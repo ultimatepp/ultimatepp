@@ -81,7 +81,8 @@ public:
 
 class PopUpCtrl : public Ctrl
 {
-private:
+protected:
+	Image nbg;
 	bool popup;
 public:
 	PopUpCtrl() : popup(false) {}
@@ -296,7 +297,7 @@ private:
 	bool accept_time;
 
 	struct Line {
-		Point s, e;
+		Pointf s, e;
 	};
 
 	struct MinMax {
@@ -306,8 +307,8 @@ private:
 
 	Line lines[3];
 	Size sz;
-	Point cm; //circle middle
-	Point cf; //circle factor
+	Pointf cm; //circle middle
+	Pointf cf; //circle factor
 
 	int64 cur_time;
 	int   cur_line;
@@ -321,7 +322,7 @@ private:
 	bool seconds;
 	bool colon;
 
-	void PaintPtr(int n, Draw& w, Point p, double pos, double m, double rd, int d, Color color, Point cf);
+	void PaintPtr(int n, Draw& w, Pointf p, double pos, double m, double rd, int d, Color color, Point cf);
 	void PaintCenteredText(Draw& w, int x, int y, const char *text, const Font& fnt, Color c);
 	void PaintCenteredImage(Draw &w, int x, int y, const Image& img);
 
@@ -341,9 +342,9 @@ private:
 
 	int  GetDir(int prev_point, int cur_point);
 	int  GetPointedLine(Point p);
-	int  GetPoint(Point p, double tolerance = 4.0);
-	bool IsCircle(Point p, Point s, int r);
-	bool IsLine(Point s, Point e, Point p, double tolerance = 3.0);
+	int  GetPoint(Pointf p, double tolerance = 4.0);
+	bool IsCircle(Pointf p, Pointf s, double r);
+	bool IsLine(Pointf s, Pointf e, Pointf p, double tolerance = 3.0);
 	void CalcSizes();
 
 	void Timer();

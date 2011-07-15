@@ -4,13 +4,6 @@ NAMESPACE_UPP
 
 const Point Calendar::nullday = Point(-1, -1);
 
-void DrawBg(Draw& w, int x, int y, int cx, int cy, Color c)
-{
-	Image bg = CtrlImg::Bg();
-	Image nbg = Colorize(bg, c, 150);
-	w.DrawImage(x, y, cx, cy, nbg);
-}
-
 void PopUpCtrl::PopUp(Ctrl *owner, const Rect& rt)
 {
 	Close();
@@ -64,8 +57,7 @@ Calendar::Calendar()
 	first_day = MONDAY;
 	selall = true;
 	bs = 5;
-	style = &StyleDefault();
-
+	SetStyle(StyleDefault());
 	Reset();
 }
 
@@ -88,6 +80,7 @@ void Calendar::Reset()
 Calendar& Calendar::SetStyle(const Style& s)
 {
 	style = &s;
+	nbg = Colorize(CtrlImg::Bg(), s.header, 150);
 	Refresh();
 	return *this;
 }
@@ -440,7 +433,7 @@ void Calendar::Paint(Draw &w)
 
 	if(w.IsPainting(0, 0, sz.cx, hs))
 	{
-		DrawBg(w, 0, 0, sz.cx, hs, st.header);
+		w.DrawImage(0, 0, sz.cx, hs, nbg);
 		curdate = Format("%s %d", MonthName(view.month - 1), view.year);
 	}
 	w.DrawRect(0, hs, sz.cx, sz.cy - ts - hs, st.bgmain);
@@ -775,19 +768,20 @@ LineCtrl::LineCtrl()
 Clock& Clock::SetStyle(const Style& s)
 {
 	style = &s;
+	nbg = Colorize(CtrlImg::Bg(), s.header, 150);
 	Refresh();
 	return *this;
 }
 
-void Clock::PaintPtr(int n, Draw& w, Point p, double pos, double m, double rd, int d, Color color, Point cf)
+void Clock::PaintPtr(int n, Draw& w, Pointf p, double pos, double m, double rd, int d, Color color, Point cf)
 {
 	double dx = m * sin(pos * 2 * M_PI);
 	double dy = m * cos(pos * 2 * M_PI);
 
-	lines[n].s.x = p.x - int(dx * 35 / 2);
-	lines[n].s.y = p.y + int(dy * 35 / 2);
-	lines[n].e.x = p.x + int(dx * (cf.x - rd));
-	lines[n].e.y = p.y - int(dy * (cf.y - rd));
+	lines[n].s.x = p.x - dx * 35 / 2.0;
+	lines[n].s.y = p.y + dy * 35 / 2.0;
+	lines[n].e.x = p.x + dx * (cf.x - rd);
+	lines[n].e.y = p.y - dy * (cf.y - rd);
 
 	w.DrawLine(lines[n].s, lines[n].e, d, color);
 }
@@ -838,7 +832,7 @@ void Clock::Paint(Draw& w)
 	CalcSizes();
 
 	w.DrawRect(sz, st.bgmain);
-	DrawBg(w, 0, 0, sz.cx, hs, st.header);
+	w.DrawImage(0, 0, sz.cx, hs, nbg);
 	
 	w.Clip(0, hs, sz.cx, sz.cy - hs);
 
@@ -848,18 +842,18 @@ void Clock::Paint(Draw& w)
 	//w.DrawEllipse(cm.x - r / 2, cm.y - r / 2, cf.x, cf.x, Blend(st.header, White, 250), PEN_NULL, Black);
 
 	Font fnt = st.font;
-	fnt.Height(max(6, min(16, fnt.GetHeight() * cf.x / Ctrl::VertLayoutZoom(65))));
+	fnt.Height(max(6, min(16, fnt.GetHeight() * int(cf.x) / Ctrl::VertLayoutZoom(65))));
 
 	for(int i = 1; i <= 12; i++) {
 		PaintCenteredText(w,
-		                  cm.x + int(0.8 * sin(i * M_PI / 6.0) * cf.x),
-		                  cm.y - int(0.8 * cos(i * M_PI / 6.0) * cf.y),
+		                  int(cm.x + 0.8 * sin(i * M_PI / 6.0) * cf.x),
+		                  int(cm.y - 0.8 * cos(i * M_PI / 6.0) * cf.y),
 		                  AsString(i), fnt.Bold(i % 3 == 0), SBlack());
 	}
 
 	for(int i = 1; i <= 60; i++) {
-		int x = cm.x + int(0.95 * sin(i * M_PI / 30.0) * cf.x);
-		int y = cm.y - int(0.95 * cos(i * M_PI / 30.0) * cf.y);
+		int x = int(cm.x + 0.95 * sin(i * M_PI / 30.0) * cf.x);
+		int y = int(cm.y - 0.95 * cos(i * M_PI / 30.0) * cf.y);
 		PaintCenteredImage(w, x, y,
 		                   cur_point == i ? CtrlImg::BigDotH()
 		                                  : i % 5 == 0 ? CtrlImg::BigDot() : CtrlImg::SmallDot());
@@ -1015,20 +1009,20 @@ int Clock::GetPointedLine(Point p)
 	return -1;
 }
 
-bool Clock::IsLine(Point s, Point e, Point p, double tolerance)
+bool Clock::IsLine(Pointf s, Pointf e, Pointf p, double tolerance)
 {
-	int minx = min(s.x, e.x);
-	int maxx = max(s.x, e.x);
-	int miny = min(s.y, e.y);
-	int maxy = max(s.y, e.y);
+	double minx = min(s.x, e.x);
+	double maxx = max(s.x, e.x);
+	double miny = min(s.y, e.y);
+	double maxy = max(s.y, e.y);
 
 	if(p.x < minx - tolerance) return false;
 	if(p.x > maxx + tolerance) return false;
 	if(p.y < miny - tolerance) return false;
 	if(p.y > maxy + tolerance) return false;
 
-	int dx = e.x - s.x;
-	int dy = e.y - s.y;
+	double dx = e.x - s.x;
+	double dy = e.y - s.y;
 	double u = (p.x - s.x) * dy - (p.y - s.y) * dx;
 	u *= u;
 	double l = dx * dx + dy * dy;
@@ -1037,32 +1031,32 @@ bool Clock::IsLine(Point s, Point e, Point p, double tolerance)
 	return u / l < tolerance * tolerance;
 }
 
-bool Clock::IsCircle(Point p, Point s, int r)
+bool Clock::IsCircle(Pointf p, Pointf s, double r)
 {
-	int dx = p.x - s.x;
-	int dy = p.y - s.y;
+	double dx = p.x - s.x;
+	double dy = p.y - s.y;
 	return dx * dx + dy * dy < r * r;
 }
 
-int Clock::GetPoint(Point p, double tolerance /* = 4.0*/)
+int Clock::GetPoint(Pointf p, double tolerance /* = 4.0*/)
 {
 	double tcx = 0.95 * cf.x;
 	double tcy = 0.95 * cf.y;
 
-	int dx = p.x - cm.x;
-	int dy = p.y - cm.y;
+	double dx = p.x - cm.x;
+	double dy = p.y - cm.y;
 
 	double r = sqrt(double(dx * dx + dy * dy));
 	double sa = r != 0 ? dx / r : 0;
 	double ca = r != 0 ? dy / r : 0;
 
-	p.x = cm.x + int(tcx * sa);
-	p.y = cm.y + int(tcy * ca);
+	p.x = cm.x + tcx * sa;
+	p.y = cm.y + tcy * ca;
 
 	for(int i = 1; i <= 60; i++) {
-		int x = cm.x + int(tcx * sin(i * M_PI / 30));
-		int y = cm.y - int(tcy * cos(i * M_PI / 30));
-		if(abs(p.x - x) + abs(p.y - y) < tolerance)
+		double x = cm.x + tcx * sin(i * M_PI / 30);
+		double y = cm.y - tcy * cos(i * M_PI / 30);
+		if(fabs(p.x - x) + fabs(p.y - y) < tolerance)
 			return i;
 	}
 	return -1;
@@ -1238,7 +1232,7 @@ Clock::Clock()
 	prv_point = -1;
 	cur_point = -1;
 
-	style = &StyleDefault();
+	SetStyle(StyleDefault());
 	seconds = true;
 	colon = false;
 	accept_time = false;
