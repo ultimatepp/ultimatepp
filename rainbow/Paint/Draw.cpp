@@ -7,6 +7,7 @@ struct App : public Ctrl {
 	EditString x, y;
 	ArrayCtrl a, b;
 	DropList dl;
+	LineEdit editor;
 	
 	StaticRect popup;
 	StaticRect popup2;
@@ -41,7 +42,7 @@ struct App : public Ctrl {
 	
 	void LeftDown(Point p, dword)
 	{
-		popup.SetRect(p.x, p.y, 300, 400);
+		popup.SetRect(p.x, p.y, 100, 100);
 		popup.SetForeground();
 	}
 
@@ -71,13 +72,16 @@ struct App : public Ctrl {
 		popup.Add(b.HSizePos(10, 200).VSizePos(10, 10));
 		b.SetFrame(ViewFrame());
 		popup.Add(y.HSizePos(210, 10).TopPos(10, 30));
-		popup.SetRect(800, 100, 300, 400);
+		popup.SetRect(800, 100, 100, 100);
 		
 		popup2.SetRect(500, 50, 300, 400);
 		popup2.SetFrame(BlackFrame());
 		popup2.Color(Magenta());
 		
 		win.Title("Title of the window !");
+		
+		Add(editor.LeftPos(500, 300).TopPos(100, 300));
+		editor <<= LoadFile("U:/scorpio.txt");;
 		
 	//	Add(popup);
 		
@@ -87,7 +91,7 @@ struct App : public Ctrl {
 	}
 };
 
-#define EDITOR 1
+#define EDITOR 0
 
 GUI_APP_MAIN
 {
@@ -97,8 +101,8 @@ GUI_APP_MAIN
 #else	
 	App app;
 	app.popup.PopUp();
-	app.popup2.PopUp(&app.popup);
-	app.win.Open();
+//	app.popup2.PopUp(&app.popup);
+//	app.win.Open();
 #endif
 
 	ChStdSkin();
