@@ -624,8 +624,46 @@ void Ctrl::WndSetPos0(const Rect& rect)
 void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
-	Refresh(r);
-	_DBG_ // add real scroll
+	if(dx == 0 && dy == 0)
+		return;
+	if(dx && dy) {
+		Refresh(r);
+		return;
+	}
+	RemoveCursor();
+	RemoveCaret();
+	Rect sr = r.Offseted(GetScreenView().TopLeft());
+	Vector<Rect> pr = Intersection(GetPaintRects(), sr);
+	for(int i = 0; i < pr.GetCount(); i++) {
+		Rect r = pr[i];
+		if(dx) {
+			int n = r.GetWidth() - abs(dx);
+			if(n > 0) {
+				int to = r.left + dx * (dx > 0);
+				int from = r.left - dx * (dx < 0);
+				for(int y = r.top; y < r.bottom; y++)
+					memmove(framebuffer[y] + to, framebuffer[y] + from, n * sizeof(RGBA));
+			}
+			n = min(abs(dx), r.GetWidth());	
+			Refresh(dx < 0 ? r.left : r.right - n, r.top, n, r.GetHeight());
+		}
+		else {
+			int n = r.GetHeight() - abs(dy);
+			for(int y = 0; y < n; y++)
+				memmove(framebuffer[dy < 0 ? r.top + y : r.bottom - 1 - y] + r.left,
+				        framebuffer[dy < 0 ? r.top + y - dy : r.bottom - 1 - y - dy] + r.left,
+				        r.GetWidth() * sizeof(RGBA));
+			n = min(abs(dy), r.GetHeight());	
+			Refresh(r.left, dy < 0 ? r.bottom - n : r.top, r.GetWidth(), n);
+		}
+	}
+
+	Vector<Rect> ur;
+	for(int i = 0; i < invalid.GetCount(); i++)
+		if(invalid[i].Intersects(sr))
+			ur.Add(invalid[i]);
+	for(int i = 0; i < ur.GetCount(); i++)
+		AddInvalid(ur[i].Offseted(dx, dy));
 }
 
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)

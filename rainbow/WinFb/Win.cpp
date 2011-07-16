@@ -93,7 +93,7 @@ void FBUpdate(const Rect& r)
 	if(fbHWND) {
 		HDC hdc = GetDC(fbHWND);
 		fbUpdate(hdc, r);
-	#if 0
+	#if 1
 		::PatBlt(hdc, r.left, r.top, r.GetWidth(), r.GetHeight(), DSTINVERT);
 		Sleep(40);
 		::PatBlt(hdc, r.left, r.top, r.GetWidth(), r.GetHeight(), DSTINVERT);
