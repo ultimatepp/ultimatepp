@@ -12,7 +12,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdSh
 	UPP::AppInitEnvironment__(); \
 	UPP::FBInit(hInstance); \
 	GuiMainFn_(); \
-	UPP::Ctrl::CloseTopCtrls(); \
 	Ctrl::ExitFB(); \
 	UPP::UsrLog("---------- About to delete this log of WinFB..."); \
 	UPP::DeleteUsrLog(); \

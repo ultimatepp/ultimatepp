@@ -12,10 +12,18 @@ Point GetMousePos() {
 
 void Ctrl::MouseEventFB(Ptr<Ctrl> t, int event, Point p, int zdelta)
 {
+	if(!t->IsEnabled())
+		return;
 	Rect rr = t->GetRect();
-	if((event & Ctrl::ACTION) == DOWN && !dynamic_cast<TopWindowFrame *>(~t)) {
-		t->SetFocusWnd();
-		if(t) t->SetForeground();
+	if((event & Ctrl::ACTION) == DOWN) {
+		Ptr<Ctrl> q = t;
+		TopWindowFrame *wf = dynamic_cast<TopWindowFrame *>(~t);
+		if(wf)
+			q = wf->window;			
+		if(q) q->ClickActivateWnd();
+		if(q) q->SetForeground();
+		if(ignoreclick)
+			return;
 	}
 	if(t)
 		t->DispatchMouse(event, p - rr.TopLeft(), zdelta);
@@ -107,7 +115,8 @@ void Ctrl::SetCaret(int x, int y, int cx, int cy)
 	SyncCaret();
 }
 
-void Ctrl::SyncCaret() {
+void Ctrl::SyncCaret()
+{
 	GuiLock __;
 }
 

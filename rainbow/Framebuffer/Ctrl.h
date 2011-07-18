@@ -18,6 +18,8 @@ private:
 	static int   renderingMode;
 	
 	static bool  fbEndSession;
+	static int64 fbEventLoop;
+	static int64 fbEndSessionLoop;
 
 	static Image GetBak(Rect& tr);
 	static void RemoveCursor();
