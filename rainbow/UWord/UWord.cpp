@@ -23,6 +23,8 @@ class UWord : public TopWindow {
 public:
 	virtual void DragAndDrop(Point, PasteClip& d);
 	virtual void FrameDragAndDrop(Point, PasteClip& d);
+	
+	virtual void ShutdownWindow();
 
 protected:
 	RichEdit   editor;
@@ -43,7 +45,7 @@ protected:
 	void Print();
 	void Pdf();
 	void About();
-	void Destroy();
+	void Destroy(bool shutdown);
 	void SetBar();
 	void FileBar(Bar& bar);
 	void AboutMenu(Bar& bar);
@@ -82,7 +84,7 @@ void UWord::FileBar(Bar& bar)
 		if(lrufile().GetCount())
 			lrufile()(bar, THISBACK(OpenFile));
 		bar.Separator();
-		bar.Add("Exit", THISBACK(Destroy));
+		bar.Add("Exit", THISBACK1(Destroy, false));
 	}
 }
 
@@ -195,10 +197,10 @@ void UWord::About()
 	PromptOK("[A5 uWord]&Using [*^www://upp.sf.net^ Ultimate`+`+] technology.");
 }
 
-void UWord::Destroy()
+void UWord::Destroy(bool shutdown)
 {
 	if(editor.IsModified()) {
-		switch(PromptYesNoCancel("Do you want to save the changes to the document?")) {
+		switch((shutdown ? PromptYesNo : PromptYesNoCancel)("Do you want to save the changes to the document?")) {
 		case 1:
 			Save();
 			break;
@@ -207,6 +209,11 @@ void UWord::Destroy()
 		}
 	}
 	delete this;
+}
+
+void UWord::ShutdownWindow()
+{
+	Destroy(true);
 }
 
 void UWord::MainBar(Bar& bar)
@@ -230,7 +237,7 @@ UWord::UWord()
 	Add(editor.SizePos());
 	menubar.Set(THISBACK(MainMenu));
 	Sizeable().Zoomable();
-	WhenClose = THISBACK(Destroy);
+	WhenClose = THISBACK1(Destroy, false);
 	menubar.WhenHelp = toolbar.WhenHelp = statusbar;
 	static int doc;
 	Title(Format("Document%d", ++doc));
