@@ -13,6 +13,8 @@ file
 	ResGl.h,
 	FontGl.h,
 	Keys.h,
+	ControlPanel.h,
+	ControlPanel.cpp,
 	Draw.cpp,
 	DrawOp.cpp,
 	DrawText.cpp,

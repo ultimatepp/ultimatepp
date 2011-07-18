@@ -15,10 +15,18 @@ Point GetMousePos() {
 
 void Ctrl::MouseEventGl(Ptr<Ctrl> t, int event, Point p, int zdelta)
 {
+	if(!t->IsEnabled())
+		return;
 	Rect rr = t->GetRect();
-	if((event & Ctrl::ACTION) == DOWN && !dynamic_cast<TopWindowFrame *>(~t)) {
-		t->SetFocusWnd();
-		if(t) t->SetForeground();
+	if((event & Ctrl::ACTION) == DOWN) {
+		Ptr<Ctrl> q = t;
+		TopWindowFrame *wf = dynamic_cast<TopWindowFrame *>(~t);
+		if(wf)
+			q = wf->window;			
+		if(q) q->ClickActivateWnd();
+		if(q) q->SetForeground();
+		if(ignoreclick)
+			return;
 	}
 	if(t)
 		t->DispatchMouse(event, p - rr.TopLeft(), zdelta);
@@ -66,11 +74,6 @@ bool Ctrl::DoKeyGl(dword key, int cnt)
 	return b;
 }
 
-Point glCursorPos = Null;
-Image glCursorImage;
-Rect  glCaretRect;
-int   glCaretTm;
-
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
 {
 	GuiLock __;
@@ -98,7 +101,10 @@ void Ctrl::CursorSync(Draw& w)
 		w.DrawRect(cr, Black);
 	glCursorPos = GetMousePos() - glCursorImage.GetHotSpot();
 	Size sz = glCursorImage.GetSize();
+	glPushMatrix();
+	glLoadIdentity();
 	w.DrawImage(glCursorPos.x, glCursorPos.y, sz.cx, sz.cy, glCursorImage);
+	glPopMatrix();
 }
 
 void  Ctrl::SetMouseCursor(const Image& image)

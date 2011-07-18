@@ -44,6 +44,12 @@ void TopWindow::SyncCaption0()
 	frame->Refresh();
 	frame->close <<= Proxy(WhenClose);
 	frame->icon = icon;
+	frame->Enable(IsEnabled());
+}
+
+void TopWindow::State(int reason)
+{
+	SyncCaption0();
 }
 
 void TopWindow::SyncRect()
@@ -58,6 +64,7 @@ void TopWindow::SyncRect()
 void TopWindow::Open(Ctrl *owner)
 {
 	GuiLock __;
+	DLOG("Open " << Upp::Name(owner));
 	Rect r = GetRect();
 	if(r.IsEmpty())
 		SetRect(GetDefaultWindowRect());
@@ -69,6 +76,7 @@ void TopWindow::Open(Ctrl *owner)
 		if(center)
 			SetRect(GetWorkArea().CenterRect(r.GetSize()));
 	frame->SetClient(GetRect());
+	frame->window = this;
 	frame->PopUp(owner, false, true);
 	PopUp(frame, false, true);
 	popup = false;

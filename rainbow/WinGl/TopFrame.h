@@ -21,7 +21,7 @@ private:
 
 	bool   maximized;
 	Rect   overlapped;
-
+	
 	Point GetDragMode(Point p);
 	void  StartDrag();
 	Rect  Margins() const;
@@ -35,6 +35,7 @@ public:
 	Image  icon;
 	Size   minsize;
 	bool   sizeable;
+	TopWindow *window;
 
 	void SetTitle(const String& s)           { title = s; Refresh(); }
 	Rect GetClient() const;

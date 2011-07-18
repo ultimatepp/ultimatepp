@@ -1,4 +1,5 @@
 #include "TopFrame.h"
+#include "ControlPanel.h"
 
 #ifdef GUI_WINGL
 
@@ -8,11 +9,17 @@ NAMESPACE_UPP
 
 Ptr<Ctrl>      Ctrl::desktop;
 Vector<Ctrl *> Ctrl::topctrl;
+InfoPanel      Ctrl::infoPanel;
+float          Ctrl::angle = 0.f;
+float          Ctrl::scale = 1.f;
+float          Ctrl::alpha = 255.f;
 Rect           Ctrl::screenRect;
 Point          Ctrl::glCursorPos = Null;
 Image          Ctrl::glCursorImage;
 Rect           Ctrl::glCaretRect;
 int            Ctrl::glCaretTm;
+int64          Ctrl::glEventLoop = 0;
+int64          Ctrl::glEndSessionLoop = 0;
 
 void Ctrl::SetDesktop(Ctrl& q)
 {
@@ -33,8 +40,26 @@ void Ctrl::SetWindowSize(Size sz)
 
 void Ctrl::InitGl()
 {
+	Ctrl::GlobalBackBuffer();
 	Ctrl::InitTimer();
 }
+
+void Ctrl::EndSession()
+{
+	GuiLock __;
+	DLOG("Ctrl::EndSession");
+	glEndSession = true;
+	glEndSessionLoop = glEventLoop;
+	DDUMP(glEndSessionLoop);
+}
+void Ctrl::ExitGl()
+{
+	TopWindow::ShutdownWindows();
+	Ctrl::CloseTopCtrls();
+	if(glEndSession)
+		GlQuitSession();
+}
+
 
 int Ctrl::FindTopCtrl() const
 {
@@ -71,6 +96,7 @@ Ctrl *Ctrl::GetOwner()
 	int q = FindTopCtrl();
 	if(q > 0 && topctrl[q]->top) {
 		Ctrl *x = topctrl[q]->top->owner_window;
+		DDUMP(Upp::Name(x));
 		return dynamic_cast<TopWindowFrame *>(x) ? x->GetOwner() : x;
 	}
 	return NULL;
@@ -79,7 +105,7 @@ Ctrl *Ctrl::GetOwner()
 Ctrl *Ctrl::GetActiveCtrl()
 {
 	GuiLock __;
-	return desktop;
+	return focusCtrl ? focusCtrl->GetTopCtrl() : NULL;
 }
 
 // Vector<Callback> Ctrl::hotkey;
@@ -130,18 +156,16 @@ void Ctrl::SyncTopWindows()
 
 bool Ctrl::ProcessEvent(bool *quit)
 {
+	DLOG("@ ProcessEvent");
 	ASSERT(IsMainThread());
 	if(DoCall()) {
 		SyncTopWindows();
 		return false;
 	}
-	if(GlEndSession()) {
-		if(quit) *quit = true;
-		return false;
-	}
 	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
 		ReleaseCtrlCapture();
 	if(GlProcessEvent(quit)) {
+		DLOG("GlProcesEvent returned true");
 		SyncTopWindows();
 		DefferedFocusSync();
 		SyncCaret();
@@ -154,20 +178,17 @@ void Ctrl::DrawScreen()
 {
 	if(desktop && !painting) {
 		painting = true;
-		//RemoveCursor();		
-		//RemoveCaret();
-		
-		//ActivateGlContext();
 		//desktop->SyncLayout(2);
-		//InitInfoPanel();
 		Rect clip = desktop->GetRect();
 		SystemDraw draw(clip.GetSize());
-		//draw.alpha = alpha;
-		//draw.angle = angle;
+		infoPanel.Init(*desktop);
+		draw.alpha = infoPanel.GetAlpha();
+		draw.angle = infoPanel.GetAngle();
+		draw.scale = infoPanel.GetScale();
 		draw.FlatView();
 		draw.Clear();
-		//ApplyTransform(TS_BEFORE_PAINT);
-		desktop->CtrlPaint(draw, clip);//, &infoPanel);
+		desktop->ApplyTransform(TS_BEFORE_PAINT);
+		desktop->CtrlPaint(draw, clip, &infoPanel);
 		//desktop->UpdateArea(draw, clip);
 		for(int i = 0; i < topctrl.GetCount(); i++) {
 			Rect r = topctrl[i]->GetRect();
@@ -176,12 +197,43 @@ void Ctrl::DrawScreen()
 			draw.End();
 		}
 		CursorSync(draw);
-		//AnimateCaret();
-		//ApplyTransform(TS_AFTER_PAINT);
+		desktop->ApplyTransform(TS_AFTER_PAINT);
 		SwapBuffers(hDC);
 		painting = false;
 		LOGF("Fps %.2f\n", GetFps());
 	}
+}
+
+void Ctrl::DrawLine(const Vector<Rect>& clip, int x, int y, int cx, int cy, bool horz, const byte *pattern, int animation)
+{
+	if(cx <= 0 || cy <= 0)
+		return;
+}
+
+void Ctrl::DragRectDraw0(const Vector<Rect>& clip, const Rect& rect, int n, const byte *pattern, int animation)
+{
+	int hn = min(rect.GetHeight(), n);
+	int vn = min(rect.GetWidth(), n);
+	DrawLine(clip, rect.left, rect.top, rect.GetWidth(), hn, true, pattern, animation);
+	DrawLine(clip, rect.left, rect.top + hn, vn, rect.GetHeight() - hn, false, pattern, animation);
+	DrawLine(clip, rect.right - vn, rect.top + hn, vn, rect.GetHeight() - hn, false, pattern, animation);
+	DrawLine(clip, rect.left + vn, rect.bottom - hn, rect.GetWidth() - 2 * vn, hn, true, pattern, animation);
+}
+
+void Ctrl::DragRectDraw(const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
+                        Color color, int type, int animation)
+{
+	static byte solid[] =  { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
+	static byte normal[] = { 0xff, 0x00, 0xff, 0x00, 0xff, 0x00, 0xff, 0x00 };
+	static byte dashed[] = { 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 };
+	Point p = GetScreenView().TopLeft();
+	Vector<Rect> ir;
+	ir.Add(screenRect);
+	Vector<Rect> pr = Intersection(ir, clip.Offseted(p));
+	const byte *pattern = type == DRAWDRAGRECT_DASHED ? dashed :
+	                      type == DRAWDRAGRECT_NORMAL ? normal : solid;
+	DragRectDraw0(pr, rect1.Offseted(p), n, pattern, animation);
+	DragRectDraw0(pr, rect2.Offseted(p), n, pattern, animation);
 }
 
 void Ctrl::WndUpdate0r(const Rect& r)
@@ -219,15 +271,19 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 
 	bool quit = false;
 	ProcessEvents(&quit);
-	while(!GlEndSession() && !quit && ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount())
+	int64 loopno = ++glEventLoop;
+	DDUMP(loopno);
+	DDUMP(glEndSessionLoop);
+	while(loopno > glEndSessionLoop && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
 		SyncCaret();
 		GuiSleep(20);
-		if(GlEndSession()) break;
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / ProcessEvents");
 		ProcessEvents(&quit);
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / after ProcessEvents");
+		DDUMP(loopno);
+		DDUMP(glEndSessionLoop);
 	}
 
 	if(ctrl)
@@ -241,9 +297,6 @@ void Ctrl::GuiSleep0(int ms)
 	GuiLock __;
 	ASSERT(IsMainThread());
 	LLOG("GuiSleep");
-	if(GlEndSession())
-		return;
-	LLOG("GuiSleep 2");
 	int level = LeaveGMutexAll();
 	GlSleep(ms);
 	EnterGMutex(level);
@@ -351,9 +404,13 @@ void Ctrl::PutForeground()
 		topctrl.Remove(q);
 		topctrl.Add(this);
 	}
+	Vector< Ptr<Ctrl> > fw;
 	for(int i = 0; i < topctrl.GetCount(); i++)
-		if(topctrl[i]->top && topctrl[i]->top->owner_window == this)
-			topctrl[i]->PutForeground();
+		if(topctrl[i] && topctrl[i]->top && topctrl[i]->top->owner_window == this && topctrl[i] != this)
+			fw.Add(topctrl[i]);
+	for(int i = 0; i < fw.GetCount(); i++)
+		if(fw[i])
+			fw[i]->PutForeground();
 }
 
 void Ctrl::SetWndForeground0()
@@ -363,15 +420,19 @@ void Ctrl::SetWndForeground0()
 	if(top && top->owner_window && !IsWndForeground())
 		top->owner_window->PutForeground();
 	PutForeground();
+	ActivateWnd();
 }
 
 bool Ctrl::IsWndForeground() const
 {
 	GuiLock __;
-	for(int i = 0; i < topctrl.GetCount(); i++)
-		if(topctrl[i]->top && topctrl[i]->top->owner_window == this && topctrl[i]->IsWndForeground())
-			return true;
-	return topctrl.GetCount() ? topctrl.Top() == this : this == desktop;
+	bool b = false;
+	for(int i = 0; i < topctrl.GetCount(); i++) {
+		const TopWindow *tw = dynamic_cast<const TopWindow *>(topctrl[i]);
+		if(tw)
+			b = tw == this;
+	}
+	return b;
 }
 
 void Ctrl::WndEnable0(bool *b)
@@ -438,7 +499,9 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 	ASSERT(!IsChild() && !IsOpen() && FindTopCtrl() < 0);
 	NewTop();
 	if(owner) {
-		Ctrl *owner_window = owner->GetTopCtrl(); _DBG_ // should perhaps be topwindow;
+		Ctrl *owner_window = owner->GetTopWindow();
+		if(!owner_window)
+			owner_window = owner->GetTopCtrl();
 		ASSERT(owner_window->IsOpen());
 		if(owner_window != desktop) {
 			owner_window->SetForeground();
