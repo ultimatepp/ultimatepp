@@ -169,7 +169,8 @@ LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 	case WM_HELP:
 		return TRUE;
 	case WM_CLOSE:
-		fbEndSession = true;
+		Ctrl::EndSession();
+		return 0L;
 	}
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }

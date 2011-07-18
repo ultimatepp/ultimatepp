@@ -22,6 +22,9 @@ Image          Ctrl::fbCaretBak;
 int            Ctrl::fbCaretTm;
 int            Ctrl::renderingMode = MODE_ANTIALIASED;
 bool           Ctrl::fbEndSession;
+int64          Ctrl::fbEventLoop;
+int64          Ctrl::fbEndSessionLoop;
+
 
 void Ctrl::SetDesktop(Ctrl& q)
 {
@@ -53,11 +56,19 @@ void Ctrl::InitFB()
 
 void Ctrl::EndSession()
 {
+	GuiLock __;
+	DLOG("Ctrl::EndSession");
 	fbEndSession = true;
+	fbEndSessionLoop = fbEventLoop;
+	DDUMP(fbEndSessionLoop);
 }
 
 void Ctrl::ExitFB()
 {
+	TopWindow::ShutdownWindows();
+	Ctrl::CloseTopCtrls();
+	if(fbEndSession)
+		FBQuitSession();
 }
 
 void Ctrl::SetFramebufferSize(Size sz)
@@ -104,6 +115,7 @@ Ctrl *Ctrl::GetOwner()
 	int q = FindTopCtrl();
 	if(q > 0 && topctrl[q]->top) {
 		Ctrl *x = topctrl[q]->top->owner_window;
+		DDUMP(Upp::Name(x));
 		return dynamic_cast<TopWindowFrame *>(x) ? x->GetOwner() : x;
 	}
 	return NULL;
@@ -112,7 +124,7 @@ Ctrl *Ctrl::GetOwner()
 Ctrl *Ctrl::GetActiveCtrl()
 {
 	GuiLock __;
-	return desktop;
+	return focusCtrl ? focusCtrl->GetTopCtrl() : NULL;
 }
 
 // Vector<Callback> Ctrl::hotkey;
@@ -180,10 +192,6 @@ bool Ctrl::ProcessEvent(bool *quit)
 	if(DoCall()) {
 		SyncTopWindows();
 		return false;
-	}
-	if(FBEndSession()) {
-		if(quit) *quit = true;
-		return false;	
 	}
 	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
 		ReleaseCtrlCapture();
@@ -377,7 +385,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 	MemoryCheckDebug();
 	if(!ProcessEvent(quit))
 		return false;
-	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()) && !FBEndSession());
+	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()));
 	TimeStop tm;
 	TimerProc(GetTickCount());
 	DLOG("TimerProc elapsed: " << tm);
@@ -403,15 +411,19 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 
 	bool quit = false;
 	ProcessEvents(&quit);
-	while(!FBEndSession() && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
+	int64 loopno = ++fbEventLoop;
+	DDUMP(loopno);
+	DDUMP(fbEndSessionLoop);
+	while(loopno > fbEndSessionLoop && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
 		SyncCaret();
 		GuiSleep(20);
-		if(FBEndSession()) break;
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / ProcessEvents");
 		ProcessEvents(&quit);
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / after ProcessEvents");
+		DDUMP(loopno);
+		DDUMP(fbEndSessionLoop);
 	}
 
 	if(ctrl)
@@ -425,9 +437,6 @@ void Ctrl::GuiSleep0(int ms)
 	GuiLock __;
 	ASSERT(IsMainThread());
 	LLOG("GuiSleep");
-	if(FBEndSession())
-		return;
-	LLOG("GuiSleep 2");
 	int level = LeaveGMutexAll();
 	FBSleep(ms);
 	EnterGMutex(level);
@@ -539,9 +548,13 @@ void Ctrl::PutForeground()
 		topctrl.Remove(q);
 		topctrl.Add(this);
 	}
+	Vector< Ptr<Ctrl> > fw;
 	for(int i = 0; i < topctrl.GetCount(); i++)
-		if(topctrl[i]->top && topctrl[i]->top->owner_window == this)
-			topctrl[i]->PutForeground();
+		if(topctrl[i] && topctrl[i]->top && topctrl[i]->top->owner_window == this && topctrl[i] != this)
+			fw.Add(topctrl[i]);
+	for(int i = 0; i < fw.GetCount(); i++)
+		if(fw[i])
+			fw[i]->PutForeground();
 }
 
 void Ctrl::SetWndForeground0()
@@ -556,10 +569,13 @@ void Ctrl::SetWndForeground0()
 bool Ctrl::IsWndForeground() const
 {
 	GuiLock __;
-	for(int i = 0; i < topctrl.GetCount(); i++)
-		if(topctrl[i]->top && topctrl[i]->top->owner_window == this && topctrl[i]->IsWndForeground())
-			return true;
-	return topctrl.GetCount() ? topctrl.Top() == this : this == desktop;
+	bool b = false;
+	for(int i = 0; i < topctrl.GetCount(); i++) {
+		const TopWindow *tw = dynamic_cast<const TopWindow *>(topctrl[i]);
+		if(tw)
+			b = tw == this;
+	}
+	return b;
 }
 
 void Ctrl::WndEnable0(bool *b)
@@ -671,7 +687,9 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 	ASSERT(!IsChild() && !IsOpen() && FindTopCtrl() < 0);
 	NewTop();
 	if(owner) {
-		Ctrl *owner_window = owner->GetTopCtrl(); _DBG_ // should perhaps be topwindow;
+		Ctrl *owner_window = owner->GetTopWindow();
+		if(!owner_window)
+			owner_window = owner->GetTopCtrl();
 		ASSERT(owner_window->IsOpen());
 		if(owner_window != desktop) {
 			owner_window->SetForeground();

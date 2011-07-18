@@ -265,8 +265,6 @@ GUI_APP_MAIN
 	       .AllFilesType()
 	       .DefaultExt("pdf");
 
-	UWordFs().ExecuteOpen();
-
 	LoadFromFile(callback(UWord::SerializeApp));
 	new UWord;
 	Ctrl::EventLoop();

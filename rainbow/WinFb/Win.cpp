@@ -7,11 +7,6 @@ NAMESPACE_UPP
 HWND fbHWND;
 bool fbEndSession = false;
 
-bool FBEndSession()
-{
-	return fbEndSession;
-}
-
 bool FBIsWaitingEvent()
 {
 	MSG msg;
@@ -29,6 +24,11 @@ bool FBProcessEvent(bool *quit)
 		return true;
 	}
 	return false;
+}
+
+void FBQuitSession()
+{
+	::PostQuitMessage(0);
 }
 
 void FBSleep(int ms)
