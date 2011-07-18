@@ -240,12 +240,12 @@ Image PosixGetDriveImage(String dir, bool)
 #ifdef PLATFORM_WIN32
 Image GetFileIcon(const String& folder, bool, bool, bool, bool = false)
 {
-	return Null;
+	return CtrlImg::File();
 }
 #else
 Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool isexe, bool = false)
 {
-	return Null;
+	return isdir ? CtrlImg::Dir() : CtrlImg::File();
 }
 
 #endif
@@ -311,7 +311,7 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 			#endif
 					StdFont().Bold(), SColorText, true, -1, Null, SColorDisabled,
 					root[i].root_desc, StdFont()
-			);
+				);
 		#ifdef PLATFORM_WIN32
 			list.Add(t_("Network"), CtrlImg::Network(), StdFont().Bold(), SColorText,
 			         true, -1, Null, SColorDisabled, Null, StdFont());
