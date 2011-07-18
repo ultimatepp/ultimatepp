@@ -248,6 +248,7 @@ TopWindow *Ctrl::GetMainWindow()
 {
 	GuiLock __;
 	Ctrl *q = GetTopCtrl();
+	DDUMP(Upp::Name(q));
 	for(;;) {
 		Ctrl *w = q->GetOwner();
 		if(!w)
