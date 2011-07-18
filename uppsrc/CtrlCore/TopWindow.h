@@ -85,6 +85,8 @@ private:
 #endif
 
 public:
+	virtual     void ShutdownWindow();
+
 	Callback    WhenClose;
 
 	void        Backup();
@@ -165,6 +167,8 @@ public:
 	Image      GetLargeIcon() const                   { return largeicon; }
 
 	void       SerializePlacement(Stream& s, bool reminimize = false);
+	
+	static void ShutdownWindows();
 
 	typedef TopWindow CLASSNAME;
 

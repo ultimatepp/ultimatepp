@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)   // LOG(x)
+#define LLOG(x)    DLOG(x)
 
 Rect TopWindow::windowFrameMargin;
 
@@ -424,6 +424,31 @@ TopWindow& TopWindow::Urgent(bool b)
 	urgent = b;
 	SyncCaption();
 	return *this;
+}
+
+void TopWindow::ShutdownWindow()
+{
+}
+
+void TopWindow::ShutdownWindows()
+{
+	bool again = true;
+	while(again) {
+		Vector<Ctrl *> tc = GetTopCtrls();
+		again = false;
+		for(int i = 0; i < tc.GetCount(); i++) {
+			Ptr<TopWindow> w = dynamic_cast<TopWindow *>(tc[i]);
+			if(w && w->IsOpen() && w->IsEnabled()) {
+				again = true;
+				w->SetForeground();
+				w->ShutdownWindow();
+				if(w && w->IsOpen())
+					w->WhenClose();
+				if(!w || !w->IsOpen())
+					break;
+			}
+		}
+	}
 }
 
 struct DialogBackground : public Display {
