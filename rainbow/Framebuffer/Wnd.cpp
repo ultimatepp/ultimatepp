@@ -564,6 +564,7 @@ void Ctrl::SetWndForeground0()
 	if(top && top->owner_window && !IsWndForeground())
 		top->owner_window->PutForeground();
 	PutForeground();
+	ActivateWnd();
 }
 
 bool Ctrl::IsWndForeground() const
@@ -705,11 +706,11 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 
 Rect Ctrl::GetDefaultWindowRect() {
 	GuiLock __;
-	int ii = 0;
+	static int ii = 0;
 	Size sz = framebuffer.GetSize();
 	Rect rect = framebuffer.GetSize();
-	rect.Deflate(sz / 8);
-	rect.Offset(Point(sz) / 16 * (ii % 8));
+	rect.Deflate(sz / 10);
+	rect.Offset(Size(GetStdFontCy(), 2 * GetStdFontCy()) * (++ii % 8));
 	return rect;
 }
 
