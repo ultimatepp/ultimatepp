@@ -45,6 +45,13 @@ float GetFps();
 #include <WinGl/FontGl.h>
 #include <WinGl/ResGl.h>
 
+enum TransformState {
+	TS_BEFORE_CTRL_PAINT,
+	TS_AFTER_CTRL_PAINT,
+	TS_BEFORE_PAINT,
+	TS_AFTER_PAINT
+};
+
 class SystemDraw : public Draw {
 public:
 	virtual dword GetInfo() const;
@@ -121,6 +128,7 @@ public:
 	Rect		 clip;
 	float        alpha;
 	float        angle;
+	float        scale;
 	
 private:
 	Array<Cloff> cloff;
@@ -142,7 +150,7 @@ public:
 	Point    GetOffset() const { return drawing_offset; }
 	SystemDraw(Size sz);
 	virtual ~SystemDraw();
-	void FlatView();
+	void FlatView(bool applyTransform = true);
 	void Clear();
 	void PushContext();
 	void PopContext();
@@ -206,6 +214,7 @@ bool GlIsWaitingEvent();
 bool GlProcessEvent(bool *quit);
 void GlSleep(int ms);
 bool GlEndSession();
+void GlQuitSession();
 
 class PrinterJob { // Dummy only...
 	NilDraw             nil;
@@ -231,6 +240,7 @@ public:
 };
 
 class TopWindowFrame;
+struct InfoPanel;
 
 #define GUIPLATFORM_CTRL_TOP_DECLS   Ctrl *owner_window;
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <WinGl/Ctrl.h>

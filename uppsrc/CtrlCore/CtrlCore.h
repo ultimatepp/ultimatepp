@@ -561,7 +561,11 @@ private:
 	void    ScrollCtrl(Top *top, Ctrl *q, const Rect& r, Rect cr, int dx, int dy);
 	void    SyncScroll();
 	void    PaintCaret(SystemDraw& w);
+	#ifdef flagWINGL
+	void 	CtrlPaint(SystemDraw& w, const Rect& clip, Ctrl* debugctrl = NULL, int depth = 0);
+	#else
 	void    CtrlPaint(SystemDraw& w, const Rect& clip);
+	#endif
 	void    RemoveFullRefresh();
 	bool    PaintOpaqueAreas(SystemDraw& w, const Rect& r, const Rect& clip, bool nochild = false);
 	void    GatherTransparentAreas(Vector<Rect>& area, SystemDraw& w, Rect r, const Rect& clip);
@@ -1128,6 +1132,11 @@ public:
 	             bool topmost = false);
 
 	void   SetAlpha(byte alpha);
+
+#ifdef PLATFORM_WIN32
+	static bool ProcessPaintEvent();
+	static bool ProcessPaintEvents();
+#endif
 
 	static bool IsWaitingEvent();
 	static bool ProcessEvent(bool *quit = NULL);

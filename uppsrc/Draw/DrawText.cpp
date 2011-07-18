@@ -2,6 +2,10 @@
 
 NAMESPACE_UPP
 
+#ifdef flagWINGL
+#include <WinGl/FontGl.h>
+#include <WinGl/ResGl.h>
+#endif
 
 #define LLOG(x)    // LOG(x)
 #define LTIMING(x) // TIMING(x)
@@ -27,6 +31,11 @@ WString TextUnicode(const char *s, int n, byte cs, Font font)
 void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 		            Color ink, int n, const int *dx)
 {
+#ifdef flagWINGL
+	if(IsNull(ink))
+		return;
+	DrawTextOp(x, y, angle, text, font, ink, n, dx);
+#else
 	if(IsNull(ink)) return;
 	if(n < 0)
 		n = wstrlen(text);
@@ -100,6 +109,7 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 		}
 		d += dx ? *dx++ : gi.width;
 	}
+#endif
 }
 
 // ----------------------------
@@ -169,6 +179,9 @@ void Draw::DrawText(int x, int y, const String& text, Font font, Color ink, cons
 
 Size GetTextSize(const wchar *text, Font font, int n)
 {
+#ifdef flagWINGL
+	return GetTextSize(text, Resources::StdFont(font.IsBold()), n); 
+#else
 	FontInfo fi = font.Info();
 	if(n < 0)
 		n = wstrlen(text);
@@ -181,6 +194,7 @@ Size GetTextSize(const wchar *text, Font font, int n)
 	}
 	sz.cy = fi.GetHeight();
 	return sz;
+#endif
 }
 
 Size GetTextSize(const WString& text, Font font)

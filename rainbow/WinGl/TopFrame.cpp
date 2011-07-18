@@ -66,7 +66,8 @@ void TopWindowFrame::Paint(Draw& w)
 	Rect m = Margins();
 	int c = GetStdFontCy() + 4;
 	ChPaintEdge(w, sz, WinGlImg::border());
-	ChPaint(w, m.left, m.top, sz.cx - m.left - m.right, GetStdFontCy() + 4, WinGlImg::title());
+	ChPaint(w, m.left, m.top, sz.cx - m.left - m.right, GetStdFontCy() + 4,
+	        window->IsForeground() ? WinGlImg::title() : WinGlImg::bgtitle());
 	int tx = m.left + 2;
 	int tcx = sz.cx - m.left - m.right - 4 - c * (close.IsShown() + maximize.IsShown());
 	if(!IsNull(icon)) {

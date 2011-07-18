@@ -114,6 +114,9 @@ void Font::InitStdFont()
 		int    height = 0;
 		GetStdFontSys(name, height);
 #ifdef PLATFORM_WIN32
+#ifdef flagWINGL
+		AStdFont = Font(FindFaceNameIndex("Tahoma"), 12);
+#else
 		int q = FindFaceNameIndex(name);
 		if(q <= 0)
 			q = FindFaceNameIndex("Tahoma");
@@ -123,6 +126,7 @@ void Font::InitStdFont()
 			q = FindFaceNameIndex("MS Sans Serif");
 		if(q > 0)
 			AStdFont = Font(q, max(height, 1));
+#endif
 		SyncStdFont();
 #endif
 	}

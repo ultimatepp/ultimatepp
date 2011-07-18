@@ -45,4 +45,6 @@ struct OpenGLFont : Moveable<OpenGLFont>
 	void BuildVertices();
 };
 
+Size GetTextSize(const wchar *text, const OpenGLFont& fi, int n);
+
 #endif

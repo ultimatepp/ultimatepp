@@ -18,6 +18,11 @@ bool GlEndSession()
 	return glEndSession;
 }
 
+void GlQuitSession()
+{
+	::PostQuitMessage(0);
+}
+
 bool GlIsWaitingEvent()
 {
 	MSG msg;
@@ -176,10 +181,9 @@ int AppMain(HINSTANCE hInstance, LPSTR lpCmdLine)
 	if(r > 0) 
 	{
 		GuiMainFn_();
-		UPP::Ctrl::CloseTopCtrls();
+		UPP::Ctrl::ExitGl();
 		UPP::UsrLog("---------- About to delete this log of WinGL...");
 		UPP::DeleteUsrLog();
-		UPP::DestroyGl(false);
 		return UPP::GetExitCode();
 	} else {
 		return r;

@@ -14,7 +14,7 @@ bool GetMouseLeft()   { return !!(GetKeyState(VK_LBUTTON) & 0x8000); }
 bool GetMouseRight()  { return !!(GetKeyState(VK_RBUTTON) & 0x8000); }
 bool GetMouseMiddle() { return !!(GetKeyState(VK_MBUTTON) & 0x8000); }
 
-dword fbKEYtoK(dword chr) {
+dword glKEYtoK(dword chr) {
 	if(chr == VK_TAB)
 		chr = K_TAB;
 	else
@@ -56,7 +56,7 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 	switch(message) {
 	case WM_DESTROY:
 		DestroyGl();
-		::PostQuitMessage(0);
+		//::PostQuitMessage(0);
 		break;
 	case WM_LBUTTONDOWN:
 		Ctrl::DoMouseGl(Ctrl::LEFTDOWN, Point((dword)lParam));
@@ -124,21 +124,21 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 			LLOG(msgdump);
 			dword keycode = 0;
 			if(message == WM_KEYDOWN) {
-				keycode = fbKEYtoK((dword)wParam);
+				keycode = glKEYtoK((dword)wParam);
 				if(keycode == K_SPACE)
 					keycode = 0;
 			}
 			else
 			if(message == WM_KEYUP)
-				keycode = fbKEYtoK((dword)wParam) | K_KEYUP;
+				keycode = glKEYtoK((dword)wParam) | K_KEYUP;
 			else
 			if(message == WM_SYSKEYDOWN /*&& ((lParam & 0x20000000) || wParam == VK_F10)*/)
-				keycode = fbKEYtoK((dword)wParam);
+				keycode = glKEYtoK((dword)wParam);
 			else
 			if(message == WM_SYSKEYUP /*&& ((lParam & 0x20000000) || wParam == VK_F10)*/)
-				keycode = fbKEYtoK((dword)wParam) | K_KEYUP;
+				keycode = glKEYtoK((dword)wParam) | K_KEYUP;
 			else
-			if(message == WM_CHAR && wParam != 127 && wParam > 32 || wParam == 32 && fbKEYtoK(VK_SPACE) == K_SPACE)
+			if(message == WM_CHAR && wParam != 127 && wParam > 32 || wParam == 32 && glKEYtoK(VK_SPACE) == K_SPACE)
 				keycode = (dword)wParam;
 			bool b = false;
 			if(keycode)
@@ -161,7 +161,8 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 	case WM_HELP:
 		return TRUE;
 	case WM_CLOSE:
-		glEndSession = true;
+		Ctrl::EndSession();
+		return 0L;
 	}
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }

@@ -218,7 +218,7 @@ void SystemDraw::Clear()
 #endif
 }
 
-void SystemDraw::FlatView()
+void SystemDraw::FlatView(bool applyTransform)
 {
 	glViewport(0, 0, (GLsizei) drawing_size.cx, (GLsizei) drawing_size.cy);
 	float aspect = drawing_size.cx / (float) drawing_size.cy;
@@ -227,11 +227,15 @@ void SystemDraw::FlatView()
 	glOrtho(0, drawing_size.cx, drawing_size.cy, 0, -100, 100);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	float dx = (float) drawing_size.cx / 2;
-	float dy = (float) drawing_size.cy / 2;
-	glTranslatef(dx, dy, 0.f);
-	glRotatef(angle, 0, 0, 1);
-	glTranslatef(-dx, -dy, 0.f);
+	if(applyTransform)
+	{
+		float dx = (float) drawing_size.cx / 2;
+		float dy = (float) drawing_size.cy / 2;
+		glTranslatef(dx, dy, 0.f);
+		glRotatef(angle, 0, 0, 1);
+		glScalef(scale, scale, 1);
+		glTranslatef(-dx, -dy, 0.f);
+	}
 }
 
 void SystemDraw::PushContext()

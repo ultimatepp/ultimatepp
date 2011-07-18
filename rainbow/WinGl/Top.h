@@ -1,4 +1,7 @@
 //$ class TopWindow {
+public:
+	virtual void   State(int reason);
+
 private:
 	TopWindowFrame *frame;
 	
