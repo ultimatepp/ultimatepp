@@ -5,7 +5,6 @@ NAMESPACE_UPP
 #define LLOG(x)
 
 HWND fbHWND;
-bool fbEndSession = false;
 
 bool FBIsWaitingEvent()
 {

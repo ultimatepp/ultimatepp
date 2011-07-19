@@ -17,8 +17,6 @@
 
 NAMESPACE_UPP
 
-extern bool fbEndSession;
-
 extern int fbfd;
 extern struct fb_var_screeninfo vinfo;
 extern struct fb_fix_screeninfo finfo;

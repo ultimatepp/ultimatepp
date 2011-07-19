@@ -4,16 +4,17 @@ NAMESPACE_UPP
 
 #define LLOG(x)       //LOG(x)
 
-bool fbEndSession = false;
 SDL_Surface * screen = NULL;
 int videoflags = 0;
 int height = 0;
 int width = 0;
 int bpp = 0;
 
-bool FBEndSession()
+void FBQuitSession()
 {
-	return fbEndSession;
+	SDL_Event event;
+	event.type=SDL_QUIT;
+	SDL_PushEvent(&event);
 }
 
 bool FBIsWaitingEvent()
@@ -72,6 +73,7 @@ void FBUpdate(const Rect& inv)
 
 void FBFlush()
 {
+	
 }
 
 void FBInit()

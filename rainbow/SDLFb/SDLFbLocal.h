@@ -8,7 +8,6 @@
 
 NAMESPACE_UPP
 
-extern bool fbEndSession;
 extern SDL_Surface * screen;
 extern int videoflags;
 extern int height;
