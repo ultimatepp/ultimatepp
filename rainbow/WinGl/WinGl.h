@@ -29,7 +29,7 @@ extern HGLRC hRC;
 int CreateGlWindow(HINSTANCE hInstance);
 int CreateGlContext();
 void ActivateGlContext();
-void DestroyGl(bool destroyWindow = true);
+void DestroyGl();
 LRESULT CALLBACK glWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 float GetFps();

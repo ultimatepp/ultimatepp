@@ -53,7 +53,7 @@ void ActivateGlContext()
 		wglMakeCurrent(hDC, hRC);
 }
 
-void DestroyGl(bool destroyWindow)
+void DestroyGl()
 {
 	if(hDC != NULL && hRC != NULL)
 		wglMakeCurrent(NULL, NULL);
