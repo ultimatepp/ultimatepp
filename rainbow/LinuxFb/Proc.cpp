@@ -14,25 +14,24 @@ bool GetMouseRight()  { return mouseb & 0x1; }
 bool GetMouseMiddle() { return mouseb & 0x2; }
 
 dword fbKEYtoK(dword chr) {
-/*
-	if(chr == SDLK_TAB)
+
+	if(chr == SCANCODE_TAB)
 		chr = K_TAB;
 	else
-	if(chr == SDLK_SPACE)
+	if(chr == SCANCODE_SPACE)
 		chr = K_SPACE;
 	else
-	if(chr == SDLK_RETURN)
+	if(chr == SCANCODE_ENTER)
 		chr = K_RETURN;
 	else
-*/
 		chr = chr + K_DELTA;
-/*
+
 	if(chr == K_ALT_KEY || chr == K_CTRL_KEY || chr == K_SHIFT_KEY)
 		return chr;
 	if(GetCtrl()) chr |= K_CTRL;
 	if(GetAlt()) chr |= K_ALT;
 	if(GetShift()) chr |= K_SHIFT;
-*/
+
 	return chr;
 }
 
@@ -171,7 +170,7 @@ void handle_keyboard()
 		
 		//Ctrl+Alt+FN for vt switch ??
 
-		//scancode = fbKEYtoK(scancode) | (pressed)?(K_KEYUP):(0);
+		scancode = fbKEYtoK(scancode) | (pressed)?(K_KEYUP):(0);
 		bool b = Ctrl::DoKeyFB(scancode, 1);
 
 		//helper quit
