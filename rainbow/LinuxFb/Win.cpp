@@ -5,8 +5,6 @@
 
 NAMESPACE_UPP
 
-bool fbEndSession = false;
-
 //video
 int fbfd = -1;
 struct fb_var_screeninfo vinfo;
@@ -27,9 +25,9 @@ int cvt = -1;
 //event
 int pend = 0;
 
-bool FBEndSession()
+bool FBQuitSession()
 {
-	return fbEndSession;
+	Ctrl::EndSession();
 }
 
 bool FBIsWaitingEvent()

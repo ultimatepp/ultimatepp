@@ -134,6 +134,7 @@ void HandleSDLEvent(SDL_Event* event)
 		case SDL_VIDEOEXPOSE: //SDL_ExposeEvent
 			break;
 		case SDL_QUIT: //SDL_QuitEvent
+			Ctrl::EndSession();
 			break;
 		case SDL_USEREVENT: //SDL_UserEvent
 			HandleUserEvent(event);
