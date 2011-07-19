@@ -8,13 +8,13 @@ uses
 
 uses(SKELETON) Skeleton;
 
-uses(WINFB) WinFb;
-
 uses(WINALT) WinAlt;
 
-uses(SDLFB) SDLFb;
+uses(WINFB) WinFb;
 
 uses(LINUXFB) LinuxFb;
+
+uses(SDLFB) SDLFb;
 
 uses(WINGL) WinGl;
 
@@ -24,10 +24,10 @@ file
 
 mainconfig
 	"" = "GUI SKELETON",
-	"" = "GUI WINFB",
 	"" = "GUI WINALT",
-	"" = "GUI SDLFB",
+	"" = "GUI WINFB",
 	"" = "GUI LINUXFB",
+	"" = "GUI SDLFB",
 	"" = "GUI WINGL",
 	"" = "GUI";
 

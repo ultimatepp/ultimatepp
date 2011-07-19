@@ -92,7 +92,7 @@ Event Ctrl::ExitLoopEvent;
 #endif
 #endif
 
-GLOBAL_VAR(bool, Ctrl::EndSession)
+bool Ctrl::endSession = false;
 
 #ifndef flagDLL
 #ifndef PLATFORM_WINCE
@@ -103,7 +103,7 @@ LRESULT CALLBACK Ctrl::OverwatchWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 		PostQuitMessage(0);
 	}
 	if(msg == WM_ENDSESSION) {
-		EndSession() = true;
+		EndSession();
 		ELOGW("WM_ENDSESSION 1");
 		ExitLoopEvent.Set();
 		ELOGW("WM_ENDSESSION 2");
@@ -807,7 +807,7 @@ bool Ctrl::ProcessEvent(bool *quit)
 	ASSERT(IsMainThread());
 	if(DoCall())
 		return false;
-	if(EndSession())
+	if(IsEndSession())
 		return false;
 	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
 		ReleaseCtrlCapture();
@@ -856,12 +856,12 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 
 	bool quit = false;
 	ProcessEvents(&quit);
-	while(!EndSession() && !quit && ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount())
+	while(!IsEndSession() && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
 		SyncCaret();
 		GuiSleep(1000);
-		if(EndSession()) break;
+		if(IsEndSession()) break;
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / ProcessEvents");
 		ProcessEvents(&quit);
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / after ProcessEvents");
@@ -878,7 +878,7 @@ void Ctrl::GuiSleep0(int ms)
 	GuiLock __;
 	ASSERT(IsMainThread());
 	ELOG("GuiSleep");
-	if(EndSession())
+	if(IsEndSession())
 		return;
 	ELOG("GuiSleep 2");
 	int level = LeaveGMutexAll();

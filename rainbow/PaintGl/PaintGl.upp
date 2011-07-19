@@ -1,21 +1,27 @@
 uses
 	CtrlLib;
 
-uses(WINGL) WinGl;
+uses(SKELETON) Skeleton;
+
+uses(WINALT) WinAlt;
 
 uses(WINFB) WinFb;
 
+uses(LINUXFB) LinuxFb;
+
 uses(SDLFB) SDLFb;
 
-uses(LINUXFB) LinuxFb;
+uses(WINGL) WinGl;
 
 file
 	main.cpp;
 
 mainconfig
-	"" = "GUI WINGL",
+	"" = "GUI SKELETON",
+	"" = "GUI WINALT",
 	"" = "GUI WINFB",
-	"" = "GUI SDLFB",
 	"" = "GUI LINUXFB",
+	"" = "GUI SDLFB",
+	"" = "GUI WINGL",
 	"" = "GUI";
 

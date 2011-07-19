@@ -16,11 +16,12 @@ private:
 
 public:
 	static Event     ExitLoopEvent;
-	static bool&     EndSession();
-	static bool      IsEndSession()            { return EndSession(); }
+	static void      EndSession()              { endSession = true; }
+	static bool      IsEndSession()            { return endSession; }
 	static HINSTANCE hInstance;
 
 protected:
+	static bool      endSession;
 	static HCURSOR   hCursor;
 
 	static VectorMap< HWND, Ptr<Ctrl> >& Windows();

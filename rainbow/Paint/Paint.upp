@@ -4,6 +4,10 @@ uses
 	CtrlLib,
 	RichEdit;
 
+uses(SKELETON) Skeleton;
+
+uses(WINALT) WinAlt;
+
 uses(WINFB) WinFb;
 
 uses(LINUXFB) LinuxFb;
@@ -16,9 +20,11 @@ file
 	Draw.cpp;
 
 mainconfig
+	"" = "GUI SKELETON",
+	"" = "GUI WINALT",
 	"" = "GUI WINFB",
 	"" = "GUI LINUXFB",
-	"" = "GUI WINGL",
 	"" = "GUI SDLFB",
+	"" = "GUI WINGL",
 	"" = "GUI";
 
