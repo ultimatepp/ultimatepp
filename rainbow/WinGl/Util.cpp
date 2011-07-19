@@ -53,12 +53,10 @@ static uint64 sGetAniPat(uint64 src, int pos)
 */
 
 
-/*
 Size GetScreenSize()
 {
-	return ScreenInfo().GetPageSize();
+	return Ctrl::screenRect.GetSize();
 }
-*/
 
 void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                   Color color, int type, int animation)
