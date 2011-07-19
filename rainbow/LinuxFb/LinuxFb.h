@@ -4,7 +4,9 @@
 #include <Framebuffer/Framebuffer.h>
 
 #include <CtrlCore/stdids.h>
-#include "vkcodes.h" //FIXME
+
+//used with thanks from svgalib
+#include "vgakeyboard.h"
 
 #endif
 

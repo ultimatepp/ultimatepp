@@ -2,6 +2,7 @@ uses
 	Framebuffer;
 
 file
+	vgakeyboard.h,
 	LinuxFb.h,
 	LinuxFbLocal.h,
 	Local.h,
