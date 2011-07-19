@@ -162,7 +162,11 @@ void Ctrl::SyncLayout(int force)
 		}
 		Refresh();
 	}
+	#ifdef flagWINGL
+	if(oview != view) {
+	#else
 	if(oview != view || force) {
+	#endif
 		State(LAYOUTPOS);
 		Layout();
 	}
@@ -231,7 +235,9 @@ void Ctrl::UpdateRect0()
 	}
 	LLOG("UpdateRect0 " << Name() << " to " << rect);
 	LTIMING("UpdateRect0 SyncLayout");
+	#ifndef flagWINGL
 	SyncLayout();
+	#endif
 }
 
 
@@ -335,8 +341,10 @@ Ctrl& Ctrl::SetFrame(int i, CtrlFrame& fr) {
 	frame[i].frame->FrameRemove();
 	frame[i].frame = &fr;
 	fr.FrameAdd(*this);
-	SyncLayout();
+	#ifndef flagWINGL
+	SyncLayout();	
 	RefreshFrame();
+	#endif
 	return *this;
 }
 
@@ -345,8 +353,10 @@ Ctrl& Ctrl::AddFrame(CtrlFrame& fr) {
 	LLOG("AddFrame " << typeid(fr).name());
 	frame.Add().frame = &fr;
 	fr.FrameAdd(*this);
+	#ifndef flagWINGL
 	SyncLayout();
 	RefreshFrame();
+	#endif
 	return *this;
 }
 
@@ -356,8 +366,10 @@ void Ctrl::ClearFrames() {
 		frame[i].frame->FrameRemove();
 	frame.Clear();
 	frame.Add().frame = &NullFrame();
+	#ifndef flagWINGL
 	RefreshFrame();
 	SyncLayout();
+	#endif
 }
 
 void Ctrl::RemoveFrame(int i) {
@@ -373,8 +385,10 @@ void Ctrl::RemoveFrame(int i) {
 	frame = m;
 	if(frame.GetCount() == 0)
 		frame.Add().frame = &NullFrame();
+	#ifndef flagWINGL
 	RefreshFrame();
 	SyncLayout();
+	#endif
 }
 
 int  Ctrl::FindFrame(CtrlFrame& frm)
@@ -409,8 +423,10 @@ void Ctrl::InsertFrame(int i, CtrlFrame& fr)
 		m.Add().frame = &fr;
 	frame = m;
 	fr.FrameAdd(*this);
+	#ifndef flagWINGL	
 	SyncLayout();
 	RefreshFrame();
+	#endif
 }
 
 Ctrl& Ctrl::LeftPos(int a, int size) {
