@@ -176,7 +176,10 @@ void Ctrl::DrawScreen()
 {
 	if(desktop && !painting) {
 		painting = true;
-		//desktop->SyncLayout(2);
+		desktop->SyncLayout(2);
+		for(int i = 0; i < topctrl.GetCount(); i++) {
+			topctrl[i]->SyncLayout(2);
+		}
 		Rect clip = desktop->GetRect();
 		SystemDraw draw(clip.GetSize());
 		infoPanel.Init(*desktop);

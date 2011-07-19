@@ -932,12 +932,21 @@ public:
 	bool        InView() const                           { return !inframe; }
 	LogPos      GetPos() const                           { return pos; }
 
+	#ifdef flagWINGL
+	void        RefreshLayout()                          { }
+	void        RefreshLayoutDeep()                      { }
+	void        RefreshParentLayout()                    { }
+	
+	void        UpdateLayout()                           { }
+	void        UpdateParentLayout()                     { }
+	#else
 	void        RefreshLayout()                          { SyncLayout(1); }
 	void        RefreshLayoutDeep()                      { SyncLayout(2); }
 	void        RefreshParentLayout()                    { if(parent) parent->RefreshLayout(); }
 	
 	void        UpdateLayout()                           { SyncLayout(); }
 	void        UpdateParentLayout()                     { if(parent) parent->UpdateLayout(); }
+	#endif
 
 	Ctrl&       LeftPos(int a, int size = STDSIZE);
 	Ctrl&       RightPos(int a, int size = STDSIZE);
