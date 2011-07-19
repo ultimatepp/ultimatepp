@@ -26,6 +26,7 @@ void Ctrl::SetDesktop(Ctrl& q)
 	desktop = &q;
 	desktop->SetRect(screenRect.GetSize());
 	desktop->SetOpen(true);
+	desktop->StateH(OPEN);
 	desktop->NewTop();
 }
 
