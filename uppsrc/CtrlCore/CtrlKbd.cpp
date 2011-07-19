@@ -284,8 +284,6 @@ void Ctrl::SetFocusWnd()
 	GuiLock __;
 	// notification, don't set host platform focus here
 	LLOG("Ctrl::SetFocusWnd");
-	DDUMP(Upp::Name(focusCtrlWnd));
-	DDUMP(Upp::Name(this));
 	if(focusCtrlWnd != this) {
 		LLOG("Ctrl::SetFocusWnd->ActivateWnd");
 		ActivateWnd();
