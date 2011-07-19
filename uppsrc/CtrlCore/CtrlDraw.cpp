@@ -241,7 +241,7 @@ struct sDrawLevelCheck {
 #define DOLEVELCHECK
 #endif
 #ifdef flagWINGL
-void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip, Ctrl* debugctrl, int depth) {
+void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip, int depth) {
 	GuiLock __;
 	LEVELCHECK(w, this);
 	LTIMING("CtrlPaint");
@@ -251,18 +251,8 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip, Ctrl* debugctrl, int depth
 	if(!IsShown() || orect.IsEmpty() || clip.IsEmpty() || !clip.Intersects(orect))
 		return;
 	
-	if(debugctrl == this)
-	{
-		#if CLIP_MODE == 2
-		glDisable(GL_STENCIL_TEST);
-		#endif
-		w.FlatView(false);
-	}
-	else
-	{
-		glPushMatrix();
-		ApplyTransform(TS_BEFORE_CTRL_PAINT);
-	}
+	glPushMatrix();
+	ApplyTransform(TS_BEFORE_CTRL_PAINT);
 		
 	Ctrl *q;
 	Rect view = rect;
@@ -286,7 +276,7 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip, Ctrl* debugctrl, int depth
 				LEVELCHECK(w, q);
 				Point off = q->GetRect().TopLeft();
 				w.Offset(off);
-				q->CtrlPaint(w, clip - off, debugctrl, depth + 1);
+				q->CtrlPaint(w, clip - off, depth + 1);
 				w.End();
 			}
 			else
@@ -333,7 +323,7 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip, Ctrl* debugctrl, int depth
 				Rect ocl = cl - off;
 				if(ocl.Intersects(Rect(qr.GetSize()).Inflated(overpaint))) {
 					w.Offset(off);
-					q->CtrlPaint(w, rr - off, debugctrl, depth + 1);
+					q->CtrlPaint(w, rr - off, depth + 1);
 					w.End();
 				}
 				//if(q->cliptobounds)
@@ -341,17 +331,8 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip, Ctrl* debugctrl, int depth
 			}
 	}
 
-	if(debugctrl != this)
-	{
-		ApplyTransform(TS_AFTER_CTRL_PAINT);
-		glPopMatrix();
-	}
-	else
-	{
-		#if CLIP_MODE == 2
-		glEnable(GL_STENCIL_TEST);
-		#endif
-	}
+	ApplyTransform(TS_AFTER_CTRL_PAINT);
+	glPopMatrix();
 }
 #else
 void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {

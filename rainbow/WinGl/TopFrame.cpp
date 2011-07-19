@@ -140,7 +140,6 @@ void TopWindowFrame::StartDrag()
 	SetCapture();
 	startrect = GetRect();
 	startpos = GetMousePos();
-	DLOG("START DRAG ---------------");
 }
 
 void TopWindowFrame::GripResize()
@@ -163,8 +162,6 @@ void TopWindowFrame::LeftDouble(Point p, dword keyflags)
 
 void TopWindowFrame::MouseMove(Point, dword)
 {
-	//DDUMP(HasWndCapture());
-	DDUMP(HasCapture());
 	if(!HasCapture())
 		return;
 	Size msz = ComputeClient(minsize).GetSize();
