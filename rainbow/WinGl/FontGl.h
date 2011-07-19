@@ -29,7 +29,7 @@ struct OpenGLFont : Moveable<OpenGLFont>
 	Vector<CharInfo> chars;
 	VectorMap<int, VectorMap<int, float> > kerns;
 	Vector<String> files;
-	Array<const byte> compiledFiles;
+	Array<byte> compiledFiles;
 	Vector<int64> pages;
 
 	OpenGLFont() : texturesUpdated(false)

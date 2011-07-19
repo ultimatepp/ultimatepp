@@ -562,7 +562,7 @@ private:
 	void    SyncScroll();
 	void    PaintCaret(SystemDraw& w);
 	#ifdef flagWINGL
-	void 	CtrlPaint(SystemDraw& w, const Rect& clip, Ctrl* debugctrl = NULL, int depth = 0);
+	void 	CtrlPaint(SystemDraw& w, const Rect& clip, int depth = 0);
 	#else
 	void    CtrlPaint(SystemDraw& w, const Rect& clip);
 	#endif

@@ -47,10 +47,8 @@ void Ctrl::InitGl()
 void Ctrl::EndSession()
 {
 	GuiLock __;
-	DLOG("Ctrl::EndSession");
 	glEndSession = true;
 	glEndSessionLoop = glEventLoop;
-	DDUMP(glEndSessionLoop);
 }
 void Ctrl::ExitGl()
 {
@@ -96,7 +94,6 @@ Ctrl *Ctrl::GetOwner()
 	int q = FindTopCtrl();
 	if(q > 0 && topctrl[q]->top) {
 		Ctrl *x = topctrl[q]->top->owner_window;
-		DDUMP(Upp::Name(x));
 		return dynamic_cast<TopWindowFrame *>(x) ? x->GetOwner() : x;
 	}
 	return NULL;
@@ -105,6 +102,8 @@ Ctrl *Ctrl::GetOwner()
 Ctrl *Ctrl::GetActiveCtrl()
 {
 	GuiLock __;
+	if(focusCtrl == &infoPanel)
+		return desktop;
 	return focusCtrl ? focusCtrl->GetTopCtrl() : NULL;
 }
 
@@ -156,7 +155,6 @@ void Ctrl::SyncTopWindows()
 
 bool Ctrl::ProcessEvent(bool *quit)
 {
-	DLOG("@ ProcessEvent");
 	ASSERT(IsMainThread());
 	if(DoCall()) {
 		SyncTopWindows();
@@ -165,7 +163,6 @@ bool Ctrl::ProcessEvent(bool *quit)
 	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
 		ReleaseCtrlCapture();
 	if(GlProcessEvent(quit)) {
-		DLOG("GlProcesEvent returned true");
 		SyncTopWindows();
 		DefferedFocusSync();
 		SyncCaret();
@@ -188,16 +185,29 @@ void Ctrl::DrawScreen()
 		draw.FlatView();
 		draw.Clear();
 		desktop->ApplyTransform(TS_BEFORE_PAINT);
-		desktop->CtrlPaint(draw, clip, &infoPanel);
-		//desktop->UpdateArea(draw, clip);
+		desktop->CtrlPaint(draw, clip);
 		for(int i = 0; i < topctrl.GetCount(); i++) {
+			if(topctrl[i] == &infoPanel)
+				continue;
 			Rect r = topctrl[i]->GetRect();
 			draw.Clipoff(r);
 			topctrl[i]->CtrlPaint(draw, clip);
 			draw.End();
 		}
 		CursorSync(draw);
-		desktop->ApplyTransform(TS_AFTER_PAINT);
+		desktop->ApplyTransform(TS_AFTER_PAINT);		
+		glLoadIdentity();
+		#if CLIP_MODE == 2
+		glDisable(GL_STENCIL_TEST);
+		#endif
+		draw.alpha = 255.f;
+		draw.Offset(infoPanel.GetRect().TopLeft());
+		infoPanel.CtrlPaint(draw, clip, NULL);
+		draw.End();
+		#if CLIP_MODE == 2
+		glEnable(GL_STENCIL_TEST);
+		#endif
+		MouseSync(draw);		
 		SwapBuffers(hDC);
 		painting = false;
 		LOGF("Fps %.2f\n", GetFps());
@@ -272,8 +282,6 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	bool quit = false;
 	ProcessEvents(&quit);
 	int64 loopno = ++glEventLoop;
-	DDUMP(loopno);
-	DDUMP(glEndSessionLoop);
 	while(loopno > glEndSessionLoop && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
@@ -282,8 +290,6 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / ProcessEvents");
 		ProcessEvents(&quit);
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / after ProcessEvents");
-		DDUMP(loopno);
-		DDUMP(glEndSessionLoop);
 	}
 
 	if(ctrl)
@@ -491,7 +497,6 @@ void Ctrl::WndSetPos0(const Rect& rect)
 void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
-	//Refresh(r);
 }
 
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)

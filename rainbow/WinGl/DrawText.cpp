@@ -7,7 +7,7 @@ NAMESPACE_UPP
 void OpenGLFont::LoadBrc(const byte* xml, const byte* image)
 {
 	Parse((const char*) xml, false);
-	compiledFiles.Add(image);
+	compiledFiles.Add((byte*) image);
 	pages.Add();
 }
 

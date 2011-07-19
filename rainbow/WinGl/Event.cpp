@@ -1,4 +1,3 @@
-//#include <CtrlCore/CtrlCore.h>
 #include "TopFrame.h"
 
 #ifdef GUI_WINGL
@@ -99,12 +98,13 @@ void Ctrl::CursorSync(Draw& w)
 	glCaretRect = cr;
 	if(!cr.IsEmpty())
 		w.DrawRect(cr, Black);
+}
+
+void Ctrl::MouseSync(Draw& w)
+{
 	glCursorPos = GetMousePos() - glCursorImage.GetHotSpot();
 	Size sz = glCursorImage.GetSize();
-	glPushMatrix();
-	glLoadIdentity();
 	w.DrawImage(glCursorPos.x, glCursorPos.y, sz.cx, sz.cy, glCursorImage);
-	glPopMatrix();
 }
 
 void  Ctrl::SetMouseCursor(const Image& image)

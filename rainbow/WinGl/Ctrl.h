@@ -30,7 +30,7 @@
 	friend class TopWindowFrame;
 	friend class SystemDraw;
 
-	void  SetOpen(bool b)               { isopen = b; }
+	void  SetOpen(bool b) { isopen = b; }
 
 public:
 	static Rect screenRect;
@@ -41,9 +41,10 @@ public:
 	static void DoMouseGl(int event, Point p, int zdelta = 0);
 	static bool DoKeyGl(dword key, int cnt);
 	static void CursorSync(Draw& w);
+	static void MouseSync(Draw& w);
 	
 	static void  SetDesktop(Ctrl& q);
-	static Ctrl *GetDesktop()                  { return desktop; }
+	static Ctrl *GetDesktop() { return desktop; }
 	static void  SetWindowSize(Size sz);
 	
 	static void  DrawScreen();

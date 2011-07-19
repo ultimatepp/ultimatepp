@@ -107,7 +107,7 @@ void InfoPanel::Paint(Draw& w)
 	Size sz = GetSize();
 	Size wsz = screenRect.GetSize();
 	Color frameColor = Color(183, 183, 183);
-	Color bgColor = Color(102, 102, 102);// Color(74, 125, 153);
+	Color bgColor = Color(102, 102, 102);
 	w.DrawRect(sz, bgColor);
 	w.DrawRect(0, 0, 1, sz.cy, frameColor);
 	w.DrawRect(0, 0, sz.cx, 1, frameColor);
@@ -118,7 +118,6 @@ void InfoPanel::Paint(Draw& w)
 
 void InfoPanel::Init(Ctrl& parent, float angle, float scale, float alpha)
 {
-
 	int screenWidth = screenRect.Width();
 	int width = 585;
 	int distance = (screenWidth - width) / 2;
@@ -128,10 +127,11 @@ void InfoPanel::Init(Ctrl& parent, float angle, float scale, float alpha)
 		return;
 	init = false;
 	
-	parent.Add(*this);
+	//parent.Add(*this);
+	PopUp(&parent, true, false);
 	alphaSlider.SetPos(alpha, 0.f, 255.f);
 	angleSlider.SetPos(angle, 0.f, 360.f);
-	scaleSlider.SetPos(scale, 1.f, 10.f);
+	scaleSlider.SetPos(scale, 1.f, 5.f);
 }
 
 float InfoPanel::GetAlpha()
