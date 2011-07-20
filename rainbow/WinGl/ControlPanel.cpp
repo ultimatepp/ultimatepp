@@ -118,16 +118,11 @@ void InfoPanel::Paint(Draw& w)
 
 void InfoPanel::Init(Ctrl& parent, float angle, float scale, float alpha)
 {
-	int screenWidth = screenRect.Width();
-	int width = 585;
-	int distance = (screenWidth - width) / 2;
-	HSizePos(distance, distance).BottomPos(0, 30);
-
+	const int width = 585;
+	SetRect((screenRect.Width() - width) / 2, screenRect.Height() - 30, width, 30);
 	if(!init)
 		return;
 	init = false;
-	
-	//parent.Add(*this);
 	PopUp(&parent, true, false);
 	alphaSlider.SetPos(alpha, 0.f, 255.f);
 	angleSlider.SetPos(angle, 0.f, 360.f);
@@ -148,7 +143,6 @@ float InfoPanel::GetScale()
 {
 	return scaleSlider.GetPos();
 }
-
 
 
 END_UPP_NAMESPACE

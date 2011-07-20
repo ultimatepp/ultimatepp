@@ -94,7 +94,6 @@ int CreateGlWindow(HINSTANCE hInstance)
 	if(!glHwnd)
 		return -1;
 	
-	//ShowWindow(glHwnd, 1);
 	return 1;
 }
 

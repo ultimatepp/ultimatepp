@@ -23,17 +23,17 @@ int64          Ctrl::glEndSessionLoop = 0;
 
 void Ctrl::SetDesktop(Ctrl& q)
 {
+	q.SetRect(screenRect.GetSize());
+	q.SetOpen(true);
+	q.SyncLayout(2);
+	q.StateH(OPEN);
+	q.NewTop();
 	desktop = &q;
-	desktop->SetRect(screenRect.GetSize());
-	desktop->SetOpen(true);
-	desktop->StateH(OPEN);
-	desktop->NewTop();
 }
 
 void Ctrl::SetWindowSize(Size sz)
 {
 	screenRect = sz;
-	DUMP(screenRect);
 	if(desktop)
 		desktop->SetRect(screenRect);
 	SyncTopWindows();
@@ -214,7 +214,6 @@ void Ctrl::DrawScreen()
 		MouseSync(draw);		
 		SwapBuffers(hDC);
 		painting = false;
-		LOGF("Fps %.2f\n", GetFps());
 	}
 }
 
@@ -520,6 +519,8 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 	topctrl.Add(this);
 	popup = isopen = true;
 	RefreshLayoutDeep();
+	SyncLayout(2);
+	StateH(OPEN);
 	if(activate) SetFocusWnd();
 }
 
