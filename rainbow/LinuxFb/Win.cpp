@@ -1,5 +1,4 @@
 #include "LinuxFbLocal.h"
-#include <sys/kd.h>
 
 #define LLOG(x)       //LOG(x)
 
@@ -16,19 +15,18 @@ char *fbp = 0;
 int mouse_fd = -1;
 bool mouse_imps2 = false;
 Point mousep;
-int mouseb = 0;
+dword mouseb = 0;
 
 //keyb
 int keyb_fd = -1;
 int cvt = -1;
 
-//event
-int pend = 0;
-
-bool FBQuitSession()
+void FBQuitSession()
 {
 	Ctrl::EndSession();
 }
+
+int pend = 0;
 
 bool FBIsWaitingEvent()
 {
@@ -55,6 +53,7 @@ void FBSleep(int ms)
 
 void FBUpdate(const Rect& inv)
 {
+	//FIXME accelerate
 	const ImageBuffer& framebuffer = Ctrl::GetFrameBuffer();
 	memcpy(fbp, ~framebuffer, framebuffer.GetLength() * sizeof(RGBA));
 }
@@ -74,20 +73,20 @@ int entervt()
 
 	if(cvt > 0) {
 		struct vt_stat vtst;
-		if(ioctl(keyb_fd, VT_GETSTATE, &vtst) == 0 )
+		if(ioctl(keyb_fd, VT_GETSTATE, &vtst) == 0)
 			oldvt = vtst.v_active;
-		if(ioctl(keyb_fd, VT_ACTIVATE, cvt) == 0 )
+		if(ioctl(keyb_fd, VT_ACTIVATE, cvt) == 0)
 			ioctl(keyb_fd, VT_WAITACTIVE, cvt);
 	}
 
-	if(tcgetattr(keyb_fd, &oldtermios) < 0 ) {
+	if(tcgetattr(keyb_fd, &oldtermios) < 0) {
 		fprintf(stderr, "Error: saving terminal attributes");
-		return(-1);
+		return -1;
 	}
 
 	if(ioctl(keyb_fd, KDGKBMODE, &oldmode) < 0) {
 		fprintf(stderr, "Error: saving keyboard mode");
-		return(-1);
+		return -1;
 	}
 
 	kt = oldtermios;
@@ -98,20 +97,22 @@ int entervt()
 
 	if(tcsetattr(keyb_fd, TCSAFLUSH, &kt) < 0) {
 		fprintf(stderr, "Error: setting new terminal attributes");
-		return(-1);
+		return -1;
 	}
 
 	if(ioctl(keyb_fd, KDSKBMODE, K_MEDIUMRAW) < 0) {
 		fprintf(stderr, "Error: setting keyboard in mediumraw mode");
-		return(-1);
+		return -1;
 	}
 
 	if(ioctl(keyb_fd, KDSETMODE, KD_GRAPHICS) < 0) {
 		fprintf(stderr, "Error: setting keyboard in graphics mode");
-		return(-1);
+		return -1;
 	}
 
 	ioctl(keyb_fd, VT_LOCKSWITCH, 1);
+	
+	return 0;
 }
 
 void leavevt()
@@ -142,40 +143,43 @@ void FBInit(const String& fbdevice)
 	fbfd = open(fbdevice, O_RDWR);
 	if (!fbfd) {
 		fprintf(stderr, "Error: cannot open framebuffer device.\n");
-		exit(1);
+		exit(-1);
 	}
 	LLOG("The framebuffer device was opened successfully.\n");
 
 	if (ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo)) {
 		fprintf(stderr, "Error reading fixed information.\n");
-		exit(2);
+		exit(-2);
 	}
 
 	if (ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo)) {
 		fprintf(stderr, "Error reading variable information.\n");
-		exit(3);
+		exit(-3);
 	}
 	RLOG("Framebuffer opened: " << fbdevice << ": " << vinfo.xres << "x" << vinfo.yres << " @ " << vinfo.bits_per_pixel);
 
 	screensize = vinfo.xres * vinfo.yres * vinfo.bits_per_pixel / 8; //bytes
 
 	fbp = (char*)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
-	if ((intptr_t)fbp == -1) {
+	if((intptr_t)fbp == -1) {
 		fprintf(stderr, "Error: failed to map framebuffer device to memory.\n");
-		exit(4);
+		exit(-4);
 	}
 	LLOG("The framebuffer device was mapped to memory successfully.\n");
-	
-	Ctrl::SetFramebufferSize(Size(vinfo.xres, vinfo.yres));
-	
-	//Mouse stuff
-	mousep.Clear();
-	
+
+	Size fbsz(vinfo.xres, vinfo.yres);
+	Ctrl::SetFramebufferSize(fbsz);
+
+	//mouse
+
+	//mousep = fbsz / 2;
+	mousep.Clear();	
+
 	static const char *mice[] = {
-	    "/dev/input/mice"
-	    , "/dev/usbmouse"
-	    , "/dev/psaux"
-	    , NULL
+		"/dev/input/mice"
+		, "/dev/usbmouse"
+		, "/dev/psaux"
+		, NULL
 	};
 
 	for(int i=0; (mouse_fd < 0) && mice[i]; ++i) {
@@ -187,7 +191,7 @@ void FBInit(const String& fbdevice)
 				LLOG("IMPS2 mouse enabled: " << mice[i]);
 			}
 			else
-				LOG("no IMPS2 mouse present");
+				RLOG("no IMPS2 mouse present");
 		}
 		else
 			fprintf(stderr, "Error: failed to open %s.\n", mice[i]);
@@ -223,18 +227,19 @@ void FBInit(const String& fbdevice)
 			char path[32];
 			snprintf(path, 32, "%s%d", vcs[i], cvt);
 			keyb_fd = open(path, O_RDWR, 0);
-			fprintf(stderr, "path = %s, fd = %d\n", path, keyb_fd);
 
-			if(keyb_fd >= 0) {
-				tfd = open("/dev/tty", O_RDWR, 0);
-				if(tfd >= 0) {
-					fprintf(stderr, "detaching from local stdin/out/err\n");
-					ioctl(tfd, TIOCNOTTY, 0);
-					close(tfd);
-				}
-				else
-					fprintf(stderr, "Error: detaching from local stdin/out/err\n");
+			if(keyb_fd < 0)
+				continue;	
+			
+			LLOG("TTY path opened: " << path);
+			tfd = open("/dev/tty", O_RDWR, 0);
+			if(tfd >= 0) {
+				LLOG("detaching from local stdin/out/err");
+				ioctl(tfd, TIOCNOTTY, 0);
+				close(tfd);
 			}
+			else
+				fprintf(stderr, "Error: detaching from local stdin/out/err\n");
 		}
 	}
 
@@ -266,7 +271,8 @@ void FBInit(const String& fbdevice)
 
 	LLOG("tty opened: " << keyb_fd);
 
-	//setup keymap?
+	dupkmap(keyb_fd);
+
 	entervt();
 	
 	pend = 4; //fake video expose event to cause first paint

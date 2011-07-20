@@ -8,5 +8,6 @@ file
 	Local.h,
 	Keys.h,
 	Win.cpp,
-	Proc.cpp;
+	Proc.cpp,
+	keymap.cpp;
 
