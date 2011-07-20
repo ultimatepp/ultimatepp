@@ -4,36 +4,9 @@ NAMESPACE_UPP
 
 #define LLOG(x)       //LOG(x)
 
-//FIXME get input events
-bool GetShift()       { return false; }
-bool GetCtrl()        { return false; }
-bool GetAlt()         { return false; }
-bool GetCapsLock()    { return false; }
-bool GetMouseLeft()   { return mouseb & 0x4; }
-bool GetMouseRight()  { return mouseb & 0x1; }
-bool GetMouseMiddle() { return mouseb & 0x2; }
-
-dword fbKEYtoK(dword chr) {
-
-	if(chr == SCANCODE_TAB)
-		chr = K_TAB;
-	else
-	if(chr == SCANCODE_SPACE)
-		chr = K_SPACE;
-	else
-	if(chr == SCANCODE_ENTER)
-		chr = K_RETURN;
-	else
-		chr = chr + K_DELTA;
-
-	if(chr == K_ALT_KEY || chr == K_CTRL_KEY || chr == K_SHIFT_KEY)
-		return chr;
-	if(GetCtrl()) chr |= K_CTRL;
-	if(GetAlt()) chr |= K_ALT;
-	if(GetShift()) chr |= K_SHIFT;
-
-	return chr;
-}
+bool GetMouseLeft()   { return mouseb & 0x1; }
+bool GetMouseRight()  { return mouseb & 0x2; }
+bool GetMouseMiddle() { return mouseb & 0x4; }
 
 void purgefd(int fd)
 {
@@ -108,7 +81,7 @@ void handle_mouse()
 	if(n < 0) return;
 	n += offs;
 
-	for(i=0; i<(n-(rdsize-1)); i += rdsize ) {
+	for(i=0; i<(n-(rdsize-1)); i += rdsize) {
 		if((buf[i] & 0xC0) != 0) {
 			i -= (rdsize-1);
 			continue;
@@ -146,36 +119,65 @@ void handle_mouse()
 	if(i < n) {
 		memcpy(buf, &buf[i], (n-i));
 		offs = (n-i);
-	} else {
+	} else
 		offs = 0;
-	}
 }
 
 void handle_keyboard()
 {
 	unsigned char buf[BUFSIZ];
 	int n;
-	int pressed;
-	int scancode;
-
-	static int ii = 0;
+	int keyup;
+	int keycode;
 
 	n = read(keyb_fd, buf, BUFSIZ);
 	for(int i=0; i<n; ++i) {
-		scancode = buf[i] & 0x7F;
-		pressed = (buf[i] & 0x80)?(1):(0);
+		keycode = buf[i] & 0x7F;
+		keyup = (buf[i] & 0x80)?(K_KEYUP):(0);
+		bool b;
 
-		RLOG("KEY: <" << (char)scancode << "> (" << scancode << ") [" << buf[i] << "]");
-		fprintf(stderr, "KEY: <%c> (%X) [%X]\n", scancode, scancode, buf[i]);
-		
+		//char c = ((!keyup)?'=':' ');
+		//fprintf(stderr, "KEY %c: <%c> (%X) [%X]\n", c, keycode, keycode, buf[i]);
+
+		SaveModKeys(keycode, !keyup);
+
 		//Ctrl+Alt+FN for vt switch ??
 
-		scancode = fbKEYtoK(scancode) | (pressed)?(K_KEYUP):(0);
-		bool b = Ctrl::DoKeyFB(scancode, 1);
+		switch(keycode)
+		{
+			case SCANCODE_RIGHTALT: keycode = SCANCODE_LEFTALT; break;	
+			case SCANCODE_RIGHTSHIFT: keycode = SCANCODE_LEFTSHIFT; break;	
+			case SCANCODE_RIGHTCONTROL: keycode = SCANCODE_LEFTCONTROL; break;	
+		}
+
+		dword uppcode = fbKEYtoK(keycode) | keyup;
+		//fprintf(stderr, "UPP: %X - %X\n", uppcode, q);
+
+		if(!keyup && uppcode == K_SPACE)
+			uppcode = 0; //prevent double send with unicode
+
+		//first, the upp keycode
+		if(uppcode)
+			b = Ctrl::DoKeyFB(uppcode, 1);
+
+		//second, the unicode translation for a keypress
+		if(!keyup)
+		{
+			dword unicode = TranslateUnicode(keycode);
+			if(unicode >= 32 && unicode != 127)
+				b = Ctrl::DoKeyFB(unicode, 1);
+		}
 
 		//helper quit
-		if(++ii > 20)
-			fbEndSession = true;
+#if _DD
+		static int ii = 0;
+#endif
+		if(uppcode == (K_SHIFT_CTRL | K_ESCAPE)
+#ifdef _DD 
+			|| (++ii >= 100)
+#endif
+		)
+			Ctrl::EndSession();
 	}
 }
 
@@ -191,28 +193,20 @@ int readevents(int ms)
 
 	FD_ZERO(&fdset);
 	max_fd = 0;
-	if(keyb_fd >= 0) {
-		FD_SET(keyb_fd, &fdset);
-		if(max_fd < keyb_fd) {
-			max_fd = keyb_fd;
-		}
-	}
 	if(mouse_fd >= 0) {
 		FD_SET(mouse_fd, &fdset);
-		if(max_fd < mouse_fd) {
-			max_fd = mouse_fd;
-		}
+		if(max_fd < mouse_fd) max_fd = mouse_fd;
 	}
-	if(select(max_fd+1, &fdset, NULL, NULL, &to) > 0 ) {
-		if(keyb_fd >= 0 ) {
-			if(FD_ISSET(keyb_fd, &fdset)) {
-				return 2;
-			}
-		}
+	if(keyb_fd >= 0) {
+		FD_SET(keyb_fd, &fdset);
+		if(max_fd < keyb_fd) max_fd = keyb_fd;
+	}
+	if(select(max_fd+1, &fdset, NULL, NULL, &to) > 0) {
 		if(mouse_fd >= 0) {
-			if (FD_ISSET(mouse_fd, &fdset)) {
-				return 1;
-			}
+			if(FD_ISSET(mouse_fd, &fdset)) return 1;
+		}
+		if(keyb_fd >= 0) {
+			if(FD_ISSET(keyb_fd, &fdset)) return 2;
 		}
 	}
 	return 0;

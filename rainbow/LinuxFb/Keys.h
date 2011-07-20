@@ -7,6 +7,7 @@
 K_BACK       = SCANCODE_BACKSPACE + K_DELTA,
 K_BACKSPACE  = SCANCODE_BACKSPACE + K_DELTA,
 
+//handled extra in fbKEYtoK
 K_TAB        = 9, //SCANCODE_TAB
 
 K_SPACE      = 32, //SCANCODE_SPACE
