@@ -56,7 +56,6 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 	switch(message) {
 	case WM_DESTROY:
 		DestroyGl();
-		//::PostQuitMessage(0);
 		break;
 	case WM_LBUTTONDOWN:
 		Ctrl::DoMouseGl(Ctrl::LEFTDOWN, Point((dword)lParam));

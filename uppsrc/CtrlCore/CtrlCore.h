@@ -503,8 +503,8 @@ private:
 	void    Lay1(int& pos, int& r, int align, int a, int b, int sz) const;
 	Rect    CalcRect(LogPos pos, const Rect& prect, const Rect& pview) const;
 	Rect    CalcRect(const Rect& prect, const Rect& pview) const;
-	void    UpdateRect0();
-	void    UpdateRect();
+	void    UpdateRect0(bool sync = true);
+	void    UpdateRect(bool sync = true);
 	void    SetPos0(LogPos p, bool inframe);
 	void    SetWndRect(const Rect& r);
 	void    SyncMoves();

@@ -198,7 +198,11 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 			pos = p;
 			inframe = _inframe;
 			Rect to = GetRect().Size();
+			#ifdef flagWINGL
+			UpdateRect0(false);
+			#else
 			UpdateRect0();
+			#endif
 			GetTopRect(to, true);
 			MoveCtrl *s = FindMoveCtrlPtr(top->scroll_move, this);
 			if(s && s->from == from && s->to == to) {
@@ -223,7 +227,7 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 	StateH(POSITION);
 }
 
-void Ctrl::UpdateRect0()
+void Ctrl::UpdateRect0(bool sync)
 {
 	GuiLock __;
 	LTIMING("UpdateRect0");
@@ -235,16 +239,15 @@ void Ctrl::UpdateRect0()
 	}
 	LLOG("UpdateRect0 " << Name() << " to " << rect);
 	LTIMING("UpdateRect0 SyncLayout");
-	#ifndef flagWINGL
-	SyncLayout();
-	#endif
+	if(sync)
+		SyncLayout();
 }
 
 
-void Ctrl::UpdateRect()
+void Ctrl::UpdateRect(bool sync)
 {
 	GuiLock __;
-	UpdateRect0();
+	UpdateRect0(sync);
 	if(parent) RefreshFrame();
 }
 
