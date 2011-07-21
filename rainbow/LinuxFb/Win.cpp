@@ -139,6 +139,7 @@ void leavevt()
 void FBInit(const String& fbdevice)
 {
 	Ctrl::InitFB();
+	Font::SetStdFont(ScreenSans(12)); //FIXME general handling
 
 	fbfd = open(fbdevice, O_RDWR);
 	if (!fbfd) {
@@ -221,7 +222,11 @@ void FBInit(const String& fbdevice)
 	close(tfd);
 	LLOG("probable new VT: " << cvt);
 
-	if((geteuid() == 0) && (cvt > 0)) {
+	if(geteuid() != 0)
+	{
+		fprintf(stderr, "Error: not running as ROOT, mouse handling pobably unavailable\n");
+	}
+	else if(cvt > 0) {
 		LLOG("try to open the NEW assigned VT: " << cvt);
 		for(int i=0; vcs[i] && (keyb_fd < 0); ++i) {
 			char path[32];

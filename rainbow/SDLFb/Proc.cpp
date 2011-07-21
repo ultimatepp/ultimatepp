@@ -93,19 +93,6 @@ void HandleSDLEvent(SDL_Event* event)
 					//case SDL_BUTTON_WHEELDOWN: Ctrl::DoMouseFB(Ctrl::MOUSEWHEELDOUBLE, p, -120); break;
 				}
 				isdblclick[bi] = 0; //reset, to go ahead sending repeats
-				//but sdl doesnt send repeated mouse down
-				//FIXME fake repeated mousedown
-			}
-			else if(!isdblclick[bi]) //events might not be right
-			{
-				switch(bi)
-				{
-					case SDL_BUTTON_LEFT: Ctrl::DoMouseFB(Ctrl::LEFTREPEAT, p); break;
-					case SDL_BUTTON_RIGHT: Ctrl::DoMouseFB(Ctrl::RIGHTREPEAT, p); break;
-					case SDL_BUTTON_MIDDLE: Ctrl::DoMouseFB(Ctrl::MIDDLEREPEAT, p); break;
-					//case SDL_BUTTON_WHEELUP: Ctrl::DoMouseFB(Ctrl::MOUSEWHEELDOUBLE, p, +120); break;
-					//case SDL_BUTTON_WHEELDOWN: Ctrl::DoMouseFB(Ctrl::MOUSEWHEELDOUBLE, p, -120); break;
-				}
 			}
 			else
 			{
