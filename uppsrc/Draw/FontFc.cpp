@@ -139,6 +139,7 @@ CommonFontInfo (*GetFontInfoSysXft)(Font font);
 
 CommonFontInfo GetFontInfoSys(Font font)
 {
+	sInitFt();
 	if(GetFontInfoSysXft)
 		return (*GetFontInfoSysXft)(font);
 	CommonFontInfo fi;
