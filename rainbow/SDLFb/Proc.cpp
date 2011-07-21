@@ -44,6 +44,8 @@ dword fbKEYtoK(dword chr) {
 	return chr;
 }
 
+dword lastbdowntime[8] = {0};
+dword isdblclick[8] = {0};
 void HandleSDLEvent(SDL_Event* event)
 {
 	switch(event->type) {
@@ -52,15 +54,6 @@ void HandleSDLEvent(SDL_Event* event)
 		case SDL_KEYDOWN:
 		case SDL_KEYUP: //SDL_KeyboardEvent
 		{
-			String msgdump;
-			switch(event->type)
-			{
-			case SDL_KEYDOWN:    msgdump << "SDL_KEYDOWN"; break;
-			case SDL_KEYUP:      msgdump << "SDL_KEYUP"; break;
-			}
-			msgdump << (int)event->key.keysym.sym;
-			LLOG(msgdump);
-
 			bool b = false;
 			dword keycode = 0;
 			if(event->type == SDL_KEYDOWN) {
@@ -70,8 +63,7 @@ void HandleSDLEvent(SDL_Event* event)
 
 				//send respective keyup things as char events as well
 				keycode = (dword)event->key.keysym.unicode;
-				if((keycode != 127 && keycode > 32 && keycode < 255) 
-					|| (keycode == 32 && fbKEYtoK(SDLK_SPACE) == K_SPACE))
+				if((keycode != 127 && keycode >= 32 && keycode < 255))
 					b = Ctrl::DoKeyFB(keycode, 1);
 			}
 			else
@@ -88,20 +80,55 @@ void HandleSDLEvent(SDL_Event* event)
 		case SDL_MOUSEBUTTONDOWN: //SDL_MouseButtonEvent, FIXME DoubleClick
 		{
 			Point p(event->button.x, event->button.y);
-			switch(event->button.button)
+			int bi = event->button.button;
+			dword ct = SDL_GetTicks();
+			if(isdblclick[bi] && (abs(int(ct) - int(lastbdowntime[bi])) < 400))
 			{
-				case SDL_BUTTON_LEFT: Ctrl::DoMouseFB(Ctrl::LEFTDOWN, p); break;
-				case SDL_BUTTON_RIGHT: Ctrl::DoMouseFB(Ctrl::RIGHTDOWN, p); break;
-				case SDL_BUTTON_MIDDLE: Ctrl::DoMouseFB(Ctrl::MIDDLEDOWN, p); break;
-				case SDL_BUTTON_WHEELUP: Ctrl::DoMouseFB(Ctrl::MOUSEWHEEL, p, +120); break;
-				case SDL_BUTTON_WHEELDOWN: Ctrl::DoMouseFB(Ctrl::MOUSEWHEEL, p, -120); break;
+				switch(bi)
+				{
+					case SDL_BUTTON_LEFT: Ctrl::DoMouseFB(Ctrl::LEFTDOUBLE, p); break;
+					case SDL_BUTTON_RIGHT: Ctrl::DoMouseFB(Ctrl::RIGHTDOUBLE, p); break;
+					case SDL_BUTTON_MIDDLE: Ctrl::DoMouseFB(Ctrl::MIDDLEDOUBLE, p); break;
+					//case SDL_BUTTON_WHEELUP: Ctrl::DoMouseFB(Ctrl::MOUSEWHEELDOUBLE, p, +120); break;
+					//case SDL_BUTTON_WHEELDOWN: Ctrl::DoMouseFB(Ctrl::MOUSEWHEELDOUBLE, p, -120); break;
+				}
+				isdblclick[bi] = 0; //reset, to go ahead sending repeats
+				//but sdl doesnt send repeated mouse down
+				//FIXME fake repeated mousedown
+			}
+			else if(!isdblclick[bi]) //events might not be right
+			{
+				switch(bi)
+				{
+					case SDL_BUTTON_LEFT: Ctrl::DoMouseFB(Ctrl::LEFTREPEAT, p); break;
+					case SDL_BUTTON_RIGHT: Ctrl::DoMouseFB(Ctrl::RIGHTREPEAT, p); break;
+					case SDL_BUTTON_MIDDLE: Ctrl::DoMouseFB(Ctrl::MIDDLEREPEAT, p); break;
+					//case SDL_BUTTON_WHEELUP: Ctrl::DoMouseFB(Ctrl::MOUSEWHEELDOUBLE, p, +120); break;
+					//case SDL_BUTTON_WHEELDOWN: Ctrl::DoMouseFB(Ctrl::MOUSEWHEELDOUBLE, p, -120); break;
+				}
+			}
+			else
+			{
+				lastbdowntime[bi] = ct;
+				isdblclick[bi] = 0; //prepare for repeat
+				switch(bi)
+				{
+					case SDL_BUTTON_LEFT: Ctrl::DoMouseFB(Ctrl::LEFTDOWN, p); break;
+					case SDL_BUTTON_RIGHT: Ctrl::DoMouseFB(Ctrl::RIGHTDOWN, p); break;
+					case SDL_BUTTON_MIDDLE: Ctrl::DoMouseFB(Ctrl::MIDDLEDOWN, p); break;
+					case SDL_BUTTON_WHEELUP: Ctrl::DoMouseFB(Ctrl::MOUSEWHEEL, p, +120); break;
+					case SDL_BUTTON_WHEELDOWN: Ctrl::DoMouseFB(Ctrl::MOUSEWHEEL, p, -120); break;
+				}
 			}
 		}
 			break;
 		case SDL_MOUSEBUTTONUP:
 		{
+			int bi = event->button.button;
+			isdblclick[bi] = 1; //indicate maybe a dblclick
+
 			Point p(event->button.x, event->button.y);
-			switch(event->button.button)
+			switch(bi)
 			{
 				case SDL_BUTTON_LEFT: Ctrl::DoMouseFB(Ctrl::LEFTUP, p); break;
 				case SDL_BUTTON_RIGHT: Ctrl::DoMouseFB(Ctrl::RIGHTUP, p); break;

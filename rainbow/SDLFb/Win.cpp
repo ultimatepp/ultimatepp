@@ -33,7 +33,7 @@ bool FBProcessEvent(bool *quit)
 			*quit = true;
 		HandleSDLEvent(&event);
 		return true;
-	}   // End while
+	}
 	return false;
 }
 
@@ -90,6 +90,7 @@ void FBInit()
 
 	SDL_EnableUNICODE(1); //for unicode keycode availability
 	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL/2);
+	SDL_ShowCursor(0);
 
 	const SDL_VideoInfo* vi = SDL_GetVideoInfo();
 	//ASSERT(vi->hw_available);
