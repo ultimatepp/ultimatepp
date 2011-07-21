@@ -2,7 +2,9 @@
 
 using namespace Upp;
 
-struct App : TopWindow {
+class App : public TopWindow {
+public:
+	typedef App CLASSNAME;
 	ArrayCtrl  log;
 
 	void Log(const String& s)
@@ -205,6 +207,11 @@ struct App : TopWindow {
 		Log("Layout");
 	}
 
+	void OnTimer()
+	{
+		Log("Timer");	
+	}
+
 	App()
 	{
 		SetFrame(InsetFrame());
@@ -214,6 +221,7 @@ struct App : TopWindow {
 		log.AddColumn("");
 		log.NoHeader();
 		Add(log.HSizePos().BottomPos(0, 200));
+		SetTimeCallback(-1000, THISBACK(OnTimer));
 	}
 
 	~App()

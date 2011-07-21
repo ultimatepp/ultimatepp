@@ -4,9 +4,9 @@ NAMESPACE_UPP
 
 #define LLOG(x)       //LOG(x)
 
-bool GetMouseLeft()   { return mouseb & 0x1; }
-bool GetMouseRight()  { return mouseb & 0x2; }
-bool GetMouseMiddle() { return mouseb & 0x4; }
+bool GetMouseLeft()   { return mouseb & (1<<0); }
+bool GetMouseRight()  { return mouseb & (1<<1); }
+bool GetMouseMiddle() { return mouseb & (1<<2); }
 
 void purgefd(int fd)
 {
@@ -66,6 +66,41 @@ int has_imps2(int fd)
 	return 0;
 }
 
+dword lastbdowntime[8] = {0};
+dword isdblclick[8] = {0};
+
+void handle_button(dword ct, dword mouseb, dword bm, int i,
+	dword df, dword rf, dword dbf, dword uf)
+{
+	dword m = (1<<i);
+	if(bm & m)
+	{
+		if(mouseb & m) //down
+		{
+			if(isdblclick[i] && (abs(int(ct) - int(lastbdowntime[i])) < 400))
+			{
+				Ctrl::DoMouseFB(dbf, mousep);
+				isdblclick[i] = 0; //reset, to go ahead sending repeats
+			}
+			else if(!isdblclick[i])
+			{
+				//Ctrl::DoMouseFB(rf, mousep);
+			}
+			else
+			{
+				lastbdowntime[i] = ct;
+				isdblclick[i] = 0; //prepare for repeat
+				Ctrl::DoMouseFB(df, mousep);
+			}
+		}
+		else //up
+		{
+			isdblclick[i] = 1; //indicate maybe a dblclick
+			Ctrl::DoMouseFB(uf, mousep);
+		}
+	}
+}
+
 void handle_mouse()
 {
 	static int offs = 0;
@@ -109,11 +144,15 @@ void handle_mouse()
 			Ctrl::DoMouseFB(Ctrl::MOUSEMOVE, mousep);
 		}
 
-		int bm = b ^ mouseb;
+
+		dword bm = b ^ mouseb;
 		mouseb = b; //for GetMouse*
-		if(bm & 0x1) Ctrl::DoMouseFB((mouseb & 0x1)?Ctrl::LEFTDOWN:Ctrl::LEFTUP, mousep);
-		if(bm & 0x2) Ctrl::DoMouseFB((mouseb & 0x2)?Ctrl::RIGHTDOWN:Ctrl::RIGHTUP, mousep);
-		if(bm & 0x4) Ctrl::DoMouseFB((mouseb & 0x4)?Ctrl::MIDDLEDOWN:Ctrl::MIDDLEUP, mousep);
+		dword ct = GetTickCount();
+
+		handle_button(ct, mouseb, bm, 0, Ctrl::LEFTDOWN, Ctrl::LEFTREPEAT, Ctrl::LEFTDOUBLE, Ctrl::LEFTUP);
+		handle_button(ct, mouseb, bm, 1, Ctrl::RIGHTDOWN, Ctrl::RIGHTREPEAT, Ctrl::RIGHTDOUBLE, Ctrl::RIGHTUP);
+		handle_button(ct, mouseb, bm, 2, Ctrl::MIDDLEDOWN, Ctrl::MIDDLEREPEAT, Ctrl::MIDDLEDOUBLE, Ctrl::MIDDLEUP);
+
 		if(dz) Ctrl::DoMouseFB(Ctrl::MOUSEWHEEL, mousep, dz*120);
 	}
 	if(i < n) {
