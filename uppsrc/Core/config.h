@@ -1,10 +1,10 @@
 #if __GNUC__
 
-	#define COMPILER_GCC 1
-
 	#define GCC_VERSION (__GNUC__ * 10000 \
 		               + __GNUC_MINOR__ * 100 \
 		               + __GNUC_PATCHLEVEL__)	
+
+	#define COMPILER_GCC 1
 	
 	#if __WIN32
 		#define COMPILER_MINGW
@@ -14,10 +14,23 @@
 	#if __unix || __unix__ || __APPLE__
 		#define PLATFORM_POSIX 1
 		
+		#ifdef flagGUI
+			#define PLATFORM_X11 1
+		#endif
+	
 		#if __linux
 			#define PLATFORM_LINUX 1
+		// zvzv add
+		// __linux is undef on APPLE MACOSX, MACOSX has BSD stuff
+		#elif __APPLE__
+			// zvzv note
+			// s/b MACOSX
+			#define PLATFORM_OSX11 1
+			#define PLATFORM_BSD 1
 		#else
-			#if __FreeBSD__ || __OpenBSD__ || __NetBSD__ || __APPLE__
+			// zvzv mod
+			// was: #if __FreeBSD__ || __OpenBSD__ || __NetBSD__ || __APPLE__
+			#if __FreeBSD__ || __OpenBSD__ || __NetBSD__
 				#define PLATFORM_BSD 1
 				#if __FreeBSD__
 					#define PLATFORM_FREEBSD 1
