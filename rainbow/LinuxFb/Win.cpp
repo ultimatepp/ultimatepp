@@ -49,6 +49,11 @@ bool FBProcessEvent(bool *quit)
 void FBSleep(int ms)
 {
 	pend = readevents(ms); //interruptable sleep
+
+	//keep queue busy, see SDLFb/Win.cpp for why
+	//this indicates that some stuff is pending, returning true in FBProcessEvent
+	//while nothing is actually processed
+	pend |= 4;
 }
 
 void FBUpdate(const Rect& inv)

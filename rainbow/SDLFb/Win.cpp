@@ -10,6 +10,20 @@ int height = 0;
 int width = 0;
 int bpp = 0;
 
+SDL_TimerID waketimer_id = 0;
+Uint32 WakeCb(Uint32 interval, void *param)
+{
+	//wake up message que, FIXME maybe it can be done better?
+	SDL_Event event;
+	event.type=SDL_USEREVENT;
+	SDL_PushEvent(&event);
+	return 0;
+}
+void ScheduleWakup()
+{
+	waketimer_id = SDL_AddTimer(20, WakeCb, NULL);
+}
+
 void FBQuitSession()
 {
 	SDL_Event event;
@@ -39,7 +53,15 @@ bool FBProcessEvent(bool *quit)
 
 void FBSleep(int ms)
 {
-	Sleep(ms); //sleep should be wakeable with input
+	SDL_Delay(ms); //sleep should be wakeable with input
+	//ProcessEvents needs to process sth from queue each now and then.
+	//if no input is generated, no TimerProc call is performed, because queue ws empty.
+	//win32 backend has WM_TIMER message, that gets posted automatically into queue each 10ms.
+	//we dont have means to define a 'background' timer in an efficient way
+	//which could wakeup queue with smaller intervall (10ms) than sleep (20ms).
+	//we could go long way with a rescheduled timer (expensive)
+	//or the short way, keeping queue busy after each sleep
+	WakeCb(0,0);
 }
 
 void FBUpdate(const Rect& inv)
@@ -82,7 +104,7 @@ void FBInit()
 	
 	Ctrl::InitFB();
 
-	if(SDL_Init(SDL_INIT_VIDEO) < 0)
+	if(SDL_Init(SDL_INIT_VIDEO/* | SDL_INIT_TIMER*/) < 0) //timer not needed, we post to queue directly
 	{
 		Cout() << Format("Couldn't initialize SDL: %s\n", SDL_GetError());
 		return;
@@ -110,6 +132,7 @@ void FBInit()
 
 void FBDeInit()
 {
+	SDL_RemoveTimer(waketimer_id);
 	Ctrl::ExitFB();
 	SDL_FreeSurface(screen);
 	SDL_Quit();
