@@ -424,6 +424,7 @@ template <class T> inline const T& ntl_max(const T& a, const T& b) { return a > 
 	const_iterator        end() const            { return B::End(); } \
 	void                  clear()                { B::Clear(); } \
 	size_type             size()                 { return B::GetCount(); } \
+	bool                  empty() const          { return B::IsEmpty(); } \
 
 #define STL_BI_COMPATIBILITY(C) \
 	typedef T             value_type; \
@@ -437,6 +438,7 @@ template <class T> inline const T& ntl_max(const T& a, const T& b) { return a > 
 	size_type             size()                 { return GetCount(); } \
 	typedef Iterator      iterator; \
 	typedef T&            reference; \
+	bool                  empty() const          { return IsEmpty(); } \
 	iterator              begin()                { return Begin(); } \
 	iterator              end()                  { return End(); } \
 
@@ -452,6 +454,7 @@ template <class T> inline const T& ntl_max(const T& a, const T& b) { return a > 
 	size_type             size()                 { return B::GetCount(); } \
 	typedef Iterator      iterator; \
 	typedef T&            reference; \
+	bool                  empty() const          { return B::IsEmpty(); } \
 	iterator              begin()                { return B::Begin(); } \
 	iterator              end()                  { return B::End(); } \
 
@@ -473,5 +476,7 @@ template <class T> inline const T& ntl_max(const T& a, const T& b) { return a > 
 	const_reference       front() const          { return (*this)[0]; } \
 	reference             back()                 { return Top(); } \
 	const_reference       back() const           { return Top(); } \
+	bool                  empty() const          { return IsEmpty(); } \
 	void                  push_back(const T& x)  { Add(x); } \
-	void                  pop_back()             { Drop(); }
+	void                  pop_back()             { Drop(); } \
+
