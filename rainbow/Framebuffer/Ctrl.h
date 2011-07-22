@@ -50,6 +50,9 @@ private:
 
 	void  SetOpen(bool b)               { isopen = b; }
 
+protected:
+	static int PaintLock;
+
 public:
 	static void DoMouseFB(int event, Point p, int zdelta = 0);
 	static bool DoKeyFB(dword key, int cnt);
@@ -70,5 +73,9 @@ public:
 
 	void DragRectDraw(const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
 	                  Color color, int type, int animation);
+
+	static bool FullWindowDrag;
+	
+	enum { DRAWDRAGRECT_SCREEN = 0x8000 };
 
 //$ };

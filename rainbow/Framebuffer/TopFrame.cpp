@@ -138,9 +138,25 @@ void TopWindowFrame::StartDrag()
 		return;
 	if(!sizeable && (dir.x || dir.y))
 		return;
-	SetCapture();
-	startrect = GetRect();
-	startpos = GetMousePos();
+	if(FullWindowDrag) {
+		SetCapture();
+		startrect = GetRect();
+		startpos = GetMousePos();
+	}
+	else {
+		Rect r = GetScreenRect();
+		RectTracker tr(*this);
+		tr.SetCursorImage(GetDragImage(dir))
+		  .MaxRect(framebuffer.GetSize())
+		  .MinSize(ComputeClient(minsize).GetSize())
+		  .Pattern(DRAWDRAGRECT_DASHED | DRAWDRAGRECT_SCREEN)
+		  .Animation();
+		PaintLock++;
+		r = tr.Track(r, dir.x < 0 ? ALIGN_LEFT : dir.x > 0 ? ALIGN_RIGHT : ALIGN_CENTER,
+		                dir.y < 0 ? ALIGN_TOP : dir.y > 0 ? ALIGN_BOTTOM : ALIGN_CENTER);
+		PaintLock--;
+		SetRect(r);
+	}
 	LLOG("START DRAG ---------------");
 }
 
@@ -184,17 +200,21 @@ void TopWindowFrame::MouseMove(Point, dword)
 	SetRect(r);
 }
 
-Image TopWindowFrame::CursorImage(Point p, dword)
+Image TopWindowFrame::GetDragImage(Point dir)
 {
-	if(!sizeable)
-		return Image::Arrow();
-	p = HasCapture() ? dir : GetDragMode(p);
 	static Image (*im[9])() = {
 		Image::SizeTopLeft, Image::SizeLeft, Image::SizeBottomLeft,
 		Image::SizeTop, Image::Arrow, Image::SizeBottom,
 		Image::SizeTopRight, Image::SizeRight, Image::SizeBottomRight,
 	};
-	return (*im[(p.x + 1) * 3 + (p.y + 1)])();
+	return (*im[(dir.x + 1) * 3 + (dir.y + 1)])();
+}
+
+Image TopWindowFrame::CursorImage(Point p, dword)
+{
+	if(!sizeable)
+		return Image::Arrow();
+	return GetDragImage(HasCapture() ? dir : GetDragMode(p));
 }
 
 END_UPP_NAMESPACE

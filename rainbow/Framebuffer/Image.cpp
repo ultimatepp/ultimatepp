@@ -114,6 +114,7 @@ Image Image::SizeRight() { return FBImg::sizeright(); }
 Image Image::SizeBottomLeft() { return FBImg::sizebottomleft(); }
 Image Image::SizeBottom() { return FBImg::sizebottom(); }
 Image Image::SizeBottomRight() { return FBImg::sizebottomright(); }
+Image Image::Hand() { return FBImg::hand(); }
 
 END_UPP_NAMESPACE
 

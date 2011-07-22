@@ -26,7 +26,8 @@ int            Ctrl::renderingMode = MODE_ANTIALIASED;
 bool           Ctrl::fbEndSession;
 int64          Ctrl::fbEventLoop;
 int64          Ctrl::fbEndSessionLoop;
-
+bool           Ctrl::FullWindowDrag;
+int            Ctrl::PaintLock;
 
 void Ctrl::SetDesktop(Ctrl& q)
 {
@@ -318,11 +319,23 @@ void Ctrl::DragRectDraw0(const Vector<Rect>& clip, const Rect& rect, int n, cons
 void Ctrl::DragRectDraw(const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                         Color color, int type, int animation)
 {
+	DDUMP(rect1);
+	DDUMP(rect2);
+	DDUMP(clip);
+	DDUMP(type);
+	DDUMP(animation);
 	static byte solid[] =  { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 	static byte normal[] = { 0xff, 0x00, 0xff, 0x00, 0xff, 0x00, 0xff, 0x00 };
 	static byte dashed[] = { 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 };
 	Point p = GetScreenView().TopLeft();
-	Vector<Rect> pr = Intersection(GetPaintRects(), clip.Offseted(p));
+	Vector<Rect> pr;
+	if(type & DRAWDRAGRECT_SCREEN) {
+		pr.Add(Rect(framebuffer.GetSize()));
+		type &= ~DRAWDRAGRECT_SCREEN;
+		p = Point(0, 0);
+	}
+	else
+		pr = Intersection(GetPaintRects(), clip.Offseted(p));
 	const byte *pattern = type == DRAWDRAGRECT_DASHED ? dashed :
 	                      type == DRAWDRAGRECT_NORMAL ? normal : solid;
 	RemoveCursor();
@@ -334,6 +347,25 @@ void Ctrl::DragRectDraw(const Rect& rect1, const Rect& rect2, const Rect& clip, 
 void Ctrl::DoPaint()
 {
 	LLOG("@ DoPaint");
+<<<<<<< .mine
+	if(!PaintLock) {
+		bool scroll = false;
+		if(desktop)
+			desktop->SyncScroll();
+		for(int i = 0; i < topctrl.GetCount(); i++)
+			topctrl[i]->SyncScroll();
+		if((invalid.GetCount() || scroll) && desktop) {
+			RemoveCursor();
+			RemoveCaret();
+			for(int phase = 0; phase < 2; phase++) {
+				DLOG("DoPaint invalid phase " << phase);
+				DDUMPC(invalid);
+				SystemDraw painter;
+				painter.Begin();
+				for(int i = 0; i < invalid.GetCount(); i++) {
+					painter.RectPath(invalid[i]);
+					AddUpdate(invalid[i]);
+=======
 	bool scroll = false;
 	if(desktop)
 		desktop->SyncScroll();
@@ -361,11 +393,24 @@ void Ctrl::DoPaint()
 					painter.End();
 					Subtract(invalid, r);
 					painter.ExcludeClip(r);
+>>>>>>> .r3695
 				}
+				painter.Painter::Clip();
+				for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
+					Rect r = topctrl[i]->GetRect();
+					Rect ri = GetClipBound(invalid, r);
+					if(!IsNull(ri)) {
+						painter.Clipoff(r);
+						topctrl[i]->UpdateArea(painter, ri - r.TopLeft());
+						painter.End();
+						Subtract(invalid, r);
+						painter.ExcludeClip(r);
+					}
+				}
+				Rect ri = GetClipBound(invalid, framebuffer.GetSize());
+				if(!IsNull(ri))
+					desktop->UpdateArea(painter, ri);
 			}
-			Rect ri = GetClipBound(invalid, framebuffer.GetSize());
-			if(!IsNull(ri))
-				desktop->UpdateArea(painter, ri);
 		}
 	}
 	DoUpdate();
@@ -389,7 +434,7 @@ void Ctrl::WndUpdate0r(const Rect& r)
 bool Ctrl::ProcessEvents(bool *quit)
 {
 	//LOGBLOCK("@ ProcessEvents");
-	MemoryCheckDebug();
+//	MemoryCheckDebug();
 	if(!ProcessEvent(quit))
 		return false;
 	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()));
@@ -569,10 +614,13 @@ void Ctrl::SetWndForeground0()
 {
 	GuiLock __;
 	ASSERT(IsOpen());
-	if(top && top->owner_window && !IsWndForeground())
+	if(IsWndForeground())
+		return;
+	if(top && top->owner_window)
 		top->owner_window->PutForeground();
 	PutForeground();
-	ActivateWnd();
+	if(this != focusCtrl)
+		ActivateWnd();
 }
 
 bool Ctrl::IsWndForeground() const
@@ -657,7 +705,7 @@ void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 	}
 	RemoveCursor();
 	RemoveCaret();
-	Rect sr = r.Offseted(GetScreenView().TopLeft());
+	Rect sr = r.Offseted(GetScreenRect().TopLeft());
 	Vector<Rect> pr = Intersection(GetPaintRects(), sr);
 	for(int i = 0; i < pr.GetCount(); i++) {
 		Rect r = pr[i];
