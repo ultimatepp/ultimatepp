@@ -95,7 +95,9 @@ class TopWindowFrame;
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <Framebuffer/Ctrl.h>
 
-#define GUIPLATFORM_PASTECLIP_DECLS
+#define GUIPLATFORM_PASTECLIP_DECLS \
+	bool dnd; \
+	friend struct DnDLoop; \
 
 #define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <Framebuffer/Top.h>
 

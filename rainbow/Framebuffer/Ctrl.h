@@ -47,6 +47,7 @@ private:
 	friend struct PaintProxy__;
 	friend class TopWindowFrame;
 	friend class SystemDraw;
+	friend struct DnDLoop;
 
 	void  SetOpen(bool b)               { isopen = b; }
 
@@ -73,6 +74,8 @@ public:
 
 	void DragRectDraw(const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
 	                  Color color, int type, int animation);
+
+	static Ctrl *FindMouseTopCtrl();
 
 	static bool FullWindowDrag;
 	

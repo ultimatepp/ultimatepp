@@ -16,14 +16,17 @@ Ctrl * Ctrl::GetDragAndDropSource()
 }
 
 struct DnDLoop : LocalLoop {
-	Image move, copy, reject;
 	const VectorMap<String, ClipData> *data;
-	Ptr<Ctrl> source;
-	int    action;
+	Vector<String> fmts;
 
-	void Sync();
+	Image move, copy, reject;
+	Ptr<Ctrl> target;
+	int    action;
+	byte   actions;
+
+	void   Sync();
 	String GetData(const String& f);
-	void Leave();
+	void   DnD(bool paste);
 
 	virtual void  LeftUp(Point, dword);
 	virtual bool  Key(dword, int);
@@ -33,20 +36,67 @@ struct DnDLoop : LocalLoop {
 
 Ptr<DnDLoop> dndloop;
 
-void DnDLoop::Leave()
+bool PasteClip::IsAvailable(const char *fmt) const
 {
-	GuiLock __; 
+	DDUMP(fmt);
+	GuiLock __;
+	return dnd ? dndloop && FindIndex(dndloop->fmts, fmt) >= 0
+	           : IsClipboardAvailable(fmt);
+}
+
+String DnDLoop::GetData(const String& f)
+{
+	GuiLock __;
+	int i = data->Find(f);
+	String d;
+	if(i >= 0)
+		d = (*data)[i].Render();
+	else
+		if(sDnDSource)
+			d = sDnDSource->GetDropData(f);
+	return d;
+}
+
+String PasteClip::Get(const char *fmt) const
+{
+	return dnd ? dndloop ? dndloop->GetData(fmt) : String() : ReadClipboard(fmt);
+}
+
+void PasteClip::GuiPlatformConstruct()
+{
+	dnd = false;
+}
+
+void DnDLoop::DnD(bool paste)
+{
+	PasteClip d;
+	d.paste = paste;
+	d.accepted = false;
+	d.allowed = (byte)actions;
+	d.action = GetCtrl() ? DND_COPY : DND_MOVE;
+	d.dnd = true;
+	if(target)
+		target->DnD(GetMousePos() - target->GetScreenRect().TopLeft(), d);
+	action = d.IsAccepted() ? d.GetAction() : DND_NONE;
 }
 
 void DnDLoop::Sync()
 {
-	GuiLock __; 
+	GuiLock __;
+
+	Ptr<Ctrl> t = FindMouseTopCtrl();
+	if(t != target)
+		if(target)
+			target->DnDLeave();
+	target = t;
+	DnD(false);
 }
 
 void DnDLoop::LeftUp(Point, dword)
 {
 	GuiLock __; 
 	LLOG("DnDLoop::LeftUp");
+	DnD(true);
 /*	if(target) {
 		LLOG("Sending XdndDrop to " << target);
 		XEvent e = ClientMsg(target, XdndDrop);
@@ -95,34 +145,21 @@ Image DnDLoop::CursorImage(Point, dword)
 	return action == DND_MOVE ? move : action == DND_COPY ? copy : reject;
 }
 
-String DnDLoop::GetData(const String& f)
-{
-	GuiLock __; 
-	int i = data->Find(f);
-	String d;
-	if(i >= 0)
-		d = (*data)[i].Render();
-	else
-		if(source)
-			d = source->GetDropData(f);
-	return d;
-}
-
 int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
                         const VectorMap<String, ClipData>& data)
 {
 	GuiLock __; 
 	DnDLoop d;
-	PNGEncoder().SaveFile("U://sample.png", sample); _DBG_
+	d.actions = actions;
 	d.reject = actions & DND_EXACTIMAGE ? CtrlCoreImg::DndNone() : MakeDragImage(CtrlCoreImg::DndNone(), sample);
-	PNGEncoder().SaveFile("U://reject.png", d.reject); _DBG_
 	if(actions & DND_COPY)
 		d.copy = actions & DND_EXACTIMAGE ? sample : MakeDragImage(CtrlCoreImg::DndCopy(), sample);
 	if(actions & DND_MOVE)
 		d.move = actions & DND_EXACTIMAGE ? sample : MakeDragImage(CtrlCoreImg::DndMoveX11(), sample);
 	d.SetMaster(*this);
 	d.data = &data;
-	d.source = this;
+	d.action = DND_NONE;
+	d.fmts = Split(fmts, ';');
 	dndloop = &d;
 	sDnDSource = this;
 	d.Run();

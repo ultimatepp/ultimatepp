@@ -32,6 +32,16 @@ void Ctrl::MouseEventFB(Ptr<Ctrl> t, int event, Point p, int zdelta)
 		t->PostInput();
 }
 
+Ctrl *Ctrl::FindMouseTopCtrl()
+{
+	for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
+		Ctrl *t = topctrl[i];
+		if(t->GetRect().Contains(fbmousepos))
+			return t->IsEnabled() ? t : NULL;
+	}
+	return desktop->IsEnabled() ? desktop : NULL;
+}
+
 void Ctrl::DoMouseFB(int event, Point p, int zdelta)
 {
 	fbmousepos = p;

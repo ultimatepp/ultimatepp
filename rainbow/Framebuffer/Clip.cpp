@@ -233,20 +233,6 @@ Vector<String> GetFiles(PasteClip& clip)
 	return f;
 }
 
-bool PasteClip::IsAvailable(const char *fmt) const
-{
-	return IsClipboardAvailable(fmt);
-}
-
-String PasteClip::Get(const char *fmt) const
-{
-	return ReadClipboard(fmt);
-}
-
-void PasteClip::GuiPlatformConstruct()
-{
-}
-
 END_UPP_NAMESPACE
 
 #endif
