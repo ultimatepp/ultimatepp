@@ -11,6 +11,7 @@ NAMESPACE_UPP
 int64 Resources::currentSerialId = -1;
 ArrayMap<int64, Texture> Resources::textures;
 VectorMap<String, OpenGLFont> Resources::fonts;
+Vector<DragRect> SystemDraw::dragRect;
 
 float GetFps()
 {
