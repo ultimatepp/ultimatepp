@@ -4,9 +4,9 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x) //DLOG(x)
-#define LDUMP(x) //DDUMP(x)
-#define LDUMPC(x) //DDUMPC(x)
+#define LLOG(x)   DLOG(x)
+#define LDUMP(x)  DDUMP(x)
+#define LDUMPC(x) DDUMPC(x)
 
 ImageBuffer    Ctrl::framebuffer;
 Vector<Rect>   Ctrl::invalid;
@@ -419,7 +419,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	ASSERT(IsMainThread());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
-	LLOG("Entering event loop at level " << LoopLevel << BeginIndent);
+	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
 	Ptr<Ctrl> ploop;
 	if(ctrl) {
 		ploop = LoopCtrl;
@@ -447,7 +447,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	if(ctrl)
 		LoopCtrl = ploop;
 	LoopLevel--;
-	LLOG(EndIndent << "Leaving event loop ");
+	LLOG(LOG_END << "Leaving event loop ");
 }
 
 void Ctrl::GuiSleep0(int ms)
