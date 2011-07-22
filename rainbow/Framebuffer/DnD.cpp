@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 // --------------------------------------------------------------------------------------------
 
@@ -38,7 +38,6 @@ Ptr<DnDLoop> dndloop;
 
 bool PasteClip::IsAvailable(const char *fmt) const
 {
-	DDUMP(fmt);
 	GuiLock __;
 	return dnd ? dndloop && FindIndex(dndloop->fmts, fmt) >= 0
 	           : IsClipboardAvailable(fmt);
@@ -76,7 +75,7 @@ void DnDLoop::DnD(bool paste)
 	d.action = GetCtrl() ? DND_COPY : DND_MOVE;
 	d.dnd = true;
 	if(target)
-		target->DnD(GetMousePos() - target->GetScreenRect().TopLeft(), d);
+		target->DnD(GetMousePos(), d);
 	action = d.IsAccepted() ? d.GetAction() : DND_NONE;
 }
 
@@ -97,30 +96,6 @@ void DnDLoop::LeftUp(Point, dword)
 	GuiLock __; 
 	LLOG("DnDLoop::LeftUp");
 	DnD(true);
-/*	if(target) {
-		LLOG("Sending XdndDrop to " << target);
-		XEvent e = ClientMsg(target, XdndDrop);
-		e.xclient.data.l[0] = src;
-		e.xclient.data.l[1] = 0;
-		e.xclient.data.l[2] = Xeventtime;
-		Xdnd_waiting_finished = true;
-		XSendEvent(Xdisplay, target, XFalse, 0, &e);
-		XFlush(Xdisplay);
-		int timeout = GetTickCount();
-		LLOG("Waiting for XdndFinished");
-		while(Xdnd_waiting_finished && GetTickCount() - timeout < 200) {
-			GuiSleep(0);
-			ProcessEvents();
-		}
-		LLOG("Waiting finished " << GetTickCount() - timeout << "ms");
-		if(Xdnd_waiting_status) {
-			LLOG("XdndFinished timeout");
-			Xdnd_status = DND_NONE;
-			Xdnd_waiting_finished = false;
-		}
-		else
-			LLOG("XdndFinished recieved");
-	}*/
 	EndLoop();
 }
 
@@ -150,7 +125,7 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 {
 	GuiLock __; 
 	DnDLoop d;
-	d.actions = actions;
+	d.actions = (byte)actions;
 	d.reject = actions & DND_EXACTIMAGE ? CtrlCoreImg::DndNone() : MakeDragImage(CtrlCoreImg::DndNone(), sample);
 	if(actions & DND_COPY)
 		d.copy = actions & DND_EXACTIMAGE ? sample : MakeDragImage(CtrlCoreImg::DndCopy(), sample);
