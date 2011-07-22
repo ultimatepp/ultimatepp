@@ -16,7 +16,6 @@ struct App : public Ctrl {
 	void Paint(Draw& w)
 	{
 		Size sz = GetSize();
-		DDUMP(sz);
 		w.DrawRect(0, 0, sz.cx, sz.cy, SWhite);
 		w.DrawRect(10, 10, 30, 30, SRed);
 		w.DrawLine(45, 45, 80, 120, 4, Blue);

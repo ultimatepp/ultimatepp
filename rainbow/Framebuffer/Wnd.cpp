@@ -4,9 +4,9 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)   DLOG(x)
-#define LDUMP(x)  DDUMP(x)
-#define LDUMPC(x) DDUMPC(x)
+#define LLOG(x)   //DLOG(x)
+#define LDUMP(x)  //DDUMP(x)
+#define LDUMPC(x) //DDUMPC(x)
 
 ImageBuffer    Ctrl::framebuffer;
 Vector<Rect>   Ctrl::invalid;
