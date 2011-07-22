@@ -240,7 +240,9 @@ ViewDraw::ViewDraw(Ctrl *ctrl)
 
 ViewDraw::~ViewDraw()
 {
+	FBInitUpdate();
 	Ctrl::DoUpdate();
+	FBFlush();
 //	Ctrl::invalid.Clear();
 }
 
@@ -259,7 +261,6 @@ void Ctrl::DoUpdate()
 	}
 #endif
 	update.Clear();
-	FBFlush();
 //	Sleep(1000);
 }
 
@@ -376,6 +377,7 @@ void Ctrl::WndUpdate0r(const Rect& r)
 	Vector<Rect> h;
 	h <<= invalid;
 	invalid = Intersect(invalid, rr, dummy);
+	FBInitUpdate();
 	DoPaint();
 	invalid <<= h;
 	Subtract(invalid, rr);
@@ -393,6 +395,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 	TimerProc(GetTickCount());
 	DLOG("TimerProc elapsed: " << tm);
 	SweepMkImageCache();
+	FBInitUpdate();
 	DoPaint();
 	FBFlush();
 	return true;

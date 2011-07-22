@@ -86,6 +86,11 @@ void fbUpdate(HDC hdc, const Rect& r_)
 	                    ~framebuffer, (BITMAPINFO *)~data, DIB_RGB_COLORS);
 }
 
+void FBInitUpdate()
+{
+
+}
+
 void FBUpdate(const Rect& r)
 {
 	LLOG("FBUpdate " << r);

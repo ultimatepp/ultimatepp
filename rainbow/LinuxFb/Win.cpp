@@ -216,6 +216,11 @@ void FBSleep(int ms)
 	pend |= 4;
 }
 
+void FBInitUpdate()
+{
+
+}
+
 void FBUpdate(const Rect& inv)
 {
 	if(switched_away) return; //backdraw

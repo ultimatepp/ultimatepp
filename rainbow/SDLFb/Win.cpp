@@ -64,10 +64,15 @@ void FBSleep(int ms)
 	WakeCb(0,0);
 }
 
+void FBInitUpdate()
+{
+	if(SDL_MUSTLOCK(screen))
+		SDL_LockSurface(screen);
+}
+
 void FBUpdate(const Rect& inv)
 {
 	//The invalidated areas accumulate in the update region until the region is processed when the next WM_PAINT message occurs
-	SDL_LockSurface(screen);
 	const ImageBuffer& framebuffer = Ctrl::GetFrameBuffer();
 
 #if 1
@@ -88,14 +93,13 @@ void FBUpdate(const Rect& inv)
 		memcpy(((RGBA*)screen->pixels) + o, (~framebuffer) + o, ssz.cx * sizeof(RGBA));
 	}
 #endif
-
-	SDL_UnlockSurface(screen);
-	SDL_Flip(screen);
 }
 
 void FBFlush()
 {
-	
+	if(SDL_MUSTLOCK(screen))
+		SDL_UnlockSurface(screen);
+	SDL_Flip(screen);
 }
 
 void FBInit()

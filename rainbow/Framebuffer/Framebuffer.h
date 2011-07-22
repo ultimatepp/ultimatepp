@@ -104,6 +104,7 @@ class TopWindowFrame;
 bool FBIsWaitingEvent();
 bool FBProcessEvent(bool *quit);
 void FBSleep(int ms);
+void FBInitUpdate();
 void FBUpdate(const Rect& area);
 void FBFlush();
 void FBQuitSession();
