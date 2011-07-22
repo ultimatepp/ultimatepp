@@ -1582,7 +1582,8 @@ void FileSel::AddPlaceRaw(const String& path, const Image& m, const String& name
 
 FileSel& FileSel::AddPlace(const String& path, const Image& m, const String& name)
 {
-	AddPlaceRaw(NormalizePath(path), m, name);
+	if(path.GetCount())
+		AddPlaceRaw(NormalizePath(path), m, name);
 	return *this;
 }
 
