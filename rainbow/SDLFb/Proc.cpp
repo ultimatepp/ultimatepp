@@ -16,6 +16,9 @@ SDL_Surface *CreateScreen(int w, int h, int bpp, int flags)
 	return screen;
 }
 
+//cant use these, because SDL_PumpEvents gets called for each SDL_PollEvent, which recalculates KeyStates
+//but we need them to remain constant from upp layer POV
+#if 0
 //GetModState ??
 bool GetShift()       { uint8* ka = SDL_GetKeyState(NULL); return ka[SDLK_LSHIFT] || ka[SDLK_RSHIFT]; }
 bool GetCtrl()        { uint8* ka = SDL_GetKeyState(NULL); return ka[SDLK_LCTRL]  || ka[SDLK_RCTRL]; }
@@ -24,6 +27,38 @@ bool GetCapsLock()    { uint8* ka = SDL_GetKeyState(NULL); return ka[SDLK_CAPSLO
 bool GetMouseLeft()   { return (SDL_GetMouseState(NULL,NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)); }
 bool GetMouseRight()  { return (SDL_GetMouseState(NULL,NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT)); }
 bool GetMouseMiddle() { return (SDL_GetMouseState(NULL,NULL) & SDL_BUTTON(SDL_BUTTON_MIDDLE)); }
+#else
+
+dword mouseb = 0;
+dword modkeys = 0;
+
+enum KM {
+	KM_NONE  = 0x00,
+
+	KM_LSHIFT= 0x01,
+	KM_RSHIFT= 0x02,
+	KM_LCTRL = 0x04,
+	KM_RCTRL = 0x08,
+	KM_LALT  = 0x10,
+	KM_RALT  = 0x20,
+
+	KM_CAPS  = 0x40,
+	KM_NUM   = 0x80,
+	
+	KM_CTRL = KM_LCTRL | KM_RCTRL,
+	KM_SHIFT = KM_LSHIFT | KM_RSHIFT,
+	KM_ALT = KM_LALT | KM_RALT,
+};
+
+bool GetMouseLeft()   { return mouseb & (1<<0); }
+bool GetMouseRight()  { return mouseb & (1<<1); }
+bool GetMouseMiddle() { return mouseb & (1<<2); }
+bool GetShift()       { return modkeys & KM_SHIFT; }
+bool GetCtrl()        { return modkeys & KM_CTRL; }
+bool GetAlt()         { return modkeys & KM_ALT; }
+bool GetCapsLock()    { return modkeys & KM_CAPS; }
+
+#endif
 
 dword fbKEYtoK(dword chr) {
 	if(chr == SDLK_TAB)
@@ -57,6 +92,16 @@ void HandleSDLEvent(SDL_Event* event)
 			bool b = false;
 			dword keycode = 0;
 			if(event->type == SDL_KEYDOWN) {
+				switch(event->key.keysym.sym)
+				{
+					case SDLK_LSHIFT: modkeys |= KM_LSHIFT; break;
+					case SDLK_RSHIFT: modkeys |= KM_RSHIFT; break;	
+					case SDLK_LCTRL: modkeys |= KM_LCTRL; break;
+					case SDLK_RCTRL: modkeys |= KM_RCTRL; break;	
+					case SDLK_LALT: modkeys |= KM_LALT; break;
+					case SDLK_RALT: modkeys |= KM_RALT; break;	
+				}
+				
 				keycode = fbKEYtoK((dword)event->key.keysym.sym);
 				if(keycode != K_SPACE) //dont send space on keydown
 					b = Ctrl::DoKeyFB(keycode, 1);
@@ -69,6 +114,16 @@ void HandleSDLEvent(SDL_Event* event)
 			else
 			if(event->type == SDL_KEYUP)
 			{
+				switch(event->key.keysym.sym)
+				{
+					case SDLK_LSHIFT: modkeys &= ~KM_LSHIFT; break;
+					case SDLK_RSHIFT: modkeys &= ~KM_RSHIFT; break;	
+					case SDLK_LCTRL: modkeys &= ~KM_LCTRL; break;
+					case SDLK_RCTRL: modkeys &= ~KM_RCTRL; break;	
+					case SDLK_LALT: modkeys &= ~KM_LALT; break;
+					case SDLK_RALT: modkeys &= ~KM_RALT; break;	
+				}
+
 				keycode = fbKEYtoK((dword)event->key.keysym.sym) | K_KEYUP;
 				b = Ctrl::DoKeyFB(keycode, 1);
 			}
@@ -100,9 +155,9 @@ void HandleSDLEvent(SDL_Event* event)
 				isdblclick[bi] = 0; //prepare for repeat
 				switch(bi)
 				{
-					case SDL_BUTTON_LEFT: Ctrl::DoMouseFB(Ctrl::LEFTDOWN, p); break;
-					case SDL_BUTTON_RIGHT: Ctrl::DoMouseFB(Ctrl::RIGHTDOWN, p); break;
-					case SDL_BUTTON_MIDDLE: Ctrl::DoMouseFB(Ctrl::MIDDLEDOWN, p); break;
+					case SDL_BUTTON_LEFT: mouseb |= (1<<0); Ctrl::DoMouseFB(Ctrl::LEFTDOWN, p); break;
+					case SDL_BUTTON_RIGHT: mouseb |= (1<<1); Ctrl::DoMouseFB(Ctrl::RIGHTDOWN, p); break;
+					case SDL_BUTTON_MIDDLE: mouseb |= (1<<2); Ctrl::DoMouseFB(Ctrl::MIDDLEDOWN, p); break;
 					case SDL_BUTTON_WHEELUP: Ctrl::DoMouseFB(Ctrl::MOUSEWHEEL, p, +120); break;
 					case SDL_BUTTON_WHEELDOWN: Ctrl::DoMouseFB(Ctrl::MOUSEWHEEL, p, -120); break;
 				}
@@ -117,9 +172,9 @@ void HandleSDLEvent(SDL_Event* event)
 			Point p(event->button.x, event->button.y);
 			switch(bi)
 			{
-				case SDL_BUTTON_LEFT: Ctrl::DoMouseFB(Ctrl::LEFTUP, p); break;
-				case SDL_BUTTON_RIGHT: Ctrl::DoMouseFB(Ctrl::RIGHTUP, p); break;
-				case SDL_BUTTON_MIDDLE: Ctrl::DoMouseFB(Ctrl::MIDDLEUP, p); break;
+				case SDL_BUTTON_LEFT: mouseb &= ~(1<<0); Ctrl::DoMouseFB(Ctrl::LEFTUP, p); break;
+				case SDL_BUTTON_RIGHT: mouseb &= ~(1<<1); Ctrl::DoMouseFB(Ctrl::RIGHTUP, p); break;
+				case SDL_BUTTON_MIDDLE: mouseb &= ~(1<<2); Ctrl::DoMouseFB(Ctrl::MIDDLEUP, p); break;
 				case SDL_BUTTON_WHEELUP: Ctrl::DoMouseFB(Ctrl::MOUSEWHEEL, p, +120); break;
 				case SDL_BUTTON_WHEELDOWN: Ctrl::DoMouseFB(Ctrl::MOUSEWHEEL, p, -120); break;
 			}
