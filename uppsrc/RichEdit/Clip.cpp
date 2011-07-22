@@ -124,7 +124,8 @@ void RichEdit::DragAndDrop(Point p, PasteClip& d)
 			return;
 		}
 	}
-	if(!d.IsAccepted()) dropcursor = -1;
+	if(!d.IsAccepted())
+		dropcursor = -1;
 	Rect r = Null;
 	if(dropcursor >= 0 && dropcursor < text.GetLength()) {
 		RichCaret pr = text.GetCaret(dropcursor, pagesz);
