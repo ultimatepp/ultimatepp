@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)       LOG(x)
+#define LLOG(x) //DLOG(x)
 
 bool GetShift()       { return !!(GetKeyState(VK_SHIFT) & 0x8000); }
 bool GetCtrl()        { return !!(GetKeyState(VK_CONTROL) & 0x8000); }
@@ -152,7 +152,7 @@ LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 			bool b = false;
 			if(keycode)
 				b = Ctrl::DoKeyFB(keycode, LOWORD(lParam));
-//			LOG("key processed = " << b);
+//			LLOG("key processed = " << b);
 //			if(b || (message == WM_SYSKEYDOWN || message == WM_SYSKEYUP)
 //			&& wParam != VK_F4 && !PassWindowsKey((dword)wParam)) // 17.11.2003 Mirek -> invoke system menu
 //				return 0L;

@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)
+#define LLOG(x) //DLOG(x)
 
 HWND fbHWND;
 

@@ -2,7 +2,8 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x) LOG(x)
+#define LLOG(x) //DLOG(x)
+#define LDUMP(x) //DDUMP(x)
 
 static Point fbmousepos;
 
@@ -122,15 +123,15 @@ void Ctrl::SyncCaret()
 
 void Ctrl::CursorSync()
 {
-	DLOG("@ CursorSync");
+	LLOG("@ CursorSync");
 	Point p = GetMousePos() - fbCursorImage.GetHotSpot();
 	Rect cr = Null;
 	if(focusCtrl && (((GetTickCount() - fbCaretTm) / 500) & 1) == 0)
 		cr = (RectC(focusCtrl->caretx, focusCtrl->carety, focusCtrl->caretcx, focusCtrl->caretcy)
 		      + focusCtrl->GetScreenView().TopLeft()) & focusCtrl->GetScreenView();
-	DDUMP(GetTickCount());
+	LDUMP(GetTickCount());
 	if(fbCursorPos != p || cr != fbCaretRect) {
-		DDUMP(fbCaretRect);
+		LDUMP(fbCaretRect);
 		RemoveCursor();
 		RemoveCaret();
 
@@ -157,7 +158,7 @@ void Ctrl::CursorSync()
 		}
 
 		Over(framebuffer, p, fbCursorImage, sz);
-		DLOG("Cursor: " << p << ", rect " << tr);
+		LLOG("Cursor: " << p << ", rect " << tr);
 		AddUpdate(tr);
 	}
 }

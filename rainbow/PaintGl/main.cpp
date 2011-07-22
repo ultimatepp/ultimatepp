@@ -3,6 +3,9 @@
 
 using namespace Upp;
 
+#define LLOG(x)       //LOG(x)
+#define LDUMP(x)      //DDUMP(x)
+
 struct App : public Ctrl {
 	EditString x;
 	ArrayCtrl a, b;
@@ -12,9 +15,9 @@ struct App : public Ctrl {
 	
 	void Paint(Draw& w)
 	{
-		LOG("Paint");
+		LLOG("Paint");
 		Size sz = GetSize();
-		DDUMP(sz);
+		LDUMP(sz);
 		w.DrawRect(0, 0, sz.cx, sz.cy, SRed);
 		w.DrawRect(10, 10, 30, 30, SRed);
 		w.DrawLine(45, 45, 80, 120, 4, Blue);

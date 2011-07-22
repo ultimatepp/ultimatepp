@@ -64,7 +64,7 @@ void TopWindow::SyncRect()
 void TopWindow::Open(Ctrl *owner)
 {
 	GuiLock __;
-	DLOG("Open " << Upp::Name(owner));
+	LLOG("Open " << Upp::Name(owner));
 	Rect r = GetRect();
 	if(r.IsEmpty())
 		SetRect(GetDefaultWindowRect());
