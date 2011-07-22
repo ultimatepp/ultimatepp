@@ -175,13 +175,9 @@ void handle_keyboard()
 		keyup = (buf[i] & 0x80)?(K_KEYUP):(0);
 		bool b;
 
-		//char c = ((!keyup)?'=':' ');
-		//fprintf(stderr, "KEY %c: <%c> (%X) [%X]\n", c, keycode, keycode, buf[i]);
-
 		SaveModKeys(keycode, !keyup);
 
-		//Ctrl+Alt+FN for vt switch ??
-
+		//we dont support both sides, fall back to left
 		switch(keycode)
 		{
 			case SCANCODE_RIGHTALT: keycode = SCANCODE_LEFTALT; break;	
@@ -190,10 +186,33 @@ void handle_keyboard()
 		}
 
 		dword uppcode = fbKEYtoK(keycode) | keyup;
-		//fprintf(stderr, "UPP: %X - %X\n", uppcode, q);
 
 		if(!keyup && uppcode == K_SPACE)
 			uppcode = 0; //prevent double send with unicode
+
+		//vtswitch
+		int vtck = uppcode & (K_DELTA | 0xFFFF);
+		switch(vtck) {
+		    case K_F11:
+		    case K_F12:
+				vtck -= 18; //dirty hack: after F10 doesnt come F11, see vgakeyboard.h
+		    case K_F1:
+		    case K_F2:
+		    case K_F3:
+		    case K_F4:
+		    case K_F5:
+		    case K_F6:
+		    case K_F7:
+		    case K_F8:
+		    case K_F9:
+		    case K_F10:
+			if(GetCtrl() && GetAlt()) {
+				int ii = vtck - K_F1 + 1;
+				if(!keyup)
+					switchvt(ii);
+				return;
+			}
+		}
 
 		//first, the upp keycode
 		if(uppcode)
@@ -208,47 +227,9 @@ void handle_keyboard()
 		}
 
 		//helper quit
-#if _DD
-		static int ii = 0;
-#endif
-		if(uppcode == (K_SHIFT_CTRL | K_ESCAPE)
-#ifdef _DD 
-			|| (++ii >= 100)
-#endif
-		)
+		if(uppcode == (K_SHIFT_CTRL | K_ESCAPE))
 			Ctrl::EndSession();
 	}
-}
-
-//returns 0 if timeout, 1 for mouse, 2 for keyboard
-//common for waitforevents and sleep 
-int readevents(int ms)
-{
-	fd_set fdset;
-	int max_fd;
-	static struct timeval to;
-	to.tv_sec = ms / 1000;
-	to.tv_usec = ms % 1000 * 1000;
-
-	FD_ZERO(&fdset);
-	max_fd = 0;
-	if(mouse_fd >= 0) {
-		FD_SET(mouse_fd, &fdset);
-		if(max_fd < mouse_fd) max_fd = mouse_fd;
-	}
-	if(keyb_fd >= 0) {
-		FD_SET(keyb_fd, &fdset);
-		if(max_fd < keyb_fd) max_fd = keyb_fd;
-	}
-	if(select(max_fd+1, &fdset, NULL, NULL, &to) > 0) {
-		if(mouse_fd >= 0) {
-			if(FD_ISSET(mouse_fd, &fdset)) return 1;
-		}
-		if(keyb_fd >= 0) {
-			if(FD_ISSET(keyb_fd, &fdset)) return 2;
-		}
-	}
-	return 0;
 }
 
 END_UPP_NAMESPACE

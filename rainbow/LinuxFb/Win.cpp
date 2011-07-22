@@ -21,52 +21,7 @@ dword mouseb = 0;
 int keyb_fd = -1;
 int cvt = -1;
 
-void FBQuitSession()
-{
-	Ctrl::EndSession();
-}
-
-int pend = 0;
-
-bool FBIsWaitingEvent()
-{
-	pend = readevents(0);
-	return pend > 0;
-}
-
-bool FBProcessEvent(bool *quit)
-{
-	if(pend)
-	{
-		if(pend & 1) handle_mouse();
-		if(pend & 2) handle_keyboard();
-		pend = 0; //need to reset, since with repeated call is not updated here, would stuck
-		return true;
-	}
-	return false;
-}
-
-void FBSleep(int ms)
-{
-	pend = readevents(ms); //interruptable sleep
-
-	//keep queue busy, see SDLFb/Win.cpp for why
-	//this indicates that some stuff is pending, returning true in FBProcessEvent
-	//while nothing is actually processed
-	pend |= 4;
-}
-
-void FBUpdate(const Rect& inv)
-{
-	//FIXME accelerate
-	const ImageBuffer& framebuffer = Ctrl::GetFrameBuffer();
-	memcpy(fbp, ~framebuffer, framebuffer.GetLength() * sizeof(RGBA));
-}
-
-void FBFlush()
-{
-
-}
+//
 
 int oldvt;
 struct termios oldtermios;
@@ -120,6 +75,48 @@ int entervt()
 	return 0;
 }
 
+void switchvt_pre()
+{
+	ioctl(keyb_fd, KDSETMODE, KD_TEXT);
+	ioctl(keyb_fd, VT_UNLOCKSWITCH, 1);
+}
+
+void switchvt_post()
+{
+	ioctl(keyb_fd, VT_LOCKSWITCH, 1);
+	ioctl(keyb_fd, KDSETMODE, KD_GRAPHICS);
+}
+
+int switched_away = 0;
+
+void switchvt(int ii)
+{
+	struct vt_stat vtst;
+
+	/* Figure out whether or not we're switching to a new console */
+	if(ioctl(keyb_fd, VT_GETSTATE, &vtst) < 0)
+	{
+		fprintf(stderr, "Error: could not read tty state");
+		return;	
+	}
+	if(ii == vtst.v_active)
+		return;
+
+	LLOG("trying to switch to VT " << ii);
+
+	GuiLock __;
+
+	switchvt_pre();
+
+	if(ioctl(keyb_fd, VT_ACTIVATE, ii) == 0) {
+		ioctl(keyb_fd, VT_WAITACTIVE, ii);
+		switched_away = 1;
+		return;
+	}
+
+	switchvt_post();
+}
+
 void leavevt()
 {
 	if(oldmode < 0) return;
@@ -139,6 +136,97 @@ void leavevt()
 
 	if(oldvt > 0)
 		ioctl(keyb_fd, VT_ACTIVATE, oldvt);
+}
+
+int pend = 0;
+
+//returns 0 if timeout, 1 for mouse, 2 for keyboard
+//common for waitforevents and sleep 
+int readevents(int ms)
+{
+	fd_set fdset;
+	int max_fd;
+	static struct timeval to;
+	to.tv_sec = ms / 1000;
+	to.tv_usec = ms % 1000 * 1000;
+
+	if(switched_away) {
+		struct vt_stat vtst;
+		GuiLock __;
+		if((ioctl(keyb_fd, VT_GETSTATE, &vtst) == 0) &&
+		     vtst.v_active == cvt) {
+			switched_away = 0;
+			switchvt_post();
+		}
+	}
+
+	FD_ZERO(&fdset);
+	max_fd = 0;
+	if(mouse_fd >= 0) {
+		FD_SET(mouse_fd, &fdset);
+		if(max_fd < mouse_fd) max_fd = mouse_fd;
+	}
+	if(keyb_fd >= 0) {
+		FD_SET(keyb_fd, &fdset);
+		if(max_fd < keyb_fd) max_fd = keyb_fd;
+	}
+	if(select(max_fd+1, &fdset, NULL, NULL, &to) > 0) {
+		if(mouse_fd >= 0) {
+			if(FD_ISSET(mouse_fd, &fdset)) return 1;
+		}
+		if(keyb_fd >= 0) {
+			if(FD_ISSET(keyb_fd, &fdset)) return 2;
+		}
+	}
+	return 0;
+}
+
+//
+
+void FBQuitSession()
+{
+	Ctrl::EndSession();
+}
+
+bool FBIsWaitingEvent()
+{
+	pend = readevents(0);
+	return pend > 0;
+}
+
+bool FBProcessEvent(bool *quit)
+{
+	if(pend)
+	{
+		if(pend & 1) handle_mouse();
+		if(pend & 2) handle_keyboard();
+		pend = 0; //need to reset, since with repeated call is not updated here, would stuck
+		return true;
+	}
+	return false;
+}
+
+void FBSleep(int ms)
+{
+	pend = readevents(ms); //interruptable sleep
+
+	//keep queue busy, see SDLFb/Win.cpp for why
+	//this indicates that some stuff is pending, returning true in FBProcessEvent
+	//while nothing is actually processed
+	pend |= 4;
+}
+
+void FBUpdate(const Rect& inv)
+{
+	if(switched_away) return; //backdraw
+	//FIXME accelerate
+	const ImageBuffer& framebuffer = Ctrl::GetFrameBuffer();
+	memcpy(fbp, ~framebuffer, framebuffer.GetLength() * sizeof(RGBA));
+}
+
+void FBFlush()
+{
+
 }
 
 void FBInit(const String& fbdevice)
@@ -255,16 +343,19 @@ void FBInit(const String& fbdevice)
 
 	if(keyb_fd < 0) {
 		LLOG("Using already assigned VT, must not detach");
-		struct vt_stat vtstate;
+		struct vt_stat vtst;
 
 		keyb_fd = open("/dev/tty", O_RDWR);
 
-		if(ioctl(keyb_fd, VT_GETSTATE, &vtstate) < 0) {
+		if(ioctl(keyb_fd, VT_GETSTATE, &vtst) < 0) {
 			cvt = 0;
 		} else {
-			cvt = vtstate.v_active;
+			cvt = vtst.v_active;
 		}
 	}
+
+	if(cvt>0)
+		fprintf(stdout, "started on VT %d\n", cvt);
 
 	ASSERT(keyb_fd>=0);
 	oldmode = -1;
