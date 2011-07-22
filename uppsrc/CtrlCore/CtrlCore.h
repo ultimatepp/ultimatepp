@@ -1468,9 +1468,10 @@ public:
 	RectTracker&    Clip(const Rect& c)            { clip = c; return *this; }
 	RectTracker&    Width(int n)                   { width = n; return *this; }
 	RectTracker&    SetColor(Color c)              { color = c; return *this; }
-//	RectTracker&    Pattern(uint64 p)              { pattern = p; return *this; }
-	RectTracker&    Dashed();
-	RectTracker&    Solid();
+	RectTracker&    Pattern(int p)                 { pattern = p; return *this; }
+	RectTracker&    Dashed()                       { return Pattern(DRAWDRAGRECT_DASHED); }
+	RectTracker&    Solid()                        { return Pattern(DRAWDRAGRECT_SOLID); }
+	RectTracker&    Normal()                       { return Pattern(DRAWDRAGRECT_NORMAL); }
 	RectTracker&    Animation(int step_ms = 40)    { animation = step_ms; return *this; }
 	RectTracker&    KeepRatio(bool b)              { keepratio = b; return *this; }
 	RectTracker&    Round(Rounder& r)              { rounder = &r; return *this; }

@@ -54,9 +54,6 @@ RectTracker::RectTracker(Ctrl& master)
 
 RectTracker::~RectTracker() {}
 
-RectTracker& RectTracker::Dashed() { pattern = DRAWDRAGRECT_DASHED; return *this; }
-RectTracker& RectTracker::Solid()  { pattern = DRAWDRAGRECT_SOLID; return *this; }
-
 void RectTracker::DrawRect(Rect r1, Rect r2)
 {
 	if(ty < 0) {
