@@ -5,6 +5,7 @@
 NAMESPACE_UPP
 
 #define LLOG(x)  // LOG(x)
+#define LDUMP(x) //DDUMP(x)
 
 TopWindowFrame::TopWindowFrame()
 {
@@ -140,7 +141,7 @@ void TopWindowFrame::StartDrag()
 	SetCapture();
 	startrect = GetRect();
 	startpos = GetMousePos();
-	DLOG("START DRAG ---------------");
+	LLOG("START DRAG ---------------");
 }
 
 void TopWindowFrame::GripResize()
@@ -163,8 +164,8 @@ void TopWindowFrame::LeftDouble(Point p, dword keyflags)
 
 void TopWindowFrame::MouseMove(Point, dword)
 {
-	DDUMP(HasWndCapture());
-	DDUMP(HasCapture());
+	LDUMP(HasWndCapture());
+	LDUMP(HasCapture());
 	if(!HasCapture())
 		return;
 	Size msz = ComputeClient(minsize).GetSize();

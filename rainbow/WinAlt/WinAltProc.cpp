@@ -308,7 +308,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 				SyncCaret();
 				if(_this) PostInput();
 			}
-//			LOG("key processed = " << b);
+//			LLOG("key processed = " << b);
 			if(b || (message == WM_SYSKEYDOWN || message == WM_SYSKEYUP)
 			&& wParam != VK_F4 && !PassWindowsKey((dword)wParam)) // 17.11.2003 Mirek -> invoke system menu
 				return 0L;

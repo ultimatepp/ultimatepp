@@ -4,7 +4,9 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)
+#define LLOG(x) //DLOG(x)
+#define LDUMP(x) //DDUMP(x)
+#define LDUMPC(x) //DDUMPC(x)
 
 ImageBuffer    Ctrl::framebuffer;
 Vector<Rect>   Ctrl::invalid;
@@ -60,10 +62,10 @@ void Ctrl::InitFB()
 void Ctrl::EndSession()
 {
 	GuiLock __;
-	DLOG("Ctrl::EndSession");
+	LLOG("Ctrl::EndSession");
 	fbEndSession = true;
 	fbEndSessionLoop = fbEventLoop;
-	DDUMP(fbEndSessionLoop);
+	LDUMP(fbEndSessionLoop);
 }
 
 void Ctrl::ExitFB()
@@ -118,7 +120,7 @@ Ctrl *Ctrl::GetOwner()
 	int q = FindTopCtrl();
 	if(q > 0 && topctrl[q]->top) {
 		Ctrl *x = topctrl[q]->top->owner_window;
-		DDUMP(Upp::Name(x));
+		LDUMP(Upp::Name(x));
 		return dynamic_cast<TopWindowFrame *>(x) ? x->GetOwner() : x;
 	}
 	return NULL;
@@ -169,13 +171,13 @@ bool Ctrl::IsWaitingEvent()
 
 void Ctrl::AddUpdate(const Rect& rect)
 {
-	DLOG("@AddUpdate " << rect);
+	LLOG("@AddUpdate " << rect);
 	AddRefreshRect(update, rect);
 }
 
 void Ctrl::AddInvalid(const Rect& rect)
 {
-	DLOG("@AddInvalid " << rect);
+	LLOG("@AddInvalid " << rect);
 	AddRefreshRect(invalid, rect);
 }
 
@@ -190,7 +192,7 @@ void Ctrl::SyncTopWindows()
 
 bool Ctrl::ProcessEvent(bool *quit)
 {
-	DLOG("@ ProcessEvent");
+	LLOG("@ ProcessEvent");
 	ASSERT(IsMainThread());
 	if(DoCall()) {
 		SyncTopWindows();
@@ -199,7 +201,7 @@ bool Ctrl::ProcessEvent(bool *quit)
 	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
 		ReleaseCtrlCapture();
 	if(FBProcessEvent(quit)) {
-		DLOG("FBProcesEvent returned true");
+		LLOG("FBProcesEvent returned true");
 		SyncTopWindows();
 		DefferedFocusSync();
 		SyncCaret();
@@ -248,15 +250,15 @@ ViewDraw::~ViewDraw()
 
 void Ctrl::DoUpdate()
 {
-	DLOG("DoUpdate");
+	LLOG("DoUpdate");
 	invalid.Clear();
 	CursorSync();
-	DDUMPC(update);
+	LDUMPC(update);
 #if 0
 	FBUpdate(framebuffer.GetSize());
 #else
 	for(int i = 0; i < update.GetCount(); i++) {
-		DDUMP(update[i]);
+		LDUMP(update[i]);
 		FBUpdate(update[i]);
 	}
 #endif
@@ -331,7 +333,7 @@ void Ctrl::DragRectDraw(const Rect& rect1, const Rect& rect2, const Rect& clip, 
 
 void Ctrl::DoPaint()
 {
-	DLOG("@ DoPaint");
+	LLOG("@ DoPaint");
 	bool scroll = false;
 	if(desktop)
 		desktop->SyncScroll();
@@ -341,8 +343,8 @@ void Ctrl::DoPaint()
 		RemoveCursor();
 		RemoveCaret();
 		for(int phase = 0; phase < 2; phase++) {
-			DLOG("DoPaint invalid phase " << phase);
-			DDUMPC(invalid);
+			LLOG("DoPaint invalid phase " << phase);
+			LDUMPC(invalid);
 			SystemDraw painter;
 			painter.Begin();
 			for(int i = 0; i < invalid.GetCount(); i++) {
@@ -386,14 +388,14 @@ void Ctrl::WndUpdate0r(const Rect& r)
 
 bool Ctrl::ProcessEvents(bool *quit)
 {
-	LOGBLOCK("@ ProcessEvents");
+	//LOGBLOCK("@ ProcessEvents");
 	MemoryCheckDebug();
 	if(!ProcessEvent(quit))
 		return false;
 	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()));
 	TimeStop tm;
 	TimerProc(GetTickCount());
-	DLOG("TimerProc elapsed: " << tm);
+	LLOG("TimerProc elapsed: " << tm);
 	SweepMkImageCache();
 	FBInitUpdate();
 	DoPaint();
@@ -418,8 +420,8 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	bool quit = false;
 	ProcessEvents(&quit);
 	int64 loopno = ++fbEventLoop;
-	DDUMP(loopno);
-	DDUMP(fbEndSessionLoop);
+	LDUMP(loopno);
+	LDUMP(fbEndSessionLoop);
 	while(loopno > fbEndSessionLoop && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
@@ -428,8 +430,8 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / ProcessEvents");
 		ProcessEvents(&quit);
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / after ProcessEvents");
-		DDUMP(loopno);
-		DDUMP(fbEndSessionLoop);
+		LDUMP(loopno);
+		LDUMP(fbEndSessionLoop);
 	}
 
 	if(ctrl)
