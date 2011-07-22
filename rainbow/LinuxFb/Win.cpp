@@ -232,7 +232,6 @@ void FBFlush()
 void FBInit(const String& fbdevice)
 {
 	Ctrl::InitFB();
-	Font::SetStdFont(ScreenSans(12)); //FIXME general handling
 
 	fbfd = open(fbdevice, O_RDWR);
 	if (!fbfd) {

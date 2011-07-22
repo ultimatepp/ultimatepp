@@ -47,6 +47,9 @@ void Ctrl::InitFB()
 	Ctrl::InitTimer();
 	framebuffer.Create(1, 1);
 
+#ifdef PLATFORM_POSIX
+	SetStdFont(ScreenSans(12)); //FIXME general handling
+#endif
 	ChStdSkin();
 
 	static StaticRect x;
