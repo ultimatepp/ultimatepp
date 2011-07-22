@@ -138,6 +138,7 @@ Image MakeDragImage(const Image& arrow, Image sample)
 		memset(~b, 0, sizeof(RGBA) * b.GetLength());
 		Size ssz = sample.GetSize();
 		Over(b, Point(2, 22), sample, sample.GetSize());
+		Unmultiply(b);
 		for(int y = 20; y < 96; y++) {
 			RGBA *s = b[y];
 			RGBA *e = s + 96;
@@ -185,6 +186,7 @@ Image MakeDragImage(const Image& arrow, Image sample)
 			s += b.GetWidth();
 			Swap(c1, c2);
 		}
+		Premultiply(b);
 		GuiPlatformAdjustDragImage(b);
 		Over(b, Point(0, 0), arrow, arrow.GetSize());
 	}
