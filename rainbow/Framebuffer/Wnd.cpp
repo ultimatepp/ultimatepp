@@ -347,7 +347,6 @@ void Ctrl::DragRectDraw(const Rect& rect1, const Rect& rect2, const Rect& clip, 
 void Ctrl::DoPaint()
 {
 	LLOG("@ DoPaint");
-<<<<<<< .mine
 	if(!PaintLock) {
 		bool scroll = false;
 		if(desktop)
@@ -365,35 +364,6 @@ void Ctrl::DoPaint()
 				for(int i = 0; i < invalid.GetCount(); i++) {
 					painter.RectPath(invalid[i]);
 					AddUpdate(invalid[i]);
-=======
-	bool scroll = false;
-	if(desktop)
-		desktop->SyncScroll();
-	for(int i = 0; i < topctrl.GetCount(); i++)
-		topctrl[i]->SyncScroll();
-	if((invalid.GetCount() || scroll) && desktop) {
-		RemoveCursor();
-		RemoveCaret();
-		for(int phase = 0; phase < 2; phase++) {
-			LLOG("DoPaint invalid phase " << phase);
-			LDUMPC(invalid);
-			SystemDraw painter;
-			painter.Begin();
-			for(int i = 0; i < invalid.GetCount(); i++) {
-				painter.RectPath(invalid[i]);
-				AddUpdate(invalid[i]);
-			}
-			painter.Painter::Clip();
-			for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
-				Rect r = topctrl[i]->GetRect();
-				Rect ri = GetClipBound(invalid, r);
-				if(!IsNull(ri)) {
-					painter.Clipoff(r);
-					topctrl[i]->UpdateArea(painter, ri - r.TopLeft());
-					painter.End();
-					Subtract(invalid, r);
-					painter.ExcludeClip(r);
->>>>>>> .r3695
 				}
 				painter.Painter::Clip();
 				for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
