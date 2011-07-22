@@ -15,6 +15,10 @@ extern int width;
 extern int bpp;
 extern SDL_TimerID waketimer_id;
 
+//need extra maintanance, see Proc.cpp
+extern dword mouseb;
+extern dword modkeys;
+
 SDL_Surface *CreateScreen(int w, int h, int bpp, int flags);
 dword fbKEYtoK(dword chr);
 void HandleSDLEvent(SDL_Event* event);
