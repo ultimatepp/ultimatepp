@@ -42,9 +42,9 @@ int has_imps2(int fd);
 int set_imps2(int fd, int b);
 void dupkmap(int fd);
 
-int readevents(int ms);
 void handle_mouse();
 void handle_keyboard();
+void switchvt(int ii);
 
 void SaveModKeys(dword keycode, dword pressed);
 dword fbKEYtoK(dword keycode);
