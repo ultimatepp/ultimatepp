@@ -293,8 +293,6 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		Close();
 		return String::GetVoid();
 	}
-	if(!keepalive)
-		socket.StopWrite();
 
 	bool expect_status = true;
 	
@@ -401,6 +399,10 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		server_headers.Cat(b, int(e - b));
 		server_headers.Cat("\r\n");
 	}
+
+	if(!keepalive)
+		socket.StopWrite();
+
 	if(method == METHOD_HEAD) {
 		Close();
 		return String::GetVoid();
@@ -414,6 +416,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 			return String::GetVoid();
 		}
 		String part = socket.Read(1000);
+		LLOG("received part: " << part.GetLength());
 		if(!part.IsEmpty()) {
 			if(body.GetLength() + part.GetLength() > max_content_size) {
 				error = NFormat(t_("Maximum content size exceeded: %d"), body.GetLength() + part.GetLength());
@@ -490,6 +493,8 @@ String HttpClient::Execute(Gate2<int, int> progress)
 				}
 		}
 		if(!socket.IsOpen() || socket.IsError() || socket.IsEof()) {
+			LLOG("-> partial input: open = " << socket.IsOpen()
+				<< ", error " << socket.IsError() << ", eof " << socket.IsEof());
 			if(socket.IsError())
 				error = Socket::GetErrorText();
 			else if(!tc_chunked && content_length > 0 && body.GetLength() < content_length)
@@ -497,6 +502,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 			break;
 		}
 		if(progress(chunked.GetLength() + body.GetLength(), max(content_length, 0))) {
+			LLOG("-> user abort");
 			aborted = true;
 			break;
 		}

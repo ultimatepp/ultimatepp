@@ -106,8 +106,6 @@ private:
 		Color shading_fore;
 		Color shading_back;
 		int end_dots;
-		bool merge_first;
-		bool merge;
 	};
 
 	struct Cell {
@@ -115,6 +113,8 @@ private:
 
 		CellInfo info;
 		RichTxt text;
+		bool merge_first;
+		bool merge;
 		int nbegin;
 		Size span;
 	};
@@ -184,8 +184,6 @@ RichText ParseRTF(const char *rtf) { return RTFParser(rtf).Run(); }
 
 RTFParser::CellInfo::CellInfo()
 : end_dots(0)
-, merge_first(false)
-, merge(false)
 , cellmarginunits(0, 0, 0, 0)
 , shading(0)
 , shading_fore(Black())
@@ -196,6 +194,8 @@ RTFParser::CellInfo::CellInfo()
 RTFParser::Cell::Cell()
 : nbegin(0)
 , span(0, 0)
+, merge_first(false)
+, merge(false)
 {
 }
 
@@ -272,16 +272,18 @@ void RTFParser::FlushTable(int level)
 			int pos = child.tableformat.lm;
 			for(int c = 0; c < rw.GetCount(); c++) {
 				Cell& cell = rw[c];
-				if(cell.info.merge)
+				if(cell.merge) {
+					pos = cell.info.end_dots;
 					continue;
+				}
 				cell.span.cy = 0;
-				if(cell.info.merge_first) {
+				if(cell.merge_first) {
 					for(int m = r + 1; m < child.cells.GetCount(); m++) {
 						const Array<Cell>& mrw = child.cells[m];
 						int mc = mrw.GetCount();
 						while(--mc >= 0 && mrw[mc].info.end_dots > cell.info.end_dots)
 							;
-						if(mc >= 0 && mrw[mc].info.end_dots == cell.info.end_dots && mrw[mc].info.merge)
+						if(mc >= 0 && mrw[mc].info.end_dots == cell.info.end_dots && mrw[mc].merge)
 							cell.span.cy++;
 						else
 							break;
@@ -290,7 +292,7 @@ void RTFParser::FlushTable(int level)
 				cell.nbegin = dot_index.Find(pos);
 				cell.span.cx = max(0, dot_index.Find(pos = cell.info.end_dots) - cell.nbegin - 1);
 				if(cell.span.cx < 0) {
-					cell.info.merge = true;
+					cell.merge = true;
 					continue;
 				} 
 				bool outer_border[] = {
@@ -335,7 +337,7 @@ void RTFParser::FlushTable(int level)
 //			int pos = child.tableformat.lm;
 			for(int c = 0; c < rw.GetCount(); c++) {
 				Cell& cell = rw[c];
-				if(cell.info.merge)
+				if(cell.merge)
 					continue;
 				if(cell.span.cx || cell.span.cy)
 					table.SetSpan(r, cell.nbegin, cell.span.cy, cell.span.cx);
@@ -1252,15 +1254,14 @@ void RTFParser::ReadTableStyle()
 			CellInfoAt(ts.stylecol).format.color = color_table[command_arg];
 	}
 	else if(PassQ("clvmrg"))
-		CellAt(ts, ts.stylecol).info.merge = true;
+		CellAt(ts, ts.stylecol).merge = true;
 	else if(PassQ("clvmgf"))
-		CellAt(ts, ts.stylecol).info.merge_first = true;
+		CellAt(ts, ts.stylecol).merge_first = true;
 	else if(PassQ("clftsWidth")) {}
 	else if(PassQ("clwWidth")) {}
 	else if(PassQ("cellx")) {
 		int sx = ts.stylecol++;
 		Cell& newcell = CellAt(ts, sx);
-		newcell.info = CellInfoAt(sx);
 		newcell.info.end_dots = TwipDotsLim(command_arg);
 		SetCellMargin(newcell, &Rect::left);
 		SetCellMargin(newcell, &Rect::top);
