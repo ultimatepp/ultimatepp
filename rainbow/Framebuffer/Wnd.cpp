@@ -319,11 +319,6 @@ void Ctrl::DragRectDraw0(const Vector<Rect>& clip, const Rect& rect, int n, cons
 void Ctrl::DragRectDraw(const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                         Color color, int type, int animation)
 {
-	DDUMP(rect1);
-	DDUMP(rect2);
-	DDUMP(clip);
-	DDUMP(type);
-	DDUMP(animation);
 	static byte solid[] =  { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 	static byte normal[] = { 0xff, 0x00, 0xff, 0x00, 0xff, 0x00, 0xff, 0x00 };
 	static byte dashed[] = { 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 };
@@ -357,8 +352,8 @@ void Ctrl::DoPaint()
 			RemoveCursor();
 			RemoveCaret();
 			for(int phase = 0; phase < 2; phase++) {
-				DLOG("DoPaint invalid phase " << phase);
-				DDUMPC(invalid);
+				LLOG("DoPaint invalid phase " << phase);
+				LDUMPC(invalid);
 				SystemDraw painter;
 				painter.Begin();
 				for(int i = 0; i < invalid.GetCount(); i++) {
