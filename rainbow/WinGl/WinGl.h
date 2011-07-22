@@ -52,6 +52,15 @@ enum TransformState {
 	TS_AFTER_PAINT
 };
 
+struct DragRect : Moveable<DragRect> {
+	Rect rect1, rect2;
+	Rect clip;
+	int n;
+	Color color;
+	int type;
+	int animation;
+};
+
 class SystemDraw : public Draw {
 public:
 	virtual dword GetInfo() const;
@@ -130,6 +139,8 @@ public:
 	float        angle;
 	float        scale;
 	
+	static Vector<DragRect> dragRect;
+	
 private:
 	Array<Cloff> cloff;
 	int ci;
@@ -207,8 +218,7 @@ public:
 	ImageDraw(int cx, int cy);
 };
 
-void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
-                  Color color, uint64 pattern);
+void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n, Color color, int type, int animation);
 
 bool GlIsWaitingEvent();
 bool GlProcessEvent(bool *quit);
@@ -244,17 +254,12 @@ struct InfoPanel;
 
 #define GUIPLATFORM_CTRL_TOP_DECLS   Ctrl *owner_window;
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <WinGl/Ctrl.h>
-#define GUIPLATFORM_PASTECLIP_DECLS
+#define GUIPLATFORM_PASTECLIP_DECLS \
+	bool dnd; \
+	friend struct DnDLoop;
 #define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <WinGl/Top.h>
-
-//#include <CtrlCore/stdids.h>
-/*#ifndef PLATFORM_WIN32
-#include "vkcodes.h" //FIXME
-#endif*/
+#define GUIPLATFORM_INCLUDE_AFTER <WinGl/After.h>
 
 END_UPP_NAMESPACE
-
-
-#define GUIPLATFORM_INCLUDE_AFTER <WinGl/After.h>
 
 #endif

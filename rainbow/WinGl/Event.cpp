@@ -33,6 +33,16 @@ void Ctrl::MouseEventGl(Ptr<Ctrl> t, int event, Point p, int zdelta)
 		t->PostInput();
 }
 
+Ctrl *Ctrl::FindMouseTopCtrl()
+{
+	for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
+		Ctrl *t = topctrl[i];
+		if(t->GetRect().Contains(glmousepos))
+			return t->IsEnabled() ? t : NULL;
+	}
+	return desktop->IsEnabled() ? desktop : NULL;
+}
+
 void Ctrl::DoMouseGl(int event, Point p, int zdelta)
 {
 	glmousepos = p;
@@ -44,7 +54,7 @@ void Ctrl::DoMouseGl(int event, Point p, int zdelta)
 	else
 	if(a == Ctrl::DOWN && ignoreclick)
 		return;
-	LLOG("Mouse event: " << event << " position " << p << " zdelta " << zdelta << ", capture " << Upp::Name(captureCtrl));
+	LLOG("### Mouse event: " << event << " position " << p << " zdelta " << zdelta << ", capture " << Upp::Name(captureCtrl));
 	if(captureCtrl)
 		MouseEventGl(captureCtrl->GetTopCtrl(), event, p, zdelta);
 	else

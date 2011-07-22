@@ -23,6 +23,7 @@ private:
 	Rect   overlapped;
 	
 	Point GetDragMode(Point p);
+	Image GetDragImage(Point dragmode);
 	void  StartDrag();
 	Rect  Margins() const;
 	Rect  ComputeClient(Rect r);

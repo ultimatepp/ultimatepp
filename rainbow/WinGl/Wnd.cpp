@@ -5,7 +5,9 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)
+#define LLOG(x)   DLOG(x)
+#define LDUMP(x)  DDUMP(x)
+#define LDUMPC(x) DDUMPC(x)
 
 Ptr<Ctrl>      Ctrl::desktop;
 Vector<Ctrl *> Ctrl::topctrl;
@@ -20,6 +22,8 @@ Rect           Ctrl::glCaretRect;
 int            Ctrl::glCaretTm;
 int64          Ctrl::glEventLoop = 0;
 int64          Ctrl::glEndSessionLoop = 0;
+bool           Ctrl::FullWindowDrag = false;
+int            Ctrl::PaintLock;
 
 void Ctrl::SetDesktop(Ctrl& q)
 {
@@ -199,6 +203,15 @@ void Ctrl::DrawScreen()
 			draw.End();
 		}
 		CursorSync(draw);
+			
+		for(int i = 0; i < SystemDraw::dragRect.GetCount(); i++)
+		{
+			const DragRect& r = SystemDraw::dragRect[i];
+			DrawDragRect(draw, r.rect1, r.rect2, r.clip, r.n, r.color, r.type, r.animation);
+		}
+		
+		SystemDraw::dragRect.Clear();
+		
 		desktop->ApplyTransform(TS_AFTER_PAINT);		
 		glLoadIdentity();
 		#if CLIP_MODE == 2
@@ -215,38 +228,6 @@ void Ctrl::DrawScreen()
 		SwapBuffers(hDC);
 		painting = false;
 	}
-}
-
-void Ctrl::DrawLine(const Vector<Rect>& clip, int x, int y, int cx, int cy, bool horz, const byte *pattern, int animation)
-{
-	if(cx <= 0 || cy <= 0)
-		return;
-}
-
-void Ctrl::DragRectDraw0(const Vector<Rect>& clip, const Rect& rect, int n, const byte *pattern, int animation)
-{
-	int hn = min(rect.GetHeight(), n);
-	int vn = min(rect.GetWidth(), n);
-	DrawLine(clip, rect.left, rect.top, rect.GetWidth(), hn, true, pattern, animation);
-	DrawLine(clip, rect.left, rect.top + hn, vn, rect.GetHeight() - hn, false, pattern, animation);
-	DrawLine(clip, rect.right - vn, rect.top + hn, vn, rect.GetHeight() - hn, false, pattern, animation);
-	DrawLine(clip, rect.left + vn, rect.bottom - hn, rect.GetWidth() - 2 * vn, hn, true, pattern, animation);
-}
-
-void Ctrl::DragRectDraw(const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
-                        Color color, int type, int animation)
-{
-	static byte solid[] =  { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
-	static byte normal[] = { 0xff, 0x00, 0xff, 0x00, 0xff, 0x00, 0xff, 0x00 };
-	static byte dashed[] = { 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 };
-	Point p = GetScreenView().TopLeft();
-	Vector<Rect> ir;
-	ir.Add(screenRect);
-	Vector<Rect> pr = Intersection(ir, clip.Offseted(p));
-	const byte *pattern = type == DRAWDRAGRECT_DASHED ? dashed :
-	                      type == DRAWDRAGRECT_NORMAL ? normal : solid;
-	DragRectDraw0(pr, rect1.Offseted(p), n, pattern, animation);
-	DragRectDraw0(pr, rect2.Offseted(p), n, pattern, animation);
 }
 
 void Ctrl::WndUpdate0r(const Rect& r)
@@ -274,7 +255,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	ASSERT(IsMainThread());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
-	LLOG("Entering event loop at level " << LoopLevel << BeginIndent);
+	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
 	Ptr<Ctrl> ploop;
 	if(ctrl) {
 		ploop = LoopCtrl;
@@ -287,18 +268,14 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	int64 loopno = ++glEventLoop;
 	while(loopno > glEndSessionLoop && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
-//		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
 		SyncCaret();
 		GuiSleep(20);
-//		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / ProcessEvents");
 		ProcessEvents(&quit);
-//		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / after ProcessEvents");
 	}
 
 	if(ctrl)
 		LoopCtrl = ploop;
 	LoopLevel--;
-	LLOG(EndIndent << "Leaving event loop ");
 }
 
 void Ctrl::GuiSleep0(int ms)
@@ -426,10 +403,13 @@ void Ctrl::SetWndForeground0()
 {
 	GuiLock __;
 	ASSERT(IsOpen());
-	if(top && top->owner_window && !IsWndForeground())
+	if(IsWndForeground())
+		return;
+	if(top && top->owner_window)
 		top->owner_window->PutForeground();
 	PutForeground();
-	ActivateWnd();
+	if(this != focusCtrl)
+		ActivateWnd();
 }
 
 bool Ctrl::IsWndForeground() const

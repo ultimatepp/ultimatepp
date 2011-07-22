@@ -116,6 +116,7 @@ Image Image::SizeRight() { return WinGlImg::sizeright(); }
 Image Image::SizeBottomLeft() { return WinGlImg::sizebottomleft(); }
 Image Image::SizeBottom() { return WinGlImg::sizebottom(); }
 Image Image::SizeBottomRight() { return WinGlImg::sizebottomright(); }
+Image Image::Hand() { return WinGlImg::hand(); }
 
 END_UPP_NAMESPACE
 
