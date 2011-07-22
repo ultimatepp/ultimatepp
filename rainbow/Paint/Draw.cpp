@@ -91,7 +91,7 @@ struct App : public Ctrl {
 	}
 };
 
-#define EDITOR 0
+#define EDITOR 1
 
 GUI_APP_MAIN
 {

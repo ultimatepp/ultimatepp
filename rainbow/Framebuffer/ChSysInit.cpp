@@ -11,6 +11,11 @@ void ChSysInit()
 	ChReset();
 }
 
+void ChHostSkin()
+{
+	ChSysInit();
+}
+
 END_UPP_NAMESPACE
 
 #endif
