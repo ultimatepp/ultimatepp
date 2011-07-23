@@ -41,10 +41,6 @@ LRESULT TopWindow::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		inloop = InLoop();
 		WhenClose();
 		return inloop ? !InLoop() : !IsOpen();
-	case WM_ENDSESSION:
-		EndSession() = true;
-		PostQuitMessage(0);
-		return 0;
 #endif
 	case WM_CLOSE:
 		if(IsEnabled()) {

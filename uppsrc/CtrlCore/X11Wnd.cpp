@@ -400,6 +400,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	ASSERT(IsMainThread());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
+	int64 loopno = ++EventLoopNo;
 	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
 	Ctrl *ploop;
 	if(ctrl) {
@@ -408,7 +409,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 		ctrl->inloop = true;
 	}
 
-	while(ctrl ? ctrl->InLoop() && ctrl->IsOpen() : GetTopCtrls().GetCount()) {
+	while(loopno > EndSessionLoopNo && (ctrl ? ctrl->InLoop() && ctrl->IsOpen() : GetTopCtrls().GetCount())) {
 		XEvent event;
 		fd_set fdset;
 		FD_ZERO(&fdset);

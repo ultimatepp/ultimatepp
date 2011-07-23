@@ -62,6 +62,8 @@ private:
 	
 	void        FixIcons();
 
+	void        DefaultBreak();
+
 	enum { MINIMIZED, MAXIMIZED, OVERLAPPED };
 
 	WString     title;

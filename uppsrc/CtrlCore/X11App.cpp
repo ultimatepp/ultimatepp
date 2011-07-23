@@ -436,6 +436,8 @@ void Ctrl::ExitX11()
 	GuiLock __; 
 //	if(xic)
 //		XDestroyIC(xic);
+	TopWindow::ShutdownWindows();
+	CloseTopCtrls();
 	for(int i = 0; i < hotkey.GetCount(); i++)
 		UnregisterSystemHotKey(i);
 	if(xim)

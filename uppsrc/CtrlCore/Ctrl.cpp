@@ -36,6 +36,8 @@ int64 Ctrl::eventid;
 
 Ctrl *Ctrl::LoopCtrl;
 int   Ctrl::LoopLevel;
+int64 Ctrl::EventLoopNo;
+int64 Ctrl::EndSessionLoopNo;
 
 bool Ctrl::MemoryCheck;
 
