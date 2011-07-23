@@ -16,8 +16,8 @@ private:
 
 public:
 	static Event     ExitLoopEvent;
-	static bool&     EndSession();
-	static bool      IsEndSession()            { return EndSession(); }
+	static bool      endsession;
+	static void      EndSession();
 	static HINSTANCE hInstance;
 
 protected:

@@ -76,20 +76,28 @@ void TopWindow::SyncTitle()
 	ICall(THISBACK(SyncTitle0));
 }
 
+void TopWindow::DefaultBreak()
+{
+	if(FindAction(IDCANCEL))
+		RejectBreak(IDCANCEL);
+	else
+	if(FindAction(IDNO))
+		RejectBreak(IDNO);
+	else
+	if(FindAction(IDEXIT))
+		AcceptBreak(IDEXIT);
+	else
+	if(FindAction(IDYES))
+		AcceptBreak(IDYES);
+	else
+		AcceptBreak(IDOK);
+}
+
 void TopWindow::Close()
 {
 	if(InLoop()) {
 		if(!InCurrentLoop()) return;
-		if(FindAction(IDCANCEL))
-			RejectBreak(IDCANCEL);
-		else
-		if(FindAction(IDEXIT))
-			AcceptBreak(IDEXIT);
-		else
-		if(FindAction(IDYES))
-			AcceptBreak(IDYES);
-		else
-			AcceptBreak(IDOK);
+		DefaultBreak();
 		return;
 	}
 	backup.Clear();
@@ -321,9 +329,14 @@ int  TopWindow::Run(bool appmodal)
 		LLOG("EnableCtrls[" << e << "] = " << UPP::Name(disabled[e]));
 #endif
 	EnableCtrls(disabled);
+	if(IsNull(exitcode)) {
+		WhenClose();
+		if(IsNull(exitcode))
+			DefaultBreak();
+	}
 	int q = exitcode;
 	inloop = pinloop;
-	exitcode = pexitcode;
+	exitcode = pexitcode;		
 	LLOG("TopWindow::Run() = " << q << " -> " << typeid(*this).name());
 #ifdef GUI_WIN
 	LLOG("Focus = " << UPP::Name(GetFocusCtrl()) << ", raw " << (void *)::GetFocus());

@@ -22,7 +22,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR lpCmdLine, int nCmdS
 	UPP::coreCmdLine__() = UPP::SplitCmdLine__(UPP::FromSystemCharset(lpCmdLine)); \
 	UPP::AppInitEnvironment__(); \
 	GuiMainFn_(); \
-	UPP::Ctrl::CloseTopCtrls(); \
 	UPP::UsrLog("---------- About to delete this log..."); \
 	UPP::DeleteUsrLog(); \
 	UPP::Ctrl::ExitWin32(); \

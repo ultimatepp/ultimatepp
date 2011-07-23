@@ -4,15 +4,15 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)   //   LOG(x)
+#define LLOG(x)     // DLOG(x)
 #define LOGTIMING 0
 
 #ifdef _DEBUG
 #define LOGMESSAGES 0
 #endif
 
-#define ELOGW(x)  // RLOG(GetSysTime() << ": " << x) // Only activate in MT!
-#define ELOG(x)   // RLOG(GetSysTime() << ": " << x)
+#define ELOGW(x)   // RLOG(GetSysTime() << ": " << x) // Only activate in MT!
+#define ELOG(x)    // RLOG(GetSysTime() << ": " << x)
 
 template<>
 unsigned GetHashValue(const HWND& h)
@@ -65,9 +65,9 @@ static BOOL CALLBACK sDumpWindow(HWND hwnd, LPARAM lParam) {
 
 void DumpWindowOrder(bool aliens) {
 #ifndef PLATFORM_WINCE
-	LLOG("DumpWindowOrder" << BeginIndent);
+	LLOG("DumpWindowOrder" << LOG_BEGIN);
 	EnumChildWindows(NULL, &sDumpWindow, (LPARAM)(aliens ? 1 : 0));
-	LLOG(EndIndent << "//DumpWindowOrder");
+	LLOG(LOG_END << "//DumpWindowOrder");
 #endif
 }
 
@@ -92,7 +92,20 @@ Event Ctrl::ExitLoopEvent;
 #endif
 #endif
 
-GLOBAL_VAR(bool, Ctrl::EndSession)
+bool Ctrl::endsession;
+
+void Ctrl::EndSession()
+{
+	GuiLock __;
+	EndSessionLoopNo = EventLoopNo;
+	endsession = true;
+}
+
+template <class U, class V>
+void AutoCast(U& a, V b)
+{
+	a = (U)b;
+}
 
 #ifndef flagDLL
 #ifndef PLATFORM_WINCE
@@ -102,13 +115,30 @@ LRESULT CALLBACK Ctrl::OverwatchWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 		ELOGW("WM_USER");
 		PostQuitMessage(0);
 	}
+	if(msg == WM_QUERYENDSESSION) {
+		static BOOL (WINAPI *ShutdownBlockReasonCreate)(HWND hWnd, LPCWSTR pwszReason);
+		static BOOL (WINAPI *ShutdownBlockReasonDestroy)(HWND hWnd);
+		ONCELOCK {
+			if(HMODULE hDLL = LoadLibrary ("user32")) {
+				AutoCast(ShutdownBlockReasonCreate, GetProcAddress(hDLL, "ShutdownBlockReasonCreate"));
+				AutoCast(ShutdownBlockReasonDestroy, GetProcAddress(hDLL, "ShutdownBlockReasonCreate"));
+			}
+		}
+		if(ShutdownBlockReasonCreate)
+			ShutdownBlockReasonCreate(hwnd, ~WString(t_("waiting for user response")));
+		EndSession();
+		ELOGW("WM_QUERYENDSESSION 1");
+		OverwatchEndSession.Wait();
+		if(ShutdownBlockReasonDestroy)
+			ShutdownBlockReasonDestroy(hwnd);
+		ELOGW("WM_QUERYENDSESSION 2");
+		return TRUE;		
+	}
 	if(msg == WM_ENDSESSION) {
-		EndSession() = true;
+		EndSession();
 		ELOGW("WM_ENDSESSION 1");
 		ExitLoopEvent.Set();
 		ELOGW("WM_ENDSESSION 2");
-		OverwatchEndSession.Wait();
-		ELOGW("WM_ENDSESSION 3");
 	}
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
@@ -320,10 +350,13 @@ void Ctrl::ExitWin32()
 {
 	RenderAllFormats();
 
+	TopWindow::ShutdownWindows();
+	CloseTopCtrls();
+
 	OleUninitialize();
 
 	sFinished = true;
-	
+
 	for(int i = 0; i < hotkey.GetCount(); i++)
 		if(hotkey[i])
 			UnregisterHotKey(NULL, i);
@@ -514,7 +547,7 @@ void Ctrl::Create0(Ctrl::CreateBox *cr)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
-	LLOG("Ctrl::Create(parent = " << (void *)parent << ") in " <<UPP::Name(this) << BeginIndent);
+	LLOG("Ctrl::Create(parent = " << (void *)parent << ") in " <<UPP::Name(this) << LOG_BEGIN);
 	ASSERT(!IsChild() && !IsOpen());
 	Rect r = GetRect();
 	AdjustWindowRectEx(r, cr->style, FALSE, cr->exstyle);
@@ -558,7 +591,7 @@ void Ctrl::Create0(Ctrl::CreateBox *cr)
 	::ShowWindow(top->hwnd, visible ? cr->show : SW_HIDE);
 //	::UpdateWindow(hwnd);
 	StateH(OPEN);
-	LLOG(EndIndent << "//Ctrl::Create in " <<UPP::Name(this));
+	LLOG(LOG_END << "//Ctrl::Create in " <<UPP::Name(this));
 	RegisterDragDrop(top->hwnd, (LPDROPTARGET) (top->dndtgt = NewUDropTarget(this)));
 	CancelMode();
 	RefreshLayoutDeep();
@@ -585,7 +618,7 @@ void Ctrl::WndFree()
 		LLOG("Ctrl::WndFree->SetFocus " << UPP::Name(Ctrl::CtrlFromHWND(owner)));
 		::SetFocus(owner);
 	}
-	LLOG(EndIndent << "//Ctrl::WndFree() in " <<UPP::Name(this));
+	LLOG(LOG_END << "//Ctrl::WndFree() in " <<UPP::Name(this));
 	delete top;
 	top = NULL;
 }
@@ -593,7 +626,7 @@ void Ctrl::WndFree()
 void Ctrl::WndDestroy0()
 {
 	GuiLock __;
-	LLOG("Ctrl::WndDestroy() in " <<UPP::Name(this) << BeginIndent);
+	LLOG("Ctrl::WndDestroy() in " <<UPP::Name(this) << LOG_BEGIN);
 	LLOG((DumpWindowOrder(false), ""));
 	if(top && top->hwnd) {
 		HWND hwnd = top->hwnd;
@@ -807,8 +840,6 @@ bool Ctrl::ProcessEvent(bool *quit)
 	ASSERT(IsMainThread());
 	if(DoCall())
 		return false;
-	if(EndSession())
-		return false;
 	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
 		ReleaseCtrlCapture();
 	MSG msg;
@@ -844,7 +875,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	ASSERT(IsMainThread());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
-	LLOG("Entering event loop at level " << LoopLevel << BeginIndent);
+	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
 	Ptr<Ctrl> ploop;
 	if(ctrl) {
 		ploop = LoopCtrl;
@@ -853,13 +884,13 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	}
 
 	bool quit = false;
+	int64 loopno = ++EventLoopNo;
 	ProcessEvents(&quit);
-	while(!EndSession() && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
+	while(loopno > EndSessionLoopNo && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
 		SyncCaret();
 		GuiSleep(1000);
-		if(EndSession()) break;
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / ProcessEvents");
 		ProcessEvents(&quit);
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / after ProcessEvents");
@@ -868,7 +899,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	if(ctrl)
 		LoopCtrl = ploop;
 	LoopLevel--;
-	LLOG(EndIndent << "Leaving event loop ");
+	LLOG(LOG_END << "Leaving event loop ");
 }
 
 void Ctrl::GuiSleep0(int ms)
@@ -876,9 +907,6 @@ void Ctrl::GuiSleep0(int ms)
 	GuiLock __;
 	ASSERT(IsMainThread());
 	ELOG("GuiSleep");
-	if(EndSession())
-		return;
-	ELOG("GuiSleep 2");
 	int level = LeaveGMutexAll();
 #if !defined(flagDLL) && !defined(PLATFORM_WINCE)
 	if(!OverwatchThread) {
@@ -1102,10 +1130,10 @@ bool Ctrl::IsWndForeground() const
 void Ctrl::WndEnable0(bool *b)
 {
 	GuiLock __;
-	LLOG("Ctrl::WndEnable(" << b << ") in " << UPP::Name(this) << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
+	LLOG("Ctrl::WndEnable(" << (b && *b) << ") in " << UPP::Name(this) << ", focusCtrlWnd = " << UPP::Name(~focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
 	if(*b)
 		ReleaseCapture();
-	LLOG("//Ctrl::WndEnable(" << b << ") -> false " <<UPP::Name(this) << ", focusCtrlWnd = " <<UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
+	LLOG("//Ctrl::WndEnable(" << (b && *b) << ") -> false " <<UPP::Name(this) << ", focusCtrlWnd = " <<UPP::Name(~focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
 }
 
 void Ctrl::SetWndFocus0(bool *b)

@@ -470,6 +470,8 @@ private:
 	static  bool      painting;
 	static  int       LoopLevel;
 	static  Ctrl     *LoopCtrl;
+	static  int64     EventLoopNo;
+	static  int64     EndSessionLoopNo;
 	static  int64     eventid;
 
 	static  Ptr<Ctrl>           defferedSetFocus;

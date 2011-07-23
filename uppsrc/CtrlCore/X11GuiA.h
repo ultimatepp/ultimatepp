@@ -15,7 +15,6 @@ int main(int argc, const char **argv, const char **envptr) { \
 	UPP::AppInit__(argc, argv, envptr); \
 	UPP::Ctrl::InitX11(NULL); \
 	GuiMainFn_(); \
-	UPP::Ctrl::CloseTopCtrls(); \
 	UPP::UsrLog("---------- About to delete this log..."); \
 	UPP::DeleteUsrLog(); \
 	UPP::Ctrl::ExitX11(); \
