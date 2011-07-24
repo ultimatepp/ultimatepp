@@ -1404,6 +1404,10 @@ public:
 };
 
 class LocalLoop : public Ctrl {
+public:
+	virtual void CancelMode();
+
+private:
 	Ctrl *master;
 
 public:

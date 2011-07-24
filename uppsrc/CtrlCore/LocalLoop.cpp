@@ -19,6 +19,11 @@ void LocalLoop::Run()
 		focus->SetFocus();
 }
 
+void LocalLoop::CancelMode()
+{
+	EndLoop();
+}
+
 void RectTracker::LeftUp(Point, dword)
 {
 	EndLoop();
