@@ -40,5 +40,12 @@ file
 	wglew.h,
 	glew.c,
 	Resources readonly separator,
+	Shaders.h,
+	Shaders.cpp,
+	Fonts.h,
+	Fonts.cpp,
+	Tahoma.def,
+	AlphaMag.frag,
+	AlphaMag.vert,
 	WinGl.iml;
 

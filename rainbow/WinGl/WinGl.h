@@ -19,12 +19,15 @@ NAMESPACE_UPP
 #define IMAGECLASS WinGlImg
 #define IMAGEFILE <WinGl/WinGl.iml>
 #include <Draw/iml_header.h>
+#include <WinGl/Shaders.h>
+#include <WinGl/Fonts.h>
 
 extern bool  glEndSession;
 extern HWND  hWnd;
 extern HWND  glHwnd;
 extern HDC   hDC;
 extern HGLRC hRC;
+extern int   alphaMagProg;
 
 int CreateGlWindow(HINSTANCE hInstance);
 int CreateGlContext();

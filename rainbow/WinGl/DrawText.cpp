@@ -21,7 +21,6 @@ void OpenGLFont::Load(const String& fileName)
 void OpenGLFont::Parse(const char* xml, bool parsePages)
 {
 	XmlParser p(xml);
-	float scale = 1.0f / 1.f;
 
 	while(!p.IsTag())
 		p.Skip();
@@ -37,14 +36,17 @@ void OpenGLFont::Parse(const char* xml, bool parsePages)
 			lineHeight = (float) p.Double("lineHeight");
 			base = (float) p.Double("base");
 		}
-		else if(p.Tag("pages") && parsePages)
+		else if(p.Tag("pages"))
 		{
 			while(!p.End())
 			{
 				if(p.TagE("page"))
 				{
-					String fileName = p["file"];
-					files.Add(fileName);
+					if(parsePages)
+					{
+						String fileName = p["file"];
+						files.Add(fileName);
+					}
 					pages.Add(-1);
 				}
 				else
@@ -70,15 +72,7 @@ void OpenGLFont::Parse(const char* xml, bool parsePages)
 					ci.xoffset = (float) p.Double("xoffset");
 					ci.yoffset = (float) p.Double("yoffset");
 					ci.xadvance = (float) p.Double("xadvance");
-					ci.page = page;
-					
-					ci.x *= scale;
-					ci.y *= scale;
-					ci.width *= scale;
-					ci.height *= scale;
-					ci.xoffset *= scale;
-					ci.yoffset *= scale;
-					ci.xadvance *= scale;
+					ci.page = page;					
 				}
 				else
 					p.Skip();
@@ -95,7 +89,7 @@ void OpenGLFont::Parse(const char* xml, bool parsePages)
 					float amount = (float) p.Double("amount");
 					
 					VectorMap<int, float>& vm = kerns.GetAdd(first);
-					vm.Add(second, amount * scale);
+					vm.Add(second, amount);
 				}
 				else
 					p.Skip();
@@ -105,6 +99,7 @@ void OpenGLFont::Parse(const char* xml, bool parsePages)
 			p.Skip();
 	}
 }
+
 void OpenGLFont::UpdateTextures()
 {
 	if(texturesUpdated)
@@ -124,6 +119,8 @@ void OpenGLFont::UpdateTextures()
 		Image img = StreamRaster::LoadAny(ms);
 		int64 serialId = Resources::Bind(img, true);
 		pages[i] = serialId;*/
+		int64 serialId = Resources::Bind(WinGlImg::tahoma(), true);
+		pages[i] = serialId;
 	}
 
 	texturesUpdated = true;
@@ -137,7 +134,7 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 		return;
 	
 	const wchar* s = text;	
-	OpenGLFont& fi = Resources::StdFont(font.IsBold());
+	OpenGLFont& fi = Resources::GetFont(font);
 	
 	glColor4ub(ink.GetR(), ink.GetG(), ink.GetB(), (int) alpha);
 	glEnable(GL_TEXTURE_2D);
@@ -151,7 +148,14 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	fi.UpdateTextures();	
 
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-//	glUseProgram(gpuProgram);
+	glUseProgram(alphaMagProg);
+
+	float r = ink.GetR() / 255.f;
+	float g = ink.GetG() / 255.f;
+	float b = ink.GetB() / 255.f;	
+
+	int fragTextColor = glGetUniformLocation(alphaMagProg, "textColor");
+	glUniform4f(fragTextColor, r, g, b, 0);
 	
 	float xp = (float) x;
 	float yp = (float) y;
@@ -168,14 +172,15 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 			cn <<= 3;
 	
 			Resources::Bind(fi.pages[ci.page], true);
-			//int my_sampler_uniform_location = glGetUniformLocation(gpuProgram, "textMap");
-			//glActiveTexture(GL_TEXTURE0);
-			//glUniform1i(my_sampler_uniform_location, 0);
-
-			float sx = (float) ci.xoffset + xp + drawing_offset.x;
-			float sy = (float) ci.yoffset + yp + drawing_offset.y;
-			float dx = sx + ci.width;
-			float dy = sy + ci.height;
+			int textMap = glGetUniformLocation(alphaMagProg, "textMap");
+			
+			glActiveTexture(GL_TEXTURE0);
+			glUniform1i(textMap, 0);
+			
+			float sx = (float) ci.xoffset * fi.scale + xp + drawing_offset.x;
+			float sy = (float) ci.yoffset * fi.scale + yp + drawing_offset.y;
+			float dx = sx + ci.width * fi.scale;
+			float dy = sy + ci.height * fi.scale;
 
 			#if CLIP_MODE == 3
 			if(sx <= clip.right && sy <= clip.bottom && dx >= clip.left && dy >= clip.top)
@@ -244,11 +249,11 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 				glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 			}
 	
-			xp += ci.xadvance;
+			xp += ci.xadvance * fi.scale;
 			
 			int k = fi.kerns.Find(*s);
 			if(k >= 0)
-				xp += fi.kerns[k].Get(*(s + 1), 0);
+				xp += fi.kerns[k].Get(*(s + 1), 0) * fi.scale;
 		}
 		
 		++s;
@@ -275,14 +280,14 @@ Size GetTextSize(const wchar *text, const OpenGLFont& fi, int n)
 		if(cn >= 0 && cn < fi.chars.GetCount())
 		{
 			const OpenGLFont::CharInfo& ci = fi.chars[cn];
-			sz.cx += ci.xadvance;
+			sz.cx += ci.xadvance * fi.scale;
 			int k = fi.kerns.Find(ch);
 			if(k >= 0)
-				sz.cx += fi.kerns[k].Get(*wtext, 0);
+				sz.cx += fi.kerns[k].Get(*wtext, 0) * fi.scale;
 		}
 		n--;
 	}
-	sz.cy = fi.lineHeight;
+	sz.cy = fi.lineHeight * fi.scale;
 	return sz;
 }
 
