@@ -32,8 +32,10 @@ void TopWindow::Activate()
 {
 	LLOG("Activate " << Name() << " activefocus = " << UPP::Name(activefocus));
 	UsrLogT(3, "ACTIVATE " + Desc(this));
-	if(activefocus && (HasFocus() || !GetFocusChildDeep()) && IsEnabled())
+	if(activefocus && (HasFocus() || !GetFocusChildDeep()) && IsEnabled()) {
+		LLOG("activefocus->SetWantFocus()");
 		activefocus->SetWantFocus();
+	}
 	if(urgent)
 		SyncCaption();
 	LLOG("Activate End");
