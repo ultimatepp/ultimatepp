@@ -1,5 +1,7 @@
 #include "WinFb.h"
 
+#ifdef flagWINFB
+
 NAMESPACE_UPP
 
 #define LLOG(x) //DLOG(x)
@@ -176,3 +178,5 @@ LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 }
 
 END_UPP_NAMESPACE
+
+#endif

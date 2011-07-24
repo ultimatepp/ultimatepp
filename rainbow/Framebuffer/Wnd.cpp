@@ -24,8 +24,6 @@ Image          Ctrl::fbCaretBak;
 int            Ctrl::fbCaretTm;
 int            Ctrl::renderingMode = MODE_ANTIALIASED;
 bool           Ctrl::fbEndSession;
-int64          Ctrl::fbEventLoop;
-int64          Ctrl::fbEndSessionLoop;
 bool           Ctrl::FullWindowDrag;
 int            Ctrl::PaintLock;
 
@@ -65,8 +63,7 @@ void Ctrl::EndSession()
 	GuiLock __;
 	LLOG("Ctrl::EndSession");
 	fbEndSession = true;
-	fbEndSessionLoop = fbEventLoop;
-	LDUMP(fbEndSessionLoop);
+	EndSessionLoopNo = EventLoopNo;
 }
 
 void Ctrl::ExitFB()
@@ -428,11 +425,9 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	}
 
 	bool quit = false;
+	int64 loopno = ++EventLoopNo;
 	ProcessEvents(&quit);
-	int64 loopno = ++fbEventLoop;
-	LDUMP(loopno);
-	LDUMP(fbEndSessionLoop);
-	while(loopno > fbEndSessionLoop && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
+	while(loopno > EndSessionLoopNo && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
 		SyncCaret();
@@ -556,6 +551,8 @@ void Ctrl::WndDestroy0()
 	TopWindow *win = dynamic_cast<TopWindow *>(this);
 	if(win)
 		win->DestroyFrame();
+	if(topctrl.GetCount())
+		topctrl.Top()->SetWndForeground0();
 }
 
 void Ctrl::PutForeground()
@@ -581,9 +578,10 @@ void Ctrl::SetWndForeground0()
 	ASSERT(IsOpen());
 	if(IsWndForeground())
 		return;
-	if(top && top->owner_window)
-		top->owner_window->PutForeground();
-	PutForeground();
+	Ctrl *to = this;
+	while(to->top && to->top->owner_window)
+		to = to->top->owner_window;
+	to->PutForeground();
 	if(this != focusCtrl)
 		ActivateWnd();
 }

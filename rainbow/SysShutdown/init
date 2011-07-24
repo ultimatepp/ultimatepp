@@ -1,0 +1,5 @@
+#ifndef _SysShutdown_icpp_init_stub
+#define _SysShutdown_icpp_init_stub
+#include "CtrlLib/init"
+#include "WinFb/init"
+#endif
