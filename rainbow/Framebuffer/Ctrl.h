@@ -34,6 +34,8 @@ private:
 
 	static void AddInvalid(const Rect& rect);
 
+	void DestroyWnd();
+
 	void NewTop()                       { top = new Top; top->owner_window = NULL; }
 	void PutForeground();
 	static void MouseEventFB(Ptr<Ctrl> t, int event, Point p, int zdelta);
