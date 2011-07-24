@@ -1,5 +1,7 @@
 #include "WinFb.h"
 
+#ifdef flagWINFB
+
 NAMESPACE_UPP
 
 #define LLOG(x) //DLOG(x)
@@ -114,3 +116,5 @@ void FBFlush()
 }
 
 END_UPP_NAMESPACE
+
+#endif

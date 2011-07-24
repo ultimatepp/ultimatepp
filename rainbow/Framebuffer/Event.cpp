@@ -1,5 +1,7 @@
 #include "Fb.h"
 
+#ifdef GUI_FB
+
 NAMESPACE_UPP
 
 #define LLOG(x) //DLOG(x)
@@ -183,3 +185,5 @@ void  Ctrl::SetMouseCursor(const Image& image)
 }
 
 END_UPP_NAMESPACE
+
+#endif
