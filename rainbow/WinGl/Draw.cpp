@@ -87,35 +87,43 @@ bool Resources::Bind(int64 serialId, bool force)
 	return true;
 }
 
-OpenGLFont& Resources::GetFont(const char* fontName)
+OpenGLFont& Resources::GetFont(const char* fontName, int fontHeight)
 {
 	int n = fonts.Find(fontName);
+	OpenGLFont* fgl = NULL;
 	if(n >= 0)
-		return fonts[n];
+		fgl = &fonts[n];
 	else
 	{
-		OpenGLFont& font = fonts.Add(fontName);
-		font.Load(fontName);
-		return font;
+		fgl = &fonts.Add(fontName);
+		fgl->Load(fontName);
 	}
+	
+	fgl->scale = (fontHeight * 96.f / 72.f) / 72.f;
+	return *fgl;
 }
 
-OpenGLFont& Resources::GetFontBrc(const char* fontName, const byte* fontDef, const byte* fontImage)
+OpenGLFont& Resources::GetFontBrc(const char* fontName, const byte* fontDef, const byte* fontImage, int fontHeight)
 {
 	int n = fonts.Find(fontName);
+	OpenGLFont* fgl = NULL;
 	if(n >= 0)
-		return fonts[n];
+		fgl = &fonts[n];
 	else
 	{
-		OpenGLFont& font = fonts.Add(fontName);
-		font.LoadBrc(fontDef, fontImage);
-		return font;
+		fgl = &fonts.Add(fontName);
+		fgl->LoadBrc(fontDefTahoma_0 + fontDefTahoma_1 + fontDefTahoma_2, NULL);
 	}
+	
+	fgl->scale = (fontHeight * 96.f / 72.f) / 72.f;
+	return *fgl;
 }
 
-OpenGLFont& Resources::StdFont(bool bold)
+OpenGLFont& Resources::GetFont(const Font& font)
 {
-	return GetFont(bold ? "tahoma14b.fnt" : "tahoma14.fnt");
+	//return GetFont(font.IsBold() ? "tahoma.fnt" : "tahoma.fnt", font.GetHeight());	
+	return GetFontBrc(font.IsBold() ? "tahoma.fnt" : "tahoma.fnt", NULL, NULL, font.GetHeight());
+	//return GetFont(bold ? "tahoma14b.fnt" : "tahoma14.fnt");
 /*	return GetFontBrc(
 	    bold ? "tahoma14b.fnt" : "tahoma14.fnt",
 		bold ? resTahoma14Fnt : resTahoma14BoldFnt,

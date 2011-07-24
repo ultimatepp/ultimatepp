@@ -10,6 +10,7 @@ HWND   hWnd = NULL;
 HWND   glHwnd = NULL;
 HDC    hDC = NULL;
 HGLRC  hRC = NULL;
+int    alphaMagProg = -1;
 
 bool glEndSession = false;
 
@@ -150,9 +151,14 @@ int CreateGlContext()
 		return -6;
 	}
 	RLOG("OpenGL: glewInit ok..");
-	//InitializeShaders();
+	
+	alphaMagProg = CompileProgram(fragAlphaMag, vertAlphaMag);
+	if(alphaMagProg < 0)
+		return -7;
+	
+	RLOG("OpenGL: CompileProgram ok..");
+	
 	wglSwapIntervalEXT(0);
-	//SetTimeCallback(-10, THISBACK(Repaint), 1);
 	                       
 	SetTimer(glHwnd, 1, 10, NULL);
 	RLOG("OpenGL: SetTimer ok..");

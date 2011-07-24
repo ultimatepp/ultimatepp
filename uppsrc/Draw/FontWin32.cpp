@@ -245,8 +245,8 @@ Vector<FaceInfo> GetAllFacesSys()
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
 	static GlyphInfo gi;
-	const OpenGLFont& fi = Resources::StdFont();
-	gi.width = (int) fi.chars[chr - 32].xadvance;
+	const OpenGLFont& fi = Resources::GetFont(font);
+	gi.width = int(fi.chars[chr - 32].xadvance * fi.scale);
 	return gi;
 }
 #else

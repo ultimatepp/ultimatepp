@@ -7,6 +7,7 @@ struct OpenGLFont : Moveable<OpenGLFont>
 	float scaleH;
 	float lineHeight;
 	float base;
+	float scale;
 	
 	bool texturesUpdated;
 
@@ -32,7 +33,7 @@ struct OpenGLFont : Moveable<OpenGLFont>
 	Array<byte> compiledFiles;
 	Vector<int64> pages;
 
-	OpenGLFont() : texturesUpdated(false)
+	OpenGLFont() : texturesUpdated(false), scale(1.0f)
 	{}
 
 	~OpenGLFont()
