@@ -533,7 +533,7 @@ int Ctrl::GetKbdSpeed()
 	return 1000 / 32;
 }
 
-void Ctrl::WndDestroy0()
+void Ctrl::DestroyWnd()
 {
 	for(int i = 0; i < topctrl.GetCount(); i++)
 		if(topctrl[i]->top && topctrl[i]->top->owner_window == this)
@@ -551,8 +551,13 @@ void Ctrl::WndDestroy0()
 	TopWindow *win = dynamic_cast<TopWindow *>(this);
 	if(win)
 		win->DestroyFrame();
+}
+
+void Ctrl::WndDestroy0()
+{
+	DestroyWnd();
 	if(topctrl.GetCount())
-		topctrl.Top()->SetWndForeground0();
+		topctrl.Top()->ActivateWnd();
 }
 
 void Ctrl::PutForeground()
