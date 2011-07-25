@@ -29,6 +29,8 @@ extern HDC   hDC;
 extern HGLRC hRC;
 extern int   alphaMagProg;
 
+extern String error;
+
 int CreateGlWindow(HINSTANCE hInstance);
 int CreateGlContext();
 void ActivateGlContext();

@@ -219,7 +219,7 @@ void Ctrl::DrawScreen()
 		#endif
 		draw.alpha = 255.f;
 		draw.Offset(infoPanel.GetRect().TopLeft());
-		infoPanel.CtrlPaint(draw, clip, NULL);
+		infoPanel.CtrlPaint(draw, clip);
 		draw.End();
 		#if CLIP_MODE == 2
 		glEnable(GL_STENCIL_TEST);

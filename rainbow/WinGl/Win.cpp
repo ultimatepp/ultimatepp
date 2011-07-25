@@ -11,6 +11,7 @@ HWND   glHwnd = NULL;
 HDC    hDC = NULL;
 HGLRC  hRC = NULL;
 int    alphaMagProg = -1;
+String error;
 
 bool glEndSession = false;
 
@@ -122,39 +123,42 @@ int CreateGlContext()
 	pfd.iLayerType = PFD_MAIN_PLANE;
 	int pf = ChoosePixelFormat(hDC, &pfd);
 	if(!pf) {
-		RLOG("OpenGL: ChoosePixelFormat error");
+		error ="ChoosePixelFormat error";
 		return -2;
 	}
 	RLOG("OpenGL: ChoosePixelFormat ok..");
 	if(!SetPixelFormat(hDC, pf, &pfd)) {
-		RLOG("OpenGL: SetPixelFormat error");
+		error = "SetPixelFormat error";
 		return -3;
 	}
 	DescribePixelFormat(hDC, pf, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
 	hRC = wglCreateContext(hDC);
 	if(!hRC)
 	{
-		RLOG("OpenGL: wglCreateContext error");
+		error = "wglCreateContext error";
 		return -4;
 	}
 	RLOG("OpenGL: wglCreateContext ok..");
 	if(!wglMakeCurrent(hDC, hRC))
 	{
-		RLOG("OpenGL: wglMakeCurrent error");
+		error = "wglMakeCurrent error";
 		return -5;
 	}
 	RLOG("OpenGL: wglMakeCurrent ok..");
 	GLenum err = glewInit();
 	if(err != GLEW_OK)
 	{
-		RLOG("OpenGL: Glew library initialization error: " + String((const char*) glewGetErrorString(err)));
+		error = "Glew library initialization error: " + String((const char*) glewGetErrorString(err));
 		return -6;
 	}
 	RLOG("OpenGL: glewInit ok..");
 	
 	alphaMagProg = CompileProgram(fragAlphaMag, vertAlphaMag);
 	if(alphaMagProg < 0)
+	{
+		error = "Shader compilation error";
 		return -7;
+	}
 	
 	RLOG("OpenGL: CompileProgram ok..");
 	
@@ -172,16 +176,25 @@ int AppMain(HINSTANCE hInstance, LPSTR lpCmdLine)
 {
 	UPP::coreCmdLine__() = UPP::SplitCmdLine__(UPP::FromSystemCharset(lpCmdLine));
 	UPP::AppInitEnvironment__();
-//	Ctrl::InitTimer();
 	Ctrl::InitGl();
-	//int r = UPP::GlInit(hInstance);
 	int r = UPP::CreateGlWindow(hInstance);
 	if(r < 0)
-		::MessageBox(NULL, Format("OpenGL window could not be created: %r (%s)", r, GetLastErrorMessage()), NULL, MB_ICONEXCLAMATION | MB_OK);
+	{
+		error = Format("OpenGL window could not be created: %d (%s)", r, GetLastErrorMessage());
+		RLOG(error);
+		::MessageBox(NULL, error, NULL, MB_ICONEXCLAMATION | MB_OK);
+	}
 	else
+	{
 		r = UPP::CreateGlContext();
+	}
+	
 	if(r < 0)
-		::MessageBox(NULL, Format("OpenGL context could not be created: %r (%s)", r, GetLastErrorMessage()), NULL, MB_ICONEXCLAMATION | MB_OK);
+	{
+		error = Format("OpenGL context could not be created: %d (%s)", r, error);
+		RLOG(error);
+		::MessageBox(NULL, error, NULL, MB_ICONEXCLAMATION | MB_OK);
+	}
 
 	if(r > 0) 
 	{
@@ -190,7 +203,9 @@ int AppMain(HINSTANCE hInstance, LPSTR lpCmdLine)
 		UPP::UsrLog("---------- About to delete this log of WinGL...");
 		UPP::DeleteUsrLog();
 		return UPP::GetExitCode();
-	} else {
+	}
+	else
+	{
 		return r;
 	}
 }
