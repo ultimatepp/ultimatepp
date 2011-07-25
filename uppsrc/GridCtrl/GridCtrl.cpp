@@ -1175,7 +1175,7 @@ void GridCtrl::Paint(Draw &w)
 					gd->SetLeftImage(hi.img);
 					gd->PaintFixed(w, jj == firstcol, i == 0, x, y, cx, cy,
 								i == 0 ? it.val : GetConvertedColumn(hi.id, it.val),
-								style | en, hi.hfnt, false, false,
+								style | en, IsNull(hi.hfnt) ? StdFont() : hi.hfnt, false, false,
 								i == 0 ? hi.sortmode : 0,
 								hi.sortcol,
 								sortOrder.GetCount(),
@@ -1303,7 +1303,7 @@ void GridCtrl::Paint(Draw &w)
 
 					gd->PaintFixed(w, firstx, j == 0, x, y, cx, cy,
 									GetConvertedColumn(id, it.val),
-									style | en, vi.hfnt,
+									style | en, IsNull(vi.hfnt) ? StdFont() : vi.hfnt,
 									indicator, false, 0, -1, 0, false);
 					
 					it.rcx = gd->real_size.cx;
@@ -1359,14 +1359,7 @@ void GridCtrl::Paint(Draw &w)
 		if(x < sz.cx) w.DrawRect(Rect(max(x, rc.left), max(fixed_height, rc.top), sz.cx, sz.cy), SColorPaper);
 		if(y < sz.cy) w.DrawRect(Rect(max(fixed_width, rc.left), max(y, rc.top), sz.cx, sz.cy), SColorPaper);
 
-/*
-		if(fixed_rows <= total_rows)
-		{
-			w.DrawText(
-		}
-*/
-
-		bool hasfocus = HasFocus/*Deep*/() || holder.HasFocusDeep();
+		bool hasfocus = HasFocus() || holder.HasFocusDeep();
 
 		for(i = max(firstRow, fixed_rows); i < total_rows; i++)
 		{
