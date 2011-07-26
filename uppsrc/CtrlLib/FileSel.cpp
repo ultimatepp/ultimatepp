@@ -341,7 +341,7 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 				img = isdrive ? PosixGetDriveImage(fi.filename, false)
 				              : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111, false);
 			#endif
-			#ifdef GUI_WIN32
+			#ifdef GUI_WIN
 //				Image img = lazyicons ? fi.is_directory ? CtrlImg::Dir() : CtrlImg::File()
 //				                      : GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, fi.unix_mode & 0111, false);
 				img = GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, false, false, lazyicons);
@@ -1218,7 +1218,7 @@ Image GetDirIcon(const String& s)
 #ifdef GUI_X11
 	img = GetFileIcon(GetFileFolder(s), GetFileName(s), true, false, false);
 #endif
-#ifdef GUI_WIN32
+#ifdef GUI_WIN
 	if((byte)*s.Last() == 255)
 		img = CtrlImg::Network();
 	else

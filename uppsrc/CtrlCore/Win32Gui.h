@@ -1,4 +1,5 @@
 #define GUI_WIN
+#define GUI_WIN32
 
 NAMESPACE_UPP
 
