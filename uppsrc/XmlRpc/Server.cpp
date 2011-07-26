@@ -167,7 +167,7 @@ bool XmlRpcPerform(Socket& http, const char *group)
 				response <<
 					"HTTP/1.0 200 OK\r\n"
 					"Date: " << ts << "\r\n"
-					"Server: U++\r\n"
+					"Server: U++ XMLRPC server\r\n"
 					"Content-Length: " << r.GetCount() << "\r\n"
 					"Connection: close\r\n"
 					"Content-Type: text/xml\r\n\r\n"
