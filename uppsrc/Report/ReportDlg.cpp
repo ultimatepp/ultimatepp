@@ -214,10 +214,10 @@ ReportWindow::ReportWindow()
 	pdf <<= THISBACK(Pdf);
 }
 
-String Pdf(Report& report)
+String Pdf(Report& report, bool pdfa)
 {
 	return GetDrawingToPdfFn() && report.GetCount() ?
-	      (*GetDrawingToPdfFn())(report.GetPages(), report.GetPage(0).GetSize(), 200)
+	      (*GetDrawingToPdfFn())(report.GetPages(), report.GetPage(0).GetSize(), 200, pdfa)
 	      : String();
 }
 

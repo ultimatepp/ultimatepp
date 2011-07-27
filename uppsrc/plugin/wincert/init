@@ -1,0 +1,4 @@
+#ifndef _plugin_wincert_icpp_init_stub
+#define _plugin_wincert_icpp_init_stub
+#include "Web/init"
+#endif

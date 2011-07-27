@@ -172,10 +172,10 @@ ReportDlg::ReportDlg()
 	pdf <<= THISBACK(Pdf);
 }
 
-String Pdf(const DocReport& report)
+String Pdf(const DocReport& report, bool pdfa)
 {
 	return GetDrawingToPdfFn() ? (*GetDrawingToPdfFn())(report.GetPages(), report.GetPageSize(),
-	                                                    200)
+	                                                    200, pdfa)
 	                           : String();
 }
 

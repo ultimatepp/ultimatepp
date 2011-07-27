@@ -111,7 +111,7 @@ public:
 	virtual ~DocReport();
 };
 
-String Pdf(const DocReport& report);
+String Pdf(const DocReport& report, bool pdfa = false);
 
 class ReportCtrl : public Ctrl {
 public:

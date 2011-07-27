@@ -2,9 +2,9 @@
 
 NAMESPACE_UPP
 
-String Pdf(const Array<Drawing>& report, Size sz, int margin)
+String Pdf(const Array<Drawing>& report, Size sz, int margin, bool pdfa)
 {
-	PdfDraw w(sz + 2 * margin);
+	PdfDraw w(sz + 2 * margin, pdfa);
 	for(int i = 0; i < report.GetCount(); i++) {
 		w.StartPage();
 		w.DrawDrawing(margin, margin, sz.cx, sz.cy, report[i]);

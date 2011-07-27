@@ -141,7 +141,7 @@ public:
 	ReportWindow();
 };
 
-String Pdf(Report& report);
+String Pdf(Report& report, bool pdfa = false);
 void   Print(Report& r, PrinterJob& pd, bool center = true);
 bool   DefaultPrint(Report& r, int i, const char *_name = t_("Report"));
 bool   Print(Report& r, int i, const char *name = t_("Report"));
