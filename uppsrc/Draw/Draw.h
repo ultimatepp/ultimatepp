@@ -865,7 +865,7 @@ void DrawTLText(Draw& draw, int x, int y, int cx, const wchar *text, Font font =
                 Color ink = SColorText(), int accesskey = 0);
 
 
-typedef String (*DrawingToPdfFnType)(const Array<Drawing>& report, Size pagesize, int margin);
+typedef String (*DrawingToPdfFnType)(const Array<Drawing>& report, Size pagesize, int margin, bool pdfa);
 
 void SetDrawingToPdfFn(DrawingToPdfFnType Pdf);
 DrawingToPdfFnType GetDrawingToPdfFn();

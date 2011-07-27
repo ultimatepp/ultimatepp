@@ -284,13 +284,14 @@ private:
 	double      linewidth;
 	int         margin;
 	uint64      patternid;
+	bool        pdfa;
 
 	inline double Pt(double dot)        { return 0.12 * dot; }
 
 	int    Pos()                        { return offset.GetCount() + 1; }
 	int    BeginObj();
 	void   EndObj();
-	int    PutStream(const String& data, const String& keys = Null);
+	int    PutStream(const String& data, const String& keys = Null, bool compress = true);
 
 	void    PutRect(const Rect& rc);
 	void    PutrgColor(Color rg, uint64 pattern = 0);
@@ -320,7 +321,7 @@ private:
 		M22() : a(1), b(0), c(0), d(1) {}
 	};
 
-	void Init(int pagecx, int pagecy, int margin);
+	void Init(int pagecx, int pagecy, int margin, bool pdfa);
 
 	struct RGlyph : Moveable<RGlyph> {
 		String data;
@@ -334,8 +335,8 @@ public:
 	String Finish();
 	void   Clear();
 
-	PdfDraw(int pagecx, int pagecy)                { Init(pagecx, pagecy, 0); }
-	PdfDraw(Size pgsz = Size(5100, 6600))          { Init(pgsz.cx, pgsz.cy, 0); }
+	PdfDraw(int pagecx, int pagecy, bool pdfa = false)       { Init(pagecx, pagecy, 0, pdfa); }
+	PdfDraw(Size pgsz = Size(5100, 6600), bool pdfa = false) { Init(pgsz.cx, pgsz.cy, 0, pdfa); }
 };
 
 String Pdf(const Array<Drawing>& report, Size pagesize, int margin);

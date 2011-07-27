@@ -1,0 +1,13 @@
+description "Minimum Win32 certificate support and PDF digital signing\377";
+
+uses
+	Web;
+
+library
+	Crypt32.lib;
+
+file
+	wincert.h,
+	util.cpp,
+	pdf.cpp;
+
