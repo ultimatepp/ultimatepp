@@ -3,7 +3,7 @@
 class InsertColorDlg : public WithInsertColorLayout<TopWindow> {
 	typedef InsertColorDlg CLASSNAME;
 
-	String r[4];
+	String r[5];
 
 	void Sync();
 	void Select(int i);
@@ -31,6 +31,8 @@ void InsertColorDlg::Sync()
 	ahex.SetLabel(r[2]);
 	r[3] = Format("%02x%02x%02x", c.r, c.g, c.b);
 	hex.SetLabel(r[3]);
+	r[4] = Format("(%d.%d.%d)", c.r, c.g, c.b);
+	qtf.SetLabel(r[4]);
 }
 
 InsertColorDlg::InsertColorDlg()
@@ -41,6 +43,7 @@ InsertColorDlg::InsertColorDlg()
 	color <<= THISBACK1(Select, 1);
 	ahex <<= THISBACK1(Select, 2);
 	hex <<= THISBACK1(Select, 3);
+	qtf <<= THISBACK1(Select, 4);
 	Sync();
 }
 

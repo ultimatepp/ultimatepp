@@ -602,6 +602,7 @@ LAYOUT(InsertColorLayout, 432, 520)
 	ITEM(Button, rgba, SetLabel(t_("Cancel")).LeftPosZ(284, 144).TopPosZ(32, 24))
 	ITEM(Button, ahex, SetLabel(t_("Cancel")).LeftPosZ(284, 144).TopPosZ(60, 24))
 	ITEM(Button, hex, SetLabel(t_("Cancel")).LeftPosZ(284, 144).TopPosZ(88, 24))
+	ITEM(Button, qtf, SetLabel(t_("Cancel")).LeftPosZ(284, 144).TopPosZ(116, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(284, 144).TopPosZ(492, 24))
 END_LAYOUT
 
