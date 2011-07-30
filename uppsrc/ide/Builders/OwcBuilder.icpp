@@ -433,7 +433,7 @@ Builder *CreateOwcBuilder()
 	return new OwcBuilder;
 }
 
-void RegisterOwcBuilder()
+INITBLOCK
 {
 	RegisterBuilder("OWC", CreateOwcBuilder);
 }

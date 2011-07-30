@@ -109,7 +109,7 @@ void Ide::InsertMenu(Bar& bar)
 			if(ext == ".tpp") {
 				String s;
 				s << "#define TOPICFILE <" << pp << "/all.i>\n"
-	  			  << "#include <Core/topic_group.h>\n";
+				  << "#include <Core/topic_group.h>\n";
 				bar.Add(fn + " include", THISBACK1(InsertText, s));
 				n++;
 			}

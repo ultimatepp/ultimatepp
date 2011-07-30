@@ -43,6 +43,11 @@
 #define TIME_(x)                   COLUMN_("timestamp", Time, x, 0, 0)
 #define TIME_ARRAY_(x, items)      COLUMN_ARRAY_("timestamp", Time, x, 0, 0, items)
 
+#define TIME_SEC(x)                COLUMN("timestamp(0)", Time, x, 0, 0)
+#define TIME_SEC_ARRAY(x, items)   COLUMN_ARRAY("timestamp(0)", Time, x, 0, 0, items)
+#define TIME_SEC_(x)               COLUMN_("timestamp(0)", Time, x, 0, 0)
+#define TIME_SEC_ARRAY_(x, items)  COLUMN_ARRAY_("timestamp(0)", Time, x, 0, 0, items)
+
 #define BOOL(x)                    COLUMN("char(1)", bool, x, 0, 0)
 #define BOOL_ARRAY(x, items)       COLUMN_ARRAY("char(1)", bool, x, 0, 0, items)
 #define BOOL_(x)                   COLUMN_("char(1)", bool, x, 0, 0)
@@ -163,6 +168,11 @@ ATTRIBUTE("alter table @t add constraint UQ_@t$" #name " unique (" list ");", \
 #undef TIME_ARRAY
 #undef TIME_
 #undef TIME_ARRAY_
+
+#undef TIME_SEC
+#undef TIME_SEC_ARRAY
+#undef TIME_SEC_
+#undef TIME_SEC_ARRAY_
 
 #undef BOOL
 #undef BOOL_ARRAY

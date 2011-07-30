@@ -2,4 +2,5 @@
 #define _ide_Core_icpp_init_stub
 #include "CtrlLib/init"
 #include "Esc/init"
+#include "Web/init"
 #endif

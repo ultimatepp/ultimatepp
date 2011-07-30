@@ -20,6 +20,8 @@ bool IconDes::Key(dword key, int count)
 	case K_SHIFT_RIGHT: KeyMove(1, 0); return true;
 	case K_SHIFT_UP:    KeyMove(0, -1); return true;
 	case K_SHIFT_DOWN:  KeyMove(0, 1); return true;
+	case K_PAGEUP:      ChangeSlot(-1); return true;
+	case K_PAGEDOWN:    ChangeSlot(1); return true;
 	}
 	return false;
 }
