@@ -255,6 +255,16 @@ void IconDes::MoveSlot(int d)
 	}
 }
 
+void IconDes::ChangeSlot(int d)
+{
+	if(!IsCurrent())
+		return;
+	int c = list.GetCursor();
+	d = c + d;
+	if(d >= 0 && d < slot.GetCount())
+		list.SetCursor(d);
+}
+
 void IconDes::ListMenu(Bar& bar)
 {
 	using namespace IconDesKeys;

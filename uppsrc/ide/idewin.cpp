@@ -828,12 +828,6 @@ void AppMain___()
 	try {
 		void RegisterLayDes(); RegisterLayDes();
 		void RegisterIconDes(); RegisterIconDes();
-	//	void RegisterIdeVectorDes(); RegisterIdeVectorDes();
-		void RegisterGccBuilder(); RegisterGccBuilder();
-		void RegisterMscBuilder(); RegisterMscBuilder();
-		void RegisterOwcBuilder(); RegisterOwcBuilder();
-		void RegisterJavaBuilder(); RegisterJavaBuilder();
-		void RegisterScriptBuilder(); RegisterScriptBuilder();
 
 		splash_screen = true;
 

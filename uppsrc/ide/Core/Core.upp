@@ -2,7 +2,8 @@ description "TheIDE - common library\377B";
 
 uses
 	CtrlLib,
-	Esc;
+	Esc,
+	Web;
 
 file
 	Core.h,

@@ -274,6 +274,7 @@ private:
 	void  InsertPaste();
 	void  InsertFile();
 	void  MoveSlot(int d);
+	void  ChangeSlot(int d);
 
 	static FileSel& ImgFile();
 
