@@ -47,14 +47,19 @@ void Ctrl::InitGl()
 {
 	Ctrl::GlobalBackBuffer();
 	Ctrl::InitTimer();
+	ChStdSkin();
+	static StaticRect x;
+	x.Color(Cyan());
+	SetDesktop(x);
 }
 
 void Ctrl::EndSession()
 {
 	GuiLock __;
 	glEndSession = true;
-	glEndSessionLoop = glEventLoop;
+	EndSessionLoopNo = EventLoopNo;
 }
+
 void Ctrl::ExitGl()
 {
 	TopWindow::ShutdownWindows();
@@ -237,11 +242,10 @@ void Ctrl::WndUpdate0r(const Rect& r)
 
 bool Ctrl::ProcessEvents(bool *quit)
 {
-	LOGBLOCK("@ ProcessEvents");
-	MemoryCheckDebug();
+
 	if(!ProcessEvent(quit))
 		return false;
-	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()) && !GlEndSession());
+	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()));
 	TimerProc(GetTickCount());
 	SweepMkImageCache();
 	if(hRC)
@@ -264,9 +268,9 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	}
 
 	bool quit = false;
+	int64 loopno = ++EventLoopNo;
 	ProcessEvents(&quit);
-	int64 loopno = ++glEventLoop;
-	while(loopno > glEndSessionLoop && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
+	while(loopno > EndSessionLoopNo && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
 		SyncCaret();
 		GuiSleep(20);
@@ -364,7 +368,7 @@ int Ctrl::GetKbdSpeed()
 	return 1000 / 32;
 }
 
-void Ctrl::WndDestroy0()
+void Ctrl::DestroyWnd()
 {
 	for(int i = 0; i < topctrl.GetCount(); i++)
 		if(topctrl[i]->top && topctrl[i]->top->owner_window == this)
@@ -381,6 +385,13 @@ void Ctrl::WndDestroy0()
 	TopWindow *win = dynamic_cast<TopWindow *>(this);
 	if(win)
 		win->DestroyFrame();
+}
+
+void Ctrl::WndDestroy0()
+{
+	DestroyWnd();
+	if(topctrl.GetCount())
+		topctrl.Top()->ActivateWnd();
 }
 
 void Ctrl::PutForeground()
@@ -405,9 +416,10 @@ void Ctrl::SetWndForeground0()
 	ASSERT(IsOpen());
 	if(IsWndForeground())
 		return;
-	if(top && top->owner_window)
-		top->owner_window->PutForeground();
-	PutForeground();
+	Ctrl *to = this;
+	while(to->top && to->top->owner_window)
+		to = to->top->owner_window;
+	to->PutForeground();
 	if(this != focusCtrl)
 		ActivateWnd();
 }
@@ -506,13 +518,12 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 
 Rect Ctrl::GetDefaultWindowRect() {
 	GuiLock __;
-/*	int ii = 0;
+	int ii = 0;
 	Size sz = screenRect.GetSize();
 	Rect rect = sz;
 	rect.Deflate(sz / 8);
 	rect.Offset(Point(sz) / 16 * (ii % 8));
-	return rect;*/
-	return screenRect;
+	return rect;
 }
 
 Vector<WString> SplitCmdLine__(const char *cmd)

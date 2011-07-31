@@ -17,6 +17,7 @@
 
 	int FindTopCtrl() const;
 	static void SyncTopWindows();
+	void DestroyWnd();
 	void NewTop()                       { top = new Top; top->owner_window = NULL; }
 	void PutForeground();
 	static void MouseEventGl(Ptr<Ctrl> t, int event, Point p, int zdelta);

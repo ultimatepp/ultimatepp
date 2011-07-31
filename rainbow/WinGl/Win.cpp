@@ -10,7 +10,7 @@ HWND   hWnd = NULL;
 HWND   glHwnd = NULL;
 HDC    hDC = NULL;
 HGLRC  hRC = NULL;
-int    alphaMagProg = -1;
+Shader alphaMagProg;
 String error;
 
 bool glEndSession = false;
@@ -153,13 +153,14 @@ int CreateGlContext()
 	}
 	RLOG("OpenGL: glewInit ok..");
 	
-	alphaMagProg = CompileProgram(fragAlphaMag, vertAlphaMag);
-	if(alphaMagProg < 0)
+	alphaMagProg.CompileProgram(vertAlphaMag, fragAlphaMag);
+	
+	if(alphaMagProg.GetProgram() < 0)
 	{
-		error = "Shader compilation error";
+		error = alphaMagProg.GetError();
 		return -7;
 	}
-	
+		
 	RLOG("OpenGL: CompileProgram ok..");
 	
 	wglSwapIntervalEXT(0);
@@ -180,7 +181,7 @@ int AppMain(HINSTANCE hInstance, LPSTR lpCmdLine)
 	int r = UPP::CreateGlWindow(hInstance);
 	if(r < 0)
 	{
-		error = Format("OpenGL window could not be created: %d (%s)", r, GetLastErrorMessage());
+		error = Format("OpenGL window could not be created: %d\n\n%s", r, GetLastErrorMessage());
 		RLOG(error);
 		::MessageBox(NULL, error, NULL, MB_ICONEXCLAMATION | MB_OK);
 	}
@@ -191,7 +192,7 @@ int AppMain(HINSTANCE hInstance, LPSTR lpCmdLine)
 	
 	if(r < 0)
 	{
-		error = Format("OpenGL context could not be created: %d (%s)", r, error);
+		error = Format("OpenGL context could not be created: %d\n\n%s", r, error);
 		RLOG(error);
 		::MessageBox(NULL, error, NULL, MB_ICONEXCLAMATION | MB_OK);
 	}
