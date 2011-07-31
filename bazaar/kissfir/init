@@ -1,0 +1,5 @@
+#ifndef _kissfir_icpp_init_stub
+#define _kissfir_icpp_init_stub
+#include "Core/init"
+#include "plugin\kissfft/init"
+#endif

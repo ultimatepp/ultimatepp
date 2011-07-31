@@ -1,0 +1,24 @@
+description "KissFFT plugin\377";
+
+file
+	kissfft.h,
+	kissfft.cpp,
+	Orig readonly separator,
+	kiss_fft.h,
+	_kiss_fft_guts.h,
+	kiss_fft.c,
+	kissfft.hh,
+	tools readonly separator,
+	kfc.c,
+	kfc.h,
+	kiss_fastfir.h,
+	kiss_fastfir.cpp,
+	kiss_fftnd.c,
+	kiss_fftnd.h,
+	kiss_fftndr.c,
+	kiss_fftndr.h,
+	kiss_fftr.c,
+	kiss_fftr.h,
+	info readonly separator,
+	info.txt;
+

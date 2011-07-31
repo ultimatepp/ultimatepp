@@ -1,0 +1,12 @@
+uses
+	Core,
+	plugin\kissfft;
+
+file
+	kissfir.h,
+	kissfir.cpp;
+
+mainconfig
+	"" = "MT SSE2",
+	"" = "MT SSE2 FAST_FILT_UTIL";
+

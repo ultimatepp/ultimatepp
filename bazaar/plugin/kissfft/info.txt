@@ -1,0 +1,19 @@
+version 1.29 from
+http://sourceforge.net/projects/kissfft/
+
+didnt touch the files at all, except for default double change in kiss_fft.h,
+tools folder simply merged into main folder, to make include semantic right.
+
+some minor changes:
+
+kiss_fastfir.c:76 from float to
+    kiss_fft_scalar scale;
+
+added the flag
+#ifdef flagFAST_FILT_UTIL
+
+kiss_fastfir.h added with some of the cpp contents to be able to use the 2 major functions
+directly
+
+wiki:
+http://sourceforge.net/apps/mediawiki/kissfft/index.php?title=Main_Page

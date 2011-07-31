@@ -1,0 +1,15 @@
+uses
+	CtrlLib,
+	plugin\kissfft;
+
+options
+	-Dkiss_fft_scalar=double;
+
+file
+	KissFFTTest.h,
+	main.cpp,
+	KissFFTTest.lay;
+
+mainconfig
+	"" = "GUI MT SSE2";
+

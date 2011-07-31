@@ -1,0 +1,5 @@
+#ifndef _KissFFTTest_icpp_init_stub
+#define _KissFFTTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "plugin\kissfft/init"
+#endif
