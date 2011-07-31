@@ -126,17 +126,19 @@ void OpenGLFont::UpdateTextures()
 	texturesUpdated = true;
 }
 
-//extern int gpuProgram;
+float ConvStrength(float min, float max, float p)
+{
+	return min + (max - min) * p / 100.f;
+}
 
-void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx)
+void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Color ink, int outlineStrength, Color outlineColor, int glowStrength, Color glowColor, int n, const int *dx)
 {
 	if(!text)
 		return;
-	
+
 	const wchar* s = text;	
 	OpenGLFont& fi = Resources::GetFont(font);
 	
-	glColor4ub(ink.GetR(), ink.GetG(), ink.GetB(), (int) alpha);
 	glEnable(GL_TEXTURE_2D);
 	
 	#if CLIP_MODE == 3
@@ -148,14 +150,21 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	fi.UpdateTextures();	
 
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glUseProgram(alphaMagProg);
+	alphaMagProg.Start();
 
-	float r = ink.GetR() / 255.f;
-	float g = ink.GetG() / 255.f;
-	float b = ink.GetB() / 255.f;	
+	const float ic = 1.f / 255.f;
 
-	int fragTextColor = glGetUniformLocation(alphaMagProg, "textColor");
-	glUniform4f(fragTextColor, r, g, b, 0);
+	float outlineCenter = ConvStrength(0.1f, 0.45f, (float) 100 - min(outlineStrength, 100));
+	float glowCenter = ConvStrength(0.55f, 0.95f, (float) 100 - min(glowStrength, 100));
+	
+	alphaMagProg.Set("GlyphColor", ink.GetR() * ic, ink.GetG() * ic, ink.GetB() * ic, alpha);
+	alphaMagProg.Set("OutlineColor", outlineColor.GetR() * ic, outlineColor.GetG() * ic, outlineColor.GetB() * ic, alpha);
+	alphaMagProg.Set("GlowColor", glowColor.GetR() * ic, glowColor.GetG() * ic, glowColor.GetB() * ic, alpha);
+	alphaMagProg.Set("Outline", outlineStrength > 0); //0.1 - 0.45
+	alphaMagProg.Set("Glow", glowStrength > 0); //0.55 - 0.095
+	alphaMagProg.Set("Shadow", false);
+	alphaMagProg.Set("OutlineCenter", outlineCenter);
+	alphaMagProg.Set("GlowCenter", glowCenter);
 	
 	float xp = (float) x;
 	float yp = (float) y;
@@ -172,10 +181,8 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 			cn <<= 3;
 	
 			Resources::Bind(fi.pages[ci.page], true);
-			int textMap = glGetUniformLocation(alphaMagProg, "textMap");
-			
 			glActiveTexture(GL_TEXTURE0);
-			glUniform1i(textMap, 0);
+			alphaMagProg.Set("Texture", 0);
 			
 			float sx = (float) ci.xoffset * fi.scale + xp + drawing_offset.x;
 			float sy = (float) ci.yoffset * fi.scale + yp + drawing_offset.y;
@@ -241,8 +248,6 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 					tr, tb,
 					tr, tt
 				}; 
-				//SetVec(vtx, sx, sy, dx, dy);
-				//SetVec(crd, tl, tt, tr, tb);
 
 				glTexCoordPointer(2, GL_FLOAT, 0, crd);
 				glVertexPointer(2, GL_FLOAT, 0, vtx);
@@ -260,10 +265,14 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 		--n;
 	}
 
-	glUseProgram(0);
+	alphaMagProg.Stop();
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisable(GL_TEXTURE_2D);
-	glColor4ub(255, 255, 255, (int) alpha);	
+}
+
+void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx)
+{
+	Text(x, y, angle, text, font, ink, 0, White, 0, White, n, dx);
 }
 
 Size GetTextSize(const wchar *text, const OpenGLFont& fi, int n)

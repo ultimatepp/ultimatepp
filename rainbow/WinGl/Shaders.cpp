@@ -3,7 +3,7 @@
 
 NAMESPACE_UPP
 
-void printShaderInfoLog(GLuint obj, const char* fileName)
+void Shader::PrintShaderInfoLog(GLuint obj, const char* fileName)
 {
 	int infoLength = 0;
 	int charsWritten = 0;
@@ -16,6 +16,7 @@ void printShaderInfoLog(GLuint obj, const char* fileName)
 		glGetShaderInfoLog(obj, infoLength, &charsWritten, info);
 		if(charsWritten > 0)
 		{
+			compileError = info;
 			FileOut f(fileName);
 			f.Put(info);
 		}
@@ -23,7 +24,7 @@ void printShaderInfoLog(GLuint obj, const char* fileName)
 	}
 }
 
-void printProgramInfoLog(GLuint obj, const char* fileName)
+void Shader::PrintProgramInfoLog(GLuint obj, const char* fileName)
 {
 	int infoLength = 0;
 	int charsWritten = 0;
@@ -43,7 +44,7 @@ void printProgramInfoLog(GLuint obj, const char* fileName)
 	}
 }
 
-void printProgramValidationLog(GLuint obj, const char* fileName)
+void Shader::PrintProgramValidationLog(GLuint obj, const char* fileName)
 {
 	char log[1024];
 	int len = 0;
@@ -56,7 +57,7 @@ void printProgramValidationLog(GLuint obj, const char* fileName)
 	}
 }
 
-bool checkGLError()
+bool Shader::CheckGLError()
 {
 	unsigned int lastError = glGetError();
 	if(GL_NO_ERROR != lastError)
@@ -67,109 +68,187 @@ bool checkGLError()
 	return true;
 }
 
-bool IsProgramCompiled(int program)
+bool Shader::IsProgramCompiled(int program)
 {
 	GLint result = GL_FALSE;
 	glGetShaderiv(program, GL_COMPILE_STATUS, &result);
 	return result == GL_TRUE;
 }
 
-int CompileProgram(const char* frag, const char* vert)
+bool Shader::IsProgramLinked(int program)
 {
-	const GLchar* vertexShaderSrc = (const GLchar*) vert;
-	const GLchar* fragmentShaderSrc = (const GLchar*) frag;
+	GLint result = GL_FALSE;
+	glGetShaderiv(program, GL_LINK_STATUS, &result);
+	return result == GL_TRUE;
+}
+
+int Shader::CompileProgram(const char* vs, const char* fs)
+{
+	vertSrc = vs;
+	fragSrc = fs;
+	
+	const GLchar* vertexShaderSrc = (const GLchar*) vertSrc;
+	const GLchar* fragmentShaderSrc = (const GLchar*) fragSrc;
 	
 	DeleteFile("shader_vertex.log");
 	DeleteFile("shader_fragment.log");
 	DeleteFile("shader_link.log");
 	DeleteFile("shader_validation.log");
-	
-	int program = glCreateProgram();
 
 	GLenum vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	GLenum fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
 	glShaderSource(vertexShader, 1, &vertexShaderSrc, NULL);
 	glCompileShader(vertexShader);
+	
 	if(!IsProgramCompiled(vertexShader))
 	{
-		error = "Vertex shader compilation error (see shader_vertex.log)";
-		printShaderInfoLog(vertexShader, "shader_vertex.log");
-		return -3;
+		PrintShaderInfoLog(vertexShader, "shader_vertex.log");
+		error = "Vertex shader compilation error:\n\n" + compileError;
+		return -1;
 	}
+	
+	GLenum fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragmentShaderSrc, NULL);
 	glCompileShader(fragmentShader);
+	
 	if(!IsProgramCompiled(fragmentShader))
 	{
-		error = "Fragment shader compilation error (see shader_fragment.log)";
-		printShaderInfoLog(fragmentShader, "shader_fragment.log");
-		return -4;
+		PrintShaderInfoLog(fragmentShader, "shader_fragment.log");
+		error = "Fragment shader compilation error:\n\n" + compileError;
+		return -1;
 	}
-	glAttachShader(program, vertexShader);
-	glAttachShader(program, fragmentShader);
-	glLinkProgram(program);
-	//if(!IsProgramCompiled(program)) /* ATI always reports validation warning */
+
+	program = glCreateProgram();
+	
+	if(program > 0)
 	{
-		printProgramInfoLog(program, "shader_link.log");
-		printProgramValidationLog(program, "shader_validation.log");
-		//return -7;
+		glAttachShader(program, vertexShader);
+		glAttachShader(program, fragmentShader);
+		glLinkProgram(program);
+		if(!IsProgramLinked(program))
+		{
+			PrintProgramInfoLog(program, "shader_link.log");
+			PrintProgramValidationLog(program, "shader_validation.log");
+			return -1;
+		}
 	}
+	else
+		program = -1;
 	
 	return program;
 }
 
-const String fragAlphaMag =
-"uniform sampler2D textMap;                                                                  \n"
-"uniform vec4 textColor;                                                                     \n"
+int Shader::GetProgram()
+{
+	return program;
+}
+
+String Shader::GetError()
+{
+	return error;
+}
+
+int Shader::GetUniformId(const char* var)
+{
+	int n = uniforms.Find(var);
+	if(n < 0)
+	{
+		int id = glGetUniformLocation(program, var);
+		CheckGLError();
+		if(id >= 0)
+			uniforms.Add(var, id);
+		return id;
+	}
+	else
+		return uniforms[n];
+}
+
+void Shader::Set(const char* var, float v)
+{
+	int id = GetUniformId(var);
+	if(id >= 0)
+		glUniform1f(id, v);
+}
+
+void Shader::Set(const char* var, bool v)
+{
+	int id = GetUniformId(var);
+	if(id >= 0)
+		glUniform1i(id, int(v));
+}
+
+void Shader::Set(const char* var, int v)
+{
+	int id = GetUniformId(var);
+	if(id >= 0)
+		glUniform1i(id, v);
+}
+
+void Shader::Set(const char* var, float v0, float v1, float v2, float v3)
+{
+	int id = GetUniformId(var);
+	if(id >= 0)
+		glUniform4f(id, v0, v1, v2, v3);
+}
+
+void Shader::Start()
+{
+	glUseProgram(program);
+	CheckGLError();
+}
+
+void Shader::Stop()
+{
+	glUseProgram(0);
+}
+
+Shader::Shader() : program(-1)
+{}
+
+
+const String fragAlphaMag = 
+"uniform sampler2D Texture;                                                                  \n"
+"uniform vec4 GlyphColor;                                                                    \n"
+"uniform vec4 GlowColor;                                                                     \n"
+"uniform vec4 OutlineColor;                                                                  \n"
 "                                                                                            \n"
-"float alphaThreshold = 0.50;                                                                \n"
-"float distanceScale = 15.0;                                                                 \n"
+"uniform bool Outline = false;                                                               \n"
+"uniform bool Glow = false;                                                                  \n"
+"uniform bool Shadow = false;                                                                \n"
 "                                                                                            \n"
-"float outlineOuter = 0.3;                                                                   \n"
-"float outlineInner = 0.1;                                                                   \n"
-"vec4 outlineColor = vec4(0, 0, 0, 1);                                                       \n"
+"const float AlphaCenter = 0.5;                                                              \n"
 "                                                                                            \n"
-"float glowOffsetX = 0.005;                                                                  \n"
-"float glowOffsetY = 0.005;                                                                  \n"
-"float glowStart = .7;                                                                       \n"
-"float glowEnd = 0.5;                                                                        \n"
-"vec4 glowColor = vec4(0.0, 0.0, 0.0, 1.0);                                                  \n"
+"uniform float OutlineCenter = 0.4;                                                          \n"
+"uniform float GlowCenter = 0.7;                                                             \n"
+"uniform float DistanceScale = 15;                                                           \n"
 "                                                                                            \n"
 "void main()                                                                                 \n"
 "{                                                                                           \n"
-"	vec4 color = texture2D(textMap, gl_TexCoord[0].xy);                                      \n"
-"	float distanceFactor = color.a;                                                          \n"
-"	                                                                                         \n"
-"	float width = fwidth(gl_TexCoord[0].x) * distanceScale;                                  \n"
-"	                                                                                         \n"
-"	/*float outlineMin1 = outlineOuter + width * 2.0;                                        \n"
-"	float outlineMax1 = outlineInner + width * 2.0;                                          \n"
-"	                                                                                         \n"
-"	if (distanceFactor > outlineOuter && distanceFactor < outlineMax1)                       \n"
-"	{                                                                                        \n"
-"		float outlineAlpha;                                                                  \n"
-"		                                                                                     \n"
-"		if (distanceFactor <= outlineMin1)                                                   \n"
-"			outlineAlpha = smoothstep(outlineOuter, outlineMin1, distanceFactor);            \n"
-"		else                                                                                 \n"
-"			outlineAlpha = smoothstep(outlineMax1, outlineInner, distanceFactor);            \n"
-"			                                                                                 \n"
-"		color = mix(color, outlineColor, outlineAlpha);                                      \n"
-"	}*/                                                                                      \n"
-"	                                                                                         \n"
-"	color.rgb = textColor.rgb;                                                               \n"
-"	color.a = smoothstep(alphaThreshold - width, alphaThreshold + width, distanceFactor);    \n"
-"	                                                                                         \n"
-"	/*vec2 glowOffset = vec2(-glowOffsetX, -glowOffsetY);                                    \n"
-"	float glowDistance = texture2D(textMap, gl_TexCoord[0].xy + glowOffset).a;               \n"
-"	float glowFactor = smoothstep(glowStart, glowEnd, glowDistance);                         \n"
-"	                                                                                         \n"
-"	color = mix(vec4(glowColor.rgb, glowFactor), color, color.a);*/                          \n"
-"	                                                                                         \n"
-"	gl_FragColor = color;                                                                    \n"
+"   vec4 color = texture2D(Texture, gl_TexCoord[0].xy);                                      \n"
+"   float alpha = color.a;                                                                   \n"
+"   float width = fwidth(gl_TexCoord[0].x) * DistanceScale;                                  \n"
+"                                                                                            \n"
+"   vec4 finalColor = GlyphColor;                                                            \n"
+"                                                                                            \n"
+"   float ma = smoothstep(AlphaCenter - width, AlphaCenter + width, alpha);                  \n"
+"   finalColor.a = ma;                                                                       \n"
+"                                                                                            \n"
+"   if(Outline)                                                                              \n"
+"   {                                                                                        \n"
+"       float mo = smoothstep(OutlineCenter - width, OutlineCenter + width, alpha);          \n"
+"       finalColor = mix(OutlineColor, finalColor, ma);                                      \n"
+"       finalColor.a = mo;                                                                   \n"
+"   }                                                                                        \n"
+"                                                                                            \n"
+"   if(Glow && alpha >= finalColor.a - 0.5)                                                  \n"
+"   {                                                                                        \n"
+"       float mg = smoothstep(AlphaCenter, GlowCenter, sqrt(alpha));                         \n"
+"       finalColor = mix(GlowColor, finalColor, ma);                                         \n"
+"       finalColor.a = mg;                                                                   \n"
+"   }                                                                                        \n"
+"                                                                                            \n"
+"   gl_FragColor = finalColor;                                                               \n"
 "}                                                                                           \n"
 ;
-
 
 const String vertAlphaMag =
 "void main()                                                                                 \n"

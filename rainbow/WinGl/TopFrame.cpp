@@ -17,6 +17,7 @@ TopWindowFrame::TopWindowFrame()
 	maximize <<= THISBACK(ToggleMaximize);
 	maximized = false;
 	sizeable = false;
+	holding = false;
 }
 
 void TopWindowFrame::SyncRect()
@@ -168,7 +169,42 @@ void TopWindowFrame::GripResize()
 void TopWindowFrame::LeftDown(Point p, dword keyflags)
 {
 	dir = GetDragMode(p);
-	StartDrag();
+	if(dir.x || dir.y || FullWindowDrag)
+		StartDrag();
+	else {
+		SetCapture();
+		holding = true;
+		hold.Set(GetKbdDelay() / 3, THISBACK(Hold));
+	}
+}
+
+void TopWindowFrame::CancelMode()
+{
+	holding = false;
+}
+
+void TopWindowFrame::LeftUp(Point p, dword keyflags)
+{
+	holding = false;
+}
+
+void TopWindowFrame::Hold()
+{
+	if(HasCapture()) {
+		if(HasMouse() && GetMouseLeft() && holding)
+			StartDrag();
+		ReleaseCapture();
+		holding = false;
+	}
+}
+
+void TopWindowFrame::LeftHold(Point p, dword keyflags)
+{
+	if(HasCapture() || FullWindowDrag)
+		return;
+	dir = GetDragMode(p);
+	if(!dir.x && !dir.y)
+		StartDrag();
 }
 
 void TopWindowFrame::LeftDouble(Point p, dword keyflags)
@@ -179,7 +215,7 @@ void TopWindowFrame::LeftDouble(Point p, dword keyflags)
 
 void TopWindowFrame::MouseMove(Point, dword)
 {
-	if(!HasCapture())
+	if(!HasCapture() || holding)
 		return;
 	Size msz = ComputeClient(minsize).GetSize();
 	Point p = GetMousePos() - startpos;

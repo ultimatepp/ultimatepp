@@ -11,8 +11,11 @@ public:
 	virtual void  Paint(Draw& w);
 	virtual Image CursorImage(Point p, dword keyflags);
 	virtual void  LeftDown(Point p, dword keyflags);
+	virtual void  LeftHold(Point p, dword keyflags);
 	virtual void  LeftDouble(Point p, dword keyflags);
 	virtual void  MouseMove(Point p, dword keyflags);
+	virtual void  CancelMode();
+	virtual void  LeftUp(Point p, dword keyflags);
 
 private:
 	Point  dir;
@@ -22,11 +25,15 @@ private:
 	bool   maximized;
 	Rect   overlapped;
 	
+	bool   holding;
+	TimeCallback hold;
+	
 	Point GetDragMode(Point p);
 	Image GetDragImage(Point dragmode);
 	void  StartDrag();
 	Rect  Margins() const;
 	Rect  ComputeClient(Rect r);
+	void  Hold();
 
 	typedef TopWindowFrame CLASSNAME;
 

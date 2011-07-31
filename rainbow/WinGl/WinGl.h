@@ -27,7 +27,7 @@ extern HWND  hWnd;
 extern HWND  glHwnd;
 extern HDC   hDC;
 extern HGLRC hRC;
-extern int   alphaMagProg;
+extern Shader alphaMagProg;
 
 extern String error;
 
@@ -112,6 +112,12 @@ public:
 	virtual void EndNative();
 
 	virtual int  GetCloffLevel() const;
+	
+	void Text(int x, int y, int angle, const wchar *text, Font font, Color ink,
+			  int outlineStrength, Color outlineColor,
+			  int glowStrength, Color glowColor,
+			  int n, const int *dx);
+	
 
 private:
 

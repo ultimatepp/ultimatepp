@@ -2,8 +2,6 @@
 
 #ifdef GUI_WINGL
 
-//#include <shellapi.h>
-
 NAMESPACE_UPP
 
 #define LTIMING(x) // RTIMING(x)

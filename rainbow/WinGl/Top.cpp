@@ -14,7 +14,7 @@ void TopWindow::SyncFrameRect(const Rect& r)
 void TopWindow::DestroyFrame()
 {
 	if(frame->IsOpen())
-		frame->Close();
+		frame->DestroyWnd();
 }
 
 void TopWindow::GripResize()

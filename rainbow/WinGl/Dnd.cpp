@@ -82,7 +82,6 @@ void DnDLoop::DnD(bool paste)
 void DnDLoop::Sync()
 {
 	GuiLock __;
-
 	Ptr<Ctrl> t = FindMouseTopCtrl();
 	if(t != target)
 		if(target)
