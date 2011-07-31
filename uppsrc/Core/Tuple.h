@@ -9,8 +9,8 @@ struct Tuple2 {
 	int  Compare(const Tuple2& x) const       { return CombineCompare(a, x.a)(b, x.b); }
 	bool operator<=(const Tuple2& x) const    { return Compare(x) <= 0; }
 	bool operator>=(const Tuple2& x) const    { return Compare(x) >= 0; }
-	bool operator<(const Tuple2& x) const     { return Compare(x) != 0; }
-	bool operator>(const Tuple2& x) const     { return Compare(x) != 0; }
+	bool operator<(const Tuple2& x) const     { return Compare(x) < 0; }
+	bool operator>(const Tuple2& x) const     { return Compare(x) > 0; }
 	
 	unsigned GetHashValue() const             { return CombineHash(a, b); }
 
@@ -45,8 +45,8 @@ struct Tuple3 {
 	int  Compare(const Tuple3& x) const       { return CombineCompare(a, x.a)(b, x.b)(c, x.c); }
 	bool operator<=(const Tuple3& x) const    { return Compare(x) <= 0; }
 	bool operator>=(const Tuple3& x) const    { return Compare(x) >= 0; }
-	bool operator<(const Tuple3& x) const     { return Compare(x) != 0; }
-	bool operator>(const Tuple3& x) const     { return Compare(x) != 0; }
+	bool operator<(const Tuple3& x) const     { return Compare(x) < 0; }
+	bool operator>(const Tuple3& x) const     { return Compare(x) > 0; }
 	
 	unsigned GetHashValue() const             { return CombineHash(a, b, c); }
 	
@@ -84,8 +84,8 @@ struct Tuple4 {
 	int  Compare(const Tuple4& x) const       { return CombineCompare(a, x.a)(b, x.b)(c, x.c)(d, x.d); }
 	bool operator<=(const Tuple4& x) const    { return Compare(x) <= 0; }
 	bool operator>=(const Tuple4& x) const    { return Compare(x) >= 0; }
-	bool operator<(const Tuple4& x) const     { return Compare(x) != 0; }
-	bool operator>(const Tuple4& x) const     { return Compare(x) != 0; }
+	bool operator<(const Tuple4& x) const     { return Compare(x) < 0; }
+	bool operator>(const Tuple4& x) const     { return Compare(x) > 0; }
 	
 	unsigned GetHashValue() const             { return CombineHash(a, b, c, d); }
 

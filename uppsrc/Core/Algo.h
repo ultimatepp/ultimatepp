@@ -595,10 +595,7 @@ C& RemoveSorted(C& from, const C& what, const L& less)
 		return from;
 	typename C::Iterator fp = from.Begin() + BinFindIndex(from, *wp), fe = from.End(), fd = fp;
 	if(fp == fe)
-	{
-		from.Clear();
 		return from;
-	}
 	for(;;)
 	{
 		while(less(*fp, *wp))
