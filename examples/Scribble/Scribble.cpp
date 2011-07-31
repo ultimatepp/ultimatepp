@@ -53,8 +53,9 @@ void Scribble::Paint(Draw& w)
 		w.DrawRect(p1.x, p1.y, 1, 1, Black);
 	}
 	w.End();
-	w.DrawRect(imagesize.cx - pos.x, 0, sz.cx - imagesize.cx - pos.x, sz.cy, SLtGray);
-	w.DrawRect(0, imagesize.cy - pos.y, imagesize.cx - pos.x, sz.cy - imagesize.cy - pos.y, SLtGray);
+
+	w.DrawRect(imagesize.cx - pos.x, 0, sz.cx - pos.x, sz.cy, SLtGray);
+	w.DrawRect(0, imagesize.cy - pos.y, imagesize.cx - pos.x, sz.cy - pos.y, SLtGray);
 	w.DrawRect(-pos.x, -pos.y + imagesize.cy, imagesize.cx, 1, SBlack);
 	w.DrawRect(-pos.x + imagesize.cx, -pos.y, 1, imagesize.cy, SBlack);
 }
@@ -62,14 +63,14 @@ void Scribble::Paint(Draw& w)
 void Scribble::MouseMove(Point p, dword keyflags)
 {
 	if(HasCapture()) {
-		image.Top().Add() = p;
+		image.Top().Add() = scroll + p;
 		Refresh();
 	}
 }
 
 void Scribble::LeftDown(Point p, dword keyflags)
 {
-	image.Add().Add() = p;
+	image.Add().Add() = scroll + p;
 	SetCapture();
 	Refresh();
 }
