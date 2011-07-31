@@ -67,6 +67,7 @@ public:
 	virtual Value GetData() const { return RawToValue(~ctrl); }
 	Ctrl* GetCtrl() const { return ctrl; }
 	void ClearCtrl() { ctrl = NULL; }
+	void SetCtrl(Ctrl& c) { /*ASSERT(c.GetParent());*/ ctrl = &c; }
 	
 	int flags;
 

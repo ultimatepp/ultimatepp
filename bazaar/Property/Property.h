@@ -14,10 +14,10 @@ struct Property
 	Property(const S& s, const G& g)
 		: set(s), get(g) {}
 
-	const T& Set(const T& a) { ASSERT(set); set(a); return a; }
+	const T& Set(const T& a) const { ASSERT(set); set(a); return a; }
 	T Get() const { ASSERT(get); T t; get(t); return t; }
 
-	inline T operator= (const T& a) { return Set(a); }
+	inline T operator= (const T& a) const { return Set(a); }
 	inline operator T() const { return Get(); }
 
 public:
@@ -36,7 +36,7 @@ struct Accessor
 	Accessor(const S& s, const G& g)
 		: set(s), get(g) {}
 
-	bool Set(const T& a) { ASSERT(set); return set(a); }
+	bool Set(const T& a) const { ASSERT(set); return set(a); }
 	bool Get(T& a) const { ASSERT(get); return get(a); }
 
 public:
@@ -47,6 +47,26 @@ public:
 typedef Accessor<Value> ValueAccessor;
 
 ///
+
+/*
+Accessor is used to offer set/get callbacks bound to an instance,
+which is hidden inside the callbacks, providing instance independant calls.
+they can be handled / grouped in a dictionary or passed to some algorithms, which dont care of instance.
+
+PropKeeper<> is the interface used to declare hierarchy dependancies
+and create an instance bound AccessorMap from the PropTyper registered Handlers.
+corresponding PropTyper is set up with instance independant handlers in Init.
+PropKeeper and PropTyper are all strongtyped.
+
+to be able to setup an AccessorMap from base level, there is Props<BaseT>.
+it uses the typeid to know 'where to start' to call into toplevel PropKeeper SetupAccessorMap
+dynamic_cast is used to verify only. could be changed to ASSERT.
+
+to be able to 'browse' the registered handlers from the Base class level,
+typeid is used with Props<BaseT>. it uses another set of typename maps
+to know the toplevel class name, 'from where to start' to look for the instance independant handlers.
+it does not create or access any AccessorMap facilities.
+*/
 
 typedef ArrayMap<String, Accessor<Value> > AccessorMap;
 
@@ -168,9 +188,11 @@ void PropKeeper<KLASS>::Init() \
 
 
 #define EXT_UNPROPERTY_SET(KLASS, name) \
+	NEVER(); \
 
 
 #define EXT_UNPROPERTY_GET(KLASS, name) \
+	NEVER(); \
 
 
 #define EXT_UNPROPERTY(KLASS, name) \
@@ -225,7 +247,7 @@ struct Props
 	static bool SetupAccessorMap(T& c, AccessorMap& am)
 	{
 		int i = pmapam().Find(String(typeid(c).name()));
-		if(i<0) i = pmapam().Find(String(typeid(T).name()));
+		if(i<0) i = pmapam().Find(String(typeid(T).name())); //fallback to base only
 		if(i<0) return false;
 		return pmapam()[i](c,am);
 	}

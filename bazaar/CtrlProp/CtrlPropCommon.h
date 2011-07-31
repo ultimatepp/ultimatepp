@@ -1,7 +1,7 @@
 #ifndef _CtrlProp_CtrlPropCommon_h
 #define _CtrlProp_CtrlPropCommon_h
 
-#include <CtrlCore/CtrlCore.h>
+#include <CtrlLib/CtrlLib.h>
 using namespace Upp;
 
 #include <Property/Property.h>

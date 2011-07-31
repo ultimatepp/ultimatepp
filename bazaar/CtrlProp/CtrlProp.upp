@@ -9,9 +9,12 @@ uses
 
 file
 	CtrlPropCommon.h,
-	CtrlPropEdit.h,
-	CtrlPropEdit.cpp,
-	CtrlPropEdit.lay,
+	PropList.h,
+	PropList.cpp,
+	PropList.lay,
+	PropEdit.h,
+	PropEdit.cpp,
+	PropEdit.lay,
 	CtrlProp.h,
 	Props readonly separator,
 	Ctrl.icpp,

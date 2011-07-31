@@ -121,7 +121,8 @@ public:
 	static VectorMap<Value, InstancerType>& Map() { static VectorMap<Value, InstancerType> map; return map; }
 };
 
-template<class T> String TypeOfS(T* = NULL) { return String(typeid(T).name()); }
+template<class T> inline String TypeOfS(T* = 0) { return String(typeid(T).name()); }
+template<class T> inline String TypeOf(T* t = 0) { return TypeOfS<T>(t); }
 
 //in polymorph environment, type info is needed, i.e. when xmlizing/serializing elements
 //to know later which one to instantiate..best used with Instancer

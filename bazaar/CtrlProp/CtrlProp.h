@@ -2,6 +2,7 @@
 #define _CtrlProp_CtrlProp_h_
 
 #include "CtrlPropCommon.h"
-#include "CtrlPropEdit.h"
+#include "PropList.h"
+#include "PropEdit.h"
 
 #endif
