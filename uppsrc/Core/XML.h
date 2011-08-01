@@ -92,6 +92,7 @@ public:
 
 	int    GetAttrCount() const                               { return attr.GetCount() + !IsNull(attr1); }
 	String GetAttr(int i) const                               { return i ? attr.GetKey(i - 1) : attr1; }
+	bool   IsAttr(const char *id) const                       { return attr1 == id || attr.Find(id) >= 0; }
 	String operator[](int i) const                            { return i ? attr[i - 1] : attrval1; }
 	String operator[](const char *id) const                   { return attr1 == id ? attrval1 : attr.Get(id, Null); }
 	int    Int(const char *id, int def = Null) const;
