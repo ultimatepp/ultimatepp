@@ -82,8 +82,10 @@ void NonLinearOptimization() {
 		eckerle4_functor functor;
 		NumericalDiff<eckerle4_functor> numDiff(functor);
 		LevenbergMarquardt<NumericalDiff<eckerle4_functor> > lm(numDiff);
-		if (lm.minimize(x) != 1)
-			Cout() << "\nNo convergence!";
+		int ret = lm.minimize(x);
+		if (ret == LevenbergMarquardtSpace::ImproperInputParameters || 
+			ret == LevenbergMarquardtSpace::TooManyFunctionEvaluation)
+			Cout() << "\nNo convergence!: " << ret;
 		else {
 			if (VerifyIsApprox(lm.fvec.squaredNorm(), 1.4635887487E-03))
 				Cout() << "\nNorm^2 is right";
@@ -108,8 +110,10 @@ void NonLinearOptimization() {
 		LevenbergMarquardt<NumericalDiff<thurber_functor> > lm(numDiff);
 		lm.parameters.ftol = 1.E4*NumTraits<double>::epsilon();
 		lm.parameters.xtol = 1.E4*NumTraits<double>::epsilon();
-		if (lm.minimize(x) != 1)
-			Cout() << "\nNo convergence!";
+		int ret = lm.minimize(x);
+		if (ret == LevenbergMarquardtSpace::ImproperInputParameters || 
+			ret == LevenbergMarquardtSpace::TooManyFunctionEvaluation)
+			Cout() << "\nNo convergence!: " << ret;
 		else {
 			if (VerifyIsApprox(lm.fvec.squaredNorm(), 5.6427082397E+03))
 				Cout() << "\nNorm^2 is right";
@@ -158,8 +162,12 @@ void NonLinearSolving() {
 	
 	hybrd_functor functor;
 	HybridNonLinearSolver<hybrd_functor> solver(functor);
-	if (solver.solveNumericalDiff(x) != 1)
-		Cout() << "\nNo convergence!";
+	int ret = solver.solveNumericalDiff(x);
+	if (ret == HybridNonLinearSolverSpace::ImproperInputParameters ||
+	    ret == HybridNonLinearSolverSpace::TooManyFunctionEvaluation ||
+	    ret == HybridNonLinearSolverSpace::NotMakingProgressJacobian ||
+	    ret == HybridNonLinearSolverSpace::NotMakingProgressIterations)
+		Cout() << "\nNo convergence!: " << ret;
 	else {
 		if (solver.nfev != 14)
 			Cout() << "\nError with nfev!";

@@ -9,7 +9,7 @@ using namespace Eigen;
 void NonLinearTests();
 
 CONSOLE_APP_MAIN
-{
+{	
 	// http://eigen.tuxfamily.org/dox/TutorialMatrixClass.html
 	Cout() << "\n\nTutorial page 1 - The Matrix class";
 	

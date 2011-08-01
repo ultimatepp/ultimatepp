@@ -2,7 +2,7 @@ description "Eigen package demo\377";
 
 uses
 	Core,
-	Eigen;
+	plugin\Eigen;
 
 file
 	eigen_demo.cpp,
