@@ -1,9 +1,0 @@
-LAYOUT(PropListLay, 400, 200)
-	ITEM(DocEdit, gl, WantFocus(false).SetEditable(false).LeftPosZ(0, 168).VSizePosZ(0, 0))
-	ITEM(DocEdit, sl, WantFocus(false).SetEditable(false).HSizePosZ(168, 0).VSizePosZ(0, 0))
-END_LAYOUT
-
-LAYOUT(PropEditLay, 400, 200)
-	ITEM(ArrayCtrl, ac, HSizePosZ(0, 0).VSizePosZ(0, 0))
-END_LAYOUT
-

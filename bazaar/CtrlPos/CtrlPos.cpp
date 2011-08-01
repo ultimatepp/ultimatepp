@@ -202,7 +202,9 @@ void CtrlPos::MouseMove(Point p, dword keyflags)
 
 			c.Remove(); //prevent moving control from finding when searching new parent
 			Point pt(p);
-			Ctrl* pc = GetCtrl(Get(), pt, flags | DEEP);
+			int ft(flags); flags |= (DEEP | NEST);
+			Ctrl* pc = GetCtrl(Get(), pt, flags, filter);
+			flags &= ~(DEEP | NEST); flags |= (ft & DEEP); //restore DEEP flag from save, NEST is ours
 			if(!pc) pc = &Get();
 			if(pc != q)
 			{

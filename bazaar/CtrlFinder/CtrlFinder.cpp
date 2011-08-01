@@ -1,6 +1,27 @@
 #include "CtrlFinder.h"
 
-Ctrl* CtrlFinder::ChildAtPoint(Ctrl& par, Point& pt, int f)
+//this one filters 
+void CtrlFinder::StdCtrlFilter(Ctrl*& q, Point& pt, int& f)
+{
+	if((f & VIEW) && q->InView())
+	{
+		if( 	((f & VISIBLE) && q->IsShown())
+			|| ((f & INVISIBLE) && !q->IsShown())
+			|| ((f & ENABLED) && q->IsEnabled())
+			|| ((f & DISABLED) && !q->IsEnabled())
+		) return;
+	}
+
+	if((f & FRAME) && q->InFrame()) 
+		if(		((f & VISIBLE) && q->IsShown())
+			|| ((f & INVISIBLE) && !q->IsShown())
+			|| ((f & ENABLED) && q->IsEnabled())
+			|| ((f & DISABLED) && !q->IsEnabled())
+		) return;
+	q = NULL;
+}
+
+Ctrl* CtrlFinder::ChildAtPoint(Ctrl& par, Point& pt, int& f, const CtrlFilterType& fil)
 {
 	GuiLock __;
 	Ctrl *q;
@@ -12,13 +33,13 @@ Ctrl* CtrlFinder::ChildAtPoint(Ctrl& par, Point& pt, int f)
 		Point vp = p - view.TopLeft();
 		for(q = par.GetLastChild(); q; q = q->GetPrev()) {
 			if((f & VIEW) && q->InView())
-			if((f & VISIBLE) && q->IsVisible())
-			if((f & ENABLED) && q->IsEnabled())
 			{
 				Rect r = q->GetRect();
 				if(r.Contains(vp)) {
 					pt = vp - r.TopLeft();
-					return q;
+					Ctrl* w(q);
+					fil(w, pt, f);
+					if(w) return w;
 				}
 			}
 		}
@@ -28,26 +49,26 @@ Ctrl* CtrlFinder::ChildAtPoint(Ctrl& par, Point& pt, int f)
 	if(f & FRAME)
 	for(q = par.GetLastChild(); q; q = q->GetPrev()) {
 		if((f & FRAME) && q->InFrame()) 
-		if((f & VISIBLE) && q->IsVisible())
-		if((f & ENABLED) && q->IsEnabled())
 		{
 			Rect r = q->GetRect();
 			if(r.Contains(p)) {
 				pt = p - r.TopLeft();
-				return q;
+				Ctrl* w(q);
+				fil(w, pt, f);
+				if(w) return w;
 			}
 		}
 	}
 	return NULL;
 }
 
-Ctrl* CtrlFinder::GetCtrl(Ctrl& c, Point& p, int f)
+Ctrl* CtrlFinder::GetCtrl(Ctrl& c, Point& p, int& f, const CtrlFilterType& fil)
 {
-	Ctrl* q = ChildAtPoint(c, p, f);
+	Ctrl* q = ChildAtPoint(c, p, f, fil);
 	if(q && (f & DEEP)) 
 	{
 		Point pt(p);
-		Ctrl* qc = GetCtrl(*q, pt, f);
+		Ctrl* qc = GetCtrl(*q, pt, f, fil);
 		if(qc)
 		{
 			p = pt;
@@ -85,7 +106,7 @@ void CtrlFinder::LeftDown(Point p, dword keyflags)
 	ctrl = NULL;
 	if(IsEmpty()) return;
 	Point pt(p);
-	ctrl = GetCtrl(Get(), pt, flags);
+	ctrl = GetCtrl(Get(), pt, flags, filter);
 	if(!ctrl) ctrl = &Get();
 	WhenLeftDown(*ctrl, p, keyflags);
 	Action();
@@ -95,7 +116,7 @@ void CtrlFinder::RightDown(Point p, dword keyflags)
 	ctrl = NULL;
 	if(IsEmpty()) return;
 	Point pt(p);
-	ctrl = GetCtrl(Get(), pt, flags);
+	ctrl = GetCtrl(Get(), pt, flags, filter);
 	if(!ctrl) ctrl = &Get();
 	WhenRightDown(*ctrl, p, keyflags);
 	Action();

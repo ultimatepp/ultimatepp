@@ -17,6 +17,12 @@ class CtrlPos : public CtrlFinder
 public:
 	typedef CtrlPos CLASSNAME;
 	typedef CtrlFinder V;
+
+	enum
+	{
+		NEST = 0x100,
+	};
+
 	CtrlPos();
 
 	virtual void Clear();

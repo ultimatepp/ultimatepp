@@ -37,22 +37,29 @@ public:
 	typedef MouseHookCtrl R;
 	typedef Visiting<Ctrl> V;
 
+	typedef Callback3<Ctrl*&, Point&, int&> CtrlFilterType;
+
 	enum
 	{
 		VISIBLE = 0x1,
-		ENABLED = 0x2,
-		VIEW = 0x4,
-		FRAME = 0x8,
+		INVISIBLE = 0x2,
 		
-		DEEP = 0x10,
-		
-		DEF = VISIBLE | ENABLED | VIEW | FRAME | DEEP,
-	};
-	
-	Ctrl* ChildAtPoint(Ctrl& par, Point& pt, int f);
-	Ctrl* GetCtrl(Ctrl& c, Point& p, int f = DEF);
+		ENABLED = 0x4,
+		DISABLED = 0x8,
 
-	CtrlFinder() : flags(DEF) {}
+		VIEW = 0x10,
+		FRAME = 0x20,
+		
+		DEEP = 0x80,
+		
+		DEF = VISIBLE | INVISIBLE | ENABLED | DISABLED | VIEW | FRAME | DEEP,
+	};
+
+	static void StdCtrlFilter(Ctrl*& q, Point& pt, int& f);	
+	static Ctrl* ChildAtPoint(Ctrl& par, Point& pt, int& f, const CtrlFilterType& fil);
+	static Ctrl* GetCtrl(Ctrl& c, Point& p, int& f, const CtrlFilterType& fil);
+
+	CtrlFinder() : flags(DEF), filter(STDBACK(StdCtrlFilter)) {}
 
 	virtual void Visit(Ctrl& c);
 	virtual void Reload();
@@ -69,6 +76,7 @@ public:
 	void ClearCtrl() { ctrl = NULL; }
 	void SetCtrl(Ctrl& c) { /*ASSERT(c.GetParent());*/ ctrl = &c; }
 	
+	CtrlFilterType filter; //set to NULL if should not be handled, change flags if desired
 	int flags;
 
 protected:
