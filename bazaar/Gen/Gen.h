@@ -22,6 +22,7 @@ template<class T, class B = EmptyClass>
 class TypeHook : public B
 {
 public:
+	virtual ~TypeHook() {}
 	virtual const T& GetT() const              = 0;
 	virtual T& GetT()                          = 0;
 	
@@ -67,6 +68,7 @@ public:
 	virtual void Serialize(Stream& s)          = 0;
 };
 
+//maybe this should go to Stream.h
 template<class T>
 void SerializeStore(Stream& s, const T& x)
 {
@@ -139,14 +141,14 @@ private:
 class TyperRegistrar
 {
 public:
-	static void Register(Typer& t, String (*tf)()) { t.tf = tf; }	
+	static void RegisterType(Typer& t, String (*tf)()) { t.tf = tf; }	
 };
 
 template<class T, class B = EmptyClass>
 class TyperT : public B, public TyperRegistrar
 {
 public:
-	TyperT() { TyperRegistrar::Register((T&)(*this), &Invoke); }
+	TyperT() { TyperRegistrar::RegisterType((T&)(*this), &Invoke); }
 protected:
 	static inline String Invoke() { return TypeOfS<T>((T*)NULL); }
 };
@@ -224,6 +226,7 @@ class Visiting : public B
 public:
 	typedef Visiting<T,B> CLASSNAME;
 	Visiting() : pt(NULL) {}
+	virtual ~Visiting() {}
 
 	virtual void Visit(T& t) { pt = &t; Reload(); }
 	virtual void Reload() { }
@@ -292,7 +295,7 @@ int ChkLinkDeep(const T& l, bool f = true)
 {
 	int c = 0;
 	const T *list = l.GetPtr(), *e = list;
-	do { ChkLink(*e); ++c; }
+	do { ChkLink(*e, f); ++c; }
 	while((e = e->GetNext()) != list);
 	return --c;
 }

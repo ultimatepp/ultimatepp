@@ -528,8 +528,8 @@ ONCELOCK
 
 		.def("cancelmodedeep", &Ctrl::CancelModeDeep)
 
-		.add_property("show", &Ctrl::IsVisible, &Ctrl::Show)
-		.add_property("shown", &Ctrl::IsShown)
+		.add_property("show", &Ctrl::IsShown, &Ctrl::Show)
+		.add_property("visible", &Ctrl::IsVisible)
 		.add_property("enable", &Ctrl::IsEnabled, &Ctrl::Enable)
 		.add_property("edit", &Ctrl::IsEditable, &CtrlSetEditable)
 
