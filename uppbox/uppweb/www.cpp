@@ -498,19 +498,20 @@ void ExportPage(int i)
 		posB = page.Find("[IHTMLTEXT", posB);
 		if (posB < 0)
 			break; 
-		int pos0 = page.ReverseFind('[', posB);
 		int posBB = posB + strlen("[IHTMLTEXT");
-		int posE = page.Find("<`/object`>", posBB);
-		int posEE = page.Find("]", posE);
-		String html0 = page.Mid(posBB, posE + strlen("<`/object`>") - posBB);
+		int pos0 = page.ReverseFind("[", posB-1);
+		int posE = page.Find(";2", posBB);
+		String html0 = page.Mid(posBB, posE - posBB);
 		html0.Replace("`", "");
 		htmlrep.Add(html0);
-		page = page.Left(pos0) + "QTFHTMLTEXT" + page.Mid(posEE+1);
+		int posEE = page.Find("]&]", posE) + strlen("]&]");
+		
+		page = page.Left(pos0) + "QTFHTMLTEXT" + FormatInt(htmlrep.GetCount()-1) + page.Mid(posEE+1);
 	}
 	
 	page = QtfAsHtml(page, css, links, labels, targetdir, links[i]);
 	for (int iHtml = 0; iHtml < htmlrep.GetCount(); ++iHtml) 
-		page.Replace(String("QTFHTMLTEXT"), htmlrep[iHtml]);
+		page.Replace(String("QTFHTMLTEXT") + FormatInt(iHtml), htmlrep[iHtml]);
 	
 	Color paper = SWhite;
 	if(path == "topic://uppweb/www/download$en-us")
