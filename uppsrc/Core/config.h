@@ -13,10 +13,6 @@
 
 	#if __unix || __unix__ || __APPLE__
 		#define PLATFORM_POSIX 1
-		
-		#ifdef flagGUI
-			#define PLATFORM_X11 1
-		#endif
 	
 		#if __linux
 			#define PLATFORM_LINUX 1
