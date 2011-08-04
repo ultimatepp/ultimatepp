@@ -129,19 +129,20 @@ void TopicEditor::ExportGroupPdf()
 
 void TopicEditor::ExportHTML()
 {
-/*	String EncodeHtml(const RichText& text, Index<String>& css,
-	                  const VectorMap<String, String>& links,
-	                  const VectorMap<String, String>& labels,
-	                  const String& path, const String& base = Null, Zoom z = Zoom(8, 40),
-	                  const VectorMap<String, String>& escape = VectorMap<String, String>(),
-	                  int imtolerance = 0);
-	String AsCss(Index<String>& ss);
-	SelectSaveFile("HTML files\t*.html\nAll files\t*.*", file);*/
+	String path = SelectFileSaveAs("HTML files\t*.html\nAll files\t*.*");
+	if(IsNull(path))
+		return;
+	Index<String> css;
+	String html = EncodeHtml(editor.Get(), css,
+	                         VectorMap<String, String>(), VectorMap<String, String>(),
+	                         GetFileFolder(path));
+	SaveFile(path, HtmlHeader((String)~title, AsCss(css)) / html);
+//	SaveFile(ForceExt(path, ".css"), AsCss(css));
 }
 
 void TopicEditor::ExportGroupHTML()
 {
-/*	String dir = SelectDirectory();
+	String dir = SelectDirectory();
 	if(IsNull(dir))
 		return;
 	SaveTopic();
@@ -149,16 +150,17 @@ void TopicEditor::ExportGroupHTML()
 	while(ff) {
 		Topic t = ReadTopic(LoadFile(AppendFileName(grouppath, ff.GetName())));
 		if(!t.text.IsVoid()) {
-			Size page = Size(3968, 6074);
-			PdfDraw pdf(page + 400);
-			::Print(pdf, ParseQTF(t.text), page);
-			String pdfdata = pdf.Finish();
-			String path = AppendFileName(dir, GetFileTitle(ff.GetName()) + ".pdf");
-			if(LoadFile(path) != pdfdata)
-				SaveFile(path, pdfdata);
+			Index<String> css;
+			String html = EncodeHtml(ParseQTF(t.text), css,
+			                         VectorMap<String, String>(), VectorMap<String, String>(),
+			                         dir);
+			html = HtmlHeader(t.title, AsCss(css)) / html;
+			String path = AppendFileName(dir, GetFileTitle(ff.GetName()) + ".html");
+			if(LoadFile(path) != html)
+				SaveFile(path, html);
 		}
 		ff.Next();
-	}*/
+	}
 }
 
 void TopicEditor::Print()
@@ -208,8 +210,8 @@ void TopicEditor::FileBar(Bar& bar)
 	   .Key(K_CTRL_P);
 	bar.Add("Export to PDF..", THISBACK(ExportPdf));
 	bar.Add("Export group  to PDF..", THISBACK(ExportGroupPdf));
-	bar.Add("Export to HTML..", THISBACK(ExportPdf));
-	bar.Add("Export group  to HTML..", THISBACK(ExportGroupPdf));
+	bar.Add("Export to HTML..", THISBACK(ExportHTML));
+	bar.Add("Export group  to HTML..", THISBACK(ExportGroupHTML));
 }
 
 void TopicEditor::EditMenu(Bar& bar)
