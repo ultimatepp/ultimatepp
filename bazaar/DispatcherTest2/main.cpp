@@ -10,7 +10,7 @@ MyPane::MyPane()
 		dl.Add(i);
 }
 
-void MyPane::Dispatch(const Value & o)
+void MyPane::Dispatch(const Value& o)
 {
 	ei.SetData(o);
 	//pi.SetData(o);
@@ -19,7 +19,7 @@ void MyPane::Dispatch(const Value & o)
 	st.SetText(String().Cat() << o);
 }
 
-void MyPane::Dispatch(const int & o)
+void MyPane::Dispatch(const int& o)
 {
 	ei.SetData(o);
 	//pi.SetData(o);

@@ -21,7 +21,7 @@ DispatcherTest::DispatcherTest()
 	splitv1.Vert();
 	for(int i = 0; i < 10; i++)
 	{
-		WithDispatch<EditInt, Value> * pctrl = new WithDispatch<EditInt, Value>();
+		WithDispatch<EditInt, Value>* pctrl = new WithDispatch<EditInt, Value>();
 		ctrls.Add(pctrl);
 		pctrl->MinMax(0, 100);
 		disp.Register(*pctrl);
@@ -31,7 +31,7 @@ DispatcherTest::DispatcherTest()
 	splitv2.Vert();
 	for(int i = 0; i < 10; i++)
 	{
-		ProgressIndicatorWithDispatch<Value> * pctrl = new ProgressIndicatorWithDispatch<Value>();
+		ProgressIndicatorWithDispatch<Value>* pctrl = new ProgressIndicatorWithDispatch<Value>();
 		ctrls.Add(pctrl);
 		pctrl->SetTotal(100);
 		disp.Register(*pctrl);

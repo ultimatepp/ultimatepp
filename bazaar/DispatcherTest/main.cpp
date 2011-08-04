@@ -10,7 +10,7 @@ MyPane::MyPane()
 		dl.Add(i);
 }
 
-void MyPane::Dispatch(const Value & o)
+void MyPane::Dispatch(const Value& o)
 {
 	ei.SetData(o);
 	//pi.SetData(o);

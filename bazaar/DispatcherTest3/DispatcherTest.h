@@ -19,7 +19,7 @@ class WithDispatch
 public:
 	typedef WithDispatch<C, T> CLASSNAME;
 
-	virtual void Dispatch(const T & o)
+	virtual void Dispatch(const T& o)
 	{
 		C::SetData(o);	
 	}	
@@ -34,7 +34,7 @@ class ProgressIndicatorWithDispatch
 public:
 	typedef ProgressIndicatorWithDispatch<T> CLASSNAME;
 
-	virtual void Dispatch(const T & o)
+	virtual void Dispatch(const T& o)
 	{
 		Set(o);
 	}	

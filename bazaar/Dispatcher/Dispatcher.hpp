@@ -3,82 +3,52 @@
 
 #include "Dispatcher.h"
 
-template<class T, class B>
-Dispatchable<T, B>::Dispatchable()
-	: act(true)
-{
-	
-}
+//Dispatchable<T>
 
 template<class T, class B>
-Dispatchable<T, B>::~Dispatchable()
+void Dispatchable<T, B>::Unregister(const Any& _src)
 {
-	UnregisterAll();
-}
-
-template<class T, class B>
-void Dispatchable<T, B>::Unregister(const Any & _src)
-{
-	if(_src.Is<Dispatcher<T> * >())
+	if(_src.Is<Dispatcher<T>* >())
 	{
-		Dispatcher<T> * disp = _src.Get<Dispatcher<T> * >();
+		Dispatcher<T>* disp = _src.Get<Dispatcher<T>*>();
 		disp->Unregister(*this, key.Get(GetPtrHashValue(disp)));
 	}
 	else
-	if(_src.Is<DispatcherGen * >())
+	if(_src.Is<DispatcherGen* >())
 	{
-		DispatcherGen * disp = _src.Get<DispatcherGen * >();
+		DispatcherGen* disp = _src.Get<DispatcherGen*>();
 		disp->Unregister(*this, key.Get(GetPtrHashValue(disp)));
 	}
 }
 
-template<class T, class B>
-void Dispatchable<T, B>::UnregisterAll()
-{
-	while(src.GetCount()>0)
-	{
-		Unregister(src[0]);
-	}
-}
+//Dispatcher<T>
 
 template<class T>
-Dispatcher<T>::Dispatcher()
-{
-	
-}
-
-template<class T>
-Dispatcher<T>::~Dispatcher()
-{
-	ASSERT(dests.IsEmpty());
-}
-
-template<class T>
-void Dispatcher<T>::DoDispatch(const T & o) const
+void Dispatcher<T>::DoDispatch(const T& o) const
 {
 	if(!R::IsEnabled()) return;
 	for(int i = 0; i < dests.GetCount(); i++)
 	{
-		Dispatchable<T> * dest = dests.operator[](i);
+		Dispatchable<T>* dest = dests[i];
 		if(dest->IsEnabled())
 			dest->Dispatch(o);
 	}
 }
 
 template<class T>
-void Dispatcher<T>::Register(Dispatchable<T> & d, unsigned key)
+void Dispatcher<T>::Register(Dispatchable<T>& d, unsigned key)
 {
 	if(key == 0) key = GetPtrHashValue(&d);
 	int i = dests.Find(key);
 	if(i>=0) return;
 	dests.Add(key) = &d;
-	Any & a = d.src.Add(GetPtrHashValue(this));
-	a.Create<Dispatcher<T> * >() = this;
+	Any& a = d.src.Add(GetPtrHashValue(this));
+	a.Create<Dispatcher<T>*>() = this;
 	d.key.Add(GetPtrHashValue(this)) = key;
 }
 
 template<class T>
-void Dispatcher<T>::Unregister(Dispatchable<T> & d, unsigned key)
+void Dispatcher<T>::Unregister(Dispatchable<T>& d, unsigned key)
 {
 	if(key == 0) key = GetPtrHashValue(&d);
 	int i = dests.Find(key);
@@ -89,35 +59,36 @@ void Dispatcher<T>::Unregister(Dispatchable<T> & d, unsigned key)
 }
 
 template<class T>
-Dispatchable<T> * Dispatcher<T>::GetDispatchable(unsigned key) const
+Dispatchable<T>* Dispatcher<T>::GetDispatchable(unsigned key) const
 {
 	int i = dests.Find(key);
 	if(i<0) return NULL;
-	Dispatchable<T> * dest = dests.operator[](i);
-	return dest;
+	return &dests[i];
 }
 
+//DispatcherGen
+
 template<class T>
-void DispatcherGen::DoDispatch(const T & o) const
+void DispatcherGen::DoDispatch(const T& o) const
 {
 	for(int i = 0; i < dests.GetCount(); i++)
 	{
-		const Any & a = dests.operator[](i);
+		const Any& a = dests[i];
 		if(!a.Is<Dispatcher<T> >()) continue;
-		const Dispatcher<T> & dest = a.Get<Dispatcher<T> >();
+		const Dispatcher<T>& dest = a.Get<Dispatcher<T> >();
 		dest.DoDispatch(o);
 		return;
 	}
 }
 
 template<class T>
-void DispatcherGen::Register(Dispatchable<T> & d, unsigned key)
+void DispatcherGen::Register(Dispatchable<T>& d, unsigned key)
 {
 	for(int i = 0; i < dests.GetCount(); i++)
 	{
-		Any & a = dests.operator[](i);
+		Any& a = dests[i];
 		if(!a.Is<Dispatcher<T> >()) continue;
-		Dispatcher<T> & dest = a.Get<Dispatcher<T> >();
+		Dispatcher<T>& dest = a.Get<Dispatcher<T> >();
 		dest.Register(d, key);
 		return;
 	}
@@ -125,13 +96,13 @@ void DispatcherGen::Register(Dispatchable<T> & d, unsigned key)
 }
 
 template<class T>
-void DispatcherGen::Unregister(Dispatchable<T> & d, unsigned key)
+void DispatcherGen::Unregister(Dispatchable<T>& d, unsigned key)
 {
 	for(int i = 0; i < dests.GetCount(); i++)
 	{
-		Any & a = dests.operator[](i);
+		Any& a = dests[i];
 		if(!a.Is<Dispatcher<T> >()) continue;
-		Dispatcher<T> & dest = a.Get<Dispatcher<T> >();
+		Dispatcher<T>& dest = a.Get<Dispatcher<T> >();
 		dest.Unregister(d, key);
 		if(dest.GetDests().GetCount()<=0)
 			dests.Remove(i);
@@ -140,45 +111,30 @@ void DispatcherGen::Unregister(Dispatchable<T> & d, unsigned key)
 }
 
 template<class T>
-Dispatcher<T> & DispatcherGen::GetDispatcher()
+Dispatcher<T>& DispatcherGen::GetDispatcher()
 {
 	for(int i = 0; i < dests.GetCount(); i++)
 	{
-		const Any & a = dests.operator[](i);
+		const Any& a = dests[i];
 		if(!a.Is<Dispatcher<T> >()) continue;
-		Dispatcher<T> & dest = a.Get<Dispatcher<T> >();
+		Dispatcher<T>& dest = a.Get<Dispatcher<T> >();
 		return dest;
 	}
 	return dests.Add().Create<Dispatcher<T> >();
 }
 
-
-//Callback variant
-
-template<class T>
-DispatcherCB<T>::DispatcherCB()
-{
-}
+//DispatcherCB<T>
 
 template<class T>
-DispatcherCB<T>::~DispatcherCB()
-{
-	ASSERT(dests.IsEmpty());
-}
-
-template<class T>
-void DispatcherCB<T>::DoDispatch(const T & o) const
+void DispatcherCB<T>::DoDispatch(const T& o) const
 {
 	if(!R::IsEnabled()) return;
 	for(int i = 0; i < dests.GetCount(); i++)
-	{
-		const Callback1<const T &> & dest = dests.operator[](i);
-		dest(o);
-	}
+		dests[i](o);
 }
 
 template<class T>
-void DispatcherCB<T>::Register(Callback1<const T &> d, unsigned key)
+void DispatcherCB<T>::Register(Callback1<const T&> d, unsigned key)
 {
 	int i = dests.Find(key);
 	if(i>=0) return;
@@ -194,35 +150,36 @@ void DispatcherCB<T>::Unregister(unsigned key)
 }
 
 template<class T>
-Callback1<const T &>* DispatcherCB<T>::GetDispatchable(unsigned key)
+Callback1<const T&>* DispatcherCB<T>::GetDispatchable(unsigned key)
 {
 	int i = dests.Find(key);
 	if(i<0) return NULL;
-	Callback1<const T &> & dest = dests.operator[](i);
-	return &dest;
+	return &dests[i];
 }
 
+//DispatcherCBGen
+
 template<class T>
-void DispatcherCBGen::DoDispatch(const T & o) const
+void DispatcherCBGen::DoDispatch(const T& o) const
 {
 	for(int i = 0; i < dests.GetCount(); i++)
 	{
-		const Any & a = dests.operator[](i);
+		const Any& a = dests[i];
 		if(!a.Is<DispatcherCB<T> >()) continue;
-		const DispatcherCB<T> & dest = a.Get<DispatcherCB<T> >();
+		const DispatcherCB<T>& dest = a.Get<DispatcherCB<T> >();
 		dest.DoDispatch(o);
 		return;
 	}
 }
 
 template<class T>
-void DispatcherCBGen::Register(Callback1<const T &> d, unsigned key)
+void DispatcherCBGen::Register(Callback1<const T&> d, unsigned key)
 {
 	for(int i = 0; i < dests.GetCount(); i++)
 	{
-		Any & a = dests.operator[](i);
+		Any& a = dests[i];
 		if(!a.Is<DispatcherCB<T> >()) continue;
-		DispatcherCB<T> & dest = a.Get<DispatcherCB<T> >();
+		DispatcherCB<T>& dest = a.Get<DispatcherCB<T> >();
 		dest.Register(d, key);
 		return;
 	}
@@ -234,9 +191,9 @@ void DispatcherCBGen::Unregister(unsigned key)
 {
 	for(int i = 0; i < dests.GetCount(); i++)
 	{
-		Any & a = dests.operator[](i);
+		Any& a = dests[i];
 		if(!a.Is<DispatcherCB<T> >()) continue;
-		DispatcherCB<T> & dest = a.Get<DispatcherCB<T> >();
+		DispatcherCB<T>& dest = a.Get<DispatcherCB<T> >();
 		dest.Unregister(key);
 		if(dest.GetDests().GetCount()<=0)
 			dests.Remove(i);
@@ -245,13 +202,13 @@ void DispatcherCBGen::Unregister(unsigned key)
 }
 
 template<class T>
-DispatcherCB<T> & DispatcherCBGen::GetDispatcherCB()
+DispatcherCB<T>& DispatcherCBGen::GetDispatcherCB()
 {
 	for(int i = 0; i < dests.GetCount(); i++)
 	{
-		const Any & a = dests.operator[](i);
+		const Any& a = dests[i];
 		if(!a.Is<DispatcherCB<T> >()) continue;
-		DispatcherCB<T> & dest = a.Get<DispatcherCB<T> >();
+		DispatcherCB<T>& dest = a.Get<DispatcherCB<T> >();
 		return dest;
 	}
 	return dests.Add().Create<DispatcherCB<T> >();
@@ -260,28 +217,14 @@ DispatcherCB<T> & DispatcherCBGen::GetDispatcherCB()
 //DispatcherL
 
 template<class T>
-DispatcherL<T>::DispatcherL()
-{
-}
-
-template<class T>
-DispatcherL<T>::~DispatcherL()
-{
-	ASSERT(dests.IsEmpty());
-}
-
-template<class T>
 void DispatcherL<T>::DoDispatch(const T& o) const
 {
 	int c = 0;	
-	const Handler *list = dests.GetNext(), *e = list;
-	do
+	const Handler *list = dests.GetPtr(), *e = list;
+	while((e = e->GetNext()) != list)
 	{
-		++c;
-		e->h(o);
-		e = e->GetNext();
+		e->h(o); ++c;
 	}
-	while(e != list); 
 }
 
 #endif
