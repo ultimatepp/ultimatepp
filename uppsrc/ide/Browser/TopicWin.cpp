@@ -174,6 +174,8 @@ void TopicEditor::FileBar(Bar& bar)
 	   .Key(K_CTRL_P);
 	bar.Add("Export to PDF..", THISBACK(ExportPdf));
 	bar.Add("Export group  to PDF..", THISBACK(ExportGroupPdf));
+	bar.Add("Export to HTML..", THISBACK(ExportPdf));
+	bar.Add("Export group  to HTML..", THISBACK(ExportGroupPdf));
 }
 
 void TopicEditor::EditMenu(Bar& bar)
