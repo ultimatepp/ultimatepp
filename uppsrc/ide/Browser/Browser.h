@@ -341,6 +341,8 @@ public:
 
 	void   ExportPdf();
 	void   ExportGroupPdf();
+	void   ExportHTML();
+	void   ExportGroupHTML();
 	void   Print();
 
 	typedef TopicEditor CLASSNAME;

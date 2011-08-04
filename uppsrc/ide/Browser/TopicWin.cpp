@@ -127,6 +127,40 @@ void TopicEditor::ExportGroupPdf()
 	}	
 }
 
+void TopicEditor::ExportHTML()
+{
+/*	String EncodeHtml(const RichText& text, Index<String>& css,
+	                  const VectorMap<String, String>& links,
+	                  const VectorMap<String, String>& labels,
+	                  const String& path, const String& base = Null, Zoom z = Zoom(8, 40),
+	                  const VectorMap<String, String>& escape = VectorMap<String, String>(),
+	                  int imtolerance = 0);
+	String AsCss(Index<String>& ss);
+	SelectSaveFile("HTML files\t*.html\nAll files\t*.*", file);*/
+}
+
+void TopicEditor::ExportGroupHTML()
+{
+/*	String dir = SelectDirectory();
+	if(IsNull(dir))
+		return;
+	SaveTopic();
+	FindFile ff(AppendFileName(grouppath, "*.tpp"));
+	while(ff) {
+		Topic t = ReadTopic(LoadFile(AppendFileName(grouppath, ff.GetName())));
+		if(!t.text.IsVoid()) {
+			Size page = Size(3968, 6074);
+			PdfDraw pdf(page + 400);
+			::Print(pdf, ParseQTF(t.text), page);
+			String pdfdata = pdf.Finish();
+			String path = AppendFileName(dir, GetFileTitle(ff.GetName()) + ".pdf");
+			if(LoadFile(path) != pdfdata)
+				SaveFile(path, pdfdata);
+		}
+		ff.Next();
+	}*/
+}
+
 void TopicEditor::Print()
 {
 	UPP::Print(editor.Get(), Size(3968, 6074), 0);
