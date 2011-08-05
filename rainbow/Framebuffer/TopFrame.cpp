@@ -151,6 +151,7 @@ void TopWindowFrame::StartDrag()
 		  .MaxRect(framebuffer.GetSize())
 		  .MinSize(ComputeClient(minsize).GetSize())
 		  .Pattern(DRAWDRAGRECT_DASHED | DRAWDRAGRECT_SCREEN)
+		  .Width(2)
 		  .Animation();
 		PaintLock++;
 		r = tr.Track(r, dir.x < 0 ? ALIGN_LEFT : dir.x > 0 ? ALIGN_RIGHT : ALIGN_CENTER,
