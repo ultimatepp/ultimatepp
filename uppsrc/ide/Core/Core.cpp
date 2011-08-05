@@ -356,3 +356,37 @@ int CharFilterCid(int c)
 {
 	return IsAlNum(c) || c == '_' ? c : 0;
 }
+
+
+bool IsDoc(String s)
+{
+	s = ToLower(s);
+	return s.Find("readme") >= 0 || s.Find("copying") >= 0 || s.Find("license") >= 0 ||
+	       s.Find("authors") >= 0;
+}
+
+void CopyFolder(const char *_dst, const char *_src, Index<String>& used, bool all)
+{
+	String dst = NativePath(_dst);
+	String src = NativePath(_src);
+	if(dst == src)
+		return;
+	FindFile ff(AppendFileName(src, "*"));
+	bool realize = true;
+	while(ff) {
+		String s = AppendFileName(src, ff.GetName());
+		String d = AppendFileName(dst, ff.GetName());
+		if(ff.IsFolder())
+			CopyFolder(d, s, used, all);
+		else
+		if(ff.IsFile() && (all || IsDoc(s) || used.Find(s) >= 0)) {
+			if(realize) {
+				RealizeDirectory(dst);
+				realize = false;
+			}
+			SaveFile(d, LoadFile(s));
+			SetFileTime(d, ff.GetLastWriteTime());
+		}
+		ff.Next();
+	}
+}

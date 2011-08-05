@@ -1,8 +1,16 @@
-description "Utility to build U++ projects from the commandline";
+description "Commandline U++ package/assembly builder\377";
+
+uses
+	ide\Builders;
 
 file
-	umk.cpp;
+	umake.h,
+	Console.cpp,
+	IdeContext.cpp,
+	MakeBuild.cpp,
+	Export.cpp,
+	umake.cpp;
 
 mainconfig
-	"" = "CONSOLE";
+	"" = "";
 
