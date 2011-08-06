@@ -4,12 +4,12 @@
 
 #define LDUMP(x) // DUMP(x)
 
-String GetDefaultMethod()
+String MakeBuild::GetDefaultMethod()
 {
 	return LoadFile(ConfigFile("default_method"));
 }
 
-VectorMap<String, String> GetMethodVars(const String& method)
+VectorMap<String, String> MakeBuild::GetMethodVars(const String& method)
 {
 	VectorMap<String, String> map;
 	LoadVarFile(ConfigFile((String)~method + ".bm"), map);
@@ -335,7 +335,7 @@ String MakeBuild::OutDir(const Index<String>& cfg, const String& package, const 
 		outdir = AppendFileName(outdir, GetVarsName());
 	if(!use_target)
 		outdir = AppendFileName(outdir, package);
-	outdir = AppendFileName(outdir, method + "." + Join(x, "."));
+	outdir = AppendFileName(outdir, GetFileTitle(method) + "." + Join(x, "."));
 	outdir = Filter(outdir, CharFilterSlash);
 	return outdir;
 }

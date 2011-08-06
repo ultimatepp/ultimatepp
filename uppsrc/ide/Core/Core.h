@@ -176,7 +176,7 @@ String GetVarsName();
 String VarFilePath();
 Vector<String> GetUppDirs();
 String GetUppDir();
-void   SetVar(const String& var, const String& value);
+void   SetVar(const String& var, const String& val, bool save = true);
 
 String GetAnyFileName(const char *path);
 String GetAnyFileTitle(const char *path);

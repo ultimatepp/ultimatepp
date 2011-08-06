@@ -66,6 +66,9 @@ String VarFilePath(String name) {
 }
 
 String VarFilePath() {
+	String p = varsname;
+	if(IsFullPath(varsname))
+		return varsname;
 	return VarFilePath(GetVarsName());
 }
 
@@ -181,9 +184,10 @@ String GetVar(const String& var) {
 	return MainNest().Get(var);
 }
 
-void SetVar(const String& var, const String& val) {
+void SetVar(const String& var, const String& val, bool save) {
 	MainNest().Set(var, val);
-	SaveVars(GetVarsName());
+	if(save)
+		SaveVars(GetVarsName());
 }
 
 Vector<String> GetUppDirs() {
