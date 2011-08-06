@@ -63,9 +63,9 @@ CONSOLE_APP_MAIN
 			}
 		String v = GetUmkFile(arg[0] + ".var");
 		if(!FileExists(v)) {
-			Vector<String> h = SplitDirs(arg[0]);
+			Vector<String> h = Split(arg[0], ':');
 			for(int i = 0; i < h.GetCount(); i++)
-				h[i] = GetFullPath(h[i]);
+				h[i] = GetFullPath(TrimBoth(h[i]));
 			String x = Join(h, ";");
 			SetVar("UPP", x, false);
 			PutVerbose("Inline assembly: " + x);
@@ -127,7 +127,7 @@ CONSOLE_APP_MAIN
 			int  exporting = 0;
 			String mkf;
 			for(int i = 3; i < arg.GetCount(); i++)
-				if(arg[i][0] == '>')
+				if(arg[i][0] == '+' || arg[i][0] == '>')
 					ide.mainconfigparam = Filter(~arg[i] + 1, CommaSpace);
 				else
 				if(arg[i][0] == '-') {
