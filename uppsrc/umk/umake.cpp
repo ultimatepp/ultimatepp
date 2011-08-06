@@ -49,7 +49,7 @@ CONSOLE_APP_MAIN
 	ide.console.console = true;
 	bool clset = false;
 	const Vector<String>& arg = CommandLine();
-	if(arg.GetCount() >= 2 && IsAlpha(arg[0][0]) && IsAlpha(arg[1][0])) {
+	if(arg.GetCount() >= 2) {
 		bool build = arg.GetCount() >= 3 && IsAlpha(arg[2][0]);
 		for(int i = 3; i < arg.GetCount(); i++)
 			if(arg[i][0] == '-') {
