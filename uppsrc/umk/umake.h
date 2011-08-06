@@ -3,6 +3,8 @@
 
 #include <ide/Builders/Builders.h>
 
+extern bool SilentMode;
+
 class Console {
 public:
 	virtual void Append(const String& s);

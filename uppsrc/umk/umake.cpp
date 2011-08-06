@@ -32,7 +32,8 @@ VectorMap<String, String> Ide::GetMethodVars(const String& method)
 
 void Puts(const char *s)
 {
-	Cout() << s;
+	if(!SilentMode)
+		Cout() << s;
 }
 
 int CommaSpace(int c)
