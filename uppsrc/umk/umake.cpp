@@ -2,6 +2,34 @@
 
 bool SilentMode;
 
+String GetUmkFile(const char *fn)
+{
+	return GetFileOnPath(fn,
+	                     GetHomeDirFile(".upp/umk") + ';' +
+	                     GetHomeDirFile(".upp/theide") + ';' +
+	                     GetHomeDirFile(".upp/ide") + ';' +
+	                     GetHomeDirectory());
+}
+
+String GetBuildMethodPath(String method)
+{
+	if(GetFileExt(method) != ".bm")
+		method << ".bm";
+	return GetUmkFile(method);
+}
+
+String Ide::GetDefaultMethod()
+{
+	return "GCC";
+}
+
+VectorMap<String, String> Ide::GetMethodVars(const String& method)
+{
+	VectorMap<String, String> map;
+	LoadVarFile(GetBuildMethodPath(method), map);
+	return map;
+}
+
 void Puts(const char *s)
 {
 	Cout() << s;
@@ -28,11 +56,18 @@ CONSOLE_APP_MAIN
 					if(x[i] == 'l')
 						SilentMode = true;
 			}
-		if(!LoadVars(arg[0])) {
-			Puts("Invalid assembly\n");
-			SetExitCode(2);
-			return;
+		if(!FileExists(GetUmkFile(arg[0] + ".var"))) {
+			SetVar("UPP", arg[0], false);
+			String outdir = ConfigFile("_out");
+			RealizeDirectory(outdir);
+			SetVar("OUTPUT", outdir, false);
 		}
+		else
+			if(!LoadVars(arg[0])) {
+				Puts("Invalid assembly\n");
+				SetExitCode(2);
+				return;
+			}
 		if(!FileExists(SourcePath(arg[1], GetFileTitle(arg[1]) + ".upp"))) {
 			Puts("Package does not exist\n");
 			SetExitCode(2);
@@ -53,7 +88,7 @@ CONSOLE_APP_MAIN
 			if(f.GetCount())
 				ide.mainconfigparam = f[0].param;
 			String m = arg[2];
-			if(!FileExists(ConfigFile((String)m + ".bm"))) {
+			if(GetBuildMethodPath(m).GetCount() == 0) {
 				SilentMode = false;
 				Puts("Invalid build method\n");
 				SetExitCode(3);
