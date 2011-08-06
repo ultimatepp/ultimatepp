@@ -19,14 +19,8 @@ static int sCharFilterNoCr(int c) {
 }
 
 void Console::Append(const String& s) {
-	if(s.IsEmpty()) return;
-	if(console && !SilentMode) {
-		String t = Filter(s, sCharFilterNoCr);
-		if(*t.Last() == '\n')
-			t.Trim(t.GetCount() - 1);
-		puts(t);
-		return;
-	}
+	if(!SilentMode)
+		Cout() << s;
 }
 
 int Console::Flush()
