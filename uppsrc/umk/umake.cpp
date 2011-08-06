@@ -58,7 +58,10 @@ CONSOLE_APP_MAIN
 						SilentMode = true;
 			}
 		if(!FileExists(GetUmkFile(arg[0] + ".var"))) {
-			SetVar("UPP", arg[0], false);
+			Vector<String> h = SplitDirs(arg[0]);
+			for(int i = 0; i < h.GetCount(); i++)
+				h[i] = GetFullPath(h[i]);
+			SetVar("UPP", Join(h, ";"), false);
 			String outdir = ConfigFile("_out");
 			RealizeDirectory(outdir);
 			SetVar("OUTPUT", outdir, false);
