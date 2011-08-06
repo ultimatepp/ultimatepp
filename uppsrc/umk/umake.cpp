@@ -74,14 +74,15 @@ CONSOLE_APP_MAIN
 			SetVar("OUTPUT", outdir, false);
 		}
 		else {
-			PutVerbose("Assembly file: " + v);
-			if(!LoadVars(arg[0])) {
+			if(!LoadVars(v)) {
 				Puts("Invalid assembly\n");
 				SetExitCode(2);
 				return;
 			}
+			PutVerbose("Assembly file: " + v);
+			PutVerbose("Assembly: " + GetVar("UPP"));
 		}
-		PutVerbose("Output directory: " + GetVar("OUTPUT"));;
+		PutVerbose("Output directory: " + GetVar("OUTPUT"));
 		v = SourcePath(arg[1], GetFileTitle(arg[1]) + ".upp");
 		PutVerbose("Main package: " + v);
 		if(!FileExists(v)) {
@@ -104,7 +105,9 @@ CONSOLE_APP_MAIN
 			if(f.GetCount())
 				ide.mainconfigparam = f[0].param;
 			String m = arg[2];
-			if(GetBuildMethodPath(m).GetCount() == 0) {
+			String bp = GetBuildMethodPath(m);
+			PutVerbose("Build method: " + bp);
+			if(bp.GetCount() == 0) {
 				SilentMode = false;
 				Puts("Invalid build method\n");
 				SetExitCode(3);
