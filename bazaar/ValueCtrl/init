@@ -4,4 +4,5 @@
 #include "PopUpC/init"
 #include "LogPosCtrl/init"
 #include "WithEnterAction/init"
+#include "Gen/init"
 #endif

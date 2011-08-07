@@ -160,17 +160,21 @@ void CtrlPos::LeftDown(Point p, dword keyflags)
 			return;
 		}
 	}
-	CtrlFinder::LeftDown(p, keyflags);
-	if(ctrl == pctrl) //may  not move base
+
+	if(pctrl)
 	{
-		ClearCtrl();
+		Point pt(p);
+		ctrl = CtrlFinder::GetCtrl(*pctrl, pt, flags, filter);
+		if(ctrl)
+		{
+			if(ctrl->InFrame()) //may not move base nor frames
+				ClearCtrl();
+			else
+				WhenLeftDown(*ctrl, p, keyflags);
+		}
 		Action();
 	}
-	if(ctrl && ctrl->InFrame())
-	{
-		ClearCtrl(); //may not move frames
-		Action();
-	}
+
 	Refresh();
 }
 

@@ -10,16 +10,7 @@ PropEditCtrl::PropEditCtrl()
 
 void PropEditCtrl::Updated()
 {
-	if(!ctrl)
-	{
-		sctrl = NULL;
-		ac.Clear();
-		vsav.Clear();
-		am.Clear();	
-		return;
-	}
-
-	if(sctrl == ctrl)
+	if(ctrl && sctrl == ctrl)
 	{
 		for(int i = 0; i < ac.GetCount(); i++)
 		{
@@ -32,6 +23,10 @@ void PropEditCtrl::Updated()
 		return;
 	}
 	sctrl = ctrl;
+	ac.Clear();
+	vsav.Clear();
+	am.Clear();	
+	if(!ctrl) return;
 
 	Ctrl& e = *ctrl;
 

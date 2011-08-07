@@ -13,7 +13,7 @@ using namespace Upp;
 class CtrlPosTest2 : public TopWindow {
 public:
 	typedef CtrlPosTest2 CLASSNAME;
-	typedef Visiting<Ctrl> V;
+
 	CtrlPosTest2();
 
 	//keep the visiting control separated from the CtrlFinder (aka CtrlPos)

@@ -4,7 +4,8 @@ uses
 	CtrlLib,
 	PopUpC,
 	LogPosCtrl,
-	WithEnterAction;
+	WithEnterAction,
+	Gen;
 
 file
 	ValueCtrl.lay,
