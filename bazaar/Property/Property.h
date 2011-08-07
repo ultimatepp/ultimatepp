@@ -216,18 +216,17 @@ void PropKeeper<KLASS>::Init() \
 class GetAccessorMapI
 {
 public:
-	typedef ArrayMap<String, Accessor<Value> > AM;
-	virtual const AM& GetAccessorMap() const = 0;
+	virtual const AccessorMap& GetAccessorMap() const = 0;
 };
 
-template<class T>
-class WithAccessorMap : public GetAccessorMapI
+template<class T, class C = GetAccessorMapI>
+class WithAccessorMap : public C
 {
 public:
 	WithAccessorMap() { PropKeeper<T>::SetupAccessorMap((T&)(*this), am); }
-	virtual const AM& GetAccessorMap() const { return am; }
+	virtual const AccessorMap& GetAccessorMap() const { return am; }
 protected:
-	AM am;
+	AccessorMap am;
 };
 
 //
