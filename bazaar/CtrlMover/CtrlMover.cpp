@@ -28,10 +28,10 @@ Point CtrlMover::GetOffset(const Ctrl& c, const Ctrl& q)
 
 void CtrlMover::OnCtrlLeft(Ctrl& c, Point p, dword keyflags)
 {
-	if(&c == &rc) { rc.Remove(); return; }
-	if(&c == &Get()) { rc.Remove(); return; } //mat not move base
 	if(c.InFrame()) return; //may not move frames
 	rc.Remove();
+	if(&c == &rc) return;
+	if(&c == ~pctrl) return; //mat not move base
 	Add(rc.SizePos());
 
 	//if c is frame: rect in parents window, 
@@ -39,7 +39,7 @@ void CtrlMover::OnCtrlLeft(Ctrl& c, Point p, dword keyflags)
 	Rect r = c.GetRect();
 	if(c.InView())
 		r.Offset(c.GetParent()->GetView().TopLeft());
-	r.Offset(GetOffset(*c.GetParent(), Get()));
+	r.Offset(GetOffset(*c.GetParent(), *pctrl));
 
 	rc.SetData(r);
 	Action();
@@ -47,16 +47,14 @@ void CtrlMover::OnCtrlLeft(Ctrl& c, Point p, dword keyflags)
 
 void CtrlMover::OnRectChange()
 {
-	if(IsEmpty()) { rc.Remove(); return; }
-	if(!GetCtrl()) return;
-	Ctrl& c = *GetCtrl();
+	if(!pctrl || !ctrl) { rc.Remove(); return; }
 
 	Rect r = rc.GetData();
-	r.Offset(-GetOffset(*c.GetParent(), Get()));
-	if(c.InView())
-		r.Offset(-c.GetParent()->GetView().TopLeft());
+	r.Offset(-GetOffset(*ctrl->GetParent(), *pctrl));
+	if(ctrl->InView())
+		r.Offset(-ctrl->GetParent()->GetView().TopLeft());
 	
-	c.SetRect(r);
+	ctrl->SetRect(r);
 	Action();
 }
 
@@ -67,33 +65,14 @@ void CtrlMover::OnMissed(Point p, dword keyflags)
 
 void CtrlMover::Updated()
 {
-	Ctrl* c = GetCtrl();
-	if(!c) return;
-	rc.SetData(c->GetRect());
+	if(!pctrl || !ctrl) { rc.Remove(); return; }
+	rc.SetData(ctrl->GetRect());
 }
 
 void CtrlMover::State(int reason)
 {
 	if(reason != ENABLE) return;
 	if(!IsEnabled()) rc.Remove();
-}
-
-void CtrlMover::Visit(Ctrl& c)
-{
-	rc.Remove();
-	V::Visit(c);
-}
-
-void CtrlMover::Clear()
-{
-	V::Clear();
-	rc.Remove();
-}
-
-void CtrlMover::Reload()
-{
-	if(IsEmpty()) return;
-	V::Reload();
 }
 
 CtrlMover::CtrlMover()

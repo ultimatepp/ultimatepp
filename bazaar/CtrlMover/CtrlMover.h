@@ -12,12 +12,8 @@ class CtrlMover : public CtrlFinder
 {
 public:
 	typedef CtrlMover CLASSNAME;
-	typedef CtrlFinder V;
-	CtrlMover();
 
-	virtual void Visit(Ctrl& c);
-	virtual void Clear();
-	virtual void Reload();
+	CtrlMover();
 
 	virtual void State(int reason);	
 	virtual void Updated();

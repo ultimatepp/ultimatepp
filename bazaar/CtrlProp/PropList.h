@@ -6,19 +6,26 @@
 #include <LogPosCtrl/LogPosCtrl.h>
 #include <ValueCtrl/ValueCtrl.h>
 
-#include <Gen/Gen.h>
-
 #define LAYOUTFILE <CtrlProp/PropList.lay>
 #include <CtrlCore/lay.h>
 
-class PropListCtrl : public WithPropListLay<ParentCtrl>, public Visiting<Ctrl>
+class PropListCtrl : public WithPropListLay<ParentCtrl>
 {
 public:
 	typedef PropListCtrl CLASSNAME;
-	typedef Visiting<Ctrl> V;
 	PropListCtrl();
 
-	virtual void Reload();
+	virtual void Updated();
+
+	void SetCtrl(Ctrl* c) { ctrl = c; UpdateRefresh(); }
+	Ctrl* GetCtrl() const { return ctrl; }
+	void ClearCtrl() { SetCtrl(NULL); }
+
+	virtual Value GetData() const { return RawToValue(~ctrl); }
+	virtual void SetData(const Value& v) { SetCtrl(RawValue<Ctrl*>::Extract(v)); }
+
+protected:
+	Ptr<Ctrl> ctrl; //the current found child
 };
 
 class PropList : public PopUpC
@@ -27,8 +34,8 @@ public:
 	typedef PropList CLASSNAME;
 	PropList();
 
-	void PopUp(Ctrl* owner, Ctrl& e) { plc.Visit(e); PopUpC::PopUp(owner); }
-	virtual void Acceptor() { plc.Clear(); PopUpC::Acceptor(); }
+	void PopUp(Ctrl* owner, Ctrl& e) { plc.SetCtrl(&e); PopUpC::PopUp(owner); }
+	virtual void Acceptor() { plc.ClearCtrl(); PopUpC::Acceptor(); }
 
 protected:
 	PropListCtrl plc;

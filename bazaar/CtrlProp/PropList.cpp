@@ -5,10 +5,16 @@ PropListCtrl::PropListCtrl()
 	CtrlLayout(*this);
 }
 
-void PropListCtrl::Reload()
+void PropListCtrl::Updated()
 {
-	V::Reload();
-	Ctrl& e = Get();
+	if(!ctrl)
+	{
+		gl.SetData(Null);
+		sl.SetData(Null);
+		return;
+	}
+
+	Ctrl& e = *ctrl;
 
 	Value v;
 	bool b;

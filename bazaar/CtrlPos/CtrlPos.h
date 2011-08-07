@@ -7,7 +7,6 @@ using namespace Upp;
 #include <RectCtrl/RectCtrl.h>
 #include <LogPosCtrl/LogPosCtrl.h>
 #include <CtrlFinder/CtrlFinder.h>
-#include <Gen/Gen.h>
 
 //for some helpers
 #include <CtrlMover/CtrlMover.h>
@@ -24,8 +23,6 @@ public:
 	};
 
 	CtrlPos();
-
-	virtual void Clear();
 
 	virtual void Paint(Draw& w);	
 	virtual void LeftDown(Point p, dword keyflags);

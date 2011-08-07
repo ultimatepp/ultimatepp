@@ -15,11 +15,11 @@ void CtrlFinderTest::OnSelect(Ctrl& c, Point p, dword keyflags)
 
 void CtrlFinderTest::VisitCB()
 {
-	hk.Visit(vis);
+	hk.SetSource(&vis);
 }
 void CtrlFinderTest::ClearCB()
 {
-	hk.Clear();
+	hk.ClearSource();
 }
 void CtrlFinderTest::EnableCB()
 {
@@ -87,7 +87,7 @@ CtrlFinderTest::CtrlFinderTest()
 	ViewCB();
 
 	hk.WhenLeftDown = THISBACK(OnSelect);
-	hk.Visit(vis);
+	hk.SetSource(&vis);
 }
 
 GUI_APP_MAIN

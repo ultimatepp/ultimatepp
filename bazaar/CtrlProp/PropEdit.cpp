@@ -8,22 +8,39 @@ PropEditCtrl::PropEditCtrl()
 	//ac.WhenUpdateRow = THISBACK(OnUpdateRow);
 }
 
-void PropEditCtrl::Visit(Ctrl& e)
+void PropEditCtrl::Updated()
 {
-	V::Visit(e);
+	if(!ctrl)
+	{
+		sctrl = NULL;
+		ac.Clear();
+		vsav.Clear();
+		am.Clear();	
+		return;
+	}
 
-	ac.Clear();
-	vsav.Clear();
-	am.Clear();	
+	if(sctrl == ctrl)
+	{
+		for(int i = 0; i < ac.GetCount(); i++)
+		{
+			Value v;
+			int ii = am.Find(ac.Get(i, 0));
+			if(ii<0) continue;
+			if(!am[ii].get(v)) continue;
+			ac.Set(i, 1, v);
+		}
+		return;
+	}
+	sctrl = ctrl;
+
+	Ctrl& e = *ctrl;
 
 	//init local accessor map
 	//prefer the dynamic access
 	//fall back to the static accessors from Props<>
 	GetAccessorMapI* ami = dynamic_cast<GetAccessorMapI*>(&e);
-	if(ami)
-		am <<= ami->GetAccessorMap();
-	else
-		if(!Props<Ctrl>::SetupAccessorMap(e, am)) return;
+	if(ami) am <<= ami->GetAccessorMap();
+	else if(!Props<Ctrl>::SetupAccessorMap(e, am)) return;
 
 	for(int i = 0, k = 0; i < am.GetCount(); i++)
 	{
@@ -88,50 +105,28 @@ void PropEditCtrl::Visit(Ctrl& e)
 	//ac.UpdateRefresh();
 }
 
-void PropEditCtrl::Clear()
-{
-	V::Clear();
-	ac.Clear();
-	vsav.Clear();	
-}
-
-void PropEditCtrl::Reload()
-{
-	V::Reload();
-	for(int i = 0; i < ac.GetCount(); i++)
-	{
-		Value v;
-		int ii = am.Find(ac.Get(i, 0));
-		if(ii<0) continue;
-		if(!am[ii].get(v)) continue;
-		ac.Set(i, 1, v);
-	}
-}
-
 void PropEditCtrl::OnUpdateRow()
 {
-	if(IsEmpty()) return;
+	if(!ctrl) return;
 	if(!ac.IsCursor()) return; //FIXME Option Focus issue 
 	int ii = am.Find(ac.Get(0));
 	if(ii<0) return;
 	am[ii].set(ac.Get(1));
 	vsav.GetAdd(ac.Get(0)).a = true; //dirty
 	Action();
-	Get().UpdateActionRefresh(); //propagate user action
+	ctrl->UpdateActionRefresh(); //propagate user action
 }
 
-void PropEditCtrl::Restore()
+void PropEditCtrl::Undo()
 {
-	if(!IsEmpty())
-	{
-		for(int i = 0; i < vsav.GetCount(); i++)
-			if(vsav[i].a)
-			{
-				int ii = am.Find(vsav.GetKey(i));
-				if(ii<0) continue;
-				am[ii].set(vsav[i].b);				                 
-			}
-	}
+	if(!ctrl) return;
+	for(int i = 0; i < vsav.GetCount(); i++)
+		if(vsav[i].a)
+		{
+			int ii = am.Find(vsav.GetKey(i));
+			if(ii<0) continue;
+			am[ii].set(vsav[i].b);				                 
+		}
 }
 
 PropEdit::PropEdit()

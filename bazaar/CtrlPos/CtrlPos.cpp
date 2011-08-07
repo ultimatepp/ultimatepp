@@ -90,12 +90,12 @@ void CtrlPos::Paint(Draw& w)
 	if(!IsTransparent())
 		w.DrawRect(0,0,sz.cx,sz.cy, SColorFace());
 
-	if(IsEnabled() && !IsEmpty())
-		DrawHintFrame(w, Get(), Get(), LtGray());
+	if(IsEnabled() && pctrl)
+		DrawHintFrame(w, *pctrl, *pctrl, LtGray());
 	
-	if(!GetCtrl()) return;
-	Ctrl& c = *GetCtrl();
-	if(&c == &Get()) return;
+	if(!ctrl) return;
+	Ctrl& c = *ctrl;
+	if(&c == pctrl) return;
 
 	Rect r = c.GetRect();
 	Rect _r = c.GetParent()->GetView();
@@ -103,7 +103,7 @@ void CtrlPos::Paint(Draw& w)
 
 	if(c.InView())
 		r.Offset(_r.TopLeft());
-	Point op = CtrlMover::GetOffset(*(c.GetParent()), Get());
+	Point op = CtrlMover::GetOffset(*c.GetParent(), *pctrl);
 	r.Offset(op);
 	_r.Offset(op);
 
@@ -125,10 +125,10 @@ void CtrlPos::LeftDown(Point p, dword keyflags)
 	moving = false;
 	pressed = (keyflags & K_MOUSELEFT);
 
-	if(GetCtrl())
+	if(ctrl)
 	{
+		Ctrl& c = *ctrl;
 		//if already found prepare moving
-		Ctrl& c = *GetCtrl();
 		ASSERT(!c.InFrame());
 		xpos = c.GetPos();
 		xp = p;
@@ -138,7 +138,7 @@ void CtrlPos::LeftDown(Point p, dword keyflags)
 
 		if(c.InView())
 			r.Offset(_r.TopLeft());
-		Point op = CtrlMover::GetOffset(*(c.GetParent()), Get());
+		Point op = CtrlMover::GetOffset(*c.GetParent(), *pctrl);
 		r.Offset(op);
 		_r.Offset(op);
 
@@ -161,12 +161,12 @@ void CtrlPos::LeftDown(Point p, dword keyflags)
 		}
 	}
 	CtrlFinder::LeftDown(p, keyflags);
-	if(GetCtrl() == &Get()) //may  not move base
+	if(ctrl == pctrl) //may  not move base
 	{
 		ClearCtrl();
 		Action();
 	}
-	if(GetCtrl() && GetCtrl()->InFrame())
+	if(ctrl && ctrl->InFrame())
 	{
 		ClearCtrl(); //may not move frames
 		Action();
@@ -182,8 +182,8 @@ void CtrlPos::MouseMove(Point p, dword keyflags)
 	pressed = (keyflags & K_MOUSELEFT);
 	//int m = RectCtrl::GetMode(r, p, keyflags, style->handsize);
 	//ci = RectCtrl::SetCursor(m, keyflags);
-	if(!GetCtrl()) return;
-	Ctrl& c = *GetCtrl();
+	if(!ctrl) return;
+	Ctrl& c = *ctrl;
 
 	if(pressed && mode != RectCtrl::NONE) 
 	{
@@ -197,19 +197,19 @@ void CtrlPos::MouseMove(Point p, dword keyflags)
 			Rect r = LogPosPopUp::CtrlRect(xpos, q->GetSize());
 			if(c.InView())
 				r.Offset(c.GetParent()->GetView().TopLeft());
-			Point ops = CtrlMover::GetOffset(*(c.GetParent()), Get());
+			Point ops = CtrlMover::GetOffset(*(c.GetParent()), *pctrl);
 			r.Offset(ops);
 
 			c.Remove(); //prevent moving control from finding when searching new parent
 			Point pt(p);
 			int ft(flags); flags |= (DEEP | NEST);
-			Ctrl* pc = GetCtrl(Get(), pt, flags, filter);
+			Ctrl* pc = GetCtrl(*pctrl, pt, flags, filter);
 			flags &= ~(DEEP | NEST); flags |= (ft & DEEP); //restore DEEP flag from save, NEST is ours
-			if(!pc) pc = &Get();
+			if(!pc) pc = pctrl;
 			if(pc != q)
 			{
 				r.Offset(-pc->GetView().TopLeft());
-				Point opd = CtrlMover::GetOffset(*pc, Get());
+				Point opd = CtrlMover::GetOffset(*pc, *pctrl);
 				r.Offset(-opd);
 
 				xpos = LogPosPopUp::MakeLogPos(xpos, r, pc->GetSize());
@@ -278,7 +278,7 @@ void CtrlPos::RightDown(Point p, dword keyflags)
 
 		Ctrl* pc = GetCtrl()->GetParent();
 		r.Offset(-pc->GetView().TopLeft());
-		Point opd = CtrlMover::GetOffset(*pc, Get());
+		Point opd = CtrlMover::GetOffset(*pc, *pctrl);
 		r.Offset(-opd);
 
 		Ctrl::LogPos pos = LogPosPopUp::MakeLogPos(xpos, r, psz);
@@ -315,18 +315,13 @@ void CtrlPos::MouseWheel(Point p, int zdelta, dword keyflags)
 void CtrlPos::Updated()
 {
 	//refresh the view of the currently selected ctrl
+	
 }
 
 void CtrlPos::State(int reason)
 {
 	if(reason != ENABLE) return;
 	if(!IsEnabled()) { ClearCtrl(); Refresh(); }
-}
-
-void CtrlPos::Clear()
-{
-	V::Clear();
-	Refresh();	
 }
 
 CtrlPos::CtrlPos()

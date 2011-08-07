@@ -16,11 +16,11 @@ void CtrlMoverTest::OnSelect(Ctrl& c, Point p, dword keyflags)
 
 void CtrlMoverTest::VisitCB()
 {
-	hk.Visit(vis);
+	hk.SetSource(&vis);
 }
 void CtrlMoverTest::ClearCB()
 {
-	hk.Clear();
+	hk.ClearSource();
 }
 void CtrlMoverTest::EnableCB()
 {
@@ -87,7 +87,7 @@ CtrlMoverTest::CtrlMoverTest()
 	ViewCB();
 
 	hk.WhenLeftDown = THISBACK(OnSelect);
-	hk.Visit(vis);
+	hk.SetSource(&vis);
 }
 
 GUI_APP_MAIN

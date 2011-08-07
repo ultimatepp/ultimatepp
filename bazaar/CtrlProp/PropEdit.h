@@ -6,26 +6,30 @@
 #include <LogPosCtrl/LogPosCtrl.h>
 #include <ValueCtrl/ValueCtrl.h>
 
-#include <Gen/Gen.h>
-
 #define LAYOUTFILE <CtrlProp/PropEdit.lay>
 #include <CtrlCore/lay.h>
 
-class PropEditCtrl : public WithPropEditLay<ParentCtrl>, public Visiting<Ctrl>
+class PropEditCtrl : public WithPropEditLay<ParentCtrl>
 {
 public:
 	typedef PropEditCtrl CLASSNAME;
-	typedef Visiting<Ctrl> V;
+
 	PropEditCtrl();
 
-	virtual void Visit(Ctrl& e);
-	virtual void Reload();
-	virtual void Clear();
-	virtual void Restore();
+	virtual void Updated();
+	virtual void Undo();
 
 	void OnUpdateRow();
 
+	void SetCtrl(Ctrl* c) { ctrl = c; UpdateRefresh(); }
+	Ctrl* GetCtrl() const { return ctrl; }
+	void ClearCtrl() { SetCtrl(NULL); }
+
+	virtual Value GetData() const { return RawToValue(~ctrl); }
+	virtual void SetData(const Value& v) { SetCtrl(RawValue<Ctrl*>::Extract(v)); }
+
 protected:
+	Ptr<Ctrl> ctrl, sctrl; //the current child, and a cache
 	ArrayMap<String, Tuple2<bool, Value> > vsav;
 	AccessorMap am;
 };
@@ -38,10 +42,10 @@ public:
 
 	virtual void Deactivate() {} //let other popups open
 
-	void PopUp(Ctrl* owner, Ctrl& e) { pec.Visit(e); PopUpC::PopUp(owner); }
+	void PopUp(Ctrl* owner, Ctrl& e) { pec.SetCtrl(&e); PopUpC::PopUp(owner); }
 
-	virtual void Rejector() { pec.Restore(); pec.Clear(); PopUpC::Rejector(); }
-	virtual void Acceptor() { pec.Clear(); PopUpC::Acceptor(); }
+	virtual void Rejector() { pec.Undo(); pec.ClearCtrl(); PopUpC::Rejector(); }
+	virtual void Acceptor() { pec.ClearCtrl(); PopUpC::Acceptor(); }
 
 protected:
 	PropEditCtrl pec;

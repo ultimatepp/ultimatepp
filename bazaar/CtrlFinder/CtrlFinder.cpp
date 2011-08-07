@@ -78,46 +78,32 @@ Ctrl* CtrlFinder::GetCtrl(Ctrl& c, Point& p, int& f, const CtrlFilterType& fil)
 	return q;
 }
 
-void CtrlFinder::Reload()
+void CtrlFinder::UpdatedSource()
 {
-	if(IsEmpty()) return;
-	V::Reload();
-	
 	Remove();
-	Get().GetParent()->AddChild(&SetPos(Get().GetPos()), &Get());
-}
-
-void CtrlFinder::Visit(Ctrl& c)
-{
-	ASSERT(c.GetParent());
-	V::Visit(c);
-	Enable();	
-}
-
-void CtrlFinder::Clear()
-{
-	ctrl = NULL;	
-	Remove();
-	V::Clear();
+	if(!pctrl) { ctrl = NULL; return; }
+	ASSERT(pctrl->GetParent());
+	//add the finder on top of any child in the search ctrl's parent
+	pctrl->GetParent()->AddChild(&SetPos(pctrl->GetPos()), pctrl);
 }
 
 void CtrlFinder::LeftDown(Point p, dword keyflags)
 {
-	ctrl = NULL;
-	if(IsEmpty()) return;
+	if(!pctrl) return;
 	Point pt(p);
-	ctrl = GetCtrl(Get(), pt, flags, filter);
-	if(!ctrl) ctrl = &Get();
+	ctrl = GetCtrl(*pctrl, pt, flags, filter);
+	if(!ctrl) ctrl = pctrl;
+	if(!ctrl) return;
 	WhenLeftDown(*ctrl, p, keyflags);
 	Action();
 }
 void CtrlFinder::RightDown(Point p, dword keyflags)
 {
-	ctrl = NULL;
-	if(IsEmpty()) return;
+	if(!pctrl) return;
 	Point pt(p);
-	ctrl = GetCtrl(Get(), pt, flags, filter);
-	if(!ctrl) ctrl = &Get();
+	ctrl = GetCtrl(*pctrl, pt, flags, filter);
+	if(!ctrl) ctrl = pctrl;
+	if(!ctrl) return;
 	WhenRightDown(*ctrl, p, keyflags);
 	Action();
 }

@@ -4,7 +4,6 @@ uses
 	CtrlLib,
 	LogPosCtrl,
 	ValueCtrl,
-	Gen,
 	Property;
 
 file

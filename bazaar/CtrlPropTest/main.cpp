@@ -29,7 +29,7 @@ CtrlPropTest::CtrlPropTest()
 	AddFrame(mb);
 
 	hk.WhenRightDown = THISBACK(OnCtrlRight);
-	hk.Visit(vis);
+	hk.SetSource(&vis);
 	hk.Disable();
 
 	InitDummies();

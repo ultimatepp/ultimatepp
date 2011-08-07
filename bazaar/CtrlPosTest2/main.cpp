@@ -8,7 +8,7 @@ CtrlPosTest2::CtrlPosTest2()
 	
 	Sizeable().Zoomable();
 
-	hk.Visit(vis); //will add itself to vis->GetParent --> to this TopWindow with same vis.GetPos to cover it perfectly.
+	hk.SetSource(&vis); //will add itself to vis->GetParent --> to this TopWindow with same vis.GetPos to cover it perfectly.
 }
 
 GUI_APP_MAIN
