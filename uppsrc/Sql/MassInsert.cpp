@@ -1,6 +1,6 @@
 #include "Sql.h"
 
-namespace Upp {
+NAMESPACE_UPP
 
 SqlMassInsert::~SqlMassInsert()
 {
@@ -84,4 +84,5 @@ void SqlMassInsert::Flush()
 	pos = 0;
 }
 
-};
+END_UPP_NAMESPACE
+

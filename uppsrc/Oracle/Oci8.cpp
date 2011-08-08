@@ -7,7 +7,12 @@ NAMESPACE_UPP
 #define LLOG(x) RLOG(x)
 
 //#define DLLFILENAME "ora803.dll"
-#define DLLFILENAME "oci.dll"
+#ifdef PLATFORM_WIN32
+	#define DLLFILENAME "oci.dll"
+#else
+	#define DLLFILENAME "libclntsh.so"
+#endif
+
 #define DLIMODULE   OCI8
 #define DLIHEADER   <Oracle/Oci8.dli>
 #include <Core/dli_source.h>
@@ -1495,7 +1500,7 @@ void OracleBlob::Write(int64 at, const void *ptr, dword size) {
 
 void OracleBlob::Assign(Oracle8& s, int64 blob) {
 	session = &s;
-	locp = (OCILobLocator *)blob;
+	locp = (OCILobLocator *)(ptrdiff_t)blob;
 	ub4 n;
 	OpenInit(READWRITE,
 		session->oci8.OCILobGetLength(session->svchp, session->errhp, locp, &n) == OCI_SUCCESS ? n : 0);
@@ -1669,7 +1674,7 @@ void OracleClob::Write(const WString& w)
 
 void OracleClob::Assign(Oracle8& s, int64 blob) {
 	session = &s;
-	locp = (OCILobLocator *)blob;
+	locp = (OCILobLocator *)(ptrdiff_t)blob;
 	ub4 n;
 	OpenInit(READWRITE,
 		session->oci8.OCILobGetLength(session->svchp, session->errhp, locp, &n) == OCI_SUCCESS

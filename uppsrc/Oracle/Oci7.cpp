@@ -16,7 +16,12 @@ typedef byte text;
 
 NAMESPACE_UPP
 
-#define DLLFILENAME "ociw32.dll"
+#ifdef PLATFORM_WIN32
+	#define DLLFILENAME "ociw32.dll"
+#else
+	#define DLLFILENAME "libclntsh.so"
+#endif
+
 #define DLIMODULE   OCI7
 #define DLIHEADER   <Oracle/Oci7.dli>
 #include <Core/dli_source.h>
