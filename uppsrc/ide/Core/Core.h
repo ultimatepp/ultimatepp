@@ -74,6 +74,9 @@ public:
 	virtual String    IdeGetFileName() = 0;
 	virtual String    IdeGetNestFolder() = 0;
 
+	virtual String GetDefaultMethod();
+	virtual VectorMap<String, String> GetMethodVars(const String& method);
+
 	virtual ~IdeContext() {}
 };
 
@@ -97,6 +100,9 @@ void             IdeConsoleBeginGroup(String group);
 void             IdeConsoleEndGroup();
 bool             IdeConsoleWait();
 void             IdeGotoCodeRef(String s);
+
+String GetDefaultMethod();
+VectorMap<String, String> GetMethodVars(const String& method);
 
 bool      IdeIsDebug();
 void      IdeEndDebug();
