@@ -4,18 +4,6 @@
 
 #define LDUMP(x) // DUMP(x)
 
-String MakeBuild::GetDefaultMethod()
-{
-	return LoadFile(ConfigFile("default_method"));
-}
-
-VectorMap<String, String> MakeBuild::GetMethodVars(const String& method)
-{
-	VectorMap<String, String> map;
-	LoadVarFile(ConfigFile((String)~method + ".bm"), map);
-	return map;
-}
-
 MakeBuild::MakeBuild()
 {
 	targetmode = 0;

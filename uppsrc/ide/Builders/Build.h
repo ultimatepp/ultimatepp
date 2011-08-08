@@ -40,8 +40,6 @@ struct MakeBuild {
 	virtual void ReQualifyCodeBase() = 0;
 	virtual void SetErrorEditor() = 0;
 	virtual String GetMain() = 0;
-	virtual String GetDefaultMethod();
-	virtual VectorMap<String, String> GetMethodVars(const String& method);
 
 	struct TransferFileInfo
 	{

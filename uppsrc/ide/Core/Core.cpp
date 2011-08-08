@@ -97,6 +97,29 @@ const Workspace& GetIdeWorkspace()
 	return x;
 }
 
+String IdeContext::GetDefaultMethod()
+{
+	return LoadFile(ConfigFile("default_method"));
+}
+
+VectorMap<String, String> IdeContext::GetMethodVars(const String& method)
+{
+	VectorMap<String, String> map;
+	LoadVarFile(ConfigFile((String)~method + ".bm"), map);
+	return map;
+}
+
+
+String GetDefaultMethod()
+{
+	return the_ide ? the_ide->GetDefaultMethod() : String();
+}
+
+VectorMap<String, String> GetMethodVars(const String& method)
+{
+	return the_ide ? the_ide->GetMethodVars(method) : VectorMap<String, String>();
+}
+
 bool IdeIsBuilding()
 {
 	return the_ide && the_ide->IdeIsBuilding();
