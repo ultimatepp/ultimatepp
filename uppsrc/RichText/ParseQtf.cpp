@@ -511,7 +511,7 @@ void RichQtfParser::Cat(int chr)
 		format.Underline(!format.IsUnderline());
 		accesskey = 0;
 	}
-	else {
+	else if(chr >= ' ') {
 		text.Cat(chr);
 	}
 }
@@ -897,7 +897,7 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 			SetFormat();
 			const char *b = ++term;
 			for(; *term && *term != '\1'; term++)
-				if(*term == '\n') {
+				if((byte)*term == '\n') {
 					text.Cat(ToUnicode(b, (int)(term - b), format.charset));
 					EndPart();
 					b = term + 1;

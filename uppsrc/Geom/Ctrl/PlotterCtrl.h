@@ -195,6 +195,7 @@ public:
 
 protected:
 	void                    AdjustPos(Point scpos, int xymask); // 1 = x, 2 = y
+	void                    PostRefresh();
 
 protected:
 	bool                    rev_x, rev_y, aspect_lock, enable_lock;
@@ -221,7 +222,6 @@ protected:
 private:
 	void                    OnHScroll();
 	void                    OnVScroll();
-	void                    PostRefresh();
 	void                    Refresh0()                       { Refresh(); }
 
 private:
