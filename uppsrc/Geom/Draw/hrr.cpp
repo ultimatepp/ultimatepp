@@ -1201,8 +1201,8 @@ void HRR::Paint(Draw& draw, Rect dest, Rectf src,
 		<< ", max_pixel = " << max_pixel << ", mono_black = " << mono_black
 		<< ", mono_white = " << mono_white << ", blend_bgnd = " << blend_bgnd
 		<< ", dest = " << dest << ", src = " << src << BeginIndent);
-	Swap(dest.top, dest.bottom);
 	draw.Clip(dest);
+	Swap(dest.top, dest.bottom);
 	Paint(draw, MatrixfScale(src, dest), Null, alpha, max_pixel, mono_black, mono_white, blend_bgnd);
 	draw.End();
 	LLOG(EndIndent << "// HRR::Paint");

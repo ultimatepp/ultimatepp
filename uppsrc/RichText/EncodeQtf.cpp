@@ -529,10 +529,14 @@ String   AsQTF(const RichText& text, byte charset, dword options)
 String DeQtf(const char *s) {
 	String r;
 	r.Reserve(256);
-	while(*s) {
-		if((byte)*s > ' ' && !IsDigit(*s) && !IsAlpha(*s) && (byte)*s < 128)
-			r.Cat('`');
-		r.Cat(*s++);
+	for(; *s; s++) {
+		if(*s == '\n')
+			r.Cat('&');
+		else {
+			if((byte)*s > ' ' && !IsDigit(*s) && !IsAlpha(*s) && (byte)*s < 128)
+				r.Cat('`');
+			r.Cat(*s);
+		}
 	}
 	return r;
 }
