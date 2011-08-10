@@ -219,5 +219,5 @@ CONSOLE_APP_MAIN
 		Puts("Usage: umk assembly main_package build_method -options [+flags] [output]\n"
 		     "Examples: umk examples Bombs GCC -ab +GUI,SHARED ~/bombs\n"
 		     "          umk examples:uppsrc Bombs ~/GCC.bm -rv +GUI,SHARED ~/bin\n"
-		     "See http://www.ultimatepp.org/app$ide$cmdline$en-us.html for details\n");	
+		     "See http://www.ultimatepp.org/app$ide$umk$en-us.html for details\n");	
 }
