@@ -400,8 +400,8 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		server_headers.Cat("\r\n");
 	}
 
-	if(!keepalive)
-		socket.StopWrite();
+//	if(!keepalive) // mirek 110812
+//		socket.StopWrite();
 
 	if(method == METHOD_HEAD) {
 		Close();
