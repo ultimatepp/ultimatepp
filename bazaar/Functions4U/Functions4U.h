@@ -191,7 +191,7 @@ public:
 	FileDiffArray();
 	void Clear();
 	FileDiff& operator[](long i)	{return diffList[i];}
-	bool Compare(FileDataArray &master, FileDataArray &secondary, String &folderFrom, 
+	bool Compare(FileDataArray &master, FileDataArray &secondary, const String folderFrom, 
 		Upp::Array<String> &excepFolders, Upp::Array<String> &excepFiles, int sensSecs = 0);
 	bool Apply(String toFolder, String fromFolder, int flags = 0);
 	long GetCount()				{return diffList.GetCount();};
@@ -266,9 +266,12 @@ inline const T& max(const T& a, const T& b, const T& c, const T& d) {
 	return ab > cd ? ab : cd;
 }
 
-template <class T> 
-inline const T Abs(const T& a)  { 
-	return a > 0 ? a : -a;}
+
+#ifndef DBL_MAX
+#define DBL_MAX	1.7976931348623158e+308
+#define DBL_MIN	2.2250738585072014e-308 
+#endif
+
 
 //int DayOfYear(Date d);
 

@@ -12,6 +12,7 @@ functions]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/bsdiff`$en`-us^2 BSDiff]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/SvgColors`$en`-us^2 SvgColors]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/StaticPlugin`$en`-us^2 StaticPlugin]&]
+[s0;i150;O0; [^topic`:`/`/Functions4U`/src`/QtfEquation`$en`-us^2 QtfEquation]&]
 [s0;2 &]
 [s0;2 &]
 [s0; [2 There is also a ][^topic`:`/`/Functions4U`/srcdoc`/ChangesLog`$en`-us^2 News 

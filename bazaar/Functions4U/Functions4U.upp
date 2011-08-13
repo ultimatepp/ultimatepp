@@ -4,7 +4,10 @@ uses
 	Core,
 	plugin\bz2,
 	Web,
-	Draw;
+	Draw,
+	plugin\jpg,
+	plugin\gif,
+	plugin\tif;
 
 uses(GUI) ide/Browser;
 

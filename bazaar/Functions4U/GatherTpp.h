@@ -17,7 +17,7 @@ public:
 	
 	
 private:
-	Array <String> rootFolders;
+	Upp::Array <String> rootFolders;
 	String dir;	
 	VectorMap<String, String> escape;
 	VectorMap<String, String> links;

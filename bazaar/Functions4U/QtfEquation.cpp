@@ -26,16 +26,16 @@ Drawing EquationDraw::Text(String text, bool italic, int offsetX, int offsetY, d
 	int width = 0;
 	WString wtext(text);
 	for (int i = 0; i < wtext.GetCount(); ++i) 
-		width += fi[wtext[i]];
+		width += fi.GetWidth(wtext[i]);
 	
 	width += 10;
 	width = int(width*betw);
-	ImageDraw idw(width, fnt.GetHeight());
-	idw.DrawRect(Size(width, fnt.GetHeight()), White);
+	ImageDraw idw(width, fnt.GetCy());
+	idw.DrawRect(Size(width, fnt.GetCy()), White);
 	idw.DrawText(offsetX, offsetY, text, fnt);
 
-	DrawingDraw dw(width/3, fnt.GetHeight()/3);
-	dw.DrawImage(0, 0, width/3, fnt.GetHeight()/3, idw);
+	DrawingDraw dw(width/3, fnt.GetCy()/3);
+	dw.DrawImage(0, 0, width/3, fnt.GetCy()/3, idw);
 	
 	return dw;
 }
@@ -77,9 +77,11 @@ Drawing EquationDraw::SubSup(Drawing &drwText, String sub, String sup)
 
 Drawing EquationDraw::SubSupInv(Drawing &drwText, Drawing &drwSub, Drawing &drwSup)
 {
+	double factor = 0.6;
+	
 	Size szText = drwText.GetSize();
-	Size szSub  = (2/3.)*drwSub.GetSize();
-	Size szSup  = (2/3.)*drwSup.GetSize();
+	Size szSub  = factor*drwSub.GetSize();
+	Size szSup  = factor*drwSup.GetSize();
 	
 	int width = szText.cx + max(szSup.cx, szSub.cx);
 	int deltay = szSup.cy/2;
@@ -175,16 +177,23 @@ Drawing EquationDraw::Sqrt(Drawing &right)
 	Size szLeft = left.GetSize();
 	Size szRight = right.GetSize();
 	
-	int width = szLeft.cx + szRight.cx;
+	int width = 2*szLeft.cx + szRight.cx;
 	int height = max(szLeft.cy, szRight.cy);
 	
 	DrawingDraw dw(width, height);
 	
 	dw.DrawDrawing(0, 		  0, szLeft.cx,  height, left);
 	dw.DrawDrawing(szLeft.cx, 1, szRight.cx, height-1, right);
-	dw.DrawLine(szLeft.cx,    0, width-szLeft.cx, 0, 1);
+	dw.DrawLine(szLeft.cx,    1, width-szLeft.cx, 1, 1);
 	
 	return dw;	
+}
+
+Drawing EquationDraw::Exponent(Drawing &right)
+{
+	Drawing left = Text("e");
+	
+	return EquationDraw::Exp(left, right);
 }
 
 Drawing EquationDraw::Integral(Drawing &data, Drawing &sub, Drawing &sup)
@@ -195,7 +204,7 @@ Drawing EquationDraw::Integral(Drawing &data, Drawing &sub, Drawing &sup)
 	Size szLeft = left.GetSize();
 	Size szRight = right.GetSize();
 	
-	int sqWidth = szLeft.cx/3-20;
+	int sqWidth = int(szLeft.cx*1.5);
 	int width = sqWidth + szRight.cx;
 	int height = szRight.cy;
 	
@@ -215,7 +224,7 @@ Drawing EquationDraw::Summat(Drawing &data, Drawing &sub, Drawing &sup)
 	Size szLeft = left.GetSize();
 	Size szRight = right.GetSize();
 	
-	int sqWidth = szLeft.cx/3;
+	int sqWidth = int(szLeft.cx*1.3);
 	int width = sqWidth + szRight.cx;
 	int height = szRight.cy;
 	
@@ -262,6 +271,16 @@ String EquationDraw::ReplaceSymbols(String var)
 	return var;	    
 }
 
+String EquationDraw::TermTrig(CParser& p) {
+	if (p.Id("sin"))	return "sin";
+	if (p.Id("cos"))	return "cos";
+	if (p.Id("tan"))	return "tan";
+	if (p.Id("asin"))	return "asin";
+	if (p.Id("acos"))	return "acos";
+	if (p.Id("atan"))	return "atan";
+	return Null;
+}
+
 Drawing EquationDraw::Term(CParser& p, bool noBracket)
 {
 	if(p.Id("integral")) {
@@ -290,11 +309,18 @@ Drawing EquationDraw::Term(CParser& p, bool noBracket)
 		p.PassChar(')');
 		return EquationDraw::Sqrt(x);
 	}
-	if(p.Id("cos")) {
+	if(p.Id("exp")) {
 		p.PassChar('(');
 		Drawing x = Exp(p);
 		p.PassChar(')');
-		return EquationDraw::Function("cos", x);
+		return EquationDraw::Exponent(x);
+	}
+	String trig = TermTrig(p);
+	if (!IsNull(trig)) {
+		p.PassChar('(');
+		Drawing x = Exp(p);
+		p.PassChar(')');
+		return EquationDraw::Function(trig, x);
 	}
 	if(p.IsId()) 
 		return EquationDraw::Text(ReplaceSymbols(p.ReadId()));
@@ -305,6 +331,11 @@ Drawing EquationDraw::Term(CParser& p, bool noBracket)
 			return x;
 		else
 			return EquationDraw::Bracket(x);
+	}
+	if(p.Char('-')) {
+		Drawing left = Text("-");
+		Drawing term = EquationDraw::Term(p);
+		return EquationDraw::JoinCenter(left, term);
 	}
 	return EquationDraw::Text(FormatDouble(p.ReadDouble()));
 }
@@ -379,7 +410,7 @@ EquationDraw::EquationDraw()
 	symbols.GetAdd("omega") = "Ωω";
 }
 
-Drawing DrawEquation(String str)
+Drawing DrawEquation(const String &str)
 {
 	EquationDraw equation;
 	
@@ -396,12 +427,12 @@ Drawing DrawEquation(String str)
 	}
 	catch(CParser::Error e) {
 		String res;
-		res << "ERROR: " << e << '\n';
+		res << "ERROR: " << e;
 		return EquationDraw::Text(res);
 	}
 }
 
-QtfRichObject QtfEquation(String str)
+QtfRichObject QtfEquation(const String &str)
 {
 	Drawing drw = DrawEquation(str);
 	

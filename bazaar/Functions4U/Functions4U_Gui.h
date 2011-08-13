@@ -29,8 +29,8 @@ inline bool IsValid(ImageBuffer &img, T &t) {
 	return t.x >= 0 && t.y >= 0 && t.x < img.GetWidth() && t.y < img.GetHeight();
 }
 
-Drawing DrawEquation(String str);
-QtfRichObject QtfEquation(String str);
+Drawing DrawEquation(const String &str);
+QtfRichObject QtfEquation(const String &str);
 
 Image NativePathIconX(const char *path, bool folder, int flags = 0);
 
@@ -44,11 +44,13 @@ public:
 private:
 	String ReplaceSymbols(String var);
 	Drawing Term(CParser& p, bool noBracket = false);	
+	String TermTrig(CParser& p);
 	Drawing Mul(CParser& p);
 	
 private:
 	static Drawing Bracket(Drawing &data);
 	static Drawing Sqrt(Drawing &right);
+	static Drawing Exponent(Drawing &right);
 	static Drawing Integral(Drawing &data, Drawing &sub, Drawing &sup);
 	static Drawing Summat(Drawing &data, Drawing &sub, Drawing &sup);
 	static Drawing Exp(Drawing &data, Drawing &exp);
@@ -72,6 +74,12 @@ private:
 private:
 	VectorMap<String, String> symbols;
 };
+
+bool SaveImage(const Image &img, int qualityBpp, const String &fileName, String ext = "");
+bool PrintImage(const Image &img, int x = 0, int y = 0, int width = Null, int height = Null);
+void DrawRectLine(Draw& w, int x, int y, int width, int height, int lineWidth, const Color &color);
+void DrawRectLine(Draw& w, Point &pos, Size &s, int lineWidth, const Color &color);
+void DrawRectLine(Draw& w, Rect &r, int lineWidth, const Color &color);
 
 #endif
 #endif

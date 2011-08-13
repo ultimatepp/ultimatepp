@@ -4,6 +4,9 @@
 #include "plugin\bz2/init"
 #include "Web/init"
 #include "Draw/init"
+#include "plugin\jpg/init"
+#include "plugin\gif/init"
 #include "ide/Browser/init"
 #include "AESStream/init"
+#include "plugin\tif/init"
 #endif

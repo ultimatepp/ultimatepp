@@ -1537,6 +1537,41 @@ lass]_[*@4 T]>_[_^Rect`_^ Rect`_]<[*@4 T]>_[* FitInFrame]([@(0.0.255) const]_[_^
 &]
 [s3; &]
 [s4;%- &]
+[s5;:SaveImage`(const Image`&`,int`,const String`&`,String`):%- [@(0.0.255) bool]_[* Save
+Image]([@(0.0.255) const]_[_^Image^ Image]_`&[*@3 img], [@(0.0.255) int]_[*@3 qualityBpp], 
+[@(0.0.255) const]_[_^String^ String]_`&[*@3 fileName], [_^String^ String]_[*@3 ext]_`=_`"`"
+)&]
+[s2; Saves Image [%-*@3 img] in file [%-*@3 fileName] with format [%-*@3 ext]. 
+If ext is `"`", the format is taken from [%-*@3 fileName] extension.&]
+[s2; [%-*@3 qualityBpp] is the quality (for jpg) or the bits per pixel 
+(for other formats):&]
+[s3; &]
+[s4;%- &]
+[s5;:PrintImage`(const Image`&`,int`,int`,int`,int`):%- [@(0.0.255) bool]_[* PrintImage](
+[@(0.0.255) const]_[_^Image^ Image]_`&[*@3 img], [@(0.0.255) int]_[*@3 x]_`=_[@3 0], 
+[@(0.0.255) int]_[*@3 y]_`=_[@3 0], [@(0.0.255) int]_[*@3 width]_`=_Null, 
+[@(0.0.255) int]_[*@3 height]_`=_Null)&]
+[s2; Prints image [%-*@3 img] in coords. [%-*@3 x,] [%-*@3 y,] [%-*@3 width,] 
+[%-*@3 height].&]
+[s3; &]
+[s4;%- &]
+[s5;:DrawRectLine`(Draw`&`,int`,int`,int`,int`,int`,const Color`&`):%- [@(0.0.255) void
+]_[* DrawRectLine]([_^Draw^ Draw][@(0.0.255) `&]_[*@3 w], [@(0.0.255) int]_[*@3 x], 
+[@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 width], [@(0.0.255) int]_[*@3 height], 
+[@(0.0.255) int]_[*@3 lineWidth], [@(0.0.255) const]_[_^Color^ Color]_`&[*@3 color])&]
+[s5;:DrawRectLine`(Draw`&`,Point`&`,Size`&`,int`,const Color`&`):%- [@(0.0.255) void]_[* D
+rawRectLine]([_^Draw^ Draw][@(0.0.255) `&]_[*@3 w], [_^Point^ Point]_`&[*@3 pos], 
+[_^Size^ Size]_`&[*@3 s], [@(0.0.255) int]_[*@3 lineWidth], [@(0.0.255) const]_[_^Color^ Colo
+r]_`&[*@3 color])&]
+[s5;:DrawRectLine`(Draw`&`,Rect`&`,int`,const Color`&`):%- [@(0.0.255) void]_[* DrawRectL
+ine]([_^Draw^ Draw][@(0.0.255) `&]_[*@3 w], [_^Rect^ Rect]_`&[*@3 r], [@(0.0.255) int]_[*@3 lin
+eWidth], [@(0.0.255) const]_[_^Color^ Color]_`&[*@3 color])&]
+[s2; Draws a rectangle in Draw [%-*@3 w] defined by either [%-*@3 x,] 
+[%-*@3 y,] [%-*@3 width,] [%-*@3 height][%- , or Point ][%-*@3 pos][%-  and] 
+Size [%-*@3 s][%-  or Rect ][%-*@3 r][%- , with line width] [%-*@3 lineWidth] 
+and Color [%-*@3 color].&]
+[s3; &]
+[s4; &]
 [s2;l0;:RandomColor`(`):%- [_^Color^ Color]_[* RandomColor]()&]
 [s2; Returns a random color.&]
 [s3; &]
@@ -1573,7 +1608,7 @@ ageBuffer]_`&[*@3 img], [@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y])&]
 [s3; &]
 [s3; &]
 [ {{10000@1 [s0; [* Other functions]]}}&]
-[s4;%- &]
+[s4; &]
 [s5;:GetExtExecutable`(String`):%- [_^String^ String]_[* GetExtExecutable]([_^String^ Strin
 g]_[*@3 ext])&]
 [s2; Gets the program that will open by default the files with extension 

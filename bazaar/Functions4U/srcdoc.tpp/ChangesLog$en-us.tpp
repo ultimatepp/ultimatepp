@@ -4,7 +4,11 @@ topic "News and changes Log";
 [{_}%EN-US 
 [s0; [*R+184 Functions4U. News and changes log]&]
 [s0;%- &]
-[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2011/04/16]]
+[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2011/07/26]]
+:: [s0;# [2 Updated QtfEquation().]]
+:: [s0;# [2 2011/07/24]]
+:: [s0;# [2 Added SaveImage(), PrintImage() and DrawRectLine().]]
+:: [s0;# [2 2011/04/16]]
 :: [s0;# [2 Added String Tokenize(const String `&str, const String `&token, 
 int `&pos).]]
 :: [s0;# [2 2011/02/24]]

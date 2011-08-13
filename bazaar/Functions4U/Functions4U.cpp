@@ -1740,7 +1740,7 @@ void FileDiffArray::Clear()
 }
 
 // True if equal
-bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, String &folderFrom,
+bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, const String folderFrom,
 						 Array<String> &excepFolders, Array<String> &excepFiles, int sensSecs) {
 	if (master.GetCount() == 0) {
 		if (secondary.GetCount() == 0)

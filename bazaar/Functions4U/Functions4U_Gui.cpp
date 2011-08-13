@@ -3,6 +3,10 @@
 #include <CtrlLib/CtrlLib.h>
 
 #include "Functions4U.h"
+#include <plugin/jpg/jpg.h>
+#include <plugin/tif/tif.h>
+#include <plugin/gif/gif.h>
+#include <plugin/bmp/bmp.h>
 
 Image NativePathIconX(const char *path, bool folder, int flags)
 {
@@ -48,39 +52,85 @@ Image NativePathIconX(const char *path, bool folder, int flags)
 	return drw;
 }
 
-/*
-Vector<Value> ReadCol(GridCtrl& grid, int col, int begin, int end) 
-{
-	if (begin < 0 || end >= grid.GetRowCount() || col < 0 || col >= grid.GetColumnCount())
-		throw Exc(t_("Wrong param. in ReadCol"));
+bool SaveImage(const Image &img, int qualityBpp, const String &fileName, String ext) {	
+	if(!img) 
+		return false;
 	
-	Vector<Value> v;
+	if (ext == "")
+		ext = GetFileExt(fileName);
 	
-	for(int i = begin; i <= end; i++)
-		v.Add(grid(i, col));
-	return v;
+	if (ext == ".jpg" || ext == ".jpeg") {
+	    JPGEncoder jpg;	    
+	    if (IsNull(qualityBpp))
+	        qualityBpp = 85;
+	    else if (qualityBpp > 100)
+	        qualityBpp = 100;		// Max 100
+		jpg.Quality(qualityBpp);	
+		jpg.SaveFile(fileName, img);
+	} else if (ext == ".gif") {
+		GIFEncoder gif;	 
+		gif.SaveFile(fileName, img);
+	} else if (ext == ".tif" || ext == ".tiff") {
+		TIFEncoder tif;
+		if (IsNull(qualityBpp))
+	        qualityBpp = 24;
+		tif.Bpp(qualityBpp);	//1, 2, 4, 8, 24, 32
+		tif.SaveFile(fileName, img);	
+	} else if (ext == ".bmp") {
+		BMPEncoder bmp;
+		if (IsNull(qualityBpp))
+	        qualityBpp = 24;
+		bmp.Bpp(qualityBpp);	//1, 4, 8, 24, 32	and Bpp(4).Mono(); Bpp(8).Mono();
+		bmp.SaveFile(fileName, img);	
+	} else if (ext == ".png") {
+		PNGEncoder png;
+		if (IsNull(qualityBpp))
+	        qualityBpp = 24;
+		png.Bpp(qualityBpp);	//1, 4, 8, 24, 32	and only with 8	png.Interlace();
+		png.SaveFile(fileName, img);
+	} else
+		return false;
+	return true;
 }
 
-Vector<Vector<Value> > GetGridData(GridCtrl& grid) {
-	Vector<Vector<Value> > data;
+bool PrintImage(const Image &img, int x, int y, int width, int height) {
+	if(!img) 
+		return false;
 	
-	for (int row = 0; row < grid.GetRowCount()+1; ++row) 
-		data.Add(grid.ReadRow(row));
+	PrinterJob pd(t_("Printing document"));
+	if(!pd.Execute()) 
+		return false; 
 	
-	return data;
+	Draw& w = pd.GetDraw();
+	w.StartPage();
+	if (IsNull(width))
+		w.DrawImage(x, y, img);
+	else
+		w.DrawImage(x, y, width, height, img);
+	w.EndPage();
+	
+	return true;
 }
-void SetGridData(GridCtrl& grid, Vector<Vector<Value> > &data) {
-	grid.Clear(true);
-	if (!data.IsEmpty()) { 
-		int nrow = data.GetCount();
-		int ncol = data[0].GetCount();
-		for (int col = 0; col < data[0].GetCount(); ++col) 
-			grid.AddColumn(data[0][col]);
-		grid.SetRowCount(data.GetCount()-1);
-		for (int row = 0; row < grid.GetRowCount(); ++row) 
-			for (int col = 0; col < grid.GetColumnCount(); ++col) 
-				grid(row, col) = data[row+1][col];
-	}
+
+void DrawRectLine(Draw& w, int x, int y, int width, int height, int lineWidth, const Color &color) {
+	w.DrawLine(x, y, x+width, y, lineWidth, color);
+	w.DrawLine(x+width, y, x+width, y+height, lineWidth, color);
+	w.DrawLine(x+width, y+height, x, y+height, lineWidth, color);
+	w.DrawLine(x, y+height, x, y, lineWidth, color);
 }
-*/
+
+void DrawRectLine(Draw& w, Point &pos, Size &s, int lineWidth, const Color &color) {
+	w.DrawLine(pos.x, pos.y, pos.x+s.cx, pos.y, lineWidth, color);
+	w.DrawLine(pos.x+s.cx, pos.y, pos.x+s.cx, pos.y+s.cy, lineWidth, color);
+	w.DrawLine(pos.x+s.cx, pos.y+s.cy, pos.x, pos.y+s.cy, lineWidth, color);
+	w.DrawLine(pos.x, pos.y+s.cy, pos.x, pos.y, lineWidth, color);
+}
+
+void DrawRectLine(Draw& w, Rect &r, int lineWidth, const Color &color) {
+	w.DrawLine(r.left, r.top, r.right, r.top, lineWidth, color);
+	w.DrawLine(r.right, r.top, r.right, r.bottom, lineWidth, color);
+	w.DrawLine(r.right, r.bottom, r.left, r.bottom, lineWidth, color);
+	w.DrawLine(r.left, r.bottom, r.left, r.top, lineWidth, color);
+}
+
 #endif
