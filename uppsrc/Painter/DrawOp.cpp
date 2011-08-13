@@ -13,14 +13,16 @@ void Painter::OffsetOp(Point p)
 	Translate(p.x, p.y);
 }
 
-void Painter::RectPath(int x, int y, int cx, int cy)
+Painter& Painter::RectPath(int x, int y, int cx, int cy)
 {
 	Move(x, y).Line(x + cx, y).Line(x + cx, y + cy).Line(x, y + cy).Close();
+	return *this;
 }
 
-void Painter::RectPath(const Rect& r)
+Painter& Painter::RectPath(const Rect& r)
 {
 	RectPath(r.left, r.top, r.GetWidth(), r.GetHeight());
+	return *this;
 }
 
 bool Painter::ClipOp(const Rect& r)

@@ -309,8 +309,8 @@ public:
 	Painter& Ellipse(double x, double y, double rx, double ry);
 	Painter& Circle(double x, double y, double r);
 	
-	void     RectPath(int x, int y, int cx, int cy);
-	void     RectPath(const Rect& r);
+	Painter& RectPath(int x, int y, int cx, int cy);
+	Painter& RectPath(const Rect& r);
 };
 
 void PaintCharacterSys(Painter& sw, double x, double y, int ch, Font fnt);
