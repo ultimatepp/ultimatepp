@@ -548,6 +548,7 @@ bool Ctrl::IsOcxChild()
 
 Ctrl::Ctrl() {
 	GuiLock __;
+	ChSync();
 	LLOG("Ctrl::Ctrl");
 	GuiPlatformConstruct();
 	destroying = false;
@@ -709,6 +710,7 @@ Size Ctrl::Csize;
 void InitRichTextZoom()
 {
 	SetRichTextStdScreenZoom(Ctrl::HorzLayoutZoom(96), 600);
+	ChInvalidate();
 }
 
 void Ctrl::Csizeinit()
@@ -729,13 +731,15 @@ void Ctrl::SetZoomSize(Size sz, Size bsz)
 {
 	GuiLock __;
 	Csize = sz;
-	Dsize = bsz;	
+	Dsize = bsz;
+	ChInvalidate();
 }
 
 void Ctrl::NoLayoutZoom()
 {
 	GuiLock __;
 	Csize = Dsize = Size(1, 1);
+	ChInvalidate();
 }
 
 void Ctrl::GetZoomRatio(Size& m, Size& d)
@@ -908,6 +912,16 @@ void Ctrl::ChSync()
 		(*skin)();
 	Csize.cx = Dsize.cx = 0;
 	ChFinish();
+}
+
+void Ctrl::SyncCh()
+{
+	static Font prevfont;
+	Font std = GetStdFont();
+	if(prevfont != std || ChIsInvalidated()) {
+		ChSync();
+		prevfont = std;
+	}
 }
 
 void Ctrl::Xmlize(XmlIO xml)

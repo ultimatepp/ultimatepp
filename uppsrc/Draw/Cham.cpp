@@ -399,6 +399,18 @@ void ChRegisterStyle__(byte& state, byte& registered, void (*init)())
 	}
 }
 
+static bool sChInvalid = true;
+
+void ChInvalidate()
+{
+	sChInvalid = true;
+}
+
+bool ChIsInvalidated()
+{
+	return sChInvalid;
+}
+
 void ChReset()
 {
 	for(int i = 0; i < sChStyle().GetCount(); i++)
@@ -408,6 +420,7 @@ void ChReset()
 
 void ChFinish()
 {
+	sChInvalid = false;
 	for(int i = 0; i < sChStyle().GetCount(); i++)
 		sChStyle()[i].init();
 }
