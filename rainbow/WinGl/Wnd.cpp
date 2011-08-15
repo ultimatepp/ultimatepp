@@ -242,7 +242,6 @@ void Ctrl::WndUpdate0r(const Rect& r)
 
 bool Ctrl::ProcessEvents(bool *quit)
 {
-
 	if(!ProcessEvent(quit))
 		return false;
 	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()));
@@ -259,7 +258,6 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	ASSERT(IsMainThread());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
-	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
 	Ptr<Ctrl> ploop;
 	if(ctrl) {
 		ploop = LoopCtrl;
@@ -286,7 +284,6 @@ void Ctrl::GuiSleep0(int ms)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
-	LLOG("GuiSleep");
 	int level = LeaveGMutexAll();
 	GlSleep(ms);
 	EnterGMutex(level);

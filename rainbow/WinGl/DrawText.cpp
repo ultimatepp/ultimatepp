@@ -157,9 +157,11 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 	float outlineCenter = ConvStrength(0.1f, 0.45f, (float) 100 - min(outlineStrength, 100));
 	float glowCenter = ConvStrength(0.55f, 0.95f, (float) 100 - min(glowStrength, 100));
 	
-	alphaMagProg.Set("GlyphColor", ink.GetR() * ic, ink.GetG() * ic, ink.GetB() * ic, alpha);
-	alphaMagProg.Set("OutlineColor", outlineColor.GetR() * ic, outlineColor.GetG() * ic, outlineColor.GetB() * ic, alpha);
-	alphaMagProg.Set("GlowColor", glowColor.GetR() * ic, glowColor.GetG() * ic, glowColor.GetB() * ic, alpha);
+	float a = alpha * ic;
+	
+	alphaMagProg.Set("GlyphColor", ink.GetR() * ic, ink.GetG() * ic, ink.GetB() * ic, a);
+	alphaMagProg.Set("OutlineColor", outlineColor.GetR() * ic, outlineColor.GetG() * ic, outlineColor.GetB() * ic, a);
+	alphaMagProg.Set("GlowColor", glowColor.GetR() * ic, glowColor.GetG() * ic, glowColor.GetB() * ic, a);
 	alphaMagProg.Set("Outline", outlineStrength > 0); //0.1 - 0.45
 	alphaMagProg.Set("Glow", glowStrength > 0); //0.55 - 0.095
 	alphaMagProg.Set("Shadow", false);
@@ -254,11 +256,11 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 				glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 			}
 	
-			xp += ci.xadvance * fi.scale;
+			xp += int(ci.xadvance * fi.scale + 0.5f);
 			
 			int k = fi.kerns.Find(*s);
 			if(k >= 0)
-				xp += fi.kerns[k].Get(*(s + 1), 0) * fi.scale;
+				xp += int(fi.kerns[k].Get(*(s + 1), 0) * fi.scale);
 		}
 		
 		++s;
@@ -279,7 +281,7 @@ Size GetTextSize(const wchar *text, const OpenGLFont& fi, int n)
 {
 	if(n < 0)
 		n = wstrlen(text);
-	Sizef sz;
+	Size sz;
 	sz.cx = 0;
 	const wchar *wtext = (const wchar *)text;
 	while(n > 0) {
@@ -289,14 +291,14 @@ Size GetTextSize(const wchar *text, const OpenGLFont& fi, int n)
 		if(cn >= 0 && cn < fi.chars.GetCount())
 		{
 			const OpenGLFont::CharInfo& ci = fi.chars[cn];
-			sz.cx += ci.xadvance * fi.scale;
+			sz.cx += int(ci.xadvance * fi.scale + 0.5f);
 			int k = fi.kerns.Find(ch);
 			if(k >= 0)
-				sz.cx += fi.kerns[k].Get(*wtext, 0) * fi.scale;
+				sz.cx += int(fi.kerns[k].Get(*wtext, 0) * fi.scale);
 		}
 		n--;
 	}
-	sz.cy = fi.lineHeight * fi.scale;
+	sz.cy = int(fi.lineHeight * fi.scale + 0.5f);
 	return sz;
 }
 
