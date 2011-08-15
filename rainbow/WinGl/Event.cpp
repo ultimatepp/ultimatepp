@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x) LOG(x)
+#define LLOG(x) //LOG(x)
 
 static Point glmousepos;
 
@@ -58,6 +58,7 @@ void Ctrl::DoMouseGl(int event, Point p, int zdelta)
 	if(captureCtrl)
 		MouseEventGl(captureCtrl->GetTopCtrl(), event, p, zdelta);
 	else
+	{
 		for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
 			Ptr<Ctrl> t = topctrl[i];
 			Rect rr = t->GetRect();
@@ -66,10 +67,11 @@ void Ctrl::DoMouseGl(int event, Point p, int zdelta)
 				return;
 			}
 		}
-	Ctrl *desktop = GetDesktop();
-	if(desktop) {
-		desktop->DispatchMouse(event, p, zdelta);
-		desktop->PostInput();
+		Ctrl *desktop = GetDesktop();
+		if(desktop) {
+			desktop->DispatchMouse(event, p, zdelta);
+			desktop->PostInput();
+		}
 	}
 }
 

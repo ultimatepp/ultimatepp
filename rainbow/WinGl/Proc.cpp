@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)       LOG(x)
+#define LLOG(x)       //LOG(x)
 
 bool GetShift()       { return !!(GetKeyState(VK_SHIFT) & 0x8000); }
 bool GetCtrl()        { return !!(GetKeyState(VK_CONTROL) & 0x8000); }
