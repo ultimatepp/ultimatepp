@@ -746,8 +746,10 @@ void PlotterCtrl::Drag(Point start, Point prev, Point curr, dword keyflags)
 			break;
 		}
 		case DRAG_PAN: {
-			if(!IsNull(curr))
+			if(!IsNull(curr)) {
 				PanOffset(curr - start);
+				WhenUserZoom();
+			}
 			break;
 		}
 		case DRAG_CUSTOM: {
@@ -779,7 +781,6 @@ void PlotterCtrl::Drop(Point start, Point end, dword keyflags)
 				Sizef new_scale = GetScale() / ratio;
 				Pointf new_delta = Sizef(GetSize() >> 1) - Sizef(log_center) * new_scale;
 				SetZoom(new_scale, new_delta);
-				WhenUserZoom();
 				break;
 			}
 			case DRAG_ZOOM_OUT: {
@@ -787,7 +788,6 @@ void PlotterCtrl::Drop(Point start, Point end, dword keyflags)
 				Sizef new_scale = GetScale() * ratio;
 				Pointf new_delta = Pointf(scr_center) - Sizef(view.CenterPoint()) * new_scale;
 				SetZoom(new_scale, new_delta);
-				WhenUserZoom();
 				break;
 			}
 			case DRAG_PAN: {
@@ -796,6 +796,7 @@ void PlotterCtrl::Drop(Point start, Point end, dword keyflags)
 				break;
 			}
 		}
+		WhenUserZoom();
 	}
 	drag_mode = DRAG_NONE;
 }
@@ -812,6 +813,7 @@ void PlotterCtrl::Cancel()
 	if(drag_drop && drag_mode == DRAG_CUSTOM) {
 		drag_drop->Cancel();
 	}
+	WhenUserZoom();
 }
 
 bool PlotterCtrl::Key(dword key, int repcnt)
