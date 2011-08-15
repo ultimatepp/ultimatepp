@@ -181,9 +181,6 @@ public:
 	~ClippingLine()                      { Clear(); }
 };
 
-Image MipMap(const Image& img);
-Image MakeMipMap(const Image& img, int level);
-
 class LinearInterpolator {
 	struct Dda2 {
 		int count, lift, rem, mod, p;
