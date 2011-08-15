@@ -35,6 +35,9 @@ void   ChInflateMargins(Rect& r, const Value& look);
 void   InflateMargins(Size& sz, const Rect& m);
 void   ChInflateMargins(Size& sz, const Value& look);
 
+void   ChInvalidate();
+bool   ChIsInvalidated();
+
 template <class T>
 struct ChStyle {
 	byte status;
@@ -42,7 +45,7 @@ struct ChStyle {
 	T   *standard;
 
 	const T& Standard() const      { return *standard; }
-	T&       Write() const         { T& x = *(T *)this; x.status = 2; return x; }
+	T&       Write() const         { T& x = *(T *)this; x.status = 2; ChInvalidate(); return x; }
 	void     Assign(const T& src)  { *(T *)this = src; }
 
 	ChStyle()                      { status = 0; registered = 0; standard = NULL; }

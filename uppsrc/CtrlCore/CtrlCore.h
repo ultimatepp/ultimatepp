@@ -496,6 +496,7 @@ private:
 
 	void    RemoveChild0(Ctrl *q);
 
+	static  void SyncCh();
 	static  void ChSync();
 
 	static int       FindMoveCtrl(const VectorMap<Ctrl *, MoveCtrl>& m, Ctrl *x);
