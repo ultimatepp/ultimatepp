@@ -548,7 +548,7 @@ bool Ctrl::IsOcxChild()
 
 Ctrl::Ctrl() {
 	GuiLock __;
-	ChSync();
+	SyncCh();
 	LLOG("Ctrl::Ctrl");
 	GuiPlatformConstruct();
 	destroying = false;
