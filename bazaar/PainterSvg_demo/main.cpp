@@ -22,6 +22,12 @@ void RegisterExample(const char *name, void (*ex)(Painter& pw))
 
 void App::DoPaint0(Painter& sw)
 {
+	if(list.IsCursor())
+		Examples()[list.GetCursor()].example(sw);
+}
+
+void App::DoPaint(Painter& sw)
+{
 	sw.Translate(~ctrl.translate_x, ~ctrl.translate_y);
 	sw.Rotate(~ctrl.rotate);
 	sw.Scale(~ctrl.scale, (double)~ctrl.scale * (double)~ctrl.scale_x);
@@ -34,19 +40,28 @@ void App::DoPaint0(Painter& sw)
 		else
 			sw.Clear(White());
 	}
-	if(list.IsCursor())
-		Examples()[list.GetCursor()].example(sw);
-}
-
-void App::DoPaint(Painter& sw)
-{
-	if(ctrl.painting) {
-		PaintingPainter h(2000, 2000);
-		DoPaint0(h);
-		sw.Paint(h);
+	if (ctrl.painting && !isLoaded) {
+		DoPaint0(pp);
+		isLoaded = true;
 	}
+	if (ctrl.painting)
+		sw.Paint(pp);
 	else
 		DoPaint0(sw);
+}
+
+void App::Paint(Draw& w)
+{
+	Size sz = GetSize();
+	if(ctrl.transparent) {
+		for(int y = 0; y + 32 < sz.cy; y += 32)
+			for(int x = 0; x + 32 < sz.cx; x += 32)
+				w.DrawRect(x, y, 32, 32, (x ^ y) & 32 ? Color(254, 172, 120) : Color(124, 135, 253));
+	}
+	ImageBuffer ib(sz);
+	BufferPainter sw(ib, ctrl.quality);
+	DoPaint(sw);
+	w.DrawImage(0, 0, ib);
 }
 
 void App::Print()
@@ -73,20 +88,6 @@ void App::Benchmark()
 		n++;
 	}
 	PromptOK("Benchmark: " + AsString(double(time - time0) / n) + " ms");
-}
-
-void App::Paint(Draw& w)
-{
-	Size sz = GetSize();
-	if(ctrl.transparent) {
-		for(int y = 0; y + 32 < sz.cy; y += 32)
-			for(int x = 0; x + 32 < sz.cx; x += 32)
-				w.DrawRect(x, y, 32, 32, (x ^ y) & 32 ? Color(254, 172, 120) : Color(124, 135, 253));
-	}
-	ImageBuffer ib(sz);
-	BufferPainter sw(ib, ctrl.quality);
-	DoPaint(sw);
-	w.DrawImage(0, 0, ib);
 }
 
 void App::Sync()
@@ -129,7 +130,6 @@ void App::Reset()
 {
 	ctrl.rotate <<= ctrl.translate_x <<= ctrl.translate_y <<= 0;
 	ctrl.scale <<= ctrl.scale_x <<= ctrl.opacity <<= 1.0;
-	ctrl.painting = false;
 	ctrl.quality = MODE_ANTIALIASED;
 	ctrl.linejoin <<= LINEJOIN_MITER;
 	ctrl.linecap <<= LINECAP_BUTT;
@@ -145,7 +145,7 @@ void App::Serialize(Stream& s)
 		% ctrl.translate_x % ctrl.translate_x_slider
 		% ctrl.translate_y % ctrl.translate_y_slider
 		% ctrl.opacity % ctrl.opacity_slider
-		% ctrl.painting % ctrl.quality % ctrl.transparent
+		% ctrl.quality % ctrl.transparent
 	;
 }
 
@@ -175,13 +175,13 @@ App::App() {
 	ctrl.linejoin.Add(LINEJOIN_MITER, "Miter joins");
 	ctrl.linejoin.Add(LINEJOIN_ROUND, "Round joins");
 	ctrl.linejoin.Add(LINEJOIN_BEVEL, "Bevel joins");
-	ctrl.linecap <<= ctrl.linejoin <<= ctrl.painting <<= ctrl.quality <<= ctrl.transparent <<= THISBACK(Sync);
+	ctrl.linecap <<= ctrl.linejoin <<= ctrl.quality <<= ctrl.transparent <<= THISBACK(Sync);
 	ctrl.reset <<= THISBACK(Reset);
 	ctrl.benchmark <<= THISBACK(Benchmark);
 	ctrl.print <<= THISBACK(Print);
 	Reset();
 	LoadFromFile(*this);
-	Title("Painter 2.0");
+	Title("Painter and SVG");
 	
 	if (!FileExists(file)) {	
 		FileSel fsel;
@@ -191,6 +191,8 @@ App::App() {
 		if(fsel.ExecuteOpen("Selecciona fichero"))
 			file <<= ~fsel;
 	}
+	pp.Create(2000, 2000);
+	isLoaded = false;
 }
 
 App::~App()

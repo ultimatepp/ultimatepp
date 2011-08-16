@@ -5,7 +5,7 @@ String file = "C:\\Demo.svg";
 void SvgDemo(Painter& sw)
 {	
 	try {
-		if (FileExists(file))	
+		if (FileExists(file)) 
 			ParseSVG(sw, LoadFileBOM(file), GetFileDirectory(file));
 		else {
 			sw.Scale(1./20);

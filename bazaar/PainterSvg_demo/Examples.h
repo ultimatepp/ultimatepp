@@ -34,6 +34,9 @@ struct App : TopWindow {
 
 	App();
 	~App();
+	
+	PaintingPainter pp;
+	bool isLoaded;
 };
 
 #endif
