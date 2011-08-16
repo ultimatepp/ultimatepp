@@ -6,48 +6,34 @@ Color GetSvgColor(const char *color);
 String GetValueStringXml(String str, const char* var);
 Color GetColorXml(String text);
 
-String svgFileFolder = "";
-
 class Svg2DTransform {
 public:
-	Svg2DTransform()
-	{
-		Init();
-	}
-	Svg2DTransform(Svg2DTransform &transf)
-	{
-		*this = transf;
-	}
-	void Init()
-	{
+	Svg2DTransform() 						{Init();}
+	Svg2DTransform(Svg2DTransform &transf) 	{*this = transf;}
+	void Init() {
 		transX = transY = 0;
 		angle = 0;
 		scaleX = scaleY = 1;
 	}
-	void Apply(Painter &sw)
-	{
+	void Apply(Painter &sw) {
 		sw.End();
 		sw.Begin();
 		sw.Translate(transX, transY);
 		sw.Scale(scaleX, scaleY);
 		sw.Rotate(angle);
 	}
-	void Translate(double x, double y)
-	{
+	void Translate(double x, double y) {
 		transX += x;
 		transY += y;
 	}
-	void Scale(double x, double y)
-	{
+	void Scale(double x, double y) {
 		scaleX *= x;
 		scaleY *= y;
 	}
-	void Rotate(double ang)
-	{
+	void Rotate(double ang) {
 		angle += ang;
 	}
-	Svg2DTransform &operator=(const Svg2DTransform &transf)
-	{
+	Svg2DTransform &operator=(const Svg2DTransform &transf) {
 		if (this == &transf)      // Same object?
       		return *this; 
 		transX = transf.transX;
@@ -65,25 +51,18 @@ private:
 	double scaleX;
 	double scaleY;
 };
+
 class SvgStyle {
 public:
-	SvgStyle()
-	{
-		Init();
-	}
-	SvgStyle(SvgStyle &transf)
-	{
-		*this = transf;
-	}
-	void Init()
-	{
+	SvgStyle()					{Init();}
+	SvgStyle(SvgStyle &transf)  {*this = transf;}
+	void Init() {
 		strokeWidth = 1;
 		strokeFill = Null;
 		strokeColor = Black();
 		strokeOpacity = 1;
 	}
-	void Get(String str)
-	{
+	void Get(String str) {
 		String value;
 		Color color;
 		
@@ -103,15 +82,13 @@ public:
 		if (value != "")
 			strokeOpacity = atof(value);
 	}
-	void Apply(Painter &sw)
-	{
+	void Apply(Painter &sw) {
 		sw.Opacity(strokeOpacity);	
 		if (!strokeFill.IsNullInstance())	
 			sw.Fill(strokeFill);				
 		sw.Stroke(strokeWidth, strokeColor);
 	}
-	SvgStyle &operator=(const SvgStyle &style)
-	{
+	SvgStyle &operator=(const SvgStyle &style) {
 		if (this == &style)      // Same object?
       		return *this; 
 		strokeColor = style.strokeColor;
@@ -128,8 +105,7 @@ public:
 	double strokeOpacity;
 };
 
-Color GetSvgColor(const char *color)
-{
+Color GetSvgColor(const char *color) {
 	struct Svg_color {
 		const char *name;
 		int r;
@@ -282,8 +258,8 @@ Color GetSvgColor(const char *color)
 			return Color(colors[i].r, colors[i].g, colors[i].b);
 	return Null;
 }
-String GetValueStringXml(String str, const char* var)
-{
+
+String GetValueStringXml(String str, const char* var) {
 	int pos, endpos;
 	
 	if ((pos = str.Find(var)) >= 0) {
@@ -295,14 +271,14 @@ String GetValueStringXml(String str, const char* var)
 	} else
 		return "";
 }
-Color HtmlToColor(const char *str)
-{
+
+Color HtmlToColor(const char *str) {
 	int col;
 	sscanf(str+1, "%x", &col);
 	return Color(col >> 16, (col >> 8) & 255, col & 255);
 }
-Color GetColorXml(String text)
-{
+
+Color GetColorXml(String text) {
 	text = ToLower(text);
 	if (text == "none" || text.IsEmpty())
 		return Null;
@@ -311,8 +287,8 @@ Color GetColorXml(String text)
 	else
 		return GetSvgColor(text);
 }
-Array<double> GetTransformArgs(String str, const char *command)
-{
+
+Array<double> GetTransformArgs(String str, const char *command) {
 	Array<double> args;
 	int pos, endpos;
 
@@ -337,8 +313,8 @@ Array<double> GetTransformArgs(String str, const char *command)
 	}
 	return args;
 }
-void SvgPaint_Rect(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle style)
-{
+
+void SvgPaint_Rect(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle style) {
 	int x, y, width, height;
 	
 	for (int i = 0; i < xp.GetAttrCount(); ++i) {
@@ -367,8 +343,9 @@ void SvgPaint_Rect(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle s
 	sw.Rectangle(x, y, width, height);	
 	style.Apply(sw);
 }
-void SvgPaint_Image(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle style)
-{
+
+void SvgPaint_Image(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle style, 
+					const char *svgFolder) {
 	int x, y, width, height;
 	String fileName;
 	
@@ -397,13 +374,13 @@ void SvgPaint_Image(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle 
 		}
 	}				
 	if (!FileExists(fileName))
-		fileName = AppendFileName(svgFileFolder, fileName);
+		fileName = AppendFileName(svgFolder, fileName);
 	transf.Apply(sw);
 	sw.Rectangle(x, y, width, height).Fill(StreamRaster::LoadFileAny(fileName), x, y, width, 0).Stroke(0, Black());
 	style.Apply(sw);
 }
-void SvgPaint_Ellipse(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle style)
-{
+
+void SvgPaint_Ellipse(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle style) {
 	int x, y, width, height;
 	
 	for (int i = 0; i < xp.GetAttrCount(); ++i) {
@@ -432,8 +409,8 @@ void SvgPaint_Ellipse(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyl
 	sw.Ellipse(x, y, width, height);	
 	style.Apply(sw);
 }
-void SvgPaint_Line(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle style)
-{
+
+void SvgPaint_Line(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle style) {
 	int x1, y1, x2, y2;
 	
 	for (int i = 0; i < xp.GetAttrCount(); ++i) {
@@ -463,8 +440,8 @@ void SvgPaint_Line(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle s
 	sw.Line(x2, y2);	
 	style.Apply(sw);
 }
-Array<Point> GetPolygonPointsXml(Painter& sw, String &strpoints)
-{
+
+Array<Point> GetPolygonPointsXml(String &strpoints) {
 	Array<Point> points;
 	int newpos, pos;
 	char separator;
@@ -491,8 +468,8 @@ Array<Point> GetPolygonPointsXml(Painter& sw, String &strpoints)
 	}
 	return points;
 }
-void SvgPaint_Polygon(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle style)
-{
+
+void SvgPaint_Polygon(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle style) {
 	Array<Point> points;
 	
 	for (int i = 0; i < xp.GetAttrCount(); ++i) {
@@ -500,7 +477,7 @@ void SvgPaint_Polygon(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyl
 		if (attr == "points") {
 			String strpoints;
 			strpoints = NormalizeSpaces(xp[i]);
-			points = GetPolygonPointsXml(sw, strpoints);
+			points = GetPolygonPointsXml(strpoints);
 		} else if (attr == "style") 
 			style.Get(xp[i]);
 		else if (attr == "transform") {
@@ -519,16 +496,14 @@ void SvgPaint_Polygon(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyl
 		sw.Line(points[i].x, points[i].y);
 	style.Apply(sw);
 }
-void SvgPaint_Text(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle style)
-{
-	int x, y, fontHeight = 12;
+
+void SvgPaint_Text(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle style) {
+	int x, y;
 	String font;
 	int factor = 20;			// Factor to get better resolution text
 	
 	Font f(Font::ARIAL, 12);
-	StringBuffer stext;
-	String text = xp.ReadText();
-	stext = text;
+	StringBuffer stext = xp.ReadText();
 	
 	int i, j;
 	for (i = j = 0; i < stext.GetCount(); ++i, ++j) {
@@ -540,7 +515,7 @@ void SvgPaint_Text(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle s
 			stext[j] = stext[i];
 	}
 	stext.SetCount(j);
-	text = stext;
+	String text = stext;
 	for (int i = 0; i < xp.GetAttrCount(); ++i) {
 		String attr = xp.GetAttr(i);
 		if (attr == "x") 
@@ -560,10 +535,9 @@ void SvgPaint_Text(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle s
 				f.Face(Font::ARIAL);			
 			else if (fontText.Find("Courier") >= 0)
 				f.Face(Font::COURIER);		
-			fontHeight = atoi(GetValueStringXml(xp[i], "font-size:"))*factor;
-			if (fontHeight == 0)
-				fontHeight = 12*factor;
-			f.Height(fontHeight);
+			f.Height(atoi(GetValueStringXml(xp[i], "font-size:"))*factor);
+			if (f.GetHeight() == 0)
+				f.Height(12*factor);
 		} else if (attr == "transform") {
 			Array<double> args;
 			args = GetTransformArgs(xp[i], "translate");
@@ -574,14 +548,14 @@ void SvgPaint_Text(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle s
 				transf.Scale(args[0], args[1]);			
 		}
 	}
-	transf.Translate(x, y-fontHeight/factor);
+	transf.Translate(x, y-f.GetHeight()/factor);
 	transf.Scale(1./factor, 1./factor);						
 	transf.Apply(sw);	
 	sw.Text(0, 0, text, f);
 	style.Apply(sw);
 }
-void SvgPaint_Path(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle &style)
-{
+
+void SvgPaint_Path(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle &style) {
 	String path;
 	
 	for (int i = 0; i < xp.GetAttrCount(); ++i) {
@@ -605,8 +579,8 @@ void SvgPaint_Path(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle &
 		sw.Path(path);
 	style.Apply(sw);
 }
-void SvgPaint_G(Painter& sw, XmlParser &xp, Svg2DTransform &transf, SvgStyle &style)
-{
+
+void SvgPaint_G(Painter& sw, XmlParser &xp, Svg2DTransform &transf, SvgStyle &style) {
 	for (int i = 0; i < xp.GetAttrCount(); ++i) {
 		String attr = xp.GetAttr(i);
 		if (attr == "style") 
@@ -622,8 +596,8 @@ void SvgPaint_G(Painter& sw, XmlParser &xp, Svg2DTransform &transf, SvgStyle &st
 		}
 	}		
 }
-void ParseG(Painter& p, XmlParser &xp, Svg2DTransform transf, SvgStyle style)
-{
+
+void ParseG(Painter& p, XmlParser &xp, Svg2DTransform transf, SvgStyle style, const char *svgFolder) {
 	if(xp.TagE("rect")) 
 		SvgPaint_Rect(p, xp, transf, style);
 	else if(xp.TagE("ellipse"))
@@ -637,7 +611,7 @@ void ParseG(Painter& p, XmlParser &xp, Svg2DTransform transf, SvgStyle style)
 	else if(xp.TagE("path"))
 		SvgPaint_Path(p, xp, transf, style);	
 	else if(xp.TagE("image"))
-		SvgPaint_Image(p, xp, transf, style);		
+		SvgPaint_Image(p, xp, transf, style, svgFolder);		
 	else if(xp.Tag("text")) {
 		SvgPaint_Text(p, xp, transf, style);
 		xp.PassEnd();	
@@ -648,14 +622,13 @@ void ParseG(Painter& p, XmlParser &xp, Svg2DTransform transf, SvgStyle style)
 		SvgPaint_G(p, xp, transfG, styleG);
 					
 		while(!xp.End()) 
-			ParseG(p, xp, transfG, styleG);
+			ParseG(p, xp, transfG, styleG, svgFolder);
 	} else
 		xp.Skip();
 }
-void ParseSVG(Painter& p, const char *svg, const char *folder)
-{
-	svgFileFolder = folder;
-	XmlParser xp(svg);
+
+void ParseSVG(Painter& p, const char *svgFile, const char *svgFolder) {
+	XmlParser xp(svgFile);
 	while(!xp.IsTag())
 		xp.Skip();
 	xp.PassTag("svg");
@@ -665,7 +638,7 @@ void ParseSVG(Painter& p, const char *svg, const char *folder)
 	while(!xp.End()) {
 		transf.Init();
 		style.Init();
-		ParseG(p, xp, transf, style);
+		ParseG(p, xp, transf, style, svgFolder);
 	}
 	p.End();
 }
