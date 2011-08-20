@@ -2,5 +2,4 @@
 #define _Functions4U_Demo_icpp_init_stub
 #include "Core/init"
 #include "Functions4U/init"
-#include "OfficeAutomation/init"
 #endif
