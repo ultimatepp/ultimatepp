@@ -2,7 +2,7 @@
 
 using namespace Upp;
 
-#include <Eigen/Eigen.h>
+#include <plugin/Eigen/Eigen.h>
 
 using namespace Eigen;
 
