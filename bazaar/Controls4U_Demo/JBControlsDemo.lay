@@ -1,0 +1,14 @@
+LAYOUT(JBControlsDemoLayout, 456, 432)
+	ITEM(SliderCtrlX, slider, FillColor(Color(255, 85, 0)).SetThickness(3).SetThumbType(4).Jump(true).LeftPosZ(63, 330).TopPosZ(220, 52))
+	ITEM(ProgressIndicator, progress, LeftPosZ(62, 331).TopPosZ(124, 24))
+	ITEM(Meter, meter, SetAngleBegin(120).SetAngleEnd(60).LeftPosZ(64, 160).TopPosZ(12, 108))
+	ITEM(SliderCtrlX, slider2, SetMaxi(150).SetMinorTicks(5).SetMajorTicksSize(40).SetMinorTicksSize(25).SetThumbType(2).Step(10).SetFrame(InsetFrame()).LeftPosZ(8, 340).TopPosZ(280, 48))
+	ITEM(Meter, meter2, SetMax(150).SetPeak(120).SetStep(30).SetColorType(1).LeftPosZ(228, 162).TopPosZ(12, 108))
+	ITEM(SliderCtrlX, indic, SetSliderType(1).FillColor(Color(56, 255, 200)).SetThickness(5).SetThumbType(0).SetFrame(OutsetFrame()).LeftPosZ(62, 332).TopPosZ(156, 52))
+	ITEM(SliderCtrlX, vslider, SetInverted(true).FillColor(Yellow).LeftPosZ(8, 44).TopPosZ(12, 260))
+	ITEM(SliderCtrlX, vindic, SetSliderType(1).FillColor(Color(200, 255, 56)).SetTickPosition(3).SetThickness(5).SetThumbType(0).LeftPosZ(404, 44).TopPosZ(12, 260))
+	ITEM(StarIndicator, jbstar, LeftPosZ(78, 300).TopPosZ(336, 60))
+	ITEM(StarIndicator, jbstar2, SetVotesHigh(80).SetVotesLow(15).LeftPosZ(174, 108).TopPosZ(404, 20))
+	ITEM(Option, novotes, SetLabel(t_("Undefined number of votes")).LeftPosZ(288, 152).TopPosZ(408, 16))
+END_LAYOUT
+

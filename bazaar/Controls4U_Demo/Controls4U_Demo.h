@@ -51,14 +51,19 @@ public:
 	void ChangeProperties();
 };
 
-class Miscellaneous_Demo : public WithMiscellaneous<StaticRect> {
+class Functions4U_Demo : public WithFunctions4U<StaticRect> {
 public:
-	typedef Miscellaneous_Demo CLASSNAME;
-	Miscellaneous_Demo();
+	typedef Functions4U_Demo CLASSNAME;
+	Functions4U_Demo();
 	void OnDiff();
 	void OnPatch();
 };
 
+class DrawingCanvas_Demo : public WithDrawingCanvas<StaticRect> {
+public:
+	typedef DrawingCanvas_Demo CLASSNAME;
+	DrawingCanvas_Demo();
+};
 
 class Controls4U_Demo : public WithMain<TopWindow> {
 public:
@@ -70,8 +75,10 @@ public:
 	StaticCtrlsTest_Demo staticCtrlsTest_Demo;
 	StaticClock_Demo staticClock_Demo;
 	Meter_Demo meter_Demo;
+	JBControlsDemo jbcontrols_Demo;
 	FileBrowser_Demo fileBrowser_Demo;
-	Miscellaneous_Demo miscellaneous_Demo;
+	Functions4U_Demo functions4U_Demo;
+	DrawingCanvas_Demo drawingCanvas_Demo;
 #if defined(PLATFORM_WIN32) 
 	Firefox_Demo firefox_Demo;
 	IExplorer_Demo iexplorer_Demo;

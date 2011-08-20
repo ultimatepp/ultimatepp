@@ -15,7 +15,11 @@ file
 	Controls4U_Demo.lay,
 	Controls4U_Demo_win.lay,
 	Controls4U_Demo.iml,
-	Credits.txt;
+	Credits.txt,
+	JBControls readonly separator,
+	JBControls.cpp,
+	JBControlsDemo.h,
+	JBControlsDemo.lay;
 
 mainconfig
 	"" = "GUI MT",

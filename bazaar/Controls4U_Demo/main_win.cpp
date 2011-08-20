@@ -7,6 +7,7 @@ using namespace Upp;
 #if defined(PLATFORM_WIN32) 
 
 #include "Controls4U_Demo_win.h"
+#include "JBControlsDemo.h"
 #include "Controls4U_Demo.h"
 
 

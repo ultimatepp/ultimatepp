@@ -22,9 +22,9 @@ LAYOUT(FileBrowser, 424, 332)
 	ITEM(Label, dv___3, SetLabel(t_("Selected:")).HSizePosZ(4, 372).BottomPosZ(5, 19))
 END_LAYOUT
 
-LAYOUT(Miscellaneous, 444, 268)
+LAYOUT(Functions4U, 444, 268)
 	ITEM(LabelBox, dv___0, SetLabel(t_("Compare files")).LeftPosZ(4, 436).TopPosZ(4, 144))
-	ITEM(Label, dv___1, SetLabel(t_("Get patch: It gets a \"Path\" file with the differences between \"Original\" and \"New\"\nApply patch: It gets the \"New\" file by applying to \"Original\" the differences in \"Patch\"\n\"Patch\" file may be much smaller than \"Original\" or \"New\" files as only contains the\ndifferences between them")).LeftPosZ(8, 424).TopPosZ(84, 56))
+	ITEM(Label, dv___1, SetLabel(t_("Get patch: It gets a \"Patch\" file with the differences between \"Original\" and \"New\"\nApply patch: It gets the \"New\" file by applying to \"Original\" the differences in \"Patch\"\n\"Patch\" file may be much smaller than \"Original\" or \"New\" files as only contains the\ndifferences between them")).LeftPosZ(8, 424).TopPosZ(84, 56))
 	ITEM(Label, dv___2, SetLabel(t_("New:")).LeftPosZ(8, 40).TopPosZ(40, 19))
 	ITEM(Label, dv___3, SetLabel(t_("Patch:")).LeftPosZ(8, 40).TopPosZ(60, 19))
 	ITEM(Label, dv___4, SetLabel(t_("Original:")).LeftPosZ(8, 40).TopPosZ(20, 19))
@@ -158,5 +158,12 @@ LAYOUT(StaticCtrls, 512, 416)
 	ITEM(Label, dv___20, SetLabel(t_("Office")).SetAlign(ALIGN_CENTER).SetFont(StdFontZ(14).Bold()).LeftPosZ(76, 76).TopPosZ(192, 20))
 	ITEM(Label, dv___21, SetLabel(t_("SysInfo")).SetAlign(ALIGN_CENTER).SetFont(StdFontZ(14).Bold()).LeftPosZ(344, 116).TopPosZ(204, 19))
 	ITEM(Label, dv___22, SetLabel(t_("PainterSvg")).SetAlign(ALIGN_CENTER).SetFont(StdFontZ(14).Bold()).LeftPosZ(276, 116).TopPosZ(304, 19))
+END_LAYOUT
+
+LAYOUT(DrawingCanvas, 700, 596)
+	ITEM(DrawingCanvas, drawingCanvas, HSizePosZ(540, 4).VSizePosZ(24, 4))
+	ITEM(ImgCtrl, imgCtrl, LeftPosZ(4, 532).VSizePosZ(24, 4))
+	ITEM(Label, dv___2, SetLabel(t_("DrawingCanvas")).LeftPosZ(540, 84).TopPosZ(4, 19))
+	ITEM(Label, dv___3, SetLabel(t_("ImgCtrl")).LeftPosZ(4, 84).TopPosZ(4, 19))
 END_LAYOUT
 

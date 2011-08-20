@@ -7,6 +7,7 @@ using namespace Upp;
 #if defined(PLATFORM_WIN32) 	
 #include "Controls4U_Demo_win.h"
 #endif
+#include "JBControlsDemo.h"
 #include "Controls4U_Demo.h"
 
 #define IMAGEFILE <Controls4U_Demo/Controls4U_Demo.iml>
@@ -24,17 +25,21 @@ Controls4U_Demo::Controls4U_Demo() {
 	tab.Add(iexplorer_Demo.SizePos(), "Internet Explorer ActiveX");
 #endif
 	tab.Add(meter_Demo.SizePos(), "Meter & Knob");
+	tab.Add(jbcontrols_Demo.SizePos(), "JBControls");
 	tab.Add(staticClock_Demo.SizePos(), "StaticClock");
 	tab.Add(editFileFolder_Demo.SizePos(), "StaticImage & EditFile/Folder");
 	tab.Add(staticCtrls_Demo.SizePos(), "Static Controls");
 	tab.Add(staticCtrlsTest_Demo.SizePos(), "Static Controls Test");
-	tab.Add(miscellaneous_Demo.SizePos(), "Miscellaneous functions");
+	tab.Add(drawingCanvas_Demo.SizePos(), "DrawingCanvas (experimental)");
+	tab.Add(functions4U_Demo.SizePos(), "Functions4U samples");
 
-	tab.Set(tab.Find(meter_Demo));	// Select the last
+	tab.Set(tab.Find(jbcontrols_Demo));	// Select the last
+	//tab.Set(tab.Find(drawingCanvas_Demo));	// Select the last
 	
 	timerOn = false;
 	SetTimeCallback(-100, THISBACK(Timer));
 }
+
 void Controls4U_Demo::Timer() {
 	if (timerOn)
 		return;
@@ -48,11 +53,7 @@ void Controls4U_Demo::Timer() {
 #endif	
 }
 
-//String GetTrashBinDirectory();
-
 GUI_APP_MAIN {
-	/*GetTrashBinDirectory();
-	return;*/
 	Controls4U_Demo().Run();
 }
 
@@ -195,18 +196,19 @@ void FileBrowser_Demo::FileOpened() {
 void FileBrowser_Demo::ChangeProperties() {
 }
 
-Miscellaneous_Demo::Miscellaneous_Demo() {
+Functions4U_Demo::Functions4U_Demo() {
 	CtrlLayout(*this);
 	
 	String myqtf;
 
-	QtfRichObject a = QtfEquation("(2/3)");
-	QtfRichObject b = QtfEquation("integral(sqrt(cos(phi_ini^2)) + i^2 + 6, i = 1, 10)*dx = cos((27+x^2)^3.25)/(PI*R_0^2)");
+	QtfRichObject a = QtfEquation("-sqrt(2/3)");
+	QtfRichObject b = QtfEquation("integral(-sqrt(cos(phi_ini^2)) + i^2 + 6, i = 1, 10)*dx = cos((27+x^2)^3.25)/(PI*R_0^2)");
 	QtfRichObject c = QtfEquation("delta_i = a+b*x+c*x^2+d*x^3");
-	QtfRichObject d = QtfEquation("sqrt(cos(phi_ini^2))");
+	QtfRichObject d = QtfEquation("sqrt(cos(p^2))");
 	QtfRichObject e = QtfEquation("summation(a+b*x+c*x^2+d*x^3, x = h, h+1)*dx = SI_h");
+	QtfRichObject f = QtfEquation("exp(-1/2*(b-r)/a*t)*r*a*(d*b*w^2*a+d*r*w^2*a-d*r*c+d*b*c+2*f1*w*a*c)/((2*w^2*a)^2+b^2-2*c*a-b*r)");
 	
-	myqtf << "[ {{10000 [s0;= This feature is experimental]}}]&[R3 This are some formulas in QTF:&" << a << "&" << b << "&" << c << "&" << d << "&" << e;
+	myqtf << "[R3 This are some formulas in QTF:&" << a << "&" << b << "&" << c << "&" << d << "&" << e << "&" << f;
 
 	equation.SetData(myqtf);
 
@@ -214,12 +216,25 @@ Miscellaneous_Demo::Miscellaneous_Demo() {
 	butPatch.WhenAction = THISBACK(OnPatch);
 }
 
-void Miscellaneous_Demo::OnDiff() {
+void Functions4U_Demo::OnDiff() {
 	if (!BSDiff(~editOriginal, ~editNew, ~editPatch)) 
 		Exclamation(DeQtf(BsGetLastError()));
 }
 
-void Miscellaneous_Demo::OnPatch() {
+void Functions4U_Demo::OnPatch() {
 	if (!BSPatch(~editOriginal, ~editNew, ~editPatch)) 
 		Exclamation(DeQtf(BsGetLastError()));
 }
+
+	
+DrawingCanvas_Demo::DrawingCanvas_Demo() {
+	CtrlLayout(*this);
+
+	imgCtrl.SetImage(Images::ClockImage());
+	LoadSvg(drawingCanvas, AppendFileName(GetDesktopFolder(), "svg/demo.svg"));
+	
+	LineElem &elem = static_cast<LineElem&>(drawingCanvas.elemList.elems.Add(new LineElem(100, 100, 200, 200)));
+	elem.style.SetStrokeColor(Green()).SetStrokeWidth(3);
+}
+
+
