@@ -25,11 +25,11 @@ means no restrictions for any use, as long as you do not modify
 it. See the ][^http`:`/`/eigen`.tuxfamily`.org`/index`.php`?title`=Licensing`_FAQ^2 L
 icensing FAQ][2  on Eigen website for further details.]&]
 [s0;#2 &]
-[s0;# [2 In addition it includes a sample package (Eigen`_demo) to 
-ease even more its use for U`+`+ users. It has many samples of 
-main Eigen and nonlinear equation solving and optimization like 
-][^http`:`/`/www`.itl`.nist`.gov`/div898`/strd`/nls`/data`/eckerle4`.shtml^2 Eckerl
-e4][2  and ][^http`:`/`/www`.itl`.nist`.gov`/div898`/strd`/nls`/data`/thurber`.shtml^2 T
+[s0;# [2 In addition Bazaar/Eigen package includes a sample package 
+(Eigen`_demo) to ease even more its use for U`+`+ users. It has 
+many samples from Eigen library and nonlinear equation solving 
+and optimization like ][^http`:`/`/www`.itl`.nist`.gov`/div898`/strd`/nls`/data`/eckerle4`.shtml^2 E
+ckerle4][2  and ][^http`:`/`/www`.itl`.nist`.gov`/div898`/strd`/nls`/data`/thurber`.shtml^2 T
 hurber][2  (see the graphs).]&]
 [s0;#2 &]
 [s0;= [2 

@@ -3,8 +3,8 @@
 
 #include <Core/Core.h>
 
-#define EIGEN_MATRIX_PLUGIN <Eigen/ToStringPlugin.h>
-#define EIGEN_DENSEBASE_PLUGIN <Eigen/ToStringPlugin.h>
+#define EIGEN_MATRIX_PLUGIN <plugin/Eigen/ToStringPlugin.h>
+#define EIGEN_DENSEBASE_PLUGIN <plugin/Eigen/ToStringPlugin.h>
 
 #ifndef flagSSE2
  #define EIGEN_DONT_VECTORIZE
