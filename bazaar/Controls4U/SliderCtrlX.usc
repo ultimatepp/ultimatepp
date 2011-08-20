@@ -1,0 +1,177 @@
+fn DeflateRect(&r)
+{
+	r.top++;
+	r.left++;
+	r.right--;
+	r.bottom--;
+}
+
+fn DrawFrame(w, &r, c1, c2) {
+	w.DrawRect(r.left, r.top, r.right - r.left, 1, c1);
+	w.DrawRect(r.left, r.top, 1, r.bottom - r.top, c1);
+	w.DrawRect(r.right - 1, r.top, 1, r.bottom - r.top, c2);
+	w.DrawRect(r.left, r.bottom - 1, r.right - r.left, 1, c2);
+	DeflateRect(r);
+}
+
+fn DrawBorder(w, &r, ...)
+{
+	for(i = 0; i < count(argv); i += 2)
+		DrawFrame(w, r, argv[i], argv[i + 1]);
+}
+
+fn DrawButtonFrame(w, &r)
+{
+	DrawBorder(w, r, :SWhite, :SBlack, :SWhiteGray, :SGray);
+}
+
+fn DrawEdgeButtonFrame(w, &r)
+{
+	DrawBorder(w, r, :SWhiteGray, :SBlack, :SWhite, :SGray);
+}
+
+fn DrawEdgeButton(w, &r)
+{
+	DrawEdgeButtonFrame(w, r);
+	w.DrawRect(r, :SLtGray);
+}
+
+fn DrawInsetFrame(w, &r)
+{
+	DrawBorder(w, r, :SGray, :SWhite, :SBlack, :SLtGray);
+}
+
+fn DrawCtrlFrame(w, &r, frame)
+{
+	width = r.right - r.left;
+	height = r.bottom - r.top;
+	switch(frame) {
+	case "FieldFrame()":
+	case "InsetFrame()": DrawInsetFrame(w, r); break;
+	case "OutsetFrame()": DrawBorder(w, r, :SLtGray, :SBlack, :SWhite, :SGray); break;
+	case "ButtonFrame()": DrawButtonFrame(w, r); break;
+	case "ThinInsetFrame()": DrawBorder(w, r, :SGray, :SWhite); break;
+	case "ThinOutsetFrame()": DrawBorder(w, r, :SWhite, :SGray); break;
+	case "BlackFrame()": DrawBorder(w, r, :SBlack, :SBlack); break;
+	case "TopSeparatorFrame()":
+		w.DrawRect(r.left, r.top, width, 1, :SGray);
+		w.DrawRect(r.left, r.top + 1, width, 1, :SWhite);
+		r.top += 2;
+		break;
+	case "BottomSeparatorFrame()":
+		w.DrawRect(r.left, r.bottom - 2, width, 1, :SGray);
+		w.DrawRect(r.left, r.bottom - 1, width, 1, :SWhite);
+		r.bottom -= 2;
+		break;
+	case "LeftSeparatorFrame()":
+		w.DrawRect(r.left, r.top, 1, height, :SGray);
+		w.DrawRect(r.left + 1, r.top, 1, height, :SWhite);
+		r.left += 2;
+		break;
+	case "RightSeparatorFrame()":
+		w.DrawRect(r.right - 2, r.top, 1, height, :SGray);
+		w.DrawRect(r.right - 1, r.top, 1, height, :SWhite);
+		r.right -= 2;
+		break;
+	}
+}
+
+fn GradientColor(fc, tc, i, n)
+{
+	return Color(
+			fc.r + i * (tc.r - fc.r) / n,
+			fc.g + i * (tc.g - fc.g) / n,
+			fc.b + i * (tc.b - fc.b) / n
+	);
+}
+
+fn max(a, b)
+{
+	return a > b ? a : b;
+}
+
+fn min(a, b)
+{
+	return a < b ? a : b;
+}
+
+enum_property SLIDERTYPES {
+"0" : "CONTROL",
+"1" : "INDICATOR" 
+};
+
+enum_property TICK_ALIGNMENT {
+"0" : "TOP",
+"1" : "MIDDLE_TOP",
+"2" : "MIDDLE_BOTTOM",
+"3" : "BOTTOM", 
+"4" : "RIGHT = TOP", 
+"5" : "LEFT = BOTTOM", 
+"6" : "MIDDLE_LEFT = MIDDLE_BOTTOM", 
+"7" : "MIDDLE_RIGHT = MIDDLE_TOP"
+};
+
+enum_property THUMB_TYPES {
+"0" : "TYPE_0",
+"1" : "TYPE_1",
+"2" : "TYPE_2",
+"3" : "TYPE_3", 
+"4" : "TYPE_4"
+};
+
+ctrl SliderCtrlX {
+	group "Progress";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+
+	Frame  SetFrame @1;
+
+	SLIDERTYPES SetSliderType = 0;
+	int		SetMini = 0;
+	int		SetMaxi = 100;
+	bool	SetInverted = false;
+	Color 	FillColor;
+	int 	SetMajorTicks=10;
+	int 	SetMinorTicks=2;
+	int 	SetMajorTicksSize=30;
+	int 	SetMinorTicksSize=20;
+	TICK_ALIGNMENT SetTickPosition = 0;
+	int		SetThickness = 2;
+	THUMB_TYPES	SetThumbType = 1;
+	int		Step = 1;
+	bool	Jump = false;
+	
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+
+		sz = Size(r.right - r.left, r.bottom - r.top);
+
+		halfX = int(r.left + r.right) >> 1;
+		halfY = int(r.top + r.bottom) >> 1;
+
+		if (sz.cx < sz.cy) {
+			DrawInsetFrame(w, Rect(halfX , r.top + 2, sz.cx, r.bottom - 2));
+			w.DrawRect(halfX , halfY, halfX-2, halfY-2, .FillColor);
+			if (.SetSliderType == "0")
+			{
+//				imgSz = GetImageSize("JBControls/SlideCtrlX.iml::ThumbH");
+//				w.DrawImage(halfX - (imgSz.cx >> 1), halfY - (imgSz.cy >> 1), "JBControls/SlideCtrlX.iml::ThumbH");
+				imgSz = GetImageSize("CtrlImg::vthumb");
+				w.DrawImage(halfX - (imgSz.cx >> 1), halfY - (imgSz.cy >> 1), "CtrlImg::vthumb");
+			}
+		} else {
+			DrawInsetFrame(w, Rect(r.left + 2, halfY, r.right - 2, r.bottom-2 ));
+			w.DrawRect( 2 , halfY, halfX-2, halfY - 2,.FillColor);
+			if (.SetSliderType == "0")
+			{
+//				imgSz = GetImageSize("JBControls/SlideCtrlX.iml::ThumbV");
+//				w.DrawImage(halfX - (imgSz.cx >> 1), halfY - (imgSz.cy >> 1), "JBControls/SlideCtrlX.iml::ThumbV");
+				imgSz = GetImageSize("CtrlImg::hthumb");
+				w.DrawImage(halfX - (imgSz.cx >> 1), halfY - (imgSz.cy >> 1), "CtrlImg::hthumb");
+			}
+		}
+	}
+}
+

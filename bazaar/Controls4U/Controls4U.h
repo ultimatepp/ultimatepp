@@ -2,65 +2,16 @@
 #define _Controls4U_Controls4U_h_
 
 #include <Painter/Painter.h>
-#include "Functions4U/Functions4U.h"
+#include <Functions4U/Functions4U.h>
 #if defined(PLATFORM_WIN32) 
 #include "Controls4U/ActiveX.h"
 #endif
+#include "Controls4U/ImgCtrl.h"
+#include "Controls4U/DrawingCanvas.h"
+#include "Controls4U/SliderCtrlX.h"
+#include "Controls4U/StarIndicator.h"
 
 double AngAdd(double ang, double val);
-
-#ifndef flagNOPAINTER
-class MyBufferPainter : public BufferPainter {
-public:
-	MyBufferPainter(ImageBuffer& ib, int mode = MODE_ANTIALIASED) : BufferPainter(ib, mode) {};
-	void DrawLine(double x1, double y1, double x2, double y2, double width, Color color) {
-		Move(x1, y1).Line(x2, y2).Stroke(width, color);
-	}
-	void DrawRect(double x, double y, double cx, double cy, Color color) {
-		Move(x, y).Line(x + cx, y).Line(x + cx, y + cy).Line(x, y + cy).Close();
-		Fill(color);
-	}
-	void DrawRect(const Rect &r, Color color) {
-		DrawRect(r.left, r.top, r.right-r.left, r.bottom-r.top, color);
-	}	
-	void DrawEllipse(double x, double y, double rx, double ry, Color color) {
-		Ellipse(x, y, rx, ry);
-		Fill(color);
-	}
-	void DrawEllipse(const Rect& r, Color color) {
-		Sizef sz = r.GetSize();
-		Ellipse(r.left + sz.cx / 2, r.top + sz.cy / 2, sz.cx / 2, sz.cy / 2);
-		Fill(color);
-	}
-	void DrawCircle(double x, double y, double r, Color color) {
-		Ellipse(x, y, r, r);
-		Fill(color);
-	}
-	void DrawCenterText(double x, double y, String text, Font fnt, Color color) {
-		Size sz = GetTextSize(text, fnt);
-		DrawText((int)(x - sz.cx / 2.), (int)(y - sz.cy / 2.), text, fnt, color);
-	}
-	void DrawArc(double cx, double cy, double R, double ang0, double ang1, int direction, 
-					double width, Color color) {
-		if (direction == -1) {
-			double c = ang0;
-			ang0 = ang1;
-			ang1 = c;
-		}
-		ang0 = ToRad(ang0);
-		ang1 = ToRad(ang1);
-		double delta = ToRad(0.5);
-		if (ang0 > ang1)
-			ang1 += 2*M_PI;
-		
-		double x1, y1;
-		x1 = cx + R*cos(ang0 + delta);
-		y1 = cy - R*sin(ang0 + delta);
-		Move(x1, y1).Arc(cx, cy, R, R, -ang0, ang0-ang1).Stroke(width, color);
-	}
-	
-};
-#endif
 
 class EditFileFolder : public EditString {
 typedef EditFileFolder CLASSNAME;
@@ -272,7 +223,7 @@ public:
 	enum ColorType 	{WhiteType, BlackType};
 
 protected:
-	void PaintPtr(MyBufferPainter &w, double cmx, double cmy, double pos, double m, double d, 
+	void PaintPtr(BufferPainter &w, double cmx, double cmy, double pos, double m, double d, 
 					Color color, double cf);
 	int hourType;
 	int numberType;
@@ -329,12 +280,12 @@ protected:
 	int sensibility;
 	volatile Atomic running, kill;
 	
-	void PaintMarks(MyBufferPainter &w, double cx, double cy, double R, double ang0, 
+	void PaintMarks(BufferPainter &w, double cx, double cy, double R, double ang0, 
 					double ang1, int direction, double step, double bigF, Color color);
-	void PaintNumbers(MyBufferPainter &w, double cx, double cy, double R, double a0, 
+	void PaintNumbers(BufferPainter &w, double cx, double cy, double R, double a0, 
 			double step, int direction, double minv, double maxv, double stepv, double bigF, 
 			Color color);
-	void PaintHand(MyBufferPainter &w, double cx, double cy, double R, double val, double bigF,
+	void PaintHand(BufferPainter &w, double cx, double cy, double R, double val, double bigF,
 					int colorType);
 	void RefreshValue() {Refresh();};
 	
@@ -374,11 +325,11 @@ private:
 	int style;
 
 	double SliderToClient(Point pos);
-	void PaintMarks(MyBufferPainter &w, double cx, double cy, double R, double begin, double end, double ang0, 
+	void PaintMarks(BufferPainter &w, double cx, double cy, double R, double begin, double end, double ang0, 
 		double ang1, int direction, double minorstep, double bigF, Color color);
-	void PaintNumbers(MyBufferPainter &w, double cx, double cy, double R, double a0, 
+	void PaintNumbers(BufferPainter &w, double cx, double cy, double R, double a0, 
 		double step, int direction, double minv, double maxv, double stepv, double bigF, Color color);	
-	void PaintRugged(MyBufferPainter &w, double cx, double cy, double angle, double r, 
+	void PaintRugged(BufferPainter &w, double cx, double cy, double angle, double r, 
 		double rugg, int numRug, Color &color);
 	
 	virtual void  Paint(Draw& draw);

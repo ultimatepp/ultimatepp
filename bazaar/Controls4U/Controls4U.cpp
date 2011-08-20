@@ -11,6 +11,30 @@ using namespace Upp;
 #define IMAGEFILE <Controls4U/Controls4U.iml>
 #include <Draw/iml.h>
 
+void PaintCenterText(Painter &w, double x, double y, String text, Font fnt, Color color) {
+	Size sz = GetTextSize(text, fnt);
+	w.Text(x - sz.cx / 2., y - sz.cy / 2., text, fnt).Fill(color);
+}
+
+void PaintArc(Painter &w, double cx, double cy, double R, double ang0, double ang1, 
+				int direction, double width, Color color) {
+	if (direction == -1) {
+		double c = ang0;
+		ang0 = ang1;
+		ang1 = c;
+	}
+	ang0 = ToRad(ang0);
+	ang1 = ToRad(ang1);
+	double delta = ToRad(0.5);
+	if (ang0 > ang1)
+		ang1 += 2*M_PI;
+	
+	double x1, y1;
+	x1 = cx + R*cos(ang0 + delta);
+	y1 = cy - R*sin(ang0 + delta);
+	w.Move(x1, y1).Arc(cx, cy, R, R, -ang0, ang0-ang1).Stroke(width, color);
+}
+	
 void EditFileFolder::Init() {
 	//EditString::AddFrame(butLeft);
 	//EditString::AddFrame(butRight);
@@ -277,7 +301,7 @@ StaticImage::StaticImage() {
 void StaticRectangle::Paint(Draw& w) {
 	Size sz = GetSize();
 	ImageBuffer ib(sz);
-	MyBufferPainter sw(ib);	
+	BufferPainter sw(ib);	
 
 	sw.Clear(RGBAZero());
 	double wid;
@@ -316,7 +340,7 @@ StaticRectangle::StaticRectangle() {
 void StaticEllipse::Paint(Draw& w) {
 	Size sz = GetSize();
 	ImageBuffer ib(sz);
-	MyBufferPainter sw(ib);	
+	BufferPainter sw(ib);	
 
 	sw.Clear(RGBAZero());
 	double wid;
@@ -356,7 +380,7 @@ void StaticLine::FramePaint(Draw& w, const Rect& rr) {
 	int off = int(0.25*max(rr.GetWidth(), rr.GetHeight()));
 	
 	ImageBuffer ib(rr.GetWidth()+2*off, rr.GetHeight()+2*off);
-	MyBufferPainter sw(ib);	
+	BufferPainter sw(ib);	
 	Rect r = rr;
 	r.Offset(off, off);
 
@@ -430,7 +454,7 @@ void StaticArrow::FramePaint(Draw& w, const Rect& rr) {
 	int off = int(0.25*max(rr.GetWidth(), rr.GetHeight()));
 	
 	ImageBuffer ib(rr.GetWidth()+2*off, rr.GetHeight()+2*off);
-	MyBufferPainter sw(ib);	
+	BufferPainter sw(ib);	
 	Rect r = rr;
 	r.Offset(off, off);
 		
@@ -514,34 +538,34 @@ void StaticArrow::FramePaint(Draw& w, const Rect& rr) {
 		}
 	}	
 	if (orientation == OrVert) 
-		sw.DrawLine(x0, y0, x1, y1, width, color);
+		sw.Move(x0, y0).Line(x1, y1).Stroke(width, color);
 	else if (orientation == OrHor) 
-		sw.DrawLine(x0, y0, x1, y1, width, color);
+		sw.Move(x0, y0).Line(x1, y1).Stroke(width, color);
 	else if (orientation == OrSW_NE) 
-		sw.DrawLine(x0, y0, x1, y1, width, color);
+		sw.Move(x0, y0).Line(x1, y1).Stroke(width, color);
 	else if (orientation == OrNW_SE_HVH) {
 		middle = (r.left+r.right)/2;
-		sw.DrawLine(x0, y0, middle, y0, width, color);
-		sw.DrawLine(middle, y0, middle, y1, width, color);
-		sw.DrawLine(middle, y1, x1,     y1, width, color);
+		sw.Move(x0, 	y0).Line(middle, y0).Stroke(width, color);
+		sw.Move(middle, y0).Line(middle, y1).Stroke(width, color);
+		sw.Move(middle, y1).Line(x1,     y1).Stroke(width, color);
 	} else if (orientation == OrSW_NE_HVH) {
 		middle = (r.left + r.right)/2;
-		sw.DrawLine(x0,     y0, middle, y0, width, color);
-		sw.DrawLine(middle, y0, middle, y1, width, color);
-		sw.DrawLine(middle, y1, x1,     y1, width, color);
+		sw.Move(x0,     y0).Line(middle, y0).Stroke(width, color);
+		sw.Move(middle, y0).Line(middle, y1).Stroke(width, color);
+		sw.Move(middle, y1).Line(x1,     y1).Stroke(width, color);
 	} else if (orientation == OrNW_SE_VHV) {
 		middle = (r.top + r.bottom)/2;
-		sw.DrawLine(x0, y0,     x0, middle, width, color);
-		sw.DrawLine(x0, middle, x1, middle, width, color);
-		sw.DrawLine(x1, middle, x1, y1,     width, color);
+		sw.Move(x0,     y0).Line(x0, middle).Stroke(width, color);
+		sw.Move(x0, middle).Line(x1, middle).Stroke(width, color);
+		sw.Move(x1, middle).Line(x1,     y1).Stroke(width, color);
 	} else if (orientation == OrSW_NE_VHV) {
 		middle = (r.top + r.bottom)/2;
-		sw.DrawLine(x0, y0,     x0, middle, width, color);
-		sw.DrawLine(x0, middle, x1, middle, width, color);
-		sw.DrawLine(x1, middle, x1, y1,     width, color);
-	} else {
-		sw.DrawLine(x0, y0, x1, y1, width, color);				
-	}
+		sw.Move(x0,     y0).Line(x0, middle).Stroke(width, color);
+		sw.Move(x0, middle).Line(x1, middle).Stroke(width, color);
+		sw.Move(x1, middle).Line(x1,     y1).Stroke(width, color);
+	} else 
+		sw.Move(x0, y0).Line(x1, y1).Stroke(width, color);				
+	
 	w.DrawImage(-off, -off, ib);
 }
 
@@ -586,7 +610,7 @@ StaticArrow::StaticArrow() {
 	ends = EndLeft;
 }
 
-void StaticClock::PaintPtr(MyBufferPainter &w, double cmx, double cmy, double pos, double m, double d, Color color, double cf) {
+void StaticClock::PaintPtr(BufferPainter &w, double cmx, double cmy, double pos, double m, double d, Color color, double cf) {
 	double dx = m * sin(pos * 2 * M_PI);
 	double dy = m * cos(pos * 2 * M_PI);
 
@@ -595,13 +619,13 @@ void StaticClock::PaintPtr(MyBufferPainter &w, double cmx, double cmy, double po
 	double ex = cmx + dx * cf;
 	double ey = cmy - dy * cf;
 
-	w.DrawLine(sx, sy, ex, ey, d, color);
+	w.Move(sx, sy).Line(ex, ey).Stroke(d, color);
 }
 
 void StaticClock::Paint(Draw& ww) {
 	Size sz = GetSize();
 	ImageBuffer ib(sz);
-	MyBufferPainter w(ib);	
+	BufferPainter w(ib);	
 
 	w.Clear(RGBAZero());
 	w.LineCap(LINECAP_BUTT);
@@ -635,19 +659,19 @@ void StaticClock::Paint(Draw& ww) {
 			double y = cmy - (0.95 * cos(i * M_PI / 30.0) * cf);
 			if (hourType == StaticClock::Square) {
 				if(i % 5 == 0)
-					w.DrawRect(x, y, 3*bigF, 3*bigF, letterColor);
+					w.Rectangle(x, y, 3*bigF, 3*bigF).Fill(letterColor);
 				else
-					w.DrawRect(x, y, 2*bigF, 2*bigF, letterColor);
+					w.Rectangle(x, y, 2*bigF, 2*bigF).Fill(letterColor);
 			} else if (hourType == StaticClock::Rectangle) {
 				if(i % 5 == 0) {
 					double x2 = cmx + (0.7 * sin(i * M_PI / 30.0) * cf);
 					double y2 = cmy - (0.7 * cos(i * M_PI / 30.0) * cf);
-					w.DrawLine(x, y, x2, y2, 4*bigF, Gray());
-					w.DrawLine(x, y, x2, y2, 2*bigF, letterColor);
+					w.Move(x, y).Line(x2, y2).Stroke(4*bigF, Gray());
+					w.Move(x, y).Line(x2, y2).Stroke(2*bigF, letterColor);
 				} else {
 					double x2 = cmx + (0.8 * sin(i * M_PI / 30.0) * cf);
 					double y2 = cmy - (0.8 * cos(i * M_PI / 30.0) * cf);
-					w.DrawLine(x, y, x2, y2, 1*bigF, Gray());
+					w.Move(x, y).Line(x2, y2).Stroke(1*bigF, Gray());
 				}
 			}
 		}
@@ -682,9 +706,9 @@ void StaticClock::Paint(Draw& ww) {
 			double x = cmx + (numberd * sin(i * M_PI / 6.0) * cf);
 			double y = cmy - (numberd * cos(i * M_PI / 6.0) * cf);
 			if (i % 3 == 0)
-				w.DrawCenterText(x, y, FormatInt(i), fnt4, letterColor);
+				PaintCenterText(w, x, y, FormatInt(i), fnt4, letterColor);
 			else if (numberType != StaticClock::Big4)
-				w.DrawCenterText(x, y, FormatInt(i), fnt, letterColor);
+				PaintCenterText(w, x, y, FormatInt(i), fnt, letterColor);
 		}
 	}
 	double handleF = bigF;
@@ -827,7 +851,7 @@ StaticClock::StaticClock() {
 StaticClock::~StaticClock() {
 }
 
-void Meter::PaintMarks(MyBufferPainter &w, double cx, double cy, double R, double ang0, 
+void Meter::PaintMarks(BufferPainter &w, double cx, double cy, double R, double ang0, 
 			double ang1, int direction, double step, double bigF, Color color) {
 	if (direction == -1) 
 		Swap(ang0, ang1);
@@ -842,7 +866,7 @@ void Meter::PaintMarks(MyBufferPainter &w, double cx, double cy, double R, doubl
 		double y0 = cy - R*sin(i);
 		double x1 = cx + 0.93*R*cos(i);
 		double y1 = cy - 0.93*R*sin(i);
-		w.DrawLine(x0, y0, x1, y1, width, color);
+		w.Move(x0, y0).Line(x1, y1).Stroke(width, color);
 	}
 }
 
@@ -856,7 +880,7 @@ double AngAdd(double ang, double val)
 	return ang;
 }
 
-void Meter::PaintNumbers(MyBufferPainter &w, double cx, double cy, double R, double a0, 
+void Meter::PaintNumbers(BufferPainter &w, double cx, double cy, double R, double a0, 
 	double step, int direction, double minv, double maxv, double stepv, double bigF, Color color)
 {
 	a0 = ToRad(a0);
@@ -865,13 +889,13 @@ void Meter::PaintNumbers(MyBufferPainter &w, double cx, double cy, double R, dou
 	while (minv <= maxv) {
 		double x = cx + 0.8*R*cos(a0);
 		double y = cy - 0.8*R*sin(a0);
-		w.DrawCenterText(x, y, FormatDouble(minv), fnt, color);
+		PaintCenterText(w, x, y, FormatDouble(minv), fnt, color);
 		a0 += step*direction;
 		minv += stepv;
 	}
 }
 
-void Meter::PaintHand(MyBufferPainter &w, double cx, double cy, double R, double val, 
+void Meter::PaintHand(BufferPainter &w, double cx, double cy, double R, double val, 
 					  double bigF, int colorType)
 {
 	Color letterColor;
@@ -885,22 +909,22 @@ void Meter::PaintHand(MyBufferPainter &w, double cx, double cy, double R, double
 	double y0 = cy - 0.90*R*sin(val);
 	double x1 = cx;
 	double y1 = cy;
-	w.DrawLine(x0, y0, x1, y1, 5*bigF, LtGray());
+	w.Move(x0, y0).Line(x1, y1).Stroke(5*bigF, LtGray());
 	double x2 = cx + 0.4*R*cos(val);
 	double y2 = cy - 0.4*R*sin(val);
-	w.DrawLine(x0, y0, x2, y2, 4*bigF, letterColor);
+	w.Move(x0, y0).Line(x2, y2).Stroke(4*bigF, letterColor);
 	double x3 = cx - 0.3*R*cos(val);
 	double y3 = cy + 0.3*R*sin(val);
-	w.DrawLine(x1, y1, x3, y3, 5*bigF, letterColor);
+	w.Move(x1, y1).Line(x3, y3).Stroke(5*bigF, letterColor);
 	
-	w.DrawCircle(cx, cy, bigF*18, LtGray());
-	w.DrawCircle(cx, cy, bigF*15, Black());
+	w.Circle(cx, cy, bigF*18).Fill(LtGray());
+	w.Circle(cx, cy, bigF*15).Fill(Black());
 }
 
 void Meter::Paint(Draw& ww) {
 	Size sz = GetSize();
 	ImageBuffer ib(sz);
-	MyBufferPainter w(ib);	
+	BufferPainter w(ib);	
 
 	w.Clear(RGBAZero());
 	w.LineCap(LINECAP_BUTT);
@@ -975,17 +999,17 @@ void Meter::Paint(Draw& ww) {
 	else
 		cy = r.bottom + 1.08*R*maxy;
 	
-	w.DrawArc(cx, cy, R, a, b, direction, fceil(0.8*bigF), letterColor);
+	PaintArc(w, cx, cy, R, a, b, direction, fceil(0.8*bigF), letterColor);
 	
 	if (peak < max && peak > min) {
 		double valpk = peak*maxgrad/(max-min);
 		for (double i = 0.93; i < 0.98; i+= 0.004)
-			w.DrawArc(cx, cy, i*R, a + valpk*direction, b, direction, (int)(2*bigF), LtRed());
+			PaintArc(w, cx, cy, i*R, a + valpk*direction, b, direction, (int)(2*bigF), LtRed());
 		double fsize = 7*Upp::min(bigF, bigH);
 		Font fnt = Arial((int)fsize);
 		double txtx = cx + R*cos(ToRad(b))/2;
 		double txty = cy - R*sin(ToRad(b))/2;
-		w.DrawCenterText(txtx, txty, "  PEAK", fnt, Gray());
+		PaintCenterText(w, txtx, txty, "  PEAK", fnt, Gray());
 		Image light;
 		if (value < peak)
 			light = Controls4UImg::LightOff();
@@ -1002,7 +1026,7 @@ void Meter::Paint(Draw& ww) {
 	double angtxt = ToRad(a + maxgrad*direction/2);
 	double txtx = cx + R*cos(angtxt)/2;
 	double txty = cy - R*sin(angtxt)/2;
-	w.DrawCenterText(txtx, txty, text, fnt, letterColor);
+	PaintCenterText(w, txtx, txty, text, fnt, letterColor);
 	
 	double vala = (value-min)*maxgrad/(max-min);
 	PaintHand(w, cx, cy, R, a + vala*direction, bigF, colorType);	
@@ -1097,7 +1121,7 @@ Knob::Knob() : value(0), minv(0), maxv(100), minorstep(10), majorstep(20), keySt
 	Transparent();
 }
 
-void Knob::PaintMarks(MyBufferPainter &w, double cx, double cy, double R, double begin, double end, 
+void Knob::PaintMarks(BufferPainter &w, double cx, double cy, double R, double begin, double end, 
 		double ang0, double ang1, int direction, double minorstep, double bigF, Color color) {
 	if (direction == -1) 
 		Swap(ang0, ang1);
@@ -1113,18 +1137,18 @@ void Knob::PaintMarks(MyBufferPainter &w, double cx, double cy, double R, double
 			double y0 = cy - end*R*sin(iang);
 			double x1 = cx + begin*R*cos(iang);
 			double y1 = cy - begin*R*sin(iang);
-			w.DrawLine(x0, y0, x1, y1, width, color);
+			w.Move(x0, y0).Line(x1, y1).Stroke(width, color);
 			inum++;
 		} else {
 			double x0 = cx + (begin+end)*R*cos(iang)/2;
 			double y0 = cy - (begin+end)*R*sin(iang)/2;
-			w.DrawCircle(x0, y0, 0.2*(begin-end)*R, color);
+			w.Circle(x0, y0, 0.2*(begin-end)*R).Fill(color);
 			imin++;
 		}
 	}
 }
 
-void Knob::PaintNumbers(MyBufferPainter &w, double cx, double cy, double R, double a0, 
+void Knob::PaintNumbers(BufferPainter &w, double cx, double cy, double R, double a0, 
 	double step, int direction, double minv, double maxv, double stepv, double bigF, Color color) {
 	double range = maxv - minv;
 	a0 = ToRad(a0);
@@ -1136,13 +1160,13 @@ void Knob::PaintNumbers(MyBufferPainter &w, double cx, double cy, double R, doub
 		double x = cx + 0.8*R*cos(a0);
 		double y = cy - 0.8*R*sin(a0);
 		strminv = FormatDoubleAdjust(minv, range);
-		w.DrawCenterText(x, y, strminv, fnt, color);
+		PaintCenterText(w, x, y, strminv, fnt, color);
 		a0 += step*direction;
 		minv += stepv;
 	}
 }
 
-void Knob::PaintRugged(MyBufferPainter &sw, double cx, double cy, double angle, double r, double rugg, int numRug, Color &color) {
+void Knob::PaintRugged(BufferPainter &sw, double cx, double cy, double angle, double r, double rugg, int numRug, Color &color) {
 	double deltaAngle = 360./numRug;
 	
 	double iang = angle;
@@ -1150,10 +1174,10 @@ void Knob::PaintRugged(MyBufferPainter &sw, double cx, double cy, double angle, 
 		if (deltaAngle > 360)
 			deltaAngle -= 360;
 		
-		sw.DrawArc(cx, cy, r-rugg/2-1, iang, iang+0.6*deltaAngle, 1, rugg, color);
-		sw.DrawArc(cx, cy, r, 		   iang, iang+0.6*deltaAngle, 1, 1,    Gray());
+		PaintArc(sw, cx, cy, r-rugg/2-1, iang, iang+0.6*deltaAngle, 1, rugg, color);
+		PaintArc(sw, cx, cy, r, 		 iang, iang+0.6*deltaAngle, 1, 1,    Gray());
 		double riang = ToRad(iang);
-		sw.DrawLine(cx+r*cos(riang), cx-r*sin(riang), cx+(r-rugg)*cos(riang), cx-(r-rugg)*sin(riang), 1, Gray());
+		sw.Move(cx+r*cos(riang), cx-r*sin(riang)).Line(cx+(r-rugg)*cos(riang), cx-(r-rugg)*sin(riang)).Stroke(1, Gray());
 	}
 }
 
@@ -1170,7 +1194,7 @@ void Knob::Layout() {
 		dangle = angleBegin + dangle;
 	double angle = ToRad(dangle);
 	ImageBuffer ib(int(2*R), int(2*R));
-	MyBufferPainter sw(ib);	
+	BufferPainter sw(ib);	
 	sw.Clear(RGBAZero());
 	int direction;
 	if (clockWise)
@@ -1234,7 +1258,7 @@ void Knob::Layout() {
 		}
 		{
 			ImageBuffer ib(int(2*r)+1, int(2*r)+1);
-			MyBufferPainter sw(ib);	
+			BufferPainter sw(ib);	
 			sw.Clear(RGBAZero());
 			
 			if (colorType == WhiteType) {
@@ -1277,7 +1301,7 @@ void Knob::Paint(Draw& w) {
 	double cy = r;
 	
 	ImageBuffer ib(sz);
-	MyBufferPainter sw(ib);	
+	BufferPainter sw(ib);	
 	sw.Clear(RGBAZero());
 	
 	int direction;
@@ -1342,16 +1366,16 @@ void Knob::Paint(Draw& w) {
 				
 		Color lineColor = (colorType == SimpleWhiteType) ? Color(20, 20, 20) : White();
 		if (mark == Line)
-			sw.DrawLine(cx+(r-capt)*cos(angle), cy-(r-capt)*sin(angle), 
-					    cx+0.5*r*cos(angle), cy-0.5*r*sin(angle), r/25., lineColor);
+			sw.Move(cx+(r-capt)*cos(angle), cy-(r-capt)*sin(angle))
+			  .Line(cx+0.5*r*cos(angle), cy-0.5*r*sin(angle)).Stroke(r/25., lineColor);
 		else if (mark == Circle)
 			sw.Circle(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r).Stroke(1, lineColor).Fill(fill);
 	} else if (colorType == WhiteType || colorType == BlackType) {
 		Color lineColor = (colorType == WhiteType) ? Black() : White();
 		Color almostColor = (colorType == WhiteType) ? Color(220, 220, 220) : Color(60, 60, 60);
 		if (mark == Line)
-			sw.DrawLine(cx+realR*cos(angle), cy-realR*sin(angle), 
-					    cx+0.5*r*cos(angle), cy-0.5*r*sin(angle), r/25., lineColor);
+			sw.Move(cx+realR*cos(angle), cy-realR*sin(angle))
+			  .Line(cx+0.5*r*cos(angle), cy-0.5*r*sin(angle)).Stroke(r/25., lineColor);
 		else if (mark == Circle) {
 			double ccx = cx+0.7*r*cos(angle);
 			double ccy = cy-0.7*r*sin(angle);

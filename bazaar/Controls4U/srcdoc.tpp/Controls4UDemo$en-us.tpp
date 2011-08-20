@@ -5,7 +5,8 @@ topic "Controls4U_Demo review";
 [s0; [*R+184 Controls4U`_Demo]&]
 [s0;2 &]
 [s0; [2 Controls4U`_Demo package does a visual review of classes and 
-features. Here there are some screenshots:]&]
+features in different tabs. Here there are some screenshots of 
+them:]&]
 [s0;2 &]
 [s0; &]
 [s0;i150;O0; [*2 VLC ActiveX]&]

@@ -9,6 +9,10 @@ uses(!NOPAINTER) Painter;
 file
 	Controls4U.cpp,
 	Controls4U.h,
+	DrawingCanvas.cpp,
+	DrawingCanvas.h,
+	ImgCtrl.cpp,
+	ImgCtrl.h,
 	Controls4U.usc,
 	Controls4U.lay,
 	Controls4U.iml,
@@ -22,8 +26,17 @@ file
 	IExplorerBrowser.cpp,
 	FirefoxBrowser.cpp,
 	VLCPlayer.cpp,
-	vlc readonly separator,
+	VLC readonly separator,
 	plugin\vlc\axvlc_idl.c,
 	plugin\vlc\axvlc_idl.h,
-	License.txt;
+	License.txt,
+	JBControls readonly separator,
+	SliderCtrlX.cpp,
+	SliderCtrlX.h,
+	SliderCtrlX.iml,
+	SliderCtrlX.usc,
+	StarIndicator.cpp,
+	StarIndicator.h,
+	StarIndicator.iml,
+	StarIndicator.usc;
 
