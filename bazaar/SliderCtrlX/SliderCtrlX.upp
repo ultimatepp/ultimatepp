@@ -1,8 +1,0 @@
-uses
-	CtrlLib;
-
-file
-	SliderCtrlX.cpp,
-	SliderCtrlX.h,
-	SliderCtrlX.usc;
-

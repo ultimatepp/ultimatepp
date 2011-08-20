@@ -1,3 +1,0 @@
-ctrl SliderCtrlX {
-	> SliderCtrl;
-};
