@@ -2,10 +2,8 @@
 
 using namespace Upp;
 
-//#include "ImageProcessing.h"
 #include "ImgCtrl.h"
-#include "SysInfo/SysInfo.h"
-#include "Candidates/CandidatesGui.h"
+#include "Functions4U/Functions4U.h"
 
 ImgCtrl::ImgCtrl()
 { 
