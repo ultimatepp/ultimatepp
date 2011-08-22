@@ -93,6 +93,7 @@ bool                  IsNotSchemaEmpty(const SqlVal& table, SqlId column, const 
 SqlVal                Alias(const SqlVal& value, const SqlVal& alias);
 SqlVal                SchemaAlias(const SqlVal& table, const SqlVal& alias);
 SqlVal                SchemaAlias(const SqlVal& table);
+SqlId                 SchemaId(SqlId table, SqlId alias);
 SqlId                 SchemaId(SqlId table);
 
 inline SqlInsert      InsertSchema(SqlId table) { return SqlInsert(SqlId(SchemaTableName(~table))); }

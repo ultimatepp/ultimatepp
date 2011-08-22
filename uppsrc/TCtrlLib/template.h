@@ -208,7 +208,7 @@ WithDisplay<T>::WithDisplay()
 template <class T>
 void WithDisplay<T>::Paint(Draw& draw)
 {
-	prc.Paint(draw, Rect(this->GetSize()), SBlack, SLtGray, 0);
+	prc.Paint(draw, Rect(this->GetSize()), SColorText(), SColorFace(), 0);
 }
 
 template <class T>

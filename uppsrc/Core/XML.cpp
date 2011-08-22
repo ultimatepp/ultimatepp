@@ -579,14 +579,18 @@ String XmlParser::ReadText()
 
 String XmlParser::ReadTextE()
 {
-	String out;
-	while(!IsEnd())
-		if(IsText())
-			out.Cat(ReadText());
+	StringBuffer out;
+	for(;;) {
+		String t = ReadText();
+		if(!IsNull(t))
+			out.Cat(t);
+		else if(IsEnd()) {
+			PassEnd();
+			return out;
+		}
 		else
 			Skip();
-	PassEnd();
-	return out;
+	}
 }
 
 bool   XmlParser::IsDecl()
