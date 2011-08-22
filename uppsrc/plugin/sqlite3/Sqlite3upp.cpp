@@ -146,7 +146,8 @@ bool Sqlite3Connection::Execute() {
 		session.SetError("Empty statement", String("Preparing: ") + statement);
 		return false;
 	}
-	if (SQLITE_OK != sqlite3_prepare(db,statement,statement.GetLength(),&current_stmt,NULL)) {
+	String utf8_stmt = ToCharset(CHARSET_UTF8, statement, CHARSET_DEFAULT);
+	if (SQLITE_OK != sqlite3_prepare(db,utf8_stmt,utf8_stmt.GetLength(),&current_stmt,NULL)) {
 		LLOG("Sqlite3Connection::Compile(" << statement << ") -> error");
 		session.SetError(sqlite3_errmsg(db), String("Preparing: ") + statement);
 		return false;

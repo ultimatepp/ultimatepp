@@ -615,9 +615,14 @@ SqlVal SchemaAlias(const SqlVal& table)
 	return SchemaAlias(table, table);
 }
 
+SqlId SchemaId(SqlId table_id, SqlId alias_id)
+{
+	return SqlId(SchemaTableName(~table_id) + SqlCase(MSSQL, " as ")(" ") + ~alias_id);
+}
+
 SqlId SchemaId(SqlId table_id)
 {
-	return SqlId(SchemaTableName(~table_id) + SqlCase(MSSQL, " as ")(" ") + ~table_id);
+	return SchemaId(table_id, table_id);
 }
 
 VectorMap<String, SqlColumnInfo> Describe(const SqlVal& table, Sql& cursor)
