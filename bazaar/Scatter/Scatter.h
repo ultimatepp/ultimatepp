@@ -310,9 +310,9 @@ private:
 	MouseBehaviour *mouseBehavior;
 	
 	void DoMouseAction(bool down, Point pt, MouseAction action, int value);
-	void ProcessMouse(bool down, Point pt, bool ctrl, bool alt, bool shift, bool left, bool middle, int middleWheel, bool right); 
-	void LabelPopUp(bool down, Point pt); 
-	void Scrolling(bool down, Point pt);
+	void ProcessMouse(bool down, Point &pt, bool ctrl, bool alt, bool shift, bool left, bool middle, int middleWheel, bool right); 
+	void LabelPopUp(bool down, Point &pt); 
+	void Scrolling(bool down, Point &pt, bool isOut = false);
 	void MouseZoom(int zdelta, bool hor, bool ver);
 	
 	void SetDrawing(Draw& w, const int& scale)const;

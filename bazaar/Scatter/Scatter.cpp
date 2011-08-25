@@ -998,7 +998,7 @@ bool Scatter::SetMouseBehavior(MouseBehaviour *_mouseBehavior)
 	return true;
 }
 
-void Scatter::ProcessMouse(bool down, Point pt, bool ctrl, bool alt, bool shift, bool left, bool middle, int middleWheel, bool right) 
+void Scatter::ProcessMouse(bool down, Point &pt, bool ctrl, bool alt, bool shift, bool left, bool middle, int middleWheel, bool right) 
 {
 	int i;
 	for (i = 0; mouseBehavior[i].action != NO_ACTION && i < MAX_MOUSEBEHAVIOR; ++i) {
@@ -1010,7 +1010,7 @@ void Scatter::ProcessMouse(bool down, Point pt, bool ctrl, bool alt, bool shift,
 	}	
 }
 
-void Scatter::LabelPopUp(bool down, Point pt) 
+void Scatter::LabelPopUp(bool down, Point &pt) 
 {
 	if (down) {
 		if(paintInfo && px <=pt.x && pt.x<= GetSize().cx-px && (py + titleFont.GetHeight())<=pt.y && pt.y<= GetSize().cy-py)
@@ -1032,7 +1032,7 @@ void Scatter::LabelPopUp(bool down, Point pt)
 	#include <X11/cursorfont.h>
 #endif
 
-void Scatter::Scrolling(bool down, Point pt)
+void Scatter::Scrolling(bool down, Point &pt, bool isOut)
 {
 	static Image mouseImg;
 	if (down) {
@@ -1052,7 +1052,8 @@ void Scatter::Scrolling(bool down, Point pt)
 		}
 	} else {
 		if (isScrolling) {
-			MouseMove(pt, 0);
+			if (!isOut)
+				MouseMove(pt, 0);
 			isScrolling = false;
 			Ctrl::OverrideCursor(mouseImg);
 		}
@@ -1138,7 +1139,8 @@ void Scatter::MouseMove(Point pt, dword)
 
 void Scatter::MouseLeave()
 {
-	isScrolling = false;
+	Point p = Null;
+	Scrolling(false, p, true);
 }
 
 void Scatter::MouseZoom(int zdelta, bool hor, bool ver) 

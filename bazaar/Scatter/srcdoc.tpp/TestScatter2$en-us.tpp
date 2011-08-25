@@ -3,8 +3,8 @@ topic "TestScatter2";
 [{_}%EN-US 
 [s0; [*R+184 TestScatter2]&]
 [s0;2 &]
-[s0; [2 TestScatter2 package does a visual review of class features. 
-Here there are some screenshots:]&]
+[s0; [2 TestScatter2 package does a visual review of ][^topic`:`/`/Scatter`/srcdoc`/Scatter`$en`-us^2 S
+catter][2  class features. Here there are some screenshots:]&]
 [s0;2 &]
 [s0;2 &]
 [s0;i150;O0; [*2 General view]&]

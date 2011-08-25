@@ -4,14 +4,14 @@ uses
 	CtrlLib;
 
 file
+	Scatter.cpp,
 	Scatter.h,
 	Scatter.t,
-	Scatter.cpp,
-	PopUpText.h,
 	PopUpText.cpp,
+	PopUpText.h,
 	Chart.usc,
-	Pie.h,
 	Pie.cpp,
+	Pie.h,
 	Chart.iml,
 	srcdoc.tpp,
 	src.tpp;
