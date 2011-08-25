@@ -1,5 +1,5 @@
-#ifndef _MediaPlayer_icpp_init_stub
-#define _MediaPlayer_icpp_init_stub
+#ifndef _Media_Demo_icpp_init_stub
+#define _Media_Demo_icpp_init_stub
 #include "CtrlLib/init"
 #include "Controls4U/init"
 #include "GridCtrl/init"

@@ -1,0 +1,7 @@
+LAYOUT(MainVolumeCtrl, 276, 260)
+	ITEM(VolumeCtrl, dv___0, SetStereo(true).SetFrame(ThinInsetFrame()).HSizePosZ(220, 4).VSizePosZ(68, 64))
+	ITEM(VolumeCtrl, dv___1, SetStereo(true).SetFrame(ThinInsetFrame()).HSizePosZ(8, 4).BottomPosZ(4, 56))
+	ITEM(Label, dv___2, SetLabel(t_("Move the controls to change L and R speakers\nmain volume.\nOpen PC volume controls to test it.")).SetFont(StdFontZ(12)).LeftPosZ(4, 268).TopPosZ(4, 56))
+	ITEM(VolumeCtrl, dv___3, SetStereo(true).SetFrame(ThinInsetFrame()).LeftPosZ(8, 204).VSizePosZ(68, 136))
+END_LAYOUT
+

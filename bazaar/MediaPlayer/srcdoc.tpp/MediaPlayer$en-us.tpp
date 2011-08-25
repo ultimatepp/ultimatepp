@@ -1,9 +1,14 @@
-topic "MediaPlayer";
+topic "Media_demo";
 [ $$0,0#00000000000000000000000000000000:Default]
 [a83;*R6 $$1,0#31310162474203024125188417583966:caption]
 [{_}%EN-US 
-[s1; [+184 MediaPlayer]&]
-[s0; [2 MediaPlayer package is a demo of MediaPlayer control.]&]
+[s1; [+184 Media`_demo]&]
+[s0; [2 Media`_demo package is a demo of Media controls.]&]
+[s0;2 &]
+[s0;2 &]
+[s0; [*2 MediaPlayer demo]&]
+[s0;2 &]
+[s0; [2 It demonstrates MediaPlayer control.]&]
 [s0;2 &]
 [s0; [2 In addition to play, pause and stop, other options included 
 are:]&]
@@ -4483,4 +4488,9 @@ has been detected.]&]
 åœØ»ÆÙ¤‚»Ïãóæü–¸¶•µÄ•¸˜ßáëâåéÙšÇùœ÷½¬Îı»µ¼ƒèŞÄ·„ÿˆŠÎú±˜úÑºÊ‰û‹²óâÄìæøÑ³ß›»óı¨Ø
 îÙ·‹¹–îÔû§¢³ŸŠŒ³•Û¹’¯Îã¥½å®¬âËÙñ¹–¸–áë»Ï÷ñè‚Ñÿ¨ª¸ó°ú¸ÈÀÀŒüßÒé«©
 ]&]
+[s0;2 &]
+[s0;2 &]
+[s0; [*2 VolumeCtrl]&]
+[s0;2 &]
+[s0; [2 It demonstrates VolumeCtrl.]&]
 [s0; ]

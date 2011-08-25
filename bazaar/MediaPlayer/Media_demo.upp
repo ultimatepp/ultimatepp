@@ -1,0 +1,19 @@
+description "Media package examples\377";
+
+uses
+	CtrlLib,
+	Controls4U,
+	Media;
+
+file
+	main.cpp,
+	demo.lay,
+	demoMediaPlayer.cpp,
+	demoMediaPlayer.lay,
+	demoVolumeCtrl.cpp,
+	demoVolumeCtrl.lay,
+	srcdoc.tpp;
+
+mainconfig
+	"" = "GUI MT";
+
