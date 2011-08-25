@@ -65,7 +65,7 @@ onst]_[@(0.0.255) char]_`*[*@3 path])&]
 C script source are located.&]
 [s3; This function can be called as many times as necessary for different 
 directories.&]
-[s3; The original include files are located under Tcc/lib/include 
+[s3; The original include files are located under Bazaar/plugin/tcc/include 
 directory..&]
 [s4; &]
 [s1;%- &]
@@ -75,7 +75,8 @@ onst]_[@(0.0.255) char]_`*[*@3 path])&]
 C script source are located.&]
 [s3; This function can be called as many times as necessary for different 
 directories.&]
-[s3; The original library files are located under Tcc/lib/lib directory..&]
+[s3; The original library files are located under Bazaar/plugin/tcc/lib 
+directory..&]
 [s1;%- &]
 [s2;:Tcc`:`:SetOutputExe`(`):%- [@(0.0.255) void]_[* SetOutputExe]()&]
 [s3; Defines that the program will be output to an executable file 
