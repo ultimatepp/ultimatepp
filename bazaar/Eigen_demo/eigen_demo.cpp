@@ -240,10 +240,10 @@ CONSOLE_APP_MAIN
 		     5, 6, 7, 8,
 		     9,10,11,12,
 		   	 13,14,15,16;
-		Cout() << "\nBlock in the middle";
+		Cout() << "\nBlock in the middle\n";
 		Cout() << m.block<2,2>(1,1);
 		for (int i = 1; i <= 3; ++i) {
-			Cout() << "\nBlock of size " << i << "x" << i;
+			Cout() << "\nBlock of size " << i << "x" << i << "\n";
 			Cout() << m.block(0,0,i,i);
 		}
 	}
