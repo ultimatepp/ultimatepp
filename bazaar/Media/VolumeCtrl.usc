@@ -1,0 +1,53 @@
+ctrl VolumeCtrl {
+	group "Media";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+
+	Frame  SetFrame @1;
+	bool SetStereo = false;
+	bool ShowLR = true;
+
+	PaintSlider(w, r) {
+		sz = Size(r.right - r.left, r.bottom - r.top);
+
+		halfX = int(r.left + r.right) >> 1;
+		halfY = int(r.top + r.bottom) >> 1;
+
+		if (sz.cx < sz.cy) {
+			DrawInsetFrame(w, Rect(halfX - 2, r.top + 2, halfX + 2, r.bottom - 2));
+			imgSz = GetImageSize("CtrlImg::vthumb");
+			w.DrawImage(halfX - (imgSz.cx >> 1), halfY - (imgSz.cy >> 1), "CtrlImg::vthumb");
+		} else {
+			DrawInsetFrame(w, Rect(r.left + 2, halfY - 2, r.right - 2, halfY + 2));
+			imgSz = GetImageSize("CtrlImg::hthumb");
+			w.DrawImage(halfX - (imgSz.cx >> 1), halfY - (imgSz.cy >> 1), "CtrlImg::hthumb");
+		}
+	}
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		
+		if (.SetStereo) {
+			sz = Size(r.right - r.left, r.bottom - r.top);
+			if (sz.cx < sz.cy) {
+				fontSize = GetTextSize("X", Arial(sz.cx/4));
+				if (.ShowLR)
+					w.DrawText(r.left + 0.15*sz.cx, r.top + sz.cy - fontSize.cy, "L", Arial(sz.cx/4), :SBlack);
+				PaintSlider(w, Rect(r.left, r.top, r.left + sz.cx/2, r.bottom - (.ShowLR ? fontSize.cy : 0)));
+				if (.ShowLR)
+					w.DrawText(r.left + 0.65*sz.cx, r.top + sz.cy - fontSize.cy, "R", Arial(sz.cx/4), :SBlack);
+				PaintSlider(w, Rect(r.left + sz.cx/2, r.top, r.right, r.bottom - (.ShowLR ? fontSize.cy : 0)));
+			} else {
+				fontSize = GetTextSize("X", Arial(sz.cy/4));
+				if (.ShowLR)
+					w.DrawText(r.left, r.top + 0.1*sz.cy, "L", Arial(sz.cy/4), :SBlack);
+				PaintSlider(w, Rect(r.left + (.ShowLR ? 1.5*fontSize.cx : 0), r.top, r.right, r.bottom/2));
+				if (.ShowLR)
+					w.DrawText(r.left, r.top + 0.6*sz.cy, "R", Arial(sz.cy/4), :SBlack);
+				PaintSlider(w, Rect(r.left + (.ShowLR ? 1.5*fontSize.cx : 0), r.top + sz.cy/2, r.right, r.bottom));				
+			}
+		} else
+			PaintSlider(w, r);
+	}
+}

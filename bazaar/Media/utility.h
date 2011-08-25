@@ -1,6 +1,7 @@
 #ifndef _Media_utility_h_
 #define _Media_utility_h_
 
+#include "audioSystem.h"
 
 String GetTags(AVFormatContext *fileData);
 String GetAvError(int err);
@@ -25,5 +26,6 @@ inline int compute_mod(int a, int b)
 }
 
 int64 GetUSec();
-	
+
+
 #endif

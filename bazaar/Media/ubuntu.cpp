@@ -5,6 +5,7 @@ using namespace Upp;
 #include <Media/ffmpeg_base.h>
 #include "utility.h"
 
+
 int av_strerror(int errnum, char *errbuf, size_t errbuf_size)
 {
     int ret = 0;
@@ -144,3 +145,4 @@ void avsubtitle_free(AVSubtitle *sub)
 
     memset(sub, 0, sizeof(AVSubtitle));
 }
+

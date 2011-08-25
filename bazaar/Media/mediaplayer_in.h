@@ -3,7 +3,7 @@
 
 int video_thread(void *arg);
 int subtitle_thread(void *arg);
-void sdl_audio_callback(void *opaque, Uint8 *stream, int len);
+void sdl_audio_callback(void *opaque, uint16 *stream, int len);
 
 #define ALPHA_BLEND(a, oldp, newp, s)\
 ((((oldp << s) * (255 - (a))) + (newp * (a))) / (255 << s))

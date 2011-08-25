@@ -1,3 +1,5 @@
+description "Audio and video managing\377";
+
 uses
 	CtrlLib,
 	SDL;
@@ -6,7 +8,7 @@ library(MSC) "avcodec.lib avformat.lib avutil.lib swscale.lib avdevice.lib avcor
 
 library(GCC WIN32) "avcodec avformat avutil swscale avdevice avcore";
 
-library(GCC !WIN32) "avutil avcodec avformat avdevice swscale avcore";
+library(GCC !WIN32) "avutil avcodec avformat avdevice swscale";
 
 link(MSC) /FORCE:MULTIPLE;
 
@@ -22,9 +24,13 @@ file
 	MediaPlayer.iml,
 	MediaFile readonly separator,
 	MediaFile.cpp,
+	MediaFile.h,
 	PacketQueue.cpp,
 	clock.cpp,
-	MediaFile.h,
+	VolumeCtrl readonly separator,
+	VolumeCtrl.cpp,
+	VolumeCtrl.h,
+	VolumeCtrl.usc,
 	"Utility functions" readonly separator,
 	utility_file.cpp,
 	utility_stream.cpp,
@@ -32,6 +38,8 @@ file
 	utility.cpp,
 	utility.h,
 	ffmpeg_base.h,
+	audioSystem.cpp,
+	audioSystem.h,
 	mt.h,
 	ubuntu.cpp,
 	srcdoc.tpp;

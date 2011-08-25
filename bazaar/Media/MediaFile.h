@@ -76,13 +76,14 @@ private:
     int size;
     int maxSize;
     bool abort_request;
-    SDL_mutex *mutex;
-    SDL_cond *cond;
+    Mutex mutex;
+    ConditionVariable cond;
 };
 
 void sdl_audio_callback(void *data, Uint8 *stream, int len);
 	
 class MediaFile {
+typedef MediaFile CLASSNAME; 
 public:
 	friend int decoderInterrupt_cb();
 	friend void sdl_audio_callback(void *data, Uint8 *stream, int len);
@@ -90,10 +91,12 @@ public:
 	MediaFile();
 	~MediaFile();
 
-	inline String GetFileName()			{return fileData->filename;};
-	inline double GetDuration()			{return double(fileData->duration) / AV_TIME_BASE;};
-	inline int64 GetDurationTimeBase()	{return fileData->duration;};
-	inline int GetNumStreams()			{return fileData->nb_streams;};	
+	inline bool IsOpened()				{return fileData;};
+
+	inline String GetFileName()			{return !fileData ? "" : fileData->filename;};
+	inline double GetDuration()			{return !fileData ? -1 : double(fileData->duration) / AV_TIME_BASE;};
+	inline int64 GetDurationTimeBase()	{return !fileData ? -1 : fileData->duration;};
+	inline int GetNumStreams()			{return !fileData ? -1 : fileData->nb_streams;};	
 	
 	int GetNumVideo()					{return numVideoStreams;};
 	int GetNumAudio()					{return numAudioStreams;};
@@ -113,6 +116,8 @@ public:
 	
 	inline MediaFile& ShowAudio(bool show = true)	{showAudio = show; return *this;};
 	inline MediaFile& SetShowAudioFPS(double fps)	{showAudioFps = fps; return *this;};
+	
+	inline MediaFile& SetAudioFactor(double f)	{audioFactor = int(f*1000); return *this;};
 	
 	struct StreamData {
 		int id;
@@ -158,9 +163,9 @@ protected:
 	double get_external_clock();
 	bool queue_picture(AVFrame *src_frame, double pts);
 	void stream_pause();
-	static int DecoderThread(void *arg);
-	static int VideoThread(void *arg);
-	static int SubtitleThread(void *arg);
+	void DecoderThread();//void *arg);
+	void VideoThread();//(void *arg);
+	void SubtitleThread();//(void *arg);
 	bool BeginDecoder();
 	
 	AVFormatContext *fileData;
@@ -185,19 +190,19 @@ protected:
 	
 	VideoPicture pictq[VIDEO_PICTURE_QUEUE_SIZE];
     int pictq_size, pictq_rindex, pictq_windex;
-    SDL_mutex *pictq_mutex;
-    SDL_cond *pictq_cond;
+    Mutex pictq_mutex;
+    ConditionVariable pictq_cond;
 
     SubPicture subpq[SUBPICTURE_QUEUE_SIZE];
     int subpq_size, subpq_rindex, subpq_windex;
-    SDL_mutex *subpq_mutex;
-    SDL_cond *subpq_cond;
+    Mutex subpq_mutex;
+    ConditionVariable subpq_cond;
     
 	AVStream *audioStream, *videoStream, *subtitleStream;
 	
 	AVAudioConvert *reformat_ctx;
 	
-	SDL_Thread *video_tid, *decoderThreadId, *refresh_tid, *subtitle_tid;
+	Thread video_tid, decoderThreadId, /*refresh_tid,*/ subtitle_tid;
 		
 	int subtitle_stream_changed;
 	int debug, debug_mv, workaround_bugs;
@@ -255,6 +260,8 @@ protected:
 	bool forceAspect;					// Force aspect ratio
 	Rect imgRect;						// Image size
 	Mutex mtx;
+	
+	AtomicVar audioFactor;
 };
 
 

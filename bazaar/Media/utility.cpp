@@ -3,6 +3,7 @@
 using namespace Upp;
 
 #include <Media/ffmpeg_base.h>
+//#include <Functions4U/Functions4U.h>
 #include "utility.h"
 
 
@@ -17,7 +18,9 @@ int64 GetUSec() {
 	gettimeofday(&tv, &tz);
 	return int64(tv.tv_sec)*1000000 + tv.tv_usec;
 }
+
 #else
+
 int64 GetUSec() {
  	LARGE_INTEGER ticksPerSec;
   	LARGE_INTEGER tick;   
@@ -26,4 +29,5 @@ int64 GetUSec() {
   	QueryPerformanceCounter(&tick);
   	return tick.QuadPart/(ticksPerSec.QuadPart/1000000);
 }
+
 #endif

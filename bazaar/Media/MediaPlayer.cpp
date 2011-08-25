@@ -331,16 +331,16 @@ bool MediaPlayer::alloc_picture()
         return false;
     }
 
-    SDL_LockMutex(pictq_mutex);
-    vp.allocated = true;
-    SDL_CondSignal(pictq_cond);
-    SDL_UnlockMutex(pictq_mutex);
+    INTERLOCKED_(pictq_mutex) {
+    	vp.allocated = true;
+    	pictq_cond.Signal();
+    }
     return true;
 }
 
 void MediaPlayer::video_audioWaveform()
 {
-    int i, i_start, x, y1, y, ys, delay, n, nb_display_channels;
+    int i_start, x, y1, y, ys, delay, n, nb_display_channels;
     int ch, channels, h, h2, bgcolor, fgcolor;
     int16_t time_diff;
     int rdft_bits, nb_freq;
@@ -371,15 +371,15 @@ void MediaPlayer::video_audioWaveform()
         i_start = x = compute_mod(sample_array_index - delay * channels, SAMPLE_ARRAY_SIZE);
         
         h= INT_MIN;
-        for(i=0; i<1000; i+=channels){
+        for(int i = 0; i < 1000; i += channels) {
             int idx= (SAMPLE_ARRAY_SIZE + x - i) % SAMPLE_ARRAY_SIZE;
             int a= sample_array[idx];
             int b= sample_array[(idx + 4*channels)%SAMPLE_ARRAY_SIZE];
             int c= sample_array[(idx + 5*channels)%SAMPLE_ARRAY_SIZE];
             int d= sample_array[(idx + 9*channels)%SAMPLE_ARRAY_SIZE];
             int score= a-d;
-            if(h<score && (b^c)<0){
-                h= score;
+            if(h < score && (b^c)<0){
+                h = score;
                 i_start= idx;
             }            
         }
@@ -393,12 +393,12 @@ void MediaPlayer::video_audioWaveform()
 
     fgcolor = SDL_MapRGB(screen->format, 0x00, 0xff, 0x00);
 
-    /* total height for one channel */
+    // total height for one channel 
     h = screen->h / nb_display_channels;
-    /* graph height / 2 */
+    // graph height / 2 
     h2 = (h * 9) / 20;
     for(ch = 0; ch < nb_display_channels; ch++) {
-        i = i_start + ch;
+        int i = i_start + ch;
         y1 = ch * h + (h / 2); /* position of center line */
         for(x = 0; x < screen->w; x++) {
             y = (sample_array[i] * h2) >> 15;
@@ -447,30 +447,29 @@ void MediaPlayer::video_refresh() {
 	            if (++pictq_rindex == VIDEO_PICTURE_QUEUE_SIZE)
 	                pictq_rindex = 0;
 	
-	            SDL_LockMutex(pictq_mutex);
-	            pictq_size--;
-	            SDL_CondSignal(pictq_cond);
-	            SDL_UnlockMutex(pictq_mutex);
+	            INTERLOCKED_(pictq_mutex) {
+	            	pictq_size--;
+	            	pictq_cond.Signal();
+	            }
                 return;
             } 
 	
             if(subtitleStream) {
                 if (subtitle_stream_changed) {
-                    SDL_LockMutex(subpq_mutex);
-
-                    while (subpq_size) {
-                        free_subpicture(&subpq[subpq_rindex]);
-
-                        // update queue size for next picture 
-                        if (++subpq_rindex == SUBPICTURE_QUEUE_SIZE)
-                            subpq_rindex = 0;
-
-                        subpq_size--;
+                    INTERLOCKED_(subpq_mutex) {
+	                    while (subpq_size) {
+	                        free_subpicture(&subpq[subpq_rindex]);
+	
+	                        // update queue size for next picture 
+	                        if (++subpq_rindex == SUBPICTURE_QUEUE_SIZE)
+	                            subpq_rindex = 0;
+	
+	                        subpq_size--;
+	                    }
+	                    subtitle_stream_changed = false;
+	
+	                    subpq_cond.Signal();
                     }
-                    subtitle_stream_changed = false;
-
-                    SDL_CondSignal(subpq_cond);
-                    SDL_UnlockMutex(subpq_mutex);
                 } else {
                     if (subpq_size > 0) {
                         SubPicture *sp, *sp2;
@@ -489,10 +488,10 @@ void MediaPlayer::video_refresh() {
                             if (++subpq_rindex == SUBPICTURE_QUEUE_SIZE)
                                 subpq_rindex = 0;
 
-                            SDL_LockMutex(subpq_mutex);
-                            subpq_size--;
-                            SDL_CondSignal(subpq_cond);
-                            SDL_UnlockMutex(subpq_mutex);
+                            INTERLOCKED_(subpq_mutex) {
+	                            subpq_size--;
+	                            subpq_cond.Signal();
+                            }
                         }
                     }
                 }
@@ -503,10 +502,10 @@ void MediaPlayer::video_refresh() {
             if (++pictq_rindex == VIDEO_PICTURE_QUEUE_SIZE)
                 pictq_rindex = 0;
 
-            SDL_LockMutex(pictq_mutex);
-            pictq_size--;
-            SDL_CondSignal(pictq_cond);
-            SDL_UnlockMutex(pictq_mutex);
+            INTERLOCKED_(pictq_mutex) {
+            	pictq_size--;
+            	pictq_cond.Signal();
+            }
         }
     } else if (audioStream && showAudio) {
         if (get_external_clock() > lastAudioShow + 1./showAudioFps) {

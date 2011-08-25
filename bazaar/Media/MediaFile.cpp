@@ -9,6 +9,7 @@ using namespace Upp;
 MediaFile::MediaFile() {
     avcodec_register_all();		// Register all codecs, demux and protocols
     avdevice_register_all();
+    //avfilter_register_all();
     av_register_all();
     
     av_log_set_callback(AvLogCallback);
@@ -26,6 +27,7 @@ MediaFile::MediaFile() {
     showAudioFps = 25;
     rgb = false;
     forceAspect = true;
+    audioFactor = 1000;
     imgRect.Clear();
 }
 
@@ -34,10 +36,10 @@ MediaFile::~MediaFile() {
         av_close_input_file(fileData);
         fileData = NULL; /* safety */
     } 	
-    SDL_DestroyMutex(pictq_mutex);
-    SDL_DestroyCond(pictq_cond);
-    SDL_DestroyMutex(subpq_mutex);
-    SDL_DestroyCond(subpq_cond);
+    //SDL_DestroyMutex(pictq_mutex);
+    //SDL_DestroyCond(pictq_cond);
+    //SDL_DestroyMutex(subpq_mutex);
+    //SDL_DestroyCond(subpq_cond);
 }
 
 void MediaFile::Reset() {
@@ -59,13 +61,13 @@ void MediaFile::Reset() {
 	av_init_packet(&flush_pkt);
     flush_pkt.data = (uint8_t *)"FLUSH";
     
-  	pictq_mutex = SDL_CreateMutex();
-    pictq_cond = SDL_CreateCond();
+  	//pictq_mutex = SDL_CreateMutex();
+    //pictq_cond = SDL_CreateCond();
     memset(&pictq, 0, sizeof(pictq));
     pictq_size = pictq_rindex = pictq_windex = 0;
 
-  	subpq_mutex = SDL_CreateMutex();
-    subpq_cond = SDL_CreateCond();
+  	//subpq_mutex = SDL_CreateMutex();
+    //subpq_cond = SDL_CreateCond();
     memset(&subpq, 0, sizeof(subpq));
     subpq_size = subpq_rindex = subpq_windex = 0;
         
@@ -74,7 +76,7 @@ void MediaFile::Reset() {
     
     reformat_ctx = 0;
     
-    decoderThreadId = video_tid = refresh_tid = subtitle_tid = 0;
+    //decoderThreadId = video_tid = refresh_tid = subtitle_tid = 0;
     
     subtitle_stream_changed = false;
     debug = debug_mv = 0;
@@ -262,7 +264,8 @@ bool MediaFile::StreamOpen(int stream_index)
         video_current_pts_time = GetUSec();
 
     	videoq.Init(flush_pkt, &flush_pkt);
-    	video_tid = SDL_CreateThread(VideoThread, this);
+    	video_tid.Run(THISBACK(VideoThread));
+    	//video_tid = SDL_CreateThread(VideoThread, this);
 
         break;
     case AVMEDIA_TYPE_SUBTITLE:
@@ -270,7 +273,8 @@ bool MediaFile::StreamOpen(int stream_index)
         subtitleStream = fileData->streams[stream_index];
         
     	subtitleq.Init(flush_pkt, &flush_pkt);
-    	subtitle_tid = SDL_CreateThread(SubtitleThread, this);
+    	subtitle_tid.Run(THISBACK(SubtitleThread));
+    	//subtitle_tid = SDL_CreateThread(SubtitleThread, this);
     
         break;
     default:
@@ -301,11 +305,11 @@ void MediaFile::StreamClose(int stream_index)
         videoq.Abort();
 
         // note: we also signal this mutex to make sure we deblock the video thread in all cases 
-        SDL_LockMutex(pictq_mutex);
-        SDL_CondSignal(pictq_cond);
-        SDL_UnlockMutex(pictq_mutex);
+        INTERLOCKED_(pictq_mutex) {
+        	pictq_cond.Signal();
+        }
 
-        SDL_WaitThread(video_tid, NULL);
+        video_tid.Wait();
 
         videoq.End();
         break;
@@ -313,13 +317,12 @@ void MediaFile::StreamClose(int stream_index)
         subtitleq.Abort();
 
         // note: we also signal this mutex to make sure we deblock the video thread in all cases 
-        SDL_LockMutex(subpq_mutex);
-        subtitle_stream_changed = true;
+        INTERLOCKED_(subpq_mutex) {
+	        subtitle_stream_changed = true;
+	        subpq_cond.Signal();
+        }
 
-        SDL_CondSignal(subpq_cond);
-        SDL_UnlockMutex(subpq_mutex);
-
-        SDL_WaitThread(subtitle_tid, NULL);
+        subtitle_tid.Wait();
 
         subtitleq.End();
         break;
@@ -361,7 +364,13 @@ int MediaFile::audio_decode_frame(double *pts_ptr)
         // The audio packet can contain several frames 
         while (pkt_temp->size > 0) {
             data_size = sizeof(audio_buf1);
+#if (((LIBAVCODEC_VERSION_MAJOR <= 52) && (LIBAVCODEC_VERSION_MINOR <= 20)) || UBUNTU_TRICK)
+            len1 = avcodec_decode_audio2(dec, (int16_t *)audio_buf1, &data_size, pkt_temp->data, 
+            																	 pkt_temp->size);
+#else
             len1 = avcodec_decode_audio3(dec, (int16_t *)audio_buf1, &data_size, pkt_temp);                                   
+#endif            
+            
             if (len1 < 0) {
                 pkt_temp->size = 0;	// if error, we skip the frame 
                 break;
@@ -433,16 +442,12 @@ int MediaFile::audio_decode_frame(double *pts_ptr)
     }
 }
 
-/* copy samples for viewing in editor window */
-void MediaFile::update_sample_display(short *samples, int samples_size)
-{
-    int size, len, channels;
-
-    channels = audioStream->codec->channels;
-
-    size = samples_size / sizeof(short);
+// Copy samples for viewing in editor window 
+void MediaFile::update_sample_display(short *samples, int samples_size) {
+    int channels = audioStream->codec->channels;
+	int size = samples_size / sizeof(short);
     while (size > 0) {
-        len = SAMPLE_ARRAY_SIZE - sample_array_index;
+        int len = SAMPLE_ARRAY_SIZE - sample_array_index;
         if (len > size)
             len = size;
         memcpy(sample_array + sample_array_index, samples, len * sizeof(short));
@@ -454,8 +459,8 @@ void MediaFile::update_sample_display(short *samples, int samples_size)
     }
 }
 
-/* return the new audio buffer size (samples can be added or deleted
-   to get better sync if video or external master clock) */
+// Return the new audio buffer size (samples can be added or deleted
+// to get better sync if video or external master clock)
 int MediaFile::synchronize_audio(short *samples, int samples_size1, double pts)
 {
     int n, samples_size;
@@ -514,8 +519,7 @@ int MediaFile::synchronize_audio(short *samples, int samples_size1, double pts)
                 }
             }
         } else {
-            /* too big difference : may be initial PTS errors, so
-               reset A-V filter */
+            // Too big difference : may be initial PTS errors, so reset A-V filter 
             audio_diff_avg_count = 0;
             audio_diff_cum = 0;
         }
@@ -526,11 +530,10 @@ int MediaFile::synchronize_audio(short *samples, int samples_size1, double pts)
 // Called by VideoThread to store the just decoded frame
 bool MediaFile::queue_picture(AVFrame *frame, double pts) {
     // wait until we have space to put a new picture 
-    SDL_LockMutex(pictq_mutex);
-    while (pictq_size >= VIDEO_PICTURE_QUEUE_SIZE && !videoq.IsAbort()) 
-        SDL_CondWait(pictq_cond, pictq_mutex);
-    
-    SDL_UnlockMutex(pictq_mutex);
+    INTERLOCKED_(pictq_mutex) {
+    	while (pictq_size >= VIDEO_PICTURE_QUEUE_SIZE && !videoq.IsAbort()) 
+        	pictq_cond.Wait(pictq_mutex);
+    }
 
     if (videoq.IsAbort())
         return false;
@@ -550,11 +553,10 @@ bool MediaFile::queue_picture(AVFrame *frame, double pts) {
         SDL_PushEvent(&event);
 
         // wait until the picture is allocated 
-        SDL_LockMutex(pictq_mutex);
-        while (!vp.allocated && !videoq.IsAbort()) 
-            SDL_CondWait(pictq_cond, pictq_mutex);
-        
-        SDL_UnlockMutex(pictq_mutex);
+        INTERLOCKED_(pictq_mutex) {
+        	while (!vp.allocated && !videoq.IsAbort()) 
+        		pictq_cond.Wait(pictq_mutex);
+        }
 
         if (videoq.IsAbort())
             return false;
@@ -568,7 +570,7 @@ bool MediaFile::queue_picture(AVFrame *frame, double pts) {
 	SwsContext *context = 0;
 	
     // if the frame is not skipped, then display it 
-    if (vp.overlay) {			// Convertion to YUV420P
+    if (vp.overlay) {			// Conversion to YUV420P
         context = SWSGetContext(videoStream->codec->width, videoStream->codec->height,
     							videoStream->codec->pix_fmt, 
     							videoStream->codec->width, videoStream->codec->height, 
@@ -626,9 +628,9 @@ bool MediaFile::queue_picture(AVFrame *frame, double pts) {
         // now we can update the picture count 
         if (++pictq_windex == VIDEO_PICTURE_QUEUE_SIZE)
             pictq_windex = 0;
-        SDL_LockMutex(pictq_mutex);
-        pictq_size++;
-        SDL_UnlockMutex(pictq_mutex);
+        INTERLOCKED_(pictq_mutex) {
+        	pictq_size++;
+        }
     }
     return true;
 }
@@ -649,6 +651,8 @@ void MediaFile::SetError(String str) {
 }
 
 bool MediaFile::BeginDecoder() {    
-	decoderThreadId = SDL_CreateThread(DecoderThread, this);
-    return !!decoderThreadId;
+	return decoderThreadId.Run(THISBACK(DecoderThread));
+	//decoderThreadId = SDL_CreateThread(DecoderThread, this);
+    //return !!decoderThreadId;
 }
+
