@@ -1,7 +1,7 @@
 #ifndef _Tcc_Tcc_h
 #define _Tcc_Tcc_h
 
-#include "Tcc/lib/libtcc.h" 
+#include "plugin/tcc/libtcc.h" 
 
 class Tcc
 {

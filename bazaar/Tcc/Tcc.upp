@@ -15,7 +15,5 @@ file
 	srcimp.tpp,
 	src.tpp,
 	src.tpp\Tcc.t,
-	lib/libtcc.h,
-	lib/README,
 	License.txt;
 
