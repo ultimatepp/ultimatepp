@@ -581,6 +581,7 @@ One<HttpRequest> HttpServer::GetRequest()
 				req->LogTime(GetHttpURI(request_query), 1);
 				return req;
 			}
+			break;
 
 		case RS_GET_HEADERS:
 		case RS_POST_HEADERS:
