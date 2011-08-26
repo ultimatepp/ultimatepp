@@ -187,6 +187,8 @@ public:
 		TOOL(ViewAspectLock)
 		TOOL(ViewPan)
 
+	void                    PostRefresh();
+
 public:
 	Callback                WhenRescan;
 	Callback                WhenZoom;
@@ -195,7 +197,6 @@ public:
 
 protected:
 	void                    AdjustPos(Point scpos, int xymask); // 1 = x, 2 = y
-	void                    PostRefresh();
 
 protected:
 	bool                    rev_x, rev_y, aspect_lock, enable_lock;
