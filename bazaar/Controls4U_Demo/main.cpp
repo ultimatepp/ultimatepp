@@ -30,7 +30,7 @@ Controls4U_Demo::Controls4U_Demo() {
 	tab.Add(editFileFolder_Demo.SizePos(), "StaticImage & EditFile/Folder");
 	tab.Add(staticCtrls_Demo.SizePos(), "Static Controls");
 	tab.Add(staticCtrlsTest_Demo.SizePos(), "Static Controls Test");
-	tab.Add(drawingCanvas_Demo.SizePos(), "DrawingCanvas (experimental)");
+	//tab.Add(drawingCanvas_Demo.SizePos(), "DrawingCanvas (experimental)");
 	tab.Add(functions4U_Demo.SizePos(), "Functions4U samples");
 
 	tab.Set(tab.Find(jbcontrols_Demo));	// Select the last
