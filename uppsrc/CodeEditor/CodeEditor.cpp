@@ -189,12 +189,12 @@ void CodeEditor::CheckRightBracket(int pos)
 
 void CodeEditor::CopyWord() {
 	int p = GetCursor();
-	if(iscid(GetChar(p)) || (p > 0 && iscid(GetChar(--p)))) {
+	if(iscidl(GetChar(p)) || (p > 0 && iscidl(GetChar(--p)))) {
 		int e = GetLength();
 		int f = p;
-		while(--p >= 0 && iscid(GetChar(p)));
+		while(--p >= 0 && iscidl(GetChar(p)));
 			++p;
-		while(++f < e && iscid(GetChar(f)));
+		while(++f < e && iscidl(GetChar(f)));
 		WString txt = GetW(p, f - p);
 		WriteClipboardUnicodeText(txt);
 		AppendClipboardText(txt.ToString());
@@ -415,20 +415,20 @@ void CodeEditor::MakeTabsOrSpaces(bool maketabs) {
 void CodeEditor::MoveNextWord(bool sel) {
 	int p = GetCursor();
 	int e = GetLength();
-	if(iscid(GetChar(p)))
-		while(p < e && iscid(GetChar(p))) p++;
+	if(iscidl(GetChar(p)))
+		while(p < e && iscidl(GetChar(p))) p++;
 	else
-		while(p < e && !iscid(GetChar(p))) p++;
+		while(p < e && !iscidl(GetChar(p))) p++;
 	PlaceCaret(p, sel);
 }
 
 void CodeEditor::MovePrevWord(bool sel) {
 	int p = GetCursor();
 	if(p == 0) return;
-	if(iscid(GetChar(p - 1)))
-		while(p > 0 && iscid(GetChar(p - 1))) p--;
+	if(iscidl(GetChar(p - 1)))
+		while(p > 0 && iscidl(GetChar(p - 1))) p--;
 	else
-		while(p > 0 && !iscid(GetChar(p - 1))) p--;
+		while(p > 0 && !iscidl(GetChar(p - 1))) p--;
 	PlaceCaret(p, sel);
 }
 
@@ -482,8 +482,8 @@ void CodeEditor::DeleteWord() {
 	int p = GetCursor();
 	int e = GetLength();
 	int c = GetChar(p);
-	if(iscid(c))
-		while(p < e && iscid(GetChar(p))) p++;
+	if(iscidl(c))
+		while(p < e && iscidl(GetChar(p))) p++;
 	else
 	if(isspctab(c))
 		while(p < e && isspctab(GetChar(p))) p++;
@@ -499,8 +499,8 @@ void CodeEditor::DeleteWordBack() {
 	int p = GetCursor();
 	if(p < 1) return;
 	int c = GetChar(p - 1);
-	if(iscid(GetChar(p - 1)))
-		while(p > 1 && iscid(GetChar(p - 1))) p--;
+	if(iscidl(GetChar(p - 1)))
+		while(p > 1 && iscidl(GetChar(p - 1))) p--;
 	else
 	if(isspctab(c))
 		while(p > 1 && isspctab(GetChar(p - 1))) p--;
@@ -551,9 +551,9 @@ void CodeEditor::TabLeft() {
 
 bool CodeEditor::GetWordPos(int pos, int& l, int& h) {
 	l = h = pos;
-	if(!iscid(GetChar(pos))) return false;
-	while(l > 0 && iscid(GetChar(l - 1))) l--;
-	while(iscid(GetChar(h))) h++;
+	if(!iscidl(GetChar(pos))) return false;
+	while(l > 0 && iscidl(GetChar(l - 1))) l--;
+	while(iscidl(GetChar(h))) h++;
 	return true;
 }
 
