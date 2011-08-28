@@ -55,7 +55,7 @@ const wchar *isstmt(const wchar *p) {
 		const wchar *s = p;
 		for(;;) {
 			if(*k== '\0') {
-				if(!iscid(*s)) return s;
+				if(!iscidl(*s)) return s;
 				break;
 			}
 			if(*s != *k)
@@ -142,7 +142,7 @@ void CodeEditor::SyntaxState::ScanSyntax(const wchar *ln, const wchar *e)
 		while(++p < e && (*p == ' ' || *p == '\t'))
 			p++;
 		const wchar *id = p;
-		while(p < e && iscid(*p))
+		while(p < e && iscidl(*p))
 			p++;
 		int idlen = int(p - id);
 		if(id[0] == 'i' && id[1] == 'f'
@@ -226,16 +226,16 @@ void CodeEditor::SyntaxState::ScanSyntax(const wchar *ln, const wchar *e)
 			for(;;) {
 				if(p >= e) return;
 				const wchar *pp;
-				if(!iscid(pc) && (pp = isstmt(p)) != NULL) {
+				if(!iscidl(pc) && (pp = isstmt(p)) != NULL) {
 					stmtline = line;
 					spar = 0;
 					pc = 0;
 					p = pp;
 				}
 				else
-				if(!iscid(pc) && p[0] == 'n' && p[1] == 'a' && p[2] == 'm' && p[3] == 'e' &&
+				if(!iscidl(pc) && p[0] == 'n' && p[1] == 'a' && p[2] == 'm' && p[3] == 'e' &&
 				   p[4] == 's' && p[5] == 'p' && p[6] == 'a' && p[7] == 'c' && p[8] == 'e' &&
-				   !iscid(p[9])) {
+				   !iscidl(p[9])) {
 					was_namespace = true;
 					p += 9;
 				}

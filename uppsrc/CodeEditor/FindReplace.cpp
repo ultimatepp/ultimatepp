@@ -94,7 +94,7 @@ int CodeEditor::Match(const wchar *f, const wchar *s, int line, bool we, bool ig
 			const wchar *wb = s;
 			if(!iscib(*s)) return -1;
 			s++;
-			while(iscid(*s)) s++;
+			while(iscidl(*s)) s++;
 			SetFound(fi++, WILDID, WString(wb, s));
 		}
 		else
@@ -110,7 +110,7 @@ int CodeEditor::Match(const wchar *f, const wchar *s, int line, bool we, bool ig
 		}
 		f++;
 	}
-	return we && iscid(*s) ? -1 : int(s - b) + n;
+	return we && iscidl(*s) ? -1 : int(s - b) + n;
 }
 
 bool CodeEditor::Find(bool back, const wchar *text, bool wholeword, bool ignorecase,
@@ -149,8 +149,8 @@ bool CodeEditor::Find(bool back, const wchar *text, bool wholeword, bool ignorec
 	if(ft.IsEmpty()) return false;
 	if(notfoundfw) MoveTextBegin();
 	if(notfoundbk) MoveTextEnd();
-	bool wb = wholeword ? iscid(*ft) : false;
-	bool we = wholeword ? iscid(*ft.Last()) : false;
+	bool wb = wholeword ? iscidl(*ft) : false;
+	bool we = wholeword ? iscidl(*ft.Last()) : false;
 	int cursor, pos;
 	if(found)
 		GetSelection(pos, cursor);
@@ -164,7 +164,7 @@ bool CodeEditor::Find(bool back, const wchar *text, bool wholeword, bool ignorec
 	s = l + pos;
 	for(;;) {
 		for(;;) {
-			if(!wb || (s == l || !iscid(s[-1]))) {
+			if(!wb || (s == l || !iscidl(s[-1]))) {
 				int n = Match(ft, s, line, we, ignorecase);
 				if(n >= 0) {
 					int pos = GetPos(line, int(s - l));

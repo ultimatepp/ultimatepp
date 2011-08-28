@@ -148,6 +148,7 @@ Array<IdentPos> GetLineIdent(const char *line);
 Vector<Point>   GetLineString(const wchar *wline, bool& is_begin, bool& is_end);
 
 inline int  CharFilterCIdent(int i)  { return IsAlNum(i) || i == '_' ? i : 0; }
+inline bool iscidl(int c)            { return iscid(c) || IsLetter(c); }
 inline bool islbrkt(int c)           { return c == '{' || c == '[' || c == '('; }
 inline bool isrbrkt(int c)           { return c == '}' || c == ']' || c == ')'; }
 inline bool isbrkt(int c)            { return islbrkt(c) || isrbrkt(c); }

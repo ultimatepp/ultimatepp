@@ -634,7 +634,7 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 		if(iscib(*p)) {
 			const wchar *q = p;
 			StringBuffer id;
-			while(iscid(*q) && q < e)
+			while(iscidl(*q) && q < e)
 				id.Cat(*q++);
 			String iid = id;
 			if(highlight == HIGHLIGHT_SQL)
