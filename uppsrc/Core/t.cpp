@@ -299,6 +299,26 @@ Index<int> GetLngSet()
 	return ndx;
 }
 
+Index<int> GetLngSet(const String& module)
+{
+	CriticalSection::Lock __(slng);
+	Index<int> ndx;
+	Array<LngModule>& ma = sMod();
+	for(int i = 0; i < ma.GetCount(); i++) {
+		LngModule& m = ma[i];
+		if (m.name != module)
+			continue;
+		
+		for (int j = 0; j < m.map.GetCount(); ++j) {
+			Vector<LngRec>& lr = m.map[j];
+			for(int k = 0; k < lr.GetCount(); k++)
+				ndx.FindAdd(lr[k].lang);
+		}
+	}
+	
+	return ndx;
+}
+
 void    SaveLngFile(FileOut& out, int lang)
 {
 	CriticalSection::Lock __(slng);

@@ -47,6 +47,7 @@ String     GetLngString(const char *id);
 String     GetLngString(int lang, const char *id);
 
 Index<int> GetLngSet();
+Index<int> GetLngSet(const String& module);
 void       SaveLngFile(FileOut& out, int lang);
 bool       LoadLngFile(const char *file);
 
