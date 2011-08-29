@@ -664,12 +664,15 @@ One<HttpRequest> HttpServer::GetRequest()
 			}
 			{
 				String content = request_query.GetString("$$CONTENT_TYPE");
+				static const char utag[] = "application/x-www-form-urlencoded";
 				static const char mtag[] = "multipart/";
 				request_query.Set("$$POSTDATA", post_data);
-				if(!socket.IsError() && strnicmp(content, mtag, 10))
-					request_query.SetURL(post_data);
-				else
-					GetHttpPostData(request_query, post_data);
+				if(!socket.IsError()) {
+					if(!CompareNoCase(content, utag))
+						request_query.SetURL(post_data);
+					else if(!strnicmp(content, mtag, 10))
+						GetHttpPostData(request_query, post_data);
+				}
 				One<HttpRequest> req = new HttpRequest(*this, conn, request_query);
 				req->LogTime(GetHttpURI(request_query), 1);
 				return req;
