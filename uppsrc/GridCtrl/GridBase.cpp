@@ -242,6 +242,13 @@ static void MakeOption(One<Ctrl>& ctrl)
 	ctrl->WantFocus();
 }
 
+static void MakeThreeStateOption(One<Ctrl>& ctrl)
+{
+	ctrl.Create<Option>().ThreeState().ShowLabel(false);
+	ctrl->SetData(0);
+	ctrl->WantFocus();
+}
+
 GridCtrl::ItemRect& GridCtrl::ItemRect::Ctrls(Callback1<One<Ctrl>&> _factory)
 {
 	if(!(*edits)[id].factory)
@@ -260,6 +267,11 @@ GridCtrl::ItemRect& GridCtrl::ItemRect::NoCtrls()
 GridCtrl::ItemRect& GridCtrl::ItemRect::Option()
 {
 	return Ctrls(MakeOption).CtrlAlignHorzPos().CtrlAlignVertPos();
+}
+
+GridCtrl::ItemRect& GridCtrl::ItemRect::ThreeStateOption()
+{
+	return Ctrls(MakeThreeStateOption).CtrlAlignHorzPos().CtrlAlignVertPos();
 }
 
 GridCtrl::Item& GridCtrl::Item::Editable(bool b)

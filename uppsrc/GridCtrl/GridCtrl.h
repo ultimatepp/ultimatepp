@@ -735,6 +735,7 @@ class GridCtrl : public Ctrl
 				template<class T> ItemRect&  Ctrls()             { return Ctrls(DefaultCtrlFactory<T>()); }
 				ItemRect& NoCtrls();
 				ItemRect& Option();
+				ItemRect& ThreeStateOption();
 
 				ItemRect& Editable(bool b);
 				ItemRect& NoEditable();
