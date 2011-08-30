@@ -38,7 +38,7 @@ public:
 	Ctrl* GetSource() const { return pctrl; }
 	void ClearSource() { SetSource(NULL); }
 
-	void SetCtrl(Ctrl* c) { if(c && pctrl) ASSERT(c->GetParent() == ~pctrl); ctrl = c; UpdateRefresh(); }
+	void SetCtrl(Ctrl* c) { if(c && pctrl) { ASSERT(IsParentR(~pctrl, c)); } ctrl = c; UpdateRefresh(); }
 	Ctrl* GetCtrl() const { return ctrl; }
 	void ClearCtrl() { SetCtrl(NULL); }
 
@@ -48,6 +48,7 @@ public:
 	static void StdCtrlFilter(Ctrl*& q, Point& pt, int& f);	
 	static Ctrl* ChildAtPoint(Ctrl& par, Point& pt, int& f, const CtrlFilterType& fil);
 	static Ctrl* GetCtrl(Ctrl& c, Point& p, int& f, const CtrlFilterType& fil);
+	static bool IsParentR(const Ctrl* p, const Ctrl* c);
 
 	Callback3<Ctrl&, Point, dword> WhenLeftDown;
 	Callback3<Ctrl&, Point, dword> WhenRightDown;

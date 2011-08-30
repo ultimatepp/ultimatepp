@@ -90,7 +90,9 @@ void CtrlPos::Paint(Draw& w)
 	if(!IsTransparent())
 		w.DrawRect(0,0,sz.cx,sz.cy, SColorFace());
 
-	if(IsEnabled() && pctrl)
+	if(!IsEnabled()) return;	
+
+	if(pctrl)
 		DrawHintFrame(w, *pctrl, *pctrl, LtGray());
 	
 	if(!ctrl) return;
@@ -147,7 +149,7 @@ void CtrlPos::LeftDown(Point p, dword keyflags)
 
 		if(GetAlignMode(_r, rr, p, pos, style->handsize))
 		{
-			pos = LogPosPopUp::ReAlign(c, pos);		
+			pos = LogPosPopUp::MakeLogPos(pos, c);		
 			c.SetPos(pos);
 			Action();
 			Refresh();
@@ -320,12 +322,6 @@ void CtrlPos::Updated()
 {
 	//refresh the view of the currently selected ctrl
 	
-}
-
-void CtrlPos::State(int reason)
-{
-	if(reason != ENABLE) return;
-	if(!IsEnabled()) { ClearCtrl(); Refresh(); }
 }
 
 CtrlPos::CtrlPos()

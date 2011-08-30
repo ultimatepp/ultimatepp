@@ -44,3 +44,8 @@ void CtrlPropTest::OnCtrlRight(Ctrl& c, Point p, dword keyflags)
 		DoEdit(c);
 }
 
+void CtrlPropTest::OnMoveAction()
+{
+	if(hk.GetCtrl() && hk.GetCtrl() == pe.pec.GetCtrl())
+		pe.pec.Update();
+}

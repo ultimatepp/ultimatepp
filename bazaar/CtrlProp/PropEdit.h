@@ -19,9 +19,7 @@ public:
 	virtual void Updated();
 	virtual void Undo();
 
-	void OnUpdateRow();
-
-	void SetCtrl(Ctrl* c) { ctrl = c; UpdateRefresh(); }
+	void SetCtrl(Ctrl* c) { if(ctrl != c) { ctrl = c; UpdateCtrl(); } UpdateRefresh(); }
 	Ctrl* GetCtrl() const { return ctrl; }
 	void ClearCtrl() { SetCtrl(NULL); }
 
@@ -29,7 +27,14 @@ public:
 	virtual void SetData(const Value& v) { SetCtrl(RawValue<Ctrl*>::Extract(v)); }
 
 protected:
-	Ptr<Ctrl> ctrl, sctrl; //the current child, and a cache
+	void ReloadFactory(int i, One<Ctrl>& o);
+	void ReloadAction(int i);
+	void UpdateCtrl();
+
+	void OnUpdateRow(int i);
+	void OnUpdateCurrentRow();
+
+	Ptr<Ctrl> ctrl;
 	ArrayMap<String, Tuple2<bool, Value> > vsav;
 	AccessorMap am;
 };
@@ -47,7 +52,6 @@ public:
 	virtual void Rejector() { pec.Undo(); pec.ClearCtrl(); PopUpC::Rejector(); }
 	virtual void Acceptor() { pec.ClearCtrl(); PopUpC::Acceptor(); }
 
-protected:
 	PropEditCtrl pec;
 	Button ok, cancel;
 };

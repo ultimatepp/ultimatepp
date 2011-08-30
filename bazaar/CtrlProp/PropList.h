@@ -37,7 +37,6 @@ public:
 	void PopUp(Ctrl* owner, Ctrl& e) { plc.SetCtrl(&e); PopUpC::PopUp(owner); }
 	virtual void Acceptor() { plc.ClearCtrl(); PopUpC::Acceptor(); }
 
-protected:
 	PropListCtrl plc;
 	Button exit;
 };

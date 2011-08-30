@@ -5,24 +5,38 @@ PropEditCtrl::PropEditCtrl()
 	CtrlLayout(*this);
 	ac.AddColumn("Property");
 	ac.AddColumn("Value");
-	//ac.WhenUpdateRow = THISBACK(OnUpdateRow);
+	ac.AddColumn("Reload").Ctrls(THISBACK(ReloadFactory));
+	
+	ac.ColumnWidths("3 6 1");
+	
+	//ac.WhenUpdateRow = THISBACK(OnUpdateCurrentRow); only invoked after cursor leaves the edited row, but we need live
+}
+
+void PropEditCtrl::ReloadFactory(int i, One<Ctrl>& o)
+{
+	Button* b = new Button();
+	b->SetImage(CtrlImg::Toggle);
+	b->WhenAction = THISBACK1(ReloadAction, i);
+	o.Attach(b);
+}
+
+void PropEditCtrl::ReloadAction(int i)
+{
+	int ii = am.Find(ac.Get(i, 0));
+	if(ii<0) return;
+	Value v;
+	if(!am[ii].get(v)) return;
+	ac.Set(i, 1, v);
 }
 
 void PropEditCtrl::Updated()
 {
-	if(ctrl && sctrl == ctrl)
-	{
-		for(int i = 0; i < ac.GetCount(); i++)
-		{
-			Value v;
-			int ii = am.Find(ac.Get(i, 0));
-			if(ii<0) continue;
-			if(!am[ii].get(v)) continue;
-			ac.Set(i, 1, v);
-		}
-		return;
-	}
-	sctrl = ctrl;
+	for(int i = 0; i < ac.GetCount(); i++)
+		ReloadAction(i);
+}
+
+void PropEditCtrl::UpdateCtrl()
+{
 	ac.Clear();
 	vsav.Clear();
 	am.Clear();	
@@ -59,13 +73,14 @@ void PropEditCtrl::Updated()
 			{
 				pc = DefaultValueEditor(v);
 				{
-					//LogPosCtrl needs instance to live show changes
+					//LogPosCtrl needs instance infos to live show changes
 					LogPosCtrl* ple = dynamic_cast<LogPosCtrl*>(pc);
 					if(ple) ple->Set(e);
 				}
 			}
 			else pc = new ValueCtrl();
-			(*pc) <<= THISBACK(OnUpdateRow);
+
+			(*pc) <<= THISBACK1(OnUpdateRow, k); //for live editing, unlike WhenUpdateRow
 
 			ac.SetCtrl(k, 1, pc); //owned
 			++k;
@@ -85,7 +100,8 @@ void PropEditCtrl::Updated()
 			//FIXME needs to know which type
 			//meanwhile, we let user choose
 			ValueCtrl* pc = new ValueCtrl();
-			(*pc) <<= THISBACK(OnUpdateRow);
+
+			(*pc) <<= THISBACK1(OnUpdateRow, k); //for live editing, unlike WhenUpdateRow
 
 			ac.SetCtrl(k, 1, pc); //owned
 			++k;
@@ -100,16 +116,21 @@ void PropEditCtrl::Updated()
 	//ac.UpdateRefresh();
 }
 
-void PropEditCtrl::OnUpdateRow()
+void PropEditCtrl::OnUpdateRow(int i)
 {
+	am[i].set(ac.Get(i, 1));
+	vsav.GetAdd(ac.Get(i, 0)).a = true; //dirty
+	Action();
 	if(!ctrl) return;
+	ctrl->UpdateActionRefresh(); //propagate user action
+}
+
+void PropEditCtrl::OnUpdateCurrentRow()
+{
 	if(!ac.IsCursor()) return; //FIXME Option Focus issue 
 	int ii = am.Find(ac.Get(0));
 	if(ii<0) return;
-	am[ii].set(ac.Get(1));
-	vsav.GetAdd(ac.Get(0)).a = true; //dirty
-	Action();
-	ctrl->UpdateActionRefresh(); //propagate user action
+	OnUpdateRow(ii);	
 }
 
 void PropEditCtrl::Undo()

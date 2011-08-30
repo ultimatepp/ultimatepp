@@ -31,6 +31,8 @@ CtrlPropTest::CtrlPropTest()
 	hk.WhenRightDown = THISBACK(OnCtrlRight);
 	hk.SetSource(&vis);
 	hk.Disable();
+	
+	hk <<= THISBACK(OnMoveAction);
 
 	InitDummies();
 }

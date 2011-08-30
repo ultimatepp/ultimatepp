@@ -21,9 +21,11 @@ public:
 	LogPosPopUp();
 	
 	static Rect CtrlRect(Ctrl::LogPos pos, Size sz);
+	static Rect CtrlRectZ(Ctrl::LogPos pos, Size sz);
 	static Ctrl::LogPos MakeLogPos(int ax, int ay, const Rect& r, Size sz);
 	static Ctrl::LogPos MakeLogPos(Ctrl::LogPos p, const Rect& r, Size sz);
-	static Ctrl::LogPos ReAlign(const Ctrl& c, const Ctrl::LogPos& npos);
+	static Ctrl::LogPos MakeLogPos(Ctrl::LogPos p, const Ctrl::LogPos& pos, Size sz);
+	static Ctrl::LogPos MakeLogPos(Ctrl::LogPos p, const Ctrl& c);
 
 	virtual void Updated();
 	virtual Value GetData() const { return RawToValue(pos); }
@@ -60,12 +62,17 @@ public:
 
 	virtual void LeftDown(Point p, dword keyflags);
 	virtual void Updated();
+
+	void SetBaseSize(const Size& sz) { bsz = sz; }
+	void ClearBaseSize() { bsz = Null; }
+	Size GetBaseSize() const { return bsz; }
+
 	virtual Value GetData() const { return RawToValue(pos); }
 	virtual void SetData(const Value& v) { if(!v.Is<Ctrl::LogPos>()) return; pos = RawValue<Ctrl::LogPos>::Extract(v); Update(); }
 
 	Ctrl::LogPos Get() const { return pos; }
-	void Set(const Ctrl::LogPos& p) { pos = p; Update(); }
-	void Set(Ctrl& c) { posparent = &c; pos = c.GetPos(); Update(); }
+	void Set(const Ctrl::LogPos& p, const Size& sz = Null) { pos = p; bsz = sz; Update(); }
+	void Set(Ctrl& c) { pos = c.GetPos(); bsz = c.GetParent() ? c.GetParent()->GetSize() : Null; Update(); }
 	void Drop();
 	
 protected:
@@ -78,7 +85,9 @@ protected:
 	Ctrl::LogPos pos, savedpos;
 	bool push;
 	LogPosPopUp lc;
-	Ptr<Ctrl> posparent;
+
+	//base info, for recalculation
+	Size bsz;
 };
 
 #endif

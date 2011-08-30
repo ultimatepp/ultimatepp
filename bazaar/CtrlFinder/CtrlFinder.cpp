@@ -78,6 +78,15 @@ Ctrl* CtrlFinder::GetCtrl(Ctrl& c, Point& p, int& f, const CtrlFilterType& fil)
 	return q;
 }
 
+bool CtrlFinder::IsParentR(const Ctrl* p, const Ctrl* c)
+{
+	while(c && p) {
+		if(c == p) return true;
+		c = c->GetParent();
+	}
+	return false;
+}
+
 void CtrlFinder::UpdatedSource()
 {
 	Remove();

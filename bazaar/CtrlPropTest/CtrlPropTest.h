@@ -27,6 +27,7 @@ public:
 
 	void OnEdit();
 	void OnCtrlRight(Ctrl& c, Point p, dword keyflags);	
+	void OnMoveAction();
 
 public:
 	ToolBar mb;

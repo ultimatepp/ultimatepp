@@ -26,6 +26,16 @@ Rect LogPosPopUp::CtrlRect(Ctrl::LogPos pos, Size sz)
 	return r;
 }
 
+Rect LogPosPopUp::CtrlRectZ(Ctrl::LogPos pos, Size sz)
+{
+	Rect r = CtrlRect(pos, sz);
+	r.left = HorzLayoutZoom(r.left);
+	r.right = HorzLayoutZoom(r.right);
+	r.top = VertLayoutZoom(r.top);
+	r.bottom = VertLayoutZoom(r.bottom);
+	return r;
+}
+
 Ctrl::Logc MakeLogc(int align, int a, int b, int sz)
 {
 	int isz = b - a;
@@ -51,16 +61,17 @@ Ctrl::LogPos LogPosPopUp::MakeLogPos(Ctrl::LogPos p, const Rect& r, Size sz)
 	return MakeLogPos(p.x.GetAlign(), p.y.GetAlign(), r, sz);
 }
 
-Ctrl::LogPos LogPosPopUp::ReAlign(const Ctrl& c, const Ctrl::LogPos& npos)
+Ctrl::LogPos LogPosPopUp::MakeLogPos(Ctrl::LogPos p, const Ctrl::LogPos& pos, Size sz)
 {
-	if(!c.GetParent()) return npos;
-	//convert ctrl's pos to its rect in parent
-	//and reconvert to logpos using new align
-	Size sz = c.GetParent()->GetSize();
-	Ctrl::LogPos pos = c.GetPos();
 	Rect r = CtrlRect(pos, sz);
-	pos = MakeLogPos(npos, r, sz);
-	return pos;
+	return MakeLogPos(p, r, sz);
+}
+
+Ctrl::LogPos LogPosPopUp::MakeLogPos(Ctrl::LogPos p, const Ctrl& c)
+{
+	if(!c.GetParent()) return p;
+	//reconvert to logpos using new align
+	return MakeLogPos(p, c.GetPos(), c.GetParent()->GetSize());
 }
 
 void LogPosPopUp::Set(const Ctrl::LogPos& p)
@@ -260,6 +271,8 @@ LogPosCtrl::LogPosCtrl() : push(false)
 	
 	lc.WhenSizeChange = THISBACK(OnSizeChange);
 	lc.WhenAlignChange = THISBACK(OnAlignChange);
+	
+	bsz.SetNull();
 }
 
 void LogPosCtrl::LeftDown(Point p, dword keyflags)
@@ -307,12 +320,11 @@ void LogPosCtrl::Updated()
 
 void LogPosCtrl::OnSizeChange()
 {
-	if(!posparent) return;
 }
 
 void LogPosCtrl::OnAlignChange()
 {
-	if(!posparent) return;
-	lc.Set(LogPosPopUp::ReAlign(*posparent, lc.Get()));
+	if(bsz.IsNullInstance()) return;
+	lc.Set(LogPosPopUp::MakeLogPos(lc.Get(), pos, bsz));
 	lc.Update(); //feedback to lc
 }
