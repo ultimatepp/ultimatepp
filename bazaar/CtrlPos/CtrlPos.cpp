@@ -254,6 +254,7 @@ void CtrlPos::LeftUp(Point p, dword keyflags)
 void CtrlPos::RightDown(Point p, dword keyflags)
 {
 	//cancel
+	LeftDown(p, keyflags);
 	ReleaseCapture();
 	int m = mode;
 	mode = RectCtrl::NONE;
@@ -271,7 +272,7 @@ void CtrlPos::RightDown(Point p, dword keyflags)
 			Refresh();
 		}
 	}
-	else
+	else if(keyflags & K_SHIFT)
 	{
 		pressed = false;
 		moving = false;
@@ -292,6 +293,8 @@ void CtrlPos::RightDown(Point p, dword keyflags)
 		Action();
 		Refresh();
 	}
+	else if(WhenBar)
+		MenuBar::Execute(WhenBar);
 }
 
 void CtrlPos::MouseWheel(Point p, int zdelta, dword keyflags)
@@ -316,6 +319,12 @@ void CtrlPos::MouseWheel(Point p, int zdelta, dword keyflags)
 		c.Refresh();
 	}
 	
+}
+
+void CtrlPos::LeftDouble(Point p, dword flags)
+{
+	//LeftDown already called
+	WhenLeftDouble();
 }
 
 void CtrlPos::Updated()

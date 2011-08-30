@@ -52,6 +52,7 @@ public:
 
 	Callback3<Ctrl&, Point, dword> WhenLeftDown;
 	Callback3<Ctrl&, Point, dword> WhenRightDown;
+	Callback1<Bar&> WhenBar;
 
 	CtrlFilterType filter; //set to NULL if should not be handled, change flags if desired
 	int flags;

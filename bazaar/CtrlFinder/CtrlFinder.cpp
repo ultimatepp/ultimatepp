@@ -115,4 +115,6 @@ void CtrlFinder::RightDown(Point p, dword keyflags)
 	if(!ctrl) return;
 	WhenRightDown(*ctrl, p, keyflags);
 	Action();
+	if(WhenBar)
+		MenuBar::Execute(WhenBar);
 }

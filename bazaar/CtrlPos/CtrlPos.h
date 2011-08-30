@@ -30,6 +30,7 @@ public:
 	virtual void LeftUp(Point p, dword keyflags);
 	virtual void RightDown(Point p, dword keyflags);
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
+	virtual void LeftDouble(Point p, dword flags);
 	virtual void Updated();
 	virtual Rect GetVoidRect() const { return Ctrl::GetVoidRect(); }
 
@@ -38,6 +39,8 @@ public:
 	static void DrawAlignHandle(Draw& w, const Rect& _r, const Rect& r, const Ctrl::LogPos& pos, const Color& col);
 	static bool GetAlignMode(const Rect& _r, const Rect& r, const Point& pp, Ctrl::LogPos& pos, int handsize);
 	static void DrawHintFrame(Draw& w, const Ctrl& g, const Ctrl& q, const Color& hintcol);
+
+	Callback WhenLeftDouble;
 
 protected:	
 	const RectCtrl::Style* style;
