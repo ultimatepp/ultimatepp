@@ -54,7 +54,7 @@ bool DropList::Key(dword k, int) {
 		Change(-1);
 		break;
 	default:
-		if(k >= 32 && k < 256) {
+		if(k >= 32 && k < 65536) {
 			bool b = list.Key(k, 1);
 			if(list.GetCursor() >= 0 && list.GetCursor() < key.GetCount() && key[list.GetCursor()] != value)
 				Select();
