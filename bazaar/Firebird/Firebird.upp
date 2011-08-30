@@ -1,0 +1,19 @@
+description "Firebird/Interbase interface\377";
+
+uses
+	Sql;
+
+library(WIN32) fbclient_ms.lib;
+
+library(LINUX) fbclient;
+
+file
+	fb.h,
+	fb.cpp,
+	Firebird.h,
+	Firebird.cpp,
+	FirebirdSchema.h;
+
+mainconfig
+	"" = "";
+

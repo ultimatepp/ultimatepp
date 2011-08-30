@@ -1,0 +1,4 @@
+#ifndef _Firebird_icpp_init_stub
+#define _Firebird_icpp_init_stub
+#include "Sql/init"
+#endif

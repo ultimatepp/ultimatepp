@@ -1,0 +1,12 @@
+description "Firebird/Interbase interface unit test\377";
+
+uses
+	Core,
+	Firebird;
+
+file
+	FirebirdTest.cpp;
+
+mainconfig
+	"" = "";
+
