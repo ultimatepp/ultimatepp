@@ -833,8 +833,12 @@ void DropGrid::Change(int dir)
 
 void DropGrid::SearchCursor()
 {
+	if(!list.IsCursor())
+		return;
+	
 	if(trowid < -1)
 		trowid = rowid;
+	
 	value = list.Get(value_col);
 	rowid = list.GetRowId();
 	Refresh();
