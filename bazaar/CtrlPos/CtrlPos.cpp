@@ -254,7 +254,8 @@ void CtrlPos::LeftUp(Point p, dword keyflags)
 void CtrlPos::RightDown(Point p, dword keyflags)
 {
 	//cancel
-	LeftDown(p, keyflags);
+	if(!(keyflags & K_SHIFT))
+		LeftDown(p, keyflags);
 	ReleaseCapture();
 	int m = mode;
 	mode = RectCtrl::NONE;
