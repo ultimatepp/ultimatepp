@@ -2,10 +2,10 @@
 
 NAMESPACE_UPP
 
-VectorMap<Value, GlobalInstancerType>& GetGlobalInstancerMap()
+GlobalInstancerMapType& GetGlobalInstancerMap()
 {
-	static VectorMap<Value, GlobalInstancerType> map;
-	return map;
+	static GlobalInstancerMapType _;
+	return _;
 }
 
 END_UPP_NAMESPACE

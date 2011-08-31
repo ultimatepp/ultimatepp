@@ -7,7 +7,7 @@ Ctrl* OptionInstancer()
 
 INITBLOCK
 {
-	VectorMap<Value,  Instancer<Ctrl>::InstancerType>& map = Instancer<Ctrl>::Map();
+	Instancer<Ctrl>::MapType& map = Instancer<Ctrl>::Map();
 
 	map.Add(int(INT_V),    Instancer<Ctrl>::Typed<WithEnterAction<EditInt> >::GetInstancer());
 	map.Add(int(DOUBLE_V), Instancer<Ctrl>::Typed<WithEnterAction<EditDouble> >::GetInstancer());

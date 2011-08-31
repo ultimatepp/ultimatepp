@@ -3,8 +3,6 @@
 
 #include <Core/Core.h>
 
-#include "Misc.h"
-
 NAMESPACE_UPP
 
 //copyable interface, implementing the Copy function, used i.e. by PolyDeepCopyNew
@@ -101,7 +99,8 @@ public:
 };
 
 typedef void*(*GlobalInstancerType)();
-VectorMap<Value, GlobalInstancerType>& GetGlobalInstancerMap();
+typedef VectorMap<Value, GlobalInstancerType> GlobalInstancerMapType;
+GlobalInstancerMapType& GetGlobalInstancerMap();
 
 //Instancer help class, for maps of Instancers. the static Map should
 //somewhere be ONCELOCK initialized with the elements
@@ -111,16 +110,20 @@ template<class B>
 class Instancer
 {
 public:
-	typedef B*(*InstancerType)();
+	typedef B*(*Type)();
+	typedef VectorMap<Value, Type> MapType;
+
 	template<class T = B>
 	class Typed
 	{
 	public:
 		static B* GetInstance() { return new T(); }
-		static InstancerType GetInstancer() { return &GetInstance; }
+		static Type GetInstancer() { return &GetInstance; }
 		static GlobalInstancerType GetGlobalInstancer() { return (GlobalInstancerType)&GetInstance; }
 	};
-	static VectorMap<Value, InstancerType>& Map() { static VectorMap<Value, InstancerType> map; return map; }
+
+	static B* GetInstance() { return Typed<B>::GetInstance(); }
+	static MapType& Map() { static MapType _; return _; }
 };
 
 template<class T> inline String TypeOfS(T* = 0) { return String(typeid(T).name()); }
@@ -156,7 +159,7 @@ protected:
 //to declare a class beeing partaker in Instanciating.
 //T is the interface / class that should be acessible at base
 template<class T>
-class Instancing : public TypeHook<T, Typer> {};
+class Instance : public TypeHook<T, Typer> {};
 
 template <class T>
 class Shared : Moveable< Shared<T> > {
@@ -217,28 +220,6 @@ public:
 	{
 		return Shared<T>((T*)p.ptr, p.rfc);
 	}
-};
-
-//a visiting interface
-template<class T, class B = EmptyClass>
-class Visiting : public B
-{
-public:
-	typedef Visiting<T,B> CLASSNAME;
-	Visiting() : pt(NULL) {}
-	virtual ~Visiting() {}
-
-	virtual void Visit(T& t) { pt = &t; Reload(); }
-	virtual void Reload() { }
-	virtual void Clear() { pt = NULL; }
-
-	bool IsVisiting() const { return pt; }
-	bool IsEmpty() const { return !IsVisiting(); }
-	
-	T& Get() const { return *pt; }
-
-protected:
-	T* pt;
 };
 
 template<class T = double>

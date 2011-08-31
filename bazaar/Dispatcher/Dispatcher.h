@@ -5,6 +5,7 @@
 using namespace Upp;
 
 #include <Gen/Gen.h>
+#include <Gen/Misc.h>
 
 template<class T> class Dispatcher;
 
