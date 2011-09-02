@@ -441,7 +441,7 @@ void TextSettings::Load(const char *filename)
 					value.Cat(*s++);
 				}
 				if(!IsEmpty(key))
-					settings[themei].GetAdd(key) = value;
+					settings[themei].GetAdd(key) = TrimBoth(value);
 			}
 		}
 	}
