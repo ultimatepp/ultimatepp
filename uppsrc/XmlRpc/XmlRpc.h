@@ -333,4 +333,6 @@ void LogXmlRpcCalls(bool b = true);
 
 void SetXmlRpcServerTrace(Stream& s, int level = 1);
 
+int CharFilterNoCr(int c);
+
 #endif
