@@ -23,7 +23,7 @@ public:
 	Ctrl* GetCtrl() const { return ctrl; }
 	void ClearCtrl() { SetCtrl(NULL); }
 
-	virtual Value GetData() const { return RawToValue(~ctrl); }
+	virtual Value GetData() const { return RawToValue(ctrl); }
 	virtual void SetData(const Value& v) { SetCtrl(RawValue<Ctrl*>::Extract(v)); }
 
 protected:
@@ -34,7 +34,7 @@ protected:
 	void OnUpdateRow(int i);
 	void OnUpdateCurrentRow();
 
-	Ptr<Ctrl> ctrl;
+	Ctrl* ctrl;
 	ArrayMap<String, Tuple2<bool, Value> > vsav;
 	AccessorMap am;
 };

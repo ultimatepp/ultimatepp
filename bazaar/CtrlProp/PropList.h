@@ -21,11 +21,11 @@ public:
 	Ctrl* GetCtrl() const { return ctrl; }
 	void ClearCtrl() { SetCtrl(NULL); }
 
-	virtual Value GetData() const { return RawToValue(~ctrl); }
+	virtual Value GetData() const { return RawToValue(ctrl); }
 	virtual void SetData(const Value& v) { SetCtrl(RawValue<Ctrl*>::Extract(v)); }
 
 protected:
-	Ptr<Ctrl> ctrl; //the current found child
+	Ctrl* ctrl; //the current found child
 };
 
 class PropList : public PopUpC

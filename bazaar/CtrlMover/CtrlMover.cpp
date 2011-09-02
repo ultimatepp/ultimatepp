@@ -31,7 +31,7 @@ void CtrlMover::OnCtrlLeft(Ctrl& c, Point p, dword keyflags)
 	if(c.InFrame()) return; //may not move frames
 	rc.Remove();
 	if(&c == &rc) return;
-	if(&c == ~pctrl) return; //mat not move base
+	if(&c == pctrl) return; //mat not move base
 	Add(rc.SizePos());
 
 	//if c is frame: rect in parents window, 

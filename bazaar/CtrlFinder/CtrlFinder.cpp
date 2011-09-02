@@ -90,7 +90,8 @@ bool CtrlFinder::IsParentR(const Ctrl* p, const Ctrl* c)
 void CtrlFinder::UpdatedSource()
 {
 	Remove();
-	if(!pctrl) { ctrl = NULL; return; }
+	ClearCtrl();
+	if(!pctrl) return;
 	ASSERT(pctrl->GetParent());
 	//add the finder on top of any child in the search ctrl's parent
 	pctrl->GetParent()->AddChild(&SetPos(pctrl->GetPos()), pctrl);

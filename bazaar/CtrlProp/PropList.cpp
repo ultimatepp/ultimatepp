@@ -7,12 +7,9 @@ PropListCtrl::PropListCtrl()
 
 void PropListCtrl::Updated()
 {
-	if(!ctrl)
-	{
-		gl.SetData(Null);
-		sl.SetData(Null);
-		return;
-	}
+	gl.SetData(Null);
+	sl.SetData(Null);
+	if(!ctrl) return;
 
 	Ctrl& e = *ctrl;
 
