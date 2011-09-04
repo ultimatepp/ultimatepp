@@ -23,6 +23,7 @@ AssistEditor::AssistEditor()
 	assist.NoHeader();
 	assist.NoGrid();
 	assist.AddColumn().Margin(0).SetDisplay(Single<CppItemInfoDisplay>());
+	assist.NoWantFocus();
 	assist.WhenLeftClick = THISBACK(AssistInsert);
 	type.NoHeader();
 	type.NoGrid();
