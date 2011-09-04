@@ -480,7 +480,7 @@ void Esc::Unary(Esc::SRVal& r)
 	else
 	if(Char('+')) {
 		Unary(r);
-		r = -Number(r, "+");
+		r = Number(r, "+");
 	}
 	else
 	if(Char('!')) {
