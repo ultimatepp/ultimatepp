@@ -51,6 +51,12 @@ void TopWindow::EventProc(XWindow& w, XEvent *event)
 					TakeFocus();
 					return;
 				}
+				if(a == XAtom("_NET_WM_PING")) {
+					XEvent ev = *event;
+					ev.xclient.window = Xroot;
+					XSendEvent(Xdisplay, Xroot, 0, SubstructureRedirectMask|SubstructureNotifyMask, &ev);
+					return;
+				}
 				LLOG("Unknown WM_PROTOCOLS: " << XAtomName(a));
 			}
 	}
@@ -270,11 +276,12 @@ void TopWindow::Open(Ctrl *owner)
 	}
 	LLOG("XSetWMNormalHints");
 	XSetWMNormalHints(Xdisplay, GetWindow(), size_hints);
-	Atom protocols[2];
+	Atom protocols[3];
 	protocols[0] = XAtom("WM_DELETE_WINDOW");
 	protocols[1] = XAtom("WM_TAKE_FOCUS");
+	protocols[2] = XAtom("_NET_WM_PING");
 	LLOG("XSetWMProtocols");
-	XSetWMProtocols(Xdisplay, GetWindow(), protocols, 2);
+	XSetWMProtocols(Xdisplay, GetWindow(), protocols, 3);
 	String x = GetExeTitle().ToString();
 	const char *progname = ~x;
 	class_hint->res_name = (char *)progname;
@@ -329,6 +336,10 @@ void TopWindow::Open(Ctrl *owner)
 	}
 	if(IsOpen() && top)
 		top->owner = owner;
+
+	long curr_pid = getpid();
+	XChangeProperty(Xdisplay, GetWindow(), XAtom("_NET_WM_PID"), XA_CARDINAL, 32,
+	                PropModeReplace, (byte *) &curr_pid, 1);
 
 	int version = 5;
 	XChangeProperty(Xdisplay, GetWindow(), XAtom("XdndAware"), XA_ATOM, 32,
