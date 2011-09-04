@@ -284,14 +284,19 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 			}
 			else
 			if(brc) {
-				PutConsole(GetFileNamePos(fn));
 				try {
-					String hfn = GetHostPath(fn);
-					String brcdata = LoadFile(hfn);
+//					String hfn = GetHostPath(fn);
+					String brcdata = LoadFile(fn);
 					if(brcdata.IsVoid())
-						throw Exc(NFormat("error reading file '%s'", hfn));
-					CParser parser(brcdata, hfn);
-					BinaryToObject(GetHostPath(objfile), parser, GetFileDirectory(hfn), THISBACK(BinObjConsole));
+						throw Exc(NFormat("error reading file '%s'", fn));
+					CParser parser(brcdata, fn);
+					String fo = BrcToC(GetHostPath(objfile), parser, GetFileDirectory(fn), package, pkg);
+					String tmpfile = ForceExt(objfile, ".c");
+					SaveFile(tmpfile, fo);
+					int slot = AllocSlot();
+					if(slot < 0 || !Run(cc + " -Tc " + GetHostPathQ(tmpfile) + " -Fo" + GetHostPath(objfile),
+					                    slot, GetHostPath(objfile), 1))
+						throw Exc(NFormat("Error compiling binary object '%s'.", objfile));
 				}
 				catch(Exc e) {
 					PutConsole(e);
