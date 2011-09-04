@@ -2,7 +2,8 @@ description "Editing Ctrl::LogPos\377";
 
 uses
 	CtrlLib,
-	PopUpC;
+	PopUpC,
+	Gen;
 
 file
 	LogPosPopUp.lay,

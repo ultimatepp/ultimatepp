@@ -13,11 +13,9 @@ class PropEditCtrl : public WithPropEditLay<ParentCtrl>
 {
 public:
 	typedef PropEditCtrl CLASSNAME;
-
 	PropEditCtrl();
 
 	virtual void Updated();
-	virtual void Undo();
 
 	void SetCtrl(Ctrl* c) { if(ctrl != c) { ctrl = c; UpdateCtrl(); } UpdateRefresh(); }
 	Ctrl* GetCtrl() const { return ctrl; }
@@ -26,34 +24,34 @@ public:
 	virtual Value GetData() const { return RawToValue(ctrl); }
 	virtual void SetData(const Value& v) { SetCtrl(RawValue<Ctrl*>::Extract(v)); }
 
+	void OnUpdateRow(int i);
+	void OnUpdateCurrentRow();
+
+	const AccessorMap& GetAccessorMap() const { return am; }
+
 protected:
 	void ReloadFactory(int i, One<Ctrl>& o);
 	void ReloadAction(int i);
 	void UpdateCtrl();
 
-	void OnUpdateRow(int i);
-	void OnUpdateCurrentRow();
-
 	Ctrl* ctrl;
-	ArrayMap<String, Tuple2<bool, Value> > vsav;
 	AccessorMap am;
 };
 
-class PropEdit : public PopUpC
+class PropEdit : public WithCloserKeys<PopUpC>
 {
 public:
 	typedef PropEdit CLASSNAME;
 	PropEdit();
 
-	virtual void Deactivate() {} //let other popups open
+	virtual void Deactivate() {} //let other popups open, we would close on deactivate from PopUpC
 
+	using PopUpC::PopUp;
 	void PopUp(Ctrl* owner, Ctrl& e) { pec.SetCtrl(&e); PopUpC::PopUp(owner); }
 
-	virtual void Rejector() { pec.Undo(); pec.ClearCtrl(); PopUpC::Rejector(); }
-	virtual void Acceptor() { pec.ClearCtrl(); PopUpC::Acceptor(); }
+	virtual void Serialize(Stream& s);
 
 	PropEditCtrl pec;
-	Button ok, cancel;
 };
 
 #endif

@@ -4,7 +4,8 @@ uses
 	CtrlLib,
 	LogPosCtrl,
 	ValueCtrl,
-	Property;
+	Property,
+	Gen;
 
 file
 	CtrlPropCommon.h,

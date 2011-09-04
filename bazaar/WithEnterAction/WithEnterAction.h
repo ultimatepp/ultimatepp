@@ -9,7 +9,7 @@ template<class B>
 class WithEnterAction : public B {
 public:
 	typedef WithEnterAction CLASSNAME;
-	WithEnterAction() : unfocusonenter(false) {}
+	WithEnterAction() : unfocusonenter(false), informed(false) {}
 
 public:
 	virtual bool Key(dword key, int count)
@@ -30,20 +30,23 @@ public:
 			}
 			else
 			{
-				if(!c) B::Action(); //if no other Action occured
+				if(!c /*&& !informed*/) { B::Action(); informed = true; } //if no other Action occured, may send same multiple times on multiple enter
 			}
 		}
 		else
 		{
 			B::WhenAction.Clear();
 			b = B::Key(key,count);
+			informed = false;
 			B::WhenAction = cb;
 		}
 
 		return b;
 	}
-	virtual void LostFocus() { B::LostFocus(); B::Action(); }
+	virtual void LostFocus() { B::LostFocus(); if(!informed) { B::Action(); informed = true; } }
 	bool unfocusonenter;
+protected:
+	bool informed;
 };
 
 #endif

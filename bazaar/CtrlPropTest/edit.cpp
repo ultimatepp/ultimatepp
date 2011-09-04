@@ -11,7 +11,9 @@ void CtrlPropTest::DoEdit(Ctrl& c)
 		return;	
 	}
 
-	pe.PopUp(owner, c);
+	pe.pec.SetCtrl(&c);
+	pe.Backup();
+	pe.PopUp(owner);
 }
 
 void CtrlPropTest::DoList(Ctrl& c)

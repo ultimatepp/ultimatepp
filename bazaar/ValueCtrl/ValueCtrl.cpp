@@ -123,16 +123,13 @@ void ValuePopUp::TypeAction()
 ValuePopUp::ValuePopUp()
 	: vtype(-1)
 {
-	CtrlLayout(*this);
+	CtrlLayoutCancel(*this, "");
 	SetFrame(BlackFrame());
 
 	type <<= THISBACK(TypeAction);
 	type.Clear();
 	AddTypesAll();
 
-	ok <<= THISBACK(Acceptor);
-	cancel <<= THISBACK(Rejector);
-	
 	SetType(VOID_V);
 }
 
@@ -142,9 +139,9 @@ ValueCtrl::ValueCtrl()
 	IgnoreMouse(false);
 	SetFrame(BlackFrame());
 
-	vp.WhenSelect = THISBACK(AcceptDrop);
-	vp.WhenCancel = THISBACK(CloseDrop);
-	vp.WhenAction = THISBACK(ActionDrop);
+	vp.WhenAccept = THISBACK(OnAccept);
+	vp.WhenReject = THISBACK(OnReject);
+	vp.WhenAction = THISBACK(OnAction);
 	
 	Update();
 }
@@ -160,27 +157,29 @@ void ValueCtrl::Drop()
 {
 	if(push) return;
 	push = true;
-	vs = v;
-	vp.PopUp(this, v);
+	vp.SetData(v);
+	vp.Backup();
+	vp.PopUp(this);
 }
 
-void ValueCtrl::CloseDrop()
+void ValueCtrl::OnReject()
 {
 	push = false;
-	if(v != vs) {
-		v = vs;
+	Value _v = vp.GetData();
+	if(v != _v) {
+		v = _v;
 		UpdateAction();
 	}
 }
 
-void ValueCtrl::AcceptDrop()
+void ValueCtrl::OnAccept()
 {
 	push = false;
 	v = vp.GetData();
-	//UpdateAction(); //has live updated
+	//OnAction(); //has live updated
 }
 
-void ValueCtrl::ActionDrop()
+void ValueCtrl::OnAction()
 {
 	v = vp.GetData();
 	UpdateAction();

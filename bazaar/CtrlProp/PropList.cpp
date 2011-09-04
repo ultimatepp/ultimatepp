@@ -46,8 +46,4 @@ PropList::PropList()
 {
 	SetRect(plc.GetRect());
 	Add(plc.HSizePos().VSizePos(0,20));
-	Add(exit.RightPos(0, 64).BottomPos(0, 20));
-	exit.SetLabel("Close");
-	exit <<= THISBACK(Acceptor);
-	//cancel <<= THISBACK(Rejector);
 }

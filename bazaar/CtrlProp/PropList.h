@@ -25,20 +25,18 @@ public:
 	virtual void SetData(const Value& v) { SetCtrl(RawValue<Ctrl*>::Extract(v)); }
 
 protected:
-	Ctrl* ctrl; //the current found child
+	Ctrl* ctrl;
 };
 
-class PropList : public PopUpC
+class PropList : public WithCloserKeys<PopUpC>
 {
 public:
 	typedef PropList CLASSNAME;
 	PropList();
 
 	void PopUp(Ctrl* owner, Ctrl& e) { plc.SetCtrl(&e); PopUpC::PopUp(owner); }
-	virtual void Acceptor() { plc.ClearCtrl(); PopUpC::Acceptor(); }
 
 	PropListCtrl plc;
-	Button exit;
 };
 
 #endif

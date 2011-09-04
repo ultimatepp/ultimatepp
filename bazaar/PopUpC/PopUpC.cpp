@@ -1,28 +1,37 @@
 #include "PopUpC.h"
 
+NAMESPACE_UPP
+
 void PopUpC::Deactivate() {
 	if(IsOpen()) {
 		IgnoreMouseClick();
-		Rejector();
+		WhenDeactivate();
 	}
 }
 
-void PopUpC::Acceptor()
+void PopUpC::Break(int ID)
 {
-	if(Accept())
-	{
-		Close();
-		WhenSelect();
-	}
+	EndLoop(ID);
+	Close();
+	WhenBreak();
 }
 
-void PopUpC::Rejector()
+bool PopUpC::AcceptBreak(int ID)
+{
+	if(Accept()) {
+		Break(ID);
+		WhenAccept();
+		return true;
+	}
+	return false;
+}
+
+void PopUpC::RejectBreak(int ID)
 {
 	Reject();
-	Close();
-	WhenCancel();
+	Break(ID);
+	WhenReject();
 }
-
 
 void PopUpC::PopUp(Ctrl* owner)
 {
@@ -55,3 +64,4 @@ void PopUpC::PopUp(Ctrl* owner)
 	SetFocus();
 }
 
+END_UPP_NAMESPACE

@@ -28,8 +28,8 @@ bool PropIsTransparent(Value& v, const Ctrl& o) { v = o.IsTransparent(); return 
 
 bool PropRefresh(const Value& v, Ctrl& o) { o.Refresh(); return true; }
 
-bool PropSetLogPos(const Value& v, Ctrl& o) { if(!v.Is<Ctrl::LogPos>()) return false; o.SetPos(RawValue<Ctrl::LogPos>::Extract(v)); return true; }
-bool PropGetLogPos(Value& v, const Ctrl& o) { v = RawToValue(o.GetPos()); return true; }
+bool PropSetLogPos(const Value& v, Ctrl& o) { if(!v.Is<Ctrl::LogPos>()) return false; o.SetPos(RichValue<Ctrl::LogPos>::Extract(v)); return true; }
+bool PropGetLogPos(Value& v, const Ctrl& o) { v = RichToValue(o.GetPos()); return true; }
 
 bool PropGetTypeInfo(Value& v, const Ctrl& o) { v = String(typeid(o).name()); return true; }
 

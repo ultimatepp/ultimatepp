@@ -5,6 +5,7 @@
 using namespace Upp;
 
 #include <Property/Property.h>
+#include <Gen/VTypes.h>
 
 //////////////////////
 

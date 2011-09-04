@@ -2,4 +2,5 @@
 #define _LogPosCtrl_icpp_init_stub
 #include "CtrlLib/init"
 #include "PopUpC/init"
+#include "Gen/init"
 #endif

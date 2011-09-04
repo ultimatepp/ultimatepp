@@ -6,6 +6,8 @@
 using namespace Upp;
 
 #include <PopUpC/PopUpC.h>
+#include <Gen/VTypes.h>
+
 #include <LogPosCtrl/LogPosCtrl.h>
 #include <WithEnterAction/WithEnterAction.h>
 #include <Gen/Gen.h>
@@ -22,7 +24,7 @@ Ctrl* DefaultValueEditor(int vtype);
 Ctrl* DefaultValueEditor(const Value& v);
 String VTypeToString(int vtype);
 
-class ValuePopUp : public WithValuePopUpLayout<PopUpC> {
+class ValuePopUp : public WithValuePopUpLayout<WithCloserKeys<PopUpC> > {
 public:
 	typedef ValuePopUp CLASSNAME;
 	ValuePopUp();
@@ -33,7 +35,10 @@ public:
 	virtual void Deactivate() {} //let others popup
 
 	void SetType(int _vt);
+	using PopUpC::PopUp;
 	void PopUp(Ctrl* owner, const Value& _v) { SetData(_v); PopUpC::PopUp(owner); }
+
+	virtual void Serialize(Stream& s) { s % v; }
 
 	Callback WhenTypeChange;
 
@@ -91,10 +96,10 @@ public:
 		AddTypesDebug();
 	}
 	
-protected:
 	void TypeAction();
 	void DataAction() { v = pc->GetData(); Action(); }
 
+protected:
 	int vtype;
 	Value v;
 	One<Ctrl> pc;
@@ -112,15 +117,18 @@ public:
 	virtual void SetData(const Value& _v) { v = _v; vp.SetData(_v); Update(); }
 
 	void Drop();
-	
-protected:
-	void CloseDrop();
-	void AcceptDrop();
-	void ActionDrop();
 
-	bool push;
+	virtual void Serialize(Stream& s) { s % v; }
+
 	ValuePopUp vp;
-	Value v,vs;
+	
+	void OnReject();
+	void OnAccept();
+	void OnAction();
+
+protected:
+	bool push;
+	Value v;
 };
 
 //for nested Value in Value
@@ -177,7 +185,7 @@ public:
 		else
 			Set(0, 0, v);
 	}
-protected:
+
 	static void CreateValueCtrl(One<Ctrl>& ctrl) { ctrl.Create<ValueCtrl>(); }
 };
 
@@ -221,7 +229,6 @@ public:
 			Set(0, 0, v);
 	}
 
-protected:
 	static void CreateValueCtrl(One<Ctrl>& ctrl) { ctrl.Create<ValueCtrl>(); }
 };
 

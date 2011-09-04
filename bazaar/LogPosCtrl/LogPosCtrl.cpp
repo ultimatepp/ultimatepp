@@ -78,22 +78,23 @@ void LogPosPopUp::Set(const Ctrl::LogPos& p)
 {
 	pos = p;	
 	xa <<= pos.x.GetA(); xb <<= pos.x.GetB();
+	
 	switch(pos.x.GetAlign())
 	{
-		case Ctrl::LEFT:   l <<= true;  r <<= false; break;
-		case Ctrl::RIGHT:  l <<= false; r <<= true; break;
-		case Ctrl::SIZE:   l <<= true;  r <<= true; break;
+		case Ctrl::LEFT:   l = true;  r = false; break;
+		case Ctrl::RIGHT:  l = false; r = true; break;
+		case Ctrl::SIZE:   l = true;  r = true; break;
 		default:
-		case Ctrl::CENTER: l <<= false; r <<= false; break;
+		case Ctrl::CENTER: l = false; r = false; break;
 	}
 	ya <<= pos.y.GetA(); yb <<= pos.y.GetB();
 	switch(pos.y.GetAlign())
 	{
-		case Ctrl::TOP: u    <<= true;  d <<= false; break;
-		case Ctrl::BOTTOM: u <<= false; d <<= true;  break;
-		case Ctrl::SIZE: u   <<= true;  d <<= true;  break;
+		case Ctrl::TOP: t    = true;  b = false; break;
+		case Ctrl::BOTTOM: t = false; b = true;  break;
+		case Ctrl::SIZE: t   = true;  b = true;  break;
 		default:
-		case Ctrl::CENTER: u <<= false; d <<= false; break;
+		case Ctrl::CENTER: t = false; b = false; break;
 	}
 }
 
@@ -124,8 +125,8 @@ Ctrl::LogPos LogPosPopUp::Generate() const
 	int q;
 
 	q = 0;
-	q |= ((l)?(1):(0));
-	q |= ((r)?(2):(0));
+	q |= l ? 1 : 0;
+	q |= r ? 2 : 0;
 	switch(q)
 	{
 		case 1: pos.x.SetAlign(Ctrl::LEFT); break;
@@ -137,8 +138,8 @@ Ctrl::LogPos LogPosPopUp::Generate() const
 	pos.x.SetA(xa); pos.x.SetB(xb);
 
 	q = 0;
-	q |= ((u)?(1):(0));
-	q |= ((d)?(2):(0));
+	q |= t ? 1 : 0;
+	q |= b ? 2 : 0;
 	switch(q)
 	{
 		case 1: pos.y.SetAlign(Ctrl::TOP); break;
@@ -176,11 +177,11 @@ void LogPosPopUp::YbCB()
 	WhenSizeChange();
 	UpdateAction();
 }
-void LogPosPopUp::XAlignCB()
+void LogPosPopUp::XAlign()
 {
 	int q = 0;
-	q |= ((l)?(1):(0));
-	q |= ((r)?(2):(0));
+	q |= l ? 1 : 0;
+	q |= r ? 2 : 0;
 	switch(q)
 	{
 		case 1: pos.x.SetAlign(Ctrl::LEFT); break;
@@ -189,14 +190,12 @@ void LogPosPopUp::XAlignCB()
 		default:
 		case 0: pos.x.SetAlign(Ctrl::CENTER); break;
 	}
-	WhenAlignChange();
-	UpdateAction();
 }
-void LogPosPopUp::YAlignCB()
+void LogPosPopUp::YAlign()
 {
 	int q = 0;
-	q |= ((u)?(1):(0));
-	q |= ((d)?(2):(0));
+	q |= t ? 1 : 0;
+	q |= b ? 2 : 0;
 	switch(q)
 	{
 		case 1: pos.y.SetAlign(Ctrl::TOP); break;
@@ -205,69 +204,49 @@ void LogPosPopUp::YAlignCB()
 		default:
 		case 0: pos.y.SetAlign(Ctrl::CENTER); break;
 	}
-	WhenAlignChange();
-	UpdateAction();
 }
 
 LogPosPopUp::LogPosPopUp()
 {
-	CtrlLayout(*this);
+	CtrlLayoutCancel(*this, "");
 	SetFrame(BlackFrame());
 
 	l.SetLabel("<");
 	r.SetLabel(">");
-	u.SetLabel("/\\");
-	d.SetLabel("\\/");
+	t.SetLabel("/\\");
+	b.SetLabel("\\/");
 	
 	xa <<= THISBACK(XaCB);
 	xb <<= THISBACK(XbCB);
 	ya <<= THISBACK(YaCB);
 	yb <<= THISBACK(YbCB);
 
-	l <<= THISBACK(XAlignCB);
-	r <<= THISBACK(XAlignCB);
-	u <<= THISBACK(YAlignCB);
-	d <<= THISBACK(YAlignCB);
+	l <<= THISBACK(LRCB);
+	r <<= THISBACK(LRCB);
+	t <<= THISBACK(TBCB);
+	b <<= THISBACK(TBCB);
 	
-	ok <<= THISBACK(Acceptor);
-	cancel <<= THISBACK(Rejector);
-}
+	lt <<= THISBACK(LTCB);
+	rt <<= THISBACK(RTCB);
+	lb <<= THISBACK(LBCB);
+	rb <<= THISBACK(RBCB);
 
-NAMESPACE_UPP
-template<>
-String AsString(const Ctrl::LogPos& pos)
-{
-	String s;
-	int xa = pos.x.GetA(), xb = pos.x.GetB();
-	switch(pos.x.GetAlign())
-	{
-		case Ctrl::LEFT:   s << "Left(mr:" << xa << ",sz:" << xb << ")"; break;
-		case Ctrl::RIGHT:  s << "Right(mr:" << xa << ",sz:" << xb << ")"; break;
-		case Ctrl::SIZE:   s << "HSize(mr:" << xa << ",mr:" << xb << ")"; break;
-		default:
-		case Ctrl::CENTER: s << "HCent(of:" << xa << ",sz:" << xb << ")"; break;
-	}
-	s << ".";
-	int ya = pos.y.GetA(), yb = pos.y.GetB();
-	switch(pos.y.GetAlign())
-	{
-		case Ctrl::TOP:    s << "Top(mr:" << ya << ",sz:" << yb << ")"; break;
-		case Ctrl::BOTTOM: s << "Bottom(mr:" << ya << ",sz:" << yb << ")"; break;
-		case Ctrl::SIZE:   s << "VSize(mr:" << ya << ",mr:" << yb << ")"; break;
-		default:
-		case Ctrl::CENTER: s << "VCent(of:" << ya << ",sz:" << yb << ")"; break;
-	}
-	return s;
+	hc <<= THISBACK(HCCB);
+	vc <<= THISBACK(VCCB);
+	cc <<= THISBACK(CCCB);
+
+	hs <<= THISBACK(HSCB);
+	vs <<= THISBACK(VSCB);
+	ss <<= THISBACK(SSCB);
 }
-END_UPP_NAMESPACE
 
 LogPosCtrl::LogPosCtrl() : push(false)
 {
 	IgnoreMouse(false);
 
-	lc.WhenSelect = THISBACK(AcceptDrop);
-	lc.WhenCancel = THISBACK(CloseDrop);
-	lc.WhenAction = THISBACK(ActionDrop);
+	lc.WhenAccept = THISBACK(OnAccept);
+	lc.WhenReject = THISBACK(OnReject);
+	lc.WhenAction = THISBACK(OnAction);
 	
 	lc.WhenSizeChange = THISBACK(OnSizeChange);
 	lc.WhenAlignChange = THISBACK(OnAlignChange);
@@ -286,28 +265,30 @@ void LogPosCtrl::Drop()
 {
 	if(push) return;
 	push = true;
-	savedpos = pos;
-	lc.PopUp(this, pos);
+	lc.Set(pos);
+	lc.Backup();
+	lc.PopUp(this);
 }
 
-void LogPosCtrl::CloseDrop()
+void LogPosCtrl::OnReject()
 {
 	push = false;
-	if(pos != savedpos) {
-		pos = savedpos;
+	Ctrl::LogPos _pos = lc.Get();
+	if(pos != _pos) {
+		pos = _pos;
 		OnSizeChange(); //restore
 		UpdateAction();
 	}
 }
 
-void LogPosCtrl::AcceptDrop()
+void LogPosCtrl::OnAccept()
 {
 	push = false;
+//	OnAction();
 	pos = lc.Get();
-	UpdateAction();
 }
 
-void LogPosCtrl::ActionDrop()
+void LogPosCtrl::OnAction()
 {
 	pos = lc.Get();
 	UpdateAction();
