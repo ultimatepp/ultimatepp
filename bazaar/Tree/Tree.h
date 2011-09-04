@@ -129,7 +129,7 @@ class Node
 	: public Tree<Node<T> >
 {
 public:
-	typedef Node CLASSNAME;
+	typedef Node<T> CLASSNAME;
 	typedef Tree<Node<T> > R;
 
 	Node() {}
@@ -317,18 +317,71 @@ public:
 	friend void     Swap(TreeMap& a, TreeMap& b)   { a.B::Swap(b); for(int i = 0; i < a.GetCount(); i++) DoLink(a[i]); for(int i = 0; i < b.GetCount(); i++) b.DoLink(b[i]); }
 };
 
-template<class K, class T>
+NAMESPACE_UPP
+template<class K, class T, class H>
+inline void Xmlize(XmlIO xml, TreeMap<K, T, H>& data)
+{
+	::Xmlize(xml, (ArrayMap<K, T, H>&)data);
+}
+
+template <class K, class T, class H>
+inline void DumpContainer(Stream& s, const TreeMap<K, T, H>& c) {
+	DumpContainer(s, c.Begin(), c.End());
+}
+END_UPP_NAMESPACE
+
+template<class K, class T, class H = StdHash<K> >
 class MapNode
-	: public TreeMap<K, MapNode<K,T> >
+	: public TreeMap<K, MapNode<K,T,H>, H>
 {
 public:
-	typedef MapNode CLASSNAME;
-	typedef TreeMap<K, MapNode<K,T> > R;
+	typedef MapNode<K, T, H> CLASSNAME;
+	typedef TreeMap<K, MapNode<K,T,H>, H> R;
 
 	MapNode() {}
 	MapNode(const T& leaf) : leaf(leaf) {}
 
 	T leaf;
 };
+
+NAMESPACE_UPP
+template <class K, class T, class H>
+inline Stream& operator%(Stream& s, MapNode<K, T, H>& x)
+{
+	s % x.leaf % (TreeMap<K, MapNode<K,T,H>, H>&)x;
+	return s;
+}
+
+template<class K, class T, class H>
+inline void Xmlize(XmlIO xml, MapNode<K, T, H>& a)
+{
+	xml("leaf", a.leaf); ::Xmlize(xml, (TreeMap<K, MapNode<K,T,H>, H>&)a);
+}
+END_UPP_NAMESPACE
+
+template<class K, class BB, class H = StdHash<K> > //B conflicts with Tree::B
+class MapNodeB
+	: public TreeMap<K, MapNodeB<K, BB, H>, H>
+	, public BB //leaf
+{
+public:
+	typedef MapNodeB<K, BB, H> CLASSNAME;
+	typedef TreeMap<MapNodeB<K,BB,H>, H> R;
+};
+
+NAMESPACE_UPP
+template <class K, class BB, class H>
+inline Stream& operator%(Stream& s, MapNodeB<K, BB, H>& x)
+{
+	s % (BB&)x % (TreeMap<K, MapNodeB<K,BB,H>, H>&)x;
+	return s;
+}
+
+template<class K, class BB, class H>
+inline void Xmlize(XmlIO xml, MapNodeB<K, BB, H>& a)
+{
+	xml("leaf", (BB&)a); ::Xmlize(xml, (TreeMap<K, MapNodeB<K,BB,H>, H>&)a);
+}
+END_UPP_NAMESPACE
 
 #endif
