@@ -253,6 +253,7 @@ void TopWindow::Open(Ctrl *owner)
 		CenterRect(owner);
 	LLOG("Open NextRequest " << NextRequest(Xdisplay));
 	Create(owner, false, false);
+	XSetWMProperties (Xdisplay, GetWindow(), NULL, NULL, NULL, 0, NULL, NULL, NULL);
 	xminsize.cx = xmaxsize.cx = Null;
 	title2.Clear();
 	if(!weplace) {
@@ -337,13 +338,15 @@ void TopWindow::Open(Ctrl *owner)
 	if(IsOpen() && top)
 		top->owner = owner;
 
+	Window win = GetWindow();
 	long curr_pid = getpid();
-	XChangeProperty(Xdisplay, GetWindow(), XAtom("_NET_WM_PID"), XA_CARDINAL, 32,
+	XChangeProperty(Xdisplay, win, XAtom("_NET_WM_PID"), XA_CARDINAL, 32,
 	                PropModeReplace, (byte *) &curr_pid, 1);
 
 	int version = 5;
-	XChangeProperty(Xdisplay, GetWindow(), XAtom("XdndAware"), XA_ATOM, 32,
+	XChangeProperty(Xdisplay, win, XAtom("XdndAware"), XA_ATOM, 32,
 					0, (byte *)&version, 1);
+
 	SyncState0(); 
 	FixIcons();
 }
