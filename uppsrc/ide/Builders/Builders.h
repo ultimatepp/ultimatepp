@@ -2,6 +2,8 @@
 #define BUILDERS_H
 
 #include <ide/Core/Core.h>
+#include <coff/binobj/binobj.h>
+#include <plugin/bz2/bz2.h>
 
 #include "Build.h"
 
@@ -53,6 +55,8 @@ struct CppBuilder : Builder {
 	Point                  ExtractVersion();
 
 	void                   ShowTime(int count, int start_time);
+
+	String BrcToC(String objfile, CParser& binscript, String basedir, const String& package, const Package& pkg);
 
 	Blitz BlitzStep(Vector<String>& sfile, Vector<String>& soptions,
 	                Vector<String>& obj, const char *objext, Vector<bool>& optimize);
@@ -112,6 +116,8 @@ struct MscBuilder : CppBuilder {
 	bool   IsMsc86() const;
 	bool   IsMscArm() const;
 	bool   IsMsc64() const;
+
+	void BinaryToObject(String objfile, CParser& binscript, String basedir, const String& package, const Package& pkg);
 };
 
 struct JavaBuilder : CppBuilder {

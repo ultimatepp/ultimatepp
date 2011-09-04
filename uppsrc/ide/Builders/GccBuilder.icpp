@@ -1,8 +1,5 @@
 #include "Builders.h"
 
-#include <coff/binobj/binobj.h>
-#include <plugin/bz2/bz2.h>
-
 void   GccBuilder::AddFlags(Index<String>& cfg)
 {
 }
@@ -26,78 +23,7 @@ String GccBuilder::CmdLine(const String& package, const Package& pkg)
 void GccBuilder::BinaryToObject(String objfile, CParser& binscript, String basedir,
                                 const String& package, const Package& pkg)
 {
-	BinObjInfo info;
-	info.Parse(binscript, basedir);
-	String fo;
-	for(int i = 0; i < info.blocks.GetCount(); i++) {
-		String ident = info.blocks.GetKey(i);
-		ArrayMap<int, BinObjInfo::Block>& belem = info.blocks[i];
-		if(belem[0].flags & (BinObjInfo::Block::FLG_ARRAY | BinObjInfo::Block::FLG_MASK)) {
-			int count = Max(belem.GetKeys()) + 1;
-			Vector<BinObjInfo::Block *> blockref;
-			blockref.SetCount(count, 0);
-			for(int a = 0; a < belem.GetCount(); a++) {
-				BinObjInfo::Block& b = belem[a];
-				blockref[b.index] = &b;
-			}
-			for(int i = 0; i < blockref.GetCount(); i++)
-				if(blockref[i]) {
-					BinObjInfo::Block& b = *blockref[i];
-					fo << "static char " << ident << "_" << i << "[] =\n";
-					String data = ::LoadFile(b.file);
-					if(data.IsVoid())
-						throw Exc(NFormat("Error reading file '%s'", b.file));
-					if(data.GetLength() != b.length)
-						throw Exc(NFormat("length of file '%s' changed (%d -> %d) during object creation",
-							b.file, b.length, data.GetLength()));
-					switch(b.encoding) {
-						case BinObjInfo::Block::ENC_BZ2: data = BZ2Compress(data); break;
-						case BinObjInfo::Block::ENC_ZIP: data = ZCompress(data); break;
-					}
-					b.length = data.GetLength();
-					data.Cat('\0');
-					fo << AsCString(data, 70) << ";\n\n";
-				}
-
-			fo << "int " << ident << "_count = " << blockref.GetCount() << ";\n\n"
-			"int " << ident << "_length[] = {\n";
-			for(int i = 0; i < blockref.GetCount(); i++)
-				fo << '\t' << (blockref[i] ? blockref[i]->length : -1) << ",\n";
-			fo << "};\n\n"
-			"char *" << ident << "[] = {\n";
-			for(int i = 0; i < blockref.GetCount(); i++)
-				if(blockref[i])
-					fo << '\t' << ident << '_' << i << ",\n";
-				else
-					fo << "\t0,\n";
-			fo << "};\n\n";
-			if(belem[0].flags & BinObjInfo::Block::FLG_MASK) {
-				fo << "char *" << ident << "_files[] = {\n";
-				for(int i = 0; i < blockref.GetCount(); i++)
-					fo << '\t' << AsCString(blockref[i] ? GetFileName(blockref[i]->file) : String(Null)) << ",\n";
-				fo << "};\n\n";
-			}
-		}
-		else {
-			BinObjInfo::Block& b = belem[0];
-			fo << "char *" << ident << " =\n";
-			String data = ::LoadFile(b.file);
-			if(data.IsVoid())
-				throw Exc(NFormat("Error reading file '%s'", b.file));
-			if(data.GetLength() != b.length)
-				throw Exc(NFormat("length of file '%s' changed (%d -> %d) during object creation",
-					b.file, b.length, data.GetLength()));
-			switch(b.encoding) {
-				case BinObjInfo::Block::ENC_BZ2: data = BZ2Compress(data); break;
-				case BinObjInfo::Block::ENC_ZIP: data = ZCompress(data); break;
-			}
-			int b_length = data.GetLength();
-			data.Cat('\0');
-			fo << AsCString(data, 70) << ";\n\n"
-			"int " << ident << "_length = " << b_length << ";\n\n";
-		}
-	}
-
+	String fo = BrcToC(objfile, binscript, basedir, package, pkg);
 	String tmpfile = ForceExt(objfile, ".c");
 	SaveFile(tmpfile, fo);
 	String cc = CmdLine(package, pkg);
