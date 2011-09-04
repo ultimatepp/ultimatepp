@@ -861,7 +861,7 @@ void Ctrl::KillFocus(Window window)
 	if(q < 0)
 		return;
 	XWindow& w = Xwindow()[q];
-	if(w.ctrl)
+	if(w.ctrl) 
 		w.ctrl->KillFocusWnd();
 }
 
@@ -873,10 +873,13 @@ void Ctrl::SetWndFocus0(bool *b)
 	if(top && top->window != focusWindow && IsEnabled() && IsVisible()) {
 		LLOG("Setting focus... ");
 		LTIMING("XSetInfputFocus");
+		Ptr<Ctrl> _this = this;
 		KillFocus(focusWindow);
-		XSetInputFocus(Xdisplay, top->window, RevertToParent, CurrentTime);
-		focusWindow = top->window;
-		SetFocusWnd();
+		if(_this && top) {
+			XSetInputFocus(Xdisplay, top->window, RevertToParent, CurrentTime);
+			focusWindow = top->window;
+			SetFocusWnd();
+		}
 		*b = true;
 	}
 }
@@ -1003,8 +1006,10 @@ void Ctrl::SetWndForeground0()
 			w->last_active->SetWndForeground();
 	}
 	else {
+		Ptr<Ctrl> _this = this;
 		SetWndFocus();
-		XRaiseWindow(Xdisplay, top->window);
+		if(_this && top)
+			XRaiseWindow(Xdisplay, top->window);
 	}
 }
 
