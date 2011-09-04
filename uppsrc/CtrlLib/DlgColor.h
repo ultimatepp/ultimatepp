@@ -167,6 +167,7 @@ private:
 	bool     notnull;
 	bool     scolors;
 	bool     norampwheel;
+	bool     animating;
 	String   nulltext;
 	Color    color;
 

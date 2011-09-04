@@ -260,7 +260,7 @@ Color ColorPopUp::Get() const
 }
 
 void ColorPopUp::PopupDeactivate() {
-	if(popup && popup->IsOpen()) {
+	if(popup && popup->IsOpen() && !animating) {
 		popup.Clear();
 		IgnoreMouseClick();
 		WhenCancel();
@@ -305,10 +305,12 @@ void ColorPopUp::PopUp(Ctrl *owner, Color c)
 	colori = -1;
 
 	if(GUI_PopUpEffect()) {
+		animating = true;
 		popup->PopUp(owner, true, true, GUI_GlobalStyle() >= GUISTYLE_XP);
 		SetFocus();
 		Ctrl::ProcessEvents();
 		Animate(*popup, rt, GUIEFFECT_SLIDE);
+		animating = false;
 	}
 
 	popup->SetRect(rt);
@@ -328,6 +330,7 @@ ColorPopUp::ColorPopUp()
 	norampwheel = false;
 	notnull = false;
 	scolors = false;
+	animating = false;
 	SetFrame(MenuFrame());
 	Add(ramp);
 	Add(wheel);
