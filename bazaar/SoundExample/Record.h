@@ -5,7 +5,7 @@ class Record:public WithRecordLayout<ParentCtrl>{
 	Sound snd;
 	struct Data{
 		int index;  /* Index into sample array. */
-		Vector<int8> samples;
+		Vector<uint8> samples;
 	};
 	Data userdata;
 
@@ -21,14 +21,16 @@ public:
 		rec<<=THISBACK(OnRecord);
 		play<<=THISBACK(OnPlay);
 		save<<=THISBACK(OnSave);
-		file<<=GetHomeDirFile("out.raw");
+		file<<=GetHomeDirFile("out.wav");
+		type<<=0;
+		file.Disable(); type.Disable();
 		snd.WhenFinished=THISBACK(OnFinish);
 		snd.SetSampleRate(44100).SetFramesPerBuffer(1024).SetFlags(SND_NOCLIP);
 	}
 private:
 	void RecordCallback(StreamCallbackArgs& args) {
 		Data *data = (Data*)args.data;
-		const int8 *rptr = (const int8*)args.input;
+		const uint8 *rptr = (const uint8*)args.input;
 		if (args.input == NULL)
 			for (int i=0; i<args.fpb; i++) data->samples.Add(0);
 		else
@@ -39,7 +41,7 @@ private:
 	}
 	void PlayCallback(StreamCallbackArgs& args){
 		Data* data = (Data*)args.data;
-		int8* wptr = (int8*)args.output;
+		uint8* wptr = (uint8*)args.output;
 		unsigned int framesLeft = data->samples.GetCount() - data->index;
 		for (int i=0; i<args.fpb; i++) *wptr++ = data->samples[data->index++];
 		args.state = (data->samples.GetCount()==data->index)?SND_COMPLETE:SND_CONTINUE;
@@ -49,12 +51,12 @@ private:
 		SoundDevice dev=SoundSys().GetDefaultInput();
 		if (IsNull(dev)){error<<="[1 Error: No default input device."; return;}
 		else error.Clear();
-		StreamParameters param(dev,1,SND_INT8,dev.LowInputLatency);
+		StreamParameters param(dev,1,SND_UINT8,dev.LowInputLatency);
 		snd<<=THISBACK(RecordCallback);
 		snd.Open(&userdata,param,Null);
 		if(snd.IsError()){error<<="[1 Error: "+snd.GetError(); return;}
 		else error.Clear();
-		rec.Disable(); play.Disable(); save.Disable(); file.Disable();
+		rec.Disable(); play.Disable(); save.Disable(); file.Disable(); type.Enable();
 		reclbl.Show();
 		snd.Start();
 		if(snd.IsError()){error<<="[1 Error: "+snd.GetError(); return;}
@@ -78,13 +80,23 @@ private:
 	}
 	void OnFinish(void*){
 		playlbl.Hide(); reclbl.Hide();
-		rec.Enable(); play.Enable(); save.Enable(); file.Enable();
+		rec.Enable(); play.Enable(); save.Enable(); file.Enable(); type.Enable();
 		snd.Close();
 	}
 	void OnSave(){
-		FileOut f(AsString(~file));
-		f.Put(userdata.samples.Begin(),userdata.samples.GetCount());
-		f.Close();
+		if(~type==1){
+			// save raw bytes
+			FileOut f(AsString(~file));
+			f.Put(userdata.samples.Begin(),userdata.samples.GetCount());
+			f.Close();
+		} else {
+			// save .wav file
+			WaveFile f;
+			f.OpenWrite(AsString(~file));
+			f.SetupFormat(44100, 8, 1);
+			f.WriteSamples(userdata.samples.Begin(),userdata.samples.GetCount());
+			f.Close();
+		}
 	}
 };
 

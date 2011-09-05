@@ -5,6 +5,7 @@ uses
 
 file
 	wav.h,
+	wav.cpp,
 	rifffile.h,
 	rifffile.cpp,
 	wave.h,
