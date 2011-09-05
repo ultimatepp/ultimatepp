@@ -26,6 +26,7 @@ public:
 		file.Disable(); type.Disable();
 		snd.WhenFinished=THISBACK(OnFinish);
 		snd.SetSampleRate(44100).SetFramesPerBuffer(1024).SetFlags(SND_NOCLIP);
+		PopulateSrc();
 	}
 private:
 	void RecordCallback(StreamCallbackArgs& args) {
@@ -46,10 +47,32 @@ private:
 		for (int i=0; i<args.fpb; i++) *wptr++ = data->samples[data->index++];
 		args.state = (data->samples.GetCount()==data->index)?SND_COMPLETE:SND_CONTINUE;
 	}
+	void PopulateSrc(){
+		const SoundSystem& s=SoundSys();
+		src->SetRoot(Null,-1,"Use default input device");
+		for(int i=0;i<s.GetAPICount();i++){
+			SoundAPI a=s.GetAPI(i);
+			src->Add(0,SoundImg::API(),a.index,a.name + String(" (default input device)"),true);
+		}
+		for(int i=0;i<s.GetCount();i++){
+			SoundDevice d=s[i];
+			if(d.InputChannels)
+				src->Add(src->Find(d.API),SoundImg::Device(),d.index+1024,d.name,false);
+		}
+		src->OpenDeep(0);
+		src<<=-1;
+	}
 	void OnRecord(){
 		userdata.samples.Clear();
-		SoundDevice dev=SoundSys().GetDefaultInput();
-		if (IsNull(dev)){error<<="[1 Error: No default input device."; return;}
+		SoundDevice dev;
+		int n=~src;
+		if(n==-1)
+			dev=SoundSys().GetDefaultInput();
+		else if(n<1024)
+			dev=SoundSys().GetAPI(n).defaultInputDevice;
+		else
+			dev=SoundSys().GetDevices()[n-1024];
+		if(IsNull(dev)){error<<="[1 Error: No default input device."; return;}
 		else error.Clear();
 		StreamParameters param(dev,1,SND_UINT8,dev.LowInputLatency);
 		snd<<=THISBACK(RecordCallback);

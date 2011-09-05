@@ -6,11 +6,8 @@
 #include <CtrlLib/CtrlLib.h>
 using namespace Upp;
 
-class Theremin;
-
 #define LAYOUTFILE <SoundExample/SoundExample.lay>
 #include <CtrlCore/lay.h>
-
 
 #define IMAGECLASS SoundImg
 #define IMAGEFILE <SoundExample/SoundExample.iml>
