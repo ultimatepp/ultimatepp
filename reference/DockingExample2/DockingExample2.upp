@@ -1,4 +1,4 @@
-description "Bazaar: Docking example showing advanced features inc. Serialization. Author: James Thomas(mrjt)";
+description "Docking example showing advanced features inc. Serialization.\377";
 
 uses
 	CtrlLib,

@@ -1,4 +1,4 @@
-description "Bazaar: Docking example showing basic usage. Author: James Thomas (mrjt)";
+description "Docking example showing basic usage.\377";
 
 uses
 	CtrlLib,
