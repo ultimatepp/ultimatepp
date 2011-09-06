@@ -1,0 +1,16 @@
+description "Example code for the DockCtrl package";
+
+uses
+	CtrlLib,
+	DockCtrl,
+	RichEdit;
+
+file
+	DockCtrlExample.h,
+	main.cpp,
+	DockCtrlExample.lay;
+
+mainconfig
+	"" = "GUI",
+	"" = "GUI NOGTK";
+
