@@ -102,6 +102,7 @@ void Font::SetStdFont(Font font)
 	InitStdFont();
 	AStdFont = font;
 	SyncStdFont();
+	ChInvalidate();
 }
 
 void Font::InitStdFont()
