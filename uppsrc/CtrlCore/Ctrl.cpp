@@ -911,17 +911,15 @@ void Ctrl::ChSync()
 	if(skin)
 		(*skin)();
 	Csize.cx = Dsize.cx = 0;
+	Csizeinit();
 	ChFinish();
 }
 
 void Ctrl::SyncCh()
 {
-	static Font prevfont;
 	Font std = GetStdFont();
-	if(prevfont != std || ChIsInvalidated()) {
+	if(ChIsInvalidated())
 		ChSync();
-		prevfont = std;
-	}
 }
 
 void Ctrl::Xmlize(XmlIO xml)
