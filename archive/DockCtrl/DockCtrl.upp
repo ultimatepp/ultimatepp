@@ -1,0 +1,30 @@
+description "Dockable/dynamic widget framework by İsmail Yılmaz";
+
+uses
+	CtrlCore,
+	CtrlLib,
+	Draw;
+
+file
+	READMEFIRST.txt,
+	"Header Files" readonly separator,
+	DockCtrl.h,
+	"Source Files" readonly separator,
+	AutoHideBar.cpp,
+	PaneSplitter.cpp,
+	PaneFrame.cpp,
+	DockCtrl.cpp charset "UTF-8",
+	DockTabs.cpp,
+	DockWindow.cpp,
+	DockableCtrl.cpp,
+	Resources readonly separator,
+	DockableCtrl.iml,
+	DockCtrl.lay,
+	DockCtrl.t charset "UTF-8",
+	"Other Files" readonly separator,
+	TODO.txt,
+	ChangeLog.txt;
+
+mainconfig
+	"" = "GUI";
+

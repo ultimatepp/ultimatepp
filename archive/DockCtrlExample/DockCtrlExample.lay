@@ -1,0 +1,12 @@
+LAYOUT(DockCtrlExampleLayout, 200, 100)
+END_LAYOUT
+
+LAYOUT(DockLayout, 248, 200)
+	ITEM(LabelBox, dv___0, SetLabel(t_("DockWindow Layout Example")).HSizePosZ(4, 4).VSizePosZ(4, 8))
+	ITEM(Clock, dv___1, HSizePosZ(96, 12).VSizePosZ(28, 60))
+	ITEM(Button, dv___2, SetLabel(t_("Button 1")).LeftPosZ(12, 56).BottomPosZ(13, 23))
+	ITEM(Button, dv___3, SetLabel(t_("Button 2")).RightPosZ(12, 56).BottomPosZ(13, 23))
+	ITEM(Option, dv___4, SetLabel(t_("Option 1")).LeftPosZ(12, 68).TopPosZ(28, 16))
+	ITEM(Option, dv___5, SetLabel(t_("Option 2")).LeftPosZ(12, 68).TopPosZ(52, 16))
+END_LAYOUT
+
