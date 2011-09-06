@@ -1,7 +1,7 @@
 #ifndef PA_RINGBUFFER_H
 #define PA_RINGBUFFER_H
 /*
- * $Id: pa_ringbuffer.h 1549 2010-10-24 10:21:35Z rossb $
+ * $Id: pa_ringbuffer.h 1734 2011-08-18 11:19:36Z rossb $
  * Portable Audio I/O Library
  * Ring Buffer utility.
  *
@@ -90,8 +90,8 @@ extern "C"
 typedef struct PaUtilRingBuffer
 {
     ring_buffer_size_t  bufferSize; /**< Number of elements in FIFO. Power of 2. Set by PaUtil_InitRingBuffer. */
-    ring_buffer_size_t  writeIndex; /**< Index of next writable element. Set by PaUtil_AdvanceRingBufferWriteIndex. */
-    ring_buffer_size_t  readIndex;  /**< Index of next readable element. Set by PaUtil_AdvanceRingBufferReadIndex. */
+    volatile ring_buffer_size_t  writeIndex; /**< Index of next writable element. Set by PaUtil_AdvanceRingBufferWriteIndex. */
+    volatile ring_buffer_size_t  readIndex;  /**< Index of next readable element. Set by PaUtil_AdvanceRingBufferReadIndex. */
     ring_buffer_size_t  bigMask;    /**< Used for wrapping indices with extra bit to distinguish full/empty. */
     ring_buffer_size_t  smallMask;  /**< Used for fitting indices to buffer. */
     ring_buffer_size_t  elementSizeBytes; /**< Number of bytes per element. */
@@ -125,7 +125,7 @@ void PaUtil_FlushRingBuffer( PaUtilRingBuffer *rbuf );
 
  @return The number of elements available for writing.
 */
-ring_buffer_size_t PaUtil_GetRingBufferWriteAvailable( PaUtilRingBuffer *rbuf );
+ring_buffer_size_t PaUtil_GetRingBufferWriteAvailable( const PaUtilRingBuffer *rbuf );
 
 /** Retrieve the number of elements available in the ring buffer for reading.
 
@@ -133,7 +133,7 @@ ring_buffer_size_t PaUtil_GetRingBufferWriteAvailable( PaUtilRingBuffer *rbuf );
 
  @return The number of elements available for reading.
 */
-ring_buffer_size_t PaUtil_GetRingBufferReadAvailable( PaUtilRingBuffer *rbuf );
+ring_buffer_size_t PaUtil_GetRingBufferReadAvailable( const PaUtilRingBuffer *rbuf );
 
 /** Write data to the ring buffer.
 

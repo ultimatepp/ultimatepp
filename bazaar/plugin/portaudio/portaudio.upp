@@ -41,17 +41,17 @@ options(POSIX & OSS) -DPA_USE_OSS=1;
 
 options(POSIX & (!ALSA & !JACK & !OSS & !ASIHPI)) "-DPA_USE_ALSA=1 -DPA_USE_OSS=1";
 
-options(!POSIX & !DSOUND & (WASAPI | WDMKS | WMME | DSOUND)) -DPA_NO_DS=1;
+options(!POSIX & DSOUND) -DPA_USE_DS=1;
 
-options(!POSIX & !WASAPI & (WASAPI | WDMKS | WMME | DSOUND)) -DPA_NO_WASAPI=1;
+options(!POSIX & WASAPI) -DPA_USE_WASAPI=1;
 
-options(!POSIX & !WDMKS & (WASAPI | WDMKS | WMME | DSOUND)) -DPA_NO_WDMKS=1;
+options(!POSIX & WDMKS) -DPA_USE_WDMKS=1;
 
-options(!POSIX & !WMME & (WASAPI | WDMKS | WMME | DSOUND)) -DPA_NO_WMME=1;
+options(!POSIX & WMME) -DPA_USE_WMME=1;
 
-options(!POSIX & !ASIO) -DPA_NO_ASIO=1;
+options(!POSIX & ASIO) -DPA_USE_ASIO=1;
 
-options(!POSIX & (!DSOUND & !WASAPI & !WDMKS & !WMME)) "-DPA_NO_DS=1 -DPA_NO_WDMKS=1";
+options(!POSIX & (!DSOUND & !WASAPI & !WDMKS & !WMME)) "-DPA_USE_WMME=1 -DPA_USE_WASAPI=1";
 
 include
 	../portaudio,
@@ -95,6 +95,7 @@ file
 	pa_jack.h,
 	pa_win_wmme.h,
 	pa_win_waveformat.h,
+	os\win\pa_win_coinitialize.h,
 	common/pa_allocation.c,
 	common/pa_converters.c,
 	common/pa_cpuload.c,

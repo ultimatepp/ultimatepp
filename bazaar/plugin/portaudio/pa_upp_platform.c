@@ -1,7 +1,7 @@
 #include "pa_upp.h"
 
 #ifdef __clang__
-	#warning "Clang does not compile PortAudio correctly. You might experience hang ups when using setStreamFinishedCallback."
+	#warning "Clang has sometimes problems to compile PortAudio correctly. Even after succesfull compilation, you might experience hang ups when using setStreamFinishedCallback."
 #endif
 
 #ifdef flagPOSIX
@@ -11,37 +11,39 @@
 	#include "os/win/pa_win_hostapis.c"
 	#include "os/win/pa_win_util.c"
 	#include "os/win/pa_win_waveformat.c"
-//	#include "os/win/pa_x86_plain_converters.c"
+	#include "os/win/pa_win_coinitialize.c"
+	#include "os/win/pa_x86_plain_converters.c"
 #endif
 
 const char* PortAudioCompileFlags(){
-	return
+	static const char* flags=
 	#ifdef flagPOSIX
-		#if defined(PA_USE_ALSA)
-			"ALSA "
+		#if PA_USE_ALSA
+			" ALSA"
 		#endif
-		#if defined(PA_USE_ASIHPI)
-			"ASIHPI "
+		#if PA_USE_ASIHPI
+			" ASIHPI"
 		#endif
-		#if defined(PA_USE_JACK)
-			"JACK "
+		#if PA_USE_JACK
+			" JACK"
 		#endif
-		#if defined(PA_USE_OSS)
-			"OSS "
+		#if PA_USE_OSS
+			" OSS"
 		#endif
 	#else
-		#if !defined(PA_NO_DS)
-			"DSOUND "
+		#if PA_USE_DS
+			" DSOUND"
 		#endif
-		#if !defined(PA_NO_WASAPI)
-			"WASAPI "
+		#if PA_USE_WASAPI
+			" WASAPI"
 		#endif
-		#if !defined(PA_NO_WDMKS)
-			"WDMKS "
+		#if PA_USE_WDMKS
+			" WDMKS"
 		#endif
-		#if !defined(PA_NO_WMME)
-			"WMME "
+		#if PA_USE_WMME
+			" WMME"
 		#endif
 	#endif
 	;
+	return flags+1;
 }
