@@ -1,89 +1,100 @@
 #include "ValueCtrl.h"
 
+VectorMap<int, String>& GetValueTypeNoNameMap()
+{
+	static VectorMap<int, String> _;
+	return _;
+}
+
 Ctrl* OptionInstancer()
 {
 	Option* p = new Option(); p->ClickFocus(); return p;
 }
 
+template<>
+class WithValueEditorInit<StaticText> : public StaticText, public ValueEditorInit
+{
+public:
+	virtual void InitData(const Value& v) { SetText(String(v)); }
+};
+
 INITBLOCK
 {
 	Instancer<Ctrl>::MapType& map = Instancer<Ctrl>::Map();
+	VectorMap<int, String>& nmap = GetValueTypeNoNameMap();
 
-	map.Add(int(INT_V),    Instancer<Ctrl>::Typed<WithEnterAction<EditInt> >::GetInstancer());
-	map.Add(int(DOUBLE_V), Instancer<Ctrl>::Typed<WithEnterAction<EditDouble> >::GetInstancer());
-	map.Add(int(STRING_V), Instancer<Ctrl>::Typed<WithEnterAction<EditString> >::GetInstancer());
-	map.Add(int(DATE_V),   Instancer<Ctrl>::Typed<DropDate>::GetInstancer());
-	map.Add(int(TIME_V),   Instancer<Ctrl>::Typed<DropTime>::GetInstancer());
-	map.Add(int(WSTRING_V),Instancer<Ctrl>::Typed<RichTextCtrl>::GetInstancer());
-	map.Add(int(INT64_V),  Instancer<Ctrl>::Typed<WithEnterAction<EditInt64> >::GetInstancer());
+	map.Add(ValueEditKey(INT_V),    Instancer<Ctrl>::Typed<WithEnterAction<EditInt> >::GetInstancer());
+	nmap.ADDVALUETYPENOS(INT_V, "int");
 
-	map.Add(int(BOOL_V),   &OptionInstancer);
+	map.Add(ValueEditKey(DOUBLE_V), Instancer<Ctrl>::Typed<WithEnterAction<EditDouble> >::GetInstancer());
+	nmap.ADDVALUETYPENOS(DOUBLE_V, "double");
 
-	map.Add(int(COLOR_V),  Instancer<Ctrl>::Typed<ColorPusher>::GetInstancer());
+	map.Add(ValueEditKey(STRING_V), Instancer<Ctrl>::Typed<WithEnterAction<EditString> >::GetInstancer());
+	nmap.ADDVALUETYPENOS(STRING_V, "String");
+
+	map.Add(ValueEditKey(DATE_V),   Instancer<Ctrl>::Typed<DropDate>::GetInstancer());
+	nmap.ADDVALUETYPENOS(DATE_V, "Date");
+
+	map.Add(ValueEditKey(TIME_V),   Instancer<Ctrl>::Typed<DropTime>::GetInstancer());
+	nmap.ADDVALUETYPENOS(TIME_V, "Time");
+
+	map.Add(ValueEditKey(WSTRING_V),Instancer<Ctrl>::Typed<RichTextCtrl>::GetInstancer());
+	nmap.ADDVALUETYPENOS(WSTRING_V, "WString");
+
+	map.Add(ValueEditKey(INT64_V),  Instancer<Ctrl>::Typed<WithEnterAction<EditInt64> >::GetInstancer());
+	nmap.ADDVALUETYPENOS(INT64_V, "int64");
+
+	map.Add(ValueEditKey(BOOL_V),   &OptionInstancer);
+	nmap.ADDVALUETYPENOS(BOOL_V, "bool");
+
+	map.Add(ValueEditKey(COLOR_V),  Instancer<Ctrl>::Typed<ColorPusher>::GetInstancer());
+	nmap.ADDVALUETYPENOS(COLOR_V, "Color");
+
 	//map.Add(int(FONT_V), Instancer<Ctrl>::Typed<FontPusher>::GetInstancer());
+	nmap.ADDVALUETYPENOS(FONT_V, "Font");
 
-	map.Add(int(LOGPOS_V), Instancer<Ctrl>::Typed<LogPosCtrl>::GetInstancer());
-	map.Add(int(VALUE_V),  Instancer<Ctrl>::Typed<ValuePacker>::GetInstancer());
-	map.Add(int(VALUEARRAY_V), Instancer<Ctrl>::Typed<ValueArrayCtrl>::GetInstancer());
-	map.Add(int(VALUEMAP_V),Instancer<Ctrl>::Typed<ValueMapCtrl>::GetInstancer());
-	map.Add(int(VOID_V),   Instancer<Ctrl>::Typed<ValueCtrl>::GetInstancer());
-	map.Add(int(ERROR_V),  Instancer<Ctrl>::Typed<ErrorValueCtrl>::GetInstancer());
-	//map.Add(int(UNKNOWN_V), Instancer<Ctrl>::Typed<>::GetInstancer());
+	map.Add(ValueEditKey(LOGPOS_V), Instancer<Ctrl>::Typed<LogPosCtrl>::GetInstancer());
+	nmap.ADDVALUETYPENOS(LOGPOS_V, "LogPos");
+
+	map.Add(ValueEditKey(VALUE_V),  Instancer<Ctrl>::Typed<ValuePacker>::GetInstancer());
+	nmap.ADDVALUETYPENOS(VALUE_V, "Value");
+
+	map.Add(ValueEditKey(VALUEARRAY_V), Instancer<Ctrl>::Typed<ValueArrayCtrl>::GetInstancer());
+	nmap.ADDVALUETYPENOS(VALUEARRAY_V, "ValueArray");
+
+	map.Add(ValueEditKey(VALUEMAP_V),Instancer<Ctrl>::Typed<ValueMapCtrl>::GetInstancer());
+	nmap.ADDVALUETYPENOS(VALUEMAP_V, "ValueMap");
+
+	map.Add(ValueEditKey(VOID_V),   Instancer<Ctrl>::Typed<ValueCtrl>::GetInstancer());
+	nmap.ADDVALUETYPENOS(VOID_V, "Null");
+
+	map.Add(ValueEditKey(ERROR_V),  Instancer<Ctrl>::Typed<ErrorValueCtrl>::GetInstancer());
+	nmap.ADDVALUETYPENOS(ERROR_V, "ErrorValue");
+
+	map.Add(ValueEditKey(UNKNOWN_V), Instancer<Ctrl>::Typed<WithValueEditorInit<StaticText> >::GetInstancer());
+	nmap.ADDVALUETYPENOS(UNKNOWN_V, "UNKNOWN");
 }
 
-#define CASEENUMPRINT(x) case x: return ASSTRING(x);
-String VTypeToString(int vtype)
+void DefaultValueEditor(One<Ctrl>& c, int vtype)
 {
-	switch(vtype)
-	{
-		CASEENUMPRINT( INT_V )
-		CASEENUMPRINT( DOUBLE_V )
-		CASEENUMPRINT( STRING_V )
-		CASEENUMPRINT( DATE_V )
-		CASEENUMPRINT( TIME_V )
-		CASEENUMPRINT( WSTRING_V )
-		CASEENUMPRINT( INT64_V )
-		CASEENUMPRINT( BOOL_V )
-		
-		CASEENUMPRINT( COLOR_V )
-		CASEENUMPRINT( FONT_V )
-
-		CASEENUMPRINT( LOGPOS_V )
-		CASEENUMPRINT( VALUE_V )
-		CASEENUMPRINT( VALUEARRAY_V )
-		
-		CASEENUMPRINT( VOID_V )
-
-		CASEENUMPRINT( VALUEMAP_V )
-		
-		CASEENUMPRINT( ERROR_V )
-		CASEENUMPRINT( UNKNOWN_V )
-		default: return String().Cat() << "[#" << vtype << "_V";
-	}
-}
-
-Ctrl* DefaultValueEditor(int vtype)
-{
-	Ctrl* p = NULL;
-	int i = Instancer<Ctrl>::Map().Find(vtype);
+	ValueEditKey vk(vtype);
+	int i = Instancer<Ctrl>::Map().Find(vk);
 	if(i>=0)
+		c = Instancer<Ctrl>::Map()[i]();
+	if(c.IsEmpty())
 	{
-		p = Instancer<Ctrl>::Map()[i]();
+		WithValueEditorInit<StaticText>* _p = new WithValueEditorInit<StaticText>();
+		_p->InitData(vk.ToString());
+		c = _p;
 	}
-	if(!p)
-	{
-		StaticText* _p = new StaticText();
-		_p->SetText(VTypeToString(vtype));
-		p = _p;
-	}
-	return p;
 }
 
-Ctrl* DefaultValueEditor(const Value& v)
+void DefaultValueEditor(One<Ctrl>& c, const Value& v)
 {
-	Ctrl* p = DefaultValueEditor(v.GetType());
-	p->SetData(v);
-	return p;
+	DefaultValueEditor(c, v.GetType());
+	if(ValueEditorInit* vi = dynamic_cast<ValueEditorInit*>(~c))
+		vi->InitData(v);	
+	else c->SetData(v);
 }
 
 void ValuePopUp::SetType(int vt)
@@ -95,7 +106,7 @@ void ValuePopUp::SetType(int vt)
 		if(pc) return; //keep last Editor
 		vt = STRING_V; //default, if no editor yet
 	}
-	pc = DefaultValueEditor(vt);
+	DefaultValueEditor(pc, vt);
 	vtype = vt;
 	ASSERT(pc);	
 	Add(pc->HSizePos().VSizePos(0,20));

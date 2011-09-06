@@ -16,10 +16,10 @@ void ValueCtrlTest::ActionCB()
 {
 	Value v = vc.GetData();
 
-	String s = "# Value Type: ";
-	s << v.GetType() << "\n\t";
-	s << "data: ";
-	s << AsString(v);
+	ValueEditKey vk(v.GetType());
+	String s;
+	s << "(" << v.GetType() << ") " << vk.ToString();
+	s << " = " << AsString(v);
 	ToInfo(s);
 	RLOG(s);
 }

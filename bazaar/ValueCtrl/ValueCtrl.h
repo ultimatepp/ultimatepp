@@ -20,9 +20,48 @@ NAMESPACE_UPP
 template<> inline bool IsNull(const Value& v)       { return v.IsNull(); }
 END_UPP_NAMESPACE
 
-Ctrl* DefaultValueEditor(int vtype);
-Ctrl* DefaultValueEditor(const Value& v);
-String VTypeToString(int vtype);
+VectorMap<int, String>& GetValueTypeNoNameMap();
+#define ADDVALUETYPENO(x) GetAdd(x, ASSTRING(x))
+#define ADDVALUETYPENOS(x, s) GetAdd(int(x), s)
+
+//the key for the instancer of ValueCtrl editors
+struct ValueEditKey : AssignValueTypeNo<ValueEditKey, 515, Comparable<ValueEditKey, Moveable<ValueEditKey> > > {
+	int      k;
+
+	int      Compare(const ValueEditKey& o) const { return SgnCompare(k, o.k); }
+	void     Serialize(Stream& s)            { s % k; }
+	String   ToString() const                { int i = GetValueTypeNoNameMap().Find(k); if(i>=0) return GetValueTypeNoNameMap()[i];
+                                               return GetValueTypeNoNameMap().Add(k, String().Cat() << "ValueTypeNo_" << k); }
+	unsigned GetHashValue() const            { return UPP::GetHashValue(k); }
+	bool     IsNullInstance() const          { return IsNull(k); }
+
+	operator Value() const                   { return RichToValue(*this); }
+	ValueEditKey(const Value& v)             { *this = ValueTo<ValueEditKey>(v); }
+
+	ValueEditKey(const Nuller&)              { k = Null; }
+
+	ValueEditKey(int k = VOID_V) : k(k)      {}
+};
+
+class ValueEditorInit
+{
+public:
+	virtual ~ValueEditorInit() {}
+	virtual void InitData(const Value& v) = 0;
+};
+
+template<class C>
+class WithValueEditorInit : public C, public ValueEditorInit
+{
+public:
+	virtual void InitData(const Value& v) { C::SetData(v); }
+};
+
+void DefaultValueEditor(One<Ctrl>& c, int vtype);
+void DefaultValueEditor(One<Ctrl>& c, const Value& v);
+
+//obsolete
+inline String VTypeToString(int vtype) { ValueEditKey vk(vtype); return vk.ToString(); }
 
 class ValuePopUp : public WithValuePopUpLayout<WithCloserKeys<PopUpC> > {
 public:
@@ -46,47 +85,47 @@ public:
 	Callback WhenTypeChange;
 
 	void AddType(int vtype, const String& s) { if(type.Find(vtype) < 0) type.Add(vtype, s); }
-	void AddType(int vtype) { AddType(vtype, VTypeToString(vtype)); }
+	void AddType(int vtype) { ValueEditKey vk(vtype); AddType(vtype, vk.ToString()); }
 
 	void ClearTypes() { type.Clear(); SetType(VOID_V); }
 
 	void AddTypesInteger()
 	{
-		AddType(int(INT_V), "int");
-		AddType(int(INT64_V), "int64");
-		AddType(int(BOOL_V), "bool");
+		AddType(int(INT_V));
+		AddType(int(INT64_V));
+		AddType(int(BOOL_V));
 	}
 	
 	void AddTypesFloat()
 	{
-		AddType(int(DOUBLE_V), "double");
+		AddType(int(DOUBLE_V));
 	}
 	
 	void AddTypesHighLevel()
 	{
-		AddType(int(STRING_V), "String");
-		AddType(int(DATE_V), "Date");
-		AddType(int(TIME_V), "Time");
-		AddType(int(WSTRING_V), "WString");
-		AddType(int(COLOR_V), "Color");
+		AddType(int(STRING_V));
+		AddType(int(DATE_V));
+		AddType(int(TIME_V));
+		AddType(int(WSTRING_V));
+		AddType(int(COLOR_V));
 	}
 	
 	void AddTypesContainer()
 	{
-		//AddType(int(VALUE_V), "Value");
-		AddType(int(VALUEARRAY_V), "ValueArray");
-		AddType(int(VALUEMAP_V), "ValueMap");
+		//AddType(int(VALUE_V));
+		AddType(int(VALUEARRAY_V));
+		AddType(int(VALUEMAP_V));
 	}
 	
 	void AddTypesExt()
 	{
-		AddType(int(LOGPOS_V), "Ctrl::LogPos");
+		AddType(int(LOGPOS_V));
 	}
 	
 	void AddTypesDebug()
 	{
-		AddType(int(VOID_V), "Null (Reset data only)");
-		AddType(int(ERROR_V), "ErrorValue");
+		AddType(int(VOID_V));
+		AddType(int(ERROR_V));
 	}
 
 	void AddTypesAll()
@@ -136,6 +175,8 @@ protected:
 	Value v;
 };
 
+static inline void CreateValueCtrl(One<Ctrl>& ctrl) { ctrl.Create<ValueCtrl>(); }
+
 //for nested Value in Value
 class ValuePacker : public ValueCtrl
 {
@@ -155,7 +196,7 @@ public:
 	}
 	virtual void SetData(const Value& v)
 	{
-		if(v.Is<Value>()) ValueCtrl::SetData(RawValue<Value>::Extract(v));
+		if(v.Is<Value>()) ValueCtrl::SetData(RichValue<Value>::Extract(v));
 		else ValueCtrl::SetData(v);
 	}
 };
@@ -166,8 +207,10 @@ public:
 	typedef ValueArrayCtrl CLASSNAME;
 	ValueArrayCtrl()
 	{
-		AddColumn("Value").Ctrls(&CreateValueCtrl).HeaderTab();
+		AddColumn("Value").Ctrls(&CreateValueCtrl);
 		Appending().Inserting().Removing();
+		AutoHideSb();
+		NoHeader();
 		WhenCtrlsAction = Proxy(WhenAction);
 	}
 	virtual Value GetData() const 
@@ -179,7 +222,6 @@ public:
 	}
 	virtual void SetData(const Value& v)
 	{
-		RLOG("ArrayCtrl: Setting: " << v);
 		Clear();
 		if(v.Is<ValueArray>())
 		{
@@ -191,8 +233,6 @@ public:
 		else
 			Set(0, 0, v);
 	}
-
-	static void CreateValueCtrl(One<Ctrl>& ctrl) { ctrl.Create<ValueCtrl>(); }
 };
 
 class ValueMapCtrl : public ArrayCtrl
@@ -204,6 +244,8 @@ public:
 		AddColumn("Key").Ctrls(&CreateValueCtrl).HeaderTab();
 		AddColumn("Value").Ctrls(&CreateValueCtrl).HeaderTab();
 		Appending().Inserting().Removing();
+		AutoHideSb();
+		NoHeader();
 		WhenCtrlsAction = Proxy(WhenAction);
 	}
 	virtual Value GetData() const 
@@ -234,8 +276,6 @@ public:
 		else
 			Set(0, 0, v);
 	}
-
-	static void CreateValueCtrl(One<Ctrl>& ctrl) { ctrl.Create<ValueCtrl>(); }
 };
 
 class ErrorValueCtrl : public WithEnterAction<EditString>
