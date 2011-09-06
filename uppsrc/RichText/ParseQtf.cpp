@@ -896,12 +896,18 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 				EndPart();
 			SetFormat();
 			const char *b = ++term;
-			for(; *term && *term != '\1'; term++)
+			for(; *term && *term != '\1'; term++) {
 				if((byte)*term == '\n') {
 					text.Cat(ToUnicode(b, (int)(term - b), format.charset));
 					EndPart();
 					b = term + 1;
 				}
+				if((byte)*term == '\t') {
+					text.Cat(ToUnicode(b, (int)(term - b), format.charset));
+					text.Cat(9);
+					b = term + 1;
+				}
+			}
 			text.Cat(ToUnicode(b, (int)(term - b), format.charset));
 			if(*term == '\1')
 				term++;
