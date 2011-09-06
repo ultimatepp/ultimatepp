@@ -59,19 +59,15 @@ void PropEditCtrl::UpdateCtrl()
 
 		if(a.get && a.set)	
 		{
-			Ctrl* pc;
-			if(!v.IsNull())
+			One<Ctrl> oc;
+			DefaultValueEditor(oc, v);
 			{
-				pc = DefaultValueEditor(v);
-				{
-					//LogPosCtrl needs instance infos to live show changes
-					if(LogPosCtrl* ple = dynamic_cast<LogPosCtrl*>(pc))
-						ple->Set(*ctrl);
-				}
+				//LogPosCtrl needs instance infos to live show changes
+				if(LogPosCtrl* ple = dynamic_cast<LogPosCtrl*>(~oc))
+					ple->Set(*ctrl);
 			}
-			else pc = new ValueCtrl();
-			(*pc) <<= THISBACK1(OnUpdateRow, k); //for live editing, unlike WhenUpdateRow
-			ac.SetCtrl(k, 1, pc); //owned
+			(*oc) <<= THISBACK1(OnUpdateRow, k); //for live editing, unlike WhenUpdateRow
+			ac.SetCtrl(k, 1, oc.Detach()); //owned
 			++k;
 		}
 		else if(a.get)
