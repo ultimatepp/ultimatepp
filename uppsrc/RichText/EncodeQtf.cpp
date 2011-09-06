@@ -552,6 +552,9 @@ String DeQtfLf(const char *s) {
 		else
 		if(*s == '\n')
 			r.Cat('&');
+		else
+		if(*s == '\t')
+			r.Cat("-|");
 		s++;
 	}
 	return r;

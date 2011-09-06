@@ -201,13 +201,15 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 						else
 						if(c == '\r')
 							r->Cat("\\r");
+						else
+						if(c == '\t')
+							r->Cat("\\t");
 						else {
 							char h[4];
-							int q = (byte)*s;
 							h[0] = '\\';
-							h[1] = (3 & (q >> 6)) + '0';
-							h[2] = (7 & (q >> 3)) + '0';
-							h[3] = (7 & q) + '0';
+							h[1] = (3 & (c >> 6)) + '0';
+							h[2] = (7 & (c >> 3)) + '0';
+							h[3] = (7 & c) + '0';
 							r->Cat(h, 4);
 						}
 					}
