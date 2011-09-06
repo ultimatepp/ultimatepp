@@ -12,7 +12,7 @@
 	#include "os/win/pa_win_util.c"
 	#include "os/win/pa_win_waveformat.c"
 	#include "os/win/pa_win_coinitialize.c"
-	#include "os/win/pa_x86_plain_converters.c"
+//	#include "os/win/pa_x86_plain_converters.c"
 #endif
 
 const char* PortAudioCompileFlags(){
