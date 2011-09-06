@@ -19,8 +19,8 @@ void PopUpC::Break(int ID)
 bool PopUpC::AcceptBreak(int ID)
 {
 	if(Accept()) {
-		Break(ID);
 		WhenAccept();
+		Break(ID);
 		return true;
 	}
 	return false;
@@ -29,8 +29,8 @@ bool PopUpC::AcceptBreak(int ID)
 void PopUpC::RejectBreak(int ID)
 {
 	Reject();
-	Break(ID);
 	WhenReject();
+	Break(ID);
 }
 
 void PopUpC::PopUp(Ctrl* owner)

@@ -99,7 +99,7 @@ void ValuePopUp::SetType(int vt)
 	vtype = vt;
 	ASSERT(pc);	
 	Add(pc->HSizePos().VSizePos(0,20));
-	pc->WhenAction = THISBACK(DataAction);
+	HookAction();
 	WhenTypeChange;
 }
 
@@ -107,10 +107,15 @@ void ValuePopUp::Updated()
 {
 	int vt = v.GetType();
 	if(vt != vtype && !v.IsNull()) //change only if needed, keep editor for !null
-		SetType(vt);
+	{
+		Value _v = v;
+		SetType(vt); //will reset v to Null, we need the old value
+		v = _v;
+	}
+	if(pc->GetData() != v)
+		pc->SetData(v);
 	if(type.GetData() != vtype)
 	   type.SetData(vtype);
-	pc->SetData(v);
 }
 
 void ValuePopUp::TypeAction()
@@ -123,12 +128,15 @@ void ValuePopUp::TypeAction()
 ValuePopUp::ValuePopUp()
 	: vtype(-1)
 {
-	CtrlLayoutCancel(*this, "");
+	WithCloserKeys<PopUpC>::type = WithCloserKeys<PopUpC>::OKCANCEL;
+	CtrlLayoutOKCancel(*this, "");
 	SetFrame(BlackFrame());
 
 	type <<= THISBACK(TypeAction);
 	type.Clear();
 	AddTypesAll();
+
+	tryit <<= THISBACK(DataAction);
 
 	SetType(VOID_V);
 }

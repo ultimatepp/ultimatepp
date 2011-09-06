@@ -1,5 +1,7 @@
-LAYOUT(ValuePopUpLayout, 200, 100)
-	ITEM(DropList, type, HSizePosZ(0, 16).BottomPosZ(0, 20))
-	ITEM(Button, cancel, SetLabel(t_("x")).LeftPosZ(184, 16).TopPosZ(80, 20))
+LAYOUT(ValuePopUpLayout, 220, 100)
+	ITEM(DropList, type, HSizePosZ(0, 60).BottomPosZ(0, 20))
+	ITEM(Button, tryit, SetLabel(t_("try")).LeftPosZ(160, 20).TopPosZ(80, 20))
+	ITEM(Button, ok, SetLabel(t_("V")).LeftPosZ(180, 20).TopPosZ(80, 20))
+	ITEM(Button, cancel, SetLabel(t_("x")).LeftPosZ(200, 20).TopPosZ(80, 20))
 END_LAYOUT
 

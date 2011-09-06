@@ -34,6 +34,9 @@ public:
 	virtual void SetData(const Value& _v) { v = _v; Update(); }
 	virtual void Deactivate() {} //let others popup
 
+	virtual void State(int reason) { if(reason != Ctrl::OPEN) return; if(pc.IsEmpty()) return; HookAction(); }
+	virtual void Close() { pc->WhenAction.Clear(); WithCloserKeys<PopUpC>::Close(); }
+
 	void SetType(int _vt);
 	using PopUpC::PopUp;
 	void PopUp(Ctrl* owner, const Value& _v) { SetData(_v); PopUpC::PopUp(owner); }
@@ -97,9 +100,11 @@ public:
 	}
 	
 	void TypeAction();
-	void DataAction() { v = pc->GetData(); Action(); }
+	void DataAction() { v = pc->GetData(); UpdateAction(); }
 
 protected:
+	void HookAction() { pc->WhenAction = THISBACK(DataAction); }
+
 	int vtype;
 	Value v;
 	One<Ctrl> pc;
@@ -174,6 +179,7 @@ public:
 	}
 	virtual void SetData(const Value& v)
 	{
+		RLOG("ArrayCtrl: Setting: " << v);
 		Clear();
 		if(v.Is<ValueArray>())
 		{

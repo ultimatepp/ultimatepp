@@ -5,10 +5,11 @@ ValueCtrlTest::ValueCtrlTest()
 	CtrlLayout(*this, "Window title");
 	clear <<= THISBACK(Clear);
 
-	Value v = ValueArray(Vector<Value>() << 123.8 << "Test");
-	vc.SetData(v);
 	vc <<= THISBACK(ActionCB);
 	Add(vc.HSizePos().BottomPos(0, 20));
+
+	Value v = ValueArray(Vector<Value>() << 123.8 << "Test");
+	vc.SetData(v);
 }
 
 void ValueCtrlTest::ActionCB()

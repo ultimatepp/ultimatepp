@@ -8,7 +8,7 @@ uses
 	Gen;
 
 file
-	ValueCtrl.lay,
 	ValueCtrl.h,
-	ValueCtrl.cpp;
+	ValueCtrl.cpp,
+	ValueCtrl.lay;
 
