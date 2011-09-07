@@ -5,6 +5,5 @@ uses
 
 file
 	Tree.h,
-	Tree.cpp,
 	src.tpp;
 

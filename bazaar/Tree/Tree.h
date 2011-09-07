@@ -2,7 +2,8 @@
 #define _Tree_Tree_h
 
 #include <Core/Core.h>
-using namespace Upp;
+
+NAMESPACE_UPP
 
 template <class T>
 class Tree
@@ -15,8 +16,8 @@ protected:
 
 	inline void DoLink(T& t)             { t.root = root; t.parent = (T *)this; }
 	inline void Unlink(T& t)           { t.root = NULL; t.parent = NULL; }
-
-	void Relink() { for(int i = 0; i < B::GetCount(); i++) { T & t = B::operator[](i); DoLink(t); t.Relink();} }
+public:
+	void Relink() { for(int i = 0; i < B::GetCount(); i++) { T& t = B::operator[](i); DoLink(t); t.Relink();} }
 
 public:
 	T*       GetPtr()                   { return (T*) this; }
@@ -60,12 +61,9 @@ public:
 
 	using B::Drop;
 	using B::Top;
+//	using B::Pop;
 	
 	T*       PopDetach()                { T* t = B::PopDetach(); Unlink(*t); return t; }
-
-	using B::Begin;
-	using B::End;
-	using B::GetIter;
 
 	void     Swap(Tree& b)              { B::Swap(b); for(int i = 0; i < B::GetCount(); i++) DoLink(B::operator[](i)); for(int i = 0; i < b.GetCount(); i++) b.DoLink(b[i]); }
 
@@ -73,8 +71,10 @@ public:
 	Tree& operator<<(T *newt)           { Add(newt); return *this; }
 	Tree& operator|(pick_ T& x)         { AddPick(x); return *this; }
 
+	using B::IsPicked;
+
 #ifdef UPP
-	using B::Serialize;
+	void     Serialize(Stream& s)       { StreamContainer(s, *this); }
 #endif
 
 	Tree()
@@ -97,6 +97,14 @@ public:
 		, B(v, 0)
 	{ Relink(); }
 
+	using B::ConstIterator;
+	using B::Iterator;
+
+	using B::ValueType;
+	using B::Begin;
+	using B::End;
+	using B::GetIter;
+
 // Array Interface end
 
 public:
@@ -109,18 +117,16 @@ public:
 #endif
 };
 
-NAMESPACE_UPP
 template<class T>
 inline void Xmlize(XmlIO xml, Tree<T>& data)
 {
-	::Xmlize(xml, (Array<T>&)data);
+	XmlizeContainer(xml, "tree", data);
 }
 
 template <class T>
 inline void DumpContainer(Stream& s, const Tree<T>& c) {
 	DumpContainer(s, c.Begin(), c.End());
 }
-END_UPP_NAMESPACE
 
 //Tree Node helper class
 
@@ -138,7 +144,6 @@ public:
 	T leaf;
 };
 
-NAMESPACE_UPP
 template <class T>
 inline Stream& operator%(Stream& s, Node<T>& x)
 {
@@ -149,9 +154,8 @@ inline Stream& operator%(Stream& s, Node<T>& x)
 template<class T>
 inline void Xmlize(XmlIO xml, Node<T>& a)
 {
-	xml("leaf", a.leaf); ::Xmlize(xml, (Tree<Node<T> >&)a);
+	xml("leaf", a.leaf); Xmlize(xml, (Tree<Node<T> >&)a);
 }
-END_UPP_NAMESPACE
 
 template<class BB> //B conflicts with Tree::B
 class NodeB
@@ -163,7 +167,6 @@ public:
 	typedef Tree<NodeB<BB> > R;
 };
 
-NAMESPACE_UPP
 template <class BB>
 inline Stream& operator%(Stream& s, NodeB<BB>& x)
 {
@@ -174,9 +177,8 @@ inline Stream& operator%(Stream& s, NodeB<BB>& x)
 template<class BB>
 inline void Xmlize(XmlIO xml, NodeB<BB>& a)
 {
-	xml("leaf", (BB&)a); ::Xmlize(xml, (Tree<NodeB<BB> >&)a);
+	xml("leaf", (BB&)a); Xmlize(xml, (Tree<NodeB<BB> >&)a);
 }
-END_UPP_NAMESPACE
 
 ////
 
@@ -191,8 +193,8 @@ protected:
 
 	inline void DoLink(T& t)             { t.root = root; t.parent = (T *)this; }
 	inline void Unlink(T& t)           { t.root = NULL; t.parent = NULL; }
-
-	void Relink() { for(int i = 0; i < B::GetCount(); i++) { T & t = B::operator[](i); DoLink(t); t.Relink();} }
+public:
+	void Relink() { for(int i = 0; i < B::GetCount(); i++) { T& t = B::operator[](i); DoLink(t); t.Relink();} }
 
 public:
 	T*       GetPtr()                   { return (T*) this; }
@@ -263,12 +265,21 @@ public:
 	using B::Drop;
 	using B::Top;
 	using B::TopKey;
+//	using B::Pop;
 	using B::PopKey;
-//	T        Pop()                                 { T h = Top(); Drop(); return h; }
 	using B::Trim;
 	using B::GetKey;
 #ifdef UPP
-	using B::Serialize;
+	void Serialize(Stream& s) {
+		int version = 0;
+		s / version % B::key % B::value;
+		for(int i = 0; i < B::GetCount(); i++)
+		{
+			T& t = B::operator[](i); DoLink(t);
+			//t.Relink(); //serialize will recurse
+		}
+	}
+
 #endif
 
 	void     Swap(TreeMap& b)           { B::Swap(b); for(int i = 0; i < B::GetCount(); i++) DoLink(B::operator[](i)); for(int i = 0; i < b.GetCount(); i++) b.DoLink(b[i]); }
@@ -280,13 +291,20 @@ public:
 	using B::PickKeys;
 
 	using B::GetValues;
-	Vector<T>        PickValues() pick_            { Vector<T> v = B::PickValues(); for(int i = 0; i < v.GetCount(); i++) v[i].SetAsRoot(); return v; }
+	Vector<T> PickValues() pick_        { Vector<T> v = B::PickValues(); for(int i = 0; i < v.GetCount(); i++) v[i].SetAsRoot(); return v; }
 
 	using B::IsPicked;
+
+	using B::KeyType;
+	using B::KeyConstIterator;
 
 	using B::KeyBegin;
 	using B::KeyEnd;
 	using B::KeyGetIter;
+	
+	using B::ValueType;
+	using B::ConstIterator;
+	using B::Iterator;
 
 	using B::Begin;
 	using B::End;
@@ -317,18 +335,16 @@ public:
 	friend void     Swap(TreeMap& a, TreeMap& b)   { a.B::Swap(b); for(int i = 0; i < a.GetCount(); i++) DoLink(a[i]); for(int i = 0; i < b.GetCount(); i++) b.DoLink(b[i]); }
 };
 
-NAMESPACE_UPP
 template<class K, class T, class H>
 inline void Xmlize(XmlIO xml, TreeMap<K, T, H>& data)
 {
-	::Xmlize(xml, (ArrayMap<K, T, H>&)data);
+	XmlizeMap<K, T>(xml, "tkey", "tvalue", data);
 }
 
 template <class K, class T, class H>
 inline void DumpContainer(Stream& s, const TreeMap<K, T, H>& c) {
 	DumpContainer(s, c.Begin(), c.End());
 }
-END_UPP_NAMESPACE
 
 template<class K, class T, class H = StdHash<K> >
 class MapNode
@@ -344,7 +360,6 @@ public:
 	T leaf;
 };
 
-NAMESPACE_UPP
 template <class K, class T, class H>
 inline Stream& operator%(Stream& s, MapNode<K, T, H>& x)
 {
@@ -355,9 +370,8 @@ inline Stream& operator%(Stream& s, MapNode<K, T, H>& x)
 template<class K, class T, class H>
 inline void Xmlize(XmlIO xml, MapNode<K, T, H>& a)
 {
-	xml("leaf", a.leaf); ::Xmlize(xml, (TreeMap<K, MapNode<K,T,H>, H>&)a);
+	xml("leaf", a.leaf); Xmlize(xml, (TreeMap<K, MapNode<K,T,H>, H>&)a);
 }
-END_UPP_NAMESPACE
 
 template<class K, class BB, class H = StdHash<K> > //B conflicts with Tree::B
 class MapNodeB
@@ -369,7 +383,6 @@ public:
 	typedef TreeMap<MapNodeB<K,BB,H>, H> R;
 };
 
-NAMESPACE_UPP
 template <class K, class BB, class H>
 inline Stream& operator%(Stream& s, MapNodeB<K, BB, H>& x)
 {
@@ -380,8 +393,9 @@ inline Stream& operator%(Stream& s, MapNodeB<K, BB, H>& x)
 template<class K, class BB, class H>
 inline void Xmlize(XmlIO xml, MapNodeB<K, BB, H>& a)
 {
-	xml("leaf", (BB&)a); ::Xmlize(xml, (TreeMap<K, MapNodeB<K,BB,H>, H>&)a);
+	xml("leaf", (BB&)a); Xmlize(xml, (TreeMap<K, MapNodeB<K,BB,H>, H>&)a);
 }
+
 END_UPP_NAMESPACE
 
 #endif
