@@ -307,6 +307,11 @@ WString String::ToWString() const
 	return WString(Begin(), GetCount());
 }
 
+int String::GetCharCount() const
+{
+	return GetDefaultCharset() == CHARSET_UTF8 ?  utf8len(Begin(), GetCount()) : GetCount();	
+}
+
 String::String(StringBuffer& b)
 {
 	if(b.begin == b.buffer) {
