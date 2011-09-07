@@ -313,6 +313,7 @@ public:
 	String& operator<<=(const String& s)                   { if(this != &s) { String0::Free(); String0::Set(s, s.GetCount()); } return *this; }
 
 	void   Shrink()                                        { *this = String(Begin(), GetLength()); }
+	int    GetCharCount() const;
 
 	String()                                               {}
 	String(const Nuller&)                                  {}
