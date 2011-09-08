@@ -209,6 +209,7 @@ void LogPosPopUp::YAlign()
 LogPosPopUp::LogPosPopUp()
 {
 	CtrlLayoutCancel(*this, "");
+	cktype = CKOKCANCEL;
 	SetFrame(BlackFrame());
 
 	l.SetLabel("<");

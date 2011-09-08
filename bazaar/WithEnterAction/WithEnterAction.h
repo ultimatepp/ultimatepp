@@ -46,6 +46,8 @@ public:
 		return b;
 	}
 	virtual void LostFocus() { B::LostFocus(); if(!informed) { informed = true; B::Action(); } }
+	virtual bool Accept() { if(!B::Accept()) return false; if(!informed) { informed = true; B::Action(); } return true; }
+	virtual void Reject() { informed = true; B::Reject(); }
 
 	bool unfocusonenter;
 	bool multipleenter;

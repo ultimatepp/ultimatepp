@@ -139,8 +139,9 @@ void ValuePopUp::TypeAction()
 ValuePopUp::ValuePopUp()
 	: vtype(-1)
 {
-	WithCloserKeys<PopUpC>::type = WithCloserKeys<PopUpC>::OKCANCEL;
 	CtrlLayoutOKCancel(*this, "");
+	cktype = CKOKCANCEL;
+	ckkeyupactive = false;
 	SetFrame(BlackFrame());
 
 	type <<= THISBACK(TypeAction);
