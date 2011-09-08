@@ -114,8 +114,8 @@ void PropEditCtrl::OnUpdateCurrentRow()
 //
 
 PropEdit::PropEdit()
-	: WCK(WCK::OKCANCEL)
 {
+	cktype = CKOKCANCEL;
 	SetRect(pec.GetRect());
 	Add(pec.HSizePos().VSizePos(0,20));
 	//WhenDeactivate = THISBACK1(RejectBreak, int(IDCANCEL));
