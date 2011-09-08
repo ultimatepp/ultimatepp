@@ -10,6 +10,11 @@ template<class T> class WithPolyXML : public WithFactory<T>
 	public:
 		// Xmlizer
 		virtual void Xmlize(XmlIO xml) {};
+		
+		// Check if object is marked as erased so the array don't store it on xml
+		// useful if you don't remove objects from array but just mark them as erased
+		// to be redefined if you need this feature !
+		virtual bool IsErased(void) { return false; }
 };
 
 template<class T> class PolyXMLUnknown : public T
@@ -55,8 +60,11 @@ template<class T> void PolyXMLArray<T>::Xmlize(XmlIO xml)
 		for(int i = 0; i < PolyXMLArray::GetCount(); i++)
 		{
 			T &data = PolyXMLArray::operator[](i);
-			String tag = data.IsA();
-			data.Xmlize(xml.Add(tag));
+			if(!data.IsErased())
+			{
+				String tag = data.IsA();
+				data.Xmlize(xml.Add(tag));
+			}
 		}
 	}
 	else
