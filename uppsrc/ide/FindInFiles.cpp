@@ -217,6 +217,8 @@ void Ide::FindFileName() {
 	ffdlg.list.AddColumn("File");
 	ffdlg.list.WhenLeftDouble = ffdlg.Acceptor(IDOK);
 	ffdlg.mask.NullText("Search");
+	ffdlg.mask.SetText(find_file_search_string);
+	ffdlg.mask.SelectAll();
 	ffdlg.mask.SetFilter(CharFilterFindFileMask);
 	ffdlg.mask <<= ffdlg.Breaker(IDYES);
 	for(;;) {
@@ -238,6 +240,7 @@ void Ide::FindFileName() {
 			return;
 		case IDOK:
 			if(ffdlg.list.IsCursor()) {
+				find_file_search_string = ffdlg.mask;
 				EditFile(SourcePath(ffdlg.list.Get(0),  ffdlg.list.Get(1)));
 				return;
 			}
