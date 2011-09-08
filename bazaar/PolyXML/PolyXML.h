@@ -43,6 +43,8 @@ template<class T> class PolyXMLUnknown : public T
 		}
 };
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+// PolyXMLArray class -- add support for streaming polymorphic arrays of objects
 template<class T> class PolyXMLArray : public Array<T>
 {
 	public:
@@ -91,6 +93,67 @@ template<class T> void PolyXMLArray<T>::Xmlize(XmlIO xml)
 					
 					// creates an unknown class and stores raw xml on it
 					Add((T *)new PolyXMLUnknown<T>(tag, rawXml));
+				}
+			}
+		}
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// PolyXMLArrayMap class -- add support for streaming polymorphic maps of objects
+template<class K, class T> class PolyXMLArrayMap : public ArrayMap<K, T>
+{
+	public:
+		// Xmlizer
+		void Xmlize(XmlIO xml);
+		
+		void Add(const K &key, const T &data) { ArrayMap<K, T>::Add(key, data); }
+		void Add(const K &key, T *data) { ArrayMap<K, T>::Add(key, data); }
+};
+
+template<class K, class T> void PolyXMLArrayMap<K, T>::Xmlize(XmlIO xml)
+{
+	if(xml.IsStoring())
+	{
+		for(int i = 0; i < PolyXMLArrayMap::GetCount(); i++)
+		{
+			// skip unlinked elements
+			if(ArrayMap<K, T>::IsUnlinked(i))
+				continue;
+			T &data = PolyXMLArrayMap::operator[](i);
+			K const &key = PolyXMLArrayMap::GetKey(i);
+			
+			// skip data marked as erase too
+			if(data.IsErased())
+				continue;
+			String tag = data.IsA();
+			XmlizeStore(xml.Add("key"), key);
+			XmlizeStore(xml.Add(tag), data);
+		}
+	}
+	else
+	{
+		PolyXMLArrayMap<K, T>::Clear();
+		for(int i = 0; i < xml->GetCount() - 1 && xml->Node(i).IsTag("key");)
+		{
+			if(xml->Node(i).IsTag())
+			{
+				K key;
+				Upp::Xmlize(xml.At(i++), key);
+				String tag = xml->Node(i).GetTag();
+				T *data = T::CreatePtr(tag);
+				if(data)
+				{
+					data->Xmlize(xml.At(i++));
+					Add(key, data);
+				}
+				else
+				{
+					// unknown class -- gather raw xml node
+					String rawXml = AsXML(xml.At(i).Node());
+					
+					// creates an unknown class and stores raw xml on it
+					Add(key, (T *)new PolyXMLUnknown<T>(tag, rawXml));
 				}
 			}
 		}
