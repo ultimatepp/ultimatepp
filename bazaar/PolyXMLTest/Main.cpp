@@ -47,9 +47,7 @@ REGISTERCLASS(OneMore, "last class with description and index", 12);
 
 void DumpArray(PolyXMLArray<Base> &polyArray)
 {
-	
-	Cerr() << "\nArray content after streaming in : " << polyArray.GetCount() << " classes:\n";
-	for(int i = 0; i < polyArray.GetCount(); i++)
+		for(int i = 0; i < polyArray.GetCount(); i++)
 	{
 		Cerr() << "  class #" << i << " is a '" << polyArray[i].IsA() << "'\n";
 		if(polyArray[i].IsA() == "Base")
@@ -79,6 +77,38 @@ void DumpArray(PolyXMLArray<Base> &polyArray)
 	}
 }
 
+void DumpMap(PolyXMLArrayMap<String, Base> &polyMap)
+{
+	for(int i = 0; i < polyMap.GetCount(); i++)
+	{
+		Cerr() << "  class with key '" << polyMap.GetKey(i) << "' is a '" << polyMap[i].IsA() << "'\n";
+		if(polyMap[i].IsA() == "Base")
+			Cerr() << "    BaseData    = '" << ((Base &)polyMap[i]).BaseData << "'\n";
+		else if(polyMap[i].IsA() == "Derived")
+		{
+			Cerr() << "    BaseData    = '" << ((Derived &)polyMap[i]).BaseData << "'\n";
+			Cerr() << "    DerivedData = '" << ((Derived &)polyMap[i]).DerivedData << "'\n";
+		}
+		else if(polyMap[i].IsA() == "Another")
+		{
+			Cerr() << "    BaseData    = '" << ((Another &)polyMap[i]).BaseData << "'\n";
+			Cerr() << "    DerivedData = '" << ((Another &)polyMap[i]).DerivedData << "'\n";
+			Cerr() << "    AnotherData = '" << ((Another &)polyMap[i]).AnotherData << "'\n";
+		}
+		else if(polyMap[i].IsA() == "OneMore")
+		{
+			Cerr() << "    BaseData    = '" << ((OneMore &)polyMap[i]).BaseData << "'\n";
+			Cerr() << "    DerivedData = '" << ((OneMore &)polyMap[i]).DerivedData << "'\n";
+			Cerr() << "    AnotherData = '" << ((OneMore &)polyMap[i]).AnotherData << "'\n";
+			Cerr() << "    OneMoreData = '" << ((OneMore &)polyMap[i]).OneMoreData << "'\n";
+		}
+		else if(polyMap[i].IsA() == "*UNKNOWN*")
+			Cerr() << "    Original class is '" << ((PolyXMLUnknown<Base> &)polyMap[i]).GetUnknownClassName() << "' -- STREAMED IN AS RAW XML\n";
+		else
+			Cerr() << "oops... known class, but I don't know how to handle it\n";
+	}
+}
+
 CONSOLE_APP_MAIN
 {
 	// MANUAL CLASS REGISTRATION, SEE ABOVE COMMENT !
@@ -93,6 +123,9 @@ CONSOLE_APP_MAIN
 			<< "'  Description '" << Base::GetClassDescription(Base::Classes()[i]) 
 			<< "'  Index '" << Base::GetClassIndex(Base::Classes()[i]) << "'\n";
 
+	Cerr() << "\n/////////////////////////////////////////////////////////////////////////////////////////";
+	Cerr() << "\nPolyXMLArray tests";
+	Cerr() << "\n/////////////////////////////////////////////////////////////////////////////////////////";
 	PolyXMLArray<Base> polyArray;
 	
 	Base *b = new Base;
@@ -152,6 +185,70 @@ CONSOLE_APP_MAIN
 	polyArray.Clear();
 	LoadFromXML(polyArray, s);
 	DumpArray(polyArray);
+
+	Cerr() << "\n/////////////////////////////////////////////////////////////////////////////////////////";
+	Cerr() << "\nPolyXMLArrayMap tests";
+	Cerr() << "\n/////////////////////////////////////////////////////////////////////////////////////////";
+
+	PolyXMLArrayMap<String, Base> polyMap;
+	
+	b = new Base;
+	b->BaseData = "Sample data in base class";
+	polyMap.Add("BaseKey", b);
+	
+	d = new Derived;
+	d->BaseData = "Sample data in derived class";
+	d->DerivedData = "Another sample data in derived class";
+	polyMap.Add("DerivedKey", d);
+	
+	a = dynamic_cast<Another *>(Base::CreatePtr("Another"));
+	a->BaseData = "Sample data in Derived class";
+	a->DerivedData = "Another sample data in Derived class";
+	a->AnotherData = 12345;
+	polyMap.Add("AnotherKey", a);
+	
+	o = new OneMore;
+	o->BaseData = "Sample data in OneMore class";
+	o->DerivedData = "Another sample data in OneMore class";
+	o->AnotherData = 12;
+	o->OneMoreData = 3.1418;
+	polyMap.Add("OneMoreKey", o);
+	
+	Cerr() << "\nMap content before streaming out: " << polyMap.GetCount() << " classes:\n";
+	DumpMap(polyMap);
+
+	s = StoreAsXML(polyMap, "PolyXMLTest");
+	Cerr() << "\nStreamed XML : \n\n" << s ;
+	
+	polyMap.Clear();
+	LoadFromXML(polyMap, s);
+	
+	Cerr() << "\nMap content after streaming in : " << polyMap.GetCount() << " classes:\n";
+	DumpMap(polyMap);
+	
+	// Now we de-register all classes and re-register all of them BESIDES one
+	// to test in-streaming with an unknown class
+	Base::UnregisterAll();
+	Base::Register<Base>("Base");
+	Derived::Register<Derived>("Derived", "you can add a description");
+	OneMore::Register<OneMore>("OneMore", "last class with description and index", 12);
+
+	Cerr() << "\nStreaming in XML with an unknown class : \n\n";
+	
+	polyMap.Clear();
+	LoadFromXML(polyMap, s);
+	
+	Cerr() << "\nMap content after streaming in : " << polyMap.GetCount() << " classes:\n";
+	DumpMap(polyMap);
+	
+	Cerr() << "\nStreaming out XML with an unknown class : \n\n";
+	s = StoreAsXML(polyMap, "PolyXMLTest");
+	
+	Cerr() << "\nRedefining missing class and streaming it the whole stuff again : \n\n";
+	Another::Register<Another>("Another", "you can add a description and also an index", 10);
+	polyMap.Clear();
+	LoadFromXML(polyMap, s);
+	DumpMap(polyMap);
 
 }
 
