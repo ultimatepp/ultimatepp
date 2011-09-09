@@ -18,13 +18,26 @@ using namespace Upp;
 #define T_tcc_output_file		tcc_output_file
 #endif
 
+
 #if defined(PLATFORM_WIN32)
-Tcc::Tcc(const char *dllName)
+Tcc::Tcc(const char *dllName) {
+	Init(dllName);
+}
 #else
-Tcc::Tcc(const char *libPath)
+Tcc::Tcc(const char *libPath) {
+	Init(libPath);
+}
+#endif
+
+#if defined(PLATFORM_WIN32)
+void Tcc::Init(const char *dllName)
+#else
+void Tcc::Init(const char *libPath)
 #endif
 {
 #if defined(PLATFORM_WIN32)
+	if (dllName == NULL || *dllName == '\0')
+		dllName = "libtcc.dll";
 	hinstLib = LoadLibrary(TEXT(dllName));
 	if (hinstLib == NULL) 
 		throw Exc(t_("Tcc library not found"));
@@ -140,9 +153,11 @@ void Tcc::DefaultErrorHandler(void* opaque, const char* msg)
 
 Tcc::~Tcc()
 {
-	T_tcc_delete(stateTcc);
+	if (stateTcc)
+		T_tcc_delete(stateTcc);
 #if defined(PLATFORM_WIN32)	
-	FreeLibrary(hinstLib);
+	if (hinstLib)
+		FreeLibrary(hinstLib);
 #endif
 }
 

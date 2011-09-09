@@ -6,12 +6,16 @@
 class Tcc
 {
 public:
-#if defined(PLATFORM_WIN32)
-	Tcc(const char *dllFile = "libtcc.dll");
-#else
-	Tcc(const char *libPath = NULL);
-#endif
+	Tcc() {stateTcc = 0;};
 	~Tcc();
+#if defined(PLATFORM_WIN32)
+	Tcc(const char *dllFile);
+	void Init(const char *dllFile = "libtcc.dll");
+#else
+	Tcc(const char *libPath);
+	void Init(const char *libPath = NULL);
+#endif
+	bool IsInit() {return stateTcc;}
 
 	void NoStdlib() {::NoStdlib(stateTcc);}
 
