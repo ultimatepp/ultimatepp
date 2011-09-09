@@ -188,9 +188,5 @@ void Ide::CreateMakefile()
 
 void Ide::OpenOutputFolder()
 {
-	#if defined(PLATFORM_WIN32)
-		LaunchWebBrowser(GetFileFolder(target));
-	#else
-		system("xdg-open " + GetFileFolder(target) + " &");
-	#endif
+	ShellOpenFolder(GetFileFolder(target));
 }

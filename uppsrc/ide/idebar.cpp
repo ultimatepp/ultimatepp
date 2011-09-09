@@ -81,6 +81,9 @@ void Ide::File(Bar& menu) {
 	menu.Add(split, AK_SWAP, THISBACK(SwapEditors));
 
 	menu.MenuSeparator();
+	
+	menu.Add(AK_OPENFILEDIR, THISBACK(OpenFileFolder));
+	menu.MenuSeparator();
 
 	menu.Add(AK_STATISTICS, THISBACK(Statistics))
 		.Help("Display various statistics");
@@ -455,7 +458,7 @@ void Ide::BuildMenu(Bar& menu) {
 	          + "according to console pane");
 #if defined(PLATFORM_WIN32) || defined(PLATFORM_POSIX)
 	menu.MenuSeparator();
-	menu.Add(!IsNull(target), "Open output directory", THISBACK(OpenOutputFolder));
+	menu.Add(!IsNull(target), AK_OPENOUTDIR, THISBACK(OpenOutputFolder));
 #endif
 }
 

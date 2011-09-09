@@ -710,6 +710,15 @@ void WorkspaceWork::SpecialFileMenu(Bar& menu)
 #endif
 	menu.Add("Import directory tree sources..", THISBACK(Import));
 }
+void WorkspaceWork::OpenFileFolder()
+{
+	ShellOpenFolder(GetFileDirectory(GetActiveFilePath()));
+}
+
+void WorkspaceWork::OpenPackageFolder()
+{
+	ShellOpenFolder(GetFileDirectory(GetActivePackagePath()));
+}
 
 void WorkspaceWork::FileMenu(Bar& menu)
 {
@@ -740,6 +749,8 @@ void WorkspaceWork::FileMenu(Bar& menu)
 		.Help("Remove file / separator / topic group from package");
 	menu.Add(filelist.IsCursor() && !sel, "Delete", THISBACK(DelFile))
 		.Help("Remove file / topic group reference from package & delete file / folder on disk");
+	menu.Separator();
+	menu.Add("Open File Directory",THISBACK(OpenFileFolder));
 	menu.Separator();
 	menu.Add(filelist.GetCursor() > 0, "Move up", THISBACK1(MoveFile, -1))
 		.Key(organizer ? K_CTRL_UP : K_SHIFT_CTRL_UP)
@@ -866,6 +877,8 @@ void WorkspaceWork::PackageMenu(Bar& menu)
 			    .Check(actual.optimize_speed);
 			menu.Separator();
 			BuildPackageMenu(menu);
+			menu.Separator();
+			menu.Add("Open Package Directory",THISBACK(OpenPackageFolder));
 		}
 	}
 }

@@ -190,8 +190,11 @@ struct WorkspaceWork {
 	void   ShowFile(int pi);
 
 	String         GetActivePackage() const                   { return package.GetCurrentName(); }
+	String         GetActivePackagePath() const               { return PackagePath(package.GetCurrentName()); }
 	String         GetActiveFileName() const;
 	String         GetActiveFilePath() const;
+	void			OpenFileFolder();
+	void  			OpenPackageFolder();
 	bool           IsActiveFile() const;
 	Package::File& ActiveFile();
 	String         FileName(int i) const;
