@@ -1,0 +1,11 @@
+description "Testing Format handling of utf8 texts (%s), also String::GetCharCount and Format(%d) optimization\377";
+
+uses
+	Core;
+
+file
+	Utf8Format.cpp;
+
+mainconfig
+	"" = "SSE2";
+
