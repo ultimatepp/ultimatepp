@@ -108,7 +108,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 			for(int j = 0; j < srcfile.GetCount(); j++) {
 				String fn = srcfile[j];
 				String ext = ToLower(GetFileExt(fn));
-				if(ext == ".c" || ext == ".cpp" || ext == ".cc" || ext == ".cxx"
+				if(ext == ".c" || ext == ".cpp" || ext == ".cc" || ext == ".cxx" || ext == ".m" || ext == ".mm"
 				|| ext == ".s" || ext == ".S"
 				|| ext == ".brc" || (ext == ".rc" && HasFlag("WIN32"))) {
 					sfile.Add(fn);
@@ -189,6 +189,8 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 					exec << " -x c ";
 				else if(ext == ".s" || ext == ".S")
 					exec << " -x assembler-with-cpp ";
+				else if (ext == ".m" || ext == ".mm")
+					exec << fuse_cxa_atexit << " -x objective-c++ ";
 				else
 					exec << fuse_cxa_atexit << " -x c++ ";
 				exec << GetHostPathQ(fn) << " -o " << GetHostPathQ(objfile);
@@ -333,23 +335,44 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			for(i = 0; i < libpath.GetCount(); i++)
 				lnk << " -L" << GetHostPathQ(libpath[i]);
 //			lnk << " -Wl,--gc-sections,-O,2 ";
-			if (!HasFlag("OSX11"))
-			  lnk << " -Wl,-O,2 "; // CXL 05/11/14 --gc-sections causing trouble on ubuntu
+			if(!HasFlag("OSX11"))
+				lnk << " -Wl,-O,2 ";
 			lnk << linkoptions;
 
 			if (HasFlag("OSX11")) {
-			  if (HasFlag("POWERPC"))
-				lnk << " -arch ppc";
-			  if (HasFlag("X86"))
-				lnk << " -arch i386";
+				if (HasFlag("POWERPC"))
+					lnk << " -arch ppc";
+				if (HasFlag("X86"))
+					lnk << " -arch i386";
 			}
 
-			for(i = 0; i < linkfile.GetCount(); i++)
-				if(ToLower(GetFileExt(linkfile[i])) == ".o")
-					lnk  << ' ' << GetHostPathQ(linkfile[i]);
-				else
-					lib.Add(linkfile[i]);
-			if(!HasFlag("SOLARIS")&&!HasFlag("OSX11"))
+			String lfilename;
+			if(HasFlag("OBJC")) {
+				String lfilename;
+				String linklist;
+				for(i = 0; i < linkfile.GetCount(); i++)
+					if(ToLower(GetFileExt(linkfile[i])) == ".o")
+						linklist << GetHostPath(linkfile[i]) << '\n';
+
+				String linklistM = "Producing link file list ...\n";
+				String odir = GetFileDirectory(linkfile[0]);
+				lfilename << GetHostPath(GetFileFolder(linkfile[0])) << ".LinkFileList";
+					
+				linklistM  << lfilename;
+				UPP::SaveFile(lfilename, linklist);
+				lnk << " -L" << GetHostPathQ(odir)
+				    << " -F" << GetHostPathQ(odir)
+				          << " -filelist " << lfilename << " ";
+				PutConsole( linklistM );
+			}
+			else
+				for(i = 0; i < linkfile.GetCount(); i++)
+					if(ToLower(GetFileExt(linkfile[i])) == ".o")
+						lnk  << ' ' << GetHostPathQ(linkfile[i]);
+					else
+						lib.Add(linkfile[i]);
+
+			if(!HasFlag("SOLARIS") && !HasFlag("OSX11") && !HasFlag("OBJC"))
 				lnk << " -Wl,--start-group ";
 			for(int pass = 0; pass < 2; pass++)
 				for(i = 0; i < lib.GetCount(); i++) {
@@ -366,7 +389,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 							else
 								lnk << " -l" << ln;
 				}
-			if(!HasFlag("SOLARIS")&&!HasFlag("OSX11"))
+			if(!HasFlag("SOLARIS") && !HasFlag("OSX11"))
 				lnk << " -Wl,--end-group";
 			PutConsole("Linking...");
 			CustomStep(".pre-link");
