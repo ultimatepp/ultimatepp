@@ -147,3 +147,12 @@ FileSel& OutputFs() {
 	fsp->Multi();
 	return *fsp;
 }
+
+void ShellOpenFolder(const String& dir)
+{
+	#if defined(PLATFORM_WIN32)
+		LaunchWebBrowser(dir);
+	#else
+		system("xdg-open " + dir + " &");
+	#endif
+}
