@@ -482,6 +482,18 @@ String FormatTime(Time t, const char *s, int language)
 
 // New format ----------------------------
 
+
+void TrimChar(String& s, int n)
+{
+	if(GetDefaultCharset() == CHARSET_UTF8) {
+		WString h(s);
+		h.Trim(n);
+		s = h.ToString();
+	}
+	else
+		s.Trim(n);
+}
+
 struct FormId : Moveable<FormId> {
 	FormId(String id, int type) : id(id), type(type) {}
 	String id;
@@ -549,6 +561,8 @@ void RegisterDateTimeFormatter(const char *id, Formatter f)
 
 String IntFormatter(const Formatting& f)
 {
+	if(f.format.GetCount() == 0 && f.id[0] == 'd' && f.id[1] == 0)
+		return AsString((int)f.arg);
 	StringBuffer q;
 	q.SetLength(1000);
 	q.SetLength(sprintf(q, '%' + f.format + f.id, (int)f.arg));
@@ -629,6 +643,37 @@ String RealFormatter(const Formatting& f)
 String StringFormatter(const Formatting& f)
 {
 	const String& s = f.arg;
+	if(f.format.GetCount() == 0 && f.id[0] == 's' && f.id[1] == 0)
+		return s;
+	int len = s.GetCharCount();
+	int width = len;
+	int precision = len;
+	bool lpad = false;
+	CParser p(f.format);
+	if(p.Char('-'))
+		lpad = true;
+	if(p.IsNumber())
+		width = p.ReadInt();
+	if(p.Char('.') && p.IsNumber())
+		precision = p.ReadInt();
+//	if(precision > len)
+//		return WString(~s, precision).ToString();
+	String q = s;
+	if(precision < len) {
+		TrimChar(q, precision);
+		len = precision;
+	}
+	String r;
+	if(lpad)
+		r.Cat(q);
+	if(width > len)
+		r.Cat(' ', width - len);
+	if(!lpad)
+		r.Cat(q);
+	return r;
+
+/*	
+	if(f.format.GetCount())
 	String fmt = '%' + f.format + f.id;
 	char h[256];
 #ifdef COMPILER_MSC
@@ -647,6 +692,7 @@ String StringFormatter(const Formatting& f)
 		return String(ah, n);
 	}
 	return String(h, n);
+*/
 }
 
 String FloatFormatter(const Formatting& f)
@@ -1053,33 +1099,37 @@ String NFormat0(int language, const char *s, const Value **v, int count)
 			else
 				r << "<N/A '" << f.id << "' for type " << (int)f.arg.GetType() << ">";
 		}
+		int len;
 		switch(pad)
 		{
 		case ALIGN_LEFT:
 			ASSERT(padn >= 0);
-			if(r.GetLength() < padn)
-				r.Cat(' ', padn - r.GetLength());
+			len = r.GetCharCount();
+			if(len < padn)
+				r.Cat(' ', padn - len);
 			else
-				r.Trim(padn);
+				TrimChar(r, padn);
 			break;
 		case ALIGN_RIGHT:
 			ASSERT(padn >= 0);
-			if(r.GetLength() < padn) {
-				String fill(' ', padn - r.GetLength());
+			len = r.GetCharCount();
+			if(len < padn) {
+				String fill(' ', padn - len);
 				r = fill + r;
 			}
 			else
-				r.Trim(padn);
+				TrimChar(r, padn);
 			break;
 		case ALIGN_CENTER:
 			ASSERT(padn >= 0);
-			if(r.GetLength() < padn) {
-				String fill(' ', (padn - r.GetLength()) / 2);
-				r = fill + r;
-				r.Cat(' ', padn - r.GetLength());
+			len = r.GetCharCount();
+			if(len < padn) {
+				int ll = (padn - len) / 2;
+				r = String(' ', ll) + r;
+				r.Cat(' ', padn - len - ll);
 			}
 			else
-				r.Trim(padn);
+				TrimChar(r, padn);
 			break;
 		}
 		result.Cat(r);
