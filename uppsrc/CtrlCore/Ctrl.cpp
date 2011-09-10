@@ -917,7 +917,6 @@ void Ctrl::ChSync()
 
 void Ctrl::SyncCh()
 {
-	Font std = GetStdFont();
 	if(ChIsInvalidated())
 		ChSync();
 }
