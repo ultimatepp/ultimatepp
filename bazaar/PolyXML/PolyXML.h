@@ -160,6 +160,67 @@ template<class K, class T> void PolyXMLArrayMap<K, T>::Xmlize(XmlIO xml)
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+// PolyXMLArrayMapPtr class -- add support for streaming polymorphic maps of smart pointers of objects
+template<class K, class T> class PolyXMLArrayMapPtr : public ArrayMap<K, Ptr<T> >
+{
+	public:
+		// Xmlizer
+		void Xmlize(XmlIO xml);
+		
+		void Add(const K &key, const Ptr<T> &data) { ArrayMap<K, Ptr<T> >::Add(key, data); }
+};
+
+template<class K, class T> void PolyXMLArrayMapPtr<K, T>::Xmlize(XmlIO xml)
+{
+	if(xml.IsStoring())
+	{
+		for(int i = 0; i < PolyXMLArrayMapPtr::GetCount(); i++)
+		{
+			// skip unlinked elements
+			if(ArrayMap<K, Ptr<T> >::IsUnlinked(i))
+				continue;
+			Ptr<T> &data = PolyXMLArrayMapPtr::operator[](i);
+			K const &key = PolyXMLArrayMapPtr::GetKey(i);
+			
+			// skip data marked as erase too
+			if(data->IsErased())
+				continue;
+			String tag = data->IsA();
+			XmlizeStore(xml.Add("key"), key);
+			XmlizeStore(xml.Add(tag), *data);
+		}
+	}
+	else
+	{
+		PolyXMLArrayMapPtr<K, T>::Clear();
+		for(int i = 0; i < xml->GetCount() - 1 && xml->Node(i).IsTag("key");)
+		{
+			if(xml->Node(i).IsTag())
+			{
+				K key;
+				Upp::Xmlize(xml.At(i++), key);
+				String tag = xml->Node(i).GetTag();
+				Ptr<T> data = T::CreatePtr(tag);
+				if(data)
+				{
+					data->Xmlize(xml.At(i++));
+					Add(key, data);
+				}
+				else
+				{
+					// unknown class -- gather raw xml node
+					String rawXml = AsXML(xml.At(i).Node());
+					
+					// creates an unknown class and stores raw xml on it
+					Ptr<T> raw = (T *)new PolyXMLUnknown<T>(tag, rawXml);
+					Add(key, raw);
+				}
+			}
+		}
+	}
+}
+
 END_UPP_NAMESPACE;
 
 #endif
