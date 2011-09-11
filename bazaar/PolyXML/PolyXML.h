@@ -161,27 +161,27 @@ template<class K, class T> void PolyXMLArrayMap<K, T>::Xmlize(XmlIO xml)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-// PolyXMLArrayMapPtr class -- add support for streaming polymorphic maps of smart pointers of objects
-template<class K, class T> class PolyXMLArrayMapPtr : public ArrayMap<K, Ptr<T> >
+// PolyXMLArrayMapOne class -- add support for streaming polymorphic maps of One<> objects
+template<class K, class T> class PolyXMLArrayMapOne : public ArrayMap<K, One<T> >
 {
 	public:
 		// Xmlizer
 		void Xmlize(XmlIO xml);
 		
-		void Add(const K &key, const Ptr<T> &data) { ArrayMap<K, Ptr<T> >::Add(key, data); }
+		void Add(const K &key, const One<T> &data) { ArrayMap<K, One<T> >::Add(key, data); }
 };
 
-template<class K, class T> void PolyXMLArrayMapPtr<K, T>::Xmlize(XmlIO xml)
+template<class K, class T> void PolyXMLArrayMapOne<K, T>::Xmlize(XmlIO xml)
 {
 	if(xml.IsStoring())
 	{
-		for(int i = 0; i < PolyXMLArrayMapPtr::GetCount(); i++)
+		for(int i = 0; i < PolyXMLArrayMapOne::GetCount(); i++)
 		{
 			// skip unlinked elements
-			if(ArrayMap<K, Ptr<T> >::IsUnlinked(i))
+			if(ArrayMap<K, One<T> >::IsUnlinked(i))
 				continue;
-			Ptr<T> &data = PolyXMLArrayMapPtr::operator[](i);
-			K const &key = PolyXMLArrayMapPtr::GetKey(i);
+			One<T> &data = PolyXMLArrayMapOne::operator[](i);
+			K const &key = PolyXMLArrayMapOne::GetKey(i);
 			
 			// skip data marked as erase too
 			if(data->IsErased())
@@ -193,7 +193,7 @@ template<class K, class T> void PolyXMLArrayMapPtr<K, T>::Xmlize(XmlIO xml)
 	}
 	else
 	{
-		PolyXMLArrayMapPtr<K, T>::Clear();
+		PolyXMLArrayMapOne<K, T>::Clear();
 		for(int i = 0; i < xml->GetCount() - 1 && xml->Node(i).IsTag("key");)
 		{
 			if(xml->Node(i).IsTag())
@@ -201,7 +201,7 @@ template<class K, class T> void PolyXMLArrayMapPtr<K, T>::Xmlize(XmlIO xml)
 				K key;
 				Upp::Xmlize(xml.At(i++), key);
 				String tag = xml->Node(i).GetTag();
-				Ptr<T> data = T::CreatePtr(tag);
+				One<T> data = T::CreatePtr(tag);
 				if(data)
 				{
 					data->Xmlize(xml.At(i++));
@@ -213,7 +213,7 @@ template<class K, class T> void PolyXMLArrayMapPtr<K, T>::Xmlize(XmlIO xml)
 					String rawXml = AsXML(xml.At(i).Node());
 					
 					// creates an unknown class and stores raw xml on it
-					Ptr<T> raw = (T *)new PolyXMLUnknown<T>(tag, rawXml);
+					One<T> raw = (T *)new PolyXMLUnknown<T>(tag, rawXml);
 					Add(key, raw);
 				}
 			}
