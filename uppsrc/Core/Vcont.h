@@ -208,6 +208,7 @@ public:
 	void     Move(int i1, int i2);
 
 	T       *Detach(int i)              { T *t = &Get(i); vector.Remove(i); return t; }
+	T       *Swap(int i, T *newt)       { T *tmp = vector[i]; vector[i] = ptr; return tmp; }
 	T&       Set(int i, T *newt)        { delete (T *)vector[i]; vector[i] = newt; return *newt; }
 	T&       Insert(int i, T *newt);
 

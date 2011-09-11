@@ -439,6 +439,13 @@ is responsible for deletion of the element.&]
 [s7; [*/ Return value]-|Pointer to the element allocated on the heap.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Array`:`:Swap`(int`,T`*`):%- [*@4 T]_`*[* Swap]([@(0.0.255) int]_[*@3 i], 
+[*@4 T]_`*[*@3 newt])&]
+[s2; Sets element at [%-*@3 i] to [%-*@3 newt].and returns a pointer 
+to original element. Client is responsible for deletion of the 
+original element.&]
+[s3; &]
+[s4;%- &]
 [s5;:Array`:`:Set`(int`,T`*`):%- [*@4 T][@(0.0.255) `&]_[* Set]([@(0.0.255) int]_[*@3 i], 
 [*@4 T]_`*[*@3 newt])&]
 [s2; Replaces element at the specified position by an element previously 

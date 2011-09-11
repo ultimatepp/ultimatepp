@@ -142,4 +142,11 @@ Client is responsible for deletion of the element.&]
 pointer to the element is returned. Client is responsible for 
 deletion of the element.&]
 [s3; &]
+[s4;%- &]
+[s5;:ArrayMap`:`:Swap`(int`,T`*`):%- [*@4 T]_`*[* Swap]([@(0.0.255) int]_[*@3 i], 
+[*@4 T]_`*[*@3 newt])&]
+[s2; Sets element at [%-*@3 i] to [%-*@3 newt].and returns a pointer 
+to original element. Client is responsible for deletion of the 
+original element.&]
+[s3; &]
 [s0; ]
