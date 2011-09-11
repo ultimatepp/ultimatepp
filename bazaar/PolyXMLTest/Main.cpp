@@ -2,7 +2,7 @@
 
 using namespace Upp;
 
-class Base : public WithPolyXML<Base>
+class Base : public WithPolyXML<Base>, public Pte<Base>
 {
 	public:
 		String BaseData;
@@ -109,6 +109,38 @@ void DumpMap(PolyXMLArrayMap<String, Base> &polyMap)
 	}
 }
 
+void DumpMapPtr(PolyXMLArrayMapPtr<String, Base> &polyMap)
+{
+	for(int i = 0; i < polyMap.GetCount(); i++)
+	{
+		Cerr() << "  class with key '" << polyMap.GetKey(i) << "' is a '" << polyMap[i]->IsA() << "'\n";
+		if(polyMap[i]->IsA() == "Base")
+			Cerr() << "    BaseData    = '" << ((Ptr<Base> &)polyMap[i])->BaseData << "'\n";
+		else if(polyMap[i]->IsA() == "Derived")
+		{
+			Cerr() << "    BaseData    = '" << ((Ptr<Derived> &)polyMap[i])->BaseData << "'\n";
+			Cerr() << "    DerivedData = '" << ((Ptr<Derived> &)polyMap[i])->DerivedData << "'\n";
+		}
+		else if(polyMap[i]->IsA() == "Another")
+		{
+			Cerr() << "    BaseData    = '" << ((Ptr<Another> &)polyMap[i])->BaseData << "'\n";
+			Cerr() << "    DerivedData = '" << ((Ptr<Another> &)polyMap[i])->DerivedData << "'\n";
+			Cerr() << "    AnotherData = '" << ((Ptr<Another> &)polyMap[i])->AnotherData << "'\n";
+		}
+		else if(polyMap[i]->IsA() == "OneMore")
+		{
+			Cerr() << "    BaseData    = '" << ((Ptr<OneMore> &)polyMap[i])->BaseData << "'\n";
+			Cerr() << "    DerivedData = '" << ((Ptr<OneMore> &)polyMap[i])->DerivedData << "'\n";
+			Cerr() << "    AnotherData = '" << ((Ptr<OneMore> &)polyMap[i])->AnotherData << "'\n";
+			Cerr() << "    OneMoreData = '" << ((Ptr<OneMore> &)polyMap[i])->OneMoreData << "'\n";
+		}
+		else if(polyMap[i]->IsA() == "*UNKNOWN*")
+			Cerr() << "    Original class is '" << ((Ptr<PolyXMLUnknown<Base> > &)polyMap[i])->GetUnknownClassName() << "' -- STREAMED IN AS RAW XML\n";
+		else
+			Cerr() << "oops... known class, but I don't know how to handle it\n";
+	}
+}
+
 CONSOLE_APP_MAIN
 {
 	// MANUAL CLASS REGISTRATION, SEE ABOVE COMMENT !
@@ -123,132 +155,201 @@ CONSOLE_APP_MAIN
 			<< "'  Description '" << Base::GetClassDescription(Base::Classes()[i]) 
 			<< "'  Index '" << Base::GetClassIndex(Base::Classes()[i]) << "'\n";
 
-	Cerr() << "\n/////////////////////////////////////////////////////////////////////////////////////////";
-	Cerr() << "\nPolyXMLArray tests";
-	Cerr() << "\n/////////////////////////////////////////////////////////////////////////////////////////";
-	PolyXMLArray<Base> polyArray;
+	{
+		Cerr() << "\n/////////////////////////////////////////////////////////////////////////////////////////";
+		Cerr() << "\nPolyXMLArray tests";
+		Cerr() << "\n/////////////////////////////////////////////////////////////////////////////////////////";
+		PolyXMLArray<Base> polyArray;
+		
+		Base *b = new Base;
+		b->BaseData = "Sample data in base class";
+		polyArray.Add(b);
+		
+		Derived *d = new Derived;
+		d->BaseData = "Sample data in derived class";
+		d->DerivedData = "Another sample data in derived class";
+		polyArray.Add(d);
+		
+		Another *a = dynamic_cast<Another *>(Base::CreatePtr("Another"));
+		a->BaseData = "Sample data in Derived class";
+		a->DerivedData = "Another sample data in Derived class";
+		a->AnotherData = 12345;
+		polyArray.Add(a);
+		
+		OneMore *o = new OneMore;
+		o->BaseData = "Sample data in OneMore class";
+		o->DerivedData = "Another sample data in OneMore class";
+		o->AnotherData = 12;
+		o->OneMoreData = 3.1418;
+		polyArray.Add(o);
+		
+		Cerr() << "\nArray content before streaming out: " << polyArray.GetCount() << " classes:\n";
+		DumpArray(polyArray);
 	
-	Base *b = new Base;
-	b->BaseData = "Sample data in base class";
-	polyArray.Add(b);
+		String s = StoreAsXML(polyArray, "PolyXMLTest");
+		Cerr() << "\nStreamed XML : \n\n" << s ;
+		
+		polyArray.Clear();
+		LoadFromXML(polyArray, s);
+		
+		Cerr() << "\nArray content after streaming in : " << polyArray.GetCount() << " classes:\n";
+		DumpArray(polyArray);
+		
+		// Now we de-register all classes and re-register all of them BESIDES one
+		// to test in-streaming with an unknown class
+		Base::UnregisterAll();
+		Base::Register<Base>("Base");
+		Derived::Register<Derived>("Derived", "you can add a description");
+		OneMore::Register<OneMore>("OneMore", "last class with description and index", 12);
 	
-	Derived *d = new Derived;
-	d->BaseData = "Sample data in derived class";
-	d->DerivedData = "Another sample data in derived class";
-	polyArray.Add(d);
-	
-	Another *a = dynamic_cast<Another *>(Base::CreatePtr("Another"));
-	a->BaseData = "Sample data in Derived class";
-	a->DerivedData = "Another sample data in Derived class";
-	a->AnotherData = 12345;
-	polyArray.Add(a);
-	
-	OneMore *o = new OneMore;
-	o->BaseData = "Sample data in OneMore class";
-	o->DerivedData = "Another sample data in OneMore class";
-	o->AnotherData = 12;
-	o->OneMoreData = 3.1418;
-	polyArray.Add(o);
-	
-	Cerr() << "\nArray content before streaming out: " << polyArray.GetCount() << " classes:\n";
-	DumpArray(polyArray);
+		Cerr() << "\nStreaming in XML with an unknown class : \n\n";
+		
+		polyArray.Clear();
+		LoadFromXML(polyArray, s);
+		
+		Cerr() << "\nArray content after streaming in : " << polyArray.GetCount() << " classes:\n";
+		DumpArray(polyArray);
+		
+		Cerr() << "\nStreaming out XML with an unknown class : \n\n";
+		s = StoreAsXML(polyArray, "PolyXMLTest");
+		
+		Cerr() << "\nRedefining missing class and streaming it the whole stuff again : \n\n";
+		Another::Register<Another>("Another", "you can add a description and also an index", 10);
+		polyArray.Clear();
+		LoadFromXML(polyArray, s);
+		DumpArray(polyArray);
+	}
 
-	String s = StoreAsXML(polyArray, "PolyXMLTest");
-	Cerr() << "\nStreamed XML : \n\n" << s ;
+	{	
+		Cerr() << "\n/////////////////////////////////////////////////////////////////////////////////////////";
+		Cerr() << "\nPolyXMLArrayMap tests";
+		Cerr() << "\n/////////////////////////////////////////////////////////////////////////////////////////";
 	
-	polyArray.Clear();
-	LoadFromXML(polyArray, s);
+		PolyXMLArrayMap<String, Base> polyMap;
+		
+		Base *b = new Base;
+		b->BaseData = "Sample data in base class";
+		polyMap.Add("BaseKey", b);
+		
+		Derived *d = new Derived;
+		d->BaseData = "Sample data in derived class";
+		d->DerivedData = "Another sample data in derived class";
+		polyMap.Add("DerivedKey", d);
+		
+		Another *a = dynamic_cast<Another *>(Base::CreatePtr("Another"));
+		a->BaseData = "Sample data in Derived class";
+		a->DerivedData = "Another sample data in Derived class";
+		a->AnotherData = 12345;
+		polyMap.Add("AnotherKey", a);
+		
+		OneMore *o = new OneMore;
+		o->BaseData = "Sample data in OneMore class";
+		o->DerivedData = "Another sample data in OneMore class";
+		o->AnotherData = 12;
+		o->OneMoreData = 3.1418;
+		polyMap.Add("OneMoreKey", o);
+		
+		Cerr() << "\nMap content before streaming out: " << polyMap.GetCount() << " classes:\n";
+		DumpMap(polyMap);
 	
-	Cerr() << "\nArray content after streaming in : " << polyArray.GetCount() << " classes:\n";
-	DumpArray(polyArray);
+		String s = StoreAsXML(polyMap, "PolyXMLTest");
+		Cerr() << "\nStreamed XML : \n\n" << s ;
+		
+		polyMap.Clear();
+		LoadFromXML(polyMap, s);
+		
+		Cerr() << "\nMap content after streaming in : " << polyMap.GetCount() << " classes:\n";
+		DumpMap(polyMap);
+		
+		// Now we de-register all classes and re-register all of them BESIDES one
+		// to test in-streaming with an unknown class
+		Base::UnregisterAll();
+		Base::Register<Base>("Base");
+		Derived::Register<Derived>("Derived", "you can add a description");
+		OneMore::Register<OneMore>("OneMore", "last class with description and index", 12);
 	
-	// Now we de-register all classes and re-register all of them BESIDES one
-	// to test in-streaming with an unknown class
-	Base::UnregisterAll();
-	Base::Register<Base>("Base");
-	Derived::Register<Derived>("Derived", "you can add a description");
-	OneMore::Register<OneMore>("OneMore", "last class with description and index", 12);
+		Cerr() << "\nStreaming in XML with an unknown class : \n\n";
+		
+		polyMap.Clear();
+		LoadFromXML(polyMap, s);
+		
+		Cerr() << "\nMap content after streaming in : " << polyMap.GetCount() << " classes:\n";
+		DumpMap(polyMap);
+		
+		Cerr() << "\nStreaming out XML with an unknown class : \n\n";
+		s = StoreAsXML(polyMap, "PolyXMLTest");
+		
+		Cerr() << "\nRedefining missing class and streaming it the whole stuff again : \n\n";
+		Another::Register<Another>("Another", "you can add a description and also an index", 10);
+		polyMap.Clear();
+		LoadFromXML(polyMap, s);
+		DumpMap(polyMap);
+	}
 
-	Cerr() << "\nStreaming in XML with an unknown class : \n\n";
+	{	
+		Cerr() << "\n/////////////////////////////////////////////////////////////////////////////////////////";
+		Cerr() << "\nPolyXMLArrayMapPtr tests";
+		Cerr() << "\n/////////////////////////////////////////////////////////////////////////////////////////";
 	
-	polyArray.Clear();
-	LoadFromXML(polyArray, s);
+		PolyXMLArrayMapPtr<String, Base> polyMapPtr;
+		
+		Ptr<Base> b = new Base;
+		b->BaseData = "Sample data in base class";
+		polyMapPtr.Add("BaseKey", b);
+		
+		Ptr<Derived> d = new Derived;
+		d->BaseData = "Sample data in derived class";
+		d->DerivedData = "Another sample data in derived class";
+		polyMapPtr.Add("DerivedKey", (Ptr<Base>&)d);
+		
+		Ptr<Another> a = dynamic_cast<Another *>(Base::CreatePtr("Another"));
+		a->BaseData = "Sample data in Derived class";
+		a->DerivedData = "Another sample data in Derived class";
+		a->AnotherData = 12345;
+		polyMapPtr.Add("AnotherKey", (Ptr<Base>&)a);
+		
+		Ptr<OneMore> o = new OneMore;
+		o->BaseData = "Sample data in OneMore class";
+		o->DerivedData = "Another sample data in OneMore class";
+		o->AnotherData = 12;
+		o->OneMoreData = 3.1418;
+		polyMapPtr.Add("OneMoreKey", (Ptr<Base>&)o);
+		
+		Cerr() << "\nMap content before streaming out: " << polyMapPtr.GetCount() << " classes:\n";
+		DumpMapPtr(polyMapPtr);
 	
-	Cerr() << "\nArray content after streaming in : " << polyArray.GetCount() << " classes:\n";
-	DumpArray(polyArray);
+		String s = StoreAsXML(polyMapPtr, "PolyXMLTest");
+		Cerr() << "\nStreamed XML : \n\n" << s ;
+		
+		polyMapPtr.Clear();
+		LoadFromXML(polyMapPtr, s);
+		
+		Cerr() << "\nMap content after streaming in : " << polyMapPtr.GetCount() << " classes:\n";
+		DumpMapPtr(polyMapPtr);
+		
+		// Now we de-register all classes and re-register all of them BESIDES one
+		// to test in-streaming with an unknown class
+		Base::UnregisterAll();
+		Base::Register<Base>("Base");
+		Derived::Register<Derived>("Derived", "you can add a description");
+		OneMore::Register<OneMore>("OneMore", "last class with description and index", 12);
 	
-	Cerr() << "\nStreaming out XML with an unknown class : \n\n";
-	s = StoreAsXML(polyArray, "PolyXMLTest");
-	
-	Cerr() << "\nRedefining missing class and streaming it the whole stuff again : \n\n";
-	Another::Register<Another>("Another", "you can add a description and also an index", 10);
-	polyArray.Clear();
-	LoadFromXML(polyArray, s);
-	DumpArray(polyArray);
-
-	Cerr() << "\n/////////////////////////////////////////////////////////////////////////////////////////";
-	Cerr() << "\nPolyXMLArrayMap tests";
-	Cerr() << "\n/////////////////////////////////////////////////////////////////////////////////////////";
-
-	PolyXMLArrayMap<String, Base> polyMap;
-	
-	b = new Base;
-	b->BaseData = "Sample data in base class";
-	polyMap.Add("BaseKey", b);
-	
-	d = new Derived;
-	d->BaseData = "Sample data in derived class";
-	d->DerivedData = "Another sample data in derived class";
-	polyMap.Add("DerivedKey", d);
-	
-	a = dynamic_cast<Another *>(Base::CreatePtr("Another"));
-	a->BaseData = "Sample data in Derived class";
-	a->DerivedData = "Another sample data in Derived class";
-	a->AnotherData = 12345;
-	polyMap.Add("AnotherKey", a);
-	
-	o = new OneMore;
-	o->BaseData = "Sample data in OneMore class";
-	o->DerivedData = "Another sample data in OneMore class";
-	o->AnotherData = 12;
-	o->OneMoreData = 3.1418;
-	polyMap.Add("OneMoreKey", o);
-	
-	Cerr() << "\nMap content before streaming out: " << polyMap.GetCount() << " classes:\n";
-	DumpMap(polyMap);
-
-	s = StoreAsXML(polyMap, "PolyXMLTest");
-	Cerr() << "\nStreamed XML : \n\n" << s ;
-	
-	polyMap.Clear();
-	LoadFromXML(polyMap, s);
-	
-	Cerr() << "\nMap content after streaming in : " << polyMap.GetCount() << " classes:\n";
-	DumpMap(polyMap);
-	
-	// Now we de-register all classes and re-register all of them BESIDES one
-	// to test in-streaming with an unknown class
-	Base::UnregisterAll();
-	Base::Register<Base>("Base");
-	Derived::Register<Derived>("Derived", "you can add a description");
-	OneMore::Register<OneMore>("OneMore", "last class with description and index", 12);
-
-	Cerr() << "\nStreaming in XML with an unknown class : \n\n";
-	
-	polyMap.Clear();
-	LoadFromXML(polyMap, s);
-	
-	Cerr() << "\nMap content after streaming in : " << polyMap.GetCount() << " classes:\n";
-	DumpMap(polyMap);
-	
-	Cerr() << "\nStreaming out XML with an unknown class : \n\n";
-	s = StoreAsXML(polyMap, "PolyXMLTest");
-	
-	Cerr() << "\nRedefining missing class and streaming it the whole stuff again : \n\n";
-	Another::Register<Another>("Another", "you can add a description and also an index", 10);
-	polyMap.Clear();
-	LoadFromXML(polyMap, s);
-	DumpMap(polyMap);
-
+		Cerr() << "\nStreaming in XML with an unknown class : \n\n";
+		
+		polyMapPtr.Clear();
+		LoadFromXML(polyMapPtr, s);
+		
+		Cerr() << "\nMap content after streaming in : " << polyMapPtr.GetCount() << " classes:\n";
+		DumpMapPtr(polyMapPtr);
+		
+		Cerr() << "\nStreaming out XML with an unknown class : \n\n";
+		s = StoreAsXML(polyMapPtr, "PolyXMLTest");
+		
+		Cerr() << "\nRedefining missing class and streaming it the whole stuff again : \n\n";
+		Another::Register<Another>("Another", "you can add a description and also an index", 10);
+		polyMapPtr.Clear();
+		LoadFromXML(polyMapPtr, s);
+		DumpMapPtr(polyMapPtr);
+	}
 }
 
