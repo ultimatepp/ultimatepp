@@ -109,33 +109,33 @@ void DumpMap(PolyXMLArrayMap<String, Base> &polyMap)
 	}
 }
 
-void DumpMapPtr(PolyXMLArrayMapPtr<String, Base> &polyMap)
+void DumpMapOne(PolyXMLArrayMapOne<String, Base> &polyMap)
 {
 	for(int i = 0; i < polyMap.GetCount(); i++)
 	{
 		Cerr() << "  class with key '" << polyMap.GetKey(i) << "' is a '" << polyMap[i]->IsA() << "'\n";
 		if(polyMap[i]->IsA() == "Base")
-			Cerr() << "    BaseData    = '" << ((Ptr<Base> &)polyMap[i])->BaseData << "'\n";
+			Cerr() << "    BaseData    = '" << ((One<Base> &)polyMap[i])->BaseData << "'\n";
 		else if(polyMap[i]->IsA() == "Derived")
 		{
-			Cerr() << "    BaseData    = '" << ((Ptr<Derived> &)polyMap[i])->BaseData << "'\n";
-			Cerr() << "    DerivedData = '" << ((Ptr<Derived> &)polyMap[i])->DerivedData << "'\n";
+			Cerr() << "    BaseData    = '" << ((One<Derived> &)polyMap[i])->BaseData << "'\n";
+			Cerr() << "    DerivedData = '" << ((One<Derived> &)polyMap[i])->DerivedData << "'\n";
 		}
 		else if(polyMap[i]->IsA() == "Another")
 		{
-			Cerr() << "    BaseData    = '" << ((Ptr<Another> &)polyMap[i])->BaseData << "'\n";
-			Cerr() << "    DerivedData = '" << ((Ptr<Another> &)polyMap[i])->DerivedData << "'\n";
-			Cerr() << "    AnotherData = '" << ((Ptr<Another> &)polyMap[i])->AnotherData << "'\n";
+			Cerr() << "    BaseData    = '" << ((One<Another> &)polyMap[i])->BaseData << "'\n";
+			Cerr() << "    DerivedData = '" << ((One<Another> &)polyMap[i])->DerivedData << "'\n";
+			Cerr() << "    AnotherData = '" << ((One<Another> &)polyMap[i])->AnotherData << "'\n";
 		}
 		else if(polyMap[i]->IsA() == "OneMore")
 		{
-			Cerr() << "    BaseData    = '" << ((Ptr<OneMore> &)polyMap[i])->BaseData << "'\n";
-			Cerr() << "    DerivedData = '" << ((Ptr<OneMore> &)polyMap[i])->DerivedData << "'\n";
-			Cerr() << "    AnotherData = '" << ((Ptr<OneMore> &)polyMap[i])->AnotherData << "'\n";
-			Cerr() << "    OneMoreData = '" << ((Ptr<OneMore> &)polyMap[i])->OneMoreData << "'\n";
+			Cerr() << "    BaseData    = '" << ((One<OneMore> &)polyMap[i])->BaseData << "'\n";
+			Cerr() << "    DerivedData = '" << ((One<OneMore> &)polyMap[i])->DerivedData << "'\n";
+			Cerr() << "    AnotherData = '" << ((One<OneMore> &)polyMap[i])->AnotherData << "'\n";
+			Cerr() << "    OneMoreData = '" << ((One<OneMore> &)polyMap[i])->OneMoreData << "'\n";
 		}
 		else if(polyMap[i]->IsA() == "*UNKNOWN*")
-			Cerr() << "    Original class is '" << ((Ptr<PolyXMLUnknown<Base> > &)polyMap[i])->GetUnknownClassName() << "' -- STREAMED IN AS RAW XML\n";
+			Cerr() << "    Original class is '" << ((One<PolyXMLUnknown<Base> > &)polyMap[i])->GetUnknownClassName() << "' -- STREAMED IN AS RAW XML\n";
 		else
 			Cerr() << "oops... known class, but I don't know how to handle it\n";
 	}
@@ -288,44 +288,44 @@ CONSOLE_APP_MAIN
 
 	{	
 		Cerr() << "\n/////////////////////////////////////////////////////////////////////////////////////////";
-		Cerr() << "\nPolyXMLArrayMapPtr tests";
+		Cerr() << "\nPolyXMLArrayMapOne tests";
 		Cerr() << "\n/////////////////////////////////////////////////////////////////////////////////////////";
 	
-		PolyXMLArrayMapPtr<String, Base> polyMapPtr;
+		PolyXMLArrayMapOne<String, Base> polyMapOne;
 		
-		Ptr<Base> b = new Base;
+		One<Base> b = new Base;
 		b->BaseData = "Sample data in base class";
-		polyMapPtr.Add("BaseKey", b);
+		polyMapOne.Add("BaseKey", b);
 		
-		Ptr<Derived> d = new Derived;
+		One<Derived> d = new Derived;
 		d->BaseData = "Sample data in derived class";
 		d->DerivedData = "Another sample data in derived class";
-		polyMapPtr.Add("DerivedKey", (Ptr<Base>&)d);
+		polyMapOne.Add("DerivedKey", (One<Base>&)d);
 		
-		Ptr<Another> a = dynamic_cast<Another *>(Base::CreatePtr("Another"));
+		One<Another> a = dynamic_cast<Another *>(Base::CreatePtr("Another"));
 		a->BaseData = "Sample data in Derived class";
 		a->DerivedData = "Another sample data in Derived class";
 		a->AnotherData = 12345;
-		polyMapPtr.Add("AnotherKey", (Ptr<Base>&)a);
+		polyMapOne.Add("AnotherKey", (One<Base>&)a);
 		
-		Ptr<OneMore> o = new OneMore;
+		One<OneMore> o = new OneMore;
 		o->BaseData = "Sample data in OneMore class";
 		o->DerivedData = "Another sample data in OneMore class";
 		o->AnotherData = 12;
 		o->OneMoreData = 3.1418;
-		polyMapPtr.Add("OneMoreKey", (Ptr<Base>&)o);
+		polyMapOne.Add("OneMoreKey", (One<Base>&)o);
 		
-		Cerr() << "\nMap content before streaming out: " << polyMapPtr.GetCount() << " classes:\n";
-		DumpMapPtr(polyMapPtr);
+		Cerr() << "\nMap content before streaming out: " << polyMapOne.GetCount() << " classes:\n";
+		DumpMapOne(polyMapOne);
 	
-		String s = StoreAsXML(polyMapPtr, "PolyXMLTest");
+		String s = StoreAsXML(polyMapOne, "PolyXMLTest");
 		Cerr() << "\nStreamed XML : \n\n" << s ;
 		
-		polyMapPtr.Clear();
-		LoadFromXML(polyMapPtr, s);
+		polyMapOne.Clear();
+		LoadFromXML(polyMapOne, s);
 		
-		Cerr() << "\nMap content after streaming in : " << polyMapPtr.GetCount() << " classes:\n";
-		DumpMapPtr(polyMapPtr);
+		Cerr() << "\nMap content after streaming in : " << polyMapOne.GetCount() << " classes:\n";
+		DumpMapOne(polyMapOne);
 		
 		// Now we de-register all classes and re-register all of them BESIDES one
 		// to test in-streaming with an unknown class
@@ -336,20 +336,20 @@ CONSOLE_APP_MAIN
 	
 		Cerr() << "\nStreaming in XML with an unknown class : \n\n";
 		
-		polyMapPtr.Clear();
-		LoadFromXML(polyMapPtr, s);
+		polyMapOne.Clear();
+		LoadFromXML(polyMapOne, s);
 		
-		Cerr() << "\nMap content after streaming in : " << polyMapPtr.GetCount() << " classes:\n";
-		DumpMapPtr(polyMapPtr);
+		Cerr() << "\nMap content after streaming in : " << polyMapOne.GetCount() << " classes:\n";
+		DumpMapOne(polyMapOne);
 		
 		Cerr() << "\nStreaming out XML with an unknown class : \n\n";
-		s = StoreAsXML(polyMapPtr, "PolyXMLTest");
+		s = StoreAsXML(polyMapOne, "PolyXMLTest");
 		
 		Cerr() << "\nRedefining missing class and streaming it the whole stuff again : \n\n";
 		Another::Register<Another>("Another", "you can add a description and also an index", 10);
-		polyMapPtr.Clear();
-		LoadFromXML(polyMapPtr, s);
-		DumpMapPtr(polyMapPtr);
+		polyMapOne.Clear();
+		LoadFromXML(polyMapOne, s);
+		DumpMapOne(polyMapOne);
 	}
 }
 
