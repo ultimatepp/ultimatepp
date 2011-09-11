@@ -61,7 +61,7 @@ void COMBINE5(klass, __, type, __, style)::InitIt() { \
 	klass::style(); \
 } \
 \
-const klass::Style& klass::style() \
+const klass::type& klass::style() \
 { \
 	static COMBINE5(klass, __, type, __, style) b, standard; \
 	if(b.status == 0) { \
