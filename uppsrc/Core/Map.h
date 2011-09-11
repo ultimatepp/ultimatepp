@@ -165,6 +165,7 @@ public:
 	T&        Set(int i, T *ptr)                   { return B::value.Set(i, ptr); }
 	T        *PopDetach()                          { B::key.Drop(); return B::value.PopDetach(); }
 	T        *Detach(int i)                        { B::key.Remove(i); return B::value.Detach(i); }
+	T        *Swap(int i, T *newt)                 { return B::value.Swap(i, newt); }
 
 	ArrayMap(const ArrayMap& s, int) : AMap<K, T, Array<T>, HashFn>(s, 1) {}
 	ArrayMap(pick_ Index<K, HashFn>& ndx, pick_ Array<T>& val) : AMap<K, T, Array<T>, HashFn>(ndx, val) {}
