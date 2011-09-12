@@ -60,6 +60,7 @@ void Ctrl::RefreshFrame() {
 void  Ctrl::ScrollRefresh(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
+	LLOG("ScrollRefresh " << r << " " << dx << " " << dy);
 	if(!IsOpen() || !IsVisible() || r.IsEmpty()) return;
 	int tdx = tabs(dx), tdy = tabs(dy);
 	if(dx) WndInvalidateRect(RectC(dx >= 0 ? r.left : r.right - tdx, r.top - tdy, tdx, r.Height()));
@@ -147,12 +148,14 @@ void Ctrl::ScrollCtrl(Top *top, Ctrl *q, const Rect& r, Rect cr, int dx, int dy)
 void  Ctrl::ScrollView(const Rect& _r, int dx, int dy)
 {
 	GuiLock __;
+	LLOG("ScrollView " << _r << " " << dx << " " << dy);
 	if(IsFullRefresh() || !IsVisible())
 		return;
 	Size vsz = GetSize();
 	dx = sgn(dx) * min(abs(dx), vsz.cx);
 	dy = sgn(dy) * min(abs(dy), vsz.cy);
 	Rect r = _r & vsz;
+	LLOG("ScrollView2 " << r << " " << dx << " " << dy);
 	Ctrl *w;
 	for(w = this; w->parent; w = w->parent)
 		if(w->InFrame()) {
