@@ -110,7 +110,6 @@ bool SystemDraw::IsPaintingOp(const Rect& r) const
 {
 	GuiLock __;
 	LTIMING("IsPainting");
-	LLOG("SystemDraw::IsPaintingOp r: " << r);
 	return ::RectVisible(handle, r);
 }
 
