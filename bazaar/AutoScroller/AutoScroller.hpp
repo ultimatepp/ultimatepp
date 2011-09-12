@@ -7,46 +7,44 @@ template<class C>
 AutoScroller<C>::AutoScroller()
 {
 	EnableScroll();
+	scroll.AutoHide();
 	scroll.WhenScroll = THISBACK(OnScroll);
-	Add(pane.TopPos(0).LeftPos(0));
-	SetPaneSize(GetSize());
+}
+
+template<class C>
+void AutoScroller<C>::Scroll(const Point& p)
+{
+	if(!HasPane()) return;
+	Rect _r = pane->GetRect();
+	Rect r(-p, _r.GetSize());
+	pane->SetRect(r);
+	WhenScrolled();
 }
 
 template<class C>
 void AutoScroller<C>::OnScroll()
 {
-	Rect r(-scroll.Get(), pane.GetRect().GetSize());
-	pane.SetRect(r);
+	Scroll(scroll.Get());
 }
 
 template<class C>
 void AutoScroller<C>::Layout()
 {
-	Size sz = GetSize();
-	if(sz != scroll.GetPage())
-		scroll.SetPage(sz);
-}
-
-template<class C>
-void AutoScroller<C>::SetPaneSize(const Size & sz)
-{
-	Ctrl::LogPos logp;
-	logp.x = ParentCtrl::PosLeft(0, sz.cx);
-	logp.y = ParentCtrl::PosTop(0, sz.cy);
-	pane.SetPos(logp);
-	scroll.SetTotal(sz);
+	Size psz = C::GetSize();
+	scroll.SetPage(psz);
+	if(!HasPane()) return;
+	Size tsz = pane->GetSize();
+	scroll.SetTotal(tsz);
 }
 
 template<class C>
 void AutoScroller<C>::EnableScroll(bool b)
 {
-	if(b) AddFrame(scroll.AutoHide());
-	else RemoveFrame(scroll);
+	if(scroll.x.InFrame() || scroll.y.InFrame()) return;
+	if(b) C::AddFrame(scroll);
+	else C::RemoveFrame(scroll);
 	scroll.x.Enable(b);
 	scroll.y.Enable(b);
-	return;
-	scroll.Show(b);
-	Layout();
 }
 
 #endif

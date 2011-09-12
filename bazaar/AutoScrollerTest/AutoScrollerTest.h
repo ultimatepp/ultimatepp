@@ -11,9 +11,9 @@ using namespace Upp;
 #define IMAGEFILE <AutoScrollerTest/AutoScrollerTest.iml>
 #include <Draw/iml_header.h>
 
-//if use only ParentCtrl as pane
+//if use only ParentCtrl as base
 //#include <AutoScroller/AutoScroller.h>
-//if use custom panes
+//if use custom base
 #include <AutoScroller/AutoScroller.hpp>
 
 class AutoScrollerTest : public WithAutoScrollerTestLayout<TopWindow> {
@@ -22,9 +22,9 @@ public:
 	AutoScrollerTest();
 	
 	void Toggle();
-	
-	AutoScroller<WithTestLay<ParentCtrl> > sc;
-	//WithTestLay<ParentCtrl> view;
+
+	AutoScroller<ParentCtrl> sc;	
+	WithTestLay<ParentCtrl> view;
 };
 
 #endif

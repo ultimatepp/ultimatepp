@@ -50,11 +50,10 @@ void CtrlMoverTest::ViewCB()
 }
 CtrlMoverTest::CtrlMoverTest()
 {
-	CtrlLayout(vis);
-	SetRect(vis.GetRect());
-	Add(vis.SizePos());
-	
+	SetRect(Size(400,400));
 	Sizeable().Zoomable();
+
+	CtrlLayout(vis);
 
 	CtrlLayout(sb);
 	sb.Width(sb.GetSize().cx);
@@ -86,6 +85,10 @@ CtrlMoverTest::CtrlMoverTest()
 	ft.view <<= true;
 	ViewCB();
 
+	Add(sc.SizePos());
+	sc.AddPane(vis);
+	sc.WhenScrolled = callback(&hk, &CtrlMover::Update);
+	
 	hk.WhenLeftDown = THISBACK(OnSelect);
 	hk.SetSource(&vis);
 }

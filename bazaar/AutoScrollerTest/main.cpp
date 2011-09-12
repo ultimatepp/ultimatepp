@@ -10,28 +10,25 @@ void AutoScrollerTest::Toggle()
 
 AutoScrollerTest::AutoScrollerTest()
 {
-	CtrlLayout(*this, "Window title");
+	CtrlLayout(*this, "AutoScroller Test");
 	Sizeable().Zoomable();
+	Size sz = GetSize();
 
-	CtrlLayout(sc.pane);
-
-	//determine the total size of the scrolling pane
-	//or updaten it, i.e. after CtrlLayout
-	sc.SetPaneSize(sc.pane.GetSize());
-
-	//add content to the scrolling pane, if not CtrlLayouted
-	//sc.pane.Add(view);
-
-	//add the AutoScroller itself to application
+	sc.EnableScroll();
 	Add(sc.SizePos());
 
-	//do other setup stuff
-	sc.pane.tg <<= THISBACK(Toggle);
+	CtrlLayout(view); //will determine desired size of pane
+	sc.AddPane(view); //size remains as specified, if view changes size, sc.Layout() needs to be called.
+						//if sc changes its size, it recalculates the scroll bars automatically
+
+	//sc.WhenScrolled = THISBACK(); //after scrolling events
+
+	view.tg <<= THISBACK(Toggle);
 	
-	sc.pane.doc0 <<= "doc0";
-	sc.pane.doc1 <<= "doc1";
-	sc.pane.doc2 <<= "doc2";
-	sc.pane.doc3 <<= "doc3";
+	view.doc0 <<= "doc0";
+	view.doc1 <<= "doc1";
+	view.doc2 <<= "doc2";
+	view.doc3 <<= "doc3";
 }
 
 GUI_APP_MAIN

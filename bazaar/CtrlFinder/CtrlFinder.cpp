@@ -21,7 +21,7 @@ void CtrlFinder::StdCtrlFilter(Ctrl*& q, Point& pt, int& f)
 	q = NULL;
 }
 
-Ctrl* CtrlFinder::ChildAtPoint(Ctrl& par, Point& pt, int& f, const CtrlFilterType& fil)
+Ctrl* CtrlFinder::ChildAtPoint(Ctrl& par, Point& pt, int& f, const CtrlFilterType& filt)
 {
 	GuiLock __;
 	Ctrl *q;
@@ -38,7 +38,7 @@ Ctrl* CtrlFinder::ChildAtPoint(Ctrl& par, Point& pt, int& f, const CtrlFilterTyp
 				if(r.Contains(vp)) {
 					pt = vp - r.TopLeft();
 					Ctrl* w(q);
-					fil(w, pt, f);
+					filt(w, pt, f);
 					if(w) return w;
 				}
 			}
@@ -54,7 +54,7 @@ Ctrl* CtrlFinder::ChildAtPoint(Ctrl& par, Point& pt, int& f, const CtrlFilterTyp
 			if(r.Contains(p)) {
 				pt = p - r.TopLeft();
 				Ctrl* w(q);
-				fil(w, pt, f);
+				filt(w, pt, f);
 				if(w) return w;
 			}
 		}
@@ -62,18 +62,14 @@ Ctrl* CtrlFinder::ChildAtPoint(Ctrl& par, Point& pt, int& f, const CtrlFilterTyp
 	return NULL;
 }
 
-Ctrl* CtrlFinder::GetCtrl(Ctrl& c, Point& p, int& f, const CtrlFilterType& fil)
+Ctrl* CtrlFinder::GetCtrl(Ctrl& c, Point& p, int& f, const CtrlFilterType& filt)
 {
-	Ctrl* q = ChildAtPoint(c, p, f, fil);
+	Ctrl* q = ChildAtPoint(c, p, f, filt);
 	if(q && (f & DEEP)) 
 	{
 		Point pt(p);
-		Ctrl* qc = GetCtrl(*q, pt, f, fil);
-		if(qc)
-		{
-			p = pt;
-			return qc;	
-		}
+		Ctrl* qc = GetCtrl(*q, pt, f, filt);
+		if(qc) { p = pt; return qc;	}
 	}
 	return q;
 }
@@ -87,14 +83,20 @@ bool CtrlFinder::IsParentR(const Ctrl* p, const Ctrl* c)
 	return false;
 }
 
+void CtrlFinder::Updated()
+{
+	if(!pctrl) return;
+	SetPos(pctrl->GetPos());
+}
+
 void CtrlFinder::UpdatedSource()
 {
 	Remove();
 	ClearCtrl();
 	if(!pctrl) return;
 	ASSERT(pctrl->GetParent());
-	//add the finder on top of any child in the search ctrl's parent
-	pctrl->GetParent()->AddChild(&SetPos(pctrl->GetPos()), pctrl);
+	//finder adds itself on top of any child in the search ctrl's parent
+	pctrl->GetParent()->AddChild(this, pctrl);
 }
 
 void CtrlFinder::LeftDown(Point p, dword keyflags)

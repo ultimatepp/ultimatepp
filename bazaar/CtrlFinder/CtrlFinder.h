@@ -32,7 +32,9 @@ public:
 	virtual void LeftDown(Point p, dword keyflags);
 	virtual void RightDown(Point p, dword keyflags);
 
-	void SetSource(Ctrl* c) { if(pctrl != c) { if(c) ASSERT(c->GetParent()); pctrl = c; ctrl = NULL; } UpdatedSource(); }
+	virtual void Updated();
+
+	void SetSource(Ctrl* c) { if(pctrl != c) { if(c) ASSERT(c->GetParent()); pctrl = c; ctrl = NULL; UpdatedSource(); } Update(); }
 	Ctrl* GetSource() const { return pctrl; }
 	void ClearSource() { SetSource(NULL); }
 
@@ -44,8 +46,8 @@ public:
 	virtual void SetData(const Value& v) { SetCtrl(RawValue<Ctrl*>::Extract(v)); }
 	
 	static void StdCtrlFilter(Ctrl*& q, Point& pt, int& f);	
-	static Ctrl* ChildAtPoint(Ctrl& par, Point& pt, int& f, const CtrlFilterType& fil);
-	static Ctrl* GetCtrl(Ctrl& c, Point& p, int& f, const CtrlFilterType& fil);
+	static Ctrl* ChildAtPoint(Ctrl& par, Point& pt, int& f, const CtrlFilterType& filt);
+	static Ctrl* GetCtrl(Ctrl& c, Point& p, int& f, const CtrlFilterType& filt);
 	static bool IsParentR(const Ctrl* p, const Ctrl* c);
 
 	Callback3<Ctrl&, Point, dword> WhenLeftDown;

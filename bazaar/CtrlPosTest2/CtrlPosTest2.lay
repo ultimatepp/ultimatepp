@@ -6,3 +6,6 @@ LAYOUT(CtrlPosTest2Layout, 640, 480)
 	ITEM(ParentCtrl, par, SetFrame(BlackFrame()).HSizePosZ(8, 220).VSizePosZ(184, 8))
 END_LAYOUT
 
+LAYOUT(MainLay, 400, 200)
+END_LAYOUT
+

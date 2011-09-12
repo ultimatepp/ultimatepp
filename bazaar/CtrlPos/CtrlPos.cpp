@@ -331,7 +331,7 @@ void CtrlPos::LeftDouble(Point p, dword flags)
 void CtrlPos::Updated()
 {
 	//refresh the view of the currently selected ctrl
-	
+	CtrlFinder::Updated();
 }
 
 CtrlPos::CtrlPos()

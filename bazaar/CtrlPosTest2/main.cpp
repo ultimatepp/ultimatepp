@@ -2,12 +2,15 @@
 
 CtrlPosTest2::CtrlPosTest2()
 {
-	CtrlLayout(vis);
-	SetRect(vis.GetRect()); //same size as the child
-	Add(vis.SizePos());
-	
+	CtrlLayout(*this);
 	Sizeable().Zoomable();
 
+	Add(sc.SizePos());
+
+	CtrlLayout(vis);
+
+	sc.AddPane(vis);
+	sc.WhenScrolled = callback(&hk, &CtrlPos::UpdateRefresh);
 	hk.SetSource(&vis); //will add itself to vis->GetParent --> to this TopWindow with same vis.GetPos to cover it perfectly.
 }
 
