@@ -15,6 +15,8 @@ public:
 	typedef CtrlPosTest CLASSNAME;
 	CtrlPosTest();
 
+	virtual void Activate();
+
 	void VisitCB();
 	void ClearCB();
 	void EnableCB();

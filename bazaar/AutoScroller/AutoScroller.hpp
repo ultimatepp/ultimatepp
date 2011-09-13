@@ -6,7 +6,7 @@
 template<class C>
 AutoScroller<C>::AutoScroller()
 {
-	EnableScroll();
+	C::AddFrame(scroll);
 	scroll.AutoHide();
 	scroll.WhenScroll = THISBACK(OnScroll);
 }
@@ -40,9 +40,6 @@ void AutoScroller<C>::Layout()
 template<class C>
 void AutoScroller<C>::EnableScroll(bool b)
 {
-	if(scroll.x.InFrame() || scroll.y.InFrame()) return;
-	if(b) C::AddFrame(scroll);
-	else C::RemoveFrame(scroll);
 	scroll.x.Enable(b);
 	scroll.y.Enable(b);
 }

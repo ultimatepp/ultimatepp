@@ -24,6 +24,7 @@ void CtrlPosTest::ClearCB()
 void CtrlPosTest::EnableCB()
 {
 	hk.Enable();
+	hk.SetFocus();
 }
 void CtrlPosTest::DisableCB()
 {
@@ -90,6 +91,12 @@ CtrlPosTest::CtrlPosTest()
 
 	hk.WhenLeftDown = THISBACK(OnSelect);
 	hk.SetSource(&vis);
+	hk.SetFocus();
+}
+
+void CtrlPosTest::Activate()
+{
+	hk.SetFocus();	
 }
 
 GUI_APP_MAIN

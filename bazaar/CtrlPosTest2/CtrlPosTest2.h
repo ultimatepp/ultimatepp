@@ -16,6 +16,7 @@ public:
 	typedef CtrlPosTest2 CLASSNAME;
 
 	CtrlPosTest2();
+	virtual void Activate();
 
 	//keep the visiting control separated from the CtrlFinder (aka CtrlPos)
 	//so simply visiting this TopWindow is not possible (cause of Ctrl Tree search from bottom)

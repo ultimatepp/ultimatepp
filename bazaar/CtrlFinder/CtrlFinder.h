@@ -27,7 +27,7 @@ public:
 		DEF = VISIBLE | INVISIBLE | ENABLED | DISABLED | VIEW | FRAME | DEEP,
 	};
 
-	CtrlFinder() : flags(DEF), filter(STDBACK(StdCtrlFilter)) {}
+	CtrlFinder() : flags(DEF), filter(STDBACK(StdCtrlFilter)) { WantFocus(); }
 
 	virtual void LeftDown(Point p, dword keyflags);
 	virtual void RightDown(Point p, dword keyflags);

@@ -68,7 +68,11 @@ void CtrlPos::DrawHintFrame(Draw& w, const Ctrl& g, const Ctrl& q, const Color& 
 	Ctrl* c = q.GetFirstChild();
 	while(c)
 	{
-		if(c->InView())
+		Ctrl* e(c);
+		Point p; p.Clear();
+		int f(flags);
+		filter(e, p, f);
+		if(e && c->InView())
 		{
 			Rect r = c->GetRect();
 			if(c->InView())
@@ -78,7 +82,8 @@ void CtrlPos::DrawHintFrame(Draw& w, const Ctrl& g, const Ctrl& q, const Color& 
 			r.Inflate(1);
 			RectCtrl::DrawHandleFrame(w, r, hintcol, 1);
 		}
-		DrawHintFrame(w, g, *c, hintcol);
+		if(f & CtrlFinder::DEEP)
+			DrawHintFrame(w, g, *c, hintcol);
 		c = c->GetNext();	
 	}
 }
@@ -166,7 +171,8 @@ void CtrlPos::LeftDown(Point p, dword keyflags)
 	if(pctrl)
 	{
 		Point pt(p);
-		ctrl = CtrlFinder::GetCtrl(*pctrl, pt, flags, filter);
+		int f(flags);
+		ctrl = CtrlFinder::GetCtrl(*pctrl, pt, f, filter);
 		if(ctrl)
 		{
 			if(ctrl->InFrame()) //may not move base nor frames
@@ -328,6 +334,18 @@ void CtrlPos::LeftDouble(Point p, dword flags)
 	WhenLeftDouble();
 }
 
+bool CtrlPos::Key(dword key, int count)
+{
+	if(key == K_SPACE)
+	{
+		ClearCtrl();
+		Action();
+		Refresh();
+		return true;	
+	}
+	return false;
+}
+
 void CtrlPos::Updated()
 {
 	//refresh the view of the currently selected ctrl
@@ -338,6 +356,7 @@ CtrlPos::CtrlPos()
 	: pressed(false), moving(false), mode(RectCtrl::NONE), g(4,4)
 {
 	BackPaint();
+	NoIgnoreMouse();
 	style = &RectCtrl::StyleDefault();
 	//xpos.SetNull();
 	xp.SetNull();

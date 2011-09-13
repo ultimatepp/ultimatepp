@@ -12,6 +12,12 @@ CtrlPosTest2::CtrlPosTest2()
 	sc.AddPane(vis);
 	sc.WhenScrolled = callback(&hk, &CtrlPos::UpdateRefresh);
 	hk.SetSource(&vis); //will add itself to vis->GetParent --> to this TopWindow with same vis.GetPos to cover it perfectly.
+	hk.SetFocus();
+}
+
+void CtrlPosTest2::Activate()
+{
+	hk.SetFocus();	
 }
 
 GUI_APP_MAIN

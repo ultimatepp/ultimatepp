@@ -27,9 +27,9 @@ public:
 	void OnScroll();
 
 	Callback WhenScrolled;
+	ScrollBars scroll;
 
 protected:
-	ScrollBars scroll;
 	Ptr<Ctrl> pane;
 };
 

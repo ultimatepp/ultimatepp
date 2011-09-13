@@ -103,7 +103,8 @@ void CtrlFinder::LeftDown(Point p, dword keyflags)
 {
 	if(!pctrl) return;
 	Point pt(p);
-	ctrl = GetCtrl(*pctrl, pt, flags, filter);
+	int f(flags);
+	ctrl = GetCtrl(*pctrl, pt, f, filter);
 	if(!ctrl) ctrl = pctrl;
 	if(!ctrl) return;
 	WhenLeftDown(*ctrl, p, keyflags);
@@ -113,7 +114,8 @@ void CtrlFinder::RightDown(Point p, dword keyflags)
 {
 	if(!pctrl) return;
 	Point pt(p);
-	ctrl = GetCtrl(*pctrl, pt, flags, filter);
+	int f(flags);
+	ctrl = GetCtrl(*pctrl, pt, f, filter);
 	if(!ctrl) ctrl = pctrl;
 	if(!ctrl) return;
 	WhenRightDown(*ctrl, p, keyflags);
@@ -121,3 +123,4 @@ void CtrlFinder::RightDown(Point p, dword keyflags)
 	if(WhenBar)
 		MenuBar::Execute(WhenBar);
 }
+
