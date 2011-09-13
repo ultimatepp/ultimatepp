@@ -168,7 +168,7 @@ template<class K, class T> class PolyXMLArrayMapOne : public ArrayMap<K, One<T> 
 		// Xmlizer
 		void Xmlize(XmlIO xml);
 		
-		void Add(const K &key, const One<T> &data) { ArrayMap<K, One<T> >::Add(key, data); }
+		void Add(const K &key, pick_ One<T> &data) { ArrayMap<K, One<T> >::AddPick(key, data); }
 };
 
 template<class K, class T> void PolyXMLArrayMapOne<K, T>::Xmlize(XmlIO xml)
