@@ -56,7 +56,7 @@ public:
 
 	void MaxLines(int c = 1000) { maxlines = c; Update(); }
 	int GetMaxLines() const { return maxlines; }
-	void Updated() { if(GetLineCount() > maxlines) RemoveLines(0, maxlines>>1); }
+	virtual void Updated();
 
 	virtual  bool  IsOpen() const { return true; }
 

@@ -20,6 +20,15 @@ void LoggerCtrl::Save()
 	DocEdit::Save(out);
 }
 
+void LoggerCtrl::Updated()
+{
+	int lc = GetLineCount();
+	if(lc <= maxlines) { DocEdit::Updated(); return; }
+	int lp = DocEdit::GetPos(lc/2);
+	Remove(0, lp);
+	DocEdit::Updated();
+}
+
 void LoggerCtrl::_Put(int w)
 {
 	if(ignore) return;
