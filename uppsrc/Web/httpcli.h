@@ -38,6 +38,7 @@ public:
 	HttpClient&  Get()                            { return Method(METHOD_GET); }
 	HttpClient&  Post()                           { return Method(METHOD_POST); }
 	HttpClient&  Head()                           { return Method(METHOD_HEAD); }
+	HttpClient&  Put()                            { return Method(METHOD_PUT); }
 
 	HttpClient&  PostData(String pd)              { postdata = pd; return *this; }
 	HttpClient&  PostUData(String pd)             { return PostData(UrlEncode(pd)); }
@@ -127,6 +128,7 @@ public:
 		METHOD_GET,
 		METHOD_POST,
 		METHOD_HEAD,
+		METHOD_PUT,
 	};
 
 private:

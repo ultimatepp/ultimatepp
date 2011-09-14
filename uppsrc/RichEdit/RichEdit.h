@@ -279,6 +279,8 @@ private:
 	
 	Vector<int>              ffs;
 	
+	int                      bullet_indent;
+	
 	
 
 	static int fh[];
@@ -758,6 +760,7 @@ public:
 	RichEdit&       ClipZoom(Zoom z)                      { clipzoom = z; return *this; }
 	RichEdit&       ClipZoom(int m, int d)                { clipzoom = Zoom(m, d); return *this; }
 	Zoom            GetClipZoom() const                   { return clipzoom; }
+	RichEdit&       BulletIndent(int i)                   { bullet_indent = i; return *this; }
 
 	struct UndoInfo {
 		int              undoserial;
