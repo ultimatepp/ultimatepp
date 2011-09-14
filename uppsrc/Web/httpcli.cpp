@@ -166,7 +166,7 @@ String HttpClient::CalculateDigest(String authenticate) const
 	String hv1, hv2;
 	hv1 << username << ':' << realm << ':' << password;
 	String ha1 = MD5String(hv1);
-	hv2 << (method == METHOD_GET ? "GET" : method == METHOD_POST ? "POST" : "READ")
+	hv2 << (method == METHOD_GET ? "GET" : method == METHOD_PUT ? "PUT" : method == METHOD_POST ? "POST" : "READ")
 	<< ':' << path;
 	String ha2 = MD5String(hv2);
 	int nc = 1;
@@ -235,7 +235,12 @@ String HttpClient::Execute(Gate2<int, int> progress)
 			if(IsNull(ctype))
 				ctype = "application/x-www-form-urlencoded";
 			break;
-        case METHOD_HEAD: request << "HEAD "; break;
+  		case PUT:
+			request << "PUT ";
+			if(IsNull(ctype))
+				ctype = "application/x-www-form-urlencoded";
+			break;
+      case METHOD_HEAD: request << "HEAD "; break;
 		default: NEVER(); // invalid method
 	}
 	String host_port = host;
@@ -258,7 +263,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		request << "Accept: " << Nvl(accept, "*/*") << "\r\n";
 		request << "Accept-Encoding: gzip\r\n";
 		request << "Agent: " << Nvl(agent, "Ultimate++ HTTP client") << "\r\n";
-		if(method == METHOD_POST)
+		if(method == METHOD_POST || method == METHOD_PUT)
 			request << "Content-Length: " << postdata.GetLength() << "\r\n";
 		if(ctype.GetCount())
 			request << "Content-Type: " << ctype << "\r\n";

@@ -530,7 +530,7 @@ void  RichEdit::SetBullet(int bullet)
 	}
 	else {
 		formatinfo.bullet = bullet;
-		formatinfo.indent = 150;
+		formatinfo.indent = bullet_indent;
 	}
 	ApplyFormat(0, RichText::INDENT|RichText::BULLET);
 }

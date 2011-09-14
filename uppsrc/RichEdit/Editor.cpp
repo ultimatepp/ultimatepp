@@ -707,6 +707,8 @@ RichEdit::RichEdit()
 	singleline = false;
 	
 	clipzoom = Zoom(1, 1);
+	
+	bullet_indent = 150;
 }
 
 RichEdit::~RichEdit() {}
