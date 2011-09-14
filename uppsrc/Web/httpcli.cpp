@@ -235,7 +235,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 			if(IsNull(ctype))
 				ctype = "application/x-www-form-urlencoded";
 			break;
-  		case PUT:
+		case METHOD_PUT:
 			request << "PUT ";
 			if(IsNull(ctype))
 				ctype = "application/x-www-form-urlencoded";
