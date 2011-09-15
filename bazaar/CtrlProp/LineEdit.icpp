@@ -1,5 +1,6 @@
 #include "CtrlPropCommon.h"
-#include <CtrlLib/CtrlLib.h>
+
+NAMESPACE_UPP
 
 bool PropSetTabSize(const Value& v, LineEdit& o) { if(!IsNumber(v)) return false; o.TabSize(v); return true; }
 bool PropGetTabSize(Value& v, const LineEdit& o) { v = o.GetTabSize(); return true; }
@@ -18,3 +19,5 @@ PROPERTY("nohorzsb", PropSetNoHorzScrollbar, PropGetNoHorzScrollbar)
 END_PROPERTIES
 
 PROPS(Ctrl, LineEdit, TextCtrl)
+
+END_UPP_NAMESPACE

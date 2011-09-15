@@ -1,5 +1,6 @@
 #include "CtrlPropCommon.h"
-#include <CtrlLib/CtrlLib.h>
+
+NAMESPACE_UPP
 
 bool PropSetData(const Value& v, Ctrl& o) { o.SetData(v); return true; }
 bool PropGetData(Value& v, const Ctrl& o) { v = o.GetData(); return true; }
@@ -54,3 +55,5 @@ END_PROPERTIES
 
 GETSETPROP_DUMMY(Ctrl, EmptyClass)
 PROPS(Ctrl, Ctrl, EmptyClass)
+
+END_UPP_NAMESPACE

@@ -1,5 +1,6 @@
 #include "CtrlPropCommon.h"
-#include <CtrlLib/CtrlLib.h>
+
+NAMESPACE_UPP
 
 bool PropSetBlackEdge(const Value& v, Option& o) { if(!IsNumber(v)) return false; o.BlackEdge(v); return true; }
 bool PropGetBlackEdge(Value& v, const Option& o) { v = o.IsBlackEdge(); return true; }
@@ -21,3 +22,5 @@ PROPERTY("notnull", PropSetNotNull, PropGetNotNull)
 END_PROPERTIES
 
 PROPS(Ctrl, Option, Pusher)
+
+END_UPP_NAMESPACE

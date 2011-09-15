@@ -3,8 +3,6 @@
 
 #include <CtrlLib/CtrlLib.h>
 
-using namespace Upp;
-
 #include <PopUpC/PopUpC.h>
 #include <Gen/VTypes.h>
 
@@ -12,13 +10,13 @@ using namespace Upp;
 #include <WithEnterAction/WithEnterAction.h>
 #include <Gen/Gen.h>
 
+NAMESPACE_UPP
+
 #define LAYOUTFILE <ValueCtrl/ValueCtrl.lay>
 #include <CtrlCore/lay.h>
 
 //For ValuePacker / RichValue<Value> and GCC
-NAMESPACE_UPP
 template<> inline bool IsNull(const Value& v)       { return v.IsNull(); }
-END_UPP_NAMESPACE
 
 VectorMap<int, String>& GetValueTypeNoNameMap();
 #define ADDVALUETYPENO(x) GetAdd(x, ASSTRING(x))
@@ -284,6 +282,8 @@ public:
 	typedef ErrorValueCtrl CLASSNAME;
 	virtual Value GetData() const { return ErrorValue(EditString::GetData()); }	
 };
+
+END_UPP_NAMESPACE
 
 #endif
 

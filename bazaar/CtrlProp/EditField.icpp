@@ -1,5 +1,6 @@
 #include "CtrlPropCommon.h"
-#include <CtrlLib/CtrlLib.h>
+
+NAMESPACE_UPP
 
 bool PropSetPassword(const Value& v, EditField& o) { if(!IsNumber(v)) return false; o.Password(v); return true; }
 bool PropGetPassword(Value& v, const EditField& o) { v = o.IsPassword(); return true; }
@@ -27,3 +28,5 @@ PROPERTY("alignright", PropSetAlignRight, PropGetAlignRight)
 END_PROPERTIES
 
 PROPS(Ctrl, EditField, Ctrl)
+
+END_UPP_NAMESPACE

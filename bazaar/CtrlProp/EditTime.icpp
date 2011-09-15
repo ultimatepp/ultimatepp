@@ -1,5 +1,6 @@
 #include "CtrlPropCommon.h"
-#include <CtrlLib/CtrlLib.h>
+
+NAMESPACE_UPP
 
 bool PropSetMin(const Value& v, EditTime& o) { if(!IsNumber(v)) return false; o.MinMax(v, o.GetMax()); return true; }
 bool PropGetMin(Value& v, const EditTime& o) { v = o.GetMin(); return true; }
@@ -18,3 +19,5 @@ PROPERTY("seconds", PropSetSeconds, PropGetSeconds)
 END_PROPERTIES
 
 PROPS(Ctrl, EditTime, EditField)
+
+END_UPP_NAMESPACE

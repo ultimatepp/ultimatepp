@@ -1,5 +1,7 @@
 #include "PropList.h"
 
+NAMESPACE_UPP
+
 PropListCtrl::PropListCtrl()
 {
 	CtrlLayout(*this);
@@ -47,3 +49,5 @@ PropList::PropList()
 	SetRect(plc.GetRect());
 	Add(plc.HSizePos().VSizePos(0,20));
 }
+
+END_UPP_NAMESPACE

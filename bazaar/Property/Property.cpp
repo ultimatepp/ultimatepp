@@ -1,5 +1,7 @@
 #include "Property.h"
 
+NAMESPACE_UPP
+
 void AddToValueArray(Value& v, const Vector<String>& k)
 {
 	if(!v.Is<ValueArray>()) 
@@ -11,3 +13,5 @@ void AddToValueArray(Value& v, const Vector<String>& k)
 	for(int i = 0; i < k.GetCount(); i++)
 		vv << k[i];
 }
+
+END_UPP_NAMESPACE

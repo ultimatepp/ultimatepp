@@ -1,5 +1,6 @@
 #include "CtrlPropCommon.h"
-#include <CtrlLib/CtrlLib.h>
+
+NAMESPACE_UPP
 
 bool PropSetBackground(const Value& v, StaticRect& o) { if(!v.Is<Color>()) return false; o.Background(v); return true; }
 bool PropGetBackground(Value& v, const StaticRect& o) { v = o.GetBackground(); return true; }
@@ -9,3 +10,5 @@ PROPERTY("background", PropSetBackground, PropGetBackground)
 END_PROPERTIES
 
 PROPS(Ctrl, StaticRect, Ctrl)
+
+END_UPP_NAMESPACE

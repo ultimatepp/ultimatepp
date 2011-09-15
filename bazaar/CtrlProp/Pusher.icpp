@@ -1,5 +1,6 @@
 #include "CtrlPropCommon.h"
-#include <CtrlLib/CtrlLib.h>
+
+NAMESPACE_UPP
 
 bool PropSetLabel(const Value& v, Pusher& o) { if(!IsString(v)) return false; o.SetLabel(String(v)); return true; }
 bool PropGetLabel(Value& v, const Pusher& o) { v = o.GetLabel(); return true; }
@@ -14,3 +15,5 @@ PROPERTY("clickfocus", PropSetClickFocus, PropGetClickFocus)
 END_PROPERTIES
 
 PROPS(Ctrl, Pusher, Ctrl)
+
+END_UPP_NAMESPACE

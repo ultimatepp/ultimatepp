@@ -1,5 +1,6 @@
 #include "CtrlPropCommon.h"
-#include <CtrlLib/CtrlLib.h>
+
+NAMESPACE_UPP
 
 bool PropSetInc(const Value& v, EditIntSpin& o) { if(!IsNumber(v)) return false; o.SetInc(v); return true; }
 bool PropGetInc(Value& v, const EditIntSpin& o) { v = o.GetInc(); return true; }
@@ -12,3 +13,5 @@ PROPERTY("showspin", PropSetShowSpin, PropGetShowSpin)
 END_PROPERTIES
 
 PROPS(Ctrl, EditIntSpin, EditInt)
+
+END_UPP_NAMESPACE

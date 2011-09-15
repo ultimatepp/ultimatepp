@@ -1,5 +1,6 @@
 #include "CtrlPropCommon.h"
-#include <CtrlLib/CtrlLib.h>
+
+NAMESPACE_UPP
 
 bool PropSetAutoHideSb(const Value& v, DocEdit& o) { if(!IsNumber(v)) return false; o.AutoHideSb(v); return true; }
 bool PropGetAutoHideSb(Value& v, const DocEdit& o) { v = o.IsAutoHideSb(); return true; }
@@ -15,3 +16,5 @@ PROPERTY("eofline", PropSetEofLine, PropGetEofLine)
 END_PROPERTIES
 
 PROPS(Ctrl, DocEdit, TextCtrl)
+
+END_UPP_NAMESPACE

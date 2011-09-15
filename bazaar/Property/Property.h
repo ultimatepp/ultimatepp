@@ -1,9 +1,9 @@
 #ifndef _Property_Property_h
 #define _Property_Property_h
 
-#include <CtrlLib/CtrlLib.h>
+#include <Core/Core.h>
 
-using namespace Upp;
+NAMESPACE_UPP
 
 template<class T>
 struct Property
@@ -38,6 +38,9 @@ struct Accessor
 
 	bool Set(const T& a) const { ASSERT(set); return set(a); }
 	bool Get(T& a) const { ASSERT(get); return get(a); }
+
+	inline T operator= (const T& a) const { Set(a); return a; }
+	inline operator T() const { T t; Get(t); return t; }
 
 public:
 	const S set;
@@ -337,6 +340,8 @@ __base:	return GetSetProp##BASE(c,p,v,f); \
 } \
  \
 
+
+END_UPP_NAMESPACE
 
 #endif
 

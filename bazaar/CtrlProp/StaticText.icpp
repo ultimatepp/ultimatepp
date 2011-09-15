@@ -1,5 +1,6 @@
 #include "CtrlPropCommon.h"
-#include <CtrlLib/CtrlLib.h>
+
+NAMESPACE_UPP
 
 bool PropSetInk(const Value& v, StaticText& o) { if(!v.Is<Color>()) return false; o.SetInk(v); return true; }
 bool PropGetInk(Value& v, const StaticText& o) { v = o.GetInk(); return true; }
@@ -15,3 +16,5 @@ PROPERTY("align", PropSetAlign, PropGetAlign)
 END_PROPERTIES
 
 PROPS(Ctrl, StaticText, Ctrl)
+
+END_UPP_NAMESPACE

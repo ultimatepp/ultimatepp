@@ -1,10 +1,11 @@
 #ifndef _CtrlProp_PropList_h_
 #define _CtrlProp_PropList_h_
 
-#include "CtrlPropCommon.h"
-
-#include <LogPosCtrl/LogPosCtrl.h>
+#include <Property/Property.h>
+#include <Gen/VTypes.h>
 #include <ValueCtrl/ValueCtrl.h>
+
+NAMESPACE_UPP
 
 #define LAYOUTFILE <CtrlProp/PropList.lay>
 #include <CtrlCore/lay.h>
@@ -38,5 +39,7 @@ public:
 
 	PropListCtrl plc;
 };
+
+END_UPP_NAMESPACE
 
 #endif

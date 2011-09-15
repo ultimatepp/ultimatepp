@@ -1,5 +1,7 @@
 #include "ValueCtrl.h"
 
+NAMESPACE_UPP
+
 VectorMap<int, String>& GetValueTypeNoNameMap()
 {
 	static VectorMap<int, String> _;
@@ -212,3 +214,5 @@ void ValueCtrl::Updated()
 	else
 		SetText(v.ToString());
 }
+
+END_UPP_NAMESPACE

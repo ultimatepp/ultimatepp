@@ -1,5 +1,6 @@
 #include "CtrlPropCommon.h"
-#include <CtrlLib/CtrlLib.h>
+
+NAMESPACE_UPP
 
 bool PropSetMin(const Value& v, EditInt64& o) { if(!IsNumber(v)) return false; o.MinMax(v, o.GetMax()); return true; }
 bool PropGetMin(Value& v, const EditInt64& o) { v = o.GetMin(); return true; }
@@ -15,3 +16,5 @@ PROPERTY("notnull", PropSetNotNull, PropGetNotNull)
 END_PROPERTIES
 
 PROPS(Ctrl, EditInt64, EditField)
+
+END_UPP_NAMESPACE

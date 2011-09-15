@@ -1,5 +1,6 @@
 #include "CtrlPropCommon.h"
-#include <CtrlLib/CtrlLib.h>
+
+NAMESPACE_UPP
 
 bool PropSetMaxLen(const Value& v, EditString& o) { if(!IsNumber(v)) return false; o.MaxLen(v); return true; }
 bool PropGetMaxLen(Value& v, const EditString& o) { v = o.GetMaxLength(); return true; }
@@ -18,3 +19,5 @@ PROPERTY("notnull", PropSetNotNull, PropGetNotNull)
 END_PROPERTIES
 
 PROPS(Ctrl, EditString, EditField)
+
+END_UPP_NAMESPACE

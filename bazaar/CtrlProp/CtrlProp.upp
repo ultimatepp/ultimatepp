@@ -8,7 +8,6 @@ uses
 	Gen;
 
 file
-	CtrlPropCommon.h,
 	PropList.h,
 	PropList.cpp,
 	PropList.lay,
@@ -17,6 +16,7 @@ file
 	PropEdit.lay,
 	CtrlProp.h,
 	Props readonly separator,
+	CtrlPropCommon.h,
 	Ctrl.icpp,
 	Pusher.icpp,
 	Button.icpp,

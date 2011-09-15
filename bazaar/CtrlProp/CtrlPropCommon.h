@@ -1,13 +1,11 @@
 #ifndef _CtrlProp_CtrlPropCommon_h
 #define _CtrlProp_CtrlPropCommon_h
 
-#include <CtrlLib/CtrlLib.h>
-using namespace Upp;
-
 #include <Property/Property.h>
 #include <Gen/VTypes.h>
+#include <CtrlLib/CtrlLib.h>
 
-//////////////////////
+NAMESPACE_UPP
 
 DEC_PROPERTIES(Ctrl, EmptyClass)
 DEC_PROPERTIES(Pusher, Ctrl)
@@ -47,6 +45,8 @@ DEC_PROPERTIES(DisplayCtrl, Ctrl)
 DEC_PROPERTIES(Picture, Ctrl)
 DEC_PROPERTIES(SeparatorCtrl, Ctrl)
 DEC_PROPERTIES(SliderCtrl, Ctrl)
+
+END_UPP_NAMESPACE
 
 #endif
 

@@ -1,7 +1,10 @@
 #include "CtrlPropCommon.h"
-#include <CtrlLib/CtrlLib.h>
+
+NAMESPACE_UPP
 
 PROPERTIES(LabelBox, Label)
 END_PROPERTIES
 
 PROPS(Ctrl, LabelBox, Label)
+
+END_UPP_NAMESPACE

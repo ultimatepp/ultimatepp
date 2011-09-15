@@ -1,5 +1,6 @@
 #include "CtrlPropCommon.h"
-#include <CtrlLib/CtrlLib.h>
+
+NAMESPACE_UPP
 
 bool PropSetUndoSteps(const Value& v, TextCtrl& o) { if(!IsNumber(v)) return false; o.UndoSteps(v); return true; }
 bool PropGetUndoSteps(Value& v, const TextCtrl& o) { v = o.GetUndoSteps(); return true; }
@@ -18,3 +19,5 @@ PROPERTY("nobackground", PropSetNoBackground, PropGetNoBackground)
 END_PROPERTIES
 
 PROPS(Ctrl, TextCtrl, Ctrl)
+
+END_UPP_NAMESPACE

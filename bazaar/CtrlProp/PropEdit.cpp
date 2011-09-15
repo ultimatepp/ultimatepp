@@ -1,5 +1,7 @@
 #include "PropEdit.h"
 
+NAMESPACE_UPP
+
 PropEditCtrl::PropEditCtrl()
 {
 	CtrlLayout(*this);
@@ -167,3 +169,4 @@ void PropEdit::Serialize(Stream& s)
 	}
 }
 
+END_UPP_NAMESPACE

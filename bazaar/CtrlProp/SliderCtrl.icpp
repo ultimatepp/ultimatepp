@@ -1,7 +1,6 @@
 #include "CtrlPropCommon.h"
-#include <CtrlLib/CtrlLib.h>
 
-//SliderCtrl
+NAMESPACE_UPP
 
 bool PropSetMin(const Value& v, SliderCtrl& o) { if(!IsNumber(v)) return false; o.MinMax(v, o.GetMax()); return true; }
 bool PropGetMin(Value& v, const SliderCtrl& o) { v = o.GetMin(); return true; }
@@ -17,3 +16,5 @@ PROPERTY("step", PropSetStep, PropGetStep)
 END_PROPERTIES
 
 PROPS(Ctrl, SliderCtrl, Ctrl)
+
+END_UPP_NAMESPACE
