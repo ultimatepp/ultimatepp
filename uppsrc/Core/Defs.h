@@ -331,6 +331,37 @@ public:
 	NoCopy() {}
 };
 
+const int    INT_NULL           =    INT_MIN;
+const int64  INT64_NULL         =    INT64_MIN;
+
+const double DOUBLE_NULL        =    -1.0E+308;
+const double DOUBLE_NULL_LIM    =    -1.0E+307;
+
+class Nuller {
+public:
+	operator int() const                { return INT_NULL; }
+	operator int64() const              { return INT64_NULL; }
+	operator double() const             { return DOUBLE_NULL; }
+	operator bool() const               { return false; }
+
+	Nuller() {}
+};
+
+#ifdef flagSO
+static const Nuller Null;
+#else
+extern const Nuller Null;
+#endif
+
+template <class T> void SetNull(T& x) { x = Null; }
+
+template <class T> bool IsNull(const T& x) { return x.IsNullInstance(); }
+
+template<> inline bool  IsNull(const int& i)     { return i == INT_NULL; }
+template<> inline bool  IsNull(const int64& i)   { return i == INT64_NULL; }
+template<> inline bool  IsNull(const double& r)  { return r < DOUBLE_NULL_LIM; }
+template<> inline bool  IsNull(const bool& r  )  { return false; }
+
 #if defined(flagMT)
 	#if defined(PLATFORM_WIN32) && defined(COMPILER_GCC)
 		#define flagUSEMALLOC //MINGW does not support

@@ -391,8 +391,6 @@ public:
 
 inline bool  IsEmpty(const String& s)      { return s.IsEmpty(); }
 
-template <class T> bool IsNull(const T& x) { return x.IsNullInstance(); }
-
 String FormatPtr(const void *p);
 
 template <class T>

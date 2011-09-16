@@ -2,7 +2,7 @@ struct Uuid : AssignValueTypeNo<Uuid, 50, Moveable<Uuid> > {
 	dword a, b, c, d;
 
 	void Serialize(Stream& s);
-	bool IsNull() const           { return a == 0 && b == 0 && c == 0 && d == 0; }
+	bool IsNullInstance() const   { return a == 0 && b == 0 && c == 0 && d == 0; }
 	void SetNull()                { a = b = c = d = 0; }
 
 	operator Value() const        { return RichValue<Uuid>(*this); }
@@ -30,9 +30,6 @@ inline bool  operator==(const Uuid& u, const Uuid& w) {
 inline bool  operator!=(const Uuid& u, const Uuid& w) {
 	return !(u == w);
 }
-
-template<>
-inline bool IsNull(const Uuid& id) { return id.IsNull(); }
 
 template<>
 inline String AsString(const Uuid& id) { return Format(id); }

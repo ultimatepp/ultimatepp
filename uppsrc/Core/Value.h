@@ -37,32 +37,6 @@ public:
 	Id(const IdConst& cnst);
 };
 
-const int    INT_NULL           =    INT_MIN;
-const int64  INT64_NULL         =    INT64_MIN;
-
-const double DOUBLE_NULL        =    -1.0E+308;
-const double DOUBLE_NULL_LIM    =    -1.0E+307;
-
-class Nuller {
-public:
-	operator int() const                { return INT_NULL; }
-	operator int64() const              { return INT64_NULL; }
-	operator double() const             { return DOUBLE_NULL; }
-	operator bool() const               { return false; }
-
-	Nuller() {}
-};
-
-#ifdef flagSO
-static const Nuller Null;
-#else
-extern const Nuller Null;
-#endif
-
-template<> inline bool  IsNull(const int& i)     { return i == INT_NULL; }
-template<> inline bool  IsNull(const int64& i)   { return i == INT64_NULL; }
-template<> inline bool  IsNull(const double& r)  { return r < DOUBLE_NULL_LIM; }
-template<> inline bool  IsNull(const bool& r  )  { return false; }
 template<> inline bool  IsNull(const Date& d)    { return d.year == -32768; }
 template<> inline bool  IsNull(const Time& t)    { return t.year == -32768; }
 
@@ -484,7 +458,7 @@ protected:
 	static const T& GetNull() {
 		static T *q;
 		ONCELOCK {
-			static T x(Null);
+			static T x; SetNull(x);
 			q = &x;
 		}
 		return *q;
@@ -544,7 +518,7 @@ struct RichRef : public RawRef<T> {
 	virtual Value GetValue(const void *p)           { return RichValue<T>(*(T *) p); }
 	virtual bool  IsNull(const void *p)             { return UPP::IsNull(*(T *) p); }
 	virtual void  SetValue(void *p, const Value& v) { *(T *) p = T(v); }
-	virtual void  SetNull(void *p)                  { *(T *) p = T(Null); }
+	virtual void  SetNull(void *p)                  { UPP::SetNull(*(T *)p); }
 };
 
 class Ref : Moveable<Ref> {
