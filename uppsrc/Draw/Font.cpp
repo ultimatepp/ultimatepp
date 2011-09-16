@@ -156,14 +156,14 @@ int Font::GetHeight() const
 }
 
 String Font::GetFaceName() const {
-	if(IsNull()) return String();
+	if(IsNullInstance()) return String();
 	if(GetFace() == 0)
 		return "STDFONT";
 	return GetFaceName(GetFace());
 }
 
 dword Font::GetFaceInfo() const {
-	if(IsNull()) return 0;
+	if(IsNullInstance()) return 0;
 	return GetFaceInfo(GetFace());
 }
 
@@ -209,7 +209,7 @@ void Font::Serialize(Stream& s) {
 		s % name;
 		if(s.IsLoading()) {
 			FaceName(name);
-			if(IsNull())
+			if(IsNullInstance())
 				Face(COURIER);
 		}
 	}

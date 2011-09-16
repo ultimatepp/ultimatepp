@@ -175,11 +175,11 @@ public:
 	bool  operator!=(Font f) const  { return !operator==(f); }
 
 	dword GetHashValue() const      { return CombineHash(v.width, v.flags, v.height, v.face); }
-	bool  IsNull() const            { return v.face == 0xffff; }
-
+	bool  IsNullInstance() const    { return v.face == 0xffff; }
+	void  SetNull()                 { v.face = 0xffff; v.height = v.width = 0; v.flags = 0; }
 	Font()                          { v.height = v.width = 0; v.face = v.flags = 0; }
 	Font(int face, int height)      { v.face = face; v.height = height; v.flags = 0; v.width = 0; }
-	Font(const Nuller&)             { v.face = 0xffff; v.height = v.width = 0; v.flags = 0; }
+	Font(const Nuller&)             { SetNull(); }
 
 	operator Value() const          { return RichValue<Font>(*this); }
 	Font(const Value& q)            { *this = RichValue<Font>::Extract(q); }
@@ -187,6 +187,7 @@ public:
 // BW compatibility
 	FontInfo Info() const;
 };
+
 
 //BW compatibility
 class FontInfo {
@@ -224,12 +225,6 @@ struct ComposedGlyph {
 };
 
 bool Compose(Font fnt, int chr, ComposedGlyph& cs);
-
-template<>
-inline bool IsNull(const Font& f)            { return f.IsNull(); }
-
-template<>
-inline unsigned GetHashValue(const Font& f)  { return f.GetHashValue(); }
 
 template<>
 String AsString(const Font& f);
@@ -375,6 +370,7 @@ public:
 	void    Clear()                             { size = Null; data.Clear(); cmd.Clear(); }
 	void    Serialize(Stream& s)                { s % cmd % data % size; }
 	bool    IsNullInstance() const              { return cmd.IsEmpty(); }
+	void    SetNull()                           { size = Null; }
 	bool    operator==(const Painting& b) const { return cmd == b.cmd && data == b.data && size == b.size; }
 	unsigned GetHashValue() const               { return CombineHash(cmd, data); }
 	String  ToString() const                    { return "painting " + AsString(size); }
@@ -382,8 +378,8 @@ public:
 	operator Value() const                      { return RichValue<Painting>(*this); }
 	Painting(const Value& q)                    { *this = RichValue<Painting>::Extract(q); }
 
-	Painting()                                  { size = Null; }
-	Painting(const Nuller&)                     { size = Null; }
+	Painting()                                  { SetNull(); }
+	Painting(const Nuller&)                     { SetNull(); }
 };
 
 enum {
@@ -635,6 +631,8 @@ public:
 	void Serialize(Stream& s);
 
 	bool    IsNullInstance() const             { return data.IsEmpty(); }
+	void    SetNull()                          { size = Null; }
+
 	bool    operator==(const Drawing& b) const { return val == b.val && data == b.data && size == b.size; }
 	String  ToString() const                   { return "drawing " + AsString(size); }
 	unsigned GetHashValue() const              { return CombineHash(data, val); }
@@ -642,8 +640,8 @@ public:
 	operator Value() const         { return RichValue<Drawing>(*this); }
 	Drawing(const Value& src);
 
-	Drawing()                      { size = Null; }
-	Drawing(const Nuller&)         { size = Null; }
+	Drawing()                      { SetNull(); }
+	Drawing(const Nuller&)         { SetNull(); }
 };
 
 class DrawingDraw : public Draw {
