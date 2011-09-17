@@ -29,7 +29,7 @@
 #define __ftgl__
 
 /* We need the Freetype headers */
-#include <ft2build.h>
+#include <freetype/ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 #include FT_OUTLINE_H
@@ -100,12 +100,14 @@ namespace FTGL
     #else
     #  define FTGL_EXPORT   __declspec(dllimport)
     #endif
-
 #else
     // Compiler that is not MS Visual C++.
     // Ensure that the export symbol is defined (and blank)
     #define FTGL_EXPORT
 #endif
+
+#undef FTGL_EXPORT
+#define FTGL_EXPORT
 
 #include <FTGL/FTPoint.h>
 #include <FTGL/FTBBox.h>

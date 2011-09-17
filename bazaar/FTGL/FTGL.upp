@@ -10,6 +10,7 @@ library(FREEBSD) "GL GLU";
 library(WIN32 GCC) "glaux glu32 opengl32";
 
 file
+	ftgl.h,
 	src/config.h,
 	src/FTBuffer.cpp,
 	src/FTCharmap.cpp,

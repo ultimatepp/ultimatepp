@@ -27,7 +27,7 @@
 #define     __FTSize__
 
 
-#include <ft2build.h>
+#include <freetype/ft2build.h>
 #include FT_FREETYPE_H
 
 #include "FTGL/ftgl.h"
