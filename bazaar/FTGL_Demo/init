@@ -1,0 +1,6 @@
+#ifndef _FTGL_Demo_icpp_init_stub
+#define _FTGL_Demo_icpp_init_stub
+#include "FTGL/init"
+#include "CtrlLib/init"
+#include "GLCtrl/init"
+#endif

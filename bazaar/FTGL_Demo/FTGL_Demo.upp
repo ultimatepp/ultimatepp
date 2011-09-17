@@ -1,0 +1,18 @@
+uses
+	FTGL,
+	CtrlLib,
+	GLCtrl;
+
+file
+	trackball.c,
+	trackball.h,
+	TrackBall.h,
+	TrackBall.cpp,
+	FTGLCtrl.h,
+	FTGLCtrl.cpp,
+	FTGLDemo.h,
+	FTGLDemo.cpp;
+
+mainconfig
+	"" = "GUI";
+
