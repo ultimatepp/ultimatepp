@@ -5,7 +5,8 @@ uses
 	LogPosCtrl,
 	ValueCtrl,
 	Property,
-	Gen;
+	Gen,
+	ValueAccessorEdit;
 
 file
 	PropList.h,
@@ -13,7 +14,6 @@ file
 	PropList.lay,
 	PropEdit.h,
 	PropEdit.cpp,
-	PropEdit.lay,
 	CtrlProp.h,
 	Props readonly separator,
 	CtrlPropCommon.h,

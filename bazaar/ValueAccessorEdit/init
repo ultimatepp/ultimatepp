@@ -1,0 +1,7 @@
+#ifndef _ValueAccessorEdit_icpp_init_stub
+#define _ValueAccessorEdit_icpp_init_stub
+#include "CtrlLib/init"
+#include "Property/init"
+#include "Gen/init"
+#include "ValueCtrl/init"
+#endif

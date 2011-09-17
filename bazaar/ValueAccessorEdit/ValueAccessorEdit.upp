@@ -1,0 +1,14 @@
+uses
+	CtrlLib,
+	Property,
+	Gen,
+	ValueCtrl;
+
+file
+	ValueAccessorEdit.h,
+	ValueAccessorEdit.cpp,
+	ValueAccessorEdit.lay;
+
+mainconfig
+	"" = "GUI SSE2";
+

@@ -25,6 +25,8 @@ public:
 	virtual Value GetData() const { return RawToValue(ctrl); }
 	virtual void SetData(const Value& v) { SetCtrl(RawValue<Ctrl*>::Extract(v)); }
 
+	virtual void Serialize(Stream& s) { GuiLock __; for(Ctrl *q = GetFirstChild(); q; q = q->GetNext()) q->Serialize(s); }
+
 protected:
 	Ctrl* ctrl;
 };

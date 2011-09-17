@@ -5,6 +5,7 @@
 #include "ValueCtrl/init"
 #include "Property/init"
 #include "Gen/init"
+#include "ValueAccessorEdit/init"
 #define BLITZ_INDEX__ F8F3D3A8C39C8921944B39C96DAA6C238
 #include "Ctrl.icpp"
 #undef BLITZ_INDEX__

@@ -13,9 +13,10 @@ struct Property
 
 	Property(const S& s, const G& g)
 		: set(s), get(g) {}
+	virtual ~Property() {}
 
-	const T& Set(const T& a) const { ASSERT(set); set(a); return a; }
-	T Get() const { ASSERT(get); T t; get(t); return t; }
+	virtual const T& Set(const T& a) const { ASSERT(set); set(a); return a; }
+	virtual T Get() const { ASSERT(get); T t; get(t); return t; }
 
 	inline T operator= (const T& a) const { return Set(a); }
 	inline operator T() const { return Get(); }
@@ -35,9 +36,10 @@ struct Accessor
 
 	Accessor(const S& s, const G& g)
 		: set(s), get(g) {}
+	virtual ~Accessor() {}
 
-	bool Set(const T& a) const { ASSERT(set); return set(a); }
-	bool Get(T& a) const { ASSERT(get); return get(a); }
+	virtual bool Set(const T& a) const { ASSERT(set); return set(a); }
+	virtual bool Get(T& a) const { ASSERT(get); return get(a); }
 
 	inline T operator= (const T& a) const { Set(a); return a; }
 	inline operator T() const { T t; Get(t); return t; }
