@@ -20,7 +20,7 @@
 #define __SFOBJS_H__
 
 
-#include <../../ft2build.h>
+#include <freetype/ft2build.h>
 #include FT_INTERNAL_SFNT_H
 #include FT_INTERNAL_OBJECTS_H
 

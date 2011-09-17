@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <../../ft2build.h>
+#include <freetype/ft2build.h>
 #include FT_CACHE_H
 #include "ftcsbits.h"
 #include FT_INTERNAL_OBJECTS_H

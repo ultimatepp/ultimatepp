@@ -20,7 +20,7 @@
 #define __FTDRIVER_H__
 
 
-#include "../ft2build.h"
+#include <freetype/ft2build.h>
 #include FT_MODULE_H
 
 

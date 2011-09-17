@@ -25,7 +25,7 @@
 /***************************************************************************/
 
 
-#include <../../ft2build.h>
+#include <freetype/ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_SERVICE_GX_VALIDATE_H
 

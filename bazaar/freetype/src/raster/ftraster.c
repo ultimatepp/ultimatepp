@@ -58,7 +58,7 @@
 
 #else /* !_STANDALONE_ */
 
-#include <../../ft2build.h>
+#include <freetype/ft2build.h>
 #include "ftraster.h"
 #include FT_INTERNAL_CALC_H   /* for FT_MulDiv only */
 

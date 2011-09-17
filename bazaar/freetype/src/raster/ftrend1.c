@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <../../ft2build.h>
+#include <freetype/ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_OUTLINE_H
 #include "ftrend1.h"

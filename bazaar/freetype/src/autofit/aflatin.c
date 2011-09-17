@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <../../ft2build.h>
+#include <freetype/ft2build.h>
 #include FT_ADVANCES_H
 #include FT_INTERNAL_DEBUG_H
 

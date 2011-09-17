@@ -21,7 +21,7 @@
 #define __CFFTYPES_H__
 
 
-#include <../../ft2build.h>
+#include <freetype/ft2build.h>
 #include FT_FREETYPE_H
 #include FT_TYPE1_TABLES_H
 #include FT_INTERNAL_SERVICE_H

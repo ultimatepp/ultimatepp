@@ -42,7 +42,7 @@
 #define __GXVCOMMN_H__
 
 
-#include <../../ft2build.h>
+#include <freetype/ft2build.h>
 #include "gxvalid.h"
 #include FT_INTERNAL_DEBUG_H
 #include FT_SFNT_NAMES_H

@@ -29,7 +29,7 @@ THE SOFTWARE.
 #define __PCF_H__
 
 
-#include <../../ft2build.h>
+#include <freetype/ft2build.h>
 #include FT_INTERNAL_DRIVER_H
 #include FT_INTERNAL_STREAM_H
 
