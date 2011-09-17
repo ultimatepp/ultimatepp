@@ -143,7 +143,7 @@ void ImgButton::Paint(Draw &w)
 // DockContHandle frame
 int DockCont::DockContHandle::GetHandleSize(const DockableCtrl::Style &s) const
 {
-	return 	(s.title_font.IsNull() ? 12 : s.title_font.GetHeight()+4)
+	return 	(s.title_font.IsNullInstance() ? 12 : s.title_font.GetHeight()+4)
 			 + (s.handle_vert ? s.handle_margins.GetWidth() : s.handle_margins.GetHeight()); 
 }
 /*
@@ -204,7 +204,7 @@ void DockCont::DockContHandle::Paint(Draw& w)
 				p.x += isz + 2;
 			}
 		}
-		if (!s.title_font.IsNull()) {		
+		if (!s.title_font.IsNullInstance()) {		
 			Ctrl *c = GetLastChild();
 			while (c && !c->IsShown() && c->GetParent())
 				c = c->GetPrev();
