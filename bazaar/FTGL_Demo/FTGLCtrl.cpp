@@ -172,8 +172,6 @@ bool FTGLCtrl::Key(dword key, int count)
 		l->SetFont(&fonts[currentFont]);
 
 	Refresh();
-	Sync();
-	
 	return true;
 }
 
@@ -511,12 +509,12 @@ void FTGLCtrl::SetCamera(void)
 
 void FTGLCtrl::Layout()
 {
+	GLCtrl::Layout();
 	glMatrixMode (GL_MODELVIEW);
 	glViewport (0, 0, GetSize().cx, GetSize().cy);
 	glLoadIdentity();
 	SetCamera();
 	trackBall.Reshape(GetSize().cx, GetSize().cy);
-	GLCtrl::Layout();
 }
 
 void FTGLCtrl::GLPaint()
