@@ -86,4 +86,5 @@ void CompileCheck()
 	StableIndexSort3(x, x, x, x);
 	StableIndexSortCmp(x, x);
 	StableIndexSort2Cmp(x, x, x);
-	StableIndexSort3Cmp(x, x, x, x);}
+	StableIndexSort3Cmp(x, x, x, x);
+}
