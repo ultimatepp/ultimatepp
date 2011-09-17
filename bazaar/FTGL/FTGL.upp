@@ -1,0 +1,74 @@
+noblitz;
+
+uses
+	freetype;
+
+library(LINUX) "GL GLU";
+
+library(FREEBSD) "GL GLU";
+
+library(WIN32 GCC) "glaux glu32 opengl32";
+
+file
+	src/config.h,
+	src/FTBuffer.cpp,
+	src/FTCharmap.cpp,
+	src/FTCharmap.h,
+	src/FTCharToGlyphIndexMap.h,
+	src/FTContour.cpp,
+	src/FTContour.h,
+	src/FTFace.cpp,
+	src/FTFace.h,
+	src/FTGlyphContainer.cpp,
+	src/FTGlyphContainer.h,
+	src/FTInternals.h,
+	src/FTLibrary.cpp,
+	src/FTLibrary.h,
+	src/FTList.h,
+	src/FTPoint.cpp,
+	src/FTSize.cpp,
+	src/FTSize.h,
+	src/FTUnicode.h,
+	src/FTVector.h,
+	src/FTVectoriser.cpp,
+	src/FTVectoriser.h,
+	src/FTFont/FTBitmapFont.cpp,
+	src/FTFont/FTBitmapFontImpl.h,
+	src/FTFont/FTBufferFont.cpp,
+	src/FTFont/FTBufferFontImpl.h,
+	src/FTFont/FTExtrudeFont.cpp,
+	src/FTFont/FTExtrudeFontImpl.h,
+	src/FTFont/FTFont.cpp,
+	src/FTFont/FTFontGlue.cpp,
+	src/FTFont/FTFontImpl.h,
+	src/FTFont/FTOutlineFont.cpp,
+	src/FTFont/FTOutlineFontImpl.h,
+	src/FTFont/FTPixmapFont.cpp,
+	src/FTFont/FTPixmapFontImpl.h,
+	src/FTFont/FTPolygonFont.cpp,
+	src/FTFont/FTPolygonFontImpl.h,
+	src/FTFont/FTTextureFont.cpp,
+	src/FTFont/FTTextureFontImpl.h,
+	src/FTGlyph/FTBitmapGlyph.cpp,
+	src/FTGlyph/FTBitmapGlyphImpl.h,
+	src/FTGlyph/FTBufferGlyph.cpp,
+	src/FTGlyph/FTBufferGlyphImpl.h,
+	src/FTGlyph/FTExtrudeGlyph.cpp,
+	src/FTGlyph/FTExtrudeGlyphImpl.h,
+	src/FTGlyph/FTGlyph.cpp,
+	src/FTGlyph/FTGlyphGlue.cpp,
+	src/FTGlyph/FTGlyphImpl.h,
+	src/FTGlyph/FTOutlineGlyph.cpp,
+	src/FTGlyph/FTOutlineGlyphImpl.h,
+	src/FTGlyph/FTPixmapGlyph.cpp,
+	src/FTGlyph/FTPixmapGlyphImpl.h,
+	src/FTGlyph/FTPolygonGlyph.cpp,
+	src/FTGlyph/FTPolygonGlyphImpl.h,
+	src/FTGlyph/FTTextureGlyph.cpp,
+	src/FTGlyph/FTTextureGlyphImpl.h,
+	src/FTLayout/FTLayout.cpp,
+	src/FTLayout/FTLayoutGlue.cpp,
+	src/FTLayout/FTLayoutImpl.h,
+	src/FTLayout/FTSimpleLayout.cpp,
+	src/FTLayout/FTSimpleLayoutImpl.h;
+
