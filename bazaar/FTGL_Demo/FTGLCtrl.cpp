@@ -59,6 +59,11 @@ FTGLCtrl::FTGLCtrl() : trackBall(this)
 	SetCamera();
 }
 
+Image FTGLCtrl::MouseEvent(int event, Point p, int zdelta, dword keyflags)
+{
+	return trackBall.MouseEvent(event, p, zdelta, keyflags);
+}
+
 bool FTGLCtrl::Key(dword key, int count)
 {
     FTSimpleLayout *l = NULL;

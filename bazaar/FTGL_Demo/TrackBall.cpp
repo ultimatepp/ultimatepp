@@ -1,13 +1,17 @@
 #include "TrackBall.h"
 
-#include "trackball.h"
+#include "trkball.h"
+
+#ifdef PLATFORM_POSIX
 #include <GL/glut.h>
+#elif defined(WIN32)
+#include <gl/glu.h>
+#endif
 
 void TrackBall::_Animate(void)
 {
 	add_quats(lastquat, curquat, curquat);
 	owner->Refresh();
-	owner->Sync();
 	if(enableAnimCb)
 		owner->SetTimeCallback(10, THISBACK(_Animate));
 }
@@ -84,7 +88,7 @@ Image TrackBall::MouseEvent(int event, Point p, int zdelta, dword keyflags)
 		}
 	}
 
-	return Image();
+	return Image::Hand();
 }
 
 TrackBall::TrackBall(Ctrl *ow)

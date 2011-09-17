@@ -54,7 +54,7 @@ class FTGLCtrl : public GLCtrl
 	protected:
 		virtual void GLPaint();
 		
-		virtual Image MouseEvent(int event, Point p, int zdelta, dword keyflags) { return trackBall.MouseEvent(event, p, zdelta, keyflags); }
+		virtual Image MouseEvent(int event, Point p, int zdelta, dword keyflags);
 		virtual bool Key(dword key, int count);
 		
 		virtual void Layout();
