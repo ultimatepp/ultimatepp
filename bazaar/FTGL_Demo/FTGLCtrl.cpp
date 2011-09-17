@@ -32,6 +32,7 @@ FTGLCtrl::FTGLCtrl() : trackBall(this)
 #elif defined(PLATFORM_LINUX)
 	SetFontFiles(Vector<String>()
     	<< "/usr/share/fonts/truetype/msttcorefonts/arial.ttf"
+    	<< "/usr/share/fonts/truetype/msttcorefonts/cour.ttf"
     );
 #else
 #error "UNSUPPORTED PLATFORM -- ADD HERE DEFAULT FONTS"
