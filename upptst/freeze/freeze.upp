@@ -1,0 +1,11 @@
+description "Application simulating freeze to test WM_PING protocol\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI SSE2";
+
