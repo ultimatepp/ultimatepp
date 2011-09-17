@@ -4,8 +4,8 @@ uses
 	GLCtrl;
 
 file
-	trackball.c,
-	trackball.h,
+	trkball.c,
+	trkball.h,
 	TrackBall.h,
 	TrackBall.cpp,
 	FTGLCtrl.h,
