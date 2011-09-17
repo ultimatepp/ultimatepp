@@ -20,7 +20,7 @@
 #define __T1GLOAD_H__
 
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include "t1objs.h"
 
 

@@ -20,7 +20,7 @@
 #define __OTVALID_H__
 
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include FT_FREETYPE_H
 
 #include "otverror.h"           /* must come before FT_INTERNAL_VALIDATE_H */

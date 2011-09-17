@@ -19,7 +19,7 @@
 #ifndef __FTVALID_H__
 #define __FTVALID_H__
 
-#include <ft2build.h>
+#include "../ft2build.h"
 #include FT_CONFIG_STANDARD_LIBRARY_H   /* for ft_setjmp and ft_longjmp */
 
 

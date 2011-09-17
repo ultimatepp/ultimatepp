@@ -20,7 +20,7 @@
 #define __PSCONV_H__
 
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 
 FT_BEGIN_HEADER

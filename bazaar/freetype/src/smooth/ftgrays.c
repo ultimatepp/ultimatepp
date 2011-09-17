@@ -205,7 +205,7 @@ typedef ptrdiff_t  FT_PtrDist;
 #else /* !_STANDALONE_ */
 
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include "ftgrays.h"
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H

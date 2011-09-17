@@ -117,7 +117,7 @@
 #define __FTCGLYPH_H__
 
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include "ftcmanag.h"
 
 

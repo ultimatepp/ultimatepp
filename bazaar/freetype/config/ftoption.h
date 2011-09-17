@@ -20,7 +20,7 @@
 #define __FTOPTION_H__
 
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 
 
 FT_BEGIN_HEADER
@@ -46,7 +46,7 @@ FT_BEGIN_HEADER
   /*    directory `builds/<system>' by default, but you can easily change  */
   /*    that for your own projects.                                        */
   /*                                                                       */
-  /*  - Copy the file <ft2build.h> to `$BUILD/ft2build.h' and modify it    */
+  /*  - Copy the file <../ft2build.h> to `$BUILD/ft2build.h' and modify it    */
   /*    slightly to pre-define the macro FT_CONFIG_OPTIONS_H used to       */
   /*    locate this file during the build.  For example,                   */
   /*                                                                       */

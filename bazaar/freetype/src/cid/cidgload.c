@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include "cidload.h"
 #include "cidgload.h"
 #include FT_INTERNAL_DEBUG_H

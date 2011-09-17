@@ -15,7 +15,7 @@
 /*                                                                         */
 /***************************************************************************/
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_SERVICE_OPENTYPE_VALIDATE_H
 #include FT_OPENTYPE_VALIDATE_H

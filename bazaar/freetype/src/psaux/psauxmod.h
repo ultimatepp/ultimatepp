@@ -20,7 +20,7 @@
 #define __PSAUXMOD_H__
 
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include FT_MODULE_H
 
 

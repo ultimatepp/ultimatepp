@@ -20,7 +20,7 @@
 #define __TTAGS_H__
 
 
-#include <ft2build.h>
+#include "ft2build.h"
 #include FT_FREETYPE_H
 
 #ifdef FREETYPE_H

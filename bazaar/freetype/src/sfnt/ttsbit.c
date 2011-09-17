@@ -16,7 +16,7 @@
 /*                                                                         */
 /***************************************************************************/
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
@@ -31,7 +31,7 @@
 
 #else /* FT_CONFIG_OPTION_OLD_INTERNALS */
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H

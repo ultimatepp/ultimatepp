@@ -29,7 +29,7 @@ THE SOFTWARE.
 #define __PCFREAD_H__
 
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 
 FT_BEGIN_HEADER
 

@@ -1,6 +1,9 @@
 options
 	"-D FT2_BUILD_LIBRARY";
 
+include
+	config/ft2build.h;
+
 file
 	freetype.h,
 	ftadvanc.h,

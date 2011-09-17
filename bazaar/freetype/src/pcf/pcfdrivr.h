@@ -28,7 +28,7 @@ THE SOFTWARE.
 #ifndef __PCFDRIVR_H__
 #define __PCFDRIVR_H__
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include FT_INTERNAL_DRIVER_H
 
 FT_BEGIN_HEADER

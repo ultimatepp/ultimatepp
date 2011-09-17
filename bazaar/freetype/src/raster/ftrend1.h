@@ -20,7 +20,7 @@
 #define __FTREND1_H__
 
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include FT_RENDER_H
 
 

@@ -20,7 +20,7 @@
 #define __CIDGLOAD_H__
 
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include "cidobjs.h"
 
 

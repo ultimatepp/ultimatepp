@@ -20,7 +20,7 @@
 #define __CIDRIVER_H__
 
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include FT_INTERNAL_DRIVER_H
 
 

@@ -17,7 +17,7 @@
 /***************************************************************************/
 
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include "t1afm.h"
 #include "t1errors.h"
 #include FT_INTERNAL_STREAM_H

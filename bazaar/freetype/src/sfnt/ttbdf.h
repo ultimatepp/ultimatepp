@@ -20,7 +20,7 @@
 #define __TTBDF_H__
 
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include "ttload.h"
 #include FT_BDF_H
 

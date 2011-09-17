@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <ft2build.h>
+#include <../../ft2build.h>
 #include FT_CACHE_H
 #include "ftcmanag.h"
 #include FT_INTERNAL_OBJECTS_H
