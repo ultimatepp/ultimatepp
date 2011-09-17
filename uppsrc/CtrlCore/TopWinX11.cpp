@@ -338,10 +338,22 @@ void TopWindow::Open(Ctrl *owner)
 	if(IsOpen() && top)
 		top->owner = owner;
 
-	Window win = GetWindow();
 	long curr_pid = getpid();
+
+	static Window wm_client_leader;
+	ONCELOCK {
+		wm_client_leader = XCreateSimpleWindow(Xdisplay, Xroot, 0, 0, 1, 1, 0, 0, 0);
+		XChangeProperty(Xdisplay, wm_client_leader, XAtom("WM_CLIENT_LEADER"),
+		                XA_WINDOW, 32, PropModeReplace, (byte *)&wm_client_leader, 1);
+		XChangeProperty(Xdisplay, wm_client_leader, XAtom("_NET_WM_PID"), XA_CARDINAL, 32,
+		                PropModeReplace, (byte *) &curr_pid, 1);
+	}
+
+	Window win = GetWindow();
 	XChangeProperty(Xdisplay, win, XAtom("_NET_WM_PID"), XA_CARDINAL, 32,
 	                PropModeReplace, (byte *) &curr_pid, 1);
+	XChangeProperty(Xdisplay, win, XAtom("WM_CLIENT_LEADER"),
+	                XA_WINDOW, 32, PropModeReplace, (byte *)&wm_client_leader, 1);
 
 	int version = 5;
 	XChangeProperty(Xdisplay, win, XAtom("XdndAware"), XA_ATOM, 32,
