@@ -173,8 +173,8 @@ void MenuItemBase::PaintTopItem(Draw& w, int state) {
 		String text = GetText();
 		Size isz = GetTextSize(text, StdFont());
 		DrawMenuText(w, 6, (sz.cy - isz.cy) / 2, text, GetFont(), IsItemEnabled(), state,
-		             opaque ? style->topitemtext[0] : SColorText(),
-		             opaque2 ? style->topitemtext[state] : SColorText());
+		             opaque ? style->topitemtext[0] : SColorLabel(),
+		             opaque2 ? style->topitemtext[state] : SColorLabel());
 	}
 	else {
 		w.DrawRect(sz, SColorFace);

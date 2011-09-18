@@ -628,9 +628,9 @@ void ChHostSkin()
 		ChGtkNew(top_item, "menuitem", GTK_BOX);
 		if(gtk_major_version > 2 || (gtk_major_version == 2 && gtk_minor_version >= 1))
 			sw = GtkInt("selected_shadow_type");
-		s.topitemtext[0] = ChGtkColor(0, bar);
-		s.topitemtext[1] = ChGtkColor(1, bar);
-		s.topitemtext[2] = ChGtkColor(2, bar);
+		s.topitemtext[0] = ChGtkColor(0, top_item);
+		s.topitemtext[1] = ChGtkColor(1, top_item);
+		s.topitemtext[2] = ChGtkColor(2, top_item);
 		SColorMenuText_Write(s.topitemtext[1]);
 		s.topitem[1] = s.topitem[0];
 		GtkCh(s.topitem[2], sw, GTK_STATE_PRELIGHT);
