@@ -60,19 +60,12 @@ bool PasteClip::Accept()
 bool   PasteClip::Accept(const char *_fmt)
 {
 	Vector<String> f = Split(_fmt, ';');
-	for(int i = 0; i < f.GetCount(); i++) {
-		if(IsAccepted() && fmt == f[i])
-			return paste;
+	for(int i = 0; i < f.GetCount(); i++)
 		if(IsAvailable(f[i])) {
 			accepted = true;
-			if(paste) {
-				fmt = f[i];
-				data = Get(f[i]);
-				return true;
-			}
-			break;
+			fmt = f[i];
+			return paste;
 		}
-	}
 	return false;
 }
 

@@ -220,7 +220,6 @@ class PasteClip {
 	bool         paste;
 	bool         accepted;
 	String       fmt;
-	String       data;
 
 	void GuiPlatformConstruct();
 
@@ -229,12 +228,14 @@ public:
 	String Get(const char *fmt) const;
 
 	bool   Accept();
-	bool   Accept(const char *fmt);
-	String Get() const                  { return data; }
-	operator String() const             { return data; }
-	String operator ~() const           { return data; }
 
-	void   Reject()                     { accepted = false; data.Clear(); }
+	bool   Accept(const char *fmt);
+	String GetFormat()                  { return fmt; }
+	String Get() const                  { return Get(fmt); }
+	operator String() const             { return Get(); }
+	String operator ~() const           { return Get(); }
+
+	void   Reject()                     { accepted = false; }
 
 	int    GetAction() const            { return action; }
 	int    GetAllowedActions() const    { return allowed; }
