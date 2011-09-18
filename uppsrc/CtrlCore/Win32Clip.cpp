@@ -253,7 +253,7 @@ String GetString(PasteClip& clip)
 		String s = ~clip;
 		return WString((const wchar *)~s, wstrlen((const wchar *)~s)).ToString();
 	}
-	if(clip.IsAvailable("text"))
+	if(clip.Accept("text"))
 		return ~clip;
 	return Null;
 }
@@ -265,7 +265,7 @@ WString GetWString(PasteClip& clip)
 		String s = ~clip;
 		return WString((const wchar *)~s, wstrlen((const wchar *)~s));
 	}
-	if(clip.IsAvailable("text"))
+	if(clip.Accept("text"))
 		return (~clip).ToWString();
 	return Null;
 }
