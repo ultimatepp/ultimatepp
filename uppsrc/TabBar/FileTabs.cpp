@@ -174,8 +174,8 @@ FileTabs::FileTabs() :
 normalicons(true), 
 stackedicons(false), 
 greyedicons(true),
-filecolor(SColorText),
-extcolor(LtBlue)
+filecolor(SColorLabel),
+extcolor(IsDark(SColorFace()) ? Blend(White, LtBlue) : LtBlue)
 {
 
 }
