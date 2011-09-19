@@ -1172,10 +1172,11 @@ void GridCtrl::Paint(Draw &w)
 					if(chameleon)
 						style |= GD::CHAMELEON;
 
+					Font fnt(stdfont);
 					gd->SetLeftImage(hi.img);
 					gd->PaintFixed(w, jj == firstcol, i == 0, x, y, cx, cy,
 								i == 0 ? it.val : GetConvertedColumn(hi.id, it.val),
-								style | en, IsNull(hi.hfnt) ? StdFont() : hi.hfnt, false, false,
+								style | en, IsNull(hi.hfnt) ? fnt : hi.hfnt, false, false,
 								i == 0 ? hi.sortmode : 0,
 								hi.sortcol,
 								sortOrder.GetCount(),
@@ -1301,9 +1302,10 @@ void GridCtrl::Paint(Draw &w)
 					if(chameleon)
 						style |= GD::CHAMELEON;
 
+					Font fnt(stdfont);
 					gd->PaintFixed(w, firstx, j == 0, x, y, cx, cy,
 									GetConvertedColumn(id, it.val),
-									style | en, IsNull(vi.hfnt) ? StdFont() : vi.hfnt,
+									style | en, IsNull(vi.hfnt) ? fnt : vi.hfnt,
 									indicator, false, 0, -1, 0, false);
 					
 					it.rcx = gd->real_size.cx;
