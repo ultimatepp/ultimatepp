@@ -579,7 +579,7 @@ void Option::Paint(Draw& w) {
 	if(showlabel) {
 		bool ds = !IsShowEnabled();
 		DrawSmartText(w, isz.cx + 4, ty, tsz.cx, label, font,
-		              ds || IsReadOnly() ? SColorDisabled : SColorLabel, ////////
+		              ds || IsReadOnly() ? SColorDisabled : GetLabelTextColor(this),
 		              VisibleAccessKeys() ? accesskey : 0);
 		if(HasFocus())
 			DrawFocus(w, RectC(isz.cx + 2, ty - 1, tsz.cx + 3, tsz.cy + 2) & sz);

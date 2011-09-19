@@ -93,10 +93,9 @@ Image MirrorHorz(const Image& img);
 Image MirrorVert(const Image& img);
 Image Rotate(const Image& m, int angle);
 
-// Experimental {
 Image Colorize(const Image& img, Color color, int alpha = 100);
 Image Equalight(const Image& img, int thold = 10);
-// }
+Image AdjustForDarkBk(const Image& img);
 
 //Chameleon support
 int   Diff(RGBA a, RGBA b);

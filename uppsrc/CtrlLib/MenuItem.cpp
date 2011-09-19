@@ -173,8 +173,8 @@ void MenuItemBase::PaintTopItem(Draw& w, int state) {
 		String text = GetText();
 		Size isz = GetTextSize(text, StdFont());
 		DrawMenuText(w, 6, (sz.cy - isz.cy) / 2, text, GetFont(), IsItemEnabled(), state,
-		             opaque ? style->topitemtext[0] : SColorLabel(),
-		             opaque2 ? style->topitemtext[state] : SColorLabel());
+		             opaque ? style->topitemtext[0] : GetLabelTextColor(this),
+		             opaque2 ? style->topitemtext[state] : GetLabelTextColor(this));
 	}
 	else {
 		w.DrawRect(sz, SColorFace);
@@ -194,6 +194,8 @@ void MenuItemBase::PaintTopItem(Draw& w, int state) {
 Bar::Item& MenuItem::Image(const UPP::Image& img)
 {
 	licon = img;
+	if(IsDarkColorFace() && !nodarkadjust)
+		licon = MakeImage(licon, AdjustForDarkBk);
 	Refresh();
 	return *this;
 }
@@ -201,6 +203,8 @@ Bar::Item& MenuItem::Image(const UPP::Image& img)
 MenuItem& MenuItem::RightImage(const UPP::Image& img)
 {
 	ricon = img;
+	if(IsDarkColorFace() && !nodarkadjust)
+		ricon = MakeImage(ricon, AdjustForDarkBk);
 	Refresh();
 	return *this;
 }

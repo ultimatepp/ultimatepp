@@ -42,6 +42,7 @@ protected:
 	int     accesskey;
 	Size    maxiconsize;
 	const MenuBar::Style *style;
+	bool    nodarkadjust;
 
 public:
 	virtual void SyncState() = 0;
@@ -59,6 +60,7 @@ public:
 	Font           GetFont() const                { return font; }
 	MenuItemBase&  MaxIconSize(Size sz)           { maxiconsize = sz; return *this; }
 	bool           InOpaqueBar() const;
+	MenuItemBase&  NoDarkAdjust(bool b = true)    { nodarkadjust = b; return *this; }
 
 	MenuItemBase();
 };
