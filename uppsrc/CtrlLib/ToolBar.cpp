@@ -26,6 +26,7 @@ ToolBar::ToolBar()
 	maxiconsize = Null;
 	kind = ToolButton::NOLABEL;
 	arealook = -1;
+	nodarkadjust = false;
 }
 
 ToolBar::~ToolBar() {}
@@ -60,6 +61,7 @@ Bar::Item& ToolBar::AddItem(Callback cb)
 	m.MaxIconSize(IsNull(maxiconsize) ? style->maxiconsize : maxiconsize);
 	m.Kind(kind);
 	m.SetStyle(style->buttonstyle);
+	m.NoDarkAdjust(nodarkadjust);
 	pane.Add(&m, Null);
 	return m;
 }

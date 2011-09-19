@@ -7,7 +7,7 @@ void StaticText::Paint(Draw& w)
 	Size sz = GetSize();
 	if(!IsTransparent())
 		w.DrawRect(0, 0, sz.cx, sz.cy, SColorFace);
-	PaintLabel(w, 0, 0, sz.cx, sz.cy, !IsShowEnabled(), false, false, VisibleAccessKeys());
+	PaintLabel(this, w, 0, 0, sz.cx, sz.cy, !IsShowEnabled(), false, false, VisibleAccessKeys());
 }
 
 Size StaticText::GetMinSize() const
@@ -79,7 +79,7 @@ Label::Label() {
 
 Label::~Label() {}
 
-CH_COLOR(LabelBoxTextColor, LtBlue());
+CH_COLOR(LabelBoxTextColor, IsDark(SColorFace()) ? Blend(LtBlue(), White) : LtBlue());
 CH_COLOR(LabelBoxDisabledTextColor, SColorDisabled());
 CH_COLOR(LabelBoxColor, SColorShadow());
 

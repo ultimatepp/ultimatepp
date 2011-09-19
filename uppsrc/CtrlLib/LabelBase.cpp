@@ -171,7 +171,24 @@ Image DisabledImage(const Image& img, bool dis)
 	           : img;
 }
 
-Size DrawLabel::Paint(Draw& w, const Rect& r, bool visibleaccesskey) const
+Color GetLabelTextColor(const Ctrl *ctrl)
+{
+	if(!IsLabelTextColorMismatch())
+		return SColorLabel();
+	while(ctrl) {
+		if(!ctrl->IsTransparent()) {
+			if(dynamic_cast<const TopWindow *>(ctrl) || dynamic_cast<const TabCtrl *>(ctrl) ||
+			   dynamic_cast<const ToolBar *>(ctrl) || dynamic_cast<const MenuBar *>(ctrl) ||
+			   dynamic_cast<const StaticRect *>(ctrl) || dynamic_cast<const StaticBarArea *>(ctrl))
+				break;
+			return SColorText();
+		}
+		ctrl = ctrl->GetParent();
+	}
+	return SColorLabel();
+}
+
+Size DrawLabel::Paint(Ctrl *ctrl, Draw& w, const Rect& r, bool visibleaccesskey) const
 {
 	int lspc = this->lspc;
 	int rspc = this->rspc;
@@ -209,7 +226,7 @@ Size DrawLabel::Paint(Draw& w, const Rect& r, bool visibleaccesskey) const
 		p.y = (r.bottom + r.top - txtsz.cy) / 2;
 	Color color = disabled && !IsNull(disabledink) ? disabledink : ink;
 	if(IsNull(color))
-		color = disabled ? SColorDisabled : SColorLabel; /////////
+		color = disabled ? SColorDisabled : GetLabelTextColor(ctrl);
 	int ix;
 	if(IsNull(lspc))
 		ix = r.left + push;
@@ -245,6 +262,16 @@ Size DrawLabel::Paint(Draw& w, const Rect& r, bool visibleaccesskey) const
 	}
 
 	return isz;
+}
+
+Size DrawLabel::Paint(Ctrl *ctrl, Draw& w, int x, int y, int cx, int cy, bool visibleaccesskey) const
+{
+	return Paint(ctrl, w, RectC(x, y, cx, cy), visibleaccesskey);
+}
+
+Size DrawLabel::Paint(Draw& w, const Rect& r, bool visibleaccesskey) const
+{
+	return Paint(NULL, w, r, visibleaccesskey);
 }
 
 Size DrawLabel::Paint(Draw& w, int x, int y, int cx, int cy, bool vak) const
@@ -316,13 +343,23 @@ LabelBase& LabelBase::SetVAlign(int valign) {
 	return *this;
 }
 
-Size LabelBase::PaintLabel(Draw& w, const Rect& r, bool disabled, bool push, bool focus, bool vak)
+Size LabelBase::PaintLabel(Ctrl *ctrl, Draw& w, const Rect& r, bool disabled, bool push, bool focus, bool vak)
 {
 	DrawLabel lbl1 = lbl;
 	lbl1.disabled = disabled;
 	lbl1.push = push;
 	lbl1.focus = focus;
-	return lbl1.Paint(w, r, vak);
+	return lbl1.Paint(ctrl, w, r, vak);
+}
+
+Size LabelBase::PaintLabel(Ctrl *ctrl, Draw& w, int x, int y, int cx, int cy, bool disabled, bool push, bool focus, bool vak)
+{
+	return PaintLabel(ctrl, w, RectC(x, y, cx, cy), disabled, push, focus, vak);
+}
+
+Size LabelBase::PaintLabel(Draw& w, const Rect& r, bool disabled, bool push, bool focus, bool vak)
+{
+	return PaintLabel(NULL, w, r, disabled, push, focus, vak);
 }
 
 

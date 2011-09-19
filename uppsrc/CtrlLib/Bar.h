@@ -292,6 +292,7 @@ private:
 	int          arealook;
 	Size         maxiconsize;
 	LookFrame    frame;
+	bool         nodarkadjust;
 
 	friend class MenuItemBase;
 	friend class SubMenuBase;
@@ -354,6 +355,7 @@ public:
 	MenuBar& AreaLook(int q = 1)                    { arealook = q; Refresh(); return *this; }
 	MenuBar& MaxIconSize(Size sz)                   { maxiconsize = sz; return *this; }
 	Size     GetMaxIconSize() const                 { return maxiconsize; }
+	MenuBar& NoDarkAdjust(bool b = true)            { nodarkadjust = b; return *this; }
 
 	typedef MenuBar CLASSNAME;
 
@@ -407,6 +409,7 @@ protected:
 	byte    kind;
 	Size    minsize;
 	Size    maxiconsize;
+	bool    nodarkadjust;
 
 	const Style      *style;
 
@@ -434,6 +437,7 @@ public:
 	ToolButton& Kind(int _kind)          { kind = _kind; Refresh(); return *this; }
 	ToolButton& Label(const char *text, int kind);
 	ToolButton& Label(const char *text);
+	ToolButton& NoDarkAdjust(bool b = true) { nodarkadjust = b; return *this; }
 
 	ToolButton();
 	virtual ~ToolButton();
@@ -472,6 +476,7 @@ private:
 	Size              buttonminsize;
 	Size              maxiconsize;
 	int               kind;
+	bool              nodarkadjust;
 
 protected:
 	enum {
@@ -496,6 +501,7 @@ public:
 	ToolBar& MaxIconSize(Size sz)                   { maxiconsize = sz; return *this; }
 	ToolBar& ButtonKind(int _kind)                  { kind = _kind; return *this; }
 	ToolBar& AreaLook(int q = 1)                    { arealook = q; Refresh(); return *this; }
+	ToolBar& NoDarkAdjust(bool b = true)            { nodarkadjust = b; return *this; }
 
 	typedef ToolBar  CLASSNAME;
 

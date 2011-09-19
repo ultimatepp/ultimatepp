@@ -187,7 +187,7 @@ void Switch::Paint(Draw& w) {
 		img = CtrlsImg::Get((v.value == value ? CtrlsImg::I_S1 : CtrlsImg::I_S0) + q);
 		w.DrawImage(x, y + iy, img);
 		DrawSmartText(w, x + isz.cx + 4, y + ty, sz.cx, v.label, font,
-		              dv || IsReadOnly() ? SColorDisabled : SColorLabel, ///////
+		              dv || IsReadOnly() ? SColorDisabled : GetLabelTextColor(this), ///////
 		              VisibleAccessKeys() ? v.accesskey : 0);
 		if(HasFocus() && (pushindex == i || v.value == value && pushindex < 0))
 			DrawFocus(w, RectC(x + isz.cx + 2, y + ty - 1, tsz.cx + 3, tsz.cy + 2) & sz);

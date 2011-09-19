@@ -62,6 +62,7 @@ MenuBar::MenuBar()
 	SetStyle(StyleDefault());
 	arealook = -1;
 	maxiconsize = Null;
+	nodarkadjust = false;
 }
 
 MenuBar& MenuBar::SetStyle(const Style& s)

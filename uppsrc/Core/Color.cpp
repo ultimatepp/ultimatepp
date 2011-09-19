@@ -133,4 +133,9 @@ bool IsDark(Color c)
 	return Grayscale(c) < 80;
 }
 
+bool IsLight(Color c)
+{
+	return Grayscale(c) > 255 - 80;
+}
+
 END_UPP_NAMESPACE

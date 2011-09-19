@@ -37,6 +37,8 @@ void   ChInflateMargins(Size& sz, const Value& look);
 
 void   ChInvalidate();
 bool   ChIsInvalidated();
+bool   IsLabelTextColorMismatch();
+bool   IsDarkColorFace();
 
 template <class T>
 struct ChStyle {

@@ -411,6 +411,20 @@ bool ChIsInvalidated()
 	return sChInvalid;
 }
 
+static bool sLabelTextColorMismatch;
+
+bool IsLabelTextColorMismatch()
+{
+	return sLabelTextColorMismatch;
+}
+
+static bool sIsDarkColorFace;
+
+bool IsDarkColorFace()
+{
+	return sIsDarkColorFace;
+}
+
 void ChReset()
 {
 	for(int i = 0; i < sChStyle().GetCount(); i++)
@@ -423,6 +437,8 @@ void ChFinish()
 	sChInvalid = false;
 	for(int i = 0; i < sChStyle().GetCount(); i++)
 		sChStyle()[i].init();
+	sIsDarkColorFace = IsDark(SColorFace());
+	sLabelTextColorMismatch = IsDark(SColorText()) != IsDark(SColorLabel());
 }
 
 Value sChOp(Draw& w, const Rect& r, const Value& v, int op)

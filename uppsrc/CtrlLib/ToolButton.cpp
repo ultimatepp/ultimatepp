@@ -45,6 +45,7 @@ ToolButton::ToolButton()
 	Reset();
 	checked = false;
 	paint_checked = false;
+	nodarkadjust = false;
 	Transparent();
 	kind = NOLABEL;
 }
@@ -133,7 +134,10 @@ ToolButton& ToolButton::Label(const char *text)
 
 Image ToolButton::GetImage() const
 {
-	return CachedRescale(img, min(img.GetSize(), maxiconsize));
+	UPP::Image m = img;
+	if(IsDarkColorFace() && !nodarkadjust)
+		m = MakeImage(m, AdjustForDarkBk);
+	return CachedRescale(m, min(m.GetSize(), maxiconsize));
 }
 
 Bar::Item& ToolButton::Image(const UPP::Image& img_)

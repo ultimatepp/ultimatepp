@@ -52,6 +52,8 @@ struct DrawLabel {
 
 	Size      GetSize(int txtcx, Size sz1, int lspc, Size sz2, int rspc) const;
 	Size      GetSize(int txtcx = INT_MAX) const;
+	Size      Paint(Ctrl *ctrl, Draw& w, const Rect& r, bool visibleaccesskey = true) const;
+	Size      Paint(Ctrl *ctrl, Draw& w, int x, int y, int cx, int cy, bool visibleaccesskey = true) const;
 	Size      Paint(Draw& w, const Rect& r, bool visibleaccesskey = true) const;
 	Size      Paint(Draw& w, int x, int y, int cx, int cy, bool visibleaccesskey = true) const;
 
@@ -59,6 +61,7 @@ struct DrawLabel {
 };
 
 Image DisabledImage(const Image& img, bool disabled = true);
+Color GetLabelTextColor(const Ctrl *ctrl);
 
 class LabelBase {
 protected:
@@ -86,6 +89,10 @@ public:
 	Font        GetFont() const                              { return lbl.font; }
 	Color       GetInk() const                               { return lbl.ink; }
 
+	Size        PaintLabel(Ctrl *ctrl, Draw& w, const Rect& r,
+	                       bool disabled = false, bool push = false, bool focus = false, bool vak = true);
+	Size        PaintLabel(Ctrl *ctrl, Draw& w, int x, int y, int cx, int cy,
+	                       bool disabled = false, bool push = false, bool focus = false, bool vak = true);
 	Size        PaintLabel(Draw& w, const Rect& r,
 	                       bool disabled = false, bool push = false, bool focus = false, bool vak = true);
 	Size        PaintLabel(Draw& w, int x, int y, int cx, int cy,
