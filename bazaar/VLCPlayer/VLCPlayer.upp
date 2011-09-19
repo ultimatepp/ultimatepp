@@ -1,0 +1,19 @@
+description "Bazaar: Video player by loop playlist (for backgound videoplaying). Author: Sergey  Nikitin";
+
+
+uses
+	CtrlLib,
+	SDL;
+
+link
+	-lvlc;
+
+file
+	VLCPlayer.cpp,
+	VLCPlayer.h,
+	VLCPlayer.usc,
+	VLCPlayer.iml;
+
+mainconfig
+	"" = "GUI MT";
+

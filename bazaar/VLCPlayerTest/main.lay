@@ -1,0 +1,16 @@
+LAYOUT(MainLay, 564, 712)
+	ITEM(VLCPlayer, player, HCenterPosZ(536, -14).TopPosZ(0, 304))
+	ITEM(Button, b1, HCenterPosZ(90, -149).BottomPosZ(200, 88))
+	ITEM(Button, b2, HCenterPosZ(90, -51).BottomPosZ(200, 88))
+	ITEM(Button, b3, HCenterPosZ(90, 51).BottomPosZ(200, 88))
+	ITEM(Button, b4, HCenterPosZ(90, 149).BottomPosZ(200, 88))
+	ITEM(Button, b5, HCenterPosZ(90, -147).BottomPosZ(104, 88))
+	ITEM(Button, b6, HCenterPosZ(90, -49).BottomPosZ(104, 88))
+	ITEM(Button, b7, HCenterPosZ(90, 53).BottomPosZ(104, 88))
+	ITEM(Button, b8, HCenterPosZ(90, 151).BottomPosZ(104, 88))
+	ITEM(Button, b9, HCenterPosZ(90, 151).BottomPosZ(8, 88))
+	ITEM(Button, b10, HCenterPosZ(90, 53).BottomPosZ(8, 88))
+	ITEM(Button, b11, HCenterPosZ(90, -147).BottomPosZ(8, 88))
+	ITEM(Button, b12, HCenterPosZ(90, -49).BottomPosZ(8, 88))
+END_LAYOUT
+

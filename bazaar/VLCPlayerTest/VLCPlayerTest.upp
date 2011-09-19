@@ -1,0 +1,15 @@
+description "Bazaar: Video player by loop playlist (for backgound videoplaying) Test Application. Author: Sergey  Nikitin";
+
+uses
+	CtrlLib,
+	VLCPlayer;
+
+file
+	Interface readonly separator,
+	main.cpp,
+	main.lay,
+	main.iml;
+
+mainconfig
+	"" = "GUI MT";
+
