@@ -1,0 +1,11 @@
+description "Using U++ complex number class (derived from std::complex)\377";
+
+uses
+	Core;
+
+file
+	Complex.cpp;
+
+mainconfig
+	"" = "SSE2";
+
