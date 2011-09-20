@@ -589,6 +589,10 @@ Image  RotateClockwise(const Image& img)
 	for(int x = 0; x < sz.cx; x++)
 		for(int y = 0; y < sz.cy; y++)
 			ib[x][y] = img[sz.cy - y - 1][x];
+	Point p = img.GetHotSpot();
+	ib.SetHotSpot(Point(sz.cy - p.y - 1, p.x));
+	p = img.Get2ndSpot();
+	ib.Set2ndSpot(Point(sz.cy - p.y - 1, p.x));
 	return ib;
 }
 
@@ -599,6 +603,10 @@ Image  RotateAntiClockwise(const Image& img)
 	for(int x = 0; x < sz.cx; x++)
 		for(int y = 0; y < sz.cy; y++)
 			ib[x][y] = img[y][sz.cx - x - 1];
+	Point p = img.GetHotSpot();
+	ib.SetHotSpot(Point(p.y, sz.cx - p.x - 1));
+	p = img.Get2ndSpot();
+	ib.Set2ndSpot(Point(p.y, sz.cx - p.x - 1));
 	return ib;
 }
 
@@ -609,6 +617,10 @@ Image Rotate180(const Image& orig)
 	for(int rw = 0; rw < sz.cy; rw++)
 		for(int cl = 0; cl < sz.cx; cl++)
 			dest[rw][cl] = orig[sz.cy - rw - 1][sz.cx - cl - 1];
+	Point p = orig.GetHotSpot();
+	dest.SetHotSpot(Point(sz.cy - p.y - 1, sz.cx - p.x - 1));
+	p = orig.Get2ndSpot();
+	dest.Set2ndSpot(Point(sz.cy - p.y - 1, sz.cx - p.x - 1));
 	return dest;
 }
 
@@ -626,6 +638,10 @@ Image MirrorHorz(const Image& img)
 			e--;
 		}
 	}
+	Point p = img.GetHotSpot();
+	ib.SetHotSpot(Point(sz.cx - p.x - 1, p.y));
+	p = img.Get2ndSpot();
+	ib.Set2ndSpot(Point(sz.cx - p.x - 1, p.y));
 	return ib;
 }
 
@@ -644,6 +660,10 @@ Image MirrorVert(const Image& img)
 			e++;
 		}
 	}
+	Point p = img.GetHotSpot();
+	ib.SetHotSpot(Point(p.x, sz.cy - p.y - 1));
+	p = img.Get2ndSpot();
+	ib.Set2ndSpot(Point(p.x, sz.cy - p.y - 1));
 	return ib;
 }
 
