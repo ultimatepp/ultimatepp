@@ -27,8 +27,9 @@ GUI_APP_MAIN
 	TopWindow app;
 	app.Sizeable();
 	ArrayCtrl x;
-	x.AddColumn("");
-	for(int i = 0; i < 30; i++)
+	x.HeaderObject().Absolute();
+	x.AddColumn("", 2000);
+	for(int i = 0; i < 1000; i++)
 		x.Add(i);
 	app.Add(x.SizePos());
 	app.Run();

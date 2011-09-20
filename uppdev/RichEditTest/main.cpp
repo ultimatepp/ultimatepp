@@ -16,6 +16,7 @@ GUI_APP_MAIN
 //	SetLanguage(LNG_('P','L','P','L'));
 
 //	InstallCrashDump();
+	DDUMP(GetStdFontCy());
 	DUMP(GUI_PopUpEffect());
 	RichEditWithToolBar e;
 	e.SetPage(Size(6074, 3968));
