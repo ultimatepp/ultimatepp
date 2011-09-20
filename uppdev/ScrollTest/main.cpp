@@ -2,41 +2,34 @@
 
 using namespace Upp;
 
-struct App : public TopWindow {
-	Point pos;
-	Button ok, tl;
+#define IMAGECLASS ImageImg
+#define IMAGEFILE <ScrollTest/image.iml>
+#include <Draw/iml_header.h>
 
-	virtual void Paint(Draw &w)
-	{
-		Size sz = GetSize();
-		for(int i = pos.x / 50 - 50; (i * 50 - pos.y) < sz.cy; i++)
-			for(int j = pos.y / 50 - 50; (j * 50 - pos.x) < sz.cx; j++)
-				w.DrawRect(j * 50 - pos.x, i * 50 - pos.y, 50, 50,
-				           Color(33 * j % 255, 11 * i % 255, 100));
-	}
+#define IMAGECLASS ImageImg
+#define IMAGEFILE <ScrollTest/image.iml>
+#include <Draw/iml_source.h>
 
-	virtual bool Key(dword key, int count)
-	{
-		if(key == VK_SPACE) {
-			Size sz = GetSize();
-			Size delta(rand() % 50 - 25, rand() % 50 - 25);
-			delta = Size(0, -10);
-			pos += delta;
-			ScrollView(-delta);
-		}
-		return true;
+void InitSb()
+{
+	ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
+	s = s.Standard();
+	for(int i = 0; i < 4; i++) {
+		s.vupper[i] = ImageImg::Get(ImageImg::I_TU0 + i);
+		s.vlower[i] = MirrorVert(s.vupper[i]);
+		s.vthumb[i] = ImageImg::Get(ImageImg::I_TH0 + i);
 	}
-
-	App()
-	{
-		pos = Point(0, 0);
-		Add(ok.HCenterPos(20).VCenterPos(20));
-		Add(tl.TopPos(0, 20).LeftPos(0, 20));
-	}
-};
+}
 
 GUI_APP_MAIN
 {
-	Ctrl::ShowRepaint(30);
-	App().Run();
+	InitSb();
+	TopWindow app;
+	app.Sizeable();
+	ArrayCtrl x;
+	x.AddColumn("");
+	for(int i = 0; i < 30; i++)
+		x.Add(i);
+	app.Add(x.SizePos());
+	app.Run();
 }

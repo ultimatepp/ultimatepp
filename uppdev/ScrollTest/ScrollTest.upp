@@ -2,7 +2,9 @@ uses
 	CtrlLib;
 
 file
+	image.iml,
 	main.cpp;
 
 mainconfig
 	"" = "GUI ST";
+
