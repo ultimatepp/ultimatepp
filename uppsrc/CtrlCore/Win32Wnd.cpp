@@ -304,7 +304,7 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 	ILOG("Windows");
 	Windows(); //?? TRC: what's the use of this?
 
-	ChSync();
+	ReSkin();
 
 	OleInitialize(NULL);
 

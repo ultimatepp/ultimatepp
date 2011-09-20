@@ -548,7 +548,6 @@ bool Ctrl::IsOcxChild()
 
 Ctrl::Ctrl() {
 	GuiLock __;
-	SyncCh();
 	LLOG("Ctrl::Ctrl");
 	GuiPlatformConstruct();
 	destroying = false;
@@ -710,7 +709,7 @@ Size Ctrl::Csize;
 void InitRichTextZoom()
 {
 	SetRichTextStdScreenZoom(Ctrl::HorzLayoutZoom(96), 600);
-	ChInvalidate();
+	Ctrl::ReSkin();
 }
 
 void Ctrl::Csizeinit()
@@ -732,14 +731,14 @@ void Ctrl::SetZoomSize(Size sz, Size bsz)
 	GuiLock __;
 	Csize = sz;
 	Dsize = bsz;
-	ChInvalidate();
+	ReSkin();
 }
 
 void Ctrl::NoLayoutZoom()
 {
 	GuiLock __;
 	Csize = Dsize = Size(1, 1);
-	ChInvalidate();
+	ReSkin();
 }
 
 void Ctrl::GetZoomRatio(Size& m, Size& d)
@@ -880,6 +879,12 @@ void Modality::End()
 	active = NULL;
 }
 
+extern void (*whenSetStdFont)();
+
+INITBLOCK {
+	whenSetStdFont = &Ctrl::ReSkin;
+}
+
 void (*s_chdefault)();
 
 void (*Ctrl::skin)();
@@ -895,17 +900,16 @@ void Ctrl::SetSkin(void (*_skin)())
 {
 	GuiLock __;
 	skin = _skin;
-	ChSync();
-	Vector<Ctrl *> ctrl = GetTopCtrls();
-	for(int i = 0; i < ctrl.GetCount(); i++) {
-		ctrl[i]->RefreshLayoutDeep();
-		ctrl[i]->RefreshFrame();
-	}
+	ReSkin();
 }
 
-void Ctrl::ChSync()
+void Ctrl::ReSkin()
 {
 	GuiLock __;
+	static int lock;
+	if(lock)
+		return;
+	lock++;
 	if(s_chdefault)
 		(*s_chdefault)();
 	if(skin)
@@ -913,12 +917,12 @@ void Ctrl::ChSync()
 	Csize.cx = Dsize.cx = 0;
 	Csizeinit();
 	ChFinish();
-}
-
-void Ctrl::SyncCh()
-{
-	if(ChIsInvalidated())
-		ChSync();
+	Vector<Ctrl *> ctrl = GetTopCtrls();
+	for(int i = 0; i < ctrl.GetCount(); i++) {
+		ctrl[i]->RefreshLayoutDeep();
+		ctrl[i]->RefreshFrame();
+	}
+	lock--;
 }
 
 void Ctrl::Xmlize(XmlIO xml)
