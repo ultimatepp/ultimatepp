@@ -27,7 +27,7 @@ void MainLayDlg::Layout() {
 	Size ws = GetSize()/2;
 	ws.cy = ws.cx / 16 * 9;
 	player.SetVSize(ws);
-	if (!player.playactive) {
+	if (AtomicRead(player.playeractive)!=1) {
 		INTERLOCKED_(mtx) { 
 			
 			
@@ -93,8 +93,6 @@ GUI_APP_MAIN {
 	MainLayDlg app;
 	app.OpenMain();
 	app.player.AddPlayList(GetHomeDirFile("Видео/Avaria-Leto vsegda1-5.avi"));
-	//app.player.AddPlayList(GetHomeDirFile("Видео/Фильмы/Hunting__(2009-09).avi"));
-	//app.player.AddPlayList(GetHomeDirFile("Видео/Фильмы/Varshavyanka__(2009-09).avi"));
 	
 	app.Run();
 }

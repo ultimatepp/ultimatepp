@@ -154,7 +154,6 @@ VLCPlayer::VLCPlayer() {
 	this->SetTimeCallback(1000,THISBACK(StartPlay));
 }
 void VLCPlayer::StartPlay(){
-	AddPlayList(GetHomeDirFile("Видео/DiscountTerminals.avi"));
 	Play();
 }
 
