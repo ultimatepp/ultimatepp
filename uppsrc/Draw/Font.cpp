@@ -94,15 +94,24 @@ void Font::SyncStdFont()
 {
 	DrawLock __;
 	StdFontSize = Size(AStdFont.GetAveWidth(), AStdFont().Bold().GetCy());
+	DDUMP(StdFontSize);
+	DDUMP(AStdFont.GetHeight());
 }
+
+void (*whenSetStdFont)();
 
 void Font::SetStdFont(Font font)
 {
 	DrawLock __;
+	static int x = 0;
+	if(x) return;
+	x++;
 	InitStdFont();
 	AStdFont = font;
 	SyncStdFont();
-	ChInvalidate();
+	if(whenSetStdFont)
+		(*whenSetStdFont)();
+	x--;
 }
 
 void Font::InitStdFont()

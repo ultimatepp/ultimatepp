@@ -409,7 +409,7 @@ void Ctrl::InitX11(const char *display)
 
 	SetStdFont(Arial(12));
 
-	ChSync();
+	ReSkin();
 
 	GUI_GlobalStyle_Write(GUISTYLE_XP);
 	GUI_DragFullWindow_Write(1);

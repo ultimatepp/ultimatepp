@@ -497,9 +497,6 @@ private:
 
 	void    RemoveChild0(Ctrl *q);
 
-	static  void SyncCh();
-	static  void ChSync();
-
 	static int       FindMoveCtrl(const VectorMap<Ctrl *, MoveCtrl>& m, Ctrl *x);
 	static MoveCtrl *FindMoveCtrlPtr(VectorMap<Ctrl *, MoveCtrl>& m, Ctrl *x);
 
@@ -1220,6 +1217,8 @@ public:
 	static void   GlobalBackPaint(bool b = true);
 	static void   GlobalBackPaintHint();
 	static void   GlobalBackBuffer(bool b = true);
+
+	static void   ReSkin();
 
 	String      Name() const;
 
