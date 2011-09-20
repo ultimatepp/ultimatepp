@@ -95,7 +95,6 @@ Image Rotate(const Image& m, int angle);
 
 Image Colorize(const Image& img, Color color, int alpha = 100);
 Image Equalight(const Image& img, int thold = 10);
-Image AdjustForDarkBk(const Image& img);
 
 //Chameleon support
 int   Diff(RGBA a, RGBA b);
@@ -105,6 +104,7 @@ Image Unglyph(const Image& m);
 Image VertBlend(Image img1, Image img2, int y0, int y1);
 Image HorzBlend(Image img1, Image img2, int x0, int x1);
 Image HorzSymm(Image src);
+Image AdjustForDarkBk(const Image& img);
 
 enum {
 	IMAGECONTENT_VERTDUP = 1,
