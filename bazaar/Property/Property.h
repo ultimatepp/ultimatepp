@@ -221,7 +221,7 @@ void PropKeeper<KLASS>::Init() \
 class GetAccessorMapI
 {
 public:
-	virtual const AccessorMap& GetAccessorMap() const = 0;
+	virtual AccessorMap& GetAccessorMap() = 0;
 };
 
 template<class T, class C = GetAccessorMapI>
@@ -229,8 +229,7 @@ class WithAccessorMap : public C
 {
 public:
 	WithAccessorMap() { PropKeeper<T>::SetupAccessorMap((T&)(*this), am); }
-	virtual const AccessorMap& GetAccessorMap() const { return am; }
-protected:
+	virtual AccessorMap& GetAccessorMap() { return am; }
 	AccessorMap am;
 };
 

@@ -112,7 +112,7 @@ void AccessorMapCtrl::UpdateMap()
 		if(ValueAccessorInstance* vi = dynamic_cast<ValueAccessorInstance*>(&a))
 		{
 			//special ValueAccessors, need their own editor
-			Value q = vi->TypeOf(); //defines which editor
+			String q = vi->TypeOf(); //defines which editor
 			
 			Instancer<ValueAccessorEdit>::MapType& map = Instancer<ValueAccessorEdit>::Map();
 			int ix = map.Find(q);

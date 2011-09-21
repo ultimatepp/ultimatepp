@@ -5,17 +5,25 @@ NAMESPACE_UPP
 void PropEditCtrl::UpdateCtrl()
 {
 	ClearMap();
-	am.Clear();
+	oam.Clear();
 	if(!ctrl) return;
 
-	//init local accessor map
 	//prefer the dynamic access
 	//fall back to the static accessors from Props<>
+	AccessorMap* am = NULL;
 	GetAccessorMapI* ami = dynamic_cast<GetAccessorMapI*>(ctrl);
-	if(ami) am <<= ami->GetAccessorMap();
-	else if(!Props<Ctrl>::SetupAccessorMap(*ctrl, am)) return;
+	if(ami)
+		am = &ami->GetAccessorMap();
+	else
+	{
+		oam.Create();
+		if(!Props<Ctrl>::SetupAccessorMap(*ctrl, *oam))
+			return;
+		am = ~oam;
+	}
 
-	SetMap(&am);
+	ASSERT(am);
+	SetMap(am);
 
 	for(int i = 0; i < avae.GetCount(); i++)
 	{

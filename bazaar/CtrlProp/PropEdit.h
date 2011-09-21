@@ -19,13 +19,12 @@ public:
 	virtual void SetData(const Value& v) { SetCtrl(RawValue<Ctrl*>::Extract(v)); }
 
 	void OnAction();
-	const AccessorMap& GetAccessorMap() const { return am; }
 
 protected:
 	void UpdateCtrl();
 
 	Ctrl* ctrl;
-	AccessorMap am;
+	One<AccessorMap> oam;
 };
 
 class PropEdit : public WithCloserKeys<PopUpC>
