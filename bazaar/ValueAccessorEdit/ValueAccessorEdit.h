@@ -16,7 +16,7 @@ public:
 	typedef ValueAccessor VA;
 
 	//need get set data because of serialize
-	virtual void SetData(const Value& v) { if(!tg) return; tg->set(v); Update(); }
+	virtual void SetData(const Value& v) { if(!tg) return; tg->set(v); }
 	virtual Value GetData() const { if(!tg) return Null; Value v; tg->get(v); return v; }
 
 	virtual void SetTarget(ValueAccessor* va) { if(tg != va) { tg = va; UpdateTarget(); } Update(); }
