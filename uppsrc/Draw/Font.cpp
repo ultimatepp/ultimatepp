@@ -94,8 +94,6 @@ void Font::SyncStdFont()
 {
 	DrawLock __;
 	StdFontSize = Size(AStdFont.GetAveWidth(), AStdFont().Bold().GetCy());
-	DDUMP(StdFontSize);
-	DDUMP(AStdFont.GetHeight());
 }
 
 void (*whenSetStdFont)();
