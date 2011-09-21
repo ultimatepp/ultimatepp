@@ -46,8 +46,19 @@ void BoostPyTest::EvalCB()
 {
 	String s = ev.GetData();
 
-	object o = eval(s.Begin(), main_namespace, main_namespace);
-	Value v = extract<Value>(o);
+	Value v;
+	try
+	{
+		object o = eval(s.Begin(), main_namespace, main_namespace);
+		v = extract<Value>(o);
+	}
+	catch(boost::python::error_already_set const &)
+	{
+		// Parse and output the exception
+		std::string perror_str = parse_py_exception();
+		String es = perror_str;
+		v = ErrorValue(es);
+	}
 	
 	evr.SetData(v);	
 }

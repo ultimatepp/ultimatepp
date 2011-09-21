@@ -1,7 +1,8 @@
 uses
 	CtrlLib,
 	Py,
-	CoreBoostPy;
+	CoreBoostPy,
+	ValueCtrl;
 
 file
 	Common.h,

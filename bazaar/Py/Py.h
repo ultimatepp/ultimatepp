@@ -19,4 +19,14 @@
 
 #include <Core/Core.h>
 
+NAMESPACE_UPP
+
+#ifdef flagBOOSTPY
+// Parses the value of the active python exception
+// NOTE SHOULD NOT BE CALLED IF NO EXCEPTION
+std::string parse_py_exception();
+#endif
+
+END_UPP_NAMESPACE
+
 #endif

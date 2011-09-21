@@ -9,6 +9,3 @@ file
 	ValueAccessorEdit.cpp,
 	ValueAccessorEdit.lay;
 
-mainconfig
-	"" = "GUI SSE2";
-

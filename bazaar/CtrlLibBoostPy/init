@@ -3,4 +3,5 @@
 #include "CtrlLib/init"
 #include "Py/init"
 #include "CoreBoostPy/init"
+#include "ValueCtrl/init"
 #endif

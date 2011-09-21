@@ -209,7 +209,7 @@ void ValueCtrl::OnAction()
 
 void ValueCtrl::Updated()
 {
-	if(v.IsNull())
+	if(v.GetType() == VOID_V)
 		SetText("#Nil#");
 	else
 		SetText(v.ToString());

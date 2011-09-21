@@ -16,14 +16,7 @@ public:
 	mutable object locals; //added to by Format
 	String expr;
 
-	virtual Value  Format(const Value& q) const
-	{
-		object arg(q);
-		locals["arg"] = arg;
-		object o = eval(expr.Begin(), locals, globals);
-		Value v = extract<Value>(o);
-		return v;
-	}
+	virtual Value Format(const Value& q) const;
 };
 
 void export_Core();
