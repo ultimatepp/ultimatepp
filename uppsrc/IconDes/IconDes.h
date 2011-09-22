@@ -273,6 +273,8 @@ private:
 	void  Duplicate();
 	void  InsertPaste();
 	void  InsertFile();
+	void  ExportPngs();
+	void  InsertIml();
 	void  MoveSlot(int d);
 	void  ChangeSlot(int d);
 
