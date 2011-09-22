@@ -181,6 +181,24 @@ void IconDes::InsertFile()
 	}
 }
 
+void IconDes::ExportPngs()
+{
+	String dir = SelectDirectory();
+	for(int i = 0; i < GetCount(); i++)
+		PNGEncoder().SaveFile(AppendFileName(dir, GetName(i) + ".png"), GetImage(i));
+}
+
+void IconDes::InsertIml()
+{
+	Array<ImlImage> m;
+	int f;
+	if(LoadIml(SelectLoadFile("Iml files\t*.iml"), m, f))
+		for(int i = 0; i < m.GetCount(); i++) {
+			ImageInsert(m[i].name, m[i].image, m[i].exp);
+			list.SetCursor(list.GetCursor() + 1);
+		}
+}
+
 void IconDes::ListCursor()
 {
 	SyncImage();
@@ -274,6 +292,8 @@ void IconDes::ListMenu(Bar& bar)
 	bar.Add(IsCurrent(), AK_DUPLICATE, IconDesImg::Duplicate(), THISBACK(Duplicate));
 	bar.Add(AK_INSERT_CLIP, IconDesImg::InsertPaste(), THISBACK(InsertPaste));
 	bar.Add(AK_INSERT_FILE, IconDesImg::InsertFile(), THISBACK(InsertFile));
+	bar.Add(AK_INSERT_IML, IconDesImg::InsertIml(), THISBACK(InsertIml));
+	bar.Add(AK_EXPORT_PNGS, IconDesImg::ExportPngs(), THISBACK(ExportPngs));
 	bar.Separator();
 	bar.Add(IsCurrent() && list.GetCursor() > 0, AK_MOVE_UP, IconDesImg::MoveUp(),
 	        THISBACK1(MoveSlot, -1));
