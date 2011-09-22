@@ -9,7 +9,7 @@ class PropEditCtrl : public AccessorMapCtrl
 {
 public:
 	typedef PropEditCtrl CLASSNAME;
-	PropEditCtrl() { WhenAction = THISBACK(OnAction); }
+	PropEditCtrl() : ctrl(NULL) { WhenAction = THISBACK(OnAction); }
 
 	void SetCtrl(Ctrl* c) { if(ctrl != c) { ctrl = c; UpdateCtrl(); } Update(); }
 	Ctrl* GetCtrl() const { return ctrl; }

@@ -66,6 +66,7 @@ void ValueAccessorCtrl::Updated()
 //
 
 AccessorMapCtrl::AccessorMapCtrl()
+	: am(NULL)
 {
 	CtrlLayout(*this);
 	ac.AddColumn("Property");

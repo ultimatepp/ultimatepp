@@ -14,6 +14,8 @@ class ValueAccessorEdit : public ParentCtrl {
 public:
 	typedef ValueAccessorEdit CLASSNAME;
 	typedef ValueAccessor VA;
+	
+	ValueAccessorEdit() : tg(NULL) {}
 
 	//need get set data because of serialize
 	virtual void SetData(const Value& v) { if(!tg) return; tg->set(v); }

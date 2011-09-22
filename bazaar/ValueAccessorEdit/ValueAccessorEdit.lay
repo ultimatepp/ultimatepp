@@ -1,4 +1,4 @@
 LAYOUT(ValueAccessorEditLayout, 300, 100)
-	ITEM(ArrayCtrl, ac, Header(false).HSizePosZ(0, 0).VSizePosZ(0, 0))
+	ITEM(ArrayCtrl, ac, SetLineCy(25).VertGrid(false).Header(false).HSizePosZ(0, 0).VSizePosZ(0, 0))
 END_LAYOUT
 
