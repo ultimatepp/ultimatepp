@@ -3,6 +3,7 @@ uses
 
 file
 	image.iml,
+	help.iml,
 	main.cpp;
 
 mainconfig

@@ -10,6 +10,8 @@ using namespace Upp;
 #define IMAGEFILE <ScrollTest/image.iml>
 #include <Draw/iml_source.h>
 
+Image h;
+
 void InitSb()
 {
 	ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
@@ -18,6 +20,7 @@ void InitSb()
 	Size sz = ImageImg::Get(ImageImg::I_BU0).GetSize();
 	s.barsize = sz.cx;
 	s.arrowsize = sz.cy;
+
 	for(int i = 0; i < 4; i++) {
 		Image up = ImageImg::Get(ImageImg::I_BU0 + i);
 		s.up.look[i] = ChLookWith(up, uparrow);
@@ -33,21 +36,39 @@ void InitSb()
 		
 		s.left.look[i] = ChLookWith(RotateClockwise(down), RotateClockwise(downarrow));
 		s.hlower[i] = RotateClockwise(vlower);
+
+		if(IsNull(h))
+			h = RotateClockwise(vlower);
+		PNGEncoder().SaveFile("u:/" + AsString(i) + ".png", h);
+		DDUMP(h.GetHotSpot());
+		DDUMP(h.Get2ndSpot());
+
 		s.hthumb[i] = ChLookWith(RotateClockwise(thumb), RotateClockwise(thumbhandle));
 		s.hupper[i] = RotateClockwise(vupper);
 		s.right.look[i] = ChLookWith(RotateClockwise(up), RotateClockwise(uparrow));
 	}
 }
 
+struct Test : TopWindow {
+	virtual void Paint(Draw& w)
+	{
+		w.DrawRect(GetSize(), White());
+		ChPaint(w, Rect(10, 10, 100, 20), h);
+	}
+	
+};
+
 GUI_APP_MAIN
 {
-	InitSb();
+//	InitSb();
+//	Test().Run();
+
 	TopWindow app;
 	app.Sizeable();
 	ArrayCtrl x;
 	x.HeaderObject().Absolute();
 	x.AddColumn("", 2000);
-	for(int i = 0; i < 1000; i++)
+	for(int i = 0; i < 1/*000*/; i++)
 		x.Add(i);
 	app.Add(x.SizePos());
 	app.Run();
