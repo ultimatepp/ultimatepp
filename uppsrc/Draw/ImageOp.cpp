@@ -582,6 +582,14 @@ Image HorzFadeOut(int cx, int cy, Color color)
 	return HorzFadeOut(Size(cx, cy), color);
 }
 
+void SetNormalizedHotSpots(ImageBuffer& ib, int x1, int y1, int x2, int y2)
+{
+	Rect r(x1, y1, x2, y2);
+	r.Normalize();
+	ib.SetHotSpot(r.TopLeft());
+	ib.Set2ndSpot(r.BottomRight());
+}
+
 Image  RotateClockwise(const Image& img)
 {
 	Size sz = img.GetSize();
@@ -589,10 +597,9 @@ Image  RotateClockwise(const Image& img)
 	for(int x = 0; x < sz.cx; x++)
 		for(int y = 0; y < sz.cy; y++)
 			ib[x][y] = img[sz.cy - y - 1][x];
-	Point p = img.GetHotSpot();
-	ib.SetHotSpot(Point(sz.cy - p.y - 1, p.x));
-	p = img.Get2ndSpot();
-	ib.Set2ndSpot(Point(sz.cy - p.y - 1, p.x));
+	Point p1 = img.GetHotSpot();
+	Point p2 = img.Get2ndSpot();
+	SetNormalizedHotSpots(ib, sz.cy - p1.y - 1, p1.x, sz.cy - p2.y - 1, p2.x);
 	return ib;
 }
 
@@ -603,10 +610,10 @@ Image  RotateAntiClockwise(const Image& img)
 	for(int x = 0; x < sz.cx; x++)
 		for(int y = 0; y < sz.cy; y++)
 			ib[x][y] = img[y][sz.cx - x - 1];
-	Point p = img.GetHotSpot();
-	ib.SetHotSpot(Point(p.y, sz.cx - p.x - 1));
-	p = img.Get2ndSpot();
-	ib.Set2ndSpot(Point(p.y, sz.cx - p.x - 1));
+	
+	Point p1 = img.GetHotSpot();
+	Point p2 = img.Get2ndSpot();
+	SetNormalizedHotSpots(ib, p1.y, sz.cx - p1.x - 1, p2.y, sz.cx - p2.x - 1);
 	return ib;
 }
 
@@ -617,10 +624,9 @@ Image Rotate180(const Image& orig)
 	for(int rw = 0; rw < sz.cy; rw++)
 		for(int cl = 0; cl < sz.cx; cl++)
 			dest[rw][cl] = orig[sz.cy - rw - 1][sz.cx - cl - 1];
-	Point p = orig.GetHotSpot();
-	dest.SetHotSpot(Point(sz.cy - p.y - 1, sz.cx - p.x - 1));
-	p = orig.Get2ndSpot();
-	dest.Set2ndSpot(Point(sz.cy - p.y - 1, sz.cx - p.x - 1));
+	Point p1 = orig.GetHotSpot();
+	Point p2 = orig.Get2ndSpot();
+	SetNormalizedHotSpots(dest, sz.cy - p1.y - 1, sz.cx - p1.x - 1, sz.cy - p2.y - 1, sz.cx - p2.x - 1);
 	return dest;
 }
 
@@ -638,10 +644,9 @@ Image MirrorHorz(const Image& img)
 			e--;
 		}
 	}
-	Point p = img.GetHotSpot();
-	ib.SetHotSpot(Point(sz.cx - p.x - 1, p.y));
-	p = img.Get2ndSpot();
-	ib.Set2ndSpot(Point(sz.cx - p.x - 1, p.y));
+	Point p1 = img.GetHotSpot();
+	Point p2 = img.Get2ndSpot();
+	SetNormalizedHotSpots(ib, sz.cx - p1.x - 1, p1.y, sz.cx - p2.x - 1, p2.y);
 	return ib;
 }
 
@@ -660,10 +665,9 @@ Image MirrorVert(const Image& img)
 			e++;
 		}
 	}
-	Point p = img.GetHotSpot();
-	ib.SetHotSpot(Point(p.x, sz.cy - p.y - 1));
-	p = img.Get2ndSpot();
-	ib.Set2ndSpot(Point(p.x, sz.cy - p.y - 1));
+	Point p1 = img.GetHotSpot();
+	Point p2 = img.Get2ndSpot();
+	SetNormalizedHotSpots(ib, p1.x, sz.cy - p1.y - 1, p2.x, sz.cy - p2.y - 1);
 	return ib;
 }
 
