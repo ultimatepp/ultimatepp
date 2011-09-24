@@ -138,7 +138,7 @@ void ScrollBar::Paint(Draw& w) {
 	int p = push;
 	if(!HasCapture())
 		p = -1;
-	const Value *hl[] = { style->hupper, style->hlower, style->hthumb };
+	const Value *hl[] = { style->hlower, style->hupper, style->hthumb };
 	const Value *vl[] = { style->vupper, style->vlower, style->vthumb };
 
 	const Value **l = IsHorz() ? hl : vl;
