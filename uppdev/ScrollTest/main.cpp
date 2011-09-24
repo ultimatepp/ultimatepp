@@ -14,10 +14,28 @@ void InitSb()
 {
 	ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
 	s = s.Standard();
+	Image uparrow = CtrlsImg::kUA();
+	Size sz = ImageImg::Get(ImageImg::I_BU0).GetSize();
+	s.barsize = sz.cx;
+	s.arrowsize = sz.cy;
 	for(int i = 0; i < 4; i++) {
-		s.vupper[i] = ImageImg::Get(ImageImg::I_TU0 + i);
-		s.vlower[i] = MirrorVert(s.vupper[i]);
-		s.vthumb[i] = ImageImg::Get(ImageImg::I_TH0 + i);
+		Image up = ImageImg::Get(ImageImg::I_BU0 + i);
+		s.up.look[i] = ChLookWith(up, uparrow);
+		Image vupper = ImageImg::Get(ImageImg::I_TU0 + i);
+		s.vupper[i] = vupper;
+		Image thumb = ImageImg::Get(ImageImg::I_TH0 + i);
+		Image thumbhandle = ImageImg::THH();
+		s.vthumb[i] = ChLookWith(thumb, thumbhandle);
+		Image vlower = s.vlower[i] = MirrorVert(vupper);
+		Image down = MirrorVert(up);
+		Image downarrow = MirrorVert(uparrow);
+		s.down.look[i] = ChLookWith(down, downarrow);
+		
+		s.left.look[i] = ChLookWith(RotateClockwise(down), RotateClockwise(downarrow));
+		s.hlower[i] = RotateClockwise(vlower);
+		s.hthumb[i] = ChLookWith(RotateClockwise(thumb), RotateClockwise(thumbhandle));
+		s.hupper[i] = RotateClockwise(vupper);
+		s.right.look[i] = ChLookWith(RotateClockwise(up), RotateClockwise(uparrow));
 	}
 }
 
