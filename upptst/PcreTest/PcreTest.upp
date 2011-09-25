@@ -1,0 +1,9 @@
+uses
+	Core,
+	Pcre;
+
+file
+	PcreTest.cpp charset "UTF-8";
+
+mainconfig
+	"" = "CONSOLE";
