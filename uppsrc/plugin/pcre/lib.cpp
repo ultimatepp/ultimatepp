@@ -1,6 +1,15 @@
-#define SUPPORT_UTF8
+#include <Core/Core.h>
+
+using namespace Upp;
+
+#define SUPPORT_UTF8	
 #define SUPPORT_UCP
 #define HAVE_CONFIG_H
+
+#define HAVE_STDINT_H 0
+#define HAVE_INTTYPES_H 0
+#define int64_t int64
+
 
 #ifdef COMPILER_GCC
 #define PCRE_STATIC
