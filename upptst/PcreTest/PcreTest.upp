@@ -1,9 +1,9 @@
 uses
-	Core,
-	Pcre;
+	Core;
 
 file
 	PcreTest.cpp charset "UTF-8";
 
 mainconfig
 	"" = "CONSOLE";
+
