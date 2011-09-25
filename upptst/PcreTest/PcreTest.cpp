@@ -1,6 +1,8 @@
 #include <Core/Core.h>
 #include <Plugin/Pcre/Pcre.h>
 
+using namespace Upp;
+
 CONSOLE_APP_MAIN
 {
 	RegExp r0("(\\w+)\\s(\\w+)\\s(\\w+)");
