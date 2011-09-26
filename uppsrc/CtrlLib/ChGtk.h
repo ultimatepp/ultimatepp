@@ -15,8 +15,6 @@
 #undef Display
 
 namespace Upp {
-	
-#define GTK_NEWSCROLLBAR _DBG_
 
 enum {
 	GTK_BOX,
