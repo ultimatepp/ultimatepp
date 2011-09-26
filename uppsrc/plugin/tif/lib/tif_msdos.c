@@ -1,4 +1,4 @@
-/* $Header: /cvs/maptools/cvsroot/libtiff/libtiff/tif_msdos.c,v 1.2 2005/12/21 12:23:13 joris Exp $ */
+/* $Header: /cvs/maptools/cvsroot/libtiff/libtiff/Attic/tif_msdos.c,v 1.3.2.1 2010-06-08 18:50:42 bfriesen Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -102,6 +102,7 @@ TIFFOpen(const char* name, const char* mode)
 {
 	static const char module[] = "TIFFOpen";
 	int m, fd;
+        TIFF *ret;
 
 	m = _TIFFgetMode(mode, module);
 	if (m == -1)
@@ -112,6 +113,12 @@ TIFFOpen(const char* name, const char* mode)
 		return ((TIFF*)0);
 	}
 	return (TIFFFdOpen(fd, name, mode));
+
+        ret = TIFFFdOpen(fd, name, mode);
+
+        if (ret == NULL) close(fd);
+
+        return ret;
 }
 
 #ifdef __GNUC__
@@ -177,3 +184,10 @@ msdosErrorHandler(const char* module, const char* fmt, va_list ap)
 	fprintf(stderr, ".\n");
 }
 TIFFErrorHandler _TIFFerrorHandler = msdosErrorHandler;
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

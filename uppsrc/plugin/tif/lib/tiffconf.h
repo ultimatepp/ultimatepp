@@ -9,13 +9,28 @@
 #define _TIFFCONF_
 
 /* Define to 1 if the system has the type `int16'. */
-/* #undef HAVE_INT16 */
+#define HAVE_INT16
 
 /* Define to 1 if the system has the type `int32'. */
-/* #undef HAVE_INT32 */
+#define HAVE_INT32
 
 /* Define to 1 if the system has the type `int8'. */
-/* #undef HAVE_INT8 */
+#define HAVE_INT8
+
+/* Define to 1 if the system has the type `int64'. */
+#define HAVE_INT64
+
+/* Define to 1 if the system has the type `uint16'. */
+#define HAVE_UINT16
+
+/* Define to 1 if the system has the type `uint32'. */
+#define HAVE_UINT32
+
+/* Define to 1 if the system has the type `uint8'. */
+#define HAVE_UINT8
+
+/* Define to 1 if the system has the type `uint64'. */
+#define HAVE_UINT64
 
 /* The size of a `int', as computed by sizeof. */
 #define SIZEOF_INT 4
@@ -97,5 +112,18 @@
 #define ICC_SUPPORT
 #define PHOTOSHOP_SUPPORT
 #define IPTC_SUPPORT
+
+#define	int8 signed char
+#define	uint8 unsigned char
+#define	int16 short
+#define	uint16 unsigned short
+
+#ifdef PLATFORM_WIN32
+	#define	int32 long
+	#define	uint32 unsigned long
+#else
+	#define	int32 int
+	#define	uint32 int unsigned
+#endif
 
 #endif /* _TIFFCONF_ */

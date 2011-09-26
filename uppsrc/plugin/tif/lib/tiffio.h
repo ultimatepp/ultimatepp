@@ -1,4 +1,4 @@
-/* $Id: tiffio.h,v 1.50 2006/03/21 16:37:51 dron Exp $ */
+/* $Id: tiffio.h,v 1.56.2.4 2010-06-08 18:50:43 bfriesen Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -58,14 +58,15 @@ typedef	struct tiff TIFF;
  *     32-bit file offsets being the most important, and to ensure
  *     that it is unsigned, rather than signed.
  */
-typedef	uint32 ttag_t;		/* directory tag */
-typedef	uint16 tdir_t;		/* directory index */
-typedef	uint16 tsample_t;	/* sample number */
-typedef	uint32 tstrip_t;	/* strip number */
-typedef uint32 ttile_t;		/* tile number */
-typedef	int32 tsize_t;		/* i/o size in bytes */
-typedef	void* tdata_t;		/* image data ref */
-typedef	uint32 toff_t;		/* file offset */
+typedef uint32 ttag_t;          /* directory tag */
+typedef uint16 tdir_t;          /* directory index */
+typedef uint16 tsample_t;       /* sample number */
+typedef uint32 tstrile_t;       /* strip or tile number */
+typedef tstrile_t tstrip_t;     /* strip number */
+typedef tstrile_t ttile_t;      /* tile number */
+typedef int32 tsize_t;          /* i/o size in bytes */
+typedef void* tdata_t;          /* image data ref */
+typedef uint32 toff_t;          /* file offset */
 
 #if !defined(__WIN32__) && (defined(_WIN32) || defined(WIN32))
 #define __WIN32__
@@ -95,10 +96,6 @@ typedef	HFILE thandle_t;	/* client data handle */
 #else
 typedef	void* thandle_t;	/* client data handle */
 #endif /* USE_WIN32_FILEIO */
-
-#ifndef NULL
-# define NULL	(void *)0
-#endif
 
 /*
  * Flags to pass to TIFFPrintDirectory to control
@@ -191,35 +188,36 @@ typedef void (*tileSeparateRoutine)
  * RGBA-reader state.
  */
 struct _TIFFRGBAImage {
-	TIFF*	tif;				/* image handle */
-	int	stoponerr;			/* stop on read error */
-	int	isContig;			/* data is packed/separate */
-	int	alpha;				/* type of alpha data present */
-	uint32	width;				/* image width */
-	uint32	height;				/* image height */
-	uint16	bitspersample;			/* image bits/sample */
-	uint16	samplesperpixel;		/* image samples/pixel */
-	uint16	orientation;			/* image orientation */
-	uint16	req_orientation;		/* requested orientation */
-	uint16	photometric;			/* image photometric interp */
-	uint16*	redcmap;			/* colormap pallete */
-	uint16*	greencmap;
-	uint16*	bluecmap;
-						/* get image data routine */
-	int	(*get)(TIFFRGBAImage*, uint32*, uint32, uint32);
+	TIFF* tif;                              /* image handle */
+	int stoponerr;                          /* stop on read error */
+	int isContig;                           /* data is packed/separate */
+	int alpha;                              /* type of alpha data present */
+	uint32 width;                           /* image width */
+	uint32 height;                          /* image height */
+	uint16 bitspersample;                   /* image bits/sample */
+	uint16 samplesperpixel;                 /* image samples/pixel */
+	uint16 orientation;                     /* image orientation */
+	uint16 req_orientation;                 /* requested orientation */
+	uint16 photometric;                     /* image photometric interp */
+	uint16* redcmap;                        /* colormap pallete */
+	uint16* greencmap;
+	uint16* bluecmap;
+	/* get image data routine */
+	int (*get)(TIFFRGBAImage*, uint32*, uint32, uint32);
+	/* put decoded strip/tile */
 	union {
 	    void (*any)(TIFFRGBAImage*);
-	    tileContigRoutine	contig;
-	    tileSeparateRoutine	separate;
-	} put;					/* put decoded strip/tile */
-	TIFFRGBValue* Map;			/* sample mapping array */
-	uint32** BWmap;				/* black&white map */
-	uint32** PALmap;			/* palette image map */
-	TIFFYCbCrToRGB* ycbcr;			/* YCbCr conversion state */
-        TIFFCIELabToRGB* cielab;		/* CIE L*a*b conversion state */
+	    tileContigRoutine contig;
+	    tileSeparateRoutine separate;
+	} put;
+	TIFFRGBValue* Map;                      /* sample mapping array */
+	uint32** BWmap;                         /* black&white map */
+	uint32** PALmap;                        /* palette image map */
+	TIFFYCbCrToRGB* ycbcr;                  /* YCbCr conversion state */
+	TIFFCIELabToRGB* cielab;                /* CIE L*a*b conversion state */
 
-        int	row_offset;
-        int     col_offset;
+	int row_offset;
+	int col_offset;
 };
 
 /*
@@ -251,6 +249,10 @@ typedef struct {
 /* share internal LogLuv conversion routines? */
 #ifndef LOGLUV_PUBLIC
 #define LOGLUV_PUBLIC		1
+#endif
+
+#if !defined(__GNUC__) && !defined(__attribute__)
+#  define __attribute__(x) /*nothing*/
 #endif
 
 #if defined(c_plusplus) || defined(__cplusplus)
@@ -349,6 +351,8 @@ extern	int TIFFReadCustomDirectory(TIFF*, toff_t, const TIFFFieldInfo[],
 				    size_t);
 extern	int TIFFReadEXIFDirectory(TIFF*, toff_t);
 extern	tsize_t TIFFScanlineSize(TIFF*);
+extern	tsize_t TIFFOldScanlineSize(TIFF*);
+extern	tsize_t TIFFNewScanlineSize(TIFF*);
 extern	tsize_t TIFFRasterScanlineSize(TIFF*);
 extern	tsize_t TIFFStripSize(TIFF*);
 extern	tsize_t TIFFRawStripSize(TIFF*, tstrip_t);
@@ -433,10 +437,10 @@ extern	TIFF* TIFFClientOpen(const char*, const char*,
 	    TIFFMapFileProc, TIFFUnmapFileProc);
 extern	const char* TIFFFileName(TIFF*);
 extern	const char* TIFFSetFileName(TIFF*, const char *);
-extern	void TIFFError(const char*, const char*, ...);
-extern	void TIFFErrorExt(thandle_t, const char*, const char*, ...);
-extern	void TIFFWarning(const char*, const char*, ...);
-extern	void TIFFWarningExt(thandle_t, const char*, const char*, ...);
+extern void TIFFError(const char*, const char*, ...) __attribute__((format (printf,2,3)));
+extern void TIFFErrorExt(thandle_t, const char*, const char*, ...) __attribute__((format (printf,3,4)));
+extern void TIFFWarning(const char*, const char*, ...) __attribute__((format (printf,2,3)));
+extern void TIFFWarningExt(thandle_t, const char*, const char*, ...) __attribute__((format (printf,3,4)));
 extern	TIFFErrorHandler TIFFSetErrorHandler(TIFFErrorHandler);
 extern	TIFFErrorHandlerExt TIFFSetErrorHandlerExt(TIFFErrorHandlerExt);
 extern	TIFFErrorHandler TIFFSetWarningHandler(TIFFErrorHandler);
@@ -513,3 +517,10 @@ extern void TIFFYCbCrtoRGB(TIFFYCbCrToRGB *, uint32, int32, int32,
 #endif /* _TIFFIO_ */
 
 /* vim: set ts=8 sts=8 sw=8 noet: */
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

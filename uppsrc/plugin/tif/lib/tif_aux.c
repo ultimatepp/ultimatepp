@@ -1,4 +1,4 @@
-/* $Id: tif_aux.c,v 1.19 2006/02/07 10:41:30 dron Exp $ */
+/* $Id: tif_aux.c,v 1.20.2.3 2010-06-09 21:15:27 bfriesen Exp $ */
 
 /*
  * Copyright (c) 1991-1997 Sam Leffler
@@ -34,7 +34,8 @@
 #include <math.h>
 
 tdata_t
-_TIFFCheckMalloc(TIFF* tif, size_t nmemb, size_t elem_size, const char* what)
+_TIFFCheckRealloc(TIFF* tif, tdata_t buffer,
+		  size_t nmemb, size_t elem_size, const char* what)
 {
 	tdata_t cp = NULL;
 	tsize_t	bytes = nmemb * elem_size;
@@ -43,12 +44,21 @@ _TIFFCheckMalloc(TIFF* tif, size_t nmemb, size_t elem_size, const char* what)
 	 * XXX: Check for integer overflow.
 	 */
 	if (nmemb && elem_size && bytes / elem_size == nmemb)
-		cp = _TIFFmalloc(bytes);
+		cp = _TIFFrealloc(buffer, bytes);
 
 	if (cp == NULL)
-		TIFFErrorExt(tif->tif_clientdata, tif->tif_name, "No space %s", what);
+		TIFFErrorExt(tif->tif_clientdata, tif->tif_name,
+			     "Failed to allocate memory for %s "
+			     "(%ld elements of %ld bytes each)",
+			     what,(long) nmemb, (long) elem_size);
 
-	return (cp);
+	return cp;
+}
+
+tdata_t
+_TIFFCheckMalloc(TIFF* tif, size_t nmemb, size_t elem_size, const char* what)
+{
+	return _TIFFCheckRealloc(tif, NULL, nmemb, elem_size, what);
 }
 
 static int
@@ -90,6 +100,35 @@ bad:
 		_TIFFfree(tf[2]);
 	tf[0] = tf[1] = tf[2] = 0;
 	return 0;
+}
+
+static int
+TIFFDefaultRefBlackWhite(TIFFDirectory* td)
+{
+	int i;
+
+	if (!(td->td_refblackwhite = (float *)_TIFFmalloc(6*sizeof (float))))
+		return 0;
+        if (td->td_photometric == PHOTOMETRIC_YCBCR) {
+		/*
+		 * YCbCr (Class Y) images must have the ReferenceBlackWhite
+		 * tag set. Fix the broken images, which lacks that tag.
+		 */
+		td->td_refblackwhite[0] = 0.0F;
+		td->td_refblackwhite[1] = td->td_refblackwhite[3] =
+			td->td_refblackwhite[5] = 255.0F;
+		td->td_refblackwhite[2] = td->td_refblackwhite[4] = 128.0F;
+	} else {
+		/*
+		 * Assume RGB (Class R)
+		 */
+		for (i = 0; i < 3; i++) {
+		    td->td_refblackwhite[2*i+0] = 0;
+		    td->td_refblackwhite[2*i+1] =
+			    (float)((1L<<td->td_bitspersample)-1L);
+		}
+	}
+	return 1;
 }
 
 /*
@@ -217,33 +256,10 @@ TIFFVGetFieldDefaulted(TIFF* tif, ttag_t tag, va_list ap)
 		}
 		return (1);
 	case TIFFTAG_REFERENCEBLACKWHITE:
-		{
-			int i;
-			static float ycbcr_refblackwhite[] = 
-			{ 0.0F, 255.0F, 128.0F, 255.0F, 128.0F, 255.0F };
-			static float rgb_refblackwhite[6];
-
-			for (i = 0; i < 3; i++) {
-				rgb_refblackwhite[2 * i + 0] = 0.0F;
-				rgb_refblackwhite[2 * i + 1] =
-					(float)((1L<<td->td_bitspersample)-1L);
-			}
-			
-			if (td->td_photometric == PHOTOMETRIC_YCBCR) {
-				/*
-				 * YCbCr (Class Y) images must have the
-				 * ReferenceBlackWhite tag set. Fix the
-				 * broken images, which lacks that tag.
-				 */
-				*va_arg(ap, float **) = ycbcr_refblackwhite;
-			} else {
-				/*
-				 * Assume RGB (Class R)
-				 */
-				*va_arg(ap, float **) = rgb_refblackwhite;
-			}
-			return 1;
-		}
+		if (!td->td_refblackwhite && !TIFFDefaultRefBlackWhite(td))
+			return (0);
+		*va_arg(ap, float **) = td->td_refblackwhite;
+		return (1);
 	}
 	return 0;
 }
@@ -265,3 +281,10 @@ TIFFGetFieldDefaulted(TIFF* tif, ttag_t tag, ...)
 }
 
 /* vim: set ts=8 sts=8 sw=8 noet: */
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

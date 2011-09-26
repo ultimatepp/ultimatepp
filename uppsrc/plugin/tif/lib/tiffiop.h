@@ -1,4 +1,4 @@
-/* $Id: tiffiop.h,v 1.46 2006/03/16 12:22:27 dron Exp $ */
+/* $Id: tiffiop.h,v 1.51.2.7 2011-03-21 21:09:19 fwarmerdam Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -57,6 +57,17 @@ extern void *lfind(const void *, const void *, size_t *, size_t,
 		   int (*)(const void *, const void *));
 #endif
 
+/*
+  Libtiff itself does not require a 64-bit type, but bundled TIFF
+  utilities may use it.  
+*/
+#ifndef HAVE_INT64
+#if !defined(__xlC__) && !defined(__xlc__) // Already defined there (#2301)
+typedef TIFF_INT64_T  int64;
+typedef TIFF_UINT64_T uint64;
+#endif
+#endif
+
 #include "tiffio.h"
 #include "tif_dir.h"
 
@@ -97,29 +108,35 @@ struct tiff {
 	int		tif_fd;		/* open file descriptor */
 	int		tif_mode;	/* open mode (O_*) */
 	uint32		tif_flags;
-#define	TIFF_FILLORDER		0x0003	/* natural bit fill order for machine */
-#define	TIFF_DIRTYHEADER	0x0004	/* header must be written on close */
-#define	TIFF_DIRTYDIRECT	0x0008	/* current directory must be written */
-#define	TIFF_BUFFERSETUP	0x0010	/* data buffers setup */
-#define	TIFF_CODERSETUP		0x0020	/* encoder/decoder setup done */
-#define	TIFF_BEENWRITING	0x0040	/* written 1+ scanlines to file */
-#define	TIFF_SWAB		0x0080	/* byte swap file information */
-#define	TIFF_NOBITREV		0x0100	/* inhibit bit reversal logic */
-#define	TIFF_MYBUFFER		0x0200	/* my raw data buffer; free on close */
-#define	TIFF_ISTILED		0x0400	/* file is tile, not strip- based */
-#define	TIFF_MAPPED		0x0800	/* file is mapped into memory */
-#define	TIFF_POSTENCODE		0x1000	/* need call to postencode routine */
-#define	TIFF_INSUBIFD		0x2000	/* currently writing a subifd */
-#define	TIFF_UPSAMPLED		0x4000	/* library is doing data up-sampling */ 
-#define	TIFF_STRIPCHOP		0x8000	/* enable strip chopping support */
+#define	TIFF_FILLORDER		0x00003	/* natural bit fill order for machine */
+#define	TIFF_DIRTYHEADER	0x00004	/* header must be written on close */
+#define	TIFF_DIRTYDIRECT	0x00008	/* current directory must be written */
+#define	TIFF_BUFFERSETUP	0x00010	/* data buffers setup */
+#define	TIFF_CODERSETUP		0x00020	/* encoder/decoder setup done */
+#define	TIFF_BEENWRITING	0x00040	/* written 1+ scanlines to file */
+#define	TIFF_SWAB		0x00080	/* byte swap file information */
+#define	TIFF_NOBITREV		0x00100	/* inhibit bit reversal logic */
+#define	TIFF_MYBUFFER		0x00200	/* my raw data buffer; free on close */
+#define	TIFF_ISTILED		0x00400	/* file is tile, not strip- based */
+#define	TIFF_MAPPED		0x00800	/* file is mapped into memory */
+#define	TIFF_POSTENCODE		0x01000	/* need call to postencode routine */
+#define	TIFF_INSUBIFD		0x02000	/* currently writing a subifd */
+#define	TIFF_UPSAMPLED		0x04000	/* library is doing data up-sampling */ 
+#define	TIFF_STRIPCHOP		0x08000	/* enable strip chopping support */
 #define	TIFF_HEADERONLY		0x10000	/* read header only, do not process */
 					/* the first directory */
+#define TIFF_NOREADRAW		0x20000 /* skip reading of raw uncompressed */
+					/* image data */
+#define	TIFF_INCUSTOMIFD	0x40000	/* currently writing a custom IFD */
 	toff_t		tif_diroff;	/* file offset of current directory */
 	toff_t		tif_nextdiroff;	/* file offset of following directory */
 	toff_t*		tif_dirlist;	/* list of offsets to already seen */
 					/* directories to prevent IFD looping */
+	tsize_t		tif_dirlistsize;/* number of entires in offset list */
 	uint16		tif_dirnumber;  /* number of already seen directories */
 	TIFFDirectory	tif_dir;	/* internal rep of current directory */
+	TIFFDirectory	tif_customdir;	/* custom IFDs are separated from
+					   the main ones */
 	TIFFHeader	tif_header;	/* file's header block */
 	const int*	tif_typeshift;	/* data type shift counts */
 	const long*	tif_typemask;	/* data type masks */
@@ -164,7 +181,8 @@ struct tiff {
 	tsize_t		tif_rawcc;	/* bytes unread from raw buffer */
 /* memory-mapped file support */
 	tidata_t	tif_base;	/* base of mapped file */
-	toff_t		tif_size;	/* size of mapped file region (bytes) */
+	toff_t		tif_size;	/* size of mapped file region (bytes)
+					   FIXME: it should be tsize_t */
 	TIFFMapFileProc	tif_mapproc;	/* map file method */
 	TIFFUnmapFileProc tif_unmapproc;/* unmap file method */
 /* input/output callback methods */
@@ -222,9 +240,14 @@ struct tiff {
 #endif
 
 /* NB: the uint32 casts are to silence certain ANSI-C compilers */
-#define TIFFhowmany(x, y) ((((uint32)(x))+(((uint32)(y))-1))/((uint32)(y)))
+#define TIFFhowmany(x, y) (((uint32)x < (0xffffffff - (uint32)(y-1))) ?	\
+			   ((((uint32)(x))+(((uint32)(y))-1))/((uint32)(y))) : \
+			   0U)
 #define TIFFhowmany8(x) (((x)&0x07)?((uint32)(x)>>3)+1:(uint32)(x)>>3)
 #define	TIFFroundup(x, y) (TIFFhowmany(x,y)*(y))
+
+/* Safe multiply which returns zero if there is an integer overflow */
+#define TIFFSafeMultiply(t,v,m) ((((t)m != (t)0) && (((t)((v*m)/m)) == (t)v)) ? (t)(v*m) : (t)0)
 
 #define TIFFmax(A,B) ((A)>(B)?(A):(B))
 #define TIFFmin(A,B) ((A)<(B)?(A):(B))
@@ -273,6 +296,7 @@ extern	TIFFErrorHandlerExt _TIFFwarningHandlerExt;
 extern	TIFFErrorHandlerExt _TIFFerrorHandlerExt;
 
 extern	tdata_t _TIFFCheckMalloc(TIFF*, size_t, size_t, const char*);
+extern	tdata_t _TIFFCheckRealloc(TIFF*, tdata_t, size_t, size_t, const char*);
 
 extern	int TIFFInitDumpMode(TIFF*, int);
 #ifdef PACKBITS_SUPPORT
@@ -321,3 +345,10 @@ extern	TIFFCodec _TIFFBuiltinCODECS[];
 #endif /* _TIFFIOP_ */
 
 /* vim: set ts=8 sts=8 sw=8 noet: */
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

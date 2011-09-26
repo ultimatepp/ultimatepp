@@ -1,4 +1,4 @@
-/* $Id: tif_write.c,v 1.21 2006/02/27 14:29:20 dron Exp $ */
+/* $Id: tif_write.c,v 1.22.2.5 2010-06-08 18:50:43 bfriesen Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -227,10 +227,8 @@ TIFFWriteEncodedStrip(TIFF* tif, tstrip_t strip, tdata_t data, tsize_t cc)
 
         if( td->td_stripbytecount[strip] > 0 )
         {
-            /* if we are writing over existing tiles, zero length. */
-            td->td_stripbytecount[strip] = 0;
-
-            /* this forces TIFFAppendToStrip() to do a seek */
+	    /* Force TIFFAppendToStrip() to consider placing data at end
+               of file. */
             tif->tif_curoff = 0;
         }
         
@@ -363,10 +361,8 @@ TIFFWriteEncodedTile(TIFF* tif, ttile_t tile, tdata_t data, tsize_t cc)
 
         if( td->td_stripbytecount[tile] > 0 )
         {
-            /* if we are writing over existing tiles, zero length. */
-            td->td_stripbytecount[tile] = 0;
-
-            /* this forces TIFFAppendToStrip() to do a seek */
+	    /* Force TIFFAppendToStrip() to consider placing data at end
+               of file. */
             tif->tif_curoff = 0;
         }
         
@@ -521,7 +517,8 @@ TIFFWriteCheck(TIFF* tif, int tiles, const char* module)
 		 * because this field is used in other parts of library even
 		 * in the single band case.
 		 */
-		tif->tif_dir.td_planarconfig = PLANARCONFIG_CONTIG;
+		if (!TIFFFieldSet(tif, FIELD_PLANARCONFIG))
+                    tif->tif_dir.td_planarconfig = PLANARCONFIG_CONTIG;
 	} else {
 		if (!TIFFFieldSet(tif, FIELD_PLANARCONFIG)) {
 			TIFFErrorExt(tif->tif_clientdata, module,
@@ -625,64 +622,53 @@ TIFFGrowStrips(TIFF* tif, int delta, const char* module)
 static int
 TIFFAppendToStrip(TIFF* tif, tstrip_t strip, tidata_t data, tsize_t cc)
 {
-	TIFFDirectory *td = &tif->tif_dir;
 	static const char module[] = "TIFFAppendToStrip";
+	TIFFDirectory *td = &tif->tif_dir;
 
 	if (td->td_stripoffset[strip] == 0 || tif->tif_curoff == 0) {
-		/*
-		 * No current offset, set the current strip.
-		 */
-		assert(td->td_nstrips > 0);
-		if (td->td_stripoffset[strip] != 0) {
-			/*
-			 * Prevent overlapping of the data chunks. We need
-                         * this to enable in place updating of the compressed
-                         * images. Larger blocks will be moved at the end of
-                         * the file without any optimization of the spare
-                         * space, so such scheme is not too much effective.
-			 */
-			if (td->td_stripbytecountsorted) {
-				if (strip == td->td_nstrips - 1
-				    || td->td_stripoffset[strip + 1] <
-					td->td_stripoffset[strip] + cc) {
-					td->td_stripoffset[strip] =
-						TIFFSeekFile(tif, (toff_t)0,
-							     SEEK_END);
-				}
-			} else {
-				tstrip_t i;
-				for (i = 0; i < td->td_nstrips; i++) {
-					if (td->td_stripoffset[i] > 
-						td->td_stripoffset[strip]
-					    && td->td_stripoffset[i] <
-						td->td_stripoffset[strip] + cc) {
-						td->td_stripoffset[strip] =
-							TIFFSeekFile(tif,
-								     (toff_t)0,
-								     SEEK_END);
-					}
-				}
-			}
+            assert(td->td_nstrips > 0);
 
-			if (!SeekOK(tif, td->td_stripoffset[strip])) {
-				TIFFErrorExt(tif->tif_clientdata, module,
-					  "%s: Seek error at scanline %lu",
-					  tif->tif_name,
-					  (unsigned long)tif->tif_row);
-				return (0);
-			}
-		} else
-			td->td_stripoffset[strip] =
-			    TIFFSeekFile(tif, (toff_t) 0, SEEK_END);
-		tif->tif_curoff = td->td_stripoffset[strip];
+            if( td->td_stripbytecount[strip] != 0 
+                && td->td_stripoffset[strip] != 0 
+                && td->td_stripbytecount[strip] >= cc )
+            {
+                /* 
+                 * There is already tile data on disk, and the new tile
+                 * data we have to will fit in the same space.  The only 
+                 * aspect of this that is risky is that there could be
+                 * more data to append to this strip before we are done
+                 * depending on how we are getting called.
+                 */
+                if (!SeekOK(tif, td->td_stripoffset[strip])) {
+                    TIFFErrorExt(tif->tif_clientdata, module,
+                                 "Seek error at scanline %lu",
+                                 (unsigned long)tif->tif_row);
+                    return (0);
+                }
+            }
+            else
+            {
+                /* 
+                 * Seek to end of file, and set that as our location to 
+                 * write this strip.
+                 */
+                td->td_stripoffset[strip] = TIFFSeekFile(tif, 0, SEEK_END);
+            }
+
+            tif->tif_curoff = td->td_stripoffset[strip];
+
+            /*
+             * We are starting a fresh strip/tile, so set the size to zero.
+             */
+            td->td_stripbytecount[strip] = 0;
 	}
 
 	if (!WriteOK(tif, data, cc)) {
-		TIFFErrorExt(tif->tif_clientdata, module, "%s: Write error at scanline %lu",
-		    tif->tif_name, (unsigned long) tif->tif_row);
-		return (0);
+		TIFFErrorExt(tif->tif_clientdata, module, "Write error at scanline %lu",
+		    (unsigned long) tif->tif_row);
+		    return (0);
 	}
-	tif->tif_curoff += cc;
+	tif->tif_curoff =  tif->tif_curoff+cc;
 	td->td_stripbytecount[strip] += cc;
 	return (1);
 }
@@ -723,3 +709,10 @@ TIFFSetWriteOffset(TIFF* tif, toff_t off)
 }
 
 /* vim: set ts=8 sts=8 sw=8 noet: */
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

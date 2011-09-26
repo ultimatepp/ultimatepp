@@ -5,10 +5,31 @@
 
 struct tiff;
 
+#include <plugin/tif/lib/tiff.h>
+#include <plugin/tif/lib/tiffio.h>
+#include <plugin/tif/lib/tiffiop.h>
+
+#undef int8
+#undef uint8
+#undef int16
+#undef uint16
+#undef int32
+#undef uint32
+
+#undef HAVE_INT8
+#undef HAVE_INT16
+#undef HAVE_INT32
+#undef HAVE_UINT8
+#undef HAVE_UINT16
+#undef HAVE_UINT32
+
 NAMESPACE_UPP
 
 struct tiff *TIFFStreamOpen(const char *filename, const char *mode, Stream *stream, bool destruct = false);
 struct tiff *TIFFFileStreamOpen(const char *filename, const char *mode);
+
+//struct tiff* TIFFWrapOpen(const char*, const char*);
+//int TIFFWrapGetField(::tiff* tif_data, uint32 tag, ...);
 
 class TIFRaster : public StreamRaster {
 public:
