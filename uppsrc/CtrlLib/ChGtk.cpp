@@ -4,6 +4,9 @@
 #ifdef GUI_X11
 #ifndef flagNOGTK
 
+#define LLOG(x)  // DLOG(x)
+#define LDUMP(x) // DDUMP(x)
+
 NAMESPACE_UPP
 
 extern int    gtk_antialias;
@@ -71,6 +74,8 @@ void ChHostSkin()
 	bool KDE = Environment().Get("KDE_FULL_SESSION", String()) == "true";
 
 	String engine = GtkStyleString("gtk-theme-name");
+	
+	LDUMP(engine);
 	
 	bool Qt = engine == "Qt" || KDE;
 	
@@ -241,18 +246,21 @@ void ChHostSkin()
 		GtkObject *adj = gtk_adjustment_new(250, 0, 1000, 1, 1, 500);
 		static GtkWidget *vscrollbar = gtk_vscrollbar_new(GTK_ADJUSTMENT(adj));
 		ChGtkNew(vscrollbar, "slider", GTK_SLIDER|GTK_VAL1);
-		Image m = GetGTK(ChGtkLast(), 0, 0, "slider", GTK_SLIDER|GTK_VAL1, 16, 32);
-		s.thumbmin = GtkInt("min-slider-length");
-		s.barsize = GtkInt("slider-width");
-		s.arrowsize = GtkInt("stepper-size");
 
+		s.thumbmin = GTK_RANGE(vscrollbar)->min_slider_size;
+		s.barsize = max(14, GtkInt("slider_width")); // 'max' - ugly fix for ThinIce theme
+		s.arrowsize = max(s.barsize, GtkInt("stepper_size")); // 'max' - ugly fix for ThinIce theme
+
+		/* The only theme with 3 buttons is Amaranth and it does not look good...
 		s.isright2 = s.isdown2 = GtkInt("has-secondary-forward-stepper");
 		s.isleft2 = s.isup2 = GtkInt("has-secondary-backward-stepper");
+		*/
 
 		for(int i = 0; i < 6; i++)
 			CtrlsImg::Set(CtrlsImg::I_DA + i, CtrlsImg::Get(CtrlsImg::I_kDA + i));
 
 		if(Qt) {
+			LLOG("Qt path");
 			int r = Null;
 			for(int i = 0; i < 4; i++) {
 				ImageDraw iw(64, 64);
@@ -325,6 +333,59 @@ void ChHostSkin()
 			s.overthumb = true;
 		}
 		else {
+#ifdef GTK_NEWSCROLLBAR
+			GtkChScrollBar(s.up.look, s.up2.look, s.vlower, s.vthumb, s.vupper, s.down2.look, s.down.look,
+			               CtrlsImg::I_UA, CtrlsImg::I_DA, false);
+
+			if(IsEmptyImage(GetGTK(ChGtkLast(), 2, 2, "vscrollbar", GTK_BOX|GTK_TOP|GTK_RANGEA, 16, 16))) {
+				static GtkWidget *btn = gtk_button_new();
+				ChGtkNew(btn, "button", GTK_BOX);
+
+				GtkChButton(Button::StyleScroll().Write().look);
+				GtkChButton(Button::StyleEdge().Write().look);
+				GtkChButton(Button::StyleLeftEdge().Write().look);
+
+				{
+					DropList::Style& s = DropList::StyleFrame().Write();
+					GtkChButtonWith(s.look, CtrlsImg::DA());
+					GtkChButtonWith(s.trivial, CtrlsImg::DA());
+				}
+				{
+					SpinButtons::Style& s = SpinButtons::StyleDefault().Write();
+					GtkChButtonWith(s.inc.look, CtrlImg::spinup2());
+					GtkChButtonWith(s.dec.look, CtrlImg::spindown2());
+				}
+			}
+			else {
+				ChGtkNew("vscrollbar", GTK_BOX|GTK_VCENTER|GTK_RANGEB);
+				GtkCh(Button::StyleScroll().Write().look, "02142222");
+
+				int q = !classiq;
+
+				GtkChImgWith(Button::StyleEdge().Write().look, Null, 1 * q);
+				GtkChImgWith(Button::StyleLeftEdge().Write().look, Null, 2 * q);
+
+				{
+					DropList::Style& s = DropList::StyleFrame().Write();
+					GtkChImgWith(s.look, CtrlsImg::DA(), 1 * q, po);
+					GtkChImgWith(s.trivial, CtrlsImg::DA(), 1 * q, po);
+					GtkChImgWith(s.left, CtrlsImg::DA(), 2 * q, po);
+					GtkChImgWith(s.right, CtrlsImg::DA(), 1 * q, po);
+					s.pressoffset = po;
+				}
+				{
+					SpinButtons::Style& s = SpinButtons::StyleDefault().Write();
+					GtkChImgWith(s.inc.look, q ? CtrlImg::spinup2() : CtrlImg::spinup3(), (1|GTK_BOTTOMLINE) * q, po);
+					GtkChImgWith(s.dec.look, q ? CtrlImg::spindown2() : CtrlImg::spindown3(), 1 * q, po);
+				}
+			}
+
+			static GtkWidget *hscrollbar = gtk_hscrollbar_new(GTK_ADJUSTMENT(adj));
+			ChGtkNew(hscrollbar, "slider", GTK_SLIDER);
+			GtkChScrollBar(s.left.look, s.left2.look, s.hlower, s.hthumb, s.hupper, s.right2.look, s.right.look,
+			               CtrlsImg::I_LA, CtrlsImg::I_RA, true);
+			
+#else
 			GtkChSlider(s.vthumb);
 			if(engine != "Nodoka") {
 				ChGtkNew("trough", GTK_BGBOX);
@@ -332,8 +393,9 @@ void ChHostSkin()
 				GtkChTrough(s.vlower);
 			}
 			bool atp = IsEmptyImage(GetGTK(ChGtkLast(), 2, 2, "vscrollbar", GTK_BOX|GTK_TOP|GTK_RANGEA, 16, 16));
+			LDUMP(atp);
 			Size asz(s.barsize / 2, s.arrowsize / 2);
-			if(Qt || engine == "Human")
+			if(engine == "Human")
 				atp = false;
 			if(atp) {
 				ChGtkNew("vscrollbar", GTK_ARROW);
@@ -402,7 +464,7 @@ void ChHostSkin()
 					GtkChImgWith(s.dec.look, q ? CtrlImg::spindown2() : CtrlImg::spindown3(), 1 * q, po);
 				}
 			}
-
+#endif
 			int d = Diff(fc, SColorPaper());
 			Image m = GtkGetLastImage();
 			for(int x = 0; x < 4; x++)
@@ -417,7 +479,7 @@ void ChHostSkin()
 					}
 				}
 			FieldFrameColor_Write(fc);
-
+#ifndef GTK_NEWSCROLLBAR
 			static GtkWidget *hscrollbar = gtk_hscrollbar_new(GTK_ADJUSTMENT(adj));
 			ChGtkNew(hscrollbar, "slider", GTK_SLIDER);
 			GtkChSlider(s.hthumb);
@@ -448,6 +510,7 @@ void ChHostSkin()
 				ChGtkNew("hscrollbar", GTK_BGBOX|GTK_RIGHT|GTK_RANGED);
 				GtkChArrow(s.right.look, CtrlsImg::RA(), po);
 			}
+#endif
 
 			gtk_object_sink(adj);
 
@@ -474,8 +537,8 @@ void ChHostSkin()
 			CtrlImg::Set("vthumb",GetGTK(w, 0, 0, "vscale", GTK_SLIDER|GTK_VAL1, cy, cx));
 			CtrlImg::Set("vthumb1",GetGTK(w, 2, 0, "vscale", GTK_SLIDER|GTK_VAL1, cy, cx));
 			gtk_widget_destroy(w);
-
 		}
+
 	}
 
 	if(!Qt)

@@ -1,23 +1,26 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+#if defined(_DEBUG) && 1
 
-#define LTIMING(x) //  RTIMING(x)
-
-#if defined(_DEBUG) && 0
+_DBG_
 #include <plugin/png/png.h>
 
+namespace Upp {
 inline void LOGPNG(const char *name, const Image& m)
 {
-	PNGEncoder png;
-	png.SaveFile(ConfigFile(name) + ".png", m);
+	PNGEncoder().SaveFile(GetHomeDirFile(name) + ".png", m);
 }
+};
 
 #else
 
 #define LOGPNG(a, b)
 
 #endif
+
+NAMESPACE_UPP
+
+#define LTIMING(x) //  RTIMING(x)
 
 struct ChImageMaker : ImageMaker {
 	Size       sz;
