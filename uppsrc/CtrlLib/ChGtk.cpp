@@ -333,7 +333,6 @@ void ChHostSkin()
 			s.overthumb = true;
 		}
 		else {
-#ifdef GTK_NEWSCROLLBAR
 			GtkChScrollBar(s.up.look, s.up2.look, s.vlower, s.vthumb, s.vupper, s.down2.look, s.down.look,
 			               CtrlsImg::I_UA, CtrlsImg::I_DA, false);
 
@@ -385,86 +384,6 @@ void ChHostSkin()
 			GtkChScrollBar(s.left.look, s.left2.look, s.hlower, s.hthumb, s.hupper, s.right2.look, s.right.look,
 			               CtrlsImg::I_LA, CtrlsImg::I_RA, true);
 			
-#else
-			GtkChSlider(s.vthumb);
-			if(engine != "Nodoka") {
-				ChGtkNew("trough", GTK_BGBOX);
-				GtkChTrough(s.vupper);
-				GtkChTrough(s.vlower);
-			}
-			bool atp = IsEmptyImage(GetGTK(ChGtkLast(), 2, 2, "vscrollbar", GTK_BOX|GTK_TOP|GTK_RANGEA, 16, 16));
-			LDUMP(atp);
-			Size asz(s.barsize / 2, s.arrowsize / 2);
-			if(engine == "Human")
-				atp = false;
-			if(atp) {
-				ChGtkNew("vscrollbar", GTK_ARROW);
-//				if(engine != "Human") {
-					GtkCh(s.up.look, "02141111");
-					GtkCh(s.up2.look, "02141111");
-//				}
-				ChGtkNew("vscrollbar", GTK_ARROW|GTK_VAL1);
-//				if(engine != "Human") {
-					GtkCh(s.down.look, "02141111");
-					GtkCh(s.down2.look, "02141111");
-//				}
-
-				static GtkWidget *btn = gtk_button_new();
-				ChGtkNew(btn, "button", GTK_BOX);
-
-				GtkChButton(Button::StyleScroll().Write().look);
-				GtkChButton(Button::StyleEdge().Write().look);
-				GtkChButton(Button::StyleLeftEdge().Write().look);
-
-				{
-					DropList::Style& s = DropList::StyleFrame().Write();
-					GtkChButtonWith(s.look, CtrlsImg::DA());
-					GtkChButtonWith(s.trivial, CtrlsImg::DA());
-				}
-				{
-					SpinButtons::Style& s = SpinButtons::StyleDefault().Write();
-					GtkChButtonWith(s.inc.look, CtrlImg::spinup2());
-					GtkChButtonWith(s.dec.look, CtrlImg::spindown2());
-				}
-			}
-			else {
-				if(engine != "Nodoka") {
-					GtkIml(CtrlsImg::I_UA, ChGtkLast(), 0, 0, "vscrollbar", GTK_ARROW|GTK_TOP|GTK_RANGEA, asz.cx, asz.cy);
-					GtkIml(CtrlsImg::I_DA, ChGtkLast(), 0, 0, "vscrollbar", GTK_ARROW|GTK_VAL1|GTK_BOTTOM|GTK_RANGED, asz.cx, asz.cy);
-				}
-
-				ChGtkNew("vscrollbar", GTK_BGBOX|GTK_TOP|GTK_RANGEA);
-				GtkChArrow(s.up.look, CtrlsImg::UA(), po);
-				ChGtkNew("vscrollbar", GTK_BGBOX|GTK_BOTTOM|GTK_RANGED);
-				GtkChArrow(s.down.look, CtrlsImg::DA(), po);
-				ChGtkNew("vscrollbar", GTK_BGBOX|GTK_VCENTER|GTK_RANGEC);
-				GtkChArrow(s.up2.look, CtrlsImg::UA(), po);
-				ChGtkNew("vscrollbar", GTK_BGBOX|GTK_VCENTER|GTK_RANGEB);
-				GtkChArrow(s.down2.look, CtrlsImg::DA(), po);
-
-				ChGtkNew("vscrollbar", GTK_BOX|GTK_VCENTER|GTK_RANGEB);
-				GtkCh(Button::StyleScroll().Write().look, "02142222");
-
-				int q = !classiq;
-
-				GtkChImgWith(Button::StyleEdge().Write().look, Null, 1 * q);
-				GtkChImgWith(Button::StyleLeftEdge().Write().look, Null, 2 * q);
-
-				{
-					DropList::Style& s = DropList::StyleFrame().Write();
-					GtkChImgWith(s.look, CtrlsImg::DA(), 1 * q, po);
-					GtkChImgWith(s.trivial, CtrlsImg::DA(), 1 * q, po);
-					GtkChImgWith(s.left, CtrlsImg::DA(), 2 * q, po);
-					GtkChImgWith(s.right, CtrlsImg::DA(), 1 * q, po);
-					s.pressoffset = po;
-				}
-				{
-					SpinButtons::Style& s = SpinButtons::StyleDefault().Write();
-					GtkChImgWith(s.inc.look, q ? CtrlImg::spinup2() : CtrlImg::spinup3(), (1|GTK_BOTTOMLINE) * q, po);
-					GtkChImgWith(s.dec.look, q ? CtrlImg::spindown2() : CtrlImg::spindown3(), 1 * q, po);
-				}
-			}
-#endif
 			int d = Diff(fc, SColorPaper());
 			Image m = GtkGetLastImage();
 			for(int x = 0; x < 4; x++)
@@ -479,38 +398,6 @@ void ChHostSkin()
 					}
 				}
 			FieldFrameColor_Write(fc);
-#ifndef GTK_NEWSCROLLBAR
-			static GtkWidget *hscrollbar = gtk_hscrollbar_new(GTK_ADJUSTMENT(adj));
-			ChGtkNew(hscrollbar, "slider", GTK_SLIDER);
-			GtkChSlider(s.hthumb);
-			if(engine != "Nodoka") {
-				ChGtkNew("trough", GTK_BGBOX);
-				GtkChTrough(s.hupper);
-				GtkChTrough(s.hlower);
-			}
-			if(atp) {
-				ChGtkNew("hscrollbar", GTK_ARROW|GTK_VAL2);
-				GtkCh(s.left.look, "02141111");
-				GtkCh(s.left2.look, "02141111");
-				ChGtkNew("hscrollbar", GTK_ARROW|GTK_VAL3);
-				GtkCh(s.right.look, "02141111");
-				GtkCh(s.right2.look, "02141111");
-			}
-			else {
-				if(engine != "Nodoka") {
-					GtkIml(CtrlsImg::I_LA, ChGtkLast(), 0, 0, "hscrollbar", GTK_ARROW|GTK_VAL2|GTK_LEFT|GTK_RANGEA, asz.cy, asz.cx);
-					GtkIml(CtrlsImg::I_RA, ChGtkLast(), 0, 0, "hscrollbar", GTK_ARROW|GTK_VAL3|GTK_RIGHT|GTK_RANGED, asz.cy, asz.cx);
-				}
-				ChGtkNew("hscrollbar", GTK_BGBOX|GTK_LEFT|GTK_RANGEA);
-				GtkChArrow(s.left.look, CtrlsImg::LA(), po);
-				ChGtkNew("hscrollbar", GTK_BGBOX|GTK_VCENTER|GTK_RANGEC);
-				GtkChArrow(s.left2.look, CtrlsImg::LA(), po);
-				ChGtkNew("hscrollbar", GTK_BGBOX|GTK_VCENTER|GTK_RANGEB);
-				GtkChArrow(s.right2.look, CtrlsImg::RA());
-				ChGtkNew("hscrollbar", GTK_BGBOX|GTK_RIGHT|GTK_RANGED);
-				GtkChArrow(s.right.look, CtrlsImg::RA(), po);
-			}
-#endif
 
 			gtk_object_sink(adj);
 
