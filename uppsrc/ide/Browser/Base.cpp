@@ -179,7 +179,7 @@ void UpdateCodeBase(Progress& pi)
 		for(int i = 0; i < pk.file.GetCount(); i++) {
 			String path = SourcePath(n, pk.file[i]);
 			String ext = ToUpper(GetFileExt(path));
-			if(ext == ".C" || ext == ".CPP" || ext == ".CC" || ext == ".CXX" ||
+			if(ext == ".C" || ext == ".CPP" || ext == ".CC" || ext == ".CXX" || ext == ".ICPP" ||
 			   ext == ".H" || ext == ".HPP" || ext == ".HH" || ext == ".HXX" ||
 			   ext == ".LAY" || ext == ".SCH") {
 				fp.Add(path);
