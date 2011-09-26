@@ -319,7 +319,7 @@ void MenuItem::Paint(Draw& w)
 	             style->itemtext);
 	isz = ricon.GetSize();
 	if(isenabled)
-		w.DrawImage(sz.cx - isz.cx, (sz.cy - isz.cy) / 2, ricon, SColorMenuText());
+		w.DrawImage(sz.cx - isz.cx, (sz.cy - isz.cy) / 2, ricon, hl ? style->itemtext : SColorMenuText());
 	else
 		w.DrawImage(sz.cx - isz.cx, (sz.cy - isz.cy) / 2, DisabledImage(ricon));
 	x = sz.cx - max(isz.cx, 16) - 1;
