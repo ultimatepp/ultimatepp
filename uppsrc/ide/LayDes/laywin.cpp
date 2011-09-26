@@ -284,6 +284,7 @@ LayDes::LayDes()
 	item.AddColumn("Var / lbl", 10).Margin(0);
 	item.WhenLeftClick = THISBACK(ItemClick);
 	item.NoWantFocus();
+	item.WhenBar = THISBACK(MoveBar);
 
 	SetFrame(toolbar);
 	AddFrame(InsetFrame());
