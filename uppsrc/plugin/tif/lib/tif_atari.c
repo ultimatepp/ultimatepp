@@ -1,4 +1,4 @@
-/* "$Header: /cvs/maptools/cvsroot/libtiff/libtiff/tif_atari.c,v 1.2 2005/12/21 12:23:13 joris Exp $" */
+/* "$Header: /cvs/maptools/cvsroot/libtiff/libtiff/Attic/tif_atari.c,v 1.2.2.1 2010-06-08 18:50:41 bfriesen Exp $" */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -241,3 +241,10 @@ atariErrorHandler(const char* module, const char* fmt, va_list ap)
 	fprintf(stderr, ".\n");
 }
 TIFFErrorHandler _TIFFerrorHandler = atariErrorHandler;
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

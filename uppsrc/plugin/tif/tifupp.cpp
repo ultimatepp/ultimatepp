@@ -1,13 +1,13 @@
 #include <Draw/Draw.h>
 #include "tif.h"
 
-#define int8 tif_int8
-#define int32 tif_int32
-#define uint32 tif_uint32
-#include <plugin/tif/lib/tiffio.h>
-#include <plugin/tif/lib/tiffiop.h>
-#undef int32
-#undef uint32
+#ifdef PLATFORM_WIN32
+	#define	tif_int32 long
+	#define	tif_uint32 unsigned long
+#else
+	#define	tif_int32 int
+	#define	tif_uint32 unsigned int
+#endif
 
 #define LLOG(x) // LOG(x)
 
@@ -522,6 +522,17 @@ struct ::tiff *TIFFFileStreamOpen(const char *filename, const char *mode)
 		return NULL;
 	return TIFFStreamOpen(filename, mode, -fs, true);
 }
+/*
+
+struct ::tiff* TIFFWrapOpen(const char *filename, const char *mode){
+	return ::TIFFOpen(filename, mode);
+}
+
+int TIFFWrapGetField(::tiff* tif_data, uint32 tag, ...){
+	va_list ap;
+	return ::TIFFGetField(tif_data, tag, ap);
+}
+*/
 
 struct ::tiff *TIFFStreamOpen(const char *filename, const char *mode, Stream *stream, bool destruct)
 {

@@ -1,4 +1,4 @@
-/* $Id: tiff.h,v 1.42 2005/12/23 15:10:45 dron Exp $ */
+/* $Id: tiff.h,v 1.43.2.1 2010-06-08 18:50:43 bfriesen Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -43,7 +43,7 @@
  *    (http://partners.adobe.com/asn/developer/PDFS/TN/TIFF6.pdf)
  *
  * For Big TIFF design notes see the following link
- *    http://gdal.maptools.org/twiki/bin/view/libtiff/BigTIFFDesign
+ *    http://www.remotesensing.org/libtiff/bigtiffdesign.html
  */
 #define	TIFF_VERSION	        42
 #define TIFF_BIGTIFF_VERSION    43
@@ -61,24 +61,33 @@
  * strings		unsigned char*
  */
 
+
 #ifndef HAVE_INT8
 typedef	signed char int8;	/* NB: non-ANSI compilers may not grok */
 #endif
+#ifndef HAVE_UINT8
 typedef	unsigned char uint8;
+#endif
 #ifndef HAVE_INT16
 typedef	short int16;
 #endif
+#ifndef HAVE_UINT16
 typedef	unsigned short uint16;	/* sizeof (uint16) must == 2 */
+#endif
 #if SIZEOF_INT == 4
 #ifndef HAVE_INT32
 typedef	int int32;
 #endif
+#ifndef HAVE_UINT32
 typedef	unsigned int uint32;	/* sizeof (uint32) must == 4 */
+#endif
 #elif SIZEOF_LONG == 4
 #ifndef HAVE_INT32
 typedef	long int32;
 #endif
+#ifndef HAVE_UINT32
 typedef	unsigned long uint32;	/* sizeof (uint32) must == 4 */
+#endif
 #endif
 
 /* For TIFFReassignTagToIgnore */
@@ -645,3 +654,10 @@ typedef	enum {
 #endif /* _TIFF_ */
 
 /* vim: set ts=8 sts=8 sw=8 noet: */
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

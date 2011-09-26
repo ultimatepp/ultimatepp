@@ -1,4 +1,4 @@
-/* $Id: tif_pixarlog.c,v 1.14 2006/03/16 12:38:24 dron Exp $ */
+/* $Id: tif_pixarlog.c,v 1.15.2.4 2010-06-08 18:50:42 bfriesen Exp $ */
 
 /*
  * Copyright (c) 1996-1997 Sam Leffler
@@ -327,7 +327,7 @@ horizontalAccumulate11(uint16 *wp, int n, int stride, uint16 *op)
 	    while (n > 0) {
 		REPEAT(stride,
 		    wp[stride] += *wp; *op = *wp&mask; wp++; op++)
-	    	n -= stride;
+		n -= stride;
 	    }
 	}
     }
@@ -593,7 +593,6 @@ PixarLogMakeTables(PixarLogState *sp)
 static	int PixarLogEncode(TIFF*, tidata_t, tsize_t, tsample_t);
 static	int PixarLogDecode(TIFF*, tidata_t, tsize_t, tsample_t);
 
-#define N(a)   (sizeof(a)/sizeof(a[0]))
 #define PIXARLOGDATAFMT_UNKNOWN	-1
 
 static int
@@ -767,6 +766,18 @@ PixarLogDecode(TIFF* tif, tidata_t op, tsize_t occ, tsample_t s)
 	/* Swap bytes in the data if from a different endian machine. */
 	if (tif->tif_flags & TIFF_SWAB)
 		TIFFSwabArrayOfShort(up, nsamples);
+
+	/* 
+	 * if llen is not an exact multiple of nsamples, the decode operation
+	 * may overflow the output buffer, so truncate it enough to prevent
+	 * that but still salvage as much data as possible.
+	 */
+	if (nsamples % llen) { 
+		TIFFWarningExt(tif->tif_clientdata, module,
+			"%s: stride %d is not a multiple of sample count, "
+			"%d, data truncated.", tif->tif_name, llen, nsamples);
+		nsamples -= nsamples % llen;
+	}
 
 	for (i = 0; i < nsamples; i += llen, up += llen) {
 		switch (sp->user_datafmt)  {
@@ -1036,7 +1047,7 @@ PixarLogEncode(TIFF* tif, tidata_t bp, tsize_t cc, tsample_t s)
 	TIFFDirectory *td = &tif->tif_dir;
 	PixarLogState *sp = EncoderState(tif);
 	static const char module[] = "PixarLogEncode";
-	int 	i, n, llen;
+	int	i, n, llen;
 	unsigned short * up;
 
 	(void) s;
@@ -1278,9 +1289,21 @@ static const TIFFFieldInfo pixarlogFieldInfo[] = {
 int
 TIFFInitPixarLog(TIFF* tif, int scheme)
 {
+	static const char module[] = "TIFFInitPixarLog";
+
 	PixarLogState* sp;
 
 	assert(scheme == COMPRESSION_PIXARLOG);
+
+	/*
+	 * Merge codec-specific tag information.
+	 */
+	if (!_TIFFMergeFieldInfo(tif, pixarlogFieldInfo,
+				 TIFFArrayCount(pixarlogFieldInfo))) {
+		TIFFErrorExt(tif->tif_clientdata, module,
+			     "Merging PixarLog codec-specific tags failed");
+		return 0;
+	}
 
 	/*
 	 * Allocate state block so tag methods have storage to record values.
@@ -1311,7 +1334,6 @@ TIFFInitPixarLog(TIFF* tif, int scheme)
 	tif->tif_cleanup = PixarLogCleanup;
 
 	/* Override SetField so we can handle our private pseudo-tag */
-	_TIFFMergeFieldInfo(tif, pixarlogFieldInfo, N(pixarlogFieldInfo));
 	sp->vgetparent = tif->tif_tagmethods.vgetfield;
 	tif->tif_tagmethods.vgetfield = PixarLogVGetField;   /* hook for codec tags */
 	sp->vsetparent = tif->tif_tagmethods.vsetfield;
@@ -1333,10 +1355,17 @@ TIFFInitPixarLog(TIFF* tif, int scheme)
 
 	return (1);
 bad:
-	TIFFErrorExt(tif->tif_clientdata, "TIFFInitPixarLog",
+	TIFFErrorExt(tif->tif_clientdata, module,
 		     "No space for PixarLog state block");
 	return (0);
 }
 #endif /* PIXARLOG_SUPPORT */
 
 /* vim: set ts=8 sts=8 sw=8 noet: */
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

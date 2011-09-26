@@ -1,5 +1,8 @@
 /* libtiff/tif_config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Define if building universal (internal helper macro) */
+#undef AC_APPLE_UNIVERSAL_BUILD
+
 /* Support CCITT Group 3 & 4 algorithms */
 #undef CCITT_SUPPORT
 
@@ -49,8 +52,14 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
+/* Define to 1 if you have the <io.h> header file. */
+#undef HAVE_IO_H
+
 /* Define to 1 if you have the `isascii' function. */
 #undef HAVE_ISASCII
+
+/* Define to 1 if you have the `jbg_newlen' function. */
+#undef HAVE_JBG_NEWLEN
 
 /* Define to 1 if you have the `lfind' function. */
 #undef HAVE_LFIND
@@ -87,6 +96,9 @@
 
 /* Define to 1 if you have the <search.h> header file. */
 #undef HAVE_SEARCH_H
+
+/* Define to 1 if you have the `setmode' function. */
+#undef HAVE_SETMODE
 
 /* Define to 1 if you have the `sqrt' function. */
 #undef HAVE_SQRT
@@ -143,6 +155,9 @@
 /* Set the native cpu bit order (FILLORDER_LSB2MSB or FILLORDER_MSB2LSB) */
 #undef HOST_FILLORDER
 
+/* Support ISO JBIG compression (requires JBIG-KIT library) */
+#undef JBIG_SUPPORT
+
 /* Support JPEG compression (requires IJG JPEG library) */
 #undef JPEG_SUPPORT
 
@@ -165,8 +180,7 @@
 /* Define to 1 if your C compiler doesn't accept -c and -o together. */
 #undef NO_MINUS_C_MINUS_O
 
-/* Support Old JPEG compresson (read contrib/ojpeg/README first! Compilation
-   fails with unpatched IJG JPEG library) */
+/* Support Old JPEG compresson (read-only) */
 #undef OJPEG_SUPPORT
 
 /* Name of package */
@@ -184,6 +198,9 @@
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
 
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
@@ -197,11 +214,23 @@
    your system. */
 #undef PTHREAD_CREATE_JOINABLE
 
-/* The size of a `int', as computed by sizeof. */
+/* The size of `int', as computed by sizeof. */
 #undef SIZEOF_INT
 
-/* The size of a `long', as computed by sizeof. */
+/* The size of `long', as computed by sizeof. */
 #undef SIZEOF_LONG
+
+/* The size of `signed long', as computed by sizeof. */
+#undef SIZEOF_SIGNED_LONG
+
+/* The size of `signed long long', as computed by sizeof. */
+#undef SIZEOF_SIGNED_LONG_LONG
+
+/* The size of `unsigned long', as computed by sizeof. */
+#undef SIZEOF_UNSIGNED_LONG
+
+/* The size of `unsigned long long', as computed by sizeof. */
+#undef SIZEOF_UNSIGNED_LONG_LONG
 
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
@@ -219,6 +248,18 @@
 /* Support ThunderScan 4-bit RLE algorithm */
 #undef THUNDER_SUPPORT
 
+/* Signed 64-bit type formatter */
+#undef TIFF_INT64_FORMAT
+
+/* Signed 64-bit type */
+#undef TIFF_INT64_T
+
+/* Unsigned 64-bit type formatter */
+#undef TIFF_UINT64_FORMAT
+
+/* Unsigned 64-bit type */
+#undef TIFF_UINT64_T
+
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
 #undef TIME_WITH_SYS_TIME
 
@@ -228,9 +269,17 @@
 /* Version number of package */
 #undef VERSION
 
-/* Define to 1 if your processor stores words with the most significant byte
-   first (like Motorola and SPARC, unlike Intel and VAX). */
-#undef WORDS_BIGENDIAN
+/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
+   significant byte first (like Motorola and SPARC, unlike Intel). */
+#if defined AC_APPLE_UNIVERSAL_BUILD
+# if defined __BIG_ENDIAN__
+#  define WORDS_BIGENDIAN 1
+# endif
+#else
+# ifndef WORDS_BIGENDIAN
+#  undef WORDS_BIGENDIAN
+# endif
+#endif
 
 /* Define to 1 if the X Window System is missing or not being used. */
 #undef X_DISPLAY_MISSING
@@ -253,8 +302,8 @@
 #undef inline
 #endif
 
-/* Define to `long' if <sys/types.h> does not define. */
+/* Define to `long int' if <sys/types.h> does not define. */
 #undef off_t
 
-/* Define to `unsigned' if <sys/types.h> does not define. */
+/* Define to `unsigned int' if <sys/types.h> does not define. */
 #undef size_t

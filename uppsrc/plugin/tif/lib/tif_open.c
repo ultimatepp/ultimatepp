@@ -1,4 +1,4 @@
-/* $Id: tif_open.c,v 1.31 2006/03/16 12:23:02 dron Exp $ */
+/* $Id: tif_open.c,v 1.33.2.2 2010-12-06 16:54:22 faxguy Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -198,7 +198,7 @@ TIFFClientOpen(
 	 */
 	tif->tif_flags = FILLORDER_MSB2LSB;
 	if (m == O_RDONLY )
-            tif->tif_flags |= TIFF_MAPPED;
+		tif->tif_flags |= TIFF_MAPPED;
 
 #ifdef STRIPCHOP_DEFAULT
 	if (m == O_RDONLY || m == O_RDWR)
@@ -304,10 +304,11 @@ TIFFClientOpen(
 	/*
 	 * Read in TIFF header.
 	 */
-	if (tif->tif_mode & O_TRUNC ||
+	if ((m & O_TRUNC) ||
 	    !ReadOK(tif, &tif->tif_header, sizeof (TIFFHeader))) {
 		if (tif->tif_mode == O_RDONLY) {
-			TIFFErrorExt(tif->tif_clientdata, name, "Cannot read TIFF header");
+			TIFFErrorExt(tif->tif_clientdata, name,
+				     "Cannot read TIFF header");
 			goto bad;
 		}
 		/*
@@ -336,7 +337,8 @@ TIFFClientOpen(
                 TIFFSeekFile( tif, 0, SEEK_SET );
                
 		if (!WriteOK(tif, &tif->tif_header, sizeof (TIFFHeader))) {
-			TIFFErrorExt(tif->tif_clientdata, name, "Error writing TIFF header");
+			TIFFErrorExt(tif->tif_clientdata, name,
+				     "Error writing TIFF header");
 			goto bad;
 		}
 		/*
@@ -350,6 +352,7 @@ TIFFClientOpen(
 			goto bad;
 		tif->tif_diroff = 0;
 		tif->tif_dirlist = NULL;
+		tif->tif_dirlistsize = 0;
 		tif->tif_dirnumber = 0;
 		return (tif);
 	}
@@ -366,10 +369,12 @@ TIFFClientOpen(
 	    tif->tif_header.tiff_magic != MDI_LITTLEENDIAN
 #endif
 	    ) {
-		TIFFErrorExt(tif->tif_clientdata, name,  "Not a TIFF or MDI file, bad magic number %d (0x%x)",
+		TIFFErrorExt(tif->tif_clientdata, name,
+			"Not a TIFF or MDI file, bad magic number %d (0x%x)",
 #else
 	    ) {
-		TIFFErrorExt(tif->tif_clientdata, name,  "Not a TIFF file, bad magic number %d (0x%x)",
+		TIFFErrorExt(tif->tif_clientdata, name,
+			     "Not a TIFF file, bad magic number %d (0x%x)",
 #endif
 		    tif->tif_header.tiff_magic,
 		    tif->tif_header.tiff_magic);
@@ -398,7 +403,7 @@ TIFFClientOpen(
 		TIFFErrorExt(tif->tif_clientdata, name,
 		    "Not a TIFF file, bad version number %d (0x%x)",
 		    tif->tif_header.tiff_version,
-		    tif->tif_header.tiff_version); 
+		    tif->tif_header.tiff_version);
 		goto bad;
 	}
 	tif->tif_flags |= TIFF_MYBUFFER;
@@ -681,3 +686,10 @@ TIFFGetUnmapFileProc(TIFF* tif)
 }
 
 /* vim: set ts=8 sts=8 sw=8 noet: */
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

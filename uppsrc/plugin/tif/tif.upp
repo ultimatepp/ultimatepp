@@ -35,8 +35,6 @@ file
 	lib\Makefile.lcc,
 	lib\Makefile.vc,
 	lib\ojpeg.patch,
-	lib\Readme,
-	lib\Release-date,
 	lib\t4.h,
 	lib\tif_aux.c,
 	lib\tif_close.c,
@@ -89,6 +87,5 @@ file
 	lib\tiffiop.h,
 	lib\tiffvers.h,
 	lib\uvcode.h,
-	lib\Version,
 	end readonly separator;
 
