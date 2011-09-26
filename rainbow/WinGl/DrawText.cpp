@@ -4,11 +4,15 @@
 
 NAMESPACE_UPP
 
-void OpenGLFont::LoadBrc(const byte* xml, const byte* image)
+void OpenGLFont::LoadBrc(const byte* xml, const byte** imagesData, const int* imagesSize, int imagesCount)
 {
 	Parse((const char*) xml, false);
-	compiledFiles.Add((byte*) image);
-	pages.Add();
+	for(int i = 0; i < imagesCount; i++)
+	{
+		BrcImage& bi = brcImages.Add();
+		bi.data = imagesData[i];
+		bi.length = imagesSize[i];
+	}
 }
 
 void OpenGLFont::Load(const String& fileName)
@@ -45,9 +49,9 @@ void OpenGLFont::Parse(const char* xml, bool parsePages)
 					if(parsePages)
 					{
 						String fileName = p["file"];
-						files.Add(fileName);
+						images.Add(fileName);
 					}
-					pages.Add(-1);
+					pages.Add(StrInt(p["id"]));
 				}
 				else
 					p.Skip();
@@ -105,21 +109,18 @@ void OpenGLFont::UpdateTextures()
 	if(texturesUpdated)
 		return;
 				
-	for(int i = 0; i < files.GetCount(); i++)
+	for(int i = 0; i < images.GetCount(); i++)
 	{
-		Image img = StreamRaster::LoadFileAny(GetDataFile(files[i]));
+		Image img = StreamRaster::LoadFileAny(GetDataFile(images[i]));
 		int64 serialId = Resources::Bind(img, true);
 		pages[i] = serialId;
 	}
 	
-	for(int i = 0; i < compiledFiles.GetCount(); i++)
+	for(int i = 0; i < brcImages.GetCount(); i++)
 	{
-/*		DUMP(compiledFiles[i]);
-		MemStream ms((void*) resTahoma14Img, resTahoma14Img_length);
+		MemStream ms((void*) brcImages[i].data, brcImages[i].length);
 		Image img = StreamRaster::LoadAny(ms);
 		int64 serialId = Resources::Bind(img, true);
-		pages[i] = serialId;*/
-		int64 serialId = Resources::Bind(WinGlImg::tahoma(), true);
 		pages[i] = serialId;
 	}
 
@@ -171,6 +172,8 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 	float xp = (float) x;
 	float yp = (float) y;
 	
+	int page = -1;
+	
 	while(*s && n > 0)
 	{
 		int ch = *s;
@@ -182,9 +185,13 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 	
 			cn <<= 3;
 	
-			Resources::Bind(fi.pages[ci.page], true);
-			glActiveTexture(GL_TEXTURE0);
-			alphaMagProg.Set("Texture", 0);
+			if(ci.page != page)
+			{
+				Resources::Bind(fi.pages[ci.page], true);
+				glActiveTexture(GL_TEXTURE0);
+				alphaMagProg.Set("Texture", 0);
+				page = ci.page;
+			}
 			
 			float sx = (float) ci.xoffset * fi.scale + xp + drawing_offset.x;
 			float sy = (float) ci.yoffset * fi.scale + yp + drawing_offset.y;

@@ -15,10 +15,10 @@ void ValueSlider::Paint(Draw &w)
 {
 	Size sz = GetSize();
 
-	w.DrawRect(0, 0, sz.cx, 1, Black);
+	/*w.DrawRect(0, 0, sz.cx, 1, Black);
 	w.DrawRect(0, sz.cy - 1, sz.cx, 1, Black);
 	w.DrawRect(0, 0, 1, sz.cy, Black);
-	w.DrawRect(sz.cx - 1, 0, 1, sz.cy, Black);
+	w.DrawRect(sz.cx - 1, 0, 1, sz.cy, Black);*/
 		
 	int t = (int) (((pos - minValue) * sz.cx) / (maxValue - minValue));
 	if(t < 1) t = 1;
@@ -84,11 +84,11 @@ float ValueSlider::GetPos()
 	return pos;
 }
 
-InfoPanel::InfoPanel() : init(true)
+InfoPanel::InfoPanel() : init(true), parent(NULL)
 {
-	Add(alphaSlider.RightPos(215, 100).BottomPos(2, 24));
-	Add(angleSlider.RightPos(110, 100).BottomPos(2, 24));
-	Add(scaleSlider.RightPos(5, 100).BottomPos(2, 24));
+	Add(alphaSlider.RightPos(199, 100).VSizePos(1, 0));
+	Add(angleSlider.RightPos(100, 100).VSizePos(1, 0));
+	Add(scaleSlider.RightPos(1, 100).VSizePos(1, 0));
 	
 	alphaSlider.text = "Alpha";
 	angleSlider.text = "Angle";
@@ -100,6 +100,10 @@ InfoPanel::InfoPanel() : init(true)
 	alphaSlider.immediate = true;
 	angleSlider.immediate = true;
 	scaleSlider.immediate = true;
+
+	alphaSlider.SetPos(255.f, 0.f, 255.f);
+	angleSlider.SetPos(0.f, 0.f, 360.f);
+	scaleSlider.SetPos(1.f, 1.f, 5.f);
 }
 
 void InfoPanel::Paint(Draw& w)
@@ -113,20 +117,35 @@ void InfoPanel::Paint(Draw& w)
 	w.DrawRect(0, 0, sz.cx, 1, frameColor);
 	w.DrawRect(sz.cx - 1, 0, 1, sz.cy, frameColor);
 	String info = Format("FPS: %.2f, Textures: %d, Size: %d, %d", GetFps(), Resources::textures.GetCount(), wsz.cx, wsz.cy);
-	w.DrawText(5, sz.cy - 22, info, StdFont(), White);
+	w.DrawText(5, sz.cy - 18, info, StdFont(), White);
 }
 
 void InfoPanel::Init(Ctrl& parent, float angle, float scale, float alpha)
 {
 	const int width = 585;
-	SetRect((screenRect.Width() - width) / 2, screenRect.Height() - 30, width, 30);
+	SetRect((screenRect.Width() - width) / 2, screenRect.Height() - 22, width, 22);
 	if(!init)
 		return;
 	init = false;
-	PopUp(&parent, true, false);
+	this->parent = &parent;
+	Show();
 	alphaSlider.SetPos(alpha, 0.f, 255.f);
 	angleSlider.SetPos(angle, 0.f, 360.f);
 	scaleSlider.SetPos(scale, 1.f, 5.f);
+}
+
+void InfoPanel::Show(bool b)
+{
+	if(IsOpen())
+	{
+		if(!b)
+			Close();
+	}
+	else
+	{
+		if(b)
+			PopUp(parent, true, false);
+	}
 }
 
 float InfoPanel::GetAlpha()
@@ -143,6 +162,5 @@ float InfoPanel::GetScale()
 {
 	return scaleSlider.GetPos();
 }
-
 
 END_UPP_NAMESPACE

@@ -26,11 +26,17 @@ struct OpenGLFont : Moveable<OpenGLFont>
 		float xadvance;
 		int page;
 	};
+	
+	struct BrcImage : Moveable<BrcImage>
+	{
+		const byte* data;
+		int length;
+	};
 
 	Vector<CharInfo> chars;
 	VectorMap<int, VectorMap<int, float> > kerns;
-	Vector<String> files;
-	Array<byte> compiledFiles;
+	Vector<String> images;
+	Vector<BrcImage> brcImages;
 	Vector<int64> pages;
 
 	OpenGLFont() : texturesUpdated(false), scale(1.0f)
@@ -39,7 +45,7 @@ struct OpenGLFont : Moveable<OpenGLFont>
 	~OpenGLFont()
 	{}
 
-	void LoadBrc(const byte* xml, const byte* image);
+	void LoadBrc(const byte* xml, const byte** imagesData, const int* imagesSize, int imagesCount);
 	void Load(const String& fileName);
 	void Parse(const char* xml, bool parsePages);
 	void UpdateTextures();

@@ -137,6 +137,11 @@ int Shader::CompileProgram(const char* vs, const char* fs)
 	return program;
 }
 
+int Shader::CompileProgram(const byte* vs, const byte* fs)
+{
+	return CompileProgram((const char*) vs, (const char*) fs);
+}
+
 int Shader::GetProgram()
 {
 	return program;
@@ -204,57 +209,4 @@ void Shader::Stop()
 Shader::Shader() : program(-1)
 {}
 
-
-const String fragAlphaMag = 
-"uniform sampler2D Texture;                                                                  \n"
-"uniform vec4 GlyphColor;                                                                    \n"
-"uniform vec4 GlowColor;                                                                     \n"
-"uniform vec4 OutlineColor;                                                                  \n"
-"                                                                                            \n"
-"uniform bool Outline;                                                                       \n"
-"uniform bool Glow;                                                                          \n"
-"uniform bool Shadow;                                                                        \n"
-"                                                                                            \n"
-"const float AlphaCenter = 0.5;                                                              \n"
-"const float DistanceScale = 15.0;                                                           \n"
-"                                                                                            \n"
-"uniform float OutlineCenter;                                                                \n"
-"uniform float GlowCenter;                                                                   \n"
-"                                                                                            \n"
-"void main()                                                                                 \n"
-"{                                                                                           \n"
-"   vec4 color = texture2D(Texture, gl_TexCoord[0].xy);                                      \n"
-"   float alpha = color.a;                                                                   \n"
-"   float width = fwidth(gl_TexCoord[0].x) * DistanceScale;                                  \n"
-"                                                                                            \n"
-"   vec4 finalColor = GlyphColor;                                                            \n"
-"                                                                                            \n"
-"   float ma = smoothstep(AlphaCenter - width, AlphaCenter + width, alpha);                  \n"
-"   finalColor.a = ma;                                                                       \n"
-"                                                                                            \n"
-"   if(Outline)                                                                              \n"
-"   {                                                                                        \n"
-"       float mo = smoothstep(OutlineCenter - width, OutlineCenter + width, alpha);          \n"
-"       finalColor = mix(OutlineColor, finalColor, ma);                                      \n"
-"       finalColor.a = mo;                                                                   \n"
-"   }                                                                                        \n"
-"                                                                                            \n"
-"   if(Glow && alpha >= finalColor.a - 0.5)                                                  \n"
-"   {                                                                                        \n"
-"       float mg = smoothstep(AlphaCenter, GlowCenter, sqrt(alpha));                         \n"
-"       finalColor = mix(GlowColor, finalColor, ma);                                         \n"
-"       finalColor.a = mg;                                                                   \n"
-"   }                                                                                        \n"
-"                                                                                            \n"
-"   gl_FragColor = finalColor * GlyphColor.a;                                                \n"
-"}                                                                                           \n"
-;
-
-const String vertAlphaMag =
-"void main()                                                                                 \n"
-"{                                                                                           \n"
-"	gl_TexCoord[0] = gl_MultiTexCoord0;                                                      \n"
-"	gl_Position = ftransform();                                                              \n"
-"}                                                                                           \n"
-;
 END_UPP_NAMESPACE

@@ -13,6 +13,14 @@ HGLRC  hRC = NULL;
 Shader alphaMagProg;
 String error;
 
+#ifdef flagDEBUG
+bool controlPanelActive = true;
+bool consoleActive = true;
+#else
+bool controlPanelActive = false;
+bool consoleActive = false;
+#endif
+
 bool glEndSession = false;
 
 bool GlEndSession()
@@ -153,7 +161,7 @@ int CreateGlContext()
 	}
 	RLOG("OpenGL: glewInit ok..");
 	
-	alphaMagProg.CompileProgram(vertAlphaMag, fragAlphaMag);
+	alphaMagProg.CompileProgram(alphaMagVert, alphaMagFrag);
 	
 	if(alphaMagProg.GetProgram() < 0)
 	{
