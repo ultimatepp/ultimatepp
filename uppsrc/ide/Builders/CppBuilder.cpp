@@ -362,12 +362,28 @@ String CppBuilder::IncludesDefinesTargetTime(const String& package, const Packag
 	return cc;
 }
 
+static void WriteByteArray(StringBuffer& fo, const String& data)
+{
+	int pos = 0;
+	for(int p = 0; p < data.GetLength(); p++) {
+		if(pos >= 70) {
+			fo << '\n';
+			pos = 0;
+		}
+		if(pos == 0)
+			fo << '\t';
+		String part = FormatInt(data[p]);
+		fo << part << ", ";
+		pos += part.GetLength() + 2;
+	}
+}
+
 String CppBuilder::BrcToC(String objfile, CParser& binscript, String basedir,
                           const String& package, const Package& pkg)
 {
 	BinObjInfo info;
 	info.Parse(binscript, basedir);
-	String fo;
+	StringBuffer fo;
 	for(int i = 0; i < info.blocks.GetCount(); i++) {
 		String ident = info.blocks.GetKey(i);
 		ArrayMap<int, BinObjInfo::Block>& belem = info.blocks[i];
@@ -382,7 +398,7 @@ String CppBuilder::BrcToC(String objfile, CParser& binscript, String basedir,
 			for(int i = 0; i < blockref.GetCount(); i++)
 				if(blockref[i]) {
 					BinObjInfo::Block& b = *blockref[i];
-					fo << "static char " << ident << "_" << i << "[] =\n";
+					fo << "static char " << ident << "_" << i << "[] = {\n";
 					String data = ::LoadFile(b.file);
 					if(data.IsVoid())
 						throw Exc(NFormat("Error reading file '%s'", b.file));
@@ -395,7 +411,9 @@ String CppBuilder::BrcToC(String objfile, CParser& binscript, String basedir,
 					}
 					b.length = data.GetLength();
 					data.Cat('\0');
-					fo << AsCString(data, 70, "\t", ASCSTRING_OCTALHI | ASCSTRING_SMART) << ";\n\n";
+					WriteByteArray(fo, data);
+					fo << ";\n\n";
+//					fo << AsCString(data, 70, "\t", ASCSTRING_OCTALHI | ASCSTRING_SMART) << ";\n\n";
 				}
 
 			fo << "int " << ident << "_count = " << blockref.GetCount() << ";\n\n"
@@ -414,12 +432,12 @@ String CppBuilder::BrcToC(String objfile, CParser& binscript, String basedir,
 				fo << "char *" << ident << "_files[] = {\n";
 				for(int i = 0; i < blockref.GetCount(); i++)
 					fo << '\t' << AsCString(blockref[i] ? GetFileName(blockref[i]->file) : String(Null)) << ",\n";
-				fo << "};\n\n";
+				fo << "\n};\n\n";
 			}
 		}
 		else {
 			BinObjInfo::Block& b = belem[0];
-			fo << "char *" << ident << " =\n";
+			fo << "static char " << ident << "_[] = {\n";
 			String data = ::LoadFile(b.file);
 			if(data.IsVoid())
 				throw Exc(NFormat("Error reading file '%s'", b.file));
@@ -432,7 +450,10 @@ String CppBuilder::BrcToC(String objfile, CParser& binscript, String basedir,
 			}
 			int b_length = data.GetLength();
 			data.Cat('\0');
-			fo << AsCString(data, 70) << ";\n\n"
+			WriteByteArray(fo, data);
+			fo << "\n};\n\n"
+			"char *" << ident << " = " << ident << "_;\n\n"
+//			fo << AsCString(data, 70) << ";\n\n"
 			"int " << ident << "_length = " << b_length << ";\n\n";
 		}
 	}
