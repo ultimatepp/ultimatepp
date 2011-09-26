@@ -15,6 +15,8 @@
 #undef Display
 
 namespace Upp {
+	
+#define GTK_NEWSCROLLBAR _DBG_
 
 enum {
 	GTK_BOX,
@@ -62,6 +64,26 @@ enum {
 	GTK_BOTTOMLINE = 0x100
 };
 
+
+/*
+enum
+{
+  GTK_SHADOW_NONE,
+  GTK_SHADOW_IN,
+  GTK_SHADOW_OUT,
+  GTK_SHADOW_ETCHED_IN,
+  GTK_SHADOW_ETCHED_OUT
+};
+
+enum
+{
+  GTK_STATE_NORMAL,
+  GTK_STATE_ACTIVE,
+  GTK_STATE_PRELIGHT,
+  GTK_STATE_SELECTED,
+  GTK_STATE_INSENSITIVE
+};
+*/
 struct GtkRangeLayout_ {
   GdkRectangle stepper_a;
   GdkRectangle stepper_b;
@@ -74,7 +96,7 @@ GtkWidget *Setup(GtkWidget *widget);
 
 void SetChGtkSpy_(void (*spy)(const char *name, int state, int shadow, const char *detail, int type, int cx, int cy, const Value& look));
 
-Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int type, int cx, int cy);
+Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int type, int cx, int cy, Rect rect = Null);
 Image GtkGetLastImage();
 
 struct ChGtkI : Moveable<ChGtkI> {
@@ -108,8 +130,8 @@ void GtkChButtonWith(Value *look, const Image& img);
 void GtkChArrow(Value *look, const Image& img, Point offset = Point(0, 0));
 int GtkInt(GtkWidget *widget, const char *id);
 int GtkInt(const char *id);
-void GtkIml(int uii, GtkWidget *w, int shadow, int state, const char *detail, int type, int cx, int cy);
-void GtkIml(int uii, GtkWidget *w, int shadow, const char *detail, int type, int cx, int cy);
+void GtkIml(int uii, GtkWidget *w, int shadow, int state, const char *detail, int type, int cx, int cy, const Rect& rect = Null);
+void GtkIml(int uii, GtkWidget *w, int shadow, const char *detail, int type, int cx, int cy, const Rect& rect = Null);
 Color ChGtkColor(int ii, GtkWidget *widget);
 void ChGtkColor(Color& c, int ii);
 void ChGtkColor(Color *c, int ii);
@@ -124,6 +146,11 @@ Image  GtkThemeIcon(const char *name, bool large);
 
 int    GtkStyleInt(const char *name);
 String GtkStyleString(const char *name);
+
+void GtkChScrollBar(Value *lbutton, Value *lbutton2,
+                    Value *lower, Value *thumb, Value *upper,
+                    Value *ubutton2, Value *ubutton, 
+                    int i_larrow, int i_uarrow, bool horz);
 
 };
 

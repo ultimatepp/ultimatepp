@@ -70,7 +70,8 @@ void SetChGtkSpy_(void (*spy)(const char *name, int state, int shadow, const cha
 	chgtkspy__ = spy;
 }
 
-Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int type, int cx, int cy)
+Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int type, int cx, int cy,
+             Rect rect)
 {
 	MemoryIgnoreLeaksBlock __;
 	GdkPixbuf *icon;
@@ -90,11 +91,22 @@ Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int t
 		gtk_widget_set_sensitive(widget, state != 4);
 		gtk_widget_set_state(widget, (GtkStateType)state);
 	}
-	Rect rect;
 	int ht = type & 0xf000;
-	rect.top = ht == GTK_VCENTER ? cy : ht == GTK_BOTTOM ? 2 * cy : 0;
-	rect.left = ht == GTK_HCENTER ? cx : ht == GTK_RIGHT ? 2 * cx : 0;
-	rect.SetSize(cx, cy);
+	int rcx, rcy;
+	int margin = (type >> 4) & 7;
+	Rect crop(0, 0, cx, cy);
+	if(IsNull(rect)) {
+		rect.top = ht == GTK_VCENTER ? cy : ht == GTK_BOTTOM ? 2 * cy : 0;
+		rect.left = ht == GTK_HCENTER ? cx : ht == GTK_RIGHT ? 2 * cx : 0;
+		rect.SetSize(cx, cy);
+		rcx = max(rect.GetWidth() - 2 * margin, 0);
+		rcy = max(rect.GetHeight() - 2 * margin, 0);
+		crop = rect.Inflated(margin);
+	}
+	else {
+		rcx = rect.GetWidth();
+		rcy = rect.GetHeight();
+	}
 	if(ht >= GTK_LEFT && ht <= GTK_RIGHT)
 		cx *= 3;
 	if(ht >= GTK_TOP && ht <= GTK_BOTTOM)
@@ -102,7 +114,9 @@ Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int t
 	type &= ~0xf000;
 	if(GTK_IS_RANGE(widget)) {
 		GtkRange *r = GTK_RANGE(widget);
+	#ifndef GTK_NEWSCROLLBAR
 		r->has_stepper_a = r->has_stepper_b = r->has_stepper_c = r->has_stepper_d = 1;
+	#endif
 		GdkRectangle cr;
 		cr.x = rect.left;
 		cr.y = rect.top;
@@ -124,7 +138,6 @@ Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int t
 	allocation.height = cy;
 	Image m[2];
 	Color back = White;
-	int margin = (type >> 4) & 7;
 	for(int i = 0; i < 2; i++) {
 		ImageDraw iw(cx + 2 * margin, cy + 2 * margin);
 		iw.DrawRect(0, 0, cx + 2 * margin, cy + 2 * margin, back);
@@ -138,8 +151,6 @@ Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int t
 		cr.width = cx;
 		cr.height = cy;
 		GtkStyle *style = gtk_widget_get_style(widget);
-		int rcx = max(rect.GetWidth() - 2 * margin, 0);
-		int rcy = max(rect.GetHeight() - 2 * margin, 0);
 		int t1 = (type & 0xf00) >> 8;
 		switch(type & 15) {
 		case GTK_BGBOX:
@@ -198,7 +209,7 @@ Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int t
 			break;
 		}
 		g_object_unref(pixmap);
-		m[i] = Crop(iw, rect.Inflated(margin));
+		m[i] = Crop(iw, crop);
 		back = Black;
 	}
 	if(type == GTK_ICON)
@@ -363,8 +374,6 @@ void GtkCh(Value *look, const char *d)
 
 void GtkCh(Value *look)             { GtkCh(look, "02140000"); }
 void GtkChButton(Value *look)       { GtkCh(look, "02142212"); }
-void GtkChSlider(Value *look)       { GtkCh(look, "02242222"); }
-void GtkChTrough(Value *look)       { GtkCh(look, "11141111"); }
 
 void GtkChWith(Value& look, int shadow, int state, const Image& img, Color c, Point offset)
 {
@@ -402,17 +411,19 @@ int  GtkInt(const char *id)
 	return GtkInt(ChGtkLast(), id);
 }
 
-void GtkIml(int uii, GtkWidget *w, int shadow, int state, const char *detail, int type, int cx, int cy)
+void GtkIml(int uii, GtkWidget *w, int shadow, int state, const char *detail, int type, int cx, int cy,
+            const Rect& rect)
 {
-	CtrlsImg::Set(uii, GetGTK(w, state, shadow, detail, type, cx, cy));
+	CtrlsImg::Set(uii, GetGTK(w, state, shadow, detail, type, cx, cy, rect));
 }
 
-void GtkIml(int uii, GtkWidget *w, int shadow, const char *detail, int type, int cx, int cy)
+void GtkIml(int uii, GtkWidget *w, int shadow, const char *detail, int type, int cx, int cy,
+            const Rect& rect)
 {
-	GtkIml(uii + 0, w, shadow, 0, detail, type, cx, cy);
-	GtkIml(uii + 1, w, shadow, 2, detail, type, cx, cy);
-	GtkIml(uii + 2, w, shadow, 1, detail, type, cx, cy);
-	GtkIml(uii + 3, w, shadow, 4, detail, type, cx, cy);
+	GtkIml(uii + 0, w, shadow, 0, detail, type, cx, cy, rect);
+	GtkIml(uii + 1, w, shadow, 2, detail, type, cx, cy, rect);
+	GtkIml(uii + 2, w, shadow, 1, detail, type, cx, cy, rect);
+	GtkIml(uii + 3, w, shadow, 4, detail, type, cx, cy, rect);
 }
 
 Color ChGtkColor(int ii, GtkWidget *widget)
@@ -522,6 +533,74 @@ String GtkStyleString(const char *name)
 	const char *h = "";
 	g_object_get(gtk_settings_get_default(), name, &h, NULL);
 	return h;
+}
+
+
+void GtkChSlider(Value *look)       { GtkCh(look, "02242222"); }
+void GtkChTrough(Value *look)       { GtkCh(look, "11141111"); }
+
+
+void GtkChArrow(Value *look, int index, Point po)
+{
+	GtkChWith(look, "02142212", CtrlsImg::Get(index), po);
+}
+
+void GtkChScrollBar(Value *lbutton, Value *lbutton2,
+                    Value *lower, Value *thumb, Value *upper,
+                    Value *ubutton2, Value *ubutton,
+                    int i_larrow, int i_uarrow,
+                    bool horz)
+{
+	const char *detail = horz ? "hscrollbar" : "vscrollbar";
+	
+	GtkChSlider(thumb);
+
+	ChGtkNew("trough", GTK_BGBOX);
+	GtkChTrough(upper);
+	GtkChTrough(lower);
+
+	const ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
+	Size sz = Size(s.barsize, s.arrowsize);
+	if(horz)
+		Swap(sz.cx, sz.cy);
+	Rect r = Rect(sz).CenterRect(sz / 2);
+
+	// Fix for themes that replace button background with arrow; e.g. Sphere Crystal
+	Image a = GetGTK(ChGtkLast(), 0, 0, detail, GTK_ARROW|GTK_TOP|GTK_RANGEA, 10, 10);
+	int trans = 0;
+	const RGBA *end = ~a + a.GetLength();
+	for(const RGBA *i = a; i < end; i++)
+		if(i->a < 255)
+			trans++;
+	if(trans > a.GetLength() / 4) { // 'normal' correct theme, fetch arrows
+		GtkIml(i_larrow, ChGtkLast(), 0, 0, detail,
+		       horz ? GTK_ARROW|GTK_VAL2|GTK_LEFT|GTK_RANGEA : GTK_ARROW|GTK_TOP|GTK_RANGEA,
+		       sz.cx, sz.cy, r);
+		GtkIml(i_uarrow, ChGtkLast(), 0, 0, detail,
+		       horz ? GTK_ARROW|GTK_VAL3|GTK_RIGHT|GTK_RANGED : GTK_ARROW|GTK_VAL1|GTK_BOTTOM|GTK_RANGED,
+		       sz.cx, sz.cy, r);
+		Point po(GtkInt("arrow-displacement-x"), GtkInt("arrow-displacement-y"));
+		ChGtkNew(detail, horz ? GTK_BGBOX|GTK_LEFT|GTK_RANGEA : GTK_BGBOX|GTK_TOP|GTK_RANGEA);
+		GtkChArrow(lbutton, i_larrow, po);
+		ChGtkNew(detail, GTK_BGBOX|GTK_VCENTER|GTK_RANGEB);
+		GtkChArrow(lbutton2, i_larrow, po);
+		ChGtkNew(detail, GTK_BGBOX|GTK_VCENTER|GTK_RANGEC);
+		GtkChArrow(ubutton2, i_uarrow, po);
+		ChGtkNew(detail, horz ? GTK_BGBOX|GTK_RIGHT|GTK_RANGED : GTK_BGBOX|GTK_BOTTOM|GTK_RANGED);
+		GtkChArrow(ubutton, i_uarrow, po);
+	}
+/* Crystal sphere: does not look good, let us stay with standard buttons
+	else {
+		ChGtkNew(detail, horz ? GTK_ARROW|GTK_VAL2|GTK_LEFT|GTK_RANGEA|GTK_MARGIN4 : GTK_ARROW|GTK_TOP|GTK_RANGEA|GTK_MARGIN4);
+		GtkCh(lbutton, "02142212");
+		ChGtkNew(detail, horz ? GTK_ARROW|GTK_VAL2|GTK_LEFT|GTK_RANGEA|GTK_MARGIN4 : GTK_ARROW|GTK_TOP|GTK_RANGEA|GTK_MARGIN4);
+		GtkCh(lbutton2, "02142212");
+		ChGtkNew(detail, horz ? GTK_ARROW|GTK_VAL3|GTK_RIGHT|GTK_RANGED|GTK_MARGIN4 : GTK_ARROW|GTK_VAL1|GTK_BOTTOM|GTK_RANGED|GTK_MARGIN4);
+		GtkCh(ubutton2, "02142212");
+		ChGtkNew(detail, horz ? GTK_ARROW|GTK_VAL3|GTK_RIGHT|GTK_RANGED|GTK_MARGIN4 : GTK_ARROW|GTK_VAL1|GTK_BOTTOM|GTK_RANGED|GTK_MARGIN4);
+		GtkCh(ubutton, "02142212");
+	}
+*/
 }
 
 END_UPP_NAMESPACE
