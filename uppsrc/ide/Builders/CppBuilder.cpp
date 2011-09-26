@@ -412,7 +412,7 @@ String CppBuilder::BrcToC(String objfile, CParser& binscript, String basedir,
 					b.length = data.GetLength();
 					data.Cat('\0');
 					WriteByteArray(fo, data);
-					fo << ";\n\n";
+					fo << "\n};\n\n";
 //					fo << AsCString(data, 70, "\t", ASCSTRING_OCTALHI | ASCSTRING_SMART) << ";\n\n";
 				}
 
