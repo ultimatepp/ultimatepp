@@ -12,6 +12,7 @@ int64 Resources::currentSerialId = -1;
 ArrayMap<int64, Texture> Resources::textures;
 VectorMap<String, OpenGLFont> Resources::fonts;
 Vector<DragRect> SystemDraw::dragRect;
+FrameInfo frameInfo;
 
 float GetFps()
 {
@@ -103,7 +104,7 @@ OpenGLFont& Resources::GetFont(const char* fontName, int fontHeight)
 	return *fgl;
 }
 
-OpenGLFont& Resources::GetFontBrc(const char* fontName, const byte* fontDef, const byte* fontImage, int fontHeight)
+OpenGLFont& Resources::GetFontBrc(const char* fontName, const byte* fontDef,  const byte** imagesData, const int* imagesSize, int imagesCount, int fontHeight)
 {
 	int n = fonts.Find(fontName);
 	OpenGLFont* fgl = NULL;
@@ -112,7 +113,7 @@ OpenGLFont& Resources::GetFontBrc(const char* fontName, const byte* fontDef, con
 	else
 	{
 		fgl = &fonts.Add(fontName);
-		fgl->LoadBrc(fontDefTahoma_0 + fontDefTahoma_1 + fontDefTahoma_2, NULL);
+		fgl->LoadBrc(fontDef, imagesData, imagesSize, imagesCount);
 	}
 	
 	fgl->scale = (fontHeight * 96.f / 72.f) / 72.f;
@@ -121,10 +122,13 @@ OpenGLFont& Resources::GetFontBrc(const char* fontName, const byte* fontDef, con
 
 OpenGLFont& Resources::GetFont(const Font& font)
 {
-	//return GetFont(font.IsBold() ? "tahoma.fnt" : "tahoma.fnt", font.GetHeight());	
-	return GetFontBrc(font.IsBold() ? "tahoma.fnt" : "tahoma.fnt", NULL, NULL, font.GetHeight());
+	if(font.IsBold())
+		return GetFontBrc("TahomaB", tahomaBFontDef, (const byte**) tahomaBFontImg, tahomaBFontImg_length, tahomaBFontImg_count, font.GetHeight());
+	else
+		return GetFontBrc("TahomaN", tahomaNFontDef, (const byte**) tahomaNFontImg, tahomaNFontImg_length, tahomaNFontImg_count, font.GetHeight());
+
 	//return GetFont(bold ? "tahoma14b.fnt" : "tahoma14.fnt");
-/*	return GetFontBrc(
+	/*return GetFontBrc(
 	    bold ? "tahoma14b.fnt" : "tahoma14.fnt",
 		bold ? resTahoma14Fnt : resTahoma14BoldFnt,
 		bold ? resTahoma14Img : resTahoma14BoldImg);*/
@@ -171,6 +175,7 @@ void SystemDraw::Reset() {
 	drawing_offset = Point(0, 0);
 	alpha = 255;
 	angle = 0.f;
+	image_coloring = true;
 }
 
 SystemDraw::SystemDraw() {
@@ -204,7 +209,7 @@ void SystemDraw::Init()
 #elif CLIP_MODE == 2
 	glEnable(GL_STENCIL_TEST);
 	glStencilFunc(GL_ALWAYS, 0, ~0);
-	glStencilFunc(GL_KEEP, GL_KEEP, GL_KEEP);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 	glClearStencil(0);
 #endif
 	glEnable(GL_LINE_SMOOTH);

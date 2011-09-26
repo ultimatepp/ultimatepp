@@ -38,11 +38,13 @@ protected:
 	static int PaintLock;
 
 public:
+	static Console console;
 	static Rect screenRect;
 
 	static void InitGl();
 	static void ExitGl();
 	static void EndSession();
+	static bool DoMouseGl(Ctrl* q, int event, Point p, int zdelta);
 	static void DoMouseGl(int event, Point p, int zdelta = 0);
 	static bool DoKeyGl(dword key, int cnt);
 	static void CursorSync(Draw& w);

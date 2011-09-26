@@ -22,6 +22,7 @@ private:
 public:
 
 	int  CompileProgram(const char* vs, const char* fs);
+	int  CompileProgram(const byte* vs, const byte* fs);
 	int  GetProgram();
 	void Set(const char* var, float v);
 	void Set(const char* var, bool v);
@@ -33,8 +34,5 @@ public:
 	
 	Shader();
 };
-
-extern const String fragAlphaMag;
-extern const String vertAlphaMag;
 
 #endif

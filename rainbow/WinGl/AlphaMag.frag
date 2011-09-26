@@ -1,49 +1,42 @@
-uniform sampler2D textMap;
-uniform vec4 textColor;
+uniform sampler2D Texture;
+uniform vec4 GlyphColor;
+uniform vec4 GlowColor;
+uniform vec4 OutlineColor;
 
-float alphaThreshold = 0.5;
-float distanceScale = 25.0;
+uniform bool Outline;
+uniform bool Glow;
+uniform bool Shadow;
 
-float outlineOuter = 0.1;
-float outlineInner = 0.5;
-vec4 outlineColor = vec4(1, 0, 0, 1);
+const float AlphaCenter = 0.5;
+const float DistanceScale = 20.0;
 
-float glowOffsetX = 0.005;
-float glowOffsetY = 0.005;
-float glowStart = 0.3;
-float glowEnd = 1.0;
-vec4 glowColor = vec4(1.0, 1.0, 1.0, 1.0);
+uniform float OutlineCenter;
+uniform float GlowCenter;
 
 void main()
 {
-	vec4 color = texture2D(textMap, gl_TexCoord[0].xy);
-	float distanceFactor = color.a;
-	
-	float width = fwidth(gl_TexCoord[0].xy) * distanceScale;
-	
-	float outlineMin1 = outlineOuter + width * 2.0;
-	float outlineMax1 = outlineInner + width * 2.0;
-	
-	if (distanceFactor > outlineOuter && distanceFactor < outlineMax1)
+	vec4 color = texture2D(Texture, gl_TexCoord[0].xy);
+	float alpha = color.a;
+	float width = min(length(fwidth(gl_TexCoord[0])), 1.0) * DistanceScale;
+
+	vec4 finalColor = GlyphColor;
+
+	float ma = smoothstep(AlphaCenter - width, AlphaCenter + width, alpha);
+	finalColor.a = ma;
+
+	if(Outline)
 	{
-		float outlineAlpha;
-		
-		if (distanceFactor <= outlineMin1)
-			outlineAlpha = smoothstep(outlineOuter, outlineMin1, distanceFactor);
-		else
-			outlineAlpha = smoothstep(outlineMax1, outlineInner, distanceFactor);
-			
-		color = mix(color, outlineColor, outlineAlpha);
+		float mo = smoothstep(OutlineCenter - width, OutlineCenter + width, alpha);
+		finalColor = mix(OutlineColor, finalColor, ma);
+		finalColor.a = mo;
 	}
 	
-	color.a = smoothstep(alphaThreshold - width, alphaThreshold + width, distanceFactor);
+	if(Glow && alpha >= finalColor.a - 0.5)
+	{
+		float mg = smoothstep(AlphaCenter, GlowCenter, sqrt(alpha));
+		finalColor = mix(GlowColor, finalColor, ma);
+		finalColor.a = mg;
+	}
 	
-	vec2 glowOffset = vec2(-glowOffsetX, -glowOffsetY);
-	float glowDistance = texture2D(textMap, gl_TexCoord[0].xy + glowOffset).a;
-	float glowFactor = smoothstep(glowStart, glowEnd, glowDistance);
-	
-	color = mix(vec4(glowColor.rgb, glowFactor), color, color.a);
-	
-	gl_FragColor = color;
+	gl_FragColor = finalColor * GlyphColor.a;
 }
-

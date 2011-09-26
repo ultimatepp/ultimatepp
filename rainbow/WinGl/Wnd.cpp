@@ -1,5 +1,6 @@
 #include "TopFrame.h"
 #include "ControlPanel.h"
+#include "Console.h"
 
 #ifdef GUI_WINGL
 
@@ -12,6 +13,7 @@ NAMESPACE_UPP
 Ptr<Ctrl>      Ctrl::desktop;
 Vector<Ctrl *> Ctrl::topctrl;
 InfoPanel      Ctrl::infoPanel;
+Console        Ctrl::console;
 float          Ctrl::angle = 0.f;
 float          Ctrl::scale = 1.f;
 float          Ctrl::alpha = 255.f;
@@ -24,6 +26,36 @@ int64          Ctrl::glEventLoop = 0;
 int64          Ctrl::glEndSessionLoop = 0;
 bool           Ctrl::FullWindowDrag = false;
 int            Ctrl::PaintLock;
+
+void GlLog(int line, const char* text, Color ink)
+{
+	Ctrl::console.Log(line, text, ink);
+}
+
+void GlLog(const char* text, Color ink)
+{
+	Ctrl::console.Log(text, ink);
+}
+
+void GlLogF(Color ink, const char* fmt, ...)
+{
+	char buffer[1024];
+	va_list argptr;
+	va_start(argptr, fmt);
+	vsprintf(buffer, fmt, argptr);
+	va_end(argptr);
+	GlLog(buffer, ink);
+}
+
+void GlLogF(const char* fmt, ...)
+{
+	char buffer[1024];
+	va_list argptr;
+	va_start(argptr, fmt);
+	vsprintf(buffer, fmt, argptr);
+	va_end(argptr);
+	GlLog(buffer);
+}
 
 void Ctrl::SetDesktop(Ctrl& q)
 {
@@ -112,7 +144,7 @@ Ctrl *Ctrl::GetOwner()
 Ctrl *Ctrl::GetActiveCtrl()
 {
 	GuiLock __;
-	if(focusCtrl == &infoPanel)
+	if(focusCtrl == &infoPanel || focusCtrl == &console)
 		return desktop;
 	return focusCtrl ? focusCtrl->GetTopCtrl() : NULL;
 }
@@ -184,14 +216,18 @@ bool Ctrl::ProcessEvent(bool *quit)
 void Ctrl::DrawScreen()
 {
 	if(desktop && !painting) {
+		int t0 = GetTickCount();
 		painting = true;
 		desktop->SyncLayout(2);
-		for(int i = 0; i < topctrl.GetCount(); i++) {
-			topctrl[i]->SyncLayout(2);
-		}
 		Rect clip = desktop->GetRect();
 		SystemDraw draw(clip.GetSize());
 		infoPanel.Init(*desktop);
+		infoPanel.Show(controlPanelActive);
+		console.Init(*desktop);
+		console.Show(consoleActive);
+		for(int i = 0; i < topctrl.GetCount(); i++) {
+			topctrl[i]->SyncLayout(2);
+		}
 		draw.alpha = infoPanel.GetAlpha();
 		draw.angle = infoPanel.GetAngle();
 		draw.scale = infoPanel.GetScale();
@@ -200,7 +236,7 @@ void Ctrl::DrawScreen()
 		desktop->ApplyTransform(TS_BEFORE_PAINT);
 		desktop->CtrlPaint(draw, clip);
 		for(int i = 0; i < topctrl.GetCount(); i++) {
-			if(topctrl[i] == &infoPanel)
+			if(topctrl[i] == &infoPanel || topctrl[i] == &console)
 				continue;
 			Rect r = topctrl[i]->GetRect();
 			draw.Clipoff(r);
@@ -220,18 +256,33 @@ void Ctrl::DrawScreen()
 		desktop->ApplyTransform(TS_AFTER_PAINT);		
 		glLoadIdentity();
 		#if CLIP_MODE == 2
-		glDisable(GL_STENCIL_TEST);
+		//glDisable(GL_STENCIL_TEST);
 		#endif
+		draw.ImageColoring();
 		draw.alpha = 255.f;
-		draw.Offset(infoPanel.GetRect().TopLeft());
-		infoPanel.CtrlPaint(draw, clip);
-		draw.End();
+		if(controlPanelActive)
+		{
+			draw.Offset(infoPanel.GetRect().TopLeft());
+			infoPanel.CtrlPaint(draw, clip);
+			draw.End();
+		}
+		if(consoleActive)
+		{
+			draw.Offset(console.GetRect().TopLeft());
+			console.CtrlPaint(draw, clip);
+			draw.End();
+		}
 		#if CLIP_MODE == 2
-		glEnable(GL_STENCIL_TEST);
+		//glEnable(GL_STENCIL_TEST);
 		#endif
 		MouseSync(draw);		
 		SwapBuffers(hDC);
 		painting = false;
+		int t1 = GetTickCount();
+		frameInfo.frame_time = t1 - t0;
+		frameInfo.frame_factor = frameInfo.frame_time * frameInfo.frame_skip / 1000.f;
+		frameInfo.fps = frameInfo.frame_time > 0.f ? 1000.f / (float)frameInfo.frame_time : 0.f;
+		//LOGF("ft: %d, t0: %d, t1: %d\n", frameInfo.frame_time, t0, t1);
 	}
 }
 

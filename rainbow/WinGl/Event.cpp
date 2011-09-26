@@ -14,7 +14,7 @@ Point GetMousePos() {
 
 void Ctrl::MouseEventGl(Ptr<Ctrl> t, int event, Point p, int zdelta)
 {
-	if(!t->IsEnabled())
+	if(!t->IsEnabled() && (t != (Ctrl*) &infoPanel && t != (Ctrl*) &console))
 		return;
 	Rect rr = t->GetRect();
 	if((event & Ctrl::ACTION) == DOWN) {
@@ -43,6 +43,16 @@ Ctrl *Ctrl::FindMouseTopCtrl()
 	return desktop->IsEnabled() ? desktop : NULL;
 }
 
+bool Ctrl::DoMouseGl(Ctrl* q, int event, Point p, int zdelta)
+{
+	Rect rr = q->GetRect();
+	if(rr.Contains(p)) {
+		MouseEventGl(q, event, p, zdelta);
+		return true;
+	}
+	return false;
+}
+
 void Ctrl::DoMouseGl(int event, Point p, int zdelta)
 {
 	glmousepos = p;
@@ -59,24 +69,43 @@ void Ctrl::DoMouseGl(int event, Point p, int zdelta)
 		MouseEventGl(captureCtrl->GetTopCtrl(), event, p, zdelta);
 	else
 	{
-		for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
-			Ptr<Ctrl> t = topctrl[i];
-			Rect rr = t->GetRect();
-			if(rr.Contains(p)) {
-				MouseEventGl(t, event, p, zdelta);
-				return;
+		bool processed = consoleActive && DoMouseGl((Ctrl*) &console, event, p, zdelta);
+		processed = !processed && controlPanelActive && DoMouseGl((Ctrl*) &infoPanel, event, p, zdelta);
+		if(!processed)
+		{
+			for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
+				if(topctrl[i] != (Ctrl*) &infoPanel && topctrl[i] != (Ctrl*) &console &&
+				   DoMouseGl(topctrl[i], event, p, zdelta))
+				   return;
 			}
-		}
-		Ctrl *desktop = GetDesktop();
-		if(desktop) {
-			desktop->DispatchMouse(event, p, zdelta);
-			desktop->PostInput();
+			Ctrl *desktop = GetDesktop();
+			if(desktop) {
+				desktop->DispatchMouse(event, p, zdelta);
+				desktop->PostInput();
+			}
 		}
 	}
 }
 
 bool Ctrl::DoKeyGl(dword key, int cnt)
 {
+	if(key == K_CTRL_GRAVE)
+	{
+		controlPanelActive = !controlPanelActive;
+		consoleActive = !consoleActive;
+		return true;
+	}
+	else if(key == K_CTRL_F11)
+	{
+		consoleActive = !consoleActive;
+		return true;
+	}
+	else if(key == K_CTRL_F12)
+	{
+		controlPanelActive = !controlPanelActive;
+		return true;
+	}
+	
 	bool b = DispatchKey(key, cnt);
 	SyncCaret();
 	Ctrl *desktop = GetDesktop();

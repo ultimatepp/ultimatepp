@@ -20,7 +20,7 @@ NAMESPACE_UPP
 #define IMAGEFILE <WinGl/WinGl.iml>
 #include <Draw/iml_header.h>
 #include <WinGl/Shaders.h>
-#include <WinGl/Fonts.h>
+#include "Resources.brc"
 
 extern bool  glEndSession;
 extern HWND  hWnd;
@@ -37,6 +37,19 @@ void ActivateGlContext();
 void DestroyGl();
 LRESULT CALLBACK glWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
+struct FrameInfo {
+	float fps;
+	float frame_factor;
+	float frame_skip;
+	dword frame_time;
+	FrameInfo() : fps(0.f), frame_factor(1.f), frame_skip(60.f), frame_time(0)
+	{}
+};
+
+extern FrameInfo frameInfo;
+
+extern bool controlPanelActive;
+extern bool consoleActive;
 float GetFps();
 
 #define CLIP_MODE 2
@@ -70,7 +83,7 @@ class SystemDraw : public Draw {
 public:
 	virtual dword GetInfo() const;
 	virtual Size  GetPageSize() const;
-	bool    CanSetSurface()                         { return false; }
+	bool CanSetSurface() { return false; }
 
 	void PlaneEquation(double eq[4], float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3);
 	void SetClipRect(const Rect& r);
@@ -117,6 +130,8 @@ public:
 			  int outlineStrength, Color outlineColor,
 			  int glowStrength, Color glowColor,
 			  int n, const int *dx);
+			  
+	void ImageColoring(bool b = true) { image_coloring = b; }
 	
 
 private:
@@ -157,6 +172,7 @@ private:
 	int ci;
 	int cn;
 	int cd;
+	bool image_coloring;
 
 	void Reset();
 
@@ -262,6 +278,11 @@ public:
 
 class TopWindowFrame;
 struct InfoPanel;
+struct Console;
+void GlLog(int line, const char* text, Color ink = White);
+void GlLog(const char* text, Color ink = White);
+void GlLogF(Color ink, const char* fmt, ...);
+void GlLogF(const char* fmt, ...);
 
 #define GUIPLATFORM_CTRL_TOP_DECLS   Ctrl *owner_window;
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <WinGl/Ctrl.h>

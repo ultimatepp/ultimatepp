@@ -27,7 +27,7 @@ struct ValueSlider : Ctrl
 	virtual void MouseMove(Point p, dword keyflags);
 	
 	void SetPos(float p, float minValue, float maxValue);
-	float  GetPos();
+	float GetPos();
 	
 	Callback WhenLeftUp;
 };
@@ -35,6 +35,7 @@ struct ValueSlider : Ctrl
 struct InfoPanel : Ctrl
 {
 	bool init;
+	Ctrl* parent;
 	
 	ValueSlider alphaSlider;
 	ValueSlider angleSlider;
@@ -45,6 +46,7 @@ struct InfoPanel : Ctrl
 	float GetScale();
 	
 	void Init(Ctrl& parent, float angle = 0.f, float scale = 1.f, float alpha = 255.f);
+	void Show(bool b = true);
 	virtual void Paint(Draw& w);
 	typedef InfoPanel CLASSNAME;
 	InfoPanel();

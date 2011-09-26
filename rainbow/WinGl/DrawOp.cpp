@@ -338,12 +338,13 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 	tt *= th;
 	tb *= th;
 
-	if(IsNull(color))	
-		glColor4ub(255, 255, 255, (int) alpha);
-	else
-		glColor4ub(color.GetR(), color.GetG(), color.GetB(), (int) alpha);
-	//if(!IsNull(color))
-	//	glColor4ub(color.GetR(), color.GetG(), color.GetB(), (int) alpha);
+	if(image_coloring)
+	{
+		if(IsNull(color))	
+			glColor4ub(255, 255, 255, (int) alpha);
+		else
+			glColor4ub(color.GetR(), color.GetG(), color.GetB(), (int) alpha);
+	}
 	
 	glEnable(GL_TEXTURE_2D);
 

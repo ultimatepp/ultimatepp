@@ -17,7 +17,7 @@ struct Resources
 	static int64 Bind(const Image& img, bool linear = false);
 	static bool Bind(int64 serialId, bool force = false);
 	static OpenGLFont& GetFont(const char* fontName, int fontHeight);
-	static OpenGLFont& GetFontBrc(const char* fontName, const byte* fontDef, const byte* fontImage, int fontHeight);
+	static OpenGLFont& GetFontBrc(const char* fontName, const byte* fontDef, const byte** imagesData, const int* imagesSize, int imagesCount, int fontHeight);
 	static OpenGLFont& GetFont(const Font& font);
 };
 
