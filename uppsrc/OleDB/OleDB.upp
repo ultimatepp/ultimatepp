@@ -1,4 +1,4 @@
-description "OLEDB interface";
+description "OLEDB interface\377";
 
 uses
 	Ole,
