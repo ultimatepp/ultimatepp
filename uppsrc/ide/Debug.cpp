@@ -123,10 +123,14 @@ void Ide::BuildAndDebug0(const String& srcfile)
 			if(bm.Get("BUILDER", Null) == "MSC71") {
 				String sln = ForceExt(target, ".sln");
 				if(GetFileLength(sln) > 0)
-					h->Launch("devenv \"" + h->GetHostPath(sln) + "\" " + "\"" + h->GetHostPath(srcfile) + "\"");
+					h->Launch("devenv \"" + h->GetHostPath(sln) + "\" "
+					// + "\"" + h->GetHostPath(srcfile) + "\"" //TRC, 2011/09/26: wrong devenv argument
+					);
 				else
-					h->Launch("devenv \"" + h->GetHostPath(target) + "\" \""
-					          + h->GetHostPath(srcfile) + "\" /debugexe ");
+					h->Launch("devenv \"" + h->GetHostPath(target)
+					//+ "\" \"" + h->GetHostPath(srcfile) //TRC, 2011/09/26: wrong devenv argument
+					+ "\" /debugexe "
+					);
 				return;
 			}
 			dbg = "gdb";
