@@ -3,9 +3,6 @@ description "Non-GUI code. Streams, NTL containers, concrete types, Value, XML, 
 acceptflags
 	USEMALLOC;
 
-uses
-	plugin\pcre;
-
 uses(WIN32) plugin\z;
 
 library(MSC !MSC8ARM) "kernel32 user32";
