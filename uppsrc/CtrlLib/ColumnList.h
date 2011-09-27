@@ -157,6 +157,7 @@ public:
 
 	void         RemoveSelection();
 
+	int          GetSelectCount() const               { return selcount; }
 	bool         IsSelection() const                  { return selcount > 0; }
 	void         ClearSelection();
 	void         SelectOne(int i, bool sel);
