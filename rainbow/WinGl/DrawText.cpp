@@ -24,6 +24,8 @@ void OpenGLFont::Load(const String& fileName)
 
 void OpenGLFont::Parse(const char* xml, bool parsePages)
 {
+	chars.SetCount(512);
+	
 	XmlParser p(xml);
 
 	while(!p.IsTag())
@@ -64,11 +66,10 @@ void OpenGLFont::Parse(const char* xml, bool parsePages)
 			{
 				if(p.TagE("char"))
 				{
-					CharInfo& ci = chars.Add();
+					int id = p.Int("id");
+					CharInfo& ci = chars[id];
 					
-					int page = p.Int("page");
-				
-					ci.id = p.Int("id");
+					ci.id = id;
 					ci.x = (float) p.Double("x");
 					ci.y = (float) p.Double("y");
 					ci.width = (float) p.Double("width");
@@ -76,7 +77,7 @@ void OpenGLFont::Parse(const char* xml, bool parsePages)
 					ci.xoffset = (float) p.Double("xoffset");
 					ci.yoffset = (float) p.Double("yoffset");
 					ci.xadvance = (float) p.Double("xadvance");
-					ci.page = page;					
+					ci.page = p.Int("page");
 				}
 				else
 					p.Skip();
@@ -176,8 +177,7 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 	
 	while(*s && n > 0)
 	{
-		int ch = *s;
-		int cn = ch - 32;
+		int cn = *s;
 		
 		if(cn >= 0 && cn < fi.chars.GetCount())
 		{
@@ -292,14 +292,12 @@ Size GetTextSize(const wchar *text, const OpenGLFont& fi, int n)
 	sz.cx = 0;
 	const wchar *wtext = (const wchar *)text;
 	while(n > 0) {
-		int ch = *wtext++;
-		int cn = ch - 32;
-		
+		int cn = *wtext++;
 		if(cn >= 0 && cn < fi.chars.GetCount())
 		{
 			const OpenGLFont::CharInfo& ci = fi.chars[cn];
 			sz.cx += int(ci.xadvance * fi.scale + 0.5f);
-			int k = fi.kerns.Find(ch);
+			int k = fi.kerns.Find(cn);
 			if(k >= 0)
 				sz.cx += int(fi.kerns[k].Get(*wtext, 0) * fi.scale);
 		}
