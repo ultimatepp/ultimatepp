@@ -4,7 +4,9 @@ topic "News and changes log";
 [{_}%EN-US 
 [s0; [*R+184 Controls4U. News and changes log]&]
 [s0;%- &]
-[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2011/07/26]]
+[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2011/08/27]]
+:: [s0; [2 Added PainterCanvas]]
+:: [s0;# [2 2011/07/26]]
 :: [s0; [2 Removed internal MyBufferPainter]]
 :: [s0;# [2 2011/07/24]]
 :: [s0; [2 Added SliderCtrlX and StarIndicator]]

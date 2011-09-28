@@ -11,8 +11,6 @@ file
 	Controls4U.h,
 	DrawingCanvas.cpp,
 	DrawingCanvas.h,
-	ImgCtrl.cpp,
-	ImgCtrl.h,
 	Controls4U.usc,
 	Controls4U.lay,
 	Controls4U.iml,

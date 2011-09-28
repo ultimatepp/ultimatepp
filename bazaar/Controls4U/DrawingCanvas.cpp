@@ -475,7 +475,7 @@ void DrawingCanvas::Paint(Draw& w) {
 void DrawingCanvas::DoPaint(Painter& sw) {
 	sw.Translate(translateX, translateY);
 	sw.Rotate(rotate);
-	sw.Scale(scale, scale);
+	sw.Scale(scale);
 	sw.Opacity(opacity);
 	sw.LineCap(linecap);
 	sw.LineJoin(linejoin);
@@ -558,3 +558,153 @@ void DrawingCanvas::LeftUp(Point p, dword keyflags) {
 		selectionWindow.isSelected = false;
 	}
 }
+
+PainterCanvas::PainterCanvas() {
+	rotate = 0;
+	/*translateX = translateY = 0;
+	scale = 1;*/
+	
+	mode = MODE_ANTIALIASED;	// MODE_NOAA, MODE_SUBPIXEL
+	linejoin = LINEJOIN_MITER;
+	linecap = LINECAP_BUTT;
+	opacity = 1;
+	scaleFactor = 1.2;
+	backColor = Null;
+	backImage = Null;
+	colorUnderBackgroundImage = false;
+	alwaysFitInCanvas = true;
+	Layout();
+	showWindow = true;
+	
+	focusMove.focusMoving = false;
+}
+		
+void PainterCanvas::Paint(Draw& w) {
+	Size sz = GetSize();
+	ImageBuffer ib(sz);
+	BufferPainter sw(ib, mode);
+	
+	sw.Translate(translateX, translateY);
+	sw.Rotate(rotate);
+	sw.Scale(scale);
+	sw.Opacity(opacity);
+	sw.LineCap(linecap);
+	sw.LineJoin(linejoin);
+	//if (/*IsNull(backImage) || */colorUnderBackgroundImage) 
+	//	sw.Clear(backColor);
+	//else
+	//	sw.Clear(RGBAZero());
+	if (backColor)
+		sw.Clear(backColor);
+	else
+		sw.Clear(Gray());
+	//else {
+	//	Color c = Null;
+	//	sw.Clear(c);
+	//}
+
+	if (canvasSize.cx > 0 && canvasSize.cy > 0) {
+		if (!IsNull(backImage)) 
+			sw.Rectangle(0, 0, canvasSize.cx, canvasSize.cy).Fill(backImage, 0, 0, canvasSize.cx, 0)
+				.Stroke(0, Black());
+		
+		WhenPaint(sw);
+	}
+	w.DrawImage(0, 0, ib);	
+	
+	if (!showWindow/* || canvasSize.cx <= 0 || canvasSize.cy <= 0*/) 
+		return;
+	
+	int twidth = 100;
+	int theight = int(twidth*double(canvasSize.cy)/canvasSize.cx); 
+	int tx = sz.cx-twidth-20;
+	int ty = sz.cy-theight-20;	
+
+	ImageBuffer tib(twidth, theight);
+	BufferPainter tsw(tib, mode);
+	
+	tsw.Scale(double(twidth)/canvasSize.cx);
+
+	if (IsNull(backImage) || colorUnderBackgroundImage) 
+		tsw.Clear(backColor);
+	 
+	if (!IsNull(backImage)) 
+		tsw.Rectangle(0, 0, canvasSize.cx, canvasSize.cy).Fill(backImage, 0, 0, canvasSize.cx, 0)
+			.Stroke(0, Black());
+	
+	if (canvasSize.cx > 0 && canvasSize.cy > 0) 
+		WhenPaint(tsw);
+	
+	w.DrawImage(tx, ty, twidth, theight, tib);
+	DrawRectLine(w, tx-1, ty-1, twidth+1, theight+1, 1, Black());
+	
+	double rateRep = double(twidth)/(canvasSize.cy*scale);
+	DrawRectLine(w, int(tx-translateX*rateRep-1), int(ty-translateY*rateRep-1), 
+				1+int(twidth*sz.cx/((canvasSize.cx - translateX*rateRep)*scale)), 
+				1+int(theight*sz.cy/((canvasSize.cy - translateY*rateRep)*scale)), 1, Black());	
+}
+
+void PainterCanvas::Layout() {
+	if (alwaysFitInCanvas) 
+		FitInCanvas();	
+}
+
+void PainterCanvas::MouseWheel(Point p, int zdelta, dword keyflags) {
+	double factor;
+	if(zdelta > 0)
+		factor = scaleFactor;
+	else
+		factor = 1/scaleFactor;
+	scale *= factor;
+	
+	Size sz = GetSize();
+	translateX = sz.cx*(1-factor)/2. + translateX*factor;
+	translateY = sz.cy*(1-factor)/2. + translateY*factor;
+	
+	Refresh();
+}
+
+void PainterCanvas::FitInCanvas() {
+	Rect r = FitInFrame(GetSize(), GetCanvasSize());
+
+	double scalex = GetSize().cx/double(GetCanvasSize().cx);
+	double scaley = GetSize().cy/double(GetCanvasSize().cy);
+	
+	scale = min(scalex, scaley);
+	translateX = r.left;
+	translateY = r.top;
+
+	Refresh();
+}	
+
+void PainterCanvas::MiddleDown(Point p, dword keyflags) {
+	focusMove.lastFocusPoint = p;
+    focusMove.focusMoving = true;
+}
+
+void PainterCanvas::MiddleUp(Point p, dword keyflags) {
+    focusMove.focusMoving = false;
+}
+
+void PainterCanvas::MouseLeave() {
+    focusMove.focusMoving = false;
+}
+
+void PainterCanvas::MouseMove(Point p, dword keyflags) {
+    if (focusMove.focusMoving) {
+     	translateX -= focusMove.lastFocusPoint.x - p.x;
+      	translateY -= focusMove.lastFocusPoint.y - p.y;
+      	focusMove.lastFocusPoint = p;
+
+        Refresh();
+    }
+}
+
+void PainterCanvas::SetBackground(Image &image)	{
+	backImage = image; 
+	if (backImage.GetSize() != canvasSize) {
+		SetCanvasSize(backImage.GetSize()); 
+		Layout();
+	}
+}
+

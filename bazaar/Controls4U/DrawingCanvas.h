@@ -175,7 +175,7 @@ public:
 		limits.right = x2;
 		limits.bottom = y2;
 	}
-	LineElem(double x1, double y1, double x2, double y2) : x1(x1), y1(y1), x2(x2), y2(y2) {SetLimits();}
+	LineElem(double x1, double y1, double x2, double y2) : x1(x1), x2(x2), y1(y1), y2(y2) {SetLimits();}
 	LineElem() {x1 = x2 = y1 = y2 = 0;}
 	
 //private:
@@ -414,9 +414,9 @@ public:
 			case 'A':
 				while(p.IsDouble()) {
 					t1 = ReadPoint(p);
-					/* double xangle = */ ReadDouble(p);
-					/* bool large = */ ReadBool(p);
-					/* bool sweep = */ ReadBool(p);
+					double xangle = ReadDouble(p);
+					bool large = ReadBool(p);
+					bool sweep = ReadBool(p);
 					t = ReadPoint(p);
 					//SvgArc(t1, xangle * M_PI / 180.0, large, sweep, t, rel);
 				}
@@ -492,6 +492,57 @@ private:
 
 bool LoadSvg(DrawingCanvas &canvas, String fileName);
 
+
+
+
+class PainterCanvas : public Ctrl {
+typedef PainterCanvas CLASSNAME;		
+public:
+	PainterCanvas();
+	void SetCanvasSize(Size sz)	{canvasSize = sz;};
+	Size GetCanvasSize() const	{return canvasSize;};
+	void SetBackground(Image &image);
+	Image GetBackground()		{return backImage;}
+	void FitInCanvas();
+	
+	PainterCanvas &SetBackground(Color &color)			{backColor = color; Refresh(); return *this;};
+	PainterCanvas &SetColorUnderBackgroundImage(bool set) 	{colorUnderBackgroundImage = set; return *this;};
+	PainterCanvas &SetScale(double factor)				{scale *= factor; Refresh(); return *this;};
+	PainterCanvas &SetAlwaysFitInCanvas(bool fit = true){alwaysFitInCanvas = fit; Refresh(); return *this;}
+	PainterCanvas &SetMode(int md = MODE_ANTIALIASED)	{mode = md; return *this;}
+	PainterCanvas &SetShowWindow(bool sw = true)		{showWindow = sw; return *this;};
+	
+	Callback1 <Painter &> WhenPaint;
+	
+protected:
+	virtual void Paint(Draw& draw);	
+	virtual void Layout();	
+	
+private:
+	double translateX, translateY;
+	double rotate;
+	double scale;
+	double opacity;
+	int linejoin, linecap;
+	int mode;
+	double scaleFactor;
+	Image backImage;
+	Color backColor;
+	Size canvasSize;
+	bool colorUnderBackgroundImage;
+	bool alwaysFitInCanvas;
+	bool showWindow;
+	
+	virtual void MouseMove(Point p, dword keyflags);
+	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
+	virtual void MiddleDown(Point p, dword keyflags);
+	virtual void MiddleUp(Point p, dword keyflags);
+	virtual void MouseLeave();
+	struct FocusMove {
+		bool focusMoving;
+		Point lastFocusPoint;
+	} focusMove;
+};
 	
 #endif
 

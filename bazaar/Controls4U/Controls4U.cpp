@@ -210,7 +210,7 @@ bool SetFirstChild(Ctrl *ctrl) {
 		//	}
 		//}
 	}
-	Ctrl::Layout();
+	//Ctrl::Layout();
 } 
 
 void StaticImage::Paint(Draw& w) {
