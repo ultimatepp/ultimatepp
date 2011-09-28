@@ -27,9 +27,10 @@ Tab1::Tab1()
 	Vector<XY> s1,s2;
 	s1<<XY(10,14)<<XY(20,25)<<XY(30,29)<<XY(40,24)<<XY(50,36);
 	s2<<XY(20,34)<<XY(30,45)<<XY(40,49)<<XY(50,44)<<XY(60,56);
-	scatter1.AddSeries(s1,"series1");
-	scatter1.AddSeries(s2,"series2",true,LtRed);
+	scatter1.AddSeries(s1,"series1").Stroke().Mark();
+	scatter1.AddSeries(s2,"series2").Stroke().Mark();
 	scatter1.ShowInfo();	
+	scatter1.SetPopText("h", "v", "v2");
 }
 
 
@@ -141,10 +142,10 @@ Tab4::Tab4()
 	scatter4.SetMouseHandling(true);
 	Vector<XY> s1,s2;
 	s1<<XY(1,-6)<<XY(2,-4)<<XY(3,2)<<XY(4,8)<<XY(5,8)<<XY(6,15)<<XY(7,20)<<XY(8,25)<<XY(9,14)<<XY(10,10)<<XY(11,3)<<XY(12,-11);
-	scatter4.AddSeries(s1,"2005",true);
+	scatter4.AddSeries(s1,"2005").Stroke().Mark();
 	
 	s2<<XY(1,-12)<<XY(2,-7)<<XY(3,0)<<XY(4,2)<<XY(5,10)<<XY(6,18)<<XY(7,25)<<XY(8,26)<<XY(9,15)<<XY(10,12)<<XY(11,7)<<XY(12,-6);
-	scatter4.AddSeries(s2,"2006",true,LtRed);
+	scatter4.AddSeries(s2,"2006").Stroke().Mark();
 	
 	scatter4.Graduation_FormatX(Scatter::MON);
 	WString sl="Temperature [";
@@ -180,8 +181,8 @@ Tab5::Tab5()
 	HSizePos().VSizePos();
 	scatter5.SetRange(10,100);
 	Vector<XY> s1, s2;
-	scatter5.AddSeries(s1,"U-t",true,LtBlue,0,6);
-	scatter5.AddSeries(s2,"I-t",true,LtRed,0,6);
+	scatter5.AddSeries(s1,"U-t").Stroke().Mark(0);
+	scatter5.AddSeries(s2,"I-t").Stroke().Mark(0);
 	b1<<=(THISBACK(Start));
 	b2<<=(THISBACK(Stop));
 	b3<<=(THISBACK(Reset));
@@ -199,8 +200,8 @@ void Tab5::Animate()
 	scatter5.AddPoint(0,XY(t,50+20*sin(t)),false);
 	scatter5.AddPoint(1,XY(t,50+30*cos(t)));
 	t+=0.1;
-	if((t-scatter5.GetXMin())>=scatter5.GetXRange()) scatter5.SetXYMin(scatter5.GetXMin()+10,0);
-	
+	if((t-scatter5.GetXMin()) >= scatter5.GetXRange())
+		scatter5.SetXYMin(scatter5.GetXMin()+2,0);
 }
 
 void Tab5::Start()
@@ -326,7 +327,7 @@ void Tab7::AddSeries()
 	int topIndex=(scatter7.GetPData().IsEmpty() ? 0 : (int)ci.Scan(scatter7.GetPLegend().Top().Mid(6))+1);
 	double f=1+topIndex*1.1;	
 	s<<XY(10,3*f)<<XY(30,7*f)<<XY(50,12*f)<<XY(70,10*f);
-	scatter7.AddSeries(s,String("series")+AsString(topIndex),true);
+	scatter7.AddSeries(s,String("series")+AsString(topIndex)).Stroke().Mark();
 } 
 
 void Tab7::RemoveLastSeries()
@@ -383,7 +384,11 @@ public:
 	{
 		s=Format("%Mon",fround(d)); 
 		if (!s.IsEmpty())
-			s << "\n2011";
+			s << "\n/2011";
+	}
+	void MyFormatDelta(String& s, int i, double d)
+	{
+		s = FormatDouble(d, 1) + " " + t_("months");
 	}
 };
 
@@ -397,16 +402,17 @@ Tab8::Tab8()
 	scatter8.SetMouseHandling(true, true);
 	Vector<XY> s1,s2, s3;
 	s1<<XY(1,-6)<<XY(2,-4)<<XY(3,2)<<XY(4,8)<<XY(5,8)<<XY(6,15)<<XY(7,20)<<XY(8,25)<<XY(9,14)<<XY(10,10)<<XY(11,3)<<XY(12,-11);;
-	scatter8.AddSeries(s1,"Temperature",true).SetPattern(LINE_DASHED);
+	scatter8.AddSeries(s1,"Temperature").Stroke().Mark().SetPattern(LINE_DASHED);
 	
 	s2<<XY(1,1010)<<XY(2,1012)<<XY(3,1015)<<XY(4,1013)<<XY(5,1017)<<XY(6,1018)<<XY(7,1010)<<XY(8,1007)<<XY(9,1003)<<XY(10,1001)<<XY(11,1000)<<XY(12,1002);
-	scatter8.AddSeries(s2,"Pressure",true,LtRed).SetPattern("oooooo...ooo...o...ooo...").SetDataPrimaryY(false);
+	scatter8.AddSeries(s2,"Pressure").Stroke().Mark().SetPattern("oooooo...ooo...o...ooo...").SetDataPrimaryY(false);
 	scatter8.SetDrawY2Reticle();
 	
 	s3<<XY(1,-20)<<XY(2,-20)<<XY(2,-10)<<XY(3,-10)<<XY(3,0)<<XY(4,0)<<XY(4,10)<<XY(5,10)<<XY(5,20)<<XY(6,20)<<XY(6,30)<<XY(7,30)<<XY(7,20)<<XY(8,20)<<XY(8,10);
-	scatter8.AddSeries(s3,"Device 1",true);
+	scatter8.AddSeries(s3,"Device 1").Stroke().Mark();
 	
 	scatter8.cbModifFormatX = THISBACK(MyFormat);
+	scatter8.cbModifFormatDeltaX = THISBACK(MyFormatDelta);
 	scatter8.SetMaxZoom(40).SetMinZoom(2, 20);
 	WString sl="Temperature [";
 	sl.Cat(176);
@@ -452,8 +458,8 @@ Tab9::Tab9()
 		s1<<XY(t,20*sin(2*M_PI*t/100000));
 		s2<<XY(t,15*cos(2*M_PI*t/100000));
 	}
-	scatter9.AddSeries(s1,"series1",true,LtBlue);
-	scatter9.AddSeries(s2,"series2",true,LtRed);
+	scatter9.AddSeries(s1,"series1").Stroke().Mark();
+	scatter9.AddSeries(s2,"series2").Stroke().Mark();
 	scatter9.ShowInfo();	
 	fastView.WhenAction = THISBACK(OnFastView);
 	sequentialX.WhenAction = THISBACK(OnSequentialX);
