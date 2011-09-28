@@ -436,6 +436,53 @@ Scatter &Scatter::AddSeries(Vector<XY> & points,const String& legend,const bool&
 	return *this;
 }
 
+Color GetNewColor(int id)
+{
+	switch(id) {
+	case 0:	return LtBlue();
+	case 1:	return LtRed();
+	case 2:	return LtGreen();
+	case 3:	return Black();
+	case 4:	return LtGray();
+	case 5:	return Yellow();
+	case 6:	return Brown();
+	case 7:	return Blue();
+	case 8:	return Red();
+	case 9:	return Green();
+	case 10:return Gray();
+	}
+	return Color(Random(), Random(), Random());
+}
+
+Scatter &Scatter::Stroke(int width, class::Color pcolor, const String pattern)
+{
+	int id = vPointsData.GetCount() - 1;
+
+	vJoin[id] = width > 0;	
+	if (IsNull(pcolor))
+		pcolor = GetNewColor(id);
+	vPColors[id] = pcolor;
+	vPWidth[id] = width;
+	
+	Refresh();
+	return *this;	
+}
+
+Scatter &Scatter::Mark(int thickness, class::Color pcolor, MarkStyle style)
+{
+	int id = vPointsData.GetCount() - 1;
+
+	vPThickness[id] = thickness;	
+	if (IsNull(pcolor))
+		pcolor = GetNewColor(id);
+	vMarkColors[id] = pcolor;
+	vShowMark[id] = thickness > 0;
+	vMarkStyles[id] = style;
+		
+	Refresh();
+	return *this;
+}
+
 Scatter &Scatter::SetPattern(const String pattern)
 {
 	vPPattern[vPPattern.GetCount()-1] = pattern;
@@ -939,34 +986,81 @@ void Scatter::ShowInfo(bool show)
 
 void Scatter::ProcessPopUp(const Point & pt)
 {
-	double x=(pt.x-px)*xRange/(GetSize().cx-2*px-1)+xMin;		
-	double y=(GetSize().cy-py-pt.y-1)*yRange/(GetSize().cy-2*py-titleFont.GetHeight()-1)+yMin;
+	double _x= (popLT.x-px)*xRange/(GetSize().cx-2*px-1)+xMin;		
+	double _y= (GetSize().cy-py-popLT.y-1)*yRange/(GetSize().cy-2*py-titleFont.GetHeight()-1)+yMin;
+	double _y2=(GetSize().cy-py-popLT.y-1)*yRange2/(GetSize().cy-2*py-titleFont.GetHeight()-1)+yMin2;
+	double x= (pt.x-px)*xRange/(GetSize().cx-2*px-1)+xMin;		
+	double y= (GetSize().cy-py-pt.y-1)*yRange/(GetSize().cy-2*py-titleFont.GetHeight()-1)+yMin;
 	double y2=(GetSize().cy-py-pt.y-1)*yRange2/(GetSize().cy-2*py-titleFont.GetHeight()-1)+yMin2;
-	if(logX) 
-		x=pow(10.0, x);
-	if(logY) 
-		y=pow(10.0, y);
-	if(logY2) 
-		y2=pow(10.0, y2);
-	String strx, stry;
-	if (cbModifFormatX)
-		cbModifFormatX(strx, 0, x); 
-	else
-		strx = VariableFormatX(x);
-	if (cbModifFormatY)
-		cbModifFormatY(stry, 0, y);
-	else
-		stry = VariableFormatY(y);
-	String str="x: "+strx+"\ny: "+stry;
-	if (drawY2Reticle) {
-		String stry2;
-		if (cbModifFormatY2)
-			cbModifFormatY2(stry2, 0, y2);
-		else
-			stry2 = VariableFormatY2(y2);
-		str << "\ny2: "+stry2;
+	
+	double dx  = x  - _x;
+	double dy  = y  - _y;
+	double dy2 = y2 - _y2;
+	if(logX) {
+		x  = pow(10.0, x);
+		_x = pow(10.0, _x);
+		dx = pow(10.0, dx);
 	}
-	const Point p2=pt+offset;
+	if(logY) {
+		y  = pow(10.0, y);
+		_y = pow(10.0, _y);
+		dy = pow(10.0, dy);
+	}
+	if(logY2) {
+		y2  = pow(10.0, y2);
+		_y2 = pow(10.0, _y2);
+		dy2 = pow(10.0, dy2);
+	}
+	String strx, _strx, dstrx, stry, _stry, dstry;
+	if (cbModifFormatX) {
+		cbModifFormatX(strx,  0, x); 		strx.Replace("\n", "");
+		cbModifFormatX(_strx, 0, _x); 		_strx.Replace("\n", "");
+	} else {
+		strx  = VariableFormatX(x);
+		_strx = VariableFormatX(_x);
+	}
+	if (cbModifFormatDeltaX) {
+		cbModifFormatDeltaX(dstrx, 0, dx);	dstrx.Replace("\n", ""); 
+	} else {
+		dstrx = VariableFormatX(dx);
+	}	
+	if (cbModifFormatY) {
+		cbModifFormatY(stry,  0, y);		stry.Replace("\n", "");
+		cbModifFormatY(_stry, 0, _y);		_stry.Replace("\n", "");
+	} else {
+		stry  = VariableFormatY(y);
+		_stry = VariableFormatY(_y);
+	}
+	if (cbModifFormatDeltaY) {
+		cbModifFormatDeltaY(dstry, 0, dy);	dstry.Replace("\n", "");
+	} else {
+		dstry = VariableFormatY(dy);
+	}
+	String str= popTextX + ": " + _strx;
+	if (strx != _strx)
+		str << "; " + popTextX + "': " + strx + "; Δ" + popTextX + ": " + dstrx;
+	str << "\n" + popTextY + ": " + _stry;
+	if (stry != _stry)	
+ 		str << "; " + popTextY + "': " + stry + "; Δ" + popTextY + ": " + dstry;
+	if (drawY2Reticle) {
+		String stry2, _stry2, dstry2;
+		if (cbModifFormatY2) {
+			cbModifFormatY2(stry2,  0, y2);			stry2.Replace("\n", "");
+			cbModifFormatY2(_stry2, 0, _y2);		_stry2.Replace("\n", "");
+		} else {
+			stry2  = VariableFormatY2(y2);
+			_stry2 = VariableFormatY2(_y2);
+		}
+		if (cbModifFormatDeltaY2) {
+			cbModifFormatDeltaY2(dstry2, 0, dy2);	dstry2.Replace("\n", "");
+		} else {
+			dstry2 = VariableFormatY(dy2);
+		}
+		str << "\n" + popTextY2 + ": " + _stry2;
+		if (stry2 != _stry2)		
+			str << "; " + popTextY2 + ": " + stry2 + "; Δ" + popTextY2 + ": " + dstry2;
+	}
+	const Point p2 = pt+offset;
 	popText.SetText(str).Move(this,p2.x,p2.y);
 }
 
@@ -1016,14 +1110,19 @@ void Scatter::LabelPopUp(bool down, Point &pt)
 		if(paintInfo && px <=pt.x && pt.x<= GetSize().cx-px && (py + titleFont.GetHeight())<=pt.y && pt.y<= GetSize().cy-py)
 		{
 			popText.AppearOnly(this);
-			ProcessPopUp(pt);		
 			isLabelPopUp = true;
+			if (IsNull(popLT))
+				popLT = pt;
+			popRB = pt;
+			ProcessPopUp(pt);		
 		}	
 	} else {
 		if(paintInfo && isLabelPopUp) 
 		{
 			popText.Close();
 			isLabelPopUp = false;
+			popLT = popRB = Null;
+			Refresh();
 		}		
 	}
 }
@@ -1132,7 +1231,11 @@ void Scatter::MouseMove(Point pt, dword)
 	if(isLabelPopUp) {
 		if (paintInfo && px <=pt.x && pt.x<= GetSize().cx-px && (py + titleFont.GetHeight())<=pt.y && pt.y<= GetSize().cy-py) 
 		{
-			ProcessPopUp(pt);
+			if (IsNull(popLT))
+				popLT = pt;
+			popRB = pt;
+			ProcessPopUp(pt);		
+			Refresh();
 		}
 	}	
 }
@@ -1335,6 +1438,17 @@ Vector <double> &GetPatternArray(String pattern)
 	return pats.GetValues()[pos];
 }
 
+void Scatter::DrawLineX(Draw& w, const int x0, const int y0, const int x1, const int y1, int thick, const class::Color &color, String pattern, const int &scale) 
+{
+	Vector<Point> p;
+	p.SetCount(2);       
+	p[0].x = x0;
+	p[0].y = y0;
+	p[1].x = x1;
+	p[1].y = y1;
+	DrawPolylineX(w, p, thick, color, pattern, scale);
+}
+
 void Scatter::DrawPolylineX(Draw& w, const Vector<Point> &p, int thick, const class::Color &color, String pattern, const int &scale) 
 {
 	if (pattern == LINE_SOLID) 
@@ -1514,6 +1628,18 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 			DrawPolylineX(w, p1,fround(scale*vFThickness[j]/6),vFColors[j],vFPattern[j], scale);
 			nf++;
 		}
+	}
+	if (!IsNull(popLT) && popLT != popRB) {
+		int x0 = px;
+		int y0 = py + titleFont.GetHeight();
+		int rfrom = min(popLT.y-y0, popRB.y-y0);
+		int rto   = max(popLT.y-y0, popRB.y-y0);
+		for (int r = rfrom; r < rto; r += scale*5)
+			DrawLineX(w, popLT.x-x0, r, popRB.x-x0, r, scale, LtGray, "o..", scale);
+		DrawLineX(w, 1, 		 popLT.y-y0, l, 		 popLT.y-y0, scale, Black, "o.", scale);
+		DrawLineX(w, 1, 	   	 popRB.y-y0, l, 	   	 popRB.y-y0, scale, Black, "o.", scale);
+		DrawLineX(w, popLT.x-x0, 1, 	   	 popLT.x-x0, h, 	   	 scale, Black, "o.", scale);
+		DrawLineX(w, popRB.x-x0, 1, 	   	 popRB.x-x0, h, 	     scale, Black, "o.", scale);
 	}
 	w.End();
 }
@@ -1700,7 +1826,7 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 			Standard6.Height(scale*StdFont().GetHeight());  
 			w.DrawText(l+scale*10,fround(-h*yMinUnit2/yRange2+h-i*h/(yRange/yMajorUnit))-scale*8,gridLabelY2,Standard6,axisColor);
 		}	
-		
+	
 	if(antialiasing && w.IsGui())
 	{
 		ImageDraw imdraw(3*l,3*h);	
@@ -1734,6 +1860,7 @@ Scatter::Scatter():
 	xMinUnit(0.0), yMinUnit(0.0), yMinUnit2(0.0),
 	logX(false), logY(false), logY2(false),
 	cbModifFormatX(NULL),cbModifFormatY(NULL),cbModifFormatY2(NULL),
+	cbModifFormatDeltaX(NULL),cbModifFormatDeltaY(NULL),cbModifFormatDeltaY2(NULL),
 	gridColor(::Color(102,102,102)),
 	gridWidth(4),
 	paintInfo(false),
@@ -1743,7 +1870,9 @@ Scatter::Scatter():
 	showLegend(true),legendWeight(80),
 	antialiasing(false),
 	offset(10,12),
-	minXZoom(-1), maxXZoom(-1), minYZoom(-1), maxYZoom(-1), fastViewX(false), sequentialXAll(false)
+	minXZoom(-1), maxXZoom(-1), minYZoom(-1), maxYZoom(-1), fastViewX(false), 
+	sequentialXAll(false), popTextX("x"), popTextY("y1"), popTextY2("y2"), 
+	popLT(Null), popRB(Null)
 {
 	Color(graphColor);	
 	BackPaint();

@@ -125,6 +125,57 @@ side of control.&]
 in the bottommost side of control.&]
 [s3; &]
 [s4; &]
+[s5;:Scatter`:`:SetPopText`(const String`,const String`,const String`): [@(0.0.255) voi
+d]_[* SetPopText]([@(0.0.255) const]_[_^String^ String]_[*@3 x], [@(0.0.255) const]_[_^String^ S
+tring]_[*@3 y], [@(0.0.255) const]_[_^String^ String]_[*@3 y2])&]
+[s2;%% Sets the text that will define the values in axis [%-*@3 x], 
+[%-*@3 y] and [%-*@3 y2].&]
+[s2;%% It is used in the pop text that appears when selecting a point 
+or a window.&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:AddSeries`(Vector`<XY`>`&`,const String`&`,const bool`&`,const Color`&`,const int`&`,const int`&`): [_^Scatter^ S
+catter]_`&[* AddSeries]([_^Vector^ Vector]<[_^XY^ XY]>_`&_[*@3 points],[@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 legend][@(0.0.255) `=]`"`", [@(0.0.255) const]_[@(0.0.255) bool`&
+]_[*@3 join][@(0.0.255) `=false],[@(0.0.255) const]_class`::Color[@(0.0.255) `&]_[*@3 pcolor
+][@(0.0.255) `=]LtBlue,[@(0.0.255) const]_[@(0.0.255) int`&]_[*@3 width][@(0.0.255) `=][@3 30
+],[@(0.0.255) const]_[@(0.0.255) int`&]_[*@3 thickness][@(0.0.255) `=][@3 6])&]
+[s2;%% Adds a new data series located in [%-*@3 points], with [%-*@3 legend].&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:Stroke`(int`,Color`,const String`): [_^Scatter^ Scatter]_`&[* Stroke]([@(0.0.255) i
+nt]_[*@3 width]_`=_[@3 30], class`::Color_[*@3 color]_`=_Null, [@(0.0.255) const]_[_^String^ S
+tring]_[*@3 pattern]_`=_LINE`_SOLID)&]
+[s2;%% Sets the line [%-*@3 width], [%-*@3 color] and line [%-*@3 pattern] 
+of the latest added series.&]
+[s2;%% If [%-*@3 color] is Null, it is selected automatically a different 
+color depending of the series id.&]
+[s2;%% Available [%-*@3 pattern] values are:&]
+[s2;i150;O0;%% LINE`_DOTTED -|-|[C `"o...`"]&]
+[s2;i150;O0;%% LINE`_DOTTED`_SEP-|[C `"o...........`"]&]
+[s2;i150;O0;%% LINE`_DASHED -|-|[C `"oooooo......`"]&]
+[s2;i150;O0;%% LINE`_DASH`_DOT -|-|[C `"ooooo...o...`"]&]
+[s2;i150;O0;%% LINE`_SOLID -|-|[C `"oooooooooooo`"]&]
+[s2;%% However this value is user configurable just entering a String 
+with the pattern defining line elements as `"o`" and space elements 
+as `".`".&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:Mark`(int`,Color`,MarkStyle`): [_^Scatter^ Scatter]_`&[* Mark]([@(0.0.255) i
+nt]_[*@3 thickness]_`=_[@3 6], class`::Color_[*@3 color]_`=_Null, MarkStyle_[*@3 style]_`=
+_CIRCLE)&]
+[s2;%% Sets the mark [%-*@3 thickness], [%-*@3 color] and [%-*@3 style] 
+of the latest added series.&]
+[s2;%% If [%-*@3 color] is Null, it is selected automatically a different 
+color depending of the series id.&]
+[s2;%% Available mark [%-*@3 style] values are CIRCLE, RECTANGLE, SQUARE, 
+TRIANGLE, CROSS, X, RHOMB.&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:HideMark`(`): [_^Scatter^ Scatter]_`&[* HideMark]()&]
+[s2;%% Hides the of the latest added series.marks.&]
+[s3; &]
+[s4; &]
 [s5;:Scatter`:`:SetMouseBehavior`(Scatter`:`:MouseBehaviour`*`): [@(0.0.255) bool]_[* Set
 MouseBehavior]([_^Scatter`:`:MouseBehaviour^ MouseBehaviour]_`*[*@3 mouseBehavior])&]
 [s2;%% Sets with [%-*@3 mouseBehavior] the array of MouseBehavior conditions 

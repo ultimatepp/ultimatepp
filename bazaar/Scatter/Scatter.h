@@ -39,7 +39,9 @@ public:
 	#define LINE_DASH_DOT 	"ooooo...o..."
 	#define LINE_SOLID 		"oooooooooooo"
 	
-	Callback3<String&, int, double> cbModifFormatX, cbModifFormatY, cbModifFormatY2;
+	Callback3<String&, int, double> cbModifFormatX, cbModifFormatDeltaX;
+	Callback3<String&, int, double> cbModifFormatY, cbModifFormatDeltaY;
+	Callback3<String&, int, double> cbModifFormatY2, cbModifFormatDeltaY2;
 			
 	virtual void  Paint(Draw& w);
 	virtual void  LeftDown(Point, dword);
@@ -123,15 +125,20 @@ public:
 	double GetXMin () const {return xMin;}
 	double GetYMin () const {return yMin;}	
 	double GetYMin2 () const {return yMin2;}
-		
+	
+	void SetPopText(const String x, const String y1, const String y2) {popTextX = x; popTextY = y1; popTextY2 = y2;}
+	
 	void Graduation_FormatX(Formats fi);	
 	void Graduation_FormatY(Formats fi);
 	void Graduation_FormatY2(Formats fi);
 	
 	Scatter& SetMouseHandling(bool valx = true, bool valy = false);
 	
-	Scatter &AddSeries (Vector<XY> & points,const String& legend="", const bool& join=false,const class::Color& pcolor=LtBlue,const int& width=30,const int& thickness=6);
+	Scatter &AddSeries(Vector<XY> & points,const String& legend="", const bool& join=false,const class::Color& pcolor=LtBlue,const int& width=30,const int& thickness=6);
 	
+	Scatter &Stroke(int width = 30, class::Color pcolor = Null, const String pattern = LINE_SOLID);
+	Scatter &Mark(int thickness = 6, class::Color pcolor = Null, MarkStyle style = CIRCLE);
+	Scatter &HideMark() {vShowMark[vShowMark.GetCount()-1] = false;	Refresh(); return *this;}
 	Scatter &SetPattern(const String pattern);
 	
 	inline bool IsValid(const int& j) const {return (j>=0 && j<vPointsData.GetCount());}
@@ -261,6 +268,8 @@ private:
 	bool paintInfo;
 	Point clickPoint;
 	PopUpInfo popText;
+	String popTextX, popTextY, popTextY2;
+	Point popLT, popRB;
 	const Point offset;
 	
 	class::Color axisColor;
@@ -303,6 +312,7 @@ private:
 	int legendWeight;
 	bool antialiasing;
 	bool mouseHandlingX, mouseHandlingY;
+
 	
 	Vector<XY> Cubic (const Vector<XY>& DataSet, const int& fineness=10, double tension=0.4)const;
 	void DrawLegend(Draw& w,const int& scale) const;
@@ -326,6 +336,8 @@ private:
 	inline void DrawMark(const int& style, Draw& w, const int& scale, const Point& cp, const int& size, const class::Color& markColor)const;
 	
 	static void DrawPolylineX(Draw& w, const Vector<Point> &p, int thick, const class::Color &color, String pattern, const int& scale);
+	static void DrawLineX(Draw& w, const int x0, const int y0, const int x1, const int y1, int thick, const class::Color &color, String pattern, const int &scale);
+	
 	void AdjustMinUnitX();
 	void AdjustMinUnitY();
 	void AdjustMinUnitY2();
