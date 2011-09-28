@@ -70,7 +70,10 @@ void Ctrl::DoMouseGl(int event, Point p, int zdelta)
 	else
 	{
 		bool processed = consoleActive && DoMouseGl((Ctrl*) &console, event, p, zdelta);
-		processed = !processed && controlPanelActive && DoMouseGl((Ctrl*) &infoPanel, event, p, zdelta);
+		
+		if(!processed && controlPanelActive)
+			processed = DoMouseGl((Ctrl*) &infoPanel, event, p, zdelta);
+		
 		if(!processed)
 		{
 			for(int i = topctrl.GetCount() - 1; i >= 0; i--) {

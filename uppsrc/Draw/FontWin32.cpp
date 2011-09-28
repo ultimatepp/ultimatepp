@@ -246,10 +246,11 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
 	static GlyphInfo gi;
 	const OpenGLFont& fi = Resources::GetFont(font);
-	int idx = chr - 32;
-	gi.width = idx < fi.chars.GetCount() 
-		? int(fi.chars[chr - 32].xadvance * fi.scale + 0.5f)
+	gi.width = chr < fi.chars.GetCount() 
+		? int(fi.chars[chr].xadvance * fi.scale + 0.5f)
 		: 0;
+	gi.lspc = 0;
+	gi.rspc = 0;
 	return gi;
 }
 #else
