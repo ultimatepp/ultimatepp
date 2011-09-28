@@ -230,7 +230,7 @@ void Functions4U_Demo::OnPatch() {
 DrawingCanvas_Demo::DrawingCanvas_Demo() {
 	CtrlLayout(*this);
 
-	imgCtrl.SetImage(Images::ClockImage());
+	//imgCtrl.SetImage(Images::ClockImage());
 	LoadSvg(drawingCanvas, AppendFileName(GetDesktopFolder(), "svg/demo.svg"));
 	
 	LineElem &elem = static_cast<LineElem&>(drawingCanvas.elemList.elems.Add(new LineElem(100, 100, 200, 200)));

@@ -161,9 +161,7 @@ LAYOUT(StaticCtrls, 512, 416)
 END_LAYOUT
 
 LAYOUT(DrawingCanvas, 700, 596)
-	ITEM(DrawingCanvas, drawingCanvas, HSizePosZ(540, 4).VSizePosZ(24, 4))
-	ITEM(ImgCtrl, imgCtrl, LeftPosZ(4, 532).VSizePosZ(24, 4))
-	ITEM(Label, dv___2, SetLabel(t_("DrawingCanvas")).LeftPosZ(540, 84).TopPosZ(4, 19))
-	ITEM(Label, dv___3, SetLabel(t_("ImgCtrl")).LeftPosZ(4, 84).TopPosZ(4, 19))
+	ITEM(DrawingCanvas, drawingCanvas, HSizePosZ(4, 4).VSizePosZ(24, 4))
+	ITEM(Label, dv___1, SetLabel(t_("DrawingCanvas")).LeftPosZ(4, 84).TopPosZ(4, 19))
 END_LAYOUT
 
