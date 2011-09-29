@@ -1013,26 +1013,26 @@ void Scatter::ProcessPopUp(const Point & pt)
 	}
 	String strx, _strx, dstrx, stry, _stry, dstry;
 	if (cbModifFormatX) {
-		cbModifFormatX(strx,  0, x); 		strx.Replace("\n", "");
-		cbModifFormatX(_strx, 0, _x); 		_strx.Replace("\n", "");
+		cbModifFormatX(strx,  0, x); 		strx.Replace("\n", " ");
+		cbModifFormatX(_strx, 0, _x); 		_strx.Replace("\n", " ");
 	} else {
 		strx  = VariableFormatX(x);
 		_strx = VariableFormatX(_x);
 	}
 	if (cbModifFormatDeltaX) {
-		cbModifFormatDeltaX(dstrx, 0, dx);	dstrx.Replace("\n", ""); 
+		cbModifFormatDeltaX(dstrx, 0, dx);	dstrx.Replace("\n", " "); 
 	} else {
 		dstrx = VariableFormatX(dx);
 	}	
 	if (cbModifFormatY) {
-		cbModifFormatY(stry,  0, y);		stry.Replace("\n", "");
-		cbModifFormatY(_stry, 0, _y);		_stry.Replace("\n", "");
+		cbModifFormatY(stry,  0, y);		stry.Replace("\n", " ");
+		cbModifFormatY(_stry, 0, _y);		_stry.Replace("\n", " ");
 	} else {
 		stry  = VariableFormatY(y);
 		_stry = VariableFormatY(_y);
 	}
 	if (cbModifFormatDeltaY) {
-		cbModifFormatDeltaY(dstry, 0, dy);	dstry.Replace("\n", "");
+		cbModifFormatDeltaY(dstry, 0, dy);	dstry.Replace("\n", " ");
 	} else {
 		dstry = VariableFormatY(dy);
 	}
@@ -1045,14 +1045,14 @@ void Scatter::ProcessPopUp(const Point & pt)
 	if (drawY2Reticle) {
 		String stry2, _stry2, dstry2;
 		if (cbModifFormatY2) {
-			cbModifFormatY2(stry2,  0, y2);			stry2.Replace("\n", "");
-			cbModifFormatY2(_stry2, 0, _y2);		_stry2.Replace("\n", "");
+			cbModifFormatY2(stry2,  0, y2);			stry2.Replace("\n", " ");
+			cbModifFormatY2(_stry2, 0, _y2);		_stry2.Replace("\n", " ");
 		} else {
 			stry2  = VariableFormatY2(y2);
 			_stry2 = VariableFormatY2(_y2);
 		}
 		if (cbModifFormatDeltaY2) {
-			cbModifFormatDeltaY2(dstry2, 0, dy2);	dstry2.Replace("\n", "");
+			cbModifFormatDeltaY2(dstry2, 0, dy2);	dstry2.Replace("\n", " ");
 		} else {
 			dstry2 = VariableFormatY(dy2);
 		}
@@ -1110,6 +1110,7 @@ void Scatter::LabelPopUp(bool down, Point &pt)
 		if(paintInfo && px <=pt.x && pt.x<= GetSize().cx-px && (py + titleFont.GetHeight())<=pt.y && pt.y<= GetSize().cy-py)
 		{
 			popText.AppearOnly(this);
+			
 			isLabelPopUp = true;
 			if (IsNull(popLT))
 				popLT = pt;
@@ -1234,7 +1235,9 @@ void Scatter::MouseMove(Point pt, dword)
 			if (IsNull(popLT))
 				popLT = pt;
 			popRB = pt;
-			ProcessPopUp(pt);		
+			popText.AppearOnlyOpen(this);
+			
+			ProcessPopUp(pt);
 			Refresh();
 		}
 	}	
@@ -1634,12 +1637,12 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 		int y0 = py + titleFont.GetHeight();
 		int rfrom = min(popLT.y-y0, popRB.y-y0);
 		int rto   = max(popLT.y-y0, popRB.y-y0);
-		for (int r = rfrom; r < rto; r += scale*5)
-			DrawLineX(w, popLT.x-x0, r, popRB.x-x0, r, scale, LtGray, "o..", scale);
-		DrawLineX(w, 1, 		 popLT.y-y0, l, 		 popLT.y-y0, scale, Black, "o.", scale);
-		DrawLineX(w, 1, 	   	 popRB.y-y0, l, 	   	 popRB.y-y0, scale, Black, "o.", scale);
-		DrawLineX(w, popLT.x-x0, 1, 	   	 popLT.x-x0, h, 	   	 scale, Black, "o.", scale);
-		DrawLineX(w, popRB.x-x0, 1, 	   	 popRB.x-x0, h, 	     scale, Black, "o.", scale);
+		for (int r = rfrom+scale*5; r < rto; r += scale*5)
+			DrawLineX(w, popLT.x-x0, r, popRB.x-x0, r, scale, LtRed, "o..", scale);
+		DrawLineX(w, 1, 		 popLT.y-y0, l, 		 popLT.y-y0, scale, LtRed, "o.", scale);
+		DrawLineX(w, 1, 	   	 popRB.y-y0, l, 	   	 popRB.y-y0, scale, LtRed, "o.", scale);
+		DrawLineX(w, popLT.x-x0, 1, 	   	 popLT.x-x0, h, 	   	 scale, LtRed, "o.", scale);
+		DrawLineX(w, popRB.x-x0, 1, 	   	 popRB.x-x0, h, 	     scale, LtRed, "o.", scale);
 	}
 	w.End();
 }
@@ -1827,7 +1830,7 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 			w.DrawText(l+scale*10,fround(-h*yMinUnit2/yRange2+h-i*h/(yRange/yMajorUnit))-scale*8,gridLabelY2,Standard6,axisColor);
 		}	
 	
-	if(antialiasing && w.IsGui())
+	if(antialiasing)		//  && w.IsGui())	IsGui() is always false in Linux
 	{
 		ImageDraw imdraw(3*l,3*h);	
 		Plot (imdraw,3,3*l,3*h);

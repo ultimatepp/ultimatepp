@@ -8,6 +8,8 @@ using namespace Upp;
 
 class PopUpInfo : public StaticText {
 	Color color;
+	bool opened;
+	
 public:
 	void   Paint(Draw& w);
 
@@ -27,10 +29,17 @@ public:
 		AppearOnly(owner);
 		Move(owner, x, y, gx, gy);	 
 	}
-	inline void AppearOnly(Ctrl * owner)
+	inline void AppearOnly(Ctrl *owner)
 	{
 		if(IsOpen()) Close();
 		Ctrl::PopUp(owner);
+	}
+	inline void AppearOnlyOpen(Ctrl *owner)
+	{
+		if (opened)
+			return;
+		AppearOnly(owner);
+		opened = true;
 	}
 	inline void Move(Ctrl *owner, const int& x, const int& y, const int& gx=0, const int& gy=0)
 	{

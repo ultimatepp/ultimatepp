@@ -18,4 +18,5 @@ PopUpInfo::PopUpInfo(): color(SColorInfo())
 	IgnoreMouse();
 	SetAlign(ALIGN_CENTER);
 	SetFrame(BlackFrame());
+	opened = false;
 }

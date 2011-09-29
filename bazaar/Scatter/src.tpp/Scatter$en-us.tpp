@@ -62,6 +62,13 @@ value [%-*@3 x ]in data units.&]
 [%-*@3 y ]in data units.&]
 [s3;%% &]
 [s4; &]
+[s5;:Scatter`:`:ShowInfo`(bool`): [@(0.0.255) void]_[* ShowInfo]([@(0.0.255) bool]_[*@3 show][@(0.0.255) `=
+true])&]
+[s2;%% Defines to show or not with [%-*@3 show ]the pop`-up window 
+that indicates in data units the cursor location and, if dragged, 
+the size of the window.&]
+[s3;%% &]
+[s4; &]
 [s5;:Scatter`:`:SetRange`(double`,double`,double`): [_^Scatter^ Scatter][@(0.0.255) `&]_[* S
 etRange]([@(0.0.255) double]_[*@3 rx], [@(0.0.255) double]_[*@3 ry], 
 [@(0.0.255) double]_[*@3 ry2]_`=_`-[@3 1])&]
