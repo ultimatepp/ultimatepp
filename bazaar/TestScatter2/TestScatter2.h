@@ -384,7 +384,7 @@ public:
 	{
 		s=Format("%Mon",fround(d)); 
 		if (!s.IsEmpty())
-			s << "\n/2011";
+			s << "\n2011";
 	}
 	void MyFormatDelta(String& s, int i, double d)
 	{
