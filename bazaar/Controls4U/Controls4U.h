@@ -6,7 +6,6 @@
 #if defined(PLATFORM_WIN32) 
 #include "Controls4U/ActiveX.h"
 #endif
-#include "Controls4U/ImgCtrl.h"
 #include "Controls4U/DrawingCanvas.h"
 #include "Controls4U/SliderCtrlX.h"
 #include "Controls4U/StarIndicator.h"
