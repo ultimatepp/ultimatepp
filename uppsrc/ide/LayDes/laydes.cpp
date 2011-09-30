@@ -767,7 +767,7 @@ void LayDes::Group(Bar& bar, const String& group)
 	Sort(type);
 	int h = 3 * StdFont().Info().GetHeight() / 2;
 	int w = 8 * h / 3;
-	((MenuBar&)bar).LeftGap(w + 2);
+	((MenuBar&)bar).LeftGap(w + 6);
 	int q = 0;
 	for(i = 0; i < type.GetCount(); i++) {
 		bar.Add(type[i], GetTypeIcon(type[i], w, h, 0, SColorFace),

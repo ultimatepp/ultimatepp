@@ -89,7 +89,7 @@ void MenuBar::Paint(Draw& w)
 		else
 			PaintBar(w, style->breaksep, style->look);
 	else
-		PaintBar(w, style->breaksep, style->popupbody, style->popupiconbar, style->leftgap);
+		PaintBar(w, style->breaksep, style->popupbody, style->popupiconbar, Nvl(leftgap, style->leftgap));
 }
 
 Value MenuBar::GetBackground() const
