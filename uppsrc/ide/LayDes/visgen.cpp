@@ -50,10 +50,10 @@ void VisGenDlg::Refresh()
 		oce << "Cancel";
 	if(HasItem("exit"))
 		oce << "Exit";
+	String n = ~name;
+	if(IsNull(n))
+		n = GetName();
 	if(q == 0) {
-		String n = ~name;
-		if(IsNull(n))
-			n = GetName();
 		s << "class " << n << " : public With" << layout.name << "<TopWindow> {\n"
 		  << "\ttypedef " << n << " CLASSNAME;\n"
 		  << "\n"
@@ -69,6 +69,19 @@ void VisGenDlg::Refresh()
 	}
 	else
 	if(q == 1) {
+		s << "struct " << n << " : With" << layout.name << "<TopWindow> {\n"
+		  << "\ttypedef " << n << " CLASSNAME;\n"
+		  << "\t" << n << "();\n"
+		  << "};\n"
+		  << "\n"
+		  << n << "::" << n << "()\n"
+		  << "{\n"
+		  << oce;
+		s << "(*this, \"\");\n";
+		s << "}\n";
+	}
+	else
+	if(q == 2) {
 		String n = ~name;
 		if(IsNull(n))
 			n = "dlg";
@@ -91,7 +104,7 @@ void VisGenDlg::Refresh()
 					s << ToUpper(id);
 				else
 					s << id;
-				if(q == 3) {
+				if(q == 4) {
 					s << ", ";
 					if(name2 && !IsNull(~name))
 						s << ~name << '.';
@@ -113,9 +126,10 @@ void VisGenDlg::Type()
 	String n = GetName();
 	switch((int)~type) {
 	case 0:
+	case 1:
 		name <<= GetName();
 		break;
-	case 1:
+	case 2:
 		name <<= "dlg";
 		break;
 	default:
