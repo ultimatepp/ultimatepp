@@ -392,6 +392,8 @@ struct RichCellPos {
 String DeQtf(const char *s);
 String DeQtfLf(const char *s);
 
+String QtfFormat(Color c);
+
 struct QtfRichObject {
 	RichObject obj;
 

@@ -2104,6 +2104,14 @@ output values.&]
 [s0; [* Cursor and selection management]&]
 [s3; &]
 [s0; &]
+[s5;:ArrayCtrl`:`:ScrollUp`(`):%- [@(0.0.255) void]_[* ScrollUp]()&]
+[s5;:ArrayCtrl`:`:ScrollDown`(`):%- [@(0.0.255) void]_[* ScrollDown]()&]
+[s5;:ArrayCtrl`:`:ScrollPageUp`(`):%- [@(0.0.255) void]_[* ScrollPageUp]()&]
+[s5;:ArrayCtrl`:`:ScrollPageDown`(`):%- [@(0.0.255) void]_[* ScrollPageDown]()&]
+[s5;:ArrayCtrl`:`:ScrollEnd`(`):%- [@(0.0.255) void]_[* ScrollEnd]()&]
+[s5;:ArrayCtrl`:`:ScrollBegin`(`):%- [@(0.0.255) void]_[* ScrollBegin]()&]
+[s2; Scrolls the content of ArrayCtrl.&]
+[s3; &]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:GetSelectCount`(`)const:%- [@(0.0.255) int]_[* GetSelectCount]()_[@(0.0.255) c
 onst]&]
@@ -2410,6 +2418,51 @@ and opened for editation.&]
 [s7; [*/ Return value]-|[* true] `= the current row has been successfully 
 committed, [* false] when not&]
 [s3; &]
+[s0; &]
+[s0; &]
+[s0; [* Content export]&]
+[s0;* &]
+[s3;%- &]
+[s5;:ArrayCtrl`:`:AsText`(String`(`*`)`(const Value`&`)`,bool`,const char`*`,const char`*`,const char`*`,const char`*`)const:%- [_^String^ S
+tring]_[* AsText]([_^String^ String]_(`*[*@3 format])([@(0.0.255) const]_Value[@(0.0.255) `&
+]), [@(0.0.255) bool]_[*@3 sel]_`=_[@(0.0.255) false], [@(0.0.255) const]_[@(0.0.255) char]_
+`*[*@3 tab]_`=_`"`\t`", [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 row]_`=_`"`\r`\n`", 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 hdrtab]_`=_`"`\t`", [@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 hdrrow]_`=_`"`\r`\n`")_[@(0.0.255) const]&]
+[s2; Generic function for conversion of ArrayCtrl content to text. 
+The content visible on screen is exported (means, it exports 
+columns defined using AddColumn, not indicies). Cells are converted 
+to output format using [%-*@3 format] function. If [%-*@3 sel] is 
+true, only rows with IsSel true are exported. [%-*@3 tab] represents 
+a separator text between cells in a row, [%-*@3 row] separator 
+of rows. [%-*@3 hdrtab] is separator of header cells (those are 
+texts of ArrayCtrl header) `- if NULL, no header is exported. 
+[%-*@3 hdrrow].is separator of header and data rows.&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:SetClipboard`(bool`,bool`)const:%- [@(0.0.255) void]_[* SetClipboard]([@(0.0.255) b
+ool]_[*@3 sel]_`=_[@(0.0.255) false], [@(0.0.255) bool]_[*@3 hdr]_`=_[@(0.0.255) true])_[@(0.0.255) c
+onst]&]
+[s2; Puts ArrayCtrl content to clipboard in text format, `"`\t`" 
+and `"`\r`\n`" as separators. If [%-*@3 sel] is true, only rows 
+with IsSel true are exported, [%-*@3 hdr] controls whether header 
+is exported.&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:AsQtf`(bool`,bool`):%- [_^String^ String]_[* AsQtf]([@(0.0.255) bool]_[*@3 s
+el]_`=_[@(0.0.255) false], [@(0.0.255) bool]_[*@3 hdr]_`=_[@(0.0.255) true])&]
+[s2; Returns ArrayCtrl content in QTF format. If [%-*@3 sel] is true, 
+only rows with IsSel true are exported, [%-*@3 hdr] controls whether 
+header is exported.&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:AsCsv`(bool`,int`,bool`):%- [_^String^ String]_[* AsCsv]([@(0.0.255) bool
+]_[*@3 sel]_`=_[@(0.0.255) false], [@(0.0.255) int]_[*@3 sep]_`=_`';`', 
+[@(0.0.255) bool]_[*@3 hdr]_`=_[@(0.0.255) true])&]
+[s2; Returns ArrayCtrl content in csv format, using [%-*@3 sep] as 
+separator. If [%-*@3 sel] is true, only rows with IsSel true are 
+exported, [%-*@3 hdr] controls whether header is exported.&]
+[s0; &]
 [s0; &]
 [s0; [* Notification callbacks]&]
 [s3; &]

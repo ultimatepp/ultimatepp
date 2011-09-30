@@ -11,7 +11,7 @@ void SeparateNumber(String& s)
 		s.Cat(';');
 }
 
-String FmtColor(Color c)
+String QtfFormat(Color c)
 {
 	if(IsNull(c)) return "N";
 	for(int i = 0; i < 10; i++)
@@ -63,9 +63,9 @@ void CharFmt(String& fmt, const RichPara::CharFormat& a, const RichPara::CharFor
 	if(a.indexentry != b.indexentry)
 		fmt << 'I' << DeQtf(ToUtf8(b.indexentry)) << ';';
 	if(a.ink != b.ink)
-		fmt << "@" << FmtColor(b.ink);
+		fmt << "@" << QtfFormat(b.ink);
 	if(a.paper != b.paper)
-		fmt << "$" << FmtColor(b.paper);
+		fmt << "$" << QtfFormat(b.paper);
 	if(a.GetHeight() != b.GetHeight()) {
 		for(int i = 0; i < 10; i++)
 			if(b.GetHeight() == QTFFontHeight[i]) {
@@ -96,7 +96,7 @@ void QTFEncodeParaFormat(String& qtf, const RichPara::Format& format, const Rich
 	FmtNumber(qtf, 'i', style.indent, format.indent);
 	FmtNumber(qtf, 'H', style.ruler, format.ruler);
 	if(style.rulerink != format.rulerink)
-		qtf << "h" << FmtColor(format.rulerink);
+		qtf << "h" << QtfFormat(format.rulerink);
 	FmtNumber(qtf, 'b', style.before, format.before);
 	FmtNumber(qtf, 'a', style.after, format.after);
 	if(style.newpage != format.newpage)
@@ -386,10 +386,10 @@ void QTFEncodeTxt(String& qtf, const RichTxt& text, const RichStyles& styles, co
 			if(f.keep)
 				qtf << "K";
 			if(f.framecolor != d.framecolor)
-				qtf << 'F' << FmtColor(f.framecolor);
+				qtf << 'F' << QtfFormat(f.framecolor);
 			FmtNumber(qtf, 'g', d.grid, f.grid);
 			if(f.gridcolor != d.gridcolor)
-				qtf << 'G' << FmtColor(f.gridcolor);
+				qtf << 'G' << QtfFormat(f.gridcolor);
 			FmtNumber(qtf, 'h', d.header, f.header);
 			RichCell::Format cf = Single<RichCell::Format>();
 			for(int i = 0; i < ny; i++) {
@@ -414,9 +414,9 @@ void QTFEncodeTxt(String& qtf, const RichTxt& text, const RichStyles& styles, co
 					FmtNumber2(qtf, 'b', cf.border.bottom, f.border.bottom, cf.margin.bottom, f.margin.bottom);
 					FmtNumber(qtf, 'H', cf.minheight, f.minheight);
 					if(f.color != cf.color)
-						qtf << '@' << FmtColor(f.color);
+						qtf << '@' << QtfFormat(f.color);
 					if(f.bordercolor != cf.bordercolor)
-						qtf << 'R' << FmtColor(f.bordercolor);
+						qtf << 'R' << QtfFormat(f.bordercolor);
 					cf = f;
 					if(c.hspan)
 						qtf << '-' << c.hspan;

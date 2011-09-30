@@ -107,6 +107,8 @@ int MemICmp(const void *dest, const void *src, int count);
 String NormalizeSpaces(const char *s);
 String NormalizeSpaces(const char *begin, const char *end);
 
+String CsvString(const String& text);
+
 #ifndef PLATFORM_WIN32
 void Sleep(int msec);
 #endif

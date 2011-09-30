@@ -506,9 +506,9 @@ Value ArrayCtrl::GetColumn(int row, int col) const {
 	return vm;
 }
 
-Value ArrayCtrl::GetConvertedColumn(int i, int col) {
+Value ArrayCtrl::GetConvertedColumn(int i, int col) const {
 	LTIMING("GetConvertedColumn");
-	Column& m = column[col];
+	const Column& m = column[col];
 	Value v = GetColumn(i, col);
 	if(!m.convert) return v;
 	if(m.cache.Is< Vector<String> >() && i < m.cache.Get< Vector<String> >().GetCount()) {
@@ -2704,6 +2704,71 @@ void ArrayCtrl::InsertDrop(int line, const ArrayCtrl& src, PasteClip& d)
 void ArrayCtrl::InsertDrop(int line, PasteClip& d)
 {
 	InsertDrop(line, GetInternal<ArrayCtrl>(d), d);
+}
+
+String ArrayCtrl::AsText(String (*format)(const Value&), bool sel,
+                         const char *tab, const char *row,
+                         const char *hdrtab, const char *hdrrow) const
+{
+	String txt;
+	if(hdrtab) {
+		for(int i = 0; i < GetColumnCount(); i++) {
+			if(i)
+				txt << hdrtab;
+			txt << (*format)(HeaderTab(i).GetText());
+		}
+		if(hdrrow)
+			txt << hdrrow;
+	}
+	bool next = false;
+	for(int r = 0; r < GetCount(); r++)
+		if(!sel || IsSel(r)) {
+			if(next)
+				txt << row;
+			for(int i = 0; i < GetColumnCount(); i++) {
+				if(i)
+					txt << tab;
+				txt << (*format)(GetConvertedColumn(r, i));
+			}
+			next = true;
+		}
+	return txt;
+}
+
+void ArrayCtrl::SetClipboard(bool sel, bool hdr) const
+{
+	ClearClipboard();
+	AppendClipboardText(AsText(AsString, sel, "\t", "\r\n", hdr ? "\t" : NULL, "\r\n"));
+}
+
+static String sQtfFormat(const Value& v)
+{
+	return "\1" + AsString(v) + "\1";
+}
+
+String ArrayCtrl::AsQtf(bool sel, bool hdr)
+{
+	String qtf;
+	qtf << "{{";
+	for(int i = 0; i < GetColumnCount(); i++) {
+		if(i)
+			qtf << ":";
+		qtf << header.GetTabWidth(i);
+	}
+	if(hdr)
+		qtf << "@L [*";
+	return qtf << ' ' << AsText(sQtfFormat, sel, ":: ", ":: ", hdr ? ":: " : NULL, "::@W ]") << "}}";
+}
+
+static String sCsvFormat(const Value& v)
+{
+	return IsNumber(v) ? AsString(v) : CsvString(AsString(v));
+}
+
+String ArrayCtrl::AsCsv(bool sel, int sep, bool hdr)
+{
+	char h[2] = { sep, 0 };
+	return AsText(sCsvFormat, sel, h, "\r\n", hdr ? h : NULL, "\r\n");
 }
 
 ArrayCtrl::ArrayCtrl() {

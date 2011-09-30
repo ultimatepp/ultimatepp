@@ -66,7 +66,7 @@ public:
 		int                   margin;
 		bool                  cached;
 		bool                  clickedit;
-		Any                   cache;
+		mutable Any           cache;
 		const ValueOrder     *order;
 		int                 (*cmp)(const Value& a, const Value& b);
 
@@ -408,7 +408,7 @@ public:
 	void       Set(Id id, const Value& v);
 
 	Value      GetColumn(int row, int col) const;
-	Value      GetConvertedColumn(int row, int col);
+	Value      GetConvertedColumn(int row, int col) const;
 
 	int        GetSelectCount() const;
 	bool       IsSelection() const                              { return GetSelectCount(); }
@@ -554,6 +554,13 @@ public:
 	void       ScrollPageDown()                        { sb.NextPage(); }
 	void       ScrollEnd()                             { sb.End(); }
 	void       ScrollBegin()                           { sb.Begin(); }
+
+	String     AsText(String (*format)(const Value&), bool sel = false,
+	                  const char *tab = "\t", const char *row = "\r\n",
+	                  const char *hdrtab = "\t", const char *hdrrow = "\r\n") const;
+	void       SetClipboard(bool sel = false, bool hdr = true) const;
+	String     AsQtf(bool sel = false, bool hdr = true);
+	String     AsCsv(bool sel = false, int sep = ';', bool hdr = true);
 
 	String     RowFormat(const char *s);
 
