@@ -372,7 +372,7 @@ static void WriteByteArray(StringBuffer& fo, const String& data)
 		}
 		if(pos == 0)
 			fo << '\t';
-		String part = FormatInt(data[p]);
+		String part = FormatInt((byte)data[p]);
 		fo << part << ", ";
 		pos += part.GetLength() + 2;
 	}
