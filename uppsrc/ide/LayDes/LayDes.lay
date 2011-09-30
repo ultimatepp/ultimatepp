@@ -57,7 +57,7 @@ LAYOUT(InsertLangLayout, 252, 68)
 END_LAYOUT
 
 LAYOUT(VisGenLayout, 724, 488)
-	ITEM(Switch, type, SetLabel(t_("Dialog class\nModal classless dialog\nCtrl list\nCtrl list pairs")).LeftPosZ(8, 156).TopPosZ(8, 76))
+	ITEM(Switch, type, SetLabel(t_("Dialog class\nDialog struct\nModal classless dialog\nCtrl list\nCtrl list pairs")).LeftPosZ(8, 156).TopPosZ(8, 76))
 	ITEM(Label, name_lbl, SetLabel(t_("Name")).LeftPosZ(8, 32).TopPosZ(96, 19))
 	ITEM(EditString, name, LeftPosZ(44, 120).TopPosZ(96, 19))
 	ITEM(Option, pars, SetLabel(t_("Parenthesis")).LeftPosZ(8, 152).TopPosZ(124, 15))
