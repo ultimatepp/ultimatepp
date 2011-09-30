@@ -635,6 +635,22 @@ String NormalizeSpaces(const char *s, const char *end)
 	return r;
 }
 
+String CsvString(const String& text)
+{
+	String r;
+	r << '\"';
+	const char *s = text;
+	while(*s) {
+		if(*s == '\"')
+			r << "\"\"";
+		else
+			r.Cat(*s);
+		s++;
+	}
+	r << '\"';
+	return r;
+}
+
 int ChNoInvalid(int c)
 {
 	return c == DEFAULTCHAR ? '_' : c;
