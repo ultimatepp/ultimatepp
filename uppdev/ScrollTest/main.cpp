@@ -33,16 +33,8 @@ void InitSb()
 		Image down = MirrorVert(up);
 		Image downarrow = MirrorVert(uparrow);
 		s.down.look[i] = ChLookWith(down, downarrow);
-		
 		s.left.look[i] = ChLookWith(RotateClockwise(down), RotateClockwise(downarrow));
 		s.hlower[i] = RotateClockwise(vlower);
-
-		if(IsNull(h))
-			h = RotateClockwise(vlower);
-		PNGEncoder().SaveFile("u:/" + AsString(i) + ".png", h);
-		DDUMP(h.GetHotSpot());
-		DDUMP(h.Get2ndSpot());
-
 		s.hthumb[i] = ChLookWith(RotateClockwise(thumb), RotateClockwise(thumbhandle));
 		s.hupper[i] = RotateClockwise(vupper);
 		s.right.look[i] = ChLookWith(RotateClockwise(up), RotateClockwise(uparrow));
@@ -58,18 +50,26 @@ struct Test : TopWindow {
 	
 };
 
+struct MyApp : TopWindow {
+	virtual void Activate() { Ctrl::ReSkin(); }
+	
+	ArrayCtrl x;
+	
+	MyApp() {
+		Sizeable();
+		x.HeaderObject().Absolute();
+		x.AddColumn("", 2000);
+		for(int i = 0; i < 1000; i++)
+			x.Add(i);
+		Add(x.SizePos());		
+	}
+	
+};
+
 GUI_APP_MAIN
 {
 //	InitSb();
 //	Test().Run();
 
-	TopWindow app;
-	app.Sizeable();
-	ArrayCtrl x;
-	x.HeaderObject().Absolute();
-	x.AddColumn("", 2000);
-	for(int i = 0; i < 1/*000*/; i++)
-		x.Add(i);
-	app.Add(x.SizePos());
-	app.Run();
+	MyApp().Run();
 }

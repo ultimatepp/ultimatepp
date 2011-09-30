@@ -4,15 +4,14 @@ using namespace Upp;
 
 struct App : public TopWindow
 {
-	MultiButtonFrame drop;
+	virtual void Paint(Draw& w)
+	{
+		w.DrawRect(GetSize(), White());
+		ChPaint(w, GetSize(), Button::StyleScroll().look[0]);
+	}
 
 	App()
 	{
-		SetRect( Size( 200, 25 ) );
-		drop.AddTo( *this );
-		drop.AddButton().Main();
-		drop.SetStyle( MultiButtonFrame::StyleFrame() );
-		drop.AddButton().Left().SetLabel( "Button" );
 	}
 };
 
