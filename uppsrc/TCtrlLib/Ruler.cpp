@@ -264,6 +264,7 @@ void RulerCtrl::Paint(Draw& draw)
 	&& rep_count > 0 /*&& rep_count * text_step.GetCount() <= TEXT_LIMIT*/) {
 		int ix = BinFindIndex(text_step, pos1 - rep_index * text_repeat);
 		int ppos = (is_right ? SMALL_SIZE : cheight - cy - SMALL_SIZE);
+		int rpos = (is_right ? 0 : cheight - SMALL_SIZE - 1);
 		for(int c = fround(rep_count); --c >= 0; ix = 0, rep_index++) {
 			int lim = text_step.GetCount();
 			double dp2 = pos2 - rep_index * text_repeat;
@@ -285,12 +286,14 @@ void RulerCtrl::Paint(Draw& draw)
 				Size tsize = GetTextSize(text, font);
 				int half = tsize.cx >> 1;
 				if(is_vert) {
-					draw.DrawRect(0, cli, ppos, 1, Gray());
+					draw.DrawRect(0, cli, ppos, 1, Black());
+					draw.DrawRect(rpos, cli, SMALL_SIZE + 1, 1, Black());
 //					draw.DrawRect(ppos - VGAP, cli - half - HGAP, tsize.cy + 2 * VGAP, tsize.cx + 2 * HGAP, background);
 					draw.DrawText(ppos, cli + half, 900, text, font, Gray());
 				}
 				else {
-					draw.DrawRect(cli, 0, 1, ppos, Gray());
+					draw.DrawRect(cli, 0, 1, ppos, Black());
+					draw.DrawRect(cli, rpos, 1, SMALL_SIZE + 1, Black());
 //					draw.DrawRect(cli - half - HGAP, ppos - VGAP, tsize.cx + 2 * HGAP, tsize.cy + 2 * VGAP, background);
 					draw.DrawText(cli - half, ppos, text, font, Gray());
 				}
