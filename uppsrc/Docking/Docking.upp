@@ -24,6 +24,3 @@ file
 	src.tpp,
 	Docking.t charset "UTF-8";
 
-mainconfig
-	"" = "GUI";
-
