@@ -16,13 +16,13 @@ topic "How to contribute. Web page";
 [s0; [*+117 Introduction]&]
 [s0; &]
 [s0; Code style has always been subject to a lot of discussions, 
-some of them beeing really passionate and emotional. Those of 
+some of them being really passionate and emotional. Those of 
 you already having seen the intimate details of Ultimate`+`+ 
 in uppsrc and maybe bazaar surely have percepted a certain degree 
 of order, functionality and maybe, like I did,even a certain 
 beauty (yes, I am married in real world :), all hard to describe. 
-For me the code felt usefull, well structured and quite easy 
-to read and thus esier to understand. And this is maybe the essence 
+For me the code felt useful, well structured and quite easy to 
+read and thus easier to understand. And this is maybe the essence 
 of good code style. All the things mentioned below are tiny little 
 details that can help to achieve this overall perception in U`+`+ 
 code. Don`'t hesitate to look at the code in uppsrc to learn. 
@@ -32,7 +32,7 @@ while and feel some comfort with it. But this document should
 shorten the time.&]
 [s0; &]
 [s0; If you like to contribute code or major fixes, you are encouraged 
-to pay attention to these things. It makes life esier for the 
+to pay attention to these things. It makes life easier for the 
 community, which usually keeps an eye on the changes made to 
 the code base. It enables us (the community, of which you are 
 about to be part of) to spot bugs fast and provide fast fixes. 
@@ -50,17 +50,17 @@ code&]
 [s0;i150;O0; [* Use Topic`+`+] (.tpp files) to comment your class usage, 
 this is the prefered method of code commenting. Use separate 
 files for API and implementation documentation. TheIDE can generate 
-the apropriate files for you. Click on the little cyan rectangles 
+the appropriate files for you. Click on the little cyan rectangles 
 next to functions, variables or classes. `'[/ New reference topic]`" 
 adds to `'src.tpp`', `'[/ New implementation topic]`' adds to `'srcimp.tpp`'. 
 [* Provide also the `"Big picture`"] design aspects of your package 
 / class, briefly outlined in the src.tpp as a header (see U`+`+ 
-class documentation as an example). This reliefes a lot of headache 
+class documentation as an example). This relieves a lot of headache 
 when studying the code.&]
 [s0; &]
 [s0;i150;O0; [* Be familiar with U`+`+, use its facilities] This is 
 a general prerequisite anyway, but it means to have studied the 
-exsisting code and its possibilities a bit. It might happen that 
+existing code and its possibilities a bit. It might happen that 
 you have invented things that U`+`+ already provides for you 
 and you could have saved your time. It also means to know, understand, 
 and thus stick to the design pattern, i.e. when implementing 
@@ -87,9 +87,9 @@ field, adding the absolute path to Bazaar at the end.&]
 like [C #include <Scatter/Scatter.h>] instead of [C #include `"/folderA/folderB/Scatt
 er.h`"]&]
 [s0; &]
-[s0;i150;O0; [* Use the package idea] of U`+`+. A package compunds 
-one or more classes and its files, becuase they logicaly belong 
-together and should all be available when usig the package inside 
+[s0;i150;O0; [* Use the package idea] of U`+`+. A package compounds 
+one or more classes and its files, because they logically belong 
+together and should all be available when using the package inside 
 another package. A package should have an overall name and a 
 .h with same name (which then can [C #include] the other class 
 headers if any). Example: [C #include <Core/Core.h>]. This is the 
@@ -97,32 +97,32 @@ way you also should use other packages inside yours. (See `'Overview`'
 for more info on packages) &]
 [s0; &]
 [s0;i150;O0; Provide a [* Test / Demo package] for your package. Generally 
-it is a good idea to have a `'MyPackge`' and `'MyPackageTest`' 
+it is a good idea to have a `'MyPackage`' and `'MyPackageTest`' 
 package shipped together, where functionality and Testing / Presenting 
 is separated. Others won`'t need to trouble with the code too 
 much if the can simply [C #include <MyPackage/MyPackage.h>]. a 
-package whoose usage they have observed in the Test package.&]
+package whose usage they have observed in the Test package.&]
 [s0; &]
 [s0;i150;O0; [* Avoid usage of new / delete] as hell. [* Use U`+`+ NTL 
-containers] for your data or capsulate the allocation or deallocation 
+containers] for your data or encapsulate the allocation or deallocation 
 of objects. Memory leaks can cause serious brain damage :). of 
 course, don`'t mix new/delete with malloc/free. Pointers should 
 only be used to really point to things and NOT to maintain the 
-last reference to a dynamicly allocated object (this should be 
-done in containers, Array<>, Vector<>, One<>, Any<>, etc. [* everything 
-belongs somewhere]...).&]
+last reference to a dynamically allocated object (this should 
+be done in containers, Array<>, Vector<>, One<>, Any<>, etc. 
+[* everything belongs somewhere]...).&]
 [s0;* &]
 [s0;i150;O0; [* Avoid usage of  ][*C #define constants], use compile 
 time safe constants inside your class where possible. Example: 
 [C static const int MaxSize `= 100;]&]
 [s0; &]
-[s0;i150;O0; Dont forget the [*C virtual `~Destructor()], As soon as 
-your class is meant to be a base class (i.e. has any other virtual 
-function) it should have a virtual destructor, even if it`'s 
-empty.&]
+[s0;i150;O0; Do not forget the [*C virtual `~Destructor()], As soon 
+as your class is meant to be a base class (i.e. has any other 
+virtual function) it should have a virtual destructor, even if 
+it`'s empty.&]
 [s0; &]
 [s0;i150;O0; Pay attention to implicit conversion. Some bugs come 
-from defaultly parametrised constructors, which are used then 
+from constructors parametrized by default, which are used then 
 as implicit conversion constructors. (you may protect with the 
 `'explicit`' keyword)&]
 [s0; &]
@@ -130,7 +130,7 @@ as implicit conversion constructors. (you may protect with the
 doors to many bugs and makes the usage of your class difficult 
 in classes that maintain it.&]
 [s0; &]
-[s0;i150;O0; [* Use integer counter access.] Dont use iterators on 
+[s0;i150;O0; [* Use integer counter access.] Do not use iterators on 
 the Containers. Example: [C for(int i `= 0; i < vec.GetCount(); 
 i`+`+) vec`[i`] `= 0;]&]
 [s0; &]
@@ -146,23 +146,23 @@ Example:&]
 little things like that.&]
 [s0; &]
 [s0;i150;O0; [* Implement small functions in class definition itself]. 
-Many functions only have 1 or 2 syntactically importnat statements 
+Many functions only have 1 or 2 syntactically important statements 
 (return `*this doesn`'t count) and are maybe important to understand 
-class function. A developper will first look in header file. 
-Rule of thumb: >3 statements should go into own implementation 
-in .cpp file. Example: [C String Right(int count) const `{ return 
-Mid(GetLength() `- count); `}]&]
+class function. A developer will first look in header file. Rule 
+of thumb: >3 statements should go into own implementation in .cpp 
+file. Example: [C String Right(int count) const `{ return Mid(GetLength() 
+`- count); `}]&]
 [s0; &]
 [s0;i150;O0; Provide for Methods chaining in your class by returning 
-`*this, where logically usefull. This makes it possible to [C myControl.HSizePos().
-VSizePos().Enable().]&]
+`*this, where logically useful. This makes it possible to [C myControl.HSizePos().V
+SizePos().Enable().]&]
 [s0; &]
 [s0;i150;O0; Provide a [C String ToString() const; ]Users will thank 
 you if they can inspect an object in a preformatted way with 
 [C LOG(objectInstance);] without having to setup own functions 
 to show content during debug. Maybe it should be virtual to allow 
-derived classes to extend it. This is hevily used in object design 
-orientated languages like C#.&]
+derived classes to extend it. This is heavily used in object 
+design orientated languages like C#.&]
 [s0; &]
 [s0;i150;O0; Think of providing a [C unsigned GetHashValue() const; 
 ]If it is logical, such a function can enable your object to 
@@ -171,7 +171,7 @@ directly be used as a Key in Upp containers like Index.&]
 [s0; [*+117 Class layout]&]
 [s0; &]
 [s0; A class is made for someone to use it and should expose most 
-important info first. So keep the class cpmponents`' order as 
+important info first. So keep the class components`' order as 
 following: (unneeded or unused parts can be left out)&]
 [s0; &]
 [s0; [C@(28.42.150) class tempc ]&]
@@ -244,7 +244,7 @@ are own helper classes and functions]&]
 [s0;C@(28.42.150) &]
 [s0; [C@(28.42.150) -|/`*]&]
 [s0; [C@(28.42.150) -|`* Here follows the private data, which only the 
-class itself takes care of and noone should ever know about.]&]
+class itself takes care of and none should ever know about.]&]
 [s0; [C@(28.42.150) -|`* in case of wrapper class this is mostly the 
 objects that are wrapped]&]
 [s0; [C@(28.42.150) -|`*/]&]
@@ -262,20 +262,21 @@ anywhere else], especially in class members`' names. [* Don`'t
 use Hungarian] style (Linus: `"Brain damage`") or things like 
 `'[C m`_myMember, `_anotherMember, yetAnotherMember]`'. Example: 
 [C Font font; Size textsize; ]Assist`+`+ makes life so easy, that 
-we dont need this to figure out if its a class member (Hit Ctrl`+Space)&]
+we do not need this to figure out if its a class member (Hit 
+Ctrl`+Space)&]
 [s0; &]
 [s0;i150;O0; Stick to[*  implicit variable names semantic] inside function 
-bodies if possible and usefull. i,j,k,m,n,q, u mostly are integer 
-counters or indices in arrays, p is probably a pointer, a,b,c 
+bodies if possible and useful. i,j,k,m,n,q, u mostly are integer 
+counters or indexes in arrays, p is probably a pointer, a,b,c 
 are typically bool, d is double, f is a float. v is a Vector 
 or a Value, s is a String etc.. this makes code less typographic 
 and focuses more on the algorithm used. But don`'t use such variables 
 exclusively, please. a1 a2 and a3 are quite the same at first 
 look :)&]
 [s0; &]
-[s0;i150;O0; Tend to [* avoid comments] in general, except for nesseccary 
+[s0;i150;O0; Tend to [* avoid comments] in general, except for necessary 
 hints on important sections, critical for understanding. instead, 
-[* focus and persue a good design structure] in your package / 
+[* focus and pursue a good design structure] in your package / 
 class, which makes most comments disposable.&]
 [s0; &]
 [s0;i150;O0; [* Use Tabs to intend] code, except in the header of a 
