@@ -8,13 +8,13 @@ on target platforms. It is called `'Chameleon`' and was meant
 to be only a slim layer to resemble target platform look, but 
 passing time has evolved to a rich featured part of Ultimate`+`+. 
 Own custom Controls can be created quite fast, but often lack 
-the proper support for Chameleon thechnology, rendering an ugly 
+the proper support for Chameleon technology, rendering an ugly 
 spot in your overall application, when it uses the other Ultimate`+`+ 
 standard controls, which are `'Chameleon aware`'. So here is 
 how you can extend / properly create a Ctrl derived Ultimate`+`+ 
-control with chamelon support.]&]
+control with chameleon support.]&]
 [s0;2 &]
-[s0; [*2 1) define what you consider Style for your control]&]
+[s0; [*2 1) Define what you consider Style for your control]&]
 [s0;2 &]
 [s0; [2 In .h file]&]
 [s0;C1 &]
@@ -32,21 +32,21 @@ control with chamelon support.]&]
 [s0;2 &]
 [s0; [2 This is maybe the most important task to do. When you go ahead 
 implementing your Ctrl, you should already use the respective 
-properties, where possibl, thats why this is important to do 
+properties, where possible, thats why this is important to do 
 as soon as possible in development. Later porting can be pain. 
 Parts considered to be Style of your Control are Colors of parts, 
 think of states, your Ctrl can be in (active, inactive..), general 
 sizes of  bars, margins, etc. Font should `*not`* be part of 
 it. It should be specified via API (thus later including of your 
-Ctrl in TheIDE can be done esier, provide SetFont() for it)]&]
+Ctrl in TheIDE can be done easier, provide SetFont() for it)]&]
 [s0;2 &]
 [s0; [2 The ChStyle base enriches your own style with some handling 
 with respect to static Style instances for all Ctrl instances 
-of that type. so dont forget it.]&]
+of that type. so do not forget it.]&]
 [s0;2 &]
 [s0; [2 Stick to the naming convention, Style...]&]
 [s0;2 &]
-[s0; [*2 2) setup a default style]&]
+[s0; [*2 2) Setup a default style]&]
 [s0;2 &]
 [s0; [2 It is registered globally in Chameleon database for this special 
 control (thats why the macro needs Ctrl class name, Style class 
@@ -72,13 +72,13 @@ are derived from current target Platform settings.]&]
 [s0; [C1 -|vfm `= 2;]&]
 [s0; [C1 `}]&]
 [s0;2 &]
-[s0; [*2 3) use a const Style `*style to referece]&]
+[s0; [*2 3) Use a const Style `*style to reference]&]
 [s0;2 &]
 [s0; [2  It is the currently used style in your control code. Don`'t 
 forget to initialize the pointer to your default style. Now, 
 that you have a StyleDefault() function, you can use this one. 
 provide means to override the Style  settings used in your Ctrl 
-(SetStyle). Ofcorse, the referenced Style needs to exsist as 
+(SetStyle). Of course, the referenced Style needs to exist as 
 long as the Ctrl uses it.]&]
 [s0;2 &]
 [s0; In .h file&]
@@ -97,7 +97,7 @@ long as the Ctrl uses it.]&]
 [s0; [C1 -|return `*this;]&]
 [s0; [C1 `}]&]
 [s0;2 &]
-[s0; [*2 4) use your style information to paint your control]&]
+[s0; [*2 4) Use your style information to paint your control]&]
 [s0;2 &]
 [s0; [2 Either use it directly, or provide Chameleon helper functions 
 with some of your style info]&]
@@ -169,15 +169,15 @@ to its previous state.]&]
 [s0; [C1 -|es.disabled `= SColorFace();]&]
 [s0; [C1 -|es.focus `= Blend(Green(), Black(), 192);]&]
 [s0;2 &]
-[s0; [2 your main aplication window should update all instaniated controls 
-after finishing updating all desired styles]&]
+[s0; [2 your main application window should update all instantiated 
+controls after finishing updating all desired styles]&]
 [s0; [C1  -|RefreshLayoutDeep();]&]
 [s0;2 &]
 [s0; [2 Some Ctrl`'s may have more than one global style (i.e. Button). 
 if your Ctrl`'s also needs more, just use another CH`_STYLE macro 
-to provide it. Dont forget to define it in .h just in the same 
+to provide it. Do not forget to define it in .h just in the same 
 way as StyleDefault.]&]
-[s0; [2 Thus, your Ctrl can be constructed parametrized or use anoter 
+[s0; [2 Thus, your Ctrl can be constructed parametrized or use another 
 default Style (Button`::StyleNormal, Button`::StyleOk..)]&]
 [s0;2 &]
 [s0; [2 As of chameleonized helper functions, ][C2 ChPaint][2  is the only 
@@ -186,7 +186,7 @@ the OS theming engine. The beauty and cornerstone of ChPaint
 and Chameleon is that ChPaint expects Value and can be extended 
 w.r.t. Value types it is able to render. There are two basic 
 types supported directly in Draw: Color and Image. Image has `"hotspots`" 
-logic to define inteligent scaling, and color is self explaining. 
+logic to define intelligent scaling, and color is self explaining. 
 You can extend recognized types using ChLookFn. This way, e.g. 
 XP chameleon registers its internal Value type `"XpElement`" 
 and is able to use XP style rendering system to render Values 
