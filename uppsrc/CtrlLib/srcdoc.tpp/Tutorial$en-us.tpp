@@ -1376,7 +1376,7 @@ menu:&]
 [s3;:Gui09: 9. Context menu alternative and using CallbackArgTarget&]
 [s5; It is also possible to create context menu by adding menu items 
 directly to MenuBar. Also, quite often the result of context 
-menu is some value `- in such case, [* CallbackArgTaget] can be 
+menu is some value `- in such case, [* CallbackArgTarget] can be 
 used to simplify the task `- CallbackArgTarget [* operator`[`]] 
 returns callback which, when invoked, stores the value of index 
 (which has to be of CalbackArgTarget`'s template parameter type) 
