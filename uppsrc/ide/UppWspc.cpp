@@ -4,10 +4,33 @@ const char tempaux[] = "<temp-aux>";
 const char prjaux[] = "<prj-aux>";
 const char ideaux[] = "<ide-aux>";
 
+Image OverLtRed(const Image& m)
+{
+	Image red = CreateImage(m.GetSize(), Blend(LtRed, SColorPaper));
+	Over(red, Point(0, 0), m, m.GetSize());
+	return red;
+}
+
+Image ImageOverRed(const Image& m)
+{
+	return MakeImage(m, OverLtRed);
+}
+
 Font WorkspaceWork::ListFont()
 {
 	return StdFont();
 };
+
+void WorkspaceWork::SetErrorFiles(const Vector<String>& files)
+{
+	errorfiles <<= files;
+	int i = filelist.GetCursor();
+	int s = filelist.GetSbPos();
+	SaveLoadPackage();
+	filelist.SetSbPos(s);
+	filelist.SetCursor(i);
+	SyncErrorPackages();
+}
 
 String WorkspaceWork::PackagePathA(const String& pn) {
 	if(pn == prjaux) {
@@ -54,6 +77,28 @@ struct PackageOrder {
 	}
 };
 
+void WorkspaceWork::SyncErrorPackages()
+{
+	TIMING("SyncErrorPackages");
+	for(int i = 0; i < package.GetCount(); i++) {
+		FileList::File f = package.Get(i);
+		if(!IsAux(f.name) && i < speed.GetCount()) {
+			FileList::File ff = f;		
+			String path = GetFileFolder(PackagePath(f.name));
+			ff.icon = speed[i] ? IdeCommonImg::FastPackage() : IdeImg::Package();
+			ff.underline = Null;
+			for(int q = 0; q < errorfiles.GetCount(); q++) {
+				if(errorfiles[q].StartsWith(path)) {
+					ff.icon = ImageOverRed(ff.icon);
+					ff.underline = LtRed;
+					break;
+				}
+			}
+			package.Set(i, ff);
+		}
+	}
+}
+
 void WorkspaceWork::ScanWorkspace() {
 	Workspace wspc;
 	wspc.Scan(main);
@@ -62,7 +107,7 @@ void WorkspaceWork::ScanWorkspace() {
 	filelist.Clear();
 	package.Clear();
 	Vector<String> pks;
-	Vector<bool> speed;
+	speed.Clear();
 	for(int i = 0; i < wspc.package.GetCount(); i++) {
 		pks.Add(wspc.package.GetKey(i));
 		speed.Add(wspc.GetPackage(i).optimize_speed);
@@ -82,9 +127,7 @@ void WorkspaceWork::ScanWorkspace() {
 			fnt.Bold();
 		if(pi.italic)
 			fnt.Italic();
-		package.Add(pk,
-		            speed[i] ? IdeCommonImg::FastPackage() : IdeImg::Package(),
-		            fnt, Nvl(pi.ink, SColorText()), false, 0, Null, SColorMark);
+		package.Add(pk, Null, fnt, Nvl(pi.ink, SColorText()), false, 0, Null, SColorMark);
 	}
 	if(!organizer) {
 		package.Add(prjaux, IdeImg::PrjAux(), ListFont(), Magenta);
@@ -93,6 +136,8 @@ void WorkspaceWork::ScanWorkspace() {
 		package.Add(METAPACKAGE, IdeImg::Meta(), ListFont(), Red);
 	}
 	package.SetCursor(0);
+	
+	SyncErrorPackages();
 }
 
 void WorkspaceWork::SavePackage()
@@ -211,6 +256,10 @@ void WorkspaceWork::LoadActualPackage()
 					m = TopicImg::IGroup();
 				else
 					m = TopicImg::Group();
+			if(errorfiles.Find(p) >= 0) {
+				m = ImageOverRed(m);
+				uln = LtRed;
+			}
 			filelist.Add(f, m, ListFont(), SColorText, false, 0,
 			             Null, SColorMark, Null, Null, Null, uln);
 			fileindex.Add(i);
@@ -689,9 +738,14 @@ void  WorkspaceWork::ShowFile(int pi)
 	}
 }
 
+bool WorkspaceWork::IsAux(const String& p)
+{
+	return p == tempaux || p == prjaux || p == ideaux || p == METAPACKAGE;
+}
+
 bool WorkspaceWork::IsAux()
 {
-	return actualpackage == tempaux || actualpackage == prjaux || actualpackage == ideaux || actualpackage == METAPACKAGE;
+	return IsAux(actualpackage);
 }
 
 void WorkspaceWork::SpecialFileMenu(Bar& menu)

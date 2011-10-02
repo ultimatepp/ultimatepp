@@ -1,5 +1,3 @@
-#ifdef LAYOUTFILE
-
 LAYOUT(HttpServerLayout, 250, 144)
 	ITEM(Label, semaphore, LeftPosZ(24, 30).TopPosZ(12, 48))
 	ITEM(Label, dv___1, SetLabel(t_("Hit count:")).LeftPosZ(80, 76).TopPosZ(4, 19))
@@ -16,4 +14,3 @@ LAYOUT(HttpServerLayout, 250, 144)
 	ITEM(Button, cancel, SetLabel(t_("Stop")).RightPosZ(4, 80).BottomPosZ(4, 22))
 END_LAYOUT
 
-#endif

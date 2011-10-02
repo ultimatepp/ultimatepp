@@ -279,6 +279,15 @@ void FileList::Set(int ii,
 	KillEdit();
 }
 
+void FileList::Set(int ii, const File& f)
+{
+	Value v;
+	File& m = CreateRawValue<File>(v);
+	m = f;
+	ColumnList::Set(ii, v, !m.isdir);
+	KillEdit();
+}
+
 void FileList::SetIcon(int ii, const Image& icon)
 {
 	Value v;

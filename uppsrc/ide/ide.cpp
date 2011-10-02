@@ -487,6 +487,8 @@ void Ide::ClearErrorEditor()
 	for(int i = 0; i < filedata.GetCount(); i++) {
 		ClearErrorEditor(filedata.GetKey(i));
 	}
+	
+	SetErrorFiles(Vector<String>());
 }
 
 void Ide::ClearErrorEditor(String file)
@@ -513,8 +515,11 @@ void Ide::SetErrorEditor()
 	One<Host> host = CreateHost(false);
 	String    hfile;
 	EditorBar hbar;
+	Vector<String> errorfiles;
 	for(int i = 0; i < console.GetLineCount(); i++) {
 		if(FindLineError(console.GetUtf8Line(i), *host, file, lineno, error)) {
+			file = NormalizePath(file);
+			errorfiles.Add(file);
 			if(editfile == file) {
 				editor.SetError(lineno - 1, error);
 				refresh = true;
@@ -534,6 +539,7 @@ void Ide::SetErrorEditor()
 		Filedata(hfile).lineinfo = hbar.GetLineInfo();
 	if(refresh)
 		editor.RefreshFrame();
+	SetErrorFiles(errorfiles);
 }
 
 void Ide::Renumber() {

@@ -88,6 +88,7 @@ public:
 	                bool isdir = false, int64 length = 0, Time time = Null, Color extink = Null,
 	                const String& desc = Null, Font descfont = Null, Value data = Null,
 	                Color underline = Null, bool unixexe = false, bool hidden = false);
+	void        Set(int ii, const File& f);
 	void        SetIcon(int ii, const Image& icon);
 	void        Add(const String& name, const Image& icon = Null,
 		            Font font = StdFont(), Color ink = SColorText(),

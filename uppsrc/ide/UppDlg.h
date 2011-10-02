@@ -127,9 +127,10 @@ struct UppList : FileList {
 struct WorkspaceWork {
 	static    Font ListFont();
 
-	FileList    package;
-	UppList     filelist;
-	Vector<int> fileindex;
+	FileList     package;
+	Vector<bool> speed;
+	UppList      filelist;
+	Vector<int>  fileindex;
 
 	String    main;
 	String    actualpackage;
@@ -160,6 +161,8 @@ struct WorkspaceWork {
 	bool         organizer;
 	bool         showtime;
 	bool         sort;
+	
+	Index<String> errorfiles;
 
 	virtual void   PackageCursor();
 	virtual void   FileCursor();
@@ -175,6 +178,7 @@ struct WorkspaceWork {
 	void   ScanWorkspace();
 	void   SavePackage();
 	void   RestoreBackup();
+	void   SyncErrorPackages();
 
 	void SerializeFileSetup(Stream& s)                { s % filelist % package; }
 
@@ -193,8 +197,8 @@ struct WorkspaceWork {
 	String         GetActivePackagePath() const               { return PackagePath(package.GetCurrentName()); }
 	String         GetActiveFileName() const;
 	String         GetActiveFilePath() const;
-	void			OpenFileFolder();
-	void  			OpenPackageFolder();
+	void           OpenFileFolder();
+	void           OpenPackageFolder();
 	bool           IsActiveFile() const;
 	Package::File& ActiveFile();
 	String         FileName(int i) const;
@@ -228,6 +232,7 @@ struct WorkspaceWork {
 	void RemovePackageMenu(Bar& bar);
 	void RemovePackage(String from_package);
 
+	static bool IsAux(const String& p);
 	bool IsAux();
 
 	void PackageMenu(Bar& bar);
@@ -235,6 +240,8 @@ struct WorkspaceWork {
 	void SpecialFileMenu(Bar& bar);
 
 	String PackagePathA(const String& pn);
+	
+	void SetErrorFiles(const Vector<String>& files);
 
 	void SerializeClosed(Stream& s);
 
