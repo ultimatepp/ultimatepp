@@ -31,12 +31,13 @@ void Pusher::LeftDown(Point, dword) {
 	push = true;
 	RefreshPush();
 	WhenPush();
+	SetCapture();
 }
 
 void Pusher::MouseMove(Point, dword style) {
 	LLOG("Mouse move !");
-	if(IsReadOnly()) return;
-	bool b = style & K_MOUSELEFT;
+	if(IsReadOnly() || !HasCapture()) return;
+	bool b = GetScreenView().Contains(GetMousePos());
 	if(b != push) {
 		push = b;
 		RefreshPush();
