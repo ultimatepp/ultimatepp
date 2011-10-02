@@ -201,7 +201,7 @@ nt]_[*@3 ii], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 icon])&]
 [s2;%% Replaces an icon of file item.&]
 [s3;%% &]
 [s4; &]
-[s5;:FileList`:`:Add`(const String`&`,const Image`&`,Font`,Color`,bool`,int64`,Time`,Color`,const String`&`,Font`,Value`,Color`,bool`): [@(0.0.255) v
+[s5;:FileList`:`:Add`(const String`&`,const Image`&`,Font`,Color`,bool`,int64`,Time`,Color`,const String`&`,Font`,Value`,Color`,bool`,bool`): [@(0.0.255) v
 oid]_[* Add]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 name], 
 [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 icon]_`=_Null, 
 [_^Font^ Font]_[*@3 font]_`=_StdFont(), [_^Color^ Color]_[*@3 ink]_`=_SColorText(), 
@@ -210,7 +210,7 @@ oid]_[* Add]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 name],
 [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 desc]_`=_Null, 
 [_^Font^ Font]_[*@3 descfont]_`=_Null, [_^Value^ Value]_[*@3 data]_`=_Null, 
 [_^Color^ Color]_[*@3 underline]_`=_Null, [@(0.0.255) bool]_[*@3 unixexe]_`=_[@(0.0.255) fa
-lse])&]
+lse], [@(0.0.255) bool]_[*@3 hidden]_`=_[@(0.0.255) false])&]
 [s2;%% Adds a new file item at the end of list.&]
 [s3;%% &]
 [s4; &]
@@ -247,6 +247,11 @@ oid]_[* Set]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[_^String^ String][@(
 [_^Font^ Font]_[*@3 descfont]_`=_Null, [_^Value^ Value]_[*@3 data]_`=_Null, 
 [_^Color^ Color]_[*@3 underline]_`=_Null, [@(0.0.255) bool]_[*@3 unixexe]_`=_[@(0.0.255) fa
 lse], [@(0.0.255) bool]_[*@3 hidden]_`=_[@(0.0.255) false])&]
+[s2;%% Replaces an information about a file item at specified position.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileList`:`:Set`(int`,const FileList`:`:File`&`): [@(0.0.255) void]_[* Set]([@(0.0.255) i
+nt]_[*@3 ii], [@(0.0.255) const]_[_^FileList`:`:File^ File][@(0.0.255) `&]_[*@3 f])&]
 [s2;%% Replaces an information about a file item at specified position.&]
 [s3;%% &]
 [s4; &]
