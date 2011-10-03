@@ -12,7 +12,8 @@ void Ide::SetupEditor(int f, String hl, String fn)
 	}
 	if(IsNull(hl)) {
 		if(ext == ".c" || ext == ".cpp" || ext == ".cc" || ext == ".cxx" ||
-		   ext == ".h" || ext == ".hpp" || ext == ".hh" || ext == ".hxx" || ext == ".icpp")
+		   ext == ".h" || ext == ".hpp" || ext == ".hh" || ext == ".hxx" ||
+		   ext == ".m"                  || ext == ".mm" || ext == ".icpp")
 			editor.Highlight(CodeEditor::HIGHLIGHT_CPP);
 		else
 		if(ext == ".usc")

@@ -23,7 +23,8 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img)
 		img = IdeCommonImg::Language();
 	if(ext == ".icpp")
 		img = IdeCommonImg::ISource();
-	if(ext == ".c" || ext == ".cpp" || ext == ".cc" || ext == ".cxx")
+	if(ext == ".c" || ext == ".cpp" || ext == ".cc" || ext == ".cxx"
+	               || ext == ".m" || ext == ".mm")  //should later have diff img?
 		img = IdeCommonImg::Source();
 	if(ext == ".sch")
 		img = IdeCommonImg::Sch();

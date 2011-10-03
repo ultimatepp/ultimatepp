@@ -377,7 +377,7 @@ void Ide::FindFolder()
 
 void Ide::ConstructFindInFiles() {
 	ff.find.AddButton().SetMonoImage(CtrlImg::smallright()).Tip("Wildcard") <<= THISBACK(FindWildcard);
-	static const char *defs = "*.cpp *.h *.hpp *.c *.C *.cxx *.cc *.icpp *.sch *.lay *.rc";
+	static const char *defs = "*.cpp *.h *.hpp *.c *.m *.C *.M *.cxx *.cc *.mm *.MM *.icpp *.sch *.lay *.rc";
 	ff.files <<= String(defs);
 	ff.files.AddList((String)defs);
 	ff.files.AddList((String)"*.txt");
