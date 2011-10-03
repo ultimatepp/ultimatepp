@@ -54,7 +54,7 @@ void ClentCallbackCalcBody() {
 		pictaddr = TrimBoth(V.At(7));
 		if (!pictaddr.IsEmpty()) {
 #ifdef PLATFORM_X11
-			pictaddr = GetHomeDirectory()+"/MyApps/RepGenTest/"+pictaddr;
+			pictaddr = GetHomeDirectory()+"/upp/bazaar/RepGenTest/images/"+pictaddr;
 			DUMP(pictaddr);
 #endif
 			Image im = StreamRaster::LoadFileAny(pictaddr);
@@ -100,7 +100,7 @@ void SelectReportDlg::arr_LeftDouble() {
 GUI_APP_MAIN
 {
 	
-	STRINGS = Split(LoadFile(GetHomeDirectory()+"/MyApps/RepGenTest/DATA.csv"), '\n', true);
+	STRINGS = Split(LoadFile(GetHomeDirectory()+"/upp/bazaar/RepGenTest/DATA.csv"), '\n', true);
 
 	rep.RepGenReportVar       = callback(ClentCallbackReportVar);
 	rep.RepGenReportFinish    = callback(ClentCallbackReportFinish);
@@ -110,12 +110,14 @@ GUI_APP_MAIN
 	
 	SetLanguage(GetSystemLNG()& 0xfffff);
 	SelectReportDlg dlg;
+	dlg.Zoomable();
+	dlg.Sizeable();
 	dlg.arr.AddColumn("List of Template",200);
-	dlg.arr.AddIndex();
+	dlg.arr.AddColumn("s",200);
 	
-	dlg.arr.Add("Report Etiketji",(String)(GetHomeDirectory()+"/MyApps/RepGenTest/REPORT_TEMPLATE.QTF"));
-	dlg.arr.Add("Report Thumbnails",(String)(GetHomeDirectory()+"/MyApps/RepGenTest/REPORT_TEMPLATE1.QTF"));
-	//dlg.arr.Add("Report RusEtiketki",(String)(GetHomeDirectory()+"/MyAppsTest/Reports3/MARK-N4.QTF"));
+	dlg.arr.Add("Report Etiketji",(String)(GetHomeDirectory()+"/upp/bazaar/RepGenTest/REPORT_TEMPLATE.QTF"));
+	dlg.arr.Add("Report Thumbnails",(String)(GetHomeDirectory()+"/upp/bazaar/RepGenTest/REPORT_TEMPLATE1.QTF"));
+	//dlg.arr.Add("Report RusEtiketki",(String)(GetHomeDirectory()+"/upp/bazaar/Reports3/MARK-N4.QTF"));
 	int i = dlg.Run();
 	if(i==IDOK) {
 		String s = dlg.arr.Get(1);
