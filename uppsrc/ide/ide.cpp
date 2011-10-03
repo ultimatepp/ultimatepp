@@ -519,7 +519,11 @@ void Ide::SetErrorEditor()
 	for(int i = 0; i < console.GetLineCount(); i++) {
 		if(FindLineError(console.GetUtf8Line(i), *host, file, lineno, error)) {
 			file = NormalizePath(file);
+		#ifdef PLATFORM_WIN32
+			errorfiles.Add(ToLower(file));
+		#else
 			errorfiles.Add(file);
+		#endif
 			if(editfile == file) {
 				editor.SetError(lineno - 1, error);
 				refresh = true;
