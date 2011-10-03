@@ -283,9 +283,15 @@ bool Perform(Report& r, const char *caption)
 	return ReportWindow().Perform(r, 100, caption);
 }
 
-bool QtfReport(const String& qtf, const char *name)
+bool QtfReport(const String& qtf, const char *name, bool pagenumbers)
 {
 	Report r;
+	if(pagenumbers) {
+		Report rr;
+		rr.Footer("[1> $$P]");
+		rr << qtf;
+		r.Footer("[1> $$P/" + AsString(rr.GetCount()) + "]");
+	}
 	r << qtf;
 	return Perform(r, name);
 }

@@ -43,6 +43,10 @@
 #ifndef NASM_COMPILER_H
 #define NASM_COMPILER_H 1
 
+#ifdef __APPLE__
+#define _FORTIFY_SOURCE 0  //aris002 - in the future evaluate how unsafe are the safe funtions and vice versa
+#endif
+
 #ifdef HAVE_CONFIG_H
 # include "config.h"
 /* autoconf doesn't define these if they are redundant, but we want to
