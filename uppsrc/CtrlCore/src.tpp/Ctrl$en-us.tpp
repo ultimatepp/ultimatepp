@@ -416,9 +416,8 @@ Ctrl and Alt keys.&]
 [s4;%- &]
 [s5;:Ctrl`:`:RightDouble`(Point`,dword`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Right
 Double]([_^`:`:Point^ Point]_[*@3 p], [_^`:`:dword^ dword]_[*@3 keyflags])&]
-[s2;b17;a17; This method is repeatedly called by default implementation 
-of MouseEvent when mouse right button is pressed for some time, 
-imitating keyboard autorepeat behaviour.&]
+[s2;b17;a17; This method is called by default implementation of MouseEvent 
+when mouse right button is double`-clicked.&]
 [s7;i1120;a17; [%-*C@3 p]-|Position of mouse cursor in view coordinates.&]
 [s7;i1120;a17; [%-*C@3 keyflags]-|Combination of key flags for Shift, 
 Ctrl and Alt keys.&]
@@ -463,6 +462,69 @@ when mouse left button is released.&]
 Ctrl and Alt keys.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Ctrl`:`:MiddleDown`(Point`,dword`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Middle
+Down]([_^Point^ Point]_[*@3 p], [_^dword^ dword]_[*@3 keyflags])&]
+[s2;b17;a17; This method is called by default implementation of MouseEvent 
+when mouse middle button is pressed.&]
+[s7;i1120;a17; [%-*C@3 p]-|Position of mouse cursor in view coordinates.&]
+[s7;i1120;a17; [%-*C@3 keyflags]-|Combination of key flags for Shift, 
+Ctrl and Alt keys.&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:MiddleDouble`(Point`,dword`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Midd
+leDouble]([_^Point^ Point]_[*@3 p], [_^dword^ dword]_[*@3 keyflags])&]
+[s2;b17;a17; This method is called by default implementation of MouseEvent 
+when mouse left button is double`-clicked.&]
+[s7;i1120;a17; [%-*C@3 p]-|Position of mouse cursor in view coordinates.&]
+[s7;i1120;a17; [%-*C@3 keyflags]-|Combination of key flags for Shift, 
+Ctrl and Alt keys.&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:MiddleTriple`(Point`,dword`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Midd
+leTriple]([_^Point^ Point]_[*@3 p], [_^dword^ dword]_[*@3 keyflags])&]
+[s2; This method is called by default implementation of MouseEvent 
+when mouse right button is triple`-clicked.&]
+[s7;i1120;a17; [%-*C@3 p]-|Position of mouse cursor in view coordinates.&]
+[s7;i1120;a17; [%-*C@3 keyflags]-|Combination of key flags for Shift, 
+Ctrl and Alt keys.&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:MiddleRepeat`(Point`,dword`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Midd
+leRepeat]([_^Point^ Point]_[*@3 p], [_^dword^ dword]_[*@3 keyflags])&]
+[s2; This method is repeatedly called by default implementation of 
+MouseEvent when mouse right button is pressed for some time, 
+imitating keyboard autorepeat behaviour.&]
+[s7;i1120;a17; [%-*C@3 p]-|Position of mouse cursor in view coordinates.&]
+[s7;i1120;a17; [%-*C@3 keyflags]-|Combination of key flags for Shift, 
+Ctrl and Alt keys.&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:MiddleDrag`(Point`,dword`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Middle
+Drag]([_^Point^ Point]_[*@3 p], [_^dword^ dword]_[*@3 keyflags])&]
+[s2; This method is called by default implementation of MouseEvent 
+when user moves the mouse while holding middle button by more 
+than GUI`_DragDistance pixels. [%-*@3 p] is the starting point 
+of drag, not the current mouse position.&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:MiddleHold`(Point`,dword`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Middle
+Hold]([_^Point^ Point]_[*@3 p], [_^dword^ dword]_[*@3 keyflags])&]
+[s2; This method is called by default implementation of MouseEvent 
+when user holds the mouse middle button down for a while.&]
+[s7;i1120;a17; [%-*C@3 p]-|Position of mouse cursor in view coordinates.&]
+[s7;i1120;a17; [%-*C@3 keyflags]-|Combination of key flags for Shift, 
+Ctrl and Alt keys.&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:MiddleUp`(Point`,dword`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* MiddleUp
+]([_^Point^ Point]_[*@3 p], [_^dword^ dword]_[*@3 keyflags])&]
+[s2; This method is called by default implementation of MouseEvent 
+when mouse middle button is released.&]
+[s7;i1120;a17; [%-*C@3 p]-|Position of mouse cursor in view coordinates.&]
+[s7;i1120;a17; [%-*C@3 keyflags]-|Combination of key flags for Shift, 
+Ctrl and Alt keys.&]
+[s3; &]
+[s4;%- &]
 [s5;:Ctrl`:`:MouseWheel`(Point`,int`,dword`):%- [@(0.0.255) virtual] 
 [@(0.0.255) void]_[* MouseWheel]([_^`:`:Point^ Point]_[*@3 p], [@(0.0.255) int]_[*@3 zdelta],
  [_^`:`:dword^ dword]_[*@3 keyflags])&]
@@ -478,6 +540,62 @@ Ctrl and Alt keys.&]
 [s2;b17;a17; This method is called by default implementation of MouseEvent 
 when mouse cursor leaves view area of Ctrl.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:DragAndDrop`(Point`,PasteClip`&`):%- [@(0.0.255) virtual] 
+[@(0.0.255) void]_[* DragAndDrop]([_^Point^ Point]_[*@3 p], [_^PasteClip^ PasteClip][@(0.0.255) `&
+]_[*@3 d])&]
+[s2; This method is called when user performs drag and drop operation 
+over view area. The drag operation can either be just moving 
+the mouse, or actual drop `- the difference is that for actual 
+drop the PasteClip`::Accept method returns true. This allows to 
+share drag and drop logic, which is very similar, in the single 
+method.&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:FrameDragAndDrop`(Point`,PasteClip`&`):%- [@(0.0.255) virtual] 
+[@(0.0.255) void]_[* FrameDragAndDrop]([_^Point^ Point]_[*@3 p], [_^PasteClip^ PasteClip][@(0.0.255) `&
+]_[*@3 d])&]
+[s2; This method is called when user performs drag and drop operation 
+over frame area. The drag operation can either be just moving 
+the mouse, or actual drop `- the difference is that for actual 
+drop the PasteClip`::Accept method returns true. This allows to 
+share drag and drop logic, which is very similar, in the single 
+method.&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:DragRepeat`(Point`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* DragRepeat]([_^Point^ P
+oint]_[*@3 p])&]
+[s2; This method is called when user holds his drag operation over 
+single position for some time. This is similar to LeftRepeat 
+and it is usually used to scroll the content of view when DragRepeat 
+occurs at the border area of view.&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:DragEnter`(`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* DragEnter]()&]
+[s2; Called when user enters view with drag.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:DragLeave`(`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* DragLeave]()&]
+[s2; Called when user`'s drag leaves the view.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:GetDropData`(const String`&`)const:%- [@(0.0.255) virtual] 
+[_^String^ String]_[* GetDropData]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 f
+mt])_[@(0.0.255) const]&]
+[s2; This method is invoked to obtain drop data from Ctrl is such 
+data was not supplied as ClipData in call to DoDragAndDrop. Default 
+implementation calls GetSelectionData.&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:GetSelectionData`(const String`&`)const:%- [@(0.0.255) virtual] 
+[_^String^ String]_[* GetSelectionData]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
+]_[*@3 fmt])_[@(0.0.255) const]&]
+[s2; This method should return the widget`'s actual selection in 
+requested format. It is used for X11 middle mouse selection paste 
+operation ans as default implementation of GetDropData, because 
+usually the data to be transfered by drag`&drop operation is 
+the selection.&]
+[s3; &]
 [s4;%- &]
 [s5;:Ctrl`:`:CursorImage`(Point`,dword`):%- [@(0.0.255) virtual] [_^`:`:Image^ Image]_[* Cu
 rsorImage]([_^`:`:Point^ Point]_[*@3 p], [_^`:`:dword^ dword]_[*@3 keyflags])&]
@@ -2160,6 +2278,82 @@ loop, nothing is terminated until this additional loop is active.&]
 [s5;:Ctrl`:`:GetExitCode`(`)const:%- [@(0.0.255) int]_[* GetExitCode]()_[@(0.0.255) const]&]
 [s7;i1120;a17; [*/ Return value]-|Exit code of last loop performed with 
 this Ctrl.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:Clipboard`(`):%- [@(0.0.255) static] [_^PasteClip^ PasteClip][@(0.0.255) `&]_[* C
+lipboard]()&]
+[s2; Represents the clipboard as PasteClip. This allows unification 
+of drag`&drop and clipboard operations as there can be single 
+method handling with Clipboard and Drag`&Drop (and X11 selection) 
+operations.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:Selection`(`):%- [@(0.0.255) static] [_^PasteClip^ PasteClip][@(0.0.255) `&]_[* S
+election]()&]
+[s2; Represents X11 selection as PasteClip. This allows unification 
+of drag`&drop and selection operations as there can be single 
+method handling with Clipboard and Drag`&Drop (and X11 selection) 
+operations.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:SetSelectionSource`(const char`*`):%- [@(0.0.255) void]_[* SetSelectionSourc
+e]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 fmts])&]
+[s2; Tells X11 system that this Ctrl is current selection source, 
+with [%-*@3 fmts] available (semicolon separated list).&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:DoDragAndDrop`(const char`*`,const Image`&`,dword`,const VectorMap`<String`,ClipData`>`&`):%- [@(0.0.255) i
+nt]_[* DoDragAndDrop]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 fmts], 
+[@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 sample], [_^dword^ dword]_[*@3 action
+s], [@(0.0.255) const]_[_^VectorMap^ VectorMap]<[_^String^ String], 
+[_^ClipData^ ClipData]>`&_[*@3 data])&]
+[s2; Performs drag`&drop operation, with this Ctrl as source. [%-*@3 fmts] 
+is a semicolon separated list of formats available using GetDropData 
+method, [%-*@3 sample] is an image representation of data, [%-*@3 actions] 
+are allowed drag and drop operations `- a binary or DND`_NONE, 
+DND`_COPY, DND`_MOVE (or DND`_ALL as combination of all of them). 
+Special unrelated flag DND`_EXACTIMAGE can be add to actions 
+to indicate that Drag`&Drop should not alter [%-*@3 sample] image 
+(otherwise it can be adjusted to look consistent). [%-*@3 data] 
+is data directly provided for the operation as map of individual 
+formats to ClipData.&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:DoDragAndDrop`(const char`*`,const Image`&`,dword`):%- [@(0.0.255) int]_[* D
+oDragAndDrop]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 fmts], [@(0.0.255) const]_[_^Image^ I
+mage][@(0.0.255) `&]_[*@3 sample]_`=_Null, [_^dword^ dword]_[*@3 actions]_`=_DND`_ALL)&]
+[s2; DoDragAndDrop with empty data (all formats are provided by GetDropData).&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:DoDragAndDrop`(const VectorMap`<String`,ClipData`>`&`,const Image`&`,dword`):%- [@(0.0.255) i
+nt]_[* DoDragAndDrop]([@(0.0.255) const]_[_^VectorMap^ VectorMap]<[_^String^ String], 
+[_^ClipData^ ClipData]>`&_[*@3 data], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 s
+ample]_`=_Null, [_^dword^ dword]_[*@3 actions]_`=_DND`_ALL)&]
+[s2; DoDragAndDrop with empty fmts (all formats are provided by [%-*@3 data]).&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:GetDragAndDropSource`(`):%- [@(0.0.255) static] [_^Ctrl^ Ctrl]_`*[* GetDragAnd
+DropSource]()&]
+[s2; Returns current source of Drag and Drop, is such source exists 
+in this process and it is U`+`+ widget (otherwise returns NULL).&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:GetDragAndDropTarget`(`):%- [@(0.0.255) static] [_^Ctrl^ Ctrl]_`*[* GetDragAnd
+DropTarget]()&]
+[s2; Returns current target of Drag and Drop, is such target exists 
+in this process and it is U`+`+ widget (otherwise returns NULL).&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:IsDragAndDropSource`(`):%- [@(0.0.255) bool]_[* IsDragAndDropSource]()&]
+[s2; Same as this `=`= GetDragAndDropSource().&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:IsDragAndDropTarget`(`):%- [@(0.0.255) bool]_[* IsDragAndDropTarget]()&]
+[s2; Same as this `=`= GetDragAndDropTarget().&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:StdSampleSize`(`):%- [@(0.0.255) static] [_^Size^ Size]_[* StdSampleSize]()&]
+[s2; Returns the best size of DoDragAndDrop sample parameter.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:SetMinSize`(Size`):%- [@(0.0.255) void]_[* SetMinSize]([_^`:`:Size^ Size]_[*@3 s
