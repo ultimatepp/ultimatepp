@@ -79,12 +79,14 @@ struct PackageOrder {
 
 void WorkspaceWork::SyncErrorPackages()
 {
-	TIMING("SyncErrorPackages");
 	for(int i = 0; i < package.GetCount(); i++) {
 		FileList::File f = package.Get(i);
 		if(!IsAux(f.name) && i < speed.GetCount()) {
 			FileList::File ff = f;		
 			String path = GetFileFolder(PackagePath(f.name));
+		#ifdef PLATFORM_WIN32
+			path = ToLower(path);
+		#endif
 			ff.icon = speed[i] ? IdeCommonImg::FastPackage() : IdeImg::Package();
 			ff.underline = Null;
 			for(int q = 0; q < errorfiles.GetCount(); q++) {
@@ -256,6 +258,9 @@ void WorkspaceWork::LoadActualPackage()
 					m = TopicImg::IGroup();
 				else
 					m = TopicImg::Group();
+		#ifdef PLATFORM_WIN32
+			p = ToLower(p);
+		#endif
 			if(errorfiles.Find(p) >= 0) {
 				m = ImageOverRed(m);
 				uln = LtRed;
