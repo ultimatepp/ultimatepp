@@ -281,8 +281,8 @@ public:
 	ConstIIterator& operator+=(int d)      { ii += d; return *this; }
 	ConstIIterator& operator-=(int d)      { ii -= d; return *this; }
 
-	ConstIIterator  operator+(int d) const { return ConstIIterator(cont, ii + d); }
-	ConstIIterator  operator-(int d) const { return ConstIIterator(cont, ii - d); }
+	ConstIIterator  operator+(int d) const { return ConstIIterator(*cont, ii + d); }
+	ConstIIterator  operator-(int d) const { return ConstIIterator(*cont, ii - d); }
 
 	int  operator-(const ConstIIterator& b) const   { return ii - b.ii; }
 
