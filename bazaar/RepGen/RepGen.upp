@@ -8,6 +8,7 @@ uses
 file
 	RepGen.h,
 	RepGen.cpp,
+	RepGen.t charset "UTF-8",
 	src.tpp,
 	srcdoc.tpp;
 
