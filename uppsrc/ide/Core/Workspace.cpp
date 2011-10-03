@@ -207,7 +207,8 @@ String GetUppDir() {
 bool IsCSourceFile(const char *path)
 {
 	String ext = ToLower(GetFileExt(path));
-	return ext == ".cpp" || ext == ".c" || ext == ".cc" || ext == ".cxx" || ext == ".icpp";
+	return ext == ".cpp" || ext == ".c" || ext == ".cc" || ext == ".cxx"
+	                     || ext == ".m" || ext == ".mm" || ext == ".icpp";
 }
 
 bool IsCHeaderFile(const char *path)
