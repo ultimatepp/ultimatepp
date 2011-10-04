@@ -10,10 +10,8 @@ typedef int socklen_t;
 #endif
 
 #ifdef PLATFORM_POSIX
-#include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
-#include <netinet/in.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 typedef int SOCKET;

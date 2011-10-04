@@ -34,7 +34,6 @@ invoke(PyObject* callable
 }} //ns
 
 NAMESPACE_UPP
-using namespace boost::python;
 
 void* call_convertible(PyObject* po);
 

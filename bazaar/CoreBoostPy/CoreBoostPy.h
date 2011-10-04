@@ -12,8 +12,8 @@ NAMESPACE_UPP
 class PyEvalConvert : public Convert
 {
 public:
-	object globals;
-	mutable object locals; //added to by Format
+	boost::python::object globals;
+	mutable boost::python::object locals; //added to by Format
 	String expr;
 
 	virtual Value Format(const Value& q) const;

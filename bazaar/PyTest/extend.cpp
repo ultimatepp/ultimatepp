@@ -4,7 +4,7 @@ using namespace std;
 
 struct FuncID
 {
-	DWORD id; // An index number of the function.
+	short id; // An index number of the function.
 	PyObject* cbf; // Pointer to the callback function.
 };
 
@@ -12,7 +12,7 @@ Array<FuncID> FunctionsList;
 
 PyObject* newmodule_RegisterFunction ( PyObject* pSelf, PyObject* pArgs )
 {
-	DWORD index = 0;
+	short index = 0;
 	PyObject* CallbackFunction = NULL;
 
 	if ( !PyArg_ParseTuple ( pArgs, "lO", &index, &CallbackFunction ) )
@@ -31,7 +31,7 @@ PyObject* newmodule_RegisterFunction ( PyObject* pSelf, PyObject* pArgs )
 		if ( FunctionsList[i].id == index )
 		{
 			// Sorry mates.
-			return Py_BuildValue ( "i", FALSE );
+			return Py_BuildValue ( "i", 0 );
 		}
 	}
 
@@ -54,12 +54,12 @@ PyObject* newmodule_RegisterFunction ( PyObject* pSelf, PyObject* pArgs )
 		return NULL;
 	}
 
-	return Py_BuildValue ( "i", TRUE );
+	return Py_BuildValue ( "i", 1 );
 }
 
 PyObject* newmodule_CallFunctionByID ( PyObject* pSelf, PyObject* pArgs )
 {
-	DWORD index = 0;
+	short index = 0;
 
 	if ( !PyArg_ParseTuple ( pArgs, "l", &index ) )
 		return NULL;
@@ -79,7 +79,7 @@ PyObject* newmodule_CallFunctionByID ( PyObject* pSelf, PyObject* pArgs )
 	}
 
 	// Damn function wasn't found.
-	return Py_BuildValue ( "i", FALSE );
+	return Py_BuildValue ( "i", 0 );
 }
 
 static PyMethodDef newmoduleMethods[] =
