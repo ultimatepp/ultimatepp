@@ -29,7 +29,7 @@ Tab1::Tab1()
 	s2<<XY(20,34)<<XY(30,45)<<XY(40,49)<<XY(50,44)<<XY(60,56);
 	scatter1.AddSeries(s1,"series1").Stroke().Mark();
 	scatter1.AddSeries(s2,"series2").Stroke().Mark();
-	scatter1.ShowInfo();	
+	scatter1.ShowInfo().ShowContextMenu();
 	scatter1.SetPopText("h", "v", "v2");
 }
 
@@ -139,7 +139,7 @@ Tab4::Tab4()
 	scatter4.SetRange(13,50);
 	scatter4.SetMajorUnits(1,10);
 	scatter4.SetXYMin(0,-20);
-	scatter4.SetMouseHandling(true);
+	scatter4.SetMouseHandling(true).ShowContextMenu();
 	Vector<XY> s1,s2;
 	s1<<XY(1,-6)<<XY(2,-4)<<XY(3,2)<<XY(4,8)<<XY(5,8)<<XY(6,15)<<XY(7,20)<<XY(8,25)<<XY(9,14)<<XY(10,10)<<XY(11,3)<<XY(12,-11);
 	scatter4.AddSeries(s1,"2005").Stroke().Mark();
@@ -191,8 +191,7 @@ Tab5::Tab5()
 	b6<<=(THISBACK(Plus));
 	b7<<=(THISBACK(Minus));
 	t=0.0;
-	b2.Disable();
-	
+	b2.Disable();	
 }
 
 void Tab5::Animate()
@@ -421,7 +420,7 @@ Tab8::Tab8()
 	scatter8.SetLabelY2("Pressure [mBar]");
 	scatter8.SetMarkStyle(1,Scatter::RECTANGLE);
 	scatter8.SetMarkWidth(1,24);
-	scatter8.ShowInfo();	
+	scatter8.ShowInfo().ShowContextMenu();	
 }
 
 //******************************************************************************************

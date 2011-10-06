@@ -2,7 +2,6 @@
 
 #include <Report/Report.h>
 #include <PdfDraw/PdfDraw.h>
-#include <plugin/jpg/jpg.h>
 
 #define IMAGECLASS MyImages
 #define IMAGEFILE <TestScatter2/TestScatter2.iml>
@@ -81,37 +80,36 @@ void TestScatter2::Preview()
 
 void TestScatter2::SavePNG()
 {
-	PNGEncoder encoder;
 	int ntab=tc1.Get();	
 	
 	switch (ntab)
 	{
 		case 0:
-			encoder.SaveFile("scatter1.png",tab1.scatter1.GetImage(3));
+			tab1.scatter1.SaveToImage("scatter1.png");
 			break;
 		case 1:	
-			encoder.SaveFile("scatter2.png",tab2.scatter2.GetImage(3));
+			tab2.scatter2.SaveToImage("scatter2.png");
 			break;
 		case 2:
-			encoder.SaveFile("scatter3.png",tab3.scatter3.GetImage(3));
+			tab3.scatter3.SaveToImage("scatter3.png");
 			break;
 		case 3:
-			encoder.SaveFile("scatter4.png",tab4.scatter4.GetImage(3));
+			tab4.scatter4.SaveToImage("scatter4.png");
 			break;
 		case 4:
-			encoder.SaveFile("scatter5.png",tab5.scatter5.GetImage(3));
+			tab5.scatter5.SaveToImage("scatter5.png");
 			break;
 		case 5:
-			encoder.SaveFile("scatter6.png",tab6.scatter6.GetImage(3));
+			tab6.scatter6.SaveToImage("scatter6.png");
 			break;
 		case 6:
-			encoder.SaveFile("scatter7.png",tab7.scatter7.GetImage(3));
+			tab7.scatter7.SaveToImage("scatter7.png");
 			break;				
 		case 7:
-			encoder.SaveFile("scatter8.png",tab8.scatter8.GetImage(3));
+			tab8.scatter8.SaveToImage("scatter8.png");
 			break;
 		case 8:
-			encoder.SaveFile("scatter9.png",tab9.scatter9.GetImage(3));
+			tab9.scatter9.SaveToImage("scatter9.png");
 			break;
 	}			
 	
@@ -119,37 +117,36 @@ void TestScatter2::SavePNG()
 
 void TestScatter2::SaveJPG()
 {
-	JPGEncoder encoder(90);
 	int ntab=tc1.Get();	
 	
 	switch (ntab)
 	{
 		case 0:
-			encoder.SaveFile("scatter1.jpg",tab1.scatter1.GetImage(3));
+			tab1.scatter1.SaveToImage("scatter1.jpg");
 			break;
 		case 1:
-			encoder.SaveFile("scatter2.jpg",tab2.scatter2.GetImage(3));
+			tab2.scatter2.SaveToImage("scatter2.jpg");
 			break;
 		case 2:
-			encoder.SaveFile("scatter3.jpg",tab3.scatter3.GetImage(3));
+			tab3.scatter3.SaveToImage("scatter3.jpg");
 			break;
 		case 3:
-			encoder.SaveFile("scatter4.jpg",tab4.scatter4.GetImage(3));
+			tab4.scatter4.SaveToImage("scatter4.jpg");
 			break;
 		case 4:
-			encoder.SaveFile("scatter5.jpg",tab5.scatter5.GetImage(3));
+			tab5.scatter5.SaveToImage("scatter5.jpg");
 			break;
 		case 5:
-			encoder.SaveFile("scatter6.jpg",tab6.scatter6.GetImage(3));
+			tab6.scatter6.SaveToImage("scatter6.jpg");
 			break;
 		case 6:
-			encoder.SaveFile("scatter7.jpg",tab7.scatter7.GetImage(3));
+			tab7.scatter7.SaveToImage("scatter7.jpg");
 			break;				
 		case 7:
-			encoder.SaveFile("scatter8.jpg",tab8.scatter8.GetImage(3));
+			tab8.scatter8.SaveToImage("scatter8.jpg");
 			break;		
 		case 8:
-			encoder.SaveFile("scatter9.jpg",tab9.scatter9.GetImage(3));
+			tab9.scatter9.SaveToImage("scatter9.jpg");
 			break;		
 	}			
 	

@@ -4,8 +4,7 @@ uses
 	CtrlLib,
 	Scatter,
 	Report,
-	PdfDraw,
-	plugin\jpg;
+	PdfDraw;
 
 file
 	TestScatter2.h,
