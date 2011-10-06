@@ -1,7 +1,8 @@
 description "Bazaar: Scatter & Pie ctrls, by Andrei-Catalin\377";
 
 uses
-	CtrlLib;
+	CtrlLib,
+	plugin\jpg;
 
 file
 	Scatter.cpp,

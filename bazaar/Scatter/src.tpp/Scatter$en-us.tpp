@@ -27,10 +27,30 @@ changed to fit the data.&]
 [s4; &]
 [s5;:Scatter`:`:SaveToClipboard`(bool`): [@(0.0.255) void]_[* SaveToClipboard]([@(0.0.255) b
 ool]_[*@3 saveAsMetafile]_`=_[@(0.0.255) false])&]
-[s2;%% Saves Scatter to clipboard as a bitmap.&]
+[s2;%% Saves graph to clipboard as a bitmap.&]
 [s2;%% In windows if [%-*@3 saveAsMetafile ]is true, a metafile is 
 sent to clipboard.&]
 [s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:SaveToImage`(String`): [@(0.0.255) void]_[* SaveToImage]([_^String^ String]_
+[*@3 fileName]_`=_Null)&]
+[s2;%% Saves graph to file [%-*@3 fileName.] Supported formats are 
+.PNG and .JPG.&]
+[s2;%% If [%-*@3 fileName] is null, a window is opened asking the user 
+to enter a file name.&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:SetFastViewX`(bool`): [_^Scatter^ Scatter][@(0.0.255) `&]_[* SetFastViewX](
+[@(0.0.255) bool]_[*@3 set]_`=_[@(0.0.255) true])&]
+[s2;%% If [%-*@3 set ]is true, it will be viewed a point per horizontal 
+pixel. This point will be the average of all data that is in 
+that pixel.&]
+[s2;%% This speeds up the graph painting.&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:GetTitleFont`(`): [_^Font^ Font][@(0.0.255) `&]_[* GetTitleFont]()&]
+[s2;%% Returns title font.&]
+[s3; &]
 [s4; &]
 [s5;:Scatter`:`:GetXByPoint`(const int`): [@(0.0.255) double]_[* GetXByPoint]([@(0.0.255) c
 onst]_[@(0.0.255) int]_[*@3 x])&]
@@ -62,11 +82,38 @@ value [%-*@3 x ]in data units.&]
 [%-*@3 y ]in data units.&]
 [s3;%% &]
 [s4; &]
-[s5;:Scatter`:`:ShowInfo`(bool`): [@(0.0.255) void]_[* ShowInfo]([@(0.0.255) bool]_[*@3 show][@(0.0.255) `=
-true])&]
+[s5;:Scatter`:`:ShowInfo`(bool`): [_^Scatter^ Scatter][@(0.0.255) `&]_[* ShowInfo]([@(0.0.255) b
+ool]_[*@3 show][@(0.0.255) `=true])&]
 [s2;%% Defines to show or not with [%-*@3 show ]the pop`-up window 
 that indicates in data units the cursor location and, if dragged, 
 the size of the window.&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:ShowContextMenu`(const bool`&`): [_^Scatter^ Scatter][@(0.0.255) `&]_[* Sho
+wContextMenu]([@(0.0.255) const]_[@(0.0.255) bool`&]_[*@3 show][@(0.0.255) `=true])&]
+[s2;%% Defines to show or not with [%-*@3 show ]the context menu with 
+options to move and zoom the plot (if SetMouseHandling(true)) 
+and to save it to file or clipboard.&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:FitToData`(bool`): [@(0.0.255) void]_[* FitToData]([@(0.0.255) bool]_[*@3 Y]_
+`=_[@(0.0.255) false])&]
+[s2;%% Scales and scrolls the plots so that all data is included 
+in X axis. If [%-*@3 Y] is true, Y axis is also fitted so that 
+all plot points are visible.&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:Zoom`(double`,bool`,bool`): [@(0.0.255) void]_[* Zoom]([@(0.0.255) double]_
+[*@3 scale], [@(0.0.255) bool]_[*@3 hor]_`=_[@(0.0.255) true], [@(0.0.255) bool]_[*@3 ver]_`=
+_[@(0.0.255) true])&]
+[s2;%% Zooms graph by [%-*@3 scale] factor. The axis scaled are X if 
+[%-*@3 hor] is true and Y if [%-*@3 ver ]is true.&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:Scroll`(double`,double`): [@(0.0.255) void]_[* Scroll]([@(0.0.255) double]_
+[*@3 factorX], [@(0.0.255) double]_[*@3 factorY])&]
+[s2;%% Scrolls graph by [%-*@3 factorX] in X axis and [%-*@3 factorY 
+]in Y axis.&]
 [s3;%% &]
 [s4; &]
 [s5;:Scatter`:`:SetRange`(double`,double`,double`): [_^Scatter^ Scatter][@(0.0.255) `&]_[* S
@@ -183,6 +230,37 @@ TRIANGLE, CROSS, X, RHOMB.&]
 [s2;%% Hides the of the latest added series.marks.&]
 [s3; &]
 [s4; &]
+[s5;:Scatter`:`:SetSequentialX`(const int`&`,const bool`&`): [@(0.0.255) void]_[* SetSequ
+entialX]([@(0.0.255) const]_[@(0.0.255) int`&]_[*@3 j], [@(0.0.255) const]_[@(0.0.255) bool
+`&]_[*@3 sequential]_`=_[@(0.0.255) true])&]
+[s2;%% If [%-*@3 sequential] is true, it Indicates that the [%-*@3 j] 
+graph data has been sequentially inserted following X axis.&]
+[s2;%% This speeds up the graph painting.&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:SetSequentialX`(const bool`&`): [_^Scatter^ Scatter]_`&[* SetSequentialX](
+[@(0.0.255) const]_[@(0.0.255) bool`&]_[*@3 sequential]_`=_[@(0.0.255) true])&]
+[s2;%% If [%-*@3 sequential] is true, it Indicates that the last inserted 
+graph data has been sequentially inserted following X axis.&]
+[s2;%% This speeds up the graph painting.&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:SetSequentialXAll`(const bool`&`): [_^Scatter^ Scatter]_`&[* SetSequentia
+lXAll]([@(0.0.255) const]_[@(0.0.255) bool`&]_[*@3 sequential]_`=_[@(0.0.255) true])&]
+[s2;%% If [%-*@3 sequential] is true, it Indicates that all graph data 
+has been sequentially inserted following X axis.&]
+[s2;%% This speeds up the graph painting.&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:RemoveSeries`(const int`&`): [@(0.0.255) void]_[* RemoveSeries]([@(0.0.255) c
+onst]_[@(0.0.255) int`&]_[*@3 j])&]
+[s2;%% Remove [%-*@3 j] data series.&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:RemoveAllSeries`(`): [@(0.0.255) void]_[* RemoveAllSeries]()&]
+[s2;%% Remove all data series, cleaning the graph.&]
+[s3; &]
+[s4; &]
 [s5;:Scatter`:`:SetMouseBehavior`(Scatter`:`:MouseBehaviour`*`): [@(0.0.255) bool]_[* Set
 MouseBehavior]([_^Scatter`:`:MouseBehaviour^ MouseBehaviour]_`*[*@3 mouseBehavior])&]
 [s2;%% Sets with [%-*@3 mouseBehavior] the array of MouseBehavior conditions 
@@ -206,8 +284,7 @@ used.&]
 [s3;%% &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
-[s3;%% &]
-[s4; &]
+[s4;%% &]
 [s5;:Scatter`:`:MouseBehaviour`:`:ctrl: [@(0.0.255) bool]_[* ctrl]&]
 [s2;%% Set to true if Ctrl has to be pressed.&]
 [s3; &]

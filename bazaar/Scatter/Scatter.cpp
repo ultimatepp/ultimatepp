@@ -5,7 +5,8 @@
 #include <Draw/iml.h>
 
 Scatter::MouseBehaviour defaultMouse[] = {
-	{false, false, false, true , false, 0, false, Scatter::SHOW_INFO},
+	{false, false, false, true , false, 0, false, Scatter::SHOW_INFO}, 
+	{false, false, false, false, false, 0, true , Scatter::CONTEXT_MENU},
 	{false, false, false, false, true , 0, false, Scatter::SCROLL},
 	{false, false, false, false, false, 1, false, Scatter::ZOOM_H_RED},
 	{false, false, false, false, false, 1, false, Scatter::ZOOM_V_RED},
@@ -920,6 +921,7 @@ Image Scatter::GetImage(const int& scale)
 
 void Scatter::SaveAsMetafile(const char* file) const
 {
+	GuiLock __;
 	WinMetaFileDraw wmfd;	
 	wmfd.Create(6*GetSize().cx,6*GetSize().cy,"Scatter","chart",file);
 	SetDrawing (wmfd, 6);	
@@ -928,6 +930,7 @@ void Scatter::SaveAsMetafile(const char* file) const
 
 void Scatter::SaveToClipboard(bool saveAsMetafile) 
 {
+	GuiLock __;
 	if (saveAsMetafile) {
 		WinMetaFileDraw wmfd;	
 		wmfd.Create(6*GetSize().cx,6*GetSize().cy,"Scatter","chart");
@@ -943,6 +946,7 @@ void Scatter::SaveToClipboard(bool saveAsMetafile)
 
 void Scatter::SaveToClipboard(bool) 
 {
+	GuiLock __;
 	Image img = GetImage(3);
 	WriteClipboardImage(img);
 }
@@ -979,9 +983,10 @@ void Scatter::Paint(Draw& w)
 	SetDrawing(w,1);
 }
 
-void Scatter::ShowInfo(bool show)
+Scatter &Scatter::ShowInfo(bool show)
 {
 	paintInfo=show;
+	return *this;
 }
 
 void Scatter::ProcessPopUp(const Point & pt)
@@ -1077,6 +1082,9 @@ void Scatter::DoMouseAction(bool down, Point pt, MouseAction action, int value)
 						break;
 	case SHOW_INFO:		LabelPopUp(down, pt);
 						break;
+	case CONTEXT_MENU:	if(showContextMenu)
+							MenuBar::Execute(THISBACK(ContextMenu));
+						break;
 	}
 }
 
@@ -1094,8 +1102,7 @@ bool Scatter::SetMouseBehavior(MouseBehaviour *_mouseBehavior)
 
 void Scatter::ProcessMouse(bool down, Point &pt, bool ctrl, bool alt, bool shift, bool left, bool middle, int middleWheel, bool right) 
 {
-	int i;
-	for (i = 0; mouseBehavior[i].action != NO_ACTION && i < MAX_MOUSEBEHAVIOR; ++i) {
+	for (int i = 0; mouseBehavior[i].action != NO_ACTION && i < MAX_MOUSEBEHAVIOR; ++i) {
 		if (mouseBehavior[i].ctrl   == ctrl   && mouseBehavior[i].alt   == alt   &&
 		    mouseBehavior[i].shift  == shift  && mouseBehavior[i].left  == left  &&
 		    mouseBehavior[i].middle == middle && mouseBehavior[i].right == right &&
@@ -1252,19 +1259,17 @@ void Scatter::MouseLeave()
 void Scatter::MouseZoom(int zdelta, bool hor, bool ver) 
 {
 	double scale = zdelta > 0 ? zdelta/100. : -100./zdelta;
-	Zoom(scale);
+	Zoom(scale, mouseHandlingX, mouseHandlingY);
 }
 
-void Scatter::Zoom(double scale, bool hor, bool ver) 
+void Scatter::Zoom(double scale, bool mouseX, bool mouseY) 
 {
-	bool mouseX = mouseHandlingX && hor;
 	mouseX = mouseX && ((minXZoom > 0 && xRange*scale > minXZoom) || (minXZoom < 0));
 	mouseX = mouseX && ((maxXZoom > 0 && xRange*scale < maxXZoom) || (maxXZoom < 0));
-	bool mouseY = mouseHandlingY && ver;
 	mouseY = mouseY && ((minYZoom > 0 && yRange*scale > minYZoom) || (minYZoom < 0));
 	mouseY = mouseY && ((maxYZoom > 0 && yRange*scale < maxYZoom) || (maxYZoom < 0));
-	mouseX = mouseX && (!mouseHandlingY || mouseY);	
-	mouseY = mouseY && (!mouseHandlingX || mouseX);
+	//mouseX = mouseX && (!mouseHandlingY || mouseY);	
+	//mouseY = mouseY && (!mouseHandlingX || mouseX);
 	if (mouseX)
 	{
 		double oldXMin = xMin;
@@ -1273,7 +1278,6 @@ void Scatter::Zoom(double scale, bool hor, bool ver)
 		AdjustMinUnitX();
 		xRange *= scale;
 	}
-	
 	if (mouseY)
 	{
 		yRange *= scale;
@@ -1389,7 +1393,50 @@ Scatter &Scatter::SetMouseHandling(bool valx, bool valy)
 	return *this;
 }
 
-Pointf PointAtLen(const Pointf &p0, const Pointf &p1, double len) {
+void Scatter::ContextMenu(Bar& bar)
+{
+	if (mouseHandlingX || mouseHandlingY) {
+		bar.Add(t_("Fit to data"), ChartImg::ShapeHandles(), THISBACK1(FitToData, mouseHandlingY));
+		bar.Add(t_("Zoom +"), ChartImg::ZoomPlus(), THISBACK3(Zoom, 1/1.2, true, mouseHandlingY));
+		bar.Add(t_("Zoom -"), ChartImg::ZoomMinus(), THISBACK3(Zoom, 1.2, true, mouseHandlingY));
+		bar.Add(t_("Scroll Left"), ChartImg::LeftArrow(), THISBACK2(Scroll, -0.2, 0));
+		bar.Add(t_("Scroll Right"), ChartImg::RightArrow(), THISBACK2(Scroll, 0.2, 0));
+		if (mouseHandlingY) {
+			bar.Add(t_("Scroll Up"), ChartImg::UpArrow(), THISBACK2(Scroll, 0, -0.2));
+			bar.Add(t_("Scroll Down"), ChartImg::DownArrow(), THISBACK2(Scroll, 0, 0.2));			
+		}
+		bar.Separator();
+	}
+	bar.Add(t_("Copy"), ChartImg::Copy(), THISBACK1(SaveToClipboard, false)).Key(K_CTRL_C);
+	bar.Add(t_("Save to file"), ChartImg::Save(), THISBACK1(SaveToImage, Null));
+}
+
+void Scatter::SaveToImage(String fileName)
+{
+	GuiLock __;
+	if (IsNull(fileName)) {
+		FileSel fs;
+		
+		fs.Type("PNG file", "*.png");
+		fs.Type("JPEG file", "*.jpg");
+	    if(!fs.ExecuteSaveAs(t_("Saving plot to PNG or JPEG file"))) {
+	        Exclamation(t_("Plot has not been saved"));
+	        return;
+	    }
+        fileName = fs;
+	}
+	if (GetFileExt(fileName) == ".png") {
+		PNGEncoder encoder;
+		encoder.SaveFile(fileName, GetImage(3));
+	} else if (GetFileExt(fileName) == ".jpg") {	
+		JPGEncoder encoder(90);
+		encoder.SaveFile(fileName, GetImage(3));		
+	} else
+		Exclamation(Format(t_("File format %s not found"), GetFileExt(fileName)));
+}
+	
+Pointf PointAtLen(const Pointf &p0, const Pointf &p1, double len) 
+{
 	Pointf ret;
 	if (p1.y == p0.y) {
 		ret.x = p0.x + ((p0.x < p1.x) ? len : -len);
@@ -1406,9 +1453,12 @@ Pointf PointAtLen(const Pointf &p0, const Pointf &p1, double len) {
 	}
 	return ret;
 }
-double Dist(const Pointf &p0, const Pointf &p1) {
+
+double Dist(const Pointf &p0, const Pointf &p1) 
+{
 	return sqrt(sqr(p0.x-p1.x) + sqr(p0.y-p1.y));
 }
+
 inline bool Even(int val)	  	{return !(val%2);}
 
 Vector <double> GetLinePattern(String pattern) 
@@ -1638,11 +1688,11 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 		int rfrom = min(popLT.y-y0, popRB.y-y0);
 		int rto   = max(popLT.y-y0, popRB.y-y0);
 		for (int r = rfrom+scale*5; r < rto; r += scale*5)
-			DrawLineX(w, popLT.x-x0, r, popRB.x-x0, r, scale, LtRed, "o..", scale);
-		DrawLineX(w, 1, 		 popLT.y-y0, l, 		 popLT.y-y0, scale, LtRed, "o.", scale);
-		DrawLineX(w, 1, 	   	 popRB.y-y0, l, 	   	 popRB.y-y0, scale, LtRed, "o.", scale);
-		DrawLineX(w, popLT.x-x0, 1, 	   	 popLT.x-x0, h, 	   	 scale, LtRed, "o.", scale);
-		DrawLineX(w, popRB.x-x0, 1, 	   	 popRB.x-x0, h, 	     scale, LtRed, "o.", scale);
+			DrawLineX(w, popLT.x-x0, r, popRB.x-x0, r, scale, SColorHighlight, "o..", scale);
+		DrawLineX(w, 1, 		 popLT.y-y0, l, 		 popLT.y-y0, scale, SColorHighlight, "o.", scale);
+		DrawLineX(w, 1, 	   	 popRB.y-y0, l, 	   	 popRB.y-y0, scale, SColorHighlight, "o.", scale);
+		DrawLineX(w, popLT.x-x0, 1, 	   	 popLT.x-x0, h, 	   	 scale, SColorHighlight, "o.", scale);
+		DrawLineX(w, popRB.x-x0, 1, 	   	 popRB.x-x0, h, 	     scale, SColorHighlight, "o.", scale);
 	}
 	w.End();
 }
@@ -1736,6 +1786,7 @@ Size GetTextSizeMultiline(Array <Size> &sizes) {
 			
 void Scatter::SetDrawing(Draw& w, const int& scale) const
 {
+	GuiLock __;
 	w.DrawRect(scale*GetSize(),graphColor);
 	Size sz;
 	sz.cx=0;
@@ -1843,14 +1894,14 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 	
 Scatter::Scatter():
 	title (""),
-	titleColor(Black),
+	titleColor(SColorText),
 	graphColor(White),
 	titleFont(Roman(20)),
 	xLabel(""),yLabel(""),
 	labelsFont(StdFont()),
-	labelsColor(Black),
-	plotAreaColor(::Color(245,245,248)),
-	axisColor(Black),
+	labelsColor(SColorText),
+	plotAreaColor(SColorLtFace),
+	axisColor(SColorText),
 	axisWidth(6),
 	px(30),
 	py(30),
@@ -1864,7 +1915,7 @@ Scatter::Scatter():
 	logX(false), logY(false), logY2(false),
 	cbModifFormatX(NULL),cbModifFormatY(NULL),cbModifFormatY2(NULL),
 	cbModifFormatDeltaX(NULL),cbModifFormatDeltaY(NULL),cbModifFormatDeltaY2(NULL),
-	gridColor(::Color(102,102,102)),
+	gridColor(SColorDkShadow),
 	gridWidth(4),
 	paintInfo(false),
 	mouseHandlingX(false), mouseHandlingY(false), isScrolling(false), isLabelPopUp(false),      
@@ -1875,11 +1926,11 @@ Scatter::Scatter():
 	offset(10,12),
 	minXZoom(-1), maxXZoom(-1), minYZoom(-1), maxYZoom(-1), fastViewX(false), 
 	sequentialXAll(false), popTextX("x"), popTextY("y1"), popTextY2("y2"), 
-	popLT(Null), popRB(Null)
+	popLT(Null), popRB(Null), showContextMenu(false)
 {
 	Color(graphColor);	
 	BackPaint();
-	popText.SetColor(::Color(200,220,255));        
+	popText.SetColor(SColorFace);        
 	SetMouseBehavior(defaultMouse);
 }
 

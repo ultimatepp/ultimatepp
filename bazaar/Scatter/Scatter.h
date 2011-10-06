@@ -7,6 +7,7 @@ Copyright (C) 2006-2007, Andrei-Catalin
 #define _Scatter_Scatter_h
 
 #include "PopUpText.h"
+#include <plugin/jpg/jpg.h>
 
 using namespace Upp;
 
@@ -58,7 +59,7 @@ public:
 	Callback WhenSetRange;
 	Callback WhenSetXYMin;
 	
-	enum MouseAction {NO_ACTION = 1111110, SCROLL, ZOOM_H_ENL, ZOOM_H_RED, ZOOM_V_ENL, ZOOM_V_RED, SHOW_INFO};
+	enum MouseAction {NO_ACTION = 0, SCROLL, ZOOM_H_ENL, ZOOM_H_RED, ZOOM_V_ENL, ZOOM_V_RED, SHOW_INFO, CONTEXT_MENU};
 
 	struct MouseBehaviour {
 		bool ctrl;
@@ -103,6 +104,8 @@ public:
 	
 	Scatter& ShowLegend(const bool& show=true);
 	Scatter& SetLegendWeight(const int& weight);
+	
+	Scatter& ShowContextMenu(const bool& show=true) {showContextMenu = show; return *this;}
 	
 	Scatter& SetAntialiasing(const bool& aa=true);	
 	
@@ -219,7 +222,7 @@ public:
 	void RemoveFSeries(const int& j);
 	void RemoveAllFSeries();
 	
-	void ShowInfo(bool show=true);	
+	Scatter &ShowInfo(bool show=true);	
 	void ProcessPopUp(const Point & pt);
 	
 	Drawing GetDrawing()const;
@@ -230,6 +233,7 @@ public:
 	#endif
 	
 	void SaveToClipboard(bool saveAsMetafile = false);
+	void SaveToImage(String fileName = Null);
 	
 	Scatter& LogX(const bool& logx=true) {logX=logx; return *this;}
 	Scatter& LogY(const bool& logy=true) {logY=logy; return *this;}	
@@ -312,7 +316,7 @@ private:
 	int legendWeight;
 	bool antialiasing;
 	bool mouseHandlingX, mouseHandlingY;
-
+	bool showContextMenu;
 	
 	Vector<XY> Cubic (const Vector<XY>& DataSet, const int& fineness=10, double tension=0.4)const;
 	void DrawLegend(Draw& w,const int& scale) const;
@@ -341,6 +345,8 @@ private:
 	void AdjustMinUnitX();
 	void AdjustMinUnitY();
 	void AdjustMinUnitY2();
+	
+	void ContextMenu(Bar& bar);
 	
 	virtual Image  CursorImage(Point p, dword keyflags);
 	
