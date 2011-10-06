@@ -9,6 +9,7 @@ uses
 
 file
 	ProtectStatus.h,
+	Protect.t,
 	ProtectStatus.cpp,
 	Protect.h,
 	Protect.cpp,

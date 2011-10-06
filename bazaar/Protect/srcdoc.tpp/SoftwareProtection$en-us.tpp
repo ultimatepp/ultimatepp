@@ -21,7 +21,7 @@ up to code encryption, which makes disassembly virtually impossible
 if user hasn`'t a program license.&]
 [s0;%- &]
 [s0; First step is the easiest to achieve, and its security degree 
-depends almost only on authentication media choosen.&]
+depends almost only on authentication media chosen.&]
 [s0; In my opinion, a good dongle or, even better, an internet authentication 
 method are the most secure; in particular, internet auth, which 
 has the obvious caveat of the need of a connection available 
@@ -41,7 +41,7 @@ he has good skills in software debugging, and make is [_ somehow
 ]difficult for an user in possession of a license to defeat the 
 protection scheme.&]
 [s0; This is accomplished by encryption of some software parts and 
-on`-the`-fly decription with a license key obtained in any usable 
+on`-the`-fly decryption with a license key obtained in any usable 
 way.&]
 [s0; Beware that a mid`-skilled programmer in possession of a right 
 license key can defeat the algorithm in short time, as the decryption 

@@ -908,7 +908,7 @@ PROTECT`_END`_FUNC macros :&]
 [s0;l160;/ &]
 [s0;l160; [/ `}]&]
 [s0;l160; &]
-[s0; Define a decription function ([* Decrypt ]in this case) which 
+[s0; Define a decryption function ([* Decrypt ]in this case) which 
 obtains by any mean you choose the decryption key and do the 
 decryption process; for this purpose, Protect package gives a 
 function that does the decryption, named [* PROTECT`_DECRYPT()] 
