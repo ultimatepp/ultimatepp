@@ -16,7 +16,7 @@ void CParser::ThrowError(const char *s) {
 
 bool CParser::Spaces0() {
 	LTIMING("Spaces");
-	if(*term > ' ' &&
+	if((byte)*term > ' ' &&
 	   !(term[0] == '/' && term[1] == '/') &&
 	   !(term[0] == '/' && term[1] == '*'))
 		return false;
@@ -38,7 +38,7 @@ bool CParser::Spaces0() {
 			}
 		}
 		if(!*term) break;
-		if(*term > ' ') break;
+		if((byte)*term > ' ') break;
 		if(*term == '\n') {
 			line++;
 			lineptr = term + 1;
