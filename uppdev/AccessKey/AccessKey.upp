@@ -1,6 +1,5 @@
 uses
-	CtrlLib,
-	Web\ctrl;
+	CtrlLib;
 
 include
 	gdfgsdfg;
