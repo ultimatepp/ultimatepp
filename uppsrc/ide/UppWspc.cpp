@@ -360,9 +360,7 @@ void WorkspaceWork::AddFile(ADDFILE af)
 	case PACKAGE_FILE: fs = &BasedSourceFs(); fs->BaseDir(GetFileFolder(PackagePathA(active))); break;
 	case ANY_FILE:     fs = &AnySourceFs(); break;
 	case OUTPUT_FILE:  fs->ActiveDir(GetOutputDir()); break;
-#ifdef PLATFORM_POSIX
 	case HOME_FILE:    fs->ActiveDir(GetHomeDirectory()); break;
-#endif
 	case LOCAL_FILE:   fs->ActiveDir(GetLocalDir()); break;
 	default: ; // GCC warns otherwise
 	}
@@ -753,7 +751,7 @@ bool WorkspaceWork::IsAux()
 	return IsAux(actualpackage);
 }
 
-void WorkspaceWork::SpecialFileMenu(Bar& menu)
+void WorkspaceWork::InsertSpecialMenu(Bar& menu)
 {
 	bool isaux = IsAux();
 	menu.Add("Insert any file(s)", THISBACK1(AddFile, ANY_FILE))
@@ -763,12 +761,16 @@ void WorkspaceWork::SpecialFileMenu(Bar& menu)
 		.Help("Open file selector in output / intermediate directory for current package");
 	menu.Add(isaux, "Insert Local directory file(s)", THISBACK1(AddFile, LOCAL_FILE))
 		.Help("Open file selector in Local directory for current package");
-#ifdef PLATFORM_POSIX
 	menu.Add("Insert home directory file(s)", THISBACK1(AddFile, HOME_FILE))
 		.Help("Open file selector in current user's HOME directory");
-#endif
+}
+
+void WorkspaceWork::SpecialFileMenu(Bar& menu)
+{
+	InsertSpecialMenu(menu);
 	menu.Add("Import directory tree sources..", THISBACK(Import));
 }
+
 void WorkspaceWork::OpenFileFolder()
 {
 	ShellOpenFolder(GetFileDirectory(GetActiveFilePath()));
@@ -783,13 +785,17 @@ void WorkspaceWork::FileMenu(Bar& menu)
 {
 	bool sel = filelist.IsCursor() && filelist[filelist.GetCursor()].isdir;
 	bool isaux = IsAux();
-	menu.Add(!isaux, "Insert package directory file(s)", THISBACK1(AddFile, PACKAGE_FILE))
-		.Help("Insert file relative to current package");
-	menu.Add(!isaux, "Insert topic++ group", THISBACK(AddTopicGroup));
+	if(isaux)
+		InsertSpecialMenu(menu);
+	else {
+		menu.Add(!isaux, "Insert package directory file(s)", THISBACK1(AddFile, PACKAGE_FILE))
+			.Help("Insert file relative to current package");
+		menu.Add(!isaux, "Insert topic++ group", THISBACK(AddTopicGroup));
+		menu.Add("Special", THISBACK(SpecialFileMenu))
+		    .Help("Less frequently used methods of adding files to the package");
+	}
 	menu.Add("Insert separator", THISBACK(AddSeparator))
 		.Help("Insert text separator line");
-	menu.Add("Special", THISBACK(SpecialFileMenu))
-	    .Help("Less frequently used methods of adding files to the package");
 	menu.Separator();
 	if(!organizer) {
 		if(sel)
