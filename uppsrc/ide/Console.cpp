@@ -122,6 +122,7 @@ int Console::Flush()
 			if(slot.outfile)
 				slot.outfile->Put(s);
 			if(!slot.quiet) {
+				s = FromSystemCharset(s);
 				if(console_lock < 0 || console_lock == i) {
 					console_lock = i;
 					Append(s);
