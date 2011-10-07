@@ -76,8 +76,20 @@ onst]_[@(0.0.255) char]_`*[*@3 cmdline], [@(0.0.255) const]_[@(0.0.255) char]_`*
 ]can provide a new environment for the process, if NULL, then 
 the new process inherits caller`'s environment.&]
 [s3;%% &]
+[s4; &]
+[s5;:LocalProcess`:`:ConvertCharset`(bool`): [_^LocalProcess^ LocalProcess][@(0.0.255) `&
+]_[* ConvertCharset]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:LocalProcess`:`:NoConvertCharset`(`): [_^LocalProcess^ LocalProcess][@(0.0.255) `&]_
+[* NoConvertCharset]()&]
+[s2;%% Determines LocalProcess should convert encoding from system 
+to application one. Default setting is true.&]
 [s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor Detail]]}}&]
+[s3; &]
+[s5;:LocalProcess`:`:ConvertCharset`(bool`): [_^LocalProcess^ LocalProcess][@(0.0.255) `&
+]_[* ConvertCharset]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%%  [%-*@3 b].&]
+[s3;%% &]
 [s4;H0; &]
 [s5;:LocalProcess`:`:LocalProcess`(`): [* LocalProcess]()&]
 [s2;%% Default constructor.&]
@@ -94,17 +106,22 @@ onst]_[@(0.0.255) char]_`*[*@3 cmdline], [@(0.0.255) const]_[@(0.0.255) char]_`*
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Global functions related to LocalProcess]]}}&]
 [s3; &]
-[s5;:Sys`(const char`*`,String`&`): [@(0.0.255) int]_[* Sys]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 cmd], [_^String^ String][@(0.0.255) `&]_[*@3 output])&]
+[s5;:Sys`(const char`*`,String`&`,bool`): [@(0.0.255) int]_[* Sys]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 cmd], [_^String^ String][@(0.0.255) `&]_[*@3 out], [@(0.0.255) bool]_[*@3 convert
+charset]_`=_[@(0.0.255) true])&]
 [s2;%% Runs process defined by [%-*@3 cmd] command line, returns its 
 standard output in [%-*@3 output].and its exit code as return value. 
-If there was error invoking [%-*@3 cmd], returns `-1&]
+If there was error invoking [%-*@3 cmd], returns `-1. If [%-*@3 convertcharset] 
+is true, output is converted from system character encoding to 
+application encoding.&]
 [s3;%% &]
 [s4; &]
-[s5;:Sys`(const char`*`): [_^String^ String]_[* Sys]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 c
-md])&]
+[s5;:Sys`(const char`*`,bool`): [_^String^ String]_[* Sys]([@(0.0.255) const]_[@(0.0.255) cha
+r]_`*[*@3 cmd], [@(0.0.255) bool]_[*@3 convertcharset]_`=_[@(0.0.255) true])&]
 [s2;%% Runs process defined by [%-*@3 cmd] command line. If [%-*@3 cmd] 
 was executed successfully and returned zero exit code, returns 
-its standard output, otherwise returns String`::GetVoid().&]
+its standard output, otherwise returns String`::GetVoid(). If 
+[%-*@3 convertcharset] is true, output is converted from system 
+character encoding to application encoding.&]
 [s3; &]
 [s0; ]
