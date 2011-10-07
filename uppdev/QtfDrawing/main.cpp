@@ -1,5 +1,7 @@
 #include <CtrlLib/CtrlLib.h>
 
+using namespace Upp;
+
 GUI_APP_MAIN
 {
 	String pict = AsQTF(CreateImageObject(StreamRaster::LoadFileAny("d:/msg_about.gif"), 400));
