@@ -34,6 +34,7 @@ private:
 	HANDLE       hProcess;
 	HANDLE       hOutputRead;
 	HANDLE       hInputWrite;
+	bool         convertcharset;
 #endif
 #ifdef PLATFORM_POSIX
 	Buffer<char> cmd_buf;
@@ -49,11 +50,14 @@ private:
 
 public:
 	bool Start(const char *cmdline, const char *envptr = NULL);
+	
+	LocalProcess& ConvertCharset(bool b = true)                       { convertcharset = b; return *this; }
+	LocalProcess& NoConvertCharset()                                  { return ConvertCharset(false); }
 
 	LocalProcess()                                                    { Init(); }
 	LocalProcess(const char *cmdline, const char *envptr = NULL)      { Init(); Start(cmdline, envptr); }
 	virtual ~LocalProcess()                                           { Kill(); }
 };
 
-int    Sys(const char *cmd, String& output);
-String Sys(const char *cmd);
+int    Sys(const char *cmd, String& out, bool convertcharset = true);
+String Sys(const char *cmd, bool convertcharset = true);

@@ -61,7 +61,7 @@ void SvnDiff::Execute(const String& f)
 
 void SvnDiff::Load()
 {
-	diff.Set(LoadFile(editfile), extfile = Sys("svn cat " + editfile + '@' + AsString(~r)));
+	diff.Set(LoadFile(editfile), extfile = Sys("svn cat " + editfile + '@' + AsString(~r), false));
 }
 
 SvnDiff::SvnDiff()

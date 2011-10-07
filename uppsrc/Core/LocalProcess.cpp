@@ -21,6 +21,7 @@ void LocalProcess::Init() {
 	output_read = false;
 #endif
 	exit_code = Null;
+	convertcharset = true;
 }
 
 void LocalProcess::Free() {
@@ -339,7 +340,9 @@ bool LocalProcess::Read(String& res) {
 	char buffer[1024];
 	if(!ReadFile(hOutputRead, buffer, sizeof(buffer), &n, NULL))
 		return false;
-	res = FromSystemCharset(String(buffer, n));
+	res = String(buffer, n);
+	if(convertcharset)
+		res = FromSystemCharset(res);
 	return true;
 #endif
 #ifdef PLATFORM_POSIX
@@ -372,12 +375,16 @@ bool LocalProcess::Read(String& res) {
 	}
 	if(!was_running)
 		output_read = true;
+	if(convertcharset)
+		res = FromSystemCharset(res);
 	return !IsNull(res) || was_running;
 #endif
 }
 
 void LocalProcess::Write(String s)
 {
+	if(convertcharset)
+		s = ToSystemCharset(s);
 #ifdef PLATFORM_WIN32
 	dword n;
 	WriteFile(hInputWrite, s, s.GetLength(), &n, NULL);
@@ -387,10 +394,11 @@ void LocalProcess::Write(String s)
 #endif
 }
 
-int Sys(const char *cmd, String& out)
+int Sys(const char *cmd, String& out, bool convertcharset)
 {
 	out.Clear();
 	LocalProcess p;
+	p.ConvertCharset(convertcharset);
 	if(!p.Start(cmd))
 		return -1;
 	while(p.IsRunning()) {
@@ -401,10 +409,10 @@ int Sys(const char *cmd, String& out)
 	return p.GetExitCode();
 }
 
-String Sys(const char *cmd)
+String Sys(const char *cmd, bool convertcharset)
 {
 	String r;
-	return Sys(cmd, r) ? String::GetVoid() : r;
+	return Sys(cmd, r, convertcharset) ? String::GetVoid() : r;
 }
 
 END_UPP_NAMESPACE
