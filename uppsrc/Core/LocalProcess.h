@@ -30,11 +30,12 @@ private:
 #endif
 
 private:
+	bool         convertcharset;
+
 #ifdef PLATFORM_WIN32
 	HANDLE       hProcess;
 	HANDLE       hOutputRead;
 	HANDLE       hInputWrite;
-	bool         convertcharset;
 #endif
 #ifdef PLATFORM_POSIX
 	Buffer<char> cmd_buf;
