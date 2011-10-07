@@ -8,6 +8,4 @@ file
 	LEDCtrl.h,
 	LEDCtrl.usc;
 
-mainconfig
-	"" = "GUI";
 
