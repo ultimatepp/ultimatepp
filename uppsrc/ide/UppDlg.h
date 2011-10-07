@@ -238,6 +238,7 @@ struct WorkspaceWork {
 	void PackageMenu(Bar& bar);
 	void FileMenu(Bar& bar);
 	void SpecialFileMenu(Bar& bar);
+	void InsertSpecialMenu(Bar& menu);
 
 	String PackagePathA(const String& pn);
 	
