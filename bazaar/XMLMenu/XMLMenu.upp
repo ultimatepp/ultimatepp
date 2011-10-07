@@ -1,0 +1,20 @@
+description "XML driven menu system\377";
+
+uses
+	CtrlLib;
+
+file
+	XMLMenu.h,
+	DragWindow.h,
+	DragWindow.cpp,
+	XMLToolBarFloating.h,
+	XMLToolBarFloating.cpp,
+	XMLDragFrame.h,
+	XMLDragFrame.cpp,
+	XMLToolBar.h,
+	XMLToolBar.cpp,
+	XMLToolBarFrame.h,
+	XMLToolBarFrame.cpp,
+	WithXMLMenu.h,
+	WithXMLMenu.cpp;
+
