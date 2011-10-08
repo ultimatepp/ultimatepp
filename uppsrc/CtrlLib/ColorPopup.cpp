@@ -64,7 +64,7 @@ void ColorPopUp::Hint(Color c)
 	for(int i = 0; i < 17; i++)
 		if(hint[i] == c) {
 			memmove(&hint[i], &hint[i + 1], (17 - i) * sizeof(Color));
-			break;
+			hint[17] = LtGray;
 		}
 	memmove(&hint[1], &hint[0], 17 * sizeof(Color));
 	hint[0] = c;
