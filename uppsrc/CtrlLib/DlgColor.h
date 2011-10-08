@@ -168,6 +168,7 @@ private:
 	bool     scolors;
 	bool     norampwheel;
 	bool     animating;
+	bool     hints;
 	String   nulltext;
 	Color    color;
 
@@ -175,19 +176,26 @@ private:
 	ColorWheelCtrl wheel;
 	One<Popup>     popup;
 
+	static Color   hint[18];
+	
+	friend void ColorPopUp_InitHint();
+
 public:
 	Callback WhenCancel;
 	Callback WhenSelect;
+
+	static void Hint(Color c);
 
 	typedef ColorPopUp CLASSNAME;
 
 	void     PopUp(Ctrl *owner, Color c = White);
 	Color    Get() const;
-
+	
 	ColorPopUp& NotNull(bool b = true)               { notnull = b; return *this; }
 	ColorPopUp& SColors(bool b = true)               { scolors = b; return *this; }//Deprecated
 	ColorPopUp& NullText(const char *s)              { nulltext = s; Refresh(); return *this; }
 	ColorPopUp& NoRampWheel(bool b = true)           { norampwheel = b; return *this; }
+	ColorPopUp& Hints(bool b = true)                 { hints = b; return *this; }
 
 	ColorPopUp();
 	virtual ~ColorPopUp();
@@ -254,5 +262,6 @@ public:
 
 String FormatColor(Color c);
 Color  ReadColor(CParser& p);
+Color  ColorFromText(const char *s);
 
 #endif//__TCtrlLib_DlgColor__

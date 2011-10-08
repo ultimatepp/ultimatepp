@@ -47,6 +47,29 @@ s_colors[] = {
 	{ "SWhite", &White },
 };
 
+Color ColorPopUp::hint[18];
+
+void ColorPopUp_InitHint()
+{
+	for(int i = 0; i < 18; i++)
+		ColorPopUp::hint[i] = LtGray;
+}
+
+INITBLOCK {
+	ColorPopUp_InitHint();
+}
+
+void ColorPopUp::Hint(Color c)
+{
+	for(int i = 0; i < 17; i++)
+		if(hint[i] == c) {
+			memmove(&hint[i], &hint[i + 1], (17 - i) * sizeof(Color));
+			break;
+		}
+	memmove(&hint[1], &hint[0], 17 * sizeof(Color));
+	hint[0] = c;
+}
+
 String FormatColor(Color c)
 {
 	if(IsNull(c))
@@ -73,11 +96,40 @@ Color ReadColor(CParser& p)
 	return Color(minmax(r, 0, 255), minmax(g, 0, 255), minmax(b, 0, 255));
 }
 
+
+static int sCharFilterNoDigit(int c)
+{
+	return IsDigit(c) ? 0 : c;
+}
+
+static int sCharFilterHex(int c)
+{
+	return c >= 'a' && c <= 'f' || c >= 'A' && c <= 'F' || IsDigit(c) ? c : 0;
+}
+
+Color ColorFromText(const char *s)
+{
+	Vector<String> h = Split(s, sCharFilterNoDigit);
+	if(h.GetCount() == 3) {
+		int r = atoi(h[0]);
+		int g = atoi(h[1]);
+		int b = atoi(h[2]);
+		if(r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255)
+			return Color(r, g, b);
+	}
+	String hex = Filter(s, sCharFilterHex);
+	if(hex.GetCount() == 6 || hex.GetCount() == 8) {
+		dword w = (dword)ScanInt64(~hex, NULL, 16);
+		return Color(byte(w >> 16), byte(w >> 8), byte(w));
+	}
+	return Null;
+}
+
 ColorPopUp::~ColorPopUp() {}
 
 int ColorPopUp::GetColorCount() const
 {
-	return scolors ? 216 + 36 + 18 : 216 + 18 + 18;
+	return 18 + scolors * 18 + 2 * 18 + hints * 18 + 216;
 }
 
 Color ColorPopUp::GetColor(int i) const
@@ -89,6 +141,11 @@ Color ColorPopUp::GetColor(int i) const
 	i -= 36;
 	if(i < 18)
 		return GrayColor(255 * (i + 1) / 20);
+	if(hints) {
+		i -= 18;
+		if(i < 18)
+			return hint[i];
+	}
 	i -= 18;
 	int q = i % 18;
 	i /= 18;
@@ -331,6 +388,7 @@ ColorPopUp::ColorPopUp()
 	notnull = false;
 	scolors = false;
 	animating = false;
+	hints = false;
 	SetFrame(MenuFrame());
 	Add(ramp);
 	Add(wheel);

@@ -48,6 +48,9 @@ void ColorPusher::Drop()
 	push = true;
 	Refresh();
 	saved_color = color;
+	Color c = ColorFromText(ReadClipboardText());
+	if(!IsNull(c))
+		ColorPopUp::Hint(c);
 	colors.PopUp(this, color);
 }
 
@@ -70,10 +73,12 @@ void ColorPusher::AcceptColors()
 
 void ColorPusher::SetData(const Value& v)
 {
-	if(color != v) {
-		color = v;
+	Color c = v;
+	if(color != c) {
+		color = c;
 		Refresh();
 	}
+	ColorPopUp::Hint(c);
 }
 
 Value ColorPusher::GetData() const
@@ -97,6 +102,7 @@ ColorPusher::ColorPusher()
 	colors.WhenSelect = THISBACK(AcceptColors);
 	colors.WhenCancel = THISBACK(CloseColors);
 	colors.WhenAction = THISBACK(NewColor);
+	colors.Hints();
 	SetFrame(EditFieldFrame());
 }
 
