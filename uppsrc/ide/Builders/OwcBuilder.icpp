@@ -29,6 +29,10 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 	if (HasFlag("WIN32"))
 		cc << " -bt=nt";
 
+	String ccoptions = Gather(pkg.option, config.GetKeys());
+	if (!ccoptions.IsEmpty())
+		cc << ' ' << ccoptions;
+
 	String cc_speed = cc;
 	bool   release = false;
 
@@ -111,8 +115,9 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 			bool execerr = false;
 			if (rc) {
 				PutConsole(GetFileNamePos(fn));
+				objfile = ForceExt(objfile, ".res");
 				int slot = AllocSlot();
-				if (slot < 0 || !Run("wrc -q -fo=" + GetHostPathQ(objfile) + Includes(" -i=", package, pkg)
+				if (slot < 0 || !Run("wrc -q -r -x -fo=" + GetHostPathQ(objfile) + Includes(" -i=", package, pkg)
 					+ ' ' + GetHostPathQ(fn), slot, GetHostPath(objfile), 1))
 					execerr = true;
 			}
@@ -165,8 +170,6 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 		linkfile.Add(AppendExt(libs[i], ".lib"));
 
 	linkoptions << Gather(pkg.link, config.GetKeys());
-	if (linkoptions.GetCount() > 0)
-		linkoptions << ' ';
 
 	int linktime = GetTickCount();
 	if (!HasFlag("MAIN")) {
@@ -186,6 +189,16 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 		Time producttime = GetFileTime(product);
 		linkfile.Add(ForceExt(product, ".lib"));
 
+		Vector<String> files, res;
+		for (int i = 0, n = obj.GetCount(); i < n; ++i)
+			if (obj[i].EndsWith("j")) // ".obj"
+				files.Add(obj[i]);
+			else // ".res"
+				res.Add(obj[i]);
+
+		if (!is_shared && !res.IsEmpty())
+			linkfile.Append(res);
+
 		if (!Wait()) {
 			IdeConsoleEndGroup();
 			return false;
@@ -197,33 +210,24 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 
 				if (is_shared) {
 					lib << LinkerName() << " option quiet";
-		
+
 					if (HasFlag("DEBUG"))
 					    lib << " debug all option incremental";
 
 					if (HasFlag("WIN32"))
 						lib << " system nt_dll";
 
-					const int libpathCount = libpath.GetCount();
-					if (libpathCount > 0) {
-						lib << " libpath ";
-						for (int j = 0, k = libpathCount - 1; j < libpathCount; ++j) {
-							lib << '\"' << libpath[j] << '\"';
-							if (j < k)
-								lib << ';';
-						}
-					}
-
 					if (!linkoptions.IsEmpty())
 						lib << ' ' << linkoptions;
 
-					lib << " file ";
+					if (!libpath.IsEmpty())
+						lib << " libpath \"" << Join(libpath, "\";\"") << '\"';
 
-					for (int j = 0, k = n - 1; j < n; ++j) {
-						lib << '\'' << obj[j] << '\'';
-						if (j < k)
-							lib << ", ";
-					}
+					if (!files.IsEmpty())
+						lib << " file '" << Join(files, "', '") << '\'';
+
+					if (!res.IsEmpty())
+						lib << " resource '" << Join(res, "', '") << '\'';
 
 					const int all_usesCount = all_uses.GetCount(),
 						all_librariesCount = all_libraries.GetCount();
@@ -233,6 +237,7 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 
 						for (int j = 0, k = all_usesCount - 1; j < all_usesCount; ++j) {
 							lib << '\'' << GetHostPath(ForceExt(GetSharedLibPath(all_uses[j]), ".lib")) << '\'';
+
 							if (j < k)
 								lib << ", ";
 						}
@@ -241,19 +246,7 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 							lib << ", ";
 
 						for (int j = 0, k = all_librariesCount - 1; j < all_librariesCount; ++j) {
-							String libfile(AppendExt(all_libraries[j], ".lib"));
-							if (!IsFullPath(libfile)) {
-								for (int p = 0; p < libpath.GetCount(); ++p) {
-									String nf(NormalizePath(libfile, libpath[p]));
-
-									if (FileExists(nf)) {
-										libfile = nf;
-										break;
-									}
-								}
-							}
-
-							lib << '\'' << GetHostPath(libfile) << '\'';
+							lib << '\'' << AppendExt(all_libraries[j], ".lib") << '\'';
 
 							if (j < k)
 								lib << ", ";
@@ -270,8 +263,8 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 
 					lib << '\'' << product << '\'';
 
-					for (int j = 0; j < n; ++j)
-						lib << " '" << GetHostPath(obj[j]) << '\'';
+					for (int j = 0, m = files.GetCount(); j < m; ++j)
+						lib << " '" << GetHostPath(files[j]) << '\'';
 				}
 
 				PutConsole("Creating library...");
@@ -323,42 +316,32 @@ bool OwcBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			if (createmap)
 				link << " option map";
 
-			const int libpathCount = libpath.GetCount();
-			if (libpathCount > 0) {
-				link << " libpath ";
-				for (int j = 0, k = libpathCount - 1; j < libpathCount; ++j) {
-					link << '\"' << libpath[j] << '\"';
-					if (j < k)
-						link << ';';
-				}
-			}
-
 			if (!linkoptions.IsEmpty())
 				link << ' ' << linkoptions;
 
-			int b = -1;
-			for (int j = linkfileCount - 1; j >= 0; --j)
-				if (GetFileExt(linkfile[j]) != ".lib") { b = j; break; }
+			if (!libpath.IsEmpty())
+				link << " libpath \"" << Join(libpath, "\";\"") << '\"';
 
-			if (b >= 0) {
-				link << " file ";
+			Vector<String> files, libs, res;
 
-				for (int j = 0, k = b - 1; j <= b; ++j) {
-					link << '\'' << linkfile[j] << '\'';
-					if (j <= k)
-						link << ", ";
-				}
+			for (int j = 0; j < linkfileCount; ++j) {
+				const String ext(linkfile[j].Right(1));
+				if (ext == "j") // ".obj"
+					files.Add(linkfile[j]);
+				else if (ext == "b") // ".lib"
+					libs.Add(linkfile[j]);
+				else // ".res"
+					res.Add(linkfile[j]);
 			}
 
-			if (b < linkfileCount - 1) {
-				link << " library ";
+			if (!files.IsEmpty())
+				link << " file '" << Join(files, "', '") << '\'';
 
-				for (int j = b + 1, k = linkfileCount - 1; j < linkfileCount; ++j) {
-					link << '\'' << GetHostPath(linkfile[j]) << '\'';
-					if (j < k)
-						link << ", ";
-				}
-			}
+			if (!res.IsEmpty())
+				link << " resource '" << Join(res, "', '") << '\'';
+
+			if (!libs.IsEmpty())
+				link << " library '" << Join(libs, "', '") << '\'';
 
 			link << " name '" << GetHostPath(target) << '\'';
 
