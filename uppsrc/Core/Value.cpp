@@ -407,9 +407,19 @@ void ValueArray::Set(int i, const Value& v) {
 	Clone().At(i) = v;
 }
 
-void ValueArray::Remove(int i)
+void ValueArray::Remove(int i, int count)
 {
-	Clone().Remove(i);
+	Clone().Remove(i, count);
+}
+
+void ValueArray::Insert(int i, const ValueArray& va)
+{
+	if(va.data == data) {
+		ValueArray va2 = va;
+		Clone().Insert(i, va2.Get());
+	}
+	else
+		Clone().Insert(i, va.Get());
 }
 
 const Value& ValueArray::Get(int i) const {

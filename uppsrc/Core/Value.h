@@ -631,9 +631,12 @@ public:
 
 	void Add(const Value& v);
 	void Set(int i, const Value& v);
-	void Remove(int i);
 	const Value& Get(int i) const;
 	const Vector<Value>& Get() const          { return data->data; }
+
+	void Remove(int i, int count = 1);
+	void Insert(int i, const ValueArray& va);
+	void Append(const ValueArray& va)         { Insert(GetCount(), va); }
 
 	const Value& operator[](int i) const      { return Get(i); }
 
