@@ -79,10 +79,11 @@ protected:
 
 
 class Sql {
-protected:
 	SqlConnection  *cn;
+	Vector<Value>   param;
 
 	friend class SqlSession;
+	friend struct AppSql;
 
 	Value       Select0(const String& what);
 	void        Assign(SqlSource& src);

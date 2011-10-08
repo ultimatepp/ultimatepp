@@ -92,6 +92,8 @@ void Sql::Clear() {
 
 void Sql::SetParam(int i, const Value& val) {
 	cn->SetParam(i, val);
+	if(GetSession().GetTrace())
+		param.Set(i, val);
 }
 
 void Sql::SetStatement(const String& s) {
@@ -113,7 +115,18 @@ bool Sql::Execute() {
 		if(this == &AppCursor())
 			*s << "SQL* ";
 #endif
-		*s << cn->statement << '\n';
+		int i = 0;
+		for(const char *q = cn->statement; *q; q++)
+			if(*q == '?' && i < param.GetCount()) {
+				Value v = param[i++];
+				if(IsString(v))
+					*s << '\'' << v << '\'';
+				else
+					*s << v;
+			}
+			else
+				s->Put(*q);
+		*s << '\n';
 	}
 	if(!session.IsOpen())
 	{
