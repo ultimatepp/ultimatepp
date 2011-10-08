@@ -547,6 +547,8 @@ void ExportPage(int i)
 				HtmlTCell().Center() / BoxWidth(160).Center() / (
 					bar[GetLinkLanguage(path)] +
 					"<br>" +
+					LoadFile(GetRcFile("facebook.txt")) +
+					"<br><br>" +
 //						"<p align=\"center\">" +
 					LoadFile(GetRcFile("adsense2.txt")) +
 					"<br><br>" +
@@ -657,6 +659,10 @@ GUI_APP_MAIN
 	outPdf = true;
 	doSvn = true;
 	
+#ifdef _DEBUG
+	ftpupload = false;
+#endif
+
 	ProgramData data;
 	
 	String configFile = GetHomeDirFile("uppweb.xml");
