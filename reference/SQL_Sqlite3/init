@@ -1,0 +1,4 @@
+#ifndef _SQL_Sqlite3_icpp_init_stub
+#define _SQL_Sqlite3_icpp_init_stub
+#include "plugin\sqlite3/init"
+#endif
