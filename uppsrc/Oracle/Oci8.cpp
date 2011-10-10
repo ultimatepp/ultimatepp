@@ -362,7 +362,7 @@ void OCI8Connection::SetParam(int i, Sql& rc) {
 	*(OCIStmt **)w.Data() = w.refcursor -> stmthp;
 	w.ind[0] = 0;
 	Oracle8RefCursorStub stub(w.refcursor);
-	rc = stub;
+	rc = Sql(stub);
 }
 
 void  OCI8Connection::SetParam(int i, const Value& q) {
