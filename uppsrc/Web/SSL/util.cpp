@@ -28,6 +28,7 @@ SSLInitCls::SSLInitCls()
 {
 	RLOG("SSLInitCls");
 	Socket::Init();
+	MemoryIgnoreLeaksBlock __;
 	CRYPTO_set_mem_functions(SSLAlloc, SSLRealloc, SSLFree);
 	SSL_load_error_strings();
 	SSL_library_init();
