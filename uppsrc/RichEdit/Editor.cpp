@@ -622,6 +622,8 @@ RichEdit::RichEdit()
 	AddFrame(sb);
 	RefreshBar();
 
+	WhenBar = THISBACK(StdBar);
+
 	ruler.WhenBeginTrack = THISBACK(BeginRulerTrack);
 	ruler.WhenTrack = THISBACK(RulerTrack);
 	ruler.WhenEndTrack = THISBACK(ReadFormat);

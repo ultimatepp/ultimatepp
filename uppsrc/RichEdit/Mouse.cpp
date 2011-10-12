@@ -182,28 +182,22 @@ void RichEdit::MouseMove(Point p, dword flags)
 	}
 }
 
-void RichEdit::RightDown(Point p, dword flags)
+void RichEdit::StdBar(Bar& menu)
 {
-	useraction = true;
-	NextUndo();
-	MenuBar menu;
 	int l, h;
-	Rect ocr = GetCaretRect();
-	int c = GetMousePos(p);
 	int fieldpos = -1;
 	Id field;
 	String fieldparam;
 	String ofieldparam;
 	RichObject object, o;
 	if(GetSelection(l, h)) {
-		if(c >= l && c < h) {
-			CopyTool(menu);
-			CutTool(menu);
-		}
+//		if(c >= l && c < h) {
+		CopyTool(menu);
+		CutTool(menu);
+//		}
 		PasteTool(menu);
 	}
 	else {
-		LeftDown(p, flags);
 		if(objectpos >= 0) {
 			object = GetObject();
 			if(!object) return;
@@ -258,6 +252,37 @@ void RichEdit::RightDown(Point p, dword flags)
 		}
 		LoadImageTool(menu);
 	}
+}
+
+void RichEdit::RightDown(Point p, dword flags)
+{
+	useraction = true;
+	NextUndo();
+	MenuBar menu;
+	int l, h;
+	Rect ocr = GetCaretRect();
+	int c = GetMousePos(p);
+	int fieldpos = -1;
+	Id field;
+	String fieldparam;
+	String ofieldparam;
+	RichObject object, o;
+	if(!GetSelection(l, h)) {
+		LeftDown(p, flags);
+		if(objectpos >= 0)
+			o = object = GetObject();
+		else {
+			RichPos p = cursorp;
+			field = p.field;
+			fieldparam = p.fieldparam;
+			RichPara::FieldType *ft = RichPara::fieldtype().Get(field, NULL);
+			if(ft) {
+				ofieldparam = fieldparam;
+				fieldpos = cursor;
+			}
+		}
+	}
+	WhenBar(menu);
 	Rect r = GetCaretRect();
 	Refresh(r);
 	Refresh(ocr);

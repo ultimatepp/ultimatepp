@@ -26,7 +26,8 @@ static int GetParaHeight(const Array<RichPara::Part>& parts)
 
 class RTFEncoder {
 public:
-	RTFEncoder(Stream& stream, const RichText& richtext, byte charset, Size dot_page_size, const Rect& dot_margins);
+	RTFEncoder(Stream& stream, const RichText& richtext, byte charset,
+		Size dot_page_size, const Rect& dot_margins, void *context);
 
 	void            Run();
 
@@ -78,7 +79,7 @@ private:
 	byte                  charset;
 	Size                  dot_page_size;
 	Rect                  dot_margins;
-	
+	void                  *context;
 
 	RichPara::CharFormat  charfmt;
 	RichPara::Format      parafmt;
@@ -94,15 +95,15 @@ private:
 };
 
 void EncodeRTF(Stream& stream, const RichText& richtext, byte charset,
-	Size dot_page_size, const Rect& dot_margins)
+	Size dot_page_size, const Rect& dot_margins, void *context)
 {
-	RTFEncoder(stream, richtext, charset, dot_page_size, dot_margins).Run();
+	RTFEncoder(stream, richtext, charset, dot_page_size, dot_margins, context).Run();
 }
 
-String EncodeRTF(const RichText& richtext, byte charset, Size dot_page_size, const Rect& dot_margins)
+String EncodeRTF(const RichText& richtext, byte charset, Size dot_page_size, const Rect& dot_margins, void *context)
 {
 	StringStream out;
-	EncodeRTF(out, richtext, charset, dot_page_size, dot_margins);
+	EncodeRTF(out, richtext, charset, dot_page_size, dot_margins, context);
 	String s = out.GetResult();
 	LLOG("EncodeRTF <<<<<\n" << s << "\n>>>>> EncodeRTF");
 	return s;
@@ -123,12 +124,13 @@ String EncodeRTF(const RichText& richtext)
 }
 
 RTFEncoder::RTFEncoder(Stream& stream_, const RichText& richtext_, byte charset_,
-	Size dot_page_size_, const Rect& dot_margins_)
+	Size dot_page_size_, const Rect& dot_margins_, void *context_)
 : stream(stream_)
 , richtext(richtext_)
 , charset(charset_)
 , dot_page_size(dot_page_size_)
 , dot_margins(dot_margins_)
+, context(context_)
 {
 	for(int i = 0; i < richtext.GetStyleCount(); i++)
 		styleid.Add(richtext.GetStyleId(i));
@@ -295,7 +297,7 @@ void RTFEncoder::PutObject(const RichObject& object)
 	else {
 		Command("wmetafile", 8);
 		WinMetaFileDraw wmd(log_size.cx, log_size.cy);
-		object.Paint(wmd, log_size);
+		object.Paint(wmd, log_size, context);
 		WinMetaFile wmf = wmd.Close();
 		HENHMETAFILE hemf = wmf.GetHEMF();
 		int size = GetWinMetaFileBits(hemf, 0, 0, MM_ANISOTROPIC, ScreenHDC());
@@ -670,8 +672,10 @@ void RTFEncoder::PutTxt(const RichTxt& txt, int nesting, int dot_width)
 					Command("intbl");
 				if(nesting > 1)
 					Command("itap", nesting);
-				parafmt = RichPara::Format();
-				charfmt = RichPara::CharFormat();
+//				parafmt = RichPara::Format();
+//				bool isul = charfmt.IsUnderline();
+//				charfmt = RichPara::CharFormat();
+//				charfmt.Underline(isul);
 				para_ht = 0;
 			}
 			if(para.format.bullet == RichPara::BULLET_TEXT) {
