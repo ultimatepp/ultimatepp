@@ -22,7 +22,7 @@ GUI_APP_MAIN
 		.SetAppName("myapp")
 		
 		// accept 1.6 as maximum downloadable version
-		.SetMaxVersion(ProgramVersion("1.6"))
+		.SetMaxVersion(ProductVersion("1.6"))
 		
 		// accept development versions too (those like MM.mm.dd)
 		.AcceptDevelVersions()
