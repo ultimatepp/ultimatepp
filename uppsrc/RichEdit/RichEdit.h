@@ -626,6 +626,7 @@ public:
 	Callback                     WhenStartEvaluating;
 	Callback2<String&, WString&> WhenHyperlink;
 	Callback1<String&>           WhenLabel;
+	Callback1<Bar&>              WhenBar;
 
 	void   SerializeSettings(Stream& s);
 
@@ -670,6 +671,8 @@ public:
 
 	bool   Print();
 	void   DoPrint()                             { Print(); }
+
+	void   StdBar(Bar& bar);
 
 	void   StyleTool(Bar& bar, int width = 120);
 	void   FaceTool(Bar& bar, int width = 130);
