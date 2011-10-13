@@ -10817,7 +10817,7 @@ int parse_args(TCCState *s, int argc, char **argv)
                 break;
             case TCC_OPTION_B:
                 /* set tcc utilities path (mainly for tcc development) */
-                tcc_lib_path = optarg;
+                strcpy(tcc_lib_path, optarg);
                 break;
             case TCC_OPTION_l:
                 dynarray_add((void ***)&files, &nb_files, r);
@@ -10951,7 +10951,7 @@ int main(int argc, char **argv)
     int64_t start_time = 0;
 
 #ifdef _WIN32
-    tcc_lib_path = w32_tcc_lib_path();
+    strcpy(tcc_lib_path, w32_tcc_lib_path());
 #endif
 
     s = tcc_new();
