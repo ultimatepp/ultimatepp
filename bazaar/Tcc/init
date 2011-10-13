@@ -1,4 +1,5 @@
 #ifndef _Tcc_icpp_init_stub
 #define _Tcc_icpp_init_stub
 #include "Core/init"
+#include "plugin/tcc/init"
 #endif

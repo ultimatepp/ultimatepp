@@ -26,8 +26,8 @@ calls. All durable storage has to be located in the main program.&]
 [s0; The file is a standalone native program so it requires a main() 
 function with command line arguments if necessary.&]
 [s0; &]
-[s0; Tcc uses exceptions so any compiling problem can be catched 
-from the main program.&]
+[s0; Tcc uses exceptions so any compiling problem can be caught from 
+the main program.&]
 [s0; &]
 [s0; Tcc sample reference is included [^topic`:`/`/Tcc`/srcdoc`/Sample`$en`-us^ here].&]
 [s0; Tcc implementation details are included [^topic`:`/`/Tcc`/srcimp`/Tcc`$en`-us^ her
@@ -46,7 +46,8 @@ License (LGPL).&]
 [s0; &]
 [s0; TCC main features are:&]
 [s0;i150;O0; Small: DLL size is 200Kb&]
-[s0;i150;O0; Fast: It compiles much faster than GCC os MSC&]
+[s0;i150;O0; Fast: It compiles much faster than GCC or MSC (however 
+code is slower)&]
 [s0;i150;O0; It can be used as a backend for dynamic code generation&]
 [s0; &]
 [s0; TCC homepage is [^http`:`/`/bellard`.org`/tcc`/^ here.]&]
