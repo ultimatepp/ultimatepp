@@ -133,8 +133,8 @@ Tcc_Demo::Tcc_Demo()
 	EditExeFile.SetData(AppendFileName(GetHomeDirectory(), "tccdemo")); 
 	OpNoStdlib = true;
 #endif
-	EditIncludePath <<= "...put here right path...Bazaar/plugin/tcc/include";		
-	EditLibsPath <<= "...put here right path...Bazaar/plugin/tcc/lib";
+	EditIncludePath <<= "...put here right path...bazaar/plugin/tcc/include";		
+	EditLibsPath <<= "...put here right path...bazaar/plugin/tcc/lib";
 	SourceCode.SetFont(Courier(12));
 	Sizeable();
 }
