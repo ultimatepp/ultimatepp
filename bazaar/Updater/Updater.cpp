@@ -18,9 +18,9 @@
 String Updater::GetPlatformRoot(void)
 {
 #if defined(WIN64)
-	return webRoot + "/WINDOWS64/";
+	return serverRoot + "/WINDOWS64/";
 #elif defined(WIN32)
-	return webRoot + "/WINDOWS32/";
+	return serverRoot + "/WINDOWS32/";
 #elif defined(PLATFORM_POSIX)
 #ifdef __x86_64
 	return webRoot + "/LINUX64/";
@@ -36,19 +36,37 @@ String Updater::GetPlatformRoot(void)
 // constructor
 Updater::Updater()
 {
+	// gets user config path
+#ifdef PLATFORM_POSIX
+	userConfigFolder = "/home/" + user;
+#else
+	userConfigFolder = GetAppDataFolder();
+#endif
+
+	// gets system config path
+#ifdef PLATFORM_POSIX
+	systemConfigFolder = "/usr/share";
+#else
+	systemConfigFolder = GetProgramsFolder();
+#endif
+
+	applicationFolder = GetProgramsFolder();
+
+	isWebServer = true;
+
 	// fetches and stores environment, we need to change it later
-	environ <<= Environment();
+	environment <<= Environment();
 	
 	// accepts development versions by default
 	acceptDevelVersions = true;
 
 	// gets state variable, if not present assume starting in normal mode
 	String stateStr;
-	if(environ.Find("UPDATER_STATE") < 0)
+	if(environment.Find("UPDATER_STATE") < 0)
 		state = NormalRun;
 	else
 	{
-		stateStr = environ.Get("UPDATER_STATE");
+		stateStr = environment.Get("UPDATER_STATE");
 		if(stateStr == "INSIDEUPDATER")
 			state = InsideUpdater;
 		else if(stateStr == "UNINSTALLFAILED")
@@ -70,17 +88,17 @@ Updater::Updater()
 	// gets user name
 	if(state != InsideUpdater)
 		user = GetUserName();
-	else if(environ.Find("UPDATER_USER") < 0)
+	else if(environment.Find("UPDATER_USER") < 0)
 		user = "unknown";
 	else
-		user = environ.Get("UPDATER_USER");
+		user = environment.Get("UPDATER_USER");
 
 	// get application name -- either from GetExeTitle() if in normal mode
 	// or from environment if in superuser mode
 	if(state != InsideUpdater && state != UninstallSucceeded)
 		appName = GetExeTitle();
-	else if(environ.Find("UPDATER_APPNAME") >= 0)
-		appName = environ.Get("UPDATER_APPNAME");
+	else if(environment.Find("UPDATER_APPNAME") >= 0)
+		appName = environment.Get("UPDATER_APPNAME");
 	else
 		appName = GetExeTitle(); // fallout -- should NEVER get here
 	
@@ -107,26 +125,58 @@ Updater &Updater::SetAppName(String const &_appName)
 {
 	appName = _appName;
 	
+	UpdateFolderNames();
+	
+	return *this;
+}
+
+Updater &Updater::SetAppDataFolder(String const &folderName)
+{
+	userConfigFolder = folderName;
+	
+	UpdateFolderNames();
+	
+	return *this;
+}
+
+Updater &Updater::SetSystemConfigFolder(String const &folderName)
+{
+	systemConfigFolder = folderName;
+	
+	UpdateFolderNames();
+	
+	return *this;
+}
+
+Updater &Updater::SetApplicationFolder(String const &folderName)
+{
+	applicationFolder = folderName;
+	
+	UpdateFolderNames();
+	
+	return *this;
+}
+
+void Updater::UpdateFolderNames() 
+{
 	// gets app's user config path
-#ifdef PLATFORM_POSIX
-	userConfigPath = "/home/" + user + "/." + appName + "/";
-#else
-	userConfigPath = GetAppDataFolder() + "/" + appName + "/";
-#endif
+	userConfigPath = userConfigFolder + "/" + appName + "/";
 
 	// gets app's system config path
+	systemConfigPath = systemConfigFolder + "/" + appName + "/";
+
 #ifdef PLATFORM_POSIX
-	systemConfigPath = "/usr/share/" + appName + "/";
+	applicationPath = applicationFolder + "/" + appName;
 #else
-	systemConfigPath = GetProgramsFolder() + "/" + appName + "/";
+	applicationPath = applicationFolder + "/" + appName + "/" + appName + ".exe";
 #endif
 
-	// checks wether app is already installed and gather its version
+	// checks whether app is already installed and gather its version
 	installedVersion.Clear();
 #ifdef PLATFORM_POSIX
-	appInstalled = FileExists(GetProgramsFolder() + "/" + appName);
+	appInstalled = FileExists(applicationPath);
 #else
-	appInstalled = FileExists(GetProgramsFolder() + "/" + appName + "/" + appName + ".exe");
+	appInstalled = FileExists(applicationPath);
 #endif
 	appInstalled &= FileExists(systemConfigPath + "version");
 	String verStr;
@@ -135,10 +185,7 @@ Updater &Updater::SetAppName(String const &_appName)
 		verStr = LoadFile(systemConfigPath + "version");
 		if(verStr != "")
 			installedVersion = verStr;
-	}
-	
-	return *this;
-
+	}	
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -150,16 +197,16 @@ void Updater::FailUpdate()
 	switch(updaterOp)
 	{
 		case Install:
-			environ.Add("UPDATER_STATE", "INSTALLFAILED");
+			environment.Add("UPDATER_STATE", "INSTALLFAILED");
 			break;
 			
 		case Uninstall:
-			environ.Add("UPDATER_APPNAME", appName);
-			environ.Add("UPDATER_STATE", "UNINSTALLFAILED");
+			environment.Add("UPDATER_APPNAME", appName);
+			environment.Add("UPDATER_STATE", "UNINSTALLFAILED");
 			break;
 			
 		case Update:
-		environ.Add("UPDATER_STATE", "UPDATEFAILED");
+		environment.Add("UPDATER_STATE", "UPDATEFAILED");
 			break;
 			
 		default:
@@ -173,16 +220,16 @@ void Updater::SucceedUpdate()
 	switch(updaterOp)
 	{
 		case Install:
-			environ.Add("UPDATER_STATE", "INSTALLSUCCEEDED");
+			environment.Add("UPDATER_STATE", "INSTALLSUCCEEDED");
 			break;
 			
 		case Uninstall:
-			environ.Add("UPDATER_APPNAME", appName);
-			environ.Add("UPDATER_STATE", "UNINSTALLSUCCEEDED");
+			environment.Add("UPDATER_APPNAME", appName);
+			environment.Add("UPDATER_STATE", "UNINSTALLSUCCEEDED");
 			break;
 			
 		case Update:
-			environ.Add("UPDATER_STATE", "UPDATESUCCEEDED");
+			environment.Add("UPDATER_STATE", "UPDATESUCCEEDED");
 			break;
 			
 		default:
@@ -197,11 +244,11 @@ void Updater::SucceedUpdate()
 bool Updater::START_Updater(String const &operation)
 {
 	// prepare environment for updating
-	environ.Add("UPDATER_USER", user);
-	environ.Add("UPDATER_OP", operation);
-	environ.Add("UPDATER_STATE", "INSIDEUPDATER");
-	environ.Add("UPDATER_APPNAME", appName);
-	environ.Add("UPDATER_EXEPATH", GetExeFilePath());
+	environment.Add("UPDATER_USER", user);
+	environment.Add("UPDATER_OP", operation);
+	environment.Add("UPDATER_STATE", "INSIDEUPDATER");
+	environment.Add("UPDATER_APPNAME", appName);
+	environment.Add("UPDATER_EXEPATH", GetExeFilePath());
 	
 	if(CommandLine().GetCount() && CommandLine()[0] != "--UNINSTALL")
 	{
@@ -209,7 +256,7 @@ bool Updater::START_Updater(String const &operation)
 		for(int i = 0; i < CommandLine().GetCount(); i++)
 			s += CommandLine()[i] + " ";
 		s = s.Left(s.GetCount() - 1);
-		environ.Add("UPDATER_CMDLINE", s);
+		environment.Add("UPDATER_CMDLINE", s);
 	}
 
 	// gets current executable path
@@ -232,7 +279,7 @@ bool Updater::START_Updater(String const &operation)
 #endif
 	
 	// executes the file asking for password
-	bool res = !SysStartAdmin(tempName, "", environ);
+	bool res = !SysStartAdmin(tempName, "", environment);
 	return res;
 
 }
@@ -347,17 +394,17 @@ bool Updater::DO_InsideUpdater(void)
 	// fails update if no operation found (shoudn't happen...)
 	bool failed = false;
 	
-	if(environ.Find("UPDATER_USER") < 0)
+	if(environment.Find("UPDATER_USER") < 0)
 		failed = true;
 	else
-		environ.RemoveKey("UPDATER_USER");
+		environment.RemoveKey("UPDATER_USER");
 
-	if(environ.Find("UPDATER_OP") < 0)
+	if(environment.Find("UPDATER_OP") < 0)
 		failed = true;
 	else
 	{
-		operation = environ.Get("UPDATER_OP");
-		environ.RemoveKey("UPDATER_OP");
+		operation = environment.Get("UPDATER_OP");
+		environment.RemoveKey("UPDATER_OP");
 
 		// setup update operation code
 		if(operation == "INSTALL")
@@ -371,27 +418,27 @@ bool Updater::DO_InsideUpdater(void)
 	
 	}
 	
-	if(environ.Find("UPDATER_APPNAME") < 0)
+	if(environment.Find("UPDATER_APPNAME") < 0)
 		failed = true;
 	else
 	{
-		appName = environ.Get("UPDATER_APPNAME");
-		environ.RemoveKey("UPDATER_APPNAME");
+		appName = environment.Get("UPDATER_APPNAME");
+		environment.RemoveKey("UPDATER_APPNAME");
 	}
-	environ.RemoveKey("UPDATER_STATE");
+	environment.RemoveKey("UPDATER_STATE");
 
-	if(environ.Find("UPDATER_CMDLINE") >= 0)
+	if(environment.Find("UPDATER_CMDLINE") >= 0)
 	{
-		commandLine = environ.Get("UPDATER_CMDLINE");
-		environ.RemoveKey("UPDATER_CMDLINE");
+		commandLine = environment.Get("UPDATER_CMDLINE");
+		environment.RemoveKey("UPDATER_CMDLINE");
 	}
 
-	if(environ.Find("UPDATER_EXEPATH") < 0)
+	if(environment.Find("UPDATER_EXEPATH") < 0)
 		failed = true;
 	else
 	{
-		exePath = environ.Get("UPDATER_EXEPATH");
-		environ.RemoveKey("UPDATER_EXEPATH");
+		exePath = environment.Get("UPDATER_EXEPATH");
+		environment.RemoveKey("UPDATER_EXEPATH");
 	}
 
 	// if failed getting environment data, signals and restarts in normal mode
@@ -430,9 +477,9 @@ void Updater::DO_Uninstall(void)
 	// removes executable
 	String path;
 #ifdef PLATFORM_POSIX
-			path = GetProgramsFolder() + "/" + appName;
+			path = applicationFolder + "/" + appName;
 #else
-			path = GetProgramsFolder() + "/" + appName + "/" + appName + ".exe";
+			path = applicationFolder + "/" + appName + "/" + appName + ".exe";
 #endif
 	FileDelete(path);
 	
@@ -541,14 +588,14 @@ void Updater::RestartApp(RestartModes restartMode)
 			break;
 		case RestartNew:
 #ifdef PLATFORM_POSIX
-			path = GetProgramsFolder() + "/" + appName;
+			path = applicationFolder + "/" + appName;
 #else
-			path = GetProgramsFolder() + "/" + appName + "/" + appName + ".exe";
+			path = applicationFolder + "/" + appName + "/" + appName + ".exe";
 #endif
 			break;
 	}
 	// restart app in user mode, no gui, no password should be needed
-	SysStartUser(user, "", path, commandLine, environ);
+	SysStartUser(user, "", path, commandLine, environment);
 }
 
 // fetch list of available app versions
@@ -611,12 +658,8 @@ bool Updater::FetchApp(ProductVersion ver, bool devel)
 	}
 	
 	// replaces/installs app
-	String destPath;
-#ifdef PLATFORM_POSIX
-	destPath = GetProgramsFolder() + "/" + appName;
-#else
-	destPath = GetProgramsFolder() + "/" + appName + "/" + appName + ".exe";
-#endif
+	String destPath = applicationPath;
+
 	if(!SaveFile(destPath, appBuffer))
 		return false;
 #ifdef PLATFORM_POSIX
