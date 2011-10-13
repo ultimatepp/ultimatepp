@@ -261,6 +261,8 @@ private:
 	bool                     useraction, modified;
 	bool                     singleline;
 	static int               fixedlang;
+	RichObject               bar_object;
+	String                   bar_fieldparam;
 
 	WithRichFindReplaceLayout<TopWindow> findreplace;
 

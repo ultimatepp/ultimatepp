@@ -189,20 +189,17 @@ void RichEdit::StdBar(Bar& menu)
 	Id field;
 	String fieldparam;
 	String ofieldparam;
-	RichObject object, o;
+	RichObject object;
 	if(GetSelection(l, h)) {
-//		if(c >= l && c < h) {
 		CopyTool(menu);
 		CutTool(menu);
-//		}
 		PasteTool(menu);
 	}
 	else {
 		if(objectpos >= 0) {
-			object = GetObject();
-			if(!object) return;
-			o = object;
-			o.Menu(menu, context);
+			bar_object = GetObject();
+			if(!bar_object) return;
+			bar_object.Menu(menu, context);
 			if(!menu.IsEmpty())
 				menu.Separator();
 			menu.Add(t_("Object position.."), THISBACK(AdjustObjectSize));
@@ -228,12 +225,11 @@ void RichEdit::StdBar(Bar& menu)
 		else {
 			RichPos p = cursorp;
 			field = p.field;
-			fieldparam = p.fieldparam;
+			bar_fieldparam = p.fieldparam;
 			RichPara::FieldType *ft = RichPara::fieldtype().Get(field, NULL);
 			if(ft) {
-				ofieldparam = fieldparam;
 				fieldpos = cursor;
-				ft->Menu(menu, &fieldparam);
+				ft->Menu(menu, &bar_fieldparam);
 				if(!menu.IsEmpty())
 					menu.Separator();
 				CopyTool(menu);
@@ -264,20 +260,21 @@ void RichEdit::RightDown(Point p, dword flags)
 	int c = GetMousePos(p);
 	int fieldpos = -1;
 	Id field;
-	String fieldparam;
 	String ofieldparam;
-	RichObject object, o;
+	RichObject o;
+	bar_object.Clear();
+	bar_fieldparam = Null;
 	if(!GetSelection(l, h)) {
 		LeftDown(p, flags);
 		if(objectpos >= 0)
-			o = object = GetObject();
+			o = bar_object = GetObject();
 		else {
 			RichPos p = cursorp;
 			field = p.field;
-			fieldparam = p.fieldparam;
+			bar_fieldparam = p.fieldparam;
 			RichPara::FieldType *ft = RichPara::fieldtype().Get(field, NULL);
 			if(ft) {
-				ofieldparam = fieldparam;
+				ofieldparam = bar_fieldparam;
 				fieldpos = cursor;
 			}
 		}
@@ -290,18 +287,20 @@ void RichEdit::RightDown(Point p, dword flags)
 	menu.Execute();
 	paintcarect = false;
 	Refresh(r);
-	if(object && o && o.GetSerialId() != object.GetSerialId())
-		ReplaceObject(o);
-	if(fieldpos >= 0 && fieldparam != ofieldparam) {
+	if(bar_object && o && o.GetSerialId() != bar_object.GetSerialId())
+		ReplaceObject(bar_object);
+	if(fieldpos >= 0 && bar_fieldparam != ofieldparam) {
 		RichText::FormatInfo f = text.GetFormatInfo(fieldpos, 1);
 		Remove(fieldpos, 1);
 		RichPara p;
-		p.Cat(field, fieldparam, f);
+		p.Cat(field, bar_fieldparam, f);
 		RichText clip;
 		clip.Cat(p);
 		Insert(fieldpos, clip, false);
 		Finish();
 	}
+	bar_object.Clear();
+	bar_fieldparam = Null;
 }
 
 void RichEdit::LeftDouble(Point p, dword flags)
