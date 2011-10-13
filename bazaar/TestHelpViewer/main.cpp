@@ -14,7 +14,6 @@ GUI_APP_MAIN
 	helpViewer.Title("HelpViewer test");
 	helpViewer.Clear();
 	helpViewer.LoadTOC("topic://TestHelpViewer/app/TOC$it-it");
-	helpViewer.LoadTOC("topic://TestHelpViewer/app/TOC$it-it");
 	helpViewer.Execute();
 }
 
