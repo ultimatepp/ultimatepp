@@ -159,7 +159,7 @@ bool ShellExec(String const &args, VectorMap<String, String> const &env, bool wa
 	SHELLEXECUTEINFO info =
 	{
 		sizeof(SHELLEXECUTEINFO),		// cbsize
-		SEE_MASK_NOASYNC,				// fMask
+		SEE_MASK_FLAG_DDEWAIT,			// fMask
 		0,								// hwnd
 		"runas",						// lpVerb
 		args,							// lpFile

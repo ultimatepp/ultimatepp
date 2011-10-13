@@ -31,7 +31,11 @@ bool IsXpOrLater(void)
     
     return (osvi.dwMajorVersion > 5 || (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion >= 1));
 }
- 
+
+#ifdef __MINGW32__ 
+extern "C" BOOL WINAPI CheckTokenMembership(HANDLE,PSID,PBOOL);
+#endif
+
 static BOOL IsGroupMember(DWORD dwRelativeID, BOOL bProcessRelative, BOOL* pIsMember)
 {
     HANDLE hToken, hDupToken;
