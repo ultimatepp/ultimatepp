@@ -1,0 +1,4 @@
+#ifndef _LineEditTest_icpp_init_stub
+#define _LineEditTest_icpp_init_stub
+#include "CtrlLib/init"
+#endif
