@@ -33,10 +33,10 @@ inline bool operator==(Date a, Date b) {
 
 bool operator<(Date a, Date b);
 
-int  operator-(Date a, Date b);
-Date operator+(Date a, int b);
-Date operator+(int a, Date b);
-Date operator-(Date a, int b);
+int   operator-(Date a, Date b);
+Date  operator+(Date a, int b);
+Date  operator+(int a, Date b);
+Date  operator-(Date a, int b);
 Date& operator+=(Date& a, int b);
 Date& operator-=(Date& a, int b);
 
