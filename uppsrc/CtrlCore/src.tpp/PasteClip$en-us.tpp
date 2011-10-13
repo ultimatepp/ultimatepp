@@ -93,18 +93,20 @@ har]_`*[*@3 fmt])&]
 separated by semicolon. If any of them is available in the PasteClip, 
 it is set to accepted status and accepted format is stored in 
 PasteClip (to be retrieved by GetFormat method later). If PasteClip 
-is in paste mode, method returns true. Note that Accept can return 
-false even if format is accepted `- this happens in `'drag`' 
-stage of drag`&drop operation to indicate that target is willing 
-to accept the data.&]
+is in paste mode, method stores source data rendered in accepted 
+format and returns true. Note that Accept can return false even 
+if format is accepted `- this happens in `'drag`' stage of drag`&drop 
+operation to indicate that target is willing to accept the data.&]
 [s3;%% &]
 [s4; &]
 [s5;:PasteClip`:`:GetFormat`(`): [_^String^ String]_[* GetFormat]()&]
-[s2;%% Returns a format accepted by the last Accept(fmt) method.&]
+[s2;%% Returns a format accepted by the last Accept(fmt) method returning 
+true.&]
 [s3; &]
 [s4; &]
 [s5;:PasteClip`:`:Get`(`)const: [_^String^ String]_[* Get]()_[@(0.0.255) const]&]
-[s2;%% Same as Get(GetFormat()).&]
+[s2;%% Returns data rendered by the last Accept(fmt) method returning 
+true.&]
 [s3; &]
 [s4; &]
 [s5;:PasteClip`:`:operator String`(`)const: [* operator_String]()_[@(0.0.255) const]&]
