@@ -1,0 +1,4 @@
+#ifndef _AttrText_icpp_init_stub
+#define _AttrText_icpp_init_stub
+#include "CtrlLib/init"
+#endif
