@@ -1,6 +1,7 @@
 template "Win32 DLL project (no U++)" main;
 
 option "Multithreaded" mt;
+option "Use SSE2" sse2 = 1;
 
 @@<:PACKAGE:>.h
 #ifndef _<:PACKAGE:>_<:PACKAGE:>_h
@@ -16,7 +17,6 @@ option "Multithreaded" mt;
 #endif
 
 #endif
-
 @@<:PACKAGE:>.cpp
 #include <windows.h>
 #include "<:PACKAGE:>.h"
@@ -35,7 +35,6 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD reason,  LPVOID lpReserved)
 	}
 	return TRUE;
 }
-
 @@<:PACKAGE:>.upp
 library(WIN32) "kernel32 user32 advapi32 shell32 winmm";
 
@@ -46,4 +45,4 @@ file
 	<:PACKAGE:>.cpp;
 
 mainconfig
-	"" = "DLL SSE2 <:?mt:>MT<:.:>";
+	"" = "DLL<:?mt:> MT<:.:><:?sse2:> SSE2<:.:>";

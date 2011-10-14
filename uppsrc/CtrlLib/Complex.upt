@@ -3,8 +3,9 @@ template "CtrlLib application with main window" main;
 id     "Main window class name" classname = PACKAGE;
 select("No layouts", "Generate layout file", "Main window has layout", "Main window has OK/Cancel")
        "Layout" lay = 2;
-option "Imagelist file"         iml;
-option "Multithreaded"          mt;
+option "Imagelist file" iml;
+option "Multithreaded" mt;
+option "Use SSE2" sse2 = 1;
 
 @@<:PACKAGE:>.h
 #ifndef _<:PACKAGE:>_<:PACKAGE:>_h
@@ -27,7 +28,6 @@ public:
 };
 
 #endif
-
 @@main.cpp
 #include "<:PACKAGE:>.h"
 
@@ -43,7 +43,6 @@ GUI_APP_MAIN
 {
 	<:classname:>().Run();
 }
-
 @@<:PACKAGE:>.lay
 ??lay
 
@@ -51,7 +50,6 @@ LAYOUT(<:classname:>Layout, 200, 100)
 	<:?lay == 3:>ITEM(Button, ok, SetLabel("OK").RightPosZ(90, 80).BottomPosZ(4, 22))
 	ITEM(Button, cancel, SetLabel("Cancel").RightPosZ(4, 80).BottomPosZ(4, 22))<:.:>
 END_LAYOUT
-
 @@<:PACKAGE:>.iml
 ??iml
 
@@ -67,4 +65,4 @@ file
 ;
 
 mainconfig
-	"" = <:?mt:>"GUI MT SSE2"<:/:>"GUI SSE2"<:.:>;
+	"" = "GUI<:?mt:> MT<:.:><:?sse2:> SSE2<:.:>";

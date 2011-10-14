@@ -5,6 +5,5 @@ template "Plain package with header" sub;
 #define _<:PACKAGE:>_<:PACKAGE:>_h
 
 #endif
-
 @@<:PACKAGE:>.upp
 file "<:PACKAGE:>.h";

@@ -3,6 +3,7 @@ template "Win32 API project (no U++)" main;
 option "Main menu" menu;
 option "Program icon" icon;
 option "Hello World" hello;
+option "Use SSE2" sse2 = 1;
 
 @@resource.h
 <:?icon:>#define IDI_BIG         100
@@ -187,4 +188,4 @@ file resource.h,
      <:PACKAGE:>.cpp;
 
 mainconfig
-    "" = "GUI SSE2";
+    "" = "GUI<:?sse2:> SSE2<:.:>";

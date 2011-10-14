@@ -2,6 +2,7 @@ template "Basic CtrlLib application" main;
 
 option "Create header" header;
 option "Multithreaded" mt;
+option "Use SSE2" sse2 = 1;
 
 @@<:PACKAGE:>.h
 ??header
@@ -13,14 +14,12 @@ option "Multithreaded" mt;
 using namespace Upp;
 
 #endif
-
 @@main.cpp
 #include <:?header:>"<:PACKAGE:>.h"<:/:><CtrlLib/CtrlLib.h><:.:>
 
 GUI_APP_MAIN
 {
 }
-
 @@<:PACKAGE:>.upp
 uses
 	CtrlLib;
@@ -30,4 +29,4 @@ file
 	"main.cpp";
 
 mainconfig
-	"" = <:?mt:>"GUI MT SSE2"<:/:>"GUI SSE2"<:.:>;
+	"" = "GUI<:?mt:> MT<:.:><:?sse2:> SSE2<:.:>";
