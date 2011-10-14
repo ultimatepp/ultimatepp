@@ -112,11 +112,16 @@ for the text painted.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AttrText`:`:font:%- [_^Font^ Font]_font&]
-[s2; Font of text.&]
+[s2; Font of text. It is default initialized by constructor to StdFont.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AttrText`:`:ink:%- [_^Color^ Color]_ink&]
 [s2; Text color.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:AttrText`:`:normalink:%- [_^Color^ Color]_[* normalink]&]
+[s2; Text color to be used if the item is not in selected nor focused 
+nor read`-only state.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AttrText`:`:paper:%- [_^Color^ Color]_paper&]
@@ -151,6 +156,11 @@ perator`=([@(0.0.255) const]_[_^WString^ WString][@(0.0.255) `&]_[@3 s])&]
 [s2; Sets the text to [%-*@3 s].&]
 [s3; &]
 [s4;%- &]
+[s5;:AttrText`:`:operator`=`(const String`&`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* o
+perator`=]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
+[s2; Sets the text to [%-*@3 s].&]
+[s3; &]
+[s4;%- &]
 [s5;:AttrText`:`:Ink`(Color`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_Ink([_^Color^ Color]_
 [@3 c])&]
 [s2; Sets the text color.&]
@@ -177,6 +187,26 @@ ont]_[@3 f])&]
 [s7; [%-*C@3 f]-|The font.&]
 [s7; [*/ Return value]-|`*this.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:AttrText`:`:Bold`(bool`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* Bold]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; Calls font.Bold([%-*@3 b]). Returns `*this.&]
+[s3; &]
+[s4;%- &]
+[s5;:AttrText`:`:Italic`(bool`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* Italic]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; Calls font.Italic([%-*@3 b]). Returns `*this.&]
+[s3; &]
+[s4;%- &]
+[s5;:AttrText`:`:Underline`(bool`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* Underline]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; Calls font.Underline([%-*@3 b]). Returns `*this.&]
+[s3; &]
+[s4;%- &]
+[s5;:AttrText`:`:Strikeout`(bool`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* Strikeout]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; Calls font.Strikeout([%-*@3 b]). Returns `*this.&]
+[s3; &]
 [s4;%- &]
 [s5;:AttrText`:`:Align`(int`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_Align([@(0.0.255) in
 t]_[@3 a])&]
@@ -211,26 +241,21 @@ ue][@(0.0.255) `&]_[*@3 v])&]
 [s2; Converts Value to AttrText.&]
 [s3; &]
 [s4;%- &]
-[s5;:AttrText`:`:AttrText`(const char`*`):%- AttrText([@(0.0.255) const]_[@(0.0.255) char
-]_`*[@3 text])&]
-[s2; Constructs AttrText, assigning the text attribute and all other 
-attributes to zero.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:AttrText`:`:AttrText`(const wchar`*`):%- AttrText([@(0.0.255) const]_[_^wchar^ wchar
-]_`*[@3 text])&]
-[s2; Constructs AttrText, assigning the text attribute and all other 
-attributes to zero.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:AttrText`:`:AttrText`(const WString`&`):%- AttrText([@(0.0.255) const]_[_^WString^ W
+[s5;:AttrText`:`:AttrText`(const char`*`):%- [* AttrText]([@(0.0.255) const]_[@(0.0.255) ch
+ar]_`*[@3 text])&]
+[s5;:AttrText`:`:AttrText`(const wchar`*`):%- [* AttrText]([@(0.0.255) const]_[_^wchar^ wch
+ar]_`*[@3 text])&]
+[s5;:AttrText`:`:AttrText`(const WString`&`):%- [* AttrText]([@(0.0.255) const]_[_^WString^ W
 String][@(0.0.255) `&]_[@3 text])&]
-[s2; Constructs AttrText, assigning the text attribute and all other 
-attributes to zero.&]
+[s5;:AttrText`:`:AttrText`(const String`&`):%- [* AttrText]([@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 text])&]
+[s2; Assigns text attribute. Assigns Null to all other members except 
+font, which is initialized to StdFont.&]
 [s3; &]
 [s4;%- &]
 [s5;:AttrText`:`:AttrText`(`):%- AttrText()&]
-[s2; Default constructor.&]
+[s2; Default constructor. Assigns Null to all members except font, 
+which is initialized to StdFont.&]
 [s3; &]
 [s0; &]
 [s0; &]

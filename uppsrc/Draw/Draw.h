@@ -54,6 +54,15 @@ class Font : AssignValueTypeNo<Font, FONT_V, Moveable<Font> >{
 		} v;
 	};
 	
+	enum {
+		FONT_BOLD = 0x8000,
+		FONT_ITALIC = 0x4000,
+		FONT_UNDERLINE = 0x2000,
+		FONT_STRIKEOUT = 0x1000,
+		FONT_NON_ANTI_ALIASED = 0x800,
+		FONT_TRUE_TYPE_ONLY = 0x400
+	};
+
 	static Font AStdFont;
 	static Size StdFontSize;
 
@@ -101,16 +110,16 @@ public:
 		SCREEN_SANS = SANSSERIF,
 		SCREEN_FIXED = MONOSPACE,
 	};
-
+	
 	int    GetFace() const          { return v.face; }
 	int    GetHeight() const;
 	int    GetWidth() const         { return v.width; }
-	bool   IsBold() const           { return v.flags & 0x8000; }
-	bool   IsItalic() const         { return v.flags & 0x4000; }
-	bool   IsUnderline() const      { return v.flags & 0x2000; }
-	bool   IsStrikeout() const      { return v.flags & 0x1000; }
-	bool   IsNonAntiAliased() const { return v.flags & 0x800; }
-	bool   IsTrueTypeOnly() const   { return v.flags & 0x400; }
+	bool   IsBold() const           { return v.flags & FONT_BOLD; }
+	bool   IsItalic() const         { return v.flags & FONT_ITALIC; }
+	bool   IsUnderline() const      { return v.flags & FONT_UNDERLINE; }
+	bool   IsStrikeout() const      { return v.flags & FONT_STRIKEOUT; }
+	bool   IsNonAntiAliased() const { return v.flags & FONT_NON_ANTI_ALIASED; }
+	bool   IsTrueTypeOnly() const   { return v.flags & FONT_TRUE_TYPE_ONLY; }
 	String GetFaceName() const;
 	dword  GetFaceInfo() const;
 	int64  AsInt64() const          { return data; }
@@ -118,24 +127,25 @@ public:
 	Font& Face(int n)               { v.face = n; return *this; }
 	Font& Height(int n)             { v.height = n; return *this; }
 	Font& Width(int n)              { v.width = n; return *this; }
-	Font& Bold()                    { v.flags |= 0x8000; return *this; }
-	Font& NoBold()                  { v.flags &= ~0x8000; return *this; }
+	Font& Bold()                    { v.flags |= FONT_BOLD; return *this; }
+	Font& NoBold()                  { v.flags &= ~FONT_BOLD; return *this; }
 	Font& Bold(bool b)              { return b ? Bold() : NoBold(); }
-	Font& Italic()                  { v.flags |= 0x4000; return *this; }
-	Font& NoItalic()                { v.flags &= ~0x4000; return *this; }
+	Font& Italic()                  { v.flags |= FONT_ITALIC; return *this; }
+	Font& NoItalic()                { v.flags &= ~FONT_ITALIC; return *this; }
 	Font& Italic(bool b)            { return b ? Italic() : NoItalic(); }
-	Font& Underline()               { v.flags |= 0x2000; return *this; }
-	Font& NoUnderline()             { v.flags &= ~0x2000; return *this; }
+	Font& Underline()               { v.flags |= FONT_UNDERLINE; return *this; }
+	Font& NoUnderline()             { v.flags &= ~FONT_UNDERLINE; return *this; }
 	Font& Underline(bool b)         { return b ? Underline() : NoUnderline(); }
-	Font& Strikeout()               { v.flags |= 0x1000; return *this; }
-	Font& NoStrikeout()             { v.flags &= ~0x1000; return *this; }
+	Font& Strikeout()               { v.flags |= FONT_STRIKEOUT; return *this; }
+	Font& NoStrikeout()             { v.flags &= ~FONT_STRIKEOUT; return *this; }
 	Font& Strikeout(bool b)         { return b ? Strikeout() : NoStrikeout(); }
-	Font& NonAntiAliased()          { v.flags |= 0x800; return *this; }
-	Font& NoNonAntiAliased()        { v.flags &= ~0x800; return *this; }
+	Font& NonAntiAliased()          { v.flags |= FONT_NON_ANTI_ALIASED; return *this; }
+	Font& NoNonAntiAliased()        { v.flags &= ~FONT_NON_ANTI_ALIASED; return *this; }
 	Font& NonAntiAliased(bool b)    { return b ? NonAntiAliased() : NoNonAntiAliased(); }
-	Font& TrueTypeOnly()            { v.flags |= 0x400; return *this; }
-	Font& NoTrueTypeOnly()          { v.flags &= ~0x400; return *this; }
+	Font& TrueTypeOnly()            { v.flags |= FONT_TRUE_TYPE_ONLY; return *this; }
+	Font& NoTrueTypeOnly()          { v.flags &= ~FONT_TRUE_TYPE_ONLY; return *this; }
 	Font& TrueTypeOnly(bool b)      { return b ? TrueTypeOnly() : NoTrueTypeOnly(); }
+
 	Font& FaceName(const String& name);
 
 	Font  operator()() const        { return *this; }

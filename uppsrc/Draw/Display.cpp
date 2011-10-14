@@ -23,32 +23,28 @@ void AttrText::Init()
 	ink = Null;
 	normalink = Null;
 	paper = Null;
-	font = Null;
+	font = StdFont();
 	align = Null;
 	imgspc = 0;
 }
 
-AttrText::AttrText(const char *_text)
+AttrText::AttrText(const char *text) : text(text)
 {
-	text = _text;
 	Init();
 }
 
-AttrText::AttrText(const wchar *_text)
+AttrText::AttrText(const wchar *text) : text(text)
 {
-	text = _text;
 	Init();
 }
 
-AttrText::AttrText(const WString& _text)
+AttrText::AttrText(const WString& text) : text(text)
 {
-	text = _text;
 	Init();
 }
 
-AttrText::AttrText(const String& _text)
+AttrText::AttrText(const String& text) : text(text.ToWString())
 {
-	text = _text.ToWString();
 	Init();
 }
 
@@ -102,14 +98,13 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 	if(IsType<AttrText>(q)) {
 		const AttrText& t = ValueTo<AttrText>(q);
 		txt = t.text;
+		font = t.font;
 		if(!IsNull(t.paper))
 			paper = t.paper;
 		if(!IsNull(t.ink))
 			ink = t.ink;
 		if(!IsNull(t.normalink) && !(s & (CURSOR|SELECT|READONLY)))
 			ink = t.normalink;
-		if(!IsNull(t.font))
-			font = t.font;
 		if(!IsNull(t.align))
 			a = t.align;
 		if(!IsNull(t.img)) {
@@ -154,8 +149,7 @@ Size StdDisplayClass::GetStdSize(const Value& q) const
 	if(IsType<AttrText>(q)) {
 		const AttrText& t = ValueTo<AttrText>(q);
 		txt = t.text;
-		if(!IsNull(t.font))
-			font = t.font;
+		font = t.font;
 		if(!IsNull(t.img)) {
 			isz = t.img.GetSize();
 			isz.cx += t.imgspc;

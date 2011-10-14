@@ -40,6 +40,12 @@ struct AttrText {
 	AttrText& NormalInk(Color c)                    { normalink = c; return *this; }
 	AttrText& Paper(Color c)                        { paper = c; return *this; }
 	AttrText& SetFont(Font f)                       { font = f; return *this; }
+
+	AttrText& Bold(bool b = true)                   { font.Bold(b); return *this; }
+	AttrText& Italic(bool b = true)                 { font.Italic(b); return *this; }
+	AttrText& Underline(bool b = true)              { font.Underline(b); return *this; }
+	AttrText& Strikeout(bool b = true)              { font.Strikeout(b); return *this; }
+
 	AttrText& Align(int a)                          { align = a; return *this; }
 	AttrText& Left()                                { return Align(ALIGN_LEFT); }
 	AttrText& Center()                              { return Align(ALIGN_CENTER); }
