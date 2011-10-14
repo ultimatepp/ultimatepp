@@ -144,7 +144,7 @@ void WorkspaceWork::ScanWorkspace() {
 
 void WorkspaceWork::SavePackage()
 {
-	if(IsNull(actualpackage) || actualpackage == "<METAPACKAGE>")
+	if(IsNull(actualpackage) || actualpackage == METAPACKAGE)
 		return;
 	InvalidatePackageInfo(actualpackage);
 	String pp = PackagePathA(actualpackage);
