@@ -2,7 +2,74 @@
 
 NAMESPACE_UPP
 
+
 void RichEdit::Filter(RichText& txt) {}
+
+void BegSelFixRaw(RichText& text)
+{
+	RichPos p = text.GetRichPos(0, 1);
+	ASSERT(p.table == 1);
+	if(p.table != 1)
+		return;
+	RichPara::Format fmt;
+	text.InsertParaSpecial(1, true, fmt);
+}
+
+void BegSelUnFixRaw(RichText& text)
+{
+	ASSERT(text.GetLength() > 0);
+	RichPos p = text.GetRichPos(1, 1);
+	ASSERT(p.table == 1);
+	if(p.table != 1)
+		return;
+	text.RemoveParaSpecial(1, true);
+}
+
+void RichEdit::UndoBegSelFix::Apply(RichText& txt)
+{
+	BegSelUnFixRaw(txt);
+}
+
+RichEdit::UndoRec *RichEdit::UndoBegSelFix::GetRedo(const RichText& txt)
+{
+	return new RichEdit::UndoBegSelUnFix;
+}
+
+void RichEdit::UndoBegSelUnFix::Apply(RichText& text)
+{
+	BegSelFixRaw(text);
+}
+
+RichEdit::UndoRec * RichEdit::UndoBegSelUnFix::GetRedo(const RichText& txt)
+{
+	return new RichEdit::UndoBegSelFix;
+}
+
+bool RichEdit::BegSelTabFix()
+{
+	if(begtabsel) {
+		int c = cursor;
+		AddUndo(new UndoBegSelFix);
+		BegSelFixRaw(text);
+		Move(0);
+		Move(c + 1, true);
+		begtabsel = false;
+		return true;
+	}
+	return false;
+}
+
+void RichEdit::BegSelTabFixEnd(bool fix)
+{
+	if(fix && GetLength() > 0) {
+		int c = cursor;
+		AddUndo(new UndoBegSelUnFix);
+		BegSelUnFixRaw(text);
+		Move(0);
+		Move(c - 1, true);
+		begtabsel = true;
+	}
+}
 
 bool RichEdit::InvalidRange(int l, int h)
 {
@@ -20,6 +87,7 @@ void RichEdit::AddUndo(UndoRec *ur)
 	found = false;
 	ur->cursor = cursor;
 	ur->serial = undoserial;
+	DLOG("Undo serial: " << undoserial);
 	undo.AddTail(ur);
 }
 
@@ -54,7 +122,9 @@ void RichEdit::SaveFormat()
 		pos = cursor;
 		count = 0;
 	}
+	bool b = BegSelTabFix();
 	SaveFormat(pos, count);
+	BegSelTabFixEnd(b);
 }
 
 void RichEdit::Limit(int& pos, int& count)
@@ -68,9 +138,11 @@ void RichEdit::ModifyFormat(int pos, const RichText::FormatInfo& fi, int count)
 {
 	if(IsReadOnly())
 		return;
+	bool b = BegSelTabFix();
 	Limit(pos, count);
 	SaveFormat(pos, count);
 	text.ApplyFormatInfo(pos, fi, count);
+	BegSelTabFixEnd(b);
 }
 
 void RichEdit::Remove(int pos, int len, bool forward)
@@ -187,8 +259,19 @@ RichText RichEdit::GetSelection(int maxcount) const
 		clip.SetStyles(text.GetStyles());
 		clip.CatPick(tab);
 	}
-	else
-		clip = text.Copy(min(cursor, anchor), min(maxcount, abs(cursor - anchor)));
+	else {
+		if(begtabsel) {
+			RichPos p = text.GetRichPos(0, 1);
+			if(p.table) {
+				RichTable tab = text.CopyTable(p.table);
+				clip.SetStyles(text.GetStyles());
+				clip.CatPick(tab);
+				clip.CatPick(text.Copy(p.tablen + 1, minmax(abs(cursor - p.tablen - 1), 0, maxcount)));
+			}
+		}
+		else
+			clip = text.Copy(min(cursor, anchor), min(maxcount, abs(cursor - anchor)));
+	}
 	return clip;
 }
 
@@ -377,6 +460,7 @@ void RichEdit::InsertLine()
 		formatinfo.label = lbl;
 	}
 	anchor = cursor = cursor + 1;
+	begtabsel = false;
 	formatinfo.newpage = false;
 	if(st) {
 		Uuid next = text.GetStyle(b.styleid).next;

@@ -7,6 +7,7 @@ void RichEdit::FinishNF()
 	anchorp = text.GetRichPos(anchor);
 	cursorp = text.GetRichPos(cursor);
 	tablesel = 0;
+	begtabsel = false;
 	if(anchor != cursor) {
 		RichPos p = text.GetRichPos(cursor, anchorp.level);
 		if(anchorp.level == 0 || anchorp.level < cursorp.level) {
@@ -15,20 +16,26 @@ void RichEdit::FinishNF()
 		}
 		else
 		if(p.table != anchorp.table) {
-			tablesel = anchorp.table;
-			if(cursor < anchor) {
-				cells.left = 0;
-				cells.right = anchorp.cell.x;
-				cells.top = 0;
-				cells.bottom = anchorp.cell.y;
+			if(text.GetRichPos(anchor, 1).table == 1 && anchor < cursor) {
+				begtabsel = true;
+				anchor = 0;
 			}
 			else {
-				cells.left = anchorp.cell.x;
-				cells.right = anchorp.tabsize.cx - 1;
-				cells.top = anchorp.cell.y;
-				cells.bottom = anchorp.tabsize.cy - 1;
+				tablesel = anchorp.table;
+				if(cursor < anchor) {
+					cells.left = 0;
+					cells.right = anchorp.cell.x;
+					cells.top = 0;
+					cells.bottom = anchorp.cell.y;
+				}
+				else {
+					cells.left = anchorp.cell.x;
+					cells.right = anchorp.tabsize.cx - 1;
+					cells.top = anchorp.cell.y;
+					cells.bottom = anchorp.tabsize.cy - 1;
+				}
+				text.AdjustTableSel(tablesel, cells);
 			}
-			text.AdjustTableSel(tablesel, cells);
 		}
 		else
 		if(p.cell != anchorp.cell) {
@@ -86,8 +93,10 @@ void RichEdit::MoveNG(int newpos, bool select)
 	if(newpos >= text.GetLength() + select) newpos = text.GetLength() + select;
 	CloseFindReplace();
 	cursor = newpos;
-	if(!select)
+	if(!select) {
 		anchor = cursor;
+		begtabsel = false;
+	}
 	objectpos = -1;
 	Finish();
 	if(select)
@@ -286,7 +295,7 @@ bool RichEdit::CursorKey(dword key, int count)
 
 bool RichEdit::IsSelection() const
 {
-	return anchor >= 0 && anchor != cursor;
+	return anchor != cursor;
 }
 
 bool RichEdit::GetSelection(int& l, int& h) const
@@ -315,6 +324,7 @@ void RichEdit::CancelSelection()
 	if(IsSelection()) {
 		tablesel = 0;
 		anchor = cursor;
+		begtabsel = false;
 		found = notfoundfw = false;
 		CloseFindReplace();
 		Finish();
@@ -331,6 +341,7 @@ bool RichEdit::RemoveSelection(bool back)
 			Move(text.GetCellPos(tablesel, cells.top, cells.left).pos);
 		}
 		else {
+			BegSelTabFix();
 			int c = min(cursor, anchor);
 			Remove(c, abs(cursor - anchor), back);
 			found = notfoundfw = false;

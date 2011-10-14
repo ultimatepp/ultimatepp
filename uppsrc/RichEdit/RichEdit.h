@@ -227,6 +227,7 @@ private:
 	RichText                 text;
 	RichText::FormatInfo     formatinfo;
 	int                      cursor, anchor;
+	bool                     begtabsel;
 	RichCaret                cursorc;
 	RichPos                  cursorp;
 	RichPos                  anchorp;
@@ -282,8 +283,6 @@ private:
 	Vector<int>              ffs;
 	
 	int                      bullet_indent;
-	
-	
 
 	static int fh[];
 
@@ -409,6 +408,16 @@ private:
 
 		UndoTable(const RichText& txt, int table);
 	};
+	
+	struct UndoBegSelFix : UndoRec {
+		virtual void     Apply(RichText& txt);
+		virtual UndoRec *GetRedo(const RichText& txt);
+	};
+
+	struct UndoBegSelUnFix : UndoRec {
+		virtual void     Apply(RichText& txt);
+		virtual UndoRec *GetRedo(const RichText& txt);
+	};
 
 	BiArray<UndoRec> undo;
 	Array<UndoRec>   redo;
@@ -465,7 +474,7 @@ private:
 
 	void       Limit(int& pos, int& count);
 	bool       InvalidRange(int c1, int c2);
-	void       NextUndo()                 { undoserial += incundoserial; incundoserial = false; }
+	void       NextUndo()                 { undoserial += incundoserial; incundoserial = false; DDUMP(undoserial); }
 	void       AddUndo(UndoRec *undo);
 
 	void       BeginRulerTrack();
@@ -594,6 +603,9 @@ private:
 	void     StyleKeys();
 	void     ApplyStyleKey(int i);
 
+	bool     BegSelTabFix();
+	void     BegSelTabFixEnd(bool fix);
+
 	struct DisplayDefault : public Display {
 		virtual void Paint(Draw& w, const Rect& r, const Value& q,
 		                   Color ink, Color paper, dword style) const;
@@ -629,6 +641,8 @@ public:
 	Callback2<String&, WString&> WhenHyperlink;
 	Callback1<String&>           WhenLabel;
 	Callback1<Bar&>              WhenBar;
+
+	void   StdBar(Bar& menu);
 
 	void   SerializeSettings(Stream& s);
 
@@ -673,8 +687,6 @@ public:
 
 	bool   Print();
 	void   DoPrint()                             { Print(); }
-
-	void   StdBar(Bar& bar);
 
 	void   StyleTool(Bar& bar, int width = 120);
 	void   FaceTool(Bar& bar, int width = 130);
@@ -774,9 +786,10 @@ public:
 	};
 
 	struct PosInfo {
-		int cursor;
-		int anchor;
-		int zsc;
+		int  cursor;
+		int  anchor;
+		bool begtabsel;
+		int  zsc;
 
 		void Serialize(Stream& s);
 	};
