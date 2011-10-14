@@ -3,6 +3,7 @@ template "Core console project" main;
 option "Create header" header;
 option "Commandline loop" cmdline;
 option "Multithreaded" mt;
+option "Use SSE2" sse2 = 1;
 
 @@<:PACKAGE:>.h
 ??header
@@ -25,7 +26,6 @@ CONSOLE_APP_MAIN
 	for(int i = 0; i < cmdline.GetCount(); i++) {
 	}<:.:>
 }
-
 @@<:PACKAGE:>.upp
 uses Core;
 
@@ -33,4 +33,4 @@ file <:?header:>"<:PACKAGE:>.h",<:.:>
 	"<:PACKAGE:>.cpp";
 
 mainconfig
-	"" = <:?mt:>"MT SSE2"<:/:>"SSE2"<:.:>;
+	"" = "<:?mt:>MT<:.:><:?mt && sse2:> <:.:><:?sse2:>SSE2<:.:>";

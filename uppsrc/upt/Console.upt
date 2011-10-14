@@ -1,5 +1,7 @@
 template "Console application (no U++)" main;
 
+option "Use SSE2" sse2 = 1;
+
 @@<:PACKAGE:>.cpp
 #include "stdio.h"
 
@@ -7,10 +9,9 @@ int main(int argc, const char *argv[])
 {
 	return 0;
 }
-
 @@<:PACKAGE:>.upp
 file
 	<:PACKAGE:>.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "<:?sse2:>SSE2<:.:>";

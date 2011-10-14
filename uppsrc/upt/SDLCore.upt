@@ -5,6 +5,7 @@ option "Initialize video" video;
 option "Double buffering" doublebuff;
 option "Full screen" fullscreen;
 option "Event loop" loop;
+option "Use SSE2" sse2 = 1;
 
 @@<:PACKAGE:>.h
 ??header
@@ -95,4 +96,4 @@ library(MSC) "SDL SDLmain";
 library(GCC WIN32) "SDL.dll SDLmain";
 
 mainconfig
-	"" = "SSE2";
+	"" = "<:?sse2:>SSE2<:.:>";
