@@ -129,7 +129,7 @@ void RichEdit::Paint(Draw& w)
 				pi.cells = cells;
 			}
 			else {
-				pi.sell = min(cursor, anchor);
+				pi.sell = begtabsel ? -1 : min(cursor, anchor);
 				pi.selh = max(cursor, anchor);
 			}
 		text.Paint(pw, pagesz, pi);
@@ -525,9 +525,9 @@ void RichEdit::SetPickUndoInfo(pick_ UndoInfo& f)
 
 void RichEdit::PosInfo::Serialize(Stream& s)
 {
-	int version = 1;
+	int version = 2;
 	s / version;
-	s % cursor % anchor % zsc;
+	s % cursor % anchor % zsc % begtabsel;
 	if(version == 0)
 		zsc = 0;
 }
@@ -537,6 +537,7 @@ RichEdit::PosInfo RichEdit::GetPosInfo() const
 	PosInfo f;
 	f.cursor = cursor;
 	f.anchor = anchor;
+	f.begtabsel = begtabsel;
 	f.zsc = zsc;
 	return f;
 }
@@ -546,6 +547,9 @@ void RichEdit::SetPosInfo(const PosInfo& f)
 	int l = text.GetLength();
 	cursor = min(l, f.cursor);
 	anchor = min(l, f.anchor);
+	begtabsel = f.begtabsel;
+	if(begtabsel)
+		anchor = 0;
 	Finish();
 	zsc = f.zsc;
 	Layout();
@@ -591,6 +595,8 @@ RichEdit::RichEdit()
 	style.Tip(t_("Style"));
 
 	style <<= THISBACK(Style);
+	
+	WhenBar = THISBACK(StdBar);
 
 	pagesz = Size(3968, 6074);
 	unit = UNIT_POINT;
@@ -621,8 +627,6 @@ RichEdit::RichEdit()
 	AddFrame(ruler);
 	AddFrame(sb);
 	RefreshBar();
-
-	WhenBar = THISBACK(StdBar);
 
 	ruler.WhenBeginTrack = THISBACK(BeginRulerTrack);
 	ruler.WhenTrack = THISBACK(RulerTrack);

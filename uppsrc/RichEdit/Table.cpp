@@ -49,6 +49,7 @@ void RichEdit::InsertTable()
 	if(text.GetRichPos(cursor).paralen) {
 		InsertLine();
 		cursor = anchor = cursor - 1;
+		begtabsel = false;
 	}
 	SaveFormat(cursor, 0);
 	AddUndo(new UndoCreateTable(text.SetTable(cursor, table)));

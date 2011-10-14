@@ -29,6 +29,7 @@ bool RichEdit::Key(dword key, int count)
 		if(cursor <= 0 || RemoveSpecial(cursor, cursor - 1, true))
 			return true;
 		anchor = --cursor;
+		begtabsel = false;
 		Remove(cursor, 1);
 		break;
 	case K_DELETE:
@@ -52,6 +53,7 @@ bool RichEdit::Key(dword key, int count)
 				return true;
 			Remove(c, cursor - c);
 			cursor = anchor = c;
+			begtabsel = false;
 			break;
 		}
 		break;
@@ -127,6 +129,7 @@ bool RichEdit::Key(dword key, int count)
 		}
 		if(cursorp.table && cursorp.posincell == cursorp.celllen) {
 			cursor = anchor = cursor + 1;
+			begtabsel = false;
 			break;
 		}
 	default:
