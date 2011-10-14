@@ -23,9 +23,9 @@ String Updater::GetPlatformRoot(void)
 	return serverRoot + "/WINDOWS32/";
 #elif defined(PLATFORM_POSIX)
 #ifdef __x86_64
-	return webRoot + "/LINUX64/";
+	return serverRoot + "/LINUX64/";
 #else
-	return webRoot + "/LINUX32/";
+	return serverRoot + "/LINUX32/";
 #endif
 #else
 #error "PLATFORM NOT SUPPORTED"
@@ -601,16 +601,23 @@ void Updater::RestartApp(RestartModes restartMode)
 // fetch list of available app versions
 ProductVersions Updater::FetchVersions(void)
 {
-	HttpClient http;
-	http.TimeoutMsecs(1000);
-	http.URL(GetPlatformRoot() + "versions");
+	String verStr;
+	if (isWebServer) {
+		HttpClient http;
+		http.TimeoutMsecs(1000);
+		http.URL(GetPlatformRoot() + "versions");
 
-	// fetch version file from server
-	String verStr = http.Execute();
-	int err = http.GetStatusCode();
-	if(verStr == "" || err != 200)
+		// fetch version file from server
+		verStr = http.Execute();
+		int err = http.GetStatusCode();
+		if(err != 200)
+			return ProductVersions();
+	} else 
+		verStr = LoadFile(GetPlatformRoot() + "versions");
+	
+	verStr = TrimBoth(verStr);
+	if(verStr.IsEmpty())
 		return ProductVersions();
-
 	return ProductVersions(verStr);
 }
 
@@ -625,7 +632,7 @@ ProductVersion Updater::FetchMaxValidVersion(bool devel)
 	return versions.FindMax(ProductVersion(), maxVersion, devel);
 }
 
-// fetch the new app version from web server
+// fetch the new app version from server
 // and replaces older one
 // if ver is not specified, fetches the maximum available
 // one but which is less than or equal maxVersion
@@ -638,32 +645,36 @@ bool Updater::FetchApp(ProductVersion ver, bool devel)
 	if(!ver)
 		return false;
 
-	HttpClient http;
-#ifdef PLATFORM_POSIX
-	http.URL(GetPlatformRoot() + ver.ToString() + "/" + appName);
-#else
-	http.URL(GetPlatformRoot() + ver.ToString() + "/" + appName + ".exe");
-#endif
-	http.TimeoutMsecs(1000*60*30);
-	http.MaxContentSize(100000000);
+	String appServerPath;
+	#ifdef PLATFORM_POSIX
+		appServerPath = GetPlatformRoot() + ver.ToString() + "/" + appName;
+	#else
+		appServerPath = GetPlatformRoot() + ver.ToString() + "/" + appName + ".exe";
+	#endif
 
-	// fetch version file from server
-	Progress progress(t_("Downloading application.... please wait"));
-	appBuffer = http.Execute(progress);
-	err = http.GetStatusCode();
-	if(err != 200 || http.IsAborted() || http.IsError())
-	{
-		appBuffer = "";
-		return false;
-	}
+	if (isWebServer) {
+		HttpClient http;
+		http.URL(appServerPath);
+		http.TimeoutMsecs(1000*60*30);
+		http.MaxContentSize(100000000);
 	
-	// replaces/installs app
-	String destPath = applicationPath;
+		// fetch version file from server
+		Progress progress(t_("Downloading application.... please wait"));
+		appBuffer = http.Execute(progress);
+		err = http.GetStatusCode();
+		if(err != 200 || http.IsAborted() || http.IsError())
+		{
+			appBuffer = "";
+			return false;
+		}
+		// replaces/installs app
+		if(!SaveFile(applicationPath, appBuffer))
+			return false;		
+	} else
+		FileCopy(appServerPath, applicationPath);
 
-	if(!SaveFile(destPath, appBuffer))
-		return false;
 #ifdef PLATFORM_POSIX
-	if(chmod(~destPath, 0755) != 0)
+	if(chmod(~applicationPath, 0755) != 0)
 		return false;
 #endif
 
@@ -747,11 +758,11 @@ bool Updater::DefaultPrompts(void)
 	switch(GetState())
 	{
 		case UninstallFailed:
-			Exclamation(Format(t_("Uninstall of '%s' failed&Press OK to quit"), appName));
+			Exclamation(Format(t_("Uninstall of '%s' failed") + String("&") + t_("Press OK to quit"), appName));
 			return false;
 	
 		case UninstallSucceeded:
-			PromptOK(Format(t_("Uninstall of '%s' complete&Press OK to quit"), appName));
+			PromptOK(Format(t_("Uninstall of '%s' complete") + String("&") + t_("Press OK to quit"), appName));
 			return false;
 			
 		case UninstallAborted:
@@ -761,14 +772,14 @@ bool Updater::DefaultPrompts(void)
 			switch(installBehaviour)
 			{
 				case AskUser :
-					if(!PromptYesNo(Format(t_("Install of '%s' failed&Run without installing?"), appName)))
+					if(!PromptYesNo(Format(t_("Install of '%s' failed") + String("&") + t_("Run without installing?"), appName)))
 						return false;
 					break;
 				case AbortExecution:
 					Exclamation(Format(t_("Install of '%s' failed"), appName));
 					return false;
 				case ContinueExecution:
-					Exclamation(Format(t_("Install of '%s' failed&press OK to run uninstalled"), appName));
+					Exclamation(Format(t_("Install of '%s' failed") + String("&") + t_("Press OK to run uninstalled"), appName));
 					return true;
 				default:
 					return false;
@@ -782,14 +793,14 @@ bool Updater::DefaultPrompts(void)
 			switch(installBehaviour)
 			{
 				case AskUser :
-					if(!PromptYesNo(Format(t_("Install of '%s' aborted&Run without installing?"), appName)))
+					if(!PromptYesNo(Format(t_("Install of '%s' aborted") + String("&") + t_("Run without installing?"), appName)))
 						return false;
 					break;
 				case AbortExecution:
 					Exclamation(Format(t_("Install of '%s' aborted"), appName));
 					return false;
 				case ContinueExecution:
-					Exclamation(Format(t_("Install of '%s' aborted&press OK to run uninstalled"), appName));
+					Exclamation(Format(t_("Install of '%s' aborted") + String("&") + t_("Press OK to run uninstalled"), appName));
 					return true;
 				default:
 					return false;
@@ -801,14 +812,14 @@ bool Updater::DefaultPrompts(void)
 			switch(updateBehaviour)
 			{
 				case AskUser:
-					if(!PromptYesNo(Format(t_("Update of '%s' failed&Run current version?"), appName)))
+					if(!PromptYesNo(Format(t_("Update of '%s' failed") + String("&") + t_("Run current version?"), appName)))
 						return false;
 					break;
 				case AbortExecution:
 					Exclamation(Format(t_("Update of '%s' failed"), appName));
 					return false;
 				case ContinueExecution:
-					Exclamation(Format(t_("Update of '%s' failed&press OK to run current version"), appName));
+					Exclamation(Format(t_("Update of '%s' failed") + String("&") + t_("Press OK to run current version"), appName));
 					return true;
 				default:
 					return true;
