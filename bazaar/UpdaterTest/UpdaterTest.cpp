@@ -30,6 +30,9 @@ GUI_APP_MAIN
 		// setup web root for program downloads
 		.SetWebRoot("www.timberstruct.com/webupdater/updatertest")
 		
+		// set LAN path if download is local
+		//.SetLANRoot(GetDesktopFolder())
+		
 		// ask for updates on launch
 		.UpdateManual()
 		
