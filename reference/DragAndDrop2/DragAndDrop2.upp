@@ -1,0 +1,11 @@
+description "Low-level drag and drop operation, late rendering using GetSelectionData\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI SSE2";
+
