@@ -87,7 +87,6 @@ void RichEdit::AddUndo(UndoRec *ur)
 	found = false;
 	ur->cursor = cursor;
 	ur->serial = undoserial;
-	DLOG("Undo serial: " << undoserial);
 	undo.AddTail(ur);
 }
 

@@ -474,7 +474,7 @@ private:
 
 	void       Limit(int& pos, int& count);
 	bool       InvalidRange(int c1, int c2);
-	void       NextUndo()                 { undoserial += incundoserial; incundoserial = false; DDUMP(undoserial); }
+	void       NextUndo()                 { undoserial += incundoserial; incundoserial = false; }
 	void       AddUndo(UndoRec *undo);
 
 	void       BeginRulerTrack();
