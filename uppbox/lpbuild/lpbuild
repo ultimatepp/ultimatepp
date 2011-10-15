@@ -12,7 +12,7 @@ GPG_KEY="0CE4194D"				# gpg key fingerprint to use
 PYTHON=python
 TMPDIR="/home/upp/lpbuild.tmp"	# directory for temporary files (defaults to /tmp/lpbuild.tmp)
 PPA="upp"
-SERIES=( hardy jaunty karmic lucid maverick natty )
+SERIES=( hardy jaunty karmic lucid maverick natty oneiric )
 
 # my local setup (for debuging)
 #SRC_PATH="/home/h/uppsvn"
@@ -24,7 +24,7 @@ SERIES=( hardy jaunty karmic lucid maverick natty )
 #PYTHON=python2
 #TMPDIR=""	# use default
 #PPA="upp-testing"
-#SERIES=( natty )
+#SERIES=( oneiric )
 #SIMULATE="-s"
 
 echo "Debian source package builder"
