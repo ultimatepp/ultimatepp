@@ -1,0 +1,11 @@
+description "Low-level drag and drop operation\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI SSE2";
+
