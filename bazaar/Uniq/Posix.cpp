@@ -136,7 +136,7 @@ Uniq::Uniq()
 		// we also create the lock file
 		if(mkfifo(pipePath, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH))
 		{
-			Cerr() << "Error creating interprocess pipe\n";
+			Cerr() << t_("Error creating interprocess pipe") << "\n";
 			exit(1);
 		}
 		lockFile = open(lockPath, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
@@ -148,7 +148,7 @@ Uniq::Uniq()
 		int lock = fcntl(lockFile, F_SETLK, &fl);
 		if(lock == -1)
 		{
-			Cerr() << "Error locking lock file\n";
+			Cerr() << t_("Error locking lock file") << "\n";
 			unlink(pipePath);
 			unlink(lockPath);
 			exit(1);
