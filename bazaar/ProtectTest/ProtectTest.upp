@@ -8,6 +8,8 @@ file
 	main.cpp;
 
 mainconfig
+	"" = "GUI USE_SQLITE",
+	"" = "GUI PROTECT USE_SQLITE",
 	"" = "GUI",
 	"" = "GUI PROTECT";
 
@@ -16,7 +18,7 @@ custom(POSIX PROTECT) "post-link",
 	"";
 
 custom(WIN32 PROTECT) "post-link",
-	"Z:\\home\\massimo\\WINDOWS\\upp\\out\\MSC9\\ProtectEncrypt.exe $(OUTPA"
-	"TH) AABBCCDDEEFF00112233445566778899",
+	"c:\\desarrollo\\upp\\ProtectEncrypt.exe $(OUTPATH) AABBCCDDEEFF0011223"
+	"3445566778899",
 	"";
 
