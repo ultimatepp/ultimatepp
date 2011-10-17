@@ -11,5 +11,6 @@ file
 	ProtectClientDemo.lay;
 
 mainconfig
+	"" = "GUI USE_SQLITE",
 	"" = "GUI";
 
