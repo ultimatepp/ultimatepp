@@ -1,11 +1,21 @@
 #ifndef _Protect_ProtectDB_h_
 #define _Protect_ProtectDB_h_
 
+#include <Core/Core.h>
+
+#ifndef flagUSE_SQLITE
 #include <MySql/MySql.h>
+#else
+#include <plugin/sqlite3/Sqlite3.h>
+#endif
 
 NAMESPACE_UPP
 
+#ifndef flagUSE_SQLITE
 #define SCHEMADIALECT <MySql/MySqlSchema.h>
+#else
+#define SCHEMADIALECT <plugin/sqlite3/Sqlite3Schema.h>
+#endif
 #define MODEL <Protect/ProtectDB.sch>
 #include "Sql/sch_header.h"
 
@@ -27,7 +37,11 @@ class ProtectDB
 		bool upgraded;
 		
 		// database session
+#ifndef flagUSE_SQLITE
 		MySqlSession session;
+#else
+		Sqlite3Session session;
+#endif
 	
 	protected:
 	

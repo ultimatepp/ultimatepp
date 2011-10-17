@@ -484,7 +484,7 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 			// warning --- there's a caveat if client side crashes without disconnecting
 			// the total connection time won't be updated - it would make few sense anyways
 			userRec = db.Get(eMail);
-			int time = GetSysTime() - (Time)userRec.Get("LASTCONNECTIONDATE");
+			int64 time = GetSysTime() - (Time)userRec.Get("LASTCONNECTIONDATE");
 			time += (int)userRec.Get("TOTALCONNECTIONTIME");
 			userRec.Get("TOTALCONNECTIONTIME") = time;
 			db.Set(userRec);

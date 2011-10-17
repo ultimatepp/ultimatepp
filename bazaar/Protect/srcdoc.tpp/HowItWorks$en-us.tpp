@@ -13,9 +13,9 @@ app which is used by post`-link custom build step to encrypt
 the executable after link process&]
 [s0; &]
 [s0; The usage is quite simple and transparent to build process; 
-to use it it`'s enough to :&]
+to use it is enough to :&]
 [s0; &]
-[s0;i150;O0; Build the [* ProtectEncrypt ]package and put it`'s executable 
+[s0;i150;O0; Build the [* ProtectEncrypt ]package and put its executable 
 in some easy to locate place (system32 windows directory or /usr/bin 
 for linux systems, for example)&]
 [s0; &]
@@ -961,7 +961,6 @@ So :&]
 [s0; Will give an error because of undefined variable i; the solution 
 is to put variable definition [/ before ][* PROTECT`_START`_FUNC] 
 or the return statement [/ inside ]the macro couple :&]
-[s0; &]
 [s0; &]
 [s0;l160; [/ -|int i `= 10;]&]
 [s0;l160; [/ -|][*/ PROTECT`_START`_FUNC(Decrypt);]&]

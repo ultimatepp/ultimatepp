@@ -3,9 +3,12 @@ description "Software copy protection module\377";
 uses
 	Core,
 	Cypher,
-	MySql,
 	Web,
 	ProductVersion;
+
+uses(USE_SQLITE) plugin\sqlite3;
+
+uses(!USE_SQLITE) MySql;
 
 file
 	ProtectStatus.h,

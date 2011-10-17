@@ -15,7 +15,7 @@ itIT("")
 
 T_("BAD REQUEST")
 caES("")
-esES("mala solicitud")
+esES("Mala solicitud")
 itIT("")
 
 T_("MISSING INITIALIZATION VECTOR ON DATA")

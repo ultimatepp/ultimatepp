@@ -2,7 +2,8 @@
 #define _Protect_icpp_init_stub
 #include "Core/init"
 #include "Cypher/init"
-#include "MySql/init"
 #include "Web/init"
+#include "plugin\sqlite3/init"
+#include "MySql/init"
 #include "ProductVersion/init"
 #endif

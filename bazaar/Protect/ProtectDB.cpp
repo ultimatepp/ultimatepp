@@ -20,7 +20,11 @@ ProtectDB::~ProtectDB()
 // connect/disconnect
 bool ProtectDB::Connect(void)
 {
+#ifndef flagUSE_SQLITE
 	if(!session.Connect(userName, password, dbName, host))
+#else
+	if(!session.Open(dbName)) 
+#endif
 		return false;
 	connected = true;
 	SQL = session;
