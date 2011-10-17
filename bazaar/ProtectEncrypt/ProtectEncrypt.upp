@@ -8,5 +8,6 @@ file
 	ProtectEncrypt.cpp;
 
 mainconfig
+	"" = "USE_SQLITE",
 	"" = "";
 
