@@ -124,8 +124,8 @@ Vector<int> GetPropertyInts(Window w, Atom property, Atom rtype)
 	Vector<int> result;
 	String p = GetProperty(w, property, rtype);
 	const long int *ptr = (const long int *)~p;
-	const long int *lim = ptr + p.GetLength() / 4;
-	result.Reserve(p.GetLength() / 4);
+	const long int *lim = ptr + p.GetLength() / sizeof(long int);
+	result.Reserve(p.GetLength() / sizeof(long int));
 	while(ptr < lim)
 		result.Add(*ptr++);
 	return result;
