@@ -26,7 +26,6 @@ GLOBAL_VAR(SSLInitCls, SSLInit);
 
 SSLInitCls::SSLInitCls()
 {
-	RLOG("SSLInitCls");
 	Socket::Init();
 	MemoryIgnoreLeaksBlock __;
 	CRYPTO_set_mem_functions(SSLAlloc, SSLRealloc, SSLFree);
@@ -37,8 +36,6 @@ SSLInitCls::SSLInitCls()
 
 SSLInitCls::~SSLInitCls()
 {
-	RLOG("~SSLInitCls");
-
 	CONF_modules_unload(1);
 //		destroy_ui_method();
 	EVP_cleanup();
