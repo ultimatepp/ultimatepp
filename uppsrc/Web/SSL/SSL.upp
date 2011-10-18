@@ -33,6 +33,7 @@ link(WIN32 DEBUG MSC71) /nodefaultlib:libc;
 link(WIN32 MT MSC71) /nodefaultlib:libc;
 
 file
+	SSL.h,
 	WebSSL.h,
 	util.cpp,
 	httpscli.cpp,
