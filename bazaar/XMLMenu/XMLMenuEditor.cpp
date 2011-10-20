@@ -223,7 +223,7 @@ void XMLBarEditor::imageSelCb(void)
 	
 	// opens a file selector, allows selection of some
 	// kind of image formats
-	FileSelector fs;
+	FileSel fs;
 	fs.ActiveDir(lastPath);
 	fs.Type(t_("Image files"), "*.png,*.jpg,*.ico,*.bmp");
 	if(!fs.ExecuteOpen(t_("Select icon file")))
