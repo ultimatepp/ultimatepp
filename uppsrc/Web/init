@@ -1,7 +1,7 @@
 #ifndef _Web_icpp_init_stub
 #define _Web_icpp_init_stub
 #include "Core/init"
-#define BLITZ_INDEX__ FC6F975A86E4E6CFB52E673E128BCEAC9
+#define BLITZ_INDEX__ F18AE5130D569C71830703B78BC8B3166
 #include "Web_init.icpp"
 #undef BLITZ_INDEX__
 #endif
