@@ -1,0 +1,4 @@
+LAYOUT(TestXMLMenuLayout, 608, 384)
+	ITEM(Splitter, splitter, HSizePosZ(0, 0).VSizePosZ(0, 0))
+END_LAYOUT
+

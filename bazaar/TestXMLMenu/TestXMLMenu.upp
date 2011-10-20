@@ -1,0 +1,14 @@
+description "Testing new XML menu system\377";
+
+uses
+	XMLMenu;
+
+file
+	TestXMLMenu.iml,
+	TestXMLMenu.lay,
+	TestXMLMenu.h,
+	TestXMLMenu.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,4 @@
+#ifndef _TestXMLMenu_icpp_init_stub
+#define _TestXMLMenu_icpp_init_stub
+#include "XMLMenu/init"
+#endif

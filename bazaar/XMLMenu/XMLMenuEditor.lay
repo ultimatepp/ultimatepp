@@ -1,0 +1,41 @@
+LAYOUT(CmdBoxLayout, 156, 296)
+	ITEM(LabelBox, dv___0, SetLabel(t_("Available commands")).HSizePosZ(4, 4).VSizePosZ(0, 4))
+	ITEM(ColumnList, commandList, HSizePosZ(8, 8).VSizePosZ(16, 8))
+END_LAYOUT
+
+LAYOUT(BarListLayout, 156, 296)
+	ITEM(LabelBox, title, SetLabel(t_("Available toolbars")).HSizePosZ(4, 4).VSizePosZ(0, 4))
+	ITEM(ColumnList, barList, HSizePosZ(8, 8).VSizePosZ(16, 8))
+END_LAYOUT
+
+LAYOUT(ItemEditorLayout, 344, 104)
+	ITEM(EditString, tooltip, LeftPosZ(96, 136).TopPosZ(80, 19))
+	ITEM(Label, dv___1, SetLabel(t_("Icon :")).LeftPosZ(248, 88).TopPosZ(0, 20))
+	ITEM(Label, dv___2, SetLabel(t_("Command id :")).LeftPosZ(0, 92).TopPosZ(0, 20))
+	ITEM(EditString, cmdId, LeftPosZ(96, 136).TopPosZ(0, 19))
+	ITEM(Label, labelName, SetLabel(t_("Label :")).LeftPosZ(0, 92).TopPosZ(40, 20))
+	ITEM(EditString, label, LeftPosZ(96, 136).TopPosZ(40, 19))
+	ITEM(Label, dv___6, SetLabel(t_("Tooltip :")).LeftPosZ(0, 92).TopPosZ(80, 20))
+	ITEM(Button, icon, LeftPosZ(248, 88).TopPosZ(24, 76))
+END_LAYOUT
+
+LAYOUT(MenuEditorLayout, 536, 304)
+	ITEM(Button, okButton, SetLabel(t_("Ok")).LeftPosZ(4, 68).BottomPosZ(4, 20))
+	ITEM(Button, cancelButton, SetLabel(t_("Cancel")).RightPosZ(4, 68).BottomPosZ(4, 20))
+	ITEM(Splitter, horzSplitter, HSizePosZ(0, 0).VSizePosZ(0, 28))
+END_LAYOUT
+
+LAYOUT(CmdAddLayout, 236, 76)
+	ITEM(EditString, cmdId, LeftPosZ(8, 220).TopPosZ(28, 19))
+	ITEM(Button, cancelBtn, SetLabel(t_("Cancel")).LeftPosZ(168, 64).TopPosZ(52, 20))
+	ITEM(Button, okBtn, SetLabel(t_("Ok")).LeftPosZ(4, 64).TopPosZ(52, 20))
+	ITEM(Label, dv___3, SetLabel(t_("New command Id :")).LeftPosZ(8, 220).TopPosZ(4, 20))
+END_LAYOUT
+
+LAYOUT(BarAddLayout, 236, 76)
+	ITEM(EditString, barName, LeftPosZ(8, 220).TopPosZ(28, 19))
+	ITEM(Button, cancelBtn, SetLabel(t_("Cancel")).LeftPosZ(168, 64).TopPosZ(52, 20))
+	ITEM(Button, okBtn, SetLabel(t_("Ok")).LeftPosZ(4, 64).TopPosZ(52, 20))
+	ITEM(Label, dv___3, SetLabel(t_("New bar name :")).LeftPosZ(8, 220).TopPosZ(4, 20))
+END_LAYOUT
+
