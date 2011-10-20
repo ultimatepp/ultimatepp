@@ -193,6 +193,12 @@ String HttpClient::CalculateDigest(String authenticate) const
 	return auth;
 }
 
+HttpClient& HttpClient::Header(const char *id, const String& data)
+{
+	client_headers << id << ": " << data << "\r\n";
+	return *this;
+}
+
 String HttpClient::Execute(Gate2<int, int> progress)
 {
 	int start_time = msecs();
