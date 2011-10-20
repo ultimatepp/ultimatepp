@@ -27,6 +27,7 @@ public:
 	HttpClient&  Headers(String h)                { client_headers = h; return *this; }
 	HttpClient&  ClearHeaders()                   { return Headers(Null); }
 	HttpClient&  AddHeaders(String h)             { client_headers.Cat(h); return *this; }
+	HttpClient&  Header(const char *id, const String& data);
 
 	HttpClient&  StdHeaders(bool sh)              { std_headers = sh; return *this; }
 	HttpClient&  NoStdHeaders()                   { return StdHeaders(false); }
