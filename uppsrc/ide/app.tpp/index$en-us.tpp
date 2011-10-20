@@ -36,10 +36,9 @@ Packages and Assemblies]&]
 [s0;l224; [^topic`:`/`/ide`/app`/macros`$en`-us^ Macros]&]
 [s0;l224; [^topic`:`/`/ide`/app`/PackageTemplates`$en`-us^ Ultimate`+`+ 
 Project Templates]&]
-[s0;l224; [^topic`:`/`/ide`/app`/cmdline`$en`-us^ TheIDE command`-line 
-`& umk]&]
+[s0;l224; [^topic`:`/`/ide`/app`/umk`$en`-us^ umk]&]
 [s0;l224; [^topic`:`/`/ide`/app`/IconDes`$en`-us^ Iml designer]&]
-[s0;l224;^topic`:`/`/ide`/app`/cmdline`$en`-us^ &]
+[s0;l224; &]
 [s0;l224; [^topic`:`/`/ide`/app`/CrossComp`$en`-gb^ Using TheIDE as 
 a Cross Development Tool]&]
 [s0; &]
