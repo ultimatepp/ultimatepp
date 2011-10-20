@@ -99,6 +99,7 @@ String HttpClient::ReadUntilProgress(char until, int start_time, int end_time, G
 
 HttpClient& HttpClient::Post(const char *id, const String& data)
 {
+	Post();
 	if(postdata.GetCount())
 		postdata << '&';
 	postdata << id << '=' << UrlEncode(data);
