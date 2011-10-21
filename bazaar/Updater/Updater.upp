@@ -7,6 +7,8 @@ uses
 	ProductVersion,
 	ProductVersion;
 
+library(LINUX) util;
+
 file
 	Updater.t,
 	Updater.iml,
