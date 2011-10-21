@@ -37,18 +37,18 @@ String Updater::GetPlatformRoot(void)
 Updater::Updater()
 {
 	// fetches and stores environment, we need to change it later
-	environ <<= Environment();
+	environment <<= Environment();
 	
 	// accepts development versions by default
 	acceptDevelVersions = true;
 
 	// gets state variable, if not present assume starting in normal mode
 	String stateStr;
-	if(environ.Find("UPDATER_STATE") < 0)
+	if(environment.Find("UPDATER_STATE") < 0)
 		state = NormalRun;
 	else
 	{
-		stateStr = environ.Get("UPDATER_STATE");
+		stateStr = environment.Get("UPDATER_STATE");
 		if(stateStr == "INSIDEUPDATER")
 			state = InsideUpdater;
 		else if(stateStr == "UNINSTALLFAILED")
@@ -70,17 +70,17 @@ Updater::Updater()
 	// gets user name
 	if(state != InsideUpdater)
 		user = GetUserName();
-	else if(environ.Find("UPDATER_USER") < 0)
+	else if(environment.Find("UPDATER_USER") < 0)
 		user = "unknown";
 	else
-		user = environ.Get("UPDATER_USER");
+		user = environment.Get("UPDATER_USER");
 
 	// get application name -- either from GetExeTitle() if in normal mode
 	// or from environment if in superuser mode
 	if(state != InsideUpdater && state != UninstallSucceeded)
 		appName = GetExeTitle();
-	else if(environ.Find("UPDATER_APPNAME") >= 0)
-		appName = environ.Get("UPDATER_APPNAME");
+	else if(environment.Find("UPDATER_APPNAME") >= 0)
+		appName = environment.Get("UPDATER_APPNAME");
 	else
 		appName = GetExeTitle(); // fallout -- should NEVER get here
 	
@@ -150,16 +150,16 @@ void Updater::FailUpdate()
 	switch(updaterOp)
 	{
 		case Install:
-			environ.Add("UPDATER_STATE", "INSTALLFAILED");
+			environment.Add("UPDATER_STATE", "INSTALLFAILED");
 			break;
 			
 		case Uninstall:
-			environ.Add("UPDATER_APPNAME", appName);
-			environ.Add("UPDATER_STATE", "UNINSTALLFAILED");
+			environment.Add("UPDATER_APPNAME", appName);
+			environment.Add("UPDATER_STATE", "UNINSTALLFAILED");
 			break;
 			
 		case Update:
-		environ.Add("UPDATER_STATE", "UPDATEFAILED");
+		environment.Add("UPDATER_STATE", "UPDATEFAILED");
 			break;
 			
 		default:
@@ -173,16 +173,16 @@ void Updater::SucceedUpdate()
 	switch(updaterOp)
 	{
 		case Install:
-			environ.Add("UPDATER_STATE", "INSTALLSUCCEEDED");
+			environment.Add("UPDATER_STATE", "INSTALLSUCCEEDED");
 			break;
 			
 		case Uninstall:
-			environ.Add("UPDATER_APPNAME", appName);
-			environ.Add("UPDATER_STATE", "UNINSTALLSUCCEEDED");
+			environment.Add("UPDATER_APPNAME", appName);
+			environment.Add("UPDATER_STATE", "UNINSTALLSUCCEEDED");
 			break;
 			
 		case Update:
-			environ.Add("UPDATER_STATE", "UPDATESUCCEEDED");
+			environment.Add("UPDATER_STATE", "UPDATESUCCEEDED");
 			break;
 			
 		default:
@@ -197,11 +197,11 @@ void Updater::SucceedUpdate()
 bool Updater::START_Updater(String const &operation)
 {
 	// prepare environment for updating
-	environ.Add("UPDATER_USER", user);
-	environ.Add("UPDATER_OP", operation);
-	environ.Add("UPDATER_STATE", "INSIDEUPDATER");
-	environ.Add("UPDATER_APPNAME", appName);
-	environ.Add("UPDATER_EXEPATH", GetExeFilePath());
+	environment.Add("UPDATER_USER", user);
+	environment.Add("UPDATER_OP", operation);
+	environment.Add("UPDATER_STATE", "INSIDEUPDATER");
+	environment.Add("UPDATER_APPNAME", appName);
+	environment.Add("UPDATER_EXEPATH", GetExeFilePath());
 	
 	if(CommandLine().GetCount() && CommandLine()[0] != "--UNINSTALL")
 	{
@@ -209,7 +209,7 @@ bool Updater::START_Updater(String const &operation)
 		for(int i = 0; i < CommandLine().GetCount(); i++)
 			s += CommandLine()[i] + " ";
 		s = s.Left(s.GetCount() - 1);
-		environ.Add("UPDATER_CMDLINE", s);
+		environment.Add("UPDATER_CMDLINE", s);
 	}
 
 	// gets current executable path
@@ -232,7 +232,7 @@ bool Updater::START_Updater(String const &operation)
 #endif
 	
 	// executes the file asking for password
-	bool res = !SysStartAdmin(tempName, "", environ);
+	bool res = !SysStartAdmin(tempName, "", environment);
 	return res;
 
 }
@@ -347,17 +347,17 @@ bool Updater::DO_InsideUpdater(void)
 	// fails update if no operation found (shoudn't happen...)
 	bool failed = false;
 	
-	if(environ.Find("UPDATER_USER") < 0)
+	if(environment.Find("UPDATER_USER") < 0)
 		failed = true;
 	else
-		environ.RemoveKey("UPDATER_USER");
+		environment.RemoveKey("UPDATER_USER");
 
-	if(environ.Find("UPDATER_OP") < 0)
+	if(environment.Find("UPDATER_OP") < 0)
 		failed = true;
 	else
 	{
-		operation = environ.Get("UPDATER_OP");
-		environ.RemoveKey("UPDATER_OP");
+		operation = environment.Get("UPDATER_OP");
+		environment.RemoveKey("UPDATER_OP");
 
 		// setup update operation code
 		if(operation == "INSTALL")
@@ -371,27 +371,27 @@ bool Updater::DO_InsideUpdater(void)
 	
 	}
 	
-	if(environ.Find("UPDATER_APPNAME") < 0)
+	if(environment.Find("UPDATER_APPNAME") < 0)
 		failed = true;
 	else
 	{
-		appName = environ.Get("UPDATER_APPNAME");
-		environ.RemoveKey("UPDATER_APPNAME");
+		appName = environment.Get("UPDATER_APPNAME");
+		environment.RemoveKey("UPDATER_APPNAME");
 	}
-	environ.RemoveKey("UPDATER_STATE");
+	environment.RemoveKey("UPDATER_STATE");
 
-	if(environ.Find("UPDATER_CMDLINE") >= 0)
+	if(environment.Find("UPDATER_CMDLINE") >= 0)
 	{
-		commandLine = environ.Get("UPDATER_CMDLINE");
-		environ.RemoveKey("UPDATER_CMDLINE");
+		commandLine = environment.Get("UPDATER_CMDLINE");
+		environment.RemoveKey("UPDATER_CMDLINE");
 	}
 
-	if(environ.Find("UPDATER_EXEPATH") < 0)
+	if(environment.Find("UPDATER_EXEPATH") < 0)
 		failed = true;
 	else
 	{
-		exePath = environ.Get("UPDATER_EXEPATH");
-		environ.RemoveKey("UPDATER_EXEPATH");
+		exePath = environment.Get("UPDATER_EXEPATH");
+		environment.RemoveKey("UPDATER_EXEPATH");
 	}
 
 	// if failed getting environment data, signals and restarts in normal mode
@@ -548,7 +548,7 @@ void Updater::RestartApp(RestartModes restartMode)
 			break;
 	}
 	// restart app in user mode, no gui, no password should be needed
-	SysStartUser(user, "", path, commandLine, environ);
+	SysStartUser(user, "", path, commandLine, environment);
 }
 
 // fetch list of available app versions

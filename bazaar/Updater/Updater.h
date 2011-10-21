@@ -79,7 +79,7 @@ class Updater
 		bool FetchApp(ProductVersion ver, bool devel);
 		
 		// running copy of environment
-		VectorMap<String, String>environ;
+		VectorMap<String, String>environment;
 		
 		// user name (which launched app in normal mode
 		String user;
