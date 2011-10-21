@@ -114,7 +114,7 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 		lnk << " $(LIBPATH)";
 		if (!HasFlag("OSX11"))
 			lnk << " -Wl,-O,2";
-		lnk << " $(LDFLAGS)";
+		lnk << " $(LDFLAGS) -Wl,--start-group ";
 
 		makefile.linkfiles = lnk;
 	}
@@ -143,6 +143,16 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 		libfiles = "$(AR) ";
 	libfiles << makefile.output;
 
+	Vector<String> libs = Split(Gather(pkg.library, config.GetKeys()), ' ');
+	for(int i = 0; i < libs.GetCount(); i++) {
+		String ln = libs[i];
+		String ext = ToLower(GetFileExt(ln));
+		if(ext == ".a" || ext == ".so" || ext == ".dll")
+			makefile.linkfileend << " \\\n\t\t\t" << GetHostPathQ(FindInDirs(libpath, ln));
+		else
+			makefile.linkfileend << " \\\n\t\t\t-l" << ln;
+	}
+	
 	for(int i = 0; i < pkg.GetCount(); i++)
 		if(!pkg[i].separator) {
 			String gop = Gather(pkg[i].option, config.GetKeys());
@@ -188,10 +198,11 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 		makefile.linkdep << " \\\n\t" << makefile.output;
 		makefile.linkfiles << " \\\n\t\t\t" << makefile.output;
 	}
-
+/*
 	if(main) {
 		if(!HasFlag("SOLARIS")&&!HasFlag("OSX11"))
 			makefile.linkfiles << " \\\n\t\t-Wl,--start-group ";
+		DDUMPC(all_libraries);
 		for(int i = 0; i < all_libraries.GetCount(); i++) {
 			String ln = all_libraries[i];
 			String ext = ToLower(GetFileExt(ln));
@@ -203,6 +214,7 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 		if(!HasFlag("SOLARIS")&&!HasFlag("OSX11"))
 			makefile.linkfileend << " \\\n\t\t-Wl,--end-group\n\n";
 	}
+*/
 }
 
 Point CppBuilder::ExtractVersion()

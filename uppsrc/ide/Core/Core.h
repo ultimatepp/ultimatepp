@@ -223,6 +223,8 @@ String AsStringWhen(const String& when);
 struct OptItem {
 	String   when;
 	String   text;
+	
+	String ToString() const { return when + ": " + text ; }
 };
 
 struct CustomStep {

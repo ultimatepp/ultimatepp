@@ -266,6 +266,12 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
 	String builder = bm.Get("BUILDER", "GCC");
+	int q = BuilderMap().Find(builder);
+	if(q < 0) {
+		PutConsole("Invalid builder " + builder);
+		ConsoleShow();
+		return NULL;
+	}
 	One<Builder> b = (*BuilderMap().Get(builder))();
 	b->host = host;
 	b->compiler = bm.Get("COMPILER", "");
@@ -373,6 +379,7 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 	VectorMap<String, String> bm = GetMethodVars(method);
 	if(bm.GetCount() == 0) {
 		PutConsole("Invalid build method");
+		ConsoleShow();
 		return false;
 	}
 	One<Host> host = CreateHost(false);
@@ -383,6 +390,8 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 		host = h;
 	}
 	One<Builder> b = CreateBuilder(~host);
+	if(!b)
+		return false;
 	b->config = PackageConfig(wspc, pkindex, bm, mainparam, *host, *b);
 	const TargetMode& m = targetmode == 0 ? debug : release;
 	b->version = m.version;
@@ -455,7 +464,7 @@ void MakeBuild::SetHdependDirs()
 }
 
 Vector<String> MakeBuild::GetAllUses(const Workspace& wspc, int f)
-{
+{ // Warning: This does not seem to do what it is supposed to do...
 	String package = wspc[f];
 	Index<String> all_uses;
 	bool warn = true;
@@ -479,10 +488,11 @@ Vector<String> MakeBuild::GetAllUses(const Workspace& wspc, int f)
 Vector<String> MakeBuild::GetAllLibraries(const Workspace& wspc, int index,
 	const VectorMap<String, String>& bm, String mainparam,
 	Host& host, Builder& builder)
-{
+{ // Warning: This does not seem to do what it is supposed to do...
 	Vector<String> uses = GetAllUses(wspc, index);
 	uses.Add(wspc[index]);
 	Index<String> libraries;
+	
 	for(int i = 0; i < uses.GetCount(); i++) {
 		int f = wspc.package.Find(UnixPath(uses[i]));
 		if(f >= 0) {
@@ -564,8 +574,11 @@ bool MakeBuild::Build()
 		return false;
 	}
 	One<Host> host = CreateHost(false);
+	One<Builder> builder = CreateBuilder(~host);
+	if(!builder)
+		return false;
 	Index<String> p = PackageConfig(GetIdeWorkspace(), 0, bm, mainconfigparam,
-	                                *host, *CreateBuilder(~host));
+	                                *host, *builder);
 	Workspace wspc;
 	wspc.Scan(GetMain(), p.GetKeys());
 	return Build(wspc, mainconfigparam, Null);
@@ -575,8 +588,11 @@ void MakeBuild::CleanPackage(const Workspace& wspc, int package)
 {
 	PutConsole(NFormat("Cleaning %s", wspc[package]));
 	One<Host> host = CreateHost(false);
+	One<Builder> builder = CreateBuilder(~host);
+	if(!builder)
+		return;
 	host->DeleteFolderDeep(OutDir(PackageConfig(wspc, package, GetMethodVars(method), mainconfigparam,
-		*host, *CreateBuilder(~host)), wspc[package], GetMethodVars(method)));
+		*host, *builder), wspc[package], GetMethodVars(method)));
 }
 
 void MakeBuild::Clean()
@@ -601,6 +617,10 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 	VectorMap<String, String> bm = GetMethodVars(method);
 	One<Host> host = CreateHost(false);
 	One<Builder> b = CreateBuilder(~host);
+	
+	if(!b)
+		return;
+	
 	const TargetMode& tm = GetTargetMode();
 
 	String makefile;
@@ -688,7 +708,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 		<< config
 		<< install
 		<< "\n"
-		"$(OutFile): " << linkdep << "\n\t" << linkfiles << linkfileend << "\n"
+		"$(OutFile): " << linkdep << "\n\t" << linkfiles << linkfileend << " -Wl,--end-group\n\n"
 		<< rules
 		<< ".PHONY: clean\n"
 		<< "clean:\n"
