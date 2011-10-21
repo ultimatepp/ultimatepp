@@ -18,14 +18,14 @@
 String Updater::GetPlatformRoot(void)
 {
 #if defined(WIN64)
-	return webRoot + "/WINDOWS64/";
+	return AppendFileName(webRoot, "WINDOWS64/");
 #elif defined(WIN32)
-	return webRoot + "/WINDOWS32/";
+	return AppendFileName(webRoot, "WINDOWS32/");
 #elif defined(PLATFORM_POSIX)
 #ifdef __x86_64
-	return webRoot + "/LINUX64/";
+	return AppendFileName(webRoot, "LINUX64/");
 #else
-	return webRoot + "/LINUX32/";
+	return AppendFileName(webRoot, "LINUX32/";
 #endif
 #else
 #error "PLATFORM NOT SUPPORTED"
@@ -109,30 +109,30 @@ Updater &Updater::SetAppName(String const &_appName)
 	
 	// gets app's user config path
 #ifdef PLATFORM_POSIX
-	userConfigPath = "/home/" + user + "/." + appName + "/";
+	userConfigPath = AppendFileName("/home", user + "/." + appName);
 #else
-	userConfigPath = GetAppDataFolder() + "/" + appName + "/";
+	userConfigPath = AppendFileName(GetAppDataFolder(), appName);
 #endif
 
 	// gets app's system config path
 #ifdef PLATFORM_POSIX
-	systemConfigPath = "/usr/share/" + appName + "/";
+	systemConfigPath = AppendFileName("/usr/share", appName);
 #else
-	systemConfigPath = GetProgramsFolder() + "/" + appName + "/";
+	systemConfigPath = AppendFileName(GetProgramsFolder(), appName);
 #endif
 
 	// checks wether app is already installed and gather its version
 	installedVersion.Clear();
 #ifdef PLATFORM_POSIX
-	appInstalled = FileExists(GetProgramsFolder() + "/" + appName);
+	appInstalled = FileExists(AppendFileName(GetProgramsFolder(), appName));
 #else
-	appInstalled = FileExists(GetProgramsFolder() + "/" + appName + "/" + appName + ".exe");
+	appInstalled = FileExists(AppendFileName(GetProgramsFolder(), appName + "/" + appName + ".exe"));
 #endif
-	appInstalled &= FileExists(systemConfigPath + "version");
+	appInstalled &= FileExists(AppendFileName(systemConfigPath, "version"));
 	String verStr;
 	if(appInstalled)
 	{
-		verStr = LoadFile(systemConfigPath + "version");
+		verStr = LoadFile(AppendFileName(systemConfigPath, "version"));
 		if(verStr != "")
 			installedVersion = verStr;
 	}
@@ -311,13 +311,13 @@ bool Updater::DO_NormalRun(void)
 	
 	// we shall check which kind of update is enabled
 	String updateMode;
-	if(!FileExists(userConfigPath + "UPDATER_MODE"))
+	if(!FileExists(AppendFileName(userConfigPath, "UPDATER_MODE")))
 	{
 		updateMode = "ASK";
-		SaveFile(userConfigPath + "UPDATER_MODE", updateMode);
+		SaveFile(AppendFileName(userConfigPath, "UPDATER_MODE"), updateMode);
 	}
 	else
-		updateMode = LoadFile(userConfigPath + "UPDATER_MODE");
+		updateMode = LoadFile(AppendFileName(userConfigPath, "UPDATER_MODE"));
 
 	// if updates are disabled, just do nothing
 	if(updateMode == "DISABLED")
@@ -430,9 +430,9 @@ void Updater::DO_Uninstall(void)
 	// removes executable
 	String path;
 #ifdef PLATFORM_POSIX
-			path = GetProgramsFolder() + "/" + appName;
+			path = AppendFileName(GetProgramsFolder(), appName);
 #else
-			path = GetProgramsFolder() + "/" + appName + "/" + appName + ".exe";
+			path = AppendFileName(GetProgramsFolder(), appName + "/" + appName + ".exe");
 #endif
 	FileDelete(path);
 	
@@ -541,9 +541,9 @@ void Updater::RestartApp(RestartModes restartMode)
 			break;
 		case RestartNew:
 #ifdef PLATFORM_POSIX
-			path = GetProgramsFolder() + "/" + appName;
+			path = AppendFileName(GetProgramsFolder(), appName);
 #else
-			path = GetProgramsFolder() + "/" + appName + "/" + appName + ".exe";
+			path = AppendFileName(GetProgramsFolder(), appName + "/" + appName + ".exe");
 #endif
 			break;
 	}
@@ -556,7 +556,7 @@ ProductVersions Updater::FetchVersions(void)
 {
 	HttpClient http;
 	http.TimeoutMsecs(1000);
-	http.URL(GetPlatformRoot() + "versions");
+	http.URL(AppendFileName(GetPlatformRoot(), "versions"));
 
 	// fetch version file from server
 	String verStr = http.Execute();
@@ -593,9 +593,9 @@ bool Updater::FetchApp(ProductVersion ver, bool devel)
 
 	HttpClient http;
 #ifdef PLATFORM_POSIX
-	http.URL(GetPlatformRoot() + ver.ToString() + "/" + appName);
+	http.URL(AppendFileName(GetPlatformRoot(), ver.ToString() + "/" + appName));
 #else
-	http.URL(GetPlatformRoot() + ver.ToString() + "/" + appName + ".exe");
+	http.URL(AppendFileName(GetPlatformRoot(), ver.ToString() + "/" + appName + ".exe"));
 #endif
 	http.TimeoutMsecs(1000*60*30);
 	http.MaxContentSize(100000000);
@@ -613,9 +613,9 @@ bool Updater::FetchApp(ProductVersion ver, bool devel)
 	// replaces/installs app
 	String destPath;
 #ifdef PLATFORM_POSIX
-	destPath = GetProgramsFolder() + "/" + appName;
+	destPath = AppendFileName(GetProgramsFolder(), appName);
 #else
-	destPath = GetProgramsFolder() + "/" + appName + "/" + appName + ".exe";
+	destPath = AppendFileName(GetProgramsFolder(), appName + "/" + appName + ".exe");
 #endif
 	if(!SaveFile(destPath, appBuffer))
 		return false;
@@ -625,7 +625,7 @@ bool Updater::FetchApp(ProductVersion ver, bool devel)
 #endif
 
 	// stores current version inside system config path
-	if(!SaveFile(systemConfigPath + "version", ver.ToString()))
+	if(!SaveFile(AppendFileName(systemConfigPath, "version"), ver.ToString()))
 		return false;
 	installedVersion = ver;
 
@@ -677,14 +677,14 @@ bool Updater::Run()
 // sets updater to manual mode -- if update is available, asks user
 Updater &Updater::UpdateManual(void)
 {
-	SaveFile(userConfigPath + "UPDATER_MODE", "ASK");
+	SaveFile(AppendFileName(userConfigPath, "UPDATER_MODE"), "ASK");
 	return *this;
 }
 
 // sets updater to auto -- updates app on launch without asking user
 Updater &Updater::UpdateAuto(void)
 {
-	SaveFile(userConfigPath + "UPDATER_MODE", "AUTO");
+	SaveFile(AppendFileName(userConfigPath, "UPDATER_MODE"), "AUTO");
 	return *this;
 }
 
@@ -692,7 +692,7 @@ Updater &Updater::UpdateAuto(void)
 // re-enable it to restart updating system on next run
 Updater &Updater::UpdateDisable(void)
 {
-	SaveFile(userConfigPath + "UPDATER_MODE", "DISABLE");
+	SaveFile(AppendFileName(userConfigPath, "UPDATER_MODE"), "DISABLE");
 	return *this;
 }
 		
