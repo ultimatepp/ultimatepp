@@ -384,6 +384,8 @@ int CharFilterCid(int c)
 bool IsDoc(String s)
 {
 	s = ToLower(s);
+	if(s.Find("svn") >= 0)
+		return false;
 	return s.Find("readme") >= 0 || s.Find("copying") >= 0 || s.Find("license") >= 0 ||
 	       s.Find("authors") >= 0;
 }
