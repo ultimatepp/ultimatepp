@@ -5,5 +5,6 @@ file
 	ClassFactory.h,
 	ClassFactory.cpp,
 	PolyXML.h,
-	src.tpp;
+	src.tpp,
+	srcdoc.tpp;
 
