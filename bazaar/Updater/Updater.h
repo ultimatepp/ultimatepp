@@ -79,19 +79,16 @@ class Updater
 		bool FetchApp(ProductVersion ver, bool devel);
 		
 		// running copy of environment
-		VectorMap<String, String>environment;
+		VectorMap<String, String>environ;
 		
 		// user name (which launched app in normal mode
 		String user;
 		
 		// user configuration path
-		String userConfigPath, userConfigFolder;
+		String userConfigPath;
 		
-		// system configuration path (to keep installed version number)
-		String systemConfigPath, systemConfigFolder;
-		
-		// program path
-		String applicationPath, applicationFolder;
+		// sistem configuration path (to keep installed version number)
+		String systemConfigPath;
 		
 		// flag stating if app is installed
 		bool appInstalled;
@@ -113,10 +110,8 @@ class Updater
 		bool acceptDevelVersions;
 		ProductVersion maxVersion;
 		
-		// root of web server repository
-		String serverRoot;
-		
-		bool isWebServer;
+		// root ow web server repository
+		String webRoot;
 		
 		// install mode -- manual (true) or auto (false)
 		bool confirmInstall;
@@ -170,9 +165,6 @@ class Updater
 		// unlinks application
 		bool ShellUnlink(void);
 		
-		// Update application folder names
-		void UpdateFolderNames();
-		
 	protected:
 
 	public:
@@ -180,8 +172,7 @@ class Updater
 		Updater();
 		
 		Updater &SetMaxVersion(ProductVersion const &mv) { maxVersion = mv; return *this; }
-		Updater &SetWebRoot(String const &wr) { serverRoot = wr; isWebServer = true; return *this; }
-		Updater &SetLANRoot(String const &wr) { serverRoot = wr; isWebServer = false; return *this; }
+		Updater &SetWebRoot(String const &wr) { webRoot = wr; return *this; }
 		
 		// gets user config folder (/home/user/.appname in Linux, c:\Users\user\Application data\appname in windows)
 		String const &GetUserConfigPath(void) { return userConfigPath; }
@@ -218,10 +209,7 @@ class Updater
 		bool IsAppInstalled(void) { return appInstalled; }
 		ProductVersion const &GetInstalledVersion(void) { return installedVersion; }
 		ProductVersion const &GetMaxVersion(void) { return maxVersion; }
-		String const &GetWebRoot(void) { return serverRoot; }
-		
-		String const &GetServerRoot(void) { return serverRoot; }
-		bool IsWebServer() {return isWebServer;}
+		String const &GetWebRoot(void) { return webRoot; }
 	
 		// executes updater
 		// return true if app should continue execution
@@ -243,15 +231,6 @@ class Updater
 		// allows easy separation of installer from main application code
 		// if you want to deploy a small installer
 		Updater &SetAppName(String const &appName);
-		
-		// sets application data folder
-		Updater &SetAppDataFolder(String const &folderName);
-
-		// sets program executable folder
-		Updater &SetApplicationFolder(String const &folderName);
-		
-		// sets app's system config path
-		Updater &SetSystemConfigFolder(String const &folderName);
 		
 		// setup application icon
 		Updater &SetIcon(Image const &i) { icon = i; return *this; }
