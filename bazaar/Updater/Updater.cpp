@@ -18,14 +18,14 @@
 String Updater::GetPlatformRoot(void)
 {
 #if defined(WIN64)
-	return AppendFileName(webRoot, "WINDOWS64/");
+	return serverRoot + "/WINDOWS64/";
 #elif defined(WIN32)
-	return AppendFileName(webRoot, "WINDOWS32/");
+	return serverRoot + "/WINDOWS32/";
 #elif defined(PLATFORM_POSIX)
 #ifdef __x86_64
-	return AppendFileName(webRoot, "LINUX64/");
+	return serverRoot + "/LINUX64/";
 #else
-	return AppendFileName(webRoot, "LINUX32/";
+	return serverRoot + "/LINUX32/";
 #endif
 #else
 #error "PLATFORM NOT SUPPORTED"
@@ -36,6 +36,9 @@ String Updater::GetPlatformRoot(void)
 // constructor
 Updater::Updater()
 {
+	// defaults to web server mode
+	isWebServer = true;
+
 	// fetches and stores environment, we need to change it later
 	environment <<= Environment();
 	
@@ -554,16 +557,26 @@ void Updater::RestartApp(RestartModes restartMode)
 // fetch list of available app versions
 ProductVersions Updater::FetchVersions(void)
 {
-	HttpClient http;
-	http.TimeoutMsecs(1000);
-	http.URL(AppendFileName(GetPlatformRoot(), "versions"));
+	String verStr;
 
-	// fetch version file from server
-	String verStr = http.Execute();
-	int err = http.GetStatusCode();
-	if(verStr == "" || err != 200)
+	if(isWebServer)
+	{
+		HttpClient http;
+		http.TimeoutMsecs(1000);
+		http.URL(AppendFileName(GetPlatformRoot(), "versions"));
+
+		// fetch version file from server
+		verStr = http.Execute();
+		int err = http.GetStatusCode();
+		if(err != 200)
+			return ProductVersions();
+	}
+	else
+		verStr = LoadFile(GetPlatformRoot() + "versions");
+
+	verStr = TrimBoth(verStr);
+	if(verStr.IsEmpty())
 		return ProductVersions();
-
 	return ProductVersions(verStr);
 }
 
@@ -578,7 +591,7 @@ ProductVersion Updater::FetchMaxValidVersion(bool devel)
 	return versions.FindMax(ProductVersion(), maxVersion, devel);
 }
 
-// fetch the new app version from web server
+// fetch the new app version from server
 // and replaces older one
 // if ver is not specified, fetches the maximum available
 // one but which is less than or equal maxVersion
@@ -591,37 +604,41 @@ bool Updater::FetchApp(ProductVersion ver, bool devel)
 	if(!ver)
 		return false;
 
-	HttpClient http;
-#ifdef PLATFORM_POSIX
-	http.URL(AppendFileName(GetPlatformRoot(), ver.ToString() + "/" + appName));
-#else
-	http.URL(AppendFileName(GetPlatformRoot(), ver.ToString() + "/" + appName + ".exe"));
-#endif
-	http.TimeoutMsecs(1000*60*30);
-	http.MaxContentSize(100000000);
+	String appServerPath, destPath;
+	#ifdef PLATFORM_POSIX
+		appServerPath = AppendFileName(GetPlatformRoot(), ver.ToString() + "/" + appName);
+		destPath = AppendFileName(GetProgramsFolder(), appName);
+	#else
+		appServerPath = AppendFileName(GetPlatformRoot(), ver.ToString() + "/" + appName + ".exe");
+		destPath = AppendFileName(GetProgramsFolder(), appName + "/" + appName + ".exe");
+	#endif
 
-	// fetch version file from server
-	Progress progress(t_("Downloading application.... please wait"));
-	appBuffer = http.Execute(progress);
-	err = http.GetStatusCode();
-	if(err != 200 || http.IsAborted() || http.IsError())
+	if(isWebServer)
 	{
-		appBuffer = "";
-		return false;
-	}
+		HttpClient http;
+		http.URL(appServerPath);
+		http.TimeoutMsecs(1000*60*30);
+		http.MaxContentSize(100000000);
+
+		// fetch version file from server
+		Progress progress(t_("Downloading application.... please wait"));
+		appBuffer = http.Execute(progress);
+		err = http.GetStatusCode();
+		if(err != 200 || http.IsAborted() || http.IsError())
+		{
+			appBuffer = "";
+			return false;
+		}
 	
-	// replaces/installs app
-	String destPath;
+		// replaces/installs app
+		if(!SaveFile(destPath, appBuffer))
+			return false;
+	}
+	else
+		FileCopy(appServerPath, destPath);
 #ifdef PLATFORM_POSIX
-	destPath = AppendFileName(GetProgramsFolder(), appName);
-#else
-	destPath = AppendFileName(GetProgramsFolder(), appName + "/" + appName + ".exe");
-#endif
-	if(!SaveFile(destPath, appBuffer))
-		return false;
-#ifdef PLATFORM_POSIX
-	if(chmod(~destPath, 0755) != 0)
-		return false;
+		if(chmod(~destPath, 0755) != 0)
+			return false;
 #endif
 
 	// stores current version inside system config path

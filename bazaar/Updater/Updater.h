@@ -110,8 +110,11 @@ class Updater
 		bool acceptDevelVersions;
 		ProductVersion maxVersion;
 		
-		// root ow web server repository
-		String webRoot;
+		// root of web server repository
+		String serverRoot;
+		
+		// selects between web server mode or local mode
+		bool isWebServer;
 		
 		// install mode -- manual (true) or auto (false)
 		bool confirmInstall;
@@ -172,7 +175,8 @@ class Updater
 		Updater();
 		
 		Updater &SetMaxVersion(ProductVersion const &mv) { maxVersion = mv; return *this; }
-		Updater &SetWebRoot(String const &wr) { webRoot = wr; return *this; }
+		Updater &SetWebRoot(String const &wr) { serverRoot = wr; isWebServer = true; return *this; }
+		Updater &SetLANRoot(String const &wr) { serverRoot = wr; isWebServer = false; return *this; }
 		
 		// gets user config folder (/home/user/.appname in Linux, c:\Users\user\Application data\appname in windows)
 		String const &GetUserConfigPath(void) { return userConfigPath; }
@@ -209,7 +213,9 @@ class Updater
 		bool IsAppInstalled(void) { return appInstalled; }
 		ProductVersion const &GetInstalledVersion(void) { return installedVersion; }
 		ProductVersion const &GetMaxVersion(void) { return maxVersion; }
-		String const &GetWebRoot(void) { return webRoot; }
+		String const &GetWebRoot(void) { return serverRoot; }
+		String const &GetServerRoot(void) { return serverRoot; }
+		bool IsWebServer(void) { return isWebServer; }
 	
 		// executes updater
 		// return true if app should continue execution
