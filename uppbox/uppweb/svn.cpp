@@ -1,5 +1,7 @@
 #include "www.h"
 
+#define LLOG(x)
+
 VectorMap<String, SvnListRev> svndata;
 Vector<SvnLogRev> svnlog;
 
@@ -78,7 +80,7 @@ void GetSvnFolderDeep(VectorMap<String, SvnListRev> &data, const String &tppfold
 	}
 }
 void GetSvnList(VectorMap<String, SvnListRev> &data, const String &rootdir) {
-	RLOG("Querying svn for documentation metadata ...");
+	LLOG("Querying svn for documentation metadata ...");
 	GetSvnFolder(data, AppendFileName(rootdir, "uppbox/uppweb/www.tpp"));
 	GetSvnFolder(data, AppendFileName(rootdir, "uppbox/uppweb/gsoc.tpp"));
 	GetSvnFolderDeep(data, AppendFileName(rootdir, "uppsrc"));
@@ -156,7 +158,7 @@ void ParseSvnLog(Vector<SvnLogRev> &log, String& out){
 }
 
 void GetSvnLog(Vector<SvnLogRev> &log, int limit) {
-	RLOG("Querying svn for revisions log ...");
+	LLOG("Querying svn for revisions log ...");
 	String out = Sys("svn log \"" + rootdir + "\" --xml --verbose --non-interactive" + 
 					 ((limit > -1) ? " --limit " + FormatInt(limit) : ""));  
 	ParseSvnLog(log,out);

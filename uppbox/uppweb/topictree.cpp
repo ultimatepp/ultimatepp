@@ -1,6 +1,6 @@
 #include "www.h"
 
-#define LLOG(x)  LOG(x)
+#define LLOG(x) // LOG(x)
 
 StaticCriticalSection     reflink_lock;
 VectorMap<String, String> reflink;
