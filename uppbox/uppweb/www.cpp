@@ -7,7 +7,7 @@
 #define TFILE <uppweb/www.t>
 #include <Core/t.h>
 
-#define LLOG(x)  // LOG(x)
+#define LLOG(x)  LOG(x)
 
 #ifdef PLATFORM_WIN32 
 String rootdir = "u:\\upp.src";
@@ -661,6 +661,7 @@ GUI_APP_MAIN
 	
 #ifdef _DEBUG
 	ftpupload = false;
+//	outPdf = false;
 #endif
 
 	ProgramData data;
@@ -744,6 +745,8 @@ GUI_APP_MAIN
 
 	escape.Add("PAYPAL", LoadFile(GetRcFile("donations.txt")));
 
+	LLOG("A: " << MemoryUsedKb());
+
 	header = HtmlPackedTable()
 	       .Width(-100)
 	       .BgColor(White)
@@ -759,6 +762,8 @@ GUI_APP_MAIN
 			);
 	
 	bar.SetCount(languages.GetCount());
+
+	LLOG("B: " << MemoryUsedKb());
 	
 	int lang = GetCurrentLanguage();
 	for (int i = 0; i < languages.GetCount(); ++i) {
@@ -844,12 +849,16 @@ GUI_APP_MAIN
 		      //bf / blang;
 	}
 	SetLanguage(lang);
+
+	LLOG("C: " << MemoryUsedKb());
 	
 	for(int i = 0; i < tt.GetCount(); i++) {
 		String topic = tt.GetKey(i);
 		links.Add(topic, topic == "topic://uppweb/www/index$en-us" ? "index.html" :
 		                 memcmp(topic, "topic://", 8) ? topic : TopicFileNameHtml(topic));
 	}
+
+	LLOG("D: " << MemoryUsedKb());
 	
 	String svntableStr = DeQtf("[svntable]");
 	for(int i = 0; i < tt.GetCount(); i++) {
@@ -881,7 +890,7 @@ GUI_APP_MAIN
 		}
 	}
 
-	DUMPC(reflink.GetKeys());
+	LLOG("E: " << MemoryUsedKb());
 
 	for(int i = 0; i < reflink.GetCount(); i++) {
 		String l = reflink.GetKey(i);
@@ -897,6 +906,8 @@ GUI_APP_MAIN
 		}
 		labels.Add(l, lbl);
 	}
+
+	LLOG("F: " << MemoryUsedKb());
 
 	Date d = GetSysDate();
 	lastUpdate = HtmlItalic() / HtmlArial(8) / HtmlFontColor(Gray()) /
@@ -946,17 +957,29 @@ GUI_APP_MAIN
 			tt[i].text = page;
 		}
 	}
-	
+
+	LLOG("G: " << MemoryUsedKb());
+
+	PromptOK("Pause");
+
+/*
 	if (outPdf) {
 		PdfDraw pdf;
 		for(int i = 0; i < tt.GetCount(); i++)
 			QtfAsPdf(pdf, tt[i]);
 		SaveFile(AppendFileName(pdfdir, "Upp.pdf"), pdf.Finish());
 	}
-	
+*/
+
+	LLOG("H: " << MemoryUsedKb());
+	PromptOK("Pause 2");
+
 	for(int i = 0; i < tt.GetCount(); i++)
 		ExportPage(i);
 	SetLanguage(lang);
+
+	PromptOK("Pause 3");
+	LLOG("I: " << MemoryUsedKb());
 
 //	SaveFile(AppendFileName(targetdir, "favicon.ico"), LoadFile(AppendFileName(uppsrc, "ide/ide.ico")));
 	SaveFile(AppendFileName(targetdir, "stats.html"),
