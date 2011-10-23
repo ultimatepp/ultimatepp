@@ -81,6 +81,7 @@ ImageDraw::~ImageDraw()
 }
 
 Image Image::Arrow() { return Null; }
+Image Image::Hand() { return Null; }
 Image Image::Wait() { return Null; }
 Image Image::IBeam() { return Null; }
 Image Image::No() { return Null; }
