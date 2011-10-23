@@ -93,7 +93,6 @@ void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rec
 
 #ifndef PLATFORM_WIN32
 #include <CtrlCore/stdids.h>
-#include "../LinuxFb/vkcodes.h" //FIXME
 #endif
 
 #define GUIPLATFORM_KEYCODES_INCLUDE <Skeleton/Keys.h>
