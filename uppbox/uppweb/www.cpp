@@ -19,17 +19,16 @@ String targetdir = "u:\\uppwww";
 String diffdir   = "u:\\wwwupp";
 String pdfdir    = "u:\\pdf";
 #else
-String rootdir;
-String uppbox;
-String uppsrc;
-String reference;
-String examples;
-String targetdir;
-String diffdir;
-String pdfdir;
+String rootdir = "/root/upp.src";
+String uppbox =    rootdir + "uppbox";
+String uppsrc =    rootdir + "uppsrc";
+String reference = rootdir + "reference";
+String examples =  rootdir + "examples";
+String targetdir = "/var/www";
+String diffdir   = "/root/wwwupp";
+String pdfdir    = "/root/pdf";
 #endif
 String bazaar;
-bool ftpupload;
 bool outPdf;
 bool doSvn;
 
@@ -498,13 +497,13 @@ void ExportPage(int i)
 		posB = page.Find("[IHTMLTEXT", posB);
 		if (posB < 0)
 			break; 
-		int posBB = posB + strlen("[IHTMLTEXT");
+		int posBB = posB + (int)strlen("[IHTMLTEXT");
 		int pos0 = page.ReverseFind("[", posB-1);
 		int posE = page.Find(";2", posBB);
 		String html0 = page.Mid(posBB, posE - posBB);
 		html0.Replace("`", "");
 		htmlrep.Add(html0);
-		int posEE = page.Find("]&]", posE) + strlen("]&]");
+		int posEE = page.Find("]&]", posE) + (int)strlen("]&]");
 		
 		page = page.Left(pos0) + "QTFHTMLTEXT" + FormatInt(htmlrep.GetCount()-1) + page.Mid(posEE+1);
 	}
@@ -655,15 +654,9 @@ GUI_APP_MAIN
 	diffdir   = GetHomeDirFile("wwwupp");
 	pdfdir   = GetHomeDirFile("pdf");
 #endif
-	ftpupload = true;
 	outPdf = true;
 	doSvn = true;
 	
-#ifdef _DEBUG
-	ftpupload = false;
-//	outPdf = false;
-#endif
-
 	ProgramData data;
 	
 	String configFile = GetHomeDirFile("uppweb.xml");
@@ -674,7 +667,7 @@ GUI_APP_MAIN
 			targetdir = data.targetdir;
 			diffdir   = data.diffdir;
 			pdfdir    = data.pdfdir;	
-			ftpupload = data.ftpUpload;
+//			ftpupload = data.ftpUpload;
 			outPdf    = data.outPdf;
 			doSvn     = data.doSvn;
 			cfgloaded = true;
@@ -685,7 +678,7 @@ GUI_APP_MAIN
 		data.targetdir = targetdir;
 		data.diffdir   = diffdir;
 		data.pdfdir    = pdfdir;
-		data.ftpUpload = ftpupload;
+//		data.ftpUpload = ftpupload;
 		data.outPdf    = outPdf;
 		data.doSvn	   = doSvn;
 		StoreAsXMLFile(data, NULL, configFile);
@@ -745,8 +738,6 @@ GUI_APP_MAIN
 
 	escape.Add("PAYPAL", LoadFile(GetRcFile("donations.txt")));
 
-	LLOG("A: " << MemoryUsedKb());
-
 	header = HtmlPackedTable()
 	       .Width(-100)
 	       .BgColor(White)
@@ -763,8 +754,6 @@ GUI_APP_MAIN
 	
 	bar.SetCount(languages.GetCount());
 
-	LLOG("B: " << MemoryUsedKb());
-	
 	int lang = GetCurrentLanguage();
 	for (int i = 0; i < languages.GetCount(); ++i) {
 		Htmls bi, bex, bdoc, bcom, bcon, bsearch, blang;
@@ -850,16 +839,12 @@ GUI_APP_MAIN
 	}
 	SetLanguage(lang);
 
-	LLOG("C: " << MemoryUsedKb());
-	
 	for(int i = 0; i < tt.GetCount(); i++) {
 		String topic = tt.GetKey(i);
 		links.Add(topic, topic == "topic://uppweb/www/index$en-us" ? "index.html" :
 		                 memcmp(topic, "topic://", 8) ? topic : TopicFileNameHtml(topic));
 	}
 
-	LLOG("D: " << MemoryUsedKb());
-	
 	String svntableStr = DeQtf("[svntable]");
 	for(int i = 0; i < tt.GetCount(); i++) {
 		if (tt[i].title == "Svn releases") 
@@ -890,8 +875,6 @@ GUI_APP_MAIN
 		}
 	}
 
-	LLOG("E: " << MemoryUsedKb());
-
 	for(int i = 0; i < reflink.GetCount(); i++) {
 		String l = reflink.GetKey(i);
 		String lbl = Filter(l, CharFilterLbl);
@@ -906,8 +889,6 @@ GUI_APP_MAIN
 		}
 		labels.Add(l, lbl);
 	}
-
-	LLOG("F: " << MemoryUsedKb());
 
 	Date d = GetSysDate();
 	lastUpdate = HtmlItalic() / HtmlArial(8) / HtmlFontColor(Gray()) /
@@ -930,7 +911,7 @@ GUI_APP_MAIN
 					pos = page.Find("::", pos);
 					pos = page.Find(":: [s0;=2", pos);
 					if (pos >= 0)
-						pos += strlen(":: [s0;=2");
+						pos += (int)strlen(":: [s0;=2");
 					String strDate;
 					if (pos >= 0) {
 						Time t = bazaarItems[j].lastChange;
@@ -942,7 +923,7 @@ GUI_APP_MAIN
 					}
 					pos = page.Find(":: [s0;=2", pos);
 					if (pos >= 0)
-						pos += strlen(":: [s0;=2");
+						pos += (int)strlen(":: [s0;=2");
 					String strSz;
 					if (pos >= 0) {
 						if (bazaarItems[j].size == 0)
@@ -960,8 +941,6 @@ GUI_APP_MAIN
 
 	LLOG("G: " << MemoryUsedKb());
 
-	PromptOK("Pause");
-
 /*
 	if (outPdf) {
 		PdfDraw pdf;
@@ -972,13 +951,11 @@ GUI_APP_MAIN
 */
 
 	LLOG("H: " << MemoryUsedKb());
-	PromptOK("Pause 2");
 
 	for(int i = 0; i < tt.GetCount(); i++)
 		ExportPage(i);
 	SetLanguage(lang);
 
-	PromptOK("Pause 3");
 	LLOG("I: " << MemoryUsedKb());
 
 //	SaveFile(AppendFileName(targetdir, "favicon.ico"), LoadFile(AppendFileName(uppsrc, "ide/ide.ico")));
@@ -1002,6 +979,8 @@ GUI_APP_MAIN
 	         "</noscript>"
 	);
 	BeepInformation();
+
+#if 0 // we are now doing this on server, directly copying to www directory
 	
 	if (!ftpupload)
 		return;
@@ -1050,4 +1029,5 @@ GUI_APP_MAIN
 		}
 	}
 	BeepInformation();
+#endif
 }

@@ -8,4 +8,5 @@
 #include "ide/init"
 #include "plugin\ftp/init"
 #include "Sql/init"
+#include "Skeleton/init"
 #endif
