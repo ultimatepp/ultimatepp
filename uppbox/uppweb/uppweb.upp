@@ -9,7 +9,8 @@ uses
 	plugin\png,
 	ide,
 	plugin\ftp,
-	Sql;
+	Sql,
+	Skeleton;
 
 options(GCC) -DNOWSTRING;
 
@@ -49,6 +50,6 @@ file
 	www.t;
 
 mainconfig
-	"" = "GUI MT",
-	"" = "GUI";
+	"" = "GUI MT SKELETON",
+	"" = "GUI SKELETON";
 
