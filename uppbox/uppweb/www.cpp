@@ -7,7 +7,7 @@
 #define TFILE <uppweb/www.t>
 #include <Core/t.h>
 
-#define LLOG(x)  LOG(x)
+#define LLOG(x)  // LOG(x)
 
 #ifdef PLATFORM_WIN32 
 String rootdir = "u:\\upp.src";
