@@ -27,7 +27,7 @@ library(OSX11) "X11 Xft fontconfig Xrender freetype expat";
 
 library(FREEBSD) xcb;
 
-library(POSIX !NOGTK) notify;
+library(POSIX !NOGTK !RAINBOW) notify;
 
 file
 	Core readonly separator,
