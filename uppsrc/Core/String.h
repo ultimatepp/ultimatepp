@@ -96,7 +96,7 @@ public:
 	
 	void   Replace(const tchar *find, int findlen, const tchar *replace, int replacelen);
 	void   Replace(const String& find, const String& replace) { Replace(~find, find.GetCount(), ~replace, replace.GetCount()); }
-	void   Replace(const tchar *find, const tchar *replace)   { Replace(find, strlen(find), replace, strlen(replace)); }
+	void   Replace(const tchar *find, const tchar *replace)   { Replace(find, (int)strlen(find), replace, (int)strlen(replace)); }
 	
 	bool   StartsWith(const tchar *s, int len) const;
 	bool   StartsWith(const tchar *s) const                   { return StartsWith(s, strlen__(s)); }

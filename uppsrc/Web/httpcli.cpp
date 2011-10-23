@@ -476,7 +476,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 								l--;
 							if(l == b)
 								break;
-							server_headers.Cat(b, p - b);
+							server_headers.Cat(b, int(p - b));
 						}
 						goto EXIT;
 					}
