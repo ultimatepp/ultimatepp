@@ -11,17 +11,17 @@ library((LINUX | BSD) & !NOGTK) "gtk-x11-2.0  gdk-x11-2.0  atk-1.0  gdk_pixbuf-2
 
 library(WIN32 !MSC8ARM) "user32 gdi32";
 
-library(LINUX) "X11 Xrender";
+library(LINUX !RAINBOW) "X11 Xrender";
 
-library(LINUX) dl;
+library(LINUX  !RAINBOW) dl;
 
-library(LINUX !XLFD) Xft;
+library(LINUX !XLFD  !RAINBOW) Xft;
 
-library(BSD) "X11  Xau Xdmcp";
+library(BSD !RAINBOW) "X11  Xau Xdmcp";
 
-library(BSD !XLFD) "Xft fontconfig Xrender freetype expat";
+library(BSD !XLFD  !RAINBOW) "Xft fontconfig Xrender freetype expat";
 
-library(LINUX !XLFD !SHARED) "fontconfig Xrender freetype";
+library(LINUX !XLFD !SHARED  !RAINBOW) "fontconfig Xrender freetype";
 
 library(OSX11) "X11 Xft fontconfig Xrender freetype expat";
 

@@ -1,7 +1,7 @@
 #ifndef _plugin_gif_icpp_init_stub
 #define _plugin_gif_icpp_init_stub
 #include "Draw/init"
-#define BLITZ_INDEX__ F4B0EEED8D84A571AB8FDA03143B1B9CE
+#define BLITZ_INDEX__ FD306544184E4611D8AA5A32ECC5927E2
 #include "gif.icpp"
 #undef BLITZ_INDEX__
 #endif
