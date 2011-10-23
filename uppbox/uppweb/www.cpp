@@ -707,11 +707,9 @@ GUI_APP_MAIN
 	
 	RLOG("--- uppweb started at " << GetSysTime());
 
-	DeleteFolderDeep(targetdir);
 	RealizeDirectory(targetdir);
 	
 	if (outPdf) {
-		DeleteFolderDeep(pdfdir);
 		RealizeDirectory(pdfdir);
 	}
 	GatherRefLinks(uppsrc);
