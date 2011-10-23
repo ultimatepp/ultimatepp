@@ -14,7 +14,7 @@ library(LINUX) "dl freetype";
 
 library(BSD !XLFD) "fontconfig freetype expat";
 
-library(LINUX !XLFD) fontconfig;
+library(LINUX !XLFD) "fontconfig expat";
 
 library(OSX11) "fontconfig freetype expat";
 
