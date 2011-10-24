@@ -1491,9 +1491,11 @@ void OracleBlob::Write(int64 at, const void *ptr, dword size) {
 	ASSERT(IsOpen() && (style & STRM_WRITE) && session);
 	ASSERT(at == (dword)at);
 	ub4 n = size;
-	if(session->oci8.OCILobWrite(session->svchp, session->errhp, locp, &n, (dword)at + 1, (void *)ptr, size,
-		OCI_ONE_PIECE, NULL, NULL, 0, SQLCS_IMPLICIT) != OCI_SUCCESS || n != size)
+	int res = session->oci8.OCILobWrite(session->svchp, session->errhp, locp, &n, (dword)at + 1, (void *)ptr, size,
+		OCI_ONE_PIECE, NULL, NULL, 0, SQLCS_IMPLICIT);
+	if(res != OCI_SUCCESS || n != size)
 	{
+		RLOG("OracleBlob::Write(" << at << ", " << size << "): res = " << res << ", n = " << n);
 		SetError();
 	}
 }
