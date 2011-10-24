@@ -1490,6 +1490,8 @@ dword OracleBlob::Read(int64 at, void *ptr, dword size) {
 void OracleBlob::Write(int64 at, const void *ptr, dword size) {
 	ASSERT(IsOpen() && (style & STRM_WRITE) && session);
 	ASSERT(at == (dword)at);
+	if(!size)
+		return;
 	ub4 n = size;
 	int res = session->oci8.OCILobWrite(session->svchp, session->errhp, locp, &n, (dword)at + 1, (void *)ptr, size,
 		OCI_ONE_PIECE, NULL, NULL, 0, SQLCS_IMPLICIT);
@@ -1596,6 +1598,8 @@ dword OracleClob::Read(int64 at, void *ptr, dword size) {
 void OracleClob::Write(int64 at, const void *ptr, dword size) {
 	ASSERT(IsOpen() && (style & STRM_WRITE) && session);
 	ASSERT(at == (dword)at);
+	if(!size)
+		return;
 	bool utf8 = session->IsUtf8Session();
 	if(at & 1) {
 		char auxbuf[2];
