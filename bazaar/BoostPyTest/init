@@ -4,4 +4,7 @@
 #include "PyConsoleCtrl/init"
 #include "ValueCtrl/init"
 #include "CtrlLibBoostPy/init"
+#define BLITZ_INDEX__ F77A55E940E891CC1429BF25681A67728
+#include "PyEx.icpp"
+#undef BLITZ_INDEX__
 #endif

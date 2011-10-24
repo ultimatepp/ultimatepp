@@ -4,6 +4,7 @@ uses
 	Core;
 
 file
+	Tree.cpp,
 	Tree.h,
 	src.tpp;
 

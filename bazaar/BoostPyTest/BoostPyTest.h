@@ -1,31 +1,11 @@
 #ifndef _BoostPyTest_BoostPyTest_h_
 #define _BoostPyTest_BoostPyTest_h_
 
-#include <PyConsoleCtrl/PyConsoleCtrl.h>
-using namespace boost::python;
+//py stuff needs go first
+#include "PyEx.h"
 
-#include "world.h"
-#include "PyConsoleCtrl.h"
-#include <CtrlLibBoostPy/CtrlLibBoostPy.h>
+#include <CtrlLib/CtrlLib.h>
 using namespace Upp;
-
-NAMESPACE_UPP
-
-decl_export_Callback1(int);
-decl_export_Gate1(int);
-decl_export_Callback1(Value);
-decl_export_Gate1(Value);
-
-decl_export_Callback2(int, double);
-decl_export_Gate2(int, double);
-
-decl_export_Callback3(int, double, bool);
-decl_export_Gate3(int, double, bool);
-
-decl_export_Callback4(int, double, bool, int64);
-decl_export_Gate4(int, double, bool, int64);
-
-END_UPP_NAMESPACE
 
 #define LAYOUTFILE <BoostPyTest/BoostPyTest.lay>
 #include <CtrlCore/lay.h>
@@ -36,12 +16,13 @@ public:
 	BoostPyTest();
 	~BoostPyTest();
 
+	void InitPyEnv();
 	void ExitHandler();
 	void CBi(int i);
 	void EvalCB();
 	void EvalPyCv();
 
-	object main_namespace;
+	boost::python::object main_namespace;
 
 #if PUREVIRTEST
 #else

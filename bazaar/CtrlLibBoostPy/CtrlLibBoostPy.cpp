@@ -1,4 +1,5 @@
 #include "CtrlLibBoostPy.h"
+using namespace boost::python;
 
 NAMESPACE_UPP
 

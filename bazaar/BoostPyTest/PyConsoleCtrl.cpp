@@ -1,9 +1,6 @@
 #include "PyConsoleCtrl.h"
 using namespace boost::python;
 
-#include <CtrlLibBoostPy/CtrlLibBoostPy.h>
-using namespace Upp;
-
 NAMESPACE_UPP
 
 void export_PyConsoleCtrl()

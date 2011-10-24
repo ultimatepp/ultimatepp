@@ -9,12 +9,15 @@ file
 	PyConsoleCtrl.cpp,
 	world.h,
 	world.cpp,
+	PyEx.h,
+	PyEx.icpp,
 	app readonly separator,
-	compile.txt,
-	modules.cppi,
 	BoostPyTest.h,
 	main.cpp,
-	BoostPyTest.lay;
+	BoostPyTest.lay,
+	modules.cppi,
+	pyenv.cpp,
+	compile.txt;
 
 mainconfig
 	"" = "GUI MT SSE2 BOOSTPY";
