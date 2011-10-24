@@ -125,6 +125,10 @@ public:
 	double                  GetAvgScale() const;
 	Pointf                  GetDelta() const                 { return delta; }
 	Pointf                  GetPushDelta() const             { return push_delta; }
+	
+	bool                    IsReversedX() const              { return rev_x; }
+	bool                    IsReversedY() const              { return rev_y; }
+	
 	bool                    IsReversing() const              { return scale.cx * scale.cy < 0; }
 
 	Sizef                   GetPhysicalZoom() const;
@@ -320,6 +324,8 @@ public:
 
 	virtual Image           Cursor(Pointf pt, dword keyflags, bool dragging) const;
 	virtual bool            Push(Pointf pt, dword keyflags);
+	virtual void            DropRect(const Rectf& rc, dword keyflags);
+	virtual void            Click(Pointf pt, dword keyflags);
 
 private:
 	PlotterCtrl&            owner;

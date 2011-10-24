@@ -26,6 +26,17 @@ enum
 	ROW_BUF_SIZE    = 16384,
 };
 
+enum {
+	EXIF_BYTE      =  1, // An 8-bit unsigned integer
+	EXIF_ASCII     =  2, // An 8-bit byte containing one 7-bit ASCII code. The final byte is terminated with NULL
+	EXIF_SHORT     =  3, // A 16-bit (2-byte) unsigned integer
+	EXIF_LONG      =  4,  // A 32-bit (4-byte) unsigned integer
+	EXIF_RATIONAL  =  5, // Two LONGs. The first LONG is the numerator and the second LONG expresses the denominator
+	EXIF_UNDEFINED =  7, // An 8-bit byte that can take any value depending on the field definition
+	EXIF_SLONG     =  9, // A 32-bit (4-byte) signed integer (2's complement notation)
+	EXIF_SRATIONAL = 10, // Two SLONGs. The first SLONG is the numerator and the second SLONG is the denominator
+};
+
 struct jpg_stream_destination_mgr
 {
 	jpeg_destination_mgr  pub;
@@ -336,13 +347,17 @@ int JPGRaster::Data::ExifDir(const char *begin, int offset, IFD_TYPE type)
 			}
 		}
 		else if(type == GPS_IFD) {
-			if((tag == 2 || tag == 4) && fmt == 5 && count == 3) {
+			if((tag == 2 || tag == 4) && fmt == EXIF_RATIONAL && count == 3) {
 				metadata.Add(tag == 2 ? "GPSLatitude" : "GPSLongitude",
 					ExifF5(data + 0) + ExifF5(data + 8) / 60 + ExifF5(data + 16) / 3600);
 //				puts(NFormat("GPSLatitude: %n %n %n", n1, n2, n3));
 			}
-			else if(tag == 6 && fmt == 5 && count == 1)
+			else if(tag == 6 && fmt == EXIF_RATIONAL && count == 1)
 				metadata.Add("GPSAltitude", ExifF5(data));
+			else if(tag == 16 && fmt == EXIF_ASCII && count == 2 && *data)
+				metadata.Add("GPSImgDirectionRef", String(*data, 1));
+			else if(tag == 17 && fmt == EXIF_RATIONAL && count == 1)
+				metadata.Add("GPSImgDirection", ExifF5(data + 0));
 		}
 	}
 	int nextoff = Exif32(e);

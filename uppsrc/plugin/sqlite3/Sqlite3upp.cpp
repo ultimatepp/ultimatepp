@@ -84,6 +84,11 @@ void Sqlite3Connection::BindParam(int i, const Value& r) {
 	if (IsNull(r))
 		sqlite3_bind_null(current_stmt,i);
 	else switch (r.GetType()) {
+		case SQLRAW_V: {
+			SqlRaw p = r;
+			sqlite3_bind_blob(current_stmt, i, p, p.GetLength(), SQLITE_TRANSIENT);
+			break;
+		}
 		case STRING_V:
 		case WSTRING_V: {
 			WString p = r;

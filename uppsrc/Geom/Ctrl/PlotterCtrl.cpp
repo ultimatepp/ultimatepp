@@ -1204,11 +1204,30 @@ Image ZoomOutDragDrop::Cursor(Pointf pt, dword keyflags, bool dragging) const
 
 bool ZoomOutDragDrop::Push(Pointf pt, dword keyflags)
 {
+	return true;
+}
+
+void ZoomOutDragDrop::DropRect(const Rectf& rc, dword keyflags)
+{
+	Rectf view_rc = owner.GetViewRect();
+	Rect screen_rc = owner.ToClient(rc);
+	Sizef new_scale = (Sizef)max(screen_rc.Size(), Size(10, 10)) / view_rc.Size();
+	double aspect = owner.GetAspectRatio();
+	if(aspect != 0)
+		new_scale = max(new_scale, Sizef(new_scale.cy / aspect, new_scale.cx * aspect));
+	if(owner.IsReversedX()) new_scale.cx = -new_scale.cx;
+	if(owner.IsReversedY()) new_scale.cy = -new_scale.cy;
+	Pointf new_delta = Pointf(screen_rc.CenterPoint()) - new_scale * Sizef(view_rc.CenterPoint());
+	owner.SetZoom(new_scale, new_delta);
+	owner.WhenUserZoom();
+}
+
+void ZoomOutDragDrop::Click(Pointf pt, dword keyflags)
+{
 	Rectf rc = GetOwner().GetViewRect();
 	rc.Inflate(rc.Size() * 0.5);
 	owner.Zoom(rc + pt - rc.CenterPoint());
 	owner.WhenUserZoom();
-	return false;
 }
 
 //////////////////////////////////////////////////////////////////////
