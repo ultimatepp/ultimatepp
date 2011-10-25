@@ -7,7 +7,7 @@ mkdir ~/upload || true
 rm -r ~/upp.tmp || true
 mkdir ~/upp.tmp || true
 
-bash ~/Scripts/www
+# bash ~/Scripts/www
 
 bash ~/Scripts/win
 
