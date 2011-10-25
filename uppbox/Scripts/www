@@ -3,5 +3,5 @@ set -e
 mkdir ~/tmp || true
 
 rm ~/tmp/makeweb || true
-~/bin/theide uppbox uppweb GCC -abrs ~/tmp/makeweb
-~/tmp/makeweb
+# ~/bin/theide uppbox uppweb GCC -abrs ~/tmp/makeweb
+# ~/tmp/makeweb
