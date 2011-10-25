@@ -71,7 +71,7 @@ struct Formatting
 
 typedef String (*Formatter)(const Formatting& fmt);
 
-void RegisterFormatter(int type, const char *id, Formatter f, bool ascii) init_;
+void RegisterFormatter(int type, const char *id, Formatter f) init_;
 void RegisterNullFormatter(const char *id, Formatter f) init_;
 void RegisterNumberFormatter(const char *id, Formatter f) init_;
 void RegisterStringFormatter(const char *id, Formatter f) init_;
