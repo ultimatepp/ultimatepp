@@ -445,6 +445,7 @@ public:
 	explicit SqlStatement(const String& s) : text(s) {}
 
 	String Get(int dialect) const;
+	String Get() const;
 	String GetText() const                           { return text; }
 	bool   IsEmpty() const                           { return text.IsEmpty(); }
 	operator bool() const                            { return !IsEmpty(); }

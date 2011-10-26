@@ -8,6 +8,11 @@ String SqlStatement::Get(int dialect) const {
 	return SqlCompile(dialect, text);
 }
 
+String SqlStatement::Get() const
+{
+	return Get(SQL.GetDialect());
+}
+
 SqlSelect& SqlSelect::SetOp(const SqlSelect& s2, const char *op)
 {
 	String q;
