@@ -135,11 +135,14 @@ void AssistEditor::ExpressionType(const String& ttype, const Vector<String>& xp,
                                   Index<String>& typeset, bool variable,
                                   bool can_shortcut_operator, Index<String>& visited_bases)
 {
+	if(++scan_counter > 10000) // sort of ugly limitation of parsing permutations
+		return;
 	if(ii >= xp.GetCount()) {
 		LLOG("--- Final type: " << ttype);
 		typeset.FindAdd(ttype);
 		return;
 	}
+	LDUMP(ii);
 	LDUMP(xp[ii]);
 	Vector<String> tparam;
 	String type = ParseTemplatedType(ttype, tparam);
@@ -162,16 +165,21 @@ void AssistEditor::ExpressionType(const String& ttype, const Vector<String>& xp,
 		id = "operator" + id;
 		LLOG("id as: " << id);
 	}
+	Index< Tuple2<String, bool> > mtype;
 	for(int i = 0; i < n.GetCount(); i = FindNext(n, i)) {
 		const CppItem& m = n[i];
 		if(m.name == id) {
 			LLOG("Member " << m.qtype << "'" << m.name << "'");
-			ExpressionType(ResolveTParam(m.qtype, tparam), xp, ii + 1, typeset, m.IsData() && !m.isptr);
+			mtype.FindAdd(MakeTuple(m.qtype, m.IsData() && !m.isptr));
 		}
 	}
+	for(int i = 0; i < mtype.GetCount(); i++)
+		ExpressionType(ResolveTParam(mtype[i].a, tparam), xp, ii + 1, typeset, mtype[i].b);
+	
 	if(typeset.GetCount() != c0 || IsNull(type))
 		return;
 	Vector<String> base = GetTypeBases(type);
+	LDUMPC(base);
 	ResolveTParam(base, tparam);
 	for(int i = 0; i < base.GetCount(); i++)
 		if(visited_bases.Find(base[i]) < 0) {
@@ -229,6 +237,12 @@ Index<String> AssistEditor::ExpressionType(const Parser& parser, const Vector<St
 	}
 	ExpressionType("", xp, 0, typeset, false);
 	return typeset;
+}
+
+Index<String> AssistEditor::EvaluateExpressionType(const Parser& parser, const Vector<String>& xp)
+{
+	scan_counter = 0;
+	return ExpressionType(parser, xp);
 }
 
 int CharFilterT(int c)

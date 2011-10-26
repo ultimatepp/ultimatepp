@@ -466,7 +466,7 @@ void AssistEditor::Assist()
 		String tp;
 		Vector<String> xp = ReadBack(q);
 		if(xp.GetCount()) {
-			Index<String> typeset = ExpressionType(parser, xp);
+			Index<String> typeset = EvaluateExpressionType(parser, xp);
 			for(int i = 0; i < typeset.GetCount(); i++)
 				if(typeset[i].GetCount())
 					GatherItems(typeset[i], xp.GetCount(), in_types, xp.GetCount() == 0);
@@ -1095,7 +1095,7 @@ void Ide::ContextGoto0(int pos)
 	if(xp.GetCount() == 0 && IsNull(tp))
 		type.Add(parser.current_scope);
 	else {
-		type = editor.ExpressionType(parser, xp);
+		type = editor.EvaluateExpressionType(parser, xp);
 		if(type.GetCount() == 0)
 			return;
 	}

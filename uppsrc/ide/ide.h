@@ -338,6 +338,7 @@ struct AssistEditor : CodeEditor {
 	bool           include_local;
 	int            include_back;
 	String         include_path;
+	int            scan_counter;
 	
 	RichTextCtrl   param_info;
 	String         param_qtf;
@@ -378,6 +379,8 @@ struct AssistEditor : CodeEditor {
 //	void           ExpressionType(const String& type, const Vector<String>& xp, int ii,
 //	                              Index<String>& typeset);
 	Index<String>  ExpressionType(const Parser& parser, const Vector<String>& xp);
+
+	Index<String>  EvaluateExpressionType(const Parser& parser, const Vector<String>& xp);
 
 	String         RemoveDefPar(const char *s);
 	String         MakeDefinition(const String& cls, const String& _n);
