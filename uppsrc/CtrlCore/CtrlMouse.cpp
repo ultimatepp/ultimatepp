@@ -62,14 +62,16 @@ void Ctrl::LogMouseEvent(const char *f, const Ctrl *ctrl, int event, Point p, in
 Image Ctrl::FrameMouseEventH(int event, Point p, int zdelta, dword keyflags)
 {
 	GuiLock __;
+	Ptr<Ctrl> this_ = this;
 	for(int i = 0; i < mousehook().GetCount(); i++)
-		if((*mousehook()[i])(this, true, event, p, zdelta, keyflags))
+		if(this_ && (*mousehook()[i])(this, true, event, p, zdelta, keyflags))
 			return Image::Arrow();
-	LogMouseEvent("FRAME ", this, event, p, zdelta, keyflags);
-	eventCtrl = this;
-	if(parent)
+	if(this_)
+		LogMouseEvent("FRAME ", this, event, p, zdelta, keyflags);
+	eventCtrl = this_;
+	if(parent && this_)
 		parent->ChildFrameMouseEvent(this, event, p, zdelta, keyflags);
-	return FrameMouseEvent(event, p, zdelta, keyflags);
+	return this_ ? FrameMouseEvent(event, p, zdelta, keyflags) : Image();
 }
 
 Image Ctrl::FrameMouseEvent(int event, Point p, int zdelta, dword keyflags)
@@ -80,13 +82,15 @@ Image Ctrl::FrameMouseEvent(int event, Point p, int zdelta, dword keyflags)
 Image Ctrl::MouseEventH(int event, Point p, int zdelta, dword keyflags)
 {
 	GuiLock __;
+	Ptr<Ctrl> this_ = this;
 	for(int i = 0; i < mousehook().GetCount(); i++)
-		if((*mousehook()[i])(this, false, event, p, zdelta, keyflags))
+		if(this_ && (*mousehook()[i])(this, false, event, p, zdelta, keyflags))
 			return Image::Arrow();
-	LogMouseEvent(NULL, this, event, p, zdelta, keyflags);
-	if(parent)
+	if(this_)
+		LogMouseEvent(NULL, this, event, p, zdelta, keyflags);
+	if(parent && this_)
 		parent->ChildMouseEvent(this, event, p, zdelta, keyflags);
-	return MouseEvent(event, p, zdelta, keyflags);
+	return this_ ? MouseEvent(event, p, zdelta, keyflags) : Image();
 }
 
 void Ctrl::ChildFrameMouseEvent(Ctrl *child, int event, Point p, int zdelta, dword keyflags)
