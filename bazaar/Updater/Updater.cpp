@@ -563,7 +563,7 @@ ProductVersions Updater::FetchVersions(void)
 	{
 		HttpClient http;
 		http.TimeoutMsecs(1000);
-		http.URL(AppendFileName(GetPlatformRoot(), "versions"));
+		http.URL(GetPlatformRoot() + "versions");
 
 		// fetch version file from server
 		verStr = http.Execute();
@@ -606,10 +606,10 @@ bool Updater::FetchApp(ProductVersion ver, bool devel)
 
 	String appServerPath, destPath;
 	#ifdef PLATFORM_POSIX
-		appServerPath = AppendFileName(GetPlatformRoot(), ver.ToString() + "/" + appName);
+		appServerPath = GetPlatformRoot() + ver.ToString() + "/" + appName;
 		destPath = AppendFileName(GetProgramsFolder(), appName);
 	#else
-		appServerPath = AppendFileName(GetPlatformRoot(), ver.ToString() + "/" + appName + ".exe");
+		appServerPath = GetPlatformRoot() + ver.ToString() + "/" + appName + ".exe";
 		destPath = AppendFileName(GetProgramsFolder(), appName + "/" + appName + ".exe");
 	#endif
 
