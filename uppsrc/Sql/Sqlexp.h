@@ -445,7 +445,9 @@ public:
 	explicit SqlStatement(const String& s) : text(s) {}
 
 	String Get(int dialect) const;
+#ifndef flagNOAPPSQL
 	String Get() const;
+#endif
 	String GetText() const                           { return text; }
 	bool   IsEmpty() const                           { return text.IsEmpty(); }
 	operator bool() const                            { return !IsEmpty(); }

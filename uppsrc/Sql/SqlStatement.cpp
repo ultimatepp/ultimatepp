@@ -8,10 +8,12 @@ String SqlStatement::Get(int dialect) const {
 	return SqlCompile(dialect, text);
 }
 
+#ifndef flagNOAPPSQL
 String SqlStatement::Get() const
 {
 	return Get(SQL.GetDialect());
 }
+#endif
 
 SqlSelect& SqlSelect::SetOp(const SqlSelect& s2, const char *op)
 {
