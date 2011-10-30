@@ -1,7 +1,7 @@
 topic "Ultimate++ download";
 [ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,0#27457433418004101424360058862402:Caption]
-[{_}%EN-US 
+[{_}%FR-FR 
 [s0;= [*R6 Téléchargement U`+`+]&]
 [s1;#b0; Aperçu&]
 [s1;#b0; &]
@@ -104,14 +104,13 @@ les versions stables.]&]
 [s0;2 &]
 [s1;#b0; Versions stables&]
 [s0;2 &]
-[s0; [2 Les versions stables sont publiées toutes les 2`-3 semaines 
-environ sur Sourceforge.net. Vous pouvez les télécharger ici: 
-][^http`:`/`/sourceforge`.net`/projects`/upp`/files`/^2 http://sourceforge.net/proje
-cts/upp/files][2 . En plus de l`'installateur Windows et de l`'archive 
-des sources, vous pourrez aussi trouver ici des paquets RPM pour 
-Fedora, Mandriva et OpenSUSE.]&]
-[s0;2 &]
-[s0; [2 Pour les utilisateurs Ubuntu/Debian ne souhaitant pas mettre 
+[s0;# [2 Les versions stables sont publiées sur Sourceforge.net. Vous 
+pouvez les télécharger ici: ][^http`:`/`/sourceforge`.net`/projects`/upp`/files`/^2 h
+ttp://sourceforge.net/projects/upp/files][2 . En plus de l`'installateur 
+Windows et de l`'archive des sources, vous pourrez aussi trouver 
+ici des paquets RPM pour Fedora, Mandriva et OpenSUSE.]&]
+[s0;#2 &]
+[s0;# [2 Pour les utilisateurs Ubuntu/Debian ne souhaitant pas mettre 
 à jour quotidiennement avec le PPA quotidien, des versions PPA 
 stables sont disponibles à cette adresse : ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^2 h
 ttps://launchpad.net/`~dolik`-rce/`+archive/upp][2 . Pour installer 
@@ -128,4 +127,4 @@ Cependant, si vous appréciez cette plateforme, pensez à faire
 une ][^topic`:`/`/uppweb`/www`/Funding`$en`-us^2 donation][2  ; même 
 les plus petites contributions aident à soutenir son dévelopemment 
 continu.]&]
-[s0;%FR-FR ]
+[s0; ]
