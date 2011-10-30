@@ -87,13 +87,13 @@ releases, because bugfixes are not backported to stable releases.]&]
 [s0;2 &]
 [s1;#b0; Stable releases&]
 [s0;2 &]
-[s0; [2 Stable releases are published about every 2`-3 weeks at Sourceforge.net, 
-you can download them at ][^http`:`/`/sourceforge`.net`/projects`/upp`/files`/^2 ht
-tp://sourceforge.net/projects/upp/files][2 . In addition to Windows 
-installer and source tarballs, you can also find here rpm packages 
-for Fedora, Mandriva and OpenSUSE.]&]
-[s0;2 &]
-[s0; [2 For Ubuntu and Debian users who doesn`'t want to update every 
+[s0;# [2 Stable releases are published at Sourceforge.net. You can 
+download them at ][^http`:`/`/sourceforge`.net`/projects`/upp`/files`/^2 http://sour
+ceforge.net/projects/upp/files][2 . In addition to Windows installer 
+and source tarballs, you can also find here rpm packages for 
+Fedora, Mandriva and OpenSUSE.]&]
+[s0;#2 &]
+[s0;# [2 For Ubuntu and Debian users who doesn`'t want to update every 
 day from nightly PPA, there is stable releases PPA, ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^2 h
 ttps://launchpad.net/`~dolik`-rce/`+archive/upp][2 . To install 
 Ultimate`+`+ from this archive, use the same procedure as described 
