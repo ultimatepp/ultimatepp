@@ -6481,7 +6481,8 @@ because of Painter high quality graphics library.&]
 
 ]
 ::^ [s0; Web browser based in Firefox]
-:: [s0; [^topic`:`/`/Controls4U`/src`/IExplorerBrowser`$en`-us^ IExplorerBrowser]]
+:: [s0; [^topic`:`/`/Controls4U`/src`/InternetExplorerBrowser`$en`-us^ InternetExplorerBro
+wser]]
 ::= [s0;= 
 @@image:961&540
 ‚ƒß‹€€€€€€€€€ø§œì…Ô”ÛÇ÷ğÏ„Ã·ŠÑö¡Š¨¨…€Ø¨ ¢†Ø—Øİ‰…‚ô÷·ˆÈ÷÷÷£¿¢€ˆˆŠ‚˜«ÔÄ³çû™

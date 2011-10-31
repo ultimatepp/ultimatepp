@@ -597,7 +597,7 @@ void PainterCanvas::Paint(Draw& w) {
 	if (backColor)
 		sw.Clear(backColor);
 	else
-		sw.Clear(Gray());
+		sw.Clear(SColorFace());
 	//else {
 	//	Color c = Null;
 	//	sw.Clear(c);
@@ -612,7 +612,7 @@ void PainterCanvas::Paint(Draw& w) {
 	}
 	w.DrawImage(0, 0, ib);	
 	
-	if (!showWindow/* || canvasSize.cx <= 0 || canvasSize.cy <= 0*/) 
+	if (!showWindow || canvasSize.cx <= 0 || canvasSize.cy <= 0) 
 		return;
 	
 	int twidth = 100;
@@ -705,6 +705,7 @@ void PainterCanvas::SetBackground(Image &image)	{
 	if (backImage.GetSize() != canvasSize) {
 		SetCanvasSize(backImage.GetSize()); 
 		Layout();
-	}
+	} 
+	Refresh();
 }
 
