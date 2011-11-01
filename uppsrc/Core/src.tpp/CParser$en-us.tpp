@@ -168,10 +168,16 @@ d] method with [%-*@3 s] as parameter. If it returns [* false], throws
 ].&]
 [s3; &]
 [s4; &]
-[s5;:CParser`:`:IsId`(`): [@(0.0.255) bool]_[* IsId]()&]
+[s5;:CParser`:`:IsId`(`)const: [@(0.0.255) bool]_[* IsId]()_const&]
 [s2;%% Tests whether there is any C`-like identifier at the current 
 position.&]
 [s3; &]
+[s4; &]
+[s5;:CParser`:`:IsId`(const char`*`): [@(0.0.255) bool]_[* IsId]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 s])_const&]
+[s2;%% Tests whether there is C`-like identifier [%-*@3 s] at current 
+position.&]
+[s3;%% &]
 [s4; &]
 [s5;:CParser`:`:ReadId`(`)throw`(CParser`:`:Error`): [_^String^ String]_[* ReadId]()_[@(0.0.255) t
 hrow](Error)&]

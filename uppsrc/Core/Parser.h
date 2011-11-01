@@ -15,6 +15,7 @@ protected:
 	bool        skipspaces;
 
 	bool        Spaces0();
+	const char *IsId0(const char *s);
 	bool        Id0(const char *id);
 	void        DoSpaces()                    { if(skipspaces) Spaces(); }
 
@@ -43,6 +44,7 @@ public:
 	bool   Id(const char *s)                  { return term[0] == s[0] && (s[1] == 0 || term[1] == s[1]) && Id0(s); }
 	void   PassId(const char *s) throw(Error);
 	bool   IsId()                             { return iscib(*term); }
+	bool   IsId(const char *s)                { return term[0] == s[0] && (s[1] == 0 || term[1] == s[1]) && IsId0(s); }
 	String ReadId() throw(Error);
 	String ReadIdt() throw(Error);
 	bool   IsInt();

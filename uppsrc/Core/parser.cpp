@@ -48,17 +48,22 @@ bool CParser::Spaces0() {
 	return true;
 }
 
-bool CParser::Id0(const char *s) {
-	LTIMING("Id");
+const char *CParser::IsId0(const char *s) {
 	const char *t = term + 1;
 	s++;
 	while(*s) {
 		if(*t != *s)
-			return false;
+			return NULL;
 		t++;
 		s++;
 	}
-	if(IsAlNum(*t) || *t == '_')
+	return IsAlNum(*t) || *t == '_' ? NULL : t;
+}
+
+bool CParser::Id0(const char *s) {
+	LTIMING("Id");
+	const char *t = IsId0(s);
+	if(!t)
 		return false;
 	term = t;
 	DoSpaces();

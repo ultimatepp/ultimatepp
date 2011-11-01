@@ -290,12 +290,12 @@ bool ValueArray::operator==(const ValueArray& v) const
 static String sAsString(const Vector<Value>& v)
 {
 	String s;
-	s << "{ ";
+	s << "[";
 	for(int i = 0; i < v.GetCount(); i++) {
 		if(i) s << ", ";
 		s << v[i];
 	}
-	s << " }";
+	s << "]";
 	return s;
 }
 
@@ -471,7 +471,7 @@ String ValueMap::Data::AsString() const
 	s << "{ ";
 	for(int i = 0; i < key.GetCount(); i++) {
 		if(i) s << ", ";
-		s << "(" << key[i] << ", " << value[i] << ")";
+		s << key[i] << ": " << value[i];
 	}
 	s << " }";
 	return s;
