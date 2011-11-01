@@ -36,7 +36,16 @@ esES("")
 T_("Not possible to delete")
 esES("No es posible borrar")
 
+T_("There was a problem in the copy")
+esES("Hubo un problema al copiar")
+
 T_("Dl cannot be released")
+esES("")
+
+
+// Functions4U_Gui.cpp
+
+T_("Printing document")
 esES("")
 
 
@@ -102,17 +111,3 @@ esES("")
 T_("Impossible to open %s")
 esES("Imposible abrir %s")
 
-
-// Obsolete
-
-T_("Not possible to create")
-esES("No es posible crear")
-
-T_("Dll cannot be released")
-esES("")
-
-T_("Wrong param. in ReadCol")
-esES("")
-
-T_("There was a problem in the copy")
-esES("Hubo un problema al copiar")

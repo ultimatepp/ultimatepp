@@ -945,8 +945,9 @@ String RemoveAccent(wchar c) {
 		wsret.Cat(c);
 		return wsret.ToString();
 	}
-	const WString accented = "ÂÃÀÁÇÈÉÊËẼÌÍÎÏÑÒÓÔÕÙÚÛÝàáâãçèéêëẽìíîïñòóôõùúûýÿ";
-	const char *unaccented = "AAAACEEEEEIIIINOOOOUUUYaaaaceeeeeiiiinoooouuuyy";
+	//const WString accented = "ÂÃÀÁÇÈÉÊËẼÌÍÎÏÑÒÓÔÕÙÚÛÝàáâãçèéêëẽìíîïñòóôõøùúûýÿ";
+	const WString accented = "\303\202\303\203\303\200\303\201\303\207\303\210\303\211\303\212\303\213\341\272\274\303\214\303\215\303\216\303\217\303\221\303\222\303\223\303\224\303\225\303\231\303\232\303\233\303\235\303\240\303\241\303\242\303\243\303\247\303\250\303\251\303\252\303\253\341\272\275\303\254\303\255\303\256\303\257\303\261\303\262\303\263\303\264\303\265\303\270\303\271\303\272\303\273\303\275\303\277";
+	const char *unaccented = "AAAACEEEEEIIIINOOOOUUUYaaaaceeeeeiiiinooooouuuyy";
 	
 	for (int i = 0; accented[i]; ++i) {
 		if (accented[i] == c) {
@@ -954,7 +955,8 @@ String RemoveAccent(wchar c) {
 			return wsret.ToString();	
 		}
 	}
-	const WString maccented = "ÅåÆæØøþÞßÐðÄäÖöÜü";
+	//const WString maccented = "ÅåÆæØøþÞßÐðÄäÖöÜü";
+	const WString maccented = "\303\205\303\245\303\206\303\246\303\230\303\270\303\276\303\236\303\237\303\220\303\260\303\204\303\244\303\226\303\266\303\234\303\274";
 	const char *unmaccented[] = {"AA", "aa", "AE", "ae", "OE", "oe", "TH", "th", "SS", "ETH", 
 								 "eth", "AE", "ae", "OE", "oe", "UE", "ue"};
 	for (int i = 0; maccented[i]; ++i) {
@@ -966,9 +968,9 @@ String RemoveAccent(wchar c) {
 }
 
 bool IsPunctuation(wchar c) {
-	const WString punct = "\"’'()[]{}<>:;,‒–—―….,¡!¿?«»-‐"
-						  "‘’“”/\\&@*\\•^©¤฿¢$€ƒ£₦¥₩₪†‡〃"
-						  "#№ºª\%‰‱ ¶′®§℠℗~™_|¦=";
+	//const WString punct = "\"’'()[]{}<>:;,‒–—―….,¡!¿?«»-‐‘’“”/\\&@*\\•^©¤฿¢$€ƒ£₦¥₩₪†‡〃#№ºª\%‰‱ ¶′®§℠℗~™_|¦=";
+	const WString punct = "\"\342\200\231'()[]{}<>:;,\342\200\222\342\200\223\342\200\224\342\200\225\342\200\246.,\302\241!\302\277?\302\253\302\273-\342\200\220\342\200\230\342\200\231\342\200\234\342\200\235/\\&@*\\\342\200\242^\302\251\302\244\340\270\277\302\242$\342\202\254\306\222\302\243\342\202\246\302\245\342\202\251\342\202\252\342\200\240\342\200\241\343\200\203#\342\204\226\302\272\302\252%\342\200\260\342\200\261 "
+     					  "\302\266\342\200\262\302\256\302\247\342\204\240\342\204\227~\342\204\242_|\302\246=";
 	for (int i = 0; punct[i]; ++i) {
 		if (punct[i] == c) 
 			return true;
@@ -990,6 +992,51 @@ String RemoveAccents(String str) {
 		ret += schar;
 	}
 	return ret;
+}
+
+String FitFileName(String fileName, int len) {
+	if (fileName.GetCount() <= len)
+		return fileName;
+	
+	Array<String> path;
+	
+	const char *s = fileName;
+	char c;
+	int pos0 = 0;
+	for (int pos1 = 0; (c = s[pos1]) != '\0'; ++pos1) {
+	#ifdef PLATFORM_WIN32
+		if(c == '\\' || c == '/') {
+	#else
+		if(c == '/') {
+	#endif
+			path.Add(fileName.Mid(pos0, pos1-pos0));
+			pos0 = ++pos1;
+		}
+	}
+	path.Add(fileName.Mid(pos0));
+
+	String begin, end;
+	int iBegin = 0;
+	int iEnd = path.GetCount() - 1;
+	
+	if (path[iEnd].GetCount() >= len)
+		return path[iEnd].Left(len);
+	if (path[iEnd].GetCount() >= len-4)
+		return path[iEnd];
+	
+	len -= 3;	// ...
+	
+	for (; iBegin <= iEnd; iBegin++, iEnd--) {
+		if (path[iEnd].GetCount() + 1 > len)
+			break;
+		end = DIR_SEPS + path[iEnd] + end;
+		len -= path[iEnd].GetCount() + 1;
+		if (path[iBegin].GetCount() + 1 > len)
+			break;
+		begin += path[iBegin] + DIR_SEPS;
+		len -= path[iBegin].GetCount() + 1;
+	}
+	return begin + "..." + end;
 }
 
 String Tokenize(const String &str, const String &token, int &pos) {
@@ -2034,16 +2081,8 @@ Value GetVARIANT(VARIANT &result)
 		ret = AsString(result.dblVal);
 		break;
 	case VT_BSTR:  
-			/* 	char dbcs[1024];		// Old version failed with cyrillic and other alphabets
-	        char *pbstr = (char *)result.bstrVal;
-	      	int i = wcstombs(dbcs, result.bstrVal, *((DWORD *)(pbstr-4)));
-	      	dbcs[i] = 0;
-			ret = dbcs;
-			*/
-		{
-			ret = WideToString(result.bstrVal);
-			break;
-		}
+		ret = WideToString(result.bstrVal);
+		break;
 	case VT_LPSTR:
          //ret = result.pszVal;
          ret = "Unknown VT_LPSTR";
@@ -2149,6 +2188,10 @@ void *Dl::GetFunction(const String &functionName) {
 
 Color RandomColor() {
 	return Color(Random(), 0);
+}
+
+double Random(double min, double max) {
+	 return min + (max - min)*Random()/double(0xffffffff);
 }
 
 /* Included in ImageOp

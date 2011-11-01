@@ -1,6 +1,7 @@
 #ifndef _Functions4U_Functions4U_h
 #define _Functions4U_Functions4U_h
 
+#include <float.h>
 #include <Draw/Draw.h>
 #ifdef flagGUI
 #include <ide/Browser/Browser.h>
@@ -30,6 +31,8 @@ bool AppendFile(const char *filename, const char *str);
 String AppendFileName(const String& path1, const char *path2, const char *path3);
 	
 inline String Trim(const String& s) {return TrimBoth(s);};
+
+String FitFileName(String fileName, int len);
 
 String Tokenize(const String &str, const String &token, int &pos);
 	
@@ -227,14 +230,14 @@ String RemoveAccents(String str);
 String RemoveAccent(wchar c);
 bool IsPunctuation(wchar c);
 	
-inline double ToRad(double angle)	{return angle*M_PI/180;}
-inline double ToDeg(double angle)	{return angle*180/M_PI;}
+inline double ToRad(double angle)	{return angle*M_PI/180.;}
+inline double ToDeg(double angle)	{return angle*180./M_PI;}
 
-inline bool Odd(int val)	  	{return val%2;}
-inline bool Even(int val) 	  	{return !Odd(val);}
-inline int RoundEven(int val) 	{return Even(val) ? val : val+1;}
+inline bool Odd(int val)	  		{return val%2;}
+inline bool Even(int val) 	  		{return !Odd(val);}
+inline int RoundEven(int val) 		{return Even(val) ? val : val+1;}
 template<class T>
-inline int Sign(T a) 			{return (a > 0) - (a < 0);}
+inline int Sign(T a) 				{return (a > 0) - (a < 0);}
 template<class T>
 inline T Average(T a, T b) 			{return T(a+b)/2;}
 template<class T>
@@ -266,14 +269,8 @@ inline const T& max(const T& a, const T& b, const T& c, const T& d) {
 	return ab > cd ? ab : cd;
 }
 
+double Random(double min, double max);
 
-#ifndef DBL_MAX
-#define DBL_MAX	1.7976931348623158e+308
-#define DBL_MIN	2.2250738585072014e-308 
-#endif
-
-
-//int DayOfYear(Date d);
 
 // A String based class to parse into
 class StringParse :  public String {
@@ -501,7 +498,6 @@ bool BSPatch(String oldfile, String newfile, String patchfile);
 bool BSDiff(String oldfile, String newfile, String patchfile);
 
 
-// Fits object centered into frame maintaining the aspect
 template <class T>
 Rect_<T> FitInFrame(const Size_<T> &frame, const Size_<T> &object)
 {
@@ -519,7 +515,6 @@ Rect_<T> FitInFrame(const Size_<T> &frame, const Size_<T> &object)
 
 Color RandomColor();
 
-// Image Rotate180(const Image& img); 		Included in ImageOp
 Image GetRect(const Image& orig, const Rect &r);
 
 class _NRFuse {
