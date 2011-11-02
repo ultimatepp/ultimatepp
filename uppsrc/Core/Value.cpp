@@ -577,7 +577,19 @@ void ValueMap::Add(const Value& key, const Value& value) {
 	d.value.Add(value);
 }
 
-void ValueMap::Set(int i, const Value& v) {
+void ValueMap::Set(const Value& key, const Value& value)
+{
+	Data& d = Clone();
+	int i = d.key.Find(key);
+	if(i >= 0)
+		d.value.Set(i, value);
+	else {
+		d.key.Add(key);
+		d.value.Add(value);
+	}
+}
+
+void ValueMap::SetAt(int i, const Value& v) {
 	Clone().value.Set(i, v);
 }
 
