@@ -322,6 +322,8 @@ public:
 	XmlRpcCall& Proxy(const char *url)                          { server.Proxy(url); return *this; }
 	XmlRpcCall& ProxyAuth(const String& usr, const String& pwd) { server.ProxyAuth(usr, pwd); return *this; }
 
+	XmlRpcCall& MaxRequestSize(int maxsize)                     { server.MaxContentSize(maxsize); return *this; }
+
 	XmlRpcCall& TimeOut(int msec)                               { timeout = msec; return *this; }
 	XmlRpcCall& URL(const char *url);
 	
