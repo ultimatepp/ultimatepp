@@ -700,7 +700,13 @@ public:
 	void Add(const String& s, const Value& value) { Add(Value(s), value); }
 	void Add(const char *s, const Value& value)   { Add(Value(s), value); }
 	void Add(Id id, const Value& value)           { Add(Value(id.ToString()), value); }
-	void Set(int i, const Value& v);
+
+	void Set(const Value& key, const Value& value);
+	void Set(const String& s, const Value& value) { Set(Value(s), value); }
+	void Set(const char *s, const Value& value)   { Set(Value(s), value); }
+	void Set(Id id, const Value& value)           { Set(Value(id.ToString()), value); }
+
+	void SetAt(int i, const Value& v);
 	void SetKey(int i, const Value& k);
 	void SetKey(int i, const String& s)           { SetKey(i, Value(s)); }
 	void SetKey(int i, const char* s)             { SetKey(i, Value(s)); }
