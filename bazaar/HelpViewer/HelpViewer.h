@@ -5,10 +5,9 @@
 
 using namespace Upp;
 
-/*
+#define IMAGECLASS HelpImg
 #define IMAGEFILE <HelpViewer/HelpViewer.iml>
 #include <Draw/iml_header.h>
-*/
 
 class HelpViewer : public TopWindow
 {
@@ -18,24 +17,26 @@ class HelpViewer : public TopWindow
 		RichTextView contentsPane;
 		TreeCtrl mainTocTree;
 		
+		// go to a selected link
+		void showLink(String const &link);
+
 		// reacts on TOC link selection
 		void tocLinkCb();
 		
 		// reacts on link selection inside content pane
 		void contentLinkCb(String const &link);
 		
-		ToolBar        toolbar;
-		Zoom           zoom;
+		ToolBar toolBar;
 	
-		struct Pos : Moveable<Pos>
-		{
-			String link;
-			int    scy;
-		};
+		Vector<String> stack;
+		int tos;
 		
-		Vector<Pos>    back;
-		Vector<Pos>    forward;
-		String         current_link;
+		// go previous/next
+		void backCb(void);
+		void fwCb(void);
+		
+		// toolbar construction
+		void toolBarCb(Bar &bar);
 		
 		// appends a treeCtrl to main tocCtrl
 		void AppendTOC(TreeCtrl const &t, int curId = 0, int destId = 0);

@@ -1,14 +1,16 @@
 #include "HelpViewer.h"
 
-/*
+#define IMAGECLASS HelpImg
 #define IMAGEFILE <HelpViewer/HelpViewer.iml>
 #include <Draw/iml_source.h>
-*/
 
 const char *TOPICLINK = "^topic`:`/`/";
 
 HelpViewer::HelpViewer()
 {
+	// adds toolbar
+	AddFrame(toolBar);
+	
 	// setups splitter and its contents
 	Add(splitter);
 	splitter.Horz(tocPane, contentsPane).SetPos(2500);
@@ -21,11 +23,15 @@ HelpViewer::HelpViewer()
 	// setup TOC link callback
 	mainTocTree.WhenSel = THISBACK(tocLinkCb);
 	contentsPane.WhenLink << THISBACK(contentLinkCb);
-	
-	zoom.m = 160;
-	zoom.d = 1000;
+
+	// initialize link stack
+	stack.Clear();
+	tos = -1;
 	
 	Sizeable().Zoomable();
+
+	// loads toolbar
+	toolBar.Set(THISBACK(toolBarCb));
 }
 
 // appends a treeCtrl to main tocCtrl
@@ -37,12 +43,6 @@ void HelpViewer::AppendTOC(TreeCtrl const &t, int curId, int destId)
 	// recursively add all children
 	for(int i = 0; i < t.GetChildCount(curId); i++)
 		AppendTOC(t, t.GetChild(curId, i), destChild);
-	
-	// opens all content tree and display first item
-	mainTocTree.OpenDeep(0);
-	mainTocTree.SelectOne(2);
-	mainTocTree.SetCursor(2);
-	mainTocTree.WhenSel();
 }
 
 // Parses TOC and fills tocTree control
@@ -123,21 +123,70 @@ bool HelpViewer::LoadTOC(String const &tocLink)
 	if(tocTree.GetChildCount(0))
 		AppendTOC(tocTree);
 
+	
+	// opens all content tree and display first item
+	mainTocTree.OpenDeep(0);
+	mainTocTree.SetCursor(2);
+
+	// stores first topic at top of stack
+	String curLink = mainTocTree.Get();
+	stack.Clear();
+	stack.Add(curLink);
+	tos = 0;
+	
 	return true;
 }
 		
-// reacts on link selection inside content pane
-void HelpViewer::contentLinkCb(String const &link)
+// go to a selected link
+void HelpViewer::showLink(String const &link)
 {
 	Topic t = GetTopic(link);
 	if(!IsNull(t.text))
 	{
+		Zoom zoom;
+		zoom.m = 160;
+		zoom.d = 1000;
+		
 		String label = t.label;
 		RichText txt = ParseQTF(t.text);
 		contentsPane.Pick(txt, zoom);
 		contentsPane.GotoLabel(label, true);
-		current_link = link;
+		int tocId = mainTocTree.Find(link);
+		if(tocId >= 0)
+		{
+			// disable tocTree action on selecting cursor
+			// otherwise we've got a recursive call
+			mainTocTree.WhenSel.Clear();
+			mainTocTree.SetCursor(tocId);
+			
+			// re-enable tocTree action
+			mainTocTree.WhenSel = THISBACK(tocLinkCb);
+
+			// setup window title
+			Title(mainTocTree.GetValue());
+		}
 	}
+}
+
+// reacts on link selection inside content pane
+void HelpViewer::contentLinkCb(String const &link)
+{
+	// clear forward buffer
+	stack.Trim(tos+1);
+
+	// updates history
+	int tocId = mainTocTree.GetCursor();
+	if(tocId > 0)
+	{
+		String curLink = mainTocTree.Get();
+		stack.Add(curLink);
+		tos++;
+		toolBar.Set(THISBACK(toolBarCb));
+
+	}
+	
+	// shows link inside main pane
+	showLink(link);
 }
 
 
@@ -150,5 +199,34 @@ void HelpViewer::tocLinkCb()
 	// gets link
 	String link = mainTocTree.Get(id);
 	
+	// follow link
 	contentLinkCb(link);
+}
+
+// go previous/next
+void HelpViewer::backCb(void)
+{
+	if(--tos >= 0)
+	{
+		String link = stack[tos];
+		showLink(link);
+	}
+	toolBar.Set(THISBACK(toolBarCb));
+}
+
+void HelpViewer::fwCb(void)
+{
+	if(tos < stack.GetCount() - 1)
+	{
+		String link = stack[++tos];
+		showLink(link);
+	}
+	toolBar.Set(THISBACK(toolBarCb));
+}
+
+// toolbar construction
+void HelpViewer::toolBarCb(Bar &bar)
+{
+	bar.Add(tos > 0, "Back", HelpImg::Back(), THISBACK(backCb));
+	bar.Add(tos < stack.GetCount() - 1, "Forward", HelpImg::Forward(), THISBACK(fwCb));
 }

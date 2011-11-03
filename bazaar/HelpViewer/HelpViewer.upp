@@ -4,7 +4,7 @@ uses
 	CtrlLib;
 
 file
+	HelpViewer.iml,
 	HelpViewer.h,
-	HelpViewer.cpp,
-	HelpViewer.iml;
+	HelpViewer.cpp;
 
