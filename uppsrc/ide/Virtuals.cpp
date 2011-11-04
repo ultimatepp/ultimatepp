@@ -57,18 +57,18 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 	}
 
 	void Sync() {
-		String name = ~find;
+		String name = ToLower((String)~find);
 		String k = list.GetKey();
 		list.Clear();
-		for(int i = 0; i < item.GetCount(); i++) {
-			CppItemInfo f;
-			(CppItem&)f = item[i];
-			f.virt = false;
-			f.name = item[i].name;
-			if(memcmp_i(name, f.name, name.GetCount()) == 0)
+		for(int i = 0; i < item.GetCount(); i++)
+			if(ToLower(item[i].name).Find(name) >= 0) {
+				CppItemInfo f;
+				(CppItem&)f = item[i];
+				f.virt = false;
+				f.name = item[i].name;
 				list.Add(item.GetKey(i), f.natural, RawToValue(f),
-				         item[i].defined, item[i].overed);
-		}
+					item[i].defined, item[i].overed);
+			}
 		if(!list.FindSetCursor(k))
 			list.GoBegin();
 	}
@@ -103,6 +103,7 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 		list.MultiSelect();
 		list.EvenRowColor();
 		Sizeable().Zoomable();
+		find.SetFilter(SearchItemFilter);
 		find <<= THISBACK(Sync);
 		Sync();
 	}
