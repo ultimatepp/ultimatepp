@@ -124,6 +124,8 @@ file
 	XML.cpp optimize_speed,
 	Xmlize.h,
 	Xmlize.cpp optimize_speed,
+	JSON.h,
+	JSON.cpp,
 	Uuid.h,
 	Uuid.cpp optimize_speed,
 	Ptr.h,

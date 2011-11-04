@@ -219,8 +219,13 @@ Value ErrorValue(const char *s) {
 	return ErrorValue(String(s));
 }
 
-Value ErrorValue() {
-	return ErrorValue(String());
+const Value& ErrorValue() {
+	static Value *p;
+	ONCELOCK {
+		static Value v = ErrorValue(String());
+		p = &v;
+	}
+	return *p;
 }
 
 String GetErrorText(const Value& v) {
@@ -604,7 +609,7 @@ void ValueMap::Remove(int i)
 	d.value.Remove(i);
 }
 
-Value ValueMap::operator[](const Value& key) const
+const Value& ValueMap::operator[](const Value& key) const
 {
 	int q = data->key.Find(key);
 	return q >= 0 ? data->value[q] : ErrorValue();
