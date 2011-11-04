@@ -1,4 +1,4 @@
-description "Using CoWork for loop parallelisation";
+description "Using CoWork for loop parallelisation\377";
 
 uses
 	CtrlLib;
@@ -8,3 +8,4 @@ file
 
 mainconfig
 	"" = "GUI MT";
+

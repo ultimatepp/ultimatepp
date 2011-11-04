@@ -1,4 +1,4 @@
-description "Connecting Sqlite3 database";
+description "Connecting Sqlite3 database\377";
 
 uses
 	plugin\sqlite3;
