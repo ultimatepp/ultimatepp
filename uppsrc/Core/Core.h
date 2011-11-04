@@ -258,6 +258,7 @@ NAMESPACE_UPP
 
 #include "Parser.h"
 #include "XML.h"
+#include "JSON.h"
 #include "Lang.h"
 #include "i18n.h"
 #include "Topic.h"

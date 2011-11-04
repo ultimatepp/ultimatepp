@@ -147,6 +147,12 @@ public:
 
 	Value& operator=(const Value& v);
 	Value(const Value& v);
+	
+	int   GetCount() const;
+	const Value& operator[](int i) const;
+	const Value& operator[](const String& key) const;
+	const Value& operator[](const char *key) const;
+	const Value& operator[](const Id& key) const;
 
 	Value();
 	~Value();
@@ -482,9 +488,9 @@ public:
 template <class T>
 inline Value RichToValue(const T& data)                   { return RichValue<T>(data); }
 
-Value ErrorValue(const char *s);
-Value ErrorValue(const String& s);
-Value ErrorValue();
+Value        ErrorValue(const char *s);
+Value        ErrorValue(const String& s);
+const Value& ErrorValue();
 
 String GetErrorText(const Value& v);
 
@@ -630,6 +636,7 @@ public:
 	bool IsEmpty() const                      { return data->data.IsEmpty(); }
 
 	void Add(const Value& v);
+	ValueArray& operator<<(const Value& v)    { Add(v); return *this; }
 	void Set(int i, const Value& v);
 	const Value& Get(int i) const;
 	const Vector<Value>& Get() const          { return data->data; }
@@ -713,27 +720,60 @@ public:
 	void SetKey(int i, Id id)                     { SetKey(i, Value(id.ToString())); }
 	void Remove(int i);
 
-	const Index<Value>& GetKeys() const       { return data->key; }
-	ValueArray GetValues() const              { return data->value; }
+	const Index<Value>& GetKeys() const           { return data->key; }
+	ValueArray GetValues() const                  { return data->value; }
 
-	operator ValueArray() const               { return GetValues(); }
+	operator ValueArray() const                   { return GetValues(); }
 
-	Value operator[](const Value& k) const;
-	Value operator[](const String& s) const   { return operator[](Value(s)); }
-	Value operator[](const char *s) const     { return operator[](Value(s)); }
-	Value operator[](const Id& k) const       { return operator[](Value(k.ToString())); }
+	const Value& operator[](const Value& k) const;
+	const Value& operator[](const String& s) const{ return operator[](Value(s)); }
+	const Value& operator[](const char *s) const  { return operator[](Value(s)); }
+	const Value& operator[](const Id& k) const    { return operator[](Value(k.ToString())); }
 
-	unsigned GetHashValue() const             { return data->GetHashValue(); }
+	unsigned GetHashValue() const                 { return data->GetHashValue(); }
 	void     Serialize(Stream& s);
-	String   ToString() const                 { return data->AsString(); }
+	String   ToString() const                     { return data->AsString(); }
 
 	bool operator==(const ValueMap& v) const;
-	bool operator!=(const ValueMap& v) const  { return !operator==(v); }
+	bool operator!=(const ValueMap& v) const      { return !operator==(v); }
 };
 
 inline bool IsValueArray(const Value& v) { return v.GetType() == VALUEARRAY_V || v.GetType() == VALUEMAP_V; }
 inline bool IsValueMap(const Value& v)   { return IsValueArray(v); }
 
+inline
+int Value::GetCount() const
+{
+	return IsValueArray(*this) ? ValueArray(*this).GetCount() : 0;
+}
+
+inline
+const Value& Value::operator[](int i) const
+{
+	ASSERT(IsValueArray(*this));
+	return ValueArray(*this)[i];
+}
+
+inline
+const Value& Value::operator[](const String& key) const
+{
+	ASSERT(IsValueMap(*this));
+	return ValueMap(*this)[key];
+}
+
+inline
+const Value& Value::operator[](const char *key) const
+{
+	ASSERT(IsValueMap(*this));
+	return ValueMap(*this)[key];
+}
+
+inline
+const Value& Value::operator[](const Id& key) const
+{
+	ASSERT(IsValueMap(*this));
+	return ValueMap(*this)[key];
+}
 
 class ValueGen {
 public:
