@@ -527,8 +527,8 @@ LAYOUT(VirtualsLayout, 712, 496)
 	ITEM(ArrayCtrl, list, HSizePosZ(8, 8).VSizePosZ(8, 40))
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(80, 64).BottomPosZ(8, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(12, 64).BottomPosZ(8, 24))
-	ITEM(Label, dv___3, SetLabel(t_("Find")).LeftPosZ(8, 28).BottomPosZ(9, 19))
-	ITEM(EditString, find, LeftPosZ(36, 124).BottomPosZ(9, 19))
+	ITEM(Label, dv___3, SetLabel(t_("Find")).LeftPosZ(8, 60).BottomPosZ(9, 19))
+	ITEM(EditString, find, LeftPosZ(72, 124).BottomPosZ(9, 19))
 END_LAYOUT
 
 LAYOUT(UppOptDlg, 520, 68)

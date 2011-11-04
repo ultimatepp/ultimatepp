@@ -23,7 +23,7 @@ struct GotoDlg : public WithGotoLayout<TopWindow> {
 void GotoDlg::SyncList()
 {
 	list.Clear();
-	String n = ~target;
+	String n = ToLower((String)~target);
 	int typei = Null;
 	String scope = Null;
 	Vector<String> h = Split(n, ':');
@@ -51,6 +51,14 @@ void GotoDlg::SyncList()
 	if(IsDigit(*n))
 		n.Clear();
 	Index<String> nc;
+	for(int i = 0; i < item.GetCount(); i++) {
+		const CppItemInfo& f = item[i];		
+		if(ToLower(f.name).Find(n) >= 0 && (IsNull(typei) || typei == f.typei) && (IsNull(scope) || scope == f.scope)) {
+			list.Add(f.scope, RawToValue(f), f.item, f.line, GetCppFile(f.file), f.scope);
+			nc.FindAdd(f.scope);
+		}
+	}
+/*
 	for(int ci = 0; ci < (n.GetCount() ? 2 : 1); ci++)
 		for(int i = 0; i < item.GetCount(); i++) {
 			const CppItemInfo& f = item[i];
@@ -63,6 +71,7 @@ void GotoDlg::SyncList()
 				nc.FindAdd(f.scope);
 			}
 		}
+*/
 	list.HeaderTab(0).SetText(Format("Scope (%d)", nc.GetCount()));
 	list.HeaderTab(1).SetText(Format("Symbol (%d)", list.GetCount()));
 	SyncOk();
@@ -89,7 +98,7 @@ void GotoDlg::SyncOk()
 
 int GotoFilter(int c)
 {
-	return IsDigit(c) || IsAlpha(c) || c == '_' || c == ':' ? c : c == '.' ? ':' : 0;
+	return IsDigit(c) || IsAlpha(c) || c == '_' || c == ':' ? ToUpper(c) : c == '.' ? ':' : 0;
 }
 
 void GotoDlg::Serialize(Stream& s)
