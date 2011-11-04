@@ -1,4 +1,4 @@
-description "Using CParser for simple expression evaluator";
+description "Using CParser for simple expression evaluator\377";
 
 uses
 	Core;

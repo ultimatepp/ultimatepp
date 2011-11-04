@@ -1,0 +1,4 @@
+#ifndef _CParser_icpp_init_stub
+#define _CParser_icpp_init_stub
+#include "Core/init"
+#endif
