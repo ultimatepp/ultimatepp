@@ -76,7 +76,7 @@ etPos], then the skip is performed after any symbol.&]
 to skip, [* false] otherwise.&]
 [s3; &]
 [s4; &]
-[s5;:CParser`:`:PeekChar`(`): [@(0.0.255) char]_[* PeekChar]()&]
+[s5;:CParser`:`:PeekChar`(`)const: [@(0.0.255) char]_[* PeekChar]()_[@(0.0.255) const]&]
 [s2;%% Returns the current single character.&]
 [s3; &]
 [s4; &]
@@ -86,19 +86,20 @@ returns the character at the position before advancing.&]
 [s7;%% [*/ Return value]-|Character at position before advancing it.&]
 [s3; &]
 [s4; &]
-[s5;:CParser`:`:IsChar`(char`): [@(0.0.255) bool]_[* IsChar]([@(0.0.255) char]_[*@3 c])&]
+[s5;:CParser`:`:IsChar`(char`)const: [@(0.0.255) bool]_[* IsChar]([@(0.0.255) char]_[*@3 c])_
+[@(0.0.255) const]&]
 [s2;%% Tests whether there is a specific character [%-*@3 c ]at the 
 current position.&]
-[s3; &]
+[s3;%% &]
 [s4; &]
-[s5;:CParser`:`:IsChar2`(char`,char`): [@(0.0.255) bool]_[* IsChar2]([@(0.0.255) char]_[*@3 c
-1], [@(0.0.255) char]_[*@3 c2])&]
+[s5;:CParser`:`:IsChar2`(char`,char`)const: [@(0.0.255) bool]_[* IsChar2]([@(0.0.255) char]_
+[*@3 c1], [@(0.0.255) char]_[*@3 c2])_[@(0.0.255) const]&]
 [s2;%% Tests whether there is a specific character pair ([%-*@3 c1], 
 [%-*@3 c2]) at the current position.&]
-[s3; &]
+[s3;%% &]
 [s4; &]
-[s5;:CParser`:`:IsChar3`(char`,char`,char`): [@(0.0.255) bool]_[* IsChar3]([@(0.0.255) char
-]_[*@3 c1], [@(0.0.255) char]_[*@3 c2], [@(0.0.255) char]_[*@3 c3])&]
+[s5;:CParser`:`:IsChar3`(char`,char`,char`)const: [@(0.0.255) bool]_[* IsChar3]([@(0.0.255) c
+har]_[*@3 c1], [@(0.0.255) char]_[*@3 c2], [@(0.0.255) char]_[*@3 c3])_[@(0.0.255) const]&]
 [s2;%% Test for a specific character triplet ([%-*@3 c1], [%-*@3 c2], 
 [%-*@3 c3]) at the current position.&]
 [s3; &]
@@ -168,13 +169,13 @@ d] method with [%-*@3 s] as parameter. If it returns [* false], throws
 ].&]
 [s3; &]
 [s4; &]
-[s5;:CParser`:`:IsId`(`)const: [@(0.0.255) bool]_[* IsId]()_const&]
+[s5;:CParser`:`:IsId`(`)const: [@(0.0.255) bool]_[* IsId]()_[@(0.0.255) const]&]
 [s2;%% Tests whether there is any C`-like identifier at the current 
 position.&]
 [s3; &]
 [s4; &]
-[s5;:CParser`:`:IsId`(const char`*`): [@(0.0.255) bool]_[* IsId]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 s])_const&]
+[s5;:CParser`:`:IsId`(const char`*`)const: [@(0.0.255) bool]_[* IsId]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 s])_[@(0.0.255) const]&]
 [s2;%% Tests whether there is C`-like identifier [%-*@3 s] at current 
 position.&]
 [s3;%% &]
@@ -195,11 +196,10 @@ or template based type.&]
 [s7;%% [*/ Return value]-|Identifier.&]
 [s3; &]
 [s4; &]
-[s5;:CParser`:`:IsInt`(`): [@(0.0.255) bool]_[* IsInt]()&]
+[s5;:CParser`:`:IsInt`(`)const: [@(0.0.255) bool]_[* IsInt]()_[@(0.0.255) const]&]
 [s2;%% Test for integer at current position `- there either must 
 be digit, or `'`+`' or `'`-`' sign followed by any number of 
 spaces and digit.&]
-[s7;%% [*/ Return value]-|true if there is integer.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:ReadInt`(`)throw`(CParser`:`:Error`): [@(0.0.255) int]_[* ReadInt]()_[@(0.0.255) t
@@ -216,20 +216,17 @@ false, throws an &]
 Parser`::Error], otherwise returns it.&]
 [s3;%% &]
 [s4; &]
-[s5;:CParser`:`:IsNumber`(`): [@(0.0.255) bool]_[* IsNumber]()&]
+[s5;:CParser`:`:IsNumber`(`)const: [@(0.0.255) bool]_[* IsNumber]()_[@(0.0.255) const]&]
 [s2;%% Tests for sign`-less number at current position `- there must 
 be digit at current position.&]
-[s7;%% [*/ Return value]-|true if there is number.&]
 [s3; &]
 [s4; &]
-[s5;:CParser`:`:IsNumber`(int`): [@(0.0.255) bool]_[* IsNumber]([@(0.0.255) int]_[*@3 base])&]
+[s5;:CParser`:`:IsNumber`(int`)const: [@(0.0.255) bool]_[* IsNumber]([@(0.0.255) int]_[*@3 ba
+se])_[@(0.0.255) const]&]
 [s2;%% Tests for sign`-less number with given base `- there must 
 be digit or letter `'A`' `- `'Z`' or `'a`' `- `'z`', where range 
-is limit by actual base (e.g. for base 12 letters `'a`' `'A`' 
-`'b`' `'B`' are allowed).&]
-[s7;%% [%-*C@3 base]-|Numeric base.&]
-[s7;%% [*/ Return value]-|true if there is number with given numeric 
-base.&]
+is limit by actual [%-*@3 base ](e.g. for base 12 letters `'a`' 
+`'A`' `'b`' `'B`' are allowed).&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:ReadNumber`(int`)throw`(CParser`:`:Error`): [_^uint32^ uint32]_[* ReadNum
@@ -246,11 +243,10 @@ umber64]([@(0.0.255) int]_[*@3 base]_`=_[@3 10])_[@(0.0.255) throw](Error)&]
 [s2;%% Reads 64`-bit unsigned number with given numeric [%-*@3 base].&]
 [s3;%% &]
 [s4; &]
-[s5;:CParser`:`:IsDouble`(`): [@(0.0.255) bool]_[* IsDouble]()&]
+[s5;:CParser`:`:IsDouble`(`)const: [@(0.0.255) bool]_[* IsDouble]()_[@(0.0.255) const]&]
 [s2;%% Test for floating point number at current position `- there 
 either must be digit, or `'`+`' or `'`-`' sign followed by any 
 number of spaces and digit.&]
-[s7;%% [*/ Return value]-|true if there is the floating point number.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:ReadDouble`(`)throw`(CParser`:`:Error`): [@(0.0.255) double]_[* ReadDoubl
@@ -259,10 +255,9 @@ e]()_[@(0.0.255) throw](Error)&]
 [s7;%% [*/ Return value]-|Floating point number.&]
 [s3; &]
 [s4; &]
-[s5;:CParser`:`:IsString`(`): [@(0.0.255) bool]_[* IsString]()&]
+[s5;:CParser`:`:IsString`(`)const: [@(0.0.255) bool]_[* IsString]()_[@(0.0.255) const]&]
 [s2;%% Tests for C`-like string literal at the current position. 
 Same as [* IsChar](`'`\`"`');&]
-[s7;%% [*/ Return value]-|true when there is string literal.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:ReadOneString`(bool`)throw`(CParser`:`:Error`): [_^String^ String]_[* Rea
@@ -322,16 +317,14 @@ literals are skipped as whole symbols, otherwise input position
 is advanced by 1 character.&]
 [s3; &]
 [s4; &]
-[s5;:CParser`:`:GetPtr`(`): [@(0.0.255) const]_[@(0.0.255) char]_`*[* GetPtr]()&]
+[s5;:CParser`:`:GetPtr`(`)const: [@(0.0.255) const]_[@(0.0.255) char]_`*[* GetPtr]()_[@(0.0.255) c
+onst]&]
 [s2;%% Returns a pointer to the current position.&]
-[s7;%% [*/ Return value]-|Pointer to current position.&]
 [s3; &]
 [s4; &]
-[s5;:CParser`:`:GetPos`(`): [_^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Pos`:`:struct^ C
-Parser`::Pos]_[* GetPos]()&]
-[s2;%% Gets the current position,.&]
-[s7;%% [*/ Return value]-|Current position. It contains the pointer 
-as well as the line number and the filename.&]
+[s5;:CParser`:`:GetPos`(`)const: [_^CParser`:`:Pos^ Pos]_[* GetPos]()_[@(0.0.255) const]&]
+[s2;%% Gets the current position. It contains the pointer as well 
+as the line number and the filename.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:SetPos`(const CParser`:`:Pos`&`): [@(0.0.255) void]_[* SetPos]([@(0.0.255) c
@@ -349,7 +342,6 @@ input text (`'`\0`' character).&]
 [s4; &]
 [s5;:CParser`:`:operator bool`(`)const: [* operator_bool]()_[@(0.0.255) const]&]
 [s2; Returns [* true ]if end of file has not been reached, [* false ]otherwise.&]
-[s7;%% &]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:GetLine`(`)const: [@(0.0.255) int]_[* GetLine]()_[@(0.0.255) const]&]
@@ -361,6 +353,17 @@ input text (`'`\0`' character).&]
 t]&]
 [s2; Returns the actual filename.&]
 [s3;%% &]
+[s3; &]
+[s4; &]
+[s5;:CParser`:`:Set`(const char`*`,const char`*`,int`): [@(0.0.255) void]_[* Set]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 ptr], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 fn], 
+[@(0.0.255) int]_[*@3 line]_`=_[@3 1])&]
+[s2;%% Sets the new input string (with filename and line).&]
+[s3;%% &]
+[s4; &]
+[s5;:CParser`:`:Set`(const char`*`): [@(0.0.255) void]_[* Set]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 ptr])&]
+[s2;%% Sets the new input string.&]
 [s0;%% &]
 [s0;%% &]
 [s0;%% &]
@@ -380,7 +383,7 @@ tring] with error description.&]
 [s3; &]
 [s5;:Exc`:`:Exc`(`): [* Exc]()&]
 [s2;%% Default constructor. Error message is empty.&]
-[s3; &]
+[s3;%% &]
 [s4; &]
 [s5;:Exc`:`:Exc`(const String`&`): [* Exc]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
 ]_[*@3 desc])&]
