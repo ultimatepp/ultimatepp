@@ -48,7 +48,7 @@ bool CParser::Spaces0() {
 	return true;
 }
 
-const char *CParser::IsId0(const char *s) {
+const char *CParser::IsId0(const char *s) const {
 	const char *t = term + 1;
 	s++;
 	while(*s) {
@@ -123,7 +123,7 @@ String CParser::ReadIdt() throw(Error) {
 	return result;
 }
 
-bool CParser::IsInt() {
+bool CParser::IsInt() const {
 	LTIMING("IsInt");
 	const char *t = term;
 	if(*t == '-' || *t == '+') {
@@ -162,7 +162,7 @@ int CParser::ReadInt(int min, int max) throw(Error)
 	return n;
 }
 
-bool CParser::IsNumber(int base)
+bool CParser::IsNumber(int base) const
 {
 	if(IsDigit(*term))
 		return true;
@@ -354,7 +354,7 @@ void CParser::SkipTerm()
 	DoSpaces();
 }
 
-CParser::Pos CParser::GetPos()
+CParser::Pos CParser::GetPos() const
 {
 	Pos p;
 	p.line = line;

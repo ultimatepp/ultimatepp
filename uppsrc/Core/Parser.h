@@ -15,7 +15,7 @@ protected:
 	bool        skipspaces;
 
 	bool        Spaces0();
-	const char *IsId0(const char *s);
+	const char *IsId0(const char *s) const;
 	bool        Id0(const char *id);
 	void        DoSpaces()                    { if(skipspaces) Spaces(); }
 
@@ -29,12 +29,12 @@ public:
 	void   SkipSpaces()                       { skipspaces = true; }
 
 	bool   Spaces()                           { return (byte)*term <= ' ' || *term == '/' ? Spaces0() : false; }
-	char   PeekChar()                         { return *term; }
+	char   PeekChar() const                   { return *term; }
 	char   GetChar();
 
-	bool   IsChar(char c)                     { return *term == c; }
-	bool   IsChar2(char c1, char c2)          { return term[0] == c1 && term[1] == c2; }
-	bool   IsChar3(char c1, char c2, char c3) { return term[0] == c1 && term[1] == c2 && term[2] == c3; }
+	bool   IsChar(char c) const               { return *term == c; }
+	bool   IsChar2(char c1, char c2) const    { return term[0] == c1 && term[1] == c2; }
+	bool   IsChar3(char c1, char c2, char c3) const { return term[0] == c1 && term[1] == c2 && term[2] == c3; }
 	bool   Char(char c);
 	bool   Char2(char c1, char c2);
 	bool   Char3(char c1, char c2, char c3);
@@ -43,20 +43,20 @@ public:
 	void   PassChar3(char c1, char c2, char c3) throw(Error);
 	bool   Id(const char *s)                  { return term[0] == s[0] && (s[1] == 0 || term[1] == s[1]) && Id0(s); }
 	void   PassId(const char *s) throw(Error);
-	bool   IsId()                             { return iscib(*term); }
-	bool   IsId(const char *s)                { return term[0] == s[0] && (s[1] == 0 || term[1] == s[1]) && IsId0(s); }
+	bool   IsId() const                       { return iscib(*term); }
+	bool   IsId(const char *s) const          { return term[0] == s[0] && (s[1] == 0 || term[1] == s[1]) && IsId0(s); }
 	String ReadId() throw(Error);
 	String ReadIdt() throw(Error);
-	bool   IsInt();
+	bool   IsInt() const;
 	int    ReadInt() throw(Error);
 	int    ReadInt(int min, int max) throw(Error);
-	bool   IsNumber()                         { return IsDigit(*term); }
-	bool   IsNumber(int base);
+	bool   IsNumber() const                   { return IsDigit(*term); }
+	bool   IsNumber(int base) const;
 	uint32 ReadNumber(int base = 10) throw(Error);
 	uint64 ReadNumber64(int base = 10) throw(Error);
-	bool   IsDouble()                         { return IsInt(); }
+	bool   IsDouble() const                   { return IsInt(); }
 	double ReadDouble() throw(Error);
-	bool   IsString()                         { return IsChar('\"'); };
+	bool   IsString() const                   { return IsChar('\"'); };
 	String ReadOneString(bool chkend = false) throw(Error);
 	String ReadString(bool chkend = false) throw(Error);
 	String ReadOneString(int delim, bool chkend = false) throw(Error);
@@ -75,9 +75,9 @@ public:
 		Pos(const char *ptr = NULL, int line = 1, String fn = Null) : ptr(ptr), line(line), fn(fn) {}
 	};
 
-	const char *GetPtr()                      { return (const char *)term; }
+	const char *GetPtr() const                { return (const char *)term; }
 
-	Pos         GetPos();
+	Pos         GetPos() const;
 	void        SetPos(const Pos& pos);
 
 	bool   IsEof() const                      { return *term == '\0'; }
