@@ -275,7 +275,7 @@ String CreateQtf(const String& item, const String& name, const CppItem& m, const
 		for(int i = 0; i < p.GetCount(); i++)
 			d << " [%-*@r " << DeQtf(p[i]) << "]";
 	if(!str && p.GetCount())
-		qtf << d << '.';
+		qtf << d << " .";
 	qtf << "&]";
 	qtf << "[s7 &]";
 	return qtf;
