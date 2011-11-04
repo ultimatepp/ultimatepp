@@ -494,7 +494,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	editor.SetFocus();
 	MakeTitle();
 	SetBar();
-	editor.assist_active = IsProjectFile(editfile) && (IsCSourceFile(editfile) || IsCHeaderFile(editfile));
+	editor.assist_active = IsProjectFile(editfile) && IsCppBaseFile();
 	editor.CheckEdited(true);
 	editor.Annotate(editfile);
 	editor.SyncNavigator();
