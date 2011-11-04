@@ -1192,6 +1192,9 @@ class CoutStream : public Stream {
 			Put0(w);
 	}
 	virtual   bool  IsOpen() const { return true; }
+#ifdef PLATFORM_POSIX
+	virtual   void   Flush()       { fflush(stdout); }
+#endif
 };
 
 Stream& Cout()
