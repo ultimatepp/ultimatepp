@@ -45,6 +45,7 @@ private:
 	friend bool  GetMouseLeft();
 	friend bool  GetMouseMiddle();
 	friend Point GetMousePos();
+	friend void  sPanicMessageBox(const char *title, const char *text);
 
 protected:
 	       void   Create(Ctrl *owner, bool redirect, bool savebits);

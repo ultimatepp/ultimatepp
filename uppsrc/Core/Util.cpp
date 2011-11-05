@@ -19,6 +19,7 @@ void InstallPanicMessageBox(void (*mb)(const char *title, const char *text))
 
 void PanicMessageBox(const char *title, const char *text)
 {
+	PanicMode = true;
 	if(sPanicMessageBox)
 		(*sPanicMessageBox)(title, text);
 	else {
