@@ -153,12 +153,15 @@ void Ctrl::UntrapX11Errors(bool b)
 	X11ErrorTrap = b;
 }
 
-static void sPanicMessageBox(const char *title, const char *text)
+void sPanicMessageBox(const char *title, const char *text)
 {
-	GuiLock __; 
 	write(2, text, strlen(text));
 	write(2, "\n", 1);
-	Ctrl::ReleaseCtrlCapture();
+	if(Ctrl::grabWindow) {
+		LLOG("RELEASE GRAB");
+		XUngrabPointer(Xdisplay, CurrentTime);
+		XFlush(Xdisplay);
+	}
 	XDisplay *display = XOpenDisplay(NULL);
 	if(!display)
 		return;
@@ -233,10 +236,10 @@ static void sPanicMessageBox(const char *title, const char *text)
 
 int X11ErrorHandler(XDisplay *, XErrorEvent *error)
 {
+	if(X11ErrorTrap || IsPanicMode()) return 0;
+
 	if(GetIniKey(INI_PREFIX "X11_ERRORS") != "1")
 		return 0;
-
-	if(X11ErrorTrap || IsPanicMode()) return 0;
 
 	static const char *request[] = {
 		"",
