@@ -1,4 +1,6 @@
-#include "JSON.h"
+#include "Core/Core.h"
+
+using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
@@ -30,4 +32,19 @@ CONSOLE_APP_MAIN
 		while(p2.Char(','));
 		p2.PassChar(']');
 	}
+	
+	LOG("- Composing JSON using support classes");
+	Json json;
+	json
+		("firstName", "Andrew")
+		("secondName", "Smith")
+		("age", 28)
+		("address", Json("streetAddress", "23 3rd Street")("city", "New York"))
+	;
+	JsonArray pn;
+	pn << Json("type", "home")("number", "12312345")
+	   << Json("type", "work")("number", "87126388");
+	json("phoneNumber", pn);
+	DUMP(~json);
+	DUMP(AsJSON(ParseJSON(~json), true));
 }
