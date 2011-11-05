@@ -1,4 +1,4 @@
-description "FTP client";
+description "FTP client\377";
 
 uses
 	Core;
