@@ -33,6 +33,10 @@ JSON arrays by ValueArray.&]
 [s5;:AsJSON`(bool`): [_^String^ String]_[* AsJSON]([@(0.0.255) bool]_[*@3 b])&]
 [s5;:AsJSON`(const String`&`): [_^String^ String]_[* AsJSON]([@(0.0.255) const]_[_^String^ St
 ring][@(0.0.255) `&]_[*@3 s])&]
+[s5;:AsJSON`(const WString`&`): [_^String^ String]_[* AsJSON]([@(0.0.255) const]_[_^WString^ W
+String][@(0.0.255) `&]_[*@3 s])&]
+[s5;:AsJSON`(const char`*`): [_^String^ String]_[* AsJSON]([@(0.0.255) const]_[@(0.0.255) cha
+r]_`*[*@3 s])&]
 [s2;%% Converts basic values to JSON representation.&]
 [s3;%% &]
 [s4; &]
@@ -50,4 +54,116 @@ possible..&]
 alue][@(0.0.255) `&]_[*@3 v], [@(0.0.255) bool]_[*@3 pretty]_`=_[@(0.0.255) false])&]
 [s2;%% Same as AsJSON([%-*@3 v], String(), [%-*@3 pretty]).&]
 [s3;%% &]
-[s0;%% ]
+[s0; &]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 Json]]}}&]
+[s3; &]
+[s1;:Json`:`:class: [@(0.0.255)3 class][3 _][*3 Json]&]
+[s2;%% Simple helper class intended for composing JSON strings. Json 
+represents JSON object.&]
+[s3; &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Constructor Detail]]}}&]
+[s3;%% &]
+[s5;:Json`:`:Json`(`): [* Json]()&]
+[s2; Default constructor. Creates empty JSON object.&]
+[s3;%% &]
+[s4;%% &]
+[s5;:Json`:`:Json`(const char`*`,const Value`&`): [* Json]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 key], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 value])&]
+[s5;:Json`:`:Json`(const char`*`,int`): [* Json]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 k
+ey], [@(0.0.255) int]_[*@3 i])&]
+[s5;:Json`:`:Json`(const char`*`,double`): [* Json]([@(0.0.255) const]_[@(0.0.255) char]_`*
+[*@3 key], [@(0.0.255) double]_[*@3 n])&]
+[s5;:Json`:`:Json`(const char`*`,bool`): [* Json]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 k
+ey], [@(0.0.255) bool]_[*@3 b])&]
+[s5;:Json`:`:Json`(const char`*`,const String`&`): [* Json]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 key], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
+[s5;:Json`:`:Json`(const char`*`,const WString`&`): [* Json]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 key], [@(0.0.255) const]_[_^WString^ WString][@(0.0.255) `&]_[*@3 s])&]
+[s5;:Json`:`:Json`(const char`*`,const char`*`): [* Json]([@(0.0.255) const]_[@(0.0.255) ch
+ar]_`*[*@3 key], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
+[s5;:Json`:`:Json`(const char`*`,const Json`&`): [* Json]([@(0.0.255) const]_[@(0.0.255) ch
+ar]_`*[*@3 key], [@(0.0.255) const]_[* Json][@(0.0.255) `&]_[*@3 object])&]
+[s5;:Json`:`:Json`(const char`*`,const JsonArray`&`): [* Json]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 key], [@(0.0.255) const]_[_^JsonArray^ JsonArray][@(0.0.255) `&]_[*@3 array])&]
+[s2;%% Construct JSON object with single key`-value pair.&]
+[s3;%% &]
+[s0;%% &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
+[s3; &]
+[s5;:Json`:`:ToString`(`)const: [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]
+[s5;:Json`:`:operator`~`(`)const: [_^String^ String]_[* operator`~]()_[@(0.0.255) const]&]
+[s5;:Json`:`:operator String`(`)const: [* operator_String]()_[@(0.0.255) const]&]
+[s2;%% Returns current JSON formatted text.&]
+[s3; &]
+[s4; &]
+[s5;:Json`:`:operator`(`)`(const char`*`,const Value`&`): [_^Json^ Json][@(0.0.255) `&]_[* o
+perator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) const]_[_^Value^ V
+alue][@(0.0.255) `&]_[*@3 value])&]
+[s5;:Json`:`:operator`(`)`(const char`*`,int`): [_^Json^ Json][@(0.0.255) `&]_[* operator()
+]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) int]_[*@3 i])&]
+[s5;:Json`:`:operator`(`)`(const char`*`,double`): [_^Json^ Json][@(0.0.255) `&]_[* operato
+r()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) double]_[*@3 n])&]
+[s5;:Json`:`:operator`(`)`(const char`*`,bool`): [_^Json^ Json][@(0.0.255) `&]_[* operator(
+)]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) bool]_[*@3 b])&]
+[s5;:Json`:`:operator`(`)`(const char`*`,const String`&`): [_^Json^ Json][@(0.0.255) `&]_
+[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 s])&]
+[s5;:Json`:`:operator`(`)`(const char`*`,const WString`&`): [_^Json^ Json][@(0.0.255) `&]_
+[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) const]_[_^WString^ W
+String][@(0.0.255) `&]_[*@3 s])&]
+[s5;:Json`:`:operator`(`)`(const char`*`,const char`*`): [_^Json^ Json][@(0.0.255) `&]_[* o
+perator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 s])&]
+[s5;:Json`:`:operator`(`)`(const char`*`,const Json`&`): [_^Json^ Json][@(0.0.255) `&]_[* o
+perator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) const]_[_^Json^ Js
+on][@(0.0.255) `&]_[*@3 object])&]
+[s5;:Json`:`:operator`(`)`(const char`*`,const JsonArray`&`): [_^Json^ Json][@(0.0.255) `&
+]_[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) const]_[_^JsonArray^ J
+sonArray][@(0.0.255) `&]_[*@3 array])&]
+[s2;%% Adds key`-value pair to JSON object.&]
+[s3;%% &]
+[s0;%% &]
+[s0;%% &]
+[s0; &]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 Json]]}}&]
+[s0;%% &]
+[s1;:JsonArray`:`:class: [@(0.0.255)3 class][3 _][*3 JsonArray]&]
+[s2;%% Simple helper class intended for composing JSON strings, representing 
+JSON array.&]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Constructor Detail]]}}&]
+[s3;%% &]
+[s5;:JsonArray`:`:JsonArray`(`): [* JsonArray]()&]
+[s2;%% Creates empty JSON array.&]
+[s3;%% &]
+[s0;%% &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
+[s3; &]
+[s5;:JsonArray`:`:ToString`(`)const: [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]
+[s5;:JsonArray`:`:operator`~`(`)const: [_^String^ String]_[* operator`~]()_[@(0.0.255) cons
+t]&]
+[s5;:JsonArray`:`:operator String`(`)const: [* operator_String]()_[@(0.0.255) const]&]
+[s2;%% Returns current JSON formatted text.&]
+[s3; &]
+[s4; &]
+[s5;:JsonArray`:`:operator`<`<`(const Value`&`): [_^JsonArray^ JsonArray][@(0.0.255) `&]_
+[* operator<<]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 value])&]
+[s5;:JsonArray`:`:operator`<`<`(int`): [_^JsonArray^ JsonArray][@(0.0.255) `&]_[* operator<
+<]([@(0.0.255) int]_[*@3 i])&]
+[s5;:JsonArray`:`:operator`<`<`(double`): [_^JsonArray^ JsonArray][@(0.0.255) `&]_[* operat
+or<<]([@(0.0.255) double]_[*@3 n])&]
+[s5;:JsonArray`:`:operator`<`<`(bool`): [_^JsonArray^ JsonArray][@(0.0.255) `&]_[* operator
+<<]([@(0.0.255) bool]_[*@3 b])&]
+[s5;:JsonArray`:`:operator`<`<`(const String`&`): [_^JsonArray^ JsonArray][@(0.0.255) `&]_
+[* operator<<]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
+[s5;:JsonArray`:`:operator`<`<`(const WString`&`): [_^JsonArray^ JsonArray][@(0.0.255) `&
+]_[* operator<<]([@(0.0.255) const]_[_^WString^ WString][@(0.0.255) `&]_[*@3 s])&]
+[s5;:JsonArray`:`:operator`<`<`(const char`*`): [_^JsonArray^ JsonArray][@(0.0.255) `&]_[* o
+perator<<]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
+[s5;:JsonArray`:`:operator`<`<`(const Json`&`): [_^JsonArray^ JsonArray][@(0.0.255) `&]_[* o
+perator<<]([@(0.0.255) const]_[_^Json^ Json][@(0.0.255) `&]_[*@3 object])&]
+[s5;:JsonArray`:`:operator`<`<`(const JsonArray`&`): [_^JsonArray^ JsonArray][@(0.0.255) `&
+]_[* operator<<]([@(0.0.255) const]_[_^JsonArray^ JsonArray][@(0.0.255) `&]_[*@3 array])&]
+[s2;%% Adds an element to JSON array.&]
+[s3;%% ]

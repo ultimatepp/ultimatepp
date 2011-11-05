@@ -46,6 +46,8 @@ public:
 	Json(const char *key, const String& s)                      { CatRaw(key, AsJSON(s)); }
 	Json(const char *key, const WString& s)                     { CatRaw(key, AsJSON(s)); }
 	Json(const char *key, const char *s)                        { CatRaw(key, AsJSON(s)); }
+	Json(const char *key, const Json& object)                   { CatRaw(key, ~object); }
+	Json(const char *key, const JsonArray& array)               { operator()(key, array); }
 };
 
 class JsonArray {
