@@ -757,22 +757,19 @@ const Value& Value::operator[](int i) const
 inline
 const Value& Value::operator[](const String& key) const
 {
-	ASSERT(IsValueMap(*this));
-	return ValueMap(*this)[key];
+	return IsValueMap(*this) ? ValueMap(*this)[key] : ErrorValue();
 }
 
 inline
 const Value& Value::operator[](const char *key) const
 {
-	ASSERT(IsValueMap(*this));
-	return ValueMap(*this)[key];
+	return IsValueMap(*this) ? ValueMap(*this)[key] : ErrorValue();
 }
 
 inline
 const Value& Value::operator[](const Id& key) const
 {
-	ASSERT(IsValueMap(*this));
-	return ValueMap(*this)[key];
+	return IsValueMap(*this) ? ValueMap(*this)[key] : ErrorValue();
 }
 
 class ValueGen {
