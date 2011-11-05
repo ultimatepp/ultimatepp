@@ -1,3 +1,5 @@
+description "Using U++ JSON support functions and classes\377";
+
 uses
 	Core;
 
