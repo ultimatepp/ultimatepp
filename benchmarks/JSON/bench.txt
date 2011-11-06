@@ -1,0 +1,3 @@
+TIMING Optimized      : 354.80 ms - 35.48 us (355.00 ms / 10000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 10000
+TIMING SemiOptimized  : 498.80 ms - 49.88 us (499.00 ms / 10000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 10000
+TIMING Automated      :  1.01 s  - 100.58 us ( 1.01 s  / 10000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 10000
