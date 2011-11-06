@@ -80,6 +80,7 @@ String MscBuilder::CmdLine(const String& package, const Package& pkg)
 //	cc << (IsMsc64() ? " -nologo -Wp64 -W3 -GR -c" : " -nologo -W3 -GR -c");
 	cc << " -nologo -W3 -GR -c";
 	cc << IncludesDefinesTargetTime(package, pkg);
+
 	return cc;
 }
 
@@ -160,7 +161,8 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 	IdeConsoleBeginGroup(package);
 	Vector<String> obj;
 
-	bool is_shared = HasFlag("SO");
+	bool is_shared = HasFlag("SO"),
+		is_clr = HasFlag("CLR");
 
 	String cc = CmdLine(package, pkg);
 	if(HasFlag("EVC")) {
@@ -169,6 +171,9 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 		cc << " -GF" // read-only string pooling
 		      " -GX-"; // turn off exception handling
 	}
+	else
+	if(is_clr)
+		cc << " -EHac";
 	else
 	if(IsMsc89())
 		cc << " -EHsc";
@@ -186,7 +191,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 	if(HasFlag("DEBUG_FULL"))
 		cc << " -Zi";
 	cc << ' ' << Gather(pkg.option, config.GetKeys());
-	cc << (HasFlag("SHARED") || is_shared ? " -MD"
+	cc << (HasFlag("SHARED") || is_shared || is_clr ? " -MD"
 	      : (HasFlag("MT") || IsMsc89()) ? " -MT" : " -ML");
 
 	String cc_size = cc;

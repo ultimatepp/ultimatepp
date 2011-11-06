@@ -272,6 +272,10 @@ void CodeEditor::InitKeywords()
 			"do", "__int64", "static", "volatile",
 			"double", "__leave", "static_cast",
 			"dynamic_cast", "long", "__stdcall", "while",
+			// CLR
+			"__abstract", "__box", "__delegate", "__event", "__gc",
+			"__identifier",	"__interface", "__nogc", "__pin", "__property",
+			"__sealed", "__try_cast", "__typeof", "__value",
 			NULL
 		};
 		static const char *upp[] = {
@@ -483,7 +487,9 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 		if(*p == '#') {
 			static const char *pd[] = {
 				"define", "error", "if", "elif", "else", "endif",
-				"ifdef", "ifndef", "include", "line", "undef", "pragma"
+				"ifdef", "ifndef", "include", "line", "undef", "pragma",
+				// CLR
+				"using"
 			};
 			static Index<String> macro;
 			if(macro.GetCount() == 0)
