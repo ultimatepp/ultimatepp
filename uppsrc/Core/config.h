@@ -122,3 +122,7 @@
 		#endif
 	#endif			
 #endif
+
+#ifdef  flagCLR
+#define flagUSEMALLOC
+#endif
