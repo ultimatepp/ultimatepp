@@ -61,7 +61,7 @@ void AssistEditor::SyncParamInfo()
 		}
 		else {
 			param_info.SetRect(r);
-			if(!param_info.IsOpen())
+			if(!param_info.IsOpen() && !IsSelection())
 				param_info.Ctrl::PopUp(this, false, false, false);
 		}
 	}
