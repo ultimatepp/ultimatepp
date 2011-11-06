@@ -1,0 +1,12 @@
+uses
+	Core;
+
+file
+	test.json,
+	JSON.h,
+	main.cpp,
+	bench.txt;
+
+mainconfig
+	"" = "SSE2";
+
