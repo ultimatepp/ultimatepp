@@ -184,7 +184,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 //	if(!HasFlag("MSC8")) // MSC8 does not support automatic precompiled headers...
 //		pch << " -YX -Fp" << GetHostPathQ(CatAnyPath(outdir, GetAnyFileName(package) + ".pch")) << ' ';
 //	cc << " -Gy -Fd" << pdb;
-	if(HasFlag("SSE2") && !is_clr)
+	if(HasFlag("SSE2"))
 		cc << " /arch:SSE2";
 	if(HasFlag("DEBUG_MINIMAL"))
 		cc << " -Zd";
