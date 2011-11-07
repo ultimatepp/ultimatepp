@@ -41,8 +41,13 @@ Value ParseJSON(CParser& p)
 
 Value ParseJSON(const char *s)
 {
-	CParser p(s);
-	return ParseJSON(p);
+	try {
+		CParser p(s);
+		return ParseJSON(p);
+	}
+	catch(CParser::Error) {
+		return ErrorValue();
+	}
 }
 
 String AsJSON(const Value& v, const String& sep, bool pretty)
