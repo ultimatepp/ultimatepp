@@ -369,6 +369,16 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 		if(state == OVERLAPPED)
 			SetRect(rect);
 		if(IsOpen()) {
+			WINDOWPLACEMENT wp;
+			memset(&wp,0,sizeof(WINDOWPLACEMENT));
+			wp.length=sizeof(WINDOWPLACEMENT);
+			wp.showCmd = state==MINIMIZED ? SW_MINIMIZE : state==MAXIMIZED ? SW_MAXIMIZE : SW_RESTORE;
+			wp.rcNormalPosition.left=rect.left;
+			wp.rcNormalPosition.top=rect.top;
+			wp.rcNormalPosition.right=rect.right;
+			wp.rcNormalPosition.bottom=rect.bottom;
+			::SetWindowPlacement(GetHWND(),&wp);
+		/*
 			HWND hwnd = GetHWND();
 			switch(state) {
 			case MINIMIZED:
@@ -384,6 +394,7 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 					::ShowWindow(hwnd, SW_RESTORE);
 				break;
 			}
+		*/
 		}
 	}
 #endif

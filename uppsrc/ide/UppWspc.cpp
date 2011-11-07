@@ -816,6 +816,7 @@ void WorkspaceWork::FileMenu(Bar& menu)
 		.Help("Remove file / topic group reference from package & delete file / folder on disk");
 	menu.Separator();
 	menu.Add("Open File Directory",THISBACK(OpenFileFolder));
+	menu.Add("Copy File Path", callback1(WriteClipboardText, GetActiveFilePath()));
 	menu.Separator();
 	menu.Add(filelist.GetCursor() > 0, "Move up", THISBACK1(MoveFile, -1))
 		.Key(organizer ? K_CTRL_UP : K_SHIFT_CTRL_UP)
