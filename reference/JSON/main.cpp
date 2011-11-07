@@ -24,13 +24,18 @@ CONSOLE_APP_MAIN
 	String s = AsJSON(va);
 	DUMP(s);
 	CParser p2(s);
-	p2.PassChar('[');
-	if(!p2.Char(']')) {
-		do {
-			DUMP(ParseJSON(p2)["firstName"]);
+	try {
+		p2.PassChar('[');
+		if(!p2.Char(']')) {
+			do {
+				DUMP(ParseJSON(p2)["firstName"]);
+			}
+			while(p2.Char(','));
+			p2.PassChar(']');
 		}
-		while(p2.Char(','));
-		p2.PassChar(']');
+	}
+	catch(CParser::Error) {
+		LOG("invalid JSON");
 	}
 	
 	LOG("- Composing JSON using support classes");
