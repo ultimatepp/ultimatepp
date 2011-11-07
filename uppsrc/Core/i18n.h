@@ -48,7 +48,7 @@ String     GetLngString(int lang, const char *id);
 
 Index<int> GetLngSet();
 Index<int> GetLngSet(const String& module);
-void       SaveLngFile(FileOut& out, int lang);
+void       SaveLngFile(FileOut& out, int lang, int lang2 = 0);
 bool       LoadLngFile(const char *file);
 
 void       SetCurrentLanguage(int lang);
