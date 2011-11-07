@@ -349,7 +349,7 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 	LLOG("rect = " << rect << ", overlapped = " << overlapped);
 	if(s.IsLoading()) {
 		if(mn) rect = overlapped;
-		Rect limit = GetWorkArea();
+		Rect limit = GetVirtualWorkArea();
 		Rect outer = rect;
 		::AdjustWindowRect(outer, WS_OVERLAPPEDWINDOW, FALSE);
 		limit.left   += rect.left   - outer.left;
