@@ -133,12 +133,19 @@ letter character set encoding according this table:&]
 [s0; &]
 [s0; example:&]
 [s0; &]
-[s7; theide `-`-export`-tr dede2&]
+[s7; myapp `-`-export`-tr dede2&]
 [s0; &]
 [s0; will create dede2.tr file (in exe directory on Win32 and `~/.theide 
 on Posix) ready for translation to deDE in windows`-1252. If 
 translations are already present, they are supplied, otherwise 
 .tr file contains empty strings in place of translations.&]
+[s0; &]
+[s0; It is also possible to output secondary already translated language 
+to .tr file as comments (e.g. in case that translator cannot 
+understand english, but can understand some other language):&]
+[s0; &]
+[s0; &]
+[s7; myapp `-`-export`-tr dede2 cscz&]
 [s0; &]
 [s0; Each U`+`+ application performs search for .tr files at startup 
 and uses them to extend internal translation tables.&]

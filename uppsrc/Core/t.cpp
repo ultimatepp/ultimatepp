@@ -319,7 +319,7 @@ Index<int> GetLngSet(const String& module)
 	return ndx;
 }
 
-void    SaveLngFile(FileOut& out, int lang)
+void    SaveLngFile(FileOut& out, int lang, int lang2)
 {
 	CriticalSection::Lock __(slng);
 	out << "LANGUAGE " << AsCString(LNGAsText(lang)) << ";\r\n";
@@ -329,6 +329,8 @@ void    SaveLngFile(FileOut& out, int lang)
 		out << "// " << m.name << "\r\n";
 		for(int j = 0; j < m.map.GetCount(); j++) {
 			String id = m.map.GetKey(j).s;
+			if (lang2)
+				out << "// " << AsCString(GetLngString_(lang2, id), 60, "\t", ASCSTRING_SMART) << "\r\n";
 			out << AsCString(id, 70) << ",\r\n"
 			    << "\t" << AsCString(GetLngString_(lang, id), 60, "\t", ASCSTRING_SMART)
 			    << ";\r\n\r\n";

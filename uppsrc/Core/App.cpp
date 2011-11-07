@@ -256,12 +256,11 @@ void CommonInit()
 			{
 				i++;
 				int lang = 0;
+				int lang2 = 0;
 				byte charset = CHARSET_UTF8;
 				String fn = "all";
 				if(i < cmd.GetCount())
-					if(cmd[i].GetLength() != 4 && cmd[i].GetLength() != 5)
-						lang = 0;
-					else {
+					if(cmd[i].GetLength() == 4 || cmd[i].GetLength() == 5) {
 						lang = LNGFromText(cmd[i].ToString());
 						fn = cmd[i].ToString();
 						int c = cmd[i][4];
@@ -271,13 +270,19 @@ void CommonInit()
 							charset = c - 'A' + CHARSET_ISO8859_1;
 					}
 				fn << ".tr";
+				if(++i < cmd.GetCount() && (cmd[i].GetLength() == 4 || cmd[i].GetLength() == 5))
+					lang2 = LNGFromText(cmd[i].ToString());
 			#ifdef PLATFORM_WIN32
 				FileOut out(GetExeDirFile(fn));
 			#else
 				FileOut out(GetHomeDirFile(fn));
 			#endif
-				if(lang)
-					SaveLngFile(out, SetLNGCharset(lang, charset));
+				if(lang) {
+					if(lang2)
+						SaveLngFile(out, SetLNGCharset(lang, charset), SetLNGCharset(lang2, charset));
+					else
+						SaveLngFile(out, SetLNGCharset(lang, charset));
+				}
 				else {
 					Index<int> l = GetLngSet();
 					for(int i = 0; i < l.GetCount(); i++)
