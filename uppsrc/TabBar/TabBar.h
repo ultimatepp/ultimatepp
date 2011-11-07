@@ -394,7 +394,8 @@ public:
 	TabBar& AddKey(const Value& key, const Value& value, Image icon = Null, String group = Null, bool make_active = false);
 	TabBar& InsertKey(int ix, const Value& key, const Value& value, Image icon = Null, String group = Null, bool make_active = false);
 	
-	void 	Close(int n);
+	void 	CloseForce(int n, bool action = true);
+	void 	Close(int n, bool action = true);
 	void 	CloseKey(const Value& key);
 	void 	Clear();
 

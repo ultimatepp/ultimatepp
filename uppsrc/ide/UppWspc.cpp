@@ -197,7 +197,7 @@ void WorkspaceWork::RestoreBackup()
 	}
 }
 
-void WorkspaceWork::SaveLoadPackageNS()
+void WorkspaceWork::SaveLoadPackageNS(bool sel)
 {
 	SavePackage();
 	String p = actualpackage;
@@ -209,13 +209,15 @@ void WorkspaceWork::SaveLoadPackageNS()
 	ScanWorkspace();
 	package.SetSbPos(psc);
 	package.FindSetCursor(p);
-	filelist.SetSbPos(fsc);
-	filelist.FindSetCursor(f);
+	if (sel) {
+		filelist.SetSbPos(fsc);
+		filelist.FindSetCursor(f);
+	}
 }
 
-void WorkspaceWork::SaveLoadPackage()
+void WorkspaceWork::SaveLoadPackage(bool sel)
 {
-	SaveLoadPackageNS();
+	SaveLoadPackageNS(sel);
 	SyncWorkspace();
 }
 
@@ -589,11 +591,14 @@ void WorkspaceWork::RemoveFile()
 		actual.file.Remove(fx);
 	}
 	if(separator || IsAux())
-		SaveLoadPackageNS();
+		SaveLoadPackageNS(false);
 	else
-		SaveLoadPackage();
-	filelist.SetSbPos(s);
-	filelist.SetCursor(i);
+		SaveLoadPackage(false);
+
+	if (separator || FileRemove()) {
+		filelist.SetSbPos(s);
+		filelist.SetCursor(i);
+	}
 }
 
 void WorkspaceWork::DelFile()

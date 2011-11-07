@@ -173,6 +173,7 @@ struct WorkspaceWork {
 	virtual void   SyncWorkspace()                    {}
 	virtual void   FileSelected()                     {}
 	virtual void   FileRename(const String& nm)       {}
+	virtual bool   FileRemove()                       { return true; }
 	virtual void   SyncSvnDir(const String& working)  {}
 
 	void   ScanWorkspace();
@@ -205,8 +206,8 @@ struct WorkspaceWork {
 	bool           IsSeparator(int i) const;
 
 	void LoadActualPackage();
-	void SaveLoadPackage();
-	void SaveLoadPackageNS();
+	void SaveLoadPackage(bool sel = true);
+	void SaveLoadPackageNS(bool sel = true);
 	void TouchFile(const String& path);
 
 	void MoveFile(int d);
