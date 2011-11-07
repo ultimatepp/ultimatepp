@@ -94,24 +94,23 @@ T_("Zoom full")
 csCZ("Zobrazit v\305\241e")
 
 T_("Zoom everything into view")
-csCZ("Nastavit m\304\233\305\231\303\255tko zobrazen\303\255 podle velikosti"
-     " okna")
+csCZ("Nastavit m\304\233\305\231\303\255tko zobrazen\303\255 podle velikosti "
+     "okna")
 
 T_("Zoom in")
 csCZ("Zv\304\233t\305\241it\tNum[+]")
 
-T_("Zoom in current view (click to zoom in 2x, drag & drop to zoom in area"
-     ")")
-csCZ("Zv\304\233t\305\241ovat oblasti plochy (kliknut\303\255m zv\304\233t\305"
-     "\241\303\255te 2x, ta\305\276en\303\255m my\305\241i zv\304\233t\305\241"
-     "\303\255te zadanou oblast)")
+T_("Zoom in current view (click to zoom in 2x, drag & drop to zoom in area)")
+csCZ("Zv\304\233t\305\241ovat oblasti plochy (kliknut\303\255m zv\304\233t\305\241\303\255te "
+     "2x, ta\305\276en\303\255m my\305\241i zv\304\233t\305\241\303\255te zadanou "
+     "oblast)")
 
 T_("Lock aspect ratio")
 csCZ("Stejn\303\251 m\304\233\305\231\303\255tko os")
 
 T_("Keep temporarily x and y scale factors in sync")
-csCZ("Do\304\215asn\304\233 udr\305\276ovat st\303\241l\303\251 m\304\233\305"
-     "\231\303\255tko os x a y")
+csCZ("Do\304\215asn\304\233 udr\305\276ovat st\303\241l\303\251 m\304\233\305\231\303\255tko "
+     "os x a y")
 
 T_("Pan")
 csCZ("Posouvat")

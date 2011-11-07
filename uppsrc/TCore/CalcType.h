@@ -76,6 +76,13 @@ struct CalcType<double> : CalcCastType<double>
 };
 
 template <>
+struct CalcType<int64> : CalcCastType<int64>
+{
+	static bool   IsType(Value v) { return IsNumber(v); }
+	static String Describe();
+};
+
+template <>
 struct CalcType<String> : CalcCastType<String>
 {
 	static bool   IsType(Value v) { return IsNull(v) || IsString(v); }
