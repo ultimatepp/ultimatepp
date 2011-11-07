@@ -6,6 +6,7 @@ NAMESPACE_UPP
 String CalcTypeDescribeInt()             { return t_("integer"); }
 
 String CalcType<double>::Describe()      { return t_("real number"); }
+String CalcType<int64>::Describe()       { return t_("64-bit integer"); }
 String CalcType<String>::Describe()      { return t_("string"); }
 String CalcType<Date>::Describe()        { return t_("date"); }
 String CalcType<Time>::Describe()        { return t_("date/time"); }

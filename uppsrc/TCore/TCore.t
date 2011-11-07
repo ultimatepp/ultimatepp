@@ -41,6 +41,9 @@ csCZ("cel\303\251 \304\215\303\255slo")
 T_("real number")
 csCZ("re\303\241ln\303\251 \304\215\303\255slo")
 
+T_("64-bit integer")
+csCZ("cel\303\251 \304\215\303\255slo (64 bit\305\257)")
+
 T_("string")
 csCZ("\305\231et\304\233zec")
 
@@ -162,14 +165,14 @@ T_("invalid day number (")
 csCZ("neplatn\303\251 \304\215\303\255slo dne (%d)")
 
 T_("Unterminated string constant")
-csCZ("")
+csCZ("Neukon\304\215en\303\241 \305\231et\304\233zcov\303\241 konstanta")
 
 T_("illegal characters after expression: %s (expression: %s)")
 csCZ("neplatn\303\251 znaky za v\303\275razem: %s (za\304\215\303\241tek v\303\275razu: "
      "%s)")
 
 T_("expected 'between', 'in' or 'like'")
-csCZ("")
+csCZ("o\304\215ek\303\241v\303\241no 'between', 'in' nebo 'like'")
 
 T_("left parenthesis not matched; subexpression starts at %s")
 csCZ("nep\303\241rov\303\241 lev\303\241 z\303\241vorka; za\304\215\303\241tek "
