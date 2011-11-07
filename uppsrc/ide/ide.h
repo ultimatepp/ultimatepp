@@ -461,6 +461,7 @@ public:
 	virtual   void   FileSelected();
 	virtual   void   Serialize(Stream& s);
 	virtual   void   FileRename(const String& nm);
+	virtual   bool   FileRemove();
 	virtual   void   DragAndDrop(Point p, PasteClip& d);
 
 	virtual   void      PutConsole(const char *s);

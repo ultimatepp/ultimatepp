@@ -393,7 +393,7 @@ int TabBar::GetNextId()
 void TabBar::ContextMenu(Bar& bar)
 {
 	if (highlight >= 0 && crosses) {
-		bar.Add(tabs.GetCount() > mintabcount, t_("Close"), THISBACK1(Close, highlight));
+		bar.Add(tabs.GetCount() > mintabcount, t_("Close"), THISBACK2(Close, highlight, true));
 		bar.Separator();
 	}
 	int cnt = groups.GetCount();
@@ -2298,11 +2298,8 @@ void TabBar::SetTabGroup(int n, const String &group)
 	Repos();
 }
 
-void TabBar::Close(int n)
+void TabBar::CloseForce(int n, bool action)
 {
-	if(tabs.GetCount() <= mintabcount)
-		return;
-
 	if(n == active)
 	{
 		int c = FindId(tabs[n].id);
@@ -2317,7 +2314,7 @@ void TabBar::Close(int n)
 	Repos();
 	
 	if(n == active)
-		SetCursor(-1);
+		SetCursor0(-1, action);
 	else {
 		if (n < active)
 			active--;
@@ -2330,6 +2327,14 @@ void TabBar::Close(int n)
 			MouseMove(GetMouseViewPos(), 0);
 		}	
 	}
+}
+
+void TabBar::Close(int n, bool action)
+{
+	if(tabs.GetCount() <= mintabcount)
+		return;
+
+	CloseForce(n, action);
 }
 
 void TabBar::CloseKey(const Value &key)

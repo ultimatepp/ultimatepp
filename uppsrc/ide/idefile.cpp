@@ -396,6 +396,27 @@ void Ide::FileRename(const String& nm)
 	tabs.RenameFile(editfile, nm);
 }
 
+bool Ide::FileRemove()
+{
+	int q = FindIndex(tablru, editfile);
+	if(q >= 0)
+		tablru.Remove(q);
+	q = tabs.GetCursor();
+	if(q >= 0) {
+		tabs.CloseForce(q, false);
+		if(filelist.GetCount())
+			return true;
+		if(tabs.GetCount())
+			TabFile();
+		else {
+			tabs.Refresh();
+			FlushFile();
+		}
+		return false;
+	}
+	return true;
+}
+
 void Ide::EditFile0(const String& path, byte charset, bool astext, const String& headername) {
 	editor.CheckEdited(false);
 	editor.CloseAssist();
