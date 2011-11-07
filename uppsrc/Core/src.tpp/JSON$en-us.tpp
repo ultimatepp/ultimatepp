@@ -16,16 +16,17 @@ topic "JSON support";
 ]_[*@3 p])&]
 [s2;%% Parses JSON represented from [%-*@3 p]. It is possible to parse 
 only part of whole text (e.g. when to parse just single element 
-of array `- parser the stops at the end of element. Elements 
+of array `- parser then stops at the end of element. Elements 
 of JSON are parsed into corresponding Value types, JSON objects 
-are represented by ValueMap, JSON arrays by ValueArray.&]
+are represented by ValueMap, JSON arrays by ValueArray. If input 
+JSON is invalid throws CParser`::Error.&]
 [s3;%% &]
 [s4; &]
 [s5;:ParseJSON`(const char`*`): [_^Value^ Value]_[* ParseJSON]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 s])&]
 [s2;%% Parses JSON text [%-*@3 s]. Elements of JSON are parsed into 
 corresponding Value types, JSON objects are represented by ValueMap, 
-JSON arrays by ValueArray.&]
+JSON arrays by ValueArray. If input JSON is invalid returns ErrorValue.&]
 [s3;%% &]
 [s4; &]
 [s5;:AsJSON`(int`): [_^String^ String]_[* AsJSON]([@(0.0.255) int]_[*@3 i])&]
