@@ -94,11 +94,11 @@ public:
 
 protected:
 	double      minval, maxval;
-	bool        notnull;
+	bool        notnull, comma;
 	String      pattern;
 
 public:
-	ConvertDouble& Pattern(const char *p)            { pattern = p; return *this; }
+	ConvertDouble& Pattern(const char *p);
 	ConvertDouble& MinMax(double _min, double _max)  { minval = _min; maxval = _max; return *this; }
 	ConvertDouble& Min(double _min)                  { minval = _min; return *this; }
 	ConvertDouble& Max(double _max)                  { maxval = _max; return *this; }

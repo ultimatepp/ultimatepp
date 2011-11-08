@@ -368,13 +368,22 @@ Value ConvertDouble::Scan(const Value& text) const {
 }
 
 int   ConvertDouble::Filter(int chr) const {
-	return CharFilterDouble(chr);
+	chr = CharFilterDouble(chr);
+	return comma && chr == '.' ? ',' : chr;		
 }
 
 ConvertDouble::ConvertDouble(double minval, double maxval, bool notnull)
   : minval(minval), maxval(maxval), notnull(notnull)
 {
 	pattern = "%.10g";
+	comma = false;
+}
+
+ConvertDouble& ConvertDouble::Pattern(const char *p)
+{
+	pattern = p;
+	comma = String(Format(1.1)).Find(',') >= 0;
+	return *this;
 }
 
 #ifdef flagSO
