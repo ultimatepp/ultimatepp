@@ -772,10 +772,6 @@ bool Ignore(XmlParser& p, dword style)
 static XmlNode sReadXmlNode(XmlParser& p, dword style)
 {
 	XmlNode m;
-	if(p.IsText()) {
-		m.CreateText(p.ReadText());
-		return m;
-	}
 	if(p.IsTag()) {
 		m.CreateTag(p.ReadTag());
 		m.SetAttrsPick(p.PickAttrs());
@@ -796,7 +792,7 @@ static XmlNode sReadXmlNode(XmlParser& p, dword style)
 		m.CreateComment(p.ReadComment());
 		return m;
 	}
-	NEVER();
+	m.CreateText(p.ReadText());
 	return m;
 }
 
