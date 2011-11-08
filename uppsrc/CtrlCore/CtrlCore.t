@@ -380,3 +380,20 @@ ruRU("")
 skSK("Ctrl")
 trTR("Ctrl")
 zhTW("Ctrl")
+
+
+// Win32Wnd.cpp
+
+T_("waiting for user response")
+caES("")
+deDE("")
+esES("")
+fiFI("")
+frFR("")
+huHU("")
+nlNL("")
+roRO("")
+ruRU("")
+skSK("")
+trTR("")
+zhTW("")
