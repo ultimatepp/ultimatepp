@@ -310,15 +310,17 @@ String FormatDoubleFix(double d, int digits, int flags)
 	String out;
 	if(flags & FD_SIGN || d < 0 && !IsNull(exp))
 		out.Cat(d >= 0 ? '+' : '-');
+	int pointchar = (flags & FD_COMMA) ? ',' : '.';
 	if(IsNull(exp) || exp < -digits) {
 		out.Cat('0');
 		if((flags & FD_ZERO) && digits) {
-			out.Cat('.');
+			out.Cat(pointchar);
 			out.Cat('0', digits);
 		}
 	}
 	else if(exp < 0) {
-		out.Cat("0.");
+		out.Cat('0');
+		out.Cat(pointchar);
 		out.Cat('0', -1 - exp);
 		int fill = digits + exp + 1;
 		if(!(flags & FD_ZERO) || dig.GetLength() >= fill)
@@ -331,7 +333,7 @@ String FormatDoubleFix(double d, int digits, int flags)
 	else if(exp < dig.GetLength()) {
 		out.Cat(dig, ++exp);
 		if(digits > 0 && ((flags & FD_ZERO) || dig.GetLength() > exp)) {
-			out.Cat('.');
+			out.Cat(pointchar);
 			if(!(flags & FD_ZERO) || dig.GetLength() - exp >= digits)
 				out.Cat(dig.Begin() + exp, min(dig.GetLength() - exp, digits));
 			else {
@@ -346,7 +348,7 @@ String FormatDoubleFix(double d, int digits, int flags)
 		out.Cat('0', exp - dig.GetLength() + 1);
 		if(digits > 0 && (flags & FD_ZERO))
 		{
-			out.Cat('.');
+			out.Cat(pointchar);
 			out.Cat('0', digits);
 		}
 	}
@@ -358,6 +360,7 @@ String FormatDoubleExp(double d, int digits, int flags, int fill_exp)
 	if(IsNull(d))
 		return Null;
 	int exp;
+	int pointchar = (flags & FD_COMMA) ? ',' : '.';
 	String dig = FormatDoubleDigits(d, digits, flags | FD_REL, exp);
 	exp = Nvl(exp, 0);
 	String out;
@@ -366,7 +369,7 @@ String FormatDoubleExp(double d, int digits, int flags, int fill_exp)
 	out.Cat(dig[0]);
 	if(dig.GetLength() > 1)
 	{
-		out.Cat('.');
+		out.Cat(pointchar);
 		out.Cat(dig.Begin() + 1, dig.GetLength() - 1);
 	}
 	out.Cat(flags & FD_CAP_E ? 'E' : 'e');
@@ -615,6 +618,7 @@ String RealFormatter(const Formatting& f)
 		while(IsDigit(*++s))
 			;
 	}
+	if(*s == ',') { s++; flags |= FD_COMMA; }
 	if(*s == '!') { s++; flags |= FD_ZERO; }
 	if(*s == '^') {
 		if(*++s == '+') {

@@ -43,6 +43,7 @@ enum
 	FD_ZERO     = 0x10, // keep trailing zeros (1.25000)
 	FD_FIX      = 0x20, // always use fixed notation (FormatDouble)
 	FD_EXP      = 0x40, // always use exponential notation (FormatDouble)
+	FD_COMMA    = 0x80, // use ',' instead of '.'
 };
 String         FormatDoubleDigits(double d, int digits, int flags, int& exponent);
 String         FormatDouble(double d, int digits, int flags = 0, int fill_exp = 0);
