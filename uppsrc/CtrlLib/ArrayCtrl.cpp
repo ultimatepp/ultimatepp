@@ -1481,8 +1481,11 @@ void ArrayCtrl::Page(int q) {
 
 void ArrayCtrl::DoPoint(Point p, bool dosel) {
 	p.y += sb;
-	if(p.y >= GetTotalCy() && IsAppendLine())
+	if(p.y >= GetTotalCy() && IsAppendLine()) {
+		if(IsMultiSelect())
+			ClearSelection();
 		KillCursor();
+	}
 	clickpos.y = GetLineAt(p.y);
 	if(!IsNull(clickpos.y))
 		SetCursor0(clickpos.y, dosel);
@@ -1787,8 +1790,11 @@ bool ArrayCtrl::Key(dword key, int) {
 		return true;
 	case K_DOWN:
 	case K_SHIFT_DOWN:
-		if((IsInserting() || IsAppending()) && IsAppendLine() && cursor == GetCount() - 1 && !editmode)
+		if((IsInserting() || IsAppending()) && IsAppendLine() && cursor == GetCount() - 1 && !editmode) {
+			if(IsMultiSelect())
+				ClearSelection();
 			KillCursor();
+		}
 		else
 		if(IsCursor()) {
 			int d = GetEditColumn();
@@ -1835,9 +1841,11 @@ bool ArrayCtrl::AcceptEnter() {
 		if(!Accept())
 			return false;
 		if(GetCursor() == array.GetCount() - 1 &&
-		   (IsInserting() || IsAppending()) && IsAppendLine() && ins && !noinsertappend) {
-		   	KillCursor();
-		   	ShowAppendLine();
+		(IsInserting() || IsAppending()) && IsAppendLine() && ins && !noinsertappend) {
+			if(IsMultiSelect())
+				ClearSelection();
+			KillCursor();
+			ShowAppendLine();
 		}
 	}
 	return true;
