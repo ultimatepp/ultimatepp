@@ -218,8 +218,11 @@ struct WorkspaceWork {
 	void AddItem(const String& name, bool separator, bool readonly);
 	void AddTopicGroup();
 	void AddSeparator();
-	void Import();
+	void DoImportTree(const String& dir, const String& mask, bool sep, Progress& pi, int from);
+	void DoImportTree(const String& dir, const String& mask, bool sep, Progress& pi);
 	void DoImport(const String& dir, const String& mask, bool sep, Progress& pi);
+	void DoImport(const String& dir, const String& mask, bool sep, Progress& pi, bool tree);
+	void Import();
 	void RemoveFile();
 	void DelFile();
 	void RenameFile();

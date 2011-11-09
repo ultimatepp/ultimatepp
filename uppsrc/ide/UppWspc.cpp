@@ -435,13 +435,65 @@ ImportDlg::ImportDlg()
 	files <<= "*.cpp *.h *.hpp *.c *.C *.cxx *.cc";
 }
 
+bool FileOrder(const String& a, const String& b)
+{
+	return stricmp(a, b) < 0;
+}
+
+void WorkspaceWork::DoImportTree(const String& dir, const String& mask, bool sep, Progress& pi, int from)
+{
+	String active = GetActivePackage();
+	if(active.IsEmpty()) return;
+	FindFile ff(AppendFileName(dir, "*.*"));
+	Vector<String> dirs, files;
+	while(ff) {
+		String p = AppendFileName(dir, ff.GetName());
+		if(ff.IsFile() && PatternMatchMulti(mask, ff.GetName()))
+			files.Add(p);
+		if(ff.IsFolder())
+			dirs.Add(p);
+		ff.Next();
+	}
+	String relPath(dir.Mid(from)),
+		absPath = SourcePath(active, relPath);
+	if(sep && files.GetCount()) {
+		if(!DirectoryExists(absPath))
+			if(!RealizeDirectory(absPath))
+				throw Format("An error occurred while creating the directory:&\1%s", absPath);
+		Package::File& f = actual.file.Add();
+		f = relPath;
+		f.separator = f.readonly = true;
+	}
+	Sort(files, FileOrder);
+	Sort(dirs, FileOrder);
+	for(int i = 0; i < files.GetCount(); i++) {
+		if(pi.StepCanceled())
+			throw String();
+		String name = GetFileName(files[i]);
+		if(FileCopy(files[i], AppendFileName(absPath, name))) {
+			Package::File& f = actual.file.Add();
+			f = AppendFileName(relPath, name);
+			f.separator = f.readonly = false;
+		}
+		else
+			throw Format("An error occurred while copying the file:&\1%s", files[i]);
+	}
+	for(int i = 0; i < dirs.GetCount(); i++)
+		DoImportTree(dirs[i], mask, true, pi, from);
+}
+
+void WorkspaceWork::DoImportTree(const String& dir, const String& mask, bool sep, Progress& pi)
+{
+	int from = dir.EndsWith(AsString(DIR_SEP)) ? dir.GetCount() : dir.GetCount() + 1;
+	DoImportTree(dir, mask, sep, pi, from);
+}
+
 void WorkspaceWork::DoImport(const String& dir, const String& mask, bool sep, Progress& pi)
 {
 	String active = GetActivePackage();
 	if(active.IsEmpty()) return;
 	FindFile ff(AppendFileName(dir, "*.*"));
-	Vector<String> files;
-	Vector<String> dirs;
+	Vector<String> dirs, files;
 	while(ff) {
 		String p = AppendFileName(dir, ff.GetName());
 		if(ff.IsFile() && PatternMatchMulti(mask, ff.GetName()))
@@ -454,21 +506,31 @@ void WorkspaceWork::DoImport(const String& dir, const String& mask, bool sep, Pr
 		Package::File& f = actual.file.Add();
 		f = GetFileTitle(dir);
 		f.separator = f.readonly = true;
-		sep = false;
 	}
-	Sort(files);
-	Sort(dirs);
+	Sort(files, FileOrder);
+	Sort(dirs, FileOrder);
 	for(int i = 0; i < files.GetCount(); i++) {
 		if(pi.StepCanceled())
 			throw String();
 		String name = GetFileName(files[i]);
-		SaveFile(SourcePath(active, name), LoadFile(files[i]));
-		Package::File& f = actual.file.Add();
-		f = name;
-		f.separator = f.readonly = false;
+		if(FileCopy(files[i], SourcePath(active, name))) {
+			Package::File& f = actual.file.Add();
+			f = name;
+			f.separator = f.readonly = false;
+		}
+		else
+			throw Format("An error occurred while copying the file:&\1%s", files[i]);
 	}
 	for(int i = 0; i < dirs.GetCount(); i++)
 		DoImport(dirs[i], mask, true, pi);
+}
+
+void WorkspaceWork::DoImport(const String& dir, const String& mask, bool sep, Progress& pi, bool tree)
+{
+	if(tree)
+		DoImportTree(dir, mask, sep, pi);
+	else
+		DoImport(dir, mask, sep, pi);
 }
 
 void WorkspaceWork::Import()
@@ -482,9 +544,12 @@ void WorkspaceWork::Import()
 	int fci = filelist.GetCursor();
 	int cs = filelist.GetSbPos();
 	try {
-		DoImport(~dlg.folder, ~dlg.files, false, pi);
+		DoImport(~dlg.folder, ~dlg.files, false, pi, ~dlg.tree);
 	}
-	catch(String) {}
+	catch(String msg) {
+		if(!msg.IsEmpty())
+			Exclamation(msg);
+	}
 	SaveLoadPackage();
 	filelist.SetSbPos(cs);
 	filelist.SetCursor(fci >= 0 ? fci : filelist.GetCount() - 1);

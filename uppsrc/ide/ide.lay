@@ -622,6 +622,7 @@ LAYOUT(ImportLayout, 400, 92)
 	ITEM(EditString, folder, LeftPosZ(80, 312).TopPosZ(8, 19))
 	ITEM(Label, dv___2, SetLabel(t_("Import files")).LeftPosZ(8, 72).TopPosZ(32, 19))
 	ITEM(EditString, files, LeftPosZ(80, 312).TopPosZ(32, 19))
+	ITEM(Option, tree, SetLabel(t_("Including tree structure")).LeftPosZ(8, 192).TopPosZ(56, 19))
 	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(260, 64).TopPosZ(60, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(328, 64).TopPosZ(60, 24))
 END_LAYOUT
