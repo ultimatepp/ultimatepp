@@ -24,7 +24,7 @@ for applications (like help and code documentation) and ][^topic`:`/`/ide`/app`/
 ssist`+`+][2  `- a powerful C`+`+ code analyzer that provides features 
 like code completion, navigation and transformation.]&]
 [s0;2%% &]
-[s0;%% [2 TheIDE can work with GCC, MinGW and Visual C`+`+ 9.0 as contained 
+[s0;%% [2 TheIDE can work with GCC, MinGW and Visual C`+`+ as contained 
 in free ][^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?familyid`=ff6467e6`-5bba`-4bf5`-b562`-9199be864d29`&displaylang`=en^2 W
 indows Vista SDK][2  and contains a full featured debugger. TheIDE 
 can also be used to develop non`-U`+`+ applications.]&]

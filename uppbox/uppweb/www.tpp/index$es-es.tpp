@@ -27,8 +27,8 @@ ssist`+`+][2  `- un poderoso analizador de código C`+`+ que ofrece
 características como el autocompletado de código, navegación 
 y transformación.]&]
 [s0;2 &]
-[s0; [2 TheIDE puede trabajar con GCC, MinGW y Visual C `+ `+ 9.0 tal 
-y como se encuentra en el ][^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?familyid`=ff6467e6`-5bba`-4bf5`-b562`-9199be864d29`&displaylang`=en^2 S
+[s0; [2 TheIDE puede trabajar con GCC, MinGW y Visual C `+ `+ tal y 
+como se encuentra en el ][^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?familyid`=ff6467e6`-5bba`-4bf5`-b562`-9199be864d29`&displaylang`=en^2 S
 DK gratuito de Windows Vista][2  y contiene un depurador completo. 
 TheIDE también puede ser utilizado para desarrollar aplicaciones 
 no U`+`+.]&]
