@@ -24,14 +24,14 @@ permettant de multiplier la vitesse des recompilations par 4,
 une interface visuelle de conception des éléments graphiques, 
 le système ][^topic`:`/`/ide`/app`/Topic`$en`-us^2 Topic`+`+][2  
 pour documenter le code et inclure des ressources de type texte 
-enrichi dans les applications ( comme l`'aide ou la documentation 
-du code ) et ][^topic`:`/`/ide`/app`/Assist`$en`-us^2 Assist`+`+,][2  
+enrichi dans les applications (comme l`'aide ou la documentation 
+du code) et ][^topic`:`/`/ide`/app`/Assist`$en`-us^2 Assist`+`+,][2  
 un puissant analyseur de code C`+`+ qui fournit des fonctionnalités 
 comme la complétion, la navigation et la transformation de code.]&]
 [s0;2 &]
-[s0; [2 TheIDE fonctionne avec GCC, MinGW et Visual C`+`+ 9.0 ( tel 
-que fourni par le ][^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?familyid`=ff6467e6`-5bba`-4bf5`-b562`-9199be864d29`&displaylang`=en^2 S
-DK Windows Vista gratuit][2  ) et inclut un débogueur complet. 
+[s0; [2 TheIDE fonctionne avec GCC, MinGW et Visual C`+`+ (tel que 
+fourni par le ][^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?familyid`=ff6467e6`-5bba`-4bf5`-b562`-9199be864d29`&displaylang`=en^2 S
+DK Windows Vista gratuit][2 ) et inclut un débogueur complet. 
 TheIDE peut également être utilisé pour développer des applications 
 natives n`'utilisant pas les bibliothèques U`+`+.]&]
 [s0;2 &]
