@@ -5,7 +5,11 @@ inline void AssertST() {}
 #ifdef _MULTITHREADED
 
 #ifdef COMPILER_MSC
-#define thread__ __declspec(thread)
+	#ifdef flagDLL
+	#define thread__
+	#else
+	#define thread__ __declspec(thread)
+	#endif
 #else
 #define thread__ __thread
 #endif
