@@ -1,4 +1,4 @@
-description "Address book application, uses XML to store data (using DOM like U++ classes)";
+description "Address book application, uses XML to store data (using DOM like U++ classes)\377";
 
 uses
 	CtrlLib,

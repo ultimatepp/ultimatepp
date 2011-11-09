@@ -143,27 +143,17 @@ void AddressBook::Open()
 		if(n.GetCount()==0 || n[0].GetTag() != TAG_ADDRESSBOOK)
 			throw XmlError("No AddressBook tag");
 		const XmlNode &ab = n[0];
-		array.SetCount(ab.GetCount());
-		for(int i=0; i < ab.GetCount(); i++){
+		for(int i = 0; i < ab.GetCount(); i++) {
 			const XmlNode &person = ab[i];
-			for(int j=0; j < person.GetCount(); j++){
-				const XmlNode &prop = person[j];
-				if(prop.IsTag(TAG_NAME))
-					array.Set(i, TAG_NAME, prop[0].GetText());
-				else
-				if(prop.IsTag(TAG_SURNAME))
-					array.Set(i, TAG_SURNAME, prop[0].GetText());
-				else
-				if(prop.IsTag(TAG_ADDRESS))
-					array.Set(i, TAG_ADDRESS, prop[0].GetText());
-				else
-				if(prop.IsTag(TAG_EMAIL))
-					array.Set(i, TAG_EMAIL, prop[0].GetText());
-			}
+			if(person.IsTag(TAG_PERSON))
+				array.Add(person[TAG_NAME].GatherText(),
+				          person[TAG_SURNAME].GatherText(),
+				          person[TAG_ADDRESS].GatherText(),
+				          person[TAG_EMAIL].GatherText());
 		}
 	}
 	catch(XmlError &e) {
-		Exclamation("Error reading the input file:&" + DeQtf(e) );
+		Exclamation("Error reading the input file:&\1" + e);
 	}
 }
 
