@@ -141,7 +141,7 @@ WString ReadClipboardUnicodeText()
 {
 	String w = ReadClipboard("wtext");
 	if(w.GetCount())
-		return WString(~w, w.GetLength() / 2);
+		return WString((const wchar *)~w, w.GetLength() / 2);
 	return ReadClipboard("text").ToWString();
 }
 
