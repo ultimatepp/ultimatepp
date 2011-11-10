@@ -4,17 +4,17 @@ acceptflags
 uses
 	Web;
 
-library(WIN32 !NOSSL !SHARED !DEBUG MT) "out32mt\\ssleay32 out32mt\\libeay32";
+library(WIN32 !NOSSL !SHARED !DEBUG) "libeay32MT ssleay32MT";
 
-library(WIN32 !NOSSL !SHARED !DEBUG !MT) "out32mt\\ssleay32 out32mt\\libeay32";
+library(WIN32 !NOSSL !SHARED DEBUG) "libeay32MTd ssleay32MTd";
+
+library(WIN32 !NOSSL SHARED !DEBUG) "libeay32MD ssleay32MD";
+
+library(WIN32 !NOSSL SHARED DEBUG) "libeay32MDd ssleay32MDd";
 
 library(WIN32) gdi32;
 
 library(LINUX !NOSSL) "crypto ssl";
-
-library(WIN32 !NOSSL SHARED) "out32dll\\ssleay32.lib out32dll\\libeay32.lib ";
-
-library(WIN32 !NOSSL !SHARED DEBUG) "out32dbg\\ssleay32 out32dbg\\libeay32";
 
 link(WIN32 DEBUG MSC SO) /nodefaultlib:libc;
 
