@@ -618,6 +618,7 @@ String RealFormatter(const Formatting& f)
 		while(IsDigit(*++s))
 			;
 	}
+	if(*s == '@') { s++; flags |= FD_NOTHSEPS; }
 	if(*s == ',') { s++; flags |= FD_COMMA; }
 	if(*s == '!') { s++; flags |= FD_ZERO; }
 	if(*s == '^') {

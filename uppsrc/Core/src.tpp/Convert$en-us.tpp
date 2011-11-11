@@ -173,7 +173,10 @@ limit.&]
 ]_[* Pattern]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 p])&]
 [s2; Formatting tag used for conversion to textual representation 
 (includes standard printf formatting tags, see Format function 
-for description). Default tag is [@4 %.10g].&]
+for description). Default tag is [@4 %.10g]. After setting a new 
+pattern, ConvertDouble formats simple example number (Format(1.1)) 
+and if it detects character `',`' in resulting string, Filter 
+method forces `',`' to be used instead of `'.`' for decimal point.&]
 [s7; [%-*C@3 p]-|Pattern.&]
 [s7; [*/ Return value]-|`*this.&]
 [s3; &]
