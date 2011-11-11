@@ -38,7 +38,7 @@ to build concrete parser, it is common to use this exception
 ]_[@(0.0.255) char]_`*[*@3 ptr], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 fn], 
 [@(0.0.255) int]_[*@3 line]_`=_[@3 1])&]
 [s2;%% Constructs the [* CParser], with additional information for 
-the text. The additional info can be used when reporting error.&]
+the text. The additional info can be used when reporting error:&]
 [s7;%% [%-*C@3 ptr]-|Pointer to the input text.&]
 [s7;%% [%-*C@3 fn]-|The name of file (in fact, can be anything, value 
 is just stored).&]
@@ -57,18 +57,28 @@ nst]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2;%% Throws [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Error`:`:struct^ CPar
 ser`::Error] with the error message [%-*@3 s].&]
 [s3; &]
+[s3;%% &]
 [s4; &]
-[s5;:CParser`:`:NoSkipSpaces`(`): [@(0.0.255) void]_[* NoSkipSpaces]()&]
-[s2;%% Sets [* CParser ]to the mode where white`-spaces are not automatically 
-skipped, but have to be skipped by [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Spaces`(`)^ S
-paces][*  ]method.&]
+[s5;:CParser`:`:SkipSpaces`(bool`): [_^CParser^ CParser][@(0.0.255) `&]_[* SkipSpaces]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% Sets the mode of skipping spaces. If [%-*@3 b] is true, sets 
+[* CParser ]to the mode where white`-spaces are automatically skipped. 
+First skip is performed when position in input text is assigned 
+via constructor or [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:SetPos`(const CParser`:`:Pos`&`)^ S
+etPos], then the skip is performed after any symbol. If [%-*@3 b] 
+is false, sets [* CParser ]to the mode where white`-spaces are 
+not automatically skipped, but have to be skipped by [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Spaces`(`)^ S
+paces][*  ]method. Default is true.&]
+[s3;%% &]
+[s4; &]
+[s5;:CParser`:`:NoSkipSpaces`(`): [_^CParser^ CParser][@(0.0.255) `&]_[* NoSkipSpaces]()&]
+[s2;%% Same as SkipSpaces(false).&]
 [s3; &]
 [s4; &]
-[s5;:CParser`:`:SkipSpaces`(`): [@(0.0.255) void]_[* SkipSpaces]()&]
-[s2;%% Sets [* CParser ]to the mode where white`-spaces are automatically 
-skipped. First skip is performed when position in input text 
-is assigned via constructor or [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:SetPos`(const CParser`:`:Pos`&`)^ S
-etPos], then the skip is performed after any symbol.&]
+[s5;:CParser`:`:UnicodeEscape`(bool`): [_^CParser^ CParser][@(0.0.255) `&]_[* UnicodeEscape
+]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% Activates/deactivates whether CParser should recognize Java/JavaScript 
+`\u unicode escape sequences in String.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:Spaces`(`): [@(0.0.255) bool]_[* Spaces]()&]
@@ -83,7 +93,6 @@ to skip, [* false] otherwise.&]
 [s5;:CParser`:`:GetChar`(`): [@(0.0.255) char]_[* GetChar]()&]
 [s2;%% Advances the position in the input text by one character and 
 returns the character at the position before advancing.&]
-[s7;%% [*/ Return value]-|Character at position before advancing it.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:IsChar`(char`)const: [@(0.0.255) bool]_[* IsChar]([@(0.0.255) char]_[*@3 c])_
@@ -131,7 +140,6 @@ position remains unmodified and [* false] is returned.&]
 [@(0.0.255) char]_[*@3 c])_[@(0.0.255) throw](Error)&]
 [s2;%% Calls [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Char`(char`)^ Char](c)
 . If it returns false, throws error.&]
-[s7;%% [%-*C@3 c]-|Character to test.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:PassChar2`(char`,char`)throw`(CParser`:`:Error`): [@(0.0.255) void]_[* Pa
@@ -139,8 +147,6 @@ ssChar2]([@(0.0.255) char]_[*@3 c1], [@(0.0.255) char]_[*@3 c2])_[@(0.0.255) thr
 [s2;%% Calls [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Char2`(char`,char`)^ C
 har2](c1, c2). If it returns [* false], throws [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Error`:`:struct^ C
 Parser`::Error].&]
-[s7;%% [%-*C@3 c1]-|First character of pair.&]
-[s7;%% [%-*C@3 c2]-|Second character of pair.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:PassChar3`(char`,char`,char`)throw`(CParser`:`:Error`): [@(0.0.255) voi
@@ -149,9 +155,6 @@ d]_[* PassChar3]([@(0.0.255) char]_[*@3 c1], [@(0.0.255) char]_[*@3 c2],
 [s2;%% Calls [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Char3`(char`,char`,char`)^ C
 har3](c1, c2, c3). If it returns [* false], throws [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Error`:`:struct^ C
 Parser`::Error].&]
-[s7;%% [%-*C@3 c1]-|First character of triplet.&]
-[s7;%% [%-*C@3 c2]-|Second character of triplet.&]
-[s7;%% [%-*C@3 c3]-|Third character of triplet.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:Id`(const char`*`): [@(0.0.255) bool]_[* Id]([@(0.0.255) const]_[@(0.0.255) c
@@ -193,7 +196,6 @@ hrow](Error)&]
 eadId] that considers different non`-alphanumeric characters 
 to be the part of identifier as long as they form C`+`+ normal 
 or template based type.&]
-[s7;%% [*/ Return value]-|Identifier.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:IsInt`(`)const: [@(0.0.255) bool]_[* IsInt]()_[@(0.0.255) const]&]
@@ -205,8 +207,8 @@ spaces and digit.&]
 [s5;:CParser`:`:ReadInt`(`)throw`(CParser`:`:Error`): [@(0.0.255) int]_[* ReadInt]()_[@(0.0.255) t
 hrow](Error)&]
 [s2;%% Reads the integer from the current position. If [* IsInt ]is 
-false, throws an &]
-[s7;%% [*/ Return value]-|Integer.&]
+false, throws an [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Error`:`:struct^ C
+Parser`::Error.]&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:ReadInt`(int`,int`)throw`(CParser`:`:Error`): [@(0.0.255) int]_[* ReadInt
@@ -231,11 +233,9 @@ is limit by actual [%-*@3 base ](e.g. for base 12 letters `'a`'
 [s4; &]
 [s5;:CParser`:`:ReadNumber`(int`)throw`(CParser`:`:Error`): [_^uint32^ uint32]_[* ReadNum
 ber]([@(0.0.255) int]_[*@3 base]_`=_[@3 10])_[@(0.0.255) throw](Error)&]
-[s2;%% Reads a number with the given numeric base. If [* IsNumber]([%-*@3 base]) 
+[s2;%% Reads a number with the given numeric [%-*C@3 base]. If [* IsNumber]([%-*@3 base]) 
 is false, throws an [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Error`:`:struct^ C
 Parser`::Error.]&]
-[s7;%% [%-*C@3 base]-|Numeric base.&]
-[s7;%% [*/ Return value]-|Number.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:ReadNumber64`(int`)throw`(CParser`:`:Error`): [_^uint64^ uint64]_[* ReadN
@@ -252,7 +252,6 @@ number of spaces and digit.&]
 [s5;:CParser`:`:ReadDouble`(`)throw`(CParser`:`:Error`): [@(0.0.255) double]_[* ReadDoubl
 e]()_[@(0.0.255) throw](Error)&]
 [s2;%% Reads a floating point number with C based lexical rules.&]
-[s7;%% [*/ Return value]-|Floating point number.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:IsString`(`)const: [@(0.0.255) bool]_[* IsString]()_[@(0.0.255) const]&]
@@ -265,22 +264,20 @@ dOneString]([@(0.0.255) bool]_[*@3 chkend]_`=_[@(0.0.255) false])_[@(0.0.255) th
 r)&]
 [s2;%% Reads C`-like string literal from current position (follow 
 C lexical rules, including escape codes). Literals on different 
-lines are not concatenated (unlike C).&]
-[s7;%% [%-*C@3 chkend]-|When [* false], [* ReadOneString ]is more permissive 
-as it allows unterminated string literals `- string is then also 
-delimited by end of line or text.&]
-[s7;%% [*/ Return value]-|String literal.&]
+lines are not concatenated (unlike C). When [%-*C@3 chkend] [* false], 
+[* ReadOneString ]is more permissive as it allows unterminated 
+string literals `- string is then also delimited by end of line 
+or text.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:ReadString`(bool`)throw`(CParser`:`:Error`): [_^String^ String]_[* ReadSt
 ring]([@(0.0.255) bool]_[*@3 chkend]_`=_[@(0.0.255) false])_[@(0.0.255) throw](Error)&]
 [s2;%% Reads C`-like string literal from current position (follow 
 C lexical rules, including escape codes). Literals on different 
-lines are concatenated (as in C).&]
-[s7;%% [%-*C@3 chkend]-|When [* false], [* ReadOneString ]is more permissive 
-as it allows unterminated string literals `- string is then also 
-delimited by end of line or text.&]
-[s7;%% [*/ Return value]-|String literal.&]
+lines are concatenated (as in C). When [%-*C@3 chkend] [* false], 
+[* ReadOneString ]is more permissive as it allows unterminated 
+string literals `- string is then also delimited by end of line 
+or text.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:ReadOneString`(int`,bool`)throw`(CParser`:`:Error`): [_^String^ String]_
@@ -288,13 +285,10 @@ delimited by end of line or text.&]
 alse])_[@(0.0.255) throw](Error)&]
 [s2;%% Reads C`-like string literal from current position (follow 
 C lexical rules, including escape codes) with different delimiter 
-than `'`\`"`'. Literals on different lines are not concatenated 
-(unlike C).&]
-[s7;%% [%-*C@3 delim]-|Delimiter.&]
-[s7;%% [%-*C@3 chkend]-|When false, [* ReadOneString ]is more permissive 
-as it allows unterminated string literals `- string is then also 
-delimited by end of line or text.&]
-[s7;%% [*/ Return value]-|String literal.&]
+[%-*C@3 delim] than `'`\`"`'. Literals on different lines are not 
+concatenated (unlike C). When [%-*C@3 chkend] is false, [* ReadOneString 
+]is more permissive as it allows unterminated string literals 
+`- string is then also delimited by end of line or text.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:ReadString`(int`,bool`)throw`(CParser`:`:Error`): [_^String^ String]_[* R
@@ -302,13 +296,10 @@ eadString]([@(0.0.255) int]_[*@3 delim], [@(0.0.255) bool]_[*@3 chkend]_`=_[@(0.
 e])_[@(0.0.255) throw](Error)&]
 [s2;%% Reads C`-like string literal from current position (follow 
 C lexical rules, including escape codes). with different delimiter 
-than `'`\`"`'. Literals on different lines are concatenated (as 
-in C).&]
-[s7;%% [%-*C@3 delim]-|Delimiter.&]
-[s7;%% [%-*C@3 chkend]-|When false, [* ReadOneString ]is more permissive 
-as it allows unterminated string literals `- string is then also 
-delimited by end of line or text.&]
-[s7;%% [*/ Return value]-|String literal.&]
+[%-*C@3 delim] than `'`\`"`'. Literals on different lines are concatenated 
+(as in C). When [%-*C@3 chkend] is false, [* ReadOneString ]is more 
+permissive as it allows unterminated string literals `- string 
+is then also delimited by end of line or text.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:SkipTerm`(`): [@(0.0.255) void]_[* SkipTerm]()&]
@@ -336,8 +327,6 @@ a different [* CParser].&]
 [s4; &]
 [s5;:CParser`:`:IsEof`(`)const: [@(0.0.255) bool]_[* IsEof]()_[@(0.0.255) const]&]
 [s2;%% Test for the end of input text.&]
-[s7;%% [*/ Return value]-|true when current position is a the end of 
-input text (`'`\0`' character).&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:operator bool`(`)const: [* operator_bool]()_[@(0.0.255) const]&]
@@ -346,7 +335,6 @@ input text (`'`\0`' character).&]
 [s4; &]
 [s5;:CParser`:`:GetLine`(`)const: [@(0.0.255) int]_[* GetLine]()_[@(0.0.255) const]&]
 [s2; Returns the current line number.&]
-[s7;%% [*/ Return value]-|Current line.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:GetFileName`(`)const: [_^String^ String]_[* GetFileName]()_[@(0.0.255) cons

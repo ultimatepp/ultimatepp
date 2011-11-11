@@ -13,6 +13,7 @@ protected:
 	int         line;
 	String      fn;
 	bool        skipspaces;
+	bool        uescape;
 
 	bool        Spaces0();
 	const char *IsId0(const char *s) const;
@@ -24,9 +25,6 @@ public:
 
 	void   ThrowError(const char *s);
 	void   ThrowError()                       { ThrowError(""); }
-
-	void   NoSkipSpaces()                     { skipspaces = false; }
-	void   SkipSpaces()                       { skipspaces = true; }
 
 	bool   Spaces()                           { return (byte)*term <= ' ' || *term == '/' ? Spaces0() : false; }
 	char   PeekChar() const                   { return *term; }
@@ -88,6 +86,10 @@ public:
 	
 	void   Set(const char *ptr, const char *fn, int line = 1);
 	void   Set(const char *ptr);
+
+	CParser& SkipSpaces(bool b = true)        { skipspaces = true; return *this; }
+	CParser& NoSkipSpaces()                   { skipspaces = false; }
+	CParser& UnicodeEscape(bool b = true)     { uescape = b; return *this; }
 
 	CParser(const char *ptr);
 	CParser(const char *ptr, const char *fn, int line = 1);

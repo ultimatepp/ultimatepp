@@ -263,15 +263,33 @@ String CParser::ReadOneString(int delim, bool chkend) throw(Error) {
 					hex = ctoi(*term);
 					if(IsXDigit(*++term)) {
 						hex = 16 * hex + (*term >= 'A' ? ToUpper(*term) - 'A' + 10 : *term - '0');
-						if(IsXDigit(*++term)) {
-							hex = 16 * hex + (*term >= 'A' ? ToUpper(*term) - 'A' + 10 : *term - '0');
-							term++;
-						}
+						term++;
 					}
 				}
 				result.Cat(hex);
 				break;
 			}
+			case 'u':
+				if(uescape) {
+					int hex = 0;
+					if(IsXDigit(*++term)) {
+						hex = ctoi(*term);
+						if(IsXDigit(*++term)) {
+							hex = 16 * hex + (*term >= 'A' ? ToUpper(*term) - 'A' + 10 : *term - '0');
+							if(IsXDigit(*++term)) {
+								hex = 16 * hex + (*term >= 'A' ? ToUpper(*term) - 'A' + 10 : *term - '0');
+								if(IsXDigit(*++term)) {
+									hex = 16 * hex + (*term >= 'A' ? ToUpper(*term) - 'A' + 10 : *term - '0');
+									term++;
+								}
+							}
+						}
+					}
+					result.Cat(WString(hex, 1).ToString());
+				}
+				else
+					result.Cat(*term++);
+				break;
 			default:
 				if(*term >= '0' && *term <= '7') {
 					int oct = *term++ - '0';
@@ -390,6 +408,7 @@ CParser::CParser(const char *ptr)
 {
 	line = 1;
 	skipspaces = true;
+	uescape = false;
 	Spaces();
 }
 
@@ -397,6 +416,7 @@ CParser::CParser(const char *ptr, const char *fn, int line)
 : term(ptr), lineptr(ptr), line(line), fn(fn)
 {
 	skipspaces = true;
+	uescape = false;
 	Spaces();
 }
 
@@ -405,6 +425,7 @@ CParser::CParser()
 	term = lineptr = NULL;
 	line = 0;
 	skipspaces = true;
+	uescape = false;
 }
 
 void CParser::Set(const char *_ptr, const char *_fn, int _line)
