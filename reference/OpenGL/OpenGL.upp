@@ -1,4 +1,4 @@
-description "GLCtrl widget example";
+description "GLCtrl widget example\377";
 
 uses
 	GLCtrl;

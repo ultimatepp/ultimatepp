@@ -25,22 +25,23 @@ CONSOLE_APP_MAIN
 	DUMP(Format("%x", 123));
 	DUMP(Format("%X", 123));
 
-	DUMP(Format("%e", 1.23));
-	DUMP(Format("%E", 1.23));
-	DUMP(Format("%f", 1.23));
-	DUMP(Format("%g", 1.23));
-	DUMP(Format("%G", 1.23));
+	DUMP(Format("%e", 1234567.89));
+	DUMP(Format("%E", 1234567.89));
+	DUMP(Format("%f", 1234567.89));
+	DUMP(Format("%g", 1234567.89));
+	DUMP(Format("%G", 1234567.89));
 
-	DUMP(Format("%n", 1.23));
-	DUMP(Format("%n", 1.23));
-	DUMP(Format("%ne", 1.23));
-	DUMP(Format("%nf", 1.23e30));
-	DUMP(Format("%nl", 1.23));
-	DUMP(Format("%v", 1.23));
-	DUMP(Format("%ve", 1.23));
-	DUMP(Format("%vf", 1.23e30));
-	DUMP(Format("%vl", 1.23));
-
+	DUMP(Format("%n", 1234567.89));
+	DUMP(Format("%,n", 1234567.89));
+	DUMP(Format("%ne", 1234567.89));
+	DUMP(Format("%nf", 1234567.89e30));
+	DUMP(Format("%nl", 1234567.89));
+	DUMP(Format("%@nl", 1234567.89));
+	DUMP(Format("%@,nl", 1234567.89));
+	DUMP(Format("%v", 1234567.89));
+	DUMP(Format("%ve", 1234567.89));
+	DUMP(Format("%vf", 1234567.89e30));
+	DUMP(Format("%vl", 1234567.89));
 
 	DUMP(Format("%[1:one;2:two;3:three;another]s", 2));
 	DUMP(Format("%[1:one;2:two;3:three;another]s", 20));
