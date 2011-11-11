@@ -36,15 +36,17 @@ template<> inline String AsString(const uint64& a)          { return Format64(a)
 
 enum
 {
-	FD_SIGN     = 0x01, // always prepend sign (+10)
-	FD_REL      = 0x02, // relative decimal places (valid digits)
-	FD_SIGN_EXP = 0x04, // always prepend sign to exponent (1e+2)
-	FD_CAP_E    = 0x08, // capital E for exponent (1E10)
-	FD_ZERO     = 0x10, // keep trailing zeros (1.25000)
-	FD_FIX      = 0x20, // always use fixed notation (FormatDouble)
-	FD_EXP      = 0x40, // always use exponential notation (FormatDouble)
-	FD_COMMA    = 0x80, // use ',' instead of '.'
+	FD_SIGN     = 0x01,  // always prepend sign (+10)
+	FD_REL      = 0x02,  // relative decimal places (valid digits)
+	FD_SIGN_EXP = 0x04,  // always prepend sign to exponent (1e+2)
+	FD_CAP_E    = 0x08,  // capital E for exponent (1E10)
+	FD_ZERO     = 0x10,  // keep trailing zeros (1.25000)
+	FD_FIX      = 0x20,  // always use fixed notation (FormatDouble)
+	FD_EXP      = 0x40,  // always use exponential notation (FormatDouble)
+	FD_COMMA    = 0x80,  // use ',' instead of '.'
+	FD_NOTHSEPS = 0x100, // In i18n, do not use thousands separators
 };
+
 String         FormatDoubleDigits(double d, int digits, int flags, int& exponent);
 String         FormatDouble(double d, int digits, int flags = 0, int fill_exp = 0);
 String         FormatDoubleFix(double d, int digits, int flags = 0);

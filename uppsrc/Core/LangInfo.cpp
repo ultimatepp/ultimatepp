@@ -480,7 +480,9 @@ String LanguageInfo::FormatDouble(double value, int digits, int FD_flags, int fi
 {
 	if(IsNull(value))
 		return Null;
-	return NlsFormatRaw(UPP::FormatDouble(value, digits, FD_flags, fill_exp), thousand_separator, decimal_point);
+	return NlsFormatRaw(UPP::FormatDouble(value, digits, FD_flags, fill_exp),
+	                    FD_flags & FD_NOTHSEPS ? String() : thousand_separator,
+	                    FD_flags & FD_COMMA ? "," : decimal_point);
 }
 
 String LanguageInfo::FormatDate(Date date) const
