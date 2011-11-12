@@ -3,7 +3,7 @@
 using namespace Upp;
 
 #define SCHEMADIALECT <MySql/MySqlSchema.h>
-#define MODEL <schema/schema.sch>
+#define MODEL <SQL_MySql/schema.sch>
 #include <Sql/sch_header.h>
 #include <Sql/sch_source.h>
 #include <Sql/sch_schema.h>
@@ -12,7 +12,7 @@ CONSOLE_APP_MAIN
 {
 	MySqlSession session;
 	// edit the connection parameters if necessary
-	if(session.Connect("root", NULL, "test")) {
+	if(session.Connect("root", "koblih", "test")) {
 		Cout() << "Connected\n";
 		SQL = session;
 		
@@ -25,13 +25,13 @@ CONSOLE_APP_MAIN
 		
 		try {
 			// insert some random data
-			SQL & Insert(TEST_TABLE)(value, Uuid::Create().ToString());
+			SQL & Insert(TEST_TABLE)(VALUE, Uuid::Create().ToString());
 			// fetch some data
 			Sql sql;
-			SQL * Select(ID, VALUE).From(TEST_TABLE)
-			                       .OrderBy(Descending(id))
+			sql * Select(ID, VALUE).From(TEST_TABLE)
+			                       .OrderBy(Descending(ID))
 			                       .Limit(5);
-			while(SQL.Fetch())
+			while(sql.Fetch())
 				Cout() << AsString(sql[0]) << ": " << AsString(sql[VALUE]) << "\n";
 		}
 		catch(SqlExc &ex) {
