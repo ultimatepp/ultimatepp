@@ -19,6 +19,12 @@ void LaySkipRest(CParser& p)
 	}
 }
 
+inline void WriteLines(String& r, int count)
+{
+	for (int i = 0; i < count; ++i)
+		r << '\n';
+}
+
 void ScanLayFile(const char *fn)
 {
 	LTIMING("Lay file");
@@ -26,17 +32,22 @@ void ScanLayFile(const char *fn)
 	CParser p(s);
 	String r;
 	try {
+		int line = p.GetLine();
 		if(p.Char('#') && p.Id("ifdef")) {
 			if(!p.Id("LAYOUTFILE"))
 				p.Id("LAYOUT");
+			WriteLines(r, p.GetLine() - line);
 		}
 		while(!p.IsEof()) {
+			line = p.GetLine();
 			p.PassId("LAYOUT");
 			p.PassChar('(');
-			r << "template <class T> struct With" << p.ReadId() << " : public T {\n"
-			  << "\tstatic Size GetLayoutSize();\n";
+			r << "template <class T> struct With" << p.ReadId() << " : public T {"
+			  << "\tstatic Size GetLayoutSize();";
 			LaySkipRest(p);
+			WriteLines(r, p.GetLine() - line);
 			for(;;) {
+				line = p.GetLine();
 				if(p.Id("ITEM")) {
 					p.PassChar('(');
 					if(p.IsId()) {
@@ -44,7 +55,7 @@ void ScanLayFile(const char *fn)
 						if(strncmp(type, "dv___", 5)) {
 							r << '\t' << type;
 							p.PassChar(',');
-							r << ' ' << p.ReadId() << ";\n";
+							r << ' ' << p.ReadId() << ";";
 						}
 					}
 				}
@@ -54,11 +65,14 @@ void ScanLayFile(const char *fn)
 				else
 					break;
 				LaySkipRest(p);
+				WriteLines(r, p.GetLine() - line);
 			}
+			line = p.GetLine();
 			p.PassId("END_LAYOUT");
 			if(p.Char('#'))
 				p.Id("endif");
-			r << "};\n\n";
+			r << "};";
+			WriteLines(r, p.GetLine() - line);
 		}
 	}
 	catch(CParser::Error) {}

@@ -373,6 +373,10 @@ void CodeEditor::InitKeywords()
 			"koKR", "jaJP",
 			NULL
 		};
+		static const char *lay[] = {
+			"LAYOUT", "ITEM", "UNTYPED", "END_LAYOUT",
+			NULL
+		};
 		static const char *sch[] = {
 			"BIT", "BIT_ARRAY", "BIT_", "BIT_ARRAY_",
 			"BOOL", "BOOL_ARRAY", "BOOL_", "BOOL_ARRAY_",
@@ -412,10 +416,10 @@ void CodeEditor::InitKeywords()
 			NULL
 		};
 		static const char **kw[HIGHLIGHT_COUNT] = {
-			cpp, usc, java, tfile, usc, sch, sql
+			cpp, usc, java, tfile, usc, lay, sch, sql
 		};
 		static const char **nm[HIGHLIGHT_COUNT] = {
-			upp, usclib, javan, tlng, usclib, javan, javan
+			upp, usclib, javan, tlng, usclib, javan, javan, javan
 		};
 		const char **q = NULL;
 		for(int i = 0; i < HIGHLIGHT_COUNT; i++) {
