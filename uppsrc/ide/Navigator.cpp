@@ -38,7 +38,7 @@ void AssistEditor::BrowserGotoNF()
 	int itemsc = browser.item.GetScroll();
 
 	String cref = browser.GetCodeRef();
- 	if(assist_active && !(theide && theide->SwapSIf(cref)))
+	if(theide && !theide->SwapSIf(cref))
 		theide->IdeGotoCodeRef(cref);
 
 	if(scope == browser.scope.GetKey()) {
