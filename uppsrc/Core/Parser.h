@@ -88,7 +88,7 @@ public:
 	void   Set(const char *ptr);
 
 	CParser& SkipSpaces(bool b = true)        { skipspaces = true; return *this; }
-	CParser& NoSkipSpaces()                   { skipspaces = false; }
+	CParser& NoSkipSpaces()                   { skipspaces = false; return *this; }
 	CParser& UnicodeEscape(bool b = true)     { uescape = b; return *this; }
 
 	CParser(const char *ptr);

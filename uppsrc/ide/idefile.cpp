@@ -25,6 +25,9 @@ void Ide::SetupEditor(int f, String hl, String fn)
 		if(ext == ".t" || ext == ".jt")
 			editor.Highlight(CodeEditor::HIGHLIGHT_T);
 		else
+		if(ext == ".lay")
+			editor.Highlight(CodeEditor::HIGHLIGHT_LAY);
+		else
 		if(ext == ".sch")
 			editor.Highlight(CodeEditor::HIGHLIGHT_SCH);
 		else
