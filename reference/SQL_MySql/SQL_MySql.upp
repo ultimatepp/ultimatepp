@@ -1,11 +1,11 @@
-description "Logging to MySql";
-
 uses
+	Core,
 	MySql;
 
 file
+	schema.sch,
 	main.cpp;
 
 mainconfig
-	"" = "MT";
+	"" = ".MYSQLDLL";
 
