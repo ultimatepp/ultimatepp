@@ -343,6 +343,7 @@ protected:
 	void   FindWildcard();
 	void   ReplaceWildcard();
 	void   InsertWildcard(int c);
+	void   CheckBraces(const WString& text);
 
 	void   SetFound(int fi, int type, const WString& text);
 
