@@ -89,7 +89,7 @@ bool SaveFileBOM(const char *path, const WString& data)
 bool SaveStreamBOMUtf8(Stream& out, const String& data) {
 	if(!out.IsOpen() || out.IsError()) 
 		return false;
-	unsigned char bom[] = {0xEF, 0xBB, 0xBF};
+	static unsigned char bom[] = {0xEF, 0xBB, 0xBF};
 	out.Put(bom, 3);
 	out.Put(ToCharset(CHARSET_UTF8, data));
 	out.Close();

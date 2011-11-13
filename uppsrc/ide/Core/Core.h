@@ -255,6 +255,8 @@ int    GetType(const Vector<String>& conf, const char *flags, int def);
 bool   GetFlag(const Vector<String>& conf, const char *flag);
 String RemoveType(Vector<String>& conf, const char *flags);
 
+enum { CHARSET_UTF8_BOM = 250 }; // Same as TextCtrl::CHARSET_UTF8_BOM
+
 class Package {
 	void Reset();
 
