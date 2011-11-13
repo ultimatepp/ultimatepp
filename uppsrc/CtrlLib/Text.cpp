@@ -92,6 +92,14 @@ void   TextCtrl::Load(Stream& s, byte charset) {
 	ClearLines();
 	String ln;
 	total = 0;
+	SetCharset(charset);
+	if(charset == CHARSET_UTF8_BOM && s.GetLeft() >= 3) {
+		int64 pos = s.GetPos();
+		char h[3];
+		if(!(s.Get(h, 3) == 3 && h[0] == 0xEF && h[1] == 0xBB && h[2] == 0xBF))
+			s.Seek(pos);
+		charset = CHARSET_UTF8;
+	}
 	while(!s.IsEof()) {
 		int c = s.Get();
 		if(c == '\n') {
@@ -111,11 +119,15 @@ void   TextCtrl::Load(Stream& s, byte charset) {
 	InsertLines(0, line.GetCount());
 	Update();
 	SetSb();
-	SetCharset(charset);
 	PlaceCaret(0);
 }
 
 void   TextCtrl::Save(Stream& s, byte charset, bool crlf) const {
+	if(charset == CHARSET_UTF8_BOM) {
+		static byte bom[] = { 0xEF, 0xBB, 0xBF };
+		s.Put(bom, 3);
+		charset = CHARSET_UTF8;
+	}
 	charset = ResolveCharset(charset);
 	for(int i = 0; i < line.GetCount(); i++) {
 		if(i)
@@ -146,7 +158,7 @@ String TextCtrl::Get(byte charset) const
 int TextCtrl::GetInvalidCharPos(byte charset) const
 {
 	int q = 0;
-	if(charset != CHARSET_UTF8)
+	if(charset != CHARSET_UTF8 && charset != CHARSET_UTF8_BOM)
 		for(int i = 0; i < line.GetCount(); i++) {
 			WString txt = line[i];
 			WString ctxt = ToUnicode(FromUnicode(txt, charset), charset);
@@ -201,7 +213,7 @@ Value TextCtrl::GetData() const
 String TextCtrl::GetEncodedLine(int i, byte charset) const
 {
 	charset = ResolveCharset(charset);
-	if(charset == CHARSET_UTF8)
+	if(charset == CHARSET_UTF8 && charset != CHARSET_UTF8_BOM)
 		return line[i].text;
 	return FromUnicode(FromUtf8(line[i].text), charset);
 }
@@ -456,7 +468,7 @@ void TextCtrl::RemoveU(int pos, int size) {
 
 int TextCtrl::Insert(int pos, const WString& _txt, bool typing) {
 	WString txt = _txt;
-	if(charset != CHARSET_UNICODE)
+	if(charset != CHARSET_UNICODE && charset != CHARSET_UTF8_BOM)
 		for(int i = 0; i < txt.GetCount(); i++)
 			if(FromUnicode(txt[i], charset) == DEFAULTCHAR)
 				txt.Set(i, '?');

@@ -101,6 +101,8 @@ public:
 
 	void   CachePos(int pos);
 
+	enum { CHARSET_UTF8_BOM = 250 };
+
 	void   Load(Stream& s, byte charset = CHARSET_DEFAULT);
 	void   Save(Stream& s, byte charset = CHARSET_DEFAULT, bool crlf = false) const;
 

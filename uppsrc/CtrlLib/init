@@ -2,7 +2,7 @@
 #define _CtrlLib_icpp_init_stub
 #include "CtrlCore/init"
 #include "PdfDraw/init"
-#define BLITZ_INDEX__ FCDD3B5FE626C4BABB0CB85A8DE59D2BC
+#define BLITZ_INDEX__ FFAA79F95F953AAC96883EC967C32C291
 #include "CtrlLib.icpp"
 #undef BLITZ_INDEX__
 #endif

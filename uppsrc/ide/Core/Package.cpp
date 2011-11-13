@@ -184,6 +184,11 @@ void Package::SetPackageResolver(bool (*Resolve)(const String& error, const Stri
 	sResolve = Resolve;
 }
 
+byte CharsetByNameX(const String& s)
+{
+	return s == "UTF-8-BOM" ? CHARSET_UTF8_BOM : CharsetByName(s);
+}
+
 void Package::Load(const char *path)
 {
 	for(;;) {
@@ -213,7 +218,7 @@ void Package::Load(const char *path)
 				   !LoadOpt(p, "uses", uses) &&
 				   !LoadOpt(p, "include", include))
 				if(p.Id("charset"))
-					charset = CharsetByName(p.ReadString());
+					charset = CharsetByNameX(p.ReadString());
 				else
 				if(p.Id("description")) {
 					description = p.ReadString();
@@ -273,7 +278,7 @@ void Package::Load(const char *path)
 								file.Top().separator = true;
 							else
 							if(p.Id("charset"))
-								file.Top().charset = CharsetByName(p.ReadString());
+								file.Top().charset = CharsetByNameX(p.ReadString());
 							else
 							if(p.Id("tabsize"))
 								file.Top().tabsize = minmax(p.ReadInt(), 1, 20);
@@ -381,6 +386,9 @@ bool Package::Save(const char *path) const {
 	}
 	if(charset > 0 && charset < CharsetCount() || charset == CHARSET_UTF8)
 		out << "charset " << AsCString(CharsetName(charset)) << ";\n\n";
+	else
+	if(charset == CHARSET_UTF8_BOM)
+		out << "charset \"UTF-8-BOM\";\n\n";
 	if(optimize_speed)
 		out << "optimize_speed;\n\n";
 	if(noblitz)
@@ -412,6 +420,9 @@ bool Package::Save(const char *path) const {
 				out << " optimize_speed";
 			if(f.charset > 0 && f.charset < CharsetCount() || f.charset == CHARSET_UTF8)
 				out << " charset " << AsCString(CharsetName(f.charset));
+			else
+			if(f.charset == CHARSET_UTF8_BOM)
+				out << " charset \"UTF-8-BOM\"";
 			if(!IsNull(f.highlight))
 				out << " highlight " << f.highlight;
 			putfopt(out, "options", f.option);

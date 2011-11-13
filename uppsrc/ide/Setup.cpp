@@ -10,6 +10,7 @@ int CharFilterVar(int c)
 void DlCharset(DropList& d)
 {
 	d.Add(CHARSET_UTF8, "UTF8");
+	d.Add(TextCtrl::CHARSET_UTF8_BOM, "UTF8 BOM");
 	for(int i = 1; i < CharsetCount(); i++)
 		d.Add(i, CharsetName(i));
 }
