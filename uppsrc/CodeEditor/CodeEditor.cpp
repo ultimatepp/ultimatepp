@@ -34,10 +34,25 @@ inline bool RBR(int c) {
 	return isbrkt(c);
 }
 
+void CodeEditor::CheckBraces(const WString& text)
+{
+	for(const wchar *s = text; *s; s++)
+		if(*s == '{' || *s == '(' || *s == '[' || *s == '/' || *s == '*' ||
+		   *s == '}' || *s == ')' || *s == ']') {
+			Refresh();
+			break;
+		}
+}
+
 void CodeEditor::PostInsert(int pos, const WString& text) {
 	if(check_edited)
 		bar.SetEdited(GetLine(pos));
 	if(IsFullRefresh()) return;
+	if(text.GetCount() > 200)
+		Refresh();
+	else
+		CheckBraces(text);
+	// Following code is probable not needed anymore...
 	if(!ScanSyntax(GetLine(pos + text.GetLength()) + 1).MatchHilite(rm_ins)) {
 		if(text.GetLength() == 1 && *text == '(' || *text == '[' || *text == ']' || *text == ')')
 			RefreshChars(RBR);
@@ -49,8 +64,13 @@ void CodeEditor::PostInsert(int pos, const WString& text) {
 
 void CodeEditor::PreRemove(int pos, int size) {
 	if(IsFullRefresh()) return;
+	if(size > 200)
+		Refresh();
+	else
+		CheckBraces(GetW(pos, size));
+	// Following code is probable not needed anymore...
 	if(size == 1)
-		rmb = Get(pos, size)[0];
+		rmb = Get(pos, 1)[0];
 	else
 		rmb = 0;
 	rm_ins = ScanSyntax(GetLine(pos + size) + 1);
@@ -60,6 +80,7 @@ void CodeEditor::PostRemove(int pos, int size) {
 	if(check_edited)
 		bar.SetEdited(GetLine(pos));
 	if(IsFullRefresh()) return;
+	// Following code is probable not needed anymore...
 	if(!ScanSyntax(GetLine(pos) + 1).MatchHilite(rm_ins)) {
 		if(rmb == '(' || rmb == '[' || rmb == ']' || rmb == ')')
 			RefreshChars(RBR);

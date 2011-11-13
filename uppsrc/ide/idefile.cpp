@@ -437,10 +437,8 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 		if(designer) {
 			editpane.Add(designer->DesignerCtrl().SizePos());
 			designer->SetFocus();
-			if(filetabs) {
+			if(filetabs)
 				tabs.SetAddFile(editfile);
-			}
-			
 			MakeTitle();
 			SetBar();
 			return;
