@@ -249,6 +249,8 @@ typedef uint64             qword;
 
 #ifdef PLATFORM_WIN32
 inline bool IsNaN(double d)        { return _isnan(d); }
+#elif __APPLE__
+inline bool IsNaN(double d)        { return std::isnan(d); }
 #else
 inline bool IsNaN(double d)        { return isnan(d); }
 #endif
