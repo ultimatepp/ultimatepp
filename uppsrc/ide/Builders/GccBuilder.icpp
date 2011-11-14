@@ -351,7 +351,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				String lfilename;
 				String linklist;
 				for(i = 0; i < linkfile.GetCount(); i++)
-					if(ToLower(GetFileExt(linkfile[i])) == ".o")
+					if(ToLower(GetFileExt(linkfile[i])) == ".o" || ToLower(GetFileExt(linkfile[i])) == ".a")
 						linklist << GetHostPath(linkfile[i]) << '\n';
 
 				String linklistM = "Producing link file list ...\n";
