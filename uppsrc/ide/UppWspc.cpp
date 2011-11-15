@@ -175,7 +175,7 @@ void WorkspaceWork::SavePackage()
 	for(int i = 0; i < actual.GetCount(); i++) {
 		String f = actual[i];
 		if(ToLower(GetFileExt(f)) == ".icpp")
-			init << "#define BLITZ_INDEX__ " << "F" + AsString(Uuid::Create()) << "\r\n"
+			init << "#define BLITZ_INDEX__ " << "F" + MD5String(init + f) << "\r\n"
 			     << "#include \"" << f << "\"\r\n"
 			     << "#undef BLITZ_INDEX__\r\n";
 	}
