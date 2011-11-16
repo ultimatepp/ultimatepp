@@ -7,8 +7,8 @@ NAMESPACE_UPP
 #define IMAGEFILE  <Geom/Ctrl/PlotterCtrl.iml>
 #include           <Draw/iml.h>
 
-#define LLOG(x) // RLOG(x)
-#define LLOGBLOCK(x) // RLOGBLOCK(x)
+#define LLOG(x) RLOG(x)
+#define LLOGBLOCK(x) RLOGBLOCK(x)
 
 PlotterCtrl::ViewPlot::ViewPlot(PlotterCtrl& ctrl, int extra_gap)
 : viewdraw(&ctrl)
@@ -548,11 +548,14 @@ void PlotterCtrl::EndBufferPaint()
 		drag_drop->Plot(plotter);
 		lock_drag_drop = false;
 	}
-	if(!abort_repaint)
+	if(abort_repaint) {
+		RLOG("PlotterCtrl::EndBufferPaint -> abort_repaint");
+	}
+	else
 		paint_buffer = *paint_draw;
 	paint_draw.Clear();
 	is_painting = false;
-	PostRefresh();
+	//PostRefresh();
 }
 
 void PlotterCtrl::PostRefresh()
@@ -562,13 +565,15 @@ void PlotterCtrl::PostRefresh()
 
 void PlotterCtrl::Paint(Draw& draw)
 {
+	RTIMING("PlotterCtrl::Paint");
 	int level = draw.GetCloffLevel();
 	try {
 		LLOGBLOCK("PlotterCtrl::Paint");
-		LLOG("PlotterCtrl::Paint @ " << GetSysTime() << ": level = " << level);
 		bool shown = IsDragging();
-		DragHide();
 		Rect clip = draw.GetPaintRect();
+		LLOG("PlotterCtrl::Paint @ " << GetSysTime() << ": level = " << level
+		<< ", rect = " << clip << ", dragging = " << shown << ", painting = " << is_painting);
+		DragHide();
 		if(is_painting) {
 	#ifdef PLATFORM_WIN32
 			if(!paint_buffer.IsEmpty()) {
@@ -599,7 +604,7 @@ void PlotterCtrl::Paint(Draw& draw)
 					}
 					EndBufferPaint();
 				}
-				else {
+				if(!paint_buffer.IsEmpty() && paint_buffer.GetSize() == size) {
 					LLOG("-> DrawImage paint_buffer");
 					draw.DrawImage(pan_offset.x, pan_offset.y, paint_buffer);
 				}
@@ -645,6 +650,7 @@ void PlotterCtrl::RefreshBuffer()
 		if(!is_painting)
 			paint_buffer.Clear();
 		else {
+			RLOG("PlotterCtrl::RefreshBuffer / is_painting -> abort_repaint");
 			abort_repaint = true;
 			AbortPlot();
 		}
@@ -659,6 +665,7 @@ void PlotterCtrl::RefreshBuffer(const Rect& rc)
 		if(!is_painting)
 			paint_buffer.Clear();
 		else {
+			RLOG("PlotterCtrl::RefreshBuffer(rc) / is_painting -> abort_repaint");
 			abort_repaint = true;
 			AbortPlot();
 		}
