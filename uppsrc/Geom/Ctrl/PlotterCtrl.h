@@ -227,7 +227,7 @@ protected:
 private:
 	void                    OnHScroll();
 	void                    OnVScroll();
-	void                    Refresh0()                       { Refresh(); }
+	void                    Refresh0()                       { RefreshBuffer(); }
 
 private:
 	TimeCallback            tcb_refresh;
