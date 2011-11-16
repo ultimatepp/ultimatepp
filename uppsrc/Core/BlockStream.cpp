@@ -162,11 +162,13 @@ void BlockStream::_Put(const void *data, dword size) {
 		memcpy(buffer + pos0 - pos, s, n);
 		s += n;
 		n = dword(pg1 - pg0) - pagesize;
-		Write(pos + pagesize, s, n);
 		streamsize = max(pos + pagesize + n, streamsize);
-		s += n;
+		int wpos = pos + pagesize;
 		SetPos(pos0 + size);
 		SyncPage();
+		if(n)
+			Write(wpos, s, n);
+		s += n;
 		if(pos1 > pg1) {
 			wrlim = buffer + pagesize;
 			pagedirty = true;
@@ -202,7 +204,7 @@ dword BlockStream::_Get(void *data, dword size) {
 		int n = int(pos + pagesize - pos0);
 		memcpy(t, buffer + pos0 - pos, n);
 		dword q = dword(pg1 - pg0) - pagesize;
-		if(Read(pos + pagesize, t + n, q) != q) {
+		if(q && Read(pos + pagesize, t + n, q) != q) {
 			SetError();
 			return 0;
 		}
