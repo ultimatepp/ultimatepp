@@ -1,0 +1,4 @@
+#ifndef _LinuxFb_icpp_init_stub
+#define _LinuxFb_icpp_init_stub
+#include "Framebuffer/init"
+#endif

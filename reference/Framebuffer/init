@@ -1,0 +1,5 @@
+#ifndef _Framebuffer_icpp_init_stub
+#define _Framebuffer_icpp_init_stub
+#include "Painter/init"
+#include "CtrlLib/init"
+#endif
