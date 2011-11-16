@@ -296,6 +296,7 @@ LayDes::LayDes()
 	layoutlist.AddColumn();
 	layoutlist.WhenCursor = THISBACK(LayoutCursor);
 	layoutlist.WhenBar = THISBACK(LayoutMenu);
+	layoutlist.WhenLeftDouble = THISBACK(RenameLayout);
 	layoutlist.NoWantFocus();
 
 	NoWantFocus();
