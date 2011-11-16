@@ -1,0 +1,29 @@
+description "Rainbow example, Framebuffer implementation of UWord\377";
+
+uses
+	CtrlLib,
+	RichEdit,
+	PdfDraw,
+	plugin\jpg;
+
+uses(SKELETON) Skeleton;
+
+uses(WINALT) WinAlt;
+
+uses(WINFB) WinFb;
+
+uses(LINUXFB) LinuxFb;
+
+uses(SDLFB) SDLFb;
+
+uses(WINGL) WinGl;
+
+file
+	UWord.cpp,
+	UWord.iml;
+
+mainconfig
+	"" = "GUI WINFB",
+	"" = "GUI LINUXFB",
+	"" = "GUI";
+
