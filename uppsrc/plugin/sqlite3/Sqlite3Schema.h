@@ -48,10 +48,21 @@
 #define UNIQUE                     ATTRIBUTE("create unique index IDX_@x on @t(@c);", \
                                              "drop index IDX_@x;")
 
+#ifndef REFERENCES
 #define REFERENCES(x)
+#endif
+
+#ifndef REFERENCES_CASCADE
 #define REFERENCES_CASCADE(x)
+#endif
+
+#ifndef REFERENCES_
 #define REFERENCES_(n, x)
+#endif
+
+#ifndef REFERENCES_CASCADE_
 #define REFERENCES_CASCADE_(n, x)
+#endif
 
 #define DUAL_PRIMARY_KEY(k1, k2)   INLINE_ATTRIBUTE(", primary key (" #k1 ", " #k2 ")")
 

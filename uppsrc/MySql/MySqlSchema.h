@@ -46,9 +46,12 @@
                                              "alter table @t drop index IDX_@x;")
 #define UNIQUE                     ATTRIBUTE("alter table @t add unique UNQ_@x (@c);", \
 	                                         "alter table @t drop index UNQ_@x;")
+
+#ifndef REFERENCES
 #define REFERENCES(x)              ATTRIBUTE("alter table @t add (constraint FK_@x foreign key "\
                                              "(@c) references " #x ");",\
                                              "alter table @t drop constraint FK_@x;")
+#endif
 
 #define TIMESTAMP(ts)              SCHEMA("-- " ts "\n\n", NULL)
 

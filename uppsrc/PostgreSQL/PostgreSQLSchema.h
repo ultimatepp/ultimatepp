@@ -82,16 +82,19 @@
                                              "(@c) references " #x ";",\
                                              "alter table @t drop constraint FK_@x;")
 #endif
+
 #ifndef REFERENCES_CASCADE
 #define REFERENCES_CASCADE(x)      ATTRIBUTE("alter table @t add constraint FK_@x foreign key "\
                                              "(@c) references " #x " on delete cascade;",\
                                              "alter table @t drop constraint FK_@x;")
 #endif
+
 #ifndef REFERENCES_
 #define REFERENCES_(n, x)          ATTRIBUTE("alter table @t add constraint FK_@x$" #n " foreign key "\
                                              "(@c) references " #x ";",\
                                              "alter table @t drop constraint FK_@x$" #n ";")
 #endif
+
 #ifndef REFERENCES_CASCADE_
 #define REFERENCES_CASCADE_(n, x)  ATTRIBUTE("alter table @t add constraint FK_@x$" #n " foreign key "\
                                              "(@c) references " #x " on delete cascade;",\
