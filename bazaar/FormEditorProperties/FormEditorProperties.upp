@@ -1,0 +1,25 @@
+uses
+	CtrlLib,
+	FormEditorCommon,
+	ExpandFrame;
+
+file
+	Basis readonly separator,
+	Common.h,
+	PropertyCaller.h,
+	Properties readonly separator,
+	FormEditorProperties.lay,
+	FormEditorProperties.h,
+	FormEditorProperties.t,
+	FormEditorProperties.icpp,
+	PropertiesMacro.h,
+	PropertiesEditor.h,
+	Properties.h,
+	Property.h,
+	Property.cpp,
+	PropertyEdits.h,
+	PropertyEdits.cpp;
+
+mainconfig
+	"" = "GUI";
+

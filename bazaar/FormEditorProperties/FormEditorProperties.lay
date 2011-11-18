@@ -1,0 +1,6 @@
+LAYOUT(PropertiesLayout, 296, 460)
+	ITEM(ExpanderCtrl, propGroups, HSizePosZ(8, 8).VSizePosZ(8, 44))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 80).BottomPosZ(8, 28))
+	ITEM(Button, ok, SetLabel(t_("Save")).RightPosZ(92, 80).BottomPosZ(8, 28))
+END_LAYOUT
+

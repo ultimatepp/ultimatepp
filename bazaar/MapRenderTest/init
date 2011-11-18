@@ -1,0 +1,5 @@
+#ifndef _MapRenderTest_icpp_init_stub
+#define _MapRenderTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "Map/init"
+#endif

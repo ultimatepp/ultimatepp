@@ -1,0 +1,29 @@
+uses
+	CtrlLib,
+	MapBG,
+	FormEditorProperties;
+
+file
+	Map.t,
+	Map.h,
+	Map.icpp,
+	MapSerialize.h,
+	Map readonly separator,
+	MapLevel.iml,
+	MapLevel.h,
+	MapLevel.cpp,
+	MapEvents.cpp,
+	MapRender.cpp,
+	MapRenderInfo.cpp,
+	MapNavigation.cpp,
+	Viewer readonly separator,
+	MapView.lay,
+	MapView.iml,
+	MapView.h,
+	MapView.cpp,
+	MapViewEvents.cpp,
+	MapViewSearch.cpp;
+
+mainconfig
+	"" = "GUI SSE2";
+

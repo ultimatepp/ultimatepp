@@ -1,0 +1,4 @@
+#include "MapEditor.h"
+
+#define  TFILE <MapEditor/MapEditor.t>
+#include <Core/t.h>

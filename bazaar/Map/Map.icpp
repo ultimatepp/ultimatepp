@@ -1,0 +1,4 @@
+#include "Map.h"
+
+#define TFILE <Map/Map.t>
+#include <Core/t.h>

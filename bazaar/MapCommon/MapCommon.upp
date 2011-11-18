@@ -1,0 +1,25 @@
+uses
+	CtrlLib,
+	Painter;
+
+file
+	MapCommon.h,
+	Item readonly separator,
+	IMapEvent.h,
+	IMapItem.h,
+	IMapItem.cpp,
+	IMapItemState.cpp,
+	Render readonly separator,
+	IMapRenderInfo.h,
+	IMapRender.h,
+	IMapRender.cpp,
+	IMapRenderStates.cpp,
+	IMapRenderEvents.cpp,
+	"Basic Entities" readonly separator,
+	PolygonItem.h,
+	PolygonItem.cpp,
+	PolygonItemEvents.cpp,
+	ButtonItem.h,
+	ButtonItem.cpp,
+	ButtonItemEvents.cpp;
+

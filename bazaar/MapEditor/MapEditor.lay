@@ -1,0 +1,34 @@
+LAYOUT(MapEditorLayout, 240, 448)
+	ITEM(GridCtrl, LevelList, HSizePosZ(8, 8).VSizePosZ(184, 44))
+	ITEM(Button, NewMapBtn, SetLabel(t_("New map...")).LeftPosZ(8, 108).TopPosZ(8, 28))
+	ITEM(Button, SaveMapBtn, SetLabel(t_("Save map...")).RightPosZ(8, 108).TopPosZ(8, 28))
+	ITEM(Button, CalcMapBtn, SetLabel(t_("Calculate...")).LeftPosZ(124, 108).BottomPosZ(376, 28))
+	ITEM(Button, ViewMapBtn, SetLabel(t_("Preview...")).LeftPosZ(124, 108).BottomPosZ(340, 28))
+	ITEM(Button, LoadMapBtn, SetLabel(t_("Load map...")).LeftPosZ(8, 108).TopPosZ(116, 28))
+	ITEM(Button, PropsBtn, SetLabel(t_("Properties...")).RightPosZ(8, 108).TopPosZ(116, 28))
+	ITEM(Button, AddLevelBtn, SetLabel(t_("+")).LeftPosZ(8, 28).BottomPosZ(8, 28))
+	ITEM(Button, ChangeLevelBtn, SetLabel(t_("Properties")).LeftPosZ(44, 72).BottomPosZ(8, 28))
+	ITEM(Button, EditLevelBtn, SetLabel(t_("Edit level...")).RightPosZ(44, 72).VSizePosZ(412, 8))
+	ITEM(Button, RemoveLevelBtn, SetLabel(t_("-")).RightPosZ(8, 28).BottomPosZ(8, 28))
+	ITEM(Label, dv___11, SetFrame(TopSeparatorFrame()).HSizePosZ(0, 0).TopPosZ(156, 13))
+	ITEM(Label, dv___12, SetLabel(t_("Levels:")).HSizePosZ(8, 8).TopPosZ(160, 23))
+END_LAYOUT
+
+LAYOUT(MapLoadLayout, 264, 80)
+	ITEM(DropList, MapList, HSizePosZ(8, 8).TopPosZ(8, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(92, 76).BottomPosZ(8, 28))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 76).BottomPosZ(8, 28))
+END_LAYOUT
+
+LAYOUT(PreviewLayout, 420, 332)
+	ITEM(MapView, View, HSizePosZ(0, 0).VSizePosZ(0, 0))
+END_LAYOUT
+
+LAYOUT(LevelEditLayout, 560, 452)
+	ITEM(MapView, EditView, SetFrame(InsetFrame()).HSizePosZ(164, 4).VSizePosZ(4, 4))
+	ITEM(GridCtrl, ItemList, LeftPosZ(4, 156).VSizePosZ(160, 4))
+	ITEM(GridCtrl, LayerList, LeftPosZ(4, 156).TopPosZ(4, 116))
+	ITEM(Label, dv___3, SetLabel(t_("Elements:")).LeftPosZ(4, 64).TopPosZ(132, 24))
+	ITEM(DropList, ItemTypeList, LeftPosZ(68, 92).TopPosZ(132, 24))
+END_LAYOUT
+

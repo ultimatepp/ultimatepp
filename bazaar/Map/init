@@ -1,0 +1,9 @@
+#ifndef _Map_icpp_init_stub
+#define _Map_icpp_init_stub
+#include "CtrlLib/init"
+#include "MapBG/init"
+#include "FormEditorProperties/init"
+#define BLITZ_INDEX__ FDCB0E40879C2D486297E4287E58D5ECF
+#include "Map.icpp"
+#undef BLITZ_INDEX__
+#endif

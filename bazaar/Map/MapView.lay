@@ -1,0 +1,15 @@
+LAYOUT(MapViewLayout, 508, 356)
+	ITEM(Button, LevelDownBtn, RightPosZ(80, 28).TopPosZ(4, 28))
+	ITEM(Button, LevelUpBtn, RightPosZ(4, 28).TopPosZ(4, 28))
+	ITEM(Button, ZoomInBtn, LeftPosZ(36, 28).TopPosZ(4, 28))
+	ITEM(Button, ClearSearchBtn, SetLabel(t_("X")).RightPosZ(4, 28).BottomPosZ(4, 28))
+	ITEM(Button, ZoomOutBtn, LeftPosZ(4, 28).TopPosZ(4, 28))
+	ITEM(Button, MoveLeftBtn, LeftPosZ(4, 28).VCenterPosZ(112, 2))
+	ITEM(Button, MoveRightBtn, RightPosZ(4, 28).VCenterPosZ(112, 2))
+	ITEM(Button, MoveDownBtn, HCenterPosZ(112, -4).BottomPosZ(4, 28))
+	ITEM(Button, MoveUpBtn, HCenterPosZ(112, -4).TopPosZ(4, 28))
+	ITEM(Label, LevelName, SetAlign(ALIGN_CENTER).RightPosZ(32, 48).TopPosZ(4, 28))
+	ITEM(SliderCtrl, ZoomSlider, LeftPosZ(68, 84).TopPosZ(4, 28))
+	ITEM(EditField, Search, RightPosZ(36, 120).BottomPosZ(4, 28))
+END_LAYOUT
+

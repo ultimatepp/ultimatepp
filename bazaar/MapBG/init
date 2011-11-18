@@ -1,0 +1,6 @@
+#ifndef _MapBG_icpp_init_stub
+#define _MapBG_icpp_init_stub
+#include "Painter/init"
+#include "CtrlLib/init"
+#include "MapCommon/init"
+#endif

@@ -1,0 +1,15 @@
+uses
+	Painter,
+	CtrlLib,
+	MapCommon,
+	Painter;
+
+file
+	FileUtils.h,
+	MipMapGen.h,
+	MipMapGen.cpp,
+	MipMap.h,
+	MipMap.cpp,
+	MapBG.h,
+	MapBG.cpp;
+

@@ -1,0 +1,4 @@
+#include "Common.h"
+
+#define TFILE <FormEditorProperties/FormEditorProperties.t>
+#include <Core/t.h>

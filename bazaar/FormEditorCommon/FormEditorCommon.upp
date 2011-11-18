@@ -1,0 +1,18 @@
+uses
+	CtrlLib;
+
+file
+	"Hypercall Library" readonly separator,
+	hypercall.h,
+	Main readonly separator,
+	Utils.h,
+	Logger.h,
+	IHistory.h,
+	IPartBase.h,
+	MenuBarEx.h,
+	MenuBarEx.cpp,
+	FormEditorCommon.h;
+
+mainconfig
+	"" = "GUI SSE2";
+

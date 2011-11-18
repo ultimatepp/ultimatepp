@@ -1,0 +1,24 @@
+uses
+	CtrlLib,
+	Map,
+	GridCtrl;
+
+file
+	MapEditorLang.icpp,
+	MapEditor.lay,
+	MapEditor.iml,
+	MapEditor.t,
+	MapEditor.h,
+	MapEditor.cpp,
+	MapEditorMap.cpp,
+	MapEditorLevel.cpp,
+	LevelEditor.h,
+	LevelEditor.cpp,
+	LevelEditorLayer.cpp,
+	LevelEditorItem.cpp,
+	LevelEditorTools.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI MT";
+

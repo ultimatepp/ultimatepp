@@ -1,0 +1,9 @@
+#ifndef _FormEditorProperties_icpp_init_stub
+#define _FormEditorProperties_icpp_init_stub
+#include "CtrlLib/init"
+#include "FormEditorCommon/init"
+#include "ExpandFrame/init"
+#define BLITZ_INDEX__ FBF5B444DA4360EC5FCE19D15538383D2
+#include "FormEditorProperties.icpp"
+#undef BLITZ_INDEX__
+#endif

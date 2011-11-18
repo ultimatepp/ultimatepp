@@ -1,0 +1,10 @@
+uses
+	CtrlLib,
+	Map;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI MT";
+

@@ -1,0 +1,9 @@
+#ifndef _MapEditor_icpp_init_stub
+#define _MapEditor_icpp_init_stub
+#include "CtrlLib/init"
+#include "Map/init"
+#include "GridCtrl/init"
+#define BLITZ_INDEX__ F7451C483F16EAEF2B514EBA83339BB5F
+#include "MapEditorLang.icpp"
+#undef BLITZ_INDEX__
+#endif
