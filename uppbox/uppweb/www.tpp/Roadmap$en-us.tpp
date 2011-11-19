@@ -26,6 +26,78 @@ topic "Changelog";
 [s0;4 &]
 [s0; [*_3 Current release]&]
 [s0; &]
+[s0; [*_4 4179][*3  (18 Nov 2011)]&]
+[s0;* &]
+[s0; `"Rainbow`" technology decouples U`+`+ GUI from host platform. 
+It is now possible to develop new GUI&]
+[s0; implementation without changing core U`+`+ files. `"Framebuffer`" 
+package uses Rainbow to implement&]
+[s0; GUI for trivial RGBA framebuffer (with keyboard and mouse inputs).&]
+[s0; &]
+[s0; New command line utility `"umk`" `- GUI independent, U`+`+ package 
+builder: umk.&]
+[s0; &]
+[s0; Docking package was adopted to main source tree.&]
+[s0;*3 &]
+[s0; [* TheIDE]&]
+[s0;i150;O0; Support for UTF8`-BOM encoding.&]
+[s0;i150;O0; Layout files are now syntax highlighted, Assist`+`+ 
+now knows correct line position info.&]
+[s0;i150;O0; Database schema files (.sch) are now syntax highlighted. 
+Assist`+`+ now knows to correct line position info.&]
+[s0;i150;O0; Ide now has minimal Objective C and C`+`+/CLR support.&]
+[s0;i150;O0; New function to export documentation to html or pdf.&]
+[s0;i150;O0; Layout designer now has `'struct`' option in code generator&]
+[s0;i150;O0; Image (.iml) designer now can import (insert) whole 
+another .iml and also export .iml to png files.&]
+[s0;i150;O0; There is now Assist`+`+ for #include.&]
+[s0;i150;O0; InsertColor function now supports QTF colors.&]
+[s0;i150;O0; Local menu on package file items now has `"Open file 
+directory`" item.&]
+[s0;* &]
+[s0; [* Library]&]
+[s0;* &]
+[s0; Core&]
+[s0;i150;O0; U`+`+ now has Value compatible Complex type.&]
+[s0;i150;O0; CParser has new Unicode Escape option to understand 
+`"`\u`" escape codes (as in JavaScript).&]
+[s0;i150;O0; ValueArray has now Insert, Append and Remove methods.&]
+[s0;i150;O0; ValueMap has now Set(key, value) method.&]
+[s0;i150;O0; Value now has operator`[`] (key) and operator`[`] (index) 
+methods to directly access contained ValueMap and ValueArray 
+elements.&]
+[s0;i150;O0; double formatting (Format, Convert) now has support 
+to easily replace decimal point with `',`' character.&]
+[s0;i150;O0; Core now has JSON (JavaScript Object Notation) parsing 
+and creation support.&]
+[s0;i150;O0; String now has GetCharCount() that is able to return 
+correct number of characters (code`-points) in String even if 
+encoding is UTF`-8.&]
+[s0; &]
+[s0; CtrlLib and CtrlCore (GUI library)&]
+[s0;i150;O0; ArrayCtrl now has AsText, SetClipboard, AsQtf and AsCsv 
+methods.&]
+[s0;i150;O0; EditField now supports limited text highlighting.&]
+[s0;i150;O0; New SetLayout`_`[layout name`] template function generated 
+from .lay (used to change compatible layout).&]
+[s0; &]
+[s0; Draw/PdfDraw/Report (graphical output)&]
+[s0;i150;O0; Draw/PdfDraw/Report got minimalistic PDF/A support.&]
+[s0;i150;O0; AttrText now has Bold/Italic/Underline/Strikeout methods.&]
+[s0;i150;O0; New QtfReport for simplified reporting of Qtf.&]
+[s0; &]
+[s0; Other library changes&]
+[s0;i150;O0; In SQL trace log, questionmark parameter placeholders 
+are now replaced with actual parameters.&]
+[s0;i150;O0; plugin`\Sqlite3 is upgraded to 3.7.8.&]
+[s0;i150;O0; plugin/tif is upgraded to version 1.43.&]
+[s0;i150;O0; plugin/jpg now supports EXIM image orientation metadata.&]
+[s0;i150;O0; New plugin/wincert package supports basic Win32 certificate 
+manipulation and PDF digital signing.&]
+[s0;#i150;O0; HttpClient now supports PUT method.&]
+[s0;*3 &]
+[s0; [*_3 Previous releases]&]
+[s0; &]
 [s0; [*_4 3211][*3  (16 Feb 2011)]&]
 [s0;*3 &]
 [s0; [* TheIDE]&]
@@ -98,16 +170,14 @@ in headers, added recipient/sender names, &]
 [s0; &]
 [s0; [* Bazaar]&]
 [s0;# &]
-[s0;# Many packages added and improved: Scatter, DeEncrypter, CMeter, 
+[s0; Many packages added and improved: Scatter, DeEncrypter, CMeter, 
 Protect, Tree, Dispatcher, Gen, SDLCtrl, PolyXML, PlotLib,PlotCtrl, 
 SysInfo, Media, MediaPlayer, Functions4U, plugin/portaudio, Sound, 
 SoundExample, AutoScroller, CtrlFinder, CtrlProp, LogPosCtrl, 
 PointCtrl, PopUpC, RectCtrl, Styler, ValueCtrl, Docking , TabBar, 
 SysExec, Protect, Updater, SysExecGui, OfficeAutomation, Dispatcher, 
 Styler, Cypher, ProductVersion, Uniq, SplashSV and HelpViewer.&]
-[s0; &]
-[s0; [*_3 Previous releases]&]
-[s0; &]
+[s0;4 &]
 [s0; [*_4 2791][*3  (18 Oct 2010)]&]
 [s0;*3 &]
 [s0; [* TheIDE]&]

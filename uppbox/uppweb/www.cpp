@@ -717,7 +717,7 @@ GUI_APP_MAIN
 	
 	SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
 	
-	String release = "3211"; 
+	String release = "4179"; 
 	escape.Add("RELEASE", release);
 	escape.Add("RELEASET", release);
 	escape.Add("UPDATETIME", Format("%`", GetUtcTime()));
