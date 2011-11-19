@@ -19,7 +19,6 @@ struct ScanTopicIterator : RichText::Iterator {
 	}
 };
 
-
 static void sDoFile(const char *path, const char *link)
 {
 	ScanTopicIterator sti;
