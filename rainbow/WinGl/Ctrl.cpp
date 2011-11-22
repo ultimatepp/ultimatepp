@@ -6,6 +6,10 @@
 
 NAMESPACE_UPP
 
+void WakeUpGuiThread(void)
+{
+}
+
 void Ctrl::GuiPlatformConstruct()
 {
 	cliptobounds = true;	

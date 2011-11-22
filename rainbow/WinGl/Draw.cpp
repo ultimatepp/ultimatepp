@@ -45,7 +45,7 @@ void SystemDraw::InitClip(const Rect& clip)
 
 void SystemDraw::Reset() {
 	systemDraw = this;
-	cloff.SetCount(20);
+	cloff.SetCount(30);
 	ci = 0;
 	cn = 0;
 	cd = 0;
