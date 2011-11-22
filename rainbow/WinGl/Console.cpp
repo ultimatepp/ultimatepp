@@ -13,8 +13,9 @@ void Console::Paint(Draw& w)
 	w.DrawRect(0, 1, 1, sz.cy, Yellow);
 	w.DrawRect(1, sz.cy - 1, sz.cx - 2, 1, Yellow);
 	//DrawFrame(w, sz, Yellow);
-	w.DrawImage(sz.cx - 10, sz.cy - 10, WinGlImg::ResizeMarker());
-	w.Clip(5, 5, sz.cx - 10, sz.cy - 10);
+	//w.DrawImage(sz.cx - 18, sz.cy - 21, WinGlImg::ResizeMarker());
+	w.DrawRect(1, sz.cy - 22, sz.cx - 2, 1, Yellow);
+	w.Clip(5, 5, sz.cx - 10, sz.cy - 5 - 21);
 	sw.alpha = 255.f;
 	int y = 5;
 	int ty = Draw::GetStdFontCy() + 2;
@@ -32,9 +33,9 @@ void Console::Paint(Draw& w)
 		sw.alpha = 255.f;
 	}
 
-	int lines = (sz.cy - y - 5) / ty;
-	int n = sb.GetPos() / ty;
-	int maxn = min(n + lines, maxLine); 
+	int lines = (sz.cy - y - 22) / ty;
+	int n = fceil(sb.GetPos() / double(ty));
+	int maxn = min(n + lines, currLine); 
 
 	while(n < maxn)
 	{
@@ -58,7 +59,7 @@ void Console::Log(const char* text, Color ink)
 {
 	bool isend = sb.IsEnd();
 	
-	if(++currLine > maxLine)
+	if(++currLine >= maxLine)
 	{
 		currLine = maxLine;
 		for(int i = 0; i < maxLine - 1; i++)
@@ -66,7 +67,10 @@ void Console::Log(const char* text, Color ink)
 	}
 
 	int ty = Draw::GetStdFontCy() + 2;
-	sb.SetTotal(currLine * ty);
+	int total = currLine * ty;
+	int fcnt = fixedText.GetCount();
+	sb.SetTotal(total + 5 + 22);
+
 	if(isend)
 		sb.GoEnd();
 
@@ -82,7 +86,7 @@ void Console::LeftDown(Point p, dword keys)
 	rs = GetSize();
 	tl = GetScreenRect().TopLeft();
 	Size sz = GetSize();
-	resize = p.x > sz.cx - 10 && p.y > sz.cy - 10;
+	resize = p.x > sz.cx - 18 && p.y > sz.cy - 18;
 }
 
 void Console::LeftUp(Point p, dword keys)
@@ -153,10 +157,21 @@ void Console::Show(bool b)
 	}
 }
 
+void Console::Clear()
+{
+	currLine = 0;
+	sb.Clear();
+}
+
 Console::Console() : init(true), resize(false)
 {
-	Add(sb.RightPos(2, 7).VSizePos(2, 10));
-	SetLines(1000);
+	Add(sb.RightPos(2, 7).VSizePos(2, 22));
+	Add(clear.LeftPos(2, 50).BottomPos(2, 18));
+	clear.SetLabel("Clear");
+	//clear.bg = Yellow;
+	//clear.alpha = 150.f;
+	clear <<= THISBACK(Clear);
+	SetLines(3000);
 	currLine = 0;
 	scrollLine = 0;
 }

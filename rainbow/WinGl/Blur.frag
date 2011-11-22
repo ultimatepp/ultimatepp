@@ -8,7 +8,7 @@ uniform bool Glow;
 uniform bool Shadow;
 
 const float AlphaCenter = 0.5;
-const float DistanceScale = 25.0;
+const float DistanceScale = 20.0;
 
 uniform float OutlineCenter;
 uniform float GlowCenter;
@@ -23,7 +23,7 @@ void main()
 
 	float ma = smoothstep(AlphaCenter - width, AlphaCenter + width, alpha);
 	finalColor.a = ma;
-	
+
 	if(Outline)
 	{
 		float mo = smoothstep(OutlineCenter - width, OutlineCenter + width, alpha);

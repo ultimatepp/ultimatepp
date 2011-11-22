@@ -138,26 +138,9 @@ void TopWindowFrame::StartDrag()
 		return;
 	if(!sizeable && (dir.x || dir.y))
 		return;
-	if(FullWindowDrag) {
-		SetCapture();
-		startrect = GetRect();
-		startpos = GetMousePos();
-	}
-	else {
-		Rect r = GetScreenRect();
-		RectTracker tr(*this);
-		tr.SetCursorImage(GetDragImage(dir))
-		  .MaxRect(screenRect.GetSize())
-		  .MinSize(ComputeClient(minsize).GetSize())
-		  .Pattern(DRAWDRAGRECT_DASHED | DRAWDRAGRECT_SCREEN)
-		  .Animation();
-		PaintLock++;
-		r = tr.Track(r, dir.x < 0 ? ALIGN_LEFT : dir.x > 0 ? ALIGN_RIGHT : ALIGN_CENTER,
-		                dir.y < 0 ? ALIGN_TOP : dir.y > 0 ? ALIGN_BOTTOM : ALIGN_CENTER);
-		PaintLock--;
-		SetRect(r);
-	}
-	LLOG("START DRAG ---------------");
+	SetCapture();
+	startrect = GetRect();
+	startpos = GetMousePos();
 }
 
 void TopWindowFrame::GripResize()
@@ -169,42 +152,7 @@ void TopWindowFrame::GripResize()
 void TopWindowFrame::LeftDown(Point p, dword keyflags)
 {
 	dir = GetDragMode(p);
-	if(dir.x || dir.y || FullWindowDrag)
-		StartDrag();
-	else {
-		SetCapture();
-		holding = true;
-		hold.Set(GetKbdDelay() / 3, THISBACK(Hold));
-	}
-}
-
-void TopWindowFrame::CancelMode()
-{
-	holding = false;
-}
-
-void TopWindowFrame::LeftUp(Point p, dword keyflags)
-{
-	holding = false;
-}
-
-void TopWindowFrame::Hold()
-{
-	if(HasCapture()) {
-		if(HasMouse() && GetMouseLeft() && holding)
-			StartDrag();
-		ReleaseCapture();
-		holding = false;
-	}
-}
-
-void TopWindowFrame::LeftHold(Point p, dword keyflags)
-{
-	if(HasCapture() || FullWindowDrag)
-		return;
-	dir = GetDragMode(p);
-	if(!dir.x && !dir.y)
-		StartDrag();
+	StartDrag();
 }
 
 void TopWindowFrame::LeftDouble(Point p, dword keyflags)
@@ -213,9 +161,14 @@ void TopWindowFrame::LeftDouble(Point p, dword keyflags)
 	IgnoreMouseUp();
 }
 
+void TopWindowFrame::LeftUp(Point p, dword keyflags)
+{
+	ReleaseCapture();
+}
+
 void TopWindowFrame::MouseMove(Point, dword)
 {
-	if(!HasCapture() || holding)
+	if(!HasCapture())
 		return;
 	Size msz = ComputeClient(minsize).GetSize();
 	Point p = GetMousePos() - startpos;

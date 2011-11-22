@@ -14,6 +14,8 @@
 
 	static int64 glEventLoop;
 	static int64 glEndSessionLoop;
+	
+	bool cliptobounds:1;
 
 	int FindTopCtrl() const;
 	static void SyncTopWindows();
@@ -55,6 +57,10 @@ public:
 	static void  SetWindowSize(Size sz);
 	
 	static void  DrawScreen();
+
+	Ctrl&   ClipToBounds(bool b = true) { cliptobounds = b; return *this; }
+	bool    IsClipToBounds() const      { return cliptobounds; } 
+	
 	
 	virtual void ApplyTransform(TransformState state) {}
 	void DragRectDraw(const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
@@ -62,8 +68,6 @@ public:
 
 	static Ctrl *FindMouseTopCtrl();
 
-	static bool FullWindowDrag;
-	
 	enum { DRAWDRAGRECT_SCREEN = 0x8000 };
 
 //$ };

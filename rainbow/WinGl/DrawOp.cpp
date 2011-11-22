@@ -34,7 +34,8 @@ void SystemDraw::SetClipRect(const Rect& r)
 	clip = r;
 #if CLIP_MODE != 2
 	for(int i = 0; i < ci; i++)
-		clip &= cloff[i].drawing_clip;
+		if(!cloff[i].exclude)
+			clip &= cloff[i].drawing_clip;
 #endif
 }
 
@@ -81,7 +82,7 @@ void SystemDraw::SetVec(float* v, int sx, int sy, int dx, int dy)
 	v[6] = (float) dx; v[7] = (float) sy;
 }
 
-void SystemDraw::StencilClip(const Rect& r, int mode)
+void SystemDraw::StencilClip(const Rect& r, int mode, bool exclude)
 {
 	float vtx[] = {
 		(float) r.left, (float) r.bottom,
@@ -90,24 +91,49 @@ void SystemDraw::StencilClip(const Rect& r, int mode)
 		(float) r.right, (float) r.top
 	};
 	
-	//SetVec(vtx, r.left, r.top, r.right, r.bottom);
 	glVertexPointer(2, GL_FLOAT, 0, vtx);
 	
+	int prev_cn = cn;
+	
 	glColorMask(0, 0, 0, 0);
+	
 	if(mode == 0)
 	{
-		++cn;
-		glStencilOp(GL_KEEP, GL_INCR, GL_INCR);
-		glStencilFunc(GL_GEQUAL, cn, ~0);	
+		if(exclude)
+		{
+			glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
+			glStencilFunc(GL_ALWAYS, 255, ~0);
+		}
+		else
+		{
+			++cn;
+			glStencilOp(GL_KEEP, GL_INCR, GL_INCR);
+			glStencilFunc(GL_GEQUAL, cn, ~0);
+		}
 	}
 	else
 	{
-		--cn;
-		glStencilOp(GL_KEEP, GL_DECR, GL_DECR);
-		glStencilFunc(GL_ALWAYS, cn, ~0);
+		if(exclude)
+		{
+			glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
+			glStencilFunc(GL_ALWAYS, cn, ~0);
+		}
+		else
+		{
+			--cn;
+			glStencilOp(GL_KEEP, GL_DECR, GL_DECR);
+			glStencilFunc(GL_ALWAYS, cn, ~0);
+		}
 	}
+
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	glStencilFunc(GL_LEQUAL, cn, ~0);
+
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	if(exclude)
+		glStencilFunc(GL_GREATER, 255, ~0);
+	else
+		glStencilFunc(GL_EQUAL, cn, ~0);
+
 	glColorMask(1, 1, 1, 1);
 	
 	/*
@@ -125,11 +151,11 @@ void SystemDraw::StencilClip(const Rect& r, int mode)
 	{
 		glStencilFunc(GL_LEQUAL, --cn, ~0);
 	}
-	*/			
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	*/			
 }
 
-void SystemDraw::SetClip(const Rect& r, int mode)
+void SystemDraw::SetClip(const Rect& r, int mode, bool exclude)
 {
 	//glColor4ub(255, 0, 0, 10);
 	//glRecti(r.left, r.top, r.right, r.bottom);
@@ -140,7 +166,7 @@ void SystemDraw::SetClip(const Rect& r, int mode)
 #elif CLIP_MODE == 1
 	PlaneClip(clip);
 #elif CLIP_MODE == 2
-	StencilClip(clip, mode);
+	StencilClip(clip, mode, exclude);
 #endif
 }
 
@@ -148,8 +174,9 @@ void SystemDraw::BeginOp()
 {
 	Cloff& w = cloff[ci++];
 	w.clipping = false;
+	w.exclude = false;
 	w.org = drawing_offset;
-	w.drawing_clip = drawing_clip;	
+	w.drawing_clip = drawing_clip;
 }
 
 void SystemDraw::EndOp()
@@ -157,14 +184,14 @@ void SystemDraw::EndOp()
 	ASSERT(ci);
 #if CLIP_MODE == 2
 	if(cloff[ci - 1].clipping)
-		SetClip(drawing_clip, 1);
+		SetClip(drawing_clip, 1, cloff[ci - 1].exclude);
 #endif
 	Cloff& w = cloff[--ci];
 	drawing_offset = w.org;
 	drawing_clip = w.drawing_clip;
 #if CLIP_MODE != 2
 	if(cloff[ci].clipping)
-		SetClip(drawing_clip, 1);
+		SetClip(drawing_clip);
 #endif
 }
 
@@ -195,6 +222,11 @@ bool SystemDraw::ClipoffOp(const Rect& r)
 
 bool SystemDraw::ExcludeClipOp(const Rect& r)
 {
+	ASSERT(ci > 0);
+	cloff[ci - 1].clipping = true;
+	cloff[ci - 1].exclude = true;
+	drawing_clip = r + drawing_offset;
+	SetClip(drawing_clip, 0, true);
 	return true;
 }
 
@@ -328,15 +360,15 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 	}
 #endif
 	
-	Resources::Bind(img);
+	const Texture& t = resources.Bind(img, false, true);
 
-	float tw = 1.f / (float) img.GetWidth();
-	float th = 1.f / (float) img.GetHeight();
+	float tw = 1.f / (float) t.realWidth;
+	float th = 1.f / (float) t.realHeight;
 
-	tl *= tw;
-	tr *= tw;
-	tt *= th;
-	tb *= th;
+	tl = (tl + t.x) * tw;
+	tr = (tr + t.x) * tw;
+	tt = (tt + t.y) * th;
+	tb = (tb + t.y) * th;
 
 	if(image_coloring)
 	{

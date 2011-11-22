@@ -287,27 +287,29 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip, int depth) {
 
 	if(viewexcluded)
 		w.End();
-	DOLEVELCHECK;
+	//DOLEVELCHECK;
 	
 	if(!oview.IsEmpty() && oview.Intersects(clip)) {
 		glPushMatrix();
 		LEVELCHECK(w, this);
 		if(overpaint) {
-			//if(cliptobounds)
+			if(cliptobounds)
 				w.Clip(oview);
 			w.Offset(view.left, view.top);
 			Paint(w);
 			PaintCaret(w);
 			w.End();
-			//if(cliptobounds)
+			if(cliptobounds)
 				w.End();
 		}
 		else {
-			//if(cliptobounds)
-				w.Clipoff(view);
+			if(cliptobounds)
+				w.Clip(view);
+			w.Offset(view.left, view.top);
 			Paint(w);
 			PaintCaret(w);
-			//if(cliptobounds)
+			w.End();
+			if(cliptobounds)
 				w.End();
 		}
 		glPopMatrix();
@@ -319,7 +321,7 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip, int depth) {
 			if(q->IsShown() && q->InView()) {
 				Rect rr(q->popup ? clip : cl);
 				LEVELCHECK(w, q);
-				//if(q->cliptobounds)
+				if(q->cliptobounds)
 					w.Clip(rr);
 				Rect qr = q->GetRect();
 				Point off = qr.TopLeft() + view.TopLeft();
@@ -329,7 +331,7 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip, int depth) {
 					q->CtrlPaint(w, rr - off, depth + 1);
 					w.End();
 				}
-				//if(q->cliptobounds)
+				if(q->cliptobounds)
 					w.End();
 			}
 	}

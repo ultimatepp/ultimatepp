@@ -11,6 +11,7 @@ HWND   glHwnd = NULL;
 HDC    hDC = NULL;
 HGLRC  hRC = NULL;
 Shader alphaMagProg;
+Shader blurProg;
 String error;
 
 #ifdef flagDEBUG
@@ -22,10 +23,18 @@ bool consoleActive = false;
 #endif
 
 bool glEndSession = false;
+bool glReady = false;
+
+int glDrawMode = DRAW_ON_IDLE;
 
 bool GlEndSession()
 {
 	return glEndSession;
+}
+
+bool GlReady()
+{
+	return glReady;
 }
 
 void GlQuitSession()
@@ -171,10 +180,12 @@ int CreateGlContext()
 		
 	RLOG("OpenGL: CompileProgram ok..");
 	
-	wglSwapIntervalEXT(0);
-	                       
-	SetTimer(glHwnd, 1, 10, NULL);
+	wglSwapIntervalEXT(1);
+	
+	if(glDrawMode == DRAW_ON_TIMER)
+		SetTimer(glHwnd, 1, 10, NULL);
 	RLOG("OpenGL: SetTimer ok..");
+	glReady = true;
 	return 1;
 }
 

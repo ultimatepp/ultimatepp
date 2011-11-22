@@ -13,6 +13,7 @@ file
 	ResGl.h,
 	FontGl.h,
 	Keys.h,
+	Resources.cpp,
 	ControlPanel.h,
 	ControlPanel.cpp,
 	Scrollbar.h,
@@ -47,6 +48,8 @@ file
 	Resources.brc,
 	Shaders.h,
 	Shaders.cpp,
+	Blur.frag,
+	Blur.vert,
 	AlphaMag.frag,
 	AlphaMag.vert,
 	WinGl.iml;

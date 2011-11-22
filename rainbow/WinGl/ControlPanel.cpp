@@ -84,6 +84,47 @@ float ValueSlider::GetPos()
 	return pos;
 }
 
+void SlimButton::Paint(Draw &w)
+{
+	SystemDraw& sw = (SystemDraw&) w;
+	float a = sw.alpha;
+	sw.alpha = alpha;
+	Size sz = GetSize();
+	if(HasMouseIn(sz))
+		w.DrawRect(sz, bg);
+	sw.alpha = a;
+	
+	Size tsz = GetTextSize(label, StdFont());
+	w.DrawText((sz.cx - tsz.cx) / 2, (sz.cy - tsz.cy) / 2, label, StdFont(), fg);
+}
+
+void SlimButton::LeftDown(Point p, dword keyflags)
+{
+	SetCapture();
+}
+
+void SlimButton::LeftUp(Point p, dword keyflags)
+{
+	ReleaseCapture();
+	Action();
+}
+
+void SlimButton::MouseMove(Point p, dword keyflags)
+{
+}
+
+void SlimButton::SetLabel(const char* s)
+{
+	label = s;
+}
+
+SlimButton::SlimButton()
+{
+	fg = White;
+	bg = Black;
+	alpha = 255.f;
+}
+
 InfoPanel::InfoPanel() : init(true), parent(NULL)
 {
 	Add(alphaSlider.RightPos(199, 100).VSizePos(1, 0));
@@ -116,7 +157,7 @@ void InfoPanel::Paint(Draw& w)
 	w.DrawRect(0, 0, 1, sz.cy, frameColor);
 	w.DrawRect(0, 0, sz.cx, 1, frameColor);
 	w.DrawRect(sz.cx - 1, 0, 1, sz.cy, frameColor);
-	String info = Format("FPS: %.2f, Textures: %d, Size: %d, %d", GetFps(), Resources::textures.GetCount(), wsz.cx, wsz.cy);
+	String info = Format("FPS: %.2f, Textures: %d (%d), Size: %d, %d", GetFps(), resources.textures.GetCount(), resources.bindedTextures, wsz.cx, wsz.cy);
 	w.DrawText(5, sz.cy - 18, info, StdFont(), White);
 }
 

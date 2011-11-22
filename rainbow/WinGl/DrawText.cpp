@@ -9,13 +9,15 @@ void OpenGLFont::LoadBrc(const byte* xml, const byte** imagesData, const int* im
 	Parse((const char*) xml, false);
 	for(int i = 0; i < imagesCount; i++)
 	{
-		BrcImage& bi = brcImages.Add();
-		bi.data = imagesData[i];
-		bi.length = imagesSize[i];
+		MemStream ms((void*) imagesData[i], imagesSize[i]);
+		Image img = StreamRaster::LoadAny(ms);
+		images.Add(img);
+		if(preload)
+			resources.Add(img, true);
 	}
 }
 
-void OpenGLFont::Load(const String& fileName)
+void OpenGLFont::Load(const String& fileName, bool preload)
 {
 	String filePath = GetDataFile(fileName);
 	String xml = LoadFile(filePath);
@@ -51,7 +53,10 @@ void OpenGLFont::Parse(const char* xml, bool parsePages)
 					if(parsePages)
 					{
 						String fileName = p["file"];
-						images.Add(fileName);
+						Image img = StreamRaster::LoadFileAny(GetDataFile(fileName));
+						images.Add(img);
+						if(preload)
+							resources.Add(img, true);
 					}
 					pages.Add(StrInt(p["id"]));
 				}
@@ -105,26 +110,17 @@ void OpenGLFont::Parse(const char* xml, bool parsePages)
 	}
 }
 
-void OpenGLFont::UpdateTextures()
+ void OpenGLFont::UpdateTextures()
 {
 	if(texturesUpdated)
 		return;
 				
 	for(int i = 0; i < images.GetCount(); i++)
 	{
-		Image img = StreamRaster::LoadFileAny(GetDataFile(images[i]));
-		int64 serialId = Resources::Bind(img, true);
-		pages[i] = serialId;
+		const Texture& t = resources.Bind(images[i], true);
+		pages[i] = t.serialId;
 	}
 	
-	for(int i = 0; i < brcImages.GetCount(); i++)
-	{
-		MemStream ms((void*) brcImages[i].data, brcImages[i].length);
-		Image img = StreamRaster::LoadAny(ms);
-		int64 serialId = Resources::Bind(img, true);
-		pages[i] = serialId;
-	}
-
 	texturesUpdated = true;
 }
 
@@ -138,8 +134,8 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 	if(!text)
 		return;
 
-	const wchar* s = text;	
-	OpenGLFont& fi = Resources::GetFont(font);
+	const wchar* s = text;
+	OpenGLFont& fi = resources.GetFont(font);
 	
 	glEnable(GL_TEXTURE_2D);
 	
@@ -150,6 +146,7 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 	float cb = (float) clip.bottom;
 	#endif
 	fi.UpdateTextures();	
+
 
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	alphaMagProg.Start();
@@ -187,7 +184,7 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 	
 			if(ci.page != page)
 			{
-				Resources::Bind(fi.pages[ci.page], true);
+				resources.Bind(fi.pages[ci.page], true);
 				glActiveTexture(GL_TEXTURE0);
 				alphaMagProg.Set("Texture", 0);
 				page = ci.page;

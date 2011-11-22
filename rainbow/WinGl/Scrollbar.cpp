@@ -95,6 +95,7 @@ SlimScrollBar::SlimScrollBar()
 void SlimScrollBar::Clear()
 {
 	total = 0;
+	t = 0;
 	pos = 0;
 	prev_ps = 0;
 	ps = 0;
@@ -109,21 +110,26 @@ void SlimScrollBar::Clear()
 
 void SlimScrollBar::UpdatePos(bool update, bool whenscroll)
 {
-	sz = GetSize();
+	sz = GetSize();	
 	Fix(sz);
+	
 	if(total <= 0 || sz.cx <= 0)
+	{
 		cs = ics = 0;
+	}
 	else
 	{
-		cs = sz.cx / ((double) total + 0.5);
-		ics = total / ((double) sz.cx);
+		cs = sz.cx / double(t + 0.5);
+		ics = t / double(sz.cx);
 	}
-	size = sz.cx * cs;
+	
+	size = max(0.0, sz.cx * cs);
+	
 	if(update)
 		pos = new_pos - start_pos;
 
-	isbegin = total < sz.cx;
-	isend = total < sz.cx;
+	isbegin = t < sz.cx;
+	isend = t < sz.cx;
 
 	if(pos <= 0)
 	{
@@ -136,8 +142,7 @@ void SlimScrollBar::UpdatePos(bool update, bool whenscroll)
 		isend = true;
 	}
 		
-	ps = total > sz.cx ? pos * ics : 0;
-	
+	ps = t > sz.cx ? pos * ics : 0;
 	
 	if(whenscroll && int(ps) != int(prev_ps))
 		WhenScroll();
@@ -153,11 +158,16 @@ void SlimScrollBar::Paint(Draw &w)
 		ready = true;
 	}
 
+	Ctrl* q = GetParent();
+	if(!q)
+		return;
+
 	Size sz = GetSize();
-		
-	if(IsHorz() && total > sz.cx || IsVert() && total > sz.cy) {
+	Size psz = q->GetSize();
+	
+	if(IsHorz() && total > psz.cx || IsVert() && total > psz.cy) {
 		Point p(int(pos), 0);
-		Size rsz(fceil(size), IsVert() ? sz.cx : sz.cy);
+		Size rsz(int(size), IsVert() ? sz.cx : sz.cy);
 		Fix(p);
 		Fix(rsz);
 		SystemDraw& sw = (SystemDraw&) w;
@@ -169,7 +179,13 @@ void SlimScrollBar::Paint(Draw &w)
 
 void SlimScrollBar::Layout()
 {
-	UpdatePos(false);
+	Size csz = GetSize();
+	Fix(csz);
+	if(ready && csz != sz)
+	{
+		sz = csz;
+		UpdatePos(false);
+	}
 }
 
 void SlimScrollBar::LeftDown(Point p, dword keyflags)
@@ -216,14 +232,14 @@ int SlimScrollBar::GetPos() const
 
 void SlimScrollBar::SetPos(int p, bool dontscale, bool whenscroll)
 {
-	pos = total > 0 ? dontscale ? p : iscale(p, sz.cx, total) : 0;
+	pos = total > 0 ? dontscale ? p : iscale(p, sz.cx, t) : 0;
 	UpdatePos(false, whenscroll);
 	Refresh();
 }
 
 void SlimScrollBar::AddPos(int p, bool dontscale, bool whenscroll)
 {
-	pos += total > 0 ? dontscale ? p : iscale(p, sz.cx, total) : 0;
+	pos += total > 0 ? dontscale ? p : iscale(p, sz.cx, t) : 0;
 	UpdatePos(false, whenscroll);
 	Refresh();
 }
@@ -233,10 +249,22 @@ int SlimScrollBar::GetTotal() const
 	return total;
 }
 
-void SlimScrollBar::SetTotal(int t)
+void SlimScrollBar::SetTotal(int total, bool whenscroll)
 {
-	total = t;
-	UpdatePos(false);
+	Ctrl* q = GetParent();
+	
+	Size sz = GetSize();
+	Size psz = q ? q->GetSize() : Size(0, 0);
+
+	Fix(sz);
+	Fix(psz);
+
+	this->total = total;
+	this->t = total;
+	if(q)
+		this->t -= psz.cx - sz.cx;
+	
+	UpdatePos(false, whenscroll);
 	Refresh();
 }
 
@@ -248,26 +276,25 @@ void SlimScrollBar::AddTotal(int t)
 	if(total <= 0 || sz.cx <= 0)
 		cs = ics = 0;
 	else
-		cs = sz.cx / ((double) total + 0.5);
-	size = sz.cx * cs;
-	ps = min(ps, (double)(total - sz.cx));
+		cs = sz.cx / ((double) t + 0.5);
+	size = int(sz.cx * cs);
+	ps = min(ps, (double)(t - sz.cx));
 	pos = (int)(ps * cs);		
 	old_pos = new_pos = (int)(pos - start_pos);
-	
 	Refresh();
 }
 
-void SlimScrollBar::GoEnd()
+void SlimScrollBar::GoEnd(bool whenscroll)
 {
 	pos = total;
-	UpdatePos(false);
+	UpdatePos(false, whenscroll);
 	Refresh();
 }
 
-void SlimScrollBar::GoBegin()
+void SlimScrollBar::GoBegin(bool whenscroll)
 {
 	pos = 0;
-	UpdatePos(false);
+	UpdatePos(false, whenscroll);
 	Refresh();
 }
 
@@ -291,7 +318,7 @@ void SlimScrollBar::Set(const SlimScrollBar& t)
 
 bool SlimScrollBar::IsScrollable() const
 {
-	return total > sz.cx && sz.cx > 0;
+	return t > sz.cx && sz.cx > 0;
 }
 
 END_UPP_NAMESPACE

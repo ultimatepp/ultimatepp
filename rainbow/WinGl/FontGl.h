@@ -35,18 +35,18 @@ struct OpenGLFont : Moveable<OpenGLFont>
 
 	Vector<CharInfo> chars;
 	VectorMap<int, VectorMap<int, float> > kerns;
-	Vector<String> images;
-	Vector<BrcImage> brcImages;
+	Vector<Image> images;
 	Vector<int64> pages;
+	bool preload;
 
-	OpenGLFont() : texturesUpdated(false), scale(1.0f)
+	OpenGLFont() : texturesUpdated(false), preload(false), scale(1.0f)
 	{}
 
 	~OpenGLFont()
 	{}
 
 	void LoadBrc(const byte* xml, const byte** imagesData, const int* imagesSize, int imagesCount);
-	void Load(const String& fileName);
+	void Load(const String& fileName, bool preload = false);
 	void Parse(const char* xml, bool parsePages);
 	void UpdateTextures();
 	void BuildVertices();

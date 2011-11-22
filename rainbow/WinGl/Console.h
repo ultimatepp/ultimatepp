@@ -1,7 +1,7 @@
 #ifndef _WinGl_Console_h_
 #define _WinGl_Console_h_
 
-#include <CtrlLib/CtrlLib.h>
+#include "ControlPanel.h"
 #include "Scrollbar.h"
 
 NAMESPACE_UPP
@@ -10,6 +10,7 @@ struct Console : Ctrl
 {
 	Ctrl* parent;
 	SlimScrollBar sb;
+	SlimButton clear;
 	
 	struct LineInfo : Moveable<LineInfo> {
 		Color ink;
@@ -39,6 +40,7 @@ struct Console : Ctrl
 	
 	void SetLines(int lines);
 	void Show(bool b = true);
+	void Clear();
 	
 	typedef Console CLASSNAME;
 	Console();

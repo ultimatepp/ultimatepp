@@ -87,6 +87,9 @@ LabelBox::LabelBox()
 {
 	LabelBase::SetInk(LabelBoxTextColor, LabelBoxDisabledTextColor);
 	SetVAlign(ALIGN_TOP);
+	#ifdef flagWINGL
+	ClipToBounds(false);
+	#endif
 }
 
 void  LabelBox::AssignAccessKeys(dword used)

@@ -32,6 +32,20 @@ struct ValueSlider : Ctrl
 	Callback WhenLeftUp;
 };
 
+struct SlimButton : Ctrl
+{
+	Color fg;
+	Color bg;
+	float alpha;
+	String label;
+	virtual void Paint(Draw &w);
+	virtual void LeftDown(Point p, dword keyflags);
+	virtual void LeftUp(Point p, dword keyflags);
+	virtual void MouseMove(Point p, dword keyflags);
+	void SetLabel(const char* s);
+	SlimButton();
+};
+
 struct InfoPanel : Ctrl
 {
 	bool init;
