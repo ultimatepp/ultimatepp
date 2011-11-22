@@ -135,10 +135,10 @@ letter character set encoding according this table:&]
 [s0; &]
 [s7; myapp `-`-export`-tr dede2&]
 [s0; &]
-[s0; will create dede2.tr file (in exe directory on Win32 and `~/.theide 
-on Posix) ready for translation to deDE in windows`-1252. If 
-translations are already present, they are supplied, otherwise 
-.tr file contains empty strings in place of translations.&]
+[s0; will create dede2.tr file (in exe directory on Win32 and user`'s 
+home folder on Posix) ready for translation to deDE in windows`-1252. 
+If translations are already present, they are supplied, otherwise 
+.tr file contains english strings in place of translations.&]
 [s0; &]
 [s0; It is also possible to output secondary already translated language 
 to .tr file as comments (e.g. in case that translator cannot 
