@@ -136,6 +136,32 @@ Size Ctrl::GetMaxSize() const
 	return GetVirtualWorkArea().Size();
 }
 
+#ifdef flagWINGL
+void Ctrl::SyncLayout(int force)
+{
+	GuiLock __;
+	Rect view = GetRect().Size();
+	overpaint = OverPaint();
+	
+	for(int i = 0; i < frame.GetCount(); i++) {
+		Frame& f = frame[i];
+		f.frame->FrameLayout(view);
+		if(view != f.view) {
+			f.view = view;
+		}
+		int q = f.frame->OverPaint();
+		if(q > overpaint) overpaint = q;
+	}
+	
+	for(Ctrl *q = GetFirstChild(); q; q = q->next) {
+		q->rect = q->CalcRect(rect, view);
+		q->SyncLayout();
+	}
+
+	State(LAYOUTPOS);
+	Layout();
+}
+#else
 void Ctrl::SyncLayout(int force)
 {
 	GuiLock __;
@@ -162,17 +188,14 @@ void Ctrl::SyncLayout(int force)
 		}
 		Refresh();
 	}
-	#ifdef flagWINGL
-	if(oview != view) {
-	#else
 	if(oview != view || force) {
-	#endif
 		State(LAYOUTPOS);
 		Layout();
 	}
 	if(refresh)
 		RefreshFrame();
 }
+#endif
 
 int Ctrl::FindMoveCtrl(const VectorMap<Ctrl *, MoveCtrl>& m, Ctrl *x)
 {
@@ -186,6 +209,7 @@ Ctrl::MoveCtrl *Ctrl::FindMoveCtrlPtr(VectorMap<Ctrl *, MoveCtrl>& m, Ctrl *x)
 	return q >= 0 ? &m[q] : NULL;
 }
 
+#ifdef flagWINGL
 void Ctrl::SetPos0(LogPos p, bool _inframe)
 {
 	GuiLock __;
@@ -198,11 +222,31 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 			pos = p;
 			inframe = _inframe;
 			Rect to = GetRect().Size();
-			#ifdef flagWINGL
 			UpdateRect0(false);
-			#else
+			StateH(POSITION);
+			return;
+		}
+		RefreshFrame();
+	}
+	pos = p;
+	inframe = _inframe;
+	UpdateRect0(true);
+	StateH(POSITION);
+}
+#else
+void Ctrl::SetPos0(LogPos p, bool _inframe)
+{
+	GuiLock __;
+	if(p == pos && inframe == _inframe) return;
+	if(parent) {
+		Rect from = GetRect().Size();
+		Top *top = GetTopRect(from, true)->top;
+		if(top) {
+			LTIMING("SetPos0 MoveCtrl");
+			pos = p;
+			inframe = _inframe;
+			Rect to = GetRect().Size();
 			UpdateRect0();
-			#endif
 			GetTopRect(to, true);
 			MoveCtrl *s = FindMoveCtrlPtr(top->scroll_move, this);
 			if(s && s->from == from && s->to == to) {
@@ -226,6 +270,7 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 	UpdateRect();
 	StateH(POSITION);
 }
+#endif
 
 void Ctrl::UpdateRect0(bool sync)
 {

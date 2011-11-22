@@ -28,21 +28,27 @@ extern HWND  glHwnd;
 extern HDC   hDC;
 extern HGLRC hRC;
 extern Shader alphaMagProg;
-
+extern bool  glReady;
 extern String error;
+extern int glDrawMode;
+
+#define DRAW_ON_TIMER 0
+#define DRAW_ON_IDLE 1
 
 int CreateGlWindow(HINSTANCE hInstance);
 int CreateGlContext();
 void ActivateGlContext();
 void DestroyGl();
 LRESULT CALLBACK glWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+int64 GetHighTickCount();
 
 struct FrameInfo {
+	int64 curr_tick_count;
 	float fps;
 	float frame_factor;
 	float frame_skip;
-	dword frame_time;
-	FrameInfo() : fps(0.f), frame_factor(1.f), frame_skip(60.f), frame_time(0)
+	int64 frame_time;
+	FrameInfo() : fps(0.f), frame_factor(1.f), frame_skip(60.f), frame_time(0), curr_tick_count(0)
 	{}
 };
 
@@ -67,16 +73,8 @@ enum TransformState {
 	TS_BEFORE_CTRL_PAINT,
 	TS_AFTER_CTRL_PAINT,
 	TS_BEFORE_PAINT,
-	TS_AFTER_PAINT
-};
-
-struct DragRect : Moveable<DragRect> {
-	Rect rect1, rect2;
-	Rect clip;
-	int n;
-	Color color;
-	int type;
-	int animation;
+	TS_AFTER_PAINT,
+	TS_SYNC_LAYOUT
 };
 
 class SystemDraw : public Draw {
@@ -89,8 +87,8 @@ public:
 	void SetClipRect(const Rect& r);
 	void ScissorClip(const Rect& r);
 	void PlaneClip(const Rect& r);
-	void StencilClip(const Rect& r, int mode = 0);
-	void SetClip(const Rect& r, int mode = 0);
+	void StencilClip(const Rect& r, int mode = 0, bool exlude = false);
+	void SetClip(const Rect& r, int mode = 0, bool exclude = false);
 
 	virtual void BeginOp();
 	virtual void EndOp();
@@ -135,7 +133,7 @@ public:
 	
 
 private:
-
+	static SystemDraw* systemDraw;
 	friend class  FontInfo;
 	friend class  Font;
 
@@ -143,6 +141,7 @@ private:
 	
 	struct Cloff : Moveable<Cloff> {
 		bool clipping;
+		bool exclude;
 		Point org;
 		Rect  drawing_clip;
 	};
@@ -164,9 +163,7 @@ public:
 	float        alpha;
 	float        angle;
 	float        scale;
-	
-	static Vector<DragRect> dragRect;
-	
+		
 private:
 	Array<Cloff> cloff;
 	int ci;
@@ -183,7 +180,7 @@ protected:
 	void Init();
 
 public:
-
+	static SystemDraw& Get() { return *systemDraw; }
 	static void Flush()        { /*glFlush();*/ }	
 	Point    GetOffset() const { return drawing_offset; }
 	SystemDraw(Size sz);
@@ -250,6 +247,7 @@ void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rec
 bool GlIsWaitingEvent();
 bool GlProcessEvent(bool *quit);
 void GlSleep(int ms);
+bool GlReady();
 bool GlEndSession();
 void GlQuitSession();
 

@@ -1,5 +1,4 @@
 #include <CtrlCore/CtrlCore.h>
-//#include <WinGl/Fonts.brc>
 
 #ifdef GUI_WINGL
 
@@ -8,131 +7,8 @@ NAMESPACE_UPP
 #define LLOG(x) // LOG(x)
 #define LTIMING(x) // RTIMING(x)
 
-int64 Resources::currentSerialId = -1;
-ArrayMap<int64, Texture> Resources::textures;
-VectorMap<String, OpenGLFont> Resources::fonts;
-Vector<DragRect> SystemDraw::dragRect;
 FrameInfo frameInfo;
-
-float GetFps()
-{
-	static float fps = 0.0f;
-	static dword updateInterval = 1000;
-	static dword timeSinceLastUpdate = 0;
-	static dword frameCount = 0;
-	static dword currentTick;
-	static dword lastTick;
-	static bool  isFirst = true;
-
-	if(isFirst)
-	{
-		currentTick = GetTickCount();
-		lastTick = currentTick;
-		isFirst = false;
-	}
-
-	frameCount++;
-	currentTick = GetTickCount();
-
-	dword elapsed = currentTick - lastTick;
-
-	lastTick = currentTick;
-	timeSinceLastUpdate += elapsed;
-
-	if (timeSinceLastUpdate > updateInterval)
-	{
-		if (timeSinceLastUpdate)
-		{
-			fps = (frameCount / float(timeSinceLastUpdate)) * 1000.f;
-			frameCount = 0;
-			timeSinceLastUpdate -= updateInterval;
-		}
-	}
-
-	return fps;
-}
-
-void Texture::AddPart(int64 serialId, const Image& img)
-{
-}
-
-int64 Resources::Bind(const Image& img, bool linear)
-{
-	int64 serialId = img.GetSerialId();
-
-	if(!Bind(serialId))
-		return serialId;
-
-	int textureNumber = textures.Find(serialId);
-
-	if(textureNumber < 0)
-	{
-		textures.Add(serialId);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.GetWidth(), img.GetHeight(), 0, GL_BGRA, GL_UNSIGNED_BYTE, img);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, linear ? GL_LINEAR : GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, linear ? GL_LINEAR : GL_NEAREST);
-	}
-
-	return serialId;
-}
-
-bool Resources::Bind(int64 serialId, bool force)
-{
-	if(!force && serialId == currentSerialId)
-		return false;
-	
-	currentSerialId = serialId;
-	glBindTexture(GL_TEXTURE_2D, (GLuint) serialId);
-	return true;
-}
-
-OpenGLFont& Resources::GetFont(const char* fontName, int fontHeight)
-{
-	int n = fonts.Find(fontName);
-	OpenGLFont* fgl = NULL;
-	if(n >= 0)
-		fgl = &fonts[n];
-	else
-	{
-		fgl = &fonts.Add(fontName);
-		fgl->Load(fontName);
-	}
-	
-	fgl->scale = (fontHeight * 96.f / 72.f) / 72.f;
-	return *fgl;
-}
-
-OpenGLFont& Resources::GetFontBrc(const char* fontName, const byte* fontDef,  const byte** imagesData, const int* imagesSize, int imagesCount, int fontHeight)
-{
-	int n = fonts.Find(fontName);
-	OpenGLFont* fgl = NULL;
-	if(n >= 0)
-		fgl = &fonts[n];
-	else
-	{
-		fgl = &fonts.Add(fontName);
-		fgl->LoadBrc(fontDef, imagesData, imagesSize, imagesCount);
-	}
-	
-	fgl->scale = (fontHeight * 96.f / 72.f) / 72.f;
-	return *fgl;
-}
-
-OpenGLFont& Resources::GetFont(const Font& font)
-{
-	if(font.IsBold())
-		return GetFontBrc("TahomaB", tahomaBFontDef, (const byte**) tahomaBFontImg, tahomaBFontImg_length, tahomaBFontImg_count, font.GetHeight());
-	else
-		return GetFontBrc("TahomaN", tahomaNFontDef, (const byte**) tahomaNFontImg, tahomaNFontImg_length, tahomaNFontImg_count, font.GetHeight());
-
-	//return GetFont(bold ? "tahoma14b.fnt" : "tahoma14.fnt");
-	/*return GetFontBrc(
-	    bold ? "tahoma14b.fnt" : "tahoma14.fnt",
-		bold ? resTahoma14Fnt : resTahoma14BoldFnt,
-		bold ? resTahoma14Img : resTahoma14BoldImg);*/
-}
+SystemDraw* SystemDraw::systemDraw = NULL;
 
 dword SystemDraw::GetInfo() const
 {
@@ -168,6 +44,7 @@ void SystemDraw::InitClip(const Rect& clip)
 }
 
 void SystemDraw::Reset() {
+	systemDraw = this;
 	cloff.SetCount(20);
 	ci = 0;
 	cn = 0;

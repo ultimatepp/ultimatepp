@@ -8,6 +8,7 @@ NAMESPACE_UPP
 
 void Ctrl::GuiPlatformConstruct()
 {
+	cliptobounds = true;	
 }
 
 void Ctrl::GuiPlatformRemove()

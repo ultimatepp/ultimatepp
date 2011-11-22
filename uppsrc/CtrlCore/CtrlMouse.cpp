@@ -539,8 +539,13 @@ Image Ctrl::DispatchMouse(int e, Point p, int zd) {
 
 Image Ctrl::DispatchMouseEvent(int e, Point p, int zd) {
 	GuiLock __;
+#ifdef flagWINGL
+	if(!IsEnabled() && this != (Ctrl*) &infoPanel)
+		return Image::Arrow();
+#else
 	if(!IsEnabled())
 		return Image::Arrow();
+#endif
 	if(captureCtrl && captureCtrl != this && captureCtrl->IsMouseActive())
 		return captureCtrl->MEvent0(e, p + GetScreenRect().TopLeft() -
 		                            captureCtrl->GetScreenRect().TopLeft(), zd);

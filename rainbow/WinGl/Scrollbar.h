@@ -56,6 +56,7 @@ class SlimScrollBar : public AlignedFrame
 {
 	private:
 		int total;
+		int t;
 		bool isend;
 		bool isbegin;
 		double pos, prev_ps, ps;
@@ -83,9 +84,9 @@ class SlimScrollBar : public AlignedFrame
 		void AddPos(int p, bool dontscale = false, bool whenscroll = true);
 		int  GetTotal() const;
 		void AddTotal(int t);
-		void SetTotal(int t);
-		void GoEnd();
-		void GoBegin();
+		void SetTotal(int t, bool whenscroll = true);
+		void GoEnd(bool whenscroll = true);
+		void GoBegin(bool whenscroll = true);
 		bool IsEnd();
 		bool IsBegin();
 		void Clear();

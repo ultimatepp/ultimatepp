@@ -81,16 +81,6 @@ void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rec
 void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                   Color color, int type, int animation)
 {
-	DragRect r;
-	r.rect1 = rect1;
-	r.rect2 = rect2;
-	r.clip = clip;
-	r.n = n;
-	r.color = color;
-	r.type = type;
-	r.animation = animation;
-	SystemDraw::dragRect.Add(r);
-	//q.DragRectDraw(rect1, rect2, clip, n, color, type, animation);
 }
 
 END_UPP_NAMESPACE

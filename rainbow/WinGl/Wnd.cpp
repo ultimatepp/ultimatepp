@@ -24,7 +24,6 @@ Rect           Ctrl::glCaretRect;
 int            Ctrl::glCaretTm;
 int64          Ctrl::glEventLoop = 0;
 int64          Ctrl::glEndSessionLoop = 0;
-bool           Ctrl::FullWindowDrag = false;
 int            Ctrl::PaintLock;
 
 void GlLog(int line, const char* text, Color ink)
@@ -61,7 +60,6 @@ void Ctrl::SetDesktop(Ctrl& q)
 {
 	q.SetRect(screenRect.GetSize());
 	q.SetOpen(true);
-	q.SyncLayout(2);
 	q.StateH(OPEN);
 	q.NewTop();
 	desktop = &q;
@@ -72,7 +70,6 @@ void Ctrl::SetWindowSize(Size sz)
 	screenRect = sz;
 	if(desktop)
 		desktop->SetRect(screenRect);
-	SyncTopWindows();
 }
 
 void Ctrl::InitGl()
@@ -210,24 +207,32 @@ bool Ctrl::ProcessEvent(bool *quit)
 		SyncCaret();
 		return true;
 	}
+	else if(glDrawMode == DRAW_ON_IDLE)
+		DrawScreen();
+	
 	return false;
 }
 
 void Ctrl::DrawScreen()
 {
-	if(desktop && !painting) {
-		int t0 = GetTickCount();
+	if(hRC && desktop && !painting) {
+		resources.BindStatic();
+		int64 t0 = GetHighTickCount();
+		frameInfo.curr_tick_count = t0;
 		painting = true;
-		desktop->SyncLayout(2);
+		desktop->ApplyTransform(TS_SYNC_LAYOUT);
+		desktop->SyncLayout();
+		for(int i = 0; i < topctrl.GetCount(); i++) {
+			Ctrl* tq = topctrl[i];
+			tq->ApplyTransform(TS_SYNC_LAYOUT);
+			tq->SyncLayout();
+		}
 		Rect clip = desktop->GetRect();
 		SystemDraw draw(clip.GetSize());
 		infoPanel.Init(*desktop);
 		infoPanel.Show(controlPanelActive);
 		console.Init(*desktop);
 		console.Show(consoleActive);
-		for(int i = 0; i < topctrl.GetCount(); i++) {
-			topctrl[i]->SyncLayout(2);
-		}
 		draw.alpha = infoPanel.GetAlpha();
 		draw.angle = infoPanel.GetAngle();
 		draw.scale = infoPanel.GetScale();
@@ -236,23 +241,21 @@ void Ctrl::DrawScreen()
 		desktop->ApplyTransform(TS_BEFORE_PAINT);
 		desktop->CtrlPaint(draw, clip);
 		for(int i = 0; i < topctrl.GetCount(); i++) {
-			if(topctrl[i] == &infoPanel || topctrl[i] == &console)
+			Ctrl* tq = topctrl[i];
+			if(tq == &infoPanel || tq == &console)
 				continue;
-			Rect r = topctrl[i]->GetRect();
-			draw.Clipoff(r);
-			topctrl[i]->CtrlPaint(draw, clip);
+			Rect r = tq->GetRect();
+			tq->ApplyTransform(TS_BEFORE_PAINT);
+			if(tq->cliptobounds)
+				draw.Clipoff(r);
+			else
+				draw.Offset(r.left, r.top);
+			tq->CtrlPaint(draw, clip);
 			draw.End();
+			tq->ApplyTransform(TS_AFTER_PAINT);
 		}
 		CursorSync(draw);
 			
-		for(int i = 0; i < SystemDraw::dragRect.GetCount(); i++)
-		{
-			const DragRect& r = SystemDraw::dragRect[i];
-			DrawDragRect(draw, r.rect1, r.rect2, r.clip, r.n, r.color, r.type, r.animation);
-		}
-		
-		SystemDraw::dragRect.Clear();
-		
 		desktop->ApplyTransform(TS_AFTER_PAINT);		
 		glLoadIdentity();
 		#if CLIP_MODE == 2
@@ -278,7 +281,7 @@ void Ctrl::DrawScreen()
 		MouseSync(draw);		
 		SwapBuffers(hDC);
 		painting = false;
-		int t1 = GetTickCount();
+		int64 t1 = GetHighTickCount();
 		frameInfo.frame_time = t1 - t0;
 		frameInfo.frame_factor = frameInfo.frame_time * frameInfo.frame_skip / 1000.f;
 		frameInfo.fps = frameInfo.frame_time > 0.f ? 1000.f / (float)frameInfo.frame_time : 0.f;
@@ -298,7 +301,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()));
 	TimerProc(GetTickCount());
 	SweepMkImageCache();
-	if(hRC)
+	if(glDrawMode == DRAW_ON_TIMER)
 		DrawScreen();
 	return true;
 }
@@ -322,7 +325,8 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	while(loopno > EndSessionLoopNo && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
 		SyncCaret();
-		GuiSleep(20);
+		if(glDrawMode == DRAW_ON_TIMER)
+			GuiSleep(20);
 		ProcessEvents(&quit);
 	}
 
@@ -558,8 +562,6 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 	}
 	topctrl.Add(this);
 	popup = isopen = true;
-	RefreshLayoutDeep();
-	SyncLayout(2);
 	StateH(OPEN);
 	if(activate) SetFocusWnd();
 }

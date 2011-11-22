@@ -245,7 +245,7 @@ Vector<FaceInfo> GetAllFacesSys()
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
 	static GlyphInfo gi;
-	const OpenGLFont& fi = Resources::GetFont(font);
+	const OpenGLFont& fi = resources.GetFont(font);
 	gi.width = chr < fi.chars.GetCount() 
 		? int(fi.chars[chr].xadvance * fi.scale + 0.5f)
 		: 0;
