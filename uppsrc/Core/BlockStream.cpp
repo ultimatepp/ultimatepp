@@ -163,7 +163,7 @@ void BlockStream::_Put(const void *data, dword size) {
 		s += n;
 		n = dword(pg1 - pg0) - pagesize;
 		streamsize = max(pos + pagesize + n, streamsize);
-		int wpos = pos + pagesize;
+		int64 wpos = pos + pagesize;
 		SetPos(pos0 + size);
 		SyncPage();
 		if(n)
