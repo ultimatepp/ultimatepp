@@ -27,6 +27,7 @@ public:
 	double              CalcDouble(CalcContext& context) const;
 	String              CalcString(CalcContext& context) const;
 	int                 CalcInt(CalcContext& context) const;
+	int64               CalcInt64(CalcContext& context) const;
 	Date                CalcDate(CalcContext& context) const;
 	Time                CalcTime(CalcContext& context) const;
 	bool                CalcBool(CalcContext& context) const;
@@ -348,6 +349,7 @@ public:
 	double              EvaluateDouble(String expr);
 	String              EvaluateString(String expr);
 	int                 EvaluateInt(String expr);
+	int64               EvaluateInt64(String expr);
 	Date                EvaluateDate(String expr);
 	Time                EvaluateTime(String expr);
 	bool                EvaluateBool(String expr, bool null_value = false);
