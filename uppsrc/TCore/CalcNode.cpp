@@ -613,6 +613,12 @@ int CalcContext::EvaluateInt(String expr)
 	return !!node ? node->CalcInt(*this) : int(Null);
 }
 
+int64 CalcContext::EvaluateInt64(String expr)
+{
+	CalcNodePtr node = CalcParser().ScanVoid(expr);
+	return !!node ? node->CalcInt64(*this) : int(Null);
+}
+
 Date CalcContext::EvaluateDate(String expr)
 {
 	CalcNodePtr node = CalcParser().ScanVoid(expr);
@@ -1038,6 +1044,16 @@ String CalcNode::CalcString(CalcContext& context) const
 }
 
 int CalcNode::CalcInt(CalcContext& context) const
+{
+	if(this == 0)
+		return Null;
+	Value v = Calc(context);
+	if(!IsNull(v) && !IsNumber(v))
+		throw Exc(t_("Number expected, found: ") + context.FormatNull(v));
+	return v;
+}
+
+int64 CalcNode::CalcInt64(CalcContext& context) const
 {
 	if(this == 0)
 		return Null;
