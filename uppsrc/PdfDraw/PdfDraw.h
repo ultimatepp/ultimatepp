@@ -339,7 +339,7 @@ public:
 	PdfDraw(Size pgsz = Size(5100, 6600), bool pdfa = false) { Init(pgsz.cx, pgsz.cy, 0, pdfa); }
 };
 
-String Pdf(const Array<Drawing>& report, Size pagesize, int margin);
+String Pdf(const Array<Drawing>& report, Size pagesize, int margin, bool pdfa = false);
 
 END_UPP_NAMESPACE
 
