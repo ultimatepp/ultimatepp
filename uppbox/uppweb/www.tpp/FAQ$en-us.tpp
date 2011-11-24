@@ -113,7 +113,7 @@ Windows 1250).&]
 so long? Is not BLITZ supposed to be fast?]&]
 [s0;/ &]
 [s22; The very first build of any GUI example has to build complete 
-U`+`+ library, something you cannot expect it to happen in seconds. 
+U`+`+ library, something you cannot expect to happen in seconds. 
 After this first rebuild, results (object and/or library files) 
 are cached for future similar builds which should be significantly 
 faster.&]
@@ -158,18 +158,12 @@ By clicking this file layout (image) designer will be invoked
 to edit it.&]
 [s22; &]
 [s22; &]
-[s23; When I use Assist`+`+ to write down function and parameters 
-in the editor I do get:&]
-[s0; -|[C@5 String s `= Garble(const char `*s][@5 ¸][C@5  const char `*e)]&]
-[s23; The `"¸`" between parameters is some weird character, not comma.&]
-[s0; &]
-[s22; A feature. Replace the first parameters with the real one (const 
-char `*s is selected), then press `',`' (after replacing the 
-first parameter, cursor will be before that `'weird`' character). 
-The `'¸`' is used to tell the editor that we are now in `"filling 
-the parameters`" mode and that it should select the next parameter.&]
-[s22; [/ Note: this is related to U`+`+ up to 2008.1. Later versions 
-replaced this behaviour with more sophisticated approach.]&]
+[s23; File with layout (.lay) or image list (.iml) switched to the 
+text format. How do I switch it back?&]
+[s23; &]
+[s23; &]
+[s22; Please invoke menu Edit / Edit using designer, or press hotkey 
+which defaults to Ctrl`+T.&]
 [s0; &]
 [s0; &]
 [s23; What is the meaning of `"Optimal`", `"Optimize speed`" and `"Optimize 
@@ -198,7 +192,7 @@ to have `"F`" flag and to get the performance on par.&]
 [s0; &]
 [s0; &]
 [s0; [/ Could someone point me to a detailed, step by step, description 
-how to build the IDE from the fresh SVN sources? (I do have 2008.1 
+how to build the IDE from the fresh SVN sources? (I do have theide 
 installed.)]&]
 [s0;/ &]
 [s22; Get fresh sources from [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/checkout^ h
@@ -227,8 +221,8 @@ toolbar. Click the right button and choose Optimal.&]
 [s22; &]
 [s22; It should build. Then, if you are in win32, you can choose `"Build/Open 
 output directory`" to fetch the result. Replace theide.exe in 
-your upp directory. I recommend keeping existing theide.exe (that 
-is, 2008.1 version) under different name as backup.&]
+your upp directory. I recommend keeping existing theide.exe under 
+different name as backup.&]
 [s22; &]
 [s22; Note: You might want to use current U`+`+ library too. You can 
 do this by putting it to appropriate assemblies `- without much 
