@@ -74,6 +74,10 @@ TOPIC("contribweb$cs-cz")
 #include "contribweb$cs-cz.tppi"
 END_TOPIC
 
+TOPIC("contribweb$de-de")
+#include "contribweb$de-de.tppi"
+END_TOPIC
+
 TOPIC("contribweb$en-us")
 #include "contribweb$en-us.tppi"
 END_TOPIC

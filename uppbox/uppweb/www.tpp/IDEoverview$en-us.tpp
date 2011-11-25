@@ -35,7 +35,7 @@ AGG example :) )&]
 [s0; &]
 [s3; Ultimate`'s IDE `-TheIDE `- Top 10 features and tools:&]
 [s0; &]
-[s12;i150; 1. Packages and assemblies `- a revoliutionary system to 
+[s12;i150; 1. Packages and assemblies `- a revolutionary system to 
 manage your projects.&]
 [s0; Tired of thinking how to connect your projects? How to organize 
 your directories? Want `"just include`" your entire package?&]
