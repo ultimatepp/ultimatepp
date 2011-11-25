@@ -242,6 +242,10 @@ TOPIC("overview$cs-cz")
 #include "overview$cs-cz.tppi"
 END_TOPIC
 
+TOPIC("overview$de-de")
+#include "overview$de-de.tppi"
+END_TOPIC
+
 TOPIC("overview$en-us")
 #include "overview$en-us.tppi"
 END_TOPIC
