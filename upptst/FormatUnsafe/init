@@ -1,0 +1,4 @@
+#ifndef _FormatUnsafe_icpp_init_stub
+#define _FormatUnsafe_icpp_init_stub
+#include "Core/init"
+#endif
