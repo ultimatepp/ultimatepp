@@ -187,14 +187,34 @@ Vector<String> Cuprep(const String& m, const VectorMap<String, String>& mac,
 	return Split(r, CharFilterTextTest(CharFilterEol));
 }
 
-bool IsCd(const String& cmd) {
+bool CppBuilder::Cd(const String& cmd) {
 	if(cmd.GetLength() > 2 && ToLower(cmd.Mid(0, 3)) == "cd ") {
+		String path = cmd.Mid(3);
 	#ifdef PLATFOTM_POSIX
 		chdir(path);
 	#endif
 	#ifdef PLATFORM_WIN32
-		SetCurrentDirectory(cmd.Mid(3));
+		SetCurrentDirectory(path);
 	#endif
+		return true;
+	}
+	return false;
+}
+
+bool CppBuilder::Cp(const String& cmd, const String& package, bool& error) {
+	if(cmd.GetLength() > 2 && ToLower(cmd.Mid(0, 3)) == "cp ") {
+		Vector<String> path = Split(cmd.Mid(3), ' ');
+		if(path.GetCount() == 2) {
+			String p = GetFileFolder(PackagePath(package));
+			String p1 = NormalizePath(path[0], p);
+			String p2 = NormalizePath(path[1], p);
+			RealizePath(p2);
+			if(!FileExists(p1)) {
+				PutConsole("FAILED: " + cmd);
+				error = true;
+			}
+			SaveFile(p2, LoadFile(p1));
+		}
 		return true;
 	}
 	return false;
@@ -207,8 +227,9 @@ static void AddPath(VectorMap<String, String>& out, String key, String path)
 	out.Add(key + "_UNIX", UnixPath(path));
 }
 
-Vector<String> CppBuilder::CustomStep(const String& path)
+Vector<String> CppBuilder::CustomStep(const String& pf, const String& package, bool& error)
 {
+	String path = package.GetCount() ? SourcePath(package, pf) : pf;
 	String file = GetHostPath(path);
 	String ext = ToLower(GetFileExt(file));
 	for(int i = 0; i < wspc.GetCount(); i++) {
@@ -218,13 +239,21 @@ Vector<String> CppBuilder::CustomStep(const String& path)
 			if(MatchWhen(m.when, config.GetKeys()) && m.MatchExt(ext)) {
 				VectorMap<String, String> mac;
 				AddPath(mac, "PATH", file);
+				AddPath(mac, "RELPATH", pf);
 				AddPath(mac, "DIR", GetFileFolder(file));
+				AddPath(mac, "PACKAGE", package);
 				mac.Add("FILE", GetFileName(file));
 				mac.Add("TITLE", GetFileTitle(file));
-				AddPath(mac, "OUTPATH", GetHostPath(target));
+				AddPath(mac, "EXEPATH", GetHostPath(target));
+				AddPath(mac, "EXEDIR", GetHostPath(GetFileFolder(target)));
+				mac.Add("EXEFILE", GetFileName(target));
+				mac.Add("EXETITLE", GetFileTitle(target));
 				AddPath(mac, "OUTDIR", GetHostPath(outdir));
-				mac.Add("OUTFILE", GetFileName(target));
-				mac.Add("OUTTITLE", GetFileTitle(target));
+				//BW
+				AddPath(mac, "OUTDIR", GetHostPath(GetFileFolder(target)));
+				AddPath(mac, "OUTFILE", GetHostPath(GetFileName(target)));
+				AddPath(mac, "OUTTITLE", GetHostPath(GetFileTitle(target)));
+
 				mac.Add("INCLUDE", Join(include, ";"));
 				Vector<String> out = Cuprep(m.output, mac, include);
 				bool dirty = out.IsEmpty();
@@ -235,8 +264,9 @@ Vector<String> CppBuilder::CustomStep(const String& path)
 					PutConsole(GetFileName(file));
 					Vector<String> cmd = Cuprep(m.command, mac, include);
 					String cmdtext;
-					for(int c = 0; c < cmd.GetCount(); c++)
-						if(!IsCd(cmd[c])) {
+					for(int c = 0; c < cmd.GetCount(); c++) {
+						PutVerbose(cmd[c]);
+						if(!Cd(cmd[c]) && !Cp(cmd[c], package, error)) {
 							String ctext = cmd[c];
 							const char *cm = ctext;
 							if(*cm == '?')
@@ -244,9 +274,12 @@ Vector<String> CppBuilder::CustomStep(const String& path)
 							if(*ctext != '?' && Execute(cm)) {
 								for(int t = 0; t < out.GetCount(); t++)
 									DeleteFile(out[t]);
+								PutConsole("FAILED: " + ctext);
+								error = true;
 								return Vector<String>();
 							}
 						}
+					}
 				}
 				return out;
 			}

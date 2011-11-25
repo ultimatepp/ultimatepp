@@ -89,7 +89,7 @@ bool JavaBuilder::BuildPackage(const String& package, Vector<String>& linkfile, 
 			return false;
 		if(!pkg[i].separator) {
 			String gop = Gather(pkg[i].option, config.GetKeys());
-			Vector<String> srcfile = CustomStep(SourcePath(package, pkg[i]));
+			Vector<String> srcfile = CustomStep(pkg[i], package, error);
 			if(srcfile.GetCount() == 0)
 				error = true;
 			for(int j = 0; j < srcfile.GetCount(); j++)
@@ -273,8 +273,9 @@ bool JavaBuilder::Link(const Vector<String>& linkfile, const String& linkoptions
 	Time tm = Time::Low();
 	for(int i = ITEMCOUNT; i < linkfile.GetCount(); i++)
 		tm = max(tm, AddClassDeep(cmdline, linkfile[i], Null));
+	bool error = false;
 	if(tm > targettime) {
-		CustomStep(".pre-link");
+		CustomStep(".pre-link", Null, error);
 		String link, response;
 		link << "jar ";
 		if(cmdline.GetLength() < 32000)
@@ -294,7 +295,7 @@ bool JavaBuilder::Link(const Vector<String>& linkfile, const String& linkoptions
 			DeleteFile(target);
 			return false;
 		}
-		CustomStep(".post-link");
+		CustomStep(".post-link", Null, error);
 		PutConsole(String().Cat() << target << " (" << GetFileInfo(target).length
 		           << " B) archived in " << GetPrintTime(time));
 	}

@@ -569,9 +569,6 @@ String IntFormatter(const Formatting& f)
 		return AsString((int)f.arg);
 	StringBuffer q;
 	q.SetLength(1000);
-	DDUMP(f.format);
-	DDUMP(f.id);
-	DDUMP('%' + f.format + f.id);
 	q.SetLength(sprintf(q, '%' + f.format + f.id, (int)f.arg));
 	return q;
 }

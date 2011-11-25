@@ -102,7 +102,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 			return false;
 		if(!pkg[i].separator) {
 			String gop = Gather(pkg[i].option, config.GetKeys());
-			Vector<String> srcfile = CustomStep(SourcePath(package, pkg[i]));
+			Vector<String> srcfile = CustomStep(pkg[i], package, error);
 			if(srcfile.GetCount() == 0)
 				error = true;
 			for(int j = 0; j < srcfile.GetCount(); j++) {
@@ -392,12 +392,13 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			if(!HasFlag("SOLARIS") && !HasFlag("OSX11"))
 				lnk << " -Wl,--end-group";
 			PutConsole("Linking...");
-			CustomStep(".pre-link");
-			if(Execute(lnk) == 0) {
-				CustomStep(".post-link");
+			bool error = false;
+			CustomStep(".pre-link", Null, error);
+			if(!error && Execute(lnk) == 0) {
+				CustomStep(".post-link", Null, error);
 				PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
 				           << " B) linked in " << GetPrintTime(time));
-				return true;
+				return !error;
 			}
 			else {
 				DeleteFile(target);

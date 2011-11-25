@@ -45,7 +45,9 @@ struct CppBuilder : Builder {
 	bool                   Run(const char *cmdline, Stream& out, int slot, String key, int blitz_count);
 	bool                   Wait();
 	bool                   HasFlag(const char *f) const        { return config.Find(f) >= 0; }
-	Vector<String>         CustomStep(const String& file);
+	bool                   Cp(const String& cmd, const String& package, bool& error);
+	bool                   Cd(const String& cmd);
+	Vector<String>         CustomStep(const String& path, const String& package, bool& error);
 
 	String                 Includes(const char *sep, const String& package, const Package& pkg);
 	String                 IncludesShort(const char *sep, const String& package, const Package& pkg);

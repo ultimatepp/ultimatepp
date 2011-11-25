@@ -220,7 +220,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 			return false;
 		if(!pkg[i].separator) {
 			String gop = Gather(pkg[i].option, config.GetKeys());
-			Vector<String> srcfile = CustomStep(SourcePath(package, pkg[i]));
+			Vector<String> srcfile = CustomStep(pkg[i], package, error);
 			if(srcfile.GetCount() == 0)
 				error = true;
 			for(int j = 0; j < srcfile.GetCount(); j++) {
@@ -520,9 +520,10 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			for(i = 0; i < linkfile.GetCount(); i++)
 				link << ' ' << GetHostPathQ(AppendExt(linkfile[i], ".lib"));
 			PutConsole("Linking...");
-			CustomStep(".pre-link");
-			if(Execute(link) == 0) {
-				CustomStep(".post-link");
+			bool error = false;
+			CustomStep(".pre-link", Null, error);
+			if(!error, Execute(link) == 0) {
+				CustomStep(".post-link", Null, error);
 				if((IsMsc86() || IsMsc64()) && HasFlag("SHARED")) {
 					String mt("mt -nologo -manifest ");
 					mt << GetHostPathQ(target) << ".manifest -outputresource:" << GetHostPathQ(target)
@@ -531,7 +532,7 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				}
 				PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
 				           << " B) linked in " << GetPrintTime(time));
-				return true;
+				return !error;
 			}
 			else {
 				DeleteFile(target);

@@ -129,7 +129,7 @@ bool ScriptBuilder::BuildPackage(const String& package, Vector<String>& linkfile
 			return false;
 		if(!pkg[i].separator) {
 			String gop = Gather(pkg[i].option, config.GetKeys());
-			Vector<String> srcfile = CustomStep(SourcePath(package, pkg[i]));
+			Vector<String> srcfile = CustomStep(pkg[i], package, error);
 			if(srcfile.GetCount() == 0)
 				error = true;
 			for(int j = 0; j < srcfile.GetCount(); j++) {
@@ -255,15 +255,16 @@ bool ScriptBuilder::Link(const Vector<String>& linkfile, const String& linkoptio
 			linkargs.Add(GetHostPathQ(target));
 			linkargs.Add(linkoptions);
 			PutConsole("Linking...");
-			CustomStep(".pre-link");
-			if(!ExecuteIf("link", linkargs).GetNumber()) {
+			bool error = false;
+			CustomStep(".pre-link", Null, error);
+			if(!error && !ExecuteIf("link", linkargs).GetNumber()) {
 				DeleteFile(target);
 				return false;
 			}
-			CustomStep(".post-link");
+			CustomStep(".post-link", Null, error);
 			PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
 				<< " B) linked in " << GetPrintTime(time));
-			return true;
+			return !error;
 		}
 	PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
 	           << " B) is up to date.");
