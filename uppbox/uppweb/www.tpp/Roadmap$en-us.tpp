@@ -26,7 +26,7 @@ topic "Changelog";
 [s0;4 &]
 [s0; [*_3 Current release]&]
 [s0; &]
-[s0; [*_4 4179][*3  (18 Nov 2011)]&]
+[s0; [*_4 4193][*3  (24 Nov 2011)]&]
 [s0;* &]
 [s0; `"Rainbow`" technology decouples U`+`+ GUI from host platform. 
 It is now possible to develop new GUI&]
