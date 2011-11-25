@@ -133,4 +133,58 @@ RichText AsRichText(const wchar *s, const RichPara::Format& f)
 	return clip;
 }
 
+struct DrawingPageDraw__ : public DrawingDraw, public PageDraw {
+	virtual Draw& Page(int i);
+
+	Array<Drawing>  page;
+	int             pagei;
+	Size            size;
+
+	void  Flush();
+
+	DrawingPageDraw__() { pagei = -1; }
+};
+
+Draw& DrawingPageDraw__::Page(int i)
+{
+	ASSERT(i >= 0);
+	if(i != pagei) {
+		Flush();
+		pagei = i;
+		Create(size);
+	}
+	return *this;
+}
+
+void DrawingPageDraw__::Flush()
+{
+	if(pagei >= 0) {
+		Drawing dw = GetResult();
+		page.At(pagei).Append(dw);
+		Create(size);
+	}
+}
+
+Array<Drawing> RenderPages(const RichText& txt, Size pagesize)
+{
+	DrawingPageDraw__ pd;
+	pd.size = pagesize;
+	PageY py(0, 0);
+	PaintInfo paintinfo;
+	paintinfo.top = PageY(0, 0);
+	paintinfo.bottom = PageY(INT_MAX, INT_MAX);
+	paintinfo.indexentry = Null;
+	paintinfo.hyperlink = Null;
+	txt.Paint(pd, PageY(0, 0), pagesize, paintinfo);
+	pd.Flush();
+	return pd.page;
+}
+
+String Pdf(const RichText& txt, Size pagesize, int margin, bool pdfa)
+{
+	Array<Drawing> pages = RenderPages(txt, pagesize);
+	return GetDrawingToPdfFn() && pages.GetCount() ? (*GetDrawingToPdfFn())(pages, pagesize, margin, pdfa)
+	                                               : String();
+}
+
 END_UPP_NAMESPACE
