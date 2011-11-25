@@ -223,8 +223,7 @@ void BlockStream::SetSize(int64 size)
 	int64 pos = GetPos();
 	Flush();
 	Seek(0);
-	SetStreamSize(/*mediasize = streamsize =*/ size); // 06-08-29 TRC
-	// during call to SetStreamSize, mediasize must still contain the old file size
+	SetStreamSize(size);
 	streamsize = size;
 	Seek(pos < size ? pos : size);
 }
