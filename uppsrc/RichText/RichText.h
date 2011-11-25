@@ -490,6 +490,10 @@ struct PrintPageDraw : PageDraw {
 	virtual ~PrintPageDraw() {}
 };
 
+Array<Drawing> RenderPages(const RichText& txt, Size pagesize = Size(3968, 6074));
+
+String Pdf(const RichText& txt, Size pagesize = Size(3968, 6074), int margin = 200, bool pdfa = false);
+
 END_UPP_NAMESPACE
 
 #endif
