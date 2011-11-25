@@ -21,7 +21,8 @@ String  VFormat(const char *fmt, va_list ptr) {
 String FormatIntBase(int i, int base, int width, char lpad, int sign, bool upper)
 {
 	enum { BUFFER = sizeof(int) * 8 + 1 };
-	ASSERT(base >= 2 && base <= 36);
+	if(base < 2 || base > 36)
+		return "<invalid base>";
 	char buffer[BUFFER];
 	char *const e = buffer + (int)BUFFER;
 	char *p = e;
@@ -568,6 +569,9 @@ String IntFormatter(const Formatting& f)
 		return AsString((int)f.arg);
 	StringBuffer q;
 	q.SetLength(1000);
+	DDUMP(f.format);
+	DDUMP(f.id);
+	DDUMP('%' + f.format + f.id);
 	q.SetLength(sprintf(q, '%' + f.format + f.id, (int)f.arg));
 	return q;
 }
@@ -976,7 +980,7 @@ String NFormat0(int language, const char *s, const Value **v, int count)
 		f.id.Clear();
 		b = s;
 		int pad = -1;
-		int padn;
+		int padn = 0;
 		String nvl_value = String::GetVoid();
 		for(;;) {
 			if(*s == '$') {
@@ -1042,7 +1046,8 @@ String NFormat0(int language, const char *s, const Value **v, int count)
 			if(!*s || *s == '`' || IsAlpha(*s))
 				break;
 			else {
-				ASSERT(*s);
+				if(!*s)
+					return result + "<unexpected end>";
 				if(IsDigit(*s))
 					n = 10 * n + *s - '0';
 				else
@@ -1055,15 +1060,13 @@ String NFormat0(int language, const char *s, const Value **v, int count)
 		while(IsAlpha(*s))
 			s++;
 		f.id = String(b, s);
-#ifndef _DEBUG
 		if(pos < 0 || pos >= count)
 		{
-			result << "!!ARGPOS=" << pos;
+			result << "<invalid pos=" << pos << ">";
 			if(*s == '`')
 				s++;
 			continue;
 		}
-#endif
 		f.arg = *v[pos++];
 		String r;
 		if(!nvl_value.IsVoid() && IsNull(f.arg))
@@ -1074,17 +1077,8 @@ String NFormat0(int language, const char *s, const Value **v, int count)
 #ifdef _DEBUG
 			int fi = formatmap().Find(FormId(f.id, f.arg.GetType()));
 			if(fi < 0) fi = formatmap().Find(FormId(f.id, VALUE_V));
-			if(fi < 0)
-			{
-				LOG("Missing formatter '" << f.id << "' for type " << f.arg.GetType());
-				String fmt_types;
-				for(int fm = 0; fm < formatmap().GetCount(); fm++)
-					if(formatmap().GetKey(fm).id == f.id)
-						fmt_types << ' ' << formatmap().GetKey(fm).type;
-				LOG("Formatter available for type(s): " << fmt_types);
-				NEVER();
-			}
-			ft = formatmap()[fi];
+			if(fi >= 0)
+				ft = formatmap()[fi];
 #else
 			for(;;) {
 				int fi = formatmap().Find(FormId(f.id, f.arg.GetType()));
@@ -1105,10 +1099,11 @@ String NFormat0(int language, const char *s, const Value **v, int count)
 				r << "<N/A '" << f.id << "' for type " << (int)f.arg.GetType() << ">";
 		}
 		int len;
-		switch(pad)
-		{
+		if(padn < 0 || padn > 1000)
+			r << "<invalid padding>";
+		else
+		switch(pad) {
 		case ALIGN_LEFT:
-			ASSERT(padn >= 0);
 			len = r.GetCharCount();
 			if(len < padn)
 				r.Cat(' ', padn - len);
@@ -1116,7 +1111,6 @@ String NFormat0(int language, const char *s, const Value **v, int count)
 				TrimChar(r, padn);
 			break;
 		case ALIGN_RIGHT:
-			ASSERT(padn >= 0);
 			len = r.GetCharCount();
 			if(len < padn) {
 				String fill(' ', padn - len);
@@ -1126,7 +1120,6 @@ String NFormat0(int language, const char *s, const Value **v, int count)
 				TrimChar(r, padn);
 			break;
 		case ALIGN_CENTER:
-			ASSERT(padn >= 0);
 			len = r.GetCharCount();
 			if(len < padn) {
 				int ll = (padn - len) / 2;
