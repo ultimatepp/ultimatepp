@@ -15,7 +15,21 @@ Resources::Resources() : autoAtlas(1024, 1024)
 	bindedTextures = 0;
 }
 
-const Texture& Resources::CreateTexture(const Image& img, bool linear, int width, int height)
+void Resources::SetTextureFiltring(int opts)
+{
+	if(opts & LINEAR_FILTERING)
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
+	else if(opts & NEAREST_FILTRING)
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	}
+}
+
+const Texture& Resources::CreateTexture(const Image& img, int width, int height)
 {
 	int64 serialId = img.GetSerialId();
 	Texture& t = textures.Add(serialId);
@@ -27,22 +41,20 @@ const Texture& Resources::CreateTexture(const Image& img, bool linear, int width
 	t.realHeight = t.height;
 	t.x = 0;
 	t.y = 0;
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, t.width, t.height, 0, GL_BGRA, GL_UNSIGNED_BYTE, img);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, linear ? GL_LINEAR : GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, linear ? GL_LINEAR : GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, t.width, t.height, 0, GL_BGRA, GL_UNSIGNED_BYTE, img);
 	++bindedTextures;
 	return t;
 }
 
 void Resources::CreateSubTexture(const Texture& t, const Image& img, int x, int y)
 {
-	Bind(autoAtlas.serialId);
+	Bind(autoAtlas.serialId, 0);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, img.GetWidth(), img.GetHeight(), GL_BGRA, GL_UNSIGNED_BYTE, img);
 }
 
-const Texture& Resources::Bind(const Image& img, bool linear, bool autoatlas)
+ const Texture& Resources::Bind(const Image& img, int opts)
 {
 	int64 serialId = img.GetSerialId();
 
@@ -52,7 +64,7 @@ const Texture& Resources::Bind(const Image& img, bool linear, bool autoatlas)
 		if(texture->atlasSerialId >= 0)
 			serialId = texture->atlasSerialId;
 	}
-	else if(autoatlas)
+	else if(opts & AUTO_ATLAS)
 	{
 		int w = img.GetWidth();
 		int h = img.GetHeight();
@@ -101,24 +113,29 @@ const Texture& Resources::Bind(const Image& img, bool linear, bool autoatlas)
 		}
 	}
 	
-	if(!Bind(serialId))
+	if(!Bind(serialId, opts))
 		return *texture;
 
 	if(!texture)
 	{
-		texture = &CreateTexture(img, linear);
+		texture = &CreateTexture(img);
 	}
 
 	return *texture;
 }
 
-bool Resources::Bind(int64 serialId, bool force)
+bool Resources::Bind(int64 serialId, int opts)
 {
-	if(!force && serialId == currentSerialId)
+	if(!(opts & FORCE_BIND) && serialId == currentSerialId)
+	{
+		if(opts & FORCE_FILTERING)
+			SetTextureFiltring(opts);
 		return false;
+	}
 	
 	currentSerialId = serialId;
 	glBindTexture(GL_TEXTURE_2D, (GLuint) serialId);
+	SetTextureFiltring(opts);
 	return true;
 }
 
@@ -129,21 +146,21 @@ void Resources::BindStatic()
 		autoAtlasBuffer.Create(autoAtlas.width, autoAtlas.height);
 		Fill(autoAtlasBuffer, RGBAZero(), autoAtlasBuffer.GetLength());
 		autoAtlasImage = autoAtlasBuffer;
-		Bind(autoAtlasImage.GetSerialId(), true);		
-		autoAtlas = CreateTexture(autoAtlasImage, false);
+		Bind(autoAtlasImage.GetSerialId());		
+		autoAtlas = CreateTexture(autoAtlasImage);
 	}
 	
 	if(!staticImages.IsEmpty())
 	{
 		for(int i = 0; i < staticImages.GetCount(); i++)
-			Bind(staticImages[i].img, staticImages[i].linear);
+			Bind(staticImages[i].img, staticImages[i].linear ? Resources::LINEAR_FILTERING : Resources::NEAREST_FILTRING);
 		staticImages.Clear();
 	}
 	
 	if(!staticAtlases.IsEmpty())
 	{
 		for(int i = 0; i < staticAtlases.GetCount(); i++)
-			Bind(staticAtlases[i].Make(textures), staticAtlases[i].linear);
+			Bind(staticAtlases[i].Make(textures), staticAtlases[i].linear ? Resources::LINEAR_FILTERING : Resources::NEAREST_FILTRING);
 		staticAtlases.Clear();
 	}
 	
