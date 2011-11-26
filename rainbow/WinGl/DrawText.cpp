@@ -117,7 +117,7 @@ void OpenGLFont::Parse(const char* xml, bool parsePages)
 				
 	for(int i = 0; i < images.GetCount(); i++)
 	{
-		const Texture& t = resources.Bind(images[i], true);
+		const Texture& t = resources.Bind(images[i], Resources::LINEAR_FILTERING);
 		pages[i] = t.serialId;
 	}
 	
@@ -184,7 +184,7 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 	
 			if(ci.page != page)
 			{
-				resources.Bind(fi.pages[ci.page], true);
+				resources.Bind(fi.pages[ci.page], Resources::LINEAR_FILTERING);
 				glActiveTexture(GL_TEXTURE0);
 				alphaMagProg.Set("Texture", 0);
 				page = ci.page;

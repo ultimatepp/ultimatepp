@@ -102,6 +102,7 @@ public:
 
 	virtual	void DrawRectOp(int x, int y, int cx, int cy, Color color);
 	virtual void DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color);
+	virtual void DrawImageOp(float x0, float y0, float z0, float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, const Image& img, const Rect& src, Color color);
 	virtual void DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color);
 
 	virtual void DrawPolyPolylineOp(const Point *vertices, int vertex_count,
@@ -189,6 +190,7 @@ public:
 	void Clear();
 	void PushContext();
 	void PopContext();
+	float GetAspect() { return drawing_size.cx / (float) drawing_size.cy; };
 };
 
 struct BackDraw__ : public SystemDraw {

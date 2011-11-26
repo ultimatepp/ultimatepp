@@ -55,6 +55,14 @@ struct ImageResource : Moveable<ImageResource>
 
 struct Resources
 {
+	enum {
+		NEAREST_FILTRING = 1,
+		LINEAR_FILTERING = 2,
+		FORCE_FILTERING = 4,
+		AUTO_ATLAS = 8,
+		FORCE_BIND = 16
+	};
+	
 	Vector<ImageResource> staticImages;
 	VectorMap<String, Atlas> staticAtlases;
 	Vector<Font> staticFonts;
@@ -70,11 +78,11 @@ struct Resources
 	ArrayMap<int64, Texture> textures;
 	ArrayMap<String, OpenGLFont> fonts;
 	
-	const Texture& CreateTexture(const Image& img, bool linear = false, int width = -1, int height = -1);
+	const Texture& CreateTexture(const Image& img, int width = -1, int height = -1);
 	void CreateSubTexture(const Texture& t, const Image& img, int x, int y);
 	
-	const Texture& Bind(const Image& img, bool linear = false, bool autoatlas = false);
-	bool Bind(int64 serialId, bool force = false);
+	const Texture& Bind(const Image& img, int opts = NEAREST_FILTRING);
+	bool Bind(int64 serialId, int opts = NEAREST_FILTRING);
 	void Add(const Image& img, bool linear = false);
 	void Add(Iml* images, bool linear = false);
 	void Add(const Font& fnt);
@@ -82,6 +90,7 @@ struct Resources
 	void AddAtlas(const char* atlasName, Iml* images);
 	OpenGLFont& GetFont(const char* fontName, int fontHeight, bool preload = false, const byte* fontDef = NULL, const byte** imagesData = NULL, const int* imagesSize = NULL, int imagesCount = 0);
 	OpenGLFont& GetFont(const Font& font, bool preload = false);
+	void SetTextureFiltring(int opts);
 	
 	void BindStatic();
 	

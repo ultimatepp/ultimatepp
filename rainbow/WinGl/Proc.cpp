@@ -49,8 +49,9 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 	GuiLock __;
 #ifdef _DEBUG
 	Tuple2<int, const char *> *x = FindTuple(sWinMsg, __countof(sWinMsg), message);
-	if(x)
+	if(x) {
 		LLOG(x->b << ", wParam: " << wParam << ", lParam: " << lParam);
+	}
 #endif
 	//	LLOG("Ctrl::WindowProc(" << message << ") in " << ::Name(this) << ", focus " << (void *)::GetFocus());
 	switch(message) {

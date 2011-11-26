@@ -360,7 +360,7 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 	}
 #endif
 	
-	const Texture& t = resources.Bind(img, false, true);
+	const Texture& t = resources.Bind(img, Resources::AUTO_ATLAS | Resources::NEAREST_FILTRING);
 
 	float tw = 1.f / (float) t.realWidth;
 	float th = 1.f / (float) t.realHeight;
@@ -399,6 +399,63 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 	glVertexPointer(2, GL_FLOAT, 0, vtx);
 	//SetVec(vtx, sx, sy, dx, dy);
 	//SetVec(crd, tl, tt, tr, tb);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	
+	glDisable(GL_TEXTURE_2D);
+}
+
+void SystemDraw::DrawImageOp(float x0, float y0, float z0, float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, const Image& img, const Rect& src, Color color)
+{
+	float tl = (float) src.left;
+	float tr = (float) src.right;
+	float tt = (float) src.top;
+	float tb = (float) src.bottom;
+	
+	float sw = (float) src.GetWidth();
+	float sh = (float) src.GetHeight();
+
+	const Texture& t = resources.Bind(img, Resources::AUTO_ATLAS | Resources::NEAREST_FILTRING);
+
+	float tw = 1.f / (float) t.realWidth;
+	float th = 1.f / (float) t.realHeight;
+
+	tl = (tl + t.x) * tw;
+	tr = (tr + t.x) * tw;
+	tt = (tt + t.y) * th;
+	tb = (tb + t.y) * th;
+
+	if(image_coloring)
+	{
+		if(IsNull(color))	
+			glColor4ub(255, 255, 255, (int) alpha);
+		else
+			glColor4ub(color.GetR(), color.GetG(), color.GetB(), (int) alpha);
+	}
+	
+	glEnable(GL_TEXTURE_2D);
+
+	float vtx[] = {
+//		float(x3 + drawing_offset.x), float(y3 + drawing_offset.y),
+//		float(x0 + drawing_offset.x), float(y0 + drawing_offset.y),
+//		float(x2 + drawing_offset.x), float(y2 + drawing_offset.y),
+//		float(x1 + drawing_offset.x), float(y1 + drawing_offset.y)
+		x3, y3, z3,
+		x0, y0, z0,
+		x2, y2, z2,
+		x1, y1, z1
+	};
+
+	float crd[] = {
+		tl, tb,
+		tl, tt,
+		tr, tb,
+		tr, tt
+	};
+
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glTexCoordPointer(2, GL_FLOAT, 0, crd);
+	glVertexPointer(3, GL_FLOAT, 0, vtx);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	
