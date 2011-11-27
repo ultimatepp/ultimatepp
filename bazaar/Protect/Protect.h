@@ -114,7 +114,6 @@ using namespace Upp;
 		: "eax", "ebx", "ecx", "edx" \
     ); \
     __xxx = true; \
-		Cerr() << "AFTER     : " << HexString(&&__start, 50) << "\n"; \
 		if(__xxx) \
 		{ \
 			__init: \

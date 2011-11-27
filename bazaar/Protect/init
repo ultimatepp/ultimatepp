@@ -3,7 +3,7 @@
 #include "Core/init"
 #include "Cypher/init"
 #include "Web/init"
+#include "ProductVersion/init"
 #include "plugin\sqlite3/init"
 #include "MySql/init"
-#include "ProductVersion/init"
 #endif
