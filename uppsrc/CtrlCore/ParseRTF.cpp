@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x) LOG(x)
+#define LLOG(x) // DLOG(x)
 
 static int TwipDotsLim(int twips) { return minmax<int>(TwipDots(twips), 0, MAX_DOTS); }
 
