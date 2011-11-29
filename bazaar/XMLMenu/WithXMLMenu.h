@@ -175,8 +175,22 @@ template<class T> WithXMLMenu<T>::~WithXMLMenu()
 template<class T> void WithXMLMenu<T>::RefreshFrames(void)
 {
 	// removes all frames
-	T::ClearFrames();
+//	T::ClearFrames();
+	T::RemoveFrame(topFrame);
+	T::RemoveFrame(bottomFrame);
+	T::RemoveFrame(leftFrame);
+	T::RemoveFrame(rightFrame);
 	
+	// add docking frames
+	if(dockTop)
+		T::InsertFrame(0, topFrame);
+	if(dockBottom)
+		T::InsertFrame(0, bottomFrame);
+	if(dockLeft)
+		T::InsertFrame(0, leftFrame);
+	if(dockRight)
+		T::InsertFrame(0, rightFrame);
+
 	// adds main menu
 	if(mainMenu)
 	{
@@ -184,19 +198,11 @@ template<class T> void WithXMLMenu<T>::RefreshFrames(void)
 		if(mainIdx >= 0)
 		{
 			MenuBar &bar = menuBarCtrls[mainIdx];
-			T::AddFrame(bar);
+			T::RemoveFrame(bar);
+			T::InsertFrame(0, bar);
 		}
 	}
 
-	// add docking frames
-	if(dockTop)
-		T::AddFrame(topFrame);
-	if(dockBottom)
-		T::AddFrame(bottomFrame);
-	if(dockLeft)
-		T::AddFrame(leftFrame);
-	if(dockRight)
-		T::AddFrame(rightFrame);
 }
 		
 
@@ -505,7 +511,13 @@ template<class T> void WithXMLMenu<T>::SetToolBar0(Bar &bar, int tbIdx, Array<XM
 // refresh menus and bars
 template<class T> void WithXMLMenu<T>::RefreshBars(void)
 {
-	T::ClearFrames();
+//	T::ClearFrames();
+	T::RemoveFrame(topFrame);
+	T::RemoveFrame(bottomFrame);
+	T::RemoveFrame(leftFrame);
+	T::RemoveFrame(rightFrame);
+	for(int iBar = 0; iBar < menuBarCtrls.GetCount(); iBar++)
+		T::RemoveFrame(menuBarCtrls[iBar]);
 
 	// refresh menus
 	menuBarCtrls.Clear();
