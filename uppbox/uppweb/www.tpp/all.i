@@ -54,6 +54,10 @@ TOPIC("comparison$cs-cz")
 #include "comparison$cs-cz.tppi"
 END_TOPIC
 
+TOPIC("comparison$de-de")
+#include "comparison$de-de.tppi"
+END_TOPIC
+
 TOPIC("comparison$en-us")
 #include "comparison$en-us.tppi"
 END_TOPIC
@@ -140,6 +144,10 @@ END_TOPIC
 
 TOPIC("extlinks$en-us")
 #include "extlinks$en-us.tppi"
+END_TOPIC
+
+TOPIC("FAQ$de-de")
+#include "FAQ$de-de.tppi"
 END_TOPIC
 
 TOPIC("FAQ$en-us")
