@@ -34,6 +34,10 @@ TOPIC("chss$cs-cz")
 #include "chss$cs-cz.tppi"
 END_TOPIC
 
+TOPIC("chss$de-de")
+#include "chss$de-de.tppi"
+END_TOPIC
+
 TOPIC("chss$en-us")
 #include "chss$en-us.tppi"
 END_TOPIC
@@ -104,6 +108,10 @@ END_TOPIC
 
 TOPIC("devmovie$en-us")
 #include "devmovie$en-us.tppi"
+END_TOPIC
+
+TOPIC("documentation$de-de")
+#include "documentation$de-de.tppi"
 END_TOPIC
 
 TOPIC("documentation$en-us")
@@ -188,6 +196,10 @@ END_TOPIC
 
 TOPIC("idess$cs-cz")
 #include "idess$cs-cz.tppi"
+END_TOPIC
+
+TOPIC("idess$de-de")
+#include "idess$de-de.tppi"
 END_TOPIC
 
 TOPIC("idess$en-us")
@@ -300,6 +312,10 @@ END_TOPIC
 
 TOPIC("ss$cs-cz")
 #include "ss$cs-cz.tppi"
+END_TOPIC
+
+TOPIC("ss$de-de")
+#include "ss$de-de.tppi"
 END_TOPIC
 
 TOPIC("ss$en-us")
