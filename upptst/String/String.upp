@@ -5,5 +5,5 @@ file
 	String.cpp;
 
 mainconfig
-	"" = "";
+	"" = "EXPERIMENTAL";
 
