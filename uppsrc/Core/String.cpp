@@ -2,6 +2,29 @@
 
 NAMESPACE_UPP
 
+inline void svo_memcpy(char *t, const char *s, int len)
+{
+	switch(len) {
+	case 15: t[14] = s[14];
+	case 14: t[13] = s[13];
+	case 13: t[12] = s[12];
+	case 12: t[11] = s[11];
+	case 11: t[10] = s[10];
+	case 10: t[9] = s[9];
+	case  9: t[8] = s[8];
+	case  8: t[7] = s[7];
+	case  7: t[6] = s[6];
+	case  6: t[5] = s[5];
+	case  5: t[4] = s[4];
+	case  4: t[3] = s[3];
+	case  3: t[2] = s[2];
+	case  2: t[1] = s[1];
+	case  1: t[0] = s[0];
+		return;
+	}
+	memcpy(t, s, len);
+}
+
 #ifdef _DEBUG
 void String0::Dsyn()
 {
@@ -77,7 +100,7 @@ unsigned String0::LHashValue() const
 	if(l < 15) {
 		dword w[4];
 		w[0] = w[1] = w[2] = w[3] = 0;
-		memcpy(w, ptr, l);
+		svo_memcpy((char *)w, ptr, l);
 		((byte *)w)[SLEN] = l;
 		return CombineHash(w[0], w[1], w[2], w[3]);
 	}
@@ -127,18 +150,18 @@ char *String0::Insert(int pos, int count, const char *s)
 			LLen() = newlen;
 		str[newlen] = 0;
 		if(s)
-			memcpy(str + pos, s, count);
+			svo_memcpy(str + pos, s, count);
 		Dsyn();
 		return str + pos;
 	}
 	char kind;
 	char *p = Alloc(max(2 * len, newlen), kind);
 	if(pos > 0)
-		memcpy(p, str, pos);
+		svo_memcpy(p, str, pos);
 	if(pos < len)
-		memcpy(p + pos + count, str + pos, len - pos);
+		svo_memcpy(p + pos + count, str + pos, len - pos);
 	if(s)
-		memcpy(p + pos, s, count);
+		svo_memcpy(p + pos, s, count);
 	p[newlen] = 0;
 	Free();
 	ptr = p;
@@ -155,7 +178,7 @@ void String0::UnShare()
 		int len = LLen();
 		char kind;
 		char *p = Alloc(len, kind);
-		memcpy(p, ptr, len + 1);
+		svo_memcpy(p, ptr, len + 1);
 		Free();
 		chr[KIND] = kind;
 		ptr = p;
@@ -230,7 +253,11 @@ void String0::Cat(const char *s, int len)
 {
 	if(IsSmall()) {
 		if(SLen() + len < 14) {
+#ifdef flagEXPERIMENTAL
+			svo_memcpy(chr + SLen(), s, len);
+#else
 			memcpy(chr + SLen(), s, len);
+#endif
 			SLen() += len;
 			chr[(int)SLen()] = 0;
 			Dsyn();
@@ -239,7 +266,11 @@ void String0::Cat(const char *s, int len)
 	}
 	else
 		if((int)LLen() + len < LAlloc() && !IsSharedRef()) {
+#ifdef flagEXPERIMENTAL
+			svo_memcpy(ptr + LLen(), s, len);
+#else
 			memcpy(ptr + LLen(), s, len);
+#endif
 			LLen() += len;
 			ptr[LLen()] = 0;
 			Dsyn();
@@ -399,7 +430,11 @@ void StringBuffer::Cat(const char *s, int l)
 	if(end + l > limit)
 		Realloc(max(GetLength(), l) + GetLength(), s, l);
 	else {
+#ifdef flagEXPERIMENTAL
+		svo_memcpy(end, s, l);
+#else
 		memcpy(end, s, l);
+#endif
 		end += l;
 	}
 }
