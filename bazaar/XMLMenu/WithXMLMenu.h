@@ -29,10 +29,10 @@ template<class T> class WithXMLMenu : public T, public XMLMenuInterface
 		XMLToolBarFrame rightFrame;
 		
 		// the menu bars
-		Array<MenuBar> menuBarCtrls;
+		ArrayMap<String, MenuBar> menuBarCtrls;
 	
 		// toolbar controls storage area
-		Array<XMLToolBarCtrl> toolBarCtrls;
+		ArrayMap<String, XMLToolBarCtrl> toolBarCtrls;
 		
 		// flags stating allowed dock point and main menu bar
 		bool dockTop, dockBottom, dockLeft, dockRight;
@@ -93,6 +93,7 @@ template<class T> class WithXMLMenu : public T, public XMLMenuInterface
 		void DragLoop(Point startP);
 		
 		// refresh menus and bars
+		void RefreshBarsDeep(void);
 		void RefreshBars(void);
 		
 		// sync bars from ctrls
@@ -151,7 +152,6 @@ template<class T> WithXMLMenu<T>::WithXMLMenu() :
 	leftFrame		(TOOLBAR_LEFT),
 	rightFrame		(TOOLBAR_RIGHT)
 {
-DLOG("XMLMenu : " << FormatHex(this));
 	// allows, by default, docking on 4 corners and embeds
 	// main menu too
 	dockTop = dockBottom = dockLeft = dockRight = true;
@@ -175,34 +175,33 @@ template<class T> WithXMLMenu<T>::~WithXMLMenu()
 template<class T> void WithXMLMenu<T>::RefreshFrames(void)
 {
 	// removes all frames
-//	T::ClearFrames();
 	T::RemoveFrame(topFrame);
 	T::RemoveFrame(bottomFrame);
 	T::RemoveFrame(leftFrame);
 	T::RemoveFrame(rightFrame);
 	
-	// add docking frames
-	if(dockTop)
-		T::InsertFrame(0, topFrame);
-	if(dockBottom)
-		T::InsertFrame(0, bottomFrame);
-	if(dockLeft)
-		T::InsertFrame(0, leftFrame);
-	if(dockRight)
-		T::InsertFrame(0, rightFrame);
-
 	// adds main menu
+	int iFrame = 0;
 	if(mainMenu)
 	{
-		int mainIdx = menuBars.Find("Main");
+		int mainIdx = menuBarCtrls.Find("Main");
 		if(mainIdx >= 0)
 		{
 			MenuBar &bar = menuBarCtrls[mainIdx];
 			T::RemoveFrame(bar);
-			T::InsertFrame(0, bar);
+			T::InsertFrame(iFrame++, bar);
 		}
 	}
 
+	// add docking frames
+	if(dockTop)
+		T::InsertFrame(iFrame++, topFrame);
+	if(dockBottom)
+		T::InsertFrame(iFrame++, bottomFrame);
+	if(dockLeft)
+		T::InsertFrame(iFrame++, leftFrame);
+	if(dockRight)
+		T::InsertFrame(iFrame, rightFrame);
 }
 		
 
@@ -509,9 +508,9 @@ template<class T> void WithXMLMenu<T>::SetToolBar0(Bar &bar, int tbIdx, Array<XM
 }
 
 // refresh menus and bars
-template<class T> void WithXMLMenu<T>::RefreshBars(void)
+template<class T> void WithXMLMenu<T>::RefreshBarsDeep(void)
 {
-//	T::ClearFrames();
+	// do a deep refresh, wiping all controls and recreating then
 	T::RemoveFrame(topFrame);
 	T::RemoveFrame(bottomFrame);
 	T::RemoveFrame(leftFrame);
@@ -523,7 +522,7 @@ template<class T> void WithXMLMenu<T>::RefreshBars(void)
 	menuBarCtrls.Clear();
 	for(int iBar = 0; iBar < menuBars.GetCount(); iBar++)
 	{
-		menuBarCtrls.Add(new MenuBar);
+		menuBarCtrls.Add(menuBars.GetKey(iBar), new MenuBar);
 
 		// workaround for main menu... without this one
 		// it appears as a popup menu
@@ -539,7 +538,7 @@ template<class T> void WithXMLMenu<T>::RefreshBars(void)
 	for(int iBar = 0; iBar < toolBars.GetCount(); iBar++)
 	{
 		XMLToolBar &toolBar = toolBars[iBar];
-		toolBarCtrls.Add(new XMLToolBarCtrl(this));
+		toolBarCtrls.Add(toolBars.GetKey(iBar), new XMLToolBarCtrl(this));
 		XMLToolBarCtrl &toolBarCtrl = toolBarCtrls.Top();
 		toolBarCtrls[iBar].Set(THISBACK1(SetToolBar, iBar));
 		Reposition(&toolBarCtrl, toolBar.GetState(), toolBar.GetPosition());
@@ -548,6 +547,72 @@ template<class T> void WithXMLMenu<T>::RefreshBars(void)
 	
 	// refresh frames
 	RefreshFrames();
+}
+
+template<class T> void WithXMLMenu<T>::RefreshBars(void)
+{
+	// refactored logic for toolbar updates -- avoids unneeded
+	// screen redrawing and frame adding/removing
+
+	// we shall first find if controls were added or removed
+	// in that case we proceed the old way, recalculating all frames
+	Vector<String> const &ctrlNames = toolBarCtrls.GetKeys();
+	bool deepUpdate = false;
+	for(int iName = 0; iName < ctrlNames.GetCount(); iName++)
+	{
+		if(toolBars.Find(ctrlNames[iName]) < 0)
+		{
+			deepUpdate = true;
+			break;
+		}
+	}
+	if(!deepUpdate)
+	{
+		Vector<String> const &barNames = toolBars.GetKeys();
+		for(int iName = 0; iName < barNames.GetCount(); iName++)
+		{
+			if(toolBarCtrls.Find(barNames[iName]) < 0)
+			{
+				deepUpdate = true;
+				break;
+			}
+		}
+	}
+	if(!deepUpdate)
+	{
+		Vector<String> const &menuCtrlNames = menuBars.GetKeys();
+		for(int iName = 0; iName < menuCtrlNames.GetCount(); iName++)
+		{
+			if(menuBars.Find(menuCtrlNames[iName]) < 0)
+			{
+				deepUpdate = true;
+				break;
+			}
+		}
+	}
+	if(!deepUpdate)
+	{
+		Vector<String> const &menuNames = menuBars.GetKeys();
+		for(int iName = 0; iName < menuNames.GetCount(); iName++)
+		{
+			if(menuBarCtrls.Find(menuNames[iName]) < 0)
+			{
+				deepUpdate = true;
+				break;
+			}
+		}
+	}
+
+	if(deepUpdate)
+		RefreshBarsDeep();
+	else
+	{
+		// do a smart refresh, just update controls inside menus and toolbars
+		for(int iBar = 0; iBar < menuBars.GetCount(); iBar++)
+			menuBarCtrls[iBar].Set(THISBACK1(SetMenuBar, iBar));
+		for(int iBar = 0; iBar < toolBars.GetCount(); iBar++)
+			toolBarCtrls[iBar].Set(THISBACK1(SetToolBar, iBar));
+	}
 }
 
 // sync bars from ctrls
@@ -594,10 +659,7 @@ template<class T> void WithXMLMenu<T>::SetToolBars(Callback1<XMLToolBars &> tb)
 // gets a context menu by name -- NULL if none
 template<class T> MenuBar *WithXMLMenu<T>::GetContextMenu(String const &name)
 {
-	int idx = menuBars.Find(name);
-	if(idx < 0)
-		return NULL;
-	return &menuBarCtrls[idx];
+	return menuBarCtrls.FindPtr(name);
 }
 
 // xml support
@@ -614,7 +676,7 @@ template<class T> void WithXMLMenu<T>::Xmlize(XmlIO xml)
 	// wait that top window is opened before refreshing toolbars
 	// don't know if it's the right way, but.....
 	if(xml.IsLoading())
-		T::PostCallback(THISBACK(RefreshBars));
+		T::PostCallback(THISBACK(RefreshBarsDeep));
 }
 
 // toggles bar visibility
