@@ -1,45 +1,45 @@
-topic "Ultimate++ is a C++ cross-platform rapid application development framework";
+topic "Ultimate++ ist ein pattformÃ¼bergreifendes C++ Framework fÃ¼r schnelle Anwendungsentwicklung";
 [ $$0,0#00000000000000000000000000000000:Default]
 [a83;*R6 $$1,0#31310162474203024125188417583966:caption]
 [{_}%DE-DE 
-[s0; [*R6 Ultimate`+`+ ist ein C`+`+ Framework fÃ¼r schnelle Entwicklung 
-von cross`-platform Anwendungen]&]
-[s0;>*R^topic`:`/`/uppweb`/www`/index`$ru`-ru^1 &]
-[ {{6760:3240f0;g0;^l/0r/0t/0b/0 [s0; [*2 U`+`+][2  ist ein C`+`+ Framework fÃ¼r schnelle Entwicklung 
-von cross`-platform Anwendungen mit Fokus auf ProduktivitÃ¤t 
-des Programmierers. Es schliesst ein Set von Libraries (GUI, 
-SQL, etc..) und eine Integrierte Entwicklungsumgebung ein.]&]
+[s0; [*R6 Ultimate`+`+ ist ein plattformÃ¼bergreifendes C`+`+ Framework 
+fÃ¼r schnelle Anwendungensentwicklung]&]
+[s0;>*R^topic`:`/`/uppweb`/www`/index`$de`-de^1 &]
+[ {{6760:3240f0;g0;^l/0r/0t/0b/0 [s0; [*2 U`+`+][2  ist ein plattformÃ¼bergreifendes C`+`+ Framework fÃ¼r 
+die schnelle Anwendungsentwicklung mit Fokus auf die ProduktivitÃ¤t 
+des Programmierers. Es schliesst ein Zusammenstellung von Bibliotheken 
+(GUI, SQL, etc..) und eine integrierte Entwicklungsumgebung ein.]&]
 [s0;2 &]
-[s0; [2 Schnelle Entwicklung wird durch ][^topic`:`/`/uppweb`/www`/overview`$en`-us^2 int
-elligenten und agressiven Einsatz von C`+`+][2  erreicht statt 
-durch ausgefallene Code Generatoren. So konkuriert U`+`+ mit 
+[s0; [2 Die schnelle Entwicklung wird durch den ][^topic`:`/`/uppweb`/www`/overview`$de`-de^2 i
+ntelligenten und offensiven Einsatz von C`+`+][2  erreicht statt 
+durch ausgefallene Code`-Generatoren. So konkuriert U`+`+ mit 
 gÃ¤ngigen Script`-Sprachen wÃ¤hrend es die C/C`+`+ Laufzeit`-Charakteristiken 
 beibehÃ¤lt.]&]
 [s0;2 &]
 [s0; [2 Die U`+`+ Integrierte Entwicklungsumgebung, TheIDE, fÃ¼hrt 
 modulare Konzepte in die C`+`+ Programmierung ein. Es bietet 
-BLITZ`-build Technologie die C`+`+ Rebuilds um bis zu das 4fache 
+BLITZ`-Build Technologie, die C`+`+ Rebuilds um das bis zu 4fache 
 beschleunigt, Visuelle Entwicklung mit den U`+`+ Libraries, das 
-][^topic`:`/`/ide`/app`/Topic`$en`-us^2 Topic`+`+][2  System fÃ¼r 
+][^topic`:`/`/ide`/app`/Topic`$de`-de^2 Topic`+`+][2  System fÃ¼r 
 Code`-Dokumentierung und Erstellen von rich`-text Ressourcen 
-fÃ¼r die Anwendung (Hilfe`-Dateien, Code Dikumentation) und ][^topic`:`/`/ide`/app`/Assist`$en`-us^2 A
+fÃ¼r die Anwendung (Hilfe`-Dateien, Code Dikumentation) und ][^topic`:`/`/ide`/app`/Assist`$de`-de^2 A
 ssist`+`+][2  `- einen leistungsstarken C`+`+ Code Analyzer mit 
 Features wie Code VervollstÃ¤ndigung, Navigation und Transformation.]&]
 [s0;2 &]
-[s0; [2 TheIDE arbeitet mit GCC, MinGW and Visual C`+`+ 9.0 wie in 
+[s0; [2 TheIDE kann mit GCC, MinGW and Visual C`+`+ 9.0, wie es in 
 der freien ][^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?familyid`=ff6467e6`-5bba`-4bf5`-b562`-9199be864d29`&displaylang`=en^2 W
-indows Vista SDK][2  enthalten und hat einen reich ausgestatteten 
-Debugger. TheIDE kann auch fÃ¼r die Entwicklung von Nicht`-U`+`+ 
-Anwendungen benutzt werden.]&]
+indows Vista SDK][2  enthalten ist, arbeiten und hat einen vollstÃ¤ndig 
+ausgestatteten Debugger. TheIDE kann auch fÃ¼r die Entwicklung 
+von Nicht`-U`+`+ Anwendungen benutzt werden.]&]
 [s0;2 &]
-[s0; [*2 Mit dem Download der Ultimate`+`+ bekommt du:]&]
+[s0; [*2 Mit dem Download der Ultimate`+`+ bekommst du:]&]
 [s0; &]
-[s0;i150;O2; [2 Hoch effiziente C`+`+ library fÃ¼r cross`-platform 
-Entwicklung in Source Code Form.]&]
-[s0;i150;O2; [2 Eine gute integrierte Entwicklugsumgebung, ausgelegt 
-auf Entwicklung von umfangreichen C`+`+ Applikationen.]&]
+[s0;i150;O2; [2 Hoch effiziente C`+`+ Bibliothek fÃ¼r plattformÃ¼bergreifende 
+Entwicklung in Quellode`-Form.]&]
+[s0;i150;O2; [2 Eine gute integrierte Entwicklungsumgebung, ausgelegt 
+auf die Entwicklung von umfangreichen C`+`+ Anwendungen.]&]
 [s0;2 &]
-[s0; [2 Du kannst beides oder einen beliebigen Teil verwenden.]]
+[s0; [2 Du kannst beides oder auch nur einen beliebigen Teil verwenden.]]
 :: [s1;> [/@(0.0.255)0 
 @@image:1271&1092
 ˆƒ ø€€€€€€€€€€ø‡œì…ü”×××ÿ§­®‰îÎÒÜƒ»„§„»¸»û€ õ¾Ù…ÒœŠ»ÃˆÂÂ ‚ÁŠÁ”¢­Òœ‚ñŸ¬ïØùŸ»÷
@@ -755,7 +755,7 @@ auf Entwicklung von umfangreichen C`+`+ Applikationen.]&]
 ´¬Ù²äÉ’¥ÒË–¬Ù²äÉÉ’¥Ë–¬Ù²¦äÉ’¥Ë–¬šÙ²äÉ’¥Ë™–¬Ù®úßú…Šèý
 ]&]
 [s0;>/@(0.0.255)0 &]
-[s0;l128; Aktuelles release: [*IRELEASET; release]&]
+[s0;l128; Aktuelles Release: [*IRELEASET; release]&]
 [s0;l128; Lizenz: [* BSD]&]
 [s0;* ]}}&]
 [s0; &]
@@ -770,22 +770,22 @@ auf Entwicklung von umfangreichen C`+`+ Applikationen.]&]
 ::r0/25t0/15b0/15@2R0-2 [s0;%- ]
 ::-1 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^2 GUI 
+::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$de`-de^2 GUI 
 Tutorial]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/comparison`$en`-us^2 Comparisons]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Overview]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/tutoring`$en`-us^2 Tutoring 
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/comparison`$de`-de^2 Vergleiche]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/overview`$de`-de^2 Ãœbersicht]&]
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/tutoring`$de`-de^2 Tutoring 
 Plan]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r8/25t/25b/25R(165) [s0;>@(114)2 ]
-::t8/25b8/25-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us^2 Documentation]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/examples`$en`-us^2 Examples]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/videotutorials`$en`-us^2 Video 
+::t8/25b8/25-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/documentation`$de`-de^2 Dokumentation]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/examples`$de`-de^2 Beispiele]&]
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/videotutorials`$de`-de^2 Video 
 Tutorials]]
 ::r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/apps`$en`-us^2 Applications]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/FAQ`$en`-us^2 FAQ]&]
+::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/apps`$de`-de^2 Anwendungen]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/FAQ`$de`-de^2 FAQ]&]
 [s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forum^2 Forums]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::t8/25b8/25R(165)-1 [s0;*+34 ]
@@ -804,34 +804,33 @@ Tutorials]]
 :: [s0;%- ]
 ::l8/25r/0t8/25b8/25@(240)R(165) [s0; [*2 U`+`+ Herunterladen]]
 ::l0/25r8/25 [s0;> [@(114)2 Los gehts!]]
-::^l8/25@2-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/svnInstall`$en`-us^2 SVN 
-install and permissions]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/bugreports`$en`-us^2 Bug 
-report. Submitting a patch]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/contribweb`$en`-us^2 Web 
-page]&]
-[s0;i150;a17;O0; [2 New development ideas]&]
-[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/www`/currenttopics`$en`-us^2 Current 
-topics]&]
-[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/ideas2011`$en`-us^2 GSoC 
+::^l8/25@2-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/svnInstall`$de`-de^2 SVN 
+Installation and Berechtigungen]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/bugreports`$de`-de^2 Fehlermeldung 
+`- Submitting a patch]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/contribweb`$de`-de^2 Webseite]&]
+[s0;i150;a17;O0; [2 Neue Ideen zur Entwicklung]&]
+[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/www`/currenttopics`$de`-de^2 Aktuelle 
+Topics]&]
+[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/ideas2011`$de`-de^2 GSoC 
 ideas]]
 ::=l0/25r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
-::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^2 Bazaar]&]
-[s0;i150;a17;O0; [^topic`:`/`/ide`/app`/About`$en`-us^2 Authors `& 
-License]]
+::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/bazaar`$de`-de^2 Bazaar]&]
+[s0;i150;a17;O0; [^topic`:`/`/ide`/app`/About`$de`-de^2 Autoren `& 
+Lizenz]]
 ::=l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/download`$en`-us^2 Download]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^2 Current 
-release][2 : ][IRELEASE;2 release]&]
+::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/download`$de`-de^2 Download]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Roadmap`$de`-de^2 Aktueller 
+Release][2 : ][IRELEASE;2 release]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-RELEASE`.exe^+75 W
 in32 installer]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-RELEASE`.tar`.gz^+75 X
 11`-src]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^+75 Ubun
 tu packages]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/svn`/svn`$en`-us^2 Latest svn][2 : 
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/svn`/svn`$de`-de^2 Latest svn][2 : 
 ][ILATESTSVN;2 latestsvn]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r/0t8/25b8/25R(165)-1 [s0;*+34 ]
@@ -850,18 +849,18 @@ tu packages]&]
 ::l/25r0/25t0/15b0/15@2R0 [s0;%- ]
 ::l8/25t8/25b8/25@(240)R(165) [s0; [*2 U`+`+ unterstÃ¼tzen]]
 ::l0/25r8/25 [s0;> [@(114)2 Manchmal braucht man mehr als Source Code...]]
-::l8/25@2-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/gsoc2011`$en`-us^2 Google 
+::l8/25@2-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/gsoc2011`$de`-de^2 Google 
 Summer of Code resources]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/extlinks`$en`-us^2 External 
+::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/extlinks`$de`-de^2 External 
 links]&]
 [s0;i150;O0; [2 Web index. ][/@(153)2 To Be Done...]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
-::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Funding`$en`-us^2 Funding 
+::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Funding`$de`-de^2 Funding 
 U`+`+]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/cookie`$en`-us^2 Cookie 
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/cookie`$de`-de^2 Cookie 
 prize]]
 ::=l0/25r0/25t0/15b0/15R0 [s0;%- ]}}&]
 [s0; &]
