@@ -2215,7 +2215,7 @@ void ArrayCtrl::SortA()
 				if(IsCtrl(i, j)) {
 					const Column& m = column[j];
 					ASSERT(m.pos.GetCount() == 1);
-					array[i].line[m.pos[0]] = GetCellCtrl(i, j).ctrl->GetData();
+					array[i].line.At(m.pos[0]) = GetCellCtrl(i, j).ctrl->GetData();
 				}
 	}
 }
@@ -2244,7 +2244,7 @@ void ArrayCtrl::SortB(const Vector<int>& o)
 				if(IsCtrl(i, j)) {
 					const Column& m = column[j];
 					ASSERT(m.pos.GetCount() == 1);
-					array[i].line[m.pos[0]] = Null;
+					array[i].line.At(m.pos[0]) = Null;
 				}
 		SyncCtrls();
 		ChildGotFocus();
