@@ -1196,10 +1196,29 @@ Header]()&]
 [s2; Same as MovingHeader(false).&]
 [s3; &]
 [s4;%- &]
+[s5;:ArrayCtrl`:`:ColumnSortFindKey`(bool`):%- [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* C
+olumnSortFindKey]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; Before ColumnSort orders the ArrayCtrl, the key of current row 
+(with cursor) is stored and after sorting, it is restored.&]
+[s3; &]
+[s4;%- &]
 [s5;:ArrayCtrl`:`:AllSorting`(`):%- [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* AllSorting](
 )&]
 [s2; If set, Sorting() is invoked for all columns (added either before 
 or after this modifier is called).&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:ColumnSortSecondary`(const ArrayCtrl`:`:Order`&`):%- [_^ArrayCtrl^ Ar
+rayCtrl][@(0.0.255) `&]_[* ColumnSortSecondary]([@(0.0.255) const]_[_^ArrayCtrl`:`:Order^ O
+rder][@(0.0.255) `&]_[*@3 order])&]
+[s2; Sets secondary sorting predicate for column sorts (see ColumnSort, 
+Sorting) `- if two cells are equal when performing sort by column, 
+they are ordered by this predicate.&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:NoColumnSortSecondary`(`):%- [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* N
+oColumnSortSecondary]()&]
+[s2; Same as ColumnSortSecondary(false).&]
 [s3; &]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:ColumnWidths`(const char`*`):%- [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_
