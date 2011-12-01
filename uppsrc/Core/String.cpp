@@ -25,6 +25,31 @@ inline void svo_memcpy(char *t, const char *s, int len)
 	memcpy(t, s, len);
 }
 
+#define SVO_MEMCPY2(tgt, src, len) \
+do { \
+	const char *s__ = (const char *)(src); \
+	char *t__ = (char *)(tgt); \
+	switch(len) { \
+	case 11: t__[10] = s__[10]; \
+	case 10: t__[9] = s__[9]; \
+	case  9: t__[8] = s__[8]; \
+	case  8: t__[7] = s__[7]; \
+	case  7: t__[6] = s__[6]; \
+	case  6: t__[5] = s__[5]; \
+	case  5: t__[4] = s__[4]; \
+	case  4: t__[3] = s__[3]; \
+	case  3: t__[2] = s__[2]; \
+	case  2: t__[1] = s__[1]; \
+	case  1: t__[0] = s__[0]; \
+		break; \
+	default: \
+		memcpy(t__, s__, len); \
+	} \
+} while(false)
+
+
+#define SVO_MEMCPY(t, s, len)    SVO_MEMCPY2(t, s, len)
+
 #ifdef _DEBUG
 void String0::Dsyn()
 {
@@ -100,7 +125,7 @@ unsigned String0::LHashValue() const
 	if(l < 15) {
 		dword w[4];
 		w[0] = w[1] = w[2] = w[3] = 0;
-		svo_memcpy((char *)w, ptr, l);
+		SVO_MEMCPY((char *)w, ptr, l);
 		((byte *)w)[SLEN] = l;
 		return CombineHash(w[0], w[1], w[2], w[3]);
 	}
@@ -150,18 +175,18 @@ char *String0::Insert(int pos, int count, const char *s)
 			LLen() = newlen;
 		str[newlen] = 0;
 		if(s)
-			svo_memcpy(str + pos, s, count);
+			SVO_MEMCPY(str + pos, s, count);
 		Dsyn();
 		return str + pos;
 	}
 	char kind;
 	char *p = Alloc(max(2 * len, newlen), kind);
 	if(pos > 0)
-		svo_memcpy(p, str, pos);
+		SVO_MEMCPY(p, str, pos);
 	if(pos < len)
-		svo_memcpy(p + pos + count, str + pos, len - pos);
+		SVO_MEMCPY(p + pos + count, str + pos, len - pos);
 	if(s)
-		svo_memcpy(p + pos, s, count);
+		SVO_MEMCPY(p + pos, s, count);
 	p[newlen] = 0;
 	Free();
 	ptr = p;
@@ -178,7 +203,7 @@ void String0::UnShare()
 		int len = LLen();
 		char kind;
 		char *p = Alloc(len, kind);
-		svo_memcpy(p, ptr, len + 1);
+		SVO_MEMCPY(p, ptr, len + 1);
 		Free();
 		chr[KIND] = kind;
 		ptr = p;
@@ -253,11 +278,7 @@ void String0::Cat(const char *s, int len)
 {
 	if(IsSmall()) {
 		if(SLen() + len < 14) {
-#ifdef flagEXPERIMENTAL
-			svo_memcpy(chr + SLen(), s, len);
-#else
-			memcpy(chr + SLen(), s, len);
-#endif
+			SVO_MEMCPY(chr + SLen(), s, len);
 			SLen() += len;
 			chr[(int)SLen()] = 0;
 			Dsyn();
@@ -266,11 +287,7 @@ void String0::Cat(const char *s, int len)
 	}
 	else
 		if((int)LLen() + len < LAlloc() && !IsSharedRef()) {
-#ifdef flagEXPERIMENTAL
-			svo_memcpy(ptr + LLen(), s, len);
-#else
-			memcpy(ptr + LLen(), s, len);
-#endif
+			SVO_MEMCPY(ptr + LLen(), s, len);
 			LLen() += len;
 			ptr[LLen()] = 0;
 			Dsyn();
@@ -430,11 +447,7 @@ void StringBuffer::Cat(const char *s, int l)
 	if(end + l > limit)
 		Realloc(max(GetLength(), l) + GetLength(), s, l);
 	else {
-#ifdef flagEXPERIMENTAL
-		svo_memcpy(end, s, l);
-#else
-		memcpy(end, s, l);
-#endif
+		SVO_MEMCPY(end, s, l);
 		end += l;
 	}
 }
