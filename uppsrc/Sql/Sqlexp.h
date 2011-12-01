@@ -99,6 +99,10 @@ class SqlId : Moveable<SqlId> {
 protected:
 	Id id;
 
+private:
+	void PutOf0(String& s, const SqlId& b);
+	void PutOf(String& s, const SqlId& b);
+
 public:
 	bool          IsEqual(SqlId b) const     { return id == b.id; }
 	bool          IsEqual(Id b) const        { return id == b; }
@@ -115,6 +119,23 @@ public:
 	SqlId         operator[](int i) const;
 	SqlId         operator&(const SqlId& s) const;
 	SqlId         operator[](const SqlId& id) const;
+
+	SqlId operator()(SqlId p);
+
+//$	SqlId     operator()(SqlId p, SqlId p1, ...);
+#define E__PutSqlId(I)      PutOf(x, p##I)
+#define E__SqlId(I)         SqlId p##I
+#define E__Of(I) \
+	SqlId operator()(SqlId p, __List##I(E__SqlId)) { \
+	String x; \
+	PutOf0(x, p); \
+	__List##I(E__PutSqlId); \
+	return x; \
+}
+__Expand(E__Of)
+#undef  E__Of
+#undef E__PutSqlId
+#undef E__SqlId
 
 	SqlId()                                      {}
 	SqlId(const char *s) : id(s)                 {}

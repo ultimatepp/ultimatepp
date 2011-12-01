@@ -27,6 +27,12 @@ SqlId SqlId::As(const char *as) const
 	return id.IsNull() ? ToString() : ToString() + SqlCase(MSSQL | PGSQL, " as ")(" ") + as;
 }
 
+SqlId SqlId::operator()(SqlId p) {
+	String x;
+	PutOf0(x, p);
+	return x;
+}
+
 SqlId SqlId::operator [] (int i) const
 {
 	return SqlId(ToString() + FormatInt(i));
