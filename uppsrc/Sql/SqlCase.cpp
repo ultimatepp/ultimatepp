@@ -342,4 +342,16 @@ SqlCase::SqlCase(byte cond, const String& text) {
 	s << (char)SQLC_IF << (char)cond << text;
 }
 
+// Put to different file to force non-inline (size opt)
+void SqlId::PutOf0(String& s, const SqlId& b)
+{
+	s << ToString() << '.' << ~b;
+}
+
+void SqlId::PutOf(String& s, const SqlId& b)
+{
+	s << ", ";
+	PutOf0(s, b);
+}
+
 END_UPP_NAMESPACE
