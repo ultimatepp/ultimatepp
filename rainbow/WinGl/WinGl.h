@@ -74,7 +74,8 @@ enum TransformState {
 	TS_AFTER_CTRL_PAINT,
 	TS_BEFORE_PAINT,
 	TS_AFTER_PAINT,
-	TS_SYNC_LAYOUT
+	TS_BEFORE_SCREEN,
+	TS_AFTER_SCREEN
 };
 
 class SystemDraw : public Draw {

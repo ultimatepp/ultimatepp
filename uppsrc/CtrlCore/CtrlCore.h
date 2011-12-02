@@ -563,11 +563,7 @@ private:
 	void    ScrollCtrl(Top *top, Ctrl *q, const Rect& r, Rect cr, int dx, int dy);
 	void    SyncScroll();
 	void    PaintCaret(SystemDraw& w);
-	#ifdef flagWINGL
-	void 	CtrlPaint(SystemDraw& w, const Rect& clip, int depth = 0);
-	#else
 	void    CtrlPaint(SystemDraw& w, const Rect& clip);
-	#endif
 	void    RemoveFullRefresh();
 	bool    PaintOpaqueAreas(SystemDraw& w, const Rect& r, const Rect& clip, bool nochild = false);
 	void    GatherTransparentAreas(Vector<Rect>& area, SystemDraw& w, Rect r, const Rect& clip);
@@ -934,21 +930,12 @@ public:
 	bool        InView() const                           { return !inframe; }
 	LogPos      GetPos() const                           { return pos; }
 
-	#ifdef flagWINGL
-	void        RefreshLayout()                          { }
-	void        RefreshLayoutDeep()                      { }
-	void        RefreshParentLayout()                    { }
-	
-	void        UpdateLayout()                           { }
-	void        UpdateParentLayout()                     { }
-	#else
 	void        RefreshLayout()                          { SyncLayout(1); }
 	void        RefreshLayoutDeep()                      { SyncLayout(2); }
 	void        RefreshParentLayout()                    { if(parent) parent->RefreshLayout(); }
 	
 	void        UpdateLayout()                           { SyncLayout(); }
 	void        UpdateParentLayout()                     { if(parent) parent->UpdateLayout(); }
-	#endif
 
 	Ctrl&       LeftPos(int a, int size = STDSIZE);
 	Ctrl&       RightPos(int a, int size = STDSIZE);
