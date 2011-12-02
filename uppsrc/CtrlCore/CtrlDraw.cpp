@@ -244,7 +244,7 @@ struct sDrawLevelCheck {
 #define DOLEVELCHECK
 #endif
 #ifdef flagWINGL
-void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip, int depth) {
+void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	GuiLock __;
 	LEVELCHECK(w, this);
 	LTIMING("CtrlPaint");
@@ -279,7 +279,7 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip, int depth) {
 				LEVELCHECK(w, q);
 				Point off = q->GetRect().TopLeft();
 				w.Offset(off);
-				q->CtrlPaint(w, clip - off, depth + 1);
+				q->CtrlPaint(w, clip - off);
 				w.End();
 			}
 			else
@@ -328,7 +328,7 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip, int depth) {
 				Rect ocl = cl - off;
 				if(ocl.Intersects(Rect(qr.GetSize()).Inflated(overpaint))) {
 					w.Offset(off);
-					q->CtrlPaint(w, rr - off, depth + 1);
+					q->CtrlPaint(w, rr - off);
 					w.End();
 				}
 				if(q->cliptobounds)

@@ -220,12 +220,9 @@ void Ctrl::DrawScreen()
 		int64 t0 = GetHighTickCount();
 		frameInfo.curr_tick_count = t0;
 		painting = true;
-		desktop->ApplyTransform(TS_SYNC_LAYOUT);
-		desktop->SyncLayout();
+		desktop->ApplyTransform(TS_BEFORE_SCREEN);
 		for(int i = 0; i < topctrl.GetCount(); i++) {
-			Ctrl* tq = topctrl[i];
-			tq->ApplyTransform(TS_SYNC_LAYOUT);
-			tq->SyncLayout();
+			topctrl[i]->ApplyTransform(TS_BEFORE_SCREEN);
 		}
 		Rect clip = desktop->GetRect();
 		SystemDraw draw(clip.GetSize());
