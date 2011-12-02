@@ -102,8 +102,6 @@ String Sprintf(const char *fmt, ...);
 
 //$-
 
-#if 1
-
 #define E__NFValue(I)  const Value& COMBINE(p, I)
 #define E__NFBody(I) \
 String Format(const char *fmt, __List##I(E__NFValue)); \
@@ -116,11 +114,5 @@ __Expand20(E__NFBody)
 
 String Format(const char *s, const Vector<Value>& v);
 String Format(int language, const char *s, const Vector<Value>& v);
-
-#else
-
-String Format(const char *fmt, ...);
-
-#endif
 
 String DeFormat(const char *text);
