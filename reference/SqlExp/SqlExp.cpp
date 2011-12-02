@@ -142,6 +142,8 @@ GUI_APP_MAIN
 	EXP(Select(COLUMN).From(TABLE).LeftJoin(Select(COLUMN).From(TABLE1)).On(COLUMN.Of(TABLE) == COLUMN1.Of(TABLE1)));
 	EXP(Select(COLUMN).From(TABLE).LeftJoin(Select(COLUMN).From(TABLE1).AsTable(TABLE2)).On(COLUMN.Of(TABLE) == COLUMN1.Of(TABLE1)));
 
+	EXP(Select(TABLE(COLUMN, COLUMN1)).From(TABLE));
+
 #ifdef GENERATE_QTF
 	qtf << "}}";
 
