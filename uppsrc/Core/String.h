@@ -16,11 +16,12 @@ inline int stricmp(const char *a, const char *b)         { return _stricmp(a, b)
 inline int strnicmp(const char *a, const char *b, int n) { return _strnicmp(a, b, n); }
 #endif
 
-inline int strlen__(const char *s)  { return s ? (int)strlen(s) : 0; }
-inline int strlen__(const wchar *s) { return s ? (int)wstrlen(s) : 0; }
+force_inline int strlen__(const char *s)  { return s ? (int)strlen(s) : 0; }
 
-inline int cmpval__(char x)         { return (byte)x; }
-inline int cmpval__(wchar x)        { return (word)x; }
+inline int strlen__(const wchar *s)       { return s ? (int)wstrlen(s) : 0; }
+
+inline int cmpval__(char x)               { return (byte)x; }
+inline int cmpval__(wchar x)              { return (word)x; }
 
 class String;
 class WString;
@@ -56,11 +57,11 @@ public:
 	void Insert(int pos, int c)                               { *B::Insert(pos, 1, NULL) = c; }
 	void Insert(int pos, const tchar *s, int count)           { B::Insert(pos, count, s); }
 	void Insert(int pos, const String& s)                     { Insert(pos, s, s.GetCount()); }
-	void Insert(int pos, const char *s)                       { Insert(pos, s, strlen__(s)); }
+	void Insert(int pos, const char *s);
 
 	void  Cat(int c)                                          { B::Cat(c); }
 	void  Cat(const tchar *s, int len)                        { B::Cat(s, len); }
-	void  Cat(const tchar *s)                                 { Cat(s, strlen__(s)); }
+	void  Cat(const tchar *s);
 	void  Cat(const String& s)                                { Cat(~s, s.GetLength()); }
 	void  Cat(int c, int count);
 	void  Cat(const tchar *s, const tchar *lim)               { ASSERT(s <= lim); Cat(s, int(lim - s)); }
@@ -96,14 +97,14 @@ public:
 	
 	void   Replace(const tchar *find, int findlen, const tchar *replace, int replacelen);
 	void   Replace(const String& find, const String& replace) { Replace(~find, find.GetCount(), ~replace, replace.GetCount()); }
-	void   Replace(const tchar *find, const tchar *replace)   { Replace(find, (int)strlen(find), replace, (int)strlen(replace)); }
+	void   Replace(const tchar *find, const tchar *replace);
 	
 	bool   StartsWith(const tchar *s, int len) const;
-	bool   StartsWith(const tchar *s) const                   { return StartsWith(s, strlen__(s)); }
+	bool   StartsWith(const tchar *s) const;
 	bool   StartsWith(const String& s) const                  { return StartsWith(~s, s.GetLength()); }
 
 	bool   EndsWith(const tchar *s, int len) const;
-	bool   EndsWith(const tchar *s) const                     { return EndsWith(s, strlen__(s)); }
+	bool   EndsWith(const tchar *s) const;
 	bool   EndsWith(const String& s) const                    { return EndsWith(~s, s.GetLength()); }
 
 	int    FindFirstOf(int len, const tchar *s, int from) const;
@@ -302,6 +303,8 @@ class String : public Moveable<String, AString<String0> > {
 	friend class String0;
 #endif
 
+	void AssignLen(const char *s, int slen);
+
 public:
 	const String& operator+=(char c)                       { Cat(c); return *this; }
 	const String& operator+=(const char *s)                { Cat(s); return *this; }
@@ -318,7 +321,7 @@ public:
 	String()                                               {}
 	String(const Nuller&)                                  {}
 	String(const String& s)                                { String0::Set(s); }
-	String(const char *s)                                  { String0::Set(s, strlen__(s)); }
+	String(const char *s);
 	String(const String& s, int n)                         { ASSERT(n >= 0 && n <= s.GetLength()); String0::Set(~s, n); }
 	String(const char *s, int n)                           { String0::Set(s, n); }
 	String(const byte *s, int n)                           { String0::Set((const char *)s, n); }
@@ -368,7 +371,7 @@ public:
 	void SetCount(int l)            { SetLength(l); }
 	int  GetLength() const          { return (int)(end - begin); }
 	int  GetCount() const           { return GetLength(); }
-	void Strlen()                   { SetLength((int)strlen(begin)); }
+	void Strlen();
 	void Clear()                    { Free(); Zero(); }
 	void Reserve(int r)             { int l = GetLength(); SetLength(l + r); SetLength(l); }
 
@@ -376,7 +379,7 @@ public:
 	void Cat(int c, int count);
 	void Cat(const char *s, int l);
 	void Cat(const char *s, const char *e) { Cat(s, int(e - s)); }
-	void Cat(const char *s)                { Cat(s, (int)strlen(s)); }
+	void Cat(const char *s);
 	void Cat(const String& s)              { Cat(s, s.GetLength()); }
 
 	int  GetAlloc() const           { return (int)(limit - begin); }
@@ -414,13 +417,13 @@ inline String AsString(const void *x)
 }
 #endif
 
-inline String& operator<<(String& s, const char *x)
+force_inline String& operator<<(String& s, const char *x)
 {
-	s.Cat(x);
+	s.Cat(x, strlen__(x));
 	return s;
 }
 
-inline String& operator<<(String& s, char *x)
+force_inline String& operator<<(String& s, char *x)
 {
 	s.Cat(x);
 	return s;

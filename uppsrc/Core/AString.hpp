@@ -1,9 +1,23 @@
 template <class B>
+force_inline
+void AString<B>::Insert(int pos, const char *s)
+{
+	Insert(pos, s, strlen__(s));
+}
+
+template <class B>
 void AString<B>::Cat(int c, int count)
 {
 	tchar *s = B::Insert(GetLength(), count, NULL);
 	while(count--)
 		*s++ = c;
+}
+
+template <class B>
+force_inline
+void AString<B>::Cat(const tchar *s)
+{
+	Cat(s, strlen__(s));
 }
 
 template <class B>
@@ -127,10 +141,24 @@ int AString<B>::Find(int len, const tchar *s, int from) const
 }
 
 template <class B>
+force_inline
+void AString<B>::Replace(const tchar *find, const tchar *replace)
+{
+	Replace(find, (int)strlen__(find), replace, (int)strlen__(replace));
+}
+
+template <class B>
 bool AString<B>::StartsWith(const tchar *s, int len) const
 {
 	if(len > GetLength()) return false;
 	return memcmp(s, B::Begin(), len * sizeof(tchar)) == 0;
+}
+
+template <class B>
+force_inline
+bool AString<B>::StartsWith(const tchar *s) const
+{
+	return StartsWith(s, strlen__(s));
 }
 
 template <class B>
@@ -139,6 +167,13 @@ bool AString<B>::EndsWith(const tchar *s, int len) const
 	int l = GetLength();
 	if(len > l) return false;
 	return memcmp(s, B::Begin() + l - len, len * sizeof(tchar)) == 0;
+}
+
+template <class B>
+force_inline
+bool AString<B>::EndsWith(const tchar *s) const
+{
+	return EndsWith(s, strlen__(s));
 }
 
 template <class B>
@@ -243,4 +278,29 @@ inline int String0::Compare(const String0& s) const
 	}
 #endif
 	return LCompare(s);
+}
+
+force_inline
+String& String::operator=(const char *s)
+{
+	AssignLen(s, strlen__(s));
+	return *this;
+}
+
+force_inline
+String::String(const char *s)
+{
+	String0::Set(s, strlen__(s));
+}
+
+force_inline
+void StringBuffer::Strlen()
+{
+	SetLength((int)strlen__(begin));
+}
+
+force_inline
+void StringBuffer::Cat(const char *s)
+{
+	Cat(s, (int)strlen__(s));
 }

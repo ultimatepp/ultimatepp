@@ -18,6 +18,7 @@ do { \
 	case  3: t__[2] = s__[2]; \
 	case  2: t__[1] = s__[1]; \
 	case  1: t__[0] = s__[0]; \
+	case  0: \
 		break; \
 	default: \
 		memcpy(t__, s__, len); \
@@ -298,15 +299,16 @@ void String0::Set(const char *s, int len)
 	Dsyn();
 }
 
-String& String::operator=(const char *s)
+void String::AssignLen(const char *s, int slen)
 {
 	int  len = GetCount();
 	char *str = (char *)Begin();
 	if(s >= str && s <= str + len)
-		return *this = String(s, strlen__(s));
-	String0::Free();
-	String0::Set(s, strlen__(s));
-	return *this;
+		*this = String(s, slen);
+	else {
+		String0::Free();
+		String0::Set(s, slen);
+	}
 }
 
 String String::GetVoid()
