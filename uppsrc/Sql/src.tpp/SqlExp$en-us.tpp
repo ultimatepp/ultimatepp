@@ -380,5 +380,7 @@ topic "SqlExp in examples";
 [s0;%- [C1  from TABLE]&]
 [s0;%- [C1  left outer join]&]
 [s0;%- [C1  ((select COLUMN from TABLE1) ][*C1 as TABLE2][C1 )]&]
-[s0;%- [C1  on TABLE.COLUMN `= TABLE1.COLUMN1]]}}&]
+[s0;%- [C1  on TABLE.COLUMN `= TABLE1.COLUMN1]]
+:: [s0;%- [C1 Select(][*C1 TABLE(COLUMN, COLUMN1)][C1 ).From(TABLE)]]
+:: [s0;%- [C1 select ][*C1 TABLE.COLUMN, TABLE.COLUMN1][C1  from TABLE]]}}&]
 [s0; ]
