@@ -294,6 +294,14 @@ inline bool IsNaN(double d)        { return isnan(d); }
 
 #define init_
 
+#ifdef COMPILER_MSC
+#define force_inline __forceinline
+#elif defined(COMPILER_GCC)
+#define force_inline __attribute__((always_inline)) inline
+#else
+#define force_inline inline
+#endif
+
 #define BINARY(i, f) \
 extern "C" byte *i; \
 extern "C" int COMBINE(i, _length);
@@ -523,14 +531,6 @@ inline int16  SwapEndian16(int16 v)   { __asm__("xchgb %b0,%h0" : "=q" (v) :  "0
 #endif
 inline dword  SwapEndian32(dword v)   { __asm__("bswap %0" : "=r" (v) : "0" (v)); return v; }
 inline int    SwapEndian32(int v)     { __asm__("bswap %0" : "=r" (v) : "0" (v)); return v; }
-#endif
-
-#ifdef COMPILER_MSC
-#define force_inline __forceinline
-#elif defined(COMPILER_GCC)
-#define force_inline __attribute__((always_inline))
-#else
-#define force_inline inline
 #endif
 
 #ifdef COMPILER_MSC
