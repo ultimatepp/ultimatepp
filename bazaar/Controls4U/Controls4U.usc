@@ -13,7 +13,7 @@ fn atan(z) {
 		return 3*Pi()/2 - atan_base(1/z);		
 }
 fn Pi() {
-	return 4*atan(1);
+	return 3.14159265358979323846;
 }
 fn ToRad(angle) {
 	if (angle > 0)

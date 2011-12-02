@@ -11,7 +11,7 @@
  * - Light Green if more than m_nVotesHigh
  *
  * Autors : jibe
- * Last modified : May 26, 2011
+ * Last modified : November 28, 2011
  *
  * 2do : Make better graphics
  * Known bugs : Invalid memory access when choosing SetFontColor with .lay designer (only under 
@@ -31,11 +31,12 @@ using namespace Upp;
 
 StarIndicator::StarIndicator()
 :ProgressIndicator()
+, m_bAlwaysShowValue(false)
+, m_bVotes(true)
 , m_FontColor(Black)
 , m_nVotes(0)
 , m_nVotesHigh(50)
 , m_nVotesLow(5)
-, votes(true)
 /***********************************************************************************************
  * Constructor
  * public
@@ -70,13 +71,14 @@ void StarIndicator::Paint(Draw& w) {
  * Paints the control
  * virtual - public
  **********************************************************************************************/
-	Font fnt = StdFont();
+	Font fnt = SansSerif();
 	Size sz = GetSize();
 	Size msz = GetMsz();
 	Rect r;
 	String pt;
 	int p0 = 0;
 	int p = pxp;
+	fnt.Bold();
 	if(total <= 0) {
 		int l = max(msz.cx, msz.cy) & ~7;
 		p0 = pxp - l / 4;
@@ -109,22 +111,29 @@ void StarIndicator::Paint(Draw& w) {
 		w.DrawImage(r,StarsImg::Get(0),Nvl(color, SColorHighlight()));
 		w.DrawImage(r,StarsImg::Get(1),SColorPaper);
 	}
-	percent ? pt = Format("%d %%", 100 * actual / max(total, 1)) : pt = Format("%3.1f / 5", 5. * actual / max(total, 1));
-	if (votes && m_nVotes > 0) {
+	if (percent) {
+		pt = Format("%d %%", 100 * actual / max(total, 1));
+	}
+	else {
+		pt = Format("%3.1f", 5. * actual / max(total, 1));
+		if (m_bTotal) pt += " / 5";
+	}
+	if (m_bVotes && m_nVotes > 0) {
 		pt = Format("%s - %d Votes", pt, m_nVotes);
 	}
-	if (m_bMouseInside) {
+	if (m_bMouseInside || m_bAlwaysShowValue) {
 		Size psz = GetTextSize(pt, fnt());
-		while (psz.cy < sz.cy-4) {
+		sz = GetSize();
+		while (psz.cy < sz.cy) {
 			fnt.Height(fnt.GetHeight()+1);
 			psz = GetTextSize(pt, fnt());
 		}
-		while (psz.cx > sz.cx-8 || psz.cy > sz.cy-4) {
+		while (psz.cx > sz.cx - 8 || psz.cy > sz.cy -4) {
 			fnt.Height(fnt.GetHeight()-1);
 			psz = GetTextSize(pt, fnt());
 		}
-		int px = (sz.cx - psz.cx) / 2 + 2;
-		int py = (sz.cy - psz.cy) / 2 + 2;
+		int px = (sz.cx - psz.cx) / 2;
+		int py = (sz.cy - psz.cy) / 2;
 		w.DrawText(px, py, pt, fnt(), m_FontColor);
 	}
 	w.End();
@@ -132,7 +141,7 @@ void StarIndicator::Paint(Draw& w) {
 
 void StarIndicator::MouseEnter(Point p, dword keyflags)
 /***********************************************************************************************
- * Sets the number of votes and the associated color
+ * Mouse got inside the control
  * virtual - public
  **********************************************************************************************/
 { 
@@ -141,12 +150,21 @@ void StarIndicator::MouseEnter(Point p, dword keyflags)
 
 void StarIndicator::MouseLeave()
 /***********************************************************************************************
- * Sets the number of votes and the associated color
+ * Mouse got outside the control
  * virtual - public
  **********************************************************************************************/
 { 
 	m_bMouseInside = false;
 	Refresh();
+}
+
+void StarIndicator::Set(double n)
+/***********************************************************************************************
+ * Sets the value
+ * virtual - public
+ **********************************************************************************************/
+{ 
+	Set(fceil(n*20),100);
 }
 
 StarIndicator&	StarIndicator::SetVotes(int n)
@@ -157,7 +175,7 @@ StarIndicator&	StarIndicator::SetVotes(int n)
 { 
 	m_nVotes=n;
 	if (n<0) SetColor(LtCyan);
-	else if (n < m_nVotesLow) SetColor(LtRed);
+	else if (n < m_nVotesLow) SetColor(Color(255,128,128));
 	else if (n < m_nVotesHigh) SetColor(Yellow);
 	else SetColor(LtGreen);
 	Refresh();

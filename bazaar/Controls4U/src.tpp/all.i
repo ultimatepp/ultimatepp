@@ -38,6 +38,14 @@ TOPIC("Meter$en-us")
 #include "Meter$en-us.tppi"
 END_TOPIC
 
+TOPIC("StarIndicator$en-us")
+#include "StarIndicator$en-us.tppi"
+END_TOPIC
+
+TOPIC("StarIndicator$fr-fr")
+#include "StarIndicator$fr-fr.tppi"
+END_TOPIC
+
 TOPIC("StaticArrow$en-us")
 #include "StaticArrow$en-us.tppi"
 END_TOPIC

@@ -139,9 +139,12 @@ ctrl StarIndicator {
 	GetMinSize() { return Size(0, 0); }
 	GetStdSize() { return Size(64, 8); }
 	
+	bool	AlwaysShowValue=false;
 	Color	SetFontColor=Black;
 	int		SetVotesHigh=50;
 	int		SetVotesLow=5;
+	bool	ShowPercent=false;
+	bool	ShowTotal=true;
 	bool	ShowVotes=true;
 
 	Frame  SetFrame @1;

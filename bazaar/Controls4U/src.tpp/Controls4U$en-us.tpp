@@ -12340,7 +12340,7 @@ movement]
  ÖÔ€€»¨€À€ÖÔ€€»¨€€€ÖÔ€€»Œç•¸‡€¯Ü•´üÕŠ¢º¬÷€ €€€À×ü……ùûæ˜
 ]
 ::^ [s0; An enhanced control compatible with SliderCtrl]
-:: [s0; StarIndicator]
+:: [s0; [^topic`:`/`/Controls4U`/src`/StarIndicator`$en`-us^ StarIndicator]]
 ::= [s0;= 
 @@image:1039&197
 €ƒ›·€€€€€€€€€€ø¯œíÓÁ‰€°¢€ÀÀÇ÷´îÆÖÿÅßÃ‘¹£«äŒ ôƒæû–¡®àƒ¡š ôºÔœÿŠˆ±”„Œ…¡„ÃÁÈĞ²”
