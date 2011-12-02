@@ -272,6 +272,7 @@ void CodeEditor::InitKeywords()
 			"do", "__int64", "static", "volatile",
 			"double", "__leave", "static_cast",
 			"dynamic_cast", "long", "__stdcall", "while",
+			"force_inline",
 			NULL
 		};
 		static const char *upp[] = {
