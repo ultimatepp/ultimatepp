@@ -378,6 +378,7 @@ CParser::Pos CParser::GetPos() const
 	p.line = line;
 	p.fn = fn;
 	p.ptr = term;
+	p.wspc = wspc;
 	p.lineptr = lineptr;
 	return p;
 }
@@ -399,12 +400,13 @@ void CParser::SetPos(const CParser::Pos& p)
 	line = p.line;
 	fn = p.fn;
 	term = p.ptr;
+	wspc = p.wspc;
 	lineptr = p.lineptr;
 	DoSpaces();
 }
 
 CParser::CParser(const char *ptr)
-: term(ptr), lineptr(ptr)
+: term(ptr), wspc(ptr), lineptr(ptr)
 {
 	line = 1;
 	skipspaces = true;
@@ -413,7 +415,7 @@ CParser::CParser(const char *ptr)
 }
 
 CParser::CParser(const char *ptr, const char *fn, int line)
-: term(ptr), lineptr(ptr), line(line), fn(fn)
+: term(ptr), wspc(ptr), lineptr(ptr), line(line), fn(fn)
 {
 	skipspaces = true;
 	uescape = false;
@@ -422,7 +424,7 @@ CParser::CParser(const char *ptr, const char *fn, int line)
 
 CParser::CParser()
 {
-	term = lineptr = NULL;
+	term = lineptr = wspc = NULL;
 	line = 0;
 	skipspaces = true;
 	uescape = false;
@@ -430,7 +432,7 @@ CParser::CParser()
 
 void CParser::Set(const char *_ptr, const char *_fn, int _line)
 {
-	term = lineptr = _ptr;
+	term = lineptr = wspc = _ptr;
 	fn = _fn;
 	line = _line;
 	skipspaces = true;

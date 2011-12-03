@@ -9,6 +9,7 @@ inline bool iscid(int c) {
 class CParser {
 protected:
 	const char *term;
+	const char *wspc;
 	const char *lineptr;
 	int         line;
 	String      fn;
@@ -26,7 +27,7 @@ public:
 	void   ThrowError(const char *s);
 	void   ThrowError()                       { ThrowError(""); }
 
-	bool   Spaces()                           { return (byte)*term <= ' ' || *term == '/' ? Spaces0() : false; }
+	bool   Spaces()                           { wspc = term; return ((byte)*term <= ' ' || *term == '/') && Spaces0(); }
 	char   PeekChar() const                   { return *term; }
 	char   GetChar();
 
@@ -64,6 +65,7 @@ public:
 
 	struct Pos {
 		const char *ptr;
+		const char *wspc;
 		const char *lineptr;
 		int         line;
 		String      fn;
@@ -74,6 +76,7 @@ public:
 	};
 
 	const char *GetPtr() const                { return (const char *)term; }
+	const char *GetSpacePtr() const           { return (const char *)wspc; }
 
 	Pos         GetPos() const;
 	void        SetPos(const Pos& pos);

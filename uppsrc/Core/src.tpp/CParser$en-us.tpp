@@ -83,7 +83,8 @@ paces][*  ]method. Default is true.&]
 [s4; &]
 [s5;:CParser`:`:Spaces`(`): [@(0.0.255) bool]_[* Spaces]()&]
 [s2;%% Skips white`-spaces. Returns [* true] if there were white`-space 
-to skip, [* false] otherwise.&]
+to skip, [* false] otherwise. Stores the position before advancing 
+as `"space pointer`" to be retrieved by GetSpacePtr.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:PeekChar`(`)const: [@(0.0.255) char]_[* PeekChar]()_[@(0.0.255) const]&]
@@ -313,6 +314,14 @@ onst]&]
 [s2;%% Returns a pointer to the current position.&]
 [s3; &]
 [s4; &]
+[s5;:CParser`:`:GetSpacePtr`(`)const: [@(0.0.255) const]_[@(0.0.255) char]_`*[* GetSpacePtr
+]()_[@(0.0.255) const]&]
+[s2;%% Returns a pointer to the position of last whitespace before 
+current position, or current position if there was none whitespace. 
+This pointer is set at the start of Space call, Space is called 
+after each token processed (unless SkipWhitespaces is false).&]
+[s3; &]
+[s4; &]
 [s5;:CParser`:`:GetPos`(`)const: [_^CParser`:`:Pos^ Pos]_[* GetPos]()_[@(0.0.255) const]&]
 [s2;%% Gets the current position. It contains the pointer as well 
 as the line number and the filename.&]
@@ -402,6 +411,11 @@ and anme of the file.&]
 [s5;:CParser`:`:Pos`:`:ptr: [@(0.0.255) const]_[@(0.0.255) char]_`*[* ptr]&]
 [s2;%% Pointer to the position in the input text &]
 [s3;%% &]
+[s4; &]
+[s5;:CParser`:`:Pos`:`:wspc: [@(0.0.255) const]_[@(0.0.255) char]_`*[* wspc]&]
+[s2;%% Pointer to the position of last whitespace before current 
+position, or current position if there was none whitespace.&]
+[s3; &]
 [s4; &]
 [s5;:CParser`:`:Pos`:`:lineptr: [@(0.0.255) const]_[@(0.0.255) char]_`*[* lineptr]&]
 [s2;%% Pointer to the beginning of the last line.&]
