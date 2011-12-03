@@ -387,11 +387,14 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 		dx, sy
 	};
 
+	float wo = 0.5f / (float) t.realWidth;
+	float ho = 0.5f / (float) t.realHeight;
+	
 	float crd[] = {
-		tl, tb,
-		tl, tt,
-		tr, tb,
-		tr, tt
+		tl + wo, tb - ho,
+		tl + wo, tt + ho,
+		tr - wo, tb - ho,
+		tr - wo, tt + ho
 	};
 
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
