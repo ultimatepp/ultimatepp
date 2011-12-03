@@ -658,22 +658,16 @@ void GridCtrl::SetClipboard(bool all, bool silent)
 	Point minpos(total_cols, total_rows);
 	Point maxpos(fixed_cols, fixed_rows);
 
-	String tc;
+	String body;
+	Vector<int> sc;
+	sc.Set(0, -1, total_cols);
+	
 	int prev_row = -1;
 
 	for(int i = fixed_rows; i < total_rows; i++)
 	{
 		bool row_selected = select_row && IsSelected(i, false);
 		
-		if(i == fixed_rows && copy_column_names)
-		{
-			for(int j = fixed_cols; j < total_cols; j++)
-				if(all || IsSelected(i, j, false))
-					tc += hitems[j].GetName() + '\t';
-				
-			tc += "\r\n";			
-		}
-
 		for(int j = fixed_cols; j < total_cols; j++)
 			if(all || row_selected || IsSelected(i, j, false))
 			{
@@ -692,13 +686,26 @@ void GridCtrl::SetClipboard(bool all, bool silent)
 
 				if(i != prev_row)
 				{
-					tc += "\r\n";
+					body += "\r\n";
 					prev_row = i;
 				}
-				tc += d.v.ToString() + '\t';
+				body += d.v.ToString() + '\t';
+				
+				sc[j] = 1;
 			}
 	}
+	
+	String header;
+	
+	if(copy_column_names)
+	{
+		for(int i = 0; i < sc.GetCount(); i++)
+			if(sc[i] >= 0)
+				header += hitems[i].GetName() + '\t';
 
+		header += "\r\n";
+	}
+		
 	gc.minpos = minpos;
 	gc.maxpos = maxpos;
 
@@ -706,7 +713,7 @@ void GridCtrl::SetClipboard(bool all, bool silent)
 	gc.shiftmode = row_selected ? true : shiftmode;
 
 	WriteClipboardFormat(gc);
-	AppendClipboardText(tc);
+	AppendClipboardText(header + body);
 
 	if(!silent)
 	{
