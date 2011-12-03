@@ -235,10 +235,39 @@ class GridClipboard : Moveable<GridClipboard>
 		{
 			int col, row;
 			Value v;
+			
+			void SerializeAttrText(Stream& s, AttrText& a)
+			{
+				s % a.text;
+				s % a.font;
+				s % a.ink;
+				s % a.normalink;
+				s % a.paper;
+				s % a.align;
+				s % a.img;
+				s % a.imgspc;
+			}
+			
 			virtual void Serialize(Stream &s)
 			{
 				s % col % row;
-				s % v;
+				dword type = IsType<AttrText>(v) ? 1 : 0;
+				s / type;
+				if(type == 1)
+				{
+					if(s.IsStoring())
+					{
+						SerializeAttrText(s, (AttrText&) ValueTo<AttrText>(v));
+					}
+					else
+					{
+						AttrText a;
+						SerializeAttrText(s, a);
+						v = RawToValue<AttrText>(a);
+					}
+				}
+				else
+					s % v;
 			}
 		};
 
