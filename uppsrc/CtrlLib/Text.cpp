@@ -95,7 +95,7 @@ void   TextCtrl::Load(Stream& s, byte charset) {
 	SetCharset(charset);
 	if(charset == CHARSET_UTF8_BOM && s.GetLeft() >= 3) {
 		int64 pos = s.GetPos();
-		char h[3];
+		byte h[3];
 		if(!(s.Get(h, 3) == 3 && h[0] == 0xEF && h[1] == 0xBB && h[2] == 0xBF))
 			s.Seek(pos);
 		charset = CHARSET_UTF8;
