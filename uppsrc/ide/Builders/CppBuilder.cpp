@@ -256,8 +256,8 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 				AddPath(mac, "OUTTITLE", GetHostPath(GetFileTitle(target)));
 
 				mac.Add("INCLUDE", Join(include, ";"));
+
 				Vector<String> out = Cuprep(m.output, mac, include);
-				DDUMPC(out);
 				bool dirty = out.IsEmpty();
 				for(int i = 0; !dirty && i < out.GetCount(); i++)
 					dirty = (GetFileTime(file) > GetFileTime(out[i]));
