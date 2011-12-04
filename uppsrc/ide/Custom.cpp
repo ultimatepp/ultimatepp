@@ -44,7 +44,7 @@ void Custom::DoMenu(Button& b, Callback1<String> cb, bool cmd) {
 	String sample = SourcePath(pk, samplefile);
 	menu.Add("Input file path (like '" + UnixPath(sample) + "')", callback1(cb, "$(PATH)"));
 	menu.Add("Input file package-relative path (like '" + samplefile + "')", callback1(cb, "$(RELPATH)"));
-	menu.Add("Input file directory (like '" + UnixPath(GetFileFolder(sample)) + "')", callback1(cb, "$(DIR)"));
+	menu.Add("Package directory (like '" + UnixPath(GetFileFolder(sample)) + "')", callback1(cb, "$(DIR)"));
 	menu.Add("Input file name (like '" + GetFileName(sample) + "')", callback1(cb, "$(FILE)"));
 	menu.Add("Input file title (like '" + GetFileTitle(sample) + "')", callback1(cb, "$(TITLE)"));
 	menu.Add("Input file package (like '" + pk + "')", callback1(cb, "$(PACKAGE)"));

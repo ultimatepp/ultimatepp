@@ -429,6 +429,7 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 			target = host->NormalizePath(AppendFileName(tout, mainfn));
 	}
 	b->target = target;
+	b->mainpackage = mainpackage;
 	if(IsNull(onefile)) {
 		String out;
 		out << "----- " << package << " ( " << Join(b->config.GetKeys(), " ") << " )";

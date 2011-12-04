@@ -227,11 +227,12 @@ static void AddPath(VectorMap<String, String>& out, String key, String path)
 	out.Add(key + "_UNIX", UnixPath(path));
 }
 
-Vector<String> CppBuilder::CustomStep(const String& pf, const String& package, bool& error)
+Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, bool& error)
 {
-	String path = package.GetCount() ? SourcePath(package, pf) : pf;
+	String package = Nvl(package_, mainpackage);
+	String path = *pf == '.' ? target : SourcePath(package, pf);
 	String file = GetHostPath(path);
-	String ext = ToLower(GetFileExt(file));
+	String ext = ToLower(GetFileExt(pf));
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Array< ::CustomStep >& mv = wspc.GetPackage(i).custom;
 		for(int j = 0; j < mv.GetCount(); j++) {
@@ -240,7 +241,7 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package, b
 				VectorMap<String, String> mac;
 				AddPath(mac, "PATH", file);
 				AddPath(mac, "RELPATH", pf);
-				AddPath(mac, "DIR", GetFileFolder(file));
+				AddPath(mac, "DIR", GetFileFolder(PackagePath(package)));
 				AddPath(mac, "PACKAGE", package);
 				mac.Add("FILE", GetFileName(file));
 				mac.Add("TITLE", GetFileTitle(file));
@@ -256,6 +257,7 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package, b
 
 				mac.Add("INCLUDE", Join(include, ";"));
 				Vector<String> out = Cuprep(m.output, mac, include);
+				DDUMPC(out);
 				bool dirty = out.IsEmpty();
 				for(int i = 0; !dirty && i < out.GetCount(); i++)
 					dirty = (GetFileTime(file) > GetFileTime(out[i]));

@@ -377,6 +377,7 @@ struct Builder {
 	String           release_link;
 	String           version;
 	String           script;
+	String           mainpackage;
 	bool             doall;
 
 	virtual bool BuildPackage(const String& package, Vector<String>& linkfile, String& linkoptions,
