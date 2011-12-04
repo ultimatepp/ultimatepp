@@ -263,6 +263,8 @@ void XMLBarEditor::treeContextCb(Bar &b)
 		return;
 	
 	int i = barTree.GetCursor();
+	if(i < 0)
+		return;
 	if(i > 0)
 	{
 		b.Add(t_("Insert new item before current"), THISBACK1(treeContextAddCb, 1));
@@ -594,6 +596,8 @@ void XMLMenuEditor::cmdContextCb(Bar &bar)
 	String cmdId = cmdPane.commandList.Get(i);
 	XMLCommand const &cmd = commands[i]; 
 	bar.Add(t_("Add custom command"), THISBACK(cmdContextAddCb));
+	if(cmd.GetIsCustom())
+		bar.Add(t_("Edit custom command"), THISBACK(cmdContextEditCb));
 	if(!cmd.GetIsCustom())
 		bar.Add(false, t_("Can't remove built-in command"), THISBACK(cmdContextRemoveCb));
 	else if(cmdInUse(cmdId))
@@ -604,14 +608,30 @@ void XMLMenuEditor::cmdContextCb(Bar &bar)
 
 void XMLMenuEditor::cmdContextAddCb(void)
 {
-	XMLCmdAdd add(commands);
-	int res = add.RunAppModal();
-	add.Close();
+	XMLCmdEdit edit(commands, true);
+	int res = edit.RunAppModal();
+	edit.Close();
 	if(res == IDOK)
 	{
-		commands.Add(add.cmdId);
+		commands.Add(edit.cmdId, edit.cmdStr);
 		FillCmdList();
-		cmdPane.commandList.SetCursor(cmdPane.commandList.Find(~add.cmdId));
+		cmdPane.commandList.SetCursor(cmdPane.commandList.Find(~edit.cmdId));
+	}
+}
+
+void XMLMenuEditor::cmdContextEditCb(void)
+{
+	XMLCmdEdit edit(commands, false);
+	edit.cmdId <<= cmdPane.commandList.GetData();
+	edit.cmdStr <<= commands.Get(cmdPane.commandList.GetData()).GetCommandString();
+	int res = edit.RunAppModal();
+	edit.Close();
+	if(res == IDOK)
+	{
+		int idx = commands.Find(~edit.cmdId);
+		commands[idx].SetCommandString(edit.cmdStr);
+		FillCmdList();
+		cmdPane.commandList.SetCursor(cmdPane.commandList.Find(~edit.cmdId));
 	}
 }
 

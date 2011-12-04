@@ -23,13 +23,20 @@ class XMLCommand
 		
 		// custom command flag
 		bool custom;
+		
+		// custom command string to be sent
+		// to custom command handler
+		String commandString;
 
 	public:
-		Ctrl *GetCtrl(void) const				{ return control;	}
-		Size const &GetCtrlSize(void) const		{ return ctrlSize;	}
-		Callback const &GetCallback(void) const	{ return callback;	}
-		bool GetIsEnabled(void) const			{ return enabled;	}
-		bool GetIsCustom(void) const			{ return custom;	}
+		Ctrl *GetCtrl(void) const					{ return control;		}
+		Size const &GetCtrlSize(void) const			{ return ctrlSize;		}
+		Callback const &GetCallback(void) const		{ return callback;		}
+		bool GetIsEnabled(void) const				{ return enabled;		}
+		bool GetIsCustom(void) const				{ return custom;		}
+
+		String const &GetCommandString(void) const	{ return commandString; }
+		XMLCommand &SetCommandString(String const &s) { commandString = s; return *this; }
 		
 		bool operator==(XMLCommand &other) const;
 		
@@ -56,6 +63,7 @@ class XMLCommands : DeepCopyOption<XMLCommands>
 			
 		// adds a custom command
 		XMLCommands &Add(String const &id);
+		XMLCommands &Add(String const &id, String const &cmd);
 		
 		// adds a built-in command with given callback
 		XMLCommands &Add(String const &id, Callback cb);
@@ -66,6 +74,7 @@ class XMLCommands : DeepCopyOption<XMLCommands>
 		
 		// adds a custom command, allows enable/disable item
 		XMLCommands &Add(bool enabled, String const &id);
+		XMLCommands &Add(bool enabled, String const &id, String const &cmd);
 		
 		// adds a built-in command with given callback, allows enable/disable item
 		XMLCommands &Add(bool enabled, String const &id, Callback cb);
@@ -82,6 +91,9 @@ class XMLCommands : DeepCopyOption<XMLCommands>
 		
 		// get a command for a given id
 		XMLCommand const &Get(String const &id) const { return commands.Get(id); }
+
+		// find a command given its name
+		int Find(String const &id) const { return commands.Find(id); }
 		
 		// sets the commands by a callback
 		void Set(Callback1<XMLCommands &> commands);

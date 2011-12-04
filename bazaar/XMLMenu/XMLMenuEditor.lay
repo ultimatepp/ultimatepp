@@ -25,11 +25,13 @@ LAYOUT(MenuEditorLayout, 536, 304)
 	ITEM(Splitter, horzSplitter, HSizePosZ(0, 0).VSizePosZ(0, 28))
 END_LAYOUT
 
-LAYOUT(CmdAddLayout, 236, 76)
-	ITEM(EditString, cmdId, LeftPosZ(8, 220).TopPosZ(28, 19))
-	ITEM(Button, cancelBtn, SetLabel(t_("Cancel")).LeftPosZ(168, 64).TopPosZ(52, 20))
-	ITEM(Button, okBtn, SetLabel(t_("Ok")).LeftPosZ(4, 64).TopPosZ(52, 20))
-	ITEM(Label, dv___3, SetLabel(t_("New command Id :")).LeftPosZ(8, 220).TopPosZ(4, 20))
+LAYOUT(CmdEditLayout, 236, 124)
+	ITEM(EditString, cmdId, HSizePosZ(8, 8).TopPosZ(28, 19))
+	ITEM(EditString, cmdStr, HSizePosZ(8, 8).TopPosZ(76, 19))
+	ITEM(Button, okBtn, SetLabel(t_("Ok")).LeftPosZ(4, 64).BottomPosZ(4, 20))
+	ITEM(Button, cancelBtn, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(4, 20))
+	ITEM(Label, dv___4, SetLabel(t_("Command Id :")).HSizePosZ(8, 8).TopPosZ(4, 20))
+	ITEM(Label, dv___5, SetLabel(t_("Command string :")).HSizePosZ(8, 8).TopPosZ(52, 20))
 END_LAYOUT
 
 LAYOUT(BarAddLayout, 236, 76)

@@ -7,8 +7,8 @@ NAMESPACE_UPP
 // xml support
 void XMLCommand::Xmlize(XmlIO xml)
 {
-	// just custom commands get streamed, so we don't need to
-	// stream anything, just set values on load
+	// just custom commands get streamed
+	// only command string gets streamed, other values are just set
 	if(xml.IsLoading())
 	{
 		enabled = true;
@@ -21,11 +21,12 @@ void XMLCommand::Xmlize(XmlIO xml)
 	{
 		ASSERT(custom == true);
 	}
+	xml("CommandString", commandString);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
 // adds a custom command
-XMLCommands &XMLCommands::Add(String const &id)
+XMLCommands &XMLCommands::Add(String const &id, String const &cmdStr)
 {
 	if(Has(id))
 		return *this;
@@ -34,8 +35,14 @@ XMLCommands &XMLCommands::Add(String const &id)
 	cmd->enabled = true;
 	cmd->custom = true;
 	cmd->callback.Clear();
+	cmd->commandString = cmdStr;
 	commands.Add(id, cmd);
 	return *this;
+}
+
+XMLCommands &XMLCommands::Add(String const &id)
+{
+	return Add(id, id);
 }
 
 // adds a built-in command with given callback
@@ -80,7 +87,7 @@ XMLCommands &XMLCommands::Add(String const &id, Ctrl &ctrl)
 }
 
 // adds a custom command, allows enable/disable item
-XMLCommands &XMLCommands::Add(bool enabled, String const &id)
+XMLCommands &XMLCommands::Add(bool enabled, String const &id, String const &cmdStr)
 {
 	bool has = Has(id);
 	XMLCommand *cmd;
@@ -92,9 +99,15 @@ XMLCommands &XMLCommands::Add(bool enabled, String const &id)
 	cmd->enabled = enabled;
 	cmd->custom = true;
 	cmd->callback.Clear();
+	cmd->commandString = cmdStr;
 	if(!has)
 		commands.Add(id, cmd);
 	return *this;
+}
+
+XMLCommands &XMLCommands::Add(bool enabled, String const &id)
+{
+	return Add(enabled, id, id);
 }
 
 // adds a built-in command with given callback, allows enable/disable item

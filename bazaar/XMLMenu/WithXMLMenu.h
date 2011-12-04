@@ -424,7 +424,12 @@ template<class T> void WithXMLMenu<T>::SetMenuBar0(Bar &bar, int mnIdx, Array<XM
 		bool isCustom = cmd.GetIsCustom();
 		Callback handler;
 		if(isCustom)
-			handler = THISBACK1(callUserHandler, id);
+		{
+			String cmds = cmd.GetCommandString();
+			if(cmds == "")
+				cmds = id;
+			handler = THISBACK1(callUserHandler, cmds);
+		}
 		else
 			handler = cmd.GetCallback();
 		

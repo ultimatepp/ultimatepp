@@ -177,10 +177,11 @@ class XMLBarsEditor : public ParentCtrl
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-class XMLCmdAdd : public WithCmdAddLayout<TopWindow>
+class XMLCmdEdit : public WithCmdEditLayout<TopWindow>
 {
 	private :
 		XMLCommands &cmds;
+		bool adding;
 	
 	protected :
 		void okCb(void)
@@ -190,7 +191,7 @@ class XMLCmdAdd : public WithCmdAddLayout<TopWindow>
 				Exclamation(t_("Invalid empty command Id"));
 				return;
 			}
-			if(cmds.Has(cmdId))
+			if(adding && cmds.Has(cmdId))
 			{
 				Exclamation(Format(t_("Command '%s' already present"), ~cmdId));
 				return;
@@ -200,13 +201,15 @@ class XMLCmdAdd : public WithCmdAddLayout<TopWindow>
 		void cancelCb(void) { Break(IDCANCEL);}
 	
 	public :
-		typedef XMLCmdAdd CLASSNAME;
+		typedef XMLCmdEdit CLASSNAME;
 		
-		XMLCmdAdd(XMLCommands &c) : cmds(c)
+		XMLCmdEdit(XMLCommands &c, bool add) : cmds(c)
 		{
 			CtrlLayout(*this);
 			okBtn.Ok() << THISBACK(okCb);
 			cancelBtn.Cancel() << THISBACK(cancelCb);
+			adding = add;
+			cmdId.SetEditable(adding);
 		}
 };
 
@@ -247,6 +250,7 @@ class XMLMenuEditor : public WithMenuEditorLayout<TopWindow>
 		// commandlist context menu
 		void cmdContextCb(Bar &bar);
 		void cmdContextAddCb(void);
+		void cmdContextEditCb(void);
 		void cmdContextRemoveCb(void);
 		
 		// commandlist double-click handler
