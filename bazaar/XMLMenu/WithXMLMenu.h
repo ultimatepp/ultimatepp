@@ -486,7 +486,7 @@ template<class T> void WithXMLMenu<T>::SetToolBar0(Bar &bar, int tbIdx, Array<XM
 		bool isCustom = cmd.GetIsCustom();
 		Callback handler;
 		if(isCustom)
-			handler = THISBACK1(callUserHandler, id);
+			handler = THISBACK1(callUserHandler, cmd.GetCommandString());
 		else
 			handler = cmd.GetCallback();
 		
