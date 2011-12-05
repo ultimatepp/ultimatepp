@@ -1,4 +1,4 @@
-topic "Documentation";
+topic "Dokumentation";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i704;a17;O9;~~~.992;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
@@ -24,7 +24,7 @@ topic "Documentation";
 bis jetzt ist noch nicht alles dokumentiert.&]
 [s0; &]
 [s0; Die Gemeinschaft um Ultimate`+`+ steht bereit, um im [^http`:`/`/www`.ultimatepp`.org`/forum`/^ F
-orum].exzellente Unterstützung zu bieten.&]
+orum] exzellente Unterstützung zu bieten.&]
 [s0; &]
 [s0;*3 &]
 [s0; [*^topic`:`/`/ide`/app`/install`$de`-de^3 Anleitung zur Installation 
@@ -78,7 +78,7 @@ Entwicklungswerkzeug]&]
 Ultimate`+`+ Pakete]&]
 [s0;l256; [^topic`:`/`/CtrlLib`/src`/index`$de`-de^ Liste aller Steuerelemente]&]
 [s0;l256;^topic`:`/`/CtrlLib`/src`/index`$de`-de^ &]
-[s0; [*+117 Contribute to Ultimate`+`+]&]
+[s0; [*+117 Bei Ultimate`+`+ mitwirken]&]
 [s0;*+117 &]
 [s0;i256; [^topic`:`/`/uppweb`/www`/contribweb`$de`-de^ Wie du mitwirken 
 kannst]&]
