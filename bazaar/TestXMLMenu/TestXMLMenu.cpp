@@ -23,9 +23,9 @@ void TestXMLMenu::commandCb(XMLCommands &cmds)
 		.Add("PrintPreview"	, callback(dummyCb))
 		.Add("Print"		, callback(dummyCb))
 		.Add("Next"			, callback(dummyCb))
-		.Add("Previous")	// custom command
-		.Add("Settings")	// custom command
-		.Add("Help")		// custom command
+		.Add("Previous"		, "PREVIOUS")	// custom command
+		.Add("Settings"		, "SETTINGS")	// custom command
+		.Add("Help"			, "HELP")		// custom command
 		.Add("Quit"			, THISBACK(quitCb))
 		.Add("Exit"			, callback(dummyCb))
 		.Add("Flag"			, callback(dummyCb))
