@@ -62,7 +62,6 @@ class XMLCommands : DeepCopyOption<XMLCommands>
 		XMLCommands(XMLCommands pick_ &cmds) : commands(cmds.commands) {}
 			
 		// adds a custom command
-		XMLCommands &Add(String const &id);
 		XMLCommands &Add(String const &id, String const &cmd);
 		
 		// adds a built-in command with given callback
@@ -73,7 +72,6 @@ class XMLCommands : DeepCopyOption<XMLCommands>
 		XMLCommands &Add(String const &id, Ctrl &ctrl, Size const &size);
 		
 		// adds a custom command, allows enable/disable item
-		XMLCommands &Add(bool enabled, String const &id);
 		XMLCommands &Add(bool enabled, String const &id, String const &cmd);
 		
 		// adds a built-in command with given callback, allows enable/disable item

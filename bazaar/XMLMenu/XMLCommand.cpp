@@ -40,11 +40,6 @@ XMLCommands &XMLCommands::Add(String const &id, String const &cmdStr)
 	return *this;
 }
 
-XMLCommands &XMLCommands::Add(String const &id)
-{
-	return Add(id, id);
-}
-
 // adds a built-in command with given callback
 XMLCommands &XMLCommands::Add(String const &id, Callback cb)
 {
@@ -103,11 +98,6 @@ XMLCommands &XMLCommands::Add(bool enabled, String const &id, String const &cmdS
 	if(!has)
 		commands.Add(id, cmd);
 	return *this;
-}
-
-XMLCommands &XMLCommands::Add(bool enabled, String const &id)
-{
-	return Add(enabled, id, id);
 }
 
 // adds a built-in command with given callback, allows enable/disable item
