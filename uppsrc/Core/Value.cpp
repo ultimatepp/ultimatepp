@@ -634,7 +634,7 @@ void Id::Set(const String& s) {
 }
 
 const String& Id::AsString(int n) {
-	static __thread const String *h[1024];
+	static thread__ const String *h[1024];
 	if(n < 1024) {
 		if(!h[n]) {
 			CriticalSection::Lock __(s_ids);
