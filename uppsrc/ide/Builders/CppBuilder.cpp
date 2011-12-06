@@ -242,6 +242,7 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 				AddPath(mac, "PATH", file);
 				AddPath(mac, "RELPATH", pf);
 				AddPath(mac, "DIR", GetFileFolder(PackagePath(package)));
+				AddPath(mac, "FILEDIR", GetFileFolder(file));
 				AddPath(mac, "PACKAGE", package);
 				mac.Add("FILE", GetFileName(file));
 				mac.Add("TITLE", GetFileTitle(file));
