@@ -114,19 +114,19 @@ public:
 
 	SqlCol        Of(SqlId id) const;
 	SqlCol        Of(const char *of) const;
-	SqlId         As(const char *as) const;
-	SqlId         As(SqlId id) const         { return As(~~id); }
-	SqlId         operator[](int i) const;
-	SqlId         operator&(const SqlId& s) const;
-	SqlId         operator[](const SqlId& id) const;
+	SqlCol        As(const char *as) const;
+	SqlCol        As(SqlId id) const         { return As(~~id); }
+	SqlCol        operator[](int i) const;
+	SqlCol        operator&(const SqlId& s) const;
+	SqlCol        operator[](const SqlId& id) const;
 
-	SqlId operator()(SqlId p);
+	SqlCol        operator()(SqlId p);
 
 //$	SqlId     operator()(SqlId p, SqlId p1, ...);
 #define E__PutSqlId(I)      PutOf(x, p##I)
 #define E__SqlId(I)         SqlId p##I
 #define E__Of(I) \
-	SqlId operator()(SqlId p, __List##I(E__SqlId)) { \
+	SqlCol operator()(SqlId p, __List##I(E__SqlId)) { \
 	String x; \
 	PutOf0(x, p); \
 	__List##I(E__PutSqlId); \

@@ -226,7 +226,12 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 				return;
 			}
 			else
-				if(r) r->Cat(c);
+				if(r) {
+					const char *p = s - 1;
+					while((byte)*s >= 32)
+						s++;
+					r->Cat(p, s);
+				}
 		}
 	}
 }

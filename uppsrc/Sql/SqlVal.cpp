@@ -17,30 +17,30 @@ SqlCol SqlId::Of(SqlId id) const
 	return id.IsNull() ? ToString() : id.ToString() + '.' + ToString();
 }
 
-SqlId SqlId::operator[](const SqlId& id) const
+SqlCol SqlId::operator[](const SqlId& id) const
 {
 	return id.IsNull() ? ToString() : ToString() + '.' + id.ToString();
 }
 
-SqlId SqlId::As(const char *as) const
+SqlCol SqlId::As(const char *as) const
 {
 	return id.IsNull() ? ToString() : ToString() + SqlCase(MSSQL | PGSQL, " as ")(" ") + as;
 }
 
-SqlId SqlId::operator()(SqlId p) {
+SqlCol SqlId::operator()(SqlId p) {
 	String x;
 	PutOf0(x, p);
 	return x;
 }
 
-SqlId SqlId::operator [] (int i) const
+SqlCol SqlId::operator [] (int i) const
 {
-	return SqlId(ToString() + FormatInt(i));
+	return ToString() + FormatInt(i);
 }
 
-SqlId SqlId::operator&(const SqlId& s) const
+SqlCol SqlId::operator&(const SqlId& s) const
 {
-	return SqlId(ToString() + "$" + s.ToString());
+	return ToString() + "$" + s.ToString();
 }
 
 String SqlS::operator()() const

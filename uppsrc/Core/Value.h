@@ -1,20 +1,22 @@
 
-struct IdConst {
-	const char *text;
-	mutable int ndx;
-};
-
 class Value;
 
 class Id : Moveable<Id> {
-protected:
-	int ndx;
-	static Index<String>& Ids();
+	int            ndx;
+
+#ifdef _MULTITHREADED
+	static         ArrayIndex<String>& Ids();
+#else
+	static         Index<String>& Ids();
+#endif
 	void           Set(const String& s);
 
 public:
+	static Id            Find(const String& s);
+	static const String& AsString(int n);
+
 	int            AsNdx() const              { return ndx; }
-	String         ToString() const;
+	String         ToString() const           { return AsString(ndx); }
 	dword          GetHashValue() const       { return ndx; }
 	bool           IsNull() const             { return ndx == 0; }
 
@@ -25,16 +27,12 @@ public:
 	bool           operator==(Id b) const     { return ndx == b.ndx; }
 	bool           operator!=(Id b) const     { return ndx != b.ndx; }
 
-	static Id            Find(const String& s);
-	static const String& AsString(int n);
-
 	operator bool() const                     { return ndx; }
 
 	Id()                                      { ndx = 0; }
 	Id(const String& s)                       { Set(s); }
 	Id(const char *s)                         { Set(s); }
 	explicit Id(int n)                        { ASSERT(n >= 0 && n < Ids().GetCount()); ndx = n; }
-	Id(const IdConst& cnst);
 };
 
 template<> inline bool  IsNull(const Date& d)    { return d.year == -32768; }
