@@ -617,11 +617,12 @@ const Value& ValueMap::operator[](const Value& key) const
 
 // ----------------------------------
 
-struct IdList : public Index<String> {
+#ifdef _MULTITHREADED
+struct IdList : public ArrayIndex<String> {
 	IdList()  { Add(String()); }
 };
 
-Index<String>& Id::Ids() {
+ArrayIndex<String>& Id::Ids() {
 	return Single<IdList>();
 }
 
@@ -632,12 +633,15 @@ void Id::Set(const String& s) {
 	ndx = Ids().FindAdd(s);
 }
 
-String Id::ToString() const {
-	CriticalSection::Lock __(s_ids);
-	return Ids()[ndx];
-}
-
 const String& Id::AsString(int n) {
+	static __thread const String *h[1024];
+	if(n < 1024) {
+		if(!h[n]) {
+			CriticalSection::Lock __(s_ids);
+			h[n] = &Ids()[n];
+		}
+		return *h[n];
+	}
 	CriticalSection::Lock __(s_ids);
 	return Ids()[n];
 }
@@ -648,17 +652,29 @@ Id Id::Find(const String& s) {
 	if(i < 0) return Id();
 	return Id(i);
 }
+#else
+struct IdList : public Index<String> {
+	IdList()  { Add(String()); }
+};
 
-Id::Id(const IdConst& cnst) {
-	if(cnst.ndx > 0) {
-		ASSERT(cnst.ndx >= 0 && cnst.ndx < Ids().GetCount());
-		ndx = cnst.ndx;
-	}
-	else {
-		Set(cnst.text);
-		cnst.ndx = ndx;
-	}
+Index<String>& Id::Ids() {
+	return Single<IdList>();
 }
+
+void Id::Set(const String& s) {
+	ndx = Ids().FindAdd(s);
+}
+
+const String& Id::AsString(int n) {
+	return Ids()[n];
+}
+
+Id Id::Find(const String& s) {
+	int i = Ids().Find(s);
+	if(i < 0) return Id();
+	return Id(i);
+}
+#endif
 
 int StdValueCompare(const Value& a, const Value& b, int language)
 {
