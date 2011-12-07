@@ -58,7 +58,7 @@ SqlBool FindSchJoin(const String& tables)
 	INTERLOCKED {
 		static VectorMap<String, SqlBool> cache;
 		if(cache.GetCount() > 20000)
-			cache.Clear();
+			cache.Clear(); // Just to defend against unlikely dynamically created SqlSelect Join permutations
 		int q = cache.Find(tables);
 		if(q >= 0)
 			return cache[q];
@@ -73,9 +73,9 @@ SqlBool FindSchJoin(const String& tables)
 				}
 			}
 		}
-		NEVER();
-		return SqlBool::False();
 	}
+	NEVER_("Schema join not found");
+	return SqlBool::False();
 }
 
 END_UPP_NAMESPACE

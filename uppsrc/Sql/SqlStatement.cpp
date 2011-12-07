@@ -152,7 +152,25 @@ SqlSelect& SqlSelect::From(SqlId table) {
 	return *this;
 }
 
+SqlSelect& SqlSelect::From(SqlCol table)
+{
+	String t1 = ~table;
+	text = "select " + text + " from " + t1;
+	tables << ',' << t1;
+	on = false;
+	return *this;
+}
+
 SqlSelect& SqlSelect::From(SqlId table1, SqlId table2) {
+	String t1 = ~table1;
+	String t2 = ~table2;
+	text = "select " + text + " from " + t1 + ", " + t2;
+	tables << ',' << t1 << ',' << t2;
+	on = false;
+	return *this;
+}
+
+SqlSelect& SqlSelect::From(SqlCol table1, SqlCol table2) {
 	String t1 = ~table1;
 	String t2 = ~table2;
 	text = "select " + text + " from " + t1 + ", " + t2;

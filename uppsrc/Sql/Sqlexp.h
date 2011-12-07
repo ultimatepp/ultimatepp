@@ -503,7 +503,9 @@ public:
 	SqlSelect& Get();
 	SqlSelect& From(const SqlSet& set);
 	SqlSelect& From(SqlId table);
+	SqlSelect& From(SqlCol table);
 	SqlSelect& From(SqlId table1, SqlId table2);
+	SqlSelect& From(SqlCol table1, SqlCol table2);
 	SqlSelect& From(SqlId table1, SqlId table2, SqlId table3);
 	SqlSelect& From(const SqlVal& a)                  { return From(SqlSet(a)); }
 
@@ -511,6 +513,10 @@ public:
 	SqlSelect& LeftJoin(SqlId table)                  { return LeftJoin0(~table); }
 	SqlSelect& RightJoin(SqlId table)                 { return RightJoin0(~table); }
 	SqlSelect& FullJoin(SqlId table)                  { return FullJoin0(~table); }
+	SqlSelect& InnerJoin(SqlCol table)                { return InnerJoin0(~table); }
+	SqlSelect& LeftJoin(SqlCol table)                 { return LeftJoin0(~table); }
+	SqlSelect& RightJoin(SqlCol table)                { return RightJoin0(~table); }
+	SqlSelect& FullJoin(SqlCol table)                 { return FullJoin0(~table); }
 
 	SqlSelect& InnerJoin(const SqlSet& set)           { return InnerJoin0(~set(SqlSet::SET)); }
 	SqlSelect& LeftJoin(const SqlSet& set)            { return LeftJoin0(~set(SqlSet::SET)); }
