@@ -66,12 +66,6 @@ SqlSelect& SqlSelect::Where(const SqlBool& exp) {
 	return *this;
 }
 
-SqlSelect& SqlSelect::On(const SqlBool& exp) {
-	if(!exp.IsTrue() && !exp.IsEmpty())
-		text << " on " << ~exp;
-	return *this;
-}
-
 SqlSelect& SqlSelect::StartWith(const SqlBool& exp) {
 	text << " start with " << ~exp;
 	return *this;
@@ -143,42 +137,103 @@ SqlSelect& SqlSelect::Get() {
 }
 
 SqlSelect& SqlSelect::From(const SqlSet& table) {
-	text = "select " + text + " from " + table(SqlSet::SETOP + 1);
+	String ts = table(SqlSet::SETOP + 1);
+	text = "select " + text + " from " + ts;
+	tables << ',' << Filter(ts, CharFilterNotWhitespace);
+	on = false;
 	return *this;
 }
 
 SqlSelect& SqlSelect::From(SqlId table) {
-	text = "select " + text + " from " + ~table;
+	String t1 = ~table;
+	text = "select " + text + " from " + t1;
+	tables << ',' << t1;
+	on = false;
 	return *this;
 }
 
 SqlSelect& SqlSelect::From(SqlId table1, SqlId table2) {
-	text = "select " + text + " from " + ~table1 + ", " + ~table2;
+	String t1 = ~table1;
+	String t2 = ~table2;
+	text = "select " + text + " from " + t1 + ", " + t2;
+	tables << ',' << t1 << ',' << t2;
+	on = false;
 	return *this;
 }
 
 SqlSelect& SqlSelect::From(SqlId table1, SqlId table2, SqlId table3) {
-	text = "select " + text + " from " + ~table1 + ", " + ~table2 + ", " + ~table3;
+	String t1 = ~table1;
+	String t2 = ~table2;
+	String t3 = ~table3;
+	text = "select " + text + " from " + t1 + ", " + t2 + ", " + t3;
+	tables << ',' << t1 << ',' << t2 << ',' << t3;
+	on = false;
 	return *this;
 }
 
 SqlSelect& SqlSelect::InnerJoin0(const String& table) {
-	text << " inner join " << ~table;
+	text << " inner join " << table;
+	tables << ',' << table;
+	on = false;
 	return *this;
 }
 
 SqlSelect& SqlSelect::LeftJoin0(const String& table) {
-	text << " left outer join " << ~table;
+	text << " left outer join " << table;
+	tables << ',' << table;
+	on = false;
 	return *this;
 }
 
 SqlSelect& SqlSelect::RightJoin0(const String& table) {
-	text << " right outer join " << ~table;
+	text << " right outer join " << table;
+	tables << ',' << table;
+	on = false;
 	return *this;
 }
 
 SqlSelect& SqlSelect::FullJoin0(const String& table) {
-	text << " full outer join " << ~table;
+	text << " full outer join " << table;
+	tables << ',' << table;
+	on = false;
+	return *this;
+}
+
+SqlSelect& SqlSelect::InnerJoinRef(SqlId table)
+{
+	InnerJoin(table);
+	On(FindSchJoin(tables));
+	on = true;
+	return *this;
+}
+
+SqlSelect& SqlSelect::LeftJoinRef(SqlId table)
+{
+	LeftJoin(table);
+	On(FindSchJoin(tables));
+	on = true;
+	return *this;
+}
+
+SqlSelect& SqlSelect::RightJoinRef(SqlId table)
+{
+	RightJoin(table);
+	On(FindSchJoin(tables));
+	on = true;
+	return *this;
+}
+
+SqlSelect& SqlSelect::FullJoinRef(SqlId table)
+{
+	FullJoin(table);
+	On(FindSchJoin(tables));
+	on = true;
+	return *this;
+}
+
+SqlSelect& SqlSelect::On(const SqlBool& exp) {
+	if(!exp.IsTrue() && !exp.IsEmpty())
+		text << (on ? " and " : " on ") << ~exp;
 	return *this;
 }
 
@@ -196,6 +251,7 @@ SqlSelect SqlSelect::AsTable(SqlId tab) const
 
 SqlSelect::SqlSelect(Fields f)
 {
+	on = false;
 	SqlSet set(f);
 	text = ~set;
 }
@@ -204,6 +260,7 @@ SqlSelect::SqlSelect(Fields f)
 
 #define E__QSqlSelectF(I) \
 SqlSelect::SqlSelect(__List##I(E__SqlVal)) { \
+	on = false; \
 	SqlSet set; \
 	__List##I(E__SCat); \
 	text = ~set; \

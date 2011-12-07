@@ -27,6 +27,7 @@ file
 	sch_source.h,
 	sch_schema.h,
 	util_td.cpp,
+	IntroSch.cpp,
 	ExportSch.cpp,
 	Info readonly separator,
 	src.tpp,

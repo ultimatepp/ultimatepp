@@ -484,6 +484,8 @@ public:
 
 class SqlSelect {
 	String  text;
+	String  tables;
+	bool    on;
 
 	SqlSelect& InnerJoin0(const String& table);
 	SqlSelect& LeftJoin0(const String& table);
@@ -515,6 +517,11 @@ public:
 	SqlSelect& RightJoin(const SqlSet& set)           { return RightJoin0(~set(SqlSet::SET)); }
 	SqlSelect& FullJoin(const SqlSet& set)            { return FullJoin0(~set(SqlSet::SET)); }
 
+	SqlSelect& InnerJoinRef(SqlId table);
+	SqlSelect& LeftJoinRef(SqlId table);
+	SqlSelect& RightJoinRef(SqlId table);
+	SqlSelect& FullJoinRef(SqlId table);
+
 	SqlSelect& Where(const SqlBool& exp);
 	SqlSelect& On(const SqlBool& exp);
 	SqlSelect& StartWith(const SqlBool& exp);
@@ -541,8 +548,8 @@ public:
 	SqlSelect AsTable(SqlId tab) const;
 
 	SqlSelect(Fields f);
-	SqlSelect(const SqlSet& s)                        { text = ~s; }
-	SqlSelect()                                       {}
+	SqlSelect(const SqlSet& s)                        { text = ~s; on = false; }
+	SqlSelect()                                       { on = false; }
 #define E__QSelect(I)   SqlSelect(__List##I(E__SqlVal));
 __Expand(E__QSelect);
 #undef  E__QSelect
