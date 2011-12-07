@@ -39,7 +39,10 @@
 #define LONGRAW(x)                 COLUMN("blob", String, x, 0, 0)
 #define LONGRAW_(x)                COLUMN_("blob", String, x, 0, 0)
 
+#ifndef PRIMARY_KEY
 #define PRIMARY_KEY                INLINE_ATTRIBUTE("primary key")
+#endif
+
 #define AUTO_INCREMENT
 #define NOT_NULL                   INLINE_ATTRIBUTE("not null")
 

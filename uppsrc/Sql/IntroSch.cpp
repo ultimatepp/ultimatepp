@@ -2,36 +2,66 @@
 
 NAMESPACE_UPP
 
+
+struct SchTableInfo {
+	Vector<String> column;
+	Vector<String> ref_table;
+	Vector<String> ref_column;
+	String         primary_key;
+	String         prefix;
+};
+
 ArrayMap<String, SchTableInfo>& sSchTableInfo()
 {
 	static ArrayMap<String, SchTableInfo> x;
 	return x;
 }
 
-SchTableInfo& SchTableInfo::Column(const char *name)
+void SchDbInfoTable(const char *table)
 {
-	column.Add(name);
-	ref_table.Add();
-	ref_column.Add();
-	return *this;
+	sSchTableInfo().GetAdd(table);
 }
 
-SchTableInfo& SchTableInfo::References(const char *table)
+void SchDbInfoColumn(const char *name)
 {
-	ref_table.Top() = table;
-	return *this;
+	SchTableInfo& f = sSchTableInfo().Top();
+	f.column.Add(f.prefix + name);
+	f.ref_table.Add();
+	f.ref_column.Add();
+	if(IsNull(f.primary_key))
+		f.primary_key = name;
 }
 
-SchTableInfo& SchTableInfo::References(const char *table, const char *column)
+void SchDbInfoVar(void (*fn)(), const char *name)
 {
-	References(table);
-	ref_column.Top() = column;
-	return *this;
+	SchTableInfo& f = sSchTableInfo().Top();
+	String h = f.prefix;
+	f.prefix << name << '$';
+	(*fn)();
+	f.prefix = h;
 }
 
-SchTableInfo& SchDbInfo(const char *table)
+void SchDbInfoReferences(const char *table)
 {
-	return sSchTableInfo().GetAdd(table);
+	sSchTableInfo().Top().ref_table.Top() = table;
+}
+
+void SchDbInfoReferences(const char *table, const char *column)
+{
+	SchDbInfoReferences(table);
+	sSchTableInfo().Top().ref_column.Top() = column;
+}
+
+void SchDbInfoPrimaryKey()
+{
+	SchTableInfo& f = sSchTableInfo().Top();
+	f.primary_key = f.column.Top();
+}
+
+void SchDbInfoColumnArray(const char *name, int items)
+{
+	for(int i = 0; i < items; i++)
+		SchDbInfoColumn(String().Cat() << name << i);
 }
 
 const SchTableInfo& GetSchTableInfo(const String& table)
@@ -40,37 +70,59 @@ const SchTableInfo& GetSchTableInfo(const String& table)
 	return sSchTableInfo().Get(~table, sSchTableInfoZero);
 }
 
-SqlBool Join(const String& tab1, const String& tab2)
+SqlBool Join(const String& tab1, const String& as1, const String& tab2, const String& as2)
 {
 	const SchTableInfo& t1 = GetSchTableInfo(tab1);
 	const SchTableInfo& t2 = GetSchTableInfo(tab2);
 	for(int i = 0; i < t1.ref_table.GetCount(); i++)
 		if(t1.ref_table[i] == tab2)
-			return SqlId(t1.column[i]).Of(SqlId(tab1)) == SqlId(t2.column[0]).Of(SqlId(tab2));
+			return SqlId(t1.column[i]).Of(SqlId(as1)) == SqlId(t2.primary_key).Of(SqlId(as2));
 	for(int i = 0; i < t2.ref_table.GetCount(); i++)
 		if(t2.ref_table[i] == tab1)
-			return SqlId(t2.column[i]).Of(SqlId(tab2)) == SqlId(t1.column[0]).Of(SqlId(tab1));
+			return SqlId(t2.column[i]).Of(SqlId(as1)) == SqlId(t1.primary_key).Of(SqlId(as2));
 	return SqlBool::False();
+}
+
+int sChrf(int c)
+{
+	return c < 32 ? ' ' : c;
+}
+
+StaticMutex sM;
+
+String GetSchColumns(const String& table)
+{
+	Mutex::Lock __(sM);
+	return Join(GetSchTableInfo(table).column, ",");
 }
 
 SqlBool FindSchJoin(const String& tables)
 {
-	INTERLOCKED {
-		static VectorMap<String, SqlBool> cache;
-		if(cache.GetCount() > 20000)
-			cache.Clear(); // Just to defend against unlikely dynamically created SqlSelect Join permutations
-		int q = cache.Find(tables);
-		if(q >= 0)
-			return cache[q];
-		Vector<String> s = Split(tables, ',');
-		if(s.GetCount() >= 2) {
-			String tab1 = s.Top();
-			for(int i = 0; i < s.GetCount() - 1; i++) {
-				SqlBool b = Join(tab1, s[i]);
-				if(!b.IsFalse()) {
-					cache.Add(tables, b);
-					return b;
-				}
+	Mutex::Lock __(sM);
+	static VectorMap<String, SqlBool> cache;
+	if(cache.GetCount() > 20000) // Defend against unlikely dynamic Join permutations
+		cache.Clear();
+	int q = cache.Find(tables);
+	if(q >= 0)
+		return cache[q];
+	Vector<String> s = Split(Filter(tables, sChrf), ',');
+	Vector<String> as;
+	Vector<String> table;
+	for(int i = 0; i < s.GetCount(); i++) {
+		Vector<String> ss = Split(s[i], ' ');
+		if(ss.GetCount()) {
+			table.Add(ss[0]);
+			as.Add(ss.Top());
+		}
+	}
+	if(table.GetCount() >= 2) {
+		String tab1 = table.Top();
+		String as1 = as.Top();
+		for(int i = 0; i < table.GetCount() - 1; i++) {
+			SqlBool b = Join(tab1, as1, table[i], as[i]);
+			if(!b.IsFalse()) {
+				cache.Add(tables, b);
+				return b;
 			}
 		}
 	}

@@ -108,20 +108,15 @@ inline void SqlSchemaClear(T *a, int n) {
 		SqlSchemaClear(*a++);
 }
 
-
-struct SchTableInfo {
-	Vector<String> column;
-	Vector<String> ref_table;
-	Vector<String> ref_column;
-
-	SchTableInfo& Column(const char *name);
-	SchTableInfo& References(const char *table);
-	SchTableInfo& References(const char *table, const char *column);
-};
-
-SchTableInfo& SchDbInfo(const char *table);
+void SchDbInfoTable(const char *table);
+void SchDbInfoColumn(const char *column);
+void SchDbInfoVar(void (*fn)(), const char *name);
+void SchDbInfoPrimaryKey();
+void SchDbInfoReferences(const char *table);
+void SchDbInfoReferences(const char *table, const char *column);
 
 SqlBool FindSchJoin(const String& tables);
+String  GetSchColumns(const String& table);
 
 String ExportSch(SqlSession& session, const String& database);
 String ExportIds(SqlSession& session, const String& database);
