@@ -45,7 +45,7 @@ SqlCol SqlId::operator&(const SqlId& s) const
 
 String SqlS::operator()() const
 {
-	return '(' + text + ')';
+	return String().Cat() << '(' << text << ')';
 }
 
 String SqlS::operator()(int at) const
@@ -63,12 +63,12 @@ String SqlS::operator()(int at, byte cond) const
 }
 
 SqlS::SqlS(const SqlS& a, const char *o, const SqlS& b, int pr, int prb) {
-	text = a(pr) + o + b(prb);
+	text << a(pr) << o << b(prb);
 	priority = pr;
 }
 
 SqlS::SqlS(const SqlS& a, const char *o, const SqlS& b, int pr) {
-	text = a(pr) + o + b(pr);
+	text << a(pr) << o << b(pr);
 	priority = pr;
 }
 

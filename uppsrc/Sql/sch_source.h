@@ -128,16 +128,27 @@ void S_##x::FieldLayoutRaw(FieldOperator& fo, const String& prefix) {\
 
 // Introspection
 
-#define TYPE(x)   struct SINS_##x##_ { SINS_##x##_(); } SINS_##x##__; SINS_##x##_::SINS_##x##_() { SchDbInfo(#x)
-#define TYPE_I(x, b)   struct SINS_##x##_ { SINS_##x##_(); } SINS_##x##__; SINS_##x##_::SINS_##x##_() { SchDbInfo(#x)
-#define TYPE_II(x, b1, b2)   struct SINS_##x##_ { SINS_##x##_(); } SINS_##x##__; SINS_##x##_::SINS_##x##_() { SchDbInfo(#x)
-#define TYPE_III(x, b1, b2, b3)   struct SINS_##x##_ { SINS_##x##_(); } SINS_##x##__; SINS_##x##_::SINS_##x##_() { SchDbInfo(#x)
-#define COLUMN(type, ctype, name, width, prec)               .Column(#name)
-#define REFERENCES(table)                                    .References(#table)
-#define REFERENCES_CASCADE(table)                            .References(#table)
-#define REFERENCES_(table, column)                           .References(#table, #column)
-#define REFERENCES_CASCADE_(table, column)                   .References(#table, #column)
-#define COLUMN_ARRAY(type, ctype, name, width, prec, items)  .ColumnArray(#name, items);
-#define END_TABLE ; }
+#define TYPE(x)                   void SchDbInfo##x() {
+#define TYPE_I(x, b)              void SchDbInfo##x() { SchDbInfo##b();
+#define TYPE_II(x, b1, b2)        void SchDbInfo##x() { SchDbInfo##b1(); SchDbInfo##b2();
+#define TYPE_III(x, b1, b2, b3)   void SchDbInfo##x() { SchDbInfo##b1(); SchDbInfo##b2(); SchDbInfo##b3();
+#define COLUMN(type, ctype, name, width, prec)               SchDbInfoColumn(#name);
+#define VAR(type, name)                                      SchDbInfoVar(SchDbInfo##type, #name);
+#define REFERENCES(table)                                    SchDbInfoReferences(#table);
+#define REFERENCES_CASCADE(table)                            SchDbInfoReferences(#table);
+#define REFERENCES_(table, column)                           SchDbInfoReferences(#table, #column);
+#define REFERENCES_CASCADE_(table, column)                   SchDbInfoReferences(#table, #column);
+#define PRIMARY_KEY                                          SchDbInfoPrimaryKey();
+#define COLUMN_ARRAY(type, ctype, name, width, prec, items)  SchDbInfoColumnArray(#name, items);
+#define END_TABLE }
+
+#include SCHEMADIALECT
+
+#define TABLE(x)              struct SINS_##x##_ { SINS_##x##_(); } SINS_##x##__; SINS_##x##_::SINS_##x##_() {\
+									SchDbInfoTable(#x); SchDbInfo##x();
+#define TABLE_I(x, b)              TABLE(x)
+#define TABLE_II(x, b1, b2)        TABLE(x)
+#define TABLE_III(x, b1, b2, b3)   TABLE(x)
+#define END_TABLE }
 
 #include SCHEMADIALECT

@@ -70,7 +70,9 @@
                                    UPGRADE("create sequence " #x " start with 1;")
 #define SEQUENCE_(x)               DOID(x) SEQUENCE(x)
 
+#ifndef PRIMARY_KEY
 #define PRIMARY_KEY                INLINE_ATTRIBUTE("primary key")
+#endif
 #define NOT_NULL                   INLINE_ATTRIBUTE("not null")
 #define UNIQUE                     INLINE_ATTRIBUTE("unique")
 #define SQLDEFAULT(v)              INLINE_ATTRIBUTE("default " #v)

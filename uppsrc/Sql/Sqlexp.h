@@ -151,6 +151,8 @@ protected:
 	String text;
 	byte   priority;
 
+	void   Put(const SqlS& a, int pr);
+
 public:
 	enum PRIORITY {
 		EMPTY    =   0,

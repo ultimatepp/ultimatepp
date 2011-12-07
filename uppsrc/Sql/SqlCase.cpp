@@ -1,5 +1,7 @@
 #include "Sql.h"
 
+#define LTIMING(x)
+
 NAMESPACE_UPP
 
 enum {
@@ -54,6 +56,7 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 		int c = *s++;
 		switch(c) {
 		case SQLC_IF: {
+			LTIMING("SqlCompile IF");
 			StringBuffer *er = r;
 			for(;;) {
 				c = *s++;
@@ -79,6 +82,7 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 		}
 		break;
 		case SQLC_DATE: {
+			LTIMING("SqlCompile DATE");
 			Date x;
 			ReadSqlValue(x, s);
 			if(!r) break;
@@ -102,6 +106,7 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 			break;
 		}
 		case SQLC_TIME: {
+			LTIMING("SqlCompile TIME");
 			Time x;
 			ReadSqlValue(x, s);
 			if(!r) break;
@@ -170,6 +175,7 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 			break;
 		}
 		case SQLC_STRING: {
+			LTIMING("SqlCompile STRING");
 			int l;
 			ReadSqlValue(l, s);
 			String x = String(s, l);
