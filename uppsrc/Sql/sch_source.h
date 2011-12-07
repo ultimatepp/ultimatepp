@@ -125,3 +125,19 @@ void S_##x::FieldLayoutRaw(FieldOperator& fo, const String& prefix) {\
 #define END_TYPE                 }
 
 #include SCHEMADIALECT
+
+// Introspection
+
+#define TYPE(x)   struct SINS_##x##_ { SINS_##x##_(); } SINS_##x##__; SINS_##x##_::SINS_##x##_() { SchDbInfo(#x)
+#define TYPE_I(x, b)   struct SINS_##x##_ { SINS_##x##_(); } SINS_##x##__; SINS_##x##_::SINS_##x##_() { SchDbInfo(#x)
+#define TYPE_II(x, b1, b2)   struct SINS_##x##_ { SINS_##x##_(); } SINS_##x##__; SINS_##x##_::SINS_##x##_() { SchDbInfo(#x)
+#define TYPE_III(x, b1, b2, b3)   struct SINS_##x##_ { SINS_##x##_(); } SINS_##x##__; SINS_##x##_::SINS_##x##_() { SchDbInfo(#x)
+#define COLUMN(type, ctype, name, width, prec)               .Column(#name)
+#define REFERENCES(table)                                    .References(#table)
+#define REFERENCES_CASCADE(table)                            .References(#table)
+#define REFERENCES_(table, column)                           .References(#table, #column)
+#define REFERENCES_CASCADE_(table, column)                   .References(#table, #column)
+#define COLUMN_ARRAY(type, ctype, name, width, prec, items)  .ColumnArray(#name, items);
+#define END_TABLE ; }
+
+#include SCHEMADIALECT
