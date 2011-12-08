@@ -4,7 +4,7 @@ using namespace Upp;
 
 #include "Functions4U.h"
 
-#if defined(PLATFORM_WIN32) 
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 #define Ptr Ptr_
 #define byte byte_
 #define CY win32_CY_
@@ -56,7 +56,7 @@ Honza
 /////////////////////////////////////////////////////////////////////
 // LaunchFile
 
-#if defined(PLATFORM_WIN32)
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 bool LaunchFileCreateProcess(const char *file) {
 	STARTUPINFOW startInfo;
     PROCESS_INFORMATION procInfo;
@@ -250,7 +250,7 @@ bool SetReadOnly(const char *path, bool readOnly) {
 }
 
 bool SetReadOnly(const char *path, bool usr, bool grp, bool oth) {
-#if defined(PLATFORM_WIN32) 
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 	DWORD attr = GetFileAttributesW(ToSystemCharsetW(path)); 
 	
 	if (attr == INVALID_FILE_ATTRIBUTES) 
@@ -283,7 +283,7 @@ bool SetReadOnly(const char *path, bool usr, bool grp, bool oth) {
 }
 
 bool IsReadOnly(const char *path, bool &usr, bool &grp, bool &oth) {
-#if defined(PLATFORM_WIN32) 
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 	DWORD attr = GetFileAttributesW(ToSystemCharsetW(path)); 
 	
 	if (attr == INVALID_FILE_ATTRIBUTES) 
@@ -391,7 +391,7 @@ bool TrashBinClear()
 }
 
 #endif
-#if defined(PLATFORM_WIN32)
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 bool FileToTrashBin(const char *path)
 {	
@@ -465,7 +465,7 @@ String GetExtExecutable(String ext)
 	String exeFile = "";
 	if (ext[0] != '.')
 		ext = String(".") + ext;
-#if defined(PLATFORM_WIN32)
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 	String file = AppendFileName(GetHomeDirectory(), String("dummy") + ext); // Required by FindExecutableW
 	SaveFile(file, "   ");
 	if (!FileExists(file)) 
@@ -492,7 +492,7 @@ String GetExtExecutable(String ext)
 }
 
 
-#if defined(PLATFORM_WIN32)
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 Array<String> GetDriveList() {
 	char drvStr[26*4+1];		// A, B, C, ...
 	Array<String> ret;
@@ -544,7 +544,7 @@ Array<String> GetDriveList() {
 #endif
 
 String Getcwd() {
-#if defined(PLATFORM_WIN32)
+#if defined(PLATFORM_WIN32) || defined(PLATFORM_WIN64)
 	wchar ret[MAX_PATH];
 	if (_wgetcwd(ret, MAX_PATH))
 		return FromSystemCharsetW(ret);
@@ -558,7 +558,7 @@ String Getcwd() {
 }
 
 bool Chdir (const String &folder) {
-#if defined(PLATFORM_WIN32)
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 	return 0 == _wchdir(ToSystemCharsetW(folder));
 #else
 	return 0 == chdir(folder);
@@ -595,7 +595,7 @@ String GetFirefoxDownloadFolder()
 }
 */
 
-#if defined(PLATFORM_WIN32)
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 String GetShellFolder(int clsid) 
 {
@@ -1004,7 +1004,7 @@ String FitFileName(String fileName, int len) {
 	char c;
 	int pos0 = 0;
 	for (int pos1 = 0; (c = s[pos1]) != '\0'; ++pos1) {
-	#ifdef PLATFORM_WIN32
+	#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 		if(c == '\\' || c == '/') {
 	#else
 		if(c == '/') {
@@ -1069,7 +1069,7 @@ String FileRealName(const char *fileName) {
 		return fileName;
 }
 #endif
-#ifdef PLATFORM_WIN32
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 bool GetRealName_Next(String &real, String file) {
 	bool ret;
 	String old;
@@ -1114,7 +1114,7 @@ String FileRealName(const char *_fileName) {
 }
 #endif
 
-#ifdef PLATFORM_WIN32	
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 #define Ptr Ptr_
 #define byte byte_
@@ -1173,7 +1173,7 @@ bool GetSymLinkPath(const char *linkPath, String &filePath)
 }				
 */	
 bool IsSymLink(const char *path) {
-#ifdef PLATFORM_WIN32	
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 	return GetFileExt(path) == ".lnk";
 #else
 	struct stat stf;
@@ -1195,7 +1195,7 @@ bool UpperFolder(const char *folderName) {
 		return false;
 	if (folderName[0] == '\0')
 		return false;
-#ifdef PLATFORM_WIN32
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 	if (strlen(folderName) == 3)
 #else
 	if (strlen(folderName) == 1)
@@ -1211,7 +1211,7 @@ String GetUpperFolder(const String &folderName) {
 	if (folderName[len-1] == DIR_SEP)
 		len--;
 	int pos = folderName.ReverseFind(DIR_SEP, len-1);
-#ifdef PLATFORM_WIN32
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 	if (pos == 2)
 #else
 	if (pos == 0)
@@ -1410,7 +1410,7 @@ Array<String> SearchFile(String dir, const Array<String> &condFiles, const Array
 								 const Array<String> &extFiles,  const Array<String> &extFolders, 
 								 const String &text, Array<String> &errorList) {
 	Array<String> files;								     
-	errorList.Clear();
+	//errorList.Clear();
 
 	SearchFile_Each(dir, condFiles, condFolders, extFiles, extFolders, text, files, errorList);	
 	
@@ -1421,7 +1421,7 @@ Array<String> SearchFile(String dir, const Array<String> &condFiles, const Array
 Array<String> SearchFile(String dir, String condFile, String text, Array<String> &errorList)
 {
 	Array<String> condFiles, condFolders, extFiles, extFolders, files;
-	errorList.Clear();
+	//errorList.Clear();
 
 	condFiles.Add(condFile);
 	SearchFile_Each(dir, condFiles, condFolders, extFiles, extFolders, text, files, errorList);	
@@ -1910,7 +1910,7 @@ bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, con
 	return equal;
 }
 
-#ifdef PLATFORM_WIN32
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 String WinLastError() {
 	LPVOID lpMsgBuf;
 	String ret;
@@ -1969,7 +1969,7 @@ bool FileDiffArray::Apply(String toFolder, String fromFolder, int flags)
 			
 			if (!ok) {
 				String strError = t_("Not possible to create ") + dest;
-#ifdef PLATFORM_WIN32
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 			  	strError += ". " + WinLastError();
 #endif
 				SetLastError(strError);
@@ -1986,7 +1986,7 @@ bool FileDiffArray::Apply(String toFolder, String fromFolder, int flags)
 			}
 			if (!ok) {
 				String strError = t_("Not possible to delete") + String(" ") + dest;
-#ifdef PLATFORM_WIN32
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 			  	strError += ". " + WinLastError();
 #endif
 				SetLastError(strError);				
@@ -2056,7 +2056,7 @@ bool FileDiffArray::LoadFile(const char *fileName)
 }
 	
 	
-#if defined(PLATFORM_WIN32) 
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 Value GetVARIANT(VARIANT &result)
 {
 	Value ret;
@@ -2120,7 +2120,7 @@ String WideToString(LPCWSTR wcs, int len) {
 
 #endif
 
-#if defined(PLATFORM_WIN32) 
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 Dl::Dl() {
 	hinstLib = 0;
