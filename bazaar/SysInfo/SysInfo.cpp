@@ -643,7 +643,7 @@ void GetWindowsList(Array<long> &hWnd, Array<long> &processId, Array<String> &na
 	
 	EnumWindows(EnumGetWindowsList, (LPARAM)&hWnd);	
 	for (int i = 0; i < hWnd.GetCount(); ++i) {
-		hInstance = (HINSTANCE)GetWindowLong((HWND)hWnd[i], GWL_HINSTANCE);
+		hInstance = (HINSTANCE)GetWindowLongPtr((HWND)hWnd[i], GWLP_HINSTANCE);
 		dwThreadId = GetWindowThreadProcessId((HWND)hWnd[i], &dwProcessId);
 		processId.Add(dwProcessId);
 		hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, dwProcessId);
@@ -657,7 +657,7 @@ void GetWindowsList(Array<long> &hWnd, Array<long> &processId, Array<String> &na
 			name.Add(t_("UNKNOWN"));		
 		CloseHandle(hProcess);
 		if (IsWindowVisible((HWND)hWnd[i])) {
-			int count = SendMessageW((HWND)hWnd[i], WM_GETTEXT, sizeof(str)/sizeof(WCHAR), (LPARAM)str);
+			int count = int(SendMessageW((HWND)hWnd[i], WM_GETTEXT, sizeof(str)/sizeof(WCHAR), (LPARAM)str));
 			str[count] = '\0';
 			caption.Add(FromSystemCharset(WString(str).ToString()));	
 		} else
@@ -1062,7 +1062,7 @@ bool ProcessExists(long pid)
 /////////////////////////////////////////////////////////////////////
 // Os Info
 
-#if defined(PLATFORM_WIN32) 
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 #if !defined(PRODUCT_ULTIMATE)
 //#define PRODUCT_UNDEFINED                       0x00000000
@@ -1447,7 +1447,7 @@ long    GetProcessId()			{return getpid();}
 
 /////////////////////////////////////////////////////////////////////
 // Drives list
-#if defined(PLATFORM_WIN32)
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 bool GetDriveSpace(String drive, 
 	//uint64 &totalBytes,	// To determine the total number of bytes on a disk or volume, use IOCTL_DISK_GET_LENGTH_INFO.
@@ -1568,8 +1568,8 @@ bool GetDriveInformation(String drive, String &type, String &volume, /*uint64 &s
 
 #endif
 
-#if defined (PLATFORM_WIN32)
-unsigned long start, end;
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
+int64 start, end;
 unsigned long nCtr, nFreq, nCtrStop;
 
 #if defined(__MINGW32__)
@@ -1604,21 +1604,11 @@ int GetCpuSpeed()
     QueryPerformanceCounter((LARGE_INTEGER *) &nCtrStop);
     nCtrStop += nFreq/10000;								
     
-    _asm {
-     	__asm _emit 0x0f 
-     	__asm _emit 0x31
-    	mov DWORD PTR start, eax
-   		mov DWORD PTR [start + 4], edx
-    }
+    start = __rdtsc();
     do 
          QueryPerformanceCounter((LARGE_INTEGER *) &nCtr);
     while (nCtr < nCtrStop);
-    _asm {
-        __asm _emit 0x0f 
-        __asm _emit 0x31
-        mov DWORD PTR end, eax
-        mov DWORD PTR [end + 4], edx
- 	}
+    end = __rdtsc();
 	return int((end-start)/100);
 }
 #endif 
@@ -1648,7 +1638,7 @@ int GetCpuSpeed()
   	return int((end-start)/10000);
 }
 #endif
-#if defined(PLATFORM_WIN32)
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 #define SHTDN_REASON_MINOR_OTHER 0
 
@@ -1745,7 +1735,7 @@ void GetCompilerInfo(String &name, int &version, String &date)
 	name = "";
 	version = 0;
 	date = __DATE__;
-	#if defined(WIN32) 
+	#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 		#if defined(__MINGW32__)
 			name = "mingw";
 			version = __GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__;	// __VERSION__
@@ -1855,7 +1845,7 @@ bool CloseCDTray(String drive)
 }
 
 #endif
-#if defined(PLATFORM_WIN32)
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
 {
 	SYSTEM_POWER_STATUS power;
@@ -1972,7 +1962,7 @@ struct KeyCodes {
 	int code;
 }; 
 
-#if defined(PLATFORM_WIN32)
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 Array <String> GetWinRegSubkeys(const String& key, HKEY base) {
 	HKEY hkey;
@@ -3011,7 +3001,7 @@ void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
  		if (inKey == false) {
 			if (!vk) 
  				PressKey(c);
-#if defined(PLATFORM_WIN32)
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 			else {
 				PressKeyVK(c, true);
 				virt.Add(c);
@@ -3019,7 +3009,7 @@ void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
 #endif
 		}
 	}
-#if defined(PLATFORM_WIN32)
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 	for (int i = 0; i < virt.GetCount(); ++i)
 		PressKeyVK(virt[i], false, true);
 #endif
@@ -3072,7 +3062,7 @@ void SetDesktopWallPaper(const char *path)
 
 #endif
 
-#if defined(PLATFORM_WIN32)
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 void SetDesktopWallPaper(const char *path)
 {
