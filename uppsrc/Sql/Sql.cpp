@@ -684,7 +684,7 @@ Vector<SqlColumnInfo> SqlSession::EnumColumns(String database, String table)
 	if(!IsNull(database))
 		full_name << '.';
 	full_name << table;
-	if(cursor.Execute(Select(SqlAll()).From(SqlSet(SqlCol(full_name))).Where(none))) {
+	if(cursor.Execute(Select(SqlAll()).From(SqlSet(SqlId(full_name))).Where(none))) {
 		info.SetCount(cursor.GetColumns());
 		for(int i = 0; i < info.GetCount(); i++)
 			info[i] = cursor.GetColumnInfo(i);

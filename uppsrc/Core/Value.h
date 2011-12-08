@@ -2,37 +2,23 @@
 class Value;
 
 class Id : Moveable<Id> {
-	int            ndx;
-
-#ifdef _MULTITHREADED
-	static         ArrayIndex<String>& Ids();
-#else
-	static         Index<String>& Ids();
-#endif
-	void           Set(const String& s);
+	String id;
 
 public:
-	static Id            Find(const String& s);
-	static const String& AsString(int n);
+	const String&  ToString() const              { return id; }
+	dword          GetHashValue() const          { return UPP::GetHashValue(id); }
+	bool           IsNull() const                { return UPP::IsNull(id); }
 
-	int            AsNdx() const              { return ndx; }
-	String         ToString() const           { return AsString(ndx); }
-	dword          GetHashValue() const       { return ndx; }
-	bool           IsNull() const             { return ndx == 0; }
+	operator const String&() const               { return ToString(); }
+	const String&  operator~() const             { return ToString(); }
+	bool           operator==(const Id& b) const { return id == b.id; }
+	bool           operator!=(const Id& b) const { return id != b.id; }
 
-	void           Serialize(Stream& s);
+	operator bool() const                        { return id.GetCount(); }
 
-	operator       String() const             { return ToString(); }
-	String         operator~() const          { return ToString(); }
-	bool           operator==(Id b) const     { return ndx == b.ndx; }
-	bool           operator!=(Id b) const     { return ndx != b.ndx; }
-
-	operator bool() const                     { return ndx; }
-
-	Id()                                      { ndx = 0; }
-	Id(const String& s)                       { Set(s); }
-	Id(const char *s)                         { Set(s); }
-	explicit Id(int n)                        { ASSERT(n >= 0 && n < Ids().GetCount()); ndx = n; }
+	Id()                                         {}
+	Id(const String& s)                          { id = s; }
+	Id(const char *s)                            { id = s; }
 };
 
 template<> inline bool  IsNull(const Date& d)    { return d.year == -32768; }

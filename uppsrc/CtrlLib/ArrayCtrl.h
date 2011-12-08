@@ -84,8 +84,8 @@ public:
 
 	public:
 		Column& Add(int _pos)                      { pos.Add(_pos); return *this; }
-		Column& Add(Id id)                         { pos.Add(-id.AsNdx()); return *this; }
-		Column& AddIndex(Id id)                    { arrayctrl->AddIndex(id); return Add(id); }
+		Column& Add(const Id& id)                  { pos.Add(-arrayctrl->AsNdx(id)); return *this; }
+		Column& AddIndex(const Id& id)             { arrayctrl->AddIndex(id); return Add(id); }
 		Column& AddIndex()                         { Add(arrayctrl->GetIndexCount()); arrayctrl->AddIndex(); return *this; }
 
 		Column& SetConvert(const Convert& c);
@@ -191,6 +191,7 @@ private:
 	const Order               *columnsortsecondary;
 	int                        min_visible_line, max_visible_line;
 	int                        ctrl_low, ctrl_high;
+	Index<String>              id_ndx;
 
 	int   keypos;
 	int   cursor;
@@ -307,6 +308,8 @@ private:
 	void   SyncInfo();
 	void   SortA();
 	void   SortB(const Vector<int>& o);
+	
+	int    AsNdx(const String& id)              { return id_ndx.FindAdd(id); }
 
 public: // temporary (TRC 06/07/28) // will be removed!
 	Ctrl&  SetCtrl(int i, int j, Ctrl *newctrl) { return SetCtrl(i, j, newctrl, true, true); }
@@ -345,34 +348,34 @@ public:
 	Callback          WhenSelection;
 
 	IdInfo&    IndexInfo(int ii);
-	IdInfo&    IndexInfo(Id id);
-	IdInfo&    AddIndex(Id id);
+	IdInfo&    IndexInfo(const Id& id);
+	IdInfo&    AddIndex(const Id& id);
 	IdInfo&    AddIndex();
 	int        GetIndexCount() const        { return idx.GetCount(); }
 	Id         GetId(int ii) const          { return idx.GetKey(ii); }
-	int        GetPos(Id id) const          { return idx.Find(id); }
-	IdInfo&    SetId(int ii, Id id);
-	IdInfo&    AddKey(Id id)                { ASSERT(idx.GetCount() == 0); return AddIndex(id); }
+	int        GetPos(const Id& id) const   { return idx.Find(id); }
+	IdInfo&    SetId(int ii, const Id& id);
+	IdInfo&    AddKey(const Id& id)         { ASSERT(idx.GetCount() == 0); return AddIndex(id); }
 	IdInfo&    AddKey()                     { ASSERT(idx.GetCount() == 0); return AddIndex(); }
 	Id         GetKeyId() const             { return idx.GetKey(0); }
 
 	Column&    AddColumn(const char *text = NULL, int w = 0);
-	Column&    AddColumn(Id id, const char *text, int w = 0);
+	Column&    AddColumn(const Id& id, const char *text, int w = 0);
 	Column&    AddColumnAt(int ii, const char *text, int w = 0);
-	Column&    AddColumnAt(Id id, const char *text, int w = 0);
+	Column&    AddColumnAt(const Id& id, const char *text, int w = 0);
 	Column&    AddRowNumColumn(const char *text, int w = 0);
 
 	int                       GetColumnCount() const   { return column.GetCount(); }
 	int                       FindColumnWithPos(int pos) const;
-	int                       FindColumnWithId(Id id) const;
+	int                       FindColumnWithId(const Id& id) const;
 	Column&                   ColumnAt(int i)          { return column[i]; }
-	Column&                   ColumnAt(Id id)          { return column[FindColumnWithId(id)]; }
+	Column&                   ColumnAt(const Id& id)   { return column[FindColumnWithId(id)]; }
 	HeaderCtrl::Column&       HeaderTab(int i)         { return header.Tab(i); }
-	HeaderCtrl::Column&       HeaderTab(Id id)         { return header.Tab(FindColumnWithId(id)); }
+	HeaderCtrl::Column&       HeaderTab(const Id& id)  { return header.Tab(FindColumnWithId(id)); }
 	const Column&             ColumnAt(int i) const    { return column[i]; }
-	const Column&             ColumnAt(Id id) const    { return column[FindColumnWithId(id)]; }
+	const Column&             ColumnAt(const Id& id) const   { return column[FindColumnWithId(id)]; }
 	const HeaderCtrl::Column& HeaderTab(int i) const   { return header.Tab(i); }
-	const HeaderCtrl::Column& HeaderTab(Id id) const   { return header.Tab(FindColumnWithId(id)); }
+	const HeaderCtrl::Column& HeaderTab(const Id& id) const   { return header.Tab(FindColumnWithId(id)); }
 
 	const HeaderCtrl&         HeaderObject() const     { return header; }
 	HeaderCtrl&               HeaderObject()           { return header; }
@@ -381,9 +384,9 @@ public:
 	void       SerializeSettings(Stream& s);
 
 	IdInfo&    AddCtrl(Ctrl& ctrl);
-	IdInfo&    AddCtrl(Id id, Ctrl& ctrl);
+	IdInfo&    AddCtrl(const Id& id, Ctrl& ctrl);
 	void       AddCtrlAt(int ii, Ctrl& ctrl);
-	void       AddCtrlAt(Id id, Ctrl& ctrl);
+	void       AddCtrlAt(const Id& id, Ctrl& ctrl);
 	void       AddRowNumCtrl(Ctrl& ctrl);
 
 	void       SetCount(int c);
@@ -392,20 +395,20 @@ public:
 	void       Clear();
 	void       Shrink();
 	Value      Get(int i, int ii) const;
-	Value      Get(int i, Id id) const;
+	Value      Get(int i, const Id& id) const;
 	void       Set(int i, int ii, const Value& v);
-	void       Set(int i, Id id, const Value& v);
+	void       Set(int i, const Id& id, const Value& v);
 
 	Value      Get(int ii) const;
-	Value      Get(Id id) const;
+	Value      Get(const Id& id) const;
 	Value      GetOriginal(int ii) const;
-	Value      GetOriginal(Id id) const;
+	Value      GetOriginal(const Id& id) const;
 	bool       IsModified(int ii) const;
-	bool       IsModified(Id id) const;
+	bool       IsModified(const Id& id) const;
 	Value      GetKey() const;
 	Value      GetOriginalKey() const;
 	void       Set(int ii, const Value& v);
-	void       Set(Id id, const Value& v);
+	void       Set(const Id& id, const Value& v);
 
 	Value      GetColumn(int row, int col) const;
 	Value      GetConvertedColumn(int row, int col) const;
@@ -478,10 +481,10 @@ public:
 	void       SwapDown();
 
 	int        Find(const Value& v, int ii = 0, int from = 0) const;
-	int        Find(const Value& v, Id id, int from = 0) const;
+	int        Find(const Value& v, const Id& id, int from = 0) const;
 
 	bool       FindSetCursor(const Value& val, int ii = 0, int from = 0);
-	bool       FindSetCursor(const Value& val, Id id, int from = 0);
+	bool       FindSetCursor(const Value& val, const Id& id, int from = 0);
 
 	void       Sort(const ArrayCtrl::Order& order);
 	void       Sort(int from, int count, const ArrayCtrl::Order& order);
@@ -490,7 +493,7 @@ public:
 	                int (*compare)(const Vector<Value>& v1, const Vector<Value>& v2));
 	void       Sort(int ii, int (*compare)(const Value& v1, const Value& v2)
 	                = StdValueCompare);
-	void       Sort(Id id, int (*compare)(const Value& v1, const Value& v2)
+	void       Sort(const Id& id, int (*compare)(const Value& v1, const Value& v2)
 	                = StdValueCompare);
 	void       Sort()                                  { Sort(0); }
 
@@ -649,12 +652,12 @@ public:
 	virtual void       Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 
 	void               Connect(ArrayCtrl& ac, int ii = 0);
-	void               Connect(ArrayCtrl& ac, Id id)               { Connect(ac, ac.GetPos(id)); }
+	void               Connect(ArrayCtrl& ac, const Id& id)        { Connect(ac, ac.GetPos(id)); }
 
 	void               Disconnect();
 
 	ArrayCtrl::Column& AddColumn(ArrayCtrl& ac, const char *text = NULL, int w = 0);
-	ArrayCtrl::Column& AddColumn(ArrayCtrl& ac, Id id, const char *text, int w = 0);
+	ArrayCtrl::Column& AddColumn(ArrayCtrl& ac, const Id& id, const char *text, int w = 0);
 
 	ArrayOption&       TrueFalse(Value _t, Value _f)               { t = _t; f = _f; return *this; }
 	Value              GetFalse() const                            { return f; }

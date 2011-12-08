@@ -2,43 +2,38 @@
 
 NAMESPACE_UPP
 
-SqlCol SqlCol::As(const char *as) const
-{
-	return name + SqlCase(MSSQL | PGSQL, " as ")(" ") + as;
-}
-
-SqlCol SqlId::Of(const char *of) const
+SqlId SqlId::Of(const char *of) const
 {
 	return of + ('.' + ToString());
 }
 
-SqlCol SqlId::Of(SqlId id) const
+SqlId SqlId::Of(SqlId id) const
 {
 	return id.IsNull() ? ToString() : id.ToString() + '.' + ToString();
 }
 
-SqlCol SqlId::operator[](const SqlId& id) const
+SqlId SqlId::operator[](const SqlId& id) const
 {
 	return id.IsNull() ? ToString() : ToString() + '.' + id.ToString();
 }
 
-SqlCol SqlId::As(const char *as) const
+SqlId SqlId::As(const char *as) const
 {
 	return id.IsNull() ? ToString() : ToString() + SqlCase(MSSQL | PGSQL, " as ")(" ") + as;
 }
 
-SqlCol SqlId::operator()(SqlId p) {
+SqlId SqlId::operator()(SqlId p) {
 	String x;
 	PutOf0(x, p);
 	return x;
 }
 
-SqlCol SqlId::operator [] (int i) const
+SqlId SqlId::operator [] (int i) const
 {
 	return ToString() + FormatInt(i);
 }
 
-SqlCol SqlId::operator&(const SqlId& s) const
+SqlId SqlId::operator&(const SqlId& s) const
 {
 	return ToString() + "$" + s.ToString();
 }
@@ -142,7 +137,7 @@ SqlVal::SqlVal(const Nuller&) {
 	SetNull();
 }
 
-SqlVal::SqlVal(SqlId id) {
+SqlVal::SqlVal(const SqlId& id) {
 	SetHigh(id.ToString());
 }
 
@@ -151,18 +146,6 @@ SqlVal::SqlVal(const SqlId& (*id)())
 	SetHigh((*id)().ToString());
 }
 
-SqlVal::SqlVal(SqlCol id) {
-	SetHigh(id.ToString());
-}
-/*
-SqlVal::SqlVal(const SqlSelect& x) {
-	SetHigh('(' + ((SqlStatement) x).GetText() + ')');
-}
-
-SqlVal::SqlVal(const SqlBool& x) {
-	SetHigh(~x);
-}
-*/
 SqlVal::SqlVal(const Case& x) {
 	SetHigh(~x);
 }
@@ -255,7 +238,7 @@ SqlVal Count(const SqlSet& exp)
 
 SqlVal SqlAll()
 {
-	return SqlCol("*");
+	return SqlId("*");
 }
 
 SqlVal SqlCountRows()
@@ -407,18 +390,18 @@ SqlVal Coalesce(const SqlVal& exp1, const SqlVal& exp2, const SqlVal& exp3, cons
 	return SqlFunc("coalesce", exp1, exp2, exp3, exp4);
 }
 
-SqlVal Prior(SqlId a) {
+SqlVal Prior(const SqlId& a) {
 	return SqlVal("prior " + ~a, SqlS::UNARY);
 }
 
-SqlVal NextVal(SqlId a) {
+SqlVal NextVal(const SqlId& a) {
 	return SqlVal(SqlCase
 	                 (PGSQL, "nextval('" + ~a + "')")
 	                 (~a + ".NEXTVAL")
 	              , SqlS::HIGH);
 }
 
-SqlVal CurrVal(SqlId a) {
+SqlVal CurrVal(const SqlId& a) {
 	return SqlVal(SqlCase
 				    (PGSQL, "currval('" + ~a + "')")
 				    (~a + ".CURRVAL")
@@ -427,16 +410,16 @@ SqlVal CurrVal(SqlId a) {
 
 SqlVal SqlRowNum()
 {
-	return SqlCol("ROWNUM");
+	return SqlId("ROWNUM");
 }
 
 SqlVal SqlArg() {
-	return SqlCol("?");
+	return SqlId("?");
 }
 
-SqlVal OuterJoin(SqlCol col)
+SqlVal OuterJoin(const SqlId& col)
 {
-	return SqlCol(~col + "(+)");
+	return SqlId(~col + "(+)");
 }
 
 SqlVal SqlBinary(const char *s, int l)

@@ -165,7 +165,7 @@ void SqlUserRights::Sync()
 		SqlId OWNER("OWNER");
 		SqlId TABLE_NAME("TABLE_NAME");
 		SqlId PRIVILEGE("PRIVILEGE");
-		Select(SqlCol("OWNER, TABLE_NAME, "
+		Select(SqlId("OWNER, TABLE_NAME, "
 			"SUM(distinct DECODE(PRIVILEGE, 'SELECT', 1, 'UPDATE', 2, "
 			"'INSERT', 4, 'DELETE', 8, 0))"))
 			.From(Select(OWNER, TABLE_NAME, PRIVILEGE).From(SqlId("USER_TAB_PRIVS")) |
@@ -219,7 +219,7 @@ void SqlIndex::Open(String ind, String own, SqlSession& session)
 {
 	SqlBool exp = SqlId("INDEX_NAME") == ind;
 	if(!IsNull(own))
-		exp &= SqlCol("OWNER") == own;
+		exp &= SqlId("OWNER") == own;
 	Sql cursor(session);
 	Select(SqlId("OWNER"), SqlId("INDEX_NAME"), SqlId("TABLE_OWNER"), SqlId("TABLE_NAME"))
 		.From(SqlId("ALL_INDEXES"))

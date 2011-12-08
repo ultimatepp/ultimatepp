@@ -144,7 +144,7 @@ SqlSelect& SqlSelect::From(const SqlSet& table) {
 	return *this;
 }
 
-SqlSelect& SqlSelect::From(SqlId table) {
+SqlSelect& SqlSelect::From(const SqlId& table) {
 	String t1 = ~table;
 	text = "select " + text + " from " + t1;
 	tables << ',' << t1;
@@ -152,16 +152,7 @@ SqlSelect& SqlSelect::From(SqlId table) {
 	return *this;
 }
 
-SqlSelect& SqlSelect::From(SqlCol table)
-{
-	String t1 = ~table;
-	text = "select " + text + " from " + t1;
-	tables << ',' << t1;
-	on = false;
-	return *this;
-}
-
-SqlSelect& SqlSelect::From(SqlId table1, SqlId table2) {
+SqlSelect& SqlSelect::From(const SqlId& table1, const SqlId& table2) {
 	String t1 = ~table1;
 	String t2 = ~table2;
 	text = "select " + text + " from " + t1 + ", " + t2;
@@ -170,26 +161,7 @@ SqlSelect& SqlSelect::From(SqlId table1, SqlId table2) {
 	return *this;
 }
 
-SqlSelect& SqlSelect::From(SqlCol table1, SqlCol table2) {
-	String t1 = ~table1;
-	String t2 = ~table2;
-	text = "select " + text + " from " + t1 + ", " + t2;
-	tables << ',' << t1 << ',' << t2;
-	on = false;
-	return *this;
-}
-
-SqlSelect& SqlSelect::From(SqlId table1, SqlId table2, SqlId table3) {
-	String t1 = ~table1;
-	String t2 = ~table2;
-	String t3 = ~table3;
-	text = "select " + text + " from " + t1 + ", " + t2 + ", " + t3;
-	tables << ',' << t1 << ',' << t2 << ',' << t3;
-	on = false;
-	return *this;
-}
-
-SqlSelect& SqlSelect::From(SqlCol table1, SqlCol table2, SqlCol table3) {
+SqlSelect& SqlSelect::From(const SqlId& table1, const SqlId& table2, const SqlId& table3) {
 	String t1 = ~table1;
 	String t2 = ~table2;
 	String t3 = ~table3;
@@ -227,7 +199,7 @@ SqlSelect& SqlSelect::FullJoin0(const String& table) {
 	return *this;
 }
 
-SqlSelect& SqlSelect::InnerJoinRef(SqlId table)
+SqlSelect& SqlSelect::InnerJoinRef(const SqlId& table)
 {
 	InnerJoin(table);
 	On(FindSchJoin(tables));
@@ -235,7 +207,7 @@ SqlSelect& SqlSelect::InnerJoinRef(SqlId table)
 	return *this;
 }
 
-SqlSelect& SqlSelect::LeftJoinRef(SqlId table)
+SqlSelect& SqlSelect::LeftJoinRef(const SqlId& table)
 {
 	LeftJoin(table);
 	On(FindSchJoin(tables));
@@ -243,7 +215,7 @@ SqlSelect& SqlSelect::LeftJoinRef(SqlId table)
 	return *this;
 }
 
-SqlSelect& SqlSelect::RightJoinRef(SqlId table)
+SqlSelect& SqlSelect::RightJoinRef(const SqlId& table)
 {
 	RightJoin(table);
 	On(FindSchJoin(tables));
@@ -251,7 +223,7 @@ SqlSelect& SqlSelect::RightJoinRef(SqlId table)
 	return *this;
 }
 
-SqlSelect& SqlSelect::FullJoinRef(SqlId table)
+SqlSelect& SqlSelect::FullJoinRef(const SqlId& table)
 {
 	FullJoin(table);
 	On(FindSchJoin(tables));
@@ -270,7 +242,7 @@ SqlVal SqlSelect::AsValue() const
 	return SqlVal(String("(").Cat() << text << ")", SqlVal::LOW);
 }
 
-SqlSelect SqlSelect::AsTable(SqlId tab) const
+SqlSelect SqlSelect::AsTable(const SqlId& tab) const
 {
 	SqlSelect h;
 	h.text = String("(").Cat() << text << ") as " << ~tab;
@@ -315,7 +287,7 @@ SqlDelete& SqlDelete::Where(const SqlBool& b) {
 	return *this;
 }
 
-void SqlInsert::Column(SqlId column, SqlVal val) {
+void SqlInsert::Column(const SqlId& column, SqlVal val) {
 	set1.Cat(column);
 	set2.Cat(val);
 	if(keycolumn.IsNull()) keycolumn = column;
@@ -336,7 +308,7 @@ SqlInsert::operator SqlStatement() const {
 	return SqlStatement(s);
 }
 
-SqlInsert& SqlInsert::From(SqlId from) {
+SqlInsert& SqlInsert::From(const SqlId& from) {
 	return From(SqlSet(from));
 }
 
@@ -402,7 +374,7 @@ SqlUpdate::operator SqlStatement() const {
 	return SqlStatement(stmt);
 }
 
-void SqlUpdate::Column(SqlId column, SqlVal val) {
+void SqlUpdate::Column(const SqlId& column, SqlVal val) {
 	set.Cat(SqlVal(SqlVal(column), " = ", val, SqlS::COMP));
 }
 
