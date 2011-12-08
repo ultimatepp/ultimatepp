@@ -110,7 +110,7 @@ static int sCharFilterHex(int c)
 Color ColorFromText(const char *s)
 {
 	Vector<String> h = Split(s, sCharFilterNoDigit);
-	if(h.GetCount() == 3) {
+	if(h.GetCount() == 3 && (strchr(s, ',') || strchr(s, ';') || strchr(s, '.'))) {
 		int r = atoi(h[0]);
 		int g = atoi(h[1]);
 		int b = atoi(h[2]);
