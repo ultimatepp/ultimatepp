@@ -295,7 +295,7 @@ const Display& ArrayCtrl::GetDisplay(int j)
 
 int ArrayCtrl::Pos(int pos) const {
 	if(pos >= 0) return pos;
-	pos = idx.Find(Id(-pos));
+	pos = idx.Find(id_ndx[-pos]);
 	ASSERT(pos >= 0);
 	return pos;
 }
@@ -341,7 +341,7 @@ Value ArrayCtrl::Get(int ii) const {
 	return Get0(cursor, ii);
 }
 
-Value ArrayCtrl::Get(Id id) const {
+Value ArrayCtrl::Get(const Id& id) const {
 	return Get(GetPos(id));
 }
 
@@ -349,7 +349,7 @@ Value ArrayCtrl::GetOriginal(int ii) const {
 	return Get0(cursor, ii);
 }
 
-Value ArrayCtrl::GetOriginal(Id id) const {
+Value ArrayCtrl::GetOriginal(const Id& id) const {
 	return GetOriginal(GetPos(id));
 }
 
@@ -380,7 +380,7 @@ bool ArrayCtrl::IsModified(int ii) const {
 	return false;
 }
 
-bool ArrayCtrl::IsModified(Id id) const {
+bool ArrayCtrl::IsModified(const Id& id) const {
 	return IsModified(GetPos(id));
 }
 
@@ -441,7 +441,7 @@ void ArrayCtrl::Set(int ii, const Value& v) {
 	RefreshRow(cursor);
 }
 
-void ArrayCtrl::Set(Id id, const Value& v) {
+void ArrayCtrl::Set(const Id& id, const Value& v) {
 	Set(GetPos(id), v);
 }
 
@@ -468,7 +468,7 @@ void ArrayCtrl::Set(int i, int ii, const Value& v)
 	AfterSet(i);
 }
 
-void ArrayCtrl::Set(int i, Id id, const Value& v) {
+void ArrayCtrl::Set(int i, const Id& id, const Value& v) {
 	Set(i, GetPos(id), v);
 }
 
@@ -476,7 +476,7 @@ Value ArrayCtrl::Get(int i, int ii) const {
 	return i == cursor ? Get(ii) : Get0(i, ii);
 }
 
-Value ArrayCtrl::Get(int i, Id id) const {
+Value ArrayCtrl::Get(int i, const Id& id) const {
 	return Get(i, GetPos(id));
 }
 
@@ -941,11 +941,11 @@ ArrayCtrl::IdInfo& ArrayCtrl::IndexInfo(int i) {
 	return idx[i];
 }
 
-ArrayCtrl::IdInfo& ArrayCtrl::IndexInfo(Id id) {
+ArrayCtrl::IdInfo& ArrayCtrl::IndexInfo(const Id& id) {
 	return idx.Get(id);
 }
 
-ArrayCtrl::IdInfo& ArrayCtrl::AddIndex(Id id) {
+ArrayCtrl::IdInfo& ArrayCtrl::AddIndex(const Id& id) {
 	return idx.Add(id);
 }
 
@@ -953,7 +953,7 @@ ArrayCtrl::IdInfo& ArrayCtrl::AddIndex() {
 	return idx.Add(Id());
 }
 
-ArrayCtrl::IdInfo& ArrayCtrl::SetId(int i, Id id) {
+ArrayCtrl::IdInfo& ArrayCtrl::SetId(int i, const Id& id) {
 	while(idx.GetCount() < i + 1)
 		idx.Add(Id());
 	idx.SetKey(i, id);
@@ -965,7 +965,7 @@ ArrayCtrl::Column& ArrayCtrl::AddColumn(const char *text, int w) {
 	return AddColumnAt(idx.GetCount() - 1, text, w);
 }
 
-ArrayCtrl::Column& ArrayCtrl::AddColumn(Id id, const char *text, int w) {
+ArrayCtrl::Column& ArrayCtrl::AddColumn(const Id& id, const char *text, int w) {
 	AddIndex(id);
 	return AddColumnAt(idx.GetCount() - 1, text, w);
 }
@@ -981,7 +981,7 @@ ArrayCtrl::Column& ArrayCtrl::AddColumnAt(int pos, const char *text, int w) {
 	return m;
 }
 
-ArrayCtrl::Column& ArrayCtrl::AddColumnAt(Id id, const char *text, int w) {
+ArrayCtrl::Column& ArrayCtrl::AddColumnAt(const Id& id, const char *text, int w) {
 	header.Add(text, w);
 	Column& m = column.Add();
 	m.arrayctrl = this;
@@ -1012,7 +1012,7 @@ int ArrayCtrl::FindColumnWithPos(int pos) const
 	return -1;
 }
 
-int ArrayCtrl::FindColumnWithId(Id id) const
+int ArrayCtrl::FindColumnWithId(const Id& id) const
 {
 	return FindColumnWithPos(GetPos(id));
 }
@@ -1023,7 +1023,7 @@ ArrayCtrl::IdInfo& ArrayCtrl::AddCtrl(Ctrl& ctrl) {
 	return f;
 }
 
-ArrayCtrl::IdInfo& ArrayCtrl::AddCtrl(Id id, Ctrl& ctrl) {
+ArrayCtrl::IdInfo& ArrayCtrl::AddCtrl(const Id& id, Ctrl& ctrl) {
 	IdInfo& f = AddIndex(id);
 	AddCtrlAt(idx.GetCount() - 1, ctrl);
 	return f;
@@ -1037,8 +1037,8 @@ void ArrayCtrl::AddCtrlAt(int ii, Ctrl& ctrl) {
 	ctrl <<= Null;
 }
 
-void ArrayCtrl::AddCtrlAt(Id id, Ctrl& ctrl) {
-	AddCtrlAt(-id.AsNdx(), ctrl);
+void ArrayCtrl::AddCtrlAt(const Id& id, Ctrl& ctrl) {
+	AddCtrlAt(-AsNdx(id), ctrl);
 }
 
 void ArrayCtrl::AddRowNumCtrl(Ctrl& ctrl) {
@@ -2180,7 +2180,7 @@ int ArrayCtrl::Find(const Value& v, int ii, int i) const {
 	return -1;
 }
 
-int  ArrayCtrl::Find(const Value& v, Id id, int i) const {
+int  ArrayCtrl::Find(const Value& v, const Id& id, int i) const {
 	return Find(v, GetPos(id), i);
 }
 
@@ -2191,7 +2191,7 @@ bool ArrayCtrl::FindSetCursor(const Value& val, int ii, int i) {
 	return true;
 }
 
-bool ArrayCtrl::FindSetCursor(const Value& val, Id id, int i) {
+bool ArrayCtrl::FindSetCursor(const Value& val, const Id& id, int i) {
 	return FindSetCursor(val, idx.Find(id), i);
 }
 
@@ -2396,7 +2396,7 @@ void ArrayCtrl::Sort(int ii, int (*compare)(const Value& v1, const Value& v2)) {
 	Sort(io);
 }
 
-void ArrayCtrl::Sort(Id id, int (*compare)(const Value& v1, const Value& v2)) {
+void ArrayCtrl::Sort(const Id& id, int (*compare)(const Value& v1, const Value& v2)) {
 	Sort(idx.Find(id), compare);
 }
 
@@ -2868,7 +2868,7 @@ ArrayCtrl::Column& ArrayOption::AddColumn(ArrayCtrl& ac, const char *text, int w
 	return AddColumn(ac, Id(), text, w).NoClickEdit();
 }
 
-ArrayCtrl::Column& ArrayOption::AddColumn(ArrayCtrl& ac, Id id, const char *text, int w)
+ArrayCtrl::Column& ArrayOption::AddColumn(ArrayCtrl& ac, const Id& id, const char *text, int w)
 {
 	Connect(ac, ac.GetIndexCount());
 	return ac.AddColumn(id, text, w).SetDisplay(*this).InsertValue(f).NoClickEdit();

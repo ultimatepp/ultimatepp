@@ -83,7 +83,7 @@ struct FieldSqlSet : FieldOperator {
 	SqlSet *set;
 
 	virtual void Field(const char *name, Ref) {
-		set->Cat(SqlCol(name));
+		set->Cat(SqlId(name));
 	}
 };
 

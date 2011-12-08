@@ -617,65 +617,6 @@ const Value& ValueMap::operator[](const Value& key) const
 
 // ----------------------------------
 
-#ifdef _MULTITHREADED
-struct IdList : public ArrayIndex<String> {
-	IdList()  { Add(String()); }
-};
-
-ArrayIndex<String>& Id::Ids() {
-	return Single<IdList>();
-}
-
-static StaticCriticalSection s_ids;
-
-void Id::Set(const String& s) {
-	CriticalSection::Lock __(s_ids);
-	ndx = Ids().FindAdd(s);
-}
-
-const String& Id::AsString(int n) {
-	static thread__ const String *h[1024];
-	if(n < 1024) {
-		if(!h[n]) {
-			CriticalSection::Lock __(s_ids);
-			h[n] = &Ids()[n];
-		}
-		return *h[n];
-	}
-	CriticalSection::Lock __(s_ids);
-	return Ids()[n];
-}
-
-Id Id::Find(const String& s) {
-	CriticalSection::Lock __(s_ids);
-	int i = Ids().Find(s);
-	if(i < 0) return Id();
-	return Id(i);
-}
-#else
-struct IdList : public Index<String> {
-	IdList()  { Add(String()); }
-};
-
-Index<String>& Id::Ids() {
-	return Single<IdList>();
-}
-
-void Id::Set(const String& s) {
-	ndx = Ids().FindAdd(s);
-}
-
-const String& Id::AsString(int n) {
-	return Ids()[n];
-}
-
-Id Id::Find(const String& s) {
-	int i = Ids().Find(s);
-	if(i < 0) return Id();
-	return Id(i);
-}
-#endif
-
 int StdValueCompare(const Value& a, const Value& b, int language)
 {
 	LTIMING("StdValueCompare");

@@ -84,17 +84,6 @@ String SqlFormat(const Value& x);
 String SqlFormatBinary(const char *s, int l);
 String SqlFormatBinary(const String& x);
 
-class SqlCol : Moveable<SqlCol> {
-	String name;
-public:
-	String        ToString() const          { return name; }
-	const String& operator~() const         { return name; }
-
-	SqlCol        As(const char *as) const;
-
-	SqlCol(const String& name) : name(name) {}
-};
-
 class SqlId : Moveable<SqlId> {
 protected:
 	Id id;
@@ -104,29 +93,29 @@ private:
 	void PutOf(String& s, const SqlId& b);
 
 public:
-	bool          IsEqual(SqlId b) const     { return id == b.id; }
-	bool          IsEqual(Id b) const        { return id == b; }
-	bool          IsNull() const             { return id.IsNull(); }
+	bool          IsEqual(const SqlId& b) const  { return id == b.id; }
+	bool          IsEqual(const Id& b) const     { return id == b; }
+	bool          IsNull() const                 { return id.IsNull(); }
 
-	operator      Id() const                 { return id; }
-	String        ToString() const           { return id.ToString(); }
-	String        operator~() const          { return ToString(); }
+	operator      const Id&() const              { return id; }
+	const String& ToString() const               { return id.ToString(); }
+	String        operator~() const              { return ToString(); }
 
-	SqlCol        Of(SqlId id) const;
-	SqlCol        Of(const char *of) const;
-	SqlCol        As(const char *as) const;
-	SqlCol        As(SqlId id) const         { return As(~~id); }
-	SqlCol        operator[](int i) const;
-	SqlCol        operator&(const SqlId& s) const;
-	SqlCol        operator[](const SqlId& id) const;
+	SqlId         Of(SqlId id) const;
+	SqlId         Of(const char *of) const;
+	SqlId         As(const char *as) const;
+	SqlId         As(SqlId id) const         { return As(~~id); }
+	SqlId         operator[](int i) const;
+	SqlId         operator&(const SqlId& s) const;
+	SqlId         operator[](const SqlId& id) const;
 
-	SqlCol        operator()(SqlId p);
+	SqlId         operator()(SqlId p);
 
 //$	SqlId     operator()(SqlId p, SqlId p1, ...);
 #define E__PutSqlId(I)      PutOf(x, p##I)
-#define E__SqlId(I)         SqlId p##I
+#define E__SqlId(I)         const SqlId& p##I
 #define E__Of(I) \
-	SqlCol operator()(SqlId p, __List##I(E__SqlId)) { \
+	SqlId operator()(const SqlId& p, __List##I(E__SqlId)) { \
 	String x; \
 	PutOf0(x, p); \
 	__List##I(E__PutSqlId); \
@@ -140,8 +129,10 @@ __Expand(E__Of)
 	SqlId()                                      {}
 	SqlId(const char *s) : id(s)                 {}
 	SqlId(const String& s) : id(s)               {}
-	SqlId(Id id) : id(id)                        {}
+	SqlId(const Id& id) : id(id)                 {}
 };
+
+typedef SqlId SqlCol; // Deprecated
 
 #define SQLID(x)     const UPP::SqlId x(#x);
 #define SQL_ID(n, x) const UPP::SqlId n(#x);
@@ -210,11 +201,8 @@ public:
 	SqlVal(Time x);
 	SqlVal(const Value& x);
 	SqlVal(const Nuller&);
-	SqlVal(SqlId id);
+	SqlVal(const SqlId& id);
 	SqlVal(const SqlId& (*id)());
-	SqlVal(SqlCol id);
-//	SqlVal(const SqlSelect& x);
-//	SqlVal(const SqlBool& x);
 	SqlVal(const Case& x);
 };
 
@@ -282,31 +270,25 @@ SqlVal Cast(const char* type, const SqlId& a);
 
 SqlVal SqlNvl(const SqlVal& a);
 inline SqlVal Nvl(const SqlVal& a)     { return SqlNvl(SqlVal(a)); }
-inline SqlVal Nvl(const SqlCol& a)     { return SqlNvl(SqlVal(a)); }
 inline SqlVal Nvl(const SqlId& a)      { return SqlNvl(SqlVal(a)); }
 
 SqlVal SqlNvl(const SqlVal& a, const SqlVal& b);
 inline SqlVal Nvl(const SqlVal& a, const SqlVal& b) { return SqlNvl(SqlVal(a), SqlVal(b)); }
-inline SqlVal Nvl(const SqlVal& a, const SqlCol& b) { return SqlNvl(SqlVal(a), SqlVal(b)); }
 inline SqlVal Nvl(const SqlVal& a, const SqlId& b)  { return SqlNvl(SqlVal(a), SqlVal(b)); }
-inline SqlVal Nvl(const SqlCol& a, const SqlVal& b) { return SqlNvl(SqlVal(a), SqlVal(b)); }
-inline SqlVal Nvl(const SqlCol& a, const SqlCol& b) { return SqlNvl(SqlVal(a), SqlVal(b)); }
-inline SqlVal Nvl(const SqlCol& a, const SqlId& b)  { return SqlNvl(SqlVal(a), SqlVal(b)); }
 inline SqlVal Nvl(const SqlId& a, const SqlVal& b)  { return SqlNvl(SqlVal(a), SqlVal(b)); }
-inline SqlVal Nvl(const SqlId& a, const SqlCol& b)  { return SqlNvl(SqlVal(a), SqlVal(b)); }
 inline SqlVal Nvl(const SqlId& a, const SqlId& b)   { return SqlNvl(SqlVal(a), SqlVal(b)); }
 
 SqlVal Coalesce(const SqlVal& exp1, const SqlVal& exp2);
 SqlVal Coalesce(const SqlVal& exp1, const SqlVal& exp2, const SqlVal& exp3);
 SqlVal Coalesce(const SqlVal& exp1, const SqlVal& exp2, const SqlVal& exp3, const SqlVal& exp4);
 
-SqlVal Prior(SqlId a);
+SqlVal Prior(const SqlId& a);
 
-SqlVal NextVal(SqlId a);
-SqlVal CurrVal(SqlId a);
-SqlVal OuterJoin(SqlCol col);
+SqlVal NextVal(const SqlId& a);
+SqlVal CurrVal(const SqlId& a);
+SqlVal OuterJoin(const SqlId& col); //Oracle only, deprecated
 
-inline SqlVal operator++(SqlId a)           { return NextVal(a); }
+inline SqlVal operator++(const SqlId& a)           { return NextVal(a); }
 
 SqlVal SqlRowNum();
 
@@ -360,7 +342,6 @@ SqlBool        NotNull(const SqlVal& a);
 
 inline SqlBool IsNull(const SqlId& a)  { return SqlIsNull(a); }
 inline SqlBool IsNull(const SqlVal& a) { return SqlIsNull(a); }
-inline SqlBool IsNull(const SqlCol& a) { return SqlIsNull(a); }
 
 SqlBool        Like(const SqlVal& a, const SqlVal& b, bool casesensitive = true);
 SqlBool        NotLike(const SqlVal& a, const SqlVal& b, bool casesensitive = true);
@@ -375,14 +356,14 @@ SqlBool        NotExists(const SqlSet& set);
 
 SqlBool        LikeUpperAscii(const SqlVal& a, const SqlVal& b);
 
-SqlBool        LeftJoin(SqlVal v1, SqlVal v2);
-SqlBool        RightJoin(SqlVal v1, SqlVal v2);
+SqlBool        LeftJoin(SqlVal v1, SqlVal v2); // Deprecated
+SqlBool        RightJoin(SqlVal v1, SqlVal v2); // Deprecated
 
-SqlBool        Join(SqlId tab1, SqlId tab2, SqlId key);
-SqlBool        LeftJoin(SqlId tab1, SqlId tab2, SqlId key);
-SqlBool        RightJoin(SqlId tab1, SqlId tab2, SqlId key);
+SqlBool        Join(SqlId tab1, SqlId tab2, SqlId key); // Deprecated
+SqlBool        LeftJoin(SqlId tab1, SqlId tab2, SqlId key); // Deprecated
+SqlBool        RightJoin(SqlId tab1, SqlId tab2, SqlId key); // Deprecated
 
-SqlBool        SqlFirstRow();
+SqlBool        SqlFirstRow(); // Oracle specific
 
 inline SqlBool operator==(const SqlVal& a, const SqlSet& b) { return In(a, b); }
 inline SqlBool operator!=(const SqlVal& a, const SqlSet& b) { return NotIn(a, b); }
@@ -504,32 +485,25 @@ public:
 
 	SqlSelect& Get();
 	SqlSelect& From(const SqlSet& set);
-	SqlSelect& From(SqlId table);
-	SqlSelect& From(SqlCol table);
-	SqlSelect& From(SqlId table1, SqlId table2);
-	SqlSelect& From(SqlCol table1, SqlCol table2);
-	SqlSelect& From(SqlId table1, SqlId table2, SqlId table3);
-	SqlSelect& From(SqlCol table1, SqlCol table2, SqlCol table3);
+	SqlSelect& From(const SqlId& table);
+	SqlSelect& From(const SqlId& table1, const SqlId& table2);
+	SqlSelect& From(const SqlId& table1, const SqlId& table2, const SqlId& table3);
 	SqlSelect& From(const SqlVal& a)                  { return From(SqlSet(a)); }
 
-	SqlSelect& InnerJoin(SqlId table)                 { return InnerJoin0(~table); }
-	SqlSelect& LeftJoin(SqlId table)                  { return LeftJoin0(~table); }
-	SqlSelect& RightJoin(SqlId table)                 { return RightJoin0(~table); }
-	SqlSelect& FullJoin(SqlId table)                  { return FullJoin0(~table); }
-	SqlSelect& InnerJoin(SqlCol table)                { return InnerJoin0(~table); }
-	SqlSelect& LeftJoin(SqlCol table)                 { return LeftJoin0(~table); }
-	SqlSelect& RightJoin(SqlCol table)                { return RightJoin0(~table); }
-	SqlSelect& FullJoin(SqlCol table)                 { return FullJoin0(~table); }
+	SqlSelect& InnerJoin(const SqlId& table)          { return InnerJoin0(~table); }
+	SqlSelect& LeftJoin(const SqlId& table)           { return LeftJoin0(~table); }
+	SqlSelect& RightJoin(const SqlId& table)          { return RightJoin0(~table); }
+	SqlSelect& FullJoin(const SqlId& table)           { return FullJoin0(~table); }
 
 	SqlSelect& InnerJoin(const SqlSet& set)           { return InnerJoin0(~set(SqlSet::SET)); }
 	SqlSelect& LeftJoin(const SqlSet& set)            { return LeftJoin0(~set(SqlSet::SET)); }
 	SqlSelect& RightJoin(const SqlSet& set)           { return RightJoin0(~set(SqlSet::SET)); }
 	SqlSelect& FullJoin(const SqlSet& set)            { return FullJoin0(~set(SqlSet::SET)); }
 
-	SqlSelect& InnerJoinRef(SqlId table);
-	SqlSelect& LeftJoinRef(SqlId table);
-	SqlSelect& RightJoinRef(SqlId table);
-	SqlSelect& FullJoinRef(SqlId table);
+	SqlSelect& InnerJoinRef(const SqlId& table);
+	SqlSelect& LeftJoinRef(const SqlId& table);
+	SqlSelect& RightJoinRef(const SqlId& table);
+	SqlSelect& FullJoinRef(const SqlId& table);
 
 	SqlSelect& Where(const SqlBool& exp);
 	SqlSelect& On(const SqlBool& exp);
@@ -554,7 +528,7 @@ public:
 	operator  SqlSet() const                           { return SqlSet(text, SqlSet::SETOP); }
 	operator  SqlStatement() const                     { return SqlStatement(text); }
 	SqlVal    AsValue() const;
-	SqlSelect AsTable(SqlId tab) const;
+	SqlSelect AsTable(const SqlId& tab) const;
 
 	SqlSelect(Fields f);
 	SqlSelect(const SqlSet& s)                        { text = ~s; on = false; }
@@ -620,12 +594,12 @@ class SqlInsert {
 	SqlBool where;
 
 public:
-	void Column(SqlId column, SqlVal val);
-	void Column(SqlId column)                        { Column(column, column); }
-	SqlInsert& operator()(SqlId column, SqlVal val)  { Column(column, val); return *this; }
-	SqlInsert& operator()(SqlId column)              { Column(column, column); return *this; }
+	void Column(const SqlId& column, SqlVal val);
+	void Column(const SqlId& column)                       { Column(column, column); }
+	SqlInsert& operator()(const SqlId& column, SqlVal val) { Column(column, val); return *this; }
+	SqlInsert& operator()(const SqlId& column)             { Column(column, column); return *this; }
 	SqlInsert& operator()(Fields f, bool nokey = false);
-	SqlInsert& From(SqlId from);
+	SqlInsert& From(const SqlId& from);
 	SqlInsert& From(SqlSet _from)                    { from = _from; return *this; }
 	SqlInsert& From(SqlVal from)                     { return From(SqlSet(from)); }
 	SqlInsert& Where(SqlBool w)                      { where = w; return *this; }
@@ -637,8 +611,9 @@ public:
 	operator SqlStatement() const;
 	operator bool() const                            { return !set1.IsEmpty(); }
 
-	SqlInsert(SqlId table) : table(table) {}
-	SqlInsert(SqlId table, SqlSet set1, SqlSet set2) : table(table), set1(set1), set2(set2) {}
+	SqlInsert(const SqlId& table) : table(table) {}
+	SqlInsert(const SqlId& table, const SqlSet& set1, const SqlSet& set2)
+		: table(table), set1(set1), set2(set2) {}
 	SqlInsert(Fields f, bool nokey = false);
 
 //Deprecated!!!
@@ -650,7 +625,7 @@ public:
 	Value Fetch() const                               { return SqlStatement(*this).Fetch(); }
 };
 
-inline SqlInsert Insert(SqlId table)                  { return SqlInsert(table); }
+inline SqlInsert Insert(const SqlId& table)           { return SqlInsert(table); }
 inline SqlInsert Insert(Fields f)                     { return SqlInsert(f); }
 inline SqlInsert InsertNoKey(Fields f)                { return SqlInsert(f, true); }
 
@@ -660,9 +635,9 @@ class SqlUpdate {
 	SqlBool where;
 
 public:
-	void Column(SqlId column, SqlVal val);
+	void Column(const SqlId& column, SqlVal val);
 	void Column(const SqlSet& cols, const SqlSet& val);
-	SqlUpdate& operator()(SqlId column, SqlVal val)  { Column(column, val); return *this; }
+	SqlUpdate& operator()(const SqlId& column, SqlVal val)       { Column(column, val); return *this; }
 	SqlUpdate& operator()(const SqlSet& cols, const SqlSet& val) { Column(cols, val); return *this; }
 	SqlUpdate& operator()(Fields f);
 	SqlUpdate& Where(SqlBool w)                      { where = w; return *this; }
@@ -671,7 +646,7 @@ public:
 
 	operator bool() const                            { return !set.IsEmpty(); }
 
-	SqlUpdate(SqlId table) : table(table) {}
+	SqlUpdate(const SqlId& table) : table(table) {}
 	SqlUpdate(Fields f);
 
 //Deprecated!!!
@@ -683,5 +658,5 @@ public:
 	Value Fetch() const                               { return SqlStatement(*this).Fetch(); }
 };
 
-inline SqlUpdate Update(SqlId table)                  { return SqlUpdate(table); }
+inline SqlUpdate Update(const SqlId& table)           { return SqlUpdate(table); }
 inline SqlUpdate Update(Fields f)                     { return SqlUpdate(f); }

@@ -48,7 +48,7 @@ class SelectColumns : public FieldOperator
 public:
 	virtual void Field(const char *name, Ref f)
 	{
-		columns.Cat(SqlCol(name));
+		columns.Cat(SqlId(name));
 	}
 
 public:
@@ -121,7 +121,7 @@ public:
 
 	virtual void Field(const char *name, Ref f)
 	{
-		if(Id::Find(name) == column)
+		if(name == ~column)
 			value = f;
 	}
 
@@ -136,7 +136,7 @@ public:
 
 	virtual void Field(const char *name, Ref f)
 	{
-		if(Id::Find(name) == column)
+		if(name == ~column)
 			ref = f;
 	}
 
@@ -199,7 +199,7 @@ String SchemaTableName(const String& table)
 
 SqlVal SchemaTable(const SqlVal& table)
 {
-	return SqlCol(SchemaTableName(~table));
+	return SqlId(SchemaTableName(~table));
 }
 
 String GetInsertString(Fields nf, bool optimize)
@@ -602,7 +602,7 @@ SqlVal Alias(const SqlVal& value, const SqlVal& alias)
 {
 	if(~value == ~alias)
 		return value;
-	return SqlCol(~value + SqlCase(MSSQL, " as ")(" ") + ~alias);
+	return SqlId(~value + SqlCase(MSSQL, " as ")(" ") + ~alias);
 }
 
 SqlVal SchemaAlias(const SqlVal& table, const SqlVal& alias)
@@ -664,7 +664,7 @@ SqlVal GetCsVal(const SqlVal& val)
 
 SqlVal GetCs(const char* col)
 {
-	return GetCsVal(SqlCol(col));
+	return GetCsVal(SqlId(col));
 }
 
 SqlVal GetCsAsciiVal(const SqlVal& val)
@@ -674,7 +674,7 @@ SqlVal GetCsAsciiVal(const SqlVal& val)
 
 SqlVal GetCsAscii(const char* col)
 {
-	return GetCsAsciiVal(SqlCol(col));
+	return GetCsAsciiVal(SqlId(col));
 }
 
 SqlBool LikeSmartWild(const SqlVal& exp, const String& text)
