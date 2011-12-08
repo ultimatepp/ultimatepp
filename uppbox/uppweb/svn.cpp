@@ -6,6 +6,7 @@ VectorMap<String, SvnListRev> svndata;
 Vector<SvnLogRev> svnlog;
 
 void ParseSvnList(VectorMap<String, SvnListRev> &data, String &out, const String path, const String folder) {
+	RLOG("SvnList " << path);
 	String topicFolder;
 	
 	String line;

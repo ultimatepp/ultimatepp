@@ -20,6 +20,8 @@ file
 	svn.cpp,
 	topictree.cpp,
 	cpp.cpp tabsize 4,
+	topic1.cpp,
+	topic2.cpp,
 	www.cpp,
 	svn.tpp,
 	gsoc.tpp,
@@ -50,6 +52,5 @@ file
 	www.t;
 
 mainconfig
-	"" = "GUI MT SKELETON RAINBOW",
-	"" = "GUI SKELETON RAINBOW";
+	"" = "MT SKELETON RAINBOW";
 

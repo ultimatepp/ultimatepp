@@ -198,12 +198,6 @@ String QtfAsHtml(const char *qtf, Index<String>& css,
 	return EncodeHtml(ParseQTF(qtf), css, links, labels, outdir, fn, Zoom(8, 40), escape, 40);
 }
 
-#define TOPICFILE <uppweb/www.tpp/all.i>
-#include <Core/topic_group.h>
-
-#define TOPICFILE <ide/app.tpp/all.i>
-#include <Core/topic_group.h>
-
 String GetText(const char *s)
 {
 	return GetTopic(s).text;
@@ -621,6 +615,7 @@ void ExportPage(int i)
 	    .Alink(Red).Link(Black).Vlink(Blue)
 	    / html;
 	SaveFile(AppendFileName(targetdir, links[i]), content);
+	RLOG("Exported page " << links[i]);
 }
 
 
@@ -645,7 +640,7 @@ struct ProgramData {
 	}
 };
 
-GUI_APP_MAIN
+CONSOLE_APP_MAIN
 {
 #ifdef PLATFORM_POSIX
 	StdLogSetup(LOG_COUT);
@@ -656,6 +651,8 @@ GUI_APP_MAIN
 #endif
 	outPdf = true;
 	doSvn = true;
+
+	RLOG("--- uppweb started at " << GetSysTime());
 	
 	ProgramData data;
 	
@@ -683,8 +680,11 @@ GUI_APP_MAIN
 		data.doSvn	   = doSvn;
 		StoreAsXMLFile(data, NULL, configFile);
 	}
+	Cout() << "RootDir: " << rootdir << "\n";
+	Cout() << "TargetDir: " << targetdir << "\n";
+	
 	if (!DirectoryExists(rootdir)) {
-		Exclamation ("Directory " + DeQtf(rootdir) + " does not exist");
+		Cout() << ("Directory " + DeQtf(rootdir) + " does not exist\n");
 		return;
 	}
 
@@ -693,6 +693,9 @@ GUI_APP_MAIN
 	reference = AppendFileName(rootdir, "reference");
 	examples =  AppendFileName(rootdir, "examples");
 	bazaar =    AppendFileName(rootdir, "bazaar");
+
+	Cout() << "Loading www.tpp\n";
+	InitWwwTpp();
 
 	languages.Add(LNG_('E','N','U','S'));		// en-us has to be the first one
 	languages.Add(LNG_('C','A','E','S'));
@@ -705,14 +708,14 @@ GUI_APP_MAIN
 	languages.Add(LNG_('Z','H','C','N'));
 	languages.Add(LNG_('Z','H','T','W'));
 	
-	RLOG("--- uppweb started at " << GetSysTime());
-
 	RealizeDirectory(targetdir);
 	
 	if (outPdf) {
 		RealizeDirectory(pdfdir);
 	}
+	Cout() << "Gather ref links " << uppsrc << "\n";
 	GatherRefLinks(uppsrc);
+	Cout() << "Gather ref links " << AppendFileName(rootdir, "bazaar") << "\n";
 	GatherRefLinks(AppendFileName(rootdir, "bazaar"));
 	
 	SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
@@ -723,6 +726,7 @@ GUI_APP_MAIN
 	escape.Add("UPDATETIME", Format("%`", GetUtcTime()));
 	
 	if (doSvn) {
+		Cout() << "Processing svn\n";
 		GetSvnList(svndata, rootdir);
 		GetSvnLog(svnlog);
 		CreateRssFeed();
@@ -754,6 +758,7 @@ GUI_APP_MAIN
 
 	int lang = GetCurrentLanguage();
 	for (int i = 0; i < languages.GetCount(); ++i) {
+		Cout() << "Language " << LNGAsText(languages[i]);
 		Htmls bi, bex, bdoc, bcom, bcon, bsearch, blang;
 
 		SetLanguage(languages[i]);
@@ -976,7 +981,7 @@ GUI_APP_MAIN
 	           "My Google Page Rank" +
 	         "</noscript>"
 	);
-	BeepInformation();
+	Cout() << "Finished OK\n";
 
 #if 0 // we are now doing this on server, directly copying to www directory
 	
