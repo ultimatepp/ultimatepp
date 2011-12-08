@@ -15,6 +15,8 @@ using namespace Upp;
 #define MTC
 #endif
 
+void InitWwwTpp();
+
 struct SvnListRev : Moveable <SvnListRev> {
         String author;
         int revision;
