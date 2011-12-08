@@ -140,7 +140,7 @@ void S_##x::FieldLayoutRaw(FieldOperator& fo, const String& prefix) {\
 #define REFERENCES_CASCADE_(table, column)                   SchDbInfoReferences(#table, #column);
 #define PRIMARY_KEY                                          SchDbInfoPrimaryKey();
 #define COLUMN_ARRAY(type, ctype, name, width, prec, items)  SchDbInfoColumnArray(#name, items);
-#define END_TABLE }
+#define END_TYPE }
 
 #include SCHEMADIALECT
 
@@ -149,6 +149,6 @@ void S_##x::FieldLayoutRaw(FieldOperator& fo, const String& prefix) {\
 #define TYPE_I(x, b)              TYPE(x)
 #define TYPE_II(x, b1, b2)        TYPE(x)
 #define TYPE_III(x, b1, b2, b3)   TYPE(x)
-#define END_TABLE }
+#define END_TYPE }
 
 #include SCHEMADIALECT

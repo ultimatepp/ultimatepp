@@ -509,6 +509,7 @@ public:
 	SqlSelect& From(SqlId table1, SqlId table2);
 	SqlSelect& From(SqlCol table1, SqlCol table2);
 	SqlSelect& From(SqlId table1, SqlId table2, SqlId table3);
+	SqlSelect& From(SqlCol table1, SqlCol table2, SqlCol table3);
 	SqlSelect& From(const SqlVal& a)                  { return From(SqlSet(a)); }
 
 	SqlSelect& InnerJoin(SqlId table)                 { return InnerJoin0(~table); }

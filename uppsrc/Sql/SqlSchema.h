@@ -110,6 +110,7 @@ inline void SqlSchemaClear(T *a, int n) {
 
 void SchDbInfoTable(const char *table);
 void SchDbInfoColumn(const char *column);
+void SchDbInfoColumnArray(const char *name, int items);
 void SchDbInfoVar(void (*fn)(), const char *name);
 void SchDbInfoPrimaryKey();
 void SchDbInfoReferences(const char *table);
