@@ -189,6 +189,16 @@ SqlSelect& SqlSelect::From(SqlId table1, SqlId table2, SqlId table3) {
 	return *this;
 }
 
+SqlSelect& SqlSelect::From(SqlCol table1, SqlCol table2, SqlCol table3) {
+	String t1 = ~table1;
+	String t2 = ~table2;
+	String t3 = ~table3;
+	text = "select " + text + " from " + t1 + ", " + t2 + ", " + t3;
+	tables << ',' << t1 << ',' << t2 << ',' << t3;
+	on = false;
+	return *this;
+}
+
 SqlSelect& SqlSelect::InnerJoin0(const String& table) {
 	text << " inner join " << table;
 	tables << ',' << table;
