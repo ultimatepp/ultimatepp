@@ -144,11 +144,11 @@ void S_##x::FieldLayoutRaw(FieldOperator& fo, const String& prefix) {\
 
 #include SCHEMADIALECT
 
-#define TABLE(x)              struct SINS_##x##_ { SINS_##x##_(); } SINS_##x##__; SINS_##x##_::SINS_##x##_() {\
+#define TYPE(x)              struct SINS_##x##_ { SINS_##x##_(); } SINS_##x##__; SINS_##x##_::SINS_##x##_() {\
 									SchDbInfoTable(#x); SchDbInfo##x();
-#define TABLE_I(x, b)              TABLE(x)
-#define TABLE_II(x, b1, b2)        TABLE(x)
-#define TABLE_III(x, b1, b2, b3)   TABLE(x)
+#define TYPE_I(x, b)              TYPE(x)
+#define TYPE_II(x, b1, b2)        TYPE(x)
+#define TYPE_III(x, b1, b2, b3)   TYPE(x)
 #define END_TABLE }
 
 #include SCHEMADIALECT
