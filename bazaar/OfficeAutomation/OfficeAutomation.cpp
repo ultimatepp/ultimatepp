@@ -176,7 +176,7 @@ bool Ole::Invoke(int autoType, VARIANT *pvResult, IDispatch *pDisp, String name,
     va_start(marker, cArgs);
 
     if(!pDisp) {
-        MessageBox(NULL, t_("OfficeAutomation internal error. ObjectOle included is null"), t_("Error"), 0x10010);
+        LOG("OfficeAutomation internal error. ObjectOle included is null");
         return false;
     }
     // Variables used
@@ -195,8 +195,8 @@ bool Ole::Invoke(int autoType, VARIANT *pvResult, IDispatch *pDisp, String name,
     // Get DISPID for name passed
     hr = pDisp->GetIDsOfNames(IID_NULL, (LPOLESTR *)&ptName, 1, LOCALE_USER_DEFAULT, &dispID);
     if(FAILED(hr)) {
-        sprintf(buf, t_("OfficeAutomation internal error. Command \"%s\" not found for object or problem when running it"), szName);
-        MessageBox(NULL, buf, t_("Ole error"), 0x10010);
+        sprintf(buf, "OfficeAutomation internal error. Command \"%s\" not found for object or problem when running it", szName);
+        LOG(buf);
         return false;
     }
     VARIANT *pArgs = new VARIANT[cArgs+1];		// Allocate memory for arguments
@@ -218,8 +218,8 @@ bool Ole::Invoke(int autoType, VARIANT *pvResult, IDispatch *pDisp, String name,
     delete [] pArgs;
 
     if(FAILED(hr)) {
-        //sprintf(buf, "IDispatch::Invoke(\"%s\"=%08lx) failed w/err 0x%08lx", szName, dispID, hr);
-		//MessageBox(NULL, buf, "Ole::Invoke()", 0x10010);
+        sprintf(buf, "IDispatch::Invoke(\"%s\"=%08lx) failed w/err 0x%08lx", szName, dispID, hr);
+		LOG(buf);
         return false;
     }
     return true;
@@ -229,14 +229,14 @@ ObjectOle Ole::CreateObject(String application) {
 	CLSID clsid;
 	HRESULT hr = CLSIDFromProgID(application.ToWString(), &clsid);	// Get CLSID for our server
 	if(FAILED(hr)) {
-		//::MessageBox(NULL, "CLSIDFromProgID() failed", "Error", 0x10010);
+		LOG("CLSIDFromProgID() failed");
 		return NULL;
 	}
 	ObjectOle app;
 	// Start server and get IDispatch
 	hr = CoCreateInstance(clsid, NULL, CLSCTX_LOCAL_SERVER, IID_IDispatch, (void **)&app);
 	if(FAILED(hr)) {
-		::MessageBox(NULL, t_("OfficeAutomation internal error. Application not registered properly"), t_("Error"), 0x10010);
+		LOG("OfficeAutomation internal error. Application not registered properly");
 		return NULL;
 	}
 	return app;
@@ -399,7 +399,7 @@ MSSheet::MSSheet() {
 
 	App = Ole::CreateObject("Excel.Application");
 	if (!(Books = Ole::GetObject(App, "Workbooks"))) {
-		::MessageBox(NULL, t_("Excel workbooks not loaded properly"), t_("Error"), 0x10010);
+		LOG("Excel workbooks not loaded properly");
 		return;
 	}
 }
@@ -1134,7 +1134,7 @@ MSDoc::MSDoc() {
 	
 	App = Ole::CreateObject("Word.Application");
 	if (!(Docs = Ole::GetObject(App, "Documents"))) {
-		::MessageBox(NULL, t_("Word document not loaded properly"), t_("Error"), 0x10010);
+		LOG("Word document not loaded properly");
 		return;
 	}
 }
