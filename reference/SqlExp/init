@@ -4,4 +4,5 @@
 #include "Sql/init"
 #include "RichText/init"
 #include "CtrlLib/init"
+#include "RichEdit/init"
 #endif

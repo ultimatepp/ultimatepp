@@ -4,7 +4,8 @@ uses
 	Core,
 	Sql,
 	RichText,
-	CtrlLib;
+	CtrlLib,
+	RichEdit;
 
 file
 	SqlExp.sch,
