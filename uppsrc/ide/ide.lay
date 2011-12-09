@@ -475,7 +475,7 @@ LAYOUT(SetupIdeLayout, 512, 264)
 	ITEM(Button, gnome, SetLabel(t_("Gnome")).LeftPosZ(164, 52).TopPosZ(196, 20))
 	ITEM(Button, kde, SetLabel(t_("KDE")).LeftPosZ(220, 52).TopPosZ(196, 20))
 	ITEM(Label, dv___15, SetLabel(t_("HYDRA threads:")).LeftPosZ(376, 80).TopPosZ(4, 19))
-	ITEM(EditIntSpin, hydra1_threads, Min(1).Max(10).LeftPosZ(460, 48).TopPosZ(4, 19))
+	ITEM(EditIntSpin, hydra1_threads, Min(1).Max(64).LeftPosZ(460, 48).TopPosZ(4, 19))
 	ITEM(Option, output_per_assembly, SetLabel(t_("Use unique output directory per assembly (append assembly name to output director)")).LeftPosZ(4, 492).TopPosZ(224, 16))
 END_LAYOUT
 
