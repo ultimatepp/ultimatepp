@@ -1,4 +1,7 @@
 #ifndef _AccessKey_icpp_init_stub
 #define _AccessKey_icpp_init_stub
 #include "CtrlLib/init"
+#define BLITZ_INDEX__ F00f0b258c02a89606d9b9456bec43473
+#include "testing.icpp"
+#undef BLITZ_INDEX__
 #endif
