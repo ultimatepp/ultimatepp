@@ -10,8 +10,8 @@ uses
 
 file
 	Sql.h,
-	SqlCase.cpp optimize_speed,
 	Sqlexp.h,
+	SqlCase.cpp optimize_speed,
 	SqlVal.cpp optimize_speed,
 	SqlBool.cpp optimize_speed,
 	SqlSet.cpp optimize_speed,
