@@ -1,4 +1,4 @@
-#include <CtrlLib/CtrlLib.h>
+#include <RichEdit/RichEdit.h>
 #include <Sql/Sql.h>
 
 using namespace Upp;
@@ -145,7 +145,10 @@ GUI_APP_MAIN
 #ifdef GENERATE_QTF
 	qtf << "}}";
 
-	ParseQTF(qtf);
-	SaveFile(ConfigFile("sqlexp.qtf"), qtf);
+	RichEditWithToolBar edit;
+	edit.SetQTF(qtf);
+	TopWindow win;
+	win.Add(edit.SizePos());
+	win.Run();
 #endif
 }
