@@ -7,16 +7,11 @@ using namespace Upp;
 #define GENERATE_QTF
 #endif
 
-#define SQLID(x) SqlId x(#x)
-
-SQLID(COLUMN);
-SQLID(COLUMN1);
-SQLID(COLUMN2);
-SQLID(TABLE);
-SQLID(TABLE1);
-SQLID(TABLE2);
-SQLID(SEQ);
-SQLID(A);
+#define MODEL <SqlExp/SqlExp.sch>
+#define SCHEMADIALECT <plugin/sqlite3/Sqlite3Schema.h>
+#include <Sql/sch_header.h>
+#include <Sql/sch_schema.h>
+#include <Sql/sch_source.h>
 
 #define EXP(s) Exp(#s, s)
 
@@ -64,85 +59,88 @@ GUI_APP_MAIN
 #else
 	StdLogSetup(LOG_FILE|LOG_COUT);
 #endif
-	EXP(Select(COLUMN).From(TABLE));
-	EXP(Select(COLUMN.Of(TABLE)).From(TABLE));
-	EXP(Select(COLUMN.As(A)).From(TABLE));
-	EXP(Select(COLUMN&A).From(TABLE));
-	EXP(Select(COLUMN[3]).From(TABLE));
-	EXP(Select(COLUMN1 % COLUMN2).From(TABLE));
-	EXP(Select(COLUMN1 | COLUMN2).From(TABLE));
-	EXP(Select(SqlFunc("any_fn", COLUMN, 2)).From(TABLE));
-	EXP(Select(Distinct(COLUMN)).From(TABLE));
-	EXP(Select(Distinct(SqlSet(COLUMN1, COLUMN2))).From(TABLE));
-	EXP(Select(All(COLUMN)).From(TABLE));
-	EXP(Select(Count(COLUMN)).From(TABLE));
-	EXP(Select(SqlAll()).From(TABLE));
-	EXP(Select(SqlCountRows()).From(TABLE));
-	EXP(Select(COLUMN).From(TABLE).OrderBy(Descending(COLUMN)));
-	EXP(Select(SqlMax(COLUMN)).From(TABLE));
-	EXP(Select(SqlMin(COLUMN)).From(TABLE));
-	EXP(Select(SqlSum(COLUMN)).From(TABLE));
-	EXP(Select(Avg(COLUMN)).From(TABLE));
-	EXP(Select(Stddev(COLUMN)).From(TABLE));
-	EXP(Select(Variance(COLUMN)).From(TABLE));
-	EXP(Select(Greatest(COLUMN1, COLUMN2)).From(TABLE));
-	EXP(Select(Least(COLUMN1, COLUMN2)).From(TABLE));
-	EXP(Select(Upper(COLUMN)).From(TABLE));
-	EXP(Select(Lower(COLUMN)).From(TABLE));
-	EXP(Select(Substr(COLUMN, 1)).From(TABLE));
-	EXP(Select(Substr(COLUMN, 2, 1)).From(TABLE));
-	EXP(Select(Instr(COLUMN, "hello")).From(TABLE));
-	EXP(Select(SqlNvl(COLUMN1, COLUMN2)).From(TABLE));
+	EXP(Select(COL).From(TABLE1));
+	EXP(Select(COL.Of(TABLE1)).From(TABLE1));
+	EXP(Select(COL.As(A)).From(TABLE1));
+	EXP(Select(COL&A).From(TABLE1));
+	EXP(Select(COL[3]).From(TABLE1));
+	EXP(Select(COLUMN1 % COLUMN2).From(TABLE1));
+	EXP(Select(COLUMN1 | COLUMN2).From(TABLE1));
+	EXP(Select(SqlFunc("any_fn", COL, 2)).From(TABLE1));
+	EXP(Select(Distinct(COL)).From(TABLE1));
+	EXP(Select(Distinct(SqlSet(COLUMN1, COLUMN2))).From(TABLE1));
+	EXP(Select(All(COL)).From(TABLE1));
+	EXP(Select(Count(COL)).From(TABLE1));
+	EXP(Select(SqlAll()).From(TABLE1));
+	EXP(Select(SqlCountRows()).From(TABLE1));
+	EXP(Select(COL).From(TABLE1).OrderBy(Descending(COL)));
+	EXP(Select(SqlMax(COL)).From(TABLE1));
+	EXP(Select(SqlMin(COL)).From(TABLE1));
+	EXP(Select(SqlSum(COL)).From(TABLE1));
+	EXP(Select(Avg(COL)).From(TABLE1));
+	EXP(Select(Stddev(COL)).From(TABLE1));
+	EXP(Select(Variance(COL)).From(TABLE1));
+	EXP(Select(Greatest(COLUMN1, COLUMN2)).From(TABLE1));
+	EXP(Select(Least(COLUMN1, COLUMN2)).From(TABLE1));
+	EXP(Select(Upper(COL)).From(TABLE1));
+	EXP(Select(Lower(COL)).From(TABLE1));
+	EXP(Select(Substr(COL, 1)).From(TABLE1));
+	EXP(Select(Substr(COL, 2, 1)).From(TABLE1));
+	EXP(Select(Instr(COL, "hello")).From(TABLE1));
+	EXP(Select(SqlNvl(COLUMN1, COLUMN2)).From(TABLE1));
 	EXP(Select(NextVal(SEQ)).Get());
 	EXP(Select(CurrVal(SEQ)).Get());
-	EXP(Select(SqlArg()).From(TABLE));
+	EXP(Select(SqlArg()).From(TABLE1));
 
-	EXP(Select(COLUMN).From(TABLE).Where(COLUMN / 2 > 1 && COLUMN1 == "A" || COLUMN2 == Date(2006, 1, 1)));
-	EXP(Select(COLUMN).From(TABLE).Where(!(COLUMN == 1)));
-	EXP(Select(COLUMN).From(TABLE).Where((COLUMN1 == 1) - (COLUMN2 == 1)));
-	EXP(Select(COLUMN).From(TABLE).Where(IsNull(COLUMN1)));
-	EXP(Select(COLUMN).From(TABLE).Where(NotNull(COLUMN1)));
-	EXP(Select(COLUMN).From(TABLE).Where(Like(COLUMN1, Wild("A*"))));
-	EXP(Select(COLUMN).From(TABLE).Where(NotLike(COLUMN1, Wild("A*"))));
-	EXP(Select(COLUMN).From(TABLE).Where(In(COLUMN, Select(COLUMN).From(TABLE1))));
-	EXP(Select(COLUMN).From(TABLE).Where(COLUMN == Select(COLUMN).From(TABLE1)));
-	EXP(Select(COLUMN).From(TABLE).Where(COLUMN == Select(COLUMN).From(TABLE1).AsValue()));
-	EXP(Select(COLUMN).From(TABLE).Where(NotIn(COLUMN, Select(COLUMN).From(TABLE1))));
-	EXP(Select(COLUMN).From(TABLE).Where(COLUMN != Select(COLUMN).From(TABLE1)));
-	EXP(Select(COLUMN).From(TABLE).Where(Exists(Select(COLUMN).From(TABLE1))));
-	EXP(Select(COLUMN).From(TABLE).Where(NotExists(Select(COLUMN).From(TABLE1))));
+	EXP(Select(COL).From(TABLE1).Where(COL / 2 > 1 && COLUMN1 == "A" || COLUMN2 == Date(2006, 1, 1)));
+	EXP(Select(COL).From(TABLE1).Where(!(COL == 1)));
+	EXP(Select(COL).From(TABLE1).Where((COLUMN1 == 1) - (COLUMN2 == 1)));
+	EXP(Select(COL).From(TABLE1).Where(IsNull(COLUMN1)));
+	EXP(Select(COL).From(TABLE1).Where(NotNull(COLUMN1)));
+	EXP(Select(COL).From(TABLE1).Where(Like(COLUMN1, Wild("A*"))));
+	EXP(Select(COL).From(TABLE1).Where(NotLike(COLUMN1, Wild("A*"))));
+	EXP(Select(COL).From(TABLE1).Where(In(COL, Select(COL).From(TABLE1))));
+	EXP(Select(COL).From(TABLE1).Where(COL == Select(COL).From(TABLE1)));
+	EXP(Select(COL).From(TABLE1).Where(COL == Select(COL).From(TABLE1).AsValue()));
+	EXP(Select(COL).From(TABLE1).Where(NotIn(COL, Select(COL).From(TABLE1))));
+	EXP(Select(COL).From(TABLE1).Where(COL != Select(COL).From(TABLE1)));
+	EXP(Select(COL).From(TABLE1).Where(Exists(Select(COL).From(TABLE1))));
+	EXP(Select(COL).From(TABLE1).Where(NotExists(Select(COL).From(TABLE1))));
 
-	EXP(Select(COLUMN).From(TABLE).Where(COLUMN == (Select(COLUMN1).From(TABLE1) | Select(COLUMN2).From(TABLE2))));
-	EXP(Select(COLUMN).From(TABLE).Where(COLUMN == (Select(COLUMN1).From(TABLE1) & Select(COLUMN2).From(TABLE2))));
-	EXP(Select(COLUMN).From(TABLE).Where(COLUMN == (Select(COLUMN1).From(TABLE1) - Select(COLUMN2).From(TABLE2))));
-	EXP(Select(COLUMN).From(TABLE).Where(COLUMN == 0).GroupBy(COLUMN).Having(COLUMN == 0).OrderBy(Descending(COLUMN)));
-	EXP(Select(COLUMN, Count(Select(SqlAll()).From(TABLE))).From(TABLE).Where(COLUMN == 0).GroupBy(COLUMN)
-	    .Having(COLUMN == 0).OrderBy(Descending(COLUMN)));
-	EXP(Select(COLUMN).From(TABLE).Limit(100));
-	EXP(Select(COLUMN).From(TABLE).Limit(100, 10));
-	EXP(Select(COLUMN).From(TABLE).Offset(20));
+	EXP(Select(COL).From(TABLE1).Where(COL == (Select(COLUMN1).From(TABLE1) | Select(COLUMN2).From(TABLE2))));
+	EXP(Select(COL).From(TABLE1).Where(COL == (Select(COLUMN1).From(TABLE1) & Select(COLUMN2).From(TABLE2))));
+	EXP(Select(COL).From(TABLE1).Where(COL == (Select(COLUMN1).From(TABLE1) - Select(COLUMN2).From(TABLE2))));
+	EXP(Select(COL).From(TABLE1).Where(COL == 0).GroupBy(COL).Having(COL == 0).OrderBy(Descending(COL)));
+	EXP(Select(COL, Count(Select(SqlAll()).From(TABLE1))).From(TABLE1).Where(COL == 0).GroupBy(COL)
+	    .Having(COL == 0).OrderBy(Descending(COL)));
+	EXP(Select(COL).From(TABLE1).Limit(100));
+	EXP(Select(COL).From(TABLE1).Limit(100, 10));
+	EXP(Select(COL).From(TABLE1).Offset(20));
 	EXP(Select(25 * 34).Get());
-	EXP(Select(COLUMN).From(TABLE).Hint("hint"));
-	EXP(Select(COLUMN).From(TABLE).InnerJoin(TABLE1).On(COLUMN.Of(TABLE) == COLUMN1.Of(TABLE1)));
-	EXP(Select(COLUMN).From(TABLE).LeftJoin(TABLE1).On(COLUMN.Of(TABLE) == COLUMN1.Of(TABLE1)));
-	EXP(Select(COLUMN).From(TABLE).RightJoin(TABLE1).On(COLUMN.Of(TABLE) == COLUMN1.Of(TABLE1)));
-	EXP(Select(COLUMN).From(TABLE).FullJoin(TABLE1).On(COLUMN.Of(TABLE) == COLUMN1.Of(TABLE1)));
+	EXP(Select(COL).From(TABLE1).Hint("hint"));
+	EXP(Select(COL).From(TABLE1).InnerJoin(TABLE1).On(COL.Of(TABLE1) == COLUMN1.Of(TABLE1)));
+	EXP(Select(COL).From(TABLE1).LeftJoin(TABLE1).On(COL.Of(TABLE1) == COLUMN1.Of(TABLE1)));
+	EXP(Select(COL).From(TABLE1).RightJoin(TABLE1).On(COL.Of(TABLE1) == COLUMN1.Of(TABLE1)));
+	EXP(Select(COL).From(TABLE1).FullJoin(TABLE1).On(COL.Of(TABLE1) == COLUMN1.Of(TABLE1)));
 
-	EXP(Delete(TABLE).Where(COLUMN < 0));
+	EXP(Delete(TABLE1).Where(COL < 0));
 
-	EXP(Insert(TABLE)(COLUMN1, 12)(COLUMN2, "hello")(COLUMN, Date(2007, 1, 1)));
-	EXP(Insert(TABLE)(COLUMN1, 12)(COLUMN2)(COLUMN).From(TABLE1).Where(COLUMN >= 0));
+	EXP(Insert(TABLE1)(COLUMN1, 12)(COLUMN2, "hello")(COL, Date(2007, 1, 1)));
+	EXP(Insert(TABLE1)(COLUMN1, 12)(COLUMN2)(COL).From(TABLE1).Where(COL >= 0));
 
-	EXP(Update(TABLE)(COLUMN1, 13)(COLUMN2, "world").Where(COLUMN > Date(2007, 1, 1)));
+	EXP(Update(TABLE1)(COLUMN1, 13)(COLUMN2, "world").Where(COL > Date(2007, 1, 1)));
 	
-	EXP(Insert(TABLE)(COLUMN, Select(COLUMN1).From(TABLE1).Where(COLUMN2 == 21).AsValue()));
+	EXP(Insert(TABLE1)(COL, Select(COLUMN1).From(TABLE1).Where(COLUMN2 == 21).AsValue()));
 
-	EXP(Select(COLUMN).From(Select(COLUMN).From(TABLE1)));
-	EXP(Select(COLUMN).From(Select(COLUMN).From(TABLE1).AsTable(TABLE2)));
-	EXP(Select(COLUMN).From(TABLE).LeftJoin(Select(COLUMN).From(TABLE1)).On(COLUMN.Of(TABLE) == COLUMN1.Of(TABLE1)));
-	EXP(Select(COLUMN).From(TABLE).LeftJoin(Select(COLUMN).From(TABLE1).AsTable(TABLE2)).On(COLUMN.Of(TABLE) == COLUMN1.Of(TABLE1)));
+	EXP(Select(COL).From(Select(COL).From(TABLE1)));
+	EXP(Select(COL).From(Select(COL).From(TABLE1).AsTable(TABLE2)));
+	EXP(Select(COL).From(TABLE1).LeftJoin(Select(COL).From(TABLE1)).On(COL.Of(TABLE1) == COLUMN1.Of(TABLE1)));
+	EXP(Select(COL).From(TABLE1).LeftJoin(Select(COL).From(TABLE1).AsTable(TABLE2)).On(COL.Of(TABLE1) == COLUMN1.Of(TABLE1)));
 
-	EXP(Select(TABLE(COLUMN, COLUMN1)).From(TABLE));
+	EXP(Select(TABLE1(COL, COLUMN1)).From(TABLE1));
+
+	EXP(Select(ID(ID, NAME, LASTNAME)).From(TABLE1).LeftJoinRef(TABLE2).Where(BDATE == Date(2011, 12, 9)));
+	EXP(Select(ID(ID, NAME, LASTNAME)).From(TABLE1).LeftJoinRef(TABLE2).On(IsNull(BDATE)).Where(BDATE == Date(2011, 12, 9)));
 
 #ifdef GENERATE_QTF
 	qtf << "}}";
