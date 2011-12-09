@@ -99,7 +99,7 @@ public:
 
 	operator      const Id&() const              { return id; }
 	const String& ToString() const               { return id.ToString(); }
-	String        operator~() const              { return ToString(); }
+	const String& operator~() const              { return ToString(); }
 
 	SqlId         Of(SqlId id) const;
 	SqlId         Of(const char *of) const;
@@ -142,7 +142,7 @@ protected:
 	String text;
 	byte   priority;
 
-	void   Put(const SqlS& a, int pr);
+	void   Init(const SqlS& a, const char *o, int olen, const SqlS& b, int pr, int prb);
 
 public:
 	enum PRIORITY {
@@ -172,8 +172,9 @@ public:
 	SqlS()                                  : priority(EMPTY) {}
 	SqlS(const char *s, int pr)             : text(s), priority(pr) {}
 	SqlS(const String& s, int pr)           : text(s), priority(pr) {}
-	SqlS(const SqlS& a, const char *op, const SqlS& b, int pr, int prb);
-	SqlS(const SqlS& a, const char *op, const SqlS& b, int pr);
+	
+	force_inline SqlS(const SqlS& a, const char *op, const SqlS& b, int pr, int prb) { Init(a, op, strlen(op), b, pr, prb); }
+	force_inline SqlS(const SqlS& a, const char *op, const SqlS& b, int pr)          { Init(a, op, strlen(op), b, pr, pr); }
 };
 
 class SqlVal : public SqlS, Moveable<SqlVal> {

@@ -4,22 +4,22 @@ NAMESPACE_UPP
 
 SqlId SqlId::Of(const char *of) const
 {
-	return of + ('.' + ToString());
+	return String().Cat() << of << '.' << ToString();
 }
 
 SqlId SqlId::Of(SqlId id) const
 {
-	return id.IsNull() ? ToString() : id.ToString() + '.' + ToString();
+	return id.IsNull() ? ToString() : String().Cat() << id.ToString() << '.' << ToString();
 }
 
 SqlId SqlId::operator[](const SqlId& id) const
 {
-	return id.IsNull() ? ToString() : ToString() + '.' + id.ToString();
+	return Of(id);
 }
 
 SqlId SqlId::As(const char *as) const
 {
-	return id.IsNull() ? ToString() : ToString() + SqlCase(MSSQL | PGSQL, " as ")(" ") + as;
+	return id.IsNull() ? ToString() : String().Cat() << ToString() << SqlCase(MSSQL | PGSQL, " as ")(" ") << as;
 }
 
 SqlId SqlId::operator()(SqlId p) {
@@ -57,19 +57,31 @@ String SqlS::operator()(int at, byte cond) const
 	return out;
 }
 
-SqlS::SqlS(const SqlS& a, const char *o, const SqlS& b, int pr, int prb) {
-	text << a(pr) << o << b(prb);
-	priority = pr;
-}
-
-SqlS::SqlS(const SqlS& a, const char *o, const SqlS& b, int pr) {
-	text << a(pr) << o << b(pr);
+void SqlS::Init(const SqlS& a, const char *o, int olen, const SqlS& b, int pr, int prb)
+{
+	StringBuffer s;
+	if(a.priority < pr) {
+		s.Cat('(');
+		s.Cat(~a);
+		s.Cat(')');
+	}
+	else
+		s.Cat(~a);
+	s.Cat(o, olen);
+	if(b.priority < prb) {
+		s.Cat('(');
+		s.Cat(~b);
+		s.Cat(')');
+	}
+	else
+		s.Cat(~b);
+	text = s;
 	priority = pr;
 }
 
 SqlVal SqlVal::As(const char *as) const {
 	SqlVal v;
-	v.SetHigh(text + ~SqlCase(MSSQL | PGSQL, " as ")(" ") + as);
+	v.SetHigh(String().Cat() << text << ~SqlCase(MSSQL | PGSQL, " as ")(" ") << as);
 	return v;
 }
 
@@ -186,19 +198,19 @@ SqlVal& operator%=(SqlVal& a, const SqlVal& b)     { return a = a % b; }
 SqlVal& operator|=(SqlVal& a, const SqlVal& b)     { return a = a | b; }
 
 SqlVal SqlFunc(const char *name, const SqlVal& a) {
-	return SqlVal(name + a(), SqlS::FN);
+	return SqlVal(String().Cat() << name << '(' << ~a << ')', SqlS::FN);
 }
 
 SqlVal SqlFunc(const char *n, const SqlVal& a, const SqlVal& b) {
-	return SqlVal(String(n) + '(' + ~a + ", " + ~b + ')', SqlS::FN);
+	return SqlVal(String(n).Cat() << '(' + ~a << ", " << ~b << ')', SqlS::FN);
 }
 
 SqlVal SqlFunc(const char *n, const SqlVal& a, const SqlVal& b, const SqlVal& c) {
-	return SqlVal(String(n) + '(' + ~a + ", " + ~b + ", " + ~c + ')', SqlS::FN);
+	return SqlVal(String(n).Cat() << '(' << ~a << ", " << ~b << ", " << ~c << ')', SqlS::FN);
 }
 
 SqlVal SqlFunc(const char *n, const SqlVal& a, const SqlVal& b, const SqlVal& c, const SqlVal& d) {
-	return SqlVal(String(n) + '(' + ~a + ", " + ~b + ", " + ~c + ", " + ~d + ')', SqlS::FN);
+	return SqlVal(String(n).Cat() << '(' << ~a << ", " << ~b << ", " << ~c << ", " << ~d << ')', SqlS::FN);
 }
 
 SqlVal SqlFunc(const char *name, const SqlSet& set) {
