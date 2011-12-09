@@ -3,6 +3,8 @@ uses
 	Sql;
 
 file
+	SqlExp.sch,
+	Test.i,
 	SqlExp.cpp;
 
 mainconfig
