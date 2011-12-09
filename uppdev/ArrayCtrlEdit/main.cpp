@@ -2,22 +2,27 @@
 
 using namespace Upp;
 
+Id ALFA("ALFA");
+Id BETA("BETA");
+
 GUI_APP_MAIN
 {
-	DropList es1;
+	DataPusher es1;
 	EditString es2;
-	es1.Add("Hello!");
 	ArrayCtrl list;
-	list.AddColumn(t_("hun")).Edit(es1);
+	list.AddColumn(BETA, "huh");
 	list.AddColumn(t_("fin")).Edit(es2);
 	list.Appending().AppendLine();
-//	list.AutoAppending();
-	list.DoAppend();
+	list.Add(123, "Hello", "kuku");
+	list.Add(123, "Hello", "kuku");
+	list.GoEnd();
+	EditString edit;
+	list.SetCtrl(0, 0, edit);
+//	list.StartEdit();
+	DDUMP(list.Get(0, BETA));
 	TopWindow win;
 	win.Add(list.SizePos());
 	win.Run();
 	win.Sizeable();
-	TabCtrl tab;
-	tab.Set
 }
 

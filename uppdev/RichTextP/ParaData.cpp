@@ -260,8 +260,9 @@ void RichPara::PackParts(Stream& out, const RichPara::CharFormat& chrstyle,
 		cf = p.format;
 		if(p.field) {
 			out.Put(FIELD);
-			out.Put32(p.field.AsNdx());
-			String s = p.fieldparam;
+			String s = ~p.field;
+			out % s;
+			s = p.fieldparam;
 			out % s;
 			StringStream oout;
 			CharFormat subf = cf;
@@ -478,7 +479,9 @@ void RichPara::UnpackParts(Stream& in, const RichPara::CharFormat& chrstyle,
 			}
 			in.Get();
 			Part& p = part.Top();
-			p.field = Id(in.Get32());
+			String s;
+			in % s; 
+			p.field = s;
 			in % p.fieldparam;
 			String s;
 			in % s;

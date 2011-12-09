@@ -2,11 +2,10 @@ uses
 	CtrlLib;
 
 file
-	"ArrayCtrlEdit.h"
-	, main.cpp
-	, "ArrayCtrlEdit.lay"
-
-;
+	ArrayCtrlEdit.h,
+	main.cpp,
+	ArrayCtrlEdit.lay;
 
 mainconfig
 	"" = "GUI ST";
+
