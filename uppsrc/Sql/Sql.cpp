@@ -715,6 +715,13 @@ void SqlSession::InstallErrorHandler(bool (*handler)(String error, String stmt, 
 	error_handler = handler;
 }
 
+Sql& SqlSession::GetSessionSql()
+{
+	if(!sql)
+		sql = new Sql(*this);
+	return *sql;
+}
+
 void   SqlSession::ClearError()
 {
 	lasterror.Clear();
