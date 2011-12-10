@@ -397,11 +397,7 @@ void PostgreSQLSession::Close()
 {
 	if(!conn)
 		return;
-#ifndef flagNOAPPSQL
-	if(SQL.IsOpen() && &SQL.GetSession() == this)
-		SQL.Cancel();
-#endif
-
+	SessionClose();
 	PQfinish(conn);
 	conn = NULL;
 	level = 0;

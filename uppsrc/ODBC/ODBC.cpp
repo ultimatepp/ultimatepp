@@ -74,6 +74,7 @@ bool ODBCSession::IsOpen() const
 
 void ODBCSession::Close()
 {
+	SessionClose();
 	if(hdbc != SQL_NULL_HANDLE) {
 		current = NULL;
 		FlushConnections();

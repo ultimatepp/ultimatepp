@@ -101,5 +101,7 @@
 
 #undef UNIQUE
 
+#undef REFERENCES
+
 #undef TIMESTAMP
 #undef COMMENT

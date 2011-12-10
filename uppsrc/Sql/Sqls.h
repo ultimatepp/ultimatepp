@@ -83,7 +83,8 @@ class Sql {
 	Vector<Value>   param;
 
 	friend class SqlSession;
-	friend struct AppSql;
+	friend Sql& AppCursor();
+	friend Sql& AppCursorR();
 
 	Value       Select0(const String& what);
 	void        Assign(SqlSource& src);
@@ -235,25 +236,17 @@ public:
 	Sql(const SqlStatement& s, SqlSource& session);
 	Sql(SqlConnection *connection);
 	~Sql();
+	
+	void operator=(SqlSession& s); // this only works with SQL and SQLR...
 };
 
 #ifndef NOAPPSQL
-
-struct AppSql : Sql {
-	void   operator=(SqlSource& s) { Assign(s); }
-	void   Detach()                { Sql::Detach(); }
-	AppSql() : Sql(NULLSQL) {}
+struct SqlR : Sql {
+	SqlR();
+	SqlR(const char *stmt);
+	SqlR(const SqlStatement& s);
 };
-
-AppSql& AppCursor();
-//$-
-#define SQL AppCursor()
-//$+
-//  Assist++ cheat:
-//$ AppSql SQL;
-
 #endif
-
 
 struct StatementExecutor {
 	virtual bool Execute(const String& stmt) = 0;
@@ -261,6 +254,9 @@ struct StatementExecutor {
 };
 
 typedef bool (*RunScript)(const String& text, StatementExecutor& executor, Gate2<int, int> progress_canceled);
+
+class AppSql;
+class AppSqlR;
 
 class SqlSession : public SqlSource {
 public:
@@ -301,6 +297,9 @@ protected:
 	int                           status;
 	
 	One<Sql>                      sql;
+	One<Sql>                      sqlr;
+	
+	void                          SessionClose();
 
 public:
 	virtual void                  Begin();
@@ -359,6 +358,7 @@ public:
 	String                        GetUser()                               { return Sql(*this).GetUser(); }
 	
 	Sql&                          GetSessionSql();
+	Sql&                          GetSessionSqlR();
 
 	operator                      bool() const                            { return IsOpen(); }
 
@@ -373,6 +373,21 @@ public:
 	virtual ~SqlSession();
 
 };
+
+
+#ifndef NOAPPSQL
+
+Sql& AppCursor();
+Sql& AppCursorR();
+
+//$-
+#define SQL AppCursor()
+#define SQLR AppCursorR()
+//$+
+//  Assist++ cheat:
+//$ Sql SQL;
+
+#endif
 
 class OciConnection;
 

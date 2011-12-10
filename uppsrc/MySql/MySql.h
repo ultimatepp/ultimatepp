@@ -13,7 +13,7 @@
 #endif
 
 #ifdef PLATFORM_POSIX
-#include </usr/include/mysql/mysql.h>
+#include <mysql/mysql.h>
 #endif
 
 NAMESPACE_UPP

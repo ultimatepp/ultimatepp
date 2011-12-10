@@ -18,6 +18,8 @@ file
 	SqlStatement.cpp optimize_speed,
 	Sqls.h,
 	Sql.cpp,
+	Session.cpp,
+	Script.cpp,
 	MassInsert.cpp,
 	Schema readonly separator,
 	SqlSchema.h,
