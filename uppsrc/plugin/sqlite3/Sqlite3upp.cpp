@@ -347,6 +347,7 @@ bool Sqlite3Session::Open(const char* filename) {
 	return false;
 }
 void Sqlite3Session::Close() {
+	sql.Clear();
 	if (NULL != db) {
 		int retval;
 #ifndef flagNOAPPSQL

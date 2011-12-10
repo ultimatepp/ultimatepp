@@ -254,6 +254,7 @@ AppSql& AppCursor();
 
 #endif
 
+
 struct StatementExecutor {
 	virtual bool Execute(const String& stmt) = 0;
 	virtual ~StatementExecutor() {}
@@ -298,6 +299,8 @@ protected:
 	bool                        (*error_handler)(String error, String stmt, int code, const char *scode, Sql::ERRORCLASS clss);
 
 	int                           status;
+	
+	One<Sql>                      sql;
 
 public:
 	virtual void                  Begin();
@@ -354,11 +357,10 @@ public:
 	int                           GetTime() const                         { return exectime; }
 
 	String                        GetUser()                               { return Sql(*this).GetUser(); }
+	
+	Sql&                          GetSessionSql();
 
 	operator                      bool() const                            { return IsOpen(); }
-
-	SqlSession();
-	virtual ~SqlSession();
 
 	int                           GetStatus()                             { return status; }
 	void                          SetStatus(int s)                        { status = s; WhenDatabaseActivity(*this); }
@@ -366,6 +368,10 @@ public:
 	bool                          operator != (int s) const               { return status != s; }
 
 	Callback1<const SqlSession&>  WhenDatabaseActivity;
+
+	SqlSession();
+	virtual ~SqlSession();
+
 };
 
 class OciConnection;
