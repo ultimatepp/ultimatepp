@@ -109,6 +109,7 @@ bool MySqlSession::Open(const char *connect) {
 }
 
 void MySqlSession::Close() {
+	SessionClose();
 	if(mysql) {
 		mysql_close(mysql);
 		mysql = NULL;

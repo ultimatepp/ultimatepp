@@ -830,6 +830,7 @@ SqlConnection *Oracle7::CreateConnection() {
 }
 
 void Oracle7::Close() {
+	SessionClose();
 	while(!clink.IsEmpty()) {
 		clink.GetNext()->Clear();
 		clink.GetNext()->Unlink();

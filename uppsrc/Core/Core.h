@@ -5,6 +5,7 @@
 
 #if defined(flagMT)
 	#define _MULTITHREADED
+	#define MULTITHREADED
 	#ifdef flagDLL
 		#define flagUSEMALLOC
 	#endif

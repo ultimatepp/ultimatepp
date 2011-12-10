@@ -1304,6 +1304,7 @@ bool Oracle8::Login(const char *name, const char *pwd, const char *db, bool use_
 }
 
 void Oracle8::Logoff() {
+	SessionClose();
 	LOG("Oracle8::Logoff, #" << conn_count << " connections pending");
 	while(!clink.IsEmpty()) {
 		clink.GetNext()->Clear();
