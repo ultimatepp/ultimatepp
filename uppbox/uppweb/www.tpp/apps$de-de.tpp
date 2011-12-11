@@ -32,8 +32,8 @@ lang entwickelt wurde. Derzeit umfasst es mehr als 20 U`+`+/Oracle
 Client`-Server`-Anwendungen, 450 Dialog`-Layout und Datenbankmodelle 
 mit mehr als 250 Tabellen (mit .sch Dateien gepflegt).&]
 [s0; &]
-[s0; 
-@@image:1040&781
+[s0;= 
+@@image:1176&881
 €ƒÀƒñ‚€€ƒı€€€€ø×œì½‰¸”Õß·ßê¸ä¾şçòÏŒßÌ“ÃÌÄ¸æ±™“­™Ä“Éâ¢¦€ñ—Ñ”ñÃ‘à—ÑÀÁöËÍ¾‰¸ã‚šã
 §¾³£Ÿñ×±® ‹Ñˆ‘½¸ëßÛ ¨ÉøÆ“óÿ§î¹à”õë¹ıºë˜ôõÕŸ÷ışÕÏıªÏºµÃªúïÕ¯íí€€€€€€€€€€€€€€
 €€€€€€€€€€€€€€€€€€€€€€€€Š‹Ü··ö»ÚñÈîØ÷œÇœ°®³½¶çüúîÉİëÓ¬ÿîöşëÁ®Ï¾÷öóîóœ¼³ğÎÎœ
@@ -462,7 +462,7 @@ mit mehr als 250 Tabellen (mit .sch Dateien gepflegt).&]
 ÿºïı¹»ùÈ”·œıö£…Ç×‡Ğæšö´£‘ÑåŒš´á—ËÜæŞì¹º€úÖ“çĞ µ¡³á µâ¹«şÆ–×ĞŒõ«®¹á„şòëŸñü‰ÿ£›“î
 ‡»š‰€€•°€¦ş¨’Â„ˆ¡„Âˆ¡¡„Âˆ¡„ˆÂˆ¡„ÂˆÂ¡„Âˆ¡„ĞÂˆ¡„²ûÑùŸÜø»ä
  
-@@image:974&754
+@@image:1117&870
 €ƒŒƒÜ‚€€ƒ¤ı€€€€ø×œí‰˜”åó°›İÅìÿÿìşÿ®»ùÉ¨î´ë²¹ÖÍ•öÆÜºãÌÈÌ´«šÈ„Úèˆ¤ ˆŠŠ€²œƒ‚ŠšÑ
 æĞäÖˆêŒ¢•ÜàÖ“Å¢„†Ğ†Œ‚ºœÒóôÜ¶·°á²ÿ¯ç›êêÿê«úúëîªïîêê÷ıŞ‡ÿ§úëªêê®ô¾Şªûº“Éü®½©²Ïè
 ëÍ×ÍØê÷ú£û¶‹‡ÌÚ¡ˆœ¸¥½òÎÄäÄÄÄÂ©ëÅûÕş“ªíÊÚâ‘ı£ªèÏ½¤İÉûüÉÙœ»ìê‡•Ã×Œıºşï›À“—´ŠŸŞĞ
@@ -807,7 +807,7 @@ Clients bedienen kannst.&]
 Beschreibung ist hier] zu finden).&]
 [s0; &]
 [s0; &]
-[s0; 
+[s0;= 
 @@image:1195&960
 ˆƒ½ƒ›‚€€‚åı€€€€ø£œìİ¡øÜ¼¸®œüáè‡€‡‡Ç‡‡‡Ç€‹‡‡Ç‡‡‹€Ë‡‹‹Ç‹‹ ƒÃ‹ƒ‹ó»íçÄ‘¥×²’Ï»¶·Öù´Ï
 §çÈ²¤»ñ›­ÙÉ‡¡Ÿ†îşØÒ‹Ï÷‰Şèı½ä¾¼¬éé×‡É—£Èó­ÂÆŞ éë™¡åÚæ­åšŒµúãäß‹ßëÊÌ——¾ßÿ’ªƒÚ›¨ƒ
@@ -5373,7 +5373,7 @@ des tschechischem Flussnetztes zu analysieren.&]
 [s0;> (Eine [^topic`:`/`/uppweb`/projects`/winzpv`$de`-de^ genauere 
 Beschreibung ist hier] zu finden).&]
 [s0;> &]
-[s0; 
+[s0;= 
 @@image:1202&783
 ‚ƒÂƒó‚€€ƒı€€€€ø§œì«øÜº‚“†‹‹Ë‹€‹‹ËƒƒƒÃÀ‹ƒ‹­¼°£ğ§‡–––†Ø†®ÜºĞğá«ş¶åËóùæÔ¬û¯ÙÏ¼Š
 êŸ­¼ºØ–åÿ×“±üüòößãçöÇ¿í¨ëíõøÖ½îïúíÃ¦úÚ¶­‘æÛ†İõÌ’Ãİ…‰¡‚Â„ˆ‘Ööó±íì¯ºµéÃÓŠ»öû¸
@@ -16960,7 +16960,7 @@ grÃ¶ÃŸte Akzeptant auf Benutzerseite.&]
 [s0;*3 &]
 [s0; Keine U`+`+ Anwendungsliste wÃ¤re ohne [*_ TheIDE] selbst vollstÃ¤ndig. 
 TheIDE ist nicht nur die bevorzugte Entwicklungsumgebung von 
-U`+`+, sie ist ebenso ein [*/ proof of concept] der U`+`+ Design`-Prinzipien. 
+U`+`+, sie ist ebenso ein `"[*/ proof of concept`"] der U`+`+ Design`-Prinzipien. 
 TheIDE wurde mit TheIDE und U`+`+ entwickelt (was ein interessantes 
 `"Huhn oder Ei`" Problem aufwirft...).&]
 [s0;3 &]
