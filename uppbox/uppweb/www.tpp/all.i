@@ -126,8 +126,12 @@ TOPIC("vsswing$cs-cz")
 #include "vsswing$cs-cz.tppi"
 END_TOPIC
 
-TOPIC("tutoring$en-us")
-#include "tutoring$en-us.tppi"
+TOPIC("download$de-de")
+#include "download$de-de.tppi"
+END_TOPIC
+
+TOPIC("download$en-us")
+#include "download$en-us.tppi"
 END_TOPIC
 
 TOPIC("comparison$de-de")
@@ -178,8 +182,12 @@ TOPIC("idess$cs-cz")
 #include "idess$cs-cz.tppi"
 END_TOPIC
 
-TOPIC("apps$ru-ru")
-#include "apps$ru-ru.tppi"
+TOPIC("Funding$de-de")
+#include "Funding$de-de.tppi"
+END_TOPIC
+
+TOPIC("Funding$en-us")
+#include "Funding$en-us.tppi"
 END_TOPIC
 
 TOPIC("chss$de-de")

@@ -2775,7 +2775,7 @@ für jede U`+`+ Anwendung bequem verfügbar.&]
 &]
 [s20;= [*1 RichEdit]&]
 [s20; &]
-[s20; Du kannst [^topic`:`/`/CtrlLib`/src`/index`$en`-us^ hier] eine 
+[s20; Du kannst [^topic`:`/`/CtrlLib`/src`/index`$de`-de^ hier] eine 
 komplette, alphabetische List der grundsätzlichen U`+`+ Steuerelemente 
 finden.&]
 [s19; SQL Programmierung&]
@@ -2879,7 +2879,7 @@ unserer Entwicklungskosten ermöglicht. Die meisten Schnittstellen
 scheinen fertig und optimal zu sein. Es gibt natürlich noch 
 etwas Arbeit, die meiste in der Dokumentation der IDE.&]
 [s20; Wenn du unsere Ultimate`+`+ Art zu programmieren interessant 
-findest, hindert dich nichts daran es [^topic`:`/`/uppweb`/www`/download`$en`-us^ h
+findest, hindert dich nichts daran es [^topic`:`/`/uppweb`/www`/download`$de`-de^ h
 erunterzuladen]. Aber sei vorsichtig: Du solltest immer bereit 
 sein ein paar alte Gewohnheiten und Denkweisen, wie `"Das haben 
 wir schon immer so gemacht`", über Bord zu werden, sonst könnte 

@@ -22,9 +22,8 @@ topic "Applications developed using U++";
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
-[s2;a0; [+150 Examples of applications developed using U`+`+]&]
-[s2;>^topic`:`/`/uppweb`/www`/apps`$ru`-ru^1 &]
-[s0;^topic`:`/`/uppweb`/www`/comparison`$ru`-ru^1 &]
+[s2;a0; Examples of applications developed using U`+`+&]
+[s0; &]
 [s0; One of the most complex systems developed using U`+`+ and in 
 fact the initial impulse do develop it is large municipal agenda 
 system [*_ IDIS]. being developed for more than 9 years. At the 
