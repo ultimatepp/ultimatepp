@@ -17,7 +17,7 @@ file
 	SqlSet.cpp optimize_speed,
 	SqlStatement.cpp optimize_speed,
 	Sqls.h,
-	Sql.cpp,
+	Sql.cpp optimize_speed,
 	Session.cpp,
 	Script.cpp,
 	MassInsert.cpp,
