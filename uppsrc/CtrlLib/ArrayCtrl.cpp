@@ -2444,6 +2444,8 @@ void ArrayCtrl::Serialize(Stream& s)
 void ArrayCtrl::Reset() {
 	header.Reset();
 	idx.Clear();
+	id_ndx.Clear();
+	id_ndx.Add(Id());
 	column.Clear();
 	control.Clear();
 	nocursor = false;
