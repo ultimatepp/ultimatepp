@@ -450,17 +450,19 @@ void ExportPage(int i)
 			googleFile = "";
 	}
 	String strlang;
+	String jslang;
 	Array <String> arrLangs;
 	for (int il = 0; il < languages.GetCount(); ++il) {
-		if (il != ilang) {
-			String topic = ChangeTopicLanguage(path, languages[il]);
-			int itopic;
-			if ((itopic = tt.Find(topic)) >= 0) {
-				if (tt[itopic].title.Find(" (translated)") < 0) {
+		String topic = ChangeTopicLanguage(path, languages[il]);
+		int itopic;
+		if ((itopic = tt.Find(topic)) >= 0) {
+			if (tt[itopic].title.Find(" (translated)") < 0) {
+				if (il != ilang) {
 					if (!strlang.IsEmpty())
 						strlang << ", ";
 					arrLangs.Add("[^" + links[itopic] + "^ [2 " + ToLower(GetNativeLangName(languages[il])) + "]]");
 				}
+				jslang+="'"+ links[itopic] +"':'" + GetNativeLangName(languages[il]) + "',";
 			}
 		}
 	}
@@ -571,7 +573,13 @@ void ExportPage(int i)
 					footer
 				)
 			)
-		);
+		) + Htmls("<script>a={"+jslang+"};"
+				"p=window.location.pathname.split(\"/\");p=p[p.length-1];"
+				"s='<select id=\"lang\" onchange=\"window.location=document.getElementById(\\'lang\\').value;\">';"
+				"for(l in a){if(p==l){d=\" selected=1\"}else{d=\"\"}s+='<option value=\"'+l+'\"'+d+'>'+a[l]+'</option>'}"
+				"s+='</select>';"
+				"document.getElementById('langs').innerHTML=s;"
+				"document.getElementById('langbox').style.display='block';</script>");
 
 	String topicTitle = tt.GetKey(i);
 	String pageTitle = tt[i].title;
@@ -818,13 +826,21 @@ CONSOLE_APP_MAIN
 		bi << BarLink(Www("Funding", languages[i]), t_("Funding Ultimate++"));
 	//	bcom << BarLink(Www("helpus"), "Getting involved");
 	//	bcom << BarLink("mailto: upp@ntllib.org", "Contact developers");
-	
+		
 		bsearch << BarCaption(t_("Search on this site"));
 		bsearch << SearchBar("www.ultimatepp.org");
 	
-		//blang << BarCaptionLang(t_("Languages"));
-		//blang << BarLink(Www("English", languages[i]), t_("Bazaar"));
-		//blang << BarLink(Www("Russian", languages[i]), t_("Bazaar"));
+		blang << BarCaption(t_("Language"));
+		blang << Htmls("<div id=\"langbox\" style=\"display:none;\">") + 
+		         BarItem(HtmlPackedTable().Width(-100)
+		           / HtmlRow() / (
+		               HtmlCell() / Wimg(WWW::Language) +
+		               HtmlCell() / Htmls("<div id=\"langs\">"+GetNativeLangName(languages[i])+"</div>")
+		            ),"border: 0px solid black;"
+		              "padding-left:6px; padding-right:0px;"
+		              "padding-top:4px; padding-bottom:4px;"
+		         ) + Htmls("</div>");
+
 		
 		HtmlTag bf = HtmlPackedTable()
 		       .Width(-100)
@@ -837,8 +853,8 @@ CONSOLE_APP_MAIN
 	//	      bf / bdoc + div +
 	//	      bf / bcom + div +
 	//	      bf / bcon + div +
-		      bf / bsearch + div;
-		      //bf / blang;
+		      bf / bsearch + div +
+		      bf / blang + div;
 	}
 	SetLanguage(lang);
 
