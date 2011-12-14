@@ -75,6 +75,11 @@ protected:
 	virtual SqlConnection *CreateConnection() = 0;
 	virtual ~SqlSource() {}
 	friend class Sql;
+	SqlSource() {}
+
+private:
+	void operator=(const SqlSource&);
+	SqlSource(const SqlSource&);
 };
 
 
@@ -238,6 +243,10 @@ public:
 	~Sql();
 	
 	void operator=(SqlSession& s); // this only works with SQL and SQLR...
+
+private:
+	void operator=(const Sql&);
+	Sql(const Sql&);
 };
 
 #ifndef NOAPPSQL
