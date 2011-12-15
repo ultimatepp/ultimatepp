@@ -92,8 +92,6 @@ class Sql {
 	friend Sql& AppCursorR();
 
 	Value       Select0(const String& what);
-	enum _NULLSQL { NULLSQL };
-	Sql(_NULLSQL) { cn = NULL; }
 
 public:
 	void   SetSession(SqlSource& src);
@@ -249,6 +247,10 @@ public:
 private:
 	void operator=(const Sql&);
 	Sql(const Sql&);
+};
+
+struct Sql0 : Sql {
+	Sql0() : Sql((SqlConnection *)NULL) {}
 };
 
 #ifndef NOAPPSQL
