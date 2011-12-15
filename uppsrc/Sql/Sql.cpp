@@ -551,8 +551,8 @@ bool Sql::Update(Fields nf, SqlId table) {
 	return Update(nf, (const char *)~table);
 }
 
-void Sql::Assign(SqlSource& s) {
-	if(cn) delete cn;
+void Sql::SetSession(SqlSource& s) {
+	Detach();
 	cn = s.CreateConnection();
 }
 
@@ -624,6 +624,13 @@ void Sql::Detach()
 {
 	if(cn) delete cn;
 	cn = NULL;
+	param.Clear();
+}
+
+void Sql::Attach(SqlConnection *connection)
+{
+	Detach();
+	cn = connection;
 }
 
 Sql::~Sql() {
