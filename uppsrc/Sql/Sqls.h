@@ -92,12 +92,14 @@ class Sql {
 	friend Sql& AppCursorR();
 
 	Value       Select0(const String& what);
-	void        Assign(SqlSource& src);
-	void        Detach();
 	enum _NULLSQL { NULLSQL };
 	Sql(_NULLSQL) { cn = NULL; }
 
 public:
+	void   SetSession(SqlSource& src);
+	void   Attach(SqlConnection *connection);
+	void   Detach();
+
 	String Compile(const SqlStatement& s);
 
 	void   Clear();
