@@ -153,7 +153,7 @@ Sql& AppCursor()
 		return sGlobalSession->GetSessionSql();
 	static Sql *empty;
 	ONCELOCK {
-		static Sql h(Sql::NULLSQL);
+		static Sql0 h;
 		empty = &h;
 	}
 	return *empty;
@@ -175,7 +175,7 @@ Sql& AppCursorR()
 		return sGlobalSession->GetSessionSqlR();
 	static Sql *empty;
 	ONCELOCK {
-		static Sql h(Sql::NULLSQL);
+		static Sql0 h;
 		empty = &h;
 	}
 	return *empty;
