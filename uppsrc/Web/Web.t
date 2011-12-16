@@ -19,6 +19,8 @@ itIT("Se non venite reindirizzati automaticamente usare %s.")
 nlNL("Als je niet automatisch bent omgeleid gebruik gaarne %s.")
 plPL("Je\305\233li nie zosta\305\202e\305\233 automatycznie przekierowany u\305\274yj "
      "prosz\304\231 %s.")
+ptBR("Se voc\303\252 n\303\243o for redirecionado automaticamente, por favor "
+     "use %s.")
 roRO("Dac\304\203 nu sunte\305\243i redirecta\305\243i automat folosi\305\243i "
      "%s.")
 ruRU("\320\225\321\201\320\273\320\270 \320\222\321\213 \320\275\320\265 \320\277\320\265\321\200\320\265\320\275\320\260\320\277\321\200\320\260\320\262\320\273\320\265\320\275\321\213 "
@@ -46,6 +48,7 @@ huHU("ezt a hivatkoz\303\241st")
 itIT("questo collegamento")
 nlNL("deze link")
 plPL("tego odno\305\233nika")
+ptBR("esse link")
 roRO("acest link")
 ruRU("\321\215\321\202\321\203 \321\201\321\201\321\213\320\273\320\272\321\203")
 skSK("tento odkaz")
@@ -65,6 +68,7 @@ huHU("\303\201tir\303\241ny\303\255t\303\241s m\303\241sik webc\303\255mre")
 itIT("Reindirizzamento ad un altro indirizzo web")
 nlNL("Omleiding naar een ander web adres")
 plPL("Przekierowanie do innej strony")
+ptBR("Redirecionamento para outro endere\303\247o web")
 roRO("Redirectare spre o alt\304\203 adres\304\203 web")
 ruRU("\320\237\320\265\321\200\320\265\320\275\320\260\320\277\321\200\320\260\320\262\320\273\320\265\320\275\320\270\320\265 "
      "\320\275\320\260 \320\264\321\200\321\203\320\263\320\276\320\271 \320\262\320\265\320\261 "
@@ -86,6 +90,7 @@ huHU("... (teljes hossz: %d b\303\241jt)")
 itIT("... (lunghezza totale: %d bytes)")
 nlNL("... (totale lengte: %d bytes)")
 plPL("... (ca\305\202kowita d\305\202ugo\305\233\304\207: %d bajt\303\263w)")
+ptBR("... (Comprimento total: %d bytes)")
 roRO("... (lungime total\304\203: %d bytes)")
 ruRU("... (\320\277\320\276\320\273\320\275\321\213\320\271 \321\200\320\260\320\267\320\274\320\265\321\200: "
      "%d \320\261\320\260\320\271\321\202)")
@@ -111,6 +116,7 @@ itIT("Il server web \303\250 impossibilitato ad esaudire la vostra richiesta:\n"
 nlNL("Deze web server kan niet uw aanvraag behandelen:\n<p>\n")
 plPL("Ten serwer sieciowy nie jest w stanie odpowiedzie\304\207 na twoje \305\274\304\205danie:\n"
      "<p>\n")
+ptBR("O servidor web \303\251 incapaz de satisfazer o seu pedido:\n<p>\n")
 roRO("Serverul nu este \303\256n masur\304\203 s\304\203 va satisfac\304\203 "
      "cererea:\n<p>\n")
 ruRU("\320\255\321\202\320\276\321\202 \320\262\320\265\320\261 \321\201\320\265\321\200\320\262\320\265\321\200 "
@@ -137,6 +143,7 @@ huHU("Ok:")
 itIT("Motivo:")
 nlNL("Reden:")
 plPL("Pow\303\263d:")
+ptBR("Motivo:")
 roRO("Motiv:")
 ruRU("\320\237\321\200\320\270\321\207\320\270\320\275\320\260:")
 skSK("D\303\264vod chyby: ")
@@ -156,6 +163,7 @@ huHU("R\303\251szletes lek\303\251r\303\251si adatok:")
 itIT("Dati richiesta dettagliati:")
 nlNL("G\303\253detaileerde query data:")
 plPL("Szczeg\303\263\305\202owe dane zapytania:")
+ptBR("Query detalhada de consulta:")
 roRO("Date detaliate despre cerere:")
 ruRU("\320\224\320\265\321\202\320\260\320\273\320\270 \320\267\320\260\320\277\321\200\320\276\321\201\320\260:")
 skSK("Detailn\303\251 inform\303\241cie o dotaze:")
@@ -175,6 +183,7 @@ huHU("Webkiszolg\303\241l\303\263 hiba")
 itIT("Errore di server web")
 nlNL("Web server fout")
 plPL("B\305\202\304\205d serwera sieciowego")
+ptBR("Erro de servidor Web")
 roRO("Eroare de server web")
 ruRU("\320\236\321\210\320\270\320\261\320\272\320\260 \320\262\320\265\320\261 "
      "\321\201\320\265\321\200\320\262\320\265\321\200\320\260")
@@ -200,6 +209,7 @@ huHU("%s:%d id\305\221t\303\272ll\303\251p\303\251s fejl\303\251cek fogad\303\24
 itIT("%s:%d tempo scaduto nella ricezione delle intestazioni")
 nlNL("%s:%d headers zijn niet op tijd ontvangen")
 plPL("%s:%d przekroczono czas odbierania nag\305\202\303\263wka")
+ptBR("%s:%d tempo ao receber cabe\303\247alhos expirou")
 roRO("%s:%d ob\310\233inerea antetelor a dep\304\203\310\231it limita de timp")
 ruRU("%s:%d \320\277\321\200\320\265\320\262\320\270\321\210\320\265\320\275 "
      "\320\270\320\275\321\202\320\265\321\200\320\262\320\260\320\273 \320\276\320\266\320\270\320\264\320\260\320\275\320\270\321\217 "
@@ -226,6 +236,7 @@ huHU("%s:%d: id\305\221t\303\272ll\303\251p\303\251s a szerverhez kapcsol\303\26
 itIT("%s:%d: tempo scaduto durante il collegamento al server")
 nlNL("%s:%d: niet op tijd verbonden met de host")
 plPL("%s:%d przekroczono czas \305\202\304\205czenia si\304\231 z hostem")
+ptBR("%s:%d: conex\303\243o para host expirou")
 roRO("%s:%d: dep\304\203\310\231ire de limit\304\203 de timp la conectare")
 ruRU("%s:%d \320\277\321\200\320\265\320\262\320\270\321\210\320\265\320\275 "
      "\320\270\320\275\321\202\320\265\321\200\320\262\320\260\320\273 \320\276\320\266\320\270\320\264\320\260\320\275\320\270\321\217 "
@@ -250,6 +261,7 @@ huHU("%s:%d: id\305\221t\303\272ll\303\251p\303\251s a k\303\251r\303\251s elk\3
 itIT("%s:%d: tempo scaduto nella richiesta al server")
 nlNL("%s:%d: aanvragen niet op tijd verzonden naar de server")
 plPL("%s:%d: przekroczono czas wysy\305\202ania \305\274\304\205dania do serwera")
+ptBR("%s:%d: tempo expirou ar enviar solicita\303\247\303\243o para o servidor")
 roRO("%s:%d: dep\304\203\310\231ire de limit\304\203 de timp la trimitere cerere "
      "spre server")
 ruRU("%s:%d: \321\202\320\260\320\271\320\274\320\260\321\203\321\202 \320\276\321\202\320\277\321\200\320\260\320\262\320\272\320\270 "
@@ -272,6 +284,7 @@ huHU("%s:%d: \303\251rv\303\251nytelen kiszolg\303\241l\303\263i v\303\241lasz")
 itIT("%s:%d: risposta server invalida : %s")
 nlNL("%s:%d: ongeldige reactie van de server: %s")
 plPL("%s:%d: niepoprawna odpowied\305\272 serwera: %s")
+ptBR("%s:%d: resposta do servidor inv\303\241lida: %s")
 roRO("%s:%d: r\304\203spuns invalid de la server: %s")
 ruRU("%s:%d: \320\275\320\265\320\277\321\200\320\260\320\262\320\270\320\273\321\214\320\275\321\213\320\271 "
      "\320\276\321\202\320\262\320\265\321\202 \321\201\320\265\321\200\320\262\320\265\321\200\320\260: "
@@ -297,6 +310,7 @@ huHU("%s:%d: maxim\303\241lis adathossz t\303\272ll\303\251p\303\251se (%d B)")
 itIT("%s:%d: massima lunghezza dati superata (%d B)")
 nlNL("%s:%d: maximum data lengte overschreden (%d B)")
 plPL("%s:%d: przekroczono dopuszczalny rozmiar danych (%d B)")
+ptBR("%s:%d: comprimento m\303\241ximo de dados excedido (%d B)")
 roRO("%s:%d: dimeniunea maxim\304\203 a datelor a fost dep\304\203\310\231it\304\203 "
      "(%d B)")
 ruRU("%s:%d: \320\277\321\200\320\265\320\262\321\213\321\210\320\265\320\275 "
@@ -327,6 +341,7 @@ itIT("%s:%d: massima lunghezza intestazione superata /%d B)")
 nlNL("%s:%d: maximum header lengte overschreden (%d B)")
 plPL("%s:%d: przekroczono dopuszczaln\304\205 d\305\202ugo\305\233\304\207 nag\305\202\303\263wka "
      "(%d B)")
+ptBR("%s:%d: tamaho m\303\241ximo de cabe\303\247alho excedido (%d B)")
 roRO("%s:%d: dimeniunea maxim\304\203 a antetului a fost dep\304\203\310\231it\304\203 "
      "(%d B)")
 ruRU("%s:%d: \320\277\321\200\320\265\320\262\321\213\321\210\320\265\320\275 "
@@ -357,6 +372,7 @@ huHU("%s:%d: id\305\221t\303\272ll\303\251p\303\251s a kiszolg\303\241l\303\263 
 itIT("%s:%d: tempo scaduto nella ricezione risposta dal server")
 nlNL("%s:%d: te lang gewacht op reactie van de server")
 plPL("%s:%d: przekroczono czas oczekiwania na odpowied\305\272 serwera")
+ptBR("%s:%d: Esgotado o tempo limite ao receber resposta do servidor")
 roRO("%s:%d: limit\304\203 de timp dep\304\203\310\231it\304\203 la primirea "
      "r\304\203spunsului de la server")
 ruRU("%s:%d: \321\202\320\260\320\271\320\274\320\260\321\203\321\202 \320\277\321\200\320\270 "
@@ -382,6 +398,7 @@ huHU("A maxim\303\241lis tartalomhossz t\303\272ll\303\251pve: %d")
 itIT("Dimensione contenuto massima superata")
 nlNL("Maximum inhoud grootte overschreden: %d")
 plPL("Przekroczono dopuszczalny rozmiar zawarto\305\233ci: %d")
+ptBR("Tamanho m\303\241ximo do conte\303\272do excedido: %d")
 roRO("Dimeniunea maxim\304\203 a con\310\233inutului dep\304\203\310\231it\304\203: "
      "%d")
 ruRU("\320\237\321\200\320\265\320\262\321\213\321\210\320\265\320\275 \320\274\320\260\320\272\321\201\320\270\320\274\320\260\320\273\321\214\320\275\321\213\320\271 "
@@ -406,6 +423,7 @@ huHU("R\303\251szleges beolvas\303\241s: %d a %d-b\303\263l")
 itIT("Ricezione parziale : %d su %d")
 nlNL("Gedeeltelijke invoer: %d van de %d")
 plPL("Dane cz\304\231\305\233ciowe: %d z %d")
+ptBR("Input parcial: %d de %d")
 roRO("Intr\304\203ri par\310\233iale: %d din %d")
 ruRU("\320\247\320\260\321\201\321\202\320\270\321\207\320\275\321\213\320\271 "
      "\320\262\320\262\320\276\320\264: %d \320\270\320\267 %d")
@@ -429,6 +447,7 @@ huHU("")
 itIT("Nome utente:%nbsp;")
 nlNL("")
 plPL("")
+ptBR("Nome de usu\303\241rio:&nbsp")
 roRO("Utilizator:&nbsp;")
 ruRU("\320\237\320\276\320\273\321\214\320\267\320\276\320\262\320\260\321\202\320\265\320\273\321\214:&nbsp;")
 skSK("")
@@ -448,6 +467,7 @@ huHU("")
 itIT("Password:&nbsp;")
 nlNL("")
 plPL("")
+ptBR("Senha:&nbsp")
 roRO("Parola:&nbsp;")
 ruRU("\320\237\320\260\321\200\320\276\320\273\321\214:&nbsp;")
 skSK("")
@@ -467,6 +487,7 @@ huHU("")
 itIT("Collegamento riuscito")
 nlNL("")
 plPL("")
+ptBR("A conex\303\243o bem-sucedida")
 roRO("Conexiune reusit\304\203")
 ruRU("\320\241\320\276\320\265\320\264\320\270\320\275\320\265\320\275\320\270\320\265 "
      "\321\203\321\201\320\277\320\265\321\210\320\275\320\276")
@@ -488,6 +509,7 @@ huHU("")
 itIT("\n\n<p>Il collegamento al computer remoto \303\250 riuscito. ")
 nlNL("")
 plPL("")
+ptBR("")
 roRO("\n\n<p>Conexiunea cu computerul de la distan\310\233\304\203 a reu\310\231it. ")
 ruRU("\n\n<p>\320\241\320\276\320\265\320\264\320\270\320\275\320\265\320\275\320\270\320\265 "
      "\321\201 \321\203\320\264\320\260\320\273\320\265\320\275\320\275\321\213\320\274 "
@@ -516,6 +538,7 @@ itIT("Il codice di accesso perder\303\240 la sua validit\303\240 dopo mezz'ora "
      "di inattivit\303\240 o su richiesta esplicita.\n")
 nlNL("")
 plPL("")
+ptBR("")
 roRO("Codul de acces \303\256\310\231i va pierde valabilitatea dup\304\203 jum\304\203tate "
      "de ora de inactivitate sau explicit la cerere.\n")
 ruRU("\320\232\320\276\320\264 \320\264\320\276\321\201\321\202\321\203\320\277\320\260 "
@@ -541,6 +564,7 @@ huHU("")
 itIT("Cambiare password:%nbsp;")
 nlNL("")
 plPL("")
+ptBR("Alterar senha:&nbsp")
 roRO("Schimb\304\203 parola:&nbsp;")
 ruRU("\320\230\320\267\320\274\320\265\320\275\320\270\321\202\321\214 \320\277\320\260\321\200\320\276\320\273\321\214:&nbsp;")
 skSK("")
@@ -560,6 +584,7 @@ huHU("")
 itIT("Ripetere password:&nbsp;")
 nlNL("")
 plPL("")
+ptBR("Repita a senha:&nbsp")
 roRO("Repet\304\203 parola:&nbsp;")
 ruRU("\320\237\320\276\320\262\321\202\320\276\321\200\320\270\321\202\320\265 "
      "\320\277\320\260\321\200\320\276\320\273\321\214:&nbsp;")
@@ -580,6 +605,7 @@ huHU("")
 itIT("Continuare ")
 nlNL("")
 plPL("")
+ptBR(" Continue ")
 roRO(" Continu\304\203 ")
 ruRU("\320\237\321\200\320\276\320\264\320\276\320\273\320\266\320\265\320\275\320\270\320\265")
 skSK("")
@@ -599,6 +625,7 @@ huHU("")
 itIT("Introdurre una nuova password.")
 nlNL("")
 plPL("")
+ptBR("")
 roRO("Introduce\310\233i noua parol\304\203.")
 ruRU("\320\237\320\276\320\266\320\260\320\273\321\203\320\271\321\201\321\202\320\260 "
      "\320\262\320\262\320\265\320\264\320\270\321\202\320\265 \320\275\320\276\320\262\321\213\320\271 "
@@ -620,6 +647,7 @@ huHU("")
 itIT("Introdurre la password un'altra volta.")
 nlNL("")
 plPL("")
+ptBR("")
 roRO("Introduce\310\233i parola de dou\304\203 ori.")
 ruRU("\320\237\320\276\320\266\320\260\320\273\321\203\320\271\321\201\321\202\320\260 "
      "\320\262\320\262\320\265\320\264\320\270\321\202\320\265 \320\275\320\276\320\262\321\213\320\271 "
@@ -642,6 +670,7 @@ huHU("")
 itIT("La password \303\250 scaduta. Eseguire nuovamente l'accesso.")
 nlNL("")
 plPL("")
+ptBR("")
 roRO("Parola a expirat. Autentific\304\203-te din nou.")
 ruRU("\320\222\321\200\320\265\320\274\321\217 \320\277\320\260\321\200\320\276\320\273\321\217 "
      "\320\270\321\201\321\202\320\265\320\272\320\273\320\276. \320\237\320\276\320\266\320\260\320\273\321\203\321\201\321\202\320\260 "
@@ -663,6 +692,7 @@ huHU("")
 itIT("Password e/o nome utente non validi")
 nlNL("")
 plPL("")
+ptBR("Nome de usu\303\241rio e/ou senha inv\303\241lidos")
 roRO("Parol\304\203 \310\231i/sau utilizator gre\310\231it")
 ruRU("\320\235\320\265\320\277\321\200\320\260\320\262\320\273\320\270\321\214\320\275\321\213\320\271 "
      "\320\277\320\260\321\200\320\276\320\273\321\214 \320\270/\320\270\320\273\320\270 "
@@ -687,6 +717,7 @@ huHU("Kommunik\303\241ci\303\263s hiba: Id\305\221t\303\272ll\303\251p\303\251s"
 itIT("Comunicazione fallita: Tempo scaduto.")
 nlNL("Communicatie Mislukt: Te lang moeten wachten")
 plPL("")
+ptBR("")
 roRO("Eroare \303\256n comunicare: Limit\304\203 de timp dep\304\203\310\231it\304\203.")
 ruRU("\320\236\321\210\320\270\320\261\320\272\320\260 \321\201\320\262\321\217\320\267\320\270. "
      "\320\242\320\260\320\271\320\274\320\260\321\203\321\202.")
@@ -709,6 +740,7 @@ huHU("Hiba az adatok socket-re \303\255r\303\241sakor: kommunik\303\241ci\303\26
 itIT("Errore durante la scrittura nel socket: porta di comunicazione chiusa.")
 nlNL("Fout tijdens schrijven naar socket: communicatie poort gesloten.")
 plPL("")
+ptBR("")
 roRO("Eroare la scriere \303\256n soclu: portul de comunicare este \303\256nchis.")
 ruRU("\320\236\321\210\320\270\320\261\320\272\320\260 \320\277\320\276\321\201\321\213\320\273\320\272\320\270 "
      "\320\264\320\260\320\275\320\275\321\213\321\205 \320\262 \321\201\320\276\320\272\320\265\321\202: "
@@ -732,6 +764,8 @@ huHU("Hiba az adatok socket-re \303\255r\303\241sakor, hibak\303\263d: ")
 itIT("Errore di scrittura dati nel socket, codice di errore: ")
 nlNL("Fout tijdens schrijven naar socket, fout code: ")
 plPL("")
+ptBR("Erro de grava\303\247\303\243o de dados para socket, c\303\263digo de "
+     "erro:")
 roRO("Eroare la scriere \303\256n soclu, cod:")
 ruRU("\320\236\321\210\320\270\320\261\320\272\320\260 \320\277\320\276\321\201\321\213\320\273\320\272\320\270 "
      "\320\264\320\260\320\275\320\275\321\213\321\205 \320\262 \321\201\320\276\320\272\320\265\321\202: "
@@ -755,6 +789,8 @@ huHU("Hiba az adatok socket-r\305\221l olvas\303\241sakor:  kommunik\303\241ci\3
 itIT("Errore di lettura dati dal socket: porta di comunicazione chiusa.")
 nlNL("Fout tijdens lezen vanuit socket: communicatie poort gesloten.")
 plPL("")
+ptBR("Erro na leitura de dados de socket: Porta de comunica\303\247\303\243o "
+     "fechada")
 roRO("Eroare la citirea datelor din socket: portul de comunica\310\233ie este "
      "\303\256nchis.")
 ruRU("\320\236\321\210\320\270\320\261\320\272\320\260 \321\207\321\202\320\265\320\275\320\270\321\217 "
@@ -779,6 +815,7 @@ huHU("")
 itIT("Errore di lettura dati dal socket, codice di errore: ")
 nlNL("Fout tijdens lezen vanuit socket, fout code: %s")
 plPL("")
+ptBR("Erro de leitura de socket, c\303\263digo de erro: %s")
 roRO("Eroare citire socket, code de eroare: %s")
 ruRU("\320\236\321\210\320\270\320\261\320\272\320\260 \321\207\321\202\320\265\320\275\320\270\321\217 "
      "\320\264\320\260\320\275\320\275\321\213\321\205 \320\270\320\267 \321\201\320\276\320\272\320\265\321\202\320\260, "
@@ -803,6 +840,7 @@ huHU("A t\303\241voli g\303\251p nincs megadva.")
 itIT("Server non impostato.")
 nlNL("Host niet ingesteld.")
 plPL("")
+ptBR("")
 roRO("Host-ul nu este ales.")
 ruRU("\320\241\320\265\321\200\320\262\320\265\321\200 \320\275\320\265 \320\276\320\277\321\200\320\265\320\264\320\265\320\273\320\265\320\275")
 skSK("Hostite\304\276 nie je zadan\303\275.")
@@ -822,6 +860,7 @@ huHU("A fogad\303\263 g\303\251p nincs megadva.")
 itIT("Destinatario non impostato.")
 nlNL("Ontvanger niet ingesteld.")
 plPL("")
+ptBR("")
 roRO("Receptorul nu este ales")
 ruRU("\320\237\320\276\320\273\321\203\321\207\320\260\321\202\320\265\320\273\321\214 "
      "\320\275\320\265 \320\276\320\277\321\200\320\265\320\264\320\265\320\273\320\265\320\275")
@@ -845,6 +884,7 @@ huHU("pipe() hiba; hibak\303\263d = %d")
 itIT("errore pipe(); codice di errore = %d")
 nlNL("pijp() fout; fout code = %d")
 plPL("b\305\202\304\205d pipe(); kod b\305\202\304\231du = %d")
+ptBR("pipe() erro; c\303\263digo de erro = %d")
 roRO("eroare pipe(); cod = %d")
 ruRU("\320\276\321\210\320\270\320\261\320\272\320\260 pipe(); \320\272\320\276\320\264 "
      "\320\276\321\210\320\270\320\261\320\272\320\270 = %d")
@@ -866,6 +906,7 @@ huHU("fork() hiba; hibak\303\263d = %d")
 itIT("errore fork(); codice di errore = %d")
 nlNL("vork() fout; fout code = %d")
 plPL("b\305\202\304\205d fork(); kod b\305\202\304\231du = %d")
+ptBR("fork() erro; c\303\263digo de erro = %d")
 roRO("eroare fork(): cod = %d")
 ruRU("\320\276\321\210\320\270\320\261\320\272\320\260 fork(); \320\272\320\276\320\264 "
      "\320\276\321\210\320\270\320\261\320\272\320\270 = %d")
@@ -890,6 +931,7 @@ itIT("Apertura server '%s' / porta %d fallita, errore = %s")
 nlNL("Openen host '%s' / poort %d mislukt, fout = %s")
 plPL("\305\201\304\205czenie z hostem '%s' / port %d nie powiod\305\202o si\304\231, "
      "b\305\202\304\205d = %s")
+ptBR("Abertura de host '%s' / porta %d falhou, erro = %s")
 roRO("Se deschide host-ul '%s' / e\310\231uare pe portul %d, eroare = %s")
 ruRU("\320\237\320\276\320\264\321\201\320\276\320\265\320\264\320\270\320\275\320\265\320\275\320\270\320\265 "
      "\320\272 \321\205\320\276\321\201\321\202\321\203 '%s' / \320\277\320\276\321\200\321\202\321\203 "
@@ -916,6 +958,7 @@ huHU("Hiba a %s folyamat\n%s parancs futtat\303\241s\303\241n\303\241l")
 itIT("Errore nell'esecuzione del processo: %s\nComando: %s")
 nlNL("Fout tijdens het belopen van het proces: %s\nCommando: %s")
 plPL("B\305\202\304\205d uruchamiania procesu: %s\nKomenda: %s")
+ptBR("Processo de execu\303\247\303\243o de erro: %s\nComando: %s")
 roRO("Eroare execu\310\233ie proces: %s\nComanda: %s")
 ruRU("\320\236\321\210\320\270\320\261\320\272\320\260 \320\277\321\200\320\270 "
      "\320\267\320\260\320\277\321\203\321\201\320\272\320\265 \320\277\321\200\320\276\321\206\320\265\321\201\321\201\320\260: "
@@ -940,6 +983,7 @@ huHU("Kommunik\303\241ci\303\263s hiba; folyamat = %s")
 itIT("Errore di comunicazione; processo = %s")
 nlNL("Communicatie fout; proces = %s")
 plPL("B\305\202\304\205d komunikacji; proces = %s")
+ptBR("Erro de comunica\303\247\303\243o; processo = %s")
 roRO("Erare de comunicare, procesul = %s")
 ruRU("\320\236\321\210\320\270\320\261\320\272\320\260 \320\272\320\276\320\274\320\274\321\203\320\275\320\270\320\272\320\260\321\206\320\270\320\270; "
      "\320\277\321\200\320\276\321\206\320\265\321\201\321\201 = %s")
@@ -963,6 +1007,7 @@ huHU("Hi\303\241nyz\303\263 parancssor (g\303\251p = %s)")
 itIT("Linea di comando mancante (server = %s).")
 nlNL("Missende commando regel (host = %s)")
 plPL("Brak linii polece\305\204 (host = %s).")
+ptBR("")
 roRO("Linie de comand\304\203 negasit\304\203 (host = %s)")
 ruRU("\320\235\320\265 \321\203\320\272\320\260\320\267\320\260\320\275\320\260 "
      "\320\272\320\276\320\274\320\260\320\275\320\264\320\275\320\260\321\217 "
@@ -990,6 +1035,7 @@ huHU("Sikertelen socket-megnyit\303\241s %s:%d: %s")
 itIT("Impossibile aprire il socket %s:%d: %s")
 nlNL("Kan socket niet openen %s:%d: %s")
 plPL("")
+ptBR("N\303\243o \303\251 poss\303\255vel abrir socket %s:%d: %s")
 roRO("Nu se poate deschide soclul %s:%d: %s")
 ruRU("\320\235\320\265 \320\274\320\276\320\263\321\203 \320\276\321\202\320\272\321\200\321\213\321\202\321\214 "
      "\321\201\320\276\320\272\320\265\321\202 %s:%d: %s")
