@@ -169,6 +169,7 @@ private:
 	bool     norampwheel;
 	bool     animating;
 	bool     hints;
+	bool     open;
 	String   nulltext;
 	Color    color;
 

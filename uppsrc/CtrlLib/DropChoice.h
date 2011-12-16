@@ -14,7 +14,6 @@ protected:
 		
 		virtual void Deactivate() { table->PopupDeactivate(); }
 		virtual void CancelMode() { table->PopupCancelMode(); }
-		
 	};
 
 	int          droplines;
