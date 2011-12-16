@@ -466,6 +466,8 @@ void ExportPage(int i)
 			}
 		}
 	}
+	if(!jslang.IsEmpty())
+		jslang.Trim(jslang.GetCount()-1);
 	if (arrLangs.GetCount() > 0) {
 		for (int i = 0; i < arrLangs.GetCount(); ++i) {
 			if (i == arrLangs.GetCount()-1 && i != 0)
@@ -573,12 +575,13 @@ void ExportPage(int i)
 					footer
 				)
 			)
-		) + Htmls("<script>a={"+jslang+"};"
-				"p=window.location.pathname.split(\"/\");p=p[p.length-1];"
-				"s='<select id=\"lang\" onchange=\"window.location=document.getElementById(\\'lang\\').value;\">';"
+		) + Htmls("<script>var a={"+jslang+"};"
+				"var p=window.location.pathname.split(\"/\");p=p[p.length-1];"
+				"var s='<select id=\"lang\" onchange=\"window.location=document.getElementById(\\'lang\\').value;\">';"
 				"for(l in a){if(p==l){d=\" selected=1\"}else{d=\"\"}s+='<option value=\"'+l+'\"'+d+'>'+a[l]+'</option>'}"
 				"s+='</select>';"
-				"document.getElementById('langs').innerHTML=s;"
+				"var d=document.createElement('div');d.innerHTML=s;"
+				"var c=document.getElementById('langs');c.replaceChild(d,c.firstChild);"
 				"document.getElementById('langbox').style.display='block';</script>");
 
 	String topicTitle = tt.GetKey(i);
