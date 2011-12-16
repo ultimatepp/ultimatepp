@@ -504,6 +504,7 @@ void Ide::SyncT(int kind)
 		}
 		catch(CParser::Error& e) {
 			PutConsole(e);
+			Exclamation("Failed: \1" + e);
 			return;
 		}
 	}

@@ -317,7 +317,7 @@ Color ColorPopUp::Get() const
 }
 
 void ColorPopUp::PopupDeactivate() {
-	if(popup && popup->IsOpen() && !animating) {
+	if(popup && popup->IsOpen() && !animating && open) {
 		popup.Clear();
 		IgnoreMouseClick();
 		WhenCancel();
@@ -347,6 +347,7 @@ void ColorPopUp::PopUp(Ctrl *owner, Color c)
 
 	Rect rt = RectC(x, y, sz.cx, sz.cy);
 
+	open = false;
 	popup.Create();
 	popup->color = this;
 	popup->Add(*this);
@@ -374,6 +375,7 @@ void ColorPopUp::PopUp(Ctrl *owner, Color c)
 	if(!popup->IsOpen())
 		popup->PopUp(owner, true, true, true);
 	SetFocus();
+	open = true;
 }
 
 void ColorPopUp::Select()
@@ -389,6 +391,7 @@ ColorPopUp::ColorPopUp()
 	scolors = false;
 	animating = false;
 	hints = false;
+	open = false;
 	SetFrame(MenuFrame());
 	Add(ramp);
 	Add(wheel);
