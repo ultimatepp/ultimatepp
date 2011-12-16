@@ -117,7 +117,8 @@ void SchDbInfoReferences(const char *table);
 void SchDbInfoReferences(const char *table, const char *column);
 
 SqlBool FindSchJoin(const String& tables);
-String  GetSchColumns(const String& table);
+
+Vector<String>  GetSchColumns(const String& table);
 
 String ExportSch(SqlSession& session, const String& database);
 String ExportIds(SqlSession& session, const String& database);
