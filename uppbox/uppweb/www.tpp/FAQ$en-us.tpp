@@ -54,6 +54,7 @@ decouple GUI host platform from U`+`+ GUI libraries. It allows
 creating a new GUI backend (e.g. MacOSX or Wayland) without actually 
 changing U`+`+ sources.&]
 [s0;*4 &]
+[s0;*4 &]
 [s0; [*4 Installation]&]
 [s0; &]
 [s0; [* Win32]&]
