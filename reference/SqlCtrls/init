@@ -1,0 +1,6 @@
+#ifndef _SqlCtrls_icpp_init_stub
+#define _SqlCtrls_icpp_init_stub
+#include "CtrlLib/init"
+#include "SqlCtrl/init"
+#include "plugin\sqlite3/init"
+#endif

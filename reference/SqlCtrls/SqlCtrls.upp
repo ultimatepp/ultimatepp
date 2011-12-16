@@ -1,0 +1,16 @@
+description "This package demostrates the use of SqlCtrls GUI-SQL dialog mapping class\377";
+
+uses
+	CtrlLib,
+	SqlCtrl,
+	plugin\sqlite3;
+
+file
+	SqlCtrls.h,
+	Model.sch,
+	main.cpp,
+	SqlCtrls.lay;
+
+mainconfig
+	"" = "GUI SSE2";
+

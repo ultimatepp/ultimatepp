@@ -1,0 +1,18 @@
+LAYOUT(PersonLayout, 260, 116)
+	ITEM(Label, dv___0, SetLabel(t_("First Name")).LeftPosZ(8, 60).TopPosZ(8, 21))
+	ITEM(EditString, name, LeftPosZ(72, 180).TopPosZ(8, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Last Name")).LeftPosZ(8, 60).TopPosZ(32, 21))
+	ITEM(EditString, lastname, LeftPosZ(72, 180).TopPosZ(32, 19))
+	ITEM(Label, dv___4, SetLabel(t_("Age")).LeftPosZ(8, 60).TopPosZ(56, 20))
+	ITEM(EditInt, age, LeftPosZ(72, 64).TopPosZ(56, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(188, 64).TopPosZ(84, 24))
+	ITEM(Button, cancel, SetLabel(t_("Storno")).LeftPosZ(116, 64).TopPosZ(84, 24))
+END_LAYOUT
+
+LAYOUT(PersonsLayout, 556, 324)
+	ITEM(SqlArray, list, LeftPosZ(4, 548).TopPosZ(4, 288))
+	ITEM(Button, edit, SetLabel(t_("Edit")).LeftPosZ(76, 64).TopPosZ(296, 24))
+	ITEM(Button, remove, SetLabel(t_("Remove")).LeftPosZ(148, 64).TopPosZ(296, 24))
+	ITEM(Button, create, SetLabel(t_("New")).LeftPosZ(4, 64).TopPosZ(296, 24))
+END_LAYOUT
+
