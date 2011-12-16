@@ -90,10 +90,10 @@ int sChrf(int c)
 
 StaticMutex sM;
 
-String GetSchColumns(const String& table)
+Vector<String> GetSchColumns(const String& table)
 {
 	Mutex::Lock __(sM);
-	return Join(GetSchTableInfo(table).column, ",");
+	return Vector<String>(GetSchTableInfo(table).column, 0);
 }
 
 SqlBool FindSchJoin(const String& tables)

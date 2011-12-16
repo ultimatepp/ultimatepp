@@ -147,6 +147,8 @@ class SqlCtrls {
 public:
 	void      Add(SqlId id, Ctrl& ctrl);
 	SqlCtrls& operator()(SqlId id, Ctrl& ctrl)       { Add(id, ctrl); return *this; }
+	void      Table(Ctrl& dlg, SqlId table);
+	SqlCtrls& operator()(Ctrl& dlg, SqlId table)     { Table(dlg, table); return *this; }
 	SqlSet    Set() const;
 	operator  SqlSet() const                         { return Set(); }
 	void      Read(Sql& sql);
