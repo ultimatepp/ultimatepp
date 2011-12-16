@@ -12,5 +12,6 @@ file
 	SqlCtrls.lay;
 
 mainconfig
-	"" = "GUI SSE2";
+	"" = "GUI SSE2",
+	"" = "GUI SSE2 SCH";
 

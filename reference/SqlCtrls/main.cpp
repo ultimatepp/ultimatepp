@@ -16,12 +16,16 @@ struct PersonDlg : public WithPersonLayout<TopWindow> {
 
 PersonDlg::PersonDlg()
 {
+	CtrlLayoutOKCancel(*this, "Person");
+#ifdef flagSCH
+	ctrls(*this, PERSON);
+#else
 	ctrls
 		(NAME, name)
 		(LASTNAME, lastname)
 		(AGE, age)
 	;
-	CtrlLayoutOKCancel(*this, "Person");
+#endif
 }
 
 void PersonsDlg::Create()
