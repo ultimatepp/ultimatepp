@@ -46,6 +46,7 @@ void PersonsDlg::Edit()
 	if(IsNull(id))
 		return;
 	PersonDlg dlg;
+	dlg.Title("Edit person");
 	if(!dlg.ctrls.Load(PERSON, ID == id))
 		return;
 	if(dlg.Execute() != IDOK)
@@ -93,7 +94,7 @@ GUI_APP_MAIN
 
 	SQL = sqlite3;
 
-	// Update the schema to match the schema described in "simple.sch"
+	// Update the schema to match the schema described in "Model.sch"
 	#ifdef _DEBUG
 	SqlSchema sch(SQLITE3);
 	StdStatementExecutor se(sqlite3);

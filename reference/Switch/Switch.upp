@@ -1,3 +1,5 @@
+description "Demonstrates Switch widget\377";
+
 uses
 	CtrlLib;
 
