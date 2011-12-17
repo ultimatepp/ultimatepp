@@ -1,3 +1,5 @@
+description "Demonstrates MySQL interface\377";
+
 uses
 	Core,
 	MySql;
