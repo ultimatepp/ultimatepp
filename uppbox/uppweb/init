@@ -9,4 +9,5 @@
 #include "plugin\ftp/init"
 #include "Sql/init"
 #include "Skeleton/init"
+#include "Painter/init"
 #endif

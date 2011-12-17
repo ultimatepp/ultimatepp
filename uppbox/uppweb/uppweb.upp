@@ -10,7 +10,8 @@ uses
 	ide,
 	plugin\ftp,
 	Sql,
-	Skeleton;
+	Skeleton,
+	Painter;
 
 options(GCC) -DNOWSTRING;
 
