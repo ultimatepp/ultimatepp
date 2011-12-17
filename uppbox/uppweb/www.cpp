@@ -653,8 +653,8 @@ struct ProgramData {
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
 #ifdef PLATFORM_POSIX
-	StdLogSetup(LOG_COUT);
 	rootdir = GetHomeDirFile("upp.src");
 	targetdir = GetHomeDirFile("uppwww");
 	diffdir   = GetHomeDirFile("wwwupp");
