@@ -20,10 +20,15 @@ and latest releases are available through ][^http`:`/`/subversion`.tigris`.org`/
 ubversion][2 . This is an Open Source version control system.]&]
 [s0;2 &]
 [s0; [2 So first of all you will have to install a Subversion (Svn) 
-client like TortoiseSVN, SmartSVN, SlikSVN, kdesvn or just a 
-`"apt`-get install subversion`" in Linux. Be sure that in Windows 
-the svn client is in PATH environment variable although this 
-is usually done by installer.]&]
+client like ][^http`:`/`/tortoisesvn`.net`/downloads`.html^2 TortoiseSVN][2 , 
+][^http`:`/`/www`.syntevo`.com`/smartsvn`/^2 SmartSVN][2 , ][^http`:`/`/www`.sliksvn`.com`/en`/download`/^2 S
+likSVN][2 , ][^http`:`/`/kdesvn`.alwins`-world`.de`/^2 kdesvn ][2 or 
+just a]&]
+[s0;2 &]
+[s0;l256; [C$7;2 -|apt`-get install subversion-|]&]
+[s0;2 &]
+[s0; [2 in Linux. Be sure that in Windows the svn client is in PATH 
+environment variable although this is usually done by installer.]&]
 [s0;2 &]
 [s0;2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 2. Upload Permissions]]}}&]
@@ -45,9 +50,10 @@ pp administrator][2  will contact you and give you the address
 where you have to upload your new package, username (your Upp 
 Forum nick) and password.]&]
 [s0;2 &]
-[s0;%- [%%2 For example, if the svn base address is `"][2 svn://192.168.0.1/upp`", 
-you should have to upload your package to `"svn://192.168.0.1/upp/trunk/bazaar/My`_
-Cool`_Package`". ]&]
+[s0; [2 For example, if the svn base address is]&]
+[s0;l256; [C$7;2 -|svn://192.168.0.1/upp-|]&]
+[s0;%- [2 you should have to upload your package to]&]
+[s0;l256; [C$7;2 -|svn://192.168.0.1/upp/trunk/bazaar/My`_Cool`_Package-|]&]
 [s0;2%- &]
 [s0; [%-2 Please do not put spaces in your package name. ][2 You also 
 should take care to not modify others packages (you may have 
@@ -56,11 +62,11 @@ write access to them too).]&]
 [s0; [2 When you commit (upload to svn server) the changes do not forget 
 to enter a comment following this format:]&]
 [s0;2 &]
-[s0;l256;%- [%%C$7;2 `"][C$7;2 My`_Cool`_Package: First release`"]&]
+[s0;l256;%- [%%C$7;2 -|`"][C$7;2 My`_Cool`_Package: First release`"]&]
 [s0;2%- &]
 [s0;%- [2 or]&]
 [s0;2%- &]
-[s0;l256;%- [%%C$7;2 `"][C$7;2 My`_Cool`_Package: Added X an Y. Fixed 
+[s0;l256;%- [%%C$7;2 -|`"][C$7;2 My`_Cool`_Package: Added X an Y. Fixed 
 bug Z`"]&]
 [s0;2%- &]
 [s0;2%- &]
@@ -71,7 +77,7 @@ your first release is done!]&]
 [s0;2 &]
 [s0; [2 All Bazaar folders are open so take care not modifying directly 
 contents in folders that you do not manage. If you want to change 
-something follow ][^topic`:`/`/uppweb`/www`/bazaar`_submission`$en`-us^2 Bazaar 
+something follow ][^topic`:`/`/uppweb`/www`/bazaar`_support`$en`-us^2 Bazaar 
 Support][2  instructions.]&]
 [s0;2 &]
 [s0; [2 And do not put many different features into single commit. 
