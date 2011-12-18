@@ -257,7 +257,7 @@ public:
 	bool                    IsWin32() const { return GetStyle() & STYLE_WIN32; }
 	bool                    IsPosix() const { return GetStyle() & STYLE_POSIX; }
 
-	virtual Array<FileInfo> Find(String mask, int max_count = 1000000) const; // mask = Null -> root
+	virtual Array<FileInfo> Find(String mask, int max_count = 1000000, bool unmounted = false) const; // mask = Null -> root
 	virtual bool            CreateFolder(String path, String& error) const;
 
 	bool                    FolderExists(String path) const;

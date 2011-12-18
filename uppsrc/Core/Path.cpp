@@ -1073,7 +1073,7 @@ int FileSystemInfo::GetStyle() const
 #endif
 }
 
-Array<FileSystemInfo::FileInfo> FileSystemInfo::Find(String mask, int max_count) const
+Array<FileSystemInfo::FileInfo> FileSystemInfo::Find(String mask, int max_count, bool unmounted) const
 {
 	Array<FileInfo> fi;
 	if(IsNull(mask))
@@ -1096,12 +1096,15 @@ Array<FileSystemInfo::FileInfo> FileSystemInfo::Find(String mask, int max_count)
 			if(c != 'A' && c != 'B' && n != DRIVE_REMOTE && n != DRIVE_UNKNOWN) {
 				bool b = GetVolumeInformation(drive, name, 256, &d, &d, &d, system, 256);
 				if(b) {
-				   	if(*name) f.root_desc << " " << FromSystemCharset(name);
+					if(*name) f.root_desc << " " << FromSystemCharset(name);
 				}
-				else
-				if(n == DRIVE_REMOVABLE || n == DRIVE_CDROM) {
-					fi.Drop();
-					continue;
+				else if(n == DRIVE_REMOVABLE || n == DRIVE_CDROM) {
+					if(unmounted) {
+						f.root_desc = t_("Empty drive");
+					} else {
+						fi.Drop();
+						continue;
+					}
 				}
 			}
 			switch(n)
