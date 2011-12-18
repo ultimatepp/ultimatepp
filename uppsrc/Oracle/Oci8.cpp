@@ -346,6 +346,7 @@ void OCI8Connection::SetRawParam(int i, const String& s) {
 	p.ind[0] = l ? 0 : -1;
 }
 
+/*
 class Oracle8RefCursorStub : public SqlSource {
 public:
 	Oracle8RefCursorStub(SqlConnection *cn) : cn(cn) {}
@@ -354,6 +355,7 @@ public:
 private:
 	SqlConnection *cn;
 };
+*/
 
 void OCI8Connection::SetParam(int i, Sql& rc) {
 	Item& w = PrepareParam(i, SQLT_RSET, -1, 0, VOID_V);
@@ -361,8 +363,9 @@ void OCI8Connection::SetParam(int i, Sql& rc) {
 	w.refcursor -> refcursor = true;
 	*(OCIStmt **)w.Data() = w.refcursor -> stmthp;
 	w.ind[0] = 0;
-	Oracle8RefCursorStub stub(w.refcursor);
-	rc = Sql(stub);
+//	Oracle8RefCursorStub stub(w.refcursor);
+	rc.Attach(w.refcursor);
+//	rc = Sql(stub);
 }
 
 void  OCI8Connection::SetParam(int i, const Value& q) {
