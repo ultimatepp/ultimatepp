@@ -78,7 +78,7 @@ template<class T> class WithFactory
 			else
 				return Null;
 		}
-		virtual String const &IsA(void)
+		virtual String const &IsA(void) const
 		{
 			int idx = typeMap().Find(typeid(*this).name());
 			if(idx >= 0)
