@@ -1,4 +1,5 @@
 Image GetDriveImage(char drive_style);
+Image GetFileIcon(const char *path, bool dir, bool force = false);
 
 void DrawFileName(Draw& w, int x, int y, int wcx, int cy, const WString& mname, bool isdir, Font font,
                   Color ink, Color extink, const WString& desc = Null, Font descfont = Null,
@@ -216,8 +217,8 @@ protected:
 	void        InitSplitter();
 	String      GetMask();
 	void        GoToPlace();
-	void        AddPlaceRaw(const String& path, const Image& m, const String& name);
-
+	void        AddPlaceRaw(const String& path, const Image& m, const String& name, const char* group = NULL, int row = -1);
+	void        AddSystemPlaces(int row = -1);
 
 	using       WithFileSelectorLayout<TopWindow>::Title;
 
@@ -277,9 +278,9 @@ public:
 	FileSel& Preview(Ctrl& ctrl);
 	FileSel& Preview(const Display& d);
 	FileSel& ClearPlaces();
-	FileSel& AddPlace(const String& path, const Image& m, const String& name);
-	FileSel& AddPlace(const String& path, const String& name);
-	FileSel& AddPlace(const String& path);
+	FileSel& AddPlace(const String& path, const Image& m, const String& name, const char* group = NULL, int row = -1);
+	FileSel& AddPlace(const String& path, const String& name, const char* group = NULL, int row = -1);
+	FileSel& AddPlace(const String& path, const char* group = NULL, int row = -1);
 	FileSel& AddPlaceSeparator();
 	FileSel& AddStandardPlaces();
 
