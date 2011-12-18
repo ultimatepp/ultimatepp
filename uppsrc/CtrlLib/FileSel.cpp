@@ -1275,6 +1275,16 @@ void FileSel::GoToPlace()
 
 bool FileSel::Execute(int _mode) {
 	mode = _mode;
+
+	int system_row = -1;
+	for(int i = places.GetCount() - 1; i >= 0; i--) {
+		if(places.Get(i, 3) == "PLACES:SYSTEM") {
+			system_row = i;
+			places.Remove(i);
+		}
+	}
+	AddSystemPlaces(system_row);
+		
 	if(mode == SELECTDIR) {
 		if(!fn.IsEmpty())
 			dir <<= NormalizePath(fn[0]);
@@ -1570,31 +1580,36 @@ FileSel& FileSel::Preview(const Display& d)
 	return Preview(preview_display);
 }
 
-void FileSel::AddPlaceRaw(const String& path, const Image& m, const String& name)
+void FileSel::AddPlaceRaw(const String& path, const Image& m, const String& name, const char* group, int row)
 {
 	if(path.GetCount()) {
-		places.Add(path, m, name);
-		places.SetLineCy(places.GetCount() - 1, max(m.GetSize().cy + 4, GetStdFontCy() + 4));
+		row = row < 0 ? places.GetCount() : row;
+		places.Insert(row);
+		places.Set(row, 0, path);
+		places.Set(row, 1, m);
+		places.Set(row, 2, name);
+		places.Set(row, 3, group);
+		places.SetLineCy(row, max(m.GetSize().cy + 4, GetStdFontCy() + 4));
 		SyncSplitter();
 		InitSplitter();
 	}
 }
 
-FileSel& FileSel::AddPlace(const String& path, const Image& m, const String& name)
+FileSel& FileSel::AddPlace(const String& path, const Image& m, const String& name, const char* group, int row)
 {
 	if(path.GetCount())
-		AddPlaceRaw(NormalizePath(path), m, name);
+		AddPlaceRaw(NormalizePath(path), m, name, group, row);
 	return *this;
 }
 
-FileSel& FileSel::AddPlace(const String& path, const String& name)
+FileSel& FileSel::AddPlace(const String& path, const String& name, const char* group, int row)
 {
-	return AddPlace(path, GetDirIcon(NormalizePath(path)), name);
+	return AddPlace(path, GetDirIcon(NormalizePath(path)), name, group, row);
 }
 
-FileSel& FileSel::AddPlace(const String& path)
+FileSel& FileSel::AddPlace(const String& path, const char* group, int row)
 {
-	return AddPlace(path, GetFileTitle(path));
+	return AddPlace(path, GetFileTitle(path), group, row);
 }
 
 FileSel& FileSel::AddPlaceSeparator()
@@ -1612,17 +1627,12 @@ FileSel& FileSel::ClearPlaces()
 	return *this;
 }
 
-FileSel& FileSel::AddStandardPlaces()
+void FileSel::AddSystemPlaces(int row)
 {
-	AddPlace(GetHomeDirectory(), t_("Home"));
-	AddPlace(GetDesktopFolder(), t_("Desktop"));
-	AddPlace(GetMusicFolder(), t_("Music"));
-	AddPlace(GetPicturesFolder(), t_("Pictures"));
-	AddPlace(GetVideoFolder(), t_("Videos"));
-	AddPlace(GetDocumentsFolder(), t_("Documents"));
-	AddPlace(GetDownloadFolder(), t_("Downloads"));
-	AddPlaceSeparator();
-	Array<FileSystemInfo::FileInfo> root = filesystem->Find(Null);
+	row = row < 0 ? places.GetCount() : row;
+	Array<FileSystemInfo::FileInfo> root;
+#if defined(PLATFORM_WIN32) || defined(PLATFORM_WINCE)
+	root = filesystem->Find(Null);
 	for(int i = 0; i < root.GetCount(); i++) {
 		String desc = root[i].root_desc;
 		String n = root[i].filename;
@@ -1635,16 +1645,17 @@ FileSel& FileSel::AddStandardPlaces()
 				desc << " (" << n << ")";
 			else
 				desc = n;
-			AddPlace(root[i].filename, desc);
+			AddPlace(root[i].filename, desc, "PLACES:SYSTEM", row++);
 		}
 	}
+#endif
 
 #ifdef PLATFORM_WIN32
 	if(GetSystemMetrics(SM_REMOTESESSION))
 		for(int drive = 'A'; drive < 'Z'; drive++) {
 			String path = Format("\\\\tsclient\\%c", drive);
 			if(FindFile(path + "\\*.*"))
-				AddPlace(path, Format(t_("%c on client"), drive));
+				AddPlace(path, Format(t_("%c on client"), drive), "PLACES:SYSTEM", row++);
 		}
 #endif
 #ifdef PLATFORM_POSIX
@@ -1652,12 +1663,25 @@ FileSel& FileSel::AddStandardPlaces()
 	for(int i = 0; i < root.GetCount(); i++) {
 		String fn = root[i].filename;
 		if(*fn != '.' && fn.Find("floppy") < 0)
-			AddPlace("/media/" + fn, fn);
+			AddPlace("/media/" + fn, fn, "PLACES:SYSTEM", row++);
 	}
 #endif
+}
+
+FileSel& FileSel::AddStandardPlaces()
+{
+	AddPlace(GetHomeDirectory(), t_("Home"), "PLACES:FOLDER");
+	AddPlace(GetDesktopFolder(), t_("Desktop"), "PLACES:FOLDER");
+	AddPlace(GetMusicFolder(), t_("Music"), "PLACES:FOLDER");
+	AddPlace(GetPicturesFolder(), t_("Pictures"), "PLACES:FOLDER");
+	AddPlace(GetVideoFolder(), t_("Videos"), "PLACES:FOLDER");
+	AddPlace(GetDocumentsFolder(), t_("Documents"), "PLACES:FOLDER");
+	AddPlace(GetDownloadFolder(), t_("Downloads"), "PLACES:FOLDER");
+	AddPlaceSeparator();
+	AddSystemPlaces();
 #ifdef PLATFORM_WIN32
 	AddPlaceSeparator();
-	AddPlaceRaw("\\", CtrlImg::Network(), t_("Network"));
+	AddPlaceRaw("\\", CtrlImg::Network(), t_("Network"), "PLACES:NETWORK");
 #endif
 	return *this;
 }
@@ -1763,6 +1787,7 @@ FileSel::FileSel() {
 	
 	places.AddKey();
 	places.AddColumn().AddIndex().SetDisplay(Single<DisplayPlace>());
+	places.AddIndex();
 	places.NoHeader().NoGrid();
 	places.WhenLeftClick = THISBACK(GoToPlace);
 	places.NoWantFocus();
