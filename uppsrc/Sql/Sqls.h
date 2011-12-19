@@ -196,9 +196,10 @@ public:
 
 	String      ToString() const                       { return cn->ToString(); }
 
-	bool   operator*(const SqlStatement& q)            { return Execute(q); }
-	Sql&   operator&(const SqlStatement& q)            { ExecuteX(q); return *this; }
-	Value  operator%(const SqlStatement& q)            { return Select0(Compile(q)); }
+	bool       operator*(const SqlStatement& q)        { return Execute(q); }
+	Sql&       operator&(const SqlStatement& q)        { ExecuteX(q); return *this; }
+	Value      operator%(const SqlStatement& q);
+	ValueArray operator/(const SqlStatement& q);
 
 	SqlSession& GetSession() const                     { return cn->GetSession(); }
 	int    GetDialect() const;
@@ -307,6 +308,7 @@ protected:
 	String                        errorcode_string;
 	Sql::ERRORCLASS               errorclass;
 	bool                        (*error_handler)(String error, String stmt, int code, const char *scode, Sql::ERRORCLASS clss);
+	bool                          throwonerror;
 
 	int                           status;
 	
@@ -351,6 +353,8 @@ public:
 	SqlSession&                   LogErrors(bool b = true)                { logerrors = true; return *this; }
 	SqlSession&                   UsrLog(bool b = true)                   { usrlog = true; return *this; }
 	SqlSession&                   TraceSlow(int ms = 5000)                { traceslow = ms; return *this; }
+	
+	SqlSession&                   ThrowOnError(bool b = true)             { throwonerror = b; return *this; }
 
 	bool                          WasError() const                        { return !GetLastError().IsEmpty(); }
 
