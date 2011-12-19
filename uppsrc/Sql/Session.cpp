@@ -13,6 +13,7 @@ SqlSession::SqlSession()
 	errorcode_number = Null;
 	errorclass = Sql::ERROR_UNSPECIFIED;
 	error_handler = NULL;
+	throwonerror = false;
 }
 
 SqlSession::~SqlSession()

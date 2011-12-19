@@ -146,6 +146,8 @@ bool Sql::Execute() {
 		cn->info[i].name = ToUpper(cn->info[i].name);
 
 	session.SetStatus(SqlSession::AFTER_EXECUTING);
+	if(!b && session.throwonerror)
+		throw SqlExc(GetSession());
 	return b;
 }
 
@@ -260,6 +262,21 @@ ValueMap Sql::GetRowMap() const
 	for(int i = 0; i < n; i++)
 		m.Add(GetColumnInfo(i).name, (*this)[i]);
 	return m;
+}
+
+Value Sql::operator%(const SqlStatement& q)
+{
+	return Select0(Compile(q));
+}
+
+ValueArray Sql::operator/(const SqlStatement& q)
+{
+	ValueArray va;
+	Execute(q);
+	ValueMap m;
+	while(Fetch(m))
+		va.Add(m);
+	return va;
 }
 
 bool Sql::Fetch(ValueMap& row) {
