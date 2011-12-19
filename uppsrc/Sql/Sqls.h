@@ -136,7 +136,7 @@ public:
 	__Expand(E__Fetch)
 //$+
 	bool   Fetch(Vector<Value>& row);
-
+	bool   Fetch(ValueMap& row);
 	bool   Fetch(Fields fields);
 
 	int    GetRowsProcessed() const                    { return cn->GetRowsProcessed(); }
@@ -149,6 +149,7 @@ public:
 	Value  operator[](SqlId colid) const;
 	const SqlColumnInfo& GetColumnInfo(int i) const    { return cn->info[i]; }
 	Vector<Value> GetRow() const;
+	ValueMap GetRowMap() const;
 	operator Vector<Value>() const                     { return GetRow(); }
 	void   Get(Fields fields);
 

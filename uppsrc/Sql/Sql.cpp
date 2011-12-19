@@ -238,12 +238,33 @@ bool Sql::Fetch(__List##I(E__Ref)) { \
 }
 __Expand(E__FetchF)
 
-bool Sql::Fetch(Vector<Value>& row) {
-	if(!Fetch()) return false;
+Vector<Value> Sql::GetRow() const {
+	Vector<Value> row;
 	int n = GetColumns();
 	row.SetCount(n);
 	for(int i = 0; i < n; i++)
-		GetColumn(i, row[i]);
+		row[i] = (*this)[i];
+	return row;
+}
+
+bool Sql::Fetch(Vector<Value>& row) {
+	if(!Fetch()) return false;
+	row = GetRow();
+	return true;
+}
+
+ValueMap Sql::GetRowMap() const
+{
+	ValueMap m;
+	int n = GetColumns();
+	for(int i = 0; i < n; i++)
+		m.Add(GetColumnInfo(i).name, (*this)[i]);
+	return m;
+}
+
+bool Sql::Fetch(ValueMap& row) {
+	if(!Fetch()) return false;
+	row = GetRowMap();
 	return true;
 }
 
@@ -302,14 +323,6 @@ Value Sql::operator[](SqlId id) const {
 			return operator[](i);
 	NEVER();
 	return Value();
-}
-
-Vector<Value> Sql::GetRow() const {
-	Vector<Value> row;
-	int cn = GetColumns();
-	for(int i = 0; i < cn; i++)
-		row.Add((*this)[i]);
-	return row;
 }
 
 Value Sql::Select0(const String& s) {
