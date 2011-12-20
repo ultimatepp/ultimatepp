@@ -4188,7 +4188,7 @@ GridCtrl& GridCtrl::Indicator(bool b, int size)
 	if(size < 0)
 		size = GD_IND_WIDTH;
 	indicator = b;
-	fixed_width += (size + 1) * (b ? 1 : -1);
+	fixed_width += size * (b ? 1 : -1);
 	SetColWidth(0, b ? size : 0);
 	return *this;
 }
