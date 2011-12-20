@@ -73,15 +73,12 @@ GridCtrl::ItemRect& GridCtrl::ItemRect::Size(int n, bool hv)
 {
 	hidden = n == 0;
 	
-	n = hv ? Ctrl::HorzLayoutZoom(n) : Ctrl::VertLayoutZoom(n);
-
 	if(!hidden)
 	{
+		n = hv ? Ctrl::HorzLayoutZoom(n) : Ctrl::VertLayoutZoom(n);
 		if(n < min) { n = min; ismin = true; }
 		if(n > max) { n = max; ismax = true; }
 	}
-	else
-		n = 0;
 
 	size = nsize = n;
 	return *this;

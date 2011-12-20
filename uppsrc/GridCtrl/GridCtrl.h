@@ -515,7 +515,7 @@ class GridCtrl : public Ctrl
 				{
 					min = 5; max = 1000000;
 					pos = npos = 0;
-					id  = uid = n = 0;
+					id = uid = n = 0;
 					prop = 1;
 					size = nsize = 0;
 					tsize = 0;
