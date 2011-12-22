@@ -139,7 +139,7 @@ public:
 	
 	Scatter &AddSeries(Vector<XY> & points,const String& legend="", const bool& join=false,const class::Color& pcolor=LtBlue,const int& width=30,const int& thickness=6);
 	
-	Scatter &Stroke(int width = 30, class::Color pcolor = Null, const String pattern = LINE_SOLID);
+	Scatter &Stroke(int width = 30, class::Color pcolor = Null, String pattern = Null);
 	Scatter &Mark(int thickness = 6, class::Color pcolor = Null, MarkStyle style = CIRCLE);
 	Scatter &HideMark() {vShowMark[vShowMark.GetCount()-1] = false;	Refresh(); return *this;}
 	Scatter &SetPattern(const String pattern);

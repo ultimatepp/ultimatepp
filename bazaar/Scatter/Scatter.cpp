@@ -455,7 +455,30 @@ Color GetNewColor(int id)
 	return Color(Random(), Random(), Random());
 }
 
-Scatter &Scatter::Stroke(int width, class::Color pcolor, const String pattern)
+	#define LINE_DOTTED 	"o..."
+	#define LINE_DOTTED_SEP	"o..........."
+	#define LINE_DASHED 	"oooooo......"
+	#define LINE_DASH_DOT 	"ooooo...o..."
+	#define LINE_SOLID 		"oooooooooooo"
+	
+String GetNewPattern(int id)
+{
+	switch(id) {
+	case 0:	return LINE_SOLID;
+	case 1:	return LINE_DOTTED;
+	case 2:	return LINE_DASHED;
+	case 3:	return LINE_DASH_DOT;
+	case 4:	return LINE_SOLID;
+	case 5:	return LINE_DOTTED;
+	case 6:	return LINE_DASHED;
+	case 7:	return LINE_DASH_DOT;
+	}
+	String ret = "oo";
+	dword r = Random();
+	return ret << (r & 1 ? "oo" : "..") << (r & 2 ? "oo" : "..") << (r & 4 ? "oo" : "..");
+}
+
+Scatter &Scatter::Stroke(int width, class::Color pcolor, String pattern)
 {
 	int id = vPointsData.GetCount() - 1;
 
@@ -463,7 +486,10 @@ Scatter &Scatter::Stroke(int width, class::Color pcolor, const String pattern)
 	if (IsNull(pcolor))
 		pcolor = GetNewColor(id);
 	vPColors[id] = pcolor;
-	vPWidth[id] = width;
+	vPThickness[id] = width;
+	if (IsNull(pattern))
+		pattern = GetNewPattern(id);
+	vPPattern[id] = pattern;
 	
 	Refresh();
 	return *this;	
@@ -473,7 +499,7 @@ Scatter &Scatter::Mark(int thickness, class::Color pcolor, MarkStyle style)
 {
 	int id = vPointsData.GetCount() - 1;
 
-	vPThickness[id] = thickness;	
+	vPWidth[id] = thickness;	
 	if (IsNull(pcolor))
 		pcolor = GetNewColor(id);
 	vMarkColors[id] = pcolor;
@@ -1881,7 +1907,7 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 			w.DrawText(l+scale*10,fround(-h*yMinUnit2/yRange2+h-i*h/(yRange/yMajorUnit))-scale*8,gridLabelY2,Standard6,axisColor);
 		}	
 	
-	if(antialiasing)		//  && w.IsGui())	IsGui() is always false in Linux
+	if(antialiasing && w.IsGui())	// IsGui() is always false in Linux
 	{
 		ImageDraw imdraw(3*l,3*h);	
 		Plot (imdraw,3,3*l,3*h);

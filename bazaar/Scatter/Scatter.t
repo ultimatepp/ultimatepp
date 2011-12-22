@@ -62,4 +62,3 @@ esES("El gr\303\241fico no ha sido guardado")
 T_("File format %s not found")
 caES("Format %s no trobat")
 esES("Formato %s no encontrado")
-
