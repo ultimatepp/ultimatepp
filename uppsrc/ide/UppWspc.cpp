@@ -26,7 +26,7 @@ void WorkspaceWork::SetErrorFiles(const Vector<String>& files)
 	errorfiles <<= Index<String>(files, 1);
 	int i = filelist.GetCursor();
 	int s = filelist.GetSbPos();
-	SaveLoadPackage();
+	SaveLoadPackage(false);
 	filelist.SetSbPos(s);
 	filelist.SetCursor(i);
 	SyncErrorPackages();
@@ -375,7 +375,7 @@ void WorkspaceWork::AddFile(ADDFILE af)
 		f = (*fs)[i];
 		f.readonly = fs->GetReadOnly();
 	}
-	SaveLoadPackage();
+	SaveLoadPackage(false);
 	filelist.SetSbPos(cs);
 	filelist.SetCursor(fci >= 0 ? fci : filelist.GetCount() - 1);
 	FileSelected();
@@ -391,9 +391,9 @@ void WorkspaceWork::AddItem(const String& name, bool separator, bool readonly)
 	f.separator = separator;
 	f.readonly = readonly;
 	if(separator)
-		SaveLoadPackageNS();
+		SaveLoadPackageNS(false);
 	else
-		SaveLoadPackage();
+		SaveLoadPackage(false);
 	filelist.SetSbPos(cs);
 	filelist.SetCursor(fci >= 0 ? fci : filelist.GetCount() - 1);
 	FileSelected();
@@ -550,7 +550,7 @@ void WorkspaceWork::Import()
 		if(!msg.IsEmpty())
 			Exclamation(msg);
 	}
-	SaveLoadPackage();
+	SaveLoadPackage(false);
 	filelist.SetSbPos(cs);
 	filelist.SetCursor(fci >= 0 ? fci : filelist.GetCount() - 1);
 	FileSelected();
@@ -711,7 +711,7 @@ void WorkspaceWork::RenameFile()
 	FileRename(dpath);
 	int s = filelist.GetSbPos();
 	(String &)actual.file[ii] = n;
-	SaveLoadPackage();
+	SaveLoadPackage(false);
 	filelist.SetSbPos(s);
 	filelist.SetCursor(i);
 }
@@ -766,7 +766,7 @@ void   WorkspaceWork::Group()
 		closed.UnlinkKey(as);
 	else
 		closed.Put(as);
-	SaveLoadPackage();
+	SaveLoadPackage(false);
 	filelist.SetSbPos(s);
 	filelist.SetCursor(i);
 }
@@ -802,7 +802,7 @@ void  WorkspaceWork::ShowFile(int pi)
 				int i = filelist.GetCursor();
 				int s = filelist.GetSbPos();
 				closed.UnlinkKey(sf);
-				SaveLoadPackage();
+				SaveLoadPackage(false);
 				filelist.SetSbPos(s);
 				filelist.SetCursor(i);
 			}
