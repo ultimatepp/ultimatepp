@@ -399,7 +399,7 @@ Sql& AppCursor();
 Sql& AppCursorR();
 
 //$-
-#define SQL AppCursor()
+#define SQL  AppCursor()
 #define SQLR AppCursorR()
 //$+
 //  Assist++ cheat:
