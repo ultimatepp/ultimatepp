@@ -544,9 +544,9 @@ void Ide::AddEditFile(const String& path)
 {
 	actual.file.Add(path);
 	if(IsAux())
-		SaveLoadPackageNS();
+		SaveLoadPackageNS(false);
 	else
-		SaveLoadPackage();
+		SaveLoadPackage(false);
 	ShowFile(package.GetCount() - 1);
 	filelist.SetCursor(filelist.GetCount() - 1);
 }
