@@ -1193,8 +1193,15 @@ void Ide::JumpToDefinition(const Array<CppItem>& n, int q)
 		AddHistory();
 		EditFile(path);
 		LayDesigner *l = dynamic_cast<LayDesigner *>(~designer);
-		if(l && pos.name.StartsWith("With"))
-			l->FindLayout(pos.name.Mid(4));
+		if(l) {
+			if(pos.name.StartsWith("With"))
+				l->FindLayout(pos.name.Mid(4));
+		}
+		else {
+			editor.SetCursor(editor.GetPos(pos.line - 1));
+			editor.TopCursor(4);
+			editor.SetFocus();
+		}
 		AddHistory();
 	}
 	else
