@@ -418,21 +418,6 @@ bool SqlPerformScript(SqlSession& session, const String& script,
 bool SqlPerformScript(const String& script,
                       Gate2<int, int> progress_canceled = false, bool stoponerror = false);
 
-struct StdStatementExecutor : StatementExecutor {
-	StdStatementExecutor(SqlSession& session) : cursor(session) {}
-	virtual bool Execute(const String& stmt);
-	Sql cursor;
-};
-
-#ifndef NOAPPSQL
-StatementExecutor& SQLStatementExecutor();
-#endif
-
-#ifdef BackwardCompatibility
-	typedef Sql        QSql;
-	typedef SqlSession QSession;
-#endif
-
 class SqlMassInsert {
 	struct Row : Moveable<Row> {
 		dword          nulls;
@@ -459,3 +444,20 @@ public:
 #endif
 	~SqlMassInsert();
 };
+
+// Deprecated, use SqlPerformScript instead
+struct StdStatementExecutor : StatementExecutor {
+	StdStatementExecutor(SqlSession& session) : cursor(session) {}
+	virtual bool Execute(const String& stmt);
+	Sql cursor;
+};
+
+#ifndef NOAPPSQL
+StatementExecutor& SQLStatementExecutor();
+#endif
+
+#ifdef BackwardCompatibility
+	typedef Sql        QSql;
+	typedef SqlSession QSession;
+#endif
+
