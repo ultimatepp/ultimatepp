@@ -668,6 +668,7 @@ void EditField::DragAndDrop(Point p, PasteClip& d)
 	if(AcceptText(d)) {
 		SaveUndo();
 		int sell, selh;
+		WString txt = GetWString(d);
 		if(GetSelection(sell, selh)) {
 			if(c >= sell && c < selh) {
 				RemoveSelection();
@@ -683,7 +684,7 @@ void EditField::DragAndDrop(Point p, PasteClip& d)
 				d.SetAction(DND_COPY);
 			}
 		}
-		int count = Insert(c, GetWString(d));
+		int count = Insert(c, txt);
 		SetFocus();
 		SetSelection(c, c + count);
 		Action();
@@ -744,6 +745,8 @@ void EditField::LeftDrag(Point p, dword flags)
 		iw.Alpha().DrawText(0, 0, sel, StdFont(), White);
 		VectorMap<String, ClipData> data;
 		Append(data, sel);
+		bool oks = keep_selection;
+		keep_selection = true;
 		if(DoDragAndDrop(data, iw) == DND_MOVE) {
 			CancelSelection();
 			SaveUndo();
@@ -752,6 +755,7 @@ void EditField::LeftDrag(Point p, dword flags)
 			Finish();
 			Action();
 		}
+		keep_selection = oks;
 	}
 }
 

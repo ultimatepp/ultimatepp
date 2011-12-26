@@ -2,7 +2,7 @@
 
 #ifdef GUI_X11
 
-#define LLOG(x)   // LOG(x)
+#define LLOG(x)   // DLOG(x)
 
 NAMESPACE_UPP
 
@@ -141,6 +141,7 @@ void DnDLoop::Sync()
 		Xdnd_waiting_status = true;
 		dword timeout = GetTickCount();
 		LLOG("Waiting for XdndStatus");
+		Xdnd_status = DND_NONE;
 		while(Xdnd_waiting_status && GetTickCount() - timeout < 200) {
 			GuiSleep(0);
 			ProcessEvents();
@@ -379,8 +380,7 @@ void Ctrl::DnD(Window src, bool paste)
 	LLOG("Target action " << XdndAction);
 	XEvent e = ClientMsg(src, paste ? XdndFinished : XdndStatus);
 	e.xclient.data.l[0] = GetWindow();
-	(paste ? e.xclient.data.l[2] : e.xclient.data.l[4])
-		= XdndAction == DND_MOVE ? XdndActionMove : XdndActionCopy;
+	e.xclient.data.l[paste ? 2 : 4] = XdndAction == DND_MOVE ? XdndActionMove : XdndActionCopy;
 	if(d.IsAccepted())
 		e.xclient.data.l[1] = 1;
 	LLOG("Sending status/finished to " << src << " accepted: " << d.IsAccepted());
