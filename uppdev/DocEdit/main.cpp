@@ -1,5 +1,7 @@
 #include <CtrlLib/CtrlLib.h>
 
+using namespace Upp;
+
 String FileName() { return GetExeDirFile("test.txt"); }
 
 GUI_APP_MAIN

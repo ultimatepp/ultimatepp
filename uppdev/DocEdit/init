@@ -1,0 +1,4 @@
+#ifndef _DocEdit_icpp_init_stub
+#define _DocEdit_icpp_init_stub
+#include "CtrlLib/init"
+#endif
