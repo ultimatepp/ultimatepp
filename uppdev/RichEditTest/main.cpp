@@ -26,6 +26,8 @@ GUI_APP_MAIN
 			h.Add(i);
 	e.FontFaces(h);
 
+//	GUI_PopUpEffect_Write(GUIEFFECT_NONE);
+
 	DUMP(ScrollBarSize());
 
 	e.Pick(ParseQTF(LoadFile(FileName())));
