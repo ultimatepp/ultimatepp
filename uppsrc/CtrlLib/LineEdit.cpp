@@ -782,6 +782,7 @@ void LineEdit::DragAndDrop(Point p, PasteClip& d)
 		NextUndo();
 		int a = sb.y;
 		int sell, selh;
+		WString text = GetWString(d);
 		if(GetSelection(sell, selh)) {
 			if(c >= sell && c < selh) {
 				RemoveSelection();
@@ -797,7 +798,7 @@ void LineEdit::DragAndDrop(Point p, PasteClip& d)
 				d.SetAction(DND_COPY);
 			}
 		}
-		int count = Insert(c, GetWString(d));
+		int count = Insert(c, text);
 		sb.y = a;
 		SetFocus();
 		SetSelection(c, c + count);
