@@ -25,7 +25,7 @@ void SchDbInfoTable(const char *table)
 void SchDbInfoColumn(const char *name)
 {
 	SchTableInfo& f = sSchTableInfo().Top();
-	f.column.Add(f.prefix + name);
+	f.column.Add(ToUpper(f.prefix + name));
 	f.ref_table.Add();
 	f.ref_column.Add();
 	if(IsNull(f.primary_key))

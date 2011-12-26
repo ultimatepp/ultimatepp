@@ -5,9 +5,9 @@ NAMESPACE_UPP
 
 int SqlError(
 #ifdef PLATFORM_WIN32
-	HWND parent,
+	         HWND parent,
 #endif
-	const char *text, const char *error, const char *statement, bool retry) {
+             const char *text, const char *error, const char *statement, bool retry) {
 	WithSqlErrorLayout<TopWindow> r;
 	CtrlLayoutCancel(r, t_("Database error"));
 	r.text = text;

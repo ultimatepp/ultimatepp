@@ -69,8 +69,6 @@ void SqlCtrls::Add(SqlId id, Ctrl& ctrl) {
 void SqlCtrls::Table(Ctrl& dlg, SqlId table)
 {
 	Vector<String> col = GetSchColumns(~table);
-	for(int i = 0; i < col.GetCount(); i++)
-		col[i] = ToUpper(col[i]);
 	for(Ctrl *q = dlg.GetFirstChild(); q; q = q->GetNext()) {
 		String id = ToUpper(q->GetLayoutId());
 		if(!dynamic_cast<Button *>(q) && !dynamic_cast<Label *>(q) && FindIndex(col, id) >= 0)
