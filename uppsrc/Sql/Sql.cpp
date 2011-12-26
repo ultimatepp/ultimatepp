@@ -286,7 +286,6 @@ bool Sql::Fetch(ValueMap& row) {
 }
 
 struct sReadFields : public FieldOperator {
-	int  pi;
 	Sql *sql;
 
 	void Field(const char *name, Ref f) {
@@ -298,7 +297,6 @@ void Sql::Get(Fields fo)
 {
 	sReadFields ff;
 	ff.sql = this;
-	ff.pi = 0;
 	fo(ff);
 }
 
