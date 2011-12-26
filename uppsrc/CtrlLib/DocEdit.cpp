@@ -513,6 +513,7 @@ void DocEdit::DragAndDrop(Point p, PasteClip& d)
 		NextUndo();
 		int a = sb;
 		int sell, selh;
+		WString txt = GetWString(d);
 		if(GetSelection(sell, selh)) {
 			if(c >= sell && c < selh) {
 				RemoveSelection();
@@ -528,7 +529,7 @@ void DocEdit::DragAndDrop(Point p, PasteClip& d)
 				d.SetAction(DND_COPY);
 			}
 		}
-		int count = Insert(c, GetWString(d));
+		int count = Insert(c, txt);
 		sb = a;
 		SetFocus();
 		SetSelection(c, c + count);
