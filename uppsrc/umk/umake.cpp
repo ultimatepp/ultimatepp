@@ -112,9 +112,7 @@ CONSOLE_APP_MAIN
 		if(f.GetCount())
 			ide.mainconfigparam = f[0].param;
 		String m = arg[2];
-		DDUMP(m);
 		String bp = GetBuildMethodPath(m);
-		DDUMP(bp);
 		PutVerbose("Build method: " + bp);
 		if(bp.GetCount() == 0) {
 			SilentMode = false;
