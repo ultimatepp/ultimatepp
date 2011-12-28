@@ -1141,7 +1141,8 @@ Array<OleDBSession::Provider> OleDBSession::EnumProviders()
 		OleDBSession dummy;
 		One<OleDBConnection> conn = new OleDBConnection(&dummy);
 		conn->Execute(rowset);
-		Sql cursor(-conn);
+		Sql0 cursor;
+		Attach(cursor, -conn);
 		int cname = -1, cdesc = -1, cguid = -1;
 		for(int i = 0; i < cursor.GetColumns(); i++) {
 			String ci = cursor.GetColumnInfo(i).name;
@@ -1351,7 +1352,8 @@ Vector<String> OleDBSession::EnumDatabases()
 		OleVerify(srowset->GetRowset(NULL, DBSCHEMA_CATALOGS, 0, NULL, trowset.GetIID(), 0, NULL, trowset.SetUnk()));
 		One<OleDBConnection> conn = new OleDBConnection(this);
 		conn->Execute(trowset);
-		Sql cursor(-conn);
+		Sql0 cursor;
+		Attach(cursor, -conn);
 		int ccat = -1;
 		for(int i = 0; i < cursor.GetColumns(); i++) {
 			String n = cursor.GetColumnInfo(i).name;
@@ -1376,7 +1378,8 @@ Vector<String> OleDBSession::EnumTables(String database)
 		OleVerify(srowset->GetRowset(NULL, DBSCHEMA_TABLES, 1, restrictions, trowset.GetIID(), 0, NULL, trowset.SetUnk()));
 		One<OleDBConnection> conn = new OleDBConnection(this);
 		conn->Execute(trowset);
-		Sql cursor(-conn);
+		Sql0 cursor;
+		Attach(cursor, -conn);
 		int cname = -1;
 		int cschema = -1;
 		int ctype = -1;
@@ -1418,7 +1421,8 @@ Vector<String> OleDBSession::EnumViews(String database)
 		OleVerify(srowset->GetRowset(NULL, DBSCHEMA_TABLES, 1, restrictions, trowset.GetIID(), 0, NULL, trowset.SetUnk()));
 		One<OleDBConnection> conn = new OleDBConnection(this);
 		conn->Execute(trowset);
-		Sql cursor(-conn);
+		Sql0 cursor;
+		Attach(cursor, -conn);
 		int cname = -1;
 		int cschema = -1;
 		int ctype = -1;
@@ -1476,7 +1480,8 @@ Vector<String> OleDBSession::EnumPrimaryKey(String database, String table)
 			trowset.GetIID(), 0, NULL, trowset.SetUnk()));
 		One<OleDBConnection> conn = new OleDBConnection(this);
 		conn->Execute(trowset);
-		Sql cursor(-conn);
+		Sql0 cursor;
+		Attach(cursor, -conn);
 		int cname = -1;
 		int cord = -1;
 		Vector<int> ordinal;

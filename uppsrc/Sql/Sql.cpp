@@ -610,7 +610,7 @@ bool   Sql::IsOpen()                              { return cn && GetSession().Is
 
 void SqlConnection::Attach(Sql& sql, SqlConnection *con)
 {
-	sql.Attach(con);
+	sql.Attach(con); // Duck tape to fix Oci8
 }
 
 #ifndef NOAPPSQL
