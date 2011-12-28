@@ -322,6 +322,8 @@ protected:
 	
 	void                          SessionClose();
 
+	static void Attach(Sql& sql, SqlConnection *con);
+
 public:
 	virtual void                  Begin();
 	virtual void                  Commit();

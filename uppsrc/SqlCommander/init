@@ -3,7 +3,7 @@
 #include "SqlCtrl/init"
 #include "Oracle/init"
 #include "OleDB/init"
-#include "MySql/init"
 #include "plugin\sqlite3/init"
 #include "PostgreSQL/init"
+#include "MySql/init"
 #endif

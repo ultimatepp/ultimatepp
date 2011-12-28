@@ -2,6 +2,11 @@
 
 NAMESPACE_UPP
 
+void SqlSession::Attach(Sql& sql, SqlConnection *con)
+{
+	sql.Attach(con); // Duck tape to fix OleDB
+}
+
 SqlSession::SqlSession()
 {
 	trace = NULL;
