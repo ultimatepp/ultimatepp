@@ -56,6 +56,8 @@ protected:
 	virtual String      GetUser() const;
 	virtual String      ToString() const = 0;
 
+	static void Attach(Sql& sql, SqlConnection *con);
+
 	SqlConnection();
 	virtual            ~SqlConnection();
 
@@ -88,16 +90,20 @@ class Sql {
 	Vector<Value>   param;
 
 	friend class SqlSession;
+	friend class SqlConnection;
 	friend Sql& AppCursor();
 	friend Sql& AppCursorR();
 
 	Value       Select0(const String& what);
 
-public:
 	void   SetSession(SqlSource& src);
 	void   Attach(SqlConnection *connection);
 	void   Detach();
 
+protected:
+	Sql(SqlConnection *connection);
+
+public:
 	String Compile(const SqlStatement& s);
 
 	void   Clear();
@@ -241,7 +247,6 @@ public:
 #endif
 	Sql(const char *stmt, SqlSource& session);
 	Sql(const SqlStatement& s, SqlSource& session);
-	Sql(SqlConnection *connection);
 	~Sql();
 	
 	void operator=(SqlSession& s); // this only works with SQL and SQLR...

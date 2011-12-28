@@ -608,6 +608,11 @@ void   Sql::RollbackTo(const String& savepoint)   { GetSession().RollbackTo(save
 
 bool   Sql::IsOpen()                              { return cn && GetSession().IsOpen(); }
 
+void SqlConnection::Attach(Sql& sql, SqlConnection *con)
+{
+	sql.Attach(con);
+}
+
 #ifndef NOAPPSQL
 Sql::Sql() {
 	cn = NULL;
