@@ -29,7 +29,8 @@ U`+`+ assembly/package/build method system.]&]
 file) which is in Win32 in directory where is located umk.exe 
 or in POSIX systems in directories ][@3;3 `~][3 , ][@3;3 `~/.upp/umk][3 , 
 ][@3;3 `~/.upp/theide][3  or ][@3;3 `~/.upp/theide][3 . Alternatively, 
-it is a direct set of directories that represent U`+`+ assembly.]&]
+it is a direct set of directories that represent U`+`+ assembly 
+separated by `',`'.]&]
 [s0;3 &]
 [s0; [*C@(0.0.255)3 package][3  is the main package (a program to build)]&]
 [s0;3 &]
@@ -86,6 +87,6 @@ is number of logical cores available.]]}}&]
 [s0; [3 Examples:]&]
 [s0;3 &]
 [s0; [*C@5+92 umk examples Bombs GCC `-ab `+GUI,SHARED `~/bombs`\n]&]
-[s0; [*C@5+92 umk examples:uppsrc Bombs `~/GCC.bm `-rv `+GUI,SHARED 
+[s0; [*C@5+92 umk examples,uppsrc Bombs `~/GCC.bm `-rv `+GUI,SHARED 
 `~/bin]&]
 [s0; ]

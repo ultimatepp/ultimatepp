@@ -41,6 +41,11 @@ int CommaSpace(int c)
 	return c == ',' ? ' ' : c;
 }
 
+int IsCommaOrColon(int c)
+{
+	return c == ':' || c == ',' ? c : 0;
+}
+
 CONSOLE_APP_MAIN
 {
 	Ide ide;
@@ -61,8 +66,12 @@ CONSOLE_APP_MAIN
 				}						
 			}
 		String v = GetUmkFile(arg[0] + ".var");
-		if(!FileExists(v)) {
-			Vector<String> h = Split(arg[0], ':');
+		if(IsNull(v) || !FileExists(v)) {
+		#ifdef PLATFORM_POSIX
+			Vector<String> h = Split(arg[0], IsCommaOrColon);
+		#else
+			Vector<String> h = Split(arg[0], ',');
+		#endif
 			for(int i = 0; i < h.GetCount(); i++)
 				h[i] = GetFullPath(TrimBoth(h[i]));
 			String x = Join(h, ";");
@@ -103,7 +112,9 @@ CONSOLE_APP_MAIN
 		if(f.GetCount())
 			ide.mainconfigparam = f[0].param;
 		String m = arg[2];
+		DDUMP(m);
 		String bp = GetBuildMethodPath(m);
+		DDUMP(bp);
 		PutVerbose("Build method: " + bp);
 		if(bp.GetCount() == 0) {
 			SilentMode = false;
@@ -218,6 +229,6 @@ CONSOLE_APP_MAIN
 	else
 		Puts("Usage: umk assembly main_package build_method -options [+flags] [output]\n"
 		     "Examples: umk examples Bombs GCC -ab +GUI,SHARED ~/bombs\n"
-		     "          umk examples:uppsrc Bombs ~/GCC.bm -rv +GUI,SHARED ~/bin\n"
+		     "          umk examples,uppsrc Bombs ~/GCC.bm -rv +GUI,SHARED ~/bin\n"
 		     "See http://www.ultimatepp.org/app$ide$umk$en-us.html for details\n");	
 }
