@@ -513,7 +513,7 @@ bool OCI8Connection::BulkExecute(const char *stmt, const Vector< Vector<Value> >
 
 		if(sql_type == 0)
 			sql_type = SQLT_STR;
-		int sum_len = nrows * max_row_len;
+		unsigned sum_len = nrows * max_row_len;
 		Item& p = param.Add(new Item(oci8));
 		p.Alloc(nrows, session->envhp, sql_type, sum_len, 0);
 		p.dyna_vtype = VOID_V;
@@ -1238,9 +1238,9 @@ bool Oracle8::Login(const char *name, const char *pwd, const char *db, bool use_
 	if(!disable_utf8_mode
 	&& oci8.OCIEnvNlsCreate) {
 		if(oci8.OCIEnvNlsCreate(&envhp, accessmode, 0, 0, 0, 0, 0, 0,
-		OCI_NLS_NCHARSET_ID_AL32UT8, OCI_NLS_NCHARSET_ID_AL32UT8)
+		OCI_NLS_NCHARSET_ID_AL32UT8, OCI_NLS_NCHARSET_ID_AL32UT8) != OCI_SUCCESS
 		&& oci8.OCIEnvNlsCreate(&envhp, accessmode, 0, 0, 0, 0, 0, 0,
-		OCI_NLS_NCHARSET_ID_UT8, OCI_NLS_NCHARSET_ID_UT8))
+		OCI_NLS_NCHARSET_ID_UT8, OCI_NLS_NCHARSET_ID_UT8) != OCI_SUCCESS)
 			LLOG("OCI8: error on initialization utf8 NLS");
 		else
 			utf8_session = true;

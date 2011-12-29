@@ -1325,14 +1325,13 @@ bool FileSel::Execute(int _mode) {
 	list.Multi(multi && mode == OPEN);
 	dir.ClearList();
 	file <<= Null;
-	int i;
 	if(basedir.IsEmpty()) {
 		dir.Add(GetHomeDirectory());
 	#ifdef PLATFORM_POSIX
 		Array<FileSystemInfo::FileInfo> root = filesystem->Find("/media/*");
 		dir.Add(GetDesktopFolder());
 		dir.Add("/");
-		for(i = 0; i < root.GetCount(); i++) {
+		for(int i = 0; i < root.GetCount(); i++) {
 			String ugly = root[i].filename;
 			if(ugly[0] != '.') {
 				dir.Add("/media/" + root[i].filename);
@@ -1341,7 +1340,7 @@ bool FileSel::Execute(int _mode) {
 	#else
 		dir.Add(GetDesktopFolder());
 		Array<FileSystemInfo::FileInfo> root = filesystem->Find(Null);
-		for(i = 0; i < root.GetCount(); i++) {
+		for(int i = 0; i < root.GetCount(); i++) {
 			String ugly = root[i].filename;
 			if(ugly != "A:\\" && ugly != "B:\\") {
 				ugly.Cat('\0');
