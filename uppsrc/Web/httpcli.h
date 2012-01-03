@@ -6,6 +6,7 @@ class HttpClient
 public:
 	HttpClient();
 	HttpClient(const char *url);
+	virtual ~HttpClient();
 
 	HttpClient&  TimeoutMsecs(int t)              { timeout_msecs = t; return *this; }
 	HttpClient&  MaxHeaderSize(int m)             { max_header_size = m; return *this; }
