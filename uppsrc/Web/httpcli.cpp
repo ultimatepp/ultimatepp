@@ -40,6 +40,10 @@ HttpClient::HttpClient(const char *url)
 	URL(url);
 }
 
+HttpClient::~HttpClient()
+{
+}
+
 HttpClient& HttpClient::URL(const char *u)
 {
 	const char *t = u;
