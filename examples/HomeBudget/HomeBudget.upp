@@ -1,4 +1,4 @@
-description "Demonstrates using of GridCtrl and Sqlite3 database";
+description "Demonstrates using of GridCtrl and Sqlite3 database\377";
 
 charset "UTF-8";
 
@@ -19,5 +19,6 @@ file
 	help.tpp;
 
 mainconfig
-	"" = "GUI";
+	"" = "GUI",
+	"" = "GUI .NOGTK";
 
