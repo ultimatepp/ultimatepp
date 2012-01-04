@@ -773,7 +773,10 @@ void HomeBudget::Options()
 {
 	WithOptionsLayout<TopWindow> dlg;
 	CtrlLayoutOK(dlg, t_("Options"));
-	dlg.lang.Add(0, "English").Add(1, "Polski").SetIndex(lang);
+	dlg.lang.Add(0, "English")
+	        .Add(1, "Česky")
+	        .Add(2, "Polski")
+	        .SetIndex(lang);
 	dlg.clear <<= THISBACK(ClearAll);
 	if(dlg.Execute() != IDOK)
 		return;
@@ -889,10 +892,17 @@ GUI_APP_MAIN
 
 	LoadFromFile(hb);
 
-	if(hb.lang == 0)
-		SetLanguage(LNGC_('E','N','U','S', CHARSET_UNICODE));
-	else
+	switch(hb.lang) {
+	case 1:
+		SetLanguage(LNGC_('C','S','C','Z', CHARSET_UNICODE));
+		break;
+	case 2:
 		SetLanguage(LNGC_('P','L','P','L', CHARSET_UNICODE));
+		break;
+	default:
+		SetLanguage(LNGC_('E','N','U','S', CHARSET_UNICODE));
+		break;
+	}
 	hb.Setup();
 	hb.Run();
 	StoreToFile(hb);
