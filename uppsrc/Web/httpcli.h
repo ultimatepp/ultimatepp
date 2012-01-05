@@ -73,6 +73,7 @@ public:
 
 	
 	virtual bool CreateClientSocket();
+	virtual bool IsSecure();
 
 public:
 	Socket       socket;
@@ -135,6 +136,9 @@ public:
 
 private:
 	void         Init();
+
+protected:
+	bool         use_proxy;
 	String       ReadUntilProgress(char until, int start_time, int end_time, Gate2<int, int> progress);
 };
 
