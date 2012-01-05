@@ -217,7 +217,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 	if(socket.IsOpen() && IsError())
 		Close();
 	error = Null;
-	bool use_proxy = !IsNull(proxy_host);
+	use_proxy = !IsNull(proxy_host);
 	socket_host = (use_proxy ? proxy_host : host);
 	socket_port = (use_proxy ? proxy_port : port);
 
@@ -251,14 +251,14 @@ String HttpClient::Execute(Gate2<int, int> progress)
 			if(IsNull(ctype))
 				ctype = "application/x-www-form-urlencoded";
 			break;
-      case METHOD_HEAD: request << "HEAD "; break;
+		case METHOD_HEAD: request << "HEAD "; break;
 		default: NEVER(); // invalid method
 	}
 	String host_port = host;
 	if(port)
 		host_port << ':' << port;
 	String url;
-	url << "http://" << host_port << Nvl(path, "/");
+	url << (IsSecure() ? "https://" : "http://") << host_port << Nvl(path, "/");
 	if(use_proxy)
 		request << url;
 	else
@@ -425,6 +425,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 	}
 	String chunked;
 	String body;
+
 	while(body.GetLength() < content_length || content_length < 0 || tc_chunked) {
 		if(msecs(end_time) >= 0) {
 			error = NFormat(t_("%s:%d: timed out when receiving server response"), host, port);
@@ -586,6 +587,11 @@ bool HttpClient::CreateClientSocket()
 	}
 //	socket.Linger(0); // Mirek 1/2011 - does not seem to be necessary for client
 	return true;
+}
+
+bool HttpClient::IsSecure()
+{
+	return false;
 }
 
 String HttpClientGet(String url, String proxy, String username, String password,

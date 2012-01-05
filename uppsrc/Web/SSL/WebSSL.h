@@ -146,7 +146,15 @@ private:
 };
 
 bool SSLServerSocket(Socket& socket, SSLContext& ssl_context, int port, bool nodelay = true, int listen_count = 5, bool is_blocking = true);
-bool SSLClientSocket(Socket& socket, SSLContext& ssl_context, const char *host, int port, bool nodelay = true, dword *my_addr = NULL, int timeout = DEFAULT_CONNECT_TIMEOUT, bool is_blocking = true);
+bool SSLClientSocket(Socket& socket, SSLContext& ssl_context, const char *host, int port,
+                     bool nodelay = true, dword *my_addr = NULL, int timeout = DEFAULT_CONNECT_TIMEOUT,
+                     bool is_blocking = true);
+
+
+bool SSLClientSocketUnsecured(Socket& socket, SSLContext& ssl_context, const char *host, int port,
+                              bool nodelay = true, dword *my_addr = NULL, int timeout = DEFAULT_CONNECT_TIMEOUT,
+                              bool is_blocking = true);
+bool SSLSecureSocket(Socket& socket);
 
 static const int SOCKKIND_SSL = 1; // GetKind() for SSL socket
 
@@ -167,13 +175,19 @@ public:
 	void            Secure(bool s) { secure = s; }
 	
 	virtual bool    CreateClientSocket();
-	
+	virtual bool    IsSecure();
+
 public:
 	One<SSLContext> ssl_context;
 	
 	bool            secure;
 	
 	enum { DEFAULT_HTTPS_PORT = 443 };
+
+private:
+	typedef HttpsClient CLASSNAME;
+
+	bool            ProxyConnect();
 };
 
 END_UPP_NAMESPACE

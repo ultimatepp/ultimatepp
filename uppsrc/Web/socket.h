@@ -149,7 +149,9 @@ private:
 	One<Data>       data;
 	bool            is_error;
 	int             errorcode;
-	String          errordesc;	
+	String          errordesc;
+	
+	friend bool SSLSecureSocket(Socket& socket);
 };
 
 #ifdef PLATFORM_WIN32
