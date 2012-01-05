@@ -43,6 +43,27 @@ then
 		echo "  $folder"
 		cp -r $SRC_PATH/$folder $tmp/usr/share/$PKG
 	done
+elif [ $PKG = "umk" ]
+then
+	#create necessary directories
+	mkdir -p $tmp/usr/bin
+	
+	# move umk executable into the package directory structure
+	mv $SRC_PATH/debian/umk $tmp/usr/bin/umk
+
+	# check if we really have the executable there, just in case
+	if [ ! -e $tmp/usr/bin/umk ]
+	then
+		echo "Something went wrong: the executable is not in its place!"
+		exit 1
+	fi
+
+	# generate dependencies
+	cd $SRC_PATH
+	dpkg-shlibdeps $tmp/usr/bin/umk
+
+	# strip symbols from executable
+	strip --strip-all --remove-section=.comment --remove-section=.note $tmp/usr/bin/umk
 else
 	#create necessary directories
 	mkdir -p $tmp/usr/bin
@@ -105,17 +126,21 @@ cd $tmp
 find ./ -type d -exec chmod 755 {} \; , -type f -exec chmod 644 {} \;
 chown -R root:root ./
 
-if [ ! $PKG = "upp" ]
+if [ $PKG = "umk" ]
+then
+	# set permissions for executable files
+	chmod 0755 $tmp/usr/bin/umk
+elif [ $PKG = "upp" ]
 then
 	# copy maintainer scripts
 	cp $SRC_PATH/debian/{postinst,prerm} $tmp/DEBIAN
 	# set permissions for executable files
-	chmod 0755 $tmp/DEBIAN/{postinst,prerm} $tmp/usr/bin/theide
+	chmod 0755 $tmp/DEBIAN/{postinst,prerm}
 else
 	# copy maintainer scripts
 	cp $SRC_PATH/debian/{postinst,prerm} $tmp/DEBIAN
 	# set permissions for executable files
-	chmod 0755 $tmp/DEBIAN/{postinst,prerm}
+	chmod 0755 $tmp/DEBIAN/{postinst,prerm} $tmp/usr/bin/theide
 fi
 
 # create .deb package

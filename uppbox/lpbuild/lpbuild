@@ -23,8 +23,8 @@ SERIES=( hardy jaunty karmic lucid maverick natty oneiric )
 #GPG_KEY="13A907FC"
 #PYTHON=python2
 #TMPDIR=""	# use default
-#PPA="upp-testing"
-#SERIES=( oneiric )
+#PPA="upp"
+#SERIES=( hardy jaunty karmic lucid maverick natty oneiric )
 #SIMULATE="-s"
 
 echo "Debian source package builder"

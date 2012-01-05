@@ -28,7 +28,10 @@ $(CURDIR)/debian/ide-nogtk:
 	sed -i -e 's/IDE_VERSION[ \t]*"\([0-9]*\)[^"]*"/IDE_VERSION    "\1-'$(SERIES)-$(ARCH)'-nogtk"/' $(CURDIR)/uppsrc/ide/version.h
 	$(MAKE) $(JOBS) PKG=ide $(compiler) "NESTS=uppsrc" "FLAGS=GUI MT NOGTK GCC SHARED" VERBOSE=Y BINEXT=-nogtk "BINPREFIX=debian/"
 
-build: $(CURDIR)/debian/ide $(CURDIR)/debian/ide-nogtk
+$(CURDIR)/debian/umk:
+	$(MAKE) $(JOBS) PKG=umk $(compiler) "NESTS=uppsrc" "FLAGS=GCC SHARED" VERBOSE=Y BINEXT= "BINPREFIX=debian/"
+
+build: $(CURDIR)/debian/ide $(CURDIR)/debian/ide-nogtk $(CURDIR)/debian/umk
 
 binary-indep:
 	bash -x $(CURDIR)/debian/dopack $(CURDIR) $(CURDIR)/.. upp
@@ -36,6 +39,7 @@ binary-indep:
 binary-arch: build
 	bash -x $(CURDIR)/debian/dopack $(CURDIR) $(CURDIR)/.. theide
 	bash -x $(CURDIR)/debian/dopack $(CURDIR) $(CURDIR)/.. theide-nogtk
+	bash -x $(CURDIR)/debian/dopack $(CURDIR) $(CURDIR)/.. umk
 	
 binary: binary-indep binary-arch
 

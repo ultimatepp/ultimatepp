@@ -44,3 +44,12 @@ Description: IDE (not only) for Ultimate++ framework [nogtk build]
  .
  This package contains TheIDE built with simpler look to reduce
  package dependencies.
+
+Package: umk
+Architecture: any
+Depends: ${shlibs:Depends}
+Provides: theide
+Description: Command line builder for U++ projects
+ For those who need to build U++ packages from scripts or in minimalistic
+ environments, umk utility provides simple building solution. It fully supports
+ all the build-related features provided by TheIDE, without the actual IDE.
