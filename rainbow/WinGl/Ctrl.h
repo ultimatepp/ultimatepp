@@ -55,6 +55,7 @@ public:
 	static void  SetDesktop(Ctrl& q);
 	static Ctrl *GetDesktop() { return desktop; }
 	static void  SetWindowSize(Size sz);
+	static Size  GetScreenSize() { return screenRect.GetSize(); }
 	
 	static void  DrawScreen();
 

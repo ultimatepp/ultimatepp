@@ -22,13 +22,42 @@ NAMESPACE_UPP
 #include <WinGl/Shaders.h>
 #include "Resources.brc"
 
+typedef Rect_<float> RectF;
+typedef Point_<float> PointF;
+
+struct Fbo : Moveable<Fbo>
+{
+	GLuint texId;
+	GLuint fbId;
+	GLuint rbId;
+	GLenum status;
+	int width;
+	int height;
+	bool ready;
+	
+	bool Create(int width, int height, bool resize = false);
+	void Resize(int width, int height);
+	void Bind();
+	void Unbind();
+	void Clear();
+	void BlitToScreen();
+	void BlitTo(const Fbo& fbo);
+	String GetError();
+	
+	Fbo() : width(0), height(0), ready(false)
+	{}
+};
+
 extern bool  glEndSession;
 extern HWND  hWnd;
 extern HWND  glHwnd;
 extern HDC   hDC;
 extern HGLRC hRC;
 extern Shader alphaMagProg;
-extern bool  glReady;
+extern Shader blurProg;
+extern Fbo screenFbo0;
+extern Fbo screenFbo1;
+extern bool glReady;
 extern String error;
 extern int glDrawMode;
 
@@ -104,6 +133,7 @@ public:
 	virtual	void DrawRectOp(int x, int y, int cx, int cy, Color color);
 	virtual void DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color);
 	virtual void DrawImageOp(float x0, float y0, float z0, float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, const Image& img, const Rect& src, Color color);
+	virtual void DrawTextureOp(const RectF& r, int textureId, int width, int height, const RectF& src);
 	virtual void DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color);
 
 	virtual void DrawPolyPolylineOp(const Point *vertices, int vertex_count,
@@ -162,10 +192,12 @@ public:
 	Size         drawing_size;
 	Point 		 drawing_offset;
 	Rect		 clip;
+	float        r, g, b, a;
 	float        alpha;
 	float        angle;
 	float        scale;
-		
+	static float sigma;
+			
 private:
 	Array<Cloff> cloff;
 	int ci;
@@ -187,8 +219,9 @@ public:
 	Point    GetOffset() const { return drawing_offset; }
 	SystemDraw(Size sz);
 	virtual ~SystemDraw();
-	void FlatView(bool applyTransform = true);
-	void Clear();
+	void FlatView(int width = -1, int height = -1);
+	void ApplyTransforms();
+	void Clear(bool ontransforms = false);
 	void PushContext();
 	void PopContext();
 	float GetAspect() { return drawing_size.cx / (float) drawing_size.cy; };

@@ -9,6 +9,7 @@ NAMESPACE_UPP
 
 FrameInfo frameInfo;
 SystemDraw* SystemDraw::systemDraw = NULL;
+float SystemDraw::sigma = 0;
 
 dword SystemDraw::GetInfo() const
 {
@@ -51,7 +52,9 @@ void SystemDraw::Reset() {
 	cd = 0;
 	drawing_offset = Point(0, 0);
 	alpha = 255;
-	angle = 0.f;
+	r = g = b = a = 255;
+	angle = 0;
+	scale = 1;
 	image_coloring = true;
 }
 
@@ -98,8 +101,10 @@ void SystemDraw::Init()
 	glColor4f(1.f, 1.f, 1.f, 1.f);
 }
 
-void SystemDraw::Clear()
+void SystemDraw::Clear(bool ontransforms)
 {
+	if(ontransforms && (angle == 0 && scale == 1))
+		return;
 #if CLIP_MODE == 0
 	glDisable(GL_SCISSOR_TEST);
 #endif
@@ -109,33 +114,42 @@ void SystemDraw::Clear()
 #endif
 }
 
-void SystemDraw::FlatView(bool applyTransform)
+void SystemDraw::FlatView(int width, int height)
 {
-	glViewport(0, 0, (GLsizei) drawing_size.cx, (GLsizei) drawing_size.cy);
+	glViewport(0, 0, (GLsizei) width < 0 ? drawing_size.cx : width, (GLsizei) height < 0 ? drawing_size.cy : height);
 	float aspect = drawing_size.cx / (float) drawing_size.cy;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0, drawing_size.cx, drawing_size.cy, 0, -100, 100);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	if(applyTransform)
-	{
-		float dx = (float) drawing_size.cx / 2;
-		float dy = (float) drawing_size.cy / 2;
-		glTranslatef(dx, dy, 0.f);
-		glRotatef(angle, 0, 0, 1);
-		glScalef(scale, scale, 1);
-		glTranslatef(-dx, -dy, 0.f);
-	}
+}
+
+void SystemDraw::ApplyTransforms()
+{
+	float dx = (float) drawing_size.cx / 2;
+	float dy = (float) drawing_size.cy / 2;
+	glTranslatef(dx, dy, 0.f);
+	glRotatef(angle, 0, 0, 1);
+	glScalef(scale, scale, 1);
+	glTranslatef(-dx, -dy, 0.f);
 }
 
 void SystemDraw::PushContext()
 {
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glMatrixMode(GL_MODELVIEW);
 }
 
 void SystemDraw::PopContext()
 {
-	FlatView();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
 }
 
 SystemDraw::~SystemDraw() {

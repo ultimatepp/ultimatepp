@@ -27,7 +27,10 @@ public:
 	void Set(const char* var, float v);
 	void Set(const char* var, bool v);
 	void Set(const char* var, int v);
+	void Set(const char* var, float v0, float v1);
+	void Set(const char* var, float v0, float v1, float v2);
 	void Set(const char* var, float v0, float v1, float v2, float v3);
+	void Set(const char* var, float* v, int size, int count);
 	void Start();
 	void Stop();
 	String GetError();

@@ -155,9 +155,14 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 	case WM_ERASEBKGND:
 		return 1L;
 	case WM_SIZE:
+	{
 		//ActivateGlContext();
 		Ctrl::SetWindowSize(Size(LOWORD(lParam), HIWORD(lParam)));
+		Size sz = Ctrl::GetScreenSize();
+		screenFbo0.Resize(sz.cx, sz.cy);
+		screenFbo1.Resize(sz.cx, sz.cy);
 		return 0L;
+	}
 	case WM_HELP:
 		return TRUE;
 	case WM_CLOSE:

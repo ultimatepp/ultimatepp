@@ -147,7 +147,6 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 	#endif
 	fi.UpdateTextures();	
 
-
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	alphaMagProg.Start();
 
@@ -169,9 +168,15 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 	
 	float xp = (float) x;
 	float yp = (float) y;
-	
+
 	int page = -1;
+
+	float sw = (float) fi.scaleW;
+	float sh = (float) fi.scaleH;
 	
+	float tw = 1.f / sw;
+	float th = 1.f / sh;
+
 	while(*s && n > 0)
 	{
 		int cn = *s;
@@ -203,10 +208,7 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 				float tt = (float) ci.y;
 				float tr = (float) ci.x + ci.width;
 				float tb = (float) ci.y + ci.height;
-				
-				float sw = (float) fi.scaleW;
-				float sh = (float) fi.scaleH;
-				
+								
 				#if CLIP_MODE == 3
 				if(sx < cl)
 				{
@@ -232,29 +234,26 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 					dy = cb;
 				}
 				#endif
+
+				tl = (tl + 0.5f) * tw;
+				tr = (tr - 0.5f) * tw;
+				tt = (tt + 0.5f) * th;
+				tb = (tb - 0.5f) * th;
 				
-				float tw = 1.f / sw;
-				float th = 1.f / sh;
-				
-				tl *= tw;
-				tt *= th;
-				tr *= tw;
-				tb *= th;
-		
 				float vtx[] = {
 					sx, dy,
 					sx, sy,
 					dx, dy,
 					dx, sy
 				};
-			
+
 				float crd[] = {
 					tl, tb,
 					tl, tt,
 					tr, tb,
 					tr, tt
-				}; 
-
+				};
+			
 				glTexCoordPointer(2, GL_FLOAT, 0, crd);
 				glVertexPointer(2, GL_FLOAT, 0, vtx);
 				glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

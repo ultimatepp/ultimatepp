@@ -234,19 +234,52 @@ void Ctrl::DrawScreen()
 		draw.angle = infoPanel.GetAngle();
 		draw.scale = infoPanel.GetScale();
 		draw.FlatView();
-		draw.Clear();
+		draw.Clear(true);
+		screenFbo0.Bind();
+		screenFbo0.Clear();
 		desktop->ApplyTransform(TS_BEFORE_PAINT);
 		desktop->CtrlPaint(draw, clip);
+		screenFbo0.Unbind();
+
+		glDisable(GL_BLEND);
+		RectF drawRect(0.f, 0.f, (float) screenRect.GetWidth(), (float) screenRect.GetHeight());
+		float sigma = SystemDraw::sigma;
+		if(sigma > 0)
+		{
+			float gx = 1.0f / (sqrt(2.0f * float(M_PI)) * sigma);
+			float gy = exp(-0.5f / (sigma * sigma));
+			float gz = gy * gy;
+			float blurSizeHorz = 1.f / (float) screenFbo0.width;
+			float blurSizeVert = 1.f / (float) screenFbo0.height;
+			blurProg.Start();
+			blurProg.Set("blurSize", blurSizeHorz);
+			blurProg.Set("gaussian", gx, gy, gz);
+			blurProg.Set("blurMultiplyVec", 1, 0);
+			screenFbo1.Bind();
+			draw.DrawTextureOp(drawRect, screenFbo0.texId, screenFbo0.width, screenFbo0.height, drawRect);
+			screenFbo1.Unbind();
+			
+			blurProg.Set("blurSize", blurSizeVert);
+			blurProg.Set("blurMultiplyVec", 0, 1);
+			draw.ApplyTransforms();
+			draw.DrawTextureOp(drawRect, screenFbo1.texId, screenFbo1.width, screenFbo1.height, drawRect);
+			blurProg.Stop();
+		}
+		else
+		{
+			draw.ApplyTransforms();
+			draw.DrawTextureOp(drawRect, screenFbo0.texId, screenFbo0.width, screenFbo0.height, drawRect);
+			//screenFbo0.BlitToScreen();
+		}
+		glEnable(GL_BLEND);
+
 		for(int i = 0; i < topctrl.GetCount(); i++) {
 			Ctrl* tq = topctrl[i];
 			if(tq == &infoPanel || tq == &console)
 				continue;
 			Rect r = tq->GetRect();
 			tq->ApplyTransform(TS_BEFORE_PAINT);
-			if(tq->cliptobounds)
-				draw.Clipoff(r);
-			else
-				draw.Offset(r.left, r.top);
+			draw.Offset(r.left, r.top);
 			tq->CtrlPaint(draw, clip);
 			draw.End();
 			tq->ApplyTransform(TS_AFTER_PAINT);
@@ -254,6 +287,7 @@ void Ctrl::DrawScreen()
 		CursorSync(draw);
 			
 		desktop->ApplyTransform(TS_AFTER_PAINT);		
+
 		glLoadIdentity();
 		#if CLIP_MODE == 2
 		//glDisable(GL_STENCIL_TEST);
@@ -275,7 +309,8 @@ void Ctrl::DrawScreen()
 		#if CLIP_MODE == 2
 		//glEnable(GL_STENCIL_TEST);
 		#endif
-		MouseSync(draw);		
+		MouseSync(draw);
+
 		SwapBuffers(hDC);
 		painting = false;
 		int64 t1 = GetHighTickCount();

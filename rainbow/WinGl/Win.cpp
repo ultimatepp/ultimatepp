@@ -12,6 +12,8 @@ HDC    hDC = NULL;
 HGLRC  hRC = NULL;
 Shader alphaMagProg;
 Shader blurProg;
+Fbo    screenFbo0;
+Fbo    screenFbo1;
 String error;
 
 #ifdef flagDEBUG
@@ -170,21 +172,51 @@ int CreateGlContext()
 	}
 	RLOG("OpenGL: glewInit ok..");
 	
+	Size sz = Ctrl::GetScreenSize();
+	if(!screenFbo0.Create(sz.cx, sz.cy))
+	{
+		error = "Creating screen fbo error: " + screenFbo0.GetError();		
+		return -7;
+	}
+
+	if(!screenFbo1.Create(sz.cx, sz.cy))
+	{
+		error = "Creating screen fbo error: " + screenFbo1.GetError();
+		return -7;
+	}
+	RLOG("OpenGL: Creating screen fbo ok..");
+	
 	alphaMagProg.CompileProgram(alphaMagVert, alphaMagFrag);
 	
 	if(alphaMagProg.GetProgram() < 0)
 	{
 		error = alphaMagProg.GetError();
-		return -7;
+		return -8;
 	}
-		
+
+	blurProg.CompileProgram(blurVert, blurFrag);
+	
+	if(blurProg.GetProgram() < 0)
+	{
+		error = blurProg.GetError();
+		return -8;
+	}
+	
 	RLOG("OpenGL: CompileProgram ok..");
+	
+	resources.GetFont(Tahoma(), true);
+	resources.GetFont(Tahoma().Bold(), true);
+	
+	RLOG("OpenGL: Preloading fonts ok..");
 	
 	wglSwapIntervalEXT(1);
 	
 	if(glDrawMode == DRAW_ON_TIMER)
+	{
 		SetTimer(glHwnd, 1, 10, NULL);
-	RLOG("OpenGL: SetTimer ok..");
+		RLOG("OpenGL: SetTimer ok..");
+	}
+	
 	glReady = true;
 	return 1;
 }

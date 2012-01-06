@@ -288,54 +288,37 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	if(viewexcluded)
 		w.End();
 	//DOLEVELCHECK;
-	
-	if(!oview.IsEmpty() && oview.Intersects(clip)) {
-		glPushMatrix();
-		LEVELCHECK(w, this);
-		if(overpaint) {
-			if(cliptobounds)
-				w.Clip(oview);
-			w.Offset(view.left, view.top);
-			Paint(w);
-			PaintCaret(w);
-			w.End();
-			if(cliptobounds)
-				w.End();
-		}
-		else {
-			if(cliptobounds)
-				w.Clip(view);
-			w.Offset(view.left, view.top);
-			Paint(w);
-			PaintCaret(w);
-			w.End();
-			if(cliptobounds)
-				w.End();
-		}
-		glPopMatrix();
-	}
-	
-	if(hasviewctrls && !view.IsEmpty()) {
-		Rect cl = clip & view;
-		for(q = firstchild; q; q = q->next)
-			if(q->IsShown() && q->InView()) {
-				Rect rr(q->popup ? clip : cl);
-				LEVELCHECK(w, q);
-				if(q->cliptobounds)
-					w.Clip(rr);
-				Rect qr = q->GetRect();
-				Point off = qr.TopLeft() + view.TopLeft();
-				Rect ocl = cl - off;
-				if(ocl.Intersects(Rect(qr.GetSize()).Inflated(overpaint))) {
-					w.Offset(off);
-					q->CtrlPaint(w, rr - off);
-					w.End();
-				}
-				if(q->cliptobounds)
-					w.End();
-			}
-	}
 
+	if(!oview.IsEmpty() && oview.Intersects(clip)) {
+		LEVELCHECK(w, this);
+		if(cliptobounds)
+			w.Clip(overpaint ? oview : view);
+		w.Offset(view.left, view.top);
+		Paint(w);
+		PaintCaret(w);		
+		w.End();
+		
+		if(hasviewctrls && !view.IsEmpty()) {
+			Rect cl = clip & view;
+			for(q = firstchild; q; q = q->next)
+				if(q->IsShown() && q->InView()) {
+					Rect rr(q->popup ? clip : cl);
+					LEVELCHECK(w, q);
+					Rect qr = q->GetRect();
+					Point off = qr.TopLeft() + view.TopLeft();
+					Rect ocl = cl - off;
+					if(ocl.Intersects(Rect(qr.GetSize()).Inflated(overpaint))) {
+						w.Offset(off);
+						q->CtrlPaint(w, rr - off);
+						w.End();
+					}
+				}
+		}
+
+		if(cliptobounds)
+			w.End();
+	}
+	
 	ApplyTransform(TS_AFTER_CTRL_PAINT);
 	glPopMatrix();
 }
