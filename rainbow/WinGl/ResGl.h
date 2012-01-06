@@ -56,7 +56,7 @@ struct ImageResource : Moveable<ImageResource>
 struct Resources
 {
 	enum {
-		NEAREST_FILTRING = 1,
+		NEAREST_FILTERING = 1,
 		LINEAR_FILTERING = 2,
 		FORCE_FILTERING = 4,
 		AUTO_ATLAS = 8,
@@ -81,8 +81,8 @@ struct Resources
 	const Texture& CreateTexture(const Image& img, int width = -1, int height = -1);
 	void CreateSubTexture(const Texture& t, const Image& img, int x, int y);
 	
-	const Texture& Bind(const Image& img, int opts = NEAREST_FILTRING);
-	bool Bind(int64 serialId, int opts = NEAREST_FILTRING);
+	const Texture& Bind(const Image& img, int opts = NEAREST_FILTERING);
+	bool Bind(int64 serialId, int opts = NEAREST_FILTERING);
 	void Add(const Image& img, bool linear = false);
 	void Add(Iml* images, bool linear = false);
 	void Add(const Font& fnt);

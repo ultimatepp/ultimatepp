@@ -188,11 +188,39 @@ void Shader::Set(const char* var, int v)
 		glUniform1i(id, v);
 }
 
+void Shader::Set(const char* var, float v0, float v1)
+{
+	int id = GetUniformId(var);
+	if(id >= 0)
+		glUniform2f(id, v0, v1);
+}
+
+void Shader::Set(const char* var, float v0, float v1, float v2)
+{
+	int id = GetUniformId(var);
+	if(id >= 0)
+		glUniform3f(id, v0, v1, v2);
+}
+
 void Shader::Set(const char* var, float v0, float v1, float v2, float v3)
 {
 	int id = GetUniformId(var);
 	if(id >= 0)
 		glUniform4f(id, v0, v1, v2, v3);
+}
+
+void Shader::Set(const char* var, float* v, int size, int count)
+{
+	int id = GetUniformId(var);
+	if(id >= 0)
+	{
+		if(size == 2)
+			glUniform2fv(id, count, v);
+		else if(size == 3)
+			glUniform3fv(id, count, v);
+		else if(size == 4)
+			glUniform4fv(id, count, v);			
+	}
 }
 
 void Shader::Start()

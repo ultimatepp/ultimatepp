@@ -98,12 +98,12 @@ bool Ctrl::DoKeyGl(dword key, int cnt)
 		consoleActive = !consoleActive;
 		return true;
 	}
-	else if(key == K_CTRL_F11)
+	else if(key == K_CTRL_F12)
 	{
 		consoleActive = !consoleActive;
 		return true;
 	}
-	else if(key == K_CTRL_F12)
+	else if(key == K_CTRL_F11)
 	{
 		controlPanelActive = !controlPanelActive;
 		return true;

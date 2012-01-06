@@ -135,32 +135,11 @@ void SystemDraw::StencilClip(const Rect& r, int mode, bool exclude)
 		glStencilFunc(GL_EQUAL, cn, ~0);
 
 	glColorMask(1, 1, 1, 1);
-	
-	/*
-	if(mode == 0)
-	{
-		glColorMask(0, 0, 0, 0);
-		glStencilOp(GL_KEEP, GL_INCR_WRAP, GL_INCR_WRAP);
-		glStencilFunc(GL_EQUAL, cn, ~0);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		glStencilFunc(GL_LEQUAL, ++cn, ~0);
-		glColorMask(1, 1, 1, 1);
-		//cn = cd;
-	}
-	else
-	{
-		glStencilFunc(GL_LEQUAL, --cn, ~0);
-	}
-	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-	*/			
 }
 
 void SystemDraw::SetClip(const Rect& r, int mode, bool exclude)
 {
-	//glColor4ub(255, 0, 0, 10);
-	//glRecti(r.left, r.top, r.right, r.bottom);
 	SetClipRect(r);
-
 #if CLIP_MODE == 0
 	ScissorClip(clip);
 #elif CLIP_MODE == 1
@@ -291,9 +270,6 @@ void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 		dx, sy
 	};
 	
-	//SetVec(vtx, sx, sy, dx, dy);
-	
-	
 	glVertexPointer(2, GL_FLOAT, 0, vtx);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
@@ -360,15 +336,15 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 	}
 #endif
 	
-	const Texture& t = resources.Bind(img, Resources::AUTO_ATLAS | Resources::NEAREST_FILTRING);
+	const Texture& t = resources.Bind(img, Resources::AUTO_ATLAS | Resources::NEAREST_FILTERING);
 
 	float tw = 1.f / (float) t.realWidth;
 	float th = 1.f / (float) t.realHeight;
 
-	tl = (tl + t.x) * tw;
-	tr = (tr + t.x) * tw;
-	tt = (tt + t.y) * th;
-	tb = (tb + t.y) * th;
+	tl = (tl + t.x + 0.5f) * tw;
+	tr = (tr + t.x - 0.5f) * tw;
+	tt = (tt + t.y + 0.5f) * th;
+	tb = (tb + t.y - 0.5f) * th;
 
 	if(image_coloring)
 	{
@@ -387,21 +363,62 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 		dx, sy
 	};
 
-	float wo = 0.5f / (float) t.realWidth;
-	float ho = 0.5f / (float) t.realHeight;
-	
 	float crd[] = {
-		tl + wo, tb - ho,
-		tl + wo, tt + ho,
-		tr - wo, tb - ho,
-		tr - wo, tt + ho
+		tl, tb,
+		tl, tt,
+		tr, tb,
+		tr, tt
 	};
 
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glTexCoordPointer(2, GL_FLOAT, 0, crd);
 	glVertexPointer(2, GL_FLOAT, 0, vtx);
-	//SetVec(vtx, sx, sy, dx, dy);
-	//SetVec(crd, tl, tt, tr, tb);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisable(GL_TEXTURE_2D);
+}
+
+void SystemDraw::DrawTextureOp(const RectF& r, int textureId, int width, int height, const RectF& src)
+{
+	float sx = r.left + drawing_offset.x;
+	float sy = r.top + drawing_offset.y;
+	float dx = sx + r.GetWidth();
+	float dy = sy + r.GetHeight();
+
+	float tl = src.left;
+	float tr = src.right;
+	float tt = src.top;
+	float tb = src.bottom;
+	
+	resources.Bind(textureId, Resources::NEAREST_FILTERING);
+
+	float tw = 1.f / (float) (width);
+	float th = 1.f / (float) (height);
+
+	tl = (tl + 0.5f) * tw;
+	tr = (tr - 0.5f) * tw;
+	tt = (tt + 0.5f) * th;
+	tb = (tb - 0.5f) * th;
+	
+	glEnable(GL_TEXTURE_2D);
+
+	float vtx[] = {
+		sx, dy,
+		sx, sy,
+		dx, dy,
+		dx, sy
+	};
+	
+	float crd[] = {
+		tl, tt,
+		tl, tb,
+		tr, tt,
+		tr, tb
+	};
+
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glTexCoordPointer(2, GL_FLOAT, 0, crd);
+	glVertexPointer(2, GL_FLOAT, 0, vtx);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	
@@ -418,7 +435,7 @@ void SystemDraw::DrawImageOp(float x0, float y0, float z0, float x1, float y1, f
 	float sw = (float) src.GetWidth();
 	float sh = (float) src.GetHeight();
 
-	const Texture& t = resources.Bind(img, Resources::AUTO_ATLAS | Resources::NEAREST_FILTRING);
+	const Texture& t = resources.Bind(img, Resources::AUTO_ATLAS | Resources::NEAREST_FILTERING);
 
 	float tw = 1.f / (float) t.realWidth;
 	float th = 1.f / (float) t.realHeight;
@@ -439,10 +456,6 @@ void SystemDraw::DrawImageOp(float x0, float y0, float z0, float x1, float y1, f
 	glEnable(GL_TEXTURE_2D);
 
 	float vtx[] = {
-//		float(x3 + drawing_offset.x), float(y3 + drawing_offset.y),
-//		float(x0 + drawing_offset.x), float(y0 + drawing_offset.y),
-//		float(x2 + drawing_offset.x), float(y2 + drawing_offset.y),
-//		float(x1 + drawing_offset.x), float(y1 + drawing_offset.y)
 		x3, y3, z3,
 		x0, y0, z0,
 		x2, y2, z2,
