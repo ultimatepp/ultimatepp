@@ -187,9 +187,9 @@ void Ctrl::StateDeep(int reason)
 	GuiLock __;
 	if(destroying)
 		return;
-	State(reason);
 	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext())
 		q->StateDeep(reason);
+	State(reason);
 }
 
 void Ctrl::StateH(int reason)
