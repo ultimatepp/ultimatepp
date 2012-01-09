@@ -243,9 +243,11 @@ void Ctrl::DrawScreen()
 
 		glDisable(GL_BLEND);
 		RectF drawRect(0.f, 0.f, (float) screenRect.GetWidth(), (float) screenRect.GetHeight());
-		float sigma = SystemDraw::sigma;
-		if(sigma > 0)
+		float blur = SystemDraw::blurStrength;
+		float gray = SystemDraw::grayStrength;
+		if(blur > 0 || gray > 0)
 		{
+			float sigma = blur * 3.f;
 			float gx = 1.0f / (sqrt(2.0f * float(M_PI)) * sigma);
 			float gy = exp(-0.5f / (sigma * sigma));
 			float gz = gy * gy;
@@ -255,12 +257,16 @@ void Ctrl::DrawScreen()
 			blurProg.Set("blurSize", blurSizeHorz);
 			blurProg.Set("gaussian", gx, gy, gz);
 			blurProg.Set("blurMultiplyVec", 1, 0);
+			blurProg.Set("blurStrength", blur);
+			blurProg.Set("grayStrength", gray);
 			screenFbo1.Bind();
 			draw.DrawTextureOp(drawRect, screenFbo0.texId, screenFbo0.width, screenFbo0.height, drawRect);
 			screenFbo1.Unbind();
 			
 			blurProg.Set("blurSize", blurSizeVert);
 			blurProg.Set("blurMultiplyVec", 0, 1);
+			blurProg.Set("blurStrength", blur);
+			blurProg.Set("grayStrength", gray);
 			draw.ApplyTransforms();
 			draw.DrawTextureOp(drawRect, screenFbo1.texId, screenFbo1.width, screenFbo1.height, drawRect);
 			blurProg.Stop();

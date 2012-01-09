@@ -107,6 +107,8 @@ enum TransformState {
 	TS_AFTER_SCREEN
 };
 
+#define TEXEL_OFFSET 0.325f
+
 class SystemDraw : public Draw {
 public:
 	virtual dword GetInfo() const;
@@ -196,7 +198,8 @@ public:
 	float        alpha;
 	float        angle;
 	float        scale;
-	static float sigma;
+	static float blurStrength;
+	static float grayStrength;
 			
 private:
 	Array<Cloff> cloff;

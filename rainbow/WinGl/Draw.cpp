@@ -9,7 +9,8 @@ NAMESPACE_UPP
 
 FrameInfo frameInfo;
 SystemDraw* SystemDraw::systemDraw = NULL;
-float SystemDraw::sigma = 0;
+float SystemDraw::blurStrength = 0;
+float SystemDraw::grayStrength = 0;
 
 dword SystemDraw::GetInfo() const
 {
