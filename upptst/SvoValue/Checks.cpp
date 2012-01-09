@@ -91,6 +91,16 @@ void CheckValueMap()
 	
 	ValueMap hh = v;
 	ASSERT(hh == h);
+	hh.Add(123, "foo");
+	ASSERT(hh.GetCount() == 4);
+	ASSERT(v.GetCount() == 3);
+	ASSERT(hh[123] == "foo");
+	
+	ValueArray va = v;
+	ASSERT(va.GetCount() == 3);
+	ASSERT(va[0] == 123);
+	ASSERT(va[1] == Date(2001, 12, 1));
+	ASSERT(va[2] == "test");
 }
 
 void OtherChecks()

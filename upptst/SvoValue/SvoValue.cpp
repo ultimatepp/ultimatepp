@@ -2,6 +2,8 @@
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
 	Value v;
 	ASSERT(v.IsVoid());
 
@@ -16,6 +18,10 @@ CONSOLE_APP_MAIN
 	CheckType(Time(2012, 1, 1, 15, 30), false, true);
 	ValueArray va;
 	va.Add(123);
+	va.Add("ahoj");
+	ASSERT(va.GetCount() == 2);
+	ASSERT(va[0] == 123);
+	ASSERT(va[1] == "ahoj");
 	CheckType(va, false, true);
 	ValueMap map;
 	map.Add("1", 1);
