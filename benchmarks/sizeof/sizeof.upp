@@ -1,10 +1,11 @@
 uses
-	Core;
+	Core,
+	CtrlLib;
 
 file
 	main.cpp
 		depends() test.h;
 
 mainconfig
-	"" = "CONSOLE MT";
+	"" = "GUI MT";
 
