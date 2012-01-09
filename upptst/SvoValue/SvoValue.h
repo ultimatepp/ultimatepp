@@ -22,6 +22,11 @@ void CheckNumber()
 	Value v2 = (T)0;
 	Value vn = (T)Null;
 	Value dv = 123.0;
+	ASSERT(IsNumber(v));
+	ASSERT(!IsError(v));
+	ASSERT(!IsVoid(v));
+	ASSERT(!IsString(v));
+	ASSERT(!IsDateTime(v));
 	ASSERT(vn.Is<bool>() || GetHashValue(v) == GetHashValue(dv));
 	ASSERT(v != v2);
 	ASSERT(v != vn);
@@ -49,6 +54,10 @@ void CheckType(const T& x, bool isvoid = false, bool checkhash = false)
 	Value v = x;
 	RDUMP(v);
 	ASSERT(isvoid ? v.IsVoid() : v.Is<T>());
+	if(!isvoid) {
+		RDUMP(GetValueTypeNo<T>());
+		ASSERT(v.GetType() == GetValueTypeNo<T>());
+	}
 	String h = StoreAsString(v);
 	Value vv;
 	LoadFromString(vv, h);

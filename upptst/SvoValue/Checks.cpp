@@ -68,6 +68,9 @@ void CheckDateTime()
 	
 	ASSERT(v == v2);
 	ASSERT(GetHashValue(v) == GetHashValue(v2));
+
+	ASSERT(IsDateTime(v));
+	ASSERT(IsDateTime(c));
 }
 
 void CheckValueMap()
@@ -88,6 +91,8 @@ void CheckValueMap()
 	ASSERT(v["0"] == 123);
 	ASSERT(v["1"] == Date(2001, 12, 1));
 	ASSERT(v["2"] == "test");
+	ASSERT(IsValueMap(v));
+	ASSERT(IsValueArray(v));
 	
 	ValueMap hh = v;
 	ASSERT(hh == h);
