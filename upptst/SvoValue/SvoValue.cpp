@@ -40,7 +40,12 @@ CONSOLE_APP_MAIN
 	CheckType(Sizef(20, 20), false, true);
 	CheckType(Rectf(0, 0, 123, 123), false, true);
 	CheckType(Blue(), false, true);
-	CheckType(Uuid::Create(), false, true);
+	Uuid uuid;
+	uuid.a = 11234;
+	uuid.b = 321;
+	uuid.c = 1111;
+	uuid.d = 19999;
+	CheckType(uuid, false, true);
 
 	v = ErrorValue("error");
 	CheckType(v, true);

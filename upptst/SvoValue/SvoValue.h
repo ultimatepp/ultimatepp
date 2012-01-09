@@ -51,13 +51,28 @@ void CheckType(const T& x, bool isvoid = false, bool checkhash = false)
 {
 	RLOG("---------------------------");
 	RLOG("CheckType " << typeid(T).name());
+	String fn;
+	Value vf;
+	if(!isvoid) {
+		int t = GetValueTypeNo<T>();
+		fn = ConfigFile(AsString(t));
+		if(FileExists(fn)) {
+			LoadFromFile(vf, fn);
+			RDUMP(vf.To<T>());
+			ASSERT(vf.To<T>() == x);
+		}
+	}
 	Value v = x;
 	RDUMP(v);
 	ASSERT(isvoid ? v.IsVoid() : v.Is<T>());
 	if(!isvoid) {
+		StoreToFile(v, fn);
 		RDUMP(GetValueTypeNo<T>());
 		ASSERT(v.GetType() == GetValueTypeNo<T>());
+		ASSERT(v.To<T>() == x);
 	}
+	if(!vf.IsVoid())
+		ASSERT(vf == v);
 	String h = StoreAsString(v);
 	Value vv;
 	LoadFromString(vv, h);
