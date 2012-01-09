@@ -1,8 +1,8 @@
-#include <Core/Core.h>
+#include <CtrlLib/CtrlLib.h>
 
 using namespace Upp;
 
-CONSOLE_APP_MAIN
+GUI_APP_MAIN
 {
 	RDUMP(sizeof(bool));
 	RDUMP(sizeof(int));
@@ -36,6 +36,15 @@ CONSOLE_APP_MAIN
 	RDUMP(sizeof(Point));
 	RDUMP(sizeof(Rect));
 	RDUMP(sizeof(Color));
+	RDUMP(sizeof(Complex));
+	RDUMP(sizeof(Uuid));
+	RDUMP(sizeof(ValueArray));
+	RDUMP(sizeof(ValueMap));
 	RDUMP(sizeof(Mutex));
 	RDUMP(sizeof(RWMutex));
+	RDUMP(sizeof(Image));
+	RDUMP(sizeof(Font));
+	RDUMP(sizeof(AttrText));
+	RDUMP(sizeof(Painting));
+	RDUMP(sizeof(Drawing));
 }
