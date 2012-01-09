@@ -18,24 +18,34 @@ uniform vec2 blurMultiplyVec;
 // 1, 0 - vertical
 // 0, 1 - horizontal
 uniform vec3 gaussian;
+uniform float grayStrength;
+uniform float blurStrength;
 
 void main() {
 
-	vec4 avgValue = vec4(0.0f, 0.0f, 0.0f, 0.0f);
-	float coefficientSum = 0.0f;
-	
-	vec3 incGaussian = gaussian;
-	avgValue += texture2D(blurSampler, gl_TexCoord[0].xy) * incGaussian.x;
-	coefficientSum += incGaussian.x;
-	incGaussian.xy *= incGaussian.yz;
-	
-	for (float i = 1.0f; i <= numBlurPixelsPerSide; i++) {
-		vec2 pos = i * blurSize * blurMultiplyVec;
-		avgValue += texture2D(blurSampler, gl_TexCoord[0].xy - pos) * incGaussian.x;         
-		avgValue += texture2D(blurSampler, gl_TexCoord[0].xy + pos) * incGaussian.x;         
-		coefficientSum += 2 * incGaussian.x;
-		incGaussian.xy *= incGaussian.yz;
-	}
+	vec4 v = texture2D(blurSampler, gl_TexCoord[0].xy);
+	if(blurStrength > 0)
+	{
+		vec4 avgValue = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+		float coefficientSum = 0.0f;
 		
-	gl_FragColor = avgValue / coefficientSum;
+		vec3 incGaussian = gaussian;
+		avgValue += v * incGaussian.x;
+		coefficientSum += incGaussian.x;
+		incGaussian.xy *= incGaussian.yz;
+		
+		for (float i = 1.0f; i <= numBlurPixelsPerSide; i++) {
+			vec2 pos = i * blurSize * blurMultiplyVec;
+			avgValue += texture2D(blurSampler, gl_TexCoord[0].xy - pos) * incGaussian.x;         
+			avgValue += texture2D(blurSampler, gl_TexCoord[0].xy + pos) * incGaussian.x;         
+			coefficientSum += 2 * incGaussian.x;
+			incGaussian.xy *= incGaussian.yz;
+		}
+			
+		v = avgValue / coefficientSum;
+	}
+	float gray = dot(v.rgb, vec3(0.299, 0.587, 0.114));
+	vec4 grayColor = vec4(gray, gray, gray, v.a);
+	
+	gl_FragColor = mix(v, grayColor, grayStrength);
 }

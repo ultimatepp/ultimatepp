@@ -175,16 +175,17 @@ int CreateGlContext()
 	Size sz = Ctrl::GetScreenSize();
 	if(!screenFbo0.Create(sz.cx, sz.cy))
 	{
-		error = "Creating screen fbo error: " + screenFbo0.GetError();		
+		error = "Creating screen 0 fbo error: " + screenFbo0.GetError();		
 		return -7;
 	}
 
 	if(!screenFbo1.Create(sz.cx, sz.cy))
 	{
-		error = "Creating screen fbo error: " + screenFbo1.GetError();
+		error = "Creating screen 1 fbo error: " + screenFbo1.GetError();
 		return -7;
 	}
-	RLOG("OpenGL: Creating screen fbo ok..");
+	
+	RLOG("OpenGL: Creating fbo ok..");
 	
 	alphaMagProg.CompileProgram(alphaMagVert, alphaMagFrag);
 	

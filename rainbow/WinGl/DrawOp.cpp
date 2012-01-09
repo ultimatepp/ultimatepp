@@ -341,10 +341,10 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 	float tw = 1.f / (float) t.realWidth;
 	float th = 1.f / (float) t.realHeight;
 
-	tl = (tl + t.x + 0.5f) * tw;
-	tr = (tr + t.x - 0.5f) * tw;
-	tt = (tt + t.y + 0.5f) * th;
-	tb = (tb + t.y - 0.5f) * th;
+	tl = (tl + t.x + TEXEL_OFFSET) * tw;
+	tr = (tr + t.x - TEXEL_OFFSET) * tw;
+	tt = (tt + t.y + TEXEL_OFFSET) * th;
+	tb = (tb + t.y - TEXEL_OFFSET) * th;
 
 	if(image_coloring)
 	{
@@ -395,10 +395,10 @@ void SystemDraw::DrawTextureOp(const RectF& r, int textureId, int width, int hei
 	float tw = 1.f / (float) (width);
 	float th = 1.f / (float) (height);
 
-	tl = (tl + 0.5f) * tw;
-	tr = (tr - 0.5f) * tw;
-	tt = (tt + 0.5f) * th;
-	tb = (tb - 0.5f) * th;
+	tl = (tl + TEXEL_OFFSET) * tw;
+	tr = (tr - TEXEL_OFFSET) * tw;
+	tt = (tt + TEXEL_OFFSET) * th;
+	tb = (tb - TEXEL_OFFSET) * th;
 	
 	glEnable(GL_TEXTURE_2D);
 
@@ -440,10 +440,10 @@ void SystemDraw::DrawImageOp(float x0, float y0, float z0, float x1, float y1, f
 	float tw = 1.f / (float) t.realWidth;
 	float th = 1.f / (float) t.realHeight;
 
-	tl = (tl + t.x) * tw;
-	tr = (tr + t.x) * tw;
-	tt = (tt + t.y) * th;
-	tb = (tb + t.y) * th;
+	tl = (tl + t.x + TEXEL_OFFSET) * tw;
+	tr = (tr + t.x - TEXEL_OFFSET) * tw;
+	tt = (tt + t.y + TEXEL_OFFSET) * th;
+	tb = (tb + t.y - TEXEL_OFFSET) * th;
 
 	if(image_coloring)
 	{
