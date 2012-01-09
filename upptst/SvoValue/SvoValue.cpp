@@ -4,6 +4,12 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
+	Value ist = Opt0();
+	if(ist.Is<int>())
+		RLOG("int");
+	if(IsNumber(ist))
+		RLOG("number");
+
 	Value v;
 	ASSERT(v.IsVoid());
 
@@ -27,8 +33,12 @@ CONSOLE_APP_MAIN
 	map.Add("1", 1);
 	map.Add("2", 2);
 	CheckType(map, false, true);
+	CheckType(Point(20, 20), false, true);
 	CheckType(Size(20, 20), false, true);
 	CheckType(Rect(0, 0, 123, 123), false, true);
+	CheckType(Pointf(20, 20), false, true);
+	CheckType(Sizef(20, 20), false, true);
+	CheckType(Rectf(0, 0, 123, 123), false, true);
 	CheckType(Blue(), false, true);
 	CheckType(Uuid::Create(), false, true);
 
