@@ -28,7 +28,9 @@
 using namespace std;
 using namespace Upp;
 
+#ifndef _DEBUG
 #define NO_OUTPUT // for benchmark purposes, output is omitted
+#endif
 
 void BenchNTL(const char *file) {
 	FileIn in(file);
@@ -69,6 +71,58 @@ void BenchNTL(const char *file) {
 		for(int i = 0; i < l.GetCount(); i++) {
 			if(i) std::cout << ", ";
 			std::cout << l[i];
+		}
+		std::cout << '\n';
+	}
+#endif
+}
+
+bool SimpleValueOrder(const Value& a, const Value& b)
+{
+	return AsString(a) < AsString(b);
+}
+
+void BenchValueMap(const char *file) {
+	FileIn in(file);
+	if (!in) {
+		std::cout << "Cannot open input file.\n";
+		return;
+	}
+
+	ValueMap map;
+	int line = 1;
+
+	for(;;) {
+		int c = in.Get();
+		if(c < 0) break;
+		if(IsAlpha(c) || c == '_') {
+			String id;
+			id.Cat(c);
+			c = in.Get();
+			while(c >= 0 && (IsAlNum(c) || c == '_')) {
+				id.Cat(c);
+				c = in.Get();
+			}
+			ValueArray va = map[id];
+			va.Add(line);
+			map.Set(id, va);
+		}
+		else
+		if(IsDigit(c))
+			do c = in.Get();
+			while(c >= 0 && (IsAlNum(c) || c == '.'));
+		if(c == '\n')
+			++line;
+	}
+
+	Vector<int> order = GetSortOrder(map.GetKeys(), SimpleValueOrder);
+#ifndef NO_OUTPUT
+	for(int i = 0; i < order.GetCount(); i++) {
+		std::cout << ~(String)(map.GetKeys()[order[i]]) << ": ";
+		ValueArray l = map.GetValues()[order[i]];
+		for(int i = 0; i < l.GetCount(); i++) {
+			if(i) std::cout << ", ";
+			std::cout << (int)l[i];
 		}
 		std::cout << '\n';
 	}
@@ -165,7 +219,11 @@ void BenchHashMap(const char *file)
 
 #endif
 
+#ifdef _DEBUG
+#define N 1
+#else
 #define N 10000
+#endif
 
 CONSOLE_APP_MAIN
 {
@@ -177,6 +235,8 @@ CONSOLE_APP_MAIN
 	else
 		fn = argv[0];
 
+		BenchValueMap(fn);
+	cout << "===========================\n";
 	BenchNTL(fn); // first run to cache the file
 
 #ifdef TEST_HASHMAP
@@ -203,5 +263,13 @@ CONSOLE_APP_MAIN
 		for(int n = 0; n < N; n++)
 			BenchNTL(fn);
 		cout << "NTL time: " << tm.Elapsed() << " ms\n";
+	}
+
+	{
+		BenchValueMap(fn);
+		TimeStop tm;
+		for(int n = 0; n < N; n++)
+			BenchValueMap(fn);
+		cout << "ValueMap time: " << tm.Elapsed() << " ms\n";
 	}
 }
