@@ -1603,12 +1603,21 @@ mg], [@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y])&]
 [s4; &]
 [s5;:IsValid`(ImageBuffer`&`,int`,int`):%- [@(0.0.255) bool]_[* IsValid]([_^ImageBuffer^ Im
 ageBuffer]_`&[*@3 img], [@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y])&]
-[s2; Returns true if coordinates [%-*@3 x] and [%-*@3 y] are inside Image 
+[s2; Returns true if coordinates [%-*@3 x] and [%-*@3 y] are inside ImageBuffer 
 [%-*@3 img].&]
 [s3; &]
+[s4;%- &]
+[s5;:IsValid`(const Image`&`,T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) b
+ool]_[* IsValid]([@(0.0.255) const]_[_^Image^ Image]_`&[*@3 img], [*@4 T]_`&[*@3 t])&]
+[s2; Returns true if point [%-*@3 t] is inside Image [%-*@3 img].&]
+[s3; &]
+[s4;%- &]
+[s5;:IsValid`(ImageBuffer`&`,T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) b
+ool]_[* IsValid]([_^ImageBuffer^ ImageBuffer]_`&[*@3 img], [*@4 T]_`&[*@3 t])&]
+[s2; Returns true if point [%-*@3 t] is inside ImageBuffer [%-*@3 img].&]
 [s3; &]
 [ {{10000@1 [s0; [* Other functions]]}}&]
-[s4; &]
+[s3; &]
 [s5;:GetExtExecutable`(String`):%- [_^String^ String]_[* GetExtExecutable]([_^String^ Strin
 g]_[*@3 ext])&]
 [s2; Gets the program that will open by default the files with extension 
