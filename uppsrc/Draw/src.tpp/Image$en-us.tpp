@@ -12,8 +12,8 @@ topic "Image and ImageBuffer";
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Image]]}}&]
 [s3; &]
-[s1;:Image`:`:class: [@(0.0.255) class]_Image_:_[@(0.0.255) public]_[@3 AssignValueTypeNo]<_
-Image, [@3 150], [_^Moveable^ Moveable]<Image>_>_&]
+[s1;:Image`:`:class: [*@(0.0.255) class][* _Image_:_][*@(0.0.255) public][* _][*@3 AssignValueTy
+peNo][* <_Image, ][*@3 150][* , ][*_^Moveable^ Moveable][* <Image>_>_]&]
 [s9;%% Image represents an immutable image value. Image can be directly 
 painted to Draw. To create or change Image, use [^`:`:ImageBuffer^ ImageBuffer].&]
 [s9;%% Image has low`-cost constant time deep copy. It is moveable 
