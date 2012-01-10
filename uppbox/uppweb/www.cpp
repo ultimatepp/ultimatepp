@@ -713,6 +713,7 @@ CONSOLE_APP_MAIN
 	languages.Add(LNG_('C','S','C','Z'));
 	languages.Add(LNG_('D','E','D','E'));
 	languages.Add(LNG_('E','S','E','S'));
+	languages.Add(LNG_('E','U','E','S'));
 	languages.Add(LNG_('F','R','F','R'));
 	languages.Add(LNG_('R','O','R','O'));
 	languages.Add(LNG_('R','U','R','U'));
