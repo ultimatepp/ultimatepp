@@ -77,25 +77,25 @@ public:
 	SvgStyle(SvgStyle &transf)  {*this = transf;}
 	void Init() {
 		strokeWidth = Null;
-		strokeFill = Null;
 		strokeColor = Null;
-		strokeOpacity = Null;
+		fill = Null;
+		opacity = Null;
 	}
 	void Set(String str);
 	void Apply(Painter &sw);
 	SvgStyle &operator=(const SvgStyle &style);
 	SvgStyle &operator+=(const SvgStyle &style);
 	
-	SvgStyle &SetStrokeWidth(int c) 	 {strokeWidth = c;		return *this;}
-	SvgStyle &SetStrokeFill(Color c) 	 {strokeFill = c;		return *this;}
-	SvgStyle &SetStrokeColor(Color c) 	 {strokeColor = c;		return *this;}
-	SvgStyle &SetStrokeOpacity(double c) {strokeOpacity = c;	return *this;}
+	SvgStyle &SetStrokeWidth(int c) 	{strokeWidth = c;	return *this;}
+	SvgStyle &SetStrokeColor(Color c) 	{strokeColor = c;	return *this;}
+	SvgStyle &SetFill(Color c) 	 		{fill = c;			return *this;}
+	SvgStyle &SetOpacity(double c) 		{opacity = c;		return *this;}
 		
 public:
 	int strokeWidth;
-	Color strokeFill;
 	Color strokeColor;
-	double strokeOpacity;
+	Color fill;
+	double opacity;
 };
 
 class GraphElemLimits : public Rectf {
@@ -135,8 +135,11 @@ public:
 	}
 };
 
-class GraphElem {
+class GraphElem : Moveable<GraphElem> {
 public:
+	GraphElem() {}
+	GraphElem(const GraphElem &graph);
+	
 	Svg2DTransform transf;
 	SvgStyle style;
 	GraphElemLimits limits;
@@ -167,7 +170,7 @@ public:
 		sw.Line(x2, y2);	
 		_style += style;	
 		_style.Apply(sw);
-		PaintLimits(sw);
+		//PaintLimits(sw);
 	}
 	virtual void SetLimits() {
 		limits.left = x1;
@@ -190,7 +193,7 @@ public:
 		sw.Rectangle(x, y, width, height);		
 		_style += style;	
 		_style.Apply(sw);	
-		PaintLimits(sw);
+		//PaintLimits(sw);
 	}
 	virtual void SetLimits() {
 		limits.left = x;
@@ -199,6 +202,7 @@ public:
 		limits.bottom = y + height;
 	}
 	RectElem(double x, double y, double width, double height) : x(x), y(y), width(width), height(height) {SetLimits();}
+	RectElem(const Rect &rect) : x(rect.left), y(rect.top), width(rect.right - rect.left), height(rect.bottom - rect.top) {SetLimits();}
 	RectElem() {x = y = width = height = 0;}
 
 //private:
@@ -414,7 +418,7 @@ public:
 			case 'A':
 				while(p.IsDouble()) {
 					t1 = ReadPoint(p);
-					// double xangle = ReadDouble(p);
+					//double xangle = ReadDouble(p);
 					//bool large = ReadBool(p);
 					//bool sweep = ReadBool(p);
 					t = ReadPoint(p);
@@ -501,18 +505,28 @@ public:
 	PainterCanvas();
 	void SetCanvasSize(Size sz)	{canvasSize = sz;};
 	Size GetCanvasSize() const	{return canvasSize;};
-	void SetBackground(Image &image);
-	Image GetBackground()		{return backImage;}
+	void Zoom(double factor);
+	void Scroll(double factorX, double factorY);
 	void FitInCanvas();
 	
-	PainterCanvas &SetBackground(Color &color)			{backColor = color; Refresh(); return *this;};
+	PainterCanvas &SetBackground(Color color)			{backColor = color; Refresh(); return *this;};
+	PainterCanvas &SetBackground(const Image image);
+	PainterCanvas &SetBackground(const String &imageFilename);
+	Image GetBackground()		{return backImage;}
 	PainterCanvas &SetColorUnderBackgroundImage(bool set) 	{colorUnderBackgroundImage = set; return *this;};
 	PainterCanvas &SetScale(double factor)				{scale *= factor; Refresh(); return *this;};
 	PainterCanvas &SetAlwaysFitInCanvas(bool fit = true){alwaysFitInCanvas = fit; Refresh(); return *this;}
 	PainterCanvas &SetMode(int md = MODE_ANTIALIASED)	{mode = md; return *this;}
 	PainterCanvas &SetShowWindow(bool sw = true)		{showWindow = sw; return *this;};
+	PainterCanvas &SetCursorImage(const Image &img)		{cursorImage = img;};
+	
+	GraphElemList elemList;
+	
+	double GetScale()	{return scale;};
 	
 	Callback1 <Painter &> WhenPaint;
+	Callback2 <Point, Pointf> WhenMouseMove;
+	Callback2 <Point, Pointf> WhenMouseLeft;
 	
 protected:
 	virtual void Paint(Draw& draw);	
@@ -537,11 +551,23 @@ private:
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void MiddleDown(Point p, dword keyflags);
 	virtual void MiddleUp(Point p, dword keyflags);
+	virtual void RightDown(Point p, dword keyflags);
+	virtual void LeftDown(Point p, dword keyflags);
 	virtual void MouseLeave();
+	virtual Image CursorImage(Point p, dword keyflags);
+
 	struct FocusMove {
 		bool focusMoving;
 		Point lastFocusPoint;
 	} focusMove;
+	void ContextMenu(Bar& bar);
+	void SaveToFile(String fileName);
+	void SaveToClipboard();
+	void Load(String fileName);
+	
+	void DoPaint(Painter& sw);
+		
+	Image cursorImage;
 };
 	
 #endif

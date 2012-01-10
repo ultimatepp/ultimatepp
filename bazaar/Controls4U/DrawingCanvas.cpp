@@ -1,9 +1,23 @@
 #include "Controls4U.h"
 #include "DrawingCanvas.h"
+#include <plugin/jpg/jpg.h>
+
+#define TFILE <Controls4U/Controls4U.t>
+#include <Core/t.h>
+
+#define IMAGECLASS Controls4UImgC
+#define IMAGEFILE <Controls4U/Controls4U.iml>
+#include <Draw/iml.h>
 
 String GetValueStringXml(String str, const char* var);
 Color GetColorXml(String text);
 void ParseG(GraphElemList &elems, XmlParser &xp, Svg2DTransform transf, SvgStyle style, const char *svgFolder);
+
+GraphElem::GraphElem(const GraphElem &graph) {
+	transf = graph.transf;
+	style = graph.style;
+	limits = graph.limits;
+}
 	
 void GraphElemList::Paint(Painter &sw, Svg2DTransform _transf, SvgStyle _style, bool firstLayer) {
 	_transf += transf;
@@ -35,17 +49,17 @@ void SvgStyle::Set(String str) {
 	
 	color = GetColorXml(GetValueStringXml(str, "fill:"));
 	if (!color.IsNullInstance())
-		strokeFill = color;
+		fill = color;
 	
 	value = GetValueStringXml(str, "opacity:");
 	if (value != "")
-		strokeOpacity = atof(value);
+		opacity = atof(value);
 }
 
 void SvgStyle::Apply(Painter &sw) {
-	sw.Opacity(strokeOpacity);	
-	if (!strokeFill.IsNullInstance())	
-		sw.Fill(strokeFill);				
+	sw.Opacity(opacity);	
+	if (!fill.IsNullInstance())	
+		sw.Fill(fill);				
 	sw.Stroke(strokeWidth, strokeColor);
 }
 
@@ -53,8 +67,8 @@ SvgStyle &SvgStyle::operator=(const SvgStyle &style) {
 	if (this == &style)      // Same object?
   		return *this; 
 	strokeColor = style.strokeColor;
-	strokeFill = style.strokeFill;
-	strokeOpacity = style.strokeOpacity;
+	fill = style.fill;
+	opacity = style.opacity;
 	strokeWidth = style.strokeWidth;
 	return *this;
 }
@@ -64,10 +78,10 @@ SvgStyle &SvgStyle::operator+=(const SvgStyle &style) {
   		return *this;
   	if (!IsNull(style.strokeColor))
 		strokeColor = style.strokeColor;
-	if (!IsNull(style.strokeFill))
-		strokeFill = style.strokeFill;
-	if (!IsNull(style.strokeOpacity))
-		strokeOpacity = style.strokeOpacity;
+	if (!IsNull(style.fill))
+		fill = style.fill;
+	if (!IsNull(style.opacity))
+		opacity = style.opacity;
 	if (!IsNull(style.strokeWidth))
 		strokeWidth = style.strokeWidth;
 	return *this;
@@ -320,8 +334,8 @@ void SvgGet_Text(GraphElemList &elems, XmlParser &xp) {
 			
 			if (elem.style.strokeColor.IsNullInstance())
 				elem.style.strokeColor = Black();
-			if (elem.style.strokeFill.IsNullInstance())
-				elem.style.strokeFill = elem.style.strokeColor;
+			if (elem.style.fill.IsNullInstance())
+				elem.style.fill = elem.style.strokeColor;
 			String fontText;
 			fontText = GetValueStringXml(xp[i], "font-family:");
 			if (fontText.Find("Roman") >= 0)
@@ -424,7 +438,7 @@ bool ParseSVG(DrawingCanvas &canvas, const char *svgFile, const char *svgFolder)
 	xp.PassTag("svg");
 	Svg2DTransform transf;
 	SvgStyle style;
-	style.SetStrokeFill(Black()).SetStrokeOpacity(1);
+	style.SetFill(Black()).SetOpacity(1);
 	//p.Begin();
 	while(!xp.End()) {
 		transf.Init();
@@ -487,7 +501,7 @@ void DrawingCanvas::DoPaint(Painter& sw) {
 	}
 	Svg2DTransform trans;
 	SvgStyle style;
-	style.SetStrokeFill(Null).SetStrokeColor(Black()).SetStrokeOpacity(1).SetStrokeWidth(1);
+	style.SetFill(Null).SetStrokeColor(Black()).SetOpacity(1).SetStrokeWidth(1);
 	
 	sw.Begin();
 	elemList.Paint(sw, trans, style, true);
@@ -575,6 +589,7 @@ PainterCanvas::PainterCanvas() {
 	alwaysFitInCanvas = true;
 	Layout();
 	showWindow = true;
+	cursorImage = Image::Arrow();
 	
 	focusMove.focusMoving = false;
 }
@@ -607,7 +622,7 @@ void PainterCanvas::Paint(Draw& w) {
 		if (!IsNull(backImage)) 
 			sw.Rectangle(0, 0, canvasSize.cx, canvasSize.cy).Fill(backImage, 0, 0, canvasSize.cx, 0)
 				.Stroke(0, Black());
-		
+		DoPaint(sw);
 		WhenPaint(sw);
 	}
 	w.DrawImage(0, 0, ib);	
@@ -655,6 +670,20 @@ void PainterCanvas::MouseWheel(Point p, int zdelta, dword keyflags) {
 		factor = scaleFactor;
 	else
 		factor = 1/scaleFactor;
+	
+	Zoom(factor);
+}
+
+void PainterCanvas::Scroll(double factorX, double factorY)
+{
+    translateX -= GetSize().cx*factorX;
+  	translateY -= GetSize().cy*factorY;
+
+	Refresh();      	
+}
+
+void PainterCanvas::Zoom(double factor)
+{
 	scale *= factor;
 	
 	Size sz = GetSize();
@@ -698,14 +727,146 @@ void PainterCanvas::MouseMove(Point p, dword keyflags) {
 
         Refresh();
     }
+    if(WhenMouseMove) {
+        Pointf pf;
+       	pf.x = p.x - translateX;
+        pf.y = p.y - translateY;
+        pf.x = pf.x / scale;
+        pf.y = pf.y / scale;
+        if (pf.x >= 0 && pf.x < canvasSize.cx && pf.y >= 0 && pf.y < canvasSize.cy)
+    		WhenMouseMove(p, pf);
+    }
 }
 
-void PainterCanvas::SetBackground(Image &image)	{
+void PainterCanvas::LeftDown(Point p, dword keyflags) {
+	if (WhenMouseLeft) {
+        Pointf pf;
+       	pf.x = p.x - translateX;
+        pf.y = p.y - translateY;
+        pf.x = pf.x / scale;
+        pf.y = pf.y / scale;
+        if (pf.x >= 0 && pf.x < canvasSize.cx && pf.y >= 0 && pf.y < canvasSize.cy)
+    		WhenMouseLeft(p, pf);
+	}
+}
+
+PainterCanvas &PainterCanvas::SetBackground(const Image image)	{
 	backImage = image; 
 	if (backImage.GetSize() != canvasSize) {
 		SetCanvasSize(backImage.GetSize()); 
 		Layout();
 	} 
 	Refresh();
+	return *this;
 }
 
+PainterCanvas &PainterCanvas::SetBackground(const String &imageFilename)	{
+	return SetBackground(StreamRaster::LoadFileAny(~imageFilename));
+}                      
+
+void PainterCanvas::RightDown(Point p, dword keyflags)
+{
+	MenuBar::Execute(THISBACK(ContextMenu));
+}
+           
+void PainterCanvas::ContextMenu(Bar& bar)
+{	
+	bar.Add(t_("Fit to size"), 	Controls4UImgC::ShapeHandles(), THISBACK(FitInCanvas));
+	bar.Add(t_("Zoom +"), 		Controls4UImgC::ZoomPlus(), 	THISBACK1(Zoom, 1.2));
+	bar.Add(t_("Zoom -"), 		Controls4UImgC::ZoomMinus(), 	THISBACK1(Zoom, 1/1.2));
+	bar.Add(t_("Scroll Left"), 	Controls4UImgC::LeftArrow(), 	THISBACK2(Scroll, 0.2, 0));
+	bar.Add(t_("Scroll Right"), Controls4UImgC::RightArrow(), 	THISBACK2(Scroll, -0.2, 0));
+	bar.Add(t_("Scroll Up"), 	Controls4UImgC::UpArrow(), 		THISBACK2(Scroll, 0, -0.2));
+	bar.Add(t_("Scroll Down"), 	Controls4UImgC::DownArrow(), 	THISBACK2(Scroll, 0, 0.2));			
+	bar.Separator();
+	bar.Add(t_("Copy"), Controls4UImgC::Copy(), 			THISBACK(SaveToClipboard)).Key(K_CTRL_C);
+	bar.Add(t_("Save background"), Controls4UImgC::Save(), 	THISBACK1(SaveToFile, Null));
+	bar.Add(t_("Load background"), Controls4UImgC::Save(), 	THISBACK1(Load, Null));
+}
+
+void PainterCanvas::SaveToClipboard() 
+{
+	GuiLock __;
+	Image img = GetBackground();
+	WriteClipboardImage(img);
+}
+
+void PainterCanvas::Load(String fileName)
+{
+	GuiLock __;
+	if (IsNull(fileName)) {
+		FileSel fs;
+		
+		fs.Type("Image files", "*.png; *.jpg; *.tif; *.bmp");
+		fs.Type("All files", "*.*");
+	    if(!fs.ExecuteOpen(t_("Loading background image"))) {
+	        Exclamation(t_("Image has not been loaded"));
+	        return;
+	    }
+        fileName = fs;
+	} 
+	if (!FileExists(fileName)) {
+		Exclamation(Format(t_("File \"%s\" not found"), DeQtf(fileName)));
+		return;
+	}
+	SetBackground(fileName);
+	if (IsNull(backImage)) {
+		Exclamation(Format(t_("File format \"%s\" not found"), GetFileExt(fileName)));
+		return;
+	}
+}     
+
+void PainterCanvas::SaveToFile(String fileName)
+{
+	GuiLock __;
+	if (IsNull(fileName)) {
+		FileSel fs;
+		
+		fs.Type("PNG file", "*.png");
+		fs.Type("JPEG file", "*.jpg");
+	    if(!fs.ExecuteSaveAs(t_("Saving background image to PNG or JPEG file"))) {
+	        Exclamation(t_("Image has not been saved"));
+	        return;
+	    }
+        fileName = fs;
+	} 
+	if (FileExists(fileName)) {
+		if (!PromptOKCancel(Format(t_("File \"%s\" found.&Do you want to overwrite it?"), DeQtf(fileName))))
+			return;
+	}
+	if (GetFileExt(fileName) == ".png") {
+		PNGEncoder encoder;
+		encoder.SaveFile(fileName, GetBackground());
+	} else if (GetFileExt(fileName) == ".jpg") {	
+		JPGEncoder encoder(90);
+		encoder.SaveFile(fileName, GetBackground());		
+	} else
+		Exclamation(Format(t_("File format \"%s\" not found"), GetFileExt(fileName)));
+}      
+                          
+Image PainterCanvas::CursorImage(Point p, dword keyflags)
+{
+	return cursorImage;
+}
+
+void PainterCanvas::DoPaint(Painter& sw) {
+	//sw.Translate(translateX, translateY);
+	//sw.Rotate(rotate);
+	//sw.Scale(scale);
+	//sw.Opacity(opacity);
+	//sw.LineCap(linecap);
+	//sw.LineJoin(linejoin);
+	/*{ PAINTER_TIMING("FILL");
+		if(transparent)
+			sw.Clear(RGBAZero());
+		else
+			sw.Clear(White());
+	}*/
+	Svg2DTransform trans;
+	SvgStyle style;
+	style.SetFill(Null).SetStrokeColor(Black()).SetOpacity(1).SetStrokeWidth(1);
+	
+	sw.Begin();
+	elemList.Paint(sw, trans, style, true);
+	sw.End();
+}

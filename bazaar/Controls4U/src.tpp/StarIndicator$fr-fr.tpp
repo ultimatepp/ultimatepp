@@ -15,6 +15,10 @@ topic "";
 [s1;:StarIndicator`:`:class: [@(0.0.255)3 class][3 _][*3 StarIndicator][3 _:_][@(0.0.255)3 publi
 c][3 _][*@3;3 ProgressIndicator]&]
 [s0;i448;a25;kKO9;@(0.0.255) &]
+[s9;%% [/ DerivÃ© de ][/^topic`:`/`/CtrlLib`/src`/ProgressInd`$en`-us`#ProgressIndicator`:`:class^ P
+rogressIndicator][/ . Partie de la bibliothÃ¨que ][/^topic`:`/`/Controls4U`/src`/Controls4U`$en`-us^ C
+ontrol4U][/ .]&]
+[s9;%% &]
 [s9; StarIndicator est une sorte de ProgressIndicator permettant 
 de montrer la popularitÃ© de quelque chose, comme on peut le 
 voir sur certains sites marchands. Il indique la popularitÃ© 
@@ -32,7 +36,7 @@ peut donner Ã  la note, en fonction du nombre de votes :&]
 [s9;i150;O0; Vert clair si plus que la valeur dÃ©finie dans la variable 
 [* m`_nVotesHigh]&]
 [s9; &]
-[s9; As seen in layout designer :&]
+[s9; Affichage dans le [/ layout designer] :&]
 [s9; -|
 @@PING:3150&633
 ‰ĞÎÇŠš€Š€€€ÉÈ€ÄÒ€€ú€€€€Ìˆ†€€”€ãôü”€€€€‰ğÈÙó€€€‹“€€‹””ÏÛŠß€€€ãÉÄÁÔøœíÙ±íƒ±
@@ -43,7 +47,7 @@ peut donner Ã  la note, en fonction du nombre de votes :&]
 ô€ñÂ§ô€ñÂ§ô€ñÂ§ô€ñÂ§ô€ñÂ§ô€ñÂ÷¤ıìıâÆÿ¿çÒçü†şÔæÎ€à©ßšÈÃäÿ°”
 €©€€€€ÉÅ¤ÎÄ®Âà‚
 &]
-[s9; As seen in program :&]
+[s9; Affichage dans le programme :&]
 [s9; -|
 @@PING:3108&567
 ‰ĞÎÇŠš€Š€€€ÉÈ€ÄÒ€€õ€€€€Äˆ†€€Œ€ş¬¥ô€€€€‰ğÈÙó€€€‹“€€‹‘œ²¬şš€€€‘½ÉÄÁÔø—œíû”İÕ

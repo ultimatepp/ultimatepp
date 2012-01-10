@@ -15,6 +15,10 @@ topic "";
 [s1;:StarIndicator`:`:class: [@(0.0.255)3 class][3 _][*3 StarIndicator][3 _:_][@(0.0.255)3 publi
 c][3 _][*@3;3 ProgressIndicator]&]
 [s0;i448;a25;kKO9;@(0.0.255) &]
+[s9; [/ Derived from ][/^topic`:`/`/CtrlLib`/src`/ProgressInd`$en`-us`#ProgressIndicator`:`:class^ P
+rogressIndicator][/ . Part of ][/^topic`:`/`/Controls4U`/src`/Controls4U`$en`-us^ Con
+trol4U][/  library.]&]
+[s9; &]
 [s9; StarIndicator is a kind of ProgressIndicator allowing to show 
 the popularity of something, as we can see on some merchant web 
 sites. It indicates the popularity with stars, and shows with 

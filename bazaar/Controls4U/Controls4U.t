@@ -61,6 +61,60 @@ T_("file")
 esES("fichero")
 
 
+// DrawingCanvas.cpp
+
+T_("Fit to size")
+esES("")
+
+T_("Zoom +")
+esES("")
+
+T_("Zoom -")
+esES("")
+
+T_("Scroll Left")
+esES("")
+
+T_("Scroll Right")
+esES("")
+
+T_("Scroll Up")
+esES("")
+
+T_("Scroll Down")
+esES("")
+
+T_("Copy")
+esES("Copiar")
+
+T_("Save background")
+esES("")
+
+T_("Load background")
+esES("")
+
+T_("Loading background image")
+esES("")
+
+T_("Image has not been loaded")
+esES("")
+
+T_("File \"%s\" not found")
+esES("")
+
+T_("File format \"%s\" not found")
+esES("")
+
+T_("Saving background image to PNG or JPEG file")
+esES("")
+
+T_("Image has not been saved")
+esES("")
+
+T_("File \"%s\" found.&Do you want to overwrite it?")
+esES("")
+
+
 // ActiveX.cpp
 
 T_("Function not implemented")

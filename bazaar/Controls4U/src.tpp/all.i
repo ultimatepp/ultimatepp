@@ -38,6 +38,14 @@ TOPIC("Meter$en-us")
 #include "Meter$en-us.tppi"
 END_TOPIC
 
+TOPIC("SliderCtrlX$en-us")
+#include "SliderCtrlX$en-us.tppi"
+END_TOPIC
+
+TOPIC("SliderCtrlX$fr-fr")
+#include "SliderCtrlX$fr-fr.tppi"
+END_TOPIC
+
 TOPIC("StarIndicator$en-us")
 #include "StarIndicator$en-us.tppi"
 END_TOPIC
