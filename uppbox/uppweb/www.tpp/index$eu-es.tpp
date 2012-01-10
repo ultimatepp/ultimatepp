@@ -1,43 +1,38 @@
 topic "U++ es un entorno de desarrollo rápido multiplataforma para C++";
 [ $$0,0#00000000000000000000000000000000:Default]
 [a83;*R6 $$1,0#31310162474203024125188417583966:caption]
-[{_}%ES-ES 
-[s0; [*R6 U`+`+ es un entorno de desarrollo rápido multiplataforma 
-para C`+`+]&]
+[{_}%EU-ES 
+[s0; [*R6 U`+`+ C`+`+ garapen gurutze`-plataforma azkar inguru da]&]
 [s0;>*R^topic`:`/`/uppweb`/www`/index`$ru`-ru^1 &]
-[ {{6760:3240f0;g0;^l/0r/0t/0b/0 [s0; [*2 U`+`+][2  es un entorno para desarrollo rápido de aplicaciones 
-en C`+`+ multiplataforma enfocado en la productividad del programador. 
-Incluye un conjunto de bibliotecas de usuario (GUI, SQL, ...), 
-y un entorno de desarrollo integrado (IDE).]&]
+[ {{6760:3240f0;g0;^l/0r/0t/0b/0 [s0; [*2 U`+`+][2  aplikazioak azkar garapenean ingurune bat da, C `+ 
+`+ plataforma developer produktibitatea bideratuta. Bat liburutegi`-multzo 
+(GUI, SQL, ...), eta integratu bat garatzeko ingurunea (IDE) 
+barne.]&]
 [s0;2 &]
-[s0; [2 La rapidez en el desarrollo se logra mediante ][^topic`:`/`/uppweb`/www`/overview`$en`-us^2 u
-n uso inteligente y agresivo de C`+`+][2  en lugar de a través 
-de sofisticados generadores de código. En este sentido, U`+`+ 
-compite con conocidos lenguajes de scripting, preservando características 
-de tiempo de ejecución de C/C`+`+.]&]
+[s0; [2 Garapen`-abiadura da ][^topic`:`/`/uppweb`/www`/overview`$en`-us^2 C`+`+ 
+smart eta oldarkorrak erabili][2  baino kodea sofistikatua sorgailuen 
+bidez lortzen da. Ildo horretan, U`+`+ popular scripting hizkuntza 
+lehiatzen mantenduz C/C`+`+ runtime ezaugarriak.]&]
 [s0;2 &]
-[s0; [2 El entorno de desarrollo integrado de U`+`+, TheIDE, introduce 
-conceptos modulares para programación en C`+`+. Cuenta con tecnología 
-de compilación BLITZ para acelerar las recompilaciones de C`+`+ 
-hasta 4 veces, diseñador visual para las librerías U`+`+, sistema 
-][^topic`:`/`/ide`/app`/Topic`$en`-us^2 Topic`+`+][2  para documentar 
-el código y crear recursos en texto enriquecido para aplicaciones 
-(como la documentación de ayuda y código) y ][^topic`:`/`/ide`/app`/Assist`$en`-us^2 A
-ssist`+`+][2  `- un poderoso analizador de código C`+`+ que ofrece 
-características como el autocompletado de código, navegación 
-y transformación.]&]
+[s0; [2 Integratuari garapen ingurunea U, TheIDE, aurkeztuko modular 
+kontzeptu C`+`+ programazio`-Blitz eraikitzeko teknologia azkartzeko 
+ezaugarriak ditu recompiles C`+`+ 4 aldiz, ikusmen U`+`+ liburutegi 
+diseinatzaile, ][^topic`:`/`/ide`/app`/Topic`$en`-us^2 Topic`+`+][2  
+kodea dokumentatzeko eta aberatsa testua aplikazio baliabideak 
+(laguntza kodea eta dokumentazioa adibidez) eta ][^topic`:`/`/ide`/app`/Assist`$en`-us^2 A
+ssist`+`+][2  sortzeko sistema `- bat C`+`+ indartsu kodea analizatzaile 
+eskaintzen duen kodea amaitzeko, nabigazioa eta eraldaketa bezalako 
+ezaugarri.]&]
 [s0;2 &]
-[s0; [2 TheIDE puede trabajar con GCC, MinGW y Visual C `+ `+ tal y 
-como se encuentra en el ][^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?familyid`=ff6467e6`-5bba`-4bf5`-b562`-9199be864d29`&displaylang`=en^2 S
-DK gratuito de Windows Vista][2  y contiene un depurador completo. 
-TheIDE también puede ser utilizado para desarrollar aplicaciones 
-no U`+`+.]&]
+[s0; [2 TheIDE ahal GCC, MinGW eta Visual C`+`+ lana ][^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?familyid`=ff6467e6`-5bba`-4bf5`-b562`-9199be864d29`&displaylang`=en^2 W
+indows Vista SDK kostua ez][2  aurkitu eta full araztaile bat dauka. 
+TheIDEere erabil daiteke aplikazioak garatzeko ez U`+`+.]&]
 [s0;2 &]
-[s0; [*2 En pocas palabras qué puedes obtener con U`+`+]&]
+[s0; [*2 Azken finean zer lortu nahi duzu U`+`+]&]
 [s0; &]
-[s0;i150;O2; [2 Una librería multiplataforma en C`+`+ muy efectiva]&]
-[s0;i150;O2; [2 Un buen entorno para desarrollo de aplicaciones, diseñado 
-para realizar grandes proyectos en C`+`+]&]
+[s0;i150;O2; [2 Bat gurutze`-plataforma C`+`+ liburutegia oso eraginkorra]&]
+[s0;i150;O2; [2 Aplikazioak garatzeko ingurune egokia C`+`+ proiektu 
+handiak diseinatu]&]
 [s0;2 ]
 :: [s1;> [/@(0.0.255)0 
 @@image:1271&1092
@@ -754,37 +749,37 @@ para realizar grandes proyectos en C`+`+]&]
 ��ٲ�ɒ��˖�ٲ��ɒ�˖�ٲ��ɒ�˖��ٲ�ɒ�˙��ٮ�������
 ]&]
 [s0;>/@(0.0.255)0 &]
-[s0;l128; Revisión actual: [*IRELEASET; release]&]
-[s0;l128; Licencia: [* BSD]&]
+[s0;l128; Orrialdearen: [*IRELEASET; release]&]
+[s0;l128; Lizentzia: [* BSD]&]
 [s0;* ]}}&]
 [s0; &]
-[ {{10000f0;g0;l8/25r8/25t8/25b8/25@(240)R(165) [s0;= [* Recursos U`+`+]]}}&]
-[s0;0%- &]
-[ {{1229:1995:161:1612:1612:161:1309:1921f0;g0;l8/25t8/25b8/25@(240)R(165) [s0; [*2 Comenzando]]
-::l0/25r8/25 [s0;> [@(114)2 5 minutos para comenzar]]
+[ {{10000f0;g0;l8/25r8/25t8/25b8/25@(240)R(165) [s0;= [* U`+`+ Baliabideak]]}}&]
+[s0;0 &]
+[ {{1229:1995:161:1612:1612:161:1309:1921f0;g0;l8/25t8/25b8/25@(240)R(165) [s0; [*2 Hasiera]]
+::l0/25r8/25 [s0;> [@(114)2 5 minutu hasteko]]
 ::r0/25t0/25b0/25@2 [s0;>@(114)2 ]
-::l8/25t8/25b8/25@(240) [s0; [*2 Usuarios]]
+::l8/25t8/25b8/25@(240) [s0; [*2 Erabiltzaileak]]
 ::l0/25r8/25-3 [s0;>@(114)2 ]
 ::r0/25t0/15b0/15@2R0-2 [s0;%- ]
 ::-1 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^2 Tutorial 
-GUI]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/comparison`$en`-us^2 Comparaciones]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Visión general]&]
-[s0;i150;O0;%% [^topic`:`/`/uppweb`/www`/tutoring`$es`-es^2 Plan de 
-Tutoría]]
+::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^2 GUI 
+Tutorial]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/comparison`$en`-us^2 Konparazioak]&]
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Orokorra]&]
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/tutoring`$es`-es^2 Tutoretza 
+Plan]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r8/25t/25b/25R(165) [s0;>@(114)2 ]
-::t8/25b8/25-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us^2 Documentación]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/examples`$en`-us^2 Ejemplos]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/comparison`$en`-us^2 Comparaciones]]
+::t8/25b8/25-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us^2 Dokumentazioa]&]
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/examples`$en`-us^2 Adibideak]&]
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/comparison`$en`-us^2 Konparazioak]]
 ::r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/apps`$en`-us^2 Aplicaciones]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/FAQ`$en`-us^2 Preguntas 
-más frecuentes (FAQ)]&]
-[s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forum^2 Foros]]
+::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/apps`$en`-us^2 Eskaerak]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/FAQ`$en`-us^2 Maiz egiten 
+diren galderak]&]
+[s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forum^2 Foroak]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::t8/25b8/25R(165)-1 [s0;*+34 ]
 ::t0/15b0/15R0 [s0;%- ]
@@ -794,43 +789,42 @@ más frecuentes (FAQ)]&]
 ::t8/25b/25R(165)|5 [s0;*+34 ]
 ::b8/25-1 [s0;*+34 ]
 ::t0/15b0/15R0 [s0;%- ]
-::l8/25t8/25b8/25@(240)R(165) [s0; [*2 Desarrolladores]]
-::l0/25r8/25-3 [s0;> [@(114)2 Si quieres aportar en la web o en el código fuente 
-este es tu lugar]]
+::l8/25t8/25b8/25@(240)R(165) [s0; [*2 Sustatzaileak]]
+::l0/25r8/25-3 [s0;> [@(114)2 Nahi duzun web edo iturri kodea lagundu baduzu hau da 
+zure lekua]]
 ::r0/25t0/15b0/15@2R0-2 [s0;%- ]
 ::-1 [s0;%- ]
 :: [s0;%- ]
 :: [s0;%- ]
-::l8/25r/0t8/25b8/25@(240)R(165) [s0; [*2 Descargar U`+`+]]
-::l0/25r8/25 [s0;> [@(114)2 ¡A empezar!]]
-::^l8/25@2-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/svnInstall`$en`-us^2 Instalación 
-SVN y permisos]&]
-[s0;i150;a17;O0; [2 Información de errores. Enviando un parche. ][/@(153)2 A 
-realizar ...]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/contribweb`$en`-us^2 Página 
-Web]&]
-[s0;i150;a17;O0; [2 Nuevas ideas a desarrollar]&]
-[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/www`/currenttopics`$en`-us^2 Temas 
-actuales]&]
-[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/ideas2010`$en`-us^2 Ideas 
-GSoC]]
+::l8/25r/0t8/25b8/25@(240)R(165) [s0; [*2 U`+`+ Download]]
+::l0/25r8/25 [s0;> [@(114)2 Hasteko!]]
+::^l8/25@2-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/svnInstall`$en`-us^2 SVN 
+instalatzea eta baimenak]&]
+[s0;i150;a17;O0; [2 Informazioa akats. Adabaki bat gehitzea. G][/@(153)2 auzatzeko 
+...]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/contribweb`$en`-us^2 Webgunea]&]
+[s0;i150;a17;O0; [2 Ideia berriak garatzeko]&]
+[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/www`/currenttopics`$en`-us^2 Gaurkotasuneko 
+gaiak]&]
+[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/ideas2010`$en`-us^2 GSoC 
+ideiak]]
 ::=l0/25r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
-::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^2 `"El Mercado`" 
-(Bazaar)]&]
-[s0;i150;a17;O0; [^topic`:`/`/ide`/app`/About`$en`-us^2 Autores y Licencia]]
+::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^2 Merkatua]&]
+[s0;i150;a17;O0; [^topic`:`/`/ide`/app`/About`$en`-us^2 Idazlea eta 
+Lizentzia]]
 ::=l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/download`$en`-us^2 Descargar]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^2 Revisión 
-actual][2 : ][IRELEASE;2 release]&]
-[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-RELEASE`.exe^+75 I
-nstalador Win32]&]
-[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-RELEASE`.tar`.gz^+75 F
-uentes X11]&]
-[s0;l160;i150;a17;O0; [^http`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^+75 Paqu
-etes Ubuntu]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/svn`/svn`$en`-us^2 Última svn][2 : 
+::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/download`$en`-us^2 Download]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^2 Orrialdearen][2 : 
+][IRELEASE;2 release]&]
+[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-RELEASE`.exe^+75 W
+in32 installer]&]
+[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-RELEASE`.tar`.gz^+75 X
+11 iturriak]&]
+[s0;l160;i150;a17;O0; [^http`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^+75 Ubun
+tu packages]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/svn`/svn`$en`-us^2 Azken svn][2 : 
 ][ILATESTSVN;2 latestsvn]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r/0t8/25b8/25R(165)-1 [s0;*+34 ]
@@ -841,26 +835,23 @@ etes Ubuntu]&]
 :: [s0;%- ]
 ::r/0t8/25b8/25R(165)-1 [s0;*+34 ]
 ::r/25t0/15b0/15R0 [s0;%- ]
-::l8/25r/0t8/25b8/25@(240)R(165) [s0; [*2 Estudiantes]]
+::l8/25r/0t8/25b8/25@(240)R(165) [s0; [*2 Ikasle]]
 ::l0/25r8/0 [s0;=@(114)2 ]
 ::r0/25t0/15b0/15@2R0 [s0;%- ]
-::l8/25r/0t8/0b8/0@(240)R(165) [s0; [*2 Otros]]
+::l8/25r/0t8/0b8/0@(240)R(165) [s0; [*2 Beste batzuk]]
 ::l0/0r8/0 [s0;=*2 ]
 ::l/25r0/25t0/15b0/15@2R0 [s0;%- ]
-::l8/25t8/25b8/25@(240)R(165) [s0; [*2 Soportando U`+`+]]
-::l0/25r8/25 [s0;> [@(114)2 A veces se necesita algo más que código...]]
-::l8/25@2-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/gsoc`$en`-us^2 Recursos 
-Google Summer of Code]]
+::l8/25t8/25b8/25@(240)R(165) [s0; [*2 U`+`+ laguntza]]
+::l0/25r8/25 [s0;> [@(114)2 Batzuetan kodea baino gehiago hartzen du...]]
+::l8/25@2-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/gsoc`$en`-us^2 Google Summer 
+of Code baliabideak]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/extlinks`$en`-us^2 Enlaces 
-externos]&]
-[s0;i150;O0; [2 Indice Web. ][/@(153)2 A realizar...]]
+::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;O0; [^topic`:`/`/uppweb`/www`/extlinks`$en`-us^2 Kanpoko Loturak]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
-::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Funding`$en`-us^2 Financiando 
-U`+`+]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/cookie`$en`-us^2 Premio 
-`"Galletita`"]]
+::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Funding`$en`-us^2 U`+`+ 
+Finantzaketa]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/cookie`$en`-us^2 Gozoa Saria]]
 ::=l0/25r0/25t0/15b0/15R0 [s0;%- ]}}&]
 [s0; ]
