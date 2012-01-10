@@ -175,7 +175,7 @@ public:
 		limits.right = x2;
 		limits.bottom = y2;
 	}
-	LineElem(double x1, double y1, double x2, double y2) : x1(x1), x2(x2), y1(y1), y2(y2) {SetLimits();}
+	LineElem(double x1, double y1, double x2, double y2) : x1(x1), y1(y1), x2(x2), y2(y2) {SetLimits();}
 	LineElem() {x1 = x2 = y1 = y2 = 0;}
 	
 //private:
@@ -414,9 +414,9 @@ public:
 			case 'A':
 				while(p.IsDouble()) {
 					t1 = ReadPoint(p);
-					double xangle = ReadDouble(p);
-					bool large = ReadBool(p);
-					bool sweep = ReadBool(p);
+					// double xangle = ReadDouble(p);
+					//bool large = ReadBool(p);
+					//bool sweep = ReadBool(p);
 					t = ReadPoint(p);
 					//SvgArc(t1, xangle * M_PI / 180.0, large, sweep, t, rel);
 				}
