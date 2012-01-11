@@ -19,7 +19,7 @@ struct Date : RelOps< Date, Moveable<Date> > {
 	int      Compare(Date b) const;
 
 	Date& operator++()   	             { if(day < 28) day++; else Set(Get() + 1); return *this; }
-	Date& operator--()   	             { if(day > 0) day--; else Set(Get() - 1); return *this; }
+	Date& operator--()   	             { if(day > 1) day--; else Set(Get() - 1); return *this; }
 
 	Date()                               { year = -32768; day = month = 0; }
 	Date(const Nuller&)                  { year = -32768; day = month = 0; }
