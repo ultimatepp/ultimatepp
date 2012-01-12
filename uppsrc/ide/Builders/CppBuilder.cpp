@@ -230,7 +230,7 @@ static void AddPath(VectorMap<String, String>& out, String key, String path)
 Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, bool& error)
 {
 	String package = Nvl(package_, mainpackage);
-	String path = *pf == '.' ? target : SourcePath(package, pf);
+	String path = (*pf == '.' && pf[1] != '.') ? target : SourcePath(package, pf);
 	String file = GetHostPath(path);
 	String ext = ToLower(GetFileExt(pf));
 	for(int i = 0; i < wspc.GetCount(); i++) {
