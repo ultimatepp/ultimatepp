@@ -1,0 +1,11 @@
+optimize_speed;
+
+uses
+	Core;
+
+file
+	ValueBench.cpp;
+
+mainconfig
+	"" = "SSE2 MT";
+

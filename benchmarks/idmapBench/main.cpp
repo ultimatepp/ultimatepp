@@ -104,6 +104,7 @@ void BenchValueMap(const char *file) {
 				c = in.Get();
 			}
 			ValueArray va = map[id];
+			map.Set(id, Null);
 			va.Add(line);
 			map.Set(id, va);
 		}
