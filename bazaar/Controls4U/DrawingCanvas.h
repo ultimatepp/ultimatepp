@@ -518,7 +518,7 @@ public:
 	PainterCanvas &SetAlwaysFitInCanvas(bool fit = true){alwaysFitInCanvas = fit; Refresh(); return *this;}
 	PainterCanvas &SetMode(int md = MODE_ANTIALIASED)	{mode = md; return *this;}
 	PainterCanvas &SetShowWindow(bool sw = true)		{showWindow = sw; return *this;};
-	PainterCanvas &SetCursorImage(const Image &img)		{cursorImage = img;};
+	PainterCanvas &SetCursorImage(const Image &img)		{cursorImage = img; return *this;};
 	
 	GraphElemList elemList;
 	
