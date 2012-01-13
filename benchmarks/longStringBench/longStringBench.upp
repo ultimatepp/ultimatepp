@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "SSE2",
+	"" = "SSE2 NEWREF";
+
