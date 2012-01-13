@@ -47,15 +47,16 @@ void CheckNumber()
 }
 
 template <class T>
-void CheckType(const T& x, bool isvoid = false, bool checkhash = false)
+void CheckType(const T& x, bool checkhash = false)
 {
 	RLOG("---------------------------");
 	RLOG("CheckType " << typeid(T).name() << " = " << x);
 	String fn;
 	Value vf;
+	Value tt = x;
+	bool isvoid = tt.IsVoid();
 	if(!isvoid) {
-		int t = GetValueTypeNo<T>();
-		fn = ConfigFile(AsString(t) + ":" + AsString(x));
+		fn = ConfigFile(AsString(tt.GetType()) + ":" + AsString(x));
 		if(FileExists(fn)) {
 			LoadFromFile(vf, fn);
 			RDUMP(vf.To<T>());
@@ -69,7 +70,9 @@ void CheckType(const T& x, bool isvoid = false, bool checkhash = false)
 		StoreToFile(v, fn);
 		RDUMP(GetValueTypeNo<T>());
 		ASSERT(v.GetType() == GetValueTypeNo<T>());
-		ASSERT(v.To<T>() == x);
+		if(!tt.Is<ValueArray>() && !tt.Is<ValueMap>())
+			ASSERT(v.To<T>() == x);
+		ASSERT((T)(v) == x);
 	}
 	if(!vf.IsVoid())
 		ASSERT(vf == v);
