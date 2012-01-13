@@ -1,0 +1,4 @@
+#ifndef _longStringBench_icpp_init_stub
+#define _longStringBench_icpp_init_stub
+#include "Core/init"
+#endif

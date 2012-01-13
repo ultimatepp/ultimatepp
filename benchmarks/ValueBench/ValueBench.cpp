@@ -8,6 +8,8 @@ using namespace Upp;
 #define N 100000
 #endif
 
+Value h;
+
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
@@ -17,6 +19,9 @@ CONSOLE_APP_MAIN
 		x.Add(Random(1000));
 		xs.Add(AsString(1000));
 	}
+	Value xxx = Null;
+	h = xxx;
+	RTIMING("Total");
 	int sum;
 	for(int i = 0; i < N; i++) {
 		ValueArray va;
