@@ -50,12 +50,12 @@ template <class T>
 void CheckType(const T& x, bool isvoid = false, bool checkhash = false)
 {
 	RLOG("---------------------------");
-	RLOG("CheckType " << typeid(T).name());
+	RLOG("CheckType " << typeid(T).name() << " = " << x);
 	String fn;
 	Value vf;
 	if(!isvoid) {
 		int t = GetValueTypeNo<T>();
-		fn = ConfigFile(AsString(t));
+		fn = ConfigFile(AsString(t) + ":" + AsString(x));
 		if(FileExists(fn)) {
 			LoadFromFile(vf, fn);
 			RDUMP(vf.To<T>());
