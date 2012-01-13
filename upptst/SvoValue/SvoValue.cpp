@@ -15,6 +15,8 @@ CONSOLE_APP_MAIN
 
 	CheckType(Value(), true);
 	CheckType(String("ahoj"), false, true);
+	CheckType(String('a', 20), false, true);
+	CheckType(String('b', 200), false, true);
 	CheckType(WString("ahoj"));
 	CheckType(123);
 	CheckType(123.0, false, true);
