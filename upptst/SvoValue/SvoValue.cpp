@@ -24,6 +24,7 @@ CONSOLE_APP_MAIN
 	CheckType((int64)123, true);
 	CheckType(Date(2012, 1, 1));
 	CheckType(Time(2012, 1, 1, 15, 30), true);
+	CheckType(Complex(1, 2), true);
 	ValueArray va;
 	va.Add(123);
 	va.Add("ahoj");
@@ -72,6 +73,22 @@ CONSOLE_APP_MAIN
 	RLOG("CheckDateTime");
 	CheckDateTime();
 
+	RLOG("------------------------------");
+	RLOG("CheckValue");
+	CheckRawValue();
+
+	RLOG("------------------------------");
+	RLOG("CheckRawValue");
+	CheckRawValue();
+
+	RLOG("------------------------------");
+	RLOG("CheckRawPickValue");
+	CheckRawPickValue();
+
+	RLOG("------------------------------");
+	RLOG("CheckCreateRawValue");
+	CheckCreateRawValue();
+		
 	RLOG("------------------------------");
 	RLOG("OtherChecks");
 	OtherChecks();	
