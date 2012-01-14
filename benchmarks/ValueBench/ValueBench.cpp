@@ -5,7 +5,7 @@ using namespace Upp;
 #ifdef _DEBUG
 #define N 1
 #else
-#define N 100000
+#define N 300000
 #endif
 
 Value h;
@@ -56,6 +56,11 @@ CONSOLE_APP_MAIN
 			RTIMING("Read String with To");
 			for(int i = 0; i < va.GetCount(); i++)
 				sum += va[i].To<String>().GetLength();
+		}
+		{
+			RTIMING("Read String with Get");
+			for(int i = 0; i < va.GetCount(); i++)
+				sum += va[i].Get<String>().GetLength();
 		}
 		Vector<String> vs;
 		{
