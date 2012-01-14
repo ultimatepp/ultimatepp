@@ -103,7 +103,11 @@ void BenchValueMap(const char *file) {
 				id.Cat(c);
 				c = in.Get();
 			}
+#ifdef SVO_VALUE
 			ValueArray va = map.GetAndClear(id);
+#else
+			ValueArray va = map[id];
+#endif
 			va.Add(line);
 			map.Set(id, va);
 		}
