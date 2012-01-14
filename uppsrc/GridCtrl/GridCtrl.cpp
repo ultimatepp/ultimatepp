@@ -1724,7 +1724,8 @@ void GridCtrl::RemoveColumn(int n, int count)
 	rowbkp.Remove(n, count);
 	total_cols -= count;
 	recalc_cols = true;
-	RefreshLayout();
+	valid_cursor = SetCursor0(min(curpos.x, total_cols - 1), curpos.y).IsValid();
+	Repaint(true);
 }
 
 GridCtrl::ItemRect& GridCtrl::AddRow(int n, int size)
@@ -3317,7 +3318,13 @@ GridCtrl::CurState GridCtrl::SetCursor0(Point p, int opt, int dirx, int diry)
 	}
 	else
 		tmpcur = p;
-
+	
+	if(dirx == 0 && diry == 0 && !IsValidCursor(tmpcur))
+	{
+		cs.valid = false;
+		return cs;
+	}
+	
 	Point oldcur = highlight ? livecur : curpos;
 
 	bool oldvalid = IsValidCursorAll(oldcur);
