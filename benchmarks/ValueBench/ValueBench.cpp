@@ -37,6 +37,11 @@ CONSOLE_APP_MAIN
 				sum += (int)va[i];
 		}
 		{
+			RTIMING("Read int with To");
+			for(int i = 0; i < va.GetCount(); i++)
+				sum += va[i].To<int>();
+		}
+		{
 			va.Clear();
 			RTIMING("Add String");
 			for(int i = 0; i < 100; i++)
@@ -46,6 +51,11 @@ CONSOLE_APP_MAIN
 			RTIMING("Read String");
 			for(int i = 0; i < va.GetCount(); i++)
 				sum += String(va[i]).GetLength();
+		}
+		{
+			RTIMING("Read String with To");
+			for(int i = 0; i < va.GetCount(); i++)
+				sum += va[i].To<String>().GetLength();
 		}
 		Vector<String> vs;
 		{
@@ -62,14 +72,19 @@ CONSOLE_APP_MAIN
 		Vector<Value> vv;
 		{
 			vv.Clear();
-			RTIMING("Add Vector<Value>");
+			RTIMING("Add Vector<Value> String");
 			for(int i = 0; i < 100; i++)
 				vv.Add(xs[i]);
 		}
 		{
-			RTIMING("Read Vector<Value>");
+			RTIMING("Read Vector<Value> String");
 			for(int i = 0; i < vv.GetCount(); i++)
 				sum += String(vv[i]).GetLength();
+		}
+		{
+			RTIMING("Read Vector<Value> String with To");
+			for(int i = 0; i < vv.GetCount(); i++)
+				sum += vv[i].To<String>().GetLength();
 		}
 	}
 	Cout() << sum << "\n";
