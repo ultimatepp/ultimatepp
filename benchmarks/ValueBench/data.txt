@@ -1,0 +1,24 @@
+* /home/cxl/upp/out/svo_benchmarks/GCC.Debug_Full.Release.Shared.Sse2/ValueBench 13.01.2012 12:48:47, user: cxl
+
+TIMING Read Vector<Value>: 36.22 ms - 362.22 ns (41.00 ms / 100000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100000
+TIMING Add Vector<Value>: 126.22 ms -  1.26 us (131.00 ms / 100000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100000
+TIMING Read Vector<String>: 10.22 ms - 102.22 ns (15.00 ms / 100000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100000
+TIMING Add Vector<String>: 93.22 ms - 932.22 ns (98.00 ms / 100000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100000
+TIMING Read String    : 43.22 ms - 432.22 ns (48.00 ms / 100000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100000
+TIMING Add String     : 208.22 ms -  2.08 us (213.00 ms / 100000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100000
+TIMING Read int       : 28.22 ms - 282.22 ns (33.00 ms / 100000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100000
+TIMING Add int        : 218.22 ms -  2.18 us (223.00 ms / 100000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100000
+TIMING Total          :  1.05 s  -  1.05 s  ( 1.05 s  / 1 ), min:  1.05 s , max:  1.05 s , nesting: 1 - 1
+
+* /home/cxl/upp/out/benchmarks/GCC.Shared.Sse2/ValueBench 13.01.2012 12:48:10, user: cxl
+
+TIMING Read Vector<Value>: 113.45 ms -  1.13 us (118.00 ms / 100000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100000
+TIMING Add Vector<Value>: 221.45 ms -  2.21 us (226.00 ms / 100000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100000
+TIMING Read Vector<String>: 19.45 ms - 194.50 ns (24.00 ms / 100000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100000
+TIMING Add Vector<String>: 108.45 ms -  1.08 us (113.00 ms / 100000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100000
+TIMING Read String    : 146.45 ms -  1.46 us (151.00 ms / 100000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100000
+TIMING Add String     : 270.45 ms -  2.70 us (275.00 ms / 100000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100000
+TIMING Read int       : 119.45 ms -  1.19 us (124.00 ms / 100000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100000
+TIMING Add int        : 223.45 ms -  2.23 us (228.00 ms / 100000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100000
+TIMING Total          :  1.55 s  -  1.55 s  ( 1.55 s  / 1 ), min:  1.55 s , max:  1.55 s , nesting: 1 - 1
+
