@@ -151,6 +151,10 @@ void OtherChecks()
 	RDUMP(v3 == y);
 	RDUMP(v4 == y);
 	RDUMP(v4 == v2);
+
+	ASSERT(v2 == v3);
+	ASSERT(v2 != v4);
+	ASSERT(v4 != x);	
 	
 	Value uu = Uuid::Create();
 	RDUMP(uu);

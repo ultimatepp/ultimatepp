@@ -12,6 +12,9 @@ void CheckString();
 void CheckDateTime();
 void CheckValueMap();
 void OtherChecks();
+void CheckRawPickValue();
+void CheckRawValue();
+void CheckCreateRawValue();
 
 template <class T>
 void CheckNumber()
@@ -59,12 +62,19 @@ void CheckType(const T& x, bool checkhash = false)
 		fn = ConfigFile(AsString(tt.GetType()) + ":" + AsString(x));
 		if(FileExists(fn)) {
 			LoadFromFile(vf, fn);
-			RDUMP(vf.To<T>());
-			ASSERT(vf.To<T>() == x);
+			if(IsValueMap(tt)) {
+				RDUMP(ValueMap(vf));
+				ASSERT(ValueMap(vf) == ValueMap(x));
+			}
+			else {
+				RDUMP(vf.To<T>());
+				ASSERT(vf.To<T>() == x);
+			}
 		}
 	}
 	Value v = x;
 	RDUMP(v);
+	ASSERT((T)v == x);
 	ASSERT(isvoid ? v.IsVoid() : v.Is<T>());
 	if(!isvoid) {
 		StoreToFile(v, fn);
@@ -73,6 +83,14 @@ void CheckType(const T& x, bool checkhash = false)
 		if(!tt.Is<ValueArray>() && !tt.Is<ValueMap>())
 			ASSERT(v.To<T>() == x);
 		ASSERT((T)(v) == x);
+		if(!tt.Is<bool>() && !tt.Is<ValueArray>() && !tt.Is<ValueMap>()) {
+			Value hh;
+			for(int i = 0; i < 2; i++) {
+				ASSERT(IsNull(hh.Get<T>()));
+				ASSERT(IsNull((T)hh));
+				hh = (int)Null;
+			}
+		}
 	}
 	if(!vf.IsVoid())
 		ASSERT(vf == v);
