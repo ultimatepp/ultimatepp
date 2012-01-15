@@ -1,0 +1,516 @@
+noblitz;
+library
+	"GL GLU Xmu";
+options
+	-I../../,
+	-I../../oce/inc,
+	-DHAVE_FTGL_NEWER212,
+	-DOCE_BUILD_STATIC_LIB;
+options(POSIX) -DHAVE_DIRENT_H;
+options(POSIX) -DHAVE_DLFCN_H;
+options(POSIX) -DOCE_HAVE_FSTREAM;
+options(POSIX) -DHAVE_NETDB_H;
+options(POSIX) -DOCE_HAVE_IOSTREAM;
+options(POSIX) -DOCE_HAVE_IOMANIP;
+options(POSIX) -DOCE_HAVE_LIMITS_H;
+options(POSIX) -DHAVE_PWD_H;
+options(POSIX) -DHAVE_SIGNAL_H;
+options(POSIX) -DHAVE_STATFS;
+options(POSIX) -DHAVE_STDLIB_H;
+options(POSIX) -DHAVE_STRING_H;
+options(POSIX) -DHAVE_SYS_IPC_H;
+options(POSIX) -DHAVE_SYS_MMAN_H;
+options(POSIX) -DHAVE_SYS_PARAM_H;
+options(POSIX) -DHAVE_SYS_SEM_H;
+options(POSIX) -DHAVE_SYS_SOCKET_H;
+options(POSIX) -DHAVE_SYS_STAT_H;
+options(POSIX) -DHAVE_SYS_TIME_H;
+options(POSIX) -DHAVE_SYS_TIMES_H;
+options(POSIX) -DHAVE_SYS_TYPES_H;
+options(POSIX) -DHAVE_SYS_UNISTD_H;
+options(POSIX) -DHAVE_SYS_UTSNAME_H;
+options(POSIX) -DHAVE_SYS_VFS_H;
+options(POSIX) -DHAVE_UNISTD_H;
+options(WIN32) -DWNT;
+options(WIN32) -DHAVE_NO_DLL;
+file
+	../../oce/src/Xw/Xw.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_ColorMap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_Driver.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_FontMap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_GraphicDevice.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_IconBox.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_MarkMap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_PixMap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_TextManager.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_TypeMap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_WidthMap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_Window.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_alloc_color.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_alloc_pixel.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_calc_points.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_convert_image.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_def_background_color.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_def_color.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_def_colormap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_def_font.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_def_fontmap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_def_highlight_color.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_def_marker.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_def_markmap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_def_tile.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_def_tilemap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_def_type.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_def_typemap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_def_width.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_def_widthmap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_def_window.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_draw_arc.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_draw_buffer.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_draw_image.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_draw_line.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_draw_marker.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_draw_point.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_draw_poly.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_draw_polyarc.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_draw_polytext.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_draw_segment.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_draw_text.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_draw_zoomed_image.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_erase_area.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_erase_window.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_flush.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_gamma_image.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_background_color.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_background_image.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_background_index.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_background_pixel.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_color.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_color_index.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_color_name.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_color_pixel.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_colormap_info.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_colormap_visual.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_colormap_xid.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_cursor_position.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_display_info.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_display_visual.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_double_buffer.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_env.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_filename.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_font.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_font_index.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_fontmap_info.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_highlight_color.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_image.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_image_info.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_marker_index.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_markmap_info.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_mmscreen_pixelvalue.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_pixel.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_pixel_mmscreenvalue.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_pixel_screencoord.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_pixel_screenvalue.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_pixel_windowcoord.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_pixel_windowvalue.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_rgbpixel.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_screen_pixelcoord.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_screen_pixelvalue.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_screen_size.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_text_size.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_tilemap_info.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_type.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_type_index.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_typemap_info.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_width.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_width_index.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_widthmap_info.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_window_info.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_window_pixelcoord.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_window_pixelvalue.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_window_position.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_get_window_visual.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_isdefine_color.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_isdefine_colormap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_isdefine_display.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_isdefine_font.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_isdefine_fontmap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_isdefine_image.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_isdefine_marker.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_isdefine_markmap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_isdefine_tile.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_isdefine_tilemap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_isdefine_type.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_isdefine_typemap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_isdefine_width.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_isdefine_widthmap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_isdefine_window.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_load_bmp_image.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_load_gif_image.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_load_icons.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_load_image.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_load_xwd_image.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_open_display.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_open_image.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_open_pixmap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_open_window.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_put_background_image.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_put_pixel.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_put_rgbpixel.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_resize_window.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_restore_area.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_restore_window.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_save_image.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_background_index.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_colormap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_double_buffer.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_event.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_extended_text_attrib.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_fontmap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_hard_cursor.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_internal_event.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_line_attrib.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_marker_attrib.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_markmap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_poly_attrib.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_soft_cursor.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_text_attrib.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_tilemap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_trace.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_typemap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_widthmap.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_window_ratio.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_set_window_state.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_wait_event.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/Xw/Xw_zoom_image.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/drv/Xw/Xw_HListOfMFTFonts_0.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/drv/Xw/Xw_ListOfMFTFonts_0.cxx
+		options() -I../../oce/src/Xw
+		options() -I../../oce/drv/Xw,
+	../../oce/src/ImageUtility/ImageUtility.cxx
+		options() -I../../oce/src/ImageUtility
+		options() -I../../oce/drv/ImageUtility,
+	../../oce/src/ImageUtility/ImageUtility_X11Display.cxx
+		options() -I../../oce/src/ImageUtility
+		options() -I../../oce/drv/ImageUtility,
+	../../oce/src/ImageUtility/ImageUtility_X11Dump.cxx
+		options() -I../../oce/src/ImageUtility
+		options() -I../../oce/drv/ImageUtility,
+	../../oce/src/ImageUtility/ImageUtility_X11GC.cxx
+		options() -I../../oce/src/ImageUtility
+		options() -I../../oce/drv/ImageUtility,
+	../../oce/src/ImageUtility/ImageUtility_X11Window.cxx
+		options() -I../../oce/src/ImageUtility
+		options() -I../../oce/drv/ImageUtility,
+	../../oce/src/ImageUtility/ImageUtility_X11XImage.cxx
+		options() -I../../oce/src/ImageUtility
+		options() -I../../oce/drv/ImageUtility,
+	../../oce/src/ImageUtility/ImageUtility_XPR.cxx
+		options() -I../../oce/src/ImageUtility
+		options() -I../../oce/drv/ImageUtility,
+	../../oce/src/ImageUtility/ImageUtility_XWD.cxx
+		options() -I../../oce/src/ImageUtility
+		options() -I../../oce/drv/ImageUtility,
+	../../oce/src/ImageUtility/ImageUtility_XWUD.cxx
+		options() -I../../oce/src/ImageUtility
+		options() -I../../oce/drv/ImageUtility;

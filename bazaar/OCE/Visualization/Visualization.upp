@@ -1,0 +1,3235 @@
+uses(LINUX) OCE/Visualization/Xw;
+uses(WIN32) OCE/Visualization/WNT;
+noblitz;
+uses
+	OCE/ModelingData,
+	FTGL;
+options(WIN32) -D__InterfaceGraphic_DLL;
+options
+	-I../,
+	-I../oce/inc,
+	-DHAVE_FTGL_NEWER212,
+	-DOCE_BUILD_STATIC_LIB;
+options(POSIX) -DHAVE_DIRENT_H;
+options(POSIX) -DHAVE_DLFCN_H;
+options(POSIX) -DOCE_HAVE_FSTREAM;
+options(POSIX) -DHAVE_NETDB_H;
+options(POSIX) -DOCE_HAVE_IOSTREAM;
+options(POSIX) -DOCE_HAVE_IOMANIP;
+options(POSIX) -DOCE_HAVE_LIMITS_H;
+options(POSIX) -DHAVE_PWD_H;
+options(POSIX) -DHAVE_SIGNAL_H;
+options(POSIX) -DHAVE_STATFS;
+options(POSIX) -DHAVE_STDLIB_H;
+options(POSIX) -DHAVE_STRING_H;
+options(POSIX) -DHAVE_SYS_IPC_H;
+options(POSIX) -DHAVE_SYS_MMAN_H;
+options(POSIX) -DHAVE_SYS_PARAM_H;
+options(POSIX) -DHAVE_SYS_SEM_H;
+options(POSIX) -DHAVE_SYS_SOCKET_H;
+options(POSIX) -DHAVE_SYS_STAT_H;
+options(POSIX) -DHAVE_SYS_TIME_H;
+options(POSIX) -DHAVE_SYS_TIMES_H;
+options(POSIX) -DHAVE_SYS_TYPES_H;
+options(POSIX) -DHAVE_SYS_UNISTD_H;
+options(POSIX) -DHAVE_SYS_UTSNAME_H;
+options(POSIX) -DHAVE_SYS_VFS_H;
+options(POSIX) -DHAVE_UNISTD_H;
+options(WIN32) -DWNT;
+options(WIN32) -DHAVE_NO_DLL;
+include
+	../oce/inc;
+file
+	../oce/src/MeshVS/MeshVS_ColorHasher.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_DataSource.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_DataSource3D.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_DeformedDataSource.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_Drawer.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_DummySensitiveEntity.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_ElementalColorPrsBuilder.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_Mesh.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_MeshEntityOwner.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_MeshOwner.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_MeshPrsBuilder.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_NodalColorPrsBuilder.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_PrsBuilder.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_SensitiveFace.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_SensitiveMesh.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_SensitivePolyhedron.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_SensitiveSegment.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_TextPrsBuilder.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_Tool.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_TwoColors.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/MeshVS/MeshVS_VectorPrsBuilder.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_Array1OfSequenceOfInteger_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapIteratorOfDataMapOfColorMapOfInteger_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapIteratorOfDataMapOfHArray1OfSequenceOfInteger_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapIteratorOfDataMapOfIntegerAsciiString_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapIteratorOfDataMapOfIntegerBoolean_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapIteratorOfDataMapOfIntegerColor_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapIteratorOfDataMapOfIntegerMaterial_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapIteratorOfDataMapOfIntegerMeshEntityOwner_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapIteratorOfDataMapOfIntegerOwner_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapIteratorOfDataMapOfIntegerTwoColors_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapIteratorOfDataMapOfIntegerVector_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapIteratorOfDataMapOfTwoColorsMapOfInteger_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapNodeOfDataMapOfColorMapOfInteger_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapNodeOfDataMapOfHArray1OfSequenceOfInteger_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapNodeOfDataMapOfIntegerAsciiString_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapNodeOfDataMapOfIntegerBoolean_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapNodeOfDataMapOfIntegerColor_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapNodeOfDataMapOfIntegerMaterial_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapNodeOfDataMapOfIntegerMeshEntityOwner_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapNodeOfDataMapOfIntegerOwner_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapNodeOfDataMapOfIntegerTwoColors_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapNodeOfDataMapOfIntegerVector_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapNodeOfDataMapOfTwoColorsMapOfInteger_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapOfColorMapOfInteger_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapOfHArray1OfSequenceOfInteger_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapOfIntegerAsciiString_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapOfIntegerBoolean_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapOfIntegerColor_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapOfIntegerMaterial_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapOfIntegerMeshEntityOwner_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapOfIntegerOwner_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapOfIntegerTwoColors_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapOfIntegerVector_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_DataMapOfTwoColorsMapOfInteger_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_HArray1OfSequenceOfInteger_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_MapIteratorOfMapOfTwoNodes_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_MapOfTwoNodes_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_SequenceNodeOfSequenceOfPrsBuilder_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_SequenceOfPrsBuilder_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_StdMapNodeOfMapOfTwoNodes_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_TwoColorsHasher_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/drv/MeshVS/MeshVS_TwoNodesHasher_0.cxx
+		options() -I../oce/src/MeshVS
+		options() -I../oce/drv/MeshVS,
+	../oce/src/NIS/NIS_Allocator.cxx
+		options() -I../oce/src/NIS
+		options() -I../oce/drv/NIS,
+	../oce/src/NIS/NIS_DrawList.cxx
+		options() -I../oce/src/NIS
+		options() -I../oce/drv/NIS,
+	../oce/src/NIS/NIS_Drawer.cxx
+		options() -I../oce/src/NIS
+		options() -I../oce/drv/NIS,
+	../oce/src/NIS/NIS_InteractiveContext.cxx
+		options() -I../oce/src/NIS
+		options() -I../oce/drv/NIS,
+	../oce/src/NIS/NIS_InteractiveObject.cxx
+		options() -I../oce/src/NIS
+		options() -I../oce/drv/NIS,
+	../oce/src/NIS/NIS_ObjectsIterator.cxx
+		options() -I../oce/src/NIS
+		options() -I../oce/drv/NIS,
+	../oce/src/NIS/NIS_SelectFilter.cxx
+		options() -I../oce/src/NIS
+		options() -I../oce/drv/NIS,
+	../oce/src/NIS/NIS_Surface.cxx
+		options() -I../oce/src/NIS
+		options() -I../oce/drv/NIS,
+	../oce/src/NIS/NIS_SurfaceDrawer.cxx
+		options() -I../oce/src/NIS
+		options() -I../oce/drv/NIS,
+	../oce/src/NIS/NIS_Triangulated.cxx
+		options() -I../oce/src/NIS
+		options() -I../oce/drv/NIS,
+	../oce/src/NIS/NIS_TriangulatedDrawer.cxx
+		options() -I../oce/src/NIS
+		options() -I../oce/drv/NIS,
+	../oce/src/NIS/NIS_View.cxx
+		options() -I../oce/src/NIS
+		options() -I../oce/drv/NIS,
+	../oce/src/OpenGl/OpenGl_AVIWriter.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_Extension.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_FontMgr.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_FrameBuffer.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_1.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_2.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_3.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_4.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_5.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_6.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_7.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_703.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_705.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_707.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_709.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_710.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_711.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_712.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_713.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_8.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_9.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_Export.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_Layer.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_GraphicDriver_print.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_ImageBox.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_LightBox.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_Memory.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_PrimitiveArray.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_PrinterContext.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_ResourceCleaner.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_ResourceTexture.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_ResourceVBO.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_TextRender.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_TextureBox.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_addnames.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_antialias.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_applid.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_attri.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_bintcol.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_bintrefl.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_bsurfprop.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_charexpan.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_charspace.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_curve.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_degmodel.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_depthcue.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_dind.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_dotexturemap.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_edgecol.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_edgeflag.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_edgetyp.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_edgewid.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_execstruct.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_facecull.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_facedmode.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_filters.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_funcs.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_graduatedtrihedron.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_highlight.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_hlind.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_indexpolygons.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_initelem.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_inquire.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_intcol.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_intrefl.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_intshademtd.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_intstyle.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_intstyleind.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_label.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_lightstate.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_localtran3.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_mrkr.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_mrkrcol.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_mrkrset.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_mrkrsize.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_mrkrtype.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_pick.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_pickid.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_polygon.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_polygonholes.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_polygonoffset.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_polyl.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_polylcol.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_polyltyp.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_polylwid.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_qstrip.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_remnames.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_subrs.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_subrvis.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_surfprop.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_telem_util.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_text.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_textalignment.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_textangle.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_textcol.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_textcolsubtitle.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_textdisplaytype.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_textfont.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_textfontaspect.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_textheight.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_textstyle.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_texture.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_textzoomable.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_tgl_util.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_tgl_utilgr.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_tmesh.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_activateview.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_antialiasing.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_backfacing.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_background.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_begin.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_begin_animation.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_begin_immediat_mode.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_begin_layer_mode.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_bezier.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_bezier_weight.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_blink.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_boundarybox.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_cleargroup.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_clearstructure.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_cliplimit.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_closegroup.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_connect.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_contextstructure.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_curve.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_deactivateview.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_degeneratestructure.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_depthcueing.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_depthtest.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_disconnect.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_displaystructure.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_element_exploration.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_end.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_erasestructure.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_facecontextgroup.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_gradient_background.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_graduatedtrihedron.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_group.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_highlightcolor.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_init_pick.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_inquirefacilities.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_inquirelight.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_inquireplane.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_inquireview.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_light.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_light_exploration.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_linecontextgroup.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_marker.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_marker_set.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_markercontextgroup.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_namesetstructure.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_opengroup.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_parray.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_pick.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_pickid.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_plane.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_polygon.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_polygon_holes.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_polygon_indices.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_polygon_set.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_polyline.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_print.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_project_raster.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_quadrangle.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_ratio_window.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_redraw.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_removegroup.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_removestructure.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_removeview.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_set_environment.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_setlight.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_setplane.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_setvisualisation.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_structure.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_structure_exploration.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_text.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_textcontextgroup.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_texture.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_transformstructure.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_transparency.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_triangle.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_triedron.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_unproject_raster.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_update.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_userdraw.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_view.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_view_exploration.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_viewmapping.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_togl_vieworientation.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_tox.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_transform_persistence.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_triedron.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_tsm.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_txgl.cxx
+		options(WIN32) -FI../../../InterfaceGraphic_WNT.hxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_undefined.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_userdraw.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_view.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_vind.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/OpenGl/OpenGl_ws.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/drv/OpenGl/OpenGl_Error_0.cxx
+		options() -I../oce/src/OpenGl
+		options() -I../oce/drv/OpenGl,
+	../oce/src/Aspect/Aspect.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_AspectFillArea.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_AspectLine.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_AspectMarker.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_Background.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_CLayer2d.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_CircularGrid.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_ColorCubeColorMap.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_ColorMap.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_ColorMapEntry.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_ColorPixel.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_ColorRampColorMap.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_ColorScale.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_Driver.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_Edge.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_FStream.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_FontMap.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_FontMapEntry.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_FontStyle.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_GenId.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_GenericColorMap.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_GradientBackground.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_GraphicDevice.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_GraphicDriver.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_Grid.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_Handle.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_IFStream.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_IndexPixel.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_LineStyle.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_MarkMap.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_MarkMapEntry.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_MarkerStyle.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_PixMap.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_Pixel.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_RGBPixel.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_RectangularGrid.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_TypeMap.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_TypeMapEntry.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_WidthMap.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_WidthMapEntry.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_Window.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/Aspect/Aspect_WindowDriver.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_Array1OfEdge_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_AspectFillAreaDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_AspectLineDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_AspectMarkerDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_BadAccess_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_ColorMapDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_DriverDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_DriverError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_EdgeDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_FontMapDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_FontStyleDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_GraphicDeviceDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_IdentDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_LineStyleDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_LineWidthDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_MarkMapDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_MarkerStyleDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_PixmapDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_PixmapError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_PolyStyleDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_SequenceNodeOfSequenceOfColorMapEntry_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_SequenceNodeOfSequenceOfColor_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_SequenceNodeOfSequenceOfFontMapEntry_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_SequenceNodeOfSequenceOfMarkMapEntry_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_SequenceNodeOfSequenceOfTypeMapEntry_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_SequenceNodeOfSequenceOfWidthMapEntry_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_SequenceOfColorMapEntry_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_SequenceOfColor_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_SequenceOfFontMapEntry_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_SequenceOfMarkMapEntry_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_SequenceOfTypeMapEntry_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_SequenceOfWidthMapEntry_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_TypeMapDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_UndefinedMap_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_WidthMapDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_WindowDefinitionError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/drv/Aspect/Aspect_WindowError_0.cxx
+		options() -I../oce/src/Aspect
+		options() -I../oce/drv/Aspect,
+	../oce/src/InterfaceGraphic/InterfaceGraphic_Palette.c
+		options() -I../oce/src/InterfaceGraphic
+		options() -I../oce/drv/InterfaceGraphic,
+	../oce/src/InterfaceGraphic/InterfaceGraphic_cPrintf.cxx
+		options() -I../oce/src/InterfaceGraphic
+		options() -I../oce/drv/InterfaceGraphic,
+	../oce/src/SelectBasics/SelectBasics.cxx
+		options() -I../oce/src/SelectBasics
+		options() -I../oce/drv/SelectBasics,
+	../oce/src/SelectBasics/SelectBasics_BasicTool.cxx
+		options() -I../oce/src/SelectBasics
+		options() -I../oce/drv/SelectBasics,
+	../oce/src/SelectBasics/SelectBasics_EntityOwner.cxx
+		options() -I../oce/src/SelectBasics
+		options() -I../oce/drv/SelectBasics,
+	../oce/src/SelectBasics/SelectBasics_SensitiveEntity.cxx
+		options() -I../oce/src/SelectBasics
+		options() -I../oce/drv/SelectBasics,
+	../oce/src/SelectBasics/SelectBasics_SortAlgo.cxx
+		options() -I../oce/src/SelectBasics
+		options() -I../oce/drv/SelectBasics,
+	../oce/drv/SelectBasics/SelectBasics_ListIteratorOfListOfBox2d_0.cxx
+		options() -I../oce/src/SelectBasics
+		options() -I../oce/drv/SelectBasics,
+	../oce/drv/SelectBasics/SelectBasics_ListIteratorOfListOfSensitive_0.cxx
+		options() -I../oce/src/SelectBasics
+		options() -I../oce/drv/SelectBasics,
+	../oce/drv/SelectBasics/SelectBasics_ListNodeOfListOfBox2d_0.cxx
+		options() -I../oce/src/SelectBasics
+		options() -I../oce/drv/SelectBasics,
+	../oce/drv/SelectBasics/SelectBasics_ListNodeOfListOfSensitive_0.cxx
+		options() -I../oce/src/SelectBasics
+		options() -I../oce/drv/SelectBasics,
+	../oce/drv/SelectBasics/SelectBasics_ListOfBox2d_0.cxx
+		options() -I../oce/src/SelectBasics
+		options() -I../oce/drv/SelectBasics,
+	../oce/drv/SelectBasics/SelectBasics_ListOfSensitive_0.cxx
+		options() -I../oce/src/SelectBasics
+		options() -I../oce/drv/SelectBasics,
+	../oce/drv/SelectBasics/SelectBasics_SequenceNodeOfSequenceOfOwner_0.cxx
+		options() -I../oce/src/SelectBasics
+		options() -I../oce/drv/SelectBasics,
+	../oce/drv/SelectBasics/SelectBasics_SequenceOfOwner_0.cxx
+		options() -I../oce/src/SelectBasics
+		options() -I../oce/drv/SelectBasics,
+	../oce/src/Viewer/Viewer_View.cxx
+		options() -I../oce/src/Viewer
+		options() -I../oce/drv/Viewer,
+	../oce/src/Viewer/Viewer_Viewer.cxx
+		options() -I../oce/src/Viewer
+		options() -I../oce/drv/Viewer,
+	../oce/drv/Viewer/Viewer_BadValue_0.cxx
+		options() -I../oce/src/Viewer
+		options() -I../oce/drv/Viewer,
+	../oce/src/MFT/MFT.cxx
+		options() -I../oce/src/MFT
+		options() -I../oce/drv/MFT,
+	../oce/src/MFT/MFT_CommandDescriptor.cxx
+		options() -I../oce/src/MFT
+		options() -I../oce/drv/MFT,
+	../oce/src/MFT/MFT_FileRecord.cxx
+		options() -I../oce/src/MFT
+		options() -I../oce/drv/MFT,
+	../oce/src/MFT/MFT_FontManager.cxx
+		options() -I../oce/src/MFT
+		options() -I../oce/drv/MFT,
+	../oce/src/MFT/MFT_TextManager.cxx
+		options() -I../oce/src/MFT
+		options() -I../oce/drv/MFT,
+	../oce/drv/MFT/MFT_FontManagerDefinitionError_0.cxx
+		options() -I../oce/src/MFT
+		options() -I../oce/drv/MFT,
+	../oce/drv/MFT/MFT_FontManagerError_0.cxx
+		options() -I../oce/src/MFT
+		options() -I../oce/drv/MFT,
+	../oce/drv/MFT/MFT_ListOfFontHandle_0.cxx
+		options() -I../oce/src/MFT
+		options() -I../oce/drv/MFT,
+	../oce/drv/MFT/MFT_SequenceNodeOfListOfFontHandle_0.cxx
+		options() -I../oce/src/MFT
+		options() -I../oce/drv/MFT,
+	../oce/src/PS/PS_Driver.cxx
+		options() -I../oce/src/PS
+		options() -I../oce/drv/PS,
+	../oce/src/CGM/CGM_Driver.cxx
+		options() -I../oce/src/CGM
+		options() -I../oce/drv/CGM,
+	../oce/src/CGM/Gestfic.cxx
+		options() -I../oce/src/CGM
+		options() -I../oce/drv/CGM,
+	../oce/src/CGM/cgmobin.c
+		options() -I../oce/src/CGM
+		options() -I../oce/drv/CGM,
+	../oce/src/CGM/cgmochar.c
+		options() -I../oce/src/CGM
+		options() -I../oce/drv/CGM,
+	../oce/src/CGM/cgmotext.c
+		options() -I../oce/src/CGM
+		options() -I../oce/drv/CGM,
+	../oce/src/AlienImage/AlienImage.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_AidaAlienData.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_AidaAlienImage.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_AlienImage.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_AlienImageData.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_AlienUserImage.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_BMPAlienData.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_BMPAlienImage.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_BMPHeader.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_EuclidAlienData.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_EuclidAlienImage.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_GIFAlienData.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_GIFAlienImage.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_GIFLZWDict.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_MemoryOperations.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_SGIRGBAlienData.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_SGIRGBAlienImage.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_SGIRGBFileHeader.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_SUNRFFileHeader.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_SunRFAlienData.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_SunRFAlienImage.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_X11XColor.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_X11XWDAlienData.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_X11XWDFileHeader.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/AlienImage/AlienImage_XAlienImage.cxx
+		options() -I../oce/src/AlienImage
+		options() -I../oce/drv/AlienImage,
+	../oce/src/Image/Image.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/src/Image/Image_AveragePixelInterpolation.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/src/Image/Image_BalancedPixelInterpolation.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/src/Image/Image_BilinearPixelInterpolation.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/src/Image/Image_ColorImage.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/src/Image/Image_Convertor.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/src/Image/Image_Image.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/src/Image/Image_PixMap.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/src/Image/Image_PixelAddress.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/src/Image/Image_PixelInterpolation.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/src/Image/Image_PlanarPixelInterpolation.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/src/Image/Image_PseudoColorImage.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/drv/Image/Image_ColorPixelDataMap_0.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/drv/Image/Image_ColorPixelMapHasher_0.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/drv/Image/Image_DColorImage_0.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/drv/Image/Image_DIndexedImage_0.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/drv/Image/Image_DataMapIteratorOfColorPixelDataMap_0.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/drv/Image/Image_DataMapIteratorOfLookupTable_0.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/drv/Image/Image_DataMapNodeOfColorPixelDataMap_0.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/drv/Image/Image_DataMapNodeOfLookupTable_0.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/drv/Image/Image_IndexPixelMapHasher_0.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/drv/Image/Image_LookupTable_0.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/drv/Image/Image_PixelFieldOfDColorImage_0.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/drv/Image/Image_PixelFieldOfDIndexedImage_0.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/drv/Image/Image_PixelRowOfDColorImage_0.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/drv/Image/Image_PixelRowOfDIndexedImage_0.cxx
+		options() -I../oce/src/Image
+		options() -I../oce/drv/Image,
+	../oce/src/PlotMgt/PlotMgt.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/src/PlotMgt/PlotMgt_ImageDriver.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/src/PlotMgt/PlotMgt_Plotter.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/src/PlotMgt/PlotMgt_PlotterDriver.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/src/PlotMgt/PlotMgt_PlotterParameter.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/src/PlotMgt/PlotMgt_PlotterTools.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/src/PlotMgt/PlotMgt_Plotter_1.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/src/PlotMgt/PlotMgt_Plotter_2.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/src/PlotMgt/PlotMgt_TextManager.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/src/PlotMgt/PlotMgt_fillpolyarc.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/src/PlotMgt/PlotMgt_fillpolygon.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/drv/PlotMgt/PlotMgt_HListOfMFTFonts_0.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/drv/PlotMgt/PlotMgt_HListOfPlotterParameter_0.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/drv/PlotMgt/PlotMgt_ListOfMFTFonts_0.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/drv/PlotMgt/PlotMgt_ListOfPlotterParameter_0.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/drv/PlotMgt/PlotMgt_PlotterAccessError_0.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/drv/PlotMgt/PlotMgt_PlotterDefinitionError_0.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/drv/PlotMgt/PlotMgt_SequenceNodeOfListOfPlotterParameter_0.cxx
+		options() -I../oce/src/PlotMgt
+		options() -I../oce/drv/PlotMgt,
+	../oce/drv/TColQuantity/TColQuantity_Array1OfLength_0.cxx
+		options() -I../oce/src/TColQuantity
+		options() -I../oce/drv/TColQuantity,
+	../oce/drv/TColQuantity/TColQuantity_Array2OfLength_0.cxx
+		options() -I../oce/src/TColQuantity
+		options() -I../oce/drv/TColQuantity,
+	../oce/drv/TColQuantity/TColQuantity_HArray1OfLength_0.cxx
+		options() -I../oce/src/TColQuantity
+		options() -I../oce/drv/TColQuantity,
+	../oce/drv/TColQuantity/TColQuantity_HArray2OfLength_0.cxx
+		options() -I../oce/src/TColQuantity
+		options() -I../oce/drv/TColQuantity,
+	../oce/src/V2d/V2d.cxx
+		options() -I../oce/src/V2d
+		options() -I../oce/drv/V2d,
+	../oce/src/V2d/V2d_BackgroundGraphicObject.cxx
+		options() -I../oce/src/V2d
+		options() -I../oce/drv/V2d,
+	../oce/src/V2d/V2d_CircularGraphicGrid.cxx
+		options() -I../oce/src/V2d
+		options() -I../oce/drv/V2d,
+	../oce/src/V2d/V2d_CircularGrid.cxx
+		options() -I../oce/src/V2d
+		options() -I../oce/drv/V2d,
+	../oce/src/V2d/V2d_DefaultMap.cxx
+		options() -I../oce/src/V2d
+		options() -I../oce/drv/V2d,
+	../oce/src/V2d/V2d_RectangularGraphicGrid.cxx
+		options() -I../oce/src/V2d
+		options() -I../oce/drv/V2d,
+	../oce/src/V2d/V2d_RectangularGrid.cxx
+		options() -I../oce/src/V2d
+		options() -I../oce/drv/V2d,
+	../oce/src/V2d/V2d_View.cxx
+		options() -I../oce/src/V2d
+		options() -I../oce/drv/V2d,
+	../oce/src/V2d/V2d_Viewer.cxx
+		options() -I../oce/src/V2d
+		options() -I../oce/drv/V2d,
+	../oce/src/Graphic2d/Graphic2d_Buffer.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_CBitFields8.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_Circle.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_CircleMarker.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_Drawer.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_Ellips.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_EllipsMarker.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_FramedText.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_GraphicObject.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_HidingGraphicObject.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_HidingText.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_Image.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_ImageFile.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_InfiniteLine.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_Line.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_Marker.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_Paragraph.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_Polyline.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_PolylineMarker.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_Primitive.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_Segment.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_SetOfMarkers.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_SetOfPolylines.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_SetOfSegments.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_Text.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_TransientManager.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_VectorialMarker.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_Vertex.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_View.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Graphic2d/Graphic2d_ViewMapping.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_Array1OfVertex_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_BufferList_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_CircleDefinitionError_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_DetectionColorError_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_DisplayList_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_DrawerDefinitionError_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_EllipsDefinitionError_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_HArray1OfVertex_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_HSequenceOfPrimitives_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_HSequenceOfVertex_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_ImageDefinitionError_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_InfiniteLineDefinitionError_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_MarkerDefinitionError_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_OverrideColorError_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_PolylineDefinitionError_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_SegmentDefinitionError_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_SequenceNodeOfSequenceOfBuffer_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_SequenceNodeOfSequenceOfGraphicObject_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_SequenceNodeOfSequenceOfPolyline_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_SequenceNodeOfSequenceOfPrimitives_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_SequenceNodeOfSequenceOfVertex_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_SequenceOfBuffer_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_SequenceOfGraphicObject_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_SequenceOfPolyline_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_SequenceOfPrimitives_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_SequenceOfVertex_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_TextDefinitionError_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/drv/Graphic2d/Graphic2d_TransientDefinitionError_0.cxx
+		options() -I../oce/src/Graphic2d
+		options() -I../oce/drv/Graphic2d,
+	../oce/src/Select2D/Select2D_Projector.cxx
+		options() -I../oce/src/Select2D
+		options() -I../oce/drv/Select2D,
+	../oce/src/Select2D/Select2D_SensitiveArc.cxx
+		options() -I../oce/src/Select2D
+		options() -I../oce/drv/Select2D,
+	../oce/src/Select2D/Select2D_SensitiveBox.cxx
+		options() -I../oce/src/Select2D
+		options() -I../oce/drv/Select2D,
+	../oce/src/Select2D/Select2D_SensitiveCircle.cxx
+		options() -I../oce/src/Select2D
+		options() -I../oce/drv/Select2D,
+	../oce/src/Select2D/Select2D_SensitiveEntity.cxx
+		options() -I../oce/src/Select2D
+		options() -I../oce/drv/Select2D,
+	../oce/src/Select2D/Select2D_SensitivePoint.cxx
+		options() -I../oce/src/Select2D
+		options() -I../oce/drv/Select2D,
+	../oce/src/Select2D/Select2D_SensitiveSegment.cxx
+		options() -I../oce/src/Select2D
+		options() -I../oce/drv/Select2D,
+	../oce/src/Prs2d/Prs2d_Angle.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Angularity.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Arrow.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_AspectFramedText.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_AspectHidingPoly.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_AspectHidingText.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_AspectLine.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_AspectRoot.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_AspectText.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Axis.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Circularity.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Concentric.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Cylindric.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Diameter.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Dimension.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_DrawSymbol.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Drawer.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Flatness.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Length.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_LineProfile.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Parallelism.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Perpendicular.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Point.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Position.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Radius.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_RadiusIndep.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Repere.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Straightness.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_SurfProfile.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_SymCircular.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_SymTotal.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Symmetry.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Taper.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_Tolerance.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/Prs2d/Prs2d_ToleranceFrame.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/drv/Prs2d/Prs2d_DataMapIteratorOfDataMapOfAspectRoot_0.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/drv/Prs2d/Prs2d_DataMapNodeOfDataMapOfAspectRoot_0.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/drv/Prs2d/Prs2d_DataMapOfAspectRoot_0.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/drv/Prs2d/Prs2d_SymbolDefinitionError_0.cxx
+		options() -I../oce/src/Prs2d
+		options() -I../oce/drv/Prs2d,
+	../oce/src/AIS2D/AIS2D.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/src/AIS2D/AIS2D_GlobalStatus.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/src/AIS2D/AIS2D_InteractiveContext.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/src/AIS2D/AIS2D_InteractiveObject.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/src/AIS2D/AIS2D_LocalContext.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/src/AIS2D/AIS2D_LocalStatus.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/src/AIS2D/AIS2D_PrimitiveArchit.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/src/AIS2D/AIS2D_ProjShape.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_DataMapIteratorOfDataMapOfIOStatus_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_DataMapIteratorOfDataMapOfLC_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_DataMapIteratorOfDataMapOfLocStat_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_DataMapIteratorOfDataMapOfPrimAspects_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_DataMapNodeOfDataMapOfIOStatus_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_DataMapNodeOfDataMapOfLC_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_DataMapNodeOfDataMapOfLocStat_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_DataMapNodeOfDataMapOfPrimAspects_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_DataMapOfIOStatus_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_DataMapOfLC_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_DataMapOfLocStat_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_DataMapOfPrimAspects_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_HSequenceOfIO_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_HSequenceOfPrimArchit_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_ListIteratorOfListOfIO_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_ListNodeOfListOfIO_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_ListOfIO_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_SequenceNodeOfSequenceOfIO_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_SequenceNodeOfSequenceOfPrimArchit_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_SequenceOfIO_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/drv/AIS2D/AIS2D_SequenceOfPrimArchit_0.cxx
+		options() -I../oce/src/AIS2D
+		options() -I../oce/drv/AIS2D,
+	../oce/src/GGraphic2d/GGraphic2d_Curve.cxx
+		options() -I../oce/src/GGraphic2d
+		options() -I../oce/drv/GGraphic2d,
+	../oce/src/GGraphic2d/GGraphic2d_SetOfCurves.cxx
+		options() -I../oce/src/GGraphic2d
+		options() -I../oce/drv/GGraphic2d,
+	../oce/drv/GGraphic2d/GGraphic2d_CurveDefinitionError_0.cxx
+		options() -I../oce/src/GGraphic2d
+		options() -I../oce/drv/GGraphic2d,
+	../oce/src/V3d/V3d.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_AmbientLight.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_Camera.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_CircularGrid.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_ColorScale.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_ColorScaleLayerItem.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_DirectionalLight.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_LayerMgr.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_Light.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_ListOfTransient.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_OrthographicView.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_PerspectiveView.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_Plane.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_PositionLight.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_PositionalLight.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_RectangularGrid.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_SpotLight.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_View.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_View_1.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_View_2.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_View_3.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_View_4.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_View_5.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_View_Print.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_Viewer.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_Viewer_1.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_Viewer_2.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_Viewer_3.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/V3d/V3d_Viewer_4.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/drv/V3d/V3d_UnMapped_0.cxx
+		options() -I../oce/src/V3d
+		options() -I../oce/drv/V3d,
+	../oce/src/Graphic3d/Graphic3d_ArrayOfPoints.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_ArrayOfPolygons.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_ArrayOfPolylines.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_ArrayOfPrimitives.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_ArrayOfQuadrangleStrips.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_ArrayOfQuadrangles.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_ArrayOfSegments.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_ArrayOfTriangleFans.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_ArrayOfTriangleStrips.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_ArrayOfTriangles.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_AspectFillArea3d.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_AspectLine3d.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_AspectMarker3d.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_AspectText3d.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_CBitFields16.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_CBitFields20.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_CBitFields4.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_CBitFields8.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_CBounds.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_CGraduatedTrihedron.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_CGroup.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_CInitTexture.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_CLight.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_CPick.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_CPlane.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_CStructure.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_CTexture.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_CTransPersStruct.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_CUserDraw.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_CView.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_DataStructureManager.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDevice.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_1.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_2.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_3.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_4.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_5.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_6.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_7.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_703.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_705.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_707.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_709.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_710.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_711.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_712.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_713.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_8.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_9.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_Export.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_Layer.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_GraphicDriver_Print.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Group.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Group_1.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Group_10.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Group_11.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Group_12.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Group_13.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Group_2.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Group_3.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Group_4.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Group_5.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Group_7.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Group_8.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Group_9.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_MaterialAspect.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Plotter.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Strips.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Structure.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_StructureManager.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Texture1D.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Texture1Dmanual.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Texture1Dsegment.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Texture2D.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Texture2Dmanual.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Texture2Dplane.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_TextureEnv.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_TextureMap.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_TextureRoot.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Vector.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_Vertex.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_VertexC.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_VertexN.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_VertexNC.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_VertexNT.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Graphic3d/Graphic3d_WNTGraphicDevice.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_Array1OfVector_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_Array1OfVertexC_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_Array1OfVertexNC_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_Array1OfVertexNT_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_Array1OfVertexN_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_Array1OfVertex_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_Array2OfVertexC_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_Array2OfVertexNC_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_Array2OfVertexNT_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_Array2OfVertexN_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_Array2OfVertex_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_AspectTextDefinitionError_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_CycleError_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_GroupDefinitionError_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_HSequenceOfGroup_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_HSequenceOfStructure_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_HSetOfGroup_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_InitialisationError_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_ListIteratorOfListOfPArray_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_ListIteratorOfListOfShortReal_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_ListIteratorOfSetListOfSetOfGroup_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_ListNodeOfListOfPArray_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_ListNodeOfListOfShortReal_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_ListNodeOfSetListOfSetOfGroup_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_ListOfPArray_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_ListOfShortReal_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_MapIteratorOfMapOfStructure_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_MapOfStructure_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_MaterialDefinitionError_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_PickIdDefinitionError_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_PlotterDefinitionError_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_PriorityDefinitionError_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_SequenceNodeOfSequenceOfAddress_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_SequenceNodeOfSequenceOfGroup_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_SequenceNodeOfSequenceOfStructure_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_SequenceOfAddress_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_SequenceOfGroup_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_SequenceOfStructure_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_SetIteratorOfSetOfGroup_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_SetListOfSetOfGroup_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_SetOfGroup_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_StdMapNodeOfMapOfStructure_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_StructureDefinitionError_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_TransformError_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/drv/Graphic3d/Graphic3d_VectorError_0.cxx
+		options() -I../oce/src/Graphic3d
+		options() -I../oce/drv/Graphic3d,
+	../oce/src/Visual3d/Visual3d_ClipPlane.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/src/Visual3d/Visual3d_ContextPick.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/src/Visual3d/Visual3d_ContextView.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/src/Visual3d/Visual3d_Layer.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/src/Visual3d/Visual3d_LayerItem.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/src/Visual3d/Visual3d_Light.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/src/Visual3d/Visual3d_PickDescriptor.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/src/Visual3d/Visual3d_PickPath.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/src/Visual3d/Visual3d_TransientManager.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/src/Visual3d/Visual3d_View.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/src/Visual3d/Visual3d_ViewManager.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/src/Visual3d/Visual3d_ViewMapping.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/src/Visual3d/Visual3d_ViewOrientation.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/src/Visual3d/Visual3d_View_Print.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_ClipDefinitionError_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_ContextPickDefinitionError_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_DepthCueingDefinitionError_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_HSequenceOfPickPath_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_HSetOfClipPlane_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_HSetOfLight_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_HSetOfView_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_LayerDefinitionError_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_LightDefinitionError_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_ListIteratorOfSetListOfSetOfClipPlane_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_ListIteratorOfSetListOfSetOfLight_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_ListIteratorOfSetListOfSetOfView_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_ListNodeOfSetListOfSetOfClipPlane_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_ListNodeOfSetListOfSetOfLight_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_ListNodeOfSetListOfSetOfView_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_PickError_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_SequenceNodeOfSequenceOfPickPath_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_SequenceOfPickPath_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_SetIteratorOfSetOfClipPlane_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_SetIteratorOfSetOfLight_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_SetIteratorOfSetOfView_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_SetListOfSetOfClipPlane_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_SetListOfSetOfLight_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_SetListOfSetOfView_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_SetOfClipPlane_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_SetOfLight_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_SetOfView_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_TransformError_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_TransientDefinitionError_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_ViewDefinitionError_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_ViewManagerDefinitionError_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_ViewMappingDefinitionError_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_ViewOrientationDefinitionError_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/drv/Visual3d/Visual3d_ZClippingDefinitionError_0.cxx
+		options() -I../oce/src/Visual3d
+		options() -I../oce/drv/Visual3d,
+	../oce/src/Select3D/Select3D_Projector.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/src/Select3D/Select3D_SensitiveBox.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/src/Select3D/Select3D_SensitiveCircle.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/src/Select3D/Select3D_SensitiveCurve.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/src/Select3D/Select3D_SensitiveEntity.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/src/Select3D/Select3D_SensitiveFace.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/src/Select3D/Select3D_SensitiveGroup.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/src/Select3D/Select3D_SensitivePoint.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/src/Select3D/Select3D_SensitivePoly.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/src/Select3D/Select3D_SensitiveSegment.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/src/Select3D/Select3D_SensitiveTriangle.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/src/Select3D/Select3D_SensitiveTriangulation.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/src/Select3D/Select3D_SensitiveWire.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/drv/Select3D/Select3D_ListIteratorOfListOfSensitiveTriangle_0.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/drv/Select3D/Select3D_ListIteratorOfListOfSensitive_0.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/drv/Select3D/Select3D_ListNodeOfListOfSensitiveTriangle_0.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/drv/Select3D/Select3D_ListNodeOfListOfSensitive_0.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/drv/Select3D/Select3D_ListOfSensitiveTriangle_0.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/drv/Select3D/Select3D_ListOfSensitive_0.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/drv/Select3D/Select3D_SensitiveEntitySequence_0.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/drv/Select3D/Select3D_SequenceNodeOfSensitiveEntitySequence_0.cxx
+		options() -I../oce/src/Select3D
+		options() -I../oce/drv/Select3D,
+	../oce/src/Prs3d/Prs3d.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_AngleAspect.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_AnglePresentation.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_Arrow.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_ArrowAspect.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_BasicAspect.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_CompositeAspect.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_DatumAspect.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_Drawer.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_IsoAspect.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_LengthAspect.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_LengthPresentation.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_LineAspect.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_PlaneAspect.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_PlaneSet.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_PointAspect.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_Presentation.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_Projector.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_RadiusAspect.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_Root.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_ShadingAspect.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_ShapeTool.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_Text.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/Prs3d/Prs3d_TextAspect.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/drv/Prs3d/Prs3d_InvalidAngle_0.cxx
+		options() -I../oce/src/Prs3d
+		options() -I../oce/drv/Prs3d,
+	../oce/src/StdPrs/StdPrs_Curve.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/src/StdPrs/StdPrs_DeflectionCurve.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/src/StdPrs/StdPrs_HLRPolyShape.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/src/StdPrs/StdPrs_HLRToolShape.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/src/StdPrs/StdPrs_Plane.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/src/StdPrs/StdPrs_PoleCurve.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/src/StdPrs/StdPrs_ShadedPoleSurface.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/src/StdPrs/StdPrs_ShadedSurface.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/src/StdPrs/StdPrs_ToolPoint.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/src/StdPrs/StdPrs_ToolRFace.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/src/StdPrs/StdPrs_ToolShadedShape.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/src/StdPrs/StdPrs_ToolVertex.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/src/StdPrs/StdPrs_WFDeflectionRestrictedFace.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/src/StdPrs/StdPrs_WFDeflectionSurface.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/src/StdPrs/StdPrs_WFPoleSurface.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/src/StdPrs/StdPrs_WFSurface.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/drv/StdPrs/StdPrs_HLRShape_0.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/drv/StdPrs/StdPrs_Point_0.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/drv/StdPrs/StdPrs_ShadedShape_0.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/drv/StdPrs/StdPrs_Vertex_0.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/drv/StdPrs/StdPrs_WFDeflectionShape_0.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/drv/StdPrs/StdPrs_WFRestrictedFace_0.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/drv/StdPrs/StdPrs_WFShape_0.cxx
+		options() -I../oce/src/StdPrs
+		options() -I../oce/drv/StdPrs,
+	../oce/src/SelectMgr/SelectMgr_AndFilter.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/src/SelectMgr/SelectMgr_CompositionFilter.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/src/SelectMgr/SelectMgr_EntityOwner.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/src/SelectMgr/SelectMgr_Filter.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/src/SelectMgr/SelectMgr_OrFilter.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/src/SelectMgr/SelectMgr_SelectableObject.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/src/SelectMgr/SelectMgr_Selection.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/src/SelectMgr/SelectMgr_SelectionManager.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/src/SelectMgr/SelectMgr_SortCriterion.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/src/SelectMgr/SelectMgr_ViewerSelector.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_DataMapIteratorOfDataMapOfIntegerSensitive_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_DataMapIteratorOfDataMapOfObjectSelectors_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_DataMapIteratorOfDataMapOfSelectionActivation_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_DataMapNodeOfDataMapOfIntegerSensitive_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_DataMapNodeOfDataMapOfObjectSelectors_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_DataMapNodeOfDataMapOfSelectionActivation_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_DataMapOfIntegerSensitive_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_DataMapOfObjectSelectors_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_DataMapOfSelectionActivation_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_IndexedDataMapNodeOfIndexedDataMapOfOwnerCriterion_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_IndexedDataMapOfOwnerCriterion_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_IndexedMapNodeOfIndexedMapOfOwner_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_IndexedMapOfOwner_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_ListIteratorOfListOfFilter_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_ListNodeOfListOfFilter_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_ListOfFilter_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_SequenceNodeOfSequenceOfFilter_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_SequenceNodeOfSequenceOfOwner_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_SequenceNodeOfSequenceOfSelection_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_SequenceNodeOfSequenceOfSelector_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_SequenceOfFilter_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_SequenceOfOwner_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_SequenceOfSelection_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/drv/SelectMgr/SelectMgr_SequenceOfSelector_0.cxx
+		options() -I../oce/src/SelectMgr
+		options() -I../oce/drv/SelectMgr,
+	../oce/src/PrsMgr/PrsMgr_ModedPresentation.cxx
+		options() -I../oce/src/PrsMgr
+		options() -I../oce/drv/PrsMgr,
+	../oce/src/PrsMgr/PrsMgr_PresentableObject.cxx
+		options() -I../oce/src/PrsMgr
+		options() -I../oce/drv/PrsMgr,
+	../oce/src/PrsMgr/PrsMgr_Presentation.cxx
+		options() -I../oce/src/PrsMgr
+		options() -I../oce/drv/PrsMgr,
+	../oce/src/PrsMgr/PrsMgr_Presentation2d.cxx
+		options() -I../oce/src/PrsMgr
+		options() -I../oce/drv/PrsMgr,
+	../oce/src/PrsMgr/PrsMgr_Presentation3d.cxx
+		options() -I../oce/src/PrsMgr
+		options() -I../oce/drv/PrsMgr,
+	../oce/src/PrsMgr/PrsMgr_PresentationManager.cxx
+		options() -I../oce/src/PrsMgr
+		options() -I../oce/drv/PrsMgr,
+	../oce/src/PrsMgr/PrsMgr_PresentationManager2d.cxx
+		options() -I../oce/src/PrsMgr
+		options() -I../oce/drv/PrsMgr,
+	../oce/src/PrsMgr/PrsMgr_PresentationManager3d.cxx
+		options() -I../oce/src/PrsMgr
+		options() -I../oce/drv/PrsMgr,
+	../oce/src/PrsMgr/PrsMgr_Prs.cxx
+		options() -I../oce/src/PrsMgr
+		options() -I../oce/drv/PrsMgr,
+	../oce/drv/PrsMgr/PrsMgr_Presentations_0.cxx
+		options() -I../oce/src/PrsMgr
+		options() -I../oce/drv/PrsMgr,
+	../oce/drv/PrsMgr/PrsMgr_SequenceNodeOfPresentations_0.cxx
+		options() -I../oce/src/PrsMgr
+		options() -I../oce/drv/PrsMgr,
+	../oce/src/AIS/AIS.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_AngleDimension.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_AttributeFilter.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_Axis.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_BadEdgeFilter.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_C0RegularityFilter.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_Chamf2dDimension.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_Chamf3dDimension.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_Circle.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_ConcentricRelation.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_ConnectedInteractive.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_ConnectedShape.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_DiameterDimension.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_DimensionOwner.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_Drawer.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_EllipseRadiusDimension.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_EqualDistanceRelation.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_EqualRadiusRelation.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_ExclusionFilter.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_FixRelation.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_GlobalStatus.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_GraphicTool.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_IdenticRelation.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_InteractiveContext.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_InteractiveContext_1.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_InteractiveContext_2.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_InteractiveContext_3.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_InteractiveObject.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_LengthDimension.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_Line.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_LocalContext.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_LocalContext_1.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_LocalStatus.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_MaxRadiusDimension.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_MidPointRelation.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_MinRadiusDimension.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_MultipleConnectedInteractive.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_MultipleConnectedShape.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_OffsetDimension.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_ParallelRelation.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_PerpendicularRelation.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_Plane.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_PlaneTrihedron.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_Point.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_RadiusDimension.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_Relation.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_Selection.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_Shape.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_SignatureFilter.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_SymmetricRelation.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_TangentRelation.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_TexturedShape.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_Triangulation.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_Trihedron.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/AIS/AIS_TypeFilter.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_DataMapIteratorOfDataMapOfILC_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_DataMapIteratorOfDataMapOfIOStatus_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_DataMapIteratorOfDataMapOfSelStat_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_DataMapIteratorOfDataMapofIntegerListOfinteractive_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_DataMapNodeOfDataMapOfILC_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_DataMapNodeOfDataMapOfIOStatus_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_DataMapNodeOfDataMapOfSelStat_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_DataMapNodeOfDataMapofIntegerListOfinteractive_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_DataMapOfILC_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_DataMapOfIOStatus_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_DataMapOfSelStat_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_DataMapofIntegerListOfinteractive_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_IndexedDataMapNodeOfIndexedDataMapOfOwnerPrs_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_IndexedDataMapOfOwnerPrs_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_ListIteratorOfListOfInteractive_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_ListNodeOfListOfInteractive_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_ListOfInteractive_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_MapIteratorOfMapOfInteractive_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_MapOfInteractive_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_SequenceNodeOfSequenceOfDimension_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_SequenceNodeOfSequenceOfInteractive_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_SequenceOfDimension_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_SequenceOfInteractive_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/drv/AIS/AIS_StdMapNodeOfMapOfInteractive_0.cxx
+		options() -I../oce/src/AIS
+		options() -I../oce/drv/AIS,
+	../oce/src/DsgPrs/DsgPrs.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_AnglePresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_Chamf2dPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_ConcentricPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_DatumTool.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_DiameterPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_EllipseRadiusPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_EqualDistancePresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_EqualRadiusPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_FilletRadiusPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_FixPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_IdenticPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_LengthPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_MidPointPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_OffsetPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_ParalPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_PerpenPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_RadiusPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_ShadedPlanePresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_ShapeDirPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_SymbPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_SymmetricPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_TangentPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_XYZAxisPresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/DsgPrs/DsgPrs_XYZPlanePresentation.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/drv/DsgPrs/DsgPrs_DatumPrs_0.cxx
+		options() -I../oce/src/DsgPrs
+		options() -I../oce/drv/DsgPrs,
+	../oce/src/StdSelect/StdSelect.cxx
+		options() -I../oce/src/StdSelect
+		options() -I../oce/drv/StdSelect,
+	../oce/src/StdSelect/StdSelect_BRepHilighter.cxx
+		options() -I../oce/src/StdSelect
+		options() -I../oce/drv/StdSelect,
+	../oce/src/StdSelect/StdSelect_BRepOwner.cxx
+		options() -I../oce/src/StdSelect
+		options() -I../oce/drv/StdSelect,
+	../oce/src/StdSelect/StdSelect_BRepSelectionTool.cxx
+		options() -I../oce/src/StdSelect
+		options() -I../oce/drv/StdSelect,
+	../oce/src/StdSelect/StdSelect_EdgeFilter.cxx
+		options() -I../oce/src/StdSelect
+		options() -I../oce/drv/StdSelect,
+	../oce/src/StdSelect/StdSelect_FaceFilter.cxx
+		options() -I../oce/src/StdSelect
+		options() -I../oce/drv/StdSelect,
+	../oce/src/StdSelect/StdSelect_Prs.cxx
+		options() -I../oce/src/StdSelect
+		options() -I../oce/drv/StdSelect,
+	../oce/src/StdSelect/StdSelect_SensitiveText2d.cxx
+		options() -I../oce/src/StdSelect
+		options() -I../oce/drv/StdSelect,
+	../oce/src/StdSelect/StdSelect_Shape.cxx
+		options() -I../oce/src/StdSelect
+		options() -I../oce/drv/StdSelect,
+	../oce/src/StdSelect/StdSelect_ShapeTypeFilter.cxx
+		options() -I../oce/src/StdSelect
+		options() -I../oce/drv/StdSelect,
+	../oce/src/StdSelect/StdSelect_TextProjector2d.cxx
+		options() -I../oce/src/StdSelect
+		options() -I../oce/drv/StdSelect,
+	../oce/src/StdSelect/StdSelect_ViewerSelector2d.cxx
+		options() -I../oce/src/StdSelect
+		options() -I../oce/drv/StdSelect,
+	../oce/src/StdSelect/StdSelect_ViewerSelector3d.cxx
+		options() -I../oce/src/StdSelect
+		options() -I../oce/drv/StdSelect,
+	../oce/drv/StdSelect/StdSelect_IndexedDataMapNodeOfIndexedDataMapOfOwnerPrs_0.cxx
+		options() -I../oce/src/StdSelect
+		options() -I../oce/drv/StdSelect,
+	../oce/drv/StdSelect/StdSelect_IndexedDataMapOfOwnerPrs_0.cxx
+		options() -I../oce/src/StdSelect
+		options() -I../oce/drv/StdSelect,
+	../oce/src/Voxel/Voxel_BoolDS.cxx
+		options() -I../oce/src/Voxel
+		options() -I../oce/drv/Voxel,
+	../oce/src/Voxel/Voxel_BooleanOperation.cxx
+		options() -I../oce/src/Voxel
+		options() -I../oce/drv/Voxel,
+	../oce/src/Voxel/Voxel_CollisionDetection.cxx
+		options() -I../oce/src/Voxel
+		options() -I../oce/drv/Voxel,
+	../oce/src/Voxel/Voxel_ColorDS.cxx
+		options() -I../oce/src/Voxel
+		options() -I../oce/drv/Voxel,
+	../oce/src/Voxel/Voxel_DS.cxx
+		options() -I../oce/src/Voxel
+		options() -I../oce/drv/Voxel,
+	../oce/src/Voxel/Voxel_FastConverter.cxx
+		options() -I../oce/src/Voxel
+		options() -I../oce/drv/Voxel,
+	../oce/src/Voxel/Voxel_FloatDS.cxx
+		options() -I../oce/src/Voxel
+		options() -I../oce/drv/Voxel,
+	../oce/src/Voxel/Voxel_OctBoolDS.cxx
+		options() -I../oce/src/Voxel
+		options() -I../oce/drv/Voxel,
+	../oce/src/Voxel/Voxel_Prs.cxx
+		options() -I../oce/src/Voxel
+		options() -I../oce/drv/Voxel,
+	../oce/src/Voxel/Voxel_ROctBoolDS.cxx
+		options() -I../oce/src/Voxel
+		options() -I../oce/drv/Voxel,
+	../oce/src/Voxel/Voxel_Reader.cxx
+		options() -I../oce/src/Voxel
+		options() -I../oce/drv/Voxel,
+	../oce/src/Voxel/Voxel_Selector.cxx
+		options() -I../oce/src/Voxel
+		options() -I../oce/drv/Voxel,
+	../oce/src/Voxel/Voxel_SplitData.cxx
+		options() -I../oce/src/Voxel
+		options() -I../oce/drv/Voxel,
+	../oce/src/Voxel/Voxel_Writer.cxx
+		options() -I../oce/src/Voxel
+		options() -I../oce/drv/Voxel;

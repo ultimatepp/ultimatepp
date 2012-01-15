@@ -1,0 +1,4488 @@
+noblitz;
+uses
+	OCE/ModelingAlgorithms,
+	OCE/Visualization;
+options
+	-I../,
+	-I../oce/inc,
+	-DHAVE_FTGL_NEWER212,
+	-DOCE_BUILD_STATIC_LIB;
+options(POSIX) -DHAVE_DIRENT_H;
+options(POSIX) -DHAVE_DLFCN_H;
+options(POSIX) -DOCE_HAVE_FSTREAM;
+options(POSIX) -DHAVE_NETDB_H;
+options(POSIX) -DOCE_HAVE_IOSTREAM;
+options(POSIX) -DOCE_HAVE_IOMANIP;
+options(POSIX) -DOCE_HAVE_LIMITS_H;
+options(POSIX) -DHAVE_PWD_H;
+options(POSIX) -DHAVE_SIGNAL_H;
+options(POSIX) -DHAVE_STATFS;
+options(POSIX) -DHAVE_STDLIB_H;
+options(POSIX) -DHAVE_STRING_H;
+options(POSIX) -DHAVE_SYS_IPC_H;
+options(POSIX) -DHAVE_SYS_MMAN_H;
+options(POSIX) -DHAVE_SYS_PARAM_H;
+options(POSIX) -DHAVE_SYS_SEM_H;
+options(POSIX) -DHAVE_SYS_SOCKET_H;
+options(POSIX) -DHAVE_SYS_STAT_H;
+options(POSIX) -DHAVE_SYS_TIME_H;
+options(POSIX) -DHAVE_SYS_TIMES_H;
+options(POSIX) -DHAVE_SYS_TYPES_H;
+options(POSIX) -DHAVE_SYS_UNISTD_H;
+options(POSIX) -DHAVE_SYS_UTSNAME_H;
+options(POSIX) -DHAVE_SYS_VFS_H;
+options(POSIX) -DHAVE_UNISTD_H;
+options(WIN32) -DWNT;
+options(WIN32) -DHAVE_NO_DLL;
+include
+	../oce/inc;
+file
+	../oce/src/FWOSDriver/FWOSDriver.cxx
+		options() -I../oce/src/FWOSDriver
+		options() -I../oce/drv/FWOSDriver,
+	../oce/src/FWOSDriver/FWOSDriver_Driver.cxx
+		options() -I../oce/src/FWOSDriver
+		options() -I../oce/drv/FWOSDriver,
+	../oce/src/FWOSDriver/FWOSDriver_DriverFactory.cxx
+		options() -I../oce/src/FWOSDriver
+		options() -I../oce/drv/FWOSDriver,
+	../oce/src/DBC/DBC_BaseArray.cxx
+		options() -I../oce/src/DBC
+		options() -I../oce/drv/DBC,
+	../oce/src/DBC/DBC_DBVArray.cxx
+		options() -I../oce/src/DBC
+		options() -I../oce/drv/DBC,
+	../oce/drv/DBC/DBC_VArrayNodeOfVArrayOfCharacter_0.cxx
+		options() -I../oce/src/DBC
+		options() -I../oce/drv/DBC,
+	../oce/drv/DBC/DBC_VArrayNodeOfVArrayOfExtCharacter_0.cxx
+		options() -I../oce/src/DBC
+		options() -I../oce/drv/DBC,
+	../oce/drv/DBC/DBC_VArrayNodeOfVArrayOfInteger_0.cxx
+		options() -I../oce/src/DBC
+		options() -I../oce/drv/DBC,
+	../oce/drv/DBC/DBC_VArrayNodeOfVArrayOfReal_0.cxx
+		options() -I../oce/src/DBC
+		options() -I../oce/drv/DBC,
+	../oce/drv/DBC/DBC_VArrayOfCharacter_0.cxx
+		options() -I../oce/src/DBC
+		options() -I../oce/drv/DBC,
+	../oce/drv/DBC/DBC_VArrayOfExtCharacter_0.cxx
+		options() -I../oce/src/DBC
+		options() -I../oce/drv/DBC,
+	../oce/drv/DBC/DBC_VArrayOfInteger_0.cxx
+		options() -I../oce/src/DBC
+		options() -I../oce/drv/DBC,
+	../oce/drv/DBC/DBC_VArrayOfReal_0.cxx
+		options() -I../oce/src/DBC
+		options() -I../oce/drv/DBC,
+	../oce/drv/DBC/DBC_VArrayTNodeOfVArrayOfCharacter_0.cxx
+		options() -I../oce/src/DBC
+		options() -I../oce/drv/DBC,
+	../oce/drv/DBC/DBC_VArrayTNodeOfVArrayOfExtCharacter_0.cxx
+		options() -I../oce/src/DBC
+		options() -I../oce/drv/DBC,
+	../oce/drv/DBC/DBC_VArrayTNodeOfVArrayOfInteger_0.cxx
+		options() -I../oce/src/DBC
+		options() -I../oce/drv/DBC,
+	../oce/drv/DBC/DBC_VArrayTNodeOfVArrayOfReal_0.cxx
+		options() -I../oce/src/DBC
+		options() -I../oce/drv/DBC,
+	../oce/src/PCollection/PCollection_CompareOfInteger.cxx
+		options() -I../oce/src/PCollection
+		options() -I../oce/drv/PCollection,
+	../oce/src/PCollection/PCollection_CompareOfReal.cxx
+		options() -I../oce/src/PCollection
+		options() -I../oce/drv/PCollection,
+	../oce/src/PCollection/PCollection_HAsciiString.cxx
+		options() -I../oce/src/PCollection
+		options() -I../oce/drv/PCollection,
+	../oce/src/PCollection/PCollection_HExtendedString.cxx
+		options() -I../oce/src/PCollection
+		options() -I../oce/drv/PCollection,
+	../oce/drv/PCollection/PCollection_IsContained_0.cxx
+		options() -I../oce/src/PCollection
+		options() -I../oce/drv/PCollection,
+	../oce/drv/PCollection/PCollection_IsNotRoot_0.cxx
+		options() -I../oce/src/PCollection
+		options() -I../oce/drv/PCollection,
+	../oce/drv/PCollection/PCollection_IsNullTree_0.cxx
+		options() -I../oce/src/PCollection
+		options() -I../oce/drv/PCollection,
+	../oce/drv/PCollection/PCollection_PrivCompareOfInteger_0.cxx
+		options() -I../oce/src/PCollection
+		options() -I../oce/drv/PCollection,
+	../oce/drv/PCollection/PCollection_PrivCompareOfReal_0.cxx
+		options() -I../oce/src/PCollection
+		options() -I../oce/drv/PCollection,
+	../oce/src/PColStd/PColStd_HashAsciiString.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/src/PColStd/PColStd_HashExtendedString.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_FieldOfHArray1OfExtendedString_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_FieldOfHArray1OfInteger_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_FieldOfHArray1OfPersistent_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_FieldOfHArray1OfReal_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_FieldOfHArray2OfInteger_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_FieldOfHArray2OfPersistent_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_FieldOfHArray2OfReal_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HArray1OfExtendedString_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HArray1OfInteger_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HArray1OfPersistent_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HArray1OfReal_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HArray2OfInteger_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HArray2OfPersistent_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HArray2OfReal_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HDoubleListOfInteger_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HDoubleListOfPersistent_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HDoubleListOfReal_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HOfAsciiString_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HOfExtendedString_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HOfInteger_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HOfReal_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HSequenceOfHAsciiString_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HSequenceOfHExtendedString_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HSequenceOfInteger_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HSequenceOfPersistent_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HSequenceOfReal_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HSingleListOfInteger_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HSingleListOfPersistent_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_HSingleListOfReal_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_SeqExplorerOfHSequenceOfHAsciiString_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_SeqExplorerOfHSequenceOfHExtendedString_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_SeqExplorerOfHSequenceOfInteger_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_SeqExplorerOfHSequenceOfPersistent_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_SeqExplorerOfHSequenceOfReal_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_SeqNodeOfHSequenceOfHAsciiString_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_SeqNodeOfHSequenceOfHExtendedString_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_SeqNodeOfHSequenceOfInteger_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_SeqNodeOfHSequenceOfPersistent_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_SeqNodeOfHSequenceOfReal_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_VArrayNodeOfFieldOfHArray1OfExtendedString_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_VArrayNodeOfFieldOfHArray1OfInteger_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_VArrayNodeOfFieldOfHArray1OfPersistent_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_VArrayNodeOfFieldOfHArray1OfReal_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_VArrayNodeOfFieldOfHArray2OfInteger_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_VArrayNodeOfFieldOfHArray2OfPersistent_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_VArrayNodeOfFieldOfHArray2OfReal_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_VArrayTNodeOfFieldOfHArray1OfExtendedString_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_VArrayTNodeOfFieldOfHArray1OfInteger_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_VArrayTNodeOfFieldOfHArray1OfPersistent_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_VArrayTNodeOfFieldOfHArray1OfReal_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_VArrayTNodeOfFieldOfHArray2OfInteger_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_VArrayTNodeOfFieldOfHArray2OfPersistent_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/drv/PColStd/PColStd_VArrayTNodeOfFieldOfHArray2OfReal_0.cxx
+		options() -I../oce/src/PColStd
+		options() -I../oce/drv/PColStd,
+	../oce/src/PMMgt/PMMgt_PManaged.cxx
+		options() -I../oce/src/PMMgt
+		options() -I../oce/drv/PMMgt,
+	../oce/drv/PShort/PShort_FieldOfHArray1OfShortReal_0.cxx
+		options() -I../oce/src/PShort
+		options() -I../oce/drv/PShort,
+	../oce/drv/PShort/PShort_FieldOfHArray2OfShortReal_0.cxx
+		options() -I../oce/src/PShort
+		options() -I../oce/drv/PShort,
+	../oce/drv/PShort/PShort_HArray1OfShortReal_0.cxx
+		options() -I../oce/src/PShort
+		options() -I../oce/drv/PShort,
+	../oce/drv/PShort/PShort_HArray2OfShortReal_0.cxx
+		options() -I../oce/src/PShort
+		options() -I../oce/drv/PShort,
+	../oce/drv/PShort/PShort_HSequenceOfShortReal_0.cxx
+		options() -I../oce/src/PShort
+		options() -I../oce/drv/PShort,
+	../oce/drv/PShort/PShort_SeqExplorerOfHSequenceOfShortReal_0.cxx
+		options() -I../oce/src/PShort
+		options() -I../oce/drv/PShort,
+	../oce/drv/PShort/PShort_SeqNodeOfHSequenceOfShortReal_0.cxx
+		options() -I../oce/src/PShort
+		options() -I../oce/drv/PShort,
+	../oce/drv/PShort/PShort_VArrayNodeOfFieldOfHArray1OfShortReal_0.cxx
+		options() -I../oce/src/PShort
+		options() -I../oce/drv/PShort,
+	../oce/drv/PShort/PShort_VArrayNodeOfFieldOfHArray2OfShortReal_0.cxx
+		options() -I../oce/src/PShort
+		options() -I../oce/drv/PShort,
+	../oce/drv/PShort/PShort_VArrayTNodeOfFieldOfHArray1OfShortReal_0.cxx
+		options() -I../oce/src/PShort
+		options() -I../oce/drv/PShort,
+	../oce/drv/PShort/PShort_VArrayTNodeOfFieldOfHArray2OfShortReal_0.cxx
+		options() -I../oce/src/PShort
+		options() -I../oce/drv/PShort,
+	../oce/src/PStandard/PStandard_ArrayNode.cxx
+		options() -I../oce/src/PStandard
+		options() -I../oce/drv/PStandard,
+	../oce/drv/PTColStd/PTColStd_DataMapIteratorOfPersistentTransientMap_0.cxx
+		options() -I../oce/src/PTColStd
+		options() -I../oce/drv/PTColStd,
+	../oce/drv/PTColStd/PTColStd_DataMapIteratorOfTransientPersistentMap_0.cxx
+		options() -I../oce/src/PTColStd
+		options() -I../oce/drv/PTColStd,
+	../oce/drv/PTColStd/PTColStd_DataMapNodeOfPersistentTransientMap_0.cxx
+		options() -I../oce/src/PTColStd
+		options() -I../oce/drv/PTColStd,
+	../oce/drv/PTColStd/PTColStd_DataMapNodeOfTransientPersistentMap_0.cxx
+		options() -I../oce/src/PTColStd
+		options() -I../oce/drv/PTColStd,
+	../oce/drv/PTColStd/PTColStd_DoubleMapIteratorOfDoubleMapOfTransientPersistent_0.cxx
+		options() -I../oce/src/PTColStd
+		options() -I../oce/drv/PTColStd,
+	../oce/drv/PTColStd/PTColStd_DoubleMapNodeOfDoubleMapOfTransientPersistent_0.cxx
+		options() -I../oce/src/PTColStd
+		options() -I../oce/drv/PTColStd,
+	../oce/drv/PTColStd/PTColStd_DoubleMapOfTransientPersistent_0.cxx
+		options() -I../oce/src/PTColStd
+		options() -I../oce/drv/PTColStd,
+	../oce/drv/PTColStd/PTColStd_MapPersistentHasher_0.cxx
+		options() -I../oce/src/PTColStd
+		options() -I../oce/drv/PTColStd,
+	../oce/drv/PTColStd/PTColStd_PersistentTransientMap_0.cxx
+		options() -I../oce/src/PTColStd
+		options() -I../oce/drv/PTColStd,
+	../oce/drv/PTColStd/PTColStd_TransientPersistentMap_0.cxx
+		options() -I../oce/src/PTColStd
+		options() -I../oce/drv/PTColStd,
+	../oce/src/ObjMgt/ObjMgt_ExternRef.cxx
+		options() -I../oce/src/ObjMgt
+		options() -I../oce/drv/ObjMgt,
+	../oce/src/ObjMgt/ObjMgt_ExternShareable.cxx
+		options() -I../oce/src/ObjMgt
+		options() -I../oce/drv/ObjMgt,
+	../oce/drv/ObjMgt/ObjMgt_PSeqOfExtRef_0.cxx
+		options() -I../oce/src/ObjMgt
+		options() -I../oce/drv/ObjMgt,
+	../oce/drv/ObjMgt/ObjMgt_SeqExplorerOfPSeqOfExtRef_0.cxx
+		options() -I../oce/src/ObjMgt
+		options() -I../oce/drv/ObjMgt,
+	../oce/drv/ObjMgt/ObjMgt_SeqNodeOfPSeqOfExtRef_0.cxx
+		options() -I../oce/src/ObjMgt
+		options() -I../oce/drv/ObjMgt,
+	../oce/src/BinDrivers/BinDrivers.cxx
+		options() -I../oce/src/BinDrivers
+		options() -I../oce/drv/BinDrivers,
+	../oce/src/BinDrivers/BinDrivers_DocumentRetrievalDriver.cxx
+		options() -I../oce/src/BinDrivers
+		options() -I../oce/drv/BinDrivers,
+	../oce/src/BinDrivers/BinDrivers_DocumentStorageDriver.cxx
+		options() -I../oce/src/BinDrivers
+		options() -I../oce/drv/BinDrivers,
+	../oce/src/BinMDataXtd/BinMDataXtd.cxx
+		options() -I../oce/src/BinMDataXtd
+		options() -I../oce/drv/BinMDataXtd,
+	../oce/src/BinMDataXtd/BinMDataXtd_AxisDriver.cxx
+		options() -I../oce/src/BinMDataXtd
+		options() -I../oce/drv/BinMDataXtd,
+	../oce/src/BinMDataXtd/BinMDataXtd_ConstraintDriver.cxx
+		options() -I../oce/src/BinMDataXtd
+		options() -I../oce/drv/BinMDataXtd,
+	../oce/src/BinMDataXtd/BinMDataXtd_GeometryDriver.cxx
+		options() -I../oce/src/BinMDataXtd
+		options() -I../oce/drv/BinMDataXtd,
+	../oce/src/BinMDataXtd/BinMDataXtd_PatternStdDriver.cxx
+		options() -I../oce/src/BinMDataXtd
+		options() -I../oce/drv/BinMDataXtd,
+	../oce/src/BinMDataXtd/BinMDataXtd_PlacementDriver.cxx
+		options() -I../oce/src/BinMDataXtd
+		options() -I../oce/drv/BinMDataXtd,
+	../oce/src/BinMDataXtd/BinMDataXtd_PlaneDriver.cxx
+		options() -I../oce/src/BinMDataXtd
+		options() -I../oce/drv/BinMDataXtd,
+	../oce/src/BinMDataXtd/BinMDataXtd_PointDriver.cxx
+		options() -I../oce/src/BinMDataXtd
+		options() -I../oce/drv/BinMDataXtd,
+	../oce/src/BinMDataXtd/BinMDataXtd_ShapeDriver.cxx
+		options() -I../oce/src/BinMDataXtd
+		options() -I../oce/drv/BinMDataXtd,
+	../oce/src/BinMPrsStd/BinMPrsStd.cxx
+		options() -I../oce/src/BinMPrsStd
+		options() -I../oce/drv/BinMPrsStd,
+	../oce/src/BinMPrsStd/BinMPrsStd_AISPresentationDriver.cxx
+		options() -I../oce/src/BinMPrsStd
+		options() -I../oce/drv/BinMPrsStd,
+	../oce/src/BinMPrsStd/BinMPrsStd_PositionDriver.cxx
+		options() -I../oce/src/BinMPrsStd
+		options() -I../oce/drv/BinMPrsStd,
+	../oce/src/BinMNaming/BinMNaming.cxx
+		options() -I../oce/src/BinMNaming
+		options() -I../oce/drv/BinMNaming,
+	../oce/src/BinMNaming/BinMNaming_NamedShapeDriver.cxx
+		options() -I../oce/src/BinMNaming
+		options() -I../oce/drv/BinMNaming,
+	../oce/src/BinMNaming/BinMNaming_NamingDriver.cxx
+		options() -I../oce/src/BinMNaming
+		options() -I../oce/drv/BinMNaming,
+	../oce/src/BinTools/BinTools.cxx
+		options() -I../oce/src/BinTools
+		options() -I../oce/drv/BinTools,
+	../oce/src/BinTools/BinTools_Curve2dSet.cxx
+		options() -I../oce/src/BinTools
+		options() -I../oce/drv/BinTools,
+	../oce/src/BinTools/BinTools_CurveSet.cxx
+		options() -I../oce/src/BinTools
+		options() -I../oce/drv/BinTools,
+	../oce/src/BinTools/BinTools_LocationSet.cxx
+		options() -I../oce/src/BinTools
+		options() -I../oce/drv/BinTools,
+	../oce/src/BinTools/BinTools_ShapeSet.cxx
+		options() -I../oce/src/BinTools
+		options() -I../oce/drv/BinTools,
+	../oce/src/BinTools/BinTools_SurfaceSet.cxx
+		options() -I../oce/src/BinTools
+		options() -I../oce/drv/BinTools,
+	../oce/src/BinMDF/BinMDF.cxx
+		options() -I../oce/src/BinMDF
+		options() -I../oce/drv/BinMDF,
+	../oce/src/BinMDF/BinMDF_ADriver.cxx
+		options() -I../oce/src/BinMDF
+		options() -I../oce/drv/BinMDF,
+	../oce/src/BinMDF/BinMDF_ADriverTable.cxx
+		options() -I../oce/src/BinMDF
+		options() -I../oce/drv/BinMDF,
+	../oce/src/BinMDF/BinMDF_ReferenceDriver.cxx
+		options() -I../oce/src/BinMDF
+		options() -I../oce/drv/BinMDF,
+	../oce/src/BinMDF/BinMDF_TagSourceDriver.cxx
+		options() -I../oce/src/BinMDF
+		options() -I../oce/drv/BinMDF,
+	../oce/drv/BinMDF/BinMDF_DataMapIteratorOfTypeADriverMap_0.cxx
+		options() -I../oce/src/BinMDF
+		options() -I../oce/drv/BinMDF,
+	../oce/drv/BinMDF/BinMDF_DataMapNodeOfTypeADriverMap_0.cxx
+		options() -I../oce/src/BinMDF
+		options() -I../oce/drv/BinMDF,
+	../oce/drv/BinMDF/BinMDF_DoubleMapIteratorOfTypeIdMap_0.cxx
+		options() -I../oce/src/BinMDF
+		options() -I../oce/drv/BinMDF,
+	../oce/drv/BinMDF/BinMDF_DoubleMapNodeOfTypeIdMap_0.cxx
+		options() -I../oce/src/BinMDF
+		options() -I../oce/drv/BinMDF,
+	../oce/drv/BinMDF/BinMDF_TypeADriverMap_0.cxx
+		options() -I../oce/src/BinMDF
+		options() -I../oce/drv/BinMDF,
+	../oce/drv/BinMDF/BinMDF_TypeIdMap_0.cxx
+		options() -I../oce/src/BinMDF
+		options() -I../oce/drv/BinMDF,
+	../oce/src/BinMDataStd/BinMDataStd.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_AsciiStringDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_BooleanArrayDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_BooleanListDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_ByteArrayDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_CommentDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_DirectoryDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_ExpressionDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_ExtStringArrayDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_ExtStringListDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_IntPackedMapDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_IntegerArrayDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_IntegerDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_IntegerListDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_NameDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_NamedDataDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_NoteBookDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_RealArrayDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_RealDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_RealListDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_ReferenceArrayDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_ReferenceListDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_RelationDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_TickDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_TreeNodeDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_UAttributeDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMDataStd/BinMDataStd_VariableDriver.cxx
+		options() -I../oce/src/BinMDataStd
+		options() -I../oce/drv/BinMDataStd,
+	../oce/src/BinMFunction/BinMFunction.cxx
+		options() -I../oce/src/BinMFunction
+		options() -I../oce/drv/BinMFunction,
+	../oce/src/BinMFunction/BinMFunction_FunctionDriver.cxx
+		options() -I../oce/src/BinMFunction
+		options() -I../oce/drv/BinMFunction,
+	../oce/src/BinMFunction/BinMFunction_GraphNodeDriver.cxx
+		options() -I../oce/src/BinMFunction
+		options() -I../oce/drv/BinMFunction,
+	../oce/src/BinMFunction/BinMFunction_ScopeDriver.cxx
+		options() -I../oce/src/BinMFunction
+		options() -I../oce/drv/BinMFunction,
+	../oce/src/BinMDocStd/BinMDocStd.cxx
+		options() -I../oce/src/BinMDocStd
+		options() -I../oce/drv/BinMDocStd,
+	../oce/src/BinMDocStd/BinMDocStd_XLinkDriver.cxx
+		options() -I../oce/src/BinMDocStd
+		options() -I../oce/drv/BinMDocStd,
+	../oce/src/BinObjMgt/BinObjMgt_Persistent.cxx
+		options() -I../oce/src/BinObjMgt
+		options() -I../oce/drv/BinObjMgt,
+	../oce/src/BinLDrivers/BinLDrivers.cxx
+		options() -I../oce/src/BinLDrivers
+		options() -I../oce/drv/BinLDrivers,
+	../oce/src/BinLDrivers/BinLDrivers_DocumentRetrievalDriver.cxx
+		options() -I../oce/src/BinLDrivers
+		options() -I../oce/drv/BinLDrivers,
+	../oce/src/BinLDrivers/BinLDrivers_DocumentSection.cxx
+		options() -I../oce/src/BinLDrivers
+		options() -I../oce/drv/BinLDrivers,
+	../oce/src/BinLDrivers/BinLDrivers_DocumentStorageDriver.cxx
+		options() -I../oce/src/BinLDrivers
+		options() -I../oce/drv/BinLDrivers,
+	../oce/src/BinTObjDrivers/BinTObjDrivers.cxx
+		options() -I../oce/src/BinTObjDrivers
+		options() -I../oce/drv/BinTObjDrivers,
+	../oce/src/BinTObjDrivers/BinTObjDrivers_DocumentRetrievalDriver.cxx
+		options() -I../oce/src/BinTObjDrivers
+		options() -I../oce/drv/BinTObjDrivers,
+	../oce/src/BinTObjDrivers/BinTObjDrivers_DocumentStorageDriver.cxx
+		options() -I../oce/src/BinTObjDrivers
+		options() -I../oce/drv/BinTObjDrivers,
+	../oce/src/BinTObjDrivers/BinTObjDrivers_IntSparseArrayDriver.cxx
+		options() -I../oce/src/BinTObjDrivers
+		options() -I../oce/drv/BinTObjDrivers,
+	../oce/src/BinTObjDrivers/BinTObjDrivers_ModelDriver.cxx
+		options() -I../oce/src/BinTObjDrivers
+		options() -I../oce/drv/BinTObjDrivers,
+	../oce/src/BinTObjDrivers/BinTObjDrivers_ObjectDriver.cxx
+		options() -I../oce/src/BinTObjDrivers
+		options() -I../oce/drv/BinTObjDrivers,
+	../oce/src/BinTObjDrivers/BinTObjDrivers_ReferenceDriver.cxx
+		options() -I../oce/src/BinTObjDrivers
+		options() -I../oce/drv/BinTObjDrivers,
+	../oce/src/BinTObjDrivers/BinTObjDrivers_XYZDriver.cxx
+		options() -I../oce/src/BinTObjDrivers
+		options() -I../oce/drv/BinTObjDrivers,
+	../oce/src/TDataXtd/TDataXtd.cxx
+		options() -I../oce/src/TDataXtd
+		options() -I../oce/drv/TDataXtd,
+	../oce/src/TDataXtd/TDataXtd_Axis.cxx
+		options() -I../oce/src/TDataXtd
+		options() -I../oce/drv/TDataXtd,
+	../oce/src/TDataXtd/TDataXtd_Constraint.cxx
+		options() -I../oce/src/TDataXtd
+		options() -I../oce/drv/TDataXtd,
+	../oce/src/TDataXtd/TDataXtd_Geometry.cxx
+		options() -I../oce/src/TDataXtd
+		options() -I../oce/drv/TDataXtd,
+	../oce/src/TDataXtd/TDataXtd_Pattern.cxx
+		options() -I../oce/src/TDataXtd
+		options() -I../oce/drv/TDataXtd,
+	../oce/src/TDataXtd/TDataXtd_PatternStd.cxx
+		options() -I../oce/src/TDataXtd
+		options() -I../oce/drv/TDataXtd,
+	../oce/src/TDataXtd/TDataXtd_Placement.cxx
+		options() -I../oce/src/TDataXtd
+		options() -I../oce/drv/TDataXtd,
+	../oce/src/TDataXtd/TDataXtd_Plane.cxx
+		options() -I../oce/src/TDataXtd
+		options() -I../oce/drv/TDataXtd,
+	../oce/src/TDataXtd/TDataXtd_Point.cxx
+		options() -I../oce/src/TDataXtd
+		options() -I../oce/drv/TDataXtd,
+	../oce/src/TDataXtd/TDataXtd_Position.cxx
+		options() -I../oce/src/TDataXtd
+		options() -I../oce/drv/TDataXtd,
+	../oce/src/TDataXtd/TDataXtd_Shape.cxx
+		options() -I../oce/src/TDataXtd
+		options() -I../oce/drv/TDataXtd,
+	../oce/drv/TDataXtd/TDataXtd_Array1OfTrsf_0.cxx
+		options() -I../oce/src/TDataXtd
+		options() -I../oce/drv/TDataXtd,
+	../oce/drv/TDataXtd/TDataXtd_HArray1OfTrsf_0.cxx
+		options() -I../oce/src/TDataXtd
+		options() -I../oce/drv/TDataXtd,
+	../oce/src/TNaming/TNaming.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_Builder.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_CopyShape.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_DeltaOnModification.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_DeltaOnRemoval.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_Identifier.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_Iterator.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_IteratorOnShapesSet.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_Localizer.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_Name.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_NamedShape.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_Naming.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_NamingTool.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_NewShapeIterator.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_OldShapeIterator.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_RefShape.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_SameShapeIterator.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_Scope.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_Selector.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_ShapesSet.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_Tool.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_TranslateTool.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_Translator.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TNaming/TNaming_UsedShapes.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_DataMapIteratorOfDataMapOfShapePtrRefShape_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_DataMapIteratorOfDataMapOfShapeShapesSet_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_DataMapNodeOfDataMapOfShapePtrRefShape_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_DataMapNodeOfDataMapOfShapeShapesSet_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_DataMapOfShapePtrRefShape_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_DataMapOfShapeShapesSet_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_ListIteratorOfListOfIndexedDataMapOfShapeListOfShape_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_ListIteratorOfListOfMapOfShape_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_ListIteratorOfListOfNamedShape_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_ListNodeOfListOfIndexedDataMapOfShapeListOfShape_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_ListNodeOfListOfMapOfShape_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_ListNodeOfListOfNamedShape_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_ListOfIndexedDataMapOfShapeListOfShape_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_ListOfMapOfShape_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_ListOfNamedShape_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_MapIteratorOfMapOfNamedShape_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_MapOfNamedShape_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_NamedShapeHasher_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/drv/TNaming/TNaming_StdMapNodeOfMapOfNamedShape_0.cxx
+		options() -I../oce/src/TNaming
+		options() -I../oce/drv/TNaming,
+	../oce/src/TPrsStd/TPrsStd_AISPresentation.cxx
+		options() -I../oce/src/TPrsStd
+		options() -I../oce/drv/TPrsStd,
+	../oce/src/TPrsStd/TPrsStd_AISViewer.cxx
+		options() -I../oce/src/TPrsStd
+		options() -I../oce/drv/TPrsStd,
+	../oce/src/TPrsStd/TPrsStd_AxisDriver.cxx
+		options() -I../oce/src/TPrsStd
+		options() -I../oce/drv/TPrsStd,
+	../oce/src/TPrsStd/TPrsStd_ConstraintDriver.cxx
+		options() -I../oce/src/TPrsStd
+		options() -I../oce/drv/TPrsStd,
+	../oce/src/TPrsStd/TPrsStd_ConstraintTools.cxx
+		options() -I../oce/src/TPrsStd
+		options() -I../oce/drv/TPrsStd,
+	../oce/src/TPrsStd/TPrsStd_Driver.cxx
+		options() -I../oce/src/TPrsStd
+		options() -I../oce/drv/TPrsStd,
+	../oce/src/TPrsStd/TPrsStd_DriverTable.cxx
+		options() -I../oce/src/TPrsStd
+		options() -I../oce/drv/TPrsStd,
+	../oce/src/TPrsStd/TPrsStd_GeometryDriver.cxx
+		options() -I../oce/src/TPrsStd
+		options() -I../oce/drv/TPrsStd,
+	../oce/src/TPrsStd/TPrsStd_NamedShapeDriver.cxx
+		options() -I../oce/src/TPrsStd
+		options() -I../oce/drv/TPrsStd,
+	../oce/src/TPrsStd/TPrsStd_PlaneDriver.cxx
+		options() -I../oce/src/TPrsStd
+		options() -I../oce/drv/TPrsStd,
+	../oce/src/TPrsStd/TPrsStd_PointDriver.cxx
+		options() -I../oce/src/TPrsStd
+		options() -I../oce/drv/TPrsStd,
+	../oce/drv/TPrsStd/TPrsStd_DataMapIteratorOfDataMapOfGUIDDriver_0.cxx
+		options() -I../oce/src/TPrsStd
+		options() -I../oce/drv/TPrsStd,
+	../oce/drv/TPrsStd/TPrsStd_DataMapNodeOfDataMapOfGUIDDriver_0.cxx
+		options() -I../oce/src/TPrsStd
+		options() -I../oce/drv/TPrsStd,
+	../oce/drv/TPrsStd/TPrsStd_DataMapOfGUIDDriver_0.cxx
+		options() -I../oce/src/TPrsStd
+		options() -I../oce/drv/TPrsStd,
+	../oce/src/AppStd/AppStd_Application.cxx
+		options() -I../oce/src/AppStd
+		options() -I../oce/drv/AppStd,
+	../oce/src/CDM/CDM_Application.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/src/CDM/CDM_COutMessageDriver.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/src/CDM/CDM_Document.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/src/CDM/CDM_MessageDriver.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/src/CDM/CDM_MetaData.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/src/CDM/CDM_NullMessageDriver.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/src/CDM/CDM_Reference.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/src/CDM/CDM_ReferenceIterator.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_DataMapIteratorOfMetaDataLookUpTable_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_DataMapIteratorOfPresentationDirectory_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_DataMapNodeOfMetaDataLookUpTable_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_DataMapNodeOfPresentationDirectory_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_DocumentHasher_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_ListIteratorOfListOfDocument_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_ListIteratorOfListOfReferences_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_ListNodeOfListOfDocument_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_ListNodeOfListOfReferences_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_ListOfDocument_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_ListOfReferences_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_MapIteratorOfMapOfDocument_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_MapOfDocument_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_MetaDataLookUpTable_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_PresentationDirectory_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_StackIteratorOfStackOfDocument_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_StackNodeOfStackOfDocument_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_StackOfDocument_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/drv/CDM/CDM_StdMapNodeOfMapOfDocument_0.cxx
+		options() -I../oce/src/CDM
+		options() -I../oce/drv/CDM,
+	../oce/src/PCDM/PCDM.cxx
+		options() -I../oce/src/PCDM
+		options() -I../oce/drv/PCDM,
+	../oce/src/PCDM/PCDM_DOMHeaderParser.cxx
+		options() -I../oce/src/PCDM
+		options() -I../oce/drv/PCDM,
+	../oce/src/PCDM/PCDM_Document.cxx
+		options() -I../oce/src/PCDM
+		options() -I../oce/drv/PCDM,
+	../oce/src/PCDM/PCDM_ReadWriter.cxx
+		options() -I../oce/src/PCDM
+		options() -I../oce/drv/PCDM,
+	../oce/src/PCDM/PCDM_ReadWriter_1.cxx
+		options() -I../oce/src/PCDM
+		options() -I../oce/drv/PCDM,
+	../oce/src/PCDM/PCDM_Reader.cxx
+		options() -I../oce/src/PCDM
+		options() -I../oce/drv/PCDM,
+	../oce/src/PCDM/PCDM_Reference.cxx
+		options() -I../oce/src/PCDM
+		options() -I../oce/drv/PCDM,
+	../oce/src/PCDM/PCDM_ReferenceIterator.cxx
+		options() -I../oce/src/PCDM
+		options() -I../oce/drv/PCDM,
+	../oce/src/PCDM/PCDM_RetrievalDriver.cxx
+		options() -I../oce/src/PCDM
+		options() -I../oce/drv/PCDM,
+	../oce/src/PCDM/PCDM_StorageDriver.cxx
+		options() -I../oce/src/PCDM
+		options() -I../oce/drv/PCDM,
+	../oce/src/PCDM/PCDM_Writer.cxx
+		options() -I../oce/src/PCDM
+		options() -I../oce/drv/PCDM,
+	../oce/drv/PCDM/PCDM_DriverError_0.cxx
+		options() -I../oce/src/PCDM
+		options() -I../oce/drv/PCDM,
+	../oce/drv/PCDM/PCDM_SequenceNodeOfSequenceOfDocument_0.cxx
+		options() -I../oce/src/PCDM
+		options() -I../oce/drv/PCDM,
+	../oce/drv/PCDM/PCDM_SequenceNodeOfSequenceOfReference_0.cxx
+		options() -I../oce/src/PCDM
+		options() -I../oce/drv/PCDM,
+	../oce/drv/PCDM/PCDM_SequenceOfDocument_0.cxx
+		options() -I../oce/src/PCDM
+		options() -I../oce/drv/PCDM,
+	../oce/drv/PCDM/PCDM_SequenceOfReference_0.cxx
+		options() -I../oce/src/PCDM
+		options() -I../oce/drv/PCDM,
+	../oce/src/CDF/CDF.cxx
+		options() -I../oce/src/CDF
+		options() -I../oce/drv/CDF,
+	../oce/src/CDF/CDF_Application.cxx
+		options() -I../oce/src/CDF
+		options() -I../oce/drv/CDF,
+	../oce/src/CDF/CDF_Directory.cxx
+		options() -I../oce/src/CDF
+		options() -I../oce/drv/CDF,
+	../oce/src/CDF/CDF_DirectoryIterator.cxx
+		options() -I../oce/src/CDF
+		options() -I../oce/drv/CDF,
+	../oce/src/CDF/CDF_MetaDataDriver.cxx
+		options() -I../oce/src/CDF
+		options() -I../oce/drv/CDF,
+	../oce/src/CDF/CDF_MetaDataDriverFactory.cxx
+		options() -I../oce/src/CDF
+		options() -I../oce/drv/CDF,
+	../oce/src/CDF/CDF_Session.cxx
+		options() -I../oce/src/CDF
+		options() -I../oce/drv/CDF,
+	../oce/src/CDF/CDF_Store.cxx
+		options() -I../oce/src/CDF
+		options() -I../oce/drv/CDF,
+	../oce/src/CDF/CDF_StoreList.cxx
+		options() -I../oce/src/CDF
+		options() -I../oce/drv/CDF,
+	../oce/src/CDF/CDF_Timer.cxx
+		options() -I../oce/src/CDF
+		options() -I../oce/drv/CDF,
+	../oce/drv/CDF/CDF_MetaDataDriverError_0.cxx
+		options() -I../oce/src/CDF
+		options() -I../oce/drv/CDF,
+	../oce/src/UTL/UTL.cxx
+		options() -I../oce/src/UTL
+		options() -I../oce/drv/UTL,
+	../oce/src/LDOM/LDOMBasicString.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOMParser.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOMString.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOM_Attr.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOM_BasicAttribute.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOM_BasicElement.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOM_BasicNode.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOM_BasicText.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOM_CharReference.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOM_CharacterData.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOM_Document.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOM_Element.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOM_LDOMImplementation.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOM_MemManager.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOM_Node.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOM_NodeList.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOM_OSStream.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOM_XmlReader.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/LDOM/LDOM_XmlWriter.cxx
+		options() -I../oce/src/LDOM
+		options() -I../oce/drv/LDOM,
+	../oce/src/TDF/TDF.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_Attribute.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_AttributeDelta.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_AttributeIterator.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_ChildIDIterator.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_ChildIterator.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_ClosureMode.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_ClosureTool.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_ComparisonTool.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_CopyLabel.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_CopyTool.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_Data.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_DataSet.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_DefaultDeltaOnModification.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_DefaultDeltaOnRemoval.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_Delta.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_DeltaOnAddition.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_DeltaOnForget.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_DeltaOnModification.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_DeltaOnRemoval.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_DeltaOnResume.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_IDFilter.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_Label.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_LabelMapHasher.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_LabelNode.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_Reference.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_RelocationTable.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_TagSource.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_Tool.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDF/TDF_Transaction.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_AttributeArray1_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_AttributeDataMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_AttributeDeltaList_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_AttributeDoubleMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_AttributeIndexedMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_AttributeList_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_AttributeMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_AttributeSequence_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_DataMapIteratorOfAttributeDataMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_DataMapIteratorOfLabelDataMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_DataMapIteratorOfLabelIntegerMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_DataMapIteratorOfLabelLabelMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_DataMapNodeOfAttributeDataMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_DataMapNodeOfLabelDataMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_DataMapNodeOfLabelIntegerMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_DataMapNodeOfLabelLabelMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_DeltaList_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_DoubleMapIteratorOfAttributeDoubleMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_DoubleMapIteratorOfGUIDProgIDMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_DoubleMapIteratorOfLabelDoubleMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_DoubleMapNodeOfAttributeDoubleMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_DoubleMapNodeOfGUIDProgIDMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_DoubleMapNodeOfLabelDoubleMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_GUIDProgIDMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_HAttributeArray1_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_IDList_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_IDMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_IndexedMapNodeOfAttributeIndexedMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_IndexedMapNodeOfLabelIndexedMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_LabelDataMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_LabelDoubleMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_LabelIndexedMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_LabelIntegerMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_LabelLabelMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_LabelList_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_LabelMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_LabelSequence_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_ListIteratorOfAttributeDeltaList_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_ListIteratorOfAttributeList_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_ListIteratorOfDeltaList_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_ListIteratorOfIDList_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_ListIteratorOfLabelList_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_ListNodeOfAttributeDeltaList_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_ListNodeOfAttributeList_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_ListNodeOfDeltaList_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_ListNodeOfIDList_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_ListNodeOfLabelList_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_MapIteratorOfAttributeMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_MapIteratorOfIDMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_MapIteratorOfLabelMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_SequenceNodeOfAttributeSequence_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_SequenceNodeOfLabelSequence_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_StdMapNodeOfAttributeMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_StdMapNodeOfIDMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/drv/TDF/TDF_StdMapNodeOfLabelMap_0.cxx
+		options() -I../oce/src/TDF
+		options() -I../oce/drv/TDF,
+	../oce/src/TDataStd/TDataStd.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_AsciiString.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_BooleanArray.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_BooleanList.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_ByteArray.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_ChildNodeIterator.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_Comment.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_Current.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_DeltaOnModificationOfByteArray.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_DeltaOnModificationOfExtStringArray.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_DeltaOnModificationOfIntArray.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_DeltaOnModificationOfIntPackedMap.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_DeltaOnModificationOfRealArray.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_Directory.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_Expression.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_ExtStringArray.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_ExtStringList.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_HDataMapOfStringByte.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_HDataMapOfStringHArray1OfInteger.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_HDataMapOfStringHArray1OfReal.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_HDataMapOfStringInteger.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_HDataMapOfStringReal.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_HDataMapOfStringString.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_IntPackedMap.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_Integer.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_IntegerArray.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_IntegerList.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_Name.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_NamedData.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_NoteBook.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_Real.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_RealArray.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_RealList.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_ReferenceArray.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_ReferenceList.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_Relation.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_Tick.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_TreeNode.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_UAttribute.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TDataStd/TDataStd_Variable.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_DataMapIteratorOfDataMapOfStringByte_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_DataMapIteratorOfDataMapOfStringHArray1OfInteger_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_DataMapIteratorOfDataMapOfStringHArray1OfReal_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_DataMapIteratorOfDataMapOfStringReal_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_DataMapIteratorOfDataMapOfStringString_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_DataMapNodeOfDataMapOfStringByte_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_DataMapNodeOfDataMapOfStringHArray1OfInteger_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_DataMapNodeOfDataMapOfStringHArray1OfReal_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_DataMapNodeOfDataMapOfStringReal_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_DataMapNodeOfDataMapOfStringString_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_DataMapOfStringByte_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_DataMapOfStringHArray1OfInteger_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_DataMapOfStringHArray1OfReal_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_DataMapOfStringReal_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_DataMapOfStringString_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_HLabelArray1_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_LabelArray1_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_ListIteratorOfListOfByte_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_ListIteratorOfListOfExtendedString_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_ListNodeOfListOfByte_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_ListNodeOfListOfExtendedString_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_ListOfByte_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/drv/TDataStd/TDataStd_ListOfExtendedString_0.cxx
+		options() -I../oce/src/TDataStd
+		options() -I../oce/drv/TDataStd,
+	../oce/src/TFunction/TFunction_Driver.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/src/TFunction/TFunction_DriverTable.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/src/TFunction/TFunction_Function.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/src/TFunction/TFunction_GraphNode.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/src/TFunction/TFunction_IFunction.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/src/TFunction/TFunction_Iterator.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/src/TFunction/TFunction_Logbook.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/src/TFunction/TFunction_Scope.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/drv/TFunction/TFunction_Array1OfDataMapOfGUIDDriver_0.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/drv/TFunction/TFunction_DataMapIteratorOfDataMapOfGUIDDriver_0.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/drv/TFunction/TFunction_DataMapIteratorOfDataMapOfLabelListOfLabel_0.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/drv/TFunction/TFunction_DataMapNodeOfDataMapOfGUIDDriver_0.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/drv/TFunction/TFunction_DataMapNodeOfDataMapOfLabelListOfLabel_0.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/drv/TFunction/TFunction_DataMapOfGUIDDriver_0.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/drv/TFunction/TFunction_DataMapOfLabelListOfLabel_0.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/drv/TFunction/TFunction_DoubleMapIteratorOfDoubleMapOfIntegerLabel_0.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/drv/TFunction/TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel_0.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/drv/TFunction/TFunction_DoubleMapOfIntegerLabel_0.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/drv/TFunction/TFunction_HArray1OfDataMapOfGUIDDriver_0.cxx
+		options() -I../oce/src/TFunction
+		options() -I../oce/drv/TFunction,
+	../oce/src/TDocStd/TDocStd.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/src/TDocStd/TDocStd_Application.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/src/TDocStd/TDocStd_ApplicationDelta.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/src/TDocStd/TDocStd_CompoundDelta.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/src/TDocStd/TDocStd_Context.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/src/TDocStd/TDocStd_Document.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/src/TDocStd/TDocStd_Modified.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/src/TDocStd/TDocStd_MultiTransactionManager.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/src/TDocStd/TDocStd_Owner.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/src/TDocStd/TDocStd_PathParser.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/src/TDocStd/TDocStd_XLink.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/src/TDocStd/TDocStd_XLinkIterator.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/src/TDocStd/TDocStd_XLinkRoot.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/src/TDocStd/TDocStd_XLinkTool.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/drv/TDocStd/TDocStd_DataMapIteratorOfLabelIDMapDataMap_0.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/drv/TDocStd/TDocStd_DataMapNodeOfLabelIDMapDataMap_0.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/drv/TDocStd/TDocStd_LabelIDMapDataMap_0.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/drv/TDocStd/TDocStd_SequenceNodeOfSequenceOfApplicationDelta_0.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/drv/TDocStd/TDocStd_SequenceNodeOfSequenceOfDocument_0.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/drv/TDocStd/TDocStd_SequenceOfApplicationDelta_0.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/drv/TDocStd/TDocStd_SequenceOfDocument_0.cxx
+		options() -I../oce/src/TDocStd
+		options() -I../oce/drv/TDocStd,
+	../oce/src/AppStdL/AppStdL_Application.cxx
+		options() -I../oce/src/AppStdL
+		options() -I../oce/drv/AppStdL,
+	../oce/src/PDataXtd/PDataXtd_Axis.cxx
+		options() -I../oce/src/PDataXtd
+		options() -I../oce/drv/PDataXtd,
+	../oce/src/PDataXtd/PDataXtd_Constraint.cxx
+		options() -I../oce/src/PDataXtd
+		options() -I../oce/drv/PDataXtd,
+	../oce/src/PDataXtd/PDataXtd_Geometry.cxx
+		options() -I../oce/src/PDataXtd
+		options() -I../oce/drv/PDataXtd,
+	../oce/src/PDataXtd/PDataXtd_PatternStd.cxx
+		options() -I../oce/src/PDataXtd
+		options() -I../oce/drv/PDataXtd,
+	../oce/src/PDataXtd/PDataXtd_Placement.cxx
+		options() -I../oce/src/PDataXtd
+		options() -I../oce/drv/PDataXtd,
+	../oce/src/PDataXtd/PDataXtd_Plane.cxx
+		options() -I../oce/src/PDataXtd
+		options() -I../oce/drv/PDataXtd,
+	../oce/src/PDataXtd/PDataXtd_Point.cxx
+		options() -I../oce/src/PDataXtd
+		options() -I../oce/drv/PDataXtd,
+	../oce/src/PDataXtd/PDataXtd_Position.cxx
+		options() -I../oce/src/PDataXtd
+		options() -I../oce/drv/PDataXtd,
+	../oce/src/PDataXtd/PDataXtd_Shape.cxx
+		options() -I../oce/src/PDataXtd
+		options() -I../oce/drv/PDataXtd,
+	../oce/src/PNaming/PNaming_Name.cxx
+		options() -I../oce/src/PNaming
+		options() -I../oce/drv/PNaming,
+	../oce/src/PNaming/PNaming_Name_1.cxx
+		options() -I../oce/src/PNaming
+		options() -I../oce/drv/PNaming,
+	../oce/src/PNaming/PNaming_NamedShape.cxx
+		options() -I../oce/src/PNaming
+		options() -I../oce/drv/PNaming,
+	../oce/src/PNaming/PNaming_Naming.cxx
+		options() -I../oce/src/PNaming
+		options() -I../oce/drv/PNaming,
+	../oce/src/PNaming/PNaming_Naming_1.cxx
+		options() -I../oce/src/PNaming
+		options() -I../oce/drv/PNaming,
+	../oce/drv/PNaming/PNaming_FieldOfHArray1OfNamedShape_0.cxx
+		options() -I../oce/src/PNaming
+		options() -I../oce/drv/PNaming,
+	../oce/drv/PNaming/PNaming_HArray1OfNamedShape_0.cxx
+		options() -I../oce/src/PNaming
+		options() -I../oce/drv/PNaming,
+	../oce/drv/PNaming/PNaming_VArrayNodeOfFieldOfHArray1OfNamedShape_0.cxx
+		options() -I../oce/src/PNaming
+		options() -I../oce/drv/PNaming,
+	../oce/drv/PNaming/PNaming_VArrayTNodeOfFieldOfHArray1OfNamedShape_0.cxx
+		options() -I../oce/src/PNaming
+		options() -I../oce/drv/PNaming,
+	../oce/src/PPrsStd/PPrsStd_AISPresentation.cxx
+		options() -I../oce/src/PPrsStd
+		options() -I../oce/drv/PPrsStd,
+	../oce/src/PPrsStd/PPrsStd_AISPresentation_1.cxx
+		options() -I../oce/src/PPrsStd
+		options() -I../oce/drv/PPrsStd,
+	../oce/src/MDataXtd/MDataXtd.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MDataXtd/MDataXtd_AxisRetrievalDriver.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MDataXtd/MDataXtd_AxisStorageDriver.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MDataXtd/MDataXtd_ConstraintRetrievalDriver.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MDataXtd/MDataXtd_ConstraintStorageDriver.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MDataXtd/MDataXtd_GeometryRetrievalDriver.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MDataXtd/MDataXtd_GeometryStorageDriver.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MDataXtd/MDataXtd_PatternStdRetrievalDriver.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MDataXtd/MDataXtd_PatternStdStorageDriver.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MDataXtd/MDataXtd_PlacementRetrievalDriver.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MDataXtd/MDataXtd_PlacementStorageDriver.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MDataXtd/MDataXtd_PlaneRetrievalDriver.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MDataXtd/MDataXtd_PlaneStorageDriver.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MDataXtd/MDataXtd_PointRetrievalDriver.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MDataXtd/MDataXtd_PointStorageDriver.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MDataXtd/MDataXtd_ShapeRetrievalDriver.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MDataXtd/MDataXtd_ShapeStorageDriver.cxx
+		options() -I../oce/src/MDataXtd
+		options() -I../oce/drv/MDataXtd,
+	../oce/src/MPrsStd/MPrsStd.cxx
+		options() -I../oce/src/MPrsStd
+		options() -I../oce/drv/MPrsStd,
+	../oce/src/MPrsStd/MPrsStd_AISPresentationRetrievalDriver.cxx
+		options() -I../oce/src/MPrsStd
+		options() -I../oce/drv/MPrsStd,
+	../oce/src/MPrsStd/MPrsStd_AISPresentationRetrievalDriver_1.cxx
+		options() -I../oce/src/MPrsStd
+		options() -I../oce/drv/MPrsStd,
+	../oce/src/MPrsStd/MPrsStd_AISPresentationStorageDriver.cxx
+		options() -I../oce/src/MPrsStd
+		options() -I../oce/drv/MPrsStd,
+	../oce/src/MPrsStd/MPrsStd_PositionRetrievalDriver.cxx
+		options() -I../oce/src/MPrsStd
+		options() -I../oce/drv/MPrsStd,
+	../oce/src/MPrsStd/MPrsStd_PositionStorageDriver.cxx
+		options() -I../oce/src/MPrsStd
+		options() -I../oce/drv/MPrsStd,
+	../oce/src/MNaming/MNaming.cxx
+		options() -I../oce/src/MNaming
+		options() -I../oce/drv/MNaming,
+	../oce/src/MNaming/MNaming_NamedShapeRetrievalDriver.cxx
+		options() -I../oce/src/MNaming
+		options() -I../oce/drv/MNaming,
+	../oce/src/MNaming/MNaming_NamedShapeStorageDriver.cxx
+		options() -I../oce/src/MNaming
+		options() -I../oce/drv/MNaming,
+	../oce/src/MNaming/MNaming_NamingRetrievalDriver.cxx
+		options() -I../oce/src/MNaming
+		options() -I../oce/drv/MNaming,
+	../oce/src/MNaming/MNaming_NamingRetrievalDriver_1.cxx
+		options() -I../oce/src/MNaming
+		options() -I../oce/drv/MNaming,
+	../oce/src/MNaming/MNaming_NamingStorageDriver.cxx
+		options() -I../oce/src/MNaming
+		options() -I../oce/drv/MNaming,
+	../oce/src/PDF/PDF_Attribute.cxx
+		options() -I../oce/src/PDF
+		options() -I../oce/drv/PDF,
+	../oce/src/PDF/PDF_Data.cxx
+		options() -I../oce/src/PDF
+		options() -I../oce/drv/PDF,
+	../oce/src/PDF/PDF_Reference.cxx
+		options() -I../oce/src/PDF
+		options() -I../oce/drv/PDF,
+	../oce/src/PDF/PDF_TagSource.cxx
+		options() -I../oce/src/PDF
+		options() -I../oce/drv/PDF,
+	../oce/drv/PDF/PDF_FieldOfHAttributeArray1_0.cxx
+		options() -I../oce/src/PDF
+		options() -I../oce/drv/PDF,
+	../oce/drv/PDF/PDF_HAttributeArray1_0.cxx
+		options() -I../oce/src/PDF
+		options() -I../oce/drv/PDF,
+	../oce/drv/PDF/PDF_VArrayNodeOfFieldOfHAttributeArray1_0.cxx
+		options() -I../oce/src/PDF
+		options() -I../oce/drv/PDF,
+	../oce/drv/PDF/PDF_VArrayTNodeOfFieldOfHAttributeArray1_0.cxx
+		options() -I../oce/src/PDF
+		options() -I../oce/drv/PDF,
+	../oce/src/PDataStd/PDataStd_AsciiString.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_BooleanArray.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_BooleanList.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_ByteArray.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_ByteArray_1.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_Comment.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_Directory.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_Expression.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_ExtStringArray.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_ExtStringArray_1.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_ExtStringList.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_IntPackedMap.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_IntPackedMap_1.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_Integer.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_IntegerArray.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_IntegerArray_1.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_IntegerList.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_Name.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_NamedData.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_NoteBook.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_Real.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_RealArray.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_RealArray_1.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_RealList.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_ReferenceArray.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_ReferenceList.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_Relation.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_Tick.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_TreeNode.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_UAttribute.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PDataStd/PDataStd_Variable.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/drv/PDataStd/PDataStd_FieldOfHArray1OfByte_0.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/drv/PDataStd/PDataStd_FieldOfHArray1OfHArray1OfInteger_0.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/drv/PDataStd/PDataStd_FieldOfHArray1OfHArray1OfReal_0.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/drv/PDataStd/PDataStd_FieldOfHArray1OfHAsciiString_0.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/drv/PDataStd/PDataStd_HArray1OfByte_0.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/drv/PDataStd/PDataStd_HArray1OfHArray1OfInteger_0.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/drv/PDataStd/PDataStd_HArray1OfHArray1OfReal_0.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/drv/PDataStd/PDataStd_HArray1OfHAsciiString_0.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/drv/PDataStd/PDataStd_VArrayNodeOfFieldOfHArray1OfByte_0.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/drv/PDataStd/PDataStd_VArrayNodeOfFieldOfHArray1OfHArray1OfInteger_0.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/drv/PDataStd/PDataStd_VArrayNodeOfFieldOfHArray1OfHArray1OfReal_0.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/drv/PDataStd/PDataStd_VArrayNodeOfFieldOfHArray1OfHAsciiString_0.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/drv/PDataStd/PDataStd_VArrayTNodeOfFieldOfHArray1OfByte_0.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/drv/PDataStd/PDataStd_VArrayTNodeOfFieldOfHArray1OfHArray1OfInteger_0.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/drv/PDataStd/PDataStd_VArrayTNodeOfFieldOfHArray1OfHArray1OfReal_0.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/drv/PDataStd/PDataStd_VArrayTNodeOfFieldOfHArray1OfHAsciiString_0.cxx
+		options() -I../oce/src/PDataStd
+		options() -I../oce/drv/PDataStd,
+	../oce/src/PFunction/PFunction_Function.cxx
+		options() -I../oce/src/PFunction
+		options() -I../oce/drv/PFunction,
+	../oce/src/PDocStd/PDocStd_Document.cxx
+		options() -I../oce/src/PDocStd
+		options() -I../oce/drv/PDocStd,
+	../oce/src/PDocStd/PDocStd_XLink.cxx
+		options() -I../oce/src/PDocStd
+		options() -I../oce/drv/PDocStd,
+	../oce/src/MDF/MDF.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/src/MDF/MDF_ARDriver.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/src/MDF/MDF_ASDriver.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/src/MDF/MDF_ReferenceRetrievalDriver.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/src/MDF/MDF_ReferenceStorageDriver.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/src/MDF/MDF_TagSourceRetrievalDriver.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/src/MDF/MDF_TagSourceStorageDriver.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/src/MDF/MDF_Tool.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_ARDriverHSequence_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_ARDriverSequence_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_ARDriverTable_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_ASDriverHSequence_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_ASDriverSequence_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_ASDriverTable_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_DataMapIteratorOfTypeARDriverMap_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_DataMapIteratorOfTypeASDriverMap_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_DataMapIteratorOfTypeDriverListMapOfARDriverTable_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_DataMapIteratorOfTypeDriverListMapOfASDriverTable_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_DataMapNodeOfTypeARDriverMap_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_DataMapNodeOfTypeASDriverMap_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_DataMapNodeOfTypeDriverListMapOfARDriverTable_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_DataMapNodeOfTypeDriverListMapOfASDriverTable_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_DriverListOfARDriverTable_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_DriverListOfASDriverTable_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_ListIteratorOfDriverListOfARDriverTable_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_ListIteratorOfDriverListOfASDriverTable_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_ListNodeOfDriverListOfARDriverTable_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_ListNodeOfDriverListOfASDriverTable_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_RRelocationTable_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_SRelocationTable_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_SequenceNodeOfARDriverSequence_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_SequenceNodeOfASDriverSequence_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_TypeARDriverMap_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_TypeASDriverMap_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_TypeDriverListMapOfARDriverTable_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/drv/MDF/MDF_TypeDriverListMapOfASDriverTable_0.cxx
+		options() -I../oce/src/MDF
+		options() -I../oce/drv/MDF,
+	../oce/src/MDataStd/MDataStd.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_AsciiStringRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_AsciiStringStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_BooleanArrayRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_BooleanArrayStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_BooleanListRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_BooleanListStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_ByteArrayRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_ByteArrayRetrievalDriver_1.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_ByteArrayStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_CommentRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_CommentStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_DirectoryRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_DirectoryStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_ExpressionRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_ExpressionStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_ExtStringArrayRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_ExtStringArrayRetrievalDriver_1.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_ExtStringArrayStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_ExtStringListRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_ExtStringListStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_IntPackedMapRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_IntPackedMapRetrievalDriver_1.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_IntPackedMapStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_IntegerArrayRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_IntegerArrayRetrievalDriver_1.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_IntegerArrayStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_IntegerListRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_IntegerListStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_IntegerRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_IntegerStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_NameRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_NameStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_NamedDataRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_NamedDataStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_NoteBookRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_NoteBookStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_RealArrayRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_RealArrayRetrievalDriver_1.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_RealArrayStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_RealListRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_RealListStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_RealRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_RealStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_ReferenceArrayRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_ReferenceArrayStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_ReferenceListRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_ReferenceListStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_RelationRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_RelationStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_TickRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_TickStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_TreeNodeRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_TreeNodeStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_UAttributeRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_UAttributeStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_VariableRetrievalDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MDataStd/MDataStd_VariableStorageDriver.cxx
+		options() -I../oce/src/MDataStd
+		options() -I../oce/drv/MDataStd,
+	../oce/src/MFunction/MFunction.cxx
+		options() -I../oce/src/MFunction
+		options() -I../oce/drv/MFunction,
+	../oce/src/MFunction/MFunction_FunctionRetrievalDriver.cxx
+		options() -I../oce/src/MFunction
+		options() -I../oce/drv/MFunction,
+	../oce/src/MFunction/MFunction_FunctionStorageDriver.cxx
+		options() -I../oce/src/MFunction
+		options() -I../oce/drv/MFunction,
+	../oce/src/MDocStd/MDocStd.cxx
+		options() -I../oce/src/MDocStd
+		options() -I../oce/drv/MDocStd,
+	../oce/src/MDocStd/MDocStd_DocumentRetrievalDriver.cxx
+		options() -I../oce/src/MDocStd
+		options() -I../oce/drv/MDocStd,
+	../oce/src/MDocStd/MDocStd_DocumentStorageDriver.cxx
+		options() -I../oce/src/MDocStd
+		options() -I../oce/drv/MDocStd,
+	../oce/src/MDocStd/MDocStd_XLinkRetrievalDriver.cxx
+		options() -I../oce/src/MDocStd
+		options() -I../oce/drv/MDocStd,
+	../oce/src/MDocStd/MDocStd_XLinkStorageDriver.cxx
+		options() -I../oce/src/MDocStd
+		options() -I../oce/drv/MDocStd,
+	../oce/src/PBRep/PBRep_Curve3D.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_CurveOn2Surfaces.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_CurveOnClosedSurface.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_CurveOnSurface.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_CurveRepresentation.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_GCurve.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_PointOnCurve.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_PointOnCurveOnSurface.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_PointOnSurface.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_PointRepresentation.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_PointsOnSurface.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_Polygon3D.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_PolygonOnClosedSurface.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_PolygonOnClosedTriangulation.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_PolygonOnSurface.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_PolygonOnTriangulation.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_TEdge.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_TEdge1.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_TFace.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_TFace1.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_TVertex.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PBRep/PBRep_TVertex1.cxx
+		options() -I../oce/src/PBRep
+		options() -I../oce/drv/PBRep,
+	../oce/src/PTopoDS/PTopoDS_CompSolid.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_Compound.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_Edge.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_Face.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_HShape.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_Shape1.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_Shell.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_Solid.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TCompSolid.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TCompSolid1.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TCompound.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TCompound1.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TEdge.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TEdge1.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TFace.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TFace1.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TShape.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TShape1.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TShell.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TShell1.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TSolid.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TSolid1.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TVertex.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TVertex1.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TWire.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_TWire1.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_Vertex.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PTopoDS/PTopoDS_Wire.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/drv/PTopoDS/PTopoDS_FieldOfHArray1OfHShape_0.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/drv/PTopoDS/PTopoDS_FieldOfHArray1OfShape1_0.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/drv/PTopoDS/PTopoDS_HArray1OfHShape_0.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/drv/PTopoDS/PTopoDS_HArray1OfShape1_0.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/drv/PTopoDS/PTopoDS_VArrayNodeOfFieldOfHArray1OfHShape_0.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/drv/PTopoDS/PTopoDS_VArrayNodeOfFieldOfHArray1OfShape1_0.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/drv/PTopoDS/PTopoDS_VArrayTNodeOfFieldOfHArray1OfHShape_0.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/drv/PTopoDS/PTopoDS_VArrayTNodeOfFieldOfHArray1OfShape1_0.cxx
+		options() -I../oce/src/PTopoDS
+		options() -I../oce/drv/PTopoDS,
+	../oce/src/PGeom/PGeom_Axis1Placement.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_Axis2Placement.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_AxisPlacement.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_BSplineCurve.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_BSplineSurface.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_BezierCurve.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_BezierSurface.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_BoundedCurve.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_BoundedSurface.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_CartesianPoint.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_Circle.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_Conic.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_ConicalSurface.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_Curve.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_CylindricalSurface.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_Direction.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_ElementarySurface.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_Ellipse.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_Geometry.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_Hyperbola.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_Line.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_OffsetCurve.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_OffsetSurface.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_Parabola.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_Plane.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_Point.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_RectangularTrimmedSurface.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_SphericalSurface.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_Surface.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_SurfaceOfLinearExtrusion.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_SurfaceOfRevolution.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_SweptSurface.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_ToroidalSurface.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_Transformation.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_TrimmedCurve.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_Vector.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom/PGeom_VectorWithMagnitude.cxx
+		options() -I../oce/src/PGeom
+		options() -I../oce/drv/PGeom,
+	../oce/src/PGeom2d/PGeom2d_AxisPlacement.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_BSplineCurve.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_BezierCurve.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_BoundedCurve.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_CartesianPoint.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_Circle.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_Conic.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_Curve.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_Direction.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_Ellipse.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_Geometry.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_Hyperbola.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_Line.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_OffsetCurve.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_Parabola.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_Point.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_Transformation.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_TrimmedCurve.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_Vector.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PGeom2d/PGeom2d_VectorWithMagnitude.cxx
+		options() -I../oce/src/PGeom2d
+		options() -I../oce/drv/PGeom2d,
+	../oce/src/PPoly/PPoly_Polygon2D.cxx
+		options() -I../oce/src/PPoly
+		options() -I../oce/drv/PPoly,
+	../oce/src/PPoly/PPoly_Polygon3D.cxx
+		options() -I../oce/src/PPoly
+		options() -I../oce/drv/PPoly,
+	../oce/src/PPoly/PPoly_PolygonOnTriangulation.cxx
+		options() -I../oce/src/PPoly
+		options() -I../oce/drv/PPoly,
+	../oce/src/PPoly/PPoly_Triangle.cxx
+		options() -I../oce/src/PPoly
+		options() -I../oce/drv/PPoly,
+	../oce/src/PPoly/PPoly_Triangulation.cxx
+		options() -I../oce/src/PPoly
+		options() -I../oce/drv/PPoly,
+	../oce/drv/PPoly/PPoly_FieldOfHArray1OfTriangle_0.cxx
+		options() -I../oce/src/PPoly
+		options() -I../oce/drv/PPoly,
+	../oce/drv/PPoly/PPoly_HArray1OfTriangle_0.cxx
+		options() -I../oce/src/PPoly
+		options() -I../oce/drv/PPoly,
+	../oce/drv/PPoly/PPoly_VArrayNodeOfFieldOfHArray1OfTriangle_0.cxx
+		options() -I../oce/src/PPoly
+		options() -I../oce/drv/PPoly,
+	../oce/drv/PPoly/PPoly_VArrayTNodeOfFieldOfHArray1OfTriangle_0.cxx
+		options() -I../oce/src/PPoly
+		options() -I../oce/drv/PPoly,
+	../oce/drv/PColgp/PColgp_FieldOfHArray1OfCirc2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray1OfDir2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray1OfDir_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray1OfLin2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray1OfPnt2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray1OfPnt_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray1OfVec2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray1OfVec_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray1OfXYZ_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray1OfXY_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray2OfCirc2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray2OfDir2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray2OfDir_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray2OfLin2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray2OfPnt2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray2OfPnt_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray2OfVec2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray2OfVec_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray2OfXYZ_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_FieldOfHArray2OfXY_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray1OfCirc2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray1OfDir2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray1OfDir_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray1OfLin2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray1OfPnt2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray1OfPnt_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray1OfVec2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray1OfVec_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray1OfXYZ_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray1OfXY_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray2OfCirc2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray2OfDir2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray2OfDir_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray2OfLin2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray2OfPnt2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray2OfPnt_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray2OfVec2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray2OfVec_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray2OfXYZ_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HArray2OfXY_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HSequenceOfDir_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HSequenceOfPnt_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HSequenceOfVec_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_HSequenceOfXYZ_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_SeqExplorerOfHSequenceOfDir_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_SeqExplorerOfHSequenceOfPnt_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_SeqExplorerOfHSequenceOfVec_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_SeqExplorerOfHSequenceOfXYZ_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_SeqNodeOfHSequenceOfDir_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_SeqNodeOfHSequenceOfPnt_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_SeqNodeOfHSequenceOfVec_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_SeqNodeOfHSequenceOfXYZ_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray1OfCirc2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray1OfDir2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray1OfDir_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray1OfLin2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray1OfPnt2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray1OfPnt_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray1OfVec2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray1OfVec_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray1OfXYZ_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray1OfXY_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray2OfCirc2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray2OfDir2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray2OfDir_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray2OfLin2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray2OfPnt2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray2OfPnt_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray2OfVec2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray2OfVec_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray2OfXYZ_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayNodeOfFieldOfHArray2OfXY_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray1OfCirc2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray1OfDir2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray1OfDir_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray1OfLin2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray1OfPnt2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray1OfPnt_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray1OfVec2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray1OfVec_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray1OfXYZ_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray1OfXY_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray2OfCirc2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray2OfDir2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray2OfDir_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray2OfLin2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray2OfPnt2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray2OfPnt_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray2OfVec2d_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray2OfVec_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray2OfXYZ_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/drv/PColgp/PColgp_VArrayTNodeOfFieldOfHArray2OfXY_0.cxx
+		options() -I../oce/src/PColgp
+		options() -I../oce/drv/PColgp,
+	../oce/src/PTopLoc/PTopLoc_Datum3D.cxx
+		options() -I../oce/src/PTopLoc
+		options() -I../oce/drv/PTopLoc,
+	../oce/src/PTopLoc/PTopLoc_ItemLocation.cxx
+		options() -I../oce/src/PTopLoc
+		options() -I../oce/drv/PTopLoc,
+	../oce/src/PTopLoc/PTopLoc_Location.cxx
+		options() -I../oce/src/PTopLoc
+		options() -I../oce/drv/PTopLoc,
+	../oce/drv/PColPGeom/PColPGeom_FieldOfHArray1OfBSplineCurve_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_FieldOfHArray1OfBezierCurve_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_FieldOfHArray1OfBoundedCurve_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_FieldOfHArray1OfBoundedSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_FieldOfHArray1OfCurve_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_FieldOfHArray1OfSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_FieldOfHArray2OfBSplineSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_FieldOfHArray2OfBezierSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_FieldOfHArray2OfBoundedSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_FieldOfHArray2OfSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_HArray1OfBSplineCurve_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_HArray1OfBezierCurve_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_HArray1OfBoundedCurve_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_HArray1OfBoundedSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_HArray1OfCurve_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_HArray1OfSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_HArray2OfBSplineSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_HArray2OfBezierSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_HArray2OfBoundedSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_HArray2OfSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayNodeOfFieldOfHArray1OfBSplineCurve_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayNodeOfFieldOfHArray1OfBezierCurve_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayNodeOfFieldOfHArray1OfBoundedCurve_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayNodeOfFieldOfHArray1OfBoundedSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayNodeOfFieldOfHArray1OfCurve_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayNodeOfFieldOfHArray1OfSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayNodeOfFieldOfHArray2OfBSplineSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayNodeOfFieldOfHArray2OfBezierSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayNodeOfFieldOfHArray2OfBoundedSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayNodeOfFieldOfHArray2OfSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayTNodeOfFieldOfHArray1OfBSplineCurve_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayTNodeOfFieldOfHArray1OfBezierCurve_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayTNodeOfFieldOfHArray1OfBoundedCurve_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayTNodeOfFieldOfHArray1OfBoundedSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayTNodeOfFieldOfHArray1OfCurve_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayTNodeOfFieldOfHArray1OfSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayTNodeOfFieldOfHArray2OfBSplineSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayTNodeOfFieldOfHArray2OfBezierSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayTNodeOfFieldOfHArray2OfBoundedSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom/PColPGeom_VArrayTNodeOfFieldOfHArray2OfSurface_0.cxx
+		options() -I../oce/src/PColPGeom
+		options() -I../oce/drv/PColPGeom,
+	../oce/drv/PColPGeom2d/PColPGeom2d_FieldOfHArray1OfBSplineCurve_0.cxx
+		options() -I../oce/src/PColPGeom2d
+		options() -I../oce/drv/PColPGeom2d,
+	../oce/drv/PColPGeom2d/PColPGeom2d_FieldOfHArray1OfBezierCurve_0.cxx
+		options() -I../oce/src/PColPGeom2d
+		options() -I../oce/drv/PColPGeom2d,
+	../oce/drv/PColPGeom2d/PColPGeom2d_FieldOfHArray1OfBoundedCurve_0.cxx
+		options() -I../oce/src/PColPGeom2d
+		options() -I../oce/drv/PColPGeom2d,
+	../oce/drv/PColPGeom2d/PColPGeom2d_FieldOfHArray1OfCurve_0.cxx
+		options() -I../oce/src/PColPGeom2d
+		options() -I../oce/drv/PColPGeom2d,
+	../oce/drv/PColPGeom2d/PColPGeom2d_HArray1OfBSplineCurve_0.cxx
+		options() -I../oce/src/PColPGeom2d
+		options() -I../oce/drv/PColPGeom2d,
+	../oce/drv/PColPGeom2d/PColPGeom2d_HArray1OfBezierCurve_0.cxx
+		options() -I../oce/src/PColPGeom2d
+		options() -I../oce/drv/PColPGeom2d,
+	../oce/drv/PColPGeom2d/PColPGeom2d_HArray1OfBoundedCurve_0.cxx
+		options() -I../oce/src/PColPGeom2d
+		options() -I../oce/drv/PColPGeom2d,
+	../oce/drv/PColPGeom2d/PColPGeom2d_HArray1OfCurve_0.cxx
+		options() -I../oce/src/PColPGeom2d
+		options() -I../oce/drv/PColPGeom2d,
+	../oce/drv/PColPGeom2d/PColPGeom2d_VArrayNodeOfFieldOfHArray1OfBSplineCurve_0.cxx
+		options() -I../oce/src/PColPGeom2d
+		options() -I../oce/drv/PColPGeom2d,
+	../oce/drv/PColPGeom2d/PColPGeom2d_VArrayNodeOfFieldOfHArray1OfBezierCurve_0.cxx
+		options() -I../oce/src/PColPGeom2d
+		options() -I../oce/drv/PColPGeom2d,
+	../oce/drv/PColPGeom2d/PColPGeom2d_VArrayNodeOfFieldOfHArray1OfBoundedCurve_0.cxx
+		options() -I../oce/src/PColPGeom2d
+		options() -I../oce/drv/PColPGeom2d,
+	../oce/drv/PColPGeom2d/PColPGeom2d_VArrayNodeOfFieldOfHArray1OfCurve_0.cxx
+		options() -I../oce/src/PColPGeom2d
+		options() -I../oce/drv/PColPGeom2d,
+	../oce/drv/PColPGeom2d/PColPGeom2d_VArrayTNodeOfFieldOfHArray1OfBSplineCurve_0.cxx
+		options() -I../oce/src/PColPGeom2d
+		options() -I../oce/drv/PColPGeom2d,
+	../oce/drv/PColPGeom2d/PColPGeom2d_VArrayTNodeOfFieldOfHArray1OfBezierCurve_0.cxx
+		options() -I../oce/src/PColPGeom2d
+		options() -I../oce/drv/PColPGeom2d,
+	../oce/drv/PColPGeom2d/PColPGeom2d_VArrayTNodeOfFieldOfHArray1OfBoundedCurve_0.cxx
+		options() -I../oce/src/PColPGeom2d
+		options() -I../oce/drv/PColPGeom2d,
+	../oce/drv/PColPGeom2d/PColPGeom2d_VArrayTNodeOfFieldOfHArray1OfCurve_0.cxx
+		options() -I../oce/src/PColPGeom2d
+		options() -I../oce/drv/PColPGeom2d,
+	../oce/src/MgtBRep/MgtBRep.cxx
+		options() -I../oce/src/MgtBRep
+		options() -I../oce/drv/MgtBRep,
+	../oce/src/MgtBRep/MgtBRep_TranslateTool.cxx
+		options() -I../oce/src/MgtBRep
+		options() -I../oce/drv/MgtBRep,
+	../oce/src/MgtBRep/MgtBRep_TranslateTool1.cxx
+		options() -I../oce/src/MgtBRep
+		options() -I../oce/drv/MgtBRep,
+	../oce/src/MgtGeom/MgtGeom.cxx
+		options() -I../oce/src/MgtGeom
+		options() -I../oce/drv/MgtGeom,
+	../oce/src/MgtGeom2d/MgtGeom2d.cxx
+		options() -I../oce/src/MgtGeom2d
+		options() -I../oce/drv/MgtGeom2d,
+	../oce/src/MgtPoly/MgtPoly.cxx
+		options() -I../oce/src/MgtPoly
+		options() -I../oce/drv/MgtPoly,
+	../oce/src/MgtTopLoc/MgtTopLoc.cxx
+		options() -I../oce/src/MgtTopLoc
+		options() -I../oce/drv/MgtTopLoc,
+	../oce/src/MgtTopoDS/MgtTopoDS.cxx
+		options() -I../oce/src/MgtTopoDS
+		options() -I../oce/drv/MgtTopoDS,
+	../oce/src/MgtTopoDS/MgtTopoDS_TranslateTool.cxx
+		options() -I../oce/src/MgtTopoDS
+		options() -I../oce/drv/MgtTopoDS,
+	../oce/src/MgtTopoDS/MgtTopoDS_TranslateTool1.cxx
+		options() -I../oce/src/MgtTopoDS
+		options() -I../oce/drv/MgtTopoDS,
+	../oce/drv/ShapeSchema/ShapeSchema.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_DBC_VArrayOfCharacter.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_DBC_VArrayOfExtCharacter.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_ObjMgt_ExternRef.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_ObjMgt_ExternShareable.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_ObjMgt_PSeqOfExtRef.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_ObjMgt_SeqNodeOfPSeqOfExtRef.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_Curve3D.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_CurveOn2Surfaces.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_CurveOnClosedSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_CurveOnSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_CurveRepresentation.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_GCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_PointOnCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_PointOnCurveOnSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_PointOnSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_PointRepresentation.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_PointsOnSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_Polygon3D.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_PolygonOnClosedSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_PolygonOnClosedTriangulation.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_PolygonOnSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_PolygonOnTriangulation.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_TEdge.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_TEdge1.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_TFace.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_TFace1.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_TVertex.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PBRep_TVertex1.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PCDMShape_Document.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PCDM_Document.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom2d_FieldOfHArray1OfBSplineCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom2d_FieldOfHArray1OfBezierCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom2d_FieldOfHArray1OfBoundedCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom2d_FieldOfHArray1OfCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom2d_HArray1OfBSplineCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom2d_HArray1OfBezierCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom2d_HArray1OfBoundedCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom2d_HArray1OfCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_FieldOfHArray1OfBSplineCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_FieldOfHArray1OfBezierCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_FieldOfHArray1OfBoundedCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_FieldOfHArray1OfBoundedSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_FieldOfHArray1OfCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_FieldOfHArray1OfSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_FieldOfHArray2OfBSplineSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_FieldOfHArray2OfBezierSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_FieldOfHArray2OfBoundedSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_FieldOfHArray2OfSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_HArray1OfBSplineCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_HArray1OfBezierCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_HArray1OfBoundedCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_HArray1OfBoundedSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_HArray1OfCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_HArray1OfSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_HArray2OfBSplineSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_HArray2OfBezierSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_HArray2OfBoundedSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColPGeom_HArray2OfSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColStd_FieldOfHArray1OfInteger.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColStd_FieldOfHArray1OfReal.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColStd_FieldOfHArray2OfReal.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColStd_HArray1OfInteger.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColStd_HArray1OfReal.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColStd_HArray2OfReal.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray1OfCirc2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray1OfDir.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray1OfDir2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray1OfLin2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray1OfPnt.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray1OfPnt2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray1OfVec.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray1OfVec2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray1OfXY.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray1OfXYZ.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray2OfCirc2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray2OfDir.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray2OfDir2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray2OfLin2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray2OfPnt.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray2OfPnt2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray2OfVec.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray2OfVec2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray2OfXY.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_FieldOfHArray2OfXYZ.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray1OfCirc2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray1OfDir.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray1OfDir2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray1OfLin2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray1OfPnt.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray1OfPnt2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray1OfVec.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray1OfVec2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray1OfXY.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray1OfXYZ.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray2OfCirc2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray2OfDir.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray2OfDir2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray2OfLin2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray2OfPnt.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray2OfPnt2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray2OfVec.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray2OfVec2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray2OfXY.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HArray2OfXYZ.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HSequenceOfDir.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HSequenceOfPnt.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HSequenceOfVec.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_HSequenceOfXYZ.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_SeqNodeOfHSequenceOfDir.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_SeqNodeOfHSequenceOfPnt.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_SeqNodeOfHSequenceOfVec.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PColgp_SeqNodeOfHSequenceOfXYZ.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PCollection_HAsciiString.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PCollection_HExtendedString.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_AxisPlacement.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_BSplineCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_BezierCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_BoundedCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_CartesianPoint.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_Circle.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_Conic.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_Curve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_Direction.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_Ellipse.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_Geometry.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_Hyperbola.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_Line.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_OffsetCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_Parabola.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_Point.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_Transformation.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_TrimmedCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_Vector.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom2d_VectorWithMagnitude.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_Axis1Placement.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_Axis2Placement.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_AxisPlacement.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_BSplineCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_BSplineSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_BezierCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_BezierSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_BoundedCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_BoundedSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_CartesianPoint.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_Circle.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_Conic.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_ConicalSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_Curve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_CylindricalSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_Direction.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_ElementarySurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_Ellipse.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_Geometry.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_Hyperbola.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_Line.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_OffsetCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_OffsetSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_Parabola.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_Plane.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_Point.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_RectangularTrimmedSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_SphericalSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_Surface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_SurfaceOfLinearExtrusion.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_SurfaceOfRevolution.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_SweptSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_ToroidalSurface.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_Transformation.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_TrimmedCurve.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_Vector.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PGeom_VectorWithMagnitude.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PMMgt_PManaged.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PPoly_FieldOfHArray1OfTriangle.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PPoly_HArray1OfTriangle.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PPoly_Polygon2D.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PPoly_Polygon3D.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PPoly_PolygonOnTriangulation.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PPoly_Triangle.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PPoly_Triangulation.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopLoc_Datum3D.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopLoc_ItemLocation.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopLoc_Location.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_CompSolid.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_Compound.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_Edge.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_Face.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_FieldOfHArray1OfHShape.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_FieldOfHArray1OfShape1.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_HArray1OfHShape.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_HArray1OfShape1.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_HShape.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_Shape1.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_Shell.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_Solid.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TCompSolid.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TCompSolid1.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TCompound.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TCompound1.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TEdge.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TEdge1.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TFace.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TFace1.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TShape.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TShape1.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TShell.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TShell1.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TSolid.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TSolid1.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TVertex.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TVertex1.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TWire.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_TWire1.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_Vertex.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_PTopoDS_Wire.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_Standard_Persistent.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_Standard_Storable.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Ax1.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Ax2.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Ax22d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Ax2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Ax3.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Circ2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Dir.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Dir2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Lin2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Mat.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Mat2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Pnt.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Pnt2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Trsf.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Trsf2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Vec.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_Vec2d.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_XY.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/drv/ShapeSchema/ShapeSchema_gp_XYZ.cxx
+		options() -I../oce/src/ShapeSchema
+		options() -I../oce/drv/ShapeSchema,
+	../oce/src/PCDMShape/PCDMShape_Document.cxx
+		options() -I../oce/src/PCDMShape
+		options() -I../oce/drv/PCDMShape,
+	../oce/drv/StdLSchema/StdLSchema.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_DBC_VArrayOfCharacter.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_DBC_VArrayOfExtCharacter.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PCDM_Document.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PColStd_FieldOfHArray1OfExtendedString.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PColStd_FieldOfHArray1OfInteger.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PColStd_FieldOfHArray1OfReal.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PColStd_FieldOfHArray2OfInteger.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PColStd_HArray1OfExtendedString.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PColStd_HArray1OfInteger.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PColStd_HArray1OfReal.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PColStd_HArray2OfInteger.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PCollection_HAsciiString.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PCollection_HExtendedString.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDF_Attribute.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDF_Data.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDF_FieldOfHAttributeArray1.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDF_HAttributeArray1.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDF_Reference.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDF_TagSource.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_AsciiString.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_BooleanArray.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_BooleanList.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_ByteArray.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_ByteArray_1.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_Comment.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_Directory.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_Expression.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_ExtStringArray.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_ExtStringArray_1.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_ExtStringList.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_FieldOfHArray1OfByte.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_FieldOfHArray1OfHArray1OfInteger.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_FieldOfHArray1OfHArray1OfReal.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_FieldOfHArray1OfHAsciiString.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_HArray1OfByte.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_HArray1OfHArray1OfInteger.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_HArray1OfHArray1OfReal.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_HArray1OfHAsciiString.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_IntPackedMap.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_IntPackedMap_1.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_Integer.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_IntegerArray.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_IntegerArray_1.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_IntegerList.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_Name.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_NamedData.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_NoteBook.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_Real.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_RealArray.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_RealArray_1.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_RealList.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_ReferenceArray.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_ReferenceList.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_Relation.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_Tick.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_TreeNode.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_UAttribute.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDataStd_Variable.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDocStd_Document.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PDocStd_XLink.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_PFunction_Function.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_Standard_GUID.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_Standard_Persistent.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/drv/StdLSchema/StdLSchema_Standard_Storable.cxx
+		options() -I../oce/src/StdLSchema
+		options() -I../oce/drv/StdLSchema,
+	../oce/src/StdLDrivers/StdLDrivers.cxx
+		options() -I../oce/src/StdLDrivers
+		options() -I../oce/drv/StdLDrivers,
+	../oce/src/StdLDrivers/StdLDrivers_DocumentRetrievalDriver.cxx
+		options() -I../oce/src/StdLDrivers
+		options() -I../oce/drv/StdLDrivers,
+	../oce/src/StdLDrivers/StdLDrivers_DocumentStorageDriver.cxx
+		options() -I../oce/src/StdLDrivers
+		options() -I../oce/drv/StdLDrivers,
+	../oce/drv/StdSchema/StdSchema.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_DBC_VArrayOfCharacter.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_DBC_VArrayOfExtCharacter.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PColStd_FieldOfHArray1OfInteger.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PColStd_HArray1OfInteger.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PCollection_HAsciiString.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PCollection_HExtendedString.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PDF_Attribute.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PDF_FieldOfHAttributeArray1.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PDF_HAttributeArray1.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PDataStd_Integer.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PDataStd_Real.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PDataXtd_Axis.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PDataXtd_Constraint.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PDataXtd_Geometry.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PDataXtd_PatternStd.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PDataXtd_Placement.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PDataXtd_Plane.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PDataXtd_Point.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PDataXtd_Position.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PDataXtd_Shape.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PNaming_FieldOfHArray1OfNamedShape.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PNaming_HArray1OfNamedShape.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PNaming_Name.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PNaming_Name_1.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PNaming_NamedShape.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PNaming_Naming.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PNaming_Naming_1.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PPrsStd_AISPresentation.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PPrsStd_AISPresentation_1.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PTopLoc_Datum3D.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PTopLoc_ItemLocation.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PTopLoc_Location.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PTopoDS_FieldOfHArray1OfShape1.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PTopoDS_HArray1OfShape1.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PTopoDS_Shape1.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_PTopoDS_TShape1.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_Standard_Persistent.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_Standard_Storable.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_gp_Ax1.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_gp_Ax2.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_gp_Ax2d.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_gp_Ax3.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_gp_Dir.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_gp_Dir2d.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_gp_Mat.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_gp_Mat2d.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_gp_Pnt.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_gp_Pnt2d.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_gp_Trsf.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_gp_Trsf2d.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_gp_Vec.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_gp_Vec2d.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_gp_XY.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/drv/StdSchema/StdSchema_gp_XYZ.cxx
+		options() -I../oce/src/StdSchema
+		options() -I../oce/drv/StdSchema,
+	../oce/src/StdDrivers/StdDrivers.cxx
+		options() -I../oce/src/StdDrivers
+		options() -I../oce/drv/StdDrivers,
+	../oce/src/StdDrivers/StdDrivers_DocumentRetrievalDriver.cxx
+		options() -I../oce/src/StdDrivers
+		options() -I../oce/drv/StdDrivers,
+	../oce/src/StdDrivers/StdDrivers_DocumentStorageDriver.cxx
+		options() -I../oce/src/StdDrivers
+		options() -I../oce/drv/StdDrivers,
+	../oce/src/TObj/TObj_Application.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_Assistant.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_CheckModel.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_HiddenPartition.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_LabelIterator.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_Model.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_ModelIterator.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_Object.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_ObjectIterator.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_OcafObjectIterator.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_Partition.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_Persistence.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_ReferenceIterator.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_SequenceIterator.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_SequenceOfObject.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_TIntSparseArray.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_TModel.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_TNameContainer.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_TObject.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_TReference.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/TObj/TObj_TXYZ.cxx
+		options() -I../oce/src/TObj
+		options() -I../oce/drv/TObj,
+	../oce/src/XmlDrivers/XmlDrivers.cxx
+		options() -I../oce/src/XmlDrivers
+		options() -I../oce/drv/XmlDrivers,
+	../oce/src/XmlDrivers/XmlDrivers_DocumentRetrievalDriver.cxx
+		options() -I../oce/src/XmlDrivers
+		options() -I../oce/drv/XmlDrivers,
+	../oce/src/XmlDrivers/XmlDrivers_DocumentStorageDriver.cxx
+		options() -I../oce/src/XmlDrivers
+		options() -I../oce/drv/XmlDrivers,
+	../oce/src/XmlMDataXtd/XmlMDataXtd.cxx
+		options() -I../oce/src/XmlMDataXtd
+		options() -I../oce/drv/XmlMDataXtd,
+	../oce/src/XmlMDataXtd/XmlMDataXtd_AxisDriver.cxx
+		options() -I../oce/src/XmlMDataXtd
+		options() -I../oce/drv/XmlMDataXtd,
+	../oce/src/XmlMDataXtd/XmlMDataXtd_ConstraintDriver.cxx
+		options() -I../oce/src/XmlMDataXtd
+		options() -I../oce/drv/XmlMDataXtd,
+	../oce/src/XmlMDataXtd/XmlMDataXtd_GeometryDriver.cxx
+		options() -I../oce/src/XmlMDataXtd
+		options() -I../oce/drv/XmlMDataXtd,
+	../oce/src/XmlMDataXtd/XmlMDataXtd_PatternStdDriver.cxx
+		options() -I../oce/src/XmlMDataXtd
+		options() -I../oce/drv/XmlMDataXtd,
+	../oce/src/XmlMDataXtd/XmlMDataXtd_PlacementDriver.cxx
+		options() -I../oce/src/XmlMDataXtd
+		options() -I../oce/drv/XmlMDataXtd,
+	../oce/src/XmlMDataXtd/XmlMDataXtd_PlaneDriver.cxx
+		options() -I../oce/src/XmlMDataXtd
+		options() -I../oce/drv/XmlMDataXtd,
+	../oce/src/XmlMDataXtd/XmlMDataXtd_PointDriver.cxx
+		options() -I../oce/src/XmlMDataXtd
+		options() -I../oce/drv/XmlMDataXtd,
+	../oce/src/XmlMDataXtd/XmlMDataXtd_ShapeDriver.cxx
+		options() -I../oce/src/XmlMDataXtd
+		options() -I../oce/drv/XmlMDataXtd,
+	../oce/src/XmlMNaming/XmlMNaming.cxx
+		options() -I../oce/src/XmlMNaming
+		options() -I../oce/drv/XmlMNaming,
+	../oce/src/XmlMNaming/XmlMNaming_NamedShapeDriver.cxx
+		options() -I../oce/src/XmlMNaming
+		options() -I../oce/drv/XmlMNaming,
+	../oce/src/XmlMNaming/XmlMNaming_NamingDriver.cxx
+		options() -I../oce/src/XmlMNaming
+		options() -I../oce/drv/XmlMNaming,
+	../oce/src/XmlMNaming/XmlMNaming_Shape1.cxx
+		options() -I../oce/src/XmlMNaming
+		options() -I../oce/drv/XmlMNaming,
+	../oce/drv/XmlMNaming/XmlMNaming_Array1OfShape1_0.cxx
+		options() -I../oce/src/XmlMNaming
+		options() -I../oce/drv/XmlMNaming,
+	../oce/src/XmlMPrsStd/XmlMPrsStd.cxx
+		options() -I../oce/src/XmlMPrsStd
+		options() -I../oce/drv/XmlMPrsStd,
+	../oce/src/XmlMPrsStd/XmlMPrsStd_AISPresentationDriver.cxx
+		options() -I../oce/src/XmlMPrsStd
+		options() -I../oce/drv/XmlMPrsStd,
+	../oce/src/XmlMPrsStd/XmlMPrsStd_PositionDriver.cxx
+		options() -I../oce/src/XmlMPrsStd
+		options() -I../oce/drv/XmlMPrsStd,
+	../oce/src/XmlLDrivers/XmlLDrivers.cxx
+		options() -I../oce/src/XmlLDrivers
+		options() -I../oce/drv/XmlLDrivers,
+	../oce/src/XmlLDrivers/XmlLDrivers_DocumentRetrievalDriver.cxx
+		options() -I../oce/src/XmlLDrivers
+		options() -I../oce/drv/XmlLDrivers,
+	../oce/src/XmlLDrivers/XmlLDrivers_DocumentStorageDriver.cxx
+		options() -I../oce/src/XmlLDrivers
+		options() -I../oce/drv/XmlLDrivers,
+	../oce/src/XmlLDrivers/XmlLDrivers_NamespaceDef.cxx
+		options() -I../oce/src/XmlLDrivers
+		options() -I../oce/drv/XmlLDrivers,
+	../oce/drv/XmlLDrivers/XmlLDrivers_SequenceNodeOfSequenceOfNamespaceDef_0.cxx
+		options() -I../oce/src/XmlLDrivers
+		options() -I../oce/drv/XmlLDrivers,
+	../oce/drv/XmlLDrivers/XmlLDrivers_SequenceOfNamespaceDef_0.cxx
+		options() -I../oce/src/XmlLDrivers
+		options() -I../oce/drv/XmlLDrivers,
+	../oce/src/XmlMDF/XmlMDF.cxx
+		options() -I../oce/src/XmlMDF
+		options() -I../oce/drv/XmlMDF,
+	../oce/src/XmlMDF/XmlMDF_ADriver.cxx
+		options() -I../oce/src/XmlMDF
+		options() -I../oce/drv/XmlMDF,
+	../oce/src/XmlMDF/XmlMDF_ADriverTable.cxx
+		options() -I../oce/src/XmlMDF
+		options() -I../oce/drv/XmlMDF,
+	../oce/src/XmlMDF/XmlMDF_ReferenceDriver.cxx
+		options() -I../oce/src/XmlMDF
+		options() -I../oce/drv/XmlMDF,
+	../oce/src/XmlMDF/XmlMDF_TagSourceDriver.cxx
+		options() -I../oce/src/XmlMDF
+		options() -I../oce/drv/XmlMDF,
+	../oce/drv/XmlMDF/XmlMDF_DataMapIteratorOfMapOfDriver_0.cxx
+		options() -I../oce/src/XmlMDF
+		options() -I../oce/drv/XmlMDF,
+	../oce/drv/XmlMDF/XmlMDF_DataMapIteratorOfTypeADriverMap_0.cxx
+		options() -I../oce/src/XmlMDF
+		options() -I../oce/drv/XmlMDF,
+	../oce/drv/XmlMDF/XmlMDF_DataMapNodeOfMapOfDriver_0.cxx
+		options() -I../oce/src/XmlMDF
+		options() -I../oce/drv/XmlMDF,
+	../oce/drv/XmlMDF/XmlMDF_DataMapNodeOfTypeADriverMap_0.cxx
+		options() -I../oce/src/XmlMDF
+		options() -I../oce/drv/XmlMDF,
+	../oce/drv/XmlMDF/XmlMDF_MapOfDriver_0.cxx
+		options() -I../oce/src/XmlMDF
+		options() -I../oce/drv/XmlMDF,
+	../oce/drv/XmlMDF/XmlMDF_TypeADriverMap_0.cxx
+		options() -I../oce/src/XmlMDF
+		options() -I../oce/drv/XmlMDF,
+	../oce/src/XmlMDataStd/XmlMDataStd.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_AsciiStringDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_BooleanArrayDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_BooleanListDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_ByteArrayDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_CommentDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_DirectoryDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_ExpressionDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_ExtStringArrayDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_ExtStringListDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_IntPackedMapDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_IntegerArrayDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_IntegerDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_IntegerListDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_NameDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_NamedDataDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_NoteBookDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_RealArrayDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_RealDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_RealListDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_ReferenceArrayDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_ReferenceListDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_RelationDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_TickDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_TreeNodeDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_UAttributeDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDataStd/XmlMDataStd_VariableDriver.cxx
+		options() -I../oce/src/XmlMDataStd
+		options() -I../oce/drv/XmlMDataStd,
+	../oce/src/XmlMDocStd/XmlMDocStd.cxx
+		options() -I../oce/src/XmlMDocStd
+		options() -I../oce/drv/XmlMDocStd,
+	../oce/src/XmlMDocStd/XmlMDocStd_XLinkDriver.cxx
+		options() -I../oce/src/XmlMDocStd
+		options() -I../oce/drv/XmlMDocStd,
+	../oce/src/XmlMFunction/XmlMFunction.cxx
+		options() -I../oce/src/XmlMFunction
+		options() -I../oce/drv/XmlMFunction,
+	../oce/src/XmlMFunction/XmlMFunction_FunctionDriver.cxx
+		options() -I../oce/src/XmlMFunction
+		options() -I../oce/drv/XmlMFunction,
+	../oce/src/XmlMFunction/XmlMFunction_GraphNodeDriver.cxx
+		options() -I../oce/src/XmlMFunction
+		options() -I../oce/drv/XmlMFunction,
+	../oce/src/XmlMFunction/XmlMFunction_ScopeDriver.cxx
+		options() -I../oce/src/XmlMFunction
+		options() -I../oce/drv/XmlMFunction,
+	../oce/src/XmlObjMgt/XmlObjMgt.cxx
+		options() -I../oce/src/XmlObjMgt
+		options() -I../oce/drv/XmlObjMgt,
+	../oce/src/XmlObjMgt/XmlObjMgt_GP.cxx
+		options() -I../oce/src/XmlObjMgt
+		options() -I../oce/drv/XmlObjMgt,
+	../oce/src/XmlObjMgt/XmlObjMgt_Persistent.cxx
+		options() -I../oce/src/XmlObjMgt
+		options() -I../oce/drv/XmlObjMgt,
+	../oce/src/XmlTObjDrivers/XmlTObjDrivers.cxx
+		options() -I../oce/src/XmlTObjDrivers
+		options() -I../oce/drv/XmlTObjDrivers,
+	../oce/src/XmlTObjDrivers/XmlTObjDrivers_DocumentRetrievalDriver.cxx
+		options() -I../oce/src/XmlTObjDrivers
+		options() -I../oce/drv/XmlTObjDrivers,
+	../oce/src/XmlTObjDrivers/XmlTObjDrivers_DocumentStorageDriver.cxx
+		options() -I../oce/src/XmlTObjDrivers
+		options() -I../oce/drv/XmlTObjDrivers,
+	../oce/src/XmlTObjDrivers/XmlTObjDrivers_IntSparseArrayDriver.cxx
+		options() -I../oce/src/XmlTObjDrivers
+		options() -I../oce/drv/XmlTObjDrivers,
+	../oce/src/XmlTObjDrivers/XmlTObjDrivers_ModelDriver.cxx
+		options() -I../oce/src/XmlTObjDrivers
+		options() -I../oce/drv/XmlTObjDrivers,
+	../oce/src/XmlTObjDrivers/XmlTObjDrivers_ObjectDriver.cxx
+		options() -I../oce/src/XmlTObjDrivers
+		options() -I../oce/drv/XmlTObjDrivers,
+	../oce/src/XmlTObjDrivers/XmlTObjDrivers_ReferenceDriver.cxx
+		options() -I../oce/src/XmlTObjDrivers
+		options() -I../oce/drv/XmlTObjDrivers,
+	../oce/src/XmlTObjDrivers/XmlTObjDrivers_XYZDriver.cxx
+		options() -I../oce/src/XmlTObjDrivers
+		options() -I../oce/drv/XmlTObjDrivers;

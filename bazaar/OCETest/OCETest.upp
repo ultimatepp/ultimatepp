@@ -1,0 +1,20 @@
+noblitz;
+
+uses
+	CtrlLib,
+	OCE/Visualization,
+	OCE\ModelingAlgorithms;
+
+file
+	CascadeDocument.h,
+	CascadeDocument.cpp,
+	CascadeView.h,
+	CascadeView.cpp,
+	MakeBottle.h,
+	MakeBottle.cpp,
+	OCETest.h,
+	OCETest.cpp;
+
+mainconfig
+	"" = "GUI USEMALLOC";
+
