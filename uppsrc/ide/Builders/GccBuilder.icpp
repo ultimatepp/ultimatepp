@@ -193,7 +193,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 					exec << fuse_cxa_atexit << " -x objective-c++ ";
 				else
 					exec << fuse_cxa_atexit << " -x c++ ";
-				exec << GetHostPathQ(fn) << " -o " << GetHostPathQ(objfile);
+				exec << GetHostPathQ(fn)  << " " << soptions[i] << " -o " << GetHostPathQ(objfile);
 				PutVerbose(exec);
 				int slot = AllocSlot();
 				execerr = (slot < 0 || !Run(exec, slot, GetHostPath(objfile), 1));

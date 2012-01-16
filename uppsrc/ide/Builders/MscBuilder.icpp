@@ -314,8 +314,8 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 					c = cc_speed;
 				int slot = AllocSlot();
 				if(slot < 0 || !Run(c + PdbPch(package, slot, !sContainsPchOptions(cc) && !sContainsPchOptions(soptions[i]))
-				+ soptions[i] + (ext == ".c" ? " -Tc " : " -Tp ")
-				+ GetHostPathQ(fn) + " -Fo" + GetHostPathQ(objfile), slot, GetHostPath(objfile), 1))
+				   + " " + soptions[i] + (ext  ".c" ? " -Tc " : " -Tp ")
+				   + GetHostPathQ(fn) + " -Fo" + GetHostPathQ(objfile), slot, GetHostPath(objfile), 1))
 					execerr = true;
 			}
 			if(execerr)
