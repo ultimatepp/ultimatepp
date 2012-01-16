@@ -2,7 +2,6 @@
 
 NAMESPACE_UPP
 
-
 struct SchTableInfo {
 	Vector<String> column;
 	Vector<String> ref_table;
@@ -79,7 +78,7 @@ SqlBool Join(const String& tab1, const String& as1, const String& tab2, const St
 			return SqlId(t1.column[i]).Of(SqlId(as1)) == SqlId(t2.primary_key).Of(SqlId(as2));
 	for(int i = 0; i < t2.ref_table.GetCount(); i++)
 		if(t2.ref_table[i] == tab1)
-			return SqlId(t2.column[i]).Of(SqlId(as1)) == SqlId(t1.primary_key).Of(SqlId(as2));
+			return SqlId(t2.column[i]).Of(SqlId(as2)) == SqlId(t1.primary_key).Of(SqlId(as1));
 	return SqlBool::False();
 }
 
