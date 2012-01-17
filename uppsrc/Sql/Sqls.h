@@ -438,7 +438,6 @@ class SqlMassInsert {
 	int             pos;
 	
 	void            NewRow();
-	
 
 public:
 	SqlMassInsert& operator()(SqlId col, const Value& val);
