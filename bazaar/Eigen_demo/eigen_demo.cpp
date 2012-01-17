@@ -311,13 +311,11 @@ CONSOLE_APP_MAIN
 		joined << vec1, vec2;
 		Cout() << "\njoined = " << joined;
 		
-		
 		MatrixXf matA(2, 2);
 		matA << 1, 2, 3, 4;
 		MatrixXf matB(4, 4);
 		matB << matA, matA/10, matA/10, matA;
 		Cout() << matB;
-		
 		
 		Matrix3f m;
 		m.row(0) << 1, 2, 3;
@@ -338,6 +336,10 @@ CONSOLE_APP_MAIN
 		Cout() << "\nA two-dimensional dynamic-size array:\n";
 		ArrayXXf a3 = ArrayXXf::Zero(3, 4);
 		Cout() << a3 << "\n";
+		
+		Cout() << "\nA two-dimensional dynamic-size array set to 1.23:\n";
+		MatrixXd a4 = MatrixXd::Constant(3, 4, 1.23);
+		Cout() << a4 << "\n";
 		
 		ArrayXXd table(10, 4);
 		table.col(0) = ArrayXd::LinSpaced(10, 0, 90);
