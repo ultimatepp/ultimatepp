@@ -40,7 +40,8 @@
 	#include <X11/Xfuncs.h>
 	#include <X11/Xutil.h>
 	#include <X11/Xatom.h>
-	#include <X11/extensions/XTest.h>
+	#include <X11/extensions/XTest.h>	// In case of error please install XTest. 
+										// See http://www.ultimatepp.org/srcimp$SysInfo$SysInfo$en-us.html
 #endif
 
 using namespace Upp;
