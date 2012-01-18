@@ -182,6 +182,20 @@ thread__ MTrand *sRng;
 thread__ byte    sRb[sizeof(MTrand)];
 #endif
 
+void SeedRandom(dword *seed, int len){
+	if(!sRng) {
+		sRng = new(sRb) MTrand;
+	}
+	sRng->init_by_array(seed, len);
+}
+
+void SeedRandom(dword seed){
+	if(!sRng) {
+		sRng = new(sRb) MTrand;
+	}
+	sRng->init_genrand(seed);
+}
+
 dword Random()
 {
 	if(!sRng) {
@@ -204,6 +218,29 @@ dword Random(dword n)
 		r = Random() & mask;
 	while(r >= n);
 	return r;
+}
+
+qword Random64()
+{
+	return MAKEQWORD(Random(), Random());
+}
+
+qword Random64(qword n)
+{
+	qword mask = n, r;
+	mask |= mask >> 1;	mask |= mask >> 2;
+	mask |= mask >> 4;	mask |= mask >> 8;
+	mask |= mask >> 16;	mask |= mask >> 32;
+
+	do
+		r = Random64() & mask;
+	while(r >= n);
+	return r;
+}
+
+double Randomf()
+{
+	return Random64(INT64(4503599627370496)) / 4503599627370496.0;
 }
 
 END_UPP_NAMESPACE
