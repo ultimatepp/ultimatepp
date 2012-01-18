@@ -689,7 +689,7 @@ void GridCtrl::SetClipboard(bool all, bool silent)
 					body += "\r\n";
 					prev_row = i;
 				}
-				body += d.v.ToString() + '\t';
+				body += GetStdConvertedColumn(j, d.v).ToString() + '\t';
 				
 				sc[j] = 1;
 			}

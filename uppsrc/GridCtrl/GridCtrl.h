@@ -659,18 +659,18 @@ class GridCtrl : public Ctrl
 				bool IsFixed() { return ismin && ismax; }
 
 				void ChangeSortMode(bool idsort = true);
-
+				
 				friend bool operator<(const ItemRect& a, const ItemRect& b)
 				{
 					if(sortMode)
-						return (StdValueCompare((*a.items)[a.id][sortCol].val, (*b.items)[b.id][sortCol].val, 0) < 0);
+						return (StdValueCompare(a.ExtractValue(a.id, sortCol), b.ExtractValue(b.id, sortCol), 0) < 0);
 					else
 						return a.id < b.id;
 				}
 				friend bool operator>(const ItemRect& a, const ItemRect& b)
 				{
 					if(sortMode)
-						return (StdValueCompare((*a.items)[a.id][sortCol].val, (*b.items)[b.id][sortCol].val, 0) > 0);
+						return (StdValueCompare(a.ExtractValue(a.id, sortCol), b.ExtractValue(b.id, sortCol), 0) > 0);
 					else
 						return a.id > b.id;
 				}
@@ -795,6 +795,8 @@ class GridCtrl : public Ctrl
 				bool IsSortOrg() const                           { return sortmode == 0; }
 				bool IsSortAsc() const                           { return sortmode == 1; }
 				bool IsSortDsc() const                           { return sortmode == 2; }
+
+				Value ExtractValue(int r, int c) const;
 
 				void Serialize(Stream &s);
 				void Clear();

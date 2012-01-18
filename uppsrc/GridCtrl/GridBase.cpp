@@ -293,4 +293,10 @@ GridCtrl::ItemRect& GridCtrl::ItemRect::NoEditable()
 	return Editable(false);
 }
 
+Value GridCtrl::ItemRect::ExtractValue(int r, int c) const
+{
+	const Value& v = (*items)[r][c].val;
+	return IsType<AttrText>(v) ? ValueTo<AttrText>(v).text : v;
+}
+
 END_UPP_NAMESPACE
