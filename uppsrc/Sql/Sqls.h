@@ -429,6 +429,7 @@ class SqlMassInsert {
 	struct Row : Moveable<Row> {
 		dword          nulls;
 		Vector <Value> value;
+		SqlBool        remove;
 	};
 
 	Sql&            sql;
@@ -436,17 +437,19 @@ class SqlMassInsert {
 	Vector<String>  column;
 	Vector<Row>     cache;
 	int             pos;
+	bool            error;
 	
 	void            NewRow();
 
 public:
 	SqlMassInsert& operator()(SqlId col, const Value& val);
-	SqlMassInsert& EndRow();
+	SqlMassInsert& EndRow(SqlBool remove = SqlBool());
 	void           Flush();
+	bool           IsError() const                                 { return error; }
 	
-	SqlMassInsert(Sql& sql, SqlId table) : sql(sql), table(~table) { pos = 0; }
+	SqlMassInsert(Sql& sql, SqlId table) : sql(sql), table(~table) { pos = 0; error = false; }
 #ifndef NOAPPSQL
-	SqlMassInsert(SqlId table) : sql(SQL), table(~table) { pos = 0; }
+	SqlMassInsert(SqlId table) : sql(SQL), table(~table) { pos = 0; error = false; }
 #endif
 	~SqlMassInsert();
 };
