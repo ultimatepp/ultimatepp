@@ -240,7 +240,7 @@ qword Random64(qword n)
 
 double Randomf()
 {
-	return Random64(INT64(4503599627370496)) / 4503599627370496.0;
+	return Random64(I64(4503599627370496)) / 4503599627370496.0;
 }
 
 END_UPP_NAMESPACE
