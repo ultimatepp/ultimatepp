@@ -91,7 +91,27 @@ void   SetDateScan(const char *scan)
 
 const char *StrToDate(Date& d, const char *s, Date def)
 {
-	const char *fmt = s_date_scan;
+	return StrToDate(s_date_scan, d, s, def);
+}
+
+Date ScanDate(const char *fmt, const char *s, Date def)
+{
+	Date d;
+	if(StrToDate(fmt, d, s, def))
+		return d;
+	return def;
+}
+
+Date ScanDate(const char *s, Date def)
+{
+	Date d;
+	if(StrToDate(d, s, def))
+		return d;
+	return def;
+}
+
+const char *StrToDate(const char *fmt, Date& d, const char *s, Date def)
+{
 	if(*s == 0) {
 		d = Null;
 		return s;
