@@ -296,7 +296,7 @@ GridCtrl::ItemRect& GridCtrl::ItemRect::NoEditable()
 Value GridCtrl::ItemRect::ExtractValue(int r, int c) const
 {
 	const Value& v = (*items)[r][c].val;
-	return IsType<AttrText>(v) ? ValueTo<AttrText>(v).text : v;
+	return IsType<AttrText>(v) ? Value(ValueTo<AttrText>(v).text) : v;
 }
 
 END_UPP_NAMESPACE
