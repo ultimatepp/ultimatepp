@@ -26,8 +26,9 @@ SqlMassInsert& SqlMassInsert::operator()(SqlId col, const Value& val)
 	return *this;
 }
 
-SqlMassInsert& SqlMassInsert::EndRow()
+SqlMassInsert& SqlMassInsert::EndRow(SqlBool remove)
 {
+	cache.Top().remove = remove;
 	if(cache.GetCount() && cache[0].value.GetCount() * cache.GetCount() > 5000)
 		Flush();
 	ASSERT(column.GetCount() == pos);
@@ -40,6 +41,18 @@ void SqlMassInsert::Flush()
 	const dword DONE = 0xffffffff;
 	if(cache.GetCount() == 0)
 		return;
+	sql.GetSession().Begin();
+	SqlBool remove;
+	bool doremove = false;
+	for(int ii = 0; ii < cache.GetCount(); ii++) {
+		SqlBool rm = cache[ii].remove;
+		if(!rm.IsEmpty()) {
+			doremove = true;
+			remove = remove || rm;
+		}
+	}
+	if(doremove)
+		sql * Delete(SqlId(table)).Where(remove);
 	for(int ii = 0; ii < cache.GetCount(); ii++) {
 		dword nulls = cache[ii].nulls;
 		if(nulls != DONE) {
@@ -79,6 +92,12 @@ void SqlMassInsert::Flush()
 			sql.Execute(insert);
 		}
 	}
+	if(sql.WasError()) {
+		error = true;
+		sql.GetSession().Rollback();
+	}
+	else
+		sql.GetSession().Commit();
 	cache.Clear();
 	column.Clear();
 	pos = 0;
