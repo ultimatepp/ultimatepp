@@ -127,6 +127,7 @@ public:
 
 	dword       GetMode() const           { return Stat().st_mode; }
 	String      GetName() const           { return name; }
+	String      GetPath() const;
 	int64       GetLength() const         { return Stat().st_size; }
 	FileTime    GetLastChangeTime() const { return Stat().st_ctime; }
 	FileTime    GetLastAccessTime() const { return Stat().st_atime; }

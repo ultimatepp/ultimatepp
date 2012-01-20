@@ -630,8 +630,8 @@ String NormalizePath(const char *path, const char *currdir)
 void FindFile::Close() {
 	if(dir) {
 		closedir(dir);
-	    dir = NULL;
-	 }
+		dir = NULL;
+	}
 }
 
 bool FindFile::IsFolder() const {
@@ -665,6 +665,7 @@ bool FindFile::IsExecutable() const
 }
 
 bool FindFile::Next() {
+	file = false;
 	if(!dir) return false;
 	statis = false;
 	for(;;) {
