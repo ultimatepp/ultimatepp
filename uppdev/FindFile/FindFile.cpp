@@ -7,7 +7,7 @@ CONSOLE_APP_MAIN
 #ifdef PLATFORM_WIN32
 	FindFile ff("u:/client/*.*");
 #else
-	FindFile ff(AppendFileName(GetHomeDir(), "*.*"));
+	FindFile ff(AppendFileName(GetHomeDirectory(), "*.*"));
 #endif
 	while(ff) {
 		LOG(ff.GetName());
@@ -22,7 +22,7 @@ CONSOLE_APP_MAIN
 		ff.Next();
 	}
 	LOG("================================================================");
-	ff.Search("u:/client/zlib1.dll");
+	ff.Search("/home/centrum/test");
 	while(ff) {
 		LOG(ff.GetName());
 		LOG(ff.GetPath());
