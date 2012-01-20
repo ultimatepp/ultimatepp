@@ -67,6 +67,7 @@ public:
 
 	dword       GetAttributes() const;
 	String      GetName() const;
+	String      GetPath() const;
 	int64       GetLength() const;
 	FileTime    GetCreationTime() const;
 	FileTime    GetLastAccessTime() const;

@@ -399,7 +399,7 @@ FindFile::FindFile(const char *name) {
 
 bool FindFile::Search(const char *name) {
 	pattern = GetFileName(name);
-	path = GetFileDirectory(name);
+	path = NormalizePath(GetFileDirectory(name));
 	Close();
 	if(w)
 		handle = UnicodeWin32().FindFirstFileW(ToSystemCharsetW(name), w);
@@ -685,7 +685,7 @@ bool FindFile::Next() {
 
 bool FindFile::Search(const char *fn) {
 	Close();
-	path = GetFileDirectory(fn);
+	path = NormalizePath(GetFileDirectory(fn));
 	statis = false;
 	file = false;
 	if(HasWildcards(fn)) {
@@ -744,6 +744,11 @@ String NormalizePath(const char *path, const char *currdir) {
 }
 
 #endif//PLATFORM_POSIX
+
+String FindFile::GetPath() const
+{
+	return AppendFileName(path, GetName());
+}
 
 bool FileExists(const char *name) {
 	FindFile ff(name);
