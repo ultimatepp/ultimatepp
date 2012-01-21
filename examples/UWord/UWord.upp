@@ -1,4 +1,4 @@
-description "Wordprocessor application";
+description "Wordprocessor application\377";
 
 uses
 	CtrlLib,
@@ -13,3 +13,4 @@ file
 mainconfig
 	"" = "GUI",
 	"" = "GUI .NOGTK";
+
