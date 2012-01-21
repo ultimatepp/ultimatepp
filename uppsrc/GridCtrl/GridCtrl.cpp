@@ -2,7 +2,9 @@
 
 NAMESPACE_UPP
 
+#ifdef COMPILER_MSC
 #pragma warning(disable: 4355)
+#endif
 
 #define TFILE <GridCtrl/GridCtrl.t>
 #include <Core/t.h>
