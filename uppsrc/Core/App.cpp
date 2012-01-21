@@ -402,7 +402,9 @@ void    LaunchWebBrowser(const String& url)
 	};
 	for(int i = 0; i < __countof(browser); i++)
 		if(system("which " + String(browser[i])) == 0) {
-			system(String(browser[i]) + " " + url + " &");
+			IGNORE_RESULT(
+				system(String(browser[i]) + " " + url + " &")
+			);
 			break;
 		}
 #endif

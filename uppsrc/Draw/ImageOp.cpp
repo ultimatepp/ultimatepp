@@ -710,7 +710,6 @@ static Pointf Cvp(double x, double y, double sina, double cosa)
 Image Rotate(const Image& m, int angle)
 {
 	Size isz = m.GetSize();
-	Point center = isz / 2;
 	Pointf centerf = Pointf(Point(isz)) / 2.0;
 	double sina, cosa;
 	Draw::SinCos(-angle, sina, cosa);
@@ -718,9 +717,6 @@ Image Rotate(const Image& m, int angle)
 	Pointf p2 = Cvp(centerf.x, -centerf.y, sina, cosa);
 	Size sz2 = Size(2 * (int)max(tabs(p1.x), tabs(p2.x)),
 	                2 * (int)max(tabs(p1.y), tabs(p2.y)));
-	Pointf dcenterf = Sizef(sz2) / 2.0;
-	Point dcenter = sz2 / 2;
-
 	ImageBuffer ib(sz2);
 	Fill(~ib, RGBAZero(), ib.GetLength());
 	RGBA *t = ~ib;

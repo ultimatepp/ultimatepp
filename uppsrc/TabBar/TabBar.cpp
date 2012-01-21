@@ -889,7 +889,7 @@ void TabBar::PaintTabItems(Tab& t, Draw &w, const Rect& rn, int align)
 	{
 		const TabItem& ti = t.items[i];
 		
-		Point p;
+		Point p(0, 0);
 		int pos = ti.side == LEFT ? pos_left : pos_right - ti.size.cx;
 		
 		if(!IsNull(ti.img))

@@ -283,8 +283,8 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 	}
 
 	Font f = fnt;
-	dword tl = chr < 4096 ? 0x80000000 >> (chr >> 7) : 0;
-	dword th = 0x80000000 >> ((dword)chr >> 11);
+//	dword tl = chr < 4096 ? 0x80000000 >> (chr >> 7) : 0;
+//	dword th = 0x80000000 >> ((dword)chr >> 11);
 	for(int i = 0; i < rface.GetCount(); i++) {
 		if(/*((l[i] & tl) || (h[i] & th)) && */IsNormal(f.Face(rface[i]), chr)) {
 			int a = fnt.GetAscent();

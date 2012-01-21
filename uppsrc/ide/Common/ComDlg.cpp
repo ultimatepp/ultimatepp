@@ -154,8 +154,12 @@ void ShellOpenFolder(const String& dir)
 	#if defined(PLATFORM_WIN32)
 		LaunchWebBrowser(dir);
 	#elif __APPLE__
-		system("open " + dir + " &");
+		IGNORE_RESULT(
+			system("open " + dir + " &")
+		);
 	#else
-		system("xdg-open " + dir + " &");
+		IGNORE_RESULT(
+			system("xdg-open " + dir + " &")
+		);
 	#endif
 }

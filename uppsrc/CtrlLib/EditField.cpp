@@ -381,7 +381,6 @@ Rect EditField::GetCaretRect(int pos) const
 
 void EditField::SyncCaret()
 {
-	FontInfo fi = font.Info();
 	Rect r = GetCaretRect(cursor);
 	SetCaret(r.left, r.top, r.GetWidth(), r.GetHeight());
 }

@@ -10,7 +10,8 @@ struct NullStep : public ParentCtrl {
 	}
 };
 
-static void InitLayout(Upp::Ctrl& parent, NullStep& layout, NullStep& uts, NullStep&){
+inline
+void InitLayout(Upp::Ctrl& parent, NullStep& layout, NullStep& uts, NullStep&){
 	parent.LayoutId("NullStepLayout");
 };
 

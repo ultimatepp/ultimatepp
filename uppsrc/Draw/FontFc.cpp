@@ -29,7 +29,6 @@ bool sInitFt(void)
 FcPattern *CreateFcPattern(Font font)
 {
 	LTIMING("CreateXftFont");
-	double sina, cosa;
 	int hg = abs(font.GetHeight());
 	if(hg == 0) hg = 10;
 	String face = font.GetFaceName();
@@ -50,7 +49,6 @@ FcPattern *CreateFcPattern(Font font)
 FT_Face CreateFTFace(const FcPattern *pattern, String *rpath) {
 	FT_Face	    face = NULL;
 
-	int		    id;
 	double	    dsize;
 	double	    aspect;
 	FcChar8    *filename;

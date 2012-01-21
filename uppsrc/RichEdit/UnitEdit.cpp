@@ -112,7 +112,7 @@ void UnitEdit::Spin(int delta)
 	if(IsNull(q))
 		q = 0;
 	else {
-		double h;
+		double h = 10;
 		switch(u) {
 		case UNIT_DOT:   h = 10; break;
 		case UNIT_POINT: h = 0.5; break;

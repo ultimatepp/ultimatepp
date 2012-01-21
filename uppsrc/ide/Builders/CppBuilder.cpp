@@ -307,7 +307,6 @@ Blitz CppBuilder::BlitzStep(Vector<String>& sfile, Vector<String>& soptions,
                             Vector<bool>& optimize)
 {
 	Blitz b;
-	Time now = GetSysTime();
 	Vector<String> excluded;
 	Vector<String> excludedoptions;
 	Vector<bool>   excludedoptimize;

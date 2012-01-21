@@ -512,7 +512,6 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 	Point p = GetCaretPoint() + GetScreenView().TopLeft();
 	Rect wa = GetWorkArea();
 	int cx = min(wa.Width() - 100, HorzLayoutZoom(600));
-	Rect r = RectC(p.x, p.y, cx, cy);
 	if(p.x + cx > wa.right)
 		p.x = wa.right - cx;
 	if(p.y + cy + GetFontSize().cy < wa.bottom)

@@ -200,7 +200,7 @@ void InitX11Draw(XDisplay *display)
 			for(int g = 0; g < 24; g++)
 				for(int b = 0; b < 12; b++) {
 					int mind = INT_MAX;
-					int mini;
+					int mini = 0;
 					for(int i = 0; i < colorcount; i++) {
 						int d = ssq(r * 255 / 11 - (cs[i].red >> 8)) +
 						        ssq(g * 255 / 23 - (cs[i].green >> 8)) +

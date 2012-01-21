@@ -142,7 +142,7 @@ void TopicCtrl::SyncDocTree()
 	String hdx = sTopicHome.Mid(1);
 	if(idelink.GetCount() == 0)
 		GatherLinks(idelink, hdx);
-	int ide;
+	int ide = 0;
 	bool idefirst = true;
 	if(MatchTopicLink(hdx, sdx)) {
 		ide = AddTree(0, IdeImg::Package(), "\3" + hdx, s_idehelp);
@@ -163,9 +163,9 @@ void TopicCtrl::SyncDocTree()
 	for(int i = 0; i < wspc.GetCount(); i++)
 		used.Add(wspc[i]);
 
-	int usid;
+	int usid = 0;
 	bool usedfirst = true;
-	int otid;
+	int otid = 0;
 	bool otherfirst = true;
 
 	String lng = ~lang;
@@ -173,7 +173,7 @@ void TopicCtrl::SyncDocTree()
 		TopicLink tl;
 		tl.package = map.GetKey(i);
 		bool packagefirst = true;
-		int pid;
+		int pid = 0;
 		VectorMap<String, Index<String> >& group = map[i];
 		for(int i = 0; i < group.GetCount(); i++) {
 			tl.group = group.GetKey(i);
@@ -185,7 +185,7 @@ void TopicCtrl::SyncDocTree()
 					n = s_documents;
 				if(n == "srcimp")
 					n = s_implementation;
-				int gid;
+				int gid = 0;
 				bool groupfirst = true;
 				const Index<String>& topic = group[i];
 				for(int i = 0; i < topic.GetCount(); i++) {

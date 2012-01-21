@@ -278,7 +278,6 @@ void WorkspaceWork::TouchFile(const String& path)
 {
 	if(!showtime)
 		return;
-	Time tm = GetSysTime();
 	String n = GetFileName(path);
 	for(int i = 0; i < filelist.GetCount(); i++) {
 		FileList::File f = filelist[i];
@@ -647,11 +646,14 @@ void WorkspaceWork::RemoveFile()
 		int fx = fileindex[i];
 		separator = actual.file[fx].separator;
 		if(separator && closed.Find(GetActiveSepfo()) >= 0) {
-			int px = fx, c;
+			int px = fx;
 			while(--px >= 0 && !actual.file[fx].separator)
 				;
-			if(px >= 0 && (c = closed.Find(Sepfo(GetActivePackage(), actual.file[px]))) >= 0)
-				closed.Unlink(c);
+			if(px >= 0) {
+				int c = closed.Find(Sepfo(GetActivePackage(), actual.file[px]));
+				if(c >= 0)
+					closed.Unlink(c);
+			}
 		}
 		actual.file.Remove(fx);
 	}

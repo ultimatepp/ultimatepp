@@ -62,7 +62,7 @@ void LocalHost::ChDir(const String& path)
 	SetCurrentDirectory(path);
 #endif
 #ifdef PLATFORM_POSIX
-	chdir(path);
+	IGNORE_RESULT( chdir(path) );
 #endif
 	if(cmdout)
 		*cmdout << "cd \"" << GetHostPath(path) << "\"\n";

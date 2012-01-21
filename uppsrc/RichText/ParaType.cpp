@@ -304,7 +304,7 @@ RichPara::Lines RichPara::FormatLines(int acx) const
 	int cx = lines.first_indent;
 	int rcx = lines.cx - format.lm - format.rm;
 	bool withtabs = false;
-	int scx;
+	int scx = cx;
 	while(s < end) {
 		Tab t;
 		if(*s == ' ') {

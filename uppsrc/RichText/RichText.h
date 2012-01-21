@@ -247,7 +247,7 @@ struct RichHotPos {
 	int left, cx;
 	int textleft, textcx;
 
-	RichHotPos()       { table = 0; column = Null; }
+	RichHotPos()       { table = 0; column = Null; left = cx = 0; }
 };
 
 struct RichValPos : Moveable<RichValPos> {

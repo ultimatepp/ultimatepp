@@ -402,7 +402,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	LoopLevel++;
 	int64 loopno = ++EventLoopNo;
 	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
-	Ctrl *ploop;
+	Ctrl *ploop = NULL;
 	if(ctrl) {
 		ploop = LoopCtrl;
 		LoopCtrl = ctrl;

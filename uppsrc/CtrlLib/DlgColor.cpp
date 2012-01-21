@@ -343,7 +343,6 @@ int WheelRampCtrl::LevelToClient(int l) const
 void WheelRampCtrl::Paint(Draw& draw)
 {
 	if(!cache || cache.GetSize() != wheel_rect.GetSize() || cache_level != (ramp ? h16 : v16)) {
-		Size size = max(GetSize(), Size(1, 1));
 		cache = ramp ? PaintRamp(wheel_rect.GetSize()) : PaintWheel(wheel_rect.GetSize());
 		cache_level = (ramp ? h16 : v16);
 	}
@@ -469,7 +468,6 @@ enum { PREC = 64 };
 Image WheelRampCtrl::PaintRamp(Size size)
 {
 	ImageDraw iw(size);
-	Size rcsize = wheel_rect.Size();
 	ImageBuffer ib(PREC, PREC);
 	for(int y = 0; y < PREC; y++) {
 		RGBA *scan = ib[y];

@@ -1037,7 +1037,6 @@ Image TreeCtrl::GetDragSample()
 		Size msz = m.GetSize(display);
 		Size isz = m.image.GetSize();
 		Size vsz = m.GetValueSize(display);
-		Rect r = RectC(0, y, vsz.cx + 2 * m.margin, msz.cy);
 		int x = 0;
 		if(IsSel(l.itemi)) {
 			iw.DrawImage(x, y + (msz.cy - isz.cy) / 2, m.image);

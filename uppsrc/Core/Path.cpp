@@ -202,8 +202,7 @@ String GetCurrentDirectory() {
 	}
 #elif defined(PLATFORM_POSIX)
 	char h[1024];
-	getcwd(h, 1024);
-	return FromSystemCharset(h);
+	return getcwd(h, 1024) ? FromSystemCharset(h) : String();
 #else
 #error GetCurrentDirectory not implemented for this platform, comment this line to get Null
 	return Null;
@@ -212,9 +211,9 @@ String GetCurrentDirectory() {
 #endif
 
 #ifdef PLATFORM_POSIX
-void SetCurrentDirectory(const char *path)
+bool SetCurrentDirectory(const char *path)
 {
-	chdir(path);
+	return chdir(path) == 0;
 }
 #endif
 
@@ -724,24 +723,17 @@ String NormalizePath(const char *path, const char *currdir) {
 		out = (sDirSep(currdir[0]) && sDirSep(currdir[1]) ? "//" : "/");
 		p = Split(currdir, CharFilterTextTest(sDirSep));
 	}
-	bool quote = false;
 	for(; i < si.GetCount(); i++) {
 		String s = si[i];
 		if(s != "." && !s.IsEmpty())
 			if(s[0] == '.' && s[1] == '.') {
 				if(!p.IsEmpty()) p.Drop();
 			}
-			else {
+			else
 				p.Add(s);
-				if(s.Find(' ') >= 0)
-					quote = true;
-			}
 	}
 	out.Cat(Join(p, DIR_SEPS));
-//	if(quote)
-//		return '\"' + out + '\"';
-//	else
-		return out;
+	return out;
 }
 
 #endif//PLATFORM_POSIX
@@ -1052,7 +1044,6 @@ String GetSymLinkPath(const char *linkpath)
 	return path;
 #else
 	char buff[_MAX_PATH + 1];
-	bool ret;
 	int len = readlink(linkpath, buff, _MAX_PATH);
 	if(len > 0 && len < _MAX_PATH)
 		return String(buff, len);
