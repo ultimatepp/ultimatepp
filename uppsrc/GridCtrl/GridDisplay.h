@@ -103,6 +103,6 @@ class GridDisplay
 struct GridDisplayCtrl : GridDisplay, StaticRect
 {};
 
-extern GridDisplay StdGridDisplay;
+GridDisplay& StdGridDisplay();
 
 #endif

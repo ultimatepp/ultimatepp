@@ -1323,7 +1323,7 @@ void GridCtrl::Paint(Draw &w)
 			if(summary_row)
 			{
 				j = 0;
-				Item &it = GetItemSize(j, i, x, y, cx, cy, skip, false, true);
+//				Item &it = GetItemSize(j, i, x, y, cx, cy, skip, false, true);
 				cy = GD_HDR_HEIGHT;
 				y = sz.cy - cy;
 				if(w.IsPainting(x, y, cx, cy))
@@ -3342,7 +3342,7 @@ GridCtrl::CurState GridCtrl::SetCursor0(Point p, int opt, int dirx, int diry)
 
 		Item *oit = oldvalid ? &GetItem(oldcur) : NULL;
 
-		bool diry_change = false;
+//		bool diry_change = false;
 
 		while(true)
 		{
@@ -3776,7 +3776,7 @@ void GridCtrl::Recalc(bool horizontal, RectItems &its, int n, double size, doubl
 
 			double cps = sumprop != 0 ? -diff / sumprop : 0;
 
-			bool isminmax = false;
+//			bool isminmax = false;
 
 			for(int i = cnt - 1; i >= n + 1; --i)
 			{
@@ -4779,7 +4779,7 @@ void GridCtrl::SyncCtrls(int row, int col)
 				idx = it->idx;
 			}
 
-			bool manual_ctrl = it->ctrl_flag & IC_MANUAL;
+//			bool manual_ctrl = it->ctrl_flag & IC_MANUAL;
 
 			if(!it->ctrl && create_row && create_col && it->editable && edits[idx].factory)
 			{
@@ -6605,7 +6605,7 @@ bool GridCtrl::Remove0(int row, int cnt /* = 1*/, bool recalc /* = true*/, bool 
 	if(cnt < 0)
 		return false;
 
-	int minid = total_rows;
+//	int minid = total_rows;
 	bool cancel = true;
 	int x = -1;
 	int y = -1;
@@ -7287,9 +7287,9 @@ void GridCtrl::DoRemove()
 	}
 	else
 	{
-		int removed = 0;
+//		int removed = 0;
 		int not_removed = 0;
-		int tc = total_rows;
+//		int tc = total_rows;
 
 		minRowSelected = GetMinRowSelected();
 		maxRowSelected = GetMaxRowSelected();
