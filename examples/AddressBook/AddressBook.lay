@@ -28,3 +28,4 @@ LAYOUT(SearchLayout, 480, 56)
 	ITEM(EditField, email, LeftPosZ(308, 96).TopPosZ(28, 19))
 	ITEM(Button, search, SetLabel(t_("&Search")).LeftPosZ(416, 56).TopPosZ(28, 20))
 END_LAYOUT
+
