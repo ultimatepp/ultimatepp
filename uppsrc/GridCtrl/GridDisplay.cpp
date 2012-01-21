@@ -8,7 +8,7 @@ NAMESPACE_UPP
 #include <Draw/iml_source.h>
 #include "GridUtils.h"
 
-GridDisplay StdGridDisplay;
+GLOBAL_VAR(GridDisplay, StdGridDisplay)
 
 static Image (*vhdr[])() =
 {
@@ -261,7 +261,7 @@ int GridDisplay::GetLinesCount(int cx, const wchar* s, const Font& font, bool wr
 	if(*s == 0)
 		return 0;
 
-	int tcy = font.Info().GetHeight();
+//	int tcy = font.Info().GetHeight();
 
 	const wchar *p = s;
 	const wchar *t = s;
@@ -312,7 +312,7 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 	const wchar *t = s;
 
 	int lines = 0;
-	int enters = 0;
+//	int enters = 0;
 
 	int ty = y;
 	Size tsz;

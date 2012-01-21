@@ -88,7 +88,6 @@ void DnDLoop::Sync()
 	unsigned int d1;
 	int x, y, d2;
 	Window tgt = Xroot;
-	int version;
 	for(;;) {
 		if(XQueryPointer(Xdisplay, tgt, &root, &tgt, &x, &y, &d2, &d2, &d1)) {
 			if(!tgt)
@@ -114,7 +113,7 @@ void DnDLoop::Sync()
 			LLOG("Sending XdndEnter to " << target << ", src = " << src);
 			XEvent e = ClientMsg(target, XdndEnter);
 			e.xclient.data.l[0] = src;
-			e.xclient.data.l[1] = (fmt.GetCount() > 3) | (version << 24);
+			e.xclient.data.l[1] = (fmt.GetCount() > 3) | (Xdnd_version << 24);
 			for(int i = 0; i < min(3, fmt.GetCount()); i++)
 				e.xclient.data.l[i + 2] = fmt[i];
 			XSendEvent(Xdisplay, target, XFalse, 0, &e);

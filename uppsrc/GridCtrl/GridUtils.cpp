@@ -12,7 +12,7 @@ void LogCon(const char *fmt, ...)
 	char buffer[1024];
 	va_list argptr;
 	va_start(argptr, fmt);
-	int l = vsprintf(buffer, fmt, argptr);
+	vsprintf(buffer, fmt, argptr);
 	va_end(argptr);
 	LOG(buffer);
 }
@@ -22,7 +22,7 @@ void LogCon(int level, const char *fmt, ...)
 	char buffer[1024];
 	va_list argptr;
 	va_start(argptr, fmt);
-	int l = vsprintf(buffer, fmt, argptr);
+	vsprintf(buffer, fmt, argptr);
 	va_end(argptr);
 	LOG(buffer);
 }
