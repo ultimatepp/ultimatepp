@@ -968,7 +968,7 @@ void TreeCtrl::Paint(Draw& w)
 			}
 		}
 	}
-	Rect dri;
+	Rect dri = Null;
 	for(int i = FindLine(org.y); i < line.GetCount(); i++) {
 		Line& l = line[i];
 		const Item& m = item[l.itemi];

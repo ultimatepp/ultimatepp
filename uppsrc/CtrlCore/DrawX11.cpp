@@ -46,7 +46,6 @@ dword   (*Xgetpixel)(int r, int g, int b);
 EXITBLOCK
 {
 	if(Xdisplay) {
-// No CloseDisplay for now...
 		XCloseDisplay(Xdisplay);
 		LLOG("Xdisplay closed");
 		Xdisplay = NULL;

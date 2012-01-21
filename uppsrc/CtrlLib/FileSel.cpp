@@ -1475,7 +1475,7 @@ void FileSel::Serialize(Stream& s) {
 	int version = 10;
 	s / version;
 	String ad = ~dir;
-	int dummy;
+	int dummy = 0;
 	if(version < 10)
 		s / dummy;
 	else

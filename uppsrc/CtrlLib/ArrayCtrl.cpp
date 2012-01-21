@@ -72,11 +72,6 @@ ArrayCtrl::Column& ArrayCtrl::Column::Ctrls(Callback2<int, One<Ctrl>&> _factory)
 	return *this;
 }
 
-static void sPerformSimple(int, One<Ctrl>& x, Callback1<One<Ctrl>&> factory)
-{
-	factory(x);
-}
-
 void ArrayCtrl::Column::Factory1(int, One<Ctrl>& x)
 {
 	factory1(x);
@@ -2879,7 +2874,6 @@ ArrayCtrl::Column& ArrayOption::AddColumn(ArrayCtrl& ac, const Id& id, const cha
 void ArrayOption::Paint(Draw& w, const Rect& r, const Value& q,
 		                Color ink, Color paper, dword style) const
 {
-	bool focusCursor = (style & (CURSOR | SELECT)) && (style & FOCUS);
 	bool gray = (array && !array->IsEnabled());
 	w.DrawRect(r, paper);
 
