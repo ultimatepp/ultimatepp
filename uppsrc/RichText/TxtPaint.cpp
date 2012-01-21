@@ -122,7 +122,6 @@ PageY RichTxt::GetPartPageY(int parti, RichContext rc) const
 
 bool IsPainting(PageDraw& pw, Zoom z, const Rect& page, PageY top, PageY bottom)
 {
-	int t = top.y;
 	for(int pi = top.page; pi <= bottom.page; pi++)
 		if(pw.Page(pi).IsPainting(Rect(z * page.left, z * (pi == top.page ? top.y : page.top),
 		                               z * page.right, z * (pi == bottom.page ? bottom.y : page.bottom))))

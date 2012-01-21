@@ -1437,7 +1437,6 @@ void FlatSpin::SetCallbacks(const Callback &cbl, const Callback& cbr)
 
 void FlatSpin::Layout()
 {
-	Size sz = GetSize();
 	left.LeftPos(0, left.GetImage().GetSize().cx + 8).VSizePos();
 	right.RightPos(0, right.GetImage().GetSize().cx + 8).VSizePos();
 }

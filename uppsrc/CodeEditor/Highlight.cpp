@@ -453,7 +453,7 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 	const wchar *p = text;
 	const wchar *e = text.End();
 	int uvsn;
-	Color c = GetUvsHighlight(text, uvsn);
+	GetUvsHighlight(text, uvsn);
 	if(uvsn) {
 		hls.SetInk(0, text.GetLength() + 1, Yellow);
 		hls.SetPaper(0, text.GetLength() + 1, Gray);

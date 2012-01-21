@@ -80,7 +80,7 @@ void RichText::Validate()
 bool RichText::GetInvalid(PageY& top, PageY& bottom, const Rect& page,
                           int sell, int selh, int osell, int oselh) const
 {
-	int spi;
+	int spi = 0;
 	int rtype = r_type;
 	if(sell != selh || osell != oselh) {
 		if(sell != osell) {

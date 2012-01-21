@@ -74,7 +74,7 @@ Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int t
              Rect rect)
 {
 	MemoryIgnoreLeaksBlock __;
-	GdkPixbuf *icon;
+	GdkPixbuf *icon = NULL;
 	if(type == GTK_ICON || type == GTK_THEMEICON) {
 		gtk_widget_set_sensitive(widget, 1);
 		gtk_widget_set_state(widget, GTK_STATE_NORMAL);

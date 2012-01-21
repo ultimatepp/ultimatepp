@@ -390,7 +390,9 @@ void LocalProcess::Write(String s)
 	WriteFile(hInputWrite, s, s.GetLength(), &n, NULL);
 #endif
 #ifdef PLATFORM_POSIX
-	write(rpipe[1], s, s.GetLength());
+	IGNORE_RESULT(
+		write(rpipe[1], s, s.GetLength())
+	);
 #endif
 }
 

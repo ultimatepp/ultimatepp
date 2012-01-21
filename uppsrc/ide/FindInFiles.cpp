@@ -185,23 +185,6 @@ static bool RawFileMatch(const char *pattern, const char *file, const char *& en
 	return true;
 }
 
-static const char *FindFileMatch(const char *pattern, const char *file, String& cont)
-{
-	const char *endptr;
-	if(!RawFileMatch(pattern, file, endptr))
-		return endptr;
-	if(cont.IsVoid())
-	{
-		cont = endptr;
-		return NULL;
-	}
-	const char *p = cont;
-	while(*p && ToLower(*p) == ToLower(*endptr++))
-		p++;
-	cont.Trim(int(p - cont.Begin()));
-	return NULL;
-}
-
 int CharFilterFindFileMask(int c)
 {
 	return ToUpper(ToAscii(c));

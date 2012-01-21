@@ -64,13 +64,13 @@ void TopWindow::EventProc(XWindow& w, XEvent *event)
 	if(event->type == PropertyNotify && event->xproperty.atom == XAtom("_NET_WM_STATE")) {
 		LLOG("_NET_WM_STATE notify");
 		Vector<int> p = GetPropertyInts(GetWindow(), XAtom("_NET_WM_STATE"));
-		if(FindIndex(p, XAtom("_NET_WM_STATE_HIDDEN")) >= 0) {
+		if(FindIndex(p, (int)XAtom("_NET_WM_STATE_HIDDEN")) >= 0) {
 			state = MINIMIZED;
 			LLOG("MINIMIZED");
 		}
 		else
-		if(FindIndex(p, XAtom("_NET_WM_STATE_MAXIMIZED_HORZ")) >= 0 &&
-		   FindIndex(p, XAtom("_NET_WM_STATE_MAXIMIZED_VERT")) >= 0) {
+		if(FindIndex(p, (int)XAtom("_NET_WM_STATE_MAXIMIZED_HORZ")) >= 0 &&
+		   FindIndex(p, (int)XAtom("_NET_WM_STATE_MAXIMIZED_VERT")) >= 0) {
 			state = MAXIMIZED;
 			LLOG("MAXIMIZED");
 		}

@@ -183,19 +183,19 @@ private:
 RichText ParseRTF(const char *rtf) { return RTFParser(rtf).Run(); }
 
 RTFParser::CellInfo::CellInfo()
-: end_dots(0)
-, cellmarginunits(0, 0, 0, 0)
+: cellmarginunits(0, 0, 0, 0)
 , shading(0)
 , shading_fore(Black())
 , shading_back(White())
+, end_dots(0)
 {
 }
 
 RTFParser::Cell::Cell()
-: nbegin(0)
-, span(0, 0)
-, merge_first(false)
+: merge_first(false)
 , merge(false)
+, nbegin(0)
+, span(0, 0)
 {
 }
 
@@ -250,7 +250,6 @@ void RTFParser::FlushTable(int level)
 		dot_index.Add(child.tableformat.lm);
 		for(int r = 0; r < child.cells.GetCount(); r++) {
 			Array<Cell>& rw = child.cells[r];
-			int pos = child.tableformat.lm;
 			for(int c = 0; c < rw.GetCount(); c++)
 				dot_index.FindAdd(rw[c].info.end_dots);
 		}
@@ -355,7 +354,7 @@ void RTFParser::FlushTable(int level)
 				};
 				for(int b = 0; b < __countof(border_width); b++) {
 					int tbl_wd = (outer_border[b] ? tbl_border : tbl_grid);
-					Color tbl_co = (outer_border[b] ? clr_border : clr_grid);
+//					Color tbl_co = (outer_border[b] ? clr_border : clr_grid);
 					if(*border_width[b] <= tbl_wd)
 						*border_width[b] = 0;
 				}

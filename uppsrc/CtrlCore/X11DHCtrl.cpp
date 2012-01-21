@@ -385,11 +385,12 @@ XVisualInfo DHCtrl::GetVisualInfo(void)
 		return *UserVisualInfo;
 
 	XVisualInfo visualInfo;
+	memset(&visualInfo, 0, sizeof(visualInfo));
 
 	// get the active visual
 	Visual *visual = GetVisual();
 
-	// gets a list of all available XVsualinfo
+	// gets a list of all available XVisualinfo
 	XVisualInfo *v = 0;
 	XVisualInfo vtemplate;
 	int nVis;

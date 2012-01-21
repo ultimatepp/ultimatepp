@@ -108,7 +108,6 @@ void RichTable::Paint(PageDraw& pw, RichContext rc, const PaintInfo& _pi) const
 		pw.tracer->Table(rc.page, rc.py, *this);
 	const TabLayout& tab = Realize(rc);
 	if(!tab.page.IsEmpty()) {
-		Rect p = tab.page;
 		PaintInfo pi = _pi;
 		int frameln = LineZoom(pi.zoom, format.frame);
 		int gridln = LineZoom(pi.zoom, format.grid);
@@ -152,7 +151,6 @@ void RichTable::Paint(PageDraw& pw, RichContext rc, const PaintInfo& _pi) const
 			}
 		}
 		for(int i = 0; i < frr.GetCount(); i++) {
-			PaintInfo _pi = pi;
 			pi.tablesel = 0;
 			pi.sell = pi.selh = -1;
 			int pgi = frr.GetKey(i);

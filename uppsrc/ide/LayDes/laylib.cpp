@@ -368,9 +368,9 @@ void EscDraw::DrawSmartText(EscEscape& e)
 	int x = e.Int(0);
 	int y = e.Int(1);
 	int ii = 2;
-	int cx = INT_MAX;
-	if(e[ii].IsInt())
-		cx = e.Int(ii++);
+//	int cx = INT_MAX;
+//	if(e[ii].IsInt())
+//		cx = e.Int(ii++);
 	String text;
 	if(ii < e.GetCount() && e[ii].IsArray())
 		text = ToUtf8((WString)e[ii++]);

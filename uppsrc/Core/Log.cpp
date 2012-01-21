@@ -155,12 +155,18 @@ void LogStream::Create(const char *path, bool append)
 	}
 	WriteFile(hfile, "\r\n", 2, &n, NULL);
 #else
-	write(hfile, h, strlen(h));
+	IGNORE_RESULT(
+		write(hfile, h, strlen(h))
+	);
 	if(part) {
 		sprintf(h, ", #%d", part);
-		write(hfile, h, strlen(h));
+		IGNORE_RESULT(
+			write(hfile, h, strlen(h))
+		);
 	}
-	write(hfile, "\r\n", 2);
+	IGNORE_RESULT(
+		write(hfile, "\r\n", 2)
+	);
 #endif
 	bol = true;
 }
@@ -186,7 +192,9 @@ void LogStream::Flush()
 #else
 	if(options & LOG_FILE)
 		if(hfile >= 0)
-			write(hfile, buffer, count);
+			IGNORE_RESULT(
+				write(hfile, buffer, count)
+			);
 	if(options & LOG_DBG)
 		Cerr().Put(buffer, count);
 #endif
@@ -252,6 +260,7 @@ bool LogStream::IsOpen() const
 #endif
 }
 
+/*
 static void sLarge(String& text, size_t *large, int count, const char *txt)
 {
 	int n = min(1024, count);
@@ -268,6 +277,7 @@ static void sLarge(String& text, size_t *large, int count, const char *txt)
 			text << Format("%4d`KB, %5d %s (%6d KB)\r\n", (int)(uintptr_t)(q >> 10), nn, txt, (int)(uintptr_t)((nn * q) >> 10));
 	}
 }
+*/
 
 String AsString(const MemoryProfile& mem)
 {

@@ -155,8 +155,12 @@ void Ctrl::UntrapX11Errors(bool b)
 
 void sPanicMessageBox(const char *title, const char *text)
 {
-	write(2, text, strlen(text));
-	write(2, "\n", 1);
+	IGNORE_RESULT(
+		write(2, text, strlen(text))
+	);
+	IGNORE_RESULT(
+		write(2, "\n", 1)
+	);
 	if(Ctrl::grabWindow) {
 		LLOG("RELEASE GRAB");
 		XUngrabPointer(Xdisplay, CurrentTime);

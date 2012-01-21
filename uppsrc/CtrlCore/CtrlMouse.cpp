@@ -233,7 +233,6 @@ Ctrl *Ctrl::ChildFromPoint(Point& pt) const
 	GuiLock __;
 	Ctrl *q;
 	Point p = pt;
-	Rect rect = GetRect();
 	Rect view = GetView();
 	if(view.Contains(p)) {
 		Point vp = p - view.TopLeft();
@@ -600,7 +599,6 @@ Ctrl *Ctrl::GetVisibleChild(Ctrl *ctrl, Point p, bool pointinframe)
 	if(!pointinframe)
 		p += ctrl->GetView().TopLeft();
 	Ctrl *q;
-	Rect rect = ctrl->GetRect();
 	Rect view = ctrl->GetView();
 	if(view.Contains(p)) {
 		p -= view.TopLeft();

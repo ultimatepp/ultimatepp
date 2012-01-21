@@ -7,7 +7,7 @@ NAMESPACE_UPP
 #define LLOGHEXDUMP(x, s) // LOGHEXDUMP(x, s)
 
 void BlockStream::SetBufferSize(dword size) {
-	int64 p;
+	int64 p = 0;
 	if(IsOpen()) {
 		p = GetPos();
 		Flush();
@@ -409,7 +409,7 @@ void FileStream::SetStreamSize(int64 pos)
 	while(pos > len) {
 		static char buffer[1024];
 		int64 diff = pos - len;
-		int chunk = (diff > sizeof(buffer) ? sizeof(buffer) : (int)diff);
+		int chunk = (diff > (int64)sizeof(buffer) ? sizeof(buffer) : (int)diff);
 		if(write(handle, buffer, chunk) != chunk) {
 			SetLastError();
 			LSEEK64_(handle, cur, SEEK_SET);

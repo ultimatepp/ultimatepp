@@ -47,7 +47,6 @@ void RichEdit::SetObjectPos(int pos)
 	Rect rr = r.Offseted(GetTextRect().left, -sb);
 	objectrect = GetObjectRect(pos);
 	objectpos = cursor;
-	PageRect pr = text.GetCaret(cursor, pagesz);
 	PlaceCaret();
 	Refresh(rr);
 	ReadFormat();
@@ -185,7 +184,6 @@ void RichEdit::MouseMove(Point p, dword flags)
 void RichEdit::StdBar(Bar& menu)
 {
 	int l, h;
-	int fieldpos = -1;
 	Id field;
 	String fieldparam;
 	String ofieldparam;
@@ -228,7 +226,6 @@ void RichEdit::StdBar(Bar& menu)
 			bar_fieldparam = p.fieldparam;
 			RichPara::FieldType *ft = RichPara::fieldtype().Get(field, NULL);
 			if(ft) {
-				fieldpos = cursor;
 				ft->Menu(menu, &bar_fieldparam);
 				if(!menu.IsEmpty())
 					menu.Separator();
@@ -257,7 +254,6 @@ void RichEdit::RightDown(Point p, dword flags)
 	MenuBar menu;
 	int l, h;
 	Rect ocr = GetCaretRect();
-	int c = GetMousePos(p);
 	int fieldpos = -1;
 	Id field;
 	String ofieldparam;

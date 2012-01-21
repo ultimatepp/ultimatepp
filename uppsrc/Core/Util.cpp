@@ -23,8 +23,12 @@ void PanicMessageBox(const char *title, const char *text)
 	if(sPanicMessageBox)
 		(*sPanicMessageBox)(title, text);
 	else {
-		write(2, text, (int)strlen(text));
-		write(2, "\n", 1);
+		IGNORE_RESULT(
+			write(2, text, (int)strlen(text))
+		);
+		IGNORE_RESULT(
+			write(2, "\n", 1)
+		);
 	}
 }
 
@@ -888,7 +892,9 @@ static void LinuxBeep(const char *fn)
 #else
 	if(fork()) return;
 #endif
-	system(h);
+	IGNORE_RESULT(
+		system(h)
+	);
 	_exit(EXIT_SUCCESS);
 }
 #endif

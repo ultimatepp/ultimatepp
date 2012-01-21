@@ -113,7 +113,6 @@ void RichEdit::Move(int newpos, bool select)
 void RichEdit::MoveUpDown(int dir, bool select, int pg)
 {
 	Rect page = pagesz;
-	PageY h = text.GetHeight(pagesz);
 	if(dir > 0 && cursor >= GetLength() && select) {
 		Move(GetLength() + 1, true);
 		return;

@@ -127,7 +127,7 @@ private:
 	Point   Op(Point p);
 	void    Sync();
 
-	static Link<DisplayPopup> all[1];
+	static Link<DisplayPopup> *all();
 	static bool StateHook(Ctrl *, int reason);
 
 public:

@@ -136,7 +136,6 @@ Image MakeDragImage(const Image& arrow, Image sample)
 	else {
 		b.Create(128, 128);
 		memset(~b, 0, sizeof(RGBA) * b.GetLength());
-		Size ssz = sample.GetSize();
 		Over(b, Point(2, 22), sample, sample.GetSize());
 		Unmultiply(b);
 		for(int y = 20; y < 96; y++) {

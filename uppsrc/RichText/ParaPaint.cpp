@@ -46,8 +46,8 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 			draw.DrawRect(zx0, zy0, width, 2, pi.indexentry);
 		Font fnt = f;
 		int zht = z * tabs(f.GetHeight());
-		int ssa;
-		int ssd;
+		int ssa = 0;
+		int ssd = 0;
 		if(f.sscript) {
 			FontInfo fi = fnt(zht).Info();
 			ssa = fi.GetAscent();
@@ -174,8 +174,8 @@ void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& 
 		}
 	opy = py;
 	int oi = 0;
-	int x;
-	int y0;
+	int x = 0;
+	int y0 = 0;
 	int lineascent = 0;
 	for(int lni = 0; lni < pl.GetCount(); lni++) {
 		const Line& li = pl[lni];

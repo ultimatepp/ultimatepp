@@ -129,7 +129,6 @@ void TabCtrl::Layout()
 	for(int i = 0; i < tab.GetCount(); i++)
 		if(tab[i].ctrl)
 			Ctrl::Add(*tab[i].ctrl);
-	Size sz = GetSize();
 	int th = style->tabheight + style->sel.top;
 	tabs.TopPos(0, th + style->sel.bottom)
 	    .HSizePos(0, style->sel.left + style->sel.right);
@@ -174,7 +173,6 @@ void TabCtrl::PaintTabs(Draw& w)
 	int th = style->tabheight + tt;
 	Size sz = GetSize();
 	ChPaint(w, 0, th, sz.cx, sz.cy - th, style->body);
-	Size chsz = GetTextSize("M", style->font);
 	for(int phase = 0; phase < 2; phase++) {
 		for(int i = tab.GetCount() - 1; i >= 0; i--)
 			if((sel == i) == phase) {
