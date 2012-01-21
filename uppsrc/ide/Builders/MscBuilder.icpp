@@ -557,7 +557,7 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			PutConsole("Linking...");
 			bool error = false;
 			CustomStep(".pre-link", Null, error);
-			if(!error, Execute(link) == 0) {
+			if(!error && Execute(link) == 0) {
 				CustomStep(".post-link", Null, error);
 				if((IsMsc86() || IsMsc64()) && HasFlag("SHARED")) {
 					String mt("mt -nologo -manifest ");

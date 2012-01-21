@@ -207,7 +207,7 @@ Size DrawLabel::Paint(Ctrl *ctrl, Draw& w, const Rect& r, bool visibleaccesskey)
 		}
 	}
 	Size isz = GetSize(txtcx, sz1, lspc, sz2, rspc);
-	Point p, ip;
+	Point p = r.TopLeft(), ip;
 	if(align == ALIGN_LEFT)
 		p.x = r.left;
 	else

@@ -483,7 +483,7 @@ Image Iml::Get(int i)
 					static Vector<Image> cached;
 					if(cached_data != d.data) {
 						cached_data = d.data;
-						cached = UnpackImlData(String(d.data, d.len));
+						cached = UnpackImlData(d.data, d.len);
 						if(premultiply)
 							for(int i = 0; i < cached.GetCount(); i++)
 								cached[i] = Premultiply(cached[i]);

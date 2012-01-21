@@ -707,7 +707,7 @@ void HeaderCtrl::Serialize(Stream& s) {
 		s / n;
 		for(int i = 0; i < n; i++)
 			if(i < col.GetCount()) {
-				int n;
+				int n = 1;
 				s / n;
 				col[i].ratio = n;
 			}

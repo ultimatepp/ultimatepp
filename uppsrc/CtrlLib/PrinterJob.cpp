@@ -151,8 +151,9 @@ String System(const char *cmd, const String& in)
 	c << " >" << ofn;
 	if(in.GetCount())
 		c << " <" << ifn;
-	system(c);
-	String q = LoadFile(ofn);
+	String q;
+	if(system(c) >= 0)
+		q = LoadFile(ofn);
 	FileDelete(ofn);
 	FileDelete(ifn);
 	return q;

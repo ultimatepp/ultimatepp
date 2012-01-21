@@ -224,7 +224,7 @@ void  ToolButton::Paint(Draw& w)
 	ChPaint(w, sz, style->look[li]);
 	Point off = style->offset[li];
 	Point ip = (sz - isz) / 2 + off;
-	Size tsz;
+	Size tsz(0, 0);
 	if(kind != NOLABEL)
 		tsz = GetTextSize(text, style->font);
 	if(kind == BOTTOMLABEL) {

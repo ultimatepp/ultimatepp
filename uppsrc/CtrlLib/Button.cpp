@@ -556,7 +556,7 @@ void Option::Paint(Draw& w) {
 		w.DrawRect(0, 0, sz.cx, sz.cy, SColorFace);
 	
 	Size isz = CtrlsImg::O0().GetSize();
-	Size tsz;
+	Size tsz(0, 0);
 	int ix = 0, iy = 0, ty = 0;
 	
 	if(showlabel) {
