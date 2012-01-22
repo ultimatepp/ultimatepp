@@ -1,7 +1,8 @@
 description "\377B";
 
 uses
-	ide\Core;
+	ide\Core,
+	CtrlLib;
 
 file
 	Common.h,
