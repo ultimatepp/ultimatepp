@@ -31,25 +31,6 @@ T ReadSqlValue(T& x, const char *&s) {
 	return x;
 }
 
-static String SqlFormat__(const char *s, int res, bool mysql) {
-	if(!s || !*s) return "NULL";
-	String result;
-	result.Reserve(res);
-	result.Cat("\'");
-	for(; *s; s++) {
-		if(*s == '\'')
-			result.Cat(mysql ? "\\\'" : "\'\'");
-		else {
-			if((*s == '\"' || *s == '\\') && mysql)
-				result.Cat('\\');
-			result.Cat(*s);
-		}
-	}
-	result.Cat('\'');
-	return result;
-}
-
-
 void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 {
 	for(;;) {
