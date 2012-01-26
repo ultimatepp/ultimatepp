@@ -13,7 +13,7 @@ SRCDIR="~/upp.tmp/u"                   # where to look for source tarball
 #SRCDIR="/home/h"
 set -e
 
-version="$(ls $SRC/upp-x11-src-*.tar.gz | sed '$s/.*upp-x11-src-\([0-9]*\)[.]tar[.]gz/\1/')"
+version="$(ls $SRCDIR/upp-x11-src-*.tar.gz | sed '$s/.*upp-x11-src-\([0-9]*\)[.]tar[.]gz/\1/')"
 tmp="$TMP/upp-$version"
 
 if [ ! "$version" ]; then
