@@ -1,8 +1,10 @@
-void *SysAllocRaw(size_t size);
+void  OutOfMemoryPanic(size_t size);
+
+void *SysAllocRaw(size_t size, int reqsize);
 void  SysFreeRaw(void *ptr, size_t size);
 
-void *AllocRaw4KB();
-void *AllocRaw64KB();
+void *AllocRaw4KB(int reqsize);
+void *AllocRaw64KB(int reqsize);
 void *LAlloc(size_t& size);
 void  LFree(void *ptr);
 
@@ -141,7 +143,7 @@ struct Heap {
 	static int  SizeToBin(int n) { return SzBin[(n - 1) >> 3]; }
 
 	void   LinkFree(DLink *b, int size);
-	DLink *AddChunk();
+	DLink *AddChunk(int reqsize);
 	void  *DivideBlock(DLink *b, int size, int ii);
 	void  *TryLAlloc(int ii, size_t size);
 	void  *LAlloc(size_t& size);

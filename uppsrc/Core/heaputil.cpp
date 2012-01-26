@@ -19,7 +19,7 @@ void *MemoryAllocPermanentRaw(size_t size)
 	static byte *ptr = NULL;
 	static byte *limit = NULL;
 	if(ptr + size >= limit) {
-		ptr = (byte *)AllocRaw4KB();
+		ptr = (byte *)AllocRaw4KB(size);
 		limit = ptr + 4096;
 	}
 	void *p = ptr;
@@ -48,11 +48,19 @@ void DoPeakProfile()
 		heap.Make(*sPeak);
 }
 
+void OutOfMemoryPanic(size_t size)
+{
+	char h[200];
+	sprintf(h, "Out of memory!\nRequested size: %lld\nU++ allocated memory: %d KB",
+	        (long long)size, MemoryUsedKb());
+	Panic(h);
+}
+
 int sKB;
 
 int   MemoryUsedKb() { return sKB; }
 
-void *SysAllocRaw(size_t size)
+void *SysAllocRaw(size_t size, int reqsize)
 {
 	sKB += int(((size + 4095) & ~4095) >> 10);
 #ifdef PLATFORM_WIN32
@@ -67,7 +75,7 @@ void *SysAllocRaw(size_t size)
 		ptr = NULL;
 #endif
 	if(!ptr)
-		Panic("Out of memory!");
+		OutOfMemoryPanic((size_t)reqsize);
 	DoPeakProfile();
 	return ptr;
 }
@@ -85,14 +93,14 @@ void  SysFreeRaw(void *ptr, size_t size)
 int s4kb__;
 int s64kb__;
 
-void *AllocRaw4KB()
+void *AllocRaw4KB(int reqsize)
 {
 	static int   left;
 	static byte *ptr;
 	static int   n = 32;
 	if(left == 0) {
 		left = n >> 5;
-		ptr = (byte *)SysAllocRaw(left * 4096);
+		ptr = (byte *)SysAllocRaw(left * 4096, reqsize);
 	}
 	n = n + 1;
 	if(n > 4096) n = 4096;
@@ -104,14 +112,14 @@ void *AllocRaw4KB()
 	return p;
 }
 
-void *AllocRaw64KB()
+void *AllocRaw64KB(int reqsize)
 {
 	static int   left;
 	static byte *ptr;
 	static int   n = 32;
 	if(left == 0) {
 		left = n >> 5;
-		ptr = (byte *)SysAllocRaw(left * 65536);
+		ptr = (byte *)SysAllocRaw(left * 65536, reqsize);
 	}
 	n = n + 1;
 	if(n > 256) n = 256;
