@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=TheIDE
+GenericName=TheIDE
+Comment=IDE for cross-platform C++ development
+MimeType=application/x-upp;
+Exec=theide
+Icon=theide.png
+Terminal=false
+Type=Application
+Categories=Development;IDE;GUIDesigner;
+StartupNotify=false
