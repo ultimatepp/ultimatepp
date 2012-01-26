@@ -1,0 +1,180 @@
+.\" Process this file with command
+.\" groff -man -Tascii theide.1
+.\"
+.TH THEIDE 1 TheIDE " " TheIDE 
+.SH NAME
+theide \(hy A good integrated development environment, 
+designed for developing large C++ applications.
+.SH SYNOPSIS
+.B theide 
+.br
+.BI "theide " "assembly package" 
+.br
+.BI "theide " "assembly package build_method" 
+.RB "[" \-options "] [" >FLAG [ ,FLAG ]...]
+.RI [ out ]
+.LP
+The first method starts TheIDE with a Package selection dialog, 
+the second method directly opens 
+.IR package " from " assembly 
+and third one allows you to build or export specified project according 
+to the supplied parameters. The last method does not open TheIde 
+but causes it to work in console mode.
+.SH DESCRIPTION
+TheIDE 
+is U++ integrated development environment which introduces modular 
+concepts to C++ programming. It features 
+.I BLITZ-build 
+technology to speedup C++ rebuilds up to 4 times, visual designers 
+for U++ libraries, 
+.I Topic++ 
+system for documenting code and creating rich text 
+resources for applications (like help and code documentation) 
+and
+.I Assist++
+\(hy a powerful C++ code analyzer that provides features 
+like code completion, navigation and transformation.
+
+TheIDE integrates with compiler and debugger 
+.RB "(by default " gcc "(1) and " gdb (1)) 
+and can also be used to develop non-U++ applications.
+
+.SH OPTIONS
+
+.IP assembly
+Selects in which assembly to look for package. It must be configured 
+in file 
+.I ~/.upp/theide/assembly.var
+.
+.IP package
+Selects which package to use. The package must exist in selected assembly.
+.IP build_method
+Selects build method. It must be configured in file 
+.I ~/.upp/theide/build_method.bm
+.
+.LP
+.IP FLAGs
+Specify witch flags should be set up. This works the same way as inside 
+TheIDE. The FLAGs must be separated by commas and first and prepended 
+with ">" character. Please note, that ">" has special meaning in most 
+shells and therefore you must either escape it or enclose in quotation
+marks.
+.LP
+Parameter
+.B options
+must always form single string, e.g. "\-arvs". 
+Please note, that some options are mutually exclusive. Don't use them 
+together unless you want to be surprised by the results.
+.SS General options:
+.RS
+.IP a
+Rebuild all. Cleans caches before doing anything.
+.IP b
+Use BLITZ.
+.IP e
+If building fails, stop with message box.
+.IP l
+Be silent.
+.IP v
+Be verbose.
+.IP m
+Create a map file.
+.RE
+.SS Output mode:
+.RS
+.IP r
+Release mode.
+.IP 1
+Release mode \(hy optimize for size.
+.IP 2
+Release mode \(hy optimize for speed.
+.LP
+These options are mutually exclusive. If more of them is used then last 
+one is used. If none is used, Debug mode is assumed.
+.RE
+.SS Linking mode:
+.RS
+.IP s
+Use shared libraries.
+.IP S
+Use shared libraries and build as shared libraries.
+.LP
+These options are mutually exclusive. If more of them is used then last 
+one is used. If none is specified, static linking is used.
+.RE
+.SS Exporting:
+.RS
+.IP x
+Export files necessary to build project to the directory 
+.I out
+.IP X
+Export all files in project to directory 
+.I out
+.IP M
+Create makefile in file 
+.I out
+.IP xM,XM
+If you mix M with x or X, Makefile is exported to directory 
+.I out
+.LP
+Options x and X are mutually exclusive. The last specified is used. 
+.RE
+.SH FILES
+.I ~/.upp/theide/*.var
+.RS
+The assembly specifications.
+.RE
+.I ~/.upp/theide/*.bm
+.RS
+The build methods configurations.
+.RE
+.I  ~/.upp/theide/theide.cfg
+.RS 
+Main configuration file.
+.RE
+.I  ~/.upp/theide/ide.colors
+.RS 
+Configuration of colors used in TheIDE.
+.RE
+.I  ~/.upp/theide/ide.key
+.RS 
+Configuration of key bindings in TheIDE.
+.RE
+.LP
+.IP NOTE: 
+None of these files is meant to be edited by hand. They can be created 
+and/or modified from within TheIDE. This is strongly recommended 
+since it is easier and safer.
+.SH EXAMPLES
+.B "theide examples UWord"
+.RS
+Opens UWord (an example implementation of text proccesor) in TheIDE. 
+.RE
+.LP
+.B theide examples AddressBook GCC \-vasb ">GUI,MT" /tmp/ab
+.RS
+Builds application AddressBook with verbose output, using 
+.BR gcc (1)
+in debug mode, with GUI and multithreading support, links it using
+shared libraries and places it in /tmp/ab.
+.RE
+.LP
+.B theide uppsrc ide \-2sx ">GUI,MT" /tmp/ide
+.RS
+Exports Makefile and all the files needed to build TheIDE itself
+(with speed optimizations) into the directory /tmp/ide/.
+.RE
+
+.SH BUGS
+If you find any bugs, please contact the developpers on our forums (
+.I http://www.ultimatepp.org/forum
+) or file a bug on projects SourceForge page (
+.I http://sourceforge.net/projects/upp
+).
+.SH AUTHORS
+Mirek Fidler, Koldo Ramirez, Tomas Rylek, Daniel Kos
+.SH DOCUMENTATION
+Full documentation is accesible from within TheIDE
+and also online on 
+.I http://ultimatepp.org
+.

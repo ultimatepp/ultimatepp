@@ -1,0 +1,6 @@
+debian/tmp/nogtk/theide usr/bin
+umk usr/bin
+theide.1 usr/share/man1
+theide.desktop usr/share/applications
+debian/tmp/theide.png usr/share/pixmaps
+copyright usr/share/doc/theide-nogtk
