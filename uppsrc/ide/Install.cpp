@@ -335,9 +335,14 @@ bool Install()
 	if(!(InstallWizard().Run()&(IDOK|IDCANCEL))) return false;
 
 	String supp=UpdaterCfg().globalsrc;
-	String bm = ConfigFile("GCC.bm");
-	if(IsNull(LoadFile(bm)))
-		SaveFile(bm, LoadFile(AppendFileName(supp, "GCC.bm")));
+	FindFile ff(ConfigFile("*.bm"));
+	if(!ff) {
+		ff.Search(AppendFileName(supp, "*.bm"));
+		while(ff) {
+			FileCopy(ff.GetPath(), ConfigFile(ff.GetName()));
+			ff.Next();
+		}
+	}
 	// 2008/06/01 -- add valgrind suppression file
 	String ValgSupp = ConfigFile("valgrind.supp");
 	if(IsNull(LoadFile(ValgSupp)))
