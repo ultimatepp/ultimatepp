@@ -74,7 +74,7 @@ Heap::Page *Heap::WorkPage(int k)
 					break;
 				}
 		if(!page) {
-			page = (Page *)AllocRaw4KB();
+			page = (Page *)AllocRaw4KB(Ksz(k));
 			LLOG("AllocK - allocated new system page " << (void *)page << " " << k);
 			page->Format(k);
 		}

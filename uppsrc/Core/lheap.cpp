@@ -50,7 +50,7 @@ void Heap::LinkFree(DLink *b, int size)
 	b->Link(freebin[q]);
 }
 
-Heap::DLink *Heap::AddChunk()
+Heap::DLink *Heap::AddChunk(int reqsize)
 {
 	DLink *ml;
 	if(lempty->next != lempty) {
@@ -59,7 +59,7 @@ Heap::DLink *Heap::AddChunk()
 		LLOG("Retrieved empty large " << (void *)ml);
 	}
 	else {
-		ml = (DLink *)AllocRaw64KB();
+		ml = (DLink *)AllocRaw64KB(reqsize);
 		LLOG("AllocRaw64KB " << (void *)ml);
 	}
 	lcount++;
@@ -157,9 +157,7 @@ void *Heap::LAlloc(size_t& size) {
 		Init();
 	if(size > MAXBLOCK) {
 		Mutex::Lock __(mutex);
-		BigHdr *h = (BigHdr *)SysAllocRaw(size + BIGHDRSZ);
-		if(!h)
-			Panic("Out of memory!");
+		BigHdr *h = (BigHdr *)SysAllocRaw(size + BIGHDRSZ, size);
 		h->Link(big);
 		h->size = size = ((size + BIGHDRSZ + 4095) & ~4095) - BIGHDRSZ;
 		Header *b = (Header *)((byte *)h + BIGHDRSZ - sizeof(Header));
@@ -188,7 +186,7 @@ void *Heap::LAlloc(size_t& size) {
 		ptr = TryLAlloc(bini, size);
 		if(ptr) return ptr;
 	}
-	DLink *n = AddChunk();
+	DLink *n = AddChunk(size);
 	if(!n)
 		Panic("Out of memory!");
 	ptr = DivideBlock(n, (int)size, LBINS - 1);
