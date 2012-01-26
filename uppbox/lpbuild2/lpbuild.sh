@@ -3,7 +3,7 @@
 # PRODUCTION CONFIGURATION
 GPG_PROG="/home/upp/bin/gpg-extpass"   # what program to use for signing (here a wrapper that supplies passphrase)
 GPG_KEY="0CE4194D"                     # gpg key fingerprint to use
-TMP="~/upp.tmp"                        # path for temporary files
+TMP="~/lpbuild.tmp"                    # path for temporary files
 SRCDIR="~/upp.tmp/u"                   # where to look for source tarball
 
 ## DEBUG CONFIGURATION
