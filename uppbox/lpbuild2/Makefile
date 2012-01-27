@@ -12,16 +12,13 @@ ARCH="`dpkg-architecture -qDEB_HOST_ARCH`"
 ide:
 	sed -i -e 's/IDE_VERSION[ \t]*"\([0-9]*\)[^"]*"/IDE_VERSION    "\1-'$(SERIES)-$(ARCH)'"/' $(CURDIR)/uppsrc/ide/version.h
 	$(MAKE) -f mkfile $(JOBS) PKG=ide $(compiler) "NESTS=uppsrc" "FLAGS=GUI MT GCC SHARED" BINEXT= "BINPREFIX="
-	#cp /usr/bin/theide $@
 
 ide-nogtk:
 	sed -i -e 's/IDE_VERSION[ \t]*"\([0-9]*\)[^"]*"/IDE_VERSION    "\1-'$(SERIES)-$(ARCH)'-nogtk"/' $(CURDIR)/uppsrc/ide/version.h
 	$(MAKE) -f mkfile $(JOBS) PKG=ide $(compiler) "NESTS=uppsrc" "FLAGS=GUI MT NOGTK GCC SHARED" BINEXT=-nogtk "BINPREFIX="
-	#cp /usr/bin/theide $@
 
 umk:
 	$(MAKE) -f mkfile $(JOBS) PKG=umk $(compiler) "NESTS=uppsrc" "FLAGS=GCC SHARED" BINEXT= "BINPREFIX="
-	#cp /usr/bin/theide $@
 
 install:
 	# this is just a trick to rename files
