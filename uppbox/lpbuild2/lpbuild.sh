@@ -26,7 +26,7 @@ elif [ -d "$tmp" ]; then
     exit 1
 fi
 
-dists="karmic lucid maverick natty oneiric"
+[ -z "$dists" ] && dists="karmic lucid maverick natty oneiric"
 scriptpath="$(cd ${0%/*} 2>/dev/null || true; echo $PWD/${0##*/})"
 scriptdir="$(dirname $scriptpath)"
 src="$SRCDIR/upp-x11-src-$version.tar.gz"
@@ -38,7 +38,7 @@ cp -r "$scriptdir/debian" "$tmp/debian"
 for f in Makefile mkfile copyright theide.1 theide.desktop; do
     cp "$scriptdir/$f" "$tmp/$f"
 done
-[ "$1" = "stable" ] && sed -i '/code.google/s/^/#/;/sf.net/s/^#//;' "$tmp/debian/watch"
+[ "$stable" = 1 ] && sed -i '/code.google/s/^/#/;/sf.net/s/^#//;' "$tmp/debian/watch"
 ln -s "$src" "$TMP/upp_$version.orig.tar.gz"
 
 cd $tmp
@@ -62,6 +62,7 @@ EOF
 
     [ "$skiporig" ] || dpkg-source --commit . packaging packaging.patch
     dpkg-buildpackage -d -S -k$GPG_KEY -m'Jan Dolinar <dolik.rce@seznam.cz>' -sgpg -p$GPG_PROG $skiporig
-    dput -c "$scriptdir/dput.cfg" "upp-$dist" "../upp_"$distver"_source.changes"
+    [ "$noupload" = 1 ] || dput -c "$scriptdir/dput.cfg" "upp-$dist" "../upp_"$distver"_source.changes"
     skiporig="-sd"
 done
+set -e
