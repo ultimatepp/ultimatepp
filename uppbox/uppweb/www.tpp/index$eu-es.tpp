@@ -1,4 +1,4 @@
-topic "U++ es un entorno de desarrollo rápido multiplataforma para C++";
+topic "U++ C++ garapen gurutze-plataforma azkar inguru da";
 [ $$0,0#00000000000000000000000000000000:Default]
 [a83;*R6 $$1,0#31310162474203024125188417583966:caption]
 [{_}%EU-ES 
