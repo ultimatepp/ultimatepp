@@ -48,7 +48,6 @@ void SvnSync::SyncList()
 	for(int i = 0; i < works.GetCount(); i++) {
 		SvnWork w = works[i];
 		String path = GetFullPath(w.working);
-		DDUMP(path);
 		list.Add(REPOSITORY, path,
 		         AttrText("Working directory").SetFont(StdFont().Bold()).Ink(White).Paper(Blue),
 		         AttrText(path).SetFont(Arial(20).Bold()).Paper(Blue).Ink(White),
@@ -61,9 +60,6 @@ void SvnSync::SyncList()
 				String h = ln[i];
 				if(h.GetCount() > 7) {
 					String file = GetFullPath(TrimLeft(h.Mid(7)));
-					DLOG("------------------------------------------------");
-					DDUMP(h);
-					DDUMP(file);
 					if(IsFullPath(file)) {
 						actions = true;
 						h.Trim(7);
@@ -107,8 +103,6 @@ void SvnSync::SyncList()
 								color = c[action];
 							}
 						}
-						DDUMP(an);
-						DDUMP(action);
 						if(pass == action < 0) {
 							int ii = list.GetCount();
 							list.Add(action, file,
@@ -312,8 +306,6 @@ again:
 				continue;
 			}
 			else {
-				DDUMP(path);
-				LOGHEXDUMP(path, path.GetCount());
 				if(action != DELETEC)
 					filelist << " \"" << path << "\"";   // <-- add the file to the list
 				commit = true;
