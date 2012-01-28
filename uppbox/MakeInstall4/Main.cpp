@@ -77,8 +77,8 @@ int FilterVersion(int c) { return c == ':' ? '_' : c; }
 
 CONSOLE_APP_MAIN
 {
-	if(FileExists("u:/theide/theide.exe"))
-		win32 = "u:/theide";
+	if(FileExists("u:/upp/umk.exe"))
+		win32 = "u:/upp";
 	else
 		win32 = "u:/Win32/theide";
 

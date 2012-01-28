@@ -27,4 +27,4 @@ cd ~/upp.tmp
 mv u upp-x11-src-`svnversion ~/upp.src`
 tar -cvvzf ~/upload/upp-x11-src-`svnversion ~/upp.src`.tar.gz upp-x11-src-`svnversion ~/upp.src`
 mv upp-x11-src-`svnversion ~/upp.src` u
-~/bin/upload
+#~/bin/upload
