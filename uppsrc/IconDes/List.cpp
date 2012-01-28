@@ -177,7 +177,10 @@ void IconDes::InsertFile()
 		Image m = StreamRaster::LoadFileAny(fn);
 		if(IsNull(m))
 			Exclamation(DeQtf(fn) + " not an image.");
-		ImageInsert(Filter(GetFileTitle(fn), CharFilterImageId), m);
+		String id = Filter(GetFileTitle(fn), CharFilterImageId);
+		if(!IsAlpha(*id) && *id != '_')
+			id = '_' + id;
+		ImageInsert(id, m);
 	}
 }
 
