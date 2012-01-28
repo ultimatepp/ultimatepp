@@ -48,6 +48,7 @@ void SvnSync::SyncList()
 	for(int i = 0; i < works.GetCount(); i++) {
 		SvnWork w = works[i];
 		String path = GetFullPath(w.working);
+		DDUMP(path);
 		list.Add(REPOSITORY, path,
 		         AttrText("Working directory").SetFont(StdFont().Bold()).Ink(White).Paper(Blue),
 		         AttrText(path).SetFont(Arial(20).Bold()).Paper(Blue).Ink(White),
@@ -59,23 +60,30 @@ void SvnSync::SyncList()
 			for(int i = 0; i < ln.GetCount(); i++) {
 				String h = ln[i];
 				if(h.GetCount() > 7) {
-					String file = TrimLeft(h.Mid(7));
+					String file = GetFullPath(TrimLeft(h.Mid(7)));
+					DLOG("------------------------------------------------");
+					DDUMP(h);
+					DDUMP(file);
 					if(IsFullPath(file)) {
 						actions = true;
 						h.Trim(7);
 						bool simple = h.Mid(1, 6) == "      ";
-						int action = simple ? String("MC?!~").Find(h[0]) : -1;
+						int action = simple ? String("MC?!~").Find(h[0]) : SVN_IGNORE;
 						if(h == "    S  ")
 							action = REPLACE;
 						String an;
 						Color  color;
-						if(action < 0) {
+						if(action == SVN_IGNORE) {
 							color = Black;
-							if(simple && h[0] == 'A')
+							if(simple && h[0] == 'A') {
 								an = "svn add";
+								action = SVN_ACTION;
+							}
 							else
-							if(simple && h[0] == 'D')
+							if(simple && h[0] == 'D') {
 								an = "svn delete";
+								action = SVN_ACTION;
+							}
 							else {
 								an = h.Mid(0, 7);
 								color = Gray;
@@ -87,7 +95,7 @@ void SvnSync::SyncList()
 							   file[q + 1] == 'r' && IsDigit(file[q + 2]))
 							   && FileExists(file.Mid(0, q))) {
 								action = DELETEC;
-								an = "Delete";
+								an = "Delete (conflict resolved)";
 								color = Black;
 							}
 							else {
@@ -99,6 +107,8 @@ void SvnSync::SyncList()
 								color = c[action];
 							}
 						}
+						DDUMP(an);
+						DDUMP(action);
 						if(pass == action < 0) {
 							int ii = list.GetCount();
 							list.Add(action, file,
@@ -295,12 +305,17 @@ again:
 					DeleteFolderDeep(path);
 				if(action != ADD)
 					sys.CheckSystem("svn revert \"" + path + "\"");
-			}else if(IsNumber(v)&&(int)v==2||action==-1){
+			}
+			else
+			if(IsNumber(v) && (int)v==2 || action == SVN_IGNORE) {
 				l++;
 				continue;
 			}
 			else {
-				filelist << " \"" << path << "\"";   // <-- add the file to the list
+				DDUMP(path);
+				LOGHEXDUMP(path, path.GetCount());
+				if(action != DELETEC)
+					filelist << " \"" << path << "\"";   // <-- add the file to the list
 				commit = true;
 				switch(action) {
 				case ADD:
