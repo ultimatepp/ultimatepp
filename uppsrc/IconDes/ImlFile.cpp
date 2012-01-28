@@ -199,12 +199,19 @@ bool LoadIml(const String& data, Array<ImlImage>& img, int& format)
 		while(p.Id("IMAGE_ID")) {
 			p.PassChar('(');
 			String n;
-			if(p.IsId())
+			if(p.IsId()) {
 				n = p.ReadId();
-			if(n.StartsWith("im__", 4))
-				n = Null;
+				if(n.StartsWith("im__", 4))
+					n = Null;
+				p.PassChar(')');
+			}
+			else
+				while(!p.IsEof()) {
+					if(p.Char(')'))
+						break;
+					p.SkipTerm();
+				}
 			name.Add(n);
-			p.PassChar(')');
 			bool e = false;
 			if(p.Id("IMAGE_META")) {
 				p.PassChar('(');
