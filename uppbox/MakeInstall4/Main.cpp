@@ -102,7 +102,6 @@ CONSOLE_APP_MAIN
 	CopyFolders(upp, upptmp, uppsrc + "/assemblies");
 	SaveFile(upptmp + "/uppsrc/guiplatform.h", "");
 	SaveFile(upptmp + "/uppsrc/ide/version.h", "#define IDE_VERSION \"" + version + "\"\r\n");
-	u:/upp.src/uppbox,u:/upp.src/uppsrc MakeInstall4 u:/Win32/theide/MSC9.bm -ar
 	Make("ide", "theide.exe");
 	Make("umk", "umk.exe");
 
