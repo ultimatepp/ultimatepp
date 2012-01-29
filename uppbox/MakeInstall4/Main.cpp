@@ -63,6 +63,7 @@ void CopyFolders(const char *src, const char *dst, const char *folders, bool dee
 
 String tmp = "u:/upp.tmp";
 String upptmp = tmp + "/u";
+String ass = upptmp + "/uppsrc";
 String upp = "u:/upp.src";
 String uppsrc = upp + "/uppsrc";
 String win32 = "u:/theide";
@@ -74,6 +75,11 @@ void CopyIdeFile(const String& fn)
 
 int NoDigit(int c) { return IsDigit(c) ? 0 : c; }
 int FilterVersion(int c) { return c == ':' ? '_' : c; }
+
+void Make(String pkg, String exe)
+{
+	Syx(win32 + "/umk " + ass + " " + pkg + " " + win32 + "/MSC9.bm -ar " + upptmp + "/" + exe);
+}
 
 CONSOLE_APP_MAIN
 {
@@ -91,13 +97,14 @@ CONSOLE_APP_MAIN
 	DeleteFolderDeep(tmp);
 	RealizeDirectory(tmp);
 	
-	CopyFolders(uppsrc, upptmp + "/uppsrc", uppsrc + "/packages");
-	CopyFolders(uppsrc, upptmp + "/uppsrc", uppsrc + "/packages1", false);
+	CopyFolders(uppsrc, ass, uppsrc + "/packages");
+	CopyFolders(uppsrc, ass, uppsrc + "/packages1", false);
 	CopyFolders(upp, upptmp, uppsrc + "/assemblies");
 	SaveFile(upptmp + "/uppsrc/guiplatform.h", "");
 	SaveFile(upptmp + "/uppsrc/ide/version.h", "#define IDE_VERSION \"" + version + "\"\r\n");
-	Syx(win32 + "/umk upptmp ide MSC9 -ar " + upptmp + "/theide.exe");
-	Syx(win32 + "/umk upptmp umk MSC9 -ar " + upptmp + "/umk.exe");
+	u:/upp.src/uppbox,u:/upp.src/uppsrc MakeInstall4 u:/Win32/theide/MSC9.bm -ar
+	Make("ide", "theide.exe");
+	Make("umk", "umk.exe");
 
 	CopyIdeFile("dbghelp.dll");
 	CopyIdeFile("en-us.scd");
