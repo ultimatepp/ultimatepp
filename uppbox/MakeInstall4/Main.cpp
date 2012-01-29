@@ -117,5 +117,6 @@ CONSOLE_APP_MAIN
 
 	Syx(win32 + "/7za/7za.exe a " + tmp + "/upp.7z * -r -mx -m0fb=255 -mf=off");
 	SetCurrentDirectory(tmp);
-	Syx(win32 + "/umk uppbox WinInstaller2 MSC9 -ar u:/upload/upp-win32-" + Filter(version, FilterVersion) + ".exe");
+	Syx(win32 + "/umk " + upptmp + "/uppbox," + upptmp + "/uppsrc WinInstaller2 " + win32 +
+	    "/MSC9 -ar u:/upload/upp-win32-" + Filter(version, FilterVersion) + ".exe");
 }
