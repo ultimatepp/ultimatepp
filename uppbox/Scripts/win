@@ -1,6 +1,6 @@
 set -e
 
-rm ~/upload/* || true
+#rm ~/upload/* || true
 wine u:/Win32/theide/umk u:/upp.src/uppbox,u:/upp.src/uppsrc MakeInstall4 u:/Win32/theide/MSC9.bm -ar u:/mku.exe
 wine u:/mku.exe
 #~/bin/upload

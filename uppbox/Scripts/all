@@ -1,3 +1,5 @@
+rm ~/upload/* || true
+
 export WINEDEBUG=-all wine program.exe
 
 set -e
@@ -14,3 +16,5 @@ bash ~/Scripts/win
 bash ~/Scripts/src
 
 # bash ~/Scripts/deb64
+
+chmod a=rw ~/upload/*
