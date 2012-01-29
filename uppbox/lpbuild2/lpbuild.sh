@@ -35,7 +35,7 @@ rm -rf "$TMP"
 mkdir -p "$tmp"
 
 cp -r "$scriptdir/debian" "$tmp/debian"
-for f in Makefile mkfile copyright theide.1 theide.desktop; do
+for f in Makefile mkfile copyright theide.1 umk.1 theide.desktop; do
     cp "$scriptdir/$f" "$tmp/$f"
 done
 [ "$stable" = 1 ] && sed -i '/code.google/s/^/#/;/sf.net/s/^#//;' "$tmp/debian/watch"

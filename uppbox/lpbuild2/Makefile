@@ -24,7 +24,7 @@ install:
 	# this is just a trick to rename files
 	install -D ide $(DESTDIR)/theide
 	install -D ide-nogtk $(DESTDIR)/nogtk/theide
-	install -D uppsrc/ide/theide-48.png $(DESTDIR)/theide.png
+	install -D -m 644 uppsrc/ide/theide-48.png $(DESTDIR)/theide.png
 
 clean:
 	rm -f ide ide-nogtk umk
