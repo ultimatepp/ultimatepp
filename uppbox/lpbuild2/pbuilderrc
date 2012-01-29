@@ -66,3 +66,5 @@ else
     echo "Unknown distribution: $DIST"
     exit 1
 fi
+
+DEBBUILDOPTS="-j$(echo /sys/devices/system/cpu/cpu[0-9] | wc -w || echo 1)"

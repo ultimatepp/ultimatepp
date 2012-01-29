@@ -18,10 +18,10 @@ for dist in $dists; do
   for arch in $archs; do
     # create the chroot if it doesn't exist yet
     if [ ! -f "/var/cache/pbuilder/$NAME-base.tgz" ]; then
-      DIST=$dist ARCH=$arch pbuilder --create --configfile "$scriptdir/pbuilderrc" --distribution $dist --architecture $arch
+      sudo DIST=$dist ARCH=$arch pbuilder --create --configfile "$scriptdir/pbuilderrc" --distribution $dist --architecture $arch
     fi;
     # build the binary packages
-    DIST=$dist ARCH=$arch pbuilder --build --configfile "$scriptdir/pbuilderrc" --distribution $dist --architecture $arch "$TMP/upp_${version}-0~${dist}0.dsc"
+    sudo DIST=$dist ARCH=$arch pbuilder --build --configfile "$scriptdir/pbuilderrc" --distribution $dist --architecture $arch "$TMP/upp_${version}-0~${dist}0.dsc"
   done
 done
 

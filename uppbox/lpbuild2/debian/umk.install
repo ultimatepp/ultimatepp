@@ -1,2 +1,3 @@
 umk usr/bin
 copyright usr/share/doc/umk
+umk.1 usr/share/man/man1

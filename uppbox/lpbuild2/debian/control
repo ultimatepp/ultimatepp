@@ -2,13 +2,13 @@ Source: upp
 Section: devel
 Priority: optional
 Maintainer: Jan Dolinar <dolik.rce@seznam.cz>
-Standards-Version: 3.8.4
-Build-Depends: g++ (= 4.1) | g++ (>= 4.3), debhelper, libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), libgtk2.0-dev (>= 2.8.17), libnotify-dev
+Standards-Version: 3.9.1
+Build-Depends: g++ (= 4.1) | g++ (>= 4.3), debhelper (>= 7), libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), libgtk2.0-dev (>= 2.8.17), libnotify-dev
 Homepage: http://www.ultimatepp.org
 
 Package: upp
 Architecture: all
-Depends: theide, g++ (= 4.1) | g++ (>= 4.3), libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), libgtk2.0-dev (>= 2.8.17), libnotify-dev
+Depends: theide, ${misc:Depends}, g++ (= 4.1) | g++ (>= 4.3), libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), libgtk2.0-dev (>= 2.8.17), libnotify-dev
 Description: C++ library for cross-platform development
  Ultimate++ is a radical and innovative GUI toolkit whose number one priority
  is programmer productivity. C++ is a great programming language but
@@ -18,7 +18,7 @@ Description: C++ library for cross-platform development
 
 Package: theide
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Replaces: upp (<= 2332)
 Description: IDE (not only) for Ultimate++ framework
  TheIDE introduces modular concepts to C++ programming. It features 
@@ -30,7 +30,7 @@ Description: IDE (not only) for Ultimate++ framework
 
 Package: theide-nogtk
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Provides: theide
 Replaces: theide, upp (<=2332)
 Conflicts: theide
@@ -47,7 +47,7 @@ Description: IDE (not only) for Ultimate++ framework [nogtk build]
 
 Package: umk
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Provides: theide
 Replaces: theide, upp (<=2332)
 Conflicts: theide
