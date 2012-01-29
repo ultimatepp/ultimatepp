@@ -1,6 +1,6 @@
 set -e
 
-rm ~/upload/* || true
+#rm ~/upload/* || true
 
 #remove Win32 specific files
 rm ~/upp.tmp/u/*.exe || true
