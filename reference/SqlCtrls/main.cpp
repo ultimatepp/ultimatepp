@@ -95,21 +95,15 @@ GUI_APP_MAIN
 	SQL = sqlite3;
 
 	// Update the schema to match the schema described in "Model.sch"
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	SqlSchema sch(SQLITE3);
-	StdStatementExecutor se(sqlite3);
 	All_Tables(sch);
 	if(sch.ScriptChanged(SqlSchema::UPGRADE))
-		Sqlite3PerformScript(sch.Upgrade(),se);
-	if(sch.ScriptChanged(SqlSchema::ATTRIBUTES)) {
-		Sqlite3PerformScript(sch.Attributes(),se);
-	}
-	if(sch.ScriptChanged(SqlSchema::CONFIG)) {
-		Sqlite3PerformScript(sch.ConfigDrop(),se);
-		Sqlite3PerformScript(sch.Config(),se);
-	}
+		SqlPerformScript(sch.Upgrade());
+	if(sch.ScriptChanged(SqlSchema::ATTRIBUTES))
+		SqlPerformScript(sch.Attributes());
 	sch.SaveNormal();
-	#endif
+#endif
 
 	PersonsDlg().Run();
 }
