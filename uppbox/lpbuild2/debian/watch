@@ -1,7 +1,7 @@
 version=3
 
 # nightly builds
-http://code.google.com/p/upp-mirror/downloads/list?can=1 .*/upp-x11-src-(.*)\.tar\.gz
+http://ultimatepp.org/downloads/upp-x11-src-(.*)\.tar\.gz
 
 # stable release
 #http://sf.net/upp/upp-x11-src-(.*)\.tar\.gz
