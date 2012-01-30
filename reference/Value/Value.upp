@@ -1,4 +1,4 @@
-description "Using Value to store any data";
+description "Using Value to store any data\377";
 
 uses
 	Core;
