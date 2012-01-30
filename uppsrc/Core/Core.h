@@ -240,7 +240,15 @@ NAMESPACE_UPP
 #include "Vcont.hpp"
 #include "Index.hpp"
 
+#ifdef flagSVO_VALUE
+#define SVO_VALUE
+#endif
+
+#include "OldValue.h"
+
 #include "Value.h"
+#include "ValueUtil.h"
+
 #include "Gtypes.h"
 #include "Color.h"
 #include "Complex.h"

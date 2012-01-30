@@ -91,7 +91,8 @@ mainconfig
 	"" = ".NOGTK GUI",
 	"" = "GUI HEAPDBG CHECKINIT",
 	"" = "GUI TESTINSTALL",
-	"" = "GUI CHECKCLIPBOARD";
+	"" = "GUI CHECKCLIPBOARD",
+	"" = "GUI SVO_VALUE";
 
 custom() "",
 	"",

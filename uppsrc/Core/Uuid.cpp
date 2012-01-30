@@ -4,9 +4,15 @@ NAMESPACE_UPP
 
 //#BLITZ_APPROVE
 
+#ifdef SVO_VALUE
+INITBLOCK {
+	Value::Register<Uuid>();
+}
+#else
 INITBLOCK {
 	RichValue<Uuid>::Register();
 }
+#endif
 
 void Uuid::Serialize(Stream& s) {
 	int version = 0;
