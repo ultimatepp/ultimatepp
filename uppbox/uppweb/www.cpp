@@ -645,7 +645,7 @@ String Downloads()
 	IndexSort2(tm, fn, path, StdGreater<Time>());
 	for(int i = 0; i < fn.GetCount(); i++)
 		if(i < 40)
-			r << "[^downloads/" << ff.GetName() << " \1" << fn[i] << "\1]&";
+			r << "[^downloads/" << ff.GetName() << "^ \1" << fn[i] << "\1]&";
 		else
 			DeleteFile(ff.GetPath());
 	return r;
@@ -913,6 +913,9 @@ CONSOLE_APP_MAIN
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "bazaar", true));
 		else if (tt[i].title == "Svn Upp major releases") 
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppsrc", true));		
+		else
+		if(tt[i].title == "Nightly builds")
+			tt[i].text.Replace(String("<#downloads#>"), downloads);
 		else if (links[i].Find("index") >= 0) {
 			String win32 = "upp-win32-RELEASE.exe";
 			String win32release = win32;
@@ -923,7 +926,6 @@ CONSOLE_APP_MAIN
 			tt[i].text.Replace(DeQtf(x11), DeQtf(x11release));
 			tt[i].text.Replace(DeQtf(win32), DeQtf(win32release));
 		}
-		tt[i].text.Replace(String("<#downloads#>"), downloads);
 	}
 
 	for(int i = 0; i < reflink.GetCount(); i++) {
