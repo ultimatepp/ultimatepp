@@ -143,7 +143,7 @@ void ImgButton::Paint(Draw &w)
 // DockContHandle frame
 int DockCont::DockContHandle::GetHandleSize(const DockableCtrl::Style &s) const
 {
-	return 	(!IsNull(s.title_font) ? 12 : s.title_font.GetHeight()+4)
+	return 	(IsNull(s.title_font) ? 12 : s.title_font.GetHeight()+4)
 			 + (s.handle_vert ? s.handle_margins.GetWidth() : s.handle_margins.GetHeight()); 
 }
 /*
