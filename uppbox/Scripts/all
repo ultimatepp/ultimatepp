@@ -18,3 +18,7 @@ bash ~/Scripts/src
 # bash ~/Scripts/deb64
 
 chmod a=rw ~/upload/*
+
+export SRCDIR=/home/upp/upload
+
+bash ~/upp.src/lpbuild2/lpbuild.sh
