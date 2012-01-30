@@ -36,6 +36,7 @@ file
 	ide.key,
 	Console.cpp,
 	FindInFiles.cpp optimize_speed,
+	Config.cpp,
 	ide.cpp,
 	idefile.cpp charset "iso8859-1",
 	EditorTabBar.cpp,

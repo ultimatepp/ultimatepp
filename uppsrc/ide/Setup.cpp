@@ -479,11 +479,17 @@ void Ide::SetupFormat() {
 			ReadHlStyles(hlt.hlstyle);
 		}
 	}
+	FileSetTime(ConfigFile("version"), ToTime(~ide.showtimeafter));
+	FinishConfig();
+	SaveConfig();
+}
+
+void Ide::FinishConfig()
+{
 	if(filelist.IsCursor()) {
 		FlushFile();
 		FileCursor();
 	}
-	FileSetTime(ConfigFile("version"), ToTime(~ide.showtimeafter));
 	SaveLoadPackage();
 	SyncCh();
 }

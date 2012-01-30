@@ -79,146 +79,6 @@ void Ide::ConsolePaste()
 	}
 }
 
-void Ide::Serialize(Stream& s) {
-	int version = 19;
-	s.Magic(0x1234);
-	s / version;
-	s % main;
-	SerializePlacement(s);
-	s % AnySourceFs();
-	s % BasedSourceFs();
-	s % AnyPackageFs();
-	s % pfsplit;
-	s % wesplit;
-	package.SerializeSettings(s);
-	filelist.SerializeSettings(s);
-	s % editorfont;
-	if(version >= 6)
-		s % tfont;
-	s % veditorfont;
-	s % consolefont;
-	s % font1;
-	s % font2;
-	s % show_status_bar;
-	s % toolbar_in_row;
-	if(version >= 18) {
-		s % filetabs;
-	}
-	else {
-		bool b;
-		s % b;
-		filetabs = b ? AlignedFrame::TOP : -1;
-	}
-	s % auto_enclose;
-	s % show_tabs;
-	s % tabs_icons;
-	if(version >= 18) {
-		s % tabs_crosses;
-	}
-	else {
-		bool b;
-		s % b;
-		tabs_crosses = b ? AlignedFrame::RIGHT : -1;
-	}
-		
-	if(version >= 14) {
-		s % tabs_grouping;
-		s % tabs_serialize;
-	}
-	if(version >= 18) {
-		s % tabs_stacking;
-	}	
-	if(version >= 15)
-		s % force_crlf;
-	s % no_parenthesis_indent;
-	s % hilite_scope;
-	s % hilite_if_endif;
-	s % hilite_bracket;
-	s % hilite_ifdef;
-	if(version >= 16)
-		s % barline;
-	if(version >= 17)
-		s % qtfsel;
-	s % wrap_console_text;
-	s % mute_sounds;
-	s % line_numbers;
-	s % bookmark_pos;
-	s % use_target;
-	s % default_charset;
-	s % header_guards;
-	s % insert_include;
-	String varsname = GetVarsName();
-	s % varsname;
-	s % pocfg;
-	if(s.IsLoading())
-		LoadVars(varsname);
-	SerializeGlobalConfigs(s);
-	doc.Serialize(s);
-	s % right_split;
-	s % splash_screen;
-	s % editor.auto_assist;
-	if(version >= 1)
-		s % editor.commentdp;
-	if(version >= 2) {
-		s % bordercolumn;
-		s % bordercolor;
-	}
-	if(version >= 3) {
-		s % hydra1_threads;
-		if(s.IsLoading())
-			console.SetSlots(hydra1_threads);
-	}
-	if(version >= 4) {
-		s % doc;
-	}
-	if(version >= 5) {
-		s % chstyle;
-	}
-	if(version >= 7)
-	{
-		s % astyle_BracketIndent;
-		s % astyle_NamespaceIndent;
-		s % astyle_BlockIndent;
-		s % astyle_CaseIndent;
-		s % astyle_ClassIndent;
-		s % astyle_LabelIndent;
-		s % astyle_SwitchIndent;
-		s % astyle_PreprocessorIndent;
-		s % astyle_MinInStatementIndentLength;
-		s % astyle_MaxInStatementIndentLength;
-		s % astyle_BreakClosingHeaderBracketsMode;
-		s % astyle_BreakElseIfsMode;
-		s % astyle_BreakOneLineBlocksMode;
-		s % astyle_SingleStatementsMode;
-		s % astyle_BreakBlocksMode;
-		s % astyle_BreakClosingHeaderBlocksMode;
-		s % astyle_BracketFormatMode;
-		s % astyle_ParensPaddingMode;
-		s % astyle_ParensUnPaddingMode;
-		s % astyle_OperatorPaddingMode;
-		s % astyle_EmptyLineFill;
-		s % astyle_TabSpaceConversionMode;
-		s % astyle_TestBox;
-	}
-	if(version >= 8)
-		s % LinuxHostConsole;
-	if(version >= 9)
-		editor.SerializeNavigator(s);
-	if(version >= 10)
-		s % showtime;
-	if(version >= 11) {
-		String d;
-		s % d;
-	}
-	if(version >= 12)
-		s % DiffFs();
-	if(version >= 13)
-		s % sort;
-	if(version >= 19)
-		s % output_per_assembly;
-	s.Magic();
-}
-
 void Ide::PutConsole(const char *s)
 {
 	console << s << "\n";
@@ -996,7 +856,7 @@ void AppMain___()
 			}
 		}
 
-		LoadFromFile(ide);
+		ide.LoadConfig();
 		if(arg.GetCount()==2){
 			LoadVars(arg[0]);
 			ide.SetMain(arg[1]);
@@ -1025,9 +885,6 @@ void AppMain___()
 
 		ide.editor_bottom.Zoom(0);
 		ide.right_split.Zoom(0);
-		ide.UpdateFormat();
-		RestoreKeys(LoadFile(ConfigFile("ide.key")));
-		ide.editor.LoadHlStyles(LoadFile(ConfigFile("ide.colors")));
 		if(FileExists(ConfigFile("developide"))) {
 	#ifdef PLATFORM_WIN32
 			InstallCrashDump();
@@ -1035,18 +892,16 @@ void AppMain___()
 			ActivateUsrLog();
 		}
 		if(clset || ide.OpenMainPackage()) {
-			StoreToFile(ide);
+			ide.SaveConfig();
 			SyncRefs();
 			ide.FileSelected();
 			ide.Run();
 		}
-		StoreToFile(ide);
+		ide.SaveConfig();
 	#ifdef PLATFORM_POSIX
 		StoreAsXMLFile(UpdaterCfg(),"SourceUpdater",ConfigFile("updates.xml"));
 	#endif
 		SaveCodeBase();
-		SaveFile(ConfigFile("ide.key"), StoreKeys());
-		SaveFile(ConfigFile("ide.colors"), ide.editor.StoreHlStyles());
 		DelTemps();
 		ReduceCache();
 	}

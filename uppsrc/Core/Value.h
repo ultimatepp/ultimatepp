@@ -4,8 +4,6 @@ class Id;
 class ValueArray;
 class ValueMap;
 
-#define SVO_VALUE
-
 const dword VOID_V    = 0;
 
 const dword INT_V     = 1;
