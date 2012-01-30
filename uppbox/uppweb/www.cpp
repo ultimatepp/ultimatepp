@@ -16,7 +16,6 @@ String uppsrc =    rootdir + "uppsrc";
 String reference = rootdir + "reference";
 String examples =  rootdir + "examples";
 String targetdir = "u:\\uppwww";
-String diffdir   = "u:\\wwwupp";
 String pdfdir    = "u:\\pdf";
 #else
 String rootdir = "/root/upp.src";
@@ -26,7 +25,6 @@ String reference = rootdir + "reference";
 String examples =  rootdir + "examples";
 String targetdir = "/var/www";
 String diffdir   = "/root/wwwupp";
-String pdfdir    = "/root/pdf";
 #endif
 String bazaar;
 bool outPdf;
@@ -629,6 +627,29 @@ void ExportPage(int i)
 	RLOG("Exported page " << links[i]);
 }
 
+String Downloads()
+{
+	String r;
+	FindFile ff(AppendFileName(targetdir, "downloads/*.*"));
+	Vector<Time> tm;
+	Vector<String> fn;
+	Vector<String> path;
+	while(ff) {
+		if(ff.IsFile()) {
+			tm.Add(ff.GetLastWriteTime());
+			fn.Add(ff.GetName());
+			path.Add(ff.GetPath());
+		}
+		ff.Next();
+	}
+	IndexSort2(tm, fn, path, StdGreater<Time>());
+	for(int i = 0; i < fn.GetCount(); i++)
+		if(i < 40)
+			r << "[^downloads/" << ff.GetName() << " \1" << fn[i] << "\1]&";
+		else
+			DeleteFile(ff.GetPath());
+	return r;
+}
 
 struct ProgramData {
 	String rootdir;
@@ -650,6 +671,8 @@ struct ProgramData {
 		;
 	}
 };
+
+
 
 CONSOLE_APP_MAIN
 {
@@ -673,7 +696,7 @@ CONSOLE_APP_MAIN
 		if (LoadFromXMLFile(data, configFile)) {
 			rootdir   = data.rootdir;
 			targetdir = data.targetdir;
-			diffdir   = data.diffdir;
+//			diffdir   = data.diffdir;
 			pdfdir    = data.pdfdir;	
 //			ftpupload = data.ftpUpload;
 			outPdf    = data.outPdf;
@@ -684,7 +707,7 @@ CONSOLE_APP_MAIN
 	if (!cfgloaded) {
 		data.rootdir   = rootdir;
 		data.targetdir = targetdir;
-		data.diffdir   = diffdir;
+//		data.diffdir   = diffdir;
 		data.pdfdir    = pdfdir;
 //		data.ftpUpload = ftpupload;
 		data.outPdf    = outPdf;
@@ -693,6 +716,8 @@ CONSOLE_APP_MAIN
 	}
 	Cout() << "RootDir: " << rootdir << "\n";
 	Cout() << "TargetDir: " << targetdir << "\n";
+
+	String downloads = Downloads();
 	
 	if (!DirectoryExists(rootdir)) {
 		Cout() << ("Directory " + DeQtf(rootdir) + " does not exist\n");
@@ -709,6 +734,7 @@ CONSOLE_APP_MAIN
 	InitWwwTpp();
 
 	languages.Add(LNG_('E','N','U','S'));		// en-us has to be the first one
+#ifndef _DEBUG // too slow to have them all while developing
 	languages.Add(LNG_('C','A','E','S'));
 	languages.Add(LNG_('C','S','C','Z'));
 	languages.Add(LNG_('D','E','D','E'));
@@ -719,6 +745,7 @@ CONSOLE_APP_MAIN
 	languages.Add(LNG_('R','U','R','U'));
 	languages.Add(LNG_('Z','H','C','N'));
 	languages.Add(LNG_('Z','H','T','W'));
+#endif
 	
 	RealizeDirectory(targetdir);
 	
@@ -896,6 +923,7 @@ CONSOLE_APP_MAIN
 			tt[i].text.Replace(DeQtf(x11), DeQtf(x11release));
 			tt[i].text.Replace(DeQtf(win32), DeQtf(win32release));
 		}
+		tt[i].text.Replace(String("<#downloads#>"), downloads);
 	}
 
 	for(int i = 0; i < reflink.GetCount(); i++) {
@@ -1002,55 +1030,4 @@ CONSOLE_APP_MAIN
 	         "</noscript>"
 	);
 	Cout() << "Finished OK\n";
-
-#if 0 // we are now doing this on server, directly copying to www directory
-	
-	if (!ftpupload)
-		return;
-	
-	RLOG("uppweb Finished, now about to upload the content");
-	
-	Vector<String> upload;
-	{
-		FindFile ff(AppendFileName(targetdir, "*.*"));
-		while(ff) {
-			if(ff.IsFile()) {
-				String s = LoadFile(AppendFileName(targetdir, ff.GetName()));
-				String f = AppendFileName(diffdir, ff.GetName());
-				if(LoadFile(f) != s) {
-					upload.Add(ff.GetName());
-					RLOG("upload: " << ff.GetName());
-				}
-			}
-			ff.Next();
-		}
-	}
-	RealizeDirectory(diffdir);
-	
-	if(upload.GetCount()) {
-		FtpClient ftp;
-		RLOG("Connecting ftp...");
-		if(!ftp.Connect(getenv("UPPFTP"), getenv("UPPFTPUSR"), getenv("UPPFTPPWD"), true)) {
-			RLOG("Unable to connect!" + ftp.GetError());
-			SetExitCode(1);
-			return;
-		}
-		if(!ftp.Cd("www")) {
-			RLOG("Unable to 'cd www'");
-			SetExitCode(1);
-			return;
-		}
-		for(int i = 0; i < upload.GetCount(); i++) {
-			RLOG("Uploading " << upload[i]);
-			String s = LoadFile(AppendFileName(targetdir, upload[i]));
-			if(!ftp.Save(upload[i], s)) {
-				RLOG("FTP error (file upload): " + ftp.GetError());
-				SetExitCode(1);
-				return;
-			}
-			SaveFile(AppendFileName(diffdir, upload[i]), s);
-		}
-	}
-	BeepInformation();
-#endif
 }
