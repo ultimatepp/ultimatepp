@@ -12,12 +12,11 @@ topic "Ultimate++ download";
 ::@2 [s0; [*2 Any]]
 :: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/checkout^2 SVN]&]
 [s0;= [^https`:`/`/gitorious`.org`/upp^2 GIT][2 `*]]
-:: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/downloads`/list^2 tarball]]
+:: [s0;= [^topic`:`/`/uppweb`/www`/nightly`$en`-us^2 tarball]]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 tarball]]
 :: [s0; [*2 MS Windows]]
 :: [s0;=2 ]
-:: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/downloads`/list^2 win32 
-installer]]
+:: [s0;= [^topic`:`/`/uppweb`/www`/nightly`$en`-us^2 win32 installer]]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 win32 
 installer]]
 :: [s0; [*2 Ubuntu]]
@@ -63,10 +62,10 @@ build and install the packages automatically.]&]
 [s0; &]
 [s1;#b0; Nightly builds&]
 [s0;2 &]
-[s0; [2 Every night there is automatic release published at ][^http`:`/`/code`.google`.com`/p`/upp`-mirror`/downloads`/list^2 h
-ttp://code.google.com/p/upp`-mirror/downloads/list][2 . Here you 
-can find windows installer (upp`-win32`-NNNN.exe) and source 
-tarball (upp`-x11`-src`-NNNN.tar.gz). ]&]
+[s0; [2 Every night there is automatic release published ][%DE-DE^topic`:`/`/uppweb`/www`/nightly`$en`-us^2 t
+opic://uppweb/www/nightly`$en`-us][2 . Here you can find windows 
+installer (upp`-win32`-NNNN.exe) and source tarball (upp`-x11`-src`-NNNN.tar.gz).
+ ]&]
 [s0;2 &]
 [s0; [2 If you are using Ubuntu or Debian based GNU/Linux distribution, 
 you can find deb packages (and also dsc source packages) of nightly 

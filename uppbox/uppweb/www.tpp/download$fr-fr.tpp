@@ -12,12 +12,11 @@ topic "Ultimate++ download";
 ::@2 [s0; [*2 Tous]]
 :: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/checkout^2 SVN]&]
 [s0;= [^https`:`/`/gitorious`.org`/upp^2 GIT][2 `*]]
-:: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/downloads`/list^2 archive]]
+:: [s0;= [^topic`:`/`/uppweb`/www`/nightly`$en`-us^2 archive]]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 archive]]
 :: [s0; [*2 MS Windows]]
 :: [s0;=2 ]
-:: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/downloads`/list^2 Installateur 
-win32]]
+:: [s0;= [^topic`:`/`/uppweb`/www`/nightly`$en`-us^2 Installateur win32]]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 Installateur 
 win32]]
 :: [s0; [*2 Ubuntu]]
@@ -75,10 +74,10 @@ automatiquement.]&]
 [s0; &]
 [s1;#b0; Binaires quotidiens&]
 [s0;2 &]
-[s0; [2 Chaque nuit, une version est automatiquement publié ici : ][^http`:`/`/code`.google`.com`/p`/upp`-mirror`/downloads`/list^2 h
-ttp://code.google.com/p/upp`-mirror/downloads/list][2 . Vous y trouverez 
-un installateur Windows (upp`-win32`-NNNN.exe) et une archive 
-des sources (upp`-x11`-src`-NNNN.tar.gz).]&]
+[s0; [2 Chaque nuit, une version est automatiquement publié ici : ][%DE-DE^topic`:`/`/uppweb`/www`/nightly`$en`-us^2 t
+opic://uppweb/www/nightly`$en`-us][2 . Vous y trouverez un installateur 
+Windows (upp`-win32`-NNNN.exe) et une archive des sources (upp`-x11`-src`-NNNN.ta
+r.gz).]&]
 [s0;2 &]
 [s0; [2 Si vous utilisez une distribution GNU/Linux basée sur Ubuntu 
 ou Debian, vous pourrez trouver des paquets ][C2 deb][2  (ainsi que 

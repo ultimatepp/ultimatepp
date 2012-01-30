@@ -12,12 +12,11 @@ topic "Ultimate++ herunterladen";
 ::@2 [s0; [*2 Jedes]]
 :: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/checkout^2 SVN]&]
 [s0;= [^https`:`/`/gitorious`.org`/upp^2 GIT][2 `*]]
-:: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/downloads`/list^2 tarball]]
+:: [s0;= [^topic`:`/`/uppweb`/www`/nightly`$en`-us^2 tarball]]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 tarball]]
 :: [s0; [*2 MS Windows]]
 :: [s0;=2 ]
-:: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/downloads`/list^2 win32 
-Installer]]
+:: [s0;= [^topic`:`/`/uppweb`/www`/nightly`$en`-us^2 win32 Installer]]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 win32 
 Installer]]
 :: [s0; [*2 Ubuntu]]
@@ -66,10 +65,10 @@ erstellen und installieren der Pakete.]&]
 [s1;#b0; Nightly `- Builds&]
 [s0;2 &]
 [s0; [2 Jede Nacht gibt es ein automatisches Release, welches unter 
-][^http`:`/`/code`.google`.com`/p`/upp`-mirror`/downloads`/list^2 http://code.google
-.com/p/upp`-mirror/downloads/list][2  veröffentlich wird. Dort 
-findest du den Installer für Windows (upp`-win21`-NNNN.exe) 
-und den Source`-Tarball (upp`-x11`-src`-NNNN.tar.gz). ]&]
+][^topic`:`/`/uppweb`/www`/nightly`$en`-us^2 topic://uppweb/www/nightly`$en`-us][2  
+veröffentlich wird. Dort findest du den Installer für Windows 
+(upp`-win21`-NNNN.exe) und den Source`-Tarball (upp`-x11`-src`-NNNN.tar.gz). 
+]&]
 [s0;2 &]
 [s0; [2 Wenn du Ubuntu oder eine auf Debian basierende GNU/Linux Distribution 
 nutzt, kannst du die Deb `- Pakete (und auch die dsc`-Quellpakete) 
