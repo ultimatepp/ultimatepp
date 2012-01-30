@@ -733,6 +733,12 @@ public:
 
 // ------------------------------------
 
+	Time      config_time;
+	void      LoadConfig();
+	void      SaveConfig();
+	void      CheckConfig();
+	void      FinishConfig();
+
 	int       GetPackageIndex();
 
 	void      BeepMuteExclamation() { if(!mute_sounds) BeepExclamation(); }
