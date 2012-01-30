@@ -200,7 +200,7 @@ Value StrIntValue(const char *s)
 		int64 q = ScanInt64(s);
 		return IsNull(q) ? ErrorValue(t_("Invalid number !")) : Value(q);
 	}
-	return Null;
+	return (int)Null;
 }
 
 Value StrDblValue(const char *s)
@@ -209,7 +209,7 @@ Value StrDblValue(const char *s)
 		double q = ScanDouble(s);
 		return IsNull(q) ? ErrorValue(t_("Invalid number !")) : Value(q);
 	}
-	return Null;
+	return (double)Null;
 }
 
 Value Scan(dword qtype, const String& text, const Value& def) {

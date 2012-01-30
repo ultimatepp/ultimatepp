@@ -34,6 +34,8 @@ inline bool operator==(Date a, Date b) {
 	return a.day == b.day && a.month == b.month && a.year == b.year;
 }
 
+template<> inline bool  IsNull(const Date& d)    { return d.year == -32768; }
+
 bool operator<(Date a, Date b);
 
 int   operator-(Date a, Date b);
@@ -112,6 +114,8 @@ inline unsigned GetHashValue(Time t) {
 	return t.second +
 		   32 * (t.minute + 32 * (t.hour + 16 * (t.day + 32 * (t.month + 8 * t.year))));
 }
+
+template<> inline bool  IsNull(const Time& t)    { return t.year == -32768; }
 
 bool operator==(Time a, Time b);
 bool operator<(Time a, Time b);

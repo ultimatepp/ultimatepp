@@ -56,7 +56,7 @@ struct Size_ : Moveable< Size_<T> > {
 	friend T      Squared(Size_ a)             { return a.cx * a.cx + a.cy * a.cy; }
 	friend double Length(Size_ a)              { return hypot(a.cx, a.cy); }
 
-	unsigned      GetHashValue() const         { return UPP::GetHashValue(cx) ^ UPP::GetHashValue(cy); }
+	unsigned      GetHashValue() const         { return CombineHash(cx, cy); }
 
 	String        ToString() const;
 
@@ -72,8 +72,13 @@ struct Size_ : Moveable< Size_<T> > {
 
 	Size_(const Nuller&)                       { cx = cy = Null; }
 
+#ifdef SVO_VALUE
+	operator Value() const                     { return FitsSvoValue<Size_>() ? SvoToValue(*this) : RichToValue(*this); }
+	Size_(const Value& src)                    { *this = src.Get<Size_>(); }
+#else
 	operator Value() const                     { return RichValue<Size_>(*this); }
 	Size_(const Value& src)                    { *this = RichValue<Size_>::Extract(src); }
+#endif
 
 	void Serialize(Stream& s)                  { s % cx % cy; }
 
@@ -158,7 +163,7 @@ struct Point_ : Moveable< Point_<T> > {
 
 	friend Point_ Nvl(Point_ a, Point_ b)           { return IsNull(a) ? b : a; }
 
-	unsigned      GetHashValue() const              { return UPP::GetHashValue(x) ^ UPP::GetHashValue(y); }
+	unsigned      GetHashValue() const              { return CombineHash(x, y); }
 
 	String        ToString() const;
 
@@ -174,8 +179,13 @@ struct Point_ : Moveable< Point_<T> > {
 
 	Point_(const Nuller&)                           { x = y = Null; }
 
+#ifdef SVO_VALUE
+	operator Value() const                          { return FitsSvoValue<Point_>() ? SvoToValue(*this) : RichToValue(*this); }
+	Point_(const Value& src)                        { *this = src.Get<Point_>(); }
+#else
 	operator Value() const                          { return RichValue<Point_>(*this); }
-	/*explicit */Point_(const Value& src)               { *this = RichValue<Point_>::Extract(src); }
+	Point_(const Value& src)                        { *this = RichValue<Point_>::Extract(src); }
+#endif
 
 	void Serialize(Stream& s)                       { s % x % y; }
 
@@ -336,7 +346,7 @@ struct Rect_ : Moveable< Rect_<T> > {
 
 	friend const Rect_& Nvl(const Rect_& a, const Rect_& b) { return IsNull(a) ? b : a; }
 
-	unsigned     GetHashValue() const           { return UPP::GetHashValue(left) ^ UPP::GetHashValue(top) ^ UPP::GetHashValue(right) ^ UPP::GetHashValue(bottom); }
+	unsigned     GetHashValue() const                       { return CombineHash(left, top, right, bottom); }
 
 	String ToString() const;
 

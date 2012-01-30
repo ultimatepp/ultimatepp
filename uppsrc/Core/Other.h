@@ -8,6 +8,17 @@ T& Single() {
 	return *p;
 }
 
+int RegisterTypeNo__(const char *type);
+
+template <class T>
+int StaticTypeNo() {
+	static int typeno;
+	ONCELOCK {
+		typeno = RegisterTypeNo__(typeid(T).name());
+	}
+	return typeno;
+}
+
 template <class T>
 class One : MoveableAndDeepCopyOption< One<T> > {
 	mutable T  *ptr;

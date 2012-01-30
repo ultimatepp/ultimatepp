@@ -144,13 +144,8 @@ public:
 };
 
 class String0 : Moveable<String0> {
-	enum { SMALL, MEDIUM = 31 };
-	enum { KIND = 14, SLEN = 15, LLEN = 2 };
-
-#if defined(_DEBUG) && defined(COMPILER_GCC)
-	int          len;
-	const char  *s;
-#endif
+	enum { SMALL = 0, MEDIUM = 31 }; // SMALL has to be 0 because of GetSpecial and because is it ending zero
+	enum { KIND = 14, SLEN = 15, LLEN = 2, SPECIAL = 13 };
 
 	struct Rc {
 		Atomic refcount;
@@ -170,6 +165,12 @@ class String0 : Moveable<String0> {
 		dword  w[4];
 		qword  q[2];
 	};
+
+
+#if defined(_DEBUG) && defined(COMPILER_GCC)
+	int          len;
+	const char  *s;
+#endif
 
 #ifdef _DEBUG
 	void Dsyn();
@@ -205,23 +206,31 @@ class String0 : Moveable<String0> {
 
 	static String0::Rc voidptr[2];
 
-	void Swap(String0& b)                           { UPP::Swap(q[0], b.q[0]); UPP::Swap(q[1], b.q[1]); Dsyn(); b.Dsyn(); }
-
+	void Swap(String0& b)         { UPP::Swap(q[0], b.q[0]); UPP::Swap(q[1], b.q[1]); Dsyn(); b.Dsyn(); }
+	
+	void SetSpecial0(byte st)     { w[3] = MAKE4B(0, st, 0, 0); }
+	void SetSpecial(byte st)      { ASSERT(IsSmall() && GetCount() == 0); SetSpecial0(st); }
+	byte GetSpecial() const       { return (chr[SLEN] | chr[KIND]) == 0 ? chr[SPECIAL] : 0; }
+	byte GetSt() const            { return chr[SPECIAL]; }
+	bool IsSpecial() const        { return !v[7] && v[6]; }
+	bool IsSpecial(byte st) const { return w[3] == MAKE4B(0, st, 0, 0); }
+	
 	friend class String;
 	friend class StringBuffer;
+	friend class Value;
 
 protected:
-	void Zero()                  { q[0] = q[1] = 0; Dsyn(); }
-	void Free()                  { if(IsLarge()) LFree(); }
+	void Zero()                     { q[0] = q[1] = 0; Dsyn(); }
+	void Free()                     { if(IsLarge()) LFree(); }
+	void SetSmall(const String0& s) { q[0] = s.q[0]; q[1] = s.q[1]; }
 	void Set(const String0& s) {
-		if(s.IsSmall()) { q[0] = s.q[0]; q[1] = s.q[1]; }
-		else LSet(s);
+		if(s.IsSmall()) SetSmall(s); else LSet(s);
 		Dsyn();
 	}
 	void Assign(const String0& s) {
 		if(s.IsSmall()) {
-			if(IsLarge()) LFree();
-			q[0] = s.q[0]; q[1] = s.q[1];
+			Free();
+			SetSmall(s);
 		}
 		else
 			if(this != &s) {
@@ -288,8 +297,8 @@ public:
 
 	String0& operator=(const String0& s) { Free(); Set(s); return *this; }
 
-	String0()                       { Zero(); }
-	~String0()                      { Free(); }
+	String0()                   {}
+	~String0()                  { Free(); }
 };
 
 class String : public Moveable<String, AString<String0> > {
@@ -304,7 +313,18 @@ class String : public Moveable<String, AString<String0> > {
 #endif
 
 	void AssignLen(const char *s, int slen);
+	
+	enum SSPECIAL { SPECIAL };
+	
+	template <class T>
+	String(const T& x, byte st, SSPECIAL) {
+		*(T*)chr = x;
+		SetSpecial0(st);
+	}
+	String(SSPECIAL) {}
 
+	friend class Value;
+	
 public:
 	const String& operator+=(char c)                       { Cat(c); return *this; }
 	const String& operator+=(const char *s)                { Cat(s); return *this; }
@@ -318,8 +338,8 @@ public:
 	void   Shrink()                                        { *this = String(Begin(), GetLength()); }
 	int    GetCharCount() const;
 
-	String()                                               {}
-	String(const Nuller&)                                  {}
+	String()                                               { Zero(); }
+	String(const Nuller&)                                  { Zero(); }
 	String(const String& s)                                { String0::Set(s); }
 	String(const char *s);
 	String(const String& s, int n)                         { ASSERT(n >= 0 && n <= s.GetLength()); String0::Set(~s, n); }
@@ -488,7 +508,7 @@ template<>
 inline String AsString(const String& s)     { return s; }
 
 template<>
-inline unsigned GetHashValue(const String& s) { return memhash(~s, s.GetLength()); }
+inline unsigned GetHashValue(const String& s) { return s.GetHashValue(); }
 
 int CompareNoCase(const String& a, const String& b, byte encoding = 0);
 int CompareNoCase(const String& a, const char *b, byte encoding = 0);
