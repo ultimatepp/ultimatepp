@@ -25,6 +25,7 @@ String reference = rootdir + "reference";
 String examples =  rootdir + "examples";
 String targetdir = "/var/www";
 String diffdir   = "/root/wwwupp";
+String pdfdir    = "/var/www";
 #endif
 String bazaar;
 bool outPdf;
@@ -175,8 +176,8 @@ Htmls SearchBar(const char *domain)
 
 	String style = "border: 0px solid black; "
 	               "padding-left:6px; padding-right:0px; "
-	               "padding-top:4px; padding-bottom:4px;";
-		               "border-top: 1px solid #6E89AE;";
+	               "padding-top:4px; padding-bottom:4px;"
+		           "border-top: 1px solid #6E89AE;";
 	return BarItem(content, style);
 }
 
