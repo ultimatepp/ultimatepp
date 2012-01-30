@@ -5,24 +5,29 @@
 .SH NAME
 umk \(hy Command line builder for Ultimate++ projects
 .SH SYNOPSIS
-.BI "umk " "assembly package "
-.R [-[a][b][e][r][s][S][v][1][2][m][d][M][l][x][X][Hn]]
-.R [+FLAG[,FLAG]...] [ out ]
-.LP TODO
+.BI "umk "
+.I assembly package build_method
+[-[a] [b] [e] [r] [s] [S] [v] [1] [2] [m] [d] [M] [l] [x] [X] [Hn]]
+[+FLAG[,FLAG]...] [ out ]
+
 .SH DESCRIPTION
-TODO
+.RB "Umk builds " package " from " assembly " using settings from " build_method
+.RB " and " FLAG "s. The resulting binary is created in " out "."
 .SH OPTIONS
 
 .IP assembly
-Selects in which assembly to look for package. It must be configured 
-in file 
-.I ~/.upp/theide/assembly.var
+Selects in which assembly to look for package. It can be a predefined assembly 
+(in .var file) which is in Win32 in directory where is located umk.exe 
+or in POSIX systems in directories ~, ~/.upp/umk, ~/.upp/theide 
+or ~/.upp/theide. Alternatively, it is a direct set of directories 
+that represent U++ assembly separated by ','.
 .
 .IP package
 Selects which package to use. The package must exist in selected assembly.
 .IP build_method
-Selects build method. It must be configured in file 
-.I ~/.upp/theide/build_method.bm
+Selects build method to be used to build the resulting executable, specified 
+either as name of build method (which is then searched for in ~, ~/.upp/umk, 
+~/.upp/theide ~/.upp/theide directories) or it is a direct path to the .bm file.
 .
 .LP
 .IP FLAGs
@@ -100,30 +105,14 @@ The assembly specifications.
 .RS
 The build methods configurations.
 .RE
-.I  ~/.upp/theide/theide.cfg
-.RS 
-Main configuration file.
-.RE
-.I  ~/.upp/theide/ide.colors
-.RS 
-Configuration of colors used in TheIDE.
-.RE
-.I  ~/.upp/theide/ide.key
-.RS 
-Configuration of key bindings in TheIDE.
-.RE
 .LP
-.IP NOTE: 
-None of these files is meant to be edited by hand. They can be created 
-and/or modified from within TheIDE. This is strongly recommended 
-since it is easier and safer.
 .SH EXAMPLES
-.B "theide examples UWord"
+.B "umk examples UWord"
 .RS
 Opens UWord (an example implementation of text proccesor) in TheIDE. 
 .RE
 .LP
-.B theide examples AddressBook GCC \-vasb ">GUI,MT" /tmp/ab
+.B umk examples AddressBook GCC \-vasb ">GUI,MT" /tmp/ab
 .RS
 Builds application AddressBook with verbose output, using 
 .BR gcc (1)
@@ -131,7 +120,7 @@ in debug mode, with GUI and multithreading support, links it using
 shared libraries and places it in /tmp/ab.
 .RE
 .LP
-.B theide uppsrc ide \-2sx ">GUI,MT" /tmp/ide
+.B umk uppsrc ide \-2sx ">GUI,MT" /tmp/ide
 .RS
 Exports Makefile and all the files needed to build TheIDE itself
 (with speed optimizations) into the directory /tmp/ide/.
