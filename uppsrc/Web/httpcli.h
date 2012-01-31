@@ -61,6 +61,7 @@ public:
 	int          GetStatusCode() const            { return status_code; }
 	String       GetStatusLine() const            { return status_line; }
 	String       GetHeaders() const               { return server_headers; }
+	String       GetBody() const                  { return body; }
 
 	bool         IsRedirect() const               { return is_redirect; }
 	String       GetRedirectURL() const           { return redirect_url; }
@@ -81,6 +82,7 @@ public:
 	bool         aborted;
 	bool         force_digest;
 	String       error;
+	String       body;
 
 	int          timeout_msecs;
 	int          max_header_size;
