@@ -5,19 +5,12 @@ optimize_speed;
 uses
 	Core;
 
+library(POSIX) bz2;
+
 file
 	Wrapper readonly separator,
 	bz2.h,
 	bz2upp.cpp,
-	src.tpp,
-	"BZ2 files" readonly separator,
-	lib/bzlib.h,
-	lib/blocksort.c,
-	lib/bzlib.c,
-	lib/bzlib_private.h,
-	lib/compress.c,
-	lib/crctable.c,
-	lib/decompress.c,
-	lib/huffman.c,
-	lib/randtable.c;
+	bzlib.c,
+	src.tpp;
 

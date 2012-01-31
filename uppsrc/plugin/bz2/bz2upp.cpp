@@ -1,7 +1,11 @@
 #include <Core/Core.h>
 #include <plugin/bz2/bz2.h>
-#include "lib/bzlib.h"
 
+#ifdef flagWIN32
+	#include "lib/bzlib.h"
+#else
+	#include <bzlib.h>
+#endif
 
 NAMESPACE_UPP
 
