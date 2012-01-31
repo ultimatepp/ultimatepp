@@ -424,7 +424,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		return String::GetVoid();
 	}
 	String chunked;
-	String body;
+	body.Clear();
 
 	while(body.GetLength() < content_length || content_length < 0 || tc_chunked) {
 		if(msecs(end_time) >= 0) {
