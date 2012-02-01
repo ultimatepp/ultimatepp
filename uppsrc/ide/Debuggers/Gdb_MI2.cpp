@@ -66,7 +66,7 @@ bool Gdb_MI2::RunTo()
 	// it'll be cleared automatically on first stop
 	if(!TryBreak(IdeGetFileName(), IdeGetFileLine(), true))
 	{
-		Exclamation("No code at chosen location !");
+		Exclamation(t_("No code at chosen location !"));
 		return false;
 	}
 
@@ -84,21 +84,37 @@ void Gdb_MI2::Run()
 	else
 		val = MICmd("exec-continue");
 
-	while(dbg && isRunning)
+	int i = 50;
+	while(!started && --i)
 	{
-		ReadGdb(false);
 		GuiSleep(20);
 		Ctrl::ProcessEvents();
+		ReadGdb(false);
 	}
-	if(!isRunning)
+	if(!started)
+	{
+		Exclamation(t_("Failed to start application"));
+		return;
+	}
+	Lock();
+	while(dbg && !stopped)
+	{
+		GuiSleep(20);
+		Ctrl::ProcessEvents();
+		ReadGdb(false);
+	}
+	Unlock();
+	if(stopped)
 		CheckStopReason();
 
+	started = stopped = false;
 	firstRun = false;
 	IdeActivateBottom();
 }
 
 void Gdb_MI2::Stop()
 {
+	started = stopped = false;
 	if(dbg && dbg->IsRunning())
 		dbg->Kill();
 }
@@ -166,7 +182,8 @@ Gdb_MI2::Gdb_MI2()
 
 	Transparent();
 
-	isRunning = false;
+	started = false;
+	stopped = false;
 }
 
 Gdb_MI2::~Gdb_MI2()
@@ -217,13 +234,13 @@ MIValue Gdb_MI2::ParseGdb(String const &output, bool wait)
 		// check 'running' and 'stopped' async output
 		if(s.StartsWith("*running"))
 		{
-			isRunning = true;
+			started = true;
 			stopReason.Clear();
 			continue;
 		}
 		else if(s.StartsWith("*stopped"))
 		{
-			isRunning = false;
+			stopped = true;
 			s = '{' + s.Mid(9) + '}';
 			stopReason = MIValue(s);
 			continue;
@@ -386,21 +403,19 @@ MIValue Gdb_MI2::ReadGdb(bool wait)
 // debugger run/stop status -- all remaining asynchrnonous output is discarded
 MIValue Gdb_MI2::MICmd(const char *cmdLine)
 {
-
 	// sends command to debugger and get result data
 
 	// should handle dbg unexpected termination ?
 	if(!dbg || !dbg->IsRunning() || IdeIsDebugLock())
 		return MIValue();
-	
+
 	// consume previous output from gdb... don't know why sometimes
 	// is there and gives problems to MI interface. We shall maybe
 	// parse and store it somewhere
 	ReadGdb(false);
-	Lock();
+
 	dbg->Write(String("-") + cmdLine + "\n");
-	Unlock();
-	
+
 	return ReadGdb();
 }
 
@@ -631,12 +646,38 @@ void Gdb_MI2::CheckStopReason(void)
 void Gdb_MI2::Step(const char *cmd)
 {
 	bool b = disas.HasFocus();
+
 	MIValue res = MICmd(cmd);
+
+	int i = 50;
+	while(!started && --i)
+	{
+		GuiSleep(20);
+		Ctrl::ProcessEvents();
+		ReadGdb(false);
+	}
+	if(!started)
+	{
+		Exclamation(t_("Failed to start application"));
+		return;
+	}
+
+	Lock();
+	ReadGdb(false);
+	while(dbg && !stopped)
+	{
+		GuiSleep(20);
+		Ctrl::ProcessEvents();
+		ReadGdb(false);
+	}
+	Unlock();
 	if(b)
 		disas.SetFocus();
 
-	if(!isRunning)
+	firstRun = false;
+	if(stopped)
 		CheckStopReason();
+	started = stopped = false;
 	IdeActivateBottom();
 }
 
@@ -920,7 +961,7 @@ bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdli
 	host = _host;
 	dbg = host->StartProcess("gdb " + GetHostPath(exefile) + " --interpreter=mi -q");
 	if(!dbg) {
-		Exclamation("Error invoking gdb !");
+		Exclamation(t_("Error invoking gdb !"));
 		return false;
 	}
 	IdeSetBottom(*this);
