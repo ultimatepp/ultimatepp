@@ -550,9 +550,19 @@ void Gdb_MI2::SyncDisas(MIValue &fInfo, bool fr)
 	adr_t adr = stou(~fInfo["addr"].Get().Mid(2), NULL, 16);
 	if(!disas.InRange(adr))
 	{
-		String file = fInfo["file"];
-		String line = fInfo["line"];
-		MIValue code = MICmd(Format("data-disassemble -f %s -l %s -n -1 -- 0", file, line))["asm_insns"];
+		MIValue code;
+		
+		// if frame is inside a source file, disassemble current function
+		if(fInfo.Find("file") >= 0 && fInfo.Find("line") >= 0)
+		{
+			String file = fInfo["file"];
+			String line = fInfo["line"];
+			code = MICmd(Format("data-disassemble -f %s -l %s -n -1 -- 0", file, line))["asm_insns"];
+		}
+		else
+			// otherwise disassemble some -100 ... +100 bytes around address
+			code = MICmd(Format("data-disassemble -s %x -e %x -- 0", (void *)(adr - 100), (void *)(adr + 100)))["asm_insns"];
+			
 		disas.Clear();
 		for(int iLine = 0; iLine < code.GetCount(); iLine++)
 		{
@@ -606,6 +616,17 @@ void Gdb_MI2::SyncIde(bool fr)
 	SyncDisas(fInfo, fr);
 }
 
+// logs frame data on console
+void Gdb_MI2::LogFrame(String const &msg, MIValue &frame)
+{
+	String file = frame("file", "<unknown>");
+	String line = frame("line", "<unknown>");
+	String function = frame("function", "<unknown>");
+	String addr = frame("addr", "<unknown>");
+
+	PutConsole(Format(msg + " at %s, function '%s', file '%s', line %s", addr, function, file, line));
+}
+
 // check for stop reason
 void Gdb_MI2::CheckStopReason(void)
 {
@@ -623,22 +644,12 @@ void Gdb_MI2::CheckStopReason(void)
 	}
 	else if(reason == "breakpoint-hit")
 	{
-		MIValue &v = stopReason["frame"];
-		String file 	= v["file"];
-		String line 	= v["line"];
-		String function = v["func"];
-		String addr 	= v["addr"];
-		PutConsole(Format("Hit breakpoint at %s, function '%s', file '%s', line %s", addr, function, file, line));
+		LogFrame("Hit breakpoint", stopReason["frame"]);
 		SyncIde();
 	}
 	else
 	{
-		MIValue &v = stopReason["frame"];
-		String file 	= v["file"];
-		String line 	= v["line"];
-		String function = v["func"];
-		String addr 	= v["addr"];
-		PutConsole(Format("Stopped at %s, function '%s', file '%s', line %s, reason '%s'", addr, function, file, line, stopReason["reason"].Get()));
+		LogFrame(Format("Stopped, reason '%s'", reason), stopReason["frame"]);
 		SyncIde();
 	}
 }
@@ -707,9 +718,9 @@ void Gdb_MI2::DisasFocus()
 String Gdb_MI2::FormatFrame(MIValue &fInfo, MIValue &fArgs)
 {
 	int idx = atoi(fInfo["level"].Get());
-	String func = fInfo["func"];
-	String file = fInfo["file"];
-	String line = fInfo["line"];
+	String func = fInfo("func", "<unknown>");
+	String file = fInfo("file", "<unknown>");
+	String line = fInfo("line", "<unknown>");
 	int nArgs = fArgs.GetCount();
 	String argLine;
 	for(int iArg = 0; iArg < nArgs; iArg++)
