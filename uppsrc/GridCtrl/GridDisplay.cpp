@@ -261,8 +261,6 @@ int GridDisplay::GetLinesCount(int cx, const wchar* s, const Font& font, bool wr
 	if(*s == 0)
 		return 0;
 
-//	int tcy = font.Info().GetHeight();
-
 	const wchar *p = s;
 	const wchar *t = s;
 		

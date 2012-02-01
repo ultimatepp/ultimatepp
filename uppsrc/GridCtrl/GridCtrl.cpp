@@ -180,6 +180,7 @@ GridCtrl::GridCtrl() : holder(*this)
 	fixed_height = 0;
 	total_width  = 0;
 	total_height = 0;
+	summary_height = 0;
 
 	ItemRect &ir = vitems.Add();
 	ir.parent = this;
@@ -1325,7 +1326,6 @@ void GridCtrl::Paint(Draw &w)
 			if(summary_row)
 			{
 				j = 0;
-//				Item &it = GetItemSize(j, i, x, y, cx, cy, skip, false, true);
 				cy = GD_HDR_HEIGHT;
 				y = sz.cy - cy;
 				if(w.IsPainting(x, y, cx, cy))
@@ -3344,8 +3344,6 @@ GridCtrl::CurState GridCtrl::SetCursor0(Point p, int opt, int dirx, int diry)
 
 		Item *oit = oldvalid ? &GetItem(oldcur) : NULL;
 
-//		bool diry_change = false;
-
 		while(true)
 		{
 			bool cur = IsValidCursor(tmpcur, fc, lc, fr, lr);
@@ -3777,8 +3775,6 @@ void GridCtrl::Recalc(bool horizontal, RectItems &its, int n, double size, doubl
 			}
 
 			double cps = sumprop != 0 ? -diff / sumprop : 0;
-
-//			bool isminmax = false;
 
 			for(int i = cnt - 1; i >= n + 1; --i)
 			{
@@ -4780,8 +4776,6 @@ void GridCtrl::SyncCtrls(int row, int col)
 				it = &items[it->idy][it->idx];
 				idx = it->idx;
 			}
-
-//			bool manual_ctrl = it->ctrl_flag & IC_MANUAL;
 
 			if(!it->ctrl && create_row && create_col && it->editable && edits[idx].factory)
 			{
@@ -6006,6 +6000,12 @@ bool GridCtrl::Go0(int jump, bool scroll, bool goleft, bool ctrlmode)
 
 	bool samerow = false;
 	bool doall = true;
+	
+	if(!ready)
+	{
+		UpdateSizes();
+		UpdateSb();
+	}
 
 	if(jump == GO_LEFT || jump == GO_RIGHT)
 	{
@@ -6469,7 +6469,7 @@ void GridCtrl::UpdateSb(bool horz, bool vert)
 
 	if(vert)
 	{
-		sby.SetTotal(resize_row_mode == 0 ? total_height - fixed_height + summary_height: 0);
+		sby.SetTotal(resize_row_mode == 0 ? total_height - fixed_height + summary_height : 0);
 		sby.SetPage(GetSize().cy - fixed_height);
 	}
 }
@@ -6607,7 +6607,6 @@ bool GridCtrl::Remove0(int row, int cnt /* = 1*/, bool recalc /* = true*/, bool 
 	if(cnt < 0)
 		return false;
 
-//	int minid = total_rows;
 	bool cancel = true;
 	int x = -1;
 	int y = -1;
@@ -6706,7 +6705,7 @@ bool GridCtrl::Remove0(int row, int cnt /* = 1*/, bool recalc /* = true*/, bool 
 		{
 			oldcur.x = oldcur.y = -1;
 		}
-		
+
 		if(whens && removed)
 			WhenRemovedRow();
 	}
@@ -6730,7 +6729,12 @@ bool GridCtrl::Remove0(int row, int cnt /* = 1*/, bool recalc /* = true*/, bool 
 				RebuildToolBar();
 		}
 	}
-
+	else if(recalc)
+	{
+		UpdateVisColRow(false);
+		recalc_rows = true;
+	}
+		
 	firstRow = -1;
 
 	if(IsEmpty())
@@ -7289,9 +7293,7 @@ void GridCtrl::DoRemove()
 	}
 	else
 	{
-//		int removed = 0;
 		int not_removed = 0;
-//		int tc = total_rows;
 
 		minRowSelected = GetMinRowSelected();
 		maxRowSelected = GetMaxRowSelected();
