@@ -400,6 +400,7 @@ void Ide::SetupFormat() {
 		(ide.mute_sounds, mute_sounds)
 		(ide.wrap_console_text, wrap_console_text)
 		(ide.hydra1_threads, hydra1_threads)
+		(ide.gdbSelector, gdbSelector)
 		(ide.chstyle, chstyle)
 		(ide.console, LinuxHostConsole)
 		(ide.output_per_assembly, output_per_assembly)

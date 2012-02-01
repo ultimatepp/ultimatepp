@@ -94,7 +94,7 @@ void Ide::SerializeWorkspace(Stream& s) {
 
 void Ide::Serialize(Stream& s) {
 	int version = 0;
-	s.Magic(0x1234321);
+	s.Magic(0x2345432);
 	s / version;
 	s % main;
 	s % AnySourceFs();
@@ -150,6 +150,7 @@ void Ide::Serialize(Stream& s) {
 	s % bordercolumn;
 	s % bordercolor;
 	s % hydra1_threads;
+	s % gdbSelector;
 	if(s.IsLoading())
 		console.SetSlots(hydra1_threads);
 	s % doc;

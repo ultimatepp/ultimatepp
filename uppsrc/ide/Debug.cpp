@@ -153,6 +153,7 @@ void Ide::BuildAndExtDebugFile()
 }
 
 One<Debugger> GdbCreate(One<Host> host, const String& exefile, const String& cmdline);
+One<Debugger> Gdb_MI2Create(One<Host> host, const String& exefile, const String& cmdline);
 #ifdef PLATFORM_WIN32
 One<Debugger> CdbCreate(One<Host> host, const String& exefile, const String& cmdline);
 One<Debugger> PdbCreate(One<Host> host, const String& exefile, const String& cmdline);
@@ -173,9 +174,18 @@ void Ide::BuildAndDebug(bool runto)
 	HideBottom();
 	editor.Disable();
 #ifdef COMPILER_MSC
-	debugger = builder == "GCC" ? GdbCreate(host, target, runarg) : PdbCreate(host, target, runarg);
+	if(builder == "GCC")
+		if(gdbSelector)
+			debugger = Gdb_MI2Create(host, target, runarg);
+		else
+			debugger = GdbCreate(host, target, runarg);
+	else
+		debugger = PdbCreate(host, target, runarg);
 #else
-	debugger = GdbCreate(host, target, runarg);
+	if(gdbSelector)
+		debugger = Gdb_MI2Create(host, target, runarg);
+	else
+		debugger = GdbCreate(host, target, runarg);
 #endif
 	if(!debugger) return;
 	debuglock = 0;

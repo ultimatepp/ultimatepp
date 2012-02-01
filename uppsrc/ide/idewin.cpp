@@ -311,6 +311,8 @@ Ide::Ide()
 	stat_build_time = 0;
 	build_start_time = Null;
 	hydra1_threads = CPU_Cores();
+	
+	gdbSelector = 0;
 
 	chstyle = 0;
 
