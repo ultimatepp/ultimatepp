@@ -534,6 +534,8 @@ public:
 	int        idestate;
 	int        debuglock;
 	int        hydra1_threads;
+	
+	int        gdbSelector;
 
 	int        chstyle;
 

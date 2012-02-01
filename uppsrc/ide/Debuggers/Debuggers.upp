@@ -6,12 +6,19 @@ uses
 	HexView;
 
 file
+	MIValue.h,
+	MIValue.cpp,
 	Debuggers.h,
 	Debuggers.iml,
 	Gdb.lay,
 	Disas.cpp,
 	Dbg.cpp,
 	Gdb.cpp,
+	Gdb_MI2.lay,
+	Gdb_MI2.h,
+	Gdb_MI2.cpp,
+	PrettyPrinters.brc,
+	PrettyPrinters.py,
 	PDB readonly separator,
 	Pdb.h,
 	cvconst.h,
@@ -25,5 +32,6 @@ file
 	Pdb.cpp,
 	Pdb.key,
 	Info readonly separator,
-	Copying;
+	Copying,
+	srcimp.tpp;
 

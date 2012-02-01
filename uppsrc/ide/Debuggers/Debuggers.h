@@ -169,6 +169,8 @@ struct Gdb : Dbg {
 	virtual ~Gdb();
 };
 
+#include "Gdb_MI2.h"
+
 #ifdef COMPILER_MSC
 #include "Pdb.h"
 #endif
