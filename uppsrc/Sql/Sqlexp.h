@@ -418,6 +418,7 @@ public:
 	SqlSet&          Cat(const SqlVal& val); // adding a member
 	SqlSet&          Cat(const SqlSet& set);
 	SqlSet&          operator|=(const SqlVal& val)  { return Cat(val); }
+	SqlSet&          operator<<(const SqlVal& val)  { return Cat(val); }
 
 	SqlSet&          operator|=(const SqlSet& set)  { return *this = *this | set; }
 	SqlSet&          operator&=(const SqlSet& set)  { return *this = *this & set; }
