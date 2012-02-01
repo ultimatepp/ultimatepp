@@ -36,8 +36,9 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		Vector<Label *> reglbl;
 		void AddReg(const char *reg, Label *lbl) { regname.Add(reg); reglbl.Add(lbl); }
 
-		// running flag -- setup by ReadGdb function when async input is catched
-		bool isRunning;
+		// running flags -- setup by ReadGdb function when async input is catched
+		bool started;
+		bool stopped;
 		MIValue stopReason;
 	
 		// read debugger output analyzing command responses
