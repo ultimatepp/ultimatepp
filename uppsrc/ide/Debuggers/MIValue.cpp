@@ -261,6 +261,20 @@ String const &MIValue::Get(void) const
 	return string;
 }
 		
+// tuple string member accessor with default value if not found
+String MIValue::Get(const char *key, const char *def) const
+{
+	ASSERT(type == MITuple);
+	int i = tuple.Find(key);
+	if(i >= 0)
+	{
+		ASSERT(tuple[i].type == MIString);
+		return tuple[i];
+	}
+	else
+		return def;
+}
+
 // data dump
 String MIValue::Dump(int level)
 {

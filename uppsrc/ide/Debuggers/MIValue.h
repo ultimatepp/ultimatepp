@@ -53,7 +53,10 @@ class MIValue : public Moveable<MIValue>
 		operator const String &() const { return Get(); }
 		String &ToString(void) { return Get(); }
 		String const &ToString(void) const { return Get(); }
-//		operator const char *() { return Get(); }
+		
+		// tuple string member accessor with default value if not found
+		String Get(const char *key, const char *def) const;
+		String operator()(const char *key, const char *def) const  { return Get(key, def); }
 		
 		// some type checking
 		bool IsArray(void) { return type == MIArray; }

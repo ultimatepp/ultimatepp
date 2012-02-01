@@ -76,6 +76,9 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		// update local variables on demand
 		void UpdateLocalVars(void);
 		
+		// logs frame data on console
+		void LogFrame(String const &msg, MIValue &frame);
+
 		// check for stop reason
 		void CheckStopReason(void);
 		
