@@ -593,10 +593,13 @@ void Gdb_MI2::SyncIde(bool fr)
 	// if we got file and line info, we can sync the source editor position
 	if(fInfo.Find("file") >= 0 && fInfo.Find("line") >= 0)
 	{
-		String file = fInfo["file"];
+		String file = GetLocalPath(fInfo["file"]);
 		int line = atoi(fInfo["line"].Get());
-		IdeSetDebugPos(GetLocalPath(file), line - 1, fr ? DbgImg::FrameLinePtr() : DbgImg::IpLinePtr(), 0);
-		IdeSetDebugPos(GetLocalPath(file), line - 1, disas.HasFocus() ? fr ? DbgImg::FrameLinePtr() : DbgImg::IpLinePtr() : Image(), 1);
+		if(FileExists(file))
+		{
+			IdeSetDebugPos(GetLocalPath(file), line - 1, fr ? DbgImg::FrameLinePtr() : DbgImg::IpLinePtr(), 0);
+			IdeSetDebugPos(GetLocalPath(file), line - 1, disas.HasFocus() ? fr ? DbgImg::FrameLinePtr() : DbgImg::IpLinePtr() : Image(), 1);
+		}
 	}
 
 	// i we got an address, we can sync the assembly position
