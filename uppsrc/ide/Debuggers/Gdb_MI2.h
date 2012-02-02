@@ -30,6 +30,24 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		ArrayCtrl locals;
 		ArrayCtrl watches;
 		ArrayCtrl autos;
+
+		// explorer stuffs -- just starting
+		ArrayCtrl explorer;
+		EditString explorerExpr;
+		Button explorerBackBtn, explorerForwardBtn;
+		StaticRect explorerPane;
+		void onExploreExpr(ArrayCtrl *what = NULL);
+		void onExplorerChild();
+		void onExplorerBack();
+		void onExplorerForward();
+		void ExplorerMenu(Bar& bar);
+		void doExplore(String const &expr, String var, bool isChild, bool appendHistory);
+		Index<String> explorerHistoryExpressions;
+		Index<String> explorerHistoryVars;
+		Vector<bool> explorerHistoryChilds;
+		int explorerHistoryPos;
+		Vector<String> explorerChildVars;
+
 		Label dlock;
 	
 		Vector<String> regname;
