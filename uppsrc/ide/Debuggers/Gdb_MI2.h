@@ -70,11 +70,23 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		// just changed variables gets re-updated from GDB
 		// on frame change, all values are wiped and re-read from GDB
 		Vector<String>localVarTypes;
-		Vector<String>localVarExpressions;
+		Index<String>localVarExpressions;
 		Vector<String>localVarValues;
 		
+		// stored watches expressions, values and types
+		Index<String>watchesNames;
+		Vector<String>watchesTypes;
+		Index<String>watchesExpressions;
+		Vector<String>watchesValues;
+		
+		// update variables on demand (locals, watches....)
+		void UpdateVars(void);
+
 		// update local variables on demand
 		void UpdateLocalVars(void);
+		
+		// update stored watches values on demand
+		void UpdateWatches(void);
 		
 		// logs frame data on console
 		void LogFrame(String const &msg, MIValue &frame);

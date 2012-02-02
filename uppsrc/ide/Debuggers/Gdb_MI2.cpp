@@ -458,89 +458,6 @@ bool Gdb_MI2::TryBreak(String const &file, int line, bool temp)
 	return !res.IsError();
 }
 
-/*
-void Gdb_MI2::SetDisas(const String& text)
-{
-	disas.Clear();
-	StringStream ss(text);
-	while(!ss.IsEof()) {
-		String ln = ss.GetLine();
-		CParser p(ln);
-		if(p.Char2('0', 'x')) {
-			dword adr = p.IsNumber(16) ? p.ReadNumber(16) : 0;
-			String code;
-			String args;
-			int level = 0;
-			while(!p.IsEof()) {
-				if(p.Char(':') && level == 0)
-					break;
-				else
-				if(p.Char('<'))
-					level++;
-				else
-				if(p.Char('>'))
-					level--;
-				else
-					p.GetChar();
-			}
-			p.Spaces();
-			if(p.IsId()) {
-				code = p.ReadId();
-				for(;;) {
-					if(p.Spaces())
-						args.Cat(' ');
-					if(p.IsEof())
-						break;
-					if(p.Char2('0', 'x')) {
-						dword adr = 0;
-						if(p.IsNumber(16))
-							adr = p.ReadNumber(16);
-						String fname;
-						bool   usefname = false;
-						if(p.Char('<')) {
-							const char *b = p.GetPtr();
-							int level = 1;
-							usefname = true;
-							while(!p.IsEof()) {
-								if(p.Char('>') && --level == 0) {
-									fname = String(b, p.GetPtr() - 1);
-									break;
-								}
-								if(p.Char('<'))
-									level++;
-								if(p.Char('+'))
-									usefname = false;
-								else {
-									p.GetChar();
-									p.Spaces();
-								}
-							}
-						}
-						args << (usefname ? fname : Sprintf("0x%X", adr));
-						disas.AddT(adr);
-					}
-					else
-					if(p.Id("DWORD"))
-						args.Cat("dword ");
-					else
-					if(p.Id("WORD"))
-						args.Cat("word ");
-					else
-					if(p.Id("BYTE"))
-						args.Cat("byte ");
-					else
-					if(p.Id("PTR"))
-						args.Cat("ptr ");
-					else
-						args.Cat(p.GetChar());
-				}
-			}
-			disas.Add(adr, code, args);
-		}
-	}
-}
-*/
-
 void Gdb_MI2::SyncDisas(MIValue &fInfo, bool fr)
 {
 	if(!disas.IsVisible())
@@ -615,7 +532,7 @@ void Gdb_MI2::SyncIde(bool fr)
 	frame.Add(0, FormatFrame(fInfo, fArgs));
 	frame <<= 0;
 	
-	SyncLocals();
+	SyncData();
 	SyncDisas(fInfo, fr);
 }
 
@@ -770,6 +687,32 @@ void Gdb_MI2::ShowFrame()
 	SyncIde(i);
 }
 
+// update variables on demand (locals, watches....)
+void Gdb_MI2::UpdateVars(void)
+{
+	MIValue updated = MICmd("var-update 2 *")["changelist"];
+	for(int iUpd = 0; iUpd < updated.GetCount(); iUpd++)
+	{
+		String varName = updated[iUpd]["name"];
+		int iVar;
+
+		// local variables
+		if( (iVar = localVarNames.Find(varName)) < 0)
+			continue;
+		if( updated[iUpd].Find("value") < 0)
+			continue;
+		localVarValues[iVar] = updated[iUpd]["value"];
+		
+		// watches
+		if( (iVar = watchesNames.Find(varName)) < 0)
+			continue;
+		if( updated[iUpd].Find("value") < 0)
+			continue;
+		watchesValues[iVar] = updated[iUpd]["value"];
+		
+	}
+}
+
 // update local variables on demand
 void Gdb_MI2::UpdateLocalVars(void)
 {
@@ -786,9 +729,10 @@ void Gdb_MI2::UpdateLocalVars(void)
 	// anymore... that can happen, for example, exiting from a loop
 	for(int iVar = localVarNames.GetCount() - 1; iVar >= 0; iVar--)
 	{
-		if(locIdx.Find(localVarNames[iVar]) < 0)
+		if(locIdx.Find(localVarExpressions[iVar]) < 0)
 		{
-			localVarNames.Pop();
+			String varName = localVarNames.Pop();
+			MICmd("var-delete " + varName);
 			localVarExpressions.Pop();
 			localVarValues.Pop();
 			localVarTypes.Pop();
@@ -798,7 +742,7 @@ void Gdb_MI2::UpdateLocalVars(void)
 	// then we shall add missing variables
 	for(int iLoc = 0; iLoc < locIdx.GetCount(); iLoc++)
 	{
-		if(localVarNames.Find(locIdx[iLoc]) < 0)
+		if(localVarExpressions.Find(locIdx[iLoc]) < 0)
 		{
 			MIValue var = MICmd(String("var-create - * ") + locIdx[iLoc]);
 			
@@ -814,19 +758,52 @@ void Gdb_MI2::UpdateLocalVars(void)
 	}
 	
 	// and finally, we do an update to refresh changed variables
-	MIValue updated = MICmd("var-update 2 *")["changelist"];
-	for(int iUpd = 0; iUpd < updated.GetCount(); iUpd++)
-	{
-		String varName = updated[iUpd]["name"];
-		int iVar;
-		if( (iVar = localVarNames.Find(varName)) < 0)
-			continue;
-		if( updated[iUpd].Find("value") < 0)
-			continue;
-		localVarValues[iVar] = updated[iUpd]["value"];
-	}
+	UpdateVars();
 }
+
+// update stored watches values on demand
+void Gdb_MI2::UpdateWatches(void)
+{
+	// gets variable names from control
+	Index<String> exprs;
+	for(int i = 0; i < watches.GetCount(); i++)
+		exprs.Add(watches.Get(i, 0));
 	
+	// purge stored watches not available anymore
+	for(int iVar = watchesNames.GetCount() - 1; iVar >= 0;  iVar--)
+	{
+		if(exprs.Find(watchesExpressions[iVar]) < 0)
+		{
+			String varName = watchesNames.Pop();
+			MICmd("var-delete " + varName);
+			watchesExpressions.Pop();
+			watchesValues.Pop();
+			watchesTypes.Pop();
+		}
+	}
+
+	// then we shall add missing variables
+	for(int i = 0; i < exprs.GetCount(); i++)
+	{
+		if(watchesExpressions.Find(exprs[i]) < 0)
+		{
+			// the '@' means we create a dynamic variable
+			MIValue var = MICmd(String("var-create - @ ") + exprs[i]);
+			
+			// sometimes it has problem creating vars... maybe because they're
+			// still not active; we just skip them
+			if(var.IsError() || var.IsEmpty())
+				continue;
+			watchesNames.Add(var["name"]);
+			watchesExpressions.Add(exprs[i]);
+			watchesTypes.Add(var["type"]);
+			watchesValues.Add(var["value"]);
+		}
+	}
+
+	// and finally, we do an update to refresh changed variables
+	UpdateVars();
+}
 
 void Gdb_MI2::SyncLocals()
 {
@@ -844,12 +821,21 @@ void Gdb_MI2::SyncLocals()
 // sync watches treectrl
 void Gdb_MI2::SyncWatches()
 {
-/*
+	// update local watches cache, if needed
+	UpdateWatches();
+	
+	// re-fill the control
 	VectorMap<String, String> prev = DataMap(watches);
 	for(int i = 0; i < watches.GetCount(); i++)
-		watches.Set(i, 1, Print(watches.Get(i, 0)));
+	{
+		String expr = watches.Get(i, 0);
+		int idx = watchesExpressions.Find(expr);
+		if(idx >= 0)
+			watches.Set(i, 1, "(" + watchesTypes[idx] + ")" + watchesValues[idx]);
+		else
+			watches.Set(i, 1, t_("<can't evaluate expression>"));
+	}
 	MarkChanged(prev, watches);
-*/
 }
 
 // sync auto vars treectrl
@@ -923,7 +909,7 @@ void Gdb_MI2::SendPrettyPrinters(void)
 	String fName = GetTempFileName();
 	fName = fName.Left(fName.GetCount() - 3) + "py";
 	SaveFile(fName, (const char *)PrettyPrinters);
-	DLOG(MICmd("interpreter-exec console \"source " + fName + "\"").Dump());
+	MICmd("interpreter-exec console \"source " + fName + "\"");
 	FileDelete(fName);
 }
 
