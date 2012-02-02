@@ -96,7 +96,7 @@ void Ide::Serialize(Stream& s) {
 	int version = 0;
 	s.Magic(0x2345432);
 	s / version;
-	s % main;
+	s % last_main;
 	s % AnySourceFs();
 	s % BasedSourceFs();
 	s % AnyPackageFs();
@@ -207,8 +207,8 @@ void Ide::LoadConfig()
 		FileCursor();
 	}
 	SaveLoadPackage();
-	SyncCh();}
-
+	SyncCh();
+}
 
 void Ide::CheckConfig()
 {
