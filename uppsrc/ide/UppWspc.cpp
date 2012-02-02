@@ -434,7 +434,7 @@ ImportDlg::ImportDlg()
 	files <<= "*.cpp *.h *.hpp *.c *.C *.cxx *.cc";
 }
 
-bool FileOrder(const String& a, const String& b)
+bool FileOrder_(const String& a, const String& b)
 {
 	return stricmp(a, b) < 0;
 }
@@ -463,8 +463,8 @@ void WorkspaceWork::DoImportTree(const String& dir, const String& mask, bool sep
 		f = relPath;
 		f.separator = f.readonly = true;
 	}
-	Sort(files, FileOrder);
-	Sort(dirs, FileOrder);
+	Sort(files, &FileOrder_);
+	Sort(dirs, &FileOrder_);
 	for(int i = 0; i < files.GetCount(); i++) {
 		if(pi.StepCanceled())
 			throw String();
@@ -506,8 +506,8 @@ void WorkspaceWork::DoImport(const String& dir, const String& mask, bool sep, Pr
 		f = GetFileTitle(dir);
 		f.separator = f.readonly = true;
 	}
-	Sort(files, FileOrder);
-	Sort(dirs, FileOrder);
+	Sort(files, &FileOrder_);
+	Sort(dirs, &FileOrder_);
 	for(int i = 0; i < files.GetCount(); i++) {
 		if(pi.StepCanceled())
 			throw String();
