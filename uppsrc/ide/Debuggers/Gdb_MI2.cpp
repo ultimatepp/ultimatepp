@@ -152,17 +152,44 @@ Gdb_MI2::Gdb_MI2()
 	locals.NoHeader();
 	locals.AddColumn("", 1);
 	locals.AddColumn("", 6);
+	locals.WhenLeftDouble = THISBACK1(onExploreExpr, &locals);
+
 	watches.NoHeader();
 	watches.AddColumn("", 1).Edit(watchedit);
 	watches.AddColumn("", 6);
 	watches.Inserting().Removing();
+	watches.WhenLeftDouble = THISBACK1(onExploreExpr, &watches);
+
+	int c = EditField::GetStdHeight();
+	explorer.AddColumn("", 1);
+	explorer.AddColumn("", 6) /*.SetDisplay(Single<VisualDisplay>()) */;
+	explorerPane.Add(explorerBackBtn.LeftPos(0, c).TopPos(0, c));
+	explorerPane.Add(explorerForwardBtn.LeftPos(c + 2, c).TopPos(0, c));
+	explorerPane.Add(explorerExpr.HSizePos(2 * c + 4).TopPos(0, c));
+	explorerPane.Add(explorer.HSizePos().VSizePos(EditField::GetStdHeight(), 0));
+	explorer.NoHeader();
+	explorer.WhenLeftDouble = THISBACK(onExplorerChild);
+	explorer.WhenBar = THISBACK(ExplorerMenu);
+
+	explorerBackBtn.SetImage(DbgImg::ExplorerBack());
+	explorerBackBtn <<= THISBACK(onExplorerBack);
+	explorerForwardBtn.SetImage(DbgImg::ExplorerFw());
+	explorerForwardBtn <<= THISBACK(onExplorerForward);
+	explorerBackBtn.Disable();
+	explorerForwardBtn.Disable();
+	explorerHistoryPos = -1;
+
 	autos.NoHeader();
 	autos.AddColumn("", 1);
 	autos.AddColumn("", 6);
+
 	Add(tab.SizePos());
-	tab.Add(watches.SizePos(), "Watches");
-	tab.Add(locals.SizePos(), "Locals");
-	tab.Add(autos.SizePos(), "Autos");
+	tab.Add(watches.SizePos(), t_("Watches"));
+	tab.Add(locals.SizePos(), t_("Locals"));
+	tab.Add(explorerPane.SizePos(), t_("Explorer"));
+	
+//	tab.Add(autos.SizePos(), "Autos");
+
 	Add(frame.HSizePos(200, 0).TopPos(2, EditField::GetStdHeight()));
 	frame.Ctrl::Add(dlock.SizePos());
 	dlock = "  Running..";
@@ -954,6 +981,153 @@ void Gdb_MI2::CopyDisas()
 {
 	disas.WriteClipboard();
 }
+
+/////////////////////////////////////  EXPLORER //////////////////////////////////////////////////////
+
+void Gdb_MI2::doExplore(String const &expr, String var, bool isChild, bool appendHistory)
+{
+	// set the expression inside expression editor
+	explorerExpr = expr;
+	
+	// try to find a suitable already created var inside history
+	// if not, and if not a child, we shall create it
+	if(var.IsEmpty())
+	{
+		// empty var is allowed ONLY for non-childs exploring
+		if(isChild)
+			return;
+		
+		int iVar = explorerHistoryExpressions.Find(expr);
+		if(iVar < 0)
+		{
+			MIValue v = MICmd("var-create - @ " + expr);
+			if(v.IsEmpty() || v.IsError())
+				return;
+			var = v["name"];
+		}
+		else
+			var = explorerHistoryVars[iVar];
+	}
+
+	// update the history : trim it from past current position
+	// and append it at end
+	if(appendHistory)
+	{
+		if(explorerHistoryPos >= 0)
+		{
+			// frees all non-child variables following current position
+			for(int i = explorerHistoryPos + 1; i < explorerHistoryVars.GetCount(); i++)
+			{
+				if(!explorerHistoryChilds[i] && explorerHistoryVars[i] != var)
+				{
+					MICmd("var-delete " + explorerHistoryVars[i]);
+				}
+			}
+			explorerHistoryPos++;
+			explorerHistoryExpressions.Trim(explorerHistoryPos);
+			explorerHistoryVars.Trim(explorerHistoryPos);
+			explorerHistoryChilds.Trim(explorerHistoryPos);
+		}
+		else
+			explorerHistoryPos = 0;
+		explorerHistoryExpressions.Add(expr);
+		explorerHistoryVars.Add(var);
+		explorerHistoryChilds.Add(isChild);
+	}
+	
+	// here we've finally got variable to explore, just read it
+	// and set into first row of explorer ArrayCtrl
+	String value = MICmd("var-evaluate-expression " + var)["value"];
+	String type = MICmd("var-info-type " + var)["type"];
+	explorer.Clear();
+	explorerChildVars.Clear();
+	explorer.Add("=", "(" + type + ")" + value, var);
+	
+	// now we shall add variable children... we limit them to a number of 100
+	// which should be anough. Alternative would be to display them in ranges,
+	// but this over-complicates the application.
+	MIValue childInfo = MICmd("var-list-children 1 " + var + " 0 100");
+	int nChilds = min(atoi(childInfo["numchild"].Get()), 100);
+	if(nChilds)
+	{
+		MIValue &childs = childInfo["children"];
+		for(int i = 0; i < childs.GetCount(); i++)
+		{
+			MIValue child = childs[i];
+			explorer.Add(child["exp"].Get(), "(" + child["type"].Get() + ")" + child["value"].Get());
+			explorerChildVars.Add(child["name"]);
+		}
+	}
+	
+	explorerBackBtn.Enable(explorerHistoryPos > 0);
+	explorerForwardBtn.Enable(explorerHistoryPos < explorerHistoryVars.GetCount() - 1);
+}
+
+// 
+void Gdb_MI2::onExploreExpr(ArrayCtrl *what)
+{
+	String expr;
+	if(!what)
+	{
+		// if expression don't come from another ArrayCtrl
+		// we use the expression editbox
+		expr = ~explorerExpr;
+	}
+	{
+		// otherwise, we use the expression from sending ArrayCtrl
+		int line = what->GetCursor();
+		if(line >= 0)
+			expr = what->Get(line, 0);
+	}
+	// nothing to do on empty expression
+	if(expr == "")
+		return;
+	doExplore(expr, "", false, true);
+	
+	// activate explorer tab
+	tab.Set(2);
+}
+
+void Gdb_MI2::onExplorerChild()
+{
+	// click on first line (value line) does nothing
+	int line = explorer.GetCursor();
+	if(line < 1)
+		return;
+	if(--line < explorerChildVars.GetCount())
+	{
+		String var = explorerChildVars[line];
+		String expr = MICmd("var-info-expression " + var)["exp"];
+		doExplore(expr, var, true, true);
+	}
+}
+
+void Gdb_MI2::onExplorerBack()
+{
+	if(explorerHistoryPos < 1)
+		return;
+	explorerHistoryPos--;
+	String expr = explorerHistoryExpressions[explorerHistoryPos];
+	String var = explorerHistoryVars[explorerHistoryPos];
+	bool isChild = explorerHistoryChilds[explorerHistoryPos];
+	doExplore(expr, var, isChild, false);
+}
+
+void Gdb_MI2::onExplorerForward()
+{
+	if(explorerHistoryPos >= explorerHistoryVars.GetCount() - 1)
+		return;
+	explorerHistoryPos++;
+	String expr = explorerHistoryExpressions[explorerHistoryPos];
+	String var = explorerHistoryVars[explorerHistoryPos];
+	bool isChild = explorerHistoryChilds[explorerHistoryPos];
+	doExplore(expr, var, isChild, false);
+}
+
+void Gdb_MI2::ExplorerMenu(Bar& bar)
+{
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // create GDB process and initializes it
 bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdline)
