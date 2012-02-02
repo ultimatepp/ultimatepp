@@ -137,10 +137,10 @@ void Ide::Serialize(Stream& s) {
 	s % header_guards;
 	s % insert_include;
 	String varsname = GetVarsName();
-	s % varsname;
+	s % varsname; // What is the point of this?!
 	s % pocfg;
-	if(s.IsLoading())
-		LoadVars(varsname);
+//	if(s.IsLoading())
+//		LoadVars(varsname);
 	SerializeGlobalConfigs(s);
 	doc.Serialize(s);
 	s % right_split;
