@@ -92,10 +92,11 @@ inline void SqlSchemaInitClear(T *a, int n) {
 		SqlSchemaInitClear(*a++);
 }
 
-inline void SqlSchemaInitClear(int& a)    { a = Null; }
-inline void SqlSchemaInitClear(double& a) { a = Null; }
-inline void SqlSchemaInitClear(int64& a)  { a = Null; }
-inline void SqlSchemaInitClear(bool& a)   { a = false; }
+
+template<> inline void SqlSchemaInitClear(int& a)    { a = Null; }
+template<> inline void SqlSchemaInitClear(double& a) { a = Null; }
+template<> inline void SqlSchemaInitClear(int64& a)  { a = Null; }
+template<> inline void SqlSchemaInitClear(bool& a)   { a = false; }
 
 template <class T>
 inline void SqlSchemaClear(T& a)          { a = Null; }
