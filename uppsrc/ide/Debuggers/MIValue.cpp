@@ -11,7 +11,6 @@ int MIValue::ParsePair(String &name, MIValue &val, String const &s, int i)
 	if(s[i] != '=')
 		return i;
 	i++;
-	
 	switch(s[i])
 	{
 		case '"':
@@ -41,7 +40,8 @@ int MIValue::ParseTuple(String const &s, int i)
 	type = MITuple;
 	
 	// drop opening delimiter
-	ASSERT(s[i++] == '{');
+	ASSERT(s[i] == '{');
+	i++;
 	while(s[i] && s[i] != '}')
 	{
 		String name;
@@ -50,7 +50,8 @@ int MIValue::ParseTuple(String const &s, int i)
 		tuple.Add(name, val);
 		if(s[i] == '}')
 			break;
-		ASSERT(s[i++] == ',');
+		ASSERT(s[i] == ',');
+		i++;
 	}
 	return i + 1;
 }
@@ -61,7 +62,8 @@ int MIValue::ParseArray(String const &s, int i)
 	type = MIArray;
 	
 	// drop opening delimiter
-	ASSERT(s[i++] == '[');
+	ASSERT(s[i] == '[');
+	i++;
 	while(s[i] && s[i] != ']')
 	{
 		String name;
@@ -77,7 +79,8 @@ int MIValue::ParseArray(String const &s, int i)
 		array.Add(val);
 		if(s[i] == ']')
 			break;
-		ASSERT(s[i++] == ',');
+		ASSERT(s[i] == ',');
+		i++;
 	}
 	return i + 1;
 }
@@ -88,7 +91,8 @@ int MIValue::ParseString(String const &s, int i)
 	type = MIString;
 
 	char c;
-	ASSERT(s[i++] == '"');
+	ASSERT(s[i] == '"');
+	i++;
 	while( (c = s[i++]) != 0)
 	{
 		// verbatim if escaped

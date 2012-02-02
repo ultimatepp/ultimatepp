@@ -83,7 +83,6 @@ void Gdb_MI2::Run()
 		val = MICmd("exec-run");
 	else
 		val = MICmd("exec-continue");
-
 	int i = 50;
 	while(!started && --i)
 	{
