@@ -379,6 +379,7 @@ void XmlParser::Next()
 				break;
 			}
 			if(term[0] == '/' && term[1] == '>') {
+				cdata.Clear();
 				empty_tag = true;
 				term += 2;
 				break;
