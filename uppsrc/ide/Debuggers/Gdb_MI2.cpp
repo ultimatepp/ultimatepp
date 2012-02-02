@@ -165,7 +165,7 @@ Gdb_MI2::Gdb_MI2()
 	explorer.AddColumn("", 6) /*.SetDisplay(Single<VisualDisplay>()) */;
 	explorerPane.Add(explorerBackBtn.LeftPos(0, c).TopPos(0, c));
 	explorerPane.Add(explorerForwardBtn.LeftPos(c + 2, c).TopPos(0, c));
-	explorerPane.Add(explorerExpr.HSizePos(2 * c + 4).TopPos(0, c));
+	explorerPane.Add(explorerExprEdit.HSizePos(2 * c + 4).TopPos(0, c));
 	explorerPane.Add(explorer.HSizePos().VSizePos(EditField::GetStdHeight(), 0));
 	explorer.NoHeader();
 	explorer.WhenLeftDouble = THISBACK(onExplorerChild);
@@ -987,7 +987,11 @@ void Gdb_MI2::CopyDisas()
 void Gdb_MI2::doExplore(String const &expr, String var, bool isChild, bool appendHistory)
 {
 	// set the expression inside expression editor
-	explorerExpr = expr;
+	explorerExprEdit = expr;
+
+	// store current expr as "parent expr" to be used
+	// when displaying childs... GDB is not reliable on this
+	explorerParentExpr = expr;
 	
 	// try to find a suitable already created var inside history
 	// if not, and if not a child, we shall create it
@@ -1071,7 +1075,7 @@ void Gdb_MI2::onExploreExpr(ArrayCtrl *what)
 	{
 		// if expression don't come from another ArrayCtrl
 		// we use the expression editbox
-		expr = ~explorerExpr;
+		expr = ~explorerExprEdit;
 	}
 	{
 		// otherwise, we use the expression from sending ArrayCtrl
@@ -1097,7 +1101,7 @@ void Gdb_MI2::onExplorerChild()
 	if(--line < explorerChildVars.GetCount())
 	{
 		String var = explorerChildVars[line];
-		String expr = MICmd("var-info-expression " + var)["exp"];
+		String expr = explorerParentExpr + MICmd("var-info-expression " + var)["exp"];
 		doExplore(expr, var, true, true);
 	}
 }

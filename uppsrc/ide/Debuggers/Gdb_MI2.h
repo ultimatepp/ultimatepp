@@ -33,7 +33,7 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 
 		// explorer stuffs -- just starting
 		ArrayCtrl explorer;
-		EditString explorerExpr;
+		EditString explorerExprEdit;
 		Button explorerBackBtn, explorerForwardBtn;
 		StaticRect explorerPane;
 		void onExploreExpr(ArrayCtrl *what = NULL);
@@ -47,6 +47,7 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		Vector<bool> explorerHistoryChilds;
 		int explorerHistoryPos;
 		Vector<String> explorerChildVars;
+		String explorerParentExpr;
 
 		Label dlock;
 	
