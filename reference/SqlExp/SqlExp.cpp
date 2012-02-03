@@ -141,6 +141,9 @@ GUI_APP_MAIN
 
 	EXP(Select(ID(ID, NAME, LASTNAME)).From(TABLE1).LeftJoinRef(TABLE2).Where(BDATE == Date(2011, 12, 9)));
 	EXP(Select(ID(ID, NAME, LASTNAME)).From(TABLE1).LeftJoinRef(TABLE2).On(IsNull(BDATE)).Where(BDATE == Date(2011, 12, 9)));
+	
+	EXP(Select(TABLE1(SqlAll())).From(TABLE1));
+	EXP(Select(SqlAll().Of(TABLE1)).From(TABLE1));
 
 #ifdef GENERATE_QTF
 	qtf << "}}";
