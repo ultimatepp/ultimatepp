@@ -32,7 +32,20 @@ class UppStringPrinter(object):
 			ptr = CHR
 		else:
 			ptr = self.val[ptr]
-		return ptr.string()
+		return '"' + ptr.string() + '"'
+
+	def display_hint(self):
+		return 'String'
+
+# Upp::String* printer
+class UppStringPtrPrinter(object):
+	"Print an Upp::String *"
+
+	def __init__(self, val):
+		self.val = val
+
+	def to_string(self):
+		return '@' + str(self.val.address) + ': ' + UppStringPrinter(self.val).to_string()
 
 	def display_hint(self):
 		return 'String'
@@ -41,9 +54,10 @@ class UppStringPrinter(object):
 class UppVectorPrinter(object):
 	"Print an Upp::Vector"
 	class _iterator:
-		def __init__ (self, start, finish):
-			self.item = start
-			self.finish = finish
+		def __init__ (self, val):
+			self.val = val
+			self.item = val['vector']
+			self.finish = self.item + val['items']
 			self.count = 0
 
 		def __iter__(self):
@@ -52,20 +66,22 @@ class UppVectorPrinter(object):
 		def next(self):
 			count = self.count
 			self.count = self.count + 1
+			if count == 0:
+				return ('.items', self.val['items'])
+			if count == 1:
+				return ('.alloc', self.val['alloc'])
 			if self.item == self.finish:
 				raise StopIteration
 			elt = self.item.dereference()
 			self.item = self.item + 1
-			return ('[%d]' % count, elt)
+			return ('[%d]' % (count-2), elt)
 
 	def __init__(self, typename, val):
 		self.typename = typename
 		self.val = val
 
 	def children(self):
-		start = self.val['vector']
-		finish = start + self.val['items']
-		return self._iterator(start, finish)
+		return self._iterator(self.val)
 
 	def to_string(self):
 		start = 0
@@ -78,13 +94,17 @@ class UppVectorPrinter(object):
 		return 'array'
 
 def UppLookupFunction(val):
+	typeStr = str(val.type)
+	
+	if typeStr == 'Upp::String *':
+		return UppStringPtrPrinter(val)
+
+	if typeStr == 'Upp::String':
+		return UppStringPrinter(val)
+		
 	lookup_tag = val.type.tag
 	if lookup_tag == None:
 		return None
-
-	regex = re.compile("^Upp::String$")
-	if regex.match(lookup_tag):
-		return UppStringPrinter(val)
 
 	regex = re.compile("^Upp::Vector<.*>$")
 	if regex.match(lookup_tag):
