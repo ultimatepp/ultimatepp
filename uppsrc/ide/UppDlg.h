@@ -132,7 +132,7 @@ struct WorkspaceWork {
 	UppList      filelist;
 	Vector<int>  fileindex;
 
-	String    main, last_main;
+	String    main;
 	String    actualpackage;
 	int       actualfileindex;
 	Package   actual;

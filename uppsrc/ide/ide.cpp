@@ -165,13 +165,12 @@ bool Ide::OpenMainPackage()
 #else
 	tt << " (TheIDE " << IDE_VERSION << ')';
 #endif
-	String p = SelectPackage(tt, last_main, true, true);
+	String p = SelectPackage(tt, main, true, true);
 	if(p.IsEmpty()) return false;
 	main.Clear();
 	if(!IsOpen())
 		Open();
 	SetMain(p);
-	last_main = main;
 	return true;
 }
 
