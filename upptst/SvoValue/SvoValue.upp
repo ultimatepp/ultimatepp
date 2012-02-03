@@ -13,5 +13,5 @@ file
 	SvoValue.cpp optimize_speed;
 
 mainconfig
-	"" = "SSE2";
+	"" = "SSE2 SVO_VALUE";
 
