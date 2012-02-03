@@ -758,7 +758,7 @@ void Gdb_MI2::UpdateLocalVars(void)
 		if(locIdx.Find(localVarExpressions[iVar]) < 0)
 		{
 			String varName = localVarNames.Pop();
-			MICmd("var-delete " + varName);
+			MICmd("var-delete \"" + varName + "\"");
 			localVarExpressions.Pop();
 			localVarValues.Pop();
 			localVarTypes.Pop();
@@ -770,7 +770,7 @@ void Gdb_MI2::UpdateLocalVars(void)
 	{
 		if(localVarExpressions.Find(locIdx[iLoc]) < 0)
 		{
-			MIValue var = MICmd(String("var-create - * ") + locIdx[iLoc]);
+			MIValue var = MICmd(String("var-create - * \"") + locIdx[iLoc] + "\"");
 			
 			// sometimes it has problem creating vars... maybe because they're
 			// still not active; we just skip them
@@ -801,7 +801,7 @@ void Gdb_MI2::UpdateWatches(void)
 		if(exprs.Find(watchesExpressions[iVar]) < 0)
 		{
 			String varName = watchesNames.Pop();
-			MICmd("var-delete " + varName);
+			MICmd("var-delete \"" + varName + "\"");
 			watchesExpressions.Pop();
 			watchesValues.Pop();
 			watchesTypes.Pop();
@@ -814,7 +814,7 @@ void Gdb_MI2::UpdateWatches(void)
 		if(watchesExpressions.Find(exprs[i]) < 0)
 		{
 			// the '@' means we create a dynamic variable
-			MIValue var = MICmd(String("var-create - @ ") + exprs[i]);
+			MIValue var = MICmd(String("var-create - @ \"") + exprs[i] + "\"");
 			
 			// sometimes it has problem creating vars... maybe because they're
 			// still not active; we just skip them
@@ -1003,7 +1003,7 @@ void Gdb_MI2::doExplore(String const &expr, String var, bool isChild, bool appen
 		int iVar = explorerHistoryExpressions.Find(expr);
 		if(iVar < 0)
 		{
-			MIValue v = MICmd("var-create - @ " + expr);
+			MIValue v = MICmd("var-create - @ \"" + expr + "\"");
 			if(v.IsEmpty() || v.IsError())
 				return;
 			var = v["name"];
@@ -1023,7 +1023,7 @@ void Gdb_MI2::doExplore(String const &expr, String var, bool isChild, bool appen
 			{
 				if(!explorerHistoryChilds[i] && explorerHistoryVars[i] != var)
 				{
-					MICmd("var-delete " + explorerHistoryVars[i]);
+					MICmd("var-delete \"" + explorerHistoryVars[i] + "\"");
 				}
 			}
 			explorerHistoryPos++;
@@ -1040,8 +1040,8 @@ void Gdb_MI2::doExplore(String const &expr, String var, bool isChild, bool appen
 	
 	// here we've finally got variable to explore, just read it
 	// and set into first row of explorer ArrayCtrl
-	String value = MICmd("var-evaluate-expression " + var)["value"];
-	String type = MICmd("var-info-type " + var)["type"];
+	String value = MICmd("var-evaluate-expression \"" + var + "\"")["value"];
+	String type = MICmd("var-info-type \"" + var + "\"")["type"];
 	explorer.Clear();
 	explorerChildVars.Clear();
 	explorer.Add("=", "(" + type + ")" + value, var);
@@ -1049,7 +1049,7 @@ void Gdb_MI2::doExplore(String const &expr, String var, bool isChild, bool appen
 	// now we shall add variable children... we limit them to a number of 100
 	// which should be anough. Alternative would be to display them in ranges,
 	// but this over-complicates the application.
-	MIValue childInfo = MICmd("var-list-children 1 " + var + " 0 100");
+	MIValue childInfo = MICmd("var-list-children 1 \"" + var + "\" 0 100");
 	int nChilds = min(atoi(childInfo["numchild"].Get()), 100);
 	if(nChilds)
 	{
@@ -1057,7 +1057,19 @@ void Gdb_MI2::doExplore(String const &expr, String var, bool isChild, bool appen
 		for(int i = 0; i < childs.GetCount(); i++)
 		{
 			MIValue child = childs[i];
-			explorer.Add(child["exp"].Get(), "(" + child["type"].Get() + ")" + child["value"].Get());
+			String exp = child["exp"];
+			
+			// handle pseudo children...
+			while(exp == "public" || exp == "private" || exp == "protected")
+			{
+				child = MICmd(String("var-list-children 1 \"") + child["name"] + "\"")["children"][0];
+				exp = child["exp"];
+			}
+			String type = child("type", "");
+			if(!type.IsEmpty())
+				type = "(" + type + ")";
+			String value = child["value"];
+			explorer.Add(exp, type + value);
 			explorerChildVars.Add(child["name"]);
 		}
 	}
@@ -1100,7 +1112,7 @@ void Gdb_MI2::onExplorerChild()
 	if(--line < explorerChildVars.GetCount())
 	{
 		String var = explorerChildVars[line];
-		String expr = explorerParentExpr + MICmd("var-info-expression " + var)["exp"];
+		String expr = explorerParentExpr + MICmd("var-info-expression \"" + var + "\"")["exp"];
 		doExplore(expr, var, true, true);
 	}
 }
