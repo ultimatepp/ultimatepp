@@ -49,13 +49,41 @@ void Exp(const char *sqlexp, SqlStatement x)
 
 #define EXP(x) Exp(#x, x)
 
+int NoQuotes(int c)
+{
+	return c == '\"' || c == '`' ? 0 : c;
+}
+
+bool IsCid(int c)
+{
+	return IsAlNum(c) || c == '_' || c == '$';
+}
+
 void Test(int dialect, const char *dialectn, SqlStatement s, const char *q)
 {
 	LOG("---------------------");
 	LOG("Dialect  " << dialectn);
 	LOG("Etalon   " << q);
 	LOG("Compiled " << s.Get(dialect));
-	ASSERT(s.Get(dialect) == q);
+	String compiled = s.Get(dialect);
+	bool quote = false;
+	for(int i = 0; i < compiled.GetCount(); i++) {
+		if(compiled[i] == '\"' || compiled[i] == '`')
+			quote = !quote;
+		else
+		if(quote && !IsCid(compiled[i])) {
+			LOG("FAILED QUOTES");
+		#ifndef flagNOSTOP
+			NEVER();
+		#endif
+		}
+	}
+	if(compiled != q) {
+		LOG("FAILED");
+	#ifndef flagNOSTOP
+		NEVER();
+	#endif
+	}
 }
 
 #define TEST(dialect, s, e) Test(dialect, #dialect, s, e)
