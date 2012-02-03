@@ -1,3 +1,5 @@
+description "SqlExp unit testing\377";
+
 uses
 	Core,
 	Sql;
@@ -8,5 +10,6 @@ file
 	SqlExp.cpp;
 
 mainconfig
-	"" = "";
+	"" = "",
+	"" = "NOSTOP";
 
