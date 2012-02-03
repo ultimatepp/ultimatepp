@@ -249,11 +249,9 @@ SqlVal Count(const SqlSet& exp)
 	return SqlFunc("count", exp);
 }
 
-SqlVal SqlAll()
+SqlId SqlAll()
 {
-	SqlVal val;
-	val.SetHigh("*");
-	return val;
+	return SqlId("*");
 }
 
 SqlVal SqlCountRows()

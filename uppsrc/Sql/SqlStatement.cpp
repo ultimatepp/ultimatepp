@@ -132,7 +132,7 @@ SqlSelect& SqlSelect::Hint(const char *hint)
 }
 
 SqlSelect& SqlSelect::Get() {
-	text = "select " + text + SqlCase(ORACLE, "from DUAL")("");
+	text = "select " + text + SqlCase(ORACLE, " from DUAL")("");
 	return *this;
 }
 

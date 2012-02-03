@@ -43,15 +43,20 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 			break;
 		case SQLC_ID: {
 				for(;;) {
-					if(r)
-						*r << quote;
 					const char *b = s;
-					while((byte)*s >= 32)
+					bool do_quote = IsAlpha(*s) || *s == '_' || *s == '$';
+					while((byte)*s >= 32) {
+						if(!(IsAlNum(*s) || *s == '_' || *s == '$'))
+							do_quote = false;
 						s++;
+					}
 					int c = *s;
 					if(r) {
+						if(do_quote)
+							*r << quote;
 						r->Cat(b, s);
-						*r << quote;
+						if(do_quote)
+							*r << quote;
 						if(c == SQLC_AS) {
 							if(dialect & (MSSQL | PGSQL))
 								*r << " as ";
