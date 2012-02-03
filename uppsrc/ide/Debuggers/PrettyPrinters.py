@@ -93,6 +93,49 @@ class UppVectorPrinter(object):
 	def display_hint(self):
 		return 'array'
 
+# Upp::Array printer
+class UppArrayPrinter(object):
+	"Print an Upp::Array"
+	class _iterator:
+		def __init__ (self, val):
+			self.val = val['vector']
+			self.item = self.val['vector']
+			self.finish = self.item + self.val['items']
+			self.count = 0
+
+		def __iter__(self):
+			return self
+
+		def next(self):
+			count = self.count
+			self.count = self.count + 1
+			if count == 0:
+				return ('.items', self.val['items'])
+			if count == 1:
+				return ('.alloc', self.val['alloc'])
+			if self.item == self.finish:
+				raise StopIteration
+			elt = self.item.dereference().dereference()
+			self.item = self.item + 1
+			return ('[%d]' % (count-2), elt)
+
+	def __init__(self, typename, val):
+		self.typename = typename
+		self.val = val
+
+	def children(self):
+		return self._iterator(self.val)
+
+	def to_string(self):
+		start = 0
+		finish = self.val['vector']['items']
+		end = self.val['vector']['alloc']
+		return ('%s count %d alloc %d'
+			% (self.typename, int (finish - start), int (end - start)))
+
+	def display_hint(self):
+		return 'array'
+
 def UppLookupFunction(val):
 	typeStr = str(val.type)
 	
@@ -109,6 +152,10 @@ def UppLookupFunction(val):
 	regex = re.compile("^Upp::Vector<.*>$")
 	if regex.match(lookup_tag):
 		return UppVectorPrinter(lookup_tag, val)
+
+	regex = re.compile("^Upp::Array<.*>$")
+	if regex.match(lookup_tag):
+		return UppArrayPrinter(lookup_tag, val)
 
 	return None
 
