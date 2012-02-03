@@ -249,7 +249,7 @@ SqlVal Distinct(const SqlVal& exp);
 SqlSet Distinct(const SqlSet& columns);
 SqlVal All(const SqlVal& exp);
 SqlSet All(const SqlSet& columns);
-SqlVal SqlAll();
+SqlId  SqlAll();
 SqlVal Count(const SqlVal& exp);
 SqlVal Count(const SqlSet& exp);
 SqlVal SqlCountRows();
