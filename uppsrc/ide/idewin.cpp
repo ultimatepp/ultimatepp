@@ -893,13 +893,15 @@ void AppMain___()
 	#endif
 			ActivateUsrLog();
 		}
+		ide.LoadLastMain();
 		if(clset || ide.OpenMainPackage()) {
-			ide.SaveConfig();
+			ide.SaveLastMain();
 			SyncRefs();
 			ide.FileSelected();
 			ide.Run();
 		}
 		ide.SaveConfig();
+		ide.SaveLastMain();
 	#ifdef PLATFORM_POSIX
 		StoreAsXMLFile(UpdaterCfg(),"SourceUpdater",ConfigFile("updates.xml"));
 	#endif

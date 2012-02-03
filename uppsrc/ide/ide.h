@@ -961,6 +961,10 @@ public:
 	String    WorkspaceFile();
 	void      SerializeWorkspace(Stream& s);
 
+	void      SerializeLastMain(Stream& s);
+	void      SaveLastMain();
+	void      LoadLastMain();
+
 //	void      PrintTime(dword time);
 	void      SetIdeState(int newstate);
 

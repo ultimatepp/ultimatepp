@@ -92,11 +92,31 @@ void Ide::SerializeWorkspace(Stream& s) {
 
 }
 
-void Ide::Serialize(Stream& s) {
+void Ide::SerializeLastMain(Stream& s)
+{
+	s % main;
+	String varsname = GetVarsName();
+	s % varsname;
+	s % pocfg;
+	if(s.IsLoading())
+		LoadVars(varsname);
+}
+
+void Ide::SaveLastMain()
+{
+	StoreToFile(THISBACK(SerializeLastMain), ConfigFile("lastmain.cfg"));
+}
+
+void Ide::LoadLastMain()
+{
+	LoadFromFile(THISBACK(SerializeLastMain), ConfigFile("lastmain.cfg"));
+}
+
+void Ide::Serialize(Stream& s)
+{
 	int version = 0;
-	s.Magic(0x2345432);
+	s.Magic(0x12341234);
 	s / version;
-	s % last_main;
 	s % AnySourceFs();
 	s % BasedSourceFs();
 	s % AnyPackageFs();
@@ -136,11 +156,6 @@ void Ide::Serialize(Stream& s) {
 	s % default_charset;
 	s % header_guards;
 	s % insert_include;
-	String varsname = GetVarsName();
-	s % varsname; // What is the point of this?!
-	s % pocfg;
-//	if(s.IsLoading())
-//		LoadVars(varsname);
 	SerializeGlobalConfigs(s);
 	doc.Serialize(s);
 	s % right_split;
