@@ -148,11 +148,11 @@ SqlBool Join(SqlId tab1, SqlId tab2, SqlId key) {
 }
 
 SqlBool LeftJoin(SqlId tab1, SqlId tab2, SqlId key) {
-	return SqlId(~key.Of(tab1) + "(+)") == key.Of(tab2);
+	return SqlId(key.Of(tab1).Quoted() + "(+)") == key.Of(tab2).Quoted();
 }
 
 SqlBool RightJoin(SqlId tab1, SqlId tab2, SqlId key) {
-	return key.Of(tab1) == SqlId(~key.Of(tab2) + "(+)");
+	return key.Of(tab1).Quoted() == SqlId(key.Of(tab2).Quoted() + "(+)");
 }
 
 END_UPP_NAMESPACE

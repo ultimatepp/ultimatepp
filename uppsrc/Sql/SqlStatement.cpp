@@ -145,27 +145,27 @@ SqlSelect& SqlSelect::From(const SqlSet& table) {
 }
 
 SqlSelect& SqlSelect::From(const SqlId& table) {
-	String t1 = ~table;
-	text = "select " + text + " from " + t1;
+	const String& t1 = table.ToString();
+	text = String().Cat() << "select " << text << " from \t" << t1 << '\t';
 	tables << ',' << t1;
 	on = false;
 	return *this;
 }
 
 SqlSelect& SqlSelect::From(const SqlId& table1, const SqlId& table2) {
-	String t1 = ~table1;
-	String t2 = ~table2;
-	text = "select " + text + " from " + t1 + ", " + t2;
+	const String& t1 = table1.ToString();
+	const String& t2 = table2.ToString();
+	text = String().Cat() << "select " << text << " from \t" << t1 << "\t, \t" << t2 << '\t';
 	tables << ',' << t1 << ',' << t2;
 	on = false;
 	return *this;
 }
 
 SqlSelect& SqlSelect::From(const SqlId& table1, const SqlId& table2, const SqlId& table3) {
-	String t1 = ~table1;
-	String t2 = ~table2;
-	String t3 = ~table3;
-	text = "select " + text + " from " + t1 + ", " + t2 + ", " + t3;
+	const String& t1 = table1.ToString();
+	const String& t2 = table2.ToString();
+	const String& t3 = table3.ToString();
+	text = String().Cat() << "select " << text << " from \t" << t1 << "\t, \t" << t2 << "\t, \t" << t3 << '\t';
 	tables << ',' << t1 << ',' << t2 << ',' << t3;
 	on = false;
 	return *this;
@@ -245,7 +245,7 @@ SqlVal SqlSelect::AsValue() const
 SqlSelect SqlSelect::AsTable(const SqlId& tab) const
 {
 	SqlSelect h;
-	h.text = String("(").Cat() << text << ") as " << ~tab;
+	h.text = String("(").Cat() << text << ") as \t" << tab.ToString() << '\t';
 	return h;
 }
 
@@ -295,7 +295,7 @@ void SqlInsert::Column(const SqlId& column, SqlVal val) {
 }
 
 SqlInsert::operator SqlStatement() const {
-	String s = "insert into " + ~table;
+	String s = "insert into " + table.Quoted();
 	if(!set1.IsEmpty()) {
 		s << set1();
 		if(from.IsEmpty()) {
@@ -368,7 +368,7 @@ SqlUpdate& SqlUpdate::operator()(Fields f) {
 
 SqlUpdate::operator SqlStatement() const {
 	StringBuffer stmt;
-	stmt << "update " << ~table << " set " << ~set;
+	stmt << "update " << table.Quoted() << " set " << ~set;
 	if(!where.IsEmpty())
 		stmt << " where " << ~where;
 	return SqlStatement(stmt);

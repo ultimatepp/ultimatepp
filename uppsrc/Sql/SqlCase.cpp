@@ -4,17 +4,6 @@
 
 NAMESPACE_UPP
 
-enum {
-	SQLC_IF = 1,
-	SQLC_ELSEIF,
-	SQLC_ELSE,
-	SQLC_ENDIF,
-	SQLC_DATE,
-	SQLC_TIME,
-	SQLC_STRING,
-	SQLC_BINARY,
-};
-
 template <class T>
 String MakeSqlValue(int code, T& value)
 {
@@ -33,9 +22,57 @@ T ReadSqlValue(T& x, const char *&s) {
 
 void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 {
+	char quote = dialect == MY_SQL ? '`' : '\"';
 	for(;;) {
 		int c = *s++;
 		switch(c) {
+		case SQLC_OF:
+			if(r)
+				*r << '.';
+			break;
+		case SQLC_AS:
+			if(r)
+				if(dialect & (MSSQL | PGSQL))
+					*r << " as ";
+				else
+					*r << ' ';
+			break;
+		case SQLC_COMMA:
+			if(r)
+				*r << ", ";
+			break;
+		case SQLC_ID: {
+				for(;;) {
+					if(r)
+						*r << quote;
+					const char *b = s;
+					while((byte)*s >= 32)
+						s++;
+					int c = *s;
+					if(r) {
+						r->Cat(b, s);
+						*r << quote;
+						if(c == SQLC_AS) {
+							if(dialect & (MSSQL | PGSQL))
+								*r << " as ";
+							else
+								*r << ' ';
+						}
+						else
+						if(c == SQLC_OF)
+							*r << '.';
+						else
+						if(c == SQLC_COMMA)
+							*r << ", ";
+					}
+					s++;
+					if(c == SQLC_ID)
+						break;
+					if(c == '\0')
+						return;
+				}
+			}
+			break;
 		case SQLC_IF: {
 			LTIMING("SqlCompile IF");
 			StringBuffer *er = r;
@@ -335,14 +372,14 @@ SqlCase::SqlCase(byte cond, const String& text) {
 }
 
 // Put to different file to force non-inline (size opt)
-void SqlId::PutOf0(String& s, const SqlId& b)
+void SqlId::PutOf0(String& s, const SqlId& b) const
 {
-	s << ToString() << '.' << ~b;
+	s << ToString() << (char)SQLC_OF << ~b;
 }
 
-void SqlId::PutOf(String& s, const SqlId& b)
+void SqlId::PutOf(String& s, const SqlId& b) const
 {
-	s << ", ";
+	s << (char)SQLC_COMMA;
 	PutOf0(s, b);
 }
 

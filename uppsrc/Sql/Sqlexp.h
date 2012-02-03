@@ -59,6 +59,21 @@ String AsString(Fields a);
 
 // ----------
 
+enum {
+	SQLC_IF = 1,
+	SQLC_ELSEIF = 2,
+	SQLC_ELSE = 3,
+	SQLC_ENDIF = 4,
+	SQLC_DATE = 5,
+	SQLC_TIME = 6,
+	SQLC_STRING = 7,
+	SQLC_BINARY = 8,
+	SQLC_ID = 9, // '\t'
+	SQLC_OF = 10,
+	SQLC_AS = 11,
+	SQLC_COMMA = 12,
+};
+
 class SqlCase {
 	String s;
 
@@ -89,8 +104,8 @@ protected:
 	Id id;
 
 private:
-	void PutOf0(String& s, const SqlId& b);
-	void PutOf(String& s, const SqlId& b);
+	void PutOf0(String& s, const SqlId& b) const;
+	void PutOf(String& s, const SqlId& b) const;
 
 public:
 	bool          IsEqual(const SqlId& b) const  { return id == b.id; }
@@ -100,22 +115,23 @@ public:
 	operator      const Id&() const              { return id; }
 	const String& ToString() const               { return id.ToString(); }
 	const String& operator~() const              { return ToString(); }
+	String        Quoted() const                 { return String().Cat() << '\t' << id << '\t'; }
 
 	SqlId         Of(SqlId id) const;
 	SqlId         Of(const char *of) const;
 	SqlId         As(const char *as) const;
-	SqlId         As(SqlId id) const         { return As(~~id); }
-	SqlId         operator[](int i) const;
-	SqlId         operator&(const SqlId& s) const;
-	SqlId         operator[](const SqlId& id) const;
+	SqlId         As(SqlId id) const             { return As(~id.ToString()); }
+	SqlId         operator[](int i) const; // deprecated
+	SqlId         operator&(const SqlId& s) const; // depreceted
+	SqlId         operator[](const SqlId& id) const; // deprecated
 
-	SqlId         operator()(SqlId p);
+	SqlId         operator()(SqlId p) const;
 
 //$	SqlId     operator()(SqlId p, SqlId p1, ...);
 #define E__PutSqlId(I)      PutOf(x, p##I)
 #define E__SqlId(I)         const SqlId& p##I
 #define E__Of(I) \
-	SqlId operator()(const SqlId& p, __List##I(E__SqlId)) { \
+	SqlId operator()(const SqlId& p, __List##I(E__SqlId)) const { \
 	String x; \
 	PutOf0(x, p); \
 	__List##I(E__PutSqlId); \
@@ -492,10 +508,10 @@ public:
 	SqlSelect& From(const SqlId& table1, const SqlId& table2, const SqlId& table3);
 	SqlSelect& From(const SqlVal& a)                  { return From(SqlSet(a)); }
 
-	SqlSelect& InnerJoin(const SqlId& table)          { return InnerJoin0(~table); }
-	SqlSelect& LeftJoin(const SqlId& table)           { return LeftJoin0(~table); }
-	SqlSelect& RightJoin(const SqlId& table)          { return RightJoin0(~table); }
-	SqlSelect& FullJoin(const SqlId& table)           { return FullJoin0(~table); }
+	SqlSelect& InnerJoin(const SqlId& table)          { return InnerJoin0(table.Quoted()); }
+	SqlSelect& LeftJoin(const SqlId& table)           { return LeftJoin0(table.Quoted()); }
+	SqlSelect& RightJoin(const SqlId& table)          { return RightJoin0(table.Quoted()); }
+	SqlSelect& FullJoin(const SqlId& table)           { return FullJoin0(table.Quoted()); }
 
 	SqlSelect& InnerJoin(const SqlSet& set)           { return InnerJoin0(~set(SqlSet::SET)); }
 	SqlSelect& LeftJoin(const SqlSet& set)            { return LeftJoin0(~set(SqlSet::SET)); }

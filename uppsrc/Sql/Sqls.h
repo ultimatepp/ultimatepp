@@ -433,7 +433,7 @@ class SqlMassInsert {
 	};
 
 	Sql&            sql;
-	String          table;
+	SqlId           table;
 	Vector<String>  column;
 	Vector<Row>     cache;
 	int             pos;
@@ -447,9 +447,9 @@ public:
 	void           Flush();
 	bool           IsError() const                                 { return error; }
 	
-	SqlMassInsert(Sql& sql, SqlId table) : sql(sql), table(~table) { pos = 0; error = false; }
+	SqlMassInsert(Sql& sql, SqlId table) : sql(sql), table(table)  { pos = 0; error = false; }
 #ifndef NOAPPSQL
-	SqlMassInsert(SqlId table) : sql(SQL), table(~table) { pos = 0; error = false; }
+	SqlMassInsert(SqlId table) : sql(SQL), table(table)            { pos = 0; error = false; }
 #endif
 	~SqlMassInsert();
 };
