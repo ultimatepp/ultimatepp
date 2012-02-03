@@ -908,7 +908,7 @@
 		"select \"SEQ\".NEXTVAL");
 	TEST(ORACLE,
 		Select(NextVal(SEQ)).Get(),
-		"select \"SEQ\".NEXTVALfrom DUAL");
+		"select \"SEQ\".NEXTVAL from DUAL");
 	TEST(MSSQL,
 		Select(NextVal(SEQ)).Get(),
 		"select \"SEQ\".NEXTVAL");
@@ -930,7 +930,7 @@
 		"select \"SEQ\".CURRVAL");
 	TEST(ORACLE,
 		Select(CurrVal(SEQ)).Get(),
-		"select \"SEQ\".CURRVALfrom DUAL");
+		"select \"SEQ\".CURRVAL from DUAL");
 	TEST(MSSQL,
 		Select(CurrVal(SEQ)).Get(),
 		"select \"SEQ\".CURRVAL");
@@ -1458,7 +1458,7 @@
 		"select 850");
 	TEST(ORACLE,
 		Select(25 * 34).Get(),
-		"select 850from DUAL");
+		"select 850 from DUAL");
 	TEST(MSSQL,
 		Select(25 * 34).Get(),
 		"select 850");
@@ -1845,4 +1845,70 @@
 	TEST(DB2,
 		Select(ID(ID, NAME, LASTNAME)).From(TABLE1).LeftJoinRef(TABLE2).On(IsNull(BDATE)).Where(BDATE == Date(2011, 12, 9)),
 		"select \"ID\".\"ID\", \"ID\".\"NAME\", \"ID\".\"LASTNAME\" from \"TABLE1\" left outer join \"TABLE2\" on \"TABLE2\".\"TABLE1_ID\" = \"TABLE1\".\"NAME\" and \"BDATE\" is NULL where \"BDATE\" = '2011-12-09'");
+// ---------------------------------
+	TEST(MY_SQL,
+		Select(SqlAll().Of(TABLE1)).From(TABLE1),
+		"select `TABLE1`.* from `TABLE1`");
+	TEST(SQLITE3,
+		Select(SqlAll().Of(TABLE1)).From(TABLE1),
+		"select \"TABLE1\".* from \"TABLE1\"");
+	TEST(ORACLE,
+		Select(SqlAll().Of(TABLE1)).From(TABLE1),
+		"select \"TABLE1\".* from \"TABLE1\"");
+	TEST(MSSQL,
+		Select(SqlAll().Of(TABLE1)).From(TABLE1),
+		"select \"TABLE1\".* from \"TABLE1\"");
+	TEST(PGSQL,
+		Select(SqlAll().Of(TABLE1)).From(TABLE1),
+		"select \"TABLE1\".* from \"TABLE1\"");
+	TEST(FIREBIRD,
+		Select(SqlAll().Of(TABLE1)).From(TABLE1),
+		"select \"TABLE1\".* from \"TABLE1\"");
+	TEST(DB2,
+		Select(SqlAll().Of(TABLE1)).From(TABLE1),
+		"select \"TABLE1\".* from \"TABLE1\"");
+// ---------------------------------
+	TEST(MY_SQL,
+		Select(SqlId("TEST.*")).From(TABLE1),
+		"select TEST.* from `TABLE1`");
+	TEST(SQLITE3,
+		Select(SqlId("TEST.*")).From(TABLE1),
+		"select TEST.* from \"TABLE1\"");
+	TEST(ORACLE,
+		Select(SqlId("TEST.*")).From(TABLE1),
+		"select TEST.* from \"TABLE1\"");
+	TEST(MSSQL,
+		Select(SqlId("TEST.*")).From(TABLE1),
+		"select TEST.* from \"TABLE1\"");
+	TEST(PGSQL,
+		Select(SqlId("TEST.*")).From(TABLE1),
+		"select TEST.* from \"TABLE1\"");
+	TEST(FIREBIRD,
+		Select(SqlId("TEST.*")).From(TABLE1),
+		"select TEST.* from \"TABLE1\"");
+	TEST(DB2,
+		Select(SqlId("TEST.*")).From(TABLE1),
+		"select TEST.* from \"TABLE1\"");
+// ---------------------------------
+	TEST(MY_SQL,
+		Select(SqlId("123")).From(TABLE1),
+		"select 123 from `TABLE1`");
+	TEST(SQLITE3,
+		Select(SqlId("123")).From(TABLE1),
+		"select 123 from \"TABLE1\"");
+	TEST(ORACLE,
+		Select(SqlId("123")).From(TABLE1),
+		"select 123 from \"TABLE1\"");
+	TEST(MSSQL,
+		Select(SqlId("123")).From(TABLE1),
+		"select 123 from \"TABLE1\"");
+	TEST(PGSQL,
+		Select(SqlId("123")).From(TABLE1),
+		"select 123 from \"TABLE1\"");
+	TEST(FIREBIRD,
+		Select(SqlId("123")).From(TABLE1),
+		"select 123 from \"TABLE1\"");
+	TEST(DB2,
+		Select(SqlId("123")).From(TABLE1),
+		"select 123 from \"TABLE1\"");
 // ---------------------------------

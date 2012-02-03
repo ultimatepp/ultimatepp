@@ -61,10 +61,6 @@ bool IsCid(int c)
 
 void Test(int dialect, const char *dialectn, SqlStatement s, const char *q)
 {
-	LOG("---------------------");
-	LOG("Dialect  " << dialectn);
-	LOG("Etalon   " << q);
-	LOG("Compiled " << s.Get(dialect));
 	String compiled = s.Get(dialect);
 	bool quote = false;
 	for(int i = 0; i < compiled.GetCount(); i++) {
@@ -79,6 +75,10 @@ void Test(int dialect, const char *dialectn, SqlStatement s, const char *q)
 		}
 	}
 	if(compiled != q) {
+		LOG("---------------------");
+		LOG("Dialect  " << dialectn);
+		LOG("Etalon   " << q);
+		LOG("Compiled " << s.Get(dialect));
 		LOG("FAILED");
 	#ifndef flagNOSTOP
 		NEVER();
@@ -197,6 +197,12 @@ CONSOLE_APP_MAIN
 
 	EXP(Select(ID(ID, NAME, LASTNAME)).From(TABLE1).LeftJoinRef(TABLE2).Where(BDATE == Date(2011, 12, 9)));
 	EXP(Select(ID(ID, NAME, LASTNAME)).From(TABLE1).LeftJoinRef(TABLE2).On(IsNull(BDATE)).Where(BDATE == Date(2011, 12, 9)));
+	
+	EXP(Select(SqlAll().Of(TABLE1)).From(TABLE1));
+
+	EXP(Select(SqlId("TEST.*")).From(TABLE1));
+
+	EXP(Select(SqlId("123")).From(TABLE1));
 
 // =========================================================================
 
