@@ -4,6 +4,9 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
+	Date d = Null;
+	DDUMP(IsNull(d));
+
 	Value ist = Opt0();
 	if(ist.Is<int>())
 		RLOG("int");
