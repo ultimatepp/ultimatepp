@@ -42,14 +42,14 @@ bool Gdb_MI2::SetBreakpoint(const String& filename, int line, const String& bp)
 	// and remove it
 	MIValue brk = bps.FindBreakpoint(file, line);
 	if(!brk.IsEmpty())
-		ASSERT(!MICmd("break-delete " + brk["number"]).IsError());
+		ASSERT(!MICmd(Format("break-delete %s", brk["number"].Get())).IsError());
 	
 	if(bp.IsEmpty())
 		return true;
 	else if(bp[0] == 0xe)
-		return !MICmd("break-insert " + Format("%s:%d", file, line)).IsError();
+		return !MICmd(Format("break-insert %s:%d", file, line)).IsError();
 	else
-		return !MICmd("break-insert " + Format("-c \"%s\" %s:%d", bp, file, line)).IsError();
+		return !MICmd(Format("break-insert -c \"%s\" %s:%d", bp, file, line)).IsError();
 }
 
 bool Gdb_MI2::RunTo()
