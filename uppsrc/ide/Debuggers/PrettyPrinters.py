@@ -136,6 +136,27 @@ class UppArrayPrinter(object):
 	def display_hint(self):
 		return 'array'
 
+# Upp::Value printer
+class UppValuePrinter(object):
+
+	def __init__(self, val):
+		self.typeid ={
+			0:'void',
+			1:'int',
+			2:'double',
+			3:'Upp::String',
+			4:'Upp::Date',
+			5:'Upp::Time',
+			6:'ERROR',
+			7:'Upp::Value',
+			8:'Upp::WString',
+			9:'Upp::ValueArray',
+			10:'int64',
+			11:'bool',
+			12:'Upp::ValueMap'
+		}
+		self.val = val
+
 def UppLookupFunction(val):
 	typeStr = str(val.type)
 	
