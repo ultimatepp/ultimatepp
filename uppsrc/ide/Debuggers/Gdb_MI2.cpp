@@ -192,7 +192,8 @@ Gdb_MI2::Gdb_MI2()
 	tab.Add(autos.SizePos(), "Autos");
 	tab.Add(explorerPane.SizePos(), t_("Explorer"));
 	
-	Add(frame.HSizePos(FindTabsRight() + 10, 0).TopPos(2, EditField::GetStdHeight()));
+	Add(threadSelector.LeftPos(FindTabsRight() + 10, StdFont().GetWidth('X') * 10).TopPos(2, EditField::GetStdHeight()));
+	Add(frame.HSizePos(threadSelector.GetRect().right + 10, 0).TopPos(2, EditField::GetStdHeight()));
 	frame.Ctrl::Add(dlock.SizePos());
 	dlock = "  Running..";
 	dlock.SetFrame(BlackFrame());
@@ -268,6 +269,7 @@ void Gdb_MI2::Lock()
 	watches.Disable();
 	locals.Disable();
 	frame.Disable();
+	threadSelector.Disable();
 	dlock.Show();
 }
 
@@ -278,6 +280,7 @@ void Gdb_MI2::Unlock()
 		watches.Enable();
 		locals.Enable();
 		frame.Enable();
+		threadSelector.Enable();
 		dlock.Hide();
 	}
 }
@@ -568,6 +571,22 @@ void Gdb_MI2::SyncDisas(MIValue &fInfo, bool fr)
 // sync ide display with breakpoint position
 void Gdb_MI2::SyncIde(bool fr)
 {
+	// setup threads droplist
+	threadSelector.Clear();
+	MIValue tInfo = MICmd("thread-info");
+	int curThread = atoi(tInfo["current-thread-id"].Get());
+	MIValue &threads = tInfo["threads"];
+	for(int iThread = 0; iThread < threads.GetCount(); iThread++)
+	{
+		int id = atoi(threads[iThread]["id"].Get());
+		if(id == curThread)
+		{
+			threadSelector.Add(id, Format("#%03x(*)", id));
+			break;
+		}
+	}
+	threadSelector <<= curThread;
+
 	// get current frame info and level
 	MIValue fInfo = MICmd("stack-info-frame")["frame"];
 	int level = atoi(fInfo["level"].Get());
@@ -594,7 +613,7 @@ void Gdb_MI2::SyncIde(bool fr)
 	// get the arguments for current frame
 	MIValue fArgs = MICmd(Format("stack-list-arguments 1 %d %d", level, level))["stack-args"][0]["args"];
 	
-	// setup droplist
+	// setup frame droplist
 	frame.Clear();
 	frame.Add(0, FormatFrame(fInfo, fArgs));
 	frame <<= 0;
@@ -752,6 +771,35 @@ void Gdb_MI2::ShowFrame()
 	int i = (int)~frame;
 	MICmd(Format("stack-select-frame %d", i));
 	SyncIde(i);
+}
+
+// re-fills thread selector droplist on drop
+void Gdb_MI2::dropThreads()
+{
+	int q = ~threadSelector;
+	threadSelector.Clear();
+
+	// get a list of all available threads
+	MIValue tInfo = MICmd("thread-info");
+	MIValue &threads = tInfo["threads"];
+	int currentId = atoi(tInfo["current-thread-id"].Get());
+	for(int iThread = 0; iThread < threads.GetCount(); iThread++)
+	{
+		MIValue &t = threads[iThread];
+		int id = atoi(t["id"].Get());
+		String threadStr = Format("#%03x%s", id, (id == currentId ? "(*)" : ""));
+		threadSelector.Add(id, threadStr);
+	}
+	threadSelector <<= q;
+}
+
+// selects current thread
+void Gdb_MI2::showThread(void)
+{
+	int i = (int)~threadSelector;
+	MICmd(Format("thread-select %d", i));
+
+	SyncIde();	
 }
 
 // update variables on demand (locals, watches....)
@@ -1322,8 +1370,12 @@ bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdli
 	disas.AddFrame(regs);
 	disas.WhenCursor = THISBACK(DisasCursor);
 	disas.WhenFocus = THISBACK(DisasFocus);
+
 	frame.WhenDrop = THISBACK(DropFrames);
 	frame <<= THISBACK(ShowFrame);
+
+	threadSelector.WhenDrop = THISBACK(dropThreads);
+	threadSelector <<= THISBACK(showThread);
 
 	watches.WhenAcceptEdit = THISBACK(SyncData);
 	tab <<= THISBACK(SyncData);
