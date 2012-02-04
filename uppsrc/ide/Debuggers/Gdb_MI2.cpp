@@ -35,6 +35,9 @@ bool Gdb_MI2::SetBreakpoint(const String& filename, int line, const String& bp)
 	// gets all breakpoints
 	MIValue bps = GetBreakpoints();
 	
+	// line should start from 1...
+	line++;
+	
 	// check wether we've got already a breakpoint here
 	// and remove it
 	MIValue brk = bps.FindBreakpoint(file, line);
@@ -185,11 +188,10 @@ Gdb_MI2::Gdb_MI2()
 	Add(tab.SizePos());
 	tab.Add(watches.SizePos(), t_("Watches"));
 	tab.Add(locals.SizePos(), t_("Locals"));
+	tab.Add(autos.SizePos(), "Autos");
 	tab.Add(explorerPane.SizePos(), t_("Explorer"));
 	
-//	tab.Add(autos.SizePos(), "Autos");
-
-	Add(frame.HSizePos(200, 0).TopPos(2, EditField::GetStdHeight()));
+	Add(frame.HSizePos(FindTabsRight() + 10, 0).TopPos(2, EditField::GetStdHeight()));
 	frame.Ctrl::Add(dlock.SizePos());
 	dlock = "  Running..";
 	dlock.SetFrame(BlackFrame());
@@ -221,6 +223,42 @@ Gdb_MI2::~Gdb_MI2()
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //											PRIVATE FUNCTIONS
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// find free space at right of tabs (we should probably add something to TabCtrl for that..)
+int Gdb_MI2::FindTabsRight(void)
+{
+	if(!tab.GetCount())
+		return 0;
+	
+	int lastTab = tab.GetCount() - 1;
+	int i1 = 0, i2 = 10000;
+	
+	// bisect up it finds a point on last tab...
+	int iTab = -1;
+	int i;
+	while(iTab != lastTab)
+	{
+		i = (i1 + i2) / 2;
+		iTab = tab.GetTab(Point(i, 0));
+		if(iTab < 0)
+			i2 = i;
+		else
+			i1 = i;
+	}
+	
+	// now scan for righ tab edge
+	i1 = i; i2 = i + 10000;
+	while(abs(i1 - i2) > 2)
+	{
+		i = (i1 + i2) / 2;
+		iTab = tab.GetTab(Point(i, 0));
+		if(iTab == -1)
+			i2 = i;
+		else
+			i1 = i;
+	}
+	return i;
+}
 
 // lock/unlock debugger controls
 void Gdb_MI2::Lock()
@@ -1058,6 +1096,8 @@ void Gdb_MI2::doExplore(String const &expr, String var, bool isChild, bool appen
 		{
 			MIValue child = childs[i];
 			String exp = child["exp"];
+			if(isdigit(exp[0]))
+				exp = '[' + exp + ']';
 			
 			// handle pseudo children...
 			while(exp == "public" || exp == "private" || exp == "protected")
@@ -1100,7 +1140,7 @@ void Gdb_MI2::onExploreExpr(ArrayCtrl *what)
 	doExplore(expr, "", false, true);
 	
 	// activate explorer tab
-	tab.Set(2);
+	tab.Set(3);
 }
 
 void Gdb_MI2::onExplorerChild()
@@ -1112,7 +1152,14 @@ void Gdb_MI2::onExplorerChild()
 	if(--line < explorerChildVars.GetCount())
 	{
 		String var = explorerChildVars[line];
-		String expr = explorerParentExpr + MICmd("var-info-expression \"" + var + "\"")["exp"];
+		String varExp = var;
+		String expr = MICmd("var-info-expression \"" + var + "\"")["exp"];
+		if(expr[0] != '[' && expr[0] != '.')
+			if(isdigit(expr[0]))
+				expr = '[' + expr + ']';
+			else
+				expr = '.' + expr;
+		expr = explorerParentExpr + expr;
 		doExplore(expr, var, true, true);
 	}
 }
