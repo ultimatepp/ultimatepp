@@ -26,6 +26,7 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 
 		EditString watchedit;
 		DropList frame;
+		DropList threadSelector;
 		TabCtrl tab;
 		ArrayCtrl locals;
 		ArrayCtrl watches;
@@ -167,6 +168,12 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 	
 		// shows selected stack frame in editor
 		void ShowFrame();
+		
+		// re-fills thread selector droplist on drop
+		void dropThreads();
+		
+		// selects current thread
+		void showThread(void);
 
 		// sends pretty-prinding scripts
 		void SendPrettyPrinters(void);
