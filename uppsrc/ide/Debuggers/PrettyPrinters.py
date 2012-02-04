@@ -136,6 +136,26 @@ class UppArrayPrinter(object):
 	def display_hint(self):
 		return 'array'
 
+# Upp::VectorMap printer
+class UppVectorMapPrinter(object):
+	"Print an Upp::VectorMap"
+
+	def __init__(self, typename, val):
+		self.typename = typename
+		self.val = val
+
+	def children(self):
+		return [('keys', self.val['key']), ('values', self.val['value'])].__iter__()
+
+	def to_string(self):
+		count = self.val['key']['key']['items']
+		alloc = self.val['key']['key']['alloc']
+		return ('%s count %d alloc %d'
+			% (self.typename, count, alloc))
+
+	def display_hint(self):
+		return 'array'
+
 # Upp::Value printer
 class UppValuePrinter(object):
 
@@ -196,6 +216,10 @@ def UppLookupFunction(val):
 	if lookup_tag == None:
 		return None
 
+	regex = re.compile("^Upp::VectorMap<.*>$")
+	if regex.match(lookup_tag):
+		return UppVectorMapPrinter(lookup_tag, val)
+
 	regex = re.compile("^Upp::Vector<.*>$")
 	if regex.match(lookup_tag):
 		return UppVectorPrinter(lookup_tag, val)
@@ -203,6 +227,10 @@ def UppLookupFunction(val):
 	regex = re.compile("^Upp::Array<.*>$")
 	if regex.match(lookup_tag):
 		return UppArrayPrinter(lookup_tag, val)
+
+	regex = re.compile("^Upp::Index<.*>$")
+	if regex.match(lookup_tag):
+		return UppVectorPrinter(lookup_tag, val['key'])
 
 	return None
 
