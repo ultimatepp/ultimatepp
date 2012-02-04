@@ -145,7 +145,7 @@ class UppVectorMapPrinter(object):
 		self.val = val
 
 	def children(self):
-		return [('keys', self.val['key']), ('values', self.val['value'])].__iter__()
+		return [('.keys', self.val['key']), ('.values', self.val['value'])].__iter__()
 
 	def to_string(self):
 		count = self.val['key']['key']['items']
@@ -181,24 +181,19 @@ class UppValuePrinter(object):
 		typeId = Upp_Value_GetType(self.val)
 		if typeId == 0:
 			return '<void>'
-		elif typeId == 1 or typeId == 10:
-			return str(Upp_Value_GetInteger(self.val))
-		elif typeId == 2:
-			return str(Upp_Value_GetDouble(self.val))
-		elif typeId == 3:
+		elif typeId in (1, 2, 3, 4, 5, 7, 8, 10, 11):
 			return str(Upp_Value_GetString(self.val))
 		elif typeId == 6:
 			return '<ERROR VALUE>'
-		elif typeId == 7:
-			return str(Upp_Value_GetValue(self.val))
-		elif typeId == 8:
-			return str(Upp_Value_GetWString(self.val))
-		elif typeId == 11:
-			return str(Upp_Value_GetBool(self.val))
-		elif self.typeIds.has_key(typeId):
-			return "<unsupported value type '" + self.typeIds[typeId] + "'>"
 		else:
-			return "<unsupported value type '" + str(typeId) + "'>"
+			strVal = str(Upp_Value_GetString(self.val))
+			if strVal != '':
+				return strVal
+			else:
+				if self.typeIds.has_key(typeId):
+					return "<unsupported value type '" + self.typeIds[typeId] + "'>"
+				else:
+					return "<unsupported value type '" + str(typeId) + "'>"
 
 def UppLookupFunction(val):
 	typeStr = str(val.type)
@@ -237,15 +232,8 @@ def UppLookupFunction(val):
 #check if Upp value inspecting support is enabled
 Upp_Value_Inspectors = True
 try:
-	Upp_Value_GetType		= gdb.parse_and_eval('Upp::_GDB_Value_GetType')
-	Upp_Value_GetString		= gdb.parse_and_eval('Upp::_GDB_Value_GetString')
-	Upp_Value_GetWString	= gdb.parse_and_eval('Upp::_GDB_Value_GetWString')
-	Upp_Value_GetInteger	= gdb.parse_and_eval('Upp::_GDB_Value_GetInteger')
-	Upp_Value_GetDouble		= gdb.parse_and_eval('Upp::_GDB_Value_GetDouble')
-	Upp_Value_GetDate		= gdb.parse_and_eval('Upp::_GDB_Value_GetDate')
-	Upp_Value_GetTime		= gdb.parse_and_eval('Upp::_GDB_Value_GetTime')
-	Upp_Value_GetBool		= gdb.parse_and_eval('Upp::_GDB_Value_GetBool')
-	Upp_Value_GetValue		= gdb.parse_and_eval('Upp::_GDB_Value_GetValue')
+	Upp_Value_GetType		= gdb.parse_and_eval('Upp::_DBG_Value_GetType')
+	Upp_Value_GetString		= gdb.parse_and_eval('Upp::_DBG_Value_AsString')
 except Exception as inst:
 	Upp_Value_Inspectors = False
 
