@@ -184,6 +184,7 @@ Gdb_MI2::Gdb_MI2()
 	autos.NoHeader();
 	autos.AddColumn("", 1);
 	autos.AddColumn("", 6);
+	autos.WhenLeftDouble = THISBACK1(onExploreExpr, &autos);
 
 	Add(tab.SizePos());
 	tab.Add(watches.SizePos(), t_("Watches"));
@@ -572,6 +573,7 @@ void Gdb_MI2::SyncIde(bool fr)
 	int level = atoi(fInfo["level"].Get());
 	
 	// if we got file and line info, we can sync the source editor position
+	autoLine = "";
 	if(fInfo.Find("file") >= 0 && fInfo.Find("line") >= 0)
 	{
 		String file = GetLocalPath(fInfo["file"]);
@@ -580,6 +582,7 @@ void Gdb_MI2::SyncIde(bool fr)
 		{
 			IdeSetDebugPos(GetLocalPath(file), line - 1, fr ? DbgImg::FrameLinePtr() : DbgImg::IpLinePtr(), 0);
 			IdeSetDebugPos(GetLocalPath(file), line - 1, disas.HasFocus() ? fr ? DbgImg::FrameLinePtr() : DbgImg::IpLinePtr() : Image(), 1);
+			autoLine = IdeGetLine(line - 2) + ' ' + IdeGetLine(line - 1) + ' ' + IdeGetLine(line);
 		}
 	}
 
@@ -761,19 +764,25 @@ void Gdb_MI2::UpdateVars(void)
 		int iVar;
 
 		// local variables
-		if( (iVar = localVarNames.Find(varName)) < 0)
-			continue;
-		if( updated[iUpd].Find("value") < 0)
-			continue;
-		localVarValues[iVar] = updated[iUpd]["value"];
+		if( (iVar = localVarNames.Find(varName)) >= 0)
+		{
+			if( updated[iUpd].Find("value") >= 0)
+				localVarValues[iVar] = updated[iUpd]["value"];
+		}
 		
 		// watches
-		if( (iVar = watchesNames.Find(varName)) < 0)
-			continue;
-		if( updated[iUpd].Find("value") < 0)
-			continue;
-		watchesValues[iVar] = updated[iUpd]["value"];
+		if( (iVar = watchesNames.Find(varName)) >= 0)
+		{
+			if( updated[iUpd].Find("value") >= 0)
+				watchesValues[iVar] = updated[iUpd]["value"];
+		}
 		
+		// autos
+		if( (iVar = autosNames.Find(varName)) >= 0)
+		{
+			if( updated[iUpd].Find("value") >= 0)
+				autosValues[iVar] = updated[iUpd]["value"];
+		}
 	}
 }
 
@@ -869,6 +878,50 @@ void Gdb_MI2::UpdateWatches(void)
 	UpdateVars();
 }
 
+// update stored auto values on demand
+void Gdb_MI2::UpdateAutos(void)
+{
+	// gets variable names from control
+	Index<String> exprs;
+	for(int i = 0; i < autos.GetCount(); i++)
+		exprs.Add(autos.Get(i, 0));
+	
+	// purge stored autos not available anymore
+	for(int iVar = autosNames.GetCount() - 1; iVar >= 0;  iVar--)
+	{
+		if(exprs.Find(autosExpressions[iVar]) < 0)
+		{
+			String varName = autosNames.Pop();
+			MICmd("var-delete \"" + varName + "\"");
+			autosExpressions.Pop();
+			autosValues.Pop();
+			autosTypes.Pop();
+		}
+	}
+
+	// then we shall add missing variables
+	for(int i = 0; i < exprs.GetCount(); i++)
+	{
+		if(autosExpressions.Find(exprs[i]) < 0)
+		{
+			// the '@' means we create a dynamic variable
+			MIValue var = MICmd(String("var-create - @ \"") + exprs[i] + "\"");
+			
+			// sometimes it has problem creating vars... maybe because they're
+			// still not active; we just skip them
+			if(var.IsError() || var.IsEmpty())
+				continue;
+			autosNames.Add(var["name"]);
+			autosExpressions.Add(exprs[i]);
+			autosTypes.Add(var["type"]);
+			autosValues.Add(var["value"]);
+		}
+	}
+
+	// and finally, we do an update to refresh changed variables
+	UpdateVars();
+}
+
 void Gdb_MI2::SyncLocals()
 {
 	// update local vars cache, if needed
@@ -905,14 +958,18 @@ void Gdb_MI2::SyncWatches()
 // sync auto vars treectrl
 void Gdb_MI2::SyncAutos()
 {
-/*
 	VectorMap<String, String> prev = DataMap(autos);
 	autos.Clear();
-	CParser p(autoline);
-	while(!p.IsEof()) {
-		if(p.IsId()) {
+
+	// read expressions around cursor line
+	CParser p(autoLine);
+	while(!p.IsEof())
+	{
+		if(p.IsId())
+		{
 			String exp = p.ReadId();
-			for(;;) {
+			for(;;)
+			{
 				if(p.Char('.') && p.IsId())
 					exp << '.';
 				else
@@ -922,17 +979,27 @@ void Gdb_MI2::SyncAutos()
 					break;
 				exp << p.ReadId();
 			}
-			if(autos.Find(exp) < 0) {
-				String val = Print(exp);
-				if(!IsNull(val) && val.Find('(') < 0)
-					autos.Add(exp, val);
-			}
+			if(autos.Find(exp) < 0)
+				autos.Add(exp, "");
 		}
 		p.SkipTerm();
 	}
 	autos.Sort();
+
+	// update autos cache, if needed
+	UpdateAutos();
+
+	for(int i = autos.GetCount() -1; i >= 0; i--)
+	{
+		String expr = autos.Get(i, 0);
+		int idx = autosExpressions.Find(expr);
+		if(idx >= 0)
+			autos.Set(i, 1, "(" + autosTypes[idx] + ")" + autosValues[idx]);
+		else
+			autos.Remove(i);
+	}
+
 	MarkChanged(prev, autos);
-*/
 }
 
 // sync data tabs, depending on which tab is shown
