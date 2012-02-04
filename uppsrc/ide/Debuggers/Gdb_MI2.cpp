@@ -238,7 +238,7 @@ int Gdb_MI2::FindTabsRight(void)
 	
 	// bisect up it finds a point on last tab...
 	int iTab = -1;
-	int i;
+	int i = 0;
 	while(iTab != lastTab)
 	{
 		i = (i1 + i2) / 2;

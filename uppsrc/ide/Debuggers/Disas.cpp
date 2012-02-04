@@ -36,8 +36,8 @@ void DbgDisas::Paint(Draw& w)
 		if(i == ip)
 			DrawHighlightImage(w, x + 2, y + (box.cy - 12) / 2, ipimg);
 		x += 18;
-		w.DrawText(x, y, n.code, StdFont(), ink);
-		w.DrawText(x + codecx, y, n.args, StdFont(), ink);
+		w.DrawText(x, y, n.code, StdFont(12), ink);
+		w.DrawText(x + codecx, y, n.args, StdFont(12), ink);
 		y += box.cy;
 		i++;
 	}
@@ -92,7 +92,7 @@ void DbgDisas::Clear()
 	inst.Clear();
 	taddr.Clear();
 	addr.Clear();
-	codecx = GetTextSize("movlmo", StdFont()).cx;
+	codecx = GetTextSize("movlmo", StdFont(12)).cx;
 }
 
 void  DbgDisas::Add(adr_t adr, const String& code, const String& args)
@@ -107,7 +107,7 @@ void  DbgDisas::Add(adr_t adr, const String& code, const String& args)
 	n.args = args;
 	sb.SetTotal(inst.GetCount());
 	Refresh();
-	int cx = GetTextSize(n.code, StdFont()).cx;
+	int cx = GetTextSize(n.code, StdFont(12)).cx;
 	if(cx > codecx)
 		codecx = cx;
 }
