@@ -977,30 +977,79 @@ void Gdb_MI2::SendPrettyPrinters(void)
 	FileDelete(fName);
 }
 
+// format watch line
+String Gdb_MI2::FormatWatchLine(String exp, String const &val, int level)
+{
+	if(exp.GetCount() < 20)
+		exp = exp + String(' ', 20);
+	else
+		exp = exp.Left(17) + "...";
+	exp = exp.Left(20) + " = " + val;
+	return String(' ', level * 4) + exp;
+}
+
+// deep watch current quickwatch variable
+void Gdb_MI2::WatchDeep(String const &parentExp, String const &var, int level)
+{
+	MIValue childInfo = MICmd("var-list-children 1 \"" + var + "\" 0 100");
+	int nChilds = min(atoi(childInfo["numchild"].Get()), 100);
+	if(nChilds)
+	{
+		MIValue &childs = childInfo["children"];
+		for(int i = 0; i < childs.GetCount(); i++)
+		{
+			MIValue child = childs[i];
+			String exp = child["exp"];
+			
+			// handle pseudo children...
+			while(exp == "public" || exp == "private" || exp == "protected")
+			{
+				child = MICmd(String("var-list-children 1 \"") + child["name"] + "\"")["children"][0];
+				exp = child["exp"];
+			}
+			if(isdigit(exp[0]))
+				exp = '[' + exp + ']';
+
+			String type = child("type", "");
+			if(!type.IsEmpty())
+				type = "(" + type + ")";
+			String value = child["value"];
+			
+			// try to format nicely results...
+			quickwatch.value <<= (String)~quickwatch.value + "\n" + FormatWatchLine(parentExp + exp, type + value, level);
+			
+			// recursive deep watch
+			WatchDeep(exp, child["name"], level + 1);
+		}
+	}
+}
+
 // opens quick watch dialog
 void Gdb_MI2::QuickWatch()
 {
-/*
-	for(;;) {
+	for(;;)
+	{
 		int q = quickwatch.Run();
 		if(q == IDCANCEL)
 			break;
-		FastCmd("set print pretty on");
-		String s = FastCmd("p " + (String)~quickwatch.expression);
-		const char *a = strchr(s, '=');
-		if(a) {
-			a++;
-			while(*a == ' ')
-				a++;
-			quickwatch.value <<= a;
+		MIValue v = MICmd("var-create - @ " + (String)~quickwatch.expression);
+		if(!v.IsError())
+		{
+			String exp = ~quickwatch.expression;
+			String type = v("type", "");
+			if(!type.IsEmpty())
+				type = "(" + type + ")";
+			String value = v["value"];
+			quickwatch.value <<= FormatWatchLine(exp, type + value, 0);
 			quickwatch.expression.AddHistory();
+			String name = v["name"];
+			WatchDeep(exp, name, 1);
+			MICmd("var-delete " + name);
 		}
 		else
-			quickwatch.value <<= s;
-		FastCmd("set print pretty off");
+			quickwatch.value <<= t_("<can't evaluate expression>");
 	}
 	quickwatch.Close();
-*/
 }
 
 // copy stack frame list to clipboard
@@ -1096,8 +1145,6 @@ void Gdb_MI2::doExplore(String const &expr, String var, bool isChild, bool appen
 		{
 			MIValue child = childs[i];
 			String exp = child["exp"];
-			if(isdigit(exp[0]))
-				exp = '[' + exp + ']';
 			
 			// handle pseudo children...
 			while(exp == "public" || exp == "private" || exp == "protected")
@@ -1105,6 +1152,8 @@ void Gdb_MI2::doExplore(String const &expr, String var, bool isChild, bool appen
 				child = MICmd(String("var-list-children 1 \"") + child["name"] + "\"")["children"][0];
 				exp = child["exp"];
 			}
+			if(isdigit(exp[0]))
+				exp = '[' + exp + ']';
 			String type = child("type", "");
 			if(!type.IsEmpty())
 				type = "(" + type + ")";
