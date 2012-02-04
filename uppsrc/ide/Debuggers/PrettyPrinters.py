@@ -140,7 +140,7 @@ class UppArrayPrinter(object):
 class UppValuePrinter(object):
 
 	def __init__(self, val):
-		self.typeid ={
+		self.typeIds ={
 			0:'void',
 			1:'int',
 			2:'double',
@@ -156,6 +156,29 @@ class UppValuePrinter(object):
 			12:'Upp::ValueMap'
 		}
 		self.val = val
+		
+	def to_string(self):
+		typeId = Upp_Value_GetType(self.val)
+		if typeId == 0:
+			return '<void>'
+		elif typeId == 1 or typeId == 10:
+			return str(Upp_Value_GetInteger(self.val))
+		elif typeId == 2:
+			return str(Upp_Value_GetDouble(self.val))
+		elif typeId == 3:
+			return str(Upp_Value_GetString(self.val))
+		elif typeId == 6:
+			return '<ERROR VALUE>'
+		elif typeId == 7:
+			return str(Upp_Value_GetValue(self.val))
+		elif typeId == 8:
+			return str(Upp_Value_GetWString(self.val))
+		elif typeId == 11:
+			return str(Upp_Value_GetBool(self.val))
+		elif self.typeIds.has_key(typeId):
+			return "<unsupported value type '" + self.typeIds[typeId] + "'>"
+		else:
+			return "<unsupported value type '" + str(typeId) + "'>"
 
 def UppLookupFunction(val):
 	typeStr = str(val.type)
@@ -165,6 +188,9 @@ def UppLookupFunction(val):
 
 	if typeStr == 'Upp::String':
 		return UppStringPrinter(val)
+		
+	if typeStr == 'Upp::Value' and Upp_Value_Inspectors:
+		return UppValuePrinter(val)
 		
 	lookup_tag = val.type.tag
 	if lookup_tag == None:
@@ -179,6 +205,21 @@ def UppLookupFunction(val):
 		return UppArrayPrinter(lookup_tag, val)
 
 	return None
+
+#check if Upp value inspecting support is enabled
+Upp_Value_Inspectors = True
+try:
+	Upp_Value_GetType		= gdb.parse_and_eval('Upp::_GDB_Value_GetType')
+	Upp_Value_GetString		= gdb.parse_and_eval('Upp::_GDB_Value_GetString')
+	Upp_Value_GetWString	= gdb.parse_and_eval('Upp::_GDB_Value_GetWString')
+	Upp_Value_GetInteger	= gdb.parse_and_eval('Upp::_GDB_Value_GetInteger')
+	Upp_Value_GetDouble		= gdb.parse_and_eval('Upp::_GDB_Value_GetDouble')
+	Upp_Value_GetDate		= gdb.parse_and_eval('Upp::_GDB_Value_GetDate')
+	Upp_Value_GetTime		= gdb.parse_and_eval('Upp::_GDB_Value_GetTime')
+	Upp_Value_GetBool		= gdb.parse_and_eval('Upp::_GDB_Value_GetBool')
+	Upp_Value_GetValue		= gdb.parse_and_eval('Upp::_GDB_Value_GetValue')
+except Exception as inst:
+	Upp_Value_Inspectors = False
 
 gdb.pretty_printers.append(UppLookupFunction)
 
