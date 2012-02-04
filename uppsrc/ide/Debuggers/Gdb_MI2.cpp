@@ -56,18 +56,19 @@ bool Gdb_MI2::RunTo()
 {
 	String bi;
 	bool df = disas.HasFocus();
+	bool res;
+	// sets a temporary breakpoint on cursor location
+	// it'll be cleared automatically on first stop
 	if(df)
 	{
 		if(!disas.GetCursor())
 			return false;
-		bi = Sprintf("*0x%X", disas.GetCursor());
+		res = TryBreak(disas.GetCursor(), true);
 	}
 	else
-		bi = BreakPos(IdeGetFileName(), IdeGetFileLine());
+		res = TryBreak(IdeGetFileName(), IdeGetFileLine() + 1, true);
 
-	// sets a temporary breakpoint on cursor location
-	// it'll be cleared automatically on first stop
-	if(!TryBreak(IdeGetFileName(), IdeGetFileLine(), true))
+	if(!res)
 	{
 		Exclamation(t_("No code at chosen location !"));
 		return false;
@@ -490,13 +491,13 @@ MIValue Gdb_MI2::MICmd(const char *cmdLine)
 // format breakpoint line from ide file and line
 String Gdb_MI2::BreakPos(String const &file, int line)
 {
-	return String().Cat() << Filter(host->GetHostPath(NormalizePath(file)), CharFilterReSlash) << ":" << line + 1;
+	return String().Cat() << Filter(host->GetHostPath(NormalizePath(file)), CharFilterReSlash) << ":" << line;
 }
 
 // set breakpoint
 MIValue Gdb_MI2::InsertBreakpoint(const char *file, int line)
 {
-	return MICmd("break-insert" + BreakPos(file, line));
+	return MICmd("break-insert " + BreakPos(file, line));
 }
 
 // get breakpoints info
@@ -514,6 +515,17 @@ MIValue Gdb_MI2::GetBreakpoint(int id)
 MIValue Gdb_MI2::GetBreakPoint(const char *file, int line)
 {
 	return MIValue();
+}
+
+bool Gdb_MI2::TryBreak(adr_t addr, bool temp)
+{
+	String bp;
+	if(temp)
+		bp = "-t ";
+	bp += Format("*0x%X", (int64)addr);
+
+	MIValue res = MICmd(String("break-insert ") + bp);
+	return !res.IsError();
 }
 
 bool Gdb_MI2::TryBreak(String const &file, int line, bool temp)

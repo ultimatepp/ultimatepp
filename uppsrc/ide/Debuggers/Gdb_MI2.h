@@ -81,6 +81,7 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		MIValue GetBreakPoint(const char *file, int line);
 		
 		// try to set a breakpoint - returns false if no code there
+		bool TryBreak(adr_t addr, bool temp);
 		bool TryBreak(String const &file, int line, bool temp);
 
 		// set breakpoint
