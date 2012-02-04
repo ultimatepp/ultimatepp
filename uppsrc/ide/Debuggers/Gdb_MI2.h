@@ -163,6 +163,12 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 	
 		// opens quick watch dialog
 		void QuickWatch(void);
+		
+		// format watch line
+		String FormatWatchLine(String exp, String const &val, int level);
+
+		// deep watch current quickwatch variable
+		void WatchDeep(String const &parentExp, String const &name, int level = 0);
 
 		// copy stack frame list to clipboard
 		void CopyStack(void);
