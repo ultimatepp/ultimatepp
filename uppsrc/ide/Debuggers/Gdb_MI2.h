@@ -101,6 +101,13 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		Index<String>watchesExpressions;
 		Vector<String>watchesValues;
 		
+		// stored autos expressions, values and types
+		String autoLine;
+		Index<String>autosNames;
+		Vector<String>autosTypes;
+		Index<String>autosExpressions;
+		Vector<String>autosValues;
+		
 		// update variables on demand (locals, watches....)
 		void UpdateVars(void);
 
@@ -110,6 +117,9 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		// update stored watches values on demand
 		void UpdateWatches(void);
 		
+		// update stored auto values on demand
+		void UpdateAutos(void);
+
 		// logs frame data on console
 		void LogFrame(String const &msg, MIValue &frame);
 
