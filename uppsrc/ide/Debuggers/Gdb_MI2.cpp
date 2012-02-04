@@ -834,6 +834,11 @@ void Gdb_MI2::UpdateVars(void)
 	}
 }
 
+struct CapitalLess
+{
+	bool operator()(String const &a, String const &b) const { return ToUpper(a) < ToUpper(b); }
+};
+
 // update local variables on demand
 void Gdb_MI2::UpdateLocalVars(void)
 {
@@ -877,6 +882,19 @@ void Gdb_MI2::UpdateLocalVars(void)
 			localVarValues.Add(var["value"]);
 		}
 	}
+	
+	// unsorted local vars are ugly and difficult to look at...
+	// so we sort them. As we've 4 structures, it's not so simple
+	Vector<String> keys;
+	keys <<= localVarExpressions.GetKeys();
+	IndexSort(keys, localVarTypes, CapitalLess());
+	keys <<= localVarExpressions.GetKeys();
+	IndexSort(keys, localVarValues, CapitalLess());
+	Vector<String> names;
+	names <<= localVarNames.GetKeys();
+	IndexSort(keys, names, CapitalLess());
+	localVarNames = names;
+	localVarExpressions = keys;
 	
 	// and finally, we do an update to refresh changed variables
 	UpdateVars();

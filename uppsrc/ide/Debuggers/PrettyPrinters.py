@@ -136,9 +136,9 @@ class UppArrayPrinter(object):
 	def display_hint(self):
 		return 'array'
 
-# Upp::VectorMap printer
-class UppVectorMapPrinter(object):
-	"Print an Upp::VectorMap"
+# Upp::VectorMap and ArrayMap printer
+class UppMapPrinter(object):
+	"Print an Upp::VectorMap or ArrayMap"
 
 	def __init__(self, typename, val):
 		self.typename = typename
@@ -213,7 +213,11 @@ def UppLookupFunction(val):
 
 	regex = re.compile("^Upp::VectorMap<.*>$")
 	if regex.match(lookup_tag):
-		return UppVectorMapPrinter(lookup_tag, val)
+		return UppMapPrinter(lookup_tag, val)
+
+	regex = re.compile("^Upp::ArrayMap<.*>$")
+	if regex.match(lookup_tag):
+		return UppMapPrinter(lookup_tag, val)
 
 	regex = re.compile("^Upp::Vector<.*>$")
 	if regex.match(lookup_tag):
