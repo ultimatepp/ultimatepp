@@ -19,7 +19,13 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		DbgDisas disas;
 
 		// the registers pane
+#ifdef CPU_64
+		FrameBottom<WithGdb_MI2Registers64Layout<StaticRect> > regs;
+#define	RPREFIX "r"
+#else
 		FrameBottom<WithGdb_MI2RegistersLayout<StaticRect> > regs;
+#define	RPREFIX "e"
+#endif
 
 		// the quick watch dialog
 		WithGdb_MI2QuickwatchLayout<TopWindow> quickwatch;
