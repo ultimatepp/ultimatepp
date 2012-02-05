@@ -195,6 +195,15 @@ class UppValuePrinter(object):
 				else:
 					return "<unsupported value type '" + str(typeId) + "'>"
 
+# Upp::One<> printer
+class UppOnePrinter(object):
+
+	def __init__(self, val):
+		self.val = val
+		
+	def to_string(self):
+		return str(self.val['ptr'].dereference())
+
 def UppLookupFunction(val):
 	typeStr = str(val.type)
 	
@@ -230,6 +239,10 @@ def UppLookupFunction(val):
 	regex = re.compile("^Upp::Index<.*>$")
 	if regex.match(lookup_tag):
 		return UppVectorPrinter(lookup_tag, val['key'])
+
+	regex = re.compile("^Upp::One<.*>$")
+	if regex.match(lookup_tag):
+		return UppOnePrinter(val)
 
 	return None
 
