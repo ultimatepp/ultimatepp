@@ -308,7 +308,6 @@ void Gdb_MI2::Unlock()
 MIValue Gdb_MI2::ParseGdb(String const &output, bool wait)
 {
 	MIValue res;
-
 	// parse result data
 	StringStream ss(output);
 	while(!ss.IsEof())
@@ -862,9 +861,14 @@ void Gdb_MI2::showThread(void)
 // update variables on demand (locals, watches....)
 void Gdb_MI2::UpdateVars(void)
 {
-	MIValue updated = MICmd("var-update 2 *")["changelist"];
+	MIValue iUpdated = MICmd("var-update 2 *");
+	if(!iUpdated.IsTuple() || iUpdated.Find("changelist") < 0)
+		return;
+	MIValue &updated = iUpdated["changelist"];
 	for(int iUpd = 0; iUpd < updated.GetCount(); iUpd++)
 	{
+		if(!updated[iUpd].IsTuple() || iUpdated.Find("name") < 0 || iUpdated.Find("value") < 0)
+			return;
 		String varName = updated[iUpd]["name"];
 		int iVar;
 
@@ -903,7 +907,10 @@ void Gdb_MI2::UpdateLocalVars(void)
 	// because we need to keep them updated at each step and
 	// re-reading as a whole is too time expensive.
 	// So, at first we build a list of local variable NAMES only
-	MIValue loc = MICmd("stack-list-variables 0")["variables"];
+	MIValue iLoc = MICmd("stack-list-variables 0");
+	if(iLoc.IsEmpty() || iLoc.IsError())
+		return;
+	MIValue &loc = iLoc["variables"];
 	Index<String>locIdx;
 	for(int iLoc = 0; iLoc < loc.GetCount(); iLoc++)
 		locIdx.Add(loc[iLoc]["name"]);
