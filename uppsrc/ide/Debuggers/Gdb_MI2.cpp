@@ -129,7 +129,22 @@ bool Gdb_MI2::IsFinished()
 
 bool Gdb_MI2::Tip(const String& exp, CodeEditor::MouseTip& mt)
 {
-	return false;
+	// quick exit
+	if(exp.IsEmpty())
+		return false;
+	
+	// if local vars are empty, update them
+	UpdateLocalVars();
+
+	// display tip just for local variables... it should be more than enough
+	int i = localVarExpressions.Find(exp);
+	if(i < 0)
+		return false;
+
+	mt.display = &StdDisplay();
+	mt.value = exp + "=" + localVarValues[i];
+	mt.sz = mt.display->GetStdSize(String(mt.value) + "X");
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -642,11 +657,6 @@ void Gdb_MI2::SyncIde(bool fr)
 			IdeSetDebugPos(GetLocalPath(file), line - 1, disas.HasFocus() ? fr ? DbgImg::FrameLinePtr() : DbgImg::IpLinePtr() : Image(), 1);
 			autoLine = IdeGetLine(line - 2) + ' ' + IdeGetLine(line - 1) + ' ' + IdeGetLine(line);
 		}
-	}
-
-	// i we got an address, we can sync the assembly position
-	if(fInfo.Find("addr") >= 0)
-	{
 	}
 
 	// get the arguments for current frame
