@@ -140,14 +140,14 @@ Gdb_MI2::Gdb_MI2()
 {
 	CtrlLayout(regs);
 	regs.Height(regs.GetLayoutSize().cy);
-	AddReg("eax", &regs.eax);
-	AddReg("ebx", &regs.ebx);
-	AddReg("ecx", &regs.ecx);
-	AddReg("edx", &regs.edx);
-	AddReg("esi", &regs.esi);
-	AddReg("edi", &regs.edi);
-	AddReg("ebp", &regs.ebp);
-	AddReg("esp", &regs.esp);
+	AddReg(RPREFIX "ax", &regs.rax);
+	AddReg(RPREFIX "bx", &regs.rbx);
+	AddReg(RPREFIX "cx", &regs.rcx);
+	AddReg(RPREFIX "dx", &regs.rdx);
+	AddReg(RPREFIX "si", &regs.rsi);
+	AddReg(RPREFIX "di", &regs.rdi);
+	AddReg(RPREFIX "bp", &regs.rbp);
+	AddReg(RPREFIX "sp", &regs.rsp);
 	regs.Color(SColorLtFace);
 	regs.AddFrame(TopSeparatorFrame());
 	regs.AddFrame(RightSeparatorFrame());
@@ -578,6 +578,33 @@ void Gdb_MI2::SyncDisas(MIValue &fInfo, bool fr)
 			disas.Add(address, opCode, operand);
 		}
 	}
+	
+	// update registers
+	MIValue rNames = MICmd("data-list-register-names")["register-names"];
+	Index<String>iNames;
+	for(int i = 0; i < rNames.GetCount(); i++)
+		iNames.Add(rNames[i]);
+	MIValue rValues = MICmd("data-list-register-values x")["register-values"];
+	for(int iReg = 0; iReg < regname.GetCount(); iReg++)
+	{
+		int i = iNames.Find(regname[iReg]);
+		String rValue = "****************";
+		if(i >= 0)
+			rValue = "0000000000000000" + rValues[i]["value"].Get().Mid(2);
+#ifdef CPU_64
+		rValue = rValue.Right(16);
+#else
+		rValue = rValue.Right(8);
+#endif
+		if(reglbl[iReg]->GetText() != rValue)
+		{
+			reglbl[iReg]->SetLabel(rValue);
+			reglbl[iReg]->SetInk(LtRed);
+		}
+		else
+			reglbl[iReg]->SetInk(Black);
+	}
+			
 }
 
 // sync ide display with breakpoint position
