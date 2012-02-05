@@ -713,23 +713,31 @@ void Gdb_MI2::Step(const char *cmd)
 // setup ide cursor based on disassembler one
 void Gdb_MI2::DisasCursor()
 {
-/*
 	if(!disas.HasFocus())
 		return;
-	int line;
-	String file;
-	adr_t addr;
-	if(ParsePos(FastCmd(Sprintf("info line *0x%X", disas.GetCursor())), file, line, addr))
-		IdeSetDebugPos(file, line - 1, DbgImg::DisasPtr(), 1);
+
+	// temporary disable disas lost-focus handler
+	// otherwise cursor will not be correctly set by following code
+	disas.WhenFocus.Clear();
+
+	// to get info of corresponding file/line of an address, the only way
+	// we found is to insert a breakpoint, note the position and remove it
+	MIValue b = MICmd(Format("break-insert *0x%X", (int64)disas.GetCursor()))["bkpt"];
+	if(b.Find("file") >= 0 && b.Find("line") >= 0)
+		IdeSetDebugPos(b["file"], atoi(b["line"].Get()) - 1, DbgImg::DisasPtr(), 1);
+	if(b.Find("number"))
+		MICmd(Format("break-delete %s", b["number"].Get()));
 	disas.SetFocus();
-*/
+
+	// re-enable disas lost focus handler
+	disas.WhenFocus = THISBACK(DisasFocus);
 }
 
 // reset ide default cursor image when disassembler loose focus
 void Gdb_MI2::DisasFocus()
 {
-//	if(!disas.HasFocus())
-//		IdeSetDebugPos(file, 0, Null, 1);
+	if(!disas.HasFocus())
+		IdeSetDebugPos(IdeGetFileName(), IdeGetFileLine(), Null, 1);
 }
 
 // create a string representation of frame given its info and args
