@@ -1117,6 +1117,11 @@ bool Gdb_MI2::Key(dword key, int count)
 			f->Key(key, count);
 		return true;
 	}
+	if(key == K_ENTER && explorerExprEdit.HasFocus())
+	{
+		onExploreExpr();
+		return true;
+	}
 	return Ctrl::Key(key, count);
 }
 
@@ -1245,7 +1250,12 @@ void Gdb_MI2::doExplore(String const &expr, String var, bool isChild, bool appen
 		{
 			MIValue v = MICmd("var-create - @ \"" + expr + "\"");
 			if(v.IsEmpty() || v.IsError())
+			{
+				explorer.Clear();
+				explorerChildVars.Clear();
+				explorer.Add(expr, "<can't evaluate>");
 				return;
+			}
 			var = v["name"];
 		}
 		else
@@ -1330,6 +1340,7 @@ void Gdb_MI2::onExploreExpr(ArrayCtrl *what)
 		// we use the expression editbox
 		expr = ~explorerExprEdit;
 	}
+	else
 	{
 		// otherwise, we use the expression from sending ArrayCtrl
 		int line = what->GetCursor();
