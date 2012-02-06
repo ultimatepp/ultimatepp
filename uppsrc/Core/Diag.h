@@ -88,7 +88,7 @@ inline void LockLog() {}
 inline void UnlockLog() {}
 #endif
 
-#define STATIC_ASSERT(x)
+#define STATIC_ASSERT( expr ) { struct __static_assert { unsigned static_assert:(expr); }; }
 
 #ifdef _DEBUG
 
