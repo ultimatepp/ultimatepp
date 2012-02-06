@@ -54,8 +54,8 @@ BLITZ время сборки проекта уменьшено
 такие возможности как: автозаполнение 
 кода, навигацию и трансформацию.]&]
 [s0;2 &]
-[s0; [2 TheIDE работает с GCC, MinGW и Visual C`+`+ 9.0 (поставляет
-ся с бесплатным ][^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?familyid`=ff6467e6`-5bba`-4bf5`-b562`-9199be864d29`&displaylang`=en^2 W
+[s0; [2 TheIDE работает с GCC, MinGW и Visual C`+`+ (поставляется
+ с бесплатным ][^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?familyid`=ff6467e6`-5bba`-4bf5`-b562`-9199be864d29`&displaylang`=en^2 W
 indows Vista SDK][2 ), а также содержит полноценный 
 отладчик. TheIDE можно использовать 
 не только для разработки U`+`+ приложений.]&]
@@ -805,12 +805,15 @@ Ultimate`+`+ вы получите:]&]
 примеры/уроки]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/comparison`$ru`-ru^2 Сравнения]&]
 [s0;i150;O0; [^topic`:`/`/uppweb`/www`/overview`$ru`-ru^2 Обзор 
-возможностей]]
+возможностей]&]
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/tutoring`$ru`-ru^2 План 
+изучения]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r8/25t/25b/25R(165) [s0;>@(114)2 ]
 ::t8/25b8/25-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/documentation`$ru`-ru^2 Документац
 ия]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/examples`$ru`-ru^2 Примеры]]
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/examples`$ru`-ru^2 Примеры]&]
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/videotutorials`$ru`-ru^2 Видеоуроки]]
 ::r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
 ::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/apps`$ru`-ru^2 Приложения]&]
@@ -840,21 +843,21 @@ Ultimate`+`+ вы получите:]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/contribweb`$ru`-ru^2 Помочь 
 с веб`-сайтом.]&]
 [s0;i150;a17;O0; [2 Предложить свои идеи по Ultimate`+`+:]&]
-[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/www`/currenttopics`$en`-en^2 Текущие 
+[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/www`/currenttopics`$ru`-ru^2 Текущие 
 темы]&]
-[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/ideas2010`$en`-en^2 GSoC 
+[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/ideas2011`$ru`-ru^2 GSoC 
 идеи]]
 ::=l0/25r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
-::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^2 Базар 
+::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/bazaar`$ru`-ru^2 Базар 
 (сторонний код)]&]
-[s0;i150;a17;O0; [^topic`:`/`/ide`/app`/About`$en`-us^2 Авторы 
+[s0;i150;a17;O0; [^topic`:`/`/ide`/app`/About`$ru`-ru^2 Авторы 
 и лицензия]]
 ::=l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/download`$en`-us^2 Страница 
+::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/download`$ru`-ru^2 Страница 
 загрузки]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^2 Текущий 
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Roadmap`$ru`-ru^2 Текущий 
 релиз][2 : ][IRELEASE;2 release]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-RELEASE`.exe^+75 W
 in32 installer]&]
@@ -862,7 +865,7 @@ in32 installer]&]
 11`-src]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^+75 Ubun
 tu packages]&]
-[s0;i150;a17;O0;%% [%RU-RU^topic`:`/`/uppweb`/svn`/svn`$en`-us^2 SVN][%RU-RU2 : 
+[s0;i150;a17;O0;%% [%RU-RU^topic`:`/`/uppweb`/svn`/svn`$ru`-ru^2 SVN][%RU-RU2 : 
 ][ILATESTSVN;2 latestsvn]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r/0t8/25b8/25R(165)-1 [s0;*+34 ]
@@ -881,17 +884,17 @@ tu packages]&]
 ::l/25r0/25t0/15b0/15@2R0 [s0;%- ]
 ::l8/25t8/25b8/25@(240)R(165) [s0; [*2 Помочь U`+`+]]
 ::l0/25r8/25 [s0;> [@(114)2 Иногда нужен не только код...]]
-::l8/25@2-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/gsoc`$en`-us^2 Google Summer 
+::l8/25@2-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/gsoc`$ru`-ru^2 Google Summer 
 of Code ресурсы]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/extlinks`$en`-us^2 Внешние 
+::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/extlinks`$ru`-ru^2 Внешние 
 ссылки]&]
 [s0;i150;O0; [2 Карта сайта. ][/@(153)2 В разработке...]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
 ::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Funding`$ru`-ru^2 Финансовая 
 поддержка U`+`+]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/cookie`$en`-us^2 Cookie`-приз]]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/cookie`$ru`-ru^2 Cookie`-приз]]
 ::=l0/25r0/25t0/15b0/15R0 [s0;%- ]}}&]
 [s0; ]

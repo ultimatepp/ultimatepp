@@ -38,6 +38,10 @@ TOPIC("documentation$de-de")
 #include "documentation$de-de.tppi"
 END_TOPIC
 
+TOPIC("documentation$ru-ru")
+#include "documentation$ru-ru.tppi"
+END_TOPIC
+
 TOPIC("download$de-de")
 #include "download$de-de.tppi"
 END_TOPIC
@@ -48,6 +52,10 @@ END_TOPIC
 
 TOPIC("download$fr-fr")
 #include "download$fr-fr.tppi"
+END_TOPIC
+
+TOPIC("download$ru-ru")
+#include "download$ru-ru.tppi"
 END_TOPIC
 
 TOPIC("idess$de-de")
@@ -66,8 +74,16 @@ TOPIC("index$eu-es")
 #include "index$eu-es.tppi"
 END_TOPIC
 
+TOPIC("index$ru-ru")
+#include "index$ru-ru.tppi"
+END_TOPIC
+
 TOPIC("nightly$en-us")
 #include "nightly$en-us.tppi"
+END_TOPIC
+
+TOPIC("nightly$ru-ru")
+#include "nightly$ru-ru.tppi"
 END_TOPIC
 
 TOPIC("overview$de-de")
