@@ -87,7 +87,7 @@ SqlBool NotNull(const SqlVal& a) {
 }
 
 SqlBool SqlFirstRow() {
-	return SqlId("ROWNUM") == 1;
+	return SqlRowNum() == 1;
 }
 
 SqlBool Like(const SqlVal& a, const SqlVal& b, bool cs) {
