@@ -68,6 +68,10 @@ void Test(int dialect, const char *dialectn, SqlStatement s, const char *q)
 			quote = !quote;
 		else
 		if(quote && !IsCid(compiled[i])) {
+			LOG("---------------------");
+			LOG("Dialect  " << dialectn);
+			LOG("Etalon   " << q);
+			LOG("Compiled " << s.Get(dialect));
 			LOG("FAILED QUOTES");
 		#ifndef flagNOSTOP
 			NEVER();
@@ -90,6 +94,8 @@ void Test(int dialect, const char *dialectn, SqlStatement s, const char *q)
 
 CONSOLE_APP_MAIN
 {
+	SqlId::UseQuotes();
+
 	Date date = Date(2011, 12, 31);
 	EXP(Select(A, B).From(TABLE1, TABLE2).OrderBy(B, C));
 	EXP(Select(A, B).From(TABLE1, TABLE2).Where(A == 10).OrderBy(B, C));
@@ -200,9 +206,9 @@ CONSOLE_APP_MAIN
 	
 	EXP(Select(SqlAll().Of(TABLE1)).From(TABLE1));
 
-	EXP(Select(SqlId("TEST.*")).From(TABLE1));
+	EXP(Select(SqlTxt("TEST.*")).From(TABLE1));
 
-	EXP(Select(SqlId("123")).From(TABLE1));
+	EXP(Select(SqlTxt("123")).From(TABLE1));
 
 // =========================================================================
 
