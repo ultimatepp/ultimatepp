@@ -736,10 +736,11 @@ public:
 // ------------------------------------
 
 	Time      config_time;
+	Time      ConfigTime();
 	void      LoadConfig();
 	void      SaveConfig();
-	void      CheckConfig();
 	void      FinishConfig();
+	void      SaveConfigOnTime();
 
 	int       GetPackageIndex();
 

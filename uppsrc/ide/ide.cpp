@@ -719,7 +719,6 @@ void Ide::SetIcon()
 
 void Ide::Periodic()
 {
-	CheckConfig();
 	CheckFileUpdate();
 	SetIcon();
 	if(debugger && debugger->IsFinished() && !IdeIsDebugLock())
