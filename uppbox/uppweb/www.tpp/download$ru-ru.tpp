@@ -74,7 +74,7 @@ UR][2  и собрать их инструментом makepkg.
 [s1;#b0; Ночные сборки&]
 [s0;2 &]
 [s0; [2 Каждую ночь автоматически публикуется 
-новый выпуск. Здесь ][^topic`:`/`/uppweb`/www`/nightly`$en`-us^2 to
+новый выпуск. Здесь ][^topic`:`/`/uppweb`/www`/nightly`$ru`-ru^2 to
 pic://uppweb/www/nightly`$ru`-ru][2 , вы можетere найти 
 инсталлятор для windows (upp`-win32`-NNNN.exe) 
 и архив с исходным кодом (upp`-x11`-src`-NNNN.tar.gz). 
