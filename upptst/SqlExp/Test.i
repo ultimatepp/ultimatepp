@@ -1869,46 +1869,46 @@
 		"select \"TABLE1\".* from \"TABLE1\"");
 // ---------------------------------
 	TEST(MY_SQL,
-		Select(SqlId("TEST.*")).From(TABLE1),
+		Select(SqlTxt("TEST.*")).From(TABLE1),
 		"select TEST.* from `TABLE1`");
 	TEST(SQLITE3,
-		Select(SqlId("TEST.*")).From(TABLE1),
+		Select(SqlTxt("TEST.*")).From(TABLE1),
 		"select TEST.* from \"TABLE1\"");
 	TEST(ORACLE,
-		Select(SqlId("TEST.*")).From(TABLE1),
+		Select(SqlTxt("TEST.*")).From(TABLE1),
 		"select TEST.* from \"TABLE1\"");
 	TEST(MSSQL,
-		Select(SqlId("TEST.*")).From(TABLE1),
+		Select(SqlTxt("TEST.*")).From(TABLE1),
 		"select TEST.* from \"TABLE1\"");
 	TEST(PGSQL,
-		Select(SqlId("TEST.*")).From(TABLE1),
+		Select(SqlTxt("TEST.*")).From(TABLE1),
 		"select TEST.* from \"TABLE1\"");
 	TEST(FIREBIRD,
-		Select(SqlId("TEST.*")).From(TABLE1),
+		Select(SqlTxt("TEST.*")).From(TABLE1),
 		"select TEST.* from \"TABLE1\"");
 	TEST(DB2,
-		Select(SqlId("TEST.*")).From(TABLE1),
+		Select(SqlTxt("TEST.*")).From(TABLE1),
 		"select TEST.* from \"TABLE1\"");
 // ---------------------------------
 	TEST(MY_SQL,
-		Select(SqlId("123")).From(TABLE1),
+		Select(SqlTxt("123")).From(TABLE1),
 		"select 123 from `TABLE1`");
 	TEST(SQLITE3,
-		Select(SqlId("123")).From(TABLE1),
+		Select(SqlTxt("123")).From(TABLE1),
 		"select 123 from \"TABLE1\"");
 	TEST(ORACLE,
-		Select(SqlId("123")).From(TABLE1),
+		Select(SqlTxt("123")).From(TABLE1),
 		"select 123 from \"TABLE1\"");
 	TEST(MSSQL,
-		Select(SqlId("123")).From(TABLE1),
+		Select(SqlTxt("123")).From(TABLE1),
 		"select 123 from \"TABLE1\"");
 	TEST(PGSQL,
-		Select(SqlId("123")).From(TABLE1),
+		Select(SqlTxt("123")).From(TABLE1),
 		"select 123 from \"TABLE1\"");
 	TEST(FIREBIRD,
-		Select(SqlId("123")).From(TABLE1),
+		Select(SqlTxt("123")).From(TABLE1),
 		"select 123 from \"TABLE1\"");
 	TEST(DB2,
-		Select(SqlId("123")).From(TABLE1),
+		Select(SqlTxt("123")).From(TABLE1),
 		"select 123 from \"TABLE1\"");
 // ---------------------------------
