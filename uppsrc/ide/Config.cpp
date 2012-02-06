@@ -202,12 +202,23 @@ void Ide::Serialize(Stream& s)
 	s.Magic();
 }
 
+Time Ide::ConfigTime()
+{
+	return FileGetTime(ConfigFile());
+}
+
 void Ide::SaveConfig()
 {
 	SaveChangedFile(ConfigFile(), StoreAsString(*this));
 	SaveChangedFile(ConfigFile("ide.key"), StoreKeys());
 	SaveChangedFile(ConfigFile("ide.colors"), editor.StoreHlStyles());
-	config_time = FileGetTime(ConfigFile());
+	config_time = ConfigTime();
+}
+
+void Ide::SaveConfigOnTime()
+{
+	if(ConfigTime() == config_time)
+		SaveConfig();
 }
 
 void Ide::LoadConfig()
@@ -223,10 +234,4 @@ void Ide::LoadConfig()
 	}
 	SaveLoadPackage();
 	SyncCh();
-}
-
-void Ide::CheckConfig()
-{
-	if(config_time != FileGetTime(ConfigFile()))
-		LoadConfig();
 }

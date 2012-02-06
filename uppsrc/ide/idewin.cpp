@@ -899,9 +899,9 @@ void AppMain___()
 			SyncRefs();
 			ide.FileSelected();
 			ide.Run();
+			ide.SaveConfigOnTime();
+			ide.SaveLastMain();
 		}
-		ide.SaveConfig();
-		ide.SaveLastMain();
 	#ifdef PLATFORM_POSIX
 		StoreAsXMLFile(UpdaterCfg(),"SourceUpdater",ConfigFile("updates.xml"));
 	#endif
