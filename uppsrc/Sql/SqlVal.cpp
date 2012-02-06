@@ -421,17 +421,20 @@ SqlVal CurrVal(const SqlId& a) {
 				  , SqlS::HIGH);
 }
 
-SqlVal SqlRowNum()
+SqlVal SqlTxt(const char *s)
 {
 	SqlVal v;
-	v.SetHigh("ROWNUM");
+	v.SetHigh(s);
 	return v;
 }
 
+SqlVal SqlRowNum()
+{
+	return SqlTxt("ROWNUM");
+}
+
 SqlVal SqlArg() {
-	SqlVal v;
-	v.SetHigh("?");
-	return v;
+	return SqlTxt("?");
 }
 
 SqlVal OuterJoin(const SqlId& col)

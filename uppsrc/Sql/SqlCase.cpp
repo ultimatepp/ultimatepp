@@ -20,6 +20,13 @@ T ReadSqlValue(T& x, const char *&s) {
 	return x;
 }
 
+static bool sSqlIdQuoted;
+
+void SqlId::UseQuotes(bool b)
+{
+	sSqlIdQuoted = b;
+}
+
 void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 {
 	char quote = dialect == MY_SQL ? '`' : '\"';
@@ -44,12 +51,9 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 		case SQLC_ID: {
 				for(;;) {
 					const char *b = s;
-					bool do_quote = IsAlpha(*s) || *s == '_' || *s == '$';
-					while((byte)*s >= 32) {
-						if(!(IsAlNum(*s) || *s == '_' || *s == '$'))
-							do_quote = false;
+					bool do_quote = sSqlIdQuoted && *s != '*';
+					while((byte)*s >= 32)
 						s++;
-					}
 					int c = *s;
 					if(r) {
 						if(do_quote)

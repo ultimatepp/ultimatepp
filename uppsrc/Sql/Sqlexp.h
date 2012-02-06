@@ -108,6 +108,8 @@ private:
 	void PutOf(String& s, const SqlId& b) const;
 
 public:
+	static void   UseQuotes(bool b = true);
+
 	bool          IsEqual(const SqlId& b) const  { return id == b.id; }
 	bool          IsEqual(const Id& b) const     { return id == b; }
 	bool          IsNull() const                 { return id.IsNull(); }
@@ -306,6 +308,8 @@ SqlVal CurrVal(const SqlId& a);
 SqlVal OuterJoin(const SqlId& col); //Oracle only, deprecated
 
 inline SqlVal operator++(const SqlId& a)           { return NextVal(a); }
+
+SqlVal SqlTxt(const char *s);
 
 SqlVal SqlRowNum();
 
