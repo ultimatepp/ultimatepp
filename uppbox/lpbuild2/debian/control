@@ -3,12 +3,12 @@ Section: devel
 Priority: optional
 Maintainer: Jan Dolinar <dolik.rce@seznam.cz>
 Standards-Version: 3.9.1
-Build-Depends: g++ (= 4.1) | g++ (>= 4.3), debhelper (>= 7), libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), libbz2, libgtk2.0-dev (>= 2.8.17), libnotify-dev
+Build-Depends: g++ (= 4.1) | g++ (>= 4.3), debhelper (>= 7), libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), libbz2-dev, libgtk2.0-dev (>= 2.8.17), libnotify-dev
 Homepage: http://www.ultimatepp.org
 
 Package: upp
 Architecture: all
-Depends: theide, ${misc:Depends}, g++ (= 4.1) | g++ (>= 4.3), libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), libgtk2.0-dev (>= 2.8.17), libnotify-dev
+Depends: theide, ${misc:Depends}, g++ (= 4.1) | g++ (>= 4.3), libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), libbz2-dev, libgtk2.0-dev (>= 2.8.17), libnotify-dev
 Description: C++ library for cross-platform development
  Ultimate++ is a radical and innovative GUI toolkit whose number one priority
  is programmer productivity. C++ is a great programming language but
