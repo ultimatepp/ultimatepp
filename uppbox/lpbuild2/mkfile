@@ -1,83 +1,82 @@
 ########################################################################
-#     __  __  __   ____  __  __  __   __  ____  ___     _      _       #
-#    (  )(  )(  ) (_  _)(  )(  \/  ) (  )(_  _)(  _)  _( )_  _( )_     #
-#     )(__)(  )(__  )(   )(  )    (  /__\  )(   ) _) (_   _)(_   _)    #
-#     \____/ (____)(__) (__)(_/\/\_)(_)(_)(__) (___)   (_)    (_)      #
-#        ___  ___    __   __  __  ___  _    _  __   ___   _  _         #
-#       (  _)(  ,)  (  ) (  \/  )(  _)( \/\/ )/  \ (  ,) ( )/ )        #
-#        ) _) )  \  /__\  )    (  ) _) \    /( () ) )  \  )  \         #
-#       (_)  (_)\_)(_)(_)(_/\/\_)(___)  \/\/  \__/ (_)\_)(_)\_)        #
-#              __  __   __   _  _  ___  ___  __  __    ___             #
-#             (  \/  ) (  ) ( )/ )(  _)(  _)(  )(  )  (  _)            #
-#              )    (  /__\  )  \  ) _) ) _) )(  )(__  ) _)            #
-#             (_/\/\_)(_)(_)(_)\_)(___)(_)  (__)(____)(___)            #
+#  __  __    _      _     __  __   __   _  _  ___  ___  __  __    ___  #
+# (  )(  ) _( )_  _( )_  (  \/  ) (  ) ( )/ )(  _)(  _)(  )(  )  (  _) #
+#  )(__)( (_   _)(_   _)  )    (  /__\  )  \  ) _) ) _) )(  )(__  ) _) #
+#  \____/   (_)    (_)   (_/\/\_)(_)(_)(_)\_)(___)(_)  (__)(____)(___) #
 #                                                                      #
-########################################################################
-
 ############################## USAGE ###################################
 # This makefile is controlled through a set of variables, similar to   #
 # any other makefile. The prefered way to change them is via command   #
-# line, e.g.: make "PKG=ide usvn" CC=g++                               #
+# line, e.g.: make PKG="ide usvn" CXX=g++                              #
 #                                                                      #
 # All of the variables that can control the bahaviour are listed below #
-# in DEFAULTS section. Also their default value is shown here.         #
+# in DEFAULTS section. Also their default value is shown here. Notice  #
+# that many of them can contain shell commands (enclosed in ``) which  #
+# are evaluated before parsing and building each package.
 #                                                                      #
-# For boolean type of variables, values of y, Y, yes, YES, Yes, true,  #
-# True, TRUE, T, t, 1, on, On, ON and @ are considered true. Anything  #
+# For boolean type of variables value "1" represents true, anything    #
 # else is evaluated as false.                                          #
 ############################# TARGETS ##################################
-# This makefile defines four targets that are meant to be used by user #
-# from the command line:                                               #
+# This makefile defines five targets that are meant to be used         #
+# directly by user from the command line:                              #
 #                                                                      #
-# all    - builds all (default if any packages are selected)           #
-# help   - shows this help (default if no packages are selected)       #
-# clean  - deletes OBJDIR                                              #
-# export - exports preparsed Makefile to file EXPORT                   #
+# all          - builds all (default if any packages are specified)    #
+# help         - shows this help (default if no packages are given)    #
+# simulate     - prints all commands, without executing them           #
+# clean        - deletes all compiled files related to given packages  #
+# dist-clean   - deletes the entire OUT directory (including parsers)  #
 ############################# EXAMPLES #################################
 # Typical usage:                                                       #
-#    make PKG=ide FLAGS="GUI MT"                                       #
+#    make PKG=ide FLAGS="GCC"                                          #
 # More complicated usage:                                              #
-#    make PKG="ide UWord Bombs" FLAGS="GUI GCC NOGTK" VERBOSE=y        #
-# Building "theide" instead of "ide":                                  #
-#    make PKG=ide BINPREFIX=bin/the                                    #
-# Export makefile with full dependencies:                              #
-#    make export PKG=ide FAST=n                                        #
+#    make PKG="ide UWord Bombs" FLAGS="GCC .NOGTK" ECHO=1              #
 # Show help:                                                           #
-#    make OR make help                                                 #
-# Simulation mode:                                                     #
-#    make PKG=ide SIMULATE=y                                           #
+#    make help                                                         #
 # Silent mode:                                                         #
-#    make PKG=ide SILENT=y                                             #
-# Paralel compilation (3 paralel processes):                           #
-#    make PKG=ide JOBS=3                                               #
+#    make PKG=ide SILENT=1                                             #
 ############################# DEFAULTS #################################
-# List of packages to build (space separated).                         #
-# If empty, this help text will be shown.                              #
-PKG=
+# List of packages to build (space separated). If empty, this help     #
+# text will be shown.                                                  #
+PKG:=
 # Paths where to look for packages.                                    #
-NESTS=bazaar examples reference tutorial uppsrc
-# Flags as in TheIDE.
-# The only difference is, that if you use SPEED or SIZE flag, then     #
-# the application will be optimized for Speed or Size, respectively.   #
-# Flags STATIC and ALLSHARED will determine the linking mode.          #
-FLAGS=GCC
-# Additional include paths for compiler (without  leading "-I").       #
-INCPATHS:=
+NESTS:=uppsrc bazaar examples reference tutorial $$HOME/MyApps
+# Building flags (as in TheIDE).
+FLAGS:=GCC
+# Additional include paths for compiler (without the leading "-I").    #
+INCPATHS:= /usr/include/freetype2 /usr/include/gtk-2.0
+INCPATHS+= /usr/local/include/gtk-2.0 /usr/include/glib-2.0
+INCPATHS+= /usr/local/include/glib-2.0 /usr/lib/glib-2.0/include
+INCPATHS+= /usr/local/lib/glib-2.0/include /usr/lib/gtk-2.0/include
+INCPATHS+= /usr/local/lib/gtk-2.0/include /usr/include/cairo
+INCPATHS+= /usr/include/pango-1.0 /usr/include/atk-1.0
+INCPATHS+= /usr/X11R6/include /usr/X11R6/include/freetype2
+INCPATHS+= /usr/X11R6/include/gtk-2.0 /usr/X11R6/include/glib-2.0
+INCPATHS+= /usr/X11R6/lib/glib-2.0/include
+INCPATHS+= /usr/X11R6/lib/gtk-2.0/include /usr/X11R6/include/cairo
+INCPATHS+= /usr/X11R6/include/pango-1.0 /usr/X11R6/include/atk-1.0
+INCPATHS+= /usr/local/include/cairo /usr/local/include/pango-1.0
+INCPATHS+= /usr/local/include/atk-1.0 /usr/local/include
+INCPATHS+= /usr/local/include/libpng /usr/include/gdk-pixbuf-2.0
+INCPATHS+= /usr/lib/i386-linux-gnu/glib-2.0/include
+INCPATHS+= /usr/lib/x86_64-linux-gnu/glib-2.0/include
 # Paths to libraries for linker.                                       #
-LIBPATHS:=
+LIBPATHS:=/usr/X11R6/lib /usr/lib /usr/local/lib
 # Directory to store intermediate object files                         #
-OBJDIR:= _out
-# Extension added to resulting executables                             #
-BINEXT:=
-# Prefix for resulting binaries. Usually used with "/" at the end,     #
-# to specify the directory (hence the name)                            #
-BINPREFIX:=bin/
+OUT:=_out
+# Directory where the resulting binaries will be stored                #
+BIN:=$(OUT)/bin
 # ar command                                                           #
-AR:= ar -src
+AR:=ar -src
+# Command to create directories equivalent to "mkdir -p". The only     #
+# good reason to change is if your platform uses mkdir command which   #
+# doesn't support the -p option                                        #
+MKDIRP:=mkdir -p
 # C compiler command                                                   #
-CC:= c++
+CC:=cc
 # C++ compiler command                                                 #
-CXX:=$(CC)
+CXX:=c++
+# Options for C/C++ preprocessor                                       #
+CPPFLAGS:=
 # Options for C compiler                                               #
 CFLAGS:=
 # Options for C++ compiler                                             #
@@ -88,489 +87,283 @@ LDFLAGS:=-Wl,--gc-sections -Wl,-s -Wl,-O,2
 SPEEDFLAGS:=-O3 -ffunction-sections -fdata-sections
 # Additional options for size optimization                             #
 SIZEFLAGS:=-Os -finline-limit=20 -ffunction-sections -fdata-sections
-# Platform flag, added to FLAGS                                        #
-PLATFORM:=$(shell uname | tr a-z A-Z) POSIX
+# Optimization, supply SPEED or SIZE to optimize the executables       #
+OPT:=
+# Platform flag, added to FLAGS, can include shell commands            #
+PLATFORM:=`uname | tr a-z A-Z` POSIX
 # Suppress all messagges                                               #
-SILENT:=
+SILENT:=0
 # Print each executed command                                          #
-VERBOSE:=
-# Print each executed command, prepended with "SIMULATE: ", without    #
-# actually executing it.                                               #
-SIMULATE:=
-# Do not make full dependency scan (using gcc -M switch).              #
-# This saves a lot of time and usually doesn't make any harm.          #
-# FAST mode must by turned on only if you modified include files (*.h, #
-# *.lay, ...) without modifying the *.c/cpp files that include them.   # 
-FAST:=y
-# Add flags from based on mainconfig section (not implemented yet)     #
-USEMAINCFG:=
-# Number of parallel jobs to use (like "make -jN" option).             #
-# The JOBS variable must be used instead of -j option (as -j would not #
-# work as expected). Default value is the number of cores (if it is    #
-# possible to detect) or 1.                                            #
-JOBS:=$(shell echo /sys/devices/system/cpu/cpu[0-9] | wc -w || echo 1)
-# External parser to use instead of the contained one. Also used       #
-# for manipulation with the internal parser (see update-parser,        #
-# and export-parser targets in this Makefile for details).             #
-PARSER:=
-# Exported makefile (used only with export target)                     #
-# If multiple packages are being exported, each produces additional    #
-# Makefile, which name is EXPORT.package_name                          #
-EXPORT:=Makefile.export
-# Awk binary. Used only for export.                                    #
-AWK:=awk
+ECHO:=0
+# Use dependency files. This will probably work only with gcc-like     #
+# compilers (requires -MD option). The build usually works correctly   #
+# even without specifying the dependencies unless you modify included  #
+# files (*.h, *.lay, ...) without modifying the *.c/cpp files that     #
+# include them.                                                        # 
+DEPS:=0
+# Run the executable(s) sequntially when compiled                      #
+RUN:=0
+# Override default name of final executable (absolute or relative path)
+TARGET:=
+# Add flags from based on mainconfig section (1-based index, set       #
+# to 0 to disable completely                                           #
+USEMAINCFG:=1
+# Ask for some additional details during parsing                       #
+INTERACTIVE:=0
+# Use colorized output, recognized values are 0, 1 or auto             #
+COLOR:=auto
+# What color should be used in colorized mode, number from 0 to 7      #
+HIGHLIGHT:=4
+TIME:=TIMEFORMAT="  time taken: %Es"; time
 ########################################################################
-# HELP END
 
-ifeq ($(filter 3.8%, $(MAKE_VERSION)), )
-$(error This Makefile only supports GNU make version 3.80 and newer)
-endif
+m:=[ "$(SILENT)" = "1" ] || echo
+e:=@    #comment out for debugging
+dbgparser:=-DflagDEBUG -ggdb3
 
-# no need to parse dependencies just to clean up or to read help etc.
-ifeq ($(MAKECMDGOALS),clean)
-skip-parse:=y
-endif
-ifeq ($(MAKECMDGOALS),help)
-skip-parse:=y
-endif
-ifeq ($(MAKECMDGOALS),export)
-skip-parse:=y
-endif
-ifeq ($(PKG),)
-skip-parse:=y
-endif
+thisfile:=$(MAKEFILE_LIST)$(.MAKEFILE_LIST)
+color:=if [ "$(COLOR)" = "auto" ]; then [ -t 1 ] && c=1 || c=0; else c="$(COLOR)"; fi
+pass:=$(color); UPP_NESTS="$(NESTS)" UPP_FLAGS="$(FLAGS)" \
+    UPP_INCPATHS="$(INCPATHS)" UPP_LIBPATHS="$(LIBPATHS)" UPP_OUT="$(OUT)" \
+    UPP_BIN="$(BIN)" UPP_AR="$(AR)" UPP_MKDIRP="$(MKDIRP)" UPP_CC="$(CC)" \
+    UPP_CXX="$(CXX)" UPP_CFLAGS="$(CFLAGS)" UPP_CXXFLAGS="$(CXXFLAGS)" \
+    UPP_LDFLAGS="$(LDFLAGS)" UPP_SPEEDFLAGS="$(SPEEDFLAGS)" \
+    UPP_SIZEFLAGS="$(SIZEFLAGS)" UPP_PLATFORM="$(PLATFORM)" \
+    UPP_SILENT="$(SILENT)" UPP_ECHO="$(ECHO)" UPP_DEPS="$(DEPS)" \
+    UPP_RUN="$(RUN)" UPP_TARGET="$(TARGET)" UPP_USEMAINCFG="$(USEMAINCFG)" \
+    UPP_OPT="$(OPT)" UPP_INTERACTIVE="$(INTERACTIVE)" UPP_COLOR="$$c" \
+    UPP_HIGHLIGHT="$(HIGHLIGHT)"
 
-# Determine the name of this Makefile
-filename:=$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
+all: no-package-specified build
 
-# Helper functions to put variables on cmdline
-pass-var= "$1=$$($1)"
-export-var= "$1=$($1)"
-# list of user variables to pass to child processes
-cmdline-vars=NESTS FLAGS INCPATHS LIBPATHS OBJDIR BINEXT BINPREFIX AR CC CXX\
- CFLAGS CXXFLAGS LDFLAGS SPEEDFLAGS SIZEFLAGS PLATFORM\
- SILENT VERBOSE SIMULATE FAST USEMAINCFG
-L:=(
-R:=)
-CONFIRM=y Y yes YES Yes true True T TRUE t 1 on On ON @
-confirm=$(filter $(strip $1),$(CONFIRM))
-# verbose/silent/fast mode switches
-S:=$(call confirm,$(SILENT))
-M:=$(if $(call confirm,$(VERBOSE)),,@)
-M:=$(if $(call confirm,$(SIMULATE)),@echo SIMULATE: ,$M)
-F:=$(call confirm,$(FAST))
-# echo a string if silent mode is not on
-echo=$(if $S,,@echo $1)
+do-build: $(OUT)/parser $(OUT)/brc.sh $(OUT)/color.sh
+	+$e set -e; $(color); B=""; N=""; C=""; color=""; \
+	[ $$c -eq 1 ] && color="$(SHELL) $(OUT)/color.sh" && B="\e[1m" && N="\e[0m" && C="\e[1;3$(HIGHLIGHT)m"; \
+	for pkg in $(PKG) ; do \
+		$m $${B}Parsing package $$C$$pkg$$N $$B...$$N; \
+		$(TIME) $(pass) $$color $(OUT)/parser $$pkg; \
+		$m $${B}Building package$$N $$C$$pkg$$N $$B...$$N; \
+		$(TIME) $$color $(MAKE) -j 3 -f $(OUT)/Makefile && \
+		$m $${B}Package$$N $$C$$pkg$$N$$B finished ...$$N; \
+	done; set +e
 
-ifneq ($(skip-parse),y)
+no-package-specified:
+	$e if [ -z "$(PKG)" ]; then sed '/^$$/{s/.*//;q;}' $(thisfile) && false; fi
 
-flags:=$(sort $(FLAGS) $(PLATFORM))
-CINC:=$(foreach d,$(NESTS) $(INCPATHS), -I$d) -I/usr/include/freetype2 -I/usr/include/gtk-2.0 -I/usr/local/include/gtk-2.0 -I/usr/include/glib-2.0 -I/usr/local/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/local/lib/glib-2.0/include -I/usr/lib/gtk-2.0/include -I/usr/local/lib/gtk-2.0/include -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/X11R6/include -I/usr/X11R6/include/freetype2 -I/usr/X11R6/include/gtk-2.0 -I/usr/X11R6/include/glib-2.0 -I/usr/X11R6/lib/glib-2.0/include -I/usr/X11R6/lib/gtk-2.0/include -I/usr/X11R6/include/cairo -I/usr/X11R6/include/pango-1.0 -I/usr/X11R6/include/atk-1.0 -I/usr/local/include/cairo -I/usr/local/include/pango-1.0 -I/usr/local/include/atk-1.0 -I/usr/local/include -I/usr/local/include/libpng -I/usr/include/gdk-pixbuf-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/lib/i386-linux-gnu/gtk-2.0/include -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/gtk-3.0/gdk
-LIBPATH:=$(foreach d,$(LIBPATHS), -L$d) -L/usr/X11R6/lib -L/usr/lib -L/usr/local/lib
-needed-dirs:=
-begin-group:=-Wl,--start-group
-end-group:=-Wl,--end-group
-# MacOsX specific things
-ifeq ($(filter $(PLATFORM),DARWIN),DARWIN)
-begin-group:=
-end-group:=
-endif
-# Return true, if package $2 is to be compiled with flag $1
-has-flag=$(filter $1,$2)
-#Join array with "_"
-concatenate=$(strip $(if $1,$(if $(filter $(words $1),1),$1,\
-     $(firstword $1)_$(call concatenate,$(wordlist 2,$(words $1),$1)))))
-# Return output directory for .o files, based on pkg name and flags
-objdir=$(OBJDIR)/$1/$(call concatenate,$($1_FLAGS))
-# prepare output directories targets
-define create-dir
-needed-dirs+= $1
-$1:
-	$(call echo,"    Creating directory $1 ...")
-	$Mmkdir -p $1
-endef
-needs-dir=$(if $(filter $(needed-dirs),$1),,$(eval $(call create-dir,$1))) $1
-# get dependencies recursively
-get-deps=$(strip $(foreach p,$($1_USES),$(call get-deps,$p)) $1)
+$(OUT)/parser: $(OUT)/parser.cpp
+	@$m Compiling parser...
+	+$e $(TIME) $(CXX) -x c++ -o $@ $^ $(dbgparser)
 
-# Compiler commands
-compiler-cpp=$(CXX) -c -x c++ $(CXXFLAGS)
-compiler-c=$(CC) -c -x c $(CFLAGS)
-analyze-info=$(if $S,,    Analyzing $1 dependencies ...)
-includes-fetcher-c=$(info $(analyze-info))$(CC) -M -x c $(CXXFLAGS)
-includes-fetcher-cpp=$(info $(analyze-info))$(CC) -M -x c++ $(CFLAGS)
+$(OUT)/parser.cpp: $(thisfile)
+	@$m "Extracting parser..."
+	+$e [ -d $(OUT) ] || $(MKDIRP) $(OUT)
+	+$e $(TIME) sed -n 's/^#://p;' $< | base64 -d | gzip -d > $@
 
-# file counting utilities for progress reports
-C:=$(OBJDIR)/.make_counter
-incrementor:=while ! ln -s -T '$C' '$C_lock' 2>/dev/null;do true; done; echo -n $$$$(($$$$(cat '$C')+1))>'$C';cat '$C'; rm $C_lock;
-counter-beg:=c=0; for f in 
-counter-end:=; do [ -e $$f ] && c=$$(($$c+1)); done; echo $$c;
+$(OUT)/brc.sh: $(thisfile)
+	@$m "Extracting brc parser..."
+	+$e [ -d $(OUT) ] || $(MKDIRP) $(OUT)
+	+$e $(TIME) sed -n 's/^#~//p;' $< | base64 -d | gzip -d > $@
 
-# general target scheme (args:{deps,target,pkg,lang,flags}
-define compile
-$2: $(if $F,$($3_NEST)/$1,$(dir $2)$(shell $(includes-fetcher-$4) $5 $(CINC) $($3_MACRO) $($3_NEST)/$1 |tr -d '\\\\' | sed 's/^[^:]*://')) | $(call needs-dir,$(dir $2))
-	$(call echo,"    Compiling $1 $Lflags $(strip $($3_FLAGS))$R ["`$(incrementor)`"/$(file-num)] ...") 
-	$M$(compiler-$4) $5 $(CINC) $($3_MACRO) $($3_NEST)/$1 -o $2
-$(EMPTYLINE)
-endef
+$(OUT)/color.sh: $(thisfile)
+	@$m "Extracting colorizer script..."
+	+$e [ -d $(OUT) ] || $(MKDIRP) $(OUT)
+	+$e $(TIME) sed -n 's/^#%//p;' $< | base64 -d | gzip -d > $@
 
-#compile .cpp/.c/.icpp into .o/.io
-compile-cpp=$(call compile,$1,$2,$3,cpp,)
-compile-c=$(call compile,$1,$2,$3,c,)
-compile-icpp=$(call compile,$1,$2,$3,cpp,)
-# ditto with speed optimization
-compile-cpp-speed=$(call compile,$1,$2,$3,cpp,$(SPEEDFLAGS))
-compile-c-speed=$(call compile,$1,$2,$3,c,$(SPEEDFLAGS))
-compile-icpp-speed=$(call compile,$1,$2,$3,cpp,$(SPEEDFLAGS))
-# ditto with size optimization
-compile-cpp-size=$(call compile,$1,$2,$3,cpp,$(SIZEFLAGS))
-compile-c-size=$(call compile,$1,$2,$3,c,$(SIZEFLAGS))
-compile-icpp-size=$(call compile,$1,$2,$3,cpp,$(SIZEFLAGS))
+build: do-build
+	$e for pkg in $(PKG); do \
+		if [ "$(RUN)" = "1" ]; then \
+			for target in "$(TARGET)" "$(BIN)/$(TARGET)" "$(BIN)/$$pkg"; do \
+				[ -f "$$target" ] && break; \
+			done; \
+			[ -e "$$target" ] && { $m "Running $$target"; } && $$target; \
+		fi; \
+	done
 
-# call appropriate compile functions for all files
-define compile-all
-$(if $(call has-flag,SPEED,$($1_FLAGS)),\
-  $(foreach f,$($1_FILES_CPP) $($1_FILES_CPP_SPEED) $($1_FILES_CPP_SIZE),$(call compile-cpp-speed,$1/$f,$($1_OBJDIR)/$(basename $f).o,$1))\
-  $(foreach f,$($1_FILES_C) $($1_FILES_C_SPEED) $($1_FILES_C_SIZE),$(call compile-c-speed,$1/$f,$($1_OBJDIR)/$(basename $f).o,$1))\
-  $(foreach f,$($1_FILES_ICPP) $($1_FILES_ICPP_SPEED) $($1_FILES_ICPP_SIZE),$(call compile-icpp-speed,$1/$f,$($1_OBJDIR)/$(basename $f).io,$1))\
-,$(if $(call has-flag,SIZE,$($1_FLAGS)),\
-  $(foreach f,$($1_FILES_CPP) $($1_FILES_CPP_SPEED) $($1_FILES_CPP_SIZE),$(call compile-cpp-size,$1/$f,$($1_OBJDIR)/$(basename $f).o,$1))\
-  $(foreach f,$($1_FILES_C) $($1_FILES_C_SPEED) $($1_FILES_C_SIZE),$(call compile-c-size,$1/$f,$($1_OBJDIR)/$(basename $f).o,$1))\
-  $(foreach f,$($1_FILES_ICPP) $($1_FILES_ICPP_SPEED) $($1_FILES_ICPP_SIZE),$(call compile-icpp-size,$1/$f,$($1_OBJDIR)/$(basename $f).io,$1))\
-,\
-  $(foreach f,$($1_FILES_CPP),$(call compile-cpp,$1/$f,$($1_OBJDIR)/$(basename $f).o,$1))\
-  $(foreach f,$($1_FILES_C),$(call compile-c,$1/$f,$($1_OBJDIR)/$(basename $f).o,$1))\
-  $(foreach f,$($1_FILES_ICPP),$(call compile-icpp,$1/$f,$($1_OBJDIR)/$(basename $f).io,$1))\
-  $(foreach f,$($1_FILES_CPP_SPEED),$(call compile-cpp-speed,$1/$f,$($1_OBJDIR)/$(basename $f).o,$1))\
-  $(foreach f,$($1_FILES_C_SPEED),$(call compile-c-speed,$1/$f,$($1_OBJDIR)/$(basename $f).o,$1))\
-  $(foreach f,$($1_FILES_ICPP_SPEED),$(call compile-icpp-speed,$1/$f,$($1_OBJDIR)/$(basename $f).io,$1))\
-  $(foreach f,$($1_FILES_CPP_SIZE),$(call compile-cpp-size,$1/$f,$($1_OBJDIR)/$(basename $f).o,$1))\
-  $(foreach f,$($1_FILES_C_SIZE),$(call compile-c-size,$1/$f,$($1_OBJDIR)/$(basename $f).o,$1))\
-  $(foreach f,$($1_FILES_ICPP_SIZE),$(call compile-icpp-size,$1/$f,$($1_OBJDIR)/$(basename $f).io,$1))\
-))
-endef
+simulate: $(OUT)/Makefile
+	+$e for pkg in $(PKG) ; do \
+		$m Parsing package $$pkg ... && \
+		$(pass) $(OUT)/parser $$pkg && \
+		$m Building package $$pkg ... && \
+		$(MAKE) -nf $(OUT)/Makefile; \
+	done
 
-ifeq ($(single-package),y)
-
-# prepare some variables neccesary early in the build process
-define prep
-  $(eval $1_FLAGS:=$(sort $($1_FLAGS) $(if $($1_SPEED),SPEED,$(if $($1_SIZE),SIZE,))))
-  $1_MACRO:=$(foreach f,$($1_FLAGS), -Dflag$f)
-  $1_OBJDIR:=$(call objdir,$1)
-endef
-
-# compile all .c/cpp files in package $1 and create .a
-define build
-$(eval $1_OBJFILES:=$(foreach f,$($1_FILES_CPP) $($1_FILES_CPP_SPEED) $($1_FILES_CPP_SIZE) $($1_FILES_C) $($1_FILES_C_SPEED) $($1_FILES_C_SIZE),$($1_OBJDIR)/$(basename $f).o))
-$(eval $1_IOBJFILES:=$(foreach f,$($1_FILES_ICPP) $($1_FILES_ICPP_SPEED) $($1_FILES_ICPP_SIZE),$($1_OBJDIR)/$(basename $f).io))
-
-$($1_OBJDIR)/$(notdir $1.a): $($1_OBJFILES)
-	$(call echo,"    Creating archive $$@ ...")
-	$M$(AR) $$@ $($1_OBJFILES)
-
-$(eval $(call compile-all,$1))
-endef
-
-# create target to link libraries into executable
-define link
-$(eval ARCHIVES:=$(strip $(foreach u,$(ALLDEPS),$($u_IOBJFILES)) $(foreach u,$(ALLDEPS_),$($u_OBJDIR)/$(notdir $u.a))))
-$(eval ALLLIBS:=$(sort $(foreach u,$(ALLDEPS_),$(foreach l,$($u_LIBS), -l$l))))
-$(shell mkdir -p $(OBJDIR);rm -f $C_lock; echo -n `$(counter-beg) $(sort $(IOBJFILES) $(foreach u,$(ALLDEPS),$($u_OBJFILES))) $(counter-end)` > '$C')
-
-$(BINPREFIX)$1$(BINEXT): $(ARCHIVES) $(call needs-dir,$(dir $(BINPREFIX)))
-	$(call echo,"  Linking $$@ ...")
-	$M$(CXX) -o $$@ $(if $(call has-flag,ALLSHARED,$($1_FLAGS)),-shared,$(if $(call has-flag,STATIC,$1),-static,)) $(LIBPATH) $(LDFLAGS) $(begin-group) $(ARCHIVES) $(ALLLIBS) $(end-group)
-endef
-
-endif # single-package
-
-# call make to parse, compile and build package $1
-define make-pkg
-.PHONY: $1
-$1:
-	$(if $(call confirm,$(SIMULATE)),@echo -n "SIMULATE: ";,)
-	$(if $(call confirm,$(SIMULATE)),,$M)+-\
-      $(MAKE) -Rrf $(filename) $(if $(JOBS),-j$(JOBS) ,)--no-p PKG=$1 single-package=y $(foreach v,$(cmdline-vars),$(call pass-var,$v))
-endef
-
-.PHONY: default
-default: all
-
-# create targets for the main tasks
-define main-targets
-.PHONY: all start export
-
-all: $(if $(single-package),start $(BINPREFIX)$(PKG)$(BINEXT),$(PKG))
-	$(call echo,"$(if $(single-package),  Package $(PKG),Everything) done.")
-
-start:
-	$(call echo,"  Building package $(PKG)$(if $($(PKG)_DESC), [$($(PKG)_DESC)],) ($(file-num) files in $(words $(ALLDEPS)) packages, flags: $($(PKG)_FLAGS))")
-endef
-
-endif # if skip-parse
-
-# create target to export makefile for package $1
-define export-pkg
-export_$1:
-	$(if $(call confirm,$(SIMULATE)),@echo -n "SIMULATE: ";,)
-	$(if $(call confirm,$(SIMULATE)),,$M)+-\
-      $(MAKE) -rRf $(filename) --no-p single-package=y "EXPORT=$(EXPORT).$(subst /,_,$1)" PKG=$1 $(foreach v,$(cmdline-vars),$(call pass-var,$v)) export
-endef
-
-# create targets for help, clean up, export and developper targets
-define additional-targets
-.PHONY: help clean
 help:
-	@sed '/HELP.END/{s/.*//;q;}' $(filename)
+	$e sed '/^$$/{s/.*//;q;}' $(thisfile);
 
 clean:
-	$(call echo,Deleting $(OBJDIR))
-	$M rm -rf $(OBJDIR) || true
+	+$e for pkg in $(PKG); do \
+		$m Parsing package $$pkg... && \
+		$(pass) $(OUT)/parser $$pkg && \
+		$m Cleaning package $$pkg && \
+		$(MAKE) -f $(OUT)/Makefile clean; \
+	done
 
-#For developers:
-# print the parser to stdout (usage: make export-parser)
-print-parser:
-	@sed -n 's/^#://p;' $(filename)
+dist-clean:
+	@$m Deleting $(OUT) ...
+	$e rm -rf $(OUT)
 
-# print the parser to PARSER (usage: make export-parser PARSER=parser.sh)
-export-parser:
-	@sed -n 's/^#://p;' $(filename) > $(PARSER)
+parser-clean:
+	@$m Deleting parser files ...
+	$e rm -f $(OUT)/parser $(OUT)/parser.cpp
 
-# load $(PARSER) into this Makefile (usage: make update-parser PARSER=parser.new > Makefile.new)
-update-parser:
-	@sed -n '/^#:/!s/.*/&/p;' $(filename)
-	@sed 's/.*/#:&/;' $(PARSER)
-
-endef
-
-#create export target
-ifeq ($(words $(strip $(PKG))),1)
-define export-targets
-export:
-	$(call echo,"  Exporting makefile for package $(PKG) to $(EXPORT) ...")
-	$Mecho ".PHONY:default" > $(EXPORT)
-	$Mecho "default: all" >>  $(EXPORT)
-	$M$(MAKE) -RrpqBf $(filename) default "PKG=$(PKG)" single-package=y exporting=y $(foreach v,$(cmdline-vars),$(call export-var,$v)) \
-        |sed -n '/^. Files/,$$$${/^[\x23]/!{/.c[p]*:$$$$/!H}};$$$${g;p;}'\
-        >> '$(EXPORT)'
-#        |sed -n '/^. Files/,$$$${/^[\x23]/!{/:$$$$/!H}};$$$${g;p;}'\
-
-endef
-else
-define export-targets
-export: $(foreach p,$(PKG),$(eval $(call export-pkg,$p)) export_$p)
-	$(call echo,"Exporting control makefile to $(EXPORT)")
-	$Mecho -n all:>'$(EXPORT)'
-	$Mecho -n "$(foreach p,$(PKG),\n	$M+-$(MAKE) --no-p -f $(EXPORT).$(subst /,_,$p);)">>'$(EXPORT)'
-endef
-endif
-
-# clean-out the default rules SUFFIXES, we manage everything based on upp files
 .SUFFIXES:
 
-ifneq ($(skip-parse),y)
+.PHONY: all help simulate clean dist-clean parser-clean \
+        build do-build no-package-specified
 
-ifeq ($(single-package),y)
-
-# Parse the upp files
-JOBS:=$(strip $(JOBS))
-ifeq ($(JOBS),1)
-$(if $S,,$(info Using 1 parallel job ...))
-else
-$(if $S,,$(info Using $(JOBS) parallel jobs ...))
-endif
-$(if $S,,$(info Parsing package files needed for $(PKG) ...))
-ifeq ($(PARSER),)
-$(eval $(shell sed -n 's/^#://p;' $(filename) | sh -s '$(PKG)' '$(NESTS)' '$(flags)'))
-else
-$(eval $(shell sh $(PARSER) '$(PKG)' '$(NESTS)' '$(flags)'))
-endif
-$(eval $(PKG)_FLAGS+=MAIN)
-$(eval ALLDEPS_:=$(call get-deps,$(PKG)))
-$(eval ALLDEPS:=$(sort $(ALLDEPS_)))
-$(eval file-num:=$(words $(foreach p,$(ALLDEPS),$($p_FILES_CPP) $($p_FILES_ICPP) $($p_FILES_C) $($p_FILES_CPP_SPEED) $($p_FILES_ICPP_SPEED) $($p_FILES_C_SPEED) $($p_FILES_CPP_SIZE) $($p_FILES_ICPP_SIZE) $($p_FILES_C_SIZE))))
-$(foreach p,$(ALLDEPS),$(eval $(call prep,$p)))
-
-endif # single-package
-
-# Call link on main package and create all directories
-# and build targets needed for current task
-# OR
-# run makefile for each package from $(PKG)
-$(if $(single-package),\
-  $(foreach p,$(ALLDEPS),$(eval $(call build,$p)))\
-  $(eval $(call link,$(PKG))),\
- $(foreach p,$(PKG),$(eval $(call make-pkg,$p))))
-
-endif # not skip-parse
-
-$(eval $(main-targets))
-ifneq ($(exporting),y)
-$(eval $(additional-targets))
-$(eval $(export-targets))
-endif
-
-# Everything marked with '#:' is a shell script used to parse .upp files
-#:NESTS="$2"
-#:FLAGS="$3"
-#:
-#:# GENERAL FUNCTIONS
-#:FindUpp(){
-#:	pkg=`/bin/echo "$1" | sed -e 's|.*/||;'`
-#:	for n in $NESTS
-#:	do
-#:		if [ -f "$n/$1/$pkg.upp" ]
-#:		then
-#:			FILE="$n/$1/$pkg.upp"
-#:			NEST="$n"
-#:			return
-#:		fi
-#:	done
-#:}
-#:PrintFiles() {
-#:	local files="$1"
-#:	shift
-#:	local s
-#:	while [ "x" != "x$1" ]
-#:	do
-#:		s=$s"/[.]"$2"\$/ {s/[.]"$2"\$/."$3"/;s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval "$PKG"_"$1"+=&)|p;};"
-#:		shift 3
-#:	done
-#:	/bin/echo "$files" | sed -n -e "$s"
-#:}
-#:Pop(){
-#:	/bin/echo "$1"
-#:}
-#:Shift(){
-#:	shift
-#:	/bin/echo "$@"
-#:}
-#:
-#:# SED PARSERS
-#:# WARNING: Don't try to fix the ugly looking syntax of sed scripts - it is 
-#:#          neccesary to make it work with BSD sed!
-#:#
-#:# Parser for booleans
-#:p="/^description/! {"
-#:# change (..(..)..) to (..[..]..)
-#:p=$p"
-#::a;
-#:s/(\(.*\)(\([^()]*\))\(.*\))/(\1[\2]\3)/
-#:t a;
-#:"
-#:# change (...) to ([...])
-#:p=$p"s/(\(.*\))/([\1])/g;"
-#:# delete spaces on left ...
-#:p=$p":b;
-#:s/\[\([^ ]*\)[ ][ ]*\([&|]\)\(.*\)\]/[\1\2\3]/;"
-#:# ... and right side of operator
-#:p=$p"s/\[\([^ ]*\)\([&|]\)[ ][ ]*\(.*\)\]/[\1\2\3]/;
-#:t b;
-#:"
-#:# insert implicit &
-#:p=$p":c;
-#:s/\[\([a-zA-Z0-9_!&|]*\)[ ][ ]*\(.*\)\]/[\1\&\2]/;
-#:t c;
-#:"
-#:# place {} around flags
-#:p=$p"s/\([![&|]\)\([a-zA-Z0-9_][a-zA-Z0-9_]*\)/\1{\2}/g;"
-#:# evalualte flags
-#:p=$p"s/{\([^{}]*\)}/{\$(call has-flag,\1,$FLAGS)}/g;"
-#:# evaluate negations
-#:p=$p":d;
-#:s/!{\([^{}]*\)}/{\$(if \1,,T)}/g;"
-#:# evaluate ANDs
-#:p=$p"s/{\([^{}]*\)}&{\([^{}]*\)}/{\$(call and,\1,\2)}/g;"
-#:# evaluate ORs
-#:p=$p"s/{\([^{}]*\)}|{\([^{}]*\)}/{\$(call or,\1,\2)}/g;"
-#:# remove [] around already evaluated statements
-#:p=$p"s/\[\({[^{}]*}\)\]/\1/g;
-#:t d;
-#:"
-#:p=$p"s/({\([^{}]*\)})\(.*\)/\$(if \1,\2,)/g;
-#:}"
-#:
-#:# File list parser
-#:# strip quotes
-#:f="s/\"//g;"
-#:# remove separators
-#:f=$f"s/,[ ]*[^,]*separator[ ]*,/,/g;"
-#:# file.cpp optimize_xyz -> file.cpp_xyz
-#:f=$f"s/,[ ]*\([^ ,]*\)[ ]*optimize_/,\1_/g;"
-#:# drop modificators (charset, readonly, highlight, tabsize, font, ...)
-#:f=$f"s/,[ ]*\([^ ,][^ ,]*\)[^,]*/,\1/g;"
-#:# convert \ -> / and print
-#:f=$f's/\\/\//g;p;'
-#:
-#:# Simple sections parser
-#:# note: charset and blitz are ignored
-#:Simples() {
-#:	/bin/echo "$2" | sed -n -e '
-#:	/^library[ ]*/ {s/^library[ ]*//;'"s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval $1"_"LIBS+=&)|;p;};"'
-#:	/^link[ ]*/ {s/^link[ ]*//;'"s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval $1"_"LINK+=&)|;p;};"'
-#:	/^acceptflags[ ]*/ {s/^acceptflags[ ]*//;'"s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval $1"_"ACCEPT+=&)|;p;};"'
-#:	/^mainconfig[ ]*/ {s/^mainconfig[ ]*//;'"s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval $1"_"CFG+=&)|;p;};"'
-#:	/^target[ ]*/ {s/^target[ ]*//;'"s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval $1"_"TARGET+=&)|;p;};"'
-#:	/^include[ ]*/ {s/^include[ ]*//;'"s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval $1"_"INC+=&)|;p;};"'
-#:	/^options[ ]*/ {s/^options[ ]*//;'"s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval $1"_"OPTS+=&)|;p;};"'
-#:	/^flags[ ]*/ {s/^flags[ ]*//;'"s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval $1"_"FLAGS+=&)|;p;};"
-#:}
-#:
-#:# THE MAIN PARSER FUNCTION
-#:Parse(){
-#:	PKG="$1"
-#:	FindUpp "$PKG"
-#:	/bin/echo '$(eval '$package'_NEST:='$NEST')'
-#:	/bin/echo '$(eval '$package'_FLAGS+='$FLAGS')'
-#:
-#:	if [ -z "$FILE" ]
-#:	then
-#:		/bin/echo "ERROR: Package $PKG not found!"
-#:		exit 1
-#:	fi
-#:	# get the .upp contents, parse the boolean expresions and translate them to the language of make
-#:	UPP=`cat $FILE | tr "\n\r;" "  \n" | sed -e "s/^[ 	]*//g;s/[ 	]*\$//g;s/[ 	][ 	]*/ /g; $p"`
-#:# FILE SECTION PARSER
-#:	FILES=`/bin/echo "$UPP" | sed -n -e '/^'file'[ ]*/ {s/^'file'[ ]*//;s/.*/, & ,/;'"$f}" | tr "," "\n";`
-#:	PrintFiles "$FILES" \
-#:		FILES_CPP        cpp        cpp \
-#:		FILES_CPP_SPEED  cpp_speed  cpp \
-#:		FILES_CPP_SIZE   cpp_size   cpp \
-#:		FILES_ICPP       icpp       icpp \
-#:		FILES_ICPP_SPEED icpp_speed icpp \
-#:		FILES_ICPP_SIZE  icpp_size  icpp \
-#:		FILES_C          c          c   \
-#:		FILES_C_SPEED    c_speed    c   \
-#:		FILES_C_SIZE     c_size     c
-#:# DESCRIPTION SECTION PARSER
-#:	/bin/echo "$UPP" | sed -n -e '/^'description'[ ]*/{s/^'description'[ ]*//;s/^"\(.*\)"$/\1/;s/\\[^ ]*$//;'"s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval "$PKG"_DESC=&)|p;}"
-#:# USES SECTION PARSER
-#:	USES=$( /bin/echo "$UPP" | sed -n -e '/^'uses'[ ]*/{s/^'uses'[ ]*//;s/\\/\//g;/^\$/!s/[ ]*,[ ]*/ /g;p;}' )
-#:	/bin/echo "$USES" | sed -e "s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval "$PKG"_USES+=&)|;"
-#:# GLOBAL OPTIMIZATION FLAGS PARSER
-#:	/bin/echo "$UPP" | sed -n -e 's|^optimize_speed[ ]*|$(eval '"$PKG"'_SPEED=T)|p;
-#:	s|^optimize_size[ ]*|$(eval '"$PKG"'_SIZE=T)|p;'
-#:# SIMPLE SECTIONS PARSERS
-#:	Simples "$PKG" "$UPP"
-#:}
-#:
-#:# MAIN LOOP
-#:NEEDED="$1"
-#:PARSED=""
-#:while [ -n "$NEEDED" ]
-#:do
-#:	package=`Pop $NEEDED`
-#:	NEEDED=`Shift $NEEDED`
-#:	Parse $package;
-#:	PARSED="$PARSED $package"
-#:	uses=$( /bin/echo "$USES" | sed -e 's/\\/\//g;/^\$(/{s/.*, \([^, ]*\),[)]*$/\1/;}' )
-#:	for dep in $uses
-#:	do
-#:		if [ -z "`/bin/echo " $NEEDED $PARSED " | grep " $dep "`" ]
-#:		then
-#:			NEEDED="$NEEDED $dep"
-#:		fi
-#:	done
-#:done;
-#:#
-#:/bin/echo '$(eval PARSED:='"$PARSED"')'
+### PARSER CODE (gzipped and base64 encoded) ###
+#:H4sIAI+CLk8CA7Q7bVPbSNKfoYr/MGgJSFjYJle3e4sROZY4WerAULzsJgs8WVkag4IsKZJsYA
+#:n89qe7Z0YayS8hW3epFEgzPd09Pf2u4Ycg8sKRz9n2KAqy3G/e7Cz+UIx5+UPCq0MRv9NfszwN
+#:ousqCKAJg/7EWBDj0GLOh0no5nzbC90sY2c7i0EUBhFn4zjwWa/7W/fEPGOZ9bi4EAxM+r0wSI
+#:BKDm+5z9PUNronJ0cnW+w0HvL8Buiz/MbNWXYTj0KfRXzMU3bjJgmPuA8PWfHSbDYvI8PqAEp+
+#:H+TmJj4+LT51prElHn7jXh6nyEwEFIK/uO2GYezBurN1lnQWk1E/DLytxQUBaFpbCGS2LZsRID
+#:0l8JPJf48nnCBeW52nxYVntYzN/6dWtWmVlBiy9J7ne/Eoyk3Li6Msr61KeT5KI+JbW3e2yuKE
+#:py4QvrgyEUtkTV2XXERX2jpBYepqMVVfB6C7vm/SGeJhAhs7DonFYjC0oESxLsbwXCSGdRMUzU
+#:waON9oWOxMnJTCWHByb7FHJtcQKee+wwq48yj4MuIl9FhwAiwncea8CyLfHBNVYA5Gdhw4pmIL
+#:MHClcYTYx5ILxECrNcxCBKStcJ4IETjtTrBNsg9gDziFhMaOk1wEVwWlAIk8lYQ2NgURsgcpIU
+#:QX8qgiSPWu0YMhnSJOLoAQA2tj5/nMpJ0u4CwBSqoJc5h5tm6lXOhrYsPkOkLFA/PMokU0Ixc9
+#:LYIxjsFSCp3fPtspVcKRMtGmQOrCxoRFnZLLYMC6d+OmVSMSc2ANW3UDSMD4U3+UmIZhwZk/Fb
+#:CCnHhZBb8BSwvYrJlY1gSsIJsJIiUsoCW8zwUTE0Y4SDk3EzJBwX3FFAT2ikHMNql+HIdsP+sO
+#:k/zBnARn0w15HU7LYW1EoO9FMfE8E1NBHpcqcKbhmM1DZamSc/24NflPWVpC44kU2y+GnfrJ1F
+#:hReJbhrLxhAjoKQLPRaMxUEE1DI/khY9sLufttV6wrAkPrKRWzI31D6ZRferCAA8xL6lZdyI3J
+#:jaHhl/oGSyUjEkl9NitncceswdDJLIhFbh54nzw3y7dJ/jtm6QoE5gahEK5ABOhlQWPIh8N4DJ
+#:JoIBxJ0xawuiuHEJ0JlzZtY0DyRft5Ma+vpzCaXODkFaIoXxubONB+Gat1FRWemJkJW3ZQ0cgT
+#:02bWvTh5KNVCyGJBaQw+41YQqOb4NeoohL14mLgpr9K1lXycjc0i6pYoYOIN0I2EdmfoyiEhUd
+#:qe1cLXAchRQ888HWMZVYpjgMgU7GBQ29iwZDDDSOY4XjWY1QJZLVrWjFxFZFQbRUrITGmCU9GD
+#:anTF+Q1cWgQ8DI9KAo1AyAB9+xwGZUQ6DHzNh4OupbnNKkp5nd+UctcY13V1gxbKpAKGttsySl
+#:dzWGZ00zROt9h+NHZDcD5w1i6kszzNWB4jL8siUdUy1YWnjtQ6ooFGtyO4Yqurkr+dNklBMCWG
+#:IPIuqD2S+pMukueDF/g93bKGwrAAR2OzYlJqJVi/lzyYZPRoeFJiqHMSMZoZ2tjaZXtNk7tU8k
+#:VgJOCRrzKCwivUvF14k6lzUEPpDamIXI+noBZvv3QxyFKmtX+PPByq3I7MFwAOHKuDk4B9UcvR
+#:v5O3EjMANJUbeJZsLy5Kfk+46//mhpDfFmHBJjP2eRgMN1Hs9po28lqMqMLKcSBgKaswjE5hBm
+#:lHFju3QeKgd7y7CUJumtkFjoC1S/xfvzI5hDmJJFEObjv/eG2hXsr3ZYc0E58bDcBKIamJNodD
+#:eJoUzL84AzfMeEcwedEGemuXBnGtLRHm8AXe83TEhTrp3sWTnh6dRQc8cod5MgMHrOuevofijZ
+#:g3vyDLOEZU8cW72IBAsYxafAkjfYg4tx2Fadsxv7xpb8FWySvkQUTsLKSoCeuedIAD84uFHMht
+#:47AUfEqKuEhb34MNjIaV49QdJiTUQUwpvwoBylvKGSmzQmPkOAUBx2nXRKjMVDJSylEOyGNA7n
+#:g0GrKjJH/sHfW6Njs97nbfwq/9P7owqyZPwYNwKMbOe//pHf3es1nvyGYfu6cMMQCnIw+jQMiB
+#:C4AGm8hLlYvA84HjcKNrGEMgKKMBwER6kL9rMtrPTuNR6nEToVbZQIkD67lBE/E0i8i21lyTMl
+#:mGaavcq9IwSZ3f5yAVuRpFA9AN0rBqrAG4ZpnZqYADoxgD8ziM73hqildBl+FbcRyGlyRgcZi/
+#:Ly5g7gfqVpkPvgXgefOn7+/lvGiaNFGgDg1POWjGQQhsksmpKLzvwNBPp+LA4RfqGyXjp1As3v
+#:DMrOS8+oEwqHT182BBaeIZpSXCYOl5rbVWtHqkMoIW7ud8+Fjowd0NFbjyLYA5eBuOcrcf8lLD
+#:MVIi53I5NnxwxJR6X1XXg9j1AVDbha0VXWz9lj/YqlSWCKlgZsJJK4+Q2QBoiSSzdItsjUJ93S
+#:tWd6PBm8KLLuCMQ4mAlr+0y/dxWLyjvCt+1SG0hUcVaS9mG+TcFqRXxNNHcohLTUhlUbOWZAYW
+#:j8ONDQFDKROSR+UpPa3IksUPpF9suG0rLzbFsSG4HwsOpWxX2dAZN6lPRIuGTYlOCQtG8NxhpI
+#:yumY1Rk2aVTgooQUVERxQx7UuCvkDL5Tn94ma8B55nWomnPFumObXWDKeWlUElq3gxjdbbIP1v
+#:kKJsoUKrbSOEoFXNqtACyKNXaQ4okGkZB9lD/2Kz3W5j1+3d/kF3nQ2cAeROkfk8iGwjNRQ3g2
+#:reQh0XLVNZHmDramCRgkUNB9Jd1zf79qaN2O2BOKCG08ffrRZWXQz+u+zG9W7RPtMULJIFwyTk
+#:Qx5hZhxH7E40l2OgxTnknDkicVK5/ciqHHNKiVpVEuCqutG4Yk5RNcJjRlZKJTGN8+PjT7TrpO
+#:GgfurQqXMN1QIgpNxJ0X2TbmUd3cudJ8ljNc76PPPSIKHUwA/Sjh6Pa64IRxGMwT5u8Wc/dVPw
+#:WK7vD0L3GpwZpPzAhs1GGafalNr9IMNRlsfDEqGgv8Ncz+PgDgFgcH1LP8c2I1QlLGrLDhvATx
+#:xcXIAdUEOwkhDQaFWlEjg995ojKO7TVO/2S1falc6lZHkVjjvLSfs1Ftgj6rUiYQuQ2Q0pILnK
+#:Rla1SY5MOs6I0g5cSkD1doNc+ShKL3QnEOgq/YKyfsVYGLpwEqa0HjIAzcaEeydLqSfb0nQ2ZZ
+#:ca4DCFHsDZeqYwGLQ8SIu7R+8oT16mRBnz5M6apftqBKPc/1HFg+W0WTY6YVF6kWpxG5Lr5SKW
+#:ycQZXoXf11NqmXAIGswUYQSSdKp9y/xckP3iLH/pFEEjlEm3RO/VGi8oG6kZq+Sw/oZ+kK/BE5
+#:XA1IJDn4Yfli7wQHq7h91Ph7sfrrQg7d35wBpK+c43EdJmOqho5AEMMG20DG3hgMKVPGezd35w
+#:MNEcgfyIWJuaIy2A5WPjnyAgQRIZQmvtjWFsAUHsEKopeATa8FPb2cIAoybiUJNFGCvMEGaaI8
+#:hoBTxqE/ny0pWTcgw03XkS6cryYH7H5FhQYK8ycscD2Ju/fBkZNntWxCcaJ7UOSEXbMXUobafU
+#:drPI3sBhGcIVZoYtnaIFZoCAmIlXANFXGsJlzoEhT2oUPnUmJDlHo3S5MwGFJzaUS54Jh57aEA
+#:57Joz040bh0S0RTCsmqGWnhhZTDEtZfiWjMI3Ly3/89JM8ePnBTdp8piV0OIqqc2kYnXkURSQR
+#:0rGU1fuxzCllnKFUT8vkLEl9RtI2k1gU98Mg/6vYWqvFgusoTiEPAIsDLbybt3roghTjaBBc65
+#:zKhwWMhLP4lHqq4WIGHhrTRi7xg5gE14YdJWkkMP4vEfheuaGlDIO/+KcsgZwJ0BAWGIUDpy6C
+#:sNNvrIUftaX7f3TnrMTUoTiqQiUwrWADuW1R7NfTfLamxELRMePYk8VgXETJQmLrmWhttTF42U
+#:UtUziZPJ2NvMJuns4SE7FZl5VWSM1AoUlLx6BENgtBsVltcSkAWccUpZjw08U8yqLozAysUhqy
+#:XhLiLvZPuR2p5MCqYP1e/RJpZulx6qXxZHFcKQXFcq0enKiHp1TPk0XytDI5m6iRK1XynDp5Tq
+#:VcrZVnV8vFIclfRZk7UTVLiKLqrVbQVbmrqopWVGL2wAvjInLWP2ZVikLR2UnAmZrKUux6PkWX
+#:NKQiaLmLxciLySsdddOqdMbfQVSAUtecnq8R/lpdghlgq5VRyQcxL+Mp1XxZnEKZlzblLYyxzs
+#:5Ee3A8pTmYknKNZUcQYwUt+Oxsdtjn6grWaHwWulJvZD+PLz5fqfQ9cD7TZyspIfweJ3Lq4Kpo
+#:wXnWTluqHYw3Nq8cnBZpjVAfSn7FlFf5BpYBKBXg5d42YW/plL1lDcdoGg2JuuxCPKmLHsduCo
+#:IshQ3p9Q5LbqnWk+QwNE7coSpOhTJQWR/aTJWckDFlIr0C14a4xLcrJlVMton3fWLfs/TPo1A0
+#:7IBFuVQzeGwbnv9ao3gnZ3a1mT/EjDDCT2saVFuD+nlNVv4iZBy6uXeD+qd1/CgRur1WvUnNfy
+#:1LZ1vcSyiXZzYu6UwsMYscggj20Whp1VGqrdEzAUtmApJIX8u0s7Iw0/lQ3l59Z2iX+kaCzei7
+#:nqU+NArPpdqm/hQ/M9mcE/TpREV6GPiWfv1KsaDU8DMw8XlbqICui5/Lr74mbN5x2l+/oopdwI
+#:+rpkoDiYJYDKYkCMEJ+pP0ybnVxTCQqFdXA99xjMPd/Z4xwWnt2wJ939R0YhdoTFeJ2jnWTl+I
+#:nUm5t68s8YmNQtLymvZirtXyttXViVRuVerbVGookb62k/6UXYCSvWgTuNv6HjQ+vn6dYO3rXN
+#:YAdjZr3bEbQlSX7r6I7+Ad6qYHQ03q1i87ql2vqX0x6zgfu6ed+kfzeowHRnFFtSG+WIT2Hexi
+#:WCwrPgSqr66mZYiAXtKT5OqK97Q438opB9NM+EX3DH7/tdtj4truFpTQWDc/q31MrZtLNvtvgN
+#:Gt3tHkSVBcB7N8y5Os3jwpxY+GKawNe3A4UdicQIeIqQkD1S5HR0IrKD9riobb7bUtGy4IW4sX
+#:o8n7IYSoicXulAiGPCnlKQEhntlEV+9RybRnRMxUYMtPAVXKo2kElYhGMiMoAy/yIe8CV9IW7a
+#:uQ0ma7JuCUD4L7iV7fN5KTx9r+x3LbcqMpBHdmNATuxljtc1rjTJ4+IkKTzUydldHQE90VbH0b
+#:56dddJ57794btrFpFLd86OCzzHOjgfkMS2zjlW/Yq5FVul/0ck2qlcuNOFJ56tfDf3fTSKo382
+#:OeRWs5FHOQ4OYx63PmUtqh2llN2TmSJIpCRXXhi2YpkOCp6+XBmGtb2u+ddU929872f+vCntoG
+#:MAU7U/d0lrVFMmxHTvQm2tjcEllc8RHV1CEfVZNzxsZlQSC3bRyOwjzAzFV0GUYpfbHImDt2gx
+#:C/Xtqw/RC/acQRVxfgVTopaxi6KRFszyBYXicuiDL2KrDY2qtsbYt+ohghobSfdRSoVPqAyoSr
+#:iNYttkelmEj1mIl/dgDyZm7GMjgmrkpx8AlhkOVWuQeF5CPUnnKTmLhfvPKvtpCjSiHDqmIDU5
+#:YfKhTdWfTYxaVxaRBGq+wqDwbhKLvBK/nF3b/+aHDx+p8/ilwbu+eZCUM2gzE4g9wPItVdxDtc
+#:dHsD5sXXcorlwgZoDdkAAyNQFWQkS7/qZkAXAVxIA2s8oVcAVKZ5EWatVCZEbJvN0il1M7FyXN
+#:GVMkGaF6VbYotWJF2ldIzzjDrS1Iqb0oSeyNmYUqZEOBmRl4kCRZ2NDEzJNDfvqw9GL6ekcs2i
+#:091URbXMAakZISFku6A8aSWRElTmgJN+thY4Slf70kQWWQ3AsaE2EN1gbhorTUkClgyWUJ1J6g
+#:Vefw4fKjDUgQGnHQis9SKaD4uT+U6KRf9mPlWr6D1NmacApRJj1cOSCjsDWp60XbCufJNqe3wT
+#:g80qste9Q0UA83etUCrdxMNXLIlTr9Yulc9iU06/evhPwhPogZo6/XqcVv1DR8W1o+Oz79Jv7U
+#:wAl+PgZ1L0OArxZPRCH1iQdQzqcRo1hUZUWvOzuHCkr9v/ozt1mep4Ps1WR/nx5cXaKOEryoiY
+#:i+bJJKBImyoyqzeLx86cRvEY72miPuADNucrfT7shWhdsXGlnTp349HtLO8zuenotrJj1XohVa
+#:tBaRdjSONED6hSOGHyRUXdFj2a6p20kYxN6WCve3p2ClnVKEmy1GN99y8XYiykpDzlEUTpfATu
+#:J3BDxu9d7NxlrHUTD3nrpnX4sAtrDEsvFqq43x3svkfc7/f22PvzfQQtLbgKenywe/bu6OQQoI
+#:+PTvc/sIP93vmH6orFMrfH/dCYlhGrV2F3csFxGns8E+/KOLUxbJuWf0AJ+o5/ibm0uKS6nCRa
+#:kTed5jyZvNSzVBQX3tDvLC1OaVM/Zx2oTelu7JKI8568cnspelwXm+oCbul0JKS6ZQ/Z+op5vH
+#:v2q2XYP4mLpkuUEA19iO8rKwOjI94bzo/0VOa8FRRv908Aw48TGP70g5S+1gCqP0tc/5yHCz+M
+#:T2Xnz76b8SnY5nJ2tn9G6P41Hx2D/A0yxrWsddG8uvi/5tX6Squ1phH5aR6Ro/MzIYGfJ2Vo/r
+#:Lfs1olon9piEo4OMmlxVZrYWHFhBrr4Pxt17JXzGWL8dxr0qfy4koTsPnAc1j6tFS0boWSPGka
+#:JpTrZBSqO8ksHWExMaXAX9Jv02r+DBdYnYomOnXFrUETeKslPrCy0AVSkIzn9KWVOvSBF+QPS+
+#:KCLeDTLpfIG7FlR2SpcmltqbiUC74UStsN+lRfAVpY6TLPZysm1L631w3jEzge7IwZS+LOrfxn
+#:cO8mZpcGPoOnCR9ob6KW6I+C0GcKPWT9PGH15eadKlGL22cRsJ7wNKAbZyEbcBc44tal0amvbu
+#:BpGx1IkGs7irP8f7olhf9/vqdvsU66MMAKcd1owOYbVYSGH7Nv7ob2AKUiGq6+9m9vQ26B+VBk
+#:y42QMQm/TnFwa6vw75rFQHiLR3mZeZ2fQaRp5cOk9QnGDd18hu4tx6+njljTMFqHcoTkJu4DDd
+#:W1SQVtG3cCCzYMhwPhW1Sl9c4FCB9bI7iG7t3JtiB7VghocdEXlG4DA4pEMsRy9Qd2VgrMhdA8
+#:xM8ybhg+sGsecVFOK4x0gq8y1YQBclV9QHRQ01f/pp8uXgKjw9gPBg8syMXf8xOjGHMFU9Ss8X
+#:miNWnedo9P9e6MgvLiME41uL2jg6OTGqD6riECcYZDtboHpgiwkjSAB8aYeAppAsxbKvx+83IW
+#:BVdJC8vjjX2joW5iTUECoC9CAe8CQbkjyB0TN7+ZtqOwmKhu6mD/F7UpATJtX2JmKleKJHF1YD
+#:QEaMEY5jifcpa6d/jUkSPmqhwgYuLvmUCXLn5uk0DkPdd8uM7wokMYg8pNLsukpuJKG4i/7Q8/
+#:dndPnFcBPR8e9c5+VS9vdz+qx1+PzksYyPrOuurttLt31HsLb4Zd01yWb+zkw08P3E0bmz+327
+#:YcGOJFWvnouw/qGRQ8LcaDAiTjnlLoipWBd9hyyD7rBgM5woyZPUp2Z01++DBvmqqvuQBQZ82b
+#:P5i7em9vNlszZnZPZkwc/gcSqOMZk91Zi2bRnyXlGeOzZD/0nJVDGYjw+3wQou2t7K1sr/QujW
+#:kLXLHA2WErv+xBsZfjAjf1boIxX+nh0n/PWOoBrS5Ey709i214bOOeeehjV7bZRsxW/o0zx8d0
+#:Ghabyqx3fy8xfPhQoGg0vg+Jcj2z9EH6kBnTPh+4ozDfElF6CkDz+Nej3sctEcS9kEOw8VBKHM
+#:qETIV4ieUywvCgYXgWcRMihnJpYDWGTL+tVj+IwLXp8EVkUPXixtHrWSDSkAidgLdmgJZGRRj/
+#:v5Rj2W3jBp4VQP9AEBaszWolOclJ6DZxHSMO4CBA4qAHxy0UResqtR6Q5Lo9WN/eeZEccld20x
+#:wMr8iZITm7M5wHh89NUVW3CwpdF1K1t4E2UFZj/3sfKSd+RAmx+BwEGGrz2bZ8NvwB2udhjr/e
+#:9IrieqIoYIv8e9/by5MT5sYJciJiFbfDZ7YH8xj3YVD1xQbLyRQuSzl0zv/E88fFKibgwE5Pzt
+#:6rnRzPNdtXtgnyIx64vohgX2EG1o66ZB/ATzImiymSwMd4RAbSjnWGh12nl89t7sY4e/vm7Bz+
+#:cJgXNsvt3GYjC5ZLjQ5hHs0t9aqmITcpeDBxXtri3bvXDEs7W9Kooal754QTHt1mrO1LLEGEPt
+#:E28ARuDNd+oPHPT1LbUbcaUACxGf9zlJwdV1uzEvbEEdv+8JPyLX1Mjeok2iFkia53GY6dY05c
+#:9S6/fMPUDTUl81xxlJpMDhX/JNDB4G6K2Wcw/qec8VuMb7zxZ7Z3swmwEWzQavY3wUxgAuZutv
+#:3DAKfGlBxk+6ffB1MYM48Atcak45fpFsiZzfLmFkXoZZtz66XK/LqlujqaGUjeW2YfguaPwsae
+#:0gBQzUO4Ut4DqDJIc7SwMXjdliMMZMu9RhAaOiDgoTUEUlyu4NMoaX4Dm7tTekkAva3u+yKLp4
+#:PH1Xddv6wyjAPkctwIc0SKbgsiYPSqRLPbvHoMeIXA7k1nxua4OETI6rwxijl0mFVbu9/ctywf
+#:s5QqlxGG446XFgnhuhI9G14lLIMWwLlpngxlDaiyFnOHXHPLY8bMO+h2Nkygs+kvR4Z+07fhdt
+#:9WzAzwubvzSbav7xQ8MuN2y/Wkj79+Mj+baBxQIvvxa8ZFitpgZxAOP8uGnlDe0cGQHbOo9z0/
+#:hZ0t0Rf4Ne/hfG77SwnBtaJYKHnDLRX/6lVOnYTXBDsLLJYjMyz3Vq3KCGEXGQw4KUYMn2ZdyL
+#:DIKAZn+3Sa3M/ZkY7hwXrw4Jil0dDyPdF0HqOuofbR5Clwh2u7d8vgEJanKquuWMEcdIPFlCXr
+#:cYg8Ug3PmUcOzddPlTUJM7lcAmDgCch6FsOm6oRL0Dm8wMakL4GqdD2UUFKEWoB0CX9x7Vt5+P
+#:Uw9Je+XBbHDKyN0WSRTWpSofngcA1wlETUBi7eUy1SuXBnDRpUy/fRaT+J8RM9k2igziYjp4NU
+#:w2obpF7LPAsJjoRH/UisZbQgev5OB3lUvH+B1h7fuSB8RuNHjiQswkdW0w+++z7Zq4Alv7N1NF
+#:KHimZXihHNG6wUIqRpyPaT5owcg0tOLkhprZtz3P5ihs8+5v0ZbMOjIeUZ2u4wDtl5eali/s30
+#:QsZbq89UuzwwBxdFpkkcRZMQG/OHZiH8aKmMBYjq/ySIbEUKfFlOrPXTV297O5/toD2C6Ms5Ok
+#:UbhEXqVgTyPkhI7YuKNsfxyG/a6Y49zho7cLs9/pDRfvqb94ZbybaJljT8k0+cF+BcgLqazBEc
+#:NsMxrMtBuZhwCC0ipR7IJf0HxeiM8eT6LsxfJ26ABAqdtBU3Nkewhvgn4ksquoGGDM4vwAE2Ui
+#:ETrIGCTJspIJBgyyq50FKFjy+OP7w5vfChdu7X53ORKLcGx8WHrhs8JDx0JFSafKWabvDgeO5u
+#:6HWDn2gNiE8ntFVJT/wt3uuVcLHb4DBTy/C5yZwbtP+XWLRSl8rOoN5IKJQz0lGczsanIFhU4E
+#:HQa9i4DTn4NFbUokjawS/n8PbhjT0cPdPGqVigEgBBA9SFrWhf4nAI3XdWXK+XtyuQrtA+XXzl
+#:1oZBUE2otsHTnfOwnw7cGtFNZz98FxzxnZMlctzlySnMOlcCM0d7+WJ0gHExxbzUeP0PuvHkJc
+#:7A3wUv9gFuuQgMvysdxRHJiTK/GKr7b4EAigMguLLGtfpEPWSTJVtCqC+WJrqem2JdGdLRBMcM
+#:47K1eYW/8MK2LR9IwQd4EZP4qh5o+evySm5Pw268cuBZ0/XUxn7ajK+nozi/hVEVoDC80lVycg
+#:EhZwfNuksgR1fqRo8hFlT9C96lKgGmWwAA
+### BRC parser (gzipped and base64 encoded) ###
+#~H4sIAI+CLk8CA31UXW/aMBR9z6+4c70GKMENnSZ1EZXoW1VtmrqXtYSBcQzJBk4Um3Wj7X/ftR
+#~MItGh+IP645/r43HM5ecdmmWI69U7ApJkGLcqsMCBy9VuWRkNvVgqYZ0sJmTI59OqFXmeGz3Ay
+#~z0sMXhXZkpssV5hmrflCfgLE9XTqol2OK8jXplibnvA8LQ0E0hMJkGmSlYqvJNBwSrz5gExnXM
+#~tmxzOrAjdXv4xcFRAkNu/kuxt4qmUCvmajVrs7ZsAWkWZxyZgPdI4XUsSyopQFLzEQU+XXmWq1
+#~4ckDHALvAdrHd7mlHQ83X9uQz34OHBInvcUmwkADhIYEnmGxyZDEpc2NpxBFO+j1Q/8VdLbpH2
+#~BniO0fB3fa+GPBLrQ+kJoLN0nln2RtHy/BJ7EhEH5kIZD3WRcIkFgRv0r4DE4OinpAdxyfUdaF
+#~c7bwXZKlVCijpVPHPgoIBEr44nnXN1+Gd/c7YaRIcyDaYEEFiJSXWInJaAwDeCIuwOmIz+oToB
+#~d7kJeI7K0cskNDxCH+4AitZPeQ08Kk9hxnEYkaLpPPw2+3TaUG5+5rvVZbEQsXQZI38lew4d3d
+#~8B5TAxVoARtaE6zS0FbLnpxBCO32bt/GaZTefWMVm7iax6RbkU5yJRv2WIb6bdg5E75cThywEm
+#~ibxErRvMbR+r++tH9M4QtU+MMRhUcQbLB33CblZcn/autOtLrrGhjD6SlU+9ZT25j9Grg7nfIE
+#~rupewYVl3XvVOZjaSFltYhN7ni0Ed1Wo8u5KIdBjjkWA+nN/MjoPLtGJ/g47fWMDTshE5Gucog
+#~9EdPS8Msq+QKq2xGNqizwCqiBYGlvc8YEvLPsAlWQuD7W9wjTrdSBuOW6duM2w4GGXFX6jwRat
+#~KseofcccmsFV5K3pecUVKrKVIvlxRbZtq9kPZMLwHwz7lkX+XlKwl9h7wfPKFQSlA3v/ACS0qg
+#~m8BQAA
+### Colorizer (gzipped and base64 encoded) ###
+#%H4sIAI+CLk8CA32PwU7DMAyG73mKn67qLozQVlwoK4inQILDQuO2UZdkSlK1EuzdScth0iSwJd
+#%vy/9myNzf8Uxnue+b3W8/JOese+cecv77nVZnrbC3vNVddxTyfhDPKdBfi4ZowNtBFLq5lZVr7
+#%l7xlGziSylETlDXQolNNjAN5hJ7gSaKxWgsjMVk3IDI+SDsGxEnhMdHxuOTffvzlFpMK/QJoNc
+#%e7lzUa44m1++Sgh0D6hF2IsAijv3tb7ZCwL0RnQPrCzqhATW+RPqNG2lY4o6yzHHmdFSjqrMT3
+#%eliS+uRfkTkSMv4X8BT3MKexa5eCZhWQxj77AcUbtPuMAQAA
