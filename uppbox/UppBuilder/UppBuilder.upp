@@ -1,0 +1,30 @@
+options(MAKE) -DPROCESS="<UppBuilder/Make.hpp>";
+
+options(TEST) -DPROCESS="<UppBuilder/Skeleton.hpp>";
+
+file
+	Parser.cpp,
+	Make readonly separator,
+	Make.hpp,
+	update.sh,
+	Makefile.in highlight sh,
+	color.sh,
+	brc.sh,
+	Test readonly separator,
+	Skeleton.hpp,
+	Doc readonly separator,
+	srcdoc.tpp,
+	src.tpp;
+
+mainconfig
+	"" = "MAKE",
+	"" = "TEST";
+
+custom() ".hpp",
+	"sh -c \"if [ Parser.cpp -ot $(FILE) ]; then touch Parser.cpp; fi;\"",
+	"PHONY";
+
+custom(MAKE) ".in",
+	"sh update.sh",
+	"Makefile";
+
