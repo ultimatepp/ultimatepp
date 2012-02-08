@@ -14,7 +14,7 @@ SqlMassInsert& SqlMassInsert::operator()(SqlId col, const Value& val)
 		cache.Top();
 	}
 	if(cache.GetCount() == 1)
-		column.Add(col.Quoted());
+		column.Add(~col);
 	else
 		ASSERT(column[pos] == col.Quoted());
 	Row& r = cache.Top();
@@ -52,12 +52,12 @@ void SqlMassInsert::Flush()
 		}
 	}
 	if(doremove)
-		sql * Delete(table.Quoted()).Where(remove);
+		sql * Delete(table).Where(remove);
 	for(int ii = 0; ii < cache.GetCount(); ii++) {
 		dword nulls = cache[ii].nulls;
 		if(nulls != DONE) {
 			String insert;
-			insert << "insert into " + table.Quoted() + '(';
+			insert << "insert into " + ~table + '(';
 			bool nextcol = false;
 			for(int i = 0; i < column.GetCount(); i++) {
 				if(!(nulls & (1 << i))) {
