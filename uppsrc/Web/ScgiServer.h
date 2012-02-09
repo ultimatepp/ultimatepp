@@ -8,6 +8,8 @@ public:
 	
 	ScgiServer(int port = 7800);
 	
+	void Process();
+	bool Accept();
 	void Run(int listenCount = 10);
 	
 	dword  ClientIP()    { return clientIP; }
