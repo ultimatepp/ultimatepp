@@ -539,6 +539,7 @@ onst]&]
 [@(0.0.255) int]_[*@3 from]_`=_[@3 0])_[@(0.0.255) const]&]
 [s2; Returns first position of substring [%-*@3 s] tested from [%-*@3 from] 
 position, or `-1 if [%-*@3 s] is not found.&]
+[s3; &]
 [s4;%- &]
 [s5;:AString`:`:Replace`(const AString`:`:String`&`,const AString`:`:String`&`):%- [@(0.0.255) v
 oid]_[* Replace]([@(0.0.255) const]_[_^AString`:`:String^ String][@(0.0.255) `&]_[*@3 find],
@@ -546,7 +547,12 @@ oid]_[* Replace]([@(0.0.255) const]_[_^AString`:`:String^ String][@(0.0.255) `&]
 [s5;:AString`:`:Replace`(const AString`:`:tchar`*`,const AString`:`:tchar`*`):%- [@(0.0.255) v
 oid]_[* Replace]([@(0.0.255) const]_[_^AString`:`:tchar^ tchar]_`*[*@3 find], 
 [@(0.0.255) const]_[_^AString`:`:tchar^ tchar]_`*[*@3 replace])&]
+[s5;:AString`:`:Replace`(const AString`:`:String`&`,const AString`:`:tchar`*`):%- [@(0.0.255) v
+oid]_[* Replace]([@(0.0.255) const]_[_^AString`:`:String^ String][@(0.0.255) `&]_[*@3 find],
+ [@(0.0.255) const]_[_^AString`:`:tchar^ tchar]_`*[*@3 replace])&]
+[s5;:AString`:`:Replace`(const AString`:`:tchar`*`,const AString`:`:String`&`):%- [@(0.0.255) v
+oid]_[* Replace]([@(0.0.255) const]_[_^AString`:`:tchar^ tchar]_`*[*@3 find], 
+[@(0.0.255) const]_[_^AString`:`:String^ String][@(0.0.255) `&]_[*@3 replace])&]
 [s2; Replaces substring [%-*@3 find] with [%-*@3 replace ]string for 
 all times [%-*@3 find] string appears.&]
-[s3; &]
-[s0; ]
+[s3; ]

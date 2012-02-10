@@ -482,8 +482,8 @@ void InstallCrashDump(const char *info) {
 
 #ifdef _DEBUG
 // value inspectors for Gdb_MI2 frontend
-word	_DBG_Value_GetType(Value const &v)	{ return v.GetType(); }
-String	_DBG_Value_AsString(Value const &v)	{ return AsString(v); }
+dword   _DBG_Value_GetType(Value const &v)	{ return v.GetType(); }
+String  _DBG_Value_AsString(Value const &v)	{ return AsString(v); }
 #endif
 
 END_UPP_NAMESPACE

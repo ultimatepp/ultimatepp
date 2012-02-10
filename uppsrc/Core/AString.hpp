@@ -141,10 +141,30 @@ int AString<B>::Find(int len, const tchar *s, int from) const
 }
 
 template <class B>
+void AString<B>::Replace(const String& find, const String& replace)
+{
+	Replace(~find, find.GetCount(), ~replace, replace.GetCount());
+}
+
+template <class B>
 force_inline
 void AString<B>::Replace(const tchar *find, const tchar *replace)
 {
 	Replace(find, (int)strlen__(find), replace, (int)strlen__(replace));
+}
+
+template <class B>
+force_inline
+void AString<B>::Replace(const String& find, const tchar *replace)
+{
+	Replace(~find, find.GetCount(), replace, (int)strlen__(replace));
+}
+
+template <class B>
+force_inline
+void AString<B>::Replace(const tchar *find, const String& replace)
+{
+	Replace(find, (int)strlen__(find), ~replace, replace.GetCount());
 }
 
 template <class B>
