@@ -51,7 +51,7 @@ void DoPeakProfile()
 void OutOfMemoryPanic(size_t size)
 {
 	char h[200];
-	sprintf(h, "Out of memory!\nRequested size: %lld\nU++ allocated memory: %d KB",
+	sprintf(h, "Out of memory!\nRequested size: %lld B\nU++ allocated memory: %d KB",
 	        (long long)size, MemoryUsedKb());
 	Panic(h);
 }
