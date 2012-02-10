@@ -69,15 +69,20 @@ const SchTableInfo& GetSchTableInfo(const String& table)
 	return sSchTableInfo().Get(~table, sSchTableInfoZero);
 }
 
-SqlBool Join(const String& tab1, const String& as1, const String& tab2, const String& as2)
+bool MatchRefName(const String& fk, const String& pk, const String& tab, int phase)
+{
+	return phase || fk == pk || tab + '_' + pk == fk;
+}
+
+SqlBool Join(const String& tab1, const String& as1, const String& tab2, const String& as2, int phase)
 {
 	const SchTableInfo& t1 = GetSchTableInfo(tab1);
 	const SchTableInfo& t2 = GetSchTableInfo(tab2);
 	for(int i = 0; i < t1.ref_table.GetCount(); i++)
-		if(t1.ref_table[i] == tab2)
+		if(t1.ref_table[i] == tab2 && MatchRefName(t1.column[i], t2.primary_key, tab2, phase))
 			return SqlId(t1.column[i]).Of(SqlId(as1)) == SqlId(t2.primary_key).Of(SqlId(as2));
 	for(int i = 0; i < t2.ref_table.GetCount(); i++)
-		if(t2.ref_table[i] == tab1)
+		if(t2.ref_table[i] == tab1 && MatchRefName(t2.column[i], t1.primary_key, tab1, phase))
 			return SqlId(t2.column[i]).Of(SqlId(as2)) == SqlId(t1.primary_key).Of(SqlId(as1));
 	return SqlBool::False();
 }
@@ -117,13 +122,14 @@ SqlBool FindSchJoin(const String& tables)
 	if(table.GetCount() >= 2) {
 		String tab1 = table.Top();
 		String as1 = as.Top();
-		for(int i = 0; i < table.GetCount() - 1; i++) {
-			SqlBool b = Join(tab1, as1, table[i], as[i]);
-			if(!b.IsFalse()) {
-				cache.Add(tables, b);
-				return b;
+		for(int phase = 0; phase < 2; phase++)
+			for(int i = 0; i < table.GetCount() - 1; i++) {
+				SqlBool b = Join(tab1, as1, table[i], as[i], phase);
+				if(!b.IsFalse()) {
+					cache.Add(tables, b);
+					return b;
+				}
 			}
-		}
 	}
 	NEVER_("Schema join not found");
 	return SqlBool::False();
