@@ -283,7 +283,8 @@ void Ide::EditMacro(int i)
 		const IdeMacro& m = mlist[i];
 		try {
 			Vector<EscValue> arg;
-			::Execute(UscGlobal(), &macro_api, m.code, arg, 1000000);
+			EscValue api = macro_api, code = m.code;
+			::Execute(UscGlobal(), &api, code, arg, 1000000);
 		}
 		catch(Exc e) {
 			PutConsole(e);
