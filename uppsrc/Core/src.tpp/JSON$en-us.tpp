@@ -132,7 +132,7 @@ sonArray][@(0.0.255) `&]_[*@3 array])&]
 [s1;:JsonArray`:`:class: [@(0.0.255)3 class][3 _][*3 JsonArray]&]
 [s2;%% Simple helper class intended for composing JSON strings, representing 
 JSON array.&]
-[s0; &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor Detail]]}}&]
 [s3;%% &]
 [s5;:JsonArray`:`:JsonArray`(`): [* JsonArray]()&]
