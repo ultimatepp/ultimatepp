@@ -444,22 +444,6 @@ String Format(Time time, bool seconds)
 	                                     : Format(" %02d:%02d", time.hour, time.minute));
 }
 
-Time ScanTime(const char *fmt, const char *s, Date def)
-{
-	Date d;
-	if(StrToDate(fmt, d, s, def))
-		return d;
-	return def;
-}
-
-Time ScanTime(const char *s, Date def)
-{
-	Date d;
-	if(StrToDate(d, s, def))
-		return d;
-	return def;
-}
-
 const char *StrToTime(Time& d, const char *s)
 {
 	s = StrToDate(d, s);

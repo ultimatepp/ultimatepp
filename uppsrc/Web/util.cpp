@@ -579,7 +579,7 @@ HttpQuery& HttpQuery::SetURL(const String& url)
 		const char *last = p;
 		while(*p && *p != '=' && *p != '&')
 			p++;
-		String key = ToUpper(UrlDecode(last, p));
+		String key = case_sensitive ? UrlDecode(last, p) : ToUpper(UrlDecode(last, p));
 		if(*p == '=')
 			p++;
 		last = p;
