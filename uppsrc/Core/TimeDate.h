@@ -142,6 +142,8 @@ Time  GetUtcTime();
 
 String Format(Time time, bool seconds = true);
 const char *StrToTime(Time& d, const char *s);
+Time        ScanTime(const char *fmt, const char *s, Time def = Null);
+Time        ScanTime(const char *s, Time def = Null);
 
 template<>
 inline String AsString(const Time& time) { return Format(time); }
