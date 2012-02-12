@@ -216,10 +216,14 @@ private:
 
 		VectorMap<String, String> map;
 	};
+	
+	bool case_sensitive;
 
 public:
-	HttpQuery(const Nuller& = Null) : data(Empty())    {}
-	explicit HttpQuery(String url) { data = Empty(); SetURL(url); }
+	HttpQuery(const Nuller& = Null) : data(Empty())    { case_sensitive = false; }
+	explicit HttpQuery(String url) { data = Empty(); SetURL(url); case_sensitive = false; }
+
+	void                   CaseSensitive(bool b = true) { case_sensitive = b; }
 
 	void                   Serialize(Stream& stream);
 

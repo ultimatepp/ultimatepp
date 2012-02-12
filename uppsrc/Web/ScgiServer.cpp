@@ -18,6 +18,9 @@ ScgiServer::ScgiServer(int port)
 	signal(SIGABRT, sighandler);
 	signal(SIGINT, sighandler);
 	signal(SIGTERM, sighandler);
+	
+	query.CaseSensitive();
+	post.CaseSensitive();
 }
 
 void ScgiServer::Process()
