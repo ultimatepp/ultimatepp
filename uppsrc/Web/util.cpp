@@ -101,7 +101,7 @@ String UrlEncode(const String& s)
 	{
 		const char *b = p;
 		while(p < e && (byte)*p > ' ' && (byte)*p < 127
-			&& (IsAlNum(*p) || *p == ',' || *p == '.' || *p == '-' || *p == '_'))
+		      && (IsAlNum(*p) || *p == '.' || *p == '-' || *p == '_'))
 			p++;
 		if(p > b)
 			out.Cat(b, int(p - b));
