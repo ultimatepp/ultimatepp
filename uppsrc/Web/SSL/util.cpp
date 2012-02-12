@@ -580,7 +580,7 @@ bool SSLServerSocket(Socket& socket, SSLContext& ssl_context, int port, bool nod
 }
 
 bool SSLClientSocket(Socket& socket, SSLContext& ssl_context, const char *host, int port, bool nodelay,
-                     dword *my_addr, int timeout, bool blocking, Gate pre_ssl)
+                     dword *my_addr, int timeout, bool blocking)
 {
 	One<SSLSocketData> data = new SSLSocketData(ssl_context);
 	if(!data->OpenClient(host, port, nodelay, my_addr, timeout, blocking))
