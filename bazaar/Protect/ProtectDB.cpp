@@ -140,9 +140,15 @@ bool ProtectDB::Set(VectorMap<String, Value> const &d)
 		Cerr() << "Updating record for e-mail " << eMail << "\n";
 		SQL * Update(USERS)
 			(NAME					, data.Get("NAME"))
+			(SURNAME				, data.Get("SURNAME"))
 			(ADDRESS				, data.Get("ADDRESS"))
+			(TOWN					, data.Get("TOWN"))
+			(ZONE					, data.Get("ZONE"))
 			(COUNTRY				, data.Get("COUNTRY"))
 			(ZIP					, data.Get("ZIP"))
+			(CATHEGORY				, data.Get("CATHEGORY"))
+			(CF						, data.Get("CF"))
+			(PIVA					, data.Get("PIVA"))
 			(PHONE					, data.Get("PHONE"))
 			(FAX					, data.Get("FAX"))
 			(CELL					, data.Get("CELL"))
@@ -163,10 +169,15 @@ bool ProtectDB::Set(VectorMap<String, Value> const &d)
 		Cerr() << "Inserting record for e-mail " << eMail << "\n";
 		SQL * Insert(USERS)
 			(EMAIL					, eMail)
-			(NAME					, data.Get("NAME"))
+			(SURNAME				, data.Get("SURNAME"))
 			(ADDRESS				, data.Get("ADDRESS"))
+			(TOWN					, data.Get("TOWN"))
+			(ZONE					, data.Get("ZONE"))
 			(COUNTRY				, data.Get("COUNTRY"))
 			(ZIP					, data.Get("ZIP"))
+			(CATHEGORY				, data.Get("CATHEGORY"))
+			(CF						, data.Get("CF"))
+			(PIVA					, data.Get("PIVA"))
 			(PHONE					, data.Get("PHONE"))
 			(FAX					, data.Get("FAX"))
 			(CELL					, data.Get("CELL"))
@@ -191,9 +202,15 @@ VectorMap<String, Value> ProtectDB::Default(VectorMap<String, Value> const &base
 	VectorMap<String, Value> res(base, 1);
 	res.FindAdd("EMAIL", "");
 	res.FindAdd("NAME", "");
+	res.FindAdd("SURNAME", "");
 	res.FindAdd("ADDRESS", "");
+	res.FindAdd("TOWN", "");
+	res.FindAdd("ZONE", "");
 	res.FindAdd("COUNTRY", "");
 	res.FindAdd("ZIP", "");
+	res.FindAdd("CATHEGORY", 1);
+	res.FindAdd("CF", "");
+	res.FindAdd("PIVA", "");
 	res.FindAdd("PHONE", "");
 	res.FindAdd("FAX", "");
 	res.FindAdd("CELL", "");

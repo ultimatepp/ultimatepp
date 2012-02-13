@@ -286,9 +286,12 @@ bool ProtectClient::GetLicenseInfo(void)
 	}
 	if(res.Find("EMAIL") >= 0)			userEMail			= res.Get("EMAIL");
 	if(res.Find("NAME") >= 0)			userName			= res.Get("NAME");
-	if(res.Find("ADDRESS") >= 0)		userAddress			= res.Get("ADDRESS");
+	if(res.Find("SURNAME") >= 0)		userSurname			= res.Get("SURNAME");
+	if(res.Find("ZONE") >= 0)			userZone			= res.Get("ZONE");
 	if(res.Find("COUNTRY") >= 0)		userCountry			= res.Get("COUNTRY");
 	if(res.Find("ZIP") >= 0)			userZIP				= res.Get("ZIP");
+	if(res.Find("TOWN") >= 0)			userTown			= res.Get("TOWN");
+	if(res.Find("ADDRESS") >= 0)		userAddress			= res.Get("ADDRESS");
 	if(res.Find("PHONE") >= 0)			userPhone			= res.Get("PHONE");
 	if(res.Find("FAX") >= 0)			userFax				= res.Get("FAX");
 	if(res.Find("CELL") >= 0)			userCell			= res.Get("CELL");
@@ -304,15 +307,29 @@ bool ProtectClient::UpdateUserData(void)
 {
 	lastError = 0;
 
+		String userName;
+		String userSurname;
+		String userZone;
+		String userCountry;
+		String userZIP;
+		String userTown;
+		String userAddress;
+		String userPhone;
+		String userFax;
+		String userCell;
+
 	// sends a register packet to server
 	VectorMap<String, Value>v;
 	v.Add("REASON", PROTECT_UPDATEUSERDATA);
 	v.Add("CLIENTID", (int)clientID);
 	v.Add("EMAIL", userEMail);
 	v.Add("NAME", userName);
-	v.Add("ADDRESS", userAddress);
+	v.Add("SURNAME", userSurname);
+	v.Add("ZONE", userZone);
 	v.Add("COUNTRY", userCountry);
 	v.Add("ZIP", userZIP);
+	v.Add("TOWN", userTown);
+	v.Add("ADDRESS", userAddress);
 	v.Add("PHONE", userPhone);
 	v.Add("FAX", userFax);
 	v.Add("CELL", userCell);
@@ -337,9 +354,12 @@ bool ProtectClient::Register(void)
 	v.Add("REASON", PROTECT_REGISTER);
 	v.Add("EMAIL", userEMail);
 	v.Add("NAME", userName);
-	v.Add("ADDRESS", userAddress);
+	v.Add("SURNAME", userSurname);
+	v.Add("ZONE", userZone);
 	v.Add("COUNTRY", userCountry);
 	v.Add("ZIP", userZIP);
+	v.Add("TOWN", userTown);
+	v.Add("ADDRESS", userAddress);
 	v.Add("PHONE", userPhone);
 	v.Add("FAX", userFax);
 	v.Add("CELL", userCell);

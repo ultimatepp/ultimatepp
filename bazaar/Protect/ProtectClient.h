@@ -29,10 +29,14 @@ class ProtectClient
 		
 		// user data
 		String userEMail;
+		
 		String userName;
-		String userAddress;
+		String userSurname;
+		String userZone;
 		String userCountry;
 		String userZIP;
+		String userTown;
+		String userAddress;
 		String userPhone;
 		String userFax;
 		String userCell;
@@ -123,20 +127,26 @@ class ProtectClient
 		// filled automatically by GETLICENSEINFO request
 		ProtectClient &SetUserEMail(String const &mail)				{ userEMail = mail; return *this; }
 		ProtectClient &SetUserName(String const &name)				{ userName = name; return *this; }
-		ProtectClient &SetUserAddress(String const &address)		{ userAddress = address; return *this; }
+		ProtectClient &SetUserSurname(String const &surname)		{ userSurname = surname; return *this; }
+		ProtectClient &SetUserZone(String zone)						{ userZone = zone; return *this; }
 		ProtectClient &SetUserCountry(String const &country)		{ userCountry = country; return *this; }
 		ProtectClient &SetUserZip(String const &zip)				{ userZIP = zip; return *this; }
+		ProtectClient &SetUserTown(String const &town)				{ userTown = town; return *this; }
+		ProtectClient &SetUserAddress(String const &address)		{ userAddress = address; return *this; }
 		ProtectClient &SetUserPhone(String const &phone)			{ userPhone = phone; return *this; }
 		ProtectClient &SetUserFax(String const &fax)				{ userFax = fax; return *this; }
 		ProtectClient &SetUserCell(String const &cell)				{ userCell = cell; return *this; }
 		ProtectClient &SetCurrentVersion(ProductVersion const &v)	{ currentVersion = v; return *this; }
 		ProtectClient &SetActivationKey(String const &key)			{ activationKey = key; StoreConfig(); return *this; }
-		
+
 		String GetUserEMail(void)					{ return userEMail; }
 		String GetUserName(void)					{ return userName; }
-		String GetUserAddress(void)					{ return userAddress; }
+		String GetUserSurname(void)					{ return userSurname; }
+		String GetUserZone(void)					{ return userZone; }
 		String GetUserCountry(void)					{ return userCountry; }
 		String GetUserZip(void)						{ return userZIP; }
+		String GetUserTown(void)					{ return userTown; }
+		String GetUserAddress(void)					{ return userAddress; }
 		String GetUserPhone(void)					{ return userPhone; }
 		String GetUserFax(void)						{ return userFax; }
 		String GetUserCell(void)					{ return userCell; }
