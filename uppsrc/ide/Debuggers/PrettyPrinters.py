@@ -195,6 +195,19 @@ class UppValuePrinter(object):
 				else:
 					return "<unsupported value type '" + str(typeId) + "'>"
 
+# Upp::Value* printer
+class UppValuePtrPrinter(object):
+	"Print an Upp::Value *"
+
+	def __init__(self, val):
+		self.val = val
+
+	def to_string(self):
+		return '@' + str(self.val.address) + ': ' + UppValuePrinter(self.val.dereference()).to_string()
+
+	def display_hint(self):
+		return 'String'
+
 # Upp::One<> printer
 class UppOnePrinter(object):
 
@@ -210,10 +223,37 @@ def UppLookupFunction(val):
 	if typeStr == 'Upp::String *':
 		return UppStringPtrPrinter(val)
 
+	if typeStr == 'const Upp::String *':
+		return UppStringPtrPrinter(val)
+
+	if typeStr == 'Upp::String &':
+		return UppStringPtrPrinter(val.address)
+
+	if typeStr == 'const Upp::String &':
+		return UppStringPtrPrinter(val.address)
+
 	if typeStr == 'Upp::String':
 		return UppStringPrinter(val)
 		
+	if typeStr == 'const Upp::String':
+		return UppStringPrinter(val)
+		
+	if typeStr == 'Upp::Value *' and Upp_Value_Inspectors:
+		return UppValuePtrPrinter(val)
+		
+	if typeStr == 'const Upp::Value *' and Upp_Value_Inspectors:
+		return UppValuePtrPrinter(val)
+		
+	if typeStr == 'Upp::Value &' and Upp_Value_Inspectors:
+		return UppValuePtrPrinter(val.address)
+		
+	if typeStr == 'const Upp::Value &' and Upp_Value_Inspectors:
+		return UppValuePtrPrinter(val.address)
+		
 	if typeStr == 'Upp::Value' and Upp_Value_Inspectors:
+		return UppValuePrinter(val)
+		
+	if typeStr == 'const Upp::Value' and Upp_Value_Inspectors:
 		return UppValuePrinter(val)
 		
 	lookup_tag = val.type.tag
