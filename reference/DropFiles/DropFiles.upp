@@ -1,4 +1,4 @@
-description "Window that accepts drag&drop of files";
+description "Window that accepts drag&drop of files\377";
 
 uses
 	CtrlLib;
@@ -8,3 +8,4 @@ file
 
 mainconfig
 	"" = "GUI";
+
