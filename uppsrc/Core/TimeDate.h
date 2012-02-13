@@ -141,8 +141,9 @@ Time  GetSysTime();
 Time  GetUtcTime();
 
 String Format(Time time, bool seconds = true);
+const char *StrToTime(const char *datefmt, Time& d, const char *s);
 const char *StrToTime(Time& d, const char *s);
-Time        ScanTime(const char *fmt, const char *s, Time def = Null);
+Time        ScanTime(const char *datefmt, const char *s, Time def = Null);
 Time        ScanTime(const char *s, Time def = Null);
 
 template<>
