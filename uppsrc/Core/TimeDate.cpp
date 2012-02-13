@@ -26,8 +26,7 @@ int  GetDaysOfMonth(int m, int y) {
 }
 
 bool Date::IsValid() const {
-	return year == -32768 /* TRC fix 2007/06/17:was == 0 */ || month >= 1 && month <= 12 &&
-		                day >= 1 && day <= GetDaysOfMonth(month, year);
+	return year == -32768 || month >= 1 && month <= 12 && day >= 1 && day <= GetDaysOfMonth(month, year);
 }
 
 String DayName(int i, int lang)
@@ -94,22 +93,6 @@ const char *StrToDate(Date& d, const char *s, Date def)
 	return StrToDate(s_date_scan, d, s, def);
 }
 
-Date ScanDate(const char *fmt, const char *s, Date def)
-{
-	Date d;
-	if(StrToDate(fmt, d, s, def))
-		return d;
-	return def;
-}
-
-Date ScanDate(const char *s, Date def)
-{
-	Date d;
-	if(StrToDate(d, s, def))
-		return d;
-	return def;
-}
-
 const char *StrToDate(const char *fmt, Date& d, const char *s, Date def)
 {
 	if(*s == 0) {
@@ -174,6 +157,22 @@ const char *StrToDate(const char *fmt, Date& d, const char *s, Date def)
 const char *StrToDate(Date& d, const char *s)
 {
 	return StrToDate(d, s, Null);
+}
+
+Date ScanDate(const char *fmt, const char *s, Date def)
+{
+	Date d;
+	if(StrToDate(fmt, d, s, def))
+		return d;
+	return def;
+}
+
+Date ScanDate(const char *s, Date def)
+{
+	Date d;
+	if(StrToDate(d, s, def))
+		return d;
+	return def;
 }
 
 static bool s_date_letters = true, s_date_upper = true;
@@ -444,9 +443,9 @@ String Format(Time time, bool seconds)
 	                                     : Format(" %02d:%02d", time.hour, time.minute));
 }
 
-const char *StrToTime(Time& d, const char *s)
+const char *StrToTime(const char *datefmt, Time& d, const char *s)
 {
-	s = StrToDate(d, s);
+	s = StrToDate(datefmt, d, s);
 	if(!s)
 		return NULL;
 	d.hour = d.minute = d.second = 0;
@@ -467,6 +466,26 @@ const char *StrToTime(Time& d, const char *s)
 	return s;
 }
 
+const char *StrToTime(Time& d, const char *s)
+{
+	return StrToTime(s_date_scan, d, s);
+}
+
+Time ScanTime(const char *datefmt, const char *s, Time def)
+{
+	Time tm;
+	if(StrToTime(datefmt, tm, s))
+		return tm;
+	return def;
+}
+
+Time ScanDate(const char *s, Time def)
+{
+	Time tm;
+	if(StrToTime(tm, s))
+		return tm;
+	return def;
+}
 
 #ifdef PLATFORM_WIN32
 

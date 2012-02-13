@@ -9,10 +9,9 @@ struct Complex : std::complex<double>
 	Complex(double r, double i) : C(r,i)    {}
 	Complex(const C& c) : C(c)              {}
 
-	Complex(const Nuller&) : C(DOUBLE_NULL) {}
+	Complex(const Nuller&) : C(DOUBLE_NULL, DOUBLE_NULL) {}
 	operator Value() const                  { return RichValue<Complex>(*this); } 
 	Complex(const Value& v) : C(IsNumber(v) ? Complex((double)v) : RichValue<Complex>::Extract(v)) {}
-
 
 	bool operator==(const Complex& c) const { return (const C&)(*this) == (const C&)c; }
 	bool operator!=(const Complex& c) const { return (const C&)(*this) != (const C&)c; }
