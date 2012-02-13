@@ -1,0 +1,11 @@
+description "Instant Payement Notification server for PayPal\377";
+
+uses
+	IPNServer;
+
+file
+	IPNServerTest.cpp;
+
+mainconfig
+	"" = "MT";
+

@@ -1,0 +1,4 @@
+#ifndef _IPNServerTest_icpp_init_stub
+#define _IPNServerTest_icpp_init_stub
+#include "IPNServer/init"
+#endif
