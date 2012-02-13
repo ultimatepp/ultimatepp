@@ -66,13 +66,13 @@ public:
 };
 
 template <class T>
-void Xmlize(XmlIO xml, T& var)
+void Xmlize(XmlIO& xml, T& var)
 {
 	var.Xmlize(xml);
 }
 
 template <class T>
-void Xmlize(XmlIO xml, const char* itemtag, T& var)
+void Xmlize(XmlIO& xml, const char* itemtag, T& var)
 {
 	var.Xmlize(xml);
 }
@@ -113,45 +113,45 @@ template <> String XmlAttrStore(const Date& var);
 template <> void XmlAttrLoad(Time& var, const String& text);
 template <> String XmlAttrStore(const Time& var);
 
-template<> void Xmlize(XmlIO xml, String& var);
-template<> void Xmlize(XmlIO xml, WString& var);
-template<> void Xmlize(XmlIO xml, int& var);
-template<> void Xmlize(XmlIO xml, dword& var);
-template<> void Xmlize(XmlIO xml, double& var);
-template<> void Xmlize(XmlIO xml, bool& var);
-template<> void Xmlize(XmlIO xml, Date& var);
-template<> void Xmlize(XmlIO xml, Time& var);
-template<> void Xmlize(XmlIO xml, int16& var);
-template<> void Xmlize(XmlIO xml, int64& var);
-template<> void Xmlize(XmlIO xml, byte& var);
+template<> void Xmlize(XmlIO& xml, String& var);
+template<> void Xmlize(XmlIO& xml, WString& var);
+template<> void Xmlize(XmlIO& xml, int& var);
+template<> void Xmlize(XmlIO& xml, dword& var);
+template<> void Xmlize(XmlIO& xml, double& var);
+template<> void Xmlize(XmlIO& xml, bool& var);
+template<> void Xmlize(XmlIO& xml, Date& var);
+template<> void Xmlize(XmlIO& xml, Time& var);
+template<> void Xmlize(XmlIO& xml, int16& var);
+template<> void Xmlize(XmlIO& xml, int64& var);
+template<> void Xmlize(XmlIO& xml, byte& var);
 
-template<> void Xmlize(XmlIO xml, Point& p);
-template<> void Xmlize(XmlIO xml, Point16& p);
-template<> void Xmlize(XmlIO xml, Point64& p);
-template<> void Xmlize(XmlIO xml, Pointf& p);
+template<> void Xmlize(XmlIO& xml, Point& p);
+template<> void Xmlize(XmlIO& xml, Point16& p);
+template<> void Xmlize(XmlIO& xml, Point64& p);
+template<> void Xmlize(XmlIO& xml, Pointf& p);
 
-template<> void Xmlize(XmlIO xml, Size& sz);
-template<> void Xmlize(XmlIO xml, Size16& sz);
-template<> void Xmlize(XmlIO xml, Size64& sz);
-template<> void Xmlize(XmlIO xml, Sizef& sz);
+template<> void Xmlize(XmlIO& xml, Size& sz);
+template<> void Xmlize(XmlIO& xml, Size16& sz);
+template<> void Xmlize(XmlIO& xml, Size64& sz);
+template<> void Xmlize(XmlIO& xml, Sizef& sz);
 
-template<> void Xmlize(XmlIO xml, Rect& r);
-template<> void Xmlize(XmlIO xml, Rect16& r);
-template<> void Xmlize(XmlIO xml, Rect64& r);
-template<> void Xmlize(XmlIO xml, Rectf& r);
+template<> void Xmlize(XmlIO& xml, Rect& r);
+template<> void Xmlize(XmlIO& xml, Rect16& r);
+template<> void Xmlize(XmlIO& xml, Rect64& r);
+template<> void Xmlize(XmlIO& xml, Rectf& r);
 
-template<> void Xmlize(XmlIO xml, Color& c);
+template<> void Xmlize(XmlIO& xml, Color& c);
 
-template<> void Xmlize(XmlIO xml, Value& v);
+template<> void Xmlize(XmlIO& xml, Value& v);
 
-template<> void Xmlize(XmlIO xml, ValueArray& v);
-template<> void Xmlize(XmlIO xml, ValueMap& v);
+template<> void Xmlize(XmlIO& xml, ValueArray& v);
+template<> void Xmlize(XmlIO& xml, ValueMap& v);
 
-void XmlizeLangAttr(XmlIO xml, int& lang, const char *id = "lang");
-void XmlizeLang(XmlIO xml, const char *tag, int& lang, const char *id = "id");
+void XmlizeLangAttr(XmlIO& xml, int& lang, const char *id = "lang");
+void XmlizeLang(XmlIO& xml, const char *tag, int& lang, const char *id = "id");
 
 template<class T>
-void XmlizeContainer(XmlIO xml, const char *tag, T& data)
+void XmlizeContainer(XmlIO& xml, const char *tag, T& data)
 {
 	if(xml.IsStoring())
 		for(int i = 0; i < data.GetCount(); i++)
@@ -165,38 +165,38 @@ void XmlizeContainer(XmlIO xml, const char *tag, T& data)
 }
 
 template<class T>
-void Xmlize(XmlIO xml, Vector<T>& data)
+void Xmlize(XmlIO& xml, Vector<T>& data)
 {
 	XmlizeContainer(xml, "item", data);
 }
 
 template<class T>
-void Xmlize(XmlIO xml, const char* itemtag, Vector<T>& data)
+void Xmlize(XmlIO& xml, const char* itemtag, Vector<T>& data)
 {
 	XmlizeContainer(xml, itemtag, data);
 }
 
 template<class T>
-void Xmlize(XmlIO xml, Array<T>& data)
+void Xmlize(XmlIO& xml, Array<T>& data)
 {
 	XmlizeContainer(xml, "item", data);
 }
 
 template<class T>
-void Xmlize(XmlIO xml, const char* itemtag, Array<T>& data)
+void Xmlize(XmlIO& xml, const char* itemtag, Array<T>& data)
 {
 	XmlizeContainer(xml, itemtag, data);
 }
 
 template<class T>
-void XmlizeStore(XmlIO xml, const T& data)
+void XmlizeStore(XmlIO& xml, const T& data)
 {
 	ASSERT(xml.IsStoring());
 	Xmlize(xml, const_cast<T&>(data));
 }
 
 template<class K, class V, class T>
-void XmlizeMap(XmlIO xml, const char *keytag, const char *valuetag, T& data)
+void XmlizeMap(XmlIO& xml, const char *keytag, const char *valuetag, T& data)
 {
 	if(xml.IsStoring()) {
 		for(int i = 0; i < data.GetCount(); i++)
@@ -217,19 +217,19 @@ void XmlizeMap(XmlIO xml, const char *keytag, const char *valuetag, T& data)
 }
 
 template<class K, class V, class H>
-void Xmlize(XmlIO xml, VectorMap<K, V, H>& data)
+void Xmlize(XmlIO& xml, VectorMap<K, V, H>& data)
 {
 	XmlizeMap<K, V>(xml, "key", "value", data);
 }
 
 template<class K, class V, class H>
-void Xmlize(XmlIO xml, ArrayMap<K, V, H>& data)
+void Xmlize(XmlIO& xml, ArrayMap<K, V, H>& data)
 {
 	XmlizeMap<K, V>(xml, "key", "value", data);
 }
 
 template<class K, class T>
-void XmlizeIndex(XmlIO xml, const char *keytag, T& data)
+void XmlizeIndex(XmlIO& xml, const char *keytag, T& data)
 {
 	if(xml.IsStoring()) {
 		for(int i = 0; i < data.GetCount(); i++)
@@ -253,21 +253,21 @@ void XmlizeIndex(XmlIO xml, const char *keytag, T& data)
 }
 
 template<class K, class H>
-void Xmlize(XmlIO xml, Index<K, H>& data)
+void Xmlize(XmlIO& xml, Index<K, H>& data)
 {
 	XmlizeIndex<K>(xml, "key", data);
 }
 
 template<class K, class H>
-void Xmlize(XmlIO xml, ArrayIndex<K, H>& data)
+void Xmlize(XmlIO& xml, ArrayIndex<K, H>& data)
 {
 	XmlizeIndex<K>(xml, "key", data);
 }
 
-void RegisterValueXmlize(dword type, void (*xmlize)(XmlIO xml, Value& v), const char *name);
+void RegisterValueXmlize(dword type, void (*xmlize)(XmlIO& xml, Value& v), const char *name);
 
 template <class T>
-void ValueXmlize(XmlIO xml, Value& v)
+void ValueXmlize(XmlIO& xml, Value& v)
 {
 	T x;
 	if(xml.IsStoring())
