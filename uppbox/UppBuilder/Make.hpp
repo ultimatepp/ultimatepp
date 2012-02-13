@@ -137,7 +137,6 @@ void Parser::Process(){
 		opt+=EvalVector(pkgs[i].option,i,"");
 		for(int j=0;j<pkgs[i].flags.GetCount();j++)
 			opt+=" -Dflag"+pkgs[i].flags[j];
-		
 		String fdir=pkg+"/"+FlagDir(pkgs[i].flags);
 		fprintf(mf, "%s", ~(pkg+"_src="+pkgs[i].dir+"\n"+
 		            pkg+"_out=$(OUT)/"+fdir+"\n"+

@@ -15,7 +15,7 @@ toBin() {
         BZ2) obj=$tmp/obj.bz2; cat "$1" | bzip2 -9 > $obj ;;
         *)   obj="$1" ;;
     esac
-    hexdump -e '"\t" 16/1 "%i, " "\n"' $obj | sed '$s/[ ,]\+$/, 0/g'
+    hexdump -v -e '"\t" 16/1 "%i, " "\n"' $obj | sed '$s/[ ,]\+$/, 0/g'
     len="`cat $obj | wc -c`"
 }
 

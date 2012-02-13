@@ -62,7 +62,7 @@ public:
 	~String()                 {free(p);}
 	
 	char& operator[](const int n) const           {return p[n];}
-	bool IsEmpty() const                          {return *p == 0;}
+	bool IsEmpty() const                          {return *p == 0 || strlen(p) == 0;}
 	const char* operator~() const                 {return p;}
 	operator const char*() const                  {return p;}
 	String& operator=(const String& s)            {return operator=(s.p);}
@@ -418,7 +418,11 @@ struct Upp{
 };
 
 inline void Split(String s,Vector<String>& v){
-	while(s.GetCount()) v.AddUnique(ReadValue(s,' '));
+	while(s.GetCount()){
+		String val = ReadValue(s,' ');
+		if(val.GetCount())
+			v.AddUnique(val);
+	}
 }
 
 String FlagDir(const Vector<String>& v){
