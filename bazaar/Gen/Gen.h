@@ -75,14 +75,14 @@ void SerializeStore(Stream& s, const T& x)
 }
 
 //declares a class Xmlizeable
-//maybe redundant because of global template Xmlize(XmlIO xml, T&t)
+//maybe redundant because of global template Xmlize(XmlIO& xml, T&t)
 //which calls t.Xmlize()
 //but to ensure implementations
 template<class B = EmptyClass>
 class Xmlizeable : public B
 {
 public:
-	virtual void Xmlize(XmlIO xml)             = 0;
+	virtual void Xmlize(XmlIO& xml)             = 0;
 };
 
 //most times it is a good idea to implement both

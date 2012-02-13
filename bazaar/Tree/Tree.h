@@ -118,7 +118,7 @@ public:
 };
 
 template<class T>
-inline void Xmlize(XmlIO xml, Tree<T>& data)
+inline void Xmlize(XmlIO& xml, Tree<T>& data)
 {
 	XmlizeContainer(xml, "tree", data);
 }
@@ -152,7 +152,7 @@ inline Stream& operator%(Stream& s, Node<T>& x)
 }
 
 template<class T>
-inline void Xmlize(XmlIO xml, Node<T>& a)
+inline void Xmlize(XmlIO& xml, Node<T>& a)
 {
 	xml("leaf", a.leaf); Xmlize(xml, (Tree<Node<T> >&)a);
 }
@@ -175,7 +175,7 @@ inline Stream& operator%(Stream& s, NodeB<BB>& x)
 }
 
 template<class BB>
-inline void Xmlize(XmlIO xml, NodeB<BB>& a)
+inline void Xmlize(XmlIO& xml, NodeB<BB>& a)
 {
 	xml("leaf", (BB&)a); Xmlize(xml, (Tree<NodeB<BB> >&)a);
 }
@@ -336,7 +336,7 @@ public:
 };
 
 template<class K, class T, class H>
-inline void Xmlize(XmlIO xml, TreeMap<K, T, H>& data)
+inline void Xmlize(XmlIO& xml, TreeMap<K, T, H>& data)
 {
 	XmlizeMap<K, T>(xml, "tkey", "tvalue", data);
 }
@@ -368,7 +368,7 @@ inline Stream& operator%(Stream& s, MapNode<K, T, H>& x)
 }
 
 template<class K, class T, class H>
-inline void Xmlize(XmlIO xml, MapNode<K, T, H>& a)
+inline void Xmlize(XmlIO& xml, MapNode<K, T, H>& a)
 {
 	xml("leaf", a.leaf); Xmlize(xml, (TreeMap<K, MapNode<K,T,H>, H>&)a);
 }
@@ -391,7 +391,7 @@ inline Stream& operator%(Stream& s, MapNodeB<K, BB, H>& x)
 }
 
 template<class K, class BB, class H>
-inline void Xmlize(XmlIO xml, MapNodeB<K, BB, H>& a)
+inline void Xmlize(XmlIO& xml, MapNodeB<K, BB, H>& a)
 {
 	xml("leaf", (BB&)a); Xmlize(xml, (TreeMap<K, MapNodeB<K,BB,H>, H>&)a);
 }

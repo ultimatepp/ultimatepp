@@ -50,7 +50,7 @@ Stream& operator%(Stream& s, Ctrl::LogPos& pos)
 }
 
 template<>
-void Xmlize(XmlIO xml, Ctrl::LogPos& pos)
+void Xmlize(XmlIO& xml, Ctrl::LogPos& pos)
 {
 	static VectorMap<String, int> mapx, mapy;
 	static VectorMap<int, String> remapx, remapy;

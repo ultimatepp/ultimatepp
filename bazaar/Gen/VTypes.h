@@ -30,7 +30,7 @@ inline bool operator!=(const Ctrl::LogPos& x, const Value& v)   { return RichVal
 template<> String AsString(const Ctrl::LogPos& pos);
 
 template<> Stream& operator%(Stream& s, Ctrl::LogPos& pos);
-template<> void Xmlize(XmlIO xml, Ctrl::LogPos& pos);
+template<> void Xmlize(XmlIO& xml, Ctrl::LogPos& pos);
 
 
 END_UPP_NAMESPACE
