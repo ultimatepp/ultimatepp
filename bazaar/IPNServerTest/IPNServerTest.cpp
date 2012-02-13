@@ -40,7 +40,7 @@ static bool Daemonize(void)
 		return false;
 
 	// Redirect standard files to a log file (NULL for input)
-	String logPath = "/var/log/TimberStruct/";
+	String logPath = "/var/log/IPNServer/";
 	RealizePath(logPath);
 	freopen("/dev/null", "r", stdin);
 	freopen(AppendFileName(logPath, "out.log"), "w", stdout);
