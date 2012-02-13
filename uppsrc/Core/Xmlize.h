@@ -154,13 +154,17 @@ template<class T>
 void XmlizeContainer(XmlIO& xml, const char *tag, T& data)
 {
 	if(xml.IsStoring())
-		for(int i = 0; i < data.GetCount(); i++)
-			Xmlize(xml.Add(tag), data[i]);
+		for(int i = 0; i < data.GetCount(); i++) {
+			XmlIO io = xml.Add(tag);
+			Xmlize(io, data[i]);
+		}
 	else {
 		data.Clear();
 		for(int i = 0; i < xml->GetCount(); i++)
-			if(xml->Node(i).IsTag(tag))
-				Xmlize(xml.At(i), data.Add());
+			if(xml->Node(i).IsTag(tag)) {
+				XmlIO io = xml.At(i);
+				Xmlize(io, data.Add());
+			}
 	}
 }
 
@@ -201,8 +205,10 @@ void XmlizeMap(XmlIO& xml, const char *keytag, const char *valuetag, T& data)
 	if(xml.IsStoring()) {
 		for(int i = 0; i < data.GetCount(); i++)
 			if(!data.IsUnlinked(i)) {
-				XmlizeStore(xml.Add(keytag), data.GetKey(i));
-				XmlizeStore(xml.Add(valuetag), data[i]);
+				XmlIO k = xml.Add(keytag);
+				XmlizeStore(k, data.GetKey(i));
+				XmlIO v = xml.Add(valuetag);
+				XmlizeStore(v, data[i]);
 			}
 	}
 	else {
@@ -210,8 +216,10 @@ void XmlizeMap(XmlIO& xml, const char *keytag, const char *valuetag, T& data)
 		int i = 0;
 		while(i < xml->GetCount() - 1 && xml->Node(i).IsTag(keytag) && xml->Node(i + 1).IsTag(valuetag)) {
 			K key;
-			Xmlize(xml.At(i++), key);
-			Xmlize(xml.At(i++), data.Add(key));
+			XmlIO k = xml.At(i++);
+			Xmlize(k, key);
+			XmlIO v = xml.At(i++);
+			Xmlize(v, data.Add(key));
 		}
 	}
 }
@@ -235,7 +243,8 @@ void XmlizeIndex(XmlIO& xml, const char *keytag, T& data)
 		for(int i = 0; i < data.GetCount(); i++)
 			if(!data.IsUnlinked(i)) {
 				//XmlizeStore(xml.Add(keytag), data.GetKey(i)); //FIXME xmlize with hashfn awareness
-				XmlizeStore(xml.Add(keytag), data[i]);
+				XmlIO io = xml.Add(keytag);
+				XmlizeStore(io, data[i]);
 			}
 	}
 	else {
@@ -246,7 +255,8 @@ void XmlizeIndex(XmlIO& xml, const char *keytag, T& data)
 			//K key;
 			//Xmlize(xml.At(i++), key); //FIXME dexmlize with hashfn awareness
 			K k;
-			Xmlize(xml.At(i++), k);
+			XmlIO io = xml.At(i++);
+			Xmlize(io, k);
 			data.Add(k);
 		}
 	}
