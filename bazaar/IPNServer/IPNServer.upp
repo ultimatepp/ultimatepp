@@ -1,0 +1,10 @@
+description "Instant Payement Notification server for PayPal\377";
+
+uses
+	Core,
+	Web/SSL;
+
+file
+	IPNServer.h,
+	IPNServer.cpp;
+
