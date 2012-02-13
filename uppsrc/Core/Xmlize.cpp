@@ -3,7 +3,7 @@
 NAMESPACE_UPP
 
 template<>
-void Xmlize(XmlIO xml, String& var)
+void Xmlize(XmlIO& xml, String& var)
 {
 	if(xml.IsLoading()) {
 		for(int i = 0; i < xml->GetCount(); i++)
@@ -23,7 +23,7 @@ void Xmlize(XmlIO xml, String& var)
 }
 
 template<>
-void Xmlize(XmlIO xml, WString& var)
+void Xmlize(XmlIO& xml, WString& var)
 {
 	String h;
 	if(xml.IsStoring())
@@ -141,7 +141,7 @@ template<> String XmlAttrStore(const Time& var) {
 	return Format("%04d%02d%02d`T%02d`:%02d`:%02d", var.year, var.month, var.day, var.hour, var.minute, var.second);
 }
 
-#define VALUE_XMLIZE(type) template <> void Xmlize(XmlIO xml, type& var) { xml.Attr("value", var); }
+#define VALUE_XMLIZE(type) template <> void Xmlize(XmlIO& xml, type& var) { xml.Attr("value", var); }
 
 VALUE_XMLIZE(int);
 VALUE_XMLIZE(dword);
@@ -154,7 +154,7 @@ VALUE_XMLIZE(Time);
 VALUE_XMLIZE(Date);
 
 template <class T>
-void XmlizePoint_(XmlIO xml, T& p)
+void XmlizePoint_(XmlIO& xml, T& p)
 {
 	xml
 		.Attr("x", p.x)
@@ -162,13 +162,13 @@ void XmlizePoint_(XmlIO xml, T& p)
 	;
 }
 
-template<> void Xmlize(XmlIO xml, Point& p)   { XmlizePoint_(xml, p); }
-template<> void Xmlize(XmlIO xml, Point16& p) { XmlizePoint_(xml, p); }
-template<> void Xmlize(XmlIO xml, Point64& p) { XmlizePoint_(xml, p); }
-template<> void Xmlize(XmlIO xml, Pointf& p)  { XmlizePoint_(xml, p); }
+template<> void Xmlize(XmlIO& xml, Point& p)   { XmlizePoint_(xml, p); }
+template<> void Xmlize(XmlIO& xml, Point16& p) { XmlizePoint_(xml, p); }
+template<> void Xmlize(XmlIO& xml, Point64& p) { XmlizePoint_(xml, p); }
+template<> void Xmlize(XmlIO& xml, Pointf& p)  { XmlizePoint_(xml, p); }
 
 template<class T>
-void XmlizeSize_(XmlIO xml, T& sz)
+void XmlizeSize_(XmlIO& xml, T& sz)
 {
 	xml
 		.Attr("cx", sz.cx)
@@ -176,13 +176,13 @@ void XmlizeSize_(XmlIO xml, T& sz)
 	;
 }
 
-template<> void Xmlize(XmlIO xml, Size& p)   { XmlizeSize_(xml, p); }
-template<> void Xmlize(XmlIO xml, Size16& p) { XmlizeSize_(xml, p); }
-template<> void Xmlize(XmlIO xml, Size64& p) { XmlizeSize_(xml, p); }
-template<> void Xmlize(XmlIO xml, Sizef& p)  { XmlizeSize_(xml, p); }
+template<> void Xmlize(XmlIO& xml, Size& p)   { XmlizeSize_(xml, p); }
+template<> void Xmlize(XmlIO& xml, Size16& p) { XmlizeSize_(xml, p); }
+template<> void Xmlize(XmlIO& xml, Size64& p) { XmlizeSize_(xml, p); }
+template<> void Xmlize(XmlIO& xml, Sizef& p)  { XmlizeSize_(xml, p); }
 
 template<class T>
-void XmlizeRect_(XmlIO xml, T& r)
+void XmlizeRect_(XmlIO& xml, T& r)
 {
 	xml
 		.Attr("left", r.left)
@@ -192,13 +192,13 @@ void XmlizeRect_(XmlIO xml, T& r)
 	;
 }
 
-template<> void Xmlize(XmlIO xml, Rect& p)   { XmlizeRect_(xml, p); }
-template<> void Xmlize(XmlIO xml, Rect16& p) { XmlizeRect_(xml, p); }
-template<> void Xmlize(XmlIO xml, Rect64& p) { XmlizeRect_(xml, p); }
-template<> void Xmlize(XmlIO xml, Rectf& p)  { XmlizeRect_(xml, p); }
+template<> void Xmlize(XmlIO& xml, Rect& p)   { XmlizeRect_(xml, p); }
+template<> void Xmlize(XmlIO& xml, Rect16& p) { XmlizeRect_(xml, p); }
+template<> void Xmlize(XmlIO& xml, Rect64& p) { XmlizeRect_(xml, p); }
+template<> void Xmlize(XmlIO& xml, Rectf& p)  { XmlizeRect_(xml, p); }
 
 template<>
-void Xmlize(XmlIO xml, Color& c)
+void Xmlize(XmlIO& xml, Color& c)
 {
 	int r = c.GetR();
 	int g = c.GetG();
@@ -211,7 +211,7 @@ void Xmlize(XmlIO xml, Color& c)
 	c = Color(r, g, b);
 }
 
-typedef void (*ValueXmlizer)(XmlIO xml, Value& v);
+typedef void (*ValueXmlizer)(XmlIO& xml, Value& v);
 
 VectorMap<dword, ValueXmlizer>& ValueXmlizeMap()
 {
@@ -230,7 +230,7 @@ INITBLOCK {
 	ValueXmlizeName();
 }
 
-void RegisterValueXmlize(dword type, void (*xmlize)(XmlIO xml, Value& v), const char *name)
+void RegisterValueXmlize(dword type, void (*xmlize)(XmlIO& xml, Value& v), const char *name)
 {
 	ASSERT(ValueXmlizeMap().Find(type) < 0);
 	ASSERT(ValueXmlizeName().Find(name) < 0);
@@ -260,7 +260,7 @@ REGISTER_VALUE_XMLIZE(ValueMap);
 
 static String s_binary("serialized_binary");
 
-template<> void Xmlize(XmlIO xml, Value& v)
+template<> void Xmlize(XmlIO& xml, Value& v)
 {
 	if(xml.IsStoring()) {
 		dword typeno = v.GetType();
@@ -296,7 +296,7 @@ template<> void Xmlize(XmlIO xml, Value& v)
 	}
 }
 
-template<> void Xmlize(XmlIO xml, ValueArray& v)
+template<> void Xmlize(XmlIO& xml, ValueArray& v)
 {
 	if(xml.IsStoring())
 		XmlizeStore(xml, v.Get());
@@ -307,7 +307,7 @@ template<> void Xmlize(XmlIO xml, ValueArray& v)
 	}
 }
 
-template<> void Xmlize(XmlIO xml, ValueMap& v)
+template<> void Xmlize(XmlIO& xml, ValueMap& v)
 {
 	if(xml.IsStoring()) {
 		XmlizeStore(xml, v.GetKeys());
@@ -325,7 +325,7 @@ template<> void Xmlize(XmlIO xml, ValueMap& v)
 	}
 }
 
-void XmlizeLangAttr(XmlIO xml, int& lang, const char *id)
+void XmlizeLangAttr(XmlIO& xml, int& lang, const char *id)
 {
 	String l;
 	if(xml.IsStoring())
@@ -335,7 +335,7 @@ void XmlizeLangAttr(XmlIO xml, int& lang, const char *id)
 		lang = LNGFromText(l);
 }
 
-void XmlizeLang(XmlIO xml, const char *tag, int& lang, const char *id)
+void XmlizeLang(XmlIO& xml, const char *tag, int& lang, const char *id)
 {
 	XmlIO n(xml, tag);
 	XmlizeLangAttr(n, lang, id);
