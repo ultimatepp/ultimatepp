@@ -307,17 +307,6 @@ bool ProtectClient::UpdateUserData(void)
 {
 	lastError = 0;
 
-		String userName;
-		String userSurname;
-		String userZone;
-		String userCountry;
-		String userZIP;
-		String userTown;
-		String userAddress;
-		String userPhone;
-		String userFax;
-		String userCell;
-
 	// sends a register packet to server
 	VectorMap<String, Value>v;
 	v.Add("REASON", PROTECT_UPDATEUSERDATA);
