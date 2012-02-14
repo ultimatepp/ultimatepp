@@ -58,7 +58,7 @@ void IPNServer::OnRequest()
 		{
 			VectorMap<String, String> data;
 			for(int i = 0; i < post.GetCount(); i++)
-				data.Add(post.GetKey(i), post[i]);
+				data.Add(ToUpper(post.GetKey(i)), post[i]);
 			onVerified(data);
 		}
 		else
