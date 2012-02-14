@@ -14,10 +14,10 @@ struct Data {
 	bool                      option;
 
 	void Dump();
-	void Xmlize(XmlIO xml);
+	void Xmlize(XmlIO& xml);
 };
 
-void Data::Xmlize(XmlIO xml)
+void Data::Xmlize(XmlIO& xml)
 {
 	xml
 		("Dimension", sz)

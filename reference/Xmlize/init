@@ -1,0 +1,4 @@
+#ifndef _Xmlize_icpp_init_stub
+#define _Xmlize_icpp_init_stub
+#include "Core/init"
+#endif
