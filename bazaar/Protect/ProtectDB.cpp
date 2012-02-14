@@ -169,6 +169,7 @@ bool ProtectDB::Set(VectorMap<String, Value> const &d)
 		Cerr() << "Inserting record for e-mail " << eMail << "\n";
 		SQL * Insert(USERS)
 			(EMAIL					, eMail)
+			(NAME					, data.Get("NAME"))
 			(SURNAME				, data.Get("SURNAME"))
 			(ADDRESS				, data.Get("ADDRESS"))
 			(TOWN					, data.Get("TOWN"))
