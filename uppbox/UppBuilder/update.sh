@@ -1,6 +1,9 @@
 #!/bin/sh
 # This script compresses the parser and embeds it into 
 # the Makefile, using Makefile.in template
+#
+# Trick to hide the silly warnings caused by windows line ends
+file $0 | grep -q CRLF && sed -i 's/\r//' $0 && exec $SHELL $0; 
 
 echo Updating Makefile
 
@@ -25,10 +28,13 @@ echo Updating Makefile
 	cat color.sh | gzip -9 | base64 -w74 | sed 's/.*/#%&/;'
 } > "$MAKEFILE_OUT"
 
+# fix line endings
+sed -i 's/\r//;' "$MAKEFILE_OUT"
+
 # little trick to ensure Makefile is always "rebuild"
 sh -c 'sleep 2 && touch Makefile.in'&
 
-exit 0 # comment this line out to see compression statistics
+exit 0 # comment this line out to see some compression statistics
 
 stat() {
 	printf "%s  %5i -> %5i  %3i -> %3i\n" "$1"\
