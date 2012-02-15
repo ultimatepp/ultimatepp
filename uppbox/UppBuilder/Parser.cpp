@@ -445,7 +445,6 @@ String FlagDir(const Vector<String>& v){
 		s+="."+r[i];
 	return s;
 }
-
 class Parser{
 	Vector<Upp> pkgs;
 	String main;
@@ -474,8 +473,7 @@ public:
 		for(int j=0;j<dflags.GetCount();j++)
 			if((pkg==0||pkgs[pkg].accepts.Find(dflags[j])>=0) && dflags.Find(id)>=0)
 				return true;
-		if(pkg==0&&id=="MAIN") return true;
-		return false;
+		return (pkg==0&&id=="MAIN");
 	}
 	
 	bool sMatchAnd(String& s,int pkg){
@@ -568,7 +566,6 @@ public:
 		for(int i=0; i<flags.GetCount(); i++)
 			p+=" "+flags[i];
 		printf("%s\n",~p);
-		Vector<String> dflags;
 		for(int i=0; i<flags.GetCount(); i++)
 			if(flags[i][0]=='.'){
 				dflags.Add(flags[i].Mid(1));

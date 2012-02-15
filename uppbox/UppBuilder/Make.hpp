@@ -123,7 +123,6 @@ void Parser::Process(){
 	        date, ~includes, ~libpaths);
 	String icpps, archives, prelink, postlink, custom;
 	Vector<String> dirs;
-	dirs.Add("$(BIN)");
 	for(int i=0;i<pkgs.GetCount();i++){
 		const String& pkg=pkgs[i].name;
 		String base=BaseName(pkg);
@@ -216,8 +215,6 @@ void Parser::Process(){
 		liblist+=" -l"+libs[i];
 	for(int i=0;i<linkopts.GetCount();i++)
 		optlist+=" "+linkopts[i];
-	for(int i=0;i<dirs.GetCount();i++)
-		dirlist+=" "+dirs[i];
 	String target = GetEnv("TARGET");
 	if(target.IsEmpty()){
 		target=BaseName(main);
@@ -228,9 +225,11 @@ void Parser::Process(){
 			}
 		}
 	}
-	if(target[0]!='/')
+	if(target.Find("/")==-1)
 		target="$(BIN)/"+target;
 	dirs.AddUnique(DirName(target));
+	for(int i=0;i<dirs.GetCount();i++)
+		dirlist+=" "+dirs[i];
 	fprintf(mf, "build: createdirs %s %s\n", ~custom, ~target);
 	fprintf(mf, "%s: %s %s\n"
 	            "	$M \"$BLinking$N $C$@$N\"\n"
@@ -245,6 +244,6 @@ void Parser::Process(){
 	for(int i=0;i<pkgs.GetCount();i++)
 		clean+=" $("+pkgs[i].name+"_out)";
 	fprintf(mf,"clean:\n"
-	           "	$E rm -rf %s",~clean);
+	           "	$E rm -rf %s\n",~clean);
 	fclose(mf);
 }

@@ -108,6 +108,11 @@ TARGET:=
 # Add flags from based on mainconfig section (1-based index, set       #
 # to 0 to disable completely                                           #
 USEMAINCFG:=1
+# Number of parallel processes to use (like "make -jN" option).        #
+# The JOBS variable must be used instead of -j option (as -j would not #
+# work as expected). Default value is the number of cores (if it is    #
+# possible to detect) or 1.                                            #
+JOBS:=$(shell echo /sys/devices/system/cpu/cpu[0-9] | wc -w || echo 1)
 # Ask for some additional details during parsing                       #
 INTERACTIVE:=0
 # Use colorized output, recognized values are 0, 1 or auto             #
@@ -143,7 +148,7 @@ do-build: $(OUT)/parser $(OUT)/brc.sh $(OUT)/color.sh
 		$m $${B}Parsing package $$C$$pkg$$N $$B...$$N; \
 		$(TIME) $(pass) $$color $(OUT)/parser $$pkg; \
 		$m $${B}Building package$$N $$C$$pkg$$N $$B...$$N; \
-		$(TIME) $$color $(MAKE) -j 3 -f $(OUT)/Makefile && \
+		$(TIME) $$color $(MAKE) -j $(JOBS) -f $(OUT)/Makefile && \
 		$m $${B}Package$$N $$C$$pkg$$N$$B finished ...$$N; \
 	done; set +e
 

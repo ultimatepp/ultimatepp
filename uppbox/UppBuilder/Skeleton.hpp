@@ -11,6 +11,7 @@ additional parser output formats.
 void Parser::Process(){
 	DUMP(flags);
 	DUMP(nests);
+	DUMP(dflags);
 	printf("packages:\n");
 	for(int i = 0; i < pkgs.GetCount(); i++){
 		printf("  %s\n", ~pkgs[i].name);
