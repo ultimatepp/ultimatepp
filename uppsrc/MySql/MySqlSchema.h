@@ -39,6 +39,7 @@
 #ifndef PRIMARY_KEY
 #define PRIMARY_KEY                INLINE_ATTRIBUTE("primary key")
 #endif
+
 #define AUTO_INCREMENT             INLINE_ATTRIBUTE("auto_increment")
 #define KEY                        INLINE_ATTRIBUTE("key")
 #define NOT_NULL                   INLINE_ATTRIBUTE("not null")
