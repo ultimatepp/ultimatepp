@@ -76,7 +76,6 @@ VectorMap<String, Value> ProtectDB::Get(String const &mail)
 		SQL * Select(SqlAll()).From(USERS).Where(EMAIL == mail);
 		if(SQL.WasError())
 		{
-			Cerr() << "Trying to refresh connection...\n";
 			if(!RefreshConnection())
 			{
 				Cerr() << "SQL Error : " << session.GetErrorCodeString() << "\n";
@@ -84,10 +83,7 @@ VectorMap<String, Value> ProtectDB::Get(String const &mail)
 				return res;
 			}
 			else
-			{
-				Cerr() << "Refresh ok, retrying\n";
 				continue;
-			}
 		}
 		else
 			break;
@@ -98,7 +94,6 @@ VectorMap<String, Value> ProtectDB::Get(String const &mail)
 			res[i] = SQL[res.GetKey(i)];
 	else
 	{
-		Cerr() << "ProtectDB::Get(\"" << mail << "\") failed\n"; 
 		res.Clear();
 		return res;
 	}
@@ -127,17 +122,13 @@ bool ProtectDB::Set(VectorMap<String, Value> const &d)
 				return false;
 			}
 			else
-			{
-				Cerr() << "Refresh ok, retrying\n";
 				continue;
-			}
 		}
 		else
 			break;
 	}
 	if(SQL.Fetch())
 	{
-		Cerr() << "Updating record for e-mail " << eMail << "\n";
 		SQL * Update(USERS)
 			(NAME					, data.Get("NAME"))
 			(SURNAME				, data.Get("SURNAME"))
@@ -166,7 +157,6 @@ bool ProtectDB::Set(VectorMap<String, Value> const &d)
 	}
 	else
 	{
-		Cerr() << "Inserting record for e-mail " << eMail << "\n";
 		SQL * Insert(USERS)
 			(EMAIL					, eMail)
 			(NAME					, data.Get("NAME"))
@@ -228,19 +218,5 @@ VectorMap<String, Value> ProtectDB::Default(VectorMap<String, Value> const &base
 
 	return res;
 }
-
-/*
-	MySqlSession session;
-	// substitute your 'username' and 'password' here:
-	if(!session.Connect("username", "password", "mysql", "localhost")) {
-		printf("Can't connect with MySql\n");
-		return;
-	}
-	Sql sql(session);
-	sql.Execute("use mysql");
-	sql.Execute("show tables");
-	while(sql.Fetch())
-		Cout() << (String)sql[0] << '\n';
-*/
 
 END_UPP_NAMESPACE
