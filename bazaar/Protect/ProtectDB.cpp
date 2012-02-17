@@ -224,7 +224,7 @@ VectorMap<String, Value> ProtectDB::Default(VectorMap<String, Value> const &base
 	res.FindAdd("ACTIVATIONDATE", GetSysTime());
 	res.FindAdd("LASTCONNECTIONDATE", GetSysTime());
 	res.FindAdd("TOTALCONNECTIONS", 0);
-	res.FindAdd("TOTALCONNECTIONTIME", Time());
+	res.FindAdd("TOTALCONNECTIONTIME", 0);
 
 	return res;
 }
