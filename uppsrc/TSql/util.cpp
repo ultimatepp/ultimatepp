@@ -67,7 +67,7 @@ public:
 	}
 
 	SqlInsert    Get(const SqlVal& from_table) const       { return GetRaw(Nvl(~from_table, table)); }
-	SqlInsert    GetSchema(const SqlVal& from_table) const { return GetRaw(SchemaTableName(Nvl(~from_table, table))); }
+	SqlInsert    GetSchema(const SqlId& from_table) const { return GetRaw(SchemaTableName(Nvl(~from_table, table))); }
 
 private:
 	SqlInsert    GetRaw(const String& dest) const
@@ -97,7 +97,7 @@ public:
 
 	operator     bool () const                             { return columns.GetCount(); }
 	SqlUpdate    Get(const SqlVal& from_table) const       { return GetRaw(Nvl(~from_table, table)); }
-	SqlUpdate    GetSchema(const SqlVal& from_table) const { return GetRaw(SchemaTableName(Nvl(~from_table, table))); }
+	SqlUpdate    GetSchema(const SqlId& from_table) const { return GetRaw(SchemaTableName(Nvl(~from_table, table))); }
 
 private:
 	SqlUpdate    GetRaw(const String& dest) const
@@ -197,7 +197,7 @@ String SchemaTableName(const String& table)
 	return s + '.' + table;
 }
 
-SqlVal SchemaTable(const SqlVal& table)
+SqlId SchemaTable(const SqlId& table)
 {
 	return SqlId(SchemaTableName(~table));
 }
@@ -470,7 +470,7 @@ Vector<String>& SyncStrColumn(Vector<String>& dest, SqlId col, const SqlVal& tab
 	return dest;
 }
 
-Vector<String> LoadSchemaStrColumn(SqlId column, const SqlVal& table, SqlSession& session, bool order)
+Vector<String> LoadSchemaStrColumn(SqlId column, const SqlId& table, SqlSession& session, bool order)
 {
 	Vector<String> result;
 	FetchContainer(result, Select(column).FromSchema(table), session);
@@ -479,7 +479,7 @@ Vector<String> LoadSchemaStrColumn(SqlId column, const SqlVal& table, SqlSession
 	return result;
 }
 
-Vector<String>& SyncSchemaStrColumn(Vector<String>& dest, SqlId col, const SqlVal& table, SqlSession& session)
+Vector<String>& SyncSchemaStrColumn(Vector<String>& dest, SqlId col, const SqlId& table, SqlSession& session)
 {
 	if(dest.IsEmpty())
 		dest = LoadSchemaStrColumn(col, table, session);
@@ -501,12 +501,12 @@ bool IsNotEmpty(const SqlVal& table, SqlId column, const Value& value, Sql& curs
 	return IsNotEmpty(table, column == value, cursor);
 }
 
-bool IsNotSchemaEmpty(const SqlVal& table, const SqlBool& cond, Sql& cursor)
+bool IsNotSchemaEmpty(const SqlId& table, const SqlBool& cond, Sql& cursor)
 {
 	return IsNotEmpty(Select(ROWNUM).FromSchema(table).Where(cond), cursor);
 }
 
-bool IsNotSchemaEmpty(const SqlVal& table, SqlId column, const Value& value, Sql& cursor)
+bool IsNotSchemaEmpty(const SqlId& table, SqlId column, const Value& value, Sql& cursor)
 {
 	return IsNotSchemaEmpty(table, column == value, cursor);
 }
@@ -593,34 +593,36 @@ SqlSet DeleteHint(const char *hint, const SqlVal& table)
 	return SqlSet(String().Cat() << "delete /*+ " << hint << " */ from " << ~table, SqlSet::SETOP);
 }
 
-SqlSet DeleteSchemaHint(const char *hint, const SqlVal& table)
+SqlSet DeleteSchemaHint(const char *hint, const SqlId& table)
 {
 	return DeleteHint(hint, SchemaTable(table));
 }
 
-SqlVal Alias(const SqlVal& value, const SqlVal& alias)
+SqlVal Alias(const SqlId& value, const SqlId& alias)
 {
 	if(~value == ~alias)
 		return value;
-	return SqlId(~value + SqlCase(MSSQL, " as ")(" ") + ~alias);
+	StringBuffer out;
+	out << ~value << (char)SQLC_AS << ~alias;
+	return SqlId((String)out);
 }
 
-SqlVal SchemaAlias(const SqlVal& table, const SqlVal& alias)
+SqlVal SchemaAlias(const SqlId& table, const SqlId& alias)
 {
 	return Alias(SchemaTable(table), alias);
 }
 
-SqlVal SchemaAlias(const SqlVal& table)
+SqlVal SchemaAlias(const SqlId& table)
 {
 	return SchemaAlias(table, table);
 }
 
-SqlId SchemaId(SqlId table_id, SqlId alias_id)
+SqlId SchemaId(const SqlId& table_id, const SqlId& alias_id)
 {
 	return SqlId(SchemaTableName(~table_id) + SqlCase(MSSQL, " as ")(" ") + ~alias_id);
 }
 
-SqlId SchemaId(SqlId table_id)
+SqlId SchemaId(const SqlId& table_id)
 {
 	return SchemaId(table_id, table_id);
 }
@@ -637,7 +639,7 @@ VectorMap<String, SqlColumnInfo> Describe(const SqlVal& table, Sql& cursor)
 	return map;
 }
 
-VectorMap<String, SqlColumnInfo> DescribeSchema(const SqlVal& table, Sql& cursor)
+VectorMap<String, SqlColumnInfo> DescribeSchema(const SqlId& table, Sql& cursor)
 {
 	return Describe(SchemaTable(table), cursor);
 }
@@ -647,7 +649,7 @@ int64 SelectCount(const SqlVal& table, const SqlBool& cond, Sql& cursor)
 	return Select(SqlCountRows()).From(table).Where(cond).Fetch(cursor);
 }
 
-int64 SelectSchemaCount(const SqlVal& table, const SqlBool& cond, Sql& cursor)
+int64 SelectSchemaCount(const SqlId& table, const SqlBool& cond, Sql& cursor)
 {
 	return Select(SqlCountRows()).FromSchema(table).Where(cond).Fetch(cursor);
 }
