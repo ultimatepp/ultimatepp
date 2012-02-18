@@ -33,7 +33,7 @@ private:
 void                  SetSchema(const String& schema);
 String                GetSchema();
 String                SchemaTableName(const String& table);
-SqlVal                SchemaTable(const SqlVal& table);
+SqlId                 SchemaTable(const SqlId& table);
 
 String                GetInsertString(Fields nf, bool optimize = true);
 String                GetSchemaInsertString(Fields nf, bool optimize = true);
@@ -90,11 +90,11 @@ bool                  IsNotSchemaEmpty(const SqlVal& table, SqlId column, const 
 
 #endif
 
-SqlVal                Alias(const SqlVal& value, const SqlVal& alias);
-SqlVal                SchemaAlias(const SqlVal& table, const SqlVal& alias);
-SqlVal                SchemaAlias(const SqlVal& table);
-SqlId                 SchemaId(SqlId table, SqlId alias);
-SqlId                 SchemaId(SqlId table);
+SqlVal                Alias(const SqlId& value, const SqlId& alias);
+SqlVal                SchemaAlias(const SqlId& table, const SqlId& alias);
+SqlVal                SchemaAlias(const SqlId& table);
+SqlId                 SchemaId(const SqlId& table, const SqlId& alias);
+SqlId                 SchemaId(const SqlId& table);
 
 inline SqlInsert      InsertSchema(SqlId table) { return SqlInsert(SqlId(SchemaTableName(~table))); }
 inline SqlUpdate      UpdateSchema(SqlId table) { return SqlUpdate(SqlId(SchemaTableName(~table))); }
@@ -107,23 +107,23 @@ SqlSelect             SelectHint(const char *hint, __List##I(E__SqlVal));
 __Expand(E__SelectHint);
 */
 SqlSet                DeleteHint(const char *hint, const SqlVal& table);
-SqlSet                DeleteSchemaHint(const char *hint, const SqlVal& table);
+SqlSet                DeleteSchemaHint(const char *hint, const SqlId& table);
 
 VectorMap<String, SqlColumnInfo> Describe(const SqlVal& table, Sql& cursor APPSQLCURSOR);
-VectorMap<String, SqlColumnInfo> DescribeSchema(const SqlVal& table, Sql& cursor APPSQLCURSOR);
+VectorMap<String, SqlColumnInfo> DescribeSchema(const SqlId& table, Sql& cursor APPSQLCURSOR);
 
 int64                 SelectCount(const SqlVal& table, const SqlBool& cond, Sql& cursor);
-int64                 SelectSchemaCount(const SqlVal& table, const SqlBool& cond, Sql& cursor);
+int64                 SelectSchemaCount(const SqlId& table, const SqlBool& cond, Sql& cursor);
 
 #ifndef NOAPPSQL
 inline int64          SelectCount(const SqlVal& table, const SqlBool& cond = SqlBool::True())       { return SelectCount(table, cond, SQL); }
-inline int64          SelectSchemaCount(const SqlVal& table, const SqlBool& cond = SqlBool::True()) { return SelectSchemaCount(table, cond, SQL); }
+inline int64          SelectSchemaCount(const SqlId& table, const SqlBool& cond = SqlBool::True()) { return SelectSchemaCount(table, cond, SQL); }
 #endif
 
 Vector<String>        LoadStrColumn(SqlId column, const SqlVal& table, SqlSession& session APPSQLSESSION, bool order = false);
 Vector<String>&       SyncStrColumn(Vector<String>& dest, SqlId col, const SqlVal& table, SqlSession& session APPSQLSESSION, bool order = false);
-Vector<String>        LoadSchemaStrColumn(SqlId column, const SqlVal& table, SqlSession& session APPSQLSESSION, bool order = false);
-Vector<String>&       SyncSchemaStrColumn(Vector<String>& dest, SqlId col, const SqlVal& table, SqlSession& session APPSQLSESSION);
+Vector<String>        LoadSchemaStrColumn(SqlId column, const SqlId& table, SqlSession& session APPSQLSESSION, bool order = false);
+Vector<String>&       SyncSchemaStrColumn(Vector<String>& dest, SqlId col, const SqlId& table, SqlSession& session APPSQLSESSION);
 
 SqlVal                GetCsVal(const SqlVal& val); // replaces CH for sorts
 SqlVal                GetCs(const char *col);
