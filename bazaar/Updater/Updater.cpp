@@ -610,7 +610,8 @@ bool Updater::FetchApp(ProductVersion ver, bool devel)
 		destPath = AppendFileName(GetProgramsFolder(), appName);
 	#else
 		appServerPath = GetPlatformRoot() + ver.ToString() + "/" + appName + ".exe";
-		destPath = AppendFileName(GetProgramsFolder(), appName + "/" + appName + ".exe");
+		destPath = AppendFileName(GetProgramsFolder(), appName + "\\" + appName + ".exe");
+		RealizePath(destPath);
 	#endif
 
 	if(isWebServer)
@@ -644,6 +645,7 @@ bool Updater::FetchApp(ProductVersion ver, bool devel)
 	// stores current version inside system config path
 	if(!SaveFile(AppendFileName(systemConfigPath, "version"), ver.ToString()))
 		return false;
+
 	installedVersion = ver;
 
 	return true;
