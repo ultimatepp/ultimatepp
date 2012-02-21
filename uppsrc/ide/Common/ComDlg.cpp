@@ -89,8 +89,8 @@ void IdeFs(FileSel& fs) {
 }
 
 void SourceFs(FileSel& fs) {
-	String mask = "*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.lay *.iml *.lng *.sch *.usc *.rc *.brc *.upt";
-	fs.Type("C++ files (*.cpp *.h *.hpp *.c *.C *.cc *.cxx)", "*.cpp *.h *.hpp *.c *.C *.cc *.cxx");
+	String mask = "*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.lay *.iml *.lng *.sch *.usc *.rc *.brc *.upt";
+	fs.Type("C++ files (*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp)", "*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp");
 	fs.Type("Layout files (*.lay)", "*.lay");
 	fs.Type("Image files (*.iml)", "*.iml");
 	fs.Type("Language files (*.lng)", "*.lng");
