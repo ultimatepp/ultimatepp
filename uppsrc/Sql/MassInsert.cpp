@@ -16,7 +16,7 @@ SqlMassInsert& SqlMassInsert::operator()(SqlId col, const Value& val)
 	if(cache.GetCount() == 1)
 		column.Add(~col);
 	else
-		ASSERT(column[pos] == col.Quoted());
+		ASSERT(column[pos] == col.Quoted() || column[pos] == ~col);
 	Row& r = cache.Top();
 	r.value.Add(val);
 	if(IsNull(val))
