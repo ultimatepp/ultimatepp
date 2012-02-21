@@ -1842,7 +1842,7 @@ class GridText : Ctrl
 		void Column(const Id& c) { column = &c; }
 };
 
-template<> void Xmlize(XmlIO xml, GridCtrl& g);
+template<> void Xmlize(XmlIO& xml, GridCtrl& g);
 
 END_UPP_NAMESPACE
 
