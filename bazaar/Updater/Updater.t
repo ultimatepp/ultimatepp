@@ -13,7 +13,7 @@ T_("Install '%s' application?")
 caES("\302\277 Instal\302\267lar l'aplicaci\303\263 '%s' ?")
 deDE("")
 esES("\302\277 Instalar la aplicacion '%s' ?")
-itIT("Installare l'applicazione '%s' ^")
+itIT("Installare l'applicazione '%s' ?")
 
 T_("New version '%s' is available&Install it ?")
 caES("Est\303\240 disponible una nova versi\303\263 '%s'&\302\277 La voleu instal\302\267lar "
