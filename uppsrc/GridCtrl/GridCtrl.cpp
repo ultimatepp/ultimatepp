@@ -8308,7 +8308,7 @@ void GridResizePanel::MouseMove(Point p, dword flags)
 
 /*----------------------------------------------------------------------------------------*/
 
-template<> void Xmlize(XmlIO xml, GridCtrl& g) {
+template<> void Xmlize(XmlIO& xml, GridCtrl& g) {
 	Vector<Vector<Value> > v;
 	
 	if(xml.IsLoading()) {
