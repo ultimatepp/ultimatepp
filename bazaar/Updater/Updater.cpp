@@ -638,8 +638,8 @@ bool Updater::FetchApp(ProductVersion ver, bool devel)
 	else
 		FileCopy(appServerPath, destPath);
 #ifdef PLATFORM_POSIX
-		if(chmod(~destPath, 0755) != 0)
-			return false;
+	if(chmod(~destPath, 0755) != 0)
+		return false;
 #endif
 
 	// stores current version inside system config path
@@ -661,11 +661,11 @@ bool Updater::Run()
 {
 	// create user config path only on normal run
 	if(state == NormalRun)
-		RealizePath(userConfigPath);
+		RealizeDirectory(userConfigPath);
 	
 	// creates system config path on superuser mode
 	if(state == InsideUpdater)
-		RealizePath(systemConfigPath);
+		RealizeDirectory(systemConfigPath);
 	
 	switch(state)
 	{
