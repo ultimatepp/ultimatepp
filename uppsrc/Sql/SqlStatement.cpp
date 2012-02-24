@@ -246,7 +246,7 @@ SqlSet SqlSelect::AsTable(const SqlId& tab) const
 {
 	StringBuffer t;
 	t << SqlCase(MSSQL, "")("(")
-	<< "(" << text << ")" << (char)SQLC_AS << "\t" << tab.ToString() << '\t'
+	<< "(" << text << ") as \t" << tab.ToString() << '\t'
 	<< SqlCase(MSSQL, "")(")");
 	return SqlSet(String(t), SqlSet::HIGH);
 }
