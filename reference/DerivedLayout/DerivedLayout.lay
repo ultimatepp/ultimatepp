@@ -1,0 +1,10 @@
+LAYOUT(BaseLayout, 184, 68)
+	ITEM(Label, bl, SetLabel(t_("Base class control:")).LeftPosZ(8, 108).TopPosZ(8, 20))
+	ITEM(EditString, baseEdit, LeftPosZ(116, 64).TopPosZ(8, 19))
+END_LAYOUT
+
+LAYOUT(DerivedLayout, 184, 68)
+	ITEM(Label, dl, SetLabel(t_("Derived class control:")).LeftPosZ(8, 112).TopPosZ(36, 20))
+	ITEM(EditString, derivedEdit, LeftPosZ(116, 64).TopPosZ(36, 19))
+END_LAYOUT
+
