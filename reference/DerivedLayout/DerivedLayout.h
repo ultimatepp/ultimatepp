@@ -12,7 +12,7 @@ struct Base : public WithBaseLayout<TopWindow> {
 	Base();
 };
 
-struct Derived : public Base, public WithDerivedLayout<EmptyClass> {
+struct Derived : public WithDerivedLayout<Base> {
 	Derived();
 };
 

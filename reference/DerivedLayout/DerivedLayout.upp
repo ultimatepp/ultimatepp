@@ -1,4 +1,4 @@
-description "Combining Layouts in class inheritance\377";
+description "Test deriving layouts\377";
 
 uses
 	CtrlLib;
