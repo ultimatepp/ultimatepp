@@ -242,11 +242,11 @@ SqlVal SqlSelect::AsValue() const
 	return SqlVal(String("(").Cat() << text << ")", SqlVal::LOW);
 }
 
-SqlSelect SqlSelect::AsTable(const SqlId& tab) const
+SqlSet SqlSelect::AsTable(const SqlId& tab) const
 {
-	SqlSelect h;
-	h.text = String("(").Cat() << text << ") as \t" << tab.ToString() << '\t';
-	return h;
+	StringBuffer t;
+	t << "(" << text << ")" << (char)SQLC_AS << "\t" << tab.ToString() << '\t';
+	return SqlSet(String(t), SqlSet::HIGH);
 }
 
 SqlSelect::SqlSelect(Fields f)

@@ -550,7 +550,7 @@ public:
 	operator  SqlSet() const                           { return SqlSet(text, SqlSet::SETOP); }
 	operator  SqlStatement() const                     { return SqlStatement(text); }
 	SqlVal    AsValue() const;
-	SqlSelect AsTable(const SqlId& tab) const;
+	SqlSet    AsTable(const SqlId& tab) const;
 
 	SqlSelect(Fields f);
 	SqlSelect(const SqlSet& s)                        { text = ~s; on = false; }
