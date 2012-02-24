@@ -14,15 +14,18 @@ topic "CoWork";
 [s3; &]
 [s1;:CoWork`:`:class: [@(0.0.255)3 class][3 _][*3 CoWork]&]
 [s9;%% This class is indented as loop`-parallelization tool. Whenever 
-loop iterations are independent (they do not share any data), 
-CoWork can be used to relatively easily spawn loop iterations 
-over thread and thus over CPU cores. CoWork works with fixed`-size 
-global thread pool, which is created during initialization phase 
-(first CoWork constructor called). No more thread are created 
-or destroyed during normal work. Nesting of CoWork instances 
-is also possible. Of course, not only loop iterations can be 
-parallelized, whenever there are two or more actions that can 
-run in parallel, you can use CoWork.&]
+loop iterations are independent (they do not share any data between 
+iterations), CoWork can be used to relatively easily spawn loop 
+iterations over threads and thus over CPU cores. Note that previous 
+statement does [* not] preclude CoWork iterations to share data 
+at all `- sharing data using Mutex or similar serialization mechanisms 
+still works. CoWork works with fixed`-size global thread pool, 
+which is created during initialization phase (first CoWork constructor 
+called). No more thread are created or destroyed during normal 
+work. Nesting of CoWork instances is also possible. Of course, 
+not only loop iterations can be parallelized, whenever there 
+are two or more actions that can run in parallel, you can use 
+CoWork.&]
 [s9;%% Single`-threaded implementation simply performs all actions 
 submitted by Do in sequence.&]
 [s3;%% &]
