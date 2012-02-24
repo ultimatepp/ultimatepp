@@ -1,0 +1,4 @@
+#ifndef _DerivedLayout_icpp_init_stub
+#define _DerivedLayout_icpp_init_stub
+#include "CtrlLib/init"
+#endif

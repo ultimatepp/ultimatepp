@@ -1,0 +1,13 @@
+description "Combining Layouts in class inheritance\377";
+
+uses
+	CtrlLib;
+
+file
+	DerivedLayout.h,
+	main.cpp,
+	DerivedLayout.lay;
+
+mainconfig
+	"" = "GUI";
+
