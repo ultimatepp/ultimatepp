@@ -1725,7 +1725,7 @@
 		"select \"COL\" from ((select \"COL\" from \"TABLE1\") as \"TABLE2\")");
 	TEST(MSSQL,
 		Select(COL).From(Select(COL).From(TABLE1).AsTable(TABLE2)),
-		"select \"COL\" from ((select \"COL\" from \"TABLE1\") as \"TABLE2\")");
+		"select \"COL\" from (select \"COL\" from \"TABLE1\") as \"TABLE2\"");
 	TEST(PGSQL,
 		Select(COL).From(Select(COL).From(TABLE1).AsTable(TABLE2)),
 		"select \"COL\" from ((select \"COL\" from \"TABLE1\") as \"TABLE2\")");
@@ -1769,7 +1769,7 @@
 		"select \"COL\" from \"TABLE1\" left outer join ((select \"COL\" from \"TABLE1\") as \"TABLE2\") on \"TABLE1\".\"COL\" = \"TABLE1\".\"COLUMN1\"");
 	TEST(MSSQL,
 		Select(COL).From(TABLE1).LeftJoin(Select(COL).From(TABLE1).AsTable(TABLE2)).On(COL.Of(TABLE1) == COLUMN1.Of(TABLE1)),
-		"select \"COL\" from \"TABLE1\" left outer join ((select \"COL\" from \"TABLE1\") as \"TABLE2\") on \"TABLE1\".\"COL\" = \"TABLE1\".\"COLUMN1\"");
+		"select \"COL\" from \"TABLE1\" left outer join (select \"COL\" from \"TABLE1\") as \"TABLE2\" on \"TABLE1\".\"COL\" = \"TABLE1\".\"COLUMN1\"");
 	TEST(PGSQL,
 		Select(COL).From(TABLE1).LeftJoin(Select(COL).From(TABLE1).AsTable(TABLE2)).On(COL.Of(TABLE1) == COLUMN1.Of(TABLE1)),
 		"select \"COL\" from \"TABLE1\" left outer join ((select \"COL\" from \"TABLE1\") as \"TABLE2\") on \"TABLE1\".\"COL\" = \"TABLE1\".\"COLUMN1\"");
