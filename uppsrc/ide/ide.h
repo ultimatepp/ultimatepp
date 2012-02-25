@@ -880,7 +880,7 @@ public:
 		void  SyncT(int kind);
 		void  ConvertST();
 		void  ExportMakefile(const String& ep);
-		void  ExportProject(const String& ep, bool all, bool gui);
+		void  ExportProject(const String& ep, bool all, bool gui, bool deletedir = true);
 		void  SyncSvnDirs(const Vector<String>& working);
 		void  SyncSvnDir(const String& working);
 		void  SyncSvn();

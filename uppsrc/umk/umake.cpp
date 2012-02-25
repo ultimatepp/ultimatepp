@@ -131,6 +131,7 @@ CONSOLE_APP_MAIN
 		ide.targetmode = 0;
 		bool clean = false;
 		bool makefile = false;
+		bool deletedir = true;
 		int  exporting = 0;
 		String mkf;
 		for(int i = 3; i < arg.GetCount(); i++)
@@ -185,6 +186,9 @@ CONSOLE_APP_MAIN
 					case 'X':
 						exporting = 2;
 						break;
+					case 'k':
+						deletedir = false;
+						break;
 					case 'H':
 						if(i + 1 < x.GetCount() && x[i + 1] >= '1' && x[i + 1] <= '9')
 							ide.console.SetSlots(x[++i] - '0');
@@ -211,7 +215,7 @@ CONSOLE_APP_MAIN
 			if(makefile)
 				ide.ExportMakefile(mkf);
 			else
-				ide.ExportProject(mkf, exporting == 2);
+				ide.ExportProject(mkf, exporting == 2, deletedir);
 		}
 		else
 		if(makefile) {

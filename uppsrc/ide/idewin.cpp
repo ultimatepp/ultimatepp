@@ -765,6 +765,7 @@ void AppMain___()
 				ide.console.console = true;
 				bool clean = false;
 				bool makefile = false;
+				bool deletedir = false;
 				int  exporting = 0;
 				String mkf;
 				for(int i = 3; i < arg.GetCount(); i++)
@@ -819,6 +820,9 @@ void AppMain___()
 							case 'X':
 								exporting = 2;
 								break;
+							case 'k':
+								deletedir = false;
+								break;
 							default:
 								SilentMode = false;
 								Puts("Invalid build option(s)");
@@ -839,7 +843,7 @@ void AppMain___()
 					if(makefile)
 						ide.ExportMakefile(mkf);
 					else
-						ide.ExportProject(mkf, exporting == 2, false);
+						ide.ExportProject(mkf, exporting == 2, false, deletedir);
 				}
 				else
 				if(makefile) {
