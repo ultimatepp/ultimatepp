@@ -45,7 +45,7 @@ void Ide::ExportProject(const String& ep, bool all, bool gui)
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		if(gui && pi.StepCanceled())
 			return;
-		CopyFolder(AppendFileName(ep, wspc[i]), PackageDirectory(wspc[i]), used, all);
+		CopyFolder(AppendFileName(ep, wspc[i]), PackageDirectory(wspc[i]), used, all, true);
 	}
 	Vector<String> upp = GetUppDirs();
 	for(int i = 0; i < upp.GetCount(); i++) {
@@ -58,11 +58,11 @@ void Ide::ExportProject(const String& ep, bool all, bool gui)
 				String fn = ff.GetName();
 				String path = AppendFileName(d, fn);
 				if(all || used.Find(path) >= 0)
-					Upp::SaveFile(AppendFileName(ep, fn), LoadFile(path));
+					CopyFile(AppendFileName(ep, fn), path, true);
 			}
 			ff.Next();
 		}
-		CopyFolder(AppendFileName(ep, wspc[i]), PackageDirectory(wspc[i]), used, all);
+		CopyFolder(AppendFileName(ep, wspc[i]), PackageDirectory(wspc[i]), used, all, true);
 	}
 	ExportMakefile(ep);
 }

@@ -2,7 +2,9 @@ description "TheIDE - common library\377B";
 
 uses
 	Esc,
-	Web;
+	Web,
+	coff/binobj,
+	plugin/bz2;
 
 file
 	Core.h,

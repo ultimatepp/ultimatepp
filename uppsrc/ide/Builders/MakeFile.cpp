@@ -162,6 +162,10 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 			bool isrc = (ext == ".rc" && HasFlag("WIN32"));
 			bool iscpp = (ext == ".cpp" || ext == ".cc" || ext == ".cxx");
 			bool isicpp = (ext == ".icpp");
+			if(ext == ".brc") {
+				isc = true;
+				fn << "c";
+			}
 			if(isc || isrc || iscpp || isicpp) {
 				String outfile;
 				outfile << makefile.outdir << AdjustMakePath(GetFileTitle(fn)) << (isrc ? "_rc" : "") << objext;

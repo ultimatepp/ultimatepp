@@ -23,7 +23,7 @@ String GccBuilder::CmdLine(const String& package, const Package& pkg)
 void GccBuilder::BinaryToObject(String objfile, CParser& binscript, String basedir,
                                 const String& package, const Package& pkg)
 {
-	String fo = BrcToC(objfile, binscript, basedir, package, pkg);
+	String fo = BrcToC(binscript, basedir);
 	String tmpfile = ForceExt(objfile, ".c");
 	SaveFile(tmpfile, fo);
 	String cc = CmdLine(package, pkg);

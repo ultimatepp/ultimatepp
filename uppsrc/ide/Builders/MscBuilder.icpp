@@ -295,7 +295,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 					if(brcdata.IsVoid())
 						throw Exc(NFormat("error reading file '%s'", fn));
 					CParser parser(brcdata, fn);
-					String fo = BrcToC(GetHostPath(objfile), parser, GetFileDirectory(fn), package, pkg);
+					String fo = BrcToC(parser, GetFileDirectory(fn));
 					String tmpfile = ForceExt(objfile, ".c");
 					SaveFile(tmpfile, fo);
 					int slot = AllocSlot();
