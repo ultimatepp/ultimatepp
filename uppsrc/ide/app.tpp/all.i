@@ -90,6 +90,10 @@ TOPIC("install$en-us")
 #include "install$en-us.tppi"
 END_TOPIC
 
+TOPIC("install$ru-ru")
+#include "install$ru-ru.tppi"
+END_TOPIC
+
 TOPIC("macros$en-us")
 #include "macros$en-us.tppi"
 END_TOPIC

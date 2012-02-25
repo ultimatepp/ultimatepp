@@ -5,7 +5,7 @@ void Ide::ExportMakefile(const String& ep)
 	SaveMakeFile(AppendFileName(ep, "Makefile"), true);
 }
 
-void Ide::ExportProject(const String& ep, bool all, bool gui)
+void Ide::ExportProject(const String& ep, bool all, bool gui, bool deletedir)
 {
 	SaveFile(false);
 	::Workspace wspc;
@@ -34,7 +34,7 @@ void Ide::ExportProject(const String& ep, bool all, bool gui)
 		                "Do you want to delete it?")) return;
 		FileDelete(ep);
 	}
-	if(DirectoryExists(ep)) {
+	if(deletedir && DirectoryExists(ep)) {
 		if(gui && !PromptYesNo(DeQtf(ep) + " is existing directory.&"
 		                "Do you want to replace it?")) return;
 		DeleteFolderDeep(ep);

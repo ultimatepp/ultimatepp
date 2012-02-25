@@ -79,6 +79,8 @@ used.]]
 ::= [s0; [3 Export project (to directory ][*@4;3 out][3 ), export all files.]]
 ::^ [s0; [*C@4;3 xM]]
 ::= [s0; [3 Export makefile (to directory ][*@4;3 out][3 ).]]
+::^ [s0;%- [*C@4;3 k]]
+::= [s0; [3 Do not delete target directory ][*@4;3 out][3  when exporting.]]
 ::^ [s0;%- [*C@4;3 H][*/C@3;3 n]]
 ::= [s0; [3 Number of threads used for building (single digit). Default 
 is number of logical cores available.]]}}&]
