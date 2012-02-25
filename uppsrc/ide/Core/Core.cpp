@@ -390,7 +390,126 @@ bool IsDoc(String s)
 	       s.Find("authors") >= 0;
 }
 
-void CopyFolder(const char *_dst, const char *_src, Index<String>& used, bool all)
+static void WriteByteArray(StringBuffer& fo, const String& data)
+{
+	int pos = 0;
+	for(int p = 0; p < data.GetLength(); p++) {
+		if(pos >= 70) {
+			fo << '\n';
+			pos = 0;
+		}
+		if(pos == 0)
+			fo << '\t';
+		String part = FormatInt((byte)data[p]);
+		fo << part << ", ";
+		pos += part.GetLength() + 2;
+	}
+}
+
+String BrcToC(CParser& binscript, String basedir)
+{
+	BinObjInfo info;
+	info.Parse(binscript, basedir);
+	StringBuffer fo;
+	for(int i = 0; i < info.blocks.GetCount(); i++) {
+		String ident = info.blocks.GetKey(i);
+		ArrayMap<int, BinObjInfo::Block>& belem = info.blocks[i];
+		if(belem[0].flags & (BinObjInfo::Block::FLG_ARRAY | BinObjInfo::Block::FLG_MASK)) {
+			int count = Max(belem.GetKeys()) + 1;
+			Vector<BinObjInfo::Block *> blockref;
+			blockref.SetCount(count, 0);
+			for(int a = 0; a < belem.GetCount(); a++) {
+				BinObjInfo::Block& b = belem[a];
+				blockref[b.index] = &b;
+			}
+			for(int i = 0; i < blockref.GetCount(); i++)
+				if(blockref[i]) {
+					BinObjInfo::Block& b = *blockref[i];
+					fo << "static char " << ident << "_" << i << "[] = {\n";
+					String data = ::LoadFile(b.file);
+					if(data.IsVoid())
+						throw Exc(NFormat("Error reading file '%s'", b.file));
+					if(data.GetLength() != b.length)
+						throw Exc(NFormat("length of file '%s' changed (%d -> %d) during object creation",
+							b.file, b.length, data.GetLength()));
+					switch(b.encoding) {
+						case BinObjInfo::Block::ENC_BZ2: data = BZ2Compress(data); break;
+						case BinObjInfo::Block::ENC_ZIP: data = ZCompress(data); break;
+					}
+					b.length = data.GetLength();
+					data.Cat('\0');
+					WriteByteArray(fo, data);
+					fo << "\n};\n\n";
+//					fo << AsCString(data, 70, "\t", ASCSTRING_OCTALHI | ASCSTRING_SMART) << ";\n\n";
+				}
+
+			fo << "int " << ident << "_count = " << blockref.GetCount() << ";\n\n"
+			"int " << ident << "_length[] = {\n";
+			for(int i = 0; i < blockref.GetCount(); i++)
+				fo << '\t' << (blockref[i] ? blockref[i]->length : -1) << ",\n";
+			fo << "};\n\n"
+			"char *" << ident << "[] = {\n";
+			for(int i = 0; i < blockref.GetCount(); i++)
+				if(blockref[i])
+					fo << '\t' << ident << '_' << i << ",\n";
+				else
+					fo << "\t0,\n";
+			fo << "};\n\n";
+			if(belem[0].flags & BinObjInfo::Block::FLG_MASK) {
+				fo << "char *" << ident << "_files[] = {\n";
+				for(int i = 0; i < blockref.GetCount(); i++)
+					fo << '\t' << AsCString(blockref[i] ? GetFileName(blockref[i]->file) : String(Null)) << ",\n";
+				fo << "\n};\n\n";
+			}
+		}
+		else {
+			BinObjInfo::Block& b = belem[0];
+			fo << "static char " << ident << "_[] = {\n";
+			String data = ::LoadFile(b.file);
+			if(data.IsVoid())
+				throw Exc(NFormat("Error reading file '%s'", b.file));
+			if(data.GetLength() != b.length)
+				throw Exc(NFormat("length of file '%s' changed (%d -> %d) during object creation",
+					b.file, b.length, data.GetLength()));
+			switch(b.encoding) {
+				case BinObjInfo::Block::ENC_BZ2: data = BZ2Compress(data); break;
+				case BinObjInfo::Block::ENC_ZIP: data = ZCompress(data); break;
+			}
+			int b_length = data.GetLength();
+			data.Cat('\0');
+			WriteByteArray(fo, data);
+			fo << "\n};\n\n"
+			"char *" << ident << " = " << ident << "_;\n\n"
+//			fo << AsCString(data, 70) << ";\n\n"
+			"int " << ident << "_length = " << b_length << ";\n\n";
+		}
+	}
+	return fo;
+}
+
+void CopyFile(const String& d, const String& s, bool brc)
+{
+	FindFile ff(s);
+	if(ff) {
+		String ext = ToLower(GetFileExt(s));
+		if(brc && ext == ".brc") {
+			try {
+				String brcdata = LoadFile(s);
+				if(brcdata.IsVoid())
+					throw Exc(Format("error reading file '%s'", s));
+				CParser parser(brcdata, s);
+				Upp::SaveFile(d + "c", BrcToC(parser, GetFileDirectory(s)));
+			}
+			catch(Exc e) {
+				PutConsole(e);
+			}
+		}
+		SaveFile(d, LoadFile(s));
+		SetFileTime(d, ff.GetLastWriteTime());
+	}
+}
+
+void CopyFolder(const char *_dst, const char *_src, Index<String>& used, bool all, bool brc)
 {
 	String dst = NativePath(_dst);
 	String src = NativePath(_src);
@@ -402,15 +521,14 @@ void CopyFolder(const char *_dst, const char *_src, Index<String>& used, bool al
 		String s = AppendFileName(src, ff.GetName());
 		String d = AppendFileName(dst, ff.GetName());
 		if(ff.IsFolder())
-			CopyFolder(d, s, used, all);
+			CopyFolder(d, s, used, all, brc);
 		else
 		if(ff.IsFile() && (all || IsDoc(s) || used.Find(s) >= 0)) {
 			if(realize) {
 				RealizeDirectory(dst);
 				realize = false;
 			}
-			SaveFile(d, LoadFile(s));
-			SetFileTime(d, ff.GetLastWriteTime());
+			CopyFile(d, s, brc);
 		}
 		ff.Next();
 	}

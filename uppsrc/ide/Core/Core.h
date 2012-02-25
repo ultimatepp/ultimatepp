@@ -3,6 +3,8 @@
 
 #include <Esc/Esc.h>
 #include <Web/Web.h>
+#include <coff/binobj/binobj.h>
+#include <plugin/bz2/bz2.h>
 
 using namespace Upp;
 
@@ -19,7 +21,9 @@ inline String GetPrintTime(dword time0) { return PrintTime(msecs(time0)); }
 bool   SaveChangedFile(const char *path, String data, bool delete_empty = false);
 
 bool IsDoc(String s);
-void CopyFolder(const char *_dst, const char *_src, Index<String>& used, bool all);
+
+void CopyFile(const String& dst, const String& src, bool brc = false);
+void CopyFolder(const char *_dst, const char *_src, Index<String>& used, bool all, bool brc = false);
 
 class Workspace;
 

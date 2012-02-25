@@ -17,6 +17,8 @@ struct Blitz {
 	String info;
 };
 
+String BrcToC(CParser& binscript, String basedir);
+
 struct CppBuilder : Builder {
 	virtual String GetTargetExt() const;
 
@@ -57,8 +59,6 @@ struct CppBuilder : Builder {
 	Point                  ExtractVersion();
 
 	void                   ShowTime(int count, int start_time);
-
-	String BrcToC(String objfile, CParser& binscript, String basedir, const String& package, const Package& pkg);
 
 	Blitz BlitzStep(Vector<String>& sfile, Vector<String>& soptions,
 	                Vector<String>& obj, const char *objext, Vector<bool>& optimize);
