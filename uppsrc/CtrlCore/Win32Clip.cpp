@@ -47,31 +47,37 @@ int  GetClipboardFormatCode(const char *format_id)
 	return format_map[f];
 }
 
+bool DebugClipboard()
+{
+	static bool b = GetIniKey("DebugClipboard") == "1";
+	return b;
+}
+
 void ClipboardLog(const char *txt)
 {
-#ifdef flagCHECKCLIPBOARD
+	if(!DebugClipboard()) 
+		return;
 	FileAppend f(GetExeDirFile("clip.log"));
-	f << txt << "\n";
-#endif
+	f << GetSysTime() << ": " << txt << "\n";
 }
 
 void ClipboardError(const char *txt)
 {
-#ifdef flagCHECKCLIPBOARD
+	if(!DebugClipboard()) 
+		return;
 	String s = txt;
 	s << "\n" << GetLastErrorMessage();
 	MessageBox(::GetActiveWindow(), s, "Clipboard error", MB_ICONSTOP | MB_OK | MB_APPLMODAL);
 	ClipboardLog(String().Cat() << s << " ERROR");
-#endif
 }
 
 String FromWin32CF(int cf);
 
 void ClipboardError(const char *txt, int format)
 {
-#ifdef flagCHECKCLIPBOARD
+	if(!DebugClipboard()) 
+		return;
 	ClipboardError(String().Cat() << txt << ' ' << FromWin32CF(format));
-#endif
 }
 
 bool ClipboardOpen()
@@ -80,10 +86,13 @@ bool ClipboardOpen()
 	// right after we close it thus blocking us to send more formats
 	// So the solution is to wait and retry... (mirek, 2011-01-09)
 	for(int i = 0; i < 200; i++) {
-		if(OpenClipboard(utilityHWND))
+		if(OpenClipboard(utilityHWND)) {
+			ClipboardLog("----- ClipboardOpen OK");
 			return true;
+		}
 		Sleep(10);
 	}
+	ClipboardError("ClipboardOpen has failed!");
 	return false;
 }
 
@@ -91,9 +100,6 @@ void ClearClipboard()
 {
 	GuiLock __;
 	sClipMap().Clear();
-#ifdef flagCHECKCLIPBOARD
-	DeleteFile(GetExeDirFile("clip.log"));
-#endif
 	ClipboardLog("* ClearClipboard");
 	if(ClipboardOpen()) {
 		if(!EmptyClipboard())
@@ -101,11 +107,6 @@ void ClearClipboard()
 		if(!CloseClipboard())
 			ClipboardError("CloseClipboard ERROR");
 	}
-#ifdef flagCHECKCLIPBOARD
-	else {
-		ClipboardError("OpenClipboard ERROR");
-	}
-#endif
 }
 
 void SetClipboardRaw(int format, const byte *data, int length)
@@ -117,11 +118,11 @@ void SetClipboardRaw(int format, const byte *data, int length)
 		handle = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, length + 2);
 		byte *ptr;
 		if(!handle) {
-			ClipboardLog("GlobalAlloc ERROR");
+			ClipboardError("GlobalAlloc ERROR");
 			return;
 		}
 		if(!(ptr = (byte *)GlobalLock(handle))) {
-			ClipboardLog("GlobalLock ERROR");
+			ClipboardError("GlobalLock ERROR");
 			GlobalFree(handle);
 			return;
 		}
@@ -146,8 +147,6 @@ void AppendClipboard(int format, const byte *data, int length)
 		if(!CloseClipboard())
 			ClipboardError("CloseClipboard", format);
 	}
-	else
-		ClipboardError("OpenClipboard", format);
 }
 
 void AppendClipboard(const char *format, const byte *data, int length)
@@ -204,10 +203,11 @@ void Ctrl::DestroyClipboard()
 String ReadClipboard(const char *format)
 {
 	GuiLock __;
-	if(!OpenClipboard(NULL))
+	if(!ClipboardOpen())
 		return Null;
 	HGLOBAL hmem = GetClipboardData(GetClipboardFormatCode(format));
 	if(hmem == 0) {
+		ClipboardError("GetClipboardData failed");
 		CloseClipboard();
 		return Null;
 	}
@@ -215,6 +215,7 @@ String ReadClipboard(const char *format)
 	ASSERT(src);
 	int length = (int)GlobalSize(hmem);
 	if(length < 0) {
+		ClipboardError("ReadCliboard length < 0");
 		CloseClipboard();
 		return Null;
 	}
