@@ -10,14 +10,6 @@ Console::Console() {
 	console = false;
 }
 
-static int sAppf(int c) {
-	return c >= ' ' || c == '\n' ? c : c == '\t' ? ' ' : 0;
-}
-
-static int sCharFilterNoCr(int c) {
-	return c == '\r' ? 0 : c;
-}
-
 void Console::Append(const String& s) {
 	if(!SilentMode)
 		Cout() << s;
