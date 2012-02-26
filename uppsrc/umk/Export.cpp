@@ -5,7 +5,7 @@ void Ide::ExportMakefile(const String& ep)
 	SaveMakeFile(AppendFileName(ep, "Makefile"), true);
 }
 
-void Ide::ExportProject(const String& ep, bool all)
+void Ide::ExportProject(const String& ep, bool all, bool deletedir)
 {
 	::Workspace wspc;
 	wspc.Scan(main);
@@ -30,12 +30,25 @@ void Ide::ExportProject(const String& ep, bool all)
 	}
 	if(FileExists(ep))
 		FileDelete(ep);
-
-	if(DirectoryExists(ep))
+	if(deletedir && DirectoryExists(ep))
 		DeleteFolderDeep(ep);
 
 	for(int i = 0; i < wspc.GetCount(); i++)
-		CopyFolder(AppendFileName(ep, wspc[i]), PackageDirectory(wspc[i]), used, all);
-
+		CopyFolder(AppendFileName(ep, wspc[i]), PackageDirectory(wspc[i]), used, all, true);
+	Vector<String> upp = GetUppDirs();
+	for(int i = 0; i < upp.GetCount(); i++) {
+		String d = upp[i];
+		FindFile ff(AppendFileName(d, "*"));
+		while(ff) {
+			if(ff.IsFile()) {
+				String fn = ff.GetName();
+				String path = AppendFileName(d, fn);
+				if(all || used.Find(path) >= 0)
+					CopyFile(AppendFileName(ep, fn), path, true);
+			}
+			ff.Next();
+		}
+		CopyFolder(AppendFileName(ep, wspc[i]), PackageDirectory(wspc[i]), used, all, true);
+	}
 	ExportMakefile(ep);
 }

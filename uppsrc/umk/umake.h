@@ -144,7 +144,7 @@ struct Ide : public IdeContext, public MakeBuild {
 	virtual VectorMap<String, String> GetMethodVars(const String& method);
 
 	void ExportMakefile(const String& ep);
-	void ExportProject(const String& ep, bool all);
+	void ExportProject(const String& ep, bool all, bool deletedir = true);
 
 	Ide();
 };
