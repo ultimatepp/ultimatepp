@@ -270,13 +270,9 @@ bool MySqlConnection::Execute() {
 		return false;
 	}
 	result = mysql_store_result(mysql);
-/*	if(trace) { // cxl 2005-5-2, duplicated traces...
-		if(session.IsTraceTime())
-			*trace << Format("--------------\nexec %d ms:\n", msecs(time));
-		*trace << ToString() << '\n';
-	}*/
+	rows = (int)mysql_affected_rows(mysql);
 	if(result) {
-		rows = (int)mysql_affected_rows(mysql);
+		DDUMP(rows);
 		int fields = mysql_num_fields(result);
 		info.SetCount(fields);
 		convert.Alloc(fields, false);
