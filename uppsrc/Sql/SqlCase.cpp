@@ -27,6 +27,13 @@ void SqlId::UseQuotes(bool b)
 	sSqlIdQuoted = b;
 }
 
+String SqlId::Quoted() const
+{
+	if(sSqlIdQuoted && !id.IsNull())
+		return String().Cat() << '\t' << id << '\t';
+	return id;
+}
+
 void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 {
 	char quote = dialect == MY_SQL ? '`' : '\"';

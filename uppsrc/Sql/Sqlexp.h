@@ -117,7 +117,7 @@ public:
 	operator      const Id&() const              { return id; }
 	const String& ToString() const               { return id.ToString(); }
 	const String& operator~() const              { return ToString(); }
-	String        Quoted() const                 { return String().Cat() << '\t' << id << '\t'; }
+	String        Quoted() const;
 
 	SqlId         Of(SqlId id) const;
 	SqlId         Of(const char *of) const;
