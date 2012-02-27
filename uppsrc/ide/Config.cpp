@@ -223,7 +223,8 @@ void Ide::SaveConfigOnTime()
 
 void Ide::LoadConfig()
 {
-	LoadFromFile(*this);
+	if(!LoadFromFile(*this) && GetIniKey("DebugClipboard") == "1")
+		Exclamation("LoadConfig has failed!");
 	RestoreKeys(LoadFile(ConfigFile("ide.key")));
 	editor.LoadHlStyles(LoadFile(ConfigFile("ide.colors")));
 	config_time = FileGetTime(ConfigFile());
