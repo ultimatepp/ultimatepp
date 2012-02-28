@@ -250,6 +250,9 @@ public:
 	~Sql();
 	
 	void operator=(SqlSession& s); // this only works with SQL and SQLR...
+#ifdef _MULTITHREADED
+	static void PerThread(bool b = true); // Activates thread local SQL/SQLR
+#endif
 
 private:
 	void operator=(const Sql&);
@@ -394,9 +397,12 @@ public:
 
 	Callback1<const SqlSession&>  WhenDatabaseActivity;
 
+#ifdef _MULTITHREADED
+	static void PerThread(bool b = true); // Activates thread local SQL/SQLR
+#endif
+
 	SqlSession();
 	virtual ~SqlSession();
-
 };
 
 

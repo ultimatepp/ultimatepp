@@ -122,9 +122,23 @@ void   SqlSession::ClearError()
 StaticMutex          sDefs;
 static SqlSession   *sGlobalSession;
 static SqlSession   *sGlobalSessionR;
+
+
 #ifdef _MULTITHREADED
+static bool sPerThread;
+
 thread__ SqlSession *sThreadSession;
 thread__ SqlSession *sThreadSessionR;
+
+void Sql::PerThread(bool b)
+{
+	sPerThread = b;
+}
+
+void SqlSession::PerThread(bool b)
+{
+	sPerThread = b;
+}
 #endif
 
 void Sql::operator=(SqlSession& s)
@@ -132,16 +146,18 @@ void Sql::operator=(SqlSession& s)
 	Mutex::Lock __(sDefs);
 	if(this == &AppCursor()) {
 	#ifdef _MULTITHREADED
-		sThreadSession = &s;
-		if(!sGlobalSession)
+		if(sPerThread)
+			sThreadSession = &s;
+		else
 	#endif
 			sGlobalSession = &s;
 		return;
 	}
 	if(this == &AppCursorR()) {
 	#ifdef _MULTITHREADED
-		sThreadSessionR = &s;
-		if(!sGlobalSessionR)
+		if(sPerThread)
+			sThreadSessionR = &s;
+		else
 	#endif
 			sGlobalSessionR = &s;
 		return;
@@ -152,11 +168,14 @@ void Sql::operator=(SqlSession& s)
 Sql& AppCursor()
 {
 #ifdef _MULTITHREADED
-	if(sThreadSession)
-		return sThreadSession->GetSessionSql();
+	if(sPerThread) {
+		if(sThreadSession)
+			return sThreadSession->GetSessionSql();
+	}
+	else
 #endif
-	if(sGlobalSession)
-		return sGlobalSession->GetSessionSql();
+		if(sGlobalSession)
+			return sGlobalSession->GetSessionSql();
 	static Sql *empty;
 	ONCELOCK {
 		static Sql0 h;
@@ -168,14 +187,20 @@ Sql& AppCursor()
 Sql& AppCursorR()
 {
 #ifdef _MULTITHREADED
-	if(sThreadSessionR)
-		return sThreadSessionR->GetSessionSqlR();
+	if(sPerThread) {
+		if(sThreadSessionR)
+			return sThreadSessionR->GetSessionSqlR();
+	}
+	else
 #endif
 	if(sGlobalSessionR)
 		return sGlobalSessionR->GetSessionSqlR();
 #ifdef _MULTITHREADED
-	if(sThreadSession)
-		return sThreadSession->GetSessionSqlR();
+	if(sPerThread) {
+		if(sThreadSession)
+			return sThreadSession->GetSessionSqlR();
+	}
+	else
 #endif
 	if(sGlobalSession)
 		return sGlobalSession->GetSessionSqlR();
