@@ -112,14 +112,29 @@ void Ide::LoadLastMain()
 	LoadFromFile(THISBACK(SerializeLastMain), ConfigFile("lastmain.cfg"));
 }
 
+void Sentinel(Stream& s, const char *txt)
+{
+	String h;
+	h << "<123456789:" << txt << ":123456789>";
+	Buffer<char> hh(h.GetLength());
+	memcpy(hh, h, h.GetLength());
+	s.SerializeRaw((byte *)~hh, h.GetLength());
+}
+
 void Ide::Serialize(Stream& s)
 {
 	int version = 0;
+	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
+	Sentinel(s, "after magic");
 	s / version;
+	Sentinel(s, "before first FileSel");
 	s % AnySourceFs();
+	Sentinel(s, "after AnySourceFs");
 	s % BasedSourceFs();
+	Sentinel(s, "after BasedSourceFs");
 	s % AnyPackageFs();
+	Sentinel(s, "after AnyPackageFs");
 	s % pfsplit;
 	s % wesplit;
 	package.SerializeSettings(s);
