@@ -82,7 +82,7 @@ void SqlS::Init(const SqlS& a, const char *o, int olen, const SqlS& b, int pr, i
 
 SqlVal SqlVal::As(const char *as) const {
 	SqlVal v;
-	v.SetHigh(String().Cat() << '\t' << text << (char)SQLC_AS << as << '\t');
+	v.SetHigh(String().Cat() << text << (char)SQLC_AS << '\t' << as << '\t');
 	return v;
 }
 
