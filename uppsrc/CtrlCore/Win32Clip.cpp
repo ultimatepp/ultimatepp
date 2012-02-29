@@ -131,7 +131,7 @@ void SetClipboardRaw(int format, const byte *data, int length)
 		ptr[length + 1] = 0;
 		GlobalUnlock(handle);
 	}
-	if(!SetClipboardData(format, handle)) {
+	if(SetClipboardData(format, handle) != handle) {
 		ClipboardError("SetCliboardData", format);
 		LLOG("SetClipboardData error: " << GetLastErrorMessage());
 		GlobalFree(handle);
