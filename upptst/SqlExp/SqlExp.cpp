@@ -32,7 +32,7 @@ SQLID(OBEXPBI)
 void Exp0(int dialect, const char *dialectn, const char *sqlexp, SqlStatement x)
 {
 	LOG("\tTEST(" << dialectn << ",\n\t\t" << sqlexp << ",\n\t\t"
-	    << AsCString(x.Get(dialect)) << ");");
+	    << AsCString(x.Get(dialect)) << "); // " << x.Get(dialect));
 }
 
 void Exp(const char *sqlexp, SqlStatement x)
@@ -153,6 +153,9 @@ CONSOLE_APP_MAIN
 	EXP(Select(NextVal(SEQ)).Get());
 	EXP(Select(CurrVal(SEQ)).Get());
 	EXP(Select(SqlArg()).From(TABLE1));
+	EXP(Select(Coalesce(COLUMN1, "_")).From(TABLE1));
+	EXP(Select(Coalesce(COLUMN1, "_").As("H")).From(TABLE1));
+	EXP(Select(Coalesce(COLUMN1, "_").As(COLUMN2)).From(TABLE1));
 
 	EXP(Select(COL).From(TABLE1).Where(COL / 2 > 1 && COLUMN1 == "A" || COLUMN2 == Date(2006, 1, 1)));
 	EXP(Select(COL).From(TABLE1).Where(!(COL == 1)));
