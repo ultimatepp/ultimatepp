@@ -180,9 +180,9 @@ void Ide::Serialize(Stream& s)
 	s % bordercolumn;
 	s % bordercolor;
 	s % hydra1_threads;
-	s % gdbSelector;
 	if(s.IsLoading())
 		console.SetSlots(hydra1_threads);
+	s % gdbSelector;
 	s % doc;
 	s % chstyle;
 	s % astyle_BracketIndent;
@@ -225,6 +225,10 @@ Time Ide::ConfigTime()
 void Ide::SaveConfig()
 {
 	SaveChangedFile(ConfigFile(), StoreAsString(*this));
+	if(GetIniKey("DebugClipboard") == "1") {
+		SaveChangedFile(ConfigFile() + ".bak", StoreAsString(*this));
+		StoreToFile(*this, ConfigFile() + ".bak1");
+	}
 	SaveChangedFile(ConfigFile("ide.key"), StoreKeys());
 	SaveChangedFile(ConfigFile("ide.colors"), editor.StoreHlStyles());
 	config_time = ConfigTime();
@@ -238,8 +242,14 @@ void Ide::SaveConfigOnTime()
 
 void Ide::LoadConfig()
 {
-	if(!LoadFromFile(*this) && GetIniKey("DebugClipboard") == "1")
+	if(!LoadFromFile(*this) && GetIniKey("DebugClipboard") == "1") {
 		Exclamation("LoadConfig has failed!");
+		if(!LoadFromFile(*this, ConfigFile() + ".bak")) {
+			Exclamation("LoadConfig .bak has failed!");
+			if(!LoadFromFile(*this, ConfigFile() + ".bak1"))
+				Exclamation("LoadConfig .bak1 has failed!");
+		}
+	}
 	RestoreKeys(LoadFile(ConfigFile("ide.key")));
 	editor.LoadHlStyles(LoadFile(ConfigFile("ide.colors")));
 	config_time = FileGetTime(ConfigFile());
