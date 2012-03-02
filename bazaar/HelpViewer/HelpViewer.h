@@ -49,6 +49,9 @@ class HelpViewer : public TopWindow
 		// loads TOC contents
 		bool LoadTOC(String const &toc);
 		
+		// follows a link
+		void FollowLink(String const &link) { showLink(link); }
+		
 		// clears contents
 		void Clear() { mainTocTree.Clear(); }
 		
