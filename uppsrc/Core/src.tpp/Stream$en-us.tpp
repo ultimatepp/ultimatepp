@@ -1164,10 +1164,11 @@ onst]_[@(0.0.255) char]_`*[*@3 filename], [_^dword^ dword]_[*@3 mode],
 mode`_t_[*@3 acm]_`=_[@3 0644])&]
 [s6;%- Posix specific.&]
 [s2; Opens file stream in specified mode (as defined in BlockStream) 
-and specific POSIX access rights.&]
+and specific POSIX access rights. [%-*@3 mode] can be one of READ, 
+CREATE, APPEND, READWRITE&]
 [s7; [%-*C@3 filename]-|The name of the file.&]
 [s7; [%-*C@3 mode]-|Open mode.&]
-[s2; [%-*C@3 acm]-|Access rights.&]
+[s7; [%- acm]-|Access rights.&]
 [s3; &]
 [s4;%- &]
 [s5;:FileStream`:`:GetHandle`(`)const:%- HANDLE_[* GetHandle]()_[@(0.0.255) const]&]
