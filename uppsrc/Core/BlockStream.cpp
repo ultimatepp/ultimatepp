@@ -388,6 +388,11 @@ FileStream::~FileStream() {
 	Close();
 }
 
+bool FileOut::Open(const char *fn)
+{
+	return FileStream::Open(fn, FileStream::CREATE|FileStream::NOWRITESHARE);
+}
+
 #endif
 
 #ifdef PLATFORM_POSIX
@@ -513,19 +518,10 @@ FileStream::~FileStream() {
 	Close();
 }
 
-#ifdef PLATFORM_POSIX
 bool FileOut::Open(const char *fn, mode_t acm)
 {
 	return FileStream::Open(fn, FileStream::CREATE|FileStream::NOWRITESHARE, acm);
 }
-#endif
-
-#ifdef PLATFORM_WIN32
-bool FileOut::Open(const char *fn)
-{
-	return FileStream::Open(fn, FileStream::CREATE|FileStream::NOWRITESHARE);
-}
-#endif
 
 #endif
 
