@@ -1159,16 +1159,30 @@ onst]_[_^FileTime^ FileTime][@(0.0.255) `&]_[*@3 tm])&]
 [s2; [%-*C@3 mode]-|Open mode.&]
 [s3; &]
 [s4;%- &]
+[s5;:FileStream`:`:Open`(const char`*`,dword`):%- [@(0.0.255) bool]_[* Open]([@(0.0.255) co
+nst]_[@(0.0.255) char]_`*[*@3 filename], [_^dword^ dword]_[*@3 mode])&]
+[s6;%- Posix specific.&]
+[s2; Opens file stream in specified mode (as defined in BlockStream) 
+and specific POSIX access rights. [%-*@3 mode] can be one of READ, 
+CREATE, APPEND, READWRITE possibly combined (using `'`|`') with 
+flag NOWRITESHARE. This enforces exclusive write access to the 
+file.&]
+[s7; [%-*C@3 filename]-|The name of the file.&]
+[s7; [%-*C@3 mode]-|Open mode.&]
+[s3; &]
+[s4;%- &]
 [s5;:FileStream`:`:Open`(const char`*`,dword`,mode`_t`):%- [@(0.0.255) bool]_[* Open]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 filename], [_^dword^ dword]_[*@3 mode], 
 mode`_t_[*@3 acm]_`=_[@3 0644])&]
 [s6;%- Posix specific.&]
 [s2; Opens file stream in specified mode (as defined in BlockStream) 
 and specific POSIX access rights. [%-*@3 mode] can be one of READ, 
-CREATE, APPEND, READWRITE&]
+CREATE, APPEND, READWRITE possibly combined (using `'`|`') with 
+flag NOWRITESHARE. This flag uses flock system call to enforce 
+exclusive write access to the file.&]
 [s7; [%-*C@3 filename]-|The name of the file.&]
 [s7; [%-*C@3 mode]-|Open mode.&]
-[s7; [%- acm]-|Access rights.&]
+[s7; [%-*C@3 acm]-|Access rights.&]
 [s3; &]
 [s4;%- &]
 [s5;:FileStream`:`:GetHandle`(`)const:%- HANDLE_[* GetHandle]()_[@(0.0.255) const]&]

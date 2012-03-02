@@ -430,7 +430,7 @@ public:
 
 class FileAppend : public FileStream {
 public:
-	bool Open(const char *fn)         { return FileStream::Open(fn, FileStream::APPEND); }
+	bool Open(const char *fn)         { return FileStream::Open(fn, FileStream::APPEND|FileStream::NOWRITESHARE); }
 
 	FileAppend(const char *fn)        { Open(fn); }
 	FileAppend()                      {}
