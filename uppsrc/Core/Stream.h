@@ -349,8 +349,8 @@ public:
 		READ, CREATE, APPEND, READWRITE,
 
 		NOWRITESHARE = 0x10,
-		DELETESHARE = 0x20,
-		NOREADSHARE = 0x40,
+		DELETESHARE = 0x20, // deprecated
+		NOREADSHARE = 0x40, // deprecated
 		SHAREMASK = 0x70,
 	};
 //	typedef int OpenMode; // obsolete, use dword
@@ -422,7 +422,7 @@ public:
 	{ return FileStream::Open(fn, FileStream::CREATE, acm); }
 #endif
 #ifdef PLATFORM_WIN32
-	bool Open(const char *fn)              { return FileStream::Open(fn, FileStream::CREATE); }
+	bool Open(const char *fn)              { return FileStream::Open(fn, FileStream::CREATE|FileStream::NOWRITESHARE); }
 #endif
 
 
