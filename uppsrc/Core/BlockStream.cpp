@@ -473,6 +473,11 @@ bool FileStream::Open(const char *name, dword mode, mode_t tmode) {
 	                    O_RDWR|O_CREAT,
 	              tmode);
 	if(handle >= 0) {
+		if((mode & NOWRITESHARE) && flock(handle, LOCK_EX|LOCK_NB) < 0) {
+			close(handle);
+			handle = -1;
+			return false;
+		}
 		int64 fsz = LSEEK64_(handle, 0, SEEK_END);
 		if(fsz >= 0) {
 			OpenInit(mode, fsz);
@@ -507,6 +512,20 @@ FileStream::FileStream() {
 FileStream::~FileStream() {
 	Close();
 }
+
+#ifdef PLATFORM_POSIX
+bool FileOut::Open(const char *fn, mode_t acm)
+{
+	return FileStream::Open(fn, FileStream::CREATE|FileStream::NOWRITESHARE, acm);
+}
+#endif
+
+#ifdef PLATFORM_WIN32
+bool FileOut::Open(const char *fn)
+{
+	return FileStream::Open(fn, FileStream::CREATE|FileStream::NOWRITESHARE);
+}
+#endif
 
 #endif
 

@@ -418,13 +418,11 @@ public:
 class FileOut : public FileStream {
 public:
 #ifdef PLATFORM_POSIX
-	bool Open(const char *fn, mode_t acm = 0644)
-	{ return FileStream::Open(fn, FileStream::CREATE, acm); }
+	bool Open(const char *fn, mode_t acm = 0644);
 #endif
 #ifdef PLATFORM_WIN32
-	bool Open(const char *fn)              { return FileStream::Open(fn, FileStream::CREATE|FileStream::NOWRITESHARE); }
+	bool Open(const char *fn);
 #endif
-
 
 	FileOut(const char *fn)                { Open(fn); }
 	FileOut()                              {}
