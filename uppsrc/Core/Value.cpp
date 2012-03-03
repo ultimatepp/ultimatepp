@@ -157,6 +157,40 @@ VectorMap<dword, Value::Void *(*)()>& Value::Typemap()
 	return x;
 }
 
+Index<String>& Value::NameNdx()
+{
+	static Index<String> x;
+	return x;
+}
+
+Index<dword>& Value::TypeNdx()
+{
+	static Index<dword> x;
+	return x;
+}
+
+void Value::AddName(dword type, const char *name)
+{
+	NameNdx().Add(name);
+	TypeNdx().Add(type);
+}
+
+int Value::GetType(const char *name)
+{
+	int q = NameNdx().Find(name);
+	if(q < 0)
+		return Null;
+	return TypeNdx()[q];
+}
+
+String Value::GetName(dword type)
+{
+	int q = TypeNdx().Find(type);
+	if(q < 0)
+		return Null;
+	return NameNdx()[q];
+}
+
 SVO_FN(s_String, String);
 SVO_FN(s_int, int);
 SVO_FN(s_double, double);
@@ -215,22 +249,36 @@ Value::Void *ValueMapDataCreate()
 	return new ValueMap::Data;
 }
 
-static void sRegisterStd()
+void Value::RegisterStd()
 {
 	ONCELOCK {
-		RichValue<WString>::Register();
-		RichValue<Complex>::Register();
-		Value::Register(VALUEARRAY_V, ValueArrayDataCreate);
-		Value::Register(VALUEMAP_V, ValueMapDataCreate);
+		Value::Register<WString>("WString");
+		Value::Register<Complex>("Complex");
+		Value::Register(VALUEARRAY_V, ValueArrayDataCreate, "ValueArray");
+		Value::Register(VALUEMAP_V, ValueMapDataCreate, "ValueMap");
+		Value::AddName(STRING_V, "String");
+		Value::AddName(INT_V, "int");
+		Value::AddName(DOUBLE_V, "double");
+		Value::AddName(VOID_V, "void");
+		Value::AddName(DATE_V, "date");
+		Value::AddName(TIME_V, "time");
+		Value::AddName(INT64_V, "int64");
+		Value::AddName(BOOL_V, "bool");
+		Value::AddName(ERROR_V, "error");
 	};
 }
 
+void ValueRegisterHelper()
+{
+	Value::RegisterStd();
+}
+
 INITBLOCK {
-	sRegisterStd();
+	ValueRegisterHelper();
 }
 
 void Value::Serialize(Stream& s) {
-	sRegisterStd();
+	RegisterStd();
 	dword type;
 	if(s.IsLoading()) {
 		s / type;
@@ -278,15 +326,161 @@ void Value::Serialize(Stream& s) {
 	}
 }
 
+static String s_binary("serialized_binary");
+
 void Value::Xmlize(XmlIO& xio)
 {
+	RegisterStd();
+	if(xio.IsStoring()) {
+		dword type = GetType();
+		String name = GetName(type);
+		if(name.GetCount() == 0) {
+			xio.SetAttr("type", s_binary);
+			String s = HexString(StoreAsString(*this));
+			Upp::Xmlize(xio, s);
+		}
+		else {
+			xio.SetAttr("type", name);
+			int st = data.GetSpecial();
+			ASSERT_(!type || type == ERROR_V || type == UNKNOWN_V || st == STRING ||
+			        (IsRef() ? Typemap().Find(type) >= 0 : st < 255 && svo[st]),
+			        AsString(type) + " is not registred for serialization");
+			if(st == VOIDV)
+				return;
+			if(st == STRING)
+				Upp::Xmlize(xio, data);
+			else
+			if(IsRef())
+				ptr()->Xmlize(xio);
+			else
+				svo[st]->Xmlize(&data, xio);
+		}
+	}
+	else {
+		String name = xio.GetAttr("type");
+		if(name == s_binary) {
+			String s;
+			Upp::Xmlize(xio, s);
+			try {
+				LoadFromString(*this, ScanHexString(s));
+			}
+			catch(LoadingError) {
+				throw XmlError("serialized_binary Error");
+			}
+		}
+		else {
+			int type = GetType(name);
+			if(Upp::IsNull(type))
+				throw XmlError("invalid Value type");
+			Free();
+			int st = (dword)type == VOID_V ? VOIDV : (dword)type == STRING_V ? STRING : type;
+			if(st == STRING)
+				Upp::Xmlize(xio, data);
+			else
+			if(st < 255 && svo[st]) {
+				data.SetSpecial((byte)type);
+				svo[st]->Xmlize(&data, xio);
+			}
+			else {
+				typedef Void* (*vp)();
+				vp *cr = Typemap().FindPtr(type);
+				if(cr) {
+					Void *p = (**cr)();
+					p->Xmlize(xio);
+					InitRef(p);
+				}
+				else
+					throw XmlError("invalid Value type");
+			}
+		}
+	}
 }
 
 void Value::Jsonize(JsonIO& jio)
 {
+	RegisterStd();
+	if(jio.IsStoring()) {
+		dword type = GetType();
+		String name = GetName(type);
+		if(name.GetCount() == 0) {
+			String s = HexString(StoreAsString(*this));
+			jio("type", s_binary)
+			   ("value", s);
+		}
+		else {
+			int st = data.GetSpecial();
+			ASSERT_(!type || type == ERROR_V || type == UNKNOWN_V || st == STRING ||
+			        (IsRef() ? Typemap().Find(type) >= 0 : st < 255 && svo[st]),
+			        AsString(type) + " is not registred for serialization");
+			if(st == VOIDV)
+				return;
+			JsonIO hio;
+			if(st == STRING) {
+				String h = data;
+				Upp::Jsonize(hio, h);
+			}
+			else {
+				if(IsRef())
+					ptr()->Jsonize(hio);
+				else
+					svo[st]->Jsonize(&data, hio);
+			}
+			ValueMap m;
+			m.Add("type", name);
+			m.Add("value", hio.GetResult());
+			jio.Set(m);
+		}
+	}
+	else {
+		Value g = jio.Get();
+		String name = g["type"];
+		Value  val = g["value"];
+		if(name == s_binary) {
+			if(!Upp::IsString(val))
+				throw JsonizeError("serialized_binary Error");
+			String s = val;
+			try {
+				LoadFromString(*this, ScanHexString(s));
+			}
+			catch(LoadingError) {
+				throw JsonizeError("serialized_binary Error");
+			}
+		}
+		else {
+			DDUMP(name);
+			int type = GetType(name);
+			if(Upp::IsNull(type))
+				throw JsonizeError("invalid Value type");
+			Free();
+			int st = (dword)type == VOID_V ? VOIDV : (dword)type == STRING_V ? STRING : type;
+			if(st == STRING) {
+				if(!Upp::IsString(val))
+					throw JsonizeError("serialized_binary Error");
+				data = val;
+			}
+			else {
+				JsonIO hio(val);
+				if(st < 255 && svo[st]) {
+					data.SetSpecial((byte)type);
+					svo[st]->Jsonize(&data, hio);
+				}
+				else {
+					typedef Void* (*vp)();
+					vp *cr = Typemap().FindPtr(type);
+					if(cr) {
+						Void *p = (**cr)();
+						p->Jsonize(hio);
+						InitRef(p);
+					}
+					else
+						throw JsonizeError("invalid Value type");
+				}
+			}
+		}
+	}
 }
 
-void Value::Register(dword w, Void* (*c)()) init_ {
+void Value::Register(dword w, Void* (*c)(), const char *name) init_ {
 #ifdef flagCHECKINIT
 	RLOG("Register valuetype " << w);
 #endif
@@ -294,6 +488,7 @@ void Value::Register(dword w, Void* (*c)()) init_ {
 	ASSERT(w != UNKNOWN_V);
 	ASSERT(w < 0x8000000);
 	CHECK(Typemap().GetAdd(w, c) == c);
+	AddName(w, name);
 }
 
 String  Value::ToString() const {

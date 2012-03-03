@@ -6,7 +6,7 @@ NAMESPACE_UPP
 
 #ifdef SVO_VALUE
 INITBLOCK {
-	Value::Register<Uuid>();
+	Value::Register<Uuid>("Uuid");
 }
 #else
 INITBLOCK {
@@ -66,6 +66,16 @@ Uuid ScanUuid(const char *s)
 	id.c = scanX(~xu + 16);
 	id.d = scanX(~xu + 24);
 	return id;
+}
+
+void Uuid::Xmlize(XmlIO& xio)
+{
+	String h;
+	if(xio.IsStoring())
+		h = Format(*this);
+	xio.Attr("value", h);
+	if(xio.IsLoading())
+		*this = ScanUuid(h);
 }
 
 String Uuid::ToString() const

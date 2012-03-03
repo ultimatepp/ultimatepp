@@ -2,43 +2,6 @@
 
 NAMESPACE_UPP
 
-#ifdef SVO_VALUE
-template <class T>
-static void sReg()
-{
-	if(FitsSvoValue<T>())
-		Value::SvoRegister<T>();
-	else
-		Value::Register<T>();
-}
-
-INITBLOCK
-{
-	sReg<Point>();
-	sReg<Point64>();
-	sReg<Pointf>();
-	sReg<Size>();
-	sReg<Size64>();
-	sReg<Sizef>();
-	Value::Register<Rect>();
-	Value::Register<Rect64>();
-	Value::Register<Rectf>();
-}
-#else
-INITBLOCK {
-	Point p;
-	RichValue<Point>::Register();
-	RichValue<Point64>::Register();
-	RichValue<Pointf>::Register();
-	RichValue<Size>::Register();
-	RichValue<Size64>::Register();
-	RichValue<Sizef>::Register();
-	RichValue<Rect>::Register();
-	RichValue<Rect64>::Register();
-	RichValue<Rectf>::Register();
-}
-#endif
-
 //template <>
 //void Rect_<double>::Union(const Rect_<double>& r) {
 void Rect_double_Union(Rect_<double>& self, const Rect_<double>& r) {

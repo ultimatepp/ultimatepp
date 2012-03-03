@@ -164,7 +164,6 @@ INITBLOCK {
 	sRegisterStd();
 }
 
-
 void Value::Serialize(Stream& s) {
 	sRegisterStd();
 	dword type;

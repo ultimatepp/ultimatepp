@@ -81,6 +81,8 @@ public:
 		virtual dword      GetType() const             { return VOID_V; }
 		virtual bool       IsNull() const              { return true; }
 		virtual void       Serialize(Stream& s)        {}
+		virtual void       Xmlize(XmlIO& xio)          {}
+		virtual void       Jsonize(JsonIO& jio)        {}
 		virtual unsigned   GetHashValue() const        { return 0; }
 		virtual bool       IsEqual(const Void *p)      { return false; }
 		virtual bool       IsPolyEqual(const Value& v) { return false; }
@@ -108,6 +110,15 @@ protected:
 
 	static VectorMap<dword, Void* (*)()>& Typemap();
 	static Sval *svo[256];
+	static Index<String>& NameNdx();
+	static Index<dword>&  TypeNdx();
+	
+	static void   AddName(dword type, const char *name);
+	static int    GetType(const char *name);
+	static String GetName(dword type);
+	static void   RegisterStd();
+
+	friend void ValueRegisterHelper();
 
 	String   data;
 	Void    *&ptr()                  { ASSERT(IsRef()); return *(Void **)&data; }
@@ -148,12 +159,12 @@ protected:
 	String  GetName() const;
 
 public:
-	static  void Register(dword w, Void* (*c)()) init_; // Direct use deprecated
+	static  void Register(dword w, Void* (*c)(), const char *name = NULL) init_; // Direct use deprecated
 
 	template <class T>
-	static  void Register();
+	static  void Register(const char *name = NULL);
 	template <class T>
-	static  void SvoRegister();
+	static  void SvoRegister(const char *name = NULL);
 	
 	dword    GetType() const;
 	bool     IsError() const         { return GetType() == ERROR_V; }

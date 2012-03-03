@@ -36,6 +36,11 @@ void ValueArray::Data::Serialize(Stream& s)
 	s % data;
 }
 
+void ValueArray::Data::Xmlize(XmlIO& io)
+{
+	Upp::Xmlize(io, data);
+}
+
 unsigned ValueArray::Data::GetHashValue() const
 {
 	CombineHash w(data.GetCount());
@@ -223,6 +228,12 @@ bool ValueMap::Data::IsNull() const {
 
 void ValueMap::Data::Serialize(Stream& s) {
 	s % key % value;
+}
+
+void ValueMap::Data::Xmlize(XmlIO& xio)
+{
+	Upp::Xmlize(xio, key);
+	Upp::Xmlize(xio, value);
 }
 
 unsigned ValueMap::Data::GetHashValue() const {
@@ -484,7 +495,7 @@ void Complex::Jsonize(JsonIO& jio)
 {
 	double r, i;
 	r = real(); i = imag();
-	jio("real", r)("image", i);
+	jio("real", r)("imag", i);
 	*this = C(r, i);
 }
 
@@ -495,6 +506,43 @@ void Complex::Serialize(Stream& s)
 	s % r % i;
 	*this = C(r, i);
 }
+
+#ifdef SVO_VALUE
+template <class T>
+static void sReg(const char *name)
+{
+	if(FitsSvoValue<T>())
+		Value::SvoRegister<T>(name);
+	else
+		Value::Register<T>(name);
+}
+
+INITBLOCK
+{
+	sReg<Point>("Point");
+	sReg<Point64>("Point64");
+	sReg<Pointf>("Pointf");
+	sReg<Size>("Size");
+	sReg<Size64>("Size64");
+	sReg<Sizef>("Sizef");
+	Value::Register<Rect>("Rect");
+	Value::Register<Rect64>("Rect64");
+	Value::Register<Rectf>("Rectf");
+}
+#else
+INITBLOCK {
+	Point p;
+	RichValue<Point>::Register();
+	RichValue<Point64>::Register();
+	RichValue<Pointf>::Register();
+	RichValue<Size>::Register();
+	RichValue<Size64>::Register();
+	RichValue<Sizef>::Register();
+	RichValue<Rect>::Register();
+	RichValue<Rect64>::Register();
+	RichValue<Rectf>::Register();
+}
+#endif
 
 END_UPP_NAMESPACE
 

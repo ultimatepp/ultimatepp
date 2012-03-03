@@ -112,6 +112,8 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 		return Format("%.16g", (double)v);
 	if(IsString(v))
 		return AsCString((String)v);
+	if(IsNull(v))
+		return "null";
 	NEVER();
 	return "null";
 }

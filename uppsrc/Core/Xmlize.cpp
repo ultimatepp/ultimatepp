@@ -211,6 +211,7 @@ void Xmlize(XmlIO& xml, Color& c)
 	c = Color(r, g, b);
 }
 
+#ifndef SVO_VALUE
 typedef void (*ValueXmlizer)(XmlIO& xml, Value& v);
 
 VectorMap<dword, ValueXmlizer>& ValueXmlizeMap()
@@ -238,7 +239,6 @@ void RegisterValueXmlize(dword type, void (*xmlize)(XmlIO& xml, Value& v), const
 	ValueXmlizeName().Add(name);
 }
 
-#ifndef SVO_VALUE
 REGISTER_VALUE_XMLIZE(String);
 REGISTER_VALUE_XMLIZE(WString);
 REGISTER_VALUE_XMLIZE(int);
