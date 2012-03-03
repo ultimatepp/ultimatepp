@@ -165,6 +165,7 @@ class ValueArray : AssignValueTypeNo<ValueArray, VALUEARRAY_V, Moveable<ValueArr
 		virtual dword      GetType() const             { return VALUEARRAY_V; }
 		virtual bool       IsNull() const;
 		virtual void       Serialize(Stream& s);
+		virtual void       Xmlize(XmlIO& xio);
 		virtual unsigned   GetHashValue() const;
 		virtual bool       IsEqual(const Value::Void *p);
 		virtual String     AsString() const;
@@ -235,6 +236,7 @@ class ValueMap : AssignValueTypeNo<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 		virtual dword      GetType() const             { return VALUEMAP_V; }
 		virtual bool       IsNull() const;
 		virtual void       Serialize(Stream& s);
+		virtual void       Xmlize(XmlIO& xio);
 		virtual unsigned   GetHashValue() const;
 		virtual bool       IsEqual(const Value::Void *p);
 		virtual String     AsString() const;

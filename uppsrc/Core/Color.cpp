@@ -121,7 +121,7 @@ Color Blend(Color c1, Color c2, int alpha)
 
 #ifdef SVO_VALUE
 INITBLOCK {
-	Value::SvoRegister<Color>();
+	Value::SvoRegister<Color>("Color");
 }
 #else
 INITBLOCK {

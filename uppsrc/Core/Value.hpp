@@ -144,12 +144,13 @@ T& Value::GetSmall() const
 }
 
 template <class T>
-void Value::SvoRegister()
+void Value::SvoRegister(const char *name)
 {
 	dword t = GetValueTypeNo<T>();
 	ASSERT(t < 255);
 	SVO_FN(sval, T)
 	svo[t] = &sval;
+	AddName(t, name);
 }
 
 template <class T>
@@ -247,9 +248,10 @@ unsigned Value::GetHashValue() const
 }
 
 template <class T>
-void Value::Register()
+void Value::Register(const char *name)
 {
-	Value::Register(GetValueTypeNo<T>(), RichValueRep<T>::Create);
+	dword t = GetValueTypeNo<T>();
+	Value::Register(t, RichValueRep<T>::Create, name);
 }
 
 inline

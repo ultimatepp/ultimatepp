@@ -43,7 +43,7 @@ const int FONT_V = 40;
 
 class FontInfo;
 
-class Font : AssignValueTypeNo<Font, FONT_V, Moveable<Font> >{
+class Font : public AssignValueTypeNo<Font, FONT_V, Moveable<Font> >{
 	union {
 		int64 data;
 		struct {
@@ -366,7 +366,7 @@ void SColorDkShadow_Write(Color c);
 inline Color InvertColor() { return Color(255, 0); }
 inline Color DefaultInk() { return Black(); } //TODO!
 
-class Painting : AssignValueTypeNo<Painting, 48, Moveable<Painting> > {
+class Painting : public AssignValueTypeNo<Painting, 48, Moveable<Painting> > {
 	String     cmd;
 	ValueArray data;
 	Sizef      size;
@@ -617,7 +617,7 @@ public:
 	template <class T>	static void Register(const char *id)  { AddFormat(id, &DataDrawer::FactoryFn<T>); }
 };
 
-class Drawing : AssignValueTypeNo<Drawing, 49, Moveable<Drawing> > {
+class Drawing : public AssignValueTypeNo<Drawing, 49, Moveable<Drawing> > {
 	Size       size;
 	String     data;
 	ValueArray val;

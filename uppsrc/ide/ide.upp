@@ -87,7 +87,7 @@ file
 	Copying;
 
 mainconfig
-	"" = "GUI",
+	"" = "GUI SVO_VALUE",
 	"" = "GUI .USEMALLOC",
 	"" = ".NOGTK GUI",
 	"" = "GUI HEAPDBG CHECKINIT",

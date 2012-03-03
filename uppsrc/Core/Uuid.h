@@ -2,6 +2,7 @@ struct Uuid : AssignValueTypeNo<Uuid, 50, Moveable<Uuid> > {
 	dword a, b, c, d;
 
 	void Serialize(Stream& s);
+	void Xmlize(XmlIO& xio);
 	bool IsNullInstance() const   { return a == 0 && b == 0 && c == 0 && d == 0; }
 	void SetNull()                { a = b = c = d = 0; }
 
