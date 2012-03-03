@@ -239,6 +239,7 @@ class ValueMap : AssignValueTypeNo<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 		virtual bool       IsNull() const;
 		virtual void       Serialize(Stream& s);
 		virtual void       Xmlize(XmlIO& xio);
+		virtual void       Jsonize(JsonIO& jio);
 		virtual unsigned   GetHashValue() const;
 		virtual bool       IsEqual(const Value::Void *p);
 		virtual String     AsString() const;
@@ -311,6 +312,7 @@ public:
 
 	unsigned GetHashValue() const                 { return data->GetHashValue(); }
 	void     Serialize(Stream& s);
+	void     Jsonize(JsonIO& jio);
 	String   ToString() const                     { return data->AsString(); }
 
 	bool operator==(const ValueMap& v) const;

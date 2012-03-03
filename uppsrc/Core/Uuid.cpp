@@ -19,6 +19,17 @@ void Uuid::Serialize(Stream& s) {
 	s / version % a % b %c % d;
 }
 
+void Uuid::Jsonize(JsonIO& jio)
+{
+	String h;
+	if(jio.IsStoring()) {
+		h = Format(*this);
+		jio.Set(h);
+	}
+	else
+		*this = ScanUuid((String)jio.Get());
+}
+
 Uuid Uuid::Create() {
 	Uuid ud;
 	ud.a = Random();

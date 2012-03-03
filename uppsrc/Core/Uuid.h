@@ -3,6 +3,7 @@ struct Uuid : AssignValueTypeNo<Uuid, 50, Moveable<Uuid> > {
 
 	void Serialize(Stream& s);
 	void Xmlize(XmlIO& xio);
+	void Jsonize(JsonIO& jio);
 	bool IsNullInstance() const   { return a == 0 && b == 0 && c == 0 && d == 0; }
 	void SetNull()                { a = b = c = d = 0; }
 
