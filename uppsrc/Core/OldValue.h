@@ -1,5 +1,13 @@
 #ifndef  SVO_VALUE
 class Value;
+class XmlIO;
+class JsonIO;
+
+template <class T>
+void Jsonize(JsonIO& io, T& var);
+
+template <class T>
+void Xmlize(XmlIO& xml, T& var);
 
 class Id : Moveable<Id> {
 	String id;
