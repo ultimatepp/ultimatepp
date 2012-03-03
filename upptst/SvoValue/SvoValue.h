@@ -102,12 +102,28 @@ void CheckType(const T& x, bool checkhash = false)
 	T xx = vv;
 	RDUMP(xx);
 	ASSERT(vv == v);
+
 	RDUMP(GetHashValue(v));
 	RDUMP(GetHashValue(xx));
 	ASSERT(!checkhash || GetHashValue(v) == GetHashValue(xx));
 	
 	Value vn = (T)Null;
 	ASSERT(IsNull(vn) || vn.Is<bool>());
+
+	RDUMP(v);
+	String xml = StoreAsXML(v, "test");
+	RDUMP(xml);
+	vv = Null;
+	LoadFromXML(vv, xml);
+	RDUMP(vv);
+	ASSERT(vv == v);
+	
+	String json = StoreAsJson(v);
+	RDUMP(json);
+	vv = Null;
+	LoadFromJson(vv, json);
+	RDUMP(vv);
+	ASSERT(vv == v);
 }
 
 #endif

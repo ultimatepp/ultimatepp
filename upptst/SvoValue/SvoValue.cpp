@@ -5,7 +5,7 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
 	Date d = Null;
-	DDUMP(IsNull(d));
+	RDUMP(IsNull(d));
 
 	Value ist = Opt0();
 	if(ist.Is<int>())
@@ -42,6 +42,9 @@ CONSOLE_APP_MAIN
 	CheckType(Point(20, 20), true);
 	CheckType(Size(20, 20), true);
 	CheckType(Rect(0, 0, 123, 123), true);
+	CheckType(Point64(20, 20), true);
+	CheckType(Size64(20, 20), true);
+	CheckType(Rect64(0, 0, 123, 123), true);
 	CheckType(Pointf(20, 20), true);
 	CheckType(Sizef(20, 20), true);
 	CheckType(Rectf(0, 0, 123, 123), true);
