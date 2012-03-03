@@ -229,56 +229,6 @@ INITBLOCK {
 	sRegisterStd();
 }
 
-void Value::Ize(int type, void *io) {
-	sRegisterStd();
-	dword type;
-	if(s.IsLoading()) {
-		if(t
-		s / type;
-		Free();
-		int st = type == VOID_V ? VOIDV : type == STRING_V ? STRING : type;
-		if(st == STRING)
-			s % data;
-		else
-		if(st < 255 && svo[st]) {
-			data.SetSpecial((byte)type);
-			svo[st]->Serialize(&data, s);
-		}
-		else {
-			typedef Void* (*vp)();
-			vp *cr = Typemap().FindPtr(type);
-			if(cr) {
-				Void *p = (**cr)();
-				p->Serialize(s);
-				InitRef(p);
-			}
-			else {
-				Free();
-				data.SetSpecial(3);
-				if(type != VOID_V && type != ERROR_V)
-					s.LoadError();
-			}
-		}
-	}
-	else {
-		type = GetType();
-		s / type;
-		int st = data.GetSpecial();
-		ASSERT_(!type || type == ERROR_V || type == UNKNOWN_V || st == STRING ||
-		        (IsRef() ? Typemap().Find(type) >= 0 : st < 255 && svo[st]),
-		        AsString(type) + " is not registred for serialization");
-		if(st == VOIDV)
-			return;
-		if(st == STRING)
-			s % data;
-		else
-		if(IsRef())
-			ptr()->Serialize(s);
-		else
-			svo[st]->Serialize(&data, s);
-	}
-}
-
 void Value::Serialize(Stream& s) {
 	sRegisterStd();
 	dword type;

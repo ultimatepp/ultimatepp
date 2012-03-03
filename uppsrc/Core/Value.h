@@ -6,6 +6,12 @@ class ValueMap;
 class XmlIO;
 class JsonIO;
 
+template <class T>
+void Jsonize(JsonIO& io, T& var);
+
+template <class T>
+void Xmlize(XmlIO& xml, T& var);
+
 const dword VOID_V    = 0;
 
 const dword INT_V     = 1;
