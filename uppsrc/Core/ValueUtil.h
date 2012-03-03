@@ -166,6 +166,7 @@ class ValueArray : AssignValueTypeNo<ValueArray, VALUEARRAY_V, Moveable<ValueArr
 		virtual bool       IsNull() const;
 		virtual void       Serialize(Stream& s);
 		virtual void       Xmlize(XmlIO& xio);
+		virtual void       Jsonize(JsonIO& jio);
 		virtual unsigned   GetHashValue() const;
 		virtual bool       IsEqual(const Value::Void *p);
 		virtual String     AsString() const;
@@ -220,6 +221,7 @@ public:
 
 	unsigned GetHashValue() const             { return data->GetHashValue(); }
 	void  Serialize(Stream& s);
+	void  Jsonize(JsonIO& jio);
 
 	bool operator==(const ValueArray& v) const;
 	bool operator!=(const ValueArray& v) const  { return !operator==(v); }
