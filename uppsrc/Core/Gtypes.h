@@ -81,6 +81,7 @@ struct Size_ : Moveable< Size_<T> > {
 #endif
 
 	void Serialize(Stream& s)                  { s % cx % cy; }
+	void Jsonize(JsonIO& jio)                  { jio("cx", cx)("cy", cy); }
 
 #ifdef PLATFORM_WIN32
 	operator SIZE*()                           { ASSERT(sizeof(*this) == sizeof(SIZE)); return (SIZE*)this; }
@@ -188,6 +189,7 @@ struct Point_ : Moveable< Point_<T> > {
 #endif
 
 	void Serialize(Stream& s)                       { s % x % y; }
+	void Jsonize(JsonIO& jio)                       { jio("x", x)("y", y); }
 
 #ifdef PLATFORM_WIN32
 	operator POINT*()                               { ASSERT(sizeof(*this) == sizeof(POINT)); return (POINT*)this; }
@@ -367,6 +369,7 @@ struct Rect_ : Moveable< Rect_<T> > {
 	/*explicit */Rect_(const Value& src) { *this = RichValue<Rect_>::Extract(src); }
 
 	void     Serialize(Stream& s)    { s % left % top % right % bottom; }
+	void     Jsonize(JsonIO& jio)    { jio("left", left)("top", top)("right", right)("bottom", bottom); }
 
 #ifdef PLATFORM_WIN32
 	operator const RECT*() const { ASSERT(sizeof(*this) == sizeof(RECT)); return (RECT*)this; }

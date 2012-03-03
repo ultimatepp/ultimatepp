@@ -3,6 +3,8 @@
 class Id;
 class ValueArray;
 class ValueMap;
+class XmlIO;
+class JsonIO;
 
 const dword VOID_V    = 0;
 
@@ -40,10 +42,21 @@ template<> inline dword ValueTypeNo(const Date*)    { return DATE_V; }
 template<> inline dword ValueTypeNo(const Time*)    { return TIME_V; }
 
 template <class T, dword type, class B = EmptyClass>
-class AssignValueTypeNo : public B {
+class ValueType : public B {
 public:
 	friend dword ValueTypeNo(const T*)              { return type; }
+	
+	bool     IsNullInstance() const                 { return false; }
+	void     Serialize(Stream& s)                   { NEVER(); }
+	void     Xmlize(XmlIO& xio)                     { NEVER(); }
+	void     Jsonize(JsonIO& jio)                   { NEVER(); }
+	unsigned GetHashValue() const                   { return 0; }
+	bool     operator==(const T&) const             { NEVER(); return false; }
+	String   ToString() const                       { return typeid(T).name(); }
 };
+
+template <class T, dword type, class B = EmptyClass> // Backward compatiblity
+class AssignValueTypeNo : public ValueType<T, type, B> {};
 
 template <class T>
 dword GetValueTypeNo() { return ValueTypeNo((T*)NULL); }
@@ -76,6 +89,8 @@ public:
 	struct Sval {
 		bool       (*IsNull)(const void *p);
 		void       (*Serialize)(void *p, Stream& s);
+		void       (*Xmlize)(void *p, XmlIO& xio);
+		void       (*Jsonize)(void *p, JsonIO& jio);
 		unsigned   (*GetHashValue)(const void *p);
 		bool       (*IsEqual)(const void *p1, const void *p2);
 		bool       (*IsPolyEqual)(const void *p, const Value& v);
@@ -85,7 +100,7 @@ public:
 protected:
 	enum { STRING = 0, REF = 255, VOIDV = 3 };
 
-	static VectorMap<dword, Void* (*)(Stream& s) >& Typemap();
+	static VectorMap<dword, Void* (*)()>& Typemap();
 	static Sval *svo[256];
 
 	String   data;
@@ -127,7 +142,7 @@ protected:
 	String  GetName() const;
 
 public:
-	static  void Register(dword w, Void* (*c)(Stream& s)) init_;
+	static  void Register(dword w, Void* (*c)()) init_; // Direct use deprecated
 
 	template <class T>
 	static  void Register();
@@ -172,6 +187,8 @@ public:
 	String ToString() const;
 
 	void  Serialize(Stream& s);
+	void  Xmlize(XmlIO& xio);
+	void  Jsonize(JsonIO& jio);
 
 	unsigned GetHashValue() const;
 

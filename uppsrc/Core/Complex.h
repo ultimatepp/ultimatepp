@@ -15,21 +15,16 @@ struct Complex : std::complex<double>
 
 	bool operator==(const Complex& c) const { return (const C&)(*this) == (const C&)c; }
 	bool operator!=(const Complex& c) const { return (const C&)(*this) != (const C&)c; }
+
+	void Serialize(Stream& s);	
+	void Xmlize(XmlIO& xio);
+	void Jsonize(JsonIO& jio);
 };
 
 template<> inline bool IsNull(const Complex& r) { return r.real() < DOUBLE_NULL_LIM || r.imag() < DOUBLE_NULL_LIM; }
 template<> inline unsigned GetHashValue(const Complex& x) { return CombineHash(x.real(), x.imag()); }
 template<> inline String AsString(const std::complex<double>& x) { return String().Cat() << "(" << x.real() << "," << x.imag() << ")"; }
 template<> inline String AsString(const Complex& x) { return AsString((const std::complex<double>&)x); }
-
-template<> inline Stream& operator%(Stream& s, Complex& c)
-{
-	double r,i;
-	if(s.IsStoring()) { r = c.real(); i = c.imag(); }
-	s % r % i;
-	if(s.IsLoading()) { c = Complex(r,i); }
-	return s;
-}
 
 template<> inline dword ValueTypeNo(const Complex*) { return COMPLEX_V; }
 

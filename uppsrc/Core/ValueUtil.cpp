@@ -1,8 +1,8 @@
 #include "Core.h"
 
-#ifdef SVO_VALUE
-
 NAMESPACE_UPP
+
+#ifdef SVO_VALUE
 
 #define LTIMING(x) // RTIMING(x)
 
@@ -470,6 +470,31 @@ bool FnValuePairOrder::operator()(const Value& keya, const Value& valuea, const 
 	return (*fn)(keya, valuea, keyb, valueb) < 0;
 }
 
+#endif
+
+void Complex::Xmlize(XmlIO& xio)
+{
+	double r, i;
+	r = real(); i = imag();
+	xio.Attr("real", r).Attr("image", i);
+	*this = C(r, i);
+}
+
+void Complex::Jsonize(JsonIO& jio)
+{
+	double r, i;
+	r = real(); i = imag();
+	jio("real", r)("image", i);
+	*this = C(r, i);
+}
+
+void Complex::Serialize(Stream& s)
+{
+	double r, i;
+	r = real(); i = imag();
+	s % r % i;
+	*this = C(r, i);
+}
+
 END_UPP_NAMESPACE
 
-#endif

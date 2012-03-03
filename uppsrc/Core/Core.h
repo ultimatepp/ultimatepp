@@ -250,7 +250,6 @@ NAMESPACE_UPP
 #include "Value.h"
 #include "ValueUtil.h"
 
-#include "Gtypes.h"
 #include "Color.h"
 #include "Complex.h"
 
@@ -267,8 +266,9 @@ NAMESPACE_UPP
 #include "Hash.h"
 
 #include "Parser.h"
-#include "XML.h"
 #include "JSON.h"
+#include "Gtypes.h"
+#include "XML.h"
 #include "Lang.h"
 #include "i18n.h"
 #include "Topic.h"

@@ -90,6 +90,8 @@ class RichValueRep : public RawValueRep<T> {
 public:
 	virtual bool       IsNull() const                { return UPP::IsNull(this->v); }
 	virtual void       Serialize(Stream& s)          { s % this->v; }
+	virtual void       Xmlize(XmlIO& xio)            { Upp::Xmlize(xio, this->v); }
+	virtual void       Jsonize(JsonIO& jio)          { Upp::Jsonize(jio, this->v); }
 	virtual unsigned   GetHashValue() const          { return UPP::ValueGetHashValue(this->v); }
 	virtual bool       IsEqual(const Value::Void *p) { ASSERT(dynamic_cast<const RawValueRep<T> *>(p));
 	                                                   return static_cast<const RawValueRep<T> *>(p)->Get() == this->v; }
@@ -97,15 +99,17 @@ public:
 	virtual String     AsString() const              { return UPP::AsString(this->v); }
 
 	RichValueRep(const T& v) : RawValueRep<T>(v)     {}
-	RichValueRep(Stream& s)                          { Serialize(s); }
+	RichValueRep()                                   {}
 
-	static Value::Void *Create(Stream& s)            { return new RichValueRep(s); }
+	static Value::Void *Create()                     { return new RichValueRep; }
 };
 
 template <class T>
 struct SvoFn {
 	static bool       IsNull(const void *p)                      { return UPP::IsNull(*(T *)p); }
 	static void       Serialize(void *p, Stream& s)              { s % *(T*)p; }
+	static void       Xmlize(void *p, XmlIO& xio)                { Upp::Xmlize(xio, *(T*)p); }
+	static void       Jsonize(void *p, JsonIO& jio)              { Upp::Jsonize(jio, *(T*)p); }
 	static unsigned   GetHashValue(const void *p)                { return UPP::ValueGetHashValue(*(T*)p); }
 	static bool       IsEqual(const void *p1, const void *p2)    { return *(T*)p1 == *(T*)p2; }
 	static bool       IsPolyEqual(const void *p, const Value& v) { return UPP::IsPolyEqual(*(T*)p, v); }
@@ -114,7 +118,8 @@ struct SvoFn {
 
 #define SVO_FN(id, T) \
 	static Value::Sval id = { \
-		SvoFn<T>::IsNull, SvoFn<T>::Serialize, SvoFn<T>::GetHashValue, SvoFn<T>::IsEqual, \
+		SvoFn<T>::IsNull, SvoFn<T>::Serialize, SvoFn<T>::Xmlize, SvoFn<T>::Jsonize, \
+		SvoFn<T>::GetHashValue, SvoFn<T>::IsEqual, \
 		SvoFn<T>::IsPolyEqual, SvoFn<T>::AsString \
 	};
 
