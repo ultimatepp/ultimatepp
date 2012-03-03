@@ -151,9 +151,9 @@ bool Value::GetOtherBool() const
 	       (bool)GetSmall<int64>();
 }
 
-VectorMap<dword, Value::Void *(*)(Stream& s)>& Value::Typemap()
+VectorMap<dword, Value::Void *(*)()>& Value::Typemap()
 {
-	static VectorMap<dword, Value::Void *(*)(Stream& s)> x;
+	static VectorMap<dword, Value::Void *(*)()> x;
 	return x;
 }
 
@@ -168,14 +168,17 @@ SVO_FN(s_time, Time);
 struct SvoVoidFn {
 	static bool       IsNull(const void *p)                      { return true; }
 	static void       Serialize(void *p, Stream& s)              {}
+	static void       Xmlize(void *p, XmlIO& xio)               {}
+	static void       Jsonize(void *p, JsonIO& jio)             {}
 	static unsigned   GetHashValue(const void *p)                { return 0; }
 	static bool       IsEqual(const void *p1, const void *p2)    { return true; }
 	static bool       IsPolyEqual(const void *p, const Value& v) { return false; }
 	static String     AsString(const void *p)                    { return String(); }
 };
 
-static Value::Sval s_void = { \
-	SvoVoidFn::IsNull, SvoVoidFn::Serialize, SvoVoidFn::GetHashValue, SvoVoidFn::IsEqual,
+static Value::Sval s_void = {
+	SvoVoidFn::IsNull, SvoVoidFn::Serialize,SvoVoidFn::Xmlize, SvoVoidFn::Jsonize,
+	SvoVoidFn::GetHashValue, SvoVoidFn::IsEqual,
 	SvoVoidFn::IsPolyEqual, SvoVoidFn::AsString
 };
 
@@ -202,18 +205,14 @@ Value::Sval *Value::svo[256] = {
 	NULL, //VALUEMAP_V   = 12;
 };
 
-Value::Void *ValueArrayDataCreate(Stream& s)
+Value::Void *ValueArrayDataCreate()
 {
-	ValueArray::Data *a = new ValueArray::Data;
-	a->Serialize(s);
-	return a;
+	return new ValueArray::Data;
 }
 
-Value::Void *ValueMapDataCreate(Stream& s)
+Value::Void *ValueMapDataCreate()
 {
-	ValueMap::Data *a = new ValueMap::Data;
-	a->Serialize(s);
-	return a;
+	return new ValueMap::Data;
 }
 
 static void sRegisterStd()
@@ -230,10 +229,11 @@ INITBLOCK {
 	sRegisterStd();
 }
 
-void Value::Serialize(Stream& s) {
+void Value::Ize(int type, void *io) {
 	sRegisterStd();
 	dword type;
 	if(s.IsLoading()) {
+		if(t
 		s / type;
 		Free();
 		int st = type == VOID_V ? VOIDV : type == STRING_V ? STRING : type;
@@ -245,10 +245,13 @@ void Value::Serialize(Stream& s) {
 			svo[st]->Serialize(&data, s);
 		}
 		else {
-			typedef Void* (*vp)(Stream& s);
+			typedef Void* (*vp)();
 			vp *cr = Typemap().FindPtr(type);
-			if(cr)
-				InitRef((**cr)(s));
+			if(cr) {
+				Void *p = (**cr)();
+				p->Serialize(s);
+				InitRef(p);
+			}
 			else {
 				Free();
 				data.SetSpecial(3);
@@ -276,7 +279,64 @@ void Value::Serialize(Stream& s) {
 	}
 }
 
-void Value::Register(dword w, Void* (*c)(Stream& s)) init_ {
+void Value::Serialize(Stream& s) {
+	sRegisterStd();
+	dword type;
+	if(s.IsLoading()) {
+		s / type;
+		Free();
+		int st = type == VOID_V ? VOIDV : type == STRING_V ? STRING : type;
+		if(st == STRING)
+			s % data;
+		else
+		if(st < 255 && svo[st]) {
+			data.SetSpecial((byte)type);
+			svo[st]->Serialize(&data, s);
+		}
+		else {
+			typedef Void* (*vp)();
+			vp *cr = Typemap().FindPtr(type);
+			if(cr) {
+				Void *p = (**cr)();
+				p->Serialize(s);
+				InitRef(p);
+			}
+			else {
+				Free();
+				data.SetSpecial(3);
+				if(type != VOID_V && type != ERROR_V)
+					s.LoadError();
+			}
+		}
+	}
+	else {
+		type = GetType();
+		s / type;
+		int st = data.GetSpecial();
+		ASSERT_(!type || type == ERROR_V || type == UNKNOWN_V || st == STRING ||
+		        (IsRef() ? Typemap().Find(type) >= 0 : st < 255 && svo[st]),
+		        AsString(type) + " is not registred for serialization");
+		if(st == VOIDV)
+			return;
+		if(st == STRING)
+			s % data;
+		else
+		if(IsRef())
+			ptr()->Serialize(s);
+		else
+			svo[st]->Serialize(&data, s);
+	}
+}
+
+void Value::Xmlize(XmlIO& xio)
+{
+}
+
+void Value::Jsonize(JsonIO& jio)
+{
+}
+
+void Value::Register(dword w, Void* (*c)()) init_ {
 #ifdef flagCHECKINIT
 	RLOG("Register valuetype " << w);
 #endif

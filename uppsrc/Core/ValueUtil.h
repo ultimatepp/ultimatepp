@@ -180,7 +180,7 @@ class ValueArray : AssignValueTypeNo<ValueArray, VALUEARRAY_V, Moveable<ValueArr
 	Vector<Value>& Clone();
 	void  Init0();
 	
-	friend Value::Void *ValueArrayDataCreate(Stream& s);
+	friend Value::Void *ValueArrayDataCreate();
 	friend class Value;
 
 public:
@@ -252,7 +252,7 @@ class ValueMap : AssignValueTypeNo<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 	Data& Clone();
 	void  Init0();
 
-	friend Value::Void *ValueMapDataCreate(Stream& s);
+	friend Value::Void *ValueMapDataCreate();
 	friend class Value;
 
 public:

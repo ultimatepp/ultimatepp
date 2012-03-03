@@ -142,7 +142,9 @@ template<> void Xmlize(XmlIO& xml, Rectf& r);
 
 template<> void Xmlize(XmlIO& xml, Color& c);
 
+#ifndef SVO_VALUE
 template<> void Xmlize(XmlIO& xml, Value& v);
+#endif
 
 template<> void Xmlize(XmlIO& xml, ValueArray& v);
 template<> void Xmlize(XmlIO& xml, ValueMap& v);

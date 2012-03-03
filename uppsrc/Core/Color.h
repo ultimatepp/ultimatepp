@@ -25,7 +25,7 @@ inline dword      RGB(byte r, byte g, byte b)    { return r | (g << 8) | (b << 1
 
 const int COLOR_V = 39;
 
-class Color : AssignValueTypeNo<Color, COLOR_V, Moveable<Color> > {
+class Color : public AssignValueTypeNo<Color, COLOR_V, Moveable<Color> > {
 protected:
 	dword    color;
 

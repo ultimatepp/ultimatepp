@@ -238,6 +238,7 @@ void RegisterValueXmlize(dword type, void (*xmlize)(XmlIO& xml, Value& v), const
 	ValueXmlizeName().Add(name);
 }
 
+#ifndef SVO_VALUE
 REGISTER_VALUE_XMLIZE(String);
 REGISTER_VALUE_XMLIZE(WString);
 REGISTER_VALUE_XMLIZE(int);
@@ -295,6 +296,7 @@ template<> void Xmlize(XmlIO& xml, Value& v)
 		}
 	}
 }
+#endif
 
 template<> void Xmlize(XmlIO& xml, ValueArray& v)
 {
