@@ -249,10 +249,16 @@ template<> void Jsonize(JsonIO& io, Date& var)
 			return;
 		}
 		if(IsString(v)) {
-			Date d = ScanDate("ymd", (String)v);
-			if(!IsNull(d)) {
-				var = d;
-				return;
+			String text = v;
+			if(text.GetCount() > 6) {
+				Date d;
+				d.year = ScanInt(text.Left(4));
+				d.month = ScanInt(text.Mid(4, 2));
+				d.day = ScanInt(text.Mid(6));
+				if(var.IsValid()) {
+					var = d;
+					return;
+				}
 			}
 		}
 		throw JsonizeError("string expected for Date value");
@@ -261,7 +267,7 @@ template<> void Jsonize(JsonIO& io, Date& var)
 		if(IsNull(var))
 			io.Set(Null);
 		else
-			io.Set(Format("%04d-%02d-%02d", var.year, var.month, var.day));
+			io.Set(Format("%04d%02d%02d", var.year, var.month, var.day));
 }
 
 template<> void Jsonize(JsonIO& io, Time& var)
@@ -273,10 +279,19 @@ template<> void Jsonize(JsonIO& io, Time& var)
 			return;
 		}
 		if(IsString(v)) {
-			Time d = ScanTime("ymd", (String)v);
-			if(!IsNull(d)) {
-				var = d;
-				return;
+			String text = v;
+			if(text.GetCount() > 15) {
+				Time tm;
+				tm.year = ScanInt(text.Left(4));
+				tm.month = ScanInt(text.Mid(4, 2));
+				tm.day = ScanInt(text.Mid(6, 2));
+				tm.hour = ScanInt(text.Mid(9, 2));
+				tm.minute = ScanInt(text.Mid(12, 2));
+				tm.second = ScanInt(text.Mid(15));
+				if(var.IsValid()) {
+					var = tm;
+					return;
+				}
 			}
 		}
 		throw JsonizeError("string expected for Time value");
@@ -285,7 +300,7 @@ template<> void Jsonize(JsonIO& io, Time& var)
 		if(IsNull(var))
 			io.Set(Null);
 		else
-			io.Set(Format("%04d-%02d-%02d %02d:%02d:%02d",
+			io.Set(Format("%04d%02d%02d`T%02d:%02d:%02d",
 				          var.year, var.month, var.day, var.hour, var.minute, var.second));
 }
 

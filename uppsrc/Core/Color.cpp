@@ -88,6 +88,15 @@ Color::Color(RGBA rgba)
 	}
 }
 
+void Color::Jsonize(JsonIO& jio)
+{
+	int r = GetR();
+	int g = GetG();
+	int b = GetB();
+	jio("red", r)("green", g)("blue", b);
+	*this = Color(r, g, b);	
+}
+
 RGBA operator*(int alpha, Color c)
 {
 	RGBA r;

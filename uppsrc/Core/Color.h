@@ -45,6 +45,7 @@ public:
 	bool     operator!=(Color c) const { return color != c.color; }
 
 	void     Serialize(Stream& s)      { s % color; }
+	void     Jsonize(JsonIO& jio);
 
 	Color()                            { SetNull(); }
 	Color(int r, int g, int b)         { color = RGB(r, g, b); }

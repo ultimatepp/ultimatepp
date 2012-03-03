@@ -36,6 +36,11 @@ void ValueArray::Data::Serialize(Stream& s)
 	s % data;
 }
 
+void ValueArray::Data::Jsonize(JsonIO& jio)
+{
+	Upp::Jsonize(jio, data);
+}
+
 void ValueArray::Data::Xmlize(XmlIO& io)
 {
 	Upp::Xmlize(io, data);
@@ -156,7 +161,7 @@ void ValueArray::Serialize(Stream& s) {
 
 void ValueArray::Jsonize(JsonIO& jio)
 {
-	if(s.IsLoading()) {
+	if(jio.IsLoading()) {
 		data->Release();
 		Create();
 	}
@@ -243,6 +248,38 @@ void ValueMap::Data::Xmlize(XmlIO& xio)
 {
 	Upp::Xmlize(xio, key);
 	Upp::Xmlize(xio, value);
+}
+
+void ValueMap::Data::Jsonize(JsonIO& jio)
+{
+	if(jio.IsStoring()) {
+		ValueArray va;
+		int n = min(value.GetCount(), key.GetCount());
+		for(int i = 0; i < n; i++) {
+			ValueMap m;
+			m.Add("key", StoreAsJsonValue(key[i]));
+			m.Add("value", StoreAsJsonValue(value[i]));
+			va.Add(m);
+		}
+		jio.Set(va);
+	}
+	else {
+		Value va = jio.Get();
+		DDUMP(va);
+		key.Clear();
+		value.Clear();
+		for(int i = 0; i < va.GetCount(); i++) {
+			Value k, v;
+			DDUMP(va[i]);
+			DDUMP(va[i]["key"]);
+			LoadFromJsonValue(k, va[i]["key"]);
+			LoadFromJsonValue(v, va[i]["value"]);
+			DDUMP(k);
+			DDUMP(v);
+			key.Add(k);
+			value.Add(v);
+		}
+	}
 }
 
 unsigned ValueMap::Data::GetHashValue() const {
@@ -364,6 +401,16 @@ void ValueMap::Serialize(Stream& s) {
 	}
 	data->Serialize(s);
 }
+
+void ValueMap::Jsonize(JsonIO& jio)
+{
+	if(jio.IsLoading()) {
+		data->Release();
+		Create();
+	}
+	data->Jsonize(jio);
+}
+
 
 ValueMap::~ValueMap() {
 	ASSERT(data->GetRefCount() > 0);
