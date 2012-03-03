@@ -154,6 +154,15 @@ void ValueArray::Serialize(Stream& s) {
 	data->Serialize(s);
 }
 
+void ValueArray::Jsonize(JsonIO& jio)
+{
+	if(s.IsLoading()) {
+		data->Release();
+		Create();
+	}
+	data->Jsonize(jio);
+}
+
 ValueArray::~ValueArray() {
 	ASSERT(data->GetRefCount() > 0);
 	data->Release();
