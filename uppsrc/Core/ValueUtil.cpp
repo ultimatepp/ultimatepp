@@ -265,17 +265,12 @@ void ValueMap::Data::Jsonize(JsonIO& jio)
 	}
 	else {
 		Value va = jio.Get();
-		DDUMP(va);
 		key.Clear();
 		value.Clear();
 		for(int i = 0; i < va.GetCount(); i++) {
 			Value k, v;
-			DDUMP(va[i]);
-			DDUMP(va[i]["key"]);
 			LoadFromJsonValue(k, va[i]["key"]);
 			LoadFromJsonValue(v, va[i]["value"]);
-			DDUMP(k);
-			DDUMP(v);
 			key.Add(k);
 			value.Add(v);
 		}
