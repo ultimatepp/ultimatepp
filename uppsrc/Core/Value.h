@@ -237,6 +237,10 @@ template <class T> Value RawPickToValue(pick_ T& data);
 template <class T> Value RawDeepToValue(const T& data);
 template <class T> T&    CreateRawValue(Value& v);
 
+Value        ErrorValue(const char *s);
+Value        ErrorValue(const String& s);
+const Value& ErrorValue();
+
 template <class T>
 inline bool IsPolyEqual(const T& x, const Value& v) {
 	return false;
@@ -283,10 +287,6 @@ inline bool IsNumber(const Value& v)     { return v.Is<double>() || v.Is<int>() 
 inline bool IsDateTime(const Value& v)   { return v.Is<Date>() || v.Is<Time>(); }
 inline bool IsValueArray(const Value& v) { return v.GetType() == VALUEARRAY_V || v.GetType() == VALUEMAP_V; }
 inline bool IsValueMap(const Value& v)   { return IsValueArray(v); }
-
-Value        ErrorValue(const char *s);
-Value        ErrorValue(const String& s);
-const Value& ErrorValue();
 
 String       GetErrorText(const Value& v);
 
