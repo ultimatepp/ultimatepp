@@ -53,9 +53,9 @@ features. It is also required to Register (or SvoRegister) the
 Value so that it can be successfully deserialized from stream 
 or decoded from JSON or XML.&]
 [s3;%- &]
-[s0;i448;a25;kKO9;:noref:@(0.0.255)%- &]
+[s0;i448;a25;kKO9;@(0.0.255)%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
-[s4;%- &]
+[s3;%- &]
 [s5;:Value`:`:Register`(const char`*`):%- [@(0.0.255) static] [@(0.0.255) template]_<[@(0.0.255) c
 lass]_[*@4 T]>_[@(0.0.255) void]_[* Register]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 nam
 e]_`=_NULL)&]
@@ -212,4 +212,118 @@ onst]&]
 [s4;%- &]
 [s5;:Value`:`:`~Value`(`):%- [@(0.0.255) `~][* Value]()&]
 [s2; Destructor.&]
+[s4;%- &]
+[s0;%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 Value support functions]]}}&]
+[s0;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Value creation]]}}&]
+[s3;%- &]
+[s5;:FitsSvoValue`(`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) bool]_
+[* FitsSvoValue]()&]
+[s2; Returns true if sizeof(T) fits into SVO Value optimization.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:SvoToValue`(const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[_^Value^ V
+alue]_[* SvoToValue]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s2; Creates SVO Value from [%-*@3 x]. T has to have defined all that 
+is required for Value compatibility (derivation from ValueType 
+takes care of this).&]
+[s3; &]
+[s4;%- &]
+[s5;:RichToValue`(const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[_^Value^ V
+alue]_[* RichToValue]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 data])&]
+[s2; Creates Rich Value from [%-*@3 data]. T has to have defined all 
+that is required for Value compatibility (derivation from ValueType 
+takes care of this).&]
+[s3; &]
+[s4;%- &]
+[s5;:RawToValue`(const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[_^Value^ V
+alue]_[* RawToValue]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 data])&]
+[s2; Creates Raw Value from [%-*@3 data]. T has to have deep copy constructor.&]
+[s3; &]
+[s4;%- &]
+[s5;:RawPickToValue`(pick`_ T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[_^Value^ V
+alue]_[* RawPickToValue]([@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 data])&]
+[s2; Creates Raw Value by picking [%-*@3 data] (data is destroyed in 
+the process). T has to have pick copy semantics.&]
+[s3; &]
+[s4;%- &]
+[s5;:RawDeepToValue`(const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[_^Value^ V
+alue]_[* RawDeepToValue]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 data])&]
+[s2; Creates Raw Value by using [* optional deep copy] constructor 
+(T(const T`&, int)) [%-*@3 data].&]
+[s3; &]
+[s4;%- &]
+[s5;:CreateRawValue`(Value`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T][@(0.0.255) `&
+]_[* CreateRawValue]([_^Value^ Value][@(0.0.255) `&]_[*@3 v])&]
+[s2; Creates Raw Value of type T in [%-*@3 v]. T is created using default 
+constructor and reference to created instance is returned. Client 
+code should setup this instance before v is passed elsewhere.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ErrorValue`(const char`*`):%- [_^Value^ Value]_[* ErrorValue]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 s])&]
+[s5;:ErrorValue`(const String`&`):%- [^Value^ Value]_[* ErrorValue]([@(0.0.255) const]_[^String^ S
+tring][@(0.0.255) `&]_[*@3 s])&]
+[s2; Returns Error Value with description [%-*@3 s].&]
+[s3; &]
+[s4;%- &]
+[s5;:ErrorValue`(`):%- [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[* ErrorValue]()&]
+[s2; Returns ErrorValue with empty description.&]
+[s3; &]
+[s0;i448;a25;kKO9;@(0.0.255)%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Value type tests]]}}&]
+[s3;%- &]
+[s5;:IsVoid`(const Value`&`):%- [@(0.0.255) bool]_[* IsVoid]([@(0.0.255) const]_[_^Value^ Val
+ue][@(0.0.255) `&]_[*@3 v])&]
+[s2; Same as [%-*@3 v].IsVoid().&]
+[s3; &]
+[s4;%- &]
+[s5;:IsError`(const Value`&`):%- [@(0.0.255) bool]_[* IsError]([@(0.0.255) const]_[_^Value^ V
+alue][@(0.0.255) `&]_[*@3 v])&]
+[s2; Same as [%-*@3 v].IsError().&]
+[s3; &]
+[s4;%- &]
+[s5;:IsString`(const Value`&`):%- [@(0.0.255) bool]_[* IsString]([@(0.0.255) const]_[_^Value^ V
+alue][@(0.0.255) `&]_[*@3 v])&]
+[s2; Returns true if [%-*@3 v] contains String, WString or Null value.&]
+[s3; &]
+[s4;%- &]
+[s5;:IsNumber`(const Value`&`):%- [@(0.0.255) bool]_[* IsNumber]([@(0.0.255) const]_[_^Value^ V
+alue][@(0.0.255) `&]_[*@3 v])&]
+[s2; Returns true if [%-*@3 v] contains bool, int, int64, double or 
+Null value.&]
+[s3; &]
+[s4;%- &]
+[s5;:IsDateTime`(const Value`&`):%- [@(0.0.255) bool]_[* IsDateTime]([@(0.0.255) const]_[_^Value^ V
+alue][@(0.0.255) `&]_[*@3 v])&]
+[s2; Returns true if [%-*@3 v] contains Date, Time or Null value.&]
+[s3; &]
+[s4;%- &]
+[s5;:IsValueArray`(const Value`&`):%- [@(0.0.255) bool]_[* IsValueArray]([@(0.0.255) const]_
+[_^Value^ Value][@(0.0.255) `&]_[*@3 v])&]
+[s2; Returns true [%-*@3 v] contains ValueArray or ValueMap.&]
+[s3; &]
+[s4;%- &]
+[s5;:IsValueMap`(const Value`&`):%- [@(0.0.255) bool]_[* IsValueMap]([@(0.0.255) const]_[_^Value^ V
+alue][@(0.0.255) `&]_[*@3 v])&]
+[s2; Returns true [%-*@3 v] contains ValueArray or ValueMap.&]
+[s3; &]
+[s4;%- &]
+[s5;:GetErrorText`(const Value`&`):%- [_^String^ String]_[* GetErrorText]([@(0.0.255) const
+]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v])&]
+[s2; If [%-*@3 v] is Error Value, returns error description, otherwise 
+empty String.&]
+[s3; &]
+[s4;%- &]
+[s5;:IsNull`(const Value`&`):%- [@(0.0.255) bool]_[* IsNull]([@(0.0.255) const]_[_^Value^ Val
+ue][@(0.0.255) `&]_[*@3 v])&]
+[s2; Same as [%-*@3 v].IsNull().&]
+[s3; &]
+[s4;%- &]
+[s5;:Nvl`(const Value`&`,const Value`&`):%- [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
+]_[* Nvl]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 a], [@(0.0.255) const]_[_^Value^ V
+alue][@(0.0.255) `&]_[*@3 b])&]
+[s2; If [%-*@3 a].IsNull(), returns [%-*@3 b], otherwise (a not null) 
+returns a.&]
 [s3;%- ]
