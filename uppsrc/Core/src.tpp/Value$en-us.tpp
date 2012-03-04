@@ -11,7 +11,7 @@ topic "";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Value]]}}&]
-[s0;i448;a25;kKO9;@(0.0.255)%- &]
+[s1;@(0.0.255)3%- &]
 [s1;:Value`:`:class:%- [@(0.0.255)3 class][3 _][*3 Value][3 _:_][@(0.0.255)3 private][3 _][*@3;3 Mov
 eable][3 <][*3 Value][3 >_]&]
 [s2; Value is a concrete value type (with normal deep copy semantics) 
@@ -212,7 +212,63 @@ onst]&]
 [s4;%- &]
 [s5;:Value`:`:`~Value`(`):%- [@(0.0.255) `~][* Value]()&]
 [s2; Destructor.&]
+[s0;*@3%- &]
+[s0;%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 ValueType]]}}&]
+[s0;%- &]
+[s1;:noref:%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T], dword_[*@4 type], 
+[@(0.0.255) class]_[*@3 B]_`=_EmptyClass>&]
+[s1;:ValueType`:`:class:%- [@(0.0.255) class]_[* ValueType]_:_[@(0.0.255) public]_[*@3 B]&]
+[s2; ValueType is a helper class intended for creation of client 
+code custom Value rich compatible concrete types. Such types 
+should derive from this class, which serves to&]
+[s2; &]
+[s2; `- assign Value type number to the concrete class (parameter 
+[%-*@4 type])&]
+[s2; `- predefines some rich specific methods as `'empty`' for the 
+class. Derived type thus can only implement methods it needs 
+(e.g. that required for client code).&]
+[s2; &]
+[s2; The list of `'empty`' methods of ValueType thus also serves 
+as list of methods that Value compatible concrete type might 
+define to gain support of certain operations with Value: &]
+[s3;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
+[s3;%- &]
+[s5;:ValueType`:`:IsNullInstance`(`)const:%- [@(0.0.255) bool]_[* IsNullInstance]()_[@(0.0.255) c
+onst]&]
+[s2; True if concrete type contains Null value. ValueType returns 
+false.&]
+[s3;%- &]
 [s4;%- &]
+[s5;:ValueType`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize]([_^Stream^ Strea
+m][@(0.0.255) `&]_[*@3 s])&]
+[s2; Serialization support. ValueType invokes runtime error.&]
+[s3; &]
+[s4;%- &]
+[s5;:ValueType`:`:Xmlize`(XmlIO`&`):%- [@(0.0.255) void]_[* Xmlize]([_^XmlIO^ XmlIO][@(0.0.255) `&
+]_[*@3 xio])&]
+[s2; XML support. ValueType invokes runtime error.&]
+[s3; &]
+[s4;%- &]
+[s5;:ValueType`:`:Jsonize`(JsonIO`&`):%- [@(0.0.255) void]_[* Jsonize]([_^JsonIO^ JsonIO][@(0.0.255) `&
+]_[*@3 jio])&]
+[s2; JSON support. ValueType invokes runtime error.&]
+[s3; &]
+[s4;%- &]
+[s5;:ValueType`:`:GetHashValue`(`)const:%- [@(0.0.255) unsigned]_[* GetHashValue]()_[@(0.0.255) c
+onst]&]
+[s2; Hash value of contained data. ValueType return 0.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ValueType`:`:operator`=`=`(const T`&`)const:%- [@(0.0.255) bool]_[* operator`=`=]([@(0.0.255) c
+onst]_[*@4 T][@(0.0.255) `&])_[@(0.0.255) const]&]
+[s2; Equality of data. ValueType invokes runtime error.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ValueType`:`:ToString`(`)const:%- [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]
+[s2; Conversion to text. ValueType returns empty String.&]
+[s0;%- &]
 [s0;%- &]
 [ {{10000@(113.42.0) [s0; [*@7;4 Value support functions]]}}&]
 [s0;%- &]
