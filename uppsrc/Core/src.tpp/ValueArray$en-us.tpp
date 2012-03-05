@@ -1,4 +1,4 @@
-topic "class ValueArray : private AssignValueTypeNo<ValueArray, VALUEARRAY_V, Moveable<ValueArray> > ";
+topic "ValueArray";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -12,12 +12,21 @@ topic "class ValueArray : private AssignValueTypeNo<ValueArray, VALUEARRAY_V, Mo
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 ValueArray]]}}&]
 [s1;@(0.0.255)3 &]
-[s1;:ValueArray`:`:class: [@(0.0.255)3 class][3 _][*3 ValueArray][3 _:_][@(0.0.255)3 private][3 _][*@3;3 A
-ssignValueTypeNo][3 <][*3 ValueArray][3 , VALUEARRAY`_V, ][_^Moveable^3 Moveable][3 <][*3 Val
-ueArray][3 >_>_]&]
+[s1;:ValueArray`:`:class: [@(0.0.255)3 class][3 _][*3 ValueArray][3 _]&]
+[s2;%% ValueArray is an array of Value elements. It is fully Rich 
+Value compatible.&]
 [s2;%% &]
-[s3; &]
-[s0;i448;a25;kKO9;:noref:@(0.0.255) &]
+[s2;%% ValueArray is also compatible with ValueMap (in the similar 
+way how Date is compatible with Time). Assigning Value containing 
+ValueMap to ValueArray assigns it a ValueArray representing values 
+of ValueMap. Assigning ValueArray to ValueMap creates map where 
+keys are number 0, 1, ... GetCount() `- 1 and values contain 
+elements with corresponding indices.&]
+[s2;%% &]
+[s2;%% Not that Value also provides methods (GetCount() and operator`[`]) 
+to directly access ValueArray elements contained in Value (if 
+Value does not contain ValueArray, GetCount() returns 0).&]
+[s0;i448;a25;kKO9;@(0.0.255) &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:ValueArray`:`:ValueArray`(`): [* ValueArray]()&]
@@ -68,26 +77,26 @@ uller][@(0.0.255) `&])&]
 [s3; &]
 [s4; &]
 [s5;:ValueArray`:`:IsNull`(`)const: [@(0.0.255) bool]_[* IsNull]()_[@(0.0.255) const]&]
-[s2;%% Returns true if there are no items.&]
+[s2;%% Returns true if there are no elements.&]
 [s3; &]
 [s4; &]
 [s5;:ValueArray`:`:Clear`(`): [@(0.0.255) void]_[* Clear]()&]
-[s2;%% Removes all items.&]
+[s2;%% Removes all elements.&]
 [s3; &]
 [s4; &]
 [s5;:ValueArray`:`:SetCount`(int`): [@(0.0.255) void]_[* SetCount]([@(0.0.255) int]_[*@3 n])&]
-[s2;%% Sets the count of items to [%-*@3 n]. If number of items increases, 
-new items are void Values.&]
+[s2;%% Sets the count of elements to [%-*@3 n]. If number of elements 
+increases, new elements are void Values.&]
 [s3;%% &]
 [s4; &]
 [s5;:ValueArray`:`:SetCount`(int`,const Value`&`): [@(0.0.255) void]_[* SetCount]([@(0.0.255) i
 nt]_[*@3 n], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v])&]
-[s2;%% Sets the count of items to [%-*@3 n]. If number of items increases, 
-new items are set to [%-*@3 v] .&]
+[s2;%% Sets the count of elements to [%-*@3 n]. If number of elements 
+increases, new elements are set to [%-*@3 v] .&]
 [s3;%% &]
 [s4; &]
 [s5;:ValueArray`:`:GetCount`(`)const: [@(0.0.255) int]_[* GetCount]()_[@(0.0.255) const]&]
-[s2;%% Returns number of items.&]
+[s2;%% Returns number of elements.&]
 [s3; &]
 [s4; &]
 [s5;:ValueArray`:`:IsEmpty`(`)const: [@(0.0.255) bool]_[* IsEmpty]()_[@(0.0.255) const]&]
@@ -96,7 +105,7 @@ new items are set to [%-*@3 v] .&]
 [s4; &]
 [s5;:ValueArray`:`:Add`(const Value`&`): [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[_^Value^ V
 alue][@(0.0.255) `&]_[*@3 v])&]
-[s2;%% Adds new item [%-*@3 v].&]
+[s2;%% Adds new element [%-*@3 v].&]
 [s3;%% &]
 [s4; &]
 [s5;:ValueArray`:`:operator`<`<`(const Value`&`): [_^ValueArray^ ValueArray][@(0.0.255) `&
@@ -106,19 +115,19 @@ alue][@(0.0.255) `&]_[*@3 v])&]
 [s4; &]
 [s5;:ValueArray`:`:Set`(int`,const Value`&`): [@(0.0.255) void]_[* Set]([@(0.0.255) int]_[*@3 i
 ], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v])&]
-[s2;%% Sets item at [%-*@3 i] to [%-*@3 v]. If [%-*@3 i] >`= GetCount(), 
-void Values are added so that item [%-*@3 i] created.&]
+[s2;%% Sets element at [%-*@3 i] to [%-*@3 v]. If [%-*@3 i] >`= GetCount(), 
+void Values are added so that element [%-*@3 i] created.&]
 [s3;%% &]
 [s4; &]
 [s5;:ValueArray`:`:Get`(int`)const: [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[* Get
 ]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
-[s2;%% Returns item at [%-*@3 i].&]
+[s2;%% Returns element at [%-*@3 i].&]
 [s3;%% &]
 [s4; &]
 [s5;:ValueArray`:`:GetAndClear`(int`): [_^Value^ Value]_[* GetAndClear]([@(0.0.255) int]_[*@3 i
 ])&]
 [s2;%% Assigns empty Value at [%-*@3 i] and returns Value that was 
-in this item before. This special method is intended as optimization 
+in this element before. This special method is intended as optimization 
 in certain situation, as it can void expensive cloning of Value 
 in situation where keeping original Value in ValueArray is not 
 required.&]
@@ -131,7 +140,7 @@ required.&]
 [s4; &]
 [s5;:ValueArray`:`:Remove`(int`,int`): [@(0.0.255) void]_[* Remove]([@(0.0.255) int]_[*@3 i],
  [@(0.0.255) int]_[*@3 count]_`=_[@3 1])&]
-[s2;%% Removes [%-*@3 count] items at [%-*@3 i].&]
+[s2;%% Removes [%-*@3 count] elements at [%-*@3 i].&]
 [s3;%% &]
 [s4; &]
 [s5;:ValueArray`:`:Insert`(int`,const ValueArray`&`): [@(0.0.255) void]_[* Insert]([@(0.0.255) i
@@ -156,12 +165,13 @@ onst]&]
 [s4; &]
 [s5;:ValueArray`:`:Serialize`(Stream`&`): [@(0.0.255) void]_[* Serialize]([_^Stream^ Stream
 ][@(0.0.255) `&]_[*@3 s])&]
-[s2;%% Serializes ValueArray. All items must have serialization implemented.&]
+[s2;%% Serializes ValueArray. All elements must have serialization 
+implemented.&]
 [s3;%% &]
 [s4; &]
 [s5;:ValueArray`:`:Jsonize`(JsonIO`&`): [@(0.0.255) void]_[* Jsonize]([_^JsonIO^ JsonIO][@(0.0.255) `&
 ]_[*@3 jio])&]
-[s2;%% Converts ValueArray to/from JSON. All items must have JSON 
+[s2;%% Converts ValueArray to/from JSON. All elements must have JSON 
 conversion implemented.&]
 [s3;%% &]
 [s4; &]
