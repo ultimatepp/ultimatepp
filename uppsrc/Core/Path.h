@@ -288,9 +288,13 @@ public:
 	enum {
 		UNKNOWN, NETWORK, GROUP, SERVER, SHARE
 	};
-	String         GetName() const    { return name; }
-	String         GetPath() const    { return path; }
+	String         GetName() const     { return name; }
+	String         GetPath() const     { return path; }
 	int            GetDisplayType() const;
+	String         GetRemote() const   { return remote; }
+	String         GetLocal() const    { return local; }
+	String         GetProvider() const { return provider; }
+	String         GetComment() const  { return comment; }
 	Array<NetNode> Enum() const;
 
 	void           Serialize(Stream& s);
