@@ -112,6 +112,11 @@ public:
 
 	void    *GetVoidPtr() const        { return ptr; }
 
+	template <class T>
+	bool     Is() const                { return GetType() == GetValueTypeNo<T>(); }
+	template <class T>
+	T&       Get() const               { ASSERT(GetValueTypeNo<T>() == GetType()); return *(T *)GetVoidPtr(); }
+
 	void     SetNull()                 { if(m) m->SetNull(ptr); }
 	Value    GetValue() const          { return m ? m->GetValue(ptr) : Value(); }
 	void     SetValue(const Value& v)  { ASSERT(m); m->SetValue(ptr, v); }
@@ -153,6 +158,12 @@ inline Value&   RefValue(Ref f)   { ASSERT(f.GetType() == VALUE_V);
 template <class T>
 Ref AsRef(T& x) {
 	return Ref(&x, &Single< StdRef<T> >());
+}
+
+template <class T, dword type, class B>
+ValueType<T, type, B>::operator Ref()
+{
+	return AsRef(*static_cast<T*>(this));
 }
 
 #define E__Value(I)   Value p##I
