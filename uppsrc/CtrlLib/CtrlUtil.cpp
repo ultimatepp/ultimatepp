@@ -64,7 +64,7 @@ void Animate(Ctrl& c, int x, int y, int cx, int cy, int type)
 bool CtrlLibDisplayError(const Value& e) {
 	if(!e.IsError())
 		return false;
-	String s = ValueTo<String>(e);
+	String s = GetErrorText(e);
 	if(s.IsEmpty())
 		s = t_("Invalid data.");
 	Exclamation(s);
