@@ -49,6 +49,7 @@ template<> inline dword ValueTypeNo(const String*)  { return STRING_V; }
 template<> inline dword ValueTypeNo(const WString*) { return WSTRING_V; }
 template<> inline dword ValueTypeNo(const Date*)    { return DATE_V; }
 template<> inline dword ValueTypeNo(const Time*)    { return TIME_V; }
+template<> inline dword ValueTypeNo(const Value*)   { return VALUE_V; }
 
 template <class T, dword type, class B = EmptyClass>
 class ValueType : public B {
