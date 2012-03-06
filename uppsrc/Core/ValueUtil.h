@@ -87,7 +87,6 @@ struct RefManager {
 	virtual bool  IsNull(const void *)              { return false; }
 	virtual void  SetValue(void *, const Value& v)  { NEVER(); }
 	virtual void  SetNull(void *)                   { NEVER(); }
-	virtual void  Assign(void *t, const void *s)    { NEVER(); }
 	virtual ~RefManager() {}
 };
 
@@ -98,7 +97,6 @@ struct StdRef : public RefManager {
 	virtual int   GetType()                         { return GetValueTypeNo<T>(); }
 	virtual bool  IsNull(const void *p)             { return UPP::IsNull(*(T *) p); }
 	virtual void  SetNull(void *p)                  { UPP::SetNull(*(T *)p); }
-	void Assign(void *t, const void *s)             { *(T*)t = *(T*)s; }
 	virtual ~StdRef() {}
 };
 
@@ -126,8 +124,6 @@ public:
 	operator Value() const             { return GetValue(); }
 	Value    operator~() const         { return GetValue(); }
 	Ref&     operator=(const Value& v) { SetValue(v); return *this; }
-//	Ref&     operator=(const Ref& r);
-//	Ref&     operator=(ValueTypeRef& r);
 
 	Ref(String& s);
 	Ref(WString& s);
@@ -176,21 +172,6 @@ Ref::Ref(const ValueTypeRef& r)
 	ptr = r.ptr;
 	m = r.m;
 }
-/*
-Ref& Ref::operator=(ValueTypeRef& r)
-{
-	ASSERT(r.m->GetType() == GetType());
-	m->Assign(ptr, r.ptr);
-	return *this;
-}
-
-Ref& Ref::operator=(const Ref& r)
-{
-	ASSERT(r.m->GetType() == GetType());
-	m->Assign(ptr, r.ptr);
-	return *this;
-}
-*/
 
 template <class T, dword type, class B>
 ValueType<T, type, B>::operator ValueTypeRef()
