@@ -223,11 +223,13 @@ onst]&]
 code custom Value rich compatible concrete types. Such types 
 should derive from this class, which serves to&]
 [s2; &]
-[s2; `- assign Value type number to the concrete class (parameter 
+[s2;i150;O0; assign Value type number to the concrete class (parameter 
 [%-*@4 type])&]
-[s2; `- predefines some rich specific methods as `'empty`' for the 
-class. Derived type thus can only implement methods it needs 
+[s2;i150;O0; predefines some rich specific methods as `'empty`' for 
+the class. Derived type thus can only implement methods it needs 
 (e.g. that required for client code).&]
+[s2;i150;O0; adds conversion operator to implement Ref (generic reference) 
+compatibility&]
 [s2; &]
 [s2; The list of `'empty`' methods of ValueType thus also serves 
 as list of methods that Value compatible concrete type might 
@@ -268,7 +270,10 @@ onst]_[*@4 T][@(0.0.255) `&])_[@(0.0.255) const]&]
 [s4;%- &]
 [s5;:ValueType`:`:ToString`(`)const:%- [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]
 [s2; Conversion to text. ValueType returns empty String.&]
-[s0;%- &]
+[s3;%- &]
+[s4;%- &]
+[s5;:ValueType`:`:operator Ref`(`):%- [* operator_Ref]()&]
+[s2; Returns a Ref (generic reference) to the instance of T.&]
 [s0;%- &]
 [ {{10000@(113.42.0) [s0; [*@7;4 Value support functions]]}}&]
 [s0;%- &]

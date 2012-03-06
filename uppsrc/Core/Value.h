@@ -5,6 +5,7 @@ class ValueArray;
 class ValueMap;
 class XmlIO;
 class JsonIO;
+class Ref;
 
 template <class T>
 void Jsonize(JsonIO& io, T& var);
@@ -59,6 +60,8 @@ public:
 	unsigned GetHashValue() const                   { return 0; }
 	bool     operator==(const T&) const             { NEVER(); return false; }
 	String   ToString() const                       { return typeid(T).name(); }
+	
+	operator Ref();
 };
 
 template <class T, dword type, class B = EmptyClass> // Backward compatiblity
