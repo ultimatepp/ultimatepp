@@ -1,11 +1,13 @@
 #ifdef SVO_VALUE
 
-class Id;
-class ValueArray;
-class ValueMap;
-class XmlIO;
-class JsonIO;
-class Ref;
+class   Id;
+class   ValueArray;
+class   ValueMap;
+class   XmlIO;
+class   JsonIO;
+
+class   Ref;
+struct  ValueTypeRef;
 
 template <class T>
 void Jsonize(JsonIO& io, T& var);
@@ -61,7 +63,7 @@ public:
 	bool     operator==(const T&) const             { NEVER(); return false; }
 	String   ToString() const                       { return typeid(T).name(); }
 	
-	operator Ref();
+	operator ValueTypeRef();
 };
 
 template <class T, dword type, class B = EmptyClass> // Backward compatiblity
