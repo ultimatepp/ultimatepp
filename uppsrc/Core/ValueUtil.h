@@ -87,6 +87,7 @@ struct RefManager {
 	virtual bool  IsNull(const void *)              { return false; }
 	virtual void  SetValue(void *, const Value& v)  { NEVER(); }
 	virtual void  SetNull(void *)                   { NEVER(); }
+	virtual void  Assign(void *t, const void *s)    { NEVER(); }
 	virtual ~RefManager() {}
 };
 
@@ -97,6 +98,7 @@ struct StdRef : public RefManager {
 	virtual int   GetType()                         { return GetValueTypeNo<T>(); }
 	virtual bool  IsNull(const void *p)             { return UPP::IsNull(*(T *) p); }
 	virtual void  SetNull(void *p)                  { UPP::SetNull(*(T *)p); }
+	void Assign(void *t, const void *s)             { *(T*)t = *(T*)s; }
 	virtual ~StdRef() {}
 };
 
@@ -113,7 +115,7 @@ public:
 	void    *GetVoidPtr() const        { return ptr; }
 
 	template <class T>
-	bool     Is() const                { return GetType() == GetValueTypeNo<T>(); }
+	bool     Is() const                { return GetType() == GetValueTypeNo<T>(); } // VALUE_V!!!
 	template <class T>
 	T&       Get() const               { ASSERT(GetValueTypeNo<T>() == GetType()); return *(T *)GetVoidPtr(); }
 
@@ -124,6 +126,8 @@ public:
 	operator Value() const             { return GetValue(); }
 	Value    operator~() const         { return GetValue(); }
 	Ref&     operator=(const Value& v) { SetValue(v); return *this; }
+//	Ref&     operator=(const Ref& r);
+//	Ref&     operator=(ValueTypeRef& r);
 
 	Ref(String& s);
 	Ref(WString& s);
@@ -135,6 +139,7 @@ public:
 	Ref(Time& t);
 	Ref(Value& v);
 	Ref(void *_ptr, RefManager *_m)    { ptr = _ptr, m = _m; }
+	Ref(const ValueTypeRef& r);
 	Ref()                              { ptr = m = NULL; }
 };
 
@@ -160,10 +165,40 @@ Ref AsRef(T& x) {
 	return Ref(&x, &Single< StdRef<T> >());
 }
 
-template <class T, dword type, class B>
-ValueType<T, type, B>::operator Ref()
+struct ValueTypeRef {
+	RefManager *m;
+	void       *ptr;
+};
+
+inline
+Ref::Ref(const ValueTypeRef& r)
 {
-	return AsRef(*static_cast<T*>(this));
+	ptr = r.ptr;
+	m = r.m;
+}
+/*
+Ref& Ref::operator=(ValueTypeRef& r)
+{
+	ASSERT(r.m->GetType() == GetType());
+	m->Assign(ptr, r.ptr);
+	return *this;
+}
+
+Ref& Ref::operator=(const Ref& r)
+{
+	ASSERT(r.m->GetType() == GetType());
+	m->Assign(ptr, r.ptr);
+	return *this;
+}
+*/
+
+template <class T, dword type, class B>
+ValueType<T, type, B>::operator ValueTypeRef()
+{
+	ValueTypeRef h;
+	h.ptr = this;
+	h.m = &Single< StdRef<T> >();
+	return h;
 }
 
 #define E__Value(I)   Value p##I
