@@ -190,7 +190,7 @@ void Splitter::Serialize(Stream& s) {
 	}
 	if(s.IsLoading()) {
 		for(int i = 0; i < pos.GetCount(); i++)
-			if(pos[i] < 0 || pos[i] >= 10000) {
+			if(pos[i] < 0 || pos[i] > 10000) {
 				pos.Clear();
 				s.LoadError();
 			}
