@@ -31,7 +31,7 @@ template<> String AsString(const Ctrl::LogPos& pos);
 
 template<> Stream& operator%(Stream& s, Ctrl::LogPos& pos);
 template<> void Xmlize(XmlIO& xml, Ctrl::LogPos& pos);
-
+template<> void Jsonize(JsonIO& jio, Ctrl::LogPos& pos);
 
 END_UPP_NAMESPACE
 
