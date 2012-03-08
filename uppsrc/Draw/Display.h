@@ -55,10 +55,10 @@ struct AttrText {
 	operator Value() const;
 	AttrText(const Value& v);
 
-	AttrText(const char *text);
-	AttrText(const wchar *text);
-	AttrText(const WString& text);
-	AttrText(const String& text);
+	explicit AttrText(const char *text);
+	explicit AttrText(const wchar *text);
+	explicit AttrText(const WString& text);
+	explicit AttrText(const String& text);
 	AttrText()                                      { Init(); }
 
 private:
