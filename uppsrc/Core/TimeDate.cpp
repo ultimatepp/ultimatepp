@@ -479,7 +479,7 @@ Time ScanTime(const char *datefmt, const char *s, Time def)
 	return def;
 }
 
-Time ScanDate(const char *s, Time def)
+Time ScanTime(const char *s, Time def)
 {
 	Time tm;
 	if(StrToTime(tm, s))
