@@ -267,15 +267,15 @@ NAMESPACE_UPP
 
 #include "Parser.h"
 #include "JSON.h"
-#include "Gtypes.h"
 #include "XML.h"
+#include "Xmlize.h"
+
+#include "Gtypes.h"
 #include "Lang.h"
 #include "i18n.h"
 #include "Topic.h"
 
 #include "App.h"
-
-#include "Xmlize.h"
 
 #include "CoWork.h"
 

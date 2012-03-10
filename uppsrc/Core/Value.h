@@ -1,6 +1,7 @@
 #ifdef SVO_VALUE
 
 class   Id;
+class   Value;
 class   ValueArray;
 class   ValueMap;
 class   XmlIO;
