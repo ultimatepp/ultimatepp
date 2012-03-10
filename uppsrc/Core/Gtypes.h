@@ -726,3 +726,20 @@ double Distance(const Pointf& p1, const Pointf& p2);
 double SquaredDistance(const Pointf& p1, const Pointf& p2);
 Pointf Polar(double a);
 Pointf Polar(const Pointf& p, double r, double a);
+
+#ifndef SVO_VALUE
+template<> void Xmlize(XmlIO& xml, Point& p);
+template<> void Xmlize(XmlIO& xml, Point16& p);
+template<> void Xmlize(XmlIO& xml, Point64& p);
+template<> void Xmlize(XmlIO& xml, Pointf& p);
+
+template<> void Xmlize(XmlIO& xml, Size& sz);
+template<> void Xmlize(XmlIO& xml, Size16& sz);
+template<> void Xmlize(XmlIO& xml, Size64& sz);
+template<> void Xmlize(XmlIO& xml, Sizef& sz);
+
+template<> void Xmlize(XmlIO& xml, Rect& r);
+template<> void Xmlize(XmlIO& xml, Rect16& r);
+template<> void Xmlize(XmlIO& xml, Rect64& r);
+template<> void Xmlize(XmlIO& xml, Rectf& r);
+#endif
