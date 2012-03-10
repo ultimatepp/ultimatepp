@@ -153,6 +153,7 @@ VALUE_XMLIZE(byte);
 VALUE_XMLIZE(Time);
 VALUE_XMLIZE(Date);
 
+#ifndef SVO_VALUE
 template <class T>
 void XmlizePoint_(XmlIO& xml, T& p)
 {
@@ -211,7 +212,6 @@ void Xmlize(XmlIO& xml, Color& c)
 	c = Color(r, g, b);
 }
 
-#ifndef SVO_VALUE
 typedef void (*ValueXmlizer)(XmlIO& xml, Value& v);
 
 VectorMap<dword, ValueXmlizer>& ValueXmlizeMap()

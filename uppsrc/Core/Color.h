@@ -46,6 +46,7 @@ public:
 
 	void     Serialize(Stream& s)      { s % color; }
 	void     Jsonize(JsonIO& jio);
+	void     Xmlize(XmlIO& xio);
 
 	Color()                            { SetNull(); }
 	Color(int r, int g, int b)         { color = RGB(r, g, b); }

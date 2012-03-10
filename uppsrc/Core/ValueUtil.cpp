@@ -538,7 +538,7 @@ void Complex::Xmlize(XmlIO& xio)
 {
 	double r, i;
 	r = real(); i = imag();
-	xio.Attr("real", r).Attr("image", i);
+	xio.Attr("real", r).Attr("imag", i);
 	*this = C(r, i);
 }
 
