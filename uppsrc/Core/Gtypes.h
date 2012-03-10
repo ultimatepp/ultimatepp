@@ -82,6 +82,7 @@ struct Size_ : Moveable< Size_<T> > {
 
 	void Serialize(Stream& s)                  { s % cx % cy; }
 	void Jsonize(JsonIO& jio)                  { jio("cx", cx)("cy", cy); }
+	void Xmlize(XmlIO& xio)                    { xio.Attr("cx", cx).Attr("cy", cy); }
 
 #ifdef PLATFORM_WIN32
 	operator SIZE*()                           { ASSERT(sizeof(*this) == sizeof(SIZE)); return (SIZE*)this; }
@@ -190,6 +191,7 @@ struct Point_ : Moveable< Point_<T> > {
 
 	void Serialize(Stream& s)                       { s % x % y; }
 	void Jsonize(JsonIO& jio)                       { jio("x", x)("y", y); }
+	void Xmlize(XmlIO& xio)                         { xio.Attr("x", x).Attr("y", y); }
 
 #ifdef PLATFORM_WIN32
 	operator POINT*()                               { ASSERT(sizeof(*this) == sizeof(POINT)); return (POINT*)this; }
@@ -368,8 +370,9 @@ struct Rect_ : Moveable< Rect_<T> > {
 	operator Value() const           { return RichValue<Rect_>(*this); }
 	/*explicit */Rect_(const Value& src) { *this = RichValue<Rect_>::Extract(src); }
 
-	void     Serialize(Stream& s)    { s % left % top % right % bottom; }
-	void     Jsonize(JsonIO& jio)    { jio("left", left)("top", top)("right", right)("bottom", bottom); }
+	void     Serialize(Stream& s) { s % left % top % right % bottom; }
+	void     Jsonize(JsonIO& jio) { jio("left", left)("top", top)("right", right)("bottom", bottom); }
+	void     Xmlize(XmlIO& xio)   { xio.Attr("left", left).Attr("top", top).Attr("right", right).Attr("bottom", bottom); }
 
 #ifdef PLATFORM_WIN32
 	operator const RECT*() const { ASSERT(sizeof(*this) == sizeof(RECT)); return (RECT*)this; }

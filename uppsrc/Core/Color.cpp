@@ -97,6 +97,19 @@ void Color::Jsonize(JsonIO& jio)
 	*this = Color(r, g, b);	
 }
 
+void Color::Xmlize(XmlIO& xio)
+{
+	int r = GetR();
+	int g = GetG();
+	int b = GetB();
+	xio
+		.Attr("red", r)
+		.Attr("green", g)
+		.Attr("blue", b)
+	;
+	*this = Color(r, g, b);
+}
+
 RGBA operator*(int alpha, Color c)
 {
 	RGBA r;

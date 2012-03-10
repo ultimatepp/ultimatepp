@@ -304,12 +304,4 @@ template<> void Jsonize(JsonIO& io, Time& var)
 				          var.year, var.month, var.day, var.hour, var.minute, var.second));
 }
 
-template<> void Jsonize(JsonIO& io, Complex& var)
-{
-	double r = var.real();
-	double i = var.imag();
-	io("real", r)("imag", i);
-	var = Complex(r, i);
-}
-
 END_UPP_NAMESPACE
