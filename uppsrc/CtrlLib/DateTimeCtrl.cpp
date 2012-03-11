@@ -142,7 +142,7 @@ int	Calendar::DayOfWeek(int day, int month, int year, int zelleroffset)
 	int n1 = (26 * (month + 1)) / 10;
 	int n2 = (125 * year) / 100;
 
-	return ((day + n1 + n2 - (year / 100) + (year / 400) - zelleroffset) % 7);
+	return ((day + (8 - first_day) + n1 + n2 - (year / 100) + (year / 400) - zelleroffset) % 7);
 }
 
 int Calendar::WeekOfYear(int day, int month, int year) /* ISO-8601 */
