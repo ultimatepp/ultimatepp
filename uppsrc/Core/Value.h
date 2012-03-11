@@ -137,7 +137,8 @@ protected:
 	void     InitRef(Void *p)        { data.SetSpecial(REF); ptr() = p; }
 	void     RefRelease();
 	void     RefRetain();
-	void     Free()                  { if(IsRef()) RefRelease(); }
+	void     FreeRef()               { if(IsRef()) RefRelease(); }
+	void     Free()                  { FreeRef(); data.Clear(); }
 	void     SetLarge(const Value& v);
 
 	template <class T>

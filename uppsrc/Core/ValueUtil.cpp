@@ -28,7 +28,7 @@ Ref::Ref(Value& v)   { ptr = &v; m = &Single< ValueRef >(); }
 
 bool ValueArray::Data::IsNull() const
 {
-	return this == &Single<ValueArray::NullData>();
+	return data.IsEmpty();
 }
 
 void ValueArray::Data::Serialize(Stream& s)

@@ -32,7 +32,7 @@ void Value::RefRetain()
 
 Value& Value::operator=(const Value& v) {
 	if(this == &v) return *this;
-	Free();
+	FreeRef();
 	data = v.data;
 	if(IsRef())
 		ptr()->Retain();

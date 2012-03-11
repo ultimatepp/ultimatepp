@@ -90,24 +90,42 @@ Color::Color(RGBA rgba)
 
 void Color::Jsonize(JsonIO& jio)
 {
-	int r = GetR();
-	int g = GetG();
-	int b = GetB();
+	int r, g, b;
+	if(IsNullInstance()) {
+		r = g = b = Null;
+	}
+	else {
+		r = GetR();
+		g = GetG();
+		b = GetB();
+	}
 	jio("red", r)("green", g)("blue", b);
-	*this = Color(r, g, b);	
+	if(IsNull(r))
+		*this = Null;
+	else
+		*this = Color(r, g, b);	
 }
 
 void Color::Xmlize(XmlIO& xio)
 {
-	int r = GetR();
-	int g = GetG();
-	int b = GetB();
+	int r, g, b;
+	if(IsNullInstance()) {
+		r = g = b = Null;
+	}
+	else {
+		r = GetR();
+		g = GetG();
+		b = GetB();
+	}
 	xio
 		.Attr("red", r)
 		.Attr("green", g)
 		.Attr("blue", b)
 	;
-	*this = Color(r, g, b);
+	if(IsNull(r))
+		*this = Null;
+	else
+		*this = Color(r, g, b);	
 }
 
 RGBA operator*(int alpha, Color c)
