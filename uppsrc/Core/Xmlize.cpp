@@ -11,6 +11,7 @@ void Xmlize(XmlIO& xml, String& var)
 				var = xml->Node(i).GetText();
 				return;
 			}
+		var.Clear();
 	}
 	else {
 		for(int i = 0; i < xml->GetCount(); i++)

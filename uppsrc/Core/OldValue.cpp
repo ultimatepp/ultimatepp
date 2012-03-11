@@ -433,9 +433,9 @@ const Value& ValueArray::Get(int i) const {
 	return data->data[i];
 }
 
-template<>
-String AsString(const ValueArray& v) {
-	return sAsString(v.Get());
+String ValueArray::ToString() const
+{
+	return sAsString(Get());
 }
 
 bool ValueMap::Data::IsNull() const {

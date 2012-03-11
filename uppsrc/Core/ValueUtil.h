@@ -225,7 +225,7 @@ public:
 	ValueArray(const Value& src);
 
 	ValueArray(const Nuller&)                 { Init0(); }
-	bool IsNull() const                       { return data->IsNull(); }
+	bool IsNullInstance() const               { return IsEmpty(); }
 
 	void Clear();
 	void SetCount(int n);
@@ -247,15 +247,13 @@ public:
 	const Value& operator[](int i) const      { return Get(i); }
 
 	unsigned GetHashValue() const             { return data->GetHashValue(); }
-	void  Serialize(Stream& s);
-	void  Jsonize(JsonIO& jio);
+	void     Serialize(Stream& s);
+	void     Jsonize(JsonIO& jio);
+	String   ToString() const;
 
 	bool operator==(const ValueArray& v) const;
 	bool operator!=(const ValueArray& v) const  { return !operator==(v); }
 };
-
-template<> inline unsigned GetHashValue(const ValueArray& v) { return v.GetHashValue(); }
-template<> inline bool     IsNull(const ValueArray& v)       { return v.IsNull(); }
 
 template<>
 String AsString(const ValueArray& v);
@@ -300,7 +298,7 @@ public:
 	ValueMap(const Value& src);
 
 	ValueMap(const Nuller&)                  { Init0(); }
-	bool IsNullInstance() const              { return data->IsNull(); }
+	bool IsNullInstance() const              { return IsEmpty(); }
 
 	void Clear();
 	int  GetCount() const                     { return data->value.GetCount(); }
