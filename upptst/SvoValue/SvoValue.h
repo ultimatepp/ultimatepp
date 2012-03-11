@@ -19,7 +19,7 @@ void CheckCreateRawValue();
 template <class T>
 void CheckNumber()
 {
-	RLOG("---------------------------");
+	RLOG("========================================================");
 	RLOG("CheckNumber " << typeid(T).name());
 	Value v = (T)123;
 	Value v2 = (T)0;
@@ -52,7 +52,7 @@ void CheckNumber()
 template <class T>
 void CheckType(const T& x, bool checkhash = false)
 {
-	RLOG("---------------------------");
+	RLOG("========================================================");
 	RLOG("CheckType " << typeid(T).name() << " = " << x);
 	String fn;
 	Value vf;
@@ -110,6 +110,7 @@ void CheckType(const T& x, bool checkhash = false)
 	Value vn = (T)Null;
 	ASSERT(IsNull(vn) || vn.Is<bool>());
 
+	DLOG("----------");
 	RDUMP(v);
 	String xml = StoreAsXML(v, "test");
 	RDUMP(xml);
@@ -124,6 +125,57 @@ void CheckType(const T& x, bool checkhash = false)
 	LoadFromJson(vv, json);
 	RDUMP(vv);
 	ASSERT(vv == v);
+
+	if(!tt.Is<bool>()) {
+		DLOG("----------");
+		v = Null;
+	
+		RDUMP(v);
+		String data = StoreAsString(v);
+		vv = x;
+		LoadFromString(vv, data);
+		RDUMP(vv);
+		ASSERT(IsNull(vv));
+	
+		RDUMP(v);
+		xml = StoreAsXML(v, "test");
+		RDUMP(xml);
+		vv = x;
+		LoadFromXML(vv, xml);
+		RDUMP(vv);
+		ASSERT(IsNull(vv));
+		
+		json = StoreAsJson(v);
+		RDUMP(json);
+		vv = x;
+		LoadFromJson(vv, json);
+		RDUMP(vv);
+		ASSERT(IsNull(vv));
+	
+		DLOG("----------");
+		T tx = Null;
+		ASSERT(IsNull(tx));
+		data = StoreAsString(tx);
+		T ty = x;
+		LoadFromString(ty, data);
+		RDUMP(ty);
+		ASSERT(IsNull(ty));
+	
+		RDUMP(v);
+		xml = StoreAsXML(tx, "test");
+		RDUMP(xml);
+		ty = x;
+		LoadFromXML(ty, xml);
+		RDUMP(ty);
+		ASSERT(IsNull(ty));
+		
+		json = StoreAsJson(tx);
+		RDUMP(json);
+		ty = x;
+		LoadFromJson(ty, json);
+		RDUMP(ty);
+		ASSERT(IsNull(vv));
+	}
 }
 
 #endif
