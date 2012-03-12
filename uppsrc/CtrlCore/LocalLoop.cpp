@@ -105,6 +105,14 @@ int RectTracker::TrackVertLine(int x0, int y0, int cy, int line)
 	return Track(RectC(x0, y0, line + 1, cy), ALIGN_RIGHT, -1).right - 1;
 }
 
+Rect RectTracker::Round(const Rect& r)
+{
+	Rect h = r;
+	if(round)
+		round(h);
+	return rounder ? rounder->Round(h) : h;
+}
+
 void RectTracker::MouseMove(Point, dword)
 {
 	Point p = GetMousePos();
@@ -181,69 +189,6 @@ void RectTracker::MouseMove(Point, dword)
 	}
 }
 
-/*
-void RectTracker::MouseMove(Point, dword)
-{
-	Point p = GetMousePos();
-	rect = org;
-	if(tx == ALIGN_CENTER && ty == ALIGN_CENTER) {
-		int x = org.left - op.x + p.x;
-		int y = org.top - op.y + p.y;
-		if(x + org.Width() > maxrect.right)
-			x = maxrect.right - org.Width();
-		if(x < maxrect.left)
-			x = maxrect.left;
-		if(y + org.Height() > maxrect.bottom)
-			y = maxrect.bottom - org.Height();
-		if(y < maxrect.top)
-			y = maxrect.top;
-		rect = RectC(x, y, org.Width(), org.Height());
-	}
-	else {
-		if(tx == ALIGN_LEFT) {
-			rect.left = max(org.left - op.x + p.x, maxrect.left);
-			rect.left = minmax(rect.left, rect.right - maxsize.cx, rect.right - minsize.cx);
-		}
-		if(tx == ALIGN_RIGHT) {
-			rect.right = min(org.right - op.x + p.x, maxrect.right);
-			rect.right = minmax(rect.right, rect.left + minsize.cx, rect.left + maxsize.cx);
-		}
-		if(ty == ALIGN_TOP) {
-			rect.top = max(org.top - op.y + p.y, maxrect.top);
-			rect.top = minmax(rect.top, rect.bottom - maxsize.cy, rect.bottom - minsize.cy);
-		}
-		if(ty == ALIGN_BOTTOM) {
-			rect.bottom = min(org.bottom - op.y + p.y, maxrect.bottom);
-			rect.bottom = minmax(rect.bottom, rect.top + minsize.cy, rect.top + maxsize.cy);
-		}
-		if(keepratio) {
-			int cy = org.Width() ? rect.Width() * org.Height() / org.Width() : 0;
-			int cx = org.Height() ? rect.Height() * org.Width() / org.Height() : 0;
-			if(tx == ALIGN_BOTTOM && ty == ALIGN_RIGHT) {
-				Size sz = rect.Size();
-				if(cx > sz.cx)
-					rect.right = rect.left + cx;
-				else
-					rect.bottom = rect.top + cy;
-			}
-			else
-			if(tx == ALIGN_RIGHT)
-				rect.bottom = rect.top + cy;
-			else
-			if(ty == ALIGN_BOTTOM)
-				rect.right = rect.left + cx;
-		}
-	}
-	if(rect != o) {
-		rect = Round(rect);
-		if(rect != o) {
-			DrawRect(o, rect);
-			sync(rect);
-			o = rect;
-		}
-	}
-}
-*/
 class PointLooper : public LocalLoop {
 	const Vector<Image>& ani;
 	int ani_ms;

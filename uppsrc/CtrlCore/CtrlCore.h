@@ -1449,12 +1449,13 @@ protected:
 	Rect            o;
 	Point           op;
 
-	Rect            Round(const Rect& r)           { return rounder ? rounder->Round(r) : r; }
+	Rect            Round(const Rect& r);
 
 	virtual void    DrawRect(Rect r1, Rect r2);
 
 public:
-	Callback1<Rect> sync;
+	Callback1<Rect>  sync;
+	Callback1<Rect&> round;
 
 	RectTracker&    SetCursorImage(const Image& m) { cursorimage = m; return *this; }
 	RectTracker&    MinSize(Size sz)               { minsize = sz; return *this; }

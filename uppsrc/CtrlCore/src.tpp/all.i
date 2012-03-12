@@ -18,3 +18,7 @@ TOPIC("PasteClipUtil$en-us")
 #include "PasteClipUtil$en-us.tppi"
 END_TOPIC
 
+TOPIC("RectTracker$en-us")
+#include "RectTracker$en-us.tppi"
+END_TOPIC
+
