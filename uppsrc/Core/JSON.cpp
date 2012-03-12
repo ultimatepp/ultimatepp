@@ -251,15 +251,12 @@ template<> void Jsonize(JsonIO& io, Date& var)
 		if(IsString(v)) {
 			String text = v;
 			if(text.GetCount() > 6) {
-				DDUMP(text);
 				Date d;
 				d.year = ScanInt(text.Left(4));
 				d.month = ScanInt(text.Mid(4, 2));
 				d.day = ScanInt(text.Mid(6));
-				DDUMP(d);
 				if(d.IsValid()) {
 					var = d;
-					DDUMP(var);
 					return;
 				}
 			}
