@@ -433,11 +433,6 @@ const Value& ValueArray::Get(int i) const {
 	return data->data[i];
 }
 
-String ValueArray::ToString() const
-{
-	return sAsString(Get());
-}
-
 bool ValueMap::Data::IsNull() const {
 	return this == &Single<ValueMap::NullData>();
 }
