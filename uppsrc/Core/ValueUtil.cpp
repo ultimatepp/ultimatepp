@@ -168,6 +168,11 @@ void ValueArray::Jsonize(JsonIO& jio)
 	data->Jsonize(jio);
 }
 
+String ValueArray::ToString() const
+{
+	return sAsString(Get());
+}
+
 ValueArray::~ValueArray() {
 	ASSERT(data->GetRefCount() > 0);
 	data->Release();
