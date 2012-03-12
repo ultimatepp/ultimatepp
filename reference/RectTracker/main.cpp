@@ -5,6 +5,15 @@ using namespace Upp;
 struct MyApp : TopWindow {
 	Rect rect;
 	int  hline, vline;
+	
+	typedef MyApp CLASSNAME;
+	
+	void Round(Rect& r)
+	{
+		int cx = r.GetWidth();
+		r.left = r.left / 10 * 10;
+		r.right = r.left + cx;
+	}
 
 	virtual void Paint(Draw& w)
 	{
@@ -20,6 +29,7 @@ struct MyApp : TopWindow {
 		Size sz = GetSize();
 		if(keyflags & K_ALT) {
 			tr.Dashed().Animation();
+			tr.round = THISBACK(Round);
 			rect = tr.Track(rect, ALIGN_CENTER, ALIGN_CENTER);
 		}
 		else
@@ -33,7 +43,7 @@ struct MyApp : TopWindow {
 			vline = tr.TrackVertLine(0, 0, sz.cy, vline);
 		}
 		else {
-			tr.Dashed().Animation();
+			tr.Normal();
 			rect = tr.Track(rect, ALIGN_RIGHT, ALIGN_BOTTOM);
 		}
 		Refresh();
