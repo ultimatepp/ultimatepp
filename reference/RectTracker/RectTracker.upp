@@ -1,4 +1,4 @@
-description "Positioning loop example";
+description "Positioning loop example\377";
 
 uses
 	CtrlLib;
