@@ -1,15 +1,3 @@
-TOPIC("FAQ$de-de")
-#include "FAQ$de-de.tppi"
-END_TOPIC
-
-TOPIC("FAQ$en-us")
-#include "FAQ$en-us.tppi"
-END_TOPIC
-
-TOPIC("Funding$de-de")
-#include "Funding$de-de.tppi"
-END_TOPIC
-
 TOPIC("apps$de-de")
 #include "apps$de-de.tppi"
 END_TOPIC
@@ -34,6 +22,10 @@ TOPIC("comparison$de-de")
 #include "comparison$de-de.tppi"
 END_TOPIC
 
+TOPIC("cookie$en-us")
+#include "cookie$en-us.tppi"
+END_TOPIC
+
 TOPIC("documentation$de-de")
 #include "documentation$de-de.tppi"
 END_TOPIC
@@ -56,6 +48,18 @@ END_TOPIC
 
 TOPIC("download$ru-ru")
 #include "download$ru-ru.tppi"
+END_TOPIC
+
+TOPIC("FAQ$de-de")
+#include "FAQ$de-de.tppi"
+END_TOPIC
+
+TOPIC("FAQ$en-us")
+#include "FAQ$en-us.tppi"
+END_TOPIC
+
+TOPIC("Funding$de-de")
+#include "Funding$de-de.tppi"
 END_TOPIC
 
 TOPIC("idess$de-de")
