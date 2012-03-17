@@ -1050,6 +1050,8 @@ bool FileFlush(FileStream& stream)
 	return !fsync(stream.GetHandle());
 #endif
 }
+
+/*
 bool EqualsPath(const char *a, const char *b, int length)
 {
 	if(!length)
@@ -1061,10 +1063,11 @@ bool EqualsPath(const char *a, const char *b, int length)
 #endif
 }
 
-bool EqualsPath(String fa, String fb)
+bool EqualsPath(const String& fa, const String& fb)
 {
 	return fa.GetLength() == fb.GetLength() && EqualsPath(fa, fb, fa.GetLength());
 }
+*/
 
 String MakePathLower(String path)
 {
