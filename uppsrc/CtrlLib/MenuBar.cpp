@@ -541,7 +541,7 @@ void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 		SetRect(p.x, p.y, sz.cx, sz.cy);
 #ifdef PLATFORM_WIN32
 	DWORD dummy;
-	CreateThread(NULL, 0, PlaySoundThread, NULL, 0, &dummy);
+	CloseHandle(CreateThread(NULL, 0, PlaySoundThread, NULL, 0, &dummy));
 #endif
 	doeffect = true;
 	Ctrl::PopUp(owner, true, true, GUI_DropShadows(), !owner);
