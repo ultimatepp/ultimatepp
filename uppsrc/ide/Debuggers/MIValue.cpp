@@ -273,7 +273,7 @@ String MIValue::Get(const char *key, const char *def) const
 	if(i >= 0)
 	{
 		ASSERT(tuple[i].type == MIString);
-		return tuple[i];
+		return tuple[i].Get();
 	}
 	else
 		return def;

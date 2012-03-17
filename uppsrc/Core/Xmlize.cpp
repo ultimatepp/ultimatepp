@@ -360,7 +360,8 @@ bool LoadFromXML(Callback1<XmlIO> xmlize, const String& xml)
 		XmlNode node = ParseXML(xml);
 		for(int i = 0; i < node.GetCount(); i++)
 			if(node.Node(i).IsTag()) {
-				xmlize(XmlIO(node.At(i), true, Value()));
+				Value dummy;
+				xmlize(XmlIO(node.At(i), true, dummy));
 				break;
 			}
 		return true;

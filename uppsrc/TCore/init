@@ -3,7 +3,7 @@
 #include "Core/init"
 #include "Web/init"
 #include "plugin\dbf/init"
-#define BLITZ_INDEX__ F86AECB90B8BCD14D16E5FB9629D58AB4
+#define BLITZ_INDEX__ F85818f977ba42f8d2e1d9c6f4e48c385
 #include "TCore_init.icpp"
 #undef BLITZ_INDEX__
 #endif
