@@ -302,7 +302,7 @@ characters.&]
 [s0;l288; For example `"Århus Ørsted Ñandú crème brûlée`" 
 is converted in `"Aarhus Oersted Nandu creme brulee`"&]
 [s3;%- &]
-[s4;%- &]
+[s4; &]
 [s5;:IsPunctuation`(wchar`):%- [@(0.0.255) bool]_[* IsPunctuation]([_^wchar^ wchar]_[*@3 c])&]
 [s2; Returns true if [%-*@3 c ]is a punctuation character.&]
 [s3;%- &]
@@ -338,6 +338,91 @@ for all times [%-*@3 find] char appears.&]
 [s5;:Average`(T`,T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* Average](
 [*@4 T]_[*@3 a], [*@4 T]_[*@3 b])&]
 [s2; Returns the average of [%-*@3 a] and [%-*@3 b].&]
+[s3; &]
+[s4;%- &]
+[s5;:Average`(T`,T`,T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* Averag
+e]([*@4 T]_[*@3 a], [*@4 T]_[*@3 b], [*@4 T]_[*@3 c])&]
+[s2; Returns the average of [%-*@3 a], [%-*@3 b] and [%-*@3 c].&]
+[s3; &]
+[s4;%- &]
+[s5;:Average`(T`,T`,T`,T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* Ave
+rage]([*@4 T]_[*@3 a], [*@4 T]_[*@3 b], [*@4 T]_[*@3 c], [*@4 T]_[*@3 d])&]
+[s2; Returns the average of [%-*@3 a], [%-*@3 b], [%-*@3 c] and [%-*@3 d].&]
+[s3; &]
+[s4;%- &]
+[s5;:pow2`(T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* pow2]([*@4 T]_[*@3 a
+])&]
+[s2; Raises [%-*@3 a] to 2. Similar to sqr().&]
+[s3; &]
+[s4;%- &]
+[s5;:pow3`(T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* pow3]([*@4 T]_[*@3 a
+])&]
+[s2; Raises [%-*@3 a] to 3.&]
+[s3; &]
+[s4;%- &]
+[s5;:pow4`(T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* pow4]([*@4 T]_[*@3 a
+])&]
+[s2; Raises [%-*@3 a] to 4.&]
+[s3; &]
+[s4;%- &]
+[s5;:min`(const T`&`,const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
+[*@4 T]>_[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* min]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 a], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 b], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 c])&]
+[s2; Returns the min value of [%-*@3 a], [%-*@3 b] and [%-*@3 c].&]
+[s3; &]
+[s4;%- &]
+[s5;:min`(const T`&`,const T`&`,const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 T]>_[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* min]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 a], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 b], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 c], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 d])&]
+[s2; Returns the min value of [%-*@3 a], [%-*@3 b], [%-*@3 c] and [%-*@3 d].&]
+[s3; &]
+[s4;%- &]
+[s5;:max`(const T`&`,const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
+[*@4 T]>_[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* max]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 a], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 b], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 c])&]
+[s2; Returns the max value of [%-*@3 a], [%-*@3 b] and [%-*@3 c].&]
+[s3; &]
+[s4;%- &]
+[s5;:max`(const T`&`,const T`&`,const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 T]>_[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* max]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 a], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 b], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 c], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 d])&]
+[s2; Returns the max value of [%-*@3 a], [%-*@3 b], [%-*@3 c] and [%-*@3 d].&]
+[s3; &]
+[s4;%- &]
+[s5;:AngleAdd360`(T`,T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* Angle
+Add360]([*@4 T]_[*@3 ang], [*@4 T]_[*@3 val])&]
+[s2; Adds [%-*@3 val] to [%-*@3 ang] taking care that result is between 
+0 and 365º.&]
+[s3; &]
+[s4;%- &]
+[s5;:Distance`(const T`&`,const T`&`,const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 T]>_[@(0.0.255) const]_[*@4 T]_[* Distance]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 x1], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 y1], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 x2], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 y2])&]
+[s2; Returns the euclidean distance between ([%-*@3 x1], [%-*@3 y1]) 
+and ([%-*@3 x2], [%-*@3 y2]).&]
+[s3; &]
+[s4;%- &]
+[s5;:Distance`(const T`&`,const T`&`,const T`&`,const T`&`,const T`&`,const T`&`):%- [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) const]_[*@4 T]_[* Distance]([@(0.0.255) con
+st]_[*@4 T][@(0.0.255) `&]_[*@3 x1], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 y1], 
+[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 z1], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x
+2], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 y2], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 z2])&]
+[s2; Returns the euclidean distance between ([%-*@3 x1], [%-*@3 y1] [%-*@3 z1]), 
+and ([%-*@3 x2], [%-*@3 y2], [%-*@3 z2]).&]
+[s3; &]
+[s4;%- &]
+[s5;:Angle`(const T`&`,const T`&`,const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 T]>_[@(0.0.255) const]_[@(0.0.255) double]_[* Angle]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 x1], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 y1], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 x2], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 y2])&]
+[s2; Returns the angle between ([%-*@3 x1], [%-*@3 y1]) and ([%-*@3 x2], 
+[%-*@3 y2]).&]
 [s3; &]
 [s4;%- &]
 [s5;:Odd`(int`):%- [@(0.0.255) bool]_[* Odd]([@(0.0.255) int]_[*@3 val])&]
@@ -1575,7 +1660,7 @@ and Color [%-*@3 color].&]
 [s2;l0;:RandomColor`(`):%- [_^Color^ Color]_[* RandomColor]()&]
 [s2; Returns a random color.&]
 [s3; &]
-[s4;%- &]
+[s4; &]
 [s5;:GetRect`(const Image`&`,const Rect`&`):%- [_^Image^ Image]_[* GetRect]([@(0.0.255) con
 st]_[_^Image^ Image][@(0.0.255) `&]_[*@3 orig], [@(0.0.255) const]_[_^Rect^ Rect]_`&[*@3 r])&]
 [s2; Returns a subimage delimited by Rect [%-*@3 r] taken from [%-*@3 orig].&]

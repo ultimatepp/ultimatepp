@@ -4,7 +4,9 @@ topic "News and changes Log";
 [{_}%EN-US 
 [s0; [*R+184 Functions4U. News and changes log]&]
 [s0;%- &]
-[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2011/07/26]]
+[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2012/03/19]]
+:: [s0;# [2 Added new math and geometry functions as Distance() and Angle().]]
+:: [s0;# [2 2011/07/26]]
 :: [s0;# [2 Updated QtfEquation().]]
 :: [s0;# [2 2011/07/24]]
 :: [s0;# [2 Added SaveImage(), PrintImage() and DrawRectLine().]]

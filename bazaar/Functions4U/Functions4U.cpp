@@ -80,10 +80,7 @@ bool LaunchFileCreateProcess(const char *file) {
 }
 
 bool LaunchFileShellExecute(const char *file) {
-	HINSTANCE ret;
-	ret = ShellExecuteW(NULL, L"open", ToSystemCharsetW(file), NULL, L".", SW_SHOWNORMAL);		
-
-	return (int)ret > 32;
+	return 32 < int(ShellExecuteW(NULL, L"open", ToSystemCharsetW(file), NULL, L".", SW_SHOWNORMAL));		 
 }
 
 bool LaunchFile(const char *_file) {
@@ -707,30 +704,7 @@ String GetShellFolder(const char *local, const char *users)
   	else
   		return ret;
 }
-/*
-String GetDesktopFolder()	
-{
-	String ret = GetShellFolder("XDG_DESKTOP_DIR", "DESKTOP");
-	if (ret.IsEmpty())
-		return AppendFileName(GetHomeDirectory(), "Desktop");
-	else
-		return ret;
-}
-String GetProgramsFolder()	{return String("/usr/bin");}
-String GetAppDataFolder()	{return GetHomeDirectory();};
-String GetMusicFolder()		{return GetShellFolder("XDG_MUSIC_DIR", "MUSIC");}
-String GetPicturesFolder()	{return GetShellFolder("XDG_PICTURES_DIR", "PICTURES");}
-String GetVideoFolder()		{return GetShellFolder("XDG_VIDEOS_DIR", "VIDEOS");}
-String GetTemplatesFolder()	{return GetShellFolder("XDG_TEMPLATES_DIR", "XDG_TEMPLATES_DIR");}
-String GetDownloadFolder()	
-{
-	String browser = GetExtExecutable("html");
-	browser = ToLower(browser);
-	if (browser.Find("firefox") >= 0)
-		return GetFirefoxDownloadFolder();
-	return GetShellFolder("XDG_DOWNLOAD_DIR", "DOWNLOAD");
-};
-*/
+
 String GetTempFolder()
 {
 	return GetHomeDirectory();		
@@ -765,53 +739,6 @@ int ReverseFind(const String& s, const String& toFind, int from) {
 	}
 	return -1;
 }
-
-// Like StrToDate but using Time
-/* Now include in TimeDate
-const char *StrToTime(struct Upp::Time& d, const char *s) {
-	s = StrToDate(d, s);
-	if (!s)
-		return NULL;
-
-	d.hour = d.minute = d.second = 0;
-
-	const char *fmt = "hms";
-
-	while(*fmt) {
-		while(*s && !IsDigit(*s))
-			s++;
-		int n;
-		if(IsDigit(*s)) {
-			char *q;
-			n = strtoul(s, &q, 10);
-			s = q;
-		} else
-			break;
-
-		switch(*fmt) {
-		case 'h':
-			if(n < 0 || n > 23)
-				return NULL;
-			d.hour = n;
-			break;
-		case 'm':
-			if(n < 0 || n > 59)
-				return NULL;
-			d.minute = n;
-			break;
-		case 's':
-			if(n < 0 || n > 59)
-				return NULL;
-			d.second = n;
-			break;
-		default:
-			NEVER();
-		}
-		fmt++;
-	}
-	return d.IsValid() ? s : NULL;
-}
-*/
 
 Time StrToTime(const char *s) {
 	Time ret;
@@ -2190,23 +2117,9 @@ Color RandomColor() {
 	return Color(Random(), 0);
 }
 
-double Random(double min, double max) {
-	 return min + (max - min)*Random()/double(0xffffffff);
-}
-
-/* Included in ImageOp
-Image Rotate180(const Image& orig) {
-	Size sz = orig.GetSize();
-	ImageBuffer dest(sz);
-	for(int rw = 0; rw < sz.cy; rw++)
-		for(int cl = 0; cl < sz.cx; cl++)
-			dest[rw][cl] = orig[sz.cy - rw - 1][sz.cx - cl - 1];
-	return dest;
-}
-*/
 Image GetRect(const Image& orig, const Rect &r) {
 	if(r.IsEmpty())
-		return Image();
+		return Image(); 
 	ImageBuffer ib(r.GetSize());
 	for(int y = r.top; y < r.bottom; y++) {
 		const RGBA *s = orig[y] + r.left;

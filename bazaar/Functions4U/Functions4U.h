@@ -269,8 +269,28 @@ inline const T& max(const T& a, const T& b, const T& c, const T& d) {
 	return ab > cd ? ab : cd;
 }
 
-double Random(double min, double max);
+template <class T> 
+T AngleAdd360(T ang, T val) {
+	ang += val;
+	while (ang >= 360)
+		ang -= 360;
+	while (ang < 0)
+		ang += 360;
+	return ang;
+}
 
+template <class T> 
+inline const T Distance(const T& x1, const T& y1, const T& x2, const T& y2)  { 
+	return  sqrt(pow2(x1-x2) + pow2(y1-y2)); }
+
+template <class T> 
+inline const T Distance(const T& x1, const T& y1, const T& z1, const T& x2, const T& y2, const T& z2)  { 
+	return  sqrt(pow2(x1-x2) + pow2(y1-y2) + pow2(z1-z2)); }
+	
+template <class T> 
+inline const double Angle(const T& x1, const T& y1, const T& x2, const T& y2)  { 
+	return atan2(y2-y2, x2-x1);
+}
 
 // A String based class to parse into
 class StringParse :  public String {
