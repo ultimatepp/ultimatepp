@@ -151,7 +151,7 @@ String ReadValue(String& s,char delim1 = ',',char delim2 = ','){
 	}
 	const char* c = s;
 	for(; *c; c++){
-		if(*c==delim1 || *c==delim2 || (q && *c=='\"') && c[-1] != '\\') break;
+		if(*c==delim1 || *c==delim2 || ((q && *c=='\"') && c[-1] != '\\')) break;
 		if(*c<=(q?0:32)) continue;
 		r += *c;
 	}

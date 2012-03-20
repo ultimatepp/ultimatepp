@@ -233,7 +233,7 @@ void Parser::Process(){
 	fprintf(mf, "build: createdirs %s %s\n", ~custom, ~target);
 	fprintf(mf, "%s: %s %s\n"
 	            "	$M \"$BLinking$N $C$@$N\"\n"
-	            "	$E $(CXX) -o $@ $(LDFLAGS) $(LIBPATHS) %s -Wl,--start-group $^ %s -Wl,--end-group\n"
+	            "	$E $(CXX) -o $@ $(LDFLAGS) $(LIBPATHS) %s -Wl,--start-group $^ -Wl,--end-group -Wl,--start-group %s -Wl,--end-group\n"
 	            "%s",
 	        /*~prelink,*/ ~target, ~icpps, ~archives, ~optlist, ~liblist, ~postlink);
 	fprintf(mf, "createdirs:\n"

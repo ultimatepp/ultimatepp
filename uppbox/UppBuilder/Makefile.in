@@ -59,6 +59,10 @@ INCPATHS+= /usr/local/include/atk-1.0 /usr/local/include
 INCPATHS+= /usr/local/include/libpng /usr/include/gdk-pixbuf-2.0
 INCPATHS+= /usr/lib/i386-linux-gnu/glib-2.0/include
 INCPATHS+= /usr/lib/x86_64-linux-gnu/glib-2.0/include
+INCPATHS+= /usr/lib/i386-linux-gnu/gtk-2.0/include
+INCPATHS+= /usr/lib/x86_64-linux-gnu/gtk-2.0/include
+INCPATHS+= /usr/lib/gtk-2.0/include
+INCPATHS+= /usr/lib/glib-2.0/include
 # Paths to libraries for linker.                                       #
 LIBPATHS:=/usr/X11R6/lib /usr/lib /usr/local/lib
 # Directory to store intermediate object files                         #
