@@ -17,6 +17,8 @@ DISTS="$LOCAL_DISTS"
 TMP="$LOCAL_TMP"
 . "$RES_DIR/dsccreate.sh"
 
+export PATH=$PATH:/usr/sbin
+
 for dist in $LOCAL_DISTS; do
   for arch in $ARCHS; do
     # create the chroot if it doesn't exist yet
