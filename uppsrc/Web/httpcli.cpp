@@ -47,21 +47,24 @@ HttpClient::~HttpClient()
 HttpClient& HttpClient::URL(const char *u)
 {
 	const char *t = u;
-	while(*t && *t != '?')
+	while(*t && *t != '?' && *t != '#')
 		if(*t++ == '/' && *t == '/') {
 			u = ++t;
 			break;
 		}
 	t = u;
-	while(*u && *u != ':' && *u != '/' && *u != '?')
+	while(*u && *u != ':' && *u != '/' && *u != '?' && *u != '#')
 		u++;
-	if(*u == '?' && u[1])
+	if(strchr(u, '?'))
 		hasurlvar = true;
 	host = String(t, u);
 	port = 0;
 	if(*u == ':')
 		port = ScanInt(u + 1, &u);
 	path = u;
+	int q = path.Find('#');
+	if(q >= 0)
+		path.Trim(q);
 	return *this;
 }
 
@@ -172,7 +175,7 @@ String HttpClient::CalculateDigest(String authenticate) const
 	hv1 << username << ':' << realm << ':' << password;
 	String ha1 = MD5String(hv1);
 	hv2 << (method == METHOD_GET ? "GET" : method == METHOD_PUT ? "PUT" : method == METHOD_POST ? "POST" : "READ")
-	<< ':' << path;
+	<< ':' << UrlEncode(path);
 	String ha2 = MD5String(hv2);
 	int nc = 1;
 	String cnonce = FormatIntHex(Random(), 8);
