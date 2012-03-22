@@ -47,10 +47,15 @@ void operator*=(DropList& dl, const SqlSelect& set) {
 
 void  SqlOption::SetData(const Value& data) {
 	String s = data;
-	Set(!(IsNull(s) || s == "0"));
+	if(IsThreeState() && IsNull(data))
+		Set(Null);
+	else
+		Set(!(IsNull(s) || s == "0"));
 }
 
 Value SqlOption::GetData() const {
+	if(IsThreeState() && IsNull(Get()))
+		return String();
 	return Get() ? "1" : "0";
 }
 
