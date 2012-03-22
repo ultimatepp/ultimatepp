@@ -27,7 +27,7 @@ if [ -z "${DIST}" ] && [ -r "debian/changelog" ]; then
     fi
 fi
 
-# Optionally change Debian release states in $DIST to their names.
+# Change Debian release states in $DIST to their names.
 case "$DIST" in
     unstable)
         DIST="$UNSTABLE_CODENAME"
