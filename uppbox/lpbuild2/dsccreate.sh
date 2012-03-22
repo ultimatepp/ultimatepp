@@ -41,7 +41,7 @@ EOF
     # store changes done so far
     [ "$skiporig" ] || dpkg-source --commit . packaging packaging.patch
     # build source packages
-    dpkg-buildpackage -S $BUILDPKGOPTS $skiporig
+    dpkg-buildpackage -S $BUILDPKGOPTS -m"$MAINTAINER" $skiporig
     skiporig="-sd"
 done
 
