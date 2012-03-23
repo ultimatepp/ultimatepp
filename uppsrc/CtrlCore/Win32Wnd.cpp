@@ -629,12 +629,10 @@ void Ctrl::WndFree()
 void Ctrl::WndDestroy0()
 {
 	GuiLock __;
-	LLOG("Ctrl::WndDestroy() in " <<UPP::Name(this) << LOG_BEGIN);
-	LLOG((DumpWindowOrder(false), ""));
 	if(top && top->hwnd) {
 		HWND hwnd = top->hwnd;
 		WndFree(); // CXL 2007-06-04 to avoid loosing focus with maximize box owned dialogs
-		::DestroyWindow(hwnd);
+		bool result = ::DestroyWindow(hwnd);
 	}
 }
 

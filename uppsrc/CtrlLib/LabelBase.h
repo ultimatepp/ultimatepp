@@ -129,6 +129,8 @@ private:
 
 	static Link<DisplayPopup> *all();
 	static bool StateHook(Ctrl *, int reason);
+	static bool MouseHook(Ctrl *, bool, int, Point, int, dword);
+	static void SyncAll();
 
 public:
 	void Set(Ctrl *ctrl, const Rect& item, const Value& v, const Display *display,

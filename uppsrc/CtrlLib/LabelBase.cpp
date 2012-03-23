@@ -508,6 +508,7 @@ DisplayPopup::DisplayPopup()
 	margin = 0;
 	ONCELOCK {
 		InstallStateHook(StateHook);
+		InstallMouseHook(MouseHook);
 	}
 	LinkBefore(all());
 }
@@ -526,7 +527,6 @@ void DisplayPopup::Sync()
 			if(sz.cx + 2 * margin > item.GetWidth() || sz.cy > item.GetHeight()) {
 				slim = item + ctrl->GetScreenView().TopLeft();
 				if(slim.Contains(GetMousePos())) {
-//					Rect wa = GetWorkArea();
 					Rect r = item;
 					r.right = max(r.right, r.left + sz.cx + 2 * margin);
 					r.bottom = max(r.bottom, r.top + sz.cy);
@@ -551,11 +551,27 @@ Link<DisplayPopup> *DisplayPopup::all()
 	return &all;
 }
 
+void DisplayPopup::SyncAll()
+{
+	int n = 0;
+	for(DisplayPopup *p = all()->Link<DisplayPopup>::GetNext(); p != all(); p = p->Link<DisplayPopup>::GetNext())
+		if(p->ctrl && p->ctrl->IsOpen()) {
+			p->Sync();
+			n++;
+		}
+}
+
 bool DisplayPopup::StateHook(Ctrl *, int reason)
 {
 	if(reason == FOCUS)
-		for(DisplayPopup *p = all()->Link<DisplayPopup>::GetNext(); p != all(); p = p->Link<DisplayPopup>::GetNext())
-			p->Sync();
+		SyncAll();
+	return false;
+}
+
+
+bool DisplayPopup::MouseHook(Ctrl *, bool, int, Point, int, dword)
+{
+	SyncAll();
 	return false;
 }
 
