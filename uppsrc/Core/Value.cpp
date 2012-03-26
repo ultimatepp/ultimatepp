@@ -313,7 +313,7 @@ void Value::Serialize(Stream& s) {
 		int st = data.GetSpecial();
 		ASSERT_(!type || type == ERROR_V || type == UNKNOWN_V || st == STRING ||
 		        (IsRef() ? Typemap().Find(type) >= 0 : st < 255 && svo[st]),
-		        AsString(type) + " is not registred for serialization");
+		        GetName() + " is not registred for serialization");
 		if(st == VOIDV)
 			return;
 		if(st == STRING)
@@ -344,7 +344,7 @@ void Value::Xmlize(XmlIO& xio)
 			int st = data.GetSpecial();
 			ASSERT_(!type || type == ERROR_V || type == UNKNOWN_V || st == STRING ||
 			        (IsRef() ? Typemap().Find(type) >= 0 : st < 255 && svo[st]),
-			        AsString(type) + " is not registred for serialization");
+			        GetName() + " is not registred for xmlize");
 			if(st == VOIDV)
 				return;
 			if(st == STRING)
@@ -365,7 +365,7 @@ void Value::Xmlize(XmlIO& xio)
 				LoadFromString(*this, ScanHexString(s));
 			}
 			catch(LoadingError) {
-				throw XmlError("serialized_binary Error");
+				throw XmlError("xmlize serialized_binary Error");
 			}
 		}
 		else {
@@ -411,7 +411,7 @@ void Value::Jsonize(JsonIO& jio)
 			int st = data.GetSpecial();
 			ASSERT_(!type || type == ERROR_V || type == UNKNOWN_V || st == STRING ||
 			        (IsRef() ? Typemap().Find(type) >= 0 : st < 255 && svo[st]),
-			        AsString(type) + " is not registred for serialization");
+			        GetName() + " is not registred for jsonize");
 			if(st == VOIDV)
 				return;
 			JsonIO hio;

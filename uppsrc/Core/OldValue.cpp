@@ -182,7 +182,8 @@ void Value::Serialize(Stream& s) {
 	}
 	else {
 		type = GetType();
-		ASSERT_(!type || type == ERROR_V || type == UNKNOWN_V || Typemap().Find(type) >= 0, "Missing RichValueType<" + AsString(type) + ">::Register");
+		ASSERT_(!type || type == ERROR_V || type == UNKNOWN_V || Typemap().Find(type) >= 0,
+		        "Missing RichValueType<" + AsString(type) + ">::Register for " + typeid(*ptr).name() );
 		s / type;
 		ptr->Serialize(s);
 	}

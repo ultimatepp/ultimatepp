@@ -228,6 +228,9 @@ void   Ctrl::Serialize(Stream& s)
 	Value x;
 	if(s.IsStoring())
 		x = GetData();
+	DDUMP(x);
+	DDUMP(x.IsVoid());
+	DDUMP(x.GetType());
 	s % x;
 	if(s.IsLoading())
 		SetData(x);
