@@ -1,4 +1,4 @@
-description "XML viewer - with added \"path\" capability";
+description "XML viewer - with added \"path\" capability\377";
 
 uses
 	CtrlLib;
@@ -10,5 +10,5 @@ file
 	XmlView.rc;
 
 mainconfig
-	"" = "GUI";
+	"" = "GUI SVO_VALUE";
 
