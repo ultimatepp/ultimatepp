@@ -299,9 +299,10 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 					String tmpfile = ForceExt(objfile, ".c");
 					SaveFile(tmpfile, fo);
 					int slot = AllocSlot();
-					if(slot < 0 || !Run(cc + " -Tc " + PdbPch(package, slot, false)
-					+ GetHostPathQ(tmpfile) + " -Fo" + GetHostPath(objfile),
-					slot, GetHostPath(objfile), 1))
+					StringBuffer cmdline;
+					cmdline << cc << " -Tc " << PdbPch(package, slot, false)
+					<< " " << GetHostPathQ(tmpfile) << " -Fo" << GetHostPath(objfile);
+					if(slot < 0 || !Run(String(cmdline), slot, GetHostPath(objfile), 1))
 						throw Exc(NFormat("Error compiling binary object '%s'.", objfile));
 				}
 				catch(Exc e) {
