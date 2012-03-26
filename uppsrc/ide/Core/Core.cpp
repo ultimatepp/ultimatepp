@@ -425,7 +425,7 @@ String BrcToC(CParser& binscript, String basedir)
 			for(int i = 0; i < blockref.GetCount(); i++)
 				if(blockref[i]) {
 					BinObjInfo::Block& b = *blockref[i];
-					fo << "static char " << ident << "_" << i << "[] = {\n";
+					fo << "static unsigned char " << ident << "_" << i << "[] = {\n";
 					String data = ::LoadFile(b.file);
 					if(data.IsVoid())
 						throw Exc(NFormat("Error reading file '%s'", b.file));
@@ -448,7 +448,7 @@ String BrcToC(CParser& binscript, String basedir)
 			for(int i = 0; i < blockref.GetCount(); i++)
 				fo << '\t' << (blockref[i] ? blockref[i]->length : -1) << ",\n";
 			fo << "};\n\n"
-			"char *" << ident << "[] = {\n";
+			"unsigned char *" << ident << "[] = {\n";
 			for(int i = 0; i < blockref.GetCount(); i++)
 				if(blockref[i])
 					fo << '\t' << ident << '_' << i << ",\n";
@@ -464,7 +464,7 @@ String BrcToC(CParser& binscript, String basedir)
 		}
 		else {
 			BinObjInfo::Block& b = belem[0];
-			fo << "static char " << ident << "_[] = {\n";
+			fo << "static unsigned char " << ident << "_[] = {\n";
 			String data = ::LoadFile(b.file);
 			if(data.IsVoid())
 				throw Exc(NFormat("Error reading file '%s'", b.file));
@@ -479,7 +479,7 @@ String BrcToC(CParser& binscript, String basedir)
 			data.Cat('\0');
 			WriteByteArray(fo, data);
 			fo << "\n};\n\n"
-			"char *" << ident << " = " << ident << "_;\n\n"
+			<< "unsigned char *" << ident << " = " << ident << "_;\n\n"
 //			fo << AsCString(data, 70) << ";\n\n"
 			"int " << ident << "_length = " << b_length << ";\n\n";
 		}

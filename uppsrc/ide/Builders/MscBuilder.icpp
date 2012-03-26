@@ -300,8 +300,8 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 					SaveFile(tmpfile, fo);
 					int slot = AllocSlot();
 					StringBuffer cmdline;
-					cmdline << cc << " -Tc " << PdbPch(package, slot, false)
-					<< " " << GetHostPathQ(tmpfile) << " -Fo" << GetHostPath(objfile);
+					cmdline << cc << PdbPch(package, slot, false)
+					<< " -Tc " << GetHostPathQ(tmpfile) << " -Fo" << GetHostPathQ(objfile);
 					if(slot < 0 || !Run(String(cmdline), slot, GetHostPath(objfile), 1))
 						throw Exc(NFormat("Error compiling binary object '%s'.", objfile));
 				}
