@@ -619,7 +619,7 @@ bool Ide::Key(dword key, int count) {
 			return true;
 		}
 	}
-	return TopWindow::Key(key, count);
+	return false;
 }
 
 void Ide::GotoBookmark(const Bookmark& b)

@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)     // DLOG(x)
+#define LLOG(x)    //  DLOG(x)
 #define LOGTIMING 0
 
 #ifdef _DEBUG

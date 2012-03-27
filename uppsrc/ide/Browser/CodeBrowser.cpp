@@ -352,10 +352,10 @@ CodeBrowser::CodeBrowser()
 	range = 0;
 	static const char *tip[] = { "Nest", "Package", "File" };
 	for(int i = 0; i < 3; i++)
-		rangebutton[i].SetImage(BrowserImg::Get(BrowserImg::I_range_nest + i)).Tip(tip[i])
+		rangebutton[i].SetImage(BrowserImg::Get(BrowserImg::I_range_nest + i)).Tip(tip[i]).NoWantFocus()
 		              <<= THISBACK1(SetRange, i + 1);
 	SetRange(0);
 	sort.Tip("Order by names");
-	sort.SetImage(BrowserImg::Sort());
+	sort.SetImage(BrowserImg::Sort()).NoWantFocus();
 	sort <<= THISBACK(LoadScope);
 }

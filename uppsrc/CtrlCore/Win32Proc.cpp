@@ -8,7 +8,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  // LOG(x)
+#define LLOG(x)  // DLOG(x)
 
 dword Ctrl::KEYtoK(dword chr) {
 	if(chr == VK_TAB)
@@ -256,7 +256,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
 		{
-#if 0
+#if 1
 			String msgdump;
 			switch(message)
 			{
@@ -332,7 +332,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		if(HasChildDeep(mouseCtrl) || this == ~mouseCtrl) mouseCtrl = NULL;
 		if(HasChildDeep(focusCtrl) || this == ~focusCtrl) focusCtrl = NULL;
 		if(HasChildDeep(focusCtrlWnd) || this == ~focusCtrlWnd) {
-			LLOG("WM_NCDESTROY: clearing focusCtrlWnd = " << ::Name(focusCtrlWnd));
+			LLOG("WM_NCDESTROY: clearing focusCtrlWnd = " << UPP::Name(focusCtrlWnd));
 			focusCtrlWnd = NULL;
 			focusCtrl = NULL;
 		}
@@ -399,7 +399,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	case WM_HELP:
 		return TRUE;
 	case WM_ACTIVATE:
-		LLOG("WM_ACTIVATE " << Name() << ", wParam = " << (int)wParam << ", focusCtrlWnd = " << ::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
+		LLOG("WM_ACTIVATE " << Name() << ", wParam = " << (int)wParam << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
 		ignorekeyup = true;
 		break;
 	case WM_SETFOCUS:
@@ -431,12 +431,12 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		return 0L;
 	case WM_KILLFOCUS:
 		LLOG("WM_KILLFOCUS " << (void *)(HWND)wParam << ", this = " << UPP::Name(this) << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
-		LLOG("Kill " << ::Name(CtrlFromHWND((HWND)wParam)));
+		LLOG("Kill " << UPP::Name(CtrlFromHWND((HWND)wParam)));
 		if(!CtrlFromHWND((HWND)wParam)) {
 			LLOG("WM_KILLFOCUS -> KillFocusWnd: " << UPP::Name(this));
 			KillFocusWnd();
 		}
-		LLOG("//WM_KILLFOCUS " << (void *)(HWND)wParam << ", focusCtrlWnd = " << ::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
+		LLOG("//WM_KILLFOCUS " << (void *)(HWND)wParam << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
 		return 0L;
 	case WM_ENABLE:
 		if(!!wParam != enabled) {
