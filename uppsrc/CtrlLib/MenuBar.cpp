@@ -6,7 +6,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)    // LOG(x)
+#define LLOG(x)    // DLOG(x)
 #define LTIMING(x) // RTIMING(x)
 
 static ColorF xpmenuborder[] = {
@@ -376,6 +376,7 @@ bool MenuBar::Key(dword key, int count)
 				}
 			}
 	}
+	LLOG("MenuBar::Key -> HotKey");
 	return HotKey(key);
 }
 
@@ -402,16 +403,19 @@ bool MenuBar::HotKey(dword key)
 			return true;
 		}
 		if(key == K_ALT_KEY) {
+			LLOG("K_ALT_KEY");
 			s_doaltkey = true;
 			return true;
 		}
 		if((key == K_F10 || key == (K_ALT_KEY|K_KEYUP) && s_doaltkey)
 		   && !submenu && !HasFocusDeep() && GetTopWindow() && GetTopWindow()->IsForeground()) {
+			LLOG("Open menu by F10 or ALT-UP");
 			SetupRestoreFocus();
 			for(Ctrl *q = pane.GetFirstChild(); q; q = q->GetNext())
 				if(q->SetFocus()) return true;
 		}
 	}
+	LLOG("MenuBar::HotKey");
 	return (key == K_LEFT || key == K_RIGHT) && parentmenu ? parentmenu->Key(key, 1) : false;
 }
 

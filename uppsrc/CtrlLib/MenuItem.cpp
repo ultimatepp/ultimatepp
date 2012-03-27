@@ -6,7 +6,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)    // LOG(x)
+#define LLOG(x)    // DLOG(x)
 #define LTIMING(x) // RTIMING(x)
 
 MenuItemBase::MenuItemBase()
@@ -164,7 +164,9 @@ void MenuItemBase::PaintTopItem(Draw& w, int state) {
 	Size sz = GetSize();
 	if(GUI_GlobalStyle() >= GUISTYLE_XP) {
 		bool opaque = InOpaqueBar();
-		bool opaque2 = opaque || state == 2;
+//		bool opaque2 = opaque || state == 2;
+		bool opaque2 = opaque || state; //TODO: This would probably cause problems in linux dark themes - check!
+		// But fixes issues in ide / Win
 		if(opaque2)
 			ChPaint(w, 0, 0, sz.cx, sz.cy, style->topitem[state]);
 		else
@@ -509,6 +511,7 @@ void TopSubMenuItem::Pull()
 
 void TopSubMenuItem::MouseEnter(Point p, dword)
 {
+	LLOG("TopSubMenuItem::MouseEnter");
 	Refresh();
 	if(isenabled && parentmenu->GetActiveSubmenu())
 		Pull();
@@ -524,11 +527,13 @@ bool TopSubMenuItem::Key(dword key, int) {
 
 void TopSubMenuItem::GotFocus()
 {
+	LLOG("TopSubMenuItem::GotFocus");
 	Refresh();
 }
 
 void TopSubMenuItem::LostFocus()
 {
+	LLOG("TopSubMenuItem::LostFocus");
 	Refresh();
 }
 
