@@ -169,4 +169,9 @@ void OtherChecks()
 		c = v2;
 		RDUMP(c);
 	}
+	
+	Value txt = "text";
+	ASSERT(txt.GetCount() == 0);
+	ASSERT(txt["hhh"].IsError());
+	ASSERT(txt[3].IsError());
 }
