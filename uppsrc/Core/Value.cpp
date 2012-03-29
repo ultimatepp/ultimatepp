@@ -510,7 +510,7 @@ int Value::GetCount() const
 		if(t == VALUEMAP_V)
 			return ((ValueMap::Data *)ptr())->value.GetCount();
 	}
-	return ErrorValue();
+	return 0;
 }
 
 const Value& Value::operator[](int i) const
