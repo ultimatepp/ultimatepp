@@ -44,7 +44,7 @@ String MIMECharsetName(byte charset)
 	}
 }
 
-HttpRequest::HttpRequest(HttpServer& server, pick_ Socket& _socket, HttpQuery query_)
+HttpServerRequest::HttpServerRequest(HttpServer& server, pick_ Socket& _socket, HttpQuery query_)
 : server(server), socket(_socket), query(query_)
 , request_ticks(GetTickCount())
 {
@@ -104,31 +104,31 @@ HttpRequest::HttpRequest(HttpServer& server, pick_ Socket& _socket, HttpQuery qu
 		}
 	}
 
-	LLOG("HttpRequest:\n" << query);
+	LLOG("HttpServerRequest:\n" << query);
 }
 
-void HttpRequest::LogTime(const char *s, int level)
+void HttpServerRequest::LogTime(const char *s, int level)
 {
 	server.LogTime(NFormat("(ID:%d)%s", (int)(uintptr_t)this, s), level);
 }
 
-int HttpRequest::GetDuration() const
+int HttpServerRequest::GetDuration() const
 {
 	return GetTickCount() - request_ticks;
 }
 
-void HttpRequest::Write(String header, String body)
+void HttpServerRequest::Write(String header, String body)
 {
 	Write(header, body, 200, "OK");
 }
 
-void HttpRequest::Write(String header, String body, int result_code, String result_text)
+void HttpServerRequest::Write(String header, String body, int result_code, String result_text)
 {
 	int duration = GetDuration();
 	if(IsNull(header))
 		header = query.GetString("$$DEFAULT_HEADER");
 
-	LogTime(NFormat("HttpRequest::Write(%d): done in %d msecs: %d bytes\n%s",
+	LogTime(NFormat("HttpServerRequest::Write(%d): done in %d msecs: %d bytes\n%s",
 		result_code, duration, body.GetLength(), header), 2);
 
 	server.AddRequest(GetTickCount() - request_ticks);
@@ -146,11 +146,11 @@ void HttpRequest::Write(String header, String body, int result_code, String resu
 //	out.Cat('\0', 8192);
 	ASSERT(socket.IsOpen());
 	server.AddWrite(socket, out);
-	LogTime(NFormat("HttpRequest::Write(%d): %d bytes added to delayed write list",
+	LogTime(NFormat("HttpServerRequest::Write(%d): %d bytes added to delayed write list",
 		result_code, out.GetLength()), 2);
 }
 
-void HttpRequest::Redirect(String url)
+void HttpServerRequest::Redirect(String url)
 {
 	Htmls body = NFormat(t_("If you're not redirected automatically please use %s."), HtmlLink(url) / t_("this link"));
 	body = HtmlPage(t_("Redirection to another web address"), body);
@@ -168,11 +168,11 @@ void HttpRequest::Redirect(String url)
 	}
 	out.Cat(body);
 	server.AddWrite(socket, out);
-	LogTime(NFormat("HttpRequest::Redirect() added to delayed write list: %s", url), 2);
+	LogTime(NFormat("HttpServerRequest::Redirect() added to delayed write list: %s", url), 2);
 */
 }
 
-void HttpRequest::Error(String err)
+void HttpServerRequest::Error(String err)
 {
 	LogTime(NFormat("error after %d msecs: %s", GetDuration(), err), 0);
 	Htmls body = GetHttpErrorPage(query, err, server.IsShowQuery());
@@ -419,7 +419,7 @@ bool HttpServer::Accept()
 
 #define FOURCHAR(a,b,c,d) ((int(a)) + (int(b) * 0x100) + (int(c) * 0x10000) + (int(d) * 0x1000000))
 
-One<HttpRequest> HttpServer::GetRequest()
+One<HttpServerRequest> HttpServer::GetRequest()
 {
 	Socket conn = connection;
 	connection.Clear();
@@ -553,7 +553,7 @@ One<HttpRequest> HttpServer::GetRequest()
 				if(request_version >= 1000)
 					request_state = (four == FOURCHAR('P', 'O', 'S', 'T') ? RS_POST_HEADERS : RS_GET_HEADERS);
 				else { // simple HTTP request without headers
-					One<HttpRequest> req = new HttpRequest(*this, conn, request_query);
+					One<HttpServerRequest> req = new HttpServerRequest(*this, conn, request_query);
 					req->LogTime(GetHttpURI(request_query), 1);
 					return req;
 				}
@@ -577,7 +577,7 @@ One<HttpRequest> HttpServer::GetRequest()
 					return NULL;
 				}
 				request_query.Set("$$DEFAULT_HEADER", default_header);
-				One<HttpRequest> req = new HttpRequest(*this, conn, request_query);
+				One<HttpServerRequest> req = new HttpServerRequest(*this, conn, request_query);
 				req->LogTime(GetHttpURI(request_query), 1);
 				return req;
 			}
@@ -612,7 +612,7 @@ One<HttpRequest> HttpServer::GetRequest()
 						break;
 					}
 					else {
-						One<HttpRequest> req = new HttpRequest(*this, conn, request_query);
+						One<HttpServerRequest> req = new HttpServerRequest(*this, conn, request_query);
 						req->LogTime(GetHttpURI(request_query), 1);
 						return req;
 					}
@@ -673,7 +673,7 @@ One<HttpRequest> HttpServer::GetRequest()
 					else if(!strnicmp(content, mtag, 10))
 						GetHttpPostData(request_query, post_data);
 				}
-				One<HttpRequest> req = new HttpRequest(*this, conn, request_query);
+				One<HttpServerRequest> req = new HttpServerRequest(*this, conn, request_query);
 				req->LogTime(GetHttpURI(request_query), 1);
 				return req;
 			}
@@ -713,7 +713,7 @@ One<HttpRequest> HttpServer::GetRequest()
 			if(strm.IsError())
 				return NULL;
 			query.Set(WID__DEFAULT_HEADER, default_header);
-			One<HttpRequest> req = new HttpRequest(*this, sconn, query);
+			One<HttpServerRequest> req = new HttpServerRequest(*this, sconn, query);
 			req->LogTime(GetHttpURI(query));
 			return req;
 		}
@@ -799,7 +799,7 @@ One<HttpRequest> HttpServer::GetRequest()
 		LogTime(String() << "HttpServer::GetRequest: " << sconn.GetError());
 		return NULL;
 	}
-	One<HttpRequest> req = new HttpRequest(*this, sconn, query);
+	One<HttpServerRequest> req = new HttpServerRequest(*this, sconn, query);
 	req->LogTime(GetHttpURI(query));
 	return req;
 */

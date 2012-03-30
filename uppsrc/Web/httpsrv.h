@@ -21,12 +21,12 @@ inline String HttpBinary()                                  { return "applicatio
 
 class HttpServer;
 
-class HttpRequest
+class HttpServerRequest
 {
 	friend class HttpServer;
 
 public:
-	HttpRequest(HttpServer& server, pick_ Socket& socket, HttpQuery query);
+	HttpServerRequest(HttpServer& server, pick_ Socket& socket, HttpQuery query);
 
 	HttpServer&   GetServer()                              { return server; }
 	Socket&       GetSocket()                              { return socket; }
@@ -88,7 +88,7 @@ public:
 #ifdef PLATFORM_WIN32
 	void               GetWaitEvents(Vector<Event *>& events);
 #endif
-	One<HttpRequest>   GetRequest();
+	One<HttpServerRequest>   GetRequest();
 
 	Time               GetStartTime() const           { return start_time; }
 	double             GetHitCount() const            { return hit_count; }
@@ -179,7 +179,7 @@ private:
 	int                trailing_count;
 };
 
-inline bool   HttpRequest::IsLogging() const { return server.IsLogging(); }
+inline bool   HttpServerRequest::IsLogging() const { return server.IsLogging(); }
 
 inline String GetHttpPath(HttpQuery query)  { return query.GetString("$$PATH"); }
 inline String GetHttpQuery(HttpQuery query) { return query.GetString("$$QUERY"); }

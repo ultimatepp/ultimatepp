@@ -17,15 +17,6 @@ typedef int socklen_t;
 #include <netdb.h>
 #include <netinet/in.h>
 //#include <libiberty.h>
-enum
-{
-	INVALID_SOCKET = -1,
-	TCP_NODELAY    = 1,
-	SD_RECEIVE     = 0,
-	SD_SEND        = 1,
-	SD_BOTH        = 2,
-};
-typedef int SOCKET;
 #else
 #error Unsupported platform
 #endif//PLATFORM switch
