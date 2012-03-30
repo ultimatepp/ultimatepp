@@ -4,11 +4,6 @@
 String        WwwFormat(Time tm);
 bool          IsSameTextFile(const char *p, const char *q);
 String        StringSample(const char *s, int limit);
-String        FormatIP(dword _ip);
-String        UrlEncode(const String& s);
-String        UrlEncode(const String& s, const char *specials);
-String        UrlDecode(const char *b, const char *e);
-inline String UrlDecode(const String& s)          { return UrlDecode(s.Begin(), s.End() ); }
 String        GetRandomIdent(int length);
 String        OtpEncode(const String& password, const String& otp_key);
 String        EncryptString(const String& password, const String& otp_key);
@@ -18,10 +13,6 @@ String        BinhexEncode(const char *b, const char *e);
 inline String BinhexEncode(const String& data)    { return BinhexEncode(data.Begin(), data.End()); }
 String        BinHexDecode(const char *b, const char *e);
 inline String BinHexDecode(const String& data)    { return BinHexDecode(data.Begin(), data.End()); }
-String        Base64Encode(const char *b, const char *e);
-inline String Base64Encode(const String& data)    { return Base64Encode(data.Begin(), data.End()); }
-String        Base64Decode(const char *b, const char *e);
-inline String Base64Decode(const String& data)    { return Base64Decode(data.Begin(), data.End()); }
 String        ASCII85Encode(const byte *p, int length);
 inline String ASCII85Encode(const String& s)      { return ASCII85Encode(s, s.GetLength()); }
 String        ASCII85Decode(const byte *p, int length);

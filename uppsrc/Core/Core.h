@@ -169,6 +169,33 @@
 	#endif
 #endif
 
+#ifdef PLATFORM_WIN32
+#define W_P(w, p) w
+#if !defined(PLATFORM_CYGWIN)
+#include <winsock2.h>
+#endif
+typedef int socklen_t;
+#endif
+
+#ifdef PLATFORM_POSIX
+
+#define W_P(w, p) p
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <netinet/in.h>
+//#include <libiberty.h>
+enum
+{
+	INVALID_SOCKET = -1,
+	TCP_NODELAY    = 1,
+	SD_RECEIVE     = 0,
+	SD_SEND        = 1,
+	SD_BOTH        = 2,
+};
+typedef int SOCKET;
+#endif
+
 #include <algorithm>
 #include <string>
 #include <complex>
@@ -280,6 +307,8 @@ NAMESPACE_UPP
 #include "CoWork.h"
 
 #include "LocalProcess.h"
+
+#include "Web.h"
 
 #include "Win32Util.h"
 
