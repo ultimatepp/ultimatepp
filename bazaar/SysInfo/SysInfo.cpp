@@ -40,8 +40,7 @@
 	#include <X11/Xfuncs.h>
 	#include <X11/Xutil.h>
 	#include <X11/Xatom.h>
-	#include <X11/extensions/XTest.h>	// In case of error please install XTest. 
-										// See http://www.ultimatepp.org/srcimp$SysInfo$SysInfo$en-us.html
+	#include <X11/extensions/XTest.h>
 #endif
 
 using namespace Upp;
@@ -592,6 +591,8 @@ Array<long> GetProcessList()
 String GetProcessName(long processID)
 {
 	WCHAR szProcessName[MAX_PATH];
+	String ret;
+	
     // Get a handle to the process.
     HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processID);
 
@@ -600,16 +601,20 @@ String GetProcessName(long processID)
         HMODULE hMod;
         DWORD cbNeeded;
 
-        if (EnumProcessModules(hProcess, &hMod, sizeof(hMod), &cbNeeded))
+        if (EnumProcessModules(hProcess, &hMod, sizeof(hMod), &cbNeeded)) {
             GetModuleBaseNameW(hProcess, hMod, szProcessName, sizeof(szProcessName)/sizeof(WCHAR));
+            ret = FromSystemCharset(WString(szProcessName).ToString());
+        }
     }
     CloseHandle(hProcess);
 
-    return FromSystemCharset(WString(szProcessName).ToString());
+    return ret;
 }
 String GetProcessFileName(long processID)
 {
 	WCHAR szProcessName[MAX_PATH];
+    String ret;
+    
     // Get a handle to the process.
     HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processID);
 
@@ -618,12 +623,14 @@ String GetProcessFileName(long processID)
         HMODULE hMod;
         DWORD cbNeeded;
 
-        if (EnumProcessModules(hProcess, &hMod, sizeof(hMod), &cbNeeded))
+        if (EnumProcessModules(hProcess, &hMod, sizeof(hMod), &cbNeeded)) {
             GetModuleFileNameExW(hProcess, hMod, szProcessName, sizeof(szProcessName)/sizeof(WCHAR));
+            ret = FromSystemCharset(WString(szProcessName).ToString());
+        }
     }
     CloseHandle(hProcess);
 
-    return FromSystemCharset(WString(szProcessName).ToString());
+    return ret;
 }
 BOOL CALLBACK EnumGetWindowsList(HWND hWnd, LPARAM lParam) 
 {
@@ -1378,7 +1385,7 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
 	// Distro
 	if (GetOsInfo_CheckLsb(distro, distVersion))
 		;
-	else if (FileExists("/usr/share/doc/ubuntu-minimal"))
+	else if (FileExists("/usr/share/doc/ubuntu-minimal") || FileExists("/usr/share/ubuntu-docs"))
 		distro = "ubuntu";
 	else if (FileExists("/etc/fedora-release")) {
 		distro = "fedora";
@@ -1409,6 +1416,9 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
 	} else if (FileExists("/etc/altlinux-release")) {
 		distro = "altlinux";			
 		distVersion = LoadFile_Safe("/etc/altlinux-releas");
+	} else if (FileExists("/etc/yellowdog-release")) {
+		distro = "yellowdog";
+		distVersion = LoadFile_Safe("/etc/gentoo-yellowdog");
 	} else if (FileExists("/etc/gentoo-release")) {
 		distro = "gentoo";
 		distVersion = LoadFile_Safe("/etc/gentoo-release");

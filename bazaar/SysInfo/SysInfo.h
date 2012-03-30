@@ -20,14 +20,14 @@ struct NetAdapter {
 	String type;
 };
 
-Array <NetAdapter> GetAdapterInfo();
+Upp::Array <NetAdapter> GetAdapterInfo();
 //String GetMacAddress();		// Deprecated
 
 #if defined(PLATFORM_WIN32) 
-bool GetVideoInfo(Array <Value> &name, Array <Value> &description, Array <Value> &videoProcessor, 
-												Array <Value> &ram, Array <Value> &videoMode);
-bool GetPackagesInfo(Array <Value> &name, Array <Value> &version, Array <Value> &vendor, 
-			Array <Value> &installDate, Array <Value> &caption, Array <Value> &description, Array <Value> &state);
+bool GetVideoInfo(Upp::Array <Value> &name, Upp::Array <Value> &description, Upp::Array <Value> &videoProcessor, 
+				  Upp::Array <Value> &ram, Upp::Array <Value> &videoMode);
+bool GetPackagesInfo(Upp::Array <Value> &name, Upp::Array <Value> &version, Upp::Array <Value> &vendor, 
+			Upp::Array <Value> &installDate, Upp::Array <Value> &caption, Upp::Array <Value> &description, Upp::Array <Value> &state);
 String GetHDSerial();
 #endif
 
@@ -42,14 +42,15 @@ bool GetMemoryInfo(int &memoryLoad, uint64 &totalPhys, uint64 &freePhys, uint64 
 // name: Window name
 // fileName: Window process program file name
 // title: Window title (caption)
-void GetWindowsList(Array<long> &wid, Array<long> &pid, Array<String> &name, Array<String> &fileName, Array<String> &title);
-Array<long> GetWindowsList();
+void GetWindowsList(Upp::Array<long> &wid, Upp::Array<long> &pid, Upp::Array<String> &name, 
+					Upp::Array<String> &fileName, Upp::Array<String> &title);
+Upp::Array<long> GetWindowsList();
 
 /////////////////////////////////////////////////////////////////////
 // Process list
 // They get arrays with handles to all the opened processes and process names 
-bool GetProcessList(Array<long> &pid, Array<String> &pNames);
-Array<long> GetProcessList();
+bool GetProcessList(Upp::Array<long> &pid, Upp::Array<String> &pNames);
+Upp::Array<long> GetProcessList();
 String GetProcessName(long pid);
 // Gets the program file name of a process
 String GetProcessFileName(long processID);
