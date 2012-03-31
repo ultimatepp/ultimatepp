@@ -54,15 +54,10 @@ class TcpSocket {
 
 public:
 	Callback        WhenWait;
-	
-	TcpSocket&      Timeout(int ms)                          { timeout = ms; global = false; return *this; }
-	TcpSocket&      GlobalTimeout(int ms);
-	TcpSocket&      Blocking()                               { return Timeout(Null); }
+
+	static String   GetHostName();
 	
 	int             GetDone() const                          { return done; }
-
-	TcpSocket();
-	~TcpSocket()                                             { Close(); }
 
 	static void     Init();
 
@@ -114,7 +109,12 @@ public:
 	bool            PutAll(const char *s, int len)           { return Put(s, len) == len; }
 	bool            PutAll(const String& s)                  { return Put(s) == s.GetCount(); }
 
-	static String   GetHostName();
+	TcpSocket&      Timeout(int ms)                          { timeout = ms; global = false; return *this; }
+	TcpSocket&      GlobalTimeout(int ms);
+	TcpSocket&      Blocking()                               { return Timeout(Null); }
+
+	TcpSocket();
+	~TcpSocket()                                             { Close(); }
 };
 
 struct HttpHeader {
