@@ -5,23 +5,13 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
 // temporary
-	{
-		ValueArray va;
-		va.Add(123);
-		va.Add("ahoj");
-		ASSERT(va.GetCount() == 2);
-		ASSERT(va[0] == 123);
-		ASSERT(va[1] == "ahoj");
-		CheckType(va, true);
-	}
-
-//
-
 	Value ist = Opt0();
 	if(ist.Is<int>())
 		RLOG("int");
 	if(IsNumber(ist))
 		RLOG("number");
+//
+
 
 	Value v;
 	ASSERT(v.IsVoid());
