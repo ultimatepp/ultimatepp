@@ -1,5 +1,5 @@
 uses
-	Draw;
+	Core;
 
 file
 	ClassFactory.h,

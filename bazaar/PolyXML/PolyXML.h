@@ -129,8 +129,10 @@ template<class K, class T> void PolyXMLArrayMap<K, T>::Xmlize(XmlIO &xml)
 			if(data.IsErased())
 				continue;
 			String tag = data.IsA();
-			XmlizeStore(xml.Add("key"), key);
-			XmlizeStore(xml.Add(tag), data);
+			XmlIO ioKey = xml.Add("key");
+			XmlizeStore(ioKey, key);
+			XmlIO ioTag = xml.Add(tag);
+			XmlizeStore(ioTag, data);
 		}
 	}
 	else
@@ -141,7 +143,9 @@ template<class K, class T> void PolyXMLArrayMap<K, T>::Xmlize(XmlIO &xml)
 			if(xml->Node(i).IsTag())
 			{
 				K key;
-				Upp::Xmlize(xml.At(i++), key);
+
+				XmlIO io = xml.At(i++);
+				Upp::Xmlize(io, key);
 				String tag = xml->Node(i).GetTag();
 				T *data = T::CreatePtr(tag);
 				if(data)
