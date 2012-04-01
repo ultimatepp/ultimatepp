@@ -87,25 +87,20 @@ void Zlib::Pump(bool finish)
 {
 	if(error)
 		return;
-	if(gzip_footer)
-		return;
 	ASSERT(mode);
-	LDUMP(mode);
 	if(!output)
 		output.Alloc(chunk);
 	for(;;) {
-		LLOG("---");
-		LDUMP(z.avail_in);
+		if(gzip_footer) {
+			footer.Cat(z.next_in, z.avail_in);
+			z.avail_in = 0;
+			return;
+		}
 		int code;
 		z.avail_out = chunk;
 		z.next_out = output;
 		code = (mode == DEFLATE ? deflate : inflate)(&z, finish ? Z_FINISH : Z_NO_FLUSH);
-		LDUMP(code);
-		LDUMP(z.avail_in);
-		LDUMP(z.avail_out);
 		int count = chunk - z.avail_out;
-		LDUMP(count);
-		LDUMP(count);
 		if(count) {
 			if((docrc || gzip) && mode == INFLATE)
 				crc = crc32(crc, output, count);
@@ -113,17 +108,17 @@ void Zlib::Pump(bool finish)
 			if(mode == INFLATE)
 				total += count;
 		}
-		if(mode == INFLATE && code == Z_STREAM_END) {
+		if(mode == INFLATE && code == Z_STREAM_END)
 			gzip_footer = true;
-			break;
-		}
-		if(mode == INFLATE ? code == Z_BUF_ERROR : count == 0)
-			break;
-		if(code != Z_OK && code != Z_STREAM_END) {
-			LLOG("ERROR " << code);
-			Free();
-			error = true;
-			break;
+		else {
+			if(mode == INFLATE ? code == Z_BUF_ERROR : count == 0)
+				break;
+			if(code != Z_OK && code != Z_STREAM_END) {
+				LLOG("ZLIB ERROR " << code);
+				Free();
+				error = true;
+				break;
+			}
 		}
     }
 }
@@ -205,9 +200,9 @@ void Zlib::Put(const void *ptr, dword size)
 {
 	if(error)
 		return;
+	LLOG("ZLIB Put " << size);
 	const char *p = reinterpret_cast<const char *>(ptr);
 	while(size) {
-		LLOG("Put " << size);
 		int psz = (int) min(size, dword(INT_MAX / 4));
 		Put0(p, size);
 		size -= psz;
@@ -217,13 +212,13 @@ void Zlib::Put(const void *ptr, dword size)
 
 void Zlib::PutOut(const void *ptr, dword size)
 {
+	LLOG("ZLIB PutOut " << out.GetCount());
 	out.Cat((const char *)ptr, (int)size);
-	LDUMP(out.GetCount());
 }
 
 void Zlib::End()
 {
-	LLOG("End");
+	LLOG("ZLIB End");
 	if(mode != INFLATE || !gzip || gzip_done)
 		Pump(Z_FINISH);
 	if(gzip && mode == DEFLATE) {
@@ -231,6 +226,11 @@ void Zlib::End()
 		Poke32le(h, crc);
 		Poke32le(h + 4, total);
 		WhenOut(h, 8);
+	}
+	if(gzip && mode == INFLATE &&
+	   (footer.GetCount() != 8 || Peek32le(~footer) != (int)crc || Peek32le(~footer + 4) != total)) {
+		LLOG("ZLIB GZIP FOOTER ERROR");
+		error = true;
 	}
 	Free();
 }
