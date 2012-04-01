@@ -30,6 +30,7 @@ class Zlib {
 	bool          gzip_footer;
 	String        gzip_hs;
 	String        footer;
+	String        out;
 	
 	void          PutOut(const void *ptr, dword size);
 	void          Pump(bool finish);
@@ -40,22 +41,26 @@ class Zlib {
 
 public:
 	Callback2<const void *, dword> WhenOut;
-	String out;
 	
 	void Compress();
 	void Decompress();
 	void Put(const void *ptr, dword size);
 	void Put(const String& s)              { Put(~s, s.GetCount()); }
 	void End();
+	
+	const String& Get() const              { return out; }
+	operator const String&() const         { return out; }
+	const String& operator~() const        { return out; }
+	void   ClearOut()                      { out.Clear(); }
 
-	dword  GetCrc() const                  { return crc; }
+	dword  GetCRC() const                  { return crc; }
 	bool   IsError() const                 { return error; }
 	
 	Zlib& GZip(bool gzip_ = true)          { gzip = gzip_; return *this; } 
 	Zlib& Header(bool hdr_ = true)         { hdr = hdr_; return *this; }
 	Zlib& NoHeader()                       { return Header(false); }
-	Zlib& Crc(bool b = true)               { docrc = b; return *this; }
-	Zlib& NoCrc()                          { return Crc(false); }
+	Zlib& CRC(bool b = true)               { docrc = b; return *this; }
+	Zlib& NoCRC()                          { return CRC(false); }
 	Zlib& ChunkSize(int n);
 
 	Zlib();
