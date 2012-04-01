@@ -4,11 +4,7 @@ NAMESPACE_UPP
 
 bool HttpRequest_Trace__;
 
-#ifdef _DEBUG
-#define LLOG(x)      LOG(x)
-#else
-#define LLOG(x)      if(HttpRequest_Trace__) RLOG(x); else;
-#endif
+#define LLOG(x)      do { if(HttpRequest_Trace__) RLOG(x); } while(0)
 
 void HttpRequest::Trace(bool b)
 {
@@ -19,10 +15,10 @@ void HttpRequest::Init()
 {
 	port = 0;
 	proxy_port = 0;
-	max_header_size = DEFAULT_MAX_HEADER_SIZE;
-	max_content_size = DEFAULT_MAX_CONTENT_SIZE;
-	max_redirects = DEFAULT_MAX_REDIRECTS;
-	max_retries = DEFAULT_MAX_RETRIES;
+	max_header_size = 1000000;
+	max_content_size = 10000000;
+	max_redirects = 5;
+	max_retries = 3;
 	force_digest = false;
 	std_headers = true;
 	hasurlvar = false;
@@ -30,6 +26,9 @@ void HttpRequest::Init()
 	phase = START;
 	redirect_count = 0;
 	retry_count = 0;
+	gzip = false;
+	WhenContent = callback(this, &HttpRequest::ContentOut);
+	chunk = 4096;
 }
 
 HttpRequest::HttpRequest()
@@ -183,6 +182,8 @@ HttpRequest& HttpRequest::Header(const char *id, const String& data)
 
 void HttpRequest::HttpError(const char *s)
 {
+	if(IsError())
+		return;
 	error = NFormat(t_("%s:%d: ") + String(s), host, port);
 	LLOG("HTTP ERROR: " << error);
 	Close();
@@ -202,6 +203,7 @@ bool HttpRequest::Do()
 	case START:
 		retry_count = 0;
 		redirect_count = 0;
+		gzip = false;
 		StartRequest();
 		break;
 	case REQUEST:
@@ -286,9 +288,10 @@ void HttpRequest::Finish()
 			return;
 		}
 	}
-	if(GetHeader("content-encoding") == "gzip")
-		body = GZDecompress(body);
 	phase = FINISHED;
+
+//	if(retry_count < 2)
+//		HttpError("Checking retry");
 }
 
 void HttpRequest::ReadingChunkHeader()
@@ -299,8 +302,8 @@ void HttpRequest::ReadingChunkHeader()
 			break;
 		else
 		if(c == '\n') {
-			LLOG("Chunk header: " << data);
 			int n = ScanInt(~data, NULL, 16);
+			LLOG("HTTP Chunk header: " << data << ' ' << n);
 			if(IsNull(n)) {
 				HttpError("invalid chunk header");
 				break;
@@ -365,24 +368,51 @@ void HttpRequest::StartBody()
 	else
 		StartPhase(BODY);
 	body.Clear();
+	bodylen = 0;
+	if(GetHeader("content-encoding") == "gzip") {
+		gzip = true;
+		z.WhenOut = callback(this, &HttpRequest::Out);
+		z.ChunkSize(chunk).GZip().Decompress();
+	}
+}
+
+void HttpRequest::ContentOut(const void *ptr, dword size)
+{
+	body.Cat((const char *)ptr, size);
+}
+
+void HttpRequest::Out(const void *ptr, dword size)
+{
+	LLOG("HTTP Out " << size);
+	if(z.IsError())
+		HttpError("gzip format error");
+	int64 l = bodylen + size;
+	if(l > max_content_size) {
+		HttpError("content length exceeded " + AsString(max_content_size));
+		phase = FAILED;
+		return;
+	}
+	WhenContent(ptr, size);
+	bodylen += size;
 }
 
 bool HttpRequest::ReadingBody()
 {
 	LLOG("HTTP reading data " << count);
-	for(;;) {
-		int n = 2048;
-		if(count >= 0)
-			n = min(n, count - body.GetLength());
-		String s = Get(n);
-		if(s.GetCount() + body.GetCount() > max_content_size) {
-			HttpError("content length exceeded " + AsString(max_content_size));
-			return true;
-		}
-		body.Cat(s);
-		if(count < 0 ? IsEof() : body.GetCount() >= count)
-			return false;
+	int n = chunk;
+	if(count >= 0)
+		n = min(n, count);
+	String s = Get(n);
+	if(gzip) {
+		z.Put(~s, s.GetCount());
 	}
+	else
+		Out(~s, s.GetCount());
+	if(count >= 0) {
+		count -= n;
+		return !IsEof() && count > 0;
+	}
+	return !IsEof();
 }
 
 void HttpRequest::StartRequest()
@@ -398,20 +428,14 @@ void HttpRequest::StartRequest()
 	StartPhase(REQUEST);
 	count = 0;
 	String ctype = contenttype;
+	if((method == METHOD_POST || method == METHOD_PUT) && IsNull(ctype))
+		ctype = "application/x-www-form-urlencoded";
 	switch(method) {
-		case METHOD_GET:  data << "GET "; break;
-		case METHOD_POST:
-			data << "POST ";
-			if(IsNull(ctype))
-				ctype = "application/x-www-form-urlencoded";
-			break;
-		case METHOD_PUT:
-			data << "PUT ";
-			if(IsNull(ctype))
-				ctype = "application/x-www-form-urlencoded";
-			break;
-		case METHOD_HEAD: data << "HEAD "; break;
-		default: NEVER(); // invalid method
+	case METHOD_GET:  data << "GET "; break;
+	case METHOD_POST: data << "POST "; break;
+	case METHOD_PUT: data << "PUT "; break;
+	case METHOD_HEAD: data << "HEAD "; break;
+	default: NEVER(); // invalid method
 	}
 	String host_port = host;
 	if(port)

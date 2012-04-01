@@ -142,10 +142,6 @@ class HttpRequest : public TcpSocket {
 
 	enum {
 		DEFAULT_HTTP_PORT        = 80,
-		DEFAULT_MAX_HEADER_SIZE  = 1000000,
-		DEFAULT_MAX_CONTENT_SIZE = 10000000,
-		DEFAULT_MAX_REDIRECTS    = 5,
-		DEFAULT_MAX_RETRIES      = 3,
 	};
 
 	enum {
@@ -188,6 +184,12 @@ class HttpRequest : public TcpSocket {
 	
 	int          retry_count;
 	int          redirect_count;
+	
+	int          chunk;
+
+	int          bodylen;
+	bool         gzip;	
+	Zlib         z;
 
 	void         Init();
 
@@ -201,15 +203,19 @@ class HttpRequest : public TcpSocket {
 	void         Finish();
 
 	void         HttpError(const char *s);
-	String       Execute0();
+	void         ContentOut(const void *ptr, dword size);
+	void         Out(const void *ptr, dword size);
 
 	String       CalculateDigest(const String& authenticate) const;
 
 public:
+	Callback2<const void *, dword> WhenContent;
+
 	HttpRequest&  MaxHeaderSize(int m)                   { max_header_size = m; return *this; }
 	HttpRequest&  MaxContentSize(int m)                  { max_content_size = m; return *this; }
 	HttpRequest&  MaxRedirect(int n)                     { max_redirects = n; return *this; }
 	HttpRequest&  MaxRetries(int n)                      { max_retries = n; return *this; }
+	HttpRequest&  ChunkSize(int n)                       { chunk = n; return *this; }
 
 	HttpRequest&  Method(int m)                          { method = m; return *this; }
 	HttpRequest&  GET()                                  { return Method(METHOD_GET); }
@@ -246,19 +252,23 @@ public:
 	HttpRequest&  Proxy(const char *url);
 	HttpRequest&  ProxyAuth(const String& u, const String& p) {  proxy_username = u; proxy_password = p; return *this; }
 
-	bool         IsSocketError() const            { return TcpSocket::IsError(); }
-	bool         IsHttpError() const              { return !IsNull(error) ; }
-	bool         IsError() const                  { return IsSocketError() || IsHttpError(); }
-	String       GetErrorDesc() const             { return IsSocketError() ? TcpSocket::GetErrorDesc() : error; }
-	void         ClearError()                     { TcpSocket::ClearError(); error.Clear(); }
+	bool         IsSocketError() const                    { return TcpSocket::IsError(); }
+	bool         IsHttpError() const                      { return !IsNull(error) ; }
+	bool         IsError() const                          { return IsSocketError() || IsHttpError(); }
+	String       GetErrorDesc() const                     { return IsSocketError() ? TcpSocket::GetErrorDesc() : error; }
+	void         ClearError()                             { TcpSocket::ClearError(); error.Clear(); }
 
-	String       GetHeader(const char *s)         { return header[s]; }
-	String       operator[](const char *s)        { return GetHeader(s); }
+	String       GetHeader(const char *s)                 { return header[s]; }
+	String       operator[](const char *s)                { return GetHeader(s); }
 	String       GetRedirectUrl();
 	int          GetContentLength();
-	int          GetStatusCode() const            { return status_code; }
-	String       GetResponsePhrase() const        { return response_phrase; }
-	String       GetContent() const               { return body; }
+	int          GetStatusCode() const                    { return status_code; }
+	String       GetResponsePhrase() const                { return response_phrase; }
+
+	String       GetContent() const                       { return body; }
+	String       operator~() const                        { return GetContent(); }
+	operator String() const                               { return GetContent(); }
+	void         ClearContent()                           { body.Clear(); }
 
 	enum Phase {
 		START, REQUEST, HEADER, BODY, CHUNK_HEADER, CHUNK_BODY, TRAILER, FINISHED, FAILED
