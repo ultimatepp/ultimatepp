@@ -547,4 +547,24 @@ void TcpSocket::SetSockError(const char *context)
 	SetSockError(context, TcpSocketErrorDesc(GetErrorCode()));
 }
 
+/*
+int SocketWaitEvent::Wait(int timeout)
+{
+	fd_set read[1], write[1], except[1];
+	for(int i = 0; i < socket.GetCount()
+	FD_ZERO(fdset);
+	FD_SET(socket, fdset);
+	int avail = select((int)socket + 1,
+	                   flags & WAIT_READ ? fdset : NULL,
+	                   flags & WAIT_WRITE ? fdset : NULL, NULL, tvalp);
+	LLOG("Wait select avail: " << avail);
+	if(avail < 0) {
+		SetSockError("wait");
+		return false;
+	}
+	if(avail > 0)
+		return true;
+}
+*/
+
 END_UPP_NAMESPACE

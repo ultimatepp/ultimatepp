@@ -91,7 +91,7 @@ public:
 	void            NoLinger()                               { Linger(Null); }
 	void            Reuse(bool reuse = true);
 	
-	bool            Wait(dword flags);
+	bool            Wait(dword events);
 	bool            WaitRead()                               { return Wait(WAIT_READ); }
 	bool            WaitWrite()                              { return Wait(WAIT_WRITE); }
 
@@ -117,17 +117,28 @@ public:
 	~TcpSocket()                                             { Close(); }
 };
 
+class SocketWaitEvent {
+	Vector< Tuple2<SOCKET, dword> > socket;
+
+public:
+	void Clear()                                             { socket.Clear(); }
+	void Add(SOCKET s, dword events)                         { socket.Add(MakeTuple(s, events)); }
+	void Add(TcpSocket& s, dword events)                     { Add(s.GetSOCKET(), events); }
+
+	int  Wait(int timeout);
+};
+
 struct HttpHeader {
 	String                    first_line;
 	VectorMap<String, String> fields;
 	
-	String operator[](const char *id) { return fields.Get(id, Null); }
+	String operator[](const char *id)                        { return fields.Get(id, Null); }
 
 	bool   Response(String& protocol, int& code, String& reason);
 	bool   Request(String& method, String& uri, String& version);
 
-	void Clear();	
-	bool Parse(const String& hdrs);
+	void   Clear();	
+	bool   Parse(const String& hdrs);
 };
 
 class HttpRequest : public TcpSocket {
