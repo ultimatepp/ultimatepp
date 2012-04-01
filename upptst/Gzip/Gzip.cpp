@@ -10,58 +10,62 @@ void Put(Zlib& zip, const String& data, int fixed, int rndmask)
 		zip.Put(~data + done, n);
 		done += n;
 	}
+	DDUMP(done);
 }
 
 void Test(int size, dword cmask, int fixed, int rndmask)
 {
-	for(int gzip = 0; gzip < 2; gzip++)
-		for(int cs = 0; cs < 3; cs++) {
-			String data;
-			for(int i = 0; i < size; i++) {
-				data.Cat(rand());
-				if((rand() & cmask) == 0)
-					data.Cat("Something to test compression too...");
+	for(int crc = 0; crc < 2; crc++)
+		for(int gzip = 0; gzip < 2; gzip++)
+			for(int cs = 0; cs < 3; cs++) {
+				String data;
+				for(int i = 0; i < size; i++) {
+					data.Cat(rand());
+					if((rand() & cmask) == 0)
+						data.Cat("Something to test compression too...");
+				}
+			
+				DLOG("====================");
+				DDUMP(fixed);
+				DDUMP(gzip);
+				DDUMP(crc);
+				DLOG("COMPRESS: " << data.GetCount());
+			
+				Zlib zip;
+				zip.GZip(gzip);
+				zip.ChunkSize(cs == 0 ? 128 : cs == 1 ? 2048 : 65536).CRC(crc).Compress();
+				Put(zip, data, fixed, rndmask);
+				zip.End();
+				String deflated = zip;
+				DDUMP(deflated.GetCount());
+				
+				dword crc = zip.GetCRC();
+				
+	//			LOGHEXDUMP(~deflated, deflated.GetCount());
+				
+				String z = gzip ? GZCompress(data) : ZCompress(data);
+				
+				DDUMP(z.GetCount());
+	//			LOGHEXDUMP(~z, z.GetCount());
+	
+				if(crc)
+					ASSERT(crc == CRC32(data));
+				ASSERT(deflated == z);
+			
+				DLOG("====================");
+				DLOG("DECOMPRESS: " << deflated.GetCount());
+				String zz = gzip ? GZDecompress(deflated) : ZDecompress(deflated);
+				DDUMP(zz.GetCount());
+				zip.CRC(crc).Decompress();
+				Put(zip, deflated, fixed, rndmask);
+				zip.End();
+				String inflated = zip;
+				ASSERT(!zip.IsError());
+				DDUMP(inflated.GetCount());
+				ASSERT(inflated == data);
+				if(crc)
+					ASSERT(zip.GetCRC() == crc);
 			}
-		
-			DLOG("====================");
-			DDUMP(fixed);
-			DDUMP(gzip);
-			DLOG("COMPRESS: " << data.GetCount());
-		
-			Zlib zip;
-			zip.GZip(gzip);
-			zip.ChunkSize(cs == 0 ? 128 : cs == 1 ? 2048 : 65536).Crc().Compress();
-			DDUMP(zip.out.GetCount());
-			Put(zip, data, fixed, rndmask);
-			DDUMP(zip.out.GetCount());
-			zip.End();
-			DDUMP(zip.out.GetCount());
-			
-			String deflated = zip.out;
-			dword crc = zip.GetCrc();
-			
-			DDUMP(deflated.GetCount());
-//			LOGHEXDUMP(~deflated, deflated.GetCount());
-			
-			String z = gzip ? GZCompress(data) : ZCompress(data);
-			
-			DDUMP(z.GetCount());
-//			LOGHEXDUMP(~z, z.GetCount());
-
-			ASSERT(crc == CRC32(data));
-			ASSERT(deflated == z);
-		
-			DLOG("====================");
-			DLOG("DECOMPRESS: " << deflated.GetCount());
-			String zz = gzip ? GZDecompress(deflated) : ZDecompress(deflated);
-			DDUMP(zz.GetCount());
-			zip.Crc().Decompress();
-			Put(zip, deflated, fixed, rndmask);
-			zip.End();
-			DDUMP(zip.out.GetCount());
-			ASSERT(zip.out == data);
-			ASSERT(zip.GetCrc() == crc);
-		}
 }
 
 void Test2(int n, int fixed, int rndmask)
@@ -81,7 +85,7 @@ CONSOLE_APP_MAIN
 	z.GZip().Decompress();
 	z.Put(gzf);
 	z.End();
-	DDUMP(z.out);
+	DDUMP(~z);
 	DDUMP(GZDecompress(gzf));
 	
 	for(int x = 3; x < 10000000; x += x) {
