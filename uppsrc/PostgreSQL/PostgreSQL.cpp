@@ -301,7 +301,7 @@ SqlConnection * PostgreSQLSession::CreateConnection()
 void PostgreSQLSession::ExecTrans(const char * statement)
 {
 	if(trace)
-		*trace << statement << "\n";
+		*trace << statement << UPP::EOL;
 	
 	int itry = 0;
 

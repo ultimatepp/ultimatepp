@@ -216,15 +216,15 @@ bool Sql::Fetch() {
 	}
 	Stream *s = session.GetTrace();
 	if((int)total > session.traceslow) {
-		BugLog() << total << " ms: " << cn->statement << '\n';
+		BugLog() << total << " ms: " << cn->statement << UPP::EOL;
 		if(s)
-			*s << total << " ms: " << cn->statement << '\n';
+			*s << total << " ms: " << cn->statement << UPP::EOL;
 	}
 	else
 	if((int)fetch > session.traceslow) {
-		BugLog() << fetch << " ms further fetch: " << cn->statement << '\n';
+		BugLog() << fetch << " ms further fetch: " << cn->statement << UPP::EOL;
 		if(s)
-			*s << fetch << " ms further fetch: " << cn->statement << '\n';
+			*s << fetch << " ms further fetch: " << cn->statement << UPP::EOL;
 	}
 	cn->starttime = INT_MAX;
 	return b;

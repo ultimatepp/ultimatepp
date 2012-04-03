@@ -5,6 +5,14 @@
 
 NAMESPACE_UPP
 
+#ifndef DEF_MEM_LEVEL
+#define DEF_MEM_LEVEL 8
+#endif
+
+#ifndef OS_CODE
+#define OS_CODE  0x03
+#endif
+
 //////////////////////////////////////////////////////////////////////
 
 static voidpf zalloc_new(voidpf opaque, uInt items, uInt size)
