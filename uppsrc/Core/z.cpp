@@ -193,7 +193,7 @@ void Zlib::Put0(const char *ptr, int size)
 
 	z.next_in = (Bytef *)ptr;
 	z.avail_in = size;
-	Pump(Z_NO_FLUSH);
+	Pump(false);
 }
 	
 void Zlib::Put(const void *ptr, dword size)
@@ -220,7 +220,7 @@ void Zlib::End()
 {
 	LLOG("ZLIB End");
 	if(mode != INFLATE || !gzip || gzip_done)
-		Pump(Z_FINISH);
+		Pump(true);
 	if(gzip && mode == DEFLATE) {
 		char h[8];
 		Poke32le(h, crc);
