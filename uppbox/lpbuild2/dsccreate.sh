@@ -21,6 +21,9 @@ tar -xzf "$TMP/upp_$VERSION.orig.tar.gz" -C "$tmp"
 mv "$tmp/upp-x11-src-$VERSION"/{bazaar,examples,reference,tutorial,uppsrc} "$tmp/"
 rm -r "$tmp/upp-x11-src-$VERSION"
 
+# fix version.h
+echo '#define IDE_VERSION    "'$VERSION'"' > "$tmp/uppsrc/ide/version.h"
+
 # tweak watch file, if we build stable release
 [ "$STABLE" = "yes" ] && sed -i '/ultimatepp.org/s/^/#/;/sf.net/s/^#//;' "$tmp/debian/watch"
 
@@ -30,7 +33,7 @@ cd "$tmp"
 for dist in $DISTS; do
     # create changelog
     cat > "debian/changelog" << EOF
-upp ($VERSION-0~${dist}0) $dist; urgency=low
+upp (${VERSION}-${BUILD}~${dist}0) $dist; urgency=low
 
   * Updated to SVN VERSION $VERSION
   * See http://www.ultimatepp.org/redmine/projects/upp/repository for complete
@@ -38,8 +41,6 @@ upp ($VERSION-0~${dist}0) $dist; urgency=low
 
  -- $MAINTAINER  `date -R`
 EOF
-    # store changes done so far
-    [ "$skiporig" ] || dpkg-source --commit . packaging packaging.patch
     # build source packages
     dpkg-buildpackage -S $BUILDPKGOPTS -m"$MAINTAINER" $skiporig
     skiporig="-sd"

@@ -1,25 +1,25 @@
 build: ide ide-nogtk umk
 
 ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
-	JOBS=$(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+    JOBS:=$(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 else
-	JOBS=1 
+    JOBS:=1
 endif
 
-SERIES="`dpkg-parsechangelog -c1 | sed -n 's/^Distribution: //p;'`"
-ARCH="`dpkg-architecture -qDEB_HOST_ARCH`"
+SERIES:="`dpkg-parsechangelog -c1 | sed -n 's/^Distribution: //p;'`"
+ARCH:="`dpkg-architecture -qDEB_HOST_ARCH`"
+OPTS:=CC="cc -g" CXX="c++ -g" CFLAGS="-g" CXXFLAGS="-g" LDFLAGS="-Wl,--gc-sections -Wl,-O,2" TIME= COLOR=0
 
 ide:
-	echo "JOBS="$(JOBS)
 	sed -i -e 's/IDE_VERSION[ \t]*"\([0-9]*\)[^"]*"/IDE_VERSION    "\1-'$(SERIES)-$(ARCH)'"/' $(CURDIR)/uppsrc/ide/version.h
-	$(MAKE) -f mkfile JOBS=$(JOBS) PKG=ide "NESTS=uppsrc" "FLAGS=GUI GCC" TARGET=`pwd`/$@ TIME= COLOR=0
+	$(MAKE) -f mkfile JOBS=$(JOBS) PKG=ide "NESTS=uppsrc" $(OPTS) "FLAGS=GUI GCC DEBUG DEBUG_FULL" TARGET=`pwd`/$@
 
 ide-nogtk:
 	sed -i -e 's/IDE_VERSION[ \t]*"\([0-9]*\)[^"]*"/IDE_VERSION    "\1-'$(SERIES)-$(ARCH)'-nogtk"/' $(CURDIR)/uppsrc/ide/version.h
-	$(MAKE) -f mkfile JOBS=$(JOBS) PKG=ide "NESTS=uppsrc" "FLAGS=GUI NOGTK GCC" TARGET=`pwd`/$@ TIME= COLOR=0
+	$(MAKE) -f mkfile JOBS=$(JOBS) PKG=ide "NESTS=uppsrc" $(OPTS) "FLAGS=GUI NOGTK GCC" TARGET=`pwd`/$@
 
 umk:
-	$(MAKE) -f mkfile JOBS=$(JOBS) PKG=umk "NESTS=uppsrc" "FLAGS=GCC" TARGET=`pwd`/$@ TIME= COLOR=0
+	$(MAKE) -f mkfile JOBS=$(JOBS) PKG=umk "NESTS=uppsrc" $(OPTS) "FLAGS=GCC" TARGET=`pwd`/$@
 
 install:
 	# this is just a trick to rename files

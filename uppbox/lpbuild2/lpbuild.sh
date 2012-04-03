@@ -15,5 +15,5 @@ TMP="$LP_TMP"
 . "$RES_DIR/dsccreate.sh"
 
 for dist in $LP_DISTS; do
-  dput $DPUT_OPTS "upp-$dist" "$TMP/upp_${VERSION}-0~${dist}0_source.changes"
+  dput $DPUT_OPTS "upp-$dist" "$TMP/upp_${VERSION}-${BUILD}~${dist}0_source.changes"
 done

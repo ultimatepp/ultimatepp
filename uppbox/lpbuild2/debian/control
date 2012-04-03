@@ -55,3 +55,28 @@ Description: Command line builder for Ultimate++ projects
  For those who need to build U++ packages from scripts or in minimalistic
  environments, umk utility provides simple building solution. It fully supports
  all the build-related features provided by TheIDE, without the actual IDE.
+
+Package: theide-dbg
+Architecture: any
+Depends: theide (= ${Source-Version})
+Section: debug
+Priority: extra
+Description: Debug symbols for theide package
+ Detached debugging symbols for easier debugging of errors in theide itself.
+
+Package: theide-nogtk-dbg
+Architecture: any
+Depends: theide-nogtk (= ${Source-Version})
+Section: debug
+Priority: extra
+Description: Debug symbols for theide-nogtk package
+ Detached debugging symbols for easier debugging of errors in theide itself.
+
+Package: umk-dbg
+Architecture: any
+Depends: umk (= ${Source-Version})
+Section: debug
+Priority: extra
+Description: Debug symbols for umk package
+ Detached debugging symbols for easier debugging of errors in umk tool.
+
