@@ -881,17 +881,27 @@ HRRInfo::HRRInfo()
 {
 }
 
-HRRInfo::HRRInfo(Rectf log_rect, int levels, Color background, int method, int quality,
-	bool mono, Color mono_black, Color mono_white)
-: log_rect(log_rect), levels(levels), background(background), method(method), quality(quality)
-, mono(mono), mono_black(mono_black), mono_white(mono_white)
+HRRInfo::HRRInfo(const Rectf& log_rect_, const Rectf& map_rect_,
+	int levels_, Color background_, int method_, int quality_,
+	bool mono_, Color mono_black_, Color mono_white_)
+: log_rect(log_rect_)
+, map_rect(map_rect_)
+, levels(levels_)
+, background(background_)
+, method(method_)
+, quality(quality_)
+, mono(mono_)
+, mono_black(mono_black_)
+, mono_white(mono_white_)
 {
-	double wadd = log_rect.Height() - log_rect.Width();
-	map_rect = log_rect;
-	if(wadd >= 0)
-		map_rect.right += wadd;
-	else
-		map_rect.top += wadd;
+	if(IsNull(map_rect)) {
+		double wadd = log_rect.Height() - log_rect.Width();
+		map_rect = log_rect;
+		if(wadd >= 0)
+			map_rect.right += wadd;
+		else
+			map_rect.top += wadd;
+	}
 }
 
 void HRRInfo::Serialize(Stream& stream)
