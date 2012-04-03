@@ -5,6 +5,11 @@ NAMESPACE_UPP
 bool HttpRequest_Trace__;
 
 #define LLOG(x)      do { if(HttpRequest_Trace__) RLOG(x); } while(0)
+	
+#ifdef _DEBUG
+_DBG_
+#define ENDZIP
+#endif
 
 void HttpRequest::Trace(bool b)
 {
@@ -29,6 +34,7 @@ void HttpRequest::Init()
 	gzip = false;
 	WhenContent = callback(this, &HttpRequest::ContentOut);
 	chunk = 4096;
+	timeout = 120000;
 }
 
 HttpRequest::HttpRequest()
@@ -203,6 +209,7 @@ bool HttpRequest::Do()
 	case START:
 		retry_count = 0;
 		redirect_count = 0;
+		start_time = msecs();
 		gzip = false;
 		StartRequest();
 		break;
@@ -239,6 +246,9 @@ bool HttpRequest::Do()
 		header.Parse(data);
 		Finish();
 		break;
+	case FINISHED:
+	case FAILED:
+		return false;
 	default:
 		NEVER();
 	}
@@ -247,7 +257,7 @@ bool HttpRequest::Do()
 		if(IsSocketError() || IsError())
 			phase = FAILED;
 		else
-		if(IsTimeout()) {
+		if(msecs() - start_time >= timeout) {
 			HttpError("connection timed out");
 			phase = FAILED;
 		}
@@ -268,6 +278,23 @@ bool HttpRequest::Do()
 
 void HttpRequest::Finish()
 {
+	if(gzip) {
+	#ifdef ENDZIP
+		body = GZDecompress(body);
+		if(body.IsVoid()) {
+			HttpError("gzip decompress at finish error");
+			phase = FAILED;
+			return;
+		}
+	#else
+		z.End();
+		if(z.IsError()) {
+			HttpError("gzip format error (finish)");
+			phase = FAILED;
+			return;
+		}
+	#endif
+	}
 	Close();
 	if(status_code == 401 && !IsNull(username)) {
 		String authenticate = header["www-authenticate"];
@@ -346,7 +373,7 @@ void HttpRequest::StartBody()
 		return;
 	}
 	
-	if(!header.Response(protocol, status_code, response_phrase)) {
+	if(!header.Response(protocol, status_code, reason_phrase)) {
 		HttpError("invalid HTTP response");
 		return;
 	}
@@ -403,13 +430,21 @@ bool HttpRequest::ReadingBody()
 	if(count >= 0)
 		n = min(n, count);
 	String s = Get(n);
-	if(gzip) {
+	DDUMP(s.GetCount());
+	DDUMP(count);
+	DDUMP(IsEof());
+	if(s.GetCount() == 0)
+		return !IsEof();
+#ifndef ENDZIP
+	if(gzip)
 		z.Put(~s, s.GetCount());
-	}
 	else
+#endif
 		Out(~s, s.GetCount());
+	DDUMP(IsEof());
 	if(count >= 0) {
-		count -= n;
+		count -= s.GetCount();
+		DDUMP(count);
 		return !IsEof() && count > 0;
 	}
 	return !IsEof();
@@ -488,7 +523,7 @@ bool HttpRequest::ReadingHeader()
 	for(;;) {
 		int c = Get();
 		if(c < 0)
-			return false;
+			return !IsEof();
 		else
 			data.Cat(c);
 		if(data.GetCount() > 3) {

@@ -16,7 +16,7 @@ NAMESPACE_UPP
 #pragma comment(lib, "ws2_32.lib")
 #endif
 
-#define LLOG(x)  // DLOG("TCP " << x)
+#define LLOG(x)  //  DLOG("TCP " << x)
 
 #ifdef PLATFORM_POSIX
 
@@ -113,7 +113,6 @@ void TcpSocket::Reset()
 	ipv6 = false;
 	ptr = end = buffer;
 	is_error = false;
-	is_timeout = false;
 	is_abort = false;
 }
 
@@ -129,7 +128,7 @@ TcpSocket::TcpSocket()
 bool TcpSocket::Open(int family, int type, int protocol)
 {
 	Init();
-	CloseRaw();
+	Close();
 	ClearError();
 	if((socket = ::socket(family, type, protocol)) == INVALID_SOCKET)
 		return false;
@@ -188,7 +187,7 @@ bool TcpSocket::Listen(int port, int listen_count, bool ipv6_, bool reuse)
 
 bool TcpSocket::Accept(TcpSocket& ls)
 {
-	CloseRaw();
+	Close();
 	if(timeout && !ls.WaitRead())
 		return false;
 	if(!Open(ls.ipv6 ? AF_INET6 : AF_INET, SOCK_STREAM, 0))
@@ -241,7 +240,7 @@ void TcpSocket::Linger(int msecs)
 
 void TcpSocket::Attach(SOCKET s)
 {
-	CloseRaw();
+	Close();
 	socket = s;
 }
 
@@ -269,7 +268,7 @@ bool TcpSocket::Connect(const char *host, int port)
 			if(connect(socket, rp->ai_addr, rp->ai_addrlen) == 0 ||
 			   GetErrorCode() == SOCKERR(EINPROGRESS) || GetErrorCode() == SOCKERR(EWOULDBLOCK))
 				break;
-			CloseRaw();
+			Close();
 		}
 		rp = rp->ai_next;
 		if(!rp) {
@@ -283,33 +282,22 @@ bool TcpSocket::Connect(const char *host, int port)
 	return true;
 }
 
-bool TcpSocket::CloseRaw()
+void TcpSocket::Close()
 {
-	SOCKET old_socket = socket;
-	socket = INVALID_SOCKET;
-	if(old_socket != INVALID_SOCKET) {
-		LLOG("TcpSocket::CloseRaw(" << (int)old_socket << ")");
+	LLOG("TCP close " << (int)socket);
+	if(socket != INVALID_SOCKET) {
 		int res;
 #if defined(PLATFORM_WIN32)
-		res = closesocket(old_socket);
+		res = closesocket(socket);
 #elif defined(PLATFORM_POSIX)
-		res = close(old_socket);
+		res = close(socket);
 #else
 	#error Unsupported platform
 #endif
-		if(res && !IsError()) {
+		if(res && !IsError())
 			SetSockError("close");
-			return false;
-		}
+		socket = INVALID_SOCKET;
 	}
-	return true;
-}
-
-bool TcpSocket::Close()
-{
-	if(socket == INVALID_SOCKET)
-		return false;
-	return !IsError() && WaitWrite() && CloseRaw();
 }
 
 bool TcpSocket::WouldBlock()
@@ -349,23 +337,14 @@ String TcpSocket::GetHostName()
 	return buffer;
 }
 
-TcpSocket& TcpSocket::GlobalTimeout(int ms)
-{
-	global = true;
-	starttime = msecs();
-	timeout = ms;
-	return *this;
-}
-
 bool TcpSocket::Wait(dword flags)
 {
 	LLOG("Wait(" << timeout << ", " << flags << ")");
 	if((flags & WAIT_READ) && ptr != end)
 		return true;
-	int end_time = (global ? starttime : msecs()) + timeout;
+	int end_time = msecs() + timeout;
 	if(socket == INVALID_SOCKET)
 		return false;
-	is_timeout = false;
 	for(;;) {
 		if(IsError() || IsAbort())
 			return false;
@@ -385,7 +364,8 @@ bool TcpSocket::Wait(dword flags)
 		FD_SET(socket, fdset);
 		int avail = select((int)socket + 1,
 		                   flags & WAIT_READ ? fdset : NULL,
-		                   flags & WAIT_WRITE ? fdset : NULL, NULL, tvalp);
+		                   flags & WAIT_WRITE ? fdset : NULL,
+		                   flags & WAIT_EXCEPTION ? fdset : NULL, tvalp);
 		LLOG("Wait select avail: " << avail);
 		if(avail < 0) {
 			SetSockError("wait");
@@ -393,17 +373,18 @@ bool TcpSocket::Wait(dword flags)
 		}
 		if(avail > 0)
 			return true;
-		if(to <= 0) {
-			is_timeout = true;
+		if(to <= 0 && timeout) {
 			return false;
 		}
 		WhenWait();
+		if(timeout == 0)
+			return false;
 	}
 }
 
 int TcpSocket::Put(const char *s, int length)
 {
-	LLOG("Put(@ " << socket << ": " << length);
+	LLOG("Put " << socket << ": " << length);
 	ASSERT(IsOpen());
 	if(length < 0 && s)
 		length = (int)strlen(s);
@@ -416,7 +397,7 @@ int TcpSocket::Put(const char *s, int length)
 			return done;
 		peek = false;
 		int count = Send(s + done, length - done);
-		if(IsError() || timeout == 0)
+		if(IsError() || timeout == 0 && count == 0 && peek)
 			return done;
 		if(count > 0)
 			done += count;
@@ -446,12 +427,9 @@ int TcpSocket::Recv(void *buf, int amount)
 
 void TcpSocket::ReadBuffer()
 {
-	ptr = buffer;
-	end = buffer + Recv(buffer, BUFFERSIZE);
-	if(ptr == end && timeout) {
-		WaitRead();
+	ptr = end = buffer;
+	if(WaitRead())
 		end = buffer + Recv(buffer, BUFFERSIZE);
-	}
 }
 
 int TcpSocket::Get_()
@@ -491,15 +469,14 @@ int TcpSocket::Get(void *buffer, int count)
 			ptr += count;
 			return count;
 		}
-	int part = Recv((char *)buffer + done, count - done);
-	if(part > 0)
-		done += part;
-	while(timeout != 0 && part >= 0 && done < count && !IsError() && !IsEof()) {
+	while(done < count && !IsError() && !IsEof()) {
 		if(!WaitRead())
 			break;
-		part = Recv((char *)buffer + done, count - done);
+		int part = Recv((char *)buffer + done, count - done);
 		if(part > 0)
 			done += part;
+		if(timeout == 0)
+			break;
 	}
 	return done;
 }
@@ -547,24 +524,55 @@ void TcpSocket::SetSockError(const char *context)
 	SetSockError(context, TcpSocketErrorDesc(GetErrorCode()));
 }
 
-/*
 int SocketWaitEvent::Wait(int timeout)
 {
-	fd_set read[1], write[1], except[1];
-	for(int i = 0; i < socket.GetCount()
-	FD_ZERO(fdset);
-	FD_SET(socket, fdset);
-	int avail = select((int)socket + 1,
-	                   flags & WAIT_READ ? fdset : NULL,
-	                   flags & WAIT_WRITE ? fdset : NULL, NULL, tvalp);
-	LLOG("Wait select avail: " << avail);
-	if(avail < 0) {
-		SetSockError("wait");
-		return false;
+	FD_ZERO(read);
+	FD_ZERO(write);
+	FD_ZERO(exception);
+	int maxindex = -1;
+	for(int i = 0; i < socket.GetCount(); i++) {
+		const Tuple2<int, dword>& s = socket[i];
+		if(s.a >= 0) {
+			const Tuple2<SOCKET, dword>& s = socket[i];
+			if(s.b & WAIT_READ)
+				FD_SET(s.a, read);
+			if(s.b & WAIT_WRITE)
+				FD_SET(s.a, write);
+			if(s.b & WAIT_EXCEPTION)
+				FD_SET(s.a, exception);
+			maxindex = max(s.a, maxindex);
+		}
 	}
-	if(avail > 0)
-		return true;
+	timeval *tvalp = NULL;
+	timeval tval;
+	if(!IsNull(timeout)) {
+		tval.tv_sec = timeout / 1000;
+		tval.tv_usec = 1000 * (timeout % 1000);
+		tvalp = &tval;
+	}
+	return select(maxindex + 1, read, write, exception, tvalp);
 }
-*/
+
+dword SocketWaitEvent::Get(int i) const
+{
+	int s = socket[i].a;
+	if(s < 0)
+		return 0;
+	dword events = 0;
+	if(FD_ISSET(s, read))
+		events |= WAIT_READ;
+	if(FD_ISSET(s, write))
+		events |= WAIT_WRITE;
+	if(FD_ISSET(s, exception))
+		events |= WAIT_EXCEPTION;
+	return events;
+}
+
+SocketWaitEvent::SocketWaitEvent()
+{
+	FD_ZERO(read);
+	FD_ZERO(write);
+	FD_ZERO(exception);
+}
 
 END_UPP_NAMESPACE
