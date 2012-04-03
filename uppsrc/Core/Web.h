@@ -10,7 +10,7 @@ inline String Base64Encode(const String& data)    { return Base64Encode(data.Beg
 String        Base64Decode(const char *b, const char *e);
 inline String Base64Decode(const String& data)    { return Base64Decode(data.Begin(), data.End()); }
 
-enum { WAIT_READ = 1, WAIT_WRITE = 2, WAIT_EXCEPTION = 3 };
+enum { WAIT_READ = 1, WAIT_WRITE = 2, WAIT_EXCEPTION = 4, WAIT_ALL = 7 };
 
 class TcpSocket {
 	enum { BUFFERSIZE = 512 };
@@ -20,13 +20,11 @@ class TcpSocket {
 	char                   *end;
 	bool                    is_eof;
 	bool                    is_error;
-	bool                    is_timeout;
 	bool                    is_abort;
 	bool                    ipv6;
 
 	bool                    global;
 	int                     timeout;
-	int                     starttime;
 	int                     waitstep;
 	int                     done;
 
@@ -34,7 +32,6 @@ class TcpSocket {
 	String                  errordesc;
 
 
-	bool                    CloseRaw();
 	SOCKET                  AcceptRaw(dword *ipaddr, int timeout_msec);
 	bool                    Open(int family, int type, int protocol);
 	int                     Recv(void *buffer, int maxlen);
@@ -69,9 +66,6 @@ public:
 	int             GetError() const                         { return errorcode; }
 	String          GetErrorDesc() const                     { return errordesc; }
 
-	bool            IsTimeout() const                        { return is_timeout; }
-	void            ClearTimeout()                           { is_timeout = false; }
-	
 	void            Abort()                                  { is_abort = true; }
 	bool            IsAbort() const                          { return is_abort; }
 	void            ClearAbort()                             { is_abort = false; }
@@ -83,7 +77,7 @@ public:
 	bool            Connect(const char *host, int port);
 	bool            Listen(int port, int listen_count, bool ipv6 = false, bool reuse = true);
 	bool            Accept(TcpSocket& listen_socket);
-	bool            Close();
+	void            Close();
 	void            Shutdown();
 
 	void            NoDelay();
@@ -110,7 +104,6 @@ public:
 	bool            PutAll(const String& s)                  { return Put(s) == s.GetCount(); }
 
 	TcpSocket&      Timeout(int ms)                          { timeout = ms; global = false; return *this; }
-	TcpSocket&      GlobalTimeout(int ms);
 	TcpSocket&      Blocking()                               { return Timeout(Null); }
 
 	TcpSocket();
@@ -118,14 +111,18 @@ public:
 };
 
 class SocketWaitEvent {
-	Vector< Tuple2<SOCKET, dword> > socket;
+	Vector< Tuple2<int, dword> > socket;
+	fd_set read[1], write[1], exception[1];
 
 public:
-	void Clear()                                             { socket.Clear(); }
-	void Add(SOCKET s, dword events)                         { socket.Add(MakeTuple(s, events)); }
-	void Add(TcpSocket& s, dword events)                     { Add(s.GetSOCKET(), events); }
-
-	int  Wait(int timeout);
+	void  Clear()                                            { socket.Clear(); }
+	void  Add(SOCKET s, dword events = WAIT_ALL)             { socket.Add(MakeTuple((int)s, events)); }
+	void  Add(TcpSocket& s, dword events = WAIT_ALL)         { Add(s.GetSOCKET(), events); }
+	int   Wait(int timeout);
+	dword Get(int i) const;
+	dword operator[](int i) const                            { return Get(i); }
+	
+	SocketWaitEvent();
 };
 
 struct HttpHeader {
@@ -166,6 +163,7 @@ class HttpRequest : public TcpSocket {
 	int          max_content_size;
 	int          max_redirects;
 	int          max_retries;
+	int          timeout;
 
 	String       host;
 	int          port;
@@ -191,8 +189,9 @@ class HttpRequest : public TcpSocket {
 
 	String       protocol;
 	int          status_code;
-	String       response_phrase;
+	String       reason_phrase;
 	
+	int          start_time;
 	int          retry_count;
 	int          redirect_count;
 	
@@ -226,6 +225,7 @@ public:
 	HttpRequest&  MaxContentSize(int m)                  { max_content_size = m; return *this; }
 	HttpRequest&  MaxRedirect(int n)                     { max_redirects = n; return *this; }
 	HttpRequest&  MaxRetries(int n)                      { max_retries = n; return *this; }
+	HttpRequest&  RequestTimeout(int ms)                 { timeout = ms; return *this; }
 	HttpRequest&  ChunkSize(int n)                       { chunk = n; return *this; }
 
 	HttpRequest&  Method(int m)                          { method = m; return *this; }
@@ -274,11 +274,11 @@ public:
 	String       GetRedirectUrl();
 	int          GetContentLength();
 	int          GetStatusCode() const                    { return status_code; }
-	String       GetResponsePhrase() const                { return response_phrase; }
+	String       GetReasonPhrase() const                  { return reason_phrase; }
 
 	String       GetContent() const                       { return body; }
 	String       operator~() const                        { return GetContent(); }
-	operator String() const                               { return GetContent(); }
+	operator     String() const                           { return GetContent(); }
 	void         ClearContent()                           { body.Clear(); }
 
 	enum Phase {
@@ -295,7 +295,6 @@ public:
 	
 	HttpRequest();
 	HttpRequest(const char *url);
-
 	
 	static void  Trace(bool b = true);
 };
