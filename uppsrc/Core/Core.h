@@ -198,27 +198,8 @@ typedef int SOCKET;
 
 #ifdef PLATFORM_WIN32
 #include <plugin/z/lib/zlib.h>
-// #include <plugin/z/lib/zutil.h>
-
-#ifndef DEF_MEM_LEVEL
-#define DEF_MEM_LEVEL 8
-#endif
-
-#ifndef OS_CODE
-#define OS_CODE  0x03
-#endif
-
 #else
 #include <zlib.h>
-
-#ifndef DEF_MEM_LEVEL
-#define DEF_MEM_LEVEL 8
-#endif
-
-#ifndef OS_CODE
-#define OS_CODE  0x03
-#endif
-
 #endif
 
 #include <algorithm>
