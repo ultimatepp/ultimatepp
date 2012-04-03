@@ -49,7 +49,8 @@ class HRRInfo
 
 public:
 	HRRInfo();
-	HRRInfo(Rectf log_rect, int levels = 5, Color background = White,
+	HRRInfo(const Rectf& log_rect, const Rectf& map_rect = Null,
+		int levels = 5, Color background = White,
 		int method = METHOD_JPG, int quality = DFLT_JPG_QUALITY,
 		bool mono = false, Color mono_black = Black, Color mono_white = White);
 
