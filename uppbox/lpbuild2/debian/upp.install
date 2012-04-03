@@ -1,2 +1,6 @@
-uppsrc usr/share/upp/uppsrc
+uppsrc usr/share/upp
+bazaar usr/share/upp
+examples usr/share/upp
+reference usr/share/upp
+tutorial usr/share/upp
 copyright usr/share/doc/upp

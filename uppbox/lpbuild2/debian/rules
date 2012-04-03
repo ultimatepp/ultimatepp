@@ -1,4 +1,12 @@
 #!/usr/bin/make -f
 
+DH_VERBOSE=1
+
+override_dh_strip:
+	for P in $$(sed -n 's/^Package: \(.*\)-dbg$$/\1/p' debian/control); do \
+	  dh_strip -v -p $${P} --dbg-package=$${P}-dbg; \
+	done
+	dh_strip -v --remaining-packages
+
 %:
-		dh $@
+	dh $@ -v

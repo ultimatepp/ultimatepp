@@ -31,6 +31,6 @@ for dist in $LOCAL_DISTS; do
       rm -f "$TMP/keyscript.sh"
     fi;
     # build the binary packages
-    sudo DIST=$dist ARCH=$arch pbuilder --build --configfile "$RES_DIR/pbuilderrc" --distribution $dist --architecture $arch --debbuildopts "-j$JOBS " "$TMP/upp_${VERSION}-0~${dist}0.dsc"
+    sudo DIST=$dist ARCH=$arch pbuilder --build --configfile "$RES_DIR/pbuilderrc" --distribution $dist --architecture $arch --debbuildopts "-j$JOBS " "$TMP/upp_${VERSION}-${BUILD}~${dist}0.dsc"
   done
 done
