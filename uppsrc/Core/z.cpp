@@ -235,9 +235,7 @@ void Zlib::End()
 		Poke32le(h + 4, total);
 		WhenOut(h, 8);
 	}
-	DDUMP(footer.GetCount());
-	
-	_DBG_ if(0 && gzip && mode == INFLATE &&
+	if(gzip && mode == INFLATE &&
 	   (footer.GetCount() != 8 || Peek32le(~footer) != (int)crc || Peek32le(~footer + 4) != total)) {
 		LLOG("ZLIB GZIP FOOTER ERROR");
 		error = true;

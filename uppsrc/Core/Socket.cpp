@@ -533,7 +533,7 @@ int SocketWaitEvent::Wait(int timeout)
 	for(int i = 0; i < socket.GetCount(); i++) {
 		const Tuple2<int, dword>& s = socket[i];
 		if(s.a >= 0) {
-			const Tuple2<SOCKET, dword>& s = socket[i];
+			const Tuple2<int, dword>& s = socket[i];
 			if(s.b & WAIT_READ)
 				FD_SET(s.a, read);
 			if(s.b & WAIT_WRITE)
