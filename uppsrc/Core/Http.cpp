@@ -430,9 +430,6 @@ bool HttpRequest::ReadingBody()
 	if(count >= 0)
 		n = min(n, count);
 	String s = Get(n);
-	DDUMP(s.GetCount());
-	DDUMP(count);
-	DDUMP(IsEof());
 	if(s.GetCount() == 0)
 		return !IsEof();
 #ifndef ENDZIP
@@ -441,10 +438,8 @@ bool HttpRequest::ReadingBody()
 	else
 #endif
 		Out(~s, s.GetCount());
-	DDUMP(IsEof());
 	if(count >= 0) {
 		count -= s.GetCount();
-		DDUMP(count);
 		return !IsEof() && count > 0;
 	}
 	return !IsEof();
