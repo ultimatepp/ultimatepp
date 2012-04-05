@@ -17,6 +17,5 @@
 #include "usvn/init"
 #include "TextDiffCtrl/init"
 #include "TabBar/init"
-#include "Web/SSL/init"
 #include "ide\SrcUpdater/init"
 #endif
