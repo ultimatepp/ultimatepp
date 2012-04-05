@@ -17,8 +17,7 @@ uses
 	plugin/astyle,
 	usvn,
 	TextDiffCtrl,
-	TabBar,
-	Web/SSL;
+	TabBar;
 
 uses(POSIX) ide\SrcUpdater;
 
