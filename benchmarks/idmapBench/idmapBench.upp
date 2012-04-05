@@ -13,5 +13,7 @@ mainconfig
 	"" = "USEMALLOC",
 	"" = "MT",
 	"" = "USEMALLOC MT",
-	"" = "HEAPSTAT";
+	"" = "HEAPSTAT",
+	"" = "SVO_VALUE MT",
+	"" = "SVO_VALUE";
 

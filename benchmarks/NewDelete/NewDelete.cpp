@@ -12,7 +12,7 @@ public:
 CONSOLE_APP_MAIN
 {
 	RTIMING("NewDelete");
-	for (int i=0; i<=10000000; i++) {
+	for (int i=0; i<=100000000; i++) {
 		Test *test = new Test(i);
 		delete test;
 	}
