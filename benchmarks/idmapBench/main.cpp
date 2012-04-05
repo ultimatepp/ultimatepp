@@ -35,7 +35,7 @@ using namespace Upp;
 void BenchNTL(const char *file) {
 	FileIn in(file);
 	if (!in) {
-		std::cout << "Cannot open input file.\n";
+		RLOG("Cannot open input file.");
 		return;
 	}
 
@@ -85,7 +85,7 @@ bool SimpleValueOrder(const Value& a, const Value& b)
 void BenchValueMap(const char *file) {
 	FileIn in(file);
 	if (!in) {
-		std::cout << "Cannot open input file.\n";
+		RLOG("Cannot open input file.");
 		return;
 	}
 
@@ -137,7 +137,7 @@ template <class Container>
 void BenchSTL(Container& imap, const char *file) {
 	std::ifstream in(file);
 	if (!in) {
-		std::cout << "Cannot open input file.\n";
+		RLOG("Cannot open input file.");
 		return;
 	}
 
@@ -231,6 +231,8 @@ void BenchHashMap(const char *file)
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
 	String fn;
 	int argc = CommandLine().GetCount();
 	const Vector<String>& argv = CommandLine();
@@ -239,8 +241,6 @@ CONSOLE_APP_MAIN
 	else
 		fn = argv[0];
 
-		BenchValueMap(fn);
-	cout << "===========================\n";
 	BenchNTL(fn); // first run to cache the file
 
 #ifdef TEST_HASHMAP
@@ -249,7 +249,7 @@ CONSOLE_APP_MAIN
 		TimeStop tm;
 		for(int n = 0; n < N; n++)
 			BenchHashMap(fn);
-		cout << "STL hash_map time: " << tm.Elapsed() << " ms \n";
+		RLOG("STL hash_map time: " << tm.Elapsed() << " ms");
 	}
 #endif
 
@@ -258,7 +258,7 @@ CONSOLE_APP_MAIN
 		TimeStop tm;
 		for(int n = 0; n < N; n++)
 			BenchMap(fn);
-		cout << "STL map time: " << tm.Elapsed() << " ms \n";
+		RLOG("STL map time: " << tm.Elapsed() << " ms");
 	}
 
 	{
@@ -266,7 +266,7 @@ CONSOLE_APP_MAIN
 		TimeStop tm;
 		for(int n = 0; n < N; n++)
 			BenchNTL(fn);
-		cout << "NTL time: " << tm.Elapsed() << " ms\n";
+		RLOG("NTL time: " << tm.Elapsed() << " ms");
 	}
 
 	{
@@ -274,6 +274,6 @@ CONSOLE_APP_MAIN
 		TimeStop tm;
 		for(int n = 0; n < N; n++)
 			BenchValueMap(fn);
-		cout << "ValueMap time: " << tm.Elapsed() << " ms\n";
+		RLOG("ValueMap time: " << tm.Elapsed() << " ms");
 	}
 }

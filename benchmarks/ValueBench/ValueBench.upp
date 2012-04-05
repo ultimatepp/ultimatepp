@@ -8,6 +8,6 @@ file
 	data.txt;
 
 mainconfig
-	"" = "SSE2 MT",
-	"" = "SSE2";
+	"" = "SSE2 MT SVO_VALUE",
+	"" = "SSE2 SVO_VALUE";
 
