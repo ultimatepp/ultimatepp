@@ -8,7 +8,7 @@ bool HttpRequest_Trace__;
 	
 #ifdef _DEBUG
 _DBG_
-#define ENDZIP
+// #define ENDZIP
 #endif
 
 void HttpRequest::Trace(bool b)
@@ -197,7 +197,7 @@ void HttpRequest::HttpError(const char *s)
 
 void HttpRequest::StartPhase(int s)
 {
-	LLOG("Starting status " << s);
+	LLOG("Starting status " << s << ' ' << host);
 	phase = s;
 	data.Clear();
 }
@@ -210,7 +210,6 @@ bool HttpRequest::Do()
 		retry_count = 0;
 		redirect_count = 0;
 		start_time = msecs();
-		gzip = false;
 		StartRequest();
 		break;
 	case REQUEST:
@@ -330,7 +329,7 @@ void HttpRequest::ReadingChunkHeader()
 		else
 		if(c == '\n') {
 			int n = ScanInt(~data, NULL, 16);
-			LLOG("HTTP Chunk header: " << data << ' ' << n);
+			LLOG("HTTP Chunk header: 0x" << data << " = " << n);
 			if(IsNull(n)) {
 				HttpError("invalid chunk header");
 				break;
@@ -396,7 +395,8 @@ void HttpRequest::StartBody()
 		StartPhase(BODY);
 	body.Clear();
 	bodylen = 0;
-	if(GetHeader("content-encoding") == "gzip") {
+	gzip = GetHeader("content-encoding") == "gzip";
+	if(gzip) {
 		gzip = true;
 		z.WhenOut = callback(this, &HttpRequest::Out);
 		z.ChunkSize(chunk).GZip().Decompress();
@@ -431,7 +431,7 @@ bool HttpRequest::ReadingBody()
 		n = min(n, count);
 	String s = Get(n);
 	if(s.GetCount() == 0)
-		return !IsEof();
+		return !IsEof() && count;
 #ifndef ENDZIP
 	if(gzip)
 		z.Put(~s, s.GetCount());
@@ -449,6 +449,9 @@ void HttpRequest::StartRequest()
 {
 	Close();
 	ClearError();
+	gzip = false;
+	z.Clear();
+
 	bool use_proxy = !IsNull(proxy_host);
 
 	int p = use_proxy ? proxy_port : port;

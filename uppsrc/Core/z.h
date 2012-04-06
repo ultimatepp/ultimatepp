@@ -26,10 +26,12 @@ class Zlib {
 	bool          hdr;
 	bool          error;
 	bool          gzip;
-	bool          gzip_done;
+	bool          gzip_header_done;
 	bool          gzip_footer;
-	String        gzip_hs;
 	String        footer;
+	String        gzip_hs;
+	String        gzip_name;
+	String        gzip_comment;
 	String        out;
 	
 	void          PutOut(const void *ptr, dword size);
@@ -38,6 +40,7 @@ class Zlib {
 	void          Free();
 	void          Put0(const char *ptr, int size);
 	int           GzipHeader(const char *ptr, int size);
+	void          Init();
 
 public:
 	Callback2<const void *, dword> WhenOut;
@@ -47,6 +50,7 @@ public:
 	void Put(const void *ptr, dword size);
 	void Put(const String& s)              { Put(~s, s.GetCount()); }
 	void End();
+	void Clear();
 	
 	const String& Get() const              { return out; }
 	operator const String&() const         { return out; }
@@ -55,6 +59,8 @@ public:
 
 	dword  GetCRC() const                  { return crc; }
 	bool   IsError() const                 { return error; }
+	String GetGZipName() const             { return gzip_name; }
+	String GetGZipComment() const          { return gzip_comment; }
 	
 	Zlib& GZip(bool gzip_ = true)          { gzip = gzip_; return *this; } 
 	Zlib& Header(bool hdr_ = true)         { hdr = hdr_; return *this; }
