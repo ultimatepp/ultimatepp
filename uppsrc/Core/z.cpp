@@ -69,6 +69,11 @@ void Zlib::Begin()
 	if(docrc || gzip)
 		crc = crc32(0, NULL, 0);
 	out.Clear();
+	gzip_name.Clear();
+	gzip_comment.Clear();
+	footer.Clear();
+	gzip_footer = false;
+	gzip_header_done = false;
 }
 
 void Zlib::Compress()
@@ -152,10 +157,14 @@ int Zlib::GzipHeader(const char *ptr, int size)
 		if((pos += len + 2) > size)
 			return 0;
 	}
+	gzip_name.Clear();
+	gzip_comment.Clear();
 	for(int i = !!(flags & ORIG_NAME) + !!(flags & COMMENT); i > 0; i--) {
-		while(ptr[pos])
+		while(ptr[pos]) {
+			(i ? gzip_name : gzip_comment).Cat(ptr[pos]);
 			if(++pos > size)
 				return 0;
+		}
 		if(++pos > size)
 			return 0;
 	}
@@ -172,7 +181,7 @@ void Zlib::Put0(const char *ptr, int size)
 	ASSERT(mode);
 	if(size <= 0)
 		return;
-	if(gzip && !gzip_done && mode == INFLATE) {
+	if(gzip && !gzip_header_done && mode == INFLATE) {
 		if(gzip_hs.GetCount()) {
 			gzip_hs.Cat(ptr, size);
 			ptr = ~gzip_hs;
@@ -185,7 +194,7 @@ void Zlib::Put0(const char *ptr, int size)
 			return;
 		}
 		
-		gzip_done = true;
+		gzip_header_done = true;
 		size -= pos;
 		ptr += pos;
 	}
@@ -227,7 +236,7 @@ void Zlib::PutOut(const void *ptr, dword size)
 void Zlib::End()
 {
 	LLOG("ZLIB End");
-	if(mode != INFLATE || !gzip || gzip_done)
+	if(mode != INFLATE || !gzip || gzip_header_done)
 		Pump(true);
 	if(gzip && mode == DEFLATE) {
 		char h[8];
@@ -251,9 +260,22 @@ void Zlib::Free()
 		deflateEnd(&z);
 	mode = NONE;
 	gzip_hs.Clear();
-	gzip_done = false;
+	gzip_header_done = false;
 	gzip_footer = false;
 	total = 0;
+}
+
+void Zlib::Init()
+{
+	mode = NONE;
+	gzip = false;
+	error = false;
+}
+
+void Zlib::Clear()
+{
+	Free();
+	Init();
 }
 
 Zlib& Zlib::ChunkSize(int n)
@@ -266,6 +288,7 @@ Zlib& Zlib::ChunkSize(int n)
 
 Zlib::Zlib()
 {
+	Init();
 	z.zalloc = zalloc_new;
 	z.zfree = zfree_new;
 	z.opaque = 0;
@@ -273,15 +296,11 @@ Zlib::Zlib()
 	crc = 0;
 	hdr = true;
 	WhenOut = callback(this, &Zlib::PutOut);
-	mode = NONE;
-	gzip = false;
-	error = false;
 }
 
 Zlib::~Zlib()
 {
-	if(mode)
-		End();
+	Free();
 }
 
 static int sZpress(Stream& out, Stream& in, int size, Gate2<int, int> progress, bool nohdr, dword *crc,

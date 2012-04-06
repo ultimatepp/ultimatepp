@@ -201,8 +201,6 @@ bool HttpHeader::Request(String& method, String& uri, String& version)
 		uri.Cat(*s++);
 	while(*s == ' ')
 		s++;
-	if(!*s)
-		return false;
 	version = s;
 	return true;
 }
