@@ -473,11 +473,13 @@ void HttpRequest::Start()
 
 void HttpRequest::Dns()
 {
-	for(int i = 0; i <= Nvl(GetTimeout(), INT_MAX); i++)
+	for(int i = 0; i <= Nvl(GetTimeout(), INT_MAX); i++) {
 		if(!addrinfo.InProgress()) {
 			StartRequest();
 			return;
 		}
+		Sleep(1);
+	}
 }
 
 void HttpRequest::StartRequest()
@@ -567,6 +569,23 @@ String HttpRequest::Execute()
 {
 	while(Do());
 	return IsSuccess() ? GetContent() : String::GetVoid();
+}
+
+String HttpRequest::GetPhaseName() const
+{
+	static const char *m[] = {
+		"Start",
+		"Resolving host name",
+		"Sending request",
+		"Receiving header",
+		"Receiving content",
+		"Receiving chunk header",
+		"Receiving content chunk",
+		"Receiving trailer",
+		"Finished",
+		"Failed",
+	};
+	return phase >= 0 && phase <= FAILED ? m[phase] : "";
 }
 
 END_UPP_NAMESPACE
