@@ -18,6 +18,176 @@ NAMESPACE_UPP
 
 #define LLOG(x)  //  DLOG("TCP " << x)
 
+struct RawMutex {
+	CRITICAL_SECTION cs;
+	
+	void Enter() { EnterCriticalSection(&cs); }
+	void Leave() { LeaveCriticalSection(&cs); }
+	
+	RawMutex()   { InitializeCriticalSection(&cs); }
+	~RawMutex()  { DeleteCriticalSection(&cs); }
+};
+
+bool StartRawThread(uintptr_t (__stdcall *fn)(void *ptr), void *ptr)
+{
+#ifdef PLATFORM_WIN32
+	HANDLE handle;
+	handle = (HANDLE)_beginthreadex(0, 0, fn, ptr, 0, NULL);
+	if(handle) {
+		CloseHandle(handle);
+		return true;
+	}
+#endif
+#ifdef PLATFORM_POSIX
+	pthread_t handle;
+	if(pthread_create(&handle, 0, sThreadRoutine, cb) == 0) {
+		pthread_detach(handle)
+		return true;
+	}
+#endif
+	return false;
+}
+
+IpAddrInfo::Entry IpAddrInfo::pool[COUNT];
+
+RawMutex IpAddrInfoPoolMutex;
+
+void IpAddrInfo::EnterPool()
+{
+	IpAddrInfoPoolMutex.Enter();
+}
+
+void IpAddrInfo::LeavePool()
+{
+	IpAddrInfoPoolMutex.Leave();
+}
+
+int sGetAddrInfo(const char *host, const char *port, addrinfo **result)
+{
+	addrinfo hints;
+	memset(&hints, 0, sizeof(addrinfo));
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_protocol = IPPROTO_TCP;
+
+	return getaddrinfo(host, port, &hints, result);
+}
+
+uintptr_t __stdcall IpAddrInfo::Thread(void *ptr)
+{
+	Entry *entry = (Entry *)ptr;
+	EnterPool();
+	if(entry->status == WORKING) {
+		char host[1025];
+		char port[257];
+		strcpy(host, entry->host);
+		strcpy(port, entry->port);
+		LeavePool();
+		addrinfo *result;
+		if(sGetAddrInfo(host, port, &result) == 0 && result) {
+			EnterPool();
+			if(entry->status == WORKING) {
+				entry->addr = result;
+				entry->status = RESOLVED;
+			}
+			else {
+				freeaddrinfo(entry->addr);
+				entry->status = EMPTY;
+			}
+		}
+		else {
+			EnterPool();
+			if(entry->status == CANCELED)
+				entry->status = EMPTY;
+			else
+				entry->status = FAILED;
+		}
+	}
+	LeavePool();
+	return 0;
+}
+
+bool IpAddrInfo::Execute(const String& host, int port)
+{
+	Clear();
+	entry = exe;
+	addrinfo *result;
+	entry->addr = sGetAddrInfo(~host, ~AsString(port), &result) == 0 ? result : NULL;
+	return entry->addr;
+}
+
+void IpAddrInfo::Start()
+{
+	if(entry)
+		return;
+	EnterPool();
+	for(int i = 0; i < COUNT; i++) {
+		Entry *e = pool + i;
+		if(e->status == EMPTY) {
+			entry = e;
+			e->addr = NULL;
+			if(host.GetCount() > 1024 || port.GetCount() > 256)
+				e->status = FAILED;
+			else {
+				e->status = WORKING;
+				e->host = host;
+				e->port = port;
+				StartRawThread(&IpAddrInfo::Thread, e);
+			}
+			break;
+		}
+	}
+	LeavePool();
+}
+
+void IpAddrInfo::Start(const String& host_, int port_)
+{
+	Clear();
+	port = AsString(port_);
+	host = host_;
+	Start();
+}
+
+bool IpAddrInfo::InProgress()
+{
+	if(!entry) {
+		Start();
+		return true;
+	}
+	EnterPool();
+	int s = entry->status;
+	LeavePool();
+	return s == WORKING;
+}
+
+addrinfo *IpAddrInfo::GetResult()
+{
+	EnterPool();
+	addrinfo *ai = entry ? entry->addr : NULL;
+	LeavePool();
+	return ai;
+}
+
+void IpAddrInfo::Clear()
+{
+	EnterPool();
+	if(entry) {
+		if(entry->status == RESOLVED && entry->addr)
+			freeaddrinfo(entry->addr);
+		if(entry->status == WORKING)
+			entry->status = CANCELED;
+		entry->status = EMPTY;
+		entry = NULL;
+	}
+	LeavePool();
+}
+
+IpAddrInfo::IpAddrInfo()
+{
+	TcpSocket::Init();
+	entry = NULL;
+}
+
 #ifdef PLATFORM_POSIX
 
 #define SOCKERR(x) x
@@ -122,7 +292,6 @@ TcpSocket::TcpSocket()
 	Reset();
 	timeout = Null;
 	waitstep = 20;
-	global = false;
 }
 
 bool TcpSocket::Open(int family, int type, int protocol)
@@ -146,6 +315,8 @@ bool TcpSocket::Open(int family, int type, int protocol)
 
 bool TcpSocket::Listen(int port, int listen_count, bool ipv6_, bool reuse)
 {
+	Init();
+
 	ipv6 = ipv6_;
 	if(!Open(ipv6 ? AF_INET6 : AF_INET, SOCK_STREAM, 0))
 		return false;
@@ -244,25 +415,8 @@ void TcpSocket::Attach(SOCKET s)
 	socket = s;
 }
 
-bool TcpSocket::Connect(const char *host, int port)
+bool TcpSocket::RawConnect(addrinfo *rp)
 {
-	LLOG("TcpSocket::Data::OpenClient(" << host << ':' << port << ')');
-
-	Init();
-
-	addrinfo hints;
-	memset(&hints, 0, sizeof(addrinfo));
-	hints.ai_family = AF_UNSPEC;
-	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_protocol = IPPROTO_TCP;
-
-	addrinfo *result;
-	if(getaddrinfo(host, ~AsString(port), &hints, &result) || !result) {
-		SetSockError(Format("getaddrinfo(%s) failed", host));
-		return false;
-	}
-	
-	addrinfo *rp = result;
 	for(;;) {
 		if(Open(rp->ai_family, rp->ai_socktype, rp->ai_protocol)) {
 			if(connect(socket, rp->ai_addr, rp->ai_addrlen) == 0 ||
@@ -272,14 +426,33 @@ bool TcpSocket::Connect(const char *host, int port)
 		}
 		rp = rp->ai_next;
 		if(!rp) {
-			SetSockError(Format("unable to open or bind socket for %s", host));
-			freeaddrinfo(result);
+			SetSockError("connect has failed");
 			return false;
 		}
     }
-
-	freeaddrinfo(result);
 	return true;
+}
+
+
+bool TcpSocket::Connect(IpAddrInfo& info)
+{
+	LLOG("TCP Connect addrinfo");
+	Init();
+	addrinfo *result = info.GetResult();
+	return result && RawConnect(result);
+}
+
+bool TcpSocket::Connect(const char *host, int port)
+{
+	LLOG("TCP Connect(" << host << ':' << port << ')');
+
+	Init();
+	IpAddrInfo info;
+	if(!info.Execute(host, port)) {
+		SetSockError(Format("getaddrinfo(%s) failed", host));
+		return false;
+	}
+	return Connect(info);
 }
 
 void TcpSocket::Close()
@@ -307,7 +480,7 @@ bool TcpSocket::WouldBlock()
 	return c == SOCKERR(EWOULDBLOCK) || c == SOCKERR(EAGAIN);
 #endif
 #ifdef PLATFORM_WIN32
-	return c == SOCKERR(EWOULDBLOCK);
+	return c == SOCKERR(EWOULDBLOCK) || c == SOCKERR(ENOTCONN);
 #endif
 }
 

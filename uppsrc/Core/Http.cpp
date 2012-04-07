@@ -210,7 +210,10 @@ bool HttpRequest::Do()
 		retry_count = 0;
 		redirect_count = 0;
 		start_time = msecs();
-		StartRequest();
+		Start();
+		break;
+	case DNS:
+		Dns();
 		break;
 	case REQUEST:
 		if(SendingData())
@@ -445,7 +448,7 @@ bool HttpRequest::ReadingBody()
 	return !IsEof();
 }
 
-void HttpRequest::StartRequest()
+void HttpRequest::Start()
 {
 	Close();
 	ClearError();
@@ -455,7 +458,31 @@ void HttpRequest::StartRequest()
 	bool use_proxy = !IsNull(proxy_host);
 
 	int p = use_proxy ? proxy_port : port;
-	if(!Connect(use_proxy ? proxy_host : host, p ? p : DEFAULT_HTTP_PORT))
+	if(!p)
+		p = DEFAULT_HTTP_PORT;
+	String h = use_proxy ? proxy_host : host;
+	if(IsNull(GetTimeout())) {
+		addrinfo.Execute(h, p);
+		StartRequest();
+	}
+	else {
+		addrinfo.Start(h, p);
+		StartPhase(DNS);
+	}
+}
+
+void HttpRequest::Dns()
+{
+	for(int i = 0; i <= Nvl(GetTimeout(), INT_MAX); i++)
+		if(!addrinfo.InProgress()) {
+			StartRequest();
+			return;
+		}
+}
+
+void HttpRequest::StartRequest()
+{
+	if(!Connect(addrinfo))
 		return;
 
 	StartPhase(REQUEST);
@@ -475,7 +502,7 @@ void HttpRequest::StartRequest()
 		host_port << ':' << port;
 	String url;
 	url << "http://" << host_port << Nvl(path, "/");
-	if(use_proxy)
+	if(!IsNull(proxy_host))
 		data << url;
 	else
 		data << Nvl(path, "/");
@@ -492,7 +519,7 @@ void HttpRequest::StartRequest()
 		if(ctype.GetCount())
 			data << "Content-Type: " << ctype << "\r\n";
 	}
-	if(use_proxy && !IsNull(proxy_username))
+	if(!IsNull(proxy_host) && !IsNull(proxy_username))
 		 data << "Proxy-Authorization: Basic " << Base64Encode(proxy_username + ':' + proxy_password) << "\r\n";
 	if(!IsNull(digest))
 		data << "Authorization: Digest " << digest << "\r\n";
