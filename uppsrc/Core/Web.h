@@ -327,6 +327,7 @@ public:
 
 	bool    Do();
 	int     GetPhase() const                      { return phase; }
+	String  GetPhaseName() const;
 	bool    InProgress() const                    { return phase != FAILED && phase != FINISHED; }
 	bool    IsFailure() const                     { return phase == FAILED; }
 	bool    IsSuccess() const                     { return phase == FINISHED && status_code >= 200 && status_code < 300; }
