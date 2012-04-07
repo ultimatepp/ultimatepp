@@ -10,6 +10,41 @@ inline String Base64Encode(const String& data)    { return Base64Encode(data.Beg
 String        Base64Decode(const char *b, const char *e);
 inline String Base64Decode(const String& data)    { return Base64Decode(data.Begin(), data.End()); }
 
+class IpAddrInfo {
+	enum { COUNT = 32 };
+	struct Entry {
+		const char *host;
+		const char *port;
+		int         status;
+		addrinfo   *addr;
+	};
+	static Entry     pool[COUNT];
+	
+	enum {
+		EMPTY = 0, WORKING, CANCELED, RESOLVED, FAILED
+	};
+
+	String host, port;
+	Entry *entry;
+	Entry  exe[1];
+
+	static void EnterPool();
+	static void LeavePool();
+	static uintptr_t __stdcall Thread(void *ptr);
+
+	void Start();
+
+public:
+	void      Start(const String& host, int port);
+	bool      InProgress();
+	bool      Execute(const String& host, int port);
+	addrinfo *GetResult();
+	void      Clear();
+
+	IpAddrInfo();
+	~IpAddrInfo()           { Clear(); }
+};
+
 enum { WAIT_READ = 1, WAIT_WRITE = 2, WAIT_EXCEPTION = 4, WAIT_ALL = 7 };
 
 class TcpSocket {
@@ -23,7 +58,6 @@ class TcpSocket {
 	bool                    is_abort;
 	bool                    ipv6;
 
-	bool                    global;
 	int                     timeout;
 	int                     waitstep;
 	int                     done;
@@ -36,6 +70,7 @@ class TcpSocket {
 	bool                    Open(int family, int type, int protocol);
 	int                     Recv(void *buffer, int maxlen);
 	int                     Send(const void *buffer, int maxlen);
+	bool                    RawConnect(addrinfo *info);
 
 	void                    ReadBuffer();
 	int                     Get_();
@@ -75,6 +110,7 @@ public:
 
 	void            Attach(SOCKET socket);
 	bool            Connect(const char *host, int port);
+	bool            Connect(IpAddrInfo& info);
 	bool            Listen(int port, int listen_count, bool ipv6 = false, bool reuse = true);
 	bool            Accept(TcpSocket& listen_socket);
 	void            Close();
@@ -103,7 +139,8 @@ public:
 	bool            PutAll(const char *s, int len)           { return Put(s, len) == len; }
 	bool            PutAll(const String& s)                  { return Put(s) == s.GetCount(); }
 
-	TcpSocket&      Timeout(int ms)                          { timeout = ms; global = false; return *this; }
+	TcpSocket&      Timeout(int ms)                          { timeout = ms; return *this; }
+	int             GetTimeout() const                       { return timeout; }
 	TcpSocket&      Blocking()                               { return Timeout(Null); }
 
 	TcpSocket();
@@ -197,6 +234,7 @@ class HttpRequest : public TcpSocket {
 	
 	int          chunk;
 
+	IpAddrInfo   addrinfo;
 	int          bodylen;
 	bool         gzip;	
 	Zlib         z;
@@ -204,11 +242,13 @@ class HttpRequest : public TcpSocket {
 	void         Init();
 
 	void         StartPhase(int s);
-	void         StartBody();
+	void         Start();
+	void         Dns();
+	void         StartRequest();
 	bool         SendingData();
 	bool         ReadingHeader();
+	void         StartBody();
 	bool         ReadingBody();
-	void         StartRequest();
 	void         ReadingChunkHeader();
 	void         Finish();
 
@@ -282,7 +322,7 @@ public:
 	void         ClearContent()                           { body.Clear(); }
 
 	enum Phase {
-		START, REQUEST, HEADER, BODY, CHUNK_HEADER, CHUNK_BODY, TRAILER, FINISHED, FAILED
+		START, DNS, REQUEST, HEADER, BODY, CHUNK_HEADER, CHUNK_BODY, TRAILER, FINISHED, FAILED
 	};
 
 	bool    Do();
