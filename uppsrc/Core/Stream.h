@@ -80,16 +80,17 @@ public:
 
 	void      Put(int c)             { if(ptr < wrlim) *ptr++ = c; else _Put(c); }
 	int       Term()                 { return ptr < rdlim ? *ptr : _Term(); }
+	int       Peek()                 { return Term(); }
 	int       Get()                  { return ptr < rdlim ? *ptr++ : _Get(); }
 
-	const byte *Peek(int size = 1)   { ASSERT(size > 0); return ptr + size <= rdlim ? ptr : NULL; }
+	const byte *PeekPtr(int size = 1){ ASSERT(size > 0); return ptr + size <= rdlim ? ptr : NULL; }
 	byte       *PutPtr(int size = 1) { ASSERT(size > 0); if(ptr + size <= wrlim) { byte *p = ptr; ptr += size; return p; }; return NULL; }
 
-	void      Put(const void *data, dword size)  { if(ptr + size <= wrlim) { memcpy(ptr, data, size); ptr += size; } else _Put(data, size); }
-	dword     Get(void *data, dword size)        { if(ptr + size <= rdlim) { memcpy(data, ptr, size); ptr += size; return size; } return _Get(data, size); }
+	void      Put(const void *data, int size)  { ASSERT(size >= 0); if(ptr + size <= wrlim) { memcpy(ptr, data, size); ptr += size; } else _Put(data, size); }
+	int       Get(void *data, int size)        { ASSERT(size >= 0); if(ptr + size <= rdlim) { memcpy(data, ptr, size); ptr += size; return size; } return _Get(data, size); }
 
-	void      Put(const String& s)               { Put((const char *) s, s.GetLength()); }
-	String    Get(dword size);
+	void      Put(const String& s)   { Put((const char *) s, s.GetLength()); }
+	String    Get(int size);
 
 	void      LoadThrowing()         { style |= STRM_THROW; }
 	void      LoadError();
@@ -183,12 +184,12 @@ public:
 	bool      IsLoading()                  { return style & STRM_LOADING; }
 	bool      IsStoring()                  { return !IsLoading(); }
 
-	void      SerializeRaw(byte *data, dword count);
-	void      SerializeRaw(word *data, dword count);
-	void      SerializeRaw(dword *data, dword count);
-	void      SerializeRaw(uint64 *data, dword count);
+	void      SerializeRaw(byte *data, int count);
+	void      SerializeRaw(word *data, int count);
+	void      SerializeRaw(dword *data, int count);
+	void      SerializeRaw(uint64 *data, int count);
 
-	void      SerializeRLE(byte *data, dword count);
+	void      SerializeRLE(byte *data, int count);
 
 	Stream&   operator%(bool& d);
 	Stream&   operator%(char& d);

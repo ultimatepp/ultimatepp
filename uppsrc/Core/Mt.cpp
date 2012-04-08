@@ -586,4 +586,24 @@ LazyUpdate::LazyUpdate()
 
 #endif
 
+bool StartRawThread(rawthread_t (rawthread__ *fn)(void *ptr), void *ptr)
+{
+#ifdef PLATFORM_WIN32
+	HANDLE handle;
+	handle = (HANDLE)_beginthreadex(0, 0, fn, ptr, 0, NULL);
+	if(handle) {
+		CloseHandle(handle);
+		return true;
+	}
+#endif
+#ifdef PLATFORM_POSIX
+	pthread_t handle;
+	if(pthread_create(&handle, 0, fn, ptr) == 0) {
+		pthread_detach(handle);
+		return true;
+	}
+#endif
+	return false;
+}
+
 END_UPP_NAMESPACE

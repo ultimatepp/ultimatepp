@@ -324,15 +324,15 @@ by GetLastError call in Win32 or in errno in Posix). This error
 can be interpreted by GetErrorMessage function.&]
 [s3; &]
 [s4;%- &]
-[s5;K%- [@(0.0.255) int]_[* GetError]()_[@(0.0.255) const]&]
-[s7; [*/ Return value]-|Current error`-code. Zero indicates no error.&]
+[s5;:Stream`:`:GetError`(`)const:%- [@(0.0.255) int]_[* GetError]()_[@(0.0.255) const]&]
+[s2; Returns current error`-code. Zero indicates no error.&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:ClearError`(`):%- [@(0.0.255) void]_[* ClearError]()&]
 [s2; Clears error code.&]
 [s3; &]
 [s4;%- &]
-[s5;K%- [_^int64^ int64]_[* GetPos]()_[@(0.0.255) const]&]
+[s5;:Stream`:`:GetPos`(`)const:%- [_^int64^ int64]_[* GetPos]()_[@(0.0.255) const]&]
 [s7; [*/ Return value]-|Current position in the stream.&]
 [s3; &]
 [s4;%- &]
@@ -341,9 +341,10 @@ can be interpreted by GetErrorMessage function.&]
 Is also true in case of error.&]
 [s3; &]
 [s4;%- &]
-[s5;K%- [_^int64^ int64]_[* GetLeft]()_[@(0.0.255) const]&]
+[s5;:Stream`:`:GetLeft`(`)const:%- [_^int64^ int64]_[* GetLeft]()_[@(0.0.255) const]&]
 [s7; [*/ Return value]-|Bytes between current position and the end of 
 stream `- equivalent to GetSize() `- GetPos().&]
+[s3; &]
 [s4;%- &]
 [s5;:Stream`:`:SeekEnd`(int64`):%- [@(0.0.255) void]_[* SeekEnd]([_^int64^ int64]_[*@3 rel]_`=
 _[@3 0])&]
@@ -364,11 +365,11 @@ position. Same as Seek(GetPos() `+ rel).&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:Term`(`):%- [@(0.0.255) int]_[* Term]()&]
+[s5;:Stream`:`:Peek`(`):%- [@(0.0.255) int]_[* Peek]()&]
 [s2; Peeks byte from input stream not advancing current position. 
 If there are no more bytes in input stream or error occurred, 
 negative value is returned.&]
-[s7; [*/ Return value]-|Byte at current position in the stream.&]
-[s3; &]
+[s3;%- &]
 [s4;%- &]
 [s5;:Stream`:`:Get`(`):%- [@(0.0.255) int]_[* Get]()&]
 [s2; Reads single byte from input stream, advancing current position. 
@@ -377,8 +378,8 @@ negative value is returned.&]
 [s7; [*/ Return value]-|Byte read from input stream.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Peek`(int`):%- [@(0.0.255) const]_[_^byte^ byte]_`*[* Peek]([@(0.0.255) int]_[*@3 s
-ize]_`=_[@3 1])&]
+[s5;:Stream`:`:PeekPtr`(int`):%- [@(0.0.255) const]_[_^byte^ byte]_`*[* PeekPtr]([@(0.0.255) i
+nt]_[*@3 size]_`=_[@3 1])&]
 [s2; This is a special optimization method; it might return a pointer 
 to data of [%-*@3 size] bytes at current position in the stream, 
 but it is allowed to return NULL `- in that case you need to 
@@ -393,25 +394,20 @@ but it is allowed to return NULL `- in that case you need to
 output data using Put. Advances stream by [%-*@3 size].&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Put`(const void`*`,dword`):%- [@(0.0.255) void]_[* Put]([@(0.0.255) const]_[@(0.0.255) v
-oid]_`*[*@3 data], [_^dword^ dword]_[*@3 size])&]
+[s5;:Stream`:`:Put`(const void`*`,int`):%- [@(0.0.255) void]_[* Put]([@(0.0.255) const]_[@(0.0.255) v
+oid]_`*[*@3 data], [@(0.0.255) int]_[*@3 size])&]
 [s2; Writes a block of raw binary data to the output stream.&]
-[s7; [%-*C@3 data]-|Pointer to data.&]
-[s7; [%-*C@3 size]-|Number of bytes to write.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Get`(void`*`,dword`):%- [_^dword^ dword]_[* Get]([@(0.0.255) void]_`*[*@3 data
-], [_^dword^ dword]_[*@3 size])&]
-[s2; Reads a block of raw binary data from the input stream.&]
-[s7; [%-*C@3 data]-|Pointer to buffer to receive the data.&]
-[s7; [%-*C@3 size]-|Number of bytes to read.&]
-[s7; [*/ Return value]-|Number of bytes actually read (lower or equal 
-to the requested [*@3 size]).&]
+[s5;:Stream`:`:Get`(void`*`,int`):%- [@(0.0.255) int]_[* Get]([@(0.0.255) void]_`*[*@3 data],
+ [@(0.0.255) int]_[*@3 size])&]
+[s2; Reads at most [%-*@3 size] bytes from the stream to [%-*@3 data]. 
+Returns the number of bytes actually read.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Get`(dword`):%- [_^String^ String]_[* Get]([_^dword^ dword]_[*@3 size])&]
-[s2; Reads a block of raw binary data from the input stream. The 
-number of bytes read is the length of String.&]
+[s5;:Stream`:`:Get`(int`):%- [_^String^ String]_[* Get]([@(0.0.255) int]_[*@3 size])&]
+[s2; Reads at most [%-*@3 size] bytes from the input stream and returns 
+result as String.&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:LoadThrowing`(`):%- [@(0.0.255) void]_[* LoadThrowing]()&]
@@ -677,8 +673,8 @@ the end is written.&]
 [s7; [*/ Return value]-|true if stream is in storing mode.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:SerializeRaw`(byte`*`,dword`):%- [@(0.0.255) void]_[* SerializeRaw]([_^byte^ b
-yte]_`*[*@3 data], [_^dword^ dword]_[*@3 count])&]
+[s5;:Stream`:`:SerializeRaw`(byte`*`,int`):%- [@(0.0.255) void]_[* SerializeRaw]([_^byte^ b
+yte]_`*[*@3 data], [@(0.0.255) int]_[*@3 count])&]
 [s2; Serializes raw 8`-bit data. Might invoke LoadError if there 
 is not enough data to load.&]
 [s7; [%-*C@3 data]-|Pointer to data to store or buffer to receive loaded 
@@ -686,8 +682,8 @@ data.&]
 [s7; [%-*C@3 count]-|Number of bytes to load/store.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:SerializeRaw`(word`*`,dword`):%- [@(0.0.255) void]_[* SerializeRaw]([_^word^ w
-ord]_`*[*@3 data], [_^dword^ dword]_[*@3 count])&]
+[s5;:Stream`:`:SerializeRaw`(word`*`,int`):%- [@(0.0.255) void]_[* SerializeRaw]([_^word^ w
+ord]_`*[*@3 data], [@(0.0.255) int]_[*@3 count])&]
 [s2; Serializes raw 16`-bit data. Might invoke LoadError if there 
 is not enough data to load.&]
 [s7; [%-*C@3 data]-|Pointer to data to store or buffer to receive loaded 
@@ -695,8 +691,8 @@ data.&]
 [s7; [%-*C@3 count]-|Number of values to load/store.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:SerializeRaw`(dword`*`,dword`):%- [@(0.0.255) void]_[* SerializeRaw]([_^dword^ d
-word]_`*[*@3 data], [_^dword^ dword]_[*@3 count])&]
+[s5;:Stream`:`:SerializeRaw`(dword`*`,int`):%- [@(0.0.255) void]_[* SerializeRaw]([_^dword^ d
+word]_`*[*@3 data], [@(0.0.255) int]_[*@3 count])&]
 [s2; Serializes raw 32`-bit data. Might invoke LoadError if there 
 is not enough data to load.&]
 [s7; [%-*C@3 data]-|Pointer to data to store or buffer to receive loaded 
@@ -704,13 +700,18 @@ data.&]
 [s7; [%-*C@3 count]-|Number of values to load/store.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:SerializeRaw`(uint64`*`,dword`):%- [@(0.0.255) void]_[* SerializeRaw]([_^uint64^ u
-int64]_`*[*@3 data], [_^dword^ dword]_[*@3 count])&]
+[s5;:Stream`:`:SerializeRaw`(uint64`*`,int`):%- [@(0.0.255) void]_[* SerializeRaw]([_^uint64^ u
+int64]_`*[*@3 data], [@(0.0.255) int]_[*@3 count])&]
 [s2; Serializes raw 64`-bit data. Might invoke LoadError if there 
 is not enough data to load.&]
 [s7; [%-*C@3 data]-|Pointer to data to store or buffer to receive loaded 
 data.&]
 [s7; [%-*C@3 count]-|Number of values to load/store.&]
+[s3; &]
+[s4;%- &]
+[s5;:Stream`:`:SerializeRLE`(byte`*`,int`):%- [@(0.0.255) void]_[* SerializeRLE]([_^byte^ b
+yte]_`*[*@3 data], [@(0.0.255) int]_[*@3 count])&]
+[s2; Serializes raw data, using simple RLE compression.&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:operator`%`(bool`&`):%- [_^Stream^ Stream][@(0.0.255) `&]_[* operator%]([@(0.0.255) b
