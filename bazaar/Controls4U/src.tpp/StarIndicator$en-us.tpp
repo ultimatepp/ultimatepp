@@ -1,4 +1,4 @@
-topic "";
+topic "StarIndicator";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -17,7 +17,7 @@ c][3 _][*@3;3 ProgressIndicator]&]
 [s0;i448;a25;kKO9;@(0.0.255) &]
 [s9; [/ Derived from ][/^topic`:`/`/CtrlLib`/src`/ProgressInd`$en`-us`#ProgressIndicator`:`:class^ P
 rogressIndicator][/ . Part of ][/^topic`:`/`/Controls4U`/src`/Controls4U`$en`-us^ Con
-trol4U][/  library.]&]
+trols4U][/  library.]&]
 [s9; &]
 [s9; StarIndicator is a kind of ProgressIndicator allowing to show 
 the popularity of something, as we can see on some merchant web 

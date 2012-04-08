@@ -49,7 +49,6 @@ public:
 	EditFileFolder &UseUp(bool use);
 	EditFileFolder &UseBrowse(bool use);
 	virtual void SetData(const Value& data);
-	//void Xmlize(XmlIO xml);
 	
 	Callback WhenChange;
 };
@@ -75,6 +74,7 @@ public:
 protected:
 	virtual void Paint(Draw& draw);
 	virtual void Layout();
+	virtual void RightDown(Point pos, dword keyflags);
 	
 	String fileName;
 	Image image, origImage;
@@ -95,6 +95,36 @@ public:
 	StaticImage& SetBackground(Color c) 		{background = c; 	  Refresh(); return *this;}
 	StaticImage& UseAsBackground(bool b = true)	{useAsBackground = b; Refresh(); return *this;}
 	StaticImage();
+	
+	Callback WhenRightDown;
+};
+
+class StaticImageSet : public Ctrl {
+typedef StaticImageSet CLASSNAME;		
+protected:
+	virtual void Paint(Draw& draw);
+	virtual void LeftDown(Point pos, dword keyflags);
+	virtual void LeftRepeat(Point pos, dword keyflags);
+	virtual void LeftUp(Point pos, dword keyflags);
+	virtual void MouseMove(Point pos, dword keyflags);
+	virtual void GotFocus();
+	virtual void LostFocus();
+	
+	Vector<Image> images;
+	Color background;
+	
+	int id;
+
+public:
+	bool  Add(String fileName);
+	bool  Add(Image image);
+	Image &Get(int id)						{return images[id];}
+	Vector<Image> &GetImages()				{return images;}
+	void SetActive(int _id)					{id = _id; Refresh();}
+	StaticImageSet& SetBackground(Color c) 	{background = c; Refresh(); return *this;}
+	void Next()								{id++; if(id >= images.GetCount()) id = 0;}
+	
+	StaticImageSet();
 };
 
 #ifndef flagNOPAINTER

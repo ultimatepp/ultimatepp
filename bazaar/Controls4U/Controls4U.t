@@ -63,6 +63,9 @@ esES("fichero")
 
 // DrawingCanvas.cpp
 
+T_("Pos: %d:%d. Real pos: %.2f:%.2f")
+esES("")
+
 T_("Fit to size")
 esES("")
 
@@ -119,9 +122,3 @@ esES("")
 
 T_("Function not implemented")
 esES("Funci\303\263n no implementada")
-
-
-// Obsolete
-
-T_("Sorry. It is not possible to open %s")
-esES("Lo siento. No es posible abrir %s")

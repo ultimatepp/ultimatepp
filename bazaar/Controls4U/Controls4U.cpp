@@ -287,6 +287,15 @@ StaticImage& StaticImage::SetAngle(int _angle) {
 	return *this;
 }	
 	
+void  StaticImage::RightDown(Point pos, dword keyflags)
+{
+	if(!IsEditable())
+		return;
+
+	WhenRightDown();
+}
+
+
 StaticImage::StaticImage() {
 	Transparent();
 	NoWantFocus();
@@ -296,6 +305,76 @@ StaticImage::StaticImage() {
 	angle = Angle_0;
 	fit = BestFit;
 	useAsBackground = false;
+}
+
+void StaticImageSet::Paint(Draw& w) {
+	Size sz = GetSize();
+
+	w.DrawRect(sz, background);
+	if (sz.cx == 0 || sz.cy == 0) 
+		return;
+	Size imagesize = images[id].GetSize();	
+	if (imagesize.cx == 0 || imagesize.cy == 0) 
+		return;
+	
+	w.DrawImage(FitInFrame(sz, imagesize), images[id]);
+}
+
+void  StaticImageSet::LeftDown(Point pos, dword keyflags)
+{
+	if(!IsEditable())
+		return;
+	SetWantFocus();
+	
+	Next();
+	
+	SetCapture();
+	Refresh();	
+}
+
+void  StaticImageSet::LeftRepeat(Point pos, dword keyflags)
+{
+	if(!HasCapture())
+		LeftDown(pos, keyflags);
+}
+
+void  StaticImageSet::LeftUp(Point pos, dword keyflags)
+{
+	if (!HasCapture())
+		return;
+
+	Refresh();
+}
+
+void  StaticImageSet::MouseMove(Point pos, dword keyflags)
+{
+	if(!HasCapture()) 
+		return;
+}
+	
+void StaticImageSet::GotFocus() 	{Refresh();}
+void StaticImageSet::LostFocus() 	{Refresh();}
+
+bool  StaticImageSet::Add(String fileName)
+{
+	return Add(StreamRaster::LoadFileAny(fileName));	
+}
+
+bool  StaticImageSet::Add(Image image)
+{
+	if (IsNull(image))
+		return false;
+	images.Add(image);
+	return true;	
+}
+
+StaticImageSet::StaticImageSet() 
+{
+	Transparent();
+//	NoWantFocus();
+
+	background = Null;
+	id = 0;
 }
 
 void StaticRectangle::Paint(Draw& w) {
@@ -870,16 +949,6 @@ void Meter::PaintMarks(BufferPainter &w, double cx, double cy, double R, double 
 	}
 }
 
-double AngAdd(double ang, double val)
-{
-	ang += val;
-	while (ang >= 360)
-		ang -= 360;
-	while (ang < 0)
-		ang += 360;
-	return ang;
-}
-
 void Meter::PaintNumbers(BufferPainter &w, double cx, double cy, double R, double a0, 
 	double step, int direction, double minv, double maxv, double stepv, double bigF, Color color)
 {
@@ -976,7 +1045,7 @@ void Meter::Paint(Draw& ww) {
 		maxy = sinb;
 	int maxgrad = 0;
 	double angmaxx = 0;
-	for (double ang = a; ang != b; ang = AngAdd(ang, direction)) {
+	for (double ang = a; ang != b; ang = AngleAdd360(ang, double(direction))) {
 		maxgrad++;
 		if (ang == 180) {
 			minx = -1;

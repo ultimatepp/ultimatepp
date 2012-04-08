@@ -2,10 +2,6 @@ TOPIC("Controls4U$en-us")
 #include "Controls4U$en-us.tppi"
 END_TOPIC
 
-TOPIC("dd$en-us")
-#include "dd$en-us.tppi"
-END_TOPIC
-
 TOPIC("EditFile$en-us")
 #include "EditFile$en-us.tppi"
 END_TOPIC
@@ -84,5 +80,9 @@ END_TOPIC
 
 TOPIC("VLCPlayer$en-us")
 #include "VLCPlayer$en-us.tppi"
+END_TOPIC
+
+TOPIC("dd$en-us")
+#include "dd$en-us.tppi"
 END_TOPIC
 

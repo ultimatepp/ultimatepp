@@ -592,6 +592,10 @@ PainterCanvas::PainterCanvas() {
 	cursorImage = Image::Arrow();
 	
 	focusMove.focusMoving = false;
+	
+	legendFont = StdFont().Height(12);
+	legendShowFilename = false;
+	legendShowXY = false;
 }
 		
 void PainterCanvas::Paint(Draw& w) {
@@ -620,12 +624,16 @@ void PainterCanvas::Paint(Draw& w) {
 
 	if (canvasSize.cx > 0 && canvasSize.cy > 0) {
 		if (!IsNull(backImage)) 
-			sw.Rectangle(0, 0, canvasSize.cx, canvasSize.cy).Fill(backImage, 0, 0, canvasSize.cx, 0)
-				.Stroke(0, Black());
+			sw.Rectangle(0, 0, canvasSize.cx, canvasSize.cy).Fill(backImage, 0, 0, canvasSize.cx, 0, FILL_FAST).Stroke(0, Black());
 		DoPaint(sw);
 		WhenPaint(sw);
 	}
 	w.DrawImage(0, 0, ib);	
+	if (legendShowXY) {
+		Size sz = GetTextSize(legendText, legendFont);
+		w.DrawRectOp(0, 0, sz.cx, sz.cy, LtGray());
+		w.DrawText(0, 0, legendText, legendFont, Black());
+	}
 	
 	if (!showWindow || canvasSize.cx <= 0 || canvasSize.cy <= 0) 
 		return;
@@ -644,8 +652,7 @@ void PainterCanvas::Paint(Draw& w) {
 		tsw.Clear(backColor);
 	 
 	if (!IsNull(backImage)) 
-		tsw.Rectangle(0, 0, canvasSize.cx, canvasSize.cy).Fill(backImage, 0, 0, canvasSize.cx, 0)
-			.Stroke(0, Black());
+		tsw.Rectangle(0, 0, canvasSize.cx, canvasSize.cy).Fill(backImage, 0, 0, canvasSize.cx, 0, FILL_FAST).Stroke(0, Black());
 	
 	if (canvasSize.cx > 0 && canvasSize.cy > 0) 
 		WhenPaint(tsw);
@@ -727,12 +734,20 @@ void PainterCanvas::MouseMove(Point p, dword keyflags) {
 
         Refresh();
     }
-    if(WhenMouseMove) {
-        Pointf pf;
+    Pointf pf;
+    if(WhenMouseMove || legendShowXY) {
        	pf.x = p.x - translateX;
         pf.y = p.y - translateY;
         pf.x = pf.x / scale;
         pf.y = pf.y / scale;
+    }
+    if(legendShowXY) {
+    	legendText = Format(t_("Pos: %d:%d. Real pos: %.2f:%.2f"), p.x, p.y, pf.x, pf.y);
+    	Size sz = GetTextSize(legendText, legendFont);
+    	Refresh(0, 0, legendLastSize.cx, legendLastSize.cy);
+    	legendLastSize = sz;
+    }
+    if(WhenMouseMove) {
         if (pf.x >= 0 && pf.x < canvasSize.cx && pf.y >= 0 && pf.y < canvasSize.cy)
     		WhenMouseMove(p, pf);
     }
@@ -869,4 +884,10 @@ void PainterCanvas::DoPaint(Painter& sw) {
 	sw.Begin();
 	elemList.Paint(sw, trans, style, true);
 	sw.End();
+}
+
+PainterCanvas &PainterCanvas::SetLegend(bool _legendShowXY, Font _legendFont) {
+	legendShowXY = _legendShowXY;
+	legendFont = _legendFont;
+	return *this;
 }

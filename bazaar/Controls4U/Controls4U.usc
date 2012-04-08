@@ -273,6 +273,37 @@ ctrl StaticImage {
 	}
 }
 
+ctrl StaticImageSet {
+	group "Static";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+
+	Frame      SetFrame @1;
+	Color      SetBackground;
+
+	Paint(w) {
+		r = GetRect();
+
+		DrawCtrlFrame(w, r, .SetFrame);
+
+		sz = Size(r.right - r.left, r.bottom - r.top);
+
+		DeflateRect(r);
+		sz = Size(r.right - r.left, r.bottom - r.top);
+		w.DrawRect(r.left, r.top, sz.cx, sz.cy, .SetBackground);
+		img = "Controls4U:Controls4U.iml:ImageSample";
+		imagesize = GetImageSize(img);
+		rectaspect  = sz.cx/sz.cy; 
+		imageaspect = imagesize.cx/imagesize.cy;
+		if (rectaspect > imageaspect) 
+			w.DrawImage(r.left+(sz.cx-imageaspect*sz.cy)/2, r.top, imageaspect*sz.cy, sz.cy, img);
+		else
+			w.DrawImage(r.left, r.top+(sz.cy-sz.cx/imageaspect)/2, sz.cx, sz.cx/imageaspect, img);
+		w.DrawText(0, 0, "StaticImageSet", Arial(10), :SBlack);
+	}
+}
+
 enum_property LineOrientation {
 	"\"|\"",
 	"\"-\"",
