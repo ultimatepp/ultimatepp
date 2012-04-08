@@ -10,6 +10,14 @@ inline String Base64Encode(const String& data)    { return Base64Encode(data.Beg
 String        Base64Decode(const char *b, const char *e);
 inline String Base64Decode(const String& data)    { return Base64Decode(data.Begin(), data.End()); }
 
+#ifdef PLATFORM_WIN32
+#define rawthread_t uintptr_t
+#define rawthread__ __stdcall
+#else
+#define rawthread_t void *
+#define rawthread__
+#endif
+
 class IpAddrInfo {
 	enum { COUNT = 32 };
 	struct Entry {
@@ -30,7 +38,7 @@ class IpAddrInfo {
 
 	static void EnterPool();
 	static void LeavePool();
-	static uintptr_t __stdcall Thread(void *ptr);
+	static rawthread_t rawthread__ Thread(void *ptr);
 
 	void Start();
 

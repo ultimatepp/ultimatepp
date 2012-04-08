@@ -18,6 +18,7 @@ NAMESPACE_UPP
 
 #define LLOG(x)  //  DLOG("TCP " << x)
 
+#ifdef PLATFORM_WIN32
 struct RawMutex {
 	CRITICAL_SECTION cs;
 	
@@ -27,8 +28,26 @@ struct RawMutex {
 	RawMutex()   { InitializeCriticalSection(&cs); }
 	~RawMutex()  { DeleteCriticalSection(&cs); }
 };
+#endif
 
-bool StartRawThread(uintptr_t (__stdcall *fn)(void *ptr), void *ptr)
+#ifdef PLATFORM_POSIX
+struct RawMutex {
+	pthread_mutex_t  mutex[1];
+	
+	void Enter() { pthread_mutex_lock(mutex); }
+	void Leave() { pthread_mutex_unlock(mutex); }
+	
+	RawMutex()   {
+		pthread_mutexattr_t mutex_attr[1];
+		pthread_mutexattr_init(mutex_attr);
+		pthread_mutexattr_settype(mutex_attr, PTHREAD_MUTEX_RECURSIVE);
+		pthread_mutex_init(mutex, mutex_attr);
+ 	}
+	~RawMutex()  { pthread_mutex_destroy(mutex); }
+};
+#endif
+
+bool StartRawThread(rawthread_t (rawthread__ *fn)(void *ptr), void *ptr)
 {
 #ifdef PLATFORM_WIN32
 	HANDLE handle;
@@ -40,8 +59,8 @@ bool StartRawThread(uintptr_t (__stdcall *fn)(void *ptr), void *ptr)
 #endif
 #ifdef PLATFORM_POSIX
 	pthread_t handle;
-	if(pthread_create(&handle, 0, sThreadRoutine, cb) == 0) {
-		pthread_detach(handle)
+	if(pthread_create(&handle, 0, fn, ptr) == 0) {
+		pthread_detach(handle);
 		return true;
 	}
 #endif
@@ -73,7 +92,7 @@ int sGetAddrInfo(const char *host, const char *port, addrinfo **result)
 	return getaddrinfo(host, port, &hints, result);
 }
 
-uintptr_t __stdcall IpAddrInfo::Thread(void *ptr)
+rawthread_t rawthread__ IpAddrInfo::Thread(void *ptr)
 {
 	Entry *entry = (Entry *)ptr;
 	EnterPool();
