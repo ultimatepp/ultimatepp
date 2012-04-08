@@ -1,6 +1,8 @@
 #ifndef _Functions4U_SvgColors_h_
 #define _Functions4U_SvgColors_h_
 
+using namespace Upp;
+
 struct ColorDef {
 	const char *name;
 	Color color;

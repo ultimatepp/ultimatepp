@@ -1,5 +1,5 @@
-TOPIC("Dll$en-us")
-#include "Dll$en-us.tppi"
+TOPIC("Dl$en-us")
+#include "Dl$en-us.tppi"
 END_TOPIC
 
 TOPIC("Functions4U$en-us")

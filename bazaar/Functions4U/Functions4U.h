@@ -270,6 +270,11 @@ inline const T& max(const T& a, const T& b, const T& c, const T& d) {
 }
 
 template <class T> 
+inline bool Between(const T& val, const T& min, const T& max) { 
+	return val >= min && val <= max;
+}
+
+template <class T> 
 T AngleAdd360(T ang, T val) {
 	ang += val;
 	while (ang >= 360)
@@ -281,15 +286,24 @@ T AngleAdd360(T ang, T val) {
 
 template <class T> 
 inline const T Distance(const T& x1, const T& y1, const T& x2, const T& y2)  { 
-	return  sqrt(pow2(x1-x2) + pow2(y1-y2)); }
+	return sqrt(pow2(x1-x2) + pow2(y1-y2)); }
+
+template <class T> 
+inline const T Distance(const Point_<T>& p1, const Point_<T>& p2)  { 
+	return Distance<T>(p1.x, p1.y, p2.x, p2.y); }
 
 template <class T> 
 inline const T Distance(const T& x1, const T& y1, const T& z1, const T& x2, const T& y2, const T& z2)  { 
-	return  sqrt(pow2(x1-x2) + pow2(y1-y2) + pow2(z1-z2)); }
+	return sqrt(pow2(x1-x2) + pow2(y1-y2) + pow2(z1-z2)); }
 	
 template <class T> 
 inline const double Angle(const T& x1, const T& y1, const T& x2, const T& y2)  { 
 	return atan2(y2-y2, x2-x1);
+}
+
+template <class T> 
+inline const double Angle(const Point_<T>& p1, const Point_<T>& p2)  { 
+	return Angle<T>(p1.x, p1.y, p2.x, p2.y);
 }
 
 // A String based class to parse into

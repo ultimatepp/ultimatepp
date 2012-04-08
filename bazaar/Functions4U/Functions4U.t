@@ -28,10 +28,10 @@ T_("Problem found")
 esES("Problema encontrado")
 
 T_("Not possible to modify ")
-esES("")
+esES("No es posible modificar ")
 
 T_("Not possible to create ")
-esES("")
+esES("No es posible crear ")
 
 T_("Not possible to delete")
 esES("No es posible borrar")
@@ -40,13 +40,13 @@ T_("There was a problem in the copy")
 esES("Hubo un problema al copiar")
 
 T_("Dl cannot be released")
-esES("")
+esES("Dl no puede ser liberada")
 
 
 // Functions4U_Gui.cpp
 
 T_("Printing document")
-esES("")
+esES("Imprimiendo documento")
 
 
 // bsdiff.cpp

@@ -8,7 +8,8 @@ topic "General description";
 [s0; [2 They are grouped in the next sets:]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/Functions4U`$en`-us^2 General 
 functions]&]
-[s0;i150;O0; [^topic`:`/`/Functions4U`/src`/Dll`$en`-us^2 Dl]&]
+[s0;i150;O0; [^topic`:`/`/Functions4U`/src`/Dl`$en`-us^2 D][^topic`:`/`/Functions4U`/src`/Dll`$en`-us^2 l
+]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/bsdiff`$en`-us^2 BSDiff]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/SvgColors`$en`-us^2 SvgColors]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/StaticPlugin`$en`-us^2 StaticPlugin]&]

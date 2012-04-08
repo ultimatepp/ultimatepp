@@ -393,6 +393,13 @@ lass]_[*@4 T]>_[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* max]([@(0.0.255) con
 [s2; Returns the max value of [%-*@3 a], [%-*@3 b], [%-*@3 c] and [%-*@3 d].&]
 [s3; &]
 [s4;%- &]
+[s5;:Between`(const T`&`,const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) cla
+ss]_[*@4 T]>_[@(0.0.255) bool]_[* Between]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 val],
+ [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 min], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_
+[*@3 max])&]
+[s2; Returns true if [%-*@3 val] is between [%-*@3 min] and [%-*@3 max].&]
+[s3; &]
+[s4;%- &]
 [s5;:AngleAdd360`(T`,T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* Angle
 Add360]([*@4 T]_[*@3 ang], [*@4 T]_[*@3 val])&]
 [s2; Adds [%-*@3 val] to [%-*@3 ang] taking care that result is between 
@@ -403,8 +410,15 @@ Add360]([*@4 T]_[*@3 ang], [*@4 T]_[*@3 val])&]
 lass]_[*@4 T]>_[@(0.0.255) const]_[*@4 T]_[* Distance]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
 ]_[*@3 x1], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 y1], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
 ]_[*@3 x2], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 y2])&]
-[s2; Returns the euclidean distance between ([%-*@3 x1], [%-*@3 y1]) 
-and ([%-*@3 x2], [%-*@3 y2]).&]
+[s2; Returns the distance ([^http`:`/`/en`.wikipedia`.org`/wiki`/Euclidean`_distance^ e
+uclidean]) between ([%-*@3 x1], [%-*@3 y1]) and ([%-*@3 x2], [%-*@3 y2]).&]
+[s3; &]
+[s4;%- &]
+[s5;:Distance`(const Point`_`<T`>`&`,const Point`_`<T`>`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 T]>_[@(0.0.255) const]_[*@4 T]_[* Distance]([@(0.0.255) const]_[_^Point`_^ Point`_
+]<[*@4 T]>`&_[*@3 p1], [@(0.0.255) const]_[_^Point`_^ Point`_]<[*@4 T]>`&_[*@3 p2])&]
+[s2; Returns the distance ([^http`:`/`/en`.wikipedia`.org`/wiki`/Euclidean`_distance^ e
+uclidean]) between [%-*@3 p1] and [%-*@3 p2].&]
 [s3; &]
 [s4;%- &]
 [s5;:Distance`(const T`&`,const T`&`,const T`&`,const T`&`,const T`&`,const T`&`):%- [@(0.0.255) t
@@ -413,8 +427,9 @@ st]_[*@4 T][@(0.0.255) `&]_[*@3 x1], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[
 [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 z1], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x
 2], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 y2], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
 ]_[*@3 z2])&]
-[s2; Returns the euclidean distance between ([%-*@3 x1], [%-*@3 y1] [%-*@3 z1]), 
-and ([%-*@3 x2], [%-*@3 y2], [%-*@3 z2]).&]
+[s2; Returns the distance ([^http`:`/`/en`.wikipedia`.org`/wiki`/Euclidean`_distance^ e
+uclidean]) between ([%-*@3 x1], [%-*@3 y1] [%-*@3 z1]), and ([%-*@3 x2], 
+[%-*@3 y2], [%-*@3 z2]).&]
 [s3; &]
 [s4;%- &]
 [s5;:Angle`(const T`&`,const T`&`,const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
@@ -423,6 +438,12 @@ lass]_[*@4 T]>_[@(0.0.255) const]_[@(0.0.255) double]_[* Angle]([@(0.0.255) cons
 ]_[*@3 x2], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 y2])&]
 [s2; Returns the angle between ([%-*@3 x1], [%-*@3 y1]) and ([%-*@3 x2], 
 [%-*@3 y2]).&]
+[s3; &]
+[s4;%- &]
+[s5;:Angle`(const Point`_`<T`>`&`,const Point`_`<T`>`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 T]>_[@(0.0.255) const]_[@(0.0.255) double]_[* Angle]([@(0.0.255) const]_[_^Point`_^ P
+oint`_]<[*@4 T]>`&_[*@3 p1], [@(0.0.255) const]_[_^Point`_^ Point`_]<[*@4 T]>`&_[*@3 p2])&]
+[s2; Return the angle between [%-*@3 p1] and [%-*@3 p2].&]
 [s3; &]
 [s4;%- &]
 [s5;:Odd`(int`):%- [@(0.0.255) bool]_[* Odd]([@(0.0.255) int]_[*@3 val])&]
@@ -1659,6 +1680,12 @@ and Color [%-*@3 color].&]
 [s4; &]
 [s2;l0;:RandomColor`(`):%- [_^Color^ Color]_[* RandomColor]()&]
 [s2; Returns a random color.&]
+[s3; &]
+[s4;%- &]
+[s5;:GetRainbowColor`(int`):%- [_^Color^ Color]_[* GetRainbowColor]([@(0.0.255) int]_[*@3 val
+16])&]
+[s2; Returns a rainbow color from an input value [%-*@3 val16] from 
+0 (Red) to 0xFFFF.&]
 [s3; &]
 [s4; &]
 [s5;:GetRect`(const Image`&`,const Rect`&`):%- [_^Image^ Image]_[* GetRect]([@(0.0.255) con

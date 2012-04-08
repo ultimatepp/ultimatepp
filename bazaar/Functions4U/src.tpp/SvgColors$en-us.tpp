@@ -10,7 +10,7 @@ topic "SVG Colors";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[ {{10000@(113.42.0) [s0;%% [*@7;4 SVG Colors]]}}&]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 Functions4U Reference. SVG Colors]]}}&]
 [s0;i448;a25;kKO9;@(0.0.255) &]
 [s0;a25;kKO9;%% Svg color functions include all color supported by 
 Scalable Vector Graphics format.&]
