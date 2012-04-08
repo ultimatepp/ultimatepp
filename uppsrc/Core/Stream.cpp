@@ -82,7 +82,7 @@ bool Stream::GetAll(void *data, dword size) {
 	return true;
 }
 
-String Stream::Get(dword size)
+String Stream::Get(int size)
 {
 	StringBuffer b(size);
 	int n = Get(~b, size);
@@ -417,8 +417,9 @@ void  Stream::Put(Stream& s, int64 size, dword click) {
 	}
 }
 
-void Stream::SerializeRLE(byte *data, dword size)
+void Stream::SerializeRLE(byte *data, int size)
 {
+	ASSERT(size >= 0);
 	if(IsError()) return;
 	byte *s =   (byte *)data;
 	byte *lim = s + size;
@@ -465,7 +466,8 @@ void Stream::SerializeRLE(byte *data, dword size)
 		}
 }
 
-void Stream::SerializeRaw(byte *data, dword size) {
+void Stream::SerializeRaw(byte *data, int size) {
+	ASSERT(size >= 0);
 	if(IsError()) return;
 	if(IsLoading())
 		GetAll(data, size);
@@ -473,7 +475,8 @@ void Stream::SerializeRaw(byte *data, dword size) {
 		Put(data, size);
 }
 
-void Stream::SerializeRaw(word *data, dword count) {
+void Stream::SerializeRaw(word *data, int count) {
+	ASSERT(count >= 0);
 #ifdef CPU_BE
 	EndianSwap(data, count);
 #endif
@@ -483,7 +486,8 @@ void Stream::SerializeRaw(word *data, dword count) {
 #endif
 }
 
-void Stream::SerializeRaw(dword *data, dword count) {
+void Stream::SerializeRaw(dword *data, int count) {
+	ASSERT(count >= 0);
 #ifdef CPU_BE
 	EndianSwap(data, count);
 #endif
@@ -493,7 +497,8 @@ void Stream::SerializeRaw(dword *data, dword count) {
 #endif
 }
 
-void Stream::SerializeRaw(uint64 *data, dword count) {
+void Stream::SerializeRaw(uint64 *data, int count) {
+	ASSERT(count >= 0);
 #ifdef CPU_BE
 	EndianSwap(data, count);
 #endif

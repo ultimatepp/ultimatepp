@@ -391,12 +391,29 @@ void AppExit__()
 #endif
 }
 
+#if defined(PLATFORM_WIN32) && !defined(PLATFORM_WINCE)
+static rawthread_t rawthread__ sShellExecuteOpen(void *str)
+{
+	ShellExecuteW(NULL, L"open", (wchar *)str, NULL, L".", SW_SHOWDEFAULT);
+	free(str);
+	return 0;
+}
+
+void LaunchWebBrowser(const String& url)
+{
+	WString wurl = ToSystemCharsetW(url);
+	if (int(ShellExecuteW(NULL, L"open", wurl, NULL, L".", SW_SHOWDEFAULT)) <= 32) {
+		int l = 2 * wurl.GetLength() + 1;
+		char *curl = (char *)malloc(l);
+		memcpy(curl, wurl, l);
+		StartRawThread(sShellExecuteOpen, curl);
+	} 
+}
+#endif
+
+#ifdef PLATFORM_POSIX
 void    LaunchWebBrowser(const String& url)
 {
-#if defined(PLATFORM_WIN32) && !defined(PLATFORM_WINCE)
-	ShellExecute(NULL, "open", url, NULL, ".", SW_SHOWDEFAULT);
-#endif
-#ifdef PLATFORM_POSIX
 	const char * browser[] = {
 		"htmlview", "xdg-open", "x-www-browser", "firefox", "konqueror", "opera", "epiphany", "galeon", "netscape"
 	};
@@ -407,8 +424,8 @@ void    LaunchWebBrowser(const String& url)
 			);
 			break;
 		}
-#endif
 }
+#endif
 
 String GetDataFile(const char *filename)
 {

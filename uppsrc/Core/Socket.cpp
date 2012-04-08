@@ -18,55 +18,6 @@ NAMESPACE_UPP
 
 #define LLOG(x)  //  DLOG("TCP " << x)
 
-#ifdef PLATFORM_WIN32
-struct RawMutex {
-	CRITICAL_SECTION cs;
-	
-	void Enter() { EnterCriticalSection(&cs); }
-	void Leave() { LeaveCriticalSection(&cs); }
-	
-	RawMutex()   { InitializeCriticalSection(&cs); }
-	~RawMutex()  { DeleteCriticalSection(&cs); }
-};
-#endif
-
-#ifdef PLATFORM_POSIX
-struct RawMutex {
-	pthread_mutex_t  mutex[1];
-	
-	void Enter() { pthread_mutex_lock(mutex); }
-	void Leave() { pthread_mutex_unlock(mutex); }
-	
-	RawMutex()   {
-		pthread_mutexattr_t mutex_attr[1];
-		pthread_mutexattr_init(mutex_attr);
-		pthread_mutexattr_settype(mutex_attr, PTHREAD_MUTEX_RECURSIVE);
-		pthread_mutex_init(mutex, mutex_attr);
- 	}
-	~RawMutex()  { pthread_mutex_destroy(mutex); }
-};
-#endif
-
-bool StartRawThread(rawthread_t (rawthread__ *fn)(void *ptr), void *ptr)
-{
-#ifdef PLATFORM_WIN32
-	HANDLE handle;
-	handle = (HANDLE)_beginthreadex(0, 0, fn, ptr, 0, NULL);
-	if(handle) {
-		CloseHandle(handle);
-		return true;
-	}
-#endif
-#ifdef PLATFORM_POSIX
-	pthread_t handle;
-	if(pthread_create(&handle, 0, fn, ptr) == 0) {
-		pthread_detach(handle);
-		return true;
-	}
-#endif
-	return false;
-}
-
 IpAddrInfo::Entry IpAddrInfo::pool[COUNT];
 
 RawMutex IpAddrInfoPoolMutex;

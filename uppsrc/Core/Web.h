@@ -10,14 +10,6 @@ inline String Base64Encode(const String& data)    { return Base64Encode(data.Beg
 String        Base64Decode(const char *b, const char *e);
 inline String Base64Decode(const String& data)    { return Base64Decode(data.Begin(), data.End()); }
 
-#ifdef PLATFORM_WIN32
-#define rawthread_t uintptr_t
-#define rawthread__ __stdcall
-#else
-#define rawthread_t void *
-#define rawthread__
-#endif
-
 class IpAddrInfo {
 	enum { COUNT = 32 };
 	struct Entry {
@@ -72,13 +64,21 @@ class TcpSocket {
 
 	int                     errorcode;
 	String                  errordesc;
-
+	
+	struct SSLBase {
+		virtual void Secure(TcpSocket& s) = 0;
+		virtual void Send(TcpSocket& s) = 0;
+		virtual void Recv(TcpSocket& s) = 0;
+	};
+	
+	One<SSLBase>            ssl;
 
 	SOCKET                  AcceptRaw(dword *ipaddr, int timeout_msec);
 	bool                    Open(int family, int type, int protocol);
 	int                     Recv(void *buffer, int maxlen);
 	int                     Send(const void *buffer, int maxlen);
 	bool                    RawConnect(addrinfo *info);
+	void                    CreateSSL();
 
 	void                    ReadBuffer();
 	int                     Get_();
