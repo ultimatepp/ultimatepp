@@ -28,6 +28,7 @@ Controls4U_Demo::Controls4U_Demo() {
 	tab.Add(jbcontrols_Demo.SizePos(), "JBControls");
 	tab.Add(staticClock_Demo.SizePos(), "StaticClock");
 	tab.Add(editFileFolder_Demo.SizePos(), "StaticImage & EditFile/Folder");
+	tab.Add(staticImageSet_Demo.SizePos(), "StaticImageSet");
 	tab.Add(staticCtrls_Demo.SizePos(), "Static Controls");
 	tab.Add(staticCtrlsTest_Demo.SizePos(), "Static Controls Test");
 	//tab.Add(drawingCanvas_Demo.SizePos(), "DrawingCanvas (experimental)");
@@ -237,4 +238,10 @@ DrawingCanvas_Demo::DrawingCanvas_Demo() {
 	elem.style.SetStrokeColor(Green()).SetStrokeWidth(3);
 }
 
+StaticImageSet_Demo::StaticImageSet_Demo() {
+	CtrlLayout(*this);
 
+	imageSet.Add(Images::cream2());
+	imageSet.Add(Images::paper());
+	imageSet.Add(Images::ClockImage());
+}

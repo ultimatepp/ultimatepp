@@ -65,6 +65,12 @@ public:
 	DrawingCanvas_Demo();
 };
 
+class StaticImageSet_Demo : public WithStaticImageSet<StaticRect> {
+public:
+	typedef StaticImageSet_Demo CLASSNAME;
+	StaticImageSet_Demo();
+};
+
 class Controls4U_Demo : public WithMain<TopWindow> {
 public:
 	typedef Controls4U_Demo CLASSNAME;
@@ -79,6 +85,7 @@ public:
 	FileBrowser_Demo fileBrowser_Demo;
 	Functions4U_Demo functions4U_Demo;
 	DrawingCanvas_Demo drawingCanvas_Demo;
+	StaticImageSet_Demo staticImageSet_Demo;
 #if defined(PLATFORM_WIN32) 
 	Firefox_Demo firefox_Demo;
 	IExplorer_Demo iexplorer_Demo;

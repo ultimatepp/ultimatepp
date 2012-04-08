@@ -165,3 +165,9 @@ LAYOUT(DrawingCanvas, 700, 596)
 	ITEM(Label, dv___1, SetLabel(t_("DrawingCanvas")).LeftPosZ(4, 84).TopPosZ(4, 19))
 END_LAYOUT
 
+LAYOUT(StaticImageSet, 364, 364)
+	ITEM(StaticImageSet, imageSet, HSizePosZ(4, 4).VSizePosZ(52, 4))
+	ITEM(Label, dv___1, SetLabel(t_("Click over the image to change to the next.")).LeftPosZ(4, 292).TopPosZ(24, 20))
+	ITEM(Label, dv___2, SetLabel(t_("StaticImageSet")).SetFont(StdFont().Bold()).LeftPosZ(4, 292).TopPosZ(4, 19))
+END_LAYOUT
+

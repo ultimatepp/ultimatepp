@@ -5,5 +5,4 @@
 #include "plugin\gif/init"
 #include "plugin\jpg/init"
 #include "plugin\tif/init"
-#include "GridCtrl/init"
 #endif
