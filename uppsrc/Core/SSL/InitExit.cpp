@@ -77,6 +77,8 @@ static thread__ void (*sPrevExit)();
 static void sslExitThread()
 {
 	ERR_remove_state(0);
+	if(sPrevExit)
+		(*sPrevExit)();
 }
 
 void SslInitThread()
@@ -84,7 +86,7 @@ void SslInitThread()
 	if(sThreadInit || Thread::IsMain())
 		return;
 	sThreadInit = true;
-	Thread::AtExit(sslExitThread);
+	sPrevExit = Thread::AtExit(sslExitThread);
 }
 
 END_UPP_NAMESPACE
