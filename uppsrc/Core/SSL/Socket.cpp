@@ -18,7 +18,8 @@ struct TcpSocket::SSLImp : TcpSocket::SSL {
 	void           SetSSLResError(const char *context, int res);
 	bool           IsAgain(int res) const;
 	
-	SSLImp(TcpSocket& socket) : socket(socket) {}
+	SSLImp(TcpSocket& socket) : socket(socket) { ssl = NULL; }
+	~SSLImp();
 };
 
 TcpSocket::SSL *TcpSocket::CreateSSLImp(TcpSocket& socket)
@@ -33,6 +34,12 @@ void InitCreateSSL()
 
 INITBLOCK {
 	InitCreateSSL();
+}
+
+TcpSocket::SSLImp::~SSLImp()
+{
+	if(ssl)
+		SSL_free(ssl);
 }
 
 void TcpSocket::SSLImp::SetSSLError(const char *context)
@@ -118,28 +125,23 @@ bool TcpSocket::SSLImp::Wait(dword flags)
 int TcpSocket::SSLImp::Send(const void *buffer, int maxlen)
 {
 	int res = SSL_write(ssl, (const char *)buffer, maxlen);
-	if(IsAgain(res))
-		return 0;
-	if(res <= 0) {
+	if(res > 0)
+		return res;
+	if(!IsAgain(res))
 		SetSSLResError("SSL_write", res);
-		return 0;
-	}
-	return res;
+	return 0;
 }
 
 int TcpSocket::SSLImp::Recv(void *buffer, int maxlen)
 {
 	int res = SSL_read(ssl, (char *)buffer, maxlen);
-	if(IsAgain(res))
-		return 0;
-	if(res == 0) {
+	if(res > 0)
+		return res;
+	if(!IsAgain(res)) {
 		socket.is_eof = true;
 		if(SSL_get_shutdown(ssl) & SSL_RECEIVED_SHUTDOWN)
 			return 0;
-	}
-	if(res <= 0) {
 		SetSSLResError("SSL_read", res);
-		return 0;
 	}
 	return res;
 }
@@ -149,6 +151,7 @@ void TcpSocket::SSLImp::Close()
 	SSL_shutdown(ssl);
 	socket.RawClose();
 	SSL_free(ssl);
+	ssl = NULL;
 }
 
 
