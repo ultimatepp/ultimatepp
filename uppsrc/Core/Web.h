@@ -68,22 +68,23 @@ class TcpSocket {
 	String                  errordesc;
 	
 	struct SSL {
-		virtual bool Start(TcpSocket& s) = 0;
-		virtual bool Wait(TcpSocket& s, dword flags) = 0;
-		virtual int  Send(TcpSocket& s, const void *buffer, int maxlen) = 0;
-		virtual int  Recv(TcpSocket& s, void *buffer, int maxlen) = 0;
-		virtual void Close(TcpSocket& s) = 0;
+		virtual bool Start() = 0;
+		virtual bool Wait(dword flags) = 0;
+		virtual int  Send(const void *buffer, int maxlen) = 0;
+		virtual int  Recv(void *buffer, int maxlen) = 0;
+		virtual void Close() = 0;
+		
+		virtual ~SSL() {}
 	};
-	
-	struct SSLImp;
-	
-	friend struct SSLImp;
 	
 	One<SSL>                ssl;
 	
-	static SSL *(*CreateSSL)();
+	struct SSLImp;
+	friend struct SSLImp;
 
-	SSLImp *CreateSSLImp();
+	static SSL *(*CreateSSL)(TcpSocket& socket);
+	static SSL *CreateSSLImp(TcpSocket& socket);
+
 	friend void InitCreateSSL();
 
 	bool                    RawWait(dword flags);
@@ -102,8 +103,9 @@ class TcpSocket {
 
 	void                    Reset();
 
-	void SetSockError(const char *context, const char *errdesc);
-	void SetSockError(const char *context);
+	void                    SetSockError(const char *context, int code, const char *errdesc);
+	void                    SetSockError(const char *context, const char *errdesc);
+	void                    SetSockError(const char *context);
 
 	static int              GetErrorCode();
 	static bool             WouldBlock();
@@ -164,6 +166,7 @@ public:
 	bool            PutAll(const String& s)                  { return Put(s) == s.GetCount(); }
 	
 	bool            StartSSL();
+	bool            IsSSL() const                            { return ssl; }
 
 	TcpSocket&      Timeout(int ms)                          { timeout = ms; return *this; }
 	int             GetTimeout() const                       { return timeout; }
@@ -235,6 +238,7 @@ class HttpRequest : public TcpSocket {
 	String       proxy_username;
 	String       proxy_password;
 	String       path;
+	bool         ssl;
 
 	int          method;
 	String       accept;
@@ -302,6 +306,7 @@ public:
 
 	HttpRequest&  Host(const String& h)                  { host = h; return *this; }
 	HttpRequest&  Port(int p)                            { port = p; return *this; }
+	HttpRequest&  SSL(bool b = true)                     { ssl = b; return *this; }
 	HttpRequest&  Path(const String& p)                  { path = p; return *this; }
 	HttpRequest&  User(const String& u, const String& p) { username = u; password = p; return *this; }
 	HttpRequest&  Digest()                               { force_digest = true; return *this; }

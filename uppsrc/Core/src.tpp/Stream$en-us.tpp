@@ -410,6 +410,14 @@ Returns the number of bytes actually read.&]
 result as String.&]
 [s3; &]
 [s4;%- &]
+[s5;:Stream`:`:GetAll`(void`*`,int`):%- [@(0.0.255) bool]_[* GetAll]([@(0.0.255) void]_`*[*@3 d
+ata], [@(0.0.255) int]_[*@3 size])&]
+[s2; Reads [%-*@3 size] bytes from the stream to memory at [%-*@3 data]. 
+If there is not enough data in the stream, LoadError is invoked 
+(that in turn might throw an exception). Returns true if required 
+number of bytes was read.&]
+[s3; &]
+[s4;%- &]
 [s5;:Stream`:`:LoadThrowing`(`):%- [@(0.0.255) void]_[* LoadThrowing]()&]
 [s2; Sets stream into the mode that throws LoadingError exception 
 when LoadError is invoked. This mode is typical for serialization 
@@ -420,16 +428,6 @@ usage of stream.&]
 [s2; Performs SetError(ERROR`_LOADING`_FAILED). If Stream set to 
 the LoadThrowing mode (by LoadThrowing() method), LoadingError 
 exception is thrown.&]
-[s3; &]
-[s4;%- &]
-[s5;:Stream`:`:GetAll`(void`*`,dword`):%- [@(0.0.255) bool]_[* GetAll]([@(0.0.255) void]_`*
-[*@3 data], [_^dword^ dword]_[*@3 size])&]
-[s2; Reads a block of raw binary data from the stream. If there is 
-not enough data in the stream, LoadError is invoked (that in 
-turn might throw an exception).&]
-[s7; [%-*C@3 data]-|Pointer to buffer to receive the data.&]
-[s7; [%-*C@3 size]-|Number of bytes to read.&]
-[s7; [*/ Return value]-|true if required number of bytes was read.&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:Get8`(`):%- [@(0.0.255) int]_[* Get8]()&]

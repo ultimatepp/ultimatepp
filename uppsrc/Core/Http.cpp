@@ -35,6 +35,7 @@ void HttpRequest::Init()
 	WhenContent = callback(this, &HttpRequest::ContentOut);
 	chunk = 4096;
 	timeout = 120000;
+	ssl = false;
 }
 
 HttpRequest::HttpRequest()
@@ -50,6 +51,7 @@ HttpRequest::HttpRequest(const char *url)
 
 HttpRequest& HttpRequest::Url(const char *u)
 {
+	ssl = memcmp(u, "https", 5) == 0;
 	const char *t = u;
 	while(*t && *t != '?')
 		if(*t++ == '/' && *t == '/') {
@@ -531,6 +533,8 @@ void HttpRequest::StartRequest()
 	data << request_headers << "\r\n" << postdata; // !!! POST PHASE !!!
 	LLOG("HTTP REQUEST " << host << ":" << port);
 	LLOG("HTTP request:\n" << data);
+	if(ssl)
+		StartSSL();
 }
 
 bool HttpRequest::SendingData()
