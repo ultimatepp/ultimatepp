@@ -520,6 +520,8 @@ public:
 	PainterCanvas &SetShowWindow(bool sw = true)		{showWindow = sw; return *this;};
 	PainterCanvas &SetCursorImage(const Image &img)		{cursorImage = img; return *this;};
 	
+	PainterCanvas &SetLegend(bool _legendShowXY, Font _legendFont);
+	
 	GraphElemList elemList;
 	
 	double GetScale()	{return scale;};
@@ -568,6 +570,12 @@ private:
 	void DoPaint(Painter& sw);
 		
 	Image cursorImage;
+
+	Font legendFont;
+	bool legendShowFilename;
+	bool legendShowXY;
+	String legendText;
+	Size legendLastSize;
 };
 	
 #endif
