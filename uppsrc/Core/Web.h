@@ -49,7 +49,9 @@ enum { WAIT_READ = 1, WAIT_WRITE = 2, WAIT_EXCEPTION = 4, WAIT_ALL = 7 };
 
 class TcpSocket {
 	enum { BUFFERSIZE = 512 };
+	enum { NONE, CONNECT, ACCEPT };
 	SOCKET                  socket;
+	int                     mode;
 	char                    buffer[BUFFERSIZE];
 	char                   *ptr;
 	char                   *end;
@@ -65,20 +67,34 @@ class TcpSocket {
 	int                     errorcode;
 	String                  errordesc;
 	
-	struct SSLBase {
-		virtual void Secure(TcpSocket& s) = 0;
-		virtual void Send(TcpSocket& s) = 0;
-		virtual void Recv(TcpSocket& s) = 0;
+	struct SSL {
+		virtual bool Start(TcpSocket& s) = 0;
+		virtual bool Wait(TcpSocket& s, dword flags) = 0;
+		virtual int  Send(TcpSocket& s, const void *buffer, int maxlen) = 0;
+		virtual int  Recv(TcpSocket& s, void *buffer, int maxlen) = 0;
+		virtual void Close(TcpSocket& s) = 0;
 	};
 	
-	One<SSLBase>            ssl;
+	struct SSLImp;
+	
+	friend struct SSLImp;
+	
+	One<SSL>                ssl;
+	
+	static SSL *(*CreateSSL)();
 
+	SSLImp *CreateSSLImp();
+	friend void InitCreateSSL();
+
+	bool                    RawWait(dword flags);
 	SOCKET                  AcceptRaw(dword *ipaddr, int timeout_msec);
 	bool                    Open(int family, int type, int protocol);
+	int                     RawRecv(void *buffer, int maxlen);
 	int                     Recv(void *buffer, int maxlen);
+	int                     RawSend(const void *buffer, int maxlen);
 	int                     Send(const void *buffer, int maxlen);
 	bool                    RawConnect(addrinfo *info);
-	void                    CreateSSL();
+	void                    RawClose();
 
 	void                    ReadBuffer();
 	int                     Get_();
@@ -146,6 +162,8 @@ public:
 	int             Put(const String& s)                     { return Put(s.Begin(), s.GetLength()); }
 	bool            PutAll(const char *s, int len)           { return Put(s, len) == len; }
 	bool            PutAll(const String& s)                  { return Put(s) == s.GetCount(); }
+	
+	bool            StartSSL();
 
 	TcpSocket&      Timeout(int ms)                          { timeout = ms; return *this; }
 	int             GetTimeout() const                       { return timeout; }

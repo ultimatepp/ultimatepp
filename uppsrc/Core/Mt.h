@@ -87,6 +87,8 @@ public:
 	static int  GetCount();
 	static void ShutdownThreads();
 	static bool IsShutdownThreads();
+	static void (*AtExit(void (*exitfn)()))();
+
 #ifdef PLATFORM_WIN32
 	static Handle GetCurrentHandle()          { return GetCurrentThread(); }
 	static inline Id GetCurrentId()           { return ::GetCurrentThreadId(); };

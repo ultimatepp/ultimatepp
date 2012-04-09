@@ -71,6 +71,10 @@ the thread to finish in this case).&]
 is running so far).&]
 [s3; &]
 [s4; &]
+[s5;:Thread`:`:IsMain`(`): [@(0.0.255) static] [@(0.0.255) bool]_[* IsMain]()&]
+[s2;%% Returns true if current thread is main.&]
+[s3; &]
+[s4; &]
 [s5;:Thread`:`:GetCount`(`): [@(0.0.255) static] [@(0.0.255) int]_[* GetCount]()&]
 [s2;%% Number of running threads.&]
 [s3; &]
@@ -83,6 +87,14 @@ s]()&]
 [s5;:Thread`:`:IsShutdownThreads`(`): [@(0.0.255) static] [@(0.0.255) bool]_[* IsShutdownTh
 reads]()&]
 [s2;%% True if ShutdownThreads was called.&]
+[s3; &]
+[s4; &]
+[s5;:Thread`:`:AtExit: [@(0.0.255) static]_[@(0.0.255) void]_(`*[* AtExit]([@(0.0.255) void]_
+(`*[*@3 exitfn])()))()&]
+[s2;%% Allow to install a function [%-*@3 exitfn] to be called at thread 
+exit. Returns the pointer to function already installed or NULL, 
+client code should call the already installed function (return 
+value is not null)&]
 [s3; &]
 [s4; &]
 [s5;:Thread`:`:Priority`(int`): [@(0.0.255) void]_[* Priority]([@(0.0.255) int]_[*@3 percent])

@@ -235,8 +235,7 @@ int TcpSocket::GetErrorCode()
 
 #endif
 
-
-void TcpSocket::Init()
+void TcpSocketInit()
 {
 #if defined(PLATFORM_WIN32)
 	ONCELOCK {
@@ -244,6 +243,11 @@ void TcpSocket::Init()
 		WSAStartup(MAKEWORD(2, 2), &wsadata);
 	}
 #endif
+}
+
+void TcpSocket::Init()
+{
+	TcpSocketInit();
 }
 
 void TcpSocket::Reset()
@@ -254,6 +258,8 @@ void TcpSocket::Reset()
 	ptr = end = buffer;
 	is_error = false;
 	is_abort = false;
+	mode = NONE;
+	ssl.Clear();
 }
 
 TcpSocket::TcpSocket()
@@ -338,6 +344,7 @@ bool TcpSocket::Accept(TcpSocket& ls)
 		SetSockError("accept");
 		return false;
 	}
+	mode = ACCEPT;
 	return true;
 }
 
@@ -400,6 +407,7 @@ bool TcpSocket::RawConnect(addrinfo *rp)
 			return false;
 		}
     }
+	mode = CONNECT;
 	return true;
 }
 
@@ -425,7 +433,7 @@ bool TcpSocket::Connect(const char *host, int port)
 	return Connect(info);
 }
 
-void TcpSocket::Close()
+void TcpSocket::RawClose()
 {
 	LLOG("TCP close " << (int)socket);
 	if(socket != INVALID_SOCKET) {
@@ -443,6 +451,15 @@ void TcpSocket::Close()
 	}
 }
 
+void TcpSocket::Close()
+{
+	if(ssl)
+		ssl->Close(*this);
+	else
+		RawClose();
+	ssl.Clear();
+}
+
 bool TcpSocket::WouldBlock()
 {
 	int c = GetErrorCode();
@@ -454,7 +471,7 @@ bool TcpSocket::WouldBlock()
 #endif
 }
 
-int TcpSocket::Send(const void *buf, int amount)
+int TcpSocket::RawSend(const void *buf, int amount)
 {
 	int res = send(socket, (const char *)buf, amount, 0);
 	if(res < 0 && WouldBlock())
@@ -463,6 +480,11 @@ int TcpSocket::Send(const void *buf, int amount)
 	if(res == 0 || res < 0)
 		SetSockError("send");
 	return res;
+}
+
+int TcpSocket::Send(const void *buf, int amount)
+{
+	return ssl ? ssl->Send(*this, buf, amount) : RawSend(buf, amount);
 }
 
 void TcpSocket::Shutdown()
@@ -480,7 +502,7 @@ String TcpSocket::GetHostName()
 	return buffer;
 }
 
-bool TcpSocket::Wait(dword flags)
+bool TcpSocket::RawWait(dword flags)
 {
 	LLOG("Wait(" << timeout << ", " << flags << ")");
 	if((flags & WAIT_READ) && ptr != end)
@@ -525,6 +547,11 @@ bool TcpSocket::Wait(dword flags)
 	}
 }
 
+bool TcpSocket::Wait(dword flags)
+{
+	return ssl ? ssl->Wait(*this, flags) : RawWait(flags);
+}
+
 int TcpSocket::Put(const char *s, int length)
 {
 	LLOG("Put " << socket << ": " << length);
@@ -551,7 +578,7 @@ int TcpSocket::Put(const char *s, int length)
 	return done;
 }
 
-int TcpSocket::Recv(void *buf, int amount)
+int TcpSocket::RawRecv(void *buf, int amount)
 {
 	int res = recv(socket, (char *)buf, amount, 0);
 	if(res == 0)
@@ -566,6 +593,11 @@ int TcpSocket::Recv(void *buf, int amount)
 	     << AsCString((char *)buf, (char *)buf + min(res, 16))
 	     << (res ? "" : IsEof() ? ", EOF" : ", WOULDBLOCK"));
 	return res;
+}
+
+int TcpSocket::Recv(void *buffer, int maxlen)
+{
+	return ssl ? ssl->Recv(*this, buffer, maxlen) : RawRecv(buffer, maxlen);
 }
 
 void TcpSocket::ReadBuffer()
@@ -665,6 +697,28 @@ void TcpSocket::SetSockError(const char *context, const char *errdesc)
 void TcpSocket::SetSockError(const char *context)
 {
 	SetSockError(context, TcpSocketErrorDesc(GetErrorCode()));
+}
+
+TcpSocket::SSL *(*TcpSocket::CreateSSL)();
+
+bool TcpSocket::StartSSL()
+{
+	if(!CreateSSL) {
+		errorcode = -1;
+		errordesc = "Missing SSL support (Core/SSL)";
+		return false;
+	}
+	if(!IsOpen() || mode == NONE) {
+		errorcode = -1;
+		errordesc = "Socket not open or listening";
+		return false;
+	}
+	ssl = (*CreateSSL)();
+	if(!ssl->Start(*this)) {
+		ssl.Clear();
+		return false;
+	}
+	return true;
 }
 
 int SocketWaitEvent::Wait(int timeout)

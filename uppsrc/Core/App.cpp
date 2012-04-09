@@ -403,7 +403,7 @@ void LaunchWebBrowser(const String& url)
 {
 	WString wurl = ToSystemCharsetW(url);
 	if (int(ShellExecuteW(NULL, L"open", wurl, NULL, L".", SW_SHOWDEFAULT)) <= 32) {
-		int l = 2 * wurl.GetLength() + 1;
+		int l = sizeof(wchar) * wurl.GetLength() + 1;
 		char *curl = (char *)malloc(l);
 		memcpy(curl, wurl, l);
 		StartRawThread(sShellExecuteOpen, curl);
