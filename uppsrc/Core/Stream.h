@@ -95,7 +95,7 @@ public:
 	void      LoadThrowing()         { style |= STRM_THROW; }
 	void      LoadError();
 
-	bool      GetAll(void *data, dword size);
+	bool      GetAll(void *data, int size);
 
 	int       Get8()                 { return ptr < rdlim ? *ptr++ : _Get8(); }
 #ifdef CPU_X86
@@ -487,7 +487,7 @@ private:
 	int64    size;
 	byte     h[128];
 
-	void     Compare(int64 pos, const void *data, dword size);
+	void     Compare(int64 pos, const void *data, int size);
 
 public:
 	void     Open(Stream& aStream);

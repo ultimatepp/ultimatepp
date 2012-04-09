@@ -74,7 +74,7 @@ void Stream::LoadError() {
 		throw LoadingError();
 }
 
-bool Stream::GetAll(void *data, dword size) {
+bool Stream::GetAll(void *data, int size) {
 	if(Get(data, size) != size) {
 		LoadError();
 		return false;
@@ -1084,7 +1084,7 @@ void CompareStream::Seek(int64 apos) {
 	ptr = buffer;
 }
 
-void CompareStream::Compare(int64 pos, const void *data, dword size) {
+void CompareStream::Compare(int64 pos, const void *data, int size) {
 	ASSERT(stream);
 	if(!size) return;
 	Buffer<byte> b(size);

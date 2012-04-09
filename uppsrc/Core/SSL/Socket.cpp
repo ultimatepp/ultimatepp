@@ -3,62 +3,123 @@
 NAMESPACE_UPP
 
 struct TcpSocket::SSLImp : TcpSocket::SSL {
-	virtual bool Start(TcpSocket& s);
-	virtual bool Wait(TcpSocket& s, dword flags);
-	virtual int  Send(TcpSocket& s, const void *buffer, int maxlen);
-	virtual int  Recv(TcpSocket& s, void *buffer, int maxlen);
-	virtual void Close(TcpSocket& s);
+	virtual bool Start();
+	virtual bool Wait(dword flags);
+	virtual int  Send(const void *buffer, int maxlen);
+	virtual int  Recv(void *buffer, int maxlen);
+	virtual void Close();
+
+	TcpSocket&     socket;
+	SslContext     context;
+	::SSL         *ssl;
+	SslCertificate cert;
+
+	void           SetSSLError(const char *context);
+	void           SetSSLResError(const char *context, int res);
+	bool           IsAgain(int res) const;
+	
+	SSLImp(TcpSocket& socket) : socket(socket) {}
 };
 
-TcpSocket::SSLImp *TcpSocket::CreateSSLImp()
+TcpSocket::SSL *TcpSocket::CreateSSLImp(TcpSocket& socket)
 {
-	return new TcpSSLImp();
+	return new TcpSocket::SSLImp(socket);
 }
 
 void InitCreateSSL()
 {
-	TcpTcpSocket::CreateSSL = sCreate();
+	TcpSocket::CreateSSL = TcpSocket::CreateSSLImp;
 }
 
-bool TcpSocket::SSLImp::Start(TcpSocket& socket)
+INITBLOCK {
+	InitCreateSSL();
+}
+
+void TcpSocket::SSLImp::SetSSLError(const char *context)
 {
-	if(!(ssl = SSL_new(ssl_context))) {
-		SetSSLError("OpenClient / SSL_new");
+	int code;
+	String text = SslGetLastError(code);
+	socket.SetSockError(context, code, text);
+}
+
+void TcpSocket::SSLImp::SetSSLResError(const char *context, int res)
+{
+	int code = SSL_get_error(ssl, res);
+	String out;
+	switch(code) {
+#define SSLERR(c) case c: out = #c; break;
+		SSLERR(SSL_ERROR_NONE)
+		SSLERR(SSL_ERROR_SSL)
+		SSLERR(SSL_ERROR_WANT_READ)
+		SSLERR(SSL_ERROR_WANT_WRITE)
+		SSLERR(SSL_ERROR_WANT_X509_LOOKUP)
+		SSLERR(SSL_ERROR_SYSCALL)
+		SSLERR(SSL_ERROR_ZERO_RETURN)
+		SSLERR(SSL_ERROR_WANT_CONNECT)
+#ifdef PLATFORM_WIN32
+		SSLERR(SSL_ERROR_WANT_ACCEPT)
+#endif
+		default: out = "unknown code"; break;
+	}
+	socket.SetSockError(context, code, out);
+}
+
+bool TcpSocket::SSLImp::IsAgain(int res) const
+{
+	res = SSL_get_error(ssl, res);
+	return res == SSL_ERROR_WANT_READ ||
+	       res == SSL_ERROR_WANT_WRITE ||
+	       res == SSL_ERROR_WANT_CONNECT ||
+	       res == SSL_ERROR_WANT_ACCEPT;
+}
+
+bool TcpSocket::SSLImp::Start()
+{
+	if(!context.Create(const_cast<SSL_METHOD *>(SSLv3_client_method()))) {
+		SetSSLError("Start: SSL context.");
 		return false;
 	}
-	if(!SSL_set_fd(ssl, socket)) {
-		SetSSLError("OpenClient / SSL_set_fd");
+	if(!(ssl = SSL_new(context))) {
+		SetSSLError("Start: SSL_new");
+		return false;
+	}
+	if(!SSL_set_fd(ssl, socket.GetSOCKET())) {
+		SetSSLError("Start: SSL_set_fd");
 		return false;
 	}
 	int res;
-	if(mode == ACCEPT) {
+	if(socket.mode == ACCEPT) {
 		SSL_set_accept_state(ssl);
-		res = SSL_accept(ssl);
+		int res = SSL_accept(ssl);
+		if(res <= 0 && !IsAgain(res)) {
+			SetSSLResError("Start: SSL_accept", res);
+			return false;
+		}
 	}
 	else {
 		SSL_set_connect_state(ssl);
 		res = SSL_connect(ssl);
-	}
-	if(res <= 0) {
-		SetSSLResError("OpenClient / SSL_connect", res);
-		return false;
+		if(res <= 0 && !IsAgain(res)) {
+			SetSSLResError("Start: SSL_connect", res);
+			return false;
+		}
 	}
 	cert.Set(SSL_get_peer_certificate(ssl));
 	return true;
 }
 
-bool TcpSocket::SSLImp::Wait(TcpSocket& s, dword flags)
+bool TcpSocket::SSLImp::Wait(dword flags)
 {
 	if((flags & WAIT_READ) && SSL_pending(ssl) > 0)
 		return true;
-	return s.RawWait(flags);
+	return socket.RawWait(flags);
 }
 
-int TcpSocket::SSLImp::Send(TcpSocket& s, const void *buffer, int maxlen)
+int TcpSocket::SSLImp::Send(const void *buffer, int maxlen)
 {
-	if(!ssl)
-		return Data::Write(buf, amount);
-	int res = SSL_write(ssl, (const char *)buf, amount);
+	int res = SSL_write(ssl, (const char *)buffer, maxlen);
+	if(IsAgain(res))
+		return 0;
 	if(res <= 0) {
 		SetSSLResError("SSL_write", res);
 		return 0;
@@ -66,11 +127,13 @@ int TcpSocket::SSLImp::Send(TcpSocket& s, const void *buffer, int maxlen)
 	return res;
 }
 
-int TcpSocket::SSLImp::Recv(TcpSocket& s, void *buffer, int maxlen)
+int TcpSocket::SSLImp::Recv(void *buffer, int maxlen)
 {
-	int res = SSL_read(ssl, (char *)buf, amount);
+	int res = SSL_read(ssl, (char *)buffer, maxlen);
+	if(IsAgain(res))
+		return 0;
 	if(res == 0) {
-		s.is_eof = true;
+		socket.is_eof = true;
 		if(SSL_get_shutdown(ssl) & SSL_RECEIVED_SHUTDOWN)
 			return 0;
 	}
@@ -81,10 +144,10 @@ int TcpSocket::SSLImp::Recv(TcpSocket& s, void *buffer, int maxlen)
 	return res;
 }
 
-void TcpSocket::SSLImp::Close(TcpSocket& s)
+void TcpSocket::SSLImp::Close()
 {
 	SSL_shutdown(ssl);
-	s.RawClose();
+	socket.RawClose();
 	SSL_free(ssl);
 }
 

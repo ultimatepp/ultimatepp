@@ -454,7 +454,7 @@ void TcpSocket::RawClose()
 void TcpSocket::Close()
 {
 	if(ssl)
-		ssl->Close(*this);
+		ssl->Close();
 	else
 		RawClose();
 	ssl.Clear();
@@ -484,7 +484,7 @@ int TcpSocket::RawSend(const void *buf, int amount)
 
 int TcpSocket::Send(const void *buf, int amount)
 {
-	return ssl ? ssl->Send(*this, buf, amount) : RawSend(buf, amount);
+	return ssl ? ssl->Send(buf, amount) : RawSend(buf, amount);
 }
 
 void TcpSocket::Shutdown()
@@ -549,7 +549,7 @@ bool TcpSocket::RawWait(dword flags)
 
 bool TcpSocket::Wait(dword flags)
 {
-	return ssl ? ssl->Wait(*this, flags) : RawWait(flags);
+	return ssl ? ssl->Wait(flags) : RawWait(flags);
 }
 
 int TcpSocket::Put(const char *s, int length)
@@ -597,7 +597,7 @@ int TcpSocket::RawRecv(void *buf, int amount)
 
 int TcpSocket::Recv(void *buffer, int maxlen)
 {
-	return ssl ? ssl->Recv(*this, buffer, maxlen) : RawRecv(buffer, maxlen);
+	return ssl ? ssl->Recv(buffer, maxlen) : RawRecv(buffer, maxlen);
 }
 
 void TcpSocket::ReadBuffer()
@@ -683,15 +683,19 @@ String TcpSocket::GetLine(int maxlen)
 	}
 }
 
+void TcpSocket::SetSockError(const char *context, int code, const char *errdesc)
+{
+	errorcode = code;
+	errordesc.Clear();
+	if(socket != INVALID_SOCKET)
+		errordesc << "socket(" << (int)socket << ") / ";
+	errordesc << context << ": " << errdesc;
+	is_error = true;
+}
+
 void TcpSocket::SetSockError(const char *context, const char *errdesc)
 {
-	String err;
-	errorcode = GetErrorCode();
-	if(socket != INVALID_SOCKET)
-		err << "socket(" << (int)socket << ") / ";
-	err << context << ": " << errdesc;
-	errordesc = err;
-	is_error = true;
+	SetSockError(context, GetErrorCode(), errdesc);
 }
 
 void TcpSocket::SetSockError(const char *context)
@@ -699,10 +703,11 @@ void TcpSocket::SetSockError(const char *context)
 	SetSockError(context, TcpSocketErrorDesc(GetErrorCode()));
 }
 
-TcpSocket::SSL *(*TcpSocket::CreateSSL)();
+TcpSocket::SSL *(*TcpSocket::CreateSSL)(TcpSocket& socket);
 
 bool TcpSocket::StartSSL()
 {
+	ASSERT(IsOpen());
 	if(!CreateSSL) {
 		errorcode = -1;
 		errordesc = "Missing SSL support (Core/SSL)";
@@ -713,8 +718,8 @@ bool TcpSocket::StartSSL()
 		errordesc = "Socket not open or listening";
 		return false;
 	}
-	ssl = (*CreateSSL)();
-	if(!ssl->Start(*this)) {
+	ssl = (*CreateSSL)(*this);
+	if(!ssl->Start()) {
 		ssl.Clear();
 		return false;
 	}
