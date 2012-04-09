@@ -48,6 +48,15 @@ void Thread::Detach()
 
 static Atomic sThreadCount;
 
+static thread__  void (*sExit)(void);
+
+void (*Thread::AtExit(void (*exitfn)()))()
+{
+	void (*prev)() = sExit;
+	sExit = exitfn;
+	return prev;
+}
+
 #if defined(PLATFORM_WIN32) || defined(PLATFORM_POSIX)
 static
 #ifdef PLATFORM_WIN32
@@ -65,6 +74,8 @@ sThreadRoutine(void *arg)
 	(*cb)();
 	AtomicDec(sThreadCount);
 	delete cb;
+	if(sExit)
+		(*sExit)();
 #ifdef UPP_HEAP
 	MemoryFreeThread();
 #endif
