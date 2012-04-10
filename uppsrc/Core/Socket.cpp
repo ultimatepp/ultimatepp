@@ -2,7 +2,9 @@
 
 #ifdef PLATFORM_WIN32
 #include <winsock2.h>
-#include <Ws2ipdef.h>
+	#ifdef COMPILER_MSC
+	#include <Ws2ipdef.h>
+	#endif
 #include <Ws2tcpip.h>
 #endif
 
