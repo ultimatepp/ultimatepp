@@ -101,6 +101,10 @@
 		#endif
 	#endif
 
+	#ifdef COMPILER_MINGW
+		#define WINVER 0xFFFF	
+	#endif
+
 	#define DIR_SEP  '\\'
 	#define DIR_SEPS "\\"
 	#define PLATFORM_PATH_HAS_CASE 0
@@ -173,6 +177,7 @@
 #define W_P(w, p) w
 #if !defined(PLATFORM_CYGWIN)
 #include <winsock2.h>
+#include <ws2tcpip.h>
 #endif
 typedef int socklen_t;
 #endif
