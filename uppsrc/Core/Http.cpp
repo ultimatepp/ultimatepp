@@ -199,8 +199,8 @@ void HttpRequest::HttpError(const char *s)
 
 void HttpRequest::StartPhase(int s)
 {
-	LLOG("Starting status " << s << ' ' << host);
 	phase = s;
+	LLOG("Starting status " << s << " '" << GetPhaseName() << "' of " << host);
 	data.Clear();
 }
 
@@ -280,6 +280,15 @@ bool HttpRequest::Do()
 	return phase != FINISHED && phase != FAILED;
 }
 
+void HttpRequest::CopyCookies()
+{
+	int q = header.fields.Find("set-cookie");
+	while(q >= 0) {
+		Cookie(header.fields[q]);
+		q = header.fields.FindNext(q);
+	}
+}
+
 void HttpRequest::Finish()
 {
 	if(gzip) {
@@ -304,8 +313,9 @@ void HttpRequest::Finish()
 		String authenticate = header["www-authenticate"];
 		if(authenticate.GetCount() && redirect_count++ < max_redirects) {
 			LLOG("HTTP auth digest");
+			CopyCookies();
 			Digest(CalculateDigest(authenticate));
-			StartRequest();
+			Start();
 			return;
 		}
 	}
@@ -314,7 +324,8 @@ void HttpRequest::Finish()
 		if(url.GetCount() && redirect_count++ < max_redirects) {
 			LLOG("HTTP redirect " << url);
 			Url(url);
-			StartRequest();
+			CopyCookies();
+			Start();
 			retry_count = 0;
 			return;
 		}
@@ -359,7 +370,9 @@ String HttpRequest::GetRedirectUrl()
 	int p = path.Find('?');
 	if(p >= 0 && q < 0)
 		redirect_url.Cat(path.Mid(p));
-	return redirect_url;
+	if(redirect_url.StartsWith("http://") || redirect_url.StartsWith("https://"))
+		return redirect_url;
+	return (ssl ? "https://" : "http://") + host + "/" + redirect_url;
 }
 
 int   HttpRequest::GetContentLength()
@@ -456,6 +469,7 @@ void HttpRequest::Start()
 	ClearError();
 	gzip = false;
 	z.Clear();
+	header.Clear();
 
 	bool use_proxy = !IsNull(proxy_host);
 

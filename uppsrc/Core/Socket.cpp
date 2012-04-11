@@ -293,7 +293,9 @@ bool TcpSocket::Open(int family, int type, int protocol)
 
 bool TcpSocket::Listen(int port, int listen_count, bool ipv6_, bool reuse)
 {
+	Close();
 	Init();
+	Reset();
 
 	ipv6 = ipv6_;
 	if(!Open(ipv6 ? AF_INET6 : AF_INET, SOCK_STREAM, 0))
@@ -337,6 +339,9 @@ bool TcpSocket::Listen(int port, int listen_count, bool ipv6_, bool reuse)
 bool TcpSocket::Accept(TcpSocket& ls)
 {
 	Close();
+	Init();
+	Reset();
+
 	if(timeout && !ls.WaitRead())
 		return false;
 	if(!Open(ls.ipv6 ? AF_INET6 : AF_INET, SOCK_STREAM, 0))
@@ -418,6 +423,7 @@ bool TcpSocket::Connect(IpAddrInfo& info)
 {
 	LLOG("TCP Connect addrinfo");
 	Init();
+	Reset();
 	addrinfo *result = info.GetResult();
 	return result && RawConnect(result);
 }
@@ -427,6 +433,7 @@ bool TcpSocket::Connect(const char *host, int port)
 	LLOG("TCP Connect(" << host << ':' << port << ')');
 
 	Init();
+	Reset();
 	IpAddrInfo info;
 	if(!info.Execute(host, port)) {
 		SetSockError(Format("getaddrinfo(%s) failed", host));

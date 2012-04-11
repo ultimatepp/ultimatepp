@@ -200,7 +200,7 @@ struct HttpHeader {
 	bool   Response(String& protocol, int& code, String& reason);
 	bool   Request(String& method, String& uri, String& version);
 
-	void   Clear();	
+	void   Clear();
 	bool   Parse(const String& hdrs);
 };
 
@@ -282,6 +282,8 @@ class HttpRequest : public TcpSocket {
 	void         ReadingChunkHeader();
 	void         Finish();
 
+	void         CopyCookies();
+
 	void         HttpError(const char *s);
 	void         ContentOut(const void *ptr, dword size);
 	void         Out(const void *ptr, dword size);
@@ -323,6 +325,7 @@ public:
 	HttpRequest&  ClearHeaders()                          { return Headers(Null); }
 	HttpRequest&  AddHeaders(const String& h)             { request_headers.Cat(h); return *this; }
 	HttpRequest&  Header(const char *id, const String& data);
+	HttpRequest&  Cookie(const String& cookie)            { return Header("Cookie", cookie); }
 
 	HttpRequest&  StdHeaders(bool sh)                     { std_headers = sh; return *this; }
 	HttpRequest&  NoStdHeaders()                          { return StdHeaders(false); }
