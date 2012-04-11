@@ -1,5 +1,7 @@
 #include "SSL.h"
 
+#define LLOG(x) // DLOG(x)
+
 NAMESPACE_UPP
 
 struct TcpSocket::SSLImp : TcpSocket::SSL {
@@ -82,6 +84,7 @@ bool TcpSocket::SSLImp::IsAgain(int res) const
 
 bool TcpSocket::SSLImp::Start()
 {
+	LLOG("SSL Start");
 	if(!context.Create(const_cast<SSL_METHOD *>(SSLv3_client_method()))) {
 		SetSSLError("Start: SSL context.");
 		return false;
@@ -96,7 +99,7 @@ bool TcpSocket::SSLImp::Start()
 	}
 	int res;
 	if(socket.mode == ACCEPT) {
-		SSL_set_accept_state(ssl);
+//		SSL_set_accept_state(ssl);
 		int res = SSL_accept(ssl);
 		if(res <= 0 && !IsAgain(res)) {
 			SetSSLResError("Start: SSL_accept", res);
@@ -104,11 +107,17 @@ bool TcpSocket::SSLImp::Start()
 		}
 	}
 	else {
-		SSL_set_connect_state(ssl);
-		res = SSL_connect(ssl);
-		if(res <= 0 && !IsAgain(res)) {
-			SetSSLResError("Start: SSL_connect", res);
-			return false;
+//		SSL_set_connect_state(ssl);
+		for(;;) {
+			res = SSL_connect(ssl);
+			if(res > 0)
+				break;
+			DDUMP(IsAgain(res));
+			if(res <= 0 && !IsAgain(res)) {
+				SetSSLResError("Start: SSL_connect", res);
+				return false;
+			}
+			Sleep(100);
 		}
 	}
 	cert.Set(SSL_get_peer_certificate(ssl));
@@ -117,6 +126,7 @@ bool TcpSocket::SSLImp::Start()
 
 bool TcpSocket::SSLImp::Wait(dword flags)
 {
+	LLOG("SSL Wait");
 	if((flags & WAIT_READ) && SSL_pending(ssl) > 0)
 		return true;
 	return socket.RawWait(flags);
@@ -124,6 +134,7 @@ bool TcpSocket::SSLImp::Wait(dword flags)
 
 int TcpSocket::SSLImp::Send(const void *buffer, int maxlen)
 {
+	LLOG("SSL Send " << maxlen);
 	int res = SSL_write(ssl, (const char *)buffer, maxlen);
 	if(res > 0)
 		return res;
@@ -134,6 +145,7 @@ int TcpSocket::SSLImp::Send(const void *buffer, int maxlen)
 
 int TcpSocket::SSLImp::Recv(void *buffer, int maxlen)
 {
+	LLOG("SSL Recv " << maxlen);
 	int res = SSL_read(ssl, (char *)buffer, maxlen);
 	if(res > 0)
 		return res;
@@ -148,12 +160,12 @@ int TcpSocket::SSLImp::Recv(void *buffer, int maxlen)
 
 void TcpSocket::SSLImp::Close()
 {
+	LLOG("SSL Close");
 	SSL_shutdown(ssl);
 	socket.RawClose();
 	SSL_free(ssl);
 	ssl = NULL;
 }
-
 
 #if 0
 class SSLSocketData : public TcpSocket::Data
