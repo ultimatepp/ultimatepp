@@ -437,7 +437,11 @@ String HttpRequest::GetRedirectUrl()
 		redirect_url.Cat(path.Mid(p));
 	if(redirect_url.StartsWith("http://") || redirect_url.StartsWith("https://"))
 		return redirect_url;
-	return (ssl ? "https://" : "http://") + host + "/" + redirect_url;
+	String h = (ssl ? "https://" : "http://") + host;
+	if(*redirect_url != '/')
+		h << '/';
+	h << redirect_url;
+	return h;
 }
 
 int   HttpRequest::GetContentLength()
