@@ -18,7 +18,7 @@ NAMESPACE_UPP
 #pragma comment(lib, "ws2_32.lib")
 #endif
 
-#define LLOG(x)  //  DLOG("TCP " << x)
+#define LLOG(x)   DLOG("TCP " << x)
 
 IpAddrInfo::Entry IpAddrInfo::pool[COUNT];
 
@@ -700,6 +700,7 @@ void TcpSocket::SetSockError(const char *context, int code, const char *errdesc)
 		errordesc << "socket(" << (int)socket << ") / ";
 	errordesc << context << ": " << errdesc;
 	is_error = true;
+	LLOG("TCP ERROR " << errordesc);
 }
 
 void TcpSocket::SetSockError(const char *context, const char *errdesc)
@@ -718,13 +719,15 @@ bool TcpSocket::StartSSL()
 {
 	ASSERT(IsOpen());
 	if(!CreateSSL) {
-		errorcode = -1;
-		errordesc = "Missing SSL support (Core/SSL)";
+		SetSockError("StartSSL", -1, "Missing SSL support (Core/SSL)");
 		return false;
 	}
-	if(!IsOpen() || mode == NONE) {
-		errorcode = -1;
-		errordesc = "Socket not open or listening";
+	if(!IsOpen()) {
+		SetSockError("StartSSL", -1, "Socket is not open");
+		return false;
+	}
+	if(!IsOpen()) {
+		SetSockError("StartSSL", -1, "Socket is not connected");
 		return false;
 	}
 	ssl = (*CreateSSL)(*this);
