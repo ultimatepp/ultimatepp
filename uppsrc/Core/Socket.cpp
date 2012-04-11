@@ -18,7 +18,7 @@ NAMESPACE_UPP
 #pragma comment(lib, "ws2_32.lib")
 #endif
 
-#define LLOG(x)   DLOG("TCP " << x)
+#define LLOG(x)  // DLOG("TCP " << x)
 
 IpAddrInfo::Entry IpAddrInfo::pool[COUNT];
 
@@ -63,7 +63,7 @@ rawthread_t rawthread__ IpAddrInfo::Thread(void *ptr)
 				entry->status = RESOLVED;
 			}
 			else {
-				freeaddrinfo(entry->addr);
+				freeaddrinfo(result);
 				entry->status = EMPTY;
 			}
 		}
@@ -148,7 +148,8 @@ void IpAddrInfo::Clear()
 			freeaddrinfo(entry->addr);
 		if(entry->status == WORKING)
 			entry->status = CANCELED;
-		entry->status = EMPTY;
+		else
+			entry->status = EMPTY;
 		entry = NULL;
 	}
 	LeavePool();
