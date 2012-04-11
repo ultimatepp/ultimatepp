@@ -57,8 +57,8 @@ INITBLOCK
 	TcpSocketInit();
 	MemoryIgnoreLeaksBlock __;
 	CRYPTO_set_mem_functions(SslAlloc, SslRealloc, SslFree);
-	SSL_load_error_strings();
 	SSL_library_init();
+	SSL_load_error_strings();
 }
 
 EXITBLOCK

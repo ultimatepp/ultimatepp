@@ -216,6 +216,7 @@ class HttpRequest : public TcpSocket {
 
 	enum {
 		DEFAULT_HTTP_PORT        = 80,
+		DEFAULT_HTTPS_PORT       = 443
 	};
 
 	enum {

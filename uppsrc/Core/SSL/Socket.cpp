@@ -1,6 +1,6 @@
 #include "SSL.h"
 
-#define LLOG(x) // DLOG(x)
+#define LLOG(x)  DLOG(x)
 
 NAMESPACE_UPP
 
@@ -51,10 +51,16 @@ void TcpSocket::SSLImp::SetSSLError(const char *context)
 	socket.SetSockError(context, code, text);
 }
 
+const char *TcpSocketErrorDesc(int code);
+
 void TcpSocket::SSLImp::SetSSLResError(const char *context, int res)
 {
 	int code = SSL_get_error(ssl, res);
 	String out;
+	if(code == SSL_ERROR_SYSCALL) {
+		socket.SetSockError(context);
+		return;
+	}
 	switch(code) {
 #define SSLERR(c) case c: out = #c; break;
 		SSLERR(SSL_ERROR_NONE)
@@ -82,13 +88,24 @@ bool TcpSocket::SSLImp::IsAgain(int res) const
 	       res == SSL_ERROR_WANT_ACCEPT;
 }
 
-bool TcpSocket::SSLImp::Start()
+bool TcpSocket::SSLImp::Start() // TIMEOUTS!!!
 {
 	LLOG("SSL Start");
+
 	if(!context.Create(const_cast<SSL_METHOD *>(SSLv3_client_method()))) {
 		SetSSLError("Start: SSL context.");
 		return false;
 	}
+
+/*
+	while(!socket.Wait(WAIT_WRITE)) {
+		DLOG("Waiting for connect");
+		Sleep(1);
+	}
+	DLOG("Connected");
+	SSL_CTX *context = SSL_CTX_new (SSLv3_client_method());
+*/
+	
 	if(!(ssl = SSL_new(context))) {
 		SetSSLError("Start: SSL_new");
 		return false;
@@ -112,6 +129,7 @@ bool TcpSocket::SSLImp::Start()
 			res = SSL_connect(ssl);
 			if(res > 0)
 				break;
+			DDUMP(res);
 			DDUMP(IsAgain(res));
 			if(res <= 0 && !IsAgain(res)) {
 				SetSSLResError("Start: SSL_connect", res);
@@ -149,13 +167,11 @@ int TcpSocket::SSLImp::Recv(void *buffer, int maxlen)
 	int res = SSL_read(ssl, (char *)buffer, maxlen);
 	if(res > 0)
 		return res;
-	if(!IsAgain(res)) {
-		socket.is_eof = true;
-		if(SSL_get_shutdown(ssl) & SSL_RECEIVED_SHUTDOWN)
-			return 0;
+	
+	socket.is_eof = true;
+	if(res && !IsAgain(res))
 		SetSSLResError("SSL_read", res);
-	}
-	return res;
+	return 0;
 }
 
 void TcpSocket::SSLImp::Close()

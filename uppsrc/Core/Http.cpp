@@ -280,60 +280,125 @@ bool HttpRequest::Do()
 	return phase != FINISHED && phase != FAILED;
 }
 
-void HttpRequest::CopyCookies()
+void HttpRequest::Start()
 {
-	int q = header.fields.Find("set-cookie");
-	while(q >= 0) {
-		Cookie(header.fields[q]);
-		q = header.fields.FindNext(q);
+	Close();
+	ClearError();
+	gzip = false;
+	z.Clear();
+	header.Clear();
+
+	bool use_proxy = !IsNull(proxy_host);
+
+	int p = use_proxy ? proxy_port : port;
+	if(!p)
+		p = ssl ? DEFAULT_HTTPS_PORT : DEFAULT_HTTP_PORT;
+	String h = use_proxy ? proxy_host : host;
+	if(IsNull(GetTimeout())) {
+		addrinfo.Execute(h, p);
+		StartRequest();
+	}
+	else {
+		addrinfo.Start(h, p);
+		StartPhase(DNS);
 	}
 }
 
-void HttpRequest::Finish()
+void HttpRequest::Dns()
 {
-	if(gzip) {
-	#ifdef ENDZIP
-		body = GZDecompress(body);
-		if(body.IsVoid()) {
-			HttpError("gzip decompress at finish error");
-			phase = FAILED;
+	for(int i = 0; i <= Nvl(GetTimeout(), INT_MAX); i++) {
+		if(!addrinfo.InProgress()) {
+			StartRequest();
 			return;
 		}
-	#else
-		z.End();
-		if(z.IsError()) {
-			HttpError("gzip format error (finish)");
-			phase = FAILED;
-			return;
-		}
-	#endif
+		Sleep(1);
 	}
-	Close();
-	if(status_code == 401 && !IsNull(username)) {
-		String authenticate = header["www-authenticate"];
-		if(authenticate.GetCount() && redirect_count++ < max_redirects) {
-			LLOG("HTTP auth digest");
-			CopyCookies();
-			Digest(CalculateDigest(authenticate));
-			Start();
-			return;
-		}
-	}
-	if(status_code >= 300 && status_code < 400) {
-		String url = GetRedirectUrl();
-		if(url.GetCount() && redirect_count++ < max_redirects) {
-			LLOG("HTTP redirect " << url);
-			Url(url);
-			CopyCookies();
-			Start();
-			retry_count = 0;
-			return;
-		}
-	}
-	phase = FINISHED;
+}
 
-//	if(retry_count < 2)
-//		HttpError("Checking retry");
+void HttpRequest::StartRequest()
+{
+	if(!Connect(addrinfo))
+		return;
+
+	if(ssl && !StartSSL())
+		return;
+
+	StartPhase(REQUEST);
+	count = 0;
+	String ctype = contenttype;
+	if((method == METHOD_POST || method == METHOD_PUT) && IsNull(ctype))
+		ctype = "application/x-www-form-urlencoded";
+	switch(method) {
+	case METHOD_GET:  data << "GET "; break;
+	case METHOD_POST: data << "POST "; break;
+	case METHOD_PUT: data << "PUT "; break;
+	case METHOD_HEAD: data << "HEAD "; break;
+	default: NEVER(); // invalid method
+	}
+	String host_port = host;
+	if(port)
+		host_port << ':' << port;
+	String url;
+	url << "http://" << host_port << Nvl(path, "/");
+	if(!IsNull(proxy_host))
+		data << url;
+	else
+		data << Nvl(path, "/");
+	data << " HTTP/1.1\r\n";
+	if(std_headers) {
+		data << "URL: " << url << "\r\n"
+		     << "Host: " << host_port << "\r\n"
+		     << "Connection: close\r\n"
+		     << "Accept: " << Nvl(accept, "*/*") << "\r\n"
+		     << "Accept-Encoding: gzip\r\n"
+		     << "Agent: " << Nvl(agent, "Ultimate++ HTTP client") << "\r\n";
+		if(postdata.GetCount())
+			data << "Content-Length: " << postdata.GetCount() << "\r\n";
+		if(ctype.GetCount())
+			data << "Content-Type: " << ctype << "\r\n";
+	}
+	if(!IsNull(proxy_host) && !IsNull(proxy_username))
+		 data << "Proxy-Authorization: Basic " << Base64Encode(proxy_username + ':' + proxy_password) << "\r\n";
+	if(!IsNull(digest))
+		data << "Authorization: Digest " << digest << "\r\n";
+	else
+	if(!force_digest && (!IsNull(username) || !IsNull(password)))
+		data << "Authorization: Basic " << Base64Encode(username + ":" + password) << "\r\n";
+	data << request_headers << "\r\n" << postdata; // !!! POST PHASE !!!
+	LLOG("HTTP REQUEST " << host << ":" << port);
+	LLOG("HTTP request:\n" << data);
+}
+
+bool HttpRequest::SendingData()
+{
+	for(;;) {
+		int n = min(2048, data.GetLength() - count);
+		n = Put(~data + count, n);
+		if(n == 0)
+			break;
+		count += n;
+	}
+	return count < data.GetLength();
+}
+
+bool HttpRequest::ReadingHeader()
+{
+	for(;;) {
+		int c = Get();
+		if(c < 0)
+			return !IsEof();
+		else
+			data.Cat(c);
+		if(data.GetCount() > 3) {
+			const char *h = data.Last();
+			if(h[0] == '\n' && (h[-1] == '\r' && h[-2] == '\n' || h[-1] == '\n'))
+				return false;
+		}
+		if(data.GetCount() > max_header_size) {
+			HttpError("HTTP header exceeded " + AsString(max_header_size));
+			return true;
+		}
+	}
 }
 
 void HttpRequest::ReadingChunkHeader()
@@ -463,124 +528,57 @@ bool HttpRequest::ReadingBody()
 	return !IsEof();
 }
 
-void HttpRequest::Start()
+void HttpRequest::CopyCookies()
 {
-	Close();
-	ClearError();
-	gzip = false;
-	z.Clear();
-	header.Clear();
-
-	bool use_proxy = !IsNull(proxy_host);
-
-	int p = use_proxy ? proxy_port : port;
-	if(!p)
-		p = DEFAULT_HTTP_PORT;
-	String h = use_proxy ? proxy_host : host;
-	if(IsNull(GetTimeout())) {
-		addrinfo.Execute(h, p);
-		StartRequest();
-	}
-	else {
-		addrinfo.Start(h, p);
-		StartPhase(DNS);
+	int q = header.fields.Find("set-cookie");
+	while(q >= 0) {
+		Cookie(header.fields[q]);
+		q = header.fields.FindNext(q);
 	}
 }
 
-void HttpRequest::Dns()
+void HttpRequest::Finish()
 {
-	for(int i = 0; i <= Nvl(GetTimeout(), INT_MAX); i++) {
-		if(!addrinfo.InProgress()) {
-			StartRequest();
+	if(gzip) {
+	#ifdef ENDZIP
+		body = GZDecompress(body);
+		if(body.IsVoid()) {
+			HttpError("gzip decompress at finish error");
+			phase = FAILED;
 			return;
 		}
-		Sleep(1);
-	}
-}
-
-void HttpRequest::StartRequest()
-{
-	if(!Connect(addrinfo))
-		return;
-
-	StartPhase(REQUEST);
-	count = 0;
-	String ctype = contenttype;
-	if((method == METHOD_POST || method == METHOD_PUT) && IsNull(ctype))
-		ctype = "application/x-www-form-urlencoded";
-	switch(method) {
-	case METHOD_GET:  data << "GET "; break;
-	case METHOD_POST: data << "POST "; break;
-	case METHOD_PUT: data << "PUT "; break;
-	case METHOD_HEAD: data << "HEAD "; break;
-	default: NEVER(); // invalid method
-	}
-	String host_port = host;
-	if(port)
-		host_port << ':' << port;
-	String url;
-	url << "http://" << host_port << Nvl(path, "/");
-	if(!IsNull(proxy_host))
-		data << url;
-	else
-		data << Nvl(path, "/");
-	data << " HTTP/1.1\r\n";
-	if(std_headers) {
-		data << "URL: " << url << "\r\n"
-		     << "Host: " << host_port << "\r\n"
-		     << "Connection: close\r\n"
-		     << "Accept: " << Nvl(accept, "*/*") << "\r\n"
-		     << "Accept-Encoding: gzip\r\n"
-		     << "Agent: " << Nvl(agent, "Ultimate++ HTTP client") << "\r\n";
-		if(postdata.GetCount())
-			data << "Content-Length: " << postdata.GetCount() << "\r\n";
-		if(ctype.GetCount())
-			data << "Content-Type: " << ctype << "\r\n";
-	}
-	if(!IsNull(proxy_host) && !IsNull(proxy_username))
-		 data << "Proxy-Authorization: Basic " << Base64Encode(proxy_username + ':' + proxy_password) << "\r\n";
-	if(!IsNull(digest))
-		data << "Authorization: Digest " << digest << "\r\n";
-	else
-	if(!force_digest && (!IsNull(username) || !IsNull(password)))
-		data << "Authorization: Basic " << Base64Encode(username + ":" + password) << "\r\n";
-	data << request_headers << "\r\n" << postdata; // !!! POST PHASE !!!
-	LLOG("HTTP REQUEST " << host << ":" << port);
-	LLOG("HTTP request:\n" << data);
-	if(ssl)
-		StartSSL();
-}
-
-bool HttpRequest::SendingData()
-{
-	for(;;) {
-		int n = min(2048, data.GetLength() - count);
-		n = Put(~data + count, n);
-		if(n == 0)
-			break;
-		count += n;
-	}
-	return count < data.GetLength();
-}
-
-bool HttpRequest::ReadingHeader()
-{
-	for(;;) {
-		int c = Get();
-		if(c < 0)
-			return !IsEof();
-		else
-			data.Cat(c);
-		if(data.GetCount() > 3) {
-			const char *h = data.Last();
-			if(h[0] == '\n' && (h[-1] == '\r' && h[-2] == '\n' || h[-1] == '\n'))
-				return false;
+	#else
+		z.End();
+		if(z.IsError()) {
+			HttpError("gzip format error (finish)");
+			phase = FAILED;
+			return;
 		}
-		if(data.GetCount() > max_header_size) {
-			HttpError("HTTP header exceeded " + AsString(max_header_size));
-			return true;
+	#endif
+	}
+	Close();
+	if(status_code == 401 && !IsNull(username)) {
+		String authenticate = header["www-authenticate"];
+		if(authenticate.GetCount() && redirect_count++ < max_redirects) {
+			LLOG("HTTP auth digest");
+			CopyCookies();
+			Digest(CalculateDigest(authenticate));
+			Start();
+			return;
 		}
 	}
+	if(status_code >= 300 && status_code < 400) {
+		String url = GetRedirectUrl();
+		if(url.GetCount() && redirect_count++ < max_redirects) {
+			LLOG("HTTP redirect " << url);
+			Url(url);
+			CopyCookies();
+			Start();
+			retry_count = 0;
+			return;
+		}
+	}
+	phase = FINISHED;
 }
 
 String HttpRequest::Execute()
