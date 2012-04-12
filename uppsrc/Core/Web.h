@@ -331,7 +331,7 @@ public:
 	HttpRequest&  StdHeaders(bool sh)                     { std_headers = sh; return *this; }
 	HttpRequest&  NoStdHeaders()                          { return StdHeaders(false); }
 	HttpRequest&  Accept(const String& a)                 { accept = a; return *this; }
-	HttpRequest&  Agent(const String& a)                  { agent = a; return *this; }
+	HttpRequest&  UserAgent(const String& a)              { agent = a; return *this; }
 	HttpRequest&  ContentType(const String& a)            { contenttype = a; return *this; }
 
 	HttpRequest&  Proxy(const String& host, int port)     { proxy_host = host; proxy_port = port; return *this; }
