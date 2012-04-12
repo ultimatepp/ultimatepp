@@ -346,12 +346,12 @@ void HttpRequest::StartRequest()
 		data << Nvl(path, "/");
 	data << " HTTP/1.1\r\n";
 	if(std_headers) {
-		data << "URL: " << url << "\r\n"
+		data// << "URL: " << url << "\r\n"
 		     << "Host: " << host_port << "\r\n"
 		     << "Connection: close\r\n"
 		     << "Accept: " << Nvl(accept, "*/*") << "\r\n"
 		     << "Accept-Encoding: gzip\r\n"
-		     << "Agent: " << Nvl(agent, "Ultimate++ HTTP client") << "\r\n";
+		     << "User-Agent: " << Nvl(agent, "Ultimate++ HTTP client") << "\r\n";
 		if(postdata.GetCount())
 			data << "Content-Length: " << postdata.GetCount() << "\r\n";
 		if(ctype.GetCount())
@@ -431,10 +431,6 @@ void HttpRequest::ReadingChunkHeader()
 String HttpRequest::GetRedirectUrl()
 {
 	String redirect_url = TrimLeft(header["location"]);
-	int q = redirect_url.Find('?');
-	int p = path.Find('?');
-	if(p >= 0 && q < 0)
-		redirect_url.Cat(path.Mid(p));
 	if(redirect_url.StartsWith("http://") || redirect_url.StartsWith("https://"))
 		return redirect_url;
 	String h = (ssl ? "https://" : "http://") + host;
