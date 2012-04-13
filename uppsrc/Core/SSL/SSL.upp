@@ -2,6 +2,18 @@ description "\3770,128,128";
 
 library(POSIX) "crypto ssl";
 
+library(WIN32 MSC !SHARED !DEBUG) "libeay32MT ssleay32MT";
+
+library(WIN32 MSC !SHARED DEBUG) "libeay32MTd ssleay32MTd";
+
+library(WIN32 MSC SHARED !DEBUG) "libeay32MD ssleay32MD";
+
+library(WIN32 MSC SHARED DEBUG) "libeay32MDd ssleay32MDd";
+
+library(WIN32) gdi32;
+
+link(WIN32 MSC SO) /nodefaultlib:libc;
+
 file
 	SSL.h,
 	Util.cpp,
