@@ -560,8 +560,8 @@ typedef StaticMutex StaticCriticalSection; // deprecated
 // to resolve some host platform issues. Raw threads cannot use U++ heap
 
 #ifdef PLATFORM_WIN32
-#define rawthread_t uintptr_t
-#define rawthread__ __stdcall
+#define rawthread_t DWORD
+#define rawthread__ WINAPI
 #else
 #define rawthread_t void *
 #define rawthread__
