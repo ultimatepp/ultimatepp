@@ -601,7 +601,7 @@ bool StartRawThread(rawthread_t (rawthread__ *fn)(void *ptr), void *ptr)
 {
 #ifdef PLATFORM_WIN32
 	HANDLE handle;
-	handle = (HANDLE)_beginthreadex(0, 0, fn, ptr, 0, NULL);
+	handle = CreateThread(NULL, 0, fn, ptr, 0, NULL);
 	if(handle) {
 		CloseHandle(handle);
 		return true;
