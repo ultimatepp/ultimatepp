@@ -402,8 +402,12 @@ void TcpSocket::Attach(SOCKET s)
 
 bool TcpSocket::RawConnect(addrinfo *rp)
 {
+	if(!rp) {
+		SetSockError("connect", -1, "not found");
+		return false;
+	}
 	for(;;) {
-		if(Open(rp->ai_family, rp->ai_socktype, rp->ai_protocol)) {
+		if(rp && Open(rp->ai_family, rp->ai_socktype, rp->ai_protocol)) {
 			if(connect(socket, rp->ai_addr, rp->ai_addrlen) == 0 ||
 			   GetErrorCode() == SOCKERR(EINPROGRESS) || GetErrorCode() == SOCKERR(EWOULDBLOCK))
 				break;
@@ -411,7 +415,7 @@ bool TcpSocket::RawConnect(addrinfo *rp)
 		}
 		rp = rp->ai_next;
 		if(!rp) {
-			SetSockError("connect has failed");
+			SetSockError("connect", -1, "failed");
 			return false;
 		}
     }
