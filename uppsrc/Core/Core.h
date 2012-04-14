@@ -319,7 +319,7 @@ NAMESPACE_UPP
 
 #include "LocalProcess.h"
 
-#include "Web.h"
+#include "Inet.h"
 
 #include "Win32Util.h"
 

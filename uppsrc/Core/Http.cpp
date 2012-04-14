@@ -20,6 +20,7 @@ void HttpRequest::Init()
 {
 	port = 0;
 	proxy_port = 0;
+	ssl_proxy_port = 0;
 	max_header_size = 1000000;
 	max_content_size = 10000000;
 	max_redirects = 5;
@@ -74,15 +75,28 @@ HttpRequest& HttpRequest::Url(const char *u)
 	return *this;
 }
 
-HttpRequest& HttpRequest::Proxy(const char *p)
+static
+void sParseProxyUrl(const char *p, String& proxy_host, int proxy_port)
 {
 	const char *t = p;
 	while(*p && *p != ':')
 		p++;
 	proxy_host = String(t, p);
-	proxy_port = 80;
 	if(*p++ == ':' && IsDigit(*p))
 		proxy_port = ScanInt(p);
+}
+
+HttpRequest& HttpRequest::Proxy(const char *url)
+{
+	proxy_port = 80;
+	sParseProxyUrl(url, proxy_host, proxy_port);
+	return *this;
+}
+
+HttpRequest& HttpRequest::SSLProxy(const char *url)
+{
+	ssl_proxy_port = 8080;
+	sParseProxyUrl(url, ssl_proxy_host, ssl_proxy_port);
 	return *this;
 }
 
@@ -200,7 +214,7 @@ void HttpRequest::HttpError(const char *s)
 void HttpRequest::StartPhase(int s)
 {
 	phase = s;
-	LLOG("Starting status " << s << " '" << GetPhaseName() << "' of " << host);
+	LLOG("Starting status " << s << " '" << GetPhaseName() << "', url: " << host);
 	data.Clear();
 }
 
@@ -216,6 +230,21 @@ bool HttpRequest::Do()
 		break;
 	case DNS:
 		Dns();
+		break;
+	case SSLPROXYREQUEST:
+		if(SendingData())
+			break;
+		StartPhase(SSLPROXYRESPONSE);
+		break;
+	case SSLPROXYRESPONSE:
+		if(ReadingHeader())
+			break;
+		ProcessSSLProxyResponse();
+		break;
+	case SSLHANDSHAKE:
+		if(SSLHandshake())
+			break;
+		StartRequest();
 		break;
 	case REQUEST:
 		if(SendingData())
@@ -274,7 +303,8 @@ bool HttpRequest::Do()
 	if(phase == FAILED) {
 		if(retry_count++ < max_retries) {
 			LLOG("HTTP retry on error " << GetErrorDesc());
-			StartRequest();
+			start_time = msecs();
+			Start();
 		}
 	}
 	return phase != FINISHED && phase != FAILED;
@@ -288,15 +318,16 @@ void HttpRequest::Start()
 	z.Clear();
 	header.Clear();
 
-	bool use_proxy = !IsNull(proxy_host);
+	bool use_proxy = !IsNull(ssl ? ssl_proxy_host : proxy_host);
 
-	int p = use_proxy ? proxy_port : port;
+	int p = use_proxy ? (ssl ? ssl_proxy_port : proxy_port) : port;
 	if(!p)
 		p = ssl ? DEFAULT_HTTPS_PORT : DEFAULT_HTTP_PORT;
-	String h = use_proxy ? proxy_host : host;
+	String h = use_proxy ? ssl ? ssl_proxy_host : proxy_host : host;
+
 	if(IsNull(GetTimeout())) {
 		addrinfo.Execute(h, p);
-		StartRequest();
+		StartConnect();
 	}
 	else {
 		addrinfo.Start(h, p);
@@ -308,21 +339,62 @@ void HttpRequest::Dns()
 {
 	for(int i = 0; i <= Nvl(GetTimeout(), INT_MAX); i++) {
 		if(!addrinfo.InProgress()) {
-			StartRequest();
+			StartConnect();
 			return;
 		}
 		Sleep(1);
 	}
 }
 
-void HttpRequest::StartRequest()
+void HttpRequest::StartConnect()
 {
 	if(!Connect(addrinfo))
 		return;
+	if(ssl && ssl_proxy_host.GetCount()) {
+		StartPhase(SSLPROXYREQUEST);
+		String host_port = host;
+		if(port)
+			host_port << ':' << port;
+		else
+			host_port << ":443";
+		data << "CONNECT " << host_port << " HTTP/1.1\r\n"
+		     << "Host: " << host_port << "\r\n";
+		if(!IsNull(ssl_proxy_username))
+			data << "Proxy-Authorization: Basic "
+			        << Base64Encode(proxy_username + ':' + proxy_password) << "\r\n";
+		data << "\r\n";
+		count = 0;
+		LLOG("HTTPS proxy request:\n" << data);
+	}
+	else
+		AfterConnect();
+}
 
+void HttpRequest::ProcessSSLProxyResponse()
+{
+	LLOG("HTTPS proxy response:\n" << data);
+	int q = min(data.Find('\r'), data.Find('\n'));
+	if(q >= 0)
+		data.Trim(q);
+	if(!data.StartsWith("HTTP") || data.Find(" 2") < 0) {
+		HttpError("Invalid proxy reply: " + data);
+		return;
+	}
+	AfterConnect();
+}
+
+void HttpRequest::AfterConnect()
+{
 	if(ssl && !StartSSL())
 		return;
+	if(ssl)
+		StartPhase(SSLHANDSHAKE);
+	else
+		StartRequest();
+}
 
+void HttpRequest::StartRequest()
+{
 	StartPhase(REQUEST);
 	count = 0;
 	String ctype = contenttype;
@@ -340,13 +412,13 @@ void HttpRequest::StartRequest()
 		host_port << ':' << port;
 	String url;
 	url << "http://" << host_port << Nvl(path, "/");
-	if(!IsNull(proxy_host))
+	if(!IsNull(proxy_host) && !ssl)
 		data << url;
 	else
 		data << Nvl(path, "/");
 	data << " HTTP/1.1\r\n";
 	if(std_headers) {
-		data// << "URL: " << url << "\r\n"
+		data << "URL: " << url << "\r\n"
 		     << "Host: " << host_port << "\r\n"
 		     << "Connection: close\r\n"
 		     << "Accept: " << Nvl(accept, "*/*") << "\r\n"
@@ -583,7 +655,8 @@ void HttpRequest::Finish()
 
 String HttpRequest::Execute()
 {
-	while(Do());
+	while(Do())
+		LLOG("HTTP Execute: " << GetPhaseName());
 	return IsSuccess() ? GetContent() : String::GetVoid();
 }
 
@@ -592,6 +665,9 @@ String HttpRequest::GetPhaseName() const
 	static const char *m[] = {
 		"Start",
 		"Resolving host name",
+		"SSL proxy request",
+		"SSL proxy response",
+		"SSL handshake",
 		"Sending request",
 		"Receiving header",
 		"Receiving content",
