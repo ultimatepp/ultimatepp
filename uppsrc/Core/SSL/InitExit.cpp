@@ -71,6 +71,8 @@ EXITBLOCK
 	ERR_free_strings();
 }
 
+#ifdef _MULTITHREADED
+
 static thread__ bool sThreadInit;
 static thread__ void (*sPrevExit)();
 
@@ -88,5 +90,11 @@ void SslInitThread()
 	sThreadInit = true;
 	sPrevExit = Thread::AtExit(sslExitThread);
 }
+
+#else
+
+void SslInitThread() {}
+
+#endif
 
 END_UPP_NAMESPACE

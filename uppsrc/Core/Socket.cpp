@@ -263,6 +263,7 @@ void TcpSocket::Reset()
 	is_abort = false;
 	mode = NONE;
 	ssl.Clear();
+	sslinfo.Clear();
 }
 
 TcpSocket::TcpSocket()
@@ -430,7 +431,7 @@ bool TcpSocket::Connect(IpAddrInfo& info)
 	Init();
 	Reset();
 	addrinfo *result = info.GetResult();
-	return result && RawConnect(result);
+	return RawConnect(result);
 }
 
 bool TcpSocket::Connect(const char *host, int port)
@@ -498,6 +499,8 @@ int TcpSocket::RawSend(const void *buf, int amount)
 
 int TcpSocket::Send(const void *buf, int amount)
 {
+	if(SSLHandshake())
+		return 0;
 	return ssl ? ssl->Send(buf, amount) : RawSend(buf, amount);
 }
 
@@ -611,6 +614,8 @@ int TcpSocket::RawRecv(void *buf, int amount)
 
 int TcpSocket::Recv(void *buffer, int maxlen)
 {
+	if(SSLHandshake())
+		return 0;
 	return ssl ? ssl->Recv(buffer, maxlen) : RawRecv(buffer, maxlen);
 }
 
@@ -682,6 +687,12 @@ String TcpSocket::Get(int count)
 	return out;
 }
 
+String TcpSocket::GetAll(int len)
+{
+	String s = Get(len);
+	return s.GetCount() == len ? s : String::GetVoid();
+}
+
 String TcpSocket::GetLine(int maxlen)
 {
 	String ln;
@@ -740,7 +751,20 @@ bool TcpSocket::StartSSL()
 		ssl.Clear();
 		return false;
 	}
+	SSLHandshake();
 	return true;
+}
+
+bool TcpSocket::SSLHandshake()
+{
+	if(ssl && (mode == CONNECT || mode == ACCEPT)) {
+		dword w = ssl->Handshake();
+		if(w) {
+			Wait(w);
+			return ssl->Handshake();
+		}
+	}
+	return false;
 }
 
 int SocketWaitEvent::Wait(int timeout)
