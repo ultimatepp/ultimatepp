@@ -101,6 +101,7 @@ void Zlib::Pump(bool finish)
 	if(error)
 		return;
 	ASSERT(mode);
+	DDUMP(chunk);
 	if(!output)
 		output.Alloc(chunk);
 	for(;;) {
@@ -295,6 +296,7 @@ Zlib::Zlib()
 	docrc = false;
 	crc = 0;
 	hdr = true;
+	chunk = 4096;
 	WhenOut = callback(this, &Zlib::PutOut);
 }
 
