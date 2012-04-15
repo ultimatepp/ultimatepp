@@ -1,15 +1,18 @@
-String        WwwFormat(Time tm);
-String        FormatIP(dword _ip);
+String WwwFormat(Time tm);
 
-String        UrlEncode(const String& s);
-String        UrlEncode(const String& s, const char *specials);
-String        UrlDecode(const char *b, const char *e);
-inline String UrlDecode(const String& s)          { return UrlDecode(s.Begin(), s.End() ); }
+String UrlEncode(const char *s, const char *end);
+String UrlEncode(const char *s, int len);
+String UrlEncode(const String& s);
+String UrlDecode(const char *s, const char *end);
+String UrlDecode(const char *s, int len);
+String UrlDecode(const String& s);
 
-String        Base64Encode(const char *b, const char *e);
-inline String Base64Encode(const String& data)    { return Base64Encode(data.Begin(), data.End()); }
-String        Base64Decode(const char *b, const char *e);
-inline String Base64Decode(const String& data)    { return Base64Decode(data.Begin(), data.End()); }
+String Base64Encode(const char *s, const char *end);
+String Base64Encode(const char *s, int len);
+String Base64Encode(const String& data);
+String Base64Decode(const char *s, const char *end);
+String Base64Decode(const char *s, int len);
+String Base64Decode(const String& data);
 
 class IpAddrInfo {
 	enum { COUNT = 32 };

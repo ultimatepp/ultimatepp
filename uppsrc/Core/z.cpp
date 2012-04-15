@@ -101,7 +101,6 @@ void Zlib::Pump(bool finish)
 	if(error)
 		return;
 	ASSERT(mode);
-	DDUMP(chunk);
 	if(!output)
 		output.Alloc(chunk);
 	for(;;) {
