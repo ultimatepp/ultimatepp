@@ -2,6 +2,38 @@
 
 NAMESPACE_UPP
 
+String FormatIP(dword _ip)
+{
+	byte ip[4];
+	Poke32be(ip, _ip);
+	return Format("%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+}
+
+static const char hex_digits[] = "0123456789ABCDEF";
+
+String UrlEncode(const String& s, const char *specials)
+{
+	int l = (int)strlen(specials);
+	const char *p = s, *e = s.End();
+	String out;
+	for(; p < e; p++)
+	{
+		const char *b = p;
+		while(p < e && (byte)*p > ' ' && (byte)*p < 127 && memchr(specials, *p, l) == 0)
+			p++;
+		if(p > b)
+			out.Cat(b, int(p - b));
+		if(p >= e)
+			break;
+		if(*p == ' ')
+			out << '+';
+		else
+			out << '%' << hex_digits[(*p >> 4) & 15] << hex_digits[*p & 15];
+	}
+	return out;
+}
+
+
 bool IsSameTextFile(const char *p, const char *q)
 {
 	for(;;)

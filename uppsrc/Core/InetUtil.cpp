@@ -15,19 +15,12 @@ String WwwFormat(Time tm)
 		<< ' ' << Sprintf("%2d:%02d:%02d +0100", tm.hour, tm.minute, tm.second);
 }
 
-String FormatIP(dword _ip)
-{
-	byte ip[4];
-	Poke32be(ip, _ip);
-	return Format("%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
-}
-
 static const char hex_digits[] = "0123456789ABCDEF";
 
-String UrlEncode(const String& s)
+String UrlEncode(const char *p, const char *e)
 {
-	const char *p = s, *e = s.End();
-	String out;
+	StringBuffer out;
+	out.Reserve(e - p);
 	for(; p < e; p++)
 	{
 		const char *b = p;
@@ -46,26 +39,14 @@ String UrlEncode(const String& s)
 	return out;
 }
 
-String UrlEncode(const String& s, const char *specials)
+String UrlEncode(const char *s, int len)
 {
-	int l = (int)strlen(specials);
-	const char *p = s, *e = s.End();
-	String out;
-	for(; p < e; p++)
-	{
-		const char *b = p;
-		while(p < e && (byte)*p > ' ' && (byte)*p < 127 && memchr(specials, *p, l) == 0)
-			p++;
-		if(p > b)
-			out.Cat(b, int(p - b));
-		if(p >= e)
-			break;
-		if(*p == ' ')
-			out << '+';
-		else
-			out << '%' << hex_digits[(*p >> 4) & 15] << hex_digits[*p & 15];
-	}
-	return out;
+	return UrlEncode(s, s + len);
+}
+
+String UrlEncode(const String& s)
+{
+	return UrlEncode(~s, s.GetLength());
 }
 
 String UrlDecode(const char *b, const char *e)
@@ -88,6 +69,16 @@ String UrlDecode(const char *b, const char *e)
 		else
 			out.Cat(*p);
 	return out;
+}
+
+String UrlDecode(const char *s, int len)
+{
+	return UrlDecode(s, s + len);
+}
+
+String UrlDecode(const String& s)
+{
+	return UrlDecode(~s, s.GetLength());
 }
 
 String Base64Encode(const char *b, const char *e)
@@ -126,6 +117,16 @@ String Base64Encode(const char *b, const char *e)
 		p[3] = '=';
 	}
 	return s;
+}
+
+String Base64Encode(const char *b, int len)
+{
+	return Base64Encode(b, b + len);
+}
+
+String Base64Encode(const String& data)
+{
+	return Base64Encode(~data, data.GetCount());
 }
 
 String Base64Decode(const char *b, const char *e)
@@ -174,6 +175,16 @@ String Base64Decode(const char *b, const char *e)
 		}
 	}
 	return out;
+}
+
+String Base64Decode(const char *s, int len)
+{
+	return Base64Decode(s, s + len);
+}
+
+String Base64Decode(const String& data)
+{
+	return Base64Decode(~data, data.GetLength());
 }
 
 void HttpHeader::Clear()
