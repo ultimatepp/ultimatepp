@@ -130,7 +130,7 @@ private:
 String SslGetLastError(int& code);
 String SslGetLastError();
 String SslToString(X509_NAME *name);
-Date   ASN1ToDate(ASN1_STRING *time);
-String ASN1ToString(ASN1_STRING *s);
+Date   Asn1ToDate(ASN1_STRING *time);
+String Asn1ToString(ASN1_STRING *s);
 
 END_UPP_NAMESPACE

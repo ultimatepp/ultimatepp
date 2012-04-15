@@ -1,7 +1,6 @@
 #ifndef __tweb_util__
 #define __tweb_util__
 
-String        WwwFormat(Time tm);
 bool          IsSameTextFile(const char *p, const char *q);
 String        StringSample(const char *s, int limit);
 String        GetRandomIdent(int length);

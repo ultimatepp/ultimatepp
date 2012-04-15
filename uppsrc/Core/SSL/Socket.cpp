@@ -6,7 +6,7 @@ NAMESPACE_UPP
 
 struct TcpSocket::SSLImp : TcpSocket::SSL {
 	virtual bool  Start();
-	virtual bool  Wait(dword flags);
+	virtual bool  Wait(dword flags, int end_time);
 	virtual int   Send(const void *buffer, int maxlen);
 	virtual int   Recv(void *buffer, int maxlen);
 	virtual void  Close();
@@ -109,7 +109,8 @@ bool TcpSocket::SSLImp::Start()
 		SetSSLError("Start: SSL context.");
 		return false;
 	}
-//	context.VerifyPeer();
+	if(socket.cert.GetCount())
+		context.UseCertificate(socket.cert, socket.pkey, socket.asn1);
 	if(!(ssl = SSL_new(context))) {
 		SetSSLError("Start: SSL_new");
 		return false;
@@ -157,12 +158,12 @@ dword TcpSocket::SSLImp::Handshake()
 	return 0;
 }
 
-bool TcpSocket::SSLImp::Wait(dword flags)
+bool TcpSocket::SSLImp::Wait(dword flags, int end_time)
 {
 	LLOG("SSL Wait");
 	if((flags & WAIT_READ) && SSL_pending(ssl) > 0)
 		return true;
-	return socket.RawWait(flags);
+	return socket.RawWait(flags, end_time);
 }
 
 int TcpSocket::SSLImp::Send(const void *buffer, int maxlen)

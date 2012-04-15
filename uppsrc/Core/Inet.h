@@ -1,3 +1,4 @@
+String        WwwFormat(Time tm);
 String        FormatIP(dword _ip);
 
 String        UrlEncode(const String& s);
@@ -81,7 +82,7 @@ class TcpSocket {
 	
 	struct SSL {
 		virtual bool  Start() = 0;
-		virtual bool  Wait(dword flags) = 0;
+		virtual bool  Wait(dword flags, int end_time) = 0;
 		virtual int   Send(const void *buffer, int maxlen) = 0;
 		virtual int   Recv(void *buffer, int maxlen) = 0;
 		virtual void  Close() = 0;
@@ -92,7 +93,9 @@ class TcpSocket {
 	
 	One<SSL>                ssl;
 	One<SSLInfo>            sslinfo;
-	
+	String                  cert, pkey;
+	bool                    asn1;
+
 	struct SSLImp;
 	friend struct SSLImp;
 
@@ -101,7 +104,9 @@ class TcpSocket {
 
 	friend void InitCreateSSL();
 
-	bool                    RawWait(dword flags);
+	int                     GetEndTime() const;
+	bool                    RawWait(dword flags, int end_time);
+	bool                    Wait(dword events, int end_time);
 	SOCKET                  AcceptRaw(dword *ipaddr, int timeout_msec);
 	bool                    Open(int family, int type, int protocol);
 	int                     RawRecv(void *buffer, int maxlen);
@@ -111,9 +116,11 @@ class TcpSocket {
 	bool                    RawConnect(addrinfo *info);
 	void                    RawClose();
 
-	void                    ReadBuffer();
+	void                    ReadBuffer(int end_time);
 	int                     Get_();
 	int                     Peek_();
+	int                     Peek_(int end_time);
+	int                     Peek(int end_time)          { return ptr < end ? *ptr : Peek_(end_time); }
 
 	void                    Reset();
 
@@ -170,18 +177,21 @@ public:
 	int             Get()                                    { return ptr < end ? *ptr++ : Get_(); }
 	int             Get(void *buffer, int len);
 	String          Get(int len);
-	int             GetAll(void *buffer, int len)            { return Get(buffer, len) == len; }
-	String          GetAll(int len);
-	String          GetLine(int maxlen = 2000000);
 
 	int             Put(const char *s, int len);
 	int             Put(const String& s)                     { return Put(s.Begin(), s.GetLength()); }
-	bool            PutAll(const char *s, int len)           { return Put(s, len) == len; }
-	bool            PutAll(const String& s)                  { return Put(s) == s.GetCount(); }
+
+	bool            GetAll(void *buffer, int len);
+	String          GetAll(int len);
+	String          GetLine(int maxlen = 65536);
+
+	bool            PutAll(const char *s, int len);
+	bool            PutAll(const String& s);
 	
 	bool            StartSSL();
 	bool            IsSSL() const                            { return ssl; }
 	bool            SSLHandshake();
+	void            SSLCertificate(const String& cert, const String& pkey, bool asn1);
 	const SSLInfo  *GetSSLInfo() const                       { return ~sslinfo; }
 
 	TcpSocket&      Timeout(int ms)                          { timeout = ms; return *this; }

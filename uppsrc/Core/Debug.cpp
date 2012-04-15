@@ -4,8 +4,6 @@ NAMESPACE_UPP
 
 #define LTIMING(x) // TIMING(x)
 
-int msecs(int from) { return (int)GetTickCount() - from; }
-
 #ifdef PLATFORM_WIN32
 #include <mmsystem.h>
 #endif

@@ -111,13 +111,13 @@ String SslCertificate::GetIssuerName() const
 Date SslCertificate::GetNotBefore() const
 {
 	ASSERT(!IsEmpty());
-	return ASN1ToDate(X509_get_notBefore(cert));
+	return Asn1ToDate(X509_get_notBefore(cert));
 }
 
 Date SslCertificate::GetNotAfter() const
 {
 	ASSERT(!IsEmpty());
-	return ASN1ToDate(X509_get_notAfter(cert));
+	return Asn1ToDate(X509_get_notAfter(cert));
 }
 
 int SslCertificate::GetVersion() const
@@ -129,7 +129,7 @@ int SslCertificate::GetVersion() const
 String SslCertificate::GetSerialNumber() const
 {
 	ASSERT(!IsEmpty());
-	return ASN1ToString(X509_get_serialNumber(cert));
+	return Asn1ToString(X509_get_serialNumber(cert));
 }
 
 SslContext::SslContext(SSL_CTX *c)
@@ -186,7 +186,7 @@ String SslToString(X509_NAME *name)
 	return X509_NAME_oneline(name, buffer, sizeof(buffer));
 }
 
-Date ASN1ToDate(ASN1_STRING *time)
+Date Asn1ToDate(ASN1_STRING *time)
 {
 	if(!time) return Null;
 	int digit = 0;
@@ -200,7 +200,7 @@ Date ASN1ToDate(ASN1_STRING *time)
 	return Date(year2 + (year2 < 90 ? 2000 : 1900), month, day);
 }
 
-String ASN1ToString(ASN1_STRING *s)
+String Asn1ToString(ASN1_STRING *s)
 {
 	return String(s->data, s->length);
 }
