@@ -73,8 +73,6 @@ void     CloseStdLog();
 
 void     HexDump(Stream& s, const void *ptr, int size, int maxsize = INT_MAX);
 
-int      msecs(int from = 0);
-
 String        GetTypeName(const char *type_name);
 inline String GetTypeName(const ::std::type_info& tinfo)   { return GetTypeName(tinfo.name()); }
 

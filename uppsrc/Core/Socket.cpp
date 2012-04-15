@@ -272,6 +272,7 @@ TcpSocket::TcpSocket()
 	Reset();
 	timeout = Null;
 	waitstep = 20;
+	asn1 = false;
 }
 
 bool TcpSocket::Open(int family, int type, int protocol)
@@ -343,9 +344,14 @@ bool TcpSocket::Accept(TcpSocket& ls)
 	Close();
 	Init();
 	Reset();
-
-	if(timeout && !ls.WaitRead())
-		return false;
+	ASSERT(ls.IsOpen());
+	if(timeout) {
+		int h = ls.GetTimeout();
+		bool b = ls.Timeout(timeout).Wait(WAIT_READ, GetEndTime());
+		ls.Timeout(h);
+		if(!b)
+			return false;
+	}
 	if(!Open(ls.ipv6 ? AF_INET6 : AF_INET, SOCK_STREAM, 0))
 		return false;
 	socket = accept(ls.GetSOCKET(), NULL, NULL);
@@ -519,12 +525,11 @@ String TcpSocket::GetHostName()
 	return buffer;
 }
 
-bool TcpSocket::RawWait(dword flags)
+bool TcpSocket::RawWait(dword flags, int end_time)
 {
-	LLOG("Wait(" << timeout << ", " << flags << ")");
+	LLOG("Wait(" << msecs() << " - " << end_time << ", " << flags << ")");
 	if((flags & WAIT_READ) && ptr != end)
 		return true;
-	int end_time = msecs() + timeout;
 	if(socket == INVALID_SOCKET)
 		return false;
 	for(;;) {
@@ -564,9 +569,19 @@ bool TcpSocket::RawWait(dword flags)
 	}
 }
 
+bool TcpSocket::Wait(dword flags, int end_time)
+{
+	return ssl ? ssl->Wait(flags, end_time) : RawWait(flags, end_time);
+}
+
+int  TcpSocket::GetEndTime() const
+{
+	return IsNull(timeout) ? INT_MAX : msecs() + timeout;
+}
+
 bool TcpSocket::Wait(dword flags)
 {
-	return ssl ? ssl->Wait(flags) : RawWait(flags);
+	return Wait(flags, GetEndTime());
 }
 
 int TcpSocket::Put(const char *s, int length)
@@ -579,8 +594,9 @@ int TcpSocket::Put(const char *s, int length)
 		return 0;
 	done = 0;
 	bool peek = false;
+	int end_time = GetEndTime();
 	while(done < length) {
-		if(peek && !WaitWrite())
+		if(peek && !Wait(WAIT_WRITE, end_time))
 			return done;
 		peek = false;
 		int count = Send(s + done, length - done);
@@ -593,6 +609,26 @@ int TcpSocket::Put(const char *s, int length)
 	}
 	LLOG("//Put() -> " << done);
 	return done;
+}
+
+bool TcpSocket::PutAll(const char *s, int len)
+{
+	if(Put(s, len) != len) {
+		if(!IsError())
+			SetSockError("GePutAll", -1, "timeout");
+		return false;
+	}
+	return true;
+}
+
+bool TcpSocket::PutAll(const String& s)
+{
+	if(Put(s) != s.GetCount()) {
+		if(!IsError())
+			SetSockError("GePutAll", -1, "timeout");
+		return false;
+	}
+	return true;
 }
 
 int TcpSocket::RawRecv(void *buf, int amount)
@@ -619,10 +655,10 @@ int TcpSocket::Recv(void *buffer, int maxlen)
 	return ssl ? ssl->Recv(buffer, maxlen) : RawRecv(buffer, maxlen);
 }
 
-void TcpSocket::ReadBuffer()
+void TcpSocket::ReadBuffer(int end_time)
 {
 	ptr = end = buffer;
-	if(WaitRead())
+	if(Wait(WAIT_READ, end_time))
 		end = buffer + Recv(buffer, BUFFERSIZE);
 }
 
@@ -630,16 +666,21 @@ int TcpSocket::Get_()
 {
 	if(!IsOpen() || IsError() || IsEof() || IsAbort())
 		return -1;
-	ReadBuffer();
+	ReadBuffer(GetEndTime());
 	return ptr < end ? *ptr++ : -1;
+}
+
+int TcpSocket::Peek_(int end_time)
+{
+	if(!IsOpen() || IsError() || IsEof() || IsAbort())
+		return -1;
+	ReadBuffer(end_time);
+	return ptr < end ? *ptr : -1;
 }
 
 int TcpSocket::Peek_()
 {
-	if(!IsOpen() || IsError() || IsEof() || IsAbort())
-		return -1;
-	ReadBuffer();
-	return ptr < end ? *ptr : -1;
+	return Peek_(GetEndTime());
 }
 
 int TcpSocket::Get(void *buffer, int count)
@@ -663,8 +704,9 @@ int TcpSocket::Get(void *buffer, int count)
 			ptr += count;
 			return count;
 		}
+	int end_time = GetEndTime();
 	while(done < count && !IsError() && !IsEof()) {
-		if(!WaitRead())
+		if(!Wait(WAIT_READ, end_time))
 			break;
 		int part = Recv((char *)buffer + done, count - done);
 		if(part > 0)
@@ -687,19 +729,41 @@ String TcpSocket::Get(int count)
 	return out;
 }
 
+bool  TcpSocket::GetAll(void *buffer, int len)
+{
+	if(Get(buffer, len) == len)
+		return true;
+	if(!IsError())
+		SetSockError("GetAll", -1, "timeout");
+	return false;
+}
+
 String TcpSocket::GetAll(int len)
 {
 	String s = Get(len);
-	return s.GetCount() == len ? s : String::GetVoid();
+	if(s.GetCount() != len) {
+		if(IsEof())
+			return s;
+		if(!IsError())
+			SetSockError("GetAll", -1, "timeout");
+		return String::GetVoid();
+	}
+	return s;
 }
 
 String TcpSocket::GetLine(int maxlen)
 {
 	String ln;
+	int end_time = GetEndTime();
 	for(;;) {
-		int c = Peek();
-		if(c < 0)
+		int c = Peek(end_time);
+		if(c < 0) {
+			if(IsEof())
+				return ln;
+			if(!IsError())
+				SetSockError("GetLine", -1, "timeout");
 			return String::GetVoid();
+		}
 		Get();
 		if(c == '\n')
 			return ln;
@@ -765,6 +829,13 @@ bool TcpSocket::SSLHandshake()
 		}
 	}
 	return false;
+}
+
+void TcpSocket::SSLCertificate(const String& cert_, const String& pkey_, bool asn1_)
+{
+	cert = cert_;
+	pkey = pkey_;
+	asn1 = asn1_;
 }
 
 int SocketWaitEvent::Wait(int timeout)

@@ -9,6 +9,8 @@ static const int _MAX_PATH = PATH_MAX;
 dword  GetTickCount();
 #endif
 
+int      msecs(int from = 0);
+
 class TimeStop : Moveable<TimeStop> {
 	dword starttime;
 
