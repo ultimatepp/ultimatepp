@@ -22,7 +22,7 @@ NAMESPACE_UPP
 
 IpAddrInfo::Entry IpAddrInfo::pool[COUNT];
 
-RawMutex IpAddrInfoPoolMutex;
+AuxMutex IpAddrInfoPoolMutex;
 
 void IpAddrInfo::EnterPool()
 {
@@ -45,7 +45,7 @@ int sGetAddrInfo(const char *host, const char *port, addrinfo **result)
 	return getaddrinfo(host, port, &hints, result);
 }
 
-rawthread_t rawthread__ IpAddrInfo::Thread(void *ptr)
+auxthread_t auxthread__ IpAddrInfo::Thread(void *ptr)
 {
 	Entry *entry = (Entry *)ptr;
 	EnterPool();
@@ -104,7 +104,7 @@ void IpAddrInfo::Start()
 				e->status = WORKING;
 				e->host = host;
 				e->port = port;
-				StartRawThread(&IpAddrInfo::Thread, e);
+				StartAuxThread(&IpAddrInfo::Thread, e);
 			}
 			break;
 		}

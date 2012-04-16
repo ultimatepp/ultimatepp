@@ -392,7 +392,7 @@ void AppExit__()
 }
 
 #if defined(PLATFORM_WIN32) && !defined(PLATFORM_WINCE)
-static rawthread_t rawthread__ sShellExecuteOpen(void *str)
+static auxthread_t auxthread__ sShellExecuteOpen(void *str)
 {
 	ShellExecuteW(NULL, L"open", (wchar *)str, NULL, L".", SW_SHOWDEFAULT);
 	free(str);
@@ -406,7 +406,7 @@ void LaunchWebBrowser(const String& url)
 		int l = sizeof(wchar) * wurl.GetLength() + 1;
 		char *curl = (char *)malloc(l);
 		memcpy(curl, wurl, l);
-		StartRawThread(sShellExecuteOpen, curl);
+		StartAuxThread(sShellExecuteOpen, curl);
 	} 
 }
 #endif

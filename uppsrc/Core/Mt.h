@@ -556,44 +556,44 @@ inline void AssertST() {}
 typedef Mutex CriticalSection; // deprecated
 typedef StaticMutex StaticCriticalSection; // deprecated
 
-// Raw multirthreading intended for use even in single-threaded applications
-// to resolve some host platform issues. Raw threads cannot use U++ heap
+// Auxiliary multithreading intended for use even in single-threaded applications
+// to resolve some host platform issues. Raw threads cannot use U++ heap (nor indirectly)
 
 #ifdef PLATFORM_WIN32
-#define rawthread_t DWORD
-#define rawthread__ WINAPI
+#define auxthread_t DWORD
+#define auxthread__ WINAPI
 #else
-#define rawthread_t void *
-#define rawthread__
+#define auxthread_t void *
+#define auxthread__
 #endif
 
 #ifdef PLATFORM_WIN32
-struct RawMutex {
+struct AuxMutex {
 	CRITICAL_SECTION cs;
 	
 	void Enter() { EnterCriticalSection(&cs); }
 	void Leave() { LeaveCriticalSection(&cs); }
 	
-	RawMutex()   { InitializeCriticalSection(&cs); }
-	~RawMutex()  { DeleteCriticalSection(&cs); }
+	AuxMutex()   { InitializeCriticalSection(&cs); }
+	~AuxMutex()  { DeleteCriticalSection(&cs); }
 };
 #endif
 
 #ifdef PLATFORM_POSIX
-struct RawMutex {
+struct AuxMutex {
 	pthread_mutex_t  mutex[1];
 	
 	void Enter() { pthread_mutex_lock(mutex); }
 	void Leave() { pthread_mutex_unlock(mutex); }
 	
-	RawMutex()   {
+	AuxMutex()   {
 		pthread_mutexattr_t mutex_attr[1];
 		pthread_mutexattr_init(mutex_attr);
 		pthread_mutexattr_settype(mutex_attr, PTHREAD_MUTEX_RECURSIVE);
 		pthread_mutex_init(mutex, mutex_attr);
  	}
-	~RawMutex()  { pthread_mutex_destroy(mutex); }
+	~AuxMutex()  { pthread_mutex_destroy(mutex); }
 };
 #endif
 
-bool StartRawThread(rawthread_t (rawthread__ *fn)(void *ptr), void *ptr);
+bool StartAuxThread(auxthread_t (auxthread__ *fn)(void *ptr), void *ptr);
