@@ -1,4 +1,4 @@
-topic "Internet format utility functions";
+topic "Internet utility";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -59,4 +59,49 @@ st]_[@(0.0.255) char]_`*[*@3 s], [@(0.0.255) int]_[*@3 len])&]
 [s2;%% Decodes binary [%-*@3 data] from [^http`:`/`/en`.wikipedia`.org`/wiki`/Base64^ Bas
 e64 format]..&]
 [s3;%% &]
+[s1;@(0.0.255)3 &]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 HttpHeader]]}}&]
+[s3; &]
+[s1;:HttpHeader`:`:struct: [@(0.0.255)3 struct][3 _][*3 HttpHeader]&]
+[s2;%% This simple structure simplifies parsing of http request and 
+response headers.&]
+[s3; &]
+[s4; &]
+[s5;:HttpHeader`:`:first`_line: [_^String^ String]_[* first`_line]&]
+[s2;%% The first line of request/response `- the content of this 
+line is different for response and request.&]
+[s3; &]
+[s4; &]
+[s5;:HttpHeader`:`:fields: [_^VectorMap^ VectorMap]<[_^String^ String], 
+[_^String^ String]>_[* fields]&]
+[s2;%% Http fields as key`-value pairs. Keys are converted to lower`-case. 
+Note that the same key can be present multiple times.&]
+[s3; &]
+[s4; &]
+[s5;:HttpHeader`:`:operator`[`]`(const char`*`): [_^String^ String]_[* operator`[`]]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 id])&]
+[s2;%% Returns the first http header field with key [%-*@3 id] (must 
+be lower`-case) or empty string if such field is not present.&]
+[s3;%% &]
+[s4; &]
+[s5;:HttpHeader`:`:Response`(String`&`,int`&`,String`&`): [@(0.0.255) bool]_[* Response](
+[_^String^ String][@(0.0.255) `&]_[*@3 protocol], [@(0.0.255) int`&]_[*@3 code], 
+[_^String^ String][@(0.0.255) `&]_[*@3 reason])&]
+[s2;%% Parses the [* first`_line ]as http response.&]
+[s3;%% &]
+[s4; &]
+[s5;:HttpHeader`:`:Request`(String`&`,String`&`,String`&`): [@(0.0.255) bool]_[* Request](
+[_^String^ String][@(0.0.255) `&]_[*@3 method], [_^String^ String][@(0.0.255) `&]_[*@3 uri], 
+[_^String^ String][@(0.0.255) `&]_[*@3 version])&]
+[s2;%% Parses the [* first`_line ]as http request.&]
+[s3;%% &]
+[s4; &]
+[s5;:HttpHeader`:`:Clear`(`): [@(0.0.255) void]_[* Clear]()&]
+[s2;%% Clears data.&]
+[s3; &]
+[s4; &]
+[s5;:HttpHeader`:`:Parse`(const String`&`): [@(0.0.255) bool]_[* Parse]([@(0.0.255) const]_
+[_^String^ String][@(0.0.255) `&]_[*@3 hdrs])&]
+[s2;%% Parses the header (all lines of header) into [* first`_line 
+]and [* fields].&]
 [s0;%% ]
