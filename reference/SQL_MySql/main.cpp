@@ -12,7 +12,7 @@ CONSOLE_APP_MAIN
 {
 	MySqlSession session;
 	// edit the connection parameters if necessary
-	if(session.Connect("root", "koblih", "test")) {
+	if(session.Connect("root", "Passw0rd", "test")) {
 		Cout() << "Connected\n";
 		SQL = session;
 		
@@ -43,5 +43,4 @@ CONSOLE_APP_MAIN
 		Cerr() <<"ERROR: Unable to connect to database\n";
 		SetExitCode(1);
 	}
-	SetExitCode(0);
 }

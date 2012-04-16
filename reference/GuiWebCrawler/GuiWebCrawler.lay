@@ -1,0 +1,6 @@
+LAYOUT(CrawlerLayout, 680, 508)
+	ITEM(ArrayCtrl, work, LeftPosZ(4, 356).TopPosZ(4, 500))
+	ITEM(ArrayCtrl, finished, LeftPosZ(364, 312).TopPosZ(4, 324))
+	ITEM(ArrayCtrl, path, LeftPosZ(364, 312).TopPosZ(332, 172))
+END_LAYOUT
+
