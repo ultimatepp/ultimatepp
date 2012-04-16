@@ -397,7 +397,7 @@ public:
 	void         ClearContent()                           { body.Clear(); }
 
 	enum Phase {
-		START, DNS,
+		BEGIN, START, DNS,
 		SSLPROXYREQUEST, SSLPROXYRESPONSE, SSLHANDSHAKE,
 		REQUEST, HEADER, BODY,
 		CHUNK_HEADER, CHUNK_BODY, TRAILER,

@@ -29,7 +29,7 @@ void HttpRequest::Init()
 	std_headers = true;
 	hasurlvar = false;
 	method = METHOD_GET;
-	phase = START;
+	phase = BEGIN;
 	redirect_count = 0;
 	retry_count = 0;
 	gzip = false;
@@ -222,10 +222,11 @@ bool HttpRequest::Do()
 {
 	int c1, c2;
 	switch(phase) {
-	case START:
+	case BEGIN:
 		retry_count = 0;
 		redirect_count = 0;
 		start_time = msecs();
+	case START:
 		Start();
 		break;
 	case DNS:
@@ -304,7 +305,7 @@ bool HttpRequest::Do()
 		if(retry_count++ < max_retries) {
 			LLOG("HTTP retry on error " << GetErrorDesc());
 			start_time = msecs();
-			Start();
+			StartPhase(START);
 		}
 	}
 	return phase != FINISHED && phase != FAILED;
@@ -663,6 +664,7 @@ String HttpRequest::Execute()
 String HttpRequest::GetPhaseName() const
 {
 	static const char *m[] = {
+		"Initial state",
 		"Start",
 		"Resolving host name",
 		"SSL proxy request",
