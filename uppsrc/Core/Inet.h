@@ -34,7 +34,7 @@ class IpAddrInfo {
 
 	static void EnterPool();
 	static void LeavePool();
-	static rawthread_t rawthread__ Thread(void *ptr);
+	static auxthread_t auxthread__ Thread(void *ptr);
 
 	void Start();
 

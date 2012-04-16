@@ -597,7 +597,7 @@ LazyUpdate::LazyUpdate()
 
 #endif
 
-bool StartRawThread(rawthread_t (rawthread__ *fn)(void *ptr), void *ptr)
+bool StartAuxThread(auxthread_t (auxthread__ *fn)(void *ptr), void *ptr)
 {
 #ifdef PLATFORM_WIN32
 	HANDLE handle;
