@@ -1,6 +1,5 @@
 uses
-	CtrlLib,
-	Core/SSL;
+	CtrlLib;
 
 file
 	GuiWebCrawler.cpp,
