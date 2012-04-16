@@ -126,9 +126,9 @@ dword GetTickCount() {
 	return (dword)tv->tv_sec * 1000 + tv->tv_usec / 1000;
 }
 
-int msecs(int from) { return int((GetTickCount() - (dword)from) & 0x7fffffff); }
-
 #endif
+
+int msecs(int from) { return int((GetTickCount() - (dword)from) & 0x7fffffff); }
 
 void TimeStop::Reset()
 {
