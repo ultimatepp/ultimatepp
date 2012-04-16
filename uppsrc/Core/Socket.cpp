@@ -742,8 +742,6 @@ String TcpSocket::GetAll(int len)
 {
 	String s = Get(len);
 	if(s.GetCount() != len) {
-		if(IsEof())
-			return s;
 		if(!IsError())
 			SetSockError("GetAll", -1, "timeout");
 		return String::GetVoid();
@@ -758,8 +756,6 @@ String TcpSocket::GetLine(int maxlen)
 	for(;;) {
 		int c = Peek(end_time);
 		if(c < 0) {
-			if(IsEof())
-				return ln;
 			if(!IsError())
 				SetSockError("GetLine", -1, "timeout");
 			return String::GetVoid();
@@ -767,6 +763,11 @@ String TcpSocket::GetLine(int maxlen)
 		Get();
 		if(c == '\n')
 			return ln;
+		if(ln.GetCount() >= maxlen) {
+			if(!IsError())
+				SetSockError("GetLine", -1, "maximal length exceeded");
+			return String::GetVoid();
+		}
 		if(c != '\r')
 			ln.Cat(c);
 	}

@@ -105,7 +105,8 @@ class TcpSocket {
 	static SSL *(*CreateSSL)(TcpSocket& socket);
 	static SSL *CreateSSLImp(TcpSocket& socket);
 
-	friend void InitCreateSSL();
+	friend void  InitCreateSSL();
+	friend class IpAddrInfo;
 
 	int                     GetEndTime() const;
 	bool                    RawWait(dword flags, int end_time);
@@ -133,6 +134,8 @@ class TcpSocket {
 
 	static int              GetErrorCode();
 	static bool             WouldBlock();
+	static void             Init();
+
 
 public:
 	Callback        WhenWait;
@@ -140,8 +143,6 @@ public:
 	static String   GetHostName();
 	
 	int             GetDone() const                          { return done; }
-
-	static void     Init();
 
 	bool            IsOpen() const                           { return socket != INVALID_SOCKET; }
 	bool            IsEof() const                            { return is_eof && ptr == end; }
@@ -169,7 +170,6 @@ public:
 	void            NoDelay();
 	void            Linger(int msecs);
 	void            NoLinger()                               { Linger(Null); }
-	void            Reuse(bool reuse = true);
 	
 	bool            Wait(dword events);
 	bool            WaitRead()                               { return Wait(WAIT_READ); }
