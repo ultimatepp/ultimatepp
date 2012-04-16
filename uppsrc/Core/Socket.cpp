@@ -806,7 +806,7 @@ bool TcpSocket::StartSSL()
 		SetSockError("StartSSL", -1, "Socket is not open");
 		return false;
 	}
-	if(!IsOpen()) {
+	if(mode != CONNECT && mode != ACCEPT) {
 		SetSockError("StartSSL", -1, "Socket is not connected");
 		return false;
 	}
