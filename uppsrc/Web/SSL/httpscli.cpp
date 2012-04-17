@@ -44,7 +44,7 @@ bool HttpsClient::ProxyConnect()
 		request << "\r\n";
 		LLOG(request);
 		int written = 0;
-		while(msecs() < end_time) {
+		while(msecs() - end_time < 0) {
 			int nwrite = socket.WriteWait(request.GetIter(written), min(request.GetLength() - written, 1000), 1000);
 			if(socket.IsError()) {
 				error = Socket::GetErrorText();
