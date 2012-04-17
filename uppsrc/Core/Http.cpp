@@ -291,7 +291,7 @@ bool HttpRequest::Do()
 		if(IsSocketError() || IsError())
 			phase = FAILED;
 		else
-		if(msecs() - start_time >= timeout) {
+		if(msecs(start_time) >= timeout) {
 			HttpError("connection timed out");
 			phase = FAILED;
 		}

@@ -128,7 +128,7 @@ dword GetTickCount() {
 
 #endif
 
-int msecs(int from) { return int((GetTickCount() - (dword)from) & 0x7fffffff); }
+int msecs(int from) { return GetTickCount() - (dword)from; }
 
 void TimeStop::Reset()
 {

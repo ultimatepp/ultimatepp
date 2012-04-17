@@ -560,9 +560,8 @@ bool TcpSocket::RawWait(dword flags, int end_time)
 		}
 		if(avail > 0)
 			return true;
-		if(to <= 0 && timeout) {
+		if(to <= 0 && timeout)
 			return false;
-		}
 		WhenWait();
 		if(timeout == 0)
 			return false;
