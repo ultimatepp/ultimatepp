@@ -213,21 +213,21 @@ void Zlib::Put0(const char *ptr, int size)
 	Pump(false);
 }
 	
-void Zlib::Put(const void *ptr, dword size)
+void Zlib::Put(const void *ptr, int size)
 {
 	if(error)
 		return;
 	LLOG("ZLIB Put " << size);
 	const char *p = reinterpret_cast<const char *>(ptr);
 	while(size) {
-		int psz = (int) min(size, dword(INT_MAX / 4));
+		int psz = (int) min(size, INT_MAX / 4);
 		Put0(p, size);
 		size -= psz;
 		p += psz;
 	}
 }
 
-void Zlib::PutOut(const void *ptr, dword size)
+void Zlib::PutOut(const void *ptr, int size)
 {
 	LLOG("ZLIB PutOut " << out.GetCount());
 	out.Cat((const char *)ptr, (int)size);

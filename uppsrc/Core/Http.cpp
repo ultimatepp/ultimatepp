@@ -268,8 +268,8 @@ bool HttpRequest::Do()
 	case CHUNK_BODY:
 		if(ReadingBody())
 			break;
-		c1 = Get();
-		c2 = Get();
+		c1 = TcpSocket::Get();
+		c2 = TcpSocket::Get();
 		if(c1 != '\r' || c2 != '\n')
 			HttpError("missing ending CRLF in chunked transfer");
 		StartPhase(CHUNK_HEADER);
@@ -446,7 +446,7 @@ bool HttpRequest::SendingData()
 {
 	for(;;) {
 		int n = min(2048, data.GetLength() - count);
-		n = Put(~data + count, n);
+		n = TcpSocket::Put(~data + count, n);
 		if(n == 0)
 			break;
 		count += n;
@@ -457,7 +457,7 @@ bool HttpRequest::SendingData()
 bool HttpRequest::ReadingHeader()
 {
 	for(;;) {
-		int c = Get();
+		int c = TcpSocket::Get();
 		if(c < 0)
 			return !IsEof();
 		else
@@ -477,7 +477,7 @@ bool HttpRequest::ReadingHeader()
 void HttpRequest::ReadingChunkHeader()
 {
 	for(;;) {
-		int c = Get();
+		int c = TcpSocket::Get();
 		if(c < 0)
 			break;
 		else
@@ -559,12 +559,12 @@ void HttpRequest::StartBody()
 	}
 }
 
-void HttpRequest::ContentOut(const void *ptr, dword size)
+void HttpRequest::ContentOut(const void *ptr, int size)
 {
 	body.Cat((const char *)ptr, size);
 }
 
-void HttpRequest::Out(const void *ptr, dword size)
+void HttpRequest::Out(const void *ptr, int size)
 {
 	LLOG("HTTP Out " << size);
 	if(z.IsError())
@@ -585,7 +585,7 @@ bool HttpRequest::ReadingBody()
 	int n = chunk;
 	if(count >= 0)
 		n = min(n, count);
-	String s = Get(n);
+	String s = TcpSocket::Get(n);
 	if(s.GetCount() == 0)
 		return !IsEof() && count;
 #ifndef ENDZIP

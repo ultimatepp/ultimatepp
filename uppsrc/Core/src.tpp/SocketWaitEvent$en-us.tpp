@@ -13,8 +13,8 @@ topic "SocketWaitEvent";
 [ {{10000@(113.42.0) [s0;%% [*@7;4 SocketWaitEvent]]}}&]
 [s3; &]
 [s1;:SocketWaitEvent`:`:class: [@(0.0.255)3 class][3 _][*3 SocketWaitEvent]&]
-[s2;%% Encapsulates select call, allowing waiting on set of sockets 
-for specified events.&]
+[s2;%% Encapsulates POSIX select call, allowing waiting on set of 
+sockets for specified events.&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
@@ -24,21 +24,20 @@ for specified events.&]
 [s4; &]
 [s5;:SocketWaitEvent`:`:Add`(SOCKET`,dword`): [@(0.0.255) void]_[* Add]([_^SOCKET^ SOCKET]_
 [*@3 s], [_^dword^ dword]_[*@3 events]_`=_WAIT`_ALL)&]
-[s2;%% Adds socket [%-*@3 s] to the list to be waited on specified 
-[%-*@3 events].&]
+[s2;%% Adds socket [%-*@3 s] to the set to be waited on specified [%-*@3 events].&]
 [s3;%% &]
 [s4; &]
 [s5;:SocketWaitEvent`:`:Add`(TcpSocket`&`,dword`): [@(0.0.255) void]_[* Add]([_^TcpSocket^ T
 cpSocket][@(0.0.255) `&]_[*@3 s], [_^dword^ dword]_[*@3 events]_`=_WAIT`_ALL)&]
 [s2;%% Adds TcpSocket [%-*@3 s] to the list to be waited on specified 
 [%-*@3 events]. If [%-*@3 s] is not open, it is not used but its 
-index is reserved.&]
+index is reserved anyway (see Get).&]
 [s3;%% &]
 [s4; &]
 [s5;:SocketWaitEvent`:`:Wait`(int`): [@(0.0.255) int]_[* Wait]([@(0.0.255) int]_[*@3 timeout])
 &]
 [s2;%% Waits for event for [%-*@3 timeout] ms. If [%-*@3 timeout] is 
-Null, call is blocking. Returns a number of sockets that signalled 
+Null, call is blocking. Returns a number of sockets that signaled 
 an event.&]
 [s3;%% &]
 [s4; &]
