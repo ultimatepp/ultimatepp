@@ -1,4 +1,4 @@
-topic "";
+topic "Zlib encapsulation";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -24,7 +24,7 @@ this output partial String to conserve memory.&]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:Zlib`:`:WhenOut: [_^Callback2^ Callback2]<[@(0.0.255) const]_[@(0.0.255) void]_`*, 
-[_^dword^ dword]>_[* WhenOut]&]
+[_^dword^ int]>_[* WhenOut]&]
 [s2;%% Output callback. Represents `"consumer function`": When there 
 are output data available, they are passed out using this callback. 
 Default value stores data into output String inside Zlib.&]
