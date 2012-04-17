@@ -34,7 +34,7 @@ class Zlib {
 	String        gzip_comment;
 	String        out;
 	
-	void          PutOut(const void *ptr, dword size);
+	void          PutOut(const void *ptr, int size);
 	void          Pump(bool finish);
 	void          Begin();
 	void          Free();
@@ -43,11 +43,11 @@ class Zlib {
 	void          Init();
 
 public:
-	Callback2<const void *, dword> WhenOut;
+	Callback2<const void *, int> WhenOut;
 	
 	void Compress();
 	void Decompress();
-	void Put(const void *ptr, dword size);
+	void Put(const void *ptr, int size);
 	void Put(const String& s)              { Put(~s, s.GetCount()); }
 	void End();
 	void Clear();

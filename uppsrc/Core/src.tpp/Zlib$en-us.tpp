@@ -25,9 +25,9 @@ this output partial String to conserve memory.&]
 [s3; &]
 [s5;:Zlib`:`:WhenOut: [_^Callback2^ Callback2]<[@(0.0.255) const]_[@(0.0.255) void]_`*, 
 [_^dword^ dword]>_[* WhenOut]&]
-[s2;%% Output callback. When there are output data available, they 
-are passed out using this callback. Default value stores data 
-into output String inside Zlib.&]
+[s2;%% Output callback. Represents `"consumer function`": When there 
+are output data available, they are passed out using this callback. 
+Default value stores data into output String inside Zlib.&]
 [s3; &]
 [s4; &]
 [s5;:Zlib`:`:Compress`(`): [@(0.0.255) void]_[* Compress]()&]
@@ -38,11 +38,11 @@ into output String inside Zlib.&]
 [s2;%% Sets Zlib into decompression mode (`"inflate`" in zlib terminology).&]
 [s3; &]
 [s4; &]
-[s5;:Zlib`:`:Put`(const void`*`,dword`): [@(0.0.255) void]_[* Put]([@(0.0.255) const]_[@(0.0.255) v
-oid]_`*[*@3 ptr], [_^dword^ dword]_[*@3 size])&]
+[s5;:Zlib`:`:Put`(const void`*`,int`): [@(0.0.255) void]_[* Put]([@(0.0.255) const]_[@(0.0.255) v
+oid]_`*[*@3 ptr], [@(0.0.255) int]_[*@3 size])&]
 [s5;:Zlib`:`:Put`(const String`&`): [@(0.0.255) void]_[* Put]([@(0.0.255) const]_[_^String^ S
 tring][@(0.0.255) `&]_[*@3 s])&]
-[s2;%% Puts a bloct of data to be processed (compressed or decompressed 
+[s2;%% Puts a block of data to be processed (compressed or decompressed 
 based on mode) by Zlib.&]
 [s3;%% &]
 [s4; &]

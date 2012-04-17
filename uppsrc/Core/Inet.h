@@ -322,13 +322,20 @@ class HttpRequest : public TcpSocket {
 	void         CopyCookies();
 
 	void         HttpError(const char *s);
-	void         ContentOut(const void *ptr, dword size);
-	void         Out(const void *ptr, dword size);
+	void         ContentOut(const void *ptr, int size);
+	void         Out(const void *ptr, int size);
 
 	String       CalculateDigest(const String& authenticate) const;
 
+	// hiding from Socket:
+	int             Get();
+	int             Put();
+	bool            GetAll();
+	String          GetLine();
+	bool            PutAll();
+
 public:
-	Callback2<const void *, dword> WhenContent;
+	Callback2<const void *, int> WhenContent;
 
 	HttpRequest&  MaxHeaderSize(int m)                   { max_header_size = m; return *this; }
 	HttpRequest&  MaxContentSize(int m)                  { max_content_size = m; return *this; }
@@ -384,8 +391,8 @@ public:
 	String       GetErrorDesc() const                     { return IsSocketError() ? TcpSocket::GetErrorDesc() : error; }
 	void         ClearError()                             { TcpSocket::ClearError(); error.Clear(); }
 
-	String       GetHeader(const char *s)                 { return header[s]; }
-	String       operator[](const char *s)                { return GetHeader(s); }
+	String       GetHeader(const char *id)                { return header[id]; }
+	String       operator[](const char *id)               { return GetHeader(id); }
 	String       GetRedirectUrl();
 	int          GetContentLength();
 	int          GetStatusCode() const                    { return status_code; }
