@@ -264,7 +264,8 @@ perform some sort of external blocking on socket or socket group
 using e.g. SocketWaitEvent). Null means operations are blocking 
 (but they still can invoke WhenProgress periodically if defined). 
 Other values specify a number of milliseconds. Note: It is possible 
-to adjust timeout before any single TcpSocket operation.&]
+to adjust timeout before any single TcpSocket operation. Returns 
+`*this.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:TcpSocket`:`:GetTimeout`(`)const: [@(0.0.255) int]_[* GetTimeout]()_[@(0.0.255) const]&]
@@ -272,7 +273,7 @@ to adjust timeout before any single TcpSocket operation.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:TcpSocket`:`:Blocking`(`): [_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[* Blocking]()&]
-[s2;%% Same as Timeout(Null).&]
+[s2;%% Same as Timeout(Null). Returns `*this.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:TcpSocket`:`:TcpSocket`(`): [* TcpSocket]()&]
