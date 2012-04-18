@@ -35,29 +35,17 @@ bool ValueArray::Data::IsNull() const
 
 void ValueArray::Data::Serialize(Stream& s)
 {
-#if !defined(_MSC_VER) || _MSC_VER > 1310
 	s % data;
-#else
-	throw 0;
-#endif
 }
 
 void ValueArray::Data::Jsonize(JsonIO& jio)
 {
-#if !defined(_MSC_VER) || _MSC_VER > 1310
 	Upp::Jsonize(jio, data);
-#else
-	throw 0;
-#endif
 }
 
 void ValueArray::Data::Xmlize(XmlIO& io)
 {
-#if !defined(_MSC_VER) || _MSC_VER > 1310
 	Upp::Xmlize(io, data);
-#else
-	throw 0;
-#endif
 }
 
 unsigned ValueArray::Data::GetHashValue() const
@@ -200,11 +188,7 @@ ValueArray& ValueArray::operator=(const ValueArray& v) {
 }
 
 void ValueArray::SetCount(int n) {
-#if !defined(_MSC_VER) || _MSC_VER > 1310
 	Clone().SetCount(n);
-#else
-	throw 0;
-#endif
 }
 
 void ValueArray::SetCount(int n, const Value& v)
@@ -221,12 +205,8 @@ void ValueArray::Add(const Value& v) {
 }
 
 void ValueArray::Set(int i, const Value& v) {
-#if !defined(_MSC_VER) || _MSC_VER > 1310
 	ASSERT(i >= 0);
 	Clone().At(i) = v;
-#else
-	throw 0;
-#endif
 }
 
 void ValueArray::Remove(int i, int count)
@@ -268,21 +248,13 @@ bool ValueMap::Data::IsNull() const {
 }
 
 void ValueMap::Data::Serialize(Stream& s) {
-#if !defined(_MSC_VER) || _MSC_VER > 1310
 	s % key % value;
-#else
-	throw 0;
-#endif
 }
 
 void ValueMap::Data::Xmlize(XmlIO& xio)
 {
-#if !defined(_MSC_VER) || _MSC_VER > 1310
 	Upp::Xmlize(xio, key);
 	Upp::Xmlize(xio, value);
-#else
-	throw 0;
-#endif
 }
 
 void ValueMap::Data::Jsonize(JsonIO& jio)
