@@ -250,7 +250,7 @@ void JsonizeMap(JsonIO& io, T& map, const char *keyid, const char *valueid)
 template <class K, class V, class H>
 void Jsonize(JsonIO& io, VectorMap<K, V, H>& map)
 {
-	JsonizeMap(io, map, "key", "value");
+	JsonizeMap<VectorMap<K, V, H>, K, V>(io, map, "key", "value");
 }
 
 template <class K, class V, class H>
