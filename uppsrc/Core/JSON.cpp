@@ -114,7 +114,6 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 		return AsCString((String)v);
 	if(IsNull(v))
 		return "null";
-	DDUMP(v);
 	NEVER();
 	return "null";
 }
