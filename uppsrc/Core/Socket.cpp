@@ -2,11 +2,6 @@
 
 #ifdef PLATFORM_WIN32
 #include <winsock2.h>
-	#ifdef COMPILER_MSC
-	#if defined(COMPILER_MSC) && _MSC_VER > 1310
-	#include <Ws2ipdef.h>
-	#endif
-	#endif
 #include <Ws2tcpip.h>
 #endif
 
