@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Jsonize.cpp;
+
+mainconfig
+	"" = "SSE2";
+
