@@ -2772,7 +2772,7 @@ static String sCsvFormat(const Value& v)
 
 String ArrayCtrl::AsCsv(bool sel, int sep, bool hdr)
 {
-	char h[2] = { sep, 0 };
+	char h[2] = { (char)sep, 0 };
 	return AsText(sCsvFormat, sel, h, "\r\n", hdr ? h : NULL, "\r\n");
 }
 
