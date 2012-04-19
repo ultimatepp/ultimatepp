@@ -450,7 +450,7 @@ class DateTimeCtrl : public T {
 		int width = sz.cx;
 		int height = sz.cy;
 
-		Rect rw = Ctrl::GetWorkArea();
+		Rect rw = this->Ctrl::GetWorkArea();
 		Rect rs = this->GetScreenRect();
 		Rect r;
 		r.left   = rs.left;

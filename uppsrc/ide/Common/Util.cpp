@@ -54,9 +54,9 @@ bool SaveChangedFileFinish(const String& filename, const String& data)
 	return SaveFileFinish(filename, data);
 }
 
-typedef VectorMap<String, String> StringMap;
+typedef VectorMap<String, String> sStringMap;
 
-GLOBAL_VAR(StringMap,  sWorkspaceCfg)
+GLOBAL_VAR(sStringMap,  sWorkspaceCfg)
 GLOBAL_VAR(Vector<Callback>, sWorkspaceCfgFlush)
 
 void    RegisterWorkspaceConfig(const char *name)
