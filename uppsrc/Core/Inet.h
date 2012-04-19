@@ -200,6 +200,8 @@ public:
 	TcpSocket&      Timeout(int ms)                          { timeout = ms; return *this; }
 	int             GetTimeout() const                       { return timeout; }
 	TcpSocket&      Blocking()                               { return Timeout(Null); }
+	TcpSocket&      WaitStep(int ms)                         { waitstep = ms; return *this; }
+	int             GetWaitStep() const                      { return waitstep; }
 
 	TcpSocket();
 	~TcpSocket()                                             { Close(); }
@@ -336,6 +338,7 @@ class HttpRequest : public TcpSocket {
 
 public:
 	Callback2<const void *, int> WhenContent;
+	Callback                     WhenDo;
 
 	HttpRequest&  MaxHeaderSize(int m)                   { max_header_size = m; return *this; }
 	HttpRequest&  MaxContentSize(int m)                  { max_content_size = m; return *this; }
@@ -419,6 +422,8 @@ public:
 	bool    IsSuccess() const                     { return phase == FINISHED && status_code >= 200 && status_code < 300; }
 
 	String  Execute();
+
+	void    New();
 	
 	HttpRequest();
 	HttpRequest(const char *url);

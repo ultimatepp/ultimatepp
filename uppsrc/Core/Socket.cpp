@@ -268,7 +268,7 @@ TcpSocket::TcpSocket()
 	ClearError();
 	Reset();
 	timeout = Null;
-	waitstep = 20;
+	waitstep = 10;
 	asn1 = false;
 }
 
