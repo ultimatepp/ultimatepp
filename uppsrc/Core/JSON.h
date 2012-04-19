@@ -259,6 +259,48 @@ void Jsonize(JsonIO& io, ArrayMap<K, V, H>& map)
 	JsonizeMap<ArrayMap<K, V, H>, K, V>(io, map, "key", "value");
 }
 
+template <class T, class K, class V>
+void JsonizeStringMap(JsonIO& io, T& map)
+{
+	if(io.IsLoading()) {
+		map.Clear();
+		const ValueMap& va = io.Get();
+		map.Reserve(va.GetCount());
+		for(int i = 0; i < va.GetCount(); i++) {
+			V value;
+			String key = va.GetKey(i);
+			LoadFromJsonValue(key, va.GetKey(i));
+			LoadFromJsonValue(value, va.GetValue(i));	
+			map.Add(key, value);
+		}
+	}
+	else {
+		Index<Value>  index;
+		Vector<Value> values;
+		index.Reserve(map.GetCount());
+		values.Reserve(map.GetCount());
+		for (int i=0; i<map.GetCount(); ++i)
+		{
+			index.Add(StoreAsJsonValue(map.GetKey(i)));
+			values.Add(StoreAsJsonValue(map[i]));
+		}
+		ValueMap vm(index, values);
+		io.Set(vm);
+	}
+}
+
+template <class K, class V, class H>
+void StringMap(JsonIO& io, VectorMap<K, V, H>& map)
+{
+	JsonizeStringMap<VectorMap<K, V, H>, K, V>(io, map);
+}
+
+template <class K, class V, class H>
+void StringMap(JsonIO& io, ArrayMap<K, V, H>& map)
+{
+	JsonizeStringMap<ArrayMap<K, V, H>, K, V>(io, map);
+}
+
 template <class T, class V>
 void JsonizeIndex(JsonIO& io, T& index)
 {
