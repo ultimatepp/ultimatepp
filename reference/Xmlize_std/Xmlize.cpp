@@ -3,7 +3,7 @@
 
 namespace Upp {
 
-template<> void Xmlize(XmlIO xml, std::vector<int>& data) {
+template<> void Xmlize(XmlIO& xml, std::vector<int>& data) {
 	if(xml.IsStoring())
 		for(int i = 0; i < (int)data.size(); i++)
 			Xmlize(xml.Add("item"), data[i]);
@@ -24,6 +24,7 @@ using namespace std;
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
 	vector<int> x;
 	x.push_back(1);
 	x.push_back(2);

@@ -34,6 +34,7 @@ REGISTER_VALUE_XMLIZE(MyCustomValue);
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
 	MyCustomValue a;
 	a.x = 1;
 	a.y = 2;
