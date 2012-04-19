@@ -37,7 +37,7 @@ CONSOLE_APP_MAIN
 	catch(CParser::Error) {
 		LOG("invalid JSON");
 	}
-	
+
 	LOG("- Composing JSON using support classes");
 	Json json;
 	json

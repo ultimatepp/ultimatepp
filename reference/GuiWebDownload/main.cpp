@@ -21,13 +21,14 @@ void Loader::Perform()
 		if(!EditText(url, "Download", "URL"))
 			break;
 		loaded = 0;
-		HttpRequest http(url);
-		http.MaxContentSize(INT_MAX);
+		pi.Reset();
+		http.New();
+		http.Url(url).MaxContentSize(INT_MAX);
 		http.WhenContent = THISBACK(ProcessContent);
-		http.WhenWait = THISBACK(ShowProgress);
+		http.WhenWait = http.WhenDo = THISBACK(ShowProgress);
 		http.Execute();
 		if(!http.IsSuccess())
-			Exclamation("Failed !");
+			Exclamation("Failed !&\1" + http.GetErrorDesc());
 	}
 }
 
@@ -38,7 +39,7 @@ void Loader::ProcessContent(const void *ptr, int size)
 
 void Loader::ShowProgress()
 {
-DDUMP(http.GetPeerAddr());
+	DDUMP(http.GetPeerAddr());
 	if(http.GetContentLength() >= 0)
 		pi.Set((int)loaded, (int)http.GetContentLength());
 	else
