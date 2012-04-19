@@ -258,7 +258,7 @@ protected:
 		void  Clear();
 		bool  MatchHilite(const SyntaxState& st) const;
 		void  Grounding(const wchar *ln, const wchar *e);
-		void  ScanSyntax(const wchar *ln, const wchar *e);
+		void  ScanSyntax(const wchar *ln, const wchar *e, int tab_size);
 
 		static Color IfColor(char ifstate);
 

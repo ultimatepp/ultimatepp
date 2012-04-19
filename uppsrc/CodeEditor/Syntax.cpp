@@ -116,7 +116,7 @@ void CodeEditor::SyntaxState::Grounding(const wchar *b, const wchar *e)
 		ClearBraces();
 }
 
-void CodeEditor::SyntaxState::ScanSyntax(const wchar *ln, const wchar *e)
+void CodeEditor::SyntaxState::ScanSyntax(const wchar *ln, const wchar *e, int tab_size)
 {
 	Grounding(ln, e);
 	if(!linecont) {
@@ -125,13 +125,13 @@ void CodeEditor::SyntaxState::ScanSyntax(const wchar *ln, const wchar *e)
 	}
 	linecont = e > ln && e[-1] == '\\';
 	const wchar *p = ln;
-	int lindent = 0;
-	while(p < e && *p == '\t') {
-		p++;
-		lindent++;
+	int lindent = 0, pos = 0;
+	while(p < e && (*p == '\t' || *p == ' ')) {
+		if(*p++ == '\t' || ++pos >= tab_size) {
+			pos = 0;
+			lindent++;
+		}
 	}
-	while(p < e && (*p == ' ' || *p == '\t'))
-		p++;
 	int n;
 	Color c = GetUvsHighlight(p, n);
 	if(n) {
@@ -353,7 +353,7 @@ CodeEditor::SyntaxState CodeEditor::ScanSyntax(int line) {
 		if(st.macro != SyntaxState::MACRO_CONT)
 			st.macro = SyntaxState::MACRO_OFF;
 		WString l = GetWLine(st.line);
-		st.ScanSyntax(l, l.End());
+		st.ScanSyntax(l, l.End(), GetTabSize());
 		st.line++;
 		static int d[] = { 0, 100, 2000 };
 		for(int i = 0; i < 3; i++)

@@ -88,8 +88,8 @@ struct CodeEditor::HlSt {
 	HlSt(Vector<LineEdit::Highlight>& v) : v(v) {
 		pos = 0;
 		def = v[0];
-		def.chr = '\t';
-		v.Top().chr = '\t';
+		def.chr = ' ';
+		v.Top().chr = ' ';
 	}
 
 	~HlSt() {
@@ -473,13 +473,17 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 	String cppid;
 	if(IsNull(ss.uvscolor) && !uvsn && !ss.comment && highlight != HIGHLIGHT_CALC) {
 		if(!sm.macro) {
-			int i = 0;
-			while(i < ss.bid.GetCount() - 1 && (i >= text.GetLength() || text[i] == '\t')) {
-				hls.SetPaper(ss.bid[i], ss.bid[i + 1] - ss.bid[i], BlockColor(i));
+			int i = 0, bid = 0, pos = 0, tabsz = GetTabSize();
+			while(bid < ss.bid.GetCount() - 1
+			&& (i >= text.GetLength() || text[i] == ' ' || text[i] == '\t')) {
+				hls.SetPaper(i, 1, BlockColor(bid));
+				if(i < text.GetLength() && text[i] == '\t' || ++pos >= tabsz) {
+					pos = 0;
+					bid++;
+				}
 				i++;
 			}
-			int t = ss.bid.GetCount() ? ss.bid[i] : 0;
-			hls.SetPaper(t, 1 + max(0, text.GetLength() - t), BlockColor(ss.bid.GetCount() - 1));
+			hls.SetPaper(i, 1 + max(0, text.GetLength() - i), BlockColor(ss.bid.GetCount() - 1));
 		}
 		while(*p == ' ' || *p == '\t') {
 			p++;
