@@ -1,4 +1,4 @@
-#ifndef _SocketProgress_icpp_init_stub
-#define _SocketProgress_icpp_init_stub
+#ifndef _GuiWebDownload_icpp_init_stub
+#define _GuiWebDownload_icpp_init_stub
 #include "CtrlLib/init"
 #endif
