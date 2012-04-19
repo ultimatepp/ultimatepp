@@ -5,7 +5,7 @@ NAMESPACE_UPP
 Value ParseJSON(CParser& p)
 {
 	p.UnicodeEscape();
-	if(p.IsNumber())
+	if(p.IsDouble())
 		return p.ReadDouble();
 	if(p.IsString())
 		return p.ReadString();

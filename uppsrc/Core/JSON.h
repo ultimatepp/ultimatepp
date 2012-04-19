@@ -154,19 +154,19 @@ void LoadFromJsonValue(T& var, const Value& x)
 }
 
 template <class T>
-String StoreAsJson(const T& var)
+String StoreAsJson(const T& var, bool pretty = false)
 {
-	return AsJSON(StoreAsJsonValue(var));
+	return AsJSON(StoreAsJsonValue(var), pretty);
 }
 
 template <class T>
 bool LoadFromJson(T& var, const char *json)
 {
 	try {
-		LoadFromJsonValue(var, ParseJSON(json));
-	}
-	catch(CParser::Error) {
-		return false;
+		Value jv = ParseJSON(json);
+		if(jv.IsError())
+			return false;
+		LoadFromJsonValue(var, jv);
 	}
 	catch(JsonizeError) {
 		return false;
