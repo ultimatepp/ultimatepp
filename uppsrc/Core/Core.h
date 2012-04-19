@@ -280,7 +280,9 @@ NAMESPACE_UPP
 #include "Index.hpp"
 
 #ifdef flagSVO_VALUE
+#ifndef SVO_VALUE
 #define SVO_VALUE
+#endif
 #endif
 
 #include "OldValue.h"

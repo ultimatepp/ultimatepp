@@ -1,3 +1,5 @@
+#include <uppconfig.h>
+
 #if __GNUC__
 
 	#define GCC_VERSION (__GNUC__ * 10000 \
