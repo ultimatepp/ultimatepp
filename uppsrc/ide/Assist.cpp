@@ -677,7 +677,7 @@ bool AssistEditor::InCode()
 	int line = GetLinePos(pos);
 	SyntaxState st = ScanSyntax(line);
 	WString l = GetWLine(line);
-	st.ScanSyntax(l, ~l + pos);
+	st.ScanSyntax(l, ~l + pos, GetTabSize());
 	return !st.comment && !st.string && !st.linecomment;
 }
 

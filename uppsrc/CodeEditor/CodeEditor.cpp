@@ -551,8 +551,9 @@ void CodeEditor::TabRight() {
 	int l, h;
 	if(!GetLineSelection(l, h)) return;
 	int ll = l;
+	String tab(indent_spaces ? ' ' : '\t', indent_spaces ? GetTabSize() : 1);
 	while(l < h)
-		Insert(GetPos(l++), "\t");
+		Insert(GetPos(l++), tab);
 	SetLineSelection(ll, h);
 }
 
@@ -819,6 +820,36 @@ bool CodeEditor::Key(dword code, int count) {
 	case K_CTRL_BACKSPACE:
 		DeleteWordBack();
 		return true;
+	case K_BACKSPACE:
+		if(!IsReadOnly() && !IsSelection() && indent_spaces) {
+			int c = GetCursor();
+			Point ixln = GetIndexLine(c);
+			WString ln = GetWLine(ixln.y);
+			bool white = true;
+			int startindex = 0, pos = 0, tabsz = GetTabSize();
+			for(int i = 0; i < ixln.x; i++) {
+				if(ln[i] == '\t' || ln[i] == ' ') {
+					if(pos == 0)
+						startindex = i;
+					if(ln[i] == '\t' || ++pos >= tabsz)
+						pos = 0;
+				}
+				else {
+					white = false;
+					break;
+				}
+			}
+			if(white) {
+				int count = ixln.x - startindex;
+				PlaceCaret(c - count);
+				Remove(c - count, count);
+				Action();
+				return true;
+			}
+		}
+		break;
+	case K_SHIFT_CTRL_TAB:
+		return LineEdit::Key(K_TAB, count);
 	case K_ENTER:
 		IndentEnter(count);
 		return true;
@@ -844,12 +875,20 @@ bool CodeEditor::Key(dword code, int count) {
 		MovePrevBrk(sel);
 		return true;
 	case K_TAB:
-		if(IsSelection()) {
-			if(sel)
-				TabLeft();
-			else
-				TabRight();
-			return true;
+		if(!IsReadOnly()) {
+			if(IsSelection()) {
+				if(sel)
+					TabLeft();
+				else
+					TabRight();
+				return true;
+			}
+			if(!sel && indent_spaces) {
+				int x = GetColumnLine(GetCursor()).x;
+				int add = GetTabSize() - x % GetTabSize();
+				InsertChar(' ', add, false);
+				return true;
+			}
 		}
 	default:
 		if(IsSelection() && auto_enclose) {
