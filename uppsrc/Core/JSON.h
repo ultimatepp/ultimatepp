@@ -174,6 +174,20 @@ bool LoadFromJson(T& var, const char *json)
 	return true;
 }
 
+String sJsonFile(const char *file);
+
+template <class T>
+bool StoreAsJsonFile(const T& var, const char *file, bool pretty = false)
+{
+	return SaveFile(sJsonFile(file), StoreAsJson(var, pretty));;
+}
+
+template <class T>
+bool LoadFromJsonFile(T& var, const char *file = NULL)
+{
+	return LoadFromJson(var, LoadFile(sJsonFile(file)));
+}
+
 template<> void Jsonize(JsonIO& io, int& var);
 template<> void Jsonize(JsonIO& io, int64& var);
 template<> void Jsonize(JsonIO& io, double& var);
