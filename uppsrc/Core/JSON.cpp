@@ -304,4 +304,9 @@ template<> void Jsonize(JsonIO& io, Time& var)
 				          var.year, var.month, var.day, var.hour, var.minute, var.second));
 }
 
+String sJsonFile(const char *file)
+{
+	return file ? String(file) : ConfigFile(GetExeTitle() + ".json");
+}
+
 END_UPP_NAMESPACE
