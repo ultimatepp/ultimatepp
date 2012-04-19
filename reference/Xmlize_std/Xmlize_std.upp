@@ -1,4 +1,4 @@
-description "Xmlize with existing type, in this case std::vector<int>";
+description "Xmlize with existing type, in this case std::vector<int>\377";
 
 uses
 	Core;
