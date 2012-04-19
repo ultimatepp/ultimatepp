@@ -51,7 +51,21 @@ CONSOLE_APP_MAIN
 	LOG("===================");
 	LOG(StoreAsJson(test2));
 	ASSERT(StoreAsJson(test) == StoreAsJson(test2));
-	
+	LOG("===================");
+	StoreAsJsonFile(test, NULL, true);
+	LoadFromJsonFile(test2);	
+	ASSERT(StoreAsJson(test) == StoreAsJson(test2));
+	String fn = ConfigFile("h");
+	StoreAsJsonFile(test, fn, true);
+	DDUMP(LoadFile(fn));
+	LoadFromJsonFile(test2);	
+	ASSERT(StoreAsJson(test) == StoreAsJson(test2));
+
 	TestStruct test3;
 	ASSERT(!LoadFromJson(test2, "{\"SomeKey1\":{\"a\":\"X\",\"b\":2},\"SomeKey2\":{\"a\":1,\"b\":2}}"));
+	
+	ASSERT(!LoadFromJsonFile(test2, "c:aksjdfhkjaskjdfkhasdf"));
+
+	
+	LOG("Everything is OK.");
 }
