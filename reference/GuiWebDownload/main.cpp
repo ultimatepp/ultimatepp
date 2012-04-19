@@ -6,6 +6,8 @@ struct Loader {
 	Progress    pi;
 	HttpRequest http;
 	int64       loaded;
+	String      url;
+	FileOut     out;
 	
 	typedef Loader CLASSNAME;
 	
@@ -16,7 +18,7 @@ struct Loader {
 
 void Loader::Perform()
 {
-	String url = "http://www.samgrob.ch/images/video/m60/m60_mtzion-nw-music1.divx";
+	url = "http://www.samgrob.ch/images/video/m60/m60_mtzion-nw-music1.divx";
 	for(;;) {
 		if(!EditText(url, "Download", "URL"))
 			break;
@@ -35,16 +37,19 @@ void Loader::Perform()
 void Loader::ProcessContent(const void *ptr, int size)
 {
 	loaded += size;
+	if(!out.IsOpen())
 }
 
 void Loader::ShowProgress()
 {
-	DDUMP(http.GetPeerAddr());
-	if(http.GetContentLength() >= 0)
+	if(http.GetContentLength() >= 0) {
+		pi.SetText("Downloading " + GetFileName(url));
 		pi.Set((int)loaded, (int)http.GetContentLength());
-	else
+	}
+	else {
 		pi.Set(0, 0);
-	pi.SetText(http.GetPhaseName());
+		pi.SetText(http.GetPhaseName());
+	}
 	if(pi.Canceled())
 		http.Abort();
 }
