@@ -218,6 +218,13 @@ void HttpRequest::StartPhase(int s)
 	data.Clear();
 }
 
+void HttpRequest::New()
+{
+	ClearError();
+	ClearAbort();
+	phase = BEGIN;
+}
+
 bool HttpRequest::Do()
 {
 	int c1, c2;
@@ -282,6 +289,7 @@ bool HttpRequest::Do()
 		break;
 	case FINISHED:
 	case FAILED:
+		WhenDo();
 		return false;
 	default:
 		NEVER();
@@ -308,6 +316,7 @@ bool HttpRequest::Do()
 			StartPhase(START);
 		}
 	}
+	WhenDo();
 	return phase != FINISHED && phase != FAILED;
 }
 
@@ -326,14 +335,21 @@ void HttpRequest::Start()
 		p = ssl ? DEFAULT_HTTPS_PORT : DEFAULT_HTTP_PORT;
 	String h = use_proxy ? ssl ? ssl_proxy_host : proxy_host : host;
 
+	StartPhase(DNS);
 	if(IsNull(GetTimeout())) {
-		addrinfo.Execute(h, p);
+		if(WhenWait) {
+			addrinfo.Start(h, p);
+			while(addrinfo.InProgress()) {
+				Sleep(GetWaitStep());		
+				WhenWait();
+			}
+		}
+		else
+			addrinfo.Execute(h, p);
 		StartConnect();
 	}
-	else {
+	else
 		addrinfo.Start(h, p);
-		StartPhase(DNS);
-	}
 }
 
 void HttpRequest::Dns()
