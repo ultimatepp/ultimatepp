@@ -358,6 +358,8 @@ bool LoadFromXML(Callback1<XmlIO> xmlize, const String& xml)
 {
 	try {
 		XmlNode node = ParseXML(xml);
+		if(node.GetCount() == 0)
+			return false;
 		for(int i = 0; i < node.GetCount(); i++)
 			if(node.Node(i).IsTag()) {
 				Value dummy;
