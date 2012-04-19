@@ -5,8 +5,8 @@ struct TestStruct
 {
 	struct TestV : Moveable<TestV>
 	{
-		int a;
-		int b;
+		double  a;
+		Value   b;
 		String ToString() const
 		{
 			return Format("a=%d, b=%d", a,b);
@@ -21,11 +21,11 @@ struct TestStruct
 		}
 	};
 	
-	void Add()
+	void Add(double a, Value b)
 	{
 		TestV v;
-		v.a = 1;
-		v.b = 2;
+		v.a = a;
+		v.b = b;
 		static int ii;
 		map.Add("SomeKey" + AsString(++ii), v);
 	}
@@ -42,8 +42,8 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
 	TestStruct test, test2;
-	test.Add();
-	test.Add();
+	test.Add(0, 0);
+	test.Add(-1.2345, Date(2007, 12, 12));
 	
 	LoadFromJson(test2, StoreAsJson(test));
 
