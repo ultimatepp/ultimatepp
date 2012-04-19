@@ -40,7 +40,7 @@ const dword VALUEMAP_V   = 12;
 const dword UNKNOWN_V = (dword)0xffffffff;
 
 template <class T>
-inline dword ValueTypeNo(const T *)                 { return StaticTypeNo<T>() + 0x8000000;; }
+inline dword ValueTypeNo(const T *)                 { return StaticTypeNo<T>() + 0x8000000; }
 
 template<> inline dword ValueTypeNo(const int*)     { return INT_V; }
 template<> inline dword ValueTypeNo(const int64*)   { return INT64_V; }
