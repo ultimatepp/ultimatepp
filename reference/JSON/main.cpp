@@ -4,7 +4,10 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
-	Value js = ParseJSON(LoadFile(GetDataFile("test.json")));
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
+	String s = LoadFile(GetDataFile("test.json"));
+	Value js = ParseJSON(s)[0];
 	DUMP(js);
 	DUMP(js["age"]);
 	Value phone_number = js["phoneNumber"];
@@ -19,9 +22,6 @@ CONSOLE_APP_MAIN
 	DUMP(AsJSON(js));
 
 	LOG("- Partial parsing");
-	ValueArray va;
-	va << js << js << js;
-	String s = AsJSON(va);
 	DUMP(s);
 	CParser p2(s);
 	try {
