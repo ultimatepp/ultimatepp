@@ -279,7 +279,7 @@ INITBLOCK {
 
 void Value::Serialize(Stream& s) {
 	RegisterStd();
-	int type;
+	dword type;
 	if(s.IsLoading()) {
 		s / type;
 		Free();
