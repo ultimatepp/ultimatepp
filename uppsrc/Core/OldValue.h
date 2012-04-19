@@ -719,6 +719,9 @@ public:
 	const Value& operator[](const char *s) const  { return operator[](Value(s)); }
 	const Value& operator[](const Id& k) const    { return operator[](Value(k.ToString())); }
 
+	const Value& GetKey(int i) const              { return data->key[i]; }
+	const Value& GetValue(int i) const            { return data->value[i]; }
+
 	unsigned GetHashValue() const                 { return data->GetHashValue(); }
 	void     Serialize(Stream& s);
 	String   ToString() const                     { return data->AsString(); }
