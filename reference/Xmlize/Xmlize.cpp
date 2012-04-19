@@ -53,6 +53,8 @@ void   Data::Dump()
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
 	Data x;
 	x.sz.cx = 10;
 	x.sz.cy = 20;
