@@ -2,45 +2,72 @@
 
 using namespace Upp;
 
-struct Loader {
+struct Downloader {
 	Progress    pi;
 	HttpRequest http;
 	int64       loaded;
 	String      url;
 	FileOut     out;
+	String      path;
 	
-	typedef Loader CLASSNAME;
+	typedef Downloader CLASSNAME;
 	
-	void ProcessContent(const void *ptr, int size);
+	void Content(const void *ptr, int size);
 	void Perform();
 	void ShowProgress();
+	void Start();
+	
+	Downloader();
 };
 
-void Loader::Perform()
+Downloader::Downloader()
 {
-	url = "http://www.samgrob.ch/images/video/m60/m60_mtzion-nw-music1.divx";
+	http.MaxContentSize(INT_MAX);
+	http.WhenContent = THISBACK(Content);
+	http.WhenWait = http.WhenDo = THISBACK(ShowProgress);
+	http.WhenStart = THISBACK(Start);
+}
+
+void Downloader::Start()
+{
+	if(out.IsOpen()) {
+		out.Close();
+		DeleteFile(path);
+	}
+	loaded = 0;
+}
+
+void Downloader::Perform()
+{
+	url = "http://downloads.sourceforge.net/project/upp/upp/4179/upp-x1 1-src-4179.tar.gz";
 	for(;;) {
 		if(!EditText(url, "Download", "URL"))
 			break;
-		loaded = 0;
 		pi.Reset();
 		http.New();
-		http.Url(url).MaxContentSize(INT_MAX);
-		http.WhenContent = THISBACK(ProcessContent);
-		http.WhenWait = http.WhenDo = THISBACK(ShowProgress);
-		http.Execute();
-		if(!http.IsSuccess())
-			Exclamation("Failed !&\1" + http.GetErrorDesc());
+		path = AppendFileName(Nvl(GetDownloadFolder(), GetHomeDirFile("downloads")),
+		                      GetFileName(url));
+		http.Url(url).Execute();
+		if(out.IsOpen())
+			out.Close();
+		if(!http.IsSuccess()) {
+			DeleteFile(path);
+			Exclamation("Download has failed.&\1" +
+			            (http.IsError() ? http.GetErrorDesc()
+			                            : AsString(http.GetStatusCode()) + ' ' + http.GetReasonPhrase()));
+		}
 	}
 }
 
-void Loader::ProcessContent(const void *ptr, int size)
+void Downloader::Content(const void *ptr, int size)
 {
 	loaded += size;
 	if(!out.IsOpen())
+		out.Open(path);
+	out.Put(ptr, size);
 }
 
-void Loader::ShowProgress()
+void Downloader::ShowProgress()
 {
 	if(http.GetContentLength() >= 0) {
 		pi.SetText("Downloading " + GetFileName(url));
@@ -57,5 +84,5 @@ void Loader::ShowProgress()
 GUI_APP_MAIN
 {
 	HttpRequest::Trace();
-	Loader().Perform();
+	Downloader().Perform();
 }
