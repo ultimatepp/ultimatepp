@@ -327,6 +327,9 @@ void HttpRequest::Start()
 	gzip = false;
 	z.Clear();
 	header.Clear();
+	status_code = 0;
+	reason_phrase.Clear();
+	WhenStart();
 
 	bool use_proxy = !IsNull(ssl ? ssl_proxy_host : proxy_host);
 
