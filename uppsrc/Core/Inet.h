@@ -329,15 +329,9 @@ class HttpRequest : public TcpSocket {
 
 	String       CalculateDigest(const String& authenticate) const;
 
-	// hiding from Socket:
-	int             Get();
-	int             Put();
-	bool            GetAll();
-	String          GetLine();
-	bool            PutAll();
-
 public:
 	Callback2<const void *, int> WhenContent;
+	Callback                     WhenStart;
 	Callback                     WhenDo;
 
 	HttpRequest&  MaxHeaderSize(int m)                   { max_header_size = m; return *this; }
