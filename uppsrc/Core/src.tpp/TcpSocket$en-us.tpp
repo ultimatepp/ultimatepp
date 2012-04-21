@@ -275,6 +275,17 @@ to adjust timeout before any single TcpSocket operation. Returns
 [s5;:TcpSocket`:`:Blocking`(`): [_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[* Blocking]()&]
 [s2;%% Same as Timeout(Null). Returns `*this.&]
 [s3;%% &]
+[s4; &]
+[s5;:TcpSocket`:`:WaitStep`(int`): [_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[* WaitStep]([@(0.0.255) i
+nt]_[*@3 ms])&]
+[s2;%% Sets the periodicity of calling WhenWait in millisecond between 
+calls. Default is 10ms (100hz).&]
+[s3;%% &]
+[s4; &]
+[s5;:TcpSocket`:`:GetWaitStep`(`)const: [@(0.0.255) int]_[* GetWaitStep]()_[@(0.0.255) cons
+t]&]
+[s2;%% Retruns current periodicity of calling WhenWait.&]
+[s3; &]
 [s4;%% &]
 [s5;:TcpSocket`:`:TcpSocket`(`): [* TcpSocket]()&]
 [s5;:TcpSocket`:`:`~TcpSocket`(`): [@(0.0.255) `~][* TcpSocket]()&]
