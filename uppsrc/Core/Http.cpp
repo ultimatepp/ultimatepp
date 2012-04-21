@@ -443,7 +443,7 @@ void HttpRequest::StartRequest()
 		     << "Connection: close\r\n"
 		     << "Accept: " << Nvl(accept, "*/*") << "\r\n"
 		     << "Accept-Encoding: gzip\r\n"
-		     << "User-Agent: " << Nvl(agent, "Ultimate++ HTTP client") << "\r\n";
+		     << "User-Agent: " << Nvl(agent, "U++ HTTP request") << "\r\n";
 		if(postdata.GetCount())
 			data << "Content-Length: " << postdata.GetCount() << "\r\n";
 		if(ctype.GetCount())
