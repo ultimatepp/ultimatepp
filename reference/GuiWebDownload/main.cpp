@@ -39,7 +39,7 @@ void Downloader::Start()
 
 void Downloader::Perform()
 {
-	url = "http://downloads.sourceforge.net/project/upp/upp/4179/upp-x1 1-src-4179.tar.gz";
+	url = "http://downloads.sourceforge.net/project/upp/upp/4179/upp-x11-src-4179.tar.gz";
 	for(;;) {
 		if(!EditText(url, "Download", "URL"))
 			break;
@@ -83,6 +83,5 @@ void Downloader::ShowProgress()
 
 GUI_APP_MAIN
 {
-	HttpRequest::Trace();
 	Downloader().Perform();
 }
