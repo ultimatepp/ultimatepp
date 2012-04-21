@@ -18,6 +18,10 @@ TOPIC("bazaar$de-de")
 #include "bazaar$de-de.tppi"
 END_TOPIC
 
+TOPIC("bazaar$en-us")
+#include "bazaar$en-us.tppi"
+END_TOPIC
+
 TOPIC("bazaar_submission$de-de")
 #include "bazaar_submission$de-de.tppi"
 END_TOPIC
