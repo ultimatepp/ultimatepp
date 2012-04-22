@@ -222,9 +222,9 @@ bool Smtp::Send()
 			throw Exc(ans);
 
 		String delimiter = "?";
-		for(int i = 0; i < text.GetCount(); i++)
-			delimiter = GetDelimiter(text[i], delimiter);
-		bool alter = text.GetCount() > 1;
+		for(int i = 0; i < body.GetCount(); i++)
+			delimiter = GetDelimiter(body[i], delimiter);
+		bool alter = body.GetCount() > 1;
 		bool multi = !attachments.IsEmpty();
 
 		{ // format message
@@ -280,8 +280,8 @@ bool Smtp::Send()
 						"\r\n";
 			}
 
-			for(int i = 0; i < text.GetCount(); i++) {
-				String t = text[i], m = mime[i];
+			for(int i = 0; i < body.GetCount(); i++) {
+				String t = body[i], m = mime[i];
 				if(!no_header) {
 					if(multi || alter)
 						msg << "--" << delimiter << "\r\n";
@@ -369,7 +369,7 @@ Smtp& Smtp::New() {
 	to.Clear();
 	to_name.Clear();
 	as.Clear();
-	text.Clear();
+	body.Clear();
 	mime.Clear();
 	error.Clear();
 	return *this;
