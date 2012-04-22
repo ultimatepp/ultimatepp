@@ -24,7 +24,7 @@ class Smtp : public TcpSocket {
 	Vector<String> to;
 	Vector<String> to_name;
 	Vector<char>   as;
-	Vector<String> text;
+	Vector<String> body;
 	Vector<String> mime; // default: text/plain; charset=<default application charset>
 	Array<Attachment> attachments;
 	int            request_timeout;
@@ -51,26 +51,26 @@ public:
 	Smtp&      Host(const String& h)                              { host = h; return *this; }
 	Smtp&      Port(int p)                                        { port = p; return *this; }
 	Smtp&      SSL(bool b = true)                                 { ssl = b; return *this; }
-	Smtp&      From(const String& from, const String& name = Null);
-	Smtp&      To(const String& t, const String& name, AS a = TO);
-	Smtp&      To(const String& t, AS a = TO)                     { return To(t, Null, a); }
-	Smtp&      Cc(const String& t, const String& name = Null)     { return To(t, name, CC); }
-	Smtp&      Bcc(const String& t, const String& name = Null)    { return To(t, name, BCC); }
-	Smtp&      ReplyTo(const String& r, const String& name = Null);
-	Smtp&      Text(const String& t, const String& mime_ = Null)  { text.Add(t); mime.Add(mime_); return *this; }
-	Smtp&      NoHeader()                                         { no_header = true; return *this; }
-	Smtp&      NoHeaderSep()                                      { no_header_sep = true; return *this; }
+	Smtp&      Auth(const String& user, const String& pwd)        { auth_user = user; auth_pwd = pwd; return *this; }
+	Smtp&      From(const String& email, const String& name = Null);
+	Smtp&      To(const String& email, const String& name, AS a = TO);
+	Smtp&      To(const String& email, AS a = TO)                     { return To(email, Null, a); }
+	Smtp&      Cc(const String& email, const String& name = Null)     { return To(email, name, CC); }
+	Smtp&      Bcc(const String& email, const String& name = Null)    { return To(email, name, BCC); }
+	Smtp&      ReplyTo(const String& email, const String& name = Null);
 	Smtp&      TimeSent(Time t)                                   { time_sent = t; return *this; }
 	Smtp&      Subject(const String& s);
+	Smtp&      Body(const String& s, const String& mime_ = Null)  { body.Add(s); mime.Add(mime_); return *this; }
+	Smtp&      NoHeader()                                         { no_header = true; return *this; }
+	Smtp&      NoHeaderSep()                                      { no_header_sep = true; return *this; }
 	Smtp&      AttachFile(const char *filename, const char *mime = 0);
 	Smtp&      Attach(const char *name, const String& data, const char *mime = 0);
-	Smtp&      Auth(const String& user, const String& pwd)        { auth_user = user; auth_pwd = pwd; return *this; }
 
 	Smtp&      New();
 
-	bool           Send();
+	bool       Send();
 	
-	String         GetError() const                                   { return error; }
+	String     GetError() const                                   { return error; }
 
 	Smtp();
 
