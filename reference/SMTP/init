@@ -1,0 +1,6 @@
+#ifndef _SMTP_icpp_init_stub
+#define _SMTP_icpp_init_stub
+#include "Core/init"
+#include "Core/SMTP/init"
+#include "Core/SSL/init"
+#endif
