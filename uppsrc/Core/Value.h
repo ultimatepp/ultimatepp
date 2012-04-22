@@ -296,7 +296,7 @@ inline bool IsDateTime(const Value& v)   { return v.Is<Date>() || v.Is<Time>(); 
 inline bool IsValueArray(const Value& v) { return v.GetType() == VALUEARRAY_V || v.GetType() == VALUEMAP_V; }
 inline bool IsValueMap(const Value& v)   { return IsValueArray(v); }
 
-String       GetErrorText(const Value& v);
+String      GetErrorText(const Value& v);
 
 inline bool          IsNull(const Value& v)               { return v.IsNull(); }
 inline const Value&  Nvl(const Value& a, const Value& b)  { return IsNull(a) ? b : a; }
