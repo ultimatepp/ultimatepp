@@ -17,6 +17,11 @@ topic "Internet utility";
 protocol, like `"Sun, 15 Apr 2012 16:00:25 GMT`".&]
 [s3;%% &]
 [s4; &]
+[s5;:MIMECharsetName`(byte`): [_^String^ String]_[* MIMECharsetName]([_^byte^ byte]_[*@3 char
+set])&]
+[s2;%% Returns U`+`+ [%-*@3 charset] formatted as required by MIME.&]
+[s3;%% &]
+[s4; &]
 [s5;:UrlEncode`(const char`*`,const char`*`): [_^String^ String]_[* UrlEncode]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 s], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 end])&]
 [s5;:UrlEncode`(const char`*`,int`): [_^String^ String]_[* UrlEncode]([@(0.0.255) const]_[@(0.0.255) c

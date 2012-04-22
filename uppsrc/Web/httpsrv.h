@@ -1,5 +1,3 @@
-String MIMECharsetName(byte charset);
-
 inline String HttpContentType(const String& type)           { return String().Cat() << "Content-Type: " << type << "\r\n"; }
 inline String HttpContentDisposition(const char *disp, const String& filename)
 { return String().Cat() << "Content-Disposition: " << disp << "; filename=\"" << filename << "\"\r\n"; }

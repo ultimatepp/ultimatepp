@@ -15,6 +15,44 @@ String WwwFormat(Time tm)
 		<< ' ' << Sprintf("%2d:%02d:%02d +0100", tm.hour, tm.minute, tm.second);
 }
 
+String MIMECharsetName(byte charset)
+{
+	if(charset == CHARSET_DEFAULT)
+		charset = GetDefaultCharset();
+	switch(charset) {
+	case CHARSET_ISO8859_1:  return "ISO-8859-1";
+	case CHARSET_ISO8859_2:  return "ISO-8859-2";
+	case CHARSET_ISO8859_3:  return "ISO-8859-3";
+	case CHARSET_ISO8859_4:  return "ISO-8859-4";
+	case CHARSET_ISO8859_5:  return "ISO-8859-5";
+	case CHARSET_ISO8859_6:  return "ISO-8859-6";
+	case CHARSET_ISO8859_7:  return "ISO-8859-7";
+	case CHARSET_ISO8859_8:  return "ISO-8859-8";
+	case CHARSET_ISO8859_9:  return "ISO-8859-9";
+	case CHARSET_ISO8859_10: return "ISO-8859-10";
+	case CHARSET_ISO8859_13: return "ISO-8859-13";
+	case CHARSET_ISO8859_14: return "ISO-8859-14";
+	case CHARSET_ISO8859_15: return "ISO-8859-15";
+	case CHARSET_ISO8859_16: return "ISO-8859-16";
+	case CHARSET_WIN1250:    return "windows-1250";
+	case CHARSET_WIN1251:    return "windows-1251";
+	case CHARSET_WIN1252:    return "windows-1252";
+	case CHARSET_WIN1253:    return "windows-1253";
+	case CHARSET_WIN1254:    return "windows-1254";
+	case CHARSET_WIN1255:    return "windows-1255";
+	case CHARSET_WIN1256:    return "windows-1256";
+	case CHARSET_WIN1257:    return "windows-1257";
+	case CHARSET_WIN1258:    return "windows-1258";
+//	case CHARSET_KOI8_R:
+//	case CHARSET_CP852:
+//	case CHARSET_MJK:
+	case CHARSET_TOASCII:    return "us-ascii";
+	case CHARSET_UTF8:       return "UTF-8";
+//	case CHARSET_UNICODE:
+	default:                 return Null;
+	}
+}
+
 static const char hex_digits[] = "0123456789ABCDEF";
 
 String UrlEncode(const char *p, const char *e)

@@ -1,5 +1,7 @@
 String WwwFormat(Time tm);
 
+String MIMECharsetName(byte charset);
+
 String UrlEncode(const char *s, const char *end);
 String UrlEncode(const char *s, int len);
 String UrlEncode(const String& s);
