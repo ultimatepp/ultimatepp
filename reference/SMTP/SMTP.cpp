@@ -22,7 +22,7 @@ CONSOLE_APP_MAIN
 			.Auth(user, pwd)
 			.To(to)
 		    .Subject("Test message")
-		    .Text("Hello world!")
+		    .Body("Hello world!")
 		    .Attach("somedata.txt", "This is a test of String attachement")
 		    .AttachFile(GetDataFile("SMTP.cpp"));
 		if(mail.Send())
