@@ -826,7 +826,7 @@ bool CodeEditor::Key(dword code, int count) {
 			Point ixln = GetIndexLine(c);
 			WString ln = GetWLine(ixln.y);
 			bool white = true;
-			int startindex = 0, pos = 0, tabsz = GetTabSize();
+			int startindex = -1, pos = 0, tabsz = GetTabSize();
 			for(int i = 0; i < ixln.x; i++) {
 				if(ln[i] == '\t' || ln[i] == ' ') {
 					if(pos == 0)
@@ -839,7 +839,7 @@ bool CodeEditor::Key(dword code, int count) {
 					break;
 				}
 			}
-			if(white) {
+			if(white && startindex >= 0) {
 				int count = ixln.x - startindex;
 				PlaceCaret(c - count);
 				Remove(c - count, count);
