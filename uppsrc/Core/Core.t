@@ -1,6 +1,29 @@
 #ifdef _MSC_VER
 #pragma setlocale("C")
 #endif
+// Path.cpp
+
+T_("Empty drive")
+caES("")
+csCZ("")
+deDE("")
+esES("")
+fiFI("")
+frFR("")
+huHU("")
+itIT("")
+nlNL("")
+plPL("")
+ptBR("")
+roRO("")
+ruRU("")
+skSK("")
+srSP("")
+trTR("")
+zhCN("")
+zhTW("")
+
+
 // Util.cpp
 
 T_("Aborted by user.")
@@ -1088,6 +1111,29 @@ srSP("Nevalidna specifikacija jezika.")
 trTR("Ge\303\247ersiz dil.")
 zhCN("\346\227\240\346\225\210\350\257\255\350\250\200\346\214\207\347\244\272")
 zhTW("\347\204\241\346\225\210\350\252\236\350\250\200\346\214\207\347\244\272")
+
+
+// Http.cpp
+
+T_("%s:%d: ")
+caES("")
+csCZ("")
+deDE("")
+esES("")
+fiFI("")
+frFR("")
+huHU("")
+itIT("")
+nlNL("")
+plPL("")
+ptBR("")
+roRO("")
+ruRU("")
+skSK("")
+srSP("")
+trTR("")
+zhCN("")
+zhTW("")
 
 
 // Obsolete
