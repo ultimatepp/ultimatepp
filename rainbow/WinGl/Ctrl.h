@@ -56,6 +56,8 @@ public:
 	static Ctrl *GetDesktop() { return desktop; }
 	static void  SetWindowSize(Size sz);
 	static Size  GetScreenSize() { return screenRect.GetSize(); }
+	static dword GetCaretTm() { return glCaretTm; }
+	static void  ResetCaretTm() { glCaretTm = GetTickCount(); }
 	
 	static void  DrawScreen();
 
@@ -64,6 +66,7 @@ public:
 	
 	
 	virtual void ApplyTransform(TransformState state) {}
+	virtual void PostPaint(Draw& w) {}
 	void DragRectDraw(const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
 	                  Color color, int type, int animation);
 

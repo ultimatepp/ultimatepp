@@ -235,17 +235,19 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 				}
 				#endif
 
-				tl = (tl + 0.5f) * tw;
-				tr = (tr - 0.5f) * tw;
-				tt = (tt + 0.5f) * th;
-				tb = (tb - 0.5f) * th;
-				
+				tl = (tl + TEXEL_OFFSET) * tw;
+				tr = (tr - TEXEL_OFFSET) * tw;
+				tt = (tt + TEXEL_OFFSET) * th;
+				tb = (tb - TEXEL_OFFSET) * th;
+				/*
 				float vtx[] = {
 					sx, dy,
 					sx, sy,
 					dx, dy,
 					dx, sy
-				};
+				};*/
+				float vtx[12];
+				SetVtx(vtx, sx, sy, dx, dy);
 
 				float crd[] = {
 					tl, tb,
@@ -255,7 +257,7 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 				};
 			
 				glTexCoordPointer(2, GL_FLOAT, 0, crd);
-				glVertexPointer(2, GL_FLOAT, 0, vtx);
+				glVertexPointer(projection_mode ? 3: 2, GL_FLOAT, 0, vtx);
 				glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 			}
 	

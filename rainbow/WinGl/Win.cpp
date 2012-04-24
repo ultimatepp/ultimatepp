@@ -222,6 +222,12 @@ int CreateGlContext()
 	return 1;
 }
 
+void SerializeGl(Stream& s)
+{
+	s % controlPanelActive;
+	s % consoleActive;
+}
+ 
 Vector<WString>& coreCmdLine__();
 Vector<WString> SplitCmdLine__(const char *cmd);
 
