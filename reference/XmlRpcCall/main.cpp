@@ -14,16 +14,22 @@ struct FoxResult {
 
 XMLRPC_STRUCT(FoxResult)
 
-#define XRSFILE <XmlRpcCall/FoxRate.xrs>
-#include <XmlRpc/xrs.h>
-
-XMLRPC_STRUCT(FoxResult2)
-
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+	XmlRpcRequest xr("http://foxrate.org/rpc");
+	xr.Method("foxrate.currencyConvert") << "USD" << "GBP" << 120;
+	Value v = xr.Execute();
+	if(v.IsError())
+		LOG("Error: " << v);
+	else
+		if(v["flerror"] == 0)
+			LOG(v["amount"]);
+		else
+			LOG("Failed.");
+
 	FoxResult r;
-	if(XmlRpcCall("http://foxrate.org/rpc")
-		  .Method("foxrate.currencyConvert")
+	if(XmlRpcRequest("http://foxrate.org/rpc").Method("foxrate.currencyConvert")
 		  << "USD" << "GBP" << 120
 		  >> r)
 		if(r.flerror)
@@ -32,14 +38,4 @@ CONSOLE_APP_MAIN
 			Cout() << r.amount << '\n';
 	else 
 		Cout() << "Failed.\n";
-
-	FoxResult2 r2;
-	XmlRpcCall foxrate("http://foxrate.org/rpc");
-	if(foxrate("foxrate.currencyConvert", "GBP", "USD", 130.0) >> r2)
-		if(r2.flerror)
-			Cout() << "Server reported error\n";
-		else
-			Cout() << r2.amount << '\n';
-	else
-		Cout() << "Failed: " << foxrate.GetError() << '\n';
 }

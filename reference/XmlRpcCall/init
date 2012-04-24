@@ -2,4 +2,5 @@
 #define _XmlRpcCall_icpp_init_stub
 #include "Core/init"
 #include "XmlRpc/init"
+#include "Core\XmlRpc/init"
 #endif
