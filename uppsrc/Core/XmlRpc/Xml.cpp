@@ -1,5 +1,7 @@
 #include "XmlRpc.h"
 
+NAMESPACE_UPP
+
 Value ParseXmlRpcValue(XmlParser& p)
 {
 	Value r;
@@ -182,3 +184,5 @@ String FormatXmlRpcError(int code, const char *text)
 	  << "</fault></methodResponse>\r\n";
 	return r;
 }
+
+END_UPP_NAMESPACE

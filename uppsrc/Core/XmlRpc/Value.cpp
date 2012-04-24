@@ -1,5 +1,7 @@
 #include "XmlRpc.h"
 
+NAMESPACE_UPP
+
 void ValueCheck(bool b)
 {
 	if(!b)
@@ -108,3 +110,5 @@ void ValuePut(Value& v, const ValueMap& vm)
 {
 	v = vm;
 }
+
+END_UPP_NAMESPACE
