@@ -2,6 +2,8 @@
 
 #define LLOG(x)  // LOG(x)
 
+NAMESPACE_UPP
+
 static bool sLogRpcCalls;
 
 void LogXmlRpcCalls(bool b)
@@ -115,3 +117,5 @@ void XmlRpcCall::ClearError()
 	faultString.Clear();
 	error.Clear();
 }
+
+END_UPP_NAMESPACE
