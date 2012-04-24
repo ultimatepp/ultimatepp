@@ -1,0 +1,12 @@
+description "XML-RPC support package (both server and client stuff)\3770,128,128";
+
+uses
+	Web;
+
+file
+	XmlRpc.h,
+	Value.cpp,
+	Xml.cpp,
+	Server.cpp,
+	Client.cpp;
+

@@ -3,6 +3,8 @@
 
 #define LLOG(x)   // DLOG(x)
 
+NAMESPACE_UPP
+
 typedef void (*XmlRpcFnPtr)(XmlRpcData&);
 
 static StaticMutex XmlRpcMapMutex;
@@ -30,6 +32,19 @@ String (*sXmlRpcMethodFilter)(const String& methodname);
 void SetXmlRpcMethodFilter(String (*filter)(const String& methodname))
 {
 	sXmlRpcMethodFilter = filter;
+}
+
+void ThrowXmlRpcError(int code, const char *s)
+{
+	XmlRpcError e;
+	e.code = code;
+	e.text = s;
+	throw e;
+}
+
+void ThrowXmlRpcError(const char *s)
+{
+	ThrowXmlRpcError(-1, s);
 }
 
 static Stream *xmlrpc_trace;
@@ -110,27 +125,18 @@ String XmlRpcExecute(const String& request, const char *group, const char *peera
 	return Null;
 }
 
-int CharFilterNoCr(int c)
-{
-	return c == '\r' ? 0 : c;
-}
 
-String ReadLine(Socket& s)
-{
-	return Filter(s.ReadUntil('\n'), CharFilterNoCr);
-}
-
-bool XmlRpcPerform(Socket& http, const char *group)
+bool XmlRpcPerform(TcpSocket& http, const char *group)
 {
 	LLOG("=== Accepted connection ===================================================");
-	String request = ToUpper(ReadLine(http));
+	String request = ToUpper(http.GetLine());
 	LLOG(request);
 	if(http.IsError() || request.GetCount() == 0)
 		return false;
 	if(request.Find("POST") >= 0 || request.Find("HTTP") >= 0) {
 		VectorMap<String, String> hdr;
 		for(;;) {
-			String s = ReadLine(http);
+			String s = http.GetLine();
 			if(s.IsEmpty()) break;
 			LLOG(s);
 			int q = s.Find(':');
@@ -141,8 +147,7 @@ bool XmlRpcPerform(Socket& http, const char *group)
 			int len = atoi(hdr.Get("Content-Length", ""));
 			String r;
 			if(len > 0 && len < 1024 * 1024 * 1024) {
-				r = XmlRpcExecute(http.ReadCount(len, 90000),
-			                      group, http.GetPeerAddr());
+				r = XmlRpcExecute(http.GetAll(len), group, http.GetPeerAddr());
 				LLOG("--------- Server response:\n" << r << "=============");
 				String response;
 				String ts = WwwFormat(GetUtcTime());
@@ -155,24 +160,26 @@ bool XmlRpcPerform(Socket& http, const char *group)
 					"Content-Type: text/xml\r\n\r\n"
 					<< r;
 				LLOG(response);
-				http.Write(response);
+				http.Put(response);
 				return true;
 			}
 		}
 	}
-	http.Write("HTTP/1.0 400 Bad request\r\n"
-	           "Server: U++\r\n\r\n");
+	http.Put("HTTP/1.0 400 Bad request\r\n"
+	         "Server: U++\r\n\r\n");
 	return false;
 }
 
-bool XmlRpcServer(int port, const char *group)
+bool XmlRpcServerLoop(int port, const char *group)
 {
-	Socket rpc;
-	if(!ServerSocket(rpc, port, true, 5))
+	TcpSocket rpc;
+	if(!rpc.Listen(port, 5))
 		return false;
 	for(;;) {
-		Socket http;
+		TcpSocket http;
 		if(rpc.Accept(http))
 			XmlRpcPerform(http, group);
 	}
 }
+
+END_UPP_NAMESPACE

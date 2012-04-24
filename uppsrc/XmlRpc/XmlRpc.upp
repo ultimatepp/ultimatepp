@@ -5,8 +5,6 @@ uses
 
 file
 	XmlRpc.h,
-	Value.cpp,
-	Xml.cpp,
 	Client.cpp,
 	Server.cpp,
 	xrs readonly separator,
