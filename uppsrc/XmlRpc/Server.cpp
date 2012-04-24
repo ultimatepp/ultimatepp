@@ -3,112 +3,7 @@
 
 #define LLOG(x)   // DLOG(x)
 
-typedef void (*XmlRpcFnPtr)(XmlRpcData&);
-
-static StaticMutex XmlRpcMapMutex;
-
-VectorMap<String, XmlRpcFnPtr>& XmlRpcMap(const char *group)
-{
-	static VectorMap<String, VectorMap< String, void (*)(XmlRpcData&) > > mm;
-	return mm.GetAdd(group);
-}
-
-void Register(const char *name, void (*method)(XmlRpcData&), const char *group)
-{
-	Mutex::Lock __(XmlRpcMapMutex);
-	XmlRpcMap(group).Add(name, method);
-}
-
-XmlRpcFnPtr XmlRpcMapGet(const char *group, const char *name)
-{
-	Mutex::Lock __(XmlRpcMapMutex);
-	return XmlRpcMap(group).Get(name, NULL);
-}
-
-String (*sXmlRpcMethodFilter)(const String& methodname);
-
-void SetXmlRpcMethodFilter(String (*filter)(const String& methodname))
-{
-	sXmlRpcMethodFilter = filter;
-}
-
-static Stream *xmlrpc_trace;
-static int xmlrpc_trace_level;
-
-void SetXmlRpcServerTrace(Stream& s, int level)
-{
-	xmlrpc_trace = &s;
-	xmlrpc_trace_level = level;
-}
-
-String XmlRpcExecute(const String& request, const char *group, const char *peeraddr)
-{
-	if(xmlrpc_trace && xmlrpc_trace_level == 1)
-		*xmlrpc_trace << "XmlRpcRequest:\n" << request << '\n';
-	XmlParser p(request);
-	XmlRpcData data;
-	String methodname;
-	try {
-		String r = XmlHeader();
-		r << "<methodResponse>\r\n";
-		p.ReadPI();
-		p.PassTag("methodCall");
-		p.PassTag("methodName");
-		methodname = p.ReadText();
-		LLOG("method name: " << methodname);
-		if(xmlrpc_trace && xmlrpc_trace_level == 0)
-			*xmlrpc_trace << "XmlRpcRequest method:\n" << methodname << '\n';
-		p.PassEnd();
-		data.peeraddr = peeraddr;
-		data.in = ParseXmlRpcParams(p);
-		XmlRpcMapMutex.Enter();
-		if(sXmlRpcMethodFilter)
-			methodname = (*sXmlRpcMethodFilter)(methodname);
-		void (*fn)(XmlRpcData&) = XmlRpcMapGet(group, methodname);
-		if(fn) {
-			(*fn)(data);
-			if(IsValueArray(data.out)) {
-				ValueArray va = data.out;
-				if(va.GetCount() && IsError(va[0])) {
-					LLOG("ProcessingError");
-					return FormatXmlRpcError(XMLRPC_SERVER_PROCESSING_ERROR, "Processing error: " + GetErrorText(data.out[0]));
-				}
-				r << FormatXmlRpcParams(data.out);
-			}
-			r << "\r\n</methodResponse>\r\n";
-		}
-		else {
-			XmlRpcMapMutex.Leave();
-			return FormatXmlRpcError(XMLRPC_UNKNOWN_METHOD_ERROR, "\'" + methodname + "\' method is unknown");
-		}
-		p.PassEnd();
-		if(xmlrpc_trace)
-			if(xmlrpc_trace_level == 0)
-				*xmlrpc_trace << "XmlRpc finished OK\n";
-			else
-				*xmlrpc_trace << "Server response:\n" << r << '\n';
-		return r;
-	}
-	catch(XmlRpcError e) {
-		LLOG("Client error: " << e.text);
-		if(xmlrpc_trace)
-			*xmlrpc_trace << "Client error: " << e.text << '\n';
-		return FormatXmlRpcError(e.code, e.text);
-	}
-	catch(XmlError e) {
-		LLOG("XmlError " << e << ": " << p.GetPtr());
-		if(xmlrpc_trace)
-			*xmlrpc_trace << "XmlError: " << e << '\n';
-		return FormatXmlRpcError(XMLRPC_SERVER_XML_ERROR, "XML Error: " + e);
-	}
-	catch(ValueTypeMismatch) {
-		LLOG("ValueTypeMismatch at parameter " << data.ii);
-		if(xmlrpc_trace)
-			*xmlrpc_trace << "ValueTypeMismatch at parameter " << data.ii << '\n';
-		return FormatXmlRpcError(XMLRPC_SERVER_PARAM_ERROR, "Parameter mismatch at parameter " + AsString(data.ii));
-	}
-	return Null;
-}
+NAMESPACE_UPP
 
 int CharFilterNoCr(int c)
 {
@@ -176,3 +71,5 @@ bool XmlRpcServer(int port, const char *group)
 			XmlRpcPerform(http, group);
 	}
 }
+
+END_UPP_NAMESPACE

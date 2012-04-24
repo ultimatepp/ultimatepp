@@ -250,9 +250,6 @@ String FormatXmlRpcParams(const ValueArray& params);
 String FormatXmlRpcError(int code, const char *text);
 
 void   Register(const char *name, void (*method)(XmlRpcData&), const char *group = NULL);
-void   SetXmlRpcMethodFilter(String (*filter)(const String& methodname));
-bool   XmlRpcPerform(TcpSocket& http, const char *group);
-bool   XmlRpcServerLoop(int port, const char *group);
 
 #define XMLRPC_METHOD(x) \
 void xmlrpc##x(XmlRpcData& rpc); \
@@ -268,6 +265,11 @@ struct XmlRpcError {
 	int    code;
 	String text;
 };
+
+void   SetXmlRpcMethodFilter(String (*filter)(const String& methodname));
+String XmlRpcExecute(const String& request, const char *group, const char *peeraddr);
+bool   XmlRpcPerform(TcpSocket& http, const char *group);
+bool   XmlRpcServerLoop(int port, const char *group);
 
 void ThrowXmlRpcError(int code, const char *s);
 void ThrowXmlRpcError(const char *s);
