@@ -84,14 +84,10 @@ void SystemDraw::SetVec(float* v, int sx, int sy, int dx, int dy)
 
 void SystemDraw::StencilClip(const Rect& r, int mode, bool exclude)
 {
-	float vtx[] = {
-		(float) r.left, (float) r.bottom,
-		(float) r.left, (float) r.top,
-		(float) r.right, (float) r.bottom,
-		(float) r.right, (float) r.top
-	};
+	float vtx[12];
+	SetVtx(vtx, (float) r.left, (float) r.top, (float) r.right, (float) r.bottom);
 	
-	glVertexPointer(2, GL_FLOAT, 0, vtx);
+	glVertexPointer(projection_mode ? 3 : 2, GL_FLOAT, 0, vtx);
 	
 	int prev_cn = cn;
 	
@@ -263,14 +259,16 @@ void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 	
 	glColor4ub(color.GetR(), color.GetG(), color.GetB(), (int) alpha);
 	
-	float vtx[] = {
+/*	float vtx[] = {
 		sx, dy,
 		sx, sy,
 		dx, dy,
 		dx, sy
-	};
+	};*/
+	float vtx[12];
+	SetVtx(vtx, sx, sy, dx, dy);
 	
-	glVertexPointer(2, GL_FLOAT, 0, vtx);
+	glVertexPointer(projection_mode ? 3 : 2, GL_FLOAT, 0, vtx);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	glColor4ub(255, 255, 255, (int) alpha);
@@ -354,14 +352,8 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 			glColor4ub(color.GetR(), color.GetG(), color.GetB(), (int) alpha);
 	}
 	
-	glEnable(GL_TEXTURE_2D);
-
-	float vtx[] = {
-		sx, dy,
-		sx, sy,
-		dx, dy,
-		dx, sy
-	};
+	float vtx[12];
+	SetVtx(vtx, sx, sy, dx, dy);
 
 	float crd[] = {
 		tl, tb,
@@ -370,9 +362,10 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 		tr, tt
 	};
 
+	glEnable(GL_TEXTURE_2D);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glTexCoordPointer(2, GL_FLOAT, 0, crd);
-	glVertexPointer(2, GL_FLOAT, 0, vtx);
+	glVertexPointer(projection_mode ? 3 : 2, GL_FLOAT, 0, vtx);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisable(GL_TEXTURE_2D);
@@ -400,14 +393,9 @@ void SystemDraw::DrawTextureOp(const RectF& r, int textureId, int width, int hei
 	tt = (tt + TEXEL_OFFSET) * th;
 	tb = (tb - TEXEL_OFFSET) * th;
 	
-	glEnable(GL_TEXTURE_2D);
-
-	float vtx[] = {
-		sx, dy,
-		sx, sy,
-		dx, dy,
-		dx, sy
-	};
+	float vtx[12];
+	
+	SetVtx(vtx, sx, sy, dx, dy);
 	
 	float crd[] = {
 		tl, tt,
@@ -416,9 +404,11 @@ void SystemDraw::DrawTextureOp(const RectF& r, int textureId, int width, int hei
 		tr, tb
 	};
 
+	glEnable(GL_TEXTURE_2D);
+
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glTexCoordPointer(2, GL_FLOAT, 0, crd);
-	glVertexPointer(2, GL_FLOAT, 0, vtx);
+	glVertexPointer(projection_mode ? 3 : 2, GL_FLOAT, 0, vtx);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	
@@ -512,6 +502,117 @@ void SystemDraw::SaveCurrentColor()
 void SystemDraw::RestoreLastColor()
 {
 	glColor4f(current_color[0], current_color[1], current_color[2], current_color[3]);
+}
+
+RectF SystemDraw::UnProject(const RectF& r, float& depth)
+{
+	double projMat[16];
+	double modelMat[16];
+	int viewPort[4];
+	
+	glGetDoublev(GL_PROJECTION_MATRIX, projMat);
+	glGetDoublev(GL_MODELVIEW_MATRIX, modelMat);
+	glGetIntegerv(GL_VIEWPORT, viewPort);
+
+	RectF fr;
+	double x, y, z;
+	gluUnProject(r.left, r.top, 0.99f, modelMat, projMat, viewPort, &x, &y, &z);
+	depth = (float) z;
+	fr.left = (float) x;
+	fr.top = (float) y;
+	gluUnProject(r.right, r.bottom, 0.99f, modelMat, projMat, viewPort, &x, &y, &z);
+	fr.right = (float) x;
+	fr.bottom = (float) y;
+	return fr;
+}
+
+void SystemDraw::UnProject(float* vtx, float sx, float sy, float dx, float dy)
+{
+	double projMat[16];
+	double modelMat[16] = {
+		1, 0, 0, 0, 
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1
+	};
+	
+	int viewPort[4];
+	
+	glGetDoublev(GL_PROJECTION_MATRIX, projMat);
+	//glGetDoublev(GL_MODELVIEW_MATRIX, modelMat);
+	glGetIntegerv(GL_VIEWPORT, viewPort);
+	
+	double xs, ys, xd, yd, z;
+
+	gluUnProject(sx, drawing_size.cy - sy, 0.99, modelMat, projMat, viewPort, &xs, &ys, &z);
+	gluUnProject(dx, drawing_size.cy - dy, 0.99, modelMat, projMat, viewPort, &xd, &yd, &z);
+
+	vtx[0] = (float) xs;
+	vtx[1] = (float) yd;
+	vtx[2] = (float) z;
+	vtx[3] = (float) xs;
+	vtx[4] = (float) ys;
+	vtx[5] = (float) z;
+	vtx[6] = (float) xd;
+	vtx[7] = (float) yd;
+	vtx[8] = (float) z;
+	vtx[9] = (float) xd;
+	vtx[10] = (float) ys;
+	vtx[11] = (float) z;
+}
+
+void SystemDraw::UnProject(float& x, float& y, float &z)
+{
+	double projMat[16];
+	double modelMat[16] = {
+		1, 0, 0, 0, 
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1
+	};
+	
+	int viewPort[4];
+	
+	glGetDoublev(GL_PROJECTION_MATRIX, projMat);
+	glGetIntegerv(GL_VIEWPORT, viewPort);
+	
+	double xd, yd, zd;
+
+	gluUnProject(x, drawing_size.cy - y, 0.99, modelMat, projMat, viewPort, &xd, &yd, &zd);
+	x = (float) xd;
+	y = (float) yd;
+	z = (float) zd;
+}
+
+void SystemDraw::SetVtx(float* vtx, float sx, float sy, float dx, float dy)
+{
+	if(projection_mode == 1)
+	{
+		UnProject(vtx, sx, sy, dx, dy);
+	}
+	else
+	{
+		vtx[0] = sx;
+		vtx[1] = dy;
+		vtx[2] = sx;
+		vtx[3] = sy;
+		vtx[4] = dx;
+		vtx[5] = dy;
+		vtx[6] = dx;
+		vtx[7] = sy;
+	}
+}
+
+void SystemDraw::SetProjectionMode(int mode)
+{
+	if(mode != projection_mode)
+	{
+		projection_mode = mode;
+		if(projection_mode)
+			PerspectiveView(false);
+		else
+			OrthogonalView(false);
+	}
 }
 
 END_UPP_NAMESPACE

@@ -77,8 +77,9 @@ void Ctrl::DoMouseGl(int event, Point p, int zdelta)
 		if(!processed)
 		{
 			for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
-				if(topctrl[i] != (Ctrl*) &infoPanel && topctrl[i] != (Ctrl*) &console &&
-				   DoMouseGl(topctrl[i], event, p, zdelta))
+				Ptr<Ctrl> t = topctrl[i];
+				if(t != (Ctrl*) &infoPanel && t != (Ctrl*) &console && t->GetRect().Contains(p) &&
+				   DoMouseGl(t, event, p, zdelta))
 				   return;
 			}
 			Ctrl *desktop = GetDesktop();

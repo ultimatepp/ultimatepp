@@ -208,7 +208,11 @@ bool Ctrl::ProcessEvent(bool *quit)
 		return true;
 	}
 	else if(glDrawMode == DRAW_ON_IDLE)
+	{
+		TimerProc(GetTickCount());
+		SweepMkImageCache();
 		DrawScreen();
+	}
 	
 	return false;
 }
@@ -233,14 +237,15 @@ void Ctrl::DrawScreen()
 		draw.alpha = infoPanel.GetAlpha();
 		draw.angle = infoPanel.GetAngle();
 		draw.scale = infoPanel.GetScale();
-		draw.FlatView();
+		draw.ViewPort();
+		draw.OrthogonalView();
 		draw.Clear(true);
 		screenFbo0.Bind();
 		screenFbo0.Clear();
 		desktop->ApplyTransform(TS_BEFORE_PAINT);
 		desktop->CtrlPaint(draw, clip);
 		screenFbo0.Unbind();
-
+		draw.OrthogonalView();
 		glDisable(GL_BLEND);
 		RectF drawRect(0.f, 0.f, (float) screenRect.GetWidth(), (float) screenRect.GetHeight());
 		float blur = SystemDraw::blurStrength;
@@ -290,6 +295,7 @@ void Ctrl::DrawScreen()
 			draw.End();
 			tq->ApplyTransform(TS_AFTER_PAINT);
 		}
+
 		CursorSync(draw);
 			
 		desktop->ApplyTransform(TS_AFTER_PAINT);		
@@ -337,10 +343,12 @@ bool Ctrl::ProcessEvents(bool *quit)
 	if(!ProcessEvent(quit))
 		return false;
 	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()));
-	TimerProc(GetTickCount());
-	SweepMkImageCache();
 	if(glDrawMode == DRAW_ON_TIMER)
+	{
+		TimerProc(GetTickCount());
+		SweepMkImageCache();
 		DrawScreen();
+	}
 	return true;
 }
 

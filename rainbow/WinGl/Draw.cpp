@@ -47,16 +47,19 @@ void SystemDraw::InitClip(const Rect& clip)
 
 void SystemDraw::Reset() {
 	systemDraw = this;
-	cloff.SetCount(30);
+	cloff.SetCount(32);
+	mstack.SetCount(32);
 	ci = 0;
 	cn = 0;
 	cd = 0;
+	mi = 0;
 	drawing_offset = Point(0, 0);
 	alpha = 255;
 	r = g = b = a = 255;
 	angle = 0;
 	scale = 1;
 	image_coloring = true;
+	projection_mode = 0;
 }
 
 SystemDraw::SystemDraw() {
@@ -115,15 +118,29 @@ void SystemDraw::Clear(bool ontransforms)
 #endif
 }
 
-void SystemDraw::FlatView(int width, int height)
+void SystemDraw::ViewPort(int width, int height)
 {
 	glViewport(0, 0, (GLsizei) width < 0 ? drawing_size.cx : width, (GLsizei) height < 0 ? drawing_size.cy : height);
-	float aspect = drawing_size.cx / (float) drawing_size.cy;
+}
+
+void SystemDraw::OrthogonalView(bool clear_modelview)
+{
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0, drawing_size.cx, drawing_size.cy, 0, -100, 100);
 	glMatrixMode(GL_MODELVIEW);
+	if(clear_modelview)
+		glLoadIdentity();
+}
+
+void SystemDraw::PerspectiveView(bool clear_modelview)
+{
+	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+	gluPerspective(45.0f, GetAspect(), 1.f, 100.0f);
+	glMatrixMode(GL_MODELVIEW);
+	if(clear_modelview)
+		glLoadIdentity();
 }
 
 void SystemDraw::ApplyTransforms()
@@ -138,19 +155,20 @@ void SystemDraw::ApplyTransforms()
 
 void SystemDraw::PushContext()
 {
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glMatrixMode(GL_MODELVIEW);
+	MatrixStack& m = mstack[mi++];	
+	glGetDoublev(GL_PROJECTION_MATRIX, m.projection_matrix);
+	glGetDoublev(GL_MODELVIEW_MATRIX, m.modelview_matrix);
+	m.projection_mode = projection_mode;
 }
 
 void SystemDraw::PopContext()
 {
+	MatrixStack& m = mstack[--mi];
 	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
+	glLoadMatrixd(m.projection_matrix);
 	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
+	glLoadMatrixd(m.modelview_matrix);
+	projection_mode = m.projection_mode;
 }
 
 SystemDraw::~SystemDraw() {

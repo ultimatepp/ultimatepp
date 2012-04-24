@@ -63,11 +63,13 @@ extern int glDrawMode;
 
 #define DRAW_ON_TIMER 0
 #define DRAW_ON_IDLE 1
+#define DRAW_ON_EVENT 2
 
 int CreateGlWindow(HINSTANCE hInstance);
 int CreateGlContext();
 void ActivateGlContext();
 void DestroyGl();
+void SerializeGl(Stream& s); 
 LRESULT CALLBACK glWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 int64 GetHighTickCount();
 
@@ -165,7 +167,14 @@ public:
 			  
 	void ImageColoring(bool b = true) { image_coloring = b; }
 	
-
+	RectF UnProject(const RectF& r, float& depth);
+	void UnProject(float* vtx, float sx, float sy, float dx, float dy);
+	void UnProject(float& x, float& y, float &z);
+	void SetVtx(float* vtx, float sx, float sy, float dx, float dy);
+	void SetProjectionMode(int mode);
+	bool IsPerspectiveProjection() { return projection_mode == 1; }
+	bool IsOrthogonalProjection()  { return projection_mode == 0; }
+	
 private:
 	static SystemDraw* systemDraw;
 	friend class  FontInfo;
@@ -180,9 +189,17 @@ private:
 		Rect  drawing_clip;
 	};
 	
+	struct MatrixStack : Moveable<MatrixStack>
+	{
+		double projection_matrix[16];
+		double modelview_matrix[16];
+		int projection_mode;
+	};
+	
 	float current_color[4];
 	float vtx[8];
 	float crd[8];
+	double projection_matrix[16];
 	void SetVec(float* v, float sx, float sy, float dx, float dy);
 	void SetVec(float* v, int sx, int sy, int dx, int dy);
 	
@@ -203,10 +220,13 @@ public:
 			
 private:
 	Array<Cloff> cloff;
+	Array<MatrixStack> mstack;
 	int ci;
 	int cn;
 	int cd;
+	int mi;
 	bool image_coloring;
+	int projection_mode;
 
 	void Reset();
 
@@ -222,7 +242,9 @@ public:
 	Point    GetOffset() const { return drawing_offset; }
 	SystemDraw(Size sz);
 	virtual ~SystemDraw();
-	void FlatView(int width = -1, int height = -1);
+	void ViewPort(int width = -1, int height = -1);
+	void OrthogonalView(bool clear_modelview = true);
+	void PerspectiveView(bool clear_modelview = true);
 	void ApplyTransforms();
 	void Clear(bool ontransforms = false);
 	void PushContext();
