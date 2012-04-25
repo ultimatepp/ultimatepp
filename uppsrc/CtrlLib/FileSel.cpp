@@ -826,7 +826,7 @@ void FileSel::Open() {
 			Load();
 			return;
 		}
-		if(fn.Find(' ') < 0 && fn.Find('\"') < 0) {
+		if(fn.Find('\"') < 0) {
 			if(filesystem->IsWin32())
 			{
 				if(fn.GetLength() >= 2 && fn[1] == ':' && fn.GetLength() <= 3) {
