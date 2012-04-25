@@ -112,6 +112,18 @@ tring][@(0.0.255) `&]_[*@3 data], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 mi
 &]
 [s2; Attaches a String as file attachment..&]
 [s3; &]
+[s4;%- &]
+[s5;:Smtp`:`:AddHeader`(const String`&`):%- Smpt[@(0.0.255) `&]_[* AddHeader]([@(0.0.255) c
+onst]_[_^String^ String][@(0.0.255) `&]_[*@3 text])&]
+[s2; Adds additional [%-*@3 text] message header. Text should [* not] 
+be terminated by CRLF.&]
+[s3; &]
+[s4;%- &]
+[s5;:Smtp`:`:AddHeader`(const char`*`,const String`&`):%- [_^Smtp^ Smtp][@(0.0.255) `&]_[* A
+ddHeader]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], [@(0.0.255) const]_[_^String^ St
+ring][@(0.0.255) `&]_[*@3 txt])&]
+[s2; Adds additional field [%-*@3 id] with value [%-*@3 txt] to header.&]
+[s3; &]
 [s4; &]
 [s5;:Smtp`:`:New`(`):%- [_^Smtp^ Smtp][@(0.0.255) `&]_[* New]()&]
 [s2; Restarts Smtp for sending of next email (resets all addresses, 

@@ -22,6 +22,8 @@ public:
 	SmtpMail&      AttachFile(const char *filename, const char *mime = 0);
 	SmtpMail&      Attach(const char *name, const String& data, const char *mime = 0);
 	SmtpMail&      Auth(const String& user, const String& pwd)        { auth_user = user; auth_pwd = pwd; return *this; }
+	SmtpMail&      AddHeader(const String& text)                      { add_header << text << "\r\n"; return *this; }
+	SmtpMail&      AddHeader(const char *id, const String& txt)       { add_header << id << ": " << txt << "\r\n"; return *this; }
 
 	SmtpMail&      New();
 
@@ -63,6 +65,7 @@ private:
 	String         reply_to;
 	String         reply_to_name;
 	String         subject;
+	String         add_header;
 
 	// state automaton
 	String         error;

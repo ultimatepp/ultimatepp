@@ -278,6 +278,7 @@ bool Smtp::Send()
 					msg << "Content-Type: Multipart/" << (alter ? "alternative" : "mixed")
 						<< "; boundary=\"" << delimiter << "\"\r\n"
 						"\r\n";
+				msg << add_header;
 			}
 
 			for(int i = 0; i < body.GetCount(); i++) {
@@ -372,6 +373,7 @@ Smtp& Smtp::New() {
 	body.Clear();
 	mime.Clear();
 	error.Clear();
+	add_header.Clear();
 	return *this;
 }
 
