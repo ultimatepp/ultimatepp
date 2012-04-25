@@ -28,6 +28,7 @@ class Smtp : public TcpSocket {
 	Vector<String> mime; // default: text/plain; charset=<default application charset>
 	Array<Attachment> attachments;
 	int            request_timeout;
+	String         add_header;
 
 	bool           no_header; // default = false
 	bool           no_header_sep; // default = false
@@ -65,6 +66,8 @@ public:
 	Smtp&      NoHeaderSep()                                      { no_header_sep = true; return *this; }
 	Smtp&      AttachFile(const char *filename, const char *mime = 0);
 	Smtp&      Attach(const char *name, const String& data, const char *mime = 0);
+	Smpt&      AddHeader(const String& text)                      { add_header << text << "\r\n"; }
+	Smtp&      AddHeader(const char *id, const String& txt)       { add_header << id << ": " << txt << "\r\n"; }
 
 	Smtp&      New();
 
