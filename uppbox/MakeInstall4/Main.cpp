@@ -101,6 +101,7 @@ CONSOLE_APP_MAIN
 	CopyFolders(uppsrc, ass, uppsrc + "/packages1", false);
 	CopyFolders(upp, upptmp, uppsrc + "/assemblies");
 	SaveFile(upptmp + "/uppsrc/guiplatform.h", "");
+	SaveFile(upptmp + "/uppsrc/uppconfig.h", LoadFile(uppsrc + "/uppconfig"));
 	SaveFile(upptmp + "/uppsrc/ide/version.h", "#define IDE_VERSION \"" + version + "\"\r\n");
 	Make("ide", "theide.exe");
 	Make("umk", "umk.exe");
