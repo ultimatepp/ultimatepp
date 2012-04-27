@@ -125,8 +125,6 @@ private:
 	friend void StaticExitDraw_();
 	friend Font StdFont();
 
-	FontInfo  lastFont;
-
 	Point        actual_offset;
 	Point        actual_offset_bak;
 	struct Cloff : Moveable<Cloff> {

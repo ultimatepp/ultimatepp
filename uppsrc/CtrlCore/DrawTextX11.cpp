@@ -5,7 +5,7 @@
 NAMESPACE_UPP
 
 #define LTIMING(x)
-#define LLOG(x)
+#define LLOG(x)    // DLOG(x)
 
 int    gtk_antialias = -1;
 int    gtk_hinting = -1;
@@ -185,7 +185,7 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 			                int(ox + xpos * cosa + offset.cx),
 			                int(oy - xpos * sina + offset.cy),
 			                (FcChar16 *)&h, 1);
-			xpos += dx ? dx[i] : lastFont[text[i]];
+			xpos += dx ? dx[i] : font[text[i]];
 		}
 		if(font.IsUnderline() || font.IsStrikeout()) {
 			x += offset.cx;
@@ -234,7 +234,7 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 			if(dx && n > 0) {
 				cx = 0;
 				Sum(cx, dx, dx + n - 1);
-				cx += lastFont[text[n - 1]];
+				cx += font[text[n - 1]];
 			}
 			else
 				cx = GetTextSize(text, font, n).cx;
