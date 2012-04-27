@@ -260,8 +260,8 @@ void Value::RegisterStd()
 		Value::AddName(INT_V, "int");
 		Value::AddName(DOUBLE_V, "double");
 		Value::AddName(VOID_V, "void");
-		Value::AddName(DATE_V, "date");
-		Value::AddName(TIME_V, "time");
+		Value::AddName(DATE_V, "Date");
+		Value::AddName(TIME_V, "Time");
 		Value::AddName(INT64_V, "int64");
 		Value::AddName(BOOL_V, "bool");
 		Value::AddName(ERROR_V, "error");
