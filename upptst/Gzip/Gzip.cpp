@@ -86,6 +86,8 @@ CONSOLE_APP_MAIN
 	z.Put(gzf);
 	z.End();
 	DDUMP(~z);
+	DDUMP(z.GetGZipComment());
+	DDUMP(z.GetGZipName());
 	DDUMP(GZDecompress(gzf));
 	
 	for(int x = 3; x < 10000000; x += x) {
