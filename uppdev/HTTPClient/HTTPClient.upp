@@ -1,6 +1,7 @@
 uses
 	Core,
-	Web;
+	Web,
+	Web/SSL;
 
 file
 	HTTPClient.cpp;

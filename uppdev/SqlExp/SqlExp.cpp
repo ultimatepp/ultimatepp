@@ -3,8 +3,6 @@
 
 using namespace Upp;
 
-#define SQLID(x) SqlId x(#x)
-
 SQLID(COLUMN);
 SQLID(COLUMN1);
 SQLID(COLUMN2);
@@ -39,6 +37,9 @@ void Put(String s, const char *splits)
 
 void Exp(const char *s, SqlStatement sql)
 {
+	DDUMP(s);
+	DDUMP(sql.Get(PGSQL));
+
 	qtf << "\n:: ";
 	Put(s, ".From;.Where;.OrderBy");
 	qtf << "\n:: ";
@@ -47,6 +48,8 @@ void Exp(const char *s, SqlStatement sql)
 
 CONSOLE_APP_MAIN
 {
+	DLOG(SqlCompile(PGSQL, String().Cat() << '\t' << TABLE(COLUMN1, COLUMN2) << '\t' << " from \t" << TABLE << "\t"));
+//	return;
 	qtf << "[C1 {{1:1 SqlExp C`+`+:: PostgreSQL";
 	EXP(Select(COLUMN).From(TABLE));
 	EXP(Select(COLUMN.Of(TABLE)).From(TABLE));

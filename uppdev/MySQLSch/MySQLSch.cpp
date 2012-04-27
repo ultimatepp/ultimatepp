@@ -2,18 +2,34 @@
 
 using namespace Upp;
 
+SQLID(ADDRESSBOOK);
+SQLID(FIRSTNAME);
+SQLID(ID);
+
 CONSOLE_APP_MAIN
 {
 	MySqlSession session;
 	// substitute your 'username' and 'password' here:
-	if(!session.Connect("root", "heslo", "test", "10.0.0.19")) {
+	if(!session.Connect("root", "Passw0rd", "adrbook", "localhost")) {
+		DDUMP(session.GetErrorCodeString());
 		printf("Can't connect with MySql\n");
 		return;
 	}
-	Sql sql(session);
-	sql.Execute("use test");
+	SQL = session;
+	
+	session.SetTrace();
+	
+	Sql sql;
+	sql.Execute("use adrbook");
 	sql.Execute("show tables");
 	while(sql.Fetch())
-		Cout() << (String)sql[0] << '\n';
-	SaveFile("u:/lego.sch", ExportSch(session, "test"));
+		DDUMP((String)sql[0]);
+	
+	SQL * Insert(ADDRESSBOOK)(FIRSTNAME, "Pepíček");
+	
+	DDUMP(SQL.GetInsertedId());
+	
+	sql * Select(SqlAll().Of(ADDRESSBOOK)).From(ADDRESSBOOK);
+	while(sql.Fetch())
+		DDUMP(sql.GetRowMap());
 }

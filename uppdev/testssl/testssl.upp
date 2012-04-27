@@ -1,6 +1,7 @@
 uses
 	Core,
-	Web\SSL;
+	Web\SSL,
+	Core/SSL;
 
 file
 	testssl.cpp;

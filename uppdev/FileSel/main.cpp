@@ -7,7 +7,7 @@ GUI_APP_MAIN
 	SetDefaultCharset(CHARSET_UTF8);
 	FileSel fs;
 	String fn;
-	fs.BaseDir("U:\\");
+//	fs.BaseDir("U:\\");
 	fs.AllFilesType()
 	  .Type( t_("archive FIDE (txt)"), "*.txt") //type 1
 	  .Type( t_("archive VEG (csv)"), "*.csv;*.veg") //type 2

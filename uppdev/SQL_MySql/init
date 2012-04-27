@@ -1,0 +1,4 @@
+#ifndef _SQL_MySql_icpp_init_stub
+#define _SQL_MySql_icpp_init_stub
+#include "MySql/init"
+#endif
