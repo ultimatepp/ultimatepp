@@ -2,4 +2,5 @@
 #define _testssl_icpp_init_stub
 #include "Core/init"
 #include "Web\SSL/init"
+#include "Core/SSL/init"
 #endif

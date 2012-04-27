@@ -36,11 +36,22 @@ struct App : TopWindow {
 	void DragB()
 	{
 	}
+	
+	void A()
+	{
+		Exclamation("LeftDouble");
+	}
+	
+	void B()
+	{
+		Exclamation("LeftClick");
+	}
 
 	typedef App CLASSNAME;
 
 	App() {
-		a.AddColumn("\1Text alsdfjla fdlajd flajd falsjkd fla fals fj");
+		a.AddColumn("\1Text alsdfjla fdlajd flajd falsjkd fla fals fj").HeaderTab().WhenLeftDouble = THISBACK(A);
+		a.AddColumn("asdf").HeaderTab().WhenLeftClick = THISBACK(B);
 		a.MultiSelect();
 		a.NoGrid();
 		a.WhenDropInsert = THISBACK(DnDInsert);

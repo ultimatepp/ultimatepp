@@ -1,4 +1,4 @@
-description "Logging to MySql";
+description "Logging to MySql\377";
 
 uses
 	MySql;
@@ -8,3 +8,4 @@ file
 
 mainconfig
 	"" = "MT";
+
