@@ -646,7 +646,7 @@ String Downloads()
 	IndexSort2(tm, fn, path, StdGreater<Time>());
 	for(int i = 0; i < fn.GetCount(); i++)
 		if(i < 40)
-			r << "[^downloads/" << fn[i] << "^ \1" << fn[i] << "\1  " << tm[i]&";
+			r << "[^downloads/" << fn[i] << "^ \1" << fn[i] << "\1  " << tm[i] << "&";
 		else
 			DeleteFile(ff.GetPath());
 	return r;
