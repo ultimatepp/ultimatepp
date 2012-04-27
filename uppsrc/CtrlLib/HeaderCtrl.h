@@ -4,6 +4,7 @@ public:
 	virtual void  Paint(Draw& draw);
 	virtual Image CursorImage(Point p, dword keyflags);
 	virtual void  LeftDown(Point p, dword keyflags);
+	virtual void  LeftDouble(Point p, dword keyflags);
 	virtual void  LeftDrag(Point p, dword keyflags);
 	virtual void  MouseMove(Point p, dword keyflags);
 	virtual void  MouseLeave();
@@ -43,6 +44,8 @@ public:
 		friend class HeaderCtrl;
 
 	public:
+		Callback        WhenLeftClick;
+		Callback        WhenLeftDouble;
 		Callback        WhenAction;
 		Callback1<Bar&> WhenBar;
 

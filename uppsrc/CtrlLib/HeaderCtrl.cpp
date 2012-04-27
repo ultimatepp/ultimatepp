@@ -541,13 +541,23 @@ void HeaderCtrl::LeftDown(Point p, dword keyflags) {
 		return;
 	}
 	li = pushi = -1 - split;
-	if(!col[pushi].WhenAction) {
-		pushi = -1;
-		return;
+	col[pushi].WhenLeftClick();
+	if(pushi >= 0) {
+		if(!col[pushi].WhenAction) {
+			pushi = -1;
+			return;
+		}
+		colRect = GetTabRect(pushi);
+		push = true;
 	}
-	colRect = GetTabRect(pushi);
-	push = true;
 	Refresh();
+}
+
+void HeaderCtrl::LeftDouble(Point p, dword keyflags)
+{
+	int q = -1 - GetSplit(p.x);
+	if(q >= 0)
+		col[q].WhenLeftDouble();
 }
 
 void HeaderCtrl::RightDown(Point p, dword)
