@@ -101,7 +101,7 @@ selected.&]
 [s4; &]
 [s5;:DropList`:`:GetIndex`(`)const: [@(0.0.255) int]_[* GetIndex]()_[@(0.0.255) const]&]
 [s2;%% Returns the index of current value of DropList in the list. 
-Note that the current value isnot required to be in the list, 
+Note that the current value is not required to be in the list, 
 in that case `-1 is returned.&]
 [s3; &]
 [s4; &]
