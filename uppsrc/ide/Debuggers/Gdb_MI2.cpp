@@ -117,7 +117,7 @@ void Gdb_MI2::Run()
 
 void Gdb_MI2::Stop()
 {
-	started = stopped = false;
+	stopped = true;
 	if(dbg && dbg->IsRunning())
 		dbg->Kill();
 }
