@@ -9,5 +9,4 @@
 #include "plugin\tif/init"
 #include "plugin\png/init"
 #include "ide/Browser/init"
-#include "AESStream/init"
 #endif

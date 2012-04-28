@@ -502,8 +502,9 @@ String GetExtExecutable(String ext);
 
 Upp::Array<String> GetDriveList();
 
-String Getcwd();
-bool Chdir (const String &folder);
+// Replaced by GetCurrentDirectory() and SetCurrentDirectory()
+// String Getcwd();
+// bool Chdir (const String &folder);
 
 //String Format(Time time, const char*fmt = "%2d:%2d");
 
@@ -572,28 +573,5 @@ private:
 								_fuseNR.failed = false;							\
 							} else 												\
 								return v
-
-#ifdef flagAES
-
-#include <openssl/aes.h>
-#include <AESStream/AESStream.h>
-
-bool LoadFromXMLFileAES(Callback1<XmlIO> xmlize, const char *file, const char *key);
-template <class T>
-bool LoadFromXMLFileAES(T& data, const char *file, const char *key)
-{
-	ParamHelper__<T> p(data);
-	return LoadFromXMLFileAES(callback(&p, &ParamHelper__<T>::Invoke), file, key);
-}
-
-bool StoreAsXMLFileAES(Callback1<XmlIO> xmlize, const char *name, const char *file, const char *key);
-template <class T>
-bool StoreAsXMLFileAES(T& data, const char *name, const char *file, const char *key)
-{
-	ParamHelper__<T> p(data);
-	return StoreAsXMLFileAES(callback(&p, &ParamHelper__<T>::Invoke), name, file, key);
-}
-
-#endif
 
 #endif

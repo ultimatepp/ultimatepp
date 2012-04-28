@@ -488,7 +488,6 @@ String GetExtExecutable(String ext)
 	return exeFile;
 }
 
-
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 Array<String> GetDriveList() {
 	char drvStr[26*4+1];		// A, B, C, ...
@@ -539,7 +538,7 @@ Array<String> GetDriveList() {
 	return ret;
 }
 #endif
-
+/* Replaced by GetCurrentDirectory() and SetCurrentDirectory()
 String Getcwd() {
 #if defined(PLATFORM_WIN32) || defined(PLATFORM_WIN64)
 	wchar ret[MAX_PATH];
@@ -561,7 +560,7 @@ bool Chdir (const String &folder) {
 	return 0 == chdir(folder);
 #endif
 }
-
+*/
 /*
 String Format(Time time, const char *fmt) {
 	String  s; 
@@ -2134,32 +2133,3 @@ Image GetRect(const Image& orig, const Rect &r) {
 	return ib;
 }
 
-#ifdef flagAES
-
-static String sXMLFile(const char *file)
-{
-	return file ? String(file) : ConfigFile(GetExeTitle() + ".xml");
-}
-
-bool LoadFromXMLFileAES(Callback1<XmlIO> xmlize, const char *file, const char *key)
-{
-	if (!FileExists(file))
-		return false;
-	AESDecoderStream aesDecoder(key);
-	aesDecoder << LoadFile(sXMLFile(file));
-	String sOut;
-	sOut << aesDecoder;
-	return LoadFromXML(xmlize, sOut); 
-}
-
-bool StoreAsXMLFileAES(Callback1<XmlIO> xmlize, const char *name, const char *file, const char *key)
-{
-	String xmlStr = StoreAsXML(xmlize, name ? (String)name : GetExeTitle());
-	AESEncoderStream aesEncoder(xmlStr.GetLength(), key);
-	aesEncoder << xmlStr;
-	String sOut;
-	sOut << aesEncoder;
-	return SaveFile(sXMLFile(file), sOut);
-}
-
-#endif

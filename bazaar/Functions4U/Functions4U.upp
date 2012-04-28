@@ -12,8 +12,6 @@ uses
 
 uses(GUI) ide/Browser;
 
-uses(AES) AESStream;
-
 library(WIN32) oleaut32;
 
 file

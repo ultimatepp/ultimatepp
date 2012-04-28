@@ -28,18 +28,10 @@
 __FBSDID("$FreeBSD: src/usr.bin/bsdiff/bspatch/bspatch.c,v 1.1 2005/08/06 01:59:06 cperciva Exp $");
 #endif
 
+#include <Core/Core.h>
+
 #include "bzlib.h"
 #include <fcntl.h>
-#include <stdio.h>
-#include <stdarg.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-
-//#include <err.h>
-//#include <unistd.h>
-
-#include <Core/Core.h>
 
 using namespace Upp;
 
