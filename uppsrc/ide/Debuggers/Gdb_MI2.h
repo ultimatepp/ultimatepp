@@ -216,6 +216,7 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		// debugger IDE inteface
 		virtual void DebugBar(Bar& bar);
 		virtual bool SetBreakpoint(const String& filename, int line, const String& bp);
+		virtual void AsyncBrk();
 		virtual bool RunTo();
 		virtual void Run();
 		virtual void Stop();
