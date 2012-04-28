@@ -238,23 +238,23 @@ def UppLookupFunction(val):
 	if typeStr == 'const Upp::String':
 		return UppStringPrinter(val)
 		
-	if typeStr == 'Upp::Value *' and Upp_Value_Inspectors:
-		return UppValuePtrPrinter(val)
+#	if typeStr == 'Upp::Value *' and Upp_Value_Inspectors:
+#		return UppValuePtrPrinter(val)
 		
-	if typeStr == 'const Upp::Value *' and Upp_Value_Inspectors:
-		return UppValuePtrPrinter(val)
+#	if typeStr == 'const Upp::Value *' and Upp_Value_Inspectors:
+#		return UppValuePtrPrinter(val)
 		
-	if typeStr == 'Upp::Value &' and Upp_Value_Inspectors:
-		return UppValuePtrPrinter(val.address)
+#	if typeStr == 'Upp::Value &' and Upp_Value_Inspectors:
+#		return UppValuePtrPrinter(val.address)
 		
-	if typeStr == 'const Upp::Value &' and Upp_Value_Inspectors:
-		return UppValuePtrPrinter(val.address)
+#	if typeStr == 'const Upp::Value &' and Upp_Value_Inspectors:
+#		return UppValuePtrPrinter(val.address)
 		
-	if typeStr == 'Upp::Value' and Upp_Value_Inspectors:
-		return UppValuePrinter(val)
+#	if typeStr == 'Upp::Value' and Upp_Value_Inspectors:
+#		return UppValuePrinter(val)
 		
-	if typeStr == 'const Upp::Value' and Upp_Value_Inspectors:
-		return UppValuePrinter(val)
+#	if typeStr == 'const Upp::Value' and Upp_Value_Inspectors:
+#		return UppValuePrinter(val)
 		
 	lookup_tag = val.type.tag
 	if lookup_tag == None:
