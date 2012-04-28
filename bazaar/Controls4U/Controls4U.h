@@ -38,6 +38,7 @@ public:
 	String Get() const                           	{return GetData();};	
 	String operator~() const                     	{return Get();};
 	operator String() const                      	{return Get();};
+	operator const char *() const					{return Get();};
 	void Set(const String& s)						{fs.Set(s); EditString::SetData(s);};
 	void operator<<=(const String& s)            	{Set(s);};
 	void operator=(const String& s)              	{Set(s);};
