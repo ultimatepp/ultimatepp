@@ -10,6 +10,7 @@ void Gdb_MI2::DebugBar(Bar& bar)
 {
 	bar.Add("Stop debugging", THISBACK(Stop)).Key(K_SHIFT_F5);
 	bar.Separator();
+	bar.Add("Asynchronous break", THISBACK(AsyncBrk));
 	bool b = !IdeIsDebugLock();
 	bar.Add(b, "Step into", DbgImg::StepInto(), THISBACK1(Step, disas.HasFocus() ? "exec-step-instruction" : "exec-step")).Key(K_F11);
 	bar.Add(b, "Step over", DbgImg::StepOver(), THISBACK1(Step, disas.HasFocus() ? "exec-next-instruction" : "exec-next")).Key(K_F10);
@@ -113,6 +114,24 @@ void Gdb_MI2::Run()
 	started = stopped = false;
 	firstRun = false;
 	IdeActivateBottom();
+}
+
+void Gdb_MI2::AsyncBrk()
+{
+	// send an interrupt command to all running threads
+	MICmd("exec-interrupt --all");
+	
+	// gdb usually returns to command prompt instantly, BEFORE
+	// giving out stop reason, which we need. So, we wait some
+	// milliseconds and re-read (non blocking) GDB output to get it
+	for(int i = 0; i < 20 && !stopped; i++)
+	{
+		Sleep(100);
+		ReadGdb(false);
+	}
+	
+	// if target is correctly stopped, 'stopped' flag should be already set
+	// so we don't care here. If not set, target can't be stopped.
 }
 
 void Gdb_MI2::Stop()
@@ -489,7 +508,7 @@ MIValue Gdb_MI2::MICmd(const char *cmdLine)
 	// sends command to debugger and get result data
 
 	// should handle dbg unexpected termination ?
-	if(!dbg || !dbg->IsRunning() || IdeIsDebugLock())
+	if(!dbg || !dbg->IsRunning() /* || IdeIsDebugLock() */)
 		return MIValue();
 
 	// consume previous output from gdb... don't know why sometimes
@@ -684,8 +703,11 @@ void Gdb_MI2::LogFrame(String const &msg, MIValue &frame)
 // check for stop reason
 void Gdb_MI2::CheckStopReason(void)
 {
-	ASSERT(!stopReason.IsEmpty());
-	String reason = stopReason["reason"];
+	String reason;
+	if(stopReason.IsEmpty())
+		reason = "unknown reason";
+	else
+		reason = stopReason["reason"];
 	if(reason == "exited-normally")
 	{
 		Stop();
@@ -700,6 +722,10 @@ void Gdb_MI2::CheckStopReason(void)
 	{
 		LogFrame("Hit breakpoint", stopReason["frame"]);
 		SyncIde();
+	}
+	else if(reason == "unknown reason")
+	{
+		PutConsole("Stopped by unknown reason");
 	}
 	else
 	{
@@ -1472,6 +1498,12 @@ bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdli
 
 	watches.WhenAcceptEdit = THISBACK(SyncData);
 	tab <<= THISBACK(SyncData);
+
+	// this one will allow asynchronous break of running app
+	MICmd("gdb-set target-async 1");
+	MICmd("gdb-set pagination off");
+	MICmd("gdb-set non-stop on");
+//	MICmd("gdb-set interactive-mode off");
 
 	MICmd("gdb-set disassembly-flavor intel");
 	MICmd("gdb-set exec-done-display off");
