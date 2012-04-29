@@ -319,19 +319,37 @@ def UppLookupFunction(val):
 	if typeStr == 'Upp::Point' or typeStr == 'Upp::Pointf':
 		return UppPointPrinter(val)
 		
+	if typeStr == 'const Upp::Point' or typeStr == 'const Upp::Pointf':
+		return UppPointPrinter(val)
+		
 	if typeStr == 'Upp::Point *' or typeStr == 'Upp::Pointf *':
+		return UppPointPtrPrinter(val)
+		
+	if typeStr == 'const Upp::Point *' or typeStr == 'const Upp::Pointf *':
 		return UppPointPtrPrinter(val)
 		
 	if typeStr == 'Upp::Size' or typeStr == 'Upp::Sizef':
 		return UppSizePrinter(val)
 		
+	if typeStr == 'const Upp::Size' or typeStr == 'const Upp::Sizef':
+		return UppSizePrinter(val)
+		
 	if typeStr == 'Upp::Size *' or typeStr == 'Upp::Sizef *':
-		return UppSizePtrsPrinter(val)
+		return UppSizePtrPrinter(val)
+		
+	if typeStr == 'const Upp::Size *' or typeStr == 'const Upp::Sizef *':
+		return UppSizePtrPrinter(val)
 		
 	if typeStr == 'Upp::Rect' or typeStr == 'Upp::Rectf':
 		return UppRectPrinter(val)
 		
+	if typeStr == 'const Upp::Rect' or typeStr == 'const Upp::Rectf':
+		return UppRectPrinter(val)
+		
 	if typeStr == 'Upp::Rect *' or typeStr == 'Upp::Rectf *':
+		return UppRectPtrPrinter(val)
+		
+	if typeStr == 'const Upp::Rect *' or typeStr == 'const Upp::Rectf *':
 		return UppRectPtrPrinter(val)
 		
 	lookup_tag = val.type.tag
