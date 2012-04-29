@@ -31,7 +31,7 @@ class UppStringPrinter(object):
 		if(IsSmall):
 			ptr = CHR
 		else:
-			ptr = self.val[ptr]
+			ptr = self.val['ptr']
 		return '"' + ptr.string() + '"'
 
 	def display_hint(self):
