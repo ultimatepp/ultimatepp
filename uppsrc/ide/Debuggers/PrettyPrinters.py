@@ -217,6 +217,66 @@ class UppOnePrinter(object):
 	def to_string(self):
 		return str(self.val['ptr'].dereference())
 
+# Upp::Point printer
+class UppPointPrinter(object):
+	"Print an Upp::Point"
+
+	def __init__(self, val):
+		self.val = val
+
+	def to_string(self):
+		return '(' + str(self.val['x']) + ',' + str(self.val['y']) + ')'
+
+# Upp::Point* printer
+class UppPointPtrPrinter(object):
+	"Print an Upp::Point *"
+
+	def __init__(self, val):
+		self.val = val
+
+	def to_string(self):
+		return '@' + str(self.val.address) + ': ' + UppPointPrinter(self.val).to_string()
+
+# Upp::Size printer
+class UppSizePrinter(object):
+	"Print an Upp::Size"
+
+	def __init__(self, val):
+		self.val = val
+
+	def to_string(self):
+		return '(' + str(self.val['cx']) + ',' + str(self.val['cy']) + ')'
+
+# Upp::Size* printer
+class UppSizePtrPrinter(object):
+	"Print an Upp::Size *"
+
+	def __init__(self, val):
+		self.val = val
+
+	def to_string(self):
+		return '@' + str(self.val.address) + ': ' + UppSizePrinter(self.val).to_string()
+
+# Upp::Rect printer
+class UppRectPrinter(object):
+	"Print an Upp::Rect"
+
+	def __init__(self, val):
+		self.val = val
+
+	def to_string(self):
+		return '[' + str(self.val['left']) + ',' + str(self.val['top']) + '],[' + str(self.val['right']) + ',' + str(self.val['bottom']) + ']'
+
+# Upp::Rect* printer
+class UppRectPtrPrinter(object):
+	"Print an Upp::Rect *"
+
+	def __init__(self, val):
+		self.val = val
+
+	def to_string(self):
+		return '@' + str(self.val.address) + ': ' + UppRectPrinter(self.val).to_string()
+
 def UppLookupFunction(val):
 	typeStr = str(val.type)
 	
@@ -255,6 +315,24 @@ def UppLookupFunction(val):
 		
 #	if typeStr == 'const Upp::Value' and Upp_Value_Inspectors:
 #		return UppValuePrinter(val)
+
+	if typeStr == 'Upp::Point' or typeStr == 'Upp::Pointf':
+		return UppPointPrinter(val)
+		
+	if typeStr == 'Upp::Point *' or typeStr == 'Upp::Pointf *':
+		return UppPointPtrPrinter(val)
+		
+	if typeStr == 'Upp::Size' or typeStr == 'Upp::Sizef':
+		return UppSizePrinter(val)
+		
+	if typeStr == 'Upp::Size *' or typeStr == 'Upp::Sizef *':
+		return UppSizePtrsPrinter(val)
+		
+	if typeStr == 'Upp::Rect' or typeStr == 'Upp::Rectf':
+		return UppRectPrinter(val)
+		
+	if typeStr == 'Upp::Rect *' or typeStr == 'Upp::Rectf *':
+		return UppRectPtrPrinter(val)
 		
 	lookup_tag = val.type.tag
 	if lookup_tag == None:
