@@ -1,6 +1,17 @@
 #include "MIValue.h"
 
-MIValue NullMIValue;
+static MIValue &NullMIValue(void)
+{
+	static MIValue v;
+	return v;
+}
+
+static MIValue &ErrorMIValue(String const &msg)
+{
+	static MIValue v;
+	v.SetError(msg);
+	return v;
+}
 
 int MIValue::ParsePair(String &name, MIValue &val, String const &s, int i)
 {
@@ -40,7 +51,11 @@ int MIValue::ParseTuple(String const &s, int i)
 	type = MITuple;
 	
 	// drop opening delimiter
-	ASSERT(s[i] == '{');
+	if(s[i] != '{')
+	{
+		SetError(Format("Expected '{' at pos %d in '%s'", i, s));
+		return s.GetCount();
+	}
 	i++;
 	while(s[i] && s[i] != '}')
 	{
@@ -50,7 +65,11 @@ int MIValue::ParseTuple(String const &s, int i)
 		tuple.Add(name, val);
 		if(s[i] == '}')
 			break;
-		ASSERT(s[i] == ',');
+		if(s[i] != ',')
+		{
+			SetError(Format("Expected ',' at pos %d in '%s'", i, s));
+			return s.GetCount();
+		}
 		i++;
 	}
 	return i + 1;
@@ -62,7 +81,11 @@ int MIValue::ParseArray(String const &s, int i)
 	type = MIArray;
 	
 	// drop opening delimiter
-	ASSERT(s[i] == '[');
+	if(s[i] != '[')
+	{
+		SetError(Format("Expected '[' at pos %d in '%s'", i, s));
+		return s.GetCount();
+	}
 	i++;
 	while(s[i] && s[i] != ']')
 	{
@@ -79,7 +102,11 @@ int MIValue::ParseArray(String const &s, int i)
 		array.Add(val);
 		if(s[i] == ']')
 			break;
-		ASSERT(s[i] == ',');
+		if(s[i] != ',')
+		{
+			SetError(Format("Expected ',' at pos %d in '%s'", i, s));
+			return s.GetCount();
+		}
 		i++;
 	}
 	return i + 1;
@@ -91,7 +118,11 @@ int MIValue::ParseString(String const &s, int i)
 	type = MIString;
 
 	char c;
-	ASSERT(s[i] == '"');
+	if(s[i] != '"')
+	{
+		SetError(Format("Expected '\"' at pos %d in '%s'", i, s));
+		return s.GetCount();
+	}
 	i++;
 	while( (c = s[i++]) != 0)
 	{
@@ -103,7 +134,11 @@ int MIValue::ParseString(String const &s, int i)
 		else
 			string.Cat(c);
 	}
-	ASSERT(c == '"');
+	if(c != '"')
+	{
+		SetError(Format("Expected '\"' at pos %d in '%s'", i, s));
+		return s.GetCount();
+	}
 	return i;
 }
 
@@ -154,7 +189,7 @@ MIValue &MIValue::operator=(pick_ MIValue &v)
 			tuple = v.tuple;
 			break;
 		default:
-			NEVER();
+			SetError("Unknown MIValue type");
 	}
 	return *this;
 }
@@ -180,7 +215,7 @@ MIValue::MIValue(MIValue pick_ &v)
 			tuple = v.tuple;
 			break;
 		default:
-			NEVER();
+			SetError("Unknown MIValue type");
 	}
 }
 
@@ -231,48 +266,54 @@ int MIValue::GetCount(void) const
 	else if(type == MITuple)
 		return tuple.GetCount();
 	else
-		NEVER();
-	return -1;
+		return string.GetCount();
 }
 
 int MIValue::Find(const char *key) const
 {
-	ASSERT(type == MITuple);
+	if(type != MITuple)
+		return -1;
 	return tuple.Find(key);
 }
 
 MIValue &MIValue::Get(int i)
 {
-	ASSERT(type == MIArray);
+	if(type != MIArray)
+		return ErrorMIValue("Not an Array value type");
 	return array[i];
 }
 
 MIValue &MIValue::Get(const char *key)
 {
-	ASSERT(type == MITuple);
+	if(type != MITuple)
+		return ErrorMIValue("Not a Tuple value type");
 	return tuple.Get(key);
 }
 
 String &MIValue::Get(void)
 {
-	ASSERT(type == MIString);
+	if(type != MIString)
+		return ErrorMIValue("Not a String value type");
 	return string;
 }
 		
 String const &MIValue::Get(void) const
 {
-	ASSERT(type == MIString);
+	if(type != MIString)
+		return ErrorMIValue("Not a String value type");
 	return string;
 }
 		
 // tuple string member accessor with default value if not found
 String MIValue::Get(const char *key, const char *def) const
 {
-	ASSERT(type == MITuple);
+	if(type != MITuple)
+		return def;
 	int i = tuple.Find(key);
 	if(i >= 0)
 	{
-		ASSERT(tuple[i].type == MIString);
+		if(tuple[i].type != MIString)
+			return def;
 		return tuple[i].Get();
 	}
 	else
@@ -334,8 +375,7 @@ String MIValue::Dump(int level)
 		}
 		
 		default:
-			NEVER();
-			return "";
+			return spacer + "*UNKNOWN MIVALUE TYPE*";
 	}
 }
 
@@ -343,13 +383,15 @@ String MIValue::Dump(int level)
 MIValue &MIValue::FindBreakpoint(String const &file, int line)
 {
 	MIValue &body = Get("body");
-	body.AssertArray();
+	if(body.IsError() || !body.IsArray())
+		return NullMIValue();
 	for(int i = 0; i < body.GetCount(); i++)
 	{
 		MIValue &bp = body[i];
-		bp.AssertTuple();
+		if(bp.IsError() || !bp.IsTuple())
+			return NullMIValue();
 		if(bp["file"] == file && atoi(bp["line"].Get()) == line)
 			return bp;
 	}
-	return NullMIValue;
+	return NullMIValue();
 }

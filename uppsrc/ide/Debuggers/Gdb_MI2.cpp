@@ -10,7 +10,7 @@ void Gdb_MI2::DebugBar(Bar& bar)
 {
 	bar.Add("Stop debugging", THISBACK(Stop)).Key(K_SHIFT_F5);
 	bar.Separator();
-	bar.Add("Asynchronous break", THISBACK(AsyncBrk));
+	bar.Add(!stopped, "Asynchronous break", THISBACK(AsyncBrk));
 	bool b = !IdeIsDebugLock();
 	bar.Add(b, "Step into", DbgImg::StepInto(), THISBACK1(Step, disas.HasFocus() ? "exec-step-instruction" : "exec-step")).Key(K_F11);
 	bar.Add(b, "Step over", DbgImg::StepOver(), THISBACK1(Step, disas.HasFocus() ? "exec-next-instruction" : "exec-next")).Key(K_F10);
@@ -515,7 +515,6 @@ MIValue Gdb_MI2::MICmd(const char *cmdLine)
 	// is there and gives problems to MI interface. We shall maybe
 	// parse and store it somewhere
 	ReadGdb(false);
-
 	dbg->Write(String("-") + cmdLine + "\n");
 
 	return ReadGdb();
@@ -729,7 +728,12 @@ void Gdb_MI2::CheckStopReason(void)
 	}
 	else
 	{
-		LogFrame(Format("Stopped, reason '%s'", reason), stopReason["frame"]);
+		// weird stop reasons (i.e., signals, segfaults... may not have a frame
+		// data inside
+		if(stopReason.Find("frame") < 0)
+			PutConsole(Format("Stopped, reason '%s'", reason));
+		else
+			LogFrame(Format("Stopped, reason '%s'", reason), stopReason["frame"]);
 		SyncIde();
 	}
 }
@@ -893,31 +897,23 @@ void Gdb_MI2::UpdateVars(void)
 	MIValue &updated = iUpdated["changelist"];
 	for(int iUpd = 0; iUpd < updated.GetCount(); iUpd++)
 	{
-		if(!updated[iUpd].IsTuple() || iUpdated.Find("name") < 0 || iUpdated.Find("value") < 0)
+		if(!updated[iUpd].IsTuple() || updated[iUpd].Find("name") < 0 || updated[iUpd].Find("value") < 0)
 			return;
 		String varName = updated[iUpd]["name"];
+		String value = updated[iUpd]["value"];
 		int iVar;
 
 		// local variables
 		if( (iVar = localVarNames.Find(varName)) >= 0)
-		{
-			if( updated[iUpd].Find("value") >= 0)
-				localVarValues[iVar] = updated[iUpd]["value"];
-		}
+			localVarValues[iVar] = value;
 		
 		// watches
 		if( (iVar = watchesNames.Find(varName)) >= 0)
-		{
-			if( updated[iUpd].Find("value") >= 0)
-				watchesValues[iVar] = updated[iUpd]["value"];
-		}
+			watchesValues[iVar] = value;
 		
 		// autos
 		if( (iVar = autosNames.Find(varName)) >= 0)
-		{
-			if( updated[iUpd].Find("value") >= 0)
-				autosValues[iVar] = updated[iUpd]["value"];
-		}
+			autosValues[iVar] = value;
 	}
 }
 
@@ -966,6 +962,7 @@ void Gdb_MI2::UpdateLocalVars(void)
 			// still not active; we just skip them
 			if(var.IsError() || var.IsEmpty())
 				continue;
+
 			localVarNames.Add(var["name"]);
 			localVarExpressions.Add(locIdx[iLoc]);
 			localVarTypes.Add(var["type"]);
