@@ -620,6 +620,10 @@ void Gdb_MI2::SyncDisas(MIValue &fInfo, bool fr)
 		}
 	}
 	
+	// setup disassembler cursor
+	disas.SetCursor(adr);
+	disas.SetIp(adr, fr ? DbgImg::FrameLinePtr() : DbgImg::IpLinePtr());
+
 	// update registers
 	MIValue rNames = MICmd("data-list-register-names")["register-names"];
 	Index<String>iNames;
@@ -775,14 +779,16 @@ void Gdb_MI2::Step(const char *cmd)
 		ReadGdb(false);
 	}
 	Unlock();
-	if(b)
-		disas.SetFocus();
 
 	firstRun = false;
 	if(stopped)
 		CheckStopReason();
 	started = stopped = false;
 	IdeActivateBottom();
+
+	// reset focus to disassembly pane if was there before
+	if(b)
+		disas.SetFocus();
 }
 
 // setup ide cursor based on disassembler one
@@ -800,7 +806,7 @@ void Gdb_MI2::DisasCursor()
 	MIValue b = MICmd(Format("break-insert *0x%X", (int64)disas.GetCursor()))["bkpt"];
 	if(b.Find("file") >= 0 && b.Find("line") >= 0)
 		IdeSetDebugPos(b["file"], atoi(b["line"].Get()) - 1, DbgImg::DisasPtr(), 1);
-	if(b.Find("number"))
+	if(b.Find("number") >= 0)
 		MICmd(Format("break-delete %s", b["number"].Get()));
 	disas.SetFocus();
 
