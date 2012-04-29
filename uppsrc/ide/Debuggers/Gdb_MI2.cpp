@@ -186,8 +186,17 @@ Gdb_MI2::Gdb_MI2()
 	regs.AddFrame(TopSeparatorFrame());
 	regs.AddFrame(RightSeparatorFrame());
 
+	autos.NoHeader();
+	autos.AddColumn("", 1);
+	autos.AddColumn("", 2);
+	autos.AddColumn("", 6);
+	autos.WhenLeftDouble = THISBACK1(onExploreExpr, &autos);
+	autos.EvenRowColor();
+	autos.OddRowColor();
+
 	locals.NoHeader();
 	locals.AddColumn("", 1);
+	locals.AddColumn("", 2);
 	locals.AddColumn("", 6);
 	locals.WhenLeftDouble = THISBACK1(onExploreExpr, &locals);
 	locals.EvenRowColor();
@@ -195,6 +204,7 @@ Gdb_MI2::Gdb_MI2()
 
 	watches.NoHeader();
 	watches.AddColumn("", 1).Edit(watchedit);
+	watches.AddColumn("", 2);
 	watches.AddColumn("", 6);
 	watches.Inserting().Removing();
 	watches.WhenLeftDouble = THISBACK1(onExploreExpr, &watches);
@@ -219,13 +229,6 @@ Gdb_MI2::Gdb_MI2()
 	explorerBackBtn.Disable();
 	explorerForwardBtn.Disable();
 	explorerHistoryPos = -1;
-
-	autos.NoHeader();
-	autos.AddColumn("", 1);
-	autos.AddColumn("", 6);
-	autos.WhenLeftDouble = THISBACK1(onExploreExpr, &autos);
-	autos.EvenRowColor();
-	autos.OddRowColor();
 
 	Add(tab.SizePos());
 	tab.Add(autos.SizePos(), "Autos");
@@ -1090,7 +1093,7 @@ void Gdb_MI2::SyncLocals()
 	VectorMap<String, String> prev = DataMap(locals);
 	locals.Clear();
 	for(int i = 0; i < localVarNames.GetCount(); i++)
-		locals.Add(localVarExpressions[i], "(" + localVarTypes[i] + ")" + localVarValues[i]);
+		locals.Add(localVarExpressions[i], localVarTypes[i], localVarValues[i]);
 	MarkChanged(prev, locals);
 }
 
@@ -1107,9 +1110,15 @@ void Gdb_MI2::SyncWatches()
 		String expr = watches.Get(i, 0);
 		int idx = watchesExpressions.Find(expr);
 		if(idx >= 0)
-			watches.Set(i, 1, "(" + watchesTypes[idx] + ")" + watchesValues[idx]);
+		{
+			watches.Set(i, 1, watchesTypes[idx]);
+			watches.Set(i, 2, watchesValues[idx]);
+		}
 		else
-			watches.Set(i, 1, t_("<can't evaluate expression>"));
+		{
+			watches.Set(i, 1, "");
+			watches.Set(i, 2, t_("<can't evaluate expression>"));
+		}
 	}
 	MarkChanged(prev, watches);
 }
@@ -1153,7 +1162,10 @@ void Gdb_MI2::SyncAutos()
 		String expr = autos.Get(i, 0);
 		int idx = autosExpressions.Find(expr);
 		if(idx >= 0)
-			autos.Set(i, 1, "(" + autosTypes[idx] + ")" + autosValues[idx]);
+		{
+			autos.Set(i, 1, autosTypes[idx]);
+			autos.Set(i, 2, autosValues[idx]);
+		}
 		else
 			autos.Remove(i);
 	}
