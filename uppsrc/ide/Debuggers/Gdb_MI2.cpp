@@ -190,12 +190,16 @@ Gdb_MI2::Gdb_MI2()
 	locals.AddColumn("", 1);
 	locals.AddColumn("", 6);
 	locals.WhenLeftDouble = THISBACK1(onExploreExpr, &locals);
+	locals.EvenRowColor();
+	locals.OddRowColor();
 
 	watches.NoHeader();
 	watches.AddColumn("", 1).Edit(watchedit);
 	watches.AddColumn("", 6);
 	watches.Inserting().Removing();
 	watches.WhenLeftDouble = THISBACK1(onExploreExpr, &watches);
+	watches.EvenRowColor();
+	watches.OddRowColor();
 
 	int c = EditField::GetStdHeight();
 	explorer.AddColumn("", 1);
@@ -220,11 +224,13 @@ Gdb_MI2::Gdb_MI2()
 	autos.AddColumn("", 1);
 	autos.AddColumn("", 6);
 	autos.WhenLeftDouble = THISBACK1(onExploreExpr, &autos);
+	autos.EvenRowColor();
+	autos.OddRowColor();
 
 	Add(tab.SizePos());
-	tab.Add(watches.SizePos(), t_("Watches"));
-	tab.Add(locals.SizePos(), t_("Locals"));
 	tab.Add(autos.SizePos(), "Autos");
+	tab.Add(locals.SizePos(), t_("Locals"));
+	tab.Add(watches.SizePos(), t_("Watches"));
 	tab.Add(explorerPane.SizePos(), t_("Explorer"));
 	
 	Add(threadSelector.LeftPos(FindTabsRight() + 10, StdFont().GetWidth('X') * 10).TopPos(2, EditField::GetStdHeight()));
@@ -1160,7 +1166,7 @@ void Gdb_MI2::SyncData()
 {
 	switch(tab.Get()) {
 	case 0:
-		SyncWatches();
+		SyncAutos();
 		break;
 		
 	case 1:
@@ -1168,7 +1174,7 @@ void Gdb_MI2::SyncData()
 		break;
 		
 	case 2:
-		SyncAutos();
+		SyncWatches();
 		break;
 	}
 }
