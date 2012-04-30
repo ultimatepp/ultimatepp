@@ -109,7 +109,16 @@ void Gdb_MI2::Run()
 	}
 	Unlock();
 	if(stopped)
+	{
 		CheckStopReason();
+		
+		// as we are in non-stop mode, to allow async break to work
+		// we shall stop ALL running threads here, otherwise we'll have
+		// problems when single stepping a gui MT app
+		// single step will be done so for a single thread, while other
+		// are idle. Maybe we could make this behaviour optional
+		MICmd("exec-interrupt --all");
+	}
 
 	started = stopped = false;
 	firstRun = false;
