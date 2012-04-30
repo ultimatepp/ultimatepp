@@ -971,7 +971,7 @@ void Gdb_MI2::UpdateLocalVars(void)
 	{
 		if(localVarExpressions.Find(locIdx[iLoc]) < 0)
 		{
-			MIValue var = MICmd(String("var-create - * \"") + locIdx[iLoc] + "\"");
+			MIValue var = MICmd(String("var-create - @ \"") + locIdx[iLoc] + "\"");
 			
 			// sometimes it has problem creating vars... maybe because they're
 			// still not active; we just skip them
@@ -994,6 +994,7 @@ void Gdb_MI2::UpdateLocalVars(void)
 	IndexSort(keys, localVarValues, CapitalLess());
 	Vector<String> names;
 	names <<= localVarNames.GetKeys();
+	keys <<= localVarExpressions.GetKeys();
 	IndexSort(keys, names, CapitalLess());
 	localVarNames = names;
 	localVarExpressions = keys;
