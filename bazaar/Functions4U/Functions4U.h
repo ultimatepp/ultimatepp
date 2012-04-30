@@ -382,7 +382,7 @@ public:
 	String GetText(String separators = "")	
 	{
 		String ret = "";
-		if (pos > GetCount())
+		if (pos > GetCount() || pos == -1)
 			return ret;
 		int newpos = pos;
 		

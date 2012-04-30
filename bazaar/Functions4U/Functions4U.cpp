@@ -327,7 +327,7 @@ String GetMountDirectory(const String &path) {
 		if (path.Find(drives[i]) == 0)
 			return drives[i];
 	}
-	String localPath = AppendFileName(Getcwd(), path);
+	String localPath = AppendFileName(GetCurrentDirectory(), path);
 	if (!FileExists(localPath) && !DirectoryExists(localPath))
 		return "";
 	for (int i = 0; i < drives.GetCount(); ++i) {
@@ -338,8 +338,7 @@ String GetMountDirectory(const String &path) {
 }
 	
 String GetTrashBinDirectory()
-{
-	
+{	
 	String ret = GetEnv("XDG_DATA_HOME");
 	if (ret.IsEmpty())
 		ret = AppendFileName(GetHomeDirectory(), ".local/share/Trash");
