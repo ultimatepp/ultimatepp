@@ -2,6 +2,27 @@
 
 #include "PrettyPrinters.brc"
 
+// we need those because we changed ArrayCtrl formats (including var types)
+static VectorMap<String, String> DataMap2(const ArrayCtrl& data)
+{
+	VectorMap<String, String> m;
+	for(int i = 0; i < data.GetCount(); i++)
+		m.Add(data.Get(i, 0), data.Get(i, 2));
+	return m;
+}
+
+static void MarkChanged2(const VectorMap<String, String>& m, ArrayCtrl& data)
+{
+	for(int i = 0; i < data.GetCount(); i++)
+	{
+		int q = m.Find(data.Get(i, 0));
+		if(q >= 0 && m[q] != data.Get(i, 2))
+			data.SetDisplay(i, 2, Single<RedDisplay>());
+		else
+			data.SetDisplay(i, 2, StdDisplay());
+	}
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //											PUBLIC IDE INTERFACE
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1106,11 +1127,11 @@ void Gdb_MI2::SyncLocals()
 	UpdateLocalVars();
 	
 	// reload ide control
-	VectorMap<String, String> prev = DataMap(locals);
+	VectorMap<String, String> prev = DataMap2(locals);
 	locals.Clear();
 	for(int i = 0; i < localVarNames.GetCount(); i++)
 		locals.Add(localVarExpressions[i], localVarTypes[i], localVarValues[i]);
-	MarkChanged(prev, locals);
+	MarkChanged2(prev, locals);
 }
 
 // sync watches treectrl
@@ -1120,7 +1141,7 @@ void Gdb_MI2::SyncWatches()
 	UpdateWatches();
 	
 	// re-fill the control
-	VectorMap<String, String> prev = DataMap(watches);
+	VectorMap<String, String> prev = DataMap2(watches);
 	for(int i = 0; i < watches.GetCount(); i++)
 	{
 		String expr = watches.Get(i, 0);
@@ -1136,13 +1157,13 @@ void Gdb_MI2::SyncWatches()
 			watches.Set(i, 2, t_("<can't evaluate expression>"));
 		}
 	}
-	MarkChanged(prev, watches);
+	MarkChanged2(prev, watches);
 }
 
 // sync auto vars treectrl
 void Gdb_MI2::SyncAutos()
 {
-	VectorMap<String, String> prev = DataMap(autos);
+	VectorMap<String, String> prev = DataMap2(autos);
 	autos.Clear();
 
 	// read expressions around cursor line
@@ -1186,7 +1207,7 @@ void Gdb_MI2::SyncAutos()
 			autos.Remove(i);
 	}
 
-	MarkChanged(prev, autos);
+	MarkChanged2(prev, autos);
 }
 
 // sync data tabs, depending on which tab is shown
