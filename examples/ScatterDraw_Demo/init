@@ -1,0 +1,6 @@
+#ifndef _ScatterDraw_Demo_icpp_init_stub
+#define _ScatterDraw_Demo_icpp_init_stub
+#include "Core/init"
+#include "ScatterDraw/init"
+#include "plugin\png/init"
+#endif
