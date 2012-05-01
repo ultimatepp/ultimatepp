@@ -33,9 +33,9 @@ CONSOLE_APP_MAIN
 		  << "USD" << "GBP" << 120
 		  >> r)
 		if(r.flerror)
-			Cout() << "Server reported error\n";
+			LOG("Server reported erro");
 		else
-			Cout() << r.amount << '\n';
+			LOG(r.amount);
 	else 
-		Cout() << "Failed.\n";
+		LOG("Failed.");
 }
