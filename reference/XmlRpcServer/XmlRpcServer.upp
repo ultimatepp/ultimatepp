@@ -2,10 +2,10 @@ description "XML-RPC simple server\377";
 
 uses
 	Core,
-	XmlRpc;
+	Core/XmlRpc;
 
 file
-	XmlRpcSrvTst.cpp;
+	XmlRpcServer.cpp;
 
 mainconfig
 	"" = "";
