@@ -1,0 +1,28 @@
+description "ScatterCtrl demo. Scatter series in GUI applications\377";
+
+uses
+	CtrlLib,
+	Report,
+	PdfDraw,
+	ScatterCtrl;
+
+file
+	main.cpp,
+	ScatterCtrl_Demo.h,
+	ScatterCtrl_Demo.lay,
+	ScatterCtrl_Demo.iml,
+	tab1.cpp,
+	tab2.cpp,
+	tab3.cpp,
+	tab4.cpp,
+	tab5.cpp,
+	tab6.cpp,
+	tab7.cpp,
+	tab8.cpp,
+	tab9.cpp,
+	tab10.cpp,
+	symbol.iml;
+
+mainconfig
+	"" = "GUI";
+
