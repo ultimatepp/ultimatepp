@@ -1,0 +1,6 @@
+#ifndef _ScatterCtrl_icpp_init_stub
+#define _ScatterCtrl_icpp_init_stub
+#include "CtrlLib/init"
+#include "plugin\jpg/init"
+#include "ScatterDraw/init"
+#endif

@@ -1,0 +1,17 @@
+description "Scatter control\377";
+
+uses
+	CtrlLib,
+	plugin\jpg,
+	ScatterDraw;
+
+file
+	ScatterCtrl.cpp,
+	ScatterCtrl.h,
+	ScatterCtrl.t,
+	ScatterCtrl.usc,
+	ScatterCtrl.iml,
+	PopUpText.cpp,
+	PopUpText.h,
+	src.tpp;
+
