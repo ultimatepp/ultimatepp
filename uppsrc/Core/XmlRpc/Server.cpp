@@ -177,7 +177,7 @@ bool XmlRpcServerLoop(int port, const char *group)
 		return false;
 	for(;;) {
 		TcpSocket http;
-		if(rpc.Accept(http))
+		if(http.Accept(rpc))
 			XmlRpcPerform(http, group);
 	}
 }

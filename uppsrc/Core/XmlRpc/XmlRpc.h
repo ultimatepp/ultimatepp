@@ -269,7 +269,7 @@ struct XmlRpcError {
 void   SetXmlRpcMethodFilter(String (*filter)(const String& methodname));
 String XmlRpcExecute(const String& request, const char *group, const char *peeraddr);
 bool   XmlRpcPerform(TcpSocket& http, const char *group);
-bool   XmlRpcServerLoop(int port, const char *group);
+bool   XmlRpcServerLoop(int port, const char *group = NULL);
 
 void ThrowXmlRpcError(int code, const char *s);
 void ThrowXmlRpcError(const char *s);
