@@ -1,0 +1,14 @@
+description "Scatter control\377";
+
+uses
+	Painter,
+	DataSource;
+
+file
+	ScatterDraw.h,
+	DrawingFunctions.h,
+	SeriesPlot.h,
+	MarkPlot.h,
+	ScatterDraw.cpp,
+	ScatterDraw.t;
+
