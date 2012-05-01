@@ -80,7 +80,7 @@ GUI_APP_MAIN
 			fflush(stdout);
 			ticks = msecs();
 		}
-		One<HttpRequest> request = server.GetRequest();
+		One<HttpServerRequest> request = server.GetRequest();
 		if(!request)
 			continue;
 		HttpQuery query = request->GetQuery();
