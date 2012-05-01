@@ -1282,13 +1282,17 @@ void Gdb_MI2::WatchDeep(String const &parentExp, String const &var, int level)
 			String exp = child["exp"];
 			
 			// handle pseudo children...
+/*
 			while(exp == "public" || exp == "private" || exp == "protected")
 			{
 				child = MICmd(String("var-list-children 1 \"") + child["name"] + "\"")["children"][0];
 				exp = child["exp"];
 			}
+*/
 			if(isdigit(exp[0]))
 				exp = '[' + exp + ']';
+			else
+				exp = '.' + exp;
 
 			String type = child("type", "");
 			if(!type.IsEmpty())
@@ -1432,11 +1436,13 @@ void Gdb_MI2::doExplore(String const &expr, String var, bool isChild, bool appen
 			String exp = child["exp"];
 			
 			// handle pseudo children...
+/*
 			while(exp == "public" || exp == "private" || exp == "protected")
 			{
 				child = MICmd(String("var-list-children 1 \"") + child["name"] + "\"")["children"][0];
 				exp = child["exp"];
 			}
+*/
 			if(isdigit(exp[0]))
 				exp = '[' + exp + ']';
 			String type = child("type", "");
