@@ -1,5 +1,7 @@
 #include "ScatterDraw.h"
 
+NAMESPACE_UPP
+
 ScatterDraw& ScatterDraw::SetColor(const Color& _color)
 {
 	graphColor = _color;
@@ -781,7 +783,7 @@ double ScatterDraw::GetDataThickness(const int& j) const
 	return series[j].thickness;
 }
 
-void ScatterDraw::SetFillColor(const int& j, const ::Color& color)
+void ScatterDraw::SetFillColor(const int& j, const Color& color)
 {
 	ASSERT(IsValid(j));
 	series[j].fillColor = color;
@@ -809,7 +811,7 @@ double ScatterDraw::GetMarkWidth(const int& j) const
 }
 
 
-void ScatterDraw::SetMarkColor(const int& j, const ::Color& color)
+void ScatterDraw::SetMarkColor(const int& j, const Color& color)
 {
 	ASSERT(IsValid(j));
 	series[j].markColor = color;
@@ -1401,7 +1403,4 @@ INITBLOCK{
 	MarkPlot::Register<RhombMarkPlot>("Rhomb");
 }
 
-void GoBreakpoint()
-{
-	int kk = 1;
-}
+END_UPP_NAMESPACE
