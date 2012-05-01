@@ -1,0 +1,13 @@
+description "ScatterDraw Demo. Sacatter without GUI\377";
+
+uses
+	Core,
+	ScatterDraw,
+	plugin\png;
+
+file
+	ScatterDraw_Demo.cpp;
+
+mainconfig
+	"" = "SSE2";
+
