@@ -4,7 +4,8 @@ topic "Copyright © 1999-2009 Ultimate++ team";
 [s0;*IGetLocalDir;+117 &]
 [s0; [*+117 Copyright © 1999`-2010 Ultimate`+`+ team]&]
 [s0;i704;O9; Authors:[+117 -|][*+117 Mirek_Fídler, Koldo_Ramirez,][+117  
-][*+117 Tomáš_Rylek, ][*^http`:`/`/www`.digitalsoftware`.pl^+117 Daniel_Kos]&]
+][*+117 Tomáš_Rylek, ][*^http`:`/`/www`.digitalsoftware`.pl^+117 Daniel_Kos][* , 
+][*+117 Massimo Del Fedele]&]
 [s0;i704;O9; Contributors:[+117 -|][* Sandor_Hojtsy, Zsolt_Debre, Guido_Schimmels, 
 Augusto_Roman, Arijus Bernotas, Michael_Albert , Marcus_Mauhart, 
 ][*^http`:`/`/nullptr`.nl`/^ Jan_Wilmans][* , Graeme_Prentice, Victor_Berchet, 
@@ -14,11 +15,11 @@ Damien_Porquet, Werner_Wenzel, ][%-*^http`:`/`/www`.fallingdutch`.de`/^ Bas_Wegh
 James Thomas, ][*^http`:`/`/h4xz`.blogspot`.com^ Sritharan Sivaguru,][*  
 Artur Bać, Ralf Schneider, Pavel Ostapenko, Raul Ionitoiu, Norbert 
 Hofer, Tomasz Pajak, Benoit Cousson, Trey Van Riper, Peter Berger, 
-Sergey Nikitin, Massimo Del Fedele, Irenkov Alexander, Gabriel 
-Schmotzer, Domingo Alvarez Duarte, Andrei Cosma, Tom Olá, George 
-Brink, Zbigniew Czapiga, Konstantin Hartwich, Didier Quenouillere, 
-Anthony Paul, Kovalev Sergey, Martin Schut, Ion Lupascu, Frank 
-De prins, Jeff Humphreys, Lucas Harsze, Martin Schut, ][*^http`:`/`/www`.mimuw`.edu`.pl`/`~pan`/^ J
+Sergey Nikitin, Irenkov Alexander, Gabriel Schmotzer, Domingo 
+Alvarez Duarte, Andrei Cosma, Tom Olá, George Brink, Zbigniew 
+Czapiga, Konstantin Hartwich, Didier Quenouillere, Anthony Paul, 
+Kovalev Sergey, Martin Schut, Ion Lupascu, Frank De prins, Jeff 
+Humphreys, Lucas Harsze, Martin Schut, ][*^http`:`/`/www`.mimuw`.edu`.pl`/`~pan`/^ J
 akub Pawlewicz][* , Navin Vidhani]&]
 [s0;i704;O9; Translators:-|[* Mauro_Bottizzo, Miklós_Somogyi, Arlen_Albert, 
 Ivica_Puljic, Richard_Gill, Werner_Wenzel, Tom Olá, Sergey Nikitin, 
