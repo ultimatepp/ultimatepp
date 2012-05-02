@@ -1,4 +1,4 @@
-description "Viewer of DBF files";
+description "Viewer of DBF files\377";
 
 uses
 	plugin\dbf,
