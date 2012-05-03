@@ -260,10 +260,10 @@ inline unsigned ValueGetHashValue(const T& x) {
 }
 
 #define VALUE_COMPARE_V(T, VT) \
-inline bool operator==(const Value& v, T x)   { return (VT)v == x; } \
-inline bool operator==(T x, const Value& v)   { return (VT)v == x; } \
-inline bool operator!=(const Value& v, T x)   { return (VT)v != x; } \
-inline bool operator!=(T x, const Value& v)   { return (VT)v != x; } \
+inline bool operator==(const Value& v, T x)   { return v.Is<VT>() ? (VT)v == x : v == Value(x); } \
+inline bool operator==(T x, const Value& v)   { return v.Is<VT>() ? (VT)v == x : v == Value(x); } \
+inline bool operator!=(const Value& v, T x)   { return v.Is<VT>() ? (VT)v != x : v != Value(x); } \
+inline bool operator!=(T x, const Value& v)   { return v.Is<VT>() ? (VT)v != x : v != Value(x); } \
 
 #define VALUE_COMPARE(T) VALUE_COMPARE_V(T, T)
 

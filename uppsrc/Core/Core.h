@@ -285,6 +285,12 @@ NAMESPACE_UPP
 #endif
 #endif
 
+#ifdef flagOLD_VALUE
+#ifdef SVO_VALUE
+#undef SVO_VALUE
+#endif
+#endif
+
 #include "OldValue.h"
 
 #include "Value.h"
