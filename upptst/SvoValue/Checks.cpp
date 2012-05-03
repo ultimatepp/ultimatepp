@@ -64,13 +64,19 @@ void CheckDateTime()
 	ASSERT(c == tm);
 	
 	v = dt;
-	v2 = ToTime(v);
+	tm = ToTime(dt);
+	v2 = tm;
 	
 	ASSERT(v == v2);
 	ASSERT(GetHashValue(v) == GetHashValue(v2));
 
 	ASSERT(IsDateTime(v));
 	ASSERT(IsDateTime(c));
+
+	ASSERT(tm == v);
+	ASSERT(tm == v2);
+	ASSERT(dt == v);
+	ASSERT(dt == v2);
 }
 
 void CheckValueMap()
@@ -184,6 +190,12 @@ void OtherChecks()
 	Value n = 123;
 	ASSERT(n != "ahoj");
 	ASSERT(n == 123);
+	ASSERT(n == 123.0);
+
+	Value d = 123.0;
+	ASSERT(d != "ahoj");
+	ASSERT(d == 123);
+	ASSERT(d == 123.0);
 	
 	Value cc = Blue();
 	ASSERT(cc != 123);
