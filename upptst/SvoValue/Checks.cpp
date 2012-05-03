@@ -45,22 +45,22 @@ void CheckDateTime()
 	Value c;
 	Value v = tm;
 	RDUMP(v);
-	ASSERT(v == dt);
+	ASSERT((Date)v == dt);
 	Date xx = v;
 	ASSERT(xx == dt);
 	c = v;
 	RDUMP(c);
-	ASSERT(c == dt);
+	ASSERT((Date)c == dt);
 	Value cv = v;
 	RDUMP(cv);
-	ASSERT(cv == dt);
+	ASSERT((Date)cv == dt);
 	
 	Value v2 = tm;
 	RDUMP(v2);
 	ASSERT(v2 == v);
 	c = v;
 	RDUMP(c);
-	ASSERT(c == dt);
+	ASSERT((Date)c == dt);
 	ASSERT(c == tm);
 	
 	v = dt;
@@ -174,4 +174,19 @@ void OtherChecks()
 	ASSERT(txt.GetCount() == 0);
 	ASSERT(txt["hhh"].IsError());
 	ASSERT(txt[3].IsError());
+	
+	ASSERT(txt != GetSysDate());
+	ASSERT(txt == "text");
+	ASSERT(txt == WString("text"));
+	ASSERT(txt != 123);
+	ASSERT(txt == String("text"));
+	
+	Value n = 123;
+	ASSERT(n != "ahoj");
+	ASSERT(n == 123);
+	
+	Value cc = Blue();
+	ASSERT(cc != 123);
+	ASSERT(cc == Blue());
+	ASSERT(cc != "Blue");
 }
