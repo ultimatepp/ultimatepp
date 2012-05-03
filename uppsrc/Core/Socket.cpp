@@ -34,7 +34,7 @@ void IpAddrInfo::LeavePool()
 int sGetAddrInfo(const char *host, const char *port, addrinfo **result)
 {
 	if(!host || !*host)
-		return NULL;
+		return EAI_NONAME;
 	addrinfo hints;
 	memset(&hints, 0, sizeof(addrinfo));
 	hints.ai_family = AF_UNSPEC;
