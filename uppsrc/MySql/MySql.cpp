@@ -272,7 +272,6 @@ bool MySqlConnection::Execute() {
 	result = mysql_store_result(mysql);
 	rows = (int)mysql_affected_rows(mysql);
 	if(result) {
-		DDUMP(rows);
 		int fields = mysql_num_fields(result);
 		info.SetCount(fields);
 		convert.Alloc(fields, false);
