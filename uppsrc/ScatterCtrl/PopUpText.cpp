@@ -1,6 +1,6 @@
-
 #include "PopUpText.h"
 
+NAMESPACE_UPP
 
 void PopUpInfo::Paint(Draw& w)
 {
@@ -9,7 +9,6 @@ void PopUpInfo::Paint(Draw& w)
 		w.DrawRect(0, 0, sz.cx, sz.cy, color);
 	PaintLabel(w, 0, 0, sz.cx, sz.cy, !IsShowEnabled(), false, false, VisibleAccessKeys());
 }
-
 
 PopUpInfo::PopUpInfo(): color(SColorInfo())
 {
@@ -20,3 +19,5 @@ PopUpInfo::PopUpInfo(): color(SColorInfo())
 	SetFrame(BlackFrame());
 	opened = false;
 }
+
+END_UPP_NAMESPACE

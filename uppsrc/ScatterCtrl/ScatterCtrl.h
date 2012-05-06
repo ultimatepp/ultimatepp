@@ -2,10 +2,11 @@
 #define _ScatterCtrl_ScatterCtrl_h
 
 #include "PopUpText.h"
-#include <plugin/jpg/jpg.h>
 #include <ScatterDraw/ScatterDraw.h>
+#include <plugin/jpg/jpg.h>
+#include <GridCtrl/GridCtrl.h>
 
-using namespace Upp;
+NAMESPACE_UPP
 
 class ArrayCtrlSource : public DataSource {
 private:
@@ -37,8 +38,6 @@ public:
 	}
 	virtual inline int GetCount()	{return numData;};
 };
-
-#include <GridCtrl/GridCtrl.h>
 
 class GridCtrlSource : public DataSource {
 private:
@@ -118,18 +117,18 @@ public:
 	virtual void Refresh() {Ctrl::Refresh();};
 	virtual Size GetSize() const {return Ctrl::GetSize();};
 	
-	ScatterCtrl& SetColor(const class::Color& _color)			{ScatterDraw::SetColor(_color);				return *this;};
-	ScatterCtrl& SetGridColor(const class::Color& grid_color)	{ScatterDraw::SetGridColor(grid_color);		return *this;};
+	ScatterCtrl& SetColor(const Upp::Color& _color)				{ScatterDraw::SetColor(_color);				return *this;};
+	ScatterCtrl& SetGridColor(const Upp::Color& grid_color)		{ScatterDraw::SetGridColor(grid_color);		return *this;};
 	ScatterCtrl& SetGridWidth(const int& grid_width) 			{ScatterDraw::SetGridWidth(grid_width); 	return *this;};
-	ScatterCtrl& SetPlotAreaColor(const class::Color& p_a_color){ScatterDraw::SetPlotAreaColor(p_a_color); 	return *this;};
+	ScatterCtrl& SetPlotAreaColor(const Upp::Color& p_a_color)	{ScatterDraw::SetPlotAreaColor(p_a_color); 	return *this;};
 	ScatterCtrl& SetLegendWeight(const int& weight)				{ScatterDraw::SetLegendWeight(weight); 		return *this;};
-	ScatterCtrl& SetAxisColor(const class::Color& axis_color)	{ScatterDraw::SetAxisColor(axis_color);		return *this;};
+	ScatterCtrl& SetAxisColor(const Upp::Color& axis_color)		{ScatterDraw::SetAxisColor(axis_color);		return *this;};
 	ScatterCtrl& SetAxisWidth(const int& axis_width)			{ScatterDraw::SetAxisWidth(axis_width);		return *this;};
 	ScatterCtrl& SetTitle(const String& title)		 			{ScatterDraw::SetTitle(title); 				return *this;};
 	ScatterCtrl& SetTitleFont(const Font& fontTitle) 			{ScatterDraw::SetTitleFont(fontTitle); 		return *this;};
-	ScatterCtrl& SetTitleColor(const class::Color& colorTitle)	{ScatterDraw::SetTitleColor(colorTitle);	return *this;};
+	ScatterCtrl& SetTitleColor(const Upp::Color& colorTitle)	{ScatterDraw::SetTitleColor(colorTitle);	return *this;};
 	ScatterCtrl& SetLabelsFont(const Font& fontLabels) 			{ScatterDraw::SetLabelsFont(fontLabels); 	return *this;};
-	ScatterCtrl& SetLabelsColor(const class::Color& colorLabels){ScatterDraw::SetLabelsColor(colorLabels);	return *this;};
+	ScatterCtrl& SetLabelsColor(const Upp::Color& colorLabels)	{ScatterDraw::SetLabelsColor(colorLabels);	return *this;};
 	ScatterCtrl& SetLabelX(const String& _xLabel)				{ScatterDraw::SetLabelX(_xLabel); 			return *this;};
 	ScatterCtrl& SetLabelY(const String& _yLabel)				{ScatterDraw::SetLabelY(_yLabel); 			return *this;};
 	ScatterCtrl& SetLabelY2(const String& _yLabel)				{ScatterDraw::SetLabelY2(_yLabel); 			return *this;};
@@ -202,6 +201,8 @@ void ScatterCtrl::SetDrawing(T& w, const int& scale) {
 					  abs(popRB.x-popLT.x) + 9, abs(popRB.y-popLT.y) + 9);
 	}
 }
+
+END_UPP_NAMESPACE
 
 #endif
 
