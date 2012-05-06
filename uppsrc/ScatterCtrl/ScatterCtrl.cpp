@@ -4,6 +4,8 @@
 #define IMAGEFILE <ScatterCtrl/ScatterCtrl.iml>
 #include <Draw/iml.h>
 
+NAMESPACE_UPP
+
 ScatterCtrl::MouseBehaviour defaultMouse[] = {
 	{false, false, false, true , false, 0, false, ScatterCtrl::SHOW_INFO}, 
 	{false, false, false, false, false, 0, true , ScatterCtrl::CONTEXT_MENU},
@@ -423,3 +425,5 @@ ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(3)
 	popText.SetColor(SColorFace);        
 	SetMouseBehavior(defaultMouse);
 }
+
+END_UPP_NAMESPACE

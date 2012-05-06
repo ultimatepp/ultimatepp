@@ -3,7 +3,7 @@
 
 #include <CtrlLib/CtrlLib.h>
 
-using namespace Upp;
+NAMESPACE_UPP
 
 class PopUpInfo : public StaticText {
 	Color color;
@@ -46,6 +46,7 @@ public:
 	}	
 };
 
+END_UPP_NAMESPACE
 
 #endif
 
