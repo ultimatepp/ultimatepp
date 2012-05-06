@@ -1,5 +1,7 @@
-#ifndef _DataSource_DataSource_h_
-#define _DataSource_DataSource_h_
+#ifndef _ScatterDraw_DataSource_h_
+#define _ScatterDraw_DataSource_h_
+
+NAMESPACE_UPP
 
 class DataSource {
 public:
@@ -230,5 +232,7 @@ public:
 	}
 	virtual inline int GetCount()	{return numPoints;};
 };	
+
+END_UPP_NAMESPACE
 
 #endif
