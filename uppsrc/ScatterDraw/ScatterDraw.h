@@ -3,12 +3,10 @@
 
 #include <Draw/Draw.h>
 #include <Painter/Painter.h>
-
-#include <Core/Core.h>
+#include "DataSource.h"
 
 NAMESPACE_UPP
 
-#include "DataSource.h"
 #include "DrawingFunctions.h"
 #include "SeriesPlot.h"
 #include "MarkPlot.h"
