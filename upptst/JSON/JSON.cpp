@@ -66,6 +66,13 @@ CONSOLE_APP_MAIN
 	
 	ASSERT(!LoadFromJsonFile(test2, "c:aksjdfhkjaskjdfkhasdf"));
 
-	
+	Vector<Value> a, b;
+	a.Add();
+	String json = StoreAsJson(a);
+	DDUMP(json);
+	LoadFromJson(b, json);
+	DDUMPC(b);
+	ASSERT(b.GetCount() == 1 && IsNull(b[0]));
+
 	LOG("Everything is OK.");
 }
