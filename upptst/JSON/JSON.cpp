@@ -41,23 +41,31 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
+	Vector<Value> a, b;
+	a.Add();
+	String json = StoreAsJson(a);
+	RDUMP(json);
+	LoadFromJson(b, json);
+	RDUMPC(b);
+	ASSERT(b.GetCount() == 1 && IsNull(b[0]));
+
 	TestStruct test, test2;
 	test.Add(0, 0);
 	test.Add(-1.2345, Date(2007, 12, 12));
 	
 	LoadFromJson(test2, StoreAsJson(test));
 
-	LOG(StoreAsJson(test));
-	LOG("===================");
-	LOG(StoreAsJson(test2));
+	RLOG(StoreAsJson(test));
+	RLOG("===================");
+	RLOG(StoreAsJson(test2));
 	ASSERT(StoreAsJson(test) == StoreAsJson(test2));
-	LOG("===================");
+	RLOG("===================");
 	StoreAsJsonFile(test, NULL, true);
 	LoadFromJsonFile(test2);	
 	ASSERT(StoreAsJson(test) == StoreAsJson(test2));
 	String fn = ConfigFile("h");
 	StoreAsJsonFile(test, fn, true);
-	DDUMP(LoadFile(fn));
+	RDUMP(LoadFile(fn));
 	LoadFromJsonFile(test2);	
 	ASSERT(StoreAsJson(test) == StoreAsJson(test2));
 
@@ -66,13 +74,5 @@ CONSOLE_APP_MAIN
 	
 	ASSERT(!LoadFromJsonFile(test2, "c:aksjdfhkjaskjdfkhasdf"));
 
-	Vector<Value> a, b;
-	a.Add();
-	String json = StoreAsJson(a);
-	DDUMP(json);
-	LoadFromJson(b, json);
-	DDUMPC(b);
-	ASSERT(b.GetCount() == 1 && IsNull(b[0]));
-
-	LOG("Everything is OK.");
+	RLOG("Everything is OK.");
 }
