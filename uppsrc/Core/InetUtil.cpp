@@ -229,52 +229,77 @@ void HttpHeader::Clear()
 {
 	first_line.Clear();
 	fields.Clear();
+	f1 = f2 = f3 = Null;
 }
 
 bool HttpHeader::Parse(const String& hdrs)
 {
+	Clear();
 	StringStream ss(hdrs);
-	String s = ss.GetLine();
-	first_line = s;
+	first_line = ss.GetLine();
+
 	while(!ss.IsEof()) {
-		s = ss.GetLine();
+		String s = ss.GetLine();
 		if(s.IsEmpty()) break;
 		int q = s.Find(':');
 		if(q >= 0)
 			fields.Add(ToLower(s.Mid(0, q))) = TrimLeft(s.Mid(q + 1));
 	}
-	return true;
-}
 
-bool HttpHeader::Request(String& method, String& uri, String& version)
-{
 	const char *s = first_line;
 	if((byte)*s <= ' ')
 		return false;
-	method.Clear();
 	while(*s != ' ' && *s)
-		method.Cat(*s++);
+		f1.Cat(*s++);
 	while(*s == ' ')
 		s++;
 	if(!*s)
 		return false;
-	uri.Clear();
 	while(*s != ' ' && *s)
-		uri.Cat(*s++);
+		f2.Cat(*s++);
 	while(*s == ' ')
 		s++;
-	version = s;
+	f3 = s;
+
+	return true;
+}
+
+bool HttpHeader::Read(TcpSocket& socket)
+{
+	Clear();
+	String h = socket.GetLine();
+	if(h.IsVoid())
+		return false;
+	h << "\r\n";
+	for(;;) {
+		String s = socket.GetLine();
+		if(s.IsVoid())
+			return false;
+		if(s.IsEmpty()) break;
+		h << s << "\r\n";
+	}
+	return Parse(h);
+}
+
+int HttpHeader::GetCode() const
+{
+	return ScanInt(f2);
+}
+
+bool HttpHeader::Request(String& method, String& uri, String& version)
+{
+	method = GetMethod();
+	uri = GetURI();
+	version = GetVersion();
 	return true;
 }
 
 bool HttpHeader::Response(String& protocol, int& code, String& reason)
 {
-	String c;
-	if(Request(protocol, c, reason)) {
-		code = ScanInt(c);
-		return !IsNull(code);
-	}
-	return false;
+	protocol = GetProtocol();
+	code = GetCode();
+	reason = GetReason();
+	return !IsNull(code);
 }
 
 END_UPP_NAMESPACE
