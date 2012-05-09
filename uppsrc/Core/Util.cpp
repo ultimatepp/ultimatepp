@@ -659,6 +659,39 @@ String CsvString(const String& text)
 	return r;
 }
 
+Vector<String> GetCsvLine(Stream& s, int separator, byte charset)
+{
+	Vector<String> r;
+	bool instring = false;
+	String val;
+	byte dcs = GetDefaultCharset();
+	for(;;) {
+		int c = s.Get();
+		if(c == '\n' || c < 0) {
+			if(val.GetCount())
+				r.Add(ToCharset(dcs, val, charset));
+			return r;
+		}
+		else
+		if(c == separator && !instring) {
+			r.Add(ToCharset(dcs, val, charset));
+			val.Clear();
+		}
+		else
+		if(c == '\"') {
+			if(instring && s.Term() == '\"') {
+				s.Get();
+				val.Cat('\"');
+			}
+			else
+				instring = !instring;
+		}
+		else
+		if(c != '\r')
+			val.Cat(c);
+	}
+}
+
 int ChNoInvalid(int c)
 {
 	return c == DEFAULTCHAR ? '_' : c;
