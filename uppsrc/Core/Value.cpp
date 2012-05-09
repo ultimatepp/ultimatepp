@@ -403,79 +403,87 @@ void Value::Jsonize(JsonIO& jio)
 {
 	RegisterStd();
 	if(jio.IsStoring()) {
-		dword type = GetType();
-		String name = GetName(type);
-		if(name.GetCount() == 0) {
-			String s = HexString(StoreAsString(*this));
-			jio("type", s_binary)
-			   ("value", s);
-		}
+		if(IsNull())
+			jio.Set(Null);
 		else {
-			int st = data.GetSpecial();
-			ASSERT_(!type || type == ERROR_V || type == UNKNOWN_V || st == STRING ||
-			        (IsRef() ? Typemap().Find(type) >= 0 : st < 255 && svo[st]),
-			        GetName() + " is not registred for jsonize");
-			if(st == VOIDV)
-				return;
-			JsonIO hio;
-			if(st == STRING) {
-				String h = data;
-				Upp::Jsonize(hio, h);
+			dword type = GetType();
+			String name = GetName(type);
+			if(name.GetCount() == 0) {
+				String s = HexString(StoreAsString(*this));
+				jio("type", s_binary)
+				   ("value", s);
 			}
 			else {
-				if(IsRef())
-					ptr()->Jsonize(hio);
-				else
-					svo[st]->Jsonize(&data, hio);
+				int st = data.GetSpecial();
+				ASSERT_(!type || type == ERROR_V || type == UNKNOWN_V || st == STRING ||
+				        (IsRef() ? Typemap().Find(type) >= 0 : st < 255 && svo[st]),
+				        GetName() + " is not registred for jsonize");
+				if(st == VOIDV)
+					return;
+				JsonIO hio;
+				if(st == STRING) {
+					String h = data;
+					Upp::Jsonize(hio, h);
+				}
+				else {
+					if(IsRef())
+						ptr()->Jsonize(hio);
+					else
+						svo[st]->Jsonize(&data, hio);
+				}
+				ValueMap m;
+				m.Add("type", name);
+				m.Add("value", hio.GetResult());
+				jio.Set(m);
 			}
-			ValueMap m;
-			m.Add("type", name);
-			m.Add("value", hio.GetResult());
-			jio.Set(m);
 		}
 	}
 	else {
 		Value g = jio.Get();
-		String name = g["type"];
-		Value  val = g["value"];
-		if(name == s_binary) {
-			if(!Upp::IsString(val))
-				throw JsonizeError("serialized_binary Error");
-			String s = val;
-			try {
-				LoadFromString(*this, ScanHexString(s));
-			}
-			catch(LoadingError) {
-				throw JsonizeError("serialized_binary Error");
-			}
-		}
+		if(g.IsNull())
+			*this = Null;
 		else {
-			int type = GetType(name);
-			if(Upp::IsNull(type))
-				throw JsonizeError("invalid Value type");
-			Free();
-			int st = (dword)type == VOID_V ? VOIDV : (dword)type == STRING_V ? STRING : type;
-			if(st == STRING) {
+			String name = g["type"];
+			Value  val = g["value"];
+			if(name == s_binary) {
 				if(!Upp::IsString(val))
 					throw JsonizeError("serialized_binary Error");
-				data = val;
+				String s = val;
+				try {
+					LoadFromString(*this, ScanHexString(s));
+				}
+				catch(LoadingError) {
+					throw JsonizeError("serialized_binary Error");
+				}
 			}
 			else {
-				JsonIO hio(val);
-				if(st < 255 && svo[st]) {
-					data.SetSpecial((byte)type);
-					svo[st]->Jsonize(&data, hio);
+				int type = GetType(name);
+				if(Upp::IsNull(type))
+					throw JsonizeError("invalid Value type");
+				Free();
+				int st = (dword)type == VOID_V ? VOIDV : (dword)type == STRING_V ? STRING : type;
+				if(st == STRING) {
+					if(!Upp::IsString(val))
+						throw JsonizeError("serialized_binary Error");
+					data = val;
 				}
 				else {
-					typedef Void* (*vp)();
-					vp *cr = Typemap().FindPtr(type);
-					if(cr) {
-						Void *p = (**cr)();
-						p->Jsonize(hio);
-						InitRef(p);
+					JsonIO hio(val);
+					if(st < 255 && svo[st]) {
+						data.SetSpecial((byte)type);
+						svo[st]->Jsonize(&data, hio);
 					}
-					else
-						throw JsonizeError("invalid Value type");
+					else {
+						typedef Void* (*vp)();
+						vp *cr = Typemap().FindPtr(type);
+						if(cr) {
+							Void *p = (**cr)();
+							p->Jsonize(hio);
+							InitRef(p);
+						}
+						else
+							throw JsonizeError("invalid Value type");
+					}
 				}
 			}
 		}

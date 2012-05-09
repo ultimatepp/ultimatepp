@@ -208,8 +208,11 @@ void Font::Serialize(Stream& s) {
 		if(s.IsLoading())
 			if(f >= 0)
 				Face(f);
-			else
+			else {
 				FaceName(name);
+				if(IsNull(name))
+					SetNull();
+			}
 	}
 	else {
 		String name = GetFaceName();
