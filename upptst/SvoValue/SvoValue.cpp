@@ -1,6 +1,6 @@
 #include "SvoValue.h"
 
-CONSOLE_APP_MAIN
+GUI_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
@@ -55,6 +55,8 @@ CONSOLE_APP_MAIN
 	uuid.c = 1111;
 	uuid.d = 19999;
 	CheckType(uuid, true);
+
+	CheckType(Arial(50), true);
 
 	v = ErrorValue("error");
 	CheckType(v, true);

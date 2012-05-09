@@ -1,7 +1,7 @@
 #ifndef _SvoValue_SvoValue_h_
 #define _SvoValue_SvoValue_h_
 
-#include <Core/Core.h>
+#include <CtrlLib/CtrlLib.h>
 
 using namespace Upp;
 
