@@ -2,7 +2,7 @@ topic "Copyright © 1999-2009 Ultimate++ team";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0;*IGetLocalDir;+117 &]
-[s0; [*+117 Copyright © 1999`-2010 Ultimate`+`+ team]&]
+[s0; [*+117 Copyright © 1999`-2012 Ultimate`+`+ team]&]
 [s0;i704;O9; Authors:[+117 -|][*+117 Mirek_Fídler, Koldo_Ramirez,][+117  
 ][*+117 Tomáš_Rylek, ][*^http`:`/`/www`.digitalsoftware`.pl^+117 Daniel_Kos][* , 
 ][*+117 Massimo Del Fedele]&]

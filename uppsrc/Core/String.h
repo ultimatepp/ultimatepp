@@ -424,20 +424,11 @@ inline String AsString(const T& x)
 	return x.ToString();
 }
 
-/*
 template <class T>
 inline String AsString(T *x)
 {
 	return FormatPtr(x);
 }
-*/
-
-#ifdef PLATFORM_MSC
-inline String AsString(const void *x)
-{
-	return FormatPtr(x);
-}
-#endif
 
 force_inline String& operator<<(String& s, const char *x)
 {
