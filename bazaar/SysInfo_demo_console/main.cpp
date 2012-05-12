@@ -101,10 +101,11 @@ void Test()
 		Puts(Format("Distro:  %s, version: %s", distro, distVersion, desktop, deskVersion));
 		Puts(Format("Desktop: %s, version: %s", desktop, deskVersion));
 	}
-	String compiler, date;
+	String compiler, mode;
+	Time tim;
 	int compilerVersion;
-	GetCompilerInfo(compiler, compilerVersion, date);
-	Puts(Format("\nProgram compiled with %s version %d. Compilation date: %s", compiler, compilerVersion, date));
+	GetCompilerInfo(compiler, compilerVersion, tim, mode);
+	Puts(Format("\nProgram compiled with %s version %d. Compilation date: %s. Mode: %s", compiler, compilerVersion, Format(tim), mode));
 	
 	Puts("\nDefault exes info:");
 	const char *ext[] = {".html", ".doc", ".png", ".pdf", ".txt", ".xyz", ""};
