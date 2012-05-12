@@ -9,27 +9,34 @@
 void GetSystemInfo(String &manufacturer, String &productName, String &version, int &numberOfProcessors, String &mbSerial);
 void GetBiosInfo(String &biosVersion, Date &biosReleaseDate, String &biosSerial);
 bool GetProcessorInfo(int number, String &vendor, String &identifier, String &architecture, int &speed);		
-// Gets the real CPU speed in MHz
 int GetCpuSpeed();
 double GetCpuTemperature();
 
-struct NetAdapter {
+struct NetAdapter : DeepCopyOption<NetAdapter> {
 	String description;
 	String fullname;
 	String mac;
 	String type;
+	
+	void Xmlize(XmlIO xml);
+	void Jsonize(JsonIO& json);
+	void Serialize(Stream& stream);
+	void Copy(const NetAdapter& src);
+	NetAdapter(const NetAdapter& src, int) 	{Copy(src);}
+	//NetAdapter(const NetAdapter& src) 		{Copy(src);}
+	NetAdapter() {}
 };
 
 Upp::Array <NetAdapter> GetAdapterInfo();
-//String GetMacAddress();		// Deprecated
 
 #if defined(PLATFORM_WIN32) 
 bool GetVideoInfo(Upp::Array <Value> &name, Upp::Array <Value> &description, Upp::Array <Value> &videoProcessor, 
 				  Upp::Array <Value> &ram, Upp::Array <Value> &videoMode);
 bool GetPackagesInfo(Upp::Array <Value> &name, Upp::Array <Value> &version, Upp::Array <Value> &vendor, 
 			Upp::Array <Value> &installDate, Upp::Array <Value> &caption, Upp::Array <Value> &description, Upp::Array <Value> &state);
-String GetHDSerial();
 #endif
+
+String GetHDSerial();
 
 /////////////////////////////////////////////////////////////////////
 // Memory Info
@@ -48,14 +55,11 @@ Upp::Array<long> GetWindowsList();
 
 /////////////////////////////////////////////////////////////////////
 // Process list
-// They get arrays with handles to all the opened processes and process names 
 bool GetProcessList(Upp::Array<long> &pid, Upp::Array<String> &pNames);
 Upp::Array<long> GetProcessList();
 String GetProcessName(long pid);
-// Gets the program file name of a process
 String GetProcessFileName(long processID);
 
-// Gets the process id of a program with a window with certain title
 long GetProcessIdFromWindowCaption(String windowCaption, bool exactMatch = false);
 
 long GetWindowIdFromCaption(String windowCaption, bool exactMatch = false);
@@ -63,14 +67,11 @@ long GetWindowIdFromCaption(String windowCaption, bool exactMatch = false);
 long GetProcessIdFromWindowId(long wid);
 long GetWindowIdFromProcessId(long pid);
 
-// Ends a process by any means
 bool ProcessTerminate(long pid, int timeout = 500);
 
-// Gets the process priority as a number from 0 (minimum) to 10 (maximum)
 int GetProcessPriority(long pid);
 bool SetProcessPriority(long pid, int priority);
 
-// True if a process with handle pid exists
 bool ProcessExists(long pid);
 
 /////////////////////////////////////////////////////////////////////
@@ -80,24 +81,19 @@ String GetDesktopManagerNew();
 
 /////////////////////////////////////////////////////////////////////
 // Get drives info
-// Return false if drive is not mounted or it is not accesible
 bool GetDriveSpace(String drive, uint64 &freeBytesUser, uint64 &totalBytesUser, uint64 &totalFreeBytes);
 bool GetDriveInformation(String drive, String &type, String &volume, /*uint64 &serial, */int &maxName, String &fileSystem);
 
 /////////////////////////////////////////////////////////////////////
 // Others
-// Gets process id
 long GetProcessId();
 
-// I tries to "logoff", "reboot" or "shutdown"
 bool Shutdown(String action);
 
-// It gets compiler info
-void GetCompilerInfo(String &name, int &version, String &date);
+void GetCompilerInfo(String &name, int &version, Time &time, String &mode);
+void GetCompilerInfo(String &name, int &version, String &time, String &mode);
 
-// It gets info about the battery status
 bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin);
-// Get if there is battery
 bool GetBatteryInfo(bool &present/*, int &designCapacity, int &lastFullCapacity, String &vendor, String &type, String &model, String &serial*/);	
 
 bool OpenCDTray(String drive);
@@ -105,7 +101,6 @@ bool CloseCDTray(String drive);
 
 /////////////////////////////////////////////////////////////////////
 // Key and mouse keys
-
 bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bottom);
 bool Window_SetRect(long windowId, long left, long top, long right, long bottom);
 
@@ -144,11 +139,63 @@ bool Record_Window(String fileName, int duration, long handle, int secsFrame = 1
 
 #endif
 
-
 void SetDesktopWallPaper(const char *path);
 
-#endif
 
+struct SystemSignature : DeepCopyOption<SystemSignature> {
+	String manufacturer, productName, version, mbSerial;
+	int numberOfProcessors;	
+	String hdserial;
+	String userName;
+	Array <NetAdapter> netAdapters;
+	
+	void Load();
+	String ToString() const			{return StoreAsJson(*this, true);}
+	operator String() const			{return ToString();}
+	operator const char *() const	{return ToString();}
+	String operator~() const		{return ToString();}
+	void Copy(const SystemSignature& src);
+	SystemSignature(const SystemSignature& src, int) {Copy(src);}
+	SystemSignature()	{}
+	void Xmlize(XmlIO xml);
+	void Jsonize(JsonIO& json);
+	void Serialize(Stream& stream);
+	bool operator==(const SystemSignature &other) const;
+	bool operator!=(const SystemSignature &other) const {return !(*this == other);}	
+};
+
+struct SystemOverview : DeepCopyOption<SystemOverview> {
+	SystemSignature signature;
+	String biosVersion, biosSerial;
+	Date biosReleaseDate;
+	String computerName;
+	String kernel;
+	String kerVersion;
+	String kerArchitecture;
+	String distro;
+	String distVersion;
+	String desktop;
+	String deskVersion;
+	String compilerName;
+	int compilerVersion;
+	Time compilerTime;
+	String compilerMode;
+	
+	void Load();
+	String ToString() const			{return StoreAsJson(*this, true);}
+	operator String() const			{return ToString();}
+	operator const char *() const	{return ToString();}
+	String operator~() const		{return ToString();}
+	void Copy(const SystemOverview& src);
+	SystemOverview(const SystemOverview& src, int) { Copy(src); }	
+	SystemOverview() {}
+	void Xmlize(XmlIO xml);
+	void Jsonize(JsonIO& json);
+	void Serialize(Stream& stream);
+};
+
+
+#endif
 
 // Known bugs
 // GetWindowsList does not get the window title in Kde

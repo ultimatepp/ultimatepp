@@ -11,8 +11,14 @@ library(!WIN32) "Xtst X11 ";
 options(MSC) "/D PSAPI_VERSION=1";
 
 file
-	SysInfo.cpp,
 	SysInfo.h,
+	SysInfo_in.h,
+	SysInfo.cpp,
+	os.cpp,
+	scrrengrab.cpp,
+	mousekey.cpp,
+	cpuspeed.cpp,
+	battery.cpp,
 	srcdoc.tpp,
 	srcimp.tpp,
 	src.tpp,

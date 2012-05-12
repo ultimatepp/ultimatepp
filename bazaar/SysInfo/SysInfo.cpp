@@ -1,52 +1,4 @@
-#define _WIN32_WINNT 0xFFFF		// Required by MinGW
-#include "Core/Core.h"
-
-#if defined(PLATFORM_WIN32) 
-	#include <shellapi.h>
-	#include <Tlhelp32.h>
-	#include <psapi.h>
-	#include <Winioctl.h>
-	#define CY tagCY
-	// To compile in MinGW copy files Rpcsal.h, DispEx.h, WbemCli.h, WbemDisp.h, Wbemidl.h, 
-	// WbemProv.h and WbemTran.h from /plugin to MinGW/include and 
-	// wbemuuid.lib from /plugin to MinGW/lib
-	#include <rpcsal.h>	
-	#include <Wbemidl.h>
-	#include <winnls.h> 
-	#include <vfw.h>
-	typedef ACCESS_MASK REGSAM;
-	#include <PowrProf.h>
-#endif
-#ifdef PLATFORM_POSIX
-	#include <sys/time.h>
-	#include <sys/resource.h>
-	
-	#include <fcntl.h>
-	#include <sys/types.h>
-	#include <sys/stat.h>
-	#include <sys/vfs.h> 
-	#include <sys/utsname.h>
-	#include <dirent.h>
-	#include <pwd.h>
-	#include <grp.h>
-	#include <time.h>
-	#include <signal.h>
-	#include <sys/reboot.h>
-//#include <linux/kd.h>
-//#include <sys/ioctl.h>
-	
-	#include <X11/Xlib.h>
-	#include <X11/Xos.h>
-	#include <X11/Xfuncs.h>
-	#include <X11/Xutil.h>
-	#include <X11/Xatom.h>
-	#include <X11/extensions/XTest.h>
-#endif
-
-using namespace Upp;
-
-#define _Browser_Browser_h
-#include "SysInfo.h"
+#include "SysInfo_in.h"
 
 
 /////////////////////////////////////////////////////////////////////
@@ -160,6 +112,7 @@ bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[], Strin
 	
 	return true;
 }
+
 bool GetWMIInfo(String system, String data, Value &res, String nameSpace = "root\\cimv2") {
 	Array <Value> arrRes;
 	Array <Value> *arrResP[1];
@@ -199,6 +152,7 @@ void GetSystemInfo(String &manufacturer, String &productName, String &version, i
 	if (GetWMIInfo("Win32_BaseBoard", "SerialNumber", vmbSerial)) 
 		mbSerial = Trim(vmbSerial);	
 }
+
 void GetBiosInfo(String &biosVersion, Date &biosReleaseDate, String &biosSerial) { 
 	// Alternative is "wmic bios get name" and "wmic bios get releasedate"
 	String strBios = FromSystemCharset(GetWinRegString("BIOSVersion", "HARDWARE\\DESCRIPTION\\System\\BIOS", HKEY_LOCAL_MACHINE));	
@@ -222,6 +176,7 @@ void GetBiosInfo(String &biosVersion, Date &biosReleaseDate, String &biosSerial)
 	if (GetWMIInfo("Win32_BIOS", "SerialNumber", vmbSerial)) 
 		biosSerial = Trim(vmbSerial);	
 }
+
 bool GetProcessorInfo(int number, String &vendor, String &identifier, String &architecture, int &speed)	{
 	String strReg = Format("HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\%d", number);
 	vendor = FromSystemCharset(GetWinRegString("VendorIdentifier", strReg, HKEY_LOCAL_MACHINE));	
@@ -320,6 +275,7 @@ bool GetVideoInfo(Array <Value> &name, Array <Value> &description, Array <Value>
 		ram[row] = (atoi(ram[row].ToString()) + 524288)/1048576;
 	return true;
 }
+
 bool GetPackagesInfo(Array <Value> &name, Array <Value> &version, Array <Value> &vendor, 
 Array <Value> &installDate, Array <Value> &caption, Array <Value> &description, Array <Value> &state)
 {
@@ -360,6 +316,7 @@ Array <Value> &installDate, Array <Value> &caption, Array <Value> &description, 
 	}
 	return true;
 }
+
 double GetCpuTemperature() {
 	Value data;
 	if (GetWMIInfo("MSAcpi_ThermalZoneTemperature", "CurrentTemperature", data, "root\\wmi"))
@@ -369,7 +326,7 @@ double GetCpuTemperature() {
 	return Null;
 }
 #endif
-
+/*
 String GetMacAddress() {
 	Array <NetAdapter> ret = GetAdapterInfo();	
 	if (!ret.IsEmpty())
@@ -377,6 +334,27 @@ String GetMacAddress() {
 	else
 		return Null;
 }
+*/
+
+void NetAdapter::Copy(const NetAdapter& src) {
+	description <<= src.description;
+	fullname <<= src.fullname;
+	mac <<= src.mac;
+	type <<= src.type;
+}
+
+void NetAdapter::Xmlize(XmlIO xml) {
+	xml ("description", description)("fullname", fullname)("mac", mac)("type", type);
+}
+
+void NetAdapter::Jsonize(JsonIO& json) {
+	json ("description", description)("fullname", fullname)("mac", mac)("type", type);
+}
+
+void NetAdapter::Serialize(Stream& stream) {
+	stream % description % fullname % mac % type;
+}
+
 
 #if defined (PLATFORM_POSIX)
 void GetSystemInfo(String &manufacturer, String &productName, String &version, int &numberOfProcessors, String &mbSerial)
@@ -395,6 +373,7 @@ void GetSystemInfo(String &manufacturer, String &productName, String &version, i
 		numberOfProcessors = atoi(cpu.GetText()) + 1;
 	} 
 }
+
 void GetBiosInfo(String &biosVersion, Date &biosReleaseDate, String &biosSerial)
 {
 	String biosVendor = LoadFile_Safe("/sys/devices/virtual/dmi/id/bios_vendor");
@@ -402,6 +381,7 @@ void GetBiosInfo(String &biosVersion, Date &biosReleaseDate, String &biosSerial)
 	StrToDate(biosReleaseDate, LoadFile_Safe("/sys/devices/virtual/dmi/id/bios_date"));
 	biosSerial = LoadFile_Safe("/sys/devices/virtual/dmi/id/chassis_serial");
 }
+
 bool GetProcessorInfo(int number, String &vendor, String &identifier, String &architecture, int &speed)	
 {
 	StringParse cpu(LoadFile_Safe("/proc/cpuinfo"));
@@ -431,6 +411,7 @@ bool GetProcessorInfo(int number, String &vendor, String &identifier, String &ar
 	cpu.GoAfter_Init("cpu MHz", ":");
 	speed = cpu.GetInt();
 }
+
 double GetCpuTemperature() {
 /* This is only if acpi package is present
 	StringParse data = Sys("acpi -V");	
@@ -492,6 +473,11 @@ Array <NetAdapter> GetAdapterInfo() {
 	return ret;
 }
 
+// Not implemented yet
+String GetHDSerial() {
+	return Null;
+}
+
 #endif
 
 /////////////////////////////////////////////////////////////////////
@@ -526,13 +512,13 @@ bool GetMemoryInfo(
 #else
 
 bool GetMemoryInfo(
-int &memoryLoad, 			// percent of memory in use		
-uint64 &totalPhys, 			// physical memory				
-uint64 &freePhys, 			// free physical memory			
-uint64 &totalPageFile,		// total paging file			
-uint64 &freePageFile,		// free paging file				
-uint64 &totalVirtual,		// total virtual memory			
-uint64 &freeVirtual)
+			int &memoryLoad, 			// percent of memory in use		
+			uint64 &totalPhys, 			// physical memory				
+			uint64 &freePhys, 			// free physical memory			
+			uint64 &totalPageFile,		// total paging file			
+			uint64 &freePageFile,		// free paging file				
+			uint64 &totalVirtual,		// total virtual memory			
+			uint64 &freeVirtual)
 {
 	StringParse meminfo = LoadFile_Safe("/proc/meminfo");
 	if (meminfo == "")
@@ -610,6 +596,7 @@ String GetProcessName(long processID)
 
     return ret;
 }
+
 String GetProcessFileName(long processID)
 {
 	WCHAR szProcessName[MAX_PATH];
@@ -632,6 +619,7 @@ String GetProcessFileName(long processID)
 
     return ret;
 }
+
 BOOL CALLBACK EnumGetWindowsList(HWND hWnd, LPARAM lParam) 
 {
 	if (!hWnd)
@@ -642,6 +630,7 @@ BOOL CALLBACK EnumGetWindowsList(HWND hWnd, LPARAM lParam)
 	ret->Add((int)hWnd);
 	return TRUE;
 }
+
 void GetWindowsList(Array<long> &hWnd, Array<long> &processId, Array<String> &name, Array<String> &fileName, Array<String> &caption)
 {
 	HANDLE hProcess;
@@ -672,12 +661,14 @@ void GetWindowsList(Array<long> &hWnd, Array<long> &processId, Array<String> &na
 			caption.Add("");	
 	}
 }
+
 Array<long> GetWindowsList()
 {
 	Array<long> ret;
 	EnumWindows(EnumGetWindowsList, (LPARAM)&ret);	
 	return ret;
 }
+
 BOOL CALLBACK TerminateAppEnum(HWND hwnd, LPARAM lParam)
 {
 	DWORD dwID ;
@@ -686,6 +677,7 @@ BOOL CALLBACK TerminateAppEnum(HWND hwnd, LPARAM lParam)
      	PostMessage(hwnd, WM_CLOSE, 0, 0) ;
   	return TRUE ;
 }
+
 // pid	 	Process ID of the process to shut down.
 // timeout 	Wait time in milliseconds before shutting down the process.
 bool ProcessTerminate(long processId, int timeout)
@@ -829,15 +821,13 @@ String GetProcessFileName(long pid)
 	return ret;	
 }
 
-#ifdef PLATFORM_POSIX
 #ifdef flagGUI
-	#define SetX11ErrorHandler() {}
-	#define SetSysInfoX11ErrorHandler()	{}
+	//#define SetX11ErrorHandler() {}
+	void SetSysInfoX11ErrorHandler()	{return;}
 #else
-	#define SetX11ErrorHandler() {}
+	//#define SetX11ErrorHandler() {}
 	int SysInfoX11ErrorHandler(_XDisplay *, XErrorEvent *)	{return 0;}
 	void SetSysInfoX11ErrorHandler()						{XSetErrorHandler(SysInfoX11ErrorHandler);}
-#endif
 #endif
 
 void GetWindowsList_Rec (_XDisplay *dpy, Window w, int depth, Array<long> &wid) 
@@ -862,6 +852,7 @@ void GetWindowsList_Rec (_XDisplay *dpy, Window w, int depth, Array<long> &wid)
 		XFree((char *)children); 
 	return; 
 }
+
 Array<long> GetWindowsList()
 {
 	Array<long> ret;	
@@ -877,6 +868,7 @@ Array<long> GetWindowsList()
 	SetX11ErrorHandler();
 	return ret;
 }
+
 void GetWindowsList(Array<long> &hWnd, Array<long> &processId, Array<String> &nameL, Array<String> &fileName, Array<String> &caption)
 {
 	SetSysInfoX11ErrorHandler();
@@ -997,6 +989,7 @@ int GetProcessPriority(long pid)
 	int priority = getpriority(PRIO_PROCESS, pid);
 	return 10 - (priority + 20)/4;		// Rescale -20/20 to 10/0
 }
+
 bool SetProcessPriority(long pid, int priority)
 {
 	priority = 20 - 4*priority;
@@ -1024,6 +1017,7 @@ long GetWindowIdFromCaption(String windowCaption, bool exactMatch)
 	}
 	return -1;
 } 
+
 long GetProcessIdFromWindowCaption(String windowCaption, bool exactMatch)
 {
 	Array<long> wid, pid;
@@ -1040,6 +1034,7 @@ long GetProcessIdFromWindowCaption(String windowCaption, bool exactMatch)
 	}
 	return -1;
 }    
+
 long GetProcessIdFromWindowId(long _wId)
 {
 	Array<long> wId, pid;
@@ -1051,6 +1046,7 @@ long GetProcessIdFromWindowId(long _wId)
 	}
 	return 0;
 } 
+
 long GetWindowIdFromProcessId(long _pid)
 {
 	Array<long> wId, pid;
@@ -1067,389 +1063,6 @@ bool ProcessExists(long pid)
 {
 	return DirectoryExists(Format("/proc/%s", FormatLong(pid)));
 }
-/////////////////////////////////////////////////////////////////////
-// Os Info
-
-#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-
-#if !defined(PRODUCT_ULTIMATE)
-//#define PRODUCT_UNDEFINED                       0x00000000
-#define PRODUCT_ULTIMATE                        0x00000001
-#define PRODUCT_HOME_BASIC                      0x00000002
-#define PRODUCT_HOME_PREMIUM                    0x00000003
-#define PRODUCT_ENTERPRISE                      0x00000004
-#define PRODUCT_HOME_BASIC_N                    0x00000005
-#define PRODUCT_BUSINESS                        0x00000006
-#define PRODUCT_STANDARD_SERVER                 0x00000007
-#define PRODUCT_DATACENTER_SERVER               0x00000008
-#define PRODUCT_SMALLBUSINESS_SERVER            0x00000009
-#define PRODUCT_ENTERPRISE_SERVER               0x0000000A
-#define PRODUCT_STARTER                         0x0000000B
-#define PRODUCT_DATACENTER_SERVER_CORE          0x0000000C
-#define PRODUCT_STANDARD_SERVER_CORE            0x0000000D
-#define PRODUCT_ENTERPRISE_SERVER_CORE          0x0000000E
-#define PRODUCT_ENTERPRISE_SERVER_IA64          0x0000000F
-#define PRODUCT_BUSINESS_N                      0x00000010
-#define PRODUCT_WEB_SERVER                      0x00000011
-#define PRODUCT_CLUSTER_SERVER                  0x00000012
-#define PRODUCT_HOME_SERVER                     0x00000013
-#define PRODUCT_STORAGE_EXPRESS_SERVER          0x00000014
-#define PRODUCT_STORAGE_STANDARD_SERVER         0x00000015
-#define PRODUCT_STORAGE_WORKGROUP_SERVER        0x00000016
-#define PRODUCT_STORAGE_ENTERPRISE_SERVER       0x00000017
-#define PRODUCT_SERVER_FOR_SMALLBUSINESS        0x00000018
-#define PRODUCT_SMALLBUSINESS_SERVER_PREMIUM    0x00000019
-#define PRODUCT_UNLICENSED                      0xABCDABCD
-#endif
-
-#if !defined(SM_SERVERR2)
-#define SM_SERVERR2             89
-#endif
-#if !defined(VER_SUITE_WH_SERVER)
-#define VER_SUITE_WH_SERVER		0x00008000
-#endif
-typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
-typedef BOOL (WINAPI *PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
-
-bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, String &distro, String &distVersion, String &desktop, String &deskVersion)
-{
-   	OSVERSIONINFOEX osvi;
-   	SYSTEM_INFO si;
-   	PGNSI pGNSI;
-   	PGPI pGPI;
-   	BOOL bOsVersionInfoEx;
-   	DWORD dwType;
-
-   	ZeroMemory(&si, sizeof(SYSTEM_INFO));
-   	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
-
-   	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-
-   	if(!(bOsVersionInfoEx = GetVersionEx((OSVERSIONINFO *) &osvi)))
-      	return false;
-
-   	// Call GetNativeSystemInfo if supported or GetSystemInfo otherwise.
-   	pGNSI = (PGNSI) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo");
-	if(NULL != pGNSI)
-   		pGNSI(&si);
-   	else 
-   		GetSystemInfo(&si);
-
-	kerVersion = Format("%d.%d", (int)osvi.dwMajorVersion, (int)osvi.dwMinorVersion);
-	kernel = "Windows";
-	if (si.wProcessorArchitecture==PROCESSOR_ARCHITECTURE_AMD64)
-    	kerArchitecture = "64 bits";
-	else if (si.wProcessorArchitecture==PROCESSOR_ARCHITECTURE_IA64)
-      	kerArchitecture = "Itanium 64 bits";
-   	else if (si.wProcessorArchitecture==PROCESSOR_ARCHITECTURE_INTEL)
-      	kerArchitecture = "32 bits";
-	else
-		kerArchitecture = "Unknown";	//PROCESSOR_ARCHITECTURE_UNKNOWN
-   	if (VER_PLATFORM_WIN32_NT == osvi.dwPlatformId && osvi.dwMajorVersion > 4 ) {
-      	// Test for the specific product.
-		if (osvi.dwMajorVersion == 6) {
-			if (osvi.dwMinorVersion == 1) {
-            	if (osvi.wProductType == VER_NT_WORKSTATION)
-                	kernel.Cat(" Seven");
-            	else 
-					kernel.Cat(" Server 2008 R2");
-			} else if (osvi.dwMinorVersion == 0) {
-         		if (osvi.wProductType == VER_NT_WORKSTATION)
-         			kernel.Cat(" Vista");
-         		else
-         			kernel.Cat(" Server 2008");
-			}
-         	pGPI = (PGPI) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetProductInfo");
-         	pGPI(osvi.dwMajorVersion, osvi.dwMinorVersion, 
-         		 osvi.wServicePackMajor, osvi.wServicePackMinor, &dwType);
-         	switch(dwType) {
-         	case PRODUCT_UNLICENSED:
-               distro = "Unlicensed";
-               break;
-            case PRODUCT_ULTIMATE:
-               distro = "Ultimate Edition";
-               break;
-            case PRODUCT_HOME_PREMIUM:
-               distro = "Home Premium Edition";
-               break;
-            case PRODUCT_HOME_BASIC:	case PRODUCT_HOME_BASIC_N:
-               distro = "Home Basic Edition";
-               break;
-            case PRODUCT_ENTERPRISE:
-               distro = "Enterprise Edition";
-               break;
-            case PRODUCT_BUSINESS:		case PRODUCT_BUSINESS_N:
-               distro = "Business Edition";
-               break;
-            case PRODUCT_STARTER:
-               distro = "Starter Edition";
-               break;
-            case PRODUCT_CLUSTER_SERVER:
-               distro = "Cluster Server Edition";
-               break;
-            case PRODUCT_DATACENTER_SERVER:
-               distro = "Datacenter Edition";
-               break;
-            case PRODUCT_DATACENTER_SERVER_CORE:
-               distro = "Datacenter Edition (core installation)";
-               break;
-            case PRODUCT_ENTERPRISE_SERVER:
-               distro = "Enterprise Edition";
-               break;
-            case PRODUCT_ENTERPRISE_SERVER_CORE:
-               distro = "Enterprise Edition (core installation)";
-               break;
-            case PRODUCT_ENTERPRISE_SERVER_IA64:
-               distro = "Enterprise Edition for Itanium-based Systems";
-               break;
-            case PRODUCT_SMALLBUSINESS_SERVER:
-               distro = "Small Business Server";
-               break;
-            case PRODUCT_SMALLBUSINESS_SERVER_PREMIUM:
-               distro = "Small Business Server Premium Edition";
-               break;
-            case PRODUCT_STANDARD_SERVER:
-               distro = "Standard Edition";
-               break;
-            case PRODUCT_STANDARD_SERVER_CORE:
-               distro = "Standard Edition (core installation)";
-               break;
-            case PRODUCT_WEB_SERVER:
-               distro = "Web Server Edition";
-               break;
-         	}
-      	} else if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 2) {
-         	if (GetSystemMetrics(SM_SERVERR2) )
-         		kernel.Cat(" Server 2003 R2");
-         	else if (osvi.wSuiteMask & VER_SUITE_STORAGE_SERVER)
-            	kernel.Cat(" Storage Server 2003");
-     		else if (osvi.wSuiteMask & VER_SUITE_WH_SERVER)
-            	kernel.Cat(" Home Server");
-         	else if( osvi.wProductType == VER_NT_WORKSTATION && si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64)
-	            kernel.Cat(" XP Professional x64 Edition");
-         	else 
-         		kernel.Cat(" Server 2003");
-         	// Test for the server type.
-         	if (osvi.wProductType != VER_NT_WORKSTATION ) {
-            	if (si.wProcessorArchitecture==PROCESSOR_ARCHITECTURE_IA64 ) {
-                	if(osvi.wSuiteMask & VER_SUITE_DATACENTER )
-                   		distro = "Datacenter Edition for Itanium-based Systems";
-                	else if(osvi.wSuiteMask & VER_SUITE_ENTERPRISE )
-                   		distro = "Enterprise Edition for Itanium-based Systems";
-            	}
-			} else if (si.wProcessorArchitecture==PROCESSOR_ARCHITECTURE_AMD64 ) {
-            	if(osvi.wSuiteMask & VER_SUITE_DATACENTER )
-             		distro = "Datacenter x64 Edition";
-                else if(osvi.wSuiteMask & VER_SUITE_ENTERPRISE )
-                   	distro = "Enterprise x64 Edition";
-                else 
-                	distro = "Standard x64 Edition";
-            } else {
-             	if (osvi.wSuiteMask & VER_SUITE_COMPUTE_SERVER )
-                   	distro = "Compute Cluster Edition";
-                else if(osvi.wSuiteMask & VER_SUITE_DATACENTER )
-                   	distro = "Datacenter Edition";
-                else if(osvi.wSuiteMask & VER_SUITE_ENTERPRISE )
-                   	distro = "Enterprise Edition";
-                else if (osvi.wSuiteMask & VER_SUITE_BLADE )
-                   	distro = "Web Edition";
-                else 
-                	distro = "Standard Edition";
-            }
-    	} else if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 1 ) {
-         	kernel.Cat(" XP");
-         	if(osvi.wSuiteMask & VER_SUITE_PERSONAL )
-            	distro = "Home Edition";
-         	else 
-         		distro = "Professional";
-      	} else if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 0 ) {
-         	kernel.Cat(" 2000");
-         	if (osvi.wProductType == VER_NT_WORKSTATION)
-            	distro = "Professional";
-         	else {
-            	if(osvi.wSuiteMask & VER_SUITE_DATACENTER)
-               		distro = "Datacenter Server";
-            	else if( osvi.wSuiteMask & VER_SUITE_ENTERPRISE)
-               		distro = "Advanced Server";
-            	else 
-            		distro = "Server";
-         	}
-      	} 
-       	// Include service pack (if any) and build number.
-      	if(osvi.wServicePackMajor > 0)
-			kerVersion.Cat(Format(" %s", osvi.szCSDVersion));
-
-      	kerVersion.Cat(Format(" (Build %d)", (int)osvi.dwBuildNumber));
- 	} else if (osvi.dwPlatformId == 1) {
- 		switch(osvi.dwMinorVersion) {
- 		case 0:
- 			kernel.Cat(" 95");
- 			break;
- 		case 10:
- 			kernel.Cat(" 98");
- 			break;
- 		case 90:
- 			kernel.Cat(" Millennium");
- 			break;
- 		}
- 		distro = "";
- 	} else if (osvi.dwPlatformId == 2) {
-    	switch(osvi.dwMajorVersion) {
-    	kernel.Cat(" NT");
-        case 3:
-        	kernel.Cat(" 3.51");
-        	break;
-        case 4:
-         	kernel.Cat(" 4.0");
-         	break;
-    	}
-    	distro = "";
- 	}
- 	desktop = kernel;
- 	distVersion = deskVersion = "";
-   	return true;
-}
-#endif
-#ifdef PLATFORM_POSIX
-
-bool GetOsInfo_CheckLsb(String &distro, String &distVersion)
-{
-	StringParse lsb;			
-	lsb = LoadFile_Safe("/etc/lsb-release");		
-	if (lsb == "")
-		return false;
-	if(!lsb.GoAfter("DISTRIB_ID="))
-		return false;				
-	distro = ToLower(lsb.GetText());
-	if (distro == "")
-		return false;
-	lsb.GoAfter_Init("DISTRIB_RELEASE=");
-	distVersion = lsb.GetText();
-
-	return true;
-}
-bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, String &distro, String &distVersion, String &desktop, String &deskVersion)
-{
-	struct utsname buf;
-	
-	if (0 == uname(&buf)) {
-		kernel = buf.sysname;
-    	kerVersion = String(buf.release) + " " + String(buf.version);
-        kerArchitecture = buf.machine;
-	}
-	if (kernel == "")
-		kernel = LoadFile_Safe("/proc/sys/kernel/ostype");
-	if (kernel == "")
-		kernel = LoadFile_Safe("/proc/version");
-	if (kernel == "") {
-		if (Sys("sysctl_cmd -n kern.version").Find("FreeBSD") >= 0)
-			kernel = "freebsd";
-	}
-	if (kerVersion == "")
-		kerVersion = LoadFile_Safe("/proc/sys/kernel/osrelease") + " " + LoadFile_Safe("/proc/sys/kernel/version");
-	if (kerArchitecture == "")
-		kerArchitecture = Sys("uname -m");	// Kernel. See too /proc/version, /proc/version_signature and uname -a looking for architecture
-	
-	if (kernel == "")
-		kernel = kerVersion = kerArchitecture = "UNKNOWN";	
-	
-	// Desktop
-    if(GetEnv("GNOME_DESKTOP_SESSION_ID").GetCount() || GetEnv("GNOME_KEYRING_SOCKET").GetCount()) {
-		desktop = "gnome";
-		StringParse gnomeVersion = Sys("gnome-about --version");
-		gnomeVersion.GoAfter("gnome-about");
-		deskVersion = gnomeVersion.GetText();
-	} else if(GetEnv("KDE_FULL_SESSION").GetCount() || GetEnv("KDEDIR").GetCount() || GetEnv("KDE_MULTIHEAD").GetCount()) {
-        desktop = "kde"; 
-        StringParse konsole = Sys("konsole --version");
-        konsole.GoAfter("KDE:");
-        deskVersion = konsole.GetText("\r\n");						
-		if (deskVersion == "")		
-			deskVersion = GetEnv("KDE_SESSION_VERSION");        
-	} else {
-		StringParse desktopStr;
-		if (Sys("xprop -root _DT_SAVE_MODE").Find("xfce") >= 0)
-			desktop = "xfce";
-		else if ((desktopStr = Sys("xprop -root")).Find("ENLIGHTENMENT") >= 0) {
-			desktop = "enlightenment";
-			desktopStr.GoAfter("ENLIGHTENMENT_VERSION(STRING)", "=");
-			desktopStr = desktopStr.GetText();
-			if (desktopStr.GetText() == "Enlightenment")
-				deskVersion = desktopStr.GetText();
-		} else
-			desktop = GetEnv("DESKTOP_SESSION");
-	}
-	if (desktop == "")
-		desktop = deskVersion = "UNKNOWN";
-	
-	// Distro
-	if (GetOsInfo_CheckLsb(distro, distVersion))
-		;
-	else if (FileExists("/usr/share/doc/ubuntu-minimal") || FileExists("/usr/share/ubuntu-docs"))
-		distro = "ubuntu";
-	else if (FileExists("/etc/fedora-release")) {
-		distro = "fedora";
-		StringParse strFile = LoadFile_Safe("/etc/fedora-release");
-		String str;
-		do {
-			str = strFile.GetText();
-			if ((str != "fedora") && (str != "release"))
-				distVersion << str << " ";
-		} while (str != "");
-	} else if (FileExists("/etc/redhat-release")) {
-		distro = "redhat";
-		distVersion = LoadFile_Safe("/etc/redhat-release");
-	} else if (FileExists("/etc/SuSE-release")) {
-		StringParse strFile = LoadFile_Safe("/etc/SuSE-release");
-		distro = strFile.GetText();
-		strFile.GoAfter_Init("VERSION", "=");
-		distVersion = strFile.GetText();
-	} else if (FileExists("/etc/mandrake-release")) {
-		distro = "mandrake";			
-		distVersion = LoadFile_Safe("/etc/mandrake-release");
-	} else if (FileExists("/etc/mandriva-release")) {
-		distro = "mandriva";	
-		distVersion = LoadFile_Safe("/etc/mandriva-release");
-	} else if (FileExists("/etc/aurox-release")) {
-		distro = "aurox";
-		distVersion = LoadFile_Safe("/etc/aurox-release");
-	} else if (FileExists("/etc/altlinux-release")) {
-		distro = "altlinux";			
-		distVersion = LoadFile_Safe("/etc/altlinux-releas");
-	} else if (FileExists("/etc/yellowdog-release")) {
-		distro = "yellowdog";
-		distVersion = LoadFile_Safe("/etc/gentoo-yellowdog");
-	} else if (FileExists("/etc/gentoo-release")) {
-		distro = "gentoo";
-		distVersion = LoadFile_Safe("/etc/gentoo-release");
-	} else if (FileExists("/usr/portage")) {
-		distro = "gentoo";
-		distVersion = LoadFile_Safe("/usr/portage");
-	} else if (FileExists("/etc/slackware-version")) {
-		distro = "slackware";
-		StringParse strFile = LoadFile_Safe("/etc/slackware-version");
-		strFile.GetText();
-		distVersion = strFile.GetText();
-	} else if (FileExists("/etc/debian_version")) {
-		distro = "debian";
-		distVersion = LoadFile_Safe("/etc/debian_version");
-	} else if (LoadFile_Safe("/etc/release").Find("Solaris") >= 0)
-		distro = "solaris";
-	else if (Sys("uname -r").Find("solaris") >= 0)
-		distro = "solaris";
-	else {					// If not try with /etc/osname_version
-		distro = LoadFile_Safe("/etc/osname_version");
-		distVersion = "";
-	} 
-	if (distro == "") 
-		distro = LoadFile_Safe("/etc/issue");
-	if (distro == "") 
-		distro = distVersion = "UNKNOWN";
-	
-	return true;
-}
-
-#endif
 
 /////////////////////////////////////////////////////////////////////
 // Others
@@ -1473,6 +1086,7 @@ bool GetDriveSpace(String drive,
 	//totalBytes = 0;
 	return true;
 }
+
 // return true if mounted
 bool GetDriveInformation(String drive, String &type, String &volume, /*uint64 &serial, */int &maxName, String &fileSystem)
 {
@@ -1580,76 +1194,6 @@ bool GetDriveInformation(String drive, String &type, String &volume, /*uint64 &s
 #endif
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-int64 start, end;
-unsigned long nCtr, nFreq, nCtrStop;
-
-#if defined(__MINGW32__)
-int GetCpuSpeed()
-{
-    if(!QueryPerformanceFrequency((LARGE_INTEGER *) &nFreq)) 
-    	return 0;
-    QueryPerformanceCounter((LARGE_INTEGER *)&nCtrStop);
-    nCtrStop += nFreq/10000;
-    
-    __asm__(".byte 0x0F");
-    __asm__(".byte 0x31");
-    __asm__("mov %eax,_start");
-    __asm__("mov %edx,4+(_start)");
-	
-    do
-        QueryPerformanceCounter((LARGE_INTEGER *)&nCtr);
-    while (nCtr < nCtrStop);
-
-    __asm__(".byte 0x0F");
-    __asm__(".byte 0x31");
-    __asm__("mov %eax,_end");
-    __asm__("mov %edx,4+(_end)");
-
-    return int((end-start)/100); 
-}
-#elif defined(_MSC_VER)
-int GetCpuSpeed()
-{
-    if(!QueryPerformanceFrequency((LARGE_INTEGER *) &nFreq)) 
-    	return 0;
-    QueryPerformanceCounter((LARGE_INTEGER *) &nCtrStop);
-    nCtrStop += nFreq/10000;								
-    
-    start = __rdtsc();
-    do 
-         QueryPerformanceCounter((LARGE_INTEGER *) &nCtr);
-    while (nCtr < nCtrStop);
-    end = __rdtsc();
-	return int((end-start)/100);
-}
-#endif 
-#endif
-#if defined(PLATFORM_POSIX)
-
-#define RDTSC_READ(tm) __asm__ __volatile__ (".byte 0x0f; .byte 0x31" :"=a" (tm))
-#define COUNT_SEC   (double)tv.tv_sec + (1.e-6)*tv.tv_usec
-
-int GetCpuSpeed()
-{
-	struct timeval tv;
-  	double cnt1, cnt2;
-  	unsigned long start, end;
-
-  	RDTSC_READ(start);
-  	gettimeofday(&tv, 0);
-  	cnt1 = COUNT_SEC + 0.01;
-
-  	do {
-    	gettimeofday(&tv, 0);
-    	cnt2 = COUNT_SEC;
-  	} while(cnt2 < cnt1);
-
-  	RDTSC_READ(end);
-
-  	return int((end-start)/10000);
-}
-#endif
-#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 #define SHTDN_REASON_MINOR_OTHER 0
 
@@ -1741,11 +1285,10 @@ bool Shutdown(String action)
 }
 #endif
 
-void GetCompilerInfo(String &name, int &version, String &date)
-{
+
+void _GetCompilerInfo(String &name, int &version, String &mode) {
 	name = "";
 	version = 0;
-	date = __DATE__;
 	#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 		#if defined(__MINGW32__)
 			name = "mingw";
@@ -1768,250 +1311,25 @@ void GetCompilerInfo(String &name, int &version, String &date)
     #elif defined (__APPLE__) 
     	// In a next future?
 	#endif
-}
-	
-
-#ifdef PLATFORM_POSIX
-bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
-{
-/* This is only if acpi package is present
-	StringParse data = Sys("acpi -V");
-	
-	data.GoAfter("AC Adapter", ":");
-	String sacStatus = data.GetText();
-	discharging = sacStatus != "on-line";
-	data.GoInit();
-	data.GoAfter("Battery", ":");
-	data.GoAfter(",");
-	percentage = data.GetInt("%");
-	data.GoAfter(",");
-	String remaining;
-	if (discharging) {
-		remaining = data.GetText(" ");
-		int hour, min;
-		double secs;
-		StringToHMS(remaining, hour, min, secs);	// It is really days:hour:min in this case
-		remainingMin = int(secs) + min*60 + hour*24*60;
-	} else
-		remainingMin = Null;
-*/
-	percentage = 100;
-	Array<String> files = SearchFile("/proc/acpi/battery", "state");
-	if (files.GetCount() == 0)
-		return false;
-	StringParse state = LoadFile_Safe(files[0]);
-	if (state == "")
-		return false;
-	bool present;
-	if(!state.GoAfter_Init("present", ":"))
-		return false;			
-	present = state.GetText() == "yes";
-	if (!present)
-		return false;	// No battery inserted
-	state.GoAfter_Init("charging state", ":");	 	discharging = state.GetText() == "discharging";
-	int presentRate, remainingCapacity;
-	state.GoAfter_Init("present rate", ":");		presentRate = state.GetInt();
-	state.GoAfter_Init("remaining capacity", ":");	remainingCapacity = state.GetInt();
-	if (presentRate == 0 || !discharging)
-		remainingMin = Null;
-	else
-		remainingMin = (int)((60.*remainingCapacity)/presentRate);
-	
-	int designCapacity,lastFullCapacity;
-	String vendor, type, model, serial;
-	if (!GetBatteryInfo(present/*, designCapacity, lastFullCapacity, vendor, type, model, serial*/))
-		percentage = (int)((100.*remainingCapacity)/lastFullCapacity);
-
-	return true;
-}
-bool GetBatteryInfo(bool &present/*, int &designCapacity, int &lastFullCapacity, String &vendor, String &type, String &model, String &serial*/)
-{
-	Array<String> files = SearchFile("/proc/acpi/battery", "info");
-	if (files.GetCount() == 0)
-		return false;
-	StringParse info = LoadFile_Safe(files[0]);
-	if (info == "")
-		return false;
-	info.GoAfter_Init("present", ":");			present = info.GetText() == "yes";
-	/*
-	info.GoAfter_Init("design capacity", ":");	designCapacity = info.GetInt();
-	info.GoAfter_Init("last full capacity", ":");lastFullCapacity = info.GetInt();
-	info.GoAfter_Init("OEM info", ":");		 	vendor = info.GetText();
-	info.GoAfter_Init("battery type", ":");		type = info.GetText();
-	info.GoAfter_Init("model number", ":");		model = info.GetText();
-	info.GoAfter_Init("serial number", ":");	serial = info.GetText();
-	*/
-	return true;
+	#ifdef _DEBUG
+		mode = "debug";
+	#else
+		mode = "release";
+	#endif
 }
 
-bool OpenCDTray(String drive)
-{
-	String dummy;
-	return Sys("eject", dummy) > 0;	
-}
-bool CloseCDTray(String drive)
-{
-	String dummy;
-	return Sys("eject -t", dummy) > 0;	
+void GetCompilerInfo(String &name, int &version, String &time, String &mode) {
+	time = String(__DATE__) + " " + __TIME__;
+	_GetCompilerInfo(name, version, mode);
 }
 
-#endif
-#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
-{
-	SYSTEM_POWER_STATUS power;
-	
-	if(::GetSystemPowerStatus(&power) != 1)
-		return false;
-	
-	if (power.ACLineStatus == 1)
-		discharging = false;
-	else
-		discharging = true;
-	if (power.BatteryLifePercent <= 100)
-		percentage = power.BatteryLifePercent;
-	else
-		percentage = Null;
-	if (discharging && power.BatteryLifeTime != -1) 
-		remainingMin = int(power.BatteryLifeTime/60);
-	else
-		remainingMin = Null;
-	return true;
-}
-bool GetBatteryInfo(bool &present/*, int &designCapacity, int &lastFullCapacity, String &vendor, String &type, String &model, String &serial*/)	
-{
-	SYSTEM_POWER_STATUS power;
-	
-	if(::GetSystemPowerStatus(&power) == 0)
-		return false;
-	if (power.BatteryFlag == 128)
-		return false;			// No battery
-	
-	//designCapacity = (int)(power.BatteryFullLifeTime/60.);
-	
-	present = true;
-	//power.ACLineStatus == 0;
-	//lastFullCapacity = 0;
-	//vendor = type = model = serial = "UNKNOWN";
-	
-	return true;
+void GetCompilerInfo(String &name, int &version, Time &time, String &mode) {	
+	time = ScanTime("mdy", String(__DATE__) + " " + __TIME__);
+	_GetCompilerInfo(name, version, mode);
 }
 
-bool DriveOpenClose(String drive, bool open)
-{
-	int operation;
-	if (open)
-		operation = IOCTL_STORAGE_EJECT_MEDIA;
-	else
-		operation = IOCTL_STORAGE_LOAD_MEDIA;
-	if (drive.IsEmpty())
-		return false;
-	else if (drive.GetCount() == 1)
-		drive += ":";
-	else {
-		drive = drive.Left(2);
-		if (drive[1] != ':')
-			return false;
-	}
-	HANDLE hDrive;
-	hDrive = CreateFile("\\\\.\\" + drive, GENERIC_READ || GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (hDrive == INVALID_HANDLE_VALUE)
-		return false;
-	bool ret = false;
-	DWORD dummyBytesReturned;
-	if (DeviceIoControl(hDrive, operation, 0, 0, 0, 0, &dummyBytesReturned, 0))
-		ret = true;
-  	CloseHandle(hDrive);
-  	return ret;
-}
-
-bool OpenCDTray(String drive)
-{
-	return DriveOpenClose(drive, true);
-}
-
-bool CloseCDTray(String drive)
-{
-	return DriveOpenClose(drive, false);
-}
-
-#endif
-
-void Mouse_LeftClick()
-{
-    Mouse_LeftDown(); 
-    Mouse_LeftUp(); 
-}
-void Mouse_RightClick()
-{
-    Mouse_RightDown();
-    Mouse_RightUp();
-}
-void Mouse_MiddleClick()
-{
-    Mouse_MiddleDown();
-    Mouse_MiddleUp();
-}
-void Mouse_LeftDblClick()
-{
-	Mouse_LeftClick();
-	Mouse_LeftClick();
-}
-void Mouse_MiddleDblClick()
-{
-	Mouse_MiddleClick();
-	Mouse_MiddleClick();
-}
-void Mouse_RightDblClick()
-{
-	Mouse_RightClick();
-	Mouse_RightClick();
-}
-
-struct KeyCodes {
-	String key; 
-	int code;
-}; 
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-
-Array <String> GetWinRegSubkeys(const String& key, HKEY base) {
-	HKEY hkey;
-	Array <String> subkeys;
-	if(RegOpenKeyEx(base, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS)
-		return subkeys;
-	char temp[_MAX_PATH];
-	dword len;
-	for(dword dw = 0; len = sizeof(temp), RegEnumKeyEx(hkey, dw, temp, &len, 0, 0, 0, 0) == ERROR_SUCCESS; dw++)
-		subkeys.Add(temp);
-	RegCloseKey(hkey);
-	return subkeys;
-}
-
-void Mouse_LeftDown()
-{
-    mouse_event (MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-}
-void Mouse_LeftUp()
-{
-    mouse_event (MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-}
-void Mouse_MiddleDown()
-{
-    mouse_event (MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, 0);
-}
-void Mouse_MiddleUp()
-{
-    mouse_event (MOUSEEVENTF_MIDDLEUP, 0, 0, 0, 0);
-}
-void Mouse_RightDown()
-{
-    mouse_event (MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);
-}
-void Mouse_RightUp()
-{
-    mouse_event (MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
-}
 
 bool PutWindowPlacement(HWND hwnd, RECT rcNormalPosition, POINT ptMinPosition, POINT ptMaxPosition, long showcmd, long flags)
 {
@@ -2025,6 +1343,7 @@ bool PutWindowPlacement(HWND hwnd, RECT rcNormalPosition, POINT ptMinPosition, P
     place.length = sizeof(place);
     return SetWindowPlacement(hwnd, &place);
 }
+
 bool TakeWindowPlacement(HWND hwnd, RECT &rcNormalPosition, POINT &ptMinPosition, POINT &ptMaxPosition, long &showcmd)
 {
     WINDOWPLACEMENT place;
@@ -2039,6 +1358,7 @@ bool TakeWindowPlacement(HWND hwnd, RECT &rcNormalPosition, POINT &ptMinPosition
     
     return ret;
 }
+
 bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bottom)
 {
 	RECT rcNormalPosition;
@@ -2054,6 +1374,7 @@ bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bot
 	
 	return true;
 }
+
 bool Window_SetRect(long windowId, long left, long top, long right, long bottom)
 {
 	RECT rcNormalPosition;
@@ -2068,614 +1389,6 @@ bool Window_SetRect(long windowId, long left, long top, long right, long bottom)
 	rcNormalPosition.right = right;
 	rcNormalPosition.bottom = bottom;
 	return PutWindowPlacement((HWND)windowId, rcNormalPosition, ptMinPosition, ptMaxPosition, showcmd, 0);
-}
-bool Mouse_SetPos(long xMove, long yMove, long windowId)
-{
-    long left, top, right, bottom;
-    
-    if (windowId != 0) {
-        Window_GetRect(windowId, left, top, right, bottom);
-        xMove = xMove + left;
-        yMove = yMove + top;
-    }
-    SetCursorPos(xMove, yMove);
-    
-    return true;
-}
-bool Mouse_GetPos(long &x, long &y)
-{
-    POINT p;
-    
-    GetCursorPos (&p);
-    x = p.x;
-    y = p.y;
-    
-    return true;
-}
-
-KeyCodes keyCodes[60] = {
-	"NUMPAD7", 	VK_NUMPAD7, 	"BACK", 	VK_BACK, 
-	"NUMPAD8", 	VK_NUMPAD8,		"TAB", 		VK_TAB,
-	"NUMPAD9", 	VK_NUMPAD9, 	"RETURN", 	VK_RETURN,
-	"MULTIPLY", VK_MULTIPLY, 	"SHIFT",	VK_SHIFT,
-	"ADD",		VK_ADD, 	 	"CONTROL",	VK_CONTROL,
-	"SEPARATOR", VK_SEPARATOR,	"MENU", 	VK_MENU,
-	"SUBTRACT", VK_SUBTRACT, 	"PAUSE", 	VK_PAUSE,
-	"DECIMAL",	VK_DECIMAL,		"CAPITAL", 	VK_CAPITAL,
-	"DIVIDE",	VK_DIVIDE, 		"ESCAPE",	VK_ESCAPE,
-	"F1", 		VK_F1, 			"SPACE", 	VK_SPACE,
-	"F2", 		VK_F2,	 		"END",		VK_END,
-	"F3",		VK_F3, 			"HOME",		VK_HOME,
-	"F4",		VK_F4, 			"LEFT", 	VK_LEFT,
-	"F5",		VK_F5,		 	"UP", 		VK_UP,
-	"F6",		VK_F6,		 	"RIGHT",	VK_RIGHT,
-	"F7",		VK_F7,		 	"DOWN",		VK_DOWN,
-	"F8",		VK_F8,		 	"PRINT",	VK_PRINT,
-	"F9",		VK_F9,		 	"SNAPSHOT",	VK_SNAPSHOT,
-	"F10",		VK_F10,		 	"INSERT",	VK_INSERT,
-	"F11",		VK_F11,		 	"DELETE",	VK_DELETE,
-	"F12",		VK_F12,		 	"LWIN",		VK_LWIN,
-	"NUMLOCK",	VK_NUMLOCK,	 	"RWIN",		VK_RWIN,
-	"SCROLL",	VK_SCROLL,	 	"NUMPAD0",	VK_NUMPAD0,
-	"LSHIFT",	VK_LSHIFT,	 	"NUMPAD1", 	VK_NUMPAD1,
-	"RSHIFT",	VK_RSHIFT,	 	"NUMPAD2",	VK_NUMPAD2,
-	"LCONTROL",	VK_LCONTROL, 	"NUMPAD3",	VK_NUMPAD3,
-	"RCONTROL",	VK_RCONTROL, 	"NUMPAD4",	VK_NUMPAD4,
-	"LMENU",	VK_LMENU, 		"NUMPAD5",	VK_NUMPAD5,
-	"RMENU",	VK_RMENU, 		"NUMPAD6",	VK_NUMPAD6,
-	/*"PGUP", 	XK_Page_Up, 	"PGDOWN", 	XK_Page_Down
-	"CAPSLOCK", XK_Caps_Lock, 	"BACKSPACE",XK_BackSpace	*/
-	""
-};
-
-void PressKeyVK(int keyVK, bool hold = false, bool release = false, bool compatible = false)
-{    
-    long nScan, nExtended;
-        
-    nScan = MapVirtualKey(keyVK, 2);
-    nExtended = 0;
-    if (nScan == 0)
-        nExtended = KEYEVENTF_EXTENDEDKEY;
-    nScan = MapVirtualKey(keyVK, 0);
-    
-    if (compatible)
-        nExtended = 0;
-    
-    if (!release)
-        keybd_event ((BYTE)keyVK, (BYTE)nScan, nExtended, 0);
-    
-    if (!hold)
-        keybd_event ((BYTE)keyVK, (BYTE)nScan, KEYEVENTF_KEYUP | nExtended, 0);
-}
-
-#if defined(__MINGW32__)
-	#define	MAPVK_VK_TO_VSC		0
-	#define	MAPVK_VSC_TO_VK   	1
-	#define	MAPVK_VK_TO_CHAR  	2
-	#define	MAPVK_VSC_TO_VK_EX 	3
-#endif
-#define	MAPVK_VK_TO_VSC_EX 	4
-
-// This is less nice but more compatible for Notepad and MSWord for example
-void PressKey(wchar key, bool hold = false, bool release = false)
-{
-	if ((key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') || (key >= '0' && key <= '9')) {
-		char buff[120];
-		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_ILANGUAGE, buff, sizeof(buff));
-		HKL hKeyboardLayout = ::LoadKeyboardLayout(buff, KLF_ACTIVATE);  
-    	SHORT nVK = VkKeyScanExW(key, hKeyboardLayout);
-    	UINT nScan = MapVirtualKeyExW(nVK, MAPVK_VK_TO_CHAR, hKeyboardLayout);
-		if (!release) 
-        	keybd_event((BYTE)nVK, (BYTE)nScan, 0, 0);
-    	if (!hold) 
-        	keybd_event((BYTE)nVK, (BYTE)nScan, KEYEVENTF_KEYUP, 0);
-	} else {
-		String numStr = FormatIntDec(key, 5, '0');
-		PressKeyVK(VK_LMENU, true);
-		PressKeyVK(VK_NUMPAD0 + numStr[0] - '0');
-		PressKeyVK(VK_NUMPAD0 + numStr[1] - '0');
-		PressKeyVK(VK_NUMPAD0 + numStr[2] - '0');
-		PressKeyVK(VK_NUMPAD0 + numStr[3] - '0');
-		PressKeyVK(VK_NUMPAD0 + numStr[4] - '0');
-		PressKeyVK(VK_LMENU, false, true);
-	}
-}
-/*
-void PressKey(wchar key, bool hold = false, bool release = false)
-{
-	bool caps, num, scroll;
-	if (IsLetter(key)) {
-    	GetKeyLockStatus(caps, num, scroll);
-    	if (caps) 
-    		SetKeyLockStatus(false, num, scroll);	
-    }
- 	char buff[120];
-	GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_ILANGUAGE, buff, sizeof(buff));
-	HKL hKeyboardLayout = ::LoadKeyboardLayout(buff, KLF_ACTIVATE);  
-    SHORT nVK = VkKeyScanExW(key, hKeyboardLayout);
-	if (nVK == -1) {	// Last resource !!
-		String numStr = FormatIntDec(key, 4, '0');
-		PressKeyVK(VK_LMENU, true);
-		PressKeyVK(VK_NUMPAD0 + numStr[0] - '0');
-		PressKeyVK(VK_NUMPAD0 + numStr[1] - '0');
-		PressKeyVK(VK_NUMPAD0 + numStr[2] - '0');
-		PressKeyVK(VK_NUMPAD0 + numStr[3] - '0');
-		PressKeyVK(VK_LMENU, false, true);
-    	return;
-	}
-    UINT nScan = MapVirtualKeyExW(nVK, MAPVK_VK_TO_CHAR, hKeyboardLayout);
-    long nExtended = 0;
-    if (nScan == 0)
-        nExtended = KEYEVENTF_EXTENDEDKEY;
-    
-    nScan = MapVirtualKeyExW(nVK, MAPVK_VK_TO_VSC, hKeyboardLayout);
-    
-    bool shift, ctrl, alt;
-    
-    shift = nVK & 0x100;
-    ctrl  = nVK & 0x200;
-    alt   = nVK & 0x400;    
-    nVK   = nVK & 0xFF;
-    
-    if (!release) {
-        if (shift)
-            keybd_event (VK_SHIFT, 0, 0, 0);
-        if (ctrl)
-            keybd_event (VK_CONTROL, 0, 0, 0);
-        if (alt)
-            keybd_event (VK_MENU, 0, 0, 0);
-    
-        keybd_event ((BYTE)nVK, (BYTE)nScan, nExtended, 0);
-    }
-    if (!hold) {
-        keybd_event ((BYTE)nVK, (BYTE)nScan, KEYEVENTF_KEYUP | nExtended, 0);
-    
-   		if (shift)
-            keybd_event (VK_SHIFT, 0, KEYEVENTF_KEYUP, 0);
-        if (ctrl)
-            keybd_event (VK_CONTROL, 0, KEYEVENTF_KEYUP, 0);
-        if (alt)
-            keybd_event (VK_MENU, 0, KEYEVENTF_KEYUP, 0);
-    }
-    if (IsLetter(key) && caps) 
-    	SetKeyLockStatus(true, num, scroll);	
-}
-*/
-
-bool GetKeyLockStatus(bool &caps, bool &num, bool &scroll)
-{
-    caps = GetKeyState(VK_CAPITAL);
-    num = GetKeyState(VK_NUMLOCK);
-    scroll = GetKeyState(VK_SCROLL);
-    return true;
-}
-bool SetKeyLockStatus(bool caps, bool num, bool scroll)
-{
-	bool capsnow, numnow, scrollnow;
-	
-	GetKeyLockStatus(capsnow, numnow, scrollnow);
-	if (capsnow != caps)
-		PressKeyVK(VK_CAPITAL);
-	if (numnow != num)
-		PressKeyVK(VK_NUMLOCK);
-	if (scrollnow != scroll)
-		PressKeyVK(VK_SCROLL);
-	return true;
-}
-
-#if defined(__MINGW32__) 
-	#define labs(x)	labs((Upp::int64)(x))
-#elif defined(_MSC_VER)
-	#define labs(x)	abs(x)
-#endif
-
-bool Window_SaveCapture(long windowId, String fileName, int left, int top, int width, int height)
-{
-	if (windowId == 0)
-		windowId = (long)GetDesktopWindow();
-
-	if (GetFileExt(fileName) != ".bmp")
-		fileName += ".bmp";
-	 
-	RECT rc;
-	GetWindowRect ((HWND)windowId, &rc); 
-
-	if (left == -1)
-		left = rc.left;
-	if (top == -1)
-		top = rc.top;
-	if (width == -1)
-		width	= rc.right-rc.left;
-	if (height == -1)
-		height	= rc.bottom-rc.top;
-
-	HDC hDC = GetDC(0);
-	HDC memDC = CreateCompatibleDC (hDC);
-	HBITMAP hb = CreateCompatibleBitmap (hDC, width, height);
-	HBITMAP OldBM = (HBITMAP)SelectObject(memDC, hb);
-	BitBlt(memDC, 0, 0, width, height , hDC, left, top , SRCCOPY);
-
-    FILE *file = NULL;
-  	BITMAPINFO bmpInfo;
-    BITMAPFILEHEADER bmpFileHeader;
-    ZeroMemory(&bmpInfo, sizeof(BITMAPINFO));
-    bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-    GetDIBits(hDC, hb, 0, 0, NULL, &bmpInfo, DIB_RGB_COLORS);
-   	if(bmpInfo.bmiHeader.biSizeImage <= 0)
-     	bmpInfo.bmiHeader.biSizeImage = bmpInfo.bmiHeader.biWidth*labs(bmpInfo.bmiHeader.biHeight)*(bmpInfo.bmiHeader.biBitCount+7)/8;
-   	char *cbuf = new char[bmpInfo.bmiHeader.biSizeImage];
-   	LPVOID buf = cbuf;
-	bmpInfo.bmiHeader.biCompression = BI_RGB;
-	GetDIBits(hDC, hb, 0, bmpInfo.bmiHeader.biHeight, buf, &bmpInfo, DIB_RGB_COLORS);
-	if((file = _wfopen(fileName.ToWString(),L"wb")) == NULL)
-  		return false;
-	bmpFileHeader.bfReserved1 = 0;
-	bmpFileHeader.bfReserved2 = 0;
-	bmpFileHeader.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER)+bmpInfo.bmiHeader.biSizeImage;
-	bmpFileHeader.bfType = 19778;
-	bmpFileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
-	fwrite(&bmpFileHeader, sizeof(BITMAPFILEHEADER), 1, file);
-	fwrite(&bmpInfo.bmiHeader,sizeof(BITMAPINFOHEADER), 1, file);
-	fwrite(buf,bmpInfo.bmiHeader.biSizeImage, 1, file);
-	
-	delete[] cbuf;
-	fclose(file);
-
-	SelectObject(hDC, OldBM);
-	DeleteObject(hb);
-	DeleteDC(memDC);
-	ReleaseDC(0, hDC);
-	
-	return true;
-}
-
-class ScreenGrab {
-private:	
-	enum {GRAB_MODE_DESKTOP, GRAB_MODE_WINDOW, GRAB_MODE_RECT};
-	static HDC lDCDest;
-	static HGDIOBJ lDib;
-	static void *lDibPtr;
-	static HGDIOBJ lBmpOld;
-	static BITMAPINFO tBmpInfo;
-	static PAVIFILE lAVIPtrFile;
-	static PAVISTREAM lAVIPtrStrm;
-	static AVISTREAMINFO tAVIHdr;
-	static AVIFILEINFO tAVIFile;
-	long lAVICnt;
-	double frameRate;
-	long numFrames; 		// number of frames in video stream
-	long firstFrame; 		// position of the first video frame
-	String fileName;
-	bool viewMouse;
-	bool opened;
-	int grabMode;
-	int hwnd;
-	int left;
-	int top; 
-	int width;
-	int height;
-
-	bool AVIOpen(bool create = true);
-	bool AVIWrite();
-	void AVIClose();
-	HICON GetCursorHandle();
-	bool DIBCreate(HWND lHandleSource, long lWidth, long lHeight, long lPosX, long lPosY);
-	void DIBClean();
-	bool ScreenshotMemory();
-
-public:
-	ScreenGrab(String fileName, int secsFrame = 1, bool viewMouse = true);
-	~ScreenGrab();
-	
-	bool IniGrabDesktop();
-	bool IniGrabWindow(long handle);
-	bool IniGrabDesktopRectangle(int left, int top, int width, int height);
-	bool Grab(unsigned duration);
-	bool GrabSnapshot();
-	void Close();
-};
-
-bool Record_Desktop(String fileName, int duration, int secsFrame, bool viewMouse)
-{
-	ScreenGrab grab(fileName, secsFrame, viewMouse);
-	if (!grab.IniGrabDesktop())
-		return false;
-	if (!grab.Grab(duration))
-		return false;
-	grab.Close();
-	return true;
-}
-bool Record_DesktopRectangle(String fileName, int duration, int left, int top, int width, int height, int secsFrame, bool viewMouse)
-{
-	ScreenGrab grab(fileName, secsFrame, viewMouse);
-	if (!grab.IniGrabDesktopRectangle(left, top, width, height))
-		return false;
-	if (!grab.Grab(duration))
-		return false;
-	grab.Close();
-	return true;
-}
-bool Record_Window(String fileName, int duration, long handle, int secsFrame, bool viewMouse)
-{
-	ScreenGrab grab(fileName, secsFrame, viewMouse);
-	if (!grab.IniGrabWindow(handle))
-		return false;
-	if (!grab.Grab(duration))
-		return false;
-	grab.Close();
-	return true;
-}
-
-bool ScreenGrab::AVIOpen(bool create)
-{
-    long lRet, mode, res;
-    
-    AVIFileInit();
-    if (create)
-        mode = OF_CREATE | OF_WRITE;
-    else
-        mode = OF_SHARE_DENY_WRITE;
-
-    lRet = AVIFileOpen(&lAVIPtrFile, fileName, mode, 0);
-    if (lRet == AVIERR_OK && create) {
-      	tAVIHdr.fccType = streamtypeVIDEO;
-        tAVIHdr.fccHandler = 0;
-       	tAVIHdr.dwScale = 100;		
-       	tAVIHdr.dwRate = (DWORD)(tAVIHdr.dwScale*frameRate);	
-       	//tAVIHdr.dwQuality = -1;
-       	tAVIHdr.dwSuggestedBufferSize = tBmpInfo.bmiHeader.biSizeImage;
-        SetRect(&(tAVIHdr.rcFrame), 0, 0, tBmpInfo.bmiHeader.biWidth, tBmpInfo.bmiHeader.biHeight);
-        lRet = AVIFileCreateStream(lAVIPtrFile, &lAVIPtrStrm, &tAVIHdr);
-        if (lRet == AVIERR_OK) {
-            lRet = AVIStreamSetFormat(lAVIPtrStrm, 0, &(tBmpInfo.bmiHeader), sizeof(tBmpInfo.bmiHeader));
-            if (lRet == AVIERR_OK) 
-                lAVICnt = 0;
-        }
-    } else {
-        res = AVIFileGetStream(lAVIPtrFile, &lAVIPtrStrm, streamtypeVIDEO, 0);
-        if (res != AVIERR_OK)
-            return false;
-        firstFrame = AVIStreamStart(lAVIPtrStrm);
-        if (firstFrame != -1) 
-			return false;
-        numFrames = AVIStreamLength(lAVIPtrStrm); 
-        if (numFrames == -1)
-        	return false;
-        res = AVIFileInfo(lAVIPtrFile, &tAVIFile, sizeof(tAVIFile));
-        if (res != AVIERR_OK)
-        	return false;
-        res = AVIStreamInfo(lAVIPtrStrm, &tAVIHdr, sizeof(tAVIHdr));
-        if (res != AVIERR_OK) 
-			return false;
-    }
-    return true;
-}
-
-bool ScreenGrab::AVIWrite()
-{
-    HRESULT  lRet;
-    
-    lRet = AVIStreamWrite(lAVIPtrStrm, lAVICnt, 1, lDibPtr, tBmpInfo.bmiHeader.biSizeImage, AVIIF_KEYFRAME, NULL, NULL);
-    if (lRet == AVIERR_OK) {
-        lAVICnt++;
-        return true;
-    } else
-        return false;
-}
-
-void ScreenGrab::AVIClose()
-{
-    if (lAVIPtrStrm != 0) 
-    	AVIStreamClose(lAVIPtrStrm);
-    if (lAVIPtrFile != 0) 
-		AVIFileClose(lAVIPtrFile);
-    AVIFileExit();
-}
-
-HICON ScreenGrab::GetCursorHandle()
-{
-    HWND lHandle;
-    POINT lpPos;
-    long lThreadID;
-    long lCurrentThreadID;
- 
-  	GetCursorPos(&lpPos);
-    lHandle = WindowFromPoint(lpPos);
-    lThreadID = GetWindowThreadProcessId(lHandle, 0);
-    lCurrentThreadID = GetWindowThreadProcessId((HWND)GetWindowIdFromProcessId(GetProcessId()), 0); 
-    HICON ret;
-    if (lThreadID != lCurrentThreadID) {
-        if (AttachThreadInput(lCurrentThreadID, lThreadID, true)) {
-            ret = GetCursor();
-            AttachThreadInput(lCurrentThreadID, lThreadID, false);
-        }
-    } else
-        ret = GetCursor();
-   
-    return ret;
-}
-
-bool ScreenGrab::DIBCreate(HWND lHandleSource, long lWidth, long lHeight, long lPosX, long lPosY) 
-{
-    HDC lDCSource, lDCSourceDesktop;
-    POINT lpCursorPos;
-    
-    lDCSource = GetWindowDC(lHandleSource);
-    lDCSourceDesktop = GetWindowDC(0);
-    
-    bool ret = false;
-    if (lDCSource != 0 && lDCSourceDesktop != 0) {
-        lDCDest = CreateCompatibleDC(lDCSource);
-        if (lDCDest != 0) {
-            tBmpInfo.bmiHeader.biSize = sizeof(tBmpInfo.bmiHeader);
-          	tBmpInfo.bmiHeader.biWidth = lWidth;
-          	tBmpInfo.bmiHeader.biHeight = lHeight;
-			tBmpInfo.bmiHeader.biPlanes = 1;
-			tBmpInfo.bmiHeader.biBitCount = 24;
-			tBmpInfo.bmiHeader.biCompression = 0;
-			tBmpInfo.bmiHeader.biSizeImage = ((tBmpInfo.bmiHeader.biWidth * 3 + 3) & 0xFFFFFFFC) * tBmpInfo.bmiHeader.biHeight;
-            lDib = CreateDIBSection(lDCDest, &tBmpInfo, 0, &lDibPtr, 0, 0);
-            if (lDib != 0) {
-                lBmpOld = SelectObject(lDCDest, lDib);
-                BitBlt(lDCDest, 0, 0, lWidth, lHeight, lDCSourceDesktop, lPosX, lPosY, 0xCC0020);
-                if (viewMouse) {
-                    GetCursorPos(&lpCursorPos);
-                    DrawIcon(lDCDest, lpCursorPos.x - lPosX, lpCursorPos.y - lPosY, GetCursorHandle());
-                }
-                ret = true;
-            }
-        }
-    }
-    ReleaseDC(lHandleSource, lDCSource);
-    ReleaseDC(0, lDCSourceDesktop);
-    return ret;
-}
-
-void ScreenGrab::DIBClean()
-{
-    SelectObject(lDCDest, lBmpOld);
-    DeleteDC(lDCDest);
-    DeleteObject(lDib);
-}
-
-bool ScreenGrab::ScreenshotMemory() 
-{
-    HWND lHandle;
-    RECT lpRect;
-    long lWidth, lHeight;
-    long lPosX, lPosY;
-    
-	switch (grabMode) {
-	case GRAB_MODE_DESKTOP:
-    	lHandle = GetDesktopWindow();
-    	GetWindowRect(lHandle, &lpRect);
-    	lWidth = lpRect.right - lpRect.left;
-    	lHeight = lpRect.bottom - lpRect.top;
-    	lPosX = lpRect.left;
-    	lPosY = lpRect.top;
-    	break;
-	case GRAB_MODE_WINDOW:
-    	lHandle = (HWND)hwnd;
-    	GetWindowRect(lHandle, &lpRect);
-    	lWidth = lpRect.right - lpRect.left;
-    	lHeight = lpRect.bottom - lpRect.top;
-    	lPosX = lpRect.left;
-    	lPosY = lpRect.top;
-    	break;
-	case GRAB_MODE_RECT:
-    	lHandle = GetDesktopWindow();
-    	GetWindowRect(lHandle, &lpRect);
-    	lWidth = width;
-    	lHeight = height;
-    	lPosX = left;
-    	lPosY = top;
-    	break;
-    default:
-    	throw Exc(t_("Unknown grab mode"));
-    	return false;
-	}
-    if (DIBCreate(lHandle, lWidth, lHeight, lPosX, lPosY))
-        return true;
-  	else
-    	return false;
-}
-
-HDC ScreenGrab::lDCDest;
-HGDIOBJ ScreenGrab::lDib;
-void *ScreenGrab::lDibPtr;
-HGDIOBJ ScreenGrab::lBmpOld;
-PAVIFILE ScreenGrab::lAVIPtrFile;
-PAVISTREAM ScreenGrab::lAVIPtrStrm;
-BITMAPINFO ScreenGrab::tBmpInfo;
-AVISTREAMINFO ScreenGrab::tAVIHdr;
-AVIFILEINFO ScreenGrab::tAVIFile;
-
-ScreenGrab::ScreenGrab(String _fileName, int secsFrame, bool _viewMouse)
-{
-	opened = false;
-	fileName = _fileName;
-	viewMouse = _viewMouse;
-	frameRate = 1./secsFrame;
-}
-
-ScreenGrab::~ScreenGrab()
-{
-	Close();
-}
-
-void ScreenGrab::Close()
-{
-	if (!opened)
-		return;
-    AVIClose();
-    DIBClean();
-    opened = false;
-}
-
-bool ScreenGrab::IniGrabDesktop()
-{
-	opened = true;
-	grabMode = GRAB_MODE_DESKTOP;
-	if (!ScreenshotMemory())
-    	return false;
-  	if (!AVIOpen())
-  		return false;
-	return true;
-}
-
-bool ScreenGrab::IniGrabWindow(long handle)
-{
-	opened = true;
-	grabMode = GRAB_MODE_WINDOW;
-	hwnd = handle;
-	if (!ScreenshotMemory())
-    	return false;
-  	if (!AVIOpen())
-  		return false;
-	return true;
-}
-
-bool ScreenGrab::IniGrabDesktopRectangle(int _left, int _top, int _width, int _height)
-{
-	opened = true;	
-	grabMode = GRAB_MODE_RECT;
-	left = _left;
-	top = _top;
-	width = _width;
-	height = _height;
-	if (!ScreenshotMemory())
-    	return false;
-  	if (!AVIOpen())
-  		return false; 	
-	return true;	
-}
-	
-bool ScreenGrab::Grab(unsigned duration)
-{
-	if (!opened)
-		return false;
-    TimeStop timer;
-    timer.Reset();
-    while (timer.Elapsed() < duration*1000) {
-        if (!ScreenshotMemory())
-        	return false;
-        if (!AVIWrite())
-            return false;
-        while (timer.Elapsed() < (lAVICnt*1000.)/frameRate)
-	        Sleep(10);//DoEvents();
-    }
-    return true;
-}
-
-bool ScreenGrab::GrabSnapshot()
-{
-	if (!opened)
-		return false;
-  	if (!ScreenshotMemory())
-       	return false;
-   	if (!AVIWrite())
-      	return false;
-    return true;
 }
 
 #endif
@@ -2701,10 +1414,6 @@ bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bot
 		bottom = y + height;
 		ret = true;
 	}
-//	Window child; 		
-//		if (XTranslateCoordinates (dpy, windowId, rt, 0, 0, &rx, &ry, &child))  
-//			printf ("%d %d", rx - bw, ry - bw); 
-	
 	XCloseDisplay (dpy);
 	SetX11ErrorHandler();
 	return ret; 
@@ -2731,314 +1440,8 @@ bool Window_SetRect(long windowId, long left, long top, long right, long bottom)
 	return ret; 
 }
 
-bool Mouse_GetPos(long &x, long &y)
-{
-	SetSysInfoX11ErrorHandler();
-	_XDisplay *dpy = XOpenDisplay (NULL);
-	if (!dpy) {
-		SetX11ErrorHandler();
-		return false;
-	}   
-	bool ret = false;
-	Window root, child;
-	Window r = DefaultRootWindow(dpy);
-	int retx, rety;
-	int wx, wy;
-	unsigned int keys_buttons;
-   	if (XQueryPointer(dpy, r, &root, &child, &retx, &rety, &wx, &wy, &keys_buttons)) {
-   		x = wx;
-   		y = wy;
-   		ret = true;
-	} else 
-		x = y = -1;
-		
-	XCloseDisplay (dpy);
-	SetX11ErrorHandler();
-	
-	return ret;
-}
-
-bool Mouse_SetPos(long x, long y, long windowId)
-{
-	SetSysInfoX11ErrorHandler();
-	_XDisplay *dpy = XOpenDisplay (NULL);
-	if (!dpy) {
-		SetX11ErrorHandler();
-		return false;
-	}   
-    long left, top, right, bottom;
-    Window r = DefaultRootWindow(dpy);
-    if (windowId != 0) {
-        Window_GetRect(windowId, left, top, right, bottom);
-        x = x + left;
-        y = y + top;
-    }     
-	XWarpPointer(dpy, None, r, 0, 0, 0, 0, x, y);
-	XCloseDisplay (dpy);
-	SetX11ErrorHandler();
-	
-	return true;
-}
-
-// libxtst-dev
-void Mouse_FakeClick(int button, int press) {
-	_XDisplay *dpy = XOpenDisplay(NULL);
-	XTestFakeButtonEvent(dpy, button, press, CurrentTime);
-	XFlush(dpy);
-	XCloseDisplay(dpy);
-}
-
-void Mouse_LeftDown() {
-	Mouse_FakeClick(1, True);
-}
-void Mouse_LeftUp() {
-	Mouse_FakeClick(1, False);
-}
-void Mouse_MiddleDown() {
-	Mouse_FakeClick(2, True);
-}
-void Mouse_MiddleUp() {
-	Mouse_FakeClick(2, False);
-}
-void Mouse_RightDown() {
-	Mouse_FakeClick(3, True);
-}
-void Mouse_RightUp() {
-	Mouse_FakeClick(3, False);
-}
-
-void PressKeyVK(int key, _XDisplay *dpy = NULL) {
-	bool local = false;
-	if (!dpy) {
-		if (!(dpy = XOpenDisplay(NULL)))
-			return;
-		local = true;
-	}
-	XTestFakeKeyEvent(dpy, XKeysymToKeycode(dpy, key), True, CurrentTime);
-	XTestFakeKeyEvent(dpy, XKeysymToKeycode(dpy, key), False, CurrentTime);
-	if (local) {
-		XFlush(dpy);
-		XCloseDisplay(dpy);
-	}
-}
-
-void PressKey(wchar key, _XDisplay *dpy = NULL) {
-	bool local = false;
-	if (!dpy) {
-		if (!(dpy = XOpenDisplay(NULL)))
-			return;
-		local = true;
-	}
-	wchar k = key;
-	if (key > 0x00ff)
-    	key = key | 0x01000000;
- 	
- 	bool shift = false;
-	KeyCode code = XKeysymToKeycode(dpy, key);
-	if (code != 0) { 
-		if (XKeycodeToKeysym(dpy, code, 0) != key) {
-			if (XKeycodeToKeysym(dpy, code, 1) == key) 
-				shift = true;
-			else
-				code = 0;
-		}
-	} else {  
-		int firstKeycode, maxKeycode;
-		int keysymsPerKeycode;
-		
-		XDisplayKeycodes(dpy, &firstKeycode, &maxKeycode);
-		KeySym *keysyms = XGetKeyboardMapping(dpy, firstKeycode, maxKeycode-firstKeycode+1, &keysymsPerKeycode);
-      	int indx = (maxKeycode-firstKeycode-1)*keysymsPerKeycode;
-		keysyms[indx] = key;
-      	XChangeKeyboardMapping(dpy, firstKeycode, keysymsPerKeycode, keysyms, maxKeycode-firstKeycode);
-      	XSync(dpy, False);
-      	code = maxKeycode-1;
-      	if (XKeycodeToKeysym(dpy, code, 0) != key) {
-			if (XKeycodeToKeysym(dpy, code, 1) == key) 
-				shift = true;
-		}
-    }
-	if (code != 0) {
-		if (shift)
-			XTestFakeKeyEvent(dpy, XKeysymToKeycode(dpy, XK_Shift_L), True, CurrentTime);	
-		XTestFakeKeyEvent(dpy, code, True,  CurrentTime);
-		XTestFakeKeyEvent(dpy, code, False, CurrentTime);
-	 	if (shift)
-			XTestFakeKeyEvent(dpy, XKeysymToKeycode(dpy, XK_Shift_L), False, CurrentTime);	
-	} 	
-	if (local) {
- 		XFlush(dpy);
- 		XCloseDisplay(dpy);
-	}
-}
-
-bool GetKeyLockStatus0(bool &caps, bool &num, bool &scroll, _XDisplay *dpy) {
-	int x, y, xx, yy;
-	Window dm1, dm2;
-	unsigned int sKbdState;
-	
-	if(!XQueryPointer(dpy, DefaultRootWindow(dpy), &dm1, &dm2, &x, &y, &xx, &yy, &sKbdState))
-		return false;
-
-	caps   = sKbdState & LockMask;
-	num    = sKbdState & Mod2Mask;
-	scroll = sKbdState & Mod5Mask;
-	
-	return true;
-}
-
-bool GetKeyLockStatus(bool &caps, bool &num, bool &scroll) {
-	_XDisplay *dpy;
-	if (!(dpy = XOpenDisplay(NULL)))
-		return false;
-
-	if (!GetKeyLockStatus0(caps, num, scroll, dpy)) {
-		XCloseDisplay(dpy);
-		return false;
-	}
-	XFlush(dpy);
-	XCloseDisplay(dpy);
-	return true;
-}
-
-bool SetKeyLockStatus(bool caps, bool num, bool scroll) {
-	_XDisplay *dpy;
-	if (!(dpy = XOpenDisplay(NULL)))
-		return false;
-			
-	bool oldcaps, oldnum, oldscroll; 
-	if (!GetKeyLockStatus0(oldcaps, oldnum, oldscroll, dpy)) {
-		XCloseDisplay(dpy);
-		return false;
-	}
-	if (caps != oldcaps) 
-		PressKeyVK(XK_Caps_Lock, dpy);
-	if (num != oldnum) 
-		PressKeyVK(XK_Num_Lock, dpy);
-	if (scroll != oldscroll) 
-		PressKeyVK(XK_Scroll_Lock, dpy);
-
-	XFlush(dpy);
-	XCloseDisplay(dpy);
-	return true;
-}
-
-bool Window_SaveCapture(long windowId, String fileName, int left, int top, int width, int height)
-{
-	if (GetFileExt(fileName) != ".xwd")
-		fileName += ".xwd";
-	
-	String command;
-	if (windowId == 0)
-		command = "xwd -root -silent -out \"" + fileName + "\"";
-	else
-		command = "xwd -id " + FormatLong(windowId) + " -silent -out \"" + fileName + "\"";
-	
-	String strret;
-	return Sys(command, strret) >= 0;
-}
-
-KeyCodes keyCodes[] = {
-	"NUMPAD7", 	XK_KP_7,	 	"BACK", 	XK_BackSpace, 
-	"NUMPAD8", 	XK_KP_8,		"TAB", 		XK_Tab,
-	"NUMPAD9", 	XK_KP_9, 		"RETURN", 	XK_Return,
-	"MULTIPLY", XK_KP_Multiply,	"SHIFT",	XK_Shift_Lock,
-	"ADD",		XK_KP_Add, 	 	"CONTROL",	XK_Control_L,
-	"SEPARATOR", XK_KP_Separator,"MENU", 	XK_Super_L,
-	"SUBTRACT", XK_KP_Subtract,	"PAUSE", 	XK_Pause,
-	"DECIMAL",	XK_KP_Decimal,	/*"CAPITAL", 	VK_CAPITAL,*/
-	"DIVIDE",	XK_KP_Divide,	"ESCAPE",	XK_Escape,
-	"F1", 		XK_F1, 			"SPACE", 	XK_KP_Space,
-	"F2", 		XK_F2,	 		"END",		XK_End,
-	"F3",		XK_F3, 			"HOME",		XK_Home,
-	"F4",		XK_F4, 			"LEFT", 	XK_Left,
-	"F5",		XK_F5,		 	"UP", 		XK_Up,
-	"F6",		XK_F6,		 	"RIGHT",	XK_Right,
-	"F7",		XK_F7,		 	"DOWN",		XK_Down,
-	"F8",		XK_F8,		 	"PRINT",	XK_Sys_Req,
-	"F9",		XK_F9,		 	/*"SNAPSHOT",	VK_SNAPSHOT,*/
-	"F10",		XK_F10,		 	"INSERT",	XK_Insert,
-	"F11",		XK_F11,		 	"DELETE",	XK_Delete,
-	"F12",		XK_F12,		 	"LWIN",		XK_Meta_L,
-	"NUMLOCK",	XK_Num_Lock, 	"RWIN",		XK_Meta_R,
-	"SCROLL",	XK_Scroll_Lock,	"NUMPAD0",	XK_KP_0,
-	"LSHIFT",	XK_Shift_L,	 	"NUMPAD1", 	XK_KP_1,
-	"RSHIFT",	XK_Shift_R,	 	"NUMPAD2",	XK_KP_2,
-	"LCONTROL",	XK_Control_L, 	"NUMPAD3",	XK_KP_3,
-	"RCONTROL",	XK_Control_R, 	"NUMPAD4",	XK_KP_4,
-	"LMENU",	XK_Super_L,		"NUMPAD5",	XK_KP_5,
-	"RMENU",	XK_Super_R, 	"NUMPAD6",	XK_KP_6,
-	"PGUP", 	XK_Page_Up, 	"PGDOWN", 	XK_Page_Down,
-	"CAPSLOCK", XK_Caps_Lock, 	"BACKSPACE",XK_BackSpace,
-	""
-};
-
 #endif
 
-int GetKeyCode(String key) {
-	for (int i = 0; keyCodes[i].code != 0; ++i)
-		if (keyCodes[i].key == key)
-			return keyCodes[i].code;
-	return 0;
-}
-
-void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
-{
-	Array <wchar> virt;
-	bool inKey = false;
-	String key = "";
-	WString wtext(text);
-	for (int i = 0; i < wtext.GetCount(); ++i) {
-		bool vk = false;
-		Sleep(delayBetweenKeys);
-		wchar c = wtext[i];
-		if (c == '{')
-			inKey = true;
-		else if (c == '}') {
-			if (key == "{") 
-				c = '{';
-			else {
-				c = GetKeyCode(key);
-				vk = true;
-			}
-			inKey = false;
-			key = "";
-		} else if (inKey == 1)
-			key.Cat(c);
-		else if (c == '\n') {
-			c = GetKeyCode("RETURN");
-			vk = true;
-		}
- 		if (inKey == false) {
-			if (!vk) 
- 				PressKey(c);
-#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-			else {
-				PressKeyVK(c, true);
-				virt.Add(c);
-			}
-#endif
-		}
-	}
-#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-	for (int i = 0; i < virt.GetCount(); ++i)
-		PressKeyVK(virt[i], false, true);
-#endif
-	Sleep(finalDelay);
-}
-
-bool Snap_Desktop(String fileName)
-{
-	return Window_SaveCapture(0, fileName);
-}
-bool Snap_DesktopRectangle(String fileName, int left, int top, int width, int height)
-{
-	return Window_SaveCapture(0, fileName, left, top, width, height);
-}
-bool Snap_Window(String fileName, long handle)
-{
-	return Window_SaveCapture(handle, fileName);
-}
 
 #ifdef PLATFORM_POSIX
 
@@ -3081,3 +1484,117 @@ void SetDesktopWallPaper(const char *path)
         throw Exc(Format(t_("Error %s changing Desktop bitmap"), AsString(GetLastError())));
 }
 #endif
+
+
+
+void SystemSignature::Load() {	
+	GetSystemInfo(manufacturer, productName, version, numberOfProcessors, mbSerial);
+	hdserial = GetHDSerial();
+	userName = GetUserName();
+	netAdapters = GetAdapterInfo();	
+}
+
+bool SystemSignature::operator==(const SystemSignature &other) const {
+	if (!(manufacturer == other.manufacturer && productName == other.productName && 
+		  version == other.version && mbSerial == other.mbSerial && 
+		  numberOfProcessors == other.numberOfProcessors && hdserial == other.hdserial && 
+		  userName == other.userName))
+		return false;
+	for (int i = 0; i < netAdapters.GetCount(); ++i) {
+		if (TrimBoth(netAdapters[i].mac).IsEmpty())
+			continue;
+		for (int j = 0; j < other.netAdapters.GetCount(); ++j)
+			if(netAdapters[i].mac == other.netAdapters[j].mac)
+				return true;
+	}
+	return false;
+}
+
+void SystemSignature::Copy(const SystemSignature& src) {
+	manufacturer <<= src.manufacturer;
+	productName <<= src.productName;
+	version <<= src.version;
+	mbSerial <<= src.mbSerial;
+	numberOfProcessors = src.numberOfProcessors;
+	hdserial <<= src.hdserial;
+	userName <<= src.userName;
+	netAdapters.SetCount(src.netAdapters.GetCount());
+	for (int i = 0; i < src.netAdapters.GetCount(); ++i)
+		netAdapters[i] <<= src.netAdapters[i];
+}
+
+void SystemSignature::Xmlize(XmlIO xml) {
+	xml
+		("manufacturer", manufacturer)("productName", productName)("version", version)    
+		("numberOfProcessors", numberOfProcessors)("mbSerial", mbSerial)("hdserial", hdserial)
+		("userName", userName)("netAdapters", netAdapters)
+	;	
+}
+
+void SystemSignature::Jsonize(JsonIO& json) {
+	json
+		("manufacturer", manufacturer)("productName", productName)("version", version)    
+		("numberOfProcessors", numberOfProcessors)("mbSerial", mbSerial)("hdserial", hdserial)
+		("userName", userName)("netAdapters", netAdapters)
+	;	
+}
+
+void SystemSignature::Serialize(Stream& stream) {
+	stream % manufacturer % productName % version % numberOfProcessors % mbSerial % hdserial
+		   % userName % netAdapters;
+}
+
+void SystemOverview::Load() {	
+	signature.Load();
+	GetBiosInfo(biosVersion, biosReleaseDate, biosSerial);
+	computerName = GetComputerName();
+	GetOsInfo(kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion);
+	GetCompilerInfo(compilerName, compilerVersion, compilerTime, compilerMode);
+}
+
+void SystemOverview::Copy(const SystemOverview& src) {
+	signature <<= src.signature;
+	biosVersion <<= src.biosVersion;
+	biosSerial <<= src.biosSerial;
+	biosReleaseDate = src.biosReleaseDate;
+	computerName <<= src.computerName;
+	kernel <<= src.kernel;
+	kerVersion <<= src.kerVersion;
+	kerArchitecture <<= src.kerArchitecture;
+	distro <<= src.distro;
+	distVersion <<= src.distVersion;
+	desktop <<= src.desktop;
+	deskVersion <<= src.deskVersion;
+	compilerName <<= src.compilerName;
+	compilerVersion = src.compilerVersion;
+	compilerTime = src.compilerTime;
+	compilerMode <<= src.compilerMode;	
+}
+
+void SystemOverview::Xmlize(XmlIO xml) {
+	xml
+		("signature", signature)("biosVersion", biosVersion)("biosSerial", biosSerial)
+		("biosReleaseDate", biosReleaseDate)("computerName", computerName)("kernel", kernel)
+		("kerVersion", kerVersion)("kerArchitecture", kerArchitecture)("distro", distro)
+		("distVersion", distVersion)("desktop", desktop)("deskVersion", deskVersion)
+		("compilerName", compilerName)("compilerVersion", compilerVersion)
+		("compilerTime", compilerTime)("compilerMode", compilerMode)
+	;	
+}
+
+void SystemOverview::Jsonize(JsonIO& json) {
+	json
+		("signature", signature)("biosVersion", biosVersion)("biosSerial", biosSerial)
+		("biosReleaseDate", biosReleaseDate)("computerName", computerName)("kernel", kernel)
+		("kerVersion", kerVersion)("kerArchitecture", kerArchitecture)("distro", distro)
+		("distVersion", distVersion)("desktop", desktop)("deskVersion", deskVersion)
+		("compilerName", compilerName)("compilerVersion", compilerVersion)
+		("compilerTime", compilerTime)("compilerMode", compilerMode)
+	;	
+}
+
+void SystemOverview::Serialize(Stream& stream) {
+	stream % signature % biosVersion % biosSerial % biosReleaseDate % computerName % kernel
+		 % kerVersion % kerArchitecture % distro % distVersion % desktop % deskVersion
+		 % compilerName % compilerVersion % compilerTime % compilerMode;
+}

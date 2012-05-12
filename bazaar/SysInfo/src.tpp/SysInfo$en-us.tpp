@@ -86,6 +86,7 @@ Array_<Value>_`&[*@3 state])&]
 [s4;%- &]
 [s5;:GetCpuTemperature`(`):%- [@(0.0.255) double]_[* GetCpuTemperature]()&]
 [s2; Returns CPU temperature in degrees Celsius.&]
+[s6; It does not work in all computers.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:GetMacAddress`(`):%- [@(0.0.255) String]_[* GetMacAddress]()&]
@@ -171,15 +172,25 @@ ool]_[* GetDriveInformation]([_^String^ String]_[*@3 drive], [_^String^ String]_
 `"Removable`".&]
 [s2;%- [*@3 volume]: Gets the name of the drive&]
 [s2;%- [*@3 maxName]: Gets the maximum length permitted for a file name&]
-[s2;%- [*@3 fileSystem]: Gets the drive formatting system.&]
-[s0; -|Returns false if drive is not mounted or it is not accessible&]
+[s2;%- fileSystem: Gets the drive formatting system.&]
+[s2; Returns false if drive is not mounted or it is not accessible&]
+[s3; &]
+[s4; &]
+[s5;:GetCompilerInfo`(String`&`,int`&`,Time`&`,String`&`):%- [@(0.0.255) void]_[* GetComp
+ilerInfo]([_^String^ String]_`&[*@3 name], [@(0.0.255) int]_`&[*@3 version], 
+[_^Time^ Time]_`&[*@3 time], [_^String^ String]_`&[*@3 mode])&]
+[s2; Returns compiling information, like compiler [%-*@3 name, ]compiler 
+[%-*@3 version], program compilation [%-*@3 time]. and compiling 
+[%-*@3 mode].&]
 [s3; &]
 [s4;%- &]
-[s5;:GetCompilerInfo`(String`&`,int`&`,String`&`):%- [@(0.0.255) void]_[* GetCompilerInfo
-]([_^String^ String]_`&[*@3 name], [@(0.0.255) int]_`&[*@3 version], 
-[_^String^ String]_`&[*@3 date])&]
+[s5;:GetCompilerInfo`(String`&`,int`&`,String`&`,String`&`):%- [@(0.0.255) void]_[* GetCo
+mpilerInfo]([_^String^ String]_`&[*@3 name], [@(0.0.255) int]_`&[*@3 version], 
+[_^String^ String]_`&[*@3 time], [_^String^ String]_`&[*@3 mode])&]
 [s2; Returns compiling information, like compiler [%-*@3 name, ]compiler 
-[%-*@3 version] and program compilation [%-*@3 date].&]
+[%-*@3 version], program compilation [%-*@3 time]. and compiling 
+[%-*@3 mode].&]
+[s6; This function is deprecated&]
 [s3; &]
 [s4;%- &]
 [s5;:GetBatteryStatus`(bool`&`,int`&`,int`&`):%- [@(0.0.255) bool]_[* GetBatteryStatus]([@(0.0.255) b
@@ -189,13 +200,13 @@ iningMin])&]
 connected to the grid, [%-*@3 percentage] of charging where 100% 
 means full charge, and number of expected computer running minutes 
 in [%-*@3 remainingMin].&]
-[s0; -|Returns true if the values got are valid.&]
+[s2; Returns true if the values got are valid.&]
 [s3; &]
 [s4;%- &]
 [s5;:GetBatteryInfo`(bool`&`):%- [@(0.0.255) bool]_[* GetBatteryInfo]([@(0.0.255) bool]_`&[*@3 p
 resent]_)&]
 [s2; Gets if battery is [%-*@3 present ]or not.&]
-[s0; -|Returns true if the values got are valid.&]
+[s2; Returns true if the values got are valid.&]
 [s3; &]
 [s4;%- &]
 [s5;:OpenCDTray`(`):%- [@(0.0.255) void]_[* OpenCDTray]()&]
@@ -286,7 +297,7 @@ ng]_[*@3 pid], [@(0.0.255) int]_[*@3 timeout]_`=_[@3 500])&]
 [s2;%- [%% Ends the program with handle ][*@3 pid.]&]
 [s2; If after asking the process to end [%-*@3 timeout ]is over, it 
 will kill the process by different means in order of increasing 
-`"aggressivity`".&]
+`"agressivity`".&]
 [s0;l288; For example in Posix it will send the process first a SIGTERM, 
 if the process does not stop it will send a SIGKILL, and if the 
 process remains running it will simply call WindowKill() to do 
@@ -309,6 +320,7 @@ if possible.&]
 [s5;:ProcessExists`(long`):%- [@(0.0.255) bool]_[* ProcessExists]([@(0.0.255) long]_[*@3 pid])
 &]
 [s2; Returns true if a process with handle [%-*@3 pid ]exists.&]
+[s3; &]
 [s4;%- &]
 [s5;:GetProcessId`(`):%- [@(0.0.255) long]_[* GetProcessId]()&]
 [s2; Gets actual running process handle.&]
@@ -331,7 +343,7 @@ location in the screen in [%-*@3 left], [%-*@3 top], [%-*@3 right]
 and [%-*@3 bottom].&]
 [s0; -|Returns true if the values got are valid.&]
 [s3; &]
-[s4;%- &]
+[s4; &]
 [s5;:Window`_SetRect`(long`,long`,long`,long`,long`):%- [@(0.0.255) void]_[* Window`_SetR
 ect]([@(0.0.255) long]_[*@3 windowId], [@(0.0.255) long]_[*@3 left], 
 [@(0.0.255) long]_[*@3 top], [@(0.0.255) long]_[*@3 right], [@(0.0.255) long]_[*@3 bottom])&]
@@ -347,14 +359,14 @@ and [%-*@3 bottom].&]
 g]_`&[*@3 x], [@(0.0.255) long]_`&[*@3 y])&]
 [s2; Gets the mouse position [%-*@3 x, y].in screen pixels where upper 
 left corner is (0, 0).&]
-[s0; -|Returns true if the operation has been done successfully.&]
+[s2; Returns true if the operation has been done successfully.&]
 [s3; &]
 [s4;%- &]
 [s5;:Mouse`_SetPos`(long`,long`,long`):%- [@(0.0.255) bool]_[* Mouse`_SetPos]([@(0.0.255) l
 ong]_[*@3 x], [@(0.0.255) long]_[*@3 y], [@(0.0.255) long]_[*@3 windowId])&]
 [s2; Sets the mouse position to [%-*@3 x] [%-*@3 y] referenced to the 
 upper left vertex of window with window handle [%-*@3 windowId].&]
-[s0; -|Returns true if the operation has been done successfully.&]
+[s2; Returns true if the operation has been done successfully.&]
 [s3; &]
 [s4;%- &]
 [s5;:Mouse`_LeftClick`(`):%- [@(0.0.255) void]_[* Mouse`_LeftClick]()&]
@@ -452,9 +464,9 @@ ool]_[*@3 caps], [@(0.0.255) bool]_[*@3 num], [@(0.0.255) bool]_[*@3 scroll])&]
 [s5;:Snap`_Desktop`(String`):%- [@(0.0.255) bool]_[* Snap`_Desktop]([_^String^ String]_[*@3 f
 ileName])&]
 [s2; Saves the desktop in [%-*@3 fileName].as an image file.&]
-[s0; -|Allowed formats are:&]
-[s0; -|-|`- Posix: .xwd&]
-[s0; -|-|`- Windows: .bmp&]
+[s2; Allowed formats are:&]
+[s2;i150;O0; Posix:-|xwd&]
+[s2;i150;O0; Windows:-|bmp&]
 [s3; &]
 [s4;%- &]
 [s5;:Snap`_DesktopRectangle`(String`,int`,int`,int`,int`):%- [@(0.0.255) bool]_[* Snap`_D
@@ -462,18 +474,18 @@ esktopRectangle]([_^String^ String]_[*@3 fileName], [@(0.0.255) int]_[*@3 left],
 [@(0.0.255) int]_[*@3 top], [@(0.0.255) int]_[*@3 width], [@(0.0.255) int]_[*@3 height])&]
 [s2; Saves a rectangle of the desktop defined by [%-*@3 left], [%-*@3 top], 
 [%-*@3 width ]and [%-*@3 height].in [%-*@3 fileName] as an image file.&]
-[s0; -|Allowed formats are:&]
-[s0; -|-|`- Posix: .xwd&]
-[s0; -|-|`- Windows: .bmp&]
+[s2; Allowed formats are:&]
+[s2;i150;O0; Posix:-|xwd&]
+[s2;i150;O0; Windows:-|bmp&]
 [s3; &]
 [s4;%- &]
 [s5;:Snap`_Window`(String`,long`):%- [@(0.0.255) bool]_[* Snap`_Window]([_^String^ String]_
 [*@3 fileName], [@(0.0.255) long]_[*@3 handle])&]
 [s2; Saves a window defined by its [%-*@3 handle] in [%-*@3 fileName] 
 as an image file.&]
-[s0; -|Allowed formats are:&]
-[s0; -|-|`- Posix: .xwd&]
-[s0; -|-|`- Windows: .bmp&]
+[s2; Allowed formats are:&]
+[s2;i150;O0; Posix:-|xwd&]
+[s2;i150;O0; Windows:-|bmp&]
 [s3; &]
 [s4;%- &]
 [s5;:Record`_Desktop`(String`,int`,int`,bool`):%- [@(0.0.255) bool]_[* Record`_Desktop]([_^String^ S
