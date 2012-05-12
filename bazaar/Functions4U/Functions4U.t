@@ -55,7 +55,7 @@ T_("File %s does not exist")
 esES("Fichero %s no existe")
 
 T_("Patch file is empty")
-esES("Fichero de parche est\303\241 vacio")
+esES("")
 
 T_("Error opening %s")
 esES("Error abriendo %s")
@@ -110,3 +110,9 @@ esES("")
 
 T_("Impossible to open %s")
 esES("Imposible abrir %s")
+
+
+// Obsolete
+
+T_("Please set patch file where set the changes")
+esES("Por favor establecer el fichero de cambios")
