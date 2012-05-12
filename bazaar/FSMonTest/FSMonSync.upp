@@ -1,0 +1,16 @@
+description "Rudimentary file synchronization test for FSMon Filesystem Monitor Package\377";
+
+uses
+	CtrlLib,
+	FSMon;
+
+file
+	SyncUtils.h,
+	SyncUtils.cpp,
+	FSMonSync.lay,
+	FSMonSync.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI MT";
+
