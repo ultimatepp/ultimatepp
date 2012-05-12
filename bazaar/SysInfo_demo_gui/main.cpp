@@ -126,12 +126,14 @@ void SystemInfo::Fill() {
 		TextMemFreeVirtualbytes = Format64(freeVirtual);
 		TextMemFreeVirtual = BytesToString(freeVirtual);
 	}
-	String compiler, date;
+	String compiler, mode;
+	Time tim;
 	int compilerVersion;
-	GetCompilerInfo(compiler, compilerVersion, date);
+	GetCompilerInfo(compiler, compilerVersion, tim, mode);
 	TextCompiler = compiler;
 	TextCompilerVersion = FormatInt(compilerVersion);
-	TextCompilationDate = date;	
+	TextCompilationDate = Format(tim);	
+	TextCompilationMode = mode;
 	
 	Processors.Reset();
 	Processors.AddColumn("Processor", 6);
