@@ -536,4 +536,14 @@ VectorMap<String, int> FSMon::GetErrorMap(void)
 
 #endif
 
+// query IF some changes happened
+bool FSMon::HasChanges(void)
+{
+	bool res;
+	INTERLOCKED_(fsmMutex){
+		res = changed.GetCount();
+	}
+	return res;
+}
+
 END_UPP_NAMESPACE

@@ -171,6 +171,9 @@ class FSMon
 		// query for changed files/folders
 		Vector<Info> GetChanged(void);
 		
+		// query IF some changes happened
+		bool HasChanges(void);
+		
 		// gets actually opened files
 		Index<String>GetOpenedFiles(void);
 		
