@@ -174,10 +174,12 @@ inline const T& Value::To() const
 	}
 	if(t == INT_V || t == INT64_V || t == DOUBLE_V || t == BOOL_V ||
 	   t == DATE_V || t == TIME_V || !IsRef()) {
+#ifdef _DEBUG
 		dword t = GetValueTypeNo<T>();
 		ASSERT_(t < 255 && (t == STRING_V ? IsString() : Is((byte)t)),
 		        String().Cat() << "Invalid value conversion: "
 		                       << GetName() << " -> " << typeid(T).name());
+#endif
 		return *(T*)&data;
 	}
 	const RawValueRep<T> *x = dynamic_cast<const RawValueRep<T>*>(ptr());
