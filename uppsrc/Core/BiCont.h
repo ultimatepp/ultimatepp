@@ -48,7 +48,7 @@ public:
 	void     Serialize(Stream& s);
 #endif
 
-	bool     IsPicked()                         { return items < 0; }
+	bool     IsPicked() const                   { return items < 0; }
 
 	BiVector(const BiVector& src, int)          { DeepCopy0(src); }
 	BiVector(pick_ BiVector& src)               { Pick(src); }
