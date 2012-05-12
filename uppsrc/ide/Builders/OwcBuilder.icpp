@@ -111,10 +111,10 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 		bool init = (i >= first_ifile);
 		String objfile = CatAnyPath(outdir, GetFileName(fn) + ".obj");
 		if (HdependFileTime(fn) > GetFileTime(objfile)) {
+			PutConsole(GetFileNamePos(fn));
 			int time = GetTickCount();
 			bool execerr = false;
 			if (rc) {
-				PutConsole(GetFileNamePos(fn));
 				objfile = ForceExt(objfile, ".res");
 				int slot = AllocSlot();
 				if (slot < 0 || !Run("wrc -q -r -x -fo=" + GetHostPathQ(objfile) + Includes(" -i=", package, pkg)
@@ -123,7 +123,6 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 			}
 			else
 			if (brc) {
-				PutConsole(GetFileNamePos(fn));
 				try {
 					String hfn = GetHostPath(fn);
 					String brcdata = LoadFile(hfn);
