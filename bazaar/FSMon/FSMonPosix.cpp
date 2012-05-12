@@ -103,8 +103,6 @@ void FSMon::callHandlerCb(void)
 // event handling selector
 void FSMon::EventsSelector(uint32 mask, String const &path, String const &newPath)
 {
-	int iMask = 0;
-			
 	// flag stating event related to folder, not file
 	bool isFolder = mask & IN_ISDIR;
 
