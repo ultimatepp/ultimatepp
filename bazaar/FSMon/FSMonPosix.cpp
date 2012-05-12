@@ -339,6 +339,9 @@ void FSMon::monitorCb(void)
 				// it's a true move
 				String newName = (buf->len ? buf->name : "");
 				EventsSelector(IN_MOVE | (mask & IN_ISDIR ? IN_ISDIR : 0), path, AppendFileName(monitoredPaths[idx], newName));
+				
+				// skip the moveto
+				buf = (struct inotify_event *)((byte *)buf + BASE_BUFSIZE + buf->len);
 			}
 			else if(mask & IN_MOVED_FROM)
 			{
