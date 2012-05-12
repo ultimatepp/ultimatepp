@@ -1,44 +1,78 @@
-uses(LINUX) OCE/Visualization/Xw;
-uses(WIN32) OCE/Visualization/WNT;
 noblitz;
+
 uses
 	OCE/ModelingData,
 	FTGL;
-options(WIN32) -D__InterfaceGraphic_DLL;
+
+uses(LINUX) OCE/Visualization/Xw;
+
+uses(WIN32) OCE/Visualization/WNT;
+
 options
 	-I../,
 	-I../oce/inc,
 	-DHAVE_FTGL_NEWER212,
 	-DOCE_BUILD_STATIC_LIB;
+
+options(WIN32) -D__InterfaceGraphic_DLL;
+
 options(POSIX) -DHAVE_DIRENT_H;
+
 options(POSIX) -DHAVE_DLFCN_H;
+
 options(POSIX) -DOCE_HAVE_FSTREAM;
+
 options(POSIX) -DHAVE_NETDB_H;
+
 options(POSIX) -DOCE_HAVE_IOSTREAM;
+
 options(POSIX) -DOCE_HAVE_IOMANIP;
+
 options(POSIX) -DOCE_HAVE_LIMITS_H;
+
 options(POSIX) -DHAVE_PWD_H;
+
 options(POSIX) -DHAVE_SIGNAL_H;
+
 options(POSIX) -DHAVE_STATFS;
+
 options(POSIX) -DHAVE_STDLIB_H;
+
 options(POSIX) -DHAVE_STRING_H;
+
 options(POSIX) -DHAVE_SYS_IPC_H;
+
 options(POSIX) -DHAVE_SYS_MMAN_H;
+
 options(POSIX) -DHAVE_SYS_PARAM_H;
+
 options(POSIX) -DHAVE_SYS_SEM_H;
+
 options(POSIX) -DHAVE_SYS_SOCKET_H;
+
 options(POSIX) -DHAVE_SYS_STAT_H;
+
 options(POSIX) -DHAVE_SYS_TIME_H;
+
 options(POSIX) -DHAVE_SYS_TIMES_H;
+
 options(POSIX) -DHAVE_SYS_TYPES_H;
+
 options(POSIX) -DHAVE_SYS_UNISTD_H;
+
 options(POSIX) -DHAVE_SYS_UTSNAME_H;
+
 options(POSIX) -DHAVE_SYS_VFS_H;
+
 options(POSIX) -DHAVE_UNISTD_H;
+
 options(WIN32) -DWNT;
+
 options(WIN32) -DHAVE_NO_DLL;
+
 include
 	../oce/inc;
+
 file
 	../oce/src/MeshVS/MeshVS_ColorHasher.cxx
 		options() -I../oce/src/MeshVS
@@ -3233,3 +3267,4 @@ file
 	../oce/src/Voxel/Voxel_Writer.cxx
 		options() -I../oce/src/Voxel
 		options() -I../oce/drv/Voxel;
+

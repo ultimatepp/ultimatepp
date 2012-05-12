@@ -1,0 +1,7 @@
+description "Filesystem Monitor Package\377";
+
+file
+	FSMon.h,
+	FSMonPosix.cpp,
+	FSMonWin.cpp;
+
