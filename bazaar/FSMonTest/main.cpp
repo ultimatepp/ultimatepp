@@ -1,58 +1,34 @@
-#include "FSMonSync.h"
-#include "SyncUtils.h"
+#include "FSMonTest.h"
 
-void FSMonSync::Log(String const &s)
+void FSMonTest::Log(String const &s)
 {
-	logEdit.Set(logEdit.Get() + s);
+	logEdit.Set(logEdit.Get() + s + "\n");
 	logEdit.SetCursor(INT_MAX);
 }
 
-// gets destination path given source one
-String FSMonSync::GetDestPath(String const &srcPath)
+void FSMonTest::startCb(void)
 {
-	ASSERT(srcPath.StartsWith(srcFolder));
-	String res = srcPath.Mid(srcFolder.GetCount());
-	return AppendFileName(dstFolder, res);
+	String path = AppendFileName(GetHomeDirectory(), "FSMonTest_A");
+	Log("Starting monitor for '" + path + "'");
+	if(!DirectoryExists(path))
+		RealizeDirectory(path);
+	fsmMon.Add(path);
 }
 
-void FSMonSync::startCb(void)
+void FSMonTest::stopCb(void)
 {
-	srcFolder = AppendFileName(GetHomeDirectory(), "FSMonTest_A");
-	if(!DirectoryExists(srcFolder))
-		RealizeDirectory(srcFolder);
-	dstFolder = AppendFileName(GetHomeDirectory(), "FSMonTest_B");
-	if(!DirectoryExists(dstFolder))
-		RealizeDirectory(dstFolder);
-	Log("Starting syncinc '" + srcFolder + "' to '" + dstFolder + "'\n");
-	Log("Initial sync.....");
-	ProcessEvents();
-	SyncFolder(srcFolder, dstFolder);
-	Log("DONE\n");
-	ProcessEvents();
-	fsmMon.Add(srcFolder);
-
-	started = true;
-	stopBtn.Enable();
-	startBtn.Disable();
+	Log("Stopping\n");
+	String path = AppendFileName(GetHomeDirectory(), "FSMonTest_A");
+	fsmMon.Remove(path);
 }
 
-void FSMonSync::stopCb(void)
+void FSMonTest::quitCb(void)
 {
-	Log("Stopping\n\n");
-	fsmMon.Remove(srcFolder);
-	started = false;
-	stopBtn.Disable();
-	startBtn.Enable();
-}
-
-void FSMonSync::quitCb(void)
-{
-	if(started)
-		stopCb();
+	stopCb();
 	Break();
 }
 
-void FSMonSync::monitorCb()
+void FSMonTest::monitorCb()
 {
 	Vector<FSMon::Info> infos = fsmMon.GetChanged();
 	for(int iChange = 0; iChange < infos.GetCount(); iChange++)
@@ -61,77 +37,46 @@ void FSMonSync::monitorCb()
 		switch(info.flags)
 		{
 			case FSMon::FSM_NOP :
-				Log("NO-OP EVENT\n");
+				Log(String("NO-OP EVENT"));
 				break;
 			case FSMon::FSM_Created :
-				Log("Syncing created file '" + info.path + "'.....");
-				if(SyncFile(info.path, GetDestPath(info.path)))
-					Log("DONE\n");
-				else
-					Log("FAILED\n");
+				Log(String("Creating file '") + info.path + "'");
 				break;
 			case FSMon::FSM_Deleted :
-				Log("Syncing deleted file '" + info.path + "'.....");
-				if(SyncFile(info.path, GetDestPath(info.path)))
-					Log("DONE\n");
-				else
-					Log("FAILED\n");
+				Log(String("Deleting file '") + info.path + "'");
 				break;
 			case FSMon::FSM_Moved :
-				Log("Syncing file move from '" + info.path + "' to '" + info.newPath + "'.....");
-				if(FileMove(GetDestPath(info.path), GetDestPath(info.newPath)))
-					Log("DONE\n");
-				else
-					Log("FAILED\n");
+				Log(String("Moving file '") + info.path + "' to '" + info.newPath + "'");
 				break;
 			case FSMon::FSM_FolderCreated :
-				Log("Syncing created folder '" + info.path + "'.....");
-				if(SyncFolder(info.path, GetDestPath(info.path)))
-					Log("DONE\n");
-				else
-					Log("FAILED\n");
+				Log(String("Creating folder '") + info.path + "'");
 				break;
 			case FSMon::FSM_FolderDeleted :
-				Log("Syncing deleted file '" + info.path + "'.....");
-				if(DeleteFolderDeep(GetDestPath(info.path)))
-					Log("DONE\n");
-				else
-					Log("FAILED\n");
+				Log(String("Deleting folder '") + info.path + "'");
 				break;
 			case FSMon::FSM_FolderMoved :
-				Log("Syncing folder move from '" + info.path + "' to '" + info.newPath + "'.....");
-				if(FileMove(GetDestPath(info.path), GetDestPath(info.newPath)))
-					Log("DONE\n");
-				else
-					Log("FAILED\n");
+				Log(String("Moving folder '") + info.path + "' to '" + info.newPath + "'");
 				break;
 			case FSMon::FSM_Modified :
-				Log("Syncing modified file '" + info.path + "'.....");
-				if(SyncFile(info.path, GetDestPath(info.path)))
-					Log("DONE\n");
-				else
-					Log("FAILED\n");
+				Log(String("Modifying file '") + info.path + "'");
 				break;
 			case FSMon::FSM_AttribChange :
-				Log("Attribute syncing not supported\n");
+				Log(String("Modifying file  attributes for '") + info.path + "'");
 				break;
 		}
 	}
 }
 
-FSMonSync::FSMonSync()
+FSMonTest::FSMonTest()
 {
 	CtrlLayout(*this, "Window title");
 	fsmMon.EventHandler = THISBACK(monitorCb);
 	startBtn <<= THISBACK(startCb);
 	stopBtn <<= THISBACK(stopCb);
 	quitBtn <<= THISBACK(quitCb);
-
-	started = false;
-	stopBtn.Disable();
 }
 
 GUI_APP_MAIN
 {
-	FSMonSync().Run();
+	FSMonTest().Run();
 }

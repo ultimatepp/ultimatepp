@@ -1,0 +1,14 @@
+description "Test FSMon Filesystem Monitor Package\377";
+
+uses
+	CtrlLib,
+	FSMon;
+
+file
+	FSMonTest.lay,
+	FSMonTest.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI MT";
+
