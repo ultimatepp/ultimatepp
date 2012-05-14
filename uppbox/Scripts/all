@@ -19,4 +19,4 @@ bash ~/Scripts/src
 
 chmod a=rw ~/upload/*
 
-bash ~/upp.src/lpbuild2/lpbuild.sh ~/upp.src/lpbuild2/nightly.cfg
+#bash ~/upp.src/lpbuild2/lpbuild.sh ~/upp.src/lpbuild2/nightly.cfg
