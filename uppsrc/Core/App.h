@@ -42,11 +42,16 @@ void AppInitEnvironment__();
 void ConsoleMainFn_(); \
  \
 int main(int argc, char *argv[]) { \
-	UPP::AppInit__(argc, (const char **)argv); \
-	ConsoleMainFn_(); \
-	UPP::DeleteUsrLog(); \
-	UPP::AppExit__(); \
-	return UPP::GetExitCode(); \
+	try { \
+		UPP::AppInit__(argc, (const char **)argv); \
+		ConsoleMainFn_(); \
+		UPP::DeleteUsrLog(); \
+		UPP::AppExit__(); \
+		return UPP::GetExitCode(); \
+	} \
+	catch(Exc e) { \
+		Panic(e); \
+	} \
 } \
  \
 void ConsoleMainFn_()
