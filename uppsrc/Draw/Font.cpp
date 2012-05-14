@@ -87,6 +87,14 @@ int  Font::FindFaceNameIndex(const String& name) {
 	for(int i = 1; i < GetFaceCount(); i++)
 		if(Filter(GetFaceName(i), FontFilter) == n)
 			return i;
+	if(n == "serif")
+		return SERIF;
+	if(n == "sansserif")
+		return SANSSERIF;
+	if(n == "monospace")
+		return MONOSPACE;
+	if(n == "stdfont")
+		return STDFONT;
 	return 0;
 }
 
@@ -224,6 +232,103 @@ void Font::Serialize(Stream& s) {
 		}
 	}
 	s % v.flags % v.height % v.width;
+}
+
+String Font::GetTextFlags() const
+{
+	String txt;
+	if(IsBold())
+		txt << "bold ";
+	if(IsItalic())
+		txt << "italic ";
+	if(IsUnderline())
+		txt << "underline ";
+	if(IsStrikeout())
+		txt << "strikeout ";
+	if(IsNonAntiAliased())
+		txt << "noaa ";
+	if(IsTrueTypeOnly())
+		txt << "ttonly ";
+	if(txt.GetCount())
+		txt.Trim(txt.GetCount() - 1);
+	return txt;
+}
+
+void Font::ParseTextFlags(const char *s)
+{
+	CParser p(s);
+	v.flags = 0;
+	while(!p.IsEof()) {
+		if(p.Id("bold"))
+			Bold();
+		else
+		if(p.Id("italic"))
+			Italic();
+		else
+		if(p.Id("underline"))
+			Underline();
+		else
+		if(p.Id("strikeout"))
+			Strikeout();
+		else
+		if(p.Id("noaa"))
+			NonAntiAliased();
+		else
+		if(p.Id("ttonly"))
+			TrueTypeOnly();
+		else
+			p.SkipTerm();
+	}
+}
+
+String Font::GetFaceNameStd() const
+{
+	switch(GetFace()) {
+	case STDFONT:   return "STDFONT";
+	case SERIF:     return "serif";
+	case SANSSERIF: return "sansserif";
+	case MONOSPACE: return "monospace";
+	}
+	return GetFaceName();
+}
+
+void Font::Jsonize(JsonIO& jio)
+{
+	String n, tf;
+	if(jio.IsStoring()) {
+		n = GetFaceNameStd();
+		tf = GetTextFlags();
+		if(IsNullInstance())
+			n.Clear();
+	}
+	jio("face", n)("height", v.height)("width", v.width)("flags", tf);
+	if(IsNull(n))
+		SetNull();
+	else {
+		FaceName(n);
+		ParseTextFlags(tf);
+	}
+}
+
+void Font::Xmlize(XmlIO& xio)
+{
+	String n, tf;
+	if(xio.IsStoring()) {
+		n = GetFaceNameStd();
+		tf = GetTextFlags();
+		if(IsNullInstance())
+			n.Clear();
+	}
+	xio.Attr("face", n)
+	   .Attr("height", v.height)
+	   .Attr("width", v.width)
+	   .Attr("flags", tf);
+	if(IsNull(n))
+		SetNull();
+	else {
+		FaceName(n);
+		ParseTextFlags(tf);
+	}
 }
 
 template<>

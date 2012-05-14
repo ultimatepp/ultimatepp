@@ -156,10 +156,21 @@ template<> void Jsonize(JsonIO& io, int& var)
 		if(IsNull(v))
 			var = Null;
 		else
-		if(v >= INT_MIN && v <= INT_MAX)
+		if(v >= INT_MIN && v <= INT_MAX && (int)v == v)
 			var = (int)v;
 		else
 			throw JsonizeError("number is not integer");
+}
+
+template<> void Jsonize(JsonIO& io, int16& var)
+{
+	double v = var;
+	Jsonize(io, v);
+	if(io.IsLoading())
+		if(v >= -32768 && v <= 32767 && (int)v == v)
+			var = (int16)v;
+		else
+			throw JsonizeError("16-bit integer expected");
 }
 
 template<> void Jsonize(JsonIO& io, bool& var)
