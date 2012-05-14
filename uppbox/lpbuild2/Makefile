@@ -8,7 +8,7 @@ endif
 
 SERIES:="`dpkg-parsechangelog -c1 | sed -n 's/^Distribution: //p;'`"
 ARCH:="`dpkg-architecture -qDEB_HOST_ARCH`"
-OPTS:=CC="cc -g" CXX="c++ -g" CFLAGS="-g" CXXFLAGS="-g" LDFLAGS="-Wl,--gc-sections -Wl,-O,2" TIME= COLOR=0
+OPTS:=CC="cc -g" CXX="c++ -g" CFLAGS="-g" CXXFLAGS="-g" LDFLAGS="-Wl,--gc-sections -Wl,-O,2" TIME= COLOR=0 USEMAINCFG=0
 
 ide:
 	sed -i -e 's/IDE_VERSION[ \t]*"\([0-9]*\)[^"]*"/IDE_VERSION    "\1-'$(SERIES)-$(ARCH)'"/' $(CURDIR)/uppsrc/ide/version.h
