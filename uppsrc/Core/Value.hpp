@@ -138,8 +138,10 @@ void Value::InitSmall(const T& init)
 template <class T>
 T& Value::GetSmall() const
 {
+#ifdef _DEBUG
 	dword t = GetValueTypeNo<T>();
 	ASSERT(t < 255 && (t == STRING_V ? IsString() : Is((byte)t)));
+#endif
 	return *(T*)&data;
 }
 
