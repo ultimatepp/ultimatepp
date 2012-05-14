@@ -537,8 +537,6 @@ VectorMap<String, int> FSMon::GetErrorMap(void)
 	return res;
 }
 
-#endif
-
 // query IF some changes happened
 bool FSMon::HasChanges(void)
 {
@@ -548,5 +546,7 @@ bool FSMon::HasChanges(void)
 	}
 	return res;
 }
+
+#endif
 
 END_UPP_NAMESPACE
