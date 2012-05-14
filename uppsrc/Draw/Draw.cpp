@@ -9,8 +9,8 @@ NAMESPACE_UPP
 static StaticMutex sDrawLock;
 
 INITBLOCK {
-	RichValue<Painting>::Register();
-	RichValue<Drawing>::Register();
+	Value::Register<Painting>("Painting");
+	Value::Register<Drawing>("Drawing");
 }
 
 void Draw::SinCos(int angle, double& sina, double& cosa)

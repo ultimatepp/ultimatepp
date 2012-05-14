@@ -25,7 +25,7 @@ Size Font::StdFontSize;
 Font Font::AStdFont;
 
 INITBLOCK {
-	RichValue<Font>::Register();
+	Value::Register<Font>("Font");
 }
 
 const Vector<FaceInfo>& Font::List()
@@ -292,6 +292,7 @@ String Font::GetFaceNameStd() const
 	return GetFaceName();
 }
 
+#ifdef SVO_VALUE
 void Font::Jsonize(JsonIO& jio)
 {
 	String n, tf;
@@ -330,6 +331,7 @@ void Font::Xmlize(XmlIO& xio)
 		ParseTextFlags(tf);
 	}
 }
+#endif
 
 template<>
 String AsString(const Font& f) {

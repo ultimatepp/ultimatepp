@@ -348,3 +348,36 @@ void Jsonize(JsonIO& io, ArrayIndex<T>& var)
 {
 	JsonizeIndex<ArrayIndex<T>, T>(io, var);
 }
+
+
+template <class T>
+void XmlizeBySerialize(XmlIO& xio, T& x)
+{
+	String h;
+	if(xio.IsStoring())
+	   h = HexString(StoreAsString(x));
+	xio.Attr("data", h);
+	if(xio.IsLoading())
+		try {
+			LoadFromString(x, ScanHexString(h));
+		}
+		catch(LoadingError) {
+			throw XmlError("xmlize by serialize error");
+		}
+}
+
+template <class T>
+void JsonizeBySerialize(JsonIO& jio, T& x)
+{
+	String h;
+	if(jio.IsStoring())
+	   h = HexString(StoreAsString(x));
+	jio("data", h);
+	if(jio.IsLoading())
+		try {
+			LoadFromString(x, ScanHexString(h));
+		}
+		catch(LoadingError) {
+			throw JsonizeError("jsonize by serialize error");
+		}
+}

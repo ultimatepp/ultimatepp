@@ -290,9 +290,9 @@ String StoreAsXML(Callback1<XmlIO> xmlize, const char *name);
 bool   LoadFromXML(Callback1<XmlIO> xmlize, const String& xml);
 
 template <class T>
-String StoreAsXML(T& data, const char *name)
+String StoreAsXML(const T& data, const char *name)
 {
-	ParamHelper__<T> p(data);
+	ParamHelper__<T> p(const_cast<T &>(data));
 	return StoreAsXML(callback(&p, &ParamHelper__<T>::Invoke), name);
 }
 
