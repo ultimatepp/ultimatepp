@@ -99,6 +99,13 @@ st]&]
 [s2;%% Returns the face`-name text for current instance.&]
 [s3; &]
 [s4; &]
+[s5;:Font`:`:GetFaceNameStd`(`)const: [_^String^ String]_[* GetFaceNameStd]()_[@(0.0.255) c
+onst]&]
+[s2;%% Similar to GetFaceName, but returns generic names `"serif`", 
+`"sansserif`", `"monospace`", `"STDFONT`" for corresponding faces, 
+instead of real names.&]
+[s3; &]
+[s4; &]
 [s5;:Font`:`:GetFaceInfo`(`)const: [_^dword^ dword]_GetFaceInfo()[@(64) _][@(0.0.255) const
 ]&]
 [s2;%% Same as GetFaceInfo(GetFace()).&]
@@ -160,7 +167,8 @@ onst]&]
 [s5;:Font`:`:FaceName`(const String`&`): [_^Font^ Font][@(0.0.255) `&]_FaceName([@(0.0.255) c
 onst]_[_^String^ String][@(0.0.255) `&]_[@3 name])&]
 [s2;%% Sets the face to [%-*@3 name]. If name is not valid face`-name, 
-Font is set to Null.&]
+Font is set to Null. Method is able to recognize generic names 
+`"serif`", `"sansserif`", `"monospace`" and `"STDFONT`".&]
 [s3; &]
 [s4; &]
 [s5;:Font`:`:operator`(`)`(`)const: [_^Font^ Font][@(64) _][@(0.0.255) operator]()()[@(64) _][@(0.0.255) c
@@ -315,6 +323,17 @@ for example some symbol fonts have this issue.&]
 [s2;%% Initializes Font to STDFONT, default height, all attributes 
 not active.&]
 [s3; &]
+[s4; &]
+[s5;:Font`:`:GetTextFlags`(`)const: [_^String^ String]_[* GetTextFlags]()_[@(0.0.255) const
+]&]
+[s2;%% Returns font flags (like Bold) in verbose string form (e.g. 
+`"bold underline`").&]
+[s3; &]
+[s4; &]
+[s5;:Font`:`:ParseTextFlags`(const char`*`): [@(0.0.255) void]_[* ParseTextFlags]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 s])&]
+[s2;%% Sets font flags based on text in format created by GetTextFlags.&]
+[s3;%% &]
 [s4; &]
 [s5;:Font`:`:Font`(int`,int`): Font([@(0.0.255) int]_[@3 face], [@(0.0.255) int]_[@3 height])
 &]

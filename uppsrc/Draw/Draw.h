@@ -121,6 +121,7 @@ public:
 	bool   IsNonAntiAliased() const { return v.flags & FONT_NON_ANTI_ALIASED; }
 	bool   IsTrueTypeOnly() const   { return v.flags & FONT_TRUE_TYPE_ONLY; }
 	String GetFaceName() const;
+	String GetFaceNameStd() const;
 	dword  GetFaceInfo() const;
 	int64  AsInt64() const          { return data; }
 
@@ -151,7 +152,6 @@ public:
 	Font  operator()() const        { return *this; }
 	Font  operator()(int n) const   { return Font(*this).Height(n); }
 
-
 	int   GetAscent() const                  { return Fi().ascent; }
 	int   GetDescent() const                 { return Fi().descent; }
 	int   GetCy() const                      { return Fi().height; }
@@ -178,7 +178,14 @@ public:
 	String GetPath() const                   { return Fi().path; }
 #endif
 
+	String GetTextFlags() const;
+	void   ParseTextFlags(const char *s);
+
 	void  Serialize(Stream& s);
+#ifdef SVO_VALUE
+	void  Jsonize(JsonIO& jio);
+	void  Xmlize(XmlIO& xio);
+#endif
 
 	bool  operator==(Font f) const  { return v.face == f.v.face && v.flags == f.v.flags &&
 	                                        v.width == f.v.width && v.height == f.v.height; }
