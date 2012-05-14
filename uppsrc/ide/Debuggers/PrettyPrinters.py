@@ -389,6 +389,21 @@ try:
 	Upp_Value_GetString		= gdb.parse_and_eval('Upp::_DBG_Value_AsString')
 except Exception as inst:
 	Upp_Value_Inspectors = False
+	
+#check if debug ungrab support is enabled
+Upp_Ungrab_Support = True
+try:
+	Upp_Ungrab				= gdb.parse_and_eval('Upp::_DBG_Ungrab')
+except Exception as inst:
+	Upp_Ungrab_Support = False
+	
+#ungrab mouse at debugger stop, if ungrab helper is available
+def stop_handler(event):
+	if Upp_Ungrab_Support:
+		Upp_Ungrab()
+
+gdb.events.stop.connect (stop_handler)
+
 
 gdb.pretty_printers.append(UppLookupFunction)
 
