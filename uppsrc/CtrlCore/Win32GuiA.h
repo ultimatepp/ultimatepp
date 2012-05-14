@@ -21,7 +21,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR lpCmdLine, int nCmdS
 	UPP::Ctrl::InitWin32(hInstance); \
 	UPP::coreCmdLine__() = UPP::SplitCmdLine__(UPP::FromSystemCharset(lpCmdLine)); \
 	UPP::AppInitEnvironment__(); \
-	GuiMainFn_(); \
+	try { \
+		GuiMainFn_(); \
+	} \
+	catch(Exc e) { \
+		Panic(e); \
+	} \
 	UPP::UsrLog("---------- About to delete this log..."); \
 	UPP::DeleteUsrLog(); \
 	UPP::Ctrl::ExitWin32(); \
@@ -41,7 +46,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdSh
 	UPP::Ctrl::InitWin32(hInstance); \
 	UPP::coreCmdLine__() = UPP::SplitCmdLine__(UPP::FromSystemCharset(lpCmdLine)); \
 	UPP::AppInitEnvironment__(); \
-	GuiMainFn_(); \
+	try { \
+		GuiMainFn_(); \
+	} \
+	catch(Exc e) { \
+		Panic(e); \
+	} \
 	UPP::Ctrl::CloseTopCtrls(); \
 	UPP::UsrLog("---------- About to delete this log..."); \
 	UPP::DeleteUsrLog(); \
