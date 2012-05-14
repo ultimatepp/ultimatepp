@@ -1,0 +1,7 @@
+LAYOUT(FSMonSyncLayout, 504, 288)
+	ITEM(LineEdit, logEdit, LeftPosZ(8, 488).TopPosZ(4, 256))
+	ITEM(Button, stopBtn, SetLabel(t_("Stop")).LeftPosZ(76, 60).TopPosZ(264, 20))
+	ITEM(Button, quitBtn, SetLabel(t_("Quit")).LeftPosZ(436, 60).TopPosZ(264, 20))
+	ITEM(Button, startBtn, SetLabel(t_("Start")).LeftPosZ(12, 60).TopPosZ(264, 20))
+END_LAYOUT
+

@@ -1,0 +1,5 @@
+#ifndef _FSMonSync_icpp_init_stub
+#define _FSMonSync_icpp_init_stub
+#include "CtrlLib/init"
+#include "FSMon/init"
+#endif
