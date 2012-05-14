@@ -2,6 +2,7 @@
 #define _SvoValue_SvoValue_h_
 
 #include <CtrlLib/CtrlLib.h>
+#include <Painter/Painter.h>
 
 using namespace Upp;
 
@@ -174,6 +175,23 @@ void CheckType(const T& x, bool checkhash = false)
 		ty = x;
 		LoadFromJson(ty, json);
 		RDUMP(ty);
+		ASSERT(IsNull(vv));
+
+		RDUMP(v);
+		tx = x;
+		xml = StoreAsXML(tx, "test");
+		RDUMP(xml);
+		ty = Null;
+		LoadFromXML(ty, xml);
+		RDUMP(ty);
+		ASSERT(StoreAsXML(tx, "X") == StoreAsXML(x, "X"));
+		
+		json = StoreAsJson(tx);
+		RDUMP(json);
+		ty = Null;
+		LoadFromJson(ty, json);
+		RDUMP(ty);
+		ASSERT(StoreAsJson(tx) == StoreAsJson(x));
 		ASSERT(IsNull(vv));
 	}
 }

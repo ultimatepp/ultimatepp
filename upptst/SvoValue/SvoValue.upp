@@ -4,7 +4,8 @@ optimize_speed;
 
 uses
 	Core,
-	CtrlLib;
+	CtrlLib,
+	Painter;
 
 file
 	SvoValue.h,
@@ -14,5 +15,6 @@ file
 	SvoValue.cpp optimize_speed;
 
 mainconfig
-	"" = "SSE2 SVO_VALUE GUI";
+	"" = "SSE2 SVO_VALUE GUI",
+	"" = "SSE2 OLD_VALUE GUI";
 
