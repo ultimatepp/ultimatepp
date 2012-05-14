@@ -319,3 +319,19 @@ bool LoadFromXMLFile(T& data, const char *file = NULL)
 	ParamHelper__<T> p(data);
 	return LoadFromXMLFile(callback(&p, &ParamHelper__<T>::Invoke), file);
 }
+
+template <class T>
+void XmlizeBySerialize(XmlIO& xio, T& x)
+{
+	String h;
+	if(xio.IsStoring())
+	   h = HexString(StoreAsString(x));
+	xio.Attr("data", h);
+	if(xio.IsLoading())
+		try {
+			LoadFromString(x, ScanHexString(h));
+		}
+		catch(LoadingError) {
+			throw XmlError("xmlize by serialize error");
+		}
+}
