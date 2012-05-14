@@ -148,6 +148,9 @@ public:
 
 	Value(Void *p)                        { ptr = p; }
 	const Void *GetVoidPtr() const        { return ptr; }
+	
+	template <class T> // Forward compatibility
+	static  void Register(const char *name = NULL);
 };
 
 #define VALUE_COMPARE(T) \
@@ -259,6 +262,11 @@ public:
 
 	void operator=(const AssignValueTypeNo&) {} // MSC 6.0 empty base class bug fix
 };
+
+template <class T, dword type, class B = EmptyClass> // Forward compatiblity
+class ValueType : public AssignValueTypeNo<T, type, B> {};
+
+
 
 template <class T>
 dword GetValueTypeNo() { return ValueTypeNo((T*)NULL); }
@@ -473,6 +481,12 @@ public:
 		return Rep::Cast(v.GetVoidPtr())->Get();
 	}
 };
+
+template <class T>
+void Value::Register(const char *)
+{
+	RichValue<T>::Register();
+}
 
 template <class T>
 inline Value RichToValue(const T& data)                   { return RichValue<T>(data); }

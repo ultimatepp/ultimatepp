@@ -43,7 +43,7 @@ const int FONT_V = 40;
 
 class FontInfo;
 
-class Font : public AssignValueTypeNo<Font, FONT_V, Moveable<Font> >{
+class Font : public ValueType<Font, FONT_V, Moveable<Font> >{
 	union {
 		int64 data;
 		struct {
@@ -373,7 +373,7 @@ void SColorDkShadow_Write(Color c);
 inline Color InvertColor() { return Color(255, 0); }
 inline Color DefaultInk() { return Black(); } //TODO!
 
-class Painting : public AssignValueTypeNo<Painting, 48, Moveable<Painting> > {
+class Painting : public ValueType<Painting, 48, Moveable<Painting> > {
 	String     cmd;
 	ValueArray data;
 	Sizef      size;
@@ -386,6 +386,10 @@ public:
 
 	void    Clear()                             { size = Null; data.Clear(); cmd.Clear(); }
 	void    Serialize(Stream& s)                { s % cmd % data % size; }
+#ifdef SVO_VALUE
+	void Xmlize(XmlIO& xio)                     { XmlizeBySerialize(xio, *this); }
+	void Jsonize(JsonIO& jio)                   { JsonizeBySerialize(jio, *this); }
+#endif
 	bool    IsNullInstance() const              { return cmd.IsEmpty(); }
 	void    SetNull()                           { size = Null; }
 	bool    operator==(const Painting& b) const { return cmd == b.cmd && data == b.data && size == b.size; }
@@ -624,7 +628,7 @@ public:
 	template <class T>	static void Register(const char *id)  { AddFormat(id, &DataDrawer::FactoryFn<T>); }
 };
 
-class Drawing : public AssignValueTypeNo<Drawing, 49, Moveable<Drawing> > {
+class Drawing : public ValueType<Drawing, 49, Moveable<Drawing> > {
 	Size       size;
 	String     data;
 	ValueArray val;
@@ -646,6 +650,10 @@ public:
 	void Append(Drawing& dw);
 
 	void Serialize(Stream& s);
+#ifdef SVO_VALUE
+	void Xmlize(XmlIO& xio)        { XmlizeBySerialize(xio, *this); }
+	void Jsonize(JsonIO& jio)      { JsonizeBySerialize(jio, *this); }
+#endif
 
 	bool    IsNullInstance() const             { return data.IsEmpty(); }
 	void    SetNull()                          { size = Null; }

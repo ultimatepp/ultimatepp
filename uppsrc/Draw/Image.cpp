@@ -298,7 +298,7 @@ void Image::Serialize(Stream& s)
 }
 
 INITBLOCK {
-	RichValue<Image>::Register();
+	Value::Register<Image>("Image");
 }
 
 bool Image::operator==(const Image& img) const

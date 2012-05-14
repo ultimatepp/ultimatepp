@@ -126,7 +126,7 @@ public:
 void Premultiply(ImageBuffer& b);
 void Unmultiply(ImageBuffer& b);
 
-class Image : public AssignValueTypeNo< Image, 150, Moveable<Image> > {
+class Image : public ValueType< Image, 150, Moveable<Image> > {
 private:
 	struct Data : Link<Data> {
 		Atomic refcount;
@@ -236,6 +236,10 @@ public:
 	String ToString() const;
 
 	void  Serialize(Stream& s);
+#ifdef SVO_VALUE
+	void Xmlize(XmlIO& xio)                   { XmlizeBySerialize(xio, *this); }
+	void Jsonize(JsonIO& jio)                 { JsonizeBySerialize(jio, *this); }
+#endif
 	void  Clear();
 
 	Image& operator=(const Image& img);

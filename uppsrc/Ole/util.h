@@ -44,7 +44,7 @@ String                GetDisplayName(const GUID& guid);
 template <> bool      IsNull(const GUID& guid);
 GUID                  GetCoClassGUID(const char *name, bool prog_id = true);
 
-class Guid : public AssignValueTypeNo<Guid, 70, Moveable<Guid> >
+class Guid : public ValueType<Guid, 70, Moveable<Guid> >
 {
 public:
 	Guid(const Nuller& = Null)               { Clear(); }

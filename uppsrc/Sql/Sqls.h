@@ -19,7 +19,7 @@ public:
 
 enum { SQLRAW_V = 34 };
 
-class SqlRaw : public String, AssignValueTypeNo<SqlRaw, SQLRAW_V> {
+class SqlRaw : public String, ValueType<SqlRaw, SQLRAW_V> {
 public:
 	operator Value() const              { return RawValue<SqlRaw>(*this); }
 	SqlRaw(const Value& q)

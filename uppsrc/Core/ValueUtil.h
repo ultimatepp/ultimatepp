@@ -187,7 +187,7 @@ ValueType<T, type, B>::operator ValueTypeRef()
 
 // ---------------------- Value Array
 
-class ValueArray : AssignValueTypeNo<ValueArray, VALUEARRAY_V, Moveable<ValueArray> > {
+class ValueArray : ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArray> > {
 	struct Data : Value::Void {
 		virtual dword      GetType() const             { return VALUEARRAY_V; }
 		virtual bool       IsNull() const;
@@ -258,7 +258,7 @@ public:
 template<>
 String AsString(const ValueArray& v);
 
-class ValueMap : AssignValueTypeNo<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
+class ValueMap : ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 	struct Data : Value::Void {
 		virtual dword      GetType() const             { return VALUEMAP_V; }
 		virtual bool       IsNull() const;
