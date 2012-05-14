@@ -2,4 +2,5 @@
 #define _SvoValue_icpp_init_stub
 #include "Core/init"
 #include "CtrlLib/init"
+#include "Painter/init"
 #endif

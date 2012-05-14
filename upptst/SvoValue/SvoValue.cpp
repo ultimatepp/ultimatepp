@@ -56,8 +56,24 @@ GUI_APP_MAIN
 	uuid.d = 19999;
 	CheckType(uuid, true);
 
-	CheckType(Arial(50), true);
+	CheckType(Arial(50).Bold().Strikeout(), true);
 
+	{
+		DrawingDraw g(100, 100);
+		g.DrawText(0, 0, "Hello world");
+		Drawing x = g.GetResult();
+		CheckType(x);	
+	}
+
+	{
+		PaintingPainter g(100, 100);
+		g.DrawText(0, 0, "Hello world");
+		Painting x = g.GetResult();
+		CheckType(x);
+	}
+
+	CheckType(CtrlImg::save());
+	
 	v = ErrorValue("error");
 	CheckType(v, true);
 	ASSERT(v.IsVoid());
@@ -103,4 +119,6 @@ GUI_APP_MAIN
 	
 	RLOG("------------------------------");
 	RLOG("######## Everything is OK");
+	
+	PromptOK("OK");
 }
