@@ -233,6 +233,7 @@ bool HttpRequest::Do()
 		retry_count = 0;
 		redirect_count = 0;
 		start_time = msecs();
+		GlobalTimeout(timeout);
 	case START:
 		Start();
 		break;
@@ -345,6 +346,8 @@ void HttpRequest::Start()
 			while(addrinfo.InProgress()) {
 				Sleep(GetWaitStep());		
 				WhenWait();
+				if(msecs(start_time) >= timeout)
+					break;
 			}
 		}
 		else

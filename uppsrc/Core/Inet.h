@@ -82,6 +82,9 @@ class TcpSocket {
 	int                     waitstep;
 	int                     done;
 
+	int                     global_timeout;
+	int                     start_time;
+
 	int                     errorcode;
 	String                  errordesc;
 	
@@ -127,6 +130,7 @@ class TcpSocket {
 	int                     Peek_();
 	int                     Peek_(int end_time);
 	int                     Peek(int end_time)          { return ptr < end ? *ptr : Peek_(end_time); }
+	bool                    IsGlobalTimeout();
 
 	void                    Reset();
 
@@ -141,6 +145,8 @@ class TcpSocket {
 
 public:
 	Callback        WhenWait;
+	
+	enum { ERROR_GLOBAL_TIMEOUT = -1000000 };
 
 	static String   GetHostName();
 	
@@ -201,6 +207,8 @@ public:
 
 	TcpSocket&      Timeout(int ms)                          { timeout = ms; return *this; }
 	int             GetTimeout() const                       { return timeout; }
+	TcpSocket&      GlobalTimeout(int ms);
+	TcpSocket&      NoGlobalTimeout()                        { return GlobalTimeout(Null); }
 	TcpSocket&      Blocking()                               { return Timeout(Null); }
 	TcpSocket&      WaitStep(int ms)                         { waitstep = ms; return *this; }
 	int             GetWaitStep() const                      { return waitstep; }
@@ -333,6 +341,7 @@ class HttpRequest : public TcpSocket {
 	bool         ReadingBody();
 	void         ReadingChunkHeader();
 	void         Finish();
+	bool         IsRequestTimeout();
 
 	void         CopyCookies();
 
