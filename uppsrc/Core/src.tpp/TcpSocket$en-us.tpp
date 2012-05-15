@@ -271,6 +271,20 @@ to adjust timeout before any single TcpSocket operation. Returns
 [s5;:TcpSocket`:`:GetTimeout`(`)const: [@(0.0.255) int]_[* GetTimeout]()_[@(0.0.255) const]&]
 [s2;%% Returns current timeout.&]
 [s3;%% &]
+[s4; &]
+[s5;:TcpSocket`:`:GlobalTimeout`(int`): [_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[* GlobalTi
+meout]([@(0.0.255) int]_[*@3 ms])&]
+[s2;%% Sets the `"global timeout`". This timeout is in effect over 
+a whole range of operations, until it is canceled by calling 
+this method with Null parameter. If global timeout is exceeded, 
+operation during which it happened fails and socket error code 
+is set to ERROR`_GLOBAL`_TIMEOUT.&]
+[s3;%% &]
+[s4; &]
+[s5;:TcpSocket`:`:NoGlobalTimeout`(`): [_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[* NoGlobalT
+imeout]()&]
+[s2;%% Same as GlobalTimeout(Null).&]
+[s3; &]
 [s4;%% &]
 [s5;:TcpSocket`:`:Blocking`(`): [_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[* Blocking]()&]
 [s2;%% Same as Timeout(Null). Returns `*this.&]

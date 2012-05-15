@@ -263,6 +263,8 @@ void TcpSocket::Reset()
 	mode = NONE;
 	ssl.Clear();
 	sslinfo.Clear();
+	global_timeout = Null;
+	start_time = Null;
 }
 
 TcpSocket::TcpSocket()
@@ -524,6 +526,15 @@ String TcpSocket::GetHostName()
 	return buffer;
 }
 
+bool TcpSocket::IsGlobalTimeout()
+{
+	if(!IsNull(global_timeout) && msecs() - start_time > global_timeout) {
+		SetSockError("wait", ERROR_GLOBAL_TIMEOUT, "Timeout");
+		return true;
+	}
+	return false;
+}
+
 bool TcpSocket::RawWait(dword flags, int end_time)
 {
 	LLOG("Wait(" << msecs() << " - " << end_time << ", " << flags << ")");
@@ -559,12 +570,21 @@ bool TcpSocket::RawWait(dword flags, int end_time)
 		}
 		if(avail > 0)
 			return true;
+		if(IsGlobalTimeout())
+			return false;
 		if(to <= 0 && timeout)
 			return false;
 		WhenWait();
 		if(timeout == 0)
 			return false;
 	}
+}
+
+TcpSocket& TcpSocket::GlobalTimeout(int ms)
+{
+	start_time = msecs();
+	global_timeout = ms;
+	return *this;
 }
 
 bool TcpSocket::Wait(dword flags, int end_time)
@@ -574,7 +594,8 @@ bool TcpSocket::Wait(dword flags, int end_time)
 
 int  TcpSocket::GetEndTime() const
 {
-	return IsNull(timeout) ? INT_MAX : msecs() + timeout;
+	return min(IsNull(global_timeout) ? INT_MAX : start_time + global_timeout,
+	           IsNull(timeout) ? INT_MAX : msecs() + timeout);
 }
 
 bool TcpSocket::Wait(dword flags)
