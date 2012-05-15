@@ -10,7 +10,8 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	HttpRequest::Trace();
 	const Tuple2<const char *, const char *> x[] = {
-		{ "http://www.facebook.com/pages/Upp", "" },
+		{ "rcmania.cz", "</html>" },
+	//	{ "http://www.facebook.com/pages/Upp", "" },
 		{ "www.oexchange.org", "" },
 		{ "http://pagead2.googlesyndication.com/pagead/show_ads.js", "" },
 		{ "www.ultimatepp.org", "</script></BODY>" },
@@ -18,7 +19,6 @@ CONSOLE_APP_MAIN
 		{ "www.google.com", "</script>" },
 		{ "http://wattsupwiththat.com/", "</html>" },
 		{ "http://www.rcalbum.com", "</html>" },
-		{ "rcmania.cz", "</html>" },
 	};
 //	for(int nd = 0; nd < 1; nd++)
 		for(int i = 0; i < __countof(x); i++) {
@@ -28,6 +28,7 @@ CONSOLE_APP_MAIN
 //			if(nd)
 				h.Timeout(0);
 			if(IsNull(h.Execute())) {
+				DDUMP(~h);
 				LLOG("Error:\n" << h.GetErrorDesc());
 				NEVER();
 			}
