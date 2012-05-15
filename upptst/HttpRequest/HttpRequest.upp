@@ -1,5 +1,6 @@
 uses
-	Core;
+	Core,
+	Core\SSL;
 
 file
 	HttpRequest.cpp;
