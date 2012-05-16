@@ -577,6 +577,51 @@ void EndianSwap(int *v, int count);
 void EndianSwap(int64 *v, int count);
 void EndianSwap(uint64 *v, int count);
 
+#define SVO_MEMCPY(tgt, src, len) \
+do { \
+	const char *s__ = (const char *)(src); \
+	char *t__ = (char *)(tgt); \
+	switch(len) { \
+	case 11: t__[10] = s__[10]; \
+	case 10: t__[9] = s__[9]; \
+	case  9: t__[8] = s__[8]; \
+	case  8: t__[7] = s__[7]; \
+	case  7: t__[6] = s__[6]; \
+	case  6: t__[5] = s__[5]; \
+	case  5: t__[4] = s__[4]; \
+	case  4: t__[3] = s__[3]; \
+	case  3: t__[2] = s__[2]; \
+	case  2: t__[1] = s__[1]; \
+	case  1: t__[0] = s__[0]; \
+	case  0: \
+		break; \
+	default: \
+		memcpy(t__, s__, len); \
+	} \
+} while(false)
+
+#define SVO_MEMSET(tgt, val, len) \
+do { \
+	char *t__ = (char *)(tgt); \
+	switch(len) { \
+	case 11: t__[10] = val; \
+	case 10: t__[9] = val; \
+	case  9: t__[8] = val; \
+	case  8: t__[7] = val; \
+	case  7: t__[6] = val; \
+	case  6: t__[5] = val; \
+	case  5: t__[4] = val; \
+	case  4: t__[3] = val; \
+	case  3: t__[2] = val; \
+	case  2: t__[1] = val; \
+	case  1: t__[0] = val; \
+	case  0: \
+		break; \
+	default: \
+		memset(t__, val, len); \
+	} \
+} while(false)
+
 //Quick fix....
 #ifdef PLATFORM_WINCE
 const char *FromSysChrSet(const wchar *s);
