@@ -1,8 +1,7 @@
-#define			BORDER_SIZE			2
-#define			BORDER1				BORDER_SIZE
-#define			BORDER2				( 2 * BORDER_SIZE )
-
 class SliderCtrlX : public Ctrl {
+	static const int BORDER_SIZE = 2;
+	static const int BORDER1 = BORDER_SIZE;
+	static const int BORDER2 = 2 * BORDER_SIZE;
 	
 	typedef enum { HORZ, VERT } HOVE;
 	
