@@ -249,6 +249,7 @@ public:
 	unsigned GetHashValue() const             { return data->GetHashValue(); }
 	void     Serialize(Stream& s);
 	void     Jsonize(JsonIO& jio);
+	void     Xmlize(XmlIO& xio);
 	String   ToString() const;
 
 	bool operator==(const ValueArray& v) const;
@@ -338,6 +339,7 @@ public:
 	unsigned GetHashValue() const                 { return data->GetHashValue(); }
 	void     Serialize(Stream& s);
 	void     Jsonize(JsonIO& jio);
+	void     Xmlize(XmlIO& xio);
 	String   ToString() const                     { return data->AsString(); }
 
 	bool operator==(const ValueMap& v) const;

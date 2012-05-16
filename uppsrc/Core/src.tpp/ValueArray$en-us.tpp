@@ -175,6 +175,15 @@ implemented.&]
 conversion implemented.&]
 [s3;%% &]
 [s4; &]
+[s5;:ValueArray`:`:Xmlize`(XmlIO`&`): [@(0.0.255) void]_[* Xmlize]([_^XmlIO^ XmlIO][@(0.0.255) `&
+]_[*@3 xio])&]
+[s2;%% XML serialization support.&]
+[s3;%% &]
+[s4; &]
+[s5;:ValueArray`:`:ToString`(`)const: [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]
+[s2;%% Converts ValueArray to text.&]
+[s3; &]
+[s4; &]
 [s5;:ValueArray`:`:operator`=`=`(const ValueArray`&`)const: [@(0.0.255) bool]_[* operator
 `=`=]([@(0.0.255) const]_[_^ValueArray^ ValueArray][@(0.0.255) `&]_[*@3 v])_[@(0.0.255) con
 st]&]

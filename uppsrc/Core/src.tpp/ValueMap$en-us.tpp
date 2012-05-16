@@ -209,7 +209,12 @@ onst]&]
 [s4;%- &]
 [s5;:ValueMap`:`:Jsonize`(JsonIO`&`):%- [@(0.0.255) void]_[* Jsonize]([_^JsonIO^ JsonIO][@(0.0.255) `&
 ]_[*@3 jio])&]
-[s2; JSON support.&]
+[s2; JSON serialization support.&]
+[s3; &]
+[s4;%- &]
+[s5;:ValueMap`:`:Xmlize`(XmlIO`&`):%- [@(0.0.255) void]_[* Xmlize]([_^XmlIO^ XmlIO][@(0.0.255) `&
+]_[*@3 xio])&]
+[s2; XML serialization support.&]
 [s3; &]
 [s4;%- &]
 [s5;:ValueMap`:`:ToString`(`)const:%- [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]

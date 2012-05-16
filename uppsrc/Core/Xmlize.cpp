@@ -299,6 +299,7 @@ template<> void Xmlize(XmlIO& xml, Value& v)
 }
 #endif
 
+#ifndef SVO_VALUE
 template<> void Xmlize(XmlIO& xml, ValueArray& v)
 {
 	if(xml.IsStoring())
@@ -327,6 +328,7 @@ template<> void Xmlize(XmlIO& xml, ValueMap& v)
 			v.Add(vv[i], va[i]);
 	}
 }
+#endif
 
 void XmlizeLangAttr(XmlIO& xml, int& lang, const char *id)
 {
