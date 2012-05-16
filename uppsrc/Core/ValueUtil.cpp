@@ -182,6 +182,15 @@ void ValueArray::Jsonize(JsonIO& jio)
 	data->Jsonize(jio);
 }
 
+void ValueArray::Xmlize(XmlIO& xio)
+{
+	if(xio.IsLoading()) {
+		data->Release();
+		Create();
+	}
+	data->Xmlize(xio);
+}
+
 String ValueArray::ToString() const
 {
 	return sAsString(Get());
@@ -441,6 +450,14 @@ void ValueMap::Jsonize(JsonIO& jio)
 	data->Jsonize(jio);
 }
 
+void ValueMap::Xmlize(XmlIO& xio)
+{
+	if(xio.IsLoading()) {
+		data->Release();
+		Create();
+	}
+	data->Xmlize(xio);
+}
 
 ValueMap::~ValueMap() {
 	ASSERT(data->GetRefCount() > 0);
