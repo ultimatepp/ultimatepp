@@ -2,29 +2,6 @@
 
 NAMESPACE_UPP
 
-#define SVO_MEMCPY(tgt, src, len) \
-do { \
-	const char *s__ = (const char *)(src); \
-	char *t__ = (char *)(tgt); \
-	switch(len) { \
-	case 11: t__[10] = s__[10]; \
-	case 10: t__[9] = s__[9]; \
-	case  9: t__[8] = s__[8]; \
-	case  8: t__[7] = s__[7]; \
-	case  7: t__[6] = s__[6]; \
-	case  6: t__[5] = s__[5]; \
-	case  5: t__[4] = s__[4]; \
-	case  4: t__[3] = s__[3]; \
-	case  3: t__[2] = s__[2]; \
-	case  2: t__[1] = s__[1]; \
-	case  1: t__[0] = s__[0]; \
-	case  0: \
-		break; \
-	default: \
-		memcpy(t__, s__, len); \
-	} \
-} while(false)
-
 #ifdef _DEBUG
 void String0::Dsyn()
 {
