@@ -434,7 +434,7 @@ bool TcpSocket::RawConnect(addrinfo *rp)
 
 bool TcpSocket::Connect(IpAddrInfo& info)
 {
-	LLOG("TCP Connect addrinfo");
+	LLOG("Connect addrinfo");
 	Init();
 	Reset();
 	addrinfo *result = info.GetResult();
@@ -443,7 +443,7 @@ bool TcpSocket::Connect(IpAddrInfo& info)
 
 bool TcpSocket::Connect(const char *host, int port)
 {
-	LLOG("TCP Connect(" << host << ':' << port << ')');
+	LLOG("Connect(" << host << ':' << port << ')');
 
 	Init();
 	Reset();
@@ -457,7 +457,7 @@ bool TcpSocket::Connect(const char *host, int port)
 
 void TcpSocket::RawClose()
 {
-	LLOG("TCP close " << (int)socket);
+	LLOG("close " << (int)socket);
 	if(socket != INVALID_SOCKET) {
 		int res;
 #if defined(PLATFORM_WIN32)
@@ -800,7 +800,7 @@ void TcpSocket::SetSockError(const char *context, int code, const char *errdesc)
 		errordesc << "socket(" << (int)socket << ") / ";
 	errordesc << context << ": " << errdesc;
 	is_error = true;
-	LLOG("TCP ERROR " << errordesc);
+	LLOG("ERROR " << errordesc);
 }
 
 void TcpSocket::SetSockError(const char *context, const char *errdesc)

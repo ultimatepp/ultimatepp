@@ -1,6 +1,6 @@
 #include "SSL.h"
 
-#define LLOG(x) // DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 NAMESPACE_UPP
 
@@ -23,7 +23,7 @@ struct TcpSocket::SSLImp : TcpSocket::SSL {
 	void           SetSSLResError(const char *context, int res);
 	bool           IsAgain(int res) const;
 	
-	SSLImp(TcpSocket& socket) : socket(socket) { ssl = NULL; }
+	SSLImp(TcpSocket& socket) : socket(socket) { ssl = NULL; LLOG("SSLImp(" << socket.GetSOCKET() << ")"); }
 	~SSLImp();
 };
 
@@ -105,6 +105,7 @@ bool TcpSocket::SSLImp::Start()
 {
 	LLOG("SSL Start");
 
+	ERR_clear_error();
 	if(!context.Create(const_cast<SSL_METHOD *>(SSLv3_client_method()))) {
 		SetSSLError("Start: SSL context.");
 		return false;
@@ -125,6 +126,7 @@ bool TcpSocket::SSLImp::Start()
 dword TcpSocket::SSLImp::Handshake()
 {
 	int res;
+	ERR_clear_error();
 	if(socket.mode == ACCEPT)
 		res = SSL_accept(ssl);
 	else
@@ -137,6 +139,8 @@ dword TcpSocket::SSLImp::Handshake()
 		if(code == SSL_ERROR_WANT_READ)
 			return WAIT_READ;
 		if(code == SSL_ERROR_WANT_WRITE)
+			return WAIT_WRITE;
+		if(code == SSL_ERROR_SYSCALL && socket.GetErrorCode() == WSAENOTCONN)
 			return WAIT_WRITE;
 		SetSSLResError("SSL handshake", res);
 		return 0;
@@ -169,6 +173,7 @@ bool TcpSocket::SSLImp::Wait(dword flags, int end_time)
 int TcpSocket::SSLImp::Send(const void *buffer, int maxlen)
 {
 	LLOG("SSL Send " << maxlen);
+	ERR_clear_error();
 	int res = SSL_write(ssl, (const char *)buffer, maxlen);
 	if(res > 0)
 		return res;
@@ -183,6 +188,7 @@ int TcpSocket::SSLImp::Send(const void *buffer, int maxlen)
 int TcpSocket::SSLImp::Recv(void *buffer, int maxlen)
 {
 	LLOG("SSL Recv " << maxlen);
+	ERR_clear_error();
 	int res = SSL_read(ssl, (char *)buffer, maxlen);
 	if(res > 0)
 		return res;

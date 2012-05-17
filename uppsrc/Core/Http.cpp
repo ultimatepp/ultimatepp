@@ -23,7 +23,7 @@ void HttpRequest::Init()
 	ssl_proxy_port = 0;
 	max_header_size = 1000000;
 	max_content_size = 10000000;
-	max_redirects = 5;
+	max_redirects = 10;
 	max_retries = 3;
 	force_digest = false;
 	std_headers = true;
@@ -323,6 +323,7 @@ bool HttpRequest::Do()
 
 void HttpRequest::Start()
 {
+	LLOG("HTTP START");
 	Close();
 	ClearError();
 	gzip = false;
@@ -371,6 +372,7 @@ void HttpRequest::Dns()
 
 void HttpRequest::StartConnect()
 {
+	LLOG("HTTP StartConnect");
 	if(!Connect(addrinfo))
 		return;
 	if(ssl && ssl_proxy_host.GetCount()) {
@@ -408,6 +410,7 @@ void HttpRequest::ProcessSSLProxyResponse()
 
 void HttpRequest::AfterConnect()
 {
+	LLOG("HTTP AfterConnect");
 	if(ssl && !StartSSL())
 		return;
 	if(ssl)
@@ -437,8 +440,11 @@ void HttpRequest::StartRequest()
 	url << "http://" << host_port << Nvl(path, "/");
 	if(!IsNull(proxy_host) && !ssl)
 		data << url;
-	else
-		data << Nvl(path, "/");
+	else {
+		if(*path != '/')
+			data << '/';
+		data << path;
+	}
 	data << " HTTP/1.1\r\n";
 	if(std_headers) {
 		data << "URL: " << url << "\r\n"
@@ -665,7 +671,7 @@ void HttpRequest::Finish()
 	if(status_code >= 300 && status_code < 400) {
 		String url = GetRedirectUrl();
 		if(url.GetCount() && redirect_count++ < max_redirects) {
-			LLOG("HTTP redirect " << url);
+			LLOG("--- HTTP redirect " << url);
 			Url(url);
 			CopyCookies();
 			Start();
@@ -678,6 +684,7 @@ void HttpRequest::Finish()
 
 String HttpRequest::Execute()
 {
+	New();
 	while(Do())
 		LLOG("HTTP Execute: " << GetPhaseName());
 	return IsSuccess() ? GetContent() : String::GetVoid();
