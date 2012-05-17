@@ -343,7 +343,6 @@ class HttpRequest : public TcpSocket {
 	void         ReadingChunkHeader();
 	void         Finish();
 	bool         IsRequestTimeout();
-
 	void         CopyCookies();
 
 	void         HttpError(const char *s);
@@ -390,8 +389,6 @@ public:
 	HttpRequest&  AddHeaders(const String& h)             { request_headers.Cat(h); return *this; }
 	HttpRequest&  Header(const char *id, const String& data);
 	HttpRequest&  Cookie(const String& cookie)            { return Header("Cookie", cookie); }
-	
-	HttpRequest&  Cookies(bool b = true)                  { cookies = b; }
 
 	HttpRequest&  StdHeaders(bool sh)                     { std_headers = sh; return *this; }
 	HttpRequest&  NoStdHeaders()                          { return StdHeaders(false); }

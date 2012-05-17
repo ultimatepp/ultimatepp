@@ -659,13 +659,11 @@ void HttpRequest::Finish()
 	#endif
 	}
 	Close();
-	if(cookies)
-		CopyCookies();
+	CopyCookies();
 	if(status_code == 401 && !IsNull(username)) {
 		String authenticate = header["www-authenticate"];
 		if(authenticate.GetCount() && redirect_count++ < max_redirects) {
 			LLOG("HTTP auth digest");
-			CopyCookies();
 			Digest(CalculateDigest(authenticate));
 			Start();
 			return;
@@ -676,7 +674,6 @@ void HttpRequest::Finish()
 		if(url.GetCount() && redirect_count++ < max_redirects) {
 			LLOG("--- HTTP redirect " << url);
 			Url(url);
-			CopyCookies();
 			Start();
 			retry_count = 0;
 			return;
