@@ -310,6 +310,7 @@ class HttpRequest : public TcpSocket {
 	String       digest;
 	String       request_headers;
 	String       postdata;
+	bool         cookies;
 
 	String       protocol;
 	int          status_code;
@@ -389,6 +390,8 @@ public:
 	HttpRequest&  AddHeaders(const String& h)             { request_headers.Cat(h); return *this; }
 	HttpRequest&  Header(const char *id, const String& data);
 	HttpRequest&  Cookie(const String& cookie)            { return Header("Cookie", cookie); }
+	
+	HttpRequest&  Cookies(bool b = true)                  { cookies = b; }
 
 	HttpRequest&  StdHeaders(bool sh)                     { std_headers = sh; return *this; }
 	HttpRequest&  NoStdHeaders()                          { return StdHeaders(false); }

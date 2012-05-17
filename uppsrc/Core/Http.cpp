@@ -37,6 +37,7 @@ void HttpRequest::Init()
 	chunk = 4096;
 	timeout = 120000;
 	ssl = false;
+	cookies = false;
 }
 
 HttpRequest::HttpRequest()
@@ -658,6 +659,8 @@ void HttpRequest::Finish()
 	#endif
 	}
 	Close();
+	if(cookies)
+		CopyCookies();
 	if(status_code == 401 && !IsNull(username)) {
 		String authenticate = header["www-authenticate"];
 		if(authenticate.GetCount() && redirect_count++ < max_redirects) {

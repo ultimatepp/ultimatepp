@@ -522,6 +522,15 @@ int Ctrl::GetKbdSpeed()
 	return 25;
 }
 
+
+#ifdef _DEBUG
+void _DBG_Ungrab(void) {
+	XUngrabPointer(Xdisplay, CurrentTime);
+	XUngrabKeyboard(Xdisplay, CurrentTime);
+	XFlush(Xdisplay);
+}
+#endif
+
 END_UPP_NAMESPACE
 
 #endif
