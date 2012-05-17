@@ -21,18 +21,21 @@ class UppStringPrinter(object):
 		self.val = val
 
 	def to_string(self):
-		SMALL = 0
-		MEDIUM = 31
-		KIND = 14
-		SLEN = 15
-		LLEN = 2
-		CHR = self.val['chr']
-		IsSmall = (CHR[KIND] == SMALL)
-		if(IsSmall):
-			ptr = CHR
-		else:
-			ptr = self.val['ptr']
-		return '"' + ptr.string() + '"'
+		try:
+			SMALL = 0
+			MEDIUM = 31
+			KIND = 14
+			SLEN = 15
+			LLEN = 2
+			CHR = self.val['chr']
+			IsSmall = (CHR[KIND] == SMALL)
+			if(IsSmall):
+				ptr = CHR
+			else:
+				ptr = self.val['ptr']
+			return '"' + ptr.string() + '"'
+		except Exception as inst:
+			return "<can't read string>"
 
 	def display_hint(self):
 		return 'String'
@@ -178,6 +181,12 @@ class UppValuePrinter(object):
 		self.val = val
 		
 	def to_string(self):
+		try:
+			magic = self.val['MAGIC']
+		except Exception as inst:
+			return '<value inspectors not supported>'
+		if magic != 0xdeadbeef:
+			return '<value not initialized>'
 		typeId = Upp_Value_GetType(self.val)
 		if typeId == 0:
 			return '<void>'
@@ -298,24 +307,27 @@ def UppLookupFunction(val):
 	if typeStr == 'const Upp::String':
 		return UppStringPrinter(val)
 		
-#	if typeStr == 'Upp::Value *' and Upp_Value_Inspectors:
-#		return UppValuePtrPrinter(val)
+##########################################################################
+#						FOR VALUES -- EXPERIMENTAL
+	if typeStr == 'Upp::Value *' and Upp_Value_Inspectors:
+		return UppValuePtrPrinter(val)
 		
-#	if typeStr == 'const Upp::Value *' and Upp_Value_Inspectors:
-#		return UppValuePtrPrinter(val)
+	if typeStr == 'const Upp::Value *' and Upp_Value_Inspectors:
+		return UppValuePtrPrinter(val)
 		
-#	if typeStr == 'Upp::Value &' and Upp_Value_Inspectors:
-#		return UppValuePtrPrinter(val.address)
+	if typeStr == 'Upp::Value &' and Upp_Value_Inspectors:
+		return UppValuePtrPrinter(val.address)
 		
-#	if typeStr == 'const Upp::Value &' and Upp_Value_Inspectors:
-#		return UppValuePtrPrinter(val.address)
+	if typeStr == 'const Upp::Value &' and Upp_Value_Inspectors:
+		return UppValuePtrPrinter(val.address)
 		
-#	if typeStr == 'Upp::Value' and Upp_Value_Inspectors:
-#		return UppValuePrinter(val)
+	if typeStr == 'Upp::Value' and Upp_Value_Inspectors:
+		return UppValuePrinter(val)
 		
-#	if typeStr == 'const Upp::Value' and Upp_Value_Inspectors:
-#		return UppValuePrinter(val)
+	if typeStr == 'const Upp::Value' and Upp_Value_Inspectors:
+		return UppValuePrinter(val)
 
+##########################################################################
 	if typeStr == 'Upp::Point' or typeStr == 'Upp::Pointf':
 		return UppPointPrinter(val)
 		
