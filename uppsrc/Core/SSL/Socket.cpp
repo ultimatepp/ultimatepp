@@ -140,7 +140,11 @@ dword TcpSocket::SSLImp::Handshake()
 			return WAIT_READ;
 		if(code == SSL_ERROR_WANT_WRITE)
 			return WAIT_WRITE;
+	#ifdef PLATFORM_WIN32
 		if(code == SSL_ERROR_SYSCALL && socket.GetErrorCode() == WSAENOTCONN)
+	#else
+		if(code == SSL_ERROR_SYSCALL && socket.GetErrorCode() == ENOTCONN)
+	#endif
 			return WAIT_WRITE;
 		SetSSLResError("SSL handshake", res);
 		return 0;
