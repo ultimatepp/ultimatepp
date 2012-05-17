@@ -52,7 +52,7 @@ axContentSize]([@(0.0.255) int]_[*@3 m])&]
 [s5;:HttpRequest`:`:MaxRedirect`(int`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[* MaxR
 edirect]([@(0.0.255) int]_[*@3 n])&]
 [s2;%% Specifies the maximum number of redirections (code 3xx) (default 
-is 5). Returns `*this.&]
+is 10). Returns `*this.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:HttpRequest`:`:MaxRetries`(int`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[* MaxRe
