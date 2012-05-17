@@ -10,6 +10,7 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	HttpRequest::Trace();
 	const Tuple2<const char *, const char *> x[] = {
+		{ "https://www.servis24.cz", "" },
 		{ "rcmania.cz", "</html>" },
 	//	{ "http://www.facebook.com/pages/Upp", "" },
 		{ "www.oexchange.org", "" },
@@ -28,7 +29,7 @@ CONSOLE_APP_MAIN
 //			if(nd)
 				h.Timeout(0);
 			if(IsNull(h.Execute())) {
-				DDUMP(~h);
+				DUMP(~h);
 				LLOG("Error:\n" << h.GetErrorDesc());
 				NEVER();
 			}
