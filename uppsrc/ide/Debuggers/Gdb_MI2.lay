@@ -36,10 +36,10 @@ LAYOUT(Gdb_MI2Registers64Layout, 220, 68)
 	ITEM(Label, rsp, SetLabel(t_("0000000000000000")).SetFont(MonospaceZ(8)).LeftPosZ(136, 80).TopPosZ(52, 13))
 END_LAYOUT
 
-LAYOUT(Gdb_MI2QuickwatchLayout, 400, 200)
+LAYOUT(Gdb_MI2QuickwatchLayout, 400, 224)
 	ITEM(WithDropChoice<EditString>, expression, HSizePosZ(4, 72).TopPosZ(4, 19))
-	ITEM(Button, ok, SetLabel(t_("Evaluate")).RightPosZ(4, 64).TopPosZ(4, 20))
-	ITEM(LineEdit, value, HSizePosZ(4, 4).VSizePosZ(28, 4))
-	ITEM(Button, cancel, RightPosZ(4, 28).BottomPosZ(-32, 16))
+	ITEM(Button, evaluate, SetLabel(t_("Evaluate")).RightPosZ(4, 64).TopPosZ(4, 20))
+	ITEM(WatchEdit, value, HSizePosZ(4, 4).VSizePosZ(28, 28))
+	ITEM(Button, close, SetLabel(t_("Close")).RightPosZ(4, 64).BottomPosZ(4, 20))
 END_LAYOUT
 
