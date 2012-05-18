@@ -1,4 +1,5 @@
 #include "Debuggers.h"
+#include <ide/ide.h>
 
 #include "PrettyPrinters.brc"
 
@@ -1311,27 +1312,65 @@ void Gdb_MI2::WatchDeep(String const &parentExp, String const &var, int level)
 // opens quick watch dialog
 void Gdb_MI2::QuickWatch()
 {
+	// try to figure out if we've got the cursor in some interesting
+	// place... if it is, grab the expression from there
+	// otherwise let it unchanged
+	Ctrl *c = GetFocusCtrl();
+	if(typeid(*c) == typeid(AssistEditor))
+	{
+		AssistEditor *a = dynamic_cast<AssistEditor *>(c);
+		String s = a->ReadIdBack(a->GetCursor());
+		quickwatch.expression <<= s;
+	}
+	else if(c == &autos)
+	{
+		int i = autos.GetCursor();
+		if(i >= 0)
+			quickwatch.expression <<= autos.Get(i, 0);
+	}
+	else if(c == &locals)
+	{
+		int i = locals.GetCursor();
+		if(i >= 0)
+			quickwatch.expression <<= locals.Get(i, 0);
+	}
+	else if(c == &watches)
+	{
+		int i = watches.GetCursor();
+		if(i >= 0)
+			quickwatch.expression <<= watches.Get(i, 0);
+	}
+	else if(c == &explorer || c == &explorerExprEdit)
+	{
+		quickwatch.expression <<= ~explorerExprEdit;
+	}
+	
 	for(;;)
 	{
+		String exp = ~quickwatch.expression;
+		if(!exp.IsEmpty())
+		{
+			MIValue v = MICmd("var-create - @ " + exp);
+			if(!v.IsError())
+			{
+				String type = v("type", "");
+				if(!type.IsEmpty())
+					type = "(" + type + ")";
+				String value = v["value"];
+				quickwatch.value <<= FormatWatchLine(exp, type + value, 0);
+				quickwatch.expression.AddHistory();
+				String name = v["name"];
+				WatchDeep(exp, name, 1);
+				MICmd("var-delete " + name);
+			}
+			else
+				quickwatch.value <<= t_("<can't evaluate expression>");
+		}
+		else
+			quickwatch.value.Clear();
 		int q = quickwatch.Run();
 		if(q == IDCANCEL)
 			break;
-		MIValue v = MICmd("var-create - @ " + (String)~quickwatch.expression);
-		if(!v.IsError())
-		{
-			String exp = ~quickwatch.expression;
-			String type = v("type", "");
-			if(!type.IsEmpty())
-				type = "(" + type + ")";
-			String value = v["value"];
-			quickwatch.value <<= FormatWatchLine(exp, type + value, 0);
-			quickwatch.expression.AddHistory();
-			String name = v["name"];
-			WatchDeep(exp, name, 1);
-			MICmd("var-delete " + name);
-		}
-		else
-			quickwatch.value <<= t_("<can't evaluate expression>");
 	}
 	quickwatch.Close();
 }
