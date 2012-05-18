@@ -24,6 +24,14 @@ static void MarkChanged2(const VectorMap<String, String>& m, ArrayCtrl& data)
 	}
 }
 
+void WatchEdit::HighlightLine(int line, Vector<Highlight>& h, int pos)
+{
+	Color cEven = Blend(SColorInfo, White, 220);
+	Color cOdd = Blend(SColorInfo, White, 128);
+	for(int i = 0; i < h.GetCount(); i++)
+		h[i].paper = (line % 2 ? cOdd : cEven);
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //											PUBLIC IDE INTERFACE
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -276,10 +284,13 @@ Gdb_MI2::Gdb_MI2()
 	dlock.NoTransparent();
 	dlock.Hide();
 
-	CtrlLayoutOKCancel(quickwatch, "Quick watch");
+	CtrlLayout(quickwatch, "Quick watch");
+	quickwatch.close.Cancel() <<= quickwatch.Breaker(IDCANCEL);
+	quickwatch.evaluate.Ok() <<= quickwatch.Acceptor(IDOK);
 	quickwatch.WhenClose = quickwatch.Breaker(IDCANCEL);
 	quickwatch.value.SetReadOnly();
 	quickwatch.value.SetFont(Courier(12));
+	quickwatch.value.SetColor(TextCtrl::PAPER_READONLY, White);
 	quickwatch.Sizeable().Zoomable();
 	quickwatch.NoCenter();
 	quickwatch.SetRect(0, 150, 300, 400);
@@ -1270,7 +1281,7 @@ String Gdb_MI2::FormatWatchLine(String exp, String const &val, int level)
 }
 
 // deep watch current quickwatch variable
-void Gdb_MI2::WatchDeep(String const &parentExp, String const &var, int level)
+void Gdb_MI2::WatchDeep(String parentExp, String const &var, int level)
 {
 	MIValue childInfo = MICmd("var-list-children 1 \"" + var + "\" 0 100");
 	int nChilds = min(atoi(childInfo["numchild"].Get()), 100);
@@ -1291,8 +1302,12 @@ void Gdb_MI2::WatchDeep(String const &parentExp, String const &var, int level)
 			}
 */
 			if(isdigit(exp[0]))
+			{
 				exp = '[' + exp + ']';
-			else
+				if(parentExp.Mid(parentExp.GetCount() - 1, 1) == ".")
+					parentExp = parentExp.Left(parentExp.GetCount() - 1);
+			}
+			if(exp[0] != '.' && exp[0] != '[')
 				exp = '.' + exp;
 
 			String type = child("type", "");
