@@ -436,6 +436,8 @@ void ScatterDraw::SetDrawing(T& w, const int& scale)
 {
 	if (GetSize().cx == 0 || GetSize().cy == 0)
 		return;
+	if (xRange == 0 || xMajorUnit == 0 || yRange == 0 || yMajorUnit == 0 || yRange2 == 0)
+		return;
 	
 	w.DrawRect(scale*GetSize(), graphColor);
 	
@@ -505,7 +507,7 @@ void ScatterDraw::SetDrawing(T& w, const int& scale)
 		}
 
 	if (drawYReticle)
-		for(int i = 0; yMinUnit + i*yMajorUnit <= yRange; i++){
+		for(int i = 0; yMinUnit + i*yMajorUnit <= yRange; i++) {
 			w.DrawLine(-(scale*4), fround(-plotH*yMinUnit/yRange + plotH - i*plotH/(yRange/yMajorUnit)),
 					   0, fround(-plotH*yMinUnit/yRange + plotH - i*plotH/(yRange/yMajorUnit)),
 					   fround(gridWidth*scale), axisColor);
@@ -523,7 +525,7 @@ void ScatterDraw::SetDrawing(T& w, const int& scale)
 		}	
 
 	if (drawY2Reticle)
-		for(int i = 0; yMinUnit + i*yMajorUnit <= yRange; i++){
+		for(int i = 0; yMinUnit + i*yMajorUnit <= yRange; i++) {
 			w.DrawLine(plotW + (scale*4), fround(-plotH*yMinUnit2/yRange2 + plotH - i*plotH/(yRange/yMajorUnit)),
 					   plotW, fround(-plotH*yMinUnit2/yRange2 + plotH - i*plotH/(yRange/yMajorUnit)),
 					   fround(gridWidth*scale), axisColor);
@@ -535,8 +537,8 @@ void ScatterDraw::SetDrawing(T& w, const int& scale)
 				gridLabelY2 = VariableFormatY2(gridY2);
 			Font standard6;
 			standard6.Height(scale*StdFont().GetHeight());  
-			DrawText(w, plotW + scale*10, fround(-plotH*yMinUnit2/yRange2 + plotH - i*plotH/(yRange/yMajorUnit)) - scale*8, 0, 
-						gridLabelY2, standard6, axisColor);
+			DrawText(w, plotW + scale*10, fround(-plotH*yMinUnit2/yRange2 + plotH - i*plotH/(yRange/yMajorUnit)) - scale*8, 
+						0, gridLabelY2, standard6, axisColor);
 		}	
 
 	Plot(w, scale, plotW, plotH);	

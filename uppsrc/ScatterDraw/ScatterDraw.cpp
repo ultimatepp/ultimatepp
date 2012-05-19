@@ -345,12 +345,8 @@ void ScatterDraw::FitToData(bool vertical) {
 	for (int j = 0; j < series.GetCount(); j++) {
 		if (series[j].opacity == 0)
 			continue;
-		for (int i = 0; i < series[j].PointsData()->GetCount(); i++) {
-			if (series[j].PointsData()->x(i) < minx)
-				minx = series[j].PointsData()->x(i);
-			if (series[j].PointsData()->x(i) > maxx)
-				maxx = series[j].PointsData()->x(i);
-		}
+		minx = min(minx, series[j].PointsData()->MinX());
+		maxx = max(maxx, series[j].PointsData()->MaxX());
 	}
 	if (vertical) {
 		for (int j = 0; j < series.GetCount(); j++) {
