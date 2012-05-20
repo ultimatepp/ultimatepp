@@ -13,7 +13,47 @@ public:
 		UTF8      = PCRE_UTF8,
 		CASELESS  = PCRE_CASELESS,
 		MULTILINE = PCRE_MULTILINE,
-		UNGREEDY  = PCRE_UNGREEDY
+		UNGREEDY  = PCRE_UNGREEDY,
+		DOTALL    = PCRE_DOTALL,
+		
+		EXECUTE_OPTIONS = PCRE_ANCHORED
+		                | PCRE_NEWLINE_CR
+		                | PCRE_NEWLINE_LF
+		                | PCRE_NEWLINE_CRLF
+		                | PCRE_NEWLINE_ANYCRLF
+		                | PCRE_NEWLINE_ANY
+		                | PCRE_NOTBOL
+		                | PCRE_NOTEOL
+		                | PCRE_NOTEMPTY
+		                | PCRE_NOTEMPTY_ATSTART
+		                | PCRE_NO_START_OPTIMIZE
+		                | PCRE_NO_UTF8_CHECK
+		                | PCRE_PARTIAL_SOFT
+		                | PCRE_PARTIAL_HARD,
+		COMPILE_OPTIONS = PCRE_ANCHORED
+		                | PCRE_AUTO_CALLOUT
+		                | PCRE_BSR_ANYCRLF
+		                | PCRE_BSR_UNICODE
+		                | PCRE_CASELESS
+		                | PCRE_DOLLAR_ENDONLY
+		                | PCRE_DOTALL
+		                | PCRE_DUPNAMES
+		                | PCRE_EXTENDED
+		                | PCRE_EXTRA
+		                | PCRE_FIRSTLINE
+		                | PCRE_JAVASCRIPT_COMPAT
+		                | PCRE_MULTILINE
+		                | PCRE_NEWLINE_CR
+		                | PCRE_NEWLINE_LF
+		                | PCRE_NEWLINE_CRLF
+		                | PCRE_NEWLINE_ANYCRLF
+		                | PCRE_NEWLINE_ANY
+		                | PCRE_NO_AUTO_CAPTURE
+		                | PCRE_NO_START_OPTIMIZE
+		                | PCRE_UCP
+		                | PCRE_UNGREEDY
+		                | PCRE_UTF8
+		                | PCRE_NO_UTF8_CHECK
 	};
 
 private:

@@ -251,6 +251,7 @@ struct HttpHeader {
 	String GetVersion() const                                { return f3; }
 
 	void   Clear();
+	bool   ParseAdd(const String& hdrs);
 	bool   Parse(const String& hdrs);
 
 	bool   Read(TcpSocket& socket);
@@ -310,7 +311,7 @@ class HttpRequest : public TcpSocket {
 	String       digest;
 	String       request_headers;
 	String       postdata;
-	bool         cookies;
+	String       cookies;
 
 	String       protocol;
 	int          status_code;
@@ -383,6 +384,7 @@ public:
 	HttpRequest&  PostUData(const String& pd)             { return PostData(UrlEncode(pd)); }
 	HttpRequest&  Post(const String& data)                { POST(); return PostData(data); }
 	HttpRequest&  Post(const char *id, const String& data);
+	HttpRequest&  ClearPost()                             { PostData(Null); GET(); return *this; }
 
 	HttpRequest&  Headers(const String& h)                { request_headers = h; return *this; }
 	HttpRequest&  ClearHeaders()                          { return Headers(Null); }

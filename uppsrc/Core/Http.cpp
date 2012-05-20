@@ -286,7 +286,7 @@ bool HttpRequest::Do()
 	case TRAILER:
 		if(ReadingHeader())
 			break;
-		header.Parse(data);
+		header.ParseAdd(data);
 		Finish();
 		break;
 	case FINISHED:

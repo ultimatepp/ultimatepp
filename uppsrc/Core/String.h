@@ -792,6 +792,8 @@ int CompareNoCase(const wchar *a, const WString& b) {
 
 template<> inline String AsString(const char * const &s)    { return s; }
 template<> inline String AsString(char * const &s)          { return s; }
+template<> inline String AsString(const char *s)            { return s; }
+template<> inline String AsString(char *s)                  { return s; }
 template<> inline String AsString(const char& a)            { return String(a, 1); }
 template<> inline String AsString(const signed char& a)     { return String(a, 1); }
 template<> inline String AsString(const unsigned char& a)   { return String(a, 1); }

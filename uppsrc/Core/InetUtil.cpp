@@ -232,9 +232,8 @@ void HttpHeader::Clear()
 	f1 = f2 = f3 = Null;
 }
 
-bool HttpHeader::Parse(const String& hdrs)
+bool HttpHeader::ParseAdd(const String& hdrs)
 {
-	Clear();
 	StringStream ss(hdrs);
 	first_line = ss.GetLine();
 
@@ -262,6 +261,12 @@ bool HttpHeader::Parse(const String& hdrs)
 	f3 = s;
 
 	return true;
+}
+
+bool HttpHeader::Parse(const String& hdrs)
+{
+	Clear();
+	return ParseAdd(hdrs);
 }
 
 bool HttpHeader::Read(TcpSocket& socket)
