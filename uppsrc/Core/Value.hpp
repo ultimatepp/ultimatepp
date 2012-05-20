@@ -8,7 +8,8 @@ Value::Value(const Value& v)
 		SetLarge(v);
 	else
 		data.SetSmall(v.data);
-}
+ 	Magic(); 
+ }
 
 template<>
 inline bool IsPolyEqual(const bool& x, const Value& v) {

@@ -92,7 +92,7 @@ bool Value::operator==(const Value& v) const {
 	return svo[st]->IsEqual(&data, &v.data);
 }
 
-Value::Value(const WString& s) { InitRef(new RichValueRep<WString>(s)); }
+Value::Value(const WString& s) { InitRef(new RichValueRep<WString>(s)); Magic(); }
 
 Value::operator WString() const
 {
