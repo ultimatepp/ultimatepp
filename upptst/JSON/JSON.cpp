@@ -1,4 +1,5 @@
 #include <Core/Core.h>
+
 using namespace Upp;
 
 struct TestStruct
@@ -7,6 +8,8 @@ struct TestStruct
 	{
 		double  a;
 		Value   b;
+		String  c;
+		bool    d;
 		String ToString() const
 		{
 			return Format("a=%d, b=%d", a,b);
@@ -17,8 +20,12 @@ struct TestStruct
 			json
 				("a", a)
 				("b", b)
+				("c", c)
+				("d", d)
 			;
 		}
+		
+		TestV() { c = "Some text"; d = false; }
 	};
 	
 	void Add(double a, Value b)
@@ -34,6 +41,11 @@ struct TestStruct
 	{
 		StringMap(json, map); // <- string map
 	}
+	
+	void Xmlize(XmlIO &xio) {
+		XmlizeByJsonize(xio, *this);
+	}
+
 	VectorMap<String,TestV> map;
 };
 
@@ -73,6 +85,12 @@ CONSOLE_APP_MAIN
 	ASSERT(!LoadFromJson(test2, "{\"SomeKey1\":{\"a\":\"X\",\"b\":2},\"SomeKey2\":{\"a\":1,\"b\":2}}"));
 	
 	ASSERT(!LoadFromJsonFile(test2, "c:aksjdfhkjaskjdfkhasdf"));
+	
+	RLOG("================================");
+	String xml = StoreAsXML(test, "test");
+	RLOG(xml);
+	LoadFromXML(test2, xml);
+	ASSERT(StoreAsXML(test, "test") == xml);
 
 	RLOG("Everything is OK.");
 }
