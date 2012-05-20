@@ -109,6 +109,7 @@ public:
 	ReportView& Numbers(bool nums)    { numbers = nums; Refresh(); return *this; }
 
 	void      Set(Report& report);
+	Report   *Get()                   { return report; }
 	int       GetFirst() const        { return sb / pagesize.cy * pvn; }
 
 	void      ScrollInto(int toppage, int top, int bottompage, int bottom);
@@ -123,6 +124,7 @@ class ReportWindow : public WithReportWindowLayout<TopWindow> {
 	void Numbers() { pg.Numbers(numbers); }
 	void GoPage()  { sw <<= ReportView::PG1; Pages(); }
 	void Pdf();
+	void ShowPage();
 
 	Array<Button>         button;
 	Report               *report;
