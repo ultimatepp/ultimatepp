@@ -389,4 +389,61 @@ bool LoadFromXMLFile(Callback1<XmlIO> xmlize, const char *file)
 	return LoadFromXML(xmlize, LoadFile(sXMLFile(file)));
 }
 
+
+void StoreJsonValue(XmlIO& xio, const Value& v)
+{
+	if(v.GetType() == VALUEMAP_V) {
+		ValueMap m = v;
+		ValueArray va = m.GetValues();
+		for(int i = 0; i < m.GetCount(); i++) {
+			Value h = m.GetValue(i);
+			XmlIO io = xio.Add((String)m.GetKey(i));
+			StoreJsonValue(io, h);
+		}
+		return;
+	}
+	else
+	if(v.GetType() == VALUEARRAY_V) {
+		ValueArray va = v;
+		for(int i = 0; i < va.GetCount(); i++) {
+			XmlIO io = xio.Add("item");
+			Value h = va[i];
+			StoreJsonValue(io, h);
+		}
+	}
+	else
+	if(v.GetType() == BOOL_V) {
+		bool b = v;
+		Xmlize(xio, b);
+	}
+	else
+	if(IsNumber(v)) {
+		double h = v;
+		Xmlize(xio, h);
+		return;
+	}
+	else
+	if(IsString(v)) {
+		String h = v;
+		Xmlize(xio, h);
+	}
+	else
+		NEVER();
+}
+
+Value LoadJsonValue(const XmlNode& n)
+{
+	String h = n.Attr("value");
+	if(h.GetCount())
+		return ScanDouble(h);
+	ValueMap m;
+	String text;
+	for(int i = 0; i < n.GetCount(); i++)
+		if(n[i].IsTag())
+			m.Add(n[i].GetTag(), LoadJsonValue(n[i]));
+		else
+			return n[i].GetText();
+	return m;
+}
+
 END_UPP_NAMESPACE

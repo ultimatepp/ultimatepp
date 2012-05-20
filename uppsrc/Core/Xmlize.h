@@ -325,7 +325,7 @@ void XmlizeBySerialize(XmlIO& xio, T& x)
 {
 	String h;
 	if(xio.IsStoring())
-	   h = HexString(StoreAsString(x));
+		h = HexString(StoreAsString(x));
 	xio.Attr("data", h);
 	if(xio.IsLoading())
 		try {
@@ -334,4 +334,17 @@ void XmlizeBySerialize(XmlIO& xio, T& x)
 		catch(LoadingError) {
 			throw XmlError("xmlize by serialize error");
 		}
+}
+
+
+void  StoreJsonValue(XmlIO& xio, const Value& v);
+Value LoadJsonValue(const XmlNode& n);
+
+template <class T>
+void XmlizeByJsonize(XmlIO& xio, T& x)
+{
+	if(xio.IsStoring())
+		StoreJsonValue(xio, StoreAsJsonValue(x));
+	else
+		LoadFromJsonValue(x, LoadJsonValue(xio.Node()));
 }
