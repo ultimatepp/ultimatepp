@@ -43,16 +43,8 @@ void RegExp::Clear(bool freemem)
 
 void RegExp::SetOptions(int options)
 {
-	if(options & UNICODE)
-		compile_options |= UNICODE;
-	if(options & CASELESS)
-		compile_options |= CASELESS;
-	if(options & UNGREEDY)
-		compile_options |= UNGREEDY;
-	if(options & MULTILINE)
-		compile_options |= MULTILINE;
-	if(options & PARTIAL)
-		execute_options = PARTIAL;
+	compile_options = options & COMPILE_OPTIONS;
+	execute_options = options & EXECUTE_OPTIONS;
 }
 
 void RegExp::SetPattern(const char * p)

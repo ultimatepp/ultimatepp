@@ -138,10 +138,16 @@ st]&]
 [s2;%% Clears data.&]
 [s3; &]
 [s4; &]
-[s5;:HttpHeader`:`:Parse`(const String`&`): [@(0.0.255) bool]_[* Parse]([@(0.0.255) const]_
-[_^String^ String][@(0.0.255) `&]_[*@3 hdrs])&]
+[s5;:HttpHeader`:`:ParseAdd`(const String`&`): [@(0.0.255) bool]_[* ParseAdd]([@(0.0.255) c
+onst]_[_^String^ String][@(0.0.255) `&]_[*@3 hdrs])&]
 [s2;%% Parses the header (all lines of header) into [* first`_line 
 ]and [* fields].&]
+[s3;%% &]
+[s4; &]
+[s5;:HttpHeader`:`:Parse`(const String`&`): [@(0.0.255) bool]_[* Parse]([@(0.0.255) const]_
+[_^String^ String][@(0.0.255) `&]_[*@3 hdrs])&]
+[s2;%% Calls Clear and parses the header (all lines of header) into 
+[* first`_line ]and [* fields].&]
 [s3;%% &]
 [s4; &]
 [s5;:HttpHeader`:`:Read`(TcpSocket`&`): [@(0.0.255) bool]_[* Read]([_^TcpSocket^ TcpSocket][@(0.0.255) `&
