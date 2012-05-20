@@ -165,6 +165,15 @@ protected:
 	template <class T> friend Value SvoToValue(const T& x);
 
 	String  GetName() const;
+	
+#if defined(_DEBUG) && defined(COMPILER_GCC)
+	uint32  magic[4];
+	void    Magic()               { magic[0] = 0xc436d851; magic[1] = 0x72f67c76; magic[2] = 0x3e5e10fd; magic[3] = 0xc90d370b; }
+	void    ClearMagic()          { magic[0] = magic[1] = magic[2] = magic[3] = 0; }
+#else
+	void    Magic()               {}
+	void    ClearMagic()          {}
+#endif
 
 public:
 	static  void Register(dword w, Void* (*c)(), const char *name = NULL) init_; // Direct use deprecated
@@ -195,16 +204,16 @@ public:
 	operator int64() const           { return Is(INT64_V) ? GetSmall<int64>() : GetOtherInt64(); }
 	operator bool() const            { return Is(BOOL_V) ? GetSmall<bool>() : GetOtherBool(); }
 
-	Value(const String& s) : data(s) {}
+	Value(const String& s) : data(s) { Magic(); }
 	Value(const WString& s);
-	Value(const char *s) : data(s)   {}
-	Value(int i)                     : data(i, INT_V, String::SPECIAL) {}
-	Value(int64 i)                   : data(i, INT64_V, String::SPECIAL) {}
-	Value(double d)                  : data(d, DOUBLE_V, String::SPECIAL) {}
-	Value(bool b)                    : data(b, BOOL_V, String::SPECIAL) {}
-	Value(Date d)                    : data(d, DATE_V, String::SPECIAL) {}
-	Value(Time t)                    : data(t, TIME_V, String::SPECIAL) {}
-	Value(const Nuller&)             : data((int)Null, INT_V, String::SPECIAL) {}
+	Value(const char *s) : data(s)   { Magic(); }
+	Value(int i)                     : data(i, INT_V, String::SPECIAL) { Magic(); }
+	Value(int64 i)                   : data(i, INT64_V, String::SPECIAL) { Magic(); }
+	Value(double d)                  : data(d, DOUBLE_V, String::SPECIAL) { Magic(); }
+	Value(bool b)                    : data(b, BOOL_V, String::SPECIAL) { Magic(); }
+	Value(Date d)                    : data(d, DATE_V, String::SPECIAL) { Magic(); }
+	Value(Time t)                    : data(t, TIME_V, String::SPECIAL) { Magic(); }
+	Value(const Nuller&)             : data((int)Null, INT_V, String::SPECIAL) { Magic(); }
 
 	bool operator==(const Value& v) const;
 	bool operator!=(const Value& v) const { return !operator==(v); }
@@ -226,10 +235,10 @@ public:
 	const Value& operator[](const char *key) const;
 	const Value& operator[](const Id& key) const;
 
-	Value()                               : data((int)Null, VOIDV, String::SPECIAL) {}
-	~Value()                              { if(IsRef()) RefRelease(); }
+	Value()                               : data((int)Null, VOIDV, String::SPECIAL) { Magic(); }
+	~Value()                              { ClearMagic(); if(IsRef()) RefRelease(); }
 
-	Value(Void *p)                        { InitRef(p); }
+	Value(Void *p)                        { InitRef(p); Magic(); }
 	const Void *GetVoidPtr() const        { ASSERT(IsRef()); return ptr(); }
 
 	friend void Swap(Value& a, Value& b)  { Swap(a.data, b.data); }
