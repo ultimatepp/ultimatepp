@@ -37,7 +37,6 @@ void HttpRequest::Init()
 	chunk = 4096;
 	timeout = 120000;
 	ssl = false;
-	cookies = false;
 }
 
 HttpRequest::HttpRequest()

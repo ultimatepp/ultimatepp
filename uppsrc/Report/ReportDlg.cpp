@@ -205,7 +205,7 @@ ReportWindow::ReportWindow()
 	pg.WhenGoPage = THISBACK(GoPage);
 	lbl.SetFont(Arial(20).Italic());
 	lbl.SetAlign(ALIGN_CENTER);
-	pg.WhenAction = Breaker(-1);
+	pg.WhenAction = THISBACK(ShowPage);
 	Sizeable();
 	MaximizeBox();
 	Icon(CtrlImg::smallreporticon());
@@ -247,6 +247,12 @@ void ReportWindow::SetButton(int i, const char *label, int id)
 		AddChildBefore(&button[i], &cancel);
 }
 
+void ReportWindow::ShowPage()
+{
+	if(pg.Get())
+		lbl = Format("%d / %d", pg.GetFirst() + 1, pg.Get()->GetCount());
+}
+
 int ReportWindow::Perform(Report& report, int zoom, const char *caption)
 {
 	this->report = &report;
@@ -261,11 +267,8 @@ int ReportWindow::Perform(Report& report, int zoom, const char *caption)
 	ActiveFocus(pg);
 	Title(caption);
 	Open();
-	int n = -1;
 	for(;;) {
-		int nn = pg.GetFirst() + 1;
-		if(n != nn)
-			lbl = Format("%d / %d", n = nn, report.GetCount());
+		ShowPage();
 		int c = Run();
 		switch(c) {
 		case IDCANCEL:
