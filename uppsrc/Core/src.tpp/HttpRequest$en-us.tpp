@@ -309,7 +309,7 @@ onst]_[@(0.0.255) char]_`*[*@3 id])&]
 [s4;%% &]
 [s5;:HttpRequest`:`:GetContentLength`(`): [@(0.0.255) int]_[* GetContentLength]()&]
 [s2;%% Returns the content length as specified in HTTP response header 
-or `-1 if not specified or header not yet loaded.&]
+or 0 if not specified or header not yet loaded.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:HttpRequest`:`:GetStatusCode`(`)const: [@(0.0.255) int]_[* GetStatusCode]()_[@(0.0.255) c

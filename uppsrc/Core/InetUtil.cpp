@@ -232,6 +232,11 @@ void HttpHeader::Clear()
 	f1 = f2 = f3 = Null;
 }
 
+int64 HttpHeader::GetContentLength() const
+{
+	return Nvl(ScanInt64((*this)["content-length"]), (int64)0);
+}
+
 bool HttpHeader::ParseAdd(const String& hdrs)
 {
 	StringStream ss(hdrs);
@@ -269,10 +274,64 @@ bool HttpHeader::Parse(const String& hdrs)
 	return ParseAdd(hdrs);
 }
 
+int CharFilterScgiHttp(int c)
+{
+	return c == '_' ? '-' : c;
+}
+
+bool HttpHeader::ParseSCGI(const String& scgi_hdr)
+{
+	Clear();
+	String key, uri, qs;
+	const char *b = scgi_hdr;
+	const char *e = scgi_hdr.End();
+	int64 content_length = Null;
+	for(const char *s = scgi_hdr; s < e; s++) {
+		if(*s == '\0') {
+			String h(b, s);
+			b = s + 1;
+			if(key.GetCount()) {
+				if(key.StartsWith("http_"))
+					fields.Add(Filter(key.Mid(5), CharFilterScgiHttp), h);
+				if(key == "content_length")
+					content_length = ScanInt64(h);
+				if(key == "request_method")
+					f1 = h;
+				if(key == "request_uri")
+					uri = h;
+				if(key == "query_string")
+					qs = h;
+				if(key == "server_protocol")
+					f3 = h;
+				key.Clear();
+			}
+			else
+				key = ToLower(h);
+		}
+	}
+	f2 = uri + qs;
+	first_line = f1 + ' ' + f2 + ' ' + f3;
+	if(!IsNull(content_length) && content_length && fields.Find("content-length") < 0)
+		fields.Add("content-length", AsString(content_length));
+	return false;
+}
+
 bool HttpHeader::Read(TcpSocket& socket)
 {
 	Clear();
-	String h = socket.GetLine();
+	String h;
+	if(IsDigit(socket.Peek())) {
+		int len = 0;
+		while(IsDigit(socket.Peek()))
+			len = 10 * len + socket.Get() - '0';
+		if(socket.Get() != ':' || len < 0 || len > 10000000)
+			return false;
+		h = socket.GetAll(len);
+		if(socket.Get() != ',')
+			return false;
+		return ParseSCGI(h);
+	}
+	h = socket.GetLine();
 	if(h.IsVoid())
 		return false;
 	h << "\r\n";
