@@ -250,9 +250,12 @@ struct HttpHeader {
 	String GetURI() const                                    { return f2; }
 	String GetVersion() const                                { return f3; }
 
+	int64  GetContentLength() const;
+
 	void   Clear();
 	bool   ParseAdd(const String& hdrs);
 	bool   Parse(const String& hdrs);
+	bool   ParseSCGI(const String& scgi_hdr);
 
 	bool   Read(TcpSocket& socket);
 };

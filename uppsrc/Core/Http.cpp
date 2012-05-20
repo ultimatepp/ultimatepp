@@ -543,7 +543,7 @@ String HttpRequest::GetRedirectUrl()
 
 int   HttpRequest::GetContentLength()
 {
-	return Nvl(ScanInt(header["content-length"]), -1);
+	return header.GetContentLength();
 }
 
 void HttpRequest::StartBody()

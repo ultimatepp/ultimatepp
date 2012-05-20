@@ -134,6 +134,12 @@ st]&]
 [s2;%% Returns the version part of the first line of request.&]
 [s3; &]
 [s4; &]
+[s5;:HttpHeader`:`:GetContentLength`(`)const: [_^int64^ int64]_[* GetContentLength]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns the content length as specified in header or 0 if 
+not specified or header not yet loaded.&]
+[s3; &]
+[s4; &]
 [s5;:HttpHeader`:`:Clear`(`): [@(0.0.255) void]_[* Clear]()&]
 [s2;%% Clears data.&]
 [s3; &]
@@ -150,8 +156,16 @@ onst]_[_^String^ String][@(0.0.255) `&]_[*@3 hdrs])&]
 [* first`_line ]and [* fields].&]
 [s3;%% &]
 [s4; &]
+[s5;:HttpHeader`:`:ParseSCGI`(const String`&`): [@(0.0.255) bool]_[* ParseSCGI]([@(0.0.255) c
+onst]_[_^String^ String][@(0.0.255) `&]_[*@3 scgi`_hdr])&]
+[s2;%% Parse SCGI header, resulting state is as if the header parsed 
+was normal HTTP.&]
+[s3;%% &]
+[s4; &]
 [s5;:HttpHeader`:`:Read`(TcpSocket`&`): [@(0.0.255) bool]_[* Read]([_^TcpSocket^ TcpSocket][@(0.0.255) `&
 ]_[*@3 socket])&]
-[s2;%% Reads the header from [%-*@3 socket] and parses it.&]
+[s2;%% Reads the header from [%-*@3 socket] and parses it. Method detects 
+SCGI requests based on first character of request `- if it is 
+a digit, SCGI is assumed and the header is parsed as SCGI.&]
 [s3;%% &]
 [s0;%% ]
