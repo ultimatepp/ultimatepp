@@ -348,7 +348,7 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 	LLOG("minimized = " << mn << ", maximized = " << mx);
 	LLOG("rect = " << rect << ", overlapped = " << overlapped);
 	if(s.IsLoading()) {
-		if(mn) rect = overlapped;
+		rect = overlapped;
 		Rect limit = GetVirtualWorkArea();
 		Rect outer = rect;
 		::AdjustWindowRect(outer, WS_OVERLAPPEDWINDOW, FALSE);
@@ -362,12 +362,11 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 			minmax(rect.top,  limit.top,  limit.bottom - sz.cy),
 			sz.cx, sz.cy);
 		state = OVERLAPPED;
+		SetRect(rect);
 		if(mn && reminimize)
 			state = MINIMIZED;
 		if(mx)
 			state = MAXIMIZED;
-		if(state == OVERLAPPED)
-			SetRect(rect);
 		if(IsOpen()) {
 			WINDOWPLACEMENT wp;
 			memset(&wp,0,sizeof(WINDOWPLACEMENT));
@@ -378,23 +377,6 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 			wp.rcNormalPosition.right=rect.right;
 			wp.rcNormalPosition.bottom=rect.bottom;
 			::SetWindowPlacement(GetHWND(),&wp);
-		/*
-			HWND hwnd = GetHWND();
-			switch(state) {
-			case MINIMIZED:
-				if(!IsIconic(hwnd))
-					::ShowWindow(hwnd, SW_MINIMIZE);
-				break;
-			case MAXIMIZED:
-				if(!IsZoomed(hwnd))
-					::ShowWindow(hwnd, SW_MAXIMIZE);
-				break;
-			default:
-				if(IsIconic(hwnd) || IsZoomed(hwnd))
-					::ShowWindow(hwnd, SW_RESTORE);
-				break;
-			}
-		*/
 		}
 	}
 #endif
