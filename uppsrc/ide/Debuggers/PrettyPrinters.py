@@ -182,10 +182,10 @@ class UppValuePrinter(object):
 		
 	def to_string(self):
 		try:
-			magic = self.val['MAGIC']
+			magic = self.val['magic']
 		except Exception as inst:
 			return '<value inspectors not supported>'
-		if magic != 0xdeadbeef:
+		if magic[0] != 0xc436d851 or magic[1] != 0x72f67c76 or magic[2] != 0x3e5e10fd or magic[3] != 0xc90d370b:
 			return '<value not initialized>'
 		typeId = Upp_Value_GetType(self.val)
 		if typeId == 0:
