@@ -177,7 +177,7 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 				else
 					switch(dialect) {
 					case PGSQL: {
-						*r << "\'";
+						*r << "E\'";
 						const char *e = s + l;
 						while(s < e) {
 							byte c = *s++;
