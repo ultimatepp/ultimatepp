@@ -6,17 +6,9 @@ uses
 	PdfDraw,
 	plugin\jpg;
 
-uses(SKELETON) Skeleton;
-
-uses(WINALT) WinAlt;
-
 uses(WINFB) WinFb;
 
 uses(LINUXFB) LinuxFb;
-
-uses(SDLFB) SDLFb;
-
-uses(WINGL) WinGl;
 
 file
 	UWord.cpp,
