@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	HttpServer.cpp;
+
+mainconfig
+	"" = "SSE2",
+	"" = "SSE2 MT";
+
