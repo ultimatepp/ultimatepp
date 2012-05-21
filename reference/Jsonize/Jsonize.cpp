@@ -13,6 +13,7 @@ struct Data {
 	bool                      option;
 
 	void Jsonize(JsonIO& json);
+	void Xmlize(XmlIO& xio)           { XmlizeByJsonize(xio, *this); }
 };
 
 void Data::Jsonize(JsonIO& json)
@@ -56,4 +57,11 @@ CONSOLE_APP_MAIN
 	Data y;
 	DUMP(LoadFromJson(y, json));
 	LOG(StoreAsJson(y));
+
+	LOG("=====================");
+	String xml = StoreAsXML(x, "test");
+	DUMP(xml);
+	Data z;
+	DUMP(LoadFromXML(z, xml));
+	LOG(StoreAsXML(z, "test"));
 }
