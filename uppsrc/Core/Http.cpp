@@ -541,9 +541,10 @@ String HttpRequest::GetRedirectUrl()
 	return h;
 }
 
-int   HttpRequest::GetContentLength()
+int HttpRequest::GetContentLength()
 {
-	return header.GetContentLength();
+	int64 n = header.GetContentLength();
+	return n < INT_MAX ? (int)n : 0;
 }
 
 void HttpRequest::StartBody()
