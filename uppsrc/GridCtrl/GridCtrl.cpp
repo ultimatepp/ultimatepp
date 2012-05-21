@@ -5714,6 +5714,9 @@ void GridCtrl::Clear(bool columns)
 	items.Remove(nrows, items.GetCount() - nrows);
 	vitems.Remove(nrows, vitems.GetCount() - nrows);
 
+	total_rows = nrows;
+	fixed_rows = nrows;
+
 	if(columns)
 	{
 		hitems.Remove(1, hitems.GetCount() - 1);
@@ -5724,31 +5727,27 @@ void GridCtrl::Clear(bool columns)
 		total_cols = 1;
 		total_width = 0;
 		total_height = 0;
-		firstVisCol = 0;
-		lastVisCol = -1;
 		firstCol = -1;
 		lastCol = -1;
 		fixed_cols = 1;
-		firstVisRow = -1;
-		lastVisRow = -1;
 		coluid = 0;
 		hcol = -1;
 		sortCol = -1;
 		genr_ctrls = 0;
+		firstVisCol = fixed_cols;
+		lastVisCol = total_cols - 1;
 	}
 	else
 	{
 		total_height = fixed_height;
-		firstVisRow = fixed_rows - 1;
-		lastVisRow = fixed_rows - 1;
 	}
+
+	firstVisRow = fixed_rows;
+	lastVisRow = total_rows - 1;
 	
 	focused_ctrl = NULL;
 
 	valid_cursor = false;
-
-	total_rows = nrows;
-	fixed_rows = nrows;
 
 	firstRow = -1;
 	lastRow = -1;
@@ -8309,7 +8308,7 @@ void GridResizePanel::MouseMove(Point p, dword flags)
 /*----------------------------------------------------------------------------------------*/
 
 template<> void Xmlize(XmlIO& xml, GridCtrl& g) {
-	Vector<Vector<Value> > v;
+	Vector< Vector<Value> > v;
 	
 	if(xml.IsLoading()) {
 		xml("data", v);
@@ -8318,6 +8317,18 @@ template<> void Xmlize(XmlIO& xml, GridCtrl& g) {
 		v = g.GetValues();
 		xml("data", v);
 	}
+}
+
+template<> void Jsonize(JsonIO& json, GridCtrl& g) {
+	Vector< Vector<Value> > v;
+	
+	if(json.IsLoading()) {
+		json("data", v);
+		g.SetValues(v);
+	} else {
+		v = g.GetValues();
+		json("data", v);
+	}	
 }
 
 /* after this assist++ sees nothing */
