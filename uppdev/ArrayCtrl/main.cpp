@@ -82,3 +82,20 @@ GUI_APP_MAIN
 	DUMP("Test");
 	App().Run();
 }
+
+
+String HttpResponse(int code, const char *phrase, const String& data, const char *content_type)
+{
+	String r;
+	r <<
+		"HTTP/1.0 " << code << ' ' << phrase << "\r\n"
+		"Date: " <<  WwwFormat(GetUtcTime()) << "\r\n"
+		"Server: Centrum-Nos SaleCrm\r\n"
+		"Content-Length: " << data.GetCount() << "\r\n"
+		"Connection: close\r\n";
+	if(content_type)
+		r << "Content-Type: text/xml\r\n";
+	r << "\r\n" << data;
+	return r;
+}
+
