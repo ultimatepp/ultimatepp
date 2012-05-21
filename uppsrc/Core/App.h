@@ -31,7 +31,12 @@ bool    IsMainRunning();
 //void    Main(); // By console application
 #endif
 
+struct ExitExc {};
+
+void Exit(int code = 1);
+
 void AppExit__();
+void AppExecute__(void (*app)());
 
 #ifdef PLATFORM_WIN32
 
@@ -42,16 +47,11 @@ void AppInitEnvironment__();
 void ConsoleMainFn_(); \
  \
 int main(int argc, char *argv[]) { \
-	try { \
-		UPP::AppInit__(argc, (const char **)argv); \
-		ConsoleMainFn_(); \
-		UPP::DeleteUsrLog(); \
-		UPP::AppExit__(); \
-		return UPP::GetExitCode(); \
-	} \
-	catch(Exc e) { \
-		Panic(e); \
-	} \
+	UPP::AppInit__(argc, (const char **)argv); \
+	UPP::AppExecute__(ConsoleMainFn_); \
+	UPP::DeleteUsrLog(); \
+	UPP::AppExit__(); \
+	return UPP::GetExitCode(); \
 } \
  \
 void ConsoleMainFn_()
@@ -67,7 +67,7 @@ void ConsoleMainFn_(); \
  \
 int main(int argc, const char **argv, const char **envptr) { \
 	UPP::AppInit__(argc, argv, envptr); \
-	ConsoleMainFn_(); \
+	UPP::AppExecute__(ConsoleMainFn_); \
 	UPP::DeleteUsrLog(); \
 	UPP::AppExit__(); \
 	return UPP::GetExitCode(); \

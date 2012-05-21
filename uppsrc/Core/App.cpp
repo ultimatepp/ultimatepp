@@ -305,6 +305,23 @@ void CommonInit()
 	sMainRunning = true;
 }
 
+void Exit(int code)
+{
+	SetExitCode(code);
+	throw ExitExc();
+}
+
+void AppExecute__(void (*app)())
+{
+	try {
+		(*app)();
+	}
+	catch(Exc e) {
+		Panic(e);
+	}
+	catch(ExitExc) {}
+}
+
 #ifdef PLATFORM_POSIX
 
 void s_ill_handler(int)
