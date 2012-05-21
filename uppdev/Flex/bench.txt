@@ -1,0 +1,133 @@
+int
+
+size (times)         std::vector      Vector        Flex
+     10 (100000x)        0.000 s     0.000 s     0.078 s NBLK:256, blocks:0
+     20 (50000x)         0.000 s     0.000 s     0.062 s NBLK:256, blocks:0
+     40 (25000x)         0.000 s     0.000 s     0.063 s NBLK:256, blocks:0
+     80 (12500x)         0.000 s     0.000 s     0.062 s NBLK:256, blocks:0
+    160 (6250x)          0.000 s     0.000 s     0.078 s NBLK:256, blocks:0
+    320 (3125x)          0.000 s     0.000 s     0.093 s NBLK:256, blocks:1
+    640 (1562x)          0.000 s     0.000 s     0.156 s NBLK:256, blocks:2
+   1280 (781x)           0.000 s     0.000 s     0.188 s NBLK:256, blocks:4
+   2560 (390x)           0.000 s     0.000 s     0.219 s NBLK:256, blocks:9
+   5120 (195x)           0.000 s     0.000 s     0.249 s NBLK:256, blocks:19
+  10240 (97x)            0.000 s     0.000 s     0.359 s NBLK:512, blocks:19
+  20480 (48x)            0.000 s     0.000 s     0.390 s NBLK:512, blocks:39
+  40960 (24x)            0.000 s     0.000 s     0.484 s NBLK:512, blocks:79
+  81920 (12x)            0.000 s     0.000 s     0.531 s NBLK:512, blocks:159
+ 163840 (6x)             0.000 s     0.000 s     0.811 s NBLK:2048, blocks:79
+ 327680 (3x)             0.000 s     0.000 s     1.030 s NBLK:2048, blocks:159
+
+
+String
+size (times)         std::vector      Vector        Flex
+     10 (100000x)        0.000 s     0.000 s     0.124 s NBLK:128, blocks:0
+     20 (50000x)         0.000 s     0.000 s     0.109 s NBLK:128, blocks:0
+     40 (25000x)         0.000 s     0.000 s     0.109 s NBLK:128, blocks:0
+     80 (12500x)         0.000 s     0.000 s     0.125 s NBLK:128, blocks:0
+    160 (6250x)          0.000 s     0.000 s     0.172 s NBLK:128, blocks:1
+    320 (3125x)          0.000 s     0.000 s     0.218 s NBLK:128, blocks:2
+    640 (1562x)          0.000 s     0.000 s     0.327 s NBLK:128, blocks:4
+   1280 (781x)           0.000 s     0.000 s     0.375 s NBLK:128, blocks:9
+   2560 (390x)           0.000 s     0.000 s     0.405 s NBLK:128, blocks:19
+   5120 (195x)           0.000 s     0.000 s     0.484 s NBLK:128, blocks:39
+  10240 (97x)            0.000 s     0.000 s     0.499 s NBLK:256, blocks:39
+  20480 (48x)            0.000 s     0.000 s     0.639 s NBLK:256, blocks:79
+  40960 (24x)            0.000 s     0.000 s     0.812 s NBLK:256, blocks:159
+  81920 (12x)            0.000 s     0.000 s     1.186 s NBLK:256, blocks:319
+ 163840 (6x)             0.000 s     0.000 s     1.904 s NBLK:1024, blocks:159
+ 327680 (3x)             0.000 s     0.000 s     2.668 s NBLK:1024, blocks:319
+
+----
+* u:\upp\out\uppdev\MSC9.Debug_Full.Release\Flex.exe 10.03.2012 13:46:46, user: cxl
+
+int
+
+size (times)         std::vector      Vector        Flex
+     10 (100000x)        0.000 s     0.000 s     0.094 s NBLK:256, blocks:0
+     20 (50000x)         0.000 s     0.000 s     0.078 s NBLK:256, blocks:0
+     40 (25000x)         0.000 s     0.000 s     0.062 s NBLK:256, blocks:0
+     80 (12500x)         0.000 s     0.000 s     0.078 s NBLK:256, blocks:0
+    160 (6250x)          0.000 s     0.000 s     0.078 s NBLK:256, blocks:0
+    320 (3125x)          0.000 s     0.000 s     0.094 s NBLK:256, blocks:1
+    640 (1562x)          0.000 s     0.000 s     0.141 s NBLK:256, blocks:2
+   1280 (781x)           0.000 s     0.000 s     0.219 s NBLK:256, blocks:4
+   2560 (390x)           0.000 s     0.000 s     0.265 s NBLK:256, blocks:9
+   5120 (195x)           0.000 s     0.000 s     0.265 s NBLK:256, blocks:19
+  10240 (97x)            0.000 s     0.000 s     0.281 s NBLK:256, blocks:39
+  20480 (48x)            0.000 s     0.000 s     0.312 s NBLK:256, blocks:79
+  40960 (24x)            0.000 s     0.000 s     0.374 s NBLK:256, blocks:159
+  81920 (12x)            0.000 s     0.000 s     0.530 s NBLK:256, blocks:319
+ 163840 (6x)             0.000 s     0.000 s     0.671 s NBLK:512, blocks:319
+ 327680 (3x)             0.000 s     0.000 s     1.029 s NBLK:1024, blocks:319
+
+
+String
+size (times)         std::vector      Vector        Flex
+     10 (100000x)        0.000 s     0.000 s     0.141 s NBLK:128, blocks:0
+     20 (50000x)         0.000 s     0.000 s     0.140 s NBLK:128, blocks:0
+     40 (25000x)         0.000 s     0.000 s     0.109 s NBLK:128, blocks:0
+     80 (12500x)         0.000 s     0.000 s     0.156 s NBLK:128, blocks:0
+    160 (6250x)          0.000 s     0.000 s     0.172 s NBLK:128, blocks:1
+    320 (3125x)          0.000 s     0.000 s     0.234 s NBLK:128, blocks:2
+    640 (1562x)          0.000 s     0.000 s     0.280 s NBLK:128, blocks:4
+   1280 (781x)           0.000 s     0.000 s     0.328 s NBLK:128, blocks:9
+   2560 (390x)           0.000 s     0.000 s     0.374 s NBLK:128, blocks:19
+   5120 (195x)           0.000 s     0.000 s     0.437 s NBLK:128, blocks:39
+  10240 (97x)            0.000 s     0.000 s     0.499 s NBLK:256, blocks:39
+  20480 (48x)            0.000 s     0.000 s     0.671 s NBLK:256, blocks:79
+  40960 (24x)            0.000 s     0.000 s     0.936 s NBLK:256, blocks:159
+  81920 (12x)            0.000 s     0.000 s     1.186 s NBLK:256, blocks:319
+ 163840 (6x)             0.000 s     0.000 s     1.606 s NBLK:512, blocks:319
+ 327680 (3x)             0.000 s     0.000 s     2.652 s NBLK:1024, blocks:319
+
+* u:\upp\out\uppdev\MSC9.Debug_Full.Release\Flex.exe 16.03.2012 14:04:34, user: cxl
+
+int
+
+size (times)         std::vector      Vector        Flex
+     10 (100000x)        0.000 s     0.000 s     0.062 s NBLK:64, blocks:0
+     20 (50000x)         0.000 s     0.000 s     0.063 s NBLK:64, blocks:0
+     40 (25000x)         0.000 s     0.000 s     0.046 s NBLK:64, blocks:0
+     80 (12500x)         0.000 s     0.000 s     0.062 s NBLK:64, blocks:1
+    160 (6250x)          0.000 s     0.000 s     0.094 s NBLK:64, blocks:2
+    320 (3125x)          0.000 s     0.000 s     0.109 s NBLK:64, blocks:4
+    640 (1562x)          0.000 s     0.000 s     0.140 s NBLK:64, blocks:9
+   1280 (781x)           0.000 s     0.000 s     0.156 s NBLK:128, blocks:9
+   2560 (390x)           0.000 s     0.000 s     0.187 s NBLK:128, blocks:19
+   5120 (195x)           0.000 s     0.000 s     0.218 s NBLK:128, blocks:39
+  10240 (97x)            0.000 s     0.000 s     0.265 s NBLK:256, blocks:39
+  20480 (48x)            0.000 s     0.000 s     0.297 s NBLK:256, blocks:79
+  40960 (24x)            0.000 s     0.000 s     0.375 s NBLK:512, blocks:79
+  81920 (12x)            0.000 s     0.000 s     0.468 s NBLK:512, blocks:159
+ 163840 (6x)             0.000 s     0.000 s     0.624 s NBLK:1024, blocks:159
+ 327680 (3x)             0.000 s     0.000 s     0.873 s NBLK:2048, blocks:159
+Total Elapsed 4039 ms
+
+
+String
+size (times)         std::vector      Vector        Flex
+     10 (100000x)        0.000 s     0.000 s     0.109 s NBLK:32, blocks:0
+     20 (50000x)         0.000 s     0.000 s     0.093 s NBLK:32, blocks:0
+     40 (25000x)         0.000 s     0.000 s     0.109 s NBLK:32, blocks:1
+     80 (12500x)         0.000 s     0.000 s     0.141 s NBLK:32, blocks:2
+    160 (6250x)          0.000 s     0.000 s     0.172 s NBLK:32, blocks:4
+    320 (3125x)          0.000 s     0.000 s     0.203 s NBLK:32, blocks:9
+    640 (1562x)          0.000 s     0.000 s     0.234 s NBLK:64, blocks:9
+   1280 (781x)           0.000 s     0.000 s     0.281 s NBLK:128, blocks:9
+   2560 (390x)           0.000 s     0.000 s     0.343 s NBLK:128, blocks:19
+   5120 (195x)           0.000 s     0.000 s     0.421 s NBLK:128, blocks:39
+  10240 (97x)            0.000 s     0.000 s     0.499 s NBLK:256, blocks:39
+  20480 (48x)            0.000 s     0.000 s     0.624 s NBLK:256, blocks:79
+  40960 (24x)            0.000 s     0.000 s     0.858 s NBLK:512, blocks:79
+  81920 (12x)            0.000 s     0.000 s     1.186 s NBLK:512, blocks:159
+ 163840 (6x)             0.000 s     0.000 s     1.794 s NBLK:1024, blocks:159
+ 327680 (3x)             0.000 s     0.000 s     2.745 s NBLK:2048, blocks:159
+Total Elapsed 9812 ms
+
+
+
+
+
+
+
