@@ -40,6 +40,7 @@ struct App : TopWindow {
 	void A()
 	{
 		Exclamation("LeftDouble");
+		Exit();
 	}
 	
 	void B()
@@ -57,6 +58,7 @@ struct App : TopWindow {
 		a.WhenDropInsert = THISBACK(DnDInsert);
 		a.WhenDrop = THISBACK(DnD);
 		a.WhenDrag = THISBACK(Drag);
+		a.WhenLeftDouble = THISBACK(A);
 		
 		b.AddColumn("Text");
 		b.MultiSelect();
