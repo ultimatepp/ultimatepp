@@ -132,6 +132,9 @@ GridCtrl::GridCtrl() : holder(*this)
 	clipboard              = false;
 	extra_paste            = true;
 	fixed_paste            = false;
+	copy_allowed           = true;
+	cut_allowed            = true;
+	paste_allowed          = true;
 	copy_column_names      = false;
 	draw_focus             = false;
 	ask_remove             = false;
@@ -624,9 +627,9 @@ void GridCtrl::ClipboardMenu(Bar &bar)
 {
 	bool c = IsCursor();
 	bool s = c || IsSelection();
-	bar.Add(t_("Copy"), THISBACK(DoCopy)).Image(CtrlImg::copy()).Key(K_CTRL_C).Enable(s);
-	bar.Add(t_("Cut"), THISBACK(Nothing)).Image(CtrlImg::cut()).Key(K_CTRL_X).Enable(s);
-	bar.Add(t_("Paste"), THISBACK(DoPaste)).Image(CtrlImg::paste()).Key(K_CTRL_V).Enable(c && IsClipboardAvailable());
+	bar.Add(t_("Copy"), THISBACK(DoCopy)).Image(CtrlImg::copy()).Key(K_CTRL_C).Enable(s && copy_allowed);
+	bar.Add(t_("Cut"), THISBACK(Nothing)).Image(CtrlImg::cut()).Key(K_CTRL_X).Enable(s && cut_allowed);
+	bar.Add(t_("Paste"), THISBACK(DoPaste)).Image(CtrlImg::paste()).Key(K_CTRL_V).Enable(c && paste_allowed && IsClipboardAvailable());
 	if(extra_paste)
 		bar.Add(t_("Paste as"), THISBACK(PasteAsMenu));
 }
@@ -635,8 +638,8 @@ void GridCtrl::PasteAsMenu(Bar &bar)
 {
 	bool c = IsCursor();
 	bool s = IsClipboardAvailable() && !fixed_paste;
-	bar.Add(t_("appended"), THISBACK(DoPasteAppendedRows)).Key(K_CTRL_E).Enable(s);
-	bar.Add(t_("inserted"), THISBACK(DoPasteInsertedRows)).Key(K_CTRL_I).Enable(c && s);
+	bar.Add(t_("appended"), THISBACK(DoPasteAppendedRows)).Key(K_CTRL_E).Enable(s && paste_allowed);
+	bar.Add(t_("inserted"), THISBACK(DoPasteInsertedRows)).Key(K_CTRL_I).Enable(c && paste_allowed && s);
 }
 
 bool GridCtrl::IsClipboardAvailable()
