@@ -881,6 +881,9 @@ class GridCtrl : public Ctrl
 		bool clipboard:1;
 		bool extra_paste:1;
 		bool fixed_paste:1;
+		bool copy_allowed:1;
+		bool cut_allowed:1;
+		bool paste_allowed:1;
 		bool copy_column_names:1;
 		bool draw_focus:1;
 		bool cancel_all:1;
@@ -1136,6 +1139,9 @@ class GridCtrl : public Ctrl
 		GridCtrl& Clipboard(bool b = true)          { clipboard            = b;  return *this; }
 		GridCtrl& ExtraPaste(bool b = true)         { extra_paste          = b;  return *this; }
 		GridCtrl& FixedPaste(bool b = true)         { fixed_paste          = b;  return *this; }
+		GridCtrl& ClipboardCopy(bool b = true)		{ copy_allowed         = b;  return *this; }
+		GridCtrl& ClipboardCut(bool b = true)		{ cut_allowed          = b;  return *this; }
+		GridCtrl& ClipboardPaste(bool b = true)		{ paste_allowed        = b;  return *this; }
 		GridCtrl& CopyColumnNames(bool b = true)    { copy_column_names    = b;  return *this; }
 		GridCtrl& AskRemove(bool b = true)          { ask_remove           = b;  return *this; }
 		GridCtrl& RowChanging(bool b = true)        { row_changing         = b;  return *this; }
@@ -1843,6 +1849,7 @@ class GridText : Ctrl
 };
 
 template<> void Xmlize(XmlIO& xml, GridCtrl& g);
+template<> void Jsonize(JsonIO& json, GridCtrl& g);
 
 END_UPP_NAMESPACE
 
