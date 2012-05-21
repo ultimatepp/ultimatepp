@@ -230,6 +230,7 @@ void HttpHeader::Clear()
 	first_line.Clear();
 	fields.Clear();
 	f1 = f2 = f3 = Null;
+	scgi = false;
 }
 
 int64 HttpHeader::GetContentLength() const
@@ -282,6 +283,7 @@ int CharFilterScgiHttp(int c)
 bool HttpHeader::ParseSCGI(const String& scgi_hdr)
 {
 	Clear();
+	scgi = true;
 	String key, uri, qs;
 	const char *b = scgi_hdr;
 	const char *e = scgi_hdr.End();
@@ -364,6 +366,25 @@ bool HttpHeader::Response(String& protocol, int& code, String& reason)
 	code = GetCode();
 	reason = GetReason();
 	return !IsNull(code);
+}
+
+bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,
+                  const char *content_type, const String& data, const char *server)
+{
+	String r;
+	r << (scgi ? "Status: " : "HTTP/1.1 ") << code << ' ' << phrase << "\r\n"
+		"Date: " <<  WwwFormat(GetUtcTime()) << "\r\n"
+		"Server: " << (server ? server : "U++ based server") << "\r\n"
+		"Connection: close\r\n";
+	if(data.GetCount())
+		r << "Content-Length: " << data.GetCount() << "\r\n";
+	if(content_type)
+		r << "Content-Type: " << content_type << "\r\n";
+	r << "\r\n";
+	LOG(r + data);
+	if(!socket.PutAll(r))
+		return false;
+	return data.GetCount() == 0 || socket.PutAll(data);
 }
 
 END_UPP_NAMESPACE

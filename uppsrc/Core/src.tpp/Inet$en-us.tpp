@@ -63,14 +63,31 @@ st]_[@(0.0.255) char]_`*[*@3 s], [@(0.0.255) int]_[*@3 len])&]
 [_^String^ String][@(0.0.255) `&]_[*@3 data])&]
 [s2;%% Decodes binary [%-*@3 data] from [^http`:`/`/en`.wikipedia`.org`/wiki`/Base64^ Bas
 e64 format]..&]
-[s3;%% &]
-[s1;@(0.0.255)3 &]
+[s3; &]
+[s4; &]
+[s5;:HttpResponse`(TcpSocket`&`,bool`,int`,const char`*`,const char`*`,const String`&`,const char`*`): [@(0.0.255) b
+ool]_[* HttpResponse]([_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[*@3 socket], 
+[@(0.0.255) bool]_[*@3 scgi], [@(0.0.255) int]_[*@3 code], [@(0.0.255) const]_[@(0.0.255) cha
+r]_`*[*@3 phrase], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 content`_type]_`=_NULL, 
+[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 data]_`=_Null, 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 server]_`=_NULL)&]
+[s2;%% This function sends simple HTTP response over [%-*@3 socket]. 
+If [%-*@3 scgi] is true, first line of response is formatted for 
+SCGI (rest is the same for normal HTTP and SCGI). [%-*@3 code] 
+and [%-*@3 phrase] set the first line of response, [%-*@3 content`_type] 
+sets the respective http header (if NULL, it is not send). If 
+[%-*@3 data] is not empty, `"content`-length`" header is sent and 
+[%-*@3 data] is sent after the header. [%-*@3 server] sets the `"server`" 
+field of http header, if not present, it is set to `"U`+`+ based 
+server`".&]
+[s3; &]
+[s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 HttpHeader]]}}&]
 [s3; &]
 [s1;:HttpHeader`:`:struct: [@(0.0.255)3 struct][3 _][*3 HttpHeader]&]
 [s2;%% This simple structure simplifies parsing of http request and 
-response headers.&]
-[s3; &]
+response headers. It is also capable of parsing SCGI requests.&]
+[s3;%% &]
 [s4; &]
 [s5;:HttpHeader`:`:first`_line: [_^String^ String]_[* first`_line]&]
 [s2;%% The first line of request/response `- the content of this 
@@ -86,6 +103,10 @@ different for response and request.&]
 [_^String^ String]>_[* fields]&]
 [s2;%% Http fields as key`-value pairs. Keys are converted to lower`-case. 
 Note that the same key can be present multiple times.&]
+[s3; &]
+[s4; &]
+[s5;:HttpHeader`:`:scgi: [@(0.0.255) bool]_[* scgi]&]
+[s2;%% Indicates that this header is a result of parsing scgi.&]
 [s3; &]
 [s4; &]
 [s5;:HttpHeader`:`:operator`[`]`(const char`*`)const: [_^String^ String]_[* operator`[`]](

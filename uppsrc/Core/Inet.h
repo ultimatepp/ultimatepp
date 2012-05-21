@@ -236,6 +236,7 @@ struct HttpHeader {
 	String                    first_line;
 	String                    f1, f2, f3;
 	VectorMap<String, String> fields;
+	bool                      scgi;
 	
 	String operator[](const char *id) const                  { return fields.Get(id, Null); }
 
@@ -451,3 +452,7 @@ public:
 	
 	static void  Trace(bool b = true);
 };
+
+bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,
+                  const char *content_type = NULL, const String& data = Null,
+                  const char *server = NULL);
