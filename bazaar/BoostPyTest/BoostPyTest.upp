@@ -20,5 +20,5 @@ file
 	compile.txt;
 
 mainconfig
-	"" = "GUI MT SSE2 BOOSTPY";
+	"" = "GUI MT SSE2 BOOSTPY SVO_VALUE";
 

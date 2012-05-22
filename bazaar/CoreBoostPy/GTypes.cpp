@@ -16,7 +16,7 @@ ONCELOCK
 		.add_property("b", &Color::GetB)
 		.def("setnull", &Color::SetNull)
 		.def("isnull", &IsNull<Color>)
-		.def("__str__", &AsString<Color>)
+		.def("__str__", (String (*)(const Color&))&AsString<Color>)
 	;
 }
 }
@@ -32,7 +32,7 @@ ONCELOCK
 		.def("clear", &Size::Clear)
 		.def("setnull", &Size::SetNull)
 		.def("isnull", &IsNull<Size>)
-		.def("__str__", &AsString<Size>)
+		.def("__str__", (String (*)(const Size&))&AsString<Size>)
 	;
 }
 }
@@ -48,7 +48,7 @@ ONCELOCK
 		.def("clear", &Point::Clear)
 		.def("setnull", &Point::SetNull)
 		.def("isnull", &IsNull<Point>)
-		.def("__str__", &AsString<Point>)
+		.def("__str__", (String (*)(const Point&))&AsString<Point>)
 	;
 }
 }
@@ -68,7 +68,7 @@ ONCELOCK
 		.def("clear", &Rect::Clear)
 		.def("setnull", &Rect::SetNull)
 		.def("isnull", &IsNull<Rect>)
-		.def("__str__", &AsString<Rect>)
+		.def("__str__", (String (*)(const Rect&))&AsString<Rect>)
 
 		.add_property("topleft", &Rect::TopLeft)
 		.add_property("topcenter", &Rect::TopCenter)
