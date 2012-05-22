@@ -283,6 +283,16 @@ void Ide::SwapCase()
 	AlterText(sSwapCase);
 }
 
+static WString sCString(const WString& s)
+{
+	return AsCString(s.ToString()).ToWString();
+}
+
+void Ide::ToCString()
+{
+	AlterText(sCString);
+}
+
 void Ide::Times()
 {
 	WithStatisticsLayout<TopWindow> statdlg;

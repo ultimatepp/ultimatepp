@@ -847,6 +847,7 @@ public:
 		void  InsertLay(const String& fn);
 		void  InsertIml(const String& fn, String classname);
 		void  InsertText(const String& text);
+		void  InsertCString();
 		void  InsertMenu(Bar& bar);
 		void  EditorMenu(Bar& bar);
 
@@ -870,6 +871,7 @@ public:
 		void  TextToAscii();
 		void  TextInitCaps();
 		void  SwapCase();
+		void  ToCString();
 
 	void      MacroMenu(Bar& menu);
 		bool  HasMacros();

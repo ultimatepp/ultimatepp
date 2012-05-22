@@ -117,6 +117,8 @@ void Ide::EditSpecial(Bar& menu)
 	    .Help("Capitalize the first character of words in selection"); 
 	menu.Add(AK_SWAPCASE, THISBACK(SwapCase))
 	    .Help("Swap the case of letters in selection"); 
+	menu.Add(AK_TOCSTRING, THISBACK(ToCString))
+	    .Help("Convert selection to CString");
 }
 
 void Ide::SearchMenu(Bar& menu)
