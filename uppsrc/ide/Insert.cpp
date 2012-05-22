@@ -81,6 +81,13 @@ void Ide::InsertText(const String& text)
 	editor.Paste(text.ToWString());
 }
 
+void Ide::InsertCString()
+{
+	String txt = ReadClipboardText();
+	if(txt.GetCount())
+		editor.Paste(AsCString(txt).ToWString());
+}
+
 void Ide::InsertMenu(Bar& bar)
 {
 	if(bar.IsScanKeys())
@@ -123,6 +130,7 @@ void Ide::InsertMenu(Bar& bar)
 			bar.Add(s, THISBACK1(InsertText, s));
 		}
 	}
+	bar.Add("Insert clipboard as C string", THISBACK(InsertCString));
 }
 
 void Ide::EditorMenu(Bar& bar)
