@@ -485,14 +485,22 @@ void HttpRequest::StartRequest()
 		if(ctype.GetCount())
 			data << "Content-Type: " << ctype << "\r\n";
 	}
-	String cs;
+	VectorMap<String, Tuple2<String, int> > cms;
 	for(int i = 0; i < cookies.GetCount(); i++) {
 		const HttpCookie& c = cookies[i];
 		if(host.EndsWith(c.domain) && path.StartsWith(c.path)) {
-			if(cs.GetCount())
-				cs << "; ";
-			cs << c.id << '=' << c.value;
+			Tuple2<String, int>& m = cms.GetAdd(c.id, MakeTuple(String(), -1));
+			if(c.path.GetLength() > m.b) {
+				m.a = c.value;
+				m.b = c.path.GetLength();
+			}
 		}
+	}
+	String cs;
+	for(int i = 0; i < cms.GetCount(); i++) {
+		if(i)
+			cs << "; ";
+		cs << cms.GetKey(i) << '=' << cms[i].a;
 	}
 	if(cs.GetCount())
 		data << "Cookie: " << cs << "\r\n";
