@@ -202,6 +202,30 @@ HttpRequest& HttpRequest::Header(const char *id, const String& data)
 	return *this;
 }
 
+HttpRequest& HttpRequest::Cookie(const HttpCookie& c)
+{
+	cookies.GetAdd(String(c.id) << '?' << c.domain << '?' << c.path) = c;
+	return *this;
+}
+
+HttpRequest& HttpRequest::Cookie(const String& id, const String& value, const String& domain, const String& path)
+{
+	HttpCookie c;
+	c.id = id;
+	c.value = value;
+	c.domain = domain;
+	c.path = path;
+	return Cookie(c);
+}
+
+HttpRequest& HttpRequest::CopyCookies(const HttpRequest& r)
+{
+	const HttpHeader& h = r.GetHttpHeader();
+	for(int i = 0; i < h.cookies.GetCount(); i++)
+		Cookie(h.cookies[i]);
+	return *this;
+}
+
 void HttpRequest::HttpError(const char *s)
 {
 	if(IsError())
@@ -458,6 +482,17 @@ void HttpRequest::StartRequest()
 		if(ctype.GetCount())
 			data << "Content-Type: " << ctype << "\r\n";
 	}
+	String cs;
+	for(int i = 0; i < cookies.GetCount(); i++) {
+		const HttpCookie& c = cookies[i];
+		if(host.EndsWith(c.domain) && path.StartsWith(c.path)) {
+			if(cs.GetCount())
+				cs << "; ";
+			cs << c.id << '=' << c.value;
+		}
+	}
+	if(cs.GetCount())
+		data << "Cookie: " << cs << "\r\n";
 	if(!IsNull(proxy_host) && !IsNull(proxy_username))
 		 data << "Proxy-Authorization: Basic " << Base64Encode(proxy_username + ':' + proxy_password) << "\r\n";
 	if(!IsNull(digest))
@@ -632,11 +667,7 @@ bool HttpRequest::ReadingBody()
 
 void HttpRequest::CopyCookies()
 {
-	int q = header.fields.Find("set-cookie");
-	while(q >= 0) {
-		Cookie(header.fields[q]);
-		q = header.fields.FindNext(q);
-	}
+	CopyCookies(*this);
 }
 
 void HttpRequest::Finish()
@@ -671,6 +702,7 @@ void HttpRequest::Finish()
 	}
 	if(status_code >= 300 && status_code < 400) {
 		String url = GetRedirectUrl();
+		GET();
 		if(url.GetCount() && redirect_count++ < max_redirects) {
 			LLOG("--- HTTP redirect " << url);
 			Url(url);
