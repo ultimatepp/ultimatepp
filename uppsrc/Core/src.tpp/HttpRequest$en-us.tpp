@@ -175,6 +175,11 @@ ing][@(0.0.255) `&]_[*@3 data])&]
 [s2;%% Sets method to POST and name/value pair to the post data in 
 the format used by HTML forms with `"POST`" method. Returns `*this.&]
 [s3;%% &]
+[s4; &]
+[s5;:HttpRequest`:`:ClearPost`(`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[* ClearPost
+]()&]
+[s2;%% Empties all Post data and sets the method to GET.&]
+[s3; &]
 [s4;%% &]
 [s5;:HttpRequest`:`:Headers`(const String`&`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&
 ]_[* Headers]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 h])&]
@@ -198,11 +203,27 @@ generated header fields. Returns `*this.&]
 [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 data])&]
 [s2;%% Adds single name/value pair to headers. Returns `*this.&]
 [s3;%% &]
-[s4;%% &]
-[s5;:HttpRequest`:`:Cookie`(const String`&`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_
-[* Cookie]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 cookie])&]
-[s2;%% Adds cookie to HTTP request `- same as Header(`"Cookie`", 
-[%-*@3 cookie][%- )]. Returns `*this.&]
+[s4; &]
+[s5;:HttpRequest`:`:Cookie`(const HttpCookie`&`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&
+]_[* Cookie]([@(0.0.255) const]_[_^HttpCookie^ HttpCookie][@(0.0.255) `&]_[*@3 c])&]
+[s2;%% Sets the cookie to be send with any subsequent request. Member 
+raw of HttpCookie is ignored. Cookie is only send when path and 
+domain match (can be set to Null to match always).&]
+[s3;%% &]
+[s4; &]
+[s5;:HttpRequest`:`:Cookie`(const String`&`,const String`&`,const String`&`,const String`&`): [_^HttpRequest^ H
+ttpRequest][@(0.0.255) `&]_[* Cookie]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_
+[*@3 id], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 value], 
+[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 domain]_`=_Null, 
+[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 path]_`=_Null)&]
+[s2;%% Sets the cookie to be send with any subsequent request. Member 
+raw of HttpCookie is ignored. Cookie is only send when path and 
+domain match (can be set to Null to match always)..&]
+[s3;%% &]
+[s4; &]
+[s5;:HttpRequest`:`:CopyCookies`(const HttpRequest`&`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&
+]_[* CopyCookies]([@(0.0.255) const]_[_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[*@3 r])&]
+[s2;%% Copies cookies from another HttpRequest.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:HttpRequest`:`:StdHeaders`(bool`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[* StdH
@@ -320,6 +341,16 @@ onst]&]
 [s5;:HttpRequest`:`:GetReasonPhrase`(`)const: [_^String^ String]_[* GetReasonPhrase]()_[@(0.0.255) c
 onst]&]
 [s2;%% If request is finished, returns HTTP reason phrase.&]
+[s3;%% &]
+[s4; &]
+[s5;:HttpRequest`:`:GetHttpHeader`(`)const: [@(0.0.255) const]_[_^HttpHeader^ HttpHeader][@(0.0.255) `&
+]_[* GetHttpHeader]()_[@(0.0.255) const]&]
+[s2;%% Returns HttpHeader of response.&]
+[s3; &]
+[s4; &]
+[s5;:HttpRequest`:`:GetCookie`(const char`*`): [_^String^ String]_[* GetCookie]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 id])&]
+[s2;%% Returns the value of cookie [%-*@3 id] of response.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:HttpRequest`:`:GetContent`(`)const: [_^String^ String]_[* GetContent]()_[@(0.0.255) co

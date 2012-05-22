@@ -105,6 +105,12 @@ different for response and request.&]
 Note that the same key can be present multiple times.&]
 [s3; &]
 [s4; &]
+[s5;:HttpHeader`:`:cookies: [_^VectorMap^ VectorMap]<[_^String^ String], 
+[_^HttpCookie^ HttpCookie]>_[* cookies]&]
+[s2;%% Set of http response http cookies (filled based on Set`-Cookie 
+headers during parsing).&]
+[s3; &]
+[s4; &]
 [s5;:HttpHeader`:`:scgi: [@(0.0.255) bool]_[* scgi]&]
 [s2;%% Indicates that this header is a result of parsing scgi.&]
 [s3; &]
@@ -113,6 +119,12 @@ Note that the same key can be present multiple times.&]
 [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id])_[@(0.0.255) const]&]
 [s2;%% Returns the first http header field with key [%-*@3 id] (must 
 be lower`-case) or empty string if such field is not present.&]
+[s3;%% &]
+[s4; &]
+[s5;:HttpHeader`:`:GetCookie`(const char`*`)const: [_^String^ String]_[* GetCookie]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 id])_[@(0.0.255) const]&]
+[s2;%% Returns the value of first cookie of response (set by Set`-Cookie) 
+with name [%-*@3 id].&]
 [s3;%% &]
 [s4; &]
 [s5;:HttpHeader`:`:Response`(String`&`,int`&`,String`&`)const: [@(0.0.255) bool]_[* Respo
@@ -189,4 +201,8 @@ was normal HTTP.&]
 SCGI requests based on first character of request `- if it is 
 a digit, SCGI is assumed and the header is parsed as SCGI.&]
 [s3;%% &]
+[s4; &]
+[s5;:HttpHeader`:`:HttpHeader`(`): [* HttpHeader]()&]
+[s2;%% Default constructor.&]
+[s3; &]
 [s0;%% ]

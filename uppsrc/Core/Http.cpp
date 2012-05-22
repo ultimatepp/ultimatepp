@@ -470,6 +470,9 @@ void HttpRequest::StartRequest()
 		data << path;
 	}
 	data << " HTTP/1.1\r\n";
+	String pd = postdata;
+	if(method == METHOD_GET || method == METHOD_HEAD)
+		pd.Clear();
 	if(std_headers) {
 		data << "URL: " << url << "\r\n"
 		     << "Host: " << host_port << "\r\n"
@@ -477,8 +480,8 @@ void HttpRequest::StartRequest()
 		     << "Accept: " << Nvl(accept, "*/*") << "\r\n"
 		     << "Accept-Encoding: gzip\r\n"
 		     << "User-Agent: " << Nvl(agent, "U++ HTTP request") << "\r\n";
-		if(postdata.GetCount())
-			data << "Content-Length: " << postdata.GetCount() << "\r\n";
+		if(pd.GetCount())
+			data << "Content-Length: " << pd.GetCount() << "\r\n";
 		if(ctype.GetCount())
 			data << "Content-Type: " << ctype << "\r\n";
 	}
@@ -500,7 +503,7 @@ void HttpRequest::StartRequest()
 	else
 	if(!force_digest && (!IsNull(username) || !IsNull(password)))
 		data << "Authorization: Basic " << Base64Encode(username + ":" + password) << "\r\n";
-	data << request_headers << "\r\n" << postdata; // !!! POST PHASE !!!
+	data << request_headers << "\r\n" << pd;
 	LLOG("HTTP REQUEST " << host << ":" << port);
 	LLOG("HTTP request:\n" << data);
 }
