@@ -1,3 +1,5 @@
+description "Simple HTTP (or SCGI) server, in MT mode multithreaded\377";
+
 uses
 	Core;
 
