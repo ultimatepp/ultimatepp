@@ -232,16 +232,29 @@ public:
 	SocketWaitEvent();
 };
 
+struct HttpCookie : Moveable<HttpCookie> {
+	String id;
+	String value;
+	String domain;
+	String path;
+	String raw;
+
+	void Clear();
+	bool Parse(const String& cookie);
+};
+
 struct HttpHeader {
-	String                    first_line;
-	String                    f1, f2, f3;
-	VectorMap<String, String> fields;
-	bool                      scgi;
+	String                        first_line;
+	String                        f1, f2, f3;
+	VectorMap<String, String>     fields;
+	VectorMap<String, HttpCookie> cookies;
+	bool                          scgi;
 	
 	String operator[](const char *id) const                  { return fields.Get(id, Null); }
+	String GetCookie(const char *id) const;
 
-	bool   Response(String& protocol, int& code, String& reason);
-	bool   Request(String& method, String& uri, String& version);
+	bool   Response(String& protocol, int& code, String& reason) const;
+	bool   Request(String& method, String& uri, String& version) const;
 	
 	String GetProtocol() const                               { return f1; }
 	int    GetCode() const;
@@ -259,6 +272,12 @@ struct HttpHeader {
 	bool   ParseSCGI(const String& scgi_hdr);
 
 	bool   Read(TcpSocket& socket);
+	
+	HttpHeader()                                             { scgi = false; }
+
+private:
+	void   Add(const String& id, const String& value);
+	HttpHeader(const HttpHeader&);
 };
 
 class HttpRequest : public TcpSocket {
@@ -315,7 +334,7 @@ class HttpRequest : public TcpSocket {
 	String       digest;
 	String       request_headers;
 	String       postdata;
-	String       cookies;
+	VectorMap<String, HttpCookie> cookies;
 
 	String       protocol;
 	int          status_code;
@@ -394,7 +413,11 @@ public:
 	HttpRequest&  ClearHeaders()                          { return Headers(Null); }
 	HttpRequest&  AddHeaders(const String& h)             { request_headers.Cat(h); return *this; }
 	HttpRequest&  Header(const char *id, const String& data);
-	HttpRequest&  Cookie(const String& cookie)            { return Header("Cookie", cookie); }
+
+	HttpRequest&  Cookie(const HttpCookie& c);
+	HttpRequest&  Cookie(const String& id, const String& value,
+	                     const String& domain = Null, const String& path = Null);
+	HttpRequest&  CopyCookies(const HttpRequest& r);
 
 	HttpRequest&  StdHeaders(bool sh)                     { std_headers = sh; return *this; }
 	HttpRequest&  NoStdHeaders()                          { return StdHeaders(false); }
@@ -422,6 +445,9 @@ public:
 	int          GetContentLength();
 	int          GetStatusCode() const                    { return status_code; }
 	String       GetReasonPhrase() const                  { return reason_phrase; }
+
+	const HttpHeader& GetHttpHeader() const               { return header; }
+	String       GetCookie(const char *id)                { return header.GetCookie(id); }
 
 	String       GetContent() const                       { return body; }
 	String       operator~() const                        { return GetContent(); }

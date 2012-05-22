@@ -115,16 +115,16 @@ Note that the same key can be present multiple times.&]
 be lower`-case) or empty string if such field is not present.&]
 [s3;%% &]
 [s4; &]
-[s5;:HttpHeader`:`:Response`(String`&`,int`&`,String`&`): [@(0.0.255) bool]_[* Response](
-[_^String^ String][@(0.0.255) `&]_[*@3 protocol], [@(0.0.255) int`&]_[*@3 code], 
-[_^String^ String][@(0.0.255) `&]_[*@3 reason])&]
-[s2;%% Parses the [* first`_line ]as http response.&]
+[s5;:HttpHeader`:`:Response`(String`&`,int`&`,String`&`)const: [@(0.0.255) bool]_[* Respo
+nse]([_^String^ String][@(0.0.255) `&]_[*@3 protocol], [@(0.0.255) int`&]_[*@3 code], 
+[_^String^ String][@(0.0.255) `&]_[*@3 reason])_[@(0.0.255) const]&]
+[s2;%% Returns first line fields of http response.&]
 [s3;%% &]
 [s4; &]
-[s5;:HttpHeader`:`:Request`(String`&`,String`&`,String`&`): [@(0.0.255) bool]_[* Request](
-[_^String^ String][@(0.0.255) `&]_[*@3 method], [_^String^ String][@(0.0.255) `&]_[*@3 uri], 
-[_^String^ String][@(0.0.255) `&]_[*@3 version])&]
-[s2;%% Parses the [* first`_line ]as http request.&]
+[s5;:HttpHeader`:`:Request`(String`&`,String`&`,String`&`)const: [@(0.0.255) bool]_[* Req
+uest]([_^String^ String][@(0.0.255) `&]_[*@3 method], [_^String^ String][@(0.0.255) `&]_[*@3 u
+ri], [_^String^ String][@(0.0.255) `&]_[*@3 version])_[@(0.0.255) const]&]
+[s2;%% Returns first line fields of http request.&]
 [s3;%% &]
 [s4; &]
 [s5;:HttpHeader`:`:GetProtocol`(`)const: [_^String^ String]_[* GetProtocol]()_[@(0.0.255) c

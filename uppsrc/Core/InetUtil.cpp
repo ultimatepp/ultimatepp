@@ -225,10 +225,55 @@ String Base64Decode(const String& data)
 	return Base64Decode(~data, data.GetLength());
 }
 
+void HttpCookie::Clear()
+{
+	id.Clear();
+	value.Clear();
+	domain.Clear();
+	path.Clear();
+	raw.Clear();
+}
+
+bool HttpCookie::Parse(const String& cookie)
+{
+	Clear();
+	const char *s = cookie;
+	raw = cookie;
+	bool first = true;
+	while(s && *s) {
+		while(*s == ' ')
+			s++;
+		const char *e = strchr(s, ';');
+		if(!e)
+			e = s + strlen(s);
+		const char *eq = strchr(s, '=');
+		if(eq && eq < e) {
+			String h = String(s, eq);
+			if(first) {
+				id = h;
+				value = String(eq + 1, e);
+				first = false;
+			}
+			else {
+				h = ToLower(h);
+				if(h == "domain")
+					domain = String(eq + 1, e);
+				if(h == "path")
+					path = String(eq + 1, e);
+			}
+		}
+		if(*e == 0)
+			break;
+		s = e + 1;
+	}
+	return !first;
+}
+
 void HttpHeader::Clear()
 {
 	first_line.Clear();
 	fields.Clear();
+	cookies.Clear();
 	f1 = f2 = f3 = Null;
 	scgi = false;
 }
@@ -236,6 +281,17 @@ void HttpHeader::Clear()
 int64 HttpHeader::GetContentLength() const
 {
 	return Nvl(ScanInt64((*this)["content-length"]), (int64)0);
+}
+
+void HttpHeader::Add(const String& id_, const String& value)
+{
+	String id = ToLower(id_);
+	fields.Add(id, value);
+	if(id == "set-cookie") {
+		HttpCookie c;
+		if(c.Parse(value))
+			cookies.Add(c.id, c);
+	}
 }
 
 bool HttpHeader::ParseAdd(const String& hdrs)
@@ -248,7 +304,7 @@ bool HttpHeader::ParseAdd(const String& hdrs)
 		if(s.IsEmpty()) break;
 		int q = s.Find(':');
 		if(q >= 0)
-			fields.Add(ToLower(s.Mid(0, q))) = TrimLeft(s.Mid(q + 1));
+			Add(ToLower(s.Mid(0, q)), TrimLeft(s.Mid(q + 1)));
 	}
 
 	const char *s = first_line;
@@ -294,7 +350,7 @@ bool HttpHeader::ParseSCGI(const String& scgi_hdr)
 			b = s + 1;
 			if(key.GetCount()) {
 				if(key.StartsWith("http_"))
-					fields.Add(Filter(key.Mid(5), CharFilterScgiHttp), h);
+					Add(Filter(key.Mid(5), CharFilterScgiHttp), h);
 				if(key == "content_length")
 					content_length = ScanInt64(h);
 				if(key == "request_method")
@@ -352,7 +408,7 @@ int HttpHeader::GetCode() const
 	return ScanInt(f2);
 }
 
-bool HttpHeader::Request(String& method, String& uri, String& version)
+bool HttpHeader::Request(String& method, String& uri, String& version) const
 {
 	method = GetMethod();
 	uri = GetURI();
@@ -360,7 +416,13 @@ bool HttpHeader::Request(String& method, String& uri, String& version)
 	return true;
 }
 
-bool HttpHeader::Response(String& protocol, int& code, String& reason)
+String HttpHeader::GetCookie(const char *id) const
+{
+	int q = cookies.Find(id);
+	return q < 0 ? String() : cookies[q].value;
+}
+
+bool HttpHeader::Response(String& protocol, int& code, String& reason) const
 {
 	protocol = GetProtocol();
 	code = GetCode();
