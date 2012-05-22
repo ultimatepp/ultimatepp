@@ -18,9 +18,9 @@ protected:
 	Vector<byte> data;
 
 public:
-	void           Open(Vector<byte> & d);
+	void           Open(Vector<byte>& d);
 	void           Create();
-	void           Reserve(int n)            { SetSize((int)GetSize() + n); }
+	void           Reserve(int n)            { SetSize(GetSize() + n); }
 	void           Crop()                    { SetSize(GetPos()); }
 
 	Vector<byte>   GetResult();

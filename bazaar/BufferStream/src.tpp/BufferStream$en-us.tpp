@@ -18,9 +18,7 @@ hood, so new buffering is possible as well)&]
 [s4; &]
 [s5;:BufferStream`:`:Open`(Vector`<byte`>`&`): [@(0.0.255) void]_[* Open]([_^Vector^ Vector
 ]<[_^byte^ byte]>_`&_[*@3 d])&]
-[s2;%% Picks the Vector [%-*@3 d].as underlying buffer. doesnt change 
-the current Stream mode, only updates the pointers od the Stream, 
-resetting read position.&]
+[s2;%% Picks the Vector [%-*@3 d].as underlying buffer in Loading mode.&]
 [s3;%% &]
 [s4; &]
 [s5;:BufferStream`:`:Create`(`): [@(0.0.255) void]_[* Create]()&]
@@ -33,9 +31,9 @@ rewinds current ptr to beginning.&]
 mode.can speed up things if you know how much is to come.&]
 [s3;%% &]
 [s4; &]
-[s5;:BufferStream`:`:Trim`(`): [@(0.0.255) void]_[* Crop]()&]
-[s2;%% crops the internal buffer to currently used size. if storing 
-buffer, means crop&]
+[s5;:BufferStream`:`:Crop`(`): [@(0.0.255) void]_[* Crop]()&]
+[s2;%% crops the internal buffer to currently used size, use when 
+storing.&]
 [s3; &]
 [s4; &]
 [s5;:BufferStream`:`:GetResult`(`): [_^Vector^ Vector]<[_^byte^ byte]>_[* GetResult]()&]
