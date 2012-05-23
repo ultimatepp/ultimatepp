@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  // LOG(x)
+#define LLOG(x) LOG(x)
 
 #if defined(COMPILER_MINGW) && !defined(FLASHW_ALL)
 	// MINGW headers don't include this in (some versions of) windows
@@ -49,6 +49,8 @@ LRESULT TopWindow::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		return 0;
 	case WM_WINDOWPOSCHANGED:
+		if(!isopen)
+			break;
 #ifndef PLATFORM_WINCE
 		if(IsIconic(hwnd))
 			state = MINIMIZED;
@@ -59,9 +61,11 @@ LRESULT TopWindow::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 #endif
 		{
 			state = OVERLAPPED;
-			overlapped = GetScreenClient(hwnd);
+			if(IsWindowVisible(hwnd)) overlapped = GetScreenClient(hwnd); // 12-05-23 Tom added 'if(IsWindowVisible(hwnd))' to get only proper rectangles
 		}
+		LLOG("TopWindow::WindowProc::WM_WINDOWPOSCHANGED: overlapped = " << overlapped);
 		Layout();
+		DDUMP((int)state);
 		break;
 	}
 	return Ctrl::WindowProc(message, wParam, lParam);
@@ -210,7 +214,7 @@ void TopWindow::Open(HWND hwnd)
 	if(!GetRect().IsEmpty())
 #endif
 	if(fullscreen) {
-		SetRect(GetScreenSize());
+		SetRect(GetScreenRect()); // 12-05-23 Tom changed from GetScreenSize() to GetScreenRect() in order to get full screen on correct display
 		Create(hwnd, WS_POPUP, 0, false, SW_SHOWMAXIMIZED, false);
 	}
 	else {
@@ -218,6 +222,10 @@ void TopWindow::Open(HWND hwnd)
 		Create(hwnd, style, exstyle, false, state == OVERLAPPED ? SW_SHOWNORMAL :
 		                                    state == MINIMIZED  ? SW_MINIMIZE :
 		                                                          SW_MAXIMIZE, false);
+		DDUMP((int)state);
+		DDUMP((state == OVERLAPPED ? SW_SHOWNORMAL :
+		                                    state == MINIMIZED  ? SW_MINIMIZE :
+		                                                          SW_MAXIMIZE) == SW_MAXIMIZE);
 	}
 	PlaceFocus();
 	SyncCaption();
@@ -261,7 +269,7 @@ TopWindow& TopWindow::FullScreen(bool b)
 	bool pinloop = inloop;
 	WndDestroy();
 	Overlap();
-	SetRect(GetDefaultWindowRect());
+	SetRect(overlapped); // 12-05-23 Tom changed from GetDefaultWindowRect() to 'overlapped' to restore back to previous window position
 	Open(hwnd);
 	inloop = pinloop;
 	return *this;
@@ -337,15 +345,20 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 {
 	GuiLock __;
 #ifndef PLATFORM_WINCE
-	int version = 0;
+	int version = 1;
 	s / version;
 	Rect rect = GetRect();
 	s % overlapped % rect;
+	DDUMP((int)state);
 	bool mn = state == MINIMIZED;
 	bool mx = state == MAXIMIZED;
-	s.Pack(mn, mx);
+	bool fs = fullscreen;	// 12-05-23 Tom added fullscreen serialization
+	if(version >= 1)
+		s.Pack(mn, mx, fs);		// 12-05-23 Tom changed from: s.Pack(mn, mx);
+	else
+		s.Pack(mn, mx);
 	LLOG("TopWindow::SerializePlacement / " << (s.IsStoring() ? "write" : "read"));
-	LLOG("minimized = " << mn << ", maximized = " << mx);
+	LLOG("minimized = " << mn << ", maximized = " << mx << ", fullscreen = " << fs); // 12-05-23 Tom extended with fullscreen
 	LLOG("rect = " << rect << ", overlapped = " << overlapped);
 	if(s.IsLoading()) {
 		rect = overlapped;
@@ -361,14 +374,30 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 			minmax(rect.left, limit.left, limit.right - sz.cx),
 			minmax(rect.top,  limit.top,  limit.bottom - sz.cy),
 			sz.cx, sz.cy);
+
 		state = OVERLAPPED;
 		SetRect(rect);
-		if(mn && reminimize)
+		
+		DDUMP(mn);
+		DDUMP(mx);
+		if(mn && reminimize){
 			state = MINIMIZED;
-		if(mx)
+			//Minimize(); // 12-05-23 Tom removed
+		}
+		if(mx){
 			state = MAXIMIZED;
+			//Maximize(); // 12-05-23 Tom removed
+		}
 		if(IsOpen()) {
-			WINDOWPLACEMENT wp;
+			switch(state){
+				case MINIMIZED:
+					Minimize();
+					break;
+				case MAXIMIZED:
+					Maximize();
+					break;
+			}
+/*			WINDOWPLACEMENT wp;
 			memset(&wp,0,sizeof(WINDOWPLACEMENT));
 			wp.length=sizeof(WINDOWPLACEMENT);
 			wp.showCmd = state==MINIMIZED ? SW_MINIMIZE : state==MAXIMIZED ? SW_MAXIMIZE : SW_RESTORE;
@@ -377,7 +406,15 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 			wp.rcNormalPosition.right=rect.right;
 			wp.rcNormalPosition.bottom=rect.bottom;
 			::SetWindowPlacement(GetHWND(),&wp);
+*/
+			if(fs){
+				Overlap(); // Needed to restore normal position before fullscreen mode
+				FullScreen(fs); // Tom added for fullscreen serialization
+			}
 		}
+		else{ // Tom added for fullscreen serialization
+			fullscreen=fs; // Tom added for fullscreen serialization
+		} // Tom added for fullscreen serialization
 	}
 #endif
 }
