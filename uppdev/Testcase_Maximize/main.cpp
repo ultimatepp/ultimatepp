@@ -13,6 +13,8 @@ struct MyApp : public TopWindow {
 GUI_APP_MAIN
 {
 	MyApp app;
+	app.Open();
+	app.Maximize();
 	LoadFromFile(app);
 	app.Execute();
 	StoreToFile(app);
