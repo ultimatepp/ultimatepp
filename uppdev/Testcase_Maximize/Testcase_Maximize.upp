@@ -1,4 +1,4 @@
-description "click the titlebar";
+description "click the titlebar\377";
 
 uses
 	CtrlLib;

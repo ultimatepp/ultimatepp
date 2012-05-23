@@ -1,0 +1,4 @@
+#ifndef _Testcase_Maximize_icpp_init_stub
+#define _Testcase_Maximize_icpp_init_stub
+#include "CtrlLib/init"
+#endif
