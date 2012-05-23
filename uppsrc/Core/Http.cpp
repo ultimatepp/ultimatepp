@@ -204,7 +204,7 @@ HttpRequest& HttpRequest::Header(const char *id, const String& data)
 
 HttpRequest& HttpRequest::Cookie(const HttpCookie& c)
 {
-	cookies.GetAdd(String(c.id) << '?' << c.domain << '?' << c.path) = c;
+	cookies.GetAdd(String(c.id).Cat() << '?' << c.domain << '?' << c.path) = c;
 	return *this;
 }
 
