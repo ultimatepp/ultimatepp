@@ -6,7 +6,7 @@ class Base : public WithPolyXML<Base>, public Pte<Base>
 {
 	public:
 		String BaseData;
-		void Xmlize(XmlIO xml) { xml("BaseData", BaseData); }
+		void Xmlize(XmlIO &xml) { xml("BaseData", BaseData); }
 		Base() { BaseData = "Sample data in Base class"; }
 };
 
@@ -14,7 +14,7 @@ class Derived : public Base
 {
 	public:
 		String DerivedData;
-		void Xmlize(XmlIO xml) { Base::Xmlize(xml); xml("DerivedData", DerivedData); }
+		void Xmlize(XmlIO &xml) { Base::Xmlize(xml); xml("DerivedData", DerivedData); }
 		Derived() { DerivedData = "Sample data in Derived class"; }
 };
 
@@ -22,7 +22,7 @@ class Another : public Derived
 {
 	public:
 		int AnotherData;
-		void Xmlize(XmlIO xml) { Derived::Xmlize(xml); xml("AnotherData", AnotherData); }
+		void Xmlize(XmlIO &xml) { Derived::Xmlize(xml); xml("AnotherData", AnotherData); }
 		Another() { AnotherData = 7; }
 };
 
@@ -30,7 +30,7 @@ class OneMore : public Another
 {
 	public:
 		double OneMoreData;
-		void Xmlize(XmlIO xml) { Derived::Xmlize(xml); xml("AnotherData", AnotherData); }
+		void Xmlize(XmlIO &xml) { Derived::Xmlize(xml); xml("AnotherData", AnotherData); }
 		OneMore() { OneMoreData = 3.14; }
 };
 
