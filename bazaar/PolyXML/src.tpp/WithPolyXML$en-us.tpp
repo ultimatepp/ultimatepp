@@ -15,7 +15,7 @@ topic "WithPolyXML";
 [s1;:noref: [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][3 >]&]
 [s1;:WithPolyXML`:`:class: [@(0.0.255) class]_[* WithPolyXML]_:_[@(0.0.255) public]_[*@3 WithF
 actory]<[*@4 T]>_&]
-[s8;%% [*C@4 T]-|Type of base class of polymorphic hyerarchy.&]
+[s8;%% [*C@4 T]-|Type of base class of polymorphic hierarchy.&]
 [s0;%% This template class implements the base behaviour of polymorphic 
 classes that needs to be streamed in XML format.&]
 [s3;%% &]
@@ -23,7 +23,7 @@ classes that needs to be streamed in XML format.&]
 [s1;:noref: [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][3 >]&]
 [s1;:PolyXMLArray`:`:class: [@(0.0.255) class]_[* PolyXMLArray]_:_[@(0.0.255) public]_[*@3 Arr
 ay]<[*@4 T]>_&]
-[s8;%% [*C@4 T]-|Type of base class of polymorphic hyerarchy.&]
+[s8;%% [*C@4 T]-|Type of base class of polymorphic hierarchy.&]
 [s0;%% This template class implements the base behaviour of an XML`-streamable 
 polymorphic Array container.&]
 [s2;%% &]
@@ -32,7 +32,7 @@ polymorphic Array container.&]
 class][3 _][*@4;3 T][3 >]&]
 [s1;:PolyXMLArrayMap`:`:class: [@(0.0.255) class]_[* PolyXMLArrayMap]_:_[@(0.0.255) public]_
 [*@3 ArrayMap]<[*@4 K ][* , ][*@4 T]>_&]
-[s8;%% [*C@4 T]-|Type of base class of polymorphic hyerarchy.&]
+[s8;%% [*C@4 T]-|Type of base class of polymorphic hierarchy.&]
 [s0;%% This template class implements the base behaviour of an XML`-streamable 
 polymorphic ArrayMap container.&]
 [s2;%% &]
@@ -41,7 +41,7 @@ polymorphic ArrayMap container.&]
 class][3 _][*@4;3 T][3 >]&]
 [s1;:PolyXMLArrayMapOne`:`:class: [@(0.0.255) class]_[* PolyXMLArrayMapOne]_:_[@(0.0.255) pu
 blic]_[*@3 ArrayMap]<[*@4 K ][* , One<][*@4 T]> >_&]
-[s8;%% [*C@4 T]-|Type of base class of polymorphic hyerarchy.&]
+[s8;%% [*C@4 T]-|Type of base class of polymorphic hierarchy.&]
 [s0;%% This template class implements the base behaviour of an XML`-streamable 
 polymorphic ArrayMap container, where Value type is of type [%-* One<][%-*@4 T][%- >].&]
 [s2;%% &]
@@ -67,7 +67,7 @@ just derive from [* WithPolyXML ]template :&]
 [s2;%% [* `};]&]
 [s9;%% &]
 [s9;%% The [* Xmlize()] virtual member function must be defined in 
-each class in the hyerarchy; its purpose is to XML`-ize [* ONLY 
+each class in the hierarchy; its purpose is to XML`-ize [* ONLY 
 ]the direct members of the class. Because of that, in each derived 
 class you must call [* AT FIRST] the parent`'s class [* Xmlize()] 
 from inside it; here an example:&]

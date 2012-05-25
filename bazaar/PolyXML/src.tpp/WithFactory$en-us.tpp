@@ -15,9 +15,9 @@ topic "WithFactory";
 [s4; [*C@4 T]-|Type of base class of polymorphic hyerarchy.&]
 [s5; This template class adds some RTTI (Run Time Type Identification) 
 to your classes, and implements a so called `'class factory`', 
-bringing the ability to register class hyerarchies, construct 
+bringing the ability to register class hierarchies, construct 
 them by name, check their type at runtime, list all classes in 
-hyerarchy and so on. &]
+hierarchy and so on. &]
 [s5; It`'s a base behaviour for most polymorphic class usage.&]
 [s2; &]
 [s3;%- &]
@@ -31,7 +31,7 @@ derive from WithFactory :&]
 [s2; [* `{]&]
 [s2; [* -|-|.........]&]
 [s2; [* `};]&]
-[s5; Then you can derive your class hyerarchy from base, as usual 
+[s5; Then you can derive your class hierarchy from base, as usual 
 :&]
 [s0; &]
 [s2; [* class MyDerivedClass : public MyBaseClass]&]
@@ -71,7 +71,7 @@ member function `::&]
 [s2; [* MyBaseClass `*ptr `= new MyDerivedClass;]&]
 [s2; [* String classType `= ptr`->IsA();    ]returns the string `"MyDerivedClass`"&]
 [s0; &]
-[s5; You can also list at runtime your class hyerarchy by mean of 
+[s5; You can also list at runtime your class hierarchy by mean of 
 static member [* Classes()]:&]
 [s5; &]
 [s2; [* Vector<String> const `&classList `= MyBaseClass`::Classes();]&]
@@ -125,20 +125,20 @@ of class grouping. [%-*@3 Index] can be any integer number [%-*@3 icon
 [s7;:WithFactory`:`:Create`(const String`&`):%- [@(0.0.255) static] 
 [_^One^ One]<[*@4 T]>_[* CreateInstance]([@(0.0.255) const]_[_^String^ String]_`&[*@3 classNa
 me])&]
-[s2; Creates a class derived from hyerarchy base T by its [%-*@3 className].&]
+[s2; Creates a class derived from hierarchy base T by its [%-*@3 className].&]
 [s2; Returns a smart pointer to the base class T&]
 [s3; &]
 [s6;%- &]
 [s7;:WithFactory`:`:CreatePtr`(String const`&`):%- [@(0.0.255) static] 
 [*@4 T]_`*[* CreatePtr]([_^String^ String]_[@(0.0.255) const]_`&[*@3 className])&]
-[s2; Creates a class derived from hyerarchy base T by its [%-*@3 className].&]
+[s2; Creates a class derived from hierarchy base T by its [%-*@3 className].&]
 [s2; Returns a traditional pointer to the base class T&]
 [s3; &]
 [s6;%- &]
 [s7;:WithFactory`:`:Classes`(void`):%- [@(0.0.255) static] [_^Vector^ Vector]<[_^String^ St
 ring]>_[@(0.0.255) const]_`&[* Classes]([@(0.0.255) void])&]
 [s2; Returns Vector of strings containing all registered class names 
-in hyerarchy.&]
+in hierarchy.&]
 [s3;%- &]
 [s6;%- &]
 [s7;:WithFactory`:`:GetClassDescription`(const String`&`):%- [@(0.0.255) static] 
