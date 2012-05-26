@@ -51,8 +51,8 @@ template<class T> class PolyXMLArray : public Array<T>
 		// Xmlizer
 		void Xmlize(XmlIO &xml);
 		
-		void Add(const T &data) { Array<T>::Add(data); }
-		void Add(T *data) { Array<T>::Add(data); }
+		T& Add(const T &data) { return Array<T>::Add(data); }
+		T& Add(T *data) { return Array<T>::Add(data); }
 };
 
 template<class T> void PolyXMLArray<T>::Xmlize(XmlIO &xml)
@@ -109,8 +109,8 @@ template<class K, class T> class PolyXMLArrayMap : public ArrayMap<K, T>
 		// Xmlizer
 		void Xmlize(XmlIO &xml);
 		
-		void Add(const K &key, const T &data) { ArrayMap<K, T>::Add(key, data); }
-		void Add(const K &key, T *data) { ArrayMap<K, T>::Add(key, data); }
+		T& Add(const K &key, const T &data) { return ArrayMap<K, T>::Add(key, data); }
+		T& Add(const K &key, T *data) { return ArrayMap<K, T>::Add(key, data); }
 };
 
 template<class K, class T> void PolyXMLArrayMap<K, T>::Xmlize(XmlIO &xml)
@@ -175,7 +175,7 @@ template<class K, class T> class PolyXMLArrayMapOne : public ArrayMap<K, One<T> 
 		// Xmlizer
 		void Xmlize(XmlIO &xml);
 		
-		void Add(const K &key, pick_ One<T> &data) { ArrayMap<K, One<T> >::AddPick(key, data); }
+		One<T>& Add(const K &key, pick_ One<T> &data) { return ArrayMap<K, One<T> >::AddPick(key, data); }
 };
 
 template<class K, class T> void PolyXMLArrayMapOne<K, T>::Xmlize(XmlIO &xml)
