@@ -22,26 +22,24 @@ topic "WithFactory and PolyXML";
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
-[s2; WithPolyXML template&]
+[s2; WithFactory template&]
 [s0; &]
-[s0; [^topic`:`/`/PolyXML`/src`/WithPolyXML`$en`-us`#WithPolyXML`:`:class^ WithPolyXML 
-]template, derived from [^topic`:`/`/PolyXML`/src`/WithFactory`$en`-us`#WithFactory`:`:class^ W
-ithFactory ]one (see [* ClassFactory ]package), provides the necessary 
-behaviour to handle XML streaming of classes belong to hierarchy.&]
-[s0; All classes derived from [^topic`:`/`/PolyXML`/src`/WithPolyXML`$en`-us`#WithPolyXML`:`:class^ W
-ithPolyXML ]template can be inserted into any of following containers 
-:&]
+[s0; [^topic`:`/`/PolyXML`/src`/WithFactory`$en`-us`#WithFactory`:`:class^ WithFactory 
+]is a generic class`-factory template.&]
+[s0; It allows registering classes derived from it and provide many 
+useful functions on them :&]
 [s0; &]
-[s0;i150;O0; [^topic`:`/`/PolyXML`/src`/WithPolyXML`$en`-us`#PolyXMLArray`:`:class^ Pol
-yXMLArray]-|-|-|A polymorphic Array&]
-[s0;i150;O0; [^topic`:`/`/PolyXML`/src`/WithPolyXML`$en`-us`#PolyXMLArrayMap`:`:class^ P
-olyXMLArrayMap]-|-|A polymorphic ArrayMap&]
-[s0;i150;O0; [^topic`:`/`/PolyXML`/src`/WithPolyXML`$en`-us`#PolyXMLArrayMapOne`:`:class^ P
-olyXMLArrayMapOne]-|-|A polymorphic ArrayMap containing One<T>&]
+[s0;i150;O0; Object creation by class name&]
+[s0;i150;O0; Query of class name from object&]
+[s0;i150;O0; Association of some fields to class types, as an icon, 
+a group, a description and so on&]
+[s0;i150;O0; Query of above fields given any object belonging to 
+the class hierarchy&]
+[s0;i150;O0; Get a list of registered classes belonging to hierarchy&]
 [s0; &]
-[s0; The containers will manage automatically the XML in and out 
-streaming; on loading the correct objects will be created and 
-put into the array.&]
+[s0; It`'s the base class template for PolyXML polymorphic serialization 
+package, but can be used for generic RTTI handling.&]
 [s0; &]
-[s0; Please see the PolyXMLTest example application for usage details.&]
+[s0; Please see the PolyXMLTest application for a polymorphic serialization 
+application example.&]
 [s0; ]

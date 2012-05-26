@@ -1,0 +1,8 @@
+description "Generic class factory - Enables some advanced RTTI\377";
+
+file
+	ClassFactory.h,
+	ClassFactory.cpp,
+	src.tpp,
+	srcdoc.tpp;
+

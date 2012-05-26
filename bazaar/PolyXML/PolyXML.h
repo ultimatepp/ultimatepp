@@ -1,7 +1,7 @@
 #ifndef _PolyXML_h_
 #define _PolyXML_h_
 
-#include "ClassFactory.h"
+#include <ClassFactory/ClassFactory.h>
 
 NAMESPACE_UPP;
 

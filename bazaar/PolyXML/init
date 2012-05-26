@@ -1,4 +1,5 @@
 #ifndef _PolyXML_icpp_init_stub
 #define _PolyXML_icpp_init_stub
 #include "Core/init"
+#include "ClassFactory/init"
 #endif
