@@ -3,6 +3,7 @@ uses
 	ClassFactory;
 
 file
+	PolyXML.cpp,
 	PolyXML.h,
 	src.tpp,
 	srcdoc.tpp;
