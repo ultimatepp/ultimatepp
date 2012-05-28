@@ -1,6 +1,6 @@
 #include "SSL.h"
 
-#define LLOG(x)  // DLOG(x)
+#define LLOG(x) //  DLOG(x)
 
 NAMESPACE_UPP
 
@@ -104,6 +104,13 @@ bool TcpSocket::SSLImp::IsAgain(int res) const
 bool TcpSocket::SSLImp::Start()
 {
 	LLOG("SSL Start");
+
+#if 0 // bug hunting
+	int n = socket.GetTimeout(); _DBG_
+	socket.Timeout(Null);
+	socket.Wait(WAIT_WRITE);
+	socket.Timeout(n);
+#endif
 
 	ERR_clear_error();
 	if(!context.Create(const_cast<SSL_METHOD *>(SSLv3_client_method()))) {

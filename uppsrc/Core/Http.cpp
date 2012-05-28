@@ -338,6 +338,7 @@ bool HttpRequest::Do()
 		if(retry_count++ < max_retries) {
 			LLOG("HTTP retry on error " << GetErrorDesc());
 			start_time = msecs();
+			GlobalTimeout(timeout);
 			StartPhase(START);
 		}
 	}

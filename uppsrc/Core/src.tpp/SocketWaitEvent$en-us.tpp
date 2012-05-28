@@ -24,7 +24,8 @@ sockets for specified events.&]
 [s4; &]
 [s5;:SocketWaitEvent`:`:Add`(SOCKET`,dword`): [@(0.0.255) void]_[* Add]([_^SOCKET^ SOCKET]_
 [*@3 s], [_^dword^ dword]_[*@3 events]_`=_WAIT`_ALL)&]
-[s2;%% Adds socket [%-*@3 s] to the set to be waited on specified [%-*@3 events].&]
+[s2;%% Adds socket [%-*@3 s] to the set to be waited on specified [%-*@3 events]. 
+Note that SocketWaitEvent always waits for exceptions.&]
 [s3;%% &]
 [s4; &]
 [s5;:SocketWaitEvent`:`:Add`(TcpSocket`&`,dword`): [@(0.0.255) void]_[* Add]([_^TcpSocket^ T
@@ -47,8 +48,9 @@ onst]&]
 nt]_[*@3 i])_[@(0.0.255) const]&]
 [s2;%% Returns events that triggered for socket at index [%-*@3 i] 
 (indicies are specified by order of Add calls) as binary or of 
-WAIT`_READ, WAIT`_WRITE, WAIT`_EXCEPTION. If there were none 
-events for requested socket (or it is not open), returns 0.&]
+WAIT`_READ, WAIT`_WRITE, WAIT`_IS`_EXCEPTION (something bad happened, 
+like peer closing the connection). If there were none events 
+for requested socket (or it is not open), returns 0.&]
 [s3;%% &]
 [s4; &]
 [s5;:SocketWaitEvent`:`:SocketWaitEvent`(`): [* SocketWaitEvent]()&]

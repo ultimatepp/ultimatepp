@@ -51,8 +51,6 @@ public:
 	~IpAddrInfo()           { Clear(); }
 };
 
-enum { WAIT_READ = 1, WAIT_WRITE = 2, WAIT_EXCEPTION = 4, WAIT_ALL = 7 };
-
 struct SSLInfo {
 	String  cipher;
 	bool    cert_avail;
@@ -64,6 +62,8 @@ struct SSLInfo {
 	int     cert_version;
 	String  cert_serial;
 };
+
+enum { WAIT_READ = 1, WAIT_WRITE = 2, WAIT_IS_EXCEPTION, WAIT_ALL = 7 };
 
 class TcpSocket {
 	enum { BUFFERSIZE = 512 };

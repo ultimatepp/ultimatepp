@@ -263,7 +263,6 @@ void TcpSocket::Reset()
 	mode = NONE;
 	ssl.Clear();
 	sslinfo.Clear();
-	global_timeout = Null;
 	start_time = Null;
 }
 
@@ -274,6 +273,7 @@ TcpSocket::TcpSocket()
 	timeout = Null;
 	waitstep = 10;
 	asn1 = false;
+	global_timeout = Null;
 }
 
 bool TcpSocket::Open(int family, int type, int protocol)
@@ -556,13 +556,16 @@ bool TcpSocket::RawWait(dword flags, int end_time)
 			tval.tv_usec = 1000 * (to % 1000);
 			tvalp = &tval;
 		}
-		fd_set fdset[1];
-		FD_ZERO(fdset);
-		FD_SET(socket, fdset);
-		int avail = select((int)socket + 1,
-		                   flags & WAIT_READ ? fdset : NULL,
-		                   flags & WAIT_WRITE ? fdset : NULL,
-		                   flags & WAIT_EXCEPTION ? fdset : NULL, tvalp);
+		fd_set fdsetr[1], fdsetw[1], fdsetx[1];;
+		FD_ZERO(fdsetr);
+		if(flags & WAIT_READ)
+			FD_SET(socket, fdsetr);
+		FD_ZERO(fdsetw);
+		if(flags & WAIT_WRITE)
+			FD_SET(socket, fdsetw);
+		FD_ZERO(fdsetx);
+		FD_SET(socket, fdsetx);
+		int avail = select((int)socket + 1, fdsetr, fdsetw, fdsetx, tvalp);
 		LLOG("Wait select avail: " << avail);
 		if(avail < 0) {
 			SetSockError("wait");
@@ -580,7 +583,7 @@ bool TcpSocket::RawWait(dword flags, int end_time)
 	}
 }
 
-TcpSocket& TcpSocket::GlobalTimeout(int ms)
+ TcpSocket& TcpSocket::GlobalTimeout(int ms)
 {
 	start_time = msecs();
 	global_timeout = ms;
@@ -872,8 +875,7 @@ int SocketWaitEvent::Wait(int timeout)
 				FD_SET(s.a, read);
 			if(s.b & WAIT_WRITE)
 				FD_SET(s.a, write);
-			if(s.b & WAIT_EXCEPTION)
-				FD_SET(s.a, exception);
+			FD_SET(s.a, exception);
 			maxindex = max(s.a, maxindex);
 		}
 	}
@@ -898,7 +900,7 @@ dword SocketWaitEvent::Get(int i) const
 	if(FD_ISSET(s, write))
 		events |= WAIT_WRITE;
 	if(FD_ISSET(s, exception))
-		events |= WAIT_EXCEPTION;
+		events |= WAIT_IS_EXCEPTION;
 	return events;
 }
 

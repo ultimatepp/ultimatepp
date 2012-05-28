@@ -141,8 +141,8 @@ switches SO`_LINGER off.&]
 [s5;:TcpSocket`:`:Wait`(dword`): [@(0.0.255) bool]_[* Wait]([_^dword^ dword]_[*@3 events])&]
 [s2;%% Waits for at most timeout for [%-*@3 events], which can be a 
 combination of WAIT`_READ (wait for more input bytes available), 
-WAIT`_WRITE (wait till it is possible to write something to socket) 
-and WAIT`_EXCEPTION (wait until something bad happens).&]
+WAIT`_WRITE (wait till it is possible to write something to socket). 
+Wait also always returns when socket exception happens.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:TcpSocket`:`:WaitRead`(`): [@(0.0.255) bool]_[* WaitRead]()&]
