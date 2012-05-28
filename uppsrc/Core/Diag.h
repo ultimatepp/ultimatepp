@@ -73,6 +73,9 @@ void     CloseStdLog();
 
 void     HexDump(Stream& s, const void *ptr, int size, int maxsize = INT_MAX);
 
+void     LogHex(const String& s);
+void     LogHex(const WString& s);
+
 String        GetTypeName(const char *type_name);
 inline String GetTypeName(const ::std::type_info& tinfo)   { return GetTypeName(tinfo.name()); }
 
@@ -100,6 +103,7 @@ inline void UnlockLog() {}
 #define LOGEND()         UPP::VppLog() << UPP::LOG_END, UPP::UnlockLog()
 #define LOGBLOCK(n)      RLOGBLOCK(n)
 #define LOGHEXDUMP(s, a) UPP::HexDump(VppLog(), s, a)
+#define LOGHEX(x)        UPP::LockLog(), UPP::LogHex(x), UPP::UnlockLog()
 #define QUOTE(a)         { LOG(#a); a; }
 #define LOGSRCPOS()      UPP::LockLog(), UPP::VppLog() << __FILE__ << '#' << __LINE__ << UPP::EOL, UPP::UnlockLog()
 #define DUMP(a)          UPP::LockLog(), UPP::VppLog() << #a << " = " << (a) << UPP::EOL, UPP::UnlockLog()
@@ -107,6 +111,7 @@ inline void UnlockLog() {}
 #define DUMPCC(c)        UPP::LockLog(), UPP::DumpContainer2(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
 #define DUMPCCC(c)       UPP::LockLog(), UPP::DumpContainer3(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
 #define DUMPM(c)         UPP::LockLog(), UPP::DumpMap(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
+#define DUMPHEX(x)       UPP::LockLog(), UPP::VppLog() << #x << " = "; UPP::LogHex(x), UPP::UnlockLog()
 #define XASSERT(c, d)    if(!bool(c)) { LOG("XASSERT failed"); LOGSRCPOS(); LOG(d); ASSERT(0); } else
 #define NEVER()          ASSERT(0)
 #define NEVER_(msg)      ASSERT_(0, msg)
@@ -124,6 +129,8 @@ inline void UnlockLog() {}
 #define DDUMPC(x)        DUMPC(x)
 #define DDUMPM(x)        DUMPM(x)
 #define DTIMING(x)       TIMING(x)
+#define DLOGHEX(x)       LOGHEX(x)
+#define DDUMPHEX(x)      DUMPHEX(x)
 
 #else
 
@@ -132,6 +139,8 @@ inline void UnlockLog() {}
 #define DDUMPC(x)        @
 #define DDUMPM(x)        @
 #define DTIMING(x)       @
+#define DLOGHEX(x)       @
+#define DUMPHEX(nx)      @
 
 #define DEBUGCODE(x)     LOG_NOP
 
@@ -142,6 +151,7 @@ inline void LOGF(const char *format, ...) {}
 #define LOGEND()         LOG_NOP
 #define LOGBLOCK(n)      LOG_NOP
 #define LOGHEXDUMP(s, a) LOG_NOP
+#define LOGHEX(x)        LOG_NOP
 #define QUOTE(a)         a
 #define LOGSRCPOS()      LOG_NOP
 #define DUMP(a)          LOG_NOP
@@ -149,6 +159,7 @@ inline void LOGF(const char *format, ...) {}
 #define DUMPCC(a)        LOG_NOP
 #define DUMPCCC(a)       LOG_NOP
 #define DUMPM(a)         LOG_NOP
+#define DUMPHEX(nx)      LOG_NOP
 #define XASSERT(c, d)    LOG_NOP
 #define NEVER()          LOG_NOP
 #define NEVER_(msg)      LOG_NOP
@@ -180,6 +191,8 @@ struct DebugLogBlock
 #define RDUMP(a)          UPP::LockLog(), UPP::VppLog() << #a << " = " << (a) << UPP::EOL, UPP::UnlockLog()
 #define RDUMPC(c)         UPP::LockLog(), UPP::DumpContainer(UPP::VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
 #define RDUMPM(c)         UPP::LockLog(), UPP::DumpMap(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
+#define RLOGHEX(x)        UPP::LockLog(), UPP::LogHex(x), UPP::UnlockLog()
+#define RDUMPHEX(x)       UPP::LockLog(), UPP::VppLog() << #x << " = ", UPP::LogHex(x), UPP::UnlockLog()
 
 // Crash support
 

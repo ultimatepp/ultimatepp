@@ -392,6 +392,16 @@ void  HexDump(Stream& s, const void *ptr, int size, int maxsize) {
 	}
 }
 
+void LogHex(const String& s)
+{
+	HexDump(VppLog(), ~s, s.GetLength());
+}
+
+void LogHex(const WString& s)
+{
+	HexDump(VppLog(), ~s, sizeof(wchar) * s.GetLength());
+}
+
 #if defined(PLATFORM_WIN32) && !defined(PLATFORM_WINCE)
 
 template <class T>
