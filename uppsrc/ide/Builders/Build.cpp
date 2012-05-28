@@ -59,6 +59,10 @@ Index<String> MakeBuild::PackageConfig(const Workspace& wspc, int package,
 	}
 	host.AddFlags(cfg);
 	b.AddFlags(cfg);
+	for(int i = 0; i < pkg.flag.GetCount(); i++) {
+		if(MatchWhen(pkg.flag[i].when, cfg.GetKeys()))
+			cfg.Add(pkg.flag[i].text);
+	}
 	if(target)
 		*target = Gather(pkg.target, cfg.GetKeys(), true);
 	return cfg;
