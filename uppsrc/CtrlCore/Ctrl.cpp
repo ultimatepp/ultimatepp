@@ -705,6 +705,7 @@ const char *Ctrl::GetZoomText()
 
 Size Ctrl::Dsize;
 Size Ctrl::Csize;
+bool Ctrl::IsNoLayoutZoom;
 
 void InitRichTextZoom()
 {
@@ -731,13 +732,14 @@ void Ctrl::SetZoomSize(Size sz, Size bsz)
 	GuiLock __;
 	Csize = sz;
 	Dsize = bsz;
+	IsNoLayoutZoom = false;
 	ReSkin();
 }
 
 void Ctrl::NoLayoutZoom()
 {
 	GuiLock __;
-	Csize = Dsize = Size(1, 1);
+	IsNoLayoutZoom = true;
 	ReSkin();
 }
 
@@ -914,7 +916,7 @@ void Ctrl::ReSkin()
 		(*s_chdefault)();
 	if(skin)
 		(*skin)();
-	Csize.cx = Dsize.cx = 0;
+	Csize.cx = Dsize.cx = IsNoLayoutZoom;
 	Csizeinit();
 	ChFinish();
 	Vector<Ctrl *> ctrl = GetTopCtrls();

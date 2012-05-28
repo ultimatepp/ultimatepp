@@ -637,6 +637,7 @@ private:
 
 	static Size Dsize;
 	static Size Csize;
+	static bool IsNoLayoutZoom;
 	static void Csizeinit();
 	static void (*skin)();
 
