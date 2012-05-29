@@ -47,6 +47,7 @@ Packages and Assemblies]&]
 [s0; [^topic`:`/`/ide`/app`/macros`$en`-us^ Macros]&]
 [s0; [^topic`:`/`/ide`/app`/PackageTemplates`$en`-us^ Ultimate`+`+ 
 Project Templates]&]
+[s0; [^topic`:`/`/ide`/app`/upp`$en`-us^ U`+`+ package file format]&]
 [s0; [^topic`:`/`/ide`/app`/cmdline`$en`-us^ TheIDE command`-line]&]
 [s0; [^topic`:`/`/ide`/app`/IconDes`$en`-us^ Iml designer]&]
 [s0; &]
