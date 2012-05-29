@@ -58,7 +58,7 @@ the main program.&]
 [s3;l480; [%-*@3 funName].contains the name of the function in the 
 C script.&]
 [s4; &]
-[s4; &]
+[s1; &]
 [s2;:Tcc`:`:AddIncludePath`(const char`*`):%- [@(0.0.255) bool]_[* AddIncludePath]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 path])&]
 [s3; Sets a directory [%-*@3 path ]where include files referenced in 
@@ -86,4 +86,11 @@ indicated in Link()&]
 [s2;:Tcc`:`:SetOutputMemory`(`):%- [@(0.0.255) void]_[* SetOutputMemory]()&]
 [s3; Defines that the program will be run in memory (option by default)&]
 [s4;%- &]
-[s0; ]
+[s0; &]
+[ {{10000@1 [s0; [* C script function list. This functions can be called from C 
+script]]}}&]
+[s1;%- &]
+[s0;%- [@(0.0.255)2 void][2 _][*2 throw][2 (][@(0.0.255)2 const char][2 _`*][*@3;2 path][2 )]&]
+[s3; Throws an Exc exception with message [%-*@3 path].&]
+[s4;%- &]
+[s0;%- ]

@@ -115,7 +115,7 @@ void Tcc::Init(const char *libPath)
 			SetLibPath(libPath);
 #endif
 
-	T_tcc_set_error_func(stateTcc, NULL, Tcc::DefaultErrorHandler);
+	T_tcc_set_error_func(stateTcc, this, Tcc::DefaultErrorHandler);
     errorMsg = "";
     
     SetOutputMemory();
@@ -133,22 +133,19 @@ void Tcc::SetOutputMemory()
 	outputMemory = true;
 };
 	
-
-String Tcc::errorMsg = "";
-int Tcc::initialProgramLines;
-
 void Tcc::DefaultErrorHandler(void* opaque, const char* msg)
 {
-	if (!errorMsg.IsEmpty())
-		errorMsg.Cat('\n');		// When calling Relocate this handle can get more than one error
+	Tcc &tcc = *(Tcc *)opaque;
+	if (!tcc.errorMsg.IsEmpty())
+		tcc.errorMsg.Cat('\n');		// When calling Relocate this handle can get more than one error
 	String message = msg;
 	int linePos = sizeof("Line ")-1;
 	if (message.Left(linePos) == "Line ") {		// Fix the line number in the error message
 		int endLinePos = message.Find(':', linePos+1);
 		int line = atoi(message.Mid(linePos, endLinePos-linePos));
-		message = Format(t_("Line %d"), line-initialProgramLines) + ":" + message.Mid(endLinePos+1);
+		message = Format(t_("Line %d"), line - tcc.initProgramLines) + ":" + message.Mid(endLinePos+1);
 	}
-	errorMsg.Cat(message);
+	tcc.errorMsg.Cat(message);
 }
 
 Tcc::~Tcc()
@@ -161,28 +158,29 @@ Tcc::~Tcc()
 #endif
 }
 
-void tcc_throw(char *str)
+void tcc_throw(const char *str)
 {
 	 throw Exc(str);
 }
 
 void Tcc::Compile(const char *my_program)
 {
-	program << 	"// Basic declarations\n"	
-				"typedef int bool;\n"
-				"#define true  1\n"
-				"#define false 0\n"	
-				"#define M_PI	3.1415926535897932\n"		// It does not seem to be in math.h
-				"\n"
-				"void throw(char *str);\n"
-				"\n";
-	initialProgramLines = 0;
+	String initString = "// Basic declarations\n"	
+						"typedef int bool;\n"
+						"#define true  1\n"
+						"#define false 0\n"	
+						"#define M_PI	3.1415926535897932\n"// It does not seem to be in math.h
+						"\n"
+						"void throw(char *str);\n"
+						"\n";
+	initLen = initString.GetCount();
+	initProgramLines = 0;
 	int pos = 0;
-	while((pos = program.Find('\n', pos)) >= 0) {
-		initialProgramLines++;
+	while((pos = initString.Find('\n', pos)) >= 0) {
+		initProgramLines++;
 		pos++;
 	}
-	program << my_program;
+	program = initString + my_program;
 		
     if (T_tcc_compile_string(stateTcc, program) != 0) 
         throw Exc(errorMsg);
@@ -233,10 +231,15 @@ bool Tcc::AddIncludePath(const char *path)
     	throw Exc(errorMsg);
 	return ret;
 }
+
 bool Tcc::AddLibraryPath(const char *path)
 {
 	bool ret = T_tcc_add_library_path(stateTcc, path) == 0? true: false;
 	if (!errorMsg.IsEmpty())
     	throw Exc(errorMsg);
     return ret;	
+}
+
+String Tcc::GetProgram() {
+	return program.Mid(initLen);
 }

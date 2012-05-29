@@ -30,11 +30,7 @@ public:
 	void *GetSymbol(const char *funName); 
 	void Link(const char *fileName = 0);
 	
-	String GetProgram() {
-		String ret;
-		ret <<= program;
-		return ret;
-	}
+	String GetProgram();
 
 private:
 	TCCState *stateTcc;
@@ -43,8 +39,9 @@ private:
 #endif
 
 	static void DefaultErrorHandler(void *opaque, const char *msg);
-	static String errorMsg;
-	static int initialProgramLines;
+	String errorMsg;
+	int initProgramLines;
+	int initLen;
 	String program;
 	bool outputMemory;
 	
