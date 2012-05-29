@@ -8,7 +8,7 @@ bool HttpRequest_Trace__;
 	
 #ifdef _DEBUG
 _DBG_
-// #define ENDZIP
+// #define ENDZIP // only activate if zip pipe is in the question
 #endif
 
 void HttpRequest::Trace(bool b)
@@ -356,6 +356,7 @@ void HttpRequest::Start()
 	header.Clear();
 	status_code = 0;
 	reason_phrase.Clear();
+	body.Clear();
 	WhenStart();
 
 	bool use_proxy = !IsNull(ssl ? ssl_proxy_host : proxy_host);
