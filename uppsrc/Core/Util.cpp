@@ -119,13 +119,21 @@ void    AssertFailed(const char *file, int line, const char *cond)
 
 #ifdef PLATFORM_POSIX
 dword GetTickCount() {
+#if _POSIX_C_SOURCE >= 199309L
+	struct timespec tp;
+	if (clock_gettime(CLOCK_MONOTONIC, &tp) == 0)
+	{
+		return (dword)((tp.tv_sec * 1000) + (tp.tv_nsec / 1000000));
+	}
+	return 0; // ?? (errno is set)
+#else
 	struct timeval tv[1];
 	struct timezone tz[1];
 	memset(tz, 0, sizeof(tz));
 	gettimeofday(tv, tz);
 	return (dword)tv->tv_sec * 1000 + tv->tv_usec / 1000;
+#endif
 }
-
 #endif
 
 int msecs(int from) { return GetTickCount() - (dword)from; }
