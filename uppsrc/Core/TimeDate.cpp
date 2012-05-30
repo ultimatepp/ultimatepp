@@ -528,12 +528,12 @@ bool SetSysTime(Time time)
 {
 #ifdef PLATFORM_POSIX
 	struct tm      tmp_time;
-	tmp_time.tm_sec  = ATime.second;
-	tmp_time.tm_min  = ATime.minute;
-	tmp_time.tm_hour = ATime.hour;
-	tmp_time.tm_mday = ATime.day;
-	tmp_time.tm_mon  = ATime.month-1;
-	tmp_time.tm_year = ATime.year-1900;
+	tmp_time.tm_sec  = time.second;
+	tmp_time.tm_min  = time.minute;
+	tmp_time.tm_hour = time.hour;
+	tmp_time.tm_mday = time.day;
+	tmp_time.tm_mon  = time.month-1;
+	tmp_time.tm_year = time.year-1900;
 	time_t raw_time  = mktime(&tmp_time);
 
 	struct timespec sys_time;
@@ -545,12 +545,12 @@ bool SetSysTime(Time time)
 #endif
 #ifdef PLATFORM_WIN32
 	SYSTEMTIME systime;
-	systime.wYear	= ATime.year;
-	systime.wMonth	= ATime.month;
-	systime.wDay	= ATime.day;
-	systime.wHour	= ATime.hour;
-	systime.wMinute	= ATime.minute;
-	systime.wSecond	= ATime.second;
+	systime.wYear	= time.year;
+	systime.wMonth	= time.month;
+	systime.wDay	= time.day;
+	systime.wHour	= time.hour;
+	systime.wMinute	= time.minute;
+	systime.wSecond	= time.second;
 	systime.wDayOfWeek = 0;
 	systime.wMilliseconds = 0;
 	return SetSystemTime( &systime );
