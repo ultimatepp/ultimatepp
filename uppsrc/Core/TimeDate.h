@@ -148,3 +148,5 @@ Time        ScanTime(const char *s, Time def = Null);
 
 template<>
 inline String AsString(const Time& time) { return Format(time); }
+
+bool SetSysTime(Time time); // only root/sysadmin can do this...

@@ -524,4 +524,37 @@ Date GetSysDate() {
 	return GetSysTime();
 }
 
+bool SetSysTime(Time time)
+{
+#ifdef PLATFORM_POSIX
+	struct tm      tmp_time;
+	tmp_time.tm_sec  = ATime.second;
+	tmp_time.tm_min  = ATime.minute;
+	tmp_time.tm_hour = ATime.hour;
+	tmp_time.tm_mday = ATime.day;
+	tmp_time.tm_mon  = ATime.month-1;
+	tmp_time.tm_year = ATime.year-1900;
+	time_t raw_time  = mktime(&tmp_time);
+
+	struct timespec sys_time;
+	sys_time.tv_sec  = raw_time;
+	sys_time.tv_nsec = 0;
+
+	int result = clock_settime(CLOCK_REALTIME, &sys_time);
+	return (result == 0);
+#endif
+#ifdef PLATFORM_WIN32
+	SYSTEMTIME systime;
+	systime.wYear	= ATime.year;
+	systime.wMonth	= ATime.month;
+	systime.wDay	= ATime.day;
+	systime.wHour	= ATime.hour;
+	systime.wMinute	= ATime.minute;
+	systime.wSecond	= ATime.second;
+	systime.wDayOfWeek = 0;
+	systime.wMilliseconds = 0;
+	return SetSystemTime( &systime );
+#endif
+}
+
 END_UPP_NAMESPACE
