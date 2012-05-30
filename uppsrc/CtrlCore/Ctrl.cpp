@@ -740,6 +740,7 @@ void Ctrl::NoLayoutZoom()
 {
 	GuiLock __;
 	IsNoLayoutZoom = true;
+	Csize = Dsize = 1;
 	ReSkin();
 }
 
