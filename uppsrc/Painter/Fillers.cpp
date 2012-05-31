@@ -270,7 +270,7 @@ void SubpixelFiller::Write(int len)
 		RGBA c = ss ? Mul8(*s++, alpha) : invert ? InvertRGBA(*t) : color;
 		int a;
 		if(t->a != 255)
-			AlphaBlendCover8(*t, c, (q[0] + q[1] + q[2]) / 3);
+			AlphaBlend(*t, c);
 		else
 			if(c.a == 255) {
 				t->r = (c.r * q[0] >> 8) + ((257 - q[0]) * t->r >> 8);

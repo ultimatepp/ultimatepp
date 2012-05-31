@@ -16,6 +16,9 @@ struct RGBA : Moveable<RGBA> {
 #endif
 #endif
 
+template <>
+String AsString(const RGBA& c);
+
 #ifndef PLATFORM_WIN32
 inline int        GetRValue(dword c)             { return (byte)(c >> 0); }
 inline int        GetGValue(dword c)             { return (byte)(c >> 8); }
