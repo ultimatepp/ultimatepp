@@ -22,10 +22,6 @@ TOPIC("ArrayCtrlEdits$en-us")
 #include "ArrayCtrlEdits$en-us.tppi"
 END_TOPIC
 
-TOPIC("callback$en-us")
-#include "callback$en-us.tppi"
-END_TOPIC
-
 TOPIC("CallbackArgTarget$en-us")
 #include "CallbackArgTarget$en-us.tppi"
 END_TOPIC
@@ -38,40 +34,12 @@ TOPIC("ColumnList$en-us")
 #include "ColumnList$en-us.tppi"
 END_TOPIC
 
-TOPIC("convert$en-us")
-#include "convert$en-us.tppi"
-END_TOPIC
-
-TOPIC("cparser$en-us")
-#include "cparser$en-us.tppi"
-END_TOPIC
-
-TOPIC("ctrlpos$en-us")
-#include "ctrlpos$en-us.tppi"
-END_TOPIC
-
 TOPIC("CtrlRetriever$en-us")
 #include "CtrlRetriever$en-us.tppi"
 END_TOPIC
 
-TOPIC("display$en-us")
-#include "display$en-us.tppi"
-END_TOPIC
-
-TOPIC("draw$en-us")
-#include "draw$en-us.tppi"
-END_TOPIC
-
-TOPIC("drawing$en-us")
-#include "drawing$en-us.tppi"
-END_TOPIC
-
 TOPIC("DynamicDlg$en-us")
 #include "DynamicDlg$en-us.tppi"
-END_TOPIC
-
-TOPIC("events$en-us")
-#include "events$en-us.tppi"
 END_TOPIC
 
 TOPIC("Format$en-us")
@@ -86,20 +54,8 @@ TOPIC("GuiMT$en-us")
 #include "GuiMT$en-us.tppi"
 END_TOPIC
 
-TOPIC("image$en-us")
-#include "image$en-us.tppi"
-END_TOPIC
-
 TOPIC("ImageDraw$en-us")
 #include "ImageDraw$en-us.tppi"
-END_TOPIC
-
-TOPIC("log$en-us")
-#include "log$en-us.tppi"
-END_TOPIC
-
-TOPIC("menu$en-us")
-#include "menu$en-us.tppi"
 END_TOPIC
 
 TOPIC("OpenGL$en-us")
@@ -138,6 +94,10 @@ TOPIC("RichTextObject$en-us")
 #include "RichTextObject$en-us.tppi"
 END_TOPIC
 
+TOPIC("SQL_Sqlite3$en-us")
+#include "SQL_Sqlite3$en-us.tppi"
+END_TOPIC
+
 TOPIC("ScrollBar$en-us")
 #include "ScrollBar$en-us.tppi"
 END_TOPIC
@@ -174,10 +134,6 @@ TOPIC("SqlCtrls$en-us")
 #include "SqlCtrls$en-us.tppi"
 END_TOPIC
 
-TOPIC("SQL_Sqlite3$en-us")
-#include "SQL_Sqlite3$en-us.tppi"
-END_TOPIC
-
 TOPIC("StatusBar$en-us")
 #include "StatusBar$en-us.tppi"
 END_TOPIC
@@ -198,19 +154,63 @@ TOPIC("TreeCtrl$en-us")
 #include "TreeCtrl$en-us.tppi"
 END_TOPIC
 
-TOPIC("uscctrl$en-us")
-#include "uscctrl$en-us.tppi"
-END_TOPIC
-
-TOPIC("value$en-us")
-#include "value$en-us.tppi"
-END_TOPIC
-
 TOPIC("VirtualArray$en-us")
 #include "VirtualArray$en-us.tppi"
 END_TOPIC
 
 TOPIC("XML$en-us")
 #include "XML$en-us.tppi"
+END_TOPIC
+
+TOPIC("callback$en-us")
+#include "callback$en-us.tppi"
+END_TOPIC
+
+TOPIC("convert$en-us")
+#include "convert$en-us.tppi"
+END_TOPIC
+
+TOPIC("cparser$en-us")
+#include "cparser$en-us.tppi"
+END_TOPIC
+
+TOPIC("ctrlpos$en-us")
+#include "ctrlpos$en-us.tppi"
+END_TOPIC
+
+TOPIC("display$en-us")
+#include "display$en-us.tppi"
+END_TOPIC
+
+TOPIC("draw$en-us")
+#include "draw$en-us.tppi"
+END_TOPIC
+
+TOPIC("drawing$en-us")
+#include "drawing$en-us.tppi"
+END_TOPIC
+
+TOPIC("events$en-us")
+#include "events$en-us.tppi"
+END_TOPIC
+
+TOPIC("image$en-us")
+#include "image$en-us.tppi"
+END_TOPIC
+
+TOPIC("log$en-us")
+#include "log$en-us.tppi"
+END_TOPIC
+
+TOPIC("menu$en-us")
+#include "menu$en-us.tppi"
+END_TOPIC
+
+TOPIC("uscctrl$en-us")
+#include "uscctrl$en-us.tppi"
+END_TOPIC
+
+TOPIC("value$en-us")
+#include "value$en-us.tppi"
 END_TOPIC
 
