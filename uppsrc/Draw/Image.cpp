@@ -42,7 +42,7 @@ void ImageBuffer::Create(int cx, int cy)
 	while(s < e) {
 		s->a = a;
 		a = ~a;
-		s->r = 255;
+		s->r = a ? 255 : 0;
 		s->g = s->b = 0;
 		s++;
 	}

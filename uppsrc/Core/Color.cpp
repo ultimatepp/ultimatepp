@@ -60,6 +60,12 @@ dword Color::Get() const
 	return c & 0xffffff;
 }
 
+template <>
+String AsString(const RGBA& c)
+{
+	return Format("RGBA(%d, %d, %d, %d)", (int)c.r, (int)c.g, (int)c.b, (int)c.a);
+}
+
 Color::operator RGBA() const
 {
 	RGBA color;
