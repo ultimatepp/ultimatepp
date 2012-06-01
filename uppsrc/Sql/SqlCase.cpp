@@ -31,7 +31,7 @@ String SqlId::Quoted() const
 {
 	if(sSqlIdQuoted && !id.IsNull())
 		return String().Cat() << '\t' << id << '\t';
-	return id;
+	return id.ToString();
 }
 
 void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
