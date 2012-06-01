@@ -1,4 +1,4 @@
-description "Using diagnostic logs";
+description "Using diagnostic logs\377";
 
 uses
 	Core;
