@@ -2,5 +2,4 @@
 #define _Tcc_Demo_Gui_icpp_init_stub
 #include "CtrlLib/init"
 #include "Tcc/init"
-#include "DockCtrl/init"
 #endif
