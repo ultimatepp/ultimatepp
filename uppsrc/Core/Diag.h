@@ -140,7 +140,7 @@ inline void UnlockLog() {}
 #define DDUMPM(x)        @
 #define DTIMING(x)       @
 #define DLOGHEX(x)       @
-#define DUMPHEX(nx)      @
+#define DDUMPHEX(nx)     @
 
 #define DEBUGCODE(x)     LOG_NOP
 

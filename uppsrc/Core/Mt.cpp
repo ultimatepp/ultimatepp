@@ -245,7 +245,7 @@ void Thread::Priority(int percent)
 	SetThreadPriority(handle, prior);
 #endif
 #ifdef PLATFORM_POSIX
-	//!! todo
+	// ToDo
 #endif
 }
 

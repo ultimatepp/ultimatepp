@@ -44,9 +44,25 @@ private:
 	MYSQL *mysql;
 	String username;
 	double lastid;
-	int level;
+	int    level;
+
+	String connect_user;
+	String connect_password;
+	String connect_database;
+	String connect_host;
+	int    connect_port;
+	String connect_socket;
+
+	bool MysqlQuery(const char *query);
+	bool DoConnect();
+	bool Reconnect();
+	
+	friend class MySqlConnection;
+	typedef MySqlSession CLASSNAME;
 
 public:
+	Gate                 WhenReconnect;
+
 	bool Connect(const char *user = NULL, const char *password = NULL, const char *database = NULL,
 		         const char *host = NULL, int port = MYSQL_PORT, const char *socket = NULL);
 	bool Open(const char *connect);
@@ -60,6 +76,8 @@ public:
 	virtual void   Commit();
 	virtual void   Rollback();
 	virtual int    GetTransactionLevel() const;
+	
+	void    AutoReconnect()   { WhenReconnect = THISBACK(Reconnect); }
 
 	MySqlSession()       { mysql = NULL; Dialect(MY_SQL); }
 	~MySqlSession()      { Close(); }
