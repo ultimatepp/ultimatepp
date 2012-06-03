@@ -99,6 +99,9 @@ value is not null)&]
 [s4; &]
 [s5;:Thread`:`:Priority`(int`): [@(0.0.255) void]_[* Priority]([@(0.0.255) int]_[*@3 percent])
 &]
-[s2;%% Sets the treads priority to [%-*@3 percent ][%- (0 to 100)].&]
+[s2;%% Sets the treads priority to [%-*@3 percent ][%- (0 to 200)]. In 
+reality, current implementation supports only 5 levels, 25%, 
+75%, 125%, 175% and more than 175%; last two levels require root 
+priviledges.&]
 [s3;%% &]
 [s0; ]
