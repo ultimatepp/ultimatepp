@@ -6,7 +6,10 @@
 class Tcc
 {
 public:
-	Tcc() {stateTcc = 0;};
+	Tcc() {
+		numInstances++;
+		stateTcc = 0;
+	};
 	~Tcc();
 #if defined(PLATFORM_WIN32)
 	Tcc(const char *dllFile);
@@ -33,6 +36,7 @@ public:
 	String GetProgram();
 
 private:
+	static int numInstances;
 	TCCState *stateTcc;
 #if defined(PLATFORM_WIN32)
 	HINSTANCE hinstLib;

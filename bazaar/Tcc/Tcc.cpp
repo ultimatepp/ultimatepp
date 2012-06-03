@@ -18,9 +18,11 @@ using namespace Upp;
 #define T_tcc_output_file		tcc_output_file
 #endif
 
+int Tcc::numInstances = 0;
 
 #if defined(PLATFORM_WIN32)
 Tcc::Tcc(const char *dllName) {
+	numInstances++;
 	Init(dllName);
 }
 #else
@@ -150,8 +152,11 @@ void Tcc::DefaultErrorHandler(void* opaque, const char* msg)
 
 Tcc::~Tcc()
 {
-	if (stateTcc)
-		T_tcc_delete(stateTcc);
+	numInstances--;
+	if (numInstances == 0) {
+		if (stateTcc)
+			T_tcc_delete(stateTcc);
+	}
 #if defined(PLATFORM_WIN32)	
 	if (hinstLib)
 		FreeLibrary(hinstLib);
