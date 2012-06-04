@@ -55,7 +55,6 @@ private:
 
 	bool MysqlQuery(const char *query);
 	bool DoConnect();
-	bool Reconnect();
 	
 	friend class MySqlConnection;
 	typedef MySqlSession CLASSNAME;
@@ -66,6 +65,7 @@ public:
 	bool Connect(const char *user = NULL, const char *password = NULL, const char *database = NULL,
 		         const char *host = NULL, int port = MYSQL_PORT, const char *socket = NULL);
 	bool Open(const char *connect);
+	bool Reconnect();
 	void Close();
 
 	String   GetUser()   { return username; }
