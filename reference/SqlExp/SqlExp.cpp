@@ -67,6 +67,7 @@ GUI_APP_MAIN
 	EXP(Select(COLUMN1 % COLUMN2).From(TABLE1));
 	EXP(Select(COLUMN1 | COLUMN2).From(TABLE1));
 	EXP(Select(SqlFunc("any_fn", COL, 2)).From(TABLE1));
+	EXP(Select(SqlTxt("current_time")).From(TABLE1));
 	EXP(Select(Distinct(COL)).From(TABLE1));
 	EXP(Select(Distinct(SqlSet(COLUMN1, COLUMN2))).From(TABLE1));
 	EXP(Select(All(COL)).From(TABLE1));
