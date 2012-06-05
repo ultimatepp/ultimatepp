@@ -125,12 +125,14 @@ void Tcc::Init(const char *libPath)
 
 void Tcc::SetOutputExe()			
 {
+	ASSERT(stateTcc);
 	T_tcc_set_output_type(stateTcc, TCC_OUTPUT_EXE);
 	outputMemory = false;
 };
 
 void Tcc::SetOutputMemory()		 
 {
+	ASSERT(stateTcc);
 	T_tcc_set_output_type(stateTcc, TCC_OUTPUT_MEMORY);
 	outputMemory = true;
 };
@@ -170,6 +172,7 @@ void tcc_throw(const char *str)
 
 void Tcc::Compile(const char *my_program)
 {
+	ASSERT(stateTcc);
 	String initString = "// Basic declarations\n"	
 						"typedef int bool;\n"
 						"#define true  1\n"
@@ -195,6 +198,7 @@ void Tcc::Compile(const char *my_program)
 
 void Tcc::AddSymbol(const char *funName, void *fun)
 {
+	ASSERT(stateTcc);
 	if (!outputMemory) 
 		throw Exc(t_("Not possible to add symbols if output to file is defined"));
 	T_tcc_add_symbol(stateTcc, funName, (unsigned long)fun);
@@ -204,6 +208,7 @@ void Tcc::AddSymbol(const char *funName, void *fun)
 
 void Tcc::Link(const char *fileName)
 {
+	ASSERT(stateTcc);
 	if (outputMemory) {
 		if (fileName)
 			throw Exc(t_("Not possible to get file if output to memory is defined"));
@@ -219,6 +224,7 @@ void Tcc::Link(const char *fileName)
 
 void *Tcc::GetSymbol(const char *funName)
 {
+	ASSERT(stateTcc);
 	if (!outputMemory) 
 		throw Exc(t_("Not possible to get symbols if output to file is defined"));
 	unsigned long val = 0;
@@ -231,6 +237,7 @@ void *Tcc::GetSymbol(const char *funName)
 
 bool Tcc::AddIncludePath(const char *path)
 {
+	ASSERT(stateTcc);
 	bool ret = T_tcc_add_include_path(stateTcc, path) == 0? true: false;
 	if (!errorMsg.IsEmpty())
     	throw Exc(errorMsg);
@@ -239,6 +246,7 @@ bool Tcc::AddIncludePath(const char *path)
 
 bool Tcc::AddLibraryPath(const char *path)
 {
+	ASSERT(stateTcc);
 	bool ret = T_tcc_add_library_path(stateTcc, path) == 0? true: false;
 	if (!errorMsg.IsEmpty())
     	throw Exc(errorMsg);
