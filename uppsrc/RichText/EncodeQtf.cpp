@@ -522,6 +522,8 @@ String   AsQTF(const RichText& text, byte charset, dword options)
 		defstyle.format.Height(100);
 
 		QTFEncodeTxt(qtf, text, text.GetStyles(), defstyle, options, sm, charset, lang);
+
+		qtf << "]";
 	}
 	return qtf;
 }
