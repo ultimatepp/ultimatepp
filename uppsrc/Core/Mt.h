@@ -76,7 +76,7 @@ public:
 
 	Handle      GetHandle() const              { return handle; }
 	
-	void        Priority(int percent); // 0 = lowest, 100 = normal
+	bool        Priority(int percent); // 0 = lowest, 100 = normal
 
 	static void Start(Callback cb);
 
