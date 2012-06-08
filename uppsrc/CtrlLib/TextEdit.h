@@ -287,6 +287,10 @@ public:
 
 	void   ScrollUp()                         { sb.LineUp(); }
 	void   ScrollDown()                       { sb.LineDown(); }
+	void   ScrollPageUp()                     { sb.PageUp(); }
+	void   ScrollPageDown()                   { sb.PageDown(); }
+	void   ScrollBegin()                      { sb.VertBegin(); }
+	void   ScrollEnd()                        { sb.VertEnd(); }
 
 	Rect   GetLineScreenRect(int line) const;
 
