@@ -476,3 +476,20 @@ StatementExecutor& SQLStatementExecutor();
 	typedef SqlSession QSession;
 #endif
 
+template <class T>
+void SqlLoadTable(T& t, SqlId table, SqlId key = SqlId("ID"))
+{
+	Sql sql;
+	sql * Select(SqlAll()).From(table);
+	while(sql.Fetch())
+		sql.Get(t.Add(sql[key]));
+}
+
+template <class T>
+void SqlLoadColumn(T& t, SqlId table, SqlId column, SqlId key = SqlId("ID"))
+{
+	Sql sql;
+	sql * Select(key, column).From(table);
+	while(sql.Fetch())
+		t.Add(sql[key], sql[column]);
+}
