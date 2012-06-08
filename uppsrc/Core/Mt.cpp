@@ -227,7 +227,7 @@ int Thread::Wait()
 	return out;
 }
 
-void Thread::Priority(int percent)
+bool Thread::Priority(int percent)
 {
 	ASSERT(IsOpen());
 #ifdef PLATFORM_WIN32
@@ -242,10 +242,80 @@ void Thread::Priority(int percent)
 		prior = THREAD_PRIORITY_ABOVE_NORMAL;
 	else
 		prior = THREAD_PRIORITY_HIGHEST;
-	SetThreadPriority(handle, prior);
+	return SetThreadPriority(handle, prior);
 #endif
 #ifdef PLATFORM_POSIX
-	// ToDo
+	int policy;
+	struct sched_param param;
+	
+	if(pthread_getschedparam(handle, &policy, &param))
+		return false;
+	int percen_min, percen_max;
+	if(percent <= 25) {
+		#if defined(SCHED_IDLE)
+			policy = SCHED_IDLE;
+			percen_min = 0;
+			percen_max = 25;
+		#elif defined(SCHED_BATCH)
+			policy = SCHED_BATCH;
+			percen_min = 0;
+			percen_max = 75;
+		#else
+			policy = SCHED_OTHER;
+			percen_min = 0;
+			percen_max = 125;
+		#endif
+	}
+	else
+	if(percent <= 75){
+		#if defined(SCHED_IDLE)
+			policy = SCHED_BATCH;
+			percen_min = 25;
+			percen_max = 75;
+		#elif defined(SCHED_BATCH)
+			policy = SCHED_BATCH;
+			percen_min = 0;
+			percen_max = 75;
+		#else
+			policy = SCHED_OTHER;
+			percen_min = 0;
+			percen_max = 125;
+		#endif
+	}
+	else
+	if(percent <= 125){
+		policy = SCHED_OTHER;
+		#if defined(SCHED_IDLE)
+			percen_min = 75;
+			percen_max = 125;
+		#elif defined(SCHED_BATCH)
+			percen_min = 25;
+			percen_max = 125;
+		#else
+			percen_min = 0;
+			percen_max = 125;
+		#endif
+	}
+	else
+	if(percent <= 175){ // should be the root
+		policy = SCHED_FIFO;
+		percen_min = 125;
+		percen_max = 175;
+	}
+	else
+		policy = SCHED_RR;
+	param.sched_priority = (sched_get_priority_max(policy) - sched_get_priority_min(policy))*(minmax(percent, percen_min, percen_max)-percen_min)/(percen_max - percen_min);
+	
+	if (pthread_setschedparam(handle, policy, &param)) {
+		// No privileges? Try maximum possible! Do not use EPERM as not all os support this one
+		policy = SCHED_OTHER;
+		percen_max = 125;
+		percen_min = minmax(percen_min, 0, percen_max);
+		param.sched_priority = (sched_get_priority_max(policy) - sched_get_priority_min(policy))*(minmax(percent, percen_min, percen_max)-percen_min)/(percen_max - percen_min);
+		if (pthread_setschedparam(handle, policy, &param))
+			return false;
+	}
+	return true;
 #endif
 }
 
