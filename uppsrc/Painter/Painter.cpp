@@ -481,9 +481,8 @@ Painter& Painter::Text(double x, double y, const String& s, Font fnt, double *dx
 
 Painter& Painter::Text(const Pointf& p, const char *text, Font fnt, int n, double *dx)
 {
-	if(n < 0)
-		n = strlen(text);
-	return Text(p, ToUnicode(text, n, CHARSET_DEFAULT), fnt, n, dx);
+	WString s = ToUnicode(text, CHARSET_DEFAULT);
+	return Text(p, s, fnt, n < 0 ? s.GetCount() : n, dx);
 }
 
 Painter& Painter::Text(double x, double y, const char *text, Font fnt, int n, double *dx)
