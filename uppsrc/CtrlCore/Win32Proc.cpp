@@ -451,10 +451,12 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			MINMAXINFO *mmi = (MINMAXINFO *)lParam;
 			Rect frmrc = Size(200, 200);
 			::AdjustWindowRect(frmrc, WS_OVERLAPPEDWINDOW, FALSE);
-			Size msz = Ctrl::GetWorkArea().Deflated(-frmrc.left, -frmrc.top,
-				           frmrc.right - 200, frmrc.bottom - 200).GetSize();
-			Rect minr(Point(50, 50), min(msz, GetMinSize()));
-			Rect maxr(Point(50, 50), min(msz, GetMaxSize()));
+//			Size msz = Ctrl::GetWorkArea().Deflated(-frmrc.left, -frmrc.top,
+//				           frmrc.right - 200, frmrc.bottom - 200).GetSize();
+//			Rect minr(Point(50, 50), min(msz, GetMinSize()));
+//			Rect maxr(Point(50, 50), min(msz, GetMaxSize())); // Removed cxl&nixnixnix 2012-6-12
+			Rect minr(Point(50, 50), GetMinSize());
+			Rect maxr(Point(50, 50), GetMaxSize());
 			dword style = ::GetWindowLong(hwnd, GWL_STYLE);
 			dword exstyle = ::GetWindowLong(hwnd, GWL_EXSTYLE);
 			AdjustWindowRectEx(minr, style, FALSE, exstyle);
