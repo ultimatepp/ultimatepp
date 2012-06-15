@@ -251,13 +251,12 @@ void Ide::FindInFiles(bool replace) {
 	SerializeFf(ss);
 	ss.Open(ss.GetResult());
 	editor.SerializeFind(ss);
-	if(c == IDOK && !String(ff.find).IsEmpty()) {
+	if(c == IDOK) {
 		Renumber();
 		ff.find.AddHistory();
 		ff.files.AddHistory();
 		ff.folder.AddHistory();
 		ff.replace.AddHistory();
-
 		Progress pi("Found %d files to search.");
 		Vector<String> files;
 		SearchForFiles(files, NormalizePath((String)ff.folder, GetUppDir()), ~ff.files, pi);
@@ -291,10 +290,20 @@ void Ide::FindInFiles(bool replace) {
 			for(int i = 0; i < files.GetCount(); i++) {
 				pi.SetText(files[i]);
 				if(pi.StepCanceled()) break;
-				if(!SearchInFile(files[i], pattern, ff.wholeword, ff.ignorecase, n))
-					break;
+				if(!IsNull(pattern)) {
+					if(!SearchInFile(files[i], pattern, ff.wholeword, ff.ignorecase, n))
+						break;
+				}
+				else {
+					console2 << files[i] << "(1)\n";
+					console2.Sync();
+					n++;
+				}
 			}
-			console2 << Format("%d occurrence(s) have been found.\n", n);
+			if(!IsNull(pattern))
+				console2 << Format("%d occurrence(s) have been found.\n", n);
+			else
+				console2 << Format("%d matching file(s) have been found.\n", n);
 		}
 	}
 	SetErrorEditor();
