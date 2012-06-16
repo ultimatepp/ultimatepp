@@ -405,7 +405,7 @@ inline unsigned GetPtrHashValue(const void *a)                   { return Combin
 
 //* Is it time to activate this?
 template <class T>
-inline unsigned GetHashValue(T *ptr)                             { return GetPtrHashValue(ptr); }
+inline unsigned GetHashValue(T *ptr)                             { return GetPtrHashValue(reinterpret_cast<const void *>(ptr)); }
 //*/
 
 // workaround for broken standard libraries...
