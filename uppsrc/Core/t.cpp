@@ -185,34 +185,88 @@ char *ZoneAlloc::Alloc(int sz)
 	return s;
 }
 
-int current_lang;
-
 template<>
 inline unsigned GetHashValue(const char * const &s)
 {
 	return GetPtrHashValue(s);
 }
 
-static VectorMap<const char *, const char *>& sCurrentLangMap()
+int main_current_lang;
+
+static Index<int>& sLangIndex()
 {
-	static VectorMap<const char *, const char *> m;
+	static Index<int> m;
 	return m;
 }
 
-static VectorMap<String, String>& sCurrentSLangMap()
+static Array< VectorMap<const char *, const char *> >& sLangMap()
 {
-	static VectorMap<String, String> m;
+	static Array< VectorMap<const char *, const char *> > m;
 	return m;
+}
+
+VectorMap<const char *, const char *> *sMainCurrentLangMapPtr;
+thread__ VectorMap<const char *, const char *> *sCurrentLangMapPtr;
+
+VectorMap<const char *, const char *>& sCurrentLangMap()
+{
+	if(sCurrentLangMapPtr)
+		return *sCurrentLangMapPtr;
+	if(sMainCurrentLangMapPtr)
+		return *sMainCurrentLangMapPtr;
+	return sLangMap().At(0);
+}
+
+static Array< VectorMap<String, String> >& sSLangMap()
+{
+	static Array< VectorMap<String, String> > m;
+	return m;
+}
+
+VectorMap<String, String>          *sMainCurrentSLangMapPtr;
+thread__ VectorMap<String, String> *sCurrentSLangMapPtr;
+
+VectorMap<String, String>& sCurrentSLangMap()
+{
+	if(sCurrentLangMapPtr)
+		return *sCurrentSLangMapPtr;
+	if(sMainCurrentSLangMapPtr)
+		return *sMainCurrentSLangMapPtr;
+	return sSLangMap().At(0);
+}
+
+thread__ int thread_current_lang;
+
+int GetCurrentLanguage()
+{
+	return thread_current_lang ? thread_current_lang : main_current_lang;
 }
 
 void SetCurrentLanguage(int lang)
 {
 	{
 		CriticalSection::Lock __(slng);
-		current_lang = lang;
-		Single<ZoneAlloc>().Clear();
-		sCurrentLangMap().Clear();
-		sCurrentSLangMap().Clear();
+		thread_current_lang = lang;
+		int ii = sLangIndex().FindAdd(lang);
+		sCurrentLangMapPtr = &sLangMap().At(ii);
+		sCurrentSLangMapPtr = &sSLangMap().At(ii);
+	#ifdef _MULTITHREADED
+		if(Thread::IsMain())
+	#endif
+		{
+			main_current_lang = lang;
+			sMainCurrentSLangMapPtr = sCurrentSLangMapPtr;
+			sMainCurrentLangMapPtr = sCurrentLangMapPtr;
+		}
+		static int n = 1;
+		if(ii > n) { // protected against too many language/charset switches
+			n = 2 * n;
+			Single<ZoneAlloc>().Clear();
+			for(int i = 0; i < sLangIndex().GetCount(); i++) {
+				sSLangMap()[i].Clear();
+				sLangMap()[i].Clear();
+			}
+		}
 	}
 	SetDateFormat(t_("date-format\a%2:02d/%3:02d/%1:4d"));
 	SetDateScan(t_("date-scan\amdy"));
@@ -225,9 +279,9 @@ const char *t_GetLngString_(const char *id)
 	int q = map.Find(id);
 	if(q >= 0)
 		return map[q];
-	const LngRec *r = sFindLngRec(id, current_lang);
+	const LngRec *r = sFindLngRec(id, GetCurrentLanguage());
 	if(r) {
-		int dch = GetLNGCharset(current_lang);
+		int dch = GetLNGCharset(GetCurrentLanguage());
 		if(dch == CHARSET_UTF8) {
 			map.Add(id, r->text);
 			return r->text;
@@ -253,7 +307,7 @@ const char *t_GetLngString(const char *id)
 String GetLngString_(int lang, const char *id)
 {
 	if(!lang)
-		lang = current_lang;
+		lang = GetCurrentLanguage();
 	const LngRec *r = sFindLngRec(id, lang);
 	if(r) {
 		int dch = GetLNGCharset(lang);
@@ -278,7 +332,7 @@ String GetLngString(const char *id)
 	int q = map.Find(id);
 	if(q >= 0)
 		return map[q];
-	String s = GetLngString_(current_lang, id);
+	String s = GetLngString_(GetCurrentLanguage(), id);
 	map.Add(id, s);
 	return s;
 }

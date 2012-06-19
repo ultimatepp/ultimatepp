@@ -148,17 +148,9 @@ Convert& LNGConvert()
 	return Single<LangConvertClass>();
 }
 
-static int sCurrentLanguage = -1;
-
-int  GetCurrentLanguage() {
-	return sCurrentLanguage;
-}
-
 void SetLanguage(int lang) {
-	if(lang != LNG_CURRENT) {
-		sCurrentLanguage = lang;
+	if(lang != LNG_CURRENT)
 		SetDefaultCharset(GetLNGCharset(lang));
-	}
 	SetCurrentLanguage(lang);
 }
 
