@@ -107,6 +107,10 @@ void ParaFormatting::Set(int unit, const RichText::FormatInfo& formatinfo)
 		rulerink <<= formatinfo.rulerink;
 	else
 		rulerink <<= Null;
+	if(RichText::RULERSTYLE & formatinfo.paravalid)
+		rulerstyle <<= formatinfo.rulerstyle;
+	else
+		rulerstyle <<= Null;
 	tabpos.SetUnit(unit);
 	if(RichText::BULLET & formatinfo.paravalid)
 		bullet <<= formatinfo.bullet;
@@ -221,8 +225,21 @@ dword ParaFormatting::Get(RichText::FormatInfo& formatinfo)
 		formatinfo.rulerink = ~rulerink;
 		v |= RichText::RULERINK;
 	}
+	if(!IsNull(rulerstyle)) {
+		formatinfo.rulerstyle = ~rulerstyle;
+		v |= RichText::RULERSTYLE;
+	}
 	return v;
 }
+
+struct RulerStyleDisplay : Display {
+	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+	{
+		w.DrawRect(r, paper);
+		if(!IsNull(q))
+			RichPara::DrawRuler(w, r.left, (r.top + r.bottom) / 2 - 1, r.Width(), 2, ink, q);
+	}
+};
 
 ParaFormatting::ParaFormatting()
 {
@@ -269,6 +286,11 @@ ParaFormatting::ParaFormatting()
 	bullet <<= THISBACK(SetupIndent);
 	EnableNumbering();
 	rulerink.NullText("---");
+	rulerstyle.SetDisplay(Single<RulerStyleDisplay>());
+	rulerstyle.Add(Null);
+	rulerstyle.Add(RichPara::RULER_SOLID);
+	rulerstyle.Add(RichPara::RULER_DOT);
+	rulerstyle.Add(RichPara::RULER_DASH);
 }
 
 void StyleManager::EnterStyle()

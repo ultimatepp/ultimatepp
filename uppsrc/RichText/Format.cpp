@@ -124,6 +124,8 @@ void RichTxt::FormatInfo::Combine(const RichPara::Format& fmt)
 		paravalid &= ~RULER;
 	if(rulerink != fmt.rulerink)
 		paravalid &= ~RULERINK;
+	if(rulerstyle != fmt.rulerstyle)
+		paravalid &= ~RULERSTYLE;
 }
 
 void RichTxt::FormatInfo::ApplyTo(RichPara::CharFormat& fmt) const
@@ -207,6 +209,8 @@ void RichTxt::FormatInfo::ApplyTo(RichPara::Format& fmt) const
 		fmt.linespacing = linespacing;
 	if(paravalid & RULERINK)
 		fmt.rulerink = rulerink;
+	if(paravalid & RULERSTYLE)
+		fmt.rulerstyle = rulerstyle;
 }
 
 END_UPP_NAMESPACE

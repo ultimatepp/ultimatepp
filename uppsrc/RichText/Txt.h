@@ -39,6 +39,7 @@ public:
 		SPACING   = 0x00008000,
 		RULER     = 0x00004000,
 		RULERINK  = 0x00002000,
+		RULERSTYLE= 0x00001000,
 	};
 
 	struct FormatInfo : RichPara::Format {

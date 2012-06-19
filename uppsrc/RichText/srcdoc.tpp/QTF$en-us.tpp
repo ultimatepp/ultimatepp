@@ -312,6 +312,9 @@ optimization, [*@(128.0.255) %`-] is equivalent to [@(128.0.255) %][@(0.0.255) 0
 ::= [s0; Horizontal ruler height (if zero, there is no ruler).]
 ::^ [s0;%- [C@(128.0.255) h][/C@(0.0.255) color]]
 ::= [s0; Color of horizontal ruler (default is black).]
+::^ [s0;%- [C@(128.0.255) L][/C@(0.0.255) number]]
+::= [s0; Style of horizontal ruler line, 0 `- solid color, 1 `- dots, 
+2 `- dashes]
 ::^ [s0;%- [C@(128.0.255) b][/C@(0.0.255) number]]
 ::= [s0; Space before paragraph in dots.]
 ::^ [s0;%- [C@(128.0.255) a][/C@(0.0.255) number]]

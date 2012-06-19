@@ -76,6 +76,12 @@ struct RichPara {
 	enum TabSpecial {
 		TAB_RIGHTPOS = 0x8000000
 	};
+	
+	enum RulerStyle {
+		RULER_SOLID,
+		RULER_DOT,
+		RULER_DASH,
+	};
 
 	struct CharFormat : public Font {
 		int     language;
@@ -114,6 +120,7 @@ struct RichPara {
 		int         align;
 		int         ruler, before, lm, indent, rm, after;
 		Color       rulerink;
+		int         rulerstyle;
 		int         tabsize;
 		int         bullet;
 		int         linespacing;
@@ -228,6 +235,8 @@ struct RichPara {
 
 	static void Charformat(Stream& out, const CharFormat& o, const CharFormat& n,
 	                       const CharFormat& s);
+
+	static void DrawRuler(Draw& w, int x, int y, int cx, int cy, Color ink, int style);
 
 	void        Cat(const WString& s, const CharFormat& f);
 	void        Cat(const char *s, const CharFormat& f);
