@@ -67,30 +67,40 @@ String MonName(int i, int lang)
 	return i >= 0 && i < 12 ? Nvl(GetLngString(lang, month[i]), GetENUS(month[i])) : String();
 }
 
-static char s_date_format[64] = "%2:02d/%3:02d/%1:4d";
+static thread__ char s_date_format_thread[64];
+static char s_date_format_main[64] = "%2:02d/%3:02d/%1:4d";
 
 void   SetDateFormat(const char *fmt)
 {
-	strncpy(s_date_format, fmt, 63);
+	strncpy(s_date_format_thread, fmt, 63);
+#ifdef _MULTITHREADED
+	if(Thread::IsMain())
+#endif
+		strncpy(s_date_format_main, fmt, 63);
 }
 
 String   Format(Date date) {
 	String  s;
 	if(IsNull(date))
 		return String();
-	return Format(s_date_format, date.year, date.month, date.day, DayOfWeek(date));
+	return Format(*s_date_format_thread ? s_date_format_thread : s_date_format_main, date.year, date.month, date.day, DayOfWeek(date));
 }
 
-static char s_date_scan[64] = "mdy";
+static thread__ char s_date_scan_thread[64];
+static char s_date_scan_main[64] = "mdy";
 
 void   SetDateScan(const char *scan)
 {
-	strncpy(s_date_scan, scan, 63);
+	strncpy(s_date_scan_thread, scan, 63);
+#ifdef _MULTITHREADED
+	if(Thread::IsMain())
+#endif
+		strncpy(s_date_scan_main, scan, 63);	
 }
 
 const char *StrToDate(Date& d, const char *s, Date def)
 {
-	return StrToDate(s_date_scan, d, s, def);
+	return StrToDate(*s_date_scan_thread ? s_date_scan_thread : s_date_scan_main, d, s, def);
 }
 
 const char *StrToDate(const char *fmt, Date& d, const char *s, Date def)
@@ -175,35 +185,39 @@ Date ScanDate(const char *s, Date def)
 	return def;
 }
 
-static bool s_date_letters = true, s_date_upper = true;
-static char s_date_seps[64] = "A/\a .-";
+static thread__ char s_date_seps_thread[64];
+static char s_date_seps_main[64] = "A/\a .-";
 
 void   SetDateFilter(const char *seps)
 {
-	s_date_letters = false;
-	s_date_upper = false;
-	if(*seps == 'a') {
-		s_date_letters = true;
-		seps++;
-	}
-	else
-	if(*seps == 'A') {
-		s_date_letters = true;
-		s_date_upper = true;
-		seps++;
-	}
-	strncpy(s_date_seps, seps, 63);
+	strncpy(s_date_seps_thread, seps, 63);
+#ifdef _MULTITHREADED
+	if(Thread::IsMain())
+#endif
+		strncpy(s_date_seps_main, seps, 63);
 }
 
 int  CharFilterDate(int c)
 {
 	if(IsDigit(c))
 		return c;
-	if(s_date_letters && IsLetter(c))
-		return s_date_upper ? ToUpper(c) : c;
+	const char *s = *s_date_seps_thread ? s_date_seps_thread : s_date_seps_main;
+	bool letters = false;
+	bool upper = false;
+	if(*s == 'a') {
+		letters = true;
+		s++;
+	}
+	else
+	if(*s == 'A') {
+		letters = true;
+		upper = true;
+		s++;
+	}
+	if(letters && IsLetter(c))
+		return upper ? ToUpper(c) : c;
 	;
 	int r = 0;
-	const char *s = s_date_seps;
 	while(*s) {
 		if(c == (byte)*s)
 			return c;
@@ -468,7 +482,7 @@ const char *StrToTime(const char *datefmt, Time& d, const char *s)
 
 const char *StrToTime(Time& d, const char *s)
 {
-	return StrToTime(s_date_scan, d, s);
+	return StrToTime(*s_date_scan_thread ? s_date_scan_thread : s_date_scan_main, d, s);
 }
 
 Time ScanTime(const char *datefmt, const char *s, Time def)

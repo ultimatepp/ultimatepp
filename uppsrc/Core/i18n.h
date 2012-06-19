@@ -52,5 +52,6 @@ void       SaveLngFile(FileOut& out, int lang, int lang2 = 0);
 bool       LoadLngFile(const char *file);
 
 void       SetCurrentLanguage(int lang);
+int        GetCurrentLanguage();
 
 void       LngSetAdd(const char *id, int lang, const char *txt, bool addid);
