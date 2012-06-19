@@ -149,6 +149,25 @@ Image RichObjectImageMaker::Make() const
 */
 }
 
+void RichPara::DrawRuler(Draw& w, int x, int y, int cx, int cy, Color ink, int style)
+{
+	int segment = cy;
+	int r = x + cx;
+	switch(style) {
+	case RULER_DASH:
+		segment = 2 * cy;
+	case RULER_DOT:
+		while(x < r) {
+			w.DrawRect(x, y, min(r - x, segment), cy, ink);
+			x += 2 * segment;			
+		}
+		break;
+	default:
+		w.DrawRect(x, y, cx, cy, ink);
+		break;
+	}
+}
+
 void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& pi,
                      const Number& n, const Bits& spellerror,
                      int nbefore, int nline) const
@@ -162,9 +181,9 @@ void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& 
 	int hy = py.y - format.before - format.ruler;
 	int phy = py.page;
 	if(format.ruler && hy >= 0 && hy + format.ruler < page.bottom)
-		pw.Page(phy).DrawRect(z * page.left + z * format.lm, z * hy,
-		                      z * page.right - z * page.left - z * format.rm - z * format.lm,
-			                  max(1, z * format.ruler), format.rulerink);
+		DrawRuler(pw.Page(phy), z * page.left + z * format.lm, z * hy,
+		                        z * page.right - z * page.left - z * format.rm - z * format.lm,
+			                    max(1, z * format.ruler), format.rulerink, format.rulerstyle);
 	if(pi.sell < 0 && pi.selh > 0)
 		for(int p = opy.page; p <= py.page; p++) {
 			int top = z * (p == opy.page ? opy.y : page.top);

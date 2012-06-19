@@ -178,6 +178,7 @@ RichPara::Format::Format()
 	align = ALIGN_LEFT;
 	ruler = before = lm = rm = indent = after = 0;
 	rulerink = Black;
+	rulerstyle = RULER_SOLID;
 	bullet = 0;
 	keep = newpage = keepnext = orphan = false;
 	tabsize = 296;
@@ -348,6 +349,7 @@ String RichPara::Pack(const RichPara::Format& style, Array<RichObject>& obj) con
 	if(format.tab != style.tab)                 pattr |= 0x8000;
 	if(format.ruler != style.ruler)             pattr |= 0x10000;
 	if(format.rulerink != style.rulerink)       pattr |= 0x20000;
+	if(format.rulerstyle != style.rulerstyle)   pattr |= 0x40000;
 	out.Put32(pattr);
 	if(pattr & 1)      out.Put16(format.align);
 	if(pattr & 2)      out.Put16(format.before);
@@ -393,6 +395,8 @@ String RichPara::Pack(const RichPara::Format& style, Array<RichObject>& obj) con
 		Color c = format.rulerink;
 		c.Serialize(out);
 	}
+	if(pattr & 0x40000)
+		out.Put16(format.rulerstyle);
 	obj.Clear();
 	CharFormat cf = style;
 	if(part.GetCount())
@@ -615,6 +619,8 @@ void RichPara::Unpack(const String& data, const Array<RichObject>& obj,
 		format.ruler = in.Get16();
 	if(pattr & 0x20000)
 		format.rulerink.Serialize(in);
+	if(pattr & 0x40000)
+		format.rulerstyle = in.Get16();
 	part.Clear();
 	int oi = 0;
 	UnpackParts(in, style, part, obj, oi);
@@ -761,7 +767,7 @@ void RichPara::ApplyStyle(const Format& newstyle)
 void RichPara::Dump()
 {
 	LOG("RichPara dump" << LOG_BEGIN);
-	LOG("RULER: " << format.ruler << " " << format.rulerink);
+	LOG("RULER: " << format.ruler << " " << format.rulerink << " " << format.rulerstyle);
 	LOG("BEFORE: " << format.before);
 	LOG("INDENT: " << format.indent);
 	LOG("LM: " << format.lm);

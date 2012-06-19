@@ -650,6 +650,7 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 					case 'K': format.keepnext = !format.keepnext; break;
 					case 'H': format.ruler = GetNumber(); break;
 					case 'h': format.rulerink = GetColor(); break;
+					case 'L': format.rulerstyle = GetNumber(); break;
 					case 'Q': format.orphan = !format.orphan; break;
 					case 'n': format.before_number = GetText(';'); break;
 					case 'm': format.after_number = GetText(';'); break;
