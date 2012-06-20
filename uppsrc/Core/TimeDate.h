@@ -150,3 +150,5 @@ template<>
 inline String AsString(const Time& time) { return Format(time); }
 
 bool SetSysTime(Time time); // only root/sysadmin can do this...
+
+String GetTimeZoneText();

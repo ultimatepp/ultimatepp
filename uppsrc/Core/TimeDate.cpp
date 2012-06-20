@@ -571,4 +571,12 @@ bool SetSysTime(Time time)
 #endif
 }
 
+String GetTimeZoneText()
+{
+	Time gmtime = GetUtcTime();
+	Time ltime = GetSysTime();
+	int d = (ltime - gmtime) / 600;
+	return Format("+%02.2d%01.1d0", d / 6, d % 6);
+}
+
 END_UPP_NAMESPACE
