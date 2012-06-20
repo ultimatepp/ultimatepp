@@ -2,4 +2,7 @@
 #define _ide_IconDes_icpp_init_stub
 #include "IconDes/init"
 #include "ide\Common/init"
+#define BLITZ_INDEX__ F345d51d3b37dda2031fc9e0075258061
+#include "IdeDes.icpp"
+#undef BLITZ_INDEX__
 #endif
