@@ -516,6 +516,8 @@ Ide::Ide()
 	find_pick_sel = true;
 	find_pick_text = false;
 	
+	deactivate_save = true;
+	
 	output_per_assembly = true;
 }
 
