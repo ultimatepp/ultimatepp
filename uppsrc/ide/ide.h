@@ -463,6 +463,7 @@ public:
 	virtual   void   FileRename(const String& nm);
 	virtual   bool   FileRemove();
 	virtual   void   DragAndDrop(Point p, PasteClip& d);
+	virtual   void   Deactivate();
 
 	virtual   void      PutConsole(const char *s);
 	virtual   void      PutVerbose(const char *s);
@@ -667,6 +668,7 @@ public:
 	bool      mark_lines;
 	bool      find_pick_sel;
 	bool      find_pick_text;
+	bool      deactivate_save;
 	int       insert_include;
 	int       bordercolumn;
 	Color     bordercolor;

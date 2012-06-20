@@ -376,6 +376,7 @@ void Ide::SetupFormat() {
 		(edt.bordercolor, bordercolor)
 		(edt.findpicksel, find_pick_sel)
 		(edt.findpicktext, find_pick_text)
+		(edt.deactivate_save, deactivate_save)
 		(edt.filetabs, filetabs)
 		(edt.tabs_icons, tabs_icons)
 		(edt.tabs_crosses, tabs_crosses)
