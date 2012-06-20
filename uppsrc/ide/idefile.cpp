@@ -10,44 +10,35 @@ void Ide::SetupEditor(int f, String hl, String fn)
 	default: editor.SetFont(editorsplit.GetZoom() < 0 && editorsplit.IsHorz() ? veditorfont :
 	                        ext == ".t" ? tfont : editorfont); break;
 	}
-	if(IsNull(hl)) {
-		if(ext == ".c" || ext == ".cpp" || ext == ".cc" || ext == ".cxx" ||
-		   ext == ".h" || ext == ".hpp" || ext == ".hh" || ext == ".hxx" ||
-		   ext == ".m"                  || ext == ".mm" || ext == ".icpp")
-			editor.Highlight(CodeEditor::HIGHLIGHT_CPP);
-		else
-		if(ext == ".usc")
-			editor.Highlight(CodeEditor::HIGHLIGHT_USC);
-		else
-		if(ext == ".java")
-			editor.Highlight(CodeEditor::HIGHLIGHT_JAVA);
-		else
-		if(ext == ".t" || ext == ".jt")
-			editor.Highlight(CodeEditor::HIGHLIGHT_T);
-		else
-		if(ext == ".lay")
-			editor.Highlight(CodeEditor::HIGHLIGHT_LAY);
-		else
-		if(ext == ".sch")
-			editor.Highlight(CodeEditor::HIGHLIGHT_SCH);
-		else
-		if(ext == ".sql")
-			editor.Highlight(CodeEditor::HIGHLIGHT_SQL);
-		else
-			editor.Highlight(CodeEditor::HIGHLIGHT_NONE);
-	}
-	else {
-		if(hl == "cpp")
-			editor.Highlight(CodeEditor::HIGHLIGHT_CPP);
-		else
-		if(hl == "esc")
-			editor.Highlight(CodeEditor::HIGHLIGHT_USC);
-		else
-		if(hl == "java")
-			editor.Highlight(CodeEditor::HIGHLIGHT_JAVA);
-		else
-			editor.Highlight(CodeEditor::HIGHLIGHT_NONE);
-	}
+	if(IsNull(hl) && *ext == '.')
+		hl = ext.Mid(1);
+	if(hl == "c" || hl == "cpp" || hl == "cc" || hl == "cxx" ||
+	   hl == "h" || hl == "hpp" || hl == "hh" || hl == "hxx" ||
+	   hl == "m" || hl == "mm" || hl == "icpp")
+		editor.Highlight(CodeEditor::HIGHLIGHT_CPP);
+	else
+	if(hl == "usc")
+		editor.Highlight(CodeEditor::HIGHLIGHT_USC);
+	else
+	if(hl == "java")
+		editor.Highlight(CodeEditor::HIGHLIGHT_JAVA);
+	else
+	if(hl == "js")
+		editor.Highlight(CodeEditor::HIGHLIGHT_JAVASCRIPT);
+	else
+	if(hl == "t" || hl == "jt")
+		editor.Highlight(CodeEditor::HIGHLIGHT_T);
+	else
+	if(hl == "lay")
+		editor.Highlight(CodeEditor::HIGHLIGHT_LAY);
+	else
+	if(hl == "sch")
+		editor.Highlight(CodeEditor::HIGHLIGHT_SCH);
+	else
+	if(hl == "sql")
+		editor.Highlight(CodeEditor::HIGHLIGHT_SQL);
+	else
+		editor.Highlight(CodeEditor::HIGHLIGHT_NONE);
 }
 
 void Ide::SetupEditor()
@@ -131,7 +122,11 @@ void Ide::FileProperties()
 	d.highlight.Add(Null, "Default");
 	d.highlight.Add("cpp", "C++");
 	d.highlight.Add("java", "Java");
-	d.highlight.Add("esc", "Esc");
+	d.highlight.Add("js", "JavaScript");
+	d.highlight.Add("sql", "SQL");
+	d.highlight.Add("usc", "Esc");
+	d.highlight.Add("sch", "DB schema");
+	d.highlight.Add("lay", "Layout");
 	d.tabsize <<= f.tabsize > 0 ? f.tabsize : Null;
 	d.tabsize <<= d.Breaker(111);
 	d.tabsize.MinMax(1, 100);
