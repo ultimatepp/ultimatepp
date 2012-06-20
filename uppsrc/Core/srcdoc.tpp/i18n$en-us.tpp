@@ -172,4 +172,6 @@ add the following somewhere early in your application`'s execution:&]
 [s0; &]
 [s7; SetLanguage( GetSystemLNG() );&]
 [s0; &]
-[s0; ]
+[s0; In multithreaded applications this setting works on per`-thread 
+basis (since release 5061); threads inherit the language setting 
+of main thread on startup.]
