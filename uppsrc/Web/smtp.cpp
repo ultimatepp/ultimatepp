@@ -329,7 +329,8 @@ bool SmtpMail::Send()
 					msg << "Date: "
 						<< dayofweek[DayOfWeek(time_sent)] << ", "
 						<< (int)time_sent.day << ' ' << month[time_sent.month - 1] << ' ' << (int)time_sent.year
-						<< ' ' << Sprintf("%2d:%02d:%02d +0100", time_sent.hour, time_sent.minute, time_sent.second)
+						<< ' ' << Sprintf("%2d:%02d:%02d " + GetTimeZoneText(),
+						                  time_sent.hour, time_sent.minute, time_sent.second)
 						<< "\r\n";
 				}
 				if(multi || alter)
