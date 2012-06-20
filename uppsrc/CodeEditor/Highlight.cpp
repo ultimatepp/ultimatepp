@@ -427,31 +427,7 @@ void CodeEditor::InitKeywords()
 			NULL
 		};
 		static const char *javascriptn[] = {
-			"alert", "eval", "Link", "outerHeight", "scrollTo",
-			"Anchor", "FileUpload", "location", "outerWidth", "Select",
-			"Area", "find", "Location", "Packages", "self",
-			"arguments", "focus", "locationbar", "pageXoffset", "setInterval",
-			"Array", "Form", "Math", "pageYoffset", "setTimeout",
-			"assign", "Frame", "menubar", "parent", "status",
-			"blur", "frames", "MimeType", "parseFloat", "statusbar",
-			"Boolean", "Function", "moveBy", "parseInt", "stop",
-			"Button", "getClass", "moveTo", "Password", "String",
-			"callee", "Hidden", "name", "personalbar", "Submit",
-			"caller", "history", "NaN", "Plugin", "sun",
-			"captureEvents", "History", "navigate", "print", "taint",
-			"Checkbox", "home", "navigator", "prompt", "Text",
-			"clearInterval", "Image", "Navigator", "prototype", "Textarea",
-			"clearTimeout", "Infinity", "netscape", "Radio", "toolbar",
-			"close", "innerHeight", "Number", "ref", "top",
-			"closed", "innerWidth", "Object", "RegExp", "toString",
-			"confirm", "isFinite", "onBlur", "releaseEvents", "unescape",
-			"constructor", "isNan", "onError", "Reset", "untaint",
-			"Date", "java", "onFocus", "resizeBy", "unwatch",
-			"defaultStatus", "JavaArray", "onLoad", "resizeTo", "valueOf",
-			"document", "JavaClass", "onUnload", "routeEvent", "watch",
-			"Document", "JavaObject", "open", "scroll", "window",
-			"Element", "JavaPackage", "opener", "scrollbars", "Window",
-			"escape", "length", "Option", "scrollBy",
+			"alert", "eval", "toString", "valueOf", "length",
 			NULL
 		};
 		static const char **kw[HIGHLIGHT_COUNT] = {
