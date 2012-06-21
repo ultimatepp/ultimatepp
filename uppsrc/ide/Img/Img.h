@@ -1,8 +1,8 @@
-#ifndef _ide_IconDes_IconDes_h_
-#define _ide_IconDes_IconDes_h_
+#ifndef _ide_ImgDes_ImgDes_h_
+#define _ide_ImgDes_ImgDes_h_
 
 #include <ide/Common/Common.h>
-#include <IconDes/IconDes.h>
+#include <ide/IconDes/IconDes.h>
 
 struct IdeImgView : IdeDesigner, Ctrl {
 	Size   img_sz;
@@ -17,6 +17,12 @@ struct IdeImgView : IdeDesigner, Ctrl {
 	virtual Ctrl&  DesignerCtrl()             { return *this; }
 
 	typedef IdeImgView CLASSNAME;
+};
+
+struct IdePngDes : IdeIconDes {
+	virtual void   Save();
+
+	void   Load(const char *filename);
 };
 
 #endif

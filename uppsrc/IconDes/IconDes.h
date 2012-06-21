@@ -317,6 +317,8 @@ public:
 	void    SetEditPos(const EditPos& o);
 
 	void    SerializeSettings(Stream& s);
+	
+	void    HideList()                          { list.Hide(); }
 
 	typedef IconDes CLASSNAME;
 

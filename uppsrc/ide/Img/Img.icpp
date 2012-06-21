@@ -41,17 +41,24 @@ struct ImageViewModule : public IdeModule {
 			One<StreamRaster> o = StreamRaster::OpenAny(in);
 			if(o) {
 				Size sz = o->GetSize();
-				IdeImgView *d = new IdeImgView;
-				d->img_sz = sz;
-				d->filename = path;
-				if(sz.cx < 1024 && sz.cy < 768)
-					d->img = o->GetImage();
-				else {
-					ImageEncoder m;
-					Rescale(m, GetFitSize(sz, Size(1024, 768)), *o, sz);
-					d->img = m;
+				if(ToLower(GetFileExt(path)) == ".png" && sz.cx <= 768 && sz.cy <= 512) {
+					IdePngDes *d = new IdePngDes;
+					d->Load(path);
+					return d;
 				}
-				return d;
+				else {
+					IdeImgView *d = new IdeImgView;
+					d->img_sz = sz;
+					d->filename = path;
+					if(sz.cx <= 1024 && sz.cy <= 768)
+						d->img = o->GetImage();
+					else {
+						ImageEncoder m;
+						Rescale(m, GetFitSize(sz, Size(1024, 768)), *o, sz);
+						d->img = m;
+					}
+					return d;
+				}
 			}
 		}
 		return NULL;

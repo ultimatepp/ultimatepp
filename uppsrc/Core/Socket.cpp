@@ -274,6 +274,9 @@ TcpSocket::TcpSocket()
 	waitstep = 10;
 	asn1 = false;
 	global_timeout = Null;
+#ifdef PLATFORM_WIN32
+	connection_start = Null;
+#endif
 }
 
 bool TcpSocket::Open(int family, int type, int protocol)
@@ -285,6 +288,7 @@ bool TcpSocket::Open(int family, int type, int protocol)
 		return false;
 	LLOG("TcpSocket::Data::Open() -> " << (int)socket);
 #ifdef PLATFORM_WIN32
+	connection_start = msecs();
 	u_long arg = 1;
 	if(ioctlsocket(socket, FIONBIO, &arg))
 		SetSockError("ioctlsocket(FIO[N]BIO)");
@@ -489,7 +493,9 @@ bool TcpSocket::WouldBlock()
 	return c == SOCKERR(EWOULDBLOCK) || c == SOCKERR(EAGAIN);
 #endif
 #ifdef PLATFORM_WIN32
-	return c == SOCKERR(EWOULDBLOCK) || c == SOCKERR(ENOTCONN);
+	if(c == SOCKERR(ENOTCONN) && !IsNull(connection_start) && msecs(connection_start) < 20000)
+		return true;
+	return c == SOCKERR(EWOULDBLOCK);	       
 #endif
 }
 
@@ -571,8 +577,12 @@ bool TcpSocket::RawWait(dword flags, int end_time)
 			SetSockError("wait");
 			return false;
 		}
-		if(avail > 0)
+		if(avail > 0) {
+		#ifdef PLATFORM_WIN32
+			connection_start = Null;
+		#endif
 			return true;
+		}
 		if(IsGlobalTimeout())
 			return false;
 		if(to <= 0 && timeout)
@@ -597,8 +607,14 @@ bool TcpSocket::Wait(dword flags, int end_time)
 
 int  TcpSocket::GetEndTime() const
 {
-	return min(IsNull(global_timeout) ? INT_MAX : start_time + global_timeout,
-	           IsNull(timeout) ? INT_MAX : msecs() + timeout);
+	int o = min(IsNull(global_timeout) ? INT_MAX : start_time + global_timeout,
+	            IsNull(timeout) ? INT_MAX : msecs() + timeout);
+#ifdef PLATFORM_WIN32
+	if(GetErrorCode() == SOCKERR(ENOTCONN) && !IsNull(connection_start))
+		if(msecs(connection_start) < 20000)
+			o = connection_start + 20000;
+#endif
+	return o;
 }
 
 bool TcpSocket::Wait(dword flags)

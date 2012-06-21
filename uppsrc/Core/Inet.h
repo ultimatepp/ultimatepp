@@ -84,6 +84,9 @@ class TcpSocket {
 
 	int                     global_timeout;
 	int                     start_time;
+#ifdef PLATFORM_WIN32
+	int                     connection_start;
+#endif
 
 	int                     errorcode;
 	String                  errordesc;
@@ -139,7 +142,7 @@ class TcpSocket {
 	void                    SetSockError(const char *context);
 
 	static int              GetErrorCode();
-	static bool             WouldBlock();
+	bool             WouldBlock();
 	static void             Init();
 
 
