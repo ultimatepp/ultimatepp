@@ -429,7 +429,7 @@ void IconDes::SaveUndo()
 		return;
 	Slot& c = Current();
 	Vector<Image> undo = UnpackImlData(c.undo);
-	int maxn = minmax(400000 / max(c.image.GetLength(), 1), 4, 128);
+	int maxn = minmax((single_mode ? 4000000 : 400000) / max(c.image.GetLength(), 1), 4, 128);
 	while(undo.GetCount() > maxn)
 		undo.Remove(0);
 	if(undo.GetCount() && undo.Top() == c.image)
@@ -490,6 +490,8 @@ void IconDes::SyncImage()
 		c.pastepos = Null;
 		if(c.selection.GetSize() != c.image.GetSize())
 			SetSelect(255);
+		if(single_mode)
+			info.SetLabel(Format("%d x %d", c.image.GetWidth(), c.image.GetHeight()));
 	}
 	selectrect = false;
 	SetBar();
@@ -574,6 +576,18 @@ void IconDes::ResizeDown()
 	                                            : DownSample3x(c.image);
 	c.supersampling = false;
 	Reset();
+}
+
+void IconDes::SingleMode()
+{
+	single_mode = true;
+	list.Ctrl::Remove();
+	rgbactrl.SubCtrl(&single);
+	Size fsz = GetTextSize("Resize", StdFont());
+	single.Add(info.HSizePos().TopPos(0, fsz.cy));
+	resize.SetLabel("Resize");
+	single.Add(resize.LeftPos(0, fsz.cx + 2 * fsz.cy).TopPos(4 * fsz.cy / 3, 4 * fsz.cy / 3));
+	resize <<= THISBACK(EditImage);
 }
 
 END_UPP_NAMESPACE

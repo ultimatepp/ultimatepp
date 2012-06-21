@@ -52,6 +52,18 @@ void IconDes::PrepareImageDlg(WithImageLayout<TopWindow>& dlg)
 	dlg.name.SetFilter(sCharFilterCid);
 }
 
+void IconDes::PrepareImageSizeDlg(WithImageSizeLayout<TopWindow>& dlg)
+{
+	CtrlLayoutOKCancel(dlg, "New image");
+	dlg.cx <<= 16;
+	dlg.cy <<= 16;
+	if(IsCurrent()) {
+		Size sz = GetImageSize();
+		dlg.cx <<= sz.cx;
+		dlg.cy <<= sz.cy;
+	}
+}
+
 bool CheckName(WithImageLayout<TopWindow>& dlg)
 {
 	String n = dlg.name;
@@ -207,10 +219,40 @@ void IconDes::ListCursor()
 	SyncImage();
 }
 
+void IconDes::EditImageSize()
+{
+	Slot& c = Current();
+	WithImageSizeLayout<TopWindow> dlg;
+	PrepareImageSizeDlg(dlg);
+	dlg.Breaker(dlg.cx);
+	dlg.Breaker(dlg.cy);
+	Image img = c.image;
+	dlg.cx <<= img.GetWidth();
+	dlg.cy <<= img.GetHeight();
+	for(;;) {
+		switch(dlg.Run()) {
+		case IDCANCEL:
+			c.image = img;
+			Reset();
+			return;
+		case IDOK:
+			Reset();
+			return;
+		}
+		c.image = CreateImage(Size(minmax((int)~dlg.cx, 1, 8192), minmax((int)~dlg.cy, 1, 8192)), Null);
+		UPP::Copy(c.image, Point(0, 0), img, img.GetSize());
+		Reset();
+	}
+}
+
 void IconDes::EditImage()
 {
 	if(!IsCurrent())
 		return;
+	if(single_mode) {
+		EditImageSize();
+		return;
+	}
 	Slot& c = Current();
 	WithImageLayout<TopWindow> dlg;
 	PrepareImageDlg(dlg);
@@ -289,25 +331,29 @@ void IconDes::ChangeSlot(int d)
 void IconDes::ListMenu(Bar& bar)
 {
 	using namespace IconDesKeys;
-	bar.Add(AK_INSERT_IMAGE, IconDesImg::Insert(), THISBACK(InsertImage));
-	bar.Add(IsCurrent(), AK_IMAGE, IconDesImg::Edit(), THISBACK(EditImage));
-	bar.Add(IsCurrent(), AK_REMOVE_IMAGE, IconDesImg::Remove(), THISBACK(RemoveImage));
-	bar.Add(IsCurrent(), AK_DUPLICATE, IconDesImg::Duplicate(), THISBACK(Duplicate));
-	bar.Add(AK_INSERT_CLIP, IconDesImg::InsertPaste(), THISBACK(InsertPaste));
-	bar.Add(AK_INSERT_FILE, IconDesImg::InsertFile(), THISBACK(InsertFile));
-	bar.Add(AK_INSERT_IML, IconDesImg::InsertIml(), THISBACK(InsertIml));
-	bar.Add(AK_EXPORT_PNGS, IconDesImg::ExportPngs(), THISBACK(ExportPngs));
-	bar.Separator();
-	bar.Add(IsCurrent() && list.GetCursor() > 0, AK_MOVE_UP, IconDesImg::MoveUp(),
-	        THISBACK1(MoveSlot, -1));
-	bar.Add(IsCurrent() && list.GetCursor() < slot.GetCount() - 1, AK_MOVE_DOWN, IconDesImg::MoveDown(),
-	        THISBACK1(MoveSlot, 1));
-	if(removed.GetCount()) {
+	if(single_mode)
+		bar.Add(IsCurrent(), AK_RESIZE_SINGLE, IconDesImg::Edit(), THISBACK(EditImage));
+	else {
+		bar.Add(AK_INSERT_IMAGE, IconDesImg::Insert(), THISBACK(InsertImage));
+		bar.Add(IsCurrent(), AK_IMAGE, IconDesImg::Edit(), THISBACK(EditImage));
+		bar.Add(IsCurrent(), AK_REMOVE_IMAGE, IconDesImg::Remove(), THISBACK(RemoveImage));
+		bar.Add(IsCurrent(), AK_DUPLICATE, IconDesImg::Duplicate(), THISBACK(Duplicate));
+		bar.Add(AK_INSERT_CLIP, IconDesImg::InsertPaste(), THISBACK(InsertPaste));
+		bar.Add(AK_INSERT_FILE, IconDesImg::InsertFile(), THISBACK(InsertFile));
+		bar.Add(AK_INSERT_IML, IconDesImg::InsertIml(), THISBACK(InsertIml));
+		bar.Add(AK_EXPORT_PNGS, IconDesImg::ExportPngs(), THISBACK(ExportPngs));
 		bar.Separator();
-		for(int i = removed.GetCount() - 1; i >= 0; i--) {
-			Slot& r = removed[i];
-			bar.Add("Insert " + sFormatImageName(r.name, r.image, r.exp), r.base_image,
-			        THISBACK1(InsertRemoved, i));
+		bar.Add(IsCurrent() && list.GetCursor() > 0, AK_MOVE_UP, IconDesImg::MoveUp(),
+		        THISBACK1(MoveSlot, -1));
+		bar.Add(IsCurrent() && list.GetCursor() < slot.GetCount() - 1, AK_MOVE_DOWN, IconDesImg::MoveDown(),
+		        THISBACK1(MoveSlot, 1));
+		if(removed.GetCount()) {
+			bar.Separator();
+			for(int i = removed.GetCount() - 1; i >= 0; i--) {
+				Slot& r = removed[i];
+				bar.Add("Insert " + sFormatImageName(r.name, r.image, r.exp), r.base_image,
+				        THISBACK1(InsertRemoved, i));
+			}
 		}
 	}
 	bar.Separator();

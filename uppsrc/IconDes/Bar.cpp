@@ -286,6 +286,8 @@ IconDes::IconDes()
 
 	magnify = 13;
 	pen = 1;
+	
+	single_mode = false;
 }
 
 END_UPP_NAMESPACE

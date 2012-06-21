@@ -63,7 +63,8 @@ void IdeIconDes::Save()
 void IdeIconDes::ToolEx(Bar& bar)
 {
 	bar.Separator();
-	bar.Add("File properties..", IconDesImg::FileProperties(), THISBACK(FileProperties));
+	if(!IsSingleMode())
+		bar.Add("File properties..", IconDesImg::FileProperties(), THISBACK(FileProperties));
 }
 
 void IdeIconDes::FileProperties()
@@ -88,7 +89,7 @@ void IdeIconDes::EditMenu(Bar& bar)
 {
 	EditBar(bar);
 	ToolEx(bar);
-	bar.Add("List", THISBACK(ListMenu));
+	bar.Add(IsSingleMode() ? "PNG" : "List", THISBACK(ListMenu));
 	bar.Add("Selection", THISBACK(SelectBar));
 	bar.Add("Image", THISBACK(ImageBar));
 	bar.Add("Draw", THISBACK(DrawBar));

@@ -23,6 +23,7 @@ struct IdePngDes : IdeIconDes {
 	virtual void   Save();
 
 	void   Load(const char *filename);
+	void   Create(const char *filename);
 };
 
 #endif

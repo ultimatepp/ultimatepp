@@ -10,6 +10,15 @@ LAYOUT(ImageLayout, 168, 108)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(96, 64).TopPosZ(80, 24))
 END_LAYOUT
 
+LAYOUT(ImageSizeLayout, 168, 68)
+	ITEM(Label, dv___0, SetLabel(t_("Size")).LeftPosZ(8, 40).TopPosZ(8, 19))
+	ITEM(EditIntSpin, cx, Min(1).Max(8192).LeftPosZ(52, 44).TopPosZ(8, 19))
+	ITEM(EditIntSpin, cy, Min(1).Max(8192).LeftPosZ(116, 44).TopPosZ(8, 19))
+	ITEM(Label, dv___3, SetLabel(t_("x")).LeftPosZ(100, 12).TopPosZ(8, 16))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(28, 64).TopPosZ(36, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(96, 64).TopPosZ(36, 24))
+END_LAYOUT
+
 LAYOUT(FilePropertiesLayout, 176, 68)
 	ITEM(Option, format, SetLabel(t_("Legacy .iml format")).LeftPosZ(8, 160).TopPosZ(8, 15))
 	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(36, 64).TopPosZ(36, 24))
