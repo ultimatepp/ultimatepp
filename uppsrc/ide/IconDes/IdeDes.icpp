@@ -47,6 +47,13 @@ void SerializeIconDesPos(Stream& s)
 	}
 }
 
+void IdeIconDes::RestoreEditPos()
+{
+	IdeIconEditPos& ep = sEP().GetAdd(filename);
+	if(ep.filetime == filetime)
+		SetEditPos(ep);
+}
+
 bool IsImlFile(const char *path)
 {
 	return ToLower(GetFileExt(path)) == ".iml";
@@ -63,9 +70,7 @@ struct IconDesModule : public IdeModule {
 			IdeIconDes *d = new IdeIconDes;
 			LoadFromGlobal(*d, "icondes-ctrl");
 			if(d->Load(path)) {
-				IdeIconEditPos& ep = sEP().GetAdd(path);
-				if(ep.filetime == d->filetime)
-					d->SetEditPos(ep);
+				d->RestoreEditPos();
 				return d;
 			}
 			delete d;
@@ -93,6 +98,8 @@ void IdeIconDes::CopyId(const String& n)
 
 void IdeIconDes::ListMenuEx(Bar& bar)
 {
+	if(IsSingleMode())
+		return;
 	String n = GetCurrentName();
 	String c = GetFileTitle(filename);
 	c.Set(0, ToUpper(c[0]));

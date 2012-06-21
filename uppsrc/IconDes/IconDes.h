@@ -147,6 +147,10 @@ private:
 	IconShow       iconshow;
 	Image          cursor_image;
 	Image          fill_cursor;
+	bool           single_mode;
+	ParentCtrl     single;
+	Label          info;
+	Button         resize;
 
 	Array<Slot>    removed;
 
@@ -265,9 +269,11 @@ private:
 	void  SyncList();
 	void  ListCursor();
 	void  PrepareImageDlg(WithImageLayout<TopWindow>& dlg);
+	void  PrepareImageSizeDlg(WithImageSizeLayout<TopWindow>& dlg);
 	void  ImageInsert(const String& name, const Image& m, bool exp = false);
 	void  InsertImage();
 	void  InsertRemoved(int ii);
+	void  EditImageSize();
 	void  EditImage();
 	void  RemoveImage();
 	void  Duplicate();
@@ -318,7 +324,8 @@ public:
 
 	void    SerializeSettings(Stream& s);
 	
-	void    HideList()                          { list.Hide(); }
+	void    SingleMode();
+	bool    IsSingleMode() const                  { return single_mode; }
 
 	typedef IconDes CLASSNAME;
 

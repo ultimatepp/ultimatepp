@@ -44,6 +44,7 @@ struct ImageViewModule : public IdeModule {
 				if(ToLower(GetFileExt(path)) == ".png" && sz.cx <= 768 && sz.cy <= 512) {
 					IdePngDes *d = new IdePngDes;
 					d->Load(path);
+					d->RestoreEditPos();
 					return d;
 				}
 				else {
@@ -59,6 +60,13 @@ struct ImageViewModule : public IdeModule {
 					}
 					return d;
 				}
+			}
+			else
+			if(ToLower(GetFileExt(path)) == ".png" && GetFileLength(path) == 0) {
+				IdePngDes *d = new IdePngDes;
+				d->Create(path);
+				d->RestoreEditPos();
+				return d;
 			}
 		}
 		return NULL;
