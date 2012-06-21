@@ -1,0 +1,10 @@
+uses
+	Core,
+	Core\XmlRpc;
+
+file
+	XmlRpcClient.cpp;
+
+mainconfig
+	"" = "SSE2";
+
