@@ -2,6 +2,6 @@ description "\377B";
 
 file
 	Img.h,
-	ImgEdit.cpp,
+	Png.cpp,
 	Img.icpp;
 
