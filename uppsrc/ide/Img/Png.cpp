@@ -2,6 +2,8 @@
 
 void IdePngDes::Save()
 {
+	if(GetCount())
+		SaveChangedFile(filename, PNGEncoder().SaveString(GetImage(0)), true);
 }
 
 void IdePngDes::Load(const char *_filename)

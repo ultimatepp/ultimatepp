@@ -6,6 +6,7 @@ uses
 
 file
 	IconDes.h,
+	IconDes.cpp,
 	IdeDes.icpp,
 	Info readonly separator,
 	Copying;

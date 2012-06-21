@@ -29,4 +29,10 @@ struct IdeIconDes : IdeDesigner, IconDes {
 	IdeIconDes()                              { format = 0; }
 };
 
+struct IdeIconEditPos : IconDes::EditPos, Moveable<IdeIconEditPos> {
+	Time filetime;
+
+	IdeIconEditPos() { filetime = Null; }
+};
+
 #endif
