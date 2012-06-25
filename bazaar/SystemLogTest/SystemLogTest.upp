@@ -1,4 +1,4 @@
-description "BAZAAR: Test application for SystemLog package - Author : Massimo Del Fedele - Email : max@veneto.com";
+description "BAZAAR: Test application for SystemLog package - Author : Massimo Del Fedele - Email : max@veneto.com\377";
 
 uses
 	Core,
