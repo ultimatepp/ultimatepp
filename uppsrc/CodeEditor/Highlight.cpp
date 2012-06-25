@@ -325,7 +325,7 @@ void CodeEditor::InitKeywords()
 			"case", "default", "else", "function", "in", "return", "typeof", "while",
 			"comment", "delete", "export", "if", "label", "switch", "var", "with",
 			"catch", "enum", "throw", "class", "extends", "try", "const", "finally",
-			"debugger", "super",
+			"debugger", "super", "true", "false", "undefined",
 			NULL
 		};
 		static const char *upp_macros[] = {
