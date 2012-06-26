@@ -17,6 +17,9 @@ void Ide::SetupEditor(int f, String hl, String fn)
 	   hl == "m" || hl == "mm" || hl == "icpp")
 		editor.Highlight(CodeEditor::HIGHLIGHT_CPP);
 	else
+	if(hl == "cs")
+		editor.Highlight(CodeEditor::HIGHLIGHT_CS);
+	else
 	if(hl == "usc")
 		editor.Highlight(CodeEditor::HIGHLIGHT_USC);
 	else
@@ -124,6 +127,7 @@ void Ide::FileProperties()
 	d.font.Add(3, "Console");
 	d.highlight.Add(Null, "Default");
 	d.highlight.Add("cpp", "C++");
+	d.highlight.Add("cs", "C#");
 	d.highlight.Add("java", "Java");
 	d.highlight.Add("js", "JavaScript");
 	d.highlight.Add("css", "CSS");

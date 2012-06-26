@@ -275,6 +275,30 @@ void CodeEditor::InitKeywords()
 			"force_inline",
 			NULL
 		};
+		static const char *cs[] = {
+			"abstract", "event", "new", "struct",
+			"as", "explicit", "null", "switch",
+			"base", "extern", "object", "this",
+			"bool", "false", "operator", "throw",
+			"break", "finally", "out", "true",
+			"byte", "fixed", "override", "try",
+			"case", "float", "params", "typeof",
+			"catch", "for", "private", "uint",
+			"char", "foreach", "protected", "ulong",
+			"checked", "goto", "public", "unchecked",
+			"class", "if", "readonly", "unsafe",
+			"const", "implicit", "ref", "ushort",
+			"continue", "in", "return", "using",
+			"decimal", "int", "sbyte", "virtual",
+			"default", "interface", "sealed", "volatile",
+			"delegate", "internal", "short", "void",
+			"do", "is", "sizeof", "while",
+			"double", "lock", "stackalloc",
+			"else", "long", "static",
+			"enum", "namespace", "string",
+			"await", "async", "throws", "awaits",
+			NULL
+		};
 		static const char *upp[] = {
 			"byte", "word", "dword", "__countof", "pick_", "wchar", "NULL", "Null",
 			"int8", "uint8", "int16", "uint16", "int32", "uint32", "int64", "uint64", "qword",
@@ -451,10 +475,10 @@ void CodeEditor::InitKeywords()
 			NULL
 		};
 		static const char **kw[HIGHLIGHT_COUNT] = {
-			cpp, usc, java, tfile, usc, lay, sch, sql, javascript, css,
+			cpp, usc, java, tfile, usc, lay, sch, sql, cs, javascript, css,
 		};
 		static const char **nm[HIGHLIGHT_COUNT] = {
-			upp, usclib, javan, tlng, usclib, javan, javan, javan, javascriptn, javan,
+			upp, usclib, javan, tlng, usclib, javan, javan, javan, javan, javascriptn, javan,
 		};
 		const char **q = NULL;
 		for(int i = 0; i < HIGHLIGHT_COUNT; i++) {
