@@ -54,6 +54,7 @@ private:
 	
 	String                conns;
 	bool                  keepalive;
+	bool                  hex_blobs;
 
 	void                  ExecTrans(const char * statement);
 	Vector<String>        EnumData(char type, const char *schema = NULL);
@@ -88,7 +89,7 @@ public:
 	virtual void          Rollback();
 	virtual int           GetTransactionLevel() const;
 
-	PostgreSQLSession()                                   { conn = NULL; Dialect(PGSQL); level = 0; keepalive = false; }
+	PostgreSQLSession()                                   { conn = NULL; Dialect(PGSQL); level = 0; keepalive = hex_blobs = false; }
 	~PostgreSQLSession()                                  { Close(); }
 	PGconn * GetPGConn()                                  { return conn; }
 };
