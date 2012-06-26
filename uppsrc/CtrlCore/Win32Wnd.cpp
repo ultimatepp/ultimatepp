@@ -219,8 +219,11 @@ void WakeUpGuiThread()
 	::PostThreadMessage(sMainThreadId, WM_NULL, 0, 0);
 }
 
+void AvoidPaintingCheck__();
+
 static void Win32PanicMessageBox(const char *title, const char *text)
 {
+	AvoidPaintingCheck__();
 #ifdef PLATFORM_WINCE
 	static wchar wtext[256], wtitle[256];
 	ToUnicode(wtext, text, strlen(text), CHARSET_DEFAULT);

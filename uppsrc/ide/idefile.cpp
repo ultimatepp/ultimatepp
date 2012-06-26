@@ -26,6 +26,9 @@ void Ide::SetupEditor(int f, String hl, String fn)
 	if(hl == "js")
 		editor.Highlight(CodeEditor::HIGHLIGHT_JAVASCRIPT);
 	else
+	if(hl == "css")
+		editor.Highlight(CodeEditor::HIGHLIGHT_CSS);
+	else
 	if(hl == "t" || hl == "jt")
 		editor.Highlight(CodeEditor::HIGHLIGHT_T);
 	else
@@ -123,6 +126,7 @@ void Ide::FileProperties()
 	d.highlight.Add("cpp", "C++");
 	d.highlight.Add("java", "Java");
 	d.highlight.Add("js", "JavaScript");
+	d.highlight.Add("css", "CSS");
 	d.highlight.Add("sql", "SQL");
 	d.highlight.Add("usc", "Esc");
 	d.highlight.Add("sch", "DB schema");

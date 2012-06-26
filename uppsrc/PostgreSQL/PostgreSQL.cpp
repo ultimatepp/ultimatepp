@@ -371,7 +371,12 @@ bool PostgreSQLSession::Open(const char *connect)
 	DoKeepAlive();
 
 	LLOG( String("Postgresql client encoding: ") + pg_encoding_to_char( PQclientEncoding(conn) ) );
-	
+
+
+	Sql sql(*this);
+	if(sql.Execute("select setting from pg_settings where name = 'bytea_output'") && sql[0] == "hex")
+		hex_blobs = true;
+
 	return true;
 }
 
@@ -627,10 +632,14 @@ void PostgreSQLConnection::GetColumn(int i, Ref f) const
 			break;
 		default: {
 			if(oid[i] == PGSQL_BYTEAOID) {
-				size_t len;
-				unsigned char *q = PQunescapeBytea((const unsigned char *)s, &len);
-				f.SetValue(String(q, len));
-				PQfreemem(q);
+				if(session.hex_blobs)
+					f.SetValue(ScanHexString(s, strlen(s)));
+				else {
+					size_t len;
+					unsigned char *q = PQunescapeBytea((const unsigned char *)s, &len);
+					f.SetValue(String(q, len));
+					PQfreemem(q);
+				}
 			}
 			else
 				f.SetValue(FromCharset(String(s)));
