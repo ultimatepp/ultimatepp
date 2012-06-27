@@ -372,6 +372,31 @@ void CodeEditor::InitKeywords()
 			"word-spacing", "z-index",
 			NULL
 		};
+		static const char *cssn[] = {
+			"em", "px", "pt",
+			"left-side", "far-left", "left", "center-left", "center", "center-right", "right", "far-right", "right-side",
+			"behind", "leftwards", "rightwards", "inherit", "scroll", "fixed", "transparent", "none", "top", "bottom",
+			"repeat", "repeat-x", "repeat-y", "no-repeat", "background-color", "background-image", "background-repeat",
+			"background-attachment", "background-position", "collapse", "separate", "border-top-color", "auto", "both",
+			"normal", "attr", "open-quote", "close-quote", "no-open-quote", "no-close-quote", "cue-before", "cue-after",
+			"crosshair", "default", "pointer", "move", "e-resize", "ne-resize", "nw-resize", "n-resize", "se-resize",
+			"sw-resize", "s-resize", "w-resize", "text", "wait", "help", "progress", "ltr", "rtl", "inline", "block",
+			"list-item", "inline-block", "table", "inline-table", "table-row-group", "table-header-group",
+			"table-footer-group", "table-row", "table-column-group", "table-column", "table-cell", "table-caption",
+			"below", "level", "above", "higher", "lower", "show", "hide", "italic", "oblique", "small-caps", "bold",
+			"bolder", "lighter", "font-style",
+			"font-variant", "font-weight", "font-size", "line-height", "font-family", "caption", "icon", "menu",
+			"message-box", "small-caption", "status-bar", "inside", "outside", "disc", "circle", "square", "decimal",
+			"decimal-leading-zero", "lower-roman", "upper-roman", "lower-greek", "lower-latin", "upper-latin", "armenian",
+			"georgian", "lower-alpha", "upper-alpha", "list-style-type", "list-style-position", "list-style-image",
+			"invert", "outline-color", "outline-style", "outline-width", "visible", "hidden", "always", "avoid",
+			"x-low", "low", "medium", "high", "x-high", "mix", "static", "relative", "absolute", "once", "digits",
+			"continuous", "code", "spell-out", "x-slow", "slow", "fast", "x-fast", "faster", "slower", "justify",
+			"underline", "overline", "line-through", "blink", "capitalize", "uppercase", "lowercase", "embed",
+			"bidi-override", "baseline", "sub", "super", "text-top", "middle", "text-bottom", "silent", "x-soft", "soft",
+			"loud", "x-loud", "pre", "nowrap", "pre-wrap", "pre-line", 
+			NULL
+		};
 		static const char *upp_macros[] = {
 			"CLASSNAME", "THISBACK", "THISBACK1", "THISBACK2", "THISBACK3", "THISBACK4",
 			"PTEBACK", "PTEBACK1", "PTEBACK2",  "PTEBACK3",  "PTEBACK4", 
@@ -478,7 +503,7 @@ void CodeEditor::InitKeywords()
 			cpp, usc, java, tfile, usc, lay, sch, sql, cs, javascript, css,
 		};
 		static const char **nm[HIGHLIGHT_COUNT] = {
-			upp, usclib, javan, tlng, usclib, javan, javan, javan, javan, javascriptn, javan,
+			upp, usclib, javan, tlng, usclib, javan, javan, javan, javan, javascriptn, cssn
 		};
 		const char **q = NULL;
 		for(int i = 0; i < HIGHLIGHT_COUNT; i++) {
@@ -576,7 +601,7 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 	bool is_comment = false;
 	while(p < e) {
 		int pair = MAKELONG(p[0], p[1]);
-		if(ss.linecomment && ss.linecont || pair == MAKELONG('/', '/')) {
+		if(ss.linecomment && ss.linecont || pair == MAKELONG('/', '/') && highlight != HIGHLIGHT_CSS) {
 			hls.Put(text.GetLength() + 1 - hls.pos, hl_style[INK_COMMENT]);
 			is_comment = true;
 			break;
@@ -651,7 +676,7 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 			p++;
 		}
 		else
-		if(pair == MAKELONG('0', 'x') || pair == MAKELONG('0', 'X')) {
+		if(highlight == HIGHLIGHT_CSS ? *p == '#' : pair == MAKELONG('0', 'x') || pair == MAKELONG('0', 'X')) {
 			hls.Put(2, hl_style[INK_CONST_HEX]);
 			p += 2;
 			const wchar *t = p;
@@ -665,7 +690,7 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 			int c = INK_CONST_INT;
 			if(*p == '0') c = INK_CONST_OCT;
 			while(IsDigit(*p)) p++;
-			if(*p == '.' || *p == 'e' || *p == 'E') {
+			if(*p == '.' || (*p == 'e' || *p == 'E') && highlight != HIGHLIGHT_CSS) {
 				c = INK_CONST_FLOAT;
 				p++;
 				if(*p == '-')
@@ -703,7 +728,7 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 		if(iscib(*p)) {
 			const wchar *q = p;
 			StringBuffer id;
-			while(iscidl(*q) && q < e)
+			while((iscidl(*q) || highlight == HIGHLIGHT_CSS && *q == '-') && q < e)
 				id.Cat(*q++);
 			String iid = id;
 			if(highlight == HIGHLIGHT_SQL)
