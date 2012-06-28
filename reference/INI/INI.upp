@@ -1,0 +1,13 @@
+description "Demonstrating .ini file helper INI_BOOL, INI_STRING, INI_INT\377";
+
+uses
+	Core;
+
+file
+	test.ini,
+	INI.cpp,
+	INI2.cpp;
+
+mainconfig
+	"" = "SSE2";
+
