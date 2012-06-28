@@ -430,6 +430,98 @@ String GetIniKey(const char *id)
 	return GetIniKey(id, String());
 }
 
+IniString::operator String()
+{
+	ONCELOCK_(loaded) {
+		static Array<String> ss;
+		String& x = ss.Add();
+		x = Nvl(TrimBoth(GetIniKey(id)), (*def)());
+		value = &x;
+	}
+	return *value;
+}
+
+String IniString::operator=(const String& s)
+{
+	operator String();
+	*value = s;
+	return s;
+}
+
+String IniString::ToString() const
+{
+	return AsString((String)const_cast<IniString&>(*this));
+}
+
+IniInt::operator int() {
+	ONCELOCK_(loaded) {
+		value = ScanInt(TrimBoth(ToLower(GetIniKey(id))));
+		if(IsNull(value))
+			value = (*def)();
+	}
+	return value;
+}
+
+int IniInt::operator=(int b) {
+	ONCELOCK_(loaded) {}
+	return value = b;
+}
+
+String IniInt::ToString() const
+{
+	return AsString((int)const_cast<IniInt&>(*this));
+}
+
+IniBool::operator bool() {
+	ONCELOCK_(loaded) {
+		String h = TrimBoth(ToLower(GetIniKey(id)));
+		value = h.GetCount() ? h == "1" || h == "yes" || h == "true" || h == "y" : (*def)();
+	}
+	return value;
+}
+
+bool IniBool::operator=(bool b) {
+	ONCELOCK_(loaded) {}
+	return value = b;
+}
+
+String IniBool::ToString() const
+{
+	return AsString((bool)const_cast<IniBool&>(*this));
+}
+
+Array<IniInfo>& sIniInfo()
+{
+	static Array<IniInfo> s;
+	return s;
+}
+
+void AddIniInfo(const char *id, String (*current)(), String (*def)(), const char *info)
+{
+	IniInfo& f = sIniInfo().Add();
+	f.id = id;
+	f.current = current;
+	f.def = def;
+	f.info = info;
+}
+
+const Array<IniInfo> GetIniInfo()
+{
+	return sIniInfo();
+}
+
+String GetIniInfoFormatted()
+{
+	String r;
+	for(int i = 0; i < sIniInfo().GetCount(); i++) {
+		IniInfo& f = sIniInfo()[i];
+		r << f.id << " = " << (*f.current)() << " [default: " << (*f.def)() << "]\r\n"
+		  << "       " << f.info << "\r\n";
+	}
+	return r;
+}
+
+
 void TextSettings::Load(const char *filename)
 {
 	FileIn in(filename);
