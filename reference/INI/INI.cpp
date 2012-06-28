@@ -32,4 +32,6 @@ CONSOLE_APP_MAIN
 	DDUMP(Config::number);
 	
 	LOG(GetIniInfoFormatted());
+	
+	ExternalFn();
 }
