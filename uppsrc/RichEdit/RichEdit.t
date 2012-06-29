@@ -563,7 +563,7 @@ huHU("Hiba a [* \001%s\001] f\303\241jl megnyit\303\241sakor")
 itIT("Errore di apertura file [* \001%s\001].")
 nlNL("Fout tijdens openen bestand [* \001%s\001].")
 plPL("B\305\202\304\205d otwarcia pliku [* \001%s\001].")
-ptBR("")
+ptBR("Erro ao abrir arquivo [* \001%s\001].")
 roRO("Eroare la deschiderea fi\305\237ierului [* \001%s\001].")
 ruRU("\320\236\321\210\320\270\320\261\320\272\320\260 \320\276\321\202\320\272\321\200\321\213\321\202\320\270\321\217 "
      "\321\204\320\260\320\271\320\273\320\260 [* \001%s\001].")
