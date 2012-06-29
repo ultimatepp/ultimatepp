@@ -176,8 +176,8 @@ inline void LOGF(const char *format, ...) {}
 
 struct DebugLogBlock
 {
-	DebugLogBlock(const char *name) : name(name) { VppLog() << name << EOL << LOG_BEGIN; }
-	~DebugLogBlock()                             { VppLog() << LOG_END << "//" << name << EOL; }
+	DebugLogBlock(const char *name) : name(name) { UPP::LockLog(); VppLog() << name << EOL << LOG_BEGIN; UPP::UnlockLog(); }
+	~DebugLogBlock()                             { UPP::UnlockLog(); VppLog() << LOG_END << "//" << name << EOL; UPP::UnlockLog(); }
 	const char *name;
 };
 
@@ -193,6 +193,15 @@ struct DebugLogBlock
 #define RDUMPM(c)         UPP::LockLog(), UPP::DumpMap(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
 #define RLOGHEX(x)        UPP::LockLog(), UPP::LogHex(x), UPP::UnlockLog()
 #define RDUMPHEX(x)       UPP::LockLog(), UPP::VppLog() << #x << " = ", UPP::LogHex(x), UPP::UnlockLog()
+
+// Conditional logging
+
+#define LOG_(flag, x)     do { if(flag) RLOG(x); } while(false)
+#define LOGBEGIN_()       do { if(flag) RLOGBEGIN(x); } while(false)
+#define LOGEND_()         do { if(flag) RLOGEND(x); } while(false)
+#define DUMP_(a)          do { if(flag) RDUMP(x); } while(false)
+#define LOGHEX_(x)        do { if(flag) RLOGHEX(x); } while(false)
+#define DUMPHEX_(x)       do { if(flag) RDUMPHEX(x); } while(false)
 
 // Crash support
 

@@ -2,9 +2,11 @@
 
 NAMESPACE_UPP
 
-bool HttpRequest_Trace__;
+namespace Config {
+	INI_BOOL(HttpRequest_Trace, false, "Activates HTTP requests tracing")
+};
 
-#define LLOG(x)      do { if(HttpRequest_Trace__) RLOG(x); } while(0)
+#define LLOG(x)      LOG_(Config::HttpRequest_Trace, x)
 	
 #ifdef _DEBUG
 _DBG_
@@ -13,7 +15,7 @@ _DBG_
 
 void HttpRequest::Trace(bool b)
 {
-	HttpRequest_Trace__ = b;
+	Config::HttpRequest_Trace = b;
 }
 
 void HttpRequest::Init()
