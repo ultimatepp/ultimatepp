@@ -1,6 +1,6 @@
 #include "Browser.h"
 
-#define LLOG(x) // DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 Index<String>& ref_link()
 {

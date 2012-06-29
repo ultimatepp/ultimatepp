@@ -32,6 +32,9 @@ void      ShellOpenFolder(const String& dir);
 Image     IdeFileImage(const String& filename, bool fast = false, bool include_path = false);
 
 bool FinishSave(String tmpfile, String outfile);
+void DeactivationSave(bool b);
+bool IsDeactivationSave();
+
 bool FinishSave(String outfile);
 bool SaveFileFinish(const String& filename, const String& data);
 bool SaveChangedFileFinish(const String& filename, const String& data);
