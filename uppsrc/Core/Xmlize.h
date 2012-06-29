@@ -345,6 +345,12 @@ void XmlizeByJsonize(XmlIO& xio, T& x)
 {
 	if(xio.IsStoring())
 		StoreJsonValue(xio, StoreAsJsonValue(x));
-	else
-		LoadFromJsonValue(x, LoadJsonValue(xio.Node()));
+	else {
+		try {
+			LoadFromJsonValue(x, LoadJsonValue(xio.Node()));
+		}
+		catch(JsonizeError e) {
+			throw XmlError("xmlize by jsonize error: " + e);
+		}
+	}
 }

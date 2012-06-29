@@ -5,8 +5,24 @@ bool Debugger::Tip(const String&, CodeEditor::MouseTip&)
 	return false;
 }
 
+bool deactivation_save;
+
+void DeactivationSave(bool b) // On deactivation, make no prompts, ignore save errors
+{
+	deactivation_save = b;
+}
+
+bool IsDeactivationSave()
+{
+	return deactivation_save;
+}
+
 bool FinishSave(String tmpfile, String outfile)
 {
+	if(IsDeactivationSave()) {
+		FileMove(tmpfile, outfile);
+		return true;
+	}
 	Progress progress;
 	int time = GetTickCount();
 	for(;;) {
@@ -41,6 +57,8 @@ bool FinishSave(String outfile)
 bool SaveFileFinish(const String& filename, const String& data)
 {
 	if(!SaveFile(filename + ".$tmp", data)) {
+		if(IsDeactivationSave())
+			return true;
 		Exclamation("Error creating temporary file " + filename);
 		return false;
 	}

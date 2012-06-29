@@ -229,6 +229,9 @@ template<> void Jsonize(JsonIO& io, String& var)
 {
 	if(io.IsLoading()) {
 		const Value& v = io.Get();
+		if(IsNull(v))
+			var = Null;
+		else
 		if(IsString(v))
 			var = v;
 		else
@@ -242,6 +245,9 @@ template<> void Jsonize(JsonIO& io, WString& var)
 {
 	if(io.IsLoading()) {
 		const Value& v = io.Get();
+		if(IsNull(v))
+			var = Null;
+		else
 		if(IsString(v))
 			var = v;
 		else

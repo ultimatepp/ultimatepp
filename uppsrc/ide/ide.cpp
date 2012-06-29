@@ -565,8 +565,11 @@ void Ide::CycleFiles()
 
 void Ide::Deactivate()
 {
-	if(deactivate_save)
+	if(deactivate_save) {
+		DeactivationSave(true);
 		SaveFile();
+		DeactivationSave(false);
+	}
 }
 
 bool Ide::Key(dword key, int count) {
