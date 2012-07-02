@@ -31,7 +31,7 @@ void TopWindow::ActiveFocus0(Ctrl& ctrl)
 void TopWindow::Activate()
 {
 	LLOG("Activate " << Name() << " activefocus = " << UPP::Name(activefocus));
-	UsrLogT(3, "ACTIVATE " + Desc(this));
+	USRLOG("   ACTIVATE " + Desc(this));
 	if(activefocus && (HasFocus() || !GetFocusChildDeep()) && IsEnabled()) {
 		LLOG("activefocus->SetWantFocus()");
 		activefocus->SetWantFocus();
@@ -51,7 +51,7 @@ void TopWindow::Deactivate()
 	LLOG("DeActivate current focus " << UPP::Name(GetFocusCtrl()));
 	if(HasFocusDeep())
 		activefocus = GetFocusCtrl();
-	UsrLogT(3, "DEACTIVATE " + Desc(this));
+	USRLOG("   DEACTIVATE " + Desc(this));
 	LLOG("DeActivate " << Name() << " activefocus = " << UPP::Name(activefocus));
 }
 

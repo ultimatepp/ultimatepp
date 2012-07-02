@@ -43,10 +43,7 @@ void    Panic(const char *msg)
 	if(PanicMode)
 		return;
 	PanicMode = true;
-	LOG(msg);
-	BugLog() << "PANIC: " << msg << "\n";
-	UsrLogT("===== PANIC ================================================");
-	UsrLogT(msg);
+	RLOG("****************** PANIC: " << msg << "\n");
 	PanicMessageBox("Fatal error", msg);
 
 #ifdef PLATFORM_WIN32
@@ -86,13 +83,10 @@ void    AssertFailed(const char *file, int line, const char *cond)
 	PanicMode = true;
 	char s[2048];
 	sprintf(s, "Assertion failed in %s, line %d\n%s\n", file, line, cond);
-	LOG(s);
-	LOG(GetLastErrorMessage());
 	if(s_assert_hook)
 		(*s_assert_hook)(s);
-	BugLog() << "ASSERT FAILED: " << s << "\n";
-	UsrLogT("===== ASSERT FAILED ================================================");
-	UsrLogT(s);
+	RLOG("****************** ASSERT FAILED: " << s << "\n");
+	RLOG("LastErrorMessage: " << GetLastErrorMessage());
 
 	PanicMessageBox("Fatal error", s);
 

@@ -69,24 +69,24 @@ bool Ctrl::DispatchKey(dword keycode, int count)
 	if(!focusCtrl)
 		return false;
 	Ptr<Ctrl> p = focusCtrl;
-	if(IsUsrLog()) {
+	if(Config::user_log) {
 		String kl;
 		dword k = keycode;
-		int l = 0;
+		const char *l = "";
 		if(k < 65536) {
 			kl << "CHAR \'" << ToUtf8((wchar)keycode) << "\' (" << keycode << ')';
-			l = 2;
+			l = "  ";
 		}
 		else {
 			kl << "KEY";
 			if(k & K_KEYUP) {
 				kl << "UP";
 				k &= ~K_KEYUP;
-				l = 2;
+				l = "  ";
 			}
 			kl << " " << GetKeyDesc(k);
 		}
-		UsrLogT(l, kl);
+		USRLOG(l << kl);
 	}
 	for(;;) {
 		LLOG("Trying to DispatchKey: p = " << Desc(p));
@@ -94,8 +94,8 @@ bool Ctrl::DispatchKey(dword keycode, int count)
 		{
 			LLOG("Ctrl::DispatchKey(" << FormatIntHex(keycode) << ", " << GetKeyDesc(keycode)
 				<< "): eaten in " << Desc(p));
-			if(IsUsrLog())
-				UsrLogT(2, String().Cat() << "-> " << Desc(p));
+			if(Config::user_log)
+				USRLOG("  -> " << Desc(p));
 			eventCtrl = focusCtrl;
 			return true;
 		}
@@ -110,7 +110,7 @@ bool Ctrl::DispatchKey(dword keycode, int count)
 		p = p->GetParent();
 	}
 
-	UsrLogT(2, "key was ignored");
+	USRLOG("  key was ignored");
 
 	return false;
 }
@@ -123,8 +123,8 @@ bool Ctrl::HotKey(dword key)
 	{
 		if(ctrl->IsOpen() && ctrl->IsVisible() && ctrl->IsEnabled() && ctrl->HotKey(key))
 		{
-			if(IsUsrLog() && s_hotkey) {
-				UsrLogT(2, String().Cat() << "HOT-> " << UPP::Name(ctrl));
+			if(Config::user_log && s_hotkey) {
+				USRLOG("  HOT-> " << UPP::Name(ctrl));
 				s_hotkey = false;
 			}
 			return true;
@@ -222,8 +222,7 @@ bool Ctrl::SetFocus0(bool activate)
 bool Ctrl::SetFocus0(bool activate)
 {
 	GuiLock __;
-	if(IsUsrLog())
-		UsrLogT(6, String().Cat() << "SETFOCUS " << Desc(this));
+	USRLOG("      SETFOCUS " << Desc(this));
 	LLOG("Ctrl::SetFocus " << Desc(this));
 	LLOG("focusCtrlWnd " << UPP::Name(focusCtrlWnd));
 	LLOG("Ctrl::SetFocus0 -> deferredSetFocus = NULL; was: " << UPP::Name(defferedSetFocus));

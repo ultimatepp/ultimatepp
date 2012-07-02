@@ -69,6 +69,7 @@
 	#include <memory.h>
 	#include <dirent.h>
 	#include <signal.h>
+	#include <syslog.h>
 	#ifdef PLATFORM_SOLARIS
 		#include <inttypes.h>
 	#else

@@ -634,7 +634,7 @@ void Ctrl::Close()
 	if(parent) return;
 	StateH(CLOSE);
 	bool vis = visible;
-	UsrLogT(3, "CLOSE " + Desc(this));
+	USRLOG("   CLOSE " + Desc(this));
 	WndDestroy();
 	visible = vis;
 	popup = false;

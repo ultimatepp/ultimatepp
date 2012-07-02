@@ -243,7 +243,7 @@ void TopWindow::Open(Ctrl *owner)
 	GuiLock __; 
 	if(dokeys && (!GUI_AKD_Conservative() || GetAccessKeysDeep() <= 1))
 		DistributeAccessKeys();
-	UsrLogT(3, "OPEN " + Desc(this));
+	USRLOG("   OPEN " + Desc(this));
 	LLOG("OPEN " << Name() << " owner: " << UPP::Name(owner));
 	IgnoreMouseUp();
 	bool weplace = owner && center == 1 || center == 2 || !GetRect().IsEmpty();

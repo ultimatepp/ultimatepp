@@ -27,8 +27,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR lpCmdLine, int nCmdS
 	catch(Exc e) { \
 		Panic(e); \
 	} \
-	UPP::UsrLog("---------- About to delete this log..."); \
-	UPP::DeleteUsrLog(); \
 	UPP::Ctrl::ExitWin32(); \
 	UPP::AppExit__(); \
 	return UPP::GetExitCode(); \
@@ -48,8 +46,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdSh
 	UPP::AppInitEnvironment__(); \
 	UPP::AppExecute__(GuiMainFn_); \
 	UPP::Ctrl::CloseTopCtrls(); \
-	UPP::UsrLog("---------- About to delete this log..."); \
-	UPP::DeleteUsrLog(); \
 	UPP::Ctrl::ExitWin32(); \
 	UPP::AppExit__(); \
 	return UPP::GetExitCode(); \

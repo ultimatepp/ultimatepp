@@ -49,7 +49,6 @@ void ConsoleMainFn_(); \
 int main(int argc, char *argv[]) { \
 	UPP::AppInit__(argc, (const char **)argv); \
 	UPP::AppExecute__(ConsoleMainFn_); \
-	UPP::DeleteUsrLog(); \
 	UPP::AppExit__(); \
 	return UPP::GetExitCode(); \
 } \
@@ -68,7 +67,6 @@ void ConsoleMainFn_(); \
 int main(int argc, const char **argv, const char **envptr) { \
 	UPP::AppInit__(argc, argv, envptr); \
 	UPP::AppExecute__(ConsoleMainFn_); \
-	UPP::DeleteUsrLog(); \
 	UPP::AppExit__(); \
 	return UPP::GetExitCode(); \
 } \

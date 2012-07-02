@@ -28,9 +28,9 @@ void   SetIniFile(const char *path = NULL);
 String GetIniKey(const char *id, const String& def);
 String GetIniKey(const char *id);
 
-// "private":
 
 struct IniString {
+// "private":
 	const char *id;
 	String    (*def)();
 	bool        loaded;
@@ -42,6 +42,7 @@ struct IniString {
 };
 
 struct IniInt {
+// "private":
 	const char *id;
 	int      (*def)();
 	int        loaded;
@@ -53,6 +54,7 @@ struct IniInt {
 };
 
 struct IniBool {
+// "private":
 	const char *id;
 	bool      (*def)();
 	bool        loaded;
@@ -64,8 +66,6 @@ struct IniBool {
 };
 
 void AddIniInfo(const char *id, String (*current)(), String (*def)(), const char *info);
-
-// "public":
 
 struct IniInfo {
 	String id;
