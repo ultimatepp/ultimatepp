@@ -897,7 +897,7 @@ void AppMain___()
 	#ifdef PLATFORM_WIN32
 			InstallCrashDump();
 	#endif
-			ActivateUsrLog();
+			Config::user_log = true;
 		}
 		ide.LoadLastMain();
 		if(clset || ide.OpenMainPackage()) {

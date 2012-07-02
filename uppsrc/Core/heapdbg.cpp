@@ -166,14 +166,11 @@ void MemoryDumpLeaks()
 	bool leaks = false;
 	while(p != &dbg_live) {
 		if(p->serial) {
-			if(!leaks) {
-				BugLog() << "\n\nHeap leaks detected:\n";
+			if(!leaks)
 				VppLog() << "\n\nHeap leaks detected:\n";
-			}
 			leaks = true;
 			char b[100];
 			DbgFormat(b, p);
-			BugLog() << '\n' << b;
 			VppLog() << '\n' << b << ": ";
 			HexDump(VppLog(), p + 1, (int)(uintptr_t)p->size, 64);
 		}

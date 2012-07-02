@@ -379,8 +379,6 @@ int X11ErrorHandler(XDisplay *, XErrorEvent *error)
 
 	RLOG(e);
 	puts(e);
-	BugLog() << e << "\r\n";
-	UsrLogT(e);
 
 	Panic(e);
 

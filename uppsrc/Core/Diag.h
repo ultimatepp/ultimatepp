@@ -2,50 +2,7 @@
 const char LOG_BEGIN = '\x1e';
 const char LOG_END = '\x1f';
 
-class LogStream : public Stream {
-#ifdef PLATFORM_WIN32
-	HANDLE hfile;
-#endif
-#ifdef PLATFORM_POSIX
-	enum { INVALID_HANDLE_VALUE = -1 };
-	int   hfile;
-#endif
-
-	CriticalSection cs;
-	char  filename[512];
-	char  backup[512];
-	byte  buffer[512];
-	int   filesize;
-	byte *p;
-
-	int   sizelimit;
-	int   part;
-	dword options;
-	int16 depth;
-	bool  bol;
-
-	void  Flush();
-	void  Put0(int w);
-
-protected:
-	virtual void    _Put(int w);
-	virtual void    _Put(const void *data, dword size);
-	virtual int64   GetSize() const { return filesize; }
-
-public:
-	virtual   bool  IsOpen() const;
-	void            Create(const char *path, bool append);
-	void            SetLimit(int maxsize)                    { sizelimit = maxsize; }
-
-	void            SetOptions(dword _options)               { options = _options; }
-
-	bool            Delete();
-	void            Close();
-
-	LogStream();
-	~LogStream();
-};
-
+/*
 void     ActivateUsrLog();
 void     ActivatePersistentUsrLog();
 bool     IsUsrLog();
@@ -57,19 +14,32 @@ void     DeleteUsrLog();
 
 Stream&  BugLog();
 void     DeactivateBugLog();
+*/
 
-Stream&  StdLog();
 enum LogOptions {
-	LOG_FILE = 1, LOG_COUT = 2, LOG_CERR = 4, LOG_DBG = 8, LOG_TIMESTAMP = 16
+	LOG_FILE = 1, LOG_COUT = 2, LOG_CERR = 4, LOG_DBG = 8, LOG_SYS = 16,
+	LOG_TIMESTAMP = 256, LOG_APPEND = 512, LOG_ROTATE_GZIP,
 };
-void     StdLogSetup(dword options);
+
+inline int LOG_ROTATE(int x) { return x << 24; }
+
+void     StdLogSetup(dword options, const char *filepath = NULL,
+                     int filesize_limit = 10 * 1024 * 1024);
+Stream&  StdLog();
+
+Stream&  UppLog();
+void     SetUppLog(Stream& log);
 
 Stream&  VppLog();
 void     SetVppLog(Stream& log);
+
+/*
 void     SetVppLogName(const String& file);
 void     SetVppLogSizeLimit(int filesize);
+
 void     SetVppLogNoDeleteOnStartup();
 void     CloseStdLog();
+*/
 
 void     HexDump(Stream& s, const void *ptr, int size, int maxsize = INT_MAX);
 
@@ -81,14 +51,6 @@ inline String GetTypeName(const ::std::type_info& tinfo)   { return GetTypeName(
 
 void __LOGF__(const char *format, ...);
 
-#ifdef _MULTITHREADED
-void LockLog();
-void UnlockLog();
-#else
-inline void LockLog() {}
-inline void UnlockLog() {}
-#endif
-
 #define STATIC_ASSERT( expr ) { struct __static_assert { unsigned static_assert:(expr); }; }
 
 #ifdef _DEBUG
@@ -97,21 +59,21 @@ inline void UnlockLog() {}
 
 #define DEBUGCODE(x)     x
 
-#define LOG(a)           UPP::LockLog(), UPP::VppLog() << a << UPP::EOL, UPP::UnlockLog()
+#define LOG(a)           UPP::VppLog() << a << UPP::EOL
 #define LOGF             UPP::__LOGF__
-#define LOGBEGIN()       UPP::LockLog(), UPP::VppLog() << UPP::LOG_BEGIN
-#define LOGEND()         UPP::VppLog() << UPP::LOG_END, UPP::UnlockLog()
+#define LOGBEGIN()       UPP::VppLog() << UPP::LOG_BEGIN
+#define LOGEND()         UPP::VppLog() << UPP::LOG_END
 #define LOGBLOCK(n)      RLOGBLOCK(n)
 #define LOGHEXDUMP(s, a) UPP::HexDump(VppLog(), s, a)
-#define LOGHEX(x)        UPP::LockLog(), UPP::LogHex(x), UPP::UnlockLog()
+#define LOGHEX(x)        UPP::LogHex(x)
 #define QUOTE(a)         { LOG(#a); a; }
-#define LOGSRCPOS()      UPP::LockLog(), UPP::VppLog() << __FILE__ << '#' << __LINE__ << UPP::EOL, UPP::UnlockLog()
-#define DUMP(a)          UPP::LockLog(), UPP::VppLog() << #a << " = " << (a) << UPP::EOL, UPP::UnlockLog()
-#define DUMPC(c)         UPP::LockLog(), UPP::DumpContainer(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
-#define DUMPCC(c)        UPP::LockLog(), UPP::DumpContainer2(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
-#define DUMPCCC(c)       UPP::LockLog(), UPP::DumpContainer3(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
-#define DUMPM(c)         UPP::LockLog(), UPP::DumpMap(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
-#define DUMPHEX(x)       UPP::LockLog(), UPP::VppLog() << #x << " = "; UPP::LogHex(x), UPP::UnlockLog()
+#define LOGSRCPOS()      UPP::VppLog() << __FILE__ << '#' << __LINE__ << UPP::EOL
+#define DUMP(a)          UPP::VppLog() << #a << " = " << (a) << UPP::EOL
+#define DUMPC(c)         UPP::DumpContainer(VppLog() << #c << ':' << UPP::EOL, (c))
+#define DUMPCC(c)        UPP::DumpContainer2(VppLog() << #c << ':' << UPP::EOL, (c))
+#define DUMPCCC(c)       UPP::DumpContainer3(VppLog() << #c << ':' << UPP::EOL, (c))
+#define DUMPM(c)         UPP::DumpMap(VppLog() << #c << ':' << UPP::EOL, (c))
+#define DUMPHEX(x)       UPP::VppLog() << #x << " = "; UPP::LogHex(x)
 #define XASSERT(c, d)    if(!bool(c)) { LOG("XASSERT failed"); LOGSRCPOS(); LOG(d); ASSERT(0); } else
 #define NEVER()          ASSERT(0)
 #define NEVER_(msg)      ASSERT_(0, msg)
@@ -176,23 +138,23 @@ inline void LOGF(const char *format, ...) {}
 
 struct DebugLogBlock
 {
-	DebugLogBlock(const char *name) : name(name) { UPP::LockLog(); VppLog() << name << EOL << LOG_BEGIN; UPP::UnlockLog(); }
-	~DebugLogBlock()                             { UPP::UnlockLog(); VppLog() << LOG_END << "//" << name << EOL; UPP::UnlockLog(); }
+	DebugLogBlock(const char *name) : name(name) { VppLog() << name << EOL << LOG_BEGIN; }
+	~DebugLogBlock()                             { VppLog() << LOG_END << "//" << name << EOL; }
 	const char *name;
 };
 
-#define RLOG(a)           UPP::LockLog(), UPP::VppLog() << a << UPP::EOL, UPP::UnlockLog()
-#define RLOGBEGIN()       UPP::LockLog(), UPP::VppLog() << LOG_BEGIN
-#define RLOGEND()         UPP::VppLog() << LOG_END, UPP::UnlockLog()
+#define RLOG(a)           UPP::VppLog() << a << UPP::EOL
+#define RLOGBEGIN()       UPP::VppLog() << LOG_BEGIN
+#define RLOGEND()         UPP::VppLog() << LOG_END
 #define RLOGBLOCK(n)      UPP::DebugLogBlock MK__s(n)
 #define RLOGHEXDUMP(s, a) UPP::HexDump(UPP::VppLog(), s, a)
 #define RQUOTE(a)         { LOG(#a); a; }
-#define RLOGSRCPOS()      UPP::LockLog(), UPP::VppLog() << __FILE__ << '#' << __LINE__ << UPP::EOL
-#define RDUMP(a)          UPP::LockLog(), UPP::VppLog() << #a << " = " << (a) << UPP::EOL, UPP::UnlockLog()
-#define RDUMPC(c)         UPP::LockLog(), UPP::DumpContainer(UPP::VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
-#define RDUMPM(c)         UPP::LockLog(), UPP::DumpMap(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
-#define RLOGHEX(x)        UPP::LockLog(), UPP::LogHex(x), UPP::UnlockLog()
-#define RDUMPHEX(x)       UPP::LockLog(), UPP::VppLog() << #x << " = ", UPP::LogHex(x), UPP::UnlockLog()
+#define RLOGSRCPOS()      UPP::VppLog() << __FILE__ << '#' << __LINE__ << UPP::EOL
+#define RDUMP(a)          UPP::VppLog() << #a << " = " << (a) << UPP::EOL
+#define RDUMPC(c)         UPP::DumpContainer(UPP::VppLog() << #c << ':' << UPP::EOL, (c))
+#define RDUMPM(c)         UPP::DumpMap(VppLog() << #c << ':' << UPP::EOL, (c))
+#define RLOGHEX(x)        UPP::LogHex(x)
+#define RDUMPHEX(x)       UPP::VppLog() << #x << " = ", UPP::LogHex(x)
 
 // Conditional logging
 
@@ -202,6 +164,16 @@ struct DebugLogBlock
 #define DUMP_(a)          do { if(flag) RDUMP(x); } while(false)
 #define LOGHEX_(x)        do { if(flag) RLOGHEX(x); } while(false)
 #define DUMPHEX_(x)       do { if(flag) RDUMPHEX(x); } while(false)
+	
+// USRLOG
+
+struct IniBool;
+
+namespace Config {
+extern IniBool user_log;
+};
+
+#define USRLOG(x)         LOG_(Config::user_log, x)
 
 // Crash support
 
