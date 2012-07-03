@@ -109,6 +109,12 @@ void SystemInfo::Fill() {
 		TextDeskVersion = deskVersion;
 	}
 
+	String nname, domain;
+	if (GetNetworkInfo(nname, domain)) {
+		Textnname = nname;
+		TextDomain = domain;
+	}
+	
 	int memoryLoad;
 	uint64 totalPhys, freePhys, totalPageFile, freePageFile, totalVirtual, freeVirtual;
 	if (GetMemoryInfo(memoryLoad, totalPhys, freePhys, totalPageFile, freePageFile, totalVirtual, freeVirtual)) {
