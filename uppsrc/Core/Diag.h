@@ -167,13 +167,13 @@ struct DebugLogBlock
 	
 // USRLOG
 
-struct IniBool;
 
 namespace Ini {
-extern IniBool user_log;
+struct Bool;
+extern Bool user_log;
 };
 
-#define USRLOG(x)         LOG_(Config::user_log, x)
+#define USRLOG(x)         LOG_(Ini::user_log, x)
 
 // Crash support
 

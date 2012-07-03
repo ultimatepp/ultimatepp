@@ -69,7 +69,7 @@ bool Ctrl::DispatchKey(dword keycode, int count)
 	if(!focusCtrl)
 		return false;
 	Ptr<Ctrl> p = focusCtrl;
-	if(Config::user_log) {
+	if(Ini::user_log) {
 		String kl;
 		dword k = keycode;
 		const char *l = "";
@@ -94,7 +94,7 @@ bool Ctrl::DispatchKey(dword keycode, int count)
 		{
 			LLOG("Ctrl::DispatchKey(" << FormatIntHex(keycode) << ", " << GetKeyDesc(keycode)
 				<< "): eaten in " << Desc(p));
-			if(Config::user_log)
+			if(Ini::user_log)
 				USRLOG("  -> " << Desc(p));
 			eventCtrl = focusCtrl;
 			return true;
@@ -123,7 +123,7 @@ bool Ctrl::HotKey(dword key)
 	{
 		if(ctrl->IsOpen() && ctrl->IsVisible() && ctrl->IsEnabled() && ctrl->HotKey(key))
 		{
-			if(Config::user_log && s_hotkey) {
+			if(Ini::user_log && s_hotkey) {
 				USRLOG("  HOT-> " << UPP::Name(ctrl));
 				s_hotkey = false;
 			}

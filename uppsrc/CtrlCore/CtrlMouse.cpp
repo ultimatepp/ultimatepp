@@ -30,7 +30,7 @@ dword GetMouseFlags() {
 
 void Ctrl::LogMouseEvent(const char *f, const Ctrl *ctrl, int event, Point p, int zdelta, dword keyflags)
 {
-	if(!Config::user_log)
+	if(!Ini::user_log)
 		return;
 	String txt = f;
 	txt += (event & BUTTON) == RIGHT ? "RIGHT" : (event & BUTTON) == MIDDLE ? "MIDDLE" : "LEFT";
