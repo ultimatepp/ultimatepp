@@ -555,7 +555,7 @@ Array<NetAdapter> GetAdapterInfo()
 		// not big enough, double size and retry
 		delete[] buf;
 		bufSize *= 2;
-		if(iTry >= 3) {LOG
+		if(iTry >= 3) {
 			DLOG("Max buffer size too small");
 			close(sck);
 			return res;
