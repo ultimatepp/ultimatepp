@@ -1,5 +1,7 @@
 #include "SysInfo_in.h"
 
+NAMESPACE_UPP
+
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 #if defined(__MINGW32__) 
@@ -103,7 +105,7 @@ private:
 	bool ScreenshotMemory();
 
 public:
-	ScreenGrab(String fileName, int secsFrame = 1, bool viewMouse = true);
+	ScreenGrab(String fileName, double secsFrame = 1, bool viewMouse = true);
 	~ScreenGrab();
 	
 	bool IniGrabDesktop();
@@ -114,7 +116,7 @@ public:
 	void Close();
 };
 
-bool Record_Desktop(String fileName, int duration, int secsFrame, bool viewMouse)
+bool Record_Desktop(String fileName, int duration, double secsFrame, bool viewMouse)
 {
 	ScreenGrab grab(fileName, secsFrame, viewMouse);
 	if (!grab.IniGrabDesktop())
@@ -124,7 +126,7 @@ bool Record_Desktop(String fileName, int duration, int secsFrame, bool viewMouse
 	grab.Close();
 	return true;
 }
-bool Record_DesktopRectangle(String fileName, int duration, int left, int top, int width, int height, int secsFrame, bool viewMouse)
+bool Record_DesktopRectangle(String fileName, int duration, int left, int top, int width, int height, double secsFrame, bool viewMouse)
 {
 	ScreenGrab grab(fileName, secsFrame, viewMouse);
 	if (!grab.IniGrabDesktopRectangle(left, top, width, height))
@@ -134,7 +136,7 @@ bool Record_DesktopRectangle(String fileName, int duration, int left, int top, i
 	grab.Close();
 	return true;
 }
-bool Record_Window(String fileName, int duration, long handle, int secsFrame, bool viewMouse)
+bool Record_Window(String fileName, int duration, long handle, double secsFrame, bool viewMouse)
 {
 	ScreenGrab grab(fileName, secsFrame, viewMouse);
 	if (!grab.IniGrabWindow(handle))
@@ -329,7 +331,7 @@ BITMAPINFO ScreenGrab::tBmpInfo;
 AVISTREAMINFO ScreenGrab::tAVIHdr;
 AVIFILEINFO ScreenGrab::tAVIFile;
 
-ScreenGrab::ScreenGrab(String _fileName, int secsFrame, bool _viewMouse)
+ScreenGrab::ScreenGrab(String _fileName, double secsFrame, bool _viewMouse)
 {
 	opened = false;
 	fileName = _fileName;
@@ -452,3 +454,5 @@ bool Snap_Window(String fileName, long handle)
 {
 	return Window_SaveCapture(handle, fileName);
 }
+
+END_UPP_NAMESPACE

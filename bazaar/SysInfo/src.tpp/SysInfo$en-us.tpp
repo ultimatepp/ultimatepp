@@ -115,6 +115,11 @@ included types are:&]
 [s0;l448;i150;O1;~~~1280~1856; `"IEEE1394`"-|-|Firewire&]
 [s3; &]
 [s4;%- &]
+[s5;:GetNetworkInfo`(String`&`,String`&`):%- [@(0.0.255) bool]_[* GetNetworkInfo]([_^String^ S
+tring]_`&[*@3 name], [_^String^ String]_`&[*@3 domain])&]
+[s2; Returns the local computer network [%-*@3 name] and [%-*@3 domain].&]
+[s3; &]
+[s4;%- &]
 [s5;:GetHDSerial`(`):%- [@(0.0.255) String]_[* GetHDSerial]()&]
 [s2; Returns the hard disk physical [%-*@3 serial ]number or Null. 
 This code is not affected by disk formatting.&]
@@ -541,4 +546,4 @@ v3 and Windows desktops.&]
 [s0;l288; &]
 [s0;l288; If [%-*@3 path].is empty, the desktop wallpaper is removed. 
 &]
-[s0; ]
+[s0; ]]

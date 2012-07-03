@@ -3,6 +3,7 @@
 
 #include "Functions4U/Functions4U.h"
 
+NAMESPACE_UPP
 
 /////////////////////////////////////////////////////////////////////
 // Processor Info
@@ -18,9 +19,9 @@ struct NetAdapter : DeepCopyOption<NetAdapter> {
 	String mac;
 	String type;
 	
-	void Xmlize(XmlIO xml);
-	void Jsonize(JsonIO& json);
-	void Serialize(Stream& stream);
+	void Xmlize(XmlIO &xml);
+	void Jsonize(JsonIO &json);
+	void Serialize(Stream &stream);
 	void Copy(const NetAdapter& src);
 	NetAdapter(const NetAdapter& src, int) 	{Copy(src);}
 	//NetAdapter(const NetAdapter& src) 		{Copy(src);}
@@ -28,6 +29,8 @@ struct NetAdapter : DeepCopyOption<NetAdapter> {
 };
 
 Upp::Array <NetAdapter> GetAdapterInfo();
+
+bool GetNetworkInfo(String &name, String &domain);
 
 #if defined(PLATFORM_WIN32) 
 bool GetVideoInfo(Upp::Array <Value> &name, Upp::Array <Value> &description, Upp::Array <Value> &videoProcessor, 
@@ -90,7 +93,7 @@ long GetProcessId();
 
 bool Shutdown(String action);
 
-void GetCompilerInfo(String &name, int &version, Time &time, String &mode);
+void GetCompilerInfo(String &name, int &version, Upp::Time &time, String &mode);
 void GetCompilerInfo(String &name, int &version, String &time, String &mode);
 
 bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin);
@@ -133,9 +136,9 @@ bool SetKeyLockStatus(bool caps, bool num, bool scroll);
 
 #if defined(PLATFORM_WIN32)
 
-bool Record_Desktop(String fileName, int duration, int secsFrame = 1, bool viewMouse = true);
-bool Record_DesktopRectangle(String fileName, int duration, int left, int top, int width, int height, int secsFrame = 1, bool viewMouse = true);
-bool Record_Window(String fileName, int duration, long handle, int secsFrame = 1, bool viewMouse = true);
+bool Record_Desktop(String fileName, int duration, double secsFrame = 1, bool viewMouse = true);
+bool Record_DesktopRectangle(String fileName, int duration, int left, int top, int width, int height, double secsFrame = 1, bool viewMouse = true);
+bool Record_Window(String fileName, int duration, long handle, double secsFrame = 1, bool viewMouse = true);
 
 #endif
 
@@ -157,9 +160,9 @@ struct SystemSignature : DeepCopyOption<SystemSignature> {
 	void Copy(const SystemSignature& src);
 	SystemSignature(const SystemSignature& src, int) {Copy(src);}
 	SystemSignature()	{}
-	void Xmlize(XmlIO xml);
-	void Jsonize(JsonIO& json);
-	void Serialize(Stream& stream);
+	void Xmlize(XmlIO &xml);
+	void Jsonize(JsonIO &json);
+	void Serialize(Stream &stream);
 	bool operator==(const SystemSignature &other) const;
 	bool operator!=(const SystemSignature &other) const {return !(*this == other);}	
 };
@@ -178,7 +181,7 @@ struct SystemOverview : DeepCopyOption<SystemOverview> {
 	String deskVersion;
 	String compilerName;
 	int compilerVersion;
-	Time compilerTime;
+	Upp::Time compilerTime;
 	String compilerMode;
 	
 	void Load();
@@ -189,11 +192,12 @@ struct SystemOverview : DeepCopyOption<SystemOverview> {
 	void Copy(const SystemOverview& src);
 	SystemOverview(const SystemOverview& src, int) { Copy(src); }	
 	SystemOverview() {}
-	void Xmlize(XmlIO xml);
-	void Jsonize(JsonIO& json);
-	void Serialize(Stream& stream);
+	void Xmlize(XmlIO &xml);
+	void Jsonize(JsonIO &json);
+	void Serialize(Stream &stream);
 };
 
+END_UPP_NAMESPACE
 
 #endif
 

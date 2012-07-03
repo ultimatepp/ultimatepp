@@ -1,5 +1,7 @@
 #include "SysInfo_in.h"
 
+NAMESPACE_UPP
+
 struct KeyCodes {
 	String key; 
 	int code;
@@ -139,7 +141,7 @@ void PressKey(wchar key, bool hold = false, bool release = false)
 {
 	if ((key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') || (key >= '0' && key <= '9')) {
 		char buff[120];
-		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_ILANGUAGE, buff, sizeof(buff));
+		::GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_ILANGUAGE, buff, sizeof(buff));
 		HKL hKeyboardLayout = ::LoadKeyboardLayout(buff, KLF_ACTIVATE);  
     	SHORT nVK = VkKeyScanExW(key, hKeyboardLayout);
     	UINT nScan = MapVirtualKeyExW(nVK, MAPVK_VK_TO_CHAR, hKeyboardLayout);
@@ -556,3 +558,5 @@ void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
 #endif
 	Sleep(finalDelay);
 }
+
+END_UPP_NAMESPACE

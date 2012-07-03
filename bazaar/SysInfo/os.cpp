@@ -1,5 +1,6 @@
 #include "SysInfo_in.h"
 
+NAMESPACE_UPP
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
@@ -348,3 +349,5 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
 }
 
 #endif
+
+END_UPP_NAMESPACE

@@ -18,10 +18,13 @@
 	#include <vfw.h>
 	typedef ACCESS_MASK REGSAM;
 	#include <PowrProf.h>
+	#include <lm.h>
 #endif
 #ifdef PLATFORM_POSIX
 	#include <sys/time.h>
 	#include <sys/resource.h>
+	#include <sys/ioctl.h>
+	#include <net/if.h>
 	
 	#include <fcntl.h>
 	#include <sys/types.h>
@@ -54,8 +57,6 @@
 	#endif
 
 #endif
-
-using namespace Upp;
 
 #define _Browser_Browser_h
 #include "SysInfo.h"
