@@ -685,10 +685,6 @@ void AppMain___()
 	#endif
 	}
 
-#ifndef _DEBUG
-	SetVppLogSizeLimit(0);
-#endif
-
 	try {
 		void RegisterLayDes(); RegisterLayDes();
 		void RegisterIconDes(); RegisterIconDes();
@@ -897,7 +893,7 @@ void AppMain___()
 	#ifdef PLATFORM_WIN32
 			InstallCrashDump();
 	#endif
-			Config::user_log = true;
+			Ini::user_log = true;
 		}
 		ide.LoadLastMain();
 		if(clset || ide.OpenMainPackage()) {
