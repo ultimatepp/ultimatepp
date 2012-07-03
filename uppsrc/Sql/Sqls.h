@@ -301,9 +301,7 @@ protected:
 	friend class Sql;
 
 	Stream                       *trace;
-	bool                          logerrors;
 	bool                          tracetime;
-	bool                          usrlog;
 	int                           traceslow;
 	int                           dialect;
 	int                           exectime;
@@ -360,8 +358,6 @@ public:
 	void                          TraceTime(bool b = true)                { tracetime = b; }
 	bool                          IsTraceTime() const                     { return tracetime; }
 
-	SqlSession&                   LogErrors(bool b = true)                { logerrors = true; return *this; }
-	SqlSession&                   UsrLog(bool b = true)                   { usrlog = true; return *this; }
 	SqlSession&                   TraceSlow(int ms = 5000)                { traceslow = ms; return *this; }
 	
 	SqlSession&                   ThrowOnError(bool b = true)             { throwonerror = b; return *this; }

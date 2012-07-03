@@ -11,8 +11,6 @@ SqlSession::SqlSession()
 {
 	trace = NULL;
 	traceslow = INT_MAX / 4;
-	logerrors = false;
-	usrlog = false;
 	tracetime = false;
 	dialect = 255;
 	errorcode_number = Null;
@@ -73,8 +71,6 @@ void   SqlSession::SetError(String error, String stmt, int code, const char *sco
 	errorclass = clss;
 	String err;
 	err << "ERROR " << error << "(" << code << "): " << stmt << '\n';
-	if(logerrors)
-		BugLog() << err;
 	if(GetTrace())
 		*GetTrace() << err;
 }

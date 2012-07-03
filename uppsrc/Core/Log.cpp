@@ -85,7 +85,7 @@ void LogOut::Create(bool append)
 	filesize = 0;
 
 #ifdef PLATFORM_WIN32
-	hfile = CreateFile(ToSysChrSet(filename),
+	hfile = CreateFile(ToSysChrSet(filepath),
 		GENERIC_READ|GENERIC_WRITE,
 		FILE_SHARE_READ|FILE_SHARE_WRITE,
 		NULL,
@@ -198,7 +198,7 @@ void LogOut::Line(const char *s, int len, int depth)
 		}
 	if(options & LOG_DBG) {
 		*p = 0;
-		::OutputDebugString((LPCSTR)buffer);
+		::OutputDebugString((LPCSTR)h);
 	}
 #else
 	if(options & LOG_FILE)
@@ -327,10 +327,6 @@ void InitBlockEnd__(const char *fn, int line) {
 #endif
 
 #ifdef PLATFORM_WIN32
-#include <mmsystem.h>
-#endif
-
-#ifdef PLATFORM_WIN32
 static void sLogFile(char *fn, const char *app = ".log")
 {
 #ifdef PLATFORM_WINCE
@@ -443,6 +439,7 @@ Stream& UppLog() {
 }
 
 Stream& VppLog() {
+	return UppLog();
 }
 
 void SetVppLogName(const String& file) {

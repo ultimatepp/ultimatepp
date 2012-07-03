@@ -1,5 +1,10 @@
 #include "Core.h"
 
+#ifdef PLATFORM_WIN32
+#include <mmsystem.h>
+#endif
+
+
 NAMESPACE_UPP
 
 #define LTIMING(x) // TIMING(x)
@@ -232,9 +237,8 @@ LONG __stdcall sDumpHandler(LPEXCEPTION_POINTERS ep) {
 	sprintf(h, "CRASH: %d-%02d-%02d %02d:%02d:%02d code: 0x%X  address: 0x%p",
 	        st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond,
 	        er->ExceptionCode, er->ExceptionAddress);
-	UsrLogT("============ CRASH ================================================");
-	UsrLogT(h);
-	BugLog() << h << "\r\n";
+	RLOG("============ CRASH ================================================");
+	RLOG(h);
 	return sPrev ? (*sPrev)(ep) : 0 /*EXCEPTION_CONTINUE_SEARCH*/;
 }
 
