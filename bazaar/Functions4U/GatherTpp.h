@@ -1,6 +1,8 @@
 #ifndef _GatherTpp_h_
 #define _GatherTpp_h_
 
+NAMESPACE_UPP
+
 class GatherTpp {
 public:
 	//GatherTpp();
@@ -37,5 +39,7 @@ private:
 	String QtfAsHtml(const char *qtf, Index<String>& css, const VectorMap<String, String>& links,
     	const VectorMap<String, String>& labels, const String& outdir, const String& fn = Null);
 };
+
+END_UPP_NAMESPACE
 
 #endif

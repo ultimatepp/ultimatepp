@@ -1,9 +1,8 @@
 #include <Core/Core.h>
 
-using namespace Upp;
-
 #include "StaticPlugin.h"
 
+NAMESPACE_UPP
 
 Array<StaticPlugin::PluginData>& StaticPlugin::Plugins() {
 	static Array<PluginData> x;
@@ -67,3 +66,5 @@ bool StaticPlugin::Init(const char *_name) {
 	return Init(_name, "");
 }
 */
+
+END_UPP_NAMESPACE

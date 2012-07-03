@@ -229,10 +229,11 @@ tring][@(0.0.255) `&]_[*@3 toFind], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
 [s3; &]
 [s4;%- &]
 [s5;:SecondsToString`(double`,bool`):%- [_^String^ String]_[* SecondsToString]([@(0.0.255) d
-ouble]_[*@3 seconds], [@(0.0.255) bool]_[*@3 decimals]_`=_[@(0.0.255) false])&]
+ouble]_[*@3 seconds], [@(0.0.255) bool]_[*@3 units]_`=_[@(0.0.255) false])&]
 [s2; Converts an amount of [%-*@3 seconds] to a String formatted as 
 HH:MM:SS.&]
-[s0; -|If [%-*@3 decimals ]it includes decimals in seconds&]
+[s0; -|If [%-*@3 units ]is true the units (hours, mins, seconds) will 
+be part of the text.&]
 [s0; -|It is opposite to StringToSeconds()&]
 [s3; &]
 [s4;%- &]

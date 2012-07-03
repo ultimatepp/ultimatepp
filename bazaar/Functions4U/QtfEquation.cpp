@@ -1,11 +1,11 @@
-//#pragma NO_BLITZ
-
 #ifdef flagGUI
 
 #include <CtrlLib/CtrlLib.h>
 
 #include "Functions4U.h"
 #include "Functions4U_Gui.h"
+
+NAMESPACE_UPP
 
 Drawing EquationDraw::Text(String text, bool italic, int offsetX, int offsetY, double betw)
 {
@@ -275,6 +275,9 @@ String EquationDraw::TermTrig(CParser& p) {
 	if (p.Id("sin"))	return "sin";
 	if (p.Id("cos"))	return "cos";
 	if (p.Id("tan"))	return "tan";
+	if (p.Id("sinh"))	return "sinh";
+	if (p.Id("cosh"))	return "cosh";
+	if (p.Id("tanh"))	return "tanh";
 	if (p.Id("asin"))	return "asin";
 	if (p.Id("acos"))	return "acos";
 	if (p.Id("atan"))	return "atan";
@@ -443,4 +446,7 @@ QtfRichObject QtfEquation(const String &str)
 	return QtfRichObject(CreateDrawingObject(dw.GetResult(), sz, sz));
 }
 
+END_UPP_NAMESPACE
+
 #endif
+

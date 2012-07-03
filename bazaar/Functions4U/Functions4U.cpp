@@ -1,7 +1,5 @@
 #include <Core/Core.h>
 
-using namespace Upp;
-
 #include "Functions4U.h"
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
@@ -17,6 +15,8 @@ using namespace Upp;
 #undef byte
 #undef CY
 #endif
+
+NAMESPACE_UPP
 
 /*
 Hi Koldo,
@@ -591,16 +591,16 @@ String GetFirefoxDownloadFolder()
 */
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-
-String GetShellFolder(int clsid) 
+String GetShellFolder2(int clsid) 
 {
 	wchar path[MAX_PATH];
-	if(SHGetFolderPathW(NULL, clsid, NULL, /*SHGFP_TYPE_CURRENT*/0, path) == S_OK)
+	if(SHGetFolderPathW(NULL, clsid, NULL, //SHGFP_TYPE_CURRENT
+											0, path) == S_OK)
 		return FromUnicodeBuffer(path);
 	return Null;
 }
 
-String GetShellFolder(const char *local, const char *users) 
+String GetShellFolder2(const char *local, const char *users) 
 {
 	String ret = FromSystemCharset(GetWinRegString(local, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders", 
 									   HKEY_CURRENT_USER));
@@ -635,8 +635,8 @@ String GetDownloadFolder()
 	return GetDesktopFolder();		// I do not know to do it in other browsers !!
 };
 */ 
-String GetPersonalFolder()	{return GetShellFolder("Personal", 0);}
-String GetStartupFolder()	{return GetShellFolder(CSIDL_STARTUP);}
+String GetPersonalFolder()	{return GetShellFolder2("Personal", 0);}
+String GetStartupFolder()	{return GetShellFolder2(CSIDL_STARTUP);}
 
 String GetTempFolder()
 {
@@ -662,7 +662,7 @@ String GetSystemFolder()
 #endif
 #ifdef PLATFORM_POSIX
 
-String GetPathXdg(String xdgConfigHome, String xdgConfigDirs)
+String GetPathXdg2(String xdgConfigHome, String xdgConfigDirs)
 {
 	String ret = "";
 	if (FileExists(ret = AppendFileName(xdgConfigHome, "user-dirs.dirs"))) ;
@@ -670,7 +670,7 @@ String GetPathXdg(String xdgConfigHome, String xdgConfigDirs)
   	else if (FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.dirs"))) ;
   	return ret;
 }
-String GetPathDataXdg(String fileConfig, const char *folder) 
+String GetPathDataXdg2(String fileConfig, const char *folder) 
 {
 	StringParse fileData = LoadFile(fileConfig);
 	
@@ -686,8 +686,7 @@ String GetPathDataXdg(String fileConfig, const char *folder)
 	
 	return ret;		
 }
-
-String GetShellFolder(const char *local, const char *users) 
+String GetShellFolder2(const char *local, const char *users) 
 {
  	String xdgConfigHome = GetEnv("XDG_CONFIG_HOME");
   	if (xdgConfigHome == "")		// By default
@@ -695,10 +694,10 @@ String GetShellFolder(const char *local, const char *users)
   	String xdgConfigDirs = GetEnv("XDG_CONFIG_DIRS");
   	if (xdgConfigDirs == "")			// By default
   		xdgConfigDirs = "/etc/xdg";
-  	String xdgFileConfigData = GetPathXdg(xdgConfigHome, xdgConfigDirs);
-  	String ret = GetPathDataXdg(xdgFileConfigData, local);
+  	String xdgFileConfigData = GetPathXdg2(xdgConfigHome, xdgConfigDirs);
+  	String ret = GetPathDataXdg2(xdgFileConfigData, local);
   	if (ret == "" && *users != '\0')
-  		return GetPathDataXdg(xdgFileConfigData, users);
+  		return GetPathDataXdg2(xdgFileConfigData, users);
   	else
   		return ret;
 }
@@ -716,7 +715,7 @@ String GetSystemFolder()
 	return String("");
 }
 
-String GetPersonalFolder()	{return GetShellFolder("XDG_DOCUMENTS_DIR", "DOCUMENTS");}
+String GetPersonalFolder()	{return GetShellFolder2("XDG_DOCUMENTS_DIR", "DOCUMENTS");}
 
 #endif
 
@@ -795,11 +794,11 @@ String HMSToString(int hour, int min, double seconds, bool units) {
 	if (units) {
 		if (hour >= 2)
 			sunits = t_("hours");
-		else if (hour >= 1)
+		else if (hour == 1)
 			sunits = t_("hour");
 		else if (min >= 2)
 			sunits = t_("mins");
-		else if (min >= 60)
+		else if (min == 1)
 			sunits = t_("min");
 		else if (seconds > 1)
 			sunits = t_("secs");
@@ -811,7 +810,7 @@ String HMSToString(int hour, int min, double seconds, bool units) {
 		ret << hour << ":";
 	if (min > 0 || hour > 0) 
 	    ret << (ret.IsEmpty() ? FormatInt(min) : FormatIntDec(min, 2, '0')) << ":";
-	ret <<  (ret.IsEmpty() ? FormatDouble(seconds, 2, FD_REL) : formatSeconds(seconds));
+	ret << (ret.IsEmpty() ? FormatDouble(seconds, 2, FD_REL) : formatSeconds(seconds));
 	if (units)
 		ret << " " << sunits;
 	return ret;
@@ -1649,17 +1648,17 @@ String FileDataArray::GetFileText() {
 }
 
 bool FileDataArray::SaveFile(const char *fileName) {
-	return ::SaveFile(fileName, GetFileText());
+	return Upp::SaveFile(fileName, GetFileText());
 }
 
 bool FileDataArray::AppendFile(const char *fileName) {
-	return ::AppendFile(fileName, GetFileText());
+	return Upp::AppendFile(fileName, GetFileText());
 }
 
 bool FileDataArray::LoadFile(const char *fileName)
 {
 	Clear();
-	StringParse in = ::LoadFile(fileName);
+	StringParse in = Upp::LoadFile(fileName);
 	
 	if (in == "")
 		return false;
@@ -1929,7 +1928,7 @@ bool FileDiffArray::Apply(String toFolder, String fromFolder, int flags)
 
 bool FileDiffArray::SaveFile(const char *fileName)
 {
-	return ::SaveFile(fileName, ToString());
+	return Upp::SaveFile(fileName, ToString());
 }
 
 String FileDiffArray::ToString()
@@ -1955,7 +1954,7 @@ String FileDiffArray::ToString()
 bool FileDiffArray::LoadFile(const char *fileName)
 {
 	Clear();
-	StringParse in = ::LoadFile(fileName);
+	StringParse in = Upp::LoadFile(fileName);
 	
 	if (in == "")
 		return false;
@@ -2132,3 +2131,4 @@ Image GetRect(const Image& orig, const Rect &r) {
 	return ib;
 }
 
+END_UPP_NAMESPACE

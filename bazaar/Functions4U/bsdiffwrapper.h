@@ -1,9 +1,10 @@
 #ifndef _Functions4U_bsdiffwrapper_h_
 #define _Functions4U_bsdiffwrapper_h_
 
-
 #define ftello 	ftell
 #define fseeko 	fseek
+
+NAMESPACE_UPP
 
 extern String errMsg;
 String BsGetLastError();
@@ -27,5 +28,6 @@ bool Err(String str);
 	#endif
 #endif
 
+END_UPP_NAMESPACE
 
 #endif

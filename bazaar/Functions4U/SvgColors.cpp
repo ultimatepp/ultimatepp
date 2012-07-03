@@ -1,8 +1,9 @@
 #include <Core/Core.h>
 
-using namespace Upp;
-
 #include "Functions4U.h"
+
+NAMESPACE_UPP
+
 
 Color GetSvgColor(const char *color) {
 	struct Svg_color {
@@ -157,3 +158,5 @@ Color GetSvgColor(const char *color) {
 			return Color(colors[i].r, colors[i].g, colors[i].b);
 	return Null;
 }
+
+END_UPP_NAMESPACE

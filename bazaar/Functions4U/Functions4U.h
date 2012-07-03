@@ -8,8 +8,12 @@
 #include <Web/Web.h>
 #include "GatherTpp.h"
 #endif
+
 #include <Functions4U/SvgColors.h>
 #include "StaticPlugin.h"
+
+NAMESPACE_UPP
+
 
 enum EXT_FILE_FLAGS {USE_TRASH_BIN = 1,
 					 BROWSE_LINKS = 2,
@@ -214,8 +218,8 @@ int ReverseFind(const String& s, const String& toFind, int from = 0);
 String FormatLong(long a); 
 
 // const char *StrToTime(struct Upp::Time& d, const char *s);	Now included in TimeDate
-::Time StrToTime(const char *s);
-::Date StrToDate(const char *s);
+Time StrToTime(const char *s);
+Date StrToDate(const char *s);
 
 String BytesToString(Upp::uint64 bytes, bool units = true);
 
@@ -573,5 +577,7 @@ private:
 								_fuseNR.failed = false;							\
 							} else 												\
 								return v
+
+END_UPP_NAMESPACE
 
 #endif

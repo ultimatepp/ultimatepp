@@ -2,10 +2,10 @@
 #include <CtrlLib/CtrlLib.h>
 #include <ide/Browser/Browser.h>
 
-using namespace Upp;
-
 #include "Functions4U/Functions4U.h"
 #include "GatherTpp.h"
+
+NAMESPACE_UPP
 
 struct ScanTopicIterator : RichText::Iterator {
 	VectorMap<String, String> *reflink;
@@ -339,5 +339,7 @@ Topic &GatherTpp::GetTopic(int id) {
 Topic &GatherTpp::AddTopic(const String name) {
 	return tt.Add(name);
 }
+
+END_UPP_NAMESPACE
 
 #endif

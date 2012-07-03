@@ -1,10 +1,10 @@
 #include <Core/Core.h>
 
-using namespace Upp;
+#include "../bsdiffwrapper.h"
+
+NAMESPACE_UPP
 
 String errMsg;
-
-#include "../bsdiffwrapper.h"
 
 String BsGetLastError() {
 	return errMsg;
@@ -15,4 +15,4 @@ bool Err(String str) {
 	return false;
 }
 
-
+END_UPP_NAMESPACE

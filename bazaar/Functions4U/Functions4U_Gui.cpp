@@ -8,6 +8,8 @@
 #include <plugin/gif/gif.h>
 #include <plugin/bmp/bmp.h>
 
+NAMESPACE_UPP
+
 Image NativePathIconX(const char *path, bool folder, int flags)
 {
 	if (!(flags & BROWSE_LINKS))
@@ -132,5 +134,7 @@ void DrawRectLine(Draw& w, Rect &r, int lineWidth, const Color &color) {
 	w.DrawLine(r.right, r.bottom, r.left, r.bottom, lineWidth, color);
 	w.DrawLine(r.left, r.bottom, r.left, r.top, lineWidth, color);
 }
+
+END_UPP_NAMESPACE
 
 #endif
