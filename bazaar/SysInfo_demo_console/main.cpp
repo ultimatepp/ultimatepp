@@ -19,6 +19,7 @@ void Puts(String s)
 	SaveFile(file, LoadFile(file) + "\n" + s);
 }
 
+
 void Test()
 {
 	Puts("SysInfo functions demo");
@@ -38,6 +39,13 @@ void Test()
 	Puts(Format("Os:               %s", GetOsFolder()));
 	Puts(Format("System:           %s", GetSystemFolder()));
 	
+	Puts("\nNetwork info");
+	String nname, domain;
+	if (GetNetworkInfo(nname, domain))
+		Puts(Format("Name '%s', Domain '%s'", nname, domain));
+	else
+		Puts("Problem reading newtwork data");
+	
 	Puts("\nSystem info:");		
 	String manufacturer, productName, version, mbSerial;
 	Date releaseDate;
@@ -48,7 +56,7 @@ void Test()
  	
  	Puts(Format("Real CPU Speed: %.3f GHz", GetCpuSpeed()/1000.));
  	
- 	Puts("Battery info");
+ 	Puts("\nBattery info");
  	bool present;
  	//int designCapacity,lastFullCapacity;
 	//String batVendor, type, model, serial;
@@ -69,12 +77,12 @@ void Test()
  	String biosVersion, biosSerial;
  	Date biosReleaseDate;
 	GetBiosInfo(biosVersion, biosReleaseDate, biosSerial);
-	Puts(Format("Bios version '%s',\n release date '%s', serial: '%s'", biosVersion, AsString(biosReleaseDate), biosSerial));
+	Puts(Format("\nBios version '%s',\n release date '%s', serial: '%s'", biosVersion, AsString(biosReleaseDate), biosSerial));
 	String vendor, identifier, architecture; 
 	int speed;
 	for (int i = 0; i < numberOfProcessors; ++i) {
 		GetProcessorInfo(i, vendor, identifier, architecture, speed);		
-		Puts(Format("Processor #%d: Vendor '%s',\n identifier '%s',\n architecture '%s', speed %d MHz", i, vendor, identifier, architecture, speed));	
+		Puts(Format("\nProcessor #%d: Vendor '%s',\n identifier '%s',\n architecture '%s', speed %d MHz", i, vendor, identifier, architecture, speed));	
 	}
 	Puts("\nPress enter to continue...");	TestGetchar();
 	
