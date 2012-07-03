@@ -1,10 +1,9 @@
 #ifdef _WIN32
 
 #include <CtrlLib/CtrlLib.h>
-
-using namespace Upp;
-
 #include "ActiveX.h"
+
+NAMESPACE_UPP
 
 bool BSTRSet(const String str, BSTR &bstr) {
 	wchar_t *buffer;
@@ -373,5 +372,7 @@ HRESULT STDMETHODCALLTYPE AXClientSite::DeactivateAndUndo() {
 HRESULT STDMETHODCALLTYPE AXClientSite::OnPosRectChange(LPCRECT lprcPosRect) {
 	return S_OK;
 }
+
+END_UPP_NAMESPACE
 
 #endif

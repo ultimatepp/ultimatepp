@@ -24,9 +24,8 @@ void GraphElemList::Paint(Painter &sw, Svg2DTransform _transf, SvgStyle _style, 
 	_transf.Apply(sw);			
 	_style += style;	
 	_style.Apply(sw);	
-	for (int i = 0; i < elems.GetCount(); ++i) {
+	for (int i = 0; i < elems.GetCount(); ++i) 
 		elems[i].Paint(sw, _transf, _style, false);
-	}
 	if (firstLayer)
 		PaintLimits(sw);
 }
@@ -141,7 +140,6 @@ Array<double> GetTransformArgs(String str, const char *command) {
 	}
 	return args;
 }
-
 
 
 void SvgGet_Rect(GraphElemList &elems, XmlParser &xp) {
@@ -431,6 +429,8 @@ void ParseG(GraphElemList &elems, XmlParser &xp, Svg2DTransform transf, SvgStyle
 		xp.Skip();
 }
 
+/*
+
 bool ParseSVG(DrawingCanvas &canvas, const char *svgFile, const char *svgFolder) {
 	XmlParser xp(svgFile);
 	while(!xp.IsTag())
@@ -572,6 +572,8 @@ void DrawingCanvas::LeftUp(Point p, dword keyflags) {
 		selectionWindow.isSelected = false;
 	}
 }
+*/
+
 
 PainterCanvas::PainterCanvas() {
 	rotate = 0;
@@ -597,10 +599,12 @@ PainterCanvas::PainterCanvas() {
 	legendShowFilename = false;
 	legendShowXY = false;
 }
-		
-void PainterCanvas::Paint(Draw& w) {
-	Size sz = GetSize();
-	ImageBuffer ib(sz);
+
+Image PainterCanvas::GetImage(Size sz)
+{
+	if (IsNull(sz))
+		sz = GetSize(); 
+	ImageBuffer ib(sz);	
 	BufferPainter sw(ib, mode);
 	
 	sw.Translate(translateX, translateY);
@@ -609,26 +613,53 @@ void PainterCanvas::Paint(Draw& w) {
 	sw.Opacity(opacity);
 	sw.LineCap(linecap);
 	sw.LineJoin(linejoin);
-	//if (/*IsNull(backImage) || */colorUnderBackgroundImage) 
-	//	sw.Clear(backColor);
-	//else
-	//	sw.Clear(RGBAZero());
+
 	if (backColor)
 		sw.Clear(backColor);
 	else
 		sw.Clear(SColorFace());
-	//else {
-	//	Color c = Null;
-	//	sw.Clear(c);
-	//}
-
+//sw.Move(0, 0).Line(300, 300).Stroke(2, Black());
 	if (canvasSize.cx > 0 && canvasSize.cy > 0) {
 		if (!IsNull(backImage)) 
 			sw.Rectangle(0, 0, canvasSize.cx, canvasSize.cy).Fill(backImage, 0, 0, canvasSize.cx, 0, FILL_FAST).Stroke(0, Black());
 		DoPaint(sw);
 		WhenPaint(sw);
-	}
-	w.DrawImage(0, 0, ib);	
+//		sw.Move(0, 0).Line(300, 300).Stroke(2, Black());
+	}	
+	return ib;
+}
+		
+void PainterCanvas::Paint(Draw& w) {
+/*	Size sz = GetSize();
+	ImageBuffer ib(sz);
+	BufferPainter sw(ib, mode);
+	
+	sw.Translate(translateX, translateY);
+	sw.Rotate(rotate);
+	sw.Scale(scale);
+	sw.Opacity(opacity);
+	sw.LineCap(linecap);
+	sw.LineJoin(linejoin);*/
+	//if (/*IsNull(backImage) || */colorUnderBackgroundImage) 
+	//	sw.Clear(backColor);
+	//else
+	//	sw.Clear(RGBAZero());
+/*	if (backColor)
+		sw.Clear(backColor);
+	else
+		sw.Clear(SColorFace());*/
+	//else {
+	//	Color c = Null;
+	//	sw.Clear(c);
+	//}
+
+/*	if (canvasSize.cx > 0 && canvasSize.cy > 0) {
+		if (!IsNull(backImage)) 
+			sw.Rectangle(0, 0, canvasSize.cx, canvasSize.cy).Fill(backImage, 0, 0, canvasSize.cx, 0, FILL_FAST).Stroke(0, Black());
+		DoPaint(sw);
+		WhenPaint(sw);
+	}*/
+	w.DrawImage(0, 0, GetImage());	
 	if (legendShowXY) {
 		Size sz = GetTextSize(legendText, legendFont);
 		w.DrawRectOp(0, 0, sz.cx, sz.cy, LtGray());
@@ -640,6 +671,7 @@ void PainterCanvas::Paint(Draw& w) {
 	
 	int twidth = 100;
 	int theight = int(twidth*double(canvasSize.cy)/canvasSize.cx); 
+	Size sz = GetSize();
 	int tx = sz.cx-twidth-20;
 	int ty = sz.cy-theight-20;	
 
@@ -779,13 +811,11 @@ PainterCanvas &PainterCanvas::SetBackground(const String &imageFilename)	{
 	return SetBackground(StreamRaster::LoadFileAny(~imageFilename));
 }                      
 
-void PainterCanvas::RightDown(Point p, dword keyflags)
-{
+void PainterCanvas::RightDown(Point p, dword keyflags) {
 	MenuBar::Execute(THISBACK(ContextMenu));
 }
            
-void PainterCanvas::ContextMenu(Bar& bar)
-{	
+void PainterCanvas::ContextMenu(Bar& bar) {	
 	bar.Add(t_("Fit to size"), 	Controls4UImgC::ShapeHandles(), THISBACK(FitInCanvas));
 	bar.Add(t_("Zoom +"), 		Controls4UImgC::ZoomPlus(), 	THISBACK1(Zoom, 1.2));
 	bar.Add(t_("Zoom -"), 		Controls4UImgC::ZoomMinus(), 	THISBACK1(Zoom, 1/1.2));
@@ -799,15 +829,13 @@ void PainterCanvas::ContextMenu(Bar& bar)
 	bar.Add(t_("Load background"), Controls4UImgC::Save(), 	THISBACK1(Load, Null));
 }
 
-void PainterCanvas::SaveToClipboard() 
-{
+void PainterCanvas::SaveToClipboard()  {
 	GuiLock __;
 	Image img = GetBackground();
 	WriteClipboardImage(img);
 }
 
-void PainterCanvas::Load(String fileName)
-{
+void PainterCanvas::Load(String fileName) {
 	GuiLock __;
 	if (IsNull(fileName)) {
 		FileSel fs;
@@ -831,8 +859,7 @@ void PainterCanvas::Load(String fileName)
 	}
 }     
 
-void PainterCanvas::SaveToFile(String fileName)
-{
+void PainterCanvas::SaveToFile(String fileName) {
 	GuiLock __;
 	if (IsNull(fileName)) {
 		FileSel fs;
@@ -859,8 +886,7 @@ void PainterCanvas::SaveToFile(String fileName)
 		Exclamation(Format(t_("File format \"%s\" not found"), GetFileExt(fileName)));
 }      
                           
-Image PainterCanvas::CursorImage(Point p, dword keyflags)
-{
+Image PainterCanvas::CursorImage(Point p, dword keyflags) {
 	return cursorImage;
 }
 
@@ -890,4 +916,12 @@ PainterCanvas &PainterCanvas::SetLegend(bool _legendShowXY, Font _legendFont) {
 	legendShowXY = _legendShowXY;
 	legendFont = _legendFont;
 	return *this;
+}
+
+INITBLOCK{
+	GraphElem::Register<GraphElem>("GraphElem");
+	GraphElem::Register<LineElem>("LineElem");
+	GraphElem::Register<RectElem>("RectElem");
+	
+	// Falta el resto	
 }

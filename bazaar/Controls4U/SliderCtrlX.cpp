@@ -13,10 +13,9 @@
  **********************************************************************************************/
 
 #include <CtrlLib/CtrlLib.h>
-
-using namespace Upp;
-
 #include "SliderCtrlX.h"
+
+NAMESPACE_UPP
 
 #define IMAGECLASS SliderThumbsImg
 #define IMAGEFILE <Controls4U/SliderCtrlX.iml>
@@ -573,3 +572,5 @@ int SliderCtrlX::SliderToClient(int v) const
 			
 	return v;
 }
+
+END_UPP_NAMESPACE

@@ -1,7 +1,5 @@
 #include <CtrlLib/CtrlLib.h>
 
-using namespace Upp;
-
 #include "Controls4U/Controls4U.h"
 
 #define TFILE <Controls4U/Controls4U.t>
@@ -10,6 +8,8 @@ using namespace Upp;
 #define IMAGECLASS Controls4UImg
 #define IMAGEFILE <Controls4U/Controls4U.iml>
 #include <Draw/iml.h>
+
+NAMESPACE_UPP
 
 void PaintCenterText(Painter &w, double x, double y, String text, Font fnt, Color color) {
 	Size sz = GetTextSize(text, fnt);
@@ -1936,3 +1936,4 @@ String FileBrowser::GetFolder() {
 	return ~folders;
 }
 
+END_UPP_NAMESPACE

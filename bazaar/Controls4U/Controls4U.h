@@ -1,6 +1,7 @@
 #ifndef _Controls4U_Controls4U_h_
 #define _Controls4U_Controls4U_h_
 
+#include <PolyXML/PolyXML.h>
 #include <Painter/Painter.h>
 #include <Functions4U/Functions4U.h>
 #if defined(PLATFORM_WIN32) 
@@ -9,6 +10,8 @@
 #include "Controls4U/DrawingCanvas.h"
 #include "Controls4U/SliderCtrlX.h"
 #include "Controls4U/StarIndicator.h"
+
+NAMESPACE_UPP;
 
 double AngAdd(double ang, double val);
 
@@ -571,5 +574,7 @@ public:
 	Callback WhenTreeDblClick;
 	Callback WhenSelected;
 };
+
+END_UPP_NAMESPACE
 
 #endif

@@ -62,6 +62,7 @@ public:
 		angle = a;
 		return *this;
 	}
+	void Xmlize(XmlIO &xml)		{xml ("transX", transX)("transY", transY)("angle", angle)("scaleX", scaleX)("scaleY", scaleY);}
 
 private:
 	double transX;
@@ -86,13 +87,16 @@ public:
 	SvgStyle &operator=(const SvgStyle &style);
 	SvgStyle &operator+=(const SvgStyle &style);
 	
-	SvgStyle &SetStrokeWidth(int c) 	{strokeWidth = c;	return *this;}
+	SvgStyle &SetStrokeWidth(double c) 	{strokeWidth = c;	return *this;}
 	SvgStyle &SetStrokeColor(Color c) 	{strokeColor = c;	return *this;}
 	SvgStyle &SetFill(Color c) 	 		{fill = c;			return *this;}
 	SvgStyle &SetOpacity(double c) 		{opacity = c;		return *this;}
-		
+	
+	void Xmlize(XmlIO &xml)		{xml ("strokeWidth", strokeWidth)("strokeColor", strokeColor)
+									 ("fill", fill)("opacity", opacity);}
+			
 public:
-	int strokeWidth;
+	double strokeWidth;
 	Color strokeColor;
 	Color fill;
 	double opacity;
@@ -135,14 +139,10 @@ public:
 	}
 };
 
-class GraphElem : Moveable<GraphElem> {
+class GraphElem : public WithPolyXML<GraphElem>, public Pte<GraphElem> {
 public:
 	GraphElem() {}
 	GraphElem(const GraphElem &graph);
-	
-	Svg2DTransform transf;
-	SvgStyle style;
-	GraphElemLimits limits;
 	
 	virtual void Paint(Painter &sw, Svg2DTransform transf, SvgStyle style, bool firstLayer) {};
 	virtual void SetLimits() {};
@@ -158,8 +158,13 @@ public:
 		sw.Line(limits.left,  limits.bottom).Opacity(0.3).Stroke(0.5, Black());
 	}
 	virtual ~GraphElem() {};
+	
+	virtual void Xmlize(XmlIO &xml)	{xml ("transf", transf)("style", style)("limits", limits);}
+	
+	Svg2DTransform transf;
+	SvgStyle style;
+	GraphElemLimits limits;
 };
-
 
 class LineElem : public GraphElem {
 public:
@@ -180,6 +185,8 @@ public:
 	}
 	LineElem(double x1, double y1, double x2, double y2) : x1(x1), y1(y1), x2(x2), y2(y2) {SetLimits();}
 	LineElem() {x1 = x2 = y1 = y2 = 0;}
+	
+	void Xmlize(XmlIO &xml) 		{xml ("x1", x1)("y1", y1)("x2", x2)("y2", y2); }
 	
 //private:
 	double x1, y1, x2, y2;
@@ -205,6 +212,8 @@ public:
 	RectElem(const Rect &rect) : x(rect.left), y(rect.top), width(rect.right - rect.left), height(rect.bottom - rect.top) {SetLimits();}
 	RectElem() {x = y = width = height = 0;}
 
+	void Xmlize(XmlIO &xml) 		{xml ("x", x)("y", y)("width", width)("height", height);}
+	
 //private:
 	double x, y, width, height;
 };	
@@ -217,7 +226,7 @@ public:
 		sw.Ellipse(x, y, width, height);		
 		_style += style;	
 		_style.Apply(sw);	
-		PaintLimits(sw);
+		//PaintLimits(sw);
 	}
 	virtual void SetLimits() {
 		limits.left = x - width;
@@ -228,6 +237,8 @@ public:
 	EllipseElem(double x, double y, double width, double height) : x(x), y(y), width(width), height(height) {SetLimits();} 
 	EllipseElem() {x = y = width = height = 0;}
 
+	void Xmlize(XmlIO &xml) 		{xml ("x", x)("y", y)("width", width)("height", height);}
+	
 //private:
 	double x, y, width, height;
 };
@@ -254,6 +265,9 @@ public:
 					width(width), height(height), fileName(fileName) {img = Null; SetLimits();}
 	ImageElem() {x = y = width = height = 0; img = Null;}
 
+	void Xmlize(XmlIO &xml) 		{xml ("x", x)("y", y)("width", width)("height", height)
+										("fileName", fileName)("img", img);}
+	
 //private:
 	double x, y, width, height;
 	String fileName;
@@ -270,7 +284,7 @@ public:
 			sw.Line(points[i].x, points[i].y);
 		_style += style;	
 		_style.Apply(sw);	
-		PaintLimits(sw);
+		//PaintLimits(sw);
 	}
 	virtual void SetLimits() {
 		limits.Reset();
@@ -278,6 +292,8 @@ public:
 			limits.UpdateLimits(points[i]);
 	}
 	PolygonElem() {}
+
+	void Xmlize(XmlIO &xml) 		{xml ("points", points);}
 
 //private:
 	Array<Pointf> points;
@@ -293,7 +309,7 @@ public:
 		sw.Text(0, 0, text, f);
 		_style += style;	
 		_style.Apply(sw);	
-		PaintLimits(sw);
+		//PaintLimits(sw);
 	}
 	virtual void SetLimits() {
 		limits.left = 0;
@@ -306,12 +322,15 @@ public:
 			limits.right += fi[wtext[i]];
 		limits.bottom = limits.top + f.GetHeight();
 	}
+	TextElem(double x, double y, String text, Font f) : x(x), y(y), text(text), f(f) {factor = 1; SetLimits();}
 	TextElem() {	
-		factor = 20;
+		factor = 1;
 		f.Face(Font::ARIAL);
 		f.Height(12);
 	}
 
+	void Xmlize(XmlIO &xml) 		{xml ("x", x)("y", y)("text", text)("font", font)("f", f)("factor", factor);}
+	
 //private:
 	double x, y;
 	String text;
@@ -329,7 +348,7 @@ public:
 			sw.Path(path);		
 		_style += style;	
 		_style.Apply(sw);	
-		PaintLimits(sw);
+		//PaintLimits(sw);
 	}
 	bool ReadBool(CParser& p) {		// Painter::
 		while(p.Char(','));
@@ -432,6 +451,8 @@ public:
 	}
 	PathElem() {}
 
+	void Xmlize(XmlIO &xml) 		{xml ("path", path);}
+
 //private:
 	String path;
 };
@@ -439,15 +460,17 @@ public:
 
 class GraphElemList : public GraphElem {
 public:
-	Array<GraphElem> elems;
+	PolyXMLArray<GraphElem> elems;
 
 	String title;
 
 	void Paint(Painter &sw, Svg2DTransform transf, SvgStyle style, bool firstLayer = false);
 	void Clear();
+	
+	void Xmlize(XmlIO &xml)		{xml ("elems", elems);}
 };
 
-
+/*
 class CanvasSelector {
 typedef CanvasSelector CLASSNAME;		
 public:	
@@ -496,7 +519,7 @@ private:
 
 bool LoadSvg(DrawingCanvas &canvas, String fileName);
 
-
+*/
 
 
 class PainterCanvas : public Ctrl {
@@ -508,19 +531,20 @@ public:
 	void Zoom(double factor);
 	void Scroll(double factorX, double factorY);
 	void FitInCanvas();
+	Image GetImage(Size sz = Null);
 	
 	PainterCanvas &SetBackground(Color color)			{backColor = color; Refresh(); return *this;};
 	PainterCanvas &SetBackground(const Image image);
 	PainterCanvas &SetBackground(const String &imageFilename);
-	Image GetBackground()		{return backImage;}
-	PainterCanvas &SetColorUnderBackgroundImage(bool set) 	{colorUnderBackgroundImage = set; return *this;};
+	Image GetBackground()								{return backImage;}
+	PainterCanvas &SetColorUnderBackgroundImage(bool set) {colorUnderBackgroundImage = set; return *this;};
 	PainterCanvas &SetScale(double factor)				{scale *= factor; Refresh(); return *this;};
 	PainterCanvas &SetAlwaysFitInCanvas(bool fit = true){alwaysFitInCanvas = fit; Refresh(); return *this;}
 	PainterCanvas &SetMode(int md = MODE_ANTIALIASED)	{mode = md; return *this;}
 	PainterCanvas &SetShowWindow(bool sw = true)		{showWindow = sw; return *this;};
 	PainterCanvas &SetCursorImage(const Image &img)		{cursorImage = img; return *this;};
 	
-	PainterCanvas &SetLegend(bool _legendShowXY, Font _legendFont);
+	PainterCanvas &SetLegend(bool _legendShowXY = true, Font _legendFont = StdFont());
 	
 	GraphElemList elemList;
 	
@@ -529,6 +553,13 @@ public:
 	Callback1 <Painter &> WhenPaint;
 	Callback2 <Point, Pointf> WhenMouseMove;
 	Callback2 <Point, Pointf> WhenMouseLeft;
+	
+	void Xmlize(XmlIO &xml)	{xml ("elemList", elemList)("translateX", translateX)
+			("translateY", translateY)("rotate", rotate)("scale", scale)("opacity", opacity)
+			("linejoin", linejoin)("linecap", linecap)("mode", mode)("scaleFactor", scaleFactor)
+			("backImage", backImage)("backColor", backColor)("canvasSize", canvasSize)
+			("colorUnderBackgroundImage", colorUnderBackgroundImage)
+			("alwaysFitInCanvas", alwaysFitInCanvas)("showWindow", showWindow);}
 	
 protected:
 	virtual void Paint(Draw& draw);	

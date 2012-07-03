@@ -18,6 +18,8 @@
 
 static const CLSID CLSID_MozillaBrowser = {0x1339B54C, 0x3453, 0x11D2, {0x93, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}};	//http://www.iol.ie/~locka/mozilla/control.htm
 
+NAMESPACE_UPP
+
 class FirefoxBrowser : public DHCtrlActiveX {
 public:
 	FirefoxBrowser(bool status = true) : DHCtrlActiveX(CLSID_MozillaBrowser, "Firefox", status) {};
@@ -133,5 +135,6 @@ private:
 	};
 };
 
+END_UPP_NAMESPACE
 
 #endif

@@ -1,5 +1,7 @@
 #include <CtrlLib/CtrlLib.h>
 
+NAMESPACE_UPP
+
 class StarIndicator : public ProgressIndicator {
 private:
 	bool	m_bAlwaysShowValue;	// True if value/votes must be always shown, not only if mouse over
@@ -33,3 +35,4 @@ public:
 	virtual StarIndicator&	ShowVotes(bool b)		{ m_bVotes=b; return *this; }
 };
 
+END_UPP_NAMESPACE

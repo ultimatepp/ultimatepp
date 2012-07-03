@@ -1,10 +1,9 @@
 #ifdef _WIN32
 
 #include <CtrlLib/CtrlLib.h>
-
-using namespace Upp;
-
 #include "ActiveX.h" 
+
+NAMESPACE_UPP
 
 bool FirefoxBrowser::Browse(const String &strurl) {
 	IIWebBrowser webBrowser(this);
@@ -170,5 +169,7 @@ bool FirefoxBrowser::Stop() {
 	
 	return false;
 }
+
+END_UPP_NAMESPACE
 
 #endif
