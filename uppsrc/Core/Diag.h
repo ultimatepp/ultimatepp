@@ -169,7 +169,7 @@ struct DebugLogBlock
 
 struct IniBool;
 
-namespace Config {
+namespace Ini {
 extern IniBool user_log;
 };
 
