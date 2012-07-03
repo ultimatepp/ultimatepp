@@ -87,6 +87,7 @@ class TcpSocket {
 #ifdef PLATFORM_WIN32
 	int                     connection_start;
 #endif
+	int                     ssl_start;
 
 	int                     errorcode;
 	String                  errordesc;
@@ -149,7 +150,7 @@ class TcpSocket {
 public:
 	Callback        WhenWait;
 	
-	enum { ERROR_GLOBAL_TIMEOUT = -1000000 };
+	enum { ERROR_GLOBAL_TIMEOUT = -1000000, ERROR_SSLHANDSHAKE_TIMEOUT };
 
 	static String   GetHostName();
 	

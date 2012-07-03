@@ -277,6 +277,7 @@ TcpSocket::TcpSocket()
 #ifdef PLATFORM_WIN32
 	connection_start = Null;
 #endif
+	ssl_start = Null;
 }
 
 bool TcpSocket::Open(int family, int type, int protocol)
@@ -854,6 +855,7 @@ bool TcpSocket::StartSSL()
 		ssl.Clear();
 		return false;
 	}
+	ssl_start = msecs();
 	SSLHandshake();
 	return true;
 }
@@ -863,6 +865,12 @@ bool TcpSocket::SSLHandshake()
 	if(ssl && (mode == CONNECT || mode == ACCEPT)) {
 		dword w = ssl->Handshake();
 		if(w) {
+			if(msecs(ssl_start) > 20000) {
+				SetSockError("ssl handshake", ERROR_SSLHANDSHAKE_TIMEOUT, "Timeout");
+				return false;
+			}
+			if(IsGlobalTimeout())
+				return false;
 			Wait(w);
 			return ssl->Handshake();
 		}
