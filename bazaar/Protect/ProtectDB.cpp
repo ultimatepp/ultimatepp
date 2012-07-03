@@ -219,4 +219,101 @@ VectorMap<String, Value> ProtectDB::Default(VectorMap<String, Value> const &base
 	return res;
 }
 
+// gets emails connected to e given MAC
+// empty Vector if still none
+Vector<String> ProtectDB::GetMACEMails(String const &mac)
+{
+	Vector<String> res;
+	
+	if(!RefreshConnection())
+	{
+		Cerr() << "SQL Error -- Session expired\n";
+		res.Clear();
+		return res;
+	}
+	
+	for(int i = 0; i < 2; i++)
+	{
+		SQL * Select(SqlAll()).From(MACS).Where(MAC == mac);
+		if(SQL.WasError())
+		{
+			if(!RefreshConnection())
+			{
+				Cerr() << "SQL Error : " << session.GetErrorCodeString() << "\n";
+				res.Clear();
+				return res;
+			}
+			else
+				continue;
+		}
+		else
+			break;
+	}
+	// we've unique key, so...
+	if(SQL.Fetch())
+	{
+		String mailStr = SQL["EMAILS"];
+		res = Split(mailStr, ",", true);
+	}
+	else
+		res.Clear();
+
+	return res;
+}
+
+// update (or creates) given MAC record with connected mail
+bool ProtectDB::UpdateMac(String const &mac, Vector<String> const &eMails)
+{
+	// get all emails connected to this MAC
+	Index<String>prevMails = GetMACEMails(mac);
+	
+	
+	// check if mail is already there
+	bool mustUpdate = false;
+	for(int i = 0; i < eMails.GetCount(); i++)
+		if(prevMails.Find(ToLower(eMails[i])) < 0)
+		{
+			mustUpdate = true;
+			prevMails.Add(ToLower(eMails[i]));
+		}
+
+	// if eMail was already there, just return true
+	if(!mustUpdate)
+		return true;
+
+	String mailList = Join(prevMails.PickKeys(), ",");
+	for(int i = 0; i < 2; i++)
+	{
+		SQL * Select(SqlAll()).From(MACS).Where(MAC == mac);
+		if(SQL.WasError())
+		{
+			Cerr() << "Trying to refresh connection...\n";
+			if(!RefreshConnection())
+			{
+				Cerr() << "SQL Error : " << session.GetErrorCodeString() << "\n";
+				return false;
+			}
+			else
+				continue;
+		}
+		else
+			break;
+	}
+	if(SQL.Fetch())
+	{
+		SQL * Update(MACS)
+			(EMAILS					, mailList)
+			.Where(MAC == mac);
+	}
+	else
+	{
+		SQL * Insert(MACS)
+			(MAC					, mac)
+			(EMAILS					, mailList)
+		;
+	}
+	
+	return true;
+}
+
 END_UPP_NAMESPACE

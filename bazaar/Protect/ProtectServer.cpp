@@ -77,6 +77,14 @@ ProtectServer::ProtectServer(int port) : ScgiServer(port)
 	// initializes last cleanups times to now()
 	lastIDCleanupTime = GetSysTime();
 	lastDBCleanupTime = GetSysTime();
+	
+	// no MAC handling by default
+	recordMACs = false;
+	checkExistingMAC = false;
+	alertMACEMail = "";
+	
+	// enforce MAC data from client by default
+	enforceMAC = true;
 }
 
 // generates an unique activation key composed by 20 random uppercase chars
@@ -195,6 +203,77 @@ void ProtectServer::DisconnectClient(dword clientID)
 	}
 }
 		
+// alert by email if user want to register for demo with an
+// already used MAC
+bool ProtectServer::SendMACAlert(String const &eMail, Vector<String> const &mails)
+{
+	SmtpMail smtp;
+	
+	smtp.New();
+	smtp.TimeSent(GetSysTime());
+	smtp.To(alertMACEMail);
+	smtp.Subject(t_("PROTECT SERVER : ATTEMPT TO REGISTER WITH EXPIRED MAC"));
+//	smtp.From(serverVars.Get("SERVER_NAME"));
+	String body = "Attempt to register with e-mail : " + eMail + "\n";
+	body += "E-Mails connected to this one by MAC addresses :\n";
+	for(int i = 0; i < mails.GetCount(); i++)
+		body += mails[i] + "\n";
+	smtp.Text(body, "text/plain; charset=utf-8");
+	return smtp.Send();
+}
+
+// process MAC list in data field
+// if 'registering' is true, returns false if MAC already there
+bool ProtectServer::ProcessMACList(String const &mail, String const &MACList, bool registering)
+{
+	// gathered emails from all MACs
+	Index<String>mailIndex;
+	
+	// quick exit if we don't use MAC features...
+	if(alertMACEMail.IsEmpty() && !checkExistingMAC && !recordMACs)
+		return true;
+	
+	// get vector of client's MACs
+	Vector<String> macs = Split(MACList, ",", true);
+	
+	// gather emails for each MAC and combine them
+	bool found = false;
+	for(int iMac = 0; iMac < macs.GetCount(); iMac++)
+	{
+		Vector<String>macEMails = db.GetMACEMails(macs[iMac]);
+		if(macEMails.GetCount())
+		{
+			// we found at least an entry
+			found = true;
+			
+			// adds to customer registered mails list
+			for(int i = 0; i < macEMails.GetCount(); i++)
+			{
+				if(mailIndex.Find(macEMails[i]) < 0)
+					mailIndex.Add(macEMails[i]);
+			}
+		}
+	}
+		
+	// if we wanna record all customer's MACs, just do it
+	// each MAC gets associated with full list of emails
+	if(recordMACs)
+	{
+		for(int iMac = 0; iMac < macs.GetCount(); iMac++)
+			db.UpdateMac(macs[iMac], mailIndex.GetKeys());
+	}
+			
+	// if we wanna be signaled by email, just do it
+	if(!alertMACEMail.IsEmpty())
+		SendMACAlert(mail, mailIndex.GetKeys());
+	
+	// if we wanna drop all 'smart' people....
+	if(checkExistingMAC && found)
+		return false;
+		
+	return true;			
+}
+
 
 void ProtectServer::OnAccepted()
 {
@@ -241,6 +320,8 @@ void ProtectServer::OnRequest()
 	//		GETLICENSEINFO	gets info about license (name, expiration date, app version....)
 	if(!err && data.Find("REASON") < 0)
 		err = PROTECT_MISSING_REASON;
+	if(!err && enforceMAC && data.Find("MAC") < 0)
+		err = PROTECT_MISSING_MAC;
 	if(!err)
 		results = ProcessRequest(data.Get("REASON"), data);
 	
@@ -309,6 +390,15 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 					res.Add("ERROR", PROTECT_INVALID_EMAIL);
 					return res;
 				}
+				
+				// MAC may or may not be present, depending on client
+				// (old ones don't support it)
+				// so, we can decide if accept MACless clients or not
+				// this is already done on OnRequest handler, here we
+				// just check MAC, *if* present
+				bool denyRegistration = false;
+				if(v.Find("MAC") >= 0 && !ProcessMACList(eMail, v.Get("MAC"), true))
+					denyRegistration = true;
 
 				// avoid hacking of source packet stripping eventually
 				// added licenseinfo, expiration, etc
@@ -329,6 +419,14 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 				// if not found, new registration
 				if(!userRec.GetCount())
 				{
+					// drop 'smart' people....
+					if(denyRegistration)
+					{
+						// signals expiration and leave
+						res.Add("ERROR", PROTECT_MAIL_ALREADY_USED);
+						return res;
+					}
+
 					// generates activation key from email
 					vs.Add("ACTIVATIONKEY", GenerateActivationKey());
 					vs.Add("REGISTRATIONDATE", GetSysTime());
@@ -453,6 +551,11 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 			
 			// updates database record
 			db.Set(userRec);
+			
+			// process MAC addresses of incoming connection
+			// in case we wanna record them
+			if(v.Find("MAC") >= 0)
+				ProcessMACList(eMail, v.Get("MAC"));
 			
 			break;
 		}
@@ -688,6 +791,37 @@ ProtectServer &ProtectServer::SetDBCleanupTime(int t)
 {
 	dbCleanupTime = t;
 	lastDBCleanupTime = GetSysTime();
+	return *this;
+}
+
+// MAC handling
+ProtectServer &ProtectServer::SetRecordMACs(bool rec)
+{
+	recordMACs = rec;
+	return *this;
+}
+
+ProtectServer &ProtectServer::SetCheckExistingMAC(double check)
+{
+	checkExistingMAC = check;
+	return *this;	
+}
+
+ProtectServer &ProtectServer::SetMACAlertEMail(String const &m)
+{
+	alertMACEMail = m;
+	return *this;
+}
+
+ProtectServer &ProtectServer::ClearMACAlertEMail(void)
+{
+	alertMACEMail = "";
+	return *this;
+}
+
+ProtectServer &ProtectServer::SetEnforceMAC(bool e)
+{
+	enforceMAC = e;
 	return *this;
 }
 

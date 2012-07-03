@@ -28,7 +28,8 @@ typedef enum {
 	PROTECT_LICENSES_NUMBER_EXCEEDED,	// number of product licenses exceeded (too many apps running)
 	PROTECT_MAIL_ALREADY_USED,			// e-mail already used (and expired), can't register
 	PROTECT_INVALID_APP_VERSION,		// your license isn't valid for this APP version, should upgrade
-	PROTECT_MAIL_SEND_ERROR				// smtp error sending email
+	PROTECT_MAIL_SEND_ERROR,			// smtp error sending email
+	PROTECT_MISSING_MAC					// missing MAC field on POST DATA
 } ProtectStatus;
 
 // gets human-readable error message

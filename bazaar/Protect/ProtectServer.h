@@ -94,6 +94,28 @@ class ProtectServer : public ScgiServer
 		// sends activation mail to user
 		bool SendActivationMail(VectorMap<String, Value> const &userData, String const &locale);
 
+		// MAC recording enabling
+		// records ALL user's network adapter MACs on each access
+		bool recordMACs;
+		
+		// check if user want to register for demo with an already
+		// used MAC
+		bool checkExistingMAC;
+		
+		// enforce MAC data from client -- to be used in transition
+		// phases when some clients still don't send MAC data
+		// defaults to TRUE, set to FALSE in transition time
+		bool enforceMAC;
+		
+		// alert by email if user want to register for demo with an
+		// already used MAC
+		String alertMACEMail;
+		bool SendMACAlert(String const &eMail, Vector<String> const &mails);
+		
+		// process MAC list in data field
+		// if 'registering' is true, returns false if MAC already there
+		bool ProcessMACList(String const &mail, String const &MACList, bool registering = false);
+
 public:
 
 	// constructor - defaults to port 8787
@@ -126,6 +148,19 @@ public:
 	// sets database cleanup time
 	// used to clean up registrations with no activation on database
 	ProtectServer &SetDBCleanupTime(int t);
+	
+	// MAC handling
+	ProtectServer &SetRecordMACs(bool rec = true);
+	ProtectServer &SetNoRecordMACs(void) { return SetRecordMACs(false); }
+	
+	ProtectServer &SetCheckExistingMAC(double check = true);
+	ProtectServer &SetNoCheckExistingMAC(void) { return SetCheckExistingMAC(false); }
+	
+	ProtectServer &SetMACAlertEMail(String const &m);
+	ProtectServer &ClearMACAlertEMail(void);
+	
+	ProtectServer &SetEnforceMAC(bool e);
+	ProtectServer &SetNoEnforceMAC(void) { return SetEnforceMAC(false); }
 
 	// runs the server
 	void Run(void);

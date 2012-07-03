@@ -65,6 +65,9 @@ class ProtectClient
 		// (we must delay loda because of settable userConfigPath)
 		bool configLoaded;
 		
+		// get MAC of client adapter(s), each separated by comma
+		String GetMACs(void);
+		
 	protected:
 	
 		// sends a VectorMap to server in encrypted form

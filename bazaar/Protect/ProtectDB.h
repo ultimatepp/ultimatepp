@@ -72,6 +72,11 @@ class ProtectDB
 		
 		// get default record
 		VectorMap<String, Value> Default(VectorMap<String, Value> const &base = VectorMap<String, Value>());
+		
+		// network adapter MAC checkings -- if enabled, avoid multiple demo
+		// registrations with different mails on same machine(s)
+		Vector<String> GetMACEMails(String const &mac);
+		bool UpdateMac(String const &mac, Vector<String> const &eMails);
 };
 
 END_UPP_NAMESPACE

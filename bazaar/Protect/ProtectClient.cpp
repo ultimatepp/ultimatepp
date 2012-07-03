@@ -1,5 +1,7 @@
 #include "ProtectClient.h"
 
+#include "NetworkAdapter.h"
+
 NAMESPACE_UPP
 
 ProtectClient::ProtectClient()
@@ -73,6 +75,28 @@ void ProtectClient::SetCypher(Cypher *c)
 	cypher = c;
 	
 }
+
+// get MAC of client adapter(s), each separated by comma
+String ProtectClient::GetMACs(void)
+{
+	Vector<NetworkAdapter> adapters = GetNetworkAdaptersInfo();
+	String res = "";
+	for(int i = 0; i < adapters.GetCount(); i++)
+	{
+		NetworkAdapter const &adapter = adapters[i];
+		// just grab cable and wireless adapters
+		if(adapter.type == "ETHERNET" || adapter.type == "IEEE80211")
+		{
+			String mac = adapter.mac;
+			if(!mac.IsEmpty())
+				res += mac + ",";
+		}
+	}
+	// strip trailing comma
+	if(!res.IsEmpty())
+		res = res.Left(res.GetCount() - 1);
+	return res;
+}
 		
 // sends a VectorMap to server in encrypted form
 // and gets its response
@@ -84,6 +108,9 @@ VectorMap<String, Value> ProtectClient::SendMap(VectorMap<String, Value> const &
 	
 	// add current locale
 	dataMap.Add("LOCALE", LNGAsText(GetCurrentLanguage()).Left(5));
+	
+	// add client's adapter MAC addresses
+	dataMap.Add("MAC", GetMACs());
 	
 	// sets cypher key (and create a random IV)
 	cypher->SetKey(communicationKey);
