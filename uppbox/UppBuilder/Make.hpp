@@ -217,7 +217,7 @@ void Parser::Process(){
 		optlist+=" "+linkopts[i];
 	String target = GetEnv("TARGET");
 	if(target.IsEmpty()){
-		target=BaseName(main);
+		target="$(BIN)/" + BaseName(main);
 		for(int i=0;i<pkgs[0].target.GetCount();i++){
 			if(EvalOpt(pkgs[0].target[i],0)){
 				target = pkgs[0].target[i].item;
