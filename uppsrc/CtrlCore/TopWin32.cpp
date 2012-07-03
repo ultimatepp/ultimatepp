@@ -205,7 +205,7 @@ void TopWindow::Open(HWND hwnd)
 	GuiLock __;
 	if(dokeys && (!GUI_AKD_Conservative() || GetAccessKeysDeep() <= 1))
 		DistributeAccessKeys();
-	UsrLogT(3, "OPEN " + Desc(this));
+	USRLOG("   OPEN " << Desc(this));
 	LLOG("TopWindow::Open, owner HWND = " << FormatIntHex((int)hwnd, 8) << ", Active = " << FormatIntHex((int)::GetActiveWindow(), 8));
 	IgnoreMouseUp();
 	SyncCaption();
