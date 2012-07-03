@@ -2,20 +2,6 @@
 const char LOG_BEGIN = '\x1e';
 const char LOG_END = '\x1f';
 
-/*
-void     ActivateUsrLog();
-void     ActivatePersistentUsrLog();
-bool     IsUsrLog();
-Stream&  UsrLog();
-Stream&  UsrLog(const char *line);
-Stream&  UsrLogT(const char *line);
-Stream&  UsrLogT(int indent, const char *line);
-void     DeleteUsrLog();
-
-Stream&  BugLog();
-void     DeactivateBugLog();
-*/
-
 enum LogOptions {
 	LOG_FILE = 1, LOG_COUT = 2, LOG_CERR = 4, LOG_DBG = 8, LOG_SYS = 16,
 	LOG_TIMESTAMP = 256, LOG_TIMESTAMP_UTC = 512, LOG_APPEND = 1024, LOG_ROTATE_GZIP = 2048,
@@ -32,14 +18,6 @@ void     SetUppLog(Stream& log);
 
 Stream&  VppLog();
 void     SetVppLog(Stream& log);
-
-/*
-void     SetVppLogName(const String& file);
-void     SetVppLogSizeLimit(int filesize);
-
-void     SetVppLogNoDeleteOnStartup();
-void     CloseStdLog();
-*/
 
 void     HexDump(Stream& s, const void *ptr, int size, int maxsize = INT_MAX);
 
