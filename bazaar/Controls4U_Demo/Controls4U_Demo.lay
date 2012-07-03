@@ -160,8 +160,8 @@ LAYOUT(StaticCtrls, 512, 416)
 	ITEM(Label, dv___22, SetLabel(t_("PainterSvg")).SetAlign(ALIGN_CENTER).SetFont(StdFontZ(14).Bold()).LeftPosZ(276, 116).TopPosZ(304, 19))
 END_LAYOUT
 
-LAYOUT(DrawingCanvas, 700, 596)
-	ITEM(DrawingCanvas, drawingCanvas, HSizePosZ(4, 4).VSizePosZ(24, 4))
+LAYOUT(PainterCanvas, 700, 596)
+	ITEM(PainterCanvas, painterCanvas, SetFrame(ThinInsetFrame()).HSizePosZ(4, 4).VSizePosZ(24, 4))
 	ITEM(Label, dv___1, SetLabel(t_("DrawingCanvas")).LeftPosZ(4, 84).TopPosZ(4, 19))
 END_LAYOUT
 

@@ -31,11 +31,11 @@ Controls4U_Demo::Controls4U_Demo() {
 	tab.Add(staticImageSet_Demo.SizePos(), "StaticImageSet");
 	tab.Add(staticCtrls_Demo.SizePos(), "Static Controls");
 	tab.Add(staticCtrlsTest_Demo.SizePos(), "Static Controls Test");
-	//tab.Add(drawingCanvas_Demo.SizePos(), "DrawingCanvas (experimental)");
+	//tab.Add(painterCanvas_Demo.SizePos(), "PainterCanvas (experimental)");
 	tab.Add(functions4U_Demo.SizePos(), "Functions4U samples");
 
 	tab.Set(tab.Find(jbcontrols_Demo));	// Select the last
-	//tab.Set(tab.Find(drawingCanvas_Demo));	// Select the last
+	//tab.Set(tab.Find(painterCanvas_Demo));	// Select the last
 	
 	timerOn = false;
 	SetTimeCallback(-100, THISBACK(Timer));
@@ -228,13 +228,13 @@ void Functions4U_Demo::OnPatch() {
 }
 
 	
-DrawingCanvas_Demo::DrawingCanvas_Demo() {
+PainterCanvas_Demo::PainterCanvas_Demo() {
 	CtrlLayout(*this);
 
 	//imgCtrl.SetImage(Images::ClockImage());
-	LoadSvg(drawingCanvas, AppendFileName(GetDesktopFolder(), "svg/demo.svg"));
+	//LoadSvg(drawingCanvas, AppendFileName(GetDesktopFolder(), "svg/demo.svg"));
 	
-	LineElem &elem = static_cast<LineElem&>(drawingCanvas.elemList.elems.Add(new LineElem(100, 100, 200, 200)));
+	LineElem &elem = static_cast<LineElem&>(painterCanvas.elemList.elems.Add(new LineElem(100, 100, 200, 200)));
 	elem.style.SetStrokeColor(Green()).SetStrokeWidth(3);
 }
 

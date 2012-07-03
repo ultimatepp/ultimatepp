@@ -59,10 +59,10 @@ public:
 	void OnPatch();
 };
 
-class DrawingCanvas_Demo : public WithDrawingCanvas<StaticRect> {
+class PainterCanvas_Demo : public WithPainterCanvas<StaticRect> {
 public:
-	typedef DrawingCanvas_Demo CLASSNAME;
-	DrawingCanvas_Demo();
+	typedef PainterCanvas_Demo CLASSNAME;
+	PainterCanvas_Demo();
 };
 
 class StaticImageSet_Demo : public WithStaticImageSet<StaticRect> {
@@ -84,7 +84,7 @@ public:
 	JBControlsDemo jbcontrols_Demo;
 	FileBrowser_Demo fileBrowser_Demo;
 	Functions4U_Demo functions4U_Demo;
-	DrawingCanvas_Demo drawingCanvas_Demo;
+	PainterCanvas_Demo painterCanvas_Demo;
 	StaticImageSet_Demo staticImageSet_Demo;
 #if defined(PLATFORM_WIN32) 
 	Firefox_Demo firefox_Demo;
