@@ -207,8 +207,6 @@ void ProtectServer::DisconnectClient(dword clientID)
 // already used MAC
 bool ProtectServer::SendMACAlert(String const &eMail, Vector<String> const &mails)
 {
-	SmtpMail smtp;
-	
 	smtp.New();
 	smtp.TimeSent(GetSysTime());
 	smtp.To(alertMACEMail);
@@ -254,6 +252,10 @@ bool ProtectServer::ProcessMACList(String const &mail, String const &MACList, bo
 			}
 		}
 	}
+	
+	// add current email to MAC email list if needed
+	if(mailIndex.Find(ToLower(mail)) < 0)
+		mailIndex.Add(ToLower(mail));
 		
 	// if we wanna record all customer's MACs, just do it
 	// each MAC gets associated with full list of emails
@@ -264,11 +266,11 @@ bool ProtectServer::ProcessMACList(String const &mail, String const &MACList, bo
 	}
 			
 	// if we wanna be signaled by email, just do it
-	if(!alertMACEMail.IsEmpty())
+	if(!alertMACEMail.IsEmpty() && found && registering)
 		SendMACAlert(mail, mailIndex.GetKeys());
 	
 	// if we wanna drop all 'smart' people....
-	if(checkExistingMAC && found)
+	if(checkExistingMAC && found && registering)
 		return false;
 		
 	return true;			
