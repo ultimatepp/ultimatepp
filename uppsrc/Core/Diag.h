@@ -18,7 +18,7 @@ void     DeactivateBugLog();
 
 enum LogOptions {
 	LOG_FILE = 1, LOG_COUT = 2, LOG_CERR = 4, LOG_DBG = 8, LOG_SYS = 16,
-	LOG_TIMESTAMP = 256, LOG_APPEND = 512, LOG_ROTATE_GZIP,
+	LOG_TIMESTAMP = 256, LOG_TIMESTAMP_UTC = 512, LOG_APPEND = 1024, LOG_ROTATE_GZIP = 2048,
 };
 
 inline int LOG_ROTATE(int x) { return x << 24; }

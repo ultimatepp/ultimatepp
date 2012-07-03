@@ -40,7 +40,7 @@ is maximum size of log (if LOG`_FILE options is active), if achieved,
 a new log file is created. [%-*@3 options] is a combination of 
 bit flags:&]
 [s2; &]
-[ {{2434:7566<288;^ [s0; LOG`_FILE ]
+[ {{2939:7061<288;^ [s0; LOG`_FILE ]
 :: [s0; Output log to file (this is default). The default path of file 
 is ConfigFile(`"[/ program`_name].log`").]
 :: [s0; LOG`_COUT ]
@@ -52,8 +52,11 @@ is ConfigFile(`"[/ program`_name].log`").]
 :: [s0; LOG`_SYS ]
 :: [s0; Output log to syslog (POSIX specific).]
 :: [s0; LOG`_TIMESTAMP ]
-:: [s0; Prepend timestamp to each log line (not with LOG`_SYS, as syslog 
-already does this).]
+:: [s0; Prepend local time timestamp to each log line (not with LOG`_SYS, 
+as syslog already does this).]
+:: [s0; LOG`_TIMESTAMP`_UTC]
+:: [s0; Prepend universal time timestamp to each log line (not with 
+LOG`_SYS).]
 :: [s0; LOG`_APPEND ]
 :: [s0; When starting a program, append log to existing file instead 
 of replacing it.]
@@ -139,8 +142,8 @@ simplified by macro:&]
 [s0; &]
 [s0; One such predefined type exists, USRLOG, that is indended to 
 log user actions (like opening windows, pressing keyboard keys) 
-and can be activated by IniBool Config`::user`_log (and also by 
-setting user`_log`=true in .ini file):&]
+and can be activated by IniBool Ini`::user`_log (and also by setting 
+user`_log`=true in .ini file):&]
 [s0; &]
-[s0; #define [* USRLOG](x)         LOG`_(Config`::user`_log, x)&]
+[s0; #define [* USRLOG](x)         LOG`_(Ini`::user`_log, x)&]
 [s0; ]]

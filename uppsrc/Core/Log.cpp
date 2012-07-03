@@ -170,8 +170,8 @@ void LogOut::Line(const char *s, int len, int depth)
 	char h[600];
 	char *p = h;
 	int   ll = 0;
-	if(options & LOG_TIMESTAMP) {
-		Time t = GetSysTime();
+	if(options & (LOG_TIMESTAMP|LOG_TIMESTAMP_UTC)) {
+		Time t = (options & LOG_TIMESTAMP_UTC) ? GetUtcTime() : GetSysTime();
 		ll = sprintf(h, "%02d.%02d.%04d %02d:%02d:%02d ",
 		                t.day, t.month, t.year, t.hour, t.minute, t.second);
 		if(ll < 0)
