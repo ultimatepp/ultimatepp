@@ -2,7 +2,7 @@
 
 #ifndef flagNOMYSQL
 
-#define LLOG(x) DLOG(x)
+#define LLOG(x) // DLOG(x)
 
 NAMESPACE_UPP
 
