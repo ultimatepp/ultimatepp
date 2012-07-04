@@ -4,7 +4,7 @@ using namespace Upp;
 
 #include "Tcc.h"
 
-#if __unix__
+#if __GNUC__
 #define T_tcc_new				tcc_new
 #define T_tcc_delete			tcc_delete
 #define T_tcc_set_output_type	tcc_set_output_type
@@ -22,7 +22,6 @@ int Tcc::numInstances = 0;
 
 #if defined(PLATFORM_WIN32)
 Tcc::Tcc(const char *dllName) {
-	numInstances++;
 	Init(dllName);
 }
 #else
@@ -31,13 +30,14 @@ Tcc::Tcc(const char *libPath) {
 }
 #endif
 
-#if defined(PLATFORM_WIN32)
+#if defined(COMPILER_MSC)
 void Tcc::Init(const char *dllName)
 #else
 void Tcc::Init(const char *libPath)
 #endif
 {
-#if defined(PLATFORM_WIN32)
+	numInstances++;
+#if defined(COMPILER_MSC)
 	if (dllName == NULL || *dllName == '\0')
 		dllName = "libtcc.dll";
 	hinstLib = LoadLibrary(TEXT(dllName));
@@ -111,9 +111,9 @@ void Tcc::Init(const char *libPath)
     stateTcc = T_tcc_new();
     if (!stateTcc) 
         throw Exc("Tcc can not initialize");
-#if !defined(PLATFORM_WIN32)
+#if __GNUC__
 	if (libPath != NULL)
-		if (*libPath != '\0')
+		if (*libPath != '\0' && GetFileExt(libPath) != ".dll")
 			SetLibPath(libPath);
 #endif
 
@@ -155,11 +155,10 @@ void Tcc::DefaultErrorHandler(void* opaque, const char* msg)
 Tcc::~Tcc()
 {
 	numInstances--;
-	if (numInstances == 0) {
-		if (stateTcc)
-			T_tcc_delete(stateTcc);
-	}
-#if defined(PLATFORM_WIN32)	
+	if (numInstances == 0 && stateTcc)
+		T_tcc_delete(stateTcc);
+
+#if defined(COMPILER_MSC)	
 	if (hinstLib)
 		FreeLibrary(hinstLib);
 #endif

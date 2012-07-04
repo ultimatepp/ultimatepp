@@ -7,11 +7,10 @@ class Tcc
 {
 public:
 	Tcc() {
-		numInstances++;
 		stateTcc = 0;
 	};
 	~Tcc();
-#if defined(PLATFORM_WIN32)
+#if defined(COMPILER_MSC)
 	Tcc(const char *dllFile);
 	void Init(const char *dllFile = "libtcc.dll");
 #else
@@ -38,7 +37,7 @@ public:
 private:
 	static int numInstances;
 	TCCState *stateTcc;
-#if defined(PLATFORM_WIN32)
+#if defined(COMPILER_MSC)
 	HINSTANCE hinstLib;
 #endif
 
@@ -49,7 +48,7 @@ private:
 	String program;
 	bool outputMemory;
 	
-#if defined(PLATFORM_WIN32)
+#if defined(COMPILER_MSC)
 	TCCState *(*T_tcc_new)(void);
 	void (*T_tcc_delete)(TCCState *);
 	int (*T_tcc_set_output_type)(TCCState *s, int output_type);
