@@ -17,6 +17,7 @@ SqlSession::SqlSession()
 	errorclass = Sql::ERROR_UNSPECIFIED;
 	error_handler = NULL;
 	throwonerror = false;
+	error_log = NULL;
 }
 
 SqlSession::~SqlSession()
@@ -71,7 +72,9 @@ void   SqlSession::SetError(String error, String stmt, int code, const char *sco
 	errorclass = clss;
 	String err;
 	err << "ERROR " << error << "(" << code << "): " << stmt << '\n';
-	if(GetTrace())
+	if(error_log)
+		*error_log << err;
+	if(trace && trace != error_log)
 		*GetTrace() << err;
 }
 

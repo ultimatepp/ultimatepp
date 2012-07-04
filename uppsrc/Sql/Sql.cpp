@@ -310,11 +310,14 @@ void Sql::GetColumn(int i, Ref r) const {
 void Sql::GetColumn(SqlId colid, Ref r) const
 {
 	String s = ~colid;
-	for(int i = 0; i < cn->info.GetCount(); i++)
-		if(cn->info[i].name == s) {
-			GetColumn(i, r);
-			return;
-		}
+	for(int j = 0; j < 2; j++) {
+		for(int i = 0; i < cn->info.GetCount(); i++)
+			if(cn->info[i].name == s) {
+				GetColumn(i, r);
+				return;
+			}
+		s = ToUpper(s);
+	}
 	r.SetNull();
 }
 
@@ -326,9 +329,12 @@ Value Sql::operator[](int i) const {
 
 Value Sql::operator[](SqlId id) const {
 	String s = ~id;
-	for(int i = 0; i < cn->info.GetCount(); i++)
-		if(cn->info[i].name == s)
-			return operator[](i);
+	for(int j = 0; j < 2; j++) {
+		for(int i = 0; i < cn->info.GetCount(); i++)
+			if(cn->info[i].name == s)
+				return operator[](i);
+		s = ToUpper(s);
+	}
 	NEVER();
 	return Value();
 }

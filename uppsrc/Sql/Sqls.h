@@ -300,7 +300,7 @@ protected:
 
 	friend class Sql;
 
-	Stream                       *trace;
+	Stream                       *trace, *error_log;
 	bool                          tracetime;
 	int                           traceslow;
 	int                           dialect;
@@ -354,6 +354,9 @@ public:
 	void                          SetTrace(Stream& s = VppLog())          { trace = &s; }
 	Stream                       *GetTrace() const                        { return trace; }
 	void                          KillTrace()                             { trace = NULL; }
+
+	void                          LogErrors(Stream& s = VppLog())         { error_log = &s; }
+	void                          LogErrors(bool b)                       { error_log = b ? &VppLog() : NULL; }
 
 	void                          TraceTime(bool b = true)                { tracetime = b; }
 	bool                          IsTraceTime() const                     { return tracetime; }
