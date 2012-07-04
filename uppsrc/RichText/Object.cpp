@@ -376,14 +376,6 @@ void RichObjectTypeDrawingCls::Paint(const Value& data, Draw& w, Size sz) const
 		w.DrawDrawing(Rect(sz), ValueTo<Data>(data).drawing);
 }
 
-Drawing AsDrawing(const Painting& pw)
-{
-	Size sz = pw.GetSize();
-	DrawingDraw dw(sz);
-	dw.DrawPainting(sz, pw);
-	return dw.GetResult();
-}
-
 RichObject CreatePaintingObject(const Painting& pw, Size dot_size, Size out_size)
 {
 	return CreateDrawingObject(AsDrawing(pw), dot_size, out_size);

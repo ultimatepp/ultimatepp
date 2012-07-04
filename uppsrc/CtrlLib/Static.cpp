@@ -245,9 +245,18 @@ Size ImageCtrl::GetMinSize() const
 	return img.GetSize();
 }
 
+
+Picture& Picture::Background(Color color)
+{
+	background = color;
+	Transparent(IsNull(color));
+	Refresh();
+	return *this;
+}
+
 void Picture::Paint(Draw& w) {
 	Size sz = GetSize();
-	w.DrawRect(0, 0, sz.cx, sz.cy, background);
+_DBG_ //	w.DrawRect(0, 0, sz.cx, sz.cy, background);
 	if(!picture) return;
 	int dx = 0;
 	int dy = 0;
