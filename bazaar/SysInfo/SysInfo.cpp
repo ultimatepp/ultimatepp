@@ -674,7 +674,9 @@ Array<NetAdapter> GetAdapterInfo()
 			adapter.type = "VIRTUALBOX";
 		else if(adapter.fullname.StartsWith("wlan"))
 			adapter.type = "IEEE80211";
-		else			
+		else if(adapter.fullname.StartsWith("vmnet"))			
+			adapter.type = "VMWARE";
+		else
 			adapter.type = "OTHER";
 		
 		// description as name... we dont' have any better choice
