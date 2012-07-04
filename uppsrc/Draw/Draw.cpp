@@ -401,7 +401,7 @@ void Draw::DrawPaintingOp(const Rect& target, const Painting& pw)
 		while(yy < sz.cy) {
 			int ccy = min(sz.cy - yy, 100);
 			ImageBuffer ib(sz.cx, ccy);
-			Fill(~ib, White(), ib.GetLength());
+			Fill(~ib, IsPrinter() ? White() : Null, ib.GetLength());
 			PaintImageBuffer(ib, pw, sz, Point(0, yy), true);
 			DrawImageBandRLE(*this, target.left, target.top + yy, ib, 16);
 			yy += ccy;
@@ -409,7 +409,7 @@ void Draw::DrawPaintingOp(const Rect& target, const Painting& pw)
 	}
 	else {
 		ImageBuffer ib(sz);
-		Fill(~ib, IsPrinter() ? White() : SColorPaper(), ib.GetLength());
+		Fill(~ib, IsPrinter() ? White() : Null, ib.GetLength());
 		PaintImageBuffer(ib, pw, sz, Point(0, 0), IsPrinter());
 		DrawImage(target.left, target.top, ib);
 	}

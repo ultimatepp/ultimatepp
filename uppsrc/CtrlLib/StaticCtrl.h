@@ -127,12 +127,13 @@ protected:
 public:
 	Drawing  Get() const                         { return picture; }
 
-	Picture& Background(Color color)             { background = color; Refresh(); return *this; }
+	Picture& Background(Color color);
 	Picture& KeepRatio(bool keep = true)         { ratio = keep; Refresh(); return *this; }
 	Picture& NoKeepRatio()                       { return KeepRatio(false); }
 	Picture& Set(const Drawing& _picture)        { picture = _picture; Refresh(); return *this; }
 
 	Picture& operator=(const Drawing& _picture)  { return Set(_picture); }
+	Picture& operator=(const Painting& _picture) { return Set(AsDrawing(_picture)); }
 
 	Picture();
 };

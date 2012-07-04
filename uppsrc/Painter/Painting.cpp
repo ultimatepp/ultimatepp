@@ -290,4 +290,12 @@ void PaintingPainter::Create(Sizef sz)
 	Create(sz.cx, sz.cy);
 }
 
+Drawing AsDrawing(const Painting& pw)
+{
+	Size sz = pw.GetSize();
+	DrawingDraw dw(sz);
+	dw.DrawPainting(sz, pw);
+	return dw.GetResult();
+}
+
 END_UPP_NAMESPACE
