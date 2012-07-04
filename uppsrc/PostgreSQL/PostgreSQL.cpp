@@ -372,9 +372,8 @@ bool PostgreSQLSession::Open(const char *connect)
 
 	LLOG( String("Postgresql client encoding: ") + pg_encoding_to_char( PQclientEncoding(conn) ) );
 
-
 	Sql sql(*this);
-	if(sql.Execute("select setting from pg_settings where name = 'bytea_output'") && sql[0] == "hex")
+	if(sql.Execute("select setting from pg_settings where name = 'bytea_output'") && sql.Fetch() && sql[0] == "hex")
 		hex_blobs = true;
 
 	return true;
