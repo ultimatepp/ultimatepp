@@ -256,7 +256,7 @@ Picture& Picture::Background(Color color)
 
 void Picture::Paint(Draw& w) {
 	Size sz = GetSize();
-_DBG_ //	w.DrawRect(0, 0, sz.cx, sz.cy, background);
+	w.DrawRect(0, 0, sz.cx, sz.cy, background);
 	if(!picture) return;
 	int dx = 0;
 	int dy = 0;
