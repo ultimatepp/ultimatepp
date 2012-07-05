@@ -1,8 +1,10 @@
 #include "Skylark.h"
 
-#define LLOG(x)    DLOG(x)
-#define LDUMP(x)   DDUMP(x)
-#define LTIMING(x) RTIMING(x)
+#define LLOG(x)     DLOG(x)
+#define LDUMP(x)    DDUMP(x)
+#define LDUMPC(x)   DDUMPC(x)
+#define LDUMPM(x)   DDUMPM(x)
+#define LTIMING(x)  RTIMING(x)
 
 namespace Upp {
 
@@ -187,21 +189,25 @@ void GetBestDispatch(int method,
 		if(n.view && n.method == method &&
 		   (matched_parts > bd.matched_parts ||
 		    matched_parts == bd.matched_parts && matched_params > bd.matched_params)) {
+		    LLOG("Matched " << n.id << " parts " << matched_parts << " params " << matched_params);
 			bd.arg <<= arg;
 			bd.view = n.view;
 			bd.matched_parts = matched_parts;
 			bd.id = n.id;
 			bd.post_raw = n.post_raw;
 		}
-		int q = n.subnode.Find(String());
-		while(q >= 0) {
-			const DispatchNode& an = DispatchMap[n.subnode[q]];
-			if(an.argpos == DISPATCH_VARARGS && an.view && an.method == method) {
-				bd.view = an.view;
-				bd.arg.Clear();
-				break;
+		if(!bd.view) {
+			int q = n.subnode.Find(String());
+			while(q >= 0) {
+				const DispatchNode& an = DispatchMap[n.subnode[q]];
+				if(an.argpos == DISPATCH_VARARGS && an.view && an.method == method) {
+					bd.view = an.view;
+					bd.id = n.id;
+					bd.arg.Clear();
+					break;
+				}
+				q = n.subnode.FindNext(q);
 			}
-			q = n.subnode.FindNext(q);
 		}
 		return;
 	}
@@ -218,6 +224,7 @@ void GetBestDispatch(int method,
 		if(apos == DISPATCH_VARARGS) {
 			if(an.view && an.method == method &&
 			   (matched_parts > bd.matched_parts || matched_parts == bd.matched_parts && matched_params > bd.matched_params)) {
+			    LLOG("Matched VARARGS " << an.id << " parts " << matched_parts << " params " << matched_params);
 				bd.arg <<= arg;
 				bd.arg.Append(part, ii, part.GetCount() - ii);
 				bd.view = an.view;
@@ -281,7 +288,6 @@ void Http::Dispatch(TcpSocket& socket)
 					break;
 				String id = ToLower(TrimBoth(h.Mid(q, qq - q)));
 				qq++;
-				DUMP(id);
 				q = h.Find(';', qq);
 				if(q < 0) {
 					var.Add(id, UrlDecode(h.Mid(qq)));
@@ -292,16 +298,16 @@ void Http::Dispatch(TcpSocket& socket)
 			}
 		}
 		var.GetAdd("__identity__"); // To make StdLib.icpp GetIndentity work without changing preset stack positions
-		DUMPM(var);
+		LDUMPM(var);
 		Vector<String> part = Split(uri, '/');
 		for(int i = 0; i < part.GetCount(); i++)
 			part[i] = UrlDecode(part[i]);
-		DUMPC(part);
+		LDUMPC(part);
 		Vector<String> a;
 		BestDispatch bd(arg);
 		if(DispatchMap.GetCount())
 			GetBestDispatch(post ? DispatchNode::POST : DispatchNode::GET, part, 0, DispatchMap[0], a, bd, 0, 0);
-		DUMPC(arg);
+		LDUMPC(arg);
 		response.Clear();
 		if(bd.view) {
 			try {
@@ -317,6 +323,7 @@ void Http::Dispatch(TcpSocket& socket)
 				lang = Nvl(Int("__lang__"), LNG_ENGLISH);
 				SetLanguage(lang);
 				viewid = bd.id;
+				LDUMP(viewid);
 				(*bd.view)(*this);
 				if(session_dirty)
 					SaveSession();
@@ -357,8 +364,9 @@ void Http::Dispatch(TcpSocket& socket)
 			app.NotFound(*this);
 		}
 		r.Clear();
-		SKYLARKLOG(code_text);
+		SKYLARKLOG("Response: " << code << ' ' << code_text);
 		if(redirect.GetCount()) {
+			SKYLARKLOG("Redirect to: " << redirect);
 			r << "HTTP/1.1 " << code << " Found\r\n";
 			r << "Location: " << redirect << "\r\n";
 		}
