@@ -25,7 +25,9 @@ file
 	Static.icpp,
 	Client readonly separator,
 	Base.witz,
-	skylark.js;
+	skylark.js,
+	Group readonly separator,
+	srcdoc.tpp;
 
 custom() ".css",
 	"cp $(PATH) $(EXEDIR)/static/$(PACKAGE)/$(RELPATH)",
