@@ -5,6 +5,8 @@
 #define LDUMPM(x)  //DDUMPM(x)
 #define LLOGHEX(x) //DLOGHEX(x)
 
+namespace Upp {
+
 SessionConfig::SessionConfig()
 {
 	cookie = "__skylark_session_cookie__";
@@ -48,7 +50,7 @@ void Http::LoadSession()
 		LoadFromString(session_var, data);
 		break;
 	}
-	LLOG("Loaded session: " << session_id);
+	SKYLARKLOG("Loaded session: " << session_id);
 	LDUMPM(session_var);
 	for(int i = 0; i < session_var.GetCount(); i++)
 		var.Add(session_var.GetKey(i), session_var[i]);
@@ -58,7 +60,6 @@ thread__ int s_exp;
 
 void Http::SaveSession()
 {
-	DDUMPM(session_var);
 	const SessionConfig& cfg = app.session;
 	SetCookie(cfg.cookie, session_id);
 	if(IsNull(session_id))
@@ -90,23 +91,20 @@ void Http::SaveSession()
 					(cfg.data_column, d)
 					(cfg.lastwrite_column, tm);
 	}
-	LLOG("Stored session: " << session_id);
+	SKYLARKLOG("Stored session: " << session_id);
 	LDUMPM(session_var);
 	
 	if((s_exp++ % 1000) == 0) {
 		Time tm = GetSysTime() - cfg.expire;
-		LLOG("Expiring sessions older than " << tm);
+		SKYLARKLOG("Expiring sessions older than " << tm);
 		if(cfg.table.IsNull()) {
 			FindFile ff(AppendFileName(cfg.dir, "*.*"));
 			Vector<String> todelete;
 			while(ff) {
-				DDUMP(ff.GetPath());
-				DDUMP(Time(ff.GetLastWriteTime()));
 				if(ff.GetLastWriteTime() < tm)
 					todelete.Add(ff.GetPath());
 				ff.Next();
 			}
-			DDUMPC(todelete);
 			for(int i = 0; i < todelete.GetCount(); i++)
 				FileDelete(todelete[i]);
 		}
@@ -124,12 +122,11 @@ Http& Http::ClearSession()
 
 Http& Http::SessionSet(const char *id, const Value& value)
 {
-	DLOG("SessionSet " << id << " = " << value);
+	LLOG("SessionSet " << id << " = " << value);
 	if(IsNull(session_id))
 		NewSessionId();
 	session_var.GetAdd(id) = value;
 	var.GetAdd(id) = value;
-	DDUMPM(var);
 	session_dirty = true;
 	return *this;
 }
@@ -143,10 +140,11 @@ Http& Http::NewSessionId()
 
 Http& Http::SetLanguage(int lang_)
 {
-	DDUMP(lang_);
 	lang = lang_;
 	Upp::SetLanguage(lang_);
 	SessionSet("__lang__", lang);
 	SessionSet("language", ToLower(LNGAsText(lang)));
 	return *this;
 }
+
+};

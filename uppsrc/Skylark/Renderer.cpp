@@ -3,6 +3,8 @@
 #define LLOG(x)    DLOG(x)
 #define LTIMING(x) // RTIMING(x)
 
+namespace Upp {
+
 Renderer& Renderer::operator()(const ValueMap& map)
 {
 	ValueArray v = map.GetValues();
@@ -62,7 +64,7 @@ const One<Exe>& Renderer::GetTemplate(const char *template_name)
 
 String Renderer::RenderString(const String& template_name)
 {
-	return ::Render(GetTemplate(template_name), this, var.GetValues());
+	return UPP::Render(GetTemplate(template_name), this, var.GetValues());
 }
 
 Renderer& Renderer::Render(const char *id, const String& template_name)
@@ -74,3 +76,5 @@ Renderer& Renderer::Render(const char *id, const String& template_name)
 Renderer::~Renderer()
 {
 }
+
+};

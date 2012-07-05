@@ -1,5 +1,7 @@
 #include "Skylark.h"
 
+namespace Upp {
+
 String GetFileOnPath1(const char *file, const char *path)
 {
 	String r = GetFileOnPath(file, path);
@@ -124,3 +126,5 @@ String GetPreprocessedTemplate(const String& name, int lang)
 	String r = Filter(ReplaceVars(def.Get(id, Null), def, '#'), CharFilter20toHash);
 	return Join(Split(r, CharFilterIsCrLf), "\r\n");
 }
+
+};

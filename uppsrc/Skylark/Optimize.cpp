@@ -2,6 +2,8 @@
 
 #define LLOG(x)   // DLOG(x)
 
+namespace Upp {
+
 void Compiler::Iterate(Vector< One<Exe> >& a, Callback1< One<Exe>& > op)
 {
 	for(int i = 0; i < a.GetCount(); i++)
@@ -154,3 +156,5 @@ void Compiler::Optimize(One<Exe>& exe)
 	
 	optimized = optimized2;
 }
+
+};

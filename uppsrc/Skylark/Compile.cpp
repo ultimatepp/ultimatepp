@@ -2,6 +2,8 @@
 
 #define LLOG(x)  // DLOG(x)
 
+namespace Upp {
+
 Value Raw(const String& s)
 {
 	RawHtmlText r;
@@ -396,3 +398,5 @@ One<Exe> Compile(const char *code, const Index<String>& vars)
 		return result;
 	}
 }
+
+};

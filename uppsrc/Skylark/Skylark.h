@@ -6,7 +6,13 @@
 #include <plugin/jpg/jpg.h>
 #include <Sql/Sql.h>
 
-using namespace Upp;
+namespace Upp {
+	
+namespace Ini {
+extern Bool skylark_log;
+};
+
+#define SKYLARKLOG(x) LOG_(Ini::skylark_log, x)
 
 class Renderer;
 class Http;
@@ -69,7 +75,7 @@ public:
 	virtual void NotFound(Http& http);
 	virtual void Unauthorized(Http& http);
 
-	virtual void WorkThread() = 0;
+	virtual void WorkThread();
 	
 	void RunThread();
 
@@ -86,5 +92,7 @@ void SetStaticPath(const String& path);
 
 #include "Witz.h"
 #include "Http.h"
+
+};
 
 #endif

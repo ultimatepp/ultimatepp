@@ -4,6 +4,8 @@
 #define LDUMP(x)   DDUMP(x)
 #define LTIMING(x) RTIMING(x)
 
+namespace Upp {
+
 enum { DISPATCH_VARARGS = -1 };
 
 struct DispatchNode : Moveable<DispatchNode> {
@@ -248,9 +250,8 @@ void Http::Dispatch(TcpSocket& socket)
 		int len = GetLength();
 		content = socket.GetAll(len);
 		LLOG("--------------------------------------------");
-		LLOG(hdr.GetMethod() << " " << hdr.GetURI() << "\n");
+		SKYLARKLOG(hdr.GetMethod() << " " << hdr.GetURI());
 		LDUMP(content);
-		Cout() << hdr.GetMethod() << " " << hdr.GetURI() << "\n";
 		String r;
 		var.Clear();
 		arg.Clear();
@@ -304,7 +305,8 @@ void Http::Dispatch(TcpSocket& socket)
 		response.Clear();
 		if(bd.view) {
 			try {
-				SQL.Begin();
+				if(SQL.IsOpen())
+					SQL.Begin();
 				LoadSession();
 				session_dirty = false;
 				if(post && !bd.post_raw) {
@@ -318,10 +320,12 @@ void Http::Dispatch(TcpSocket& socket)
 				(*bd.view)(*this);
 				if(session_dirty)
 					SaveSession();
-				SQL.Commit();
+				if(SQL.IsOpen())
+					SQL.Commit();
 			}
 			catch(SqlExc e) {
-				SQL.Rollback();
+				if(SQL.IsOpen())
+					SQL.Rollback();
 				response << "Internal server error<br>"
 				         << "SQL ERROR: " << e;
 				code = 500;
@@ -329,14 +333,16 @@ void Http::Dispatch(TcpSocket& socket)
 				app.SqlError(*this);
 			}
 			catch(AuthExc e) {
-				SQL.Rollback();
+				if(SQL.IsOpen())
+					SQL.Rollback();
 				response << e;
 				code = 403;
 				code_text = "Unauthorized";
 				app.Unauthorized(*this);
 			}
 			catch(Exc e) {
-				SQL.Rollback();
+				if(SQL.IsOpen())
+					SQL.Rollback();
 				response << "Internal server error<br>"
 				         << e;
 				code = 500;
@@ -351,6 +357,7 @@ void Http::Dispatch(TcpSocket& socket)
 			app.NotFound(*this);
 		}
 		r.Clear();
+		SKYLARKLOG(code_text);
 		if(redirect.GetCount()) {
 			r << "HTTP/1.1 " << code << " Found\r\n";
 			r << "Location: " << redirect << "\r\n";
@@ -372,3 +379,5 @@ void Http::Dispatch(TcpSocket& socket)
 		socket.PutAll(response);
 	}
 }
+
+};

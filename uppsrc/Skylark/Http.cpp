@@ -3,6 +3,8 @@
 #define LLOG(x) LOG(x)
 #define LTIMING(x) RTIMING(x)
 
+namespace Upp {
+
 Http::Http(SkylarkApp& app)
 :	app(app)
 {
@@ -285,7 +287,7 @@ void MakeLink(StringBuffer& out, const Vector<String>& part, const Vector<Value>
 Http& Http::RenderResult(const char *template_name)
 {
 	LTIMING("Render");
-	response << ::Render(GetTemplate(template_name), this, var.GetValues());
+	response << UPP::Render(GetTemplate(template_name), this, var.GetValues());
 	return *this;
 }
 
@@ -338,3 +340,5 @@ Http& Http::UxSetValue(const char *id, const String& value)
 	Ux(String(">") + id, value);
 	return *this;
 }
+
+};

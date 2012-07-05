@@ -130,8 +130,7 @@ String HttpResponse(int code, const char *phrase, const String& data, const char
 
 void RegisterView(void (*view)(Http&), const char *id, const char *path);
 
-#define URL_VIEW(name, path) void name(Http& http); INITBLOCK { RegisterView(name, #name, path); } void name(Http& http)
-#define SKYLARK(name, path)  void name(Http& http); INITBLOCK { RegisterView(name, #name, path); } void name(Http& http)
+#define SKYLARK(name, path)  void name(Http& http); INITBLOCK { UPP::RegisterView(name, #name, path); } void name(Http& http)
 
 Vector<String> *GetUrlViewLinkParts(const String& id);
 

@@ -1,5 +1,7 @@
 #include "Skylark.h"
 
+namespace Upp {
+
 struct sFieldsToRenderer : public FieldOperator {
 	Renderer& http;
 
@@ -54,3 +56,5 @@ SqlInsert Renderer::Insert(SqlId table)
 	}
 	return y;
 }
+
+};
