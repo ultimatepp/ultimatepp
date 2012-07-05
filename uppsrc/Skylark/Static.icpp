@@ -1,0 +1,46 @@
+#include "Skylark.h"
+
+// add static page caching?
+
+SKYLARK(ServeStaticPage, "static/**")
+{
+	String file;
+	for(int i = 0; i < http.GetParamCount(); i++) {
+		if(i)
+			file << '/';
+		file << http[i];
+	}
+	DDUMP(file);
+	DDUMP(SkylarkApp::Config().path);
+	String path = GetFileOnPath(file, SkylarkApp::Config().path, false);
+	if(path.GetCount()) {
+		String ext = ToLower(GetFileExt(file));
+		DDUMP(ext);
+		String type = "text";
+		if(ext == ".css")
+			type = "text/css";
+		else
+		if(ext == ".js")
+			type = "text/javascript";
+		else
+		if(ext == ".png" || ext == ".jpg" || ext == ".gif")
+			type = "image/" + ext.Mid(1);
+		http.Content(type, LoadFile(path));
+	}
+}
+
+SKYLARK(ServeIml, "iml/*")
+{
+	String name = http[0];
+	int q = name.Find('.');
+	String ext;
+	if(q >= 0) {
+		ext = name.Mid(q + 1);
+		name = name.Mid(0, q);
+	}
+	Image m = GetImlImage(name);
+	if(ext == "jpg" || ext == "JPG" || ext == "jpeg" || ext == "JPEG")
+		http.Content("image/jpeg", JPGEncoder().SaveString(m));
+	else
+		http.Content("image/png", PNGEncoder().SaveString(m));
+}
