@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Skylark01.cpp;
+
+mainconfig
+	"" = "SSE2";
+
