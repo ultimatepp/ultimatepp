@@ -391,6 +391,14 @@ void PaintImageBuffer(ImageBuffer& ib, const Drawing& iw, int mode)
 		(*sIwfn)(ib, iw, mode);
 }
 
+Drawing AsDrawing(const Painting& pw)
+{
+	Size sz = pw.GetSize();
+	DrawingDraw dw(sz);
+	dw.DrawPainting(sz, pw);
+	return dw.GetResult();
+}
+
 void Draw::DrawPaintingOp(const Rect& target, const Painting& pw)
 {
 	if(!HasPainter())
