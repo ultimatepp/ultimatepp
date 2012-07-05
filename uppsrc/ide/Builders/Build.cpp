@@ -253,6 +253,7 @@ One<Host> MakeBuild::CreateHost(bool sync_files)
 		host->exedirs = SplitDirs(bm.Get("PATH", "") + ';' + env.Get("PATH", ""));
 		env.GetAdd("PATH") = Join(host->exedirs, ";");
 		env.GetAdd("UPP_MAIN__") = GetFileDirectory(PackagePath(GetMain()));
+		env.GetAdd("UPP_ASSEMBLY__") = GetVar("UPP");
 		for(int i = 0; i < env.GetCount(); i++) {
 			LDUMP(env.GetKey(i));
 			LDUMP(env[i]);
