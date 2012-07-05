@@ -1,9 +1,10 @@
 uses
-	Core;
+	Core,
+	Skylark;
 
 file
 	Skylark01.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "SSE2 MT";
 
