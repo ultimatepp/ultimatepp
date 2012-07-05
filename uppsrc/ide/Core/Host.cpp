@@ -212,18 +212,19 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 	String script = ConfigFile("console-script-" + AsString(getpid()) + ".tmp");
 	int c = LinuxHostConsole.FindFirstOf(" ");
 	String lc =  c < 0 ? LinuxHostConsole : LinuxHostConsole.Left(c);
-	if(FileExists(lc)){
-		if(console){
+	if(FileExists(lc)) {
+		
+		if(console) {
 			FileStream out(script, FileStream::CREATE, 0777);
 			out << "#!/bin/sh\n"
 			    << cmdline << '\n'
-			    << "echo \"<--- Finished, press any key to close the window --->\"\nread\n";
+			    << "echo \"<--- Finished, press any key to close the window --->\"\nread dummy\n";
 			cmdline = LinuxHostConsole + " sh " + script;
 		}
 	}
 	else
 	if(LinuxHostConsole.GetCount())
-		PutConsole("Warning: Terminal '"+lc+"' not found, executing in background.");
+		PutConsole("Warning: Terminal '" + lc + "' not found, executing in background.");
 	Buffer<char> cmd_buf(strlen(cmdline) + 1);
 	char *cmd_out = cmd_buf;
 	Vector<char *> args;

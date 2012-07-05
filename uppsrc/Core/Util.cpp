@@ -426,7 +426,7 @@ String GetIniKey(const char *id)
 
 namespace Ini {
 
-String::operator Upp::String()
+String::operator UPP::String()
 {
 	ONCELOCK_(loaded) {
 		static Array<UPP::String> ss;
@@ -437,7 +437,7 @@ String::operator Upp::String()
 	return *value;
 }
 
-Upp::String String::operator=(const UPP::String& s)
+UPP::String String::operator=(const UPP::String& s)
 {
 	operator UPP::String();
 	*value = s;
@@ -446,7 +446,7 @@ Upp::String String::operator=(const UPP::String& s)
 
 UPP::String String::ToString() const
 {
-	return AsString((String)const_cast<Ini::String&>(*this));
+	return (String)const_cast<Ini::String&>(*this);
 }
 
 Int::operator int() {
