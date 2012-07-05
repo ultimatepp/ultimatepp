@@ -18,6 +18,9 @@ GUI_APP_MAIN
 //	InstallCrashDump();
 	DDUMP(GetStdFontCy());
 	DUMP(GUI_PopUpEffect());
+	
+	PromptOK("[H20L1 &&&");
+	
 	RichEditWithToolBar e;
 	e.SetPage(Size(6074, 3968));
 	Vector<int> h;
