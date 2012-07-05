@@ -1,10 +1,10 @@
 uses
 	CtrlLib,
-	Geom;
+	Painter;
 
 file
 	main.cpp;
 
 mainconfig
-	"" = "GUI ST";
+	"" = "GUI SSE2";
 

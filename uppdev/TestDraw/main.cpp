@@ -11,6 +11,8 @@ class TestDraw : public TopWindow {
 		w.DrawRect(200, 200, 1, 1, SBlack);
 		for(int i = 0; i < 3600; i += 450)
 			w.DrawText(200, 200, i, "Test of angle!", Arial(30));
+		w.DrawLine(0, 300, 1000, 300, PEN_DOT);
+		w.DrawLine(0, 305, 1000, 305, PEN_DASH);
 	}
 
 public:
