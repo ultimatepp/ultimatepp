@@ -1,5 +1,7 @@
 #include "Skylark.h"
 
+namespace Upp {
+
 // add static page caching?
 
 SKYLARK(ServeStaticPage, "static/**")
@@ -10,12 +12,9 @@ SKYLARK(ServeStaticPage, "static/**")
 			file << '/';
 		file << http[i];
 	}
-	DDUMP(file);
-	DDUMP(SkylarkApp::Config().path);
 	String path = GetFileOnPath(file, SkylarkApp::Config().path, false);
 	if(path.GetCount()) {
 		String ext = ToLower(GetFileExt(file));
-		DDUMP(ext);
 		String type = "text";
 		if(ext == ".css")
 			type = "text/css";
@@ -44,3 +43,5 @@ SKYLARK(ServeIml, "iml/*")
 	else
 		http.Content("image/png", PNGEncoder().SaveString(m));
 }
+
+};

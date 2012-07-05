@@ -3,6 +3,8 @@
 #define LTIMING(x) // RTIMING(x)
 #define LLOG(x)    DLOG(x)
 
+namespace Upp {
+
 force_inline
 bool Compiler::IsTrue(const Value& v)
 {
@@ -394,3 +396,5 @@ String Render(const One<Exe>& exe, Renderer *r, Vector<Value>& var)
 	x.out.Cat(AsString(v));
 	return x.out;
 }
+
+};

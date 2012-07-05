@@ -1,4 +1,5 @@
 #include "Skylark.h"
+
 #ifdef PLATFORM_POSIX
 #include <sys/wait.h>
 #endif
@@ -7,7 +8,11 @@
 #include <wincon.h>
 #endif
 
-#define CONSOLE(x)   Cout() << x << '\n'
+namespace Upp {
+	
+namespace Ini {
+	INI_BOOL(skylark_log, false, "Trace of Skylark");
+};
 
 #ifdef PLATFORM_WIN32
 BOOL WINAPI SkylarkApp::CtrlCHandlerRoutine(__in  DWORD dwCtrlType)
@@ -34,10 +39,12 @@ void SkylarkApp::ThreadRun()
 
 void SkylarkApp::RunThread()
 {
-	SQL.ClearError();
-	SQLR.ClearError();
-	SQL.GetSession().ThrowOnError();
-	SQLR.GetSession().ThrowOnError();
+	if(SQL.IsOpen()) {
+		SQL.ClearError();
+		SQLR.ClearError();
+		SQL.GetSession().ThrowOnError();
+		SQLR.GetSession().ThrowOnError();
+	}
 	
 	for(;;) {
 		TcpSocket request;
@@ -51,7 +58,7 @@ void SkylarkApp::RunThread()
 		if(quit)
 			break;
 		if(b) {
-			CONSOLE("Accepted " << Thread::GetCurrentId());
+			SKYLARKLOG("Accepted " << Thread::GetCurrentId());
 		#ifdef PLATFORM_POSIX
 			if(prefork)
 				alarm(timeout);
@@ -62,10 +69,10 @@ void SkylarkApp::RunThread()
 			if(prefork)
 				alarm(0);
 		#endif
-			CONSOLE("Finished " << Thread::GetCurrentId());
+			SKYLARKLOG("Finished " << Thread::GetCurrentId());
 		}
 		else
-			CONSOLE("Waiting " << Thread::GetCurrentId());
+			SKYLARKLOG("Waiting " << Thread::GetCurrentId());
 	}
 }
 
@@ -75,11 +82,8 @@ void SkylarkApp::Main()
 	for(int i = 0; i < threads; i++)
 		Thread::Start(THISBACK(ThreadRun));
 
-	while(Thread::GetCount()) {
-		if(getpid() == main_pid && (msecs() % 1000) == 0)
-			ThreadRun();
+	while(Thread::GetCount())
 		Sleep(100);
-	}
 }
 
 void SkylarkApp::Broadcast(int signal)
@@ -163,10 +167,10 @@ void SkylarkApp::Run()
 		waitpid(prev_pid, &status, 0);
 	}
 	for(int i = 0; i < 100; i++) {
-		Cout() << i;
+		Cout() << "Trying to start listening " << i << "\n";
 		if(server.Listen(port, 5))
 			goto listening;
-		Sleep(10);
+		Sleep(100);
 	}
 	LOG("Cannot open server socket!");
 	Cout() << "Cannot open server socket!\n";
@@ -232,7 +236,7 @@ listening:;
 	FileDelete(pidf);
 #endif
 
-	CONSOLE("ExitSkylark");
+	SKYLARKLOG("ExitSkylark");
 }
 
 
@@ -269,6 +273,7 @@ const SkylarkConfig& SkylarkApp::Config()
 SkylarkApp::SkylarkApp()
 {
 	ASSERT(!app);
+	path = GetEnv("UPP_ASSEMBLY__");
 	app = this;
 	threads = 3 * CPU_Cores() + 1;
 	port = 8001;
@@ -286,3 +291,5 @@ SkylarkApp::~SkylarkApp()
 {
 	app = NULL;
 }
+
+};

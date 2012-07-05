@@ -1,5 +1,7 @@
 #include "Skylark.h"
 
+namespace Upp {
+
 Value Cycle(const Vector<Value>& arg, const Renderer *)
 {
 	if(arg.GetCount() < 3 && !IsNumber(arg[0]))
@@ -44,4 +46,6 @@ INITBLOCK {
 	Compiler::Register("raw", RawFn);
 	Compiler::Register("post_identity", PostIdentity);
 	Compiler::Register("js_identity", JsIdentity);
+};
+
 };
