@@ -9,6 +9,11 @@ Value Cycle(const Vector<Value>& arg, const Renderer *)
 	return arg[1 + int(arg[0]) % (arg.GetCount() - 1)];
 }
 
+Value CountFn(const Vector<Value>& arg, const Renderer *)
+{
+	return arg.GetCount() && IsValueArray(arg[0]) ? ValueArray(arg[0]).GetCount() : 0;
+}
+
 Value RawFn(const Vector<Value>& arg, const Renderer *)
 {
 	RawHtmlText r;
@@ -44,6 +49,7 @@ Value JsIdentity(const Vector<Value>&, const Renderer *r)
 INITBLOCK {
 	Compiler::Register("cycle", Cycle);
 	Compiler::Register("raw", RawFn);
+	Compiler::Register("count", CountFn);
 	Compiler::Register("post_identity", PostIdentity);
 	Compiler::Register("js_identity", JsIdentity);
 };
