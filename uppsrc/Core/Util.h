@@ -28,20 +28,19 @@ void   SetIniFile(const char *path = NULL);
 String GetIniKey(const char *id, const String& def);
 String GetIniKey(const char *id);
 
-namespace Ini {
-struct String {
+struct IniString {
 // "private":
 	const char   *id;
-	UPP::String (*def)();
+	String (*def)();
 	bool          loaded;
-	UPP::String  *value;
+	String  *value;
 
-	operator UPP::String();
-	UPP::String   operator=(const UPP::String& s);
-	UPP::String   ToString() const;
+	operator String();
+	String   operator=(const String& s);
+	String   ToString() const;
 };
 
-struct Int {
+struct IniInt {
 // "private":
 	const char *id;
 	int      (*def)();
@@ -50,10 +49,10 @@ struct Int {
 
 	operator    int();
 	int         operator=(int b);
-	UPP::String ToString() const;
+	String ToString() const;
 };
 
-struct Bool {
+struct IniBool {
 // "private":
 	const char *id;
 	bool      (*def)();
@@ -62,9 +61,8 @@ struct Bool {
 
 	operator     bool();
 	bool         operator=(bool b);
-	UPP::String  ToString() const;
+	String  ToString() const;
 };
-}
 
 void AddIniInfo(const char *id, String (*current)(), String (*def)(), const char *info);
 
@@ -80,23 +78,23 @@ String GetIniInfoFormatted();
 
 #define INI_BOOL(var, def, info)\
 bool DefIni_##var() { return def; }\
-Ini::Bool var = { #var, DefIni_##var };\
-UPP::String AsStringIniCurrent_##var() { return AsString(var); } \
-UPP::String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
+IniBool var = { #var, DefIni_##var };\
+String AsStringIniCurrent_##var() { return AsString(var); } \
+String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
 INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var, info); }
 
 #define INI_STRING(var, def, info)\
-UPP::String DefIni_##var() { return def; }\
-Ini::String var = { #var, DefIni_##var };\
-UPP::String AsStringIniCurrent_##var() { return AsString(var); } \
-UPP::String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
+String DefIni_##var() { return def; }\
+IniString var = { #var, DefIni_##var };\
+String AsStringIniCurrent_##var() { return AsString(var); } \
+String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
 INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var, info); }
 
 #define INI_INT(var, def, info)\
 int DefIni_##var() { return def; }\
-Ini::Int var = { #var, DefIni_##var };\
-UPP::String AsStringIniCurrent_##var() { return AsString(var); } \
-UPP::String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
+IniInt var = { #var, DefIni_##var };\
+String AsStringIniCurrent_##var() { return AsString(var); } \
+String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
 INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var, info); }
 
 VectorMap<String, String> LoadIniStream(Stream &in);
