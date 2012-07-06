@@ -13,12 +13,12 @@ option "Use SSE2" sse2 = 1;
 
 #include <CtrlLib/CtrlLib.h>
 
-using namespace Upp;
+using namespace Upp;<:?lay:>
 
-<:?lay:>#define LAYOUTFILE <<:PACKAGE:>/<:PACKAGE:>.lay>
-#include <CtrlCore/lay.h><:.:>
+#define LAYOUTFILE <<:PACKAGE:>/<:PACKAGE:>.lay>
+#include <CtrlCore/lay.h><:.:><:?iml:>
 
-<:?iml:>#define IMAGEFILE <<:PACKAGE:>/<:PACKAGE:>.iml>
+#define IMAGEFILE <<:PACKAGE:>/<:PACKAGE:>.iml>
 #include <Draw/iml_header.h><:.:>
 
 class <:classname:> : public <:lay > 1 ? "With" + classname + "Layout<TopWindow>" : "TopWindow":> {
@@ -29,14 +29,14 @@ public:
 
 #endif
 @@main.cpp
-#include "<:PACKAGE:>.h"
+#include "<:PACKAGE:>.h"<:?iml:>
 
-<:?iml:>#define IMAGEFILE <<:PACKAGE:>/<:PACKAGE:>.iml>
+#define IMAGEFILE <<:PACKAGE:>/<:PACKAGE:>.iml>
 #include <Draw/iml_source.h><:.:>
 
 <:classname:>::<:classname:>()
-{
-	<:?lay > 1:>CtrlLayout<:(lay == 3 ? "OKCancel" : ""):>(*this, "Window title");<:.:>
+{<:?lay > 1:>
+	CtrlLayout<:(lay == 3 ? "OKCancel" : ""):>(*this, "Window title");<:.:>
 }
 
 GUI_APP_MAIN
@@ -46,8 +46,8 @@ GUI_APP_MAIN
 @@<:PACKAGE:>.lay
 ??lay
 
-LAYOUT(<:classname:>Layout, 200, 100)
-	<:?lay == 3:>ITEM(Button, ok, SetLabel("OK").RightPosZ(90, 80).BottomPosZ(4, 22))
+LAYOUT(<:classname:>Layout, 200, 100)<:?lay == 3:>
+	ITEM(Button, ok, SetLabel("OK").RightPosZ(90, 80).BottomPosZ(4, 22))
 	ITEM(Button, cancel, SetLabel("Cancel").RightPosZ(4, 80).BottomPosZ(4, 22))<:.:>
 END_LAYOUT
 @@<:PACKAGE:>.iml
@@ -58,11 +58,10 @@ uses
 	CtrlLib;
 
 file
-	"<:PACKAGE:>.h"
-	, main.cpp
-	<:?lay:>, "<:PACKAGE:>.lay"<:.:>
-	<:?iml:>, "<:PACKAGE:>.iml"<:.:>
-;
+	<:PACKAGE:>.h,
+	main.cpp<:?lay:>,
+	<:PACKAGE:>.lay<:.:><:?iml:>,
+	<:PACKAGE:>.iml<:.:>;
 
 mainconfig
 	"" = "GUI<:?mt:> MT<:.:><:?sse2:> SSE2<:.:>";

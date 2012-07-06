@@ -350,6 +350,13 @@ bool AssistEditor::IncludeAssist()
 			+ ";/usr/include;/usr/local/include"
 #endif
 		);
+		// Also adding internal includes
+		const Workspace& wspc = GetIdeWorkspace();
+		for(int i = 0; i < wspc.GetCount(); i++) {
+			const Package& pkg = wspc.GetPackage(i);
+			for(int j = 0; j < pkg.include.GetCount(); j++)
+				include.Add(SourcePath(wspc[i], pkg.include[j].text));
+		}
 		include_local = false;
 	}
 	include_path.Clear();
@@ -1063,16 +1070,16 @@ void Ide::ContextGoto0(int pos)
 			return;
 		}
 	}
-	int q = l.Find("#include");
-	if(q >= 0) {
-		String path = FindIncludeFile(~l + q + 8, GetFileFolder(editfile));
+	CParser p(l);
+	if(p.Char('#') && p.Id("include")) {
+		String path = FindIncludeFile(p.GetPtr(), GetFileFolder(editfile));
 		if(!IsNull(path)) {
 			AddHistory();
 			EditFile(path);
 		}
 		return;
 	}
-	q = pos;
+	int q = pos;
 	while(iscid(editor.Ch(q - 1)))
 		q--;
 	String tp;

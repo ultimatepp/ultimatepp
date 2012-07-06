@@ -464,9 +464,22 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 
 void MakeBuild::SetHdependDirs()
 {
-	HdependSetDirs(SplitDirs(GetVar("UPP") + ';'
-	                         + GetMethodVars(method).Get("INCLUDE", "") + ';'
-	                         + Environment().Get("INCLUDE", "")));
+	Vector<String> include = SplitDirs(GetVar("UPP") + ';'
+		+ GetMethodVars(method).Get("INCLUDE", "") + ';'
+		+ Environment().Get("INCLUDE", "")
+#ifdef PLATFORM_POSIX
+		+ ";/usr/include;/usr/local/include"
+#endif
+		);
+	// Also adding internal includes
+	const Workspace& wspc = GetIdeWorkspace();
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		const Package& pkg = wspc.GetPackage(i);
+		for(int j = 0; j < pkg.include.GetCount(); j++)
+			include.Add(SourcePath(wspc[i], pkg.include[j].text));
+	}
+
+	HdependSetDirs(include);
 }
 
 Vector<String> MakeBuild::GetAllUses(const Workspace& wspc, int f)

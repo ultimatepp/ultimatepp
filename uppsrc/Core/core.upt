@@ -16,21 +16,22 @@ using namespace Upp;
 
 #endif
 @@<:PACKAGE:>.cpp
-#include <:?header:>"<:PACKAGE:>.h"<:/:><Core/Core.h><:.:>
+#include <:?header:>"<:PACKAGE:>.h"<:/:><Core/Core.h>
 
-<:?!header:>using namespace Upp;<:.:>
+using namespace Upp;<:.:>
 
 CONSOLE_APP_MAIN
-{
-	<:?cmdline:>const Vector<String>& cmdline = CommandLine();
+{<:?cmdline:>
+	const Vector<String>& cmdline = CommandLine();
 	for(int i = 0; i < cmdline.GetCount(); i++) {
 	}<:.:>
 }
 @@<:PACKAGE:>.upp
 uses Core;
 
-file <:?header:>"<:PACKAGE:>.h",<:.:>
-	"<:PACKAGE:>.cpp";
+file<:?header:>
+	<:PACKAGE:>.h,<:.:>
+	<:PACKAGE:>.cpp;
 
 mainconfig
 	"" = "<:?mt:>MT<:.:><:?mt && sse2:> <:.:><:?sse2:>SSE2<:.:>";

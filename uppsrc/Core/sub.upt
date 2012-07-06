@@ -6,4 +6,5 @@ template "Plain package with header" sub;
 
 #endif
 @@<:PACKAGE:>.upp
-file "<:PACKAGE:>.h";
+file
+	<:PACKAGE:>.h;

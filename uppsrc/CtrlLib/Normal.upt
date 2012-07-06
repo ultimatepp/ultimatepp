@@ -15,7 +15,9 @@ using namespace Upp;
 
 #endif
 @@main.cpp
-#include <:?header:>"<:PACKAGE:>.h"<:/:><CtrlLib/CtrlLib.h><:.:>
+#include <:?header:>"<:PACKAGE:>.h"<:/:><CtrlLib/CtrlLib.h>
+
+using namespace Upp;<:.:>
 
 GUI_APP_MAIN
 {
@@ -24,9 +26,9 @@ GUI_APP_MAIN
 uses
 	CtrlLib;
 
-file
-	<:?header:>"<:PACKAGE:>.h",<:.:>
-	"main.cpp";
+file<:?header:>
+	<:PACKAGE:>.h,<:.:>
+	main.cpp;
 
 mainconfig
 	"" = "GUI<:?mt:> MT<:.:><:?sse2:> SSE2<:.:>";
