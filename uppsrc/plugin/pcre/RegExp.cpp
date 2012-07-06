@@ -30,11 +30,14 @@ RegExp::~RegExp()
 
 void RegExp::Clear(bool freemem)
 {
+	if(freemem && study)
+		pcre_free(study);
 	if(freemem && cpattern)
 		pcre_free(cpattern);
 
 	first = false;
 	cpattern = NULL;
+	study = NULL;
 	rc = 0;
 	compile_options = 0;
 	execute_options = 0;
@@ -70,9 +73,25 @@ bool RegExp::Compile(bool recompile)
 	return error_code == 0;
 }
 
+bool RegExp::Study(bool restudy)
+{
+	if(!cpattern)
+		Compile();
+	if(study){
+		if(restudy)
+			pcre_free(study);
+		else
+			return true;
+	}
+	study = pcre_study(cpattern, 0, &error_string);
+	if(error_string != NULL)
+		error_code = -1; // unfortunatelly, pcre_study doesn't return error codes...
+	return error_code == 0;
+}
+
 int RegExp::Execute(const String &t, int offset)
 {
-	rc = pcre_exec(cpattern, NULL, t, t.GetLength(), offset, execute_options, pos, 30);
+	rc = pcre_exec(cpattern, study, t, t.GetLength(), offset, execute_options, pos, 30);
 	if(rc <= 0)
 		first = false;
 	return rc;
