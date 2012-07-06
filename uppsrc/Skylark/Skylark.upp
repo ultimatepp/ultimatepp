@@ -27,6 +27,7 @@ file
 	Base.witz,
 	skylark.js,
 	Info readonly separator,
+	src.tpp,
 	srcdoc.tpp;
 
 custom() ".css",
