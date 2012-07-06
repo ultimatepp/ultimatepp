@@ -1,6 +1,6 @@
 <html>
 <body>
-<a href=$Page2()>Link to page2</a><br>
+<a href=$Page2>Link to page2</a><br>
 $for(i in ["param_test", 123, "param_test3"])
 	<a href=$Param(i)>Param test: $i</a><br>
 $endfor

@@ -1,0 +1,14 @@
+description "FORM POST\377";
+
+uses
+	Core,
+	Skylark;
+
+file
+	index.witz,
+	submit.witz,
+	main.cpp;
+
+mainconfig
+	"" = "SSE2 MT";
+
