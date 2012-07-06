@@ -1,0 +1,6 @@
+#include Skylark04/base
+
+#define TITLE MyApp title
+
+#define BODY
+This is MyApp body html!
