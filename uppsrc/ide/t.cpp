@@ -570,7 +570,7 @@ void Ide::SyncT(int kind)
 						{
 							FileLine &fl = entry.fileline.Add();
 							String file = GetFileName(pEntry.fileline[iLc].file);
-							file = "PACKAGE '" + n + "' FILE '" + file + "'";
+							file = "PACKAGE '" + GetFileName(n) + "' FILE '" + file + "'";
 							fl.file = file;
 							fl.line = pEntry.fileline[iLc].line;
 						}
