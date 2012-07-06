@@ -1,0 +1,15 @@
+<html>
+<body>
+<form action=$Submit method="post" accept-charset="utf-8" enctype="multipart/form-data">
+   <P>
+   	$post_identity()
+    <INPUT type="text" name="id">
+    <INPUT type="submit" value="Add to list">
+   </P>
+</form>
+List ($count(LIST)):<br>
+$for(i in LIST)
+	"$i" 
+$endfor
+</body>
+</html>
