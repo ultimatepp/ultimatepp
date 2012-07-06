@@ -21,8 +21,10 @@ using namespace Upp;
 @@<:PACKAGE:>.cpp
 <:?header:>#include "<:PACKAGE:>.h"
 <:/:>#include <Core/Core.h>
-#include <plugin/SDL/SDL.h><:.:>
-<:?video:>
+#include <plugin/SDL/SDL.h>
+
+using namespace Upp;
+<:.:><:?video:>
 SDL_Surface * OpenScreen(const int width, const int height, const int bpp, const int flags)
 {
 	SDL_Surface * screen = SDL_SetVideoMode(width, height, bpp, flags);
@@ -89,11 +91,12 @@ CONSOLE_APP_MAIN
 uses
 	Core;
 
-file <:?header:>"<:PACKAGE:>.h",<:.:>
-	"<:PACKAGE:>.cpp";
-
 library(MSC) "SDL SDLmain";
 library(GCC WIN32) "SDL.dll SDLmain";
+
+file<:?header:>
+	<:PACKAGE:>.h,<:.:>
+	<:PACKAGE:>.cpp;
 
 mainconfig
 	"" = "<:?sse2:>SSE2<:.:>";

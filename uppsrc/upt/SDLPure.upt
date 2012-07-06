@@ -82,11 +82,12 @@ int main(int argc, char **argv)
 	return 0;
 }
 @@<:PACKAGE:>.upp
-file <:?header:>"<:PACKAGE:>.h",<:.:>
-	"<:PACKAGE:>.cpp";
-
 library(MSC) "SDL SDLmain";
 library(GCC WIN32) "SDL.dll SDLmain";
+
+file<:?header:>
+	<:PACKAGE:>.h,<:.:>
+	<:PACKAGE:>.cpp;
 
 mainconfig
 	"" = "<:?sse2:>SSE2<:.:>";
