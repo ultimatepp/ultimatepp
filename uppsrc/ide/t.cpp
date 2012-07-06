@@ -510,22 +510,24 @@ void Ide::SyncT(int kind)
 	}
 
 	Vector<TFile> tfile;
+	Vector<int>mainsT;
 
 	Progress pi;
 	const Workspace& wspc = IdeWorkspace();
 	pi.SetTotal(wspc.GetCount());
-	for(int i = 0; i < wspc.GetCount(); i++) {
-		const Package& pk = wspc.GetPackage(i);
-		String n = wspc[i];
+	for(int iPackage = 0; iPackage < wspc.GetCount(); iPackage++) {
+		const Package& pk = wspc.GetPackage(iPackage);
+		String n = wspc[iPackage];
 		pi.SetText("Scanning " + n);
 		if(pi.StepCanceled()) return;
 		VectorMap<String, LngEntry> pmap;
-		for(int i = 0; i < pk.file.GetCount(); i++) {
-			String file = SourcePath(n, pk.file[i]);
+		for(int iFile = 0; iFile < pk.file.GetCount(); iFile++) {
+			String file = SourcePath(n, pk.file[iFile]);
 			LngParseCFile(SourcePath(GetActivePackage(), file), pmap);
 		}
-		for(int i = 0; i < pk.file.GetCount(); i++) {
-			String file = SourcePath(n, pk.file[i]);
+		bool localT = false;
+		for(int iFile = 0; iFile < pk.file.GetCount(); iFile++) {
+			String file = SourcePath(n, pk.file[iFile]);
 			String ext = GetFileExt(file);
 			if(ext == ".t" || ext == ".jt") {
 				VectorMap<String, LngEntry> tmap(pmap, 0);
@@ -533,9 +535,46 @@ void Ide::SyncT(int kind)
 					TFile& tf = tfile.Add();
 					tf.java = (ext == ".jt");
 					tf.package = n;
-					tf.file = pk.file[i];
+					tf.file = pk.file[iFile];
 					tf.map = tmap;
 					tf.MakeLS();
+				}
+				// mark that we've found a local translation file
+				localT = true;
+				
+				// store index of main package translation(s) file(s)
+				if(iPackage == 0)
+					mainsT.Add(tfile.GetCount() - 1);
+			}
+		}
+		// if no local translation file(s), we append translation to
+		// main package one(s), if any
+		if(!localT && iPackage > 0)
+		{
+			for(int i = 0; i < mainsT.GetCount(); i++)
+			{
+				VectorMap<String, LngEntry> &map = tfile[mainsT[i]].map;
+				for(int iEntry = 0; iEntry < pmap.GetCount(); iEntry++)
+				{
+					int idx = map.Find(pmap.GetKey(iEntry));
+					if(idx < 0)
+					{
+						map.Add(pmap.GetKey(iEntry), pmap[iEntry]);
+						idx = map.GetCount() - 1;
+					}
+					LngEntry &entry = map[idx];
+					if(!entry.fileline.GetCount())
+					{
+						LngEntry &pEntry = pmap[iEntry];
+						for(int iLc = 0; iLc < pEntry.fileline.GetCount(); iLc++)
+						{
+							FileLine &fl = entry.fileline.Add();
+							String file = GetFileName(pEntry.fileline[iLc].file);
+							file = "PACKAGE '" + n + "' FILE '" + file + "'";
+							fl.file = file;
+							fl.line = pEntry.fileline[iLc].line;
+						}
+					}
 				}
 			}
 		}
