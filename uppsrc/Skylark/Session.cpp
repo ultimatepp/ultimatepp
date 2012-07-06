@@ -53,7 +53,7 @@ void Http::LoadSession()
 	SKYLARKLOG("Loaded session: " << session_id);
 	LDUMPM(session_var);
 	for(int i = 0; i < session_var.GetCount(); i++)
-		var.Add(session_var.GetKey(i), session_var[i]);
+		var.GetAdd(session_var.GetKey(i)) = session_var[i];
 }
 
 thread__ int s_exp;
