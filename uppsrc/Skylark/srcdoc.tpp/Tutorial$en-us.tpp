@@ -82,7 +82,10 @@ to.&]
 Http`& [/ http], which is used for request processing. [@5 SKYLARK] 
 macro creates a header for this function and also registers it 
 with Skylark so that requestes matching the path pattern are 
-dispatched to this function.&]
+dispatched to this function. Important note: as [@5 SKYLARK] macro 
+uses global constructors to register handlers, handlers should 
+be put into .icpp files (unless they are in the same file with 
+`'main`').&]
 [s5; Path pattern can contain parameter placeholders `'`*`' (see 
 [@5 Param] handler), which are then provided by [/ http] as parameters 
 (through operator`[`](int)). Path is always split by `'/`' characters 
@@ -111,4 +114,85 @@ be able to access it from your browser by entering &]
 [s0; 127.0.0.1:8001&]
 [s5; (last one should result in error `"Page not found`", as no such 
 handler is present)&]
+[s5; &]
+[s3; 2. Witz templates&]
+[s5; To decouple presentation layer from application logic, Skylark 
+features template language `'Witz`':&]
+[s7; #include <Skylark/Skylark.h>&]
+[s7; &]
+[s7; using namespace Upp;&]
+[s7; &]
+[s7; SKYLARK(HomePage, `"`")&]
+[s7; `{&]
+[s7; -|ValueArray va;&]
+[s7; -|va.Add(1);&]
+[s7; -|va.Add(`"Hello`");&]
+[s7; -|ValueMap m;&]
+[s7; -|m.Add(`"key1`", `"first value`");&]
+[s7; -|m.Add(`"key2`", `"second value`");&]
+[s7; &]
+[s7; -|[* http(`"MyValue`", `"some value`")]&]
+[s7; [* -|    (`"MyRawValue`", Raw(`"<b>raw <u>html</u></b>`"))]&]
+[s7; [* -|    (`"MyRawValue2`", `"<b>another raw <u>html</u></b>`")]&]
+[s7; [* -|    (`"MyArray`", va)]&]
+[s7; [* -|    (`"MyMap`", m)]&]
+[s7; [* -|    .RenderResult(`"Skylark02/index`");]&]
+[s7; `}&]
+[s7; &]
+[s7; struct MyApp : SkylarkApp `{&]
+[s7; -|MyApp() `{&]
+[s7; -|-|root `= `"myapp`";&]
+[s7; -|#ifdef `_DEBUG&]
+[s7; -|-|prefork `= 0;&]
+[s7; -|-|[* use`_caching ]`= false;&]
+[s7; -|#endif&]
+[s7; -|`}&]
+[s7; `};&]
+[s7; &]
+[s7; CONSOLE`_APP`_MAIN&]
+[s7; `{&]
+[s7; #ifdef `_DEBUG&]
+[s7; -|StdLogSetup(LOG`_FILE`|LOG`_COUT);&]
+[s7; -|Ini`::skylark`_log `= true;&]
+[s7; #endif&]
+[s7; &]
+[s7; -|MyApp().Run();-|&]
+[s7; `}&]
+[s7; &]
+[s7; &]
+[s5; [* Skylark02/index.witz:]&]
+[s7; <html>&]
+[s7; <body>&]
+[s7; MyValue: [* `$MyValue]<br>&]
+[s7; MyRawValue: [* `$MyRawValue]<br>&]
+[s7; MyRawValue2: [* `$raw(MyRawValue2)]<br>&]
+[s7; <br>MyArray:<br>&]
+[s7; [* `$for(i in MyArray)]&]
+[s7; [* -|`$i.`_index. `$i<br>]&]
+[s7; [* `$endfor]&]
+[s7; <br>MyMap:<br>&]
+[s7; [* `$for(i in MyMap)]&]
+[s7; [* -|`$i.`_index. `$i.`_key: `$i<br>]&]
+[s7; [* `$endfor]&]
+[s7; </body>&]
+[s7; </html>&]
+[s7; &]
+[s5; Witz template language loosely ressembles JavaScript. It is 
+able to evaluate expression, supports `"if`" and looping through 
+values with `"for`".&]
+[s5; Witz templates are compiled at runtime. Settings configuration 
+variable [* use`_caching] to false makes them to compile each time 
+they are invoked (otherwise the compilation result is cached) 
+`- this is usefull while debugging, as templates can be adjusted 
+while application is running.&]
+[s5; The search path for templates is set by another configuration 
+variable [* path]. Default value of [* path] is set to environment 
+variable `'UPP`_ASSEMBLY`_`_`', which is set by theide to current 
+assembly path `- which means that for debugging you do not need 
+to worry about [* path] as long as all templates are in U`+`+ packages 
+and you start the application from theide. Note that [* path] is 
+also used to search for static files.&]
+[s5; String values are normally HTML escaped; if you need to pass 
+raw html code as parameter, you have to either use [@5 Raw ]C`+`+ 
+function in application logic or [@5 raw] function in witz.&]
 [s5; ]]

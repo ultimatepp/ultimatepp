@@ -9,7 +9,7 @@
 namespace Upp {
 	
 namespace Ini {
-extern Bool skylark_log;
+extern IniBool skylark_log;
 };
 
 #define SKYLARKLOG(x) LOG_(Ini::skylark_log, x)

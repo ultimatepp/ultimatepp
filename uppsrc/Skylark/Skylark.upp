@@ -26,7 +26,7 @@ file
 	Client readonly separator,
 	Base.witz,
 	skylark.js,
-	Group readonly separator,
+	Info readonly separator,
 	srcdoc.tpp;
 
 custom() ".css",

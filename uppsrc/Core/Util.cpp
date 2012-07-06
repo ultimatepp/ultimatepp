@@ -424,32 +424,30 @@ String GetIniKey(const char *id)
 	return GetIniKey(id, String());
 }
 
-namespace Ini {
-
-String::operator UPP::String()
+IniString::operator String()
 {
 	ONCELOCK_(loaded) {
-		static Array<UPP::String> ss;
-		UPP::String& x = ss.Add();
+		static Array<String> ss;
+		String& x = ss.Add();
 		x = Nvl(TrimBoth(GetIniKey(id)), (*def)());
 		value = &x;
 	}
 	return *value;
 }
 
-UPP::String String::operator=(const UPP::String& s)
+String IniString::operator=(const String& s)
 {
-	operator UPP::String();
+	operator String();
 	*value = s;
 	return s;
 }
 
-UPP::String String::ToString() const
+String IniString::ToString() const
 {
-	return (String)const_cast<Ini::String&>(*this);
+	return (String)const_cast<IniString&>(*this);
 }
 
-Int::operator int() {
+IniInt::operator int() {
 	ONCELOCK_(loaded) {
 		value = ScanInt(TrimBoth(ToLower(GetIniKey(id))));
 		if(IsNull(value))
@@ -458,35 +456,34 @@ Int::operator int() {
 	return value;
 }
 
-int Int::operator=(int b) {
+int IniInt::operator=(int b) {
 	ONCELOCK_(loaded) {}
 	return value = b;
 }
 
-UPP::String Int::ToString() const
+String IniInt::ToString() const
 {
-	return AsString((int)const_cast<Ini::Int&>(*this));
+	return AsString((int)const_cast<IniInt&>(*this));
 }
 
-Bool::operator bool() {
+IniBool::operator bool() {
 	ONCELOCK_(loaded) {
-		UPP::String h = TrimBoth(ToLower(GetIniKey(id)));
+		String h = TrimBoth(ToLower(GetIniKey(id)));
 		value = h.GetCount() ? h == "1" || h == "yes" || h == "true" || h == "y" : (*def)();
 	}
 	return value;
 }
 
-bool Bool::operator=(bool b) {
+bool IniBool::operator=(bool b) {
 	ONCELOCK_(loaded) {}
 	return value = b;
 }
 
-UPP::String Bool::ToString() const
+String IniBool::ToString() const
 {
-	return AsString((bool)const_cast<Ini::Bool&>(*this));
+	return AsString((bool)const_cast<IniBool&>(*this));
 }
 
-};
 
 Array<IniInfo>& sIniInfo()
 {
