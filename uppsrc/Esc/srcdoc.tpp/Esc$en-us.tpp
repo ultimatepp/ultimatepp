@@ -473,4 +473,4 @@ function, otherwise is unspecified).]
 :: [s0; [*C GetSysTime()]]
 :: [s0; Returns current time as map with `"second`", `"minute`", `"hour`", 
 `"day`", `"month`" and `"year`" members.]}}&]
-[s0; ]
+[s0; ]]
