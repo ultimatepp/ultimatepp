@@ -60,6 +60,7 @@ private:
 	String pattern;
 	String text;
 	pcre * cpattern;
+	pcre_extra * study;
 	const char * error_string;
 	int error_offset;
 	int error_code;
@@ -75,6 +76,7 @@ public:
 	void           SetPattern(const char * p);
 	void           SetPattern(const String &p);
 	bool           Compile(bool recompile = false);
+	bool           Study(bool restudy = false);
 	int            Execute(const String &t, int offset = 0);
 	bool           Match(const String &t, bool copy = true);
 	bool           FastMatch(const String &t);
@@ -84,6 +86,7 @@ public:
 	String         GetString(int i);
 	void           GetMatchPos(int i, int& iPosStart, int& iPosAfterEnd);
 	Vector<String> GetStrings();
+	String         GetPattern() const { return pattern; }
 
 
 	bool           IsError() { return error_code != 0; }
