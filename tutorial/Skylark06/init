@@ -1,0 +1,5 @@
+#ifndef _Skylark06_icpp_init_stub
+#define _Skylark06_icpp_init_stub
+#include "Core/init"
+#include "Skylark/init"
+#endif

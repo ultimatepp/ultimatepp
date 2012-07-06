@@ -1,0 +1,10 @@
+<html>
+<body>
+<form action=$Submit method="get" accept-charset="utf-8" enctype="multipart/form-data">
+   <P>
+    <INPUT type="text" name="id">
+    <INPUT type="submit" value="Submit">
+   </P>
+</form>
+</body>
+</html>

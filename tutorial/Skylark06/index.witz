@@ -1,0 +1,11 @@
+<html>
+<body>
+<form action=$Submit method="post" accept-charset="utf-8" enctype="multipart/form-data">
+   <P>
+   	$post_identity()
+    <INPUT type="text" name="id">
+    <INPUT type="submit" value="Submit">
+   </P>
+</form>
+</body>
+</html>
