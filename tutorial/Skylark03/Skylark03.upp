@@ -1,0 +1,15 @@
+description "Witz: links to handlers\377";
+
+uses
+	Core,
+	Skylark;
+
+file
+	index.witz,
+	page2.witz,
+	param.witz,
+	main.cpp;
+
+mainconfig
+	"" = "SSE2 MT";
+
