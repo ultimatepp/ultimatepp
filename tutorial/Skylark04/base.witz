@@ -1,0 +1,8 @@
+<html>
+<title>#TITLE</title>
+<body>
+#BODY
+</body>
+</html>
+
+#define TITLE Generic title

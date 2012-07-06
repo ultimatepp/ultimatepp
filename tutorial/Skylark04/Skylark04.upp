@@ -1,13 +1,12 @@
-description "Witz links to handlers\377";
+description "Combining Witz templates using #define and #include\377";
 
 uses
 	Core,
 	Skylark;
 
 file
+	base.witz,
 	index.witz,
-	page2.witz,
-	param.witz,
 	main.cpp;
 
 mainconfig
