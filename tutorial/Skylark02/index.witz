@@ -1,0 +1,15 @@
+<html>
+<body>
+MyValue: $MyValue<br>
+MyRawValue: $MyRawValue<br>
+MyRawValue2: $raw(MyRawValue2)<br>
+<br>MyArray:<br>
+$for(i in MyArray)
+	$i._index. $i<br>
+$endfor
+<br>MyMap:<br>
+$for(i in MyMap)
+	$i._index. $i._key: $i<br>
+$endfor
+</body>
+</html>

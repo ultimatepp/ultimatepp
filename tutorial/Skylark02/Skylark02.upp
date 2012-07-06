@@ -1,10 +1,11 @@
-description "SKYLARK handlers and path patterns\377";
+description "Witz templates\377";
 
 uses
 	Core,
 	Skylark;
 
 file
+	index.witz,
 	main.cpp;
 
 mainconfig

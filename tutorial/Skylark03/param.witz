@@ -1,0 +1,6 @@
+<html>
+<body>
+Param: $PARAM<br>
+<a href=$HomePage()>Back to index</a><br>
+</body>
+</html>
