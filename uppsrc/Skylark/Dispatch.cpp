@@ -321,7 +321,6 @@ void Http::Dispatch(TcpSocket& socket)
 					if(id != (*this)["__identity__"])
 						throw AuthExc("identity error");
 				}
-				//
 				lang = Nvl(Int("__lang__"), LNG_ENGLISH);
 				Upp::SetLanguage(lang);
 				var.GetAdd("__lang__") = lang;
@@ -333,7 +332,6 @@ void Http::Dispatch(TcpSocket& socket)
 					SaveSession();
 				if(SQL.IsOpen())
 					SQL.Commit();
-				//
 			}
 			catch(SqlExc e) {
 				if(SQL.IsOpen())
