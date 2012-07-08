@@ -1,0 +1,17 @@
+#include Skylark/Base
+
+#define TITLE This is an experimental Web AddressBook application
+
+#define BODY
+
+<FORM action=$HomePage method="get" accept-charset="utf-8" enctype="multipart/form-data">
+   <P>
+    <INPUT type="text" name="search" value="$search">
+    <INPUT type="submit" value="Search">
+   </P>
+</FORM>
+
+#include Persons
+
+<p/>
+<a href=$New><img src=$Iml("AdrBookImg:Plus")/>Insert new person</a>

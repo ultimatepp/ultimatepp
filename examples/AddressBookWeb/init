@@ -1,0 +1,9 @@
+#ifndef _AddressBookWeb_icpp_init_stub
+#define _AddressBookWeb_icpp_init_stub
+#include "Core/init"
+#include "plugin/sqlite3/init"
+#include "Skylark/init"
+#define BLITZ_INDEX__ F3b6e9af72de82bc94f10c44749beaf1b
+#include "Pages.icpp"
+#undef BLITZ_INDEX__
+#endif
