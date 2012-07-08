@@ -239,11 +239,14 @@ int TcpSocket::GetErrorCode()
 
 void TcpSocketInit()
 {
-#if defined(PLATFORM_WIN32)
+#ifdef PLATFORM_WIN32
 	ONCELOCK {
 		WSADATA wsadata;
 		WSAStartup(MAKEWORD(2, 2), &wsadata);
 	}
+#endif
+#ifdef PLATFORM_POSIX
+	signal(SIGPIPE, SIG_IGN);
 #endif
 }
 
@@ -280,24 +283,35 @@ TcpSocket::TcpSocket()
 	ssl_start = Null;
 }
 
+bool TcpSocket::SetupSocket()
+{
+#ifdef PLATFORM_WIN32
+	connection_start = msecs();
+	u_long arg = 1;
+	if(ioctlsocket(socket, FIONBIO, &arg)) {
+		SetSockError("ioctlsocket(FIO[N]BIO)");
+		return false;
+	}
+#else
+	if(fcntl(socket, F_SETFL, (fcntl(socket, F_GETFL, 0) | O_NONBLOCK))) {
+		SetSockError("fcntl(O_[NON]BLOCK)");
+		return false;
+	}
+#endif
+	return true;
+}
+
 bool TcpSocket::Open(int family, int type, int protocol)
 {
 	Init();
 	Close();
 	ClearError();
-	if((socket = ::socket(family, type, protocol)) == INVALID_SOCKET)
+	if((socket = ::socket(family, type, protocol)) == INVALID_SOCKET) {
+		SetSockError("open");
 		return false;
+	}
 	LLOG("TcpSocket::Data::Open() -> " << (int)socket);
-#ifdef PLATFORM_WIN32
-	connection_start = msecs();
-	u_long arg = 1;
-	if(ioctlsocket(socket, FIONBIO, &arg))
-		SetSockError("ioctlsocket(FIO[N]BIO)");
-#else
-	if(fcntl(socket, F_SETFL, (fcntl(socket, F_GETFL, 0) | O_NONBLOCK)))
-		SetSockError("fcntl(O_[NON]BLOCK)");
-#endif
-	return true;
+	return SetupSocket();
 }
 
 bool TcpSocket::Listen(int port, int listen_count, bool ipv6_, bool reuse)
@@ -358,15 +372,13 @@ bool TcpSocket::Accept(TcpSocket& ls)
 		if(!b)
 			return false;
 	}
-	if(!Open(ls.ipv6 ? AF_INET6 : AF_INET, SOCK_STREAM, 0))
-		return false;
 	socket = accept(ls.GetSOCKET(), NULL, NULL);
 	if(socket == INVALID_SOCKET) {
 		SetSockError("accept");
 		return false;
 	}
 	mode = ACCEPT;
-	return true;
+	return SetupSocket();
 }
 
 String TcpSocket::GetPeerAddr() const

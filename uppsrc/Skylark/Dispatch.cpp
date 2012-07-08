@@ -252,7 +252,7 @@ void GetBestDispatch(int method,
 
 void Http::Dispatch(TcpSocket& socket)
 {
-	Vector<DispatchNode>& DispatchMap = sDispatchMap();
+	const Vector<DispatchNode>& DispatchMap = sDispatchMap();
 	if(hdr.Read(socket)) {
 		int len = GetLength();
 		content = socket.GetAll(len);
@@ -321,8 +321,11 @@ void Http::Dispatch(TcpSocket& socket)
 					if(id != (*this)["__identity__"])
 						throw AuthExc("identity error");
 				}
+				//
 				lang = Nvl(Int("__lang__"), LNG_ENGLISH);
-				SetLanguage(lang);
+				Upp::SetLanguage(lang);
+				var.GetAdd("__lang__") = lang;
+				var.GetAdd("language") = ToLower(LNGAsText(lang));
 				viewid = bd.id;
 				LDUMP(viewid);
 				(*bd.view)(*this);
@@ -330,6 +333,7 @@ void Http::Dispatch(TcpSocket& socket)
 					SaveSession();
 				if(SQL.IsOpen())
 					SQL.Commit();
+				//
 			}
 			catch(SqlExc e) {
 				if(SQL.IsOpen())
@@ -365,7 +369,7 @@ void Http::Dispatch(TcpSocket& socket)
 			app.NotFound(*this);
 		}
 		r.Clear();
-		SKYLARKLOG("Response: " << code << ' ' << code_text);
+		SKYLARKLOG("=== Response: " << code << ' ' << code_text);
 		if(redirect.GetCount()) {
 			SKYLARKLOG("Redirect to: " << redirect);
 			r << "HTTP/1.1 " << code << " Found\r\n";

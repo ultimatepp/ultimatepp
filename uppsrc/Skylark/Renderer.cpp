@@ -48,6 +48,8 @@ const One<Exe>& Renderer::GetTemplate(const char *template_name)
 			s << var.GetKey(i) << ';';
 		s << ':' << template_name;
 	}
+	if(!SkylarkApp::Config().use_caching) // Templates get overwritten is not cached, MT hazard
+		s << ';' << Thread::GetCurrentId();	
 	String sgn = s;
 	LLOG("Trying to retrieve " << sgn << " from cache");
 	Mutex::Lock __(template_cache_lock);

@@ -9,6 +9,11 @@
 #endif
 
 namespace Upp {
+
+String GetThreadName()
+{
+	return FormatIntBase(Thread::GetCurrentId() % 33, 35);
+}
 	
 namespace Ini {
 	INI_BOOL(skylark_log, false, "Trace of Skylark");
@@ -53,13 +58,13 @@ void SkylarkApp::RunThread()
 			accept_mutex.Leave();
 			break;
 		}
-		SKYLARKLOG("Waiting for accept " << Thread::GetCurrentId());
-		bool b = request.Timeout(60000).Accept(server);
+		SKYLARKLOG("Waiting for accept ");
+		bool b = request.Accept(server);
 		accept_mutex.Leave();
 		if(quit)
 			break;
 		if(b) {
-			SKYLARKLOG("Accepted " << Thread::GetCurrentId());
+			SKYLARKLOG("Accepted ");
 		#ifdef PLATFORM_POSIX
 			if(prefork)
 				alarm(timeout);
@@ -70,7 +75,13 @@ void SkylarkApp::RunThread()
 			if(prefork)
 				alarm(0);
 		#endif
-			SKYLARKLOG("Finished " << Thread::GetCurrentId());
+			SKYLARKLOG("Finished ");
+		}
+		else {
+			SKYLARKLOG("Accept failed: " << request.GetErrorDesc());
+		#ifdef _DEBUG 
+			break;
+		#endif
 		}
 	}
 }

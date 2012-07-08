@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)           // LOG(x)
+#define LLOG(x)           // DLOG(x)
 #define LDUMP(x)          // DUMP(x)
 #define LLOGHEXDUMP(x, s) // LOGHEXDUMP(x, s)
 
@@ -472,6 +472,7 @@ FileTime FileStream::GetTime() const {
 
 bool FileStream::Open(const char *name, dword mode, mode_t tmode) {
 	Close();
+	LLOG("Open " << name);
 	int iomode = mode & ~SHAREMASK;
 	handle = open(ToSystemCharset(name), iomode == READ ? O_RDONLY :
 	                    iomode == CREATE ? O_CREAT|O_RDWR|O_TRUNC :
@@ -486,6 +487,7 @@ bool FileStream::Open(const char *name, dword mode, mode_t tmode) {
 		int64 fsz = LSEEK64_(handle, 0, SEEK_END);
 		if(fsz >= 0) {
 			OpenInit(mode, fsz);
+			LLOG("OPEN handle " << handle);
 			return true;
 		}
 	}
@@ -495,6 +497,7 @@ bool FileStream::Open(const char *name, dword mode, mode_t tmode) {
 
 void FileStream::Close() {
 	if(!IsOpen()) return;
+	LLOG("CLOSE handle " << handle);
 	Flush();
 	if(close(handle) < 0)
 		SetLastError();
