@@ -12,7 +12,9 @@ namespace Ini {
 extern IniBool skylark_log;
 };
 
-#define SKYLARKLOG(x) LOG_(Ini::skylark_log, x)
+String GetThreadName();
+
+#define SKYLARKLOG(x) LOG_(Ini::skylark_log, GetThreadName() << ' ' << x)
 
 class Renderer;
 class Http;

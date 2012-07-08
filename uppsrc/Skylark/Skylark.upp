@@ -1,9 +1,6 @@
 description "\377B128,0,0";
 
 uses
-	Draw,
-	plugin\png,
-	plugin\jpg,
 	Sql;
 
 file

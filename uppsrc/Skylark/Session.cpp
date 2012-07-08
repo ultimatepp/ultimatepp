@@ -58,6 +58,10 @@ void Http::LoadSession()
 
 thread__ int s_exp;
 
+static int  s_last_expiration_check;
+
+StaticMutex expire_mutex;
+
 void Http::SaveSession()
 {
 	const SessionConfig& cfg = app.session;
@@ -95,21 +99,31 @@ void Http::SaveSession()
 	LDUMPM(session_var);
 	
 	if((s_exp++ % 1000) == 0) {
-		Time tm = GetSysTime() - cfg.expire;
-		SKYLARKLOG("Expiring sessions older than " << tm);
-		if(cfg.table.IsNull()) {
-			FindFile ff(AppendFileName(cfg.dir, "*.*"));
-			Vector<String> todelete;
-			while(ff) {
-				if(ff.GetLastWriteTime() < tm)
-					todelete.Add(ff.GetPath());
-				ff.Next();
+		bool expire_sessions = false;
+		{
+			Mutex::Lock __(expire_mutex);
+			if((dword)msecs(s_last_expiration_check) > 1000 * 60 * 10) {
+				expire_sessions = true;
+				s_last_expiration_check = msecs();
 			}
-			for(int i = 0; i < todelete.GetCount(); i++)
-				FileDelete(todelete[i]);
 		}
-		else
-			SQL * Delete(cfg.table).Where(cfg.lastwrite_column < tm);
+		if(expire_sessions) {
+			Time tm = GetSysTime() - cfg.expire;
+			SKYLARKLOG("Expiring sessions older than " << tm);
+			if(cfg.table.IsNull()) {
+				FindFile ff(AppendFileName(cfg.dir, "*.*"));
+				Vector<String> todelete;
+				while(ff) {
+					if(ff.GetLastWriteTime() < tm)
+						todelete.Add(ff.GetPath());
+					ff.Next();
+				}
+				for(int i = 0; i < todelete.GetCount(); i++)
+					FileDelete(todelete[i]);
+			}
+			else
+				SQL * Delete(cfg.table).Where(cfg.lastwrite_column < tm);
+		}
 	}
 }
 

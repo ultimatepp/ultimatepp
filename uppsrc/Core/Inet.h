@@ -121,6 +121,7 @@ class TcpSocket {
 	bool                    RawWait(dword flags, int end_time);
 	bool                    Wait(dword events, int end_time);
 	SOCKET                  AcceptRaw(dword *ipaddr, int timeout_msec);
+	bool                    SetupSocket();
 	bool                    Open(int family, int type, int protocol);
 	int                     RawRecv(void *buffer, int maxlen);
 	int                     Recv(void *buffer, int maxlen);
