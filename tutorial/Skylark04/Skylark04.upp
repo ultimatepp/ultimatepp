@@ -2,7 +2,9 @@ description "Combining Witz templates using #define and #include\377";
 
 uses
 	Core,
-	Skylark;
+	Skylark,
+	plugin/jpg,
+	plugin/png;
 
 file
 	base.witz,

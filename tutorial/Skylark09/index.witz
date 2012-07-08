@@ -1,0 +1,18 @@
+<html>
+<body>
+<table border="1">
+<tr>
+  <th>No.</th>
+  <th>First Name</th>
+  <th>Last Name</th>
+</tr>
+$for(i in PERSON)
+	<tr>
+	  <td>$i._index.</td>
+	  <td>$i.NAME</td>
+	  <td>$i.LASTNAME</td>
+	</tr>	
+$/
+</table>
+</body>
+</html>
