@@ -145,6 +145,9 @@ void EnableHUP()
 void SkylarkApp::Run()
 {
 //	DisableHUP();
+	if(static_dir.GetCount() == 0)
+		static_dir = root + "/static";
+
 	SqlSession::PerThread();
 	SqlId::UseQuotes();
 	FinalizeViews();
@@ -167,11 +170,12 @@ void SkylarkApp::Run()
 	}
 #else
 	if(!server.Listen(port, 5)) {
-		LOG("Cannot open server socket!");
-		Cout() << "Cannot open server socket!\n";
-		return;
+		SKYLARKLOG("Cannot open server socket!");
+		Exit(1);
 	}
 #endif
+
+	SKYLARKLOG("Starting Skylark, current static path: " << path);
 
 #ifdef PLATFORM_POSIX
 	if(prefork) {

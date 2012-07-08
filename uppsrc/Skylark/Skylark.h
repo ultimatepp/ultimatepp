@@ -35,6 +35,7 @@ struct SkylarkConfig {
 	String                    root;
 	VectorMap<String, String> view_var;
 	String                    path;
+	String                    static_dir;
 	SessionConfig             session;
 	int                       threads;
 	int                       port;
@@ -87,8 +88,6 @@ public:
 	SkylarkApp();
 	virtual ~SkylarkApp();
 };
-
-void SetStaticPath(const String& path);
 
 #include "Witz.h"
 #include "Http.h"

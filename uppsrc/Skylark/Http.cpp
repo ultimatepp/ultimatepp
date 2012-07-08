@@ -334,7 +334,7 @@ Http& Http::UxRender(const char *id, const char *template_name)
 	return Ux(id, RenderString(template_name));
 }
 
-Http& Http::UxSetValue(const char *id, const String& value)
+Http& Http::UxSet(const char *id, const String& value)
 {
 	return Ux(String(">") + id, value);
 }

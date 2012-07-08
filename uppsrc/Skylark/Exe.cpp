@@ -1,7 +1,7 @@
 #include "Skylark.h"
 
 #define LTIMING(x) // RTIMING(x)
-#define LLOG(x)    DLOG(x)
+#define LLOG(x)    // DLOG(x)
 
 namespace Upp {
 

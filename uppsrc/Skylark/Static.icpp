@@ -2,8 +2,6 @@
 
 namespace Upp {
 
-// add static page caching?
-
 SKYLARK(ServeStaticPage, "static/**")
 {
 	String file;

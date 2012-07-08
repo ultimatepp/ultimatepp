@@ -1,10 +1,10 @@
 #include "Skylark.h"
 
-#define LLOG(x)     DLOG(x)
-#define LDUMP(x)    DDUMP(x)
-#define LDUMPC(x)   DDUMPC(x)
-#define LDUMPM(x)   DDUMPM(x)
-#define LTIMING(x)  RTIMING(x)
+#define LLOG(x)     //DLOG(x)
+#define LDUMP(x)    //DDUMP(x)
+#define LDUMPC(x)   //DDUMPC(x)
+#define LDUMPM(x)   //DDUMPM(x)
+#define LTIMING(x)  //RTIMING(x)
 
 namespace Upp {
 
@@ -297,6 +297,7 @@ void Http::Dispatch(TcpSocket& socket)
 				q++;
 			}
 		}
+		var.GetAdd("static") = app.static_dir;
 		var.GetAdd("__identity__"); // To make StdLib.icpp GetIndentity work without changing preset stack positions
 		LDUMPM(var);
 		Vector<String> part = Split(uri, '/');
