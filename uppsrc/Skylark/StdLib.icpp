@@ -46,12 +46,20 @@ Value JsIdentity(const Vector<Value>&, const Renderer *r)
 	return Raw("<script type=\"text/javascript\">var __js_identity__ = \"" + GetIdentity(r) + "\"</script>");
 }
 
+Value ImlImg(const Vector<Value>& arg, const Renderer *)
+{
+	if(arg.GetCount() < 1)
+		throw Exc("Missing image name for ImlImg");
+	return Raw("<img src=\"iml/" + AsString(arg[0]) + "\")/>");
+}
+
 INITBLOCK {
 	Compiler::Register("cycle", Cycle);
 	Compiler::Register("raw", RawFn);
 	Compiler::Register("count", CountFn);
 	Compiler::Register("post_identity", PostIdentity);
 	Compiler::Register("js_identity", JsIdentity);
+	Compiler::Register("ImlImg", ImlImg);
 };
 
 };

@@ -53,7 +53,8 @@ void SkylarkApp::RunThread()
 			accept_mutex.Leave();
 			break;
 		}
-		bool b = request.Timeout(2000).Accept(server);
+		SKYLARKLOG("Waiting for accept " << Thread::GetCurrentId());
+		bool b = request.Timeout(60000).Accept(server);
 		accept_mutex.Leave();
 		if(quit)
 			break;
@@ -71,8 +72,6 @@ void SkylarkApp::RunThread()
 		#endif
 			SKYLARKLOG("Finished " << Thread::GetCurrentId());
 		}
-		else
-			SKYLARKLOG("Waiting " << Thread::GetCurrentId());
 	}
 }
 
@@ -159,23 +158,13 @@ void SkylarkApp::Run()
 
 #if defined(PLATFORM_POSIX) && defined(_DEBUG)
 	// Avoid the need to close running server in debug mode...
-	String pidf = ConfigFile("debug_pid");
-	int prev_pid = atoi(LoadFile(pidf));
-	if(prev_pid) {
-		kill(prev_pid, SIGTERM);
-		int status = 0;
-		waitpid(prev_pid, &status, 0);
-	}
-	for(int i = 0; i < 100; i++) {
-		Cout() << "Trying to start listening " << i << "\n";
+	int qq = 0;
+	for(;;) {
 		if(server.Listen(port, 5))
-			goto listening;
-		Sleep(100);
+			break;
+		Cout() << "Trying to start listening (other process using the same port?) " << ++qq << "\n";
+		Sleep(1000);
 	}
-	LOG("Cannot open server socket!");
-	Cout() << "Cannot open server socket!\n";
-	return;
-listening:;
 #else
 	if(!server.Listen(port, 5)) {
 		LOG("Cannot open server socket!");
@@ -185,9 +174,6 @@ listening:;
 #endif
 
 #ifdef PLATFORM_POSIX
-#ifdef _DEBUG
-	SaveFile(pidf, AsString(main_pid));
-#endif
 	if(prefork) {
 		struct sigaction sa;
 		memset(&sa, 0, sizeof(sa));

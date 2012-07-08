@@ -17,9 +17,10 @@ String LoadTemplate(const char *file, const String& search_path, int lang)
 		if(IsNull(path)) {
 			path = GetFileOnPath1(f, search_path);
 			if(IsNull(path))
-				return Null;
+				throw Exc("missing template " + String(file));
 		}
 	}
+	SKYLARKLOG("Loading template file " << path);
 	FileIn in(path);
 	String r;
 	while(in && !in.IsEof()) {

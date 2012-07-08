@@ -331,14 +331,17 @@ Http& Http::Ux(const char *id, const String& text)
 
 Http& Http::UxRender(const char *id, const char *template_name)
 {
-	Ux(id, RenderString(template_name));
-	return *this;
+	return Ux(id, RenderString(template_name));
 }
 
 Http& Http::UxSetValue(const char *id, const String& value)
 {
-	Ux(String(">") + id, value);
-	return *this;
+	return Ux(String(">") + id, value);
+}
+
+Http& Http::UxRun(const String& js_code)
+{
+	return Ux("!", js_code);
 }
 
 };
