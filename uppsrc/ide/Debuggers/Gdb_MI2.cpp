@@ -40,7 +40,8 @@ void Gdb_MI2::DebugBar(Bar& bar)
 {
 	bar.Add("Stop debugging", THISBACK(Stop)).Key(K_SHIFT_F5);
 	bar.Separator();
-	bar.Add(!stopped, "Asynchronous break", THISBACK(AsyncBrk));
+// see note on Run() function -- crashes X on my machine, so removed by now
+//	bar.Add(!stopped, "Asynchronous break", THISBACK(AsyncBrk));
 	bool b = !IdeIsDebugLock();
 	bar.Add(b, "Step into", DbgImg::StepInto(), THISBACK1(Step, disas.HasFocus() ? "exec-step-instruction" : "exec-step")).Key(K_F11);
 	bar.Add(b, "Step over", DbgImg::StepOver(), THISBACK1(Step, disas.HasFocus() ? "exec-next-instruction" : "exec-next")).Key(K_F10);
@@ -73,14 +74,18 @@ bool Gdb_MI2::SetBreakpoint(const String& filename, int line, const String& bp)
 	// and remove it
 	MIValue brk = bps.FindBreakpoint(file, line);
 	if(!brk.IsEmpty())
-		ASSERT(!MICmd(Format("break-delete %s", brk["number"].Get())).IsError());
+		if(!MICmd(Format("break-delete %s", brk["number"].Get())))
+		{
+			Exclamation(t_("Couldn't remove breakpoint"));
+			return false;
+		}
 	
 	if(bp.IsEmpty())
 		return true;
 	else if(bp[0] == 0xe)
-		return !MICmd(Format("break-insert %s:%d", file, line)).IsError();
+		return MICmd(Format("break-insert %s:%d", file, line));
 	else
-		return !MICmd(Format("break-insert -c \"%s\" %s:%d", bp, file, line)).IsError();
+		return MICmd(Format("break-insert -c \"%s\" %s:%d", bp, file, line));
 }
 
 bool Gdb_MI2::RunTo()
@@ -115,7 +120,15 @@ void Gdb_MI2::Run()
 {
 	MIValue val;
 	if(firstRun)
+		// GDB up to 7.1 has a bug that maps -exec-run ro run, not to run&
+		// making so async mode useless; we use the console run& command instead
+// 2012-07-08 update : interrupting GDB in async mode without having
+// non-stop mode enabled crashes X...don't know if it's a GDB bug or Theide one.
+// anyways, by now we give up with async mode and remove 'Asynchronous break' function
 		val = MICmd("exec-run");
+
+//		val = MICmd("interpreter-exec console run&");
+		
 	else
 		val = MICmd("exec-continue --all");
 	int i = 50;
@@ -139,17 +152,8 @@ void Gdb_MI2::Run()
 	}
 	Unlock();
 	if(stopped)
-	{
 		CheckStopReason();
 		
-		// as we are in non-stop mode, to allow async break to work
-		// we shall stop ALL running threads here, otherwise we'll have
-		// problems when single stepping a gui MT app
-		// single step will be done so for a single thread, while other
-		// are idle. Maybe we could make this behaviour optional
-		MICmd("exec-interrupt --all");
-	}
-
 	started = stopped = false;
 	firstRun = false;
 	IdeActivateBottom();
@@ -158,16 +162,18 @@ void Gdb_MI2::Run()
 void Gdb_MI2::AsyncBrk()
 {
 	// send an interrupt command to all running threads
-	MICmd("exec-interrupt --all");
+	StopAllThreads();
 	
 	// gdb usually returns to command prompt instantly, BEFORE
 	// giving out stop reason, which we need. So, we wait some
 	// milliseconds and re-read (non blocking) GDB output to get it
+/*
 	for(int i = 0; i < 20 && !stopped; i++)
 	{
 		Sleep(100);
 		ReadGdb(false);
 	}
+*/
 	
 	// if target is correctly stopped, 'stopped' flag should be already set
 	// so we don't care here. If not set, target can't be stopped.
@@ -378,8 +384,10 @@ void Gdb_MI2::Unlock()
 MIValue Gdb_MI2::ParseGdb(String const &output, bool wait)
 {
 	MIValue res;
+
 	// parse result data
 	StringStream ss(output);
+	int iSubstr;
 	while(!ss.IsEof())
 	{
 		String s = TrimBoth(ss.GetLine());
@@ -391,10 +399,23 @@ MIValue Gdb_MI2::ParseGdb(String const &output, bool wait)
 			stopReason.Clear();
 			continue;
 		}
+// 2012-07-08 -- In some cases, GDB output get mixed with app one
+//               so we shall look for 'stop' record in all string,
+//               not just at beginning as it was before
+// 				 not a wanderful way, as debugger could be tricked by some text...
+/*
 		else if(s.StartsWith("*stopped"))
 		{
 			stopped = true;
 			s = '{' + s.Mid(9) + '}';
+			stopReason = MIValue(s);
+			continue;
+		}
+*/
+		else if( (iSubstr = s.Find("*stopped,reason=")) >= 0)
+		{
+			stopped = true;
+			s = '{' + s.Mid(iSubstr + 9) + '}';
 			stopReason = MIValue(s);
 			continue;
 		}
@@ -733,7 +754,7 @@ void Gdb_MI2::SyncIde(bool fr)
 
 	// get the arguments for current frame
 	MIValue fArgs = MICmd(Format("stack-list-arguments 1 %d %d", level, level))["stack-args"][0]["args"];
-	
+
 	// setup frame droplist
 	frame.Clear();
 	frame.Add(0, FormatFrame(fInfo, fArgs));
@@ -754,14 +775,61 @@ void Gdb_MI2::LogFrame(String const &msg, MIValue &frame)
 	PutConsole(Format(msg + " at %s, function '%s', file '%s', line %s", addr, function, file, line));
 }
 
+// stop all running threads and re-select previous current thread
+void Gdb_MI2::StopAllThreads(void)
+{
+	// get thread info for all threads
+	MIValue tInfo = MICmd("thread-info");
+	MIValue &threads = tInfo["threads"];
+	bool someRunning = false;
+	for(int iThread = 0; iThread < threads.GetCount(); iThread++)
+	{
+		if(threads[iThread]["state"].Get() != "stopped")
+		{
+			someRunning = true;
+			break;
+		}
+	}
+	// don't issue any stop command if no threads running
+	// (brings problems....)
+	if(!someRunning)
+		return;
+
+	// stores current thread id
+	String current = tInfo("current-thread-id", "");
+	
+	// stops all threads
+	MICmd("exec-interrupt --all");
+	
+	// just to be sure, reads out GDB output
+	ReadGdb(false);
+	
+	// reselect current thread as it was before stopping all others
+	if(current != "")
+		MICmd("thread-select " + current);
+}
+		
 // check for stop reason
 void Gdb_MI2::CheckStopReason(void)
 {
+	// we need to store stop reason BEFORE interrupting all other
+	// threads, otherwise it'll be lost
+	MIValue stReason = stopReason;
+	
+	// get the reason string
 	String reason;
-	if(stopReason.IsEmpty())
+	if(stReason.IsEmpty())
 		reason = "unknown reason";
 	else
-		reason = stopReason["reason"];
+		reason = stReason["reason"];
+
+	// as we are in non-stop mode, to allow async break to work
+	// we shall stop ALL running threads here, otherwise we'll have
+	// problems when single stepping a gui MT app
+	// single step will be done so for a single thread, while other
+	// are idle. Maybe we could make this behaviour optional
+	StopAllThreads();
+
 	if(reason == "exited-normally")
 	{
 		Stop();
@@ -774,21 +842,27 @@ void Gdb_MI2::CheckStopReason(void)
 	}
 	else if(reason == "breakpoint-hit")
 	{
-		LogFrame("Hit breakpoint", stopReason["frame"]);
+		LogFrame("Hit breakpoint", stReason["frame"]);
+		SyncIde();
+	}
+	else if(reason == "end-stepping-range")
+	{
+		LogFrame("End stepping range", stReason["frame"]);
 		SyncIde();
 	}
 	else if(reason == "unknown reason")
 	{
 		PutConsole("Stopped by unknown reason");
+		SyncIde();
 	}
 	else
 	{
 		// weird stop reasons (i.e., signals, segfaults... may not have a frame
 		// data inside
-		if(stopReason.Find("frame") < 0)
+		if(stReason.Find("frame") < 0)
 			PutConsole(Format("Stopped, reason '%s'", reason));
 		else
-			LogFrame(Format("Stopped, reason '%s'", reason), stopReason["frame"]);
+			LogFrame(Format("Stopped, reason '%s'", reason), stReason["frame"]);
 		SyncIde();
 	}
 }
@@ -808,7 +882,8 @@ void Gdb_MI2::Step(const char *cmd)
 	}
 	if(!started)
 	{
-		Exclamation(t_("Failed to start application"));
+		Stop();
+		Exclamation(t_("Step failed - terminating debugger"));
 		return;
 	}
 
@@ -866,7 +941,11 @@ void Gdb_MI2::DisasFocus()
 // create a string representation of frame given its info and args
 String Gdb_MI2::FormatFrame(MIValue &fInfo, MIValue &fArgs)
 {
-	int idx = atoi(fInfo["level"].Get());
+	int idx = atoi(fInfo("level", "-1"));
+	if(idx < 0)
+		return t_("invalid frame info");
+	if(!fArgs.IsArray())
+		return t_("invalid frame args");
 	String func = fInfo("func", "<unknown>");
 	String file = fInfo("file", "<unknown>");
 	String line = fInfo("line", "<unknown>");
@@ -874,7 +953,7 @@ String Gdb_MI2::FormatFrame(MIValue &fInfo, MIValue &fArgs)
 	String argLine;
 	for(int iArg = 0; iArg < nArgs; iArg++)
 	{
-		argLine += fArgs[iArg]["name"];
+		argLine += fArgs[iArg]["name"].Get();
 		if(fArgs[iArg].Find("value") >= 0)
 			argLine << "=" << fArgs[iArg]["value"];
 		argLine << ',';
@@ -892,11 +971,19 @@ void Gdb_MI2::DropFrames()
 	
 	// get a list of frames
 	MIValue frameList = MICmd("stack-list-frames")["stack"];
-	frameList.AssertArray();
+	if(frameList.IsError() || !frameList.IsArray())
+	{
+		Exclamation("Couldn't get stack frame list");
+		return;
+	}
 	
 	// get the arguments for all frames, values just for simple types
 	MIValue frameArgs = MICmd("stack-list-arguments 1")["stack-args"];
-	frameArgs.AssertArray();
+	if(frameArgs.IsError() || !frameArgs.IsArray())
+	{
+		Exclamation("Couldn't get stack arguments list");
+		return;
+	}
 	
 	// fill the droplist
 	for(int iFrame = 0; iFrame < frameArgs.GetCount(); iFrame++)
@@ -912,7 +999,11 @@ void Gdb_MI2::DropFrames()
 void Gdb_MI2::ShowFrame()
 {
 	int i = (int)~frame;
-	MICmd(Format("stack-select-frame %d", i));
+	if(!MICmd(Format("stack-select-frame %d", i)))
+	{
+		Exclamation(Format(t_("Couldn't select frame #%d"), i));
+		return;
+	}
 	SyncIde(i);
 }
 
@@ -925,6 +1016,11 @@ void Gdb_MI2::dropThreads()
 	// get a list of all available threads
 	MIValue tInfo = MICmd("thread-info");
 	MIValue &threads = tInfo["threads"];
+	if(!tInfo.IsTuple() || !threads.IsArray())
+	{
+		Exclamation(t_("couldn't get thread info"));
+		return;
+	}
 	int currentId = atoi(tInfo["current-thread-id"].Get());
 	for(int iThread = 0; iThread < threads.GetCount(); iThread++)
 	{
@@ -987,9 +1083,11 @@ void Gdb_MI2::UpdateLocalVars(void)
 	// re-reading as a whole is too time expensive.
 	// So, at first we build a list of local variable NAMES only
 	MIValue iLoc = MICmd("stack-list-variables 0");
-	if(iLoc.IsEmpty() || iLoc.IsError())
+	if(!iLoc || iLoc.IsEmpty())
 		return;
 	MIValue &loc = iLoc["variables"];
+	if(!loc.IsArray())
+		return;
 	Index<String>locIdx;
 	for(int iLoc = 0; iLoc < loc.GetCount(); iLoc++)
 		locIdx.Add(loc[iLoc]["name"]);
@@ -1076,7 +1174,7 @@ void Gdb_MI2::UpdateWatches(void)
 			
 			// sometimes it has problem creating vars... maybe because they're
 			// still not active; we just skip them
-			if(var.IsError() || var.IsEmpty())
+			if(!var || var.IsEmpty() || !var.IsTuple())
 				continue;
 			watchesNames.Add(var["name"]);
 			watchesExpressions.Add(exprs[i]);
@@ -1120,7 +1218,7 @@ void Gdb_MI2::UpdateAutos(void)
 			
 			// sometimes it has problem creating vars... maybe because they're
 			// still not active; we just skip them
-			if(var.IsError() || var.IsEmpty())
+			if(!var || var.IsEmpty() || !var.IsTuple())
 				continue;
 			autosNames.Add(var["name"]);
 			autosExpressions.Add(exprs[i]);
@@ -1281,47 +1379,62 @@ String Gdb_MI2::FormatWatchLine(String exp, String const &val, int level)
 }
 
 // deep watch current quickwatch variable
-void Gdb_MI2::WatchDeep(String parentExp, String const &var, int level)
+void Gdb_MI2::WatchDeep0(String parentExp, String const &var, int level, int &maxRemaining)
 {
+	// avoid endless recursion for circularly linked vars
+	if(--maxRemaining <= 0)
+		return;
+	
 	MIValue childInfo = MICmd("var-list-children 1 \"" + var + "\" 0 100");
-	int nChilds = min(atoi(childInfo["numchild"].Get()), 100);
-	if(nChilds)
-	{
-		MIValue &childs = childInfo["children"];
-		for(int i = 0; i < childs.GetCount(); i++)
-		{
-			MIValue child = childs[i];
-			String exp = child["exp"];
-			
-			// handle pseudo children...
-/*
-			while(exp == "public" || exp == "private" || exp == "protected")
-			{
-				child = MICmd(String("var-list-children 1 \"") + child["name"] + "\"")["children"][0];
-				exp = child["exp"];
-			}
-*/
-			if(isdigit(exp[0]))
-			{
-				exp = '[' + exp + ']';
-				if(parentExp.Mid(parentExp.GetCount() - 1, 1) == ".")
-					parentExp = parentExp.Left(parentExp.GetCount() - 1);
-			}
-			if(exp[0] != '.' && exp[0] != '[')
-				exp = '.' + exp;
+	if(!childInfo || !childInfo.IsTuple())
+		return;
+	int nChilds = min(atoi(childInfo("numchild", "-1")), 100);
+	if(nChilds <= 0)
+		return;
 
-			String type = child("type", "");
-			if(!type.IsEmpty())
-				type = "(" + type + ")";
-			String value = child["value"];
-			
-			// try to format nicely results...
-			quickwatch.value <<= (String)~quickwatch.value + "\n" + FormatWatchLine(parentExp + exp, type + value, level);
-			
-			// recursive deep watch
-			WatchDeep(exp, child["name"], level + 1);
+	MIValue &childs = childInfo["children"];
+	for(int i = 0; i < childs.GetCount() && maxRemaining > 0; i++)
+	{
+		MIValue child = childs[i];
+		String exp = child["exp"];
+		
+		// handle pseudo children...
+/*
+		while(exp == "public" || exp == "private" || exp == "protected")
+		{
+			child = MICmd(String("var-list-children 1 \"") + child["name"] + "\"")["children"][0];
+			exp = child["exp"];
 		}
+*/
+		if(isdigit(exp[0]))
+		{
+			exp = '[' + exp + ']';
+			if(parentExp.Mid(parentExp.GetCount() - 1, 1) == ".")
+				parentExp = parentExp.Left(parentExp.GetCount() - 1);
+		}
+		if(exp[0] != '.' && exp[0] != '[')
+			exp = '.' + exp;
+
+		String type = child("type", "");
+		if(!type.IsEmpty())
+			type = "(" + type + ")";
+		String value = child["value"];
+		
+		// try to format nicely results...
+		quickwatch.value <<= (String)~quickwatch.value + "\n" + FormatWatchLine(parentExp + exp, type + value, level);
+		
+		// recursive deep watch
+		WatchDeep0(exp, child["name"], level + 1, maxRemaining);
 	}
+}
+
+void Gdb_MI2::WatchDeep(String parentExp, String const &name)
+{
+	// this is to avoid circular endless recursion
+	// we limit the total watched (sub)variables to this count
+	int maxRemaining = 300;
+	
+	WatchDeep0(parentExp, name, 1, maxRemaining);
 }
 
 // opens quick watch dialog
@@ -1375,7 +1488,7 @@ void Gdb_MI2::QuickWatch()
 				quickwatch.value <<= FormatWatchLine(exp, type + value, 0);
 				quickwatch.expression.AddHistory();
 				String name = v["name"];
-				WatchDeep(exp, name, 1);
+				WatchDeep(exp, name);
 				MICmd("var-delete " + name);
 			}
 			else
@@ -1612,9 +1725,15 @@ bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdli
 	tab <<= THISBACK(SyncData);
 
 	// this one will allow asynchronous break of running app
-	MICmd("gdb-set target-async 1");
+// 2012-07-08 -- DISABLED because of GDB bugs...
+//	MICmd("gdb-set target-async 1");
 	MICmd("gdb-set pagination off");
-	MICmd("gdb-set non-stop on");
+
+// Don't enable this one -- brings every sort of bugs with
+// It was useful to issue Asynchronous break, but too many bugs
+// to be useable
+//	MICmd("gdb-set non-stop on");
+
 //	MICmd("gdb-set interactive-mode off");
 
 	MICmd("gdb-set disassembly-flavor intel");

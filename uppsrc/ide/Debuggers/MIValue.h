@@ -27,10 +27,12 @@ class MIValue : public Moveable<MIValue>
 		MIValue &SetError(String const &msg);
 
 		// check if value contains an error
-		bool IsError(void);
+		bool IsError(void) const;
+		bool operator!(void) const { return IsError(); }
+		operator bool() { return !IsError(); }
 		
 		// check for emptyness
-		bool IsEmpty(void);
+		bool IsEmpty(void) const;
 		
 		MIValue &operator=(pick_ MIValue &v);
 		MIValue &operator=(String const &s);
@@ -59,15 +61,15 @@ class MIValue : public Moveable<MIValue>
 		String operator()(const char *key, const char *def) const  { return Get(key, def); }
 		
 		// some type checking
-		bool IsArray(void) { return type == MIArray; }
-		void AssertArray(void) { ASSERT(type == MIArray); }
-		bool IsTuple(void) { return type == MITuple; }
-		void AssertTuple(void) { ASSERT(type == MITuple); }
-		bool IsString(void) { return type == MIString; }
-		void AssertString(void) { ASSERT(type == MIString); }
+		bool IsArray(void) const { return type == MIArray; }
+		void AssertArray(void) const { ASSERT(type == MIArray); }
+		bool IsTuple(void) const { return type == MITuple; }
+		void AssertTuple(void) const { ASSERT(type == MITuple); }
+		bool IsString(void) const { return type == MIString; }
+		void AssertString(void) const { ASSERT(type == MIString); }
 		
 		// data dump
-		String Dump(int level = 0);
+		String Dump(int level = 0) const;
 		
 		// finds breakpoint data given file and line
 		MIValue &FindBreakpoint(String const &file, int line);

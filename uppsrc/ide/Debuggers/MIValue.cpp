@@ -247,13 +247,13 @@ MIValue &MIValue::SetError(String const &msg)
 }
 
 // check if value contains an error
-bool MIValue::IsError(void)
+bool MIValue::IsError(void) const
 {
 	return type == MIString && string.StartsWith("error:");
 }
 		
 // check for emptyness
-bool MIValue::IsEmpty(void)
+bool MIValue::IsEmpty(void) const
 {
 	return type == MIString && string == "";
 }
@@ -261,6 +261,8 @@ bool MIValue::IsEmpty(void)
 // simple accessors
 int MIValue::GetCount(void) const
 {
+	if(IsError())
+		return 0;
 	if(type == MIArray)
 		return array.GetCount();
 	else if(type == MITuple)
@@ -278,6 +280,8 @@ int MIValue::Find(const char *key) const
 
 MIValue &MIValue::Get(int i)
 {
+	if(IsError())
+		return *this;
 	if(type != MIArray)
 		return ErrorMIValue("Not an Array value type");
 	return array[i];
@@ -308,7 +312,7 @@ String const &MIValue::Get(void) const
 String MIValue::Get(const char *key, const char *def) const
 {
 	if(type != MITuple)
-		return def;
+		return  ErrorMIValue("Not a Tuple value type");
 	int i = tuple.Find(key);
 	if(i >= 0)
 	{
@@ -321,7 +325,7 @@ String MIValue::Get(const char *key, const char *def) const
 }
 
 // data dump
-String MIValue::Dump(int level)
+String MIValue::Dump(int level) const
 {
 	String spacer(' ', level);
 	switch(type)
@@ -338,7 +342,7 @@ String MIValue::Dump(int level)
 			{
 				String s1 = spacer + tuple.GetKey(i) + "=";
 				s += s1;
-				MIValue &val = tuple[i];
+				MIValue const &val = tuple[i];
 				if(val.type == MIString)
 					s += val.Dump();
 				else
@@ -362,7 +366,7 @@ String MIValue::Dump(int level)
 			level += 4;
 			for(int i = 0; i < array.GetCount(); i++)
 			{
-				MIValue &val = array[i];
+				MIValue const &val = array[i];
 				s += val.Dump(level);
 				if(val.type != MIString)
 					s = s.Left(s.GetCount()-1);
