@@ -504,4 +504,88 @@ enctype`=`"multipart/form`-data`">&]
 [s7; </html>&]
 [s7; &]
 [s7; &]
-[s5;* ]]
+[s3; 8. Ajax support&]
+[s5; Skylark provides optional direct support for handling Ajax requests. 
+On client side, this support is implemented using tiny JavaScript 
+library `"skylark.js`".&]
+[s7; &]
+[s7; #include <Skylark/Skylark.h>&]
+[s7; &]
+[s7; using namespace Upp;&]
+[s7; &]
+[s7; SKYLARK(HomePage, `"`")&]
+[s7; `{&]
+[s7; -|http.RenderResult(`"Skylark08/index`");&]
+[s7; `}&]
+[s7; &]
+[s7; SKYLARK([* Add], `"add:POST`")&]
+[s7; `{&]
+[s7; -|String r `= AsString(Nvl(http.Int(`"number1`")) `+ Nvl(http.Int(`"number2`")));
+&]
+[s7; [* -|http.Ux(`"result`", `"The result is: `" `+ r)]&]
+[s7; [* -|    .UxSet(`"number1`", r);]&]
+[s7; `}&]
+[s7; &]
+[s7; struct MyApp : SkylarkApp `{&]
+[s7; -|MyApp() `{&]
+[s7; -|-|root `= `"myapp`";&]
+[s7; -|#ifdef `_DEBUG&]
+[s7; -|-|prefork `= 0;&]
+[s7; -|-|use`_caching `= false;&]
+[s7; -|#endif&]
+[s7; -|`}&]
+[s7; `};&]
+[s7; &]
+[s7; CONSOLE`_APP`_MAIN&]
+[s7; `{&]
+[s7; #ifdef `_DEBUG&]
+[s7; -|StdLogSetup(LOG`_FILE`|LOG`_COUT);&]
+[s7; -|Ini`::skylark`_log `= true;&]
+[s7; #endif&]
+[s7; &]
+[s7; -|MyApp().Run();-|&]
+[s7; `}&]
+[s7; &]
+[s7; &]
+[s5; [* Skylark08/index.witz:]&]
+[s7; <html>&]
+[s7; <script type`=`"text/javascript`" src`=`"[* `$static/Skylark/skylark.js]`"></scrip
+t>&]
+[s7; <body>&]
+[s7; [* `$js`_identity()]&]
+[s7; <div id`=`"[* numbers]`">&]
+[s7;     <INPUT type`=`"text`" id`=`"[* number1]`">&]
+[s7;     <INPUT type`=`"text`" id`=`"[* number2]`">&]
+[s7;     <INPUT type`=`"button`" value`=`"Add`" onclick`=`'[* UxPost(`$Add, 
+`"numbers`")]`'><br>&]
+[s7; </div>&]
+[s7; <div id`=`"result`"/>&]
+[s7; </body>&]
+[s7; </html>&]
+[s7; &]
+[s7; &]
+[s5; [*@5 `$static] variable is set by Skylark to the [@5 static`_dir 
+]configuration parameter, if missing it is set to [/ root]/static, 
+which makes Skylark to handle requests for static files (we expect 
+that for production environment, serving static files will be 
+off`-loaded to webserver). JavaScript function [*@5 UxPost ]recursively 
+scans through html elements provided as second, third etc.. parameters 
+and gathers all ids and values of input elements, packs them 
+into POST format and sends to Skylark handler specified as first 
+parameter. In this case it basically means that is sends [@5 number1] 
+and [@5 number2] values to server handler [@5 Add]. Note the use 
+of [*@5 `$js`_identity()] call `- this plays the same role in prevention 
+of [^http`:`/`/en`.wikipedia`.org`/wiki`/Cross`-site`_request`_forgery^ CSRF] 
+attacks as [@5 `$post`_identity] for FORM POSTs (alternative [*@5 UxGet] 
+function uses GET requests and does not require [@5 `$js`_identity]). 
+Also note the use of single quotes `' for onclick handler `- 
+this is because links to handlers are expanded as double`-quoted 
+strings.&]
+[s5; The response to [@5 UxPost] or [@5 UxGet] requests is Skylark arbitrary 
+format that can be used to directly alter current web page. [*@5 Ux] 
+replaces innerHTML of matching (by id) element, [*@5 UxSet] sets 
+the value attribute of matching element. Not shown here, [*@5 UxRender] 
+is similar to Ux, but renders the text from witz template and 
+finally [*@5 UxRun] can be used to run any JavaScript code in the 
+client.&]
+[s5; ]]
