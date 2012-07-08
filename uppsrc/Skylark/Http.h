@@ -118,6 +118,7 @@ public:
 	Http&  Ux(const char *id, const String& text);
 	Http&  UxRender(const char *id, const char *template_name);
 	Http&  UxSetValue(const char *id, const String& value);
+	Http&  UxRun(const String& js_code);
 	
 	String GetResponse() const                        { return response; }
 	

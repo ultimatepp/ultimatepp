@@ -385,18 +385,11 @@ One<Exe> Compiler::Block()
 One<Exe> Compile(const char *code, const Index<String>& vars)
 {
 	Compiler c(code, vars);
-	try {
-		One<Exe> exe = c.Block();
-		LLOG("Before optimization node count: " << c.GetNodeCount(exe));
-		c.Optimize(exe);
-		LLOG("After optimization node count: " << c.GetNodeCount(exe));
-		return exe;
-	}
-	catch(CParser::Error e) {
-		One<Exe> result;
-		result.Create<Compiler::ExeConst>().value = e;
-		return result;
-	}
+	One<Exe> exe = c.Block();
+	LLOG("Before optimization node count: " << c.GetNodeCount(exe));
+	c.Optimize(exe);
+	LLOG("After optimization node count: " << c.GetNodeCount(exe));
+	return exe;
 }
 
 };

@@ -28,7 +28,7 @@ SKYLARK(ServeStaticPage, "static/**")
 	}
 }
 
-SKYLARK(ServeIml, "iml/*")
+SKYLARK(Iml, "iml/*")
 {
 	String name = http[0];
 	int q = name.Find('.');

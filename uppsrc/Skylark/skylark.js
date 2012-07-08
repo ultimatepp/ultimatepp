@@ -10,6 +10,9 @@ function ProcessAjaxResult(ss)
 		if(pos >= 0) {
 			var id = ss[i].slice(0, pos);
 			var text = ss[i].slice(pos + 1);
+			if(id == "!")
+				eval(text);
+			else
 			if(id.length > 1 && id.charAt(0) == '>')
 				document.getElementById(id.slice(1)).value = text;
 			else
