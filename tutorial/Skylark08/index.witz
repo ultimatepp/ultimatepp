@@ -1,0 +1,12 @@
+<html>
+<script type="text/javascript" src="$static/Skylark/skylark.js"></script>
+<body>
+$js_identity()
+<div id="numbers">
+    <INPUT type="text" id="number1">
+    <INPUT type="text" id="number2">
+    <INPUT type="button" value="Add" onclick='UxPost($Add, "numbers")'><br>
+</div>
+<div id="result"/>
+</body>
+</html>

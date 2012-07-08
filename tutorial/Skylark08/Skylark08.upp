@@ -1,0 +1,13 @@
+description "Ajax\377";
+
+uses
+	Core,
+	Skylark;
+
+file
+	index.witz,
+	main.cpp;
+
+mainconfig
+	"" = "SSE2 MT";
+
