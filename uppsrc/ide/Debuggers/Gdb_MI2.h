@@ -139,6 +139,9 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		// check for stop reason
 		void CheckStopReason(void);
 		
+		// stop all running threads and re-select previous current thread
+		void StopAllThreads(void);
+		
 		// single step command handler
 		void Step(const char *cmd);
 		
@@ -197,7 +200,8 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		String FormatWatchLine(String exp, String const &val, int level);
 
 		// deep watch current quickwatch variable
-		void WatchDeep(String parentExp, String const &name, int level = 0);
+		void WatchDeep0(String parentExp, String const &name, int level, int &maxRemaining);
+		void WatchDeep(String parentExp, String const &name);
 
 		// copy stack frame list to clipboard
 		void CopyStack(void);
