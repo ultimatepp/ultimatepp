@@ -1,4 +1,4 @@
-#include "AdrBook.h"
+#include "AddressBook.h"
 
 void Persons(Http& http)
 {
@@ -37,7 +37,7 @@ SKYLARK(SubmitNew, "submit/create:POST")
 	http.Redirect(HomePage);
 }
 
-SKYLARK(New, "new")
+SKYLARK(New, "person/create")
 {
 	http("ACTION", SubmitNew).RenderResult("AddressBookWeb/Dialog");
 }

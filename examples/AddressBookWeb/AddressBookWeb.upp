@@ -6,7 +6,7 @@ uses
 	Skylark;
 
 file
-	AdrBook.h,
+	AddressBook.h,
 	Model.sch,
 	Pages.icpp,
 	AdrBook.cpp,
