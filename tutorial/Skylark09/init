@@ -1,0 +1,6 @@
+#ifndef _Skylark09_icpp_init_stub
+#define _Skylark09_icpp_init_stub
+#include "Core/init"
+#include "Skylark/init"
+#include "plugin/sqlite3/init"
+#endif

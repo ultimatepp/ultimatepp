@@ -1,0 +1,15 @@
+description "Connecting SQL\377";
+
+uses
+	Core,
+	Skylark,
+	plugin/sqlite3;
+
+file
+	index.witz,
+	myapp.sch,
+	main.cpp;
+
+mainconfig
+	"" = "SSE2 MT";
+
