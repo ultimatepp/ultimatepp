@@ -2,9 +2,14 @@
 
 using namespace Upp;
 
-struct Foo : AssignValueTypeNo<Foo, 10010> {
+struct RawFoo {
+	String x;
+};
+
+struct Foo : ValueType<Foo, 10010> {
 	int x;
 	
+	Foo(const Nuller&)                  { x = Null; }
 	Foo(int x) : x(x) {}
 	Foo() {}
 
@@ -14,27 +19,30 @@ struct Foo : AssignValueTypeNo<Foo, 10010> {
 	bool operator==(const Foo& b) const { return x == b.x; }
 	bool IsNullInstance() const         { return IsNull(x); }
 	
-	operator Value()    { return RichToValue(*this); }
-	Foo(const Value& v) { *this = ValueTo<Foo>(v); }
+	operator Value()                    { return RichToValue(*this); }
+	Foo(const Value& v)                 { *this = v.Get<Foo>(); }
 };
 
 INITBLOCK {
-	RichValue<Foo>::Register();
+	Value::Register<Foo>();
 }
 
 CONSOLE_APP_MAIN
 {
-	Value v = RawToValue(Foo(12345));
-	DUMP(v.Is<Foo>());
-	DUMP(ValueTo<Foo>(v).x);
+	RawFoo h;
+	h.x = "hello";
+	Value q = RawToValue(h);
+	DUMP(q.Is<RawFoo>());
+	DUMP(q.To<RawFoo>().x);
 	
 	Value a = RichToValue(Foo(54321));
 	Value b = RichToValue(Foo(54321));
 	DUMP(a == b);
 	DUMP(IsNull(a));
 	String s = StoreAsString(a);
+	Value v;
 	LoadFromString(v, s);
-	DUMP(ValueTo<Foo>(v));
+	DUMP(v.Get<Foo>());
 	
 	Value c = Foo(321);
 	Foo x = c;

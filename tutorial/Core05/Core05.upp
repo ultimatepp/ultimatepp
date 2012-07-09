@@ -1,3 +1,5 @@
+description "AsString, ToString and operator<<\377";
+
 uses
 	Core;
 
@@ -6,3 +8,4 @@ file
 
 mainconfig
 	"" = "";
+

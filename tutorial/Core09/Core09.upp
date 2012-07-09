@@ -1,0 +1,11 @@
+description "CombineHash\377";
+
+uses
+	Core;
+
+file
+	Core09.cpp;
+
+mainconfig
+	"" = "SSE2";
+

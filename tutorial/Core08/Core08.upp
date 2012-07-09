@@ -1,3 +1,5 @@
+description "Client types and Value, RawValue, RichValue\377";
+
 uses
 	Core;
 
