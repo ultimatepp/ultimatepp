@@ -7,7 +7,7 @@ struct RawFoo {
 	int    b;
 };
 
-struct RichFoo : AssignValueTypeNo<RichFoo, 513, Comparable<RichFoo, Moveable<RichFoo> > > {
+struct RichFoo : ValueType<RichFoo, 513, Comparable<RichFoo, Moveable<RichFoo> > > {
 	String a;
 	int    b;
 
@@ -18,14 +18,14 @@ struct RichFoo : AssignValueTypeNo<RichFoo, 513, Comparable<RichFoo, Moveable<Ri
 	bool     IsNullInstance() const          { return IsNull(a); }
 
 	operator Value() const                   { return RichValue<RichFoo>(*this); }
-	RichFoo(const Value& v)                  { *this = ValueTo<RichFoo>(v); }
+	RichFoo(const Value& v)                  { *this = v.To<RichFoo>(); }
 
 	RichFoo()                                {}
 };
 
 INITBLOCK
 {
-	RichValue<RichFoo>::Register();
+	Value::Register<RichFoo>();
 }
 
 void Print(const Value& x)
