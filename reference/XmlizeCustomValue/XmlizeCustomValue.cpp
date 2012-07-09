@@ -2,35 +2,31 @@
 
 using namespace Upp;
 
-struct MyCustomValue : AssignValueTypeNo<MyCustomValue, 514> {
+struct MyCustomValue : ValueType<MyCustomValue, 514> {
 	int    x, y, z;
 
-	bool      operator==(const MyCustomValue& o) const { return false; }
-	void     Serialize(Stream& s)                     {}
-	String   ToString() const                         { return "MyCustomValue"; }
-	unsigned GetHashValue() const                     { return 0; }
-	bool     IsNullInstance() const                   { return false; }
+	String   ToString() const                { return "MyCustomValue"; }
+
 
 	operator Value() const                   { return RichValue<MyCustomValue>(*this); }
-	MyCustomValue(const Value& v)            { *this = ValueTo<MyCustomValue>(v); }
+	MyCustomValue(const Value& v)            { *this = v.To<MyCustomValue>(); }
+	void     Xmlize(XmlIO& xio);
 
 	MyCustomValue()                          {}
 };
 
-void Xmlize(XmlIO xml, MyCustomValue& v)
+void MyCustomValue::Xmlize(XmlIO& xio)
 {
-	xml
-		.Attr("x", v.x)
-		.Attr("y", v.y)
-		.Attr("z", v.z)
+	xio
+		.Attr("x", x)
+		.Attr("y", y)
+		.Attr("z", z)
 	;
 }
 
 INITBLOCK {
-	RichValue<MyCustomValue>::Register();
+	Value::Register<MyCustomValue>("MyCustomValue");
 }
-
-REGISTER_VALUE_XMLIZE(MyCustomValue);
 
 CONSOLE_APP_MAIN
 {
