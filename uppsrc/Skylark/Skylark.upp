@@ -1,4 +1,4 @@
-description "\377B128,0,0";
+description "Web development framework\377B128,0,0";
 
 uses
 	Sql;
