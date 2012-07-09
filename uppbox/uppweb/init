@@ -10,4 +10,5 @@
 #include "Sql/init"
 #include "Skeleton/init"
 #include "Painter/init"
+#include "Skylark/init"
 #endif

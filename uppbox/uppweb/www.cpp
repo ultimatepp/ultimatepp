@@ -833,6 +833,8 @@ CONSOLE_APP_MAIN
 				SrcDocs(x, qtf, "CtrlLib", languages[i]);
 				SrcDocs(x, qtf, "RichText", languages[i]);
 				SrcDocs(x, qtf, "RichEdit", languages[i]);
+				SrcDocs(x, qtf, "Sql", languages[i]);
+				SrcDocs(x, qtf, "Skylark", languages[i]);
 				FindFile ff(AppendFileName(uppsrc, "*.*"));
 				Array <String> folders;
 				folders.Clear();
