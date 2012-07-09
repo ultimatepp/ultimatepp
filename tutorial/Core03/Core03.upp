@@ -1,3 +1,5 @@
+description "WString\377";
+
 uses
 	Core;
 
@@ -6,3 +8,4 @@ file
 
 mainconfig
 	"" = "";
+
