@@ -11,7 +11,8 @@ uses
 	plugin\ftp,
 	Sql,
 	Skeleton,
-	Painter;
+	Painter,
+	Skylark;
 
 options(GCC) -DNOWSTRING;
 
