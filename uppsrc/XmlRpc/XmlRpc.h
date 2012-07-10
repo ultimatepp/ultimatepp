@@ -2,7 +2,7 @@
 #define _XmlRpc_XmlRpc2_h
 
 #include <Web/Web.h>
-#include <Core/XmlRpc/XmlRpc.h>
+#include <Core/Rpc/Rpc.h>
 
 NAMESPACE_UPP
 
@@ -12,7 +12,7 @@ bool   XmlRpcServer(int port = 80, const char *group = NULL);
 class XmlRpcCall {
 	bool       shorted;
 	HttpClient server;
-	XmlRpcData data;
+	RpcData    data;
 	String     method;
 	String     error;
 	String     faultString;

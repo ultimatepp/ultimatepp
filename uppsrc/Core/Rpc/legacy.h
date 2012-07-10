@@ -13,7 +13,7 @@ void   SetXmlRpcMethodFilter(String (*filter)(const String& methodname))
 inline
 String XmlRpcExecute(const String& request, const char *group, const char *peeraddr)
 {
-	RpcExecute(request, group, peeraddr);
+	return RpcExecute(request, group, peeraddr);
 }
 
 inline
