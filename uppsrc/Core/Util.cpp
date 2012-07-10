@@ -394,9 +394,15 @@ static StaticMutex sMtx;
 static char  sIniFile[256];
 static bool s_ini_loaded;
 
+void ReloadIniFile()
+{
+	s_ini_loaded = false;
+}
+
 void SetIniFile(const char *name) {
 	Mutex::Lock __(sMtx);
 	strcpy(sIniFile, name);
+	ReloadIniFile();
 }
 
 String GetIniKey(const char *id, const String& def) {
@@ -464,6 +470,27 @@ int IniInt::operator=(int b) {
 String IniInt::ToString() const
 {
 	return AsString((int)const_cast<IniInt&>(*this));
+}
+
+IniDouble::operator double()
+{
+	ONCELOCK_(loaded) {
+		value = ScanDouble(TrimBoth(ToLower(GetIniKey(id))));
+		if(IsNull(value))
+			value = (*def)();
+	}
+	return value;
+}
+
+double IniDouble::operator=(double b)
+{
+	ONCELOCK_(loaded) {}
+	return value = b;
+}
+
+String IniDouble::ToString() const
+{
+	return AsString((double)const_cast<IniDouble&>(*this));
 }
 
 IniBool::operator bool() {

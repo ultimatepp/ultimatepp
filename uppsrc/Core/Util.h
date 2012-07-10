@@ -24,6 +24,7 @@ public:
 
 void   SetAssertFailedHook(void (*h)(const char *));
 
+void   ReloadIniFile();
 void   SetIniFile(const char *path = NULL);
 String GetIniKey(const char *id, const String& def);
 String GetIniKey(const char *id);
@@ -44,11 +45,23 @@ struct IniInt {
 // "private":
 	const char *id;
 	int      (*def)();
-	int        loaded;
+	bool       loaded;
 	int        value;
 
 	operator    int();
 	int         operator=(int b);
+	String ToString() const;
+};
+
+struct IniDouble {
+// "private":
+	const char *id;
+	double    (*def)();
+	bool        loaded;
+	double      value;
+
+	operator    double();
+	double      operator=(double b);
 	String ToString() const;
 };
 
@@ -93,6 +106,13 @@ INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var,
 #define INI_INT(var, def, info)\
 int DefIni_##var() { return def; }\
 IniInt var = { #var, DefIni_##var };\
+String AsStringIniCurrent_##var() { return AsString(var); } \
+String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
+INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var, info); }
+
+#define INI_DOUBLE(var, def, info)\
+double DefIni_##var() { return def; }\
+IniDouble var = { #var, DefIni_##var };\
 String AsStringIniCurrent_##var() { return AsString(var); } \
 String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
 INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var, info); }
