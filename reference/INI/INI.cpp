@@ -11,6 +11,8 @@ INI_STRING(text, "default text", "Text parameter");
 
 INI_INT(number, 123456, "Number parameter");
 
+INI_DOUBLE(fp_number, 0.1, "Floating point parameter");
+
 };
 
 extern void ExternalFn();
@@ -25,6 +27,7 @@ CONSOLE_APP_MAIN
 	DDUMP(Config::flag2);
 	DDUMP(Config::text);
 	DDUMP(Config::number);
+	DDUMP(Config::fp_number);
 	
 	LOG(GetIniInfoFormatted());
 
