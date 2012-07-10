@@ -1,6 +1,5 @@
 #ifndef _XmlRpcCall_icpp_init_stub
 #define _XmlRpcCall_icpp_init_stub
 #include "Core/init"
-#include "XmlRpc/init"
-#include "Core\XmlRpc/init"
+#include "Core\Rpc/init"
 #endif
