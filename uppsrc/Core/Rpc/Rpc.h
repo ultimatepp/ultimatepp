@@ -188,6 +188,13 @@ Value      ParseXmlRpcValue(XmlParser& p);
 Value      ParseXmlRpcParam(XmlParser& p);
 ValueArray ParseXmlRpcParams(XmlParser& p);
 
+struct RpcGet {
+	Value v;
+	
+	template <class T>
+	operator T() { T x; ValueGet(x, v); return x; }
+};
+
 struct RpcData {
 	String     peeraddr;
 	ValueArray in;
@@ -201,15 +208,15 @@ struct RpcData {
 	template <class T>
 	RpcData& operator>>(T& x)           { ValueGet(x, Get()); return *this; }
 	
-	Value    operator[](const char *id) { return in_map[id]; }
+	RpcGet   operator[](const char *id) { RpcGet h; h.v = in_map[id]; return h; }
 	
 	template <class T>
-	RpcData& operator<<(const T& x)      { ASSERT(out_map.GetCount() == 0); Value v; ValuePut(v, x); out.Add(v); return *this; }
+	RpcData& operator<<(const T& x)     { ASSERT(out_map.GetCount() == 0); Value v; ValuePut(v, x); out.Add(v); return *this; }
 
 	template <class T>
-	void        Set(int i, const T& x)   { ASSERT(out_map.GetCount() == 0); Value v; ValuePut(v, x); out.Set(i, v); }
+	void        Set(int i, const T& x)  { ASSERT(out_map.GetCount() == 0); Value v; ValuePut(v, x); out.Set(i, v); }
 	
-	void        Reset()                  { in.Clear(); out.Clear(); ii = 0; }
+	void        Reset()                 { in.Clear(); out.Clear(); ii = 0; }
 
 	RpcData() { ii = 0; }
 };

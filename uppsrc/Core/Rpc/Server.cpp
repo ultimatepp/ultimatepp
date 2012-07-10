@@ -1,6 +1,6 @@
 #include "Rpc.h"
 
-#define LLOG(x)    DLOG(x)
+#define LLOG(x)  //  DLOG(x)
 
 NAMESPACE_UPP
 
@@ -148,12 +148,10 @@ Value ProcessJsonRpc(const Value& v, const char *group, const char *peeraddr)
 		data.in_map = param;
 	else
 		data.in = param;
-	DDUMP(data.in);
 	try {
 		if(CallRpcMethod(data, group, methodname)) {
 			if(IsValueArray(data.out)) {
 				ValueArray va = data.out;
-				DDUMP(data.out);
 				Value result = Null;
 				if(va.GetCount()) {
 					if(IsError(va[0])) {
