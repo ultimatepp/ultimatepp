@@ -1,5 +1,4 @@
 #ifndef _XmlRpc_icpp_init_stub
 #define _XmlRpc_icpp_init_stub
 #include "Web/init"
-#include "Core\XmlRpc/init"
 #endif
