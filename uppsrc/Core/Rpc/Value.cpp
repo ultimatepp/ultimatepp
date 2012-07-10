@@ -41,7 +41,7 @@ void ValueGet(int& n, const Value& v)
 
 void ValueGet(String& s, const Value& v)
 {
-	ValueCheck(IsNull(v) || IsString(s));
+	ValueCheck(IsNull(v) || IsString(v));
 	s = v;
 }
 
@@ -53,7 +53,7 @@ void ValueGet(double& x, const Value& v)
 
 void ValueGet(bool& x, const Value& v)
 {
-	ValueCheck(IsNull(v) || IsNumber(x));
+	ValueCheck(IsNull(v) || IsNumber(v));
 	x = v;
 }
 
@@ -67,7 +67,6 @@ Time IsoTime(const Value& v)
 
 void ValueGet(Date& x, const Value& v)
 {
-	DDUMP(v);
 	if(IsString(v)) {
 		x = IsoTime(v);
 		return;
