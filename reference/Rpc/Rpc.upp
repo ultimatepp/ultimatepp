@@ -1,0 +1,12 @@
+description "JsonRPC/XmlRPC demonstration\377";
+
+uses
+	Core,
+	Core\Rpc;
+
+file
+	Rpc.cpp;
+
+mainconfig
+	"" = "SSE2";
+
