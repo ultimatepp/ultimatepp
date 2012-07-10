@@ -1,5 +1,5 @@
-#ifndef _XmlRpc_XmlRpc_h
-#define _XmlRpc_XmlRpc_h
+#ifndef Rpc_Rpc_h
+#define Rpc_Rpc_h
 
 #include <Web/Web.h>
 
@@ -333,6 +333,8 @@ struct JsonRpcRequestNamed : RpcRequest {
 void LogRpcRequests(bool b = true);
 
 void SetRpcServerTrace(Stream& s, int level = 1);
+
+#include "legacy.h"
 
 END_UPP_NAMESPACE
 

@@ -4,7 +4,7 @@ uses
 	Web;
 
 file
-	XmlRpc.h,
+	Rpc.h,
 	legacy.h,
 	Value.cpp,
 	Xml.cpp,

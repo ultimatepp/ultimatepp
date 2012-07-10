@@ -1,5 +1,4 @@
-#include "XmlRpc.h"
-#include "XmlRpc.h"
+#include "Rpc.h"
 
 #define LLOG(x)    DLOG(x)
 

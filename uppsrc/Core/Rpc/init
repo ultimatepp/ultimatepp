@@ -1,4 +1,4 @@
-#ifndef _Core_XmlRpc_icpp_init_stub
-#define _Core_XmlRpc_icpp_init_stub
+#ifndef _Core_Rpc_icpp_init_stub
+#define _Core_Rpc_icpp_init_stub
 #include "Web/init"
 #endif
