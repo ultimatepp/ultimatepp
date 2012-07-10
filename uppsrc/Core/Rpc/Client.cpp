@@ -53,7 +53,7 @@ RpcRequest::RpcRequest()
 String XmlRpcExecute(const String& request, const char *group, const char *peeraddr, bool& json);
 String XmlRpcExecute(const String& request, const char *group, const char *peeraddr);
 
-Value RpcRequest::Retry()
+RpcGet RpcRequest::Retry()
 {
 	ClearError();
 	shouldExecute = true;
@@ -67,10 +67,10 @@ Value JsonRpcData(const Value& v)
 	return v;
 }
 
-Value RpcRequest::Execute()
+RpcGet RpcRequest::Execute()
 {
 	if(!shouldExecute)
-		return Value();
+		return RpcGet();
 	shouldExecute = false;
 	String request;
 	if(json) {
@@ -111,12 +111,14 @@ Value RpcRequest::Execute()
 		response = Post(request).Execute();
 	if(sLogRpcCalls)
 		RLOG("XmlRpc call response:\n" << response);
+	RpcGet h;
 	if(IsNull(response)) {
 		faultCode = XMLRPC_CLIENT_HTTP_ERROR;
 		faultString = GetErrorDesc();
 		error = "Http request failed: " + faultString;
 		LLOG(error);
-		return ErrorValue(error);
+		h.v = ErrorValue(error);
+		return h;
 	}
 	if(json) {
 		try {
@@ -128,7 +130,8 @@ Value RpcRequest::Execute()
 					data.in.Clear();
 					data.in.Add(result);
 					data.ii = 0;
-					return result;
+					h.v = result;
+					return h;
 				}
 				Value e = m["error"];
 				if(IsValueMap(e)) {
@@ -140,7 +143,8 @@ Value RpcRequest::Execute()
 						error.Clear();
 						error << "Failed '" << faultString << "' (" << faultCode << ')';
 						LLOG(s);
-						return ErrorValue(error);
+						h.v = ErrorValue(error);
+						return h;
 					}
 				}
 			}
@@ -149,7 +153,8 @@ Value RpcRequest::Execute()
 			faultCode = XMLRPC_CLIENT_RESPONSE_ERROR;
 			error = faultString;
 			LLOG(error);
-			return ErrorValue(error);
+			h.v = ErrorValue(error);
+			return h;
 		}
 		catch(CParser::Error e) {
 			String s;
@@ -158,7 +163,8 @@ Value RpcRequest::Execute()
 			error.Clear();
 			error << "JSON Error: " << faultString;
 			LLOG(error);
-			return ErrorValue(error);
+			h.v = ErrorValue(error);
+			return h;
 		}
 	}
 	else {
@@ -175,7 +181,8 @@ Value RpcRequest::Execute()
 					error.Clear();
 					error << "Failed '" << faultString << "' (" << faultCode << ')';
 					LLOG(s);
-					return ErrorValue(error);
+					h.v = ErrorValue(error);
+					return h;
 				}
 			}
 			else {
@@ -191,9 +198,11 @@ Value RpcRequest::Execute()
 			error.Clear();
 			error << "XML Error: " << faultString;
 			LLOG(error << ": " << p.GetPtr());
-			return ErrorValue(error);
+			h.v = ErrorValue(error);
+			return h;
 		}
-		return data.in.GetCount() ? data.in[0] : Null;
+		h.v = data.in.GetCount() ? data.in[0] : Null;
+		return h;
 	}
 }
 

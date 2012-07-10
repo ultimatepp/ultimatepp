@@ -193,6 +193,8 @@ struct RpcGet {
 	
 	template <class T>
 	operator T() { T x; ValueGet(x, v); return x; }
+	
+	String ToString() const { return v.ToString(); }
 };
 
 struct RpcData {
@@ -208,6 +210,8 @@ struct RpcData {
 	template <class T>
 	RpcData& operator>>(T& x)           { ValueGet(x, Get()); return *this; }
 	
+	RpcGet   operator++(int)            { RpcGet h; h.v = Get(); return h; }
+	
 	RpcGet   operator[](const char *id) { RpcGet h; h.v = in_map[id]; return h; }
 	
 	template <class T>
@@ -215,7 +219,10 @@ struct RpcData {
 
 	template <class T>
 	void        Set(int i, const T& x)  { ASSERT(out_map.GetCount() == 0); Value v; ValuePut(v, x); out.Set(i, v); }
-	
+
+	template <class T>
+	void operator=(const T& x)          { operator<<(x); }
+
 	void        Reset()                 { in.Clear(); out.Clear(); ii = 0; }
 
 	RpcData() { ii = 0; }
@@ -273,15 +280,12 @@ public:
 	template <class T>
 	RpcRequest& Named(const char *id, const T& x)  { data.out_map.Add(id, x); return *this; }
 
-	Value       Execute();
-	Value       Retry();
+	RpcGet      Execute();
+	RpcGet      Retry();
 
 	template <class T>
-	bool operator>>(T& x)                          { if(Execute().IsError()) return false;
+	bool operator>>(T& x)                          { if(Execute().v.IsError()) return false;
 	                                                 try { data >> x; } catch(ValueTypeMismatch) { return false; } return true; }
-
-	template <class T>
-	bool        Execute(T& result)                 { return operator>>(result); }
 
 	RpcRequest& operator()(const char *method)     { Method(method); return *this; }
 
