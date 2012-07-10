@@ -114,7 +114,7 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 		return AsCString((String)v);
 	if(IsNull(v))
 		return "null";
-	NEVER();
+	NEVER_("Non-JSON value in AsJSON: " + v.GetTypeName());
 	return "null";
 }
 

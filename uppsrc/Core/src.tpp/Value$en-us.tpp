@@ -152,6 +152,11 @@ defined).&]
 [s2; Conversion to text for supporting rich types.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Value`:`:GetTypeName`(`)const:%- [_^String^ String]_[* GetTypeName]()_[@(0.0.255) cons
+t]&]
+[s2; Returns the text with typename for debugging purposes.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Value`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize]([_^Stream^ Stream][@(0.0.255) `&
 ]_[*@3 s])&]
 [s2; Serialization for supporting rich types.&]
@@ -387,4 +392,4 @@ ue][@(0.0.255) `&]_[*@3 v])&]
 alue][@(0.0.255) `&]_[*@3 b])&]
 [s2; If [%-*@3 a].IsNull(), returns [%-*@3 b], otherwise (a not null) 
 returns a.&]
-[s3;%- ]
+[s3;%- ]]

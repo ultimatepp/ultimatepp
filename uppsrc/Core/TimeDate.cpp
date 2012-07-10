@@ -436,6 +436,12 @@ int64 Time::Get() const
 	return Date::Get() * (int64)24 * 3600 + hour * 3600 + minute * 60 + second;
 }
 
+bool Time::IsValid() const
+{
+	return year == -32768 ||
+	       Date::IsValid() && hour >= 0 && hour < 24 && minute >= 0 && minute < 60 && second >= 0 && second < 60;
+}
+
 int64 operator-(Time a, Time b) {
 	return a.Get() - b.Get();
 }

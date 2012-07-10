@@ -95,6 +95,8 @@ struct Time : Date, RelOps< Time, Moveable<Time> > {
 	void   Set(int64 scalar);
 	int64  Get() const;
 
+	bool   IsValid() const;
+
 	int    Compare(Time b) const;
 
 	Time()                   { hour = minute = second = 0; }

@@ -161,26 +161,13 @@ String FormatXmlRpcParams(const ValueArray& params)
 	return r;
 }
 
-struct XmlRpcErrorStruct : XmlRpcStruct<XmlRpcErrorStruct> {
-	int    code;
-	String text;
-	
-	void Map(ValueMapper& m) {
-		m("faultCode", code)("faultString", text);
-	}
-};
-
 String FormatXmlRpcError(int code, const char *text)
 {
-	XmlRpcErrorStruct e;
-	e.code = code;
-	e.text = text;
-	XmlRpcData d;
-	d << e;
 	String r;
 	r << XmlHeader()
 	  << "<methodResponse><fault>\r\n"
-	  << FormatXmlRpcValue(d.out[0])
+	  << "<faultCode>" << code << "</faultCode>"
+	  << "<faultString>" << text << "</faultString>"
 	  << "</fault></methodResponse>\r\n";
 	return r;
 }
