@@ -2,7 +2,7 @@ description "XML-RPC simple server\377";
 
 uses
 	Core,
-	Core/XmlRpc;
+	Core\Rpc;
 
 file
 	XmlRpcServer.cpp;

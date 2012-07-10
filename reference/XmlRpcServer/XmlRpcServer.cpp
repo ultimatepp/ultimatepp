@@ -1,8 +1,8 @@
-#include <Core/XmlRpc/XmlRpc.h>
+#include <Core/Rpc/Rpc.h>
 
 using namespace Upp;
 
-XMLRPC_METHOD(compute)
+RPC_METHOD(compute)
 {
 	double a, b;
 	String op;
@@ -29,15 +29,14 @@ XMLRPC_METHOD(compute)
 	rpc << ErrorValue("unknown operator");
 }
 
-XMLRPC_METHOD(ping)
+RPC_METHOD(ping)
 {
 	rpc << GetSysTime();
 }
 
-namespace Upp { extern bool HttpClient_Trace__; }
-
 CONSOLE_APP_MAIN
 {
 	Cout() << "Server..\n";
-	XmlRpcServerLoop(1234);
+	LogRpcRequests();
+	RpcServerLoop(1234);
 }

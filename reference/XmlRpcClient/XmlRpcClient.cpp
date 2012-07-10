@@ -1,4 +1,4 @@
-#include <Core/XmlRpc/XmlRpc.h>
+#include <Core/Rpc/Rpc.h>
 
 using namespace Upp;
 

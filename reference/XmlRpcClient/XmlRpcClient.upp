@@ -2,7 +2,7 @@ description "Client for XmlRpcServer example\377";
 
 uses
 	Core,
-	Core/XmlRpc;
+	Core\Rpc;
 
 file
 	XmlRpcClient.cpp;
