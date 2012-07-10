@@ -208,6 +208,11 @@ _>_]&]
 [s2;%% Converts the time into a numeric value.&]
 [s3; &]
 [s4; &]
+[s5;:Time`:`:IsValid`(`)const: [@(0.0.255) bool]_[* IsValid]()_[@(0.0.255) const]&]
+[s2;%% Returns true if Time is valid (Date is valid and hour/minute/second 
+values are in range).&]
+[s3; &]
+[s4; &]
 [s5;:Time`:`:AsFileTime`(`)const: [_^FileTime^ FileTime]_[* AsFileTime]()_[@(0.0.255) const
 ]&]
 [s2;%% Converst the time into a system specific value.&]

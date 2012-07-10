@@ -219,6 +219,7 @@ public:
 	bool operator!=(const Value& v) const { return !operator==(v); }
 
 	String ToString() const;
+	String GetTypeName() const       { return GetName(); }
 
 	void  Serialize(Stream& s);
 	void  Xmlize(XmlIO& xio);

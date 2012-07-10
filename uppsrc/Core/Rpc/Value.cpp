@@ -2,6 +2,31 @@
 
 NAMESPACE_UPP
 
+String FormatIso8601(Time t)
+{
+	return Format("%04.4d%02.2d%02.2d`T%02.2d`:%02.2d`:%02.2d",
+	              t.year, t.month, t.day, t.hour, t.minute, t.second);
+}
+
+Time ScanIso8601(const String& p)
+{
+	String s = TrimBoth(p);
+	// 19980717T14:08:55
+	// 01234567890123456
+	if(s.GetCount() != 17 || s[8] != 'T' || s[11] != ':' || s[14] != ':')
+		return Null;
+	Time tm;
+	tm.year = atoi(s.Mid(0, 4));
+	tm.month = atoi(s.Mid(4, 2));
+	tm.day = atoi(s.Mid(6, 2));
+	tm.hour = atoi(s.Mid(9, 2));
+	tm.minute = atoi(s.Mid(12, 2));
+	tm.second = atoi(s.Mid(15, 2));
+	if(!tm.IsValid())
+		return Null;
+	return tm;
+}
+
 void ValueCheck(bool b)
 {
 	if(!b)
@@ -32,14 +57,31 @@ void ValueGet(bool& x, const Value& v)
 	x = v;
 }
 
+Time IsoTime(const Value& v)
+{
+	Time tm = ScanIso8601((String)v);
+	if(IsNull(tm))
+		throw ValueTypeMismatch();
+	return tm;
+}
+
 void ValueGet(Date& x, const Value& v)
 {
+	DDUMP(v);
+	if(IsString(v)) {
+		x = IsoTime(v);
+		return;
+	}
 	ValueCheck(IsNull(v) || IsDateTime(v));
 	x = v;
 }
 
 void ValueGet(Time& x, const Value& v)
 {
+	if(IsString(v)) {
+		x = IsoTime(v);
+		return;
+	}
 	ValueCheck(IsNull(v) || IsDateTime(v));
 	x = v;
 }

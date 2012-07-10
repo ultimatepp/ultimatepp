@@ -5,6 +5,7 @@ uses
 
 file
 	XmlRpc.h,
+	legacy.h,
 	Value.cpp,
 	Xml.cpp,
 	Server.cpp,
