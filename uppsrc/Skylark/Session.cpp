@@ -29,7 +29,7 @@ void Http::LoadSession()
 {
 	const SessionConfig& cfg = app.session;
 	session_var.Clear();
-	session_id = (*this)[cfg.cookie];
+	session_id = (*this)['@' + cfg.cookie];
 	if(IsNull(session_id))
 		return;
 	String data;
@@ -53,7 +53,7 @@ void Http::LoadSession()
 	SKYLARKLOG("Loaded session: " << session_id);
 	LDUMPM(session_var);
 	for(int i = 0; i < session_var.GetCount(); i++)
-		var.GetAdd(session_var.GetKey(i)) = session_var[i];
+		var.GetAdd('.' + session_var.GetKey(i)) = session_var[i];
 }
 
 thread__ int s_exp;
@@ -137,10 +137,12 @@ Http& Http::ClearSession()
 Http& Http::SessionSet(const char *id, const Value& value)
 {
 	LLOG("SessionSet " << id << " = " << value);
+	if(*id == '.')
+		id++;
 	if(IsNull(session_id))
 		NewSessionId();
 	session_var.GetAdd(id) = value;
-	var.GetAdd(id) = value;
+	var.GetAdd('.' + id) = value;
 	session_dirty = true;
 	return *this;
 }

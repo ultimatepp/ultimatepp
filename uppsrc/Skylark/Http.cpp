@@ -26,7 +26,8 @@ void Http::ParseRequest(const char *p)
 		last = p;
 		while(*p && *p != '&')
 			p++;
-		var.GetAdd(key) = UrlDecode(last, p);
+		if(*key != '.' && *key != '@')
+			var.GetAdd(key) = UrlDecode(last, p);
 		if(*p)
 			p++;
 	}
@@ -53,7 +54,9 @@ Http& Http::SetRawCookie(const char *id, const String& value, Time expires,
                          const char *path, const char *domain, bool secure,
                          bool httponly)
 {
-	var.GetAdd(id) = value;
+	if(*id == '.')
+		id++;
+	var.GetAdd('@' + id) = value;
 	String& c = cookies.GetAdd(id);
 	c.Clear();
 	c << "Set-Cookie:" << ' ' << id << '=' << value;
@@ -210,7 +213,7 @@ void Http::ReadMultiPart(const String& buffer)
 				break;
 			p++;
 		}
-		if(!name.IsEmpty()) { // add variables
+		if(!name.IsEmpty() && *name != '.' && *name != '@') { // add variables
 			if(!filename.IsEmpty())
 				var.GetAdd(name + ".filename") = filename;
 			if(!content_type.IsEmpty())

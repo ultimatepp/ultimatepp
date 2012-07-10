@@ -1,0 +1,33 @@
+#include "Iml.h"
+
+namespace Upp {
+
+SKYLARK(Iml, "iml/*")
+{
+	String name = http[0];
+	int q = name.Find('.');
+	String ext;
+	if(q >= 0) {
+		ext = name.Mid(q + 1);
+		name = name.Mid(0, q);
+	}
+	Image m = GetImlImage(name);
+	if(ext == "jpg" || ext == "JPG" || ext == "jpeg" || ext == "JPEG")
+		http.Content("image/jpeg", JPGEncoder().SaveString(m));
+	else
+		http.Content("image/png", PNGEncoder().SaveString(m));
+}
+
+
+Value ImlImg(const Vector<Value>& arg, const Renderer *)
+{
+	if(arg.GetCount() < 1)
+		throw Exc("Missing image name for ImlImg");
+	return Raw("<img src=\"iml/" + AsString(arg[0]) + "\")/>");
+}
+
+INITBLOCK {
+	Compiler::Register("ImlImg", ImlImg);
+};
+
+};
