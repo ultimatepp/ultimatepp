@@ -10,21 +10,29 @@ RPC_METHOD(Multiply)
 	rpc << m * n;
 }
 
+RPC_METHOD(Multiply2)
+{
+	int m = rpc++;
+	int n = rpc++;
+	rpc = m * n;
+}
+
 RPC_METHOD(MultiplyNamed)
 {
 	int n = rpc["first"];
 	int m = rpc["second"];
-	rpc << m * n;
+	rpc = m * n;
 }
 
 CONSOLE_APP_MAIN
 {
-///	LogXmlRpcRequests();
+//	LogXmlRpcRequests();
 //	SetXmlRpcServerTrace(UppLog());
 //  Working in "shortened" mode - without URL specified, RpcRequests are performed by methods in
 //  the same process.
 
-	DUMP(JsonRpcRequest()("Multiply", 10, 11).Execute());
-	DUMP(XmlRpcRequest()("Multiply", 10, 11).Execute());
-	DUMP(JsonRpcRequestNamed()("MultiplyNamed")("first", 10)("second", 11).Execute());
+	DUMP(JsonRpcRequest()("Multiply", 2, 3).Execute());
+	DUMP(JsonRpcRequest()("Multiply2", 4, 5).Execute());
+	DUMP(XmlRpcRequest()("Multiply2", 6, 7).Execute());
+	DUMP(JsonRpcRequestNamed()("MultiplyNamed")("first", 8)("second", 9).Execute());
 }
