@@ -1,0 +1,6 @@
+#ifndef _Skylark_Iml_icpp_init_stub
+#define _Skylark_Iml_icpp_init_stub
+#define BLITZ_INDEX__ F565e623033e15f6c077dba0bc03cb2ea
+#include "Lib.icpp"
+#undef BLITZ_INDEX__
+#endif

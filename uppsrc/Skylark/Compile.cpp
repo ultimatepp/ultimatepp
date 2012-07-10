@@ -44,6 +44,7 @@ int CountLinkArgs(const Vector<String>& part)
 One<Exe> Compiler::Prim()
 {
 	One<Exe> result;
+	DDUMP(p.GetPtr());
 	if(p.Char('!'))
 		result = Create<ExeNot>(Prim());
 	else
@@ -53,8 +54,14 @@ One<Exe> Compiler::Prim()
 	if(p.Char('+'))
 		result = Prim();
 	else
-	if(p.IsId()) {
-		String id = p.ReadId();
+	if(p.IsId() || p.IsChar('.') || p.IsChar('@')) {
+		String id;
+		if(p.Char('.'))
+			id = ".";
+		else
+		if(p.Char('@'))
+			id = "@";
+		id << p.ReadId();
 		int n = var.Find(id);
 		if(p.Char('(')) {
 			Value (*f)(const Vector<Value>&, const Renderer *) = functions().Get(id, NULL);

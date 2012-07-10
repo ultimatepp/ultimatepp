@@ -290,15 +290,15 @@ void Http::Dispatch(TcpSocket& socket)
 				qq++;
 				q = h.Find(';', qq);
 				if(q < 0) {
-					var.Add(id, UrlDecode(h.Mid(qq)));
+					var.Add('@' + id, UrlDecode(h.Mid(qq)));
 					break;
 				}
-				var.Add(id, UrlDecode(h.Mid(qq, q - qq)));
+				var.Add('@' + id, UrlDecode(h.Mid(qq, q - qq)));
 				q++;
 			}
 		}
 		var.GetAdd("static") = app.static_dir;
-		var.GetAdd("__identity__"); // To make StdLib.icpp GetIndentity work without changing preset stack positions
+		var.GetAdd(".__identity__"); // To make StdLib.icpp GetIndentity work without changing preset stack positions
 		LDUMPM(var);
 		Vector<String> part = Split(uri, '/');
 		for(int i = 0; i < part.GetCount(); i++)
@@ -318,13 +318,13 @@ void Http::Dispatch(TcpSocket& socket)
 				session_dirty = false;
 				if(post && !bd.post_raw) {
 					String id = Nvl((*this)["__post_identity__"], (*this)["__js_identity__"]);
-					if(id != (*this)["__identity__"])
+					if(id != (*this)[".__identity__"])
 						throw AuthExc("identity error");
 				}
-				lang = Nvl(Int("__lang__"), LNG_ENGLISH);
+				lang = Nvl(Int(".__lang__"), LNG_ENGLISH);
 				Upp::SetLanguage(lang);
-				var.GetAdd("__lang__") = lang;
-				var.GetAdd("language") = ToLower(LNGAsText(lang));
+				var.GetAdd(".__lang__") = lang;
+				var.GetAdd(".language") = ToLower(LNGAsText(lang));
 				viewid = bd.id;
 				LDUMP(viewid);
 				(*bd.view)(*this);
