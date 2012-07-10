@@ -7,8 +7,8 @@
     <INPUT type="submit" value="Add to list">
    </P>
 </form>
-List ($count(LIST)):<br>
-$for(i in LIST)
+List ($count(.LIST)):<br>
+$for(i in .LIST)
 	"$i" 
 $endfor
 </body>

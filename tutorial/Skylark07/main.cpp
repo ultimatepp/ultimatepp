@@ -9,12 +9,12 @@ SKYLARK(HomePage, "")
 
 SKYLARK(Submit, "submit:POST")
 {
-	Value h = http["LIST"];
+	Value h = http[".LIST"];
 	ValueArray va;
 	if(IsValueArray(h))
 		va = h;
 	va.Add(http["id"]);
-	http.SessionSet("LIST", va);
+	http.SessionSet(".LIST", va);
 	http.Redirect(HomePage);
 }
 
