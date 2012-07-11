@@ -665,10 +665,6 @@ bool HttpRequest::ReadingBody()
 	if(count > 0)
 		n = min(n, count);
 	String s = TcpSocket::Get(n);
-	DDUMP(n);
-	DDUMP(s.GetCount());
-	DDUMP(IsEof());
-	DDUMP(count);
 	if(s.GetCount() == 0)
 		return !IsEof() && count;
 #ifndef ENDZIP
