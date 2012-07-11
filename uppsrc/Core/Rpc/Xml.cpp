@@ -164,11 +164,25 @@ String FormatXmlRpcParams(const ValueArray& params)
 String FormatXmlRpcError(int code, const char *text)
 {
 	String r;
-	r << XmlHeader()
-	  << "<methodResponse><fault>\r\n"
-	  << "<faultCode>" << code << "</faultCode>"
-	  << "<faultString>" << text << "</faultString>"
-	  << "</fault></methodResponse>\r\n";
+	r << XmlHeader() <<
+		"<?xml version=\"1.0\"?>"
+		"<methodResponse>"
+		  "<fault>"
+		    "<value>"
+		      "<struct>"
+		        "<member>"
+		          "<name>faultCode</name>"
+		          "<value><int>" << code << "</int></value>"
+		        "</member>"
+		        "<member>"
+		          "<name>faultString</name>"
+		          "<value><string>" << text << "</string></value>"
+		        "</member>"
+		      "</struct>"
+		    "</value>"
+		  "</fault>"
+		"</methodResponse>"
+	;
 	return r;
 }
 
