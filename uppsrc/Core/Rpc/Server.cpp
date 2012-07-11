@@ -43,7 +43,7 @@ void ThrowRpcError(int code, const char *s)
 
 void ThrowRpcError(const char *s)
 {
-	ThrowRpcError(XMLRPC_SERVER_PROCESSING_ERROR, s);
+	ThrowRpcError(RPC_SERVER_PROCESSING_ERROR, s);
 }
 
 static Stream *rpc_trace;
@@ -92,14 +92,14 @@ String DoXmlRpc(const String& request, const char *group, const char *peeraddr)
 					String e = GetErrorText(data.out[0]);
 					if(rpc_trace)
 						*rpc_trace << "Processing error: " << e << '\n';
-					return FormatXmlRpcError(XMLRPC_SERVER_PROCESSING_ERROR, "Processing error: " + e);
+					return FormatXmlRpcError(RPC_SERVER_PROCESSING_ERROR, "Processing error: " + e);
 				}
 				r << FormatXmlRpcParams(data.out);
 			}
 			r << "\r\n</methodResponse>\r\n";
 		}
 		else
-			return FormatXmlRpcError(XMLRPC_UNKNOWN_METHOD_ERROR, "\'" + methodname + "\' method is unknown");
+			return FormatXmlRpcError(RPC_UNKNOWN_METHOD_ERROR, "\'" + methodname + "\' method is unknown");
 		p.PassEnd();
 		return r;
 	}
@@ -113,13 +113,13 @@ String DoXmlRpc(const String& request, const char *group, const char *peeraddr)
 		LLOG("XmlError " << e << ": " << p.GetPtr());
 		if(rpc_trace)
 			*rpc_trace << "XmlError: " << e << '\n';
-		return FormatXmlRpcError(XMLRPC_SERVER_XML_ERROR, "XML Error: " + e);
+		return FormatXmlRpcError(RPC_SERVER_XML_ERROR, "XML Error: " + e);
 	}
 	catch(ValueTypeMismatch) {
 		LLOG("ValueTypeMismatch at parameter " << data.ii);
 		if(rpc_trace)
 			*rpc_trace << "ValueTypeMismatch at parameter " << data.ii << '\n';
-		return FormatXmlRpcError(XMLRPC_SERVER_PARAM_ERROR, "Parameter mismatch at parameter " + AsString(data.ii));
+		return FormatXmlRpcError(RPC_SERVER_PARAM_ERROR, "Parameter mismatch at parameter " + AsString(data.ii));
 	}
 	return Null;
 }
@@ -159,7 +159,7 @@ Value ProcessJsonRpc(const Value& v, const char *group, const char *peeraddr)
 						String e = GetErrorText(data.out[0]);
 						if(rpc_trace)
 							*rpc_trace << "Processing error: " << e << '\n';
-						return JsonRpcError(XMLRPC_SERVER_PROCESSING_ERROR, "Processing error: " + e, id);
+						return JsonRpcError(RPC_SERVER_PROCESSING_ERROR, "Processing error: " + e, id);
 					}
 					result = JsonRpcData(va[0]);
 				}
@@ -170,7 +170,7 @@ Value ProcessJsonRpc(const Value& v, const char *group, const char *peeraddr)
 				return m;
 			}
 		}
-		return JsonRpcError(XMLRPC_UNKNOWN_METHOD_ERROR, "Method not found", id);
+		return JsonRpcError(RPC_UNKNOWN_METHOD_ERROR, "Method not found", id);
 	}
 	catch(RpcError e) {
 		LLOG("Processing error: " << e.text);
@@ -182,7 +182,7 @@ Value ProcessJsonRpc(const Value& v, const char *group, const char *peeraddr)
 		LLOG("ValueTypeMismatch at parameter " << data.ii);
 		if(rpc_trace)
 			*rpc_trace << "ValueTypeMismatch at parameter " << data.ii << '\n';
-		return AsJSON(JsonRpcError(XMLRPC_SERVER_PARAM_ERROR, "Invalid params", id));
+		return AsJSON(JsonRpcError(RPC_SERVER_PARAM_ERROR, "Invalid params", id));
 	}
 }
 
@@ -205,7 +205,7 @@ String DoJsonRpc(const String& request, const char *group, const char *peeraddr)
 		}
 	}
 	catch(CParser::Error e) {}	
-	return AsJSON(JsonRpcError(XMLRPC_SERVER_JSON_ERROR, "Parse error", Null));
+	return AsJSON(JsonRpcError(RPC_SERVER_JSON_ERROR, "Parse error", Null));
 }
 
 String RpcExecute(const String& request, const char *group, const char *peeraddr, bool& json)

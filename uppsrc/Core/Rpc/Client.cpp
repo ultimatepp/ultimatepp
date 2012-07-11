@@ -113,7 +113,7 @@ RpcGet RpcRequest::Execute()
 		RLOG("XmlRpc call response:\n" << response);
 	RpcGet h;
 	if(IsNull(response)) {
-		faultCode = XMLRPC_CLIENT_HTTP_ERROR;
+		faultCode = RPC_CLIENT_HTTP_ERROR;
 		faultString = GetErrorDesc();
 		error = "Http request failed: " + faultString;
 		LLOG(error);
@@ -150,7 +150,7 @@ RpcGet RpcRequest::Execute()
 			}
 			String s;
 			faultString = "Invalid response";
-			faultCode = XMLRPC_CLIENT_RESPONSE_ERROR;
+			faultCode = RPC_CLIENT_RESPONSE_ERROR;
 			error = faultString;
 			LLOG(error);
 			h.v = ErrorValue(error);
@@ -159,7 +159,7 @@ RpcGet RpcRequest::Execute()
 		catch(CParser::Error e) {
 			String s;
 			faultString = e;
-			faultCode = XMLRPC_CLIENT_JSON_ERROR;
+			faultCode = RPC_CLIENT_JSON_ERROR;
 			error.Clear();
 			error << "JSON Error: " << faultString;
 			LLOG(error);
@@ -194,7 +194,7 @@ RpcGet RpcRequest::Execute()
 		catch(XmlError e) {
 			String s;
 			faultString = e;
-			faultCode = XMLRPC_CLIENT_XML_ERROR;
+			faultCode = RPC_CLIENT_XML_ERROR;
 			error.Clear();
 			error << "XML Error: " << faultString;
 			LLOG(error << ": " << p.GetPtr());
