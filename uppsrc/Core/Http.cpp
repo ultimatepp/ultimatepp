@@ -660,11 +660,15 @@ void HttpRequest::Out(const void *ptr, int size)
 
 bool HttpRequest::ReadingBody()
 {
-	LLOG("HTTP reading data " << count);
+	LLOG("HTTP reading body " << count);
 	int n = chunk;
-	if(count >= 0)
+	if(count > 0)
 		n = min(n, count);
 	String s = TcpSocket::Get(n);
+	DDUMP(n);
+	DDUMP(s.GetCount());
+	DDUMP(IsEof());
+	DDUMP(count);
 	if(s.GetCount() == 0)
 		return !IsEof() && count;
 #ifndef ENDZIP
@@ -673,7 +677,7 @@ bool HttpRequest::ReadingBody()
 	else
 #endif
 		Out(~s, s.GetCount());
-	if(count >= 0) {
+	if(count > 0) {
 		count -= s.GetCount();
 		return !IsEof() && count > 0;
 	}

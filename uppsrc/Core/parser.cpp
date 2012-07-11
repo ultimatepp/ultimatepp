@@ -451,6 +451,11 @@ inline void NextCStringLine(String& t, const char *linepfx, int& pl)
 	pl = t.GetLength();
 }
 
+inline int HexDigit(int c)
+{
+	return "0123456789ABCDEF"[c & 15];
+}
+
 String AsCString(const char *s, const char *lim, int linemax, const char *linepfx, dword flags)
 {
 	String t;
@@ -472,14 +477,27 @@ String AsCString(const char *s, const char *lim, int linemax, const char *linepf
 		case '\\': t.Cat("\\\\"); break;
 		case '\n': t.Cat("\\n"); wasspace = true; break;
 		default:
-			if(byte(*s) < 32 || (byte)*s >= 0x7f && (flags & ASCSTRING_OCTALHI) || (byte)*s == 0xff) {
-				char h[4];
-				int q = (byte)*s;
-				h[0] = '\\';
-				h[1] = (3 & (q >> 6)) + '0';
-				h[2] = (7 & (q >> 3)) + '0';
-				h[3] = (7 & q) + '0';
-				t.Cat(h, 4);
+			if(byte(*s) < 32 || (byte)*s >= 0x7f && (flags & ASCSTRING_OCTALHI) || (byte)*s == 0xff || (byte)*s == 0x7f) {
+				if(flags & ASCSTRING_JSON) {
+					char h[6];
+					int q = (byte)*s;
+					h[0] = '\\';
+					h[1] = 'u';
+					h[2] = '0';
+					h[3] = '0';
+					h[4] = HexDigit(q >> 4);
+					h[5] = HexDigit(q);
+					t.Cat(h, 6);
+				}
+				else {
+					char h[4];
+					int q = (byte)*s;
+					h[0] = '\\';
+					h[1] = (3 & (q >> 6)) + '0';
+					h[2] = (7 & (q >> 3)) + '0';
+					h[3] = (7 & q) + '0';
+					t.Cat(h, 4);
+				}
 			}
 			else {
 				t.Cat(*s);
