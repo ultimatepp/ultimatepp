@@ -454,8 +454,14 @@ ending `"`\`"`\n`" and [@3 linepfx] is inserted and literal continues
 on the new line.&]
 [s7;%% [%-*@3 linepfx]-|Pointer to zero`-terminated text to be inserted 
 at the beginning of the line when the line length is exceeded.&]
-[s7;%% [%-*@3 flags]-|true activates smarter breaking into lines `- 
-breaks at spaces are preferred.&]
+[s7;%% [%-*@3 flags]-|a combination of flags:&]
+[s0;~~~1408;%% -|ASCSTRING`_SMART-|breaks string into lines when too 
+long&]
+[s0;~~~1408;%% -|ASCSTRING`_OCTALHI-|escapes characters >128&]
+[s0;~~~1408;%% -|ASCSTRING`_JSON-|uses JSON notation for escapes (`\u0001 
+-|                                          instead of `\001)&]
+[s0;~~~1408;%% &]
+[s0;%% &]
 [s7;%% [*/ Return value]-|C`-like literal.&]
 [s3;%% &]
 [s4; &]
@@ -479,4 +485,4 @@ sCString]([%-*@3 s].[^topic`:`/`/Core`/src`/String`$en`-us`#String0`:`:Begin`(`)
 egin](),[%- _][%-*@3 s].[^topic`:`/`/Core`/src`/String`$en`-us`#String0`:`:End`(`)const^ E
 nd](),[%- _][%-*@3 linemax],[%- _][%-*@3 linepfx],[%- _][%-*@3 flags]).&]
 [s3;%% &]
-[s0; ]
+[s0; ]]

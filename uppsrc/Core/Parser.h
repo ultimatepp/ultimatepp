@@ -132,6 +132,7 @@ inline bool CParser::Char3(char c1, char c2, char c3)
 enum {
 	ASCSTRING_SMART     = 0x01,
 	ASCSTRING_OCTALHI   = 0x02,
+	ASCSTRING_JSON      = 0x04,
 };
 
 String AsCString(const char *s, const char *end, int linemax = INT_MAX, const char *linepfx = NULL,
