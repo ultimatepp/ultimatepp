@@ -4,9 +4,9 @@ Value  ParseJSON(const char *s);
 inline String AsJSON(int i)             { return IsNull(i) ? "null" : AsString(i); }
 inline String AsJSON(double n)          { return IsNull(n) ? "null" : AsString(n); }
 inline String AsJSON(bool b)            { return b ? "true" : "false"; }
-inline String AsJSON(const String& s)   { return AsCString(s); }
-inline String AsJSON(const WString& s)  { return AsCString(s.ToString()); }
-inline String AsJSON(const char *s)     { return AsCString(s); }
+inline String AsJSON(const String& s)   { return AsCString(s, INT_MAX, NULL, ASCSTRING_OCTALHI|ASCSTRING_JSON); }
+inline String AsJSON(const WString& s)  { return AsCString(s.ToString(), INT_MAX, NULL, ASCSTRING_OCTALHI|ASCSTRING_JSON); }
+inline String AsJSON(const char *s)     { return AsCString(s, INT_MAX, NULL, ASCSTRING_OCTALHI|ASCSTRING_JSON); }
 
 String AsJSON(const Value& v, const String& indent, bool pretty);
 String AsJSON(const Value& v, bool pretty = false);
