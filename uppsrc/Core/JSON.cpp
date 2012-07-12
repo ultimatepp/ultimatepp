@@ -71,7 +71,7 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 			}
 			if(pretty)
 				r << sep1;
-			r << AsCString((String)m.GetKeys()[i]) << (pretty ? ": " : ":")
+			r << AsJSON((String)m.GetKey(i)) << (pretty ? ": " : ":")
 			  << AsJSON(va[i], sep1, pretty);
 		}
 		if(pretty)
