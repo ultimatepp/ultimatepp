@@ -50,11 +50,12 @@ VectorMap<String, String> LoadIniFile(const char *filename) {
 
 static StaticMutex sMtx;
 static char  sIniFile[256];
-static bool s_ini_loaded;
+static int64 s_ini_version = 1;
 
 void ReloadIniFile()
 {
-	s_ini_loaded = false;
+	Mutex::Lock __(sMtx);
+	s_ini_version++;
 }
 
 void SetIniFile(const char *name) {
@@ -63,11 +64,21 @@ void SetIniFile(const char *name) {
 	ReloadIniFile();
 }
 
+
+bool sIniChanged(int64& version)
+{
+	if(version != s_ini_version) {
+		version = s_ini_version;
+		return true;
+	}
+	return false;
+}
+
 String GetIniKey(const char *id, const String& def) {
 	Mutex::Lock __(sMtx);
 	static VectorMap<String, String> key;
-	if(!s_ini_loaded) {
-		s_ini_loaded = true;
+	static int64 version;
+	if(sIniChanged(version)) {
 		key = LoadIniFile(*sIniFile ? sIniFile : ~ConfigFile("q.ini"));
 	#ifdef PLATFORM_WIN32
 		if(key.GetCount() == 0)
@@ -90,21 +101,24 @@ String GetIniKey(const char *id)
 
 IniString::operator String()
 {
-	ONCELOCK_(loaded) {
-		static Array<String> ss;
-		String& x = ss.Add();
-		x = TrimBoth(GetIniKey(id));
-		if(IsNull(x))
-			x = (*def)();
-		value = &x;
+	String x;
+	{
+		Mutex::Lock __(sMtx);
+		String& s = (*ref_fn)();
+		if(sIniChanged(version)) {
+			s = TrimBoth(GetIniKey(id));
+			if(IsNull(s))
+				s = (*def)();
+		}
+		x = s;
 	}
-	return *value;
+	return x;
 }
 
 String IniString::operator=(const String& s)
 {
-	operator String();
-	*value = s;
+	Mutex::Lock __(sMtx);
+	(*ref_fn)() = s;
 	return s;
 }
 
@@ -146,7 +160,8 @@ int64 ReadIniInt(const char *id)
 }
 
 IniInt::operator int() {
-	ONCELOCK_(loaded) {
+	Mutex::Lock __(sMtx);
+	if(sIniChanged(version)) {
 		value = (int)ReadIniInt(id);
 		if(IsNull(value))
 			value = (*def)();
@@ -155,7 +170,7 @@ IniInt::operator int() {
 }
 
 int IniInt::operator=(int b) {
-	ONCELOCK_(loaded) {}
+	Mutex::Lock __(sMtx);
 	return value = b;
 }
 
@@ -166,7 +181,8 @@ String IniInt::ToString() const
 
 IniInt64::operator int64()
 {
-	ONCELOCK_(loaded) {
+	Mutex::Lock __(sMtx);
+	if(sIniChanged(version)) {
 		value = ReadIniInt(id);
 		if(IsNull(value))
 			value = (*def)();
@@ -176,7 +192,7 @@ IniInt64::operator int64()
 
 int64 IniInt64::operator=(int64 b)
 {
-	ONCELOCK_(loaded) {}
+	Mutex::Lock __(sMtx);
 	return value = b;
 }
 
@@ -187,7 +203,8 @@ String IniInt64::ToString() const
 
 IniDouble::operator double()
 {
-	ONCELOCK_(loaded) {
+	Mutex::Lock __(sMtx);
+	if(sIniChanged(version)) {
 		value = ScanDouble(TrimBoth(ToLower(GetIniKey(id))));
 		if(IsNull(value))
 			value = (*def)();
@@ -197,7 +214,7 @@ IniDouble::operator double()
 
 double IniDouble::operator=(double b)
 {
-	ONCELOCK_(loaded) {}
+	Mutex::Lock __(sMtx);
 	return value = b;
 }
 
@@ -207,7 +224,8 @@ String IniDouble::ToString() const
 }
 
 IniBool::operator bool() {
-	ONCELOCK_(loaded) {
+	Mutex::Lock __(sMtx);
+	if(sIniChanged(version)) {
 		String h = TrimBoth(ToLower(GetIniKey(id)));
 		if(h.GetCount())
 			value = h == "1" || h == "yes" || h == "true" || h == "y";
@@ -218,7 +236,7 @@ IniBool::operator bool() {
 }
 
 bool IniBool::operator=(bool b) {
-	ONCELOCK_(loaded) {}
+	Mutex::Lock __(sMtx);
 	return value = b;
 }
 
