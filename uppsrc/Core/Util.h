@@ -35,7 +35,7 @@ struct IniString {
 	String (*def)();
 	bool          loaded;
 	String  *value;
-
+// "public:"
 	operator String();
 	String   operator=(const String& s);
 	String   ToString() const;
@@ -47,9 +47,21 @@ struct IniInt {
 	int      (*def)();
 	bool       loaded;
 	int        value;
-
+// "public:"
 	operator    int();
 	int         operator=(int b);
+	String ToString() const;
+};
+
+struct IniInt64 {
+// "private":
+	const char *id;
+	int64    (*def)();
+	bool       loaded;
+	int64      value;
+// "public:"
+	operator    int64();
+	int64       operator=(int64 b);
 	String ToString() const;
 };
 
@@ -59,7 +71,7 @@ struct IniDouble {
 	double    (*def)();
 	bool        loaded;
 	double      value;
-
+// "public:"
 	operator    double();
 	double      operator=(double b);
 	String ToString() const;
@@ -71,7 +83,7 @@ struct IniBool {
 	bool      (*def)();
 	bool        loaded;
 	bool        value;
-
+// "public:"
 	operator     bool();
 	bool         operator=(bool b);
 	String  ToString() const;
@@ -89,6 +101,20 @@ struct IniInfo {
 const Array<IniInfo> GetIniInfo();
 String GetIniInfoFormatted();
 
+#define INI_TYPE(var, def, info, type, decl)\
+type DefIni_##var() { return def; }\
+decl var = { #var, DefIni_##var };\
+String AsStringIniCurrent_##var() { return AsString(var); } \
+String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
+INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var, info); }
+
+#define INI_BOOL(var, def, info)   INI_TYPE(var, def, info, bool, IniBool);
+#define INI_STRING(var, def, info) INI_TYPE(var, def, info, String, IniString);
+#define INI_INT(var, def, info)    INI_TYPE(var, def, info, int, IniInt);
+#define INI_INT64(var, def, info)  INI_TYPE(var, def, info, int64, IniInt64);
+#define INI_DOUBLE(var, def, info) INI_TYPE(var, def, info, double, IniDouble);
+
+/*
 #define INI_BOOL(var, def, info)\
 bool DefIni_##var() { return def; }\
 IniBool var = { #var, DefIni_##var };\
@@ -110,12 +136,20 @@ String AsStringIniCurrent_##var() { return AsString(var); } \
 String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
 INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var, info); }
 
+#define INI_INT64(var, def, info)\
+int64 DefIni_##var() { return def; }\
+Ini64Int var = { #var, DefIni_##var };\
+String AsStringIniCurrent_##var() { return AsString(var); } \
+String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
+INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var, info); }
+
 #define INI_DOUBLE(var, def, info)\
 double DefIni_##var() { return def; }\
 IniDouble var = { #var, DefIni_##var };\
 String AsStringIniCurrent_##var() { return AsString(var); } \
 String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
 INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var, info); }
+*/
 
 VectorMap<String, String> LoadIniStream(Stream &in);
 VectorMap<String, String> LoadIniFile(const char *filename);
