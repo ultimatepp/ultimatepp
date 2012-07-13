@@ -85,8 +85,8 @@ des paquets sources ][C2 dsc][2 ) des binaires quotidiens sur le
 PPA Launchpad ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`-nightly^2 h
 ttps://launchpad.net/`~dolik`-rce/`+archive/upp`-nightly][2 . La 
 méthode recommandée est d`'ajouter l`'archive à vos sources 
-(vous pouvez suivre ce ][^https`:`/`/launchpad`.net`/`+help`/soyuz`/ppa`-sources`-list`.html^2 g
-uide pas`-à`-pas][2 , utilisez simplement ][C2 dolik`-rce/upp`-nightly][2  
+(vous pouvez suivre ce ][^topic`:`/`/uppweb`/www`/ubuntuinstall`$en`-us^2 guide 
+pas`-à`-pas][2 , utilisez simplement ][C2 dolik`-rce/upp`-nightly][2  
 comme nom PPA) et d`'installer le paquet ][C2 `"upp`"][2  avec votre 
 gestionnaire de paquets préféré (ex. Synaptic). Cela installera 
 les sources de U`+`+, l`'environnement intégré TheIDE et les 
@@ -126,4 +126,4 @@ Cependant, si vous appréciez cette plateforme, pensez à faire
 une ][^topic`:`/`/uppweb`/www`/Funding`$en`-us^2 donation][2  ; même 
 les plus petites contributions aident à soutenir son dévelopemment 
 continu.]&]
-[s0; ]
+[s0; ]]
