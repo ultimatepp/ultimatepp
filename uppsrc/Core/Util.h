@@ -32,9 +32,9 @@ String GetIniKey(const char *id);
 struct IniString {
 // "private":
 	const char   *id;
-	String (*def)();
-	bool          loaded;
-	String  *value;
+	String      (*def)();
+	String&     (*ref_fn)();
+	int64         version;
 // "public:"
 	operator String();
 	String   operator=(const String& s);
@@ -45,48 +45,48 @@ struct IniInt {
 // "private":
 	const char *id;
 	int      (*def)();
-	bool       loaded;
+	int64      version;
 	int        value;
 // "public:"
 	operator    int();
 	int         operator=(int b);
-	String ToString() const;
+	String      ToString() const;
 };
 
 struct IniInt64 {
 // "private":
 	const char *id;
 	int64    (*def)();
-	bool       loaded;
+	int64      version;
 	int64      value;
 // "public:"
 	operator    int64();
 	int64       operator=(int64 b);
-	String ToString() const;
+	String      ToString() const;
 };
 
 struct IniDouble {
 // "private":
 	const char *id;
 	double    (*def)();
-	bool        loaded;
+	int64       version;
 	double      value;
 // "public:"
 	operator    double();
 	double      operator=(double b);
-	String ToString() const;
+	String      ToString() const;
 };
 
 struct IniBool {
 // "private":
 	const char *id;
 	bool      (*def)();
-	bool        loaded;
+	int64       version;
 	bool        value;
 // "public:"
 	operator     bool();
 	bool         operator=(bool b);
-	String  ToString() const;
+	String       ToString() const;
 };
 
 void AddIniInfo(const char *id, String (*current)(), String (*def)(), const char *info);
@@ -101,18 +101,20 @@ struct IniInfo {
 const Array<IniInfo> GetIniInfo();
 String GetIniInfoFormatted();
 
-#define INI_TYPE(var, def, info, type, decl)\
+#define INI_TYPE(var, def, info, type, decl, ref)\
 type DefIni_##var() { return def; }\
-decl var = { #var, DefIni_##var };\
+decl var = { #var, DefIni_##var, ref };\
 String AsStringIniCurrent_##var() { return AsString(var); } \
 String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
 INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var, info); }
 
-#define INI_BOOL(var, def, info)   INI_TYPE(var, def, info, bool, IniBool);
-#define INI_STRING(var, def, info) INI_TYPE(var, def, info, String, IniString);
-#define INI_INT(var, def, info)    INI_TYPE(var, def, info, int, IniInt);
-#define INI_INT64(var, def, info)  INI_TYPE(var, def, info, int64, IniInt64);
-#define INI_DOUBLE(var, def, info) INI_TYPE(var, def, info, double, IniDouble);
+#define INI_BOOL(var, def, info)   INI_TYPE(var, def, info, bool, IniBool, 0);
+#define INI_INT(var, def, info)    INI_TYPE(var, def, info, int, IniInt, 0);
+#define INI_INT64(var, def, info)  INI_TYPE(var, def, info, int64, IniInt64, 0);
+#define INI_DOUBLE(var, def, info) INI_TYPE(var, def, info, double, IniDouble, 0);
+
+#define INI_STRING(var, def, info) String& DefRef##_var() { static String x; return x; }\
+                                   INI_TYPE(var, def, info, String, IniString, DefRef##_var);
 
 /*
 #define INI_BOOL(var, def, info)\
