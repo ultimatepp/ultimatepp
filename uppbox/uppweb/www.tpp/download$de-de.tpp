@@ -75,11 +75,10 @@ nutzt, kannst du die Deb `- Pakete (und auch die dsc`-Quellpakete)
 der Nightly `- Builds auf dem Launchpad PPA ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`-nightly^2 h
 ttps://launchpad.net/`~dolik`-rce/`+archive/upp`-nightly][2  finden. 
 Die empfohlene Methode ist es, das Archiv zu deinen Quellen hinzuzufügen 
-(du kannst hierzu diesem ][^https`:`/`/launchpad`.net`/`+help`/soyuz`/ppa`-sources`-list`.html^2 s
-tep`-by`-step guide][2  folgen, benutze aber dolik`-rce/upp`-nightly 
-als PPA `- Name) und installiere das Paket `"upp`" mit deinem 
-bevorzugtem Paketmanager (z.B. Synaptic). Dies wird auch die 
-Ultimate`+`+ Quellen, TheIDE und alle nötigen Abhängigkeiten 
+(du kannst hierzu diesem ][^topic`:`/`/uppweb`/www`/ubuntuinstall`$en`-us^2 step`-b
+y`-step guide][2  folgen) und installiere das Paket `"upp`" mit 
+deinem bevorzugtem Paketmanager (z.B. Synaptic). Dies wird auch 
+die Ultimate`+`+ Quellen, TheIDE und alle nötigen Abhängigkeiten 
 installieren. Bitte beachte, dass die Ubuntu Pakete noch immer 
 in Arbeit sind und es hier noch immer einige Ecken und Kanten 
 gibt.]&]
@@ -114,4 +113,4 @@ wenn du es zur Entwicklung kommerzieller Anwendungen einsetzen
 willst. Wenn du diese Plattform magst, denk über eine ][^topic`:`/`/uppweb`/www`/Funding`$de`-de^2 S
 pende][2  nach; Auch kleine Zuwendungen helfen, die fortlaufende 
 Entwicklung zu finanzieren.]&]
-[s0;%% ]
+[s0;%% ]]

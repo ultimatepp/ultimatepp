@@ -71,13 +71,12 @@ installer (upp`-win32`-NNNN.exe) and source tarball (upp`-x11`-src`-NNNN.tar.gz)
 you can find deb packages (and also dsc source packages) of nightly 
 builds at Launchpad PPA ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`-nightly^2 h
 ttps://launchpad.net/`~dolik`-rce/`+archive/upp`-nightly][2 . Recommended 
-way to add the archive to your sources (you can follow this ][^https`:`/`/launchpad`.net`/`+help`/soyuz`/ppa`-sources`-list`.html^2 s
-tep`-by`-step guide][2 , just use dolik`-rce/upp`-nightly as PPA 
-name) and install package `"upp`" using your favorite package 
-manager (e.g. Synaptic). This will also install Ultimate`+`+ 
-sources, TheIDE and all necessary dependencies. Please note that 
-Ubuntu packages are still work in progress and there is still 
-few rough edges.]&]
+way is to add the archive to your sources and install package 
+`"upp`" using your favorite package manager (e.g. apt`-get, aptitude, 
+...). This will also install Ultimate`+`+ sources, TheIDE and 
+all necessary dependencies. In case you are not familiar with 
+installing software from PPA, you can follow ][^topic`:`/`/uppweb`/www`/ubuntuinstall`$en`-us^2 t
+his step`-by`-step guide][2 .]&]
 [s1;#b0; &]
 [s0; [2 Note that latest builds are generally considered the most stable. 
 That means that nightly builds are usually more stable than stable 
@@ -106,4 +105,4 @@ are going to use it for development of commercial applications.
 However, if you like this platform, please consider ][^topic`:`/`/uppweb`/www`/Funding`$en`-us^2 d
 onating][2 ; even small contributions will help fund its continued 
 development.]&]
-[s0; ]
+[s0; ]]
