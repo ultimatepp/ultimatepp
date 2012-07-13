@@ -10,6 +10,7 @@ INI_BOOL(flag2, true, "This is bool parameter 2")
 INI_STRING(text, "default text", "Text parameter");
 
 INI_INT(number, 123456, "Number parameter");
+INI_INT64(size, 0, "Int64 parameter");
 
 INI_DOUBLE(fp_number, 0.1, "Floating point parameter");
 
