@@ -1302,6 +1302,8 @@ class GridCtrl : public Ctrl
 		Value  GetNew(int c) const;
 		Value  GetFirst(int c) const;
 		Value  GetLast(int c) const;
+		Value  GetPrev(Id id) const;
+		Value  GetPrev(int c) const;
 		Value& operator() (int r, int c);
 		Value& operator() (int c);
 		Value& operator() (Id id);

@@ -2892,6 +2892,16 @@ Value GridCtrl::GetLast(int c) const
 	return Get0(total_rows - 1, c + fixed_cols);
 }
 
+Value GridCtrl::GetPrev(Id id) const
+{
+	return rowbkp[aliases.Get(id)];	
+}
+
+Value GridCtrl::GetPrev(int c) const
+{
+	return rowbkp[c + fixed_cols];
+}
+
 Value GridCtrl::GetNew(int c) const
 {
 	return Get0(rowidx, c + fixed_cols);

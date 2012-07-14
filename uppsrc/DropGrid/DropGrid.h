@@ -179,6 +179,8 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		Value Get(Id id) const;
 		Value Get(int r, int c) const;
 		Value Get(int r, Id id) const;
+		Value GetPrev(int c) const;
+		Value GetPrev(Id id) const;
 		void  Set(int c, const Value& v);
 		void  Set(Id id, const Value& v);
 		void  Set(int r, int c, const Value& v);
