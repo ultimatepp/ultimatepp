@@ -1,0 +1,2 @@
+<a href=$SetLanguage("en-us")>EN</a>
+<a href=$SetLanguage("cs-cz")>CZ</a>

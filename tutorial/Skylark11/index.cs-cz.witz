@@ -1,0 +1,7 @@
+<html>
+<body>
+#include lang
+Česká verze<br>
+Hodnota proměnné: $VAR
+</body>
+</html>

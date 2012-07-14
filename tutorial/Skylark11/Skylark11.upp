@@ -1,0 +1,16 @@
+description "Language support\377";
+
+uses
+	Core,
+	Skylark,
+	plugin/sqlite3;
+
+file
+	lang.witz,
+	index.witz,
+	index.cs-cz.witz,
+	main.cpp;
+
+mainconfig
+	"" = "SSE2 MT";
+
