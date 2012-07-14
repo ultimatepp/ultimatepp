@@ -1,0 +1,16 @@
+description "Advanced SQL\377";
+
+uses
+	Core,
+	Skylark,
+	plugin/sqlite3;
+
+file
+	index.witz,
+	dialog.witz,
+	myapp.sch,
+	main.cpp;
+
+mainconfig
+	"" = "SSE2 MT";
+
