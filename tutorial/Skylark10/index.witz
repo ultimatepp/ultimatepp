@@ -1,0 +1,20 @@
+<html>
+<body>
+<table border="1">
+<tr>
+  <th>No.</th>
+  <th>First Name</th>
+  <th>Last Name</th>
+</tr>
+$for(i in PERSON)
+	<tr>
+	  <td>$(i._index + 1).</td>
+	  <td>$i.NAME</td>
+	  <td>$i.LASTNAME</td>
+	  <td><a href=$Edit(i.ID)>Edit</a></td>
+	</tr>	
+$/
+</table>
+<a href=$New>Create new</a>
+</body>
+</html>

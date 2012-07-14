@@ -1,0 +1,13 @@
+<html>
+<body>
+<FORM action=$ACTION method="post" accept-charset="utf-8" enctype="multipart/form-data">
+$post_identity()
+<P>
+    First name: <INPUT type="text" name="name" value="$NAME"><BR>
+    Last name: <INPUT type="text" name="lastname" value="$LASTNAME"><BR>
+    <INPUT type="submit" value="Send" name="OK"/><BR>
+</P>
+</FORM>
+</table>
+</body>
+</html>
