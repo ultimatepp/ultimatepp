@@ -1,5 +1,5 @@
-#ifndef _Wpp_Wpp_h
-#define _Wpp_Wpp_h
+#ifndef _Skylark_Skylark_h
+#define _Skylark_Skylark_h
 
 #include <Sql/Sql.h>
 
@@ -29,6 +29,8 @@ struct SessionConfig {
 struct AuthExc : Exc {
 	AuthExc(const String& s) : Exc(s) {}
 };
+
+struct BadRequestExc : Exc {};
 
 struct SkylarkConfig {
 	String                    root;
@@ -74,6 +76,7 @@ public:
 	virtual void InternalError(Http& http);
 	virtual void NotFound(Http& http);
 	virtual void Unauthorized(Http& http);
+	virtual void BadRequest(Http& http);
 
 	virtual void WorkThread();
 	

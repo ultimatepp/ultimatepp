@@ -170,7 +170,7 @@ void SkylarkApp::Run()
 	main_pid = getpid();
 	quit = false;
 
-#if defined(PLATFORM_POSIX) && defined(_DEBUG)
+#ifdef _DEBUG
 	// Avoid the need to close running server in debug mode...
 	int qq = 0;
 	for(;;) {
@@ -254,6 +254,10 @@ void SkylarkApp::NotFound(Http& http)
 }
 
 void SkylarkApp::Unauthorized(Http& http)
+{
+}
+
+void SkylarkApp::BadRequest(Http& http)
 {
 }
 

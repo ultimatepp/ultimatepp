@@ -64,7 +64,14 @@ void SetIniFile(const char *name) {
 	ReloadIniFile();
 }
 
+static
+void sIniSet(int64& version)
+{
+	version = s_ini_version;
+}
 
+
+static
 bool sIniChanged(int64& version)
 {
 	if(version != s_ini_version) {
@@ -119,6 +126,7 @@ String IniString::operator=(const String& s)
 {
 	Mutex::Lock __(sMtx);
 	(*ref_fn)() = s;
+	sIniSet(version);
 	return s;
 }
 
@@ -171,6 +179,7 @@ IniInt::operator int() {
 
 int IniInt::operator=(int b) {
 	Mutex::Lock __(sMtx);
+	sIniSet(version);
 	return value = b;
 }
 
@@ -193,6 +202,7 @@ IniInt64::operator int64()
 int64 IniInt64::operator=(int64 b)
 {
 	Mutex::Lock __(sMtx);
+	sIniSet(version);
 	return value = b;
 }
 
@@ -215,6 +225,7 @@ IniDouble::operator double()
 double IniDouble::operator=(double b)
 {
 	Mutex::Lock __(sMtx);
+	sIniSet(version);
 	return value = b;
 }
 
@@ -237,6 +248,7 @@ IniBool::operator bool() {
 
 bool IniBool::operator=(bool b) {
 	Mutex::Lock __(sMtx);
+	sIniSet(version);
 	return value = b;
 }
 

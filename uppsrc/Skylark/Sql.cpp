@@ -27,6 +27,26 @@ Renderer& Renderer::operator()(const Sql& sql)
 	return *this;
 }
 
+Renderer& Renderer::operator()(const SqlSelect& sel)
+{
+	SqlR sql;
+	sql * sel;
+	if(!sql.Fetch())
+		throw BadRequestExc();
+	return operator()(sql);	
+}
+
+Renderer& Renderer::operator()(const char *id, const SqlSelect& sel)
+{
+	ValueArray list;
+	ValueMap vm;
+	SqlR sql;
+	sql * sel;
+	while(sql.Fetch(vm))
+		list.Add(vm);
+	return operator()(id, list);
+}
+
 SqlUpdate Renderer::Update(SqlId table)
 {
 	Vector<String> col = GetSchColumns(~table);

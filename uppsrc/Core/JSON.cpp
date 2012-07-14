@@ -111,7 +111,7 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 	if(IsNumber(v))
 		return Format("%.16g", (double)v);
 	if(IsString(v))
-		return AsCString((String)v, INT_MAX, NULL, ASCSTRING_OCTALHI|ASCSTRING_JSON);
+		return AsCString((String)v, INT_MAX, NULL, ASCSTRING_JSON);
 	if(IsNull(v))
 		return "null";
 #ifdef SVO_VALUE
