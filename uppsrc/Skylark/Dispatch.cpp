@@ -380,6 +380,8 @@ void Http::Dispatch(TcpSocket& socket)
 			SKYLARKLOG("Redirect to: " << redirect);
 			r << "HTTP/1.1 " << code << " Found\r\n";
 			r << "Location: " << redirect << "\r\n";
+			for(int i = 0; i < cookies.GetCount(); i++)
+				r << cookies[i];
 		}
 		else {
 			r <<
@@ -390,8 +392,6 @@ void Http::Dispatch(TcpSocket& socket)
 				"Connection: close\r\n"
 				"Cache-Control: no-cache\r\n"
 				"Content-Type: " << content_type << "\r\n";
-			for(int i = 0; i < cookies.GetCount(); i++)
-				r << cookies[i];
 			r << "\r\n";
 		}
 		socket.PutAll(r);
