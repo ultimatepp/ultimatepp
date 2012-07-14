@@ -1,3 +1,10 @@
+description "\377128,0,0";
+
+uses
+	Draw,
+	plugin\png,
+	plugin\jpg;
+
 file
 	Iml.h,
 	Lib.icpp;

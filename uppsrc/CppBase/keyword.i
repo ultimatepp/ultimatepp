@@ -79,3 +79,5 @@ CPPID(for)
 CPPID(try)
 CPPID(catch)
 CPPID(do)
+
+CPPID(SKYLARK)

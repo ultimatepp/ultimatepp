@@ -17,6 +17,14 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img)
 			break;
 		}
 	}
+	if(ext == ".html")
+		img = IdeCommonImg::html();
+	if(ext == ".css")
+		img = IdeCommonImg::css();
+	if(ext == ".witz")
+		img = IdeCommonImg::witz();
+	if(ext == ".js")
+		img = IdeCommonImg::js();
 	if(ext == ".usc")
 		img = IdeCommonImg::Script();
 	if(ext == ".lng" || ext == ".lngj" || ext == ".t" || ext == ".jt")
@@ -89,12 +97,13 @@ void IdeFs(FileSel& fs) {
 }
 
 void SourceFs(FileSel& fs) {
-	String mask = "*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.lay *.iml *.lng *.sch *.usc *.rc *.brc *.upt";
 	fs.Type("C++ files (*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp)", "*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp");
 	fs.Type("Layout files (*.lay)", "*.lay");
 	fs.Type("Image files (*.iml)", "*.iml");
 	fs.Type("Language files (*.lng)", "*.lng");
+	fs.Type("Web development files (*.html *.js *.css *.witz)", "*.html *.js *.css *.witz");
 	fs.Type("Other special files (*.sch *.usc *.rc *.brc *.upt)", "*.sch *.usc *.rc *.brc *.upt");
+	String mask = "*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.lay *.iml *.lng *.sch *.usc *.rc *.brc *.upt *.html *.js *.css *.witz";
 	fs.Type("All source files (" + mask + ")", mask);
 	IdeFs(fs);
 }

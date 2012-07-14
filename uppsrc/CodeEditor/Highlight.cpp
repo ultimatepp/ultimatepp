@@ -401,7 +401,7 @@ void CodeEditor::InitKeywords()
 			"CLASSNAME", "THISBACK", "THISBACK1", "THISBACK2", "THISBACK3", "THISBACK4",
 			"PTEBACK", "PTEBACK1", "PTEBACK2",  "PTEBACK3",  "PTEBACK4", 
 			"QUOTE", "XASSERT", "NEVER", "XNEVER", "CHECK", "XCHECK", "ASSERT",
-			"NAMESPACE_UPP", "END_UPP_NAMESPACE", "NEVER_",
+			"NAMESPACE_UPP", "END_UPP_NAMESPACE", "NEVER_", "SKYLARK",
 			NULL
 		};
 		static const char *upp_logs[] = {

@@ -668,6 +668,21 @@ Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
 			break;
 	}
 	Qualifier();
+	if(l0 && lex == tk_SKYLARK && lex[1] == '(') {
+		++lex;
+		++lex;
+		Decl& a = r.Add();
+		a.name = lex.GetId();
+		a.function = true;
+		Decl& p = a.param.Add();
+		p.name = "http";
+		p.type = "Http";
+		p.natural = "Http& http";
+		Key(',');
+		lex.GetText();
+		Key(')');
+		return r;
+	}
 	bool isdestructor = Key('~');
 	if(l0 && context.typenames.Find(lex) >= 0 && lex[1] == '(' && lex.IsId()) {
 		Decl& a = r.Add();

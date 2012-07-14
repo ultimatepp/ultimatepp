@@ -17,6 +17,8 @@ public:
 
 	Renderer& operator()(const Sql& sql);
 	Renderer& operator()(Fields rec);
+	Renderer& operator()(const SqlSelect& row_sel);
+	Renderer& operator()(const char *id, const SqlSelect& sel);
 	SqlUpdate Update(SqlId table);
 	SqlInsert Insert(SqlId table);
 	
@@ -69,10 +71,10 @@ public:
 
 	Http&  operator()(const Sql& sql)                  { Renderer::operator()(sql); return *this; }
 	Http&  operator()(Fields rec)                      { Renderer::operator()(rec); return *this; }
+	Http&  operator()(const SqlSelect& row_sel)        { Renderer::operator()(row_sel); return *this; }
+	Http&  operator()(const char *id, const SqlSelect& sel) { Renderer::operator()(id, sel); return *this; }
 	Http&  Render(const char *id, const String& template_name) { Renderer::Render(id, template_name); return *this; }
 	Value  Render(const String& template_name)         { return Renderer::Render(template_name); }
-
-	void   Dispatch(TcpSocket& socket);
 
 	String GetHeader(const char *s) const              { return hdr[s]; }
 	int    GetLength() const                           { return atoi(GetHeader("content-length")); }
@@ -80,9 +82,9 @@ public:
 	String GetViewId() const                           { return viewid; }
 
 	Value  operator[](const char *id) const            { return Renderer::operator[](id); }
-	String operator[](int i) const                     { return i >= 0 && i < arg.GetCount() ? arg[i] : String(); }
-	
 	int    Int(const char *id) const;
+
+	String operator[](int i) const                     { return i >= 0 && i < arg.GetCount() ? arg[i] : String(); }
 	int    Int(int i) const;
 	
 	int    GetParamCount() const                       { return arg.GetCount(); }
@@ -121,17 +123,17 @@ public:
 	Http&  UxRun(const String& js_code);
 	
 	String GetResponse() const                        { return response; }
+
+	void   Dispatch(TcpSocket& socket);
 	
 	const SkylarkApp& App() const                     { return app; }
 
 	Http(SkylarkApp& app);
 };
 
-String HttpResponse(int code, const char *phrase, const String& data, const char *content_type = NULL);
+void RegisterHandler(void (*handler)(Http& http), const char *id, const char *path);
 
-void RegisterView(void (*view)(Http&), const char *id, const char *path);
-
-#define SKYLARK(name, path)  void name(Http& http); INITBLOCK { UPP::RegisterView(name, #name, path); } void name(Http& http)
+#define SKYLARK(name, path)  void name(Http& http); INITBLOCK { UPP::RegisterHandler(name, #name, path); } void name(Http& http)
 
 Vector<String> *GetUrlViewLinkParts(const String& id);
 

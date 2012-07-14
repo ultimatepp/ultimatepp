@@ -147,7 +147,7 @@ static Array<ViewData>& sViewData()
 	return x;
 }
 
-void RegisterView(void (*view)(Http&), const char *id, const char *path)
+void RegisterHandler(void (*view)(Http&), const char *id, const char *path)
 {
 	Array<ViewData>& v = sViewData();
 	ViewData& w = v.Add();
@@ -348,6 +348,14 @@ void Http::Dispatch(TcpSocket& socket)
 				response << e;
 				code = 403;
 				code_text = "Unauthorized";
+				app.Unauthorized(*this);
+			}
+			catch(BadRequestExc e) {
+				if(SQL.IsOpen())
+					SQL.Rollback();
+				response << "Bad request";
+				code = 400;
+				code_text = "Bad request";
 				app.Unauthorized(*this);
 			}
 			catch(Exc e) {

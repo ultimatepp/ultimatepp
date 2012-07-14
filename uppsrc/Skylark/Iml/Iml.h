@@ -4,7 +4,7 @@
 #include <Draw/Draw.h>
 #include <plugin/png/png.h>
 #include <plugin/jpg/jpg.h>
-
+#include <Skylark/Skylark.h>
 
 
 #endif
