@@ -717,6 +717,18 @@ Value DropGrid::Get(int r, Id id) const
 	return list.Get(r, id);
 }
 
+Value DropGrid::GetPrev(int c) const
+{
+	int r = list.GetPrevCursor();
+	return r >= 0 ? Get(r, c) : Null;
+}
+
+Value DropGrid::GetPrev(Id id) const
+{
+	int r = list.GetPrevCursor();
+	return r >= 0 ? Get(r, id) : Null;
+}
+
 void DropGrid::Set(int c, const Value& v)
 {
 	list.Set(c, v);
