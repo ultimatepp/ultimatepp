@@ -38,7 +38,6 @@ void Http::LoadSession()
 	else
 		data = SQLR % Select(cfg.data_column).From(cfg.table)
 		              .Where(cfg.id_column == session_id);
-	LLOGHEX(data);
 	switch(cfg.format) {
 	case SESSION_FORMAT_JSON:
 		LoadFromJson(session_var, data);

@@ -44,7 +44,6 @@ int CountLinkArgs(const Vector<String>& part)
 One<Exe> Compiler::Prim()
 {
 	One<Exe> result;
-	DDUMP(p.GetPtr());
 	if(p.Char('!'))
 		result = Create<ExeNot>(Prim());
 	else

@@ -40,7 +40,6 @@ ArrayMap<String, One<Exe> > template_cache;
 
 const One<Exe>& Renderer::GetTemplate(const char *template_name)
 {
-	DDUMPM(var);
 	LTIMING("GetTemplate");
 	StringBuffer s;
 	{
