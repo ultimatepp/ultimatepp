@@ -25,6 +25,11 @@ SKYLARK(CatchAll, "**")
 	http.Redirect(HomePage);
 }
 
+SKYLARK(Favicon, "/favicon.ico")
+{
+	http.ContentType("image/png") << LoadFile(GetDataFile("favicon.png"));
+}
+
 struct MyApp : SkylarkApp {
 	MyApp() {
 		root = "myapp";
