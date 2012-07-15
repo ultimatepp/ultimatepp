@@ -58,7 +58,7 @@ static const char hex_digits[] = "0123456789ABCDEF";
 String UrlEncode(const char *p, const char *e)
 {
 	StringBuffer out;
-	out.Reserve(e - p);
+	out.Reserve((int)(e - p));
 	for(; p < e; p++)
 	{
 		const char *b = p;
