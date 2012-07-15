@@ -5,6 +5,7 @@ uses
 	Skylark;
 
 file
+	favicon.png,
 	main.cpp;
 
 mainconfig
