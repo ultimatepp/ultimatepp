@@ -162,7 +162,12 @@ void SkylarkApp::FinalizeViews()
 	for(int i = 0; i < w.GetCount(); i++) {
 		const ViewData& v = w[i];
 		ASSERT_(sViewIndex().Find((uintptr_t)v.view) < 0, "duplicate view function registration " + String(v.id));
-		Vector<String> h = Split(ReplaceVars(root + '/' + v.path, view_var, '$'), ';');
+		String p = v.path;
+		if(*p == '/')
+			p = p.Mid(1);
+		else
+			p = root + '/' + p;
+		Vector<String> h = Split(ReplaceVars(p, view_var, '$'), ';');
 		for(int i = 0; i < h.GetCount(); i++)
 			RegisterView0(v.view, v.id, h[i], i == 0);
 	}

@@ -54,6 +54,11 @@ response to various HTTP requests based on url pattern:&]
 [s7; -|http.[* Redirect](HomePage);&]
 [s7; `}&]
 [s7; &]
+[s7; [* SKYLARK](Favicon, `"/favicon.ico`")&]
+[s7; `{&]
+[s7; -|http.ContentType(`"image/png`") << LoadFile(GetDataFile(`"favicon.png`"));&]
+[s7; `}&]
+[s7; &]
 [s7; struct MyApp : SkylarkApp `{&]
 [s7; -|MyApp() `{&]
 [s7; -|-|[* root `= `"myapp`";]&]
@@ -102,7 +107,9 @@ by number of text parts matched, which means that for request
 code above done by `"[* root ]`= `"[@3 myapp]`";`". This defines 
 the root path of application, in other words [@5 HomePage ]handler 
 will react to `"[@3 myapp]`" path, Param handler to e.g. `"[@3 myapp]/test/param`" 
-etc.&]
+etc. In situation where this is not desirable, it is possible 
+to exclude root by adding `'/`' at the start of path, as demonstrated 
+by [@5 Favicon] handler.&]
 [s5; [@5 MyApp().Run()] starts a HTTP server (and also SCGI server) 
 on default port 8001, so after starting application, you should 
 be able to access it from your browser by entering &]
