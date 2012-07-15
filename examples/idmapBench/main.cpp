@@ -165,7 +165,7 @@ void BenchHashMap(const char *file)
 
 #endif
 
-#define N 10000
+#define N 100
 
 CONSOLE_APP_MAIN
 {
