@@ -1,29 +1,16 @@
 #include "AddressBook.h"
 
-void Persons(Http& http)
+SKYLARK(HomePage, "")
 {
-	ValueArray person;
 	SqlBool where;
 	String s = http["search"];
 	if(!IsNull(s)) {
 		s << '%';
 		where = Like(FIRSTNAME, s) || Like(LASTNAME, s) || Like(EMAIL, s);
 	}
-	ValueMap vm;
-	Sql sql;
-	sql * Select(ID, FIRSTNAME, LASTNAME, EMAIL)
-	      .From(PERSON)
-	      .Where(where)
-	      .OrderBy(LASTNAME, FIRSTNAME);
-	while(sql.Fetch(vm))
-		person.Add(vm);
-	http("PERSON", person);
-};
-
-SKYLARK(HomePage, "")
-{
-	Persons(http);
-	http.RenderResult("AddressBookWeb/Index");
+	http("PERSON", Select(ID, FIRSTNAME, LASTNAME, EMAIL).From(PERSON)
+	               .Where(where).OrderBy(LASTNAME, FIRSTNAME))
+	.RenderResult("AddressBookWeb/Index");
 }
 
 SKYLARK(CatchAll, "**")
@@ -39,7 +26,8 @@ SKYLARK(SubmitNew, "submit/create:POST")
 
 SKYLARK(New, "person/create")
 {
-	http("ACTION", SubmitNew).RenderResult("AddressBookWeb/Dialog");
+	http("ACTION", SubmitNew)
+	.RenderResult("AddressBookWeb/Dialog");
 }
 
 SKYLARK(SubmitEdit, "submit/edit/*:POST")
@@ -48,27 +36,18 @@ SKYLARK(SubmitEdit, "submit/edit/*:POST")
 	http.Redirect(HomePage);
 }
 
-SKYLARK(Edit, "person/*/edit")
+SKYLARK(Edit, "person/edit/*")
 {
 	int id = http.Int(0);
-	Sql sql;
-	sql * Select(FIRSTNAME, LASTNAME, EMAIL)
-	      .From(PERSON)
-	      .Where(ID == id);
-	if(!sql.Fetch()) {
-		http.Redirect(HomePage);
-		return;
-	}
 	http
-		(sql)
+		(Select(FIRSTNAME, LASTNAME, EMAIL).From(PERSON).Where(ID == id))
 		("ID", id)
 		("ACTION", SubmitEdit, id)
 	.RenderResult("AddressBookWeb/Dialog");
 }
 
-SKYLARK(Delete, "person/*/delete")
+SKYLARK(Delete, "person/delete/*")
 {
 	SQL * Delete(PERSON).Where(ID == atoi(http[0]));
-	DeleteFile(ConfigFile(atoi(http[0]) + ".data"));
 	http.Redirect(HomePage);
 }
