@@ -433,7 +433,7 @@ bool TcpSocket::RawConnect(addrinfo *rp)
 	}
 	for(;;) {
 		if(rp && Open(rp->ai_family, rp->ai_socktype, rp->ai_protocol)) {
-			if(connect(socket, rp->ai_addr, rp->ai_addrlen) == 0 ||
+			if(connect(socket, rp->ai_addr, (int)rp->ai_addrlen) == 0 ||
 			   GetErrorCode() == SOCKERR(EINPROGRESS) || GetErrorCode() == SOCKERR(EWOULDBLOCK))
 				break;
 			Close();
@@ -742,7 +742,7 @@ int TcpSocket::Get(void *buffer, int count)
 		return 0;
 	
 	String out;
-	int l = end - ptr;
+	int l = (int)(end - ptr);
 	done = 0;
 	if(l > 0)
 		if(l < count) {
