@@ -62,7 +62,7 @@ struct ImageViewModule : public IdeModule {
 				}
 			}
 			else
-			if(ToLower(GetFileExt(path)) == ".png" && GetFileLength(path) == 0) {
+			if(ToLower(GetFileExt(path)) == ".png" && GetFileLength(path) <= 0) {
 				IdePngDes *d = new IdePngDes;
 				d->Create(path);
 				d->RestoreEditPos();
