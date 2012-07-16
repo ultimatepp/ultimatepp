@@ -383,6 +383,8 @@ void Gdb_MI2::Unlock()
 // so reliable as it can happen (strangely) in middle of nothing
 MIValue Gdb_MI2::ParseGdb(String const &output, bool wait)
 {
+RLOG("\n-----------------------GDB OUTPUT--------------------");
+RLOG(output);
 	MIValue res;
 
 	// parse result data
@@ -577,6 +579,8 @@ MIValue Gdb_MI2::ReadGdb(bool wait)
 // debugger run/stop status -- all remaining asynchrnonous output is discarded
 MIValue Gdb_MI2::MICmd(const char *cmdLine)
 {
+RLOG("\n-----------------------MICMD--------------------");
+RLOG(cmdLine);
 	// sends command to debugger and get result data
 
 	// should handle dbg unexpected termination ?
@@ -1743,6 +1747,10 @@ bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdli
 	MICmd("gdb-set width 0");
 	MICmd("gdb-set confirm off");
 	MICmd("gdb-set print asm-demangle");
+	
+	// avoids debugger crash if caught inside ungrabbing function
+	// (don't solves all cases, but helps...)
+	MICmd("gdb-set unwindonsignal on");
 
 	if(!IsNull(cmdline))
 		MICmd("gdb-set args " + cmdline);
