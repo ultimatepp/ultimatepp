@@ -674,6 +674,7 @@ Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
 		Decl& a = r.Add();
 		a.name = lex.GetId();
 		a.function = true;
+		a.natural = String().Cat() << "void " << a.name << "(Http& http)";
 		Decl& p = a.param.Add();
 		p.name = "http";
 		p.type = "Http";

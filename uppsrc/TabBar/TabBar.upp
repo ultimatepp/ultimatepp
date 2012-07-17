@@ -1,4 +1,4 @@
-description "Bazaar: Generic tab frame. Authors: Daniel Kos (unodgs), James Thomas (mrtj)\377";
+description "Generic tab frame. Authors: Daniel Kos (unodgs), James Thomas (mrtj)\377";
 
 uses
 	CtrlLib;
