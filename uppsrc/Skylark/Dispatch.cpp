@@ -397,6 +397,8 @@ void Http::Dispatch(TcpSocket& socket)
 				"Connection: close\r\n"
 				"Cache-Control: no-cache\r\n"
 				"Content-Type: " << content_type << "\r\n";
+			for(int i = 0; i < cookies.GetCount(); i++)
+				r << cookies[i];
 			r << "\r\n";
 		}
 		socket.PutAll(r);
