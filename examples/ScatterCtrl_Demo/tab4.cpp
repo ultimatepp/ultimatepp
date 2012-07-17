@@ -17,7 +17,7 @@ void Tab4::Init()
 	scatter.AddSeries(s2).Legend("2006").MarkStyle<CircleMarkPlot>();
 	
 	scatter.Graduation_FormatX(ScatterCtrl::MON)
-		   .SetLabelY("Temperature [176ºC]")
+		   .SetLabelY("Temperature [176 C]")
 		   .SetMarkWidth(1, 4);
 }
 
