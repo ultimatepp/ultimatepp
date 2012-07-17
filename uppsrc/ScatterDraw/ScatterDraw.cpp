@@ -238,13 +238,13 @@ void ScatterDraw::AdjustMinUnitY2()
 void ScatterDraw::AdjustMinUnitY()
 {
 	if (yMajorUnit > 0) {
-		if (fabs(yMinUnit/yMajorUnit) > 10000000000) 
+		if (fabs(yMinUnit/yMajorUnit) > 100000000) 
 			yMinUnit = yMajorUnit;
 		else {
 			while (yMinUnit < 0)
 				yMinUnit += yMajorUnit;	
 		}
-		if (fabs(yMinUnit/yMajorUnit) > 10000000000) 
+		if (fabs(yMinUnit/yMajorUnit) > 100000000) 
 			yMinUnit = yMajorUnit;
 		else {
 			while (yMinUnit > yMajorUnit)
@@ -256,13 +256,13 @@ void ScatterDraw::AdjustMinUnitY()
 void ScatterDraw::AdjustMinUnitY2()
 {
 	if (yMajorUnit2 > 0) {
-		if (fabs(yMinUnit2/yMajorUnit2) > 10000000000) 
+		if (fabs(yMinUnit2/yMajorUnit2) > 1000000000) 
 			yMinUnit2 = yMajorUnit2;
 		else {
 			while (yMinUnit2 < 0)
 				yMinUnit2 += yMajorUnit2;	
 		}
-		if (fabs(yMinUnit2/yMajorUnit2) > 10000000000) 
+		if (fabs(yMinUnit2/yMajorUnit2) > 1000000000) 
 			yMinUnit2 = yMajorUnit2;
 		else {
 			while (yMinUnit2 > yMajorUnit2)
