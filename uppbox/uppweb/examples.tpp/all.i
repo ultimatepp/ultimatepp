@@ -74,6 +74,10 @@ TOPIC("SQLApp$en-us")
 #include "SQLApp$en-us.tppi"
 END_TOPIC
 
+TOPIC("ScatterCtrl_Demo$en-us")
+#include "ScatterCtrl_Demo$en-us.tppi"
+END_TOPIC
+
 TOPIC("Scribble$en-us")
 #include "Scribble$en-us.tppi"
 END_TOPIC
