@@ -165,7 +165,6 @@ String FormatXmlRpcError(int code, const char *text)
 {
 	String r;
 	r << XmlHeader() <<
-		"<?xml version=\"1.0\"?>"
 		"<methodResponse>"
 		  "<fault>"
 		    "<value>"
