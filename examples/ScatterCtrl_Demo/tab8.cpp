@@ -24,7 +24,7 @@ void Tab8::Init()
 	scatter.cbModifFormatX = THISBACK(MyFormat);
 	scatter.cbModifFormatDeltaX = THISBACK(MyFormatDelta);
 	scatter.SetMaxZoom(40).SetMinZoom(2, 20)
-		   .SetLabelY("Temperature [ºC]")
+		   .SetLabelY("Temperature [C]")
 	       .SetLabelY2("Pressure [mBar]")
 		   .SetMarkWidth(1, 4);
 	scatter.ShowInfo()
