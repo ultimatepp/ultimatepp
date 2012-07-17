@@ -1,4 +1,4 @@
-description "ScatterDraw Demo. Sacatter without GUI\377";
+description "ScatterDraw Demo. Scatter without GUI\377";
 
 uses
 	Core,

@@ -23,7 +23,7 @@ CONSOLE_APP_MAIN
 	scatter.FitToData();
 	
 	scatter.SetTitle("ScatterDraw_Demo").SetTitleFont(SansSerif(14).Bold());
-	scatter.SetLabelY("Temperature [ºC]").SetLabelX("Time [sec]").SetLabelsFont(SansSerif(12));
+	scatter.SetLabelY("Temperature [C]").SetLabelX("Time [sec]").SetLabelsFont(SansSerif(12));
 	scatter.SetPlotAreaLeftMargin(40).SetPlotAreaRightMargin(30).SetPlotAreaTopMargin(40).SetPlotAreaBottomMargin(50);
 	scatter.SetSize(Size(1000, 500));
 	scatter.SetMode(ScatterDraw::MD_ANTIALIASED);
