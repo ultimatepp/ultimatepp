@@ -1,4 +1,4 @@
-description "Puzzle game";
+description "Puzzle game\377";
 
 uses
 	CtrlLib;

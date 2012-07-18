@@ -1,0 +1,4 @@
+#ifndef _Puzzle_icpp_init_stub
+#define _Puzzle_icpp_init_stub
+#include "CtrlLib/init"
+#endif
