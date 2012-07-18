@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-#if defined(_DEBUG) && 1
+#if 0
 
 _DBG_
 #include <plugin/png/png.h>
