@@ -176,13 +176,13 @@ Value ProcessJsonRpc(const Value& v, const char *group, const char *peeraddr)
 		LLOG("Processing error: " << e.text);
 		if(rpc_trace)
 			*rpc_trace << "Processing error: " << e.text << '\n';
-		return AsJSON(JsonRpcError(e.code, e.text, id));
+		return JsonRpcError(e.code, e.text, id);
 	}
 	catch(ValueTypeMismatch) {
 		LLOG("ValueTypeMismatch at parameter " << data.ii);
 		if(rpc_trace)
 			*rpc_trace << "ValueTypeMismatch at parameter " << data.ii << '\n';
-		return AsJSON(JsonRpcError(RPC_SERVER_PARAM_ERROR, "Invalid params", id));
+		return JsonRpcError(RPC_SERVER_PARAM_ERROR, "Invalid params", id);
 	}
 }
 
@@ -251,7 +251,7 @@ bool RpcPerform(TcpSocket& http, const char *group)
 			response <<
 				"HTTP/1.0 200 OK\r\n"
 				"Date: " << ts << "\r\n"
-				"Server: U++ XMLRPC server\r\n"
+				"Server: U++ RPC server\r\n"
 				"Content-Length: " << r.GetCount() << "\r\n"
 				"Connection: close\r\n"
 				"Content-Type: text/" << (json ? "json" : "xml") << "\r\n\r\n"
