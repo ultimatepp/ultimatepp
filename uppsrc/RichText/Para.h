@@ -117,6 +117,9 @@ struct RichPara {
 	};
 
 	struct Format : NumberFormat, CharFormat {
+		Uuid        styleid;
+		String      label;
+		WithDeepCopy< Vector<Tab> > tab;
 		int         align;
 		int         ruler, before, lm, indent, rm, after;
 		Color       rulerink;
@@ -125,9 +128,6 @@ struct RichPara {
 		int         bullet;
 		int         linespacing;
 		bool        newpage, keep, keepnext, orphan;
-		WithDeepCopy< Vector<Tab> > tab;
-		String      label;
-		Uuid        styleid;
 
 		void        SortTabs();
 

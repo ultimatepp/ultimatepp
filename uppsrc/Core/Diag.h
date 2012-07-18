@@ -218,3 +218,13 @@ void DumpMap(Stream& s, const T& t) {
 }
 
 String AsString(const MemoryProfile& mem);
+
+
+#if 0 // rare cases when release-mode DLOG/DDUMP is needed
+
+#undef  DLOG
+#undef  DDUMP
+#define DLOG(x)  RLOG(x)
+#define DDUMP(x) RDUMP(x)
+
+#endif
