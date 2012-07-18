@@ -256,7 +256,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
 		{
-#if 1
+#if 0
 			String msgdump;
 			switch(message)
 			{

@@ -100,7 +100,6 @@ protected:
 	Vector<Part>           part;
 	mutable int            length;
 	mutable int            tabcount;
-	mutable Rect           rect;
 	mutable Vector<PageY>  py;
 
 	enum {

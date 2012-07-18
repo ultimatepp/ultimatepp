@@ -437,6 +437,7 @@ void RichTxt::Init()
 {
 	r_type = ALL;
 	r_parti = 0;
+	r_paraocx = r_paraocy = -1;	
 	tabcount = length = 0;
 }
 
