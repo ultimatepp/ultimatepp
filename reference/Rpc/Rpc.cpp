@@ -17,6 +17,15 @@ RPC_METHOD(Multiply2)
 	rpc = m * n;
 }
 
+RPC_METHOD(Divide)
+{
+	int m = rpc++;
+	int n = rpc++;
+	if(n == 0)
+		ThrowRpcError("divide by zero");
+	rpc = m / n;
+}
+
 RPC_METHOD(MultiplyNamed)
 {
 	int n = rpc["first"];
@@ -26,6 +35,7 @@ RPC_METHOD(MultiplyNamed)
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
 //	LogXmlRpcRequests();
 //	SetXmlRpcServerTrace(UppLog());
 //  Working in "shortened" mode - without URL specified, RpcRequests are performed by methods in
@@ -35,4 +45,6 @@ CONSOLE_APP_MAIN
 	DUMP(JsonRpcRequest()("Multiply2", 4, 5).Execute());
 	DUMP(XmlRpcRequest()("Multiply2", 6, 7).Execute());
 	DUMP(JsonRpcRequestNamed()("MultiplyNamed")("first", 8)("second", 9).Execute());
+	DUMP(JsonRpcRequest()("Divide", 2, 0).Execute());
+	DUMP(JsonRpcRequest()("Divide", 20, 4).Execute());
 }
