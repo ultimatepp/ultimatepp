@@ -8,10 +8,11 @@ NAMESPACE_UPP
 
 #ifdef _DEBUG
 
-
 bool Ctrl::LogMessages
+
 // = true _DBG_
 ;
+bool __X11_Grabbing = false;
 #endif
 
 #define LLOG(x)      // DLOG(x)
@@ -600,6 +601,9 @@ void Ctrl::StartPopupGrab()
 		   GrabModeAsync, GrabModeAsync, None, None, CurrentTime) == GrabSuccess) {
 				PopupGrab++;
 				popupWnd = GetTopWindow();
+#ifdef _DEBUG
+				__X11_Grabbing = true;
+#endif
 			}
 	}
 }
@@ -611,6 +615,9 @@ void Ctrl::EndPopupGrab()
 	if(--PopupGrab == 0) {
 		XUngrabPointer(Xdisplay, CurrentTime);
 		XFlush(Xdisplay);
+#ifdef _DEBUG
+		__X11_Grabbing = false;
+#endif
 	}
 }
 
@@ -750,6 +757,9 @@ bool Ctrl::SetWndCapture()
 		GrabModeAsync, GrabModeAsync, None, None, CurrentTime
 	);
 	if(status) return false;
+#ifdef _DEBUG
+		__X11_Grabbing = true;
+#endif
 	LLOG("Capture set ok");
 	grabWindow = top->window;
 	return true;
@@ -769,6 +779,9 @@ void Ctrl::ReleaseGrab()
 		XUngrabPointer(Xdisplay, CurrentTime);
 		XFlush(Xdisplay);
 		grabWindow = None;
+#ifdef _DEBUG
+		__X11_Grabbing = false;
+#endif
 	}
 }
 
