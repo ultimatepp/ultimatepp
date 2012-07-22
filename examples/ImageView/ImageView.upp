@@ -1,4 +1,4 @@
-description "Simple image viewer";
+description "Simple image viewer\377";
 
 uses
 	CtrlLib,
