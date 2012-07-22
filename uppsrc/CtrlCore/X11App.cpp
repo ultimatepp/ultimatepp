@@ -522,10 +522,15 @@ int Ctrl::GetKbdSpeed()
 
 
 #ifdef _DEBUG
+extern bool __X11_Grabbing;
 void _DBG_Ungrab(void) {
-	XUngrabPointer(Xdisplay, CurrentTime);
-	XUngrabKeyboard(Xdisplay, CurrentTime);
-	XFlush(Xdisplay);
+	if(__X11_Grabbing)
+	{
+		XUngrabPointer(Xdisplay, CurrentTime);
+		XUngrabKeyboard(Xdisplay, CurrentTime);
+		XFlush(Xdisplay);
+		__X11_Grabbing = false;
+	}
 }
 #endif
 
