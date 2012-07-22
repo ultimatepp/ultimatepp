@@ -1,0 +1,9 @@
+#include "tif.h"
+
+NAMESPACE_UPP
+
+INITBLOCK {
+	StreamRaster::Register<TIFRaster>();
+}
+
+END_UPP_NAMESPACE
