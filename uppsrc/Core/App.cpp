@@ -7,6 +7,11 @@
 
 #include <shellapi.h>
 #include <wincon.h>
+
+#ifdef COMPILER_MINGW
+#undef CY
+#endif
+
 #include <shlobj.h>
 
 #undef Ptr
@@ -419,7 +424,7 @@ static auxthread_t auxthread__ sShellExecuteOpen(void *str)
 void LaunchWebBrowser(const String& url)
 {
 	WString wurl = ToSystemCharsetW(url);
-	if (int(ShellExecuteW(NULL, L"open", wurl, NULL, L".", SW_SHOWDEFAULT)) <= 32) {
+	if ((int64)(ShellExecuteW(NULL, L"open", wurl, NULL, L".", SW_SHOWDEFAULT)) <= 32) {
 		int l = sizeof(wchar) * wurl.GetLength() + 1;
 		char *curl = (char *)malloc(l);
 		memcpy(curl, wurl, l);
