@@ -68,14 +68,20 @@ void Ide::MakeIcon() {
 
 bool Ide::CanToggleReadOnly()
 {
-	FindFile ff(editfile);
-	if(ff && ff.IsReadOnly()) return false;
 	return NormalizePath(GetActiveFilePath()) == NormalizePath(editfile);
 }
 
 void Ide::ToggleReadOnly()
 {
 	if(CanToggleReadOnly() && IsActiveFile()) {
+#ifdef PLATFORM_WIN32
+		FindFile ff(editfile);
+		if(ff && ff.IsReadOnly()) {
+			dword attrib = GetFileAttributes(editfile);
+			attrib &= ~FILE_ATTRIBUTE_READONLY;
+			SetFileAttributes(editfile, attrib);
+		}
+#endif
 		editor.SetEditable(editor.IsReadOnly());
 		ActiveFile().readonly = editor.IsReadOnly();
 		SavePackage();

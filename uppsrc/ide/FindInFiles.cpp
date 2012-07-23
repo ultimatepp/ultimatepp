@@ -5,6 +5,7 @@ void Ide::SerializeFf(Stream& s) {
 	ff.find.SerializeList(s);
 	s % ff.wholeword % ff.ignorecase % ff.wildcards;
 	s % ff.replace;
+	s % ff.readonly;
 	ff.replace.SerializeList(s);
 }
 
@@ -20,7 +21,7 @@ FileSel& sSD()
 }
 
 void Ide::SerializeFindInFiles(Stream& s) {
-	int version = 2;
+	int version = 3;
 	s / version;
 	s % ff.files;
 	ff.files.SerializeList(s);
@@ -34,17 +35,21 @@ void Ide::SerializeFindInFiles(Stream& s) {
 	}
 	if(version >= 1)
 		s % sSD();
+	if(version >= 3)
+		s % ff.readonly;
 }
 
-void SearchForFiles(Vector<String>& files, String dir, String mask, Progress& pi) {
+void SearchForFiles(Vector<String>& files, String dir, String mask, int readonly, Progress& pi) {
 	FindFile ff(AppendFileName(dir, "*.*"));
 	while(ff) {
 		if(ff.IsFolder() && *ff.GetName() != '.')
-			SearchForFiles(files, AppendFileName(dir, ff.GetName()), mask, pi);
+			SearchForFiles(files, AppendFileName(dir, ff.GetName()), mask, readonly, pi);
 		else
 		if(ff.IsFile() && PatternMatchMulti(mask, ff.GetName())) {
-			if(pi.StepCanceled()) return;
-			files.Add(AppendFileName(dir, ff.GetName()));
+			if(IsNull(readonly) || !!readonly == !!ff.IsReadOnly()) {
+				if(pi.StepCanceled()) return;
+				files.Add(AppendFileName(dir, ff.GetName()));
+			}
 		}
 		ff.Next();
 	}
@@ -259,7 +264,8 @@ void Ide::FindInFiles(bool replace) {
 		ff.replace.AddHistory();
 		Progress pi("Found %d files to search.");
 		Vector<String> files;
-		SearchForFiles(files, NormalizePath((String)ff.folder, GetUppDir()), ~ff.files, pi);
+		SearchForFiles(files, NormalizePath((String)ff.folder, GetUppDir()),
+			~ff.files, ~ff.readonly, pi);
 		if(!pi.Canceled()) {
 			String pattern;
 			if(ff.wildcards) {
@@ -389,6 +395,7 @@ void FindInFilesDlg::Sync()
 FindInFilesDlg::FindInFilesDlg()
 {
 	style <<= THISBACK(Sync);
+	readonly <<= Null;
 }
 
 void FindInFilesDlg::Setup(bool replacing)
