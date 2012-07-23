@@ -102,7 +102,7 @@
 		#endif
 	#endif
 
-	#ifdef COMPILER_MINGW
+	#if defined(COMPILER_MINGW) && !defined(WINVER)
 		#define WINVER 0xFFFF	
 	#endif
 
@@ -161,7 +161,17 @@
 		#undef byte
 		#undef CY
 			typedef DWORD LCTYPE;
+			#define W_P(w, p) w
+			#include <winsock2.h>
+			#include <ws2tcpip.h>
+			typedef int socklen_t;
 		#else
+			#define W_P(w, p) w
+			#if !defined(PLATFORM_CYGWIN)
+			#include <winsock2.h>
+			#include <ws2tcpip.h>
+			#endif
+			typedef int socklen_t;
 			#define _WINSOCKAPI_   /* Prevent inclusion of winsock.h in windows.h */
 			#include <windows.h>
 			#include <stdint.h>
@@ -172,15 +182,6 @@
 	#ifdef RGBA
 		#undef RGBA
 	#endif
-#endif
-
-#ifdef PLATFORM_WIN32
-#define W_P(w, p) w
-#if !defined(PLATFORM_CYGWIN)
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#endif
-typedef int socklen_t;
 #endif
 
 #ifdef PLATFORM_POSIX
