@@ -112,7 +112,6 @@ void *Heap::AllocK(int k)
 	}
 }
 
-
 inline
 void *Heap::Allok(int k)
 {
