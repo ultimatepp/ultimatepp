@@ -29,12 +29,21 @@ void   SetIniFile(const char *path = NULL);
 String GetIniKey(const char *id, const String& def);
 String GetIniKey(const char *id);
 
+#ifdef flagSO
+bool IniChanged__(int version);
+#else
+extern int  ini_version__;
+inline bool IniChanged__(int version) { return version != ReadWithBarrier(ini_version__); }
+#endif
+
 struct IniString {
 // "private":
 	const char   *id;
 	String      (*def)();
 	String&     (*ref_fn)();
-	int64         version;
+	int           version;
+	String        Load();
+
 // "public:"
 	operator String();
 	String   operator=(const String& s);
@@ -44,11 +53,13 @@ struct IniString {
 struct IniInt {
 // "private":
 	const char *id;
-	int      (*def)();
-	int64      version;
-	int        value;
+	int       (*def)();
+	int         version;
+	int         value;
+	int         Load();
+
 // "public:"
-	operator    int();
+	operator    int()             { int h = value; if(IniChanged__(version)) return Load(); return h; }
 	int         operator=(int b);
 	String      ToString() const;
 };
@@ -56,11 +67,13 @@ struct IniInt {
 struct IniInt64 {
 // "private":
 	const char *id;
-	int64    (*def)();
-	int64      version;
-	int64      value;
+	int64     (*def)();
+	int         version;
+	int64       value;
+	int64       Load();
+
 // "public:"
-	operator    int64();
+	operator    int64()           { int64 h = value; if(IniChanged__(version)) return Load(); return h; }
 	int64       operator=(int64 b);
 	String      ToString() const;
 };
@@ -69,10 +82,12 @@ struct IniDouble {
 // "private":
 	const char *id;
 	double    (*def)();
-	int64       version;
+	int         version;
 	double      value;
+	double      Load();
+
 // "public:"
-	operator    double();
+	operator    double()           { double h = value; if(IniChanged__(version)) return Load(); return h; }
 	double      operator=(double b);
 	String      ToString() const;
 };
@@ -81,10 +96,12 @@ struct IniBool {
 // "private":
 	const char *id;
 	bool      (*def)();
-	int64       version;
+	int         version;
 	bool        value;
+	bool        Load();
+
 // "public:"
-	operator     bool();
+	operator     bool()            { bool h = value; if(IniChanged__(version)) return Load(); return h; }
 	bool         operator=(bool b);
 	String       ToString() const;
 };

@@ -50,12 +50,13 @@ VectorMap<String, String> LoadIniFile(const char *filename) {
 
 static StaticMutex sMtx;
 static char  sIniFile[256];
-static int64 s_ini_version = 1;
+
+int ini_version__ = 1;
 
 void ReloadIniFile()
 {
 	Mutex::Lock __(sMtx);
-	s_ini_version++;
+	ini_version__++;
 }
 
 void SetIniFile(const char *name) {
@@ -64,28 +65,24 @@ void SetIniFile(const char *name) {
 	ReloadIniFile();
 }
 
-static
-void sIniSet(int64& version)
+void IniSet__(int& version)
 {
-	version = s_ini_version;
+	BarrierWrite(version, ini_version__);
 }
 
-
-static
-bool sIniChanged(int64& version)
+#ifdef flagSO
+bool IniChanged__(int version)
 {
-	if(version != s_ini_version) {
-		version = s_ini_version;
-		return true;
-	}
-	return false;
+	return version != ReadWithBarrier(ini_version__);
 }
+#endif
 
 String GetIniKey(const char *id, const String& def) {
 	Mutex::Lock __(sMtx);
 	static VectorMap<String, String> key;
-	static int64 version;
-	if(sIniChanged(version)) {
+	static int version;
+	if(version != ini_version__) {
+		version = ini_version__;
 		key = LoadIniFile(*sIniFile ? sIniFile : ~ConfigFile("q.ini"));
 	#ifdef PLATFORM_WIN32
 		if(key.GetCount() == 0)
@@ -106,27 +103,36 @@ String GetIniKey(const char *id)
 	return GetIniKey(id, String());
 }
 
-IniString::operator String()
+String IniString::Load()
 {
 	String x;
 	{
 		Mutex::Lock __(sMtx);
 		String& s = (*ref_fn)();
-		if(sIniChanged(version)) {
+		if(IniChanged__(version)) {
 			s = TrimBoth(GetIniKey(id));
 			if(IsNull(s))
 				s = (*def)();
 		}
 		x = s;
+		IniSet__(version);
 	}
 	return x;
+}
+
+IniString::operator String()
+{
+	String h = (*ref_fn)();
+	if(IniChanged__(version))
+		return Load();
+	return h;
 }
 
 String IniString::operator=(const String& s)
 {
 	Mutex::Lock __(sMtx);
 	(*ref_fn)() = s;
-	sIniSet(version);
+	IniSet__(version);
 	return s;
 }
 
@@ -167,19 +173,20 @@ int64 ReadIniInt(const char *id)
 	return num;
 }
 
-IniInt::operator int() {
+int IniInt::Load() {
 	Mutex::Lock __(sMtx);
-	if(sIniChanged(version)) {
+	if(IniChanged__(version)) {
 		value = (int)ReadIniInt(id);
 		if(IsNull(value))
 			value = (*def)();
+		IniSet__(version);
 	}
 	return value;
 }
 
 int IniInt::operator=(int b) {
 	Mutex::Lock __(sMtx);
-	sIniSet(version);
+	IniSet__(version);
 	return value = b;
 }
 
@@ -188,13 +195,14 @@ String IniInt::ToString() const
 	return AsString((int)const_cast<IniInt&>(*this));
 }
 
-IniInt64::operator int64()
+int64 IniInt64::Load()
 {
 	Mutex::Lock __(sMtx);
-	if(sIniChanged(version)) {
+	if(IniChanged__(version)) {
 		value = ReadIniInt(id);
 		if(IsNull(value))
 			value = (*def)();
+		IniSet__(version);
 	}
 	return value;
 }
@@ -202,7 +210,9 @@ IniInt64::operator int64()
 int64 IniInt64::operator=(int64 b)
 {
 	Mutex::Lock __(sMtx);
-	sIniSet(version);
+	BarrierWrite(version, -1);
+	value = b;
+	IniSet__(version);
 	return value = b;
 }
 
@@ -211,13 +221,14 @@ String IniInt64::ToString() const
 	return AsString((int64)const_cast<IniInt64&>(*this));
 }
 
-IniDouble::operator double()
+double IniDouble::Load()
 {
 	Mutex::Lock __(sMtx);
-	if(sIniChanged(version)) {
+	if(IniChanged__(version)) {
 		value = ScanDouble(TrimBoth(ToLower(GetIniKey(id))));
 		if(IsNull(value))
 			value = (*def)();
+		IniSet__(version);
 	}
 	return value;
 }
@@ -225,8 +236,10 @@ IniDouble::operator double()
 double IniDouble::operator=(double b)
 {
 	Mutex::Lock __(sMtx);
-	sIniSet(version);
-	return value = b;
+	BarrierWrite(version, -1);
+	value = b;
+	IniSet__(version);
+	return b;
 }
 
 String IniDouble::ToString() const
@@ -234,29 +247,31 @@ String IniDouble::ToString() const
 	return AsString((double)const_cast<IniDouble&>(*this));
 }
 
-IniBool::operator bool() {
+bool IniBool::Load() {
 	Mutex::Lock __(sMtx);
-	if(sIniChanged(version)) {
+	if(IniChanged__(version)) {
 		String h = TrimBoth(ToLower(GetIniKey(id)));
 		if(h.GetCount())
 			value = h == "1" || h == "yes" || h == "true" || h == "y";
 		else
 			value = (*def)();
+		IniSet__(version);
 	}
 	return value;
 }
 
 bool IniBool::operator=(bool b) {
 	Mutex::Lock __(sMtx);
-	sIniSet(version);
-	return value = b;
+	BarrierWrite(version, -1);
+	value = b;
+	IniSet__(version);
+	return b;
 }
 
 String IniBool::ToString() const
 {
 	return AsString((bool)const_cast<IniBool&>(*this));
 }
-
 
 Array<IniInfo>& sIniInfo()
 {
