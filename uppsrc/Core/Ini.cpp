@@ -103,11 +103,13 @@ String GetIniKey(const char *id)
 	return GetIniKey(id, String());
 }
 
-String IniString::Load()
+static StaticMutex strMtx;
+
+IniString::operator String()
 {
 	String x;
 	{
-		Mutex::Lock __(sMtx);
+		Mutex::Lock __(strMtx);
 		String& s = (*ref_fn)();
 		if(IniChanged__(version)) {
 			s = TrimBoth(GetIniKey(id));
@@ -120,17 +122,9 @@ String IniString::Load()
 	return x;
 }
 
-IniString::operator String()
-{
-	String h = (*ref_fn)();
-	if(IniChanged__(version))
-		return Load();
-	return h;
-}
-
 String IniString::operator=(const String& s)
 {
-	Mutex::Lock __(sMtx);
+	Mutex::Lock __(strMtx);
 	(*ref_fn)() = s;
 	IniSet__(version);
 	return s;
@@ -186,8 +180,10 @@ int IniInt::Load() {
 
 int IniInt::operator=(int b) {
 	Mutex::Lock __(sMtx);
+	BarrierWrite(version, -1);
+	value = b;
 	IniSet__(version);
-	return value = b;
+	return b;
 }
 
 String IniInt::ToString() const
@@ -195,9 +191,11 @@ String IniInt::ToString() const
 	return AsString((int)const_cast<IniInt&>(*this));
 }
 
-int64 IniInt64::Load()
+static StaticMutex si64Mtx;
+
+IniInt64::operator int64()
 {
-	Mutex::Lock __(sMtx);
+	Mutex::Lock __(si64Mtx);
 	if(IniChanged__(version)) {
 		value = ReadIniInt(id);
 		if(IsNull(value))
@@ -209,11 +207,9 @@ int64 IniInt64::Load()
 
 int64 IniInt64::operator=(int64 b)
 {
-	Mutex::Lock __(sMtx);
-	BarrierWrite(version, -1);
+	Mutex::Lock __(si64Mtx);
 	value = b;
-	IniSet__(version);
-	return value = b;
+	return b;
 }
 
 String IniInt64::ToString() const
