@@ -42,7 +42,6 @@ struct IniString {
 	String      (*def)();
 	String&     (*ref_fn)();
 	int           version;
-	String        Load();
 
 // "public:"
 	operator String();
@@ -70,10 +69,9 @@ struct IniInt64 {
 	int64     (*def)();
 	int         version;
 	int64       value;
-	int64       Load();
 
 // "public:"
-	operator    int64()           { int64 h = value; if(IniChanged__(version)) return Load(); return h; }
+	operator    int64();
 	int64       operator=(int64 b);
 	String      ToString() const;
 };
