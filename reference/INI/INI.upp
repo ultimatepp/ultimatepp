@@ -9,5 +9,6 @@ file
 	INI2.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "SSE2",
+	"" = "SSE2 MT";
 
