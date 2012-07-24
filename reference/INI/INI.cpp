@@ -24,18 +24,18 @@ CONSOLE_APP_MAIN
 	
 	SetIniFile(GetDataFile("test.ini"));
 	
-	DDUMP(Config::flag1);
-	DDUMP(Config::flag2);
-	DDUMP(Config::text);
-	DDUMP(Config::number);
-	DDUMP(Config::fp_number);
+	RDUMP(Config::flag1);
+	RDUMP(Config::flag2);
+	RDUMP(Config::text);
+	RDUMP(Config::number);
+	RDUMP(Config::fp_number);
 	
-	LOG(GetIniInfoFormatted());
+	RLOG(GetIniInfoFormatted());
 
 	Config::number = 321;
-	DDUMP(Config::number);
+	RDUMP(Config::number);
 	
-	LOG(GetIniInfoFormatted());
+	RLOG(GetIniInfoFormatted());
 	
 	ExternalFn();
 }
