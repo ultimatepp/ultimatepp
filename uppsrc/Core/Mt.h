@@ -471,6 +471,19 @@ inline bool IsMainThread() { return true; }
 
 typedef int Atomic;
 
+template <class U>
+inline U ReadWithBarrier(const U& b)
+{
+	/*volatile*/ U tmp = b;
+	return tmp;
+}
+
+template <class U, class V>
+inline void BarrierWrite(U& dest, V data)
+{
+	dest = data;
+}
+
 inline int  AtomicRead(const volatile Atomic& t)      { return t; }
 inline void AtomicWrite(volatile Atomic& t, int data) { t = data; }
 
