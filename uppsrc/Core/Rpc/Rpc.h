@@ -235,15 +235,8 @@ String FormatXmlRpcError(int code, const char *text);
 
 void   Register(const char *name, void (*method)(RpcData&), const char *group = NULL);
 
-#define RPC_METHOD(x) \
-void rpc_method_##x(RpcData& rpc); \
-INITBLOCK { Register(#x, rpc_method_##x); } \
-void rpc_method_##x(RpcData& rpc)
-
-#define RPC_GMETHOD(x, group) \
-void rpc_method_##x(RpcData& rpc); \
-INITBLOCK { Register(#x, rpc_method_##x, group); } \
-void rpc_method_##x(RpcData& rpc)
+#define RPC_METHOD(name) void name(RpcData& rpc); INITBLOCK { Register(#name, name); } void name(RpcData& rpc)
+#define RPC_GMETHOD(name, group) void name(RpcData& rpc); INITBLOCK { Register(#name, name, group); } void name(RpcData& rpc)
 
 struct RpcError {
 	int    code;

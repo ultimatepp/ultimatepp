@@ -668,22 +668,39 @@ Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
 			break;
 	}
 	Qualifier();
-	if(l0 && lex == tk_SKYLARK && lex[1] == '(') {
-		++lex;
-		++lex;
-		Decl& a = r.Add();
-		a.name = lex.GetId();
-		a.function = true;
-		a.natural = String().Cat() << "void " << a.name << "(Http& http)";
-		Decl& p = a.param.Add();
-		p.name = "http";
-		p.type = "Http";
-		p.natural = "Http& http";
-		Key(',');
-		lex.GetText();
-		Key(')');
-		return r;
-	}
+	if(l0)
+		if(lex == tk_SKYLARK && lex[1] == '(') {
+			++lex;
+			++lex;
+			Decl& a = r.Add();
+			a.name = lex.GetId();
+			a.function = true;
+			a.natural = String().Cat() << "void " << a.name << "(Http& http)";
+			Decl& p = a.param.Add();
+			p.name = "http";
+			p.type = "Http";
+			p.natural = "Http& http";
+			Key(',');
+			lex.GetText();
+			Key(')');
+			return r;
+		} else
+		if((lex == tk_RPC_METHOD || lex == tk_RPC_GMETHOD) && lex[1] == '(') {
+			++lex;
+			++lex;
+			Decl& a = r.Add();
+			a.name = lex.GetId();
+			a.function = true;
+			a.natural = String().Cat() << "void " << a.name << "(RpcData& rpc)";
+			Decl& p = a.param.Add();
+			p.name = "rpc";
+			p.type = "RpcData";
+			p.natural = "RpcData& rpc";
+			if (Key(','))
+				lex.GetText();
+			Key(')');
+			return r;
+		}
 	bool isdestructor = Key('~');
 	if(l0 && context.typenames.Find(lex) >= 0 && lex[1] == '(' && lex.IsId()) {
 		Decl& a = r.Add();
