@@ -349,7 +349,13 @@ bool PostgreSQLSession::Open(const char *connect)
 {
 	Close();
 	conns = connect;
-	conn = PQconnectdb(connect);
+
+	{
+		MemoryIgnoreLeaksBlock __;
+		// PGSQL, when sharing .dll SSL, does not free SSL data
+		conn = PQconnectdb(connect);
+	}
+
 	if(PQstatus(conn) != CONNECTION_OK)
 	{	
 		SetError(FromSystemCharset(PQerrorMessage(conn)), "Opening database");
