@@ -7,15 +7,28 @@
 
 namespace Upp {
 
+namespace Ini {
+INI_STRING(session_cookie, "__skylark_session_cookie__", "Skylark session cookie ID");
+INI_STRING(session_dir, ConfigFile("session"), "Directory that contains Skylark session files");
+INI_STRING(session_format, "BINARY", "Skylark session format ('BINARY', 'JSON', 'XML')");
+INI_STRING(session_table, "", "SQL table used to store Skylark sessions; if empty, sessions are stored in files");
+INI_STRING(session_id_column, "ID", "Primary key of SQL table used to store Skylark sessions");
+INI_STRING(session_data_column, "DATA", "Name of SQL 'text' column used to store Skylark sessions data");
+INI_STRING(session_lastwrite_column, "LASTWRITE", "Name of SQL timestamp column used to store Skylark session last update time");
+INI_INT(session_expire, 3600 * 24 * 365, "Number of seconds after which Skylark session expires and can be deleted");
+};
+
 SessionConfig::SessionConfig()
 {
-	cookie = "__skylark_session_cookie__";
-	dir = ConfigFile("session");
-	format = SESSION_FORMAT_BINARY;
-	id_column = "ID";
-	data_column = "DATA";
-	lastwrite_column = "LASTWRITE";
-	expire = 3600 * 24 * 365; // one year to expire the session
+	cookie = Ini::session_cookie;
+	dir = Ini::session_dir;
+	format = Ini::session_format == "JSON" ? SESSION_FORMAT_JSON :
+	         Ini::session_format == "XML" ?  SESSION_FORMAT_XML :
+	                                         SESSION_FORMAT_BINARY;
+	id_column = (String)Ini::session_id_column;
+	data_column = (String)Ini::session_data_column;
+	lastwrite_column = (String)Ini::session_lastwrite_column;
+	expire = Ini::session_expire;
 }
 
 String Http::SessionFile(const String& sid)
