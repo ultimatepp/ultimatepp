@@ -171,7 +171,6 @@ void SkylarkApp::Run()
 	quit = false;
 
 #ifdef _DEBUG
-	// Avoid the need to close running server in debug mode...
 	int qq = 0;
 	for(;;) {
 		if(server.Listen(port, 5))
@@ -181,7 +180,7 @@ void SkylarkApp::Run()
 	}
 #else
 	if(!server.Listen(port, 5)) {
-		SKYLARKLOG("Cannot open server socket!");
+		SKYLARKLOG("Cannot open server socket for listening!");
 		Exit(1);
 	}
 #endif
@@ -275,21 +274,31 @@ const SkylarkConfig& SkylarkApp::Config()
 	return *app;
 }
 
+namespace Ini {
+INI_INT(port, 8001, "TCP/IP server port to listen on");
+INI_STRING(path, Nvl(GetEnv("UPP_ASSEMBLY__"), GetFileFolder(GetExeFilePath())), "Path to witz templates and static files");
+INI_INT(threads, 3 * CPU_Cores() + 1, "Number of threads in each Skylark subprocess");
+#ifdef _DEBUG
+INI_INT(prefork, 0, "Number of preforked Skylark subprocesses");
+INI_INT(timeout, 0, "Timeout in seconds for Skylark event handler");
+INI_BOOL(use_caching, false, "Cache compiled witz templates or other data");
+#else
+INI_INT(prefork, 1, "Number of preforked Skylark subprocesses");
+INI_INT(timeout, 300, "Timeout in seconds for Skylark event handler");
+INI_BOOL(use_caching, true, "Cache compiled witz templates or other data");
+#endif
+};
+
 SkylarkApp::SkylarkApp()
 {
 	ASSERT(!app);
-	path = GetEnv("UPP_ASSEMBLY__");
+	path = Ini::path;
 	app = this;
-	threads = 3 * CPU_Cores() + 1;
-	port = 8001;
-	use_caching = true;
-#ifdef _DEBUG
-	prefork = 0;
-	timeout = 0;
-#else
-	prefork = 1;
-	timeout = 300;
-#endif
+	threads = Ini::threads;
+	port = Ini::port;
+	use_caching = Ini::use_caching;
+	prefork = Ini::prefork;
+	timeout = Ini::timeout;
 }
 
 SkylarkApp::~SkylarkApp()
