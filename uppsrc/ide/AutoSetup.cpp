@@ -404,7 +404,7 @@ void AutoSetup()
 			"DEBUG_OPTIONS = \"-Od\";\n"
 			"RELEASE_BLITZ = \"0\";\n"
 			"RELEASE_LINKMODE = \"0\";\n"
-		d	"RELEASE_OPTIONS = \"-O2 -GS-\";\n"
+			"RELEASE_OPTIONS = \"-O2 -GS-\";\n"
 			"RELEASE_SIZE_OPTIONS = \"-O1 -GS-\";\n"
 			"DEBUGGER = \"\";\n"
 			"REMOTE_HOST = \"\";\n"
