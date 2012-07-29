@@ -343,7 +343,7 @@ inline String  CtextD(CalcPacket& packet, Time d)
 FDECLP(text, S, &GroupString)
 FDECLAP(text, D, &GroupString)
 
-inline String CtextA(CalcPacket& packet, ValueArray va)
+inline String CtextA(CalcPacket& packet, const ValueArray& va)
 {
 	String out;
 	out << "[";
@@ -747,11 +747,11 @@ inline bool CalcArrayCtr(CalcPacket& packet)
 		packet.args.Add("...");
 		return true;
 	}
-	ValueArray va;
-	va.SetCount(packet.args.GetCount());
+	Vector<Value> vlist;
+	vlist.SetCount(packet.args.GetCount());
 	for(int i = 0; i < packet.args.GetCount(); i++)
-		va.Set(i, packet.args[i]);
-	packet.result = va;
+		vlist[i] = packet.args[i];
+	packet.result = ValueArray(vlist);
 	return true;
 }
 
@@ -764,17 +764,17 @@ inline ValueArray CarrayRange(double lo, double hi)
 		return ValueArray();
 	if(df >= 1000000)
 		throw Exc(NFormat(t_("array is too long (%d elements)"), df));
-	ValueArray va;
+	Vector<Value> vlist;
 	int nelem = fround(df);
-	va.SetCount(nelem);
+	vlist.SetCount(nelem);
 	for(int i = 0; i < nelem; i++)
-		va.Set(i, i + lr);
-	return va;
+		vlist[i] = i + lr;
+	return ValueArray(vlist);
 }
 
 FDECL("[..]", CarrayRange, &GroupArray)
 
-inline Value CarrayIndex(ValueArray va, int index)
+inline Value CarrayIndex(const ValueArray& va, int index)
 {
 	if(index < 0 || index >= va.GetCount())
 		throw Exc(NFormat(t_("invalid index %d, array has just %d elements"), index, va.GetCount()));
@@ -792,18 +792,18 @@ static String CstringIndex(String s, int index)
 
 FDECL("[]", CstringIndex, &GroupString)
 
-inline ValueArray CaddAA(ValueArray a, ValueArray b)
+inline ValueArray CaddAA(const ValueArray& a, const ValueArray& b)
 {
 	int ac = a.GetCount(), bc = b.GetCount();
-	ValueArray out = a;
-	out.SetCount(ac + bc);
-	for(int i = 0; i < bc; i++)
-		out.Set(i + ac, b[i]);
-	return out;
+	Vector<Value> out;
+	out.Reserve(ac + bc);
+	out.Append(a.Get());
+	out.Append(b.Get());
+	return ValueArray(out);
 }
 FDECL("+", CaddAA, &GroupArray)
 
-inline Value CsumA(CalcPacket& packet, ValueArray a)
+inline Value CsumA(CalcPacket& packet, const ValueArray& a)
 {
 	int i = 0;
 	while(i < a.GetCount() && IsNull(a[i]))
@@ -843,8 +843,7 @@ inline Value CsumA(CalcPacket& packet, ValueArray a)
 		for(; i < a.GetCount(); i++)
 			if(IsNull(a[i]))
 				;
-			else if(IsValueArray(a[i]))
-			{
+			else if(IsValueArray(a[i])) {
 				ValueArray ai = a[i];
 				for(int t = 0, nt = ai.GetCount(); t < nt; t++)
 					va.Add(ai[t]);
@@ -859,11 +858,11 @@ inline Value CsumA(CalcPacket& packet, ValueArray a)
 
 FDECLAP(sum, A, &GroupArray)
 
-inline Value CsumASC(CalcPacket& packet, ValueArray va, String var, const CalcNode *node)
+inline Value CsumASC(CalcPacket& packet, const ValueArray& va, String var, const CalcNode *node)
 {
 	if(IsNull(var))
 		throw Exc(t_("control variable has empty name"));
-	ValueArray vout;
+	Vector<Value> vout;
 	vout.SetCount(va.GetCount());
 	if(node)
 	{
@@ -871,38 +870,36 @@ inline Value CsumASC(CalcPacket& packet, ValueArray va, String var, const CalcNo
 		for(int i = 0; i < va.GetCount(); i++)
 		{
 			packet.context.Set(var, va[i]);
-			vout.Set(i, node -> Calc(packet.context));
+			vout[i] = node -> Calc(packet.context);
 		}
 	}
-	return CsumA(packet, vout);
+	return CsumA(packet, ValueArray(vout));
 }
 
 FDECLAP(sum, ASC, &GroupArray)
 
-inline ValueArray CmulAC(CalcPacket& packet, ValueArray va, const CalcNode *node)
+inline ValueArray CmulAC(CalcPacket& packet, const ValueArray& va, const CalcNode *node)
 {
-	ValueArray vout;
+	Vector<Value> vout;
 	vout.SetCount(va.GetCount());
-	if(node)
-	{
+	if(node) {
 		CalcContext::Nesting level(packet.context);
 		static const String i_("I"), a_("A");
-		for(int i = 0; i < va.GetCount(); i++)
-		{
+		for(int i = 0; i < va.GetCount(); i++) {
 			packet.context.Set(i_, i);
 			packet.context.Set(a_, va[i]);
-			vout.Set(i, node -> Calc(packet.context));
+			vout[i] = node -> Calc(packet.context);
 		}
 	}
-	return vout;
+	return ValueArray(vout);
 }
 
 FDECLA("*", CmulAC, &GroupArray)
 
-inline int CcountA(ValueArray va) { return va.GetCount(); }
+inline int CcountA(const ValueArray& va) { return va.GetCount(); }
 FDECLP(count, A, &GroupArray)
 
-inline Value CmaxA(CalcPacket& packet, ValueArray va)
+inline Value CmaxA(CalcPacket& packet, const ValueArray& va)
 {
 	Value out = Null;
 	for(int i = 0; i < va.GetCount(); i++)
@@ -914,7 +911,7 @@ inline Value CmaxA(CalcPacket& packet, ValueArray va)
 
 FDECLAP(max, A, &GroupArray)
 
-inline Value CminA(CalcPacket& packet, ValueArray va)
+inline Value CminA(CalcPacket& packet, const ValueArray& va)
 {
 	Value out = Null;
 	for(int i = 0; i < va.GetCount(); i++)
@@ -926,7 +923,7 @@ inline Value CminA(CalcPacket& packet, ValueArray va)
 
 FDECLAP(min, A, &GroupArray)
 
-inline double CavgA(ValueArray va)
+inline double CavgA(const ValueArray& va)
 {
 	double sum = 0;
 	int cnt = 0;
@@ -944,7 +941,7 @@ inline double CavgA(ValueArray va)
 
 FDECLP(avg, A, &GroupArray)
 
-inline ValueArray CleftAN(ValueArray va, int count)
+inline ValueArray CleftAN(const ValueArray& va, int count)
 {
 	if(count < 0 || count > va.GetCount())
 		throw Exc(t_("invalid number of array elements"));
@@ -955,7 +952,7 @@ inline ValueArray CleftAN(ValueArray va, int count)
 }
 FDECLP(left, AN, &GroupArray)
 
-inline ValueArray CrightAN(ValueArray va, int count)
+inline ValueArray CrightAN(const ValueArray& va, int count)
 {
 	if(count < 0 || count > va.GetCount())
 		throw Exc(t_("invalid number of array elements"));
@@ -966,7 +963,7 @@ inline ValueArray CrightAN(ValueArray va, int count)
 }
 FDECLP(right, AN, &GroupArray)
 
-inline ValueArray CmidANN(ValueArray va, int first, int count)
+inline ValueArray CmidANN(const ValueArray& va, int first, int count)
 {
 	if(first < 0 || first > va.GetCount())
 		throw Exc(t_("invalid character index"));
@@ -979,13 +976,13 @@ inline ValueArray CmidANN(ValueArray va, int first, int count)
 }
 FDECLP(mid, ANN, &GroupArray)
 
-inline ValueArray CmidAN(ValueArray va, int first)
+inline ValueArray CmidAN(const ValueArray& va, int first)
 {
 	return CmidANN(va, first, va.GetCount() - first);
 }
 FDECLP(mid, AN, &GroupArray)
 
-inline bool CinVA(Value v, ValueArray va)
+inline bool CinVA(Value v, const ValueArray& va)
 {
 	for(int i = 0; i < va.GetCount(); i++)
 		if(v == va[i])
@@ -994,14 +991,14 @@ inline bool CinVA(Value v, ValueArray va)
 }
 FDECLP(in, VA, &GroupArray)
 
-inline ValueArray CindexA(ValueArray a)
+inline ValueArray CindexA(const ValueArray& a)
 {
-	ValueArray out;
+	Vector<Value> out;
 	int n = a.GetCount();
 	out.SetCount(n);
 	for(int i = 0; i < n; i++)
-		out.Set(i, i);
-	return out;
+		out[i] = i;
+	return ValueArray(out);
 }
 FDECLP(index, A, &GroupArray)
 
@@ -1011,7 +1008,7 @@ struct ValueLess {
 	int language;
 };
 
-inline ValueArray CsortA(CalcPacket& packet, ValueArray a)
+inline ValueArray CsortA(CalcPacket& packet, const ValueArray& a)
 {
 	if(a.GetCount() <= 1)
 		return a;
@@ -1022,7 +1019,7 @@ inline ValueArray CsortA(CalcPacket& packet, ValueArray a)
 }
 FDECLAP(sort, A, &GroupArray)
 
-inline ValueArray CsortASC(CalcPacket& packet, ValueArray a, String ident, const CalcNode *lambda)
+inline ValueArray CsortASC(CalcPacket& packet, const ValueArray& a, String ident, const CalcNode *lambda)
 {
 	if(a.GetCount() <= 1)
 		return a;
@@ -1040,7 +1037,7 @@ inline ValueArray CsortASC(CalcPacket& packet, ValueArray a, String ident, const
 }
 FDECLAP(sort, ASC, &GroupArray)
 
-inline ValueArray CdistinctA(ValueArray a)
+inline ValueArray CdistinctA(const ValueArray& a)
 {
 	if(a.GetCount() <= 1)
 		return a;
@@ -1051,7 +1048,7 @@ inline ValueArray CdistinctA(ValueArray a)
 }
 FDECLP(distinct, A, &GroupArray)
 
-inline ValueArray CdistinctASC(CalcPacket& packet, ValueArray a, String ident, const CalcNode *lambda)
+inline ValueArray CdistinctASC(CalcPacket& packet, const ValueArray& a, String ident, const CalcNode *lambda)
 {
 	if(a.GetCount() <= 1)
 		return a;
@@ -1092,7 +1089,7 @@ static bool CwithVSRC(CalcPacket& packet)
 
 FDECLQ("CwithVSRC", "with", &GroupSystem, &CwithVSRC)
 
-static ValueArray CgroupAASCC(CalcPacket& packet, ValueArray data, ValueArray ctrl, String var,
+static ValueArray CgroupAASCC(CalcPacket& packet, const ValueArray& data, ValueArray ctrl, String var,
 	const CalcNode *grp, const CalcNode *val)
 {
 	Index<Value> ix(ctrl.Get(), 0);
@@ -1130,7 +1127,8 @@ static ValueArray CgroupAASCC(CalcPacket& packet, ValueArray data, ValueArray ct
 
 FDECLAP(group, AASCC, &GroupArray)
 
-static ValueArray CgroupAASC(CalcPacket& packet, ValueArray data, ValueArray ctrl, String var, const CalcNode *grp)
+static ValueArray CgroupAASC(CalcPacket& packet, const ValueArray& data,
+	const ValueArray& ctrl, String var, const CalcNode *grp)
 {
 	return CgroupAASCC(packet, data, ctrl, var, grp, NULL);
 }

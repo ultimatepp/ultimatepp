@@ -1337,4 +1337,52 @@ PlanarSegmentTree CreatePlanarTree(const LinearSegmentTree& left, const LinearSe
 	return out;
 }
 
+GisCoordsGaussLatitude::GisCoordsGaussLatitude()
+{
+}
+
+double SphericalLatitudeFunction::Get(double phi) const
+{
+//	RTIMING("SphericalLatitudeFunction::Get");
+	phi *= DEGRAD;
+	double esx = e * sin(phi);
+	double eps = pow((1 - esx) / (1 + esx), e * alpha / 2) / k;
+	double dpi = M_PI / 4 - phi / 2;
+	if(dpi <= 0.001)
+	{
+//		RLOG("first dpi = " << FormatDouble(x, 5));
+//		RLOG("saturation: " << dpi);
+		return 90 - 2 / DEGRAD * (pow(fabs(dpi), alpha) / (dpi >= 0 ? eps : -eps));
+	}
+	else
+	{
+		double rho = phi / 2 + M_PI / 4;
+		return 2 / DEGRAD * atan(pow(fabs(tan(rho)), alpha) * (rho >= 0 ? eps : -eps)) - 90;
+	}
+}
+
+void GisCoordsGaussLatitude::Create(double a, double e2, double base_parallel)
+{
+	double e = sqrt(e2);
+	double phi0 = base_parallel * DEGRAD;
+	double alpha = sqrt(1 + (e2 * sqr(sqr(cos(phi0)))) / (1 - e2));
+	double sinphi = sin(phi0);
+	double U0 = asin(sinphi / alpha);
+	double k = exp(alpha * (log(tan(phi0 / 2 + M_PI / 4)) + e / 2 * log((1 - e * sinphi) / (1 + e * sinphi))))
+		/ tan(U0 / 2 + M_PI / 4);
+//	k = pow(tan(base_parallel / 2 + M_PI / 4), alpha)
+//		* pow((1 - e * sinphi) / (1 + e * sinphi), alpha * e / 2)
+//		/ tan(U0 / 2 + M_PI / 4);
+	radius = a * sqrt(1 - e2) / (1 - e2 * sqr(sinphi));
+	gauss_projected.Clear();
+	gauss_latitude.Clear();
+
+	SphericalLatitudeFunction gslf(alpha, k, radius, e, U0);
+	//gslf.Dump(-1.58, +1.58, 1000);
+	//gslf.Dump(-1.58, -1.56, 1000);
+	//gslf.Dump(+1.56, +1.58, 1000);
+	gauss_projected.Create(base_parallel - 30, base_parallel + 30, gslf, 300, 5000, 4);
+	gauss_latitude.CreateInverse(base_parallel - 30, base_parallel + 30, gslf, 300, 5000, 4);
+}
+
 END_UPP_NAMESPACE
