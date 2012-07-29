@@ -432,6 +432,35 @@ private:
 	bool         sukneg, cukneg;
 };
 
+class SphericalLatitudeFunction : public GisFunction
+{
+public:
+	SphericalLatitudeFunction(double alpha, double k, double R, double e, double U0)
+	: alpha(alpha), k(k), R(R), e(e), U0(U0) {}
+
+	virtual double Get(double x) const;
+
+private:
+	double alpha, k, R, e, U0;
+};
+
+class GisCoordsGaussLatitude {
+public:
+	GisCoordsGaussLatitude();
+	
+	void Create(double a, double e2, double base_parallel);
+	
+	double Spherical(double latitude) const { return gauss_projected(latitude); }
+	double Elliptical(double latitude) const { return gauss_latitude(latitude); }
+	
+public:
+	double radius;
+
+private:
+	mutable GisInterpolator gauss_projected;
+	mutable GisInterpolator gauss_latitude;
+};
+
 class GisEllipsoid
 {
 public:
@@ -451,6 +480,7 @@ public:
 		HAYFORD_1909    = 7022,
 		KRASSOWSKY_1940 = 7024,
 		WGS_1984        = 7030,
+		GRS_1980        = 7019,
 	};
 
 	bool                      IsNullInstance() const { return !a; }

@@ -170,26 +170,6 @@ void GisCoordsSpherical::SyncInterpolator() const
 	gauss_latitude.CreateInverse(-M_PI / 2, +M_PI / 2, gslf, 300, 5000, 4);
 }
 
-double SphericalLatitudeFunction::Get(double phi) const
-{
-//	RTIMING("SphericalLatitudeFunction::Get");
-	phi *= DEGRAD;
-	double esx = e * sin(phi);
-	double eps = pow((1 - esx) / (1 + esx), e * alpha / 2) / k;
-	double dpi = M_PI / 4 - phi / 2;
-	if(dpi <= 0.001)
-	{
-//		RLOG("first dpi = " << FormatDouble(x, 5));
-//		RLOG("saturation: " << dpi);
-		return 90 - 2 / DEGRAD * (pow(fabs(dpi), alpha) / (dpi >= 0 ? eps : -eps));
-	}
-	else
-	{
-		double rho = phi / 2 + M_PI / 4;
-		return 2 / DEGRAD * atan(pow(fabs(tan(rho)), alpha) * (rho >= 0 ? eps : -eps)) - 90;
-	}
-}
-
 GisCoordsConical::GisCoordsConical(
 //	bool gauss_sphere_,
 	double gauss_base_parallel_,
@@ -433,7 +413,7 @@ void GisCoordsConical::SyncArgs()
 		* pow((1 + esin_0) * (1 - esin_n) / ((1 - esin_0) * (1 + esin_n)), n * e / 2);
 	rho_coef = rho0 * pow(tan_0, n) * pow((1 - esin_0) / (1 + esin_0), n * e / 2);
 */
-	SphericalLatitudeFunction gslf(gauss_alpha, gauss_k, gauss_R, gauss_e, gauss_U0);
+	//SphericalLatitudeFunction gslf(gauss_alpha, gauss_k, gauss_R, gauss_e, gauss_U0);
 	double Us = south_parallel * DEGRAD, Un = north_parallel * DEGRAD, Uc = central_parallel * DEGRAD;
 	double Tn = tan(Un / 2 + M_PI / 4), Ts = tan(Us / 2 + M_PI / 4), Tc = tan(Uc / 2 + M_PI / 4);
 	if(fabs(Un - Us) <= SECRAD)
@@ -612,9 +592,19 @@ void GisCoordsUTM::SyncArgs()
 	E12 = sqr(ellipsoid.a / ellipsoid.b) - 1;
 }
 
-GisCoordsAzimuthal::GisCoordsAzimuthal(Pointf p)
+GisCoordsAzimuthal::GisCoordsAzimuthal(const Pointf& p, const Sizef& sc, const Sizef& o)
 {
 	pole = p;
+	scale = sc;
+	offset = o;
+}
+
+GisCoords GisCoordsAzimuthal::DeepCopy() const
+{
+	One<GisCoordsAzimuthal> out = new GisCoordsAzimuthal(pole, scale, offset);
+	out->ellipsoid = ellipsoid;
+	out->SyncArgs();
+	return GisCoords(-out);
 }
 
 int GisCoordsAzimuthal::GetBranchCount() const
@@ -634,49 +624,67 @@ GisBSPTree GisCoordsAzimuthal::GetBranchTree(const Rectf& lonlat_extent) const
 
 Pointf GisCoordsAzimuthal::LonLat(Pointf xy) const
 {
+	xy -= offset;
+	xy /= scale;
 	double rho = Length(xy);
-	double eps = atan2(xy.x, -xy.y) / DEGRAD;
-	double psi = rho / Rdeg;
-//	return Pointf(eps, M_PI / 2 - psi);
-	return orientation.Global(eps, 90 - psi);
+	double eps = Bearing(xy) / DEGRAD;
+	double sine = min(rho / (2 * gauss.radius), 1.0);
+	double psi = 2 * asin(sine);
+	//double psi = rho / Rdeg;
+	//return Pointf(eps, M_PI / 2 - psi);
+	Pointf out = orientation.Global(eps, 90 - psi);
+	//out.y = gauss.Elliptical(out.y);
+	return out;
 }
 
+/*
 Rectf GisCoordsAzimuthal::LonLatExtent(const Rectf& xy_extent) const
 {
 	Rectf lonlat = ExtentToDegree(xy_extent);
 	return orientation.GlobalExtent(lonlat.left, 90 - lonlat.bottom / Rdeg, lonlat.right, 90 - lonlat.top / Rdeg);
 }
+*/
 
 Pointf GisCoordsAzimuthal::Project(Pointf lonlat, int branch) const
 {
+	lonlat.y = gauss.Spherical(lonlat.y);
 	lonlat = orientation.Local(lonlat);
-	double psi = 90 - lonlat.y;
-//	double rho = R * E * sin(psi) / (c + R * cos(psi));
-	double rho = Rdeg * psi;
-	return PolarPointf(rho, lonlat.x - 90);
+	double psi = DEGRAD * (90 - lonlat.y);
+	//double rho = R * E * sin(psi) / (c + R * cos(psi));
+	//double rho = Rdeg * psi;
+	double rho = 2 * gauss.radius * sin(psi / 2);
+	return scale * (Sizef)PolarPointf(rho, (lonlat.x - 90) * DEGRAD) + offset;
 }
 
+/*
 Rectf GisCoordsAzimuthal::ProjectExtent(const Rectf& lonlat_extent) const
 {
 	Rectf local = orientation.LocalExtent(lonlat_extent);
 	return DegreeToExtent(local.left, Rdeg * (90 - local.bottom), local.right, Rdeg * (90 - local.top));
 }
+*/
 
+/*
 double GisCoordsAzimuthal::ProjectDeviation(Pointf lonlat1, Pointf lonlat2, int branch) const
 {
 	return 0;
 }
+*/
 
+/*
 double GisCoordsAzimuthal::ProjectRatio(Pointf lonlat, int branch) const
 {
 	return 1;
 }
+*/
 
 Array<GisCoords::Arg> GisCoordsAzimuthal::EnumArgs()
 {
 	Array<GisCoords::Arg> out;
 	out.Add(GisCoords::Arg::Angle(pole.x, "POLE_M", "Pole meridian", "", -180, +180));
 	out.Add(GisCoords::Arg::Angle(pole.y, "POLE_P", "Pole parallel", "", -90, +90));
+	out.Add(GisCoords::Arg::Edit(offset.cx, "X_OFFSET", "False easting"));
+	out.Add(GisCoords::Arg::Edit(offset.cy, "Y_OFFSET", "False northing"));
 	return out;
 }
 
@@ -688,11 +696,9 @@ Array<GisCoords::ConstArg> GisCoordsAzimuthal::EnumConstArgs() const
 
 void GisCoordsAzimuthal::SyncArgs()
 {
-	orientation = pole;
-	R = 6378e3;
-	Rdeg = R * DEGRAD;
-	c = R * 1.7;
-	E = 1;
+	gauss.Create(ellipsoid.a, ellipsoid.e2, pole.y);
+	gauss.radius = 6384000;
+	orientation = Pointf(pole.x, gauss.Spherical(pole.y));
 }
 
 void GisCoordsAzimuthal::SyncInterpolator() const
@@ -705,6 +711,7 @@ const Vector<int>& GisCoords::EnumEPSG()
 	if(epsg.IsEmpty())
 		epsg
 		<< 2065 // JTSK
+		<< 3035 // ETRS89 / ETRS-LAEA
 		<< 4326 // WGS-84
 		<< 4818 // JTSK-geo
 		<< 28403 // S-42
@@ -753,6 +760,40 @@ GisCoords GisCoords::GetEPSG(int code)
 		"UNIT[\"metre\",1]]";
 		break;
 
+		case 3035: {
+			gc = new GisCoordsAzimuthal(
+				Pointf(10, 52),
+				Sizef(1, 1),
+				Sizef(4321000, 3210000));
+			gc->ellipsoid = GisEllipsoid::GetEPSG(GisEllipsoid::WGS_1984); //GRS_1980);
+			gc->name = "ETRS89 / ETRS-LAEA";
+			gc->description = "Single CRS for all Europe";
+			gc->coordsys =
+			"PROJCS[\"ETRS89 / ETRS-LAEA\","
+				"GEOGCS[\"ETRS89\","
+					"DATUM[\"European_Terrestrial_Reference_System_1989\","
+						"SPHEROID[\"GRS 1980\",6378137,298.257222101,"
+							"AUTHORITY[\"EPSG\",\"7019\"]],"
+						"AUTHORITY[\"EPSG\",\"6258\"]],"
+					"PRIMEM[\"Greenwich\",0,"
+						"AUTHORITY[\"EPSG\",\"8901\"]],"
+					"UNIT[\"degree\",0.01745329251994328,"
+						"AUTHORITY[\"EPSG\",\"9122\"]],"
+					"AUTHORITY[\"EPSG\",\"4258\"]],"
+				"UNIT[\"metre\",1,"
+					"AUTHORITY[\"EPSG\",\"9001\"]],"
+				"PROJECTION[\"Lambert_Azimuthal_Equal_Area\"],"
+				"PARAMETER[\"latitude_of_center\",52],"
+				"PARAMETER[\"longitude_of_center\",10],"
+				"PARAMETER[\"false_easting\",4321000],"
+				"PARAMETER[\"false_northing\",3210000],"
+				"AUTHORITY[\"EPSG\",\"3035\"],"
+				"AXIS[\"X\",EAST],"
+				"AXIS[\"Y\",NORTH]]"
+			;
+			break;
+		}
+	
 	case 4326:
 		gc = new GisCoordsLonLat(0);
 		gc->ellipsoid = GisEllipsoid::GetEPSG(GisEllipsoid::WGS_1984);
@@ -806,6 +847,9 @@ GisCoords GisCoords::GetEPSG(int code)
 		"UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]], "
 		"AUTHORITY[\"EPSG\",\"2166\"]]";
 		break;
+	
+	default:
+		return GisCoords();
 	}
 	gc->ident = NFormat("EPSG:%d", code);
 	gc->SyncArgs();
