@@ -349,7 +349,11 @@ style of each level&]
 :: [s0; Lowercase roman numbers, starting with i.]
 :: [s0; [C@(128.0.255) I]]
 :: [s0; Uppercase roman numbers, starting with I]}}&]
-[s0; ]
+[s0; &]
+[s0; If after 8 numbering style characters there is a `'[@(128.0.255) !]`' 
+suffix, the reset is performed for those numbering levels that 
+are used. If all levels are not used, reset is performed for 
+the top`-level.]
 ::^ [s0;%- [C@(128.0.255) o]]
 ::= [s0; Bullet style.]
 ::^ [s0;%- [C@(128.0.255) O`_]]
@@ -730,4 +734,4 @@ tab`-`|Right tab`]`"]]
 :: [s0; a2]
 :: [s0; a1]
 :: [s0; a2]}}]}}]}}&]
-[s0; ]
+[s0; ]]
