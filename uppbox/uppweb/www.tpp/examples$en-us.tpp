@@ -22,4 +22,4 @@ topic "Examples";
 [{_}%EN-US 
 [s0; [*R6 Demonstration Examples]&]
 [s0; &]
-[s0; ]
+[s0; ]]
