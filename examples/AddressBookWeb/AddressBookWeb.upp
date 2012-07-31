@@ -10,7 +10,7 @@ file
 	AddressBook.h,
 	Model.sch,
 	Pages.icpp,
-	AdrBook.cpp,
+	Main.cpp,
 	Dialog.witz,
 	Index.witz,
 	AdrBook.iml;

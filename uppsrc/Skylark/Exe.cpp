@@ -226,7 +226,7 @@ Value Compiler::ExeOrl::Eval(ExeContext& x) const
 
 Value Compiler::ExeCond::Eval(ExeContext& x) const
 {
-	if(cond->Eval(x))
+	if(IsTrue(cond->Eval(x)))
 		return ontrue->Eval(x);
 	else
 	if(onfalse)
