@@ -190,7 +190,7 @@ to `'`$endfor`' and `'`$endif`'.&]
 [s0; &]
 [ {{4508:5492h1;@(216) [s0; Statement]
 :: [s0; Comments]
-::^@2 [s0; [/C `$expression]]
+::^@2 [s0; [*C `$][/C expression]]
 :: [s0; Expression. It gets evaluated and the result is put into the 
 document.]
 :: [s0; [*C `$if(][/C condition][*C )]&]
