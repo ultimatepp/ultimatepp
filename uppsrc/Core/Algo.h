@@ -732,44 +732,42 @@ void ForwardSort(I begin, I end, const Less& less)
 {
 	if(begin == end)
 		return;
-	I limit = end;
-	--limit;
-	while(!(begin == limit))
-	{
-		for(I best = limit, next = limit, ptr = limit;; best = ptr)
-			if(!less(*best, *--ptr))
-			{
-				if(ptr == begin)
-				{
-					begin = next;
-					break;
-				}
-			}
-			else
-			{
+	I last = end;
+	--last;
+	while(!(begin == last)) {
+		I best = last;
+		I next = last;
+		I ptr = last;
+		for(;;) {
+			if(less(*best, *--ptr)) {  // best holds, scan for better candidate
 				do
-				{
-					if(ptr == begin)
-					{
+					if(ptr == begin) { // best is the final minimum
 						IterSwap(begin, best);
 						++begin;
 						goto NEXT_ITEM;
 					}
-				}
 				while(less(*best, *--ptr));
-				if(ptr == begin)
-				{
+				if(ptr == begin) { // begin is the final minimum, best is 2nd least
 					IterSwap(++begin, best);
 					++begin;
 					break;
 				}
-				next = ptr;
-				++next;
+				next = ptr; // mark position after new best as the new end of sorted array
+				++next;     // it will hold only if all subseqent iterations define new best (descending order)
 			}
+			else
+			if(ptr == begin) { // begin is the final minimum
+				begin = next;  // and everything is sorted up to next
+				break;
+			}
+			best = ptr;
+		}
 	NEXT_ITEM:
 		;
 	}
 }
+
+
 
 template <class T, class Less>
 void ForwardSort(T& c, const Less& less)
@@ -791,48 +789,55 @@ enum
 };
 
 template <class I, class Less>
-void Sort(I begin, I end, const Less& less)
+force_inline
+void OrderIter2__(I a, I b, Less less)
 {
-	int count;
-	while((count = (int)(end - begin)) > __SORT_THRESHOLD) {
-		int expected = count >> 1, deviation = expected - (expected >> 8);
-		I b = begin, e = end, m = b + expected;
-		for(int pass = 1;; pass++) {
-			for(;; ++b) {
-				while(less(*m, *--e))
-					;
-				while(less(*b, *m))
-					++b;
-				if(!(b < e))
-					break;
-				if(m == b) m = e;
-				else if(m == e) m = b;
-				IterSwap(b, e);
-			}
-			if(pass >= __SORT_MEDIAN_PASSES)
-				break;
-			int pos = (int)(b - begin);
-			if(pos <= expected - deviation)
-				e = end;
-			else if(pos >= expected + deviation) {
-				e = b;
-				b = begin;
-			}
-			else
-				break;
-			m = b + 1 + (int)((unsigned)rand() % (e - b - 2));
+	if(less(*b, *a))
+		IterSwap(a, b);
+}
+
+dword  Random(dword n);
+
+template <class I, class Less>
+void Sort(I l, I h, const Less& less)
+{
+	for(;;) {
+		int count = h - l;
+		if(count < 2)
+			return;
+		if(count < 8) {                         // Final optimized SelectSort
+			ForwardSort(l, h, less);
+			return;
 		}
-		if(b - begin < end - e) {
-			Sort(begin, b, less);
-			begin = b;
-		}
-		else {
-			Sort(b, end, less);
-			end = b;
+		int pass = 5;
+		for(;;) {
+			I middle = l + (count >> 1);        // get the middle element
+			OrderIter2__(l, middle, less);      // sort l, middle, h-1
+			OrderIter2__(middle, h - 1, less);
+			OrderIter2__(l, middle, less);      // median is now in middle
+			IterSwap(l + 1, middle);            // move median pivot to l + 1
+			I ii = l + 1;
+			for(I i = l + 2; i != h - 1; ++i)   // do partitioning; already l <= pivot <= h - 1
+				if(less(*i, *(l + 1)))
+					IterSwap(++ii, i);
+			if(pass > 6 || min(ii - l, h - ii) > (count >> pass)) { // partition sizes ok or we done max attempts
+				IterSwap(ii, l + 1);            // put pivot back in between partitions
+				if(ii - l < h - ii - 1) {       // recurse on smaller partition, tail on larger
+					Sort(l, ii, less); 
+					l = ii + 1;
+				}
+				else {
+					Sort(ii + 1, h, less);
+					h = ii;
+				}
+				break;
+			}
+			IterSwap(l, l + Random(count));     // try some other random elements for median pivot
+			IterSwap(middle, l + Random(count));
+			IterSwap(h - 1, l + Random(count));
+			pass++;
 		}
 	}
-	if(count >= 2)
-		ForwardSort(begin, end, less);
 }
 
 template <class T, class Less>
