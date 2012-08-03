@@ -812,7 +812,7 @@ void Sort(I l, I h, const Less& less)
 		int pass = 5;
 		for(;;) {
 			I middle = l + (count >> 1);        // get the middle element
-			OrderIter2__(l, middle, less);      // sort l, middle, h-1
+			OrderIter2__(l, middle, less);      // sort l, middle, h-1 to find median of 3
 			OrderIter2__(middle, h - 1, less);
 			OrderIter2__(l, middle, less);      // median is now in middle
 			IterSwap(l + 1, middle);            // move median pivot to l + 1
@@ -931,7 +931,7 @@ template <class T, class Cmp>
 struct StableSortLessCmp_ {
 	const Cmp& cmp;
 	bool operator()(const StableSortItem<T>& a, const StableSortItem<T>& b) const {
-		int q = SgnCompare(a.value, b.value);
+		int q = cmp(a.value, b.value);
 		return q ? q < 0 : a.index < b.index;
 	}
 
@@ -973,7 +973,7 @@ struct StdCmp {
 template <class T>
 void StableSortCmp(T& c)
 {
-	StableSort(c.Begin(), c.End(), StdCmp<typename T::ValueType>());
+	StableSortCmp(c.Begin(), c.End(), StdCmp<typename T::ValueType>());
 }
 
 template <class II, class VI, class K>
