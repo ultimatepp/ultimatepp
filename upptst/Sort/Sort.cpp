@@ -44,5 +44,15 @@ CONSOLE_APP_MAIN
 		LOG("String " << sdata.GetCount());
 		Sort(sdata);
 		CheckSorted(sdata);
+		{
+			Vector<int> data = GetIntData();
+			LOG("int " << data.GetCount());
+			StableSortCmp(data);
+			CheckSorted(data);
+			Vector<String> sdata = GetStringData();
+			LOG("String " << sdata.GetCount());
+			StableSortCmp(sdata);
+			CheckSorted(sdata);
+		}
 	}
 }
