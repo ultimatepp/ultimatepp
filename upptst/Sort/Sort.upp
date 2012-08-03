@@ -2,8 +2,8 @@ uses
 	Core;
 
 file
-	StableSort.cpp;
+	Sort.cpp;
 
 mainconfig
-	"" = "";
+	"" = "SSE2";
 
