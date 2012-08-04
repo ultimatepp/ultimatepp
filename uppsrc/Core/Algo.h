@@ -832,9 +832,9 @@ void Sort(I l, I h, const Less& less)
 				}
 				break;
 			}
-			IterSwap(l, l + Random(count));     // try some other random elements for median pivot
-			IterSwap(middle, l + Random(count));
-			IterSwap(h - 1, l + Random(count));
+			IterSwap(l, l + (int)Random(count));     // try some other random elements for median pivot
+			IterSwap(middle, l + (int)Random(count));
+			IterSwap(h - 1, l + (int)Random(count));
 			pass++;
 		}
 	}
