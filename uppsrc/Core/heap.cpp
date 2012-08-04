@@ -44,7 +44,7 @@ void Heap::Init()
 void Heap::RemoteFree(void *ptr)
 {
 	LLOG("RemoteFree " << ptr);
-	Mutex::Lock __(mutex);
+	Mutex::Lock __(mutex); // TODO: Go lockless!
 	FreeLink *f = (FreeLink *)ptr;
 	f->next = remote_free;
 	remote_free = f;
@@ -63,7 +63,7 @@ void Heap::FreeRemoteRaw()
 void Heap::FreeRemote()
 {
 	LLOG("FreeRemote");
-	Mutex::Lock __(mutex);
+	Mutex::Lock __(mutex); // TODO: Go lockless!
 	FreeRemoteRaw();
 }
 
