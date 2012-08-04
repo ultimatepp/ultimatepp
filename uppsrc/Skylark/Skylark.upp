@@ -27,19 +27,19 @@ file
 	src.tpp,
 	srcdoc.tpp;
 
-custom() ".css",
+custom(_NEVER) ".css",
 	"cp $(PATH) $(EXEDIR)/static/$(PACKAGE)/$(RELPATH)",
 	"$(EXEDIR)/static/$(PACKAGE)/$(RELPATH)";
 
-custom() ".html",
+custom(_NEVER) ".html",
 	"cp $(PATH) $(EXEDIR)/static/$(PACKAGE)/$(RELPATH)",
 	"$(EXEDIR)/static/$(PACKAGE)/$(RELPATH)";
 
-custom() ".js",
+custom(_NEVER) ".js",
 	"cp $(PATH) $(EXEDIR)/static/$(PACKAGE)/$(RELPATH)",
 	"$(EXEDIR)/static/$(PACKAGE)/$(RELPATH)";
 
-custom() ".whtml",
+custom(_NEVER) ".whtml",
 	"cp $(PATH) $(EXEDIR)/template/$(PACKAGE)/$(RELPATH)",
 	"$(EXEDIR)/template/$(PACKAGE)/$(RELPATH)";
 
