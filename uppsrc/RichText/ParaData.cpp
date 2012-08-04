@@ -2,8 +2,6 @@
 
 NAMESPACE_UPP
 
-static StaticMutex sCacheMutex;
-
 Array<RichPara>& RichPara::Cache()
 {
 	static Array<RichPara> x;
@@ -26,7 +24,7 @@ RichPara::RichPara()
 RichPara::~RichPara()
 {
 	if(cacheid && !part.IsPicked() && !incache) {
-		Mutex::Lock __(sCacheMutex);
+		DrawLock __;
 		Array<RichPara>& cache = Cache();
 		incache = true;
 		cache.InsertPick(0, *this);
@@ -568,7 +566,7 @@ void RichPara::Unpack(const String& data, const Array<RichObject>& obj,
 	format = style;
 	
 	if(cacheid) {
-		Mutex::Lock __(sCacheMutex);
+		DrawLock __;
 		Array<RichPara>& cache = Cache();
 		for(int i = 0; i < cache.GetCount(); i++)
 			if(cache[i].cacheid == cacheid) {
