@@ -42,6 +42,10 @@ TOPIC("documentation$de-de")
 #include "documentation$de-de.tppi"
 END_TOPIC
 
+TOPIC("documentation$en-us")
+#include "documentation$en-us.tppi"
+END_TOPIC
+
 TOPIC("documentation$ru-ru")
 #include "documentation$ru-ru.tppi"
 END_TOPIC
@@ -96,6 +100,10 @@ END_TOPIC
 
 TOPIC("overview$de-de")
 #include "overview$de-de.tppi"
+END_TOPIC
+
+TOPIC("reference$en-us")
+#include "reference$en-us.tppi"
 END_TOPIC
 
 TOPIC("ss$de-de")

@@ -350,6 +350,8 @@ String MakeExamples(const char *dir, const char *www, int language)
 		AddFiles(topic.text, d, "h", b);
 		AddFiles(topic.text, d, "hpp", b);
 		AddFiles(topic.text, d, "cpp", b);
+		AddFiles(topic.text, d, "icpp", b);
+		AddFiles(topic.text, d, "witz", b);
 		AddFiles(topic.text, d, "usc", b);
 		AddFiles(topic.text, d, "lay", b);
 		AddFiles(topic.text, d, "key", b);
@@ -646,7 +648,7 @@ String Downloads()
 	IndexSort2(tm, fn, path, StdGreater<Time>());
 	for(int i = 0; i < fn.GetCount(); i++)
 		if(i < 40)
-			r << "[^downloads/" << fn[i] << "^ \1" << fn[i] << "\1  " << tm[i] << "&";
+			r << tm[i] << " [^downloads/" << fn[i] << "^ \1" << fn[i] << "\1]&";
 		else
 			DeleteFile(ff.GetPath());
 	return r;
@@ -810,9 +812,9 @@ CONSOLE_APP_MAIN
 		bi << BarLink(Www("examples", languages[i]), t_("Examples"));	
 		{
 			int di = tt.Find("topic://uppweb/www/examples$" + ToLower(LNGAsText(languages[i])));
-			tt[di].text << MakeExamples(examples, "examples", languages[i]);
-			tt[di].text << GetTopic("topic://uppweb/www/reference$" + ToLower(LNGAsText(languages[i]))).text;
-			tt[di].text << MakeExamples(reference, "reference", languages[i]);
+			tt[di].text << MakeExamples(examples, "examples", languages[i]) << '\n';
+			tt[di].text << GetTopic("topic://uppweb/www/reference$" + ToLower(LNGAsText(languages[i]))).text << '\n';
+			tt[di].text << MakeExamples(reference, "reference", languages[i]) << '\n';
 		}
 
 		bi << BarLink(Www("ss", languages[i]), t_("Screenshots"));

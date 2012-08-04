@@ -74,4 +74,6 @@ String SvnChanges(Vector<SvnLogRev> &log, int limit, String filter, bool major =
 Vector <SvnBazaarItems> SvnBazaarList(String bazaarPath, Vector<SvnLogRev> &log);
 String BytesToString(uint64 _bytes, bool units = true);
 
+String MakeExamples(const char *dir, const char *www, int language);
+
 #endif
