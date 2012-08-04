@@ -26,4 +26,4 @@ topic "Reference examples";
 set of very simple examples, each demonstrating a single aspect 
 of U`+`+ library.&]
 [s0; &]
-[s0; ]
+[s0; ]]
