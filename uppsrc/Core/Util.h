@@ -128,8 +128,8 @@ INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var,
 #define INI_INT64(var, def, info)  INI_TYPE(var, def, info, int64, IniInt64, 0);
 #define INI_DOUBLE(var, def, info) INI_TYPE(var, def, info, double, IniDouble, 0);
 
-#define INI_STRING(var, def, info) String& DefRef##_var() { static String x; return x; }\
-                                   INI_TYPE(var, def, info, String, IniString, DefRef##_var);
+#define INI_STRING(var, def, info) String& DefRef_##var() { static String x; return x; }\
+                                   INI_TYPE(var, def, info, String, IniString, DefRef_##var);
 
 /*
 #define INI_BOOL(var, def, info)\

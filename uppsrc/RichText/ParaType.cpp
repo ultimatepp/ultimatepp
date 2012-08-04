@@ -212,12 +212,10 @@ Array<RichPara::Lines>& RichPara::Lines::Cache()
 	return x;
 }
 
-static StaticMutex sLineCacheMutex;
-
 RichPara::Lines::~Lines()
 {
 	if(cacheid && !line.IsPicked() && !incache) {
-		Mutex::Lock __(sLineCacheMutex);
+		DrawLock __;
 		Array<Lines>& cache = Cache();
 		incache = true;
 		cache.Insert(0) = *this;
@@ -238,7 +236,7 @@ RichPara::Lines RichPara::FormatLines(int acx) const
 {
 	Lines lines;
 	if(cacheid) {
-		Mutex::Lock __(sLineCacheMutex);
+		DrawLock __;
 		Array<Lines>& cache = Lines::Cache();
 		for(int i = 0; i < cache.GetCount(); i++)
 			if(cache[i].cacheid == cacheid && cache[i].cx == acx) {
