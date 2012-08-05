@@ -698,7 +698,7 @@ void WorkspaceWork::RenameFile()
 	dlg.text <<= n;
 	dlg.Open();
 	dlg.text.SetFocus();
-	dlg.text.SetSelection(0, GetFileExtPos(n) - ~n);
+	dlg.text.SetSelection(0, int(GetFileExtPos(n) - ~n));
 	if(dlg.Run() != IDOK)
 		return;
 	n = ~dlg.text;

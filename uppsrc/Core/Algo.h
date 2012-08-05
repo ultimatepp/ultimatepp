@@ -802,7 +802,7 @@ template <class I, class Less>
 void Sort(I l, I h, const Less& less)
 {
 	for(;;) {
-		int count = h - l;
+		int count = int(h - l);
 		if(count < 2)
 			return;
 		if(count < 8) {                         // Final optimized SelectSort
