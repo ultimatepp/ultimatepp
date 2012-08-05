@@ -89,8 +89,10 @@ struct sMakeGlyph : LRUCache<Value, GlyphKey>::Maker {
 
 void BufferPainter::ApproximateChar(LinearPathConsumer& t, const CharData& ch, double tolerance)
 {
+	PAINTER_TIMING("ApproximateChar");
 	Value v;
 	INTERLOCKED {
+		PAINTER_TIMING("ApproximateChar::Fetch");
 		static LRUCache<Value, GlyphKey> cache;
 		cache.Shrink(500000);
 		sMakeGlyph h;
@@ -118,6 +120,7 @@ void BufferPainter::ApproximateChar(LinearPathConsumer& t, const CharData& ch, d
 			t.Move(p + ch.p);
 		}
 		else {
+			PAINTER_TIMING("ApproximateChar::Line");
 			p.y = g[i++];
 			t.Line(p + ch.p);
 		}

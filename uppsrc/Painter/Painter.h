@@ -3,7 +3,7 @@
 
 #include <Draw/Draw.h>
 
-#define PAINTER_TIMING(x)   // RTIMING(x)
+#define PAINTER_TIMING(x)  // RTIMING(x)
 
 NAMESPACE_UPP
 
