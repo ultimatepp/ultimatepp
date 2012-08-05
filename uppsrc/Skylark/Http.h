@@ -68,9 +68,9 @@ class Http : public Renderer {
 public:
 	Http&  operator()(const char *id, const Value& v)  { var.Add(id, v); return *this; }
 	Http&  operator()(const ValueMap& map)             { Renderer::operator()(map); return *this; }
-	Http&  operator()(const char *id, void (*view)(Http&)) { Renderer::operator()(id, view); return *this; }
-	Http&  operator()(const char *id, void (*view)(Http&), const Value& arg1) { Renderer::operator()(id, view, arg1); return *this; }
-	Http&  operator()(const char *id, void (*view)(Http&), const Value& arg1, const Value& arg2) { Renderer::operator()(id, view, arg1, arg2); return *this; }
+	Http&  operator()(const char *id, void (*handler)(Http&)) { Renderer::operator()(id, view); return *this; }
+	Http&  operator()(const char *id, void (*handler)(Http&), const Value& arg1) { Renderer::operator()(id, view, arg1); return *this; }
+	Http&  operator()(const char *id, void (*handler)(Http&), const Value& arg1, const Value& arg2) { Renderer::operator()(id, view, arg1, arg2); return *this; }
 
 	Http&  operator()(const Sql& sql)                  { Renderer::operator()(sql); return *this; }
 	Http&  operator()(Fields rec)                      { Renderer::operator()(rec); return *this; }
@@ -115,10 +115,10 @@ public:
 	
 	Http&  RenderResult(const char *template_name);
 	Http&  Redirect(const char *url, int code_ = 302) { code = code_; redirect = url; return *this; }
-	Http&  Redirect(void (*view)(Http&), const Vector<Value>& arg);
-	Http&  Redirect(void (*view)(Http&));
-	Http&  Redirect(void (*view)(Http&), const Value& v1);
-	Http&  Redirect(void (*view)(Http&), const Value& v1, const Value& v2);
+	Http&  Redirect(void (*handler)(Http&), const Vector<Value>& arg);
+	Http&  Redirect(void (*handler)(Http&));
+	Http&  Redirect(void (*handler)(Http&), const Value& v1);
+	Http&  Redirect(void (*handler)(Http&), const Value& v1, const Value& v2);
 
 	Http&  Ux(const char *id, const String& text);
 	Http&  UxRender(const char *id, const char *template_name);
