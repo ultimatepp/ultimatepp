@@ -330,7 +330,7 @@ void Http::Dispatch(TcpSocket& socket)
 				Upp::SetLanguage(lang);
 				var.GetAdd(".__lang__") = lang;
 				var.GetAdd(".language") = ToLower(LNGAsText(lang));
-				viewid = bd.id;
+				handlerid = bd.id;
 				LDUMP(viewid);
 				(*bd.view)(*this);
 				if(session_dirty)

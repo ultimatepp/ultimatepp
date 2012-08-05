@@ -41,7 +41,7 @@ class Http : public Renderer {
 	HttpHeader  hdr;
 	
 	String content;
-	String viewid;
+	String handlerid;
 	
 	Vector<String>            arg;
 	String                    session_id;
@@ -82,7 +82,7 @@ public:
 	String GetHeader(const char *s) const              { return hdr[s]; }
 	int    GetLength() const                           { return atoi(GetHeader("content-length")); }
 
-	String GetViewId() const                           { return viewid; }
+	String GetHandlerId() const                        { return viewid; }
 
 	Value  operator[](const char *id) const            { return Renderer::operator[](id); }
 	int    Int(const char *id) const;
@@ -106,9 +106,10 @@ public:
 
 	Http&  ClearSession();
 	Http&  SessionSet(const char *id, const Value& value);
+	Http&  NewSessionId();
 	
 	Http&  NewIdentity()                              { SessionSet("__identity__", Null); return *this; }
-	Http&  NewSessionId();
+
 	Http&  SetLanguage(int lang);
 	
 	Http&  Response(int code_, const String& ctext)   { code = code_; code_text = ctext; return *this; }
