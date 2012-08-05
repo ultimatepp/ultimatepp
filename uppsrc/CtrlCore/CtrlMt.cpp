@@ -96,7 +96,6 @@ void Ctrl::Call(Callback cb)
 		cbox.cb = cb;
 		UPP::PostCallback(callback1(PerformCall, &cbox));
 		int n = NonMain;
-		int nn = n;
 		NonMain = 0;
 		for(int i = 0; i < n; i++)
 			NonMainLock.Leave();

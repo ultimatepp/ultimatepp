@@ -360,7 +360,7 @@ struct CombineHash {
 	template <class T> CombineHash& Do(const T& x)                  { Put(GetHashValue(x)); return *this; }
 
 public:
-	CombineHash& Put(unsigned h) { hash = ((hash << 4) + hash) ^ h; return *this; }
+	CombineHash& Put(unsigned h)                                    { hash = ((hash << 4) + hash) ^ h; return *this; }
 
 	operator unsigned() const                                       { return hash; }
 

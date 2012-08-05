@@ -1,16 +1,14 @@
 #include "Draw.h"
 
-#ifdef PLATFORM_POSIX
-#include <fontconfig/fontconfig.h>
-#include <fontconfig/fcfreetype.h>
-#endif
-
-NAMESPACE_UPP
-
-#ifdef PLATFORM_POSIX
-
 #define LLOG(x)     //  LOG(x)
 #define LTIMING(x)  //  TIMING(x)
+
+#ifdef PLATFORM_POSIX
+
+#include <fontconfig/fontconfig.h>
+#include <fontconfig/fcfreetype.h>
+
+NAMESPACE_UPP
 
 void GetStdFontSys(String& name, int& height)
 {
@@ -235,6 +233,6 @@ Vector<FaceInfo> GetAllFacesSys()
 	return list;
 }
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif
