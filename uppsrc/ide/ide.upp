@@ -88,7 +88,7 @@ file
 	Copying;
 
 mainconfig
-	"" = "GUI",
+	"" = "GUI SSE2",
 	"" = "GUI .USEMALLOC",
 	"" = ".NOGTK GUI",
 	"" = "GUI HEAPDBG CHECKINIT",
