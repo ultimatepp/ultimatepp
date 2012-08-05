@@ -309,23 +309,25 @@ def UppLookupFunction(val):
 		
 ##########################################################################
 #						FOR VALUES -- EXPERIMENTAL
-	if typeStr == 'Upp::Value *' and Upp_Value_Inspectors:
-		return UppValuePtrPrinter(val)
+# 2012/08/05 - REMOVED AGAIN AS IT CAUSED SOME RANDOM CRASHES
+#              NEEDS DEEPER INVESTIGATION
+#	if typeStr == 'Upp::Value *' and Upp_Value_Inspectors:
+#		return UppValuePtrPrinter(val)
 		
-	if typeStr == 'const Upp::Value *' and Upp_Value_Inspectors:
-		return UppValuePtrPrinter(val)
+#	if typeStr == 'const Upp::Value *' and Upp_Value_Inspectors:
+#		return UppValuePtrPrinter(val)
 		
-	if typeStr == 'Upp::Value &' and Upp_Value_Inspectors:
-		return UppValuePtrPrinter(val.address)
+#	if typeStr == 'Upp::Value &' and Upp_Value_Inspectors:
+#		return UppValuePtrPrinter(val.address)
 		
-	if typeStr == 'const Upp::Value &' and Upp_Value_Inspectors:
-		return UppValuePtrPrinter(val.address)
+#	if typeStr == 'const Upp::Value &' and Upp_Value_Inspectors:
+#		return UppValuePtrPrinter(val.address)
 		
-	if typeStr == 'Upp::Value' and Upp_Value_Inspectors:
-		return UppValuePrinter(val)
+#	if typeStr == 'Upp::Value' and Upp_Value_Inspectors:
+#		return UppValuePrinter(val)
 		
-	if typeStr == 'const Upp::Value' and Upp_Value_Inspectors:
-		return UppValuePrinter(val)
+#	if typeStr == 'const Upp::Value' and Upp_Value_Inspectors:
+#		return UppValuePrinter(val)
 
 ##########################################################################
 	if typeStr == 'Upp::Point' or typeStr == 'Upp::Pointf':
