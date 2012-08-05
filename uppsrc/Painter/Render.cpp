@@ -29,6 +29,7 @@ struct BufferPainter::OnPathTarget : LinearPathConsumer {
 
 Buffer<ClippingLine> BufferPainter::RenderPath(double width, SpanSource *ss, const RGBA& color)
 {
+	PAINTER_TIMING("RenderPath");
 	Buffer<ClippingLine> newclip;
 	if(width == 0) {
 		current = Null;
@@ -119,10 +120,12 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, SpanSource *ss, con
 		noaa_filler.Set(rg);
 		rg = &noaa_filler;
 	}
+	PAINTER_TIMING("RenderPath2");
 	for(;;) {
 		if(i >= path.type.GetCount() || path.type[i] == DIV) {
 			g->End();
 			if(width != ONPATH) {
+				PAINTER_TIMING("Fill");
 				for(int y = rasterizer.MinY(); y <= rasterizer.MaxY(); y++) {
 					solid_filler.t = subpixel_filler.t = span_filler.t = ib[y];
 					subpixel_filler.end = subpixel_filler.t + ib.GetWidth();
@@ -157,12 +160,14 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, SpanSource *ss, con
 			break;
 		}
 		case LINE: {
+			PAINTER_TIMING("LINE");
 			const LinearData *d = (LinearData *)data;
 			data += sizeof(LinearData);
 			g->Line(pos = regular ? pathattr.mtx.Transform(d->p) : d->p);
 			break;
 		}
 		case QUADRATIC: {
+			PAINTER_TIMING("QUADRATIC");
 			const QuadraticData *d = (QuadraticData *)data;
 			data += sizeof(QuadraticData);
 			if(regular) {
@@ -177,6 +182,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, SpanSource *ss, con
 			break;
 		}
 		case CUBIC: {
+			PAINTER_TIMING("CUBIC");
 			const CubicData *d = (CubicData *)data;
 			data += sizeof(CubicData);
 			if(regular) {
