@@ -267,11 +267,13 @@ passed as argument of the function:&]
 [s7; </body>&]
 [s7; </html>&]
 [s7; &]
-[s5; [* Skylark03/param.witz:]&]
+[s5; [* Skylark03/index.witz:]&]
 [s7; <html>&]
 [s7; <body>&]
-[s7; Param: `$PARAM<br>&]
-[s7; <a href`=`$HomePage()>Back to index</a><br>&]
+[s7; <a href`=[* `$Page2()]>Link to page2</a><br>&]
+[s7; `$for(i in `[`"param`_test`", 123, `"param`_test3`"`])&]
+[s7; -|<a href`=[* `$Param(i)]>Param test: `$i</a><br>&]
+[s7; `$endfor&]
 [s7; </body>&]
 [s7; </html>&]
 [s7; &]
@@ -438,15 +440,14 @@ enctype`=`"multipart/form`-data`">&]
 [s7; &]
 [s5; Note: There also exists alternative POST`_RAW method marker in 
 SKYLARK handler definition `- such handler also reacts to POST 
-requests, but it avoids identity checks intended to prevent CSRF 
-attacks.&]
+requests, but it avoids identity checks to prevent CSRF attacks.&]
 [s5; &]
 [s3; 7. Session variables&]
-[s5; Http`::SessionSet method can be used to store `'session variables`' 
+[s5; Http`::SessioSet method can be used to store `'session variables`' 
 that are persistent for specific browser across requests. Implementation 
 is based on cookie, session variables are stored either in filesystem 
 or in database (see Skylark configuration for details). Session 
-variables are reflected in shared variable space (means its values 
+variables reflected in shared variable space (means its values 
 are accessible using [* Http`::operator`[`]]) and are distinguished 
 with `'.`' as the first character.&]
 [s7; &]
