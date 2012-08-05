@@ -35,6 +35,12 @@ Renderer& Renderer::operator()(const char *id, void (*view)(Http&), const Value&
 	return Link(id, view, Vector<Value>() << arg1 << arg2);
 }
 
+Renderer& Renderer::SetLanguage(int lang_)
+{
+	lang = lang_;
+	return *this;
+}
+
 StaticMutex                 template_cache_lock;
 ArrayMap<String, One<Exe> > template_cache;
 

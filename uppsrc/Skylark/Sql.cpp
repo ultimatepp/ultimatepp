@@ -71,6 +71,8 @@ SqlInsert Renderer::Insert(SqlId table)
 		int q = var.Find(c);
 		if(q < 0)
 			q = var.Find(ToLower(c));
+		if(q < 0)
+			q = var.Find(ToUpper(c));
 		if(q >= 0)
 			y(c, var[q]);
 	}

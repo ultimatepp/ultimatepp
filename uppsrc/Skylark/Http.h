@@ -11,17 +11,20 @@ protected:
 public:	
 	Renderer& operator()(const char *id, const Value& v)  { var.Add(id, v); return *this; }
 	Renderer& operator()(const ValueMap& map);
-	Renderer& operator()(const char *id, void (*view)(Http&));
-	Renderer& operator()(const char *id, void (*view)(Http&), const Value& arg1);
-	Renderer& operator()(const char *id, void (*view)(Http&), const Value& arg1, const Value& arg2);
+	Renderer& operator()(const char *id, void (*handler)(Http&));
+	Renderer& operator()(const char *id, void (*handler)(Http&), const Value& arg1);
+	Renderer& operator()(const char *id, void (*handler)(Http&), const Value& arg1, const Value& arg2);
 
 	Renderer& operator()(const Sql& sql);
 	Renderer& operator()(Fields rec);
 	Renderer& operator()(const SqlSelect& row_sel);
 	Renderer& operator()(const char *id, const SqlSelect& sel);
+
+	Renderer& SetLanguage(int lang);
+
 	SqlUpdate Update(SqlId table);
 	SqlInsert Insert(SqlId table);
-	
+
 	Value     operator[](const char *id) const           { return var.Get(id, Null); }
 
 	String    RenderString(const String& template_name);
