@@ -325,12 +325,12 @@ when making the exact copy of Index, e.g. in the persistent storage.&]
 [s2; Restores multi`-key ordering.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:AIndex`:`:UnlinkKey`(const T`&`,unsigned`):%- [@(0.0.255) int]_[* UnlinkKey]([@(0.0.255) c
+[s5;:AIndex`:`:UnlinkKey`(const T`&`,unsigned`):%- [@(0.0.255) int]_[* UnlinkKey]([@(0.0.255) c
 onst]_[*@4 T][@(0.0.255) `&]_[*@3 k], [@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s2; Unlinks all elements with value [%-*@3 k] using precomputed [%-*@3 `_hash]. 
 Unlinked elements stay in AIndex but are ignored by any Find 
 operations. Precomputed hash value must be same as hash value 
-that would be result of HashFn. &]
+that would be result of HashFn.&]
 [s6;%- The precomputed [@3 `_hash] must be the same as the hash specified 
 by HashFn.&]
 [s3;%- &]
@@ -344,6 +344,11 @@ in the AIndex but are ignored by any Find operations.&]
 [s5;:AIndex`:`:IsUnlinked`(int`)const:%- [@(0.0.255) bool]_[* IsUnlinked]([@(0.0.255) int]_
 [*@3 i])_[@(0.0.255) const]&]
 [s2; Tests whether the element at [%-*@3 i] is unlinked.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:AIndex`:`:GetUnlinked`(`)const:%- [_^Vector^ Vector]<[@(0.0.255) int]>_[* GetUnlinked](
+)_[@(0.0.255) const]&]
+[s2; Returns indicies of all unlinked elements.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AIndex`:`:Sweep`(`):%- [@(0.0.255) void]_[* Sweep]()&]
@@ -375,17 +380,25 @@ element.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AIndex`:`:Remove`(int`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) int]_[*@3 i])&]
-[s2; Removes an element with value [%-*@3 k] at the specified position 
-[%-*@3 i]. This is a slow operation.&]
+[s2; Removes an element at the specified position [%-*@3 i]. This is 
+a slow O(n) operation.&]
 [s6; Invalidates iterators to AIndex.&]
 [s6; Invalidates references to Index.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:AIndex`:`:Remove`(int`,int`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) int]_[*@3 i], 
+[@(0.0.255) int]_[*@3 count])&]
+[s2; Removes [%-*@3 count] elements starting at [%-*@3 i]. This is a 
+slow O(n) operation.&]
+[s6; Invalidates iterators to AIndex.&]
+[s6; Invalidates references to Index.&]
+[s3; &]
 [s4;%- &]
 [s5;:AIndex`:`:Remove`(const int`*`,int`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) const
 ]_[@(0.0.255) int]_`*[*@3 sorted`_list], [@(0.0.255) int]_[*@3 count])&]
 [s2; Removes multiple elements from AIndex. Time of operation only 
 slightly depends on the number of removed elements. This is a 
-slow operation. [%-*@3 sorted`_list] must point to [%-*@3 count] 
+slow O(n) operation. [%-*@3 sorted`_list] must point to [%-*@3 count] 
 positions, sorted in ascending order.&]
 [s6; Invalidates iterators to AIndex.&]
 [s6; Invalidates references to Index.&]
@@ -402,7 +415,7 @@ sorted`_list.GetCount()).&]
 [s5;:AIndex`:`:RemoveKey`(const T`&`,unsigned`):%- [@(0.0.255) int]_[* RemoveKey]([@(0.0.255) c
 onst]_[*@4 T][@(0.0.255) `&]_[*@3 k], [@(0.0.255) unsigned]_[*@3 h])&]
 [s2; Removes all elements with value [%-*@3 k] using a precomputed 
-hash [%-*@3 h]. Slow.&]
+hash [%-*@3 h]. Slow O(n).&]
 [s6; Invalidates iterators to AIndex.&]
 [s6; Invalidates references to Index.&]
 [s6;%- The precomputed [@3 `_hash] must be the same as the hash specified 
@@ -411,7 +424,7 @@ by HashFn.&]
 [s4;%- &]
 [s5;:AIndex`:`:RemoveKey`(const T`&`):%- [@(0.0.255) int]_[* RemoveKey]([@(0.0.255) const]_
 [*@4 T][@(0.0.255) `&]_[*@3 k])&]
-[s2; Removes all elements with value [%-*@3 k]. Slow.&]
+[s2; Removes all elements with value [%-*@3 k]. Slow O(n).&]
 [s6; Invalidates iterators to AIndex.&]
 [s6; Invalidates references to Index.&]
 [s3;%- &]
@@ -493,4 +506,4 @@ er]([@(0.0.255) int]_[*@3 pos])_[@(0.0.255) const]&]
 Same as [* Begin() `+ i]. The benefit of this method is that [* pos] 
 is range checked in debug mode.&]
 [s3;%- &]
-[s0; ]
+[s0; ]]

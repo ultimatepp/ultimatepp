@@ -259,7 +259,4 @@ CSRF attack prevention.]
 :: [s0; [*C js`_identity]]
 :: [s0; Returns a script required that provides CSRF protection for 
 AJAX POSTs.]}}&]
-[s0; &]
-[s0; &]
-[s3; [3 Standard library]&]
 [s0; ]]

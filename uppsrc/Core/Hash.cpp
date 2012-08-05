@@ -99,7 +99,7 @@ HashBase::~HashBase()
 	Free();
 }
 
-inline void HashBase::LinkBefore(int i, Link& l, int bi)
+force_inline void HashBase::LinkBefore(int i, Link& l, int bi)
 {
 	Link& bl = link[bi];
 	l.next = bi;

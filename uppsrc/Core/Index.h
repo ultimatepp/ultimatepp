@@ -77,7 +77,7 @@ public:
 
 template <class T>
 struct StdHash {
-	unsigned operator()(const T& x) const { return GetHashValue(x); }
+	unsigned operator()(const T& x) const    { return GetHashValue(x); }
 };
 
 struct PtrHash {
