@@ -767,8 +767,6 @@ void ForwardSort(I begin, I end, const Less& less)
 	}
 }
 
-
-
 template <class T, class Less>
 void ForwardSort(T& c, const Less& less)
 {
@@ -782,15 +780,9 @@ void ForwardSort(T& c)
 	ForwardSort(c.Begin(), c.End(), StdLess<VT>());
 }
 
-enum
-{
-	__SORT_THRESHOLD = 16,
-	__SORT_MEDIAN_PASSES = 2,
-};
-
 template <class I, class Less>
 force_inline
-void OrderIter2__(I a, I b, Less less)
+void OrderIter2__(I a, I b, const Less& less)
 {
 	if(less(*b, *a))
 		IterSwap(a, b);
