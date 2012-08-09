@@ -78,6 +78,7 @@ bool IniChanged__(int version)
 #endif
 
 String GetIniKey(const char *id, const String& def) {
+	ASSERT_(IsMainRunning(), "GetIniKey is allowed only after APP_MAIN has started");
 	Mutex::Lock __(sMtx);
 	static VectorMap<String, String> key;
 	static int version;
