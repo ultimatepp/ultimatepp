@@ -294,5 +294,8 @@ void DXFColorChooser::LeftDown(Point p, dword)
 {
 	DXFColorChooserDlg dlg(color);
 	if(dlg.RunAppModal() == IDOK)
+	{
 		SetColor(dlg.color);
+		WhenAction();
+	}
 }

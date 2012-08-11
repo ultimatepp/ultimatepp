@@ -32,7 +32,9 @@ class DXFColorChooser : public ParentCtrl
 		int operator~(void) { return color; }
 		int GetColor(void) { return color; }
 
-		DXFColorChooser &operator=(int c) { color = c; Refresh(); return *this; }
+		int operator=(int c) { color = c; Refresh(); return c; }
+		int operator <<= (int c) { color = c; Refresh(); return c; }
+		Callback operator <<= (Callback c) { return Ctrl::operator<<=(c); }
 		DXFColorChooser &SetColor(int c) { color = c; Refresh(); return *this; }
 };
 
