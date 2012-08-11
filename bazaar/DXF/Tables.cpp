@@ -37,8 +37,9 @@ DXFLayer &DXFLayer::SetColor(int c)
 
 DXFLayer &DXFLayer::SetLineType(String const &lt)
 {
-	// add the linetype (just dummy if already there...)
-	tables->AddLineType(lt);
+	// add the linetype if needed
+	if(!tables->HasLineType(lt))
+		tables->AddLineType(lt);
 
 	lineType = lt;
 	return *this;
@@ -202,8 +203,9 @@ uint64 DXFTables::GetNextHandle(void)
 // adds a layer
 DXFLayer &DXFTables::AddLayer(String const &name, int color, String const &lType)
 {
-	// add the linetype (just dummy if already there...)
-	AddLineType(lType);
+	// add the linetype if needed
+	if(!HasLineType(lType))
+		AddLineType(lType);
 	
 	int layIdx = layers.Find(ToUpper(name));
 	if(layIdx >= 0)
@@ -237,7 +239,7 @@ DXFLayer &DXFTables::GetLayer(String const &name)
 // adds a linetype
 DXFLineType &DXFTables::AddLineType(String const &name, Vector<double> const &elements)
 {
-	int ltIdx = lineTypes.Find(name);
+	int ltIdx = lineTypes.Find(ToUpper(name));
 	if(ltIdx >= 0)
 	{
 		lineTypes[ltIdx].elements <<= elements;
