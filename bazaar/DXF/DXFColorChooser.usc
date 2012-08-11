@@ -1,0 +1,24 @@
+ctrl DXFColorChooser {
+	group "DXF";
+	GetMinSize() { return Size(77, 20); }
+	GetStdSize() { return GetMinSize(); }
+	Paint(w)
+	{
+		zm = GetZoom();
+		zx = zm.cx;
+		zy = zm.cy;
+		r = GetRect();
+		DrawInsetFrame(w, r);
+		h = r.bottom - r.top - 2 * zy;
+		xr1 = r.left + zy; xr2 = r.left + h;
+		yr1 = r.top + zy; yr2 = r.bottom - zy;
+		w.DrawRect(xr1, yr1, h, h, :Black);
+		w.DrawRect(xr1 + zy, yr1 + zy, h - 2 * zy, h - 2 * zy, :LtRed);
+		xr1 = xr2 + zy;
+		width = r.right - xr1 - zy;
+		w.DrawRect(xr1, yr1 + zy, width, h - 2 * zy, :White);
+		textsize = GetSmartTextSize("Red", StdFont());
+		w.DrawSmartText( xr1 + (width - textsize.cx) / 2, yr1 + (h - textsize.cy) / 2, "Red", StdFont());
+	}
+	
+}

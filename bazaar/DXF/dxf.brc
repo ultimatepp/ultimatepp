@@ -1,0 +1,5 @@
+BINARY(dxf_hdr		, "dxf_hdr.txt")
+BINARY(dxf_tbl		, "dxf_tbl.txt")
+BINARY(dxf_blkrec	, "dxf_blkrec.txt")
+BINARY(dxf_blk		, "dxf_blk.txt")
+BINARY(dxf_obj		, "dxf_obj.txt")
