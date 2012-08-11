@@ -41,13 +41,13 @@ uint32 DXF_COLOR_TABLE[] =
 
 const char *STD_DXF_COLOR_NAMES[] =
 {
-	tt_("red"),
-	tt_("yellow"),
-	tt_("green"),
-	tt_("cyan"),
-	tt_("blue"),
-	tt_("magenta"),
-	tt_("white")
+	tt_("DXF\vred"),
+	tt_("DXF\vyellow"),
+	tt_("DXF\vgreen"),
+	tt_("DXF\vcyan"),
+	tt_("DXF\vblue"),
+	tt_("DXF\vmagenta"),
+	tt_("DXF\vwhite")
 };
 
 #define LAYOUTFILE <DXF/DXFColorChooser.lay>
@@ -110,7 +110,7 @@ DXFColorChooserDlg::DXFColorChooserDlg(uint32 c)
 	prevPreviewImg.Color(Color(aCol, 0));
 	curPreviewImg.Color(Color(aCol, 0));
 	if(color >= 1 && color <= 7)
-		colorEdit <<= STD_DXF_COLOR_NAMES[color - 1];
+		colorEdit <<= GetLngString(STD_DXF_COLOR_NAMES[color - 1]);
 	else
 		colorEdit <<= Format("%d", color);
 	
@@ -123,16 +123,16 @@ void DXFColorChooserDlg::SetLabels(int idx)
 {
 	if(idx == -1)
 	{
-		indexLbl.SetText(t_("Index color :"));
-		rgbLbl.SetText(t_("Red,Green,Blue :"));
+		indexLbl.SetText(t_("DXF\vIndex color :"));
+		rgbLbl.SetText(t_("DXF\vRed,Green,Blue :"));
 		return;
 	}
 	uint32 aCol = DXF_COLOR_TABLE[idx];
 	int r = GetRValue(aCol);
 	int g = GetGValue(aCol);
 	int b = GetBValue(aCol);
-	indexLbl.SetText(Format(String(t_("Index color :")) + " %d", idx));
-	rgbLbl.SetText(Format(String(t_("Red,Green,Blue :")) + "%d,%d,%d", r, g, b));
+	indexLbl.SetText(Format(String(t_("DXF\vIndex color :")) + " %d", idx));
+	rgbLbl.SetText(Format(String(t_("DXF\vRed,Green,Blue :")) + "%d,%d,%d", r, g, b));
 	Refresh();
 	Ctrl::ProcessEvents();
 }
@@ -195,7 +195,7 @@ void DXFColorChooserDlg::ChildMouseEvent(Ctrl *ctrl, int event, Point p, int zde
 			aCol |= 0x010000;
 		curPreviewImg.Color(Color(aCol, 0));
 		if(color >= 1 && color <= 7)
-			colorEdit <<= STD_DXF_COLOR_NAMES[color - 1];
+			colorEdit <<= GetLngString(STD_DXF_COLOR_NAMES[color - 1]);
 		else
 			colorEdit <<= Format("%d", color);
 	}
@@ -284,7 +284,7 @@ void DXFColorChooser::Paint(Draw &w)
 	int txtPartSize = sz.cx - rectSize.cx - 2;
 	w.DrawRect(rectSize.cx + 2, 0, txtPartSize, sz.cy, White());
 	
-	String txtCol = color >= 1 && color <= 7 ? String(STD_DXF_COLOR_NAMES[color - 1]) : Format("%d", color);
+	String txtCol = color >= 1 && color <= 7 ? GetLngString(STD_DXF_COLOR_NAMES[color - 1]) : Format("%d", color);
 	Size txtSize = GetTextSize(txtCol, StdFont());
 	w.DrawText(rectSize.cx + (txtPartSize - txtSize.cx) / 2, (sz.cy - txtSize.cy) / 2, txtCol);
 }
