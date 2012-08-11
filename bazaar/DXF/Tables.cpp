@@ -72,10 +72,10 @@ bool DXFLineType::Write(Stream &s)
 	s << "73\n" << elements.GetCount() << "\n";
 	double patLen = 0;
 	for(int i = 0; i < elements.GetCount(); i++)
-		patLen += elements[i];
+		patLen += fabs(elements[i]);
 	s << "40\n" << patLen << "\n";
 	for(int i = 0; i < elements.GetCount(); i++)
-		s << "49\n" << elements[i] << "\n";
+		s << "49\n" << elements[i] << "\n" << "74\n0\n";
 
 	return true;	
 }
