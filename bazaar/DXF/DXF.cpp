@@ -46,20 +46,26 @@ double DXF::NormalizeAngle(double a)
 }
 
 // Add a block definition
-DXFBlock *DXF::AddBlock(String const &name)
+DXFBlock &DXF::AddBlock(String const &name)
 {
 	int idx = blocks.blocks.Find(name);
 	if(idx >= 0)
-		return &blocks.blocks[idx];
+		return blocks.blocks[idx];
 	blocks.blocks.Add(name, new DXFBlock(this));
-	return &blocks.blocks.Top();
+	return blocks.blocks.Top();
 }
 
+// checks if a block is present
+bool DXF::HasBlock(String const &name) const
+{
+	return blocks.blocks.Find(name) >= 0;
+}
+		
 // gets a block by name
-DXFBlock *DXF::GetBlock(String const &name)
+DXFBlock &DXF::GetBlock(String const &name)
 {
 	int idx = blocks.blocks.Find(name);
 	if(idx >= 0)
-		return &blocks.blocks[idx];
-	return NULL;
+		return blocks.blocks[idx];
+	return *(DXFBlock *)NULL;
 }

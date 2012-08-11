@@ -197,7 +197,7 @@ uint64 DXFTables::GetNextHandle(void)
 		
 
 // adds a layer
-DXFLayer *DXFTables::AddLayer(String const &name, int color, String const &lType)
+DXFLayer &DXFTables::AddLayer(String const &name, int color, String const &lType)
 {
 	for(int i = 0; i < layers.GetCount(); i++)
 	{
@@ -206,18 +206,18 @@ DXFLayer *DXFTables::AddLayer(String const &name, int color, String const &lType
 		{
 			lay.color = color;
 			lay.lineType = lType;
-			return &lay;
+			return lay;
 		}
 	}		
 	DXFLayer &lay = layers.Add(new DXFLayer(this));
 	lay.name = name;
 	lay.color = color;
 	lay.lineType = lType;
-	return &lay;
+	return lay;
 }
 
 // adds a linetype
-DXFLineType *DXFTables::AddLineType(String const &name, Vector<double> const &elements)
+DXFLineType &DXFTables::AddLineType(String const &name, Vector<double> const &elements)
 {
 	for(int i = 0; i < lineTypes.GetCount(); i++)
 	{
@@ -225,16 +225,16 @@ DXFLineType *DXFTables::AddLineType(String const &name, Vector<double> const &el
 		if(ToUpper(lt.name == name))
 		{
 			lt.elements <<= elements;
-			return &lt;
+			return lt;
 		}
 	}		
 	DXFLineType &lt = lineTypes.Add(new DXFLineType(this));
 	lt.name = name;
 	lt.elements <<= elements;
-	return &lt;
+	return lt;
 }
 
-DXFLineType *DXFTables::AddLineType(String const &name, double e1, double e2, double e3, double e4, double e5, double e6, double e7, double e8)
+DXFLineType &DXFTables::AddLineType(String const &name, double e1, double e2, double e3, double e4, double e5, double e6, double e7, double e8)
 {
 	Vector<double> elements;
 	elements << e1 << e2;

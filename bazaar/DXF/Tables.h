@@ -124,10 +124,10 @@ class DXFTables : public Pte<DXFTables>
 		uint64 GetNextHandle(void);
 		
 		// adds a layer
-		DXFLayer *AddLayer(String const &name, int color = 7, String const &lType = "CONTINUOUS");
+		DXFLayer &AddLayer(String const &name, int color = 7, String const &lType = "CONTINUOUS");
 		
 		// adds a linetype
-		DXFLineType *AddLineType(String const &name, Vector<double> const &elements = Vector<double>());
-		DXFLineType *AddLineType(String const &name, double e1, double e2, double e3 = Null, double e4 = Null, double e5 = Null, double e6 = Null, double e7 = Null, double e8 = Null);
+		DXFLineType &AddLineType(String const &name, Vector<double> const &elements = Vector<double>());
+		DXFLineType &AddLineType(String const &name, double e1, double e2, double e3 = Null, double e4 = Null, double e5 = Null, double e6 = Null, double e7 = Null, double e8 = Null);
 };
 #endif

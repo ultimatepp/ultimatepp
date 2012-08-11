@@ -70,10 +70,13 @@ class DXF : public DXFBlock
 		static double NormalizeAngle(double a);
 		
 		// Add a block definition
-		DXFBlock *AddBlock(String const &name);
+		DXFBlock &AddBlock(String const &name);
+		
+		// checks if a block is present
+		bool HasBlock(String const &name) const;
 		
 		// gets a block by name
-		DXFBlock *GetBlock(String const &name);
+		DXFBlock &GetBlock(String const &name);
 		
 		// sets insertion scale option
 		DXF &SetScaleInsertions(bool i = true) { scaleInsertions = i; return *this; }
