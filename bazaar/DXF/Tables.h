@@ -100,11 +100,11 @@ class DXFTables : public Pte<DXFTables>
 		Ptr<DXF> dxf;
 		
 		// layers
-		Array<DXFLayer> layers;
+		ArrayMap<String, DXFLayer> layers;
 		uint64 layersHandle;
 		
 		// linetypes
-		Array<DXFLineType> lineTypes;
+		ArrayMap<String, DXFLineType> lineTypes;
 		uint64 lineTypesHandle;
 		
 		// plot style handle -- hard coded from dxf template
@@ -126,8 +126,20 @@ class DXFTables : public Pte<DXFTables>
 		// adds a layer
 		DXFLayer &AddLayer(String const &name, int color = 7, String const &lType = "CONTINUOUS");
 		
+		// checks if layer is there
+		bool HasLayer(String const &name) const;
+		
+		// gets the layer descriptor
+		DXFLayer &GetLayer(String const &name);
+		
 		// adds a linetype
 		DXFLineType &AddLineType(String const &name, Vector<double> const &elements = Vector<double>());
 		DXFLineType &AddLineType(String const &name, double e1, double e2, double e3 = Null, double e4 = Null, double e5 = Null, double e6 = Null, double e7 = Null, double e8 = Null);
+
+		// check if linetype is there
+		bool HasLineType(String const &name) const;
+		
+		// gets linetype descriptor
+		DXFLineType &GetLineType(String const &name);
 };
 #endif

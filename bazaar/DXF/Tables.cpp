@@ -37,6 +37,9 @@ DXFLayer &DXFLayer::SetColor(int c)
 
 DXFLayer &DXFLayer::SetLineType(String const &lt)
 {
+	// add the linetype (just dummy if already there...)
+	tables->AddLineType(lt);
+
 	lineType = lt;
 	return *this;
 }
@@ -124,15 +127,15 @@ DXFTables::DXFTables(DXF *d)
 	lt = new DXFLineType(this);
 	lt->SetName("ByBlock");
 	lt->handle = 0x14; // hardwired
-	lineTypes.Add(lt);
+	lineTypes.Add("ByBlock", lt);
 	lt = new DXFLineType(this);
 	lt->SetName("ByLayer");
 	lt->handle = 0x15; // hardwired
-	lineTypes.Add(lt);
+	lineTypes.Add("ByLayer", lt);
 	lt = new DXFLineType(this);
 	lt->SetName("Continuous");
 	lt->handle = 0x16; // hardwired
-	lineTypes.Add(lt);
+	lineTypes.Add("Continuous", lt);
 	
 	// create default layer 0
 	DXFLayer *la;
@@ -141,7 +144,7 @@ DXFTables::DXFTables(DXF *d)
 	la->handle = 0x10; // hardwired
 	la->SetLineType("Continuous");
 	la->SetColor(DXF::White);
-	layers.Add(la);
+	layers.Add("0", la);
 }
 
 // write tables section to stream
@@ -199,36 +202,48 @@ uint64 DXFTables::GetNextHandle(void)
 // adds a layer
 DXFLayer &DXFTables::AddLayer(String const &name, int color, String const &lType)
 {
-	for(int i = 0; i < layers.GetCount(); i++)
+	// add the linetype (just dummy if already there...)
+	AddLineType(lType);
+	
+	int layIdx = layers.Find(ToUpper(name));
+	if(layIdx >= 0)
 	{
-		DXFLayer &lay = layers[i];
-		if(ToUpper(lay.name == name))
-		{
-			lay.color = color;
-			lay.lineType = lType;
-			return lay;
-		}
-	}		
-	DXFLayer &lay = layers.Add(new DXFLayer(this));
+		layers[layIdx].color = color;
+		layers[layIdx].lineType = lType;
+		return layers[layIdx];
+	}
+	DXFLayer &lay = layers.Add(ToUpper(name), new DXFLayer(this));
 	lay.name = name;
 	lay.color = color;
 	lay.lineType = lType;
 	return lay;
 }
 
+// checks if layer is there
+bool DXFTables::HasLayer(String const &name) const
+{
+	return layers.Find(ToUpper(name)) >= 0;
+}
+
+// gets the layer descriptor
+DXFLayer &DXFTables::GetLayer(String const &name)
+{
+	int idx = layers.Find(ToUpper(name));
+	if(idx < 0)
+		return *(DXFLayer *)NULL;
+	return layers[idx];
+}
+
 // adds a linetype
 DXFLineType &DXFTables::AddLineType(String const &name, Vector<double> const &elements)
 {
-	for(int i = 0; i < lineTypes.GetCount(); i++)
+	int ltIdx = lineTypes.Find(name);
+	if(ltIdx >= 0)
 	{
-		DXFLineType &lt = lineTypes[i];
-		if(ToUpper(lt.name == name))
-		{
-			lt.elements <<= elements;
-			return lt;
-		}
-	}		
-	DXFLineType &lt = lineTypes.Add(new DXFLineType(this));
+		lineTypes[ltIdx].elements <<= elements;
+		return lineTypes[ltIdx];
+	}
+	DXFLineType &lt = lineTypes.Add(ToUpper(name), new DXFLineType(this));
 	lt.name = name;
 	lt.elements <<= elements;
 	return lt;
@@ -245,4 +260,19 @@ DXFLineType &DXFTables::AddLineType(String const &name, double e1, double e2, do
 	if(!IsNull(e7)) elements << e7;
 	if(!IsNull(e8)) elements << e8;
 	return AddLineType(name, elements);
+}
+
+// check if linetype is there
+bool DXFTables::HasLineType(String const &name) const
+{
+	return lineTypes.Find(ToUpper(name)) >= 0;
+}
+
+// gets linetype descriptor
+DXFLineType &DXFTables::GetLineType(String const &name)
+{
+	int idx = lineTypes.Find(ToUpper(name));
+	if(idx < 0)
+		return *(DXFLineType *)NULL;
+	return lineTypes[idx];
 }
