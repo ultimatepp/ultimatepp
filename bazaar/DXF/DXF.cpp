@@ -16,7 +16,7 @@ DXF::DXF() : nextHandle(0x1000), blocks(this), objects(this), tables(this)
 
 	// override block default values
 	color = DXF::ByLayer;
-	lineType = "CONTINUOUS";
+	lineType = "ByLayer";
 	
 	// do NOT scale insertions by default
 	scaleInsertions = false;
