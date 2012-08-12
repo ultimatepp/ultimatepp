@@ -73,6 +73,9 @@ class DXFEntities : public Pte<DXFEntities>
 		DXFBlockRef &InsertBlock(String const &name, Pointf const &insp, double scale, double angle);
 		DXFBlockRef &InsertBlock(String const &name, Pointf const &insp, double scale) { return InsertBlock(name, insp, scale, 0.0); }
 		DXFBlockRef &InsertBlock(String const &name, Pointf const &insp) { return InsertBlock(name, insp, 1.0, 0.0); }
+		
+		// get bounding box of entities
+		Rectf GetBoundingBox(void) const;
 };
 
 #endif

@@ -20,11 +20,26 @@ DXF::DXF() : nextHandle(0x1000), blocks(this), objects(this), tables(this)
 	
 	// do NOT scale insertions by default
 	scaleInsertions = false;
+	
+	// initialize view center and height
+	viewCenter = Pointf(100, 100);
+	viewHeight = 50;
 }
 
 // write drawing to file
 bool DXF::Write(Stream &s)
 {
+	// if we've got some entities, calculate drawing bounding box
+	// and zoom to fit it before saving
+	if(entities.entities.GetCount())
+	{
+		Rectf bb = entities.GetBoundingBox();
+		viewCenter = Pointf( (bb.left + bb.right) / 2, (bb.top + bb.bottom) / 2);
+		viewHeight = bb.top - bb.bottom;
+		double viewWidth = bb.right - bb.left;
+		if(viewHeight * 2.128571428571428 < viewWidth)
+			viewHeight = viewWidth / 2.128571428571428;
+	}
 	header.Write(s);
 	tables.Write(s);
 	blocks.Write(s);
@@ -63,6 +78,14 @@ bool DXF::HasBlock(String const &name) const
 		
 // gets a block by name
 DXFBlock &DXF::GetBlock(String const &name)
+{
+	int idx = blocks.blocks.Find(name);
+	if(idx >= 0)
+		return blocks.blocks[idx];
+	return *(DXFBlock *)NULL;
+}
+
+DXFBlock const &DXF::GetBlock(String const &name) const
 {
 	int idx = blocks.blocks.Find(name);
 	if(idx >= 0)

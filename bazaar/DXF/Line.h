@@ -25,6 +25,9 @@ class DXFLine : public DXFEntity
 		Pointf const &GetP2(void) const { return p2; }
 		Vector<Pointf> GetPoints(void) const;
 		DXFLine &SetPoints(Pointf const &p1, Pointf const &p2);
+
+		// gets bounding box of element
+		virtual Rectf GetBoundingBox(void) const;
 };
 
 #endif

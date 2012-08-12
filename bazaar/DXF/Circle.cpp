@@ -40,3 +40,9 @@ DXFCircle &DXFCircle::Set(Pointf c, double d)
 	radius = S(d);
 	return *this;
 }
+
+// gets bounding box of element
+Rectf DXFCircle::GetBoundingBox(void) const
+{
+	return Rectf(center.x - radius, center.y + radius, center.x + radius, center.y - radius);
+}

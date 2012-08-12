@@ -40,6 +40,9 @@ class DXFBlockRef : public DXFEntity
 		DXFBlockRef &SetAngle(double a);
 		DXFBlockRef &Set(Pointf const &p, double s, double a);
 		DXFBlockRef &Set(String const &n, Pointf const &p, double s, double a);
+
+		// gets bounding box of element
+		virtual Rectf GetBoundingBox(void) const;
 };
 
 #endif

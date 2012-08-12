@@ -50,6 +50,11 @@ class DXF : public DXFBlock
 		
 		// flag for scaling insertions with transform matrix
 		bool scaleInsertions;
+		
+		// view center point and height
+		// calculated from GetBoundingBox functions
+		Pointf viewCenter;
+		double viewHeight;
 
 	protected:
 	
@@ -77,6 +82,7 @@ class DXF : public DXFBlock
 		
 		// gets a block by name
 		DXFBlock &GetBlock(String const &name);
+		DXFBlock const &GetBlock(String const &name) const;
 		
 		// sets insertion scale option
 		DXF &SetScaleInsertions(bool i = true) { scaleInsertions = i; return *this; }

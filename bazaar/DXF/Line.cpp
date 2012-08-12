@@ -30,3 +30,9 @@ bool DXFLine::Write(Stream &s)
 	s << "11\n" << p2.x << "\n21\n" << p2.y << "\n31\n" << 0.0 << "\n";
 	return true;
 }
+
+// gets bounding box of element
+Rectf DXFLine::GetBoundingBox(void) const
+{
+	return Rectf(min(p1.x, p2.x), max(p1.y, p2.y), max(p1.x, p2.x), min(p1.y, p2.y));
+}

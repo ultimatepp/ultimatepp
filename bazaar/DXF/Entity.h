@@ -71,6 +71,9 @@ class DXFEntity
 		// gets/sets linetype
 		DXFEntity *SetLineType(String const &l);
 		String const &GetLineType(void) const { return lineType; }
+		
+		// gets bounding box of element
+		virtual Rectf GetBoundingBox(void) const { return Rectf(1e99, -1e99, -1e99, 1e99); }
 };
 
 #endif

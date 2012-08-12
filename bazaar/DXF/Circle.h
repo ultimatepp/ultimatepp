@@ -26,6 +26,9 @@ class DXFCircle : public DXFEntity
 		DXFCircle &Set(Pointf const &c);
 		DXFCircle &Set(double d);
 		DXFCircle &Set(Pointf c, double d);
+
+		// gets bounding box of element
+		virtual Rectf GetBoundingBox(void) const;
 };
 
 #endif

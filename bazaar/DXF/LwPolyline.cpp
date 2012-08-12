@@ -320,3 +320,77 @@ DXFLwPolyline &DXFLwPolyline::SetWidth(double w)
 	width = w;
 	return *this;
 }
+
+// normalizes an angle in range 0..2 * M_PI
+static double norm(double a)
+{
+	a = fmod(a, 2 * M_PI);
+	if(a < 0)
+		a = 2 * M_PI + a;
+	return a;
+}
+
+// gets bounding box of element
+Rectf DXFLwPolyline::GetBoundingBox(void) const
+{
+	Rectf r(1e99, -1e99, -1e99, 1e99);
+	for(int i = 0; i < vertices.GetCount(); i++)
+	{
+		Pointf const &p = vertices[i];
+		
+		// first, check the vertex
+		r.left 		= min(r.left, p.x);
+		r.top		= max(r.top, p.y);
+		r.right		= max(r.right, p.x);
+		r.bottom	= min(r.bottom, p.y);
+		
+		// get the bulge at vertex; if not zero, we need to check
+		// the arc for extents
+		if(bulges[i] != 0)
+		{
+			Pointf const &p2 = (i < vertices.GetCount() - 1 ? vertices[i + 1] : vertices[0]);
+			
+			// skip me if points are the same OR second point is first one and pline
+			// is not closed
+			if(&p != &p2 && (closed || &p2 != &vertices[0]))
+			{
+				// first, we need radius and center
+				// here quite complicated, but it should be a simpler way...
+				double chord = sqrt(sqr(p2.x - p.x) + sqr(p2.y - p.y));
+				double sagitta = fabs(chord / 2 * bulges[i]);
+				double radius = (sqr(chord / 2) + sqr(sagitta)) / 2 / sagitta;
+				double a12 = atan2(p2.y - p.y, p2.x - p.x);
+				double xm = (p2.x + p.x) / 2;
+				double ym = (p2.y - p.y) / 2;
+				double apot = radius - sagitta;
+				double ac = bulges[i] > 0 ? a12 + M_PI / 2 : a12 - M_PI / 2;
+				double xc = xm + apot * cos(ac);
+				double yc = ym + apot * sin(ac);
+				
+				// now we check how many quadrants does the arc span
+				// first, we take the angle of arc endpoints and adjust it
+				// depending on arc direction
+				double a1 = atan2(p.y - yc, p.x - xc);
+				double a2 = atan2(p2.y - yc, p2.x - xc);
+				if(bulges[i] < 0)
+				{
+					double t = a1;
+					a1 = a2;
+					a2 = t;
+				}
+			
+				// check if crossing quadrants
+				bool cross0		= norm(a1) > norm(a2);
+				bool cross90	= norm(a1 - M_PI / 2) > norm(a2 - M_PI / 2);
+				bool cross180	= norm(a1 - M_PI) > norm(a2 - M_PI);
+				bool cross270	= norm(a1 - 3 * M_PI / 2) > norm(a2 - 3 * M_PI / 2);
+				
+				if(cross0)		r.right		= xc + radius;
+				if(cross90)		r.top		= yc + radius;
+				if(cross180)	r.left		= xc - radius;
+				if(cross270)	r.bottom	= yc - radius;
+			}
+		}
+	}
+	return r;
+}

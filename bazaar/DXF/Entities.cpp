@@ -133,3 +133,18 @@ DXFBlockRef &DXFEntities::InsertBlock(String const &name, Pointf const &insp, do
 	entities.Add(blk);
 	return *blk;
 }
+
+// get bounding box of entities
+Rectf DXFEntities::GetBoundingBox(void) const
+{
+	Rectf bb(1e99, -1e99, -1e99, 1e99);
+	for(int i = 0; i < entities.GetCount(); i++)
+	{
+		Rectf r = entities[i].GetBoundingBox();
+		bb.left		= min(bb.left, r.left);
+		bb.top		= max(bb.top, r.top);
+		bb.right	= max(bb.right, r.right);
+		bb.bottom	= min(bb.bottom, r.bottom);
+	}
+	return bb;
+}

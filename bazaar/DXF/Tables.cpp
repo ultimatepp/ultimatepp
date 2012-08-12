@@ -153,6 +153,23 @@ bool DXFTables::Write(Stream &s)
 {
 	s << "0\nSECTION\n2\nTABLES\n";
 	
+	// active viweport -- partially hardwired, we just need to set
+	// zoom factor and view center point to fit created drawing
+	s << "0\nTABLE\n2\nVPORT\n";
+	s << "5\n8\n330\n0\n100\nAcDbSymbolTable\n70\n2\n";
+	s << "0\nVPORT\n5\n676\n330\n8\n100\nAcDbSymbolTableRecord\n100\nAcDbViewportTableRecord\n";
+	s << "2\n*Active\n70\n0\n";
+	s << "10\n0.0\n20\n0.0\n11\n1.0\n21\n1.0\n";
+	s << "12\n" << dxf->viewCenter.x << "\n22\n" << dxf->viewCenter.y << "\n";
+	s << "13\n0.0\n23\n0.0\n14\n10.0\n24\n10.0\n15\n10.0\n25\n10.0\n16\n0.0\n26\n0.0\n36\n1.0\n";
+	s << "17\n0.0\n27\n0.0\n37\n0.0\n";
+	s << "40\n" << dxf->viewHeight << "\n41\n2.128571428571428\n";
+	s << "42\n50.0\n43\n0.0\n44\n0.0\n50\n0.0\n51\n0.0\n";
+	s << "71\n0\n72\n1000\n73\n1\n74\n1\n75\n0\n76\n0\n77\n0\n78\n0\n";
+	s << "281\n0\n65\n1\n110\n0.0\n120\n0.0\n130\n0.0\n111\n1.0\n121\n0.0\n131\n0.0\n";
+	s << "112\n0.0\n122\n1.0\n132\n0.0\n79\n0\n146\n0.0\n";
+	s << "0\nENDTAB\n";
+
 	// hardwired tables from template
 	s << (const char *)dxf_tbl;
 	

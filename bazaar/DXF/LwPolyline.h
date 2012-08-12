@@ -71,6 +71,9 @@ class DXFLwPolyline : public DXFEntity
 		// get/set global width
 		double GetWidth(void) { return width; }
 		DXFLwPolyline &SetWidth(double w);
+
+		// gets bounding box of element
+		virtual Rectf GetBoundingBox(void) const;
 };
 
 #endif
