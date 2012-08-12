@@ -61,15 +61,15 @@ class DXFEntity
 		virtual ~DXFEntity() {}
 	
 		// gets/sets color
-		DXFEntity *SetColor(int c);
+		DXFEntity &SetColor(int c);
 		int GetColor(void) const { return color; }
 		
 		// gets/sets layer
-		DXFEntity *SetLayer(String const &l);
+		DXFEntity &SetLayer(String const &l);
 		String const &GetLayer(void) const { return layer; }
 		
 		// gets/sets linetype
-		DXFEntity *SetLineType(String const &l);
+		DXFEntity &SetLineType(String const &l);
 		String const &GetLineType(void) const { return lineType; }
 		
 		// gets bounding box of element

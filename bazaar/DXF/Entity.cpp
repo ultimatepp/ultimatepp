@@ -62,3 +62,29 @@ double DXFEntity::R(double a) const
 {
 	return entities->GetTransformationMatrix().R(a);
 }
+
+// sets color
+DXFEntity &DXFEntity::SetColor(int c)
+{
+	color = c;
+	return *this;
+}
+
+// sets layer
+DXFEntity &DXFEntity::SetLayer(String const &l)
+{
+	layer = l;
+	return *this;
+}
+
+// sets linetype
+DXFEntity &DXFEntity::SetLineType(String const &l)
+{
+	// linetype MUST be there, so add if not
+	if(!GetDXF().tables.HasLineType(l))
+		GetDXF().tables.AddLineType(l);
+	
+	lineType = l;
+	return *this;
+}
+		
