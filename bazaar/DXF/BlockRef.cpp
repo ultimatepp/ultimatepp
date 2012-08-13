@@ -21,7 +21,7 @@ bool DXFBlockRef::Write(Stream &s)
 	s << "2\n" << name << "\n";
 	s << "10\n" << insertPoint.x << "\n20\n" << insertPoint.y << "\n30\n" << 0.0 << "\n";
 	s << "41\n" << scale << "\n42\n" << scale << "\n43\n" << scale << "\n";
-	s << "50\n" << angle << "\n";
+	s << "50\n" << angle * 180.0 / M_PI << "\n";
 	return true;
 }
 
