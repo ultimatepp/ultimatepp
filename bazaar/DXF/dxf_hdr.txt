@@ -1,7 +1,3 @@
-  0
-SECTION
-  2
-HEADER
   9
 $ACADVER
   1
@@ -30,5 +26,3 @@ $ANGBASE
 $HANDSEED
   5
 677
-  0
-ENDSEC

@@ -13,6 +13,7 @@ class DXFBlock : public Pte<DXFBlock>
 	friend class DXFEntities;
 	friend class DXF;
 	friend class DXFBlocks;
+	friend class DXFHeader;
 	private:
 	
 		// dxf container object, if not this one

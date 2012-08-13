@@ -9,7 +9,7 @@
 
 // constructor
 // seeds handles with a number greater than the one in template
-DXF::DXF() : nextHandle(0x1000), blocks(this), objects(this), tables(this)
+DXF::DXF() : nextHandle(0x1000), header(this), blocks(this), objects(this), tables(this)
 {
 	tables.AddLineType("CONTINUOUS");
 	tables.AddLayer("0");
