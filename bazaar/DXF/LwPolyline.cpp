@@ -317,7 +317,7 @@ DXFLwPolyline &DXFLwPolyline::Open(void)
 // get/set global width
 DXFLwPolyline &DXFLwPolyline::SetWidth(double w)
 {
-	width = w;
+	width = S(w);
 	return *this;
 }
 
