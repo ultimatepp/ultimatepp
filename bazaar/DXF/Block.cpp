@@ -25,10 +25,10 @@ bool DXFBlock::Write(String const &name, Stream &s)
 	s << "100\nAcDbEntity\n";
 	s << "8\n0\n";
 	s << "100\nAcDbBlockBegin\n";
-	s << "2\n" << name << "\n";
+	s << "2\n" << ToCharset(CHARSET_WIN1252, name) << "\n";
 	s << "70\n0\n";							// attributes ???
 	s << "10\n0.0\n20\n0.0\n30\n0.0\n";		// shall we handle insertion base point ?
-	s << "3\n" << name << "\n";
+	s << "3\n" << ToCharset(CHARSET_WIN1252, name) << "\n";
 	s << "1\n\n";
 	
 	// write out entities

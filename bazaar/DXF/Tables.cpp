@@ -14,10 +14,10 @@ bool DXFLayer::Write(Stream &s)
 	s << "0\nLAYER\n";
 	s << "5\n" << Format64Hex(handle) << "\n";
 	s << "100\nAcDbSymbolTableRecord\n100\nAcDbLayerTableRecord\n";
-	s << "2\n" << name << "\n";
+	s << "2\n" << ToCharset(CHARSET_WIN1252, name) << "\n";
 	s << "70\n64\n";
 	s << "62\n" << color << "\n";
-	s << "6\n" << lineType << "\n";
+	s << "6\n" << ToCharset(CHARSET_WIN1252, lineType) << "\n";
 	s << "390\n" << tables->plotStyleHandle << "\n";
 
 	return true;
@@ -66,9 +66,9 @@ bool DXFLineType::Write(Stream &s)
 	s << "0\nLTYPE\n";
 	s << "5\n" << Format64Hex(handle) << "\n";
 	s << "100\nAcDbSymbolTableRecord\n100\nAcDbLinetypeTableRecord\n";
-	s << "2\n" << name << "\n";
+	s << "2\n" << ToCharset(CHARSET_WIN1252, name) << "\n";
 	s << "70\n64\n";
-	s << "3\n" << desc << "\n";
+	s << "3\n" << ToCharset(CHARSET_WIN1252, desc) << "\n";
 	s << "72\n65\n";
 	s << "73\n" << elements.GetCount() << "\n";
 	double patLen = 0;
@@ -183,7 +183,7 @@ bool DXFTables::Write(Stream &s)
 		s << "5\n" << Format64Hex(dxf->GetNextHandle()) << "\n";
 		s << "100\nAcDbSymbolTableRecord\n";
 		s << "100\nAcDbBlockTableRecord\n";
-		s << "2\n" << blocks.GetKey(iBlock) << "\n";
+		s << "2\n" << ToCharset(CHARSET_WIN1252, blocks.GetKey(iBlock)) << "\n";
 	}
 	s << "0\nENDTAB\n";
 

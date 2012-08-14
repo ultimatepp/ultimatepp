@@ -18,7 +18,7 @@ bool DXFBlockRef::Write(Stream &s)
 	
 	// output line points
 	s << "100\nAcDbBlockReference\n";
-	s << "2\n" << name << "\n";
+	s << "2\n" << ToCharset(CHARSET_WIN1252, name) << "\n";
 	s << "10\n" << insertPoint.x << "\n20\n" << insertPoint.y << "\n30\n" << 0.0 << "\n";
 	s << "41\n" << scale << "\n42\n" << scale << "\n43\n" << scale << "\n";
 	s << "50\n" << angle * 180.0 / M_PI << "\n";
