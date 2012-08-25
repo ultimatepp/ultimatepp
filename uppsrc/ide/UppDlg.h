@@ -94,6 +94,118 @@ struct TemplateDlg : public WithNewPackageLayout<TopWindow> {
 	virtual ~TemplateDlg();
 };
 
+class BaseSetupDlg : public WithBaseSetupLayout<TopWindow>
+{
+public:
+	typedef BaseSetupDlg CLASSNAME;
+	BaseSetupDlg();
+
+	bool Run(String& vars);
+
+private:
+	void OnUpp();
+	void OnBrowseUpp();
+
+private:
+	FrameRight<Button> browse_upp;
+	SelectDirButton    browse_out;
+	bool               new_base;
+};
+
+bool BaseSetup(String& vars);
+
+inline bool PackageLess(String a, String b)
+{
+	int nc = CompareNoCase(a, b);
+	if(nc) return nc < 0;
+	return a < b;
+};
+
+struct SelectPackageDlg : public WithListLayout<TopWindow> {
+	virtual bool Key(dword key, int count);
+
+	typedef SelectPackageDlg CLASSNAME;
+
+	SelectPackageDlg(const char *title, bool selectvars, bool main);
+
+	String         Run(String startwith);
+
+	void           Serialize(Stream& s);
+
+	ArrayCtrl      base;
+	ParentCtrl     list;
+	FileList       clist;
+	ArrayCtrl      alist;
+
+	bool           selectvars;
+	bool           loading;
+	int            loadi;
+	bool           finished;
+	bool           canceled;
+	String         selected;
+
+	struct PkInfo {
+		String package;
+		String description;
+		String nest;
+		Image  icon;
+		bool   main;
+
+		bool operator<(const PkInfo& b) const { return PackageLess(package, b.package); }
+		
+		PkInfo() { main = false; }
+	};
+	
+	struct PkData : PkInfo {
+		bool   ispackage;
+		Time   tm, itm;
+		
+		void   HeuristicGuess();
+		
+		void Serialize(Stream& s)  { s % package % description % nest % icon % main % ispackage % tm % itm; }
+		PkData()                   { tm = itm = Null; ispackage = true; }
+	};
+
+	Array<PkInfo>             packages;
+	Array< ArrayMap<String, PkData> > data;
+
+	String         GetCurrentName();
+	int            GetCurrentIndex();
+	void           SyncBrief();
+
+	void           ToolBase(Bar& bar);
+
+	void           OnBaseAdd();
+	void           OnBaseEdit();
+	void           OnBaseRemove();
+
+	void           OnOK();
+	void           OnCancel();
+
+	void           OnNew();
+	void           OnBase();
+	void           OnFilter();
+
+	void           ListCursor();
+	void           ChangeDescription();
+
+	void           ScanFolder(const String& path, ArrayMap<String, PkData>& nd,
+	                          const String& nest, Index<String>& dir_exists,
+	                          const String& prefix);
+	void           Load();
+	void           SyncBase(String initvars);
+	void           SyncList();
+	static bool    Pless(const SelectPackageDlg::PkInfo& a, const SelectPackageDlg::PkInfo& b);
+	
+	Vector<String> GetSvnDirs();
+	void           SyncSvnDir(const String& dir);
+	void           SyncSvnDirs();
+	
+	enum {
+		MAIN = 1, FIRST = 2
+	};
+};
+
 String SelectPackage(const char *title, const char *startwith = NULL,
 	bool selectvars = false, bool all = false);
 

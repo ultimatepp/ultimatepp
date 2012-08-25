@@ -16,14 +16,14 @@ String GetThreadName();
 class Renderer;
 class Http;
 
-struct SessionConfig {
+struct SkylarkSessionConfig {
 	String cookie;
 	String dir;
 	int    format;
 	SqlId  table, id_column, data_column, lastwrite_column;
 	int    expire;
 	
-	SessionConfig();
+	SkylarkSessionConfig();
 };
 
 struct AuthExc : Exc {
@@ -37,7 +37,7 @@ struct SkylarkConfig {
 	VectorMap<String, String> view_var;
 	String                    path;
 	String                    static_dir;
-	SessionConfig             session;
+	SkylarkSessionConfig      session;
 	int                       threads;
 	int                       port;
 	int                       prefork;

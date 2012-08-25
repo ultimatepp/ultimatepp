@@ -165,6 +165,9 @@ struct TopicInfo : Moveable<TopicInfo> {
 String          GetTopicPath(const TopicLink& link);
 String          GetTopicPath(const String& link);
 
+extern bool SyncRefsFinished;
+extern bool SyncRefsShowProgress;
+
 void            SyncRefs();
 void            SyncTopicFile(const RichText& text, const String& link, const String& path,
                               const String& title);

@@ -92,4 +92,6 @@ void StoreToWorkspace(T& x, const char *name)
 
 void SerializeWorkspaceConfigs(Stream& s);
 
+extern bool IdeExit;
+
 #endif

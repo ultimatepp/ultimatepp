@@ -189,7 +189,7 @@ byte CharsetByNameX(const String& s)
 	return s == "UTF-8-BOM" ? CHARSET_UTF8_BOM : CharsetByName(s);
 }
 
-void Package::Load(const char *path)
+bool Package::Load(const char *path)
 {
 	for(;;) {
 		Reset();
@@ -207,6 +207,8 @@ void Package::Load(const char *path)
 		description.Clear();
 		String f = LoadFile(path);
 		time = FileGetTime(path);
+		if(IsNull(time))
+			return false;
 		CParser p(f);
 		try {
 			while(!p.IsEof()) {
@@ -317,13 +319,13 @@ void Package::Load(const char *path)
 					p.ThrowError("invalid keyword");
 				p.Char(';');
 			}
-			return;
+			return true;
 		}
 		catch(CParser::Error error) {
 			if(sResolve(error, path, p.GetLine() - 1))
-				break;
+				return false;
 			Save(path);
-			return;
+			return true;
 		}
 	}
 }

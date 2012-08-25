@@ -26,7 +26,12 @@ progress.&]
 [s9;%% That way, many threads are allowed to invoke read methods 
 simultaneously while updates are performed and serialized correctly. 
 Of course, client code of such class still needs to serialize 
-access to instance, just like for any other object.&]
+access to instance, just like for any other object. Specifically 
+Invalidate method can be called only during serialized write 
+operation. LazyUpdate thus solves problem when many concurrent 
+readers are possible (but only single writer), lazy update of 
+mutable cache being performed during read operation.&]
+[s9;%% When the cache is in updated state, BeginUpdate is wait`-free.&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
@@ -40,7 +45,7 @@ nst]&]
 [s2;%% Queries whether LazyUpdate is in invalid state. In that case, 
 true is returned and any other thread calling BeginUpdate is 
 blocked until EndUpdate (and such blocked thread then returns 
-false, as cache is already updated).&]
+false, as cache is already updated). Wait`-free if cache is updated.&]
 [s3; &]
 [s4; &]
 [s5;:LazyUpdate`:`:EndUpdate`(`)const: [@(0.0.255) void]_[* EndUpdate]()_[@(0.0.255) const]&]
@@ -52,4 +57,4 @@ false, as cache is already updated).&]
 [s5;:LazyUpdate`:`:LazyUpdate`(`): [* LazyUpdate]()&]
 [s2;%% Sets LazyUpdate into invalid state.&]
 [s3; &]
-[s0; ]
+[s0; ]]

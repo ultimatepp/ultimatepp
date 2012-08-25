@@ -68,9 +68,9 @@ class Http : public Renderer {
 public:
 	Http&  operator()(const char *id, const Value& v)  { var.Add(id, v); return *this; }
 	Http&  operator()(const ValueMap& map)             { Renderer::operator()(map); return *this; }
-	Http&  operator()(const char *id, void (*handler)(Http&)) { Renderer::operator()(id, view); return *this; }
-	Http&  operator()(const char *id, void (*handler)(Http&), const Value& arg1) { Renderer::operator()(id, view, arg1); return *this; }
-	Http&  operator()(const char *id, void (*handler)(Http&), const Value& arg1, const Value& arg2) { Renderer::operator()(id, view, arg1, arg2); return *this; }
+	Http&  operator()(const char *id, void (*handler)(Http&)) { Renderer::operator()(id, handler); return *this; }
+	Http&  operator()(const char *id, void (*handler)(Http&), const Value& arg1) { Renderer::operator()(id, handler, arg1); return *this; }
+	Http&  operator()(const char *id, void (*handler)(Http&), const Value& arg1, const Value& arg2) { Renderer::operator()(id, handler, arg1, arg2); return *this; }
 
 	Http&  operator()(const Sql& sql)                  { Renderer::operator()(sql); return *this; }
 	Http&  operator()(Fields rec)                      { Renderer::operator()(rec); return *this; }
@@ -82,7 +82,7 @@ public:
 	String GetHeader(const char *s) const              { return hdr[s]; }
 	int    GetLength() const                           { return atoi(GetHeader("content-length")); }
 
-	String GetHandlerId() const                        { return viewid; }
+	String GetHandlerId() const                        { return handlerid; }
 
 	Value  operator[](const char *id) const            { return Renderer::operator[](id); }
 	int    Int(const char *id) const;
@@ -141,7 +141,7 @@ void RegisterHandler(void (*handler)(Http& http), const char *id, const char *pa
 
 Vector<String> *GetUrlViewLinkParts(const String& id);
 
-String MakeLink(void (*view)(Http&), const Vector<Value>& arg);
+String MakeLink(void (*handler)(Http&), const Vector<Value>& arg);
 
 enum {
 	SESSION_FORMAT_BINARY, SESSION_FORMAT_JSON, SESSION_FORMAT_XML

@@ -71,6 +71,7 @@ void Ide::RescanCode()
 	TimeStop t;
 	console.Clear();
 	RescanCodeBase();
+	SyncRefsShowProgress = true;
 	SyncRefs();
 	editor.SyncNavigator();
 //*/

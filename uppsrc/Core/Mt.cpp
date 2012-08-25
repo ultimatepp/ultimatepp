@@ -349,7 +349,7 @@ void Thread::Sleep(int msec)
 
 #ifndef CPU_SSE2
 
-static bool sSSE2 = false; //CPU_SSE2();
+static bool sSSE2 = CpuSSE2();
 
 void ReadMemoryBarrier()
 {
@@ -644,6 +644,7 @@ void StaticConditionVariable::Initialize()
 
 void LazyUpdate::Invalidate()
 {
+	WriteMemoryBarrier();
 	dirty = true;
 }
 

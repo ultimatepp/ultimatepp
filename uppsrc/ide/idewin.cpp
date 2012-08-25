@@ -900,7 +900,8 @@ void AppMain___()
 			ide.SaveLastMain();
 			SyncRefs();
 			ide.FileSelected();
-			ide.Run();
+			if(!IdeExit)
+				ide.Run();
 			ide.SaveConfigOnTime();
 			ide.SaveLastMain();
 		}

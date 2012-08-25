@@ -310,7 +310,7 @@ public:
 	File& operator[](int i)               { return file[i]; }
 	const File& operator[](int i) const   { return file[i]; }
 
-	void  Load(const char *path);
+	bool  Load(const char *path);
 	bool  Save(const char *file) const;
 
 	static void SetPackageResolver(bool (*Resolve)(const String& error, const String& path, int line));

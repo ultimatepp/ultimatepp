@@ -220,18 +220,19 @@ int RichTxt::ComputeLength() const
 
 int RichTxt::GetLength() const
 {
-	if(length < 0)
-		length = ComputeLength();
+	if(ReadWithBarrier(length) < 0)
+		BarrierWrite(length, ComputeLength());
 	return length;
 }
 
 int  RichTxt::GetTableCount() const
 {
-	if(tabcount < 0) {
-		tabcount = 0;
+	if(ReadWithBarrier(tabcount) < 0) {
+		int n = 0;
 		for(int i = 0; i < part.GetCount(); i++)
 			if(IsTable(i))
-				tabcount += GetTable(i).GetTableCount() + 1;
+				n += GetTable(i).GetTableCount() + 1;
+		BarrierWrite(tabcount, n);
 	}
 	return tabcount;
 }
