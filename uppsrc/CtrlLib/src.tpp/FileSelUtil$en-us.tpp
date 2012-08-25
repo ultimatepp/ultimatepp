@@ -31,6 +31,10 @@ onst]_[@(0.0.255) char]_`*[*@3 types])&]
 ypes] method of FileSel. If selections is canceled, returns empty 
 String.&]
 [s3; &]
+[s4;%- &]
+[s5;:SelectDirectory`(`):%- [_^String^ String]_[* SelectDirectory]()&]
+[s2; Selects directory.&]
+[s3;%- &]
 [s4; &]
 [s5;:SelectLoadFile`(const char`*`):%- [_^String^ String]_[* SelectLoadFile]([@(0.0.255) co
 nst]_[@(0.0.255) char]_`*[*@3 types])&]
@@ -52,7 +56,6 @@ ypes] method of FileSel. Returns true on success.&]
 [ {{10000@(113.42.0) [s0; [*@2 SelectFileIn class]]}}&]
 [s9;%- This class inherits FileIn. Its constructor invokes global 
 FileSel and opens selected file for reading:&]
-[s3;%- &]
 [s0;%- &]
 [s5;:SelectFileIn`:`:SelectFileIn`(const char`*`):%- [* SelectFileIn]([@(0.0.255) const]_
 [@(0.0.255) char]_`*[*@3 types])&]
@@ -67,7 +70,6 @@ state (can be tested using operator bool).&]
 [ {{10000@(113.42.0) [s0; [*@2 SelectFileOut class]]}}&]
 [s9;%- This class inherits FileOut. Its constructor invokes global 
 FileSel and opens selected file for writing:&]
-[s3;%- &]
 [s0;%- &]
 [s5;:SelectFileOut`:`:SelectFileOut`(const char`*`):%- [* SelectFileOut]([@(0.0.255) cons
 t]_[@(0.0.255) char]_`*[*@3 types])&]
@@ -76,4 +78,4 @@ ypes] method of FileSel. In case of any failure (selection is
 canceled, open fails), the resulting object is not in opened 
 state (can be tested using operator bool).&]
 [s3;%- &]
-[s0;%- ]
+[s0;%- ]]

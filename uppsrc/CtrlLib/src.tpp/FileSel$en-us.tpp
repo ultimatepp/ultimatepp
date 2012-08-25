@@ -525,4 +525,42 @@ to preview.&]
 file. This Display is by FileSel to show the preview, the Value 
 in Paint method is either the path of file or Null if there is 
 nothing to preview.&]
-[s0; ]
+[s3;%% &]
+[s4; &]
+[s5;:FileSel`:`:ClearPlaces`(`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* ClearPlaces]()&]
+[s2;%% Empties the list of special folders (platform specific, usually 
+folders like Video, Pictures, Downloads are in the default list). 
+The list, if not empty, is displayed in the left part of dialog.&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:AddPlace`(const String`&`,const Image`&`,const String`&`,const char`*`,int`): [_^FileSel^ F
+ileSel][@(0.0.255) `&]_[* AddPlace]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 p
+ath], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m], [@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 name], [@(0.0.255) const]_[@(0.0.255) char`*]_[*@3 group]_`=_NUL
+L, [@(0.0.255) int]_[*@3 row]_`=_`-[@3 1])&]
+[s5;:FileSel`:`:AddPlace`(const String`&`,const String`&`,const char`*`,int`): [_^FileSel^ F
+ileSel][@(0.0.255) `&]_[* AddPlace]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 p
+ath], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 name], 
+[@(0.0.255) const]_[@(0.0.255) char`*]_[*@3 group]_`=_NULL, [@(0.0.255) int]_[*@3 row]_`=_`-
+[@3 1])&]
+[s5;:FileSel`:`:AddPlace`(const String`&`,const char`*`,int`): [_^FileSel^ FileSel][@(0.0.255) `&
+]_[* AddPlace]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 path], 
+[@(0.0.255) const]_[@(0.0.255) char`*]_[*@3 group]_`=_NULL, [@(0.0.255) int]_[*@3 row]_`=_`-
+[@3 1])&]
+[s2;%% Adds a folder [%-*@3 path] to the list of special folders with 
+[%-*@3 name] and icon [%-*@3 m]. [%-*@3 group] and [%-*@3 row] must at 
+the moment be left to its default values (they are only used 
+internally). If [%-*@3 name] or icon [%-*@3 m] is not specified, 
+they are created based on [%-*@3 path].&]
+[s4; &]
+[s5;:FileSel`:`:AddPlaceSeparator`(`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* AddPlaceSepar
+ator]()&]
+[s2;%% Adds horizontal separator line to the list of special folders.&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:AddStandardPlaces`(`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* AddStandardPl
+aces]()&]
+[s2;%% Adds default special folders to the list. Called by FileSel 
+constructor.&]
+[s3; &]
+[s0; ]]

@@ -18,7 +18,7 @@ INI_STRING(session_lastwrite_column, "LASTWRITE", "Name of SQL timestamp column 
 INI_INT(session_expire, 3600 * 24 * 365, "Number of seconds after which Skylark session expires and can be deleted");
 };
 
-SessionConfig::SessionConfig()
+SkylarkSessionConfig::SkylarkSessionConfig()
 {
 	cookie = Ini::session_cookie;
 	dir = Ini::session_dir;
@@ -40,7 +40,7 @@ String Http::SessionFile(const String& sid)
 
 void Http::LoadSession()
 {
-	const SessionConfig& cfg = app.session;
+	const SkylarkSessionConfig& cfg = app.session;
 	session_var.Clear();
 	session_id = (*this)['@' + cfg.cookie];
 	if(IsNull(session_id))
@@ -76,7 +76,7 @@ StaticMutex expire_mutex;
 
 void Http::SaveSession()
 {
-	const SessionConfig& cfg = app.session;
+	const SkylarkSessionConfig& cfg = app.session;
 	SetCookie(cfg.cookie, session_id);
 	if(IsNull(session_id))
 		return;

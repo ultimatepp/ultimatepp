@@ -211,3 +211,4 @@ INITBLOCK {
 	UscSetReadMacro(ReadMacro);
 }
 
+bool IdeExit;

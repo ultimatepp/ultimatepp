@@ -133,6 +133,12 @@ void TopicCtrl::SyncDocTree()
 	}
 	
 	Vector<String> ss = Split((String)~search, ' ');
+	
+	if(ss.GetCount() && !SyncRefsFinished) {
+		SyncRefsShowProgress = true;
+		return;
+	}
+	
 	Vector<String> sdx;
 	for(int i = 0; i < ss.GetCount(); i++)
 		sdx.Add(ToUtf8(ToLower(FromUtf8(ss[i]))));

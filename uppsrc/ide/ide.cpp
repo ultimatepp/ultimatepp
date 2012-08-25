@@ -144,7 +144,6 @@ void Ide::SetMain(const String& package)
 	HideBottom();
 	if(IsNull(e))
 		e = GetFirstFile();
-	SyncRefs();
 	StartCodeBase();
 	EditFile(e);
 }
@@ -158,6 +157,7 @@ void Ide::Exit()
 	FlushFile();
 	console.Kill();
 	Break(IDOK);
+	IdeExit = true;
 }
 
 bool Ide::OpenMainPackage()

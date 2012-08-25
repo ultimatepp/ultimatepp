@@ -5,6 +5,30 @@ NAMESPACE_UPP
 #ifdef GUI_WIN
 void AvoidPaintingCheck__();
 
+Image ProcessSHIcon(const SHFILEINFO& info)
+{
+	AvoidPaintingCheck__();
+	Color c = White();
+	Image m[2];
+	for(int i = 0; i < 2; i++) {
+		ICONINFO iconinfo;
+		if(!info.hIcon || !GetIconInfo(info.hIcon, &iconinfo))
+			return Image();
+		BITMAP bm;
+		::GetObject((HGDIOBJ)iconinfo.hbmMask, sizeof(BITMAP), (LPVOID)&bm);
+		Size sz(bm.bmWidth, bm.bmHeight);
+		ImageDraw iw(sz);
+		iw.DrawRect(sz, c);
+		::DrawIconEx(iw.GetHandle(), 0, 0, info.hIcon, 0, 0, 0, NULL, DI_NORMAL|DI_COMPAT);
+		::DeleteObject(iconinfo.hbmColor);
+		::DeleteObject(iconinfo.hbmMask);
+		c = Black();
+		m[i] = iw;
+	}
+	::DestroyIcon(info.hIcon);
+	return RecreateAlpha(m[0], m[1]);
+}
+
 struct FileIconMaker : ImageMaker {
 	String file;
 	bool   exe;
@@ -16,31 +40,12 @@ struct FileIconMaker : ImageMaker {
 	}
 
 	virtual Image Make() const {
-		Color c = White();
-		Image m[2];
-		for(int i = 0; i < 2; i++) {
-			SHFILEINFO info;
-			AvoidPaintingCheck__();
-			SHGetFileInfo(ToSystemCharset(file), dir ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL,
-			              &info, sizeof(info),
-			              SHGFI_ICON|(large ? SHGFI_LARGEICON : SHGFI_SMALLICON)|(exe ? 0 : SHGFI_USEFILEATTRIBUTES));
-			HICON icon = info.hIcon;
-			ICONINFO iconinfo;
-			if(!icon || !GetIconInfo(icon, &iconinfo))
-				return Image();
-			BITMAP bm;
-			::GetObject((HGDIOBJ)iconinfo.hbmMask, sizeof(BITMAP), (LPVOID)&bm);
-			Size sz(bm.bmWidth, bm.bmHeight);
-			ImageDraw iw(sz);
-			iw.DrawRect(sz, c);
-			::DrawIconEx(iw.GetHandle(), 0, 0, info.hIcon, 0, 0, 0, NULL, DI_NORMAL|DI_COMPAT);
-			::DeleteObject(iconinfo.hbmColor);
-			::DeleteObject(iconinfo.hbmMask);
-			::DestroyIcon(info.hIcon);
-			c = Black();
-			m[i] = iw;
-		}
-		return RecreateAlpha(m[0], m[1]);
+		SHFILEINFO info;
+		AvoidPaintingCheck__();
+		SHGetFileInfo(ToSystemCharset(file), dir ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL,
+		              &info, sizeof(info),
+		              SHGFI_ICON|(large ? SHGFI_LARGEICON : SHGFI_SMALLICON)|(exe ? 0 : SHGFI_USEFILEATTRIBUTES));
+		return ProcessSHIcon(info);
 	}
 };
 
@@ -342,8 +347,6 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 				              : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111, false);
 			#endif
 			#ifdef GUI_WIN
-//				Image img = lazyicons ? fi.is_directory ? CtrlImg::Dir() : CtrlImg::File()
-//				                      : GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, fi.unix_mode & 0111, false);
 				img = GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, false, false, lazyicons);
 			#endif
 				if(IsNull(img))
@@ -371,41 +374,97 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 	return true;
 }
 
+static AuxMutex   sExeMutex;
+static char       sExePath[1025];
+static bool       sExeRunning;
+static SHFILEINFO sExeInfo;
+
+static auxthread_t auxthread__ sExeIconThread(void *)
+{
+	SHFILEINFO info;
+	char path[1025];
+	sExeMutex.Enter();
+	strncpy(path, sExePath, 1024);
+	sExeMutex.Leave();
+	AvoidPaintingCheck__();
+	SHGetFileInfo(sExePath, FILE_ATTRIBUTE_NORMAL, &info, sizeof(info), SHGFI_ICON|SHGFI_SMALLICON);
+	sExeMutex.Enter();
+	memcpy(&sExeInfo, &info, sizeof(info));
+	sExeRunning = false;
+	sExeMutex.Leave();
+	return 0;
+}
+
+void LazyFileIcons::Done(Image img)
+{
+	if(pos >= ndx.GetCount())
+		return;
+	int ii = ndx[pos];
+	if(ii < 0 || ii >= list->GetCount())
+		return;
+	const FileList::File& f = list->Get(ii);
+	WhenIcon(false, f.name, img);
+	if(f.hidden)
+		img = Contrast(img, 200);
+	list->SetIcon(ii, img);
+	pos++;
+}
+
+String LazyFileIcons::Path()
+{
+	if(pos >= ndx.GetCount())
+		return Null;
+	int ii = ndx[pos];
+	if(ii < 0 || ii >= list->GetCount())
+		return Null;
+	const FileList::File& f = list->Get(ii);
+	return ToSystemCharset(AppendFileName(dir, f.name));
+}
+
 void LazyFileIcons::Do()
 {
-	if(Ctrl::IsWaitingEvent()) {
-		Restart(5);
-		return;
-	}
-	int tm = GetTickCount();
-	while(pos < ndx.GetCount()) {
-		if((int)GetTickCount() - tm > ptime) {
-			ptime = 50;
-			Restart(0);
-			return;
+	int start = msecs();
+	for(;;) {
+		for(;;) {
+			SHFILEINFO info;
+			bool done = false;
+			String path = Path();
+			if(IsNull(path))
+				return;
+			sExeMutex.Enter();
+			bool running = sExeRunning;
+			if(!running) {
+				done = path == sExePath;
+				memcpy(&info, &sExeInfo, sizeof(info));
+				*sExePath = '\0';
+				memset(&sExeInfo, 0, sizeof(sExeInfo));
+			}
+			sExeMutex.Leave();
+			Image img = ProcessSHIcon(info);
+			if(done)
+				Done(img);
+			if(!running)
+				break;
+			Sleep(0);
+			if(msecs(start) > 10 || Ctrl::IsWaitingEvent()) {
+				Restart(0);
+				return;
+			}
 		}
-		int ii = ndx[pos];
-		if(ii < 0 || ii >= list->GetCount())
+
+		String path = Path();
+		if(IsNull(path))
 			return;
-		const FileList::File& f = list->Get(ii);
-		int t0 = GetTickCount();
-#ifdef PLATFORM_WIN32
-		Image img = GetFileIcon(AppendFileName(dir, f.name), f.isdir, f.unixexe, false, quick);
-#else
-		Image img = GetFileIcon(dir, f.name, f.isdir, f.unixexe, false);
-#endif
-		WhenIcon(f.isdir, f.name, img);
-		if(f.hidden)
-			img = Contrast(img, 200);
-		list->SetIcon(ii, img);
-		if(GetTickCount() - t0 > 700)
-			return;
-		pos++;
+		sExeMutex.Enter();
+		strncpy(sExePath, ~path, 1024);
+		sExeRunning = true;
+		StartAuxThread(sExeIconThread, NULL);
+		sExeMutex.Leave();
 	}
 }
 
 void LazyFileIcons::ReOrder()
-{
+{ // gather .exe files; sort based on length so that small .exe get resolved first
 	ndx.Clear();
 	Vector<int> len;
 	for(int i = 0; i < list->GetCount(); i++) {
@@ -425,9 +484,6 @@ void LazyFileIcons::Start(FileList& list_, const String& dir_, Callback3<bool, c
 	dir = dir_;
 	WhenIcon = WhenIcon_;
 	pos = 0;
-	quick = false;
-	ptime = 150;
-	start = GetTickCount();
 	ReOrder();
 }
 
@@ -634,7 +690,7 @@ void FileSel::SearchLoad()
 		else
 			SortByName(list);
 	Update();
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
 	lazyicons.Start(list, d, WhenIcon);
 #endif
 }
@@ -1657,6 +1713,7 @@ void FileSel::AddSystemPlaces(int row)
 				AddPlace(path, Format(t_("%c on client"), drive), "PLACES:SYSTEM", row++);
 		}
 #endif
+
 #ifdef PLATFORM_POSIX
 	root = filesystem->Find("/media/*");
 	for(int i = 0; i < root.GetCount(); i++) {

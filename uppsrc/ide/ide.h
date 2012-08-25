@@ -25,8 +25,6 @@
 #define KEYFILE      <ide/ide.key>
 #include             <CtrlLib/key_header.h>
 
-#include "UppDlg.h"
-
 #include "version.h"
 
 #include <plugin/astyle/astyle.h>
@@ -64,6 +62,8 @@ private:
 struct OpenFileButton  : FileSelButton { OpenFileButton(const char *title = NULL) : FileSelButton(MODE_OPEN, title) {} };
 struct SaveFileButton  : FileSelButton { SaveFileButton(const char *title = NULL) : FileSelButton(MODE_SAVE, title) {} };
 struct SelectDirButton : FileSelButton { SelectDirButton(const char *title = NULL) : FileSelButton(MODE_DIR,  title) {} };
+
+#include "UppDlg.h"
 
 void Puts(const char *s);
 

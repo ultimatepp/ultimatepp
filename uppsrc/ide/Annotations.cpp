@@ -111,7 +111,10 @@ void AssistEditor::SyncAnnotationPopup()
 		annotation_popup.Pick(result, GetRichTextStdScreenZoom());
 	}
 	else
-		annotation_popup.SetQTF("[A1 [@b* " + DeQtf(coderef) + "]&Not documented yet - click to document");
+		if(SyncRefsFinished)
+			annotation_popup.SetQTF("[A1 [@b* " + DeQtf(coderef) + "]&Not documented yet - click to document");
+		else
+			annotation_popup.SetQTF("[A1 [@b* " + DeQtf(coderef) + "]&Documentation not loaded yet");
 	Rect r = GetLineScreenRect(GetActiveAnnotationLine());
 	int h = annotation_popup.GetHeight(580);
 	h = min(h, 550);
@@ -148,6 +151,8 @@ void AssistEditor::NewTopic(String group, String coderef)
 
 void AssistEditor::EditAnnotation(bool fastedit)
 {
+	if(!SyncRefsFinished)
+		return;
 	String coderef;
 	Vector<String> tl;
 	if(!GetAnnotationRefs(tl, coderef))

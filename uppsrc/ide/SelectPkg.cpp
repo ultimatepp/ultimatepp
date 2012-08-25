@@ -1,224 +1,62 @@
 #include "ide.h"
 
-static VectorMap<String, PackageInfo> sPi;
+#ifdef _DEBUG
+#define LSLOW()     Sleep(20) // Simulate HD seeks to test package cache
+#else
+#define LSLOW()
+#endif
 
-void InvalidatePackageInfo(const String& name)
+SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool main)
+: selectvars(selectvars_)
 {
-	int q = sPi.Find(name);
-	if(q >= 0)
-		sPi[q].path.Clear();
+	CtrlLayoutOKCancel(*this, title);
+	Sizeable().Zoomable();
+	Icon(IdeImg::Package(), IdeImg::Package());
+	base.AutoHideSb();
+	base.NoGrid();
+	base.AddColumn("Assembly");
+	base.WhenCursor = THISBACK(OnBase);
+	base.WhenBar = THISBACK(ToolBase);
+	base.WhenLeftDouble = THISBACK(OnBaseEdit);
+	ok <<= clist.WhenLeftDouble = alist.WhenLeftDouble = THISBACK(OnOK);
+	cancel <<= WhenClose = THISBACK(OnCancel);
+	clist.Columns(4);
+	clist.WhenEnterItem = clist.WhenKillCursor = THISBACK(ListCursor);
+	alist.AddColumn("Package").Add(3);
+	alist.AddColumn("Nest");
+	alist.AddColumn("Description");
+	alist.AddIndex();
+	alist.ColumnWidths("108 79 317");
+	alist.WhenCursor = THISBACK(ListCursor);
+	alist.EvenRowColor();
+	alist.SetLineCy(max(16, Draw::GetStdFontCy()));
+	list.Add(clist.SizePos());
+	list.Add(alist.SizePos());
+	splitter.Horz(base, list);
+	splitter.SetPos(2000);
+	splitter.Zoom(selectvars ? -1 : 1);
+	newu <<= THISBACK(OnNew);
+	filter <<= THISBACK(OnFilter);
+	filter.Add(MAIN|FIRST, "Main packages of first nest");
+	filter.Add(MAIN, "All main packages");
+	filter.Add(FIRST, "All packages of first nest");
+	filter.Add(0, "All packages");
+	filter <<= main ? MAIN|FIRST : 0;
+	progress.Hide();
+	brief <<= THISBACK(SyncBrief);
+	search.NullText("Search (Ctrl+Q)", StdFont().Italic(), SColorDisabled());
+	search <<= THISBACK(SyncList);
+	search.SetFilter(CharFilterDefaultToUpperAscii);
+	SyncBrief();
+	description.NullText("Package description (Alt+Enter)", StdFont().Italic(), SColorDisabled());
+	description <<= THISBACK(ChangeDescription);
+	ActiveFocus(brief ? (Ctrl&)clist : (Ctrl&)alist);
+	clist.BackPaintHint();
+	alist.BackPaintHint();
+	base.BackPaintHint();
+	loadi = 0;
+	loading = false;
 }
-
-PackageInfo GetPackageInfo(const String& name)
-{
-	String path = PackagePath(name);
-	Time tm = FileGetTime(path);
-	int q = sPi.Find(name);
-	if(q >= 0) {
-		if(path == sPi[q].path && tm == sPi[q].stamp)
-			return sPi[q];
-	}
-	else {
-		q = sPi.GetCount();
-		sPi.Add(name);
-	}
-	PackageInfo& pi = sPi[q];
-	pi.path = path;
-	pi.stamp = tm;
-	Package p;
-	p.Load(path);
-	pi.ink = p.ink;
-	pi.italic = p.italic;
-	pi.bold = p.bold;
-	return pi;
-}
-
-class BaseSetupDlg : public WithBaseSetupLayout<TopWindow>
-{
-public:
-	typedef BaseSetupDlg CLASSNAME;
-	BaseSetupDlg();
-
-	bool Run(String& vars);
-
-private:
-	void OnUpp();
-	void OnBrowseUpp();
-
-private:
-	FrameRight<Button> browse_upp;
-	SelectDirButton    browse_out;
-	bool               new_base;
-};
-
-bool BaseSetup(String& vars) { return BaseSetupDlg().Run(vars); }
-
-BaseSetupDlg::BaseSetupDlg()
-: browse_out("Output & intermediate files")
-{
-	CtrlLayoutOKCancel(*this, "Assembly setup");
-	browse_upp.SetImage(CtrlImg::right_arrow());
-	browse_upp <<= THISBACK(OnBrowseUpp);
-	upp.AddFrame(browse_upp);
-	upp <<= THISBACK(OnUpp);
-	browse_out.Attach(output);
-}
-
-bool BaseSetupDlg::Run(String& vars)
-{
-	upp <<= GetVar("UPP");
-	output <<= GetVar("OUTPUT");
-	base <<= vars;
-	new_base = IsNull(vars);
-	while(TopWindow::Run() == IDOK)
-	{
-		String varname = ~base;
-		String varfile = VarFilePath(varname);
-		if(varname != vars)
-		{
-			if(FileExists(varfile) && !PromptOKCancel(NFormat("Overwrite existing assembly [* \1%s\1]?", varfile)))
-				continue;
-			if(!SaveVars(varname))
-			{
-				Exclamation(NFormat("Error writing assmbly [* \1%s\1].", VarFilePath(varname)));
-				continue;
-			}
-		}
-		SetVar("UPP", ~upp);
-		SetVar("OUTPUT", ~output);
-		Vector<String> paths = SplitDirs(upp.GetText().ToString());
-		for(int i = 0; i < paths.GetCount(); i++)
-			RealizeDirectory(paths[i]);
-		RealizeDirectory(output);
-		vars = varname;
-		return true;
-	}
-	return false;
-}
-
-void BaseSetupDlg::OnBrowseUpp()
-{
-	String s = ~upp;
-	int b, e;
-	if(upp.HasFocus())
-		upp.GetSelection(b, e);
-	else
-		e = s.GetLength();
-	b = e;
-	while(b > 0 && s[b - 1] != ';')
-		b--;
-	while(e < s.GetLength() && s[e] != ';')
-		e++;
-	FileSel fsel;
-	String pre = s.Left(b), post = s.Mid(e);
-	fsel.ActiveDir(s.Mid(b, e - b));
-	if(fsel.ExecuteSelectDir()) {
-		String newdir = ~fsel;
-		upp <<= pre + newdir + Nvl(post, ";");
-		upp.SetWantFocus();
-		OnUpp();
-	}
-}
-
-void BaseSetupDlg::OnUpp()
-{
-	if(new_base) {
-		String s = ~upp;
-		int f = s.Find(';');
-		if(f >= 0) s.Trim(f);
-		base <<= GetFileTitle(s);
-	}
-}
-
-inline bool PackageLess(String a, String b)
-{
-	int nc = CompareNoCase(a, b);
-	if(nc) return nc < 0;
-	return a < b;
-};
-
-struct SelectPackageDlg : public WithListLayout<TopWindow> {
-	virtual bool Key(dword key, int count);
-
-	typedef SelectPackageDlg CLASSNAME;
-
-	SelectPackageDlg(const char *title, bool selectvars, bool main);
-
-	String         Run(String startwith);
-
-	void           Serialize(Stream& s);
-
-	ArrayCtrl      base;
-	ParentCtrl     list;
-	FileList       clist;
-	ArrayCtrl      alist;
-
-	bool           selectvars;
-	bool           loading;
-	bool           finished;
-	String         selected;
-	int            update;
-
-	struct PkInfo {
-		String package;
-		String description;
-		String path;
-		String stxt;
-		String nest;
-		Image  icon;
-		bool   main;
-		Time   filetime;
-
-		bool operator<(const PkInfo& b) const { return PackageLess(package, b.package); }
-	};
-	
-	struct PkCache : Moveable<PkCache> {
-		String description;
-		bool   main;
-		Time   tm, itm;
-		Image  icon;
-		bool   exists;
-		
-		void Serialize(Stream& s)  { s % description % main % tm % itm % icon; }
-		PkCache()                  { exists = false; }
-	};
-
-	Array<PkInfo> packages;
-
-	String         GetCurrentName();
-	int            GetCurrentIndex();
-	void           SyncBrief();
-
-	void           ToolBase(Bar& bar);
-
-	void           OnBaseAdd();
-	void           OnBaseEdit();
-	void           OnBaseRemove();
-
-	void           OnOK();
-
-	void           OnNew();
-	void           OnBase();
-	void           OnFilter();
-
-	void           ListCursor();
-	void           ChangeDescription();
-
-	void           Load();
-	void           Load(String upp, String dir, int progress_pos, int progress_count,
-	                    String& case_fixed, VectorMap<String, PkCache>& cache);
-	void           SyncBase(String initvars);
-	void           SyncList();
-	static bool    Pless(const SelectPackageDlg::PkInfo& a, const SelectPackageDlg::PkInfo& b);
-	
-	Vector<String> GetSvnDirs();
-	void           SyncSvnDir(const String& dir);
-	void           SyncSvnDirs();
-	
-	enum {
-		MAIN_FIRST, MAIN_ALL, ALL_FIRST, ALL_ALL
-	};
-};
 
 bool SelectPackageDlg::Key(dword key, int count)
 {
@@ -263,13 +101,17 @@ void SelectPackageDlg::ChangeDescription()
 		PkInfo& p = packages[ii];
 		WithDescriptionLayout<TopWindow> dlg;
 		CtrlLayoutOKCancel(dlg, "Package description");
-		dlg.text <<= p.description;
+		String pp = PackagePath(p.package);
+		Package pkg;
+		if(!pkg.Load(pp)) {
+			Exclamation("Package does not exist.");
+			return;
+		}
+		dlg.text <<= pkg.description;
 		if(dlg.Run() != IDOK)
 			return;
-		Package pkg;
-		pkg.Load(p.path);
 		pkg.description = ~dlg.text;
-		pkg.Save(p.path);
+		pkg.Save(pp);
 		p.description = description <<= ~dlg.text;
 		if(alist.IsCursor())
 			alist.Set(2, ~dlg.text);
@@ -279,8 +121,12 @@ void SelectPackageDlg::ChangeDescription()
 void SelectPackageDlg::ListCursor()
 {
 	int c = GetCurrentIndex();
-	if(c >= 0 && c < packages.GetCount())
-		description <<= packages[c].description;
+	if(c >= 0 && c < packages.GetCount()) {
+		String pp = PackagePath(GetCurrentName());
+		Package pkg;
+		pkg.Load(pp);
+		description <<= pkg.description;
+	}
 	else
 		description <<= Null;
 }
@@ -292,67 +138,18 @@ void SelectPackageDlg::SyncBrief()
 	clist.Show(b);
 }
 
-SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool main)
-: selectvars(selectvars_)
-{
-	CtrlLayoutOKCancel(*this, title);
-	Sizeable().Zoomable();
-	Icon(IdeImg::Package(), IdeImg::Package());
-	base.AutoHideSb();
-	base.NoGrid();
-	base.AddColumn("Assembly");
-	base.WhenCursor = THISBACK(OnBase);
-	base.WhenBar = THISBACK(ToolBase);
-	base.WhenLeftDouble = THISBACK(OnBaseEdit);
-	ok <<= clist.WhenLeftDouble = alist.WhenLeftDouble = THISBACK(OnOK);
-	clist.Columns(4);
-	clist.WhenEnterItem = clist.WhenKillCursor = THISBACK(ListCursor);
-	alist.AddColumn("Package").Add(3);
-	alist.AddColumn("Nest");
-	alist.AddColumn("Description");
-	alist.AddIndex();
-	alist.ColumnWidths("108 79 317");
-	alist.WhenCursor = THISBACK(ListCursor);
-	alist.EvenRowColor();
-	alist.SetLineCy(max(16, Draw::GetStdFontCy()));
-	list.Add(clist.SizePos());
-	list.Add(alist.SizePos());
-	splitter.Horz(base, list);
-	splitter.SetPos(2000);
-	splitter.Zoom(selectvars ? -1 : 1);
-	newu <<= THISBACK(OnNew);
-	filter <<= THISBACK(OnFilter);
-	filter.Add(MAIN_FIRST, "Main packages of first nest");
-	filter.Add(MAIN_ALL, "All main packages");
-	filter.Add(ALL_FIRST, "All packages of first nest");
-	filter.Add(ALL_ALL, "All packages");
-	filter <<= main ? MAIN_FIRST : ALL_ALL;
-	progress.Hide();
-	brief <<= THISBACK(SyncBrief);
-	search.NullText("Search (Ctrl+Q)", StdFont().Italic(), SColorDisabled());
-	search <<= THISBACK(SyncList);
-	search.SetFilter(CharFilterDefaultToUpperAscii);
-	SyncBrief();
-	description.NullText("Package description (Alt+Enter)", StdFont().Italic(), SColorDisabled());
-	description <<= THISBACK(ChangeDescription);
-	ActiveFocus(brief ? (Ctrl&)clist : (Ctrl&)alist);
-	clist.BackPaintHint();
-	alist.BackPaintHint();
-	base.BackPaintHint();
-}
-
 String SelectPackageDlg::Run(String startwith)
 {
-	finished = false;
+	finished = canceled = false;
 	if(!IsSplashOpen())
 		Open();
 	if(selectvars)
 		SyncBase(GetVarsName());
-	else
-		OnBase();
 	String bkvar = GetVarsName();
 	if(finished)
 		return GetCurrentName();
+	if(canceled)
+		return Null;
 	alist.FindSetCursor(startwith);
 	clist.FindSetCursor(startwith);
 	ActiveFocus(alist.IsShown() ? (Ctrl&)alist : (Ctrl&)clist);
@@ -368,26 +165,40 @@ String SelectPackageDlg::Run(String startwith)
 
 void SelectPackageDlg::OnOK()
 {
+	Package pkg;
+	int f = ~filter;
+	String n = GetCurrentName();
+	if(n.GetCount() && pkg.Load(PackagePath(n)) &&
+	   (!(f & MAIN) || pkg.config.GetCount())) {
+		loading = false;
+		finished = true;
+		AcceptBreak(IDOK);
+	}
+}
+
+void SelectPackageDlg::OnCancel()
+{
 	loading = false;
-	finished = true;
-	AcceptBreak(IDOK);
+	canceled = true;
+	RejectBreak(IDCANCEL);
 }
 
 void SelectPackageDlg::OnFilter()
 {
-	OnBase();
+	SyncList();
 }
 
 void SelectPackageDlg::OnBase()
 {
-	Load();
+	if(!finished && !canceled)
+		Load();
 }
 
 void SelectPackageDlg::OnNew() {
 	TemplateDlg dlg;
 	LoadFromGlobal(dlg, "NewPackage");
 	int f = ~filter;
-	dlg.Load(GetUppDirs(), f == MAIN_FIRST || f == MAIN_ALL);
+	dlg.Load(GetUppDirs(), f & MAIN);
 	while(dlg.Run() == IDOK) {
 		String nest = ~dlg.nest;
 		String name = NativePath(String(~dlg.package));
@@ -485,166 +296,9 @@ void SelectPackageDlg::OnBaseRemove()
 	SyncBase(next);
 }
 
-void FixName(const String& dir, const String& name, String& case_fixed)
-{
-	if(IsFullPath(name))
-		return;
-	String rp = AppendFileName(dir, name);
-	static Vector<String> fn;
-	static String fndir;
-	if(fndir != dir) {
-		fn.Clear();
-		FindFile ff(AppendFileName(dir, "*.*"));
-		while(ff) {
-			fn.Add(ff.GetName());
-			ff.Next();
-		}
-	}
-	String h = ToUpper(name);
-	for(int i = 0; i < fn.GetCount(); i++)
-		if(ToUpper(fn[i]) == ToUpper(name) && fn[i] != name) {
-			MoveFile(AppendFileName(dir, fn[i]), rp + ".$$$");
-			MoveFile(rp + ".$$$", rp);
-			case_fixed << '&' << DeQtf(rp);
-		}
-}
-
 int DirSep(int c)
 {
 	return c == '\\' || c == '/' ? c : 0;
-}
-
-void SelectPackageDlg::Load(String upp, String dir, int progress_pos, int progress_count,
-                            String& case_fixed, VectorMap<String, PkCache>& cache)
-{
-	if(msecs(update) >= 200)
-	{
-		if(!IsSplashOpen() && !IsOpen())
-			Open();
-		progress.Set(progress_pos);
-		SyncList();
-		ProcessEvents();
-		if(!loading)
-			return;
-		update = msecs();
-	}
-
-	String d = AppendFileName(upp, dir);
-	String nest = GetFileName(upp);
-	Vector<String> folders;
-	for(FindFile ff(AppendFileName(d, "*.*")); ff; ff.Next())
-		if(ff.IsFolder())
-			folders.Add(ff.GetName());
-	Sort(folders, &PackageLess);
-	int f = ~filter;
-	for(int i = 0; i < folders.GetCount() && loading; i++)
-	{
-		String fo = folders[i];
-		String dd = AppendFileName(d, fo);
-		String nm = fo + ".upp";
-		String pkg = AppendFileName(dir, fo);
-		String desc;
-		String pf = AppendFileName(dd, nm);
-		String ipf = AppendFileName(dd, "icon16x16.png");
-		Time ft = FileGetTime(pf);
-		Time ift = FileGetTime(ipf);
-		if(!IsNull(ft)) {
-			int q = cache.Find(pf);
-			if(q < 0 || cache[q].tm != ft || cache[q].itm != ift) {
-				q = cache.FindAdd(pf);
-				Package p;
-				p.Load(pf);
-				cache[q].description = p.description;
-				cache[q].main = p.config.GetCount();
-				cache[q].tm = ft;
-				cache[q].itm = ift;
-				cache[q].icon = StreamRaster::LoadFileAny(ipf);
-			}
-			PkCache& p = cache[q];
-			p.exists = true;
-/*			FixName(dd, nm, case_fixed);
-			for(int i = 0; i < p.GetCount(); i++)
-				if(!p[i].separator)
-					FixName(dd, p[i], case_fixed);
-*/			if(f == ALL_ALL || f == ALL_FIRST || p.main) {
-				PkInfo& pk = packages.Add();
-				pk.package = pkg;
-				pk.description = p.description;
-				pk.path = pf;
-				pk.stxt = ToUpper(pk.package + pk.description + nest);
-				pk.nest = nest;
-				pk.main = p.main;
-				pk.icon = p.icon;
-			}
-		}
-		int ppos = progress_pos + i * progress_count / folders.GetCount();
-		int npos = progress_pos + (i + 1) * progress_count / folders.GetCount();
-		Load(upp, pkg, ppos, npos - ppos, case_fixed, cache);
-	}
-}
-
-void SelectPackageDlg::Load()
-{
-	update = msecs();
-	if(selectvars) {
-		list.Enable(base.IsCursor());
-		if(!base.IsCursor())
-			return;
-		LoadVars((String)base.Get(0));
-	}
-	Vector<String> upp = GetUppDirs();
-	packages.Clear();
-	description.Hide();
-	progress.Show();
-	loading = true;
-	String case_fixed;
-	int f = ~filter;
-	for(int i = 0; i < upp.GetCount() && (f == MAIN_ALL || f == ALL_ALL || i < 1) && loading; i++) {
-		if(!IsSplashOpen() && !IsOpen())
-			Open();
-		String cachefn = AppendFileName(ConfigFile("cfg"), MD5String(upp[i]) + ".pkg_cache");
-		VectorMap<String, PkCache> cache;
-		LoadFromFile(cache, cachefn, 4);
-		Load(upp[i], Null, 1000 * i, 1000, case_fixed, cache);
-		for(int i = 0; i < cache.GetCount(); i++)
-			if(!cache[i].exists)
-				cache.Unlink(i);
-		cache.Sweep();
-		StoreToFile(cache, cachefn, 4);
-	}
-	if(!IsNull(case_fixed))
-		PromptOK("Case was fixed in some of the files:[* " + case_fixed);
-	progress.Hide();
-	while(IsSplashOpen())
-		ProcessEvents();
-	if(!IsOpen())
-		Open();
-	description.Show();
-	if(loading) {
-		loading = false;
-		SyncList();
-	}
-}
-
-void SelectPackageDlg::SyncBase(String initvars)
-{
-	Vector<String> varlist;
-	for(FindFile ff(ConfigFile("*.var")); ff; ff.Next())
-		if(ff.IsFile())
-			varlist.Add(GetFileTitle(ff.GetName()));
-	Sort(varlist, &PackageLess);
-	base.Clear();
-	Append(base, varlist);
-	if(!base.FindSetCursor(initvars))
-		if(base.GetCount() > 0)
-			base.SetCursor(0);
-		else
-			OnBase();
-}
-
-bool SelectPackageDlg::Pless(const SelectPackageDlg::PkInfo& a, const SelectPackageDlg::PkInfo& b)
-{
-	return PackageLess(a.package, b.package);
 }
 
 struct PackageDisplay : Display {
@@ -670,33 +324,41 @@ struct PackageDisplay : Display {
 	PackageDisplay() { fnt = StdFont(); }
 };
 
-bool Match(const Vector<String>& l, const String& s)
-{
-	for(int i = 0; i < l.GetCount(); i++)
-		if(memcmp(l[i], s, s.GetLength()) == 0)
-			return true;
-	return false;
-}
-
 void SelectPackageDlg::SyncList()
 {
-	Sort(packages);
 	String n = GetCurrentName();
 	int asc = alist.GetScroll();
 	int csc = clist.GetSbPos();
+
+	packages.Clear();
+	String s = ~search;
+	int f = ~filter;
+	Index<String> added;
+	for(int i = 0; i < min((f & FIRST) ? 1 : data.GetCount(), data.GetCount()); i++) {
+		const ArrayMap<String, PkData>& nest = data[i];
+		for(int i = 0; i < nest.GetCount(); i++) {
+			const PkData& d = nest[i];
+			if(!nest.IsUnlinked(i) &&
+			   d.ispackage &&
+			   (!(f & MAIN) || d.main) &&
+			   ToUpper(d.package + d.description + d.nest).Find(s) >= 0 &&
+			   added.Find(d.package) < 0) {
+				packages.Add() = d;
+				added.Add(d.package);
+			}
+		}
+	}
+	Sort(packages);
 	alist.Clear();
 	clist.Clear();
 	ListCursor();
 	static PackageDisplay pd, bpd;
 	bpd.fnt.Bold();
-	String s = ~search;
 	for(int i = 0; i < packages.GetCount(); i++) {
 		const PkInfo& pkg = packages[i];
-		if(pkg.stxt.Find(s) >= 0) {
-			clist.Add(pkg.package, IsNull(pkg.icon) ? IdeImg::Package() : pkg.icon);
-			alist.Add(pkg.package, pkg.nest, pkg.description, pkg.icon);
-			alist.SetDisplay(alist.GetCount() - 1, 0, pkg.main ? bpd : pd);
-		}
+		clist.Add(pkg.package, IsNull(pkg.icon) ? IdeImg::Package() : pkg.icon);
+		alist.Add(pkg.package, pkg.nest, pkg.description, pkg.icon);
+		alist.SetDisplay(alist.GetCount() - 1, 0, pkg.main ? bpd : pd);
 	}
 	if(!alist.FindSetCursor(n))
 		alist.GoBegin();
@@ -704,6 +366,202 @@ void SelectPackageDlg::SyncList()
 		clist.SetCursor(0);
 	alist.ScrollTo(asc);
 	clist.SetSbPos(csc);
+}
+
+void SelectPackageDlg::ScanFolder(const String& path, ArrayMap<String, PkData>& nd,
+                                  const String& nest, Index<String>& dir_exists,
+                                  const String& prefix)
+{
+	for(FindFile ff(AppendFileName(path, "*.*")); ff; ff.Next())
+		if(ff.IsFolder() && !ff.IsHidden()) {
+			dir_exists.Add(ff.GetPath());
+			String p = ff.GetPath();
+			bool nw = nd.Find(p) < 0; // Do we have any info loaded about this package?
+			PkData& d = nd.GetAdd(ff.GetPath());
+			d.package = prefix + ff.GetName();
+			d.nest = nest;
+			if(nw) { // No cached info available about the folder
+				d.ispackage = IsLetter(*d.package) && d.package.Find('.') < 0; // First heuristic guess				
+				d.main = d.ispackage && prefix.GetCount() == 0; // Expect it is main
+			}
+		}
+}
+
+void SelectPackageDlg::Load()
+{
+	if(!base.IsCursor())
+		return;
+	if(loading) { // If we are called recursively from ProcessEvents, stop current loading and change loadi
+		loadi++;
+		loading = false;
+		return;
+	}
+	int current_loadi = -1;
+	while(current_loadi != loadi) {
+		current_loadi = loadi;
+		String assembly = (String)base.Get(0);
+		if(selectvars) {
+			list.Enable(base.IsCursor());
+			if(!base.IsCursor())
+				return;
+			LoadVars(assembly);
+		}
+		Vector<String> upp = GetUppDirs();
+		packages.Clear();
+		description.Hide();
+		progress.Show();
+		loading = true;
+		int f = ~filter;
+		data.Clear();
+		Index<String> dir_exists;
+		for(int i = 0; i < upp.GetCount(); i++) // Scan nest folders for subfolders (package candidates)
+			ScanFolder(upp[i], data.Add(), GetFileName(upp[i]), dir_exists, Null);
+		String cache_path = AppendFileName(ConfigFile("cfg"), assembly + ".pkg_cache");
+		LoadFromFile(data, cache_path);
+		int update = msecs();
+		for(int i = 0; i < data.GetCount() && loading; i++) { // Now investigate individual sub folders
+			ArrayMap<String, PkData>& nest = data[i];
+			for(int i = 0; i < nest.GetCount() && loading; i++) {
+				if(msecs(update) >= 100) { // each 100 ms update the list (and open select dialog after splash screen is closed)
+					if(!IsSplashOpen() && !IsOpen())
+						Open();
+					progress++;
+					SyncList();
+					update = msecs();
+				}
+				ProcessEvents(); // keep GUI running
+	
+				PkData& d = nest[i];
+				String path = nest.GetKey(i);
+				if(dir_exists.Find(path) < 0) // cached folder was deleted
+					nest.Unlink(i);
+				else {
+					String upp_path = AppendFileName(path, GetFileName(d.package) + ".upp");
+					LSLOW();
+					Time tm = FileGetTime(upp_path);
+					if(IsNull(tm)) // .upp file does not exist - not a package
+						d.ispackage = false;
+					else
+					if(tm != d.tm) { // cached info is outdated
+						Package p;
+						if(p.Load(upp_path)) {
+							d.description = p.description;
+							d.main = p.config.GetCount();
+							d.tm = tm;
+							d.ispackage = true;
+						}
+						else
+							d.ispackage = false;
+					}
+					else
+						d.ispackage = true;
+					
+					if(d.ispackage) {
+						String icon_path = AppendFileName(path, "icon16x16.png");
+						tm = FileGetTime(icon_path);
+						if(IsNull(tm)) // package icon does not exist
+							d.icon = Null;
+						else
+						if(tm != d.itm) { // chached package icon outdated
+							d.icon = StreamRaster::LoadFileAny(icon_path);
+							d.itm = tm;
+						}
+					}
+				}
+				ScanFolder(path, nest, d.nest, dir_exists, d.package + '/');
+			}
+			nest.Sweep();
+		}
+	
+		StoreToFile(data, cache_path);
+		progress.Hide();
+		while(IsSplashOpen())
+			ProcessEvents();
+		if(!IsOpen())
+			Open();
+		description.Show();
+		if(loading) {
+			loading = false;
+			SyncList();
+		}
+	}
+}
+
+/*
+void SelectPackageDlg::Load(const String& dir, const String& nest,
+                            String& case_fixed, VectorMap<String, PkCache>& cache)
+{
+	if(msecs(update) >= 200)
+	{
+		if(!IsSplashOpen() && !IsOpen())
+			Open();
+		progress++;
+		SyncList();
+		update = msecs();
+	}
+
+	ProcessEvents();
+	if(!loading)
+		return;
+
+	int f = ~filter;
+	for(FindFile ff(AppendFileName(dir, "*.*")); ff && loading; ff.Next())
+		if(ff.IsFolder()) {
+			String nm = ff.GetName() + ".upp";
+			String pkg = ff.GetPath();
+			String pf = AppendFileName(pkg, nm);
+			String ipf = AppendFileName(pkg, "icon16x16.png");
+			Time ft = FileGetTime(pf);
+			Time ift = FileGetTime(ipf);
+			if(!IsNull(ft)) {
+				int q = cache.Find(pkg);
+				if(q < 0 || cache[q].tm != ft || cache[q].itm != ift) {
+					q = cache.FindAdd(pkg);
+					Package p;
+					p.Load(pf);
+					cache[q].description = p.description;
+					cache[q].main = p.config.GetCount();
+					cache[q].tm = ft;
+					cache[q].itm = ift;
+					cache[q].icon = StreamRaster::LoadFileAny(ipf);
+				}
+				PkCache& p = cache[q];
+				p.exists = true;
+				DDUMP(p.main);
+				DDUMP(ff.GetName());
+				if(f == ALL_ALL || f == ALL_FIRST || p.main) {
+					PkInfo& pk = packages.Add();
+					pk.package = ff.GetName();
+					pk.description = p.description;
+					pk.stxt = ToUpper(pk.package + pk.description + nest);
+					pk.nest = nest;
+					pk.main = p.main;
+					pk.icon = p.icon;
+				}
+			}
+			Load(pkg, nest, case_fixed, cache);
+		}
+}
+*/
+void SelectPackageDlg::SyncBase(String initvars)
+{
+	Vector<String> varlist;
+	for(FindFile ff(ConfigFile("*.var")); ff; ff.Next())
+		if(ff.IsFile())
+			varlist.Add(GetFileTitle(ff.GetName()));
+	Sort(varlist, &PackageLess);
+	base.Clear();
+	Append(base, varlist);
+	if(!base.FindSetCursor(initvars))
+		if(base.GetCount() > 0)
+			base.SetCursor(0);
+		else
+			OnBase();
+}
+
+bool SelectPackageDlg::Pless(const SelectPackageDlg::PkInfo& a, const SelectPackageDlg::PkInfo& b)
+{
+	return PackageLess(a.package, b.package);
 }
 
 INITBLOCK

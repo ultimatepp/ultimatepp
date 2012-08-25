@@ -122,24 +122,28 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs = f
 void SortByName(FileList& list);
 void SortByExt(FileList& list);
 
+#ifdef GUI_WIN
+// Helper class for lazy (using aux thread) evaluation of .exe icons in Win32
 class LazyFileIcons {
 	TimeCallback tm;
 	String       dir;
 	FileList    *list;
 	int          pos;
-	bool         quick;
-	int          ptime;
-	int          start;
 	Vector<int>  ndx;
 	Callback3<bool, const String&, Image&> WhenIcon;
 
-	void Do();
-	void Restart(int delay)                 { tm.KillSet(delay, callback(this, &LazyFileIcons::Do)); }
+	AuxMutex     mutex;
+
+	void   Do();
+	void   Restart(int delay)                 { tm.KillSet(delay, callback(this, &LazyFileIcons::Do)); }
+	String Path();
+	void   Done(Image img);
 
 public:
 	void ReOrder();
 	void Start(FileList& list_, const String& dir_, Callback3<bool, const String&, Image&> WhenIcon_);
 };
+#endif
 
 String DirectoryUp(String& dir, bool basedir = false);
 
@@ -171,11 +175,14 @@ protected:
 	Array<NetNode> netnode;
 #endif
 
+#ifdef GUI_WIN
+	LazyFileIcons  lazyicons;
+#endif
+
 	DisplayCtrl    preview_display;
 	Ctrl          *preview;
 	FileList       list;
 	ArrayCtrl      places;
-	LazyFileIcons  lazyicons;
 
 	enum {
 		OPEN, SAVEAS, SELECTDIR

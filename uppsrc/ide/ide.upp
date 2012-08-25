@@ -29,6 +29,7 @@ file
 	ide.h,
 	version.h,
 	UppDlg.h,
+	BaseDlg.cpp,
 	SelectPkg.cpp,
 	UppWspc.cpp,
 	UppDlg.cpp,
