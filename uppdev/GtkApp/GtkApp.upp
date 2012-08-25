@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI SSE2",
+	"" = "GUI MT SSE2";
+
