@@ -374,6 +374,7 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 	return true;
 }
 
+#ifdef GUI_WIN
 static AuxMutex   sExeMutex;
 static char       sExePath[1025];
 static bool       sExeRunning;
@@ -486,6 +487,7 @@ void LazyFileIcons::Start(FileList& list_, const String& dir_, Callback3<bool, c
 	pos = 0;
 	ReOrder();
 }
+#endif
 
 class FileListSortName : public FileList::Order {
 public:
