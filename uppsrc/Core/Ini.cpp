@@ -171,9 +171,8 @@ int64 ReadIniInt(const char *id)
 int IniInt::Load() {
 	Mutex::Lock __(sMtx);
 	if(IniChanged__(version)) {
-		value = (int)ReadIniInt(id);
-		if(IsNull(value))
-			value = (*def)();
+		int64 v = ReadIniInt(id);
+		value = IsNull(v) ? (*def)() : (int)v;
 		IniSet__(version);
 	}
 	return value;
