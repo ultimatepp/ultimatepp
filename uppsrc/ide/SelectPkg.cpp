@@ -433,9 +433,8 @@ void SelectPackageDlg::Load()
 	
 				PkData& d = nest[i];
 				String path = nest.GetKey(i);
-				if(dir_exists.Find(path) < 0) // cached folder was deleted
-					nest.Unlink(i);
-				else {
+				FindFile ff(path);
+				if(ff && ff.IsFolder()) {
 					String upp_path = AppendFileName(path, GetFileName(d.package) + ".upp");
 					LSLOW();
 					Time tm = FileGetTime(upp_path);
@@ -467,6 +466,8 @@ void SelectPackageDlg::Load()
 						}
 					}
 				}
+				else 
+					nest.Unlink(i); // cached folder was deleted
 				ScanFolder(path, nest, d.nest, dir_exists, d.package + '/');
 			}
 			nest.Sweep();
