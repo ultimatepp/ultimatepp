@@ -239,6 +239,23 @@ Value Compiler::ExeField::Eval(ExeContext& x) const
 	return value->Eval(x)[id];	
 }
 
+Value Compiler::ExeBracket::Eval(ExeContext& x) const
+{
+	Value m = value->Eval(x);
+	Value q = index->Eval(x);
+	if(IsNumber(q) && IsValueArray(m)) {
+		ValueArray va = m;
+		int i = q;
+		if(i >= 0 && i < va.GetCount())
+			return va[i];
+	}
+	if(IsValueMap(m)) {
+		ValueMap map = m;
+		return map[q];
+	}
+	return Value();	
+}
+
 Value Compiler::ExeVarField::Eval(ExeContext& x) const
 {
 	return x.stack[var_index][id];

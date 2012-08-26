@@ -70,48 +70,47 @@ int CharFilterIsCrLf(int c)
 	return c == '\r' || c == '\n' ? c : 0;
 }
 
+String ReplaceVars(const String& src, const VectorMap<String, String>& def, int chr, Index<String>& expanded)
+{
+	String r;
+	const char *b = src;
+	const char *s = b;
+	for(;;) {
+		s = strchr(s, chr);
+		if(s) {
+			r.Cat(b, s);
+			if(s[1] == chr) {
+				r.Cat(chr);
+				b = s = s + 2;
+			}
+			else {
+				b = s;
+				CParser p(++s);
+				if(p.IsId()) {
+					String id = p.ReadId();
+					int q = def.Find(id);
+					if(q >= 0 && expanded.Find(id) < 0) {
+						int ii = expanded.GetCount();
+						expanded.Add(id); // prevent the same macro to be expanded again
+						if(expanded.GetCount() < 20) // maximum number of nested expansion - recursion limit
+							r.Cat(ReplaceVars(def[q], def, chr, expanded));
+						b = s = p.GetSpacePtr();
+						expanded.Trim(ii);
+					}
+				}
+			}
+		}
+		else {
+			r.Cat(b, src.End());
+			return r;
+		}
+	}
+}
+
 String ReplaceVars(const String& src, const VectorMap<String, String>& def, int chr)
 {
 	Index<String> expanded;
-	String r = src;
-	bool again;
-	do {
-		again = false;
-		String rr;
-		const char *s = ~r;
-		for(;;) {
-			const char *q = strchr(s, chr);
-			if(q) {
-				rr.Cat(s, q);
-				CParser p(q + 1);
-				if(p.Char(chr) || !p.IsId())
-					rr << (char)20;
-				else {
-					String id = p.ReadId();
-					if(expanded.Find(id) >= 0)
-						rr.Cat(q, p.GetSpacePtr());
-					else {
-						rr.Cat(def.Get(id, Null));
-						expanded.Add(id);
-						again = true;
-					}
-				}
-				s = p.GetSpacePtr();
-			}
-			else {
-				rr.Cat(s, r.End());
-				break;
-			}
-		}
-		r = rr;
-	}
-	while(again);
-	return r;
-}
-
-int CharFilter20toHash(int c)
-{
-	return c == 20 ? '#' : c;
+	return ReplaceVars(src, def, chr, expanded);
 }
 
 String GetPreprocessedTemplate(const String& name, int lang)
@@ -124,7 +123,7 @@ String GetPreprocessedTemplate(const String& name, int lang)
 		file = file.Mid(0, q);
 	}
 	VectorMap<String, String> def = GetTemplateDefs(file, lang);
-	String r = Filter(ReplaceVars(def.Get(id, Null), def, '#'), CharFilter20toHash);
+	String r = ReplaceVars(def.Get(id, Null), def, '#');
 	return Join(Split(r, CharFilterIsCrLf), "\r\n");
 }
 
