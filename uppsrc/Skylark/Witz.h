@@ -108,6 +108,13 @@ struct Compiler {
 		virtual Value Eval(ExeContext& x) const;
 	};
 	
+	struct ExeBracket : Exe {
+		One<Exe> value;
+		One<Exe> index;
+
+		virtual Value Eval(ExeContext& x) const;
+	};
+	
 	struct ExeVarField : Exe {
 		int    var_index;
 		String id;
@@ -185,6 +192,9 @@ struct Compiler {
 	int           count_node;
 
 	int ForVar(String id, int i);
+
+	void     DoExeField(One<Exe>& result);
+	void     DoIndicies(One<Exe>& result);
 
 	One<Exe> Prim();
 	One<Exe> Mul();

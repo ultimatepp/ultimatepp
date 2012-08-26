@@ -48,10 +48,12 @@ the template at the end of preprocessing process.&]
 [s0; &]
 [s0; Occurence of # followed by [/ id] that is neither `"include`" 
 or `"define`" inserts a subblock defined by [@5 #define] [/ id]. 
-Thus process is recursive `- subblock keep replacing until there 
-are no more #[/ id] in the block. If [/ id ]is encountered for which 
-there is corresponding [@5 #define], it is replaced by empty text. 
-If there are more definition for single id, the last one is used.&]
+This process is recursive `- subblock keep replacing until there 
+are no more #[/ id] in the block, however any [/ id] can be replaced 
+only once (to avoid infinite recursion). If [/ id ]is encountered 
+for which there is no corresponding [@5 #define], original text 
+is left unchanged. If there are more definition for single id, 
+the last one is used. ## is always replaced with single #.&]
 [s0; &]
 [s0; Example:&]
 [s0; &]

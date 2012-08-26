@@ -41,6 +41,34 @@ int CountLinkArgs(const Vector<String>& part)
 	return args;
 }
 
+void Compiler::DoExeField(One<Exe>& result)
+{
+	One<Exe> r;
+	ExeField& f = r.Create<ExeField>();
+	f.value = result;
+	f.id = p.ReadId();
+	result = r;
+}
+
+void Compiler::DoIndicies(One<Exe>& result)
+{
+	for(;;) {
+		if(p.Char('.'))
+			DoExeField(result);
+		else
+		if(p.Char('[')) {
+			One<Exe> r;
+			ExeBracket& f = r.Create<ExeBracket>();
+			f.value = result;
+			f.index = Exp();
+			result = r;
+			p.PassChar(']');
+		}
+		else
+			break;
+	}	
+}
+
 One<Exe> Compiler::Prim()
 {
 	One<Exe> result;
@@ -88,13 +116,7 @@ One<Exe> Compiler::Prim()
 					while(p.Char(','));
 					p.PassChar(')');
 				}
-				while(p.Char('.')) {
-					One<Exe> r;
-					ExeField& f = r.Create<ExeField>();
-					f.value = result;
-					f.id = p.ReadId();
-					result = r;
-				}
+				DoIndicies(result);
 			}
 			return result;
 		}
@@ -128,18 +150,14 @@ One<Exe> Compiler::Prim()
 				result.Create<ExeKey>().var_index = ForVar(id, n);
 			else {
 				result.Create<ExeVar>().var_index = n;
-				do {
-					One<Exe> r;
-					ExeField& f = r.Create<ExeField>();
-					f.value = result;
-					f.id = p.ReadId();
-					result = r;
-				}
-				while(p.Char('.'));
+				DoExeField(result);
+				DoIndicies(result);
 			}
 		}
-		else
+		else {
 			result.Create<ExeVar>().var_index = n;
+			DoIndicies(result);
+		}
 	}
 	else
 	if(p.Char('{')) {
