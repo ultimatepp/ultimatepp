@@ -381,7 +381,7 @@ void SelectPackageDlg::ScanFolder(const String& path, ArrayMap<String, PkData>& 
 			d.package = prefix + ff.GetName();
 			d.nest = nest;
 			if(nw) { // No cached info available about the folder
-				d.ispackage = IsLetter(*d.package) && d.package.Find('.') < 0; // First heuristic guess				
+				d.ispackage = IsLetter(*d.package) && d.package.Find('.') < 0; // First heuristic guess
 				d.main = d.ispackage && prefix.GetCount() == 0; // Expect it is main
 			}
 		}
@@ -411,13 +411,13 @@ void SelectPackageDlg::Load()
 		description.Hide();
 		progress.Show();
 		loading = true;
-		int f = ~filter;
 		data.Clear();
 		Index<String> dir_exists;
-		for(int i = 0; i < upp.GetCount(); i++) // Scan nest folders for subfolders (package candidates)
-			ScanFolder(upp[i], data.Add(), GetFileName(upp[i]), dir_exists, Null);
 		String cache_path = AppendFileName(ConfigFile("cfg"), assembly + ".pkg_cache");
 		LoadFromFile(data, cache_path);
+		data.SetCount(upp.GetCount());
+		for(int i = 0; i < upp.GetCount(); i++) // Scan nest folders for subfolders (package candidates)
+			ScanFolder(upp[i], data[i], GetFileName(upp[i]), dir_exists, Null);
 		int update = msecs();
 		for(int i = 0; i < data.GetCount() && loading; i++) { // Now investigate individual sub folders
 			ArrayMap<String, PkData>& nest = data[i];
@@ -455,7 +455,6 @@ void SelectPackageDlg::Load()
 					}
 					else
 						d.ispackage = true;
-					
 					if(d.ispackage) {
 						String icon_path = AppendFileName(path, "icon16x16.png");
 						tm = FileGetTime(icon_path);
@@ -487,62 +486,6 @@ void SelectPackageDlg::Load()
 	}
 }
 
-/*
-void SelectPackageDlg::Load(const String& dir, const String& nest,
-                            String& case_fixed, VectorMap<String, PkCache>& cache)
-{
-	if(msecs(update) >= 200)
-	{
-		if(!IsSplashOpen() && !IsOpen())
-			Open();
-		progress++;
-		SyncList();
-		update = msecs();
-	}
-
-	ProcessEvents();
-	if(!loading)
-		return;
-
-	int f = ~filter;
-	for(FindFile ff(AppendFileName(dir, "*.*")); ff && loading; ff.Next())
-		if(ff.IsFolder()) {
-			String nm = ff.GetName() + ".upp";
-			String pkg = ff.GetPath();
-			String pf = AppendFileName(pkg, nm);
-			String ipf = AppendFileName(pkg, "icon16x16.png");
-			Time ft = FileGetTime(pf);
-			Time ift = FileGetTime(ipf);
-			if(!IsNull(ft)) {
-				int q = cache.Find(pkg);
-				if(q < 0 || cache[q].tm != ft || cache[q].itm != ift) {
-					q = cache.FindAdd(pkg);
-					Package p;
-					p.Load(pf);
-					cache[q].description = p.description;
-					cache[q].main = p.config.GetCount();
-					cache[q].tm = ft;
-					cache[q].itm = ift;
-					cache[q].icon = StreamRaster::LoadFileAny(ipf);
-				}
-				PkCache& p = cache[q];
-				p.exists = true;
-				DDUMP(p.main);
-				DDUMP(ff.GetName());
-				if(f == ALL_ALL || f == ALL_FIRST || p.main) {
-					PkInfo& pk = packages.Add();
-					pk.package = ff.GetName();
-					pk.description = p.description;
-					pk.stxt = ToUpper(pk.package + pk.description + nest);
-					pk.nest = nest;
-					pk.main = p.main;
-					pk.icon = p.icon;
-				}
-			}
-			Load(pkg, nest, case_fixed, cache);
-		}
-}
-*/
 void SelectPackageDlg::SyncBase(String initvars)
 {
 	Vector<String> varlist;
