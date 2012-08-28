@@ -1,7 +1,7 @@
 #include "ide.h"
 
 #ifdef _DEBUG
-#define LSLOW()     Sleep(20) // Simulate HD seeks to test package cache
+#define LSLOW()    // Sleep(20) // Simulate HD seeks to test package cache
 #else
 #define LSLOW()
 #endif
@@ -145,6 +145,8 @@ String SelectPackageDlg::Run(String startwith)
 		Open();
 	if(selectvars)
 		SyncBase(GetVarsName());
+	else
+		OnBase();
 	String bkvar = GetVarsName();
 	if(finished)
 		return GetCurrentName();
@@ -389,7 +391,7 @@ void SelectPackageDlg::ScanFolder(const String& path, ArrayMap<String, PkData>& 
 
 void SelectPackageDlg::Load()
 {
-	if(!base.IsCursor())
+	if(selectvars && !base.IsCursor())
 		return;
 	if(loading) { // If we are called recursively from ProcessEvents, stop current loading and change loadi
 		loadi++;
@@ -399,8 +401,8 @@ void SelectPackageDlg::Load()
 	int current_loadi = -1;
 	while(current_loadi != loadi) {
 		current_loadi = loadi;
-		String assembly = (String)base.Get(0);
 		if(selectvars) {
+			String assembly = (String)base.Get(0);
 			list.Enable(base.IsCursor());
 			if(!base.IsCursor())
 				return;
@@ -413,7 +415,7 @@ void SelectPackageDlg::Load()
 		loading = true;
 		data.Clear();
 		Index<String> dir_exists;
-		String cache_path = AppendFileName(ConfigFile("cfg"), assembly + ".pkg_cache");
+		String cache_path = AppendFileName(ConfigFile("cfg"), GetVarsName() + ".pkg_cache");
 		LoadFromFile(data, cache_path);
 		data.SetCount(upp.GetCount());
 		for(int i = 0; i < upp.GetCount(); i++) // Scan nest folders for subfolders (package candidates)
