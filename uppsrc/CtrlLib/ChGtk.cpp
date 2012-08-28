@@ -574,6 +574,9 @@ void ChHostSkin()
 			sw = GtkInt("selected_shadow_type");
 		GtkCh(s.item, sw, GTK_STATE_PRELIGHT);
 		s.itemtext = ChGtkColor(2, menu_item);
+		s.menutext = SColorMenuText();
+		if(Diff(c, s.menutext) < 200) // menutext color too close to background color, fix it
+			s.menutext = IsDark(c) ? White() : Black();
 
 		ChGtkNew(top_item, "menuitem", GTK_BOX);
 		if(gtk_major_version > 2 || (gtk_major_version == 2 && gtk_minor_version >= 1))

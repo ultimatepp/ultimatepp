@@ -266,7 +266,7 @@ protected:
 public:
 	struct Style : ChStyle<Style> {
 		Value item, topitem[3], topbar;
-		Color itemtext, topitemtext[3];
+		Color menutext, itemtext, topitemtext[3];
 		SeparatorCtrl::Style breaksep;
 		Value look, arealook;
 		Value popupframe, popupbody, popupiconbar;
