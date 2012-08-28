@@ -443,6 +443,7 @@ class SqlMassInsert {
 	Vector<Row>     cache;
 	int             pos;
 	bool            error;
+	bool            use_transaction;
 	
 	void            NewRow();
 
@@ -451,10 +452,12 @@ public:
 	SqlMassInsert& EndRow(SqlBool remove = SqlBool());
 	void           Flush();
 	bool           IsError() const                                 { return error; }
+	SqlMassInsert& UseTransaction(bool b = true)                   { use_transaction = b; return *this; }
+	SqlMassInsert& NoUseTransaction()                              { return UseTransaction(false); }
 	
-	SqlMassInsert(Sql& sql, SqlId table) : sql(sql), table(table)  { pos = 0; error = false; }
+	SqlMassInsert(Sql& sql, SqlId table) : sql(sql), table(table)  { pos = 0; error = false; use_transaction = true; }
 #ifndef NOAPPSQL
-	SqlMassInsert(SqlId table) : sql(SQL), table(table)            { pos = 0; error = false; }
+	SqlMassInsert(SqlId table) : sql(SQL), table(table)            { pos = 0; error = false; use_transaction = true; }
 #endif
 	~SqlMassInsert();
 };
