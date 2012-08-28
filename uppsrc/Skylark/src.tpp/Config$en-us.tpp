@@ -52,7 +52,7 @@ which defaults to `"ID`".&]
 [s5;:SkylarkSessionConfig`:`:lastwrite`_column: [_^SqlId^ SqlId]_[* lastwrite`_column]&]
 [s2;%% SQL table column used to store last`-write time of session. 
 Column must be able to store Time type. Default value is loaded 
-from `"session`_last`_column`" .ini parameter, which defaults 
+from `"session`_lastwrite`_column`" .ini parameter, which defaults 
 to `"LASTWRITE`".&]
 [s3; &]
 [s4; &]
