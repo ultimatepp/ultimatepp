@@ -21,7 +21,7 @@ template <class O, class M, class T>
 struct CallbackMethodActionArg : public CallbackAction {
 	O  *object;
 	M   method;
-	T         arg;
+	T   arg;
 
 	void    Execute() { (object->*method)(arg); }
 

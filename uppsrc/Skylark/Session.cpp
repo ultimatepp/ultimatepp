@@ -29,6 +29,7 @@ SkylarkSessionConfig::SkylarkSessionConfig()
 	data_column = (String)Ini::session_data_column;
 	lastwrite_column = (String)Ini::session_lastwrite_column;
 	expire = Ini::session_expire;
+	table = (String)Ini::session_table;
 }
 
 String Http::SessionFile(const String& sid)
