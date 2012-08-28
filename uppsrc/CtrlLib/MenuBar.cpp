@@ -27,7 +27,7 @@ CH_STYLE(MenuBar, Style, StyleDefault)
 {
 	topitem[0] = Null;
 	topitem[1] = topitem[2] = item = SColorHighlight();
-	topitemtext[0] = SColorMenuText();
+	topitemtext[0] = menutext = SColorMenuText();
 	topitemtext[1] = topitemtext[2] = itemtext = SColorHighlightText();
 	topbar = SColorFace();
 	maxiconsize = Size(16, 16);

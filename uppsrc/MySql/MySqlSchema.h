@@ -50,6 +50,11 @@
 #define UNIQUE                     ATTRIBUTE("alter table @t add unique UNQ_@x (@c);", \
 	                                         "alter table @t drop index UNQ_@x;")
 
+#define DUAL_UNIQUE(k1, k2)        ATTRIBUTE("alter table @t add unique index DQ_@t$" #k1 #k2 " (" #k1 ", " #k2 ");",\
+                                             "alter table @t drop index DQ_@t$" #k1 #k2 ";")
+
+#define UNIQUE_LIST(u, l)          ATTRIBUTE("alter table @t add unique index UQ_@t$" #u " (" l ");",\
+                                             "alter table @t drop index UQ_@t$" #u ";")
 #ifndef REFERENCES
 #define REFERENCES(x)              ATTRIBUTE("alter table @t add (constraint FK_@x foreign key "\
                                              "(@c) references " #x ");",\
@@ -101,8 +106,11 @@
 #undef INDEX
 
 #undef UNIQUE
+#undef DUAL_UNIQUE
+#undef UNIQUE_LIST
 
 #undef REFERENCES
 
 #undef TIMESTAMP
 #undef COMMENT
+#undef INNODB

@@ -317,11 +317,11 @@ void MenuItem::Paint(Draw& w)
 		w.DrawImage(x, iy, DisabledImage(li));
 	x = max(isz.cx, leftgap) + textgap;
 	isz = GetTextSize(text, StdFont());
-	DrawMenuText(w, x, (sz.cy - isz.cy) / 2, txt, font, isenabled, hl, SColorMenuText,
+	DrawMenuText(w, x, (sz.cy - isz.cy) / 2, txt, font, isenabled, hl, style->menutext,
 	             style->itemtext);
 	isz = ricon.GetSize();
 	if(isenabled)
-		w.DrawImage(sz.cx - isz.cx, (sz.cy - isz.cy) / 2, ricon, hl ? style->itemtext : SColorMenuText());
+		w.DrawImage(sz.cx - isz.cx, (sz.cy - isz.cy) / 2, ricon, hl ? style->itemtext : style->menutext);
 	else
 		w.DrawImage(sz.cx - isz.cx, (sz.cy - isz.cy) / 2, DisabledImage(ricon));
 	x = sz.cx - max(isz.cx, 16) - 1;
