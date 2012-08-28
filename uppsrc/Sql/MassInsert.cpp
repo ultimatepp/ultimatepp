@@ -41,7 +41,8 @@ void SqlMassInsert::Flush()
 	const dword DONE = 0xffffffff;
 	if(cache.GetCount() == 0)
 		return;
-	sql.GetSession().Begin();
+	if(use_transaction)
+		sql.GetSession().Begin();
 	SqlBool remove;
 	bool doremove = false;
 	for(int ii = 0; ii < cache.GetCount(); ii++) {
@@ -94,10 +95,12 @@ void SqlMassInsert::Flush()
 	}
 	if(sql.WasError()) {
 		error = true;
-		sql.GetSession().Rollback();
+		if(use_transaction)
+			sql.GetSession().Rollback();
 	}
 	else
-		sql.GetSession().Commit();
+		if(use_transaction)
+			sql.GetSession().Commit();
 	cache.Clear();
 	column.Clear();
 	pos = 0;
