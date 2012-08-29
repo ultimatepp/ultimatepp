@@ -19,7 +19,7 @@ class Json {
 	Json& CatRaw(const char *key, const String& val) {
 		if(text.GetCount())
 			text << ',';
-		text << '\"' << key << "\":" << val;
+		text << AsJSON(key) << ":" << val;
 		return *this;		
 	}
 
