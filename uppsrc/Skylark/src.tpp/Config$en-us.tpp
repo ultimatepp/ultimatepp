@@ -46,9 +46,10 @@ to `"DATA`".&]
 [s3; &]
 [s4; &]
 [s5;:SkylarkSessionConfig`:`:id`_column: [_^SqlId^ SqlId]_[* id`_column]&]
-[s2;%% SQL table column used as session ID primary numeric key. Default 
-value is loaded from `"session`_id`_column`" .ini parameter, 
-which defaults to `"ID`".&]
+[s2;%% SQL table column used as session ID primary key, which is 
+UUID based String. Columns should be able to store at least 32 
+characters. Default value is loaded from `"session`_id`_column`" 
+.ini parameter, which defaults to `"ID`".&]
 [s3; &]
 [s4; &]
 [s5;:SkylarkSessionConfig`:`:lastwrite`_column: [_^SqlId^ SqlId]_[* lastwrite`_column]&]

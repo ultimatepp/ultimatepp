@@ -102,11 +102,12 @@ void Http::SaveSession()
 				(cfg.data_column, d)
 				(cfg.lastwrite_column, tm)
 		      .Where(cfg.id_column == session_id);
-		if(SQL.GetRowsProcessed() == 0)
-			SQL * Insert(cfg.table)
-			        (cfg.id_column, session_id)
-					(cfg.data_column, d)
-					(cfg.lastwrite_column, tm);
+		if(SQL.GetRowsProcessed() == 0 // MySql returns zero even if row exist when columns are equal, therefore:
+		   && IsNull(SQL % Select(cfg.id_column).From(cfg.table).Where(cfg.id_column == session_id)))
+				SQL * Insert(cfg.table)
+				        (cfg.id_column, session_id)
+						(cfg.data_column, d)
+						(cfg.lastwrite_column, tm);
 	}
 	SKYLARKLOG("Stored session: " << session_id);
 	LDUMPM(session_var);
