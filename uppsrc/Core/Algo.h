@@ -801,7 +801,7 @@ void Sort(I l, I h, const Less& less)
 			ForwardSort(l, h, less);
 			return;
 		}
-		int pass = 5;
+		int pass = 4;
 		for(;;) {
 			I middle = l + (count >> 1);        // get the middle element
 			OrderIter2__(l, middle, less);      // sort l, middle, h-1 to find median of 3
@@ -812,14 +812,17 @@ void Sort(I l, I h, const Less& less)
 			for(I i = l + 2; i != h - 1; ++i)   // do partitioning; already l <= pivot <= h - 1
 				if(less(*i, *(l + 1)))
 					IterSwap(++ii, i);
-			if(pass > 6 || min(ii - l, h - ii) > (count >> pass)) { // partition sizes ok or we done max attempts
-				IterSwap(ii, l + 1);            // put pivot back in between partitions
-				if(ii - l < h - ii - 1) {       // recurse on smaller partition, tail on larger
+			IterSwap(ii, l + 1);                // put pivot back in between partitions
+			I iih = ii;
+			while(iih + 1 != h && !less(*ii, *(iih + 1))) // Find middle range of elements equal to pivot
+				++iih;
+			if(pass > 5 || min(ii - l, h - iih) > (max(ii - l, h - iih) >> pass)) { // partition sizes ok or we have done max attempts
+				if(ii - l < h - iih - 1) {       // recurse on smaller partition, tail on larger
 					Sort(l, ii, less); 
-					l = ii + 1;
+					l = iih + 1;
 				}
 				else {
-					Sort(ii + 1, h, less);
+					Sort(iih + 1, h, less);
 					h = ii;
 				}
 				break;
