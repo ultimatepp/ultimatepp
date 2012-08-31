@@ -571,7 +571,7 @@ void Ide::CycleFiles()
 
 void Ide::Deactivate()
 {
-	if(deactivate_save) {
+	if(deactivate_save && issaving == 0) {
 		DeactivationSave(true);
 		SaveFile();
 		DeactivationSave(false);

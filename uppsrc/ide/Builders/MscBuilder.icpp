@@ -332,7 +332,6 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 			obj.Add(objfile);
 	}
 	if(error) {
-//		ShowTime(ccount, time);
 		IdeConsoleEndGroup();
 		return false;
 	}

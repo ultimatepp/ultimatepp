@@ -267,6 +267,13 @@ String ConvertTLine(const String& line, int flag)
 
 void Ide::SaveFile(bool always)
 {
+	issaving++;
+	SaveFile0(always);
+	issaving--;
+}
+
+void Ide::SaveFile0(bool always)
+{
 	if(designer) {
 		String fn = designer->GetFileName();
 		Time tm = FileGetTime(fn);
@@ -298,6 +305,8 @@ void Ide::SaveFile(bool always)
 	{
 		FileOut out(tmpfile);
 		if(!out.IsOpen()) {
+			if(IsDeactivationSave())
+				return;
 			Exclamation(NFormat("Error creating temporary file [* \1%s\1].", tmpfile));
 			return;
 		}
@@ -314,6 +323,8 @@ void Ide::SaveFile(bool always)
 				editor.Save(out, editor.GetCharset(), force_crlf);		
 		out.Close();
 		if(out.IsError()) {
+			if(IsDeactivationSave())
+				return;
 			Exclamation(NFormat("Error writing temporary file [* \1%s\1].", tmpfile));
 			return;
 		}
@@ -329,6 +340,8 @@ void Ide::SaveFile(bool always)
 		FileDelete(outfile);
 		if(FileMove(tmpfile, outfile))
 			break;
+		if(IsDeactivationSave())
+			return;
 		console.Flush();
 		Sleep(200);
 		if(progress.SetPosCanceled(msecs(time) % progress.GetTotal()))
