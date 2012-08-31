@@ -519,6 +519,8 @@ Ide::Ide()
 	deactivate_save = true;
 	
 	output_per_assembly = true;
+	
+	issaving = 0;
 }
 
 Ide::~Ide()

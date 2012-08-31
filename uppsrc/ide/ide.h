@@ -734,6 +734,8 @@ public:
 	
 	String        export_dir;
 	VectorMap<String, String> abbr;
+	
+	int           issaving;
 
 // ------------------------------------
 
@@ -820,6 +822,7 @@ public:
 		void   EditWorkspace();
 		void   EditAnyFile();
 		bool   IsProjectFile(const String& f) const;
+		void   SaveFile0(bool always);
 		void   SaveFile(bool always = false);
 		void   DoSaveFile()    { SaveFile(); }
 		void   FileBookmark	(Bar& menu);
