@@ -13,6 +13,7 @@ uses(!USE_SQLITE) MySql;
 file
 	ProtectStatus.h,
 	Protect.t,
+	ProtectTranslations.icpp,
 	ProtectStatus.cpp,
 	Protect.h,
 	Protect.cpp,

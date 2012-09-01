@@ -6,4 +6,7 @@
 #include "ProductVersion/init"
 #include "plugin\sqlite3/init"
 #include "MySql/init"
+#define BLITZ_INDEX__ Fab54e1a96e0234fe0f6cbfdf5ff34678
+#include "ProtectTranslations.icpp"
+#undef BLITZ_INDEX__
 #endif
