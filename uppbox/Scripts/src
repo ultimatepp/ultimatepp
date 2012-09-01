@@ -13,7 +13,7 @@ rm ~/upp.tmp/u/*.scd || true
 
 cp ~/Scripts/GCCMK.bm ~/.upp/theide
 
-~/bin/theide uppsrc ide GCCMK -asrxk ~/upp.tmp/u/uppsrc
+~/bin/umk ~/upp.src/uppsrc ide ~/Scripts/GCCMK.bm -asrX ~/upp.tmp/u/uppsrc
 
 cp ~/Scripts/Makefile ~/upp.tmp/u
 cp ~/Scripts/domake ~/upp.tmp/u
