@@ -66,11 +66,10 @@ String upptmp = tmp + "/u";
 String ass = upptmp + "/uppsrc";
 String upp = "u:/upp.src";
 String uppsrc = upp + "/uppsrc";
-String win32 = "u:/theide";
 
 void CopyIdeFile(const String& fn)
 {
-	SaveFile(upptmp + '/' + fn, LoadFile(win32 + '/' + fn));
+	SaveFile(upptmp + '/' + fn, LoadFile("c:/theide/" + fn));
 }
 
 int NoDigit(int c) { return IsDigit(c) ? 0 : c; }
@@ -78,16 +77,11 @@ int FilterVersion(int c) { return c == ':' ? '_' : c; }
 
 void Make(String pkg, String exe)
 {
-	Syx(win32 + "/umk " + ass + " " + pkg + " " + win32 + "/MSC9.bm -ar " + upptmp + "/" + exe);
+	Syx("umk " + ass + " " + pkg + " c:/theide/MSC9.bm -ar " + upptmp + "/" + exe);
 }
 
 CONSOLE_APP_MAIN
 {
-	if(FileExists("u:/upp/umk.exe"))
-		win32 = "u:/upp";
-	else
-		win32 = "u:/Win32/theide";
-
 	Vector<String> s = Split(Syx("svnversion " + upp), NoDigit);
 	if(s.GetCount() == 0)
 		Error("Invalid version");
@@ -106,17 +100,18 @@ CONSOLE_APP_MAIN
 	Make("ide", "theide.exe");
 	Make("umk", "umk.exe");
 
-	CopyIdeFile("dbghelp.dll");
-	CopyIdeFile("en-us.scd");
-	CopyIdeFile("en-gb.scd");
+	CopyIdeFile("c:/theide/dbghelp.dll");
+	CopyIdeFile("c:/theide/en-us.scd");
+	CopyIdeFile("c:/theide/en-gb.scd");
 
 	SetCurrentDirectory(upptmp);
 	
 	SaveFile("install.upp", LoadFile(uppsrc + "/install.upp"));
 	SaveFile("license.chk", "1");
 
-	Syx(win32 + "/7za/7za.exe a " + tmp + "/upp.7z * -r -mx -m0fb=255 -mf=off");
+	Syx("7z a " + tmp + "/upp.7z * -r -mx -m0fb=255 -mf=off");
 	SetCurrentDirectory(tmp);
-	Syx(win32 + "/umk " + upp + "/uppbox," + upp + "/uppsrc WinInstaller2 " + win32 +
-	    "/MSC9 -ar u:/upload/upp-win32-" + Filter(version, FilterVersion) + ".exe");
+	Syx("umk " + upp + "/uppbox," + upp +
+	    "/uppsrc WinInstaller2 c:/theide/MSC9 -ar u:/upload/upp-win32-" +
+	    Filter(version, FilterVersion) + ".exe");
 }
