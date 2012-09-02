@@ -236,7 +236,9 @@ bool Ctrl::SetFocus0(bool activate)
 	if(!topwindow) topwindow = topctrl;
 	LLOG("SetFocus -> SetWndFocus: topwindow = " << UPP::Name(topwindow) << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd));
 	if(!topwindow->HasWndFocus() && !topwindow->SetWndFocus()) return false;// cxl 31.1.2004
-#ifdef GUI_X11 // ugly temporary hack - popups not behaving right in MacOS
+#ifdef PLATFORM_OSX11 // ugly temporary hack - popups not behaving right in MacOS
+	// before 2012-9-2 was #ifdef GUI_X11, but that caused issues in most linux distros (cxl)
+	// as parent window of popup always manages focus/keyboard for popup in X11
 	if(activate) // Dolik/fudadmin 2011-5-1
 		topctrl->SetWndForeground();
 #else
