@@ -12,3 +12,4 @@
 </html>
 
 #define TITLE Skylark application
+#define HEAD
