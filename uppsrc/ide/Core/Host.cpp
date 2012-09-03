@@ -223,7 +223,6 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 	for(;;) { // If (pre)defined terminal emulator is not available, try to find one
 		int c = LinuxHostConsole.FindFirstOf(" ");
 		lc = c < 0 ? LinuxHostConsole : LinuxHostConsole.Left(c);
-		DDUMP(lc);
 		if(ii >= __countof(term) || FileExists(lc))
 			break;
 		LinuxHostConsole = term[ii++];
