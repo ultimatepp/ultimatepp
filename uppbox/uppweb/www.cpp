@@ -650,7 +650,7 @@ String Downloads()
 		if(i < 40)
 			r << tm[i] << " [^downloads/" << fn[i] << "^ \1" << fn[i] << "\1]&";
 		else
-			DeleteFile(ff.GetPath());
+			DeleteFile(path[i]);
 	return r;
 }
 
