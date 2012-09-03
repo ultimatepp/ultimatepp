@@ -640,6 +640,69 @@ void Ide::CheckFileUpdate()
 	ReloadFile();
 }
 
+static void GetLineIndex(String file, HashBase& hash, Vector<String>& lines)
+{
+	const char *p = file;
+	while(*p)
+	{
+		while(*p && *p != '\n' && (byte)*p <= ' ')
+			p++;
+		const char *b = p;
+		while(*p && *p++ != '\n')
+			;
+		const char *e = p;
+		while(e > b && (byte)e[-1] <= ' ')
+			e--;
+		String s(b, e);
+		hash.Add(GetHashValue(s));
+		lines.Add(s);
+	}
+}
+
+int LocateLine(String old_file, int old_line, String new_file)
+{
+	HashBase old_hash, new_hash;
+	Vector<String> old_lines, new_lines;
+	GetLineIndex(old_file, old_hash, old_lines);
+	GetLineIndex(new_file, new_hash, new_lines);
+	if(old_line <= 0)
+		return 0;
+	if(old_line >= old_lines.GetCount())
+		return new_lines.GetCount();
+	String line = old_lines[old_line];
+	//int hash = old_hash[old_line]; Mirek: unused
+	//int fore_count = old_lines.GetCount() - old_line - 1;
+	int best_match = 0, best_value = 0;
+	for(int r = 0; r < 10 && !best_value; r++)
+	{
+		int src = (r & 1 ? old_line + (r >> 1) + 1 : old_line - (r >> 1));
+		if(src < 0 || src >= old_lines.GetCount())
+			continue;
+		dword hash = old_hash[src];
+		for(int i = new_hash.Find(hash); i >= 0; i = new_hash.FindNext(i))
+			if(new_lines[i] == old_lines[src])
+			{
+				int max_back = min(i, src);
+				int max_fore = min(new_lines.GetCount() - i, old_lines.GetCount() - src) - 1;
+				if(max_back + max_fore <= best_value)
+					continue;
+				int back = 1;
+				while(back <= max_back && new_hash[i - back] == old_hash[src - back]
+					&& new_lines[i - back] == old_lines[src - back])
+					back++;
+				int fore = 1;
+				while(fore < max_fore && new_hash[i + fore] == old_hash[src + fore]
+					&& new_lines[i + fore] == old_lines[src + fore])
+					fore++;
+				if(back + fore > best_value)
+				{
+					best_value = back + fore;
+					best_match = minmax(i, 0, new_lines.GetCount());
+				}
+			}
+	}
+	return best_match;
+}
 
 void Ide::ReloadFile()
 {

@@ -141,15 +141,17 @@ bool LocalHost::Wait()
 	return IdeConsoleWait();
 }
 
-One<SlaveProcess> LocalHost::StartProcess(const char *cmdline)
+One<AProcess> LocalHost::StartProcess(const char *cmdline)
 {
 	try {
 		PutVerbose(cmdline);
-		return ::StartProcess(FindCommand(exedirs, cmdline), environment, REMOTE_TIMEOUT);
+		One<AProcess> p;
+		if(p.Create<LocalProcess>().Start(FindCommand(exedirs, cmdline), environment))
+			return p;
 	}
 	catch(...) {
-		return NULL;
 	}
+	return NULL;
 }
 
 #ifdef PLATFORM_POSIX
@@ -338,6 +340,7 @@ static bool IsSamePath(const char *a, const char *b, int count) {
 	return true;
 }
 
+#if 0
 String RemoteHost::GetEnvironment()
 {
 	return environment;
@@ -552,7 +555,7 @@ bool RemoteHost::Wait()
 	return IdeConsoleWait();
 }
 
-One<SlaveProcess> RemoteHost::StartProcess(const char *cmdline)
+One<AProcess> RemoteHost::StartProcess(const char *cmdline)
 {
 	try {
 		PutVerbose(cmdline);
@@ -571,3 +574,4 @@ void RemoteHost::AddFlags(Index<String>& cfg)
 {
 	cfg.Add(os_type);
 }
+#endif

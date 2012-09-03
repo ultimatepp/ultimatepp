@@ -69,7 +69,7 @@ struct Dbg : Debugger, ParentCtrl {
 	virtual bool IsFinished();
 
 	One<Host>          host;
-	One<SlaveProcess>  dbg;
+	One<AProcess>  dbg;
 
 	FrameBottom<WithRegistersLayout<StaticRect> > regs;
 

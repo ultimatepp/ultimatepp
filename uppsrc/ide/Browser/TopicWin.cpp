@@ -127,6 +127,22 @@ void TopicEditor::ExportGroupPdf()
 	}	
 }
 
+String MakeHtml(const char *title, String css, String body)
+{
+	String h =
+		"<HTML>\r\n"
+	    "<HEAD>\t\n"
+	    "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\">\t\n"
+	    "<META NAME=\"Generator\" CONTENT=\"U++ HTML Package\">\t\n"
+	    "<TITLE>" + String(title) + "</TITLE>\r\n"
+	;
+	if(!IsNull(css))
+		h << "<STYLE TYPE=\"text/css\"><!--\r\n"
+		  << css << "\r\n-->\r\n</STYLE>\r\n";
+	h << "</HEAD><BODY>" << body << "</BODY>";
+	return h;
+}
+
 void TopicEditor::ExportHTML()
 {
 	String path = SelectFileSaveAs("HTML files\t*.html\nAll files\t*.*");
@@ -136,7 +152,7 @@ void TopicEditor::ExportHTML()
 	String html = EncodeHtml(editor.Get(), css,
 	                         VectorMap<String, String>(), VectorMap<String, String>(),
 	                         GetFileFolder(path));
-	SaveFile(path, HtmlHeader((String)~title, AsCss(css)) / html);
+	SaveFile(path, MakeHtml((String)~title, AsCss(css), html));
 //	SaveFile(ForceExt(path, ".css"), AsCss(css));
 }
 
@@ -154,7 +170,7 @@ void TopicEditor::ExportGroupHTML()
 			String html = EncodeHtml(ParseQTF(t.text), css,
 			                         VectorMap<String, String>(), VectorMap<String, String>(),
 			                         dir);
-			html = HtmlHeader(t.title, AsCss(css)) / html;
+			html = MakeHtml(t.title, AsCss(css), html);
 			String path = AppendFileName(dir, GetFileTitle(ff.GetName()) + ".html");
 			if(LoadFile(path) != html)
 				SaveFile(path, html);

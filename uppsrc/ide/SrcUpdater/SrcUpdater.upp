@@ -2,7 +2,6 @@ description "TheIDE - Source codes management\377B";
 
 uses
 	CtrlLib,
-	Web,
 	usvn;
 
 file

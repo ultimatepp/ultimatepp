@@ -1,6 +1,5 @@
 #ifndef _ide_SrcUpdater_icpp_init_stub
 #define _ide_SrcUpdater_icpp_init_stub
 #include "CtrlLib/init"
-#include "Web/init"
 #include "usvn/init"
 #endif
