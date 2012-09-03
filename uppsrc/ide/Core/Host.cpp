@@ -213,9 +213,22 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 #ifdef PLATFORM_POSIX
 	String script = ConfigFile("console-script-" + AsString(getpid()) + ".tmp");
 	int c = LinuxHostConsole.FindFirstOf(" ");
-	String lc =  c < 0 ? LinuxHostConsole : LinuxHostConsole.Left(c);
+	String lc;
+	static const char *term[] = {
+		"/usr/bin/mate-terminal -x",
+		"/usr/bin/gnome-terminal -x",
+		"/usr/bin/konsole -e",
+		"/usr/bin/xterm -e",
+	};
+	int ii = 0;
+	for(;;) { // If (pre)defined terminal emulator is not available, try to find one
+		lc = c < 0 ? LinuxHostConsole : LinuxHostConsole.Left(c);
+		DDUMP(lc);
+		if(ii >= __countof(term) || FileExists(lc))
+			break;
+		LinuxHostConsole = term[ii++];
+	}
 	if(FileExists(lc)) {
-		
 		if(console) {
 			FileStream out(script, FileStream::CREATE, 0777);
 			out << "#!/bin/sh\n"
@@ -333,6 +346,7 @@ void LocalHost::AddFlags(Index<String>& cfg)
 #endif
 }
 
+#if 0
 static bool IsSamePath(const char *a, const char *b, int count) {
 	for(; --count >= 0; a++, b++)
 		if(a != b && ToLower(*a) != ToLower(*b) && !((*a == '\\' || *a == '/') && (*b == '\\' || *b == '/')))
@@ -340,7 +354,6 @@ static bool IsSamePath(const char *a, const char *b, int count) {
 	return true;
 }
 
-#if 0
 String RemoteHost::GetEnvironment()
 {
 	return environment;

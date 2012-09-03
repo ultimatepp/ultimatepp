@@ -315,9 +315,11 @@ void Ide::SetupFormat() {
 	ide.kde.Hide();
 	ide.gnome.Hide();
 	ide.xterm.Hide();
+	ide.mate.Hide();
 #endif
 	ide.kde <<= callback2(SetConsole, &ide.console, "/usr/bin/konsole -e");
 	ide.gnome <<= callback2(SetConsole, &ide.console, "/usr/bin/gnome-terminal -x");
+	ide.mate <<= callback2(SetConsole, &ide.console, "/usr/bin/mate-terminal -x");
 	ide.xterm <<= callback2(SetConsole, &ide.console, "/usr/bin/xterm -e");
 	
 	edt.filetabs
