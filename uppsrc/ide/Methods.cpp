@@ -199,6 +199,7 @@ BuildMethods::BuildMethods()
 	method.AddCtrl("PATH", path);
 	method.AddCtrl("INCLUDE", include);
 	method.AddCtrl("LIB", lib);
+#if 0 // REMOTE REMOVED
 	method.AddCtrl("REMOTE_HOST", remote_host);
 	method.AddCtrl("REMOTE_OS", remote_os);
 	remote_os.Add("WIN32");
@@ -211,6 +212,7 @@ BuildMethods::BuildMethods()
 	remote_file_access.Add("0", "direct (SAMBA)");
 	remote_file_access.Add("1", "indirect (transfer)");
 	method.AddCtrl("REMOTE_MAP", remote_path_map);
+#endif
 	method.AddCtrl("SCRIPT", scriptfile);
 	method.AddCtrl("LINKMODE_LOCK", linkmode_lock);
 	open_script.Attach(scriptfile);
