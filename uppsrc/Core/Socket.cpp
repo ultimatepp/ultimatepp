@@ -365,17 +365,20 @@ bool TcpSocket::Accept(TcpSocket& ls)
 	Init();
 	Reset();
 	ASSERT(ls.IsOpen());
-	if(timeout) {
+	int et = GetEndTime();
+	for(;;) {
 		int h = ls.GetTimeout();
-		bool b = ls.Timeout(timeout).Wait(WAIT_READ, GetEndTime());
+		bool b = ls.Timeout(timeout).Wait(WAIT_READ, et);
 		ls.Timeout(h);
-		if(!b)
+		if(!b) // timeout
 			return false;
-	}
-	socket = accept(ls.GetSOCKET(), NULL, NULL);
-	if(socket == INVALID_SOCKET) {
-		SetSockError("accept");
-		return false;
+		socket = accept(ls.GetSOCKET(), NULL, NULL);
+		if(socket != INVALID_SOCKET)
+			break;
+		if(!WouldBlock()) { // In prefork condition, Wait is not enough, as other process can accept
+			SetSockError("accept");
+			return false;
+		}
 	}
 	mode = ACCEPT;
 	return SetupSocket();
@@ -555,7 +558,7 @@ bool TcpSocket::IsGlobalTimeout()
 }
 
 bool TcpSocket::RawWait(dword flags, int end_time)
-{
+{ // wait till end_time
 	LLOG("Wait(" << msecs() << " - " << end_time << ", " << flags << ")");
 	if((flags & WAIT_READ) && ptr != end)
 		return true;
@@ -619,7 +622,7 @@ bool TcpSocket::Wait(dword flags, int end_time)
 }
 
 int  TcpSocket::GetEndTime() const
-{
+{ // Compute time limit for operation, based on global timeout and per-operation timeout settings
 	int o = min(IsNull(global_timeout) ? INT_MAX : start_time + global_timeout,
 	            IsNull(timeout) ? INT_MAX : msecs() + timeout);
 #ifdef PLATFORM_WIN32
