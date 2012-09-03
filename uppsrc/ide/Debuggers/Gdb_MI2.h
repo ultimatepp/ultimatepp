@@ -16,7 +16,7 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 	private:
 	
 		One<Host> host;
-		One<SlaveProcess>  dbg;
+		One<AProcess>  dbg;
 		
 		bool firstRun;
 

@@ -83,6 +83,7 @@ String NoCr(const char *s)
 	return out;
 }
 
+#if 0 // REMOTE REMOVED
 bool MakeBuild::SyncHostFiles(RemoteHost& host)
 {
 	HdependTimeDirty();
@@ -212,13 +213,15 @@ bool MakeBuild::SyncHostFiles(RemoteHost& host)
 		transferfilecache.GetAdd(info.GetKey(p)) = info[p];
 	return true;
 }
+#endif
 
 One<Host> MakeBuild::CreateHost(bool sync_files)
 {
 	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
-	String rm = bm.Get("REMOTE_HOST", Null);
 	One<Host> outhost;
+#if 0 // REMOTE REMOVED
+	String rm = bm.Get("REMOTE_HOST", Null);
 	if(!IsNull(rm)) {
 		One<RemoteHost> host = new RemoteHost;
 		host->host = rm;
@@ -247,7 +250,9 @@ One<Host> MakeBuild::CreateHost(bool sync_files)
 			SyncHostFiles(*host);
 		outhost = -host;
 	}
-	else {
+	else
+#endif
+	{
 		One<LocalHost> host = new LocalHost;
 		VectorMap<String, String> env(Environment(), 1);
 		host->exedirs = SplitDirs(bm.Get("PATH", "") + ';' + env.Get("PATH", ""));
@@ -360,7 +365,7 @@ struct OneFileHost : Host {
 	virtual bool   Run(const char *cmdline, int slot, String key, int blitz_count) { return host->Run(cmdline, slot, key, blitz_count); }
 	virtual bool   Run(const char *cmdline, Stream& out, int slot, String key, int blitz_count) { return host->Run(cmdline, out, slot, key, blitz_count); }
 	virtual bool   Wait() { return host->Wait(); }
-	virtual One<SlaveProcess> StartProcess(const char *c) { return host->StartProcess(c); }
+	virtual One<AProcess> StartProcess(const char *c) { return host->StartProcess(c); }
 	virtual void   Launch(const char *cmdline, bool) { host->Launch(cmdline); }
 	virtual void   AddFlags(Index<String>& cfg) { host->AddFlags(cfg); }
 

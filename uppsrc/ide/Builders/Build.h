@@ -63,7 +63,7 @@ struct MakeBuild {
 	const TargetMode& GetTargetMode();
 	Index<String> PackageConfig(const Workspace& wspc, int package, const VectorMap<String, String>& bm,
 	                            String mainparam, Host& host, Builder& b, String *target = NULL);
-	bool SyncHostFiles(RemoteHost& host);
+//	bool SyncHostFiles(RemoteHost& host);
 	One<Host> CreateHost(bool sync_files);
 	One<Builder> CreateBuilder(Host *host);
 	String OutDir(const Index<String>& cfg, const String& package,

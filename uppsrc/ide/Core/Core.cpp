@@ -146,7 +146,7 @@ int IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *env
 	return the_ide ? the_ide->IdeConsoleExecuteWithInput(cmdline, out, envptr, quiet) : -1;
 }
 
-int IdeConsoleExecute(One<SlaveProcess> process, const char *cmdline, Stream *out, bool quiet)
+int IdeConsoleExecute(One<AProcess> process, const char *cmdline, Stream *out, bool quiet)
 {
 	return the_ide ? the_ide->IdeConsoleExecute(process, cmdline, out, quiet) : -1;
 }
@@ -161,7 +161,7 @@ bool IdeConsoleRun(const char *cmdline, Stream *out, const char *envptr, bool qu
 	return the_ide && the_ide->IdeConsoleRun(cmdline, out, envptr, quiet, slot, key, blitz_count);
 }
 
-bool IdeConsoleRun(One<SlaveProcess> process, const char *cmdline, Stream *out, bool quiet, int slot, String key, int blitz_count)
+bool IdeConsoleRun(One<AProcess> process, const char *cmdline, Stream *out, bool quiet, int slot, String key, int blitz_count)
 {
 	return the_ide && the_ide->IdeConsoleRun(process, cmdline, out, quiet, slot, key, blitz_count);
 }

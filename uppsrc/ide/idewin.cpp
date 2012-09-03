@@ -116,7 +116,7 @@ int Ide::IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char
 	return r;
 }
 
-int Ide::IdeConsoleExecute(One<SlaveProcess> process, const char *cmdline, Stream *out, bool quiet)
+int Ide::IdeConsoleExecute(One<AProcess> process, const char *cmdline, Stream *out, bool quiet)
 {
 	return console.Execute(process, cmdline, out, quiet);
 }
@@ -131,7 +131,7 @@ bool Ide::IdeConsoleRun(const char *cmdline, Stream *out, const char *envptr, bo
 	return console.Run(cmdline, out, envptr, quiet, slot, key, blitz_count);
 }
 
-bool Ide::IdeConsoleRun(One<SlaveProcess> process, const char *cmdline, Stream *out, bool quiet, int slot, String key, int blitz_count)
+bool Ide::IdeConsoleRun(One<AProcess> process, const char *cmdline, Stream *out, bool quiet, int slot, String key, int blitz_count)
 {
 	return console.Run(process, cmdline, out, quiet, slot, key, blitz_count);
 }

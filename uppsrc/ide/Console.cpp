@@ -146,7 +146,7 @@ int Console::Flush()
 	return !running ? -1 : done_output ? 1 : 0;
 }
 
-int Console::Execute(One<SlaveProcess> p, const char *command, Stream *out, bool q)
+int Console::Execute(One<AProcess> p, const char *command, Stream *out, bool q)
 {
 	Wait();
 	if(!Run(p, command, out, q, 0))
@@ -159,12 +159,14 @@ int Console::Execute(const char *command, Stream *out, const char *envptr, bool 
 {
 	try {
 		Wait();
-		return Execute(StartProcess(command, envptr, REMOTE_TIMEOUT), command, out, q);
+		One<AProcess> p;
+		if(p.Create<LocalProcess>().Start(command, envptr))
+			return Execute(p, command, out, q);
 	}
 	catch(Exc e) {
-		ProcessEvents();
-		return Null;
 	}
+	ProcessEvents();
+	return Null;
 }
 
 int Console::AllocSlot()
@@ -188,17 +190,18 @@ bool Console::Run(const char *cmdline, Stream *out, const char *envptr, bool qui
 {
 	try {
 		Wait(slot);
-		One<SlaveProcess> sproc = StartProcess(cmdline, envptr, REMOTE_TIMEOUT);
-		return !!sproc && Run(sproc, cmdline, out, quiet, slot, key, blitz_count);
+		One<AProcess> sproc;
+		return sproc.Create<LocalProcess>().Start(cmdline, envptr) &&
+		       Run(sproc, cmdline, out, quiet, slot, key, blitz_count);
 	}
 	catch(Exc e) {
 		Append(e);
-		ProcessEvents();
-		return false;
 	}
+	ProcessEvents();
+	return false;
 }
 
-bool Console::Run(One<SlaveProcess> process, const char *cmdline, Stream *out, bool quiet, int slot, String key, int blitz_count)
+bool Console::Run(One<AProcess> process, const char *cmdline, Stream *out, bool quiet, int slot, String key, int blitz_count)
 {
 	if(!process) {
 		if(verbosebuild)
@@ -300,7 +303,8 @@ void Console::Kill(int islot)
 {
 	Slot& slot = processes[islot];
 	if(slot.process) {
-		slot.process->Kill();
+		if(slot.process->IsRunning())
+			slot.process->Kill();
 		slot.exitcode = slot.process->GetExitCode();
 		if(slot.exitcode != 0 && !IsNull(slot.key))
 			error_keys.Add(slot.key);
