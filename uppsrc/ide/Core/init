@@ -1,7 +1,6 @@
 #ifndef _ide_Core_icpp_init_stub
 #define _ide_Core_icpp_init_stub
 #include "Esc/init"
-#include "Web/init"
 #include "coff/binobj/init"
 #include "plugin/bz2/init"
 #endif
