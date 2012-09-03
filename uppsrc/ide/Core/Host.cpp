@@ -212,7 +212,6 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 #endif
 #ifdef PLATFORM_POSIX
 	String script = ConfigFile("console-script-" + AsString(getpid()) + ".tmp");
-	int c = LinuxHostConsole.FindFirstOf(" ");
 	String lc;
 	static const char *term[] = {
 		"/usr/bin/mate-terminal -x",
@@ -222,6 +221,7 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 	};
 	int ii = 0;
 	for(;;) { // If (pre)defined terminal emulator is not available, try to find one
+		int c = LinuxHostConsole.FindFirstOf(" ");
 		lc = c < 0 ? LinuxHostConsole : LinuxHostConsole.Left(c);
 		DDUMP(lc);
 		if(ii >= __countof(term) || FileExists(lc))
