@@ -13,7 +13,7 @@ protected:
 	struct Slot {
 		Slot() : outfile(NULL), quiet(true), exitcode(Null) {}
 
-		One<SlaveProcess> process;
+		One<AProcess>     process;
 		String            cmdline;
 		String            output;
 		String            key;
@@ -50,11 +50,11 @@ public:
 	bool verbosebuild;
 
 	int  Execute(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false);
-	int  Execute(One<SlaveProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false);
+	int  Execute(One<AProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false);
 	int  GetSlotCount() const { return processes.GetCount(); }
 	int  AllocSlot();
 	bool Run(const char *cmdline, Stream *out = NULL, const char *endptr = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
-	bool Run(One<SlaveProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
+	bool Run(One<AProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
 	void BeginGroup(String group);
 	void EndGroup();
 
@@ -94,10 +94,10 @@ struct Ide : public IdeContext, public MakeBuild {
 	virtual String           IdeGetOneFile() const ;
 	virtual int              IdeConsoleExecute(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false);
 	virtual int              IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *envptr, bool quiet);
-	virtual int              IdeConsoleExecute(One<SlaveProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false);
+	virtual int              IdeConsoleExecute(One<AProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false);
 	virtual int              IdeConsoleAllocSlot();
 	virtual bool             IdeConsoleRun(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
-	virtual bool             IdeConsoleRun(One<SlaveProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
+	virtual bool             IdeConsoleRun(One<AProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
 	virtual void             IdeConsoleFlush();
 	virtual void             IdeConsoleBeginGroup(String group);
 	virtual void             IdeConsoleEndGroup();

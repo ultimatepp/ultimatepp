@@ -78,7 +78,7 @@ protected:
 	struct Slot {
 		Slot() : outfile(NULL), quiet(true), exitcode(Null) {}
 
-		One<AProcess> process;
+		One<AProcess>     process;
 		String            cmdline;
 		String            output;
 		String            key;
