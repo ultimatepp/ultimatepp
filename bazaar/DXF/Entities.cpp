@@ -61,6 +61,15 @@ TransMatrix const &DXFEntities::GetTransformationMatrix(void) const
 }
 
 // create entities
+
+DXFPoint &DXFEntities::AddPoint(Pointf const &p)
+{
+	DXFPoint *pt = new DXFPoint(this);
+	pt->SetPoint(p);
+	entities.Add(pt);
+	return *pt;
+}
+
 DXFLine &DXFEntities::AddLine(Pointf const &p1, Pointf const &p2)
 {
 	DXFLine *l = new DXFLine(this);

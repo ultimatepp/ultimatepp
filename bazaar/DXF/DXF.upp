@@ -28,6 +28,8 @@ file
 	Blocks.cpp,
 	Entity.h,
 	Entity.cpp,
+	Point.h,
+	Point.cpp,
 	Line.h,
 	Line.cpp,
 	Circle.h,

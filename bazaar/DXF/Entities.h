@@ -2,6 +2,7 @@
 #define _DXF_Entities_h_
 
 #include "Entity.h"
+#include "Point.h"
 #include "Line.h"
 #include "Circle.h"
 #include "LwPolyline.h"
@@ -51,6 +52,9 @@ class DXFEntities : public Pte<DXFEntities>
 		Pointf T(Pointf const &p) const { return GetTransformationMatrix()(p); }
 	
 		// create entities
+		
+		// POINT
+		DXFPoint &AddPoint(Pointf const &p);
 		
 		// LINE
 		DXFLine &AddLine(Pointf const &p1, Pointf const &p2);
