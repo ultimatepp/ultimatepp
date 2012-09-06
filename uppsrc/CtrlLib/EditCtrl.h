@@ -153,13 +153,15 @@ protected:
 	void    SaveUndo();
 	void    DoAutoFormat();
 	int     GetTy() const;
+	void    StdPasteFilter(WString&);
 
 protected:
 	virtual void  HighlightText(Vector<Highlight>& hl);
 
 public:
-	Callback1<Bar&>   WhenBar;
-	Callback          WhenEnter;
+	Callback1<Bar&>     WhenBar;
+	Callback            WhenEnter;
+	Callback1<WString&> WhenPasteFilter;
 
 	static const Style& StyleDefault();
 	EditField&  SetStyle(const Style& s);
