@@ -788,11 +788,17 @@ void EditField::Cut()
 	Finish();
 }
 
+void EditField::StdPasteFilter(WString&)
+{
+}
+
 void EditField::Paste()
 {
 	if(!IsEditable())
 		return;
-	Insert(ReadClipboardUnicodeText());
+	WString w = ReadClipboardUnicodeText();
+	WhenPasteFilter(w);
+	Insert(w);
 	Action();
 	Finish();
 }
