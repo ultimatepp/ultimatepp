@@ -1,3 +1,12 @@
+if which pkg-config
+then
+	sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0`@g" uppsrc/Makefile.in >uppsrc/Makefile
+	sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0|sed -e s/-I//g -e \"s/ /;/g\"`@g" GCC.bm.in >GCC.bm
+else
+	sed -e "s@((INCLUDES))@@g" uppsrc/Makefile.in >uppsrc/Makefile
+	sed -e "s@((INCLUDES))@@g" GCC.bm.in >GCC.bm
+fi
+
 if [ ! -f /usr/lib/libdl.so ]
 then
 	cd uppsrc
