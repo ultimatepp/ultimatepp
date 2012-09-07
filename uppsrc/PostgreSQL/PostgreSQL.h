@@ -16,6 +16,8 @@ NAMESPACE_UPP
 // Bytea_v values are stored as bytea data, but recived as string type
 const char *PostgreSQLReadString(const char *s, String& stmt);
 
+
+// Deprecated, use SqlPerformScript instead
 bool PostgreSQLPerformScript(const String& text,
 #ifdef NOAPPSQL
 	StatementExecutor& se,
