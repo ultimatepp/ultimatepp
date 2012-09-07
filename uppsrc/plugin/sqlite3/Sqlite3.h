@@ -5,6 +5,8 @@
 
 NAMESPACE_UPP
 
+
+// Deprecated, use SqlPerformScript instead
 bool Sqlite3PerformScript(const String& text,
 #ifdef NOAPPSQL
 	StatementExecutor& se,
