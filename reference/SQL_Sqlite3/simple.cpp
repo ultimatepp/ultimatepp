@@ -25,16 +25,15 @@ CONSOLE_APP_MAIN
 	// Update the schema to match the schema described in "simple.sch"
 	#ifdef _DEBUG
 	SqlSchema sch(SQLITE3);
-	StdStatementExecutor se(sqlite3);
 	All_Tables(sch);
 	if(sch.ScriptChanged(SqlSchema::UPGRADE))
-		Sqlite3PerformScript(sch.Upgrade(),se);
+		SqlPerformScript(sch.Upgrade());
 	if(sch.ScriptChanged(SqlSchema::ATTRIBUTES)) {
-		Sqlite3PerformScript(sch.Attributes(),se);
+		SqlPerformScript(sch.Attributes());
 	}
 	if(sch.ScriptChanged(SqlSchema::CONFIG)) {
-		Sqlite3PerformScript(sch.ConfigDrop(),se);
-		Sqlite3PerformScript(sch.Config(),se);
+		SqlPerformScript(sch.ConfigDrop());
+		SqlPerformScript(sch.Config());
 	}
 	sch.SaveNormal();
 	#endif
