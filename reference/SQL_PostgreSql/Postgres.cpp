@@ -28,20 +28,21 @@ bool PostgreSQLTest::OpenDB()
 	m_session.SetTrace();
 #endif
 
+	SQL = m_session;
+
 	//schema
 	Progress p;
 	p.SetText(t_("Creating _DEBUG database"));
 	SqlSchema sch(PGSQL);
-	StdStatementExecutor se(m_session);
 	All_Tables(sch);
 	if(sch.ScriptChanged(SqlSchema::UPGRADE))
-		PostgreSQLPerformScript(sch.Upgrade(),se, p);
+		SqlPerformScript(sch.Upgrade(), p);
 	if(sch.ScriptChanged(SqlSchema::ATTRIBUTES)) {
-		PostgreSQLPerformScript(sch.Attributes(),se, p);
+		SqlPerformScript(sch.Attributes(), p);
 	}
 	if(sch.ScriptChanged(SqlSchema::CONFIG)) {
-		PostgreSQLPerformScript(sch.ConfigDrop(),se, p);
-		PostgreSQLPerformScript(sch.Config(),se, p);
+		SqlPerformScript(sch.ConfigDrop(), p);
+		SqlPerformScript(sch.Config(), p);
 	}
 	sch.SaveNormal();
 
@@ -77,9 +78,6 @@ void PostgreSQLTest::ShowTestData()
 	m_array.SetOrderBy(TESTPARTNER_NAME);
 	m_array.Query();
 }
-
-
-
 
 GUI_APP_MAIN
 {
