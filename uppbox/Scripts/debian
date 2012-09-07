@@ -1,0 +1,5 @@
+apt-get install g++
+apt-get install make
+apt-get install libgtk2.0-dev
+apt-get install libnotify-dev
+apt-get install libbz2-dev
