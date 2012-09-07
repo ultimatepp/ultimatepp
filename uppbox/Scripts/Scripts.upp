@@ -6,6 +6,7 @@ file
 	uppdeb,
 	uppnighty2deb,
 	src,
+	debian,
 	all,
 	GCCMK.bm,
 	Makefile,
