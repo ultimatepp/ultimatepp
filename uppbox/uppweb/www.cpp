@@ -841,7 +841,7 @@ CONSOLE_APP_MAIN
 				Array <String> folders;
 				folders.Clear();
 				while(ff) {
-					if(ff.IsFolder())
+					if(ff.IsFolder() && ff.GetName() != "Web")
 						folders.Add(ff.GetName());
 					ff.Next();
 				}
