@@ -39,6 +39,8 @@ class IpAddrInfo {
 	static auxthread_t auxthread__ Thread(void *ptr);
 
 	void Start();
+	
+	IpAddrInfo(const IpAddrInfo&);
 
 public:
 	void      Start(const String& host, int port);
@@ -143,10 +145,12 @@ class TcpSocket {
 	void                    SetSockError(const char *context, const char *errdesc);
 	void                    SetSockError(const char *context);
 
-	static int              GetErrorCode();
-	bool             WouldBlock();
-	static void             Init();
+	bool                    WouldBlock();
 
+	static int              GetErrorCode();
+	static void             Init();
+	
+	TcpSocket(const TcpSocket&);
 
 public:
 	Callback        WhenWait;
@@ -225,6 +229,7 @@ public:
 class SocketWaitEvent {
 	Vector< Tuple2<int, dword> > socket;
 	fd_set read[1], write[1], exception[1];
+	SocketWaitEvent(const SocketWaitEvent &);
 
 public:
 	void  Clear()                                            { socket.Clear(); }
