@@ -6,3 +6,6 @@ sources and ~/upp.out as output for intermediate files.
 
 Then start playing with U++ by invoking ~/theide (you might want to put it elsewhere later).
 
+For debian/apt-get based distribution, debian file contains required dependencies in form of
+apt-get commands. You can use this file by this file with "sh debian" as root (e.g.
+"sudo sh debian" if sudo is available).
