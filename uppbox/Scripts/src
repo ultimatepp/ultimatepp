@@ -15,13 +15,15 @@ cp ~/Scripts/GCCMK.bm ~/.upp/theide
 
 ~/bin/umk ~/upp.src/uppsrc ide ~/Scripts/GCCMK.bm -asrX ~/upp.tmp/u/uppsrc
 
+mv ~/upp.tmp/u/uppsrc/Makefile ~/upp.tmp/u/uppsrc/Makefile.in
+
 cp ~/Scripts/Makefile ~/upp.tmp/u
 cp ~/Scripts/domake ~/upp.tmp/u
 cp ~/Scripts/doinstall ~/upp.tmp/u
 cp ~/Scripts/readme ~/upp.tmp/u
 cp ~/Scripts/upp.spec ~/upp.tmp/u
 
-cp ~/Scripts/GCCMK.bm ~/upp.tmp/u/GCC.bm
+cp ~/Scripts/GCCMK.bm ~/upp.tmp/u/GCC.bm.in
 
 cd ~/upp.tmp
 mv u upp-x11-src-`svnversion ~/upp.src`
