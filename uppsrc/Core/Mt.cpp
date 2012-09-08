@@ -256,7 +256,7 @@ bool Thread::Priority(int percent)
 	
 	if(pthread_getschedparam(handle, &policy, &param))
 		return false;
-	int percent_min, percent_max;
+	int percent_min = 0, percent_max = 200;
 	if(percent <= 25) {
 		#if defined(SCHED_IDLE)
 			policy = SCHED_IDLE;
@@ -310,6 +310,7 @@ bool Thread::Priority(int percent)
 	}
 	else
 		policy = SCHED_RR;
+
 	param.sched_priority = (sched_get_priority_max(policy) - sched_get_priority_min(policy))*(minmax(percent, percent_min, percent_max)-percent_min)/(percent_max - percent_min);
 	
 	if (pthread_setschedparam(handle, policy, &param)) {
