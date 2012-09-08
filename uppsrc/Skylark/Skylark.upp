@@ -23,6 +23,8 @@ file
 	Client readonly separator,
 	Base.witz,
 	skylark.js,
+	Meta readonly separator,
+	Skylark.upt,
 	Info readonly separator,
 	src.tpp,
 	srcdoc.tpp;
