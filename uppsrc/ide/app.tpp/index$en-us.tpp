@@ -36,8 +36,10 @@ Packages and Assemblies]&]
 [s0;l224; [^topic`:`/`/ide`/app`/macros`$en`-us^ Macros]&]
 [s0;l224; [^topic`:`/`/ide`/app`/PackageTemplates`$en`-us^ Ultimate`+`+ 
 Project Templates]&]
-[s0;l224; [^topic`:`/`/ide`/app`/umk`$en`-us^ umk]&]
 [s0;l224; [^topic`:`/`/ide`/app`/IconDes`$en`-us^ Iml designer]&]
+[s0;l224;^topic`:`/`/ide`/app`/IconDes`$en`-us^ &]
+[s0;l224; [^topic`:`/`/ide`/app`/umk`$en`-us^ umk commandline builder]&]
+[s0;l224; [^topic`:`/`/ide`/app`/upp`$en`-us^ .upp file format description]&]
 [s0;l224; &]
 [s0;l224; [^topic`:`/`/ide`/app`/CrossComp`$en`-gb^ Using TheIDE as 
 a Cross Development Tool]&]
@@ -115,4 +117,4 @@ Neil Neilson, Timothy Reilly, James McNamara&]
 Öù«İµšŠªºçµé›Ùáñ¢â›¼Şş”àÇ£µ“¡’´…ßÓöº»èÏãËçß“ŠÓ‘¥îÙçÒµ˜ñ™®¯ÔêæŒ¬ğ¡ôéşé³øÿ¹†µèÛ“å
 Ä—¹¦í¾ÛÿïÁ‡§ñã’—Äó­ïÓµÉ½şìÿ¤Æ•¦áÚşáƒüúÉñ×»¦µœ±ë­Ö‚“Ó†¸‰¨í íÏÛø†äŸ¯ŠƒŠ„Ã¨™‚ô­
 ÿÍ¶´¢íÛ×ï’‘»ÜÚø™µ¼ıûöƒŸøñøÏ®¥ÚŞıÛ˜çÛ÷ÓÿÁòœ¾ØÿØıëûÙËŞöÏ²—½ìå¯×’ŞşƒğôÆ’
-]]
+]]]
