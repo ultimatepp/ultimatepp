@@ -56,6 +56,7 @@ class Http : public Renderer {
 	String request_content_type;
 	
 	VectorMap<String, String> cookies;
+	VectorMap<String, String> headers;
 	
 	void   ParseRequest(const char *s);
 	void   ReadMultiPart(const String& content);
@@ -103,6 +104,8 @@ public:
 	Http&  SetCookie(const char *id, const String& value,
 	                 Time expires = Null, const char *path = NULL,
 	                 const char *domain = NULL, bool secure = false, bool httponly = false);
+	Http&  SetHeader(const char *header, const char *data);
+	Http&  ClearHeader(const char *header);
 
 	Http&  ClearSession();
 	Http&  SessionSet(const char *id, const Value& value);

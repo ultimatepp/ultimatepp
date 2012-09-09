@@ -12,6 +12,9 @@ Http::Http(SkylarkApp& app)
 	content_type = "text/html; charset=UTF-8";
 	session_dirty = false;
 	lang = LNG_ENGLISH;
+	headers.Add("Server","U++");
+	headers.Add("Connection","close");
+	headers.Add("Cache-Control","no-cache");
 }
 
 void Http::ParseRequest(const char *p)
@@ -119,6 +122,16 @@ Http& Http::SetCookie(const char *id, const String& value, Time expires,
                       const char *path, const char *domain, bool secure, bool httponly)
 {
 	return SetRawCookie(id, UrlEncode(value), expires, path, domain, secure);
+}
+
+Http& Http::SetHeader(const char *header, const char *data)
+{
+	headers.GetAdd(header) = data;
+}
+
+Http& Http::ClearHeader(const char *header)
+{
+	headers.RemoveKey(header);
 }
 
 void Http::ReadMultiPart(const String& buffer)
