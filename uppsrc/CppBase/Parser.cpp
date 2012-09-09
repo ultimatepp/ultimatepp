@@ -669,7 +669,7 @@ Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
 	}
 	Qualifier();
 	if(l0)
-		if(lex == tk_SKYLARK && lex[1] == '(') {
+		if(lex == tk_SKYLARK && lex[1] == '(' && lex.IsId(2)) {
 			++lex;
 			++lex;
 			Decl& a = r.Add();
@@ -684,8 +684,9 @@ Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
 			lex.GetText();
 			Key(')');
 			return r;
-		} else
-		if((lex == tk_RPC_METHOD || lex == tk_RPC_GMETHOD) && lex[1] == '(') {
+		}
+		else
+		if((lex == tk_RPC_METHOD || lex == tk_RPC_GMETHOD) && lex[1] == '(' && lex.IsId(2)) {
 			++lex;
 			++lex;
 			Decl& a = r.Add();
