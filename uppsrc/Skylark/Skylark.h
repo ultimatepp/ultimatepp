@@ -72,6 +72,8 @@ class SkylarkApp : protected SkylarkConfig {
 	friend class Http;
 
 public:
+	virtual void SigUsr1();
+	
 	virtual void SqlError(Http& http);
 	virtual void InternalError(Http& http);
 	virtual void NotFound(Http& http);

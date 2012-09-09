@@ -20,12 +20,17 @@ and changing Skylark configuration, which should be only done
 in SkylarkApp constructor.&]
 [s0;i448;a25;kKO9;:noref:@(0.0.255)%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
+[s3; &]
+[s5;:SkylarkApp`:`:SigUsr1`(`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* SigUsr1]()&]
+[s2; Invoked when application recieves SIGUSR1 signal. Default implementation 
+is empty&]
 [s3;%- &]
+[s4;%- &]
 [s5;:SkylarkApp`:`:SqlError`(Http`&`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* SqlError
 ]([_^Http^ Http][@(0.0.255) `&]_[*@3 http])&]
 [s2; Overriding this method can change the response in case that 
 there was SQL error in handler.&]
-[s3; &]
+[s3;%- &]
 [s4; &]
 [s5;:SkylarkApp`:`:InternalError`(Http`&`):%- [@(0.0.255) virtual] 
 [@(0.0.255) void]_[* InternalError]([_^Http^ Http][@(0.0.255) `&]_[*@3 http])&]
