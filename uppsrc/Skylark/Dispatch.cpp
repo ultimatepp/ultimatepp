@@ -10,17 +10,17 @@ namespace Upp {
 
 enum { DISPATCH_VARARGS = -1 };
 
-struct DispatchNode : Moveable<DispatchNode> {
+struct DispatchNode : Moveable<DispatchNode> { // Single node in url hierarchy tree
 	VectorMap<String, int> subnode;
-	void   (*view)(Http&);
-	int    argpos;
-	int    method;
-	bool   post_raw;
-	String id;
+	Callback1<Http&> handler; // Associated handler, if the dispatch ends at this node
+	int              argpos;
+	int              method; // Type of method - GET or POST
+	bool             post_raw; // true for POST_RAW
+	String           id; // Handler ID
 	
 	enum { GET, POST };
 
-	DispatchNode() { view = NULL; argpos = Null; method = GET; post_raw = false; }
+	DispatchNode() { argpos = Null; method = GET; post_raw = false; }
 };
 
 static Vector<DispatchNode>& sDispatchMap()
@@ -35,9 +35,9 @@ static VectorMap<String, Vector<String> >& sLinkMap()
 	return x;
 }
 
-static Index<uintptr_t>& sViewIndex()
-{
-	static Index<uintptr_t> x;
+static Index<uintptr_t>& sHandlerIndex()
+{ // map of handler functions for Redirect
+	static Index<uintptr_t> x; // use uintptr_t because it has defined hashing
 	return x;
 }
 
@@ -63,7 +63,7 @@ Vector<String> *GetUrlViewLinkParts(const String& id)
 
 String MakeLink(void (*view)(Http&), const Vector<Value>& arg)
 {
-	int q = sViewIndex().Find((uintptr_t)view);
+	int q = sHandlerIndex().Find((uintptr_t)view);
 	if(q < 0)
 		throw Exc("Invalid view");
 	if(q < 0)
@@ -73,11 +73,13 @@ String MakeLink(void (*view)(Http&), const Vector<Value>& arg)
 	return out;
 }
 
-void RegisterView0(void (*view)(Http&), const char *id, String path, bool primary)
+void RegisterView0(void (*fn)(Http&), Callback1<Http&> cb, const char *id, String path, bool primary)
 {
 	LLOG("RegisterView " << path);
+	ASSERT_(sLinkMap().Find(id) < 0, "duplicate handler id " + String(id));
 	Vector<String>& linkpart = sLinkMap().GetAdd(id);
-	sViewIndex().FindAdd((uintptr_t)view);
+	ASSERT_(!fn || sHandlerIndex().Find((uintptr_t)fn) < 0, "duplicate view function registration " + String(id));
+	sHandlerIndex().FindAdd((uintptr_t)fn);
 	Vector<DispatchNode>& DispatchMap = sDispatchMap();
 	int method = DispatchNode::GET;
 	bool post_raw = false;
@@ -127,41 +129,50 @@ void RegisterView0(void (*view)(Http&), const char *id, String path, bool primar
 			}
 		}
 	}
-	ASSERT_(!DispatchMap[q].view, "duplicate view " + String(path));
-	DispatchMap[q].view = view;
+	ASSERT_(!DispatchMap[q].handler, "duplicate view " + String(path));
+	DispatchMap[q].handler = fn ? callback(fn) : cb;
 	DispatchMap[q].method = method;
 	DispatchMap[q].id = id;
 	DispatchMap[q].post_raw = post_raw;
 //	DumpDispatchMap();
 }
 
-struct ViewData {
-	void (*view)(Http&);
-	String id;
-	String path;
+struct HandlerData { // temporary storage of handlers until FinalizeViews call
+	void           (*fn)(Http&);
+	Callback1<Http&> cb;
+	String           id;
+	String           path;
 };
 
-static Array<ViewData>& sViewData()
+static Array<HandlerData>& sHandlerData()
 {
-	static Array<ViewData> x;
+	static Array<HandlerData> x;
 	return x;
 }
 
-void RegisterHandler(void (*view)(Http&), const char *id, const char *path)
+void RegisterHandler(void (*fn)(Http&), const char *id, const char *path)
 {
-	Array<ViewData>& v = sViewData();
-	ViewData& w = v.Add();
-	w.view = view;
+	Array<HandlerData>& v = sHandlerData();
+	HandlerData& w = v.Add();
+	w.fn = fn;
+	w.id = id;
+	w.path = path;
+}
+
+void RegisterHandler(Callback1<Http&> cb, const char *id, const char *path)
+{
+	Array<HandlerData>& v = sHandlerData();
+	HandlerData& w = v.Add();
+	w.cb = cb;
 	w.id = id;
 	w.path = path;
 }
 
 void SkylarkApp::FinalizeViews()
-{
-	Array<ViewData>& w = sViewData();
+{// the reason for HandlerData/FinalizeViews is to have a chance to ReplaceVars
+	Array<HandlerData>& w = sHandlerData();
 	for(int i = 0; i < w.GetCount(); i++) {
-		const ViewData& v = w[i];
-		ASSERT_(sViewIndex().Find((uintptr_t)v.view) < 0, "duplicate view function registration " + String(v.id));
+		const HandlerData& v = w[i];
 		String p = v.path;
 		if(*p == '/')
 			p = p.Mid(1);
@@ -169,44 +180,44 @@ void SkylarkApp::FinalizeViews()
 			p = root + '/' + p;
 		Vector<String> h = Split(ReplaceVars(p, view_var, '$'), ';');
 		for(int i = 0; i < h.GetCount(); i++)
-			RegisterView0(v.view, v.id, h[i], i == 0);
+			RegisterView0(v.fn, v.cb, v.id, h[i], i == 0);
 	}
 	w.Clear();
 }
 
-struct BestDispatch {
-	void            (*view)(Http&);
-	int             matched_parts;
-	int             matched_params;
-	Vector<String>& arg;
-	String          id;
-	bool            post_raw;
+struct BestDispatch { // Information about the best dispatch node for given path
+	Callback1<Http&> handler;
+	int              matched_parts;  // number of matched path elements
+	int              matched_params; // number of '*' arguments extracted
+	Vector<String>&  arg;            // arguments extracted
+	String           id;             // id of handler
+	bool             post_raw;       // handler is POST_RAW type
 	
-	BestDispatch(Vector<String>& arg) : arg(arg) { matched_parts = -1; matched_params = 0; view = NULL; post_raw = false; }
+	BestDispatch(Vector<String>& arg) : arg(arg) { matched_parts = -1; matched_params = 0; post_raw = false; }
 };
 
 void GetBestDispatch(int method,
                      const Vector<String>& part, int ii, const DispatchNode& n, Vector<String>& arg,                     
                      BestDispatch& bd, int matched_parts, int matched_params)
-{
+{// find the best DispatchNode for given path, best is the one with most path elements matched, if equal, more '*' used (not '**')
 	Vector<DispatchNode>& DispatchMap = sDispatchMap();
-	if(ii >= part.GetCount()) {
-		if(n.view && n.method == method &&
+	if(ii >= part.GetCount()) { // we have reached the end of path
+		if(n.handler && n.method == method &&
 		   (matched_parts > bd.matched_parts ||
-		    matched_parts == bd.matched_parts && matched_params > bd.matched_params)) {
+		    matched_parts == bd.matched_parts && matched_params > bd.matched_params)) { // node has handler
 		    LLOG("Matched " << n.id << " parts " << matched_parts << " params " << matched_params);
 			bd.arg <<= arg;
-			bd.view = n.view;
+			bd.handler = n.handler;
 			bd.matched_parts = matched_parts;
 			bd.id = n.id;
 			bd.post_raw = n.post_raw;
 		}
-		if(!bd.view) {
+		if(!bd.handler) { // node does not have handler, try '**' subnode
 			int q = n.subnode.Find(String());
 			while(q >= 0) {
 				const DispatchNode& an = DispatchMap[n.subnode[q]];
-				if(an.argpos == DISPATCH_VARARGS && an.view && an.method == method) {
-					bd.view = an.view;
+				if(an.argpos == DISPATCH_VARARGS && an.handler && an.method == method) {
+					bd.handler = an.handler;
 					bd.id = n.id;
 					bd.arg.Clear();
 					break;
@@ -217,7 +228,7 @@ void GetBestDispatch(int method,
 		return;
 	}
 	int qq = n.subnode.Get(part[ii], -1);
-	if(qq >= 0)
+	if(qq >= 0) // path element matched, try subnodes first
 		GetBestDispatch(method, part, ii + 1, DispatchMap[qq], arg, bd, matched_parts + 1, matched_params);
 	int q = n.subnode.Find(String());
 	while(q >= 0) {
@@ -227,12 +238,12 @@ void GetBestDispatch(int method,
 		int apos = an.argpos;
 		LLOG(" *" << qq << " apos: " << apos);
 		if(apos == DISPATCH_VARARGS) {
-			if(an.view && an.method == method &&
+			if(an.handler && an.method == method &&
 			   (matched_parts > bd.matched_parts || matched_parts == bd.matched_parts && matched_params > bd.matched_params)) {
 			    LLOG("Matched VARARGS " << an.id << " parts " << matched_parts << " params " << matched_params);
 				bd.arg <<= arg;
 				bd.arg.Append(part, ii, part.GetCount() - ii);
-				bd.view = an.view;
+				bd.handler = an.handler;
 				bd.matched_parts = matched_parts;
 				bd.id = an.id;
 			}
@@ -315,7 +326,7 @@ void Http::Dispatch(TcpSocket& socket)
 			GetBestDispatch(post ? DispatchNode::POST : DispatchNode::GET, part, 0, DispatchMap[0], a, bd, 0, 0);
 		LDUMPC(arg);
 		response.Clear();
-		if(bd.view) {
+		if(bd.handler) {
 			try {
 				if(SQL.IsOpen())
 					SQL.Begin();
@@ -332,7 +343,7 @@ void Http::Dispatch(TcpSocket& socket)
 				var.GetAdd(".language") = ToLower(LNGAsText(lang));
 				handlerid = bd.id;
 				LDUMP(viewid);
-				(*bd.view)(*this);
+				bd.handler(*this);
 				if(session_dirty)
 					SaveSession();
 				if(SQL.IsOpen())

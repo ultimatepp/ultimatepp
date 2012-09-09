@@ -139,6 +139,7 @@ public:
 };
 
 void RegisterHandler(void (*handler)(Http& http), const char *id, const char *path);
+void RegisterHandler(Callback1<Http&> handler, const char *id, const char *path);
 
 #define SKYLARK(name, path)  void name(Http& http); INITBLOCK { UPP::RegisterHandler(name, #name, path); } void name(Http& http)
 
