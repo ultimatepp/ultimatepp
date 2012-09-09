@@ -52,6 +52,7 @@ Project Templates]&]
 [s0; [^topic`:`/`/ide`/app`/IconDes`$en`-us^ Iml designer]&]
 [s0; &]
 [s0; [^topic`:`/`/ide`/app`/umk`$en`-us^ umk commandline builder]&]
+[s0; [^topic`:`/`/ide`/app`/upp`$en`-us^ .upp file format description]&]
 [s0; &]
 [s0; [^topic`:`/`/ide`/app`/CrossComp`$en`-gb^ Using TheIDE as a Cross 
 Development Tool]&]
