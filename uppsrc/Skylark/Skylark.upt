@@ -9,17 +9,18 @@ select("No database", "MySQL", "Postgres", "Sqlite3") "Database" db = 1;
 #ifndef _<:PACKAGE:>_<:PACKAGE:>_h
 #define _<:PACKAGE:>_<:PACKAGE:>_h
 
-#include <Skylark/Skylark.h>
-<:?db==1:>#include <MySql/MySql.h><:?db==2:><PostgreSQL/PostgreSQL.h><:?db==3:>#include <plugin/sqlite3/Sqlite3.h>
-<:.:>
+#include <Skylark/Skylark.h><:?db==1:>
+#include <MySql/MySql.h><:?db==2:>
+#include <PostgreSQL/PostgreSQL.h><:?db==3:>
+#include <plugin/sqlite3/Sqlite3.h><:.:>
 
 using namespace Upp;
 
-<:?db:>#define  MODEL         <<:PACKAGE:>/Model.sch><:.:>
-<:?db==1:>#define  SCHEMADIALECT <MySql/MySqlSchema.h><:?db==2:>
+<:?db:>#define  MODEL         <<:PACKAGE:>/Model.sch><:?db==1:>
+#define  SCHEMADIALECT <MySql/MySqlSchema.h><:?db==2:>
 #define  SCHEMADIALECT <PostgreSQL/PostgreSQLSchema.h><:?db==3:>
-#define  SCHEMADIALECT <plugin/sqlite3/Sqlite3Schema.h><:.:>
-<:?db:>#include <Sql/sch_header.h><:.:>
+#define  SCHEMADIALECT <plugin/sqlite3/Sqlite3Schema.h><:?db:>
+#include <Sql/sch_header.h><:.:>
 
 class <:classname:> : public SkylarkApp {
 public:<:?db:>
@@ -55,8 +56,8 @@ SKYLARK(CatchAll, "**")
 #include <Sql/sch_source.h>
 <:.:>
 <:classname:>::<:classname:>()
-{<:?root:>
-	root = "<:root:>";<:.:>
+{
+	root = "<:root:>";
 #ifdef _DEBUG
 	prefork = 0;
 	use_caching = false;
@@ -166,7 +167,7 @@ void <:classname:>::WorkThread()
 	RunThread();
 }
 <:.:>
-// After starting the server, enter "127.0.0.1:8001/<:root:>" in your browser
+// Local server URL: 127.0.0.1:<:port:>/<:root:>
 CONSOLE_APP_MAIN
 {
 #ifdef _DEBUG

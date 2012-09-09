@@ -189,6 +189,17 @@ ttp][@(0.0.255) `&]_[* SetCookie]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id
 [s2; Same as SetRawCookie, but url`-encoding the [%-*@3 value]. Returns 
 `*this.&]
 [s3; &]
+[s4;%- &]
+[s5;:Http`:`:SetHeader`(const char`*`,const char`*`):%- [_^Http^ Http][@(0.0.255) `&]_[* Se
+tHeader]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 header], [@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 data])&]
+[s2; Sets the response HTTP [%-*@3 header] value.&]
+[s3; &]
+[s4;%- &]
+[s5;:Http`:`:ClearHeader`(const char`*`):%- [_^Http^ Http][@(0.0.255) `&]_[* ClearHeader]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 header])&]
+[s2; Removes HTTP [%-*@3 header] from response.&]
+[s3; &]
 [s4; &]
 [s5;:Http`:`:ClearSession`(`):%- [_^Http^ Http][@(0.0.255) `&]_[* ClearSession]()&]
 [s2; Clears the session variables and session id (but their values 

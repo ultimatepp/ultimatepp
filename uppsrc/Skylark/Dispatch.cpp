@@ -390,13 +390,12 @@ void Http::Dispatch(TcpSocket& socket)
 		}
 		else {
 			r <<
-				"HTTP/1.0 " << code << ' ' << code_text << "\r\n"
+				"HTTP/1.1 " << code << ' ' << code_text << "\r\n"
 				"Date: " <<  WwwFormat(GetUtcTime()) << "\r\n"
-				"Server: U++\r\n"
 				"Content-Length: " << response.GetCount() << "\r\n"
-				"Connection: close\r\n"
-				"Cache-Control: no-cache\r\n"
 				"Content-Type: " << content_type << "\r\n";
+			for(int i = 0; i < headers.GetCount(); i++)
+				r << headers.GetKey(i) << ": " << headers[i] << "\r\n";
 			for(int i = 0; i < cookies.GetCount(); i++)
 				r << cookies[i];
 			r << "\r\n";
