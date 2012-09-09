@@ -14,25 +14,40 @@ Renderer& Renderer::operator()(const ValueMap& map)
 	return *this;
 }
 
-Renderer& Renderer::Link(const char *id, void (*view)(Http&), const Vector<Value>& arg)
+Renderer& Renderer::Link(const char *id, const HandlerId& handler, const Vector<Value>& arg)
 {
-	var.Add(id, Raw('\"' + MakeLink(view, arg) + '\"'));
+	var.Add(id, Raw('\"' + MakeLink(handler, arg) + '\"'));
 	return *this;
 }
 
-Renderer& Renderer::operator()(const char *id, void (*view)(Http&))
+Renderer& Renderer::operator()(const char *id, const HandlerId& handler)
 {
-	return Link(id, view, Vector<Value>());
+	return Link(id, handler, Vector<Value>());
 }
 
-Renderer& Renderer::operator()(const char *id, void (*view)(Http&), const Value& arg1)
+Renderer& Renderer::operator()(const char *id, const HandlerId& handler, const Value& arg1)
 {
-	return Link(id, view, Vector<Value>() << arg1);
+	return Link(id, handler, Vector<Value>() << arg1);
 }
 
-Renderer& Renderer::operator()(const char *id, void (*view)(Http&), const Value& arg1, const Value& arg2)
+Renderer& Renderer::operator()(const char *id, const HandlerId& handler, const Value& arg1, const Value& arg2)
 {
-	return Link(id, view, Vector<Value>() << arg1 << arg2);
+	return Link(id, handler, Vector<Value>() << arg1 << arg2);
+}
+
+Renderer& Renderer::operator()(const char *id, void (*handler)(Http&))
+{
+	return operator()(id, HandlerId(handler));
+}
+
+Renderer& Renderer::operator()(const char *id, void (*handler)(Http&), const Value& arg1)
+{
+	return operator()(id, HandlerId(handler), arg1);
+}
+
+Renderer& Renderer::operator()(const char *id, void (*handler)(Http&), const Value& arg1, const Value& arg2)
+{
+	return operator()(id, HandlerId(handler), arg1, arg2);
 }
 
 Renderer& Renderer::SetLanguage(int lang_)

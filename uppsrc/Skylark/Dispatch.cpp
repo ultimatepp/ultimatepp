@@ -1,9 +1,17 @@
 #include "Skylark.h"
 
-#define LLOG(x)     //DLOG(x)
-#define LDUMP(x)    //DDUMP(x)
-#define LDUMPC(x)   //DDUMPC(x)
-#define LDUMPM(x)   //DDUMPM(x)
+#if 0
+#define LLOG(x)     DLOG(x)
+#define LDUMP(x)    DDUMP(x)
+#define LDUMPC(x)   DDUMPC(x)
+#define LDUMPM(x)   DDUMPM(x)
+#else
+#define LLOG(x)
+#define LDUMP(x)
+#define LDUMPC(x)
+#define LDUMPM(x)
+#endif
+
 #define LTIMING(x)  //RTIMING(x)
 
 namespace Upp {
@@ -49,8 +57,13 @@ void DumpDispatchMap()
 		String sub;
 		for(int j = 0; j < DispatchMap[i].subnode.GetCount(); j++)
 			sub << DispatchMap[i].subnode.GetKey(j) << "->" << DispatchMap[i].subnode[j] << ", ";
-		LLOG(i << " " << (bool)DispatchMap[i].view << ": " << sub);
+		LLOG(i << " " << (bool)DispatchMap[i].handler << ": " << sub);
 	}			
+}
+
+String SkylarkAppendPath__(const String& path_prefix, const String& path)
+{
+	return path_prefix.GetCount() ? path_prefix + '/' + path : path;
 }
 
 Vector<String> *GetUrlViewLinkParts(const String& id)
@@ -61,9 +74,8 @@ Vector<String> *GetUrlViewLinkParts(const String& id)
 	return &sLinkMap()[q];
 }
 
-String MakeLink(void (*view)(Http&), const Vector<Value>& arg)
+String MakeLink0(int q, const Vector<Value>& arg)
 {
-	int q = sHandlerIndex().Find((uintptr_t)view);
 	if(q < 0)
 		throw Exc("Invalid view");
 	if(q < 0)
@@ -73,13 +85,18 @@ String MakeLink(void (*view)(Http&), const Vector<Value>& arg)
 	return out;
 }
 
+String MakeLink(const HandlerId& id, const Vector<Value>& arg)
+{
+	return MakeLink0(id.handler ? sHandlerIndex().Find((uintptr_t)id.handler) : sLinkMap().Find(id.id), arg);
+}
+
 void RegisterView0(void (*fn)(Http&), Callback1<Http&> cb, const char *id, String path, bool primary)
 {
-	LLOG("RegisterView " << path);
+	LLOG("RegisterView " << id << " -> " << path);
 	ASSERT_(sLinkMap().Find(id) < 0, "duplicate handler id " + String(id));
 	Vector<String>& linkpart = sLinkMap().GetAdd(id);
 	ASSERT_(!fn || sHandlerIndex().Find((uintptr_t)fn) < 0, "duplicate view function registration " + String(id));
-	sHandlerIndex().FindAdd((uintptr_t)fn);
+	sHandlerIndex().Add((uintptr_t)fn);
 	Vector<DispatchNode>& DispatchMap = sDispatchMap();
 	int method = DispatchNode::GET;
 	bool post_raw = false;
@@ -142,6 +159,8 @@ struct HandlerData { // temporary storage of handlers until FinalizeViews call
 	Callback1<Http&> cb;
 	String           id;
 	String           path;
+	
+	HandlerData() { fn = NULL; }
 };
 
 static Array<HandlerData>& sHandlerData()
@@ -342,7 +361,7 @@ void Http::Dispatch(TcpSocket& socket)
 				var.GetAdd(".__lang__") = lang;
 				var.GetAdd(".language") = ToLower(LNGAsText(lang));
 				handlerid = bd.id;
-				LDUMP(viewid);
+				LDUMP(handlerid);
 				bd.handler(*this);
 				if(session_dirty)
 					SaveSession();
