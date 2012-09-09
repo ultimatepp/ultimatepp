@@ -1,16 +1,29 @@
 void MakeLink(StringBuffer& out, const Vector<String>& part, const Vector<Value>& arg);
 
+struct HandlerId {
+	void (*handler)(Http& http);
+	String id;
+
+	HandlerId(const char *id) : id(id) { handler = NULL; }
+	HandlerId(void (*handler)(Http& http)) : handler(handler) {}
+
+	HandlerId() { handler = NULL; }
+};
+
 class Renderer {
 protected:
 	VectorMap<String, Value>  var;
 	int                       lang;
 
-	Renderer& Link(const char *id, void (*view)(Http&), const Vector<Value>& arg);
+	Renderer& Link(const char *id, const HandlerId& handler, const Vector<Value>& arg);
 	const One<Exe>& GetTemplate(const char *template_name);
 
 public:	
 	Renderer& operator()(const char *id, const Value& v)  { var.Add(id, v); return *this; }
 	Renderer& operator()(const ValueMap& map);
+	Renderer& operator()(const char *id, const HandlerId& handler);
+	Renderer& operator()(const char *id, const HandlerId& handler, const Value& arg1);
+	Renderer& operator()(const char *id, const HandlerId& handler, const Value& arg1, const Value& arg2);
 	Renderer& operator()(const char *id, void (*handler)(Http&));
 	Renderer& operator()(const char *id, void (*handler)(Http&), const Value& arg1);
 	Renderer& operator()(const char *id, void (*handler)(Http&), const Value& arg1, const Value& arg2);
@@ -69,6 +82,9 @@ class Http : public Renderer {
 public:
 	Http&  operator()(const char *id, const Value& v)  { var.Add(id, v); return *this; }
 	Http&  operator()(const ValueMap& map)             { Renderer::operator()(map); return *this; }
+	Http&  operator()(const char *id, const HandlerId& handler) { Renderer::operator()(id, handler); return *this; }
+	Http&  operator()(const char *id, const HandlerId& handler, const Value& arg1) { Renderer::operator()(id, handler, arg1); return *this; }
+	Http&  operator()(const char *id, const HandlerId& handler, const Value& arg1, const Value& arg2) { Renderer::operator()(id, handler, arg1, arg2); return *this; }
 	Http&  operator()(const char *id, void (*handler)(Http&)) { Renderer::operator()(id, handler); return *this; }
 	Http&  operator()(const char *id, void (*handler)(Http&), const Value& arg1) { Renderer::operator()(id, handler, arg1); return *this; }
 	Http&  operator()(const char *id, void (*handler)(Http&), const Value& arg1, const Value& arg2) { Renderer::operator()(id, handler, arg1, arg2); return *this; }
@@ -119,10 +135,10 @@ public:
 	
 	Http&  RenderResult(const char *template_name);
 	Http&  Redirect(const char *url, int code_ = 302) { code = code_; redirect = url; return *this; }
-	Http&  Redirect(void (*handler)(Http&), const Vector<Value>& arg);
-	Http&  Redirect(void (*handler)(Http&));
-	Http&  Redirect(void (*handler)(Http&), const Value& v1);
-	Http&  Redirect(void (*handler)(Http&), const Value& v1, const Value& v2);
+	Http&  Redirect(const HandlerId& handler, const Vector<Value>& arg);
+	Http&  Redirect(const HandlerId& handler);
+	Http&  Redirect(const HandlerId& handler, const Value& v1);
+	Http&  Redirect(const HandlerId& handler, const Value& v1, const Value& v2);
 
 	Http&  Ux(const char *id, const String& text);
 	Http&  UxRender(const char *id, const char *template_name);
@@ -145,8 +161,31 @@ void RegisterHandler(Callback1<Http&> handler, const char *id, const char *path)
 
 Vector<String> *GetUrlViewLinkParts(const String& id);
 
-String MakeLink(void (*handler)(Http&), const Vector<Value>& arg);
+String MakeLink(const HandlerId& id, const Vector<Value>& arg);
 
 enum {
 	SESSION_FORMAT_BINARY, SESSION_FORMAT_JSON, SESSION_FORMAT_XML
 };
+
+struct SkylarkPack {
+	String instance_id;
+	String instance_path;
+};
+
+String SkylarkAppendPath__(const String& path_prefix, const String& path);
+
+#define SKYLARK_USE(cls, id, path) \
+static void cls##_##id##_##init(cls& id); \
+INITBLOCK { \
+	static cls id; \
+	id.instance_id = #id; \
+	id.instance_path = path; \
+	cls##_##id##_##init(id); \
+	id.Use(); \
+} \
+static void cls##_##id##_##init(cls& id)
+
+#define SKYLARK_METHOD(method, path) \
+RegisterHandler(THISBACK(method), instance_id + ':' + #method, SkylarkAppendPath__(instance_path, path))
+
+#define THISLINK(x) HandlerId(instance_id + ':' + #x)

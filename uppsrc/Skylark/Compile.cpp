@@ -89,6 +89,8 @@ One<Exe> Compiler::Prim()
 		if(p.Char('@'))
 			id = "@";
 		id << p.ReadId();
+		while(p.Char(':'))
+			id << ':' << p.ReadId();
 		int n = var.Find(id);
 		if(p.Char('(')) {
 			Value (*f)(const Vector<Value>&, const Renderer *) = functions().Get(id, NULL);

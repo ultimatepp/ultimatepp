@@ -309,33 +309,33 @@ Http& Http::RenderResult(const char *template_name)
 	return *this;
 }
 
-Http& Http::Redirect(void (*view)(Http&), const Vector<Value>& arg)
+Http& Http::Redirect(const HandlerId& handler, const Vector<Value>& arg)
 {
-	Redirect(MakeLink(view, arg));
+	Redirect(MakeLink(handler, arg));
 	return *this;
 }
 
-Http& Http::Redirect(void (*view)(Http&))
+Http& Http::Redirect(const HandlerId& handler)
 {
 	Vector<Value> arg;
-	Redirect(view, arg);
+	Redirect(handler, arg);
 	return *this;
 }
 
-Http& Http::Redirect(void (*view)(Http&), const Value& v1)
+Http& Http::Redirect(const HandlerId& handler, const Value& v1)
 {
 	Vector<Value> arg;
 	arg.Add(v1);
-	Redirect(view, arg);
+	Redirect(handler, arg);
 	return *this;
 }
 
-Http& Http::Redirect(void (*view)(Http&), const Value& v1, const Value& v2)
+Http& Http::Redirect(const HandlerId& handler, const Value& v1, const Value& v2)
 {
 	Vector<Value> arg;
 	arg.Add(v1);
 	arg.Add(v2);
-	Redirect(view, arg);
+	Redirect(handler, arg);
 	return *this;
 }
 
