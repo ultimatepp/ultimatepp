@@ -127,11 +127,13 @@ Http& Http::SetCookie(const char *id, const String& value, Time expires,
 Http& Http::SetHeader(const char *header, const char *data)
 {
 	headers.GetAdd(header) = data;
+	return *this;
 }
 
 Http& Http::ClearHeader(const char *header)
 {
 	headers.RemoveKey(header);
+	return *this;
 }
 
 void Http::ReadMultiPart(const String& buffer)
