@@ -118,6 +118,10 @@ void SkylarkApp::Signal(int signal)
 		Broadcast(signal);
 		exit(0);
 		break;
+	case SIGUSR1:
+		Broadcast(signal);
+		SigUsr1();
+		break;
 	case SIGALRM:
 		if(getpid() != TheApp().main_pid) {
 			// "Timeout - session stoped"
@@ -239,6 +243,9 @@ void SkylarkApp::Run()
 	SKYLARKLOG("ExitSkylark");
 }
 
+void SkylarkApp::SigUsr1()
+{
+}
 
 void SkylarkApp::SqlError(Http& http)
 {
