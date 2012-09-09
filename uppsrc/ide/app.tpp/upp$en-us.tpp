@@ -78,7 +78,7 @@ processed by TheIDE. This can be used for example to generate
 sources on the fly or to apply some post`-processing on the final 
 executables. The command and output may contain a number of variables 
 enclosed in `'`$(...)`' that are replaced upon evaluation:&]
-[ {{2833:7167<448;>640;f0;g0;h3; [s5;b17;a17; [C@5 FILE]]
+[ {{2833:7167<448;>640;h3; [s5;b17;a17; [C@5 FILE]]
 :: [s5;b17;a17; current file name]
 :: [s5;b17;a17; [C@5 TITLE]]
 :: [s5;b17;a17; current file name without extension]
@@ -105,7 +105,7 @@ enclosed in `'`$(...)`' that are replaced upon evaluation:&]
 :: [s5;b17;a17; [C@5 EXETITLE]]
 :: [s5;b17;a17; executable file name without extension]}}&]
 [s5; &]
-[ {{1914:8086f0;g0;h1; [s5; Syntax:]
+[ {{1914:8086h1; [s5; Syntax:]
 :: [s5; [C@5 custom(<when>) <extension>, <command>, <output>;]]
 :: [s5; Example:]
 :: [s5; [C@5 custom `".rc`", `"rc /fo`$(OUTDIR)`\`\`$(TITLE)`_rc.obj `$(PATH)`", 
@@ -118,7 +118,7 @@ AABBCCDDEEFF00112233445566778899`", `"`";]]}}&]
 is set using the [C@5 description] keyword. The description string 
 can also include formatting portion, that determines the color 
 and style of the package name in the package list in TheIDE.&]
-[ {{1914:8086f0;g0;h1; [s5; Syntax:]
+[ {{1914:8086h1; [s5; Syntax:]
 :: [s5; [C@5 description <description`_string>;]&]
 [s5; where&]
 [s5; [C@5 <description`_string> `= <actual`_description> `[`\377 `[B`] 
@@ -135,14 +135,14 @@ types, Value, XML, C parsing etc...`\377B128,0,0`";]]}}&]
 [s5; Possibly the most important part of package is the list of files 
 that belong to it. Each file in the list can have set several 
 options which specify how it is handled and displayed.&]
-[ {{1914:8086f0;g0;h1; [s5; Syntax:]
+[ {{1914:8086h1; [s5; Syntax:]
 :: [s5; [C@5 file <file`_name> `[<file`_options>`]`* `[,<file`_name> `[<file`_options>`]`*
 `]`*;]&]
 [s5; where&]
 [s5; [C@5 <file`_options> `= options(<when>) <option> `| depends(<when>) 
 <dependency> `| optimize`_speed `| optimize`_size `| readonly 
 `| separator `| charset <charset`_name> `| tabsize <num 1`-20> 
-`| font <num 0`-3> `| highlight <highlighter`_name>]]
+`| font <num 0`-3> `| highlight <highlighter`_name> ]]
 :: [s5; Example:]
 :: [s5; [C@5 file ]&]
 [s5; [C@5 -|FindInFiles.cpp optimize`_speed,]&]
@@ -150,11 +150,34 @@ options which specify how it is handled and displayed.&]
 [s5; [C@5 -|Resources readonly separator,]&]
 [s5; [C@5 -|ide.rc depends() ide.ico;]]}}&]
 [s5; &]
+[s5; File options have following meaning:&]
+[ {{2745:7255^ [s5; [C@5 options]]
+:: [s5; Additional compiler options to be used for file.]
+:: [s5; [C@5 depends]]
+:: [s5; Additional dependency on other file in package. Note that header 
+file dependencies are resolved by build system.]
+:: [s5; [C@5 optimize`_speed]]
+:: [s5; In optimal build mode, this file should be optimized for speed.]
+:: [s5; [C@5 optimize`_size]]
+:: [s5; In optimal build mode, this file should be optimized for size, 
+even if whole package is optimized for speed. Note that size 
+optimization is default.]
+:: [s5; [C@5 readonly]]
+:: [s5; IDE setting: file should be opened in read`-only mode in editor.]
+:: [s5; [C@5 charset ]]
+:: [s5; IDE setting: Information about character encoding of file.]
+:: [s5; [C@5 tabsize ]]
+:: [s5; IDE setting: Information about tab size.]
+:: [s5; [C@5 font]]
+:: [s5; IDE setting: Information about font used.]
+:: [s5; [C@5 highlight]]
+:: [s5; IDE setting: Information about syntax highlighting overried (normal 
+default depends on file extension).]}}&]
 [s3; Add/Remove flags&]
 [s5; It is possible to automatically add or remove flags, based on 
 other flags. This is can be handy for example for platform dependent 
 flag switching.&]
-[ {{1914:8086f0;g0;h1; [s5; Syntax:]
+[ {{1914:8086h1; [s5; Syntax:]
 :: [s5; [C@5 flags(<when>) `[!`]<flag`_name> `[`[!`]<flag`_name>`]`*;]]
 :: [s5; Example:]
 :: [s5; [C@5 flags(POSIX) `"ALSA OSS`";]]}}&]
@@ -162,7 +185,7 @@ flag switching.&]
 [s3; Additional includes&]
 [s5; If the package requires some special include paths, they can 
 be added using [C@5 include] keyword.&]
-[ {{1914:8086f0;g0;h1; [s5; Syntax:]
+[ {{1914:8086h1; [s5; Syntax:]
 :: [s5; [C@5 include`[(<when>)`] <path> `[, <path>`]`*;]]
 :: [s5; Example:]
 :: [s5; [C@5 include ../lib;]&]
@@ -171,7 +194,7 @@ be added using [C@5 include] keyword.&]
 [s3; Libraries&]
 [s5; If the package requires to be linked with a shared or static 
 library, those can be added using [C@5 library] keyword.&]
-[ {{1914:8086f0;g0;h1; [s5; Syntax:]
+[ {{1914:8086h1; [s5; Syntax:]
 :: [s5; [C@5 library`[(<when>)`] <lib`_name> `[, <lib`_name>`]`*;]]
 :: [s5; Example:]
 :: [s5; [C@5 library png;]&]
@@ -181,7 +204,7 @@ library, those can be added using [C@5 library] keyword.&]
 [s5; Each package can specify special options to be passed to the 
 linker command. Note that since each platform can have different 
 linker, you should provide link option for each supported platform.&]
-[ {{1914:8086f0;g0;h1; [s5; Syntax:]
+[ {{1914:8086h1; [s5; Syntax:]
 :: [s5; [C@5 link`[(<when>)`] <lib`_name> `[, <lib`_name>`]`*;]]
 :: [s5; Example:]
 :: [s5; [C@5 link(MSC DEBUG) /nodefaultlib:msvcrt.lib;]]}}&]
@@ -189,17 +212,18 @@ linker, you should provide link option for each supported platform.&]
 [s3; Size optimization&]
 [s5; The [C@5 optimize`_size] keyword can be used to tell compiler 
 that the entire package should be optimized for smaller size 
-of resulting binary. It takes no parameters.&]
-[ {{1914:8086f0;g0;h1; [s5; Syntax:]
+of resulting binary when compiled with `"Optimal`" settings. 
+It takes no parameters.&]
+[ {{1914:8086h1; [s5; Syntax:]
 :: [s5; [C@5 optimize`_size;]]
 :: [s5; Example:]
 :: [s5; [C@5 optimize`_size;]]}}&]
 [s5; &]
 [s3; Speed optimization&]
 [s5; The [C@5 optimize`_speed] keyword can be used to tell compiler 
-that the entire package should be optimized for faster execution. 
-It takes no parameters.&]
-[ {{1914:8086f0;g0;h1; [s5; Syntax:]
+that the entire package should be optimized for faster execution 
+when compiled with `"Optimal`" settings. . It takes no parameters.&]
+[ {{1914:8086h1; [s5; Syntax:]
 :: [s5; [C@5 optimize`_speed;]]
 :: [s5; Example:]
 :: [s5; [C@5 optimize`_speed;]]}}&]
@@ -208,7 +232,7 @@ It takes no parameters.&]
 [s5; Any special options necessary for the package compilation may 
 be added with [C@5 options] keyword. They will be passed to the 
 compiler command only when compiling given package.&]
-[ {{1914:8086f0;g0;h1; [s5; Syntax:]
+[ {{1914:8086h1; [s5; Syntax:]
 :: [s5; [C@5 options`[(<when>)`] <lib`_name> `[, <lib`_name>`]`*;]]
 :: [s5; Example:]
 :: [s5; [C@5 options(MSC) `"/D PSAPI`_VERSION`=1`";]]}}&]
@@ -218,7 +242,7 @@ compiler command only when compiling given package.&]
 droplist in TheIDE are stored using the [C@5 mainconfig] keyword. 
 The name part is optional `- if the flags combination doesn`'t 
 have a name it is represented as an empty string.&]
-[ {{1914:8086f0;g0;h1; [s5; Syntax:]
+[ {{1914:8086h1; [s5; Syntax:]
 :: [s5; [C@5 mainconfig <name> `= <flags> `[,<name> `= <flags>`]`*;]]
 :: [s5; Example:]
 :: [s5; [C@5 mainconfig `"`" `= `"GUI`", `"Without gtk`" `= `".NOGTK GUI`";]]}}&]
@@ -226,7 +250,7 @@ have a name it is represented as an empty string.&]
 [s3; No BLITZ&]
 [s5; The [C@5 noblitz] keyword allows to prohibit BLITZ for entire 
 package. It takes no parameters.&]
-[ {{1914:8086f0;g0;h1; [s5; Syntax:]
+[ {{1914:8086h1; [s5; Syntax:]
 :: [s5; [C@5 noblitz;]]
 :: [s5; Example:]
 :: [s5; [C@5 noblitz;]]}}&]
@@ -235,7 +259,7 @@ package. It takes no parameters.&]
 [s5; The section [C@5 target] can specify the name and/or path to the 
 resulting executable. The value can optionally depend on the 
 flags used.&]
-[ {{1914:8086f0;g0;h1; [s5; Syntax:]
+[ {{1914:8086h1; [s5; Syntax:]
 :: [s5; [C@5 target`[(<when>)`] <package`_name> `[, <package`_name>`]`*;]]
 :: [s5; Example:]
 :: [s5; [C@5 target calc.ocx;]&]
@@ -245,9 +269,9 @@ flags used.&]
 [s5; Each package specifies a list of packages which it depends on. 
 The dependency specified in [C@5 uses] section can be either conditional 
 (based on flags) or unconditional.&]
-[ {{1914:8086f0;g0;h1; [s5; Syntax:]
+[ {{1914:8086h1; [s5; Syntax:]
 :: [s5; [C@5 uses`[(<when>)`] <package`_name> `[, <package`_name>`]`*;]]
 :: [s5; Example:]
 :: [s5; [C@5 uses CtrlCore;]&]
 [s5; [C@5 uses(POSIX `| LINUX `| FREEBSD) PdfDraw;]]}}&]
-[s5; ]
+[s5; ]]
