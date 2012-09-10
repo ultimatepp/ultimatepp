@@ -63,7 +63,17 @@ void DumpDispatchMap()
 
 String SkylarkAppendPath__(const String& path_prefix, const String& path)
 {
-	return path_prefix.GetCount() ? path_prefix + '/' + path : path;
+	String r = path_prefix;
+	if(path_prefix.GetCount() || path.GetCount())
+		r << '/';
+	r << path;
+	return r;
+}
+
+Http& DummyHttp()
+{
+	static Http http;
+	return http;
 }
 
 Vector<String> *GetUrlViewLinkParts(const String& id)
@@ -87,12 +97,13 @@ String MakeLink0(int q, const Vector<Value>& arg)
 
 String MakeLink(const HandlerId& id, const Vector<Value>& arg)
 {
+	DDUMP(id.id);
 	return MakeLink0(id.handler ? sHandlerIndex().Find((uintptr_t)id.handler) : sLinkMap().Find(id.id), arg);
 }
 
 void RegisterView0(void (*fn)(Http&), Callback1<Http&> cb, const char *id, String path, bool primary)
 {
-	LLOG("RegisterView " << id << " -> " << path);
+	SKYLARKLOG("Register Handler " << id << " -> " << path);
 	ASSERT_(sLinkMap().Find(id) < 0, "duplicate handler id " + String(id));
 	Vector<String>& linkpart = sLinkMap().GetAdd(id);
 	ASSERT_(!fn || sHandlerIndex().Find((uintptr_t)fn) < 0, "duplicate view function registration " + String(id));

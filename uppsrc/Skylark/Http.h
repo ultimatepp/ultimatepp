@@ -152,6 +152,7 @@ public:
 	const SkylarkApp& App() const                     { return app; }
 
 	Http(SkylarkApp& app);
+	Http() : app(SkylarkApp::TheApp()) {}
 };
 
 void RegisterHandler(void (*handler)(Http& http), const char *id, const char *path);
@@ -176,8 +177,8 @@ String SkylarkAppendPath__(const String& path_prefix, const String& path);
 
 #define SKYLARK_USE(cls, id, path) \
 static void cls##_##id##_##init(cls& id); \
+cls id; \
 INITBLOCK { \
-	static cls id; \
 	id.instance_id = #id; \
 	id.instance_path = path; \
 	cls##_##id##_##init(id); \
@@ -185,7 +186,20 @@ INITBLOCK { \
 } \
 static void cls##_##id##_##init(cls& id)
 
+#define SKYLARK_MEMBER(member, path) \
+{ \
+	member.instance_id = instance_id + ':' + #member; \
+	member.instance_path = SkylarkAppendPath__(instance_path, path); \
+	member.Use(); \
+}
+
 #define SKYLARK_METHOD(method, path) \
 RegisterHandler(THISBACK(method), instance_id + ':' + #method, SkylarkAppendPath__(instance_path, path))
 
-#define THISLINK(x) HandlerId(instance_id + ':' + #x)
+#define THISLINK(method)  (IGNORE_RESULT(&CLASSNAME::method), /* check that the method exists*/ \
+                           HandlerId(instance_id + ':' + #method))
+
+Http& DummyHttp(); // only for purposes of LINK
+
+#define LINK(instance, method) ((void)(0 ? instance.method(DummyHttp()) : (void)0), /* check that the method exists */ \
+                                HandlerId(instance.instance_id + ':' + #method))

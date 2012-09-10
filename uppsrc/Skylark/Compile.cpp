@@ -91,7 +91,9 @@ One<Exe> Compiler::Prim()
 		id << p.ReadId();
 		while(p.Char(':'))
 			id << ':' << p.ReadId();
+		DDUMP(id);
 		int n = var.Find(id);
+		DDUMP(n);
 		if(p.Char('(')) {
 			Value (*f)(const Vector<Value>&, const Renderer *) = functions().Get(id, NULL);
 			if(!f) {
