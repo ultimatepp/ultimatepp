@@ -16,10 +16,7 @@ Renderer& Renderer::operator()(const ValueMap& map)
 
 Renderer& Renderer::Link(const char *id, const HandlerId& handler, const Vector<Value>& arg)
 {
-	DDUMP(MakeLink(handler, arg));
-	DDUMP(id);
 	var.Add(id, Raw('\"' + MakeLink(handler, arg) + '\"'));
-	DDUMPM(var);
 	return *this;
 }
 
