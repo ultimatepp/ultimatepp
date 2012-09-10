@@ -97,7 +97,6 @@ String MakeLink0(int q, const Vector<Value>& arg)
 
 String MakeLink(const HandlerId& id, const Vector<Value>& arg)
 {
-	DDUMP(id.id);
 	return MakeLink0(id.handler ? sHandlerIndex().Find((uintptr_t)id.handler) : sLinkMap().Find(id.id), arg);
 }
 
