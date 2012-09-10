@@ -1,0 +1,26 @@
+#include Skylark/Base
+
+#define BODY
+
+<table border="1" id="persons">
+<tr>
+  <th>First Name</th>
+  <th>Last Name</th>
+  <th>Email</th>
+</tr>
+$for(i in PERSON)
+	<tr>
+	  <td>$i.FIRSTNAME</td>
+	  <td>$i.LASTNAME</td>
+	  <td>$i.EMAIL</td>
+	  <td>
+	  	<a href=$Person:Edit(i.ID)>Edit</a>
+	  	<a href=$Person:Delete(i.ID)>Delete</a>
+	  </td>
+	</tr>	
+$/
+</table>
+
+<p/>
+<a href=$Person:Create>Insert new person</a>
+<a href=$CREATE>Insert new person using LINK</a>

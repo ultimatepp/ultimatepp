@@ -1,0 +1,8 @@
+#ifndef _Skylark12_icpp_init_stub
+#define _Skylark12_icpp_init_stub
+#include "Skylark/init"
+#include "plugin/sqlite3/init"
+#define BLITZ_INDEX__ F70b142af5a1a021ab945c31f2df8abbb
+#include "Handlers.icpp"
+#undef BLITZ_INDEX__
+#endif

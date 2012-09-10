@@ -1,0 +1,16 @@
+uses
+	Skylark,
+	plugin/sqlite3;
+
+file
+	Skylark12.h,
+	Model.sch,
+	Ced.cpp,
+	Handlers.icpp,
+	index.witz,
+	dialog.witz,
+	Main.cpp;
+
+mainconfig
+	"" = "MT SSE2";
+

@@ -1,0 +1,23 @@
+#include "Skylark12.h"
+
+void HomePage(Http&);
+
+SKYLARK_USE(CreateEditDelete, Person, "person")
+{
+	Person.back = HomePage;
+	Person.table = PERSON;
+	Person.dialog = "Skylark12/dialog";
+}
+
+SKYLARK(HomePage, "")
+{
+	http("PERSON", Select(ID, FIRSTNAME, LASTNAME, EMAIL).From(PERSON)
+	               .OrderBy(LASTNAME, FIRSTNAME))
+	("CREATE", LINK(Person, Create))
+	.RenderResult("Skylark12/index");
+}
+
+SKYLARK(CatchAll, "**")
+{
+	http.Redirect(HomePage);
+}

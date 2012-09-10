@@ -1,0 +1,12 @@
+#include Skylark/Base
+
+#define BODY
+ <FORM action=$ACTION method="post" accept-charset="utf-8" enctype="multipart/form-data">
+ 	$post_identity()
+    <P>
+	    First name: <INPUT type="text" name="firstname" value="$FIRSTNAME"><BR>
+	    Last name: <INPUT type="text" name="lastname" value="$LASTNAME"><BR>
+	    Email: <INPUT type="text" name="email" value="$EMAIL"><BR>
+	    <INPUT type="submit" value="Send" name="OK"/><BR>
+    </P>
+ </FORM>
