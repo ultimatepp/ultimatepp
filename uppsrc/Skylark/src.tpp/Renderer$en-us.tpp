@@ -38,6 +38,9 @@ space. Returns `*this.&]
 to shared variable space. Returns `*this.&]
 [s3;%% &]
 [s4; &]
+[s5;:Renderer`:`:operator`(`)`(const char`*`,const HandlerId`&`): [_^Renderer^ Renderer
+][@(0.0.255) `&]_[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], 
+[@(0.0.255) const]_[_^HandlerId^ HandlerId][@(0.0.255) `&]_[*@3 handler])&]
 [s5;:Renderer`:`:operator`(`)`(const char`*`,void`(`*`)`(Http`&`)`): [_^Renderer^ Rende
 rer][@(0.0.255) `&]_[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], 
 [@(0.0.255) void]_(`*[*@3 handler])(Http[@(0.0.255) `&]))&]
@@ -46,6 +49,10 @@ of variable will be actual URL to [%-*@3 handler] (with no URL
 parameters). Returns `*this.&]
 [s3;%% &]
 [s4; &]
+[s5;:Renderer`:`:operator`(`)`(const char`*`,const HandlerId`&`,const Value`&`): [_^Renderer^ R
+enderer][@(0.0.255) `&]_[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], 
+[@(0.0.255) const]_[_^HandlerId^ HandlerId][@(0.0.255) `&]_[*@3 handler], 
+[@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 arg1])&]
 [s5;:Renderer`:`:operator`(`)`(const char`*`,void`(`*`)`(Http`&`)`,const Value`&`): [_^Renderer^ R
 enderer][@(0.0.255) `&]_[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], 
 [@(0.0.255) void]_(`*[*@3 handler])(Http[@(0.0.255) `&]), [@(0.0.255) const]_Value[@(0.0.255) `&
@@ -56,6 +63,11 @@ to appropriate place (defined by handler URL pattern) as URL
 parameter. Returns `*this.&]
 [s3;%% &]
 [s4; &]
+[s5;:Renderer`:`:operator`(`)`(const char`*`,const HandlerId`&`,const Value`&`,const Value`&`): [_^Renderer^ R
+enderer][@(0.0.255) `&]_[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], 
+[@(0.0.255) const]_[_^HandlerId^ HandlerId][@(0.0.255) `&]_[*@3 handler], 
+[@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 arg1], [@(0.0.255) const]_[_^Value^ V
+alue][@(0.0.255) `&]_[*@3 arg2])&]
 [s5;:Renderer`:`:operator`(`)`(const char`*`,void`(`*`)`(Http`&`)`,const Value`&`,const Value`&`): [_^Renderer^ R
 enderer][@(0.0.255) `&]_[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], 
 [@(0.0.255) void]_(`*[*@3 handler])(Http[@(0.0.255) `&]), [@(0.0.255) const]_Value[@(0.0.255) `&

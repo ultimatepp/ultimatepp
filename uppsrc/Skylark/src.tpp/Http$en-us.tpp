@@ -253,29 +253,29 @@ header of response, ][%-*@3 code][%-  the response code.] Returns
 `*this.&]
 [s3; &]
 [s4; &]
-[s5;:Http`:`:Redirect`(void`(`*`)`(Http`&`)`,const Vector`<Value`>`&`):%- [_^Http^ Http
-][@(0.0.255) `&]_[* Redirect]([@(0.0.255) void]_(`*[*@3 handler])([_^Http^ Http][@(0.0.255) `&
-]), [@(0.0.255) const]_Vector<Value>`&_[*@3 arg])&]
+[s5;:Http`:`:Redirect`(const HandlerId`&`,const Vector`<Value`>`&`):%- [_^Http^ Http][@(0.0.255) `&
+]_[* Redirect]([@(0.0.255) const]_[_^HandlerId^ HandlerId][@(0.0.255) `&]_[*@3 handler], 
+[@(0.0.255) const]_[_^Vector^ Vector]<[_^Value^ Value]>`&_[*@3 arg])&]
 [s2; Sets the redirection response to [%-*@3 handler] with a set of 
 url arguments [%-*@3 arg]. Returns `*this.&]
 [s3; &]
-[s4; &]
-[s5;:Http`:`:Redirect`(void`(`*`)`(Http`&`)`):%- [_^Http^ Http][@(0.0.255) `&]_[* Redirect](
-[@(0.0.255) void]_(`*[*@3 handler])([_^Http^ Http][@(0.0.255) `&]))&]
+[s4;%- &]
+[s5;:Http`:`:Redirect`(const HandlerId`&`):%- [_^Http^ Http][@(0.0.255) `&]_[* Redirect]([@(0.0.255) c
+onst]_[_^HandlerId^ HandlerId][@(0.0.255) `&]_[*@3 handler])&]
 [s2; Sets the redirection response to [%-*@3 handler]. Returns `*this.&]
 [s3; &]
-[s4; &]
-[s5;:Http`:`:Redirect`(void`(`*`)`(Http`&`)`,const Value`&`):%- [_^Http^ Http][@(0.0.255) `&
-]_[* Redirect]([@(0.0.255) void]_(`*[*@3 handler])([_^Http^ Http][@(0.0.255) `&]), 
-[@(0.0.255) const]_Value[@(0.0.255) `&]_[*@3 arg1])&]
+[s4;%- &]
+[s5;:Http`:`:Redirect`(const HandlerId`&`,const Value`&`):%- [_^Http^ Http][@(0.0.255) `&
+]_[* Redirect]([@(0.0.255) const]_[_^HandlerId^ HandlerId][@(0.0.255) `&]_[*@3 handler], 
+[@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v1])&]
 [s2; Sets the redirection response to [%-*@3 handler] with one url 
 argument. Returns `*this.&]
 [s3; &]
-[s4; &]
-[s5;:Http`:`:Redirect`(void`(`*`)`(Http`&`)`,const Value`&`,const Value`&`):%- [_^Http^ H
-ttp][@(0.0.255) `&]_[* Redirect]([@(0.0.255) void]_(`*[*@3 handler])([_^Http^ Http][@(0.0.255) `&
-]), [@(0.0.255) const]_Value[@(0.0.255) `&]_[*@3 arg1], [@(0.0.255) const]_Value[@(0.0.255) `&
-]_[*@3 arg2])&]
+[s4;%- &]
+[s5;:Http`:`:Redirect`(const HandlerId`&`,const Value`&`,const Value`&`):%- [_^Http^ Ht
+tp][@(0.0.255) `&]_[* Redirect]([@(0.0.255) const]_[_^HandlerId^ HandlerId][@(0.0.255) `&]_
+[*@3 handler], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v1], 
+[@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v2])&]
 [s2; Sets the redirection response to [%-*@3 handler] with two url 
 arguments. Returns `*this.&]
 [s3; &]
