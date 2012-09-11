@@ -54,10 +54,34 @@ void SqlMassInsert::Flush()
 	}
 	if(doremove)
 		sql * Delete(table).Where(remove);
+	String insert;
+	int dialect = sql.GetDialect();
+	if(dialect == MY_SQL || dialect == PGSQL) {
+		insert << "insert into " + ~table + '(';
+		for(int i = 0; i < column.GetCount(); i++) {
+			if(i)
+				insert << ", ";
+			insert << column[i];
+		}
+		insert << ") values ";
+		for(int i = 0; i < cache.GetCount(); i++) {
+			Row& r = cache[i];
+			if(i)
+				insert << ", ";
+			insert << "(";
+			bool nextval = false;
+			for(int i = 0; i < r.value.GetCount(); i++) {
+				if(i)
+					insert << ", ";
+				insert << SqlCompile(dialect, SqlFormat(r.value[i]));
+			}
+			insert << ")";
+		}
+	}
+	else
 	for(int ii = 0; ii < cache.GetCount(); ii++) {
 		dword nulls = cache[ii].nulls;
 		if(nulls != DONE) {
-			String insert;
 			insert << "insert into " + ~table + '(';
 			bool nextcol = false;
 			for(int i = 0; i < column.GetCount(); i++) {
@@ -84,15 +108,15 @@ void SqlMassInsert::Flush()
 							if(nextval)
 								insert << ", ";
 							nextval = true;
-							insert << SqlCompile(sql.GetDialect(), SqlFormat(r.value[i]));
+							insert << SqlCompile(dialect, SqlFormat(r.value[i]));
 						}
-					if(sql.GetDialect() == ORACLE)
+					if(dialect == ORACLE)
 						insert << " from dual";
 				}
 			}
-			sql.Execute(insert);
 		}
 	}
+	sql.Execute(insert);
 	if(sql.WasError()) {
 		error = true;
 		if(use_transaction)
