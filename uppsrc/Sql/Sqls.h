@@ -205,6 +205,7 @@ public:
 	bool       operator*(const SqlStatement& q)        { return Execute(q); }
 	Sql&       operator&(const SqlStatement& q)        { ExecuteX(q); return *this; }
 	Value      operator%(const SqlStatement& q);
+	ValueMap   operator^(const SqlStatement& q);
 	ValueArray operator/(const SqlStatement& q);
 
 	SqlSession& GetSession() const                     { return cn->GetSession(); }

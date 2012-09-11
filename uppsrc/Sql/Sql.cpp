@@ -262,6 +262,14 @@ Value Sql::operator%(const SqlStatement& q)
 	return Select0(Compile(q));
 }
 
+ValueMap Sql::operator^(const SqlStatement& q)
+{
+	Execute(q);
+	ValueMap m;
+	Fetch(m);
+	return m;
+}
+
 ValueArray Sql::operator/(const SqlStatement& q)
 {
 	ValueArray va;
