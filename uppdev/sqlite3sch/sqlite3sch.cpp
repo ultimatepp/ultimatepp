@@ -25,11 +25,21 @@ CONSOLE_APP_MAIN
 
 	SQL = sqlite3;
 	
-	SQL.Execute("drop table SUPPLIER");
+	SQL.Execute("drop table PERSON");
 	
 	SqlSchema sch(SQLITE3);
 	All_Tables(sch);
 	SqlPerformScript(sch.Upgrade());
 	SqlPerformScript(sch.Attributes());
 	SQL.ClearError();
+	
+	{
+		SqlMassInsert ins(PERSON);
+		ins(NAME, "a name")(ADDRESS, "an address").EndRow();
+	}
+	
+	DDUMP(SQL ^ Select(ADDRESS, NAME).From(PERSON));
+	Value v = SQL ^ Select(ADDRESS, NAME).From(PERSON);
+	DDUMP(v[ADDRESS]);
+	DDUMP(v[NAME]);
 }
