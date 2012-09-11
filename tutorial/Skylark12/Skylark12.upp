@@ -1,3 +1,5 @@
+description "Skylark packs\377";
+
 uses
 	Skylark,
 	plugin/sqlite3;

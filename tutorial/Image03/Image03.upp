@@ -1,3 +1,5 @@
+description "Creating and altering images in the code using ImageBuffer\377";
+
 uses
 	CtrlLib;
 
@@ -6,3 +8,4 @@ file
 
 mainconfig
 	"" = "GUI";
+

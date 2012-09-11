@@ -1,7 +1,11 @@
-uses Core;
+description "Array flavor\377";
+
+uses
+	Core;
 
 file
-	"Ntl05.cpp";
+	Ntl05.cpp;
 
 mainconfig
 	"" = "";
+

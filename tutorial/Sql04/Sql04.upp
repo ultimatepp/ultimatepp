@@ -1,3 +1,5 @@
+description "Schema file\377";
+
 uses
 	Core,
 	plugin\sqlite3;

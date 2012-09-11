@@ -1,9 +1,11 @@
+description "Offsets and clipping\377";
+
 uses
 	CtrlLib;
 
 file
-	
-	"main.cpp";
+	main.cpp;
 
 mainconfig
 	"" = "GUI";
+

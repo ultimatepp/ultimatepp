@@ -1,3 +1,5 @@
+description "Using structures defined by schema files\377";
+
 uses
 	Core,
 	plugin\sqlite3;

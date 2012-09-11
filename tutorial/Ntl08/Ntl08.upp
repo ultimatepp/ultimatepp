@@ -1,7 +1,11 @@
-uses Core;
+description "Index\377";
+
+uses
+	Core;
 
 file
-	"Ntl08.cpp";
+	Ntl08.cpp;
 
 mainconfig
 	"" = "";
+
