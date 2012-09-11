@@ -1,3 +1,5 @@
+description "Using schema file to define SqlId constants\377";
+
 uses
 	Core,
 	plugin\sqlite3;

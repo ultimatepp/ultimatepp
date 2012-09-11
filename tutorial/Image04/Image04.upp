@@ -1,3 +1,5 @@
+description "Loading Images from file\377";
+
 uses
 	CtrlLib,
 	plugin\jpg,
@@ -9,3 +11,4 @@ file
 
 mainconfig
 	"" = "GUI";
+

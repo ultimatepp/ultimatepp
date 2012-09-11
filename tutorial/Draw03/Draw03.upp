@@ -1,9 +1,11 @@
+description "Fonts and font metrics\377";
+
 uses
 	CtrlLib;
 
 file
-	
-	"main.cpp";
+	main.cpp;
 
 mainconfig
 	"" = "GUI";
+

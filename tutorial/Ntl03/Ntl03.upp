@@ -1,7 +1,11 @@
-uses Core;
+description "Transfer issues\377";
+
+uses
+	Core;
 
 file
-	"Ntl03.cpp";
+	Ntl03.cpp;
 
 mainconfig
 	"" = "";
+

@@ -1,7 +1,11 @@
-uses Core;
+description "Index and client types\377";
+
+uses
+	Core;
 
 file
-	"Ntl09.cpp";
+	Ntl09.cpp;
 
 mainconfig
 	"" = "";
+

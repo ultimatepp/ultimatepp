@@ -1,3 +1,5 @@
+description "Processing raster images by scanlines\377";
+
 uses
 	CtrlLib,
 	plugin\jpg;
@@ -7,3 +9,4 @@ file
 
 mainconfig
 	"" = "GUI";
+

@@ -1,3 +1,5 @@
+description "SqlSession, Sql, opening database connection\377";
+
 uses
 	Core,
 	plugin\sqlite3;

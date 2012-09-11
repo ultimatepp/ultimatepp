@@ -1,3 +1,5 @@
+description "Image designer and painting the image\377";
+
 uses
 	CtrlLib;
 

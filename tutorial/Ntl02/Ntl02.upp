@@ -1,7 +1,11 @@
-uses Core;
+description "Vector operations\377";
+
+uses
+	Core;
 
 file
-	"Ntl02.cpp";
+	Ntl02.cpp;
 
 mainconfig
 	"" = "";
+

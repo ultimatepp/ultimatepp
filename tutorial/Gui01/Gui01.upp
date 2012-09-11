@@ -1,3 +1,5 @@
+description "GUI application main function\377";
+
 uses
 	CtrlLib;
 
