@@ -31,7 +31,7 @@ aims to document the syntax of the .upp file.&]
 [s0; &]
 [s0; Each section of .upp file begins with a keyword and ends with 
 semicolon. The recognized section keywords are:&]
-[ {{2500:2500:2500:2500f0;FNg0;GN [s7;l160; [2 acceptflags]&]
+[ {{2500:2500:2500:2500g2; [s7;l160; [2 acceptflags]&]
 [s7;l160; [2 charset]&]
 [s7;l160; [2 custom]&]
 [s7;l160; [2 description]]
@@ -55,7 +55,7 @@ then passed with dot prefix and will be only applied to main
 package and all packages that list it among the accepted flags. 
 This provides a way how to minimize the number of packages that 
 need to be rebuilt when the flags are changed.&]
-[ {{1914:8086f0;g0;h1; [s5; Syntax:]
+[ {{1914:8086g2;h1; [s5; Syntax:]
 :: [s5; [C@5 acceptflags <flag`_name> `[,<flagname>`]`*;]]
 :: [s5; Example:]
 :: [s5; [C@5 acceptflags NOGTK, GUI;]]}}&]
