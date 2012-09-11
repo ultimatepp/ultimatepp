@@ -23,7 +23,7 @@ topic "GUI Tutorial";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
 [s2; GUI Tutorial&]
-[s3;:Gui01: 1.GUI application main function&]
+[s3;:Gui01: 1. GUI application main function&]
 [s5; To hide platform specific differences, U`+`+ GUI application 
 main function is defined using [* GUI`_APP`_MAIN] macro:&]
 [s5; &]
@@ -4698,4 +4698,4 @@ window.&]
 ]&]
 [s5;/ &]
 [s5;/ &]
-[s0; ]
+[s0; ]]

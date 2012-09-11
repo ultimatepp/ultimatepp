@@ -1921,4 +1921,4 @@ using Make and cached.&]
 [s0; &]
 [s0; The maximum cache size adjusts dynamically with platform specific 
 maximum (4MB for Win32).&]
-[s0; ]
+[s0; ]]
