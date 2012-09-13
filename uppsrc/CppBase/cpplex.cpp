@@ -361,9 +361,16 @@ bool   Lex::IsId(int pos)
 	return Code(pos) >= endkey + 256;
 }
 
+void Lex::ThrowError(const char *e)
+{
+	WhenError(e);
+	throw Parser::Error();
+}
+
 String Lex::Id(int pos)
 {
-	ASSERT(IsId(pos));
+	if(!IsId(pos))
+		ThrowError("expected id");
 	return id[Code(pos) - 256];
 }
 
@@ -414,28 +421,32 @@ void Lex::SkipToGrounding()
 int Lex::Int(int pos)
 {
 	Prepare(pos);
-	ASSERT(term[pos].code == t_integer);
+	if(term[pos].code != t_integer)
+		ThrowError("expected integer literal");
 	return (int)term[pos].number;
 }
 
 double Lex::Double(int pos)
 {
 	Prepare(pos);
-	ASSERT(term[pos].code == t_double);
+	if(term[pos].code != t_double)
+		ThrowError("expected floating point literal");
 	return term[pos].number;
 }
 
 String Lex::Text(int pos)
 {
 	Prepare(pos);
-	ASSERT(term[pos].code == t_string);
+	if(term[pos].code != t_string)
+		ThrowError("expected string literal");
 	return term[pos].text;
 }
 
 int Lex::Chr(int pos)
 {
 	Prepare(pos);
-	ASSERT(term[pos].code == t_character);
+	if(term[pos].code != t_character)
+		ThrowError("expected character literal");
 	return (byte)*term[pos].text;
 }
 
