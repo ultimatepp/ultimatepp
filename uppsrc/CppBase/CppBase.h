@@ -104,8 +104,11 @@ class Lex {
 	void Next();
 	bool Prepare(int pos);
 	int  GetCharacter();
+	void ThrowError(const char *e);
 
 public:
+	Callback1<const String&> WhenError;
+
 	struct Grounding {};
 
 	int         Code(int pos = 0);
@@ -392,6 +395,10 @@ class Parser {
 	void   Statement();
 	void   Locals(const String& type);
 	String Tparam(int& q);
+	
+	friend class Lex; // Fix to make Lex::ThrowError
+
+	typedef Parser CLASSNAME;
 
 public:
 	struct FunctionStat
@@ -432,7 +439,7 @@ public:
 	void   Do(Stream& s, const Vector<String>& ignore, CppBase& base, const String& fn,
 	          Callback2<int, const String&> err, const Vector<String>& typenames = Vector<String>());
 
-	Parser() : dobody(false) {}
+	Parser() : dobody(false) { 	lex.WhenError = THISBACK(ThrowError); }
 };
 
 String NoTemplatePars(const String& type);
