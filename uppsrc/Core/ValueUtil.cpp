@@ -2,8 +2,6 @@
 
 NAMESPACE_UPP
 
-#ifdef SVO_VALUE
-
 static String sAsString(const Vector<Value>& v);
 
 #define LTIMING(x) // RTIMING(x)
@@ -584,8 +582,6 @@ bool FnValuePairOrder::operator()(const Value& keya, const Value& valuea, const 
 	return (*fn)(keya, valuea, keyb, valueb) < 0;
 }
 
-#endif
-
 void Complex::Xmlize(XmlIO& xio)
 {
 	double r, i;
@@ -610,7 +606,6 @@ void Complex::Serialize(Stream& s)
 	*this = C(r, i);
 }
 
-#ifdef SVO_VALUE
 template <class T>
 static void sReg(const char *name)
 {
@@ -632,20 +627,6 @@ INITBLOCK
 	Value::Register<Rect64>("Rect64");
 	Value::Register<Rectf>("Rectf");
 }
-#else
-INITBLOCK {
-	Point p;
-	RichValue<Point>::Register();
-	RichValue<Point64>::Register();
-	RichValue<Pointf>::Register();
-	RichValue<Size>::Register();
-	RichValue<Size64>::Register();
-	RichValue<Sizef>::Register();
-	RichValue<Rect>::Register();
-	RichValue<Rect64>::Register();
-	RichValue<Rectf>::Register();
-}
-#endif
 
 END_UPP_NAMESPACE
 

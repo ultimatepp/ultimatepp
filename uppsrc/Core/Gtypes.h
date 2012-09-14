@@ -72,13 +72,8 @@ struct Size_ : Moveable< Size_<T> > {
 
 	Size_(const Nuller&)                       { cx = cy = Null; }
 
-#ifdef SVO_VALUE
 	operator Value() const                     { return FitsSvoValue<Size_>() ? SvoToValue(*this) : RichToValue(*this); }
 	Size_(const Value& src)                    { *this = src.Get<Size_>(); }
-#else
-	operator Value() const                     { return RichValue<Size_>(*this); }
-	Size_(const Value& src)                    { *this = RichValue<Size_>::Extract(src); }
-#endif
 
 	void Serialize(Stream& s)                  { s % cx % cy; }
 	void Jsonize(JsonIO& jio)                  { jio("cx", cx)("cy", cy); }
@@ -181,13 +176,8 @@ struct Point_ : Moveable< Point_<T> > {
 
 	Point_(const Nuller&)                           { x = y = Null; }
 
-#ifdef SVO_VALUE
 	operator Value() const                          { return FitsSvoValue<Point_>() ? SvoToValue(*this) : RichToValue(*this); }
 	Point_(const Value& src)                        { *this = src.Get<Point_>(); }
-#else
-	operator Value() const                          { return RichValue<Point_>(*this); }
-	Point_(const Value& src)                        { *this = RichValue<Point_>::Extract(src); }
-#endif
 
 	void Serialize(Stream& s)                       { s % x % y; }
 	void Jsonize(JsonIO& jio)                       { jio("x", x)("y", y); }
@@ -726,20 +716,3 @@ double Distance(const Pointf& p1, const Pointf& p2);
 double SquaredDistance(const Pointf& p1, const Pointf& p2);
 Pointf Polar(double a);
 Pointf Polar(const Pointf& p, double r, double a);
-
-#ifndef SVO_VALUE
-template<> void Xmlize(XmlIO& xml, Point& p);
-template<> void Xmlize(XmlIO& xml, Point16& p);
-template<> void Xmlize(XmlIO& xml, Point64& p);
-template<> void Xmlize(XmlIO& xml, Pointf& p);
-
-template<> void Xmlize(XmlIO& xml, Size& sz);
-template<> void Xmlize(XmlIO& xml, Size16& sz);
-template<> void Xmlize(XmlIO& xml, Size64& sz);
-template<> void Xmlize(XmlIO& xml, Sizef& sz);
-
-template<> void Xmlize(XmlIO& xml, Rect& r);
-template<> void Xmlize(XmlIO& xml, Rect16& r);
-template<> void Xmlize(XmlIO& xml, Rect64& r);
-template<> void Xmlize(XmlIO& xml, Rectf& r);
-#endif

@@ -51,6 +51,22 @@ Value ParseJSON(const char *s)
 	}
 }
 
+Json& Json::CatRaw(const char *key, const String& val)
+{
+	if(text.GetCount())
+		text << ',';
+	text << AsJSON(key) << ":" << val;
+	return *this;		
+}
+
+JsonArray& JsonArray::CatRaw(const String& val)
+{
+	if(text.GetCount())
+		text << ',';
+	text << val;
+	return *this;		
+}
+
 String AsJSON(const Value& v, const String& sep, bool pretty)
 {
 	String r;
@@ -114,9 +130,7 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 		return AsCString((String)v, INT_MAX, NULL, ASCSTRING_JSON);
 	if(IsNull(v))
 		return "null";
-#ifdef SVO_VALUE
 	NEVER_("Non-JSON value in AsJSON: " + v.GetTypeName());
-#endif
 	return "null";
 }
 

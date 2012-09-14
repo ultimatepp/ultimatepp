@@ -281,20 +281,6 @@ NAMESPACE_UPP
 #include "Vcont.hpp"
 #include "Index.hpp"
 
-#ifdef flagSVO_VALUE
-#ifndef SVO_VALUE
-#define SVO_VALUE
-#endif
-#endif
-
-#ifdef flagOLD_VALUE
-#ifdef SVO_VALUE
-#undef SVO_VALUE
-#endif
-#endif
-
-#include "OldValue.h"
-
 #include "Value.h"
 #include "ValueUtil.h"
 

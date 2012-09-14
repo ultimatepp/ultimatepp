@@ -292,7 +292,6 @@ String Font::GetFaceNameStd() const
 	return GetFaceName();
 }
 
-#ifdef SVO_VALUE
 void Font::Jsonize(JsonIO& jio)
 {
 	String n, tf;
@@ -331,7 +330,6 @@ void Font::Xmlize(XmlIO& xio)
 		ParseTextFlags(tf);
 	}
 }
-#endif
 
 template<>
 String AsString(const Font& f) {

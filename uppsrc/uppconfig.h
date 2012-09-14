@@ -1,1 +1,0 @@
-#define SVO_VALUE

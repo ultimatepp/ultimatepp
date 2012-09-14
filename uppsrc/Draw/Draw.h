@@ -182,10 +182,8 @@ public:
 	void   ParseTextFlags(const char *s);
 
 	void  Serialize(Stream& s);
-#ifdef SVO_VALUE
 	void  Jsonize(JsonIO& jio);
 	void  Xmlize(XmlIO& xio);
-#endif
 
 	bool  operator==(Font f) const  { return v.face == f.v.face && v.flags == f.v.flags &&
 	                                        v.width == f.v.width && v.height == f.v.height; }
@@ -388,10 +386,8 @@ public:
 
 	void    Clear()                             { size = Null; data.Clear(); cmd.Clear(); }
 	void    Serialize(Stream& s)                { s % cmd % data % size; }
-#ifdef SVO_VALUE
 	void Xmlize(XmlIO& xio)                     { XmlizeBySerialize(xio, *this); }
 	void Jsonize(JsonIO& jio)                   { JsonizeBySerialize(jio, *this); }
-#endif
 	bool    IsNullInstance() const              { return cmd.IsEmpty(); }
 	void    SetNull()                           { size = Null; }
 	bool    operator==(const Painting& b) const { return cmd == b.cmd && data == b.data && size == b.size; }
@@ -652,10 +648,8 @@ public:
 	void Append(Drawing& dw);
 
 	void Serialize(Stream& s);
-#ifdef SVO_VALUE
 	void Xmlize(XmlIO& xio)        { XmlizeBySerialize(xio, *this); }
 	void Jsonize(JsonIO& jio)      { JsonizeBySerialize(jio, *this); }
-#endif
 
 	bool    IsNullInstance() const             { return data.IsEmpty(); }
 	void    SetNull()                          { size = Null; }

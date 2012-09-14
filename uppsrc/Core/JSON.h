@@ -16,14 +16,9 @@ class JsonArray;
 class Json {
 	String text;
 
-	Json& CatRaw(const char *key, const String& val) {
-		if(text.GetCount())
-			text << ',';
-		text << AsJSON(key) << ":" << val;
-		return *this;		
-	}
-
 public:
+	Json& CatRaw(const char *key, const String& val);
+
 	String ToString() const                                     { return "{" + text + "}"; }
 	String operator~() const                                    { return ToString(); }
 	operator String() const                                     { return ToString(); }
@@ -53,14 +48,9 @@ public:
 class JsonArray {
 	String text;
 
-	JsonArray& CatRaw(const String& val) {
-		if(text.GetCount())
-			text << ',';
-		text << val;
-		return *this;		
-	}
-
 public:
+	JsonArray& CatRaw(const String& val);
+
 	String ToString() const                                     { return "[" + text + "]"; }
 	String operator~() const                                    { return ToString(); }
 	operator String() const                                     { return ToString(); }

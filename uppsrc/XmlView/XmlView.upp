@@ -10,5 +10,5 @@ file
 	XmlView.rc;
 
 mainconfig
-	"" = "GUI SVO_VALUE";
+	"" = "GUI";
 
