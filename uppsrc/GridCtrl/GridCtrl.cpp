@@ -918,7 +918,7 @@ void GridCtrl::Paste(int mode)
 		SetCursor0(lc, lr);
 		sby.Set(vitems[curpos.y].nBottom() - GetSize().cy);
 	}
-	
+	WhenPaste();
 	ClearSelection();
 }
 
@@ -3035,7 +3035,16 @@ Vector< Vector<Value> > GridCtrl::GetValues()
 		v[i].SetCount(cols_cnt);
 		
 		for(int j = 0; j < cols_cnt; j++)
-			v[i][j] = items[i + fixed_rows][j + fixed_cols].val;
+		{
+			const Value &val = items[i + fixed_rows][j + fixed_cols].val;
+			if(IsType<AttrText>(val))
+			{
+				const AttrText& t = ValueTo<AttrText>(val);
+				v[i][j] = t.text;
+			}
+			else 
+				v[i][j] = val;
+		}
 	}
 	
 	return v;
