@@ -1822,6 +1822,7 @@ class GridCtrl : public Ctrl
 		Callback1<Value&> ProcessSummaryValue;
 
 		Callback3<int, int, Value&> WhenPasteCell;
+		Callback WhenPaste;
 };
 
 class GridText : Ctrl
