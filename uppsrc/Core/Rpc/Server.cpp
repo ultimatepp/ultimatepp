@@ -124,19 +124,19 @@ String DoXmlRpc(const String& request, const char *group, const char *peeraddr)
 	return Null;
 }
 
-Value JsonRpcError(int code, const char *text, const Value& id)
+String JsonRpcError(int code, const char *text, const Value& id)
 {
-	ValueMap m;
-	m.Add("jsonrpc", "2.0");
+	Json m;
+	m("jsonrpc", "2.0");
 	ValueMap err;
 	err.Add("code", code);
 	err.Add("message", text);
-	m.Add("error", err);
-	m.Add("id", id);
+	m("error", err);
+	m("id", id);
 	return m;
 }
 
-Value ProcessJsonRpc(const Value& v, const char *group, const char *peeraddr)
+String ProcessJsonRpc(const Value& v, const char *group, const char *peeraddr)
 {
 	LLOG("Parsed JSON request: " << v);
 	Value id = v["id"];
@@ -163,11 +163,14 @@ Value ProcessJsonRpc(const Value& v, const char *group, const char *peeraddr)
 					}
 					result = JsonRpcData(va[0]);
 				}
-				ValueMap m;
-				m.Add("jsonrpc", "2.0");
-				m.Add("result", result);
-				m.Add("id", id);
-				return m;
+				Json json;
+				json("jsonrpc", "2.0");
+				if(result.Is<RawJsonText>())
+					json.CatRaw("result", result.To<RawJsonText>().json);
+				else
+					json("result", result);
+				json("id", id);
+				return json;
 			}
 		}
 		return JsonRpcError(RPC_UNKNOWN_METHOD_ERROR, "Method not found", id);
@@ -190,18 +193,13 @@ String DoJsonRpc(const String& request, const char *group, const char *peeraddr)
 {
 	try {
 		Value v = ParseJSON(request);
-		if(v.Is<ValueMap>()) {
-			Value r = ProcessJsonRpc(v, group, peeraddr);
-			return r.IsVoid() ? String() : AsJSON(r);
-		}
+		if(v.Is<ValueMap>())
+			return ProcessJsonRpc(v, group, peeraddr);
 		if(v.Is<ValueArray>()) {
 			JsonArray a;
-			bool r = false;
-			for(int i = 0; i < v.GetCount(); i++) {
-				r = true;
-				a << ProcessJsonRpc(v[i], group, peeraddr);
-			}
-			return r ? ~a : String();
+			for(int i = 0; i < v.GetCount(); i++)
+				a.CatRaw(ProcessJsonRpc(v[i], group, peeraddr));
+			return v.GetCount() ? ~a : String();
 		}
 	}
 	catch(CParser::Error e) {}	

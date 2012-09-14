@@ -165,15 +165,9 @@ Color Blend(Color c1, Color c2, int alpha)
 	             min(((a * (c2.GetB() - c1.GetB())) >> 8) + c1.GetB(), 255));
 }
 
-#ifdef SVO_VALUE
 INITBLOCK {
 	Value::SvoRegister<Color>("Color");
 }
-#else
-INITBLOCK {
-	RichValue<Color>::Register();
-}
-#endif
 
 int  Grayscale(const Color& c)
 {

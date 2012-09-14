@@ -1,5 +1,3 @@
-#ifdef SVO_VALUE
-
 inline
 Value::Value(const Value& v)
 :	data(String::SPECIAL)
@@ -358,4 +356,3 @@ template <class T> // Deprecated
 Ref RichAsRef(T& x) {
 	return Ref(&x, &Single< RichRef<T> >());
 }
-#endif

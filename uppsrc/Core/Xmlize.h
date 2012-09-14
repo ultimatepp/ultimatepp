@@ -125,14 +125,6 @@ template<> void Xmlize(XmlIO& xml, int16& var);
 template<> void Xmlize(XmlIO& xml, int64& var);
 template<> void Xmlize(XmlIO& xml, byte& var);
 
-#ifndef SVO_VALUE
-template<> void Xmlize(XmlIO& xml, Color& c);
-template<> void Xmlize(XmlIO& xml, Value& v);
-
-template<> void Xmlize(XmlIO& xml, ValueArray& v);
-template<> void Xmlize(XmlIO& xml, ValueMap& v);
-#endif 
-
 void XmlizeLangAttr(XmlIO& xml, int& lang, const char *id = "lang");
 void XmlizeLang(XmlIO& xml, const char *tag, int& lang, const char *id = "id");
 

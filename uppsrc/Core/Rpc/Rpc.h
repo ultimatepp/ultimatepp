@@ -26,6 +26,10 @@ String FormatIso8601(Time t);
 Time   ScanIso8601(const String& p);
 Value  JsonRpcData(const Value& v);
 
+struct RawJsonText {
+	String json;
+};
+
 void ValueCheck(bool b);
 
 void ValueGet(int& n, const Value& v);
@@ -116,6 +120,7 @@ void ValuePut(Value& v, const Time& x);
 void ValuePut(Value& v, const Value& t);
 void ValuePut(Value& v, const ValueArray& va);
 void ValuePut(Value& v, const ValueMap& vm);
+void ValuePut(Value& v, const Json& json);
 
 template <class T>
 Value AsXmlRpcValue(const T& x)

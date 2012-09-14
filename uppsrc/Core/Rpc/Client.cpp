@@ -80,15 +80,26 @@ RpcGet RpcRequest::Execute()
 		    ("method", method);
 		if(data.out.GetCount()) {
 			JsonArray a;
-			for(int i = 0; i < data.out.GetCount(); i++)
-				a << JsonRpcData(data.out[i]);
+			for(int i = 0; i < data.out.GetCount(); i++) {
+				const Value& v = data.out[i];
+				if(v.Is<RawJsonText>())
+					a.CatRaw(v.To<RawJsonText>().json);
+				else
+					a << JsonRpcData(v);
+			}
 			json("params", a);
 		}
 		else
 		if(data.out_map.GetCount()) {
 			Json m;
-			for(int i = 0; i < data.out_map.GetCount(); i++)
-				m((String)data.out_map.GetKey(i), JsonRpcData(data.out_map.GetValue(i)));
+			for(int i = 0; i < data.out_map.GetCount(); i++) {
+				const Value& v = data.out_map.GetValue(i);
+				String key = (String)data.out_map.GetKey(i);
+				if(v.Is<RawJsonText>())
+					m.CatRaw(key, v.To<RawJsonText>().json);
+				else
+					m(key, JsonRpcData(v));
+			}
 			json("params", m);
 		}
 		json("id", id);

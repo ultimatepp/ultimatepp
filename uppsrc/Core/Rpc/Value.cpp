@@ -152,4 +152,11 @@ void ValuePut(Value& v, const ValueMap& vm)
 	v = vm;
 }
 
+void ValuePut(Value& v, const Json& json)
+{
+	RawJsonText x;
+	x.json = json;
+	v = RawToValue(x);
+}
+
 END_UPP_NAMESPACE

@@ -57,13 +57,8 @@ public:
 
 	Color(const Nuller&)               { SetNull(); }
 
-#ifdef SVO_VALUE
 	operator Value() const             { return SvoToValue(*this); }
 	Color(const Value& q)              { color = q.Get<Color>().color; }
-#else
-	operator Value() const             { return RichValue<Color>(*this); }
-	Color(const Value& q)              { color = RichValue<Color>::Extract(q).color; }
-#endif
 
 	operator RGBA() const;
 	Color(RGBA rgba);

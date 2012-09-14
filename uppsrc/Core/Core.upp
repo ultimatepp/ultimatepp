@@ -98,8 +98,6 @@ file
 	Callback.cpp optimize_speed,
 	TimeDate.h,
 	TimeDate.cpp optimize_speed,
-	OldValue.h,
-	OldValue.cpp optimize_speed,
 	Value.h,
 	Value.hpp,
 	Value.cpp optimize_speed,

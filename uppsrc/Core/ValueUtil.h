@@ -1,5 +1,3 @@
-#ifdef SVO_VALUE
-
 Value Scan(dword stdtype, const String& text, const Value& def = Null);
 
 inline const String&  Nvl(const String& a, const String& b)    { return IsNull(a) ? b : a; }
@@ -355,5 +353,3 @@ public:
 
 
 #include "Value.hpp"
-
-#endif

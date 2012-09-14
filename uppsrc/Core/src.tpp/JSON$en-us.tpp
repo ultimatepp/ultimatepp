@@ -68,6 +68,13 @@ represents JSON object.&]
 [s5;:Json`:`:Json`(`): [* Json]()&]
 [s2; Default constructor. Creates empty JSON object.&]
 [s3;%% &]
+[s4; &]
+[s5;:Json`:`:CatRaw`(const char`*`,const String`&`): [_^Json^ Json][@(0.0.255) `&]_[* CatRa
+w]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
+]_[*@3 val])&]
+[s2;%% Appends raw text (which must be a valid JSON) [%-*@3 val] with 
+[%-*@3 key].&]
+[s3;%% &]
 [s4;%% &]
 [s5;:Json`:`:Json`(const char`*`,const Value`&`): [* Json]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 key], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 value])&]
@@ -148,6 +155,11 @@ t]&]
 [s2;%% Returns current JSON formatted text.&]
 [s3; &]
 [s4; &]
+[s5;:JsonArray`:`:CatRaw`(const String`&`): [_^JsonArray^ JsonArray][@(0.0.255) `&]_[* CatR
+aw]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 val])&]
+[s2;%% Appends raw text (which must be a valid JSON).&]
+[s3;%% &]
+[s4; &]
 [s5;:JsonArray`:`:operator`<`<`(const Value`&`): [_^JsonArray^ JsonArray][@(0.0.255) `&]_
 [* operator<<]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 value])&]
 [s5;:JsonArray`:`:operator`<`<`(int`): [_^JsonArray^ JsonArray][@(0.0.255) `&]_[* operator<
@@ -167,4 +179,4 @@ perator<<]([@(0.0.255) const]_[_^Json^ Json][@(0.0.255) `&]_[*@3 object])&]
 [s5;:JsonArray`:`:operator`<`<`(const JsonArray`&`): [_^JsonArray^ JsonArray][@(0.0.255) `&
 ]_[* operator<<]([@(0.0.255) const]_[_^JsonArray^ JsonArray][@(0.0.255) `&]_[*@3 array])&]
 [s2;%% Adds an element to JSON array.&]
-[s3;%% ]
+[s3;%% ]]

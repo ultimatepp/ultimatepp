@@ -1,7 +1,5 @@
 #include "Core.h"
 
-#ifdef SVO_VALUE
-
 NAMESPACE_UPP
 
 #ifndef flagSO
@@ -595,5 +593,3 @@ String GetErrorText(const Value& v) {
 }
 
 END_UPP_NAMESPACE
-
-#endif
