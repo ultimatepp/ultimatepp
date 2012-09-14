@@ -244,7 +244,7 @@ in AMap but is ignored by any Find operation.&]
 [s5;:AMap`:`:Put`(const K`&`,const T`&`):%- [@(0.0.255) int]_[* Put]([@(0.0.255) const]_[*@4 K
 ][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; If there are any unlinked elements in AMap, one of them is replaced 
-by the specified key/value pair. If there is are unlinked elements, 
+by the specified key/value pair. If there is no unlinked elements, 
 the key/value pair is added to the end of AIndex using [* Add]. 
 Value is transfered using deep copy constructor.&]
 [s6; T must have deep copy constructor.&]
@@ -259,7 +259,7 @@ Value is transfered using deep copy constructor.&]
 [s5;:AMap`:`:PutPick`(const K`&`,pick`_ T`&`):%- [@(0.0.255) int]_[* PutPick]([@(0.0.255) c
 onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; If there are any unlinked elements in AMap, one of them is replaced 
-by the specified key/value pair. If there is none unlinked element, 
+by the specified key/value pair. If there is no unlinked element, 
 the key/value pair is added at the end of AIndex using [* Add]. 
 Value is transfered using pick constructor.&]
 [s6; T must have pick constructor.&]
@@ -822,4 +822,4 @@ mode [* pos] is range checked.&]
 [s7; [*C@3 i]-|Required position.&]
 [s7; [*/ Return value]-|Constant value iterator.&]
 [s3; &]
-[s0; ]
+[s0; ]]
