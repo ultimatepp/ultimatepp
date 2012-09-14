@@ -33,11 +33,18 @@ RPC_METHOD(MultiplyNamed)
 	rpc = m * n;
 }
 
+RPC_METHOD(JsonMultiply)
+{
+	Value v = rpc++;
+	rpc = Json("result", (int)v["first"] * (int)v["second"]);
+}
+
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 //	LogXmlRpcRequests();
 //	SetXmlRpcServerTrace(UppLog());
+
 //  Working in "shortened" mode - without URL specified, RpcRequests are performed by methods in
 //  the same process.
 
@@ -47,4 +54,5 @@ CONSOLE_APP_MAIN
 	DUMP(JsonRpcRequestNamed()("MultiplyNamed")("first", 8)("second", 9).Execute());
 	DUMP(JsonRpcRequest()("Divide", 2, 0).Execute());
 	DUMP(JsonRpcRequest()("Divide", 20, 4).Execute());
+	DUMP(JsonRpcRequest()("JsonMultiply", Json("first", 4)("second", 10)).Execute());
 }
