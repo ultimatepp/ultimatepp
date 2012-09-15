@@ -46,7 +46,8 @@ onst]_`=_[@3 0]&]
 [s5;:MakeImage`(const ImageMaker`&`): [_^Image^ Image]_[* MakeImage]([@(0.0.255) const]_[_^ImageMaker^ I
 mageMaker][@(0.0.255) `&]_[*@3 m])&]
 [s2;%% Returns the Image based on ImageMaker (either retrieves from 
-the cache or creates and stores to cache).&]
+the cache or creates and stores to cache). Amount of images kept 
+in is controlled by SetImageCacheSize and SetImageCacheMax.&]
 [s3;%% &]
 [s4; &]
 [s5;:MakeImage`(const Image`&`,Image`(`*`)`(const Image`&`)`): [_^Image^ Image]_[* MakeIm
@@ -57,27 +58,34 @@ age]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 image],
 require other parameters than single input image.&]
 [s3;%% &]
 [s4; &]
+[s5;:MakeImagePaintOnly`(const ImageMaker`&`): [_^Image^ Image]_[* MakeImagePaintOnly]([@(0.0.255) c
+onst]_[_^ImageMaker^ ImageMaker][@(0.0.255) `&]_[*@3 m])&]
+[s2;%% Similar to MakeImage, but creates and Image that can only 
+be used in Draw`::DrawImage (this is optimization hint that can 
+save some memory in certain situations).&]
+[s3;%% &]
+[s4; &]
 [s5;:SweepMkImageCache`(`): [@(0.0.255) void]_[* SweepMkImageCache]()&]
-[s2;%% &]
+[s2;%% Despite the name, this function in fact clears size counters 
+on the cache. Size of cache is increased according to cache size 
+counter data collected since the last SweepMkImageCache.&]
 [s3; &]
 [s4; &]
 [s5;:ClearMakeImageCache`(`): [@(0.0.255) void]_[* ClearMakeImageCache]()&]
-[s2;%% Empties &]
+[s2;%% Removes all images from the cache.&]
 [s3; &]
 [s4; &]
 [s5;:SetMakeImageCacheSize`(int`): [@(0.0.255) void]_[* SetMakeImageCacheSize]([@(0.0.255) i
 nt]_[*@3 m])&]
-[s2;%%  [%-*@3 m] .&]
+[s2;%% Sets the amount of images that can be kept in cache. This 
+amount is automatically increased based on size counters of cache. 
+Default value is zero.&]
 [s3;%% &]
 [s4; &]
 [s5;:SetMakeImageCacheMax`(int`): [@(0.0.255) void]_[* SetMakeImageCacheMax]([@(0.0.255) in
 t]_[*@3 m])&]
-[s2;%%  [%-*@3 m] .&]
-[s3;%% &]
-[s4; &]
-[s5;:MakeImagePaintOnly`(const ImageMaker`&`): [_^Image^ Image]_[* MakeImagePaintOnly]([@(0.0.255) c
-onst]_[_^ImageMaker^ ImageMaker][@(0.0.255) `&]_[*@3 m])&]
-[s2;%%  [%-*@3 m] .asd&]
+[s2;%% Sets the absolute maximum of image data stored in cache. Default 
+is one million pixels.&]
 [s3;%% &]
 [s4; &]
 [s5;:CachedRescale`(const Image`&`,Size`,const Rect`&`): [_^Image^ Image]_[* CachedRescal
@@ -85,7 +93,7 @@ e]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m], [_^Size^ Size]_[*
 [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 src])&]
 [s5;:CachedRescale`(const Image`&`,Size`): [_^Image^ Image]_[* CachedRescale]([@(0.0.255) c
 onst]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m], [_^Size^ Size]_[*@3 sz])&]
-[s2;%%  [%-*@3 m] [%-*@3 sz] [%-*@3 src] . [%-*@3 m] [%-*@3 sz] .&]
+[s2;%% Returns rescaled Image, with results being cached.&]
 [s3;%% &]
 [s4; &]
 [s5;:CachedRescalePaintOnly`(const Image`&`,Size`,const Rect`&`): [_^Image^ Image]_[* Cac
@@ -93,6 +101,8 @@ hedRescalePaintOnly]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m],
 [_^Size^ Size]_[*@3 sz], [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 src])&]
 [s5;:CachedRescalePaintOnly`(const Image`&`,Size`): [_^Image^ Image]_[* CachedRescalePain
 tOnly]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m], [_^Size^ Size]_[*@3 sz])&]
-[s2;%%  [%-*@3 m] [%-*@3 sz] [%-*@3 src] . [%-*@3 m] [%-*@3 sz] .&]
+[s2;%% Returns rescaled Image, with results being cached, that can 
+only be used with Draw`::DrawImage(this is optimization hint that 
+can save some memory in certain situations).&]
 [s3;%% &]
 [s0;%% ]]
