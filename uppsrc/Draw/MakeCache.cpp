@@ -70,7 +70,7 @@ Image MakeImage__(const ImageMaker& m, bool paintonly)
 		cm.m = &m;
 		cm.paintonly = paintonly;
 		result = cache.Get(cm);
-		int q = min(cache.GetFoundSize() + cache.GetNewSize(), sMaxSizeMax);
+		int q = min(3 * (cache.GetFoundSize() + cache.GetNewSize()), sMaxSizeMax);
 		if(q > sMaxSize)
 			sMaxSize = q;
 		cache.Shrink(sMaxSize);
