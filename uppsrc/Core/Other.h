@@ -309,7 +309,8 @@ public:
 };
 
 template <class T, class K = String>
-struct LRUCache {
+class LRUCache {
+public:
 	struct Maker {
 		virtual K      Key() const = 0;
 		virtual int    Make(T& object) const = 0;

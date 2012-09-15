@@ -132,6 +132,8 @@ struct ChPartMaker {
 	ChPartMaker(const Image& m);
 };
 
+Image Magnify(const Image& img, int nx, int ny);
+
 // Image cache
 
 struct ImageMaker {
@@ -155,5 +157,3 @@ Image CachedRescale(const Image& m, Size sz, const Rect& src);
 Image CachedRescale(const Image& m, Size sz);
 Image CachedRescalePaintOnly(const Image& m, Size sz, const Rect& src);
 Image CachedRescalePaintOnly(const Image& m, Size sz);
-
-Image Magnify(const Image& img, int nx, int ny);
