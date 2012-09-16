@@ -46,12 +46,31 @@ Value JsIdentity(const Vector<Value>&, const Renderer *r)
 	return Raw("<script type=\"text/javascript\">var __js_identity__ = \"" + GetIdentity(r) + "\"</script>");
 }
 
+Value VariablesSet(const Vector<Value>&, const Renderer *r)
+{
+	String html;
+	if(r) {
+		const VectorMap<String, Value>& set = r->Variables();
+		html << "<table border='1'><tr><th>ID</th><th>VALUE</th></tr>\n";
+		for(int i = 0; i < set.GetCount(); i++)
+			html << "<tr><td>"
+			     << EscapeHtml(set.GetKey(i))
+			     << "</td><td>"
+			     << EscapeHtml(AsString(set[i]))
+			     << "</td></tr>"
+			;
+		html << "</table>";
+	}
+	return Raw(html);
+}
+
 INITBLOCK {
 	Compiler::Register("cycle", Cycle);
 	Compiler::Register("raw", RawFn);
 	Compiler::Register("count", CountFn);
 	Compiler::Register("post_identity", PostIdentity);
 	Compiler::Register("js_identity", JsIdentity);
+	Compiler::Register("set", VariablesSet);
 };
 
 };

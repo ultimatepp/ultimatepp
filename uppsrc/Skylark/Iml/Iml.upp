@@ -2,8 +2,7 @@ description "\377128,0,0";
 
 uses
 	Draw,
-	plugin\png,
-	plugin\jpg;
+	plugin\png;
 
 file
 	Iml.h,

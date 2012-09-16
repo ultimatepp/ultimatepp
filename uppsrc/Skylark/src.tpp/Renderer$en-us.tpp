@@ -167,4 +167,8 @@ tring][@(0.0.255) `&]_[*@3 template`_name])&]
 [s2;%% Same as operator()([%-*@3 id], Render([%-*@3 template`_name])), 
 in other words sets the variable to the result of template rendering. 
 Returns `*this.&]
-[s0;%% ]]
+[s4; &]
+[s5;:Renderer`:`:Variables`(`)const: [@(0.0.255) const]_[_^VectorMap^ VectorMap]<[_^String^ S
+tring], [_^Value^ Value]>`&_[* Variables]()_[@(0.0.255) const]&]
+[s2;%% Returns a reference to all shared variables.&]
+[s3; ]]

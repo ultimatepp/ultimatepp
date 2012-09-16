@@ -11,11 +11,15 @@ struct Exe {
 	virtual ~Exe() {}
 };
 
-struct RawHtmlText {
+struct RawHtmlText : ValueType<RawHtmlText, 54321> {
+	String ToString() const;
 	String text;
 };
 
-Value Raw(const String& s);
+Value  Raw(const String& s);
+
+void   EscapeHtml(StringBuffer& out, const String& txt);
+String EscapeHtml(const String& s);
 
 struct Compiler {
 	static VectorMap<String, Value (*)(const Vector<Value>&, const Renderer *)>& functions();

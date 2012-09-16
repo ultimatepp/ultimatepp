@@ -255,10 +255,13 @@ html escaped.]
 :: [s0; [*C count(array`_or`_map)]]
 :: [s0; Returns the number of elements in ValueArray or ValueMap; 0 
 if parameter is neither.]
-:: [s0; [*C post`_identity]]
+:: [s0; [*C post`_identity()]]
 :: [s0; Returns a complete definition of FORM hiddent field needed for 
 CSRF attack prevention.]
-:: [s0; [*C js`_identity]]
+:: [s0; [*C js`_identity()]]
 :: [s0; Returns a script required that provides CSRF protection for 
-AJAX POSTs.]}}&]
+AJAX POSTs.]
+:: [s0; [*C set()]]
+:: [s0; Returns html formatted list of current shared variables. Useful 
+for debugging.]}}&]
 [s0; ]]

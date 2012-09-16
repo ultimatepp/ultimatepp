@@ -45,6 +45,8 @@ public:
 	
 	Renderer& Render(const char *id, const String& template_name);
 	
+	const VectorMap<String, Value>& Variables() const    { return var; }
+	
 	Renderer()               { lang = LNG_ENGLISH; }
 	virtual ~Renderer();
 };

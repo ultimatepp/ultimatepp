@@ -4,11 +4,16 @@
 
 namespace Upp {
 
+String RawHtmlText::ToString() const
+{
+	return "RAW: " + text;
+}
+
 Value Raw(const String& s)
 {
 	RawHtmlText r;
 	r.text = s;
-	return RawToValue(r);
+	return RichToValue(r);
 }
 
 VectorMap<String, Value (*)(const Vector<Value>&, const Renderer *)>& Compiler::functions()
