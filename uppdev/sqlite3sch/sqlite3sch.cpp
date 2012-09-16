@@ -42,4 +42,11 @@ CONSOLE_APP_MAIN
 	Value v = SQL ^ Select(ADDRESS, NAME).From(PERSON);
 	DDUMP(v[ADDRESS]);
 	DDUMP(v[NAME]);
+	
+	{
+		SqlMassInsert ins(PERSON);
+		for(int i = 0; i < 10000; i++)
+			ins(ADDRESS, "adr " + AsString(i))(NAME, "name " + AsString(i)).EndRow();
+	}
+	DDUMP(SQL ^ Select(ADDRESS, NAME).From(PERSON));
 }
