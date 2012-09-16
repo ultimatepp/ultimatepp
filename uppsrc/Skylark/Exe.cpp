@@ -322,6 +322,41 @@ Value Compiler::ExeKey::Eval(ExeContext& x) const
 	return f.key;
 }
 
+void EscapeHtml(StringBuffer& out, const String& txt)
+{
+	const char *s = txt;
+	const char *e = txt.End();
+	while(s != e) {
+		if(*s == 31)
+			out.Cat("&nbsp;");
+		else
+		if(*s == '<')
+			out.Cat("&lt;");
+		else
+		if(*s == '>')
+			out.Cat("&gt;");
+		else
+		if(*s == '&')
+			out.Cat("&amp;");
+		else
+		if(*s == '\"')
+			out.Cat("&quot;");
+		else
+		if((byte)*s < ' ')
+			out.Cat(NFormat("&#%d;", (byte)*s));
+		else
+			out.Cat(*s);
+		s++;
+	}
+}
+
+String EscapeHtml(const String& s)
+{
+	StringBuffer out;
+	EscapeHtml(out, s);
+	return out;
+}
+
 force_inline
 static void sCatAsString(StringBuffer& out, const Value& v)
 {
@@ -333,38 +368,15 @@ static void sCatAsString(StringBuffer& out, const Value& v)
 		out.Cat(ValueTo<RawHtmlText>(v).text);
 	}
 	else {
-		const char *s;
 		String h;
 		if(v.Is<String>())
-			s = ValueTo<String>(v);
+			h = ValueTo<String>(v);
 		else {
 			LTIMING("AsString");
 			h = AsString(v);
-			s = h;
 		}
 		LTIMING("Escape html");
-		while(*s) {
-			if(*s == 31)
-				out.Cat("&nbsp;");
-			else
-			if(*s == '<')
-				out.Cat("&lt;");
-			else
-			if(*s == '>')
-				out.Cat("&gt;");
-			else
-			if(*s == '&')
-				out.Cat("&amp;");
-			else
-			if(*s == '\"')
-				out.Cat("&quot;");
-			else
-			if((byte)*s < ' ')
-				out.Cat(NFormat("&#%d;", (byte)*s));
-			else
-				out.Cat(*s);
-			s++;
-		}
+		EscapeHtml(out, h);
 	}
 }
 
@@ -408,6 +420,7 @@ Value Compiler::ExeBlock::Eval(ExeContext& x) const
 String Render(const One<Exe>& exe, Renderer *r, Vector<Value>& var)
 {
 	LTIMING("Render0");
+	DDUMPC(var);
 	ExeContext x(var, r);
 	Value v = exe->Eval(x);
 	x.out.Cat(AsString(v));

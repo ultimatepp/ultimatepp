@@ -16,8 +16,13 @@ String LoadTemplate(const char *file, const String& search_path, int lang)
 		path = GetFileOnPath1(f + ".witz", search_path);
 		if(IsNull(path)) {
 			path = GetFileOnPath1(f, search_path);
-			if(IsNull(path))
+			if(IsNull(path)) {
+#ifdef _DEBUG
+				return "<hr/><h1>Missing template file " + EscapeHtml(String(file)) + "</h1>$set()<hr/>";
+#else
 				throw Exc("missing template " + String(file));
+#endif
+			}
 		}
 	}
 	SKYLARKLOG("Loading template file " << path);
