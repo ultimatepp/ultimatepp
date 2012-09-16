@@ -820,7 +820,7 @@ void EditField::SelectAll()
 }
 
 void EditField::StdBar(Bar& menu) {
-	menu.Add(t_("Undo"), THISBACK(Undo))
+	menu.Add(IsEditable(), t_("Undo"), THISBACK(Undo))
 		.Key(K_ALT_BACKSPACE)
 		.Key(K_CTRL_Z);
 	menu.Separator();
@@ -840,13 +840,15 @@ void EditField::StdBar(Bar& menu) {
 		.Key(K_CTRL_A);
 }
 
-
 void EditField::RightDown(Point p, dword keyflags)
 {
 	keep_selection = true;
+	Ptr<EditField> self = this;
 	MenuBar::Execute(WhenBar);
-	SetFocus();
-	keep_selection = false;
+	if(self) { // protect from destruction when in menu modal loop
+		SetFocus();
+		keep_selection = false;
+	}
 }
 
 bool EditField::Key(dword key, int rep)
