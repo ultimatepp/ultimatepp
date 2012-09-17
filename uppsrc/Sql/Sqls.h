@@ -84,7 +84,6 @@ private:
 	SqlSource(const SqlSource&);
 };
 
-
 class Sql {
 	SqlConnection  *cn;
 	Vector<Value>   param;
@@ -113,34 +112,45 @@ public:
 	void   SetStatement(const SqlStatement& s)         { SetStatement(Compile(s)); }
 
 	bool   Execute();
-	void   ExecuteX();
+	void   ExecuteX(); // Deprecated
 	bool   Run()                                       { return Execute(); }
-	void   RunX()                                      { ExecuteX(); }
+	void   RunX()                                      { ExecuteX(); } // Deprecated
 
 	bool   Execute(const String& s);
-	void   ExecuteX(const String& s);
+	void   ExecuteX(const String& s); // Deprecated
 
 	bool   Execute(const SqlStatement& s)              { return Execute(Compile(s)); }
-	void   ExecuteX(const SqlStatement& s)             { ExecuteX(Compile(s)); }
+	void   ExecuteX(const SqlStatement& s)             { ExecuteX(Compile(s)); }  // Deprecated
+
+
 //$-
 #define  E__Run(I)       bool Run(__List##I(E__Value));
 	__Expand(E__Run)
-//$ bool Run(const Value& v1 [, const Value& v2 ...]);
+//$+ bool Run(const Value& v1 [, const Value& v2 ...]);
 
-#define  E__RunX(I)      void RunX(__List##I(E__Value));
+//$-
+#define  E__RunX(I)      void RunX(__List##I(E__Value)); // Deprecated
 	__Expand(E__RunX)
+//$+
 
+//$-
 #define  E__Execute(I)   bool Execute(const String& s, __List##I(E__Value));
 	__Expand(E__Execute)
+//$+ bool Execute(const String& s, const Value& v1 [, const Value& v2 ...]);
 
-#define  E__ExecuteX(I)  void ExecuteX(const String& s, __List##I(E__Value));
+//$-
+#define  E__ExecuteX(I)  void ExecuteX(const String& s, __List##I(E__Value)); // Deprecated
 	__Expand(E__ExecuteX)
+//$+
+
 
 	bool   Fetch();
 
+//$-
 #define  E__Fetch(I)    bool Fetch(__List##I(E__Ref));
 	__Expand(E__Fetch)
-//$+
+//$+ bool Fetch(Ref v1 [, Ref v2 ...]);
+
 	bool   Fetch(Vector<Value>& row);
 	bool   Fetch(ValueMap& row);
 	bool   Fetch(Fields fields);
@@ -159,27 +169,29 @@ public:
 	operator Vector<Value>() const                     { return GetRow(); }
 	void   Get(Fields fields);
 
-	void        SetFetchRows(int nrows)                { cn->fetchrows = nrows; }
-	void        SetLongSize(int lsz)                   { cn->longsize = lsz; }
+	void        SetFetchRows(int nrows)                { cn->fetchrows = nrows; } // deprecated
+	void        SetLongSize(int lsz)                   { cn->longsize = lsz; } // deprecated
 
 	void        Cancel()                               { cn->Cancel(); }
 
-	Value       Select(const String& what);
+	Value       Select(const String& what); // Deprecated
 
-#define  E__Select(I)   Value Select(const String& what, __List##I(E__Value));
+//$-
+#define  E__Select(I)   Value Select(const String& what, __List##I(E__Value)); // Deprecated
 	__Expand(E__Select)
 
-#define  E__Insert(I)  bool Insert(const char *tb, const char *c0, const Value& v0, __List##I(E__ColVal));
+#define  E__Insert(I)  bool Insert(const char *tb, const char *c0, const Value& v0, __List##I(E__ColVal)); // Deprecated
 	__Expand(E__Insert)
 
-#define  E__InsertId(I)  bool Insert(SqlId tb, SqlId c0, const Value& v0, __List##I(E__IdVal));
+#define  E__InsertId(I)  bool Insert(SqlId tb, SqlId c0, const Value& v0, __List##I(E__IdVal)); // Deprecated
 	__Expand(E__InsertId)
 
-#define  E__Update(I)  bool Update(const char *tb, const char *k, const Value& kv, __List##I(E__ColVal));
+#define  E__Update(I)  bool Update(const char *tb, const char *k, const Value& kv, __List##I(E__ColVal)); // Deprecated
 	__Expand(E__Update)
 
-#define  E__UpdateId(I)  bool Update(SqlId tb, SqlId k, const Value& kv, __List##I(E__IdVal));
+#define  E__UpdateId(I)  bool Update(SqlId tb, SqlId k, const Value& kv, __List##I(E__IdVal)); // Deprecated
 	__Expand(E__UpdateId)
+//$+
 
 	bool        Insert(Fields nf);
 	bool        Insert(Fields nf, const char *table);
@@ -203,7 +215,7 @@ public:
 	String      ToString() const                       { return cn->ToString(); }
 
 	bool       operator*(const SqlStatement& q)        { return Execute(q); }
-	Sql&       operator&(const SqlStatement& q)        { ExecuteX(q); return *this; }
+	Sql&       operator&(const SqlStatement& q)        { ExecuteX(q); return *this; } // Deprecated
 	Value      operator%(const SqlStatement& q);
 	ValueMap   operator^(const SqlStatement& q);
 	ValueArray operator/(const SqlStatement& q);
@@ -220,6 +232,7 @@ public:
 		CONNECTION_BROKEN,
 	};
 
+	// following block deprecated, use SqlSession for error handling
 	void   SetError(String error, String stmt, int code = 0, const char *scode = NULL, ERRORCLASS clss = ERROR_UNSPECIFIED);
 	String GetLastError() const;
 	String GetErrorStatement() const;
@@ -228,19 +241,20 @@ public:
 	ERRORCLASS GetErrorClass() const;
 	void   ClearError();
 
-	void   Begin();
-	void   Commit();
-	void   Rollback();
-	int    GetTransactionLevel();
+	void   Begin(); // deprecated: use SqlSession::Begin instead
+	void   Commit(); // deprecated: use SqlSession::Commit instead
+	void   Rollback(); // deprecated: use SqlSession::Rollback instead
+	int    GetTransactionLevel(); // deprecated: only single level of transactions generally supported
 
-	String Savepoint();
-	void   RollbackTo(const String& savepoint);
+	String Savepoint(); // deprecated
+	void   RollbackTo(const String& savepoint); // deprecated
 
-	bool   IsOpen();
+	bool   IsOpen(); // 
 
-	bool   WasError() const;
+	bool   WasError() const; // deprecated, use SqlSession::WasError
 
-	Sql(SqlSource&);
+	Sql(SqlSource& src); // internal use only
+	Sql(SqlSession& session);
 #ifndef NOAPPSQL
 	Sql();
 	Sql(const char *stmt);
@@ -365,6 +379,7 @@ public:
 	SqlSession&                   TraceSlow(int ms = 5000)                { traceslow = ms; return *this; }
 	
 	SqlSession&                   ThrowOnError(bool b = true)             { throwonerror = b; return *this; }
+	bool                          IsThrowOnError() const                  { return throwonerror; }
 
 	bool                          WasError() const                        { return !GetLastError().IsEmpty(); }
 
