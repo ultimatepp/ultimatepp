@@ -1,4 +1,4 @@
-topic "";
+topic "Sql";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -10,15 +10,16 @@ topic "";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[ {{10000@(113.42.0) [s0; [*@7;4 Title]]}}&]
+[ {{10000@(113.42.0) [s0; [*@7;4 Sql]]}}&]
 [s1;@(0.0.255)3%- &]
 [s1;:Sql`:`:class:%- [@(0.0.255)3 class][3 _][*3 Sql]&]
-[s2; Sql represents a SQL execution context. It is associated with 
-SqlSession; several Sql contexts can be associated with single 
-session. As there is usually single default SqlSession per process 
-(or per thread), when session is not specified with constructor, 
-this default session is used.&]
+[s2; This class  represents a SQL execution context. It is associated 
+with SqlSession; several Sql contexts can be associated with 
+single session. As there is usually single default SqlSession 
+per process (or per thread), when session is not specified with 
+constructor, this default session is used.&]
 [s3;%- &]
+[s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
 [s5;:Sql`:`:Compile`(const SqlStatement`&`):%- [_^String^ String]_[* Compile]([@(0.0.255) c
@@ -275,145 +276,78 @@ onst]_[_^SqlStatement^ SqlStatement][@(0.0.255) `&]_[*@3 q])&]
 [s4; &]
 [s5;:Sql`:`:operator`%`(const SqlStatement`&`):%- [_^Value^ Value]_[* operator%]([@(0.0.255) c
 onst]_[_^SqlStatement^ SqlStatement][@(0.0.255) `&]_[*@3 q])&]
-[s2; Executes query, fetches a single row and returns the value of 
-first column. If there is no row in resultset (or if error), 
-returns Null.&]
+[s2; Executes a query, fetches a single row and returns the value 
+of first column. If there is no row in resultset, returns Null. 
+In case of error, returns ErrorValue (which is also interpreted 
+as Null).&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:operator`^`(const SqlStatement`&`):%- [_^ValueMap^ ValueMap]_[* operator`^]([@(0.0.255) c
 onst]_[_^SqlStatement^ SqlStatement][@(0.0.255) `&]_[*@3 q])&]
-[s2;  [%-*@3 q] .&]
+[s2; Executes a query, fetches a single row and returns this row 
+as ValueMap where keys are names of columns. If there is no row 
+in resultset or in case of error returns empty ValueMap.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:operator`/`(const SqlStatement`&`):%- [_^ValueArray^ ValueArray]_[* operator/
 ]([@(0.0.255) const]_[_^SqlStatement^ SqlStatement][@(0.0.255) `&]_[*@3 q])&]
-[s2;  [%-*@3 q] .&]
+[s2; Executes a query and returns the resultset as ValueArray of 
+ValueMaps (keys are column names). If there is no row in resultset 
+or in case of error returns empty ValueArray.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:GetSession`(`)const:%- [_^SqlSession^ SqlSession][@(0.0.255) `&]_[* GetSession](
 )_[@(0.0.255) const]&]
-[s2; &]
+[s2; Returns the associated SqlSession.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:GetDialect`(`)const:%- [@(0.0.255) int]_[* GetDialect]()_[@(0.0.255) const]&]
-[s2; &]
+[s2; Returns the SQL dialect of associated SqlSession.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:GetInsertedId`(`)const:%- [_^Value^ Value]_[* GetInsertedId]()_[@(0.0.255) cons
 t]&]
-[s2; &]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:GetUser`(`)const:%- [_^String^ String]_[* GetUser]()_[@(0.0.255) const]&]
-[s2; &]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:ERROR`_UNSPECIFIED:%- [@(0.0.255) enum]_ERRORCLASS_[* ERROR`_UNSPECIFIED]&]
-[s2; &]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:CONNECTION`_BROKEN:%- [@(0.0.255) enum]_ERRORCLASS_[* CONNECTION`_BROKEN]&]
-[s2; &]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:SetError`(String`,String`,int`,const char`*`,ERRORCLASS`):%- [@(0.0.255) vo
-id]_[* SetError]([_^String^ String]_[*@3 error], [_^String^ String]_[*@3 stmt], 
-[@(0.0.255) int]_[*@3 code]_`=_[@3 0], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 scode]_`=_
-NULL, ERRORCLASS_[*@3 clss]_`=_ERROR`_UNSPECIFIED)&]
-[s2;  [%-*@3 error] [%-*@3 stmt] [%-*@3 code] [%-*@3 scode] [%-*@3 clss] .&]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:GetLastError`(`)const:%- [_^String^ String]_[* GetLastError]()_[@(0.0.255) cons
-t]&]
-[s2; &]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:GetErrorStatement`(`)const:%- [_^String^ String]_[* GetErrorStatement]()_[@(0.0.255) c
-onst]&]
-[s2; &]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:GetErrorCode`(`)const:%- [@(0.0.255) int]_[* GetErrorCode]()_[@(0.0.255) const]&]
-[s2; &]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:GetErrorCodeString`(`)const:%- [_^String^ String]_[* GetErrorCodeString]()_[@(0.0.255) c
-onst]&]
-[s2; &]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:GetErrorClass`(`)const:%- ERRORCLASS_[* GetErrorClass]()_[@(0.0.255) const]&]
-[s2; &]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:ClearError`(`):%- [@(0.0.255) void]_[* ClearError]()&]
-[s2; &]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:Begin`(`):%- [@(0.0.255) void]_[* Begin]()&]
-[s2; &]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:Commit`(`):%- [@(0.0.255) void]_[* Commit]()&]
-[s2; &]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:Rollback`(`):%- [@(0.0.255) void]_[* Rollback]()&]
-[s2; &]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:GetTransactionLevel`(`):%- [@(0.0.255) int]_[* GetTransactionLevel]()&]
-[s2; &]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:Savepoint`(`):%- [_^String^ String]_[* Savepoint]()&]
-[s2; &]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:RollbackTo`(const String`&`):%- [@(0.0.255) void]_[* RollbackTo]([@(0.0.255) co
-nst]_[_^String^ String][@(0.0.255) `&]_[*@3 savepoint])&]
-[s2;  [%-*@3 savepoint] .&]
-[s3; &]
+[s2; For databases with auto`-increment options of primary keys, 
+returns the last value of primary key inserted. (Note that for 
+PGSQL, it is required that the auto`-increment primary key is 
+named `"ID`").&]
 [s4; &]
 [s5;:Sql`:`:IsOpen`(`):%- [@(0.0.255) bool]_[* IsOpen]()&]
-[s2; &]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:WasError`(`)const:%- [@(0.0.255) bool]_[* WasError]()_[@(0.0.255) const]&]
-[s2; &]
+[s2; Returns true there is associated SqlSession this this instance 
+and the SqlSession is connected to database.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:Sql`(SqlSource`&`):%- [* Sql]([_^SqlSource^ SqlSource][@(0.0.255) `&]_[*@3 src])&]
-[s2;  [%-*@3 src] .&]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:Sql`(SqlSession`&`):%- [* Sql]([_^SqlSession^ SqlSession][@(0.0.255) `&]_[*@3 ses
-sion])&]
-[s2;  [%-*@3 session] .&]
+[s2; Creates Sql instance associated with session [%-*@3 src]. (SqlSession 
+is derived from SqlSource, which serves some special internal 
+purposes).&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:Sql`(`):%- [* Sql]()&]
-[s2; &]
+[s2; Creates Sql instance associated with default session.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:Sql`(const char`*`):%- [* Sql]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 stmt])
 &]
-[s2;  [%-*@3 stmt] .&]
+[s2; Creates Sql instance associated with default session and assigns 
+it a statement.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:Sql`(const SqlStatement`&`):%- [* Sql]([@(0.0.255) const]_[_^SqlStatement^ SqlS
 tatement][@(0.0.255) `&]_[*@3 s])&]
-[s2;  [%-*@3 s] .&]
+[s2; Creates Sql instance associated with default session and assigns 
+it a SqlExp statement.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:Sql`(const char`*`,SqlSource`&`):%- [* Sql]([@(0.0.255) const]_[@(0.0.255) char
 ]_`*[*@3 stmt], [_^SqlSource^ SqlSource][@(0.0.255) `&]_[*@3 session])&]
-[s2;  [%-*@3 stmt] [%-*@3 session] .&]
+[s2; Creates Sql instance associated with [%-*@3 session] and assigns 
+it a statement.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:Sql`(const SqlStatement`&`,SqlSource`&`):%- [* Sql]([@(0.0.255) const]_[_^SqlStatement^ S
 qlStatement][@(0.0.255) `&]_[*@3 s], [_^SqlSource^ SqlSource][@(0.0.255) `&]_[*@3 session])
 &]
-[s2;  [%-*@3 s] [%-*@3 session] .&]
-[s3; &]
+[s2; Creates Sql instance associated with [%-*@3 session] and assigns 
+it a SqlExp statement.&]
 [s0; ]]
