@@ -186,94 +186,98 @@ rest of resultset is released.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:Insert`(Fields`):%- [@(0.0.255) bool]_[* Insert]([_^Fields^ Fields]_[*@3 nf])&]
-[s2; Inserts Fields [%-*@3 nf] into database. Fields usually represent 
-some S`_`* table row structure based on .sch file. &]
+[s2; Executes [/ insert] statement that inserts Fields [%-*@3 nf] into 
+database. Fields usually represent some S`_`* table row structure 
+based on .sch file.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:Insert`(Fields`,const char`*`):%- [@(0.0.255) bool]_[* Insert]([_^Fields^ Field
 s]_[*@3 nf], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 table])&]
 [s5;:Sql`:`:Insert`(Fields`,SqlId`):%- [@(0.0.255) bool]_[* Insert]([_^Fields^ Fields]_[*@3 n
 f], [_^SqlId^ SqlId]_[*@3 table])&]
-[s2; Inserts Fields [%-*@3 nf] into database, but uses different table 
-as target. Fields usually represent some S`_`* table row structure 
-based on .sch file.&]
+[s2; Executes [/ insert] statement that inserts Fields [%-*@3 nf] columns 
+into database, but uses different table as target. Fields usually 
+represent some S`_`* table row structure based on .sch file.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:InsertNoKey`(Fields`):%- [@(0.0.255) bool]_[* InsertNoKey]([_^Fields^ Fields]_[*@3 n
 f])&]
-[s2; Inserts Fields [%-*@3 nf] into database, first column of [%-*@3 nf] 
-is not used (this column usually contains key). Fields usually 
-represent some S`_`* table row structure based on .sch file.&]
+[s2; Executes [/ insert] statement that inserts Fields [%-*@3 nf] into 
+database, first column of [%-*@3 nf] is not used (this column usually 
+contains key). Fields usually represent some S`_`* table row 
+structure based on .sch file.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:InsertNoKey`(Fields`,const char`*`):%- [@(0.0.255) bool]_[* InsertNoKey]([_^Fields^ F
 ields]_[*@3 nf], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 table])&]
 [s5;:Sql`:`:InsertNoKey`(Fields`,SqlId`):%- [@(0.0.255) bool]_[* InsertNoKey]([_^Fields^ Fi
 elds]_[*@3 nf], [_^SqlId^ SqlId]_[*@3 table])&]
-[s2; Inserts Fields [%-*@3 nf] into database, but uses different table 
-as target. First column of [%-*@3 nf] is not used (this column 
-usually contains primary key). Fields usually represent some 
-S`_`* table row structure based on .sch file.&]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:InsertNoNulls`(Fields`,const char`*`):%- [@(0.0.255) bool]_[* InsertNoNulls](
-[_^Fields^ Fields]_[*@3 nf], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 table])&]
-[s2;  [%-*@3 nf] [%-*@3 table] .&]
+[s2; Executes [/ insert] statement that inserts Fields [%-*@3 nf] columns 
+into database, but uses different table as target. First column 
+of [%-*@3 nf] is not used (this column usually contains primary 
+key). Fields usually represent some S`_`* table row structure 
+based on .sch file.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:InsertNoNulls`(Fields`):%- [@(0.0.255) bool]_[* InsertNoNulls]([_^Fields^ Field
 s]_[*@3 nf])&]
-[s2;  [%-*@3 nf] .&]
+[s2; Executes [/ insert] statement that inserts Fields [%-*@3 nf] into 
+database, columns that are null are not used. Fields usually 
+represent some S`_`* table row structure based on .sch file.&]
 [s3; &]
 [s4; &]
+[s5;:Sql`:`:InsertNoNulls`(Fields`,const char`*`):%- [@(0.0.255) bool]_[* InsertNoNulls](
+[_^Fields^ Fields]_[*@3 nf], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 table])&]
 [s5;:Sql`:`:InsertNoNulls`(Fields`,SqlId`):%- [@(0.0.255) bool]_[* InsertNoNulls]([_^Fields^ F
 ields]_[*@3 nf], [_^SqlId^ SqlId]_[*@3 table])&]
-[s2;  [%-*@3 nf] [%-*@3 table] .&]
+[s2; Executes [/ insert] statement that inserts Fields [%-*@3 nf] columns 
+into database, but uses different table as target. Columns that 
+are null are not used. Fields usually represent some S`_`* table 
+row structure based on .sch file.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:Update`(Fields`):%- [@(0.0.255) bool]_[* Update]([_^Fields^ Fields]_[*@3 nf])&]
-[s2;  [%-*@3 nf] .&]
+[s2; Executes [/ update] statement that updates a table row in the 
+database. First column of [%-*@3 nf] is used as primary key (for 
+[/ where] part of statement). Fields usually represent some S`_`* 
+table row structure based on .sch file.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:Update`(Fields`,const char`*`):%- [@(0.0.255) bool]_[* Update]([_^Fields^ Field
 s]_[*@3 nf], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 table])&]
-[s2;  [%-*@3 nf] [%-*@3 table] .&]
-[s3; &]
-[s4; &]
 [s5;:Sql`:`:Update`(Fields`,SqlId`):%- [@(0.0.255) bool]_[* Update]([_^Fields^ Fields]_[*@3 n
 f], [_^SqlId^ SqlId]_[*@3 table])&]
-[s2;  [%-*@3 nf] [%-*@3 table] .&]
+[s2; Executes [/ update] statement that updates a table row in the 
+database, but uses different table as target. First column of 
+[%-*@3 nf] is used as primary key (for [/ where] part of statement). 
+Fields usually represent some S`_`* table row structure based 
+on .sch file.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:Delete`(const char`*`,const char`*`,const Value`&`):%- [@(0.0.255) bool]_[* D
 elete]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 table], [@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 key], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 keyval])&]
-[s2;  [%-*@3 table] [%-*@3 key] [%-*@3 keyval] .&]
-[s3; &]
-[s4; &]
 [s5;:Sql`:`:Delete`(SqlId`,SqlId`,const Value`&`):%- [@(0.0.255) bool]_[* Delete]([_^SqlId^ S
 qlId]_[*@3 table], [_^SqlId^ SqlId]_[*@3 key], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
 ]_[*@3 keyval])&]
-[s2;  [%-*@3 table] [%-*@3 key] [%-*@3 keyval] .&]
+[s2; Removes a table row from the databases. This is sort of deprecated 
+in favor of SqlExp Delete.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:ToString`(`)const:%- [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]
-[s2; &]
+[s2; Returns the current SQL statement.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:operator`*`(const SqlStatement`&`):%- [@(0.0.255) bool]_[* operator`*]([@(0.0.255) c
 onst]_[_^SqlStatement^ SqlStatement][@(0.0.255) `&]_[*@3 q])&]
-[s2;  [%-*@3 q] .&]
-[s3; &]
-[s4; &]
-[s5;:Sql`:`:operator`&`(const SqlStatement`&`):%- [_^Sql^ Sql][@(0.0.255) `&]_[* operator`&
-]([@(0.0.255) const]_[_^SqlStatement^ SqlStatement][@(0.0.255) `&]_[*@3 q])&]
-[s2;  [%-*@3 q] .&]
+[s2; Same as Execute(Compile(q)).&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:operator`%`(const SqlStatement`&`):%- [_^Value^ Value]_[* operator%]([@(0.0.255) c
 onst]_[_^SqlStatement^ SqlStatement][@(0.0.255) `&]_[*@3 q])&]
-[s2;  [%-*@3 q] .&]
+[s2; Executes query, fetches a single row and returns the value of 
+first column. If there is no row in resultset (or if error), 
+returns Null.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:operator`^`(const SqlStatement`&`):%- [_^ValueMap^ ValueMap]_[* operator`^]([@(0.0.255) c
