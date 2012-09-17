@@ -286,11 +286,12 @@ struct SqlR : Sql {
 };
 #endif
 
-struct StatementExecutor {
+struct StatementExecutor { // Deprecated, use SqlPerforScript
 	virtual bool Execute(const String& stmt) = 0;
 	virtual ~StatementExecutor() {}
 };
 
+ // Deprecated, use SqlPerforScript
 typedef bool (*RunScript)(const String& text, StatementExecutor& executor, Gate2<int, int> progress_canceled);
 
 class AppSql;
@@ -340,18 +341,21 @@ protected:
 
 	static void Attach(Sql& sql, SqlConnection *con);
 
+protected:
+	SqlSession&                   Dialect(int q)                          { dialect = q; return *this; }
+
 public:
 	virtual void                  Begin();
 	virtual void                  Commit();
 	virtual void                  Rollback();
 	virtual int                   GetTransactionLevel() const;
 
-	virtual String                Savepoint();
-	virtual void                  RollbackTo(const String& savepoint);
+	virtual String                Savepoint(); // Deprecated
+	virtual void                  RollbackTo(const String& savepoint); // Deprecated
 
 	virtual bool                  IsOpen() const;
 
-	virtual RunScript             GetRunScript() const;
+	virtual RunScript             GetRunScript() const; // Deprecated
 
 	virtual Vector<String>        EnumUsers();
 	virtual Vector<String>        EnumDatabases();
@@ -360,10 +364,9 @@ public:
 	virtual Vector<String>        EnumSequences(String database);
 	virtual Vector<SqlColumnInfo> EnumColumns(String database, String table);
 	virtual Vector<String>        EnumPrimaryKey(String database, String table);
-	virtual String                EnumRowID(String database, String table);
-	virtual Vector<String>        EnumReservedWords();
+	virtual String                EnumRowID(String database, String table); // deprecated
+	virtual Vector<String>        EnumReservedWords(); // deprecated
 
-	SqlSession&                   Dialect(int q)                          { dialect = q; return *this; }
 	int                           GetDialect() const                      { ASSERT(dialect != 255); return dialect; }
 
 	void                          SetTrace(Stream& s = VppLog())          { trace = &s; }
@@ -392,16 +395,16 @@ public:
 	void                          ClearError();
 	void                          InstallErrorHandler(bool (*handler)(String error, String stmt, int code, const char *scode, Sql::ERRORCLASS clss));
 
-	String                        GetStatement() const                    { return statement; }
-	void                          SetStatement(const String& s)           { statement = s; }
+	String                        GetStatement() const                    { return statement; } // deprecated
+	void                          SetStatement(const String& s)           { statement = s; } // deprecated
 
-	void                          SetTime(int t)                          { exectime = t; }
-	int                           GetTime() const                         { return exectime; }
+	void                          SetTime(int t)                          { exectime = t; } // deprecated
+	int                           GetTime() const                         { return exectime; } // deprecated
 
-	String                        GetUser()                               { return Sql(*this).GetUser(); }
+	String                        GetUser()                               { return Sql(*this).GetUser(); } // deprecated
 	
-	Sql&                          GetSessionSql();
-	Sql&                          GetSessionSqlR();
+	Sql&                          GetSessionSql(); // "private" - only to make SQL work
+	Sql&                          GetSessionSqlR(); // "private" - only to make SQL work
 
 	operator                      bool() const                            { return IsOpen(); }
 

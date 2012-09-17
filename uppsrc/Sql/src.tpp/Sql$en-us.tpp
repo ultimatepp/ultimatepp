@@ -350,4 +350,12 @@ qlStatement][@(0.0.255) `&]_[*@3 s], [_^SqlSource^ SqlSource][@(0.0.255) `&]_[*@
 &]
 [s2; Creates Sql instance associated with [%-*@3 session] and assigns 
 it a SqlExp statement.&]
+[s3; &]
+[s4;%- &]
+[s5;:Sql`:`:PerThread`(bool`):%- [@(0.0.255) static] [@(0.0.255) void]_[* PerThread]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; In multithreded mode, activates mode where each thread has assigned 
+unique per`-thread default session (otherwise default session 
+is shared).&]
+[s3; &]
 [s0; ]]
