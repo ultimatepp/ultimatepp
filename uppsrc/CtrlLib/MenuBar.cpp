@@ -556,10 +556,14 @@ void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 
 void MenuBar::Execute(Ctrl *owner, Point p)
 {
-	if(IsEmpty()) return;
+	static int level; // Used to prevent another local menu to be opened (repeated right-click)
+	if(IsEmpty() || level > 0) 
+		return;
+	++level;
 	PopUp(owner, p);
 	EventLoop(this);
 	CloseMenu();
+	--level;
 }
 
 void MenuBar::Execute(Ctrl *owner, Callback1<Bar&> proc, Point p)
