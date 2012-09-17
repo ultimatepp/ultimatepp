@@ -225,7 +225,7 @@ public:
 
 	Value  GetInsertedId() const                       { return cn->GetInsertedId(); }
 
-	String GetUser() const                             { return cn->GetUser(); }
+	String GetUser() const                             { return cn->GetUser(); } // Deprecated
 
 	enum ERRORCLASS {
 		ERROR_UNSPECIFIED,
