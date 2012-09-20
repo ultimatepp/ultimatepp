@@ -357,7 +357,7 @@ struct LayDesModule : public IdeModule {
 			LayDesigner *d = CreateLayDesigner(path, cs, "laydes-ctrl");
 			return d;
 		}
-		return false;
+		return NULL;
 	}
 	virtual void Serialize(Stream& s) {
 		int version = 0;
