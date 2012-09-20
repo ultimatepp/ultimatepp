@@ -480,22 +480,6 @@ public:
 	~SqlMassInsert();
 };
 
-// Deprecated, use SqlPerformScript instead
-struct StdStatementExecutor : StatementExecutor {
-	StdStatementExecutor(SqlSession& session) : cursor(session) {}
-	virtual bool Execute(const String& stmt);
-	Sql cursor;
-};
-
-#ifndef NOAPPSQL
-StatementExecutor& SQLStatementExecutor();
-#endif
-
-#ifdef BackwardCompatibility
-	typedef Sql        QSql;
-	typedef SqlSession QSession;
-#endif
-
 template <class T>
 void SqlLoadTable(T& t, SqlId table, SqlId key = SqlId("ID"))
 {
@@ -513,3 +497,19 @@ void SqlLoadColumn(T& t, SqlId table, SqlId column, SqlId key = SqlId("ID"))
 	while(sql.Fetch())
 		t.Add(sql[key], sql[column]);
 }
+
+// Deprecated, use SqlPerformScript instead
+struct StdStatementExecutor : StatementExecutor {
+	StdStatementExecutor(SqlSession& session) : cursor(session) {}
+	virtual bool Execute(const String& stmt);
+	Sql cursor;
+};
+
+#ifndef NOAPPSQL
+StatementExecutor& SQLStatementExecutor();
+#endif
+
+#ifdef BackwardCompatibility
+	typedef Sql        QSql;
+	typedef SqlSession QSession;
+#endif
