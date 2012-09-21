@@ -13,6 +13,3 @@ file
 	TabBarCtrl.h,
 	TabBarCtrl.cpp;
 
-mainconfig
-	"" = "GUI";
-
