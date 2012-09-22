@@ -83,175 +83,11 @@ String NoCr(const char *s)
 	return out;
 }
 
-#if 0 // REMOTE REMOVED
-bool MakeBuild::SyncHostFiles(RemoteHost& host)
-{
-	HdependTimeDirty();
-	String query = "<";
-//	Vector<String> remotepath;
-	Vector<String> fdata;
-	ArrayMap<String, TransferFileInfo> info;
-	Vector<int> nocrsize;
-	const Workspace& wspc = GetIdeWorkspace();
-	int p;
-	for(p = 0; p < wspc.GetCount(); p++) {
-		const Package& pkg = wspc.GetPackage(p);
-		String pn = wspc[p];
-		for(int f = -1; f < pkg.file.GetCount(); f++)
-			if(f < 0 || !pkg.file[f].separator) {
-				Vector<String> pkgfiles;
-				String pk = (f >= 0 ? SourcePath(pn, pkg.file[f]) : PackagePath(pn));
-				if(!FindFile(pk).IsFile())
-					continue;
-				pkgfiles.Add(f >= 0 ? SourcePath(pn, pkg.file[f]) : PackagePath(pn));
-				pkgfiles.AppendPick(HdependGetDependencies(pkgfiles[0]));
-				for(int d = 0; d < pkgfiles.GetCount(); d++) {
-					TransferFileInfo newinfo;
-					newinfo.sourcepath = pkgfiles[d];
-					String rp = host.GetHostPath(newinfo.sourcepath);
-					if(info.Find(rp) >= 0 || (d && UnixPath(rp) == UnixPath(newinfo.sourcepath)))
-						continue;
-					FindFile ff(newinfo.sourcepath);
-					newinfo.filetime = (int)(Time(ff.GetLastWriteTime()) - RemoteHost::TimeBase());
-					newinfo.filesize = (int)ff.GetLength();
-					int pos = transferfilecache.Find(rp);
-					if(pos < 0 || transferfilecache[pos].filetime != newinfo.filetime
-						|| transferfilecache[pos].filesize != newinfo.filesize)
-					{
-						String content = NoCr(LoadFile(newinfo.sourcepath));
-						query << rp << '\t' << newinfo.filetime << '\t' << content.GetLength() << '\n';
-	//					remotepath.Add(rp);
-						fdata.Add(content);
-						info.Add(rp, newinfo);
-						nocrsize.Add(content.GetLength());
-						PutVerbose("Checking remote " + rp);
-	/*
-						if(msecs(ticks) >= 0)
-						{
-							ShowConsole();
-							console.Sync();
-							ticks = msecs(-200);
-						}
-	*/				}
-				}
-			}
-	}
-	if(info.IsEmpty())
-		return true;
-//	String host = GetVar("REMOTE_HOST");
-//	int port = 2346;
-//	int ppos = host.Find(':');
-//	if(ppos >= 0)
-//	{
-//		port = ScanInt(host.GetIter(ppos + 1));
-//		host.Trim(ppos);
-//	}
-
-	Index<String> ignore;
-	{
-		PutConsole(NFormat("Retrieving update list for remote filesystem %s", host.host));
-		ConsoleShow();
-		String out = host.RemoteExec(query);
-		if(out[0] != 'O' || out[1] != 'K') {
-			PutConsole(out);
-			return false;
-		}
-
-		const char *s = out;
-		while(*s && *s++ != '\n')
-			;
-		while(*s)
-		{
-			const char *b = s;
-			while(*s && *s != '\n')
-				s++;
-			ignore.FindAdd(NormalizePath(NativePath(String(b, s))));
-			if(*s)
-				s++;
-		}
-		if(ignore.GetCount() == info.GetCount())
-			PutConsole("Remote source tree is up to date.");
-		else
-		{
-			PutConsole(NFormat("%d file(s) missing in remote source tree:", info.GetCount() - ignore.GetCount()));
-			for(p = 0; p < info.GetCount(); p++)
-			{
-//				console << "   " << remotepath[p] << " - "
-//					<< FormatInt(p) << " @ " << FormatInt(ignore.Find(remotepath[p])) << "\n";
-				if(ignore.Find(NormalizePath(NativePath(info.GetKey(p)))) < 0)
-					PutConsole(String().Cat() << "   " << info.GetKey(p));
-			}
-		}
-	}
-
-	Vector<String> update;
-	for(p = 0; p < info.GetCount(); p++)
-		if(ignore.Find(NormalizePath(NativePath(info.GetKey(p)))) < 0)
-		{
-			String rawdata = fdata[p];
-			PutConsole(String().Cat() << "Compressing " << info[p].sourcepath << " (" << FormatInt(rawdata.GetLength()) << " B)\n");
-			ConsoleSync();
-			String bzdata = BZ2Compress(rawdata);
-			String comp = ASCII85Encode(bzdata);
-			if(update.IsEmpty() || update.Top().GetLength() + comp.GetLength() >= 500000)
-				update.Add(">");
-			update.Top() << info.GetKey(p) << '\t' << info[p].filetime << '\t' << nocrsize[p] << '\t' << comp << '\n';
-		}
-
-	for(p = 0; p < update.GetCount(); p++)
-	{
-		PutConsole(NFormat("Uploading block %d / %d (%d B)", p + 1, update.GetCount(), update[p].GetLength()));
-		ConsoleShow();
-		String result = host.RemoteExec(update[p]);
-		if(result[0] != 'O' || result[1] != 'K') {
-			PutConsole(result);
-			return false;
-		}
-	}
-
-	for(p = 0; p < info.GetCount(); p++)
-		transferfilecache.GetAdd(info.GetKey(p)) = info[p];
-	return true;
-}
-#endif
-
 One<Host> MakeBuild::CreateHost(bool sync_files)
 {
 	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
 	One<Host> outhost;
-#if 0 // REMOTE REMOVED
-	String rm = bm.Get("REMOTE_HOST", Null);
-	if(!IsNull(rm)) {
-		One<RemoteHost> host = new RemoteHost;
-		host->host = rm;
-		host->port = 2346;
-		int f = rm.Find(':');
-		if(f >= 0) {
-			host->host = rm.Left(f);
-			host->port = Nvl(ScanInt(rm.GetIter(f + 1)), host->port);
-		}
-		host->os_type = bm.Get("REMOTE_OS", "UNIX");
-		Vector<String> path_map = Split(bm.Get("REMOTE_MAP", Null), ';');
-		for(int p = 0; p < path_map.GetCount(); p++) {
-			f = path_map[p].Find('>');
-			if(f >= 0) {
-				host->path_map_local.Add(path_map[p].Left(f));
-				host->path_map_remote.Add(path_map[p].Mid(f + 1));
-			}
-		}
-		VectorMap<String, String> env(Environment(), 1);
-		Vector<String> exedirs = SplitDirs(bm.Get("PATH", "") + ';' + env.Get("PATH", ""));
-		env.GetAdd("PATH") = Join(exedirs, ";");
-		for(int i = 0; i < env.GetCount(); i++)
-			host->environment << env.GetKey(i) << '=' << env[i] << '\0';
-		host->environment.Cat(0);
-		if(sync_files && bm.Get("REMOTE_TRANSFER", Null) != "0")
-			SyncHostFiles(*host);
-		outhost = -host;
-	}
-	else
-#endif
 	{
 		One<LocalHost> host = new LocalHost;
 		VectorMap<String, String> env(Environment(), 1);
@@ -531,6 +367,11 @@ Vector<String> MakeBuild::GetAllLibraries(const Workspace& wspc, int index,
 
 bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, bool clear_console)
 {
+	String hfile = outfile + ".xxx";
+	SaveFile(hfile, "");
+	FileTime start_time = GetFileTime(hfile); // Defensive way to get correct filetime of start
+	DeleteFile(hfile);
+	
 	ClearErrorEditor();
 	BeginBuilding(true, clear_console);
 	bool ok = true;
@@ -579,9 +420,13 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 				ms = msecs();
 			}
 		}
-		if(ok || !stoponerrors)
+		if(ok || !stoponerrors) {
 			ok = BuildPackage(wspc, 0, build_order.GetCount(), build_order.GetCount() + 1,
-				mainparam, outfile, linkfile, linkopt, ok) && ok;
+			                  mainparam, outfile, linkfile, linkopt, ok) && ok;
+			// Set the time of target to start-time, so that if any file changes during
+			// compilation, it is recompiled during next build
+			SetFileTime(target, start_time); 
+		}
 	}
 	EndBuilding(ok);
 	ReQualifyCodeBase();
