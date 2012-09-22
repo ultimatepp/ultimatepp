@@ -1,4 +1,4 @@
-#include <Web/Web.h>
+#include <Core/Core.h>
 
 using namespace Upp;
 
@@ -33,13 +33,11 @@ CONSOLE_APP_MAIN
 		String url = cmdline[i];
 		puts(url);
 		fflush(stdout);
-		HttpClient client;
-		client.URL(url);
-		client.Proxy(proxy);
-		String content = client.ExecuteRedirect();
-		puts("[error] " + Nvl(client.GetError(), "OK (no error)"));
-		puts(NFormat("[status %d] %s\n", client.GetStatusCode(), client.GetStatusLine()));
-		puts(NFormat("[headers] (%d bytes)\n%s", client.GetHeaders().GetLength(), DumpSpecial(client.GetHeaders())));
+		HttpRequest request(url);
+		request.Proxy(proxy);
+		String content = request.Execute();
+		puts("[error] " + Nvl(request.GetErrorDesc(), "OK (no error)"));
+		puts(NFormat("[status %d] %s\n", request.GetStatusCode(), request.GetReasonPhrase()));
 		puts(NFormat("[content] (%d bytes)\n%s", content.GetLength(), DumpSpecial(content)));
 		fflush(stdout);
 	}

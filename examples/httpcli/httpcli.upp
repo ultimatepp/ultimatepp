@@ -1,4 +1,4 @@
-description "Command-line driven HTTP client";
+description "Command-line driven HTTP client\377";
 
 uses
 	Web;
@@ -8,3 +8,4 @@ file
 
 mainconfig
 	"" = "";
+
