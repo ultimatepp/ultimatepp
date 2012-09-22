@@ -52,7 +52,6 @@ CONSOLE_APP_MAIN
 	TheIde(&ide);
 	ide.console.SetSlots(CPU_Cores());
 	ide.console.console = true;
-	bool clset = false;
 	const Vector<String>& arg = CommandLine();
 	if(arg.GetCount() >= 3) {
 		for(int i = 3; i < arg.GetCount(); i++)
@@ -100,8 +99,6 @@ CONSOLE_APP_MAIN
 		}
 		ide.main = arg[1];
 		ide.wspc.Scan(ide.main);
-		clset = true;
-		bool stoponerror = false;
 		const Workspace& wspc = ide.IdeWorkspace();
 		if(!wspc.GetCount()) {
 			Puts("Empty assembly\n");
@@ -168,9 +165,6 @@ CONSOLE_APP_MAIN
 						break;
 					case 'S':
 						ide.debug.linkmode = ide.release.linkmode = 2;
-						break;
-					case 'e':
-						stoponerror = true;
 						break;
 					case 'M':
 						makefile = true;
