@@ -1,0 +1,4 @@
+#ifndef _httpcli_icpp_init_stub
+#define _httpcli_icpp_init_stub
+#include "Web/init"
+#endif
