@@ -1,8 +1,0 @@
-#ifndef _imgsrv_icpp_init_stub
-#define _imgsrv_icpp_init_stub
-#include "Web/init"
-#include "Draw/init"
-#include "plugin\png/init"
-#include "plugin\gif/init"
-#include "CtrlCore/init"
-#endif
