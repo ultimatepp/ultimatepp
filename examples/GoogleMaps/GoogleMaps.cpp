@@ -21,7 +21,11 @@ String GetGoogleMap(double center_x, double center_y, int zoom, int cx, int cy,
 		       "&size=" << cx << 'x' << cy <<
 		       "&format=" << format <<
 		       "&sensor=false&key=" << apikey;
-	return HttpClientGet(request, NULL, error);
+	HttpRequest r(request);
+	String h = r.Execute();
+	if(r.IsFailure())
+		*error = r.GetErrorDesc();
+	return h;
 }
 
 Image GetGoogleMapImage(double center_x, double center_y, int zoom, int cx, int cy,
