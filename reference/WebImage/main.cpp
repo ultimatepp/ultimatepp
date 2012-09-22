@@ -1,5 +1,4 @@
 #include <CtrlLib/CtrlLib.h>
-#include <Web/Web.h>
 
 using namespace Upp;
 
@@ -12,7 +11,7 @@ struct MyApp : TopWindow {
 	}
 	
 	MyApp() {
-		img = StreamRaster::LoadStringAny(HttpClientGet("http://www.ultimatepp.org/1i.png"));
+		img = StreamRaster::LoadStringAny(HttpRequest("http://www.ultimatepp.org/1i.png").Execute());
 	}
 };
 
