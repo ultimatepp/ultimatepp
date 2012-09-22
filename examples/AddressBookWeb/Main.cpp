@@ -3,6 +3,14 @@
 #include <Sql/sch_schema.h>
 #include <Sql/sch_source.h>
 
+#define IMAGECLASS AdrBookImg
+#define IMAGEFILE <AddressBookWeb/AdrBook.iml>
+#include <Draw/iml_header.h>
+
+#define IMAGECLASS AdrBookImg
+#define IMAGEFILE <AddressBookWeb/AdrBook.iml>
+#include <Draw/iml_source.h>
+
 struct AdrBook : SkylarkApp {
 	void WorkThread();
 
