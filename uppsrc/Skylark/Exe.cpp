@@ -243,7 +243,7 @@ Value Compiler::ExeBracket::Eval(ExeContext& x) const
 {
 	Value m = value->Eval(x);
 	Value q = index->Eval(x);
-	if(IsNumber(q) && IsValueArray(m)) {
+	if(IsNumber(q) && m.Is<ValueArray>()) {
 		ValueArray va = m;
 		int i = q;
 		if(i >= 0 && i < va.GetCount())
