@@ -9,7 +9,7 @@ NAMESPACE_UPP
 #include <sys/wait.h>
 #endif
 
-#define LLOG(x) // LOG(x)
+#define LLOG(x) // DLOG(x)
 
 void LocalProcess::Init() {
 #ifdef PLATFORM_WIN32
@@ -51,7 +51,6 @@ void LocalProcess::Free() {
 	pid = 0;
 	output_read = false;
 #endif
-	exit_code = Null;
 }
 
 bool LocalProcess::Start(const char *command, const char *envptr)
@@ -319,10 +318,8 @@ int  LocalProcess::GetExitCode() {
 	if(!IsRunning())
 		return Nvl(exit_code, -1);
 	int status;
-	if(waitpid(pid, &status, WNOHANG | WUNTRACED) != pid || !DecodeExitCode(status)) {
-		LLOG("GetExitCode() -> -1 (waitpid would hang)");
+	if(waitpid(pid, &status, WNOHANG | WUNTRACED) != pid || !DecodeExitCode(status))
 		return -1;
-	}
 	exit_code = WEXITSTATUS(status);
 	LLOG("GetExitCode() -> " << exit_code << " (just exited)");
 	return exit_code;
