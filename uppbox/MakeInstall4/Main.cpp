@@ -28,6 +28,8 @@ String Syx(const char *s)
 
 void CopyFolder(const char *src, const char *dst, bool deep = true)
 {
+	if(GetFileName(src) == ".svn")
+		return;
 	Cout() << Sprintf("Directory %s\n", src);
 	RealizeDirectory(dst);
 	FindFile ff(String(src) + "/*.*");
