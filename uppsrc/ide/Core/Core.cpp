@@ -511,6 +511,8 @@ void CopyFile(const String& d, const String& s, bool brc)
 
 void CopyFolder(const char *_dst, const char *_src, Index<String>& used, bool all, bool brc)
 {
+	if(GetFileName(_src) == ".svn")
+		return;
 	String dst = NativePath(_dst);
 	String src = NativePath(_src);
 	if(dst == src)
