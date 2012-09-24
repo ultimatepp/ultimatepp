@@ -9,11 +9,9 @@ rm ~/upp.tmp/u/*.dll || true
 rm ~/upp.tmp/u/*.upp || true
 rm ~/upp.tmp/u/*.chk || true
 
-rm ~/upp.tmp/u/*.scd || true
-
 cp ~/Scripts/GCCMK.bm ~/.upp/theide
 
-~/bin/umk ~/upp.src/uppsrc ide ~/Scripts/GCCMK.bm -asrXk ~/upp.tmp/u/uppsrc
+~/bin/umk ~/upp.src/uppsrc ide ~/Scripts/GCCMK.bm -asrxMk ~/upp.tmp/u/uppsrc
 
 mv ~/upp.tmp/u/uppsrc/Makefile ~/upp.tmp/u/uppsrc/Makefile.in
 
