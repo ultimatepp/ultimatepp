@@ -1,0 +1,12 @@
+description "plugin/zip demonstration\377";
+
+uses
+	Core,
+	plugin/zip;
+
+file
+	Zip.cpp;
+
+mainconfig
+	"" = "SSE2";
+
