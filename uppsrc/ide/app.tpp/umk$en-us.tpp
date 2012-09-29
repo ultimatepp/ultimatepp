@@ -40,7 +40,8 @@ build method (which is then searched for in ][@3;3 `~][3 , ][@3;3 `~/.upp/umk][3
 ][@3;3 `~/.upp/theide][3  ][@3;3 `~/.upp/theide][3  directories) or it 
 is a direct path to the .bm file.]&]
 [s0;*C@4;3 &]
-[s0; [*C@(0.0.255)3 FLAG][3  are compilation flags]&]
+[s0; [*C@(0.0.255)3 FLAG][3  are compilation flags. If flags are not 
+specified, the first main configuration entry is used.]&]
 [s0;3 &]
 [s0; [*C@(0.0.255)3 out][3  is output file or directory]&]
 [s0;*C@4;3 &]
@@ -91,4 +92,4 @@ is number of logical cores available.]]}}&]
 [s0; [*C@5+92 umk examples Bombs GCC `-ab `+GUI,SHARED `~/bombs`\n]&]
 [s0; [*C@5+92 umk examples,uppsrc Bombs `~/GCC.bm `-rv `+GUI,SHARED 
 `~/bin]&]
-[s0; ]
+[s0; ]]
