@@ -556,14 +556,15 @@ void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 
 void MenuBar::Execute(Ctrl *owner, Point p)
 {
-	static int level; // Used to prevent another local menu to be opened (repeated right-click)
-	if(IsEmpty() || level > 0) 
+	static Vector<Ctrl *> ows; // Used to prevent another open local menu for single owner to be opened (repeated right-click)
+	int level = ows.GetCount();
+	if(IsEmpty() || FindIndex(ows, owner) >= 0)
 		return;
-	++level;
+	ows.Add(owner);
 	PopUp(owner, p);
 	EventLoop(this);
 	CloseMenu();
-	--level;
+	ows.SetCount(level);
 }
 
 void MenuBar::Execute(Ctrl *owner, Callback1<Bar&> proc, Point p)
