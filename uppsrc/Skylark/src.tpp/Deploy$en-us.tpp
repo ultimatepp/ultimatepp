@@ -37,6 +37,7 @@ on dedicated address (i.e. there is nothing else, like web pages
 or other apps). Let`'s say we want to have [/ myapp] running on 
 [/ http://example.com/]. For this you should configure [*@3 root] 
 to empty string and set [*@3 port] to 80:&]
+[s0; &]
 [s7; port`=80;&]
 [s7; root`=`"`";&]
 [s0; &]
@@ -52,8 +53,10 @@ static files. For the example above it would be to directory
 in which directory [/ myapp] can be found.&]
 [s0; &]
 [s0; Now log to this remote server, and simply run the binary:&]
+[s0; &]
 [s7; cd /path/to/myapp&]
 [s7; nohup ./myapp `&> myapp.log `&&]
+[s0; &]
 [s0; The nohup command prevents the application to close when you 
 log off. &]
 [s0; &]
@@ -72,12 +75,14 @@ etc.) by Nginx without processing the requests in [/ myapp] itself.&]
 [s0; We will furthermore assume that you have Nginx already up and 
 running (even the default settings in most of distributions is 
 OK) and that your application is configured with&]
+[s0; &]
 [s7; port`=8001;&]
 [s7; root`=`"myapp`";&]
 [s0; &]
 [s0; All you have to do to make Nginx proxy all the requests to it 
 is to add following in the nginx configuration file (usually 
 located at [/ /etc/nginx/nginx.conf]), in the [/ server] section:&]
+[s0; &]
 [s7; location /myapp `{&]
 [s7; -|proxy`_pass http://localhost:8001;&]
 [s7; -|proxy`_set`_header X`-Forwarded`-For `$remote`_addr;&]
@@ -85,9 +90,11 @@ located at [/ /etc/nginx/nginx.conf]), in the [/ server] section:&]
 [s0; &]
 [s0; To make it serve static files directly, you have to add one 
 more location rule:&]
+[s0; &]
 [s7; location /myapp/static `{&]
 [s7; -|alias /path/to/static;&]
 [s7; `}&]
+[s0; &]
 [s0; This configuration assumes that all the static files are referenced 
 as [/ /myapp/static/somepath/file.ext], if you have them scattered 
 over multiple directories, just add one rule for each.&]
@@ -95,6 +102,7 @@ over multiple directories, just add one rule for each.&]
 [s0; Now make sure the application is running (see paragraph 1 on 
 how to launch it) and reload nginx configuration (if it is running 
 already, otherwise use `"start`" instead of `"reload`"):&]
+[s0; &]
 [s7; /etc/init.d/nginx reload&]
 [s0; &]
 [s3; 2. Using Apache as a proxy&]
@@ -103,11 +111,13 @@ already, otherwise use `"start`" instead of `"reload`"):&]
 was used in previous paragraph. The only difference is in configuration. 
 To make Apache work as proxy for [/ myapp], add following two lines 
 in the apache configuration file (usually [/ /etc/httpd/conf/httpd.conf]):&]
+[s0; &]
 [s7; ProxyPass         /myapp http://localhost:8001/myapp&]
 [s7; ProxyPassReverse  /myapp http://localhost:8001/myapp&]
 [s0; &]
 [s0; For direct serving of static files you can add this above the 
 previous two lines:&]
+[s0; &]
 [s7; <Directory /tmp/static>&]
 [s7;         Allow from all&]
 [s7; </Directory>&]
@@ -118,5 +128,6 @@ previous two lines:&]
 [s0; Reloading the Apache configuration works similar to nginx (again, 
 use `"start`" instead of `"reload`" if the server is not running 
 yet):&]
+[s0; &]
 [s7; /etc/init.d/httpd reload&]
 [s0; ]]
