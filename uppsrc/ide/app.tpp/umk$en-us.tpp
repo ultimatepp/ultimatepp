@@ -13,17 +13,16 @@ topic "umk";
 [{_}%EN-US 
 [s10; [+184 umk]&]
 [s0;3 &]
-[s0; [3 umk is commandline utility to build the U`+`+ program, with 
+[s0; [3 Umk is commandline utility to build the U`+`+ program, with 
 U`+`+ assembly/package/build method system.]&]
 [s0;3 &]
-[s0;i224;O9; [*C3 umk ][*C@(0.0.255)3 assembly package][*C@4;3  ][*C3 `[`-`[][*C@4;3 a][*C3 `]`[][*C@4;3 b
-][*C3 `]`[][*C@4;3 e][*C3 `]`[][*C@4;3 r][*C3 `]`[][*C@4;3 s][*C3 `]`[][*C@4;3 S][*C3 `]`[][*C@4;3 v][*C3 `]
-`[][*C@4;3 1][*C3 `]`[][*C@4;3 2][*C3 `]`[][*C@4;3 m][*C3 `]`[][*C@4;3 d][*C3 `]`[][*C@4;3 M][*C3 `]`[
-][*C@4;3 l][*C3 `]`[][*C@4;3 x][*C3 `]`[][*C@4;3 X][*C3 `]`[][%-*C@4;3 H][%-*/C@3;3 n][*C3 `]`]][*C@4;3  
-][*C3 `[`+][*C@(0.0.255)3 FLAG][*C3 `[,][*C@(0.0.255)3 FLAG][*C3 `]...`]][*C@4;3  
-][*C3 `[][*C@(0.0.255)3 out][*C3 `]]&]
+[s0;i224;O9; [*C3 umk ][*C@(0.0.255)3 assembly package build`_method][*C@4;3  
+][*C3 `[`-`[][*C@4;3 a][*C3 `]`[][*C@4;3 b][*C3 `]`[][*C@4;3 e][*C3 `]`[][*C@4;3 r][*C3 `]`[][*C@4;3 s
+][*C3 `]`[][*C@4;3 S][*C3 `]`[][*C@4;3 v][*C3 `]`[][*C@4;3 1][*C3 `]`[][*C@4;3 2][*C3 `]`[][*C@4;3 m][*C3 `]
+`[][*C@4;3 d][*C3 `]`[][*C@4;3 M][*C3 `]`[][*C@4;3 l][*C3 `]`[][*C@4;3 x][*C3 `]`[][*C@4;3 X][*C3 `]`[
+][%-*C@4;3 H][%-*/C@3;3 n][*C3 `]`]][*C@4;3  ][*C3 `[`+][*C@(0.0.255)3 FLAG][*C3 `[,][*C@(0.0.255)3 F
+LAG][*C3 `]...`]][*C@4;3  ][*C3 `[][*C@(0.0.255)3 out][*C3 `]]&]
 [s0;3 &]
-[s0; [3 where ][*C@(0.0.255)3 out][3  is the output directory or file and]&]
 [s0;3 &]
 [s0; [*C@(0.0.255)3 assembly][3  can be a predefined assembly (in .var 
 file) which is in Win32 in directory where is located umk.exe 
@@ -40,8 +39,9 @@ build method (which is then searched for in ][@3;3 `~][3 , ][@3;3 `~/.upp/umk][3
 ][@3;3 `~/.upp/theide][3  ][@3;3 `~/.upp/theide][3  directories) or it 
 is a direct path to the .bm file.]&]
 [s0;*C@4;3 &]
-[s0; [*C@(0.0.255)3 FLAG][3  are compilation flags. If flags are not 
-specified, the first main configuration entry is used.]&]
+[s0; [*C@(0.0.255)3 FLAG][3 s are ][^topic`:`/`/ide`/app`/Flags`$en`-us^3 compilation 
+flags][3 . If flags are not specified, the first main configuration 
+entry in .upp file is used.]&]
 [s0;3 &]
 [s0; [*C@(0.0.255)3 out][3  is output file or directory]&]
 [s0;*C@4;3 &]
@@ -89,7 +89,12 @@ is number of logical cores available.]]}}&]
 [s0;3 &]
 [s0; [3 Examples:]&]
 [s0;3 &]
-[s0; [*C@5+92 umk examples Bombs GCC `-ab `+GUI,SHARED `~/bombs`\n]&]
-[s0; [*C@5+92 umk examples,uppsrc Bombs `~/GCC.bm `-rv `+GUI,SHARED 
+[s0; [*C@5+92 umk uppsrc ide GCC `-br `+GUI,SSE2,SHARED `~/theide]&]
+[s0; [*C@5+92 umk uppsrc ide /usr/share/upp/GCC.bm `-br `+GUI,SSE2,SHARED 
+`~/theide]&]
+[s0;*C@5+92 &]
+[s0; [*C@5+92 umk examples Bombs GCC `-ab `+GUI,SHARED `~/bombs]&]
+[s0; [*C@5+92 umk upp/examples,upp/uppsrc Bombs `~/GCC.bm `-rv `+GUI,SHARED 
 `~/bin]&]
+[s0; &]
 [s0; ]]
