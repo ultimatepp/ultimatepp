@@ -252,13 +252,14 @@ protected:
 	int              tabsize;
 	int              bordercolumn;
 	Color            bordercolor;
+	Scroller         scroller;
+	Point            caretpos;
 	bool             nohbar;
 	bool             showtabs;
 	bool             cutline;
 	bool             overwrite;
-	Scroller         scroller;
-	Point            caretpos;
 	bool             showspaces;
+	bool             showlines;
 
 	void   Paint0(Draw& w);
 
@@ -346,6 +347,8 @@ public:
 	bool      IsShowTabs() const              { return showtabs; }
 	LineEdit& ShowSpaces(bool ss = true)      { showspaces = ss; Refresh(); return *this; }
 	bool      IsShowSpacess() const           { return showspaces; }
+	LineEdit& ShowLineEndings(bool sl = true) { showlines = sl; Refresh(); return *this; }
+	bool      IsShowLineEndings() const       { return showlines; }
 	LineEdit& WithCutLine(bool b)             { cutline = b; return *this; }
 	LineEdit& NoCutLine()                     { return WithCutLine(false); }
 	bool      IsWithCutLine() const           { return cutline; }

@@ -119,6 +119,7 @@ void Ide::UpdateFormat(CodeEditor& editor)
 	editor.IndentSpaces(indent_spaces);
 	editor.IndentAmount(indent_amount);
 	editor.ShowTabs(show_tabs);
+	editor.ShowLineEndings(show_tabs);
 	editor.NoParenthesisIndent(no_parenthesis_indent);
 	editor.HiliteScope(hilite_scope);
 	editor.HiliteBracket(hilite_bracket);

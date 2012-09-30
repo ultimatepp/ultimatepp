@@ -20,6 +20,7 @@ LineEdit::LineEdit() {
 	overwrite = false;
 	filter = NULL;
 	showspaces = false;
+	showlines = false;
 }
 
 LineEdit::~LineEdit() {}
@@ -85,6 +86,7 @@ void   LineEdit::Paint0(Draw& w) {
 	int pos = cpos;
 	Vector<int> dx, dx2;
 	int fascent = font.Info().GetAscent();
+	Color showcolor = Blend(SColorLight, SColorHighlight);
 	for(int i = sc.y; i < ll; i++) {
 		WString tx = line[i];
 		int len = tx.GetLength();
@@ -131,11 +133,10 @@ void   LineEdit::Paint0(Draw& w) {
 							if(pass == 0) {
 								w.DrawRect(gp * fsz.cx - scx, y, fsz.cx * l, fsz.cy, h.paper);
 								if(showtabs && h.paper != SColorHighlight && q < tx.GetLength()) {
-									Color c = Blend(SColorLight, SColorHighlight);
 									w.DrawRect(gp * fsz.cx - scx + 2, y + fsz.cy / 2,
-									           l * fsz.cx - 4, 1, c);
+									           l * fsz.cx - 4, 1, showcolor);
 									w.DrawRect(ngp * fsz.cx - scx - 3, y + 3,
-									           1, fsz.cy - 6, c);
+									           1, fsz.cy - 6, showcolor);
 								}
 								if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + l)
 									w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
@@ -149,9 +150,8 @@ void   LineEdit::Paint0(Draw& w) {
 						    if(pass == 0) {
 						        w.DrawRect(gp * fsz.cx - scx, y, fsz.cx, fsz.cy, h.paper);
 						        if(showspaces && h.paper != SColorHighlight && q < tx.GetLength()) {
-						            Color c = Blend(SColorLight, SColorHighlight);
 						            w.DrawRect(gp * fsz.cx - scx + fsz.cx / 2, y + fsz.cy / 2,
-						                       2, 2, c);
+						                       2, 2, showcolor);
 						        }
 						        if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + 1)
 						            w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
@@ -196,6 +196,14 @@ void   LineEdit::Paint0(Draw& w) {
 					w.DrawRect(gpx, y, sz.cx - gpx, fsz.cy, hl.Top().paper);
 					if(bordercolumn > 0 && bordercolumn >= gp)
 						w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
+				}
+				if(pass == 0 && showlines) {
+					int yy = 2 * fsz.cy / 3;
+					int x = gp * fsz.cx - scx;
+		            w.DrawRect(x, y + yy, fsz.cx / 2, 1, showcolor);
+		            if(fsz.cx > 2)
+			            w.DrawRect(x + 1, y + yy - 1, 1, 3, showcolor);
+		            w.DrawRect(x + fsz.cx / 2, y + yy / 2, 1, yy - yy / 2, showcolor);
 				}
 			}
 		}

@@ -366,7 +366,8 @@ void CodeEditor::IndentInsert(int chr) {
 	InsertChar(chr, 1);
 }
 
-void CodeEditor::MakeTabsOrSpaces(bool maketabs) {
+void CodeEditor::Make(Callback1<String&> op)
+{
 	Point cursor = GetColumnLine(GetCursor());
 	Point scroll = GetScrollPos();
 	int l, h;
@@ -380,7 +381,25 @@ void CodeEditor::MakeTabsOrSpaces(bool maketabs) {
 	l = GetPos(GetLine(l));
 	h = GetPos(GetLine(h - 1) + 1);
 	String substring = Get(l, h - l);
-	String out;
+	String out = substring;
+	op(out);
+	if(out == substring)
+	{
+		BeepInformation();
+		return;
+	}
+	Remove(l, h - l);
+	Insert(l, out.ToWString());
+	if(is_sel)
+		SetSelection(l, l + out.GetLength());
+	SetCursor(GetGPos(cursor.y, cursor.x));
+	SetScrollPos(scroll);
+}
+
+void CodeEditor::TabsOrSpaces(String& out, bool maketabs)
+{
+	String substring = out;
+	out.Clear();
 	int tab = GetTabSize();
 	if(tab <= 0) tab = 8;
 	for(const char *p = substring.Begin(), *e = substring.End(); p < e;)
@@ -420,17 +439,36 @@ void CodeEditor::MakeTabsOrSpaces(bool maketabs) {
 				out.Cat(*p++);
 		}
 	}
-	if(out == substring)
+}
+
+void CodeEditor::MakeTabsOrSpaces(bool maketabs)
+{
+	Make(THISBACK1(TabsOrSpaces, maketabs));
+}
+
+void CodeEditor::LineEnds(String& out)
+{
+	String substring = out;
+	out.Clear();
+	const char *q = ~substring;
+	const char *b = q;
+	for(const char *p = b, *e = substring.End(); p < e; p++)
 	{
-		BeepInformation();
-		return;
+		if(*p == '\n') {
+			out.Cat(b, q);
+			out.Cat("\r\n");
+			b = q = p + 1;
+		}
+		else
+		if(*p != '\t' && *p != ' ' && *p != '\r')
+			q = p + 1;
 	}
-	Remove(l, h - l);
-	Insert(l, out.ToWString());
-	if(is_sel)
-		SetSelection(l, l + out.GetLength());
-	SetCursor(GetGPos(cursor.y, cursor.x));
-	SetScrollPos(scroll);
+	out.Cat(b, substring.End());
+}
+
+void CodeEditor::MakeLineEnds()
+{
+	Make(THISBACK(LineEnds));
 }
 
 void CodeEditor::MoveNextWord(bool sel) {
