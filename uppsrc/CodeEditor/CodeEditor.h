@@ -367,6 +367,9 @@ protected:
 	void   ToggleLineComments(bool usestars = false);
 	void   ToggleStarComments();
 	void   Enclose(const char *c1, const char *c2, int l = -1, int h = -1);
+	void   Make(Callback1<String&> op);
+	void   TabsOrSpaces(String& out, bool maketabs);
+	void   LineEnds(String& out);
 
 	enum {
 		TIMEID_PERIODIC = Ctrl::TIMEID_COUNT,
@@ -432,8 +435,9 @@ public:
 	void   Replace();
 	void   BlockReplace();
 	int    BlockReplace(WString find, WString replace, bool wholeword, bool ignorecase, bool wildcards);
-	void   MakeTabs();
+	
 	void   MakeTabsOrSpaces(bool tabs);
+	void   MakeLineEnds();
 
 	void   CopyWord();
 	void   SwapChars();

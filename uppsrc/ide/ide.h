@@ -842,6 +842,8 @@ public:
 		void  EditUsingDesigner();
 		void  EditMakeTabs()     { editor.MakeTabsOrSpaces(true); }
 		void  EditMakeSpaces()   { editor.MakeTabsOrSpaces(false); }
+		void  EditMakeLineEnds() { editor.MakeLineEnds(); }
+
 		void  FindInFiles(bool replace);
 		void  FindFileName();
 		void  FindString(bool back);

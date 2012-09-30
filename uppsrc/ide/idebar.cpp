@@ -99,6 +99,8 @@ void Ide::EditSpecial(Bar& menu)
 		.Help("Convert leading blanks on each line to tabs");
 	menu.Add(AK_TABSTOSPACES, THISBACK(EditMakeSpaces))
 		.Help("Convert all tabs to spaces");
+	menu.Add(AK_LINEENDINGS, THISBACK(EditMakeLineEnds))
+		.Help("Remove tabs and spaces at line endings");
 	menu.Add(AK_TRANSLATESTRING, THISBACK(TranslateString))
 		.Help("Mark the current selection as translated string");
 	menu.Add(AK_SWAPCHARS, THISBACK(SwapChars))
