@@ -53,6 +53,11 @@ DispatcherTest::DispatcherTest()
 	sliderCB();
 }
 
+DispatcherTest::~DispatcherTest()
+{
+	disp.Clear();	
+}
+
 GUI_APP_MAIN
 {
 	DispatcherTest().Run();

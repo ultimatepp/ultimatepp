@@ -27,7 +27,7 @@ public:
 	virtual void Dispatch(const T& o) = 0;
 
 	void Unregister(const Any& _src);
-	void UnregisterAll() { while(src.GetCount()>0) Unregister(src[0]); }
+	void UnregisterAll() { while(src.GetCount()>0) Unregister(src[0]); } //will remove elements
 
 	void Unregister(Dispatcher<T>& from) { int i = src.Find(GetPtrHashValue(&from)); if(i<0) return; Unregister(src[i]); }
 	void Unregister(DispatcherGen& from) { int i = src.Find(GetPtrHashValue(&from)); if(i<0) return; Unregister(src[i]); }
@@ -57,7 +57,7 @@ public:
 	void Unregister(Dispatchable<T>& d, unsigned key = 0);
 	Dispatchable<T>* GetDispatchable(unsigned key) const;
 	const VectorMap<unsigned, Dispatchable<T>*>& GetDests() const { return dests; }
-	void Clear() { while(dests.GetCount()>0) dests[0].Unregister(); }
+	void Clear() { while(dests.GetCount()>0) dests[0]->Unregister(*this); }
 
 private:
 	VectorMap<unsigned, Dispatchable<T>*> dests;	
