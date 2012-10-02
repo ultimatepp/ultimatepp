@@ -23,6 +23,11 @@ void SqlSchema::FlushColumn() {
 				Upgrade() << Expand("alter table @t alter column ") << cd << ";\n";
 			}
 			else
+			if(dialect == MY_SQL) {
+				Upgrade() << Expand("alter table @t add ") << cn << ";\n";
+				Upgrade() << Expand("alter table @t modify ") << cd << ";\n";
+			}
+			else
 			if (dialect == SQLITE3 || dialect == MY_SQL)
 				Upgrade() << Expand("alter table @t add ") << cd << ";\n";
 			else
