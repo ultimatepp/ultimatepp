@@ -605,6 +605,8 @@ void DisplayPopup::Set(Ctrl *_ctrl, const Rect& _item,
 		paper = _paper;
 		style = _style;
 		margin = _margin;
+		if(ctrl)
+			Tip(ctrl->GetTip());
 		Sync();
 	}
 	else
