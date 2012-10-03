@@ -44,7 +44,7 @@ inline void LogLev(int l) { Single<LOGLEV>() = (LOGLEV)l;}
 
 ///
 
-class LoggerCtrl : public DocEdit, public Stream
+class LoggerCtrl : public DocEdit, public StringStream
 {
 public:
 	typedef LoggerCtrl CLASSNAME;
@@ -58,7 +58,7 @@ public:
 	int GetMaxLines() const { return maxlines; }
 	virtual void Updated();
 
-	virtual  bool  IsOpen() const { return true; }
+	virtual void Flush();
 
 protected:
 	virtual  void  _Put(int w);

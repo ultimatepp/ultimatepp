@@ -5,7 +5,9 @@ LoggerCtrl::LoggerCtrl() : maxlines(1000), ignore(false)
 	NoInitFocus();
 	NoWantFocus();
 	SetReadOnly();
-	//Reserve(maxlines*64);
+	Reserve(512);
+	
+	SetTimeCallback(-200, THISBACK(Flush));
 }
 
 void LoggerCtrl::Save()
@@ -32,23 +34,24 @@ void LoggerCtrl::Updated()
 void LoggerCtrl::_Put(int w)
 {
 	if(ignore) return;
-	String d;
-	d.Cat(w);
-	//String s = EscapeCh((unsigned)w);
-	GuiLock _;
-	Insert(GetLength(), d);
-	SetCursor(GetLength());
+	StringStream::_Put(w);
 }
 
 void LoggerCtrl::_Put(const void *data, dword size)
 {
 	if(ignore) return;
-	String d;
-	d.Cat((const char*)data, size);
-	//String s = EscapeCh(d);
-	GuiLock _;
-	Insert(GetLength(), d);
-	SetCursor(GetLength());
+	StringStream::_Put(data, size);
+}
+
+void LoggerCtrl::Flush()
+{
+	if(StringStream::GetSize() > 0)
+	{
+		Insert(GetLength(), GetResult());
+		SetCursor(GetLength());
+		StringStream::Create(); //empty
+		Reserve(512);
+	}
 }
 
 LogCtrl::LogCtrl() : ps(NULL)
