@@ -134,7 +134,7 @@ void DXFColorChooserDlg::SetLabels(int idx)
 	indexLbl.SetText(Format(String(t_("DXF\vIndex color :")) + " %d", idx));
 	rgbLbl.SetText(Format(String(t_("DXF\vRed,Green,Blue :")) + "%d,%d,%d", r, g, b));
 	Refresh();
-	Ctrl::ProcessEvents();
+//	Ctrl::ProcessEvents();
 }
 	
 // mouse event handler for childs
