@@ -4,7 +4,8 @@ uses
 	Core,
 	plugin/sqlite3,
 	Skylark,
-	Skylark/Iml;
+	Skylark/Iml,
+	plugin/jpg;
 
 file
 	AddressBook.h,
