@@ -5,7 +5,6 @@
 #include <Draw/Draw.h>
 #ifdef flagGUI
 #include <ide/Browser/Browser.h>
-#include <Web/Web.h>
 #include "GatherTpp.h"
 #endif
 

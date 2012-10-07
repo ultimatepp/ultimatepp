@@ -27,7 +27,6 @@ private:
 	VectorMap<String, String> reflink;
 	VectorMap<String, Topic> tt;
 	
-	Htmls header;
 	String keywords;	//
 	String title;		//
 	String indexTopic;

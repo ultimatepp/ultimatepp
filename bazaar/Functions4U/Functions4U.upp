@@ -3,7 +3,6 @@ description "Functions and classes for general use\377B255,170,0";
 uses
 	Core,
 	plugin\bz2,
-	Web,
 	Draw,
 	plugin\jpg,
 	plugin\gif,
