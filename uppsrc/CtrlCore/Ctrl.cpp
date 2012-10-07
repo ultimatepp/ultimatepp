@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  // DLOG(x)
+#define LLOG(x)   // DLOG(x)
 
 #define IMAGECLASS CtrlCoreImg
 #define IMAGEFILE <CtrlCore/Ctrl.iml>
@@ -577,6 +577,8 @@ void Ctrl::DoRemove() {
 	GuiLock __;
 	if(!IsOpen()) return;
 	ReleaseCapture();
+	if(HasChildDeep(captureCtrl))
+		captureCtrl->ReleaseCapture();
 	CancelModeDeep();
 	if(HasChildDeep(mouseCtrl) || mouseCtrl == this)
 		mouseCtrl = NULL;

@@ -2,12 +2,13 @@
 
 NAMESPACE_UPP
 
+/*
 int DockPane::ClientToPos(const Size& p)
 {
 	int w = (width>>1)*pos.GetCount()-1;
 	return minmax(vert ? 10000 * p.cy / (GetSize().cy - w) : 10000 * p.cx / (GetSize().cx - w), 0, 9999);	
 }
-
+*/
 void DockPane::CumulativePos(Vector<int>& p) const
 {
 	for (int i = 1; i < p.GetCount()-1; i++)
@@ -33,7 +34,7 @@ void DockPane::StartAnimate(int ix, Size sz, bool restore)
 		if (tsz) {
 			int msz = GetMinPos(ix);
 			if (msz < 10000 && msz+tsz > 10000) {
-				Ctrl *c = FindCtrl(ix);
+				Ctrl *c = GetIndexChild(ix);
 				int min = ClientToPos(c->GetMinSize());
 				if (min < tsz) {
 					int std = ClientToPos(c->GetStdSize());
@@ -67,10 +68,11 @@ void DockPane::EndAnimate()
 	pos <<= animpos;
 	animpos.Clear();
 	KillTimeCallback(TIMEID_ANIMATE);
-	if (dummy.GetParent()) {
+	Remove(dummy);
+/*	if (dummy.GetParent()) {
 		pos.Remove(FindIndex(dummy));	
 		dummy.Remove();
-	}
+	}*/
 	//FixChildSizes(); 
 	Layout();
 }
@@ -300,6 +302,7 @@ void DockPane::FixChildSizes()
 	ASSERT(pos[cnt-1] == 10000);
 }
 
+/*
 int DockPane::FindIndex(Ctrl& child)
 {
 	int ix = 0;
@@ -324,7 +327,7 @@ void DockPane::Swap(Ctrl& child, Ctrl& newctrl)
 	Ctrl::AddChildBefore(&newctrl, &child);
 	Ctrl::RemoveChild(&child);
 }
-
+*/
 void DockPane::Dock(Ctrl& newctrl, Size sz, int ps, bool animate, bool save)
 {
 	if (IsAnimating())
@@ -370,7 +373,7 @@ void DockPane::Undock(Ctrl& child, bool animate, bool restore)
 	if (IsAnimating())
 		EndAnimate();	
 	
-	int ix = FindIndex(child);
+	int ix = GetChildIndex(&child);
 	if (animate && GetFirstChild() != GetLastChild()) {
 		dummy.Remove();
 		Swap(child, dummy);
@@ -391,11 +394,12 @@ Rect DockPane::GetFinalAnimRect(Ctrl& ctrl)
 	ASSERT(ctrl.GetParent() == this);
 	if (!IsAnimating())
 		return ctrl.GetRect();
-	int ix = FindIndex(ctrl);
+	int ix = GetChildIndex(&ctrl);
 	ASSERT(ix >= 0 && ix < animpos.GetCount());
 	
 	Rect r = GetRect();
 	int prev = ix ? animpos[ix-1] : 0;
+	int width = GetSplitWidth();
 	if (IsHorz()) {
 		r.left += PosToClient(prev) + width*(ix);
 		r.right = r.left + PosToClient(animpos[ix] - prev);				

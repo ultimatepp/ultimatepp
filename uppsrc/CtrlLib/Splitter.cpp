@@ -20,14 +20,6 @@ int Splitter::PosToClient(int pos) const
 	return (vert ? GetSize().cy : GetSize().cx) * pos / 10000;
 }
 
-int Splitter::GetChildCount() const
-{
-	int count = 0;
-	for(Ctrl *child = GetFirstChild(); child; child = child->GetNext())
-		count++;
-	return count;
-}
-
 void Splitter::Layout() {
 	Size sz = GetSize();
 	int count = GetChildCount();
@@ -67,6 +59,11 @@ void Splitter::Layout() {
 			q->SetRect(lo, 0, hi - lo, sz.cy);
 		i++;
 	}
+}
+
+int Splitter::GetSplitWidth() const
+{
+	return chstyle->width;
 }
 
 void   Splitter::Paint(Draw& w) {
@@ -173,6 +170,24 @@ void Splitter::Add(Ctrl& pane)
 	Layout();
 }
 
+void Splitter::Insert(int ii, Ctrl& pane)
+{
+	if(ii >= GetCount())
+		Add(pane);
+	else {	
+		Ctrl::AddChildBefore(&pane, GetIndexChild(ii));
+		pos.Clear();
+		Layout();
+	}
+}
+
+void Splitter::Swap(Ctrl& child, Ctrl& newctrl)
+{
+	newctrl.SetRect(child.GetRect());
+	Ctrl::AddChildBefore(&newctrl, &child);
+	Ctrl::RemoveChild(&child);
+}
+
 void Splitter::Serialize(Stream& s) {
 	int version = 0x02;
 	s / version;
@@ -215,7 +230,7 @@ void Splitter::Remove(Ctrl& ctrl)
 				pos.Remove(n-1);
 			mins.Remove(n);
 			minpx.Remove(n);
-			RemoveChild(c);
+			RemoveChild(c); 
 			break;
 		}
 		c = c->GetNext();

@@ -122,6 +122,35 @@ void  Ctrl::Remove()
 		parent->RemoveChild(this);
 }
 
+int Ctrl::GetChildIndex(const Ctrl *child) const
+{
+	GuiLock __;
+	int i = 0;
+	for (Ctrl *c = GetFirstChild(); c; c = c->GetNext()) {
+		if(c == child) return i;
+		i++;
+	}
+	return -1;
+}
+
+int Ctrl::GetChildCount() const
+{
+	GuiLock __;
+	int n = 0;
+	for (Ctrl *c = GetFirstChild(); c; c = c->GetNext())
+		n++;
+	return n;
+}
+
+Ctrl * Ctrl::GetIndexChild(int ii) const
+{
+	GuiLock __;
+	Ctrl *c = GetFirstChild();
+	for(int i = 0; i < ii && c; i++)
+		c = c->GetNext();
+	return c;
+}
+
 bool Ctrl::HasChild(Ctrl *q) const
 {
 	GuiLock __;

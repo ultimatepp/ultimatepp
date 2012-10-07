@@ -864,6 +864,9 @@ public:
 	Ctrl            *GetFirstChild() const       { return firstchild; }
 	Ctrl            *GetPrev() const             { return parent ? prev : NULL; }
 	Ctrl            *GetNext() const             { return parent ? next : NULL; }
+	int              GetChildIndex(const Ctrl *child) const;
+	Ctrl            *GetIndexChild(int i) const;
+	int              GetChildCount() const;
 
 	bool             IsChild() const             { return parent; }
 

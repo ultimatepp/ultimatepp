@@ -908,6 +908,28 @@ or NULL if Ctrl is first or not in list.&]
 list or NULL if Ctrl is last or not in list.&]
 [s7;i1120;a17; [*/ Return value]-|Pointer to next child or NULL.&]
 [s3;%- &]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:GetChildIndex`(const Ctrl`*`)const:%- [@(0.0.255) int]_[* GetChildIndex]([@(0.0.255) c
+onst]_[_^Ctrl^ Ctrl]_`*[*@3 child])_[@(0.0.255) const]&]
+[s2; Returns the index of [%-*@3 child] (first child has index 0, second 
+child 1 etc...). If [%-*@3 child] is not present in this Ctrl, 
+returns `-1. Note that this function performs sequential scan 
+of child (results in O(n) complexity).&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:GetChildCount`(`)const:%- [@(0.0.255) int]_[* GetChildCount]()_[@(0.0.255) con
+st]&]
+[s2; Returns the number of child ctrls. Note that this function performs 
+sequential scan of child (results in O(n) complexity).&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:GetIndexChild`(int`)const:%- [_^Ctrl^ Ctrl]_`*[* GetIndexChild]([@(0.0.255) in
+t]_[*@3 i])_[@(0.0.255) const]&]
+[s2; Retruns child at index [%-*@3 i] or NULL if there is none. Note 
+that this function performs sequential scan of child (results 
+in O(n) complexity).&]
+[s3; &]
 [s4;%- &]
 [s5;:Ctrl`:`:IsChild`(`)const:%- [@(0.0.255) bool]_[* IsChild]()_[@(0.0.255) const]&]
 [s7;i1120;a17; [*/ Return value]-|True if Ctrl has parent.&]
@@ -2079,7 +2101,7 @@ trl])&]
 [s4;%- &]
 [s5;:Ctrl`:`:Remove`(`):%- [@(0.0.255) void]_[* Remove]()&]
 [s2;b17;a17; Removes Ctrl from its parent.&]
-[s3;%- &]
+[s3; &]
 [s4;%- &]
 [s5;:Ctrl`:`:operator`<`<`=`(const Value`&`):%- [@(0.0.255) const]_[_^`:`:Value^ Value][@(0.0.255) `&
 ]_[* operator<<`=]([@(0.0.255) const]_[_^`:`:Value^ Value][@(0.0.255) `&]_[*@3 v])&]
@@ -2610,4 +2632,4 @@ or!`=]([_^Ctrl`:`:LogPos^ LogPos]_[*@3 b])_[@(0.0.255) const]&]
 [s5;:Ctrl`:`:LogPos`:`:y:%- [_^Ctrl`:`:Logc^ Logc]_[* y]&]
 [s2; Vertical Logc.&]
 [s3; &]
-[s0; ]
+[s0; ]]

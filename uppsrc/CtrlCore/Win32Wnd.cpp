@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)    //  DLOG(x)
+#define LLOG(x)   //   DLOG(x)
 #define LOGTIMING 0
 
 #ifdef _DEBUG
@@ -715,11 +715,11 @@ LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 		if(i >= 0)
 			Windows().SetKey(i, NULL);
 	}
-	#if LOGMESSAGES
+#if LOGMESSAGES
 	bool logblk = false;
 	if(message != WM_SETCURSOR && message != WM_CTLCOLORBTN && message != WM_TIMER &&
 #ifndef PLATFORM_WINCE
-	   message != WM_NCHITTEST  && message != WM_ENTERIDLE &&
+	   message != WM_NCHITTEST  &&  message != WM_ENTERIDLE &&
 #endif
 	   message != WM_CTLCOLORDLG && message != WM_CTLCOLOREDIT && message != WM_CTLCOLORLISTBOX &&
 	   message != WM_CTLCOLORMSGBOX && message != WM_CTLCOLORSCROLLBAR &&
@@ -734,7 +734,7 @@ LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 				logblk = true;
 				break;
 			}
-	#endif
+#endif
 	LRESULT l = 0;
 	if(w) {
 		try
@@ -1164,10 +1164,12 @@ bool Ctrl::HasWndFocus() const
 bool Ctrl::SetWndCapture()
 {
 	GuiLock __;
+	LLOG("Ctrl::SetWndCapture() in " << UPP::Name(this));
 	ASSERT(IsMainThread());
 	HWND hwnd = GetHWND();
 	if(hwnd) {
 		::SetCapture(hwnd);
+		LLOG("SetCapture succeeded");
 		return true;
 	}
 	return false;
@@ -1176,11 +1178,13 @@ bool Ctrl::SetWndCapture()
 bool Ctrl::ReleaseWndCapture()
 {
 	GuiLock __;
+	LLOG("Ctrl::ReleaseWndCapture() in " << UPP::Name(this));
 	ASSERT(IsMainThread());
 	HWND hwnd = GetHWND();
 	if(hwnd && HasWndCapture())
 	{
 		::ReleaseCapture();
+		LLOG("ReleaseCapture succeeded");
 		return true;
 	}
 	return false;
@@ -1196,6 +1200,7 @@ bool Ctrl::HasWndCapture() const
 void Ctrl::WndInvalidateRect0(const Rect& r)
 {
 	GuiLock __;
+	LLOG("WndInvalidateRect " << UPP::Name(this));
 	HWND hwnd = GetHWND();
 	if(hwnd)
 		::InvalidateRect(hwnd, r, false);
@@ -1204,6 +1209,7 @@ void Ctrl::WndInvalidateRect0(const Rect& r)
 void Ctrl::WndSetPos0(const Rect& rect)
 {
 	GuiLock __;
+	LLOG("WndSetPos " << UPP::Name(this));
 	HWND hwnd = GetHWND();
 	if(hwnd) {
 		Rect r = rect;
@@ -1222,6 +1228,7 @@ void Ctrl::WndSetPos0(const Rect& rect)
 void Ctrl::WndUpdate0r(const Rect& r)
 {
 	GuiLock __;
+	LLOG("WndUpdate " << UPP::Name(this));
 	Ctrl *top = GetTopCtrl();
 	if(top->IsOpen()) {
 		HWND hwnd = top->GetHWND();
@@ -1247,6 +1254,7 @@ void Ctrl::WndUpdate0r(const Rect& r)
 void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
+	LLOG("WndScrollView " << UPP::Name(this));
 	if(caretCtrl && caretCtrl->GetTopCtrl() == this) {
 		WndDestroyCaret();
 		caretRect.Clear();
@@ -1261,7 +1269,7 @@ void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 
 void Ctrl::PopUpHWND(HWND owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
-	LLOG("POPUP");
+	LLOG("PopoUp " << UPP::Name(this));
 	popup = false;
 	Create(owner, WS_POPUP, topmost ? WS_EX_TOPMOST : 0, savebits,
 	       owner || !activate ? SW_SHOWNOACTIVATE : SW_SHOW,
