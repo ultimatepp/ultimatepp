@@ -1,4 +1,5 @@
 void MakeLink(StringBuffer& out, const Vector<String>& part, const Vector<Value>& arg);
+void ServeStaticPage(Http& http);
 
 struct HandlerId {
 	void (*handler)(Http& http);

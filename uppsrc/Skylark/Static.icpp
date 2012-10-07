@@ -2,6 +2,23 @@
 
 namespace Upp {
 
+Value CachedStatic(const Vector<Value>& arg, const Renderer *)
+{
+	String file = arg[0];
+	if(SkylarkApp::Config().caching != 2)
+		return "/"+SkylarkApp::Config().static_dir+"/"+file;
+	
+	String path = GetFileOnPath(file, SkylarkApp::Config().path, false);
+	if(path.GetCount()) {
+		return SkylarkApp::Config().static_dir + "/ver" + IntStr64(GetFileTime(path).ft)+"/"+file;
+	}
+	return Null;
+}
+
+INITBLOCK {
+	Compiler::Register("CachedStatic", CachedStatic);
+};
+
 SKYLARK(ServeStaticPage, "static/**")
 {
 	String file;
@@ -10,20 +27,41 @@ SKYLARK(ServeStaticPage, "static/**")
 			file << '/';
 		file << http[i];
 	}
-	String path = GetFileOnPath(file, SkylarkApp::Config().path, false);
-	if(path.GetCount()) {
-		String ext = ToLower(GetFileExt(file));
-		String type = "text";
-		if(ext == ".css")
-			type = "text/css";
-		else
-		if(ext == ".js")
-			type = "text/javascript";
-		else
-		if(ext == ".png" || ext == ".jpg" || ext == ".gif")
-			type = "image/" + ext.Mid(1);
-		http.Content(type, LoadFile(path));
+
+	if(SkylarkApp::Config().caching == 2 && file.StartsWith("ver")) {
+		int q = file.Find('/');
+		if(q >= 0)
+			file = file.Mid(q + 1);
 	}
+
+	String path = GetFileOnPath(file, SkylarkApp::Config().path, false);
+	if(!path.GetCount()) {
+		http.Response(404, "Not found");
+		return;
+	}
+
+	String ext = ToLower(GetFileExt(file));
+	String type = "text";
+	if(ext == ".css")
+		type = "text/css";
+	else
+	if(ext == ".js")
+		type = "text/javascript";
+	else
+	if(ext == ".png" || ext == ".jpg" || ext == ".gif")
+		type = "image/" + ext.Mid(1);
+	
+	if(SkylarkApp::Config().caching > 0) {
+		String tag = IntStr64(GetFileTime(path).ft);
+		http.SetHeader("Cache-Control", "public, max-age=2592000");
+		http.SetHeader("ETag", tag);
+		if(http.GetHeader("if-none-match") == tag){
+			http.Response(304, "Not Modified");
+			return;
+		}
+	}
+	
+	http.Content(type, LoadFile(path));
 }
 
 };

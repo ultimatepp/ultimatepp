@@ -39,9 +39,9 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		DropList frame;
 		DropList threadSelector;
 		TabCtrl tab;
-		ArrayCtrl locals;
-		ArrayCtrl watches;
-		ArrayCtrl autos;
+		ArrayCtrl  locals;
+		ArrayCtrl  watches;
+		ArrayCtrl  autos;
 
 		// explorer stuffs -- just starting
 		ArrayCtrl explorer;

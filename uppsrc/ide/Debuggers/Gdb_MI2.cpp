@@ -3,6 +3,9 @@
 
 #include "PrettyPrinters.brc"
 
+#define LDUMP(x) DDUMP(x)
+#define LLOG(x)  DLOG(x)
+
 // we need those because we changed ArrayCtrl formats (including var types)
 static VectorMap<String, String> DataMap2(const ArrayCtrl& data)
 {
@@ -227,30 +230,40 @@ Gdb_MI2::Gdb_MI2()
 	AddReg(RPREFIX "di", &regs.rdi);
 	AddReg(RPREFIX "bp", &regs.rbp);
 	AddReg(RPREFIX "sp", &regs.rsp);
+#ifdef CPU_64
+	AddReg("r8", &regs.r8);
+	AddReg("r9", &regs.r9);
+	AddReg("r10", &regs.r10);
+	AddReg("r11", &regs.r11);
+	AddReg("r12", &regs.r12);
+	AddReg("r13", &regs.r13);
+	AddReg("r14", &regs.r14);
+	AddReg("r15", &regs.r15);
+#endif
 	regs.Color(SColorLtFace);
 	regs.AddFrame(TopSeparatorFrame());
 	regs.AddFrame(RightSeparatorFrame());
 
 	autos.NoHeader();
 	autos.AddColumn("", 1);
-	autos.AddColumn("", 2);
-	autos.AddColumn("", 6);
+	autos.AddColumn("", 10);
+	autos.AddColumn("", 3);
 	autos.WhenLeftDouble = THISBACK1(onExploreExpr, &autos);
 	autos.EvenRowColor();
 	autos.OddRowColor();
 
 	locals.NoHeader();
 	locals.AddColumn("", 1);
-	locals.AddColumn("", 2);
-	locals.AddColumn("", 6);
+	locals.AddColumn("", 10);
+	locals.AddColumn("", 3);
 	locals.WhenLeftDouble = THISBACK1(onExploreExpr, &locals);
 	locals.EvenRowColor();
 	locals.OddRowColor();
 
 	watches.NoHeader();
 	watches.AddColumn("", 1).Edit(watchedit);
-	watches.AddColumn("", 2);
-	watches.AddColumn("", 6);
+	watches.AddColumn("", 10);
+	watches.AddColumn("", 3);
 	watches.Inserting().Removing();
 	watches.WhenLeftDouble = THISBACK1(onExploreExpr, &watches);
 	watches.EvenRowColor();
@@ -274,7 +287,7 @@ Gdb_MI2::Gdb_MI2()
 	explorerBackBtn.Disable();
 	explorerForwardBtn.Disable();
 	explorerHistoryPos = -1;
-
+	
 	Add(tab.SizePos());
 	tab.Add(autos.SizePos(), "Autos");
 	tab.Add(locals.SizePos(), t_("Locals"));
@@ -384,6 +397,8 @@ void Gdb_MI2::Unlock()
 MIValue Gdb_MI2::ParseGdb(String const &output, bool wait)
 {
 	MIValue res;
+	
+	LDUMP(output);
 
 	// parse result data
 	StringStream ss(output);
@@ -577,6 +592,7 @@ MIValue Gdb_MI2::ReadGdb(bool wait)
 // debugger run/stop status -- all remaining asynchrnonous output is discarded
 MIValue Gdb_MI2::MICmd(const char *cmdLine)
 {
+	LDUMP(cmdLine);
 	// sends command to debugger and get result data
 
 	// should handle dbg unexpected termination ?
@@ -689,10 +705,10 @@ void Gdb_MI2::SyncDisas(MIValue &fInfo, bool fr)
 
 	// update registers
 	MIValue rNames = MICmd("data-list-register-names")["register-names"];
-	Index<String>iNames;
+	MIValue rValues = MICmd("data-list-register-values x")["register-values"];
+	Index<String> iNames;
 	for(int i = 0; i < rNames.GetCount(); i++)
 		iNames.Add(rNames[i]);
-	MIValue rValues = MICmd("data-list-register-values x")["register-values"];
 	for(int iReg = 0; iReg < regname.GetCount(); iReg++)
 	{
 		int i = iNames.Find(regname[iReg]);
@@ -1240,7 +1256,7 @@ void Gdb_MI2::SyncLocals()
 	VectorMap<String, String> prev = DataMap2(locals);
 	locals.Clear();
 	for(int i = 0; i < localVarNames.GetCount(); i++)
-		locals.Add(localVarExpressions[i], localVarTypes[i], localVarValues[i]);
+		locals.Add(localVarExpressions[i], localVarValues[i], localVarTypes[i]);
 	MarkChanged2(prev, locals);
 }
 
@@ -1258,13 +1274,13 @@ void Gdb_MI2::SyncWatches()
 		int idx = watchesExpressions.Find(expr);
 		if(idx >= 0)
 		{
-			watches.Set(i, 1, watchesTypes[idx]);
-			watches.Set(i, 2, watchesValues[idx]);
+			watches.Set(i, 2, watchesTypes[idx]);
+			watches.Set(i, 1, watchesValues[idx]);
 		}
 		else
 		{
-			watches.Set(i, 1, "");
-			watches.Set(i, 2, t_("<can't evaluate expression>"));
+			watches.Set(i, 2, "");
+			watches.Set(i, 1, t_("<can't evaluate expression>"));
 		}
 	}
 	MarkChanged2(prev, watches);
@@ -1310,8 +1326,8 @@ void Gdb_MI2::SyncAutos()
 		int idx = autosExpressions.Find(expr);
 		if(idx >= 0)
 		{
-			autos.Set(i, 1, autosTypes[idx]);
-			autos.Set(i, 2, autosValues[idx]);
+			autos.Set(i, 2, autosTypes[idx]);
+			autos.Set(i, 1, autosValues[idx]);
 		}
 		else
 			autos.Remove(i);

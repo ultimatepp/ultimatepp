@@ -289,10 +289,14 @@ INI_INT(threads, 3 * CPU_Cores() + 1, "Number of threads in each Skylark subproc
 INI_INT(prefork, 0, "Number of preforked Skylark subprocesses");
 INI_INT(timeout, 0, "Timeout in seconds for Skylark event handler");
 INI_BOOL(use_caching, false, "Cache compiled witz templates or other data");
+INI_INT(caching, 1, "Agressivity of caching on static/** "
+                    "(0=no caching, 1=use ETag header, 2=use versioned path)");
 #else
 INI_INT(prefork, 1, "Number of preforked Skylark subprocesses");
 INI_INT(timeout, 300, "Timeout in seconds for Skylark event handler");
 INI_BOOL(use_caching, true, "Cache compiled witz templates or other data");
+INI_INT(caching, 1, "Agressivity of caching on static/** "
+                    "(0=no caching, 1=use ETag header, 2=use versioned path)");
 #endif
 };
 
@@ -306,6 +310,7 @@ SkylarkApp::SkylarkApp()
 	use_caching = Ini::use_caching;
 	prefork = Ini::prefork;
 	timeout = Ini::timeout;
+	caching = Ini::caching;
 }
 
 SkylarkApp::~SkylarkApp()
