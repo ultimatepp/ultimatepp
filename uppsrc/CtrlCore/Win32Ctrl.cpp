@@ -2,7 +2,7 @@
 
 #ifdef GUI_WIN
 
-#define LLOG(x) // DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 NAMESPACE_UPP
 
@@ -77,6 +77,7 @@ bool GuiPlatformHasSizeGrip()
 
 void GuiPlatformGripResize(TopWindow *q)
 {
+	LLOG("GuiPlatformGripResize " << Name(q));
 	HWND hwnd = q->GetHWND();
 	Point p = GetMousePos() - q->GetRect().TopLeft();
 	if(hwnd) {

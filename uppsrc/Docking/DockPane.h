@@ -36,7 +36,6 @@ private:
 	void 	FixChildSizes();
 	
 	int 	NormalPos(int ix) const			{ return (ix > 0) ? pos[ix] - pos[ix-1] : pos[ix]; }
-	int		ClientToPos(const Size& sz);
 	void	CumulativePos(Vector<int>& p) const;
 	void	NonCumulativePos(Vector<int>& p) const;
 	
@@ -46,11 +45,8 @@ private:
 public:
 	enum { LEFT, TOP, RIGHT, BOTTOM };
 
-	int 	FindIndex(Ctrl& child);
-	Ctrl   *FindCtrl(int ix);
 	int 	GetCount() const						{ return pos.GetCount(); }
 	
-	void	Swap(Ctrl& child, Ctrl& newctrl);
 	void	Dock(Ctrl& newctrl, Size sz, int pos, bool animate, bool save = false);
 	void 	Undock(Ctrl& newctrl, bool animate, bool restore = false);
 	

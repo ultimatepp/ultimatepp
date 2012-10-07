@@ -191,7 +191,7 @@ void DockWindow::SaveDockerPos(DockableCtrl& dc, PosInfo& pi)
 		case DockCont::STATE_DOCKED: {
 			int align = GetDockAlign(*cont);
 			ALIGN_ASSERT(align);
-			int ps = dockpane[align].FindIndex(*cont);
+			int ps = dockpane[align].GetChildIndex(cont);
 			ASSERT(ps >= 0);
 			Size sz = cont->GetSize();
 			s % align % ps % sz;
@@ -946,7 +946,7 @@ void DockWindow::Highlight(int align, DockCont& cont, DockCont *target)
 		// Do highlight
 		hl.SetHighlight(dc.GetStyle().highlight[0], false, 0);
 		hl.oldframesize = dockframe[align].GetSize();	
-		int pos = target ? dockpane[align].FindIndex(*target) : -1;
+		int pos = target ? dockpane[align].GetChildIndex(target) : -1;
 		Dock0(align, hl, pos, IsAnimatedHighlight(), true);
 	}
 	else if (target && IsTabbing()) {
