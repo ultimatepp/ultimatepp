@@ -472,7 +472,7 @@ LAYOUT(SetupIdeLayout, 512, 264)
 	ITEM(Label, dv___16, SetLabel(t_("HYDRA threads:")).LeftPosZ(376, 80).TopPosZ(4, 19))
 	ITEM(EditIntSpin, hydra1_threads, Max(64).Min(1).LeftPosZ(460, 48).TopPosZ(4, 19))
 	ITEM(Option, output_per_assembly, SetLabel(t_("Use unique output directory per assembly (append assembly name to output director)")).LeftPosZ(4, 492).TopPosZ(224, 16))
-	ITEM(Switch, gdbSelector, SetLabel(t_("Current stable implementation \nGDB_MI2 (experimental)")).LeftPosZ(184, 168).TopPosZ(24, 32))
+	ITEM(Switch, gdbSelector, SetLabel(t_("Legacy\nGDB_MI2 (new)")).LeftPosZ(184, 180).TopPosZ(24, 40))
 	ITEM(LabelBox, dv___20, SetLabel(t_("GDB Debugger interface")).LeftPosZ(176, 188).TopPosZ(4, 64))
 END_LAYOUT
 

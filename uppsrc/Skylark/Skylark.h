@@ -43,6 +43,7 @@ struct SkylarkConfig {
 	int                       prefork;
 	int                       timeout;
 	bool                      use_caching;
+	int                       caching;
 };
 
 class SkylarkApp : protected SkylarkConfig {
