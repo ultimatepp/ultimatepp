@@ -27,6 +27,10 @@ eb, dsc]]
 :: [s0;= [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^2 PPA][2 , 
 ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`/`+packages^2 deb, 
 dsc]]
+:: [s0; [*2 Debian]]
+:: [s0;=2 ]
+:: [s0;= [^http`:`/`/upp`.invothink`.com`/nightly`/^2 repository]]
+:: [s0;= [^http`:`/`/upp`.invothink`.com`/release`/^2 repository]]
 :: [s0; [*2 Fedora, Mandriva, OpenSUSE]]
 :: [s0;=2 ]
 :: [s0;=2 ]
@@ -67,9 +71,9 @@ opic://uppweb/www/nightly`$en`-us][2 . Here you can find windows
 installer (upp`-win32`-NNNN.exe) and source tarball (upp`-x11`-src`-NNNN.tar.gz).
  ]&]
 [s0;2 &]
-[s0; [2 If you are using Ubuntu or Debian based GNU/Linux distribution, 
-you can find deb packages (and also dsc source packages) of nightly 
-builds at Launchpad PPA ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`-nightly^2 h
+[s0; [2 If you are using Ubuntu based GNU/Linux distribution, you can 
+find deb packages (and also dsc source packages) of nightly builds 
+at Launchpad PPA ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`-nightly^2 h
 ttps://launchpad.net/`~dolik`-rce/`+archive/upp`-nightly][2 . Recommended 
 way is to add the archive to your sources and install package 
 `"upp`" using your favorite package manager (e.g. apt`-get, aptitude, 
@@ -77,6 +81,12 @@ way is to add the archive to your sources and install package
 all necessary dependencies. In case you are not familiar with 
 installing software from PPA, you can follow ][^topic`:`/`/uppweb`/www`/ubuntuinstall`$en`-us^2 t
 his step`-by`-step guide][2 .]&]
+[s0;2 &]
+[s0; [2 Debian users can use add a U`+`+ ][^http`:`/`/upp`.invothink`.com`/nightly`/^2 re
+pository][2  by following the simple instructions in this ][^http`:`/`/upp`.invothink`.com`/nightly`/README^2 R
+EADME file][2 . This repository contains packages for i386 and 
+amd64 architectures on the stable, testing and unstable releases 
+of Debian.]&]
 [s1;#b0; &]
 [s0; [2 Note that latest builds are generally considered the most stable. 
 That means that nightly builds are usually more stable than stable 
@@ -91,11 +101,17 @@ ceforge.net/projects/upp/files][2 . In addition to Windows installer
 and source tarballs, you can also find here rpm packages for 
 Fedora, Mandriva and OpenSUSE.]&]
 [s0;#2 &]
-[s0;# [2 For Ubuntu and Debian users who doesn`'t want to update every 
-day from nightly PPA, there is stable releases PPA, ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^2 h
+[s0;# [2 For Ubuntu users who doesn`'t want to update every day from 
+nightly PPA, there is stable releases PPA, ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^2 h
 ttps://launchpad.net/`~dolik`-rce/`+archive/upp][2 . To install 
 Ultimate`+`+ from this archive, use the same procedure as described 
 for nightly builds, just drop the `"`-nightly`" suffix.]&]
+[s0;#2 &]
+[s0; [2 Debian users who prefer to use only the stable ][^http`:`/`/upp`.invothink`.com`/release`/^2 r
+epository][2  should follow this ][^http`:`/`/upp`.invothink`.com`/release`/README^2 R
+EADME file][2 , which is very similar to the nightly version. Again, 
+the stable repository contains packages for i386 and amd64 architectures 
+on the stable, testing and unstable releases of Debian.]&]
 [s0;2 &]
 [s0;2 &]
 [s1;#b0; Price&]
