@@ -6,7 +6,11 @@ GUI_APP_MAIN
 {
 	EditString es;
 	TopWindow win;
-	es <<= "Something to test";
+	String h;
+	h << "Something ";
+	h.Cat('\0');
+	h << " to test";
+	es <<= h;
 	win.Add(es.HSizePos().TopPos(0, Ctrl::STDSIZE));
 	win.Run();
 }
