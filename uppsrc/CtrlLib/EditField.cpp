@@ -188,13 +188,12 @@ void EditField::CancelMode()
 
 int EditField::GetTextCx(const wchar *txt, int n, bool password, Font fnt) const
 {
-	FontInfo fi = fnt.Info();
 	if(password)
-		return n * fi['*'];
+		return n * font['*'];
 	const wchar *s = txt;
 	int x = 0;
 	while(n--)
-		x += fi[*s++];
+		x += GetCharWidth(*s++);
 	return x;
 }
 
@@ -207,7 +206,7 @@ int  EditField::GetViewHeight(Font font)
 {
 	Size sz(0, 0);
 	EditFieldFrame().FrameAddSize(sz);
-	return font.Info().GetHeight() + (sz.cy <= 2 ? 4 : sz.cy <= 4 ? 2 : 0);
+	return font.GetHeight() + (sz.cy <= 2 ? 4 : sz.cy <= 4 ? 2 : 0);
 }
 
 int  EditField::GetStdHeight(Font font)
@@ -219,7 +218,7 @@ int  EditField::GetStdHeight(Font font)
 
 Size EditField::GetMinSize() const
 {
-	return AddFrameSize(10, font.Info().GetHeight() + 4);
+	return AddFrameSize(10, font.GetHeight() + 4);
 }
 
 int  EditField::GetCursor(int posx)
@@ -227,16 +226,15 @@ int  EditField::GetCursor(int posx)
 	posx -= 2;
 	if(posx <= 0) return 0;
 
-	FontInfo fi = font.Info();
 	int count = text.GetLength();
 	if(password)
-		return min((posx + fi['*'] / 2) / fi['*'], count);
+		return min((posx + font['*'] / 2) / font['*'], count);
 
 	int x = 0;
 	const wchar *s = text;
 	int i = 0;
 	while(i < count) {
-		int witdh = fi[*s];
+		int witdh = GetCharWidth(*s);
 		if(posx < x + witdh / 2)
 			break;
 		x += witdh;
@@ -252,7 +250,7 @@ Image EditField::CursorImage(Point, dword)
 
 int  EditField::GetTy() const
 {
-	return (GetSize().cy + 1 - font.Info().GetHeight()) / 2;
+	return (GetSize().cy + 1 - font.GetHeight()) / 2;
 }
 
 void EditField::HighlightText(Vector<Highlight>& hl)
@@ -270,8 +268,20 @@ void EditField::Paints(Draw& w, int& x, int fcy, const wchar *&txt,
 		h.Cat('*', n);
 		w.DrawText(x, 0, ~h, fnt, ink, n);
 	}
-	else
-		w.DrawText(x, 0, txt, fnt, ink, n);
+	else {
+		const wchar *txts = txt;
+		Buffer<wchar> h;
+		const wchar *e = txt + n;
+		for(const wchar *q = txt; q < e; q++)
+			if(*q < 32) {
+				h.Alloc(n);
+				wchar *t = ~h;
+				for(const wchar *q = txt; q < e; q++)
+					*t++ = *q < 32 ? LowChar(*q) : *q;
+				txts = ~h;
+			}
+		w.DrawText(x, 0, txts, fnt, ink, n);
+	}
 	txt += n;
 	x += cx;
 }
@@ -286,7 +296,7 @@ void EditField::Paint(Draw& w)
 	Color ink = enabled ? style->text : style->textdisabled;
 	if(enabled && (convert && convert->Scan(text).IsError() || errorbg))
 		paper = style->invalid;
-	int fcy = font.Info().GetHeight();
+	int fcy = font.GetHeight();
 	int yy = GetTy();
 	w.DrawRect(0, 0, 2, sz.cy, paper);
 	w.DrawRect(0, 0, sz.cx, yy, paper);
@@ -374,9 +384,8 @@ bool EditField::IsSelection() const
 
 Rect EditField::GetCaretRect(int pos) const
 {
-	FontInfo fi = font.Info();
-	return RectC(GetCaret(pos) - sc + 2 - fi.GetRightSpace('o') + fi.GetLeftSpace('o'), GetTy(),
-	             1, min(GetSize().cy - 2 * GetTy(), fi.GetHeight()));
+	return RectC(GetCaret(pos) - sc + 2 - font.GetRightSpace('o') + font.GetLeftSpace('o'), GetTy(),
+	             1, min(GetSize().cy - 2 * GetTy(), font.GetHeight()));
 }
 
 void EditField::SyncCaret()
@@ -406,7 +415,7 @@ void EditField::Finish(bool refresh)
 	sz.cx -= 2;
 	if(sz.cx <= 0) return;
 	int x = GetCaret(cursor);
-	int wx = x + font.Info().GetRightSpace('o');
+	int wx = x + font.GetRightSpace('o');
 	if(wx > sz.cx + sc - 1) {
 		sc = wx - sz.cx + 1;
 		Refresh();
@@ -692,10 +701,9 @@ void EditField::DragAndDrop(Point p, PasteClip& d)
 	if(!d.IsAccepted()) return;
 	Rect dc(0, 0, 0, 0);
 	if(c >= 0) {
-		FontInfo fi = font.Info();
 		int x = GetCaret(c);
-		dc = RectC(x - sc + 2 - fi.GetRightSpace('o'), GetTy(),
-		           1, min(GetSize().cy - 2 * GetTy(), fi.GetHeight()));
+		dc = RectC(x - sc + 2 - font.GetRightSpace('o'), GetTy(),
+		           1, min(GetSize().cy - 2 * GetTy(), font.GetHeight()));
 	}
 	if(dc != dropcaret) {
 		Refresh(dropcaret);
