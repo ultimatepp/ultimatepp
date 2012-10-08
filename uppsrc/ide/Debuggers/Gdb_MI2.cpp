@@ -3,8 +3,8 @@
 
 #include "PrettyPrinters.brc"
 
-#define LDUMP(x) DDUMP(x)
-#define LLOG(x)  DLOG(x)
+#define LDUMP(x) // DDUMP(x)
+#define LLOG(x)  // DLOG(x)
 
 // we need those because we changed ArrayCtrl formats (including var types)
 static VectorMap<String, String> DataMap2(const ArrayCtrl& data)
