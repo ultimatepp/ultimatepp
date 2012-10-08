@@ -24,6 +24,100 @@ topic "Changelog";
 [{_}%EN-US 
 [s0; [*R6 Roadmap]&]
 [s0;4 &]
+[s0; [*_3 Upcoming release]&]
+[s0;*_3 &]
+[s0; [*_4 5xxx][*3  (Oct 2012)]&]
+[s0;*_3 &]
+[s0; The focus of this release was server programming. The main new 
+feature is `"[* Skylark]`", lean and mean [^http`:`/`/www`.ultimatepp`.org`/srcdoc`$Skylark`$Tutorial`$en`-us`.html^ U
+`+`+ based web development framework].&]
+[s0; &]
+[s0; [* Core]&]
+[s0; &]
+[s0;i150;O0; String class has been further optimized for improved 
+Cat performance.&]
+[s0;i150;O0; Id class was refactored to better support multithreded 
+programming.&]
+[s0;i150;O0; STATIC`_ASSERT introduced for compile`-time checks.&]
+[s0;i150;O0; TCP/IP and HTTP was refactored and integrated into Core, 
+providing new TcpSocket, IpAddrInfo, HttpHeader and HttpRequest 
+classed (effectively obsoleting Web package).&]
+[s0;i150;O0; Value was refactored and optimized, now using small 
+value optimization technique.&]
+[s0;i150;O0; Value got Xmlize (conversion to/from XML) and Jsonize 
+(conversion to/from JSON) support.&]
+[s0;i150;O0; Date now has operator`+`+/`-`-.&]
+[s0;i150;O0; Exit is now equivalent of C exit function, implemented 
+using exception trow to `*`_APP`_MAIN and C`+`+ friendly.&]
+[s0;i150;O0; Thread now has AtExit support.&]
+[s0;i150;O0; .ini parameters now can be optionally encapsulated using 
+INI`_`* helpers.&]
+[s0;i150;O0; Sort algorithm was refactored, works about 10% faster.&]
+[s0;i150;O0; LOGHEX and DUMPHEX logging macros provided for logging 
+Strings in hexadecimal form.&]
+[s0;i150;O0; LoadFromJsonFile and StoreToJsonFile jsonize object 
+from/to files.&]
+[s0; &]
+[s0; &]
+[s0; [* Sql]&]
+[s0; &]
+[s0;i150;O0; `'Of`' method, used to qualify SQL column names, now 
+has new alternative notation using operator().&]
+[s0;i150;O0; Schema files information is now accessible application 
+providing a form of database schema introspection.&]
+[s0;i150;O0; JoinRef method of Select provides automatic join where 
+join condition is synthetised by framework based on schema introspection.&]
+[s0;i150;O0; SqlCtrls now support automated mode based on schema 
+introspection.&]
+[s0;i150;O0; SqlSession now has ThrowOnError option, when active 
+all SQL errors throw SqlError exception.&]
+[s0;i150;O0; Sql: Sql now supports fetching ValueMap of row (using 
+Fetch variant or GetRowMap after Fetch).&]
+[s0;i150;O0; MassInsert now has `"remove`" option to remove rows 
+insterted before inserting, NoUseTransaction option and is using 
+RDBM specific SQL syntax (instead generic UNION ALL trick) when 
+possible.&]
+[s0;i150;O0; Secondary SQLR default session intended for `'read`-only`' 
+sessions.&]
+[s0;i150;O0; Default sessions SQL and SQLR now can be per`-thread 
+(useful for multithreaded server applications).&]
+[s0;i150;O0; Columns and table names now can be optinally quoted 
+(new mode).&]
+[s0;i150;O0; Sql: SqlLoadTable and SqlLoadColumn helper function can 
+read whole tables into C`+`+ VectorMaps.&]
+[s0;i150;O0; New Sqls`::operator`^ fetches single row from select 
+and returns it as ValueMap.&]
+[s0; &]
+[s0; &]
+[s0; [* RichText, RichEdit]&]
+[s0;i150;O0; Paragraph ruler now can have dotted or dashed styles&]
+[s0; &]
+[s0; [* CtrlLib]&]
+[s0; &]
+[s0;i150;O0; EditField now has WhenPasteFilter that can be used to 
+change pasted clipboard text before inserting it.&]
+[s0;i150;O0; FileSel in Win32 is now using separate thread to lazy`-load 
+icons.&]
+[s0;i150;O0; ColorPopup checks clipboard and when it founds a text 
+resembling color definition (like #12aa33 or 123 55 6), adds 
+this color to predefined colors in selection.&]
+[s0; &]
+[s0; [* ide]&]
+[s0;* &]
+[s0;i150;O0; New, vastly improved GDB frontend.&]
+[s0;i150;O0; Startup times should be significantly improved.&]
+[s0;i150;O0; C#, JavaScript and css syntax highlighting.&]
+[s0;i150;O0; Ide now can view .png, .jpg, .gif and .bmp files and 
+even edit smaller .png files.&]
+[s0;i150;O0; New save file on window deactivation option is helpful 
+when editing scripts or web templates `- no need to save file 
+when going to another window to test.&]
+[s0;i150;O0; Insert clipboard as C string, convert text to C string 
+functions.&]
+[s0;i150;O0; New find in files dialog option to filter files according 
+to their `'read only`' status.&]
+[s0;4 &]
+[s0;4 &]
 [s0; [*_3 Current release]&]
 [s0; &]
 [s0; [*_4 4193][*3  (24 Nov 2011)]&]
@@ -831,4 +925,4 @@ and declarations of current method&]
 [s0; &]
 [s0;i150;O0; U`+`+/Win now ships with SDL library and contains nice 
 SDLExample as well as SDL project templates.&]
-[s0; ]
+[s0; ]]
