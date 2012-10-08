@@ -2,8 +2,7 @@
 #define _Skylark_Iml_icpp_init_stub
 #include "Draw/init"
 #include "plugin\png/init"
-#include "plugin\jpg/init"
-#define BLITZ_INDEX__ F2cfe659668367946f7f2baa1fbeb2b5e
+#define BLITZ_INDEX__ Fe08bb47a4f2334977b7d8bba44463f3f
 #include "Lib.icpp"
 #undef BLITZ_INDEX__
 #endif

@@ -366,7 +366,8 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 		else
 			product = CatAnyPath(outdir, GetAnyFileName(package) + ".lib");
 		Time producttime = GetFileTime(product);
-		linkfile.Add(ForceExt(product, ".lib"));
+		if(obj.GetCount())
+			linkfile.Add(ForceExt(product, ".lib"));
 		if(!Wait()) {
 			IdeConsoleEndGroup();
 			return false;

@@ -186,7 +186,8 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 			product = CatAnyPath(outdir, GetAnyFileName(package) + ".lib");
 
 		Time producttime = GetFileTime(product);
-		linkfile.Add(ForceExt(product, ".lib"));
+		if(obj.GetCount())
+			linkfile.Add(ForceExt(product, ".lib"));
 
 		Vector<String> files, res;
 		for (int i = 0, n = obj.GetCount(); i < n; ++i)

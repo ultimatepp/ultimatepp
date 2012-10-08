@@ -420,7 +420,6 @@ Value Compiler::ExeBlock::Eval(ExeContext& x) const
 String Render(const One<Exe>& exe, Renderer *r, Vector<Value>& var)
 {
 	LTIMING("Render0");
-	DDUMPC(var);
 	ExeContext x(var, r);
 	Value v = exe->Eval(x);
 	x.out.Cat(AsString(v));
