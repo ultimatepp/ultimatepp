@@ -209,7 +209,8 @@ bool ScriptBuilder::BuildPackage(const String& package, Vector<String>& linkfile
 		if(IsNull(product))
 			product = CatAnyPath(outdir, GetAnyFileName(package) + ".a");
 		Time producttime = GetFileTime(product);
-		linkfile.Add("*" + product); //!! ugly
+		if(obj.GetCount())
+			linkfile.Add("*" + product); //!! ugly
 		for(int i = 0; i < obj.GetCount(); i++)
 			if(GetFileTime(obj[i]) > producttime) {
 				PutConsole("Creating library...");

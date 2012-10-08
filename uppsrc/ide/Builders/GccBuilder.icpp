@@ -244,7 +244,8 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 		String hproduct = GetHostPath(product);
 		Time producttime = GetFileTime(hproduct);
 //		LOG("hproduct = " << hproduct << ", time = " << producttime);
-		linkfile.Add(GetHostPath(product));
+		if(obj.GetCount())
+			linkfile.Add(GetHostPath(product));
 		for(int i = 0; i < obj.GetCount(); i++)
 			if(GetFileTime(obj[i]) > producttime) {
 				String lib;
