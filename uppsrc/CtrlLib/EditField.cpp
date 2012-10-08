@@ -206,7 +206,7 @@ int  EditField::GetViewHeight(Font font)
 {
 	Size sz(0, 0);
 	EditFieldFrame().FrameAddSize(sz);
-	return font.GetHeight() + (sz.cy <= 2 ? 4 : sz.cy <= 4 ? 2 : 0);
+	return font.GetCy() + (sz.cy <= 2 ? 4 : sz.cy <= 4 ? 2 : 0);
 }
 
 int  EditField::GetStdHeight(Font font)
@@ -218,7 +218,7 @@ int  EditField::GetStdHeight(Font font)
 
 Size EditField::GetMinSize() const
 {
-	return AddFrameSize(10, font.GetHeight() + 4);
+	return AddFrameSize(10, font.GetCy() + 4);
 }
 
 int  EditField::GetCursor(int posx)
@@ -250,7 +250,7 @@ Image EditField::CursorImage(Point, dword)
 
 int  EditField::GetTy() const
 {
-	return (GetSize().cy + 1 - font.GetHeight()) / 2;
+	return (GetSize().cy + 1 - font.GetCy()) / 2;
 }
 
 void EditField::HighlightText(Vector<Highlight>& hl)
@@ -296,7 +296,7 @@ void EditField::Paint(Draw& w)
 	Color ink = enabled ? style->text : style->textdisabled;
 	if(enabled && (convert && convert->Scan(text).IsError() || errorbg))
 		paper = style->invalid;
-	int fcy = font.GetHeight();
+	int fcy = font.GetCy();
 	int yy = GetTy();
 	w.DrawRect(0, 0, 2, sz.cy, paper);
 	w.DrawRect(0, 0, sz.cx, yy, paper);
@@ -385,7 +385,7 @@ bool EditField::IsSelection() const
 Rect EditField::GetCaretRect(int pos) const
 {
 	return RectC(GetCaret(pos) - sc + 2 - font.GetRightSpace('o') + font.GetLeftSpace('o'), GetTy(),
-	             1, min(GetSize().cy - 2 * GetTy(), font.GetHeight()));
+	             1, min(GetSize().cy - 2 * GetTy(), font.GetCy()));
 }
 
 void EditField::SyncCaret()
@@ -703,7 +703,7 @@ void EditField::DragAndDrop(Point p, PasteClip& d)
 	if(c >= 0) {
 		int x = GetCaret(c);
 		dc = RectC(x - sc + 2 - font.GetRightSpace('o'), GetTy(),
-		           1, min(GetSize().cy - 2 * GetTy(), font.GetHeight()));
+		           1, min(GetSize().cy - 2 * GetTy(), font.GetCy()));
 	}
 	if(dc != dropcaret) {
 		Refresh(dropcaret);
