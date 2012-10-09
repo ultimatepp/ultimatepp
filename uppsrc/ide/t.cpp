@@ -130,9 +130,13 @@ bool LngParseTFile(const String& fn, VectorMap<String, LngEntry>& lng)
 
 String CreateTFile(const VectorMap<String, LngEntry>& map, const Vector<int>& lngset, bool rep, bool obsolete, bool java)
 {
+	const char *linepfx = (java ? "   + " : "     ");
+	int ascflags = (java ? 0 : ASCSTRING_OCTALHI) | ASCSTRING_SMART;
+
 	String out;
 	String cfile;
 	out << "#ifdef _MSC_VER\r\n#pragma setlocale(\"C\")\r\n#endif";
+
 	for(int i = 0; i < map.GetCount(); i++) {
 		if(i) out << "\r\n";
 		const LngEntry& e = map[i];
@@ -148,10 +152,7 @@ String CreateTFile(const VectorMap<String, LngEntry>& map, const Vector<int>& ln
 		}
 		if(!IsNull(cfile) || rep || obsolete) {
 			String id = map.GetKey(i);
-			out << "T_(" << AsCString(id, 70,
-				java ? "   + " : "     ",
-				ASCSTRING_OCTALHI | ASCSTRING_SMART)
-			    << ")\r\n";
+			out << "T_(" << AsCString(id, 70, linepfx, ascflags) << ")\r\n";
 			for(int j = 0; j < lngset.GetCount(); j++) {
 				int lang = lngset[j];
 				if(rep || lang != LNG_enUS) {
@@ -172,8 +173,7 @@ String CreateTFile(const VectorMap<String, LngEntry>& map, const Vector<int>& ln
 							}
 						}
 						out << '(' << AsCString(q >= 0 ? e.text[q] : String(), 70,
-							java ? "   + " : "     ",
-							ASCSTRING_OCTALHI | ASCSTRING_SMART) << ")\r\n";
+							linepfx, ascflags) << ")\r\n";
 					}
 				}
 			}
