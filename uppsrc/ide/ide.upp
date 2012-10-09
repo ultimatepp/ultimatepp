@@ -10,6 +10,7 @@ uses
 	ide\Browser,
 	CodeEditor,
 	CtrlLib,
+	Web,
 	plugin\bz2,
 	HexView,
 	art\BlueBar,
@@ -88,12 +89,13 @@ file
 	Copying;
 
 mainconfig
-	"" = "GUI SSE2",
+	"" = "GUI",
 	"" = "GUI .USEMALLOC",
 	"" = ".NOGTK GUI",
 	"" = "GUI HEAPDBG CHECKINIT",
 	"" = "GUI TESTINSTALL",
-	"" = "GUI CHECKCLIPBOARD";
+	"" = "GUI CHECKCLIPBOARD",
+	"" = "GUI SVO_VALUE";
 
 custom() "",
 	"",
