@@ -22,6 +22,8 @@ public:
 	String ToString() const                                     { return "{" + text + "}"; }
 	String operator~() const                                    { return ToString(); }
 	operator String() const                                     { return ToString(); }
+
+	operator bool() const                                       { return text.GetCount(); }
 	
 	Json& operator()(const char *key, const Value& value)       { return CatRaw(key, AsJSON(value)); }
 	Json& operator()(const char *key, int i)                    { return CatRaw(key, AsJSON(i)); }
@@ -54,6 +56,8 @@ public:
 	String ToString() const                                     { return "[" + text + "]"; }
 	String operator~() const                                    { return ToString(); }
 	operator String() const                                     { return ToString(); }
+	
+	operator bool() const                                       { return text.GetCount(); }
 	
 	JsonArray& operator<<(const Value& value)                   { return CatRaw(AsJSON(value)); }
 	JsonArray& operator<<(int i)                                { return CatRaw(AsJSON(i)); }
