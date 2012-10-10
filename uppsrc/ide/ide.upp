@@ -10,7 +10,6 @@ uses
 	ide\Browser,
 	CodeEditor,
 	CtrlLib,
-	Web,
 	plugin\bz2,
 	HexView,
 	art\BlueBar,
