@@ -72,8 +72,8 @@ represents JSON object.&]
 [s5;:Json`:`:CatRaw`(const char`*`,const String`&`): [_^Json^ Json][@(0.0.255) `&]_[* CatRa
 w]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
 ]_[*@3 val])&]
-[s2;%% Appends raw text (which must be a valid JSON) [%-*@3 val] with 
-[%-*@3 key].&]
+[s2;%% Appends raw text (which must be a valid JSON) [%-*@3 val] and 
+[%-*@3 key] as key`-value pair.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Json`:`:Json`(const char`*`,const Value`&`): [* Json]([@(0.0.255) const]_[@(0.0.255) c
@@ -103,6 +103,11 @@ har]_`*[*@3 key], [@(0.0.255) const]_[_^JsonArray^ JsonArray][@(0.0.255) `&]_[*@
 [s5;:Json`:`:operator`~`(`)const: [_^String^ String]_[* operator`~]()_[@(0.0.255) const]&]
 [s5;:Json`:`:operator String`(`)const: [* operator_String]()_[@(0.0.255) const]&]
 [s2;%% Returns current JSON formatted text.&]
+[s3; &]
+[s4; &]
+[s5;:Json`:`:operator bool`(`)const: [* operator_bool]()_[@(0.0.255) const]&]
+[s2;%% Returns true if any key`-value pairs were added to this JSON 
+object.&]
 [s3; &]
 [s4; &]
 [s5;:Json`:`:operator`(`)`(const char`*`,const Value`&`): [_^Json^ Json][@(0.0.255) `&]_[* o
@@ -155,9 +160,14 @@ t]&]
 [s2;%% Returns current JSON formatted text.&]
 [s3; &]
 [s4; &]
+[s5;:JsonArray`:`:operator bool`(`)const: [* operator_bool]()_[@(0.0.255) const]&]
+[s2;%% Returns true if there were any elements inserted JSON array.&]
+[s3; &]
+[s4; &]
 [s5;:JsonArray`:`:CatRaw`(const String`&`): [_^JsonArray^ JsonArray][@(0.0.255) `&]_[* CatR
 aw]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 val])&]
-[s2;%% Appends raw text (which must be a valid JSON).&]
+[s2;%% Appends raw text (which must be a valid JSON) as an array 
+element.&]
 [s3;%% &]
 [s4; &]
 [s5;:JsonArray`:`:operator`<`<`(const Value`&`): [_^JsonArray^ JsonArray][@(0.0.255) `&]_
