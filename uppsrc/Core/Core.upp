@@ -5,7 +5,7 @@ acceptflags
 
 uses(WIN32) plugin\z;
 
-library(MSC !MSC8ARM) "kernel32 user32";
+library(MSC !MSC8ARM) "kernel32 user32 ws2_32";
 
 library(WIN32 !GUI !GNU !GCC) "ole32 oleaut32 oldnames";
 
