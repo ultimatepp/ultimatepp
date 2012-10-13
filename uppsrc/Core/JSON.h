@@ -88,6 +88,7 @@ public:
 	
 	const Value& Get() const                     { ASSERT(IsLoading()); return *src; }
 	void         Set(const Value& v)             { ASSERT(IsStoring() && !map); tgt = v; }
+
 	void         Put(Value& v)                   { ASSERT(IsStoring()); if(map) v = *map; else v = tgt; }
 	Value        GetResult() const               { ASSERT(IsStoring()); return map ? Value(*map) : tgt; }
 
