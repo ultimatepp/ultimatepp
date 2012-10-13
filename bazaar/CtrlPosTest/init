@@ -1,5 +1,6 @@
 #ifndef _CtrlPosTest_icpp_init_stub
 #define _CtrlPosTest_icpp_init_stub
 #include "CtrlLib/init"
-#include "CtrlPos/init" 
+#include "CtrlPos/init"
+#include "AutoScroller/init"
 #endif

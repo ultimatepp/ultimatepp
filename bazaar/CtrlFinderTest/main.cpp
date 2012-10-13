@@ -13,6 +13,16 @@ void CtrlFinderTest::OnSelect(Ctrl& c, Point p, dword keyflags)
 	ToInfo(inf);
 }
 
+void CtrlFinderTest::OnSelectMulti(const Vector<Ctrl*>* pctrls, Rect r, dword keyflags)
+{
+	String inf = "Selected: \n";
+
+	for(int i = 0; i < pctrls->GetCount(); i++)
+		inf << String(typeid(*pctrls->operator[](i)).name()) << "\n";
+
+	ToInfo(inf);
+}
+
 void CtrlFinderTest::VisitCB()
 {
 	hk.SetSource(&vis);
@@ -86,7 +96,8 @@ CtrlFinderTest::CtrlFinderTest()
 	ft.view <<= true;
 	ViewCB();
 
-	hk.WhenLeftDown = THISBACK(OnSelect);
+	hk.WhenLeftSelect = THISBACK(OnSelect);
+	hk.WhenLeftSelectMulti = THISBACK(OnSelectMulti);
 	hk.SetSource(&vis);
 }
 

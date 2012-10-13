@@ -134,8 +134,8 @@ Image RectCtrl::SetCursor(unsigned m, dword keyflags, const Image& old)
 		case RIGHT:  return OverrideCursor(Img::lr());
 		case TOP: return OverrideCursor(Img::tb());
 
-		case ALL: return OverrideCursor(Img::mv());
 		case CENTER: return OverrideCursor(Img::fr());
+		case ALL: if(keyflags & K_MOUSELEFT) return OverrideCursor(Img::mv()); //fall through
 		
 		default: OverrideCursor(old); return Null;
 	}
@@ -181,14 +181,22 @@ void RectCtrl::MouseMove(Point p, dword keyflags)
 
 	moving = true;
 	pressed = (keyflags & K_MOUSELEFT);
-	//int m = GetMode(r, p, keyflags, style->handsize);
-	//SetCursor(m, keyflags);
+
 	if(pressed && mode != NONE) 
 	{
 		r = xr;
 		CalcRect(r, p-xp, keyflags, mode, g);
-		r.Normalize();	
+		r.Normalize(); //if flipped
 		UpdateActionRefresh();
+	}
+	else
+	{
+		int m = GetMode(r, p, keyflags, style->handsize);
+		if(m != mode)
+		{
+			mode = m;
+			c = SetCursor(mode, keyflags, c);
+		}
 	}
 }
 

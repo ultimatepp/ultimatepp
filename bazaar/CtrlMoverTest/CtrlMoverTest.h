@@ -26,6 +26,7 @@ public:
 
 	void ToInfo(const String& s);
 	void OnSelect(Ctrl& c, Point p, dword keyflags);
+	void OnSelectMulti(const Vector<Ctrl*>* pctrls, Rect r, dword keyflags);
 
 	AutoScroller<ParentCtrl> sc;
 

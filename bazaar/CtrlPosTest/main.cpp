@@ -51,11 +51,10 @@ void CtrlPosTest::ViewCB()
 
 CtrlPosTest::CtrlPosTest()
 {
-	CtrlLayout(vis);
-	SetRect(vis.GetRect());
-	Add(vis.SizePos());
-	
+	SetRect(Size(400,400));
 	Sizeable().Zoomable();
+
+	CtrlLayout(vis);
 
 	CtrlLayout(sb);
 	sb.Width(sb.GetSize().cx);
@@ -89,7 +88,11 @@ CtrlPosTest::CtrlPosTest()
 	ft.view <<= true;
 	ViewCB();
 
-	hk.WhenLeftDown = THISBACK(OnSelect);
+	Add(sc.SizePos());
+	sc.AddPane(vis);
+	sc.WhenScrolled = callback(&hk, &CtrlPos::Update);
+
+	hk.WhenLeftSelect = THISBACK(OnSelect);
 	hk.SetSource(&vis);
 	hk.SetFocus();
 }

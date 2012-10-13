@@ -2,7 +2,8 @@ description "example how to change Ctrl LogPos in a live environment\377";
 
 uses
 	CtrlLib,
-	CtrlPos;
+	CtrlPos,
+	AutoScroller;
 
 file
 	CtrlPosTest.h,

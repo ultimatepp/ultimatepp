@@ -19,12 +19,10 @@ public:
 	virtual void Updated();
 
 	void OnCtrlLeft(Ctrl& c, Point p, dword keyflags);
+	void OnCtrlLeftMulti(const Vector<Ctrl*>* pctrls, Rect r, dword keyflags);
+
 	void OnMissed(Point p, dword keyflags);
 
-	static void GetOffset(const Ctrl& c, Point& p);
-	static void GetOffset(const Ctrl& c, const Ctrl& q, Point& p);
-	static Point GetOffset(const Ctrl& c, const Ctrl& q);
-	
 protected:
 	void OnRectChange();
 

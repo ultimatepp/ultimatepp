@@ -8,9 +8,6 @@ using namespace Upp;
 #include <LogPosCtrl/LogPosCtrl.h>
 #include <CtrlFinder/CtrlFinder.h>
 
-//for some helpers
-#include <CtrlMover/CtrlMover.h>
-
 class CtrlPos : public CtrlFinder
 {
 public:
@@ -39,15 +36,31 @@ public:
 
 	static void DrawAlignHandle(Draw& w, const Rect& _r, const Rect& r, const Ctrl::LogPos& pos, const Color& col);
 	static bool GetAlignMode(const Rect& _r, const Rect& r, const Point& pp, Ctrl::LogPos& pos, int handsize);
-	void DrawHintFrame(Draw& w, const Ctrl& g, const Ctrl& q, const Color& hintcol);
+	static void GetAlignRects(const Ctrl& ctxuser, const Ctrl& finalctx, Rect& r, Rect& _r);
+	static void DrawHintFrame(Draw& w, const Ctrl& g, const Ctrl& q, const Color& hintcol, const CtrlFilterType& filter, int flags);
+
+	void CombineAdd(Vector<Ctrl*>& c, pick_ Vector<Ctrl*> _c);
+	void CombineSubtract(Vector<Ctrl*>& c, pick_ Vector<Ctrl*> _c);
 
 	Callback WhenLeftDouble;
 
 protected:	
+	void DrawSelected(Draw& w, const Vector<Ctrl*>& ctrls);
+
 	const RectCtrl::Style* style;
 	Point g;
+
+	//storing info where the drag began (xp), the old logpos values (xpos) and the old parents (xpars)
+	//for calculation speed: precalculated offset to pctrl context and the original rect in pctrl context
 	Point xp;
-	Ctrl::LogPos xpos;
+	Array<Ctrl::LogPos> xpos;
+	Vector<Ctrl*> xpars;
+	Vector<Point> xop;
+	Vector<Rect> xr;
+	
+	//Rect rd; //debug
+	//Rect rd2; //debug
+	
 	int mode;
 	bool pressed;
 	bool moving;

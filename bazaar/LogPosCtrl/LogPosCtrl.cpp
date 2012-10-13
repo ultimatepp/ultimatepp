@@ -18,6 +18,9 @@ static void sLay1(int& pos, int& r, int align, int a, int b, int sz)
 	r = pos + max(size, 0);
 }
 
+//LogPos, parent Size -> Rect
+
+//generates a Rect from a LogPos info and its parent size
 Rect LogPosPopUp::CtrlRect(Ctrl::LogPos pos, Size sz)
 {
 	Rect r;
@@ -26,6 +29,7 @@ Rect LogPosPopUp::CtrlRect(Ctrl::LogPos pos, Size sz)
 	return r;
 }
 
+//same as above but zoom support
 Rect LogPosPopUp::CtrlRectZ(Ctrl::LogPos pos, Size sz)
 {
 	Rect r = CtrlRect(pos, sz);
@@ -50,23 +54,31 @@ Ctrl::Logc MakeLogc(int align, int a, int b, int sz)
 	return Ctrl::PosSize(a, sz - b);
 }
 
+//alignment info, Rect, parent Size -> LogPos
+
 Ctrl::LogPos LogPosPopUp::MakeLogPos(int ax, int ay, const Rect& r, Size sz)
 {
 	return Ctrl::LogPos(MakeLogc(ax, r.left, r.right, sz.cx),
 	                    MakeLogc(ay, r.top, r.bottom, sz.cy));
 }
 
+//same as above, but takes align infos from a LogPos info
 Ctrl::LogPos LogPosPopUp::MakeLogPos(Ctrl::LogPos p, const Rect& r, Size sz)
 {
 	return MakeLogPos(p.x.GetAlign(), p.y.GetAlign(), r, sz);
 }
 
+//same as above, but generates source Rect from pos/sz
+//then applying new alignment to it, taken from p
+//this effectivly replaces the alignment info, keeping the rect visually in place
+//which includes recalculation of a and b data
 Ctrl::LogPos LogPosPopUp::MakeLogPos(Ctrl::LogPos p, const Ctrl::LogPos& pos, Size sz)
 {
-	Rect r = CtrlRect(pos, sz);
+	Rect r = CtrlRect(pos, sz); //generate the source rect
 	return MakeLogPos(p, r, sz);
 }
 
+//same as above but it does it for a specific Ctrl already
 Ctrl::LogPos LogPosPopUp::MakeLogPos(Ctrl::LogPos p, const Ctrl& c)
 {
 	if(!c.GetParent()) return p;

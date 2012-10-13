@@ -1,7 +1,6 @@
 #ifndef _CtrlPos_icpp_init_stub
 #define _CtrlPos_icpp_init_stub
 #include "Core/init"
-#include "Gen/init"
 #include "RectCtrl/init"
 #include "LogPosCtrl/init"
 #include "CtrlFinder/init"

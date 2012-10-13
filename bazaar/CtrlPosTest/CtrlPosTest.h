@@ -9,6 +9,7 @@ using namespace Upp;
 #include <CtrlCore/lay.h>
 
 #include <CtrlPos/CtrlPos.h>
+#include <AutoScroller/AutoScroller.h>
 
 class CtrlPosTest : public TopWindow {
 public:
@@ -27,6 +28,8 @@ public:
 
 	void ToInfo(const String& s);
 	void OnSelect(Ctrl& c, Point p, dword keyflags);
+
+	AutoScroller<ParentCtrl> sc;
 
 	WithCtrlPosTestLayout<ParentCtrl> vis;
 	FrameLeft<WithLeftBarLay<ParentCtrl> > sb;
