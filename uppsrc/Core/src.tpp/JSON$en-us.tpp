@@ -48,7 +48,7 @@ onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v], [@(0.0.255) const]_[_^String^ Str
 ValueArray as JSON array. [%-*@3 indent] is prepended to each line. 
 If [%-*@3 pretty] is true, JSON is encoded in lines, indenting 
 each level of embedding, if it is false, JSON is as compact as 
-possible..&]
+possible.&]
 [s3;%% &]
 [s4; &]
 [s5;:AsJSON`(const Value`&`,bool`): [_^String^ String]_[* AsJSON]([@(0.0.255) const]_[_^Value^ V
