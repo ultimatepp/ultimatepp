@@ -28,13 +28,15 @@ CtrlPropTest::CtrlPropTest()
 	        THISBACK(OnEdit));
 	AddFrame(mb);
 
-	hk.WhenRightDown = THISBACK(OnCtrlRight);
+	hk.Multiselect(false);
+	hk.WhenRightSelect = THISBACK(OnCtrlRight);
 	hk.SetSource(&vis);
 	hk.Disable();
 	
 	hk <<= THISBACK(OnMoveAction);
 
 	InitDummies();
+	OnEdit();
 }
 	
 GUI_APP_MAIN

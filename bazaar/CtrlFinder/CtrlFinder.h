@@ -50,6 +50,9 @@ public:
 	virtual Value GetData() const { return RawPickToValue(Vector<Ctrl*>(ctrls, 1)); }
 	virtual void SetData(const Value& v) { SetCtrls(Vector<Ctrl*>(RawValue<Vector<Ctrl*> >::Extract(v), 1)); }
 	
+	void Multiselect(bool b = true) { multi = b; if(!b && ctrls.GetCount() > 1) { ctrls[0] = ctrls.Top(); ctrls.SetCount(1); Update(); } }
+	bool IsMultiselect() const { return multi; }
+	
 	static void StdCtrlFilter(Ctrl*& q, int& f);	
 
 	static Ctrl* ChildAtPoint(Ctrl& par, Point& pt, int& f, const CtrlFilterType& filt);
