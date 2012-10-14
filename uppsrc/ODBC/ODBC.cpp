@@ -52,6 +52,32 @@ private:
 	bool                   IsCurrent() const   { return session->current == this; }
 };
 
+Array< Tuple2<String, String> > ODBCSession::EnumDSN()
+{
+	Array< Tuple2<String, String> > out;
+	try {
+		SQLHENV MIenv;
+		SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &MIenv);
+		SQLSetEnvAttr(MIenv, SQL_ATTR_ODBC_VERSION, (void *) SQL_OV_ODBC3, 0);
+		SQLRETURN ret;
+		char l_dsn[256];
+		char l_desc[256];
+		short int l_len1,l_len2,l_next;
+		l_next=SQL_FETCH_FIRST;
+		while(SQL_SUCCEEDED(ret = SQLDataSources(MIenv, l_next, (SQLCHAR *)l_dsn, sizeof(l_dsn),
+		                                         &l_len1, (SQLCHAR *)l_desc, sizeof(l_desc), &l_len2))) {
+			Tuple2<String, String>& listdsn = out.Add();
+			listdsn.a = l_dsn;
+			listdsn.b = l_desc;
+			l_next = SQL_FETCH_NEXT;
+		}
+	}
+	catch(Exc e) {
+		LLOG("ODBC::GetDSN->" << e);
+	}
+	return out;
+}
+
 bool ODBCSession::Connect(const char *cs)
 {
 	if(henv && IsOk(SQLAllocHandle(SQL_HANDLE_DBC, henv, &hdbc))) {
