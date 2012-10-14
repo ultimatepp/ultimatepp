@@ -20,7 +20,7 @@ Alvarez Duarte, Andrei Cosma, Tom Olá, George Brink, Zbigniew
 Czapiga, Konstantin Hartwich, Didier Quenouillere, Anthony Paul, 
 Kovalev Sergey, Martin Schut, Ion Lupascu, Frank De prins, Jeff 
 Humphreys, Lucas Harsze, Martin Schut, ][*^http`:`/`/www`.mimuw`.edu`.pl`/`~pan`/^ J
-akub Pawlewicz][* , Navin Vidhani, Steffen Brummer]&]
+akub Pawlewicz][* , Navin Vidhani, Steffen Brummer, Luis Rodriguez]&]
 [s0;i704;O9; Translators:-|[* Mauro_Bottizzo, Miklós_Somogyi, Arlen_Albert, 
 Ivica_Puljic, Richard_Gill, Werner_Wenzel, Tom Olá, Sergey Nikitin, 
 Koldo Ramirez, Gabriel Schmotzer, Andrei Catalin, Massimo Del 
@@ -40,7 +40,7 @@ matepp.org]]
 [s0;+108 &]
 [s0;+108 &]
 [s0; [+108 Ultimate`+`+ has BSD license:]&]
-[ {{10000@(254.255.232) [s0; [2 Copyright (C) 2008 Mirek Fidler, Tomas Rylek and various contributors 
+[ {{10000@(254.255.232) [s0; [2 Copyright (C) 2012 Mirek Fidler, Tomas Rylek and various contributors 
 (see AUTHORS)]&]
 [s0;2 &]
 [s0; [2 Permission is hereby granted, free of charge, to any person 
@@ -1165,4 +1165,4 @@ OF SUCH]&]
 [s0;C2 &]
 [s0; [C2 -|-|     END OF TERMS AND CONDITIONS]&]
 [s0; ]}}&]
-[s0; ]
+[s0; ]]
