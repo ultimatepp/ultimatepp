@@ -48,6 +48,8 @@ private:
 	bool   IsOk(SQLRETURN ret);
 
 public:
+	static Array< Tuple2<String, String> > EnumDSN();
+
 	bool Connect(const char *cs);
 	void Close();
 
