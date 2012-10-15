@@ -103,18 +103,20 @@ returns false in case of error.&]
 [s4;%% &]
 [s5;:StoreAsJsonFile`(const T`&`,const char`*`,bool`): [@(0.0.255) template]_<[@(0.0.255) c
 lass]_[*@4 T]>_[@(0.0.255) bool]_[* StoreAsJsonFile]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
-]_[*@3 var], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 file], [@(0.0.255) bool]_[*@3 pretty
-]_`=_[@(0.0.255) false])&]
+]_[*@3 var], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 file]_`=_NULL, 
+[@(0.0.255) bool]_[*@3 pretty]_`=_[@(0.0.255) false])&]
 [s2;%% Converts [%-*@3 var] into JSON file. If [%-*@3 pretty] is true, 
 adds whitespaces to look better, otherwise the result is as compact 
-as possible.&]
+as possible. If [%-*@3 file] is NULL, ConfigFile(GetExeTitle() 
+`+ `".json`") is used as the file path.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:LoadFromJsonFile`(T`&`,const char`*`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T
 ]>_[@(0.0.255) bool]_[* LoadFromJsonFile]([*@4 T][@(0.0.255) `&]_[*@3 var], 
 [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 file]_`=_NULL)&]
 [s2;%% Retrieves [%-*@3 var] from [%-*@3 json] file. Does not throw JsonizeError, 
-returns false in case of error.&]
+returns false in case of error. If [%-*@3 file] is NULL, ConfigFile(GetExeTitle() 
+`+ `".json`") is used as the file path.&]
 [s3; &]
 [s0;i448;a25;kKO9;@(0.0.255) &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Standard Jsonize template specializations]]}}&]

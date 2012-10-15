@@ -155,30 +155,178 @@ this new tag is constructed.&]
 [s0;%% &]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Xmlize Store/Load functions]]}}&]
-[s0;%% &]
-[s4; &]
+[s3; &]
 [s5;:StoreAsXML`(const T`&`,const char`*`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T
 ]>_[_^String^ String]_[* StoreAsXML]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 data], 
-[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 name])&]
-[s2;%%  [%-*@3 data] [%-*@3 name] .&]
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 name]_`=_NULL)&]
+[s2;%% Stores [%-*@3 data] into XML string. The top`-level tag is defined 
+by [%-*@3 name], if NULL, it is set to `"app`".&]
 [s3;%% &]
 [s4;%% &]
 [s5;:LoadFromXML`(T`&`,const String`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>
 _[@(0.0.255) bool]_[* LoadFromXML]([*@4 T][@(0.0.255) `&]_[*@3 data], [@(0.0.255) const]_[_^String^ S
 tring][@(0.0.255) `&]_[*@3 xml])&]
-[s2;%%  [%-*@3 data] [%-*@3 xml] .&]
+[s2;%% Loads [%-*@3 data] from XML string [%-*@3 xml].&]
 [s3;%% &]
 [s4;%% &]
 [s5;:StoreAsXMLFile`(T`&`,const char`*`,const char`*`): [@(0.0.255) template]_<[@(0.0.255) c
 lass]_[*@4 T]>_[@(0.0.255) bool]_[* StoreAsXMLFile]([*@4 T][@(0.0.255) `&]_[*@3 data], 
 [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 name]_`=_NULL, [@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 file]_`=_NULL)&]
-[s2;%%  [%-*@3 data] [%-*@3 name] [%-*@3 file] .&]
+[s2;%% Stores [%-*@3 data] to XML file, using [%-*@3 name] (`"app`" if 
+NULL) as top`-level tag and [%-*@3 file] as the path of file. If 
+[%-*@3 file] is NULL, ConfigFile(GetExeTitle() `+ `".xml`") is 
+used as the file path.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:LoadFromXMLFile`(T`&`,const char`*`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T
 ]>_[@(0.0.255) bool]_[* LoadFromXMLFile]([*@4 T][@(0.0.255) `&]_[*@3 data], 
 [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 file]_`=_NULL)&]
-[s2;%%  [%-*@3 data] [%-*@3 file] .&]
+[s2;%% Loads [%-*@3 data] from XML file, using [%-*@3 file] as the path 
+of file. If [%-*@3 file] is NULL, ConfigFile(GetExeTitle() `+ `".xml`") 
+is used as the file path.&]
 [s3;%% &]
-[s0;*@7;4%% ]]
+[s0; &]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 Standard Xmlize template specializations]]}}&]
+[s3; &]
+[s5;:XmlAttrLoad`(String`&`,const String`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_
+[* XmlAttrLoad]([_^String^ String][@(0.0.255) `&]_[*@3 var], [@(0.0.255) const]_[_^String^ St
+ring][@(0.0.255) `&]_[*@3 text])&]
+[s5;:XmlAttrStore`(const String`&`): [@(0.0.255) template]_<>_[_^String^ String]_[* XmlAttr
+Store]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 var])&]
+[s5;:XmlAttrLoad`(WString`&`,const String`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_
+[* XmlAttrLoad]([_^WString^ WString][@(0.0.255) `&]_[*@3 var], [@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 text])&]
+[s5;:XmlAttrStore`(const WString`&`): [@(0.0.255) template]_<>_[_^String^ String]_[* XmlAtt
+rStore]([@(0.0.255) const]_[_^WString^ WString][@(0.0.255) `&]_[*@3 var])&]
+[s5;:XmlAttrLoad`(int`&`,const String`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Xm
+lAttrLoad]([@(0.0.255) int`&]_[*@3 var], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
+]_[*@3 text])&]
+[s5;:XmlAttrStore`(const int`&`): [@(0.0.255) template]_<>_[_^String^ String]_[* XmlAttrSto
+re]([@(0.0.255) const]_[@(0.0.255) int`&]_[*@3 var])&]
+[s5;:XmlAttrLoad`(dword`&`,const String`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* X
+mlAttrLoad]([_^dword^ dword][@(0.0.255) `&]_[*@3 var], [@(0.0.255) const]_[_^String^ String
+][@(0.0.255) `&]_[*@3 text])&]
+[s5;:XmlAttrStore`(const dword`&`): [@(0.0.255) template]_<>_[_^String^ String]_[* XmlAttrS
+tore]([@(0.0.255) const]_[_^dword^ dword][@(0.0.255) `&]_[*@3 var])&]
+[s5;:XmlAttrLoad`(double`&`,const String`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_
+[* XmlAttrLoad]([@(0.0.255) double`&]_[*@3 var], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
+]_[*@3 text])&]
+[s5;:XmlAttrStore`(const double`&`): [@(0.0.255) template]_<>_[_^String^ String]_[* XmlAttr
+Store]([@(0.0.255) const]_[@(0.0.255) double`&]_[*@3 var])&]
+[s5;:XmlAttrLoad`(bool`&`,const String`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* X
+mlAttrLoad]([@(0.0.255) bool`&]_[*@3 var], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
+]_[*@3 text])&]
+[s5;:XmlAttrStore`(const bool`&`): [@(0.0.255) template]_<>_[_^String^ String]_[* XmlAttrSt
+ore]([@(0.0.255) const]_[@(0.0.255) bool`&]_[*@3 var])&]
+[s5;:XmlAttrStore`(const bool`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* XmlAttrLoa
+d]([_^int16^ int16][@(0.0.255) `&]_[*@3 var], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
+]_[*@3 text])&]
+[s5;:XmlAttrStore`(const int16`&`): [@(0.0.255) template]_<>_[_^String^ String]_[* XmlAttrS
+tore]([@(0.0.255) const]_[_^int16^ int16][@(0.0.255) `&]_[*@3 var])&]
+[s5;:XmlAttrLoad`(int64`&`,const String`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* X
+mlAttrLoad]([_^int64^ int64][@(0.0.255) `&]_[*@3 var], [@(0.0.255) const]_[_^String^ String
+][@(0.0.255) `&]_[*@3 text])&]
+[s5;:XmlAttrStore`(const int64`&`): [@(0.0.255) template]_<>_[_^String^ String]_[* XmlAttrS
+tore]([@(0.0.255) const]_[_^int64^ int64][@(0.0.255) `&]_[*@3 var])&]
+[s5;:XmlAttrLoad`(byte`&`,const String`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* X
+mlAttrLoad]([_^byte^ byte][@(0.0.255) `&]_[*@3 var], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
+]_[*@3 text])&]
+[s5;:XmlAttrStore`(const byte`&`): [@(0.0.255) template]_<>_[_^String^ String]_[* XmlAttrSt
+ore]([@(0.0.255) const]_[_^byte^ byte][@(0.0.255) `&]_[*@3 var])&]
+[s5;:XmlAttrLoad`(Date`&`,const String`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* X
+mlAttrLoad]([_^Date^ Date][@(0.0.255) `&]_[*@3 var], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
+]_[*@3 text])&]
+[s5;:XmlAttrStore`(const Date`&`): [@(0.0.255) template]_<>_[_^String^ String]_[* XmlAttrSt
+ore]([@(0.0.255) const]_[_^Date^ Date][@(0.0.255) `&]_[*@3 var])&]
+[s5;:XmlAttrLoad`(Time`&`,const String`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* X
+mlAttrLoad]([_^Time^ Time][@(0.0.255) `&]_[*@3 var], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
+]_[*@3 text])&]
+[s5;:XmlAttrStore`(const Time`&`): [@(0.0.255) template]_<>_[_^String^ String]_[* XmlAttrSt
+ore]([@(0.0.255) const]_[_^Time^ Time][@(0.0.255) `&]_[*@3 var])&]
+[s2; Provides template specialization to support [*@3 var] data types 
+as XML attributes.&]
+[s3;%% &]
+[s4;%% &]
+[s5;:Xmlize`(XmlIO`&`,String`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ X
+mlIO][@(0.0.255) `&]_[*@3 xml], [_^String^ String][@(0.0.255) `&]_[*@3 var])&]
+[s5;:Xmlize`(XmlIO`&`,WString`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ X
+mlIO][@(0.0.255) `&]_[*@3 xml], [_^WString^ WString][@(0.0.255) `&]_[*@3 var])&]
+[s5;:Xmlize`(XmlIO`&`,int`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ X
+mlIO][@(0.0.255) `&]_[*@3 xml], [@(0.0.255) int`&]_[*@3 var])&]
+[s5;:Xmlize`(XmlIO`&`,dword`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ X
+mlIO][@(0.0.255) `&]_[*@3 xml], [_^dword^ dword][@(0.0.255) `&]_[*@3 var])&]
+[s5;:Xmlize`(XmlIO`&`,double`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ X
+mlIO][@(0.0.255) `&]_[*@3 xml], [@(0.0.255) double`&]_[*@3 var])&]
+[s5;:Xmlize`(XmlIO`&`,bool`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ X
+mlIO][@(0.0.255) `&]_[*@3 xml], [@(0.0.255) bool`&]_[*@3 var])&]
+[s5;:Xmlize`(XmlIO`&`,Date`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ X
+mlIO][@(0.0.255) `&]_[*@3 xml], [_^Date^ Date][@(0.0.255) `&]_[*@3 var])&]
+[s5;:Xmlize`(XmlIO`&`,Time`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ X
+mlIO][@(0.0.255) `&]_[*@3 xml], [_^Time^ Time][@(0.0.255) `&]_[*@3 var])&]
+[s5;:Xmlize`(XmlIO`&`,int16`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ X
+mlIO][@(0.0.255) `&]_[*@3 xml], [_^int16^ int16][@(0.0.255) `&]_[*@3 var])&]
+[s5;:Xmlize`(XmlIO`&`,int64`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ X
+mlIO][@(0.0.255) `&]_[*@3 xml], [_^int64^ int64][@(0.0.255) `&]_[*@3 var])&]
+[s5;:Xmlize`(XmlIO`&`,byte`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ X
+mlIO][@(0.0.255) `&]_[*@3 xml], [_^byte^ byte][@(0.0.255) `&]_[*@3 var])&]
+[s5;:Xmlize`(XmlIO`&`,Vector`<T`>`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) v
+oid]_[* Xmlize]([_^XmlIO^ XmlIO][@(0.0.255) `&]_[*@3 xml], [_^Vector^ Vector]<[*@4 T]>`&_[*@3 d
+ata])&]
+[s5;:Xmlize`(XmlIO`&`,const char`*`,Vector`<T`>`&`): [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 T]>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ XmlIO][@(0.0.255) `&]_[*@3 xml], 
+[@(0.0.255) const]_[@(0.0.255) char`*]_[*@3 itemtag], [_^Vector^ Vector]<[*@4 T]>`&_[*@3 data
+])&]
+[s5;:Xmlize`(XmlIO`&`,Array`<T`>`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) v
+oid]_[* Xmlize]([_^XmlIO^ XmlIO][@(0.0.255) `&]_[*@3 xml], [_^Array^ Array]<[*@4 T]>`&_[*@3 dat
+a])&]
+[s5;:Xmlize`(XmlIO`&`,const char`*`,Array`<T`>`&`): [@(0.0.255) template]_<[@(0.0.255) cl
+ass]_[*@4 T]>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ XmlIO][@(0.0.255) `&]_[*@3 xml], 
+[@(0.0.255) const]_[@(0.0.255) char`*]_[*@3 itemtag], [_^Array^ Array]<[*@4 T]>`&_[*@3 data])
+&]
+[s5;:Xmlize`(XmlIO`&`,ArrayMap`<K`,V`,H`>`&`): [@(0.0.255) template]_<[@(0.0.255) class]_
+[*@4 K], [@(0.0.255) class]_[*@4 V], [@(0.0.255) class]_[*@4 H]>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ X
+mlIO][@(0.0.255) `&]_[*@3 xml], [_^ArrayMap^ ArrayMap]<[*@4 K], [*@4 V], 
+[*@4 H]>`&_[*@3 data])&]
+[s5;:Xmlize`(XmlIO`&`,Index`<K`,H`>`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 K],
+ [@(0.0.255) class]_[*@4 H]>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ XmlIO][@(0.0.255) `&]_[*@3 x
+ml], [_^Index^ Index]<[*@4 K], [*@4 H]>`&_[*@3 data])&]
+[s5;:Xmlize`(XmlIO`&`,ArrayIndex`<K`,H`>`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 K
+], [@(0.0.255) class]_[*@4 H]>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ XmlIO][@(0.0.255) `&]_[*@3 x
+ml], [_^ArrayIndex^ ArrayIndex]<[*@4 K], [*@4 H]>`&_[*@3 data])&]
+[s2; Provides template specialization to support Xmlization of [*@3 var] 
+data types.&]
+[s3;%% &]
+[s0;%% &]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 Special Xmlize variants]]}}&]
+[s3; &]
+[s5;:XmlizeLangAttr`(XmlIO`&`,int`&`,const char`*`): [@(0.0.255) void]_[* XmlizeLangAttr](
+[_^XmlIO^ XmlIO][@(0.0.255) `&]_[*@3 xml], [@(0.0.255) int`&]_[*@3 lang], 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id]_`=_`"[*@3 lang]`")&]
+[s2;%% Xmlizes [%-*@3 lang] language identifier number (which encodes 
+i18n strings like `"CS`-CZ`", see Lang.h) as [%-*@3 id] attribute, 
+using more readable format (`"CS`-CZ`") than plain integer number.&]
+[s3;%% &]
+[s4;%% &]
+[s5;:XmlizeLang`(XmlIO`&`,const char`*`,int`&`,const char`*`): [@(0.0.255) void]_[* Xmliz
+eLang]([_^XmlIO^ XmlIO][@(0.0.255) `&]_[*@3 xml], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 t
+ag], [@(0.0.255) int`&]_[*@3 lang], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id]_`=_`"[*@3 i
+d]`")&]
+[s2;%% Xmlizes [%-*@3 lang] language identifier number (which encodes 
+i18n strings like `"CS`-CZ`", see Lang.h) as XML [%-*@3 tag], using 
+more readable format (`"CS`-CZ`") than plain integer number.&]
+[s3;%% &]
+[s4;%% &]
+[s5;:XmlizeBySerialize`(XmlIO`&`,T`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_
+[@(0.0.255) void]_[* XmlizeBySerialize]([_^XmlIO^ XmlIO][@(0.0.255) `&]_[*@3 xio], 
+[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s2;%% This function encodes/retrieves XML by binary serializing 
+the object and Jsonizing the hexadecimal data string.&]
+[s3;%% &]
+[s4;%% &]
+[s5;:XmlizeByJsonize`(XmlIO`&`,T`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) v
+oid]_[* XmlizeByJsonize]([_^XmlIO^ XmlIO][@(0.0.255) `&]_[*@3 xio], [*@4 T][@(0.0.255) `&]_[*@3 x
+])&]
+[s2;%% This function encodes/retrieves XML by JSON conversion and 
+then interpreting JSON object fields  as XML tags.&]
+[s3;%% ]]
