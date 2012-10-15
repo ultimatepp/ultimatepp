@@ -19,6 +19,7 @@ global function has default templated definition that in turn
 calls Jsonize method of object. However, when implementation 
 using method is not possible (e.g. for supported primitive types), 
 global templated specialization of Jsonize can be used.&]
+[s2;%% &]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3;%% &]

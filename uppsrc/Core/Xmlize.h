@@ -252,22 +252,6 @@ void Xmlize(XmlIO& xml, ArrayIndex<K, H>& data)
 	XmlizeIndex<K>(xml, "key", data);
 }
 
-void RegisterValueXmlize(dword type, void (*xmlize)(XmlIO& xml, Value& v), const char *name);
-
-template <class T>
-void ValueXmlize(XmlIO& xml, Value& v)
-{
-	T x;
-	if(xml.IsStoring())
-		x = v;
-	Xmlize(xml, x);
-	if(xml.IsLoading())
-		v = x;
-}
-
-#define REGISTER_VALUE_XMLIZE(T) \
-	INITBLOCK { RegisterValueXmlize(GetValueTypeNo<T>(), &ValueXmlize<T>, #T); }
-
 template <class T>
 struct ParamHelper__ {
 	T&   data;
