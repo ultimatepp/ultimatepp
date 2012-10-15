@@ -172,7 +172,7 @@ bool LoadFromJson(T& var, const char *json)
 String sJsonFile(const char *file);
 
 template <class T>
-bool StoreAsJsonFile(const T& var, const char *file, bool pretty = false)
+bool StoreAsJsonFile(const T& var, const char *file = NULL, bool pretty = false)
 {
 	return SaveFile(sJsonFile(file), StoreAsJson(var, pretty));;
 }
