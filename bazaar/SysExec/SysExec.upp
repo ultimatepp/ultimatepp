@@ -3,7 +3,7 @@ description "BAZAAR : Execution of external commands gathering output - Author :
 uses
 	Core;
 
-link(LINUX) -lutil;
+library(LINUX) util;
 
 file
 	SysInfo.h,
