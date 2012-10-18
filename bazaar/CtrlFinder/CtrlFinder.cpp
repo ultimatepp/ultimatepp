@@ -1,6 +1,10 @@
 #include "CtrlFinder.h"
 
-//this one filters 
+//this one filters
+//check if the found ctrl is to be kept and returned as found
+//according to the selection flags f
+//set q = NULL will continue the search.
+//keeping q will return it as found, but probably continue a DEEP search in it if flag set
 void CtrlFinder::StdCtrlFilter(Ctrl*& q, int& f)
 {
 	if((f & VIEW) && q->InView())
@@ -61,6 +65,9 @@ Ctrl* CtrlFinder::ChildAtPoint(Ctrl& par, Point& pt, int& f, const CtrlFilterTyp
 	return NULL;
 }
 
+//find a ctrl at point (in pctrl coords). The search can go deep, if specified.
+//a filter can prohibit to look deep in a returned found ctrl, resetting a DEEP flag
+//or prohibit a deep look in a fellow to be found child resetting DEEP flag and returning NULL
 Ctrl* CtrlFinder::GetCtrl(Ctrl& c, Point& p, int& f, const CtrlFilterType& filt)
 {
 	Ctrl* q = ChildAtPoint(c, p, f, filt);
@@ -113,6 +120,7 @@ Ctrl* CtrlFinder::ChildInRect(Ctrl& par, Rect& rect, int& f, const CtrlFilterTyp
 	return NULL;
 }
 
+//see rect as a big Point, the found Ctrl needs to Contain it.
 Ctrl* CtrlFinder::GetCtrl(Ctrl& c, Rect& rect, int& f, const CtrlFilterType& filt)
 {
 	Ctrl* q = ChildInRect(c, rect, f, filt);

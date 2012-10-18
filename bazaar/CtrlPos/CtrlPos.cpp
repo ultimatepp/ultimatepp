@@ -108,12 +108,12 @@ void CtrlPos::DrawHintFrame(Draw& w, const Ctrl& g, const Ctrl& q, const Color& 
 void CtrlPos::CombineSubtract(Vector<Ctrl*>& c, pick_ Vector<Ctrl*> _c)
 {
 	//top is the currently editable ctrl
-
-	while(_c.GetCount() > 0)
+	Vector<Ctrl*> __c(_c);
+	while(__c.GetCount() > 0)
 	{
-		int i = FindIndex(c, _c.Top()); //with this we are O(N^2)
+		int i = FindIndex(c, __c.Top()); //with this we are O(N^2)
 		if(i>=0) c.Remove(i);
-		_c.Drop();
+		__c.Drop();
 	}
 }
 
