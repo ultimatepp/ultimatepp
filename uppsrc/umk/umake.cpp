@@ -8,7 +8,8 @@ String GetUmkFile(const char *fn)
 	                     GetHomeDirFile(".upp/umk") + ';' +
 	                     GetHomeDirFile(".upp/theide") + ';' +
 	                     GetHomeDirFile(".upp/ide") + ';' +
-	                     GetHomeDirectory());
+	                     GetHomeDirectory() + ';' +
+	                     GetFileFolder(GetExeFilePath()));
 }
 
 String GetBuildMethodPath(String method)
