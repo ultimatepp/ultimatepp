@@ -381,4 +381,4 @@ tDoubleNotNullSpin]([@(0.0.255) double]_[*@3 min], [@(0.0.255) double]_[*@3 max]
 [s2; This constructor sets [%-*@3 min], [%-*@3 max] and [%-*@3 inc] values. 
 Spin buttons are on.&]
 [s3; &]
-[s0; ]
+[s0; ]]
