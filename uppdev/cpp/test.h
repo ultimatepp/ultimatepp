@@ -102,7 +102,7 @@
 #define E__NFValue(I)  const Value& COMBINE(p, I)
 #define E__NFBody(I)   String Format(const char *fmt, __List##I(E__NFValue));
 
-__Expand2(E__NFBody)
+EXPAND: __Expand2(E__NFBody)
 
 ASSTRING(Just a test)
 
@@ -139,3 +139,5 @@ TEST4
 dist(x, y);
 
 #define __countof(a)          int(sizeof(a) / sizeof(a[0]))
+
+__countof(bla)
