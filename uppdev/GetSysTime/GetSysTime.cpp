@@ -4,7 +4,7 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
-	DDUMP(GetSysTime());
-	DDUMP(GetUtcTime());
+	Cout() << GetSysTime() << "\n";
+	Cout() << GetUtcTime() << "\n";
 }
 
