@@ -8,7 +8,9 @@ GUI_APP_MAIN
 	FileSel fs;
 	String fn;
 //	fs.BaseDir("U:\\");
-	fs.AllFilesType()
+	fs
+	  .Type( t_("exe"), "*.exe") //type 1
+	.AllFilesType()
 	  .Type( t_("archive FIDE (txt)"), "*.txt") //type 1
 	  .Type( t_("archive VEG (csv)"), "*.csv;*.veg") //type 2
 	  .Type( t_("national archive with Fixed Length (txt)"), "*.txt")   //type 3

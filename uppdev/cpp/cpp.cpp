@@ -135,7 +135,6 @@ String Cpp::Expand(const char *s)
 			int q = macro.Find(id);
 			if(q >= 0 && !macro[q].flag) {
 				LLOG("Expanding " << id);
-				LOGBEGIN();
 				Vector<String> param;
 				while(*s && (byte)*s <= ' ') s++;
 				if(*s == '(') {
@@ -174,7 +173,6 @@ String Cpp::Expand(const char *s)
 				macro[q].flag = true;
 				r.Cat(Expand(macro[q].Expand(param)));
 				macro[q].flag = false;
-				LOGEND();
 			}
 			else
 				r.Cat(id);
