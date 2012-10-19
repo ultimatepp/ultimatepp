@@ -631,6 +631,18 @@ ctrl EditIntSpin {
 	}
 }
 
+ctrl EditInt64Spin {
+	>EditInt64;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		w.DrawRect(r, :SWhite);
+		DrawSpinButtons(w, r);
+		PaintMinMax(w, "int64", IntStr(.Min), IntStr(.Max));
+	}
+}
+
 ctrl EditDoubleSpin {
 	>EditDouble;
 
@@ -642,6 +654,34 @@ ctrl EditDoubleSpin {
 		w.DrawRect(r, :SWhite);
 		DrawSpinButtons(w, r);
 		PaintMinMaxText(w, "dbl", DblStr(.Min), DblStr(.Max), "+-" + DblStr(.SetInc));
+	}
+}
+
+ctrl EditDateSpin {
+	>EditDate;
+
+	double SetInc = 1;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		w.DrawRect(r, :SWhite);
+		DrawSpinButtons(w, r);
+		PaintMinMaxText(w, "date", DblStr(.Min), DblStr(.Max), "+-" + DblStr(.SetInc));
+	}
+}
+
+ctrl EditTimeSpin {
+	>EditTime;
+
+	double SetInc = 1;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		w.DrawRect(r, :SWhite);
+		DrawSpinButtons(w, r);
+		PaintMinMaxText(w, "time", DblStr(.Min), DblStr(.Max), "+-" + DblStr(.SetInc));
 	}
 }
 
