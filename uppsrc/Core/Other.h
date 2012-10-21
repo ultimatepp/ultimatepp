@@ -350,10 +350,18 @@ private:
 
 public:
 	int  GetSize() const            { return size; }
+	int  GetCount() const           { return data.GetCount(); }
+//	template <class P>
+//	void AjustSize(P getsize);
 
-	void Shrink(int maxsize);
+	T&   GetLRU();
+	void DropLRU();
+	void Shrink(int maxsize, int maxcount = 30000);
 
-	const T& Get(const Maker& m);
+//	template <class P>
+//	void Remove(P predicate);
+
+	T&   Get(const Maker& m);
 
 	void Clear();
 
@@ -398,17 +406,54 @@ void LRUCache<T, K>::Unlink(int i)
 }
 
 template <class T, class K>
-void LRUCache<T, K>::Shrink(int maxsize)
+T& LRUCache<T, K>::GetLRU()
 {
-	if(maxsize < 0)
-		return;
-	while((count > 30000 || size > maxsize) && head >= 0) {
+	int tail = data[head].prev;
+	return *data[tail].data;
+}
+
+template <class T, class K>
+void LRUCache<T, K>::DropLRU()
+{
+	if(head >= 0) {
 		int tail = data[head].prev;
 		size -= data[tail].size;
 		data[tail].data.Clear();
 		Unlink(tail);
 		key.Unlink(tail);
 	}
+}
+
+/*
+template <class T, class K, class P>
+void LRUCache<T, K>::AjustSize(P getsize)
+{
+	size = 0;
+	for(int i = 0; i < data.GetCount(); i++)
+		size += (data[i].size = getsize(*data[i].data));
+}
+
+template <class T, class K, class P>
+void LRUCache<T, K>::Remove(P predicate)
+{
+	int i = 0;
+	while(i < data.GetCount())
+		if(predicate(*data[i].data)) {
+			size -= data[i].size;
+			Unlink(i);
+			key.Unlink(i);
+		}
+		else
+			i++;
+}
+*/
+
+template <class T, class K>
+void LRUCache<T, K>::Shrink(int maxsize, int maxcount)
+{
+	if(maxsize >= 0)
+		while(count > 30000 || size > maxsize)
+			DropLRU();
 }
 
 template <class T, class K>
@@ -430,7 +475,7 @@ void LRUCache<T, K>::ClearCounters()
 }
 
 template <class T, class K>
-const T& LRUCache<T, K>::Get(const Maker& m)
+T& LRUCache<T, K>::Get(const Maker& m)
 {
 	Key k;
 	k.key = m.Key();
