@@ -53,7 +53,7 @@ void TrayIcon::Notify(dword msg)
 		nid.flags = NIF_ICON|NIF_MESSAGE|NIF_TIP;
 		if(nid.icon)
 			DestroyIcon(nid.icon);
-		nid.icon = IconWin32(icon);
+		nid.icon = SystemDraw::IconWin32(icon);
 		String stip = ToSystemCharset(tip);
 		int len = min(stip.GetLength(), 125);
 		memcpy(nid.tip, stip, len);

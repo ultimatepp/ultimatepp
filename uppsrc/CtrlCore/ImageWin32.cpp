@@ -638,6 +638,11 @@ HICON IconWin32(const Image& img, bool cursor)
 	return icon;
 }
 
+HICON SystemDraw::IconWin32(const Image& img, bool cursor)
+{
+	return UPP::IconWin32(img, cursor);
+}
+
 #define WCURSOR_(x)\
 { Image m; INTERLOCKED { static Image img = Win32Cursor(x); m = img; } return m; }
 

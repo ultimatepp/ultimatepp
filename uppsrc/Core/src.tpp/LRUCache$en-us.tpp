@@ -60,8 +60,8 @@ returned by Maker`::Make).&]
 removing the least recently used items first.&]
 [s3;%% &]
 [s4; &]
-[s5;:LRUCache`:`:Get`(const LRUCache`:`:Maker`&`): [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
-]_[* Get]([@(0.0.255) const]_[_^LRUCache`:`:Maker^ Maker][@(0.0.255) `&]_[*@3 m])&]
+[s5;:LRUCache`:`:Get`(const LRUCache`:`:Maker`&`): [*@4 T][@(0.0.255) `&]_[* Get]([@(0.0.255) c
+onst]_[_^LRUCache`:`:Maker^ Maker][@(0.0.255) `&]_[*@3 m])&]
 [s2;%% Retrieves data from the cache or creates them if needed [%-*@3 m].&]
 [s3;%% &]
 [s4; &]

@@ -111,6 +111,8 @@ public:
 
 	static void Flush()                                 { GdiFlush(); }
 
+	static HICON IconWin32(const Image& img, bool cursor = false);
+
 	COLORREF GetColor(Color color) const;
 	
 	Point    GetOffset() const                          { return actual_offset; }
@@ -259,8 +261,8 @@ Image Win32Icon(LPCSTR id, int iconsize = 0);
 Image Win32Icon(int id, int iconsize = 0);
 Image Win32Cursor(LPCSTR id);
 Image Win32Cursor(int id);
-HICON IconWin32(const Image& img, bool cursor = false);
 Image Win32DllIcon(const char *dll, int ii, bool large);
+HICON IconWin32(const Image& img, bool cursor = false);
 
 class BackDraw : public SystemDraw {
 public:
