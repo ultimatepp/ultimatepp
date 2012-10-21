@@ -19,7 +19,7 @@ GUI_APP_MAIN
 	DDUMP(GetStdFontCy());
 	DUMP(GUI_PopUpEffect());
 	
-	PromptOK("[H20L1 &&&");
+//	PromptOK("[H20L1 &&&");
 	
 	RichEditWithToolBar e;
 	e.SetPage(Size(6074, 3968));
