@@ -53,7 +53,6 @@ static void sCubic(LinearPathConsumer& t,
 				Pointf p123 = Mid(p12, p23);
 				Pointf p234 = Mid(p23, p34);
 				Pointf div = Mid(p123, p234);
-				Pointf p14 = Mid(p1, p4);
 				sCubic(t, p1, p12, p123, div, qt, lvl + 1);
 				sCubic(t, div, p234, p34, p4, qt, lvl + 1);
 				return;

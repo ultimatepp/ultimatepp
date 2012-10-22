@@ -319,7 +319,7 @@ public:
 
 private:
 	struct Item : Moveable<Item> {
-		int16  prev, next;
+		int    prev, next;
 		int    size;
 		One<T> data;
 		bool   flag;
@@ -350,16 +350,16 @@ private:
 
 public:
 	int  GetSize() const            { return size; }
-	int  GetCount() const           { return data.GetCount(); }
-//	template <class P>
-//	void AjustSize(P getsize);
+	int  GetCount() const           { return count; }
+
+	template <class P> void AdjustSize(P getsize);
 
 	T&   GetLRU();
 	void DropLRU();
 	void Shrink(int maxsize, int maxcount = 30000);
 
-//	template <class P>
-//	void Remove(P predicate);
+	template <class P> int  Remove(P predicate);
+	template <class P> bool RemoveOne(P predicate);
 
 	T&   Get(const Maker& m);
 
@@ -424,29 +424,56 @@ void LRUCache<T, K>::DropLRU()
 	}
 }
 
-/*
-template <class T, class K, class P>
-void LRUCache<T, K>::AjustSize(P getsize)
+template <class T, class K>
+template <class P>
+void LRUCache<T, K>::AdjustSize(P getsize)
 {
 	size = 0;
+	count = 0;
 	for(int i = 0; i < data.GetCount(); i++)
-		size += (data[i].size = getsize(*data[i].data));
+		if(!key.IsUnlinked(i)) {
+			size += (data[i].size = getsize(*data[i].data));
+			count++;
+		}
 }
 
-template <class T, class K, class P>
-void LRUCache<T, K>::Remove(P predicate)
+template <class T, class K>
+template <class P>
+int LRUCache<T, K>::Remove(P predicate)
 {
+	int n = 0;
 	int i = 0;
 	while(i < data.GetCount())
-		if(predicate(*data[i].data)) {
+		if(!key.IsUnlinked(i) && predicate(*data[i].data)) {
 			size -= data[i].size;
 			Unlink(i);
 			key.Unlink(i);
+			n++;
+			break;
 		}
 		else
 			i++;
+	return n;
 }
-*/
+
+template <class T, class K>
+template <class P>
+bool LRUCache<T, K>::RemoveOne(P predicate)
+{
+	int n = 0;
+	int i = head;
+	while(i >= 0 && i != head) {
+		int next = data[i].next;
+		if(!key.IsUnlinked(i) && predicate(*data[i].data)) {
+			size -= data[i].size;
+			Unlink(i);
+			key.Unlink(i);
+			return true;
+		}
+		i = next;
+	}
+	return false;
+}
 
 template <class T, class K>
 void LRUCache<T, K>::Shrink(int maxsize, int maxcount)
