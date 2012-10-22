@@ -76,7 +76,6 @@ void Painter::DrawImageOp(int x, int y, int cx, int cy, const Image& image, cons
 {
 	Image img = IsNull(color) ? image : SetColorKeepAlpha(image, color);
 	RectPath(x, y, cx, cy);
-	Sizef sz = img.GetSize();
 	double sw = (double)cx / src.GetWidth();
 	double sh = (double)cy / src.GetHeight();
 	Fill(img, Xform2D::Scale(sw, sh) * Xform2D::Translation(x - sw * src.left, y - sh * src.top));

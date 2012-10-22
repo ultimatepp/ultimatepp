@@ -55,9 +55,47 @@ created data.&]
 returned by Maker`::Make).&]
 [s3;%% &]
 [s4; &]
-[s5;:LRUCache`:`:Shrink`(int`): [@(0.0.255) void]_[* Shrink]([@(0.0.255) int]_[*@3 maxsize])&]
+[s5;:LRUCache`:`:GetCount`(`)const: [@(0.0.255) int]_[* GetCount]()_[@(0.0.255) const]&]
+[s2;%% Returns the number of data items in cache.&]
+[s3; &]
+[s4; &]
+[s5;:LRUCache`:`:AdjustSize`(P`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 P]>_[@(0.0.255) v
+oid]_[* AdjustSize]([*@4 P]_[*@3 getsize])&]
+[s2;%% Recalculates the total size of data in cache, using [%-*@3 getsize] 
+functional (which should have single const [%-*@4 T][%-@(0.0.255) `&] 
+parameter) to retrieve the size of individual data items.&]
+[s3;%% &]
+[s4; &]
+[s5;:LRUCache`:`:GetLRU`(`): [*@4 T][@(0.0.255) `&]_[* GetLRU]()&]
+[s2;%% Returns a reference to the least recently used data item in 
+the cache (candidate for removal).&]
+[s3; &]
+[s4; &]
+[s5;:LRUCache`:`:DropLRU`(`): [@(0.0.255) void]_[* DropLRU]()&]
+[s2;%% Removes the least recently used data item from the cache.&]
+[s3; &]
+[s4; &]
+[s5;:LRUCache`:`:Shrink`(int`,int`): [@(0.0.255) void]_[* Shrink]([@(0.0.255) int]_[*@3 maxsi
+ze], [@(0.0.255) int]_[*@3 maxcount]_`=_[@3 30000])&]
 [s2;%% Reduces the cache to contain no more than [%-*@3 maxsize] data 
-removing the least recently used items first.&]
+and [%-*@3 maxcount] items removing the least recently used items 
+first.&]
+[s3;%% &]
+[s4; &]
+[s5;:LRUCache`:`:Remove`(P`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 P]>_[@(0.0.255) i
+nt]_[* Remove]([*@4 P]_[*@3 predicate])&]
+[s2;%% Removes data items from the cache for which [%-*@3 predicate] 
+(which should have single const [%-*@4 T][%-@(0.0.255) `&] parameter) 
+returns true. Returns the number of items removed.&]
+[s3;%% &]
+[s4; &]
+[s5;:LRUCache`:`:RemoveOne`(P`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 P]>_[@(0.0.255) b
+ool]_[* RemoveOne]([*@4 P]_[*@3 predicate])&]
+[s2;%% Removes the first data item from the cache for which [%-*@3 predicate] 
+(which should have single const [%-*@4 T][%-@(0.0.255) `&] parameter) 
+returns true, scanning the cache from the most recently used 
+items to least recently used. Returns true if item was found 
+and removed.&]
 [s3;%% &]
 [s4; &]
 [s5;:LRUCache`:`:Get`(const LRUCache`:`:Maker`&`): [*@4 T][@(0.0.255) `&]_[* Get]([@(0.0.255) c
