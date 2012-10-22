@@ -16,7 +16,7 @@ GUI_APP_MAIN
 //	SetLanguage(LNG_('P','L','P','L'));
 
 //	InstallCrashDump();
-	DDUMP(GetStdFontCy());
+	DUMP(GetStdFontCy());
 	DUMP(GUI_PopUpEffect());
 	
 //	PromptOK("[H20L1 &&&");
