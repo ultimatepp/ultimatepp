@@ -762,7 +762,7 @@ CONSOLE_APP_MAIN
 	
 	SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
 	
-	String release = "4193"; 
+	String release = "5431"; 
 	escape.Add("RELEASE", release);
 	escape.Add("RELEASET", release);
 	escape.Add("UPDATETIME", Format("%`", GetUtcTime()));
