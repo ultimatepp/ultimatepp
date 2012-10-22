@@ -1,6 +1,7 @@
 topic "ScatterCtrl_Demo package does a visual review of ScatterCtrl class features. Here there are some screenshots:";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
+[s0;2 &]
 [s0; [2 ScatterCtrl`_Demo package does a visual review of ScatterCtrl 
 class features.]&]
 [s0;2 &]

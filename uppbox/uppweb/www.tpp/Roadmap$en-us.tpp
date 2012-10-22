@@ -24,9 +24,9 @@ topic "Changelog";
 [{_}%EN-US 
 [s0; [*R6 Roadmap]&]
 [s0;4 &]
-[s0; [*_3 Upcoming release]&]
+[s0; [*_3 Current release]&]
 [s0;*_3 &]
-[s0; [*_4 5xxx][*3  (Oct 2012)]&]
+[s0; [*_4 5431][*3  (Oct 2012)]&]
 [s0;*_3 &]
 [s0; The focus of this release was server programming. The main new 
 feature is `"[* Skylark]`", lean and mean [^http`:`/`/www`.ultimatepp`.org`/srcdoc`$Skylark`$Tutorial`$en`-us`.html^ U
@@ -36,7 +36,7 @@ feature is `"[* Skylark]`", lean and mean [^http`:`/`/www`.ultimatepp`.org`/srcd
 [s0; &]
 [s0;i150;O0; String class has been further optimized for improved 
 Cat performance.&]
-[s0;i150;O0; Id class was refactored to better support multithreded 
+[s0;i150;O0; Id class was refactored to better support multithreaded 
 programming.&]
 [s0;i150;O0; STATIC`_ASSERT introduced for compile`-time checks.&]
 [s0;i150;O0; TCP/IP and HTTP was refactored and integrated into Core, 
@@ -66,7 +66,7 @@ has new alternative notation using operator().&]
 [s0;i150;O0; Schema files information is now accessible application 
 providing a form of database schema introspection.&]
 [s0;i150;O0; JoinRef method of Select provides automatic join where 
-join condition is synthetised by framework based on schema introspection.&]
+join condition is synthetized by framework based on schema introspection.&]
 [s0;i150;O0; SqlCtrls now support automated mode based on schema 
 introspection.&]
 [s0;i150;O0; SqlSession now has ThrowOnError option, when active 
@@ -74,14 +74,14 @@ all SQL errors throw SqlError exception.&]
 [s0;i150;O0; Sql: Sql now supports fetching ValueMap of row (using 
 Fetch variant or GetRowMap after Fetch).&]
 [s0;i150;O0; MassInsert now has `"remove`" option to remove rows 
-insterted before inserting, NoUseTransaction option and is using 
+inserted before inserting, NoUseTransaction option and is using 
 RDBM specific SQL syntax (instead generic UNION ALL trick) when 
 possible.&]
 [s0;i150;O0; Secondary SQLR default session intended for `'read`-only`' 
 sessions.&]
 [s0;i150;O0; Default sessions SQL and SQLR now can be per`-thread 
 (useful for multithreaded server applications).&]
-[s0;i150;O0; Columns and table names now can be optinally quoted 
+[s0;i150;O0; Columns and table names now can be optionally quoted 
 (new mode).&]
 [s0;i150;O0; Sql: SqlLoadTable and SqlLoadColumn helper function can 
 read whole tables into C`+`+ VectorMaps.&]
@@ -118,7 +118,7 @@ functions.&]
 to their `'read only`' status.&]
 [s0;4 &]
 [s0;4 &]
-[s0; [*_3 Current release]&]
+[s0; [*_3 Previous releases]&]
 [s0; &]
 [s0; [*_4 4193][*3  (24 Nov 2011)]&]
 [s0;* &]
@@ -189,9 +189,7 @@ are now replaced with actual parameters.&]
 [s0;i150;O0; New plugin/wincert package supports basic Win32 certificate 
 manipulation and PDF digital signing.&]
 [s0;#i150;O0; HttpClient now supports PUT method.&]
-[s0;*3 &]
-[s0; [*_3 Previous releases]&]
-[s0; &]
+[s0;*_3 &]
 [s0; [*_4 3211][*3  (16 Feb 2011)]&]
 [s0;*3 &]
 [s0; [* TheIDE]&]
