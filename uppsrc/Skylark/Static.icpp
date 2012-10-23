@@ -2,6 +2,11 @@
 
 namespace Upp {
 
+String GetFileTimeText(const String& path)
+{
+	return IntStr64(FileGetTime(path).Get());
+}
+
 Value CachedStatic(const Vector<Value>& arg, const Renderer *)
 {
 	String file = arg[0];
@@ -9,9 +14,8 @@ Value CachedStatic(const Vector<Value>& arg, const Renderer *)
 		return "/"+SkylarkApp::Config().static_dir+"/"+file;
 	
 	String path = GetFileOnPath(file, SkylarkApp::Config().path, false);
-	if(path.GetCount()) {
-		return SkylarkApp::Config().static_dir + "/ver" + IntStr64(GetFileTime(path).ft)+"/"+file;
-	}
+	if(path.GetCount())
+		return SkylarkApp::Config().static_dir + "/ver" + GetFileTimeText(path) + "/" + file;
 	return Null;
 }
 
@@ -52,7 +56,7 @@ SKYLARK(ServeStaticPage, "static/**")
 		type = "image/" + ext.Mid(1);
 	
 	if(SkylarkApp::Config().caching > 0) {
-		String tag = IntStr64(GetFileTime(path).ft);
+		String tag = GetFileTimeText(path);
 		http.SetHeader("Cache-Control", "public, max-age=2592000");
 		http.SetHeader("ETag", tag);
 		if(http.GetHeader("if-none-match") == tag){

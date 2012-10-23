@@ -42,7 +42,7 @@ String LoadTemplate(const char *file, const String& search_path, int lang)
 		}
 		else
 			r << line;
-		r << "\r\n";
+		r << "\n";
 	}
 	return r;
 }
@@ -65,14 +65,9 @@ VectorMap<String, String> GetTemplateDefs(const char *file, int lang)
 			def[ti] << p.GetPtr();
 		}
 		else
-			def[ti] << line << "\r\n";		
+			def[ti] << line << "\n";
 	}
 	return def;
-}
-
-int CharFilterIsCrLf(int c)
-{
-	return c == '\r' || c == '\n' ? c : 0;
 }
 
 String ReplaceVars(const String& src, const VectorMap<String, String>& def, int chr, Index<String>& expanded)
@@ -129,7 +124,7 @@ String GetPreprocessedTemplate(const String& name, int lang)
 	}
 	VectorMap<String, String> def = GetTemplateDefs(file, lang);
 	String r = ReplaceVars(def.Get(id, Null), def, '#');
-	return Join(Split(r, CharFilterIsCrLf), "\r\n");
+	return Join(Split(r, '\n', false), "\r\n");
 }
 
 };
