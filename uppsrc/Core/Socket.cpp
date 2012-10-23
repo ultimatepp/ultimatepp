@@ -267,6 +267,11 @@ void TcpSocket::Reset()
 	ssl.Clear();
 	sslinfo.Clear();
 	start_time = Null;
+	global_timeout = Null;
+#ifdef PLATFORM_WIN32
+	connection_start = Null;
+#endif
+	ssl_start = Null;
 }
 
 TcpSocket::TcpSocket()
@@ -276,11 +281,6 @@ TcpSocket::TcpSocket()
 	timeout = Null;
 	waitstep = 10;
 	asn1 = false;
-	global_timeout = Null;
-#ifdef PLATFORM_WIN32
-	connection_start = Null;
-#endif
-	ssl_start = Null;
 }
 
 bool TcpSocket::SetupSocket()
@@ -630,6 +630,7 @@ int  TcpSocket::GetEndTime() const
 		if(msecs(connection_start) < 20000)
 			o = connection_start + 20000;
 #endif
+	DDUMP(o);
 	return o;
 }
 
