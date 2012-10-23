@@ -635,7 +635,6 @@ int  TcpSocket::GetEndTime() const
 		if(msecs(connection_start) < 20000)
 			o = connection_start + 20000;
 #endif
-	DDUMP(o);
 	return o;
 }
 
@@ -656,12 +655,8 @@ int TcpSocket::Put(const char *s, int length)
 	bool peek = false;
 	int end_time = GetEndTime();
 	while(done < length) {
-		_DBG_
-		if(peek)
-			Sleep(1000);
-
-//		if(peek && !Wait(WAIT_WRITE, end_time))
-//			return done;
+		if(peek && !Wait(WAIT_WRITE, end_time))
+			return done;
 		peek = false;
 		int count = Send(s + done, length - done);
 		if(IsError() || timeout == 0 && count == 0 && peek)
