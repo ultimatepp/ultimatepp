@@ -428,27 +428,30 @@ void TcpSocket::Attach(SOCKET s)
 	socket = s;
 }
 
-bool TcpSocket::RawConnect(addrinfo *rp)
+bool TcpSocket::RawConnect(addrinfo *arp)
 {
-	if(!rp) {
+	if(!arp) {
 		SetSockError("connect", -1, "not found");
 		return false;
 	}
-	for(;;) {
-		if(rp && Open(rp->ai_family, rp->ai_socktype, rp->ai_protocol)) {
-			if(connect(socket, rp->ai_addr, (int)rp->ai_addrlen) == 0 ||
-			   GetErrorCode() == SOCKERR(EINPROGRESS) || GetErrorCode() == SOCKERR(EWOULDBLOCK))
-				break;
-			Close();
-		}
-		rp = rp->ai_next;
-		if(!rp) {
-			SetSockError("connect", -1, "failed");
-			return false;
+	for(int pass = 0; pass < 2; pass++) {
+		addrinfo *rp = arp;
+		while(rp) {
+			if(rp->ai_family == AF_INET == !pass && // Try to connect IPv4 in the first pass
+			   Open(rp->ai_family, rp->ai_socktype, rp->ai_protocol)) {
+				if(connect(socket, rp->ai_addr, (int)rp->ai_addrlen) == 0 ||
+				   GetErrorCode() == SOCKERR(EINPROGRESS) || GetErrorCode() == SOCKERR(EWOULDBLOCK)
+				) {
+					mode = CONNECT;
+					return true;
+				}
+				Close();
+			}
+			rp = rp->ai_next;
 		}
     }
-	mode = CONNECT;
-	return true;
+	SetSockError("connect", -1, "failed");
+	return false;
 }
 
 
@@ -509,8 +512,10 @@ bool TcpSocket::WouldBlock()
 	return c == SOCKERR(EWOULDBLOCK) || c == SOCKERR(EAGAIN);
 #endif
 #ifdef PLATFORM_WIN32
-	if(c == SOCKERR(ENOTCONN) && !IsNull(connection_start) && msecs(connection_start) < 20000)
+	if(c == SOCKERR(ENOTCONN) && !IsNull(connection_start) && msecs(connection_start) < 20000) {
+		LLOG("ENOTCONN issue");
 		return true;
+	}
 	return c == SOCKERR(EWOULDBLOCK);	       
 #endif
 }
@@ -651,8 +656,12 @@ int TcpSocket::Put(const char *s, int length)
 	bool peek = false;
 	int end_time = GetEndTime();
 	while(done < length) {
-		if(peek && !Wait(WAIT_WRITE, end_time))
-			return done;
+		_DBG_
+		if(peek)
+			Sleep(1000);
+
+//		if(peek && !Wait(WAIT_WRITE, end_time))
+//			return done;
 		peek = false;
 		int count = Send(s + done, length - done);
 		if(IsError() || timeout == 0 && count == 0 && peek)
