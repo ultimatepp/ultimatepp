@@ -87,20 +87,13 @@ int DefaultLanguageCompare(const wchar *a, int a_length, const wchar *b, int b_l
 		if(i1 != i2)
 			return i1 >= i2 ? 1 : -1;
 
-		if(u1 != u2) // different diacritics
-			if(middle == 0)
-				middle = u1 - u2;
+		if(u1 != u2 && middle == 0) // different diacritics
+			middle = u1 - u2;
 
-		if(c1 != c2) // different case
-		{
-			if(little == 0)
-				little = (u1 != c1) - (u2 != c2);
-		}
+		if(c1 != c2 && little == 0) // different case
+			little = (u1 != c1) - (u2 != c2);
 	}
-	little += 4 * middle;
-	if(little == 0)
-		little = a_length - b_length;
-	return sgn(little);
+	return a_length != b_length ? cmp(a_length, b_length) : sgn(middle ? middle : little);
 }
 
 WString CSCZGetIndexLetter(const wchar *s, int)
@@ -179,8 +172,7 @@ int CSCZLanguageCompare(const wchar *a, int a_length, const wchar *b, int b_leng
 			return i1 >= i2 ? 1 : -1;
 
 		if(u1 != u2) // different diacritics
-			switch(i1)
-			{
+			switch(i1) {
 			case 'A': case 'E': case 'I': case 'N':
 			case 'O': case 'T': case 'U': case 'Y':
 				if(middle == 0)
@@ -189,17 +181,10 @@ int CSCZLanguageCompare(const wchar *a, int a_length, const wchar *b, int b_leng
 			default:
 				return u1 >= u2 ? 1 : -1;
 			}
-		if(c1 != c2) // different case
-		{
-			if(little == 0)
-
-				little = (u1 != c1) - (u2 != c2);
-		}
+		if(c1 != c2 && little == 0) // different case
+			little = (u1 != c1) - (u2 != c2);
 	}
-	little += 4 * middle;
-	if(little == 0)
-		little = a_length - b_length;
-	return sgn(little);
+	return a_length != b_length ? cmp(a_length, b_length) : sgn(middle ? middle : little);
 }
 
 #ifdef PLATFORM_WIN32
