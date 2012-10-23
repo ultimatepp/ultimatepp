@@ -11,7 +11,7 @@ Value CachedStatic(const Vector<Value>& arg, const Renderer *)
 {
 	String file = arg[0];
 	if(SkylarkApp::Config().caching != 2)
-		return "/"+SkylarkApp::Config().static_dir+"/"+file;
+		return "/" + SkylarkApp::Config().static_dir + "/" + file;
 	
 	String path = GetFileOnPath(file, SkylarkApp::Config().path, false);
 	if(path.GetCount())
