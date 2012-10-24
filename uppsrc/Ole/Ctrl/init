@@ -1,0 +1,5 @@
+#ifndef _Ole_Ctrl_icpp_init_stub
+#define _Ole_Ctrl_icpp_init_stub
+#include "Ole/init"
+#include "CtrlCore/init"
+#endif
