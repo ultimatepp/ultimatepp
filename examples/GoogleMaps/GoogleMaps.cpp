@@ -177,5 +177,5 @@ Pointf GoogleMapsGpsToPixelDiff(Pointf center, int zoom, Pointf gps)
 
 Pointf GoogleMapsGpsToPixel(Pointf center, int zoom, Size sz, Pointf gps)
 {
-	return (Sizef)sz / 2 - GoogleMapsGpsToPixelDiff(center, zoom, gps);
+	return (Sizef)sz / 2.0 - GoogleMapsGpsToPixelDiff(center, zoom, gps);
 }
