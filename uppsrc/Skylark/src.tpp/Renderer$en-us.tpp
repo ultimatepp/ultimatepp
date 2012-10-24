@@ -32,6 +32,13 @@ alue][@(0.0.255) `&]_[*@3 v])&]
 space. Returns `*this.&]
 [s3;%% &]
 [s4; &]
+[s5;:Renderer`:`:operator`(`)`(const char`*`,const char`*`): [_^Renderer^ Renderer][@(0.0.255) `&
+]_[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], [@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 v])&]
+[s2;%% Adds variable id [%-*@3 id] with value [%-*@3 v] to shared variable 
+space. Returns `*this.&]
+[s3;%% &]
+[s4; &]
 [s5;:Renderer`:`:operator`(`)`(const ValueMap`&`): [_^Renderer^ Renderer][@(0.0.255) `&]_
 [* operator()]([@(0.0.255) const]_[_^ValueMap^ ValueMap][@(0.0.255) `&]_[*@3 map])&]
 [s2;%% Adds all key/value pairs of [%-*@3 map] as variables id / value 
