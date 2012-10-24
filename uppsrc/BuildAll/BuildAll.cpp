@@ -6,17 +6,20 @@ using namespace Upp;
 // It compiles all U++ examples using MSC8 and MINGW build methods
 // or methods listed on commandline
 
-String input = "c:/u/upp.src";
+String input = "c:/upp.src";
 String output = "c:/upp/all";
 String umk = "c:\\upp\\umk.exe ";
 Vector<String> bm;
 
 bool failed;
 
-char *exclude[] = {
+const char *exclude[] = {
 	"SQL_MYSQL", "SDLEXAMPLE", "OLECALC", // REACTIVATE LATER
 	"LOG:R",
 	"WINFB", "LINUXFB", "FRAMEBUFFER", "COUNTER",
+#ifdef PLATFORM_LINUX
+	"SQL_MSSQL",
+#endif
 };
 
 bool IsIgnored(const String& name)
@@ -46,6 +49,9 @@ void Build(const char *nest, const char *bm, bool release)
 			c << umk << nest << ' ' << name << ' ' << bm << " -" << flags;
 			if(first)
 				c << 'a';
+		#ifdef PLATFORM_POSIX
+			c << 's';
+		#endif
 			c << ' ' << outdir;
 			String out;
 			if(Sys(c, out)) {
@@ -79,15 +85,24 @@ void Build(const char *nest)
 
 CONSOLE_APP_MAIN
 {
+#ifdef PLATFORM_POSIX
+	input = GetHomeDirFile("upp.src");
+	output = GetHomeDirFile("tstout");
+	umk = GetHomeDirFile("bin/umk") + ' ';
+#endif
+
 	LOG("BuildAll started");
 	const Vector<String>& arg = CommandLine();
 	input = GetFileFolder(GetFileFolder(GetFileFolder(GetDataFile("BuildAll.cpp"))));
-	output = "C:\\out";
 	for(int i = 0; i < arg.GetCount(); i++)
 		bm.Add(arg[i]);
 	if(bm.GetCount() == 0) {
 //		bm.Add("MSC71cdb");
+#ifdef PLATFORM_POSIX
+		bm.Add("GCC");
+#else
 		bm.Add("MSC9");
+#endif
 //		bm.Add("MINGWI2");
 	}
 	Build("examples");
