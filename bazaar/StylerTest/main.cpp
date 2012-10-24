@@ -19,7 +19,7 @@ static Color SColorSpinButtonMonoColord = LtYellow;
 
 CH_LOCSTYLE(EditField, Style, EditFieldStyleDFM)
 {
-	paper = SColorEditPaper;
+	paper = Blend(SColorPaper(), SColorEditPaper);
 	disabled = SColorFace();
 	focus = paper;
 	invalid = Blend(paper, Color(255, 0, 0), 32);
@@ -35,7 +35,7 @@ CH_LOCSTYLE(EditField, Style, EditFieldStyleDFM)
 
 CH_LOCSTYLE(Button, Style, ButtonStyleDFM)
 {
-	look[0] = SColorButtonFace;
+	look[0] = Blend(SColorFace(), SColorButtonFace);
 	look[1] = SColorFace();
 	look[2] = LtBlue();
 	look[3] = LtYellow();
@@ -84,23 +84,22 @@ void StylerTest::Menu(Bar& bar)
 
 void StylerTest::ApplyOwnStyle()
 {
-	return;
-	//recalculate own colors
-	ChFinish();
-	
-	EditField::Style& stef = EditField::StyleDefault().Write();
-	stef = EditFieldStyleDFM();
+	if(!overdef.Get()) return;
 
+	//override default style settings, without changing ref in each ctrl
 	{
-	Button::Style& stbt = Button::StyleNormal().Write();
-	stbt = ButtonStyleDFM();
+	EditField::Style& s = EditField::StyleDefault().Write();
+	s = EditFieldStyleDFM();
+	}
+	{
+	Button::Style& s = Button::StyleNormal().Write();
+	s = ButtonStyleDFM();
 	}
 
-	SpinButtons::Style& stspbt = SpinButtons::StyleDefault().Write();
-	stspbt = SpinButtonStyleDFM();
-
-	RefreshGlobalStyles();
-	RefreshLayoutDeepAll();
+	{
+	SpinButtons::Style& s = SpinButtons::StyleDefault().Write();
+	s = SpinButtonStyleDFM();
+	}
 }
 
 StylerTest::StylerTest()
@@ -108,16 +107,20 @@ StylerTest::StylerTest()
 	CtrlLayout(*this, "Window title");
 	Sizeable().Zoomable();
 
-	sc <<= THISBACK(ReloadChamCB);
+	sc.WhenSkinChange = THISBACK(ReloadChamCB);
 	Add(sc.LeftPos(0,200).BottomPos(0,200));
 
-	chc <<= THISBACK(ApplyOwnStyle);
+	chc.WhenSColorsChange = THISBACK(ApplyOwnStyle);
 	Add(chc.RightPos(0,400).BottomPos(0,200));
 
-	InitDummys();
-	b.SetStyle(ButtonStyleDFM());
+	overdef <<= callback(&sc, &StylerCtrl::OnSkinAction); //emulate a skin change
 
-	ApplyOwnStyle();
+	InitDummys();
+	b.SetStyle(ButtonStyleDFM()); //to see statically without change
+
+	overdef.Set(0); //dont override default by default
+	
+	sc.OnSkinAction();
 }
 
 void StylerTest::InitDummys()

@@ -25,7 +25,7 @@ public:
 		DEEP = 0x80,
 		
 		DEF = VISIBLE | INVISIBLE | ENABLED | DISABLED | VIEW | FRAME | DEEP,
-	};
+	} FLAGS;
 
 	CtrlFinder() : flags(DEF), filter(STDBACK(StdCtrlFilter)), multi(true) { WantFocus(); }
 

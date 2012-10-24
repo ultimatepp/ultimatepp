@@ -4,6 +4,11 @@
 #define IMAGEFILE <Styler/StylerCtrls.iml>
 #include <Draw/iml_source.h>
 
+Color Invert(const Color& c)
+{
+	return Color(255-c.GetR(), 255-c.GetG(),255-c.GetB());
+}
+
 void ColorizeIml(Iml& target, Iml& source, const Color& c, int alpha)
 {
 	for(int i = 0; i < target.GetCount(); i++) {
@@ -33,18 +38,18 @@ void ChStylerSkin(const Color& c, int blnd, const Color& fg, const Color& bg)
 	ColorizeIml(CtrlsImg::Iml(), StylerCtrlsImg::Iml(), c, 255);
 
 
-		SColorFace_Write(Blend(c, fg, blnd)); //controls face color
-		SColorShadow_Write(Blend(c, bg, blnd));
-		SColorLtFace_Write(Blend(c, fg, blnd+20));
-		SColorDkShadow_Write(Blend(c, bg, blnd+20));
+		SColorFace_Write(Blend(c, fg, min(255, blnd))); //controls face color
+		SColorShadow_Write(Blend(c, bg, min(255, blnd)));
+		SColorLtFace_Write(Blend(c, fg, min(255, blnd+20)));
+		SColorDkShadow_Write(Blend(c, bg, min(255, blnd+20)));
 
-		SColorHighlight_Write(Blend(fg, c, blnd+20));
-		SColorDisabled_Write(Blend(bg, c, blnd+20));
+		SColorHighlight_Write(Blend(fg, c, min(255, blnd+20)));
+		SColorDisabled_Write(Blend(bg, c, min(255, blnd+20)));
 
-		SColorPaper_Write(Blend(c, fg, blnd+40)); //for lists, edits etc..
-		SColorText_Write(Blend(c, bg, blnd+40));
+		SColorPaper_Write(Blend(c, fg, min(255, blnd+40))); //for lists, edits etc..
+		SColorText_Write(Blend(c, bg, min(255, blnd+40)));
 
-		SColorHighlightText_Write(Blend(c, fg, blnd+60));
+		SColorHighlightText_Write(Blend(c, fg, min(255, blnd+60)));
 
 	SColorLight_Write(SColorHighlight());
 
@@ -59,229 +64,7 @@ void ChStylerSkin(const Color& c, int blnd, const Color& fg, const Color& bg)
 	LabelBoxColor_Write(SColorHighlight());
 }
 
-void StylerCtrl::ColorizedSkin()
-{
-	Color c  = ~mcl;
-	int blnd = ~bl;
-	Color fg = ~fgcl;
-	Color bg = ~bgcl;
-
-	if(Grayscale(fg)<Grayscale(bg))
-	{
-		dk <<= true;
-	}
-	else
-	{
-		dk <<= false;
-	}
-
-	ChStylerSkin(c, blnd, fg, bg);
-}
-
-void StylerCtrl::SkinAction()
-{
-	if((int)stsw.GetData() != 2)
-	{
-		mcl.Disable();
-		fgcl.Disable();
-		bgcl.Disable();
-		bl.Disable();
-		inv.Disable();
-	}
-	else
-	{
-		mcl.Enable();
-		fgcl.Enable();
-		bgcl.Enable();
-		bl.Enable();
-		inv.Enable();
-	}
-
-	//reset
-	switch((int)stsw.GetData())
-	{
-		case 1: ChStdSkin(); break;
-		case 2: ColorizedSkin(); break;
-		default:
-		case 0: ChClassicSkin(); break;
-	}
-	
-	RefreshGlobalStyles();
-	RefreshLayoutDeepAll();
-	UpdateAction();
-}
-
-Color Invert(const Color& c)
-{
-	return Color(255-c.GetR(), 255-c.GetG(),255-c.GetB());
-}
-
-void StylerCtrl::InvertAction()
-{
-	Color c  = ~mcl;
-	Color fg = ~fgcl;
-	Color bg = ~bgcl;
-
-	fg = Invert(fg);
-	bg = Invert(bg);
-	c =  Invert(c);
-	
-	fgcl <<= fg;
-	bgcl <<= bg;
-	mcl  <<= c;
-
-	SkinAction();
-}
-
-void StylerCtrl::Updated()
-{
-
-}
-
-StylerCtrl::StylerCtrl()
-{
-	CtrlLayout(*this);
-
-	dk.SetReadOnly();
-
-	stsw <<= 2;
-	stsw <<= THISBACK(SkinAction);
-
-	mcl <<= Gray();
-	mcl <<= THISBACK(SkinAction);
-
-	fgcl <<= White();
-	fgcl <<= THISBACK(SkinAction);
-
-	bgcl <<= Black();
-	bgcl <<= THISBACK(SkinAction);
-	
-
-	bl.MinMax(0,255);
-	bl <<= 192;
-	bl <<= THISBACK(SkinAction);
-
-	inv <<= THISBACK(InvertAction);
-
-	SkinAction();
-}
-
-//
-
-void ChamStyleCtrl::Updated()
-{
-	clface <<= SColorFace();
-	clshadow <<= SColorShadow();
-	clltface <<= SColorLtFace();
-	cldkshadow <<= SColorDkShadow();
-	clhighlight <<= SColorHighlight();
-	cldisabled <<= SColorDisabled();
-	clpaper <<= SColorPaper();
-	cltext <<= SColorText();
-	clhighlighttext <<= SColorHighlightText();
-	cllight <<= SColorLight();
-
-	clmenu <<= SColorMenu();
-	clmenutext <<= SColorMenuText();
-	clmenumark <<= SColorMenuMark();
-	clinfo <<= SColorInfo();
-	clinfotext <<= SColorInfoText();
-	clmark <<= SColorMark();
-	cllabel <<= SColorLabel();
-	cllbtext <<= LabelBoxTextColor();
-	cllb <<= LabelBoxColor();
-}
-
-void ChamStyleCtrl::ColorAction()
-{
-	ChReset();
-
-	SColorFace_Write(~clface);
-	SColorShadow_Write(~clshadow);
-	SColorLtFace_Write(~clltface);
-	SColorDkShadow_Write(~cldkshadow);
-	SColorHighlight_Write(~clhighlight);
-	SColorDisabled_Write(~cldisabled);
-	SColorPaper_Write(~clpaper);
-	SColorText_Write(~cltext);
-	SColorHighlightText_Write(~clhighlighttext);
-	SColorLight_Write(~cllight);
-
-	SColorMenu_Write(~clmenu);
-	SColorMenuText_Write(~clmenutext);
-	SColorMenuMark_Write(~clmenumark);
-	SColorInfo_Write(~clinfo);
-	SColorInfoText_Write(~clinfotext);
-	SColorMark_Write(~clmark);
-	SColorLabel_Write(~cllabel);
-	LabelBoxTextColor_Write(~cllbtext);
-	LabelBoxColor_Write(~cllb);
-
-	RefreshGlobalStyles();
-	RefreshLayoutDeepAll();
-	Action();
-}
-
-ChamStyleCtrl::ChamStyleCtrl()
-{
-	CtrlLayout(*this);
-	load <<= THISBACK(LoadCB);
-	save <<= THISBACK(SaveCB);
-	
-	clface <<= THISBACK(ColorAction);
-	clshadow <<= THISBACK(ColorAction);
-	clltface <<= THISBACK(ColorAction);
-	cldkshadow <<= THISBACK(ColorAction);
-	clhighlight <<= THISBACK(ColorAction);
-	cldisabled <<= THISBACK(ColorAction);
-	clpaper <<= THISBACK(ColorAction);
-	cltext <<= THISBACK(ColorAction);
-	clhighlighttext <<= THISBACK(ColorAction);
-	cllight <<= THISBACK(ColorAction);
-
-	clmenu <<= THISBACK(ColorAction);
-	clmenutext <<= THISBACK(ColorAction);
-	clmenumark <<= THISBACK(ColorAction);
-	clinfo <<= THISBACK(ColorAction);
-	clinfotext <<= THISBACK(ColorAction);
-	clmark <<= THISBACK(ColorAction);
-	cllabel <<= THISBACK(ColorAction);
-	cllbtext <<= THISBACK(ColorAction);
-	cllb <<= THISBACK(ColorAction);
-	 
-	Update();	
-}
-
-void ChamStyleCtrl::SaveCB()
-{
-	FileSel fs;
-	if(!fs.ExecuteSaveAs("Save global colors")) return;
-	
-	PerChStyle d;
-	StoreAsXMLFile(d, "style", fs.Get());	
-	
-	//StoreToFile(d, fs.Get());
-}
-
-void ChamStyleCtrl::LoadCB()
-{
-	FileSel fs;
-	if(!fs.ExecuteOpen("Save global colors")) return;
-
-	ChReset();
-
-	PerChStyle d;
-	LoadFromXMLFile(d, fs.Get());
-	//LoadFromFile(d, fs.Get());
-
-	Update();
-	RefreshGlobalStyles();
-	RefreshLayoutDeepAll();
-	Action();
-}
-
-//
-void XmlizeCol(XmlIO xml, const String& tag, Color& c)
+void XmlizeCol(XmlIO& xml, const String& tag, Color& c)
 {
 	if(xml.IsStoring())
 	{
@@ -290,20 +73,9 @@ void XmlizeCol(XmlIO xml, const String& tag, Color& c)
 	if(xml.IsLoading())
 	{
 		int i = xml->FindTag(tag);
-		if(i>=0) { ::Xmlize(xml.At(i), c); }
+		if(i>=0) { XmlIO _ = xml.At(i); ::Xmlize(_, c); }
 	}
 }
-
-#define XMLIZECOL(TAG, SCOL) \
-	if(xml.IsStoring()) \
-		XmlizeCol(xml, TAG, c = SCOL()); \
-	if(xml.IsLoading()) \
-	{ \
-		c = Null; \
-		XmlizeCol(xml, TAG, c); if(!c.IsNullInstance()) COMBINE(SCOL, _Write)(c); \
-	} \
- \
-
 
 NAMESPACE_UPP
 template<> Stream& operator%(Stream& s, PerChStyle& o)
@@ -363,7 +135,17 @@ template<> Stream& operator%(Stream& s, PerChStyle& o)
 	return s;
 }
 
-template<> void Xmlize(XmlIO xml, PerChStyle& o)
+#define XMLIZECOL(TAG, SCOL) \
+	if(xml.IsStoring()) \
+		XmlizeCol(xml, TAG, c = SCOL()); \
+	if(xml.IsLoading()) \
+	{ \
+		c = Null; \
+		XmlizeCol(xml, TAG, c); if(!c.IsNullInstance()) COMBINE(SCOL, _Write)(c); \
+	} \
+
+
+template<> void Xmlize(XmlIO& xml, PerChStyle& o)
 {
 	Color c;
 
@@ -389,3 +171,228 @@ template<> void Xmlize(XmlIO xml, PerChStyle& o)
 	XMLIZECOL("labelbox", LabelBoxColor)
 }
 END_UPP_NAMESPACE
+
+bool SaveGlobalStyle(const String& filename)
+{
+	PerChStyle d;
+	return StoreAsXMLFile(d, "style", filename);	
+	//return StoreToFile(d, fs.Get());
+}
+
+bool LoadGlobalStyle(const String& filename)
+{
+	ChReset();
+
+	PerChStyle d;
+	bool b = LoadFromXMLFile(d, filename);
+	//b = LoadFromFile(d, filename);
+
+	if(!b) return b;
+
+	RefreshGlobalStyles();
+	RefreshLayoutDeepAll();
+
+	return b;	
+}
+
+//ChamStyleCtrl
+
+void ChamStyleCtrl::Updated()
+{
+	clface <<= SColorFace();
+	clshadow <<= SColorShadow();
+	clltface <<= SColorLtFace();
+	cldkshadow <<= SColorDkShadow();
+	clhighlight <<= SColorHighlight();
+	cldisabled <<= SColorDisabled();
+	clpaper <<= SColorPaper();
+	cltext <<= SColorText();
+	clhighlighttext <<= SColorHighlightText();
+	cllight <<= SColorLight();
+
+	clmenu <<= SColorMenu();
+	clmenutext <<= SColorMenuText();
+	clmenumark <<= SColorMenuMark();
+	clinfo <<= SColorInfo();
+	clinfotext <<= SColorInfoText();
+	clmark <<= SColorMark();
+	cllabel <<= SColorLabel();
+	cllbtext <<= LabelBoxTextColor();
+	cllb <<= LabelBoxColor();
+}
+
+void ChamStyleCtrl::OnColorAction()
+{
+	ChReset();
+
+	SColorFace_Write(~clface);
+	SColorShadow_Write(~clshadow);
+	SColorLtFace_Write(~clltface);
+	SColorDkShadow_Write(~cldkshadow);
+	SColorHighlight_Write(~clhighlight);
+	SColorDisabled_Write(~cldisabled);
+	SColorPaper_Write(~clpaper);
+	SColorText_Write(~cltext);
+	SColorHighlightText_Write(~clhighlighttext);
+	SColorLight_Write(~cllight);
+
+	SColorMenu_Write(~clmenu);
+	SColorMenuText_Write(~clmenutext);
+	SColorMenuMark_Write(~clmenumark);
+	SColorInfo_Write(~clinfo);
+	SColorInfoText_Write(~clinfotext);
+	SColorMark_Write(~clmark);
+	SColorLabel_Write(~cllabel);
+	LabelBoxTextColor_Write(~cllbtext);
+	LabelBoxColor_Write(~cllb);
+
+	RefreshGlobalStyles();
+	WhenSColorsChange(); //let outside apply own changes after recalculation, before we apply them
+	RefreshLayoutDeepAll();
+
+	Action();
+}
+
+ChamStyleCtrl::ChamStyleCtrl()
+{
+	CtrlLayout(*this);
+
+	clface <<= THISBACK(OnColorAction);
+	clshadow <<= THISBACK(OnColorAction);
+	clltface <<= THISBACK(OnColorAction);
+	cldkshadow <<= THISBACK(OnColorAction);
+	clhighlight <<= THISBACK(OnColorAction);
+	cldisabled <<= THISBACK(OnColorAction);
+	clpaper <<= THISBACK(OnColorAction);
+	cltext <<= THISBACK(OnColorAction);
+	clhighlighttext <<= THISBACK(OnColorAction);
+	cllight <<= THISBACK(OnColorAction);
+
+	clmenu <<= THISBACK(OnColorAction);
+	clmenutext <<= THISBACK(OnColorAction);
+	clmenumark <<= THISBACK(OnColorAction);
+	clinfo <<= THISBACK(OnColorAction);
+	clinfotext <<= THISBACK(OnColorAction);
+	clmark <<= THISBACK(OnColorAction);
+	cllabel <<= THISBACK(OnColorAction);
+	cllbtext <<= THISBACK(OnColorAction);
+	cllb <<= THISBACK(OnColorAction);
+
+	load <<= THISBACK(DoLoad);
+	save <<= THISBACK(DoSave);
+}
+
+void ChamStyleCtrl::DoSave()
+{
+	FileSel fs;
+	if(!fs.ExecuteSaveAs("Save global colors")) return;
+	SaveGlobalStyle(fs.Get());
+}
+
+void ChamStyleCtrl::DoLoad()
+{
+	FileSel fs;
+	if(!fs.ExecuteOpen("Save global colors")) return;
+	LoadGlobalStyle(fs.Get());
+	Update();
+}
+
+//StylerCtrl
+
+void StylerCtrl::SetColorizedSkin()
+{
+	Color c  = ~mcl;
+	int blnd = ~bl;
+	Color fg = ~fgcl;
+	Color bg = ~bgcl;
+
+	ChStylerSkin(c, blnd, fg, bg);
+}
+
+void StylerCtrl::OnSkinAction()
+{
+	if((int)stsw.GetData() != 2)
+	{
+		mcl.Disable();
+		fgcl.Disable();
+		bgcl.Disable();
+		bl.Disable();
+		inv.Disable();
+	}
+	else
+	{
+		mcl.Enable();
+		fgcl.Enable();
+		bgcl.Enable();
+		bl.Enable();
+		inv.Enable();
+	}
+
+	//reset
+	switch((int)stsw.GetData())
+	{
+		case 1: ChStdSkin(); break;
+		case 2: SetColorizedSkin(); break;
+		default:
+		case 0: ChClassicSkin(); break;
+	}
+
+	RefreshGlobalStyles();
+	WhenSkinChange(); //let outside apply own changes after recalculation, before we apply them
+	RefreshLayoutDeepAll();
+
+	UpdateAction();
+}
+
+void StylerCtrl::OnInvertAction()
+{
+	Color c  = ~mcl;
+	Color fg = ~fgcl;
+	Color bg = ~bgcl;
+
+	fg = Invert(fg);
+	bg = Invert(bg);
+	c =  Invert(c);
+	
+	fgcl <<= fg;
+	bgcl <<= bg;
+	mcl  <<= c;
+
+	OnSkinAction();
+}
+
+void StylerCtrl::Updated()
+{
+	Color fg = ~fgcl;
+	Color bg = ~bgcl;
+
+	dk <<= bool(Grayscale(fg)<Grayscale(bg));
+}
+
+StylerCtrl::StylerCtrl()
+{
+	CtrlLayout(*this);
+
+	dk.SetReadOnly();
+
+	stsw <<= 2; //ColorizedSkin
+	stsw <<= THISBACK(OnSkinAction);
+
+	mcl <<= Gray();
+	mcl <<= THISBACK(OnSkinAction);
+
+	fgcl <<= White();
+	fgcl <<= THISBACK(OnSkinAction);
+
+	bgcl <<= Black();
+	bgcl <<= THISBACK(OnSkinAction);
+	
+
+	bl.MinMax(0,255);
+	bl <<= 192;
+	bl <<= THISBACK(OnSkinAction);
+
+	inv <<= THISBACK(OnInvertAction);
+
+	//SkinAction(); //try our setup
+}

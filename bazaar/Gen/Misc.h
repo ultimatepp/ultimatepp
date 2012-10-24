@@ -1,6 +1,8 @@
 #ifndef _Gen_Misc_h_
 #define _Gen_Misc_h_
 
+#include <Core/Core.h>
+
 NAMESPACE_UPP
 
 //some usefull interfaces
@@ -38,8 +40,8 @@ public:
 	virtual ~GetSetData() {} //might be used as base interface
 	virtual T    GetData() const               = 0;
 	virtual void SetData(const T& _v)          = 0;
-	virtual T& GetRef()                        = 0;  
-	virtual const T& GetRef() const            = 0;  
+//	virtual T& GetRef()                        { NEVER(); Value v; return v; }  
+//	virtual const T& GetRef() const            { NEVER(); Value v; return v; }
 	T            operator~() const             { return GetData(); }
 	const T&     operator<<=(const T& v)       { SetData(v); return v; }
 };

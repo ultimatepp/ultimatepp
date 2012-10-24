@@ -45,5 +45,6 @@ LAYOUT(StylerTestLayout, 768, 640)
 	ITEM(StatusBar, stbar, LeftPosZ(0, 768).TopPosZ(616, 23))
 	ITEM(MenuBar, mbar, LeftPosZ(0, 768).TopPosZ(592, 23))
 	ITEM(ToolBar, tool, LeftPosZ(0, 768).TopPosZ(568, 23))
+	ITEM(Option, overdef, SetLabel(t_("Override StyleDefaults with own")).LeftPosZ(544, 216).TopPosZ(168, 16))
 END_LAYOUT
 
