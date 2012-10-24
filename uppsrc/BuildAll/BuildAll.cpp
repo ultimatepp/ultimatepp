@@ -18,7 +18,7 @@ const char *exclude[] = {
 	"LOG:R",
 	"WINFB", "LINUXFB", "FRAMEBUFFER", "COUNTER",
 #ifdef PLATFORM_LINUX
-	"SQL_MSSQL",
+	"SQL_MSSQL", "CAPTURESCREENDLL", "UWORD_FB"
 #endif
 };
 
