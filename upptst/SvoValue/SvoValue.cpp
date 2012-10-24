@@ -1,6 +1,6 @@
 #include "SvoValue.h"
 
-GUI_APP_MAIN
+CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
@@ -71,8 +71,10 @@ GUI_APP_MAIN
 		Painting x = g.GetResult();
 		CheckType(x);
 	}
-
-	CheckType(CtrlImg::save());
+	
+	{
+		CheckType(CreateImage(Size(20, 20), Blue));
+	}
 	
 	v = ErrorValue("error");
 	CheckType(v, true);
@@ -119,6 +121,4 @@ GUI_APP_MAIN
 	
 	RLOG("------------------------------");
 	RLOG("######## Everything is OK");
-	
-	PromptOK("OK");
 }

@@ -1,7 +1,6 @@
 #ifndef _SvoValue_SvoValue_h_
 #define _SvoValue_SvoValue_h_
 
-#include <CtrlLib/CtrlLib.h>
 #include <Painter/Painter.h>
 
 using namespace Upp;
