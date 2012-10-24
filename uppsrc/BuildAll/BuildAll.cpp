@@ -14,11 +14,14 @@ Vector<String> bm;
 bool failed;
 
 const char *exclude[] = {
-	"SQL_MYSQL", "SDLEXAMPLE", "OLECALC", // REACTIVATE LATER
+	"SDLEXAMPLE", "OLECALC", // REACTIVATE LATER
 	"LOG:R",
 	"WINFB", "LINUXFB", "FRAMEBUFFER", "COUNTER",
+#ifdef PLATFORM_WIN32
+	"SQL_MYSQL",
+#endif
 #ifdef PLATFORM_LINUX
-	"SQL_MSSQL", "CAPTURESCREENDLL", "UWORD_FB"
+	"SQL_MSSQL", "CAPTURESCREENDLL", "UWORD_FB", "ODBCTST", "WMF"
 #endif
 };
 
@@ -80,7 +83,7 @@ void Build(const char *nest, bool release)
 void Build(const char *nest)
 {
 	Build(nest, false);
-	Build(nest, true);
+//	Build(nest, true);
 }
 
 CONSOLE_APP_MAIN

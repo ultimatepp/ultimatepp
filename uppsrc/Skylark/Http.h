@@ -21,6 +21,7 @@ protected:
 
 public:	
 	Renderer& operator()(const char *id, const char *v)   { var.Add(id, v); return *this; }
+	Renderer& operator()(const char *id, const String& v) { var.Add(id, v); return *this; }
 	Renderer& operator()(const char *id, const Value& v)  { var.Add(id, v); return *this; }
 	Renderer& operator()(const ValueMap& map);
 	Renderer& operator()(const char *id, const HandlerId& handler);
@@ -85,6 +86,7 @@ class Http : public Renderer {
 
 public:
 	Http&  operator()(const char *id, const char *v)   { var.Add(id, v); return *this; }
+	Http&  operator()(const char *id, const String& v) { var.Add(id, v); return *this; }
 	Http&  operator()(const char *id, const Value& v)  { var.Add(id, v); return *this; }
 	Http&  operator()(const ValueMap& map)             { Renderer::operator()(map); return *this; }
 	Http&  operator()(const char *id, const HandlerId& handler) { Renderer::operator()(id, handler); return *this; }
