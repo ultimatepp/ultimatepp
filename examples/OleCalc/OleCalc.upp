@@ -1,4 +1,4 @@
-description "Simple example of ActiveX control";
+description "Simple example of ActiveX control\377";
 
 noblitz;
 
@@ -29,3 +29,4 @@ mainconfig
 custom() "post-link",
 	"regsvr32 /s /c $(OUTPATH)",
 	"";
+
