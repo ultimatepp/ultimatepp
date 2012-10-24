@@ -25,13 +25,12 @@ of session variables..&]
 [s5;:Http`:`:operator`(`)`(const char`*`,const Value`&`): [_^Http^ Http][@(0.0.255) `&]_[* o
 perator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], [@(0.0.255) const]_[_^Value^ Va
 lue][@(0.0.255) `&]_[*@3 v])&]
-[s2;%% Calls Renderer`::operator([%-*@3 id] , [%-*@3 v]) to set the value 
-of shared space variable. Returns `*this.&]
-[s3;%% &]
-[s4; &]
 [s5;:Http`:`:operator`(`)`(const char`*`,const char`*`): [_^Http^ Http][@(0.0.255) `&]_[* o
 perator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], [@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 v])&]
+[s5;:Http`:`:operator`(`)`(const char`*`,const String`&`): [_^Http^ Http][@(0.0.255) `&]_
+[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], [@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 v])&]
 [s2;%% Calls Renderer`::operator([%-*@3 id] , [%-*@3 v]) to set the value 
 of shared space variable. Returns `*this.&]
 [s3;%% &]

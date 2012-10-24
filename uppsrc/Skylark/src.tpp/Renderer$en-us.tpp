@@ -28,13 +28,12 @@ session variables and cookies).&]
 [s5;:Renderer`:`:operator`(`)`(const char`*`,const Value`&`): [_^Renderer^ Renderer][@(0.0.255) `&
 ]_[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], [@(0.0.255) const]_[_^Value^ V
 alue][@(0.0.255) `&]_[*@3 v])&]
-[s2;%% Adds variable id [%-*@3 id] with value [%-*@3 v] to shared variable 
-space. Returns `*this.&]
-[s3;%% &]
-[s4; &]
 [s5;:Renderer`:`:operator`(`)`(const char`*`,const char`*`): [_^Renderer^ Renderer][@(0.0.255) `&
 ]_[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], [@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 v])&]
+[s5;:Renderer`:`:operator`(`)`(const char`*`,const String`&`): [_^Renderer^ Renderer][@(0.0.255) `&
+]_[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], [@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 v])&]
 [s2;%% Adds variable id [%-*@3 id] with value [%-*@3 v] to shared variable 
 space. Returns `*this.&]
 [s3;%% &]
