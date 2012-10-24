@@ -12,8 +12,6 @@ int main(int argc, const char **argv, const char **envptr) { \
 	GuiMainFn_(); \
 	UPP::Ctrl::CloseTopCtrls(); \
 	FBDeInit(); \
-	UPP::UsrLog("---------- About to delete this log of LinuxFB..."); \
-	UPP::DeleteUsrLog(); \
 	return UPP::GetExitCode(); \
 } \
 \
