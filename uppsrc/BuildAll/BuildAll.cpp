@@ -79,6 +79,7 @@ void Build(const char *nest)
 
 CONSOLE_APP_MAIN
 {
+	LOG("BuildAll started");
 	const Vector<String>& arg = CommandLine();
 	input = GetFileFolder(GetFileFolder(GetFileFolder(GetDataFile("BuildAll.cpp"))));
 	output = "C:\\out";
@@ -93,9 +94,13 @@ CONSOLE_APP_MAIN
 	Build("reference");
 	Build("tutorial");
 	Build("upptst", false);
-	if(failed)
+	if(failed) {
 		Cout() << "THERE WERE ERRORS!\n";
-	else
+		SetExitCode(1);
+	}
+	else {
 		Cout() << "OK.\n";
+		LOG("OK");
+	}
 //	RDUMPC(failed);
 }
