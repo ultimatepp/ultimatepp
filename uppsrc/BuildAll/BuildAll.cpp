@@ -44,7 +44,6 @@ void Build(const char *nest, const char *bm, bool release)
 		   !IsIgnored(name) && !IsIgnored(name + ":" + mn) && !IsIgnored(String(nest) + ':' + name + ':' + mn)) {
 			String txt;
 			txt << nest << ' ' << name << ' ' << bm << ' ' << mn;
-			Cout() << "  Building " << txt;
 			String c;
 			c << umk << nest << ' ' << name << ' ' << bm << " -" << flags;
 			if(first)
@@ -53,6 +52,7 @@ void Build(const char *nest, const char *bm, bool release)
 			c << 's';
 		#endif
 			c << ' ' << outdir;
+			Cout() << c;
 			String out;
 			if(Sys(c, out)) {
 				Cout() << " *** FAILED *** !\n";
