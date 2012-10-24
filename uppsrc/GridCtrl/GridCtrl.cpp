@@ -2738,6 +2738,11 @@ void GridCtrl::Set(const Vector<Value> &v, int data_offset /* = 0*/, int column_
 	Set(r, v, data_offset, column_offset);
 }
 
+void GridCtrl::SetRaw(int r, int c, const Value &val)
+{
+	items[r][c].val = val;
+}
+
 void GridCtrl::SetCtrl(int r, int c, Ctrl& ctrl)
 {
 	r += fixed_rows;
@@ -2880,6 +2885,11 @@ Value GridCtrl::Get(const char * alias) const
 Value GridCtrl::Get(int r, const char * alias) const
 {
 	return Get0(r + fixed_rows, aliases.Get(alias));
+}
+
+Value GridCtrl::GetRaw(int r, int c) const
+{
+	return items[r][c].val;
 }
 
 Value GridCtrl::GetFirst(int c) const
@@ -6305,12 +6315,12 @@ Ctrl * GridCtrl::GetCtrl(int r, int c, bool check_visibility, bool hrel, bool vr
 
 Ctrl * GridCtrl::GetCtrl(int r, int c)
 {
-	return GetCtrl(r, c, true, true, true);
+	return GetCtrl(r + fixed_rows, c, true, true, false);
 }
 
 Ctrl * GridCtrl::GetCtrl(int c)
 {
-	return GetCtrl(curpos.y, c, true, true, false);
+	return GetCtrl(rowidx, c, true, true, false);
 }
 
 bool GridCtrl::IsCtrl(Point &p, bool check_visibility)
