@@ -11,7 +11,18 @@ String output = "c:/upp/all";
 String umk = "c:\\upp\\umk.exe ";
 Vector<String> bm;
 
-Vector<String> failed;
+bool failed;
+
+char *exclude[] = {
+	"SQL_MYSQL", "SDLEXAMPLE", "OLECALC", // REACTIVATE LATER
+	"LOG:R",
+	"WINFB", "LINUXFB", "FRAMEBUFFER", "COUNTER",
+};
+
+bool IsIgnored(const String& name)
+{
+	return Find(exclude, exclude + __countof(exclude), ToUpper(name));
+}
 
 void Build(const char *nest, const char *bm, bool release)
 {
@@ -25,21 +36,23 @@ void Build(const char *nest, const char *bm, bool release)
 	FindFile ff(AppendFileName(AppendFileName(input, nest), "*.*"));
 	bool first = true;
 	while(ff) {
-		if(ff.IsFolder() && !ff.IsHidden()) {
+		String name = ff.GetName();
+		if(ff.IsFolder() && !ff.IsHidden() &&
+		   !IsIgnored(name) && !IsIgnored(name + ":" + mn) && !IsIgnored(String(nest) + ':' + name + ':' + mn)) {
 			String txt;
-			txt << nest << ' ' << ff.GetName() << ' ' << bm << ' ' << mn;
+			txt << nest << ' ' << name << ' ' << bm << ' ' << mn;
 			Cout() << "  Building " << txt;
 			String c;
-			c << umk << nest << ' ' << ff.GetName() << ' ' << bm << " -" << flags;
+			c << umk << nest << ' ' << name << ' ' << bm << " -" << flags;
 			if(first)
 				c << 'a';
 			c << ' ' << outdir;
 			String out;
 			if(Sys(c, out)) {
 				Cout() << " *** FAILED *** !\n";
+				failed = true;
 				LOG("FAILED: " << txt);
 				LOG(out);
-				failed.Add() << txt;
 			}
 			else {
 				Cout() << " ok\n";
@@ -79,11 +92,10 @@ CONSOLE_APP_MAIN
 	Build("examples");
 	Build("reference");
 	Build("tutorial");
-	Build("upptst");
-	if(failed.GetCount()) {
-		Cout() << "***** Failed builds: \n";
-		for(int i = 0; i < failed.GetCount(); i++)
-			Cout() << "  " << failed[i] << '\n';
-	}
+	Build("upptst", false);
+	if(failed)
+		Cout() << "THERE WERE ERRORS!\n";
+	else
+		Cout() << "OK.\n";
 //	RDUMPC(failed);
 }

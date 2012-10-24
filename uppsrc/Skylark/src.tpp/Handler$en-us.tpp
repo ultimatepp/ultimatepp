@@ -17,6 +17,7 @@ topic "Handler functions and macros";
 pointer or pack instance method id to be used as URL link base. 
 Can be created from pointer to handler or as result of THISLINK 
 or LINK macros.&]
+[s3;%% &]
 [s0;%% &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Handler functions and macros]]}}&]
 [s3; &]

@@ -20,6 +20,7 @@ protected:
 	const One<Exe>& GetTemplate(const char *template_name);
 
 public:	
+	Renderer& operator()(const char *id, const char *v)   { var.Add(id, v); return *this; }
 	Renderer& operator()(const char *id, const Value& v)  { var.Add(id, v); return *this; }
 	Renderer& operator()(const ValueMap& map);
 	Renderer& operator()(const char *id, const HandlerId& handler);
