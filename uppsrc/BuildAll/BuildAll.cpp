@@ -6,9 +6,9 @@ using namespace Upp;
 // It compiles all U++ examples using MSC8 and MINGW build methods
 // or methods listed on commandline
 
-String input = "u:\\upp.src";
-String output = "u:\\all";
-String umk = "u:\\theide\\umk.exe ";
+String input = "c:/u/upp.src";
+String output = "c:/upp/all";
+String umk = "c:\\upp\\umk.exe ";
 Vector<String> bm;
 
 Vector<String> failed;
@@ -27,15 +27,18 @@ void Build(const char *nest, const char *bm, bool release)
 	while(ff) {
 		if(ff.IsFolder() && !ff.IsHidden()) {
 			String txt;
-			txt << ff.GetName() << ' ' << bm << ' ' << mn;
+			txt << nest << ' ' << ff.GetName() << ' ' << bm << ' ' << mn;
 			Cout() << "  Building " << txt;
 			String c;
-			c << umk << nest << ' ' << ff.GetName() << ' ' << bm << " -l" << flags;
+			c << umk << nest << ' ' << ff.GetName() << ' ' << bm << " -" << flags;
 			if(first)
 				c << 'a';
 			c << ' ' << outdir;
-			if(system(c)) {
+			String out;
+			if(Sys(c, out)) {
 				Cout() << " *** FAILED *** !\n";
+				LOG("FAILED: " << txt);
+				LOG(out);
 				failed.Add() << txt;
 			}
 			else {
@@ -58,7 +61,7 @@ void Build(const char *nest, bool release)
 void Build(const char *nest)
 {
 	Build(nest, false);
-//	Build(nest, true);
+	Build(nest, true);
 }
 
 CONSOLE_APP_MAIN
@@ -76,10 +79,11 @@ CONSOLE_APP_MAIN
 	Build("examples");
 	Build("reference");
 	Build("tutorial");
+	Build("upptst");
 	if(failed.GetCount()) {
 		Cout() << "***** Failed builds: \n";
 		for(int i = 0; i < failed.GetCount(); i++)
 			Cout() << "  " << failed[i] << '\n';
 	}
-	RDUMPC(failed);
+//	RDUMPC(failed);
 }

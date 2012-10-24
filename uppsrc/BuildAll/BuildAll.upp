@@ -1,4 +1,4 @@
-description "Utility that builds all U++ examples";
+description "Utility that builds all U++ examples\377";
 
 uses
 	Core;

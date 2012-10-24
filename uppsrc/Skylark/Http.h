@@ -83,6 +83,7 @@ class Http : public Renderer {
 	void   SaveSession();
 
 public:
+	Http&  operator()(const char *id, const char *v)   { var.Add(id, v); return *this; }
 	Http&  operator()(const char *id, const Value& v)  { var.Add(id, v); return *this; }
 	Http&  operator()(const ValueMap& map)             { Renderer::operator()(map); return *this; }
 	Http&  operator()(const char *id, const HandlerId& handler) { Renderer::operator()(id, handler); return *this; }

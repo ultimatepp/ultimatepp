@@ -107,7 +107,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, LPVOID lpReserved) \
 { \
 	if(fdwReason == DLL_PROCESS_ATTACH) { \
 		AppSetHandle(hinstDll); \
-		SetVppLogName(ForceExt(GetExeFilePath(), ".log")); \
 	} \
 	RLOG("DllMain(" << FormatIntHex(hinstDll) << ", reason = " << (int)fdwReason << ")"); \
 	if(fdwReason == DLL_PROCESS_ATTACH) { \
