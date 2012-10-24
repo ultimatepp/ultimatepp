@@ -5,14 +5,17 @@ namespace Upp {
 
 template<> void Xmlize(XmlIO& xml, std::vector<int>& data) {
 	if(xml.IsStoring())
-		for(int i = 0; i < (int)data.size(); i++)
-			Xmlize(xml.Add("item"), data[i]);
+		for(int i = 0; i < (int)data.size(); i++) {
+			XmlIO xio = xml.Add("item");
+			Xmlize(xio, data[i]);
+		}
 	else {
 		data.clear();
 		for(int i = 0; i < xml->GetCount(); i++)
 			if(xml->Node(i).IsTag("item")) {
 				data.push_back(0);
-				Xmlize(xml.At(i), data.back());
+				XmlIO xio = xml.At(i);
+				Xmlize(xio, data.back());
 			}
 	}
 }
