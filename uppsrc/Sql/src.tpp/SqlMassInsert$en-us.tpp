@@ -43,7 +43,8 @@ so that it is removed (if exists) before inserting a new value.&]
 [s5;:SqlMassInsert`:`:Flush`(`):%- [@(0.0.255) void]_[* Flush]()&]
 [s2; Inserts all buffered rows. SqlMassInsert calls this when buffer 
 reaches threshold and in destructor. Usually there is no need 
-to call Flush directly.&]
+to call Flush directly, except perhaps at the end of inserting 
+to retrieve the final IsError.&]
 [s3; &]
 [s4; &]
 [s5;:SqlMassInsert`:`:IsError`(`)const:%- [@(0.0.255) bool]_[* IsError]()_[@(0.0.255) const
