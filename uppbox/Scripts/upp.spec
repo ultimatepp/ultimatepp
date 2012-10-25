@@ -1,7 +1,7 @@
-# How to build example: rpmbuild -tb --define 'version 1314' --define "date $(LC_TIME=En date '+%a %b %d %Y')" upp-x11-src-1314.tar.gz
+# How to build example: rpmbuild -tb --define 'version 5431' --define "date $(LC_TIME=En date '+%a %b %d %Y')" upp-x11-src-5431.tar.gz
  
 %define		name upp
-#define		version 1314
+#define		version 5431
 #define		date $(LC_TIME=En date '+%a %b %d %Y')      
 %define		release 1
 
@@ -18,7 +18,7 @@ URL:            http://www.ultimatepp.org
 Source0:        %{name}-x11-src-%{version}.tar.gz
 
 # Common Buildrequires
-Buildrequires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel
+Buildrequires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel bzip2-devel
 
 # Mandriva specific Buildrequires
 %if "%?mdvver" != ""
@@ -77,6 +77,8 @@ programming. It provides:
 # ----
 %build
 
+sed -e "s@-I((INCLUDES))@@g" uppsrc/Makefile.in >uppsrc/Makefile
+
 make -C uppsrc \
      -e LIBPATH=$(pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)     \
      -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)" \
@@ -121,7 +123,7 @@ INCLUDEDIR=$( pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango at
 LIBDIR=$( pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk | awk ' { gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
 
 %if "%?fedora" != ""
-     LINK="$(pkg-config --libs libpng12 freetype2)"
+     LINK="$(pkg-config --libs libpng freetype2)"
 %else
      LINK=""
 %endif
