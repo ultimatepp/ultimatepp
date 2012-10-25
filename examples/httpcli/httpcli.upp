@@ -1,7 +1,7 @@
 description "Command-line driven HTTP client\377";
 
 uses
-	Web;
+	Core;
 
 file
 	main.cpp;
