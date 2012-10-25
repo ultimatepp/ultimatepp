@@ -470,7 +470,8 @@ nt]_[*@3 pos], [@(0.0.255) const]_[_^wchar^ wchar]_`*[*@3 s], [@(0.0.255) int]_[
 [s4;%- &]
 [s5;:AString`:`:Last`(`)const:%- [@(0.0.255) const]_[_^AString`:`:tchar^ tchar]_`*[* Last](
 )_[@(0.0.255) const]&]
-[s2; Returns a pointer to the last character in the string.&]
+[s2; Returns a pointer to the last character in the string. If string 
+is empty, returns a pointer to the ending zero.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AString`:`:GetIter`(int`)const:%- [@(0.0.255) const]_[_^AString`:`:tchar^ tchar]_`*[* G
@@ -555,4 +556,4 @@ oid]_[* Replace]([@(0.0.255) const]_[_^AString`:`:tchar^ tchar]_`*[*@3 find],
 [@(0.0.255) const]_[_^AString`:`:String^ String][@(0.0.255) `&]_[*@3 replace])&]
 [s2; Replaces substring [%-*@3 find] with [%-*@3 replace ]string for 
 all times [%-*@3 find] string appears.&]
-[s3; ]
+[s3; ]]
