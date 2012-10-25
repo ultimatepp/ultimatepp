@@ -1,8 +1,5 @@
 description "XML-RPC support package (both server and client stuff)\3770,128,128";
 
-uses
-	Web;
-
 file
 	Rpc.h,
 	legacy.h,
