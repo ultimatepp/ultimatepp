@@ -1,4 +1,4 @@
-description "TCP/IP related stuff\377128,0,0";
+description "TCP/IP related stuff (DEPRECATED!)\377128,0,0";
 
 uses
 	Core;

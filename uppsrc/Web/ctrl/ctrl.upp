@@ -1,3 +1,5 @@
+description "DEPRECATED!\377";
+
 uses
 	Web,
 	TCtrlLib,
