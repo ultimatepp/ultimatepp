@@ -2,6 +2,8 @@
 
 using namespace Upp;
 
+// This example requires OpenSSL library installed in win32!
+
 CONSOLE_APP_MAIN
 {
 //	Smtp::Trace();
