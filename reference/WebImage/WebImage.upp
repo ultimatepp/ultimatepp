@@ -1,4 +1,4 @@
-description "Using HttpClientGet to obtain image from web, and displaying it\377";
+description "Using HttpRequest to obtain image from web, and displaying it\377";
 
 uses
 	CtrlLib,
