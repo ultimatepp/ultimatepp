@@ -448,7 +448,7 @@ String      MySqlConnection::GetUser() const    { return session.GetUser(); }
 String      MySqlConnection::ToString() const   { return statement; }
 
 String MySqlTextType(int n) {
-	return n < 256 ? Format("varchar(%d)", n) : String("text");
+	return n < 65536 ? Format("varchar(%d)", n) : String("text");
 }
 
 const char *MySqlReadString(const char *s, String& stmt) {
