@@ -411,6 +411,7 @@ void FindInFilesDlg::Setup(bool replacing)
 	Rect r = GetRect();
 	r.SetSize(sz);
 	SetRect(r);
+	ActiveFocus(find);
 }
 
 bool FindInFilesDlg::Key(dword key, int count)

@@ -822,7 +822,7 @@ public:
 	virtual dword  GetAccessKeys() const;
 	virtual void   AssignAccessKeys(dword used);
 
-	virtual void   PostInput();
+	virtual void   PostInput(); // Deprecated
 
 	virtual void   ChildFrameMouseEvent(Ctrl *child, int event, Point p, int zdelta, dword keyflags);
 	virtual void   ChildMouseEvent(Ctrl *child, int event, Point p, int zdelta, dword keyflags);

@@ -862,16 +862,16 @@ public:
 		void  EditFind()                { editor.FindReplace(find_pick_sel, find_pick_text, false); }
 		void  EditReplace()             { editor.FindReplace(find_pick_sel, find_pick_text, true); }
 		void  EditFindReplacePickText() { editor.FindReplace(true, true, false); }
-		void  EditFindNext()     { editor.Find(false); }
-		void  EditFindPrevious() { editor.Find(true); }
-		void  EditPaste()        { editor.Paste(); }
+		void  EditFindNext()            { editor.Find(false); }
+		void  EditFindPrevious()        { editor.Find(true); }
+		void  EditPaste()               { editor.Paste(); }
 		void  FindNextError();
 		void  FindPrevError();
 	
 	void      EditSpecial(Bar& menu);
 		void  TranslateString();
-		void  SwapChars()        { editor.SwapChars(); }
-		void  CopyWord()         { editor.CopyWord(); }
+		void  SwapChars()               { editor.SwapChars(); }
+		void  CopyWord()                { editor.CopyWord(); }
 		void  AlterText(WString (*op)(const WString& in));
 		void  TextToUpper();
 		void  TextToLower();
