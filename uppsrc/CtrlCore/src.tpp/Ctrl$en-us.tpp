@@ -649,6 +649,16 @@ Default implementation is void.&]
 implementation is void.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Ctrl`:`:ChildFrameMouseEvent`(Ctrl`*`,int`,Point`,int`,dword`):%- [@(0.0.255) virt
+ual] [@(0.0.255) void]_[* ChildFrameMouseEvent]([_^Ctrl^ Ctrl]_`*[*@3 child], 
+[@(0.0.255) int]_[*@3 event], [_^Point^ Point]_[*@3 p], [@(0.0.255) int]_[*@3 zdelta], 
+[_^dword^ dword]_[*@3 keyflags])&]
+[s2; This method is invoked before the [/ frame] mouse [%-*@3 event] 
+is routed to the [%-*@3 child]. Parameters of the event are the 
+same as those in MouseEvent method. Default implementation calls 
+the parent`'s ChildMouseEvent method.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Ctrl`:`:ChildMouseEvent`(Ctrl`*`,int`,Point`,int`,dword`):%- [@(0.0.255) virtual] 
 [@(0.0.255) void]_[* ChildMouseEvent]([_^`:`:Ctrl^ Ctrl]_`*[*@3 child], 
 [@(0.0.255) int]_[*@3 event], [_^`:`:Point^ Point]_[*@3 p], [@(0.0.255) int]_[*@3 zdelta], 
@@ -657,7 +667,7 @@ implementation is void.&]
 is routed to the [%-*@3 child]. Parameters of the event are the 
 same as those in MouseEvent method. Default implementation calls 
 the parent`'s ChildMouseEvent method.&]
-[s3;%- &]
+[s3; &]
 [s4;%- &]
 [s5;:Ctrl`:`:ChildGotFocus`(`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* ChildGotFocus](
 )&]
@@ -693,7 +703,7 @@ ccessKeys]([_^`:`:dword^ dword]_[*@3 used])&]
 access keys.&]
 [s7;i1120;a17; [%-*C@3 used]-|Set of letter access keys that are already 
 used and should not be chosen by Ctrl as its access keys.&]
-[s3;%- &]
+[s3; &]
 [s4;%- &]
 [s5;:Ctrl`:`:ChildAdded`(Ctrl`*`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* ChildAdded](
 [_^`:`:Ctrl^ Ctrl]_`*[*@3 child])&]
@@ -729,14 +739,25 @@ or when the Ctrl is resized.&]
 [s4;%- &]
 [s5;:Ctrl`:`:GetMinSize`(`)const:%- [@(0.0.255) virtual] [_^`:`:Size^ Size]_[* GetMinSize](
 )_[@(0.0.255) const]&]
-[s2;b17;a17; This method should return minimal size of Ctrl.&]
-[s7;i1120;a17; [*/ Return value]-|Minimal size.&]
+[s2;b17;a17; This method should return [/ minimal] size of Ctrl. This 
+is used e.g. to limit the minimal size of windows. Default implementation 
+returns size suitable for edit`-field type of widget, based on 
+default GUI font and EditFieldIsThin setting.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:GetStdSize`(`)const:%- [@(0.0.255) virtual] [_^`:`:Size^ Size]_[* GetStdSize](
 )_[@(0.0.255) const]&]
-[s2;b17;a17; This method should return maximal size of Ctrl.&]
-[s7;i1120;a17; [*/ Return value]-|Maximal size.&]
+[s2;b17;a17; This method should return [/ standard] size of Ctrl. Default 
+implementation returns calls GetMinSize, increases width 10 and 
+returns resulting Size.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:GetMaxSize`(`)const:%- [@(0.0.255) virtual] [_^Size^ Size]_[* GetMaxSize]()_[@(0.0.255) c
+onst]&]
+[s2; This method should return [/ maximal] size of Ctrl. Default implementation 
+returns the size of virtual working area. Redefinition can be 
+used to e.g. define the maximum size of window (as maximal size 
+of view area).&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:IsShowEnabled`(`)const:%- [@(0.0.255) virtual] [@(0.0.255) bool]_[* IsShowEnab
@@ -765,6 +786,10 @@ rectangle otherwise. Paint routine uses this information to optimize.&]
 information to optimize.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Ctrl`:`:Updated`(`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Updated]()&]
+[s2; Invoked by Update method. Default implementation is empty.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Ctrl`:`:OverPaint`(`)const:%- [@(0.0.255) virtual] [@(0.0.255) int]_[* OverPaint]()_[@(0.0.255) c
 onst]&]
 [s2;b17;a17; This method can returns non`-zero number that represents 
@@ -787,11 +812,21 @@ if modal loop is performed for it.&]
 [s2;b17;a17; Used for Ocx control implementation.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Ctrl`:`:GetDesc`(`)const:%- [@(0.0.255) virtual] [_^String^ String]_[* GetDesc]()_[@(0.0.255) c
+onst]&]
+[s2; Returns description of Ctrl for diagnostic purposes. Default 
+implementation is empty.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:WhenAction:%- [_^Callback^ Callback]_[* WhenAction]&]
+[s2; This callback is used to signal that [/ user] has changed the 
+value (or state) of widget.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Ctrl`:`:SetData`(const Value`&`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* SetData](
 [@(0.0.255) const]_[_^`:`:Value^ Value][@(0.0.255) `&]_[*@3 data])&]
 [s2;b17;a17; Sets the new value to the object. Default implementation 
 is void.&]
-[s7;i1120;a17; [*C@3 data]-|New value.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:GetData`(`)const:%- [@(0.0.255) virtual] [_^`:`:Value^ Value]_[* GetData]()_[@(0.0.255) c
@@ -939,6 +974,12 @@ in O(n) complexity).&]
 oint][@(0.0.255) `&]_[*@3 pt])_[@(0.0.255) const]&]
 [s2;b17;a17; Checks whether opened top`-level Ctrl is foreground.&]
 [s7;i1120;a17; [*/ Return value]-|True if Ctrl is foreground.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:IsForeground`(`)const:%- [@(0.0.255) bool]_[* IsForeground]()_[@(0.0.255) cons
+t]&]
+[s2; Returns true if Ctrl or its top`-level parent is foreground 
+window.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:SetForeground`(`):%- [@(0.0.255) void]_[* SetForeground]()&]
@@ -1268,11 +1309,29 @@ st]&]
 [s4;%- &]
 [s5;:Ctrl`:`:RefreshLayout`(`):%- [@(0.0.255) void]_[* RefreshLayout]()&]
 [s2;b17;a17; Recomputes layout for Ctrl. This includes calling FrameLayout 
-for all frames and calling Layout virtual method.&]
+for all frames and calling Layout virtual method. Layout of child 
+widgets is recomputed if their size changes.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:RefreshLayoutDeep`(`):%- [@(0.0.255) void]_[* RefreshLayoutDeep]()&]
+[s2; Recomputes layout for the whole Ctrl tree `- unlike RefreshLayout, 
+recomputes layout of all descendants regardless whether their 
+size has changed.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:RefreshParentLayout`(`):%- [@(0.0.255) void]_[* RefreshParentLayout]()&]
 [s2;b17;a17; If Ctrl has parent, calls parent`->RefreshLayout().&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:UpdateLayout`(`):%- [@(0.0.255) void]_[* UpdateLayout]()&]
+[s2; Recomputes layout of widget by recalculating its frame coverage, 
+then, if view size has changed, calls Layout method (this is 
+the difference from RefreshLayout, which calls Layout always). 
+Layout of child widgets is recomputed if their size changes.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:UpdateParentLayout`(`):%- [@(0.0.255) void]_[* UpdateParentLayout]()&]
+[s2; Calls UpdateLayout for parent (if exists).&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:LeftPos`(int`,int`):%- [_^`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[* LeftPos]([@(0.0.255) i
@@ -1485,6 +1544,11 @@ area `- in this case this method returns part of Ctrl view that
 is not clipped out by parent`'s are limits.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Ctrl`:`:GetWorkArea`(`)const:%- [_^Rect^ Rect]_[* GetWorkArea]()_[@(0.0.255) const]&]
+[s2; Returns the work area (the maximum rectangle that window can 
+use) for screen that this window is in.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Ctrl`:`:AddFrameSize`(int`,int`)const:%- [_^`:`:Size^ Size]_[* AddFrameSize]([@(0.0.255) i
 nt]_[*@3 cx], [@(0.0.255) int]_[*@3 cy])_[@(0.0.255) const]&]
 [s2;b17;a17; Computes size of Ctrl for given size of view and actual 
@@ -1671,6 +1735,11 @@ lay inside it.&]
 [s7;i1120;a17; [*/ Return value]-|`*this for method chaining.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Ctrl`:`:IsIgnoreMouse`(`)const:%- [@(0.0.255) bool]_[* IsIgnoreMouse]()_[@(0.0.255) co
+nst]&]
+[s2; Returns the ignore`-mouse flag (see IgnoreMouse).&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Ctrl`:`:HasMouse`(`)const:%- [@(0.0.255) bool]_[* HasMouse]()_[@(0.0.255) const]&]
 [s7;i1120;a17; [*/ Return value]-|true when Ctrl is target for mouse 
 events.&]
@@ -1691,14 +1760,19 @@ events and mouse pointer is inside specified frame area rectangle.&]
 [s4;%- &]
 [s5;:Ctrl`:`:HasMouseIn`(const Rect`&`)const:%- [@(0.0.255) bool]_[* HasMouseIn]([@(0.0.255) c
 onst]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 r])_[@(0.0.255) const]&]
-[s2; [%-*C@3 r]-|rectangle in view area.&]
-[s7;i1120;a17; [*/ Return value]-|true when Ctrl is target for mouse 
-events and mouse pointer is inside specified view area rectangle.&]
+[s2; Returns true when Ctrl is target for mouse events and mouse 
+pointer is inside specified view area rectangle.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:GetMouseViewPos`(`)const:%- [_^Point^ Point]_[* GetMouseViewPos]()_[@(0.0.255) c
+onst]&]
+[s2; Returns the position of mouse relative to the view area. Note 
+that the result can negative point or point outside &]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:GetMouseCtrl`(`):%- [@(0.0.255) static] [_^`:`:Ctrl^ Ctrl]_`*[* GetMouseCtrl](
 )&]
-[s7;i1120;a17; [*/ Return value]-|Returns current target for mouse events.&]
+[s7;i1120;a17; Returns current target for mouse events.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:IgnoreMouseClick`(`):%- [@(0.0.255) static] [@(0.0.255) void]_[* IgnoreMouseCl
