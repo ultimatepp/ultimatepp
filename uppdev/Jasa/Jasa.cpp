@@ -2,17 +2,39 @@
 
 using namespace Upp;
 
+String ReadString(const char *txt)
+{
+	Cout() << txt;
+	return ReadStdIn();
+}
+
+int ReadInt(const char *txt = "")
+{
+	return StrInt(ReadString(txt));
+}
+
+double ReadDouble(const char *txt = "")
+{
+	return StrDbl(ReadString(txt));
+}
+
+
 CONSOLE_APP_MAIN
 {
-	for(;;) {
-		String s = ReadStdIn();
-		if(s.GetLength() == 0)
-			break;
-		int a = atoi(s);
-		s = ReadStdIn();
-		int b = atoi(s);
-		Cout() << a << '+' << b << '=' << a + b << '\n';
-		Cout() << a << '-' << b << '=' << a - b << '\n';
-		Cout() << a << '*' << b << '=' << a * b << '\n';
-	}
+pocitani:
+    int l = 1;
+	int a = ReadInt("Zadej cislo: ");
+    for(int i = 1; i <= a; i++) {
+		 l=l*i;
+		Cout() << l << '\n';
+    }
+	Cout() << l << '\n';
+	goto pocitani;
 }
+
+/*
+1*1 = 1
+1*2 = 2
+2*3 = 6
+6*4 = 24
+*/
