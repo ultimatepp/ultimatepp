@@ -259,8 +259,6 @@ int AppMain(HINSTANCE hInstance, LPSTR lpCmdLine)
 	{
 		GuiMainFn_();
 		UPP::Ctrl::ExitGl();
-		UPP::UsrLog("---------- About to delete this log of WinGL...");
-		UPP::DeleteUsrLog();
 		return UPP::GetExitCode();
 	}
 	else

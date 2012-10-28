@@ -18,8 +18,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdSh
 	UPP::AppInitEnvironment__(); \
 	GuiMainFn_(); \
 	UPP::Ctrl::CloseTopCtrls(); \
-	UPP::UsrLog("---------- About to delete this log..."); \
-	UPP::DeleteUsrLog(); \
 	return UPP::GetExitCode(); \
 } \
 \
@@ -35,8 +33,6 @@ int main(int argc, const char **argv, const char **envptr) { \
 	UPP::AppInit__(argc, argv, envptr); \
 	GuiMainFn_(); \
 	UPP::Ctrl::CloseTopCtrls(); \
-	UPP::UsrLog("---------- About to delete this log..."); \
-	UPP::DeleteUsrLog(); \
 	UPP::AppExit__(); \
 	return UPP::GetExitCode(); \
 } \
