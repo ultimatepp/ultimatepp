@@ -26,7 +26,7 @@ topic "Changelog";
 [s0;4 &]
 [s0; [*_3 Current release]&]
 [s0;*_3 &]
-[s0; [*_4 5431][*3  (Oct 2012)]&]
+[s0; [*_4 5485][*3  (Oct 2012)]&]
 [s0;*_3 &]
 [s0; The focus of this release was server programming. The main new 
 feature is `"[* Skylark]`", lean and mean [^http`:`/`/www`.ultimatepp`.org`/srcdoc`$Skylark`$Tutorial`$en`-us`.html^ U
