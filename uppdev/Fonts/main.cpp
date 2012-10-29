@@ -4,7 +4,7 @@ using namespace Upp;
 
 GUI_APP_MAIN
 {
-	DDUMP(GetGlyphInfo(Font().FaceName("Courier New"), 35798).IsNormal());
-	DDUMP(GetGlyphInfo(Font().FaceName("Verdana"), 35798).IsNormal());
-	DDUMP(GetGlyphInfo(Font().FaceName("Symbol"), 35798).IsNormal());
+	DDUMP(Arial(100).GetCy());
+	DDUMP(Arial(100).GetInternal());
+	DDUMP(Arial(100).GetHeight());
 }
