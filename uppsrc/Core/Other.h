@@ -399,8 +399,8 @@ void LRUCache<T, K>::Unlink(int i)
 	else {
 		if(head == i)
 			head = m.next;
-		data[(int)m.next].prev = m.prev;
-		data[(int)m.prev].next = m.next;
+		data[m.next].prev = m.prev;
+		data[m.prev].next = m.next;
 	}
 	count--;
 }
@@ -462,16 +462,19 @@ bool LRUCache<T, K>::RemoveOne(P predicate)
 {
 	int n = 0;
 	int i = head;
-	while(i >= 0 && i != head) {
-		int next = data[i].next;
-		if(!key.IsUnlinked(i) && predicate(*data[i].data)) {
-			size -= data[i].size;
-			Unlink(i);
-			key.Unlink(i);
-			return true;
+	if(i >= 0)
+		for(;;) {
+			int next = data[i].next;
+			if(predicate(*data[i].data)) {
+				size -= data[i].size;
+				Unlink(i);
+				key.Unlink(i);
+				return true;
+			}
+			if(i == next || next == head || next < 0)
+				break;
+			i = next;
 		}
-		i = next;
-	}
 	return false;
 }
 
