@@ -216,6 +216,29 @@ template <class T> inline const T& max(const T& a, const T& b) { return a > b ? 
 template <class T>
 inline T minmax(T x, T _min, T _max)                           { return min(max(x, _min), _max); }
 
+//$-int findarg(const T& x, const T1& p0, ...);
+inline void findarg_NOP() {} // Only to make List work for findarg
+
+#define E__TL(I)       typename COMBINE(T, I)
+#define E__NFIf(I)     findarg_NOP(); if(x == COMBINE(p, I)) return I - 1; findarg_NOP()
+#define E__NFValue(I)  const COMBINE(T, I)& COMBINE(p, I)
+
+#define E__NFBody(I) \
+template <typename T, __List##I(E__TL)> \
+int findarg(const T& x, __List##I(E__NFValue)) \
+{ \
+	__List##I(E__NFIf); \
+	return -1; \
+}
+
+__Expand40(E__NFBody)
+
+#undef E__TL
+#undef E__NFIf
+#undef E__NFValue
+
+//$+
+
 typedef unsigned char      byte;
 typedef signed char        int8;
 typedef unsigned char      uint8;
