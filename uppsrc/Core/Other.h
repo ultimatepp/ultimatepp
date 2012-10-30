@@ -460,7 +460,6 @@ template <class T, class K>
 template <class P>
 bool LRUCache<T, K>::RemoveOne(P predicate)
 {
-	int n = 0;
 	int i = head;
 	if(i >= 0)
 		for(;;) {
