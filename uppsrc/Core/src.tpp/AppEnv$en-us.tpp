@@ -149,6 +149,14 @@ URL that will be opened in the browser&]
 [s0;l288; [%% If ][*@3 x][%%  is higher than ][*@3 `_max][%%  it returns ][*@3 `_max.]&]
 [s3;%% &]
 [s4; &]
+[s5;:findarg`(const T`&`,const T1`&`,`.`.`.`): [@(0.0.255) template]_<[@(0.0.255) class]_
+[*@4 T]>_[@(0.0.255) int]_[* findarg]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x], 
+[@(0.0.255) const]_[*@4 T1][@(0.0.255) `&]_[*@3 p0], ...)&]
+[s2;%% Searches the list of arguments for the value of [%-*@3 x]. If 
+it is found, function returns the index of argument (starting 
+with 0). If not found, `-1 is returned.&]
+[s3;%% &]
+[s4; &]
 [s5;:CpuSSE`(`): [@(0.0.255) bool]_[* CpuSSE]()&]
 [s2;%% Returns true if CPU has SSE support.&]
 [s3; &]
@@ -164,4 +172,4 @@ URL that will be opened in the browser&]
 [s5;:CPU`_Cores`(`): [@(0.0.255) int]_[* CPU`_Cores]()&]
 [s2;%% Returns the number of cores the CPU has.&]
 [s3; &]
-[s0; ]
+[s0; ]]
