@@ -236,6 +236,7 @@ __Expand40(E__NFBody)
 #undef E__TL
 #undef E__NFIf
 #undef E__NFValue
+#undef E__NFBody
 
 //$+
 
