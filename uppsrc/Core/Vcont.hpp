@@ -324,6 +324,20 @@ void Vector<T>::Set(int i, const T& x, int count) {
 	}
 }
 
+#ifdef UPP
+template <class T>
+void Vector<T>::Xmlize(XmlIO& xio, const char *itemtag)
+{
+	XmlizeContainer(xio, itemtag, *this);
+}
+
+template <class T>
+void Vector<T>::Jsonize(JsonIO& jio)
+{
+	JsonizeArray<Vector<T>, T>(jio, *this);
+}
+#endif
+
 // ------------------
 
 template <class T>
@@ -474,6 +488,20 @@ void Array<T>::Insert(int i, const Array& x, int offset, int count) {
 	for(int q = 0; q < count; q++)
 		vector[q + i] = DeepCopyNew(x[q + offset]);
 }
+
+#ifdef UPP
+template <class T>
+void Array<T>::Xmlize(XmlIO& xio, const char *itemtag)
+{
+	XmlizeContainer(xio, itemtag, *this);
+}
+
+template <class T>
+void Array<T>::Jsonize(JsonIO& jio)
+{
+	JsonizeArray<Array<T>, T>(jio, *this);
+}
+#endif
 
 // ------------------
 

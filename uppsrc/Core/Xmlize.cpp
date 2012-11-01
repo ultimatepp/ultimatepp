@@ -172,9 +172,7 @@ void XmlizeLang(XmlIO& xml, const char *tag, int& lang, const char *id)
 
 String StoreAsXML(Callback1<XmlIO> xmlize, const char *name)
 {
-	String n = Filter(name, CharFilterAlpha);
-	if(IsNull(n))
-		n = "app";
+	String n = Filter(name ? name : "app", CharFilterAlpha);
 	XmlNode node;
 	xmlize(XmlIO(node(n), false, Value()));
 	return AsXML(node);

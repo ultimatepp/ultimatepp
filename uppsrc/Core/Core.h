@@ -259,6 +259,9 @@ inline void operator  delete[](void *ptr, const std::nothrow_t&) throw() { UPP::
 
 NAMESPACE_UPP
 
+class XmlIO;
+class JsonIO;
+
 #include "Mt.h"
 #include "Global.h"
 #include "Topt.h"
@@ -278,8 +281,6 @@ NAMESPACE_UPP
 #include "Tuple.h"
 #include "Other.h"
 #include "Algo.h"
-#include "Vcont.hpp"
-#include "Index.hpp"
 
 #include "Value.h"
 #include "ValueUtil.h"
@@ -318,6 +319,9 @@ NAMESPACE_UPP
 #include "Inet.h"
 
 #include "Win32Util.h"
+
+#include "Vcont.hpp"
+#include "Index.hpp"
 
 #if (defined(HEAPDBG) || defined(TESTLEAKS)) && defined(PLATFORM_POSIX)
 extern int sMemDiagInitCount;

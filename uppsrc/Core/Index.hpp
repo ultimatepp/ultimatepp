@@ -234,6 +234,18 @@ void AIndex<T, V, HashFn>::Serialize(Stream& s) {
 	key.Serialize(s);
 	hash.Serialize(s);
 }
+
+template <class T, class V, class HashFn>
+void AIndex<T, V, HashFn>::Xmlize(XmlIO& xio, const char *itemtag)
+{
+	XmlizeIndex<T, AIndex<T, V, HashFn> >(xio, itemtag, *this);
+}
+
+template <class T, class V, class HashFn>
+void AIndex<T, V, HashFn>::Jsonize(JsonIO& jio)
+{
+	JsonizeIndex<AIndex<T, V, HashFn>, T>(jio, *this);
+}
 #endif
 
 template <class T, class V, class HashFn>
@@ -519,6 +531,18 @@ template <class K, class T, class V, class HashFn>
 void AMap<K, T, V, HashFn>::Serialize(Stream& s) {
 	int version = 0;
 	s / version % key % value;
+}
+
+template <class K, class T, class V, class HashFn>
+void AMap<K, T, V, HashFn>::Xmlize(XmlIO& xio)
+{
+	XmlizeMap<K, T, AMap<K, T, V, HashFn> >(xio, "key", "value", *this);
+}
+
+template <class K, class T, class V, class HashFn>
+void AMap<K, T, V, HashFn>::Jsonize(JsonIO& jio)
+{
+	JsonizeMap<AMap<K, T, V, HashFn>, K, T>(jio, *this, "key", "value");
 }
 #endif
 
