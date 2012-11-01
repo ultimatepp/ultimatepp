@@ -139,26 +139,6 @@ sonIO][@(0.0.255) `&]_[*@3 io], [@(0.0.255) bool`&]_[*@3 var])&]
 sonIO][@(0.0.255) `&]_[*@3 io], [_^Date^ Date][@(0.0.255) `&]_[*@3 var])&]
 [s5;:Jsonize`(JsonIO`&`,Time`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Jsonize]([_^JsonIO^ J
 sonIO][@(0.0.255) `&]_[*@3 io], [_^Time^ Time][@(0.0.255) `&]_[*@3 var])&]
-[s5;:Jsonize`(JsonIO`&`,Vector`<T`>`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>
-_[@(0.0.255) void]_[* Jsonize]([_^JsonIO^ JsonIO][@(0.0.255) `&]_[*@3 io], 
-[_^Vector^ Vector]<[*@4 T]>`&_[*@3 var])&]
-[s5;:Jsonize`(JsonIO`&`,Array`<T`>`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_
-[@(0.0.255) void]_[* Jsonize]([_^JsonIO^ JsonIO][@(0.0.255) `&]_[*@3 io], 
-[_^Array^ Array]<[*@4 T]>`&_[*@3 var])&]
-[s5;:Jsonize`(JsonIO`&`,Index`<T`>`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_
-[@(0.0.255) void]_[* Jsonize]([_^JsonIO^ JsonIO][@(0.0.255) `&]_[*@3 io], 
-[_^Index^ Index]<[*@4 T]>`&_[*@3 var])&]
-[s5;:Jsonize`(JsonIO`&`,ArrayIndex`<T`>`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T
-]>_[@(0.0.255) void]_[* Jsonize]([_^JsonIO^ JsonIO][@(0.0.255) `&]_[*@3 io], 
-[_^ArrayIndex^ ArrayIndex]<[*@4 T]>`&_[*@3 var])&]
-[s5;:Jsonize`(JsonIO`&`,VectorMap`<K`,V`,H`>`&`): [@(0.0.255) template]_<[@(0.0.255) clas
-s]_[*@4 K], [@(0.0.255) class]_[*@4 V], [@(0.0.255) class]_[*@4 H]>_[@(0.0.255) void]_[* Jsoniz
-e]([_^JsonIO^ JsonIO][@(0.0.255) `&]_[*@3 io], [_^VectorMap^ VectorMap]<[*@4 K], 
-[*@4 V], [*@4 H]>`&_[*@3 var])&]
-[s5;:Jsonize`(JsonIO`&`,ArrayMap`<K`,V`,H`>`&`): [@(0.0.255) template]_<[@(0.0.255) class
-]_[*@4 K], [@(0.0.255) class]_[*@4 V], [@(0.0.255) class]_[*@4 H]>_[@(0.0.255) void]_[* Jsonize
-]([_^JsonIO^ JsonIO][@(0.0.255) `&]_[*@3 io], [_^ArrayMap^ ArrayMap]<[*@4 K], 
-[*@4 V], [*@4 H]>`&_[*@3 var])&]
 [s2; Provides Jsonize template specialization to support [*@3 var] 
 data type.&]
 [s3; &]

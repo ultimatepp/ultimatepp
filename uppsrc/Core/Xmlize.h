@@ -74,7 +74,7 @@ void Xmlize(XmlIO& xml, T& var)
 template <class T>
 void Xmlize(XmlIO& xml, const char* itemtag, T& var)
 {
-	var.Xmlize(xml);
+	var.Xmlize(xml, itemtag);
 }
 
 template <class T> XmlIO XmlIO::operator()(const char *tag, T& var) {
@@ -147,30 +147,6 @@ void XmlizeContainer(XmlIO& xml, const char *tag, T& data)
 }
 
 template<class T>
-void Xmlize(XmlIO& xml, Vector<T>& data)
-{
-	XmlizeContainer(xml, "item", data);
-}
-
-template<class T>
-void Xmlize(XmlIO& xml, const char* itemtag, Vector<T>& data)
-{
-	XmlizeContainer(xml, itemtag, data);
-}
-
-template<class T>
-void Xmlize(XmlIO& xml, Array<T>& data)
-{
-	XmlizeContainer(xml, "item", data);
-}
-
-template<class T>
-void Xmlize(XmlIO& xml, const char* itemtag, Array<T>& data)
-{
-	XmlizeContainer(xml, itemtag, data);
-}
-
-template<class T>
 void XmlizeStore(XmlIO& xml, const T& data)
 {
 	ASSERT(xml.IsStoring());
@@ -202,18 +178,6 @@ void XmlizeMap(XmlIO& xml, const char *keytag, const char *valuetag, T& data)
 	}
 }
 
-template<class K, class V, class H>
-void Xmlize(XmlIO& xml, VectorMap<K, V, H>& data)
-{
-	XmlizeMap<K, V>(xml, "key", "value", data);
-}
-
-template<class K, class V, class H>
-void Xmlize(XmlIO& xml, ArrayMap<K, V, H>& data)
-{
-	XmlizeMap<K, V>(xml, "key", "value", data);
-}
-
 template<class K, class T>
 void XmlizeIndex(XmlIO& xml, const char *keytag, T& data)
 {
@@ -238,18 +202,6 @@ void XmlizeIndex(XmlIO& xml, const char *keytag, T& data)
 			data.Add(k);
 		}
 	}
-}
-
-template<class K, class H>
-void Xmlize(XmlIO& xml, Index<K, H>& data)
-{
-	XmlizeIndex<K>(xml, "key", data);
-}
-
-template<class K, class H>
-void Xmlize(XmlIO& xml, ArrayIndex<K, H>& data)
-{
-	XmlizeIndex<K>(xml, "key", data);
 }
 
 template <class T>

@@ -216,18 +216,6 @@ void JsonizeArray(JsonIO& io, T& array)
 	}
 }
 
-template <class T>
-void Jsonize(JsonIO& io, Vector<T>& var)
-{
-	JsonizeArray<Vector<T>, T>(io, var);
-}
-
-template <class T>
-void Jsonize(JsonIO& io, Array<T>& var)
-{
-	JsonizeArray<Array<T>, T>(io, var);
-}
-
 template <class T, class K, class V>
 void JsonizeMap(JsonIO& io, T& map, const char *keyid, const char *valueid)
 {
@@ -255,18 +243,6 @@ void JsonizeMap(JsonIO& io, T& map, const char *keyid, const char *valueid)
 			}
 		io.Set(ValueArray(va));
 	}
-}
-
-template <class K, class V, class H>
-void Jsonize(JsonIO& io, VectorMap<K, V, H>& map)
-{
-	JsonizeMap<VectorMap<K, V, H>, K, V>(io, map, "key", "value");
-}
-
-template <class K, class V, class H>
-void Jsonize(JsonIO& io, ArrayMap<K, V, H>& map)
-{
-	JsonizeMap<ArrayMap<K, V, H>, K, V>(io, map, "key", "value");
 }
 
 template <class T, class K, class V>
@@ -330,18 +306,6 @@ void JsonizeIndex(JsonIO& io, T& index)
 				va.Add(StoreAsJsonValue(index[i]));
 		io.Set(ValueArray(va));
 	}
-}
-
-template <class T>
-void Jsonize(JsonIO& io, Index<T>& var)
-{
-	JsonizeIndex<Index<T>, T>(io, var);
-}
-
-template <class T>
-void Jsonize(JsonIO& io, ArrayIndex<T>& var)
-{
-	JsonizeIndex<ArrayIndex<T>, T>(io, var);
 }
 
 template <class T>

@@ -89,6 +89,8 @@ public:
 
 #ifdef UPP
 	void     Serialize(Stream& s);
+	void     Xmlize(XmlIO& xio);
+	void     Jsonize(JsonIO& jio);
 #endif
 
 	void     Swap(AMap& x)                         { UPP::Swap(value, x.value);

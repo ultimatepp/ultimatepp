@@ -95,6 +95,8 @@ public:
 
 #ifdef UPP
 	void     Serialize(Stream& s)    { StreamContainer(s, *this); }
+	void     Xmlize(XmlIO& xio, const char *itemtag = "item");
+	void     Jsonize(JsonIO& jio);
 #endif
 
 	Vector()                         { vector = NULL; items = alloc = 0; }
@@ -228,6 +230,8 @@ public:
 
 #ifdef UPP
 	void     Serialize(Stream& s)       { StreamContainer(s, *this); }
+	void     Xmlize(XmlIO& xio, const char *itemtag = "item");
+	void     Jsonize(JsonIO& jio);
 #endif
 
 	Array()                             {}

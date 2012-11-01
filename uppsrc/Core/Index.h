@@ -162,6 +162,8 @@ public:
 
 #ifdef UPP
 	void     Serialize(Stream& s);
+	void     Xmlize(XmlIO& xio, const char *itemtag = "key");
+	void     Jsonize(JsonIO& jio);
 #endif
 
 	V        PickKeys() pick_                 { return key; }

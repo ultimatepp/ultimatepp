@@ -270,30 +270,6 @@ mlIO][@(0.0.255) `&]_[*@3 xml], [_^int16^ int16][@(0.0.255) `&]_[*@3 var])&]
 mlIO][@(0.0.255) `&]_[*@3 xml], [_^int64^ int64][@(0.0.255) `&]_[*@3 var])&]
 [s5;:Xmlize`(XmlIO`&`,byte`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ X
 mlIO][@(0.0.255) `&]_[*@3 xml], [_^byte^ byte][@(0.0.255) `&]_[*@3 var])&]
-[s5;:Xmlize`(XmlIO`&`,Vector`<T`>`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) v
-oid]_[* Xmlize]([_^XmlIO^ XmlIO][@(0.0.255) `&]_[*@3 xml], [_^Vector^ Vector]<[*@4 T]>`&_[*@3 d
-ata])&]
-[s5;:Xmlize`(XmlIO`&`,const char`*`,Vector`<T`>`&`): [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 T]>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ XmlIO][@(0.0.255) `&]_[*@3 xml], 
-[@(0.0.255) const]_[@(0.0.255) char`*]_[*@3 itemtag], [_^Vector^ Vector]<[*@4 T]>`&_[*@3 data
-])&]
-[s5;:Xmlize`(XmlIO`&`,Array`<T`>`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) v
-oid]_[* Xmlize]([_^XmlIO^ XmlIO][@(0.0.255) `&]_[*@3 xml], [_^Array^ Array]<[*@4 T]>`&_[*@3 dat
-a])&]
-[s5;:Xmlize`(XmlIO`&`,const char`*`,Array`<T`>`&`): [@(0.0.255) template]_<[@(0.0.255) cl
-ass]_[*@4 T]>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ XmlIO][@(0.0.255) `&]_[*@3 xml], 
-[@(0.0.255) const]_[@(0.0.255) char`*]_[*@3 itemtag], [_^Array^ Array]<[*@4 T]>`&_[*@3 data])
-&]
-[s5;:Xmlize`(XmlIO`&`,ArrayMap`<K`,V`,H`>`&`): [@(0.0.255) template]_<[@(0.0.255) class]_
-[*@4 K], [@(0.0.255) class]_[*@4 V], [@(0.0.255) class]_[*@4 H]>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ X
-mlIO][@(0.0.255) `&]_[*@3 xml], [_^ArrayMap^ ArrayMap]<[*@4 K], [*@4 V], 
-[*@4 H]>`&_[*@3 data])&]
-[s5;:Xmlize`(XmlIO`&`,Index`<K`,H`>`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 K],
- [@(0.0.255) class]_[*@4 H]>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ XmlIO][@(0.0.255) `&]_[*@3 x
-ml], [_^Index^ Index]<[*@4 K], [*@4 H]>`&_[*@3 data])&]
-[s5;:Xmlize`(XmlIO`&`,ArrayIndex`<K`,H`>`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 K
-], [@(0.0.255) class]_[*@4 H]>_[@(0.0.255) void]_[* Xmlize]([_^XmlIO^ XmlIO][@(0.0.255) `&]_[*@3 x
-ml], [_^ArrayIndex^ ArrayIndex]<[*@4 K], [*@4 H]>`&_[*@3 data])&]
 [s2; Provides template specialization to support Xmlization of [*@3 var] 
 data types.&]
 [s3;%% &]
