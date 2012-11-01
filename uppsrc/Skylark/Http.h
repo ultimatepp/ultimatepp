@@ -64,6 +64,7 @@ class Http : public Renderer {
 	Vector<String>            arg;
 	String                    session_id;
 	VectorMap<String, Value>  session_var;
+	TcpSocket                *rsocket;
 	bool                      session_dirty;
 	
 	String redirect;
@@ -153,13 +154,15 @@ public:
 	Http&  UxRun(const String& js_code);
 	
 	String GetResponse() const                        { return response; }
+	
+	void   Finalize();
 
 	void   Dispatch(TcpSocket& socket);
 	
 	const SkylarkApp& App() const                     { return app; }
 
 	Http(SkylarkApp& app);
-	Http() : app(SkylarkApp::TheApp()) {}
+	Http();
 };
 
 void RegisterHandler(void (*handler)(Http& http), const char *id, const char *path);

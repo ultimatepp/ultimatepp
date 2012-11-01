@@ -336,6 +336,14 @@ response makes browser to run arbitrary javascript code. Returns
 [s5;:Http`:`:GetResponse`(`)const: [_^String^ String]_[* GetResponse]()_[@(0.0.255) const]&]
 [s2;%% Returns the current response.&]
 [s3;%% &]
+[s4; &]
+[s5;:Http`:`:Finalize`(`): [@(0.0.255) void]_[* Finalize]()&]
+[s2;%% Sends HTTP response for current request, based on data already 
+rendered at the point of call. Finalize is normally called by 
+Skylark after handler finishes, but it is possible to call it 
+earlier to send response to the client and then continue processing, 
+e.g. to process some large dataset submitted by client.&]
+[s3; &]
 [s4;%% &]
 [s5;:Http`:`:Dispatch`(TcpSocket`&`): [@(0.0.255) void]_[* Dispatch]([_^TcpSocket^ TcpSocke
 t][@(0.0.255) `&]_[*@3 socket])&]
