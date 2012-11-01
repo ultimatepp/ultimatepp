@@ -299,12 +299,12 @@ void Http::Dispatch(TcpSocket& socket)
 {
 	const Vector<DispatchNode>& DispatchMap = sDispatchMap();
 	if(hdr.Read(socket)) {
+		rsocket = &socket;
 		int len = GetLength();
 		content = socket.GetAll(len);
 		LLOG("--------------------------------------------");
 		SKYLARKLOG(hdr.GetMethod() << " " << hdr.GetURI());
 		LDUMP(content);
-		String r;
 		var.Clear();
 		arg.Clear();
 		LTIMING("Request processing");
@@ -419,8 +419,15 @@ void Http::Dispatch(TcpSocket& socket)
 			code_text = "Not found";
 			app.NotFound(*this);
 		}
-		r.Clear();
+		Finalize();
+	}	
+}
+
+void Http::Finalize()
+{
+	if(rsocket) {
 		SKYLARKLOG("=== Response: " << code << ' ' << code_text);
+		String r;
 		if(redirect.GetCount()) {
 			SKYLARKLOG("Redirect to: " << redirect);
 			r << "HTTP/1.1 " << code << " Found\r\n";
@@ -440,8 +447,9 @@ void Http::Dispatch(TcpSocket& socket)
 				r << cookies[i];
 			r << "\r\n";
 		}
-		socket.PutAll(r);
-		socket.PutAll(response);
+		rsocket->PutAll(r);
+		rsocket->PutAll(response);
+		rsocket = NULL;
 	}
 }
 

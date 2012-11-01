@@ -69,7 +69,6 @@ void SqlMassInsert::Flush()
 			if(i)
 				insert << ", ";
 			insert << "(";
-			bool nextval = false;
 			for(int i = 0; i < r.value.GetCount(); i++) {
 				if(i)
 					insert << ", ";

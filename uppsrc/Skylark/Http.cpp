@@ -15,6 +15,13 @@ Http::Http(SkylarkApp& app)
 	headers.Add("Server","U++");
 	headers.Add("Connection","close");
 	headers.Add("Cache-Control","no-cache");
+	rsocket = NULL;
+}
+
+Http::Http()
+:	app(SkylarkApp::TheApp())
+{
+	rsocket = NULL;
 }
 
 void Http::ParseRequest(const char *p)
