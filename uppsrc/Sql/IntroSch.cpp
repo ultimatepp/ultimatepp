@@ -8,6 +8,9 @@ struct SchTableInfo {
 	Vector<String> ref_column;
 	String         primary_key;
 	String         prefix;
+	bool           is_table; // It can also be TYPE, which is not in DB
+	
+	SchTableInfo() { is_table = false; }
 };
 
 ArrayMap<String, SchTableInfo>& sSchTableInfo()
@@ -18,7 +21,12 @@ ArrayMap<String, SchTableInfo>& sSchTableInfo()
 
 void SchDbInfoTable(const char *table)
 {
-	sSchTableInfo().GetAdd(table);
+	sSchTableInfo().GetAdd(table).is_table = true;
+}
+
+void SchDbInfoType(const char *table)
+{
+	sSchTableInfo().GetAdd(table).is_table = false;
 }
 
 void SchDbInfoColumn(const char *name)
@@ -93,6 +101,16 @@ int sChrf(int c)
 }
 
 StaticMutex sM;
+
+Vector<String> GetSchTables()
+{
+	Mutex::Lock __(sM);
+	Vector<String> r;
+	for(int i = 0; i < sSchTableInfo().GetCount(); i++)
+		if(sSchTableInfo()[i].is_table)
+			r.Add(sSchTableInfo().GetKey(i));
+	return r;
+}
 
 Vector<String> GetSchColumns(const String& table)
 {
