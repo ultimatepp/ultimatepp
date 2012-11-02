@@ -110,6 +110,7 @@ inline void SqlSchemaClear(T *a, int n) {
 }
 
 void SchDbInfoTable(const char *table);
+void SchDbInfoType(const char *table);
 void SchDbInfoColumn(const char *column);
 void SchDbInfoColumnArray(const char *name, int items);
 void SchDbInfoVar(void (*fn)(), const char *name);
@@ -119,6 +120,7 @@ void SchDbInfoReferences(const char *table, const char *column);
 
 SqlBool FindSchJoin(const String& tables);
 
+Vector<String>  GetSchTables();
 Vector<String>  GetSchColumns(const String& table);
 
 String ExportSch(SqlSession& session, const String& database);
