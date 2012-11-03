@@ -14,8 +14,6 @@ extern "C" int main(int argc, char *argv[]) { \
 	GuiMainFn_(); \
 	UPP::Ctrl::CloseTopCtrls(); \
 	FBDeInit(); \
-	UPP::UsrLog("---------- About to delete this log of SDLFB..."); \
-	UPP::DeleteUsrLog(); \
 	return UPP::GetExitCode(); \
 } \
 \
@@ -33,8 +31,6 @@ extern "C" int main(int argc, const char **argv, const char **envptr) { \
 	GuiMainFn_(); \
 	UPP::Ctrl::CloseTopCtrls(); \
 	FBDeInit(); \
-	UPP::UsrLog("---------- About to delete this log of SDLFB..."); \
-	UPP::DeleteUsrLog(); \
 	return UPP::GetExitCode(); \
 } \
 \
