@@ -84,7 +84,7 @@ Size Display::RatioSize(const Value& q, int cx, int cy) const {
 
 Size Display::GetStdSize(const Value& q) const
 {
-	return Size(1, 1);
+	return Single<StdDisplayClass>().GetStdSize(q);
 }
 
 void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
