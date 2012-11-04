@@ -10,23 +10,23 @@ LAYOUT(ScatterCtrl_Demo, 624, 392)
 END_LAYOUT
 
 LAYOUT(Tab1, 380, 292)
-	ITEM(ScatterCtrl, scatter, SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetTitle(t_("Basic Test")).HSizePosZ(16, 12).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Basic Test")).SetTitleFont(SansSerifZ(14).Bold()).SetLabelsFont(StdFontZ(11)).HSizePosZ(16, 12).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab2, 380, 292)
-	ITEM(ScatterCtrl, scatter, SetGridWidth(2).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetTitle(t_("Functions")).HSizePosZ(16, 12).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Functions")).SetTitleFont(SansSerifZ(14).Bold()).SetLabelsFont(StdFontZ(11)).SetGridWidth(2).HSizePosZ(16, 12).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab3, 384, 284)
-	ITEM(ScatterCtrl, scatter, SetGridColor(Color(28, 127, 0)).SetAxisWidth(12).SetAxisColor(Color(28, 212, 0)).SetLabelsColor(White).SetPlotAreaColor(Black).SetTitleColor(White).SetTitleFont(SansSerifZ(14).Bold()).SetTitle(t_("Parametric functions demo")).SetColor(Black).HSizePosZ(16, 16).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Parametric functions demo")).SetTitleFont(SansSerifZ(14).Bold()).SetTitleColor(White).SetPlotAreaColor(Black).SetColor(Black).SetLabelsColor(White).SetAxisColor(Color(28, 212, 0)).SetAxisWidth(12).SetGridColor(Color(28, 127, 0)).HSizePosZ(16, 16).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab4, 400, 316)
-	ITEM(ScatterCtrl, scatter, SetLegendWeight(200).SetLabelsFont(SansSerifZ(11)).SetLabelX(t_("Month")).SetPlotAreaLeftMargin(40).SetTitleFont(SansSerifZ(14).Bold()).SetTitle(t_("Temperature Average. X Axis mouse zoom + scroll")).HSizePosZ(16, 16).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Temperature Average. X Axis mouse zoom + scroll")).SetTitleFont(SansSerifZ(14).Bold()).SetPlotAreaLeftMargin(40).SetLabelX(t_("Month")).SetLabelsFont(SansSerifZ(11)).SetLegendWeight(200).HSizePosZ(16, 16).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab5, 400, 288)
-	ITEM(ScatterCtrl, scatter, SetLabelX(t_("time[s]")).SetTitleFont(StdFontZ(14).Bold()).SetTitle(t_("Dynamic")).HSizePosZ(16, 12).VSizePosZ(12, 36))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Dynamic")).SetTitleFont(StdFontZ(14).Bold()).SetLabelX(t_("time[s]")).HSizePosZ(16, 12).VSizePosZ(12, 36))
 	ITEM(Button, bStart, SetLabel(t_("Start")).LeftPosZ(16, 42).BottomPosZ(5, 15))
 	ITEM(Button, bStop, SetLabel(t_("Stop")).LeftPosZ(64, 42).BottomPosZ(5, 15))
 	ITEM(Button, bReset, SetLabel(t_("Reset")).LeftPosZ(112, 42).BottomPosZ(5, 15))
@@ -37,11 +37,11 @@ LAYOUT(Tab5, 400, 288)
 END_LAYOUT
 
 LAYOUT(Tab6, 400, 280)
-	ITEM(ScatterCtrl, scatter, SetTitleFont(StdFontZ(14).Bold()).SetTitle(t_("Logarithmic Scale")).HSizePosZ(12, 12).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Logarithmic Scale")).SetTitleFont(StdFontZ(14).Bold()).HSizePosZ(12, 12).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab7, 388, 300)
-	ITEM(ScatterCtrl, scatter, SetLabelY(t_("[y]")).SetLabelX(t_("[x]")).SetPlotAreaLeftMargin(45).SetTitleFont(MonospaceZ(16).Bold()).SetTitle(t_("Operations")).HSizePosZ(12, 12).VSizePosZ(12, 36))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Operations")).SetTitleFont(MonospaceZ(16).Bold()).SetPlotAreaLeftMargin(45).SetLabelX(t_("[x]")).SetLabelY(t_("[y]")).HSizePosZ(12, 12).VSizePosZ(12, 36))
 	ITEM(Button, bAddSeries, SetLabel(t_("AddSeries")).LeftPosZ(12, 60).BottomPosZ(4, 20))
 	ITEM(Button, bRemoveLastSeries, SetLabel(t_("RemoveLastSeries")).LeftPosZ(76, 104).BottomPosZ(4, 20))
 	ITEM(Button, bRemoveFirstSeries, SetLabel(t_("RemoveFirstSeries")).LeftPosZ(184, 100).BottomPosZ(4, 20))
@@ -49,17 +49,17 @@ LAYOUT(Tab7, 388, 300)
 END_LAYOUT
 
 LAYOUT(Tab8, 400, 316)
-	ITEM(ScatterCtrl, scatter, SetLegendWeight(200).SetLabelsFont(SansSerifZ(11)).SetLabelY2(t_("Legend Y2")).SetLabelY(t_("Legend Y")).SetLabelX(t_("Month")).SetPlotAreaBottomMargin(60).SetPlotAreaTopMargin(50).SetPlotAreaRightMargin(70).SetPlotAreaLeftMargin(40).SetTitleFont(SansSerifZ(15).Bold()).SetTitle(t_("Temperature & Pressure Averages. X-Y Axis mouse zoom + scroll")).HSizePosZ(16, 16).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetLabelY2(t_("Legend Y2")).SetTitle(t_("Temperature & Pressure Averages. X-Y Axis mouse zoom + scroll")).SetTitleFont(SansSerifZ(15).Bold()).SetPlotAreaLeftMargin(40).SetPlotAreaRightMargin(70).SetPlotAreaTopMargin(50).SetPlotAreaBottomMargin(50).SetLabelX(t_("Month")).SetLabelY(t_("Legend Y")).SetLabelsFont(SansSerifZ(11)).SetLegendWeight(200).HSizePosZ(16, 16).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab9, 380, 348)
-	ITEM(ScatterCtrl, scatter, SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetTitle(t_("Big dataset")).HSizePosZ(16, 12).VSizePosZ(16, 76))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Big dataset")).SetTitleFont(SansSerifZ(14).Bold()).SetLabelsFont(StdFontZ(11)).HSizePosZ(16, 12).VSizePosZ(16, 76))
 	ITEM(Option, sequentialX, SetLabel(t_("SetSequentialX")).LeftPosZ(112, 92).BottomPosZ(8, 16))
 	ITEM(Option, fastView, SetLabel(t_("SetFastView")).LeftPosZ(16, 84).BottomPosZ(8, 16))
 	ITEM(Label, dv___3, SetLabel(t_("It includes two series with 100000 points.\nTo work with Painter it requires SetFastView and SetSequentialX to be true. \nIf not the program could get stuck.")).HSizePosZ(16, 4).BottomPosZ(28, 44))
 END_LAYOUT
 
 LAYOUT(Tab10, 380, 292)
-	ITEM(ScatterCtrl, scatter, SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetTitle(t_("User graph")).HSizePosZ(16, 12).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("User graph")).SetTitleFont(SansSerifZ(14).Bold()).SetLabelsFont(StdFontZ(11)).HSizePosZ(16, 12).VSizePosZ(16, 16))
 END_LAYOUT
 
