@@ -25,9 +25,9 @@ topic "Changelog";
 [s0; [*R6 Roadmap]&]
 [s0;4 &]
 [s0; [*_3 Current release]&]
-[s0;*_3 &]
+[s0;3 &]
 [s0; [*_4 5485][*3  (Oct 2012)]&]
-[s0;*_3 &]
+[s0;3 &]
 [s0; The focus of this release was server programming. The main new 
 feature is `"[* Skylark]`", lean and mean [^http`:`/`/www`.ultimatepp`.org`/srcdoc`$Skylark`$Tutorial`$en`-us`.html^ U
 `+`+ based web development framework].&]
@@ -189,7 +189,7 @@ are now replaced with actual parameters.&]
 [s0;i150;O0; New plugin/wincert package supports basic Win32 certificate 
 manipulation and PDF digital signing.&]
 [s0;#i150;O0; HttpClient now supports PUT method.&]
-[s0;*_3 &]
+[s0;3 &]
 [s0; [*_4 3211][*3  (16 Feb 2011)]&]
 [s0;*3 &]
 [s0; [* TheIDE]&]
