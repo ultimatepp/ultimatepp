@@ -219,6 +219,8 @@ bool Ctrl::ClipHas(int type, const char *fmt)
 {
 	GuiLock __; 
 	LLOG("ClipHas " << type << ": " << fmt);
+	if(strcmp(fmt, "files") == 0)
+		fmt = "text/uri-list";
 	if(type == 0)
 		return Ctrl::xclipboard().IsAvailable(XAtom(fmt), "CLIPBOARD");
 	if(type == 2) {
@@ -235,6 +237,8 @@ String Ctrl::ClipGet(int type, const char *fmt)
 {
 	GuiLock __; 
 	LLOG("ClipGet " << type << ": " << fmt);
+	if(strcmp(fmt, "files") == 0)
+		fmt = "text/uri-list";
 	if(type && GetDragAndDropSource())
 		return DnDGetData(fmt);
 	return Ctrl::xclipboard().Read(
@@ -356,7 +360,7 @@ int JustLf(int c)
 Vector<String> GetClipFiles(const String& data)
 {
 	Vector<String> r;
-	Vector<String> f = Split(Filter(txt, JustLf), '\n');
+	Vector<String> f = Split(Filter(data, JustLf), '\n');
 	for(int i = 0; i < f.GetCount(); i++)
 		if(f[i].StartsWith("file://"))
 			r.Add(f[i].Mid(7));
