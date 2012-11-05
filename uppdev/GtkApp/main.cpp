@@ -1,21 +1,24 @@
-#include <CtrlLib/CtrlLib.h>
-
-using namespace Upp;
-
-#include <gtk/gtk.h>
-
-
+#include "GtkApp.h"
 
 static gboolean on_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
-	cairo_t *cr;
+	GtkDraw w;
+	w.cr = gdk_cairo_create(widget->window);
+
+	w.DrawRect(0, 0, 100, 100, LtBlue());
+
+	w.Clipoff(50, 50, 30, 30);
+	w.DrawImage(0, 0, CtrlImg::exclamation());
+	w.End();
+
+	w.DrawImage(50, 50 + 32, CtrlImg::exclamation(), Rect(24, 24, 10, 10));
+
+	w.DrawImage(150, 50, CtrlImg::exclamation(), Red());
+	w.DrawImage(150, 50 + 32, CtrlImg::exclamation(), Rect(24, 24, 10, 10), Red());
 	
-	cr = gdk_cairo_create(widget->window);
+	w.DrawText(0, 0, "Hello GTK!", Roman(30));
 	
-	cairo_move_to(cr, 30, 30);
-	cairo_show_text(cr, "Hello world!");
-	
-	cairo_destroy(cr);
+	cairo_destroy(w.cr);
 	
 	return FALSE;
 }

@@ -17,5 +17,15 @@ CONSOLE_APP_MAIN
 	pdf.DrawText(100, 200, "Ahoj", Arial(100), Black);
 	pdf.DrawText(300, 100, "Ahoj", Roman(150).Italic(), Black);
 	pdf.DrawText(300, 200, "Ahoj", Arial(150).Italic(), Black);
+	
+	int cy = 1000;
+	for(int bold = 0; bold < 2; bold++)
+		for(int italic = 0; italic < 2; italic++) {
+			pdf.DrawText(500, 1000, "Ahoj", Roman(100).Bold(), Black);
+			pdf.DrawText(500, 1200, "Ahoj", Arial(100).Bold(), Black);
+			pdf.DrawText(500, 1300, "Ahoj", Courier(100).Bold(), Black);
+		}
+
+
 	SaveFile(GetHomeDirFile("pdf.pdf"), pdf.Finish());
 }

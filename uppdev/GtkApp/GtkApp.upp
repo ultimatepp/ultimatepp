@@ -2,6 +2,8 @@ uses
 	CtrlLib;
 
 file
+	GtkApp.h,
+	GtkDraw.cpp,
 	main.cpp;
 
 mainconfig
