@@ -353,15 +353,22 @@ int JustLf(int c)
 	return (byte)c >= 32 || c == '\n' ? c : 0;
 }
 
+Vector<String> GetClipFiles(const String& data)
+{
+	Vector<String> r;
+	Vector<String> f = Split(Filter(txt, JustLf), '\n');
+	for(int i = 0; i < f.GetCount(); i++)
+		if(f[i].StartsWith("file://"))
+			r.Add(f[i].Mid(7));
+	return r;
+}
+
 Vector<String> GetFiles(PasteClip& clip) {
 	GuiLock __; 
 	Vector<String> r;
 	if(clip.Accept("text/uri-list")) {
 		String txt = clip;
-		Vector<String> f = Split(Filter(txt, JustLf), '\n');
-		for(int i = 0; i < f.GetCount(); i++)
-			if(f[i].StartsWith("file://"))
-				r.Add(f[i].Mid(7));
+		r = GetClipFiles(txt);
 	}
 	return r;
 }
