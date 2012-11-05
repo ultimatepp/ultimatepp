@@ -274,6 +274,7 @@ void        Append(VectorMap<String, ClipData>& data, const Image& img);
 
 bool            IsAvailableFiles(PasteClip& clip);
 bool            AcceptFiles(PasteClip& clip);
+Vector<String>  GetClipFiles(const String& data);
 Vector<String>  GetFiles(PasteClip& clip);
 
 template <class T>
