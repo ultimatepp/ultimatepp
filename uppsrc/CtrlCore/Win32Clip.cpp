@@ -464,11 +464,10 @@ struct sDROPFILES {
     BOOL  unicode;
 };
 
-Vector<String> GetFiles(PasteClip& clip)
+Vector<String> GetClipFiles(const String& data)
 {
 	GuiLock __;
 	Vector<String> f;
-	String data = clip;
 	if((unsigned)data.GetCount() < sizeof(sDROPFILES) + 2)
 		return f;
 	const sDROPFILES *df = (const sDROPFILES *)~data;
@@ -492,6 +491,13 @@ Vector<String> GetFiles(PasteClip& clip)
 			s++;
 		}
 	return f;
+}
+
+Vector<String> GetFiles(PasteClip& clip)
+{
+	GuiLock __;
+	Vector<String> f;
+	return GetClipFiles(clip);
 }
 
 bool   Has(UDropTarget *dt, const char *fmt);

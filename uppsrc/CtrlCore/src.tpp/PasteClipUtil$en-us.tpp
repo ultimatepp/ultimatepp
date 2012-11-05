@@ -87,6 +87,12 @@ asteClip][@(0.0.255) `&]_[*@3 clip])&]
 [s2;%% Accepts [%-*@3 clip].if it contains a list of OS shell files.&]
 [s3;%% &]
 [s4; &]
+[s5;:GetClipFiles`(const String`&`): [_^Vector^ Vector]<[_^String^ String]>_[* GetClipFiles
+]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 data])&]
+[s2;%% Extracts a list of OS shell files from raw Clipboard [%-*@3 data] 
+(result of ClipData`::Get call).&]
+[s3;%% &]
+[s4; &]
 [s5;:GetFiles`(PasteClip`&`): [_^Vector^ Vector]<[_^String^ String]>_[* GetFiles]([_^PasteClip^ P
 asteClip][@(0.0.255) `&]_[*@3 clip])&]
 [s2;%% Extracts a list of OS shell files from [%-*@3 clip].&]
@@ -129,4 +135,4 @@ onst]_[*@4 T][@(0.0.255) `&]_[* GetInternal]([_^PasteClip^ PasteClip][@(0.0.255)
 &]
 [s2;%% Returns a reference to variable of internal clip.&]
 [s3;%% &]
-[s0;%% ]
+[s0;%% ]]
