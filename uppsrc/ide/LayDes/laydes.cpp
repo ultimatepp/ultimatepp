@@ -1429,7 +1429,8 @@ void LayDes::SyncUsc()
 {
 	type.ClearList();
 	for(int i = 0; i < LayoutTypes().GetCount(); i++)
-		type.AddList(LayoutTypes().GetKey(i));
+		if(LayoutTypes()[i].kind != LAYOUT_SUBCTRL)
+			type.AddList(LayoutTypes().GetKey(i));
 	if(currentlayout >= 0) {
 		LayoutData& d = CurrentLayout();
 		for(int i = 0; i < d.item.GetCount(); i++)
