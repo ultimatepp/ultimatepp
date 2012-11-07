@@ -394,16 +394,14 @@ area.&]
 [s3; 3. Fonts and font metrics&]
 [s5; [* Font] is a simple font description value type `- it contains 
 an index of typeface, height of font and additional attributes 
-(e.g. italic flag). [* Info ]method of Font returns the more complex 
-[* FontInfo] object that provides metrics information about the 
-font and individual characters.&]
-[s5; The most important information of FontInfo is the [* GetAscent] 
-value `- distance from the baseline to the top of character, 
-the [* GetDescent] value `- distance from the baseline to the bottom 
-of character cell (height of character cell `- [* GetHeight] `- 
-is simply the sum of both values) and the individual character 
-width that can be obtained by FontInfo`'s [* operator`[`]] (where 
-index is in UNICODE).&]
+(e.g. italic flag). Font also provides metrics information about 
+the font and individual characters.&]
+[s5; The most important information of Font is the [* GetAscent] value 
+`- distance from the baseline to the top of character, the [* GetDescent] 
+value `- distance from the baseline to the bottom of character 
+cell (height of character cell `- [* GetHeight] `- is simply the 
+sum of both values) and the individual character width that can 
+be obtained by Font`'s [* operator`[`]] (where index is in UNICODE).&]
 [s5; To get the list all available typefaces and respective use [* GetFaceCount] 
 and [* GetFaceName] static methods of Font.&]
 [s5; Position given in [* DrawText] specifies the top`-left corner 
@@ -423,16 +421,15 @@ the C array with integer widths of characters.&]
 [s7; -|-|w.Offset(50, 50);&]
 [s7; -|-|const char `*text `= `"Programming is fun`";&]
 [s7; -|-|Font fnt(`~fontlist, 60);&]
-[s7; -|-|[* FontInfo fi `= fnt.Info()];&]
 [s7; -|-|int x `= 0;&]
 [s7; -|-|[* Vector<int> dx];&]
 [s7; -|-|for(const char `*s `= text; `*s; s`+`+) `{&]
-[s7; -|-|-|int width `= fi`[`*s`];&]
-[s7; -|-|-|w.DrawRect(x, 0, width `- 1, [* fi.GetAscent()], Color(255, 
+[s7; -|-|-|int width `= [* fnt`[`*s`]];&]
+[s7; -|-|-|w.DrawRect(x, 0, width `- 1, [* fnt.GetAscent()], Color(255, 
 255, 200));&]
-[s7; -|-|-|w.DrawRect(x, [* fi.GetAscent()], width `- 1, [* fi.GetDescent()], 
+[s7; -|-|-|w.DrawRect(x, [* fnt.GetAscent()], width `- 1, [* fnt.GetDescent()], 
 Color(255, 200, 255));&]
-[s7; -|-|-|w.DrawRect(x `+ width `- 1, 0, 1, [* fi.GetHeight()], Black());&]
+[s7; -|-|-|w.DrawRect(x `+ width `- 1, 0, 1, [* fnt.GetHeight()], Black());&]
 [s7; -|-|-|[* dx.Add](width `+ 4);&]
 [s7; -|-|-|x `+`= width;&]
 [s7; -|-|`}&]
