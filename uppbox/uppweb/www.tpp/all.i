@@ -10,10 +10,17 @@ TOPIC("Funding$de-de")
 #include "Funding$de-de.tppi"
 END_TOPIC
 
+<<<<<<< .mine
+TOPIC("Funding$en-us")
+#include "Funding$en-us.tppi"
+END_TOPIC
+
+=======
 TOPIC("Roadmap$en-us")
 #include "Roadmap$en-us.tppi"
 END_TOPIC
 
+>>>>>>> .r5524
 TOPIC("apps$de-de")
 #include "apps$de-de.tppi"
 END_TOPIC

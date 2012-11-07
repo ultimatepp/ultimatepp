@@ -27,5 +27,5 @@ still want donate to its development, you are welcome.]&]
 Burgos, yeohhs, Matt Ezell, Herbert Danler, Garry Everard, Jay 
 Krell, mobilehunter, Michael Bzdega, Reza Fatahilah Shah, Keith 
 Willis, Brian Rich, Alex Nicolson, Jean`-François GUCHENS, Daryl 
-Warder&]
-[s0; ]
+Warder, [^http`:`/`/idexindia`.com`/^ Navin Vidhani]&]
+[s0; ]]
