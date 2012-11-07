@@ -392,7 +392,7 @@ void SelectPackageDlg::ScanFolder(const String& path, ArrayMap<String, PkData>& 
 
 String SelectPackageDlg::CachePath(const char *vn) const
 {
-	return AppendFileName(ConfigFile("cfg"),  + ".pkg_cache");
+	return AppendFileName(ConfigFile("cfg"), String(vn) + ".pkg_cache");
 }
 
 void SelectPackageDlg::Load()
