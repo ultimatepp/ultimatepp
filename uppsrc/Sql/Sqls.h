@@ -403,7 +403,7 @@ public:
 	String                        GetUser()                               { return Sql(*this).GetUser(); } // deprecated
 	
 	Sql&                          GetSessionSql(); // "private" - only to make SQL work
-	Sql&                          GetSessionSqlR(); // "private" - only to make SQL work
+	Sql&                          GetSessionSqlR(); // "private" - only to make SQLR work
 
 	operator                      bool() const                            { return IsOpen(); }
 
