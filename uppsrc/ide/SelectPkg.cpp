@@ -277,6 +277,7 @@ void SelectPackageDlg::OnBaseEdit()
 	if(BaseSetup(vars)) {
 		if(vars != oldvars)
 			DeleteFile(VarFilePath(oldvars));
+		DeleteFile(CachePath(vars));
 		SyncBase(vars);
 	}
 }
@@ -389,6 +390,11 @@ void SelectPackageDlg::ScanFolder(const String& path, ArrayMap<String, PkData>& 
 		}
 }
 
+String SelectPackageDlg::CachePath(const char *vn) const
+{
+	return AppendFileName(ConfigFile("cfg"),  + ".pkg_cache");
+}
+
 void SelectPackageDlg::Load()
 {
 	if(selectvars && !base.IsCursor())
@@ -415,7 +421,7 @@ void SelectPackageDlg::Load()
 		loading = true;
 		data.Clear();
 		Index<String> dir_exists;
-		String cache_path = AppendFileName(ConfigFile("cfg"), GetVarsName() + ".pkg_cache");
+		String cache_path = CachePath(GetVarsName());
 		LoadFromFile(data, cache_path);
 		data.SetCount(upp.GetCount());
 		for(int i = 0; i < upp.GetCount(); i++) // Scan nest folders for subfolders (package candidates)
