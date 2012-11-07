@@ -192,6 +192,7 @@ struct SelectPackageDlg : public WithListLayout<TopWindow> {
 	void           ScanFolder(const String& path, ArrayMap<String, PkData>& nd,
 	                          const String& nest, Index<String>& dir_exists,
 	                          const String& prefix);
+	String         CachePath(const char *vn) const;
 	void           Load();
 	void           SyncBase(String initvars);
 	void           SyncList();
