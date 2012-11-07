@@ -1,4 +1,4 @@
 #ifndef _GtkApp_icpp_init_stub
 #define _GtkApp_icpp_init_stub
-#include "CtrlLib/init"
+#include "Draw/init"
 #endif

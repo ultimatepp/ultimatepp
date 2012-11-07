@@ -1,5 +1,7 @@
 #include "GtkApp.h"
 
+#include <cairo/cairo-ft.h>
+
 void GtkDraw::SetColor(Color c)
 {
 	cairo_set_source_rgb(cr, c.GetR() / 255.0, c.GetG() / 255.0, c.GetB() / 255.0);
@@ -146,7 +148,29 @@ void GtkDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 {
 }
 
+namespace Upp {
+FcPattern *CreateFcPattern(Font font);
+};
+
 void GtkDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx)
 {
+	FcPattern *p = CreateFcPattern(font);
+	cairo_font_face_t *face = cairo_ft_font_face_create_for_pattern(p);
+	FcPatternDestroy(p);
 	
+	Buffer<cairo_glyph_t> gs(n);
+	for(int i = 0; i < n; i++) {
+		cairo_glyph_t& g = gs[i];
+		g.index = GetGlyphInfo(font, text[i]).glyphi;
+		g.x = x;
+		g.y = y + font.GetAscent();
+		x += dx ? dx[i] : font[text[i]];
+	}
+	
+ 	cairo_set_font_face(cr, face);
+ 	cairo_set_font_size(cr, font.GetHeight());
+	SetColor(ink);
+	DDUMP(y + font.GetAscent());
+ 	cairo_show_glyphs(cr, gs, n);
+ 	cairo_font_face_destroy(face);
 }
