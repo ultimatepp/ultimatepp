@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-static void sLoadBom(Stream& in, String *t, WString *wt) 
+static void sLoadBom(Stream& in, String *t, WString *wt, byte def_charset) 
 {
 	if(in.IsOpen()) {
 		String s;
@@ -36,32 +36,54 @@ static void sLoadBom(Stream& in, String *t, WString *wt)
 		}
 		s.Cat(LoadStream(in));
 		if(wt)
-			*wt = ToUnicode(s, GetLNGCharset(GetSystemLNG()));
+			*wt = ToUnicode(s, def_charset);
 		else
-			*t = ToCharset(CHARSET_DEFAULT, s, GetLNGCharset(GetSystemLNG()));
+			*t = ToCharset(CHARSET_DEFAULT, s, def_charset);
 		return;
 	}
 	return;
 }
 
-WString LoadStreamBOMW(Stream& in)
+WString LoadStreamBOMW(Stream& in, byte def_charset)
 {
 	WString s = WString::GetVoid();
-	sLoadBom(in, NULL, &s);
+	sLoadBom(in, NULL, &s, def_charset);
+	return s;
+}
+
+WString LoadStreamBOMW(Stream& in)
+{
+	return LoadStreamBOMW(in, GetLNGCharset(GetSystemLNG()));
+}
+
+String LoadStreamBOM(Stream& in, byte def_charset)
+{
+	String s = String::GetVoid();
+	sLoadBom(in, &s, NULL, def_charset);
 	return s;
 }
 
 String LoadStreamBOM(Stream& in)
 {
-	String s = String::GetVoid();
-	sLoadBom(in, &s, NULL);
-	return s;
+	return LoadStreamBOM(in, GetLNGCharset(GetSystemLNG()));
+}
+
+WString LoadFileBOMW(const char *path, byte def_charset)
+{
+	FileIn in(path);
+	return LoadStreamBOMW(in, def_charset);
 }
 
 WString LoadFileBOMW(const char *path)
 {
 	FileIn in(path);
 	return LoadStreamBOMW(in);
+}
+
+String LoadFileBOM(const char *path, byte def_charset)
+{
+	FileIn in(path);
+	return LoadStreamBOM(in, def_charset);
 }
 
 String LoadFileBOM(const char *path)

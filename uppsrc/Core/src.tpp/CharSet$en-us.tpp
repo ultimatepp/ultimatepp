@@ -629,12 +629,25 @@ har]_`*[*@3 s], [_^byte^ byte]_[*@3 charset]_`=_CHARSET`_DEFAULT)&]
 to basic ASCII by removing diacritical markings. charset can 
 be CHARSET`_UTF8.&]
 [s3;%% &]
+[s4; &]
+[s5;:LoadStreamBOMW`(Stream`&`,byte`): [_^WString^ WString]_[* LoadStreamBOMW]([_^Stream^ S
+tream][@(0.0.255) `&]_[*@3 in], [_^byte^ byte]_[*@3 def`_charset])&]
+[s2;%% Reads stream into UNICODE string, granting optional BOM UNICODE 
+mark. If there is no BOM, text is considered to be in [%-*@3 def`_charset].&]
+[s3;%% &]
 [s4;%% &]
 [s5;:LoadStreamBOMW`(Stream`&`): [_^WString^ WString]_[* LoadStreamBOMW]([_^Stream^ Stream][@(0.0.255) `&
 ]_[*@3 in])&]
 [s2;%% Reads stream into UNICODE string, granting optional BOM UNICODE 
 mark. If there is no BOM, text is considered to be in host defined 
 encoding. (e.g. set by linux locale).&]
+[s3;%% &]
+[s4; &]
+[s5;:LoadStreamBOM`(Stream`&`,byte`): [_^String^ String]_[* LoadStreamBOM]([_^Stream^ Strea
+m][@(0.0.255) `&]_[*@3 in], [_^byte^ byte]_[*@3 def`_charset])&]
+[s2;%% [%- Reads stream into 8`-bit string with default encoding, granting 
+optional BOM UNICODE mark. If there is no BOM, text is considered 
+to be in ][%-*@3 def`_charset] .&]
 [s3;%% &]
 [s4;%% &]
 [s5;:LoadStreamBOM`(Stream`&`): [_^String^ String]_[* LoadStreamBOM]([_^Stream^ Stream][@(0.0.255) `&
@@ -643,6 +656,13 @@ encoding. (e.g. set by linux locale).&]
 optional BOM UNICODE mark. If there is no BOM, text is considered 
 to be in host defined encoding. (e.g. set by linux locale).&]
 [s3;%% &]
+[s4; &]
+[s5;:LoadFileBOMW`(const char`*`,byte`): [_^WString^ WString]_[* LoadFileBOMW]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 path], [_^byte^ byte]_[*@3 def`_charset])&]
+[s2; Reads file into UNICODE string, granting optional BOM UNICODE 
+mark. If there is no BOM, text is considered to be in [*@3 def`_charset]. 
+If the file cannot be read, returns WString`::GetVoid().&]
+[s3;%% &]
 [s4;%% &]
 [s5;:LoadFileBOMW`(const char`*`): [_^WString^ WString]_[* LoadFileBOMW]([@(0.0.255) const]_
 [@(0.0.255) char]_`*[*@3 path])&]
@@ -650,6 +670,14 @@ to be in host defined encoding. (e.g. set by linux locale).&]
 mark. If there is no BOM, text is considered to be in host defined 
 encoding. (e.g. set by linux locale). If the file cannot be read, 
 returns WString`::GetVoid().&]
+[s3;%% &]
+[s4; &]
+[s5;:LoadFileBOM`(const char`*`,byte`): [_^String^ String]_[* LoadFileBOM]([@(0.0.255) cons
+t]_[@(0.0.255) char]_`*[*@3 path], [_^byte^ byte]_[*@3 def`_charset])&]
+[s2; [%% Reads file into 8`-bit string with default encoding, granting 
+optional BOM UNICODE mark. If there is no BOM, text is considered 
+to be in ][*@3 def`_charset][%%  . ]If the file cannot be read, returns 
+String`::GetVoid().&]
 [s3;%% &]
 [s4;%% &]
 [s5;:LoadFileBOM`(const char`*`): [_^String^ String]_[* LoadFileBOM]([@(0.0.255) const]_[@(0.0.255) c
@@ -687,4 +715,4 @@ true on success.&]
 [s2; Saves 8`-bit string in default encoding to the file. Returns 
 true on success.&]
 [s3; &]
-[s0; ]
+[s0; ]]
