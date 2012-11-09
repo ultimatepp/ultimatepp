@@ -65,6 +65,12 @@ st]_[@(0.0.255) char]_`*[*@3 s], [@(0.0.255) int]_[*@3 len])&]
 e64 format]..&]
 [s3; &]
 [s4; &]
+[s5;:DeHtml`(const char`*`): [_^String^ String]_[* DeHtml]([@(0.0.255) const]_[@(0.0.255) cha
+r]_`*[*@3 s])&]
+[s2;%% Escapes characters `'<`', `'>`', `'`&`', `'`\`"`' and characters 
+< 31 as html entities and escapes character 31 as `"`&nbsp;`".&]
+[s3;%% &]
+[s4; &]
 [s5;:HttpResponse`(TcpSocket`&`,bool`,int`,const char`*`,const char`*`,const String`&`,const char`*`): [@(0.0.255) b
 ool]_[* HttpResponse]([_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[*@3 socket], 
 [@(0.0.255) bool]_[*@3 scgi], [@(0.0.255) int]_[*@3 code], [@(0.0.255) const]_[@(0.0.255) cha
@@ -205,4 +211,4 @@ a digit, SCGI is assumed and the header is parsed as SCGI.&]
 [s5;:HttpHeader`:`:HttpHeader`(`): [* HttpHeader]()&]
 [s2;%% Default constructor.&]
 [s3; &]
-[s0;%% ]
+[s0;%% ]]

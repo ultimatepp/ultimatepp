@@ -1,4 +1,4 @@
-topic "class Ref : private Moveable<Ref> ";
+topic "Ref";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -89,4 +89,4 @@ ypeRef][@(0.0.255) `&]_[*@3 r])&]
 [s5;:Ref`:`:Ref`(`): [* Ref]()&]
 [s2;%% Default constructor, constructs empty Ref (no variable referenced, 
 no value can be assigned).&]
-[s0;%% ]
+[s0;%% ]]

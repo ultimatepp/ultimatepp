@@ -447,7 +447,7 @@ requests, but it avoids identity checks to prevent CSRF attacks.&]
 that are persistent for specific browser across requests. Implementation 
 is based on cookie, session variables are stored either in filesystem 
 or in database (see Skylark configuration for details). Session 
-variables reflected in shared variable space (means its values 
+variables are reflected in shared variable space (means its values 
 are accessible using [* Http`::operator`[`]]) and are distinguished 
 with `'.`' as the first character.&]
 [s7; &]

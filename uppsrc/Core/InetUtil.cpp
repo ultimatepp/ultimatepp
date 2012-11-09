@@ -225,6 +225,34 @@ String Base64Decode(const String& data)
 	return Base64Decode(~data, data.GetLength());
 }
 
+String DeHtml(const char *s)
+{
+	String result;
+	while(*s) {
+		if(*s == 31)
+			result.Cat("&nbsp;");
+		else
+		if(*s == '<')
+			result.Cat("&lt;");
+		else
+		if(*s == '>')
+			result.Cat("&gt;");
+		else
+		if(*s == '&')
+			result.Cat("&amp;");
+		else
+		if(*s == '\"')
+			result.Cat("&quot;");
+		else
+		if((byte)*s < ' ')
+			result.Cat(NFormat("&#%d;", (byte)*s));
+		else
+			result.Cat(*s);
+		s++;
+	}
+	return result;
+}
+
 void HttpCookie::Clear()
 {
 	id.Clear();
