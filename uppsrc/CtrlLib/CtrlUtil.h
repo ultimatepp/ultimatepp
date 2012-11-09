@@ -347,6 +347,9 @@ public:
 	Ctrl&       operator[](int i)                    { return *item[i].ctrl; }
 	const Ctrl& operator[](int i) const              { return *item[i].ctrl; }
 	Id          operator()(int i) const              { return item[i].id; }
+
+	ValueMap    Get() const;
+	void        Set(const ValueMap& m);
 };
 
 void Set(ArrayCtrl& array, int ii, IdCtrls& m);

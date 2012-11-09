@@ -195,6 +195,20 @@ void IdCtrls::Add(Id id, Ctrl& ctrl)
 	m.ctrl = &ctrl;
 }
 
+ValueMap IdCtrls::Get() const
+{
+	ValueMap m;
+	for(int i = 0; i < item.GetCount(); i++)
+		m.Add(item[i].id, item[i].ctrl->GetData());
+	return m;
+}
+
+void IdCtrls::Set(const ValueMap& m)
+{
+	for(int i = 0; i < item.GetCount(); i++)
+		item[i].ctrl->SetData(m[item[i].id]);
+}
+
 void Set(ArrayCtrl& array, int ii, IdCtrls& m)
 {
 	for(int i = 0; i < m.GetCount(); i++)
