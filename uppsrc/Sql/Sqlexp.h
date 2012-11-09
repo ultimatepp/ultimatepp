@@ -621,6 +621,7 @@ public:
 	SqlInsert& operator()(const SqlId& column, SqlVal val) { Column(column, val); return *this; }
 	SqlInsert& operator()(const SqlId& column)             { Column(column, column); return *this; }
 	SqlInsert& operator()(Fields f, bool nokey = false);
+	SqlInsert& operator()(const ValueMap& data);
 	SqlInsert& From(const SqlId& from);
 	SqlInsert& From(SqlSet _from)                    { from = _from; return *this; }
 	SqlInsert& From(SqlVal from)                     { return From(SqlSet(from)); }
@@ -662,6 +663,7 @@ public:
 	SqlUpdate& operator()(const SqlId& column, SqlVal val)       { Column(column, val); return *this; }
 	SqlUpdate& operator()(const SqlSet& cols, const SqlSet& val) { Column(cols, val); return *this; }
 	SqlUpdate& operator()(Fields f);
+	SqlUpdate& operator()(const ValueMap& data);
 	SqlUpdate& Where(SqlBool w)                      { where = w; return *this; }
 
 	operator SqlStatement() const;

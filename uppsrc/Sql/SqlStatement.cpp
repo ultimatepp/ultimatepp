@@ -344,6 +344,13 @@ SqlInsert& SqlInsert::operator()(Fields f, bool nokey)
 	return *this;
 }
 
+SqlInsert& SqlInsert::operator()(const ValueMap& data)
+{
+	for(int i = 0; i < data.GetCount(); i++)
+		operator()((String)data.GetKey(i), data.GetValue(i));
+	return *this;
+}
+
 struct UpdateFieldOperator : public FieldOperator {
 	SqlUpdate *update;
 
@@ -363,6 +370,13 @@ SqlUpdate& SqlUpdate::operator()(Fields f) {
 	UpdateFieldOperator ufo;
 	ufo.update = this;
 	f(ufo);
+	return *this;
+}
+
+SqlUpdate& SqlUpdate::operator()(const ValueMap& data)
+{
+	for(int i = 0; i < data.GetCount(); i++)
+		operator()((String)data.GetKey(i), data.GetValue(i));
 	return *this;
 }
 

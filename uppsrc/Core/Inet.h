@@ -16,6 +16,8 @@ String Base64Decode(const char *s, const char *end);
 String Base64Decode(const char *s, int len);
 String Base64Decode(const String& data);
 
+String DeHtml(const char *s);
+
 class IpAddrInfo {
 	enum { COUNT = 32 };
 	struct Entry {
