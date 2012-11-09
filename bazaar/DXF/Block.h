@@ -90,6 +90,9 @@ class DXFBlock : public Pte<DXFBlock>
 
 		// gets the transformation matrix
 		TransMatrix const &GetTransformationMatrix(void) const { return transMatrix; }
+		
+		// virtual destructor for polymorphic correctness
+		virtual ~DXFBlock() {};
 };
 
 #endif
