@@ -2,6 +2,9 @@
 
 using namespace Upp;
 
+#define LAYOUTFILE <IdCtrls/IdCtrls.lay>
+#include <CtrlCore/lay.h>
+
 struct Dialog : WithDialogLayout<TopWindow> {
 	typedef Dialog CLASSNAME;
 	
@@ -15,9 +18,9 @@ Dialog::Dialog()
 	CtrlLayout(*this, "Dialog");
 
 	ctrls
-		(FIRSTNAME, firstname)
-		(LASTNAME, lastname)
-		(YEAR, year)
+		("FIRSTNAME", firstname)
+		("LASTNAME", lastname)
+		("YEAR", year)
 	;
 }
 
@@ -28,5 +31,5 @@ GUI_APP_MAIN
 	Dialog dlg;
 	dlg.ctrls.Set(m);
 	dlg.Execute();
-	StoreAsJsonFile(m);
+	StoreAsJsonFile(dlg.ctrls.Get());
 }
