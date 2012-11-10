@@ -102,9 +102,10 @@ public:
 	void   CachePos(int pos);
 
 	enum { CHARSET_UTF8_BOM = 250 };
+	enum { LE_DEFAULT, LE_CRLF, LE_LF };
 
-	void   Load(Stream& s, byte charset = CHARSET_DEFAULT);
-	void   Save(Stream& s, byte charset = CHARSET_DEFAULT, bool crlf = false) const;
+	int    Load(Stream& s, byte charset = CHARSET_DEFAULT);
+	void   Save(Stream& s, byte charset = CHARSET_DEFAULT, int line_endings = LE_DEFAULT) const;
 
 	int    GetInvalidCharPos(byte charset = CHARSET_DEFAULT) const;
 	bool   CheckCharset(byte charset = CHARSET_DEFAULT) const { return GetInvalidCharPos(charset) < 0; }

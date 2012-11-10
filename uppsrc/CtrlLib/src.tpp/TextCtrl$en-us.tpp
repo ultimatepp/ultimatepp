@@ -109,18 +109,22 @@ following operations will be performed near after [%-*@3 pos].
 Unlikely to be used in the client code.&]
 [s3;%% &]
 [s4; &]
-[s5;:TextCtrl`:`:Load`(Stream`&`,byte`): [@(0.0.255) void]_[* Load]([_^Stream^ Stream][@(0.0.255) `&
+[s5;:TextCtrl`:`:Load`(Stream`&`,byte`): [@(0.0.255) int]_[* Load]([_^Stream^ Stream][@(0.0.255) `&
 ]_[*@3 s], [_^byte^ byte]_[*@3 charset]_`=_CHARSET`_DEFAULT)&]
-[s2;%% Loads the text from the stream with defined [%-*@3 charset].&]
+[s2;%% Loads the text from the stream with defined [%-*@3 charset]. 
+Function returns the detected line endings mode `- LE`_CRLF, 
+LE`_LF or LE`_DEFAULT if there were no line endings in the file.&]
 [s3;%% &]
 [s4; &]
-[s5;:TextCtrl`:`:Save`(Stream`&`,byte`,bool`)const: [@(0.0.255) void]_[* Save]([_^Stream^ S
-tream][@(0.0.255) `&]_[*@3 s], [_^byte^ byte]_[*@3 charset]_`=_CHARSET`_DEFAULT, 
-bool [*@3 crlf])_[@(0.0.255) const]&]
+[s5;:TextCtrl`:`:Save`(Stream`&`,byte`,int`)const: [@(0.0.255) void]_[* Save]([_^Stream^ St
+ream][@(0.0.255) `&]_[*@3 s], [_^byte^ byte]_[*@3 charset]_`=_CHARSET`_DEFAULT, 
+[@(0.0.255) int]_[*@3 line`_endings]_`=_LE`_DEFAULT)_[@(0.0.255) const]&]
 [s2;%% Saves the text to the stream with defined [%-*@3 charset]. Characters 
 that cannot be represented in suggested [%-*@3 charset] are saved 
-as `'?`'. If [%-*@3 crlf] is true, line endings are forced to be 
-`"`\r`\n`" even on POSIX platforms.&]
+as `'?`'. [%-*@3 line`_endings] parameter sets the line ending 
+mode. LE`_DEFAULT uses platform specific line endings (CRLF in 
+Windows, LF in POSIX), LE`_CRLF sets CRLF line endings, LE`_LF 
+sets LF line endings).&]
 [s3;%% &]
 [s4; &]
 [s5;:TextCtrl`:`:GetInvalidCharPos`(byte`)const: [@(0.0.255) int]_[* GetInvalidCharPos]([_^byte^ b
@@ -468,4 +472,4 @@ to store and restore undo/redo state.&]
 [s5;:TextCtrl`:`:UndoData`:`:Clear`(`): [@(0.0.255) void]_[* Clear]()&]
 [s2;%% Clears the undo/redo state&]
 [s3;%% &]
-[s3;%% .]
+[s3;%% .]]

@@ -323,6 +323,12 @@ void Ide::SetupFormat() {
 	ide.mate <<= callback2(SetConsole, &ide.console, "/usr/bin/mate-terminal -x");
 	ide.xterm <<= callback2(SetConsole, &ide.console, "/usr/bin/xterm -e");
 	
+	edt.lineends
+		.Add(LF, "LF")
+		.Add(CRLF, "CRLF")
+		.Add(DETECT_LF, "Detect with default LF") a
+		.Add(DETECT_CRLF, "Detect with default CRLF");
+	
 	edt.filetabs
 		.Add(AlignedFrame::LEFT, "Left")
 		.Add(AlignedFrame::TOP, "Top")
@@ -372,7 +378,7 @@ void Ide::SetupFormat() {
 		(edt.indent_spaces, indent_spaces)
 		(edt.no_parenthesis_indent, no_parenthesis_indent)
 		(edt.showtabs, show_tabs)
-		(edt.forcecrlf, force_crlf)
+		(edt.lineends, line_endings)
 		(edt.numbers, line_numbers)
 		(edt.bookmark_pos, bookmark_pos)
 		(edt.bordercolumn, bordercolumn)

@@ -422,7 +422,11 @@ Ide::Ide()
 	tabs_stacking = false;
 	tabs_serialize = true;
 	no_parenthesis_indent = false;
-
+#ifdef PLATFORM_POSIX
+	line_endings = DETECT_LF;
+#else
+	line_endings = DETECT_CRLF;
+#endif
 	/*
 		astyle code formatter control vars
 		added 2008.01.27 by Massimo Del Fedele

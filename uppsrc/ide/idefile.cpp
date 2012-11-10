@@ -319,8 +319,14 @@ void Ide::SaveFile0(bool always)
 					out.Put(ConvertTLine(editor.GetUtf8Line(i), ASCSTRING_OCTALHI));
 				}
 			}
-			else
-				editor.Save(out, editor.GetCharset(), force_crlf);		
+			else {
+				int le = line_endings;
+				if(le == DETECT_CRLF)
+					le = Nvl(editfile_line_endings, CRLF);
+				if(le == DETECT_LF)
+					le = Nvl(editfile_line_endings, LF);
+				editor.Save(out, editor.GetCharset(), le == LF ? TextCtrl::LE_LF : TextCtrl::LE_CRLF);
+			}
 		out.Close();
 		if(out.IsError()) {
 			if(IsDeactivationSave())
@@ -497,8 +503,10 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 				editor.Set(f);
 				editor.SetCharset(CHARSET_UTF8);
 			}
-			else
-				editor.Load(in, charset);
+			else {
+				int le = editor.Load(in, charset);
+				editfile_line_endings = le == TextCtrl::LE_CRLF ? CRLF : le == TextCtrl::LE_LF ? LF : (int)Null;
+			}
 		editor.SetEditPos(fd.editpos);
 		if(!IsNull(fd.columnline) && fd.columnline.y >= 0 && fd.columnline.y < editor.GetLineCount())
 			editor.SetCursor(editor.GetColumnLinePos(fd.columnline));

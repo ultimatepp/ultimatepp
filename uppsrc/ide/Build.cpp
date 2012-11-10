@@ -101,6 +101,11 @@ String Ide::GetOutputDir()
 	return GetFileFolder(target);
 }
 
+String Ide::GetConfigDir()
+{
+	return GetHomeDirFile(".upp/" + GetFileTitle(target));
+}
+
 void Ide::PackageClean()
 {
 	const Workspace& wspc = IdeWorkspace();
