@@ -128,6 +128,9 @@ class Cypher
 		bool IsEof(void) { return !FIFO.GetCount(); }
 		bool operator!(void) { return IsEof(); }
 		operator bool() { return !IsEof(); }
+		
+		// virtual destructor -- for correct polymorphic behaviour
+		virtual ~Cypher() {}
 	
 }; // END Class Cypher
 
