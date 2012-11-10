@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	IdCtrls.lay;
+
+mainconfig
+	"" = "GUI SSE2";
+
