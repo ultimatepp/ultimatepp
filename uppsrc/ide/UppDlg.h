@@ -283,6 +283,7 @@ struct WorkspaceWork {
 	virtual void   BuildFileMenu(Bar& bar)            {}
 	virtual void   FilePropertiesMenu(Bar& bar)       {}
 	virtual String GetOutputDir()                     { return Null; }
+	virtual String GetConfigDir()                     { return Null; }
 	virtual void   SyncWorkspace()                    {}
 	virtual void   FileSelected()                     {}
 	virtual void   FileRename(const String& nm)       {}
@@ -326,7 +327,7 @@ struct WorkspaceWork {
 	void MoveFile(int d);
 	void Move(Vector<String>& v, FileList& ta, int d);
 
-	enum ADDFILE { PACKAGE_FILE, OUTPUT_FILE, HOME_FILE, LOCAL_FILE, ANY_FILE };
+	enum ADDFILE { PACKAGE_FILE, OUTPUT_FILE, HOME_FILE, LOCAL_FILE, CONFIG_FILE, ANY_FILE };
 	void AddFile(ADDFILE type);
 	void AddItem(const String& name, bool separator, bool readonly);
 	void AddTopicGroup();

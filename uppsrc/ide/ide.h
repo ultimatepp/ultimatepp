@@ -458,6 +458,7 @@ public:
 	virtual   void   ProjectSvn(Bar& bar);
 	virtual   void   FilePropertiesMenu(Bar& menu);
 	virtual   String GetOutputDir();
+	virtual   String GetConfigDir();
 	virtual   void   FileSelected();
 	virtual   void   Serialize(Stream& s);
 	virtual   void   FileRename(const String& nm);
@@ -569,6 +570,7 @@ public:
 
 	String    editfile;
 	FileTime  edittime;
+	int       editfile_line_endings;
 
 	String    editfile2;
 
@@ -631,6 +633,7 @@ public:
 	String    recent_stdout_file;
 
 // ------------------------------------
+	enum { LF, CRLF, DETECT_LF, DETECT_CRLF };
 
 	One<Debugger> debugger;
 
@@ -651,7 +654,7 @@ public:
 	bool      show_status_bar;
 	bool      toolbar_in_row;
 	bool      show_tabs;
-	bool      force_crlf;
+	int       line_endings;
 	bool      tabs_icons;
 	int       tabs_crosses;
 	bool      tabs_grouping;

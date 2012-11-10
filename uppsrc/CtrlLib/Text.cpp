@@ -86,7 +86,7 @@ void   TextCtrl::CachePos(int pos) {
 	cpos = pos - p;
 }
 
-void   TextCtrl::Load(Stream& s, byte charset) {
+int   TextCtrl::Load(Stream& s, byte charset) {
 	Clear();
 	line.Clear();
 	ClearLines();
@@ -100,8 +100,11 @@ void   TextCtrl::Load(Stream& s, byte charset) {
 			s.Seek(pos);
 		charset = CHARSET_UTF8;
 	}
+	bool cr = false;
 	while(!s.IsEof()) {
 		int c = s.Get();
+		if(c == '\r')
+			cr = true;
 		if(c == '\n') {
 			WString w = ToUnicode(ln, charset);
 			line.Add(w);
@@ -120,21 +123,26 @@ void   TextCtrl::Load(Stream& s, byte charset) {
 	Update();
 	SetSb();
 	PlaceCaret(0);
+	return line.GetCount() > 1 ? cr ? LE_CRLF : LE_LF : LE_DEFAULT;
 }
 
-void   TextCtrl::Save(Stream& s, byte charset, bool crlf) const {
+void   TextCtrl::Save(Stream& s, byte charset, int line_endings) const {
 	if(charset == CHARSET_UTF8_BOM) {
 		static byte bom[] = { 0xEF, 0xBB, 0xBF };
 		s.Put(bom, 3);
 		charset = CHARSET_UTF8;
 	}
 	charset = ResolveCharset(charset);
+	String le = "\n";
+#ifdef PLATFORM_WIN32
+	if(line_endings == LE_DEFAULT)
+		le = "\r\n";
+#endif
+	if(line_endings == LE_CRLF)
+		le = "\r\n";
 	for(int i = 0; i < line.GetCount(); i++) {
 		if(i)
-			if(crlf)
-				s.PutCrLf();
-			else
-				s.PutEol();
+			s.Put(le);
 		String txt = charset == CHARSET_UTF8 ? line[i].text
 		                                     : FromUnicode(line[i], charset);
 		const char *e = txt.End();

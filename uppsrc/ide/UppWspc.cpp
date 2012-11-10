@@ -361,6 +361,7 @@ void WorkspaceWork::AddFile(ADDFILE af)
 	case PACKAGE_FILE: fs = &BasedSourceFs(); fs->BaseDir(GetFileFolder(PackagePathA(active))); break;
 	case ANY_FILE:     fs = &AnySourceFs(); break;
 	case OUTPUT_FILE:  fs->ActiveDir(GetOutputDir()); break;
+	case CONFIG_FILE:  fs->ActiveDir(GetConfigDir()); break;
 	case HOME_FILE:    fs->ActiveDir(GetHomeDirectory()); break;
 	case LOCAL_FILE:   fs->ActiveDir(GetLocalDir()); break;
 	default: ; // GCC warns otherwise
@@ -831,6 +832,10 @@ void WorkspaceWork::InsertSpecialMenu(Bar& menu)
 		.Help("Insert files from anywhere on disk (discouraged in portable packages)");
 	menu.Add(isaux && GetOutputDir().GetCount(), "Insert output directory file(s)", THISBACK1(AddFile, OUTPUT_FILE))
 		.Help("Open file selector in output / intermediate directory for current package");
+#ifdef PLATFORM_POSIX
+	menu.Add(isaux && GetConfigDir().GetCount(), "Insert config directory file(s)", THISBACK1(AddFile, CONFIG_FILE))
+		.Help("Open file selector in output / intermediate directory for current package");
+#endif
 	menu.Add(isaux, "Insert Local directory file(s)", THISBACK1(AddFile, LOCAL_FILE))
 		.Help("Open file selector in Local directory for current package");
 	menu.Add("Insert home directory file(s)", THISBACK1(AddFile, HOME_FILE))
