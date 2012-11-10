@@ -1,0 +1,9 @@
+LAYOUT(DialogLayout, 204, 88)
+	ITEM(Label, dv___0, SetLabel(t_("First name")).LeftPosZ(8, 68).TopPosZ(8, 21))
+	ITEM(EditString, firstname, LeftPosZ(80, 116).TopPosZ(8, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Last name")).LeftPosZ(8, 68).TopPosZ(32, 21))
+	ITEM(EditString, lastname, LeftPosZ(80, 116).TopPosZ(32, 19))
+	ITEM(Label, dv___4, SetLabel(t_("Year of birth")).LeftPosZ(8, 68).TopPosZ(56, 21))
+	ITEM(EditInt, year, LeftPosZ(80, 40).TopPosZ(56, 19))
+END_LAYOUT
+
