@@ -346,6 +346,7 @@ public:
 	int         GetCount() const                     { return item.GetCount(); }
 	Ctrl&       operator[](int i)                    { return *item[i].ctrl; }
 	const Ctrl& operator[](int i) const              { return *item[i].ctrl; }
+	Id          GetKey(int i) const                  { return item[i].id; }
 	Id          operator()(int i) const              { return item[i].id; }
 
 	ValueMap    Get() const;
