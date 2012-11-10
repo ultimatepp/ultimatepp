@@ -456,6 +456,16 @@ String TrimBoth(const String& str)
 	return TrimLeft(TrimRight(str));
 }
 
+String TrimLeft(const char *sw, int len, const String& s)
+{
+	return s.StartsWith(sw, len) ? s.Mid(len) : s;
+}
+
+String TrimRight(const char *sw, int len, const String& s)
+{
+	return s.EndsWith(sw, len) ? s.Mid(0, s.GetCount() - len) : s;
+}
+
 struct StringICompare__
 {
 	int encoding;

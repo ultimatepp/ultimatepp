@@ -664,7 +664,7 @@ Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
 		if(Key(tk_virtual))
 			d.s_virtual = true;
 		else
-		if(!Key(tk_inline))
+		if(!(Key(tk_inline) || Key(tk_force_inline)))
 			break;
 	}
 	Qualifier();

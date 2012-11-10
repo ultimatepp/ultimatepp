@@ -515,6 +515,14 @@ String TrimLeft(const String& s);
 String TrimRight(const String& s);
 String TrimBoth(const String& s);
 
+String TrimLeft(const char *prefix, int len, const String& s);
+force_inline String TrimLeft(const char *prefix, const String& s)    { return TrimLeft(prefix, strlen(prefix), s); }
+force_inline String TrimLeft(const String& prefix, const String& s)  { return TrimLeft(~prefix, prefix.GetCount(), s); }
+
+String TrimRight(const char *suffix, int len, const String& s);
+force_inline String TrimRight(const char *suffix, const String& s)   { return TrimRight(suffix, strlen(suffix), s); }
+force_inline String TrimRight(const String& suffix, const String& s) { return TrimRight(~suffix, suffix.GetCount(), s); }
+
 inline StringBuffer& operator<<(StringBuffer& s, const char *x)
 {
 	s.Cat(x);
