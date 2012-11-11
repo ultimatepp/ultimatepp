@@ -326,7 +326,7 @@ void Ide::SetupFormat() {
 	edt.lineends
 		.Add(LF, "LF")
 		.Add(CRLF, "CRLF")
-		.Add(DETECT_LF, "Detect with default LF") a
+		.Add(DETECT_LF, "Detect with default LF")
 		.Add(DETECT_CRLF, "Detect with default CRLF");
 	
 	edt.filetabs
