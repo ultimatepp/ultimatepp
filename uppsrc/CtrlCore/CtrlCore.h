@@ -22,9 +22,13 @@
 NAMESPACE_UPP
 
 #ifdef _MULTITHREADED
+void EnterGMutex(int n);
+int  LeaveGMutexAll();
 void EnterGuiMutex();
 void LeaveGuiMutex();
 #else
+inline void EnterGMutex(int) {}
+inline int  LeaveGMutexAll() { return 0; }
 inline void EnterGuiMutex() {}
 inline void LeaveGuiMutex() {}
 #endif

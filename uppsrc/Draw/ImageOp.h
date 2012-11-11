@@ -142,6 +142,9 @@ struct ImageMaker {
 	virtual ~ImageMaker() {}
 };
 
+void  SysImageRealized(const Image& img); // SystemDraw realized Image handle in GUI
+void  SysImageReleased(const Image& img); // SystemDraw dropped Image handle
+
 Image MakeImage(const ImageMaker& m);
 Image MakeImage(const Image& image, Image (*make)(const Image& image));
 

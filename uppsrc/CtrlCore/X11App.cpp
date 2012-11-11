@@ -6,7 +6,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  // LOG(x)
+#define LLOG(x)  // DLOG(x)
 
 XIM Ctrl::xim;
 

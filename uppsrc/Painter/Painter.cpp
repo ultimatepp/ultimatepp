@@ -2,26 +2,49 @@
 
 NAMESPACE_UPP
 
+struct PaintCharPath : FontGlyphConsumer {
+	Painter *sw;
+	
+	virtual void Move(Pointf p) {
+		sw->Move(p);
+	}
+	virtual void Line(Pointf p) {
+		sw->Line(p);
+	}
+	virtual void Quadratic(Pointf p1, Pointf p2) {
+		sw->Quadratic(p1, p2);
+	}
+	virtual void Cubic(Pointf p1, Pointf p2, Pointf p3) {
+		sw->Cubic(p1, p2, p3);
+	}
+	virtual void Close() {
+		sw->Close();
+	}
+};
+
 void PaintCharacter(Painter& sw, const Pointf& p, int chr, Font font)
 {
 	GlyphInfo gi = GetGlyphInfo(font, chr);
+	PaintCharPath pw;
+	pw.sw = &sw;
 	if(gi.IsNormal())
-		PaintCharacterSys(sw, p.x, p.y, chr, font);
+		font.Render(pw, p.x, p.y, chr);
 	else
 	if(gi.IsReplaced()) {
 		Font fnt = font;
 		fnt.Face(gi.lspc);
 		fnt.Height(gi.rspc);
-		PaintCharacterSys(sw, p.x, p.y + font.GetAscent() - fnt.GetAscent(), chr, fnt);
+		fnt.Render(pw, p.x, p.y + font.GetAscent() - fnt.GetAscent(), chr);
 	}
 	else
 	if(gi.IsComposed()) {
 		ComposedGlyph cg;
 		Compose(font, chr, cg);
-		PaintCharacterSys(sw, p.x, p.y, cg.basic_char, font);
+		font.Render(pw, p.x, p.y, cg.basic_char);
 		sw.Div();
-		PaintCharacterSys(sw, p.x + cg.mark_pos.x, p.y + cg.mark_pos.y, cg.mark_char, cg.mark_font);
+		cg.mark_font.Render(pw, p.x + cg.mark_pos.x, p.y + cg.mark_pos.y, cg.mark_char);
 	}
+	sw.EvenOdd(true);
 }
 
 Painter& Painter::Move(const Pointf& p)

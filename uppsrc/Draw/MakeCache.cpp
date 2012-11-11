@@ -2,13 +2,20 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  // LOG(x)
+#define LLOG(x)  //  DLOG(x)
 
 static StaticCriticalSection sMakeImage;
 
+// SystemDraw image cache can get destructed later than maker cache invoking SysImageReleased
+static bool sFinished;  
+
+struct ImageMakeCacheClass : LRUCache<Image> {
+	~ImageMakeCacheClass() { sFinished = true; }
+};
+
 static LRUCache<Image>& sImageCache()
 {
-	static LRUCache<Image> m;
+	static ImageMakeCacheClass m;
 	return m;
 }
 
@@ -21,16 +28,59 @@ struct scImageMaker : LRUCache<Image>::Maker {
 	}
 	virtual int    Make(Image& object) const {
 		object = m->Make();
-		if(paintonly) {
-			SetPaintOnly___(object);
-			return object.GetLength() + 20000;
-		}
+		LLOG("ImageMaker " << object.GetSerialId() << ", size " << object.GetSize() << ", paintonly: " << paintonly);
+		if(paintonly)
+			SetPaintOnly__(object);
 		return object.GetLength() + 100;
 	}
 };
 
 static int sMaxSize;
 static int sMaxSizeMax = 1000000;
+
+int ImageSizeAdjuster(const Image& img)
+{
+	return ~img ? img.GetLength() + 100 : 100;
+}
+
+void SysImageRealized(const Image& img)
+{ // CtrlCore created handle for img, no need to keep pixels data in cache if it is paintonly kind
+	if(sFinished)
+		return;
+	LLOG("SysImageRealized " << img.GetSize());
+	if(img.data && img.data->paintonly) {
+		LLOG("Dropping PAINTONLY image " << img.GetSerialId() << " pixels, cache size: " << sImageCache().GetSize() << ", img " << img.GetLength());
+		DropPixels___(img.data->buffer);
+		sImageCache().AdjustSize(ImageSizeAdjuster);
+		LLOG("After drop, cache size: " << sImageCache().GetSize());
+	}
+}
+
+struct ImageRemover {
+	int64 serial_id;
+	
+	bool operator()(const Image& img) const {
+		if(serial_id == img.GetSerialId()) {
+			LLOG("ImageCache Removing " << serial_id);
+			return true;
+		}
+		return false;
+	}
+};
+
+void SysImageReleased(const Image& img)
+{ // CtrlCore removed handle for img, have to remove paintonly
+	if(sFinished)
+		return;
+	if(!~img) {
+		ImageRemover ir;
+		ir.serial_id = img.GetSerialId();
+		LLOG("SysImageReleased " << img.GetSerialId() << ", cache size: " << sImageCache().GetSize() << ", count " << sImageCache().GetCount());
+		int n = sImageCache().RemoveOne(ir);
+		LLOG("SysImageReleased count: " << n);
+		LLOG("SysImageReleased done cache size: " << sImageCache().GetSize() << ", count " << sImageCache().GetCount());
+	}
+}
 
 void ClearMakeImageCache()
 {
@@ -69,11 +119,14 @@ Image MakeImage__(const ImageMaker& m, bool paintonly)
 		scImageMaker cm;
 		cm.m = &m;
 		cm.paintonly = paintonly;
+		LLOG("MakeImage before shrink: " << cache.GetSize() << ", count " << cache.GetCount());
+		cache.Shrink(sMaxSize, 2000);
+		LLOG("MakeImage before make: " << cache.GetSize() << ", count " << cache.GetCount());
 		result = cache.Get(cm);
+		LLOG("MakeImage after make: " << cache.GetSize() << ", count " << cache.GetCount());
 		int q = min(3 * (cache.GetFoundSize() + cache.GetNewSize()), sMaxSizeMax);
 		if(q > sMaxSize)
 			sMaxSize = q;
-		cache.Shrink(sMaxSize);
 	}
 	return result;
 }

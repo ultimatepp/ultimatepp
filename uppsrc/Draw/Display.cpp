@@ -87,6 +87,7 @@ Size Display::GetStdSize(const Value& q) const
 	return Single<StdDisplayClass>().GetStdSize(q);
 }
 
+
 void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
                              Color ink, Color paper, dword s) const {
 	LLOG("StdDisplay::Paint0: " << q << " ink:" << ink << " paper:" << paper);

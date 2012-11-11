@@ -422,7 +422,7 @@ void  Ctrl::SetMouseCursor(const Image& image)
 	static Image img;
 	if(image.GetSerialId() != img.GetSerialId()) {
 		img = image;
-		HCURSOR hc = IconWin32(img, true);
+		HCURSOR hc = SystemDraw::IconWin32(img, true);
 		SetCursor(hc);
 		if(hCursor)
 			DestroyCursor(hCursor);

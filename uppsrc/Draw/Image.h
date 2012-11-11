@@ -128,88 +128,35 @@ void Unmultiply(ImageBuffer& b);
 
 class Image : public ValueType< Image, 150, Moveable<Image> > {
 private:
-	struct Data : Link<Data> {
+	struct Data {
 		Atomic refcount;
 		int64  serial;
+		uint64 aux_data;
 		int    paintcount;
-
-		static Link<Data>            ResData[1];
-		static int                   ResCount;
 
 		void   Retain()  { AtomicInc(refcount); }
 		void   Release() { if(AtomicDec(refcount) == 0) delete this; }
 		
-		struct SystemData;
-		
-		void  *system_buffer[6];
-		SystemData& Sys() const;
-
-#ifdef PLATFORM_WIN32
-		void CreateHBMP(HDC dc, const RGBA *data);
-#endif
-
 		ImageBuffer buffer;
 		bool        paintonly;
 		
-		void        SysInitImp();
-		void        SysReleaseImp();
-		int         GetResCountImp() const;
-		void        PaintImp(SystemDraw& w, int x, int y, const Rect& src, Color c);
-
-		void        SysInit();
-		void        SysRelease();
-		int         GetResCount() const;
-		void        Paint(SystemDraw& w, int x, int y, const Rect& src, Color c);
-
 		int         GetKind();
-		void        PaintOnlyShrink();
 
 		Data(ImageBuffer& b);
-		~Data();
-		
-		static void  (Image::Data::*sSysInit)();
-		static void  (Image::Data::*sSysRelease)();
-		static int   (Image::Data::*sGetResCount)() const;
-		static void  (Image::Data::*sPaint)(SystemDraw& w, int x, int y, const Rect& src, Color c);
-
-		friend void InstallSystemImage();
-		static void InitSystemImage(
-			void  (Image::Data::*fSysInit)(),
-			void  (Image::Data::*fSysRelease)(),
-			int   (Image::Data::*fGetResCount)() const,
-			void  (Image::Data::*fPaint)(SystemDraw& w, int x, int y, const Rect& src, Color c)
-		);
 	};
 
 	Data *data;
-
-	static Link<Image::Data>     ResData[1];
-	static int                   ResCount;
 
 	void Set(ImageBuffer& b);
 
 	friend class ImageBuffer;
 	friend struct Data;
+	friend class SystemDraw;
+	friend void  SetPaintOnly__(Image& img)          { img.data->paintonly = true; }
+	friend void  SysImageRealized(const Image& img);
 
-	friend void SetPaintOnly___(Image& m);
-	friend void DrawImageBandRLE(Draw& w, int x, int y, const Image& m, int minp);
-	friend void InstallSystemImage();
-
-#ifdef PLATFORM_WIN32
-#ifndef PLATFORM_WINCE
-	void         SetCursorCheat(LPCSTR id);
-	LPCSTR       GetCursorCheat() const;
-	friend Image Win32IconCursor(LPCSTR id, int iconsize, bool cursor);
-	friend HICON IconWin32(const Image& img, bool cursor);
-#endif
-#endif
-
-#ifdef PLATFORM_POSIX // These are only implemented for X11...
-	void         SetCursorCheat(int id);
-	int          GetCursorCheat() const;
-	friend       void *CursorX11(const Image&);
-	friend       Image X11Cursor(int c);
-#endif
+	void         SetAuxData(uint64 data);
+	uint64       GetAuxData() const;
 
 public:
 	const RGBA*    operator~() const;
@@ -247,6 +194,8 @@ public:
 
 	bool IsEmpty() const                { return IsNullInstance(); }
 	operator Value() const              { return RichValue<Image>(*this); }
+	
+	bool IsPaintOnly() const            { return data && data->paintonly; }
 
 	Image()                             { data = NULL; }
 	Image(const Nuller&)                { data = NULL; }
@@ -256,8 +205,7 @@ public:
 	Image(ImageBuffer& b);
 	~Image();
 
-	void PaintImage(SystemDraw& w, int x, int y, const Rect& src, Color c) const;
-
+	// Defined in CtrlCore or by Rainbow:
 	static Image Arrow();
 	static Image Wait();
 	static Image IBeam();

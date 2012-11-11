@@ -122,49 +122,6 @@ Size ImageBuffer::GetDPI()
 	return Size(dots.cx ? int(600.*size.cx/dots.cx) : 0, dots.cy ? int(600.*size.cy/dots.cy) : 0);
 }
 
-void  (Image::Data::*Image::Data::sSysInit)();
-void  (Image::Data::*Image::Data::sSysRelease)();
-int   (Image::Data::*Image::Data::sGetResCount)() const;
-void  (Image::Data::*Image::Data::sPaint)(SystemDraw& w, int x, int y, const Rect& src, Color c);
-
-void Image::Data::InitSystemImage(
-	void  (Image::Data::*fSysInit)(),
-	void  (Image::Data::*fSysRelease)(),
-	int   (Image::Data::*fGetResCount)() const,
-	void  (Image::Data::*fPaint)(SystemDraw& w, int x, int y, const Rect& src, Color c)
-)
-{
-	Image::Data::sSysInit = fSysInit;
-	Image::Data::sSysRelease = fSysRelease;
-	Image::Data::sGetResCount = fGetResCount;
-	Image::Data::sPaint = fPaint;
-}
-
-void Image::Data::SysInit()
-{
-	if(sSysInit)
-		(this->*sSysInit)();
-}
-
-void Image::Data::SysRelease()
-{
-	if(sSysRelease)
-		(this->*sSysRelease)();
-}
-
-int Image::Data::GetResCount() const
-{
-	if(sGetResCount)
-		return (this->*sGetResCount)();
-	return 0;
-}
-
-void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
-{
-	if(sPaint)
-		(this->*sPaint)(w, x, y, src, c);
-}
-
 void Image::Set(ImageBuffer& b)
 {
 	if(b.GetWidth() == 0 || b.GetHeight() == 0)
@@ -267,12 +224,6 @@ int Image::GetKind() const
 	return data ? data->GetKind() : IMAGE_EMPTY;
 }
 
-void Image::PaintImage(SystemDraw& w, int x, int y, const Rect& src, Color c) const
-{
-	if(data)
-		data->Paint(w, x, y, src, c);
-}
-
 void Image::Serialize(Stream& s)
 {
 	int version = 0;
@@ -372,38 +323,28 @@ String Image::ToString() const
 	return String("Image ").Cat() << GetSize();
 }
 
-Link<Image::Data>     Image::Data::ResData[1];
-int                   Image::Data::ResCount;
-
 Image::Data::Data(ImageBuffer& b)
 :	buffer(b)
 {
 	paintcount = 0;
 	paintonly = false;
 	refcount = 1;
+	aux_data = 0;
 	INTERLOCKED {
 		static int64 gserial;
 		serial = ++gserial;
 	}
-	SysInit();
 }
 
-Image::Data::~Data()
+void Image::SetAuxData(uint64 adata)
 {
-	DrawLock __;
-	SysRelease();
-	Unlink();
+	if(data)
+		data->aux_data = adata;
 }
 
-void Image::Data::PaintOnlyShrink()
+uint64 Image::GetAuxData() const
 {
-	if(paintonly) {
-		LTIMING("PaintOnlyShrink");
-		DrawLock __;
-		DropPixels___(buffer);
-		ResCount -= GetResCount();
-		Unlink();
-	}
+	return data ? data->aux_data : 0;
 }
 
 static void sMultiply(ImageBuffer& b, int (*op)(RGBA *t, const RGBA *s, int len))
@@ -444,12 +385,6 @@ Image Unmultiply(const Image& img)
 	return sMultiply(img, Unmultiply);
 }
 
-void SetPaintOnly___(Image& m)
-{
-	if(m.data && m.data->refcount == 1)
-		m.data->paintonly = true;
-}
-
 void Iml::Init(int n)
 {
 	for(int i = 0; i < n; i++)
@@ -469,11 +404,13 @@ void Iml::Set(int i, const Image& img)
 	map[i].loaded = true;
 }
 
+static StaticMutex sImlLock;
+
 Image Iml::Get(int i)
 {
 	IImage& m = map[i];
 	if(!m.loaded) {
-		DrawLock __;
+		Mutex::Lock __(sImlLock);
 		if(data.GetCount()) {
 			int ii = 0;
 			for(;;) {
@@ -568,13 +505,13 @@ Iml& GetIml(int i)
 
 String GetImlName(int i)
 {
-	DrawLock __;
+	Mutex::Lock __(sImlLock);
 	return sImgMap().GetKey(i);
 }
 
 int FindIml(const char *name)
 {
-	DrawLock __;
+	Mutex::Lock __(sImlLock);
 	return sImgMap().Find(name);
 }
 
@@ -583,7 +520,7 @@ Image GetImlImage(const char *name)
 	Image m;
 	const char *w = strchr(name, ':');
 	if(w) {
-		DrawLock __;
+		Mutex::Lock __(sImlLock);
 		int q = FindIml(String(name, w));
 		if(q >= 0) {
 			Iml& iml = *sImgMap()[q];
@@ -601,7 +538,7 @@ void SetImlImage(const char *name, const Image& m)
 {
 	const char *w = strchr(name, ':');
 	if(w) {
-		DrawLock __;
+		Mutex::Lock __(sImlLock);
 		int q = FindIml(String(name, w));
 		if(q >= 0) {
 			Iml& iml = *sImgMap()[q];

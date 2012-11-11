@@ -2,6 +2,8 @@
 
 NAMESPACE_UPP
 
+#ifndef CUSTOM_FONTSYS
+
 #ifdef PLATFORM_WIN32
 
 #define LLOG(x)     //  LOG(x)
@@ -348,6 +350,89 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 	}
 	return li[q][chr & 255];
 }
+#endif
+
+String GetFontDataSys(Font font)
+{
+	String r;
+	HFONT hfont = GetWin32Font(font, 0);
+	if(hfont) {
+		HDC hdc = Win32_IC();
+		HFONT ohfont = (HFONT) ::SelectObject(hdc, hfont);
+		DWORD size = GetFontData(hdc, 0, 0, NULL, 0);
+		if(size == GDI_ERROR) {
+			LLOG("PdfDraw::Finish: GDI_ERROR on font " << pdffont.GetKey(i));
+			return Null;
+		}
+		StringBuffer b(size);
+		GetFontData(hdc, 0, 0, b, size);
+		::SelectObject(hdc, ohfont);
+		r = b;
+	}
+	return r;
+}
+
+double fx_to_dbl(const FIXED& p) {
+	return double(p.value) + double(p.fract) * (1.0 / 65536.0);
+}
+
+Pointf fx_to_dbl(const Pointf& pp, const POINTFX& p) {
+	return Pointf(pp.x + fx_to_dbl(p.x), pp.y - fx_to_dbl(p.y));
+}
+
+void RenderCharPath(const char* gbuf, unsigned total_size, FontGlyphConsumer& sw, double xx, double yy)
+{
+	const char* cur_glyph = gbuf;
+	const char* end_glyph = gbuf + total_size;
+	Pointf pp(xx, yy);
+	while(cur_glyph < end_glyph) {
+		const TTPOLYGONHEADER* th = (TTPOLYGONHEADER*)cur_glyph;
+		const char* end_poly = cur_glyph + th->cb;
+		const char* cur_poly = cur_glyph + sizeof(TTPOLYGONHEADER);
+		sw.Move(fx_to_dbl(pp, th->pfxStart));
+		while(cur_poly < end_poly) {
+			const TTPOLYCURVE* pc = (const TTPOLYCURVE*)cur_poly;
+			if (pc->wType == TT_PRIM_LINE)
+				for(int i = 0; i < pc->cpfx; i++)
+					sw.Line(fx_to_dbl(pp, pc->apfx[i]));
+			if (pc->wType == TT_PRIM_QSPLINE)
+				for(int u = 0; u < pc->cpfx - 1; u++) {
+					Pointf b = fx_to_dbl(pp, pc->apfx[u]);
+					Pointf c = fx_to_dbl(pp, pc->apfx[u + 1]);
+					if (u < pc->cpfx - 2)
+						c = Mid(b, c);
+					sw.Quadratic(b, c);
+				}
+			cur_poly += sizeof(WORD) * 2 + sizeof(POINTFX) * pc->cpfx;
+		}
+		sw.Close();
+		cur_glyph += th->cb;
+    }
+}
+
+void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int ch, Font fnt)
+{
+	HFONT hfont = GetWin32Font(fnt, 0);
+	if(hfont) {
+		HDC hdc = Win32_IC();
+		HFONT ohfont = (HFONT) ::SelectObject(hdc, hfont);
+		GLYPHMETRICS gm;
+		MAT2 m_matrix;
+		memset(&m_matrix, 0, sizeof(m_matrix));
+		m_matrix.eM11.value = 1;
+		m_matrix.eM22.value = 1;
+		int gsz = GetGlyphOutlineW(hdc, ch, GGO_NATIVE, &gm, 0, NULL, &m_matrix);
+		if(gsz < 0)
+			return;
+		StringBuffer gb(gsz);
+		gsz = GetGlyphOutlineW(hdc, ch, GGO_NATIVE, &gm, gsz, ~gb, &m_matrix);
+		if(gsz < 0)
+			return;
+		RenderCharPath(~gb, gsz, sw, x, y + fnt.GetAscent());
+		::SelectObject(hdc, ohfont);
+	}
+}
+
 #endif
 
 #endif
