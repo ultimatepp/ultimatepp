@@ -1,7 +1,7 @@
 #ifndef _Draw_FontInt_h_
 #define _Draw_FontInt_h_
 
-// Internal header!
+// Implementation header
 
 struct FaceInfo : Moveable<FaceInfo> {
 	String name;
@@ -26,9 +26,7 @@ struct CommonFontInfo {
 	bool fixedpitch;
 	bool scaleable;
 
-#ifdef PLATFORM_POSIX
-	char path[256];
-#endif
+	char path[256]; // optional
 };
 
 class Font;
@@ -50,5 +48,15 @@ GlyphInfo GetGlyphInfo(Font font, int chr);
 const     CommonFontInfo& GetFontInfo(Font font);
 bool      IsNormal(Font font, int chr);
 void      GlyphMetrics(GlyphInfo& f, Font font, int chr);
+
+// Platform specific font interface
+
+CommonFontInfo   GetFontInfoSys(Font font);
+GlyphInfo        GetGlyphInfoSys(Font font, int chr);
+void             GetStdFontSys(String& name, int& height);
+Vector<FaceInfo> GetAllFacesSys();
+String           GetFontDataSys(Font font);
+
+void             RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int ch, Font fnt);
 
 #endif

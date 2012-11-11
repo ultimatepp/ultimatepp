@@ -22,7 +22,6 @@ library(FREEBSD) xcb;
 
 file
 	Draw.h,
-	DrawLock.cpp,
 	FontInt.h,
 	Font.cpp,
 	FontCR.cpp,

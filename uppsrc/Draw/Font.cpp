@@ -4,11 +4,6 @@
 
 NAMESPACE_UPP
 
-CommonFontInfo   GetFontInfoSys(Font font);
-GlyphInfo        GetGlyphInfoSys(Font font, int chr);
-void             GetStdFontSys(String& name, int& height);
-Vector<FaceInfo> GetAllFacesSys();
-
 bool Replace(Font fnt, int chr, Font& rfnt);
 
 void Std(Font& font)
@@ -98,9 +93,11 @@ int  Font::FindFaceNameIndex(const String& name) {
 	return 0;
 }
 
+static StaticMutex sFontLock;
+
 void Font::SyncStdFont()
 {
-	DrawLock __;
+	Mutex::Lock __(sFontLock);
 	StdFontSize = Size(AStdFont.GetAveWidth(), AStdFont().Bold().GetCy());
 }
 
@@ -108,7 +105,7 @@ void (*whenSetStdFont)();
 
 void Font::SetStdFont(Font font)
 {
-	DrawLock __;
+	Mutex::Lock __(sFontLock);
 	static int x = 0;
 	if(x) return;
 	x++;
@@ -123,7 +120,7 @@ void Font::SetStdFont(Font font)
 void Font::InitStdFont()
 {
 	ONCELOCK {
-		DrawLock __;
+		Mutex::Lock __(sFontLock);
 		List();
 		AStdFont = Arial(12);
 		String name;
@@ -356,7 +353,7 @@ CharEntry fc_cache_global[4093];
 
 bool IsNormal(Font font, int chr)
 {
-	DrawLock __;
+	Mutex::Lock __(sFontLock);
 	CharEntry& e = fc_cache_global[CombineHash(font.GetHashValue(), chr) % 4093];
 	if(e.font == font.AsInt64() || e.chr == chr)
 		return e.info.IsNormal();
@@ -365,7 +362,7 @@ bool IsNormal(Font font, int chr)
 
 CharEntry GetGlyphEntry(Font font, int chr, unsigned hash)
 {
-	DrawLock __;
+	Mutex::Lock __(sFontLock);
 	CharEntry& e = fc_cache_global[hash % 4093];
 	if(e.font != font.AsInt64() || e.chr != chr) {
 		e.font = font.AsInt64();
@@ -460,7 +457,7 @@ const CommonFontInfo& GetFontInfo(Font font)
 	unsigned hash = font.GetHashValue() & 63;
 	FontEntry& e = fi_cache[hash];
 	if(e.font != font.AsInt64()) {
-		DrawLock __;
+		Mutex::Lock __(sFontLock);
 		e.font = font.AsInt64();
 		e.info = GetFontInfoSys(font);
 	}
@@ -502,6 +499,18 @@ const CommonFontInfo& Font::Fi() const
 	lastFontInfo = GetFontInfo(*this);
 	lastFiFont = AsInt64();
 	return lastFontInfo;
+}
+
+String Font::GetData() const
+{
+	Mutex::Lock __(sFontLock);
+	return GetFontDataSys(*this);
+}
+
+void Font::Render(FontGlyphConsumer& sw, double x, double y, int ch) const
+{
+	Mutex::Lock __(sFontLock);
+	RenderCharacterSys(sw, x, y, ch, *this);
 }
 
 FontInfo Font::Info() const

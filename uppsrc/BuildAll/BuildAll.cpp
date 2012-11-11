@@ -61,6 +61,7 @@ void Build(const char *nest, const char *bm, bool release)
 				Cout() << " *** FAILED *** !\n";
 				failed = true;
 				LOG("FAILED: " << txt);
+				LOG(c);
 				LOG(out);
 			}
 			else {

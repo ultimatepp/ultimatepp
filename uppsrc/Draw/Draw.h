@@ -13,31 +13,17 @@ class Painting;
 class SystemDraw;
 class ImageDraw;
 
-#ifdef _MULTITHREADED
-void EnterGMutex();
-void EnterGMutex(int n);
-void LeaveGMutex();
-int  LeaveGMutexAll();
-
-struct DrawLock {
-	DrawLock()  { EnterGMutex(); }
-	~DrawLock() { LeaveGMutex(); }
-};
-#else
-inline void EnterGMutex() {}
-inline void EnterGMutex(int n) {}
-inline void LeaveGMutex() {}
-inline int  LeaveGMutexAll() { return 0; }
-
-struct DrawLock {
-	DrawLock() {}
-	~DrawLock() {}
-};
-#endif
-
 #include "Image.h"
 
 const int FONT_V = 40;
+
+struct FontGlyphConsumer {
+	virtual void Move(Pointf p) = 0;
+	virtual void Line(Pointf p) = 0;
+	virtual void Quadratic(Pointf p1, Pointf p2) = 0;
+	virtual void Cubic(Pointf p1, Pointf p2, Pointf p3) = 0;
+	virtual void Close() = 0;
+};
 
 #include "FontInt.h"
 
@@ -72,7 +58,8 @@ class Font : public ValueType<Font, FONT_V, Moveable<Font> >{
 
 	const CommonFontInfo& Fi() const;
 	
-	friend void sInitFonts();
+	friend void   sInitFonts();
+	friend String GetFontDataSys(Font font);
 	
 public:
 	enum {
@@ -174,12 +161,12 @@ public:
 	bool  IsScaleable() const                { return Fi().scaleable; }
 	bool  IsSpecial() const                  { return !(GetFaceInfo() & SPECIAL); }
 
-#ifdef PLATFORM_POSIX
-	String GetPath() const                   { return Fi().path; }
-#endif
-
 	String GetTextFlags() const;
 	void   ParseTextFlags(const char *s);
+	
+	String GetData() const;
+	
+	void   Render(FontGlyphConsumer& sw, double x, double y, int ch) const;
 
 	void  Serialize(Stream& s);
 	void  Jsonize(JsonIO& jio);
@@ -227,9 +214,6 @@ public:
 	bool   IsScaleable() const                { return font.IsScaleable(); }
 	int    GetFontHeight() const              { return font.GetHeight(); }
 	Font   GetFont() const                    { return font; }
-#ifdef PLATFORM_POSIX
-	String GetFileName() const                { return font.GetPath(); }
-#endif
 };
 
 struct ComposedGlyph {
@@ -386,8 +370,8 @@ public:
 
 	void    Clear()                             { size = Null; data.Clear(); cmd.Clear(); }
 	void    Serialize(Stream& s)                { s % cmd % data % size; }
-	void Xmlize(XmlIO& xio)                     { XmlizeBySerialize(xio, *this); }
-	void Jsonize(JsonIO& jio)                   { JsonizeBySerialize(jio, *this); }
+	void    Xmlize(XmlIO& xio)                  { XmlizeBySerialize(xio, *this); }
+	void    Jsonize(JsonIO& jio)                { JsonizeBySerialize(jio, *this); }
 	bool    IsNullInstance() const              { return cmd.IsEmpty(); }
 	void    SetNull()                           { size = Null; }
 	bool    operator==(const Painting& b) const { return cmd == b.cmd && data == b.data && size == b.size; }
@@ -442,7 +426,8 @@ public:
 	virtual Rect GetPaintRect() const;
 
 	virtual	void DrawRectOp(int x, int y, int cx, int cy, Color color) = 0;
-	virtual void DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color) = 0;
+	virtual void SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color);
+	virtual void DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color);
 	virtual void DrawDataOp(int x, int y, int cx, int cy, const String& data, const char *id);
 	virtual void DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color) = 0;
 
@@ -652,7 +637,7 @@ public:
 	void Jsonize(JsonIO& jio)      { JsonizeBySerialize(jio, *this); }
 
 	bool    IsNullInstance() const             { return data.IsEmpty(); }
-	void    SetNull()                          { size = Null; }
+	void    SetNull()                          { size = Null; data.Clear(); }
 
 	bool    operator==(const Drawing& b) const { return val == b.val && data == b.data && size == b.size; }
 	String  ToString() const                   { return "drawing " + AsString(size); }

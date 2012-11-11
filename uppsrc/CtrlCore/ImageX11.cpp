@@ -4,27 +4,7 @@
 
 NAMESPACE_UPP
 
-struct Image::Data::SystemData {
-	int         cursor_cheat;
-	XPicture    picture;
-	XPicture    picture8;
-};
-
-Image::Data::SystemData& Image::Data::Sys() const
-{
-	ASSERT(sizeof(system_buffer) >= sizeof(SystemData));
-	return *(SystemData *)system_buffer;
-}
-
-void Image::SetCursorCheat(int id)
-{
-	data->Sys().cursor_cheat = id;
-}
-
-int Image::GetCursorCheat() const
-{
-	return data ? data->Sys().cursor_cheat : -1;
-}
+#define LLOG(x)   DLOG(x)
 
 static void sInitXImage(XImage& ximg, Size sz)
 {
@@ -95,34 +75,37 @@ void SetSurface(SystemDraw& w, int x, int y, int cx, int cy, const RGBA *pixels)
 	XRenderFreePicture(Xdisplay, picture);
 }
 
-int  Image::Data::GetResCountImp() const
+struct ImageSysData {
+	Image       img;
+	XPicture    picture;
+	XPicture    picture8;
+	int         paintcount;
+	
+	void Init(const Image& m);
+	void Paint(SystemDraw& w, int x, int y, const Rect& src, Color c);
+	~ImageSysData();
+};
+
+void ImageSysData::Init(const Image& m)
 {
-	return !!Sys().picture + !!Sys().picture8;
+	ASSERT(~m);
+	img = m;
+	picture = 0;
+	picture8 = 0;
+	paintcount = 0;
 }
 
-void Image::Data::SysInitImp()
+ImageSysData::~ImageSysData()
 {
-	SystemData& sd = Sys();
-	sd.picture = 0;
-	sd.picture8 = 0;
-	sd.cursor_cheat = -1;
-}
-
-void Image::Data::SysReleaseImp()
-{
-	SystemData& sd = Sys();
-	if(sd.picture) {
-		GuiLock __;
-		if(Xdisplay) XRenderFreePicture(Xdisplay, sd.picture);
-		ResCount -= !paintonly;
-		sd.picture = 0;
+	SysImageReleased(img);
+	if(Xdisplay) {
+		if(picture)
+			XRenderFreePicture(Xdisplay, picture);
+		if(picture8)
+			XRenderFreePicture(Xdisplay, picture8);
 	}
-	if(sd.picture8) {
-		GuiLock __;
-		if(Xdisplay) XRenderFreePicture(Xdisplay, sd.picture8);
-		ResCount -= !paintonly;
-		sd.picture8 = 0;
-	}
+	picture = 0;
+	picture8 = 0;
 }
 
 struct XRSolidFill {
@@ -167,47 +150,39 @@ static XPicture sGetSolidFill(Color c)
 	return f.picture;
 }
 
-void Image::Data::PaintImp(SystemDraw& w, int x, int y, const Rect& src, Color c)
+void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 {
 	GuiLock __;
-	SystemData& sd = Sys();
-	while(ResCount > 512) {
-		Image::Data *l = ResData->GetPrev();
-		l->SysRelease();
-		l->Unlink();
-	}
 	x += w.GetOffset().x;
 	y += w.GetOffset().y;
-	Size sz = buffer.GetSize();
+	Size sz = img.GetSize();
 	int  len = sz.cx * sz.cy;
 	Rect sr = src & sz;
 	Size ssz = sr.Size();
 	if(sr.IsEmpty())
 		return;
-	if(GetKind() == IMAGE_EMPTY)
+	int kind = img.GetKind();
+	if(kind == IMAGE_EMPTY)
 		return;
-	if(GetKind() == IMAGE_OPAQUE && !IsNull(c)) {
+	if(kind == IMAGE_OPAQUE && !IsNull(c)) {
 		w.DrawRect(x, y, sz.cx, sz.cy, c);
 		return;
 	}
-	if(GetKind() == IMAGE_OPAQUE && paintcount == 0 && sr == Rect(sz)) {
-		SetSurface(w, x, y, sz.cx, sz.cy, buffer);
+	if(kind == IMAGE_OPAQUE && paintcount == 0 && sr == Rect(sz)) {
+		SetSurface(w, x, y, sz.cx, sz.cy, ~img);
 		paintcount++;
 		return;
 	}
-	Unlink();
-	LinkAfter(ResData);
 	if(IsNull(c)) {
-		if(!sd.picture) {
-			bool opaque = GetKind() == IMAGE_OPAQUE;
+		if(!picture) {
+			bool opaque = kind == IMAGE_OPAQUE;
 			Pixmap pixmap = XCreatePixmap(Xdisplay, Xroot, sz.cx, sz.cy, opaque ? 24 : 32);
-			sd.picture = XRenderCreatePicture(
+			picture = XRenderCreatePicture(
 				Xdisplay, pixmap,
 			    XRenderFindStandardFormat(Xdisplay, opaque ? PictStandardRGB24
 			                                               : PictStandardARGB32),
 			    0, 0
 			);
-			ResCount++;
 			XImage ximg;
 			sInitXImage(ximg, sz);
 			ximg.bitmap_pad = 32;
@@ -217,30 +192,28 @@ void Image::Data::PaintImp(SystemDraw& w, int x, int y, const Rect& src, Color c
 			ximg.green_mask = 0x0000ff00;
 			ximg.red_mask = 0x000000ff;
 			ximg.bitmap_unit = 32;
-			ximg.data = (char *)~buffer;
+			ximg.data = (char *)~img;
 			ximg.depth = opaque ? 24 : 32;
 			XInitImage(&ximg);
 			GC gc = XCreateGC(Xdisplay, pixmap, 0, 0);
 			XPutImage(Xdisplay, pixmap, gc, &ximg, 0, 0, 0, 0, sz.cx, sz.cy);
 			XFreeGC(Xdisplay, gc);
 			XFreePixmap(Xdisplay, pixmap);
-			PaintOnlyShrink();
+			SysImageRealized(img);
 		}
 		XRenderComposite(Xdisplay, PictOpOver,
-		                 sd.picture, 0, XftDrawPicture(w.GetXftDraw()),
+		                 picture, 0, XftDrawPicture(w.GetXftDraw()),
 		                 sr.left, sr.top, 0, 0, x, y, ssz.cx, ssz.cy);
 	}
 	else {
-		ASSERT(!paintonly);
-		if(!sd.picture8) {
+		if(!picture8) {
 			Pixmap pixmap = XCreatePixmap(Xdisplay, Xroot, sz.cx, sz.cy, 8);
-			sd.picture8 = XRenderCreatePicture(Xdisplay, pixmap,
-			                                   XRenderFindStandardFormat(Xdisplay, PictStandardA8),
-			                                   0, 0);
-			ResCount++;
+			picture8 = XRenderCreatePicture(Xdisplay, pixmap,
+			                                XRenderFindStandardFormat(Xdisplay, PictStandardA8),
+			                                0, 0);
 			Buffer<byte> ab(len);
 			byte *t = ab;
-			const RGBA *s = buffer;
+			const RGBA *s = ~img;
 			const RGBA *e = s + len;
 			while(s < e)
 				*t++ = (s++)->a;
@@ -259,9 +232,31 @@ void Image::Data::PaintImp(SystemDraw& w, int x, int y, const Rect& src, Color c
 			XFreePixmap(Xdisplay, pixmap);
 		}
 		XRenderComposite(Xdisplay, PictOpOver,
-		                 sGetSolidFill(c), sd.picture8, XftDrawPicture(w.GetXftDraw()),
+		                 sGetSolidFill(c), picture8, XftDrawPicture(w.GetXftDraw()),
 		                 sr.left, sr.top, 0, 0, x, y, ssz.cx, ssz.cy);
 	}
+}
+
+struct ImageSysDataMaker : LRUCache<ImageSysData, int64>::Maker {
+	Image img;
+
+	virtual int64  Key() const                      { return img.GetSerialId(); }
+	virtual int    Make(ImageSysData& object) const { object.Init(img); return img.GetLength(); }
+};
+
+void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color)
+{
+	GuiLock __;
+	if(img.GetLength() == 0)
+		return;
+	LLOG("SysDrawImageOp " << img.GetSerialId() << ' ' << img.GetSize());
+	ImageSysDataMaker m;
+	static LRUCache<ImageSysData, int64> cache;
+	LLOG("SysImage cache pixels " << cache.GetSize() << ", count " << cache.GetCount());
+	m.img = img;
+	cache.Get(m).Paint(*this, x, y, src, color);
+	Size sz = Ctrl::GetPrimaryScreenArea().GetSize();
+	cache.Shrink(4 * sz.cx * sz.cy, 1000); // Cache must be after Paint because of PaintOnly!
 }
 
 void ImageDraw::Init()
@@ -397,12 +392,17 @@ Draw& ImageDraw::Alpha()
 	return alpha;
 }
 
-Image X11Cursor(int c)
+Image SystemDraw::X11Cursor(int c)
 {
 	ImageBuffer b(32, 32);
 	Image m(b);
-	m.SetCursorCheat(c);
+	m.SetAuxData(c + 1);
 	return m;
+}
+
+Image X11Cursor(int c)
+{
+	return SystemDraw::X11Cursor(c);
 }
 
 #include <X11/cursorfont.h>
@@ -429,8 +429,13 @@ Image Image::Hand() FCURSOR_(XC_hand1)
 
 void *CursorX11(const Image& img)
 {
+	return SystemDraw::CursorX11(img);
+}
+
+void *SystemDraw::CursorX11(const Image& img)
+{
 	GuiLock __;
-	int q = img.GetCursorCheat();
+	int q = (int64)img.GetAuxData() - 1;
 	if(q >= 0)
 		return (void *)XCreateFontCursor(Xdisplay, q);
 	int len = img.GetLength();

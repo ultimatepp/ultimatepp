@@ -156,8 +156,8 @@ void TopWindow::SyncCaption0()
 	DeleteIco();
 #ifndef PLATFORM_WINCE //TODO!!!
 	if(hwnd) {
-		::SendMessage(hwnd, WM_SETICON, false, (LPARAM)(ico = IconWin32(icon)));
-		::SendMessage(hwnd, WM_SETICON, true, (LPARAM)(lico = IconWin32(largeicon)));
+		::SendMessage(hwnd, WM_SETICON, false, (LPARAM)(ico = SystemDraw::IconWin32(icon)));
+		::SendMessage(hwnd, WM_SETICON, true, (LPARAM)(lico = SystemDraw::IconWin32(largeicon)));
 	}
 #endif
 }

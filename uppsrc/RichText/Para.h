@@ -306,6 +306,7 @@ private:
                       int lineascent, Zoom z, bool highlight);
 	int         PosInLine(int x, const Rect& page, const Lines& pl, int lni) const;
 
+	static StaticMutex      cache_lock;
 	static Array<RichPara>& Cache();
 
 	struct StorePart;
