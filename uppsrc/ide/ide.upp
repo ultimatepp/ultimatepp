@@ -94,7 +94,7 @@ mainconfig
 	"" = "GUI HEAPDBG CHECKINIT",
 	"" = "GUI TESTINSTALL",
 	"" = "GUI CHECKCLIPBOARD",
-	"" = "GUI MT";
+	"" = "GUI SVO_VALUE";
 
 custom() "",
 	"",
