@@ -342,6 +342,7 @@ void LogRpcRequests(bool b = true);
 
 void SetRpcServerTrace(Stream& s, int level = 1);
 void StopRpcServerTrace();
+void SuppressRpcServerTraceForMethodCall();
 
 #include "legacy.h"
 
