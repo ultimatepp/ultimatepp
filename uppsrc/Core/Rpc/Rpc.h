@@ -341,6 +341,7 @@ struct JsonRpcRequestNamed : RpcRequest {
 void LogRpcRequests(bool b = true);
 
 void SetRpcServerTrace(Stream& s, int level = 1);
+void StopRpcServerTrace();
 
 #include "legacy.h"
 

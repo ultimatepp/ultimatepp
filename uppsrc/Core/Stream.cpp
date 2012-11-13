@@ -1496,8 +1496,12 @@ String LoadStream(Stream& in) {
 }
 
 String LoadFile(const char *filename) {
-	FileIn in(filename);
-	return LoadStream(in);
+	FindFile ff(filename);
+	if(ff && ff.IsFile()) {
+		FileIn in(filename);
+		return LoadStream(in);
+	}
+	return String::GetVoid();
 }
 
 bool SaveStream(Stream& out, const String& data) {
