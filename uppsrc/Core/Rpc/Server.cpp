@@ -46,7 +46,7 @@ void ThrowRpcError(const char *s)
 	ThrowRpcError(RPC_SERVER_PROCESSING_ERROR, s);
 }
 
-static Stream *rpc_trace;
+static Stream *rpc_trace, *suppressed_rpc_trace;
 static int rpc_trace_level;
 
 void SetRpcServerTrace(Stream& s, int level)
@@ -60,13 +60,19 @@ void StopRpcServerTrace()
 	rpc_trace = NULL;
 }
 
-bool CallRpcMethod(RpcData& data, const char *group, String methodname)
+void SuppressRpcServerTraceForMethodCall()
+{
+	suppressed_rpc_trace = rpc_trace;
+	rpc_trace = NULL;
+}
+
+bool CallRpcMethod(RpcData& data, const char *group, String methodname, const String& request)
 {
 	LLOG("method name: " << methodname);
-	if(rpc_trace && rpc_trace_level == 0)
-		*rpc_trace << "RpcRequest method:\n" << methodname << '\n';
 	if(sRpcMethodFilter)
 		methodname = (*sRpcMethodFilter)(methodname);
+	if(rpc_trace)
+		*rpc_trace << "RPC Request:\n" << request << '\n';
 	void (*fn)(RpcData&) = RpcMapGet(group, methodname);
 	if(!fn)
 		return false;
@@ -89,7 +95,7 @@ String DoXmlRpc(const String& request, const char *group, const char *peeraddr)
 		p.PassEnd();
 		data.peeraddr = peeraddr;
 		data.in = ParseXmlRpcParams(p);
-		if(CallRpcMethod(data, group, methodname)) {
+		if(CallRpcMethod(data, group, methodname, request)) {
 			if(IsValueArray(data.out)) {
 				ValueArray va = data.out;
 				if(va.GetCount() && IsError(va[0])) {
@@ -141,7 +147,7 @@ String JsonRpcError(int code, const char *text, const Value& id)
 	return m;
 }
 
-String ProcessJsonRpc(const Value& v, const char *group, const char *peeraddr)
+String ProcessJsonRpc(const Value& v, const char *group, const char *peeraddr, const String& request)
 {
 	LLOG("Parsed JSON request: " << v);
 	Value id = v["id"];
@@ -154,7 +160,7 @@ String ProcessJsonRpc(const Value& v, const char *group, const char *peeraddr)
 	else
 		data.in = param;
 	try {
-		if(CallRpcMethod(data, group, methodname)) {
+		if(CallRpcMethod(data, group, methodname, request)) {
 			if(IsValueArray(data.out)) {
 				ValueArray va = data.out;
 				Value result = Null;
@@ -199,11 +205,11 @@ String DoJsonRpc(const String& request, const char *group, const char *peeraddr)
 	try {
 		Value v = ParseJSON(request);
 		if(v.Is<ValueMap>())
-			return ProcessJsonRpc(v, group, peeraddr);
+			return ProcessJsonRpc(v, group, peeraddr, request);
 		if(v.Is<ValueArray>()) {
 			JsonArray a;
 			for(int i = 0; i < v.GetCount(); i++)
-				a.CatRaw(ProcessJsonRpc(v[i], group, peeraddr));
+				a.CatRaw(ProcessJsonRpc(v[i], group, peeraddr, request));
 			return v.GetCount() ? ~a : String();
 		}
 	}
@@ -213,8 +219,6 @@ String DoJsonRpc(const String& request, const char *group, const char *peeraddr)
 
 String RpcExecute(const String& request, const char *group, const char *peeraddr, bool& json)
 {
-	if(rpc_trace && rpc_trace_level == 1)
-		*rpc_trace << "RPC Request:\n" << request << '\n';
 	CParser p(request);
 	String r;
 	if(p.Char('{') || p.Char('[')) {
@@ -230,6 +234,11 @@ String RpcExecute(const String& request, const char *group, const char *peeraddr
 			*rpc_trace << "Rpc finished OK\n";
 		else
 			*rpc_trace << "Server response:\n" << r << '\n';
+	if(suppressed_rpc_trace) {
+		if(!rpc_trace)
+			rpc_trace = suppressed_rpc_trace;
+		suppressed_rpc_trace = NULL;
+	}
 	return r;
 }
 
