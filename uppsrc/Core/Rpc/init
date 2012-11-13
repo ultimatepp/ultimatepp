@@ -1,4 +1,3 @@
 #ifndef _Core_Rpc_icpp_init_stub
 #define _Core_Rpc_icpp_init_stub
-#include "Web/init"
 #endif

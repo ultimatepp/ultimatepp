@@ -55,6 +55,11 @@ void SetRpcServerTrace(Stream& s, int level)
 	rpc_trace_level = level;
 }
 
+void StopRpcServerTrace()
+{
+	rpc_trace = NULL;
+}
+
 bool CallRpcMethod(RpcData& data, const char *group, String methodname)
 {
 	LLOG("method name: " << methodname);
