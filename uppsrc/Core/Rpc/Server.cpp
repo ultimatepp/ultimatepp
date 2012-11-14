@@ -221,14 +221,11 @@ String RpcExecute(const String& request, const char *group, const char *peeraddr
 {
 	CParser p(request);
 	String r;
-	if(p.Char('{') || p.Char('[')) {
-		json = true;
+	json = p.Char('{') || p.Char('[');
+	if(json)
 		r = DoJsonRpc(request, group, peeraddr);
-	}
-	else {
-		json = false;
+	else
 	    r = DoXmlRpc(request, group, peeraddr);
-	}
 	if(rpc_trace)
 		if(rpc_trace_level == 0)
 			*rpc_trace << "Rpc finished OK\n";

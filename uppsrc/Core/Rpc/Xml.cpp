@@ -142,6 +142,9 @@ String FormatXmlRpcValue(const Value& _v)
 		r << "</data></array>";
 	}
 	else
+	if(v.Is<RawJsonText>())
+		r = XmlTag("string").Text(v.To<RawJsonText>().json);
+	else
 		r = XmlTag("string").Text(v);
 	return XmlTag("value")(r);
 }
