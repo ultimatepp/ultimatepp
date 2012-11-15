@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	PdfDraw;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI SSE2 MT",
+	"" = "GUI SSE2";
+
