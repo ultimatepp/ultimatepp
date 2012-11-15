@@ -28,20 +28,24 @@ void Ctrl::RefreshFrame(const Rect& r) {
 	}
 }
 
+void Ctrl::Refresh0(const Rect& area) {
+	RefreshFrame((area + GetView().TopLeft()) & GetView().Inflated(OverPaint()));
+}
+
 void Ctrl::Refresh(const Rect& area) {
 	GuiLock __;
 	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	LLOG("Refresh " << Name() << ' ' <<  area);
-	RefreshFrame((area + GetView().TopLeft()) & GetView().Inflated(OverPaint()));
+	Refresh0(area);
 }
 
 void Ctrl::Refresh() {
 	GuiLock __;
 	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	LLOG("Refresh " << Name() << " full:" << fullrefresh);
-	Refresh(Rect(GetSize()).Inflated(OverPaint()));
 	if(!GuiPlatformSetFullRefreshSpecial())
-		fullrefresh = true;
+		fullrefresh = true; // Needs to be set ahead because of possible MT ICall that can cause repaint during Refresh0
+	Refresh0(Rect(GetSize()).Inflated(OverPaint()));
 }
 
 void Ctrl::Refresh(int x, int y, int cx, int cy) {

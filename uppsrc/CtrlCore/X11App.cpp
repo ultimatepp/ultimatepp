@@ -390,10 +390,6 @@ void SetX11ErrorHandler()
 	XSetErrorHandler(X11ErrorHandler);
 }
 
-void WakeUpGuiThread()
-{
-}
-
 void Ctrl::InitX11(const char *display)
 {
 	GuiLock __; 

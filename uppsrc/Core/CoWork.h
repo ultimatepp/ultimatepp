@@ -35,6 +35,8 @@ public:
 	CoWork&  operator&(Callback cb) { Do(cb); return *this; }
 
 	void Finish();
+	
+	bool IsFinished();
 
 	CoWork();
 	~CoWork();
@@ -47,6 +49,7 @@ public:
 	void     Do(Callback cb)        { cb(); }
 	CoWork&  operator&(Callback cb) { cb(); return *this; }
 	void     Finish()               {}
+	bool     IsFinished()           { return true; }
 };
 
 #endif

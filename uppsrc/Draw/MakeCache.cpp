@@ -45,6 +45,7 @@ int ImageSizeAdjuster(const Image& img)
 
 void SysImageRealized(const Image& img)
 { // CtrlCore created handle for img, no need to keep pixels data in cache if it is paintonly kind
+	Mutex::Lock __(sMakeImage);
 	if(sFinished)
 		return;
 	LLOG("SysImageRealized " << img.GetSize());
@@ -70,6 +71,7 @@ struct ImageRemover {
 
 void SysImageReleased(const Image& img)
 { // CtrlCore removed handle for img, have to remove paintonly
+	Mutex::Lock __(sMakeImage);
 	if(sFinished)
 		return;
 	if(!~img) {
@@ -84,50 +86,45 @@ void SysImageReleased(const Image& img)
 
 void ClearMakeImageCache()
 {
-	INTERLOCKED_(sMakeImage) {
-		sImageCache().Clear();
-	}
+	Mutex::Lock __(sMakeImage);
+	sImageCache().Clear();
 }
 
 void SetMakeImageCacheMax(int m)
 {
-	INTERLOCKED_(sMakeImage) {
-		sMaxSizeMax = m;
-	}
+	Mutex::Lock __(sMakeImage);
+	sMaxSizeMax = m;
 }
 
 void  SetMakeImageCacheSize(int m)
 {
-	INTERLOCKED_(sMakeImage) {
-		sMaxSize = m;
-	}
+	Mutex::Lock __(sMakeImage);
+	sMaxSize = m;
 }
 
 void SweepMkImageCache()
 {
-	INTERLOCKED_(sMakeImage) {
-		LRUCache<Image>& cache = sImageCache();
-		cache.ClearCounters();
-	}
+	Mutex::Lock __(sMakeImage);
+	LRUCache<Image>& cache = sImageCache();
+	cache.ClearCounters();
 }
 
 Image MakeImage__(const ImageMaker& m, bool paintonly)
 {
+	Mutex::Lock __(sMakeImage);
 	Image result;
-	INTERLOCKED_(sMakeImage) {
-		LRUCache<Image>& cache = sImageCache();
-		scImageMaker cm;
-		cm.m = &m;
-		cm.paintonly = paintonly;
-		LLOG("MakeImage before shrink: " << cache.GetSize() << ", count " << cache.GetCount());
-		cache.Shrink(sMaxSize, 2000);
-		LLOG("MakeImage before make: " << cache.GetSize() << ", count " << cache.GetCount());
-		result = cache.Get(cm);
-		LLOG("MakeImage after make: " << cache.GetSize() << ", count " << cache.GetCount());
-		int q = min(3 * (cache.GetFoundSize() + cache.GetNewSize()), sMaxSizeMax);
-		if(q > sMaxSize)
-			sMaxSize = q;
-	}
+	LRUCache<Image>& cache = sImageCache();
+	scImageMaker cm;
+	cm.m = &m;
+	cm.paintonly = paintonly;
+	LLOG("MakeImage before shrink: " << cache.GetSize() << ", count " << cache.GetCount());
+	cache.Shrink(sMaxSize, 2000);
+	LLOG("MakeImage before make: " << cache.GetSize() << ", count " << cache.GetCount());
+	result = cache.Get(cm);
+	LLOG("MakeImage after make: " << cache.GetSize() << ", count " << cache.GetCount());
+	int q = min(3 * (cache.GetFoundSize() + cache.GetNewSize()), sMaxSizeMax);
+	if(q > sMaxSize)
+		sMaxSize = q;
 	return result;
 }
 
@@ -156,9 +153,8 @@ public:
 String SimpleImageMaker::Key() const
 {
 	String key;
-	int64 k = image.GetSerialId();
-	key.Cat((const char *)&k, sizeof(int64));
-	key.Cat((const char *)&make, sizeof(make));
+	RawCat(key, image.GetSerialId());
+	RawCat(key, make);
 	return key;
 }
 

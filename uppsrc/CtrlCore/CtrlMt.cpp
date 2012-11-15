@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-#define LLOG(x)    // if(!IsMainThread()) DLOG((int)GetCurrentThreadId() << " " << x)
+#define LLOG(x)    // DLOG(x)
 
 NAMESPACE_UPP
 
@@ -14,7 +14,7 @@ void EnterGMutex()
 {
 	if(sGLockLevel++ == 0)
 		sGLock.Enter();
-	LLOG("EnterGMutex");
+	LLOG("EnterGMutex " << sGLockLevel);
 }
 
 void EnterGMutex(int n)
@@ -24,7 +24,7 @@ void EnterGMutex(int n)
 			sGLock.Enter();
 		sGLockLevel += n;
 	}
-	LLOG("EnterGMutex " << n);
+	LLOG("EnterGMutex " << sGLockLevel);
 }
 
 void LeaveGMutex()
@@ -32,7 +32,7 @@ void LeaveGMutex()
 	ASSERT(sGLockLevel > 0);
 	if(--sGLockLevel == 0)
 		sGLock.Leave();
-	LLOG("LeaveGMutex");
+	LLOG("LeaveGMutex " << sGLockLevel);
 }
 
 int LeaveGMutexAll()
@@ -42,111 +42,79 @@ int LeaveGMutexAll()
 		sGLock.Leave();
 		sGLockLevel = 0;
 	}
-	LLOG("LeaveGMutex all");
+	LLOG("LeaveGMutex all " << q);
 	return q;
 }
 
-static int         NonMain;
-static StaticMutex NonMainLock; 
+static StaticMutex NonMainLock;
+// We need secondary lock for nonmain threads because we are unlocking with LeaveGMutexAll
+// in the main thread waits for events to allow nonmain threads to play with GUI entities
 
 void EnterGuiMutex()
 {
-	LLOG("Thread " << IsMainThread() << " trying to lock" << ", nonmain: " << NonMain);
-	bool nonmain = !IsMainThread();
-	if(nonmain)
+	LLOG("Thread " << IsMainThread() << " trying to lock");
+	if(!IsMainThread())
 		NonMainLock.Enter();
 	EnterGMutex();
-	if(nonmain)
-		NonMain++;
-	LLOG("Thread " << IsMainThread() << " LOCK" << ", nonmain: " << NonMain);
+	LLOG("Thread " << IsMainThread() << " LOCKED");
 }
 
 void LeaveGuiMutex()
 {
-	LLOG("Thread " << IsMainThread() << " trying to unlock" << ", nonmain: " << NonMain);
-	bool nonmain = !IsMainThread();
-	if(nonmain)
-		NonMain--;
+//	LLOG("Thread " << IsMainThread() << " trying to unlock" << ", nonmain: " << NonMain);
 	LeaveGMutex();
-	if(nonmain)
+	if(!IsMainThread())
 		NonMainLock.Leave();
-	LLOG("Thread " << IsMainThread() << " UNLOCK" << ", nonmain: " << NonMain);
+//	LLOG("Thread " << IsMainThread() << " UNLOCK" << ", nonmain: " << NonMain);
 }
 
-struct Ctrl::CallBox {
-	Semaphore sem;
-	Callback  cb;
-};
-
-void Ctrl::PerformCall(Ctrl::CallBox *cbox)
-{
-	cbox->cb();
-	LLOG("Sem release");
-	cbox->sem.Release();
-}
-
-Callback    Ctrl::CtrlCall;
-static Mutex CtrlCallMutex;
+static StaticMutex     CtrlCallMutex;
+Callback               CtrlCall;
+static StaticSemaphore CtrlCallSem; // Signals that CtrlCall was executed
+static StaticMutex     ICallMutex;
 
 void WakeUpGuiThread();
 
 bool Ctrl::DoCall()
 {
-	LLOG("DoCall");
-	GuiLock __;
+	Callback cb;
 	{
 		Mutex::Lock __(CtrlCallMutex);
-		CtrlCall();
-		CtrlCall.Clear();
+		cb = CtrlCall;
 	}
-	LLOG("--- DoCall, nonmain: " << NonMain);
-	return NonMain;
+	if(CtrlCall) {
+		GuiLock __;
+		LLOG("DoCall");
+		{
+			Mutex::Lock __(CtrlCallMutex);
+			CtrlCall.Clear();
+		}
+		cb();
+		CtrlCallSem.Release();
+		LLOG("--- DoCall");
+		return true;
+	}
+	return false;
 }
 
 void Ctrl::ICall(Callback cb)
 {
-	LLOG("Ctrl::Call " << IsMainThread() << ", nonmain: " << NonMain);
 	if(IsMainThread())
 		cb();
 	else {
-		GuiLock __;
-		CallBox cbox;
-		cbox.cb = cb;
+		LLOG("Ctrl::Call (nonmain)");
+		Mutex::Lock __(ICallMutex); // Only single ICall allowed at all times
 		{
 			Mutex::Lock __(CtrlCallMutex);
-			CtrlCall = callback1(PerformCall, &cbox);
+			CtrlCall = cb;
 		}
 		int level = LeaveGMutexAll();
 		WakeUpGuiThread();
 		LLOG("Waiting for semaphore");
 		if(!Thread::IsShutdownThreads())
-			cbox.sem.Wait();
+			CtrlCallSem.Wait();
 		EnterGMutex(level);
-	}
-	LLOG("-- Ctrl::Call " << IsMainThread());
-}
-
-void Ctrl::Call(Callback cb)
-{
-	if(IsMainThread())
-		cb();
-	else {
-		GuiLock __;
-		CallBox cbox;
-		cbox.cb = cb;
-		UPP::PostCallback(callback1(PerformCall, &cbox));
-		int n = NonMain;
-		NonMain = 0;
-		for(int i = 0; i < n; i++)
-			NonMainLock.Leave();
-		int level = LeaveGMutexAll();
-		WakeUpGuiThread();
-		if(!Thread::IsShutdownThreads())
-			cbox.sem.Wait();
-		for(int i = 0; i < n; i++)
-			NonMainLock.Enter();
-		EnterGMutex(level);
-		NonMain = n;
+		LLOG("-- Ctrl::Call");
 	}
 }
 
@@ -170,7 +138,7 @@ void Ctrl::Call(Callback cb)
 
 void Ctrl::GuiSleep(int ms)
 {
-	Call(callback1(&Ctrl::GuiSleep0, ms));
+	ICall(callback1(&Ctrl::GuiSleep0, ms));
 }
 
 void Ctrl::WndDestroy()
@@ -228,7 +196,7 @@ void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 
 void Ctrl::EventLoop(Ctrl *ctrl)
 {
-	Call(callback1(&Ctrl::EventLoop0, ctrl));
+	ICall(callback1(&Ctrl::EventLoop0, ctrl));
 }
 
 END_UPP_NAMESPACE

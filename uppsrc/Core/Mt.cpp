@@ -2,6 +2,8 @@
 
 NAMESPACE_UPP
 
+#define LLOG(x)  // DLOG(x)
+
 #ifdef _MULTITHREADED
 
 static Mutex& sMutexLock()
@@ -70,6 +72,7 @@ void *
 #endif
 sThreadRoutine(void *arg)
 {
+	LLOG("sThreadRoutine");
 	Callback *cb = (Callback *)arg;
 	try {
 		(*cb)();
@@ -107,6 +110,7 @@ Mutex vm; //a common access synchronizer
 
 bool Thread::Run(Callback _cb)
 {
+	LLOG("Thread::Run");
 	AtomicInc(sThreadCount);
 	if(!threadr)
 #ifndef CPU_BLACKFIN

@@ -567,6 +567,7 @@ private:
 	void    ScrollRefresh(const Rect& r, int dx, int dy);
 	void    ScrollCtrl(Top *top, Ctrl *q, const Rect& r, Rect cr, int dx, int dy);
 	void    SyncScroll();
+	void    Refresh0(const Rect& area);
 	void    PaintCaret(SystemDraw& w);
 	void    CtrlPaint(SystemDraw& w, const Rect& clip);
 	void    RemoveFullRefresh();
@@ -582,8 +583,6 @@ private:
 	void    SetInfoPart(int i, const char *txt);
 	String  GetInfoPart(int i) const;
 
-	static  Callback    CtrlCall;
-	
 	static  bool DoCall();
 
 // System window interface...

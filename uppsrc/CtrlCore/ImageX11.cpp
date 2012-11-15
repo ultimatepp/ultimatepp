@@ -125,7 +125,6 @@ inline int s255d16(int x)
 
 static XPicture sGetSolidFill(Color c)
 {
-	GuiLock __;
 	int q = GetHashValue(c) % (int)XRSolidFillCount;
 	XRSolidFill& f = sFill[q];
 	if(f.color == c && f.picture)
