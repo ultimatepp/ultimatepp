@@ -396,7 +396,7 @@ void Ctrl::GuiSleep0(int ms)
 	FD_SET(Xconnection, &fdset);
 	if(WakePipeOK)
 		FD_SET(WakePipe[0], &fdset);
-	int level = LeaveGMutexAll(); // Give chance to nonmain threads to touch GUI things
+	int level = LeaveGMutexAll(); // Give  a chance to nonmain threads to touch GUI things
 	select((WakePipeOK ? max(WakePipe[0], Xconnection) : Xconnection) + 1, &fdset, NULL, NULL, &timeout);
 	char h;
 	while(WakePipeOK && read(WakePipe[0], &h, 1) > 0) // There might be relatively harmless race condition here causing delay in ICall
@@ -431,7 +431,6 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 		XEvent event;
 		GuiSleep0(granularity);
 		DoCall();
-//		GuiSleep()(granularity);
 		SyncMousePos();
 		while(IsWaitingEvent()) {
 			LTIMING("XNextEvent");
