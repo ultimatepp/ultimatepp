@@ -321,6 +321,7 @@ void Ctrl::ProcessEvent(XEvent *event)
 void Ctrl::TimerAndPaint() {
 	GuiLock __;
 	LTIMING("TimerAndPaint");
+	LLOG("TimerAndPaint");
 	TimerProc(GetTickCount());
 	for(int i = 0; i < Xwindow().GetCount(); i++) {
 		XWindow& xw = Xwindow()[i];
@@ -345,6 +346,7 @@ void Ctrl::TimerAndPaint() {
 bool Ctrl::ProcessEvent(bool *)
 {
 	GuiLock __;
+	if(DoCall()) return false;
 	if(!IsWaitingEvent()) return false;
 	XEvent event;
 	XNextEvent(Xdisplay, &event);
@@ -368,23 +370,38 @@ bool Ctrl::ProcessEvents(bool *)
 	return false;
 }
 
+static bool WakePipeOK;
+static int  WakePipe[2];
+
+INITBLOCK {
+	WakePipeOK = pipe(WakePipe) == 0;
+}
+
+void WakeUpGuiThread()
+{
+	if(WakePipeOK)
+		IGNORE_RESULT(write(WakePipe[1], "\1", 1));
+}
+
 void Ctrl::GuiSleep0(int ms)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
-	fd_set fdset;
-	FD_ZERO(&fdset);
-	FD_SET(Xconnection, &fdset);
 	timeval timeout;
 	timeout.tv_sec = ms / 1000;
 	timeout.tv_usec = ms % 1000 * 1000;
 	XFlush(Xdisplay);
-	do {
-		int level = LeaveGMutexAll();
-		select(Xconnection + 1, &fdset, NULL, NULL, &timeout);
-		EnterGMutex(level);
-	}
-	while(DoCall());
+	fd_set fdset;
+	FD_ZERO(&fdset);
+	FD_SET(Xconnection, &fdset);
+	if(WakePipeOK)
+		FD_SET(WakePipe[0], &fdset);
+	int level = LeaveGMutexAll(); // Give chance to nonmain threads to touch GUI things
+	select((WakePipeOK ? max(WakePipe[0], Xconnection) : Xconnection) + 1, &fdset, NULL, NULL, &timeout);
+	char h;
+	while(WakePipeOK && read(WakePipe[0], &h, 1) > 0) // There might be relatively harmless race condition here causing delay in ICall
+		LLOG("WakeUpGuiThread detected!");
+	EnterGMutex(level);
 }
 
 static int granularity = 10;
@@ -412,19 +429,8 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 
 	while(loopno > EndSessionLoopNo && (ctrl ? ctrl->InLoop() && ctrl->IsOpen() : GetTopCtrls().GetCount())) {
 		XEvent event;
-		fd_set fdset;
-		FD_ZERO(&fdset);
-		FD_SET(Xconnection, &fdset);
-		timeval timeout;
-		timeout.tv_sec = 0;
-		timeout.tv_usec = 1000 * granularity;
-		XFlush(Xdisplay);
-		do {
-			int level = LeaveGMutexAll();
-			select(Xconnection + 1, &fdset, NULL, NULL, &timeout);
-			EnterGMutex(level);
-		}
-		while(DoCall());
+		GuiSleep0(granularity);
+		DoCall();
 //		GuiSleep()(granularity);
 		SyncMousePos();
 		while(IsWaitingEvent()) {
@@ -456,7 +462,7 @@ void Ctrl::SyncExpose()
 
 void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 {
-	Call(callback3(this, &Ctrl::Create0, owner, redirect, savebits));
+	ICall(callback3(this, &Ctrl::Create0, owner, redirect, savebits));
 }
 
 void Ctrl::Create0(Ctrl *owner, bool redirect, bool savebits)
@@ -1002,7 +1008,7 @@ void Ctrl::WndInvalidateRect0(const Rect& r)
 {
 	GuiLock __;
 	if(!top) return;
-	LLOG("WndInvalidateRect " << r);
+	LLOG("WndInvalidateRect0 " << r);
 	Invalidate(Xwindow().Get(top->window), r);
 }
 

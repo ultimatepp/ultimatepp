@@ -102,53 +102,6 @@ XftFont *GetXftFont(Font fnt, int angle)
 	return be.xftfont;
 }
 
-CommonFontInfo XftGetFontInfoSys(Font font)
-{
-	CommonFontInfo fi;
-	String path;
-	XftFont *xftfont = GetXftFont(font, 0);
-	if(xftfont) {
-		fi.ascent = (int16)xftfont->ascent;
-		fi.descent = (int16)xftfont->descent;
-		fi.height = fi.ascent + fi.descent;
-		fi.lineheight = (int16)xftfont->height;
-		fi.external = 0;
-		fi.internal = 0;
-		fi.overhang = 0;
-		fi.maxwidth = (int16)xftfont->max_advance_width;
-		fi.avewidth = fi.maxwidth;
-		fi.default_char = '?';
-		fi.fixedpitch = font.GetFaceInfo() & Font::FIXEDPITCH;
-
-		char *fn = NULL;
-		XftPatternGetString(xftfont->pattern, XFT_FILE, 0, &fn);
-		if(fn && strlen(fn) < 250)
-			strcpy(fi.path, fn);
-	}
-	return fi;
-}
-
-GlyphInfo XftGetGlyphInfoSys(Font font, int chr)
-{
-	wchar h = chr;
-	XGlyphInfo info;
-	XftTextExtents16(Xdisplay, GetXftFont(font, 0), &h, 1, &info);
-	GlyphInfo gi;
-	gi.width = info.xOff;
-	gi.lspc = -info.x;
-	gi.rspc = info.xOff - info.width + info.x;
-	return gi;
-}
-
-INITBLOCK {
-//	extern FT_Face (*FTFaceXft)(Font fnt, String *rpath);
-	extern CommonFontInfo (*GetFontInfoSysXft)(Font font);
-	extern GlyphInfo (*GetGlyphInfoSysXft)(Font font, int chr);
-//	FTFaceXft = XftFTFace;
-	GetFontInfoSysXft = XftGetFontInfoSys;
-	GetGlyphInfoSysXft = XftGetGlyphInfoSys;
-}
-
 void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font,
                             Color ink, int n, const int *dx) {
 	GuiLock __;

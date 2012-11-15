@@ -107,7 +107,7 @@ void CoWork::Do(Callback cb) {
 
 void CoWork::Finish() {
 #ifdef _MULTITHREADED
-	Pool &p = pool();
+	Pool& p = pool();
 	p.lock.Enter();
 	while(todo) {
 		LLOG("Finish: todo: " << todo << " (CoWork " << FormatIntHex(this) << ")");
@@ -125,6 +125,15 @@ void CoWork::Finish() {
 	p.lock.Leave();
 	LLOG("CoWork finished");
 #endif
+}
+
+bool CoWork::IsFinished()
+{
+	Pool& p = pool();
+	p.lock.Enter();
+	bool b = todo == 0;
+	p.lock.Leave();
+	return b;
 }
 
 CoWork::CoWork()
