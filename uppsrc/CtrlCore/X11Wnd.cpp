@@ -374,7 +374,7 @@ static bool WakePipeOK;
 static int  WakePipe[2];
 
 INITBLOCK {
-	WakePipeOK = pipe(WakePipe) == 0;
+	WakePipeOK = pipe2(WakePipe, O_NONBLOCK) == 0;
 }
 
 void WakeUpGuiThread()
