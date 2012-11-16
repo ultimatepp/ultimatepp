@@ -19,7 +19,7 @@ class UnZip {
 	dword  usize;
 	dword  done;
 
-	void   Init();	
+	void   Init();
 	void   ReadHeader();
 	void   SetError()           { error = true; }
 
