@@ -1,0 +1,12 @@
+description "Multi thread rpc server\377";
+
+uses
+	Core,
+	Core/Rpc;
+
+file
+	MtRpcServer.cpp;
+
+mainconfig
+	"" = "MT";
+

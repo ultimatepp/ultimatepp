@@ -1,0 +1,5 @@
+#ifndef _MtRpcClient_icpp_init_stub
+#define _MtRpcClient_icpp_init_stub
+#include "Core/init"
+#include "Core/Rpc/init"
+#endif
