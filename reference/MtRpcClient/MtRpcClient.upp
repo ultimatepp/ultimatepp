@@ -1,0 +1,12 @@
+description "Multi thread rpc client\377";
+
+uses
+	Core,
+	Core/Rpc;
+
+file
+	MtRpcClient.cpp;
+
+mainconfig
+	"" = "MT";
+
