@@ -8,12 +8,7 @@ bool Replace(Font fnt, int chr, Font& rfnt);
 
 void Std(Font& font)
 {
-	if(IsNull(font))
-		font = StdFont();
-	if(font.GetFace() == 0)
-		font.Face(GetStdFont().GetFace());
-	if(font.GetHeight() == 0)
-		font.Height(GetStdFont().GetHeight());
+	font.RealizeStd();
 }
 
 Size Font::StdFontSize;
@@ -105,6 +100,7 @@ void (*whenSetStdFont)();
 
 void Font::SetStdFont(Font font)
 {
+	LLOG("SetStdFont " << font);
 	Mutex::Lock __(sFontLock);
 	static int x = 0;
 	if(x) return;
@@ -115,6 +111,12 @@ void Font::SetStdFont(Font font)
 	if(whenSetStdFont)
 		(*whenSetStdFont)();
 	x--;
+	static int w = 0;
+	if(w) return;
+	w++;
+	if(whenSetStdFont)
+		(*whenSetStdFont)();
+	w--;
 }
 
 void Font::InitStdFont()
@@ -160,6 +162,15 @@ Size Font::GetStdFontSize()
 Font StdFont()
 {
 	return Font(0, -32000);
+}
+
+void Font::RealizeStd()
+{
+	int h = v.height;
+	if(IsNullInstance() || v.face == STDFONT)
+		*this = GetStdFont();
+	if(h != -32000 && h != 0)
+		v.height = h;
 }
 
 int Font::GetHeight() const
@@ -354,6 +365,7 @@ CharEntry fc_cache_global[4093];
 bool IsNormal(Font font, int chr)
 {
 	Mutex::Lock __(sFontLock);
+	font.RealizeStd();
 	CharEntry& e = fc_cache_global[CombineHash(font.GetHashValue(), chr) % 4093];
 	if(e.font == font.AsInt64() || e.chr == chr)
 		return e.info.IsNormal();
@@ -391,7 +403,7 @@ thread__ CharEntry fc_cache[512];
 
 GlyphInfo GetGlyphInfo(Font font, int chr)
 {
-	Std(font);
+	font.RealizeStd();
 	unsigned hash = CombineHash(font.GetHashValue(), chr);
 	CharEntry& e = fc_cache[hash & 511];
 	if(e.font != font.AsInt64() || e.chr != chr)
@@ -437,6 +449,7 @@ void GlyphMetrics(GlyphInfo& f, Font font, int chr)
 
 GlyphInfo GetGlyphMetrics(Font font, int chr)
 {
+	font.RealizeStd();
 	GlyphInfo f = GetGlyphInfo(font, chr);
 	if(f.IsMissing())
 		f = GetGlyphInfo(font, '?');
@@ -453,7 +466,7 @@ thread__ FontEntry fi_cache[64];
 
 const CommonFontInfo& GetFontInfo(Font font)
 {
-	Std(font);
+	font.RealizeStd();
 	unsigned hash = font.GetHashValue() & 63;
 	FontEntry& e = fi_cache[hash];
 	if(e.font != font.AsInt64()) {

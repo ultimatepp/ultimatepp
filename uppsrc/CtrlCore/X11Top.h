@@ -15,6 +15,8 @@ private:
 	void          SyncState();
 	void          SyncState0();
 
+	void          Open0(Ctrl *owner);
+
 	Image         invert;
 	WString       title2;
 //$ };

@@ -2589,6 +2589,29 @@ is available.&]
 [s7;i1120;a17; [%-*@3 ms]-|Time to sleep.&]
 [s3; &]
 [s4;%- &]
+[s5;:Ctrl`:`:Call`(Callback`):%- [@(0.0.255) static] [@(0.0.255) void]_[* Call]([_^Callback^ C
+allback]_[*@3 cb])&]
+[s2; Ececutes a callback in the main thread (the one responsible 
+for GUI). It works by posting callback into timer queue (with 
+zero delay), then waits its completion using Semaphore. Main 
+GUI thread has to run timer queue management for callback to 
+be executed (by running event`-loop (TopWindow`::Run) or ProcessEvents).&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:IsShutdownThreads`(`):%- [@(0.0.255) static] [@(0.0.255) bool]_[* IsShutdownTh
+reads]()&]
+[s2; Same as Thread`::IsShutdownThreads. Used to signal non`-main 
+threads that the program is about to end, so that non`-main threads 
+should terminate.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:ShutdownThreads`(`):%- [@(0.0.255) static] [@(0.0.255) void]_[* ShutdownThread
+s]()&]
+[s2; Similiar to Thread`::ShutdownThreads, but as part of waiting 
+for threads to finish calls ProcessEvents so that any Call methods 
+can finish.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Ctrl`:`:GetEventId`(`):%- [@(0.0.255) static] [_^int64^ int64]_[* GetEventId]()&]
 [s2; This function is guaranteed to return the same number while 
 single input event (mouse event or keyboard event) is processed. 

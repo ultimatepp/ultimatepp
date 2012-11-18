@@ -70,12 +70,12 @@ bool TopWindow::IsShowEnabled() const
 
 void TopWindow::SyncCaption()
 {
-	ICall(THISBACK(SyncCaption0));
+	Call(THISBACK(SyncCaption0));
 }
 
 void TopWindow::SyncTitle()
 {
-	ICall(THISBACK(SyncTitle0));
+	Call(THISBACK(SyncTitle0));
 }
 
 void TopWindow::DefaultBreak()

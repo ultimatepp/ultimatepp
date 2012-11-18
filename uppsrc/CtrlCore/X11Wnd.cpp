@@ -321,7 +321,6 @@ void Ctrl::ProcessEvent(XEvent *event)
 void Ctrl::TimerAndPaint() {
 	GuiLock __;
 	LTIMING("TimerAndPaint");
-	LLOG("TimerAndPaint");
 	TimerProc(GetTickCount());
 	for(int i = 0; i < Xwindow().GetCount(); i++) {
 		XWindow& xw = Xwindow()[i];
@@ -346,7 +345,6 @@ void Ctrl::TimerAndPaint() {
 bool Ctrl::ProcessEvent(bool *)
 {
 	GuiLock __;
-	if(DoCall()) return false;
 	if(!IsWaitingEvent()) return false;
 	XEvent event;
 	XNextEvent(Xdisplay, &event);
@@ -386,6 +384,7 @@ void WakeUpGuiThread()
 void Ctrl::GuiSleep0(int ms)
 {
 	GuiLock __;
+	LLOG(GetTickCount() << " GUISLEEP " << ms);
 	ASSERT(IsMainThread());
 	timeval timeout;
 	timeout.tv_sec = ms / 1000;
@@ -396,12 +395,12 @@ void Ctrl::GuiSleep0(int ms)
 	FD_SET(Xconnection, &fdset);
 	if(WakePipeOK)
 		FD_SET(WakePipe[0], &fdset);
-	int level = LeaveGMutexAll(); // Give  a chance to nonmain threads to touch GUI things
+	int level = LeaveGuiMutexAll(); // Give  a chance to nonmain threads to touch GUI things
 	select((WakePipeOK ? max(WakePipe[0], Xconnection) : Xconnection) + 1, &fdset, NULL, NULL, &timeout);
 	char h;
 	while(WakePipeOK && read(WakePipe[0], &h, 1) > 0) // There might be relatively harmless race condition here causing delay in ICall
-		LLOG("WakeUpGuiThread detected!");
-	EnterGMutex(level);
+		LLOG(GetTickCount() << " WakeUpGuiThread detected!"); // or "void" passes through timer & paint
+	EnterGuiMutex(level);
 }
 
 static int granularity = 10;
@@ -430,7 +429,6 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	while(loopno > EndSessionLoopNo && (ctrl ? ctrl->InLoop() && ctrl->IsOpen() : GetTopCtrls().GetCount())) {
 		XEvent event;
 		GuiSleep0(granularity);
-		DoCall();
 		SyncMousePos();
 		while(IsWaitingEvent()) {
 			LTIMING("XNextEvent");
@@ -461,7 +459,7 @@ void Ctrl::SyncExpose()
 
 void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 {
-	ICall(callback3(this, &Ctrl::Create0, owner, redirect, savebits));
+	Call(callback3(this, &Ctrl::Create0, owner, redirect, savebits));
 }
 
 void Ctrl::Create0(Ctrl *owner, bool redirect, bool savebits)
@@ -739,7 +737,8 @@ void Ctrl::WndSetPos0(const Rect& r)
 {
 	GuiLock __;
 	if(!top) return;
-	LLOG("WndSetPos " << Name() << r);
+	LLOG("WndSetPos0 " << Name() << r);
+	DUMP(IsMainThread());
 	AddGlobalRepaint();
 	XMoveResizeWindow(Xdisplay, top->window, r.left, r.top, r.Width(), r.Height());
 	rect = r;
@@ -1003,7 +1002,7 @@ void Ctrl::AddGlobalRepaint()
 		}
 }
 
-void Ctrl::WndInvalidateRect0(const Rect& r)
+void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
 	if(!top) return;

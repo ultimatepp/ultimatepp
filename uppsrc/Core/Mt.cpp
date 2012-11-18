@@ -192,19 +192,30 @@ int Thread::GetCount()
 	return ReadWithBarrier(sThreadCount);
 }
 
-static volatile Atomic sShutdown = 0;
+static Atomic sShutdown;
+
+void Thread::BeginShutdownThreads()
+{
+	AtomicInc(sShutdown);
+}
+
+void Thread::EndShutdownThreads()
+{
+	AtomicDec(sShutdown);
+}
+
 
 void Thread::ShutdownThreads()
 {
-	AtomicInc(sShutdown);
-	while(AtomicRead(sThreadCount))
+	BeginShutdownThreads();
+	while(GetCount())
 		Sleep(100);
-	AtomicDec(sShutdown);
+	EndShutdownThreads();
 }
 
 bool Thread::IsShutdownThreads()
 {
-	return AtomicRead(sShutdown);
+	return sShutdown;
 }
 
 int Thread::Wait()
