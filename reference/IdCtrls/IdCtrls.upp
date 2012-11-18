@@ -1,3 +1,5 @@
+description "Demonstrates IdCtrls utility class to match widgets with keys (in JSON here)\377";
+
 uses
 	CtrlLib;
 
