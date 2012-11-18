@@ -20,11 +20,13 @@ void App::Work()
 	for(;;) {
 		Sleep(1);
 		GuiLock __;
-		if(Thread::IsShutdownThreads())
+		if(IsShutdownThreads())
 			break;
-		if(list.GetCount() > 1000) {
-			if(PromptYesNo("Quit?"))
+		if(list.GetCount() > 100) {
+			if(PromptYesNo("Quit?")) {
 				Break();
+				return;
+			}
 			list.Clear();
 		}
 		list.Add((int64)Random());
@@ -40,8 +42,7 @@ App::App()
 
 App::~App()
 {
-	Thread::ShutdownThreads();
-	work.Wait();
+	ShutdownThreads();
 }
 
 GUI_APP_MAIN
