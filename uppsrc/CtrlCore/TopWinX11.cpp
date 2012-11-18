@@ -148,14 +148,14 @@ void TopWindow::SyncState0()
 
 void TopWindow::SyncState()
 {
-	ICall(THISBACK(SyncState0));
+	Call(THISBACK(SyncState0));
 }
 
 void TopWindow::SyncCaption0()
 {
 	GuiLock __; 
-	LLOG("SyncCaption");
-	SyncTitle();
+	LLOG("SyncCaption0");
+	SyncTitle0();
 	if(IsOpen() && GetWindow()) {
 		unsigned long wina[6];
 		memset(wina, 0, sizeof(wina));
@@ -240,6 +240,12 @@ void TopWindow::CenterRect(Ctrl *owner)
 
 void TopWindow::Open(Ctrl *owner)
 {
+	Call(PTEBACK1(Open0, owner));
+}
+
+void TopWindow::Open0(Ctrl *owner)
+{
+	LLOG("TopWindow::Open");
 	GuiLock __; 
 	if(dokeys && (!GUI_AKD_Conservative() || GetAccessKeysDeep() <= 1))
 		DistributeAccessKeys();
@@ -316,9 +322,9 @@ void TopWindow::Open(Ctrl *owner)
 		}
 	}
 	if(weplace) {
-		WndSetPos0(GetRect());
+		WndSetPos(GetRect());
 		LLOG("SyncCaption");
-		SyncCaption0();
+		SyncCaption();
 	}
 	LLOG(">Open NextRequest " << NextRequest(Xdisplay));
 	LLOG(">OPENED " << Name());

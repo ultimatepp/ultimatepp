@@ -111,6 +111,8 @@ public:
 	String GetFaceNameStd() const;
 	dword  GetFaceInfo() const;
 	int64  AsInt64() const          { return data; }
+	
+	void   RealizeStd();
 
 	Font& Face(int n)               { v.face = n; return *this; }
 	Font& Height(int n)             { v.height = n; return *this; }

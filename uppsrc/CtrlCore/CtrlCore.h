@@ -22,15 +22,17 @@
 NAMESPACE_UPP
 
 #ifdef _MULTITHREADED
-void EnterGMutex(int n);
-int  LeaveGMutexAll();
 void EnterGuiMutex();
 void LeaveGuiMutex();
+
+int  LeaveGuiMutexAll();
+void EnterGuiMutex(int n);
 #else
-inline void EnterGMutex(int) {}
-inline int  LeaveGMutexAll() { return 0; }
 inline void EnterGuiMutex() {}
 inline void LeaveGuiMutex() {}
+
+inline int  LeaveGuiMutexAll() { return 0; }
+inline void EnterGuiMutex(int) {}
 #endif
 
 struct GuiLock {
@@ -583,8 +585,6 @@ private:
 	void    SetInfoPart(int i, const char *txt);
 	String  GetInfoPart(int i) const;
 
-	static  bool DoCall();
-
 // System window interface...
 	void WndShow0(bool b);
 	void WndShow(bool b);
@@ -611,8 +611,10 @@ private:
 	bool SetWndFocus();
 	bool HasWndFocus() const;
 
-	void WndInvalidateRect0(const Rect& r);
 	void WndInvalidateRect(const Rect& r);
+
+	void WndScrollView0(const Rect& r, int dx, int dy);
+	void WndScrollView(const Rect& r, int dx, int dy);
 
 	void SetWndForeground0();
 	void SetWndForeground();
@@ -622,8 +624,6 @@ private:
 	bool WndEnable(bool b);
 
 	Rect GetWndScreenRect() const;
-	void WndScrollView0(const Rect& r, int dx, int dy);
-	void WndScrollView(const Rect& r, int dx, int dy);
 	void WndUpdate0();
 	void WndUpdate();
 	void WndUpdate0r(const Rect& r);
@@ -644,8 +644,6 @@ private:
 	static bool IsNoLayoutZoom;
 	static void Csizeinit();
 	static void (*skin)();
-
-	static  void ICall(Callback cb);
 
 	friend void  AvoidPaintingCheck__();
 	friend void CtrlSetDefaultSkin(void (*fn1)(), void (*fn2)());
@@ -1125,10 +1123,6 @@ public:
 	
 	enum { TIMEID_COUNT = 1 };
 
-	static void  Call(Callback cb);
-
-	static void  SetTimerGranularity(int ms);
-
 	static Ctrl *GetActiveCtrl();
 	static Ctrl *GetActiveWindow();
 
@@ -1230,6 +1224,15 @@ public:
 	static bool MemoryCheck;
 
 	static void GuiSleep(int ms);
+
+	static void SetTimerGranularity(int ms);
+
+	static void Call(Callback cb);
+
+#ifdef _MULTITHREADED
+	static bool IsShutdownThreads()                     { return Thread::IsShutdownThreads(); }
+	static void ShutdownThreads();
+#endif
 	
 	static int64 GetEventId()                           { return eventid; }
 

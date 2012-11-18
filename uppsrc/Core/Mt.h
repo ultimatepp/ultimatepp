@@ -85,6 +85,8 @@ public:
 	static bool IsST();
 	static bool IsMain();
 	static int  GetCount();
+	static void BeginShutdownThreads();
+	static void EndShutdownThreads();
 	static void ShutdownThreads();
 	static bool IsShutdownThreads();
 	static void (*AtExit(void (*exitfn)()))();
