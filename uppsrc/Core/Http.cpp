@@ -523,7 +523,7 @@ void HttpRequest::StartRequest()
 bool HttpRequest::SendingData()
 {
 	for(;;) {
-		int n = min(2048, data.GetLength() - count);
+		int n = min(2048, data.GetLength() - (int)count);
 		n = TcpSocket::Put(~data + count, n);
 		if(n == 0)
 			break;
@@ -591,7 +591,7 @@ String HttpRequest::GetRedirectUrl()
 	return h;
 }
 
-int HttpRequest::GetContentLength()
+int64 HttpRequest::GetContentLength()
 {
 	int64 n = header.GetContentLength();
 	return n < INT_MAX ? (int)n : 0;
@@ -616,9 +616,6 @@ void HttpRequest::StartBody()
 
 	count = GetContentLength();
 	
-	if(count > 0)
-		body.Reserve(count);
-
 	if(method == METHOD_HEAD)
 		phase = FINISHED;
 	else
@@ -629,7 +626,6 @@ void HttpRequest::StartBody()
 	else
 		StartPhase(BODY);
 	body.Clear();
-	bodylen = 0;
 	gzip = GetHeader("content-encoding") == "gzip";
 	if(gzip) {
 		gzip = true;
@@ -648,14 +644,12 @@ void HttpRequest::Out(const void *ptr, int size)
 	LLOG("HTTP Out " << size);
 	if(z.IsError())
 		HttpError("gzip format error");
-	int64 l = bodylen + size;
-	if(l > max_content_size) {
+	if(body.GetCount() + size > max_content_size) {
 		HttpError("content length exceeded " + AsString(max_content_size));
 		phase = FAILED;
 		return;
 	}
 	WhenContent(ptr, size);
-	bodylen += size;
 }
 
 bool HttpRequest::ReadingBody()
@@ -663,7 +657,7 @@ bool HttpRequest::ReadingBody()
 	LLOG("HTTP reading body " << count);
 	int n = chunk;
 	if(count > 0)
-		n = min(n, count);
+		n = (int)min((int64)n, count);
 	String s = TcpSocket::Get(n);
 	if(s.GetCount() == 0)
 		return !IsEof() && count;

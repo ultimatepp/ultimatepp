@@ -45,8 +45,10 @@ xHeaderSize]([@(0.0.255) int]_[*@3 m])&]
 [s4;%% &]
 [s5;:HttpRequest`:`:MaxContentSize`(int`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[* M
 axContentSize]([@(0.0.255) int]_[*@3 m])&]
-[s2;%% Specifies the maximum size of response content (default is 
-10000000). Returns `*this.&]
+[s2;%% Specifies the maximum size of response content that can be 
+stored in HttpRequest to be retrieved by GetContent method (default 
+is 10000000). Note that this limit does no apply when content 
+data are processed using WhenContent callback. Returns `*this.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:HttpRequest`:`:MaxRedirect`(int`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[* MaxR
@@ -328,7 +330,7 @@ onst]_[@(0.0.255) char]_`*[*@3 id])&]
 [s2;%% Returns processed Location field of HTTP response header.&]
 [s3;%% &]
 [s4;%% &]
-[s5;:HttpRequest`:`:GetContentLength`(`): [@(0.0.255) int]_[* GetContentLength]()&]
+[s5;:HttpRequest`:`:GetContentLength`(`): [@(0.0.255) int64]_[* GetContentLength]()&]
 [s2;%% Returns the content length as specified in HTTP response header 
 or 0 if not specified or header not yet loaded.&]
 [s3;%% &]
@@ -421,4 +423,4 @@ har]_`*[*@3 url])&]
 ool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Activates/deactivates global logging for HttpRequests (default 
 is not active).&]
-[s3;%% ]
+[s3;%% ]]
