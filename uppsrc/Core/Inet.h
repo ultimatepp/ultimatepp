@@ -295,7 +295,7 @@ private:
 class HttpRequest : public TcpSocket {
 	int          phase;
 	String       data;
-	int          count;
+	int64        count;
 
 	HttpHeader   header;
 
@@ -359,7 +359,6 @@ class HttpRequest : public TcpSocket {
 	int          chunk;
 
 	IpAddrInfo   addrinfo;
-	int          bodylen;
 	bool         gzip;	
 	Zlib         z;
 
@@ -454,7 +453,7 @@ public:
 	String       GetHeader(const char *id)                { return header[id]; }
 	String       operator[](const char *id)               { return GetHeader(id); }
 	String       GetRedirectUrl();
-	int          GetContentLength();
+	int64        GetContentLength();
 	int          GetStatusCode() const                    { return status_code; }
 	String       GetReasonPhrase() const                  { return reason_phrase; }
 
