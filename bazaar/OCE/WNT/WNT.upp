@@ -1,0 +1,145 @@
+noblitz;
+library
+	"glu32 opengl32";
+options
+	-I../,
+	-I../oce/inc,
+	-DHAVE_FTGL_NEWER212,
+	-DOCE_BUILD_STATIC_LIB,
+	-DCSFDB;
+options(POSIX) -DHAVE_DIRENT_H;
+options(POSIX) -DHAVE_DLFCN_H;
+options(POSIX) -DOCE_HAVE_FSTREAM;
+options(POSIX) -DHAVE_NETDB_H;
+options(POSIX) -DOCE_HAVE_IOSTREAM;
+options(POSIX) -DOCE_HAVE_IOMANIP;
+options(POSIX) -DOCE_HAVE_LIMITS_H;
+options(POSIX) -DHAVE_PWD_H;
+options(POSIX) -DHAVE_SIGNAL_H;
+options(POSIX) -DHAVE_STATFS;
+options(POSIX) -DHAVE_STDLIB_H;
+options(POSIX) -DHAVE_STRING_H;
+options(POSIX) -DHAVE_SYS_IPC_H;
+options(POSIX) -DHAVE_SYS_MMAN_H;
+options(POSIX) -DHAVE_SYS_PARAM_H;
+options(POSIX) -DHAVE_SYS_SEM_H;
+options(POSIX) -DHAVE_SYS_SOCKET_H;
+options(POSIX) -DHAVE_SYS_STAT_H;
+options(POSIX) -DHAVE_SYS_TIME_H;
+options(POSIX) -DHAVE_SYS_TIMES_H;
+options(POSIX) -DHAVE_SYS_TYPES_H;
+options(POSIX) -DHAVE_SYS_UNISTD_H;
+options(POSIX) -DHAVE_SYS_UTSNAME_H;
+options(POSIX) -DHAVE_SYS_VFS_H;
+options(POSIX) -DHAVE_UNISTD_H;
+options(WIN32) -DWNT;
+options(WIN32) -DHAVE_NO_DLL;
+file
+	../oce/src/WNT/EHDC.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/W32_Allocator.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/W95_Allocator.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_Allocator.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_ColorRef.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_DDriver.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_Dword.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_FontMapEntry.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_GraphicDevice.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_Icon.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_IconBox.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_IconBox_1.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_Image.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_ImageManager.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_ImageProcessor.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_LogFont.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_Long.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_MFTDraw.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_PixMap.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_TextManager.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_Uint.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_WClass.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_WDriver.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_Window.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_WindowData.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/src/WNT/WNT_WndProc.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/drv/WNT/WNT_ClassDefinitionError_0.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/drv/WNT/WNT_ColorTable_0.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/drv/WNT/WNT_FontMapEntryDefinitionError_0.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/drv/WNT/WNT_FontTable_0.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/drv/WNT/WNT_HColorTable_0.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/drv/WNT/WNT_HFontTable_0.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/drv/WNT/WNT_HListOfMFTFonts_0.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/drv/WNT/WNT_ListOfMFTFonts_0.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/drv/WNT/WNT_SequenceNodeOfSequenceOfImage_0.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT,
+	../oce/drv/WNT/WNT_SequenceOfImage_0.cxx
+		options() -I../oce/src/WNT
+		options() -I../oce/drv/WNT;

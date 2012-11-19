@@ -1,6 +1,6 @@
 #ifndef _OCETest_icpp_init_stub
 #define _OCETest_icpp_init_stub
 #include "CtrlLib/init"
-#include "OCE/Visualization/init"
-#include "OCE\ModelingAlgorithms/init"
+#include "OCE/init"
+#include "FTGL/init"
 #endif

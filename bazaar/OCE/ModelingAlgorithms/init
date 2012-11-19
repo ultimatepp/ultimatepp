@@ -1,5 +1,0 @@
-#ifndef _OCE_ModelingAlgorithms_icpp_init_stub
-#define _OCE_ModelingAlgorithms_icpp_init_stub
-#include "OCE/ModelingData/init"
-#include "FTGL/init"
-#endif

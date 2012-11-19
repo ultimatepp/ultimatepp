@@ -2,8 +2,8 @@ noblitz;
 
 uses
 	CtrlLib,
-	OCE/Visualization,
-	OCE\ModelingAlgorithms;
+	OCE,
+	FTGL;
 
 file
 	CascadeDocument.h,
