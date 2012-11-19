@@ -146,6 +146,9 @@ GlyphInfo XftGetGlyphInfoSys(Font font, int chr)
 }
 
 INITBLOCK {
+	// it is probably not quite required as Xft is based on FC, but to be sure to have 
+	// consistent metrics hook Xft metrics into Draw/FontFc.cpp
+
 	extern CommonFontInfo (*GetFontInfoSysXft)(Font font);
 	extern GlyphInfo (*GetGlyphInfoSysXft)(Font font, int chr);
 
