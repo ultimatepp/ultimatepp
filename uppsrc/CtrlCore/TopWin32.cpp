@@ -84,7 +84,7 @@ void TopWindow::SyncTitle0()
 			::SetWindowText(hwnd, ToSystemCharset(title.ToString()));
 }
 
-void TopWindow::DeleteIco0()
+void TopWindow::DeleteIco()
 {
 	GuiLock __;
 	LLOG("TopWindow::DeleteIco " << UPP::Name(this));
@@ -93,11 +93,6 @@ void TopWindow::DeleteIco0()
 	if(lico)
 		DestroyIcon(lico);
 	ico = lico = NULL;
-}
-
-void TopWindow::DeleteIco()
-{
-	ICall(THISBACK(DeleteIco0));
 }
 
 void TopWindow::SyncCaption0()

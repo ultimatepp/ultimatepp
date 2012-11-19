@@ -150,7 +150,7 @@ String Ctrl::Name() const {
 
 void Ctrl::WndCreateCaret(const Rect& cr)
 {
-	ICall(THISBACK1(WndCreateCaret0, cr));
+	Call(THISBACK1(WndCreateCaret0, cr));
 }
 
 END_UPP_NAMESPACE

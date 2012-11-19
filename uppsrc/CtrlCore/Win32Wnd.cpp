@@ -492,7 +492,7 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	cr.savebits = savebits;
 	cr.show = show;
 	cr.dropshadow = dropshadow;
-	ICall(callback1(this, &Ctrl::Create0, &cr));
+	Call(callback1(this, &Ctrl::Create0, &cr));
 }
 
 #if 0
@@ -842,8 +842,6 @@ bool Ctrl::IsWaitingEvent()
 bool Ctrl::ProcessEvent(bool *quit)
 {
 	ASSERT(IsMainThread());
-	if(DoCall())
-		return false;
 	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
 		ReleaseCtrlCapture();
 	MSG msg;
@@ -909,7 +907,7 @@ void Ctrl::GuiSleep0(int ms)
 	GuiLock __;
 	ASSERT(IsMainThread());
 	ELOG("GuiSleep");
-	int level = LeaveGMutexAll();
+	int level = LeaveGuiMutexAll();
 #if !defined(flagDLL) && !defined(PLATFORM_WINCE)
 	if(!OverwatchThread) {
 		DWORD dummy;
@@ -924,7 +922,7 @@ void Ctrl::GuiSleep0(int ms)
 #else
 	MsgWaitForMultipleObjects(0, NULL, FALSE, ms, QS_ALLINPUT);
 #endif
-	EnterGMutex(level);
+	EnterGuiMutex(level);
 }
 
 void Ctrl::WndDestroyCaret()
@@ -1197,7 +1195,7 @@ bool Ctrl::HasWndCapture() const
 	return hwnd && hwnd == ::GetCapture();
 }
 
-void Ctrl::WndInvalidateRect0(const Rect& r)
+void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
 	LLOG("WndInvalidateRect " << UPP::Name(this));
