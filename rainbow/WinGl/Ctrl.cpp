@@ -6,13 +6,9 @@
 
 NAMESPACE_UPP
 
-void WakeUpGuiThread(void)
-{
-}
-
 void Ctrl::GuiPlatformConstruct()
 {
-	cliptobounds = true;	
+	cliptobounds = true;
 }
 
 void Ctrl::GuiPlatformRemove()
@@ -67,6 +63,13 @@ Color GuiPlatformGetScreenPixel(int x, int y)
 
 void GuiPlatformAfterMenuPopUp()
 {
+}
+
+void Ctrl::ApplyLayout()
+{
+	GuiLock __;
+	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext())
+		q->ApplyLayout();
 }
 
 String Ctrl::Name() const {

@@ -195,10 +195,6 @@ void Ctrl::SyncTopWindows()
 bool Ctrl::ProcessEvent(bool *quit)
 {
 	ASSERT(IsMainThread());
-	if(DoCall()) {
-		SyncTopWindows();
-		return false;
-	}
 	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
 		ReleaseCtrlCapture();
 	if(GlProcessEvent(quit)) {
@@ -224,8 +220,10 @@ void Ctrl::DrawScreen()
 		int64 t0 = GetHighTickCount();
 		frameInfo.curr_tick_count = t0;
 		painting = true;
+		desktop->ApplyLayout();
 		desktop->ApplyTransform(TS_BEFORE_SCREEN);
 		for(int i = 0; i < topctrl.GetCount(); i++) {
+			topctrl[i]->ApplyLayout();
 			topctrl[i]->ApplyTransform(TS_BEFORE_SCREEN);
 		}
 		Rect clip = desktop->GetRect();
@@ -385,9 +383,9 @@ void Ctrl::GuiSleep0(int ms)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
-	int level = LeaveGMutexAll();
+	int level = LeaveGuiMutexAll();
 	GlSleep(ms);
-	EnterGMutex(level);
+	EnterGuiMutex(level);
 }
 
 Rect Ctrl::GetWndScreenRect() const
@@ -572,7 +570,7 @@ bool Ctrl::HasWndCapture() const
 	return captureCtrl && captureCtrl->GetTopCtrl() == this;
 }
 
-void Ctrl::WndInvalidateRect0(const Rect& r)
+void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
 	//::InvalidateRect(glHwnd, NULL, false);
