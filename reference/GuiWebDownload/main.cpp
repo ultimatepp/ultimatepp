@@ -62,8 +62,10 @@ void Downloader::Perform()
 void Downloader::Content(const void *ptr, int size)
 {
 	loaded += size;
-	if(!out.IsOpen())
+	if(!out.IsOpen()) {
+		RealizePath(path);
 		out.Open(path);
+	}
 	out.Put(ptr, size);
 }
 
