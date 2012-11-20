@@ -1,42 +1,75 @@
-uses(LINUX) OCE/Xw;
-uses(WIN32) OCE/WNT;
 noblitz;
+
+uses(LINUX) OCE/Xw;
+
+uses(WIN32) OCE/WNT;
+
 options
 	-I./,
 	-I./oce/inc,
 	-DHAVE_FTGL_NEWER212,
 	-DOCE_BUILD_STATIC_LIB,
 	-DCSFDB;
+
 options(POSIX) -I/usr/include/tcl;
+
 options(POSIX) -DHAVE_DIRENT_H;
+
 options(POSIX) -DHAVE_DLFCN_H;
+
 options(POSIX) -DOCE_HAVE_FSTREAM;
+
 options(POSIX) -DHAVE_NETDB_H;
+
 options(POSIX) -DOCE_HAVE_IOSTREAM;
+
 options(POSIX) -DOCE_HAVE_IOMANIP;
+
 options(POSIX) -DOCE_HAVE_LIMITS_H;
+
 options(POSIX) -DHAVE_PWD_H;
+
 options(POSIX) -DHAVE_SIGNAL_H;
+
 options(POSIX) -DHAVE_STATFS;
+
 options(POSIX) -DHAVE_STDLIB_H;
+
 options(POSIX) -DHAVE_STRING_H;
+
 options(POSIX) -DHAVE_SYS_IPC_H;
+
 options(POSIX) -DHAVE_SYS_MMAN_H;
+
 options(POSIX) -DHAVE_SYS_PARAM_H;
+
 options(POSIX) -DHAVE_SYS_SEM_H;
+
 options(POSIX) -DHAVE_SYS_SOCKET_H;
+
 options(POSIX) -DHAVE_SYS_STAT_H;
+
 options(POSIX) -DHAVE_SYS_TIME_H;
+
 options(POSIX) -DHAVE_SYS_TIMES_H;
+
 options(POSIX) -DHAVE_SYS_TYPES_H;
+
 options(POSIX) -DHAVE_SYS_UNISTD_H;
+
 options(POSIX) -DHAVE_SYS_UTSNAME_H;
+
 options(POSIX) -DHAVE_SYS_VFS_H;
+
 options(POSIX) -DHAVE_UNISTD_H;
+
 options(WIN32) -DWNT;
+
 options(WIN32) -DHAVE_NO_DLL;
+
 include
 	./oce/inc;
+
 file
 	oce/src/Dynamic/Dynamic.cxx
 		options() -Ioce/src/Dynamic
@@ -26039,141 +26072,6 @@ file
 	oce/src/DrawDim/DrawDim_Radius.cxx
 		options() -Ioce/src/DrawDim
 		options() -Ioce/drv/DrawDim,
-	oce/src/Draw/CommandWindow.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Axis2D.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Axis3D.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_BasicCommands.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Box.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Chronometer.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Circle2D.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Circle3D.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Color.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Commands.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Display.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Drawable2D.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Drawable3D.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_GraphicCommands.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Grid.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Interpretor.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Main.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Marker2D.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Marker3D.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Number.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_PloadCommands.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Printer.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_ProgressIndicator.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Segment2D.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Segment3D.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Text2D.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Text3D.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_UnitCommands.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_VariableCommands.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Viewer.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/Draw_Window.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/MainWindow.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/src/Draw/init.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/drv/Draw/Draw_DataMapIteratorOfMapOfFunctions_0.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/drv/Draw/Draw_DataMapIteratorOfVMap_0.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/drv/Draw/Draw_DataMapNodeOfMapOfFunctions_0.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/drv/Draw/Draw_DataMapNodeOfVMap_0.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/drv/Draw/Draw_Failure_0.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/drv/Draw/Draw_IndexedMapNodeOfMapOfAsciiString_0.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/drv/Draw/Draw_MapOfAsciiString_0.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/drv/Draw/Draw_MapOfFunctions_0.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/drv/Draw/Draw_SequenceNodeOfSequenceOfDrawable3D_0.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/drv/Draw/Draw_SequenceOfDrawable3D_0.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
-	oce/drv/Draw/Draw_VMap_0.cxx
-		options() -Ioce/src/Draw
-		options() -Ioce/drv/Draw,
 	oce/src/DBRep/DBRep.cxx
 		options() -Ioce/src/DBRep
 		options() -Ioce/drv/DBRep,
@@ -27035,3 +26933,4 @@ file
 	oce/drv/XSDRAWSTLVRML/XSDRAWSTLVRML_ElemNodesMap_0.cxx
 		options() -Ioce/src/XSDRAWSTLVRML
 		options() -Ioce/drv/XSDRAWSTLVRML;
+
