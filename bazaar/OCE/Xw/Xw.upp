@@ -35,6 +35,33 @@ options(POSIX) -DHAVE_UNISTD_H;
 options(WIN32) -DWNT;
 options(WIN32) -DHAVE_NO_DLL;
 file
+	../oce/src/ImageUtility/ImageUtility.cxx
+		options() -I../oce/src/ImageUtility
+		options() -I../oce/drv/ImageUtility,
+	../oce/src/ImageUtility/ImageUtility_X11Display.cxx
+		options() -I../oce/src/ImageUtility
+		options() -I../oce/drv/ImageUtility,
+	../oce/src/ImageUtility/ImageUtility_X11Dump.cxx
+		options() -I../oce/src/ImageUtility
+		options() -I../oce/drv/ImageUtility,
+	../oce/src/ImageUtility/ImageUtility_X11GC.cxx
+		options() -I../oce/src/ImageUtility
+		options() -I../oce/drv/ImageUtility,
+	../oce/src/ImageUtility/ImageUtility_X11Window.cxx
+		options() -I../oce/src/ImageUtility
+		options() -I../oce/drv/ImageUtility,
+	../oce/src/ImageUtility/ImageUtility_X11XImage.cxx
+		options() -I../oce/src/ImageUtility
+		options() -I../oce/drv/ImageUtility,
+	../oce/src/ImageUtility/ImageUtility_XPR.cxx
+		options() -I../oce/src/ImageUtility
+		options() -I../oce/drv/ImageUtility,
+	../oce/src/ImageUtility/ImageUtility_XWD.cxx
+		options() -I../oce/src/ImageUtility
+		options() -I../oce/drv/ImageUtility,
+	../oce/src/ImageUtility/ImageUtility_XWUD.cxx
+		options() -I../oce/src/ImageUtility
+		options() -I../oce/drv/ImageUtility,
 	../oce/src/Xw/Xw.cxx
 		options() -I../oce/src/Xw
 		options() -I../oce/drv/Xw,
@@ -487,31 +514,4 @@ file
 		options() -I../oce/drv/Xw,
 	../oce/drv/Xw/Xw_ListOfMFTFonts_0.cxx
 		options() -I../oce/src/Xw
-		options() -I../oce/drv/Xw,
-	../oce/src/ImageUtility/ImageUtility.cxx
-		options() -I../oce/src/ImageUtility
-		options() -I../oce/drv/ImageUtility,
-	../oce/src/ImageUtility/ImageUtility_X11Display.cxx
-		options() -I../oce/src/ImageUtility
-		options() -I../oce/drv/ImageUtility,
-	../oce/src/ImageUtility/ImageUtility_X11Dump.cxx
-		options() -I../oce/src/ImageUtility
-		options() -I../oce/drv/ImageUtility,
-	../oce/src/ImageUtility/ImageUtility_X11GC.cxx
-		options() -I../oce/src/ImageUtility
-		options() -I../oce/drv/ImageUtility,
-	../oce/src/ImageUtility/ImageUtility_X11Window.cxx
-		options() -I../oce/src/ImageUtility
-		options() -I../oce/drv/ImageUtility,
-	../oce/src/ImageUtility/ImageUtility_X11XImage.cxx
-		options() -I../oce/src/ImageUtility
-		options() -I../oce/drv/ImageUtility,
-	../oce/src/ImageUtility/ImageUtility_XPR.cxx
-		options() -I../oce/src/ImageUtility
-		options() -I../oce/drv/ImageUtility,
-	../oce/src/ImageUtility/ImageUtility_XWD.cxx
-		options() -I../oce/src/ImageUtility
-		options() -I../oce/drv/ImageUtility,
-	../oce/src/ImageUtility/ImageUtility_XWUD.cxx
-		options() -I../oce/src/ImageUtility
-		options() -I../oce/drv/ImageUtility;
+		options() -I../oce/drv/Xw;
