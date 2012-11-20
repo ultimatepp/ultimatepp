@@ -1,75 +1,42 @@
-noblitz;
-
 uses(LINUX) OCE/Xw;
-
 uses(WIN32) OCE/WNT;
-
+noblitz;
 options
 	-I./,
 	-I./oce/inc,
 	-DHAVE_FTGL_NEWER212,
 	-DOCE_BUILD_STATIC_LIB,
 	-DCSFDB;
-
 options(POSIX) -I/usr/include/tcl;
-
 options(POSIX) -DHAVE_DIRENT_H;
-
 options(POSIX) -DHAVE_DLFCN_H;
-
 options(POSIX) -DOCE_HAVE_FSTREAM;
-
 options(POSIX) -DHAVE_NETDB_H;
-
 options(POSIX) -DOCE_HAVE_IOSTREAM;
-
 options(POSIX) -DOCE_HAVE_IOMANIP;
-
 options(POSIX) -DOCE_HAVE_LIMITS_H;
-
 options(POSIX) -DHAVE_PWD_H;
-
 options(POSIX) -DHAVE_SIGNAL_H;
-
 options(POSIX) -DHAVE_STATFS;
-
 options(POSIX) -DHAVE_STDLIB_H;
-
 options(POSIX) -DHAVE_STRING_H;
-
 options(POSIX) -DHAVE_SYS_IPC_H;
-
 options(POSIX) -DHAVE_SYS_MMAN_H;
-
 options(POSIX) -DHAVE_SYS_PARAM_H;
-
 options(POSIX) -DHAVE_SYS_SEM_H;
-
 options(POSIX) -DHAVE_SYS_SOCKET_H;
-
 options(POSIX) -DHAVE_SYS_STAT_H;
-
 options(POSIX) -DHAVE_SYS_TIME_H;
-
 options(POSIX) -DHAVE_SYS_TIMES_H;
-
 options(POSIX) -DHAVE_SYS_TYPES_H;
-
 options(POSIX) -DHAVE_SYS_UNISTD_H;
-
 options(POSIX) -DHAVE_SYS_UTSNAME_H;
-
 options(POSIX) -DHAVE_SYS_VFS_H;
-
 options(POSIX) -DHAVE_UNISTD_H;
-
 options(WIN32) -DWNT;
-
 options(WIN32) -DHAVE_NO_DLL;
-
 include
 	./oce/inc;
-
 file
 	oce/src/Dynamic/Dynamic.cxx
 		options() -Ioce/src/Dynamic
@@ -26174,72 +26141,6 @@ file
 	oce/src/DebugTools/Perf.cxx
 		options() -Ioce/src/DebugTools
 		options() -Ioce/drv/DebugTools,
-	oce/src/QABugs/QABugs.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_1.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_10.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_11.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_12.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_13.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_14.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_15.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_16.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_17.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_18.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_19.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_2.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_3.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_4.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_5.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_6.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_7.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_8.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_9.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_MyText.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
-	oce/src/QABugs/QABugs_PresentableObject.cxx
-		options() -Ioce/src/QABugs
-		options() -Ioce/drv/QABugs,
 	oce/src/QADNaming/QADNaming.cxx
 		options() -Ioce/src/QADNaming
 		options() -Ioce/drv/QADNaming,
@@ -26933,4 +26834,3 @@ file
 	oce/drv/XSDRAWSTLVRML/XSDRAWSTLVRML_ElemNodesMap_0.cxx
 		options() -Ioce/src/XSDRAWSTLVRML
 		options() -Ioce/drv/XSDRAWSTLVRML;
-
