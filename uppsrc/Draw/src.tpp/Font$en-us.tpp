@@ -116,6 +116,14 @@ st]&]
 are expressed as bitfields of this number.&]
 [s3; &]
 [s4; &]
+[s5;:Font`:`:RealizeStd`(`): [@(0.0.255) void]_[* RealizeStd]()&]
+[s2;%% Replaces Null or STDFONT with actual standard GUI font definition. 
+If font is Null, it is set to standard font with all attributes. 
+If face is STDFONT, it is replaced with actual face of standard 
+font. If font height is `-32000 (which is value StdFont function 
+normally returns), it is replaced with standard font height.&]
+[s3; &]
+[s4; &]
 [s5;:Font`:`:Face`(int`): [_^Font^ Font][@(0.0.255) `&]_[* Face]([@(0.0.255) int]_[@3 n])&]
 [s2;%% Sets the face index.&]
 [s3; &]
