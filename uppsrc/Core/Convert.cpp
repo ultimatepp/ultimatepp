@@ -493,7 +493,7 @@ GLOBAL_VAR_INIT(const ConvertString, StdConvertString);
 GLOBAL_VARP_INIT(const ConvertString, StdConvertStringNotNull, (INT_MAX, true))
 
 Value  MapConvert::Format(const Value& q) const {
-	return map.Get(q, Null);
+	return map.Get(q, default_value);
 }
 
 NoConvertClass::NoConvertClass() {}
