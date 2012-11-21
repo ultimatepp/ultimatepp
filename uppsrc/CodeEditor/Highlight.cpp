@@ -474,7 +474,7 @@ void CodeEditor::InitKeywords()
 			"TABLE", "TABLE_", "END_TABLE", "TABLE_I", "TABLE_I_", "TABLE_II",
 			"TABLE_II_", "TABLE_III", "TABLE_III_", "VAR", "VAR_",
 			"COLUMN", "COLUMN_ARRAY", "ATTRIBUTE", "INLINE_ATTRIBUTE",
-			"TYPE", "TYPE_I", "TYPE_II", "TYPE_III",
+			"TYPE", "TYPE_I", "TYPE_II", "TYPE_III", "END_TYPE",
 			"TYPE_", "TYPE_I_", "TYPE_II_", "TYPE_III_", "SERIAL", "ISERIAL",
 			NULL
 		};
