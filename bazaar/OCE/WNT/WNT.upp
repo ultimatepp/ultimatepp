@@ -90,9 +90,6 @@ file
 	../oce/src/WNT/WNT_MFTDraw.cxx
 		options() -I../oce/src/WNT
 		options() -I../oce/drv/WNT,
-	../oce/src/WNT/WNT_PixMap.cxx
-		options() -I../oce/src/WNT
-		options() -I../oce/drv/WNT,
 	../oce/src/WNT/WNT_TextManager.cxx
 		options() -I../oce/src/WNT
 		options() -I../oce/drv/WNT,

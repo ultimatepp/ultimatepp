@@ -1,5 +1,6 @@
 #ifndef _OCE_icpp_init_stub
 #define _OCE_icpp_init_stub
+#include "FTGL/init"
 #include "OCE/Xw/init"
 #include "OCE/WNT/init"
 #endif

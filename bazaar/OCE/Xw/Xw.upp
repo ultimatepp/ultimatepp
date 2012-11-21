@@ -84,9 +84,6 @@ file
 	../oce/src/Xw/Xw_MarkMap.cxx
 		options() -I../oce/src/Xw
 		options() -I../oce/drv/Xw,
-	../oce/src/Xw/Xw_PixMap.cxx
-		options() -I../oce/src/Xw
-		options() -I../oce/drv/Xw,
 	../oce/src/Xw/Xw_TextManager.cxx
 		options() -I../oce/src/Xw
 		options() -I../oce/drv/Xw,
