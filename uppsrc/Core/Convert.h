@@ -233,10 +233,12 @@ public:
 
 protected:
 	VectorMap<Value, Value> map;
+	Value                   default_value;
 
 public:
 	void         Clear()                                 { map.Clear(); }
 	MapConvert&  Add(const Value& a, const Value& b)     { map.Add(a, b); return *this; }
+	MapConvert&  Default(const Value& v)                 { default_value = v; return *this; }
 
 	int          GetCount() const                        { return map.GetCount(); }
 	int          Find(const Value& v) const              { return map.Find(v); }
