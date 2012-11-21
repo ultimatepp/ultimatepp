@@ -167,8 +167,10 @@ Font StdFont()
 void Font::RealizeStd()
 {
 	int h = v.height;
-	if(IsNullInstance() || v.face == STDFONT)
+	if(IsNullInstance())
 		*this = GetStdFont();
+	if(v.face == STDFONT)
+		Face(GetStdFont().GetFace());
 	if(h != -32000 && h != 0)
 		v.height = h;
 }
