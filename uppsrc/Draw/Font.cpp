@@ -166,13 +166,12 @@ Font StdFont()
 
 void Font::RealizeStd()
 {
-	int h = v.height;
 	if(IsNullInstance())
 		*this = GetStdFont();
 	if(v.face == STDFONT)
 		Face(GetStdFont().GetFace());
-	if(h != -32000 && h != 0)
-		v.height = h;
+	if(v.height == -32000)
+		Height(GetStdFont().GetHeight());
 }
 
 int Font::GetHeight() const
