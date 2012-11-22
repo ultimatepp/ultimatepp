@@ -43,6 +43,7 @@ private:
 	int     minthumb;
 	bool    autohide:1;
 	bool    autodisable:1;
+	bool    is_active:1;
 
 	const Style *style;
 
@@ -75,6 +76,8 @@ public:
 	bool    Set(int pagepos);
 	void    SetPage(int pagesize);
 	void    SetTotal(int totalsize);
+	
+	bool    IsActive() const                { return is_active; }
 
 	bool    ScrollInto(int pos, int linesize);
 	bool    ScrollInto(int pos)             { return ScrollInto(pos, linesize); }
