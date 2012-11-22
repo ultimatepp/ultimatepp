@@ -78,7 +78,7 @@ HttpRequest& HttpRequest::Url(const char *u)
 }
 
 static
-void sParseProxyUrl(const char *p, String& proxy_host, int proxy_port)
+void sParseProxyUrl(const char *p, String& proxy_host, int& proxy_port)
 {
 	const char *t = p;
 	while(*p && *p != ':')
