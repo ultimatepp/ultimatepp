@@ -66,6 +66,7 @@ ScrollBar::ScrollBar() {
 	style = NULL;
 	SetStyle(StyleDefault());
 	BackPaint();
+	is_active = false;
 }
 
 ScrollBar::~ScrollBar() {}
@@ -326,18 +327,18 @@ bool  ScrollBar::Set(int apagepos) {
 void ScrollBar::Set(int _pagepos, int _pagesize, int _totalsize) {
 	pagesize = _pagesize;
 	totalsize = _totalsize;
-	bool a = totalsize > pagesize && pagesize > 0;
-	if(autohide && a != IsShown()) {
-		Show(a);
+	is_active = totalsize > pagesize && pagesize > 0;
+	if(autohide && is_active != IsShown()) {
+		Show(is_active);
 		WhenVisibility();
 	}
 	if(autodisable) {
-		if(prev.IsEnabled() != a)
+		if(prev.IsEnabled() != is_active)
 			Refresh();
-		prev.Enable(a);
-		next.Enable(a);
-		prev2.Enable(a);
-		next2.Enable(a);
+		prev.Enable(is_active);
+		next.Enable(is_active);
+		prev2.Enable(is_active);
+		next2.Enable(is_active);
 	}
 	Set(_pagepos);
 }
