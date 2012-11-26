@@ -32,6 +32,10 @@ struct AuthExc : Exc {
 
 struct BadRequestExc : Exc {};
 
+struct TemplateExc : Exc {
+	TemplateExc(const String& s) : Exc(s) {}
+};
+
 struct SkylarkConfig {
 	String                    root;
 	VectorMap<String, String> view_var;
@@ -75,11 +79,12 @@ class SkylarkApp : protected SkylarkConfig {
 public:
 	virtual void SigUsr1();
 	
-	virtual void SqlError(Http& http);
-	virtual void InternalError(Http& http);
 	virtual void NotFound(Http& http);
-	virtual void Unauthorized(Http& http);
-	virtual void BadRequest(Http& http);
+	virtual void SqlError(Http& http, const SqlExc& e);
+	virtual void InternalError(Http& http, const Exc& e);
+	virtual void Unauthorized(Http& http, const AuthExc& e);
+	virtual void BadRequest(Http& http, const BadRequestExc& e);
+	virtual void TemplateError(Http& http, const TemplateExc& e);
 
 	virtual void WorkThread();
 	

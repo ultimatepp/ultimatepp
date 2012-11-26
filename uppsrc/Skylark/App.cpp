@@ -247,24 +247,29 @@ void SkylarkApp::SigUsr1()
 {
 }
 
-void SkylarkApp::SqlError(Http& http)
-{
-}
-
-void SkylarkApp::InternalError(Http& http)
-{
-}
-
 void SkylarkApp::NotFound(Http& http)
 {
 }
 
-void SkylarkApp::Unauthorized(Http& http)
+void SkylarkApp::SqlError(Http& http, const SqlExc& e)
 {
 }
 
-void SkylarkApp::BadRequest(Http& http)
+void SkylarkApp::InternalError(Http& http, const Exc& e)
 {
+}
+
+void SkylarkApp::Unauthorized(Http& http, const AuthExc& e)
+{
+}
+
+void SkylarkApp::BadRequest(Http& http, const BadRequestExc& e)
+{
+}
+
+void SkylarkApp::TemplateError(Http& http, const TemplateExc& e)
+{
+	InternalError(http, Exc());
 }
 
 SkylarkApp *SkylarkApp::app;

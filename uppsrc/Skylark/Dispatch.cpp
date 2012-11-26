@@ -385,7 +385,7 @@ void Http::Dispatch(TcpSocket& socket)
 				         << "SQL ERROR: " << e;
 				code = 500;
 				code_text = "Internal server error";
-				app.SqlError(*this);
+				app.SqlError(*this, e);
 			}
 			catch(AuthExc e) {
 				if(SQL.IsOpen())
@@ -393,7 +393,7 @@ void Http::Dispatch(TcpSocket& socket)
 				response << e;
 				code = 403;
 				code_text = "Unauthorized";
-				app.Unauthorized(*this);
+				app.Unauthorized(*this, e);
 			}
 			catch(BadRequestExc e) {
 				if(SQL.IsOpen())
@@ -401,7 +401,7 @@ void Http::Dispatch(TcpSocket& socket)
 				response << "Bad request";
 				code = 400;
 				code_text = "Bad request";
-				app.Unauthorized(*this);
+				app.BadRequest(*this, e);
 			}
 			catch(Exc e) {
 				if(SQL.IsOpen())
@@ -410,7 +410,7 @@ void Http::Dispatch(TcpSocket& socket)
 				         << e;
 				code = 500;
 				code_text = "Internal server error";
-				app.InternalError(*this);
+				app.InternalError(*this, e);
 			}
 		}
 		else {
