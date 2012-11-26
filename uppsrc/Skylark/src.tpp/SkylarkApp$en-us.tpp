@@ -23,37 +23,52 @@ in SkylarkApp constructor.&]
 [s3; &]
 [s5;:SkylarkApp`:`:SigUsr1`(`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* SigUsr1]()&]
 [s2; Invoked when application recieves SIGUSR1 signal. Default implementation 
-is empty&]
-[s3;%- &]
-[s4;%- &]
-[s5;:SkylarkApp`:`:SqlError`(Http`&`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* SqlError
-]([_^Http^ Http][@(0.0.255) `&]_[*@3 http])&]
-[s2; Overriding this method can change the response in case that 
-there was SQL error in handler.&]
-[s3;%- &]
-[s4; &]
-[s5;:SkylarkApp`:`:InternalError`(Http`&`):%- [@(0.0.255) virtual] 
-[@(0.0.255) void]_[* InternalError]([_^Http^ Http][@(0.0.255) `&]_[*@3 http])&]
-[s2; Overriding this method can change the response in case that 
-there was internal error in handler.&]
+is empty.&]
 [s3; &]
 [s4; &]
 [s5;:SkylarkApp`:`:NotFound`(Http`&`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* NotFound
 ]([_^Http^ Http][@(0.0.255) `&]_[*@3 http])&]
 [s2; Overriding this method can change the response in case that 
-there no handler was found to handle the request.&]
+there no handler was found to handle the request. Default implementation 
+is empty.&]
 [s3; &]
-[s4; &]
-[s5;:SkylarkApp`:`:Unauthorized`(Http`&`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Unau
-thorized]([_^Http^ Http][@(0.0.255) `&]_[*@3 http])&]
+[s4;%- &]
+[s5;:SkylarkApp`:`:SqlError`(Http`&`,const SqlExc`&`):%- [@(0.0.255) virtual] 
+[@(0.0.255) void]_[* SqlError]([_^Http^ Http][@(0.0.255) `&]_[*@3 http], 
+[@(0.0.255) const]_[_^SqlExc^ SqlExc][@(0.0.255) `&]_[*@3 e])&]
 [s2; Overriding this method can change the response in case that 
-unauthorized request was detected.&]
+there was SQL error in handler. Default implementation is empty.&]
 [s3; &]
-[s4; &]
-[s5;:SkylarkApp`:`:BadRequest`(Http`&`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* BadReq
-uest]([_^Http^ Http][@(0.0.255) `&]_[*@3 http])&]
+[s4;%- &]
+[s5;:SkylarkApp`:`:InternalError`(Http`&`,const Exc`&`):%- [@(0.0.255) virtual] 
+[@(0.0.255) void]_[* InternalError]([_^Http^ Http][@(0.0.255) `&]_[*@3 http], 
+[@(0.0.255) const]_[_^Exc^ Exc][@(0.0.255) `&]_[*@3 e])&]
 [s2; Overriding this method can change the response in case that 
-invalid request was detected.&]
+there was internal error in handler. Default implementation is 
+empty.&]
+[s3; &]
+[s4;%- &]
+[s5;:SkylarkApp`:`:Unauthorized`(Http`&`,const AuthExc`&`):%- [@(0.0.255) virtual] 
+[@(0.0.255) void]_[* Unauthorized]([_^Http^ Http][@(0.0.255) `&]_[*@3 http], 
+[@(0.0.255) const]_[_^AuthExc^ AuthExc][@(0.0.255) `&]_[*@3 e])&]
+[s2; Overriding this method can change the response in case that 
+unauthorized request was detected. Default implementation is 
+empty.&]
+[s3; &]
+[s4;%- &]
+[s5;:SkylarkApp`:`:BadRequest`(Http`&`,const BadRequestExc`&`):%- [@(0.0.255) virtual] 
+[@(0.0.255) void]_[* BadRequest]([_^Http^ Http][@(0.0.255) `&]_[*@3 http], 
+[@(0.0.255) const]_[_^BadRequestExc^ BadRequestExc][@(0.0.255) `&]_[*@3 e])&]
+[s2; Overriding this method can change the response in case that 
+invalid request was detected. Default implementation is empty.&]
+[s3; &]
+[s4;%- &]
+[s5;:SkylarkApp`:`:TemplateError`(Http`&`,const TemplateErrorExc`&`):%- [@(0.0.255) vir
+tual] [@(0.0.255) void]_[* TemplateError]([_^Http^ Http][@(0.0.255) `&]_[*@3 http], 
+[@(0.0.255) const]_TemplateErrorExc[@(0.0.255) `&]_[*@3 e])&]
+[s2; Overriding this method can change the response in case that 
+there is a bug in witz template. Default implementation calls 
+InternalError with empty Exc.&]
 [s3; &]
 [s4; &]
 [s5;:SkylarkApp`:`:WorkThread`(`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* WorkThread](
