@@ -186,7 +186,7 @@ private:
 	Vector<Ln>                 ln;
 	Vector< Vector<CellInfo> > cellinfo;
 	Vector<bool>               modify;
-	FrameBottom<StaticRect>    scrollbox;
+	FrameBottom<ParentCtrl>    scrollbox;
 	DisplayPopup               info;
 	const Order               *columnsortsecondary;
 	int                        min_visible_line, max_visible_line;
