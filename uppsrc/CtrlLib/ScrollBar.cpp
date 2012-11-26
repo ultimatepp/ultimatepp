@@ -778,7 +778,7 @@ ScrollBars& ScrollBars::FixedBox()
 
 ScrollBars::ScrollBars() {
 	box = &the_box;
-	the_box.NoTransparent();
+//	the_box.NoTransparent();
 	x.WhenScroll = y.WhenScroll = callback(this, &ScrollBars::Scroll);
 	x.WhenLeftClick = y.WhenLeftClick = Proxy(WhenLeftClick);
 	x.AutoHide();

@@ -740,7 +740,6 @@ void Ctrl::WndSetPos0(const Rect& r)
 	GuiLock __;
 	if(!top) return;
 	LLOG("WndSetPos0 " << Name() << r);
-	DUMP(IsMainThread());
 	AddGlobalRepaint();
 	XMoveResizeWindow(Xdisplay, top->window, r.left, r.top, r.Width(), r.Height());
 	rect = r;

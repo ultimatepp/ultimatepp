@@ -235,6 +235,29 @@ void   Ctrl::Serialize(Stream& s)
 		q->Serialize(s);
 }
 
+void Ctrl::Jsonize(JsonIO& jio)
+{
+	GuiLock __;
+	Value x;
+	bool empty = false;
+	if(jio.IsStoring())
+		x = GetData();
+	x.Jsonize(jio);
+	if(jio.IsLoading())
+		SetData(x);
+}
+
+void Ctrl::Xmlize(XmlIO& xio)
+{
+	GuiLock __;
+	Value x;
+	if(xio.IsStoring())
+		x = GetData();
+	x.Xmlize(xio);
+	if(xio.IsLoading())
+		SetData(x);
+}
+
 void Ctrl::Updated() {}
 
 bool Ctrl::IsForeground() const
@@ -928,13 +951,6 @@ void Ctrl::ReSkin()
 		ctrl[i]->RefreshFrame();
 	}
 	lock--;
-}
-
-void Ctrl::Xmlize(XmlIO xml)
-{
-	Value v = GetData();
-	UPP::Xmlize(xml, v);
-	SetData(v);
 }
 
 CH_INT(GUI_GlobalStyle, GUISTYLE_CLASSIC);

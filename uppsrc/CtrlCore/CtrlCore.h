@@ -766,6 +766,8 @@ public:
 	virtual void   SetData(const Value& data);
 	virtual Value  GetData() const;
 	virtual void   Serialize(Stream& s);
+	virtual void   Jsonize(JsonIO& jio);
+	virtual void   Xmlize(XmlIO& xio);
 	virtual void   SetModify();
 	virtual void   ClearModify();
 	virtual bool   IsModified() const;
@@ -1235,8 +1237,6 @@ public:
 #endif
 	
 	static int64 GetEventId()                           { return eventid; }
-
-	void Xmlize(XmlIO xml);
 
 	Ctrl();
 	virtual ~Ctrl();

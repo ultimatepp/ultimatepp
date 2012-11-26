@@ -880,6 +880,18 @@ Ctrl in a way that is suitable for dialog backup and optional
 restore (e.g. when user presses Cancel button).&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Ctrl`:`:Jsonize`(JsonIO`&`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Jsonize]([_^JsonIO^ J
+sonIO][@(0.0.255) `&]_[*@3 jio])&]
+[s2; Method to convert the data of widget to/from JSON. Default implementation 
+calls Jsonize for Value obtained/set by GetData/SetData.&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:Xmlize`(XmlIO`&`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Xmlize]([_^XmlIO^ X
+mlIO][@(0.0.255) `&]_[*@3 xio])&]
+[s2; Method to convert the data of widget to/from XML. Default implementation 
+calls Jsonize for Value obtained/set by GetData/SetData.&]
+[s3; &]
+[s4;%- &]
 [s5;:Ctrl`:`:AddChild`(Ctrl`*`):%- [@(0.0.255) void]_[* AddChild]([_^`:`:Ctrl^ Ctrl]_`*[*@3 c
 hild])&]
 [s2;b17;a17; Adds a child Ctrl as last one.&]

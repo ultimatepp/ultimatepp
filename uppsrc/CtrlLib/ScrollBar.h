@@ -163,7 +163,7 @@ public:
 
 protected:
 	Ctrl      *box;
-	StaticRect the_box;
+	ParentCtrl the_box;
 	int        box_type;
 	SizeGrip   grip;
 
