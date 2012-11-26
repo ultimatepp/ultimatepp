@@ -239,7 +239,6 @@ void Ctrl::Jsonize(JsonIO& jio)
 {
 	GuiLock __;
 	Value x;
-	bool empty = false;
 	if(jio.IsStoring())
 		x = GetData();
 	x.Jsonize(jio);

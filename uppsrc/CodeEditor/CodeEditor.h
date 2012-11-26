@@ -160,6 +160,11 @@ struct FindReplaceDlg : WithIDEFindReplaceLayout<TopWindow> {
 	Size    GetAdjustedSize();
 	virtual bool Key(dword key, int count);
 	void Setup(bool doreplace);
+	void Sync();
+	
+	typedef FindReplaceDlg CLASSNAME;
+
+	FindReplaceDlg();
 };
 	
 class CodeEditor : public LineEdit {
@@ -351,7 +356,7 @@ protected:
 	int     Match(const wchar *f, const wchar *s, int line, bool we, bool icase, int fi = 0);
 	WString GetWild(int type, int& i);
 	WString GetReplaceText();
-	WString GetReplaceText(WString replace, bool wildcards);
+	WString GetReplaceText(WString replace, bool wildcards, bool samecase);
 
 	bool   InsertRS(int chr, int count = 1);
 	void   IndentEnter(int count = 1);
@@ -434,7 +439,8 @@ public:
 	bool   FindLangString(bool back);
 	void   Replace();
 	void   BlockReplace();
-	int    BlockReplace(WString find, WString replace, bool wholeword, bool ignorecase, bool wildcards);
+	int    BlockReplace(WString find, WString replace, bool wholeword, bool ignorecase,
+	                    bool wildcards, bool samecase);
 	
 	void   MakeTabsOrSpaces(bool tabs);
 	void   MakeLineEnds();

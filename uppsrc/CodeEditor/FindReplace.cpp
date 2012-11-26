@@ -2,6 +2,18 @@
 
 NAMESPACE_UPP
 
+FindReplaceDlg::FindReplaceDlg()
+{
+	ignorecase <<= THISBACK(Sync);
+	samecase <<= true;
+	Sync();
+}
+
+void FindReplaceDlg::Sync()
+{
+	samecase.Enable(ignorecase);
+}
+
 bool FindReplaceDlg::Key(dword key, int cnt) {
 	if(key == K_CTRL_I) {
 		if(find.HasFocus()) {
@@ -253,10 +265,11 @@ WString CodeEditor::GetWild(int type, int& i)
 
 WString CodeEditor::GetReplaceText()
 {
-	return GetReplaceText(findreplace.replace.GetText(), findreplace.wildcards);
+	return GetReplaceText(~findreplace.replace, findreplace.wildcards,
+	                      findreplace.wildcards && findreplace.samecase);
 }
 
-WString CodeEditor::GetReplaceText(WString rs, bool wildcards)
+WString CodeEditor::GetReplaceText(WString rs, bool wildcards, bool samecase)
 {
 	int anyi = 0, onei = 0, spacei = 0, numberi = 0, idi = 0;
 	WString rt;
@@ -312,6 +325,23 @@ WString CodeEditor::GetReplaceText(WString rs, bool wildcards)
 				rt.Cat(c);
 		}
 	}
+	if(samecase) {
+		WString h = GetSelectionW();
+		if(h.GetCount() && rt.GetCount()) {
+			if(IsUpper(h[0]))
+				rt.Set(0, ToUpper(rt[0]));
+			if(IsLower(h[0]))
+				rt.Set(0, ToLower(rt[0]));
+		}
+		if(h.GetCount() > 1) {
+			if(IsUpper(h[1]))
+				for(int i = 1; i < rt.GetCount(); i++)
+					rt.Set(i, ToUpper(rt[i]));
+			if(IsLower(h[1]))
+				for(int i = 1; i < rt.GetCount(); i++)
+					rt.Set(i, ToLower(rt[i]));
+		}
+	}
 	return rt;
 }
 
@@ -328,7 +358,7 @@ void CodeEditor::Replace()
 	}
 }
 
-int CodeEditor::BlockReplace(WString find, WString replace, bool wholeword, bool ignorecase, bool wildcards)
+int CodeEditor::BlockReplace(WString find, WString replace, bool wholeword, bool ignorecase, bool wildcards, bool samecase)
 {
 	NextUndo();
 	int l, h;
@@ -340,7 +370,7 @@ int CodeEditor::BlockReplace(WString find, WString replace, bool wholeword, bool
 		int hh, ll;
 		GetSelection(ll, hh);
 		CachePos(ll);
-		h = h - (hh - ll) + Paste(GetReplaceText(replace, wildcards));
+		h = h - (hh - ll) + Paste(GetReplaceText(replace, wildcards, ignorecase && samecase));
 		count++;
 	}
 	SetSelection(l, h);
@@ -351,7 +381,7 @@ int CodeEditor::BlockReplace(WString find, WString replace, bool wholeword, bool
 void CodeEditor::BlockReplace()
 {
 	BlockReplace(~findreplace.find, ~findreplace.replace, findreplace.wholeword,
-		findreplace.ignorecase, findreplace.wildcards);
+		         findreplace.ignorecase, findreplace.wildcards, findreplace.samecase);
 /*
 	NextUndo();
 	int l, h;
@@ -537,9 +567,13 @@ void CodeEditor::DoFindBack()
 
 void CodeEditor::SerializeFind(Stream& s)
 {
+	int version = 0;
+	s / version;
 	s % findreplace.find;
 	findreplace.find.SerializeList(s);
 	s % findreplace.wholeword % findreplace.ignorecase % findreplace.wildcards;
+	if(version >= 0)
+		s % findreplace.samecase;
 	s % findreplace.replace;
 	findreplace.replace.SerializeList(s);
 }
