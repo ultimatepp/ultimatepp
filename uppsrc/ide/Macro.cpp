@@ -186,13 +186,14 @@ void Ide::MacroReplace(EscEscape& e)
 {
 	int n = e.GetCount();
 	if(n < 2 || n > 5)
-		e.ThrowError("wrong number of arguments in call to Find (2 to 5 expected)");
+		e.ThrowError("wrong number of arguments in call to Find (2 to 6 expected)");
 	WString find = e[0];
 	WString replace = e[1];
 	bool whole_word = (n > 2 && e.Int(2) > 0);
 	bool ignore_case = (n > 3 && e.Int(3) > 0);
 	bool wildcards = (n > 4 && e.Int(4) > 0);
-	e = editor.BlockReplace(find, replace, whole_word, ignore_case, wildcards);
+	bool samecase = (n > 5 && e.Int(5) > 0);
+	e = editor.BlockReplace(find, replace, whole_word, ignore_case, wildcards, samecase);
 }
 
 void Ide::MacroFindMatchingBrace(EscEscape& e)

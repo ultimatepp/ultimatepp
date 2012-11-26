@@ -1,9 +1,13 @@
 #include "ide.h"
 
 void Ide::SerializeFf(Stream& s) {
+	int version = 0;
+	s / version;
 	s % ff.find;
 	ff.find.SerializeList(s);
 	s % ff.wholeword % ff.ignorecase % ff.wildcards;
+	if(version >= 0)
+		s % ff.samecase;
 	s % ff.replace;
 	s % ff.readonly;
 	ff.replace.SerializeList(s);
@@ -21,7 +25,7 @@ FileSel& sSD()
 }
 
 void Ide::SerializeFindInFiles(Stream& s) {
-	int version = 3;
+	int version = 4;
 	s / version;
 	s % ff.files;
 	ff.files.SerializeList(s);
@@ -37,6 +41,8 @@ void Ide::SerializeFindInFiles(Stream& s) {
 		s % sSD();
 	if(version >= 3)
 		s % ff.readonly;
+	if(version >= 4)
+		s % ff.samecase;
 }
 
 void SearchForFiles(Vector<String>& files, String dir, String mask, int readonly, Progress& pi) {
@@ -373,6 +379,11 @@ void Ide::FindFolder()
 	ff.folder <<= ~sSD();
 }
 
+void Ide::SyncFindInFiles()
+{
+	ff.samecase.Enable(ff.ignorecase);
+}
+
 void Ide::ConstructFindInFiles() {
 	ff.find.AddButton().SetMonoImage(CtrlImg::smallright()).Tip("Wildcard") <<= THISBACK(FindWildcard);
 	static const char *defs = "*.cpp *.h *.hpp *.c *.m *.C *.M *.cxx *.cc *.mm *.MM *.icpp *.sch *.lay *.rc";
@@ -385,6 +396,9 @@ void Ide::ConstructFindInFiles() {
 	editor.PutI(ff.find);
 	editor.PutI(ff.replace);
 	CtrlLayoutOKCancel(ff, "Find In Files");
+	ff.ignorecase <<= THISBACK(SyncFindInFiles);
+	ff.samecase <<= true;
+	SyncFindInFiles();
 }
 
 void FindInFilesDlg::Sync()

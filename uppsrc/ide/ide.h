@@ -1009,6 +1009,7 @@ public:
 	void      SerializeFf(Stream& s);
 	bool      SearchInFile(const String& fn, const String& pattern,
 		                   bool wholeword, bool ignorecase, int& n);
+	void      SyncFindInFiles();
 	void      ConstructFindInFiles();
 	void      SerializeFindInFiles(Stream& s);
 
