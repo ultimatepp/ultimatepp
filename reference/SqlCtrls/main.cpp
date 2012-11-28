@@ -18,9 +18,9 @@ PersonDlg::PersonDlg()
 {
 	CtrlLayoutOKCancel(*this, "Person");
 #ifdef flagSCH
-	ctrls(*this, PERSON);
+	ctrls(*this, PERSON); // matches widgets to columns based on Layout and schema introspection
 #else
-	ctrls
+	ctrls // "manual" variant
 		(NAME, name)
 		(LASTNAME, lastname)
 		(AGE, age)

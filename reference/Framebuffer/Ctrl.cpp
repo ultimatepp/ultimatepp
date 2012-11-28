@@ -76,6 +76,10 @@ String Ctrl::Name() const {
 	return s;
 }
 
+void Ctrl::InstallPanicBox()
+{
+}
+
 END_UPP_NAMESPACE
 
 #endif
