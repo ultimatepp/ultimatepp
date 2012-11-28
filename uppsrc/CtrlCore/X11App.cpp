@@ -192,7 +192,6 @@ void sPanicMessageBox(const char *title, const char *text)
 	XSelectInput(display, win, ExposureMask|KeyPressMask|ButtonPressMask|StructureNotifyMask);
 	XGCValues values;
 	GC gc = XCreateGC(display, win, 0, &values);
-	// New section
 	unsigned long wina[1];
 	wina[0] = XInternAtom(display, "_NET_WM_STATE_ABOVE", XFalse);
 	XChangeProperty(display, win,
@@ -200,8 +199,7 @@ void sPanicMessageBox(const char *title, const char *text)
 	                XInternAtom(display, "ATOM", XFalse), 32,
 	                PropModeReplace, (const unsigned char *)&wina, 1);
 	XMapWindow(display, win);
-	XSetInputFocus(display, win, RevertToParent, CurrentTime);
-	// End section
+//	XSetInputFocus(display, win, RevertToParent, CurrentTime);
 	XRaiseWindow(display, win);
 	XFontStruct *font_info = XQueryFont(display, XGContextFromGC(gc));
 	for(;;) {
@@ -388,6 +386,15 @@ int X11ErrorHandler(XDisplay *, XErrorEvent *error)
 void SetX11ErrorHandler()
 {
 	XSetErrorHandler(X11ErrorHandler);
+}
+
+INITBLOCK {
+	InstallPanicMessageBox(sPanicMessageBox);
+}
+
+void Ctrl::InstallPanicBox()
+{
+	InstallPanicMessageBox(sPanicMessageBox);
 }
 
 void Ctrl::InitX11(const char *display)

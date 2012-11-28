@@ -27,12 +27,15 @@ void LeaveGuiMutex();
 
 int  LeaveGuiMutexAll();
 void EnterGuiMutex(int n);
+
+bool ThreadHasGuiLock();
 #else
 inline void EnterGuiMutex() {}
 inline void LeaveGuiMutex() {}
 
 inline int  LeaveGuiMutexAll() { return 0; }
 inline void EnterGuiMutex(int) {}
+inline bool ThreadHasGuiLock() { return true; }
 #endif
 
 struct GuiLock {
@@ -672,6 +675,8 @@ private:
 #else
 	GUIPLATFORM_CTRL_DECLS
 #endif
+
+	static void InstallPanicBox();
 
 private:
 			void    DoRemove();
