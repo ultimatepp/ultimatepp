@@ -154,6 +154,15 @@ screen output in Ctrl`::Paint, [%-*@3 color] can be assigned special
 value InvertColor() causing invertion of all pixels in target 
 area.&]
 [s3;%% &]
+[s4; &]
+[s5;:Draw`:`:SysDrawImageOp`(int`,int`,const Image`&`,const Rect`&`,Color`): [@(0.0.255) v
+irtual] [@(0.0.255) void]_[* SysDrawImageOp]([@(0.0.255) int]_[*@3 x], 
+[@(0.0.255) int]_[*@3 y], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img], 
+[@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 src], [_^Color^ Color]_[*@3 color])&]
+[s2;%% Low(er)`-level draw of Image, called by DrawImageOp. Draw 
+derived class can either override this method and depend on DrawImageOp 
+to do rescaling and printer banding or override DrawImageOp directly.&]
+[s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawImageOp`(int`,int`,int`,int`,const Image`&`,const Rect`&`,Color`): [@(0.0.255) v
 irtual] [@(0.0.255) void]_[* DrawImageOp]([@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y],
@@ -164,7 +173,9 @@ irtual] [@(0.0.255) void]_[* DrawImageOp]([@(0.0.255) int]_[*@3 x], [@(0.0.255) 
 at [%-*@3 x], [%-*@3 y] rescaling it to [%-*@3 cx], [%-*@3 cy] (if they 
 are equal to original Image size, no rescaling is performed). 
 If [%-*@3 color] is not null, only alpha information of Image is 
-used and color pixels are painted using [%-*@3 color].&]
+used and color pixels are painted using [%-*@3 color]. Default 
+implementation performs rescaling operation in software, including 
+banding support for printer, then calls SysDrawImageOp.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawDataOp`(int`,int`,int`,int`,const String`&`,const char`*`): [@(0.0.255) v
@@ -767,4 +778,4 @@ default charset is used. Implemented using DrawTextOp.&]
 [s2;%% This simple utility function computes sin(angle) and cos(angle), 
 where the full angle (2[%- π) ]is 3600.&]
 [s3; &]
-[s0; ]
+[s0; ]]

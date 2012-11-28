@@ -234,6 +234,11 @@ static void Win32PanicMessageBox(const char *title, const char *text)
 #endif
 }
 
+void Ctrl::InstallPanicBox()
+{
+	InstallPanicMessageBox(&Win32PanicMessageBox);
+}
+
 void Ctrl::InitWin32(HINSTANCE hInstance)
 {
 	GuiLock __;
