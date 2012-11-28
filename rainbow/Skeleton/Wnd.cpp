@@ -303,7 +303,7 @@ bool Ctrl::HasWndCapture() const
 	return false;
 }
 
-void Ctrl::WndInvalidateRect0(const Rect& r)
+void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
 }
