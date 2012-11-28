@@ -300,6 +300,14 @@ String Parser::TemplateParams(String& param)
 			}
 		}
 		else
+		if(Key(t_shr) && level >= 2) {
+			level -= 2;
+			if(level <= 0) {
+				ScAdd(param, id);
+				break;
+			}
+		}
+		else
 		if(Key('<'))
 			level++;
 		else
@@ -514,6 +522,11 @@ int Parser::RPtr()
 		else
 		if(t == '>') {
 			tlevel--;
+			n++;
+		}
+		else
+		if(t == t_shr && tlevel >= 2) {
+			tlevel -= 2;
 			n++;
 		}
 		else
@@ -791,6 +804,9 @@ String Parser::Tparam(int& q)
 			level++;
 		if(lex[q] == '>')
 			level--;
+		else
+		if(lex[q] == t_shr && level >= 2)
+			level -= 2;
 		q++;
 	}
 	return String(p, lex.Pos(q));
