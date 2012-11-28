@@ -53,14 +53,19 @@ template<class T> class PolyXMLArray : public Array<T>
 		
 		T& Add(const T &data) { return Array<T>::Add(data); }
 		T& Add(T *data) { return Array<T>::Add(data); }
+		
+		// progress callback
+		Callback2<int, int>Progress;
 };
 
 template<class T> void PolyXMLArray<T>::Xmlize(XmlIO &xml)
 {
 	if(xml.IsStoring())
 	{
-		for(int i = 0; i < PolyXMLArray::GetCount(); i++)
+		int count = PolyXMLArray::GetCount();
+		for(int i = 0; i < count; i++)
 		{
+			Progress(i, count);
 			T &data = PolyXMLArray::operator[](i);
 			if(!data.IsErased())
 			{
@@ -73,8 +78,10 @@ template<class T> void PolyXMLArray<T>::Xmlize(XmlIO &xml)
 	else
 	{
 		PolyXMLArray::Clear();
-		for(int i = 0; i < xml->GetCount(); i++)
+		int count = xml->GetCount();
+		for(int i = 0; i < count; i++)
 		{
+			Progress(i, count);
 			if(xml->Node(i).IsTag())
 			{
 				String tag = xml->Node(i).GetTag();
@@ -111,14 +118,20 @@ template<class K, class T> class PolyXMLArrayMap : public ArrayMap<K, T>
 		
 		T& Add(const K &key, const T &data) { return ArrayMap<K, T>::Add(key, data); }
 		T& Add(const K &key, T *data) { return ArrayMap<K, T>::Add(key, data); }
+		
+		// progress callback
+		Callback2<int, int>Progress;
 };
 
 template<class K, class T> void PolyXMLArrayMap<K, T>::Xmlize(XmlIO &xml)
 {
 	if(xml.IsStoring())
 	{
-		for(int i = 0; i < PolyXMLArrayMap::GetCount(); i++)
+		int count = PolyXMLArrayMap::GetCount();
+		for(int i = 0; i < count; i++)
 		{
+			Progress(i, count);
+
 			// skip unlinked elements
 			if(ArrayMap<K, T>::IsUnlinked(i))
 				continue;
@@ -138,8 +151,11 @@ template<class K, class T> void PolyXMLArrayMap<K, T>::Xmlize(XmlIO &xml)
 	else
 	{
 		PolyXMLArrayMap<K, T>::Clear();
-		for(int i = 0; i < xml->GetCount() - 1 && xml->Node(i).IsTag("key");)
+		int count = xml->GetCount() - 1;
+		for(int i = 0; i < count && xml->Node(i).IsTag("key");)
 		{
+			Progress(i, count);
+
 			if(xml->Node(i).IsTag())
 			{
 				K key;
@@ -176,14 +192,20 @@ template<class K, class T> class PolyXMLArrayMapOne : public ArrayMap<K, One<T> 
 		void Xmlize(XmlIO &xml);
 		
 		One<T>& Add(const K &key, pick_ One<T> &data) { return ArrayMap<K, One<T> >::AddPick(key, data); }
+		
+		// progress callback
+		Callback2<int, int>Progress;
 };
 
 template<class K, class T> void PolyXMLArrayMapOne<K, T>::Xmlize(XmlIO &xml)
 {
 	if(xml.IsStoring())
 	{
-		for(int i = 0; i < PolyXMLArrayMapOne::GetCount(); i++)
+		int count = PolyXMLArrayMapOne::GetCount();
+		for(int i = 0; i < count; i++)
 		{
+			Progress(i, count);
+
 			// skip unlinked elements
 			if(ArrayMap<K, One<T> >::IsUnlinked(i))
 				continue;
@@ -203,8 +225,11 @@ template<class K, class T> void PolyXMLArrayMapOne<K, T>::Xmlize(XmlIO &xml)
 	else
 	{
 		PolyXMLArrayMapOne<K, T>::Clear();
-		for(int i = 0; i < xml->GetCount() - 1 && xml->Node(i).IsTag("key");)
+		int count = xml->GetCount() - 1;
+		for(int i = 0; i < count && xml->Node(i).IsTag("key");)
 		{
+			Progress(i, count);
+
 			if(xml->Node(i).IsTag())
 			{
 				K key;
