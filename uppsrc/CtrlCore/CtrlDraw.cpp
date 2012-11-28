@@ -8,8 +8,14 @@ NAMESPACE_UPP
 bool Ctrl::globalbackpaint;
 bool Ctrl::globalbackbuffer;
 
+static void sCheckGuiLock()
+{
+	ASSERT_(ThreadHasGuiLock(), "Using GUI in non-main thread without GuiLock");
+}
+
 void Ctrl::RefreshFrame(const Rect& r) {
-	GuiLock __;
+	sCheckGuiLock();
+	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
 	if(!IsOpen() || !IsVisible() || r.IsEmpty()) return;
 	LTIMING("RefreshFrame");
 	LLOG("RefreshRect " << Name() << ' ' << r);
@@ -33,14 +39,16 @@ void Ctrl::Refresh0(const Rect& area) {
 }
 
 void Ctrl::Refresh(const Rect& area) {
-	GuiLock __;
+	sCheckGuiLock();
+	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
 	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	LLOG("Refresh " << Name() << ' ' <<  area);
 	Refresh0(area);
 }
 
 void Ctrl::Refresh() {
-	GuiLock __;
+	sCheckGuiLock();
+	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
 	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	LLOG("Refresh " << Name() << " full:" << fullrefresh);
 	if(!GuiPlatformSetFullRefreshSpecial())
@@ -63,7 +71,8 @@ void Ctrl::RefreshFrame() {
 
 void  Ctrl::ScrollRefresh(const Rect& r, int dx, int dy)
 {
-	GuiLock __;
+	sCheckGuiLock();
+	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
 	LLOG("ScrollRefresh " << r << " " << dx << " " << dy);
 	if(!IsOpen() || !IsVisible() || r.IsEmpty()) return;
 	int tdx = tabs(dx), tdy = tabs(dy);

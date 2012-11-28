@@ -46,6 +46,10 @@ int LeaveGuiMutexAll()
 	return q;
 }
 
+bool ThreadHasGuiLock()
+{
+	return Thread::IsMain() || sGLockLevel;
+}
 
 void WakeUpGuiThread();
 
