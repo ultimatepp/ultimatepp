@@ -48,8 +48,6 @@ Size GetScreenSize();
 
 typedef ImageDraw SystemImageDraw;
 
-void StdDrawImage(SystemDraw& w, int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color);
-
 void SetSurface(Draw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point poff);
 void SetSurface(Draw& w, int x, int y, int cx, int cy, const RGBA *pixels);
 
