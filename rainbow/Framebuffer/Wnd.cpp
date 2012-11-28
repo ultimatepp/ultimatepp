@@ -192,10 +192,6 @@ bool Ctrl::ProcessEvent(bool *quit)
 {
 	LLOG("@ ProcessEvent");
 	ASSERT(IsMainThread());
-	if(DoCall()) {
-		SyncTopWindows();
-		return false;
-	}
 	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
 		ReleaseCtrlCapture();
 	if(FBProcessEvent(quit)) {
@@ -450,9 +446,9 @@ void Ctrl::GuiSleep0(int ms)
 	GuiLock __;
 	ASSERT(IsMainThread());
 	LLOG("GuiSleep");
-	int level = LeaveGMutexAll();
+	int level = LeaveGuiMutexAll();
 	FBSleep(ms);
-	EnterGMutex(level);
+	EnterGuiMutex(level);
 }
 
 Rect Ctrl::GetWndScreenRect() const
@@ -641,7 +637,7 @@ bool Ctrl::HasWndCapture() const
 	return captureCtrl && captureCtrl->GetTopCtrl() == this;
 }
 
-void Ctrl::WndInvalidateRect0(const Rect& r)
+void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
 	int q = FindTopCtrl();
@@ -757,6 +753,10 @@ Vector<WString> SplitCmdLine__(const char *cmd)
 			out.Add(String(begin, cmd).ToWString());
 		}
 	return out;
+}
+
+void Ctrl::InstallPanicBox()
+{
 }
 
 END_UPP_NAMESPACE

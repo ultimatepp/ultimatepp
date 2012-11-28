@@ -18,37 +18,6 @@ void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size psz, P
 	GuiLock __;
 }
 
-struct Image::Data::SystemData {
-};
-
-void Image::Data::SysInitImp()
-{
-	SystemData& sd = Sys();
-}
-
-void Image::Data::SysReleaseImp()
-{
-	SystemData& sd = Sys();
-}
-
-Image::Data::SystemData& Image::Data::Sys() const
-{
-	ASSERT(sizeof(system_buffer) >= sizeof(SystemData));
-	return *(SystemData *)system_buffer;
-}
-
-int  Image::Data::GetResCountImp() const
-{
-	SystemData& sd = Sys();
-	return 0;
-}
-
-void Image::Data::PaintImp(SystemDraw& w, int x, int y, const Rect& src, Color c)
-{
-	GuiLock __;
-	SystemData& sd = Sys();
-}
-
 ImageDraw::operator Image() const
 {
 	return Image();

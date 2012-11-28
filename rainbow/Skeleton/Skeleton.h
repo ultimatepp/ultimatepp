@@ -18,7 +18,7 @@ public:
 	virtual Rect GetPaintRect() const;
 
 	virtual	void DrawRectOp(int x, int y, int cx, int cy, Color color);
-	virtual void DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color);
+	virtual void SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color);
 	virtual void DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color);
 
 	virtual void DrawPolyPolylineOp(const Point *vertices, int vertex_count,
