@@ -264,6 +264,7 @@ private:
 	struct OutlineInfo : Moveable<OutlineInfo> {
 		bool ttf;
 		bool sitalic;
+		bool sbold;
 	};
 
 	VectorMap<Font, OutlineInfo>                outline_info;

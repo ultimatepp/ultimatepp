@@ -9,6 +9,7 @@ file
 	TTFStruct.cpp,
 	TTFReader.cpp,
 	TTFSubset.cpp,
+	ICCColorSpace.i,
 	PdfDraw.cpp,
 	PdfReport.icpp,
 	Info readonly separator,
