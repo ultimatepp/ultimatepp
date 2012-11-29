@@ -121,9 +121,11 @@ of rows that match [/ where].&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:GetColumns`(`)const:%- [@(0.0.255) int]_[* GetColumns]()_[@(0.0.255) const]&]
+[s5;:Sql`:`:GetColumnCount`(`)const:%- [@(0.0.255) int]_[* GetColumnCount]()_[@(0.0.255) co
+nst]&]
 [s2; Returns the number of columns of resultset after executing [/ select] 
 statement.&]
-[s3; &]
+[s3;%- &]
 [s4; &]
 [s5;:Sql`:`:GetColumn`(int`,Ref`)const:%- [@(0.0.255) void]_[* GetColumn]([@(0.0.255) int]_
 [*@3 i], [_^Ref^ Ref]_[*@3 r])_[@(0.0.255) const]&]

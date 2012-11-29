@@ -307,8 +307,13 @@ bool Sql::Fetch(Fields fo) {
 	return true;
 }
 
-int  Sql::GetColumns() const {
+int Sql::GetColumnCount() const
+{
 	return cn->info.GetCount();
+}
+
+int  Sql::GetColumns() const {
+	return GetColumnCount();
 }
 
 void Sql::GetColumn(int i, Ref r) const {

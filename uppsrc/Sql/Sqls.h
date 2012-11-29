@@ -158,6 +158,7 @@ public:
 	int    GetRowsProcessed() const                    { return cn->GetRowsProcessed(); }
 
 	int    GetColumns() const;
+	int    GetColumnCount() const;
 
 	void   GetColumn(int i, Ref r) const;
 	void   GetColumn(SqlId colid, Ref r) const;
