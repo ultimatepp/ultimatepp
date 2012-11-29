@@ -270,19 +270,58 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 				else
 					lib = "ar -sr ";
 				lib << GetHostPathQ(product);
+				
+		
+				String llib;
 				for(int i = 0; i < obj.GetCount(); i++)
-					lib << ' ' << GetHostPathQ(obj[i]);
+					llib << ' ' << GetHostPathQ(obj[i]);
 				PutConsole("Creating library...");
 				DeleteFile(hproduct);
 				if(is_shared) {
 					for(int i = 0; i < libpath.GetCount(); i++)
-						lib << " -L" << GetHostPathQ(libpath[i]);
+						llib << " -L" << GetHostPathQ(libpath[i]);
 					for(int i = 0; i < all_uses.GetCount(); i++)
-						lib << ' ' << GetHostPathQ(GetSharedLibPath(all_uses[i]));
+						llib << ' ' << GetHostPathQ(GetSharedLibPath(all_uses[i]));
 					for(int i = 0; i < all_libraries.GetCount(); i++)
-						lib << " -l" << GetHostPathQ(all_libraries[i]);
+						llib << " -l" << GetHostPathQ(all_libraries[i]);
 				}
-				if(!Execute(lib) == 0) {
+
+				String tmpFileName;
+				if(lib.GetCount() + llib.GetCount() >= 8192)
+				{
+					tmpFileName = GetTempFileName();
+					// we can't simply put all data on a single line
+					// as it has a limit of around 130000 chars too, so we split
+					// in multiple lines
+					FileOut f(tmpFileName);
+					while(llib != "")
+					{
+						int found = 0;
+						bool quotes = false;
+						int lim = min(8192, llib.GetCount());
+						for(int i = 0; i < lim; i++)
+						{
+							char c = llib[i];
+							if(isspace(c) && !quotes)
+								found = i;
+							else if(c == '"')
+								quotes = !quotes;
+						}
+						if(!found)
+							found = llib.GetCount();
+						f.PutLine(llib.Left(found));
+						llib.Remove(0, found);
+					}
+					f.Close();
+					lib << " @" << tmpFileName;
+				}
+				else
+					lib << llib;
+
+				int res = Execute(lib);
+				if(tmpFileName != "")
+					FileDelete(tmpFileName);
+				if(!res == 0) {
 					DeleteFile(hproduct);
 					return false;
 				}
