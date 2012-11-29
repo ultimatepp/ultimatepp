@@ -5,7 +5,7 @@ NAMESPACE_UPP
 #include "ICCColorSpace.i"
 
 #define LDUMP(x) // DUMP(x)
-#define LLOG(x) // LOG(x)
+#define LLOG(x)  // DLOG(x)
 
 #define PDF_COMPRESS
 
@@ -264,6 +264,7 @@ PdfDraw::OutlineInfo PdfDraw::GetOutlineInfo(Font fnt)
 		of.ttf = true;
 		of.sitalic = fnt.IsItalic() && (ttf.head.macStyle & 2) == 0;
 		of.sbold = fnt.IsBold() && (ttf.head.macStyle & 1) == 0;
+		LLOG(fnt << ", sbold: " << of.sbold << ", sitalic: " << of.sitalic);
 	}
 
 	outline_info.Add(fnt, of);
