@@ -89,7 +89,7 @@ void HandleSDLEvent(SDL_Event* event)
 		case SDL_KEYDOWN:
 		case SDL_KEYUP: //SDL_KeyboardEvent
 		{
-			bool b = false;
+//			bool b = false;
 			dword keycode = 0;
 			if(event->type == SDL_KEYDOWN) {
 				switch(event->key.keysym.sym)
@@ -99,17 +99,18 @@ void HandleSDLEvent(SDL_Event* event)
 					case SDLK_LCTRL: modkeys |= KM_LCTRL; break;
 					case SDLK_RCTRL: modkeys |= KM_RCTRL; break;	
 					case SDLK_LALT: modkeys |= KM_LALT; break;
-					case SDLK_RALT: modkeys |= KM_RALT; break;	
+					case SDLK_RALT: modkeys |= KM_RALT; break;
+					default:;
 				}
 				
 				keycode = fbKEYtoK((dword)event->key.keysym.sym);
 				if(keycode != K_SPACE) //dont send space on keydown
-					b = Ctrl::DoKeyFB(keycode, 1);
+					/*b = */Ctrl::DoKeyFB(keycode, 1);
 
 				//send respective keyup things as char events as well
 				keycode = (dword)event->key.keysym.unicode;
 				if((keycode != 127 && keycode >= 32 && keycode < 255))
-					b = Ctrl::DoKeyFB(keycode, 1);
+					/*b = */Ctrl::DoKeyFB(keycode, 1);
 			}
 			else
 			if(event->type == SDL_KEYUP)
@@ -122,10 +123,11 @@ void HandleSDLEvent(SDL_Event* event)
 					case SDLK_RCTRL: modkeys &= ~KM_RCTRL; break;	
 					case SDLK_LALT: modkeys &= ~KM_LALT; break;
 					case SDLK_RALT: modkeys &= ~KM_RALT; break;	
+					default:;
 				}
 
 				keycode = fbKEYtoK((dword)event->key.keysym.sym) | K_KEYUP;
-				b = Ctrl::DoKeyFB(keycode, 1);
+				/*b = */Ctrl::DoKeyFB(keycode, 1);
 			}
 		}
 			break;
