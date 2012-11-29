@@ -263,7 +263,6 @@ void Ctrl::DoUpdate()
 Vector<Rect> Ctrl::GetPaintRects()
 {
 	Vector<Rect> r;
-	int q = FindTopCtrl();
 	r.Add(GetScreenRect());
 	for(int i = max(FindTopCtrl() + 1, 0); i < topctrl.GetCount(); i++)
 		Subtract(r, topctrl[i]->GetScreenRect());
