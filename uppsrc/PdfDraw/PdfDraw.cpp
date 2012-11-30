@@ -108,7 +108,7 @@ void PdfDraw::PutRGColor(Color RG)
 
 void PdfDraw::PutLineWidth(int lw)
 {
-	lw = max(Nvl(lw, 0), 5);
+	lw = max(Nvl(lw, 0), 1);
 	if(linewidth != lw)
 		page << Pt(linewidth = lw) << " w\n";
 }
@@ -277,6 +277,10 @@ enum { FONTHEIGHT_TTF = -9999 };
 void PdfDraw::DrawTextOp(int x, int y, int angle, const wchar *s, Font fnt,
 		                 Color ink, int n, const int *dx)
 {
+//	DLOG("------------------");
+//	DDUMP(fnt);
+//	DDUMP(GetTextSize(s, fnt, n).cx);
+//	DDUMP(WString(s, n));
 	if(!n) return;
 	if(fnt.GetHeight() == 0)
 		fnt.Height(100);
@@ -360,9 +364,14 @@ void PdfDraw::DrawTextOp(int x, int y, int angle, const wchar *s, Font fnt,
 		}
 		page << "ET\n";
 	}
+//	DrawRect(x + posx, y, 20, 20, Black()); _DBG_
 	if(fnt.IsUnderline()) {
-		int w = ff.GetAscent() / 15;
-		int dy = ff.GetAscent() + max((ff.GetDescent() - w) / 2, ff.GetAscent() / 10);
+		int w = max(2, ff.GetAscent() / 25);
+		int dy = ff.GetAscent() + min(ff.GetDescent() - w, 2 * w);
+//		DDUMP(posx);
+//		DDUMP(dy);
+//		DDUMP(ff.GetAscent());
+//		DDUMP(w);
 		DrawLine(fround(x + sina * dy),
 		         fround(y + cosa * dy),
 		         fround(x + cosa * posx + sina * dy),
