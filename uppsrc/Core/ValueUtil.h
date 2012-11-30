@@ -69,6 +69,7 @@ public:
 
 	operator const String&() const               { return ToString(); }
 	const String&  operator~() const             { return ToString(); }
+	operator Value() const                       { return ToString(); }
 	bool           operator==(const Id& b) const { return id == b.id; }
 	bool           operator!=(const Id& b) const { return id != b.id; }
 
@@ -306,20 +307,11 @@ public:
 	const Value& GetValue(int i) const        { return data->value[i]; }
 
 	void Add(const Value& key, const Value& value);
-	void Add(const String& s, const Value& value) { Add(Value(s), value); }
-	void Add(const char *s, const Value& value)   { Add(Value(s), value); }
-	void Add(Id id, const Value& value)           { Add(Value(id.ToString()), value); }
 
 	void Set(const Value& key, const Value& value);
-	void Set(const String& s, const Value& value) { Set(Value(s), value); }
-	void Set(const char *s, const Value& value)   { Set(Value(s), value); }
-	void Set(Id id, const Value& value)           { Set(Value(id.ToString()), value); }
 
 	void SetAt(int i, const Value& v);
 	void SetKey(int i, const Value& k);
-	void SetKey(int i, const String& s)           { SetKey(i, Value(s)); }
-	void SetKey(int i, const char* s)             { SetKey(i, Value(s)); }
-	void SetKey(int i, Id id)                     { SetKey(i, Value(id.ToString())); }
 	void Remove(int i);
 
 	const Index<Value>& GetKeys() const           { return data->key; }
@@ -328,9 +320,6 @@ public:
 	operator ValueArray() const                   { return GetValues(); }
 
 	const Value& operator[](const Value& k) const;
-	const Value& operator[](const String& s) const{ return operator[](Value(s)); }
-	const Value& operator[](const char *s) const  { return operator[](Value(s)); }
-	const Value& operator[](const Id& k) const    { return operator[](Value(k.ToString())); }
 	
 	Value GetAndClear(const Value& key);
 
