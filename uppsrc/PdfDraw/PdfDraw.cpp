@@ -277,10 +277,6 @@ enum { FONTHEIGHT_TTF = -9999 };
 void PdfDraw::DrawTextOp(int x, int y, int angle, const wchar *s, Font fnt,
 		                 Color ink, int n, const int *dx)
 {
-//	DLOG("------------------");
-//	DDUMP(fnt);
-//	DDUMP(GetTextSize(s, fnt, n).cx);
-//	DDUMP(WString(s, n));
 	if(!n) return;
 	if(fnt.GetHeight() == 0)
 		fnt.Height(100);
@@ -305,73 +301,38 @@ void PdfDraw::DrawTextOp(int x, int y, int angle, const wchar *s, Font fnt,
 	for(int q = 0; q <= nbld; q += sbld) {
 		page << "BT ";
 		posx = q;
-		if(angle || dx || of.sitalic) {
-			M22 m;
-			if(of.sitalic)
-				m.c = 0.165;
-			if(angle)
-				m.Mul(cosa, sina, -sina, cosa);
-			int fi = -1;
-			bool straight = (fabs(m.a - 1) <= 1e-8 && fabs(m.b) <= 1e-8 && fabs(m.c) <= 1e-8 && fabs(m.d - 1) <= 1e-8);
-			Pointf prev(0, 0);
-			for(int i = 0; i < n; i++) {
-				Pointf next(Pt(x + posx * cosa + fround(ff.GetAscent() * sina)),
-				            Pt(pgsz.cy - (y - posx * sina) - fround(ff.GetAscent() * cosa)));
-				CharPos fp = GetCharPos(fnt, s[i]);
-				if(fi != fp.fi) {
-					fi = fp.fi;
-					PutFontHeight(fi, fh);
-				}
-				if(straight)
-					page << (next.x - prev.x) << ' ' << (next.y - prev.y) << " Td";
-				else
-					page << m.a << ' ' << m.b << ' ' << m.c << ' ' << m.d << ' ' << next.x << ' ' << next.y << " Tm";
-				page << " <" << FormatIntHex(fp.ci, 2);
-				while(i + 1 < n) {
-					int cw = ff[s[i]];
-					if(dx && dx[i] != cw)
-						break;
-					posx += cw;
-					CharPos np = GetCharPos(fnt, s[i + 1]);
-					if(np.fi != fp.fi)
-						break;
-					page << FormatIntHex(np.ci, 2);
-					i++;
-				}
-				page << "> Tj\n";
-				posx += dx ? dx[i] : ff[s[i]];
-				prev = next;
+		M22 m;
+		if(of.sitalic)
+			m.c = 0.165;
+		if(angle)
+			m.Mul(cosa, sina, -sina, cosa);
+		int fi = -1;
+		bool straight = (fabs(m.a - 1) <= 1e-8 && fabs(m.b) <= 1e-8 && fabs(m.c) <= 1e-8 && fabs(m.d - 1) <= 1e-8);
+		Pointf prev(0, 0);
+		for(int i = 0; i < n; i++) {
+			Pointf next(Pt(x + posx * cosa + fround(ff.GetAscent() * sina)),
+			            Pt(pgsz.cy - (y - posx * sina) - fround(ff.GetAscent() * cosa)));
+			CharPos fp = GetCharPos(fnt, s[i]);
+			if(fi != fp.fi) {
+				fi = fp.fi;
+				PutFontHeight(fi, fh);
 			}
-		}
-		else {
-			page << Pt(x + q) << " " << Pt(pgsz.cy - y - ff.GetAscent()) << " Td\n";
-			int fi = -1;
-			int ppos = 0;
-			int np = 0;
-			for(int i = 0; i < n; i++) {
-				CharPos fp = GetCharPos(fnt, s[i]);
-				if(fp.fi != fi) {
-					FlushText(np, fi, fnt.GetHeight(), txt);
-					txt.Clear();
-					np = posx - ppos;
-					ppos = posx;
-					fi = fp.fi;
-				}
-				txt.Cat(Sprintf("%02.2X", fp.ci));
-				posx += ff[s[i]];
-			}
-			FlushText(np, fi, fh, txt);
+			if(straight)
+				page << (next.x - prev.x) << ' ' << (next.y - prev.y) << " Td";
+			else
+				page << m.a << ' ' << m.b << ' ' << m.c << ' ' << m.d << ' ' << next.x << ' ' << next.y << " Tm";
+			page << " <" << FormatIntHex(fp.ci, 2);
+			page << "> Tj\n";
+			posx += dx ? dx[i] : ff[s[i]];
+			prev = next;
 		}
 		page << "ET\n";
 	}
+	
 //	DrawRect(x + posx, y, 20, 20, Black()); _DBG_
 	if(fnt.IsUnderline()) {
 		int w = max(2, ff.GetAscent() / 25);
 		int dy = ff.GetAscent() + min(ff.GetDescent() - w, 2 * w);
-//		DDUMP(posx);
-//		DDUMP(dy);
-//		DDUMP(ff.GetAscent());
-//		DDUMP(w);
 		DrawLine(fround(x + sina * dy),
 		         fround(y + cosa * dy),
 		         fround(x + cosa * posx + sina * dy),
