@@ -309,6 +309,10 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 						}
 						if(!found)
 							found = llib.GetCount();
+
+						// replace all '\' with '/'
+						llib = UnixPath(llib);
+						
 						f.PutLine(llib.Left(found));
 						llib.Remove(0, found);
 					}
