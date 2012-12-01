@@ -134,6 +134,11 @@ void ImageAnyDrawSystem(Draw *(*f)(Size sz), Image (*e)(Draw *w))
 	}
 }
 
+bool ImageAnyDraw::IsAvailable()
+{
+	return sCreateImageDraw;
+}
+
 void ImageAnyDraw::Init(Size sz)
 {
 	ASSERT(sCreateImageDraw);
