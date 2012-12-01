@@ -1,5 +1,6 @@
 uses
-	PdfDraw;
+	PdfDraw,
+	Painter;
 
 file
 	main.cpp,

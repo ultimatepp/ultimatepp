@@ -22,7 +22,7 @@ GUI_APP_MAIN
 //	PromptOK("[H20L1 &&&");
 	
 	RichEditWithToolBar e;
-	e.SetPage(Size(6074, 3968));
+//	e.SetPage(Size(6074, 3968));
 	Vector<int> h;
 	for(int i = 1; i < Font::GetFaceCount(); i++)
 		if((Font::GetFaceInfo(i) & Font::SCALEABLE) && !(Font::GetFaceInfo(i) & Font::SPECIAL))
