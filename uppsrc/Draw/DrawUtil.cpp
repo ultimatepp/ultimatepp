@@ -568,6 +568,12 @@ Image RenderGlyph(int cx, int x, Font font, int chr, int py, int pcy)
 {
 	if(render_glyph)
 		return (*render_glyph)(cx, x, font, chr, py, pcy);
+	if(ImageAnyDraw::IsAvailable()) {
+		ImageAnyDraw iw(cx, pcy);
+		iw.DrawRect(0, 0, cx, pcy, White);
+		iw.DrawText(x, -py, WString(chr, 1), font, Black);
+		return iw;
+	}
 	return Null;
 }
 

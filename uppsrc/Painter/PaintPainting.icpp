@@ -263,10 +263,24 @@ void PaintImageBufferDrawingFn(ImageBuffer& ib, const Drawing& iw, int mode)
 void RegisterPaintingFns__(void (*ig)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos, int mode),
                            void (*iw)(ImageBuffer& ib, const Drawing& p, int mode));
 
+void ImageAnyDrawPainter(Draw *(*f)(Size sz), Image (*e)(Draw *w));
+
+static Draw *sCP(Size sz)
+{
+	return new ImagePainter(sz);
+}
+
+static Image sEP(Draw *w)
+{
+	ImagePainter *ip = dynamic_cast<ImagePainter *>(w);
+	return ip ? (Image)(*ip) : Image();
+}
+
 
 INITBLOCK
 {
 	RegisterPaintingFns__(PaintImageBufferPaintingFn, PaintImageBufferDrawingFn);
+	ImageAnyDrawPainter(sCP, sEP);
 }
 
 END_UPP_NAMESPACE

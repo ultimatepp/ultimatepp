@@ -136,7 +136,7 @@ CommonFontInfo GetFontInfoSys(Font font)
 		fi.charcount = tm.tmLastChar - tm.tmFirstChar + 1;
 		fi.default_char = tm.tmDefaultChar;
 		fi.fixedpitch = (tm.tmPitchAndFamily & TMPF_FIXED_PITCH) == 0;
-		fi.scaleable = tm.tmPitchAndFamily & TMPF_TRUETYPE;
+		fi.ttf = fi.scaleable = tm.tmPitchAndFamily & TMPF_TRUETYPE;
 		if(fi.scaleable) {
 			ABC abc;
 			GetCharABCWidths(hdc, 'o', 'o', &abc);

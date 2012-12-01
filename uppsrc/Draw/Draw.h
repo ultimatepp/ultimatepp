@@ -65,6 +65,7 @@ public:
 	enum {
 		FIXEDPITCH  = 0x0001,
 		SCALEABLE   = 0x0002,
+		TTF         = 0x0004,
 		SPECIAL     = 0x0010,
 	};
 
@@ -161,7 +162,8 @@ public:
 	int   GetRightSpace(int c) const;
 	bool  IsFixedPitch() const               { return Fi().fixedpitch; }
 	bool  IsScaleable() const                { return Fi().scaleable; }
-	bool  IsSpecial() const                  { return !(GetFaceInfo() & SPECIAL); }
+	bool  IsSpecial() const                  { return GetFaceInfo() & SPECIAL; }
+	bool  IsTrueType() const                 { return Fi().ttf; }
 
 	String GetTextFlags() const;
 	void   ParseTextFlags(const char *s);
@@ -781,6 +783,8 @@ public:
 	virtual void DrawPaintingOp(const Rect& target, const Painting& w);
 
 public:
+	static bool IsAvailable();
+
 	operator Image() const;
 	
 	ImageAnyDraw(Size sz);

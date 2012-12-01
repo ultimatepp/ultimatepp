@@ -9,7 +9,6 @@ file
 	Painter.cpp,
 	SvgArc.cpp,
 	PainterPath.cpp,
-	FontWin32.cpp,
 	DrawOp.cpp,
 	Painting.h,
 	Painting.cpp,

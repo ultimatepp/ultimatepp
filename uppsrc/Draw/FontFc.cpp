@@ -10,6 +10,8 @@
 #include <fontconfig/fontconfig.h>
 #include <fontconfig/fcfreetype.h>
 
+#include <freetype/ftxf86.h>
+
 NAMESPACE_UPP
 
 void GetStdFontSys(String& name, int& height)
@@ -155,6 +157,7 @@ CommonFontInfo GetFontInfoSys(Font font)
 		fi.avewidth = fi.maxwidth;
 		fi.default_char = '?';
 		fi.fixedpitch = font.GetFaceInfo() & Font::FIXEDPITCH;
+		fi.ttf = strcmp(FT_Get_X11_Font_Format(face), "TrueType") == 0;
 		if(path.GetCount() < 250)
 			strcpy(fi.path, ~path);
 		else
@@ -219,15 +222,16 @@ Vector<FaceInfo> GetAllFacesSys()
 	FcObjectSetDestroy(os);
 	for(int i = 0; i < fs->nfont; i++) {
 		FcChar8 *family = NULL;
-		if(FcPatternGetString(fs->fonts[i], FC_FAMILY, 0, &family) == 0 && family) {
+		FcPattern *pt = fs->fonts[i];
+		if(FcPatternGetString(pt, FC_FAMILY, 0, &family) == 0 && family) {
 			FaceInfo& fi = list.Add();
 			fi.name = (const char *)family;
 			fi.info = 0;
 			int iv;
-			if(FcPatternGetInteger(fs->fonts[i], FC_SPACING, 0, &iv) == 0 && iv == FC_MONO)
+			if(FcPatternGetInteger(pt, FC_SPACING, 0, &iv) == 0 && iv == FC_MONO)
 				fi.info |= Font::FIXEDPITCH;
 			FcBool bv;
-			if(FcPatternGetBool(fs->fonts[i], FC_SCALABLE, 0, &bv) == 0 && bv)
+			if(FcPatternGetBool(pt, FC_SCALABLE, 0, &bv) == 0 && bv)
 				fi.info |= Font::SCALEABLE;
 		}
 	}
