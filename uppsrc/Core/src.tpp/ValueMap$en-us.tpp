@@ -114,17 +114,39 @@ etKey]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
 [s5;:ValueMap`:`:Add`(const Value`&`,const Value`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) c
 onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 key], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
 ]_[*@3 value])&]
+[s5;:ValueMap`:`:Add`(const String`&`,const Value`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) c
+onst]_[_^String^ String][@(0.0.255) `&]_[*@3 key], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
+]_[*@3 value])&]
+[s5;:ValueMap`:`:Add`(const char`*`,const Value`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v
+alue])&]
+[s5;:ValueMap`:`:Add`(int`,const Value`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) int]_[*@3 k
+ey], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 value])&]
+[s5;:ValueMap`:`:Add`(Id`,const Value`&`):%- [@(0.0.255) void]_[* Add]([_^Id^ Id]_[*@3 key], 
+[@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 value])&]
 [s2;%- Adds a new key`-value pair to ValueMap. ValueMap can contain 
-multiple same keys.&]
-[s3;%- &]
+multiple same keys. Note: multiple overloads are required to make 
+Id and SqlId work with ValueMap.&]
+[s3; &]
 [s4;%- &]
 [s5;:ValueMap`:`:Set`(const Value`&`,const Value`&`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) c
 onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 key], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
 ]_[*@3 value])&]
-[s2; If there is [%-*@3 key] in ValueMap, its associated Value is replaced 
-by [%-*@3 value]. If there is none such key, key`-value is added. 
-If there is more than single such key, only first one (the one 
-with lowest index) is replaced.&]
+[s5;:ValueMap`:`:Set`(const String`&`,const Value`&`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) c
+onst]_[_^String^ String][@(0.0.255) `&]_[*@3 s], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
+]_[*@3 value])&]
+[s5;:ValueMap`:`:Set`(const char`*`,const Value`&`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 s], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 va
+lue])&]
+[s5;:ValueMap`:`:Set`(int`,const Value`&`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) int]_[*@3 q
+], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 value])&]
+[s5;:ValueMap`:`:Set`(Id`,const Value`&`):%- [@(0.0.255) void]_[* Set]([_^Id^ Id]_[*@3 id], 
+[@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 value])&]
+[s2;%- [%% If there is ][*@3 key][%%  in ValueMap, its associated Value 
+is replaced by ][*@3 value][%% . If there is none such key, key`-value 
+is added. If there is more than single such key, only first one 
+(the one with lowest index) is replaced. ]Note: multiple overloads 
+are required to make Id and SqlId work with ValueMap.&]
 [s3; &]
 [s4;%- &]
 [s5;:ValueMap`:`:SetAt`(int`,const Value`&`):%- [@(0.0.255) void]_[* SetAt]([@(0.0.255) int
@@ -134,7 +156,16 @@ with lowest index) is replaced.&]
 [s4;%- &]
 [s5;:ValueMap`:`:SetKey`(int`,const Value`&`):%- [@(0.0.255) void]_[* SetKey]([@(0.0.255) i
 nt]_[*@3 i], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 key])&]
-[s2; Replaces key at given index..&]
+[s5;:ValueMap`:`:SetKey`(int`,const String`&`):%- [@(0.0.255) void]_[* SetKey]([@(0.0.255) i
+nt]_[*@3 i], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 key])&]
+[s5;:ValueMap`:`:SetKey`(int`,const char`*`):%- [@(0.0.255) void]_[* SetKey]([@(0.0.255) in
+t]_[*@3 i], [@(0.0.255) const]_[@(0.0.255) char`*]_[*@3 key])&]
+[s5;:ValueMap`:`:SetKey`(int`,int`):%- [@(0.0.255) void]_[* SetKey]([@(0.0.255) int]_[*@3 i],
+ [@(0.0.255) int]_[*@3 key])&]
+[s5;:ValueMap`:`:SetKey`(int`,Id`):%- [@(0.0.255) void]_[* SetKey]([@(0.0.255) int]_[*@3 i], 
+[_^Id^ Id]_[*@3 key])&]
+[s2;%- [%% Replaces key at given index. ]Note: multiple overloads are 
+required to make Id and SqlId work with ValueMap.&]
 [s3; &]
 [s4;%- &]
 [s5;:ValueMap`:`:Remove`(int`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) int]_[*@3 i])&]
@@ -163,16 +194,24 @@ nst]&]
 e][@(0.0.255) `&]_[* operator`[`]]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s
 ])_[@(0.0.255) const]&]
 [s5;:ValueMap`:`:operator`[`]`(const char`*`)const:%- [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
-]_[* operator`[`]]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])_[@(0.0.255) const]&]
+]_[* operator`[`]]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key])_[@(0.0.255) const]&]
 [s5;:ValueMap`:`:operator`[`]`(const Id`&`)const:%- [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
-]_[* operator`[`]]([@(0.0.255) const]_[_^Id^ Id][@(0.0.255) `&]_[*@3 k])_[@(0.0.255) const]&]
-[s2; Returns value for [%-*@3 key]. If [%-*@3 key] is not present, returns 
-void Value.&]
+]_[* operator`[`]]([@(0.0.255) const]_[_^Id^ Id][@(0.0.255) `&]_[*@3 key])_[@(0.0.255) const]&]
+[s5;:ValueMap`:`:operator`[`]`(const int`)const:%- [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
+]_[* operator`[`]]([@(0.0.255) const]_[@(0.0.255) int]_[*@3 key])_[@(0.0.255) const]&]
+[s2;%- [%% Returns value for ][*@3 key][%% . If ][*@3 key][%%  is not present, 
+returns void Value. ]Note: multiple overloads are required to 
+make Id and SqlId work with ValueMap.&]
 [s3; &]
 [s4;%- &]
 [s5;:ValueMap`:`:GetAndClear`(const Value`&`):%- [_^Value^ Value]_[* GetAndClear]([@(0.0.255) c
 onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 key])&]
-[s2;  [%-*@3 key] .&]
+[s2; If [%-*@3 key] is not present, returns void Value, otherwise returns 
+value for [%-*@3 key] and sets it to void Value. The purpose of 
+this processing is to optimize copying in situation when complex 
+value (e.g. ValueArray) is about to be changed after retrieval, 
+without clearing it in ValueMap the deep copy of complex structure 
+would have to be performed when changing it.&]
 [s3; &]
 [s4;%- &]
 [s5;:ValueMap`:`:GetHashValue`(`)const:%- [@(0.0.255) unsigned]_[* GetHashValue]()_[@(0.0.255) c
