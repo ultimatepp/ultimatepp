@@ -285,7 +285,7 @@ class ValueMap : ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 	friend class Value;
 
 public:
-	ValueMap()                               { Init0(); }
+	ValueMap()                                      { Init0(); }
 	ValueMap(const ValueMap& v);
 	ValueMap(pick_ Index<Value>& k, pick_ Vector<Value>& v);
 	ValueMap(const Index<Value>& k, const Vector<Value>& v, int deep);
@@ -296,61 +296,62 @@ public:
 	operator Value() const;
 	ValueMap(const Value& src);
 
-	ValueMap(const Nuller&)                  { Init0(); }
-	bool IsNullInstance() const              { return IsEmpty(); }
+	ValueMap(const Nuller&)                         { Init0(); }
+	bool IsNullInstance() const                     { return IsEmpty(); }
 
 	void Clear();
-	int  GetCount() const                     { return data->value.GetCount(); }
-	bool IsEmpty() const                      { return data->value.IsEmpty(); }
-	const Value& GetKey(int i) const          { return data->key[i]; }
-	const Value& GetValue(int i) const        { return data->value[i]; }
+	int  GetCount() const                           { return data->value.GetCount(); }
+	bool IsEmpty() const                            { return data->value.IsEmpty(); }
+	const Value& GetKey(int i) const                { return data->key[i]; }
+	const Value& GetValue(int i) const              { return data->value[i]; }
 
 	void Add(const Value& key, const Value& value);
-	void Add(const String& s, const Value& value) { Add(Value(s), value); }
-	void Add(const char *s, const Value& value)   { Add(Value(s), value); }
-	void Add(int q, const Value& value)           { Add(Value(q), value); }
-	void Add(Id id, const Value& value)           { Add(Value(id.ToString()), value); }
+	void Add(const String& key, const Value& value) { Add(Value(key), value); }
+	void Add(const char *key, const Value& value)   { Add(Value(key), value); }
+	void Add(int key, const Value& value)           { Add(Value(key), value); }
+	void Add(Id key, const Value& value)            { Add(Value(key.ToString()), value); }
 
 	void Set(const Value& key, const Value& value);
-	void Set(const String& s, const Value& value) { Set(Value(s), value); }
-	void Set(const char *s, const Value& value)   { Set(Value(s), value); }
-	void Set(int q, const Value& value)           { Set(Value(q), value); }
-	void Set(Id id, const Value& value)           { Set(Value(id.ToString()), value); }
+	void Set(const String& key, const Value& value) { Set(Value(key), value); }
+	void Set(const char *key, const Value& value)   { Set(Value(key), value); }
+	void Set(int key, const Value& value)           { Set(Value(key), value); }
+	void Set(Id key, const Value& value)            { Set(Value(key.ToString()), value); }
 
 	void SetAt(int i, const Value& v);
-	void SetKey(int i, const Value& k);
-	void SetKey(int i, const String& s)           { SetKey(i, Value(s)); }
-	void SetKey(int i, const char* s)             { SetKey(i, Value(s)); }
-	void SetKey(int i, int q)                     { SetKey(i, Value(q)); }
-	void SetKey(int i, Id id)                     { SetKey(i, Value(id.ToString())); }
+	void SetKey(int i, const Value& key);
+	void SetKey(int i, const String& key)           { SetKey(i, Value(key)); }
+	void SetKey(int i, const char* key)             { SetKey(i, Value(key)); }
+	void SetKey(int i, int key)                     { SetKey(i, Value(key)); }
+	void SetKey(int i, Id key)                      { SetKey(i, Value(key.ToString())); }
 	void Remove(int i);
 
-	const Index<Value>& GetKeys() const           { return data->key; }
-	ValueArray GetValues() const                  { return data->value; }
+	const Index<Value>& GetKeys() const             { return data->key; }
+	ValueArray GetValues() const                    { return data->value; }
 
-	operator ValueArray() const                   { return GetValues(); }
+	operator ValueArray() const                     { return GetValues(); }
 
-	const Value& operator[](const Value& k) const;
-	const Value& operator[](const String& s) const{ return operator[](Value(s)); }
-	const Value& operator[](const char *s) const  { return operator[](Value(s)); }
-	const Value& operator[](const Id& k) const    { return operator[](Value(k.ToString())); }
+	const Value& operator[](const Value& key) const;
+	const Value& operator[](const String& key) const { return operator[](Value(key)); }
+	const Value& operator[](const char *key) const   { return operator[](Value(key)); }
+	const Value& operator[](const int key) const     { return operator[](Value(key)); }
+	const Value& operator[](const Id& key) const     { return operator[](Value(key.ToString())); }
 	
 	Value GetAndClear(const Value& key);
 
-	unsigned GetHashValue() const                 { return data->GetHashValue(); }
+	unsigned GetHashValue() const                   { return data->GetHashValue(); }
 	void     Serialize(Stream& s);
 	void     Jsonize(JsonIO& jio);
 	void     Xmlize(XmlIO& xio);
-	String   ToString() const                     { return data->AsString(); }
+	String   ToString() const                       { return data->AsString(); }
 
 	bool operator==(const ValueMap& v) const;
-	bool operator!=(const ValueMap& v) const      { return !operator==(v); }
+	bool operator!=(const ValueMap& v) const        { return !operator==(v); }
 };
 
 class ValueGen {
 public:
 	virtual Value  Get() = 0;
-	Value operator++()                           { return Get(); }
+	Value operator++()  { return Get(); }
 	virtual ~ValueGen() {}
 };
 
