@@ -308,17 +308,20 @@ public:
 	void Add(const Value& key, const Value& value);
 	void Add(const String& s, const Value& value) { Add(Value(s), value); }
 	void Add(const char *s, const Value& value)   { Add(Value(s), value); }
+	void Add(int q, const Value& value)           { Add(Value(q), value); }
 	void Add(Id id, const Value& value)           { Add(Value(id.ToString()), value); }
 
 	void Set(const Value& key, const Value& value);
 	void Set(const String& s, const Value& value) { Set(Value(s), value); }
 	void Set(const char *s, const Value& value)   { Set(Value(s), value); }
+	void Set(int q, const Value& value)           { Set(Value(q), value); }
 	void Set(Id id, const Value& value)           { Set(Value(id.ToString()), value); }
 
 	void SetAt(int i, const Value& v);
 	void SetKey(int i, const Value& k);
 	void SetKey(int i, const String& s)           { SetKey(i, Value(s)); }
 	void SetKey(int i, const char* s)             { SetKey(i, Value(s)); }
+	void SetKey(int i, int q)                     { SetKey(i, Value(q)); }
 	void SetKey(int i, Id id)                     { SetKey(i, Value(id.ToString())); }
 	void Remove(int i);
 
