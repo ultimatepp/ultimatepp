@@ -79,6 +79,7 @@ void SysImageReleased(const Image& img)
 		ir.serial_id = img.GetSerialId();
 		LLOG("SysImageReleased " << img.GetSerialId() << ", cache size: " << sImageCache().GetSize() << ", count " << sImageCache().GetCount());
 		int n = sImageCache().RemoveOne(ir);
+		IGNORE_RESULT(n); // suppress warning about unused 'n'
 		LLOG("SysImageReleased count: " << n);
 		LLOG("SysImageReleased done cache size: " << sImageCache().GetSize() << ", count " << sImageCache().GetCount());
 	}
