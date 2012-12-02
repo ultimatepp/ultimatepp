@@ -8115,6 +8115,11 @@ void GridCtrl::ColumnWidths(const char* s)
 		hitems[i + fixed_cols].Width(atoi(w[i]));
 }
 
+void GridCtrl::SetDisplay(int r, int c, GridDisplay& gd)
+{
+	GetItem(r + fixed_rows, c + fixed_cols).SetDisplay(gd);
+}
+
 #ifdef flagGRIDSQL
 void GridCtrl::FieldLayout(FieldOperator& f)
 {
