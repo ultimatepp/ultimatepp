@@ -9,7 +9,7 @@ void GtkDraw::SetColor(Color c)
 
 dword GtkDraw::GetInfo() const
 {
-	return 0;
+	return DRAWTEXTLINES;
 }
 
 Point GtkDraw::GetOffset() const
@@ -130,6 +130,11 @@ void GtkDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 
 void GtkDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
+	SetColor(color);
+	cairo_move_to(cr, x1, y1);
+	cairo_line_to(cr, x2, y2);
+	cairo_set_line_width (cr, width);
+	cairo_stroke(cr);
 }
 
 void GtkDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor)
@@ -150,27 +155,49 @@ void GtkDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 
 namespace Upp {
 FcPattern *CreateFcPattern(Font font);
+FT_Face    FTFace(Font fnt, String *rpath = NULL);
 };
 
 void GtkDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx)
 {
 	FcPattern *p = CreateFcPattern(font);
-	cairo_font_face_t *face = cairo_ft_font_face_create_for_pattern(p);
+	cairo_font_face_t *font_face = cairo_ft_font_face_create_for_pattern(p);
 	FcPatternDestroy(p);
-	
+
+	int xpos = 0;	
 	Buffer<cairo_glyph_t> gs(n);
 	for(int i = 0; i < n; i++) {
 		cairo_glyph_t& g = gs[i];
-		g.index = GetGlyphInfo(font, text[i]).glyphi;
-		g.x = x;
+		g.index = FT_Get_Char_Index(FTFace(font), text[i]);
+		g.x = x + xpos;
 		g.y = y + font.GetAscent();
-		x += dx ? dx[i] : font[text[i]];
+		xpos += dx ? dx[i] : font[text[i]];
 	}
 	
+#if 1
+	cairo_matrix_t font_matrix[1], ctm[1];
+	cairo_matrix_init_identity(ctm);
+	cairo_matrix_init_scale(font_matrix, font.GetHeight(), font.GetHeight());
+	if(angle)
+		cairo_matrix_rotate(font_matrix, -angle * M_2PI / 3600);
+
+	cairo_font_options_t *opt = cairo_font_options_create();
+	
+	cairo_scaled_font_t *sf = cairo_scaled_font_create(font_face, font_matrix, ctm, opt);
+	SetColor(ink);
+	cairo_set_scaled_font(cr, sf);
+
+ 	cairo_show_glyphs(cr, gs, n);
+
+	cairo_font_options_destroy(opt);
+	cairo_scaled_font_destroy(sf);
+#else	
  	cairo_set_font_face(cr, face);
  	cairo_set_font_size(cr, font.GetHeight());
 	SetColor(ink);
 	DDUMP(y + font.GetAscent());
  	cairo_show_glyphs(cr, gs, n);
- 	cairo_font_face_destroy(face);
+#endif
+
+ 	cairo_font_face_destroy(font_face);
 }

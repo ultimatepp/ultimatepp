@@ -8,42 +8,53 @@
 #define IMAGEFILE <GtkApp/Test.iml>
 #include <Draw/iml_source.h>
 
-static gboolean on_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+void TestDraw(Draw& w)
 {
-	GtkDraw w;
-	w.cr = gdk_cairo_create(widget->window);
-
 	w.DrawRect(0, 0, 100, 100, Yellow());
+	
+	w.DrawLine(10, 40, 400, 20, 3, Blue());
+	
+	w.DrawImage(0, 0, TestImg::Test());
 
 	w.Clipoff(50, 50, 30, 30);
 	w.DrawImage(0, 0, TestImg::Test());
 	w.End();
 
-	w.DrawImage(50, 50 + 32, TestImg::Test(), Rect(24, 24, 10, 10));
+	w.DrawImage(50, 50 + 32, TestImg::Test(), RectC(24, 24, 10, 10));
 
 	w.DrawImage(150, 50, TestImg::Test(), Red());
-	w.DrawImage(150, 50 + 32, TestImg::Test(), Rect(24, 24, 10, 10), Red());
+	w.DrawImage(150, 50 + 32, TestImg::Test(), RectC(24, 24, 10, 10), Red());
 	
 //	w.DrawText(20, 20, "Hello GTK!", Roman(50));
 
 
-		w.Offset(150, 50);
-		const char *text = "Programming is fun";
-		Font fnt(Roman(60));
-		FontInfo fi = fnt.Info();
-		int x = 0;
-		Vector<int> dx;
-		for(const char *s = text; *s; s++) {
-			int width = fi[*s];
-			w.DrawRect(x, 0, width - 1, fi.GetAscent(), Color(255, 255, 200));
-			w.DrawRect(x, fi.GetAscent(), width - 1, fi.GetDescent(), Color(255, 200, 255));
-			w.DrawRect(x + width - 1, 0, 1, fi.GetHeight(), Black());
-			dx.Add(width + 4);
-			x += width;
-		}
-		w.DrawRect(0, 0, 4, 4, Black());
-		w.DrawText(0, 0, text, fnt);
-		w.DrawText(0, 70, text, fnt, Blue(), dx.GetCount(), dx.Begin());
+	w.Offset(150, 50);
+	const char *text = "Programming is fun";
+	Font fnt(Roman(60));
+	FontInfo fi = fnt.Info();
+	int x = 0;
+	Vector<int> dx;
+	for(const char *s = text; *s; s++) {
+		int width = fi[*s];
+		w.DrawRect(x, 0, width - 1, fi.GetAscent(), Color(255, 255, 200));
+		w.DrawRect(x, fi.GetAscent(), width - 1, fi.GetDescent(), Color(255, 200, 255));
+		w.DrawRect(x + width - 1, 0, 1, fi.GetHeight(), Black());
+		dx.Add(width + 4);
+		x += width;
+	}
+	w.DrawRect(0, 0, 4, 4, Black());
+	w.DrawText(0, 0, text, fnt);
+	w.DrawText(0, 70, text, fnt, Blue(), dx.GetCount(), dx.Begin());
+	
+	w.DrawText(50, 400, 200, "Angled text", Arial(100).Underline(), Black());
+}
+
+static gboolean on_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+{
+	GtkDraw w;
+	w.cr = gdk_cairo_create(widget->window);
+
+	TestDraw(w);
 
 	cairo_destroy(w.cr);
 	
