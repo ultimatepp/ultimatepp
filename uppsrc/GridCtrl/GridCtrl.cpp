@@ -707,8 +707,6 @@ void GridCtrl::SetClipboard(bool all, bool silent)
 			body.Remove(cnt - 1);
 	}
 	
-	LOG(body);
-	
 	String header;
 	
 	if(copy_column_names)
@@ -826,7 +824,8 @@ void GridCtrl::Paste(int mode)
 
 			for(int i = 0; i < lines.GetCount(); i++)
 			{
-				Vector<String> cells = Upp::Split(lines[i], '\t', false);
+				String line = TrimRight(lines[i]);				
+				Vector<String> cells = Upp::Split(line, '\t', false);
 				for(int j = 0; j < cells.GetCount(); j++)
 				{
 					int r = i;
