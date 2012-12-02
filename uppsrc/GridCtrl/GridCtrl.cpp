@@ -552,7 +552,7 @@ void GridCtrl::StdMenuBar(Bar &bar)
 		isitem = true;
 	}
 
-	if(multi_select)
+	if(multi_select || !select_row)
 	{
 		SelectMenu(bar);
 		isitem = true;
