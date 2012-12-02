@@ -1,0 +1,5 @@
+#ifndef _GtkMain_icpp_init_stub
+#define _GtkMain_icpp_init_stub
+#include "CtrlLib/init"
+#include "Gtk/init"
+#endif

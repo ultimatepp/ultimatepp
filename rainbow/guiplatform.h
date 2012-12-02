@@ -2,6 +2,10 @@
 #define GUIPLATFORM_INCLUDE <Skeleton/Skeleton.h>
 #endif
 
+#ifdef flagGTK
+#define GUIPLATFORM_INCLUDE <Gtk/Gtk.h>
+#endif
+
 #ifdef flagWINALT
 #define GUIPLATFORM_INCLUDE <WinAlt/WinAlt.h>
 #endif
