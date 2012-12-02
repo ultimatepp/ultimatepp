@@ -217,27 +217,41 @@ void GridDisplay::PaintFixed(Draw &w, bool firstx, bool firsty, int x, int y, in
 
 		tx += 3;
 	}
+	
 	if(indicator)
 	{
 		w.Clip(x, y, cx, cy);
+
+		Image img;
+		
 		if((style & GD::CURSOR) && (style & GD::SELECT))
 		{
-			Size isz = GridImg::FocSel().GetSize();
-			w.DrawImage(x + (cx - isz.cx) / 2, y + (cy - isz.cy) / 2, GridImg::FocSel(), col);
+			img = GridImg::FocSel();
 		}
 		else if(style & GD::CURSOR)
 		{
-			Size isz = GridImg::Focused().GetSize();
-			w.DrawImage(x + (cx - isz.cx) / 2, y + (cy - isz.cy) / 2, GridImg::Focused(), col);
+			img = GridImg::Focused();
 		}
 		else if(style & GD::SELECT)
 		{
-			Size isz = GridImg::Selected().GetSize();
-			w.DrawImage(x + (cx - isz.cx) / 2, y + (cy - isz.cy) / 2, GridImg::Selected(), col);
+			img = GridImg::Selected();
 		}
+
+		if(!img.IsEmpty())
+		{
+			Size isz = img.GetSize();
+			int xp = IsNull(val)
+				? x + (cx - isz.cx) / 2
+				: tx;
+			w.DrawImage(xp, y + (cy - isz.cy) / 2, img, col);
+			if(!IsNull(val))
+				tx += isz.cx + 3;
+		}
+		
 		w.End();
 	}
-	else if(cx > lm + rm && cy > tm + bm)
+	
+	if(cx > lm + rm && cy > tm + bm)
 	{
 		int nx = x + lm;
 		int ny = y + tm;
@@ -343,6 +357,13 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 		
 		if(nextline || endtext)
 		{
+			/*int kk = p - t;
+			if(p - t <= 1)
+			{
+				//break;
+				kk = 0;
+			}*/
+
 			int tx = x;
 			tsz = GetTextSize(t, font, p - t);
 

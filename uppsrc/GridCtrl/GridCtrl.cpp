@@ -2748,9 +2748,19 @@ void GridCtrl::Set(const Vector<Value> &v, int data_offset /* = 0*/, int column_
 	Set(r, v, data_offset, column_offset);
 }
 
+void GridCtrl::SetAny(int r, int c, const Value &val)
+{
+	Set0(r, c, val);
+}
+
 void GridCtrl::SetRaw(int r, int c, const Value &val)
 {
 	items[r][c].val = val;
+}
+
+void GridCtrl::SetIndicator(int r, const Value &val)
+{
+	Set0(r, 0, val);
 }
 
 void GridCtrl::SetCtrl(int r, int c, Ctrl& ctrl)
