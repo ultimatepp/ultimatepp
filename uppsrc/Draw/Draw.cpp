@@ -115,14 +115,30 @@ int Draw::GetCloffLevel() const { return 0; }
 
 // -------------------------------
 
-void Draw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color)
+void Draw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 {
 	NEVER();
+}
+
+void Draw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color)
+{
+	if(src == Rect(img.GetSize()))
+		SysDrawImageOp(x, y, img, color);
+	else {
+		Offset(x, y);
+		Clip(src);
+		SysDrawImageOp(0, 0, img, color);
+		End();
+		End();
+	}
 }
 
 void Draw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)
 {
 	LTIMING("DrawImageOp");
+	DDUMP(img.GetSize());
+	DDUMP(src);
+	DDUMP(Size(cx, cy));
 	bool tonative = !IsNative();
 	if(tonative) {
 		BeginNative();
