@@ -1278,7 +1278,9 @@ class GridCtrl : public Ctrl
 		void Set(Id id, const Value &val);
 		void Set(int r, const Vector<Value> &v, int data_offset = 0, int column_offset = 0);
 		void Set(const Vector<Value> &v, int data_offset = 0, int column_offset = 0);
+		void SetAny(int r, int c, const Value &val);
 		void SetRaw(int r, int c, const Value &val);
+		void SetIndicator(int r, const Value &val);
 
 		void SetCtrl(int r, int c, Ctrl& ctrl);
 		void SetCtrl(int r, int c, Ctrl* ctrl);
