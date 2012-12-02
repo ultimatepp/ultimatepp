@@ -675,6 +675,7 @@ void GridCtrl::SetClipboard(bool all, bool silent)
 		bool row_selected = select_row && IsSelected(i, false);
 		
 		for(int j = fixed_cols; j < total_cols; j++)
+		{
 			if(all || row_selected || IsSelected(i, j, false))
 			{
 				if(prev_row < 0)
@@ -699,7 +700,14 @@ void GridCtrl::SetClipboard(bool all, bool silent)
 				
 				sc[j] = 1;
 			}
+		}
+		
+		int cnt = body.GetCount();
+		if(cnt > 0 && body[cnt - 1] == '\t')
+			body.Remove(cnt - 1);
 	}
+	
+	LOG(body);
 	
 	String header;
 	
@@ -708,7 +716,10 @@ void GridCtrl::SetClipboard(bool all, bool silent)
 		for(int i = 0; i < sc.GetCount(); i++)
 			if(sc[i] >= 0)
 				header += hitems[i].GetName() + '\t';
-
+		
+		int cnt = header.GetCount();
+		if(cnt > 0 && header[cnt - 1] == '\t')
+			header.Remove(cnt - 1);
 		header += "\r\n";
 	}
 		
