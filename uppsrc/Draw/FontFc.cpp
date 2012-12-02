@@ -194,6 +194,7 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 				gi.width = TRUNC(ROUND(face->glyph->advance.x));
 				gi.lspc = TRUNC(left);
 				gi.rspc = gi.width - width - gi.lspc;
+				gi.glyphi = glyph_index;
 			}
 		}
 	}
