@@ -155,13 +155,23 @@ value InvertColor() causing invertion of all pixels in target
 area.&]
 [s3;%% &]
 [s4; &]
+[s5;:Draw`:`:SysDrawImageOp`(int`,int`,const Image`&`,Color`): [@(0.0.255) virtual] 
+[@(0.0.255) void]_[* SysDrawImageOp]([@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y], 
+[@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img], [_^Color^ Color]_[*@3 color])&]
+[s2;%% Low`-level draw of Image. It depends on second variant of 
+SysDrawImageOp to support [%-*@3 src] parameter using Offset and 
+Clip.&]
+[s3;%% &]
+[s4; &]
 [s5;:Draw`:`:SysDrawImageOp`(int`,int`,const Image`&`,const Rect`&`,Color`): [@(0.0.255) v
 irtual] [@(0.0.255) void]_[* SysDrawImageOp]([@(0.0.255) int]_[*@3 x], 
 [@(0.0.255) int]_[*@3 y], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img], 
 [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 src], [_^Color^ Color]_[*@3 color])&]
 [s2;%% Low(er)`-level draw of Image, called by DrawImageOp. Draw 
 derived class can either override this method and depend on DrawImageOp 
-to do rescaling and printer banding or override DrawImageOp directly.&]
+to do rescaling and printer banding or override DrawImageOp directly. 
+Default implementation uses Offset and Clip to provide support 
+for [%-*@3 src] parameter.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawImageOp`(int`,int`,int`,int`,const Image`&`,const Rect`&`,Color`): [@(0.0.255) v
@@ -769,7 +779,10 @@ array), otherwise advancements from font metrics are used. For
 8`-bit texts ([%-*@3 text] is [^String^ String] or [@(0.0.255) const 
 char `*]), if [%-*@3 charset] is present, text is converted from 
 this charset before printing, if no [%-*@3 charset] is specified, 
-default charset is used. Implemented using DrawTextOp.&]
+default charset is used. DrawText also performs missing glyph 
+replacement and composition. If Draw`::GetInfo() returns DRAWTEXTLINES, 
+DrawText uses DrawLine to provide support for Undeline and Strikeout 
+Font styles. DrawText calls DrawTextOp for low`-level glyph rendering.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:SinCos`(int`,double`&`,double`&`): [@(0.0.255) static] 

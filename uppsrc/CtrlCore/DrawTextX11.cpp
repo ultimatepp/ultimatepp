@@ -181,7 +181,7 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	XftFont *xftfont = GetXftFont(cache, font, angle);
 	
 	Size offset = Point(0, 0);
-	double sina, cosa;
+	double sina = 0, cosa = 1;
 	int ascent = font.Info().GetAscent();
 	if(angle) {
 		SinCos(angle, sina, cosa);

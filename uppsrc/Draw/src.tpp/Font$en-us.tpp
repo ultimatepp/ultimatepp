@@ -259,7 +259,7 @@ of text.&]
 [s4; &]
 [s5;:Font`:`:GetLineHeight`(`)const: [@(0.0.255) int]_[* GetLineHeight]()_[@(0.0.255) const
 ]&]
-[s2;%% Returns GetHeight() `+ GetExternal().&]
+[s2;%% Returns suggested total line height.&]
 [s3; &]
 [s4; &]
 [s5;:Font`:`:GetOverhang`(`)const: [@(0.0.255) int]_[* GetOverhang]()_[@(0.0.255) const]&]

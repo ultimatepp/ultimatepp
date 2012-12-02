@@ -411,6 +411,7 @@ public:
 		PRINTER = 0x004,
 		NATIVE = 0x008,
 		DATABANDS = 0x010,
+		DRAWTEXTLINES = 0x020,
 	};
 
 	virtual dword GetInfo() const = 0;
@@ -430,6 +431,7 @@ public:
 	virtual Rect GetPaintRect() const;
 
 	virtual	void DrawRectOp(int x, int y, int cx, int cy, Color color) = 0;
+	virtual void SysDrawImageOp(int x, int y, const Image& img, Color color);
 	virtual void SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color);
 	virtual void DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color);
 	virtual void DrawDataOp(int x, int y, int cx, int cy, const String& data, const char *id);

@@ -11,7 +11,7 @@ NAMESPACE_UPP
 
 dword PdfDraw::GetInfo() const
 {
-	return DOTS;
+	return DOTS|DRAWTEXTLINES;
 }
 
 Size PdfDraw::GetPageSize() const
@@ -328,7 +328,7 @@ void PdfDraw::DrawTextOp(int x, int y, int angle, const wchar *s, Font fnt,
 		}
 		page << "ET\n";
 	}
-	
+/*
 //	DrawRect(x + posx, y, 20, 20, Black()); _DBG_
 	if(fnt.IsUnderline()) {
 		int w = max(2, ff.GetAscent() / 25);
@@ -338,6 +338,7 @@ void PdfDraw::DrawTextOp(int x, int y, int angle, const wchar *s, Font fnt,
 		         fround(x + cosa * posx + sina * dy),
 		         fround(y + cosa * dy - sina * posx), w, ink);
 	}
+*/
 }
 
 Image RenderGlyph(int cx, int x, Font font, int chr, int py, int pcy);
