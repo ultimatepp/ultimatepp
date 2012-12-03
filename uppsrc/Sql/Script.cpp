@@ -24,6 +24,7 @@ bool SqlPerformScript(SqlSession& session, Stream& script,
 	String stmt;
 	int level = 0;
 	bool ok = true;
+	bool esc = false;
 	while(!script.IsEof()) {
 		int c = script.Term();
 		if(IsAlpha(c)) {
@@ -33,10 +34,12 @@ bool SqlPerformScript(SqlSession& session, Stream& script,
 				stmt.Cat(c);
 				id.Cat(ToUpper(c));
 			}
-			if(id == "BEGIN")
-				level++;
-			if(id == "END")
-				level--;
+			if(!esc) {
+				if(id == "BEGIN")
+					level++;
+				if(id == "END")
+					level--;
+			}
 		}
 		else
 		if(c == '\'') {
@@ -56,7 +59,17 @@ bool SqlPerformScript(SqlSession& session, Stream& script,
 			}
 		}
 		else
-		if(c == ';' && level == 0) {
+		if(session.GetDialect() == PGSQL && c == '$') {
+			stmt.Cat('$');
+			script.Get();
+			if(script.Term() == '$') {
+				script.Get();
+				stmt.Cat('$');
+				esc = !esc;
+			}
+		}
+		else
+		if(c == ';' && level == 0 && !esc) {
 			Sql sql(session);
 			session.ClearError();
 			int q = 0;
@@ -72,10 +85,12 @@ bool SqlPerformScript(SqlSession& session, Stream& script,
 			script.Get();
 		}
 		else {
-			if(c == '(')
-				level++;
-			if(c == ')')
-				level--;
+			if(!esc) {
+				if(c == '(')
+					level++;
+				if(c == ')')
+					level--;
+			}
 			if(c != '\r') {
 				if(session.GetDialect() == ORACLE && c == '\n')
 					stmt.Cat('\r');
