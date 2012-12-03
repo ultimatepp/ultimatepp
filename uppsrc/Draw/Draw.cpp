@@ -136,9 +136,6 @@ void Draw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color
 void Draw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)
 {
 	LTIMING("DrawImageOp");
-	DDUMP(img.GetSize());
-	DDUMP(src);
-	DDUMP(Size(cx, cy));
 	bool tonative = !IsNative();
 	if(tonative) {
 		BeginNative();
