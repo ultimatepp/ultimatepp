@@ -413,6 +413,10 @@ void Ctrl::SetTimerGranularity(int ms)
 	granularity = ms;
 }
 
+void Ctrl::SysEndLoop()
+{
+}
+
 void Ctrl::EventLoop0(Ctrl *ctrl)
 {
 	GuiLock __;

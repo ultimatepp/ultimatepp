@@ -863,6 +863,10 @@ bool Ctrl::ProcessEvent(bool *quit)
 	return false;
 }
 
+void Ctrl::SysEndLoop()
+{
+}
+
 bool Ctrl::ProcessEvents(bool *quit)
 {
 	if(ProcessEvent(quit)) {
