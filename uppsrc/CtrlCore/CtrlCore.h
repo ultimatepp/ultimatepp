@@ -636,6 +636,8 @@ private:
 
 	static void GuiSleep0(int ms);
 
+	void SysEndLoop();
+
 	static void InitTimer();
 
 	static String appname;

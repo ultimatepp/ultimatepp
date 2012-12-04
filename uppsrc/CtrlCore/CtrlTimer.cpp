@@ -185,6 +185,7 @@ void   Ctrl::EndLoop()
 {
 	GuiLock __;
 	inloop = false;
+	SysEndLoop();
 }
 
 void   Ctrl::EndLoop(int code)
