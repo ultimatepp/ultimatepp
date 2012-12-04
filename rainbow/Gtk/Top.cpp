@@ -21,14 +21,20 @@ void TopWindow::SyncCaption0()
 void TopWindow::Open(Ctrl *owner)
 {
 	GuiLock __;
+	DDUMP(GetRect());
+	if(GetSize().cx == 0)
+		SetRect(10, 10, 400, 400);
+	Create(false);
 }
 
 void TopWindow::Open()
 {
+	Open(NULL); //TODO!
 }
 
 void TopWindow::OpenMain()
 {
+	Open(NULL);
 }
 
 void TopWindow::Minimize(bool effect)

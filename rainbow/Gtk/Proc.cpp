@@ -19,6 +19,35 @@ bool  GetMouseRight() { return false; }
 bool  GetMouseMiddle() { return false; }
 Point GetMousePos() { return Point(0, 0); }
 
+bool Ctrl::Proc(GdkEvent *event)
+{
+	DDUMP((int)event->type);
+	switch(event->type) {
+	case GDK_EXPOSE:
+	case GDK_DAMAGE: {
+		GdkEventExpose *e = (GdkEventExpose *)event;
+		SystemDraw w(gdk_cairo_create(top->client->window));
+		UpdateArea(w, RectC(e->area.x, e->area.y, e->area.width, e->area.height));
+		cairo_destroy(w);
+		return FALSE;
+	}
+	case GDK_MOTION_NOTIFY: {
+		GdkEventMotion *e = (GdkEventMotion *)event;
+		DLOG("Motion");
+		DDUMP(e->x);
+		DDUMP(e->y);
+		DDUMP(e->state);
+		return true;
+	}
+	case GDK_BUTTON_PRESS:
+		DLOG("EndLoop!");
+		EndLoop();
+		return true;
+	default:;
+	}
+	return false;
+}
+
 END_UPP_NAMESPACE
 
 #endif

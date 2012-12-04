@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)   //   LOG(x)
+#define LLOG(x)      DLOG(x)
 #define LOGTIMING 0
 
 #ifdef _DEBUG
@@ -22,6 +22,35 @@ bool Ctrl::IsAlphaSupported()
 bool Ctrl::IsCompositedGui()
 {
 	return false;
+}
+
+gboolean Ctrl::GtkProc(GtkWidget *widget, GdkEvent *event, gpointer user_data)
+{
+	Ctrl *q = (Ctrl *)user_data;
+	return q->Proc(event);
+}
+
+void Ctrl::Create(bool popup)
+{
+	GuiLock __;
+	ASSERT(IsMainThread());
+	LLOG("Create " << Name() << " " << GetRect());
+	ASSERT(!IsChild() && !IsOpen());
+	LLOG("Ungrab1");
+
+	top = new Top;
+	top->window = gtk_window_new(popup ? GTK_WINDOW_POPUP : GTK_WINDOW_TOPLEVEL);
+	top->client = gtk_drawing_area_new();
+	gtk_container_add(GTK_CONTAINER(top->window), top->client);
+	gtk_widget_set_events(top->client, 0xffffffff);
+	g_signal_connect(top->client, "event", G_CALLBACK(GtkProc), this);
+	gtk_widget_show_all(top->window);
+}
+
+void Ctrl::WndDestroy0()
+{
+	gtk_widget_destroy(top->client);
+	gtk_widget_destroy(top->window);
 }
 
 Vector<Ctrl *> Ctrl::GetTopCtrls()
@@ -81,12 +110,18 @@ void Ctrl::UnregisterSystemHotKey(int id)
 
 bool Ctrl::IsWaitingEvent()
 {
-	return false;
+	return gtk_events_pending();
 }
 
 bool Ctrl::ProcessEvent(bool *quit)
 {
 	ASSERT(IsMainThread());
+	if(IsWaitingEvent()) {
+		gtk_main_iteration();
+		if(quit)
+			*quit = IsEndSession();
+		return true;
+	}	
 	return false;
 }
 
@@ -94,25 +129,24 @@ void SweepMkImageCache();
 
 bool Ctrl::ProcessEvents(bool *quit)
 {
-/*	if(ProcessEvent(quit)) {
-		while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop())); // LoopCtrl-MF 071008
-		TimerProc(GetTickCount());
-		SweepMkImageCache();
-		return true;
-	}
-	SweepMkImageCache();
-	TimerProc(GetTickCount());*/
-	return false;
+	bool r = false;
+	while(IsWaitingEvent() && (!LoopCtrl || LoopCtrl->InLoop()))
+		r = ProcessEvent(quit) || r;
+	return r;
 }
 
+void Ctrl::SysEndLoop()
+{
+	gtk_main_quit();
+}
 
 void Ctrl::EventLoop0(Ctrl *ctrl)
 {
 	GuiLock __;
-/*	ASSERT(IsMainThread());
+	ASSERT(IsMainThread());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
-	LLOG("Entering event loop at level " << LoopLevel << BeginIndent);
+	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
 	Ptr<Ctrl> ploop;
 	if(ctrl) {
 		ploop = LoopCtrl;
@@ -120,49 +154,34 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 		ctrl->inloop = true;
 	}
 
-	bool quit = false;
-	ProcessEvents(&quit);
-	while(!EndSession() && !quit && ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount())
+	DDUMP(IsEndSession());
+	DDUMP(ctrl->InLoop());
+	while(!IsEndSession() && (ctrl ? true/* ctrl->IsOpen()*/ && ctrl->InLoop() : true /*GetTopCtrls().GetCount()*/)) // Fix this
 	{
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
 		SyncCaret();
-		GuiSleep(1000);
-		if(EndSession()) break;
+		if(IsEndSession()) break;
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / ProcessEvents");
-		ProcessEvents(&quit);
-//		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / after ProcessEvents");
+		DLOG("Before gtk_main");
+
+		gtk_main();
+		
+		DLOG("After gtk_main");
+		if(ctrl) {
+			DDUMP(ctrl->IsOpen());
+			DDUMP(ctrl->InLoop());
+		}
 	}
 
 	if(ctrl)
 		LoopCtrl = ploop;
 	LoopLevel--;
-	LLOG(EndIndent << "Leaving event loop ");*/
+	LLOG(LOG_END << "Leaving event loop ");
 }
 
 void Ctrl::GuiSleep0(int ms)
 {
 	GuiLock __;
-/*	ASSERT(IsMainThread());
-	ELOG("GuiSleep");
-	if(EndSession())
-		return;
-	ELOG("GuiSleep 2");
-	int level = LeaveGMutexAll();
-#if !defined(flagDLL) && !defined(PLATFORM_WINCE)
-	if(!OverwatchThread) {
-		DWORD dummy;
-		OverwatchThread = CreateThread(NULL, 0x100000, Win32OverwatchThread, NULL, 0, &dummy);
-		ELOG("ExitLoopEventWait 1");
-		ExitLoopEvent.Wait();
-	}
-	HANDLE h[1];
-	*h = ExitLoopEvent.GetHandle();
-	ELOG("ExitLoopEventWait 2 " << (void *)*h);
-	MsgWaitForMultipleObjects(1, h, FALSE, ms, QS_ALLINPUT);
-#else
-	MsgWaitForMultipleObjects(0, NULL, FALSE, ms, QS_ALLINPUT);
-#endif
-	EnterGMutex(level);*/
 }
 
 Rect Ctrl::GetWndScreenRect() const
@@ -184,7 +203,7 @@ void Ctrl::WndUpdate0()
 
 bool Ctrl::IsWndOpen() const {
 	GuiLock __;
-	return false;
+	return true;
 }
 
 void Ctrl::SetAlpha(byte alpha)
@@ -250,10 +269,6 @@ int Ctrl::GetKbdSpeed()
 {
 	GuiLock __;
 	return 1000 / 32;
-}
-
-void Ctrl::WndDestroy0()
-{
 }
 
 void Ctrl::SetWndForeground0()
