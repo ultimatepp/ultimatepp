@@ -60,8 +60,38 @@ static gboolean on_expose_event(GtkWidget *widget, GdkEventExpose *event, gpoint
 	return FALSE;
 }
 
-int main( int argc, char *argv[])
+gboolean CtrlEvent(GtkWidget *widget, GdkEvent  *event, gpointer user_data)
 {
+	Ctrl *ctrl = (Ctrl *)user_data;
+	DDUMP((int)event->type);
+	switch(event->type) {
+	case GDK_MOTION_NOTIFY: {
+		GdkEventMotion *e = (GdkEventMotion *)event;
+		DLOG("Motion");
+		DDUMP(e->x);
+		DDUMP(e->y);
+		DDUMP(e->state);
+		return true;
+	}
+	case GDK_BUTTON_PRESS:
+		DLOG("EndLoop!");
+		ctrl->EndLoop();
+		return true;
+	default:;
+	}
+	return false;
+}
+
+struct MyApp : TopWindow {
+	virtual void Paint(Draw& w) {
+		TestDraw(w);
+	}
+};
+
+CONSOLE_APP_MAIN
+{
+	Ctrl myapp;
+
 	{
 		ImageDraw w(1000, 1000);
 		TestDraw(w);
@@ -76,10 +106,15 @@ int main( int argc, char *argv[])
 		PNGEncoder().SaveFile("/home/cxl/test_alpha.png", w);
 	}
 	
+//	gtk_init(&argc, &argv);
+	gtk_init(0, NULL);
+
+#if 1
+	MyApp().Run();
+#else
 	GtkWidget *window;
 	
-	gtk_init(&argc, &argv);
-	
+//	window = gtk_window_new(GTK_WINDOW_POPUP);
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
 	gtk_window_set_default_size((GtkWindow *)window, 1000, 600);
@@ -87,12 +122,16 @@ int main( int argc, char *argv[])
 	GtkWidget *darea = gtk_drawing_area_new();
 	gtk_container_add(GTK_CONTAINER (window), darea);
 
-	g_signal_connect(darea, "expose-event", G_CALLBACK(on_expose_event), NULL);
+
+	gtk_widget_set_events(darea, 0xffffffff);
+	g_signal_connect(darea, "expose-event", G_CALLBACK(on_expose_event), &myapp);
+	g_signal_connect(darea, "event", G_CALLBACK(CtrlEvent), &myapp);
+//	g_signal_connect(window, "expose-event", G_CALLBACK(on_expose_event), NULL);
 	g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
 	gtk_widget_show_all(window);
-	
-	gtk_main();
 
-	return 0;
+	Ctrl::EventLoop(&myapp);	
+//	gtk_main();
+#endif
 }

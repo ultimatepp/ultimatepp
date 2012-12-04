@@ -113,7 +113,11 @@ void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rec
 
 #define GUIPLATFORM_KEYCODES_INCLUDE <Gtk/Keys.h>
 
-#define GUIPLATFORM_CTRL_TOP_DECLS
+//$	struct Ctrl::Top {
+#define GUIPLATFORM_CTRL_TOP_DECLS \
+	GtkWidget *window; \
+	GtkWidget *client; \
+//$ }
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <Gtk/Ctrl.h>
 
