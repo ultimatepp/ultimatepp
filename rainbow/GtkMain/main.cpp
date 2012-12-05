@@ -1,4 +1,5 @@
 #include <CtrlLib/CtrlLib.h>
+#include <RichEdit/RichEdit.h>
 
 using namespace Upp;
 
@@ -108,9 +109,19 @@ CONSOLE_APP_MAIN
 	
 //	gtk_init(&argc, &argv);
 	gtk_init(0, NULL);
+	Ctrl::GlobalBackBuffer();
 
 #if 1
-	MyApp().Run();
+	PromptOK("Hello world!");
+	return;
+	
+	RichEditWithToolBar edit;
+	edit.SetQTF("[A500 Hello World!");
+	TopWindow win;
+	win.Add(edit.SizePos());
+	win.Run();
+
+//	MyApp().Run();
 #else
 	GtkWidget *window;
 	
