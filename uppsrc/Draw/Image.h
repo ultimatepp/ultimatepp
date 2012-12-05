@@ -152,7 +152,8 @@ private:
 	friend class ImageBuffer;
 	friend struct Data;
 	friend class SystemDraw;
-	friend void  SetPaintOnly__(Image& img)          { img.data->paintonly = true; }
+	friend void  SetPaintOnly__(Image& img)          { img.data->paintonly = img.data->refcount == 1; }
+	friend void  CanShrink__(Image& img);
 	friend void  SysImageRealized(const Image& img);
 
 	void         SetAuxData(uint64 data);
