@@ -23,9 +23,10 @@ still want donate to its development, you are welcome.]&]
 [s0;2 &]
 [s0; [*+150 Ultimate`+`+ donors]&]
 [s0;/2 &]
-[s0; [*^http`:`/`/www`.vegachess`.com^ vegachess], Daniel Jesús Pérez 
-Burgos, yeohhs, Matt Ezell, Herbert Danler, Garry Everard, Jay 
-Krell, mobilehunter, Michael Bzdega, Reza Fatahilah Shah, Keith 
-Willis, Brian Rich, Alex Nicolson, Jean`-François GUCHENS, Daryl 
-Warder, [^http`:`/`/idexindia`.com`/^ Navin Vidhani]&]
+[s0;%CA-ES [%%*^http`:`/`/www`.vegachess`.com^ vegachess][%% , Daniel 
+Jesús Pérez Burgos, yeohhs, Matt Ezell, Herbert Danler, Garry 
+Everard, Jay Krell, mobilehunter, Michael Bzdega, Reza Fatahilah 
+Shah, Keith Willis, Brian Rich, Alex Nicolson, Jean`-François 
+GUCHENS, Daryl Warder, ][%%^http`:`/`/idexindia`.com`/^ Navin Vidhani], 
+Neil Neilson&]
 [s0; ]]

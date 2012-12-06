@@ -27,4 +27,4 @@ donar per ajudar al seu desenvolupament, ets benvingut.]&]
 Burgos, yeohhs, Matt Ezell, Herbert Danler, Garry Everard, Jay 
 Krell, mobilehunter, Michael Bzdega, Reza Fatahilah Shah, Keith 
 Willis, Brian Rich, Alex Nicolson, Jean`-François GUCHENS, Daryl 
-Warder]
+Warder, Neil Neilson]]
