@@ -19,6 +19,13 @@ bool  GetMouseRight() { return false; }
 bool  GetMouseMiddle() { return false; }
 Point GetMousePos() { return Point(0, 0); }
 
+void Ctrl::GtkMouseEvent(int action, GdkEvent *event)
+{
+	GdkEventButton *e = (GdkEventButton *)event;
+	DispatchMouse(action|(e->button == 2 ? MIDDLE : e->button == 3 ? RIGHT : LEFT),
+	              Point((int)e->x, (int)e->y));
+}
+
 bool Ctrl::Proc(GdkEvent *event)
 {
 	DDUMP((int)event->type);
@@ -32,19 +39,25 @@ bool Ctrl::Proc(GdkEvent *event)
 		UpdateArea(w, RectC(e->area.x, e->area.y, e->area.width, e->area.height));
 		cairo_destroy(w);
 		painting = false;
-		return true;
+		break;
 	}
 	case GDK_MOTION_NOTIFY: {
 		GdkEventMotion *e = (GdkEventMotion *)event;
-		DispatchMouse(MOUSEMOVE, Point(e->x, e->y));
+		DispatchMouse(MOUSEMOVE, Point((int)e->x, (int)e->y));
 		DoCursorShape();
-		return true;
+		break;
 	}
 	case GDK_BUTTON_PRESS:
-		DLOG("EndLoop!");
-		EndLoop();
-		return true;
+		GtkMouseEvent(DOWN, event);
+		break;
+	case GDK_2BUTTON_PRESS:
+		GtkMouseEvent(DOUBLE, event);
+		break;
+	case GDK_BUTTON_RELEASE:
+		GtkMouseEvent(UP, event);
+		break;
 	default:;
+		return false;
 	}
 	return false;
 }
