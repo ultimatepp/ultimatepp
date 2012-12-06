@@ -1,3 +1,3 @@
-//$ class TopWindow {
+//$ class TopWindow : Ctrl {
 
 //$ };

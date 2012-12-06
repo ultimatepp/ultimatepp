@@ -40,17 +40,17 @@ void Ctrl::Create(bool popup)
 
 	top = new Top;
 	top->window = gtk_window_new(popup ? GTK_WINDOW_POPUP : GTK_WINDOW_TOPLEVEL);
-	top->client = gtk_drawing_area_new();
-	gtk_container_add(GTK_CONTAINER(top->window), top->client);
-	gtk_widget_set_events(top->client, 0xffffffff);
-	g_signal_connect(top->client, "event", G_CALLBACK(GtkProc), this);
+	gtk_widget_set_events(top->window, 0xffffffff);
+	g_signal_connect(top->window, "event", G_CALLBACK(GtkProc), this);
+	gtk_widget_set_app_paintable(top->window, TRUE);
 	gtk_widget_show_all(top->window);
+	isopen = true;
 }
 
 void Ctrl::WndDestroy0()
 {
-	gtk_widget_destroy(top->client);
 	gtk_widget_destroy(top->window);
+	isopen = false;
 }
 
 Vector<Ctrl *> Ctrl::GetTopCtrls()
@@ -203,7 +203,7 @@ void Ctrl::WndUpdate0()
 
 bool Ctrl::IsWndOpen() const {
 	GuiLock __;
-	return true;
+	return top && top->window && top->window->window;
 }
 
 void Ctrl::SetAlpha(byte alpha)
@@ -321,6 +321,13 @@ bool Ctrl::HasWndCapture() const
 void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
+	DLOG("WndInvalidateRect " << r);
+	GdkRect gr(r);
+	DDUMP(gr.x);
+	DDUMP(gr.y);
+	DDUMP(gr.width);
+	DDUMP(gr.height);
+	gdk_window_invalidate_rect(win(), &gr, true);
 }
 
 void Ctrl::WndSetPos0(const Rect& rect)
@@ -331,7 +338,6 @@ void Ctrl::WndSetPos0(const Rect& rect)
 void Ctrl::WndUpdate0r(const Rect& r)
 {
 	GuiLock __;
-
 }
 
 void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)

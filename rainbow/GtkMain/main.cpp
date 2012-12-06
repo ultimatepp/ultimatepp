@@ -84,8 +84,20 @@ gboolean CtrlEvent(GtkWidget *widget, GdkEvent  *event, gpointer user_data)
 }
 
 struct MyApp : TopWindow {
+	Point pos;
+
+	virtual void MouseMove(Point p, dword keyflags)
+	{
+		pos = p;
+		DDUMP(pos);
+		DDUMP(IsVisible());
+		DDUMP(IsOpen());
+		Refresh();
+	}
+	
 	virtual void Paint(Draw& w) {
-		TestDraw(w);
+		w.DrawRect(GetSize(), White());
+		w.DrawText(10, 10, AsString(pos));
 	}
 };
 
@@ -112,6 +124,9 @@ CONSOLE_APP_MAIN
 	Ctrl::GlobalBackBuffer();
 
 #if 1
+//	MyApp().Run();
+//	return;
+
 	PromptOK("Hello world!");
 	return;
 	
