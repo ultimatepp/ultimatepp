@@ -104,6 +104,11 @@ public:
 	~BackDraw();
 };
 
+struct GdkRect : GdkRectangle {
+	operator GdkRectangle *() { return this; }
+	GdkRect(const Rect& r);
+};
+
 void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                   Color color, uint64 pattern);
 
@@ -116,7 +121,6 @@ void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rec
 //$	struct Ctrl::Top {
 #define GUIPLATFORM_CTRL_TOP_DECLS \
 	GtkWidget *window; \
-	GtkWidget *client; \
 //$ }
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <Gtk/Ctrl.h>

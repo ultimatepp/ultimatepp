@@ -25,18 +25,19 @@ bool Ctrl::Proc(GdkEvent *event)
 	switch(event->type) {
 	case GDK_EXPOSE:
 	case GDK_DAMAGE: {
+		fullrefresh = false;
 		GdkEventExpose *e = (GdkEventExpose *)event;
-		SystemDraw w(gdk_cairo_create(top->client->window));
+		SystemDraw w(gdk_cairo_create(top->window->window));
+		painting = true;
 		UpdateArea(w, RectC(e->area.x, e->area.y, e->area.width, e->area.height));
 		cairo_destroy(w);
-		return FALSE;
+		painting = false;
+		return true;
 	}
 	case GDK_MOTION_NOTIFY: {
 		GdkEventMotion *e = (GdkEventMotion *)event;
-		DLOG("Motion");
-		DDUMP(e->x);
-		DDUMP(e->y);
-		DDUMP(e->state);
+		DispatchMouse(MOUSEMOVE, Point(e->x, e->y));
+		DoCursorShape();
 		return true;
 	}
 	case GDK_BUTTON_PRESS:
