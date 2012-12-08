@@ -10,6 +10,7 @@
 
 void TestDraw(Draw& w)
 {
+	w.DrawRect(0, 0, 10000, 10000, WhiteGray());
 	w.DrawRect(0, 0, 100, 100, Yellow());
 	
 	w.DrawLine(10, 40, 400, 20, 3, Blue());
@@ -46,23 +47,41 @@ void TestDraw(Draw& w)
 	w.DrawText(0, 0, text, fnt);
 	w.DrawText(0, 70, text, fnt, Blue(), dx.GetCount(), dx.Begin());
 	
-	w.DrawText(50, 400, 200, "Angled text", Arial(100).Underline(), Black());
+	w.DrawRect(50, 400, 2, 2, Black());
+	w.DrawText(50, 400, 200, "Angled text", Arial(50).Underline(), Red());
+
+	w.DrawRect(600, 400, 2, 2, Black());
+	w.DrawText(600, 400, 1000, "Angled text", Arial(50).Underline(), Black());
+	w.End();
 }
 
 static gboolean on_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
-	GtkDraw w;
-	w.cr = gdk_cairo_create(widget->window);
+	CairoDraw w(gdk_cairo_create(widget->window));
 
 	TestDraw(w);
 
-	cairo_destroy(w.cr);
+	cairo_destroy(w);
 	
 	return FALSE;
 }
 
 int main( int argc, char *argv[])
 {
+	{
+		CairoImageDraw w(1000, 1000);
+		TestDraw(w);
+		PNGEncoder().SaveFile("/home/cxl/test.png", w);
+	}
+
+	{
+		CairoImageDraw w(1000, 1000);
+		TestDraw(w);
+		for(int i = 0; i < 100; i++)
+			w.Alpha().DrawRect(i * 10, 0, 10, 1000, GrayColor(255 - i));
+		PNGEncoder().SaveFile("/home/cxl/test_alpha.png", w);
+	}
+	
 	GtkWidget *window;
 	
 	gtk_init(&argc, &argv);
