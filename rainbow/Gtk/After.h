@@ -4,33 +4,16 @@ public:
 	~ViewDraw();
 };
 
-Vector<WString>& coreCmdLine__();
-Vector<WString> SplitCmdLine__(const char *cmd);
+class DHCtrl : Ctrl {};
 
-#ifdef PLATFORM_WIN32
+void InitGtkApp(int argc, char **argv, const char **envptr);
 
-#define GUI_APP_MAIN \
-void GuiMainFn_();\
-\
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdShow) \
-{ \
-	UPP::coreCmdLine__() = UPP::SplitCmdLine__(UPP::FromSystemCharset(lpCmdLine)); \
-	UPP::AppInitEnvironment__(); \
-	GuiMainFn_(); \
-	UPP::Ctrl::CloseTopCtrls(); \
-	return UPP::GetExitCode(); \
-} \
-\
-void GuiMainFn_()
-
-#endif
-
-#ifdef PLATFORM_POSIX
 #define GUI_APP_MAIN \
 void GuiMainFn_(); \
 \
-int main(int argc, const char **argv, const char **envptr) { \
-	UPP::AppInit__(argc, argv, envptr); \
+int main(int argc, char **argv, const char **envptr) { \
+	UPP::AppInit__(argc, (const char **)argv, envptr); \
+	UPP::InitGtkApp(argc, argv, envptr); \
 	GuiMainFn_(); \
 	UPP::Ctrl::CloseTopCtrls(); \
 	UPP::AppExit__(); \
@@ -38,7 +21,3 @@ int main(int argc, const char **argv, const char **envptr) { \
 } \
  \
 void GuiMainFn_()
-
-#endif
-
-class DHCtrl : Ctrl {};
