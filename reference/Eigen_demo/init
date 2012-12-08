@@ -1,0 +1,5 @@
+#ifndef _Eigen_demo_icpp_init_stub
+#define _Eigen_demo_icpp_init_stub
+#include "Core/init"
+#include "plugin\Eigen/init"
+#endif

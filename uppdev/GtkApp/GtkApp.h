@@ -7,7 +7,7 @@ using namespace Upp;
 
 #include <gtk/gtk.h>
 
-struct GtkDraw : Draw {
+class CairoDraw : public Draw {
 	virtual dword GetInfo() const;
 
 	virtual void BeginOp();
@@ -38,7 +38,6 @@ struct GtkDraw : Draw {
 	virtual void DrawTextOp(int x, int y, int angle, const wchar *text, Font font,
 		                    Color ink, int n, const int *dx);
 
-	cairo_t *cr;
 
 private:
 	void  SetColor(Color c);
@@ -47,6 +46,38 @@ private:
 	void  Push();
 	void  Pop();
 	Vector<Point> offset;
+
+	cairo_t *cr;
+	CairoDraw() {}
+	
+	friend class CairoImageDraw;
+
+public:
+	operator cairo_t*()              { return cr; }
+
+	CairoDraw(cairo_t *cr) : cr(cr) {}
+};
+
+class CairoImageDraw : public CairoDraw {
+	cairo_surface_t *surface;
+	Size             isz;
+	
+	CairoDraw        alpha;
+	cairo_surface_t *alpha_surface;
+
+	void Init(Size sz);
+	void FetchStraight(ImageBuffer& b) const;
+
+public:
+	Draw& Alpha();                       
+
+	operator Image() const;
+
+	Image GetStraight() const;
+
+	CairoImageDraw(Size sz);
+	CairoImageDraw(int cx, int cy);
+	~CairoImageDraw();
 };
 
 #endif

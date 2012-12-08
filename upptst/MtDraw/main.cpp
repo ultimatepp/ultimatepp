@@ -20,7 +20,7 @@ void MyApp::Do(int i)
 {
 	String qtf;
 	qtf << "Here goes Image "
-	    << "@@iml:" << Random(100) * 10 + 100 << "*" << Random(150) * 10 + 100 << "`CtrlImg:exclamation` !!!"
+//	    << "@@iml:" << Random(100) * 10 + 100 << "*" << Random(150) * 10 + 100 << "`CtrlImg:exclamation` !!!"
 	    << "&This was pass: " << i;
 	if(i & 1) {
 		RLOG("About to lock, main: " << Thread::IsMain());
