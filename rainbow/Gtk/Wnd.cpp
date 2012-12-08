@@ -79,13 +79,14 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	if(owner && owner->top)
 		gtk_window_set_transient_for((GtkWindow *)top->window, (GtkWindow *)owner->top->window);
 	gtk_widget_set_app_paintable(top->window, TRUE);
-	gtk_widget_show_all(top->window);
 	isopen = true;
 
 	top->im_context = gtk_im_multicontext_new();
 	gtk_im_context_set_client_window(top->im_context, gdk());
  	gtk_im_context_set_use_preedit(top->im_context, false);
 	g_signal_connect(top->im_context, "commit", G_CALLBACK(IMCommit), this);
+	
+	WndShow(IsShown());
 
 	Win& w = wins.Add();
 	w.ctrl = this;
@@ -120,13 +121,13 @@ void  Ctrl::SetMouseCursor(const Image& image)
 Ctrl *Ctrl::GetOwner()
 {
 	GuiLock __;
-	return NULL;
+	return top ? top->owner : NULL;
 }
 
 Ctrl *Ctrl::GetActiveCtrl()
 {
 	GuiLock __;
-	return NULL;
+	return focusCtrl ? focusCtrl->GetTopCtrl() : NULL;
 }
 
 // Vector<Callback> Ctrl::hotkey;
@@ -257,6 +258,10 @@ Rect Ctrl::GetWndScreenRect() const
 void Ctrl::WndShow0(bool b)
 {
 	GuiLock __;
+	if(b)
+		gtk_widget_show_all(top->window);
+	else
+		gtk_widget_hide_all(top->window);
 }
 
 void Ctrl::WndUpdate0()
