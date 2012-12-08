@@ -1,0 +1,6 @@
+uses
+	Draw;
+
+file
+	main.cpp;
+

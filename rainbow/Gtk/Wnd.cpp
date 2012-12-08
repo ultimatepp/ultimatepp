@@ -14,6 +14,32 @@ NAMESPACE_UPP
 #define ELOGW(x)  // RLOG(GetSysTime() << ": " << x) // Only activate in MT!
 #define ELOG(x)   // RLOG(GetSysTime() << ": " << x)
 
+Vector<Ctrl::Win> Ctrl::wins;
+
+int Ctrl::FindCtrl(Ctrl *ctrl)
+{
+	for(int i = 0; i < wins.GetCount(); i++)
+		if(wins[i].ctrl == ctrl)
+			return i;
+	return -1;
+}
+
+int Ctrl::FindGtkWindow(GtkWidget *gtk)
+{
+	for(int i = 0; i < wins.GetCount(); i++)
+		if(wins[i].gtk == gtk)
+			return i;
+	return -1;
+}
+
+int Ctrl::FindGdkWindow(GdkWindow *gdk)
+{
+	for(int i = 0; i < wins.GetCount(); i++)
+		if(wins[i].gdk == gdk)
+			return i;
+	return -1;
+}
+
 bool Ctrl::IsAlphaSupported()
 {
 	return false;
@@ -26,11 +52,19 @@ bool Ctrl::IsCompositedGui()
 
 gboolean Ctrl::GtkProc(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 {
-	Ctrl *q = (Ctrl *)user_data;
-	return q->Proc(event);
+	bool b = ((Ctrl *)(user_data))->Proc(event);
+	FocusSync();
+	return b;
 }
 
-void Ctrl::Create(bool popup)
+void Ctrl::IMCommit(GtkIMContext *context, gchar *str, gpointer user_data)
+{
+	WString s = FromUtf8(str);
+	for(int i = 0; i < s.GetCount(); i++)
+		((Ctrl *)(user_data))->Key(s[i], 1);
+}
+
+void Ctrl::Create(Ctrl *owner, bool popup)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
@@ -42,15 +76,34 @@ void Ctrl::Create(bool popup)
 	top->window = gtk_window_new(popup ? GTK_WINDOW_POPUP : GTK_WINDOW_TOPLEVEL);
 	gtk_widget_set_events(top->window, 0xffffffff);
 	g_signal_connect(top->window, "event", G_CALLBACK(GtkProc), this);
+	if(owner && owner->top)
+		gtk_window_set_transient_for((GtkWindow *)top->window, (GtkWindow *)owner->top->window);
 	gtk_widget_set_app_paintable(top->window, TRUE);
 	gtk_widget_show_all(top->window);
 	isopen = true;
+
+	top->im_context = gtk_im_multicontext_new();
+	gtk_im_context_set_client_window(top->im_context, gdk());
+ 	gtk_im_context_set_use_preedit(top->im_context, false);
+	g_signal_connect(top->im_context, "commit", G_CALLBACK(IMCommit), this);
+
+	Win& w = wins.Add();
+	w.ctrl = this;
+	w.gtk = top->window;
+	w.gdk = top->window->window;
+	FocusSync();
 }
 
 void Ctrl::WndDestroy0()
 {
 	gtk_widget_destroy(top->window);
+	g_object_unref(top->im_context);
 	isopen = false;
+	delete top;
+	top = NULL;
+	int q = FindCtrl(this);
+	if(q >= 0)
+		wins.Remove(q);
 }
 
 Vector<Ctrl *> Ctrl::GetTopCtrls()
@@ -163,14 +216,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 		if(IsEndSession()) break;
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / ProcessEvents");
 		DLOG("Before gtk_main");
-
 		gtk_main();
-		
-		DLOG("After gtk_main");
-		if(ctrl) {
-			DDUMP(ctrl->IsOpen());
-			DDUMP(ctrl->InLoop());
-		}
 	}
 
 	if(ctrl)
@@ -182,6 +228,23 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 void Ctrl::GuiSleep0(int ms)
 {
 	GuiLock __;
+}
+
+void Ctrl::FocusSync()
+{
+	GuiLock __;
+	Ctrl *focus = NULL;
+	static Ctrl *ctrl;
+	for(int i = 0; i < wins.GetCount(); i++)
+		if(gtk_window_is_active((GtkWindow *)wins[i].gtk))
+			focus = wins[i].ctrl;
+	if(focus != ctrl) {
+		if(ctrl)
+			ctrl->KillFocusWnd();
+		ctrl = focus;
+		if(ctrl)
+			ctrl->SetFocusWnd();
+	}
 }
 
 Rect Ctrl::GetWndScreenRect() const
@@ -274,12 +337,13 @@ int Ctrl::GetKbdSpeed()
 void Ctrl::SetWndForeground0()
 {
 	GuiLock __;
+	gtk_window_present((GtkWindow *)top->window);
 }
 
 bool Ctrl::IsWndForeground() const
 {
 	GuiLock __;
-	return true;
+	return gtk_window_is_active((GtkWindow *)top->window);
 }
 
 void Ctrl::WndEnable0(bool *b)
@@ -321,18 +385,13 @@ bool Ctrl::HasWndCapture() const
 void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
-	DLOG("WndInvalidateRect " << r);
-	GdkRect gr(r);
-	DDUMP(gr.x);
-	DDUMP(gr.y);
-	DDUMP(gr.width);
-	DDUMP(gr.height);
-	gdk_window_invalidate_rect(win(), &gr, true);
+	gdk_window_invalidate_rect(gdk(), GdkRect(r), true);
 }
 
 void Ctrl::WndSetPos0(const Rect& rect)
 {
 	GuiLock __;
+	gdk_window_move_resize(gdk(), rect.left, rect.top, rect.GetWidth(), rect.GetHeight());
 }
 
 void Ctrl::WndUpdate0r(const Rect& r)

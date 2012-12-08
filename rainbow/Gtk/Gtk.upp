@@ -12,6 +12,7 @@ file
 	Ctrl.cpp,
 	Wnd.cpp,
 	Proc.cpp,
+	App.cpp,
 	Top.h,
 	Top.cpp,
 	Clip.cpp,

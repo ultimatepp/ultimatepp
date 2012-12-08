@@ -1,6 +1,7 @@
 #define GUI_GTK
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 NAMESPACE_UPP
 
@@ -120,7 +121,8 @@ void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rec
 
 //$	struct Ctrl::Top {
 #define GUIPLATFORM_CTRL_TOP_DECLS \
-	GtkWidget *window; \
+	GtkWidget    *window; \
+	GtkIMContext *im_context; \
 //$ }
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <Gtk/Ctrl.h>

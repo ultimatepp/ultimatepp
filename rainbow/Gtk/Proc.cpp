@@ -10,6 +10,8 @@ NAMESPACE_UPP
 
 #define LLOG(x)  // LOG(x)
 
+
+
 bool  GetShift() { return false; }
 bool  GetCtrl() { return false; }
 bool  GetAlt() { return false; }
@@ -28,8 +30,18 @@ void Ctrl::GtkMouseEvent(int action, GdkEvent *event)
 
 bool Ctrl::Proc(GdkEvent *event)
 {
-	DDUMP((int)event->type);
+	if(!top)
+		return false;
+	GdkEventKey *key;
+	bool pressed = false;
+	int kv;
 	switch(event->type) {
+	case GDK_FOCUS_CHANGE:
+		if(((GdkEventFocus *)event)->in)
+			gtk_im_context_focus_in(top->im_context);
+		else
+			gtk_im_context_focus_out(top->im_context);
+		break;
 	case GDK_EXPOSE:
 	case GDK_DAMAGE: {
 		fullrefresh = false;
@@ -56,7 +68,18 @@ bool Ctrl::Proc(GdkEvent *event)
 	case GDK_BUTTON_RELEASE:
 		GtkMouseEvent(UP, event);
 		break;
-	default:;
+	case GDK_KEY_PRESS:
+		pressed = true;
+		key = (GdkEventKey *)event;
+	case GDK_KEY_RELEASE:
+		key = (GdkEventKey *)event;
+		kv = key->keyval;
+		if(gtk_im_context_filter_keypress(top->im_context, key))
+			break;
+		if(kv >= 0 && kv < 65536)
+			DispatchKey((pressed ? K_KEYUP : kv + K_DELTA), 1);
+		break;
+	default:
 		return false;
 	}
 	return false;
