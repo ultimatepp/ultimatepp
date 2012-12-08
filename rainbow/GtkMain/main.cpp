@@ -46,9 +46,6 @@ struct MyApp : TopWindow {
 	virtual void MouseMove(Point p, dword keyflags)
 	{
 		pos = p;
-		DDUMP(pos);
-		DDUMP(IsVisible());
-		DDUMP(IsOpen());
 		Refresh();
 	}
 	
