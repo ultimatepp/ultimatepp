@@ -452,9 +452,17 @@ GlyphInfo GetGlyphMetrics(Font font, int chr)
 {
 	font.RealizeStd();
 	GlyphInfo f = GetGlyphInfo(font, chr);
-	if(f.IsMissing())
-		f = GetGlyphInfo(font, '?');
-	GlyphMetrics(f, font, chr);
+	if(f.IsMissing()) {
+		Font fnt = Arial(font.GetHeight());
+		wchar chr = 0x25a1;
+		f = GetGlyphInfo(fnt, chr);
+		if(!f.IsNormal()) {
+			chr = ' ';
+			f = GetGlyphInfo(fnt, chr);
+		}
+	}
+	else
+		GlyphMetrics(f, font, chr);
 	return f;
 }
 
