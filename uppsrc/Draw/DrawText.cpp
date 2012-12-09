@@ -61,7 +61,7 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 					GlyphInfo gi2 = GetGlyphInfo(font, text[i + c]);
 					if(!gi2.IsNormal())
 						break;
-					dd += dx ? dx[c] : gi.width;
+					dd += dx ? dx[c - 1] : gi.width;
 					c++;
 					gi = gi2;
 				}

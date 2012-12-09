@@ -180,6 +180,7 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 	FT_Face face = FTFace(font, NULL);
 	gi.lspc = gi.rspc = 0;
 	gi.width = 0x8000;
+	LLOG("GetGlyphInfoSys " << font << " " << (char)chr << " " << FormatIntHex(chr));
 	if(face) {
 		LTIMING("GetGlyphInfoSys 2");
 		int glyph_index = FT_Get_Char_Index(face, chr);
