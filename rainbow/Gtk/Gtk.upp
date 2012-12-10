@@ -1,4 +1,4 @@
-description "Skeleton rainbow code\377";
+description "Gtk backend\377";
 
 file
 	Gtk.h,

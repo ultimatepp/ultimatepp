@@ -79,10 +79,20 @@ bool Ctrl::Proc(GdkEvent *event)
 		if(kv >= 0 && kv < 65536)
 			DispatchKey((pressed ? K_KEYUP : kv + K_DELTA), 1);
 		break;
+
+	case GDK_CONFIGURE: {
+		GdkEventConfigure *e = (GdkEventConfigure *)event;
+		Rect rect = RectC(e->x, e->y, e->width, e->height);
+		LLOG("CongigureNotify " << rect);
+		if(GetRect() != rect)
+			SetWndRect(rect);
+		// TODO: Add DHCtrl support
+		}
+		break;
 	default:
 		return false;
 	}
-	return false;
+	return true;
 }
 
 END_UPP_NAMESPACE
