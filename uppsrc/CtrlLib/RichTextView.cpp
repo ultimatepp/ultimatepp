@@ -12,6 +12,7 @@ Rect  RichTextView::GetPage() const
 void  RichTextView::Paint(Draw& w)
 {
 	Size sz = GetSize();
+	DDUMP(background);
 	w.DrawRect(sz, background);
 	sz.cx -= margin.left + margin.right;
 	sz.cy -= margin.top + margin.bottom;
