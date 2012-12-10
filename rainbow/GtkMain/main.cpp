@@ -6,6 +6,9 @@ using namespace Upp;
 struct MyApp : TopWindow {
 	Point  pos;
 	Vector<String> log;
+
+	virtual Size GetMinSize() const { return Size(100, 100); }
+	virtual Size GetMaxSize() const { return Size(400, 200); }
 	
 	void Log(const String& s)
 	{
@@ -91,6 +94,10 @@ struct MyApp : TopWindow {
 			y += fcy;
 		}
 	}
+	
+	MyApp() {
+		Sizeable().Zoomable().Title("Event test");
+	}
 };
 
 GUI_APP_MAIN
@@ -100,10 +107,12 @@ GUI_APP_MAIN
 
 	PromptOK("Hello world!");
 	return;
-	
+
+/*	
 	RichEditWithToolBar edit;
 	edit.SetQTF("[A500 Hello World!");
 	TopWindow win;
 	win.Add(edit.SizePos());
 	win.Run();
+*/
 }
