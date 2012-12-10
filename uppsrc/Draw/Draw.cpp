@@ -125,10 +125,8 @@ void Draw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color
 	if(src == Rect(img.GetSize()))
 		SysDrawImageOp(x, y, img, color);
 	else {
-		Offset(x, y);
-		Clip(src);
-		SysDrawImageOp(0, 0, img, color);
-		End();
+		Clipoff(x, y, src.GetWidth(), src.GetHeight());
+		SysDrawImageOp(-src.left, -src.top, img, color);
 		End();
 	}
 }
