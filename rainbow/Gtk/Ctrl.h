@@ -4,10 +4,12 @@
 	static gboolean GtkProc(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 	static void     IMCommit(GtkIMContext *context, gchar *str, gpointer user_data);
 
-	bool Proc(GdkEvent *event);
+	virtual bool Proc(GdkEvent *event);
+
 	void GtkMouseEvent(int action, GdkEvent *event);
 
 	GdkWindow *gdk() { return top->window->window; }
+	GtkWindow *gtk() { return (GtkWindow *)top->window; }
 	
 	struct Win : Moveable<Win> {
 		GtkWidget *gtk;

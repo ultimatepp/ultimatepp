@@ -6,16 +6,35 @@ NAMESPACE_UPP
 
 #define LLOG(x)  // LOG(x)
 
-void    TopWindow::SyncSizeHints() {}
+void    TopWindow::SyncSizeHints()
+{
+	GuiLock __;
+	if(!top)
+		return;
+	GdkGeometry m;
+	Size sz = GetRect().GetSize();
+	if(sizeable)
+		sz = GetMinSize();
+	m.min_width = sz.cx;
+	m.min_height = sz.cy;
+	if(sizeable)
+		sz = GetMaxSize();
+	m.max_width = sz.cx;
+	m.max_height = sz.cy;
+ 	gtk_window_set_geometry_hints(gtk(), NULL, &m, (GdkWindowHints)(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE));
+}
 
 void TopWindow::SyncTitle0()
 {
 	GuiLock __;
+	if(top)
+		gtk_window_set_title(gtk(), FromUnicode(title, CHARSET_UTF8));
 }
 
 void TopWindow::SyncCaption0()
 {
 	GuiLock __;
+	SyncTitle0();
 }
 
 void TopWindow::Open(Ctrl *owner)
@@ -24,6 +43,8 @@ void TopWindow::Open(Ctrl *owner)
 	if(GetSize().cx == 0)
 		SetRect(10, 10, 400, 400);
 	Create(owner, false);
+	SyncSizeHints();
+	SyncCaption();
 }
 
 void TopWindow::Open()

@@ -85,8 +85,9 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	gtk_im_context_set_client_window(top->im_context, gdk());
  	gtk_im_context_set_use_preedit(top->im_context, false);
 	g_signal_connect(top->im_context, "commit", G_CALLBACK(IMCommit), this);
-	
+
 	WndShow(IsShown());
+	WndSetPos0(GetRect());
 
 	Win& w = wins.Add();
 	w.ctrl = this;
@@ -396,6 +397,7 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 void Ctrl::WndSetPos0(const Rect& rect)
 {
 	GuiLock __;
+	LLOG("WndSetPos0 " << rect);
 	gdk_window_move_resize(gdk(), rect.left, rect.top, rect.GetWidth(), rect.GetHeight());
 }
 
