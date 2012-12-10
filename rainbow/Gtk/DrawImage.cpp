@@ -54,7 +54,7 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 	GuiLock __;
 	if(img.GetLength() == 0)
 		return;
-	LLOG("SysDrawImageOp " << img.GetSerialId() << ' ' << img.GetSize());
+	DLOG("SysDrawImageOp " << img.GetSerialId() << ' ' << x << ", " << y << ", "<< img.GetSize());
 	ImageSysDataMaker m;
 	static LRUCache<ImageSysData, int64> cache;
 	LLOG("SysImage cache pixels " << cache.GetSize() << ", count " << cache.GetCount());

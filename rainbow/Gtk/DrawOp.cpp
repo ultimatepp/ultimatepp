@@ -103,6 +103,8 @@ Rect SystemDraw::GetPaintRect() const
 
 void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 {
+	if(IsNull(color))
+		return;
 	SetColor(color);
 	cairo_rectangle(cr, x, y, cx, cy);
 	cairo_fill(cr);

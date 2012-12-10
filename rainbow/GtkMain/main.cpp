@@ -11,6 +11,32 @@ struct MyApp : TopWindow {
 	{
 		log.Add(s);
 		log.Remove(0, max(log.GetCount() - 16, 0));
+		Refresh();
+	}
+	
+	virtual void Activate()
+	{
+		Log("Activate");
+	}
+
+	virtual void Deactivate()
+	{
+		Log("Deactivate");
+	}
+	
+	virtual void Layout()
+	{
+		Log("Layout");
+	}
+	
+	virtual void GotFocus()
+	{
+		Log("GotFocus");
+	}
+	
+	virtual void LostFocus()
+	{
+		Log("LostFocus");
 	}
 	
 	virtual Image MouseEvent(int event, Point p, int zdelta, dword keyflags)
@@ -33,14 +59,12 @@ struct MyApp : TopWindow {
 		Tuple2<int, const char *> *b = FindTuple(map, __countof(map), event & ACTION);
 		Log(String().Cat() << "MOUSE " << (a ? a->b : "") << '|' << (b ? b->b : "") << ' ' << p);
 
-		Refresh();
 		return TopWindow::MouseEvent(event, p, zdelta, keyflags);
 	}
 	
 	virtual bool Key(dword key, int count)
 	{
 		Log(GetKeyDesc(key).Cat() << ' ' << count);
-		Refresh();
 	}
 
 	virtual void MouseMove(Point p, dword keyflags)
@@ -71,8 +95,8 @@ struct MyApp : TopWindow {
 
 GUI_APP_MAIN
 {
-//	MyApp().Run();
-//	return;
+	MyApp().Run();
+	return;
 
 	PromptOK("Hello world!");
 	return;

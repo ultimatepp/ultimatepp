@@ -92,7 +92,6 @@ GUI_APP_MAIN
 
 	gtk_widget_set_events(darea, 0xffffffff);
 	g_signal_connect(darea, "expose-event", G_CALLBACK(on_expose_event), &myapp);
-	g_signal_connect(darea, "event", G_CALLBACK(CtrlEvent), &myapp);
 //	g_signal_connect(window, "expose-event", G_CALLBACK(on_expose_event), NULL);
 	g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
