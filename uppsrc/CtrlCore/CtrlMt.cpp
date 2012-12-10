@@ -70,7 +70,6 @@ void Ctrl::Call(Callback cb)
 	if(IsMainThread())
 		cb();
 	else {
-		int ms = msecs();
 		CallBox cbox;
 		cbox.cb = cb;
 		UPP::PostCallback(callback1(PerformCall, &cbox));
