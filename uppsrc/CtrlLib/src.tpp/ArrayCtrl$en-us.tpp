@@ -1229,6 +1229,16 @@ blank`-separated decimal numbers, e.g. `"1 4 6 4 1`".&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4;%- &]
+[s5;:ArrayCtrl`:`:CursorOverride`(const Image`&`):%- [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&
+]_[* CursorOverride]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 arrow])&]
+[s2; Overrides mouse cursor to [%-*@3 arrow]. Setting Null ends override.&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:NoCursorOverride`(`):%- [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoCurs
+orOverride]()&]
+[s2; Same as CursorOverride(Null).&]
+[s3;%- &]
+[s4;%- &]
 [s5;:ArrayCtrl`:`:RowFormat`(const char`*`):%- [_^String^ String]_[* RowFormat]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2; Formats a text by substituting [* %s] with the array`-specific 
@@ -2906,4 +2916,4 @@ of the rows to compare&]
 row to compare&]
 [s7; [*/ Return value]-|[* true] `= row1 < row2, [* false] `= row1 >`= row2&]
 [s3; &]
-[s0; ]
+[s0; ]]

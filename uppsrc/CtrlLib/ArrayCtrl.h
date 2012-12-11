@@ -238,6 +238,8 @@ private:
 	mutable bool  selectiondirty:1;
 
 	unsigned  bains:2;
+	
+	Image cursor_override;
 
 	bool  isdrag:1;
 	bool  selclick:1;
@@ -634,6 +636,8 @@ public:
 	ArrayCtrl& SetScrollBarStyle(const ScrollBar::Style& s)   { sb.SetStyle(s); header.SetScrollBarStyle(s); return *this; }
 	ArrayCtrl& SetHeaderCtrlStyle(const HeaderCtrl::Style& s) { header.SetStyle(s); return *this; }
 
+	ArrayCtrl& CursorOverride(const Image& arrow)             { cursor_override = arrow; return *this; }
+	ArrayCtrl& NoCursorOverride()                             { return CursorOverride(Null); }
 
 	void Reset();
 

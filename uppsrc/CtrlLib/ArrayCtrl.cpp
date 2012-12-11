@@ -1637,6 +1637,8 @@ void ArrayCtrl::MouseLeave()
 
 Image ArrayCtrl::CursorImage(Point p, dword)
 {
+	if(!IsNull(cursor_override))
+		return cursor_override;
 	return header.GetSplit(p.x) < 0 || header.GetMode() == HeaderCtrl::FIXED ? Image::Arrow()
 	                                                                         : CtrlsImg::HorzPos();
 }
