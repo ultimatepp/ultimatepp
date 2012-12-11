@@ -97,6 +97,8 @@ struct MyApp : TopWindow {
 	
 	MyApp() {
 		Sizeable().Zoomable().Title("Event test");
+		Icon(CtrlImg::save_as());
+//		Icon(CtrlImg::Network());
 	}
 };
 

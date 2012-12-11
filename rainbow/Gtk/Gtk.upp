@@ -8,6 +8,7 @@ file
 	DrawText.cpp,
 	DrawImage.cpp,
 	Util.cpp,
+	GdkImage.cpp,
 	Ctrl.h,
 	Ctrl.cpp,
 	Wnd.cpp,

@@ -35,6 +35,8 @@ void TopWindow::SyncCaption0()
 {
 	GuiLock __;
 	SyncTitle0();
+	if(top && gdk_icon.Set(icon))
+		gtk_window_set_icon(gtk(), gdk_icon);
 }
 
 void TopWindow::Open(Ctrl *owner)

@@ -110,6 +110,22 @@ struct GdkRect : GdkRectangle {
 	GdkRect(const Rect& r);
 };
 
+class ImageGdk {
+	GdkPixbuf *pixbuf;
+	Image      img;
+
+	void Free();
+
+public:
+	operator GdkPixbuf *()    { return pixbuf; }
+
+	bool Set(const Image& m);
+	          
+	ImageGdk();
+	ImageGdk(const Image& m);
+	~ImageGdk();
+};
+
 void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                   Color color, uint64 pattern);
 
