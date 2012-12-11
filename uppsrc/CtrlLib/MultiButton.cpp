@@ -390,8 +390,7 @@ void MultiButton::Paint(Draw& w)
 		cr.left = lx;
 		cr.right = rx;
 		r = cr;
-		if(!IsTransparent())
-			paper = HasFocus() ? SColorHighlight() : SColorPaper();
+		paper = HasFocus() ? SColorHighlight() : SColorPaper();
 		if(HasFocus())
 			text = SColorHighlightText();
 		w.DrawRect(r, paper);
@@ -401,9 +400,6 @@ void MultiButton::Paint(Draw& w)
 		Rect m = GetMargin();
 		r = Rect(max(lx, m.left), m.top, min(rx, sz.cx - m.right), sz.cy - m.bottom);
 		Color paper;
-		if(IsTransparent())
-			paper = Null;
-		else
 		if(mst == CTRL_HOT && !IsTrivial())
 			paper = Blend(SColorHighlight, SColorPaper, 235);
 		else
