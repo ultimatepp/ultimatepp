@@ -105,9 +105,17 @@ void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 {
 	if(IsNull(color))
 		return;
-	SetColor(color);
 	cairo_rectangle(cr, x, y, cx, cy);
-	cairo_fill(cr);
+	if(color == InvertColor()) {
+		SetColor(White());
+		cairo_set_operator(cr, CAIRO_OPERATOR_DIFFERENCE);
+		cairo_fill(cr);
+		cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+	}
+	else {
+		SetColor(color);
+		cairo_fill(cr);
+	}
 }
 
 void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
