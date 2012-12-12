@@ -156,7 +156,6 @@ private:
 	friend void  SysImageRealized(const Image& img);
 
 	void         SetAuxData(uint64 data);
-	uint64       GetAuxData() const;
 
 public:
 	const RGBA*    operator~() const;
@@ -223,6 +222,10 @@ public:
 	static Image SizeBottomRight();
 	static Image Cross();
 	static Image Hand();
+	
+	// standard mouse cursor support
+	
+	uint64       GetAuxData() const;
 
 	// IML support ("private"), deprecated - legacy .iml
 	struct Init {
