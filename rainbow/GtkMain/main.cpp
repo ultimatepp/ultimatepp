@@ -105,6 +105,7 @@ struct MyApp : TopWindow {
 			w.DrawText(100, y, log[i]);
 			y += fcy;
 		}
+		w.DrawRect(0, 0, 50, fcy * 3, InvertColor());
 	}
 	
 	MyApp() {
