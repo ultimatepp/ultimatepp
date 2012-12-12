@@ -74,6 +74,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 	top = new Top;
 	top->window = gtk_window_new(popup ? GTK_WINDOW_POPUP : GTK_WINDOW_TOPLEVEL);
+	top->cursor_id = -1;
 	gtk_widget_set_events(top->window, 0xffffffff);
 	g_signal_connect(top->window, "event", G_CALLBACK(GtkProc), this);
 	if(owner && owner->top)
@@ -117,6 +118,35 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 void  Ctrl::SetMouseCursor(const Image& image)
 {
 	GuiLock __;
+	int64 id = image.GetSerialId();
+	Ctrl *topctrl;
+	Top *top;
+	if(mouseCtrl)
+		topctrl = mouseCtrl->GetTopCtrl();
+	if(topctrl)
+		top = topctrl->top;
+	if(top && id != top->cursor_id) {
+		top->cursor_id = id;
+		int64 aux = image.GetAuxData();
+		GdkCursor *c = NULL;
+		if(aux)
+			c = gdk_cursor_new((GdkCursorType)(aux - 1));
+		else
+		if(IsNull(image))
+			c = gdk_cursor_new(GDK_BLANK_CURSOR);
+		else {
+			Point p = image.GetHotSpot();
+			ImageGdk m;
+			m.Set(image);
+			GdkPixbuf *pb = m;
+			if(pb)
+				c = gdk_cursor_new_from_pixbuf(gdk_display_get_default(), pb, p.x, p.y);
+		}
+		if(c) {
+			gdk_window_set_cursor(topctrl->gdk(), c);
+			gdk_cursor_unref(c);
+		}
+	}
 }
 
 Ctrl *Ctrl::GetOwner()
