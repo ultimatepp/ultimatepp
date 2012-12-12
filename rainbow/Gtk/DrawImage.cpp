@@ -166,23 +166,25 @@ void BackDraw::Destroy()
 {
 }
 
+#define FCURSOR_(x) { static Image h; ONCELOCK { h = CreateImage(Size(1, 1), Black); h.SetAuxData(x + 1); } return h; }
 
-Image Image::Arrow() { return Null; }
-Image Image::Hand() { return Null; }
-Image Image::Wait() { return Null; }
-Image Image::IBeam() { return Null; }
-Image Image::No() { return Null; }
-Image Image::SizeAll() { return Null; }
-Image Image::SizeHorz() { return Null; }
-Image Image::SizeVert() { return Null; }
-Image Image::SizeTopLeft() { return Null; }
-Image Image::SizeTop() { return Null; }
-Image Image::SizeTopRight() { return Null; }
-Image Image::SizeLeft() { return Null; }
-Image Image::SizeRight() { return Null; }
-Image Image::SizeBottomLeft() { return Null; }
-Image Image::SizeBottom() { return Null; }
-Image Image::SizeBottomRight() { return Null; }
+Image Image::Arrow() FCURSOR_(GDK_LEFT_PTR)
+Image Image::Wait() FCURSOR_(GDK_WATCH)
+Image Image::IBeam() FCURSOR_(GDK_XTERM)
+Image Image::No() FCURSOR_(GDK_CIRCLE)
+Image Image::SizeAll() FCURSOR_(GDK_FLEUR)
+Image Image::SizeHorz() FCURSOR_(GDK_SB_H_DOUBLE_ARROW)
+Image Image::SizeVert() FCURSOR_(GDK_DOUBLE_ARROW)
+Image Image::SizeTopLeft() FCURSOR_(GDK_TOP_LEFT_CORNER)
+Image Image::SizeTop() FCURSOR_(GDK_TOP_SIDE)
+Image Image::SizeTopRight() FCURSOR_(GDK_TOP_RIGHT_CORNER)
+Image Image::SizeLeft() FCURSOR_(GDK_LEFT_SIDE)
+Image Image::SizeRight() FCURSOR_(GDK_RIGHT_SIDE)
+Image Image::SizeBottomLeft() FCURSOR_(GDK_BOTTOM_LEFT_CORNER)
+Image Image::SizeBottom() FCURSOR_(GDK_BOTTOM_SIDE)
+Image Image::SizeBottomRight()  FCURSOR_(GDK_BOTTOM_RIGHT_CORNER)
+Image Image::Cross() FCURSOR_(GDK_CROSSHAIR)
+Image Image::Hand() FCURSOR_(GDK_HAND1)
 
 END_UPP_NAMESPACE
 

@@ -75,7 +75,19 @@ struct MyApp : TopWindow {
 		pos = p;
 		Refresh();
 	}
-	
+
+	virtual Image CursorImage(Point p, dword keyflags)
+	{
+		Size sz = GetSize();
+		if(p.x < sz.cx / 4)
+			return Image::Arrow();
+		if(p.x < 2 * sz.cx / 4)
+			return Image::Hand();
+		if(p.x < 3 * sz.cx / 4)
+			return CtrlImg::ibeam0();
+		return CtrlImg::HelpCursor0();
+	}
+
 	virtual void Paint(Draw& w) {
 		int fcy = GetStdFontCy();
 		w.DrawRect(GetSize(), White());
