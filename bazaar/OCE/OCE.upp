@@ -1,46 +1,81 @@
-uses(LINUX) OCE/Xw;
-uses(WIN32) OCE/WNT;
-uses FTGL;
 noblitz;
+
+uses
+	FTGL;
+
+uses(LINUX) OCE/Xw;
+
+uses(WIN32) OCE/WNT;
+
 options
 	-I./,
 	-I./oce/inc,
 	-DHAVE_FTGL_NEWER212,
 	-DOCE_BUILD_STATIC_LIB,
 	-DCSFDB;
+
 options(POSIX) -DHAVE_DIRENT_H;
+
 options(POSIX) -DHAVE_DLFCN_H;
+
 options(POSIX) -DOCE_HAVE_FSTREAM;
+
 options(POSIX) -DHAVE_NETDB_H;
+
 options(POSIX) -DOCE_HAVE_IOSTREAM;
+
 options(POSIX) -DOCE_HAVE_IOMANIP;
+
 options(POSIX) -DOCE_HAVE_IOS;
+
 options(POSIX) -DOCE_HAVE_LIMITS_H;
+
 options(POSIX) -DHAVE_PWD_H;
+
 options(POSIX) -DHAVE_SIGNAL_H;
+
 options(POSIX) -DHAVE_STATFS;
+
 options(POSIX) -DHAVE_STDLIB_H;
+
 options(POSIX) -DHAVE_STRING_H;
+
 options(POSIX) -DHAVE_SYS_IPC_H;
+
 options(POSIX) -DHAVE_SYS_MMAN_H;
+
 options(POSIX) -DHAVE_SYS_PARAM_H;
+
 options(POSIX) -DHAVE_SYS_SEM_H;
+
 options(POSIX) -DHAVE_SYS_SOCKET_H;
+
 options(POSIX) -DHAVE_SYS_STAT_H;
+
 options(POSIX) -DHAVE_SYS_TIME_H;
+
 options(POSIX) -DHAVE_SYS_TIMES_H;
+
 options(POSIX) -DHAVE_SYS_TYPES_H;
+
 options(POSIX) -DHAVE_SYS_UNISTD_H;
+
 options(POSIX) -DHAVE_SYS_UTSNAME_H;
+
 options(POSIX) -DHAVE_SYS_VFS_H;
+
 options(POSIX) -DHAVE_UNISTD_H;
+
 options(WIN32) -DWNT;
+
 options(WIN32) -DHAVE_NO_DLL;
+
 include
 	./oce/inc,
 	../freetype;
+
 file
-	"TOOLKIT:TKAdvTools" readonly separator,
+	TOOLKIT:TKAdvTools readonly separator,
 	"  PACKAGE:Dynamic" readonly separator,
 	oce/src/Dynamic/Dynamic.cxx
 		options() -Ioce/src/Dynamic
@@ -512,7 +547,7 @@ file
 	oce/drv/Materials/Materials_SequenceNodeOfMtsSequence_0.cxx
 		options() -Ioce/src/Materials
 		options() -Ioce/drv/Materials,
-	"TOOLKIT:TKMath" readonly separator,
+	TOOLKIT:TKMath readonly separator,
 	"  PACKAGE:BSplCLib" readonly separator,
 	oce/src/BSplCLib/BSplCLib.cxx
 		options() -Ioce/src/BSplCLib
@@ -1248,7 +1283,7 @@ file
 	oce/drv/math/math_SingularMatrix_0.cxx
 		options() -Ioce/src/math
 		options() -Ioce/drv/math,
-	"TOOLKIT:TKernel" readonly separator,
+	TOOLKIT:TKernel readonly separator,
 	"  PACKAGE:Dico" readonly separator,
 	oce/drv/Dico/Dico_DictionaryOfInteger_0.cxx
 		options() -Ioce/src/Dico
@@ -2606,7 +2641,7 @@ file
 	oce/src/UnitsAPI/UnitsAPI.cxx
 		options() -Ioce/src/UnitsAPI
 		options() -Ioce/drv/UnitsAPI,
-	"TOOLKIT:TKBRep" readonly separator,
+	TOOLKIT:TKBRep readonly separator,
 	"  PACKAGE:BRep" readonly separator,
 	oce/src/BRep/BRep_Builder.cxx
 		options() -Ioce/src/BRep
@@ -3070,7 +3105,7 @@ file
 	oce/drv/TopoDS/TopoDS_UnCompatibleShapes_0.cxx
 		options() -Ioce/src/TopoDS
 		options() -Ioce/drv/TopoDS,
-	"TOOLKIT:TKG2d" readonly separator,
+	TOOLKIT:TKG2d readonly separator,
 	"  PACKAGE:Adaptor2d" readonly separator,
 	oce/src/Adaptor2d/Adaptor2d_Curve2d.cxx
 		options() -Ioce/src/Adaptor2d
@@ -3291,7 +3326,7 @@ file
 	oce/drv/TColGeom2d/TColGeom2d_SequenceOfGeometry_0.cxx
 		options() -Ioce/src/TColGeom2d
 		options() -Ioce/drv/TColGeom2d,
-	"TOOLKIT:TKG3d" readonly separator,
+	TOOLKIT:TKG3d readonly separator,
 	"  PACKAGE:Adaptor3d" readonly separator,
 	oce/src/Adaptor3d/Adaptor3d_Curve.cxx
 		options() -Ioce/src/Adaptor3d
@@ -3663,7 +3698,7 @@ file
 	oce/src/TopAbs/TopAbs.cxx
 		options() -Ioce/src/TopAbs
 		options() -Ioce/drv/TopAbs,
-	"TOOLKIT:TKGeomBase" readonly separator,
+	TOOLKIT:TKGeomBase readonly separator,
 	"  PACKAGE:AdvApp2Var" readonly separator,
 	oce/src/AdvApp2Var/AdvApp2Var_ApproxAFunc2Var.cxx
 		options() -Ioce/src/AdvApp2Var
@@ -4823,7 +4858,7 @@ file
 	oce/src/gce/gce_Root.cxx
 		options() -Ioce/src/gce
 		options() -Ioce/drv/gce,
-	"TOOLKIT:TKBO" readonly separator,
+	TOOLKIT:TKBO readonly separator,
 	"  PACKAGE:BOP" readonly separator,
 	oce/src/BOP/BOP_Area2dBuilder.cxx
 		options() -Ioce/src/BOP
@@ -5658,7 +5693,7 @@ file
 	oce/drv/IntTools/IntTools_StdMapNodeOfMapOfSurfaceSample_0.cxx
 		options() -Ioce/src/IntTools
 		options() -Ioce/drv/IntTools,
-	"TOOLKIT:TKBool" readonly separator,
+	TOOLKIT:TKBool readonly separator,
 	"  PACKAGE:BRepAlgo" readonly separator,
 	oce/src/BRepAlgo/BRepAlgo.cxx
 		options() -Ioce/src/BRepAlgo
@@ -6851,7 +6886,7 @@ file
 	oce/drv/TopOpeBRepTool/TopOpeBRepTool_ListOfC2DF_0.cxx
 		options() -Ioce/src/TopOpeBRepTool
 		options() -Ioce/drv/TopOpeBRepTool,
-	"TOOLKIT:TKFeat" readonly separator,
+	TOOLKIT:TKFeat readonly separator,
 	"  PACKAGE:BRepFeat" readonly separator,
 	oce/src/BRepFeat/BRepFeat.cxx
 		options() -Ioce/src/BRepFeat
@@ -7001,7 +7036,7 @@ file
 	oce/drv/LocOpe/LocOpe_SequenceOfPntFace_0.cxx
 		options() -Ioce/src/LocOpe
 		options() -Ioce/drv/LocOpe,
-	"TOOLKIT:TKFillet" readonly separator,
+	TOOLKIT:TKFillet readonly separator,
 	"  PACKAGE:BRepBlend" readonly separator,
 	oce/src/BRepBlend/BRepBlend_AppFunc.cxx
 		options() -Ioce/src/BRepBlend
@@ -7413,7 +7448,7 @@ file
 	oce/src/FilletSurf/FilletSurf_InternalBuilder.cxx
 		options() -Ioce/src/FilletSurf
 		options() -Ioce/drv/FilletSurf,
-	"TOOLKIT:TKGeomAlgo" readonly separator,
+	TOOLKIT:TKGeomAlgo readonly separator,
 	"  PACKAGE:AppBlend" readonly separator,
 	oce/src/AppBlend/AppBlend_Approx.cxx
 		options() -Ioce/src/AppBlend
@@ -8865,7 +8900,7 @@ file
 	oce/drv/TopTrans/TopTrans_Array2OfOrientation_0.cxx
 		options() -Ioce/src/TopTrans
 		options() -Ioce/drv/TopTrans,
-	"TOOLKIT:TKHLR" readonly separator,
+	TOOLKIT:TKHLR readonly separator,
 	"  PACKAGE:Contap" readonly separator,
 	oce/src/Contap/Contap_ContAna.cxx
 		options() -Ioce/src/Contap
@@ -9323,7 +9358,7 @@ file
 	oce/src/TopCnx/TopCnx_EdgeFaceTransition.cxx
 		options() -Ioce/src/TopCnx
 		options() -Ioce/drv/TopCnx,
-	"TOOLKIT:TKMesh" readonly separator,
+	TOOLKIT:TKMesh readonly separator,
 	"  PACKAGE:BRepMesh" readonly separator,
 	oce/src/BRepMesh/BRepMesh.cxx
 		options() -Ioce/src/BRepMesh
@@ -9566,7 +9601,7 @@ file
 	oce/drv/IntPoly/IntPoly_SequenceOfSequenceOfPnt_0.cxx
 		options() -Ioce/src/IntPoly
 		options() -Ioce/drv/IntPoly,
-	"TOOLKIT:TKOffset" readonly separator,
+	TOOLKIT:TKOffset readonly separator,
 	"  PACKAGE:BRepOffset" readonly separator,
 	oce/src/BRepOffset/BRepOffset.cxx
 		options() -Ioce/src/BRepOffset
@@ -9754,7 +9789,7 @@ file
 	oce/drv/Draft/Draft_DataMapOfVertexVertexInfo_0.cxx
 		options() -Ioce/src/Draft
 		options() -Ioce/drv/Draft,
-	"TOOLKIT:TKPrim" readonly separator,
+	TOOLKIT:TKPrim readonly separator,
 	"  PACKAGE:BRepPrim" readonly separator,
 	oce/src/BRepPrim/BRepPrim_Builder.cxx
 		options() -Ioce/src/BRepPrim
@@ -9871,7 +9906,7 @@ file
 	oce/src/Sweep/Sweep_NumShapeTool.cxx
 		options() -Ioce/src/Sweep
 		options() -Ioce/drv/Sweep,
-	"TOOLKIT:TKShHealing" readonly separator,
+	TOOLKIT:TKShHealing readonly separator,
 	"  PACKAGE:ShapeAlgo" readonly separator,
 	oce/src/ShapeAlgo/ShapeAlgo.cxx
 		options() -Ioce/src/ShapeAlgo
@@ -10278,7 +10313,7 @@ file
 	oce/src/ShapeUpgrade/ShapeUpgrade_WireDivide.cxx
 		options() -Ioce/src/ShapeUpgrade
 		options() -Ioce/drv/ShapeUpgrade,
-	"TOOLKIT:TKTopAlgo" readonly separator,
+	TOOLKIT:TKTopAlgo readonly separator,
 	"  PACKAGE:BRepApprox" readonly separator,
 	oce/drv/BRepApprox/BRepApprox_ApproxLine_0.cxx
 		options() -Ioce/src/BRepApprox
@@ -10919,12 +10954,12 @@ file
 	oce/drv/MAT2d/MAT2d_SequenceOfSequenceOfGeometry_0.cxx
 		options() -Ioce/src/MAT2d
 		options() -Ioce/drv/MAT2d,
-	"TOOLKIT:TKXMesh" readonly separator,
+	TOOLKIT:TKXMesh readonly separator,
 	"  PACKAGE:XBRepMesh" readonly separator,
 	oce/src/XBRepMesh/XBRepMesh.cxx
 		options() -Ioce/src/XBRepMesh
 		options() -Ioce/drv/XBRepMesh,
-	"TOOLKIT:TKMeshVS" readonly separator,
+	TOOLKIT:TKMeshVS readonly separator,
 	"  PACKAGE:MeshVS" readonly separator,
 	oce/src/MeshVS/MeshVS_ColorHasher.cxx
 		options() -Ioce/src/MeshVS
@@ -11115,7 +11150,7 @@ file
 	oce/drv/MeshVS/MeshVS_TwoNodesHasher_0.cxx
 		options() -Ioce/src/MeshVS
 		options() -Ioce/drv/MeshVS,
-	"TOOLKIT:TKNIS" readonly separator,
+	TOOLKIT:TKNIS readonly separator,
 	"  PACKAGE:NIS" readonly separator,
 	oce/src/NIS/NIS_Allocator.cxx
 		options() -Ioce/src/NIS
@@ -11153,7 +11188,7 @@ file
 	oce/src/NIS/NIS_View.cxx
 		options() -Ioce/src/NIS
 		options() -Ioce/drv/NIS,
-	"TOOLKIT:TKOpenGl" readonly separator,
+	TOOLKIT:TKOpenGl readonly separator,
 	"  PACKAGE:OpenGl" readonly separator,
 	oce/src/OpenGl/OpenGl_AVIWriter.cxx
 		options() -Ioce/src/OpenGl
@@ -11332,7 +11367,7 @@ file
 	oce/src/OpenGl/OpenGl_telem_view.cxx
 		options() -Ioce/src/OpenGl
 		options() -Ioce/drv/OpenGl,
-	"TOOLKIT:TKService" readonly separator,
+	TOOLKIT:TKService readonly separator,
 	"  PACKAGE:AlienImage" readonly separator,
 	oce/src/AlienImage/AlienImage.cxx
 		options() -Ioce/src/AlienImage
@@ -11912,7 +11947,7 @@ file
 		options() -Ioce/drv/Viewer,
 	"  PACKAGE:WNT" readonly separator,
 	"  PACKAGE:Xw" readonly separator,
-	"TOOLKIT:TKV2d" readonly separator,
+	TOOLKIT:TKV2d readonly separator,
 	"  PACKAGE:AIS2D" readonly separator,
 	oce/src/AIS2D/AIS2D.cxx
 		options() -Ioce/src/AIS2D
@@ -12354,7 +12389,7 @@ file
 	oce/src/V2d/V2d_Viewer.cxx
 		options() -Ioce/src/V2d
 		options() -Ioce/drv/V2d,
-	"TOOLKIT:TKV3d" readonly separator,
+	TOOLKIT:TKV3d readonly separator,
 	"  PACKAGE:AIS" readonly separator,
 	oce/src/AIS/AIS.cxx
 		options() -Ioce/src/AIS
@@ -13620,7 +13655,7 @@ file
 	oce/drv/Visual3d/Visual3d_ZClippingDefinitionError_0.cxx
 		options() -Ioce/src/Visual3d
 		options() -Ioce/drv/Visual3d,
-	"TOOLKIT:TKVoxel" readonly separator,
+	TOOLKIT:TKVoxel readonly separator,
 	"  PACKAGE:Voxel" readonly separator,
 	oce/src/Voxel/Voxel_BoolDS.cxx
 		options() -Ioce/src/Voxel
@@ -13664,7 +13699,7 @@ file
 	oce/src/Voxel/Voxel_Writer.cxx
 		options() -Ioce/src/Voxel
 		options() -Ioce/drv/Voxel,
-	"TOOLKIT:FWOSPlugin" readonly separator,
+	TOOLKIT:FWOSPlugin readonly separator,
 	"  PACKAGE:FWOSDriver" readonly separator,
 	oce/src/FWOSDriver/FWOSDriver.cxx
 		options() -Ioce/src/FWOSDriver
@@ -13675,7 +13710,7 @@ file
 	oce/src/FWOSDriver/FWOSDriver_DriverFactory.cxx
 		options() -Ioce/src/FWOSDriver
 		options() -Ioce/drv/FWOSDriver,
-	"TOOLKIT:PTKernel" readonly separator,
+	TOOLKIT:PTKernel readonly separator,
 	"  PACKAGE:DBC" readonly separator,
 	oce/src/DBC/DBC_BaseArray.cxx
 		options() -Ioce/src/DBC
@@ -14002,7 +14037,7 @@ file
 	oce/drv/PTColStd/PTColStd_TransientPersistentMap_0.cxx
 		options() -Ioce/src/PTColStd
 		options() -Ioce/drv/PTColStd,
-	"TOOLKIT:TKBin" readonly separator,
+	TOOLKIT:TKBin readonly separator,
 	"  PACKAGE:BinDrivers" readonly separator,
 	oce/src/BinDrivers/BinDrivers.cxx
 		options() -Ioce/src/BinDrivers
@@ -14080,7 +14115,7 @@ file
 	oce/src/BinTools/BinTools_SurfaceSet.cxx
 		options() -Ioce/src/BinTools
 		options() -Ioce/drv/BinTools,
-	"TOOLKIT:TKBinL" readonly separator,
+	TOOLKIT:TKBinL readonly separator,
 	"  PACKAGE:BinLDrivers" readonly separator,
 	oce/src/BinLDrivers/BinLDrivers.cxx
 		options() -Ioce/src/BinLDrivers
@@ -14234,7 +14269,7 @@ file
 	oce/src/BinObjMgt/BinObjMgt_Persistent.cxx
 		options() -Ioce/src/BinObjMgt
 		options() -Ioce/drv/BinObjMgt,
-	"TOOLKIT:TKBinTObj" readonly separator,
+	TOOLKIT:TKBinTObj readonly separator,
 	"  PACKAGE:BinTObjDrivers" readonly separator,
 	oce/src/BinTObjDrivers/BinTObjDrivers.cxx
 		options() -Ioce/src/BinTObjDrivers
@@ -14260,7 +14295,7 @@ file
 	oce/src/BinTObjDrivers/BinTObjDrivers_XYZDriver.cxx
 		options() -Ioce/src/BinTObjDrivers
 		options() -Ioce/drv/BinTObjDrivers,
-	"TOOLKIT:TKCAF" readonly separator,
+	TOOLKIT:TKCAF readonly separator,
 	"  PACKAGE:AppStd" readonly separator,
 	oce/src/AppStd/AppStd_Application.cxx
 		options() -Ioce/src/AppStd
@@ -14478,7 +14513,7 @@ file
 	oce/drv/TPrsStd/TPrsStd_DataMapOfGUIDDriver_0.cxx
 		options() -Ioce/src/TPrsStd
 		options() -Ioce/drv/TPrsStd,
-	"TOOLKIT:TKCDF" readonly separator,
+	TOOLKIT:TKCDF readonly separator,
 	"  PACKAGE:CDF" readonly separator,
 	oce/src/CDF/CDF.cxx
 		options() -Ioce/src/CDF
@@ -14706,7 +14741,7 @@ file
 	oce/src/UTL/UTL.cxx
 		options() -Ioce/src/UTL
 		options() -Ioce/drv/UTL,
-	"TOOLKIT:TKLCAF" readonly separator,
+	TOOLKIT:TKLCAF readonly separator,
 	"  PACKAGE:AppStdL" readonly separator,
 	oce/src/AppStdL/AppStdL_Application.cxx
 		options() -Ioce/src/AppStdL
@@ -15279,7 +15314,7 @@ file
 	oce/drv/TFunction/TFunction_HArray1OfDataMapOfGUIDDriver_0.cxx
 		options() -Ioce/src/TFunction
 		options() -Ioce/drv/TFunction,
-	"TOOLKIT:TKPCAF" readonly separator,
+	TOOLKIT:TKPCAF readonly separator,
 	"  PACKAGE:MDataXtd" readonly separator,
 	oce/src/MDataXtd/MDataXtd.cxx
 		options() -Ioce/src/MDataXtd
@@ -15433,7 +15468,7 @@ file
 	oce/src/PPrsStd/PPrsStd_AISPresentation_1.cxx
 		options() -Ioce/src/PPrsStd
 		options() -Ioce/drv/PPrsStd,
-	"TOOLKIT:TKPLCAF" readonly separator,
+	TOOLKIT:TKPLCAF readonly separator,
 	"  PACKAGE:MDF" readonly separator,
 	oce/src/MDF/MDF.cxx
 		options() -Ioce/src/MDF
@@ -15922,7 +15957,7 @@ file
 	oce/src/PFunction/PFunction_Function.cxx
 		options() -Ioce/src/PFunction
 		options() -Ioce/drv/PFunction,
-	"TOOLKIT:TKPShape" readonly separator,
+	TOOLKIT:TKPShape readonly separator,
 	"  PACKAGE:MgtBRep" readonly separator,
 	oce/src/MgtBRep/MgtBRep.cxx
 		options() -Ioce/src/MgtBRep
@@ -16793,7 +16828,7 @@ file
 	oce/drv/PTopoDS/PTopoDS_VArrayTNodeOfFieldOfHArray1OfShape1_0.cxx
 		options() -Ioce/src/PTopoDS
 		options() -Ioce/drv/PTopoDS,
-	"TOOLKIT:TKShapeSchema" readonly separator,
+	TOOLKIT:TKShapeSchema readonly separator,
 	"  PACKAGE:PCDMShape" readonly separator,
 	oce/src/PCDMShape/PCDMShape_Document.cxx
 		options() -Ioce/src/PCDMShape
@@ -17507,7 +17542,7 @@ file
 	oce/drv/ShapeSchema/ShapeSchema_gp_XYZ.cxx
 		options() -Ioce/src/ShapeSchema
 		options() -Ioce/drv/ShapeSchema,
-	"TOOLKIT:TKStdLSchema" readonly separator,
+	TOOLKIT:TKStdLSchema readonly separator,
 	"  PACKAGE:StdLDrivers" readonly separator,
 	oce/src/StdLDrivers/StdLDrivers.cxx
 		options() -Ioce/src/StdLDrivers
@@ -17714,7 +17749,7 @@ file
 	oce/drv/StdLSchema/StdLSchema_Standard_Storable.cxx
 		options() -Ioce/src/StdLSchema
 		options() -Ioce/drv/StdLSchema,
-	"TOOLKIT:TKStdSchema" readonly separator,
+	TOOLKIT:TKStdSchema readonly separator,
 	"  PACKAGE:StdDrivers" readonly separator,
 	oce/src/StdDrivers/StdDrivers.cxx
 		options() -Ioce/src/StdDrivers
@@ -17891,7 +17926,7 @@ file
 	oce/drv/StdSchema/StdSchema_gp_XYZ.cxx
 		options() -Ioce/src/StdSchema
 		options() -Ioce/drv/StdSchema,
-	"TOOLKIT:TKTObj" readonly separator,
+	TOOLKIT:TKTObj readonly separator,
 	"  PACKAGE:TObj" readonly separator,
 	oce/src/TObj/TObj_Application.cxx
 		options() -Ioce/src/TObj
@@ -17956,7 +17991,7 @@ file
 	oce/src/TObj/TObj_TXYZ.cxx
 		options() -Ioce/src/TObj
 		options() -Ioce/drv/TObj,
-	"TOOLKIT:TKXml" readonly separator,
+	TOOLKIT:TKXml readonly separator,
 	"  PACKAGE:XmlDrivers" readonly separator,
 	oce/src/XmlDrivers/XmlDrivers.cxx
 		options() -Ioce/src/XmlDrivers
@@ -18021,7 +18056,7 @@ file
 	oce/src/XmlMPrsStd/XmlMPrsStd_PositionDriver.cxx
 		options() -Ioce/src/XmlMPrsStd
 		options() -Ioce/drv/XmlMPrsStd,
-	"TOOLKIT:TKXmlL" readonly separator,
+	TOOLKIT:TKXmlL readonly separator,
 	"  PACKAGE:XmlLDrivers" readonly separator,
 	oce/src/XmlLDrivers/XmlLDrivers.cxx
 		options() -Ioce/src/XmlLDrivers
@@ -18187,7 +18222,7 @@ file
 	oce/src/XmlObjMgt/XmlObjMgt_Persistent.cxx
 		options() -Ioce/src/XmlObjMgt
 		options() -Ioce/drv/XmlObjMgt,
-	"TOOLKIT:TKXmlTObj" readonly separator,
+	TOOLKIT:TKXmlTObj readonly separator,
 	"  PACKAGE:XmlTObjDrivers" readonly separator,
 	oce/src/XmlTObjDrivers/XmlTObjDrivers.cxx
 		options() -Ioce/src/XmlTObjDrivers
@@ -18213,7 +18248,7 @@ file
 	oce/src/XmlTObjDrivers/XmlTObjDrivers_XYZDriver.cxx
 		options() -Ioce/src/XmlTObjDrivers
 		options() -Ioce/drv/XmlTObjDrivers,
-	"TOOLKIT:TKBinXCAF" readonly separator,
+	TOOLKIT:TKBinXCAF readonly separator,
 	"  PACKAGE:BinMXCAFDoc" readonly separator,
 	oce/src/BinMXCAFDoc/BinMXCAFDoc.cxx
 		options() -Ioce/src/BinMXCAFDoc
@@ -18273,7 +18308,7 @@ file
 	oce/src/BinXCAFDrivers/BinXCAFDrivers_DocumentStorageDriver.cxx
 		options() -Ioce/src/BinXCAFDrivers
 		options() -Ioce/drv/BinXCAFDrivers,
-	"TOOLKIT:TKIGES" readonly separator,
+	TOOLKIT:TKIGES readonly separator,
 	"  PACKAGE:BRepToIGES" readonly separator,
 	oce/src/BRepToIGES/BRepToIGES_BREntity.cxx
 		options() -Ioce/src/BRepToIGES
@@ -19783,7 +19818,7 @@ file
 	oce/src/IGESToBRep/IGESToBRep_TopoSurface.cxx
 		options() -Ioce/src/IGESToBRep
 		options() -Ioce/drv/IGESToBRep,
-	"TOOLKIT:TKSTEP" readonly separator,
+	TOOLKIT:TKSTEP readonly separator,
 	"  PACKAGE:GeomToStep" readonly separator,
 	oce/src/GeomToStep/GeomToStep_MakeAxis1Placement.cxx
 		options() -Ioce/src/GeomToStep
@@ -20790,7 +20825,7 @@ file
 	oce/src/TopoDSToStep/TopoDSToStep_WireframeBuilder.cxx
 		options() -Ioce/src/TopoDSToStep
 		options() -Ioce/drv/TopoDSToStep,
-	"TOOLKIT:TKSTEP209" readonly separator,
+	TOOLKIT:TKSTEP209 readonly separator,
 	"  PACKAGE:RWStepElement" readonly separator,
 	oce/src/RWStepElement/RWStepElement_RWAnalysisItemWithinRepresentation.cxx
 		options() -Ioce/src/RWStepElement
@@ -21437,7 +21472,7 @@ file
 	oce/drv/StepFEA/StepFEA_SequenceOfNodeRepresentation_0.cxx
 		options() -Ioce/src/StepFEA
 		options() -Ioce/drv/StepFEA,
-	"TOOLKIT:TKSTEPAttr" readonly separator,
+	TOOLKIT:TKSTEPAttr readonly separator,
 	"  PACKAGE:RWStepDimTol" readonly separator,
 	oce/src/RWStepDimTol/RWStepDimTol_RWAngularityTolerance.cxx
 		options() -Ioce/src/RWStepDimTol
@@ -22105,7 +22140,7 @@ file
 	oce/drv/StepVisual/StepVisual_HArray1OfTextOrCharacter_0.cxx
 		options() -Ioce/src/StepVisual
 		options() -Ioce/drv/StepVisual,
-	"TOOLKIT:TKSTEPBase" readonly separator,
+	TOOLKIT:TKSTEPBase readonly separator,
 	"  PACKAGE:RWStepBasic" readonly separator,
 	oce/src/RWStepBasic/RWStepBasic_RWAction.cxx
 		options() -Ioce/src/RWStepBasic
@@ -24478,7 +24513,7 @@ file
 	oce/drv/StepShape/StepShape_HArray1OfValueQualifier_0.cxx
 		options() -Ioce/src/StepShape
 		options() -Ioce/drv/StepShape,
-	"TOOLKIT:TKSTL" readonly separator,
+	TOOLKIT:TKSTL readonly separator,
 	"  PACKAGE:RWStl" readonly separator,
 	oce/src/RWStl/RWStl.cxx
 		options() -Ioce/src/RWStl
@@ -24531,7 +24566,7 @@ file
 	oce/src/StlTransfer/StlTransfer.cxx
 		options() -Ioce/src/StlTransfer
 		options() -Ioce/drv/StlTransfer,
-	"TOOLKIT:TKVRML" readonly separator,
+	TOOLKIT:TKVRML readonly separator,
 	"  PACKAGE:Vrml" readonly separator,
 	oce/src/Vrml/Vrml.cxx
 		options() -Ioce/src/Vrml
@@ -24731,7 +24766,7 @@ file
 	oce/src/VrmlData/VrmlData_WorldInfo.cxx
 		options() -Ioce/src/VrmlData
 		options() -Ioce/drv/VrmlData,
-	"TOOLKIT:TKXCAF" readonly separator,
+	TOOLKIT:TKXCAF readonly separator,
 	"  PACKAGE:XCAFApp" readonly separator,
 	oce/src/XCAFApp/XCAFApp_Application.cxx
 		options() -Ioce/src/XCAFApp
@@ -24843,7 +24878,7 @@ file
 	oce/drv/XCAFPrs/XCAFPrs_DataMapOfStyleTransient_0.cxx
 		options() -Ioce/src/XCAFPrs
 		options() -Ioce/drv/XCAFPrs,
-	"TOOLKIT:TKXCAFSchema" readonly separator,
+	TOOLKIT:TKXCAFSchema readonly separator,
 	"  PACKAGE:MXCAFDoc" readonly separator,
 	oce/src/MXCAFDoc/MXCAFDoc.cxx
 		options() -Ioce/src/MXCAFDoc
@@ -25151,7 +25186,7 @@ file
 	oce/drv/XCAFSchema/XCAFSchema_gp_XYZ.cxx
 		options() -Ioce/src/XCAFSchema
 		options() -Ioce/drv/XCAFSchema,
-	"TOOLKIT:TKXDEIGES" readonly separator,
+	TOOLKIT:TKXDEIGES readonly separator,
 	"  PACKAGE:IGESCAFControl" readonly separator,
 	oce/src/IGESCAFControl/IGESCAFControl.cxx
 		options() -Ioce/src/IGESCAFControl
@@ -25162,7 +25197,7 @@ file
 	oce/src/IGESCAFControl/IGESCAFControl_Writer.cxx
 		options() -Ioce/src/IGESCAFControl
 		options() -Ioce/drv/IGESCAFControl,
-	"TOOLKIT:TKXDESTEP" readonly separator,
+	TOOLKIT:TKXDESTEP readonly separator,
 	"  PACKAGE:STEPCAFControl" readonly separator,
 	oce/src/STEPCAFControl/STEPCAFControl_ActorWrite.cxx
 		options() -Ioce/src/STEPCAFControl
@@ -25242,7 +25277,7 @@ file
 	oce/drv/STEPCAFControl/STEPCAFControl_StackItemOfDictionaryOfExternFile_0.cxx
 		options() -Ioce/src/STEPCAFControl
 		options() -Ioce/drv/STEPCAFControl,
-	"TOOLKIT:TKXSBase" readonly separator,
+	TOOLKIT:TKXSBase readonly separator,
 	"  PACKAGE:APIHeaderSection" readonly separator,
 	oce/src/APIHeaderSection/APIHeaderSection_EditHeader.cxx
 		options() -Ioce/src/APIHeaderSection
@@ -26246,7 +26281,7 @@ file
 	oce/src/XSControl/XSControl_Writer.cxx
 		options() -Ioce/src/XSControl
 		options() -Ioce/drv/XSControl,
-	"TOOLKIT:TKXmlXCAF" readonly separator,
+	TOOLKIT:TKXmlXCAF readonly separator,
 	"  PACKAGE:XmlMXCAFDoc" readonly separator,
 	oce/src/XmlMXCAFDoc/XmlMXCAFDoc.cxx
 		options() -Ioce/src/XmlMXCAFDoc
@@ -26305,4 +26340,215 @@ file
 		options() -Ioce/drv/XmlXCAFDrivers,
 	oce/src/XmlXCAFDrivers/XmlXCAFDrivers_DocumentStorageDriver.cxx
 		options() -Ioce/src/XmlXCAFDrivers
-		options() -Ioce/drv/XmlXCAFDrivers;
+		options() -Ioce/drv/XmlXCAFDrivers,
+	TOOLKIT:TKQADraw readonly separator,
+	"  PACKAGE:QADNaming" readonly separator,
+	oce/src/QADNaming/QADNaming.cxx
+		options() -Ioce/src/QADNaming
+		options() -Ioce/drv/QADNaming,
+	oce/src/QADNaming/QADNaming_BasicCommands.cxx
+		options() -Ioce/src/QADNaming
+		options() -Ioce/drv/QADNaming,
+	oce/src/QADNaming/QADNaming_BuilderCommands.cxx
+		options() -Ioce/src/QADNaming
+		options() -Ioce/drv/QADNaming,
+	oce/src/QADNaming/QADNaming_IteratorsCommands.cxx
+		options() -Ioce/src/QADNaming
+		options() -Ioce/drv/QADNaming,
+	oce/src/QADNaming/QADNaming_Sample.cxx
+		options() -Ioce/src/QADNaming
+		options() -Ioce/drv/QADNaming,
+	oce/src/QADNaming/QADNaming_SelectionCommands.cxx
+		options() -Ioce/src/QADNaming
+		options() -Ioce/drv/QADNaming,
+	oce/src/QADNaming/QADNaming_ToolsCommands.cxx
+		options() -Ioce/src/QADNaming
+		options() -Ioce/drv/QADNaming,
+	oce/drv/QADNaming/QADNaming_DataMapIteratorOfDataMapOfShapeOfName_0.cxx
+		options() -Ioce/src/QADNaming
+		options() -Ioce/drv/QADNaming,
+	oce/drv/QADNaming/QADNaming_DataMapNodeOfDataMapOfShapeOfName_0.cxx
+		options() -Ioce/src/QADNaming
+		options() -Ioce/drv/QADNaming,
+	oce/drv/QADNaming/QADNaming_DataMapOfShapeOfName_0.cxx
+		options() -Ioce/src/QADNaming
+		options() -Ioce/drv/QADNaming,
+	"  PACKAGE:QANCollection" readonly separator,
+	oce/src/QANCollection/QANCollection.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/src/QANCollection/QANCollection1.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/src/QANCollection/QANCollection2.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/src/QANCollection/QANCollection3.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/src/QANCollection/QANCollectionTest.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/src/QANCollection/QANCollection_Common.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_DataMapIteratorOfDataMapOfRealPnt_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_DataMapNodeOfDataMapOfRealPnt_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_DataMapOfRealPnt_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_DoubleMapIteratorOfDoubleMapOfRealInteger_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_DoubleMapNodeOfDoubleMapOfRealInteger_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_DoubleMapOfRealInteger_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_IndexedDataMapNodeOfIndexedDataMapOfRealPnt_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_IndexedDataMapOfRealPnt_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_ListIteratorOfListOfPnt_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_ListNodeOfListOfPnt_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_ListOfPnt_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_QueueNodeOfQueueOfPnt_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_QueueOfPnt_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_SListNodeOfSListOfPnt_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_SListOfPnt_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_StackIteratorOfStackOfPnt_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_StackNodeOfStackOfPnt_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	oce/drv/QANCollection/QANCollection_StackOfPnt_0.cxx
+		options() -Ioce/src/QANCollection
+		options() -Ioce/drv/QANCollection,
+	"  PACKAGE:QANewBRepNaming" readonly separator,
+	oce/src/QANewBRepNaming/QANewBRepNaming.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_BooleanOperation.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_BooleanOperationFeat.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_Box.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_Chamfer.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_Common.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_Cut.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_Cylinder.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_Fillet.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_Fuse.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_Gluing.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_ImportShape.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_Intersection.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_Limitation.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_Loader.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_LoaderParent.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_Prism.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_Revol.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_Sphere.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	oce/src/QANewBRepNaming/QANewBRepNaming_TopNaming.cxx
+		options() -Ioce/src/QANewBRepNaming
+		options() -Ioce/drv/QANewBRepNaming,
+	"  PACKAGE:QANewDBRepNaming" readonly separator,
+	oce/src/QANewDBRepNaming/QANewDBRepNaming.cxx
+		options() -Ioce/src/QANewDBRepNaming
+		options() -Ioce/drv/QANewDBRepNaming,
+	oce/src/QANewDBRepNaming/QANewDBRepNaming_FeatureCommands.cxx
+		options() -Ioce/src/QANewDBRepNaming
+		options() -Ioce/drv/QANewDBRepNaming,
+	oce/src/QANewDBRepNaming/QANewDBRepNaming_PrimitiveCommands.cxx
+		options() -Ioce/src/QANewDBRepNaming
+		options() -Ioce/drv/QANewDBRepNaming,
+	"  PACKAGE:QANewModTopOpe" readonly separator,
+	oce/src/QANewModTopOpe/QANewModTopOpe.cxx
+		options() -Ioce/src/QANewModTopOpe
+		options() -Ioce/drv/QANewModTopOpe,
+	oce/src/QANewModTopOpe/QANewModTopOpe_Glue.cxx
+		options() -Ioce/src/QANewModTopOpe
+		options() -Ioce/drv/QANewModTopOpe,
+	oce/src/QANewModTopOpe/QANewModTopOpe_Glue_SDFaces.cxx
+		options() -Ioce/src/QANewModTopOpe
+		options() -Ioce/drv/QANewModTopOpe,
+	oce/src/QANewModTopOpe/QANewModTopOpe_Glue_shell.cxx
+		options() -Ioce/src/QANewModTopOpe
+		options() -Ioce/drv/QANewModTopOpe,
+	oce/src/QANewModTopOpe/QANewModTopOpe_Glue_util.cxx
+		options() -Ioce/src/QANewModTopOpe
+		options() -Ioce/drv/QANewModTopOpe,
+	oce/src/QANewModTopOpe/QANewModTopOpe_Glue_vertex.cxx
+		options() -Ioce/src/QANewModTopOpe
+		options() -Ioce/drv/QANewModTopOpe,
+	oce/src/QANewModTopOpe/QANewModTopOpe_Glue_wire.cxx
+		options() -Ioce/src/QANewModTopOpe
+		options() -Ioce/drv/QANewModTopOpe,
+	oce/src/QANewModTopOpe/QANewModTopOpe_Intersection.cxx
+		options() -Ioce/src/QANewModTopOpe
+		options() -Ioce/drv/QANewModTopOpe,
+	oce/src/QANewModTopOpe/QANewModTopOpe_Limitation.cxx
+		options() -Ioce/src/QANewModTopOpe
+		options() -Ioce/drv/QANewModTopOpe,
+	oce/src/QANewModTopOpe/QANewModTopOpe_ReShaper.cxx
+		options() -Ioce/src/QANewModTopOpe
+		options() -Ioce/drv/QANewModTopOpe,
+	oce/src/QANewModTopOpe/QANewModTopOpe_Tools.cxx
+		options() -Ioce/src/QANewModTopOpe
+		options() -Ioce/drv/QANewModTopOpe;
+
