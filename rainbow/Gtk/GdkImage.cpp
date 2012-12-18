@@ -1,5 +1,7 @@
 #include <CtrlCore/CtrlCore.h>
 
+#ifdef GUI_GTK
+
 NAMESPACE_UPP
 
 void ImageGdk::Free()
@@ -56,3 +58,5 @@ ImageGdk::~ImageGdk()
 }
 
 END_UPP_NAMESPACE
+
+#endif

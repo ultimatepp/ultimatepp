@@ -171,6 +171,8 @@ public:
 	~PrinterJob()                                       {}
 };
 
+int rmsecs();
+
 END_UPP_NAMESPACE
 
 #define GUIPLATFORM_INCLUDE_AFTER <Gtk/After.h>

@@ -7,5 +7,6 @@ file
 	main.cpp;
 
 mainconfig
-	"" = "GUI SSE2 GTK";
+	"" = "GUI SSE2 GTK",
+	"" = "GUI SSE2";
 

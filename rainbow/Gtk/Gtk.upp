@@ -18,6 +18,5 @@ file
 	Top.cpp,
 	Clip.cpp,
 	DnD.cpp,
-	ChSysInit.cpp,
-	Msg.i;
+	ChSysInit.cpp;
 
