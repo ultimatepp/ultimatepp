@@ -38,7 +38,6 @@ class SystemDraw : public Draw {
 
 
 private:
-	void  SetColor(Color c);
 	void  RectPath(const Rect& r);
 	void  Push();
 	void  Pop();
@@ -52,6 +51,7 @@ private:
 	friend class ViewDraw;
 
 public:
+	void  SetColor(Color c);
 	operator cairo_t*()              { return cr; }
 
 	Point    GetOffset() const;

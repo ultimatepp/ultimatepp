@@ -157,6 +157,32 @@ struct MyApp2 : TopWindow {
 	}
 };
 
+struct MyApp3 : TopWindow {
+	Rect rect;
+	
+	typedef MyApp3 CLASSNAME;
+	
+	virtual void Paint(Draw& w)
+	{
+		Size sz = GetSize();
+		w.DrawRect(sz, SColorPaper());
+		DrawFrame(w, rect, Black());
+	}
+
+	virtual void LeftDown(Point p, dword keyflags) {
+		RectTracker tr(*this);
+		Size sz = GetSize();
+		tr.Normal();
+		rect = tr.Track(rect, ALIGN_RIGHT, ALIGN_BOTTOM);
+		Refresh();
+	}
+
+	MyApp3() {
+		rect = RectC(100, 100, 100, 100);
+	}
+};
+
+
 GUI_APP_MAIN
 {
 #if 0
@@ -166,8 +192,8 @@ GUI_APP_MAIN
 	return;
 #endif
 
-#if 0
-	MyApp2().Run();
+#if 1
+	MyApp3().Run();
 	return;
 #endif
 

@@ -533,17 +533,22 @@ void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 	gdk_window_invalidate_rect(gdk(), GdkRect(r), true);
 }
 
-Rect Ctrl::GetDefaultWindowRect() {
+Rect Ctrl::GetDefaultWindowRect() // ToDo!
+{
 	return Rect(0, 0, 100, 100);
 }
 
 ViewDraw::ViewDraw(Ctrl *ctrl)
 {
 	EnterGuiMutex();
+	Ctrl *top = ctrl->GetTopCtrl();
+	cr = gdk_cairo_create(top->gdk());
+	Clipoff(ctrl->GetScreenView() - top->GetScreenRect().TopLeft());
 }
 
 ViewDraw::~ViewDraw()
 {
+	cairo_destroy(cr);
 	LeaveGuiMutex();
 }
 
