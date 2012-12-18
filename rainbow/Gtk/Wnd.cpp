@@ -15,6 +15,8 @@ NAMESPACE_UPP
 #define ELOG(x)   // RLOG(GetSysTime() << ": " << x)
 
 Vector<Ctrl::Win> Ctrl::wins;
+int       Ctrl::WndCaretTime;
+bool      Ctrl::WndCaretVisible;
 
 int Ctrl::FindCtrl(Ctrl *ctrl)
 {
@@ -50,18 +52,11 @@ bool Ctrl::IsCompositedGui()
 	return false;
 }
 
-gboolean Ctrl::GtkProc(GtkWidget *widget, GdkEvent *event, gpointer user_data)
-{
-	bool b = ((Ctrl *)(user_data))->Proc(event);
-	FocusSync();
-	return b;
-}
-
 void Ctrl::IMCommit(GtkIMContext *context, gchar *str, gpointer user_data)
 {
 	WString s = FromUtf8(str);
 	for(int i = 0; i < s.GetCount(); i++)
-		((Ctrl *)(user_data))->Key(s[i], 1);
+		((Ctrl *)(user_data))->DispatchKey(s[i], 1);
 }
 
 void Ctrl::Create(Ctrl *owner, bool popup)
@@ -74,11 +69,24 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 	top = new Top;
 	top->window = gtk_window_new(popup ? GTK_WINDOW_POPUP : GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_type_hint(gtk(), popup ? GDK_WINDOW_TYPE_HINT_COMBO
+	                                      : owner ? GDK_WINDOW_TYPE_HINT_DIALOG
+	                                              : GDK_WINDOW_TYPE_HINT_NORMAL);
+
 	top->cursor_id = -1;
+
 	gtk_widget_set_events(top->window, 0xffffffff);
-	g_signal_connect(top->window, "event", G_CALLBACK(GtkProc), this);
+	g_signal_connect(top->window, "event", G_CALLBACK(GtkEvent), this);
+	
+	gtk_widget_realize(top->window);
+
+	WndSetPos0(GetRect());
+/*
+	TopWindow *tw = dynamic_cast<TopWindow *>(this);
+	gtk_window_set_resizable(gtk(), tw && tw->IsSizeable());
+*/
 	if(owner && owner->top)
-		gtk_window_set_transient_for((GtkWindow *)top->window, (GtkWindow *)owner->top->window);
+		gtk_window_set_transient_for(gtk(), owner->gtk());
 	gtk_widget_set_app_paintable(top->window, TRUE);
 	isopen = true;
 
@@ -88,13 +96,22 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	g_signal_connect(top->im_context, "commit", G_CALLBACK(IMCommit), this);
 
 	WndShow(IsShown());
-	WndSetPos0(GetRect());
 
 	Win& w = wins.Add();
 	w.ctrl = this;
 	w.gtk = top->window;
 	w.gdk = top->window->window;
 	FocusSync();
+	if(!popup)
+		SetWndFocus();
+}
+
+void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
+{
+	DLOG("POPUP " << GetRect());
+	Create(owner, true);
+	if(activate)
+		SetWndFocus();
 }
 
 void Ctrl::WndDestroy0()
@@ -112,6 +129,8 @@ void Ctrl::WndDestroy0()
 Vector<Ctrl *> Ctrl::GetTopCtrls()
 {
 	Vector<Ctrl *> h;
+	for(int i = 0; i < wins.GetCount(); i++)
+		h.Add(wins[i].ctrl);
 	return h;
 }
 
@@ -119,8 +138,8 @@ void  Ctrl::SetMouseCursor(const Image& image)
 {
 	GuiLock __;
 	int64 id = image.GetSerialId();
-	Ctrl *topctrl;
-	Top *top;
+	Ctrl *topctrl = NULL;
+	Top *top = NULL;
 	if(mouseCtrl)
 		topctrl = mouseCtrl->GetTopCtrl();
 	if(topctrl)
@@ -201,13 +220,17 @@ bool Ctrl::IsWaitingEvent()
 bool Ctrl::ProcessEvent(bool *quit)
 {
 	ASSERT(IsMainThread());
+	bool r = false;
 	if(IsWaitingEvent()) {
 		gtk_main_iteration();
 		if(quit)
 			*quit = IsEndSession();
-		return true;
-	}	
-	return false;
+		r = true;
+	}
+	TimerProc(GetTickCount());
+	SyncCaret();
+	AnimateCaret();
+	return r;
 }
 
 void SweepMkImageCache();
@@ -239,15 +262,10 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 		ctrl->inloop = true;
 	}
 
-	DDUMP(IsEndSession());
-	DDUMP(ctrl->InLoop());
-	while(!IsEndSession() && (ctrl ? true/* ctrl->IsOpen()*/ && ctrl->InLoop() : true /*GetTopCtrls().GetCount()*/)) // Fix this
+	while(!IsEndSession() && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
-//		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
-		SyncCaret();
 		if(IsEndSession()) break;
-//		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / ProcessEvents");
-		DLOG("Before gtk_main");
+		DLOG(rmsecs() << " before gtk_main");
 		gtk_main();
 	}
 
@@ -276,6 +294,47 @@ void Ctrl::FocusSync()
 		ctrl = focus;
 		if(ctrl)
 			ctrl->SetFocusWnd();
+	}
+}
+
+void Ctrl::PaintCaret(SystemDraw& w)
+{
+	GuiLock __;
+	// LLOG("PaintCaret " << this << ", caretCtrl: " << caretCtrl << ", WndCaretVisible: " << WndCaretVisible);
+	if(this == caretCtrl && WndCaretVisible)
+		w.DrawRect(caretx, carety, caretcx, caretcy, InvertColor);
+}
+
+void Ctrl::SetCaret(int x, int y, int cx, int cy)
+{
+	GuiLock __;
+	if(this == caretCtrl)
+		RefreshCaret();
+	caretx = x;
+	carety = y;
+	caretcx = cx;
+	caretcy = cy;
+	WndCaretTime = GetTickCount();
+	if(this == caretCtrl)
+		RefreshCaret();
+}
+
+void Ctrl::SyncCaret() {
+	GuiLock __;
+	if(focusCtrl != caretCtrl) {
+		RefreshCaret();
+		caretCtrl = focusCtrl;
+		RefreshCaret();
+	}
+}
+
+void  Ctrl::AnimateCaret()
+{
+	GuiLock __;
+	int v = !(((GetTickCount() - WndCaretTime) / 500) & 1);
+	if(v != WndCaretVisible) {
+		RefreshCaret();
+		WndCaretVisible = v;
 	}
 }
 
@@ -313,22 +372,20 @@ void Ctrl::SetAlpha(byte alpha)
 Rect Ctrl::GetWorkArea() const
 {
 	GuiLock __;
-	return Rect();
+	return GetWorkArea(GetRect().TopLeft());
 }
 
 void Ctrl::GetWorkArea(Array<Rect>& rc)
 {
 	GuiLock __;
-}
-
-Rect Ctrl::GetVirtualWorkArea()
-{
-	Rect out = GetPrimaryWorkArea();
-	Array<Rect> rc;
-	GetWorkArea(rc);
-	for(int i = 0; i < rc.GetCount(); i++)
-		out |= rc[i];
-	return out;
+	GdkScreen *s = gdk_screen_get_default();
+	int n = gdk_screen_get_n_monitors(s);
+	rc.Clear();
+	for(int i = 0; i < n; i++) {
+		GdkRectangle r;
+		gdk_screen_get_monitor_geometry(s, i, &r);  // TODO: Use WorkArea (for GTK 3.4)
+		rc.Add(RectC(r.x, r.y, r.width, r.height));
+	}
 }
 
 Rect Ctrl::GetWorkArea(Point pt)
@@ -341,21 +398,35 @@ Rect Ctrl::GetWorkArea(Point pt)
 	return GetPrimaryWorkArea();
 }
 
+Rect Ctrl::GetVirtualWorkArea()
+{
+	Rect out = GetPrimaryWorkArea();
+	Array<Rect> rc;
+	GetWorkArea(rc);
+	for(int i = 0; i < rc.GetCount(); i++)
+		out |= rc[i];
+	return out;
+}
+
 Rect Ctrl::GetVirtualScreenArea()
 {
 	GuiLock __;
-	return Rect();
+	gint x, y, width, height;
+	gdk_window_get_geometry(gdk_screen_get_root_window(gdk_screen_get_default()),
+	                        &x, &y, &width, &height, NULL);
+	return RectC(x, y, width, height);
 }
 
 Rect Ctrl::GetPrimaryWorkArea()
 {
-	Rect r;
-	return r;
+	Array<Rect> rc;
+	GetWorkArea(rc);
+	return rc.GetCount() ? rc[0] : RectC(0, 0, 0, 0);
 }
 
 Rect Ctrl::GetPrimaryScreenArea()
 {
-	return Size();
+	return GetPrimaryWorkArea();
 }
 
 int Ctrl::GetKbdDelay()
@@ -373,35 +444,52 @@ int Ctrl::GetKbdSpeed()
 void Ctrl::SetWndForeground0()
 {
 	GuiLock __;
-	gtk_window_present((GtkWindow *)top->window);
+	if(top)
+		gtk_window_present(gtk());
 }
 
 bool Ctrl::IsWndForeground() const
 {
 	GuiLock __;
-	return gtk_window_is_active((GtkWindow *)top->window);
+	return top && gtk_window_is_active(gtk());
 }
 
 void Ctrl::WndEnable0(bool *b)
 {
 	GuiLock __;
+	if(top)
+		gtk_widget_set_sensitive(top->window, *b);
 }
 
 void Ctrl::SetWndFocus0(bool *b)
 {
 	GuiLock __;
+	if(top) {
+		gtk_widget_grab_focus(top->window);
+		*b = true;
+	}
 }
 
 bool Ctrl::HasWndFocus() const
 {
 	GuiLock __;
-	return false;
+	return top && gtk_widget_is_focus(top->window);
 }
+
+Ptr<Ctrl> Ctrl::grabwindow;
 
 bool Ctrl::SetWndCapture()
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
+	if(grabwindow)
+		ReleaseWndCapture();
+	if(gdk_pointer_grab(gdk(), FALSE,
+					    GdkEventMask(GDK_BUTTON_RELEASE_MASK|GDK_BUTTON_PRESS_MASK|GDK_POINTER_MOTION_MASK),
+					    NULL, NULL, gtk_get_current_event_time()) == GDK_GRAB_SUCCESS) {
+		grabwindow = this;
+		return true;
+	}
 	return false;
 }
 
@@ -409,18 +497,21 @@ bool Ctrl::ReleaseWndCapture()
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
-	return false;
+	gdk_pointer_ungrab(gtk_get_current_event_time());
+	grabwindow = NULL;
+	return true;
 }
 
 bool Ctrl::HasWndCapture() const
 {
 	GuiLock __;
-	return false;
+	return this == grabwindow && gdk_pointer_is_grabbed();
 }
 
 void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
+	LLOG("WndInvalidateRect " << rect);
 	gdk_window_invalidate_rect(gdk(), GdkRect(r), true);
 }
 
@@ -439,10 +530,7 @@ void Ctrl::WndUpdate0r(const Rect& r)
 void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
-}
-
-void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
-{
+	gdk_window_invalidate_rect(gdk(), GdkRect(r), true);
 }
 
 Rect Ctrl::GetDefaultWindowRect() {

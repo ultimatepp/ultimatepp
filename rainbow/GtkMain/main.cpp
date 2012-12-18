@@ -68,11 +68,13 @@ struct MyApp : TopWindow {
 	virtual bool Key(dword key, int count)
 	{
 		Log(GetKeyDesc(key).Cat() << ' ' << count);
+		return false;
 	}
 
 	virtual void MouseMove(Point p, dword keyflags)
 	{
 		pos = p;
+		SetCaret(p.x, 0, 5, 5);
 		Refresh();
 	}
 
@@ -85,7 +87,7 @@ struct MyApp : TopWindow {
 			return Image::Hand();
 		if(p.x < 3 * sz.cx / 4)
 			return CtrlImg::ibeam0();
-		return CtrlImg::HelpCursor0();
+		return (msecs() / 500) & 1 ? CtrlImg::HelpCursor1() : CtrlImg::HelpCursor0();
 	}
 
 	virtual void Paint(Draw& w) {
@@ -105,8 +107,9 @@ struct MyApp : TopWindow {
 			w.DrawText(100, y, log[i]);
 			y += fcy;
 		}
-		w.DrawRect(0, 0, 50, fcy * 3, InvertColor());
 	}
+
+	EditString text;
 	
 	MyApp() {
 		Sizeable().Zoomable().Title("Event test");
@@ -115,19 +118,70 @@ struct MyApp : TopWindow {
 	}
 };
 
+struct MyApp2 : TopWindow {
+	DocEdit text;
+/*
+	virtual void Activate()
+	{
+		LOG("Activate");
+	}
+
+	virtual void Deactivate()
+	{
+		LOG("Deactivate");
+	}
+	
+	virtual void Layout()
+	{
+		LOG("Layout");
+	}
+	
+	virtual void GotFocus()
+	{
+		LOG("GotFocus");
+	}
+	
+	virtual void LostFocus()
+	{
+		LOG("LostFocus");
+	}
+*/
+	MyApp2() {
+		Zoomable().
+		Sizeable().
+		Title("Widget test");
+		Add(text.SizePos());
+		text <<= "Test\nHello World!";
+
+		DDUMP(Ctrl::GetWorkArea());
+	}
+};
+
 GUI_APP_MAIN
 {
-	MyApp().Run();
-	return;
+#if 0
+	String txt = "Test";
 
+	EditText(txt, "Test", "Test");
+	return;
+#endif
+
+#if 0
+	MyApp2().Run();
+	return;
+#endif
+
+#if 0
 	PromptOK("Hello world!");
 	return;
+#endif
 
-/*	
+#if 1	
 	RichEditWithToolBar edit;
-	edit.SetQTF("[A500 Hello World!");
+	edit.SetQTF("[A9 Hello World!");
 	TopWindow win;
+	win.Sizeable();
 	win.Add(edit.SizePos());
 	win.Run();
-*/
+#endif
 }

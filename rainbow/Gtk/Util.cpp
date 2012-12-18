@@ -47,6 +47,12 @@ GdkRect::GdkRect(const Rect& r)
 	height = r.GetHeight();
 }
 
+int rmsecs()
+{
+	static int msecs0 = msecs();
+	return msecs(msecs0);
+}
+ 
 END_UPP_NAMESPACE
 
 #endif

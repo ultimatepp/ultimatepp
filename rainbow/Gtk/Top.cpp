@@ -12,16 +12,24 @@ void    TopWindow::SyncSizeHints()
 	if(!top)
 		return;
 	GdkGeometry m;
-	Size sz = GetRect().GetSize();
+	Size sz0 = GetRect().GetSize();
+	DDUMP(sz0);
+	Size sz = sz0;
 	if(sizeable)
 		sz = GetMinSize();
+//		sz = Size(50, 50);
+	DDUMP(sz);
 	m.min_width = sz.cx;
 	m.min_height = sz.cy;
+	sz = sz0;
 	if(sizeable)
 		sz = GetMaxSize();
+	DDUMP(sz);
 	m.max_width = sz.cx;
 	m.max_height = sz.cy;
- 	gtk_window_set_geometry_hints(gtk(), NULL, &m, (GdkWindowHints)(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE));
+	// TODO!!!
+	gtk_window_set_resizable(gtk(), sizeable);
+	gtk_window_set_geometry_hints(gtk(), top->window, &m, GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE));
 }
 
 void TopWindow::SyncTitle0()

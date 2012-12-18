@@ -4,26 +4,40 @@
 	static gboolean GtkProc(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 	static void     IMCommit(GtkIMContext *context, gchar *str, gpointer user_data);
 
+
+	void   GtkMouseEvent(int action, GdkEvent *event);
+	void   GtkKeyEvent(GdkEventKey *key, bool pressed);
+
 	virtual bool Proc(GdkEvent *event);
 
-	void GtkMouseEvent(int action, GdkEvent *event);
+	static gboolean GtkEvent(GtkWidget *widget, GdkEvent *key, gpointer user_data);
 
-	GdkWindow *gdk() { return top->window->window; }
-	GtkWindow *gtk() { return (GtkWindow *)top->window; }
+	void     GtkConnect();
+
+	GdkWindow *gdk() const { return top->window->window; }
+	GtkWindow *gtk() const { return (GtkWindow *)top->window; }
 	
 	struct Win : Moveable<Win> {
 		GtkWidget *gtk;
 		GdkWindow *gdk;
-		Ctrl      *ctrl;
+		Ptr<Ctrl>  ctrl;
 	};
 
-	static Vector<Win> wins;
-	
+	static Vector<Win>      wins;
+	static int              WndCaretTime;
+	static bool             WndCaretVisible;
+	static Ptr<Ctrl>        grabwindow;
+
 	int FindCtrl(Ctrl *ctrl);
 	int FindGtkWindow(GtkWidget *gtk);
 	int FindGdkWindow(GdkWindow *gdk);
 	
 	static void FocusSync();
+	static void AnimateCaret();
+	static gboolean TimeHandler(GtkWidget *);
+	static void InvalidateMousePos();
+	
+	friend void InitGtkApp(int argc, char **argv, const char **envptr);
 
 public:
 	static void      EndSession()              {}
