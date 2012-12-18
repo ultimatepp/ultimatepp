@@ -129,18 +129,17 @@ bool Ctrl::Proc(GdkEvent *event)
 		}
 		break;
 	case GDK_EXPOSE:
-	case GDK_DAMAGE: {
-		TimeStop tm;
-		fullrefresh = false;
-		GdkEventExpose *e = (GdkEventExpose *)event;
-		SystemDraw w(gdk_cairo_create(top->window->window));
-		painting = true;
-		UpdateArea(w, RectC(e->area.x, e->area.y, e->area.width, e->area.height));
-		cairo_destroy(w);
-		painting = false;
-		DDUMP(tm);
+	case GDK_DAMAGE:
+		if(top) {
+			fullrefresh = false;
+			GdkEventExpose *e = (GdkEventExpose *)event;
+			SystemDraw w(gdk_cairo_create(gdk()));
+			painting = true;
+			UpdateArea(w, RectC(e->area.x, e->area.y, e->area.width, e->area.height));
+			cairo_destroy(w);
+			painting = false;
+		}
 		break;
-	}
 	case GDK_MOTION_NOTIFY: {
 		GdkEventMotion *e = (GdkEventMotion *)event;
 		DispatchMouse(MOUSEMOVE, Point((int)e->x, (int)e->y));
@@ -197,7 +196,7 @@ bool Ctrl::Proc(GdkEvent *event)
 		GdkEventConfigure *e = (GdkEventConfigure *)event;
 		Rect rect = RectC(e->x, e->y, e->width, e->height);
 		LLOG("ConfigureNotify " << rect << ", GetRect() " << GetRect());
-//		if(GetRect() != rect)
+		if(GetRect() != rect)
 			SetWndRect(rect);
 		// TODO: Add DHCtrl support
 		}
