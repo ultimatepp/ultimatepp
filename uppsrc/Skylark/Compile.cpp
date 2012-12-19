@@ -359,8 +359,11 @@ One<Exe> Compiler::Block()
 	int line = 1;
 	while(*s) {
 		if(*s == '$') {
-			if(s[1] == '$')
-				s += 2;
+			if(s[1] == '$') {
+				blk.AddText(b, s + 1);
+				p.Set(s + 2, NULL, line);
+				b = s = p.GetSpacePtr();
+			}
 			else {
 				blk.AddText(b, s);
 				p.Set(s + 1, NULL, line);
