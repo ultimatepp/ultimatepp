@@ -88,7 +88,8 @@ const One<Exe>& Renderer::GetTemplate(const char *template_name)
 	{
 		throw TemplateExc(e);
 	}
-	return NULL;
+	NEVER();
+	return template_cache[0];
 }
 
 String Renderer::RenderString(const String& template_name)

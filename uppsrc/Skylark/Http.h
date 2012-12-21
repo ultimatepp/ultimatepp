@@ -18,6 +18,7 @@ protected:
 
 	Renderer& Link(const char *id, const HandlerId& handler, const Vector<Value>& arg);
 	const One<Exe>& GetTemplate(const char *template_name);
+	friend String GetIdentity(const Renderer *r);
 
 public:	
 	Renderer& operator()(const char *id, const char *v)   { var.Add(id, v); return *this; }
@@ -84,6 +85,9 @@ class Http : public Renderer {
 
 	void   LoadSession();
 	void   SaveSession();
+
+	void   SessionSet0(const char *id, const Value& value);
+	friend String GetIdentity(const Renderer *r);
 
 public:
 	Http&  operator()(const char *id, const char *v)   { var.Add(id, v); return *this; }
