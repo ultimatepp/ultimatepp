@@ -758,6 +758,10 @@ void Ctrl::InstallPanicBox()
 {
 }
 
+void Ctrl::SysEndLoop()
+{
+}
+
 END_UPP_NAMESPACE
 
 #endif

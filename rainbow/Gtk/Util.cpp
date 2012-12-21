@@ -8,36 +8,88 @@ void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size psz, P
 {
 }
 
-void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n, Color color, uint64 pattern)
+void DrawDragLine(SystemDraw& w, bool horz, int x, int y, int len, int n, const int *pattern, Color color, int animation)
 {
+	if(len <= 0)
+		return;
+	if(horz)
+		w.Clip(x, y, len, n);
+	else
+		w.Clip(x, y, n, len);
+	
+	(horz ? x : y) -= animation;
+	len += animation;
+	bool ch = false;
+	while(len > 0) {
+		int segment = pattern[ch];
+		int d = segment + pattern[2];
+		if(horz) {
+			w.DrawRect(x, y, segment, n, color);
+			x += d;
+		}
+		else {
+			w.DrawRect(x, y, n, segment, color);
+			y += d;
+		}
+		len -= d;
+		ch = !ch;
+	}
+	w.End();
 }
 
-/*
-Size GetScreenSize()
+void DrawDragFrame(SystemDraw& w, const Rect& r, int n, const int *pattern, Color color, int animation)
 {
-	return ScreenInfo().GetPageSize();
+	DrawDragLine(w, true, r.left, r.top, r.GetWidth(), n, pattern, color, animation);
+	DrawDragLine(w, false, r.left, r.top + n, r.GetHeight() - 2 * n, n, pattern, color, animation);
+	DrawDragLine(w, false, r.right - n, r.top + n, r.GetHeight() - 2 * n, n, pattern, color, animation);
+	DrawDragLine(w, true, r.left, r.bottom - n, r.GetWidth(), n, pattern, color, animation);
 }
-*/
+
+void DrawDragRect(Ctrl& q, const DrawDragRectInfo& f)
+{
+	ViewDraw w(&q);
+	w.Clip(f.clip);
+	cairo_t *cr = w;
+//	cairo_set_operator(cr, CAIRO_OPERATOR_DIFFERENCE);
+	static int dashes[3][3] = {
+		{ 32, 32, 0 },
+		{ 1, 1, 1 },
+		{ 5, 1, 2 },
+	};
+	const int *dash = dashes[minmax(f.type, 0, 2)];
+	Color color = InvertColor;
+	DrawDragFrame(w, f.rect1, f.n, dash, color, f.animation);
+	DrawDragFrame(w, f.rect2, f.n, dash, color, f.animation);
+	w.End();
+}
 
 void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                   Color color, int type, int animation)
 {
-	ViewDraw w(&q);
-	w.Clip(clip);
-	cairo_t *cr = w;
-	double dashes[] = { 1, 1, 1, 1, 1, 1, 1, 1 };
-	w.SetColor(color);
-	cairo_set_operator(cr, CAIRO_OPERATOR_DIFFERENCE);
-	cairo_set_dash(cr, dashes, 8, 0);
-	cairo_set_line_width(cr, 1);
-	cairo_rectangle(cr, rect1.left + 0.5, rect1.top + 0.5, rect1.GetWidth() + 0.5, rect1.GetHeight() + 0.5);
-	cairo_stroke(cr);
-	cairo_rectangle(cr, rect2.left + 0.5, rect2.top + 0.5, rect2.GetWidth() + 0.5, rect2.GetHeight() + 0.5);
-	cairo_stroke(cr);
-	w.End();
-/*	uint64 pattern = type == DRAWDRAGRECT_DASHED ? I64(0xf0783c1e0f87c3e1) :
-	                 type == DRAWDRAGRECT_NORMAL ? I64(0x55aa55aa55aa55aa) : 0;	                                             
-	DrawDragRect(w, rect1, rect2, clip, n, color, sGetAniPat(pattern, animation));*/
+	Ctrl *top = q.GetTopCtrl();
+	if(top && top->top) {
+		Rect sv = q.GetScreenView();
+		Rect tv = top->GetScreenView();
+		Point off = sv.TopLeft() - tv.TopLeft();
+		DrawDragRectInfo& f = top->top->dr.Create();
+		f.rect1 = rect1 + off;
+		f.rect2 = rect2 + off;
+		f.clip = (clip & q.GetSize()) + off;
+		f.n = n;
+		f.color = color;
+		f.type = type;
+		f.animation = animation;
+		DrawDragRect(*top, f);
+	}
+}
+
+void FinishDragRect(Ctrl& q)
+{
+	Ctrl *top = q.GetTopCtrl();
+	if(top && top->top && top->top->dr) {
+		DrawDragRect(*top, *top->top->dr);
+		top->top->dr.Clear();
+	}
 }
 
 GdkRect::GdkRect(const Rect& r)

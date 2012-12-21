@@ -53,7 +53,7 @@ void SystemDraw::OffsetOp(Point p)
 
 void SystemDraw::RectPath(const Rect& r)
 {
-	cairo_rectangle(cr, r.left, r.top, r.GetWidth() - 1, r.GetHeight() - 1);
+	cairo_rectangle(cr, r.left, r.top, r.GetWidth(), r.GetHeight());
 }
 
 bool SystemDraw::ClipOp(const Rect& r)

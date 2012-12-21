@@ -126,8 +126,13 @@ public:
 	~ImageGdk();
 };
 
-void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
-                  Color color, uint64 pattern);
+struct DrawDragRectInfo {
+	Rect  rect1, rect2, clip;
+	int   n;
+	Color color;
+	int   type;
+	int   animation;
+};
 
 #ifndef PLATFORM_WIN32
 #include <CtrlCore/stdids.h>
@@ -137,9 +142,10 @@ void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rec
 
 //$	struct Ctrl::Top {
 #define GUIPLATFORM_CTRL_TOP_DECLS \
-	GtkWidget    *window; \
-	GtkIMContext *im_context; \
-	int64         cursor_id;
+	GtkWidget            *window; \
+	GtkIMContext         *im_context; \
+	int64                 cursor_id; \
+	One<DrawDragRectInfo> dr; \
 //$ }
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <Gtk/Ctrl.h>

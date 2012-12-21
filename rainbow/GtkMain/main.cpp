@@ -167,14 +167,23 @@ struct MyApp3 : TopWindow {
 		Size sz = GetSize();
 		w.DrawRect(sz, SColorPaper());
 		DrawFrame(w, rect, Black());
+		
+		w.DrawRect(0, 0, 16, 16, LtGray());
+		w.DrawRect(16, 16, 10, 10, Black());
 	}
 
 	virtual void LeftDown(Point p, dword keyflags) {
 		RectTracker tr(*this);
 		Size sz = GetSize();
 		tr.Normal();
+	//	tr.Width(2);
+	//	tr.Dashed();
+	//	tr.Animation();
+		tr.SetColor(Red());
 		rect = tr.Track(rect, ALIGN_RIGHT, ALIGN_BOTTOM);
 		Refresh();
+		ClearClipboard();
+		AppendClipboardText("Hello world!");
 	}
 
 	MyApp3() {
@@ -185,6 +194,9 @@ struct MyApp3 : TopWindow {
 
 GUI_APP_MAIN
 {
+	AppendClipboardText("Hello world! not it is " + AsString(GetSysTime()));
+	AppendClipboardImage(CtrlImg::exclamation());
+//	return;
 #if 0
 	String txt = "Test";
 
@@ -192,7 +204,7 @@ GUI_APP_MAIN
 	return;
 #endif
 
-#if 1
+#if 0
 	MyApp3().Run();
 	return;
 #endif
@@ -204,7 +216,7 @@ GUI_APP_MAIN
 
 #if 1	
 	RichEditWithToolBar edit;
-	edit.SetQTF("[A9 Hello World!");
+	edit.SetQTF("[A9 [/ Hello] [_ World]!");
 	TopWindow win;
 	win.Sizeable();
 	win.Add(edit.SizePos());

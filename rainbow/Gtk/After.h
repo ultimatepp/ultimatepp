@@ -4,6 +4,8 @@ public:
 	~ViewDraw();
 };
 
+void DrawDragRect(Ctrl& q, const DrawDragRectInfo& f);
+
 class DHCtrl : Ctrl {};
 
 void InitGtkApp(int argc, char **argv, const char **envptr);

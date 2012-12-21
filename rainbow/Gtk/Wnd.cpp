@@ -354,11 +354,6 @@ void Ctrl::WndShow0(bool b)
 		gtk_widget_hide_all(top->window);
 }
 
-void Ctrl::WndUpdate0()
-{
-	GuiLock __;
-}
-
 bool Ctrl::IsWndOpen() const {
 	GuiLock __;
 	return top && top->window && top->window->window;
@@ -525,6 +520,15 @@ void Ctrl::WndSetPos0(const Rect& rect)
 void Ctrl::WndUpdate0r(const Rect& r)
 {
 	GuiLock __;
+	LLOG("WndUpdate0r " << r);
+	gdk_window_process_updates(gdk(), TRUE);
+}
+
+void Ctrl::WndUpdate0()
+{
+	GuiLock __;
+	LLOG("WndUpdate0");
+	gdk_window_process_updates(gdk(), TRUE);
 }
 
 void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
