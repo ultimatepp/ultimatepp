@@ -70,6 +70,10 @@ void DrawDragRect(SystemDraw& w, const Rect& _rect1, const Rect& _rect2, const R
 	w.EndGdi();
 }
 
+void FinishDragRect(Ctrl& q)
+{
+}
+
 static uint64 sGetAniPat(uint64 src, int pos)
 {
 	uint64 out = 0;
