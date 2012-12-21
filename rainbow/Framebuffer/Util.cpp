@@ -66,6 +66,10 @@ void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& cli
 	q.DragRectDraw(rect1, rect2, clip, n, color, type, animation);
 }
 
+void FinishDragRect(Ctrl& q)
+{
+}
+
 END_UPP_NAMESPACE
 
 #endif

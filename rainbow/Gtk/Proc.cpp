@@ -137,6 +137,9 @@ bool Ctrl::Proc(GdkEvent *event)
 			painting = true;
 			UpdateArea(w, RectC(e->area.x, e->area.y, e->area.width, e->area.height));
 			cairo_destroy(w);
+			DDUMP((bool)top->dr);
+			if(top->dr)
+				DrawDragRect(*this, *top->dr);
 			painting = false;
 		}
 		break;
@@ -189,6 +192,7 @@ bool Ctrl::Proc(GdkEvent *event)
 				kv |= K_CTRL;
 			if(key->state & GDK_MOD1_MASK)
 				kv |= K_ALT;
+			LLOG(GetKeyDesc(kv) << ", pressed: " << pressed);
 			DispatchKey(!pressed * K_KEYUP + kv, 1);
 		}
 		break;

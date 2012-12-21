@@ -38,7 +38,25 @@
 	static void InvalidateMousePos();
 	
 	friend void InitGtkApp(int argc, char **argv, const char **envptr);
+	friend void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
+                             Color color, int type, int animation);
+	friend void FinishDragRect(Ctrl& q);
 
+public:
+	struct Gclipboard {
+		ArrayMap<String, ClipData> target;
+		GtkClipboard *clipboard;
+
+		String Get(const String& fmt);
+		void   Put(const String& fmt, const ClipData& data);
+		bool   IsAvailable(const String& fmt);
+		void   Clear();
+
+		Gclipboard(GdkAtom type);
+	};
+
+	static Gclipboard& gclipboard();
+                  
 public:
 	static void      EndSession()              {}
 	static bool      IsEndSession()            { return false; }
