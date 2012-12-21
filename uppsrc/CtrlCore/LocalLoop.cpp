@@ -92,6 +92,7 @@ Rect RectTracker::Track(const Rect& r, int _tx, int _ty)
 	DrawRect(Rect(0, 0, 0, 0), rect);
 	Run();
 	DrawRect(o, Rect(0, 0, 0, 0));
+	FinishDragRect(GetMaster());
 	return rect;
 }
 
