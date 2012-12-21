@@ -148,16 +148,22 @@ Http& Http::ClearSession()
 	return *this;
 }
 
+void Http::SessionSet0(const char *id, const Value& value)
+{
+	LLOG("SessionSet0 " << id << " = " << value);
+	if(IsNull(session_id))
+		NewSessionId();
+	session_var.GetAdd(id) = value;
+	session_dirty = true;
+}
+
 Http& Http::SessionSet(const char *id, const Value& value)
 {
 	LLOG("SessionSet " << id << " = " << value);
 	if(*id == '.')
 		id++;
-	if(IsNull(session_id))
-		NewSessionId();
-	session_var.GetAdd(id) = value;
-	var.GetAdd('.' + id) = value;
-	session_dirty = true;
+	SessionSet0(id, value);
+	var.GetAdd('.' + String(id)) = value;
 	return *this;
 }
 

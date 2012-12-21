@@ -324,6 +324,8 @@ void Http::Dispatch(TcpSocket& socket)
 				ParseRequest(~uri + q + 1);
 			uri.Trim(q);
 		}
+		var.GetAdd(".__identity__"); // To make StdLib.icpp GetIndentity work, this has to be at index 0
+		var.GetAdd("static") = app.static_dir;
 		for(int i = hdr.fields.Find("cookie"); i >= 0; i = hdr.fields.FindNext(i)) {
 			const String& h = hdr.fields[i];
 			int q = 0;
@@ -342,8 +344,6 @@ void Http::Dispatch(TcpSocket& socket)
 				q++;
 			}
 		}
-		var.GetAdd("static") = app.static_dir;
-		var.GetAdd(".__identity__"); // To make StdLib.icpp GetIndentity work without changing preset stack positions
 		LDUMPM(var);
 		Vector<String> part = Split(uri, '/');
 		for(int i = 0; i < part.GetCount(); i++)

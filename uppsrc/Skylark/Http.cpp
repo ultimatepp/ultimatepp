@@ -80,6 +80,7 @@ Http& Http::SetRawCookie(const char *id, const String& value, Time expires,
 	if(httponly)
 		c << "; HttpOnly";
 	c << "\r\n";
+	LLOG(c);
 	return *this;
 }
 

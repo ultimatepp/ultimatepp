@@ -28,11 +28,11 @@ String GetIdentity(const Renderer *r)
 	Http *http = const_cast<Http *>(dynamic_cast<const Http *>(r));
 	if(!http)
 		throw Exc("invalid POST identity call");
-	String s = (*http)[".__identity__"];
+	String s = http->var[0];
 	if(s.GetCount())
 		return s;
-	s = AsString(Uuid::Create());
-	http->SessionSet("__identity__", s);
+	http->SessionSet0("__identity__", s);
+	http->var[0] = s = AsString(Uuid::Create());
 	return s;
 }
 
