@@ -28,11 +28,11 @@ void GtkGetClipData(GtkClipboard *clipboard, GtkSelectionData *selection_data,
 	}
 	else
 	if(fmt == "image") {
-		Image m;
+		Image img;
 		if(IsString(data))
-			LoadFromString(m, data);
-		if(!IsNull(m)) {
-			ImageGdk m(target[info].data);
+			LoadFromString(img, data);
+		if(!IsNull(img)) {
+			ImageGdk m(img);
 			gtk_selection_data_set_pixbuf(selection_data, m);
 		}
 	}
