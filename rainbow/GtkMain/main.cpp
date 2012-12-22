@@ -194,8 +194,8 @@ struct MyApp3 : TopWindow {
 
 GUI_APP_MAIN
 {
-	AppendClipboardText("Hello world! not it is " + AsString(GetSysTime()));
-	AppendClipboardImage(CtrlImg::exclamation());
+//	AppendClipboardText("Hello world! now it is " + AsString(GetSysTime()));
+//	AppendClipboardImage(CtrlImg::exclamation());
 //	return;
 #if 0
 	String txt = "Test";

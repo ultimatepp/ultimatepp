@@ -83,7 +83,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	WndSetPos0(GetRect());
 /*
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
-	gtk_window_set_resizable(gtk(), tw && tw->IsSizeable());
+	if(tw)
+		tw->SyncSizeHints();
 */
 	if(owner && owner->top)
 		gtk_window_set_transient_for(gtk(), owner->gtk());
@@ -255,6 +256,8 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
 	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
+	if(!GetMouseRight() && !GetMouseMiddle() && !GetMouseLeft())
+		ReleaseCtrlCapture();
 	Ptr<Ctrl> ploop;
 	if(ctrl) {
 		ploop = LoopCtrl;
@@ -477,6 +480,7 @@ bool Ctrl::SetWndCapture()
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
+	LLOG("SetWndCapture " << Name());
 	if(grabwindow)
 		ReleaseWndCapture();
 	if(gdk_pointer_grab(gdk(), FALSE,
@@ -492,6 +496,7 @@ bool Ctrl::ReleaseWndCapture()
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
+	LLOG("ReleaseWndCapture " << Name());
 	gdk_pointer_ungrab(gtk_get_current_event_time());
 	grabwindow = NULL;
 	return true;
@@ -507,21 +512,22 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
 	LLOG("WndInvalidateRect " << rect);
-	gdk_window_invalidate_rect(gdk(), GdkRect(r), true);
+	gtk_widget_queue_draw_area(top->window, r.left, r.top, r.GetWidth(), r.GetHeight());
 }
 
 void Ctrl::WndSetPos0(const Rect& rect)
 {
 	GuiLock __;
 	LLOG("WndSetPos0 " << rect);
-	gdk_window_move_resize(gdk(), rect.left, rect.top, rect.GetWidth(), rect.GetHeight());
+	gtk_window_move(gtk(), rect.left, rect.top);
+	gtk_window_resize(gtk(), rect.GetWidth(), rect.GetHeight());
 }
 
 void Ctrl::WndUpdate0r(const Rect& r)
 {
 	GuiLock __;
 	LLOG("WndUpdate0r " << r);
-	gdk_window_process_updates(gdk(), TRUE);
+	gtk_widget_draw(top->window, GdkRect(r));
 }
 
 void Ctrl::WndUpdate0()
@@ -537,9 +543,17 @@ void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 	gdk_window_invalidate_rect(gdk(), GdkRect(r), true);
 }
 
-Rect Ctrl::GetDefaultWindowRect() // ToDo!
+Rect Ctrl::GetDefaultWindowRect()
 {
-	return Rect(0, 0, 100, 100);
+	GuiLock __; 
+	Size sz = GetPrimaryWorkArea().GetSize();
+	static int pos = min(sz.cx / 10, 50);
+	pos += 10;
+	int cx = sz.cx * 2 / 3;
+	int cy = sz.cy * 2 / 3;
+	if(pos + cx + 50 > sz.cx || pos + cy + 50 > sz.cy)
+		pos = 0;
+	return RectC(pos + 20, pos + 20, cx, cy);
 }
 
 ViewDraw::ViewDraw(Ctrl *ctrl)

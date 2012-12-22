@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  // LOG(x)
+#define LLOG(x)   DLOG(x)
 
 void    TopWindow::SyncSizeHints()
 {
@@ -13,21 +13,16 @@ void    TopWindow::SyncSizeHints()
 		return;
 	GdkGeometry m;
 	Size sz0 = GetRect().GetSize();
-	DDUMP(sz0);
 	Size sz = sz0;
 	if(sizeable)
 		sz = GetMinSize();
-//		sz = Size(50, 50);
-	DDUMP(sz);
 	m.min_width = sz.cx;
 	m.min_height = sz.cy;
 	sz = sz0;
 	if(sizeable)
 		sz = GetMaxSize();
-	DDUMP(sz);
 	m.max_width = sz.cx;
 	m.max_height = sz.cy;
-	// TODO!!!
 	gtk_window_set_resizable(gtk(), sizeable);
 	gtk_window_set_geometry_hints(gtk(), top->window, &m, GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE));
 }
@@ -47,19 +42,54 @@ void TopWindow::SyncCaption0()
 		gtk_window_set_icon(gtk(), gdk_icon);
 }
 
+void TopWindow::CenterRect(Ctrl *owner)
+{
+	GuiLock __;
+	SetupRect();
+	if(owner && center == 1 || center == 2) {
+		Size sz = GetRect().Size();
+		Rect r, wr;
+		wr = Ctrl::GetWorkArea();
+		// TODO: Add Frame support
+		if(center == 1)
+			r = owner->GetRect();
+		else
+			r = wr;
+		Point p = r.CenterPos(sz);
+		r = RectC(p.x, p.y, sz.cx, sz.cy);
+		if(r.top < wr.top) {
+			r.bottom += wr.top - r.top;
+			r.top = wr.top;
+		}
+		if(r.bottom > wr.bottom)
+			r.bottom = wr.bottom;
+		minsize.cx = min(minsize.cx, r.GetWidth());
+		minsize.cy = min(minsize.cy, r.GetHeight());
+		SetRect(r);
+	}
+}
+
 void TopWindow::Open(Ctrl *owner)
 {
 	GuiLock __;
-	if(GetSize().cx == 0)
-		SetRect(10, 10, 400, 400);
+	LLOG("OPEN " << Name() << " owner: " << UPP::Name(owner));
+	if(dokeys && (!GUI_AKD_Conservative() || GetAccessKeysDeep() <= 1))
+		DistributeAccessKeys();
+	if(fullscreen)
+		SetRect(GetPrimaryScreenArea());
+	else
+		CenterRect(owner);
+	DDUMP(GetRect());
+	IgnoreMouseUp();
 	Create(owner, false);
 	SyncSizeHints();
 	SyncCaption();
+	PlaceFocus();
 }
 
 void TopWindow::Open()
 {
-	Open(NULL); //TODO!
+	Open(GetActiveWindow()); //TODO!
 }
 
 void TopWindow::OpenMain()

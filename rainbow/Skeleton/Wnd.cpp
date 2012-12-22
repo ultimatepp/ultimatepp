@@ -363,6 +363,14 @@ Vector<WString> SplitCmdLine__(const char *cmd)
 	return out;
 }
 
+void Ctrl::SysEndLoop()
+{
+}
+
+void FinishDragRect(Ctrl& q)
+{
+}
+
 END_UPP_NAMESPACE
 
 #endif

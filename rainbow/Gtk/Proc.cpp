@@ -93,6 +93,7 @@ bool Ctrl::Proc(GdkEvent *event)
 {
 	if(!top)
 		return false;
+	Ptr<Ctrl> _this = this;
 #ifdef LOG_EVENTS
 	String ev = "?";
 	Tuple2<int, const char *> *f = FindTuple(xEvent, __countof(xEvent), event->type);
@@ -120,14 +121,16 @@ bool Ctrl::Proc(GdkEvent *event)
 		LLOG("FocusChange in: " << ((GdkEventFocus *)event)->in << ", focusCtrlWnd " << focusCtrlWnd);
 		if(((GdkEventFocus *)event)->in) {
 			gtk_im_context_focus_in(top->im_context);
-			if(this != focusCtrlWnd && IsEnabled())
-				ActivateWnd();
+			if(this != focusCtrlWnd) {
+				LLOG("Activate " << Name());
+				SetFocusWnd();
+			}
 		}
 		else {
 			gtk_im_context_focus_out(top->im_context);
 			KillFocusWnd();
 		}
-		break;
+		return true;
 	case GDK_EXPOSE:
 	case GDK_DAMAGE:
 		if(top) {
@@ -142,7 +145,7 @@ bool Ctrl::Proc(GdkEvent *event)
 				DrawDragRect(*this, *top->dr);
 			painting = false;
 		}
-		break;
+		return true;
 	case GDK_MOTION_NOTIFY: {
 		GdkEventMotion *e = (GdkEventMotion *)event;
 		DispatchMouse(MOUSEMOVE, Point((int)e->x, (int)e->y));
@@ -159,7 +162,10 @@ bool Ctrl::Proc(GdkEvent *event)
 		GtkMouseEvent(DOUBLE, event);
 		break;
 	case GDK_BUTTON_RELEASE:
-		GtkMouseEvent(UP, event);
+		if(ignoreclick)
+			EndIgnore();
+		else
+			GtkMouseEvent(UP, event);
 		break;
 	case GDK_KEY_PRESS:
 		pressed = true;
@@ -208,6 +214,7 @@ bool Ctrl::Proc(GdkEvent *event)
 	default:
 		return false;
 	}
+	_this->PostInput();
 	return true;
 }
 
