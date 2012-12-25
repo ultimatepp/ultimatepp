@@ -610,9 +610,9 @@ void RichEdit::AdjustObjectSize()
 			}
 			break;
 		case IDOK:
-			if(!IsNull(d.width) && (int)~d.width >= 0)
+			if(!IsNull(d.width) && (int)~d.width > 0)
 				sz.cx = ~d.width;
-			if(!IsNull(d.height) && (int)~d.height >= 0)
+			if(!IsNull(d.height) && (int)~d.height > 0)
 				sz.cy = ~d.height;
 			obj.SetSize(sz);
 			if(!IsNull(d.ydelta))

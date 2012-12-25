@@ -174,6 +174,7 @@ class RichObject : Moveable<RichObject> {
 	static VectorMap<String, RichObjectType *>& Map();
 
 	void                  NewSerial();
+	void                  AdjustPhysicalSize();
 
 public:
 	static void   Register(const char *name, RichObjectType *type) init_;

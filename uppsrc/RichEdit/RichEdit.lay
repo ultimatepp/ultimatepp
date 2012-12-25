@@ -134,7 +134,7 @@ END_LAYOUT
 LAYOUT(CreateTableLayout, 164, 88)
 	ITEM(Option, header, SetLabel(t_("Header")).LeftPosZ(8, 128).TopPosZ(8, 15))
 	ITEM(Label, dv___1, SetLabel(t_("Number of columns")).LeftPosZ(8, 100).TopPosZ(28, 19))
-	ITEM(EditIntSpin, columns, Min(1).Max(20).NotNull(true).LeftPosZ(112, 44).TopPosZ(28, 19))
+	ITEM(EditIntSpin, columns, Max(20).Min(1).NotNull(true).LeftPosZ(112, 44).TopPosZ(28, 19))
 	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(24, 64).TopPosZ(56, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(92, 64).TopPosZ(56, 24))
 END_LAYOUT

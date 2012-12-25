@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  //  DLOG(x)
+#define LLOG(x)    // DLOG(x)
 
 static StaticCriticalSection sMakeImage;
 
@@ -28,8 +28,8 @@ struct scImageMaker : LRUCache<Image>::Maker {
 	}
 	virtual int    Make(Image& object) const {
 		object = m->Make();
-		LLOG("ImageMaker " << object.GetSerialId() << ", size " << object.GetSize() << ", paintonly: " << paintonly);
-		if(paintonly)
+		DLOG("ImageMaker " << object.GetSerialId() << ", size " << object.GetSize() << ", paintonly: " << paintonly);
+		if(paintonly && !IsNull(object))
 			SetPaintOnly__(object);
 		return object.GetLength() + 100;
 	}
