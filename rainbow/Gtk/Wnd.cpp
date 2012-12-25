@@ -15,8 +15,11 @@ NAMESPACE_UPP
 #define ELOG(x)   // RLOG(GetSysTime() << ": " << x)
 
 Vector<Ctrl::Win> Ctrl::wins;
-int       Ctrl::WndCaretTime;
-bool      Ctrl::WndCaretVisible;
+
+int        Ctrl::WndCaretTime;
+bool       Ctrl::WndCaretVisible;
+
+GMainLoop *Ctrl::gdk_loop;
 
 int Ctrl::FindCtrl(Ctrl *ctrl)
 {
@@ -72,6 +75,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	gtk_window_set_type_hint(gtk(), popup ? GDK_WINDOW_TYPE_HINT_COMBO
 	                                      : owner ? GDK_WINDOW_TYPE_HINT_DIALOG
 	                                              : GDK_WINDOW_TYPE_HINT_NORMAL);
+//	gtk_window_set_decorated(gtk(), !popup);
 
 	top->cursor_id = -1;
 
@@ -89,6 +93,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	if(owner && owner->top)
 		gtk_window_set_transient_for(gtk(), owner->gtk());
 	gtk_widget_set_app_paintable(top->window, TRUE);
+	gtk_widget_set_can_focus(top->window, TRUE);
 	isopen = true;
 
 	top->im_context = gtk_im_multicontext_new();
@@ -109,17 +114,22 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
-	DLOG("POPUP " << GetRect());
+	GuiLock __;
+	LLOG("POPUP " << Name() << ", " << GetRect() << ", activate " << activate);
 	Create(owner, true);
-	if(activate)
-		SetWndFocus();
+	popup = true;
+//	if(activate)
+//		SetWndFocus();
 }
 
 void Ctrl::WndDestroy0()
 {
+	GuiLock __;
+	LLOG("WndDestroy " << Name());
 	gtk_widget_destroy(top->window);
 	g_object_unref(top->im_context);
 	isopen = false;
+	popup = false;
 	delete top;
 	top = NULL;
 	int q = FindCtrl(this);
@@ -129,6 +139,7 @@ void Ctrl::WndDestroy0()
 
 Vector<Ctrl *> Ctrl::GetTopCtrls()
 {
+	GuiLock __;
 	Vector<Ctrl *> h;
 	for(int i = 0; i < wins.GetCount(); i++)
 		h.Add(wins[i].ctrl);
@@ -215,7 +226,10 @@ void Ctrl::UnregisterSystemHotKey(int id)
 
 bool Ctrl::IsWaitingEvent()
 {
-	return gtk_events_pending();
+	GDK_THREADS_LEAVE ();  
+	bool result = g_main_context_pending(NULL);
+	GDK_THREADS_ENTER ();
+	return result;
 }
 
 bool Ctrl::ProcessEvent(bool *quit)
@@ -223,7 +237,7 @@ bool Ctrl::ProcessEvent(bool *quit)
 	ASSERT(IsMainThread());
 	bool r = false;
 	if(IsWaitingEvent()) {
-		gtk_main_iteration();
+		g_main_context_iteration(NULL, FALSE);
 		if(quit)
 			*quit = IsEndSession();
 		r = true;
@@ -231,6 +245,7 @@ bool Ctrl::ProcessEvent(bool *quit)
 	TimerProc(GetTickCount());
 	SyncCaret();
 	AnimateCaret();
+	gdk_flush();
 	return r;
 }
 
@@ -246,7 +261,11 @@ bool Ctrl::ProcessEvents(bool *quit)
 
 void Ctrl::SysEndLoop()
 {
-	gtk_main_quit();
+}
+
+void WakeUpGuiThread()
+{
+	g_main_context_wakeup(g_main_context_default());
 }
 
 void Ctrl::EventLoop0(Ctrl *ctrl)
@@ -265,12 +284,20 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 		ctrl->inloop = true;
 	}
 
+	GMainLoop *loop = g_main_loop_new(NULL, TRUE);
+
 	while(!IsEndSession() && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
-		if(IsEndSession()) break;
-		DLOG(rmsecs() << " before gtk_main");
-		gtk_main();
+		GDK_THREADS_LEAVE();
+		g_main_context_iteration(NULL, TRUE);
+		GDK_THREADS_ENTER();
+		TimerProc(GetTickCount());
+		SyncCaret();
+		AnimateCaret();
+		gdk_flush();
 	}
+
+	g_main_loop_unref(loop);
 
 	if(ctrl)
 		LoopCtrl = ploop;
@@ -317,9 +344,11 @@ void Ctrl::SetCaret(int x, int y, int cx, int cy)
 	carety = y;
 	caretcx = cx;
 	caretcy = cy;
-	WndCaretTime = GetTickCount();
-	if(this == caretCtrl)
+	if(this == caretCtrl) {
+		WndCaretTime = GetTickCount();
 		RefreshCaret();
+		AnimateCaret();
+	}
 }
 
 void Ctrl::SyncCaret() {
@@ -344,17 +373,23 @@ void  Ctrl::AnimateCaret()
 Rect Ctrl::GetWndScreenRect() const
 {
 	GuiLock __;
-	Rect r;
-	return r;
+	if(top) {
+		gint x, y;
+		gdk_window_get_position(gdk(), &x, &y);
+		gint width = gdk_window_get_width(gdk());
+		gint height = gdk_window_get_height(gdk());
+		return RectC(x, y, width, height);
+	}
+	return Null;
 }
 
 void Ctrl::WndShow0(bool b)
 {
 	GuiLock __;
 	if(b)
-		gtk_widget_show_all(top->window);
+		gtk_widget_show_now(top->window);
 	else
-		gtk_widget_hide_all(top->window);
+		gtk_widget_hide(top->window);
 }
 
 bool Ctrl::IsWndOpen() const {
@@ -462,8 +497,12 @@ void Ctrl::WndEnable0(bool *b)
 void Ctrl::SetWndFocus0(bool *b)
 {
 	GuiLock __;
+	DLOG("SetWndFocus0 " << top);
 	if(top) {
-		gtk_widget_grab_focus(top->window);
+		DLOG("SetWndFocus0 DO " << top->window);
+		DDUMP(gtk_widget_get_can_focus(top->window));
+		gdk_window_focus(gdk(), gtk_get_current_event_time());
+//		gtk_window_present(gtk());
 		*b = true;
 	}
 }
@@ -528,6 +567,8 @@ void Ctrl::WndUpdate0r(const Rect& r)
 	GuiLock __;
 	LLOG("WndUpdate0r " << r);
 	gtk_widget_draw(top->window, GdkRect(r));
+	ProcessEvents();
+	gdk_flush();
 }
 
 void Ctrl::WndUpdate0()
@@ -535,6 +576,8 @@ void Ctrl::WndUpdate0()
 	GuiLock __;
 	LLOG("WndUpdate0");
 	gdk_window_process_updates(gdk(), TRUE);
+	ProcessEvents();
+	gdk_flush();
 }
 
 void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)

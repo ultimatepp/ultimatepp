@@ -49,8 +49,6 @@ void DrawDragRect(Ctrl& q, const DrawDragRectInfo& f)
 {
 	ViewDraw w(&q);
 	w.Clip(f.clip);
-	cairo_t *cr = w;
-//	cairo_set_operator(cr, CAIRO_OPERATOR_DIFFERENCE);
 	static int dashes[3][3] = {
 		{ 32, 32, 0 },
 		{ 1, 1, 1 },
