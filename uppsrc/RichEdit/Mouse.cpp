@@ -26,9 +26,12 @@ void RichEdit::SetObjectPercent(int p)
 {
 	if(objectpos >= 0) {
 		RichObject obj = GetObject();
-		obj.SetSize(obj.GetPhysicalSize() * p / 100);
-		obj.KeepRatio(true);
-		ReplaceObject(obj);
+		Size sz = obj.GetPhysicalSize() * p / 100;
+		if(sz.cx > 0 && sz.cy > 0) {
+			obj.SetSize(sz);
+			obj.KeepRatio(true);
+			ReplaceObject(obj);
+		}
 	}
 }
 
@@ -200,14 +203,16 @@ void RichEdit::StdBar(Bar& menu)
 			bar_object.Menu(menu, context);
 			if(!menu.IsEmpty())
 				menu.Separator();
+			Size sz = bar_object.GetPhysicalSize();
+			bool b = sz.cx || sz.cy;
 			menu.Add(t_("Object position.."), THISBACK(AdjustObjectSize));
 			menu.Separator();
-			menu.Add("20 %", THISBACK1(SetObjectPercent, 20));
-			menu.Add("40 %", THISBACK1(SetObjectPercent, 40));
-			menu.Add("60 %", THISBACK1(SetObjectPercent, 60));
-			menu.Add("80 %", THISBACK1(SetObjectPercent, 80));
-			menu.Add("90 %", THISBACK1(SetObjectPercent, 90));
-			menu.Add("100 %", THISBACK1(SetObjectPercent, 100));
+			menu.Add(b, "20 %", THISBACK1(SetObjectPercent, 20));
+			menu.Add(b, "40 %", THISBACK1(SetObjectPercent, 40));
+			menu.Add(b, "60 %", THISBACK1(SetObjectPercent, 60));
+			menu.Add(b, "80 %", THISBACK1(SetObjectPercent, 80));
+			menu.Add(b, "90 %", THISBACK1(SetObjectPercent, 90));
+			menu.Add(b, "100 %", THISBACK1(SetObjectPercent, 100));
 			menu.Break();
 			menu.Add(t_("3 pt up"), THISBACK1(SetObjectYDelta, -3));
 			menu.Add(t_("2 pt up"), THISBACK1(SetObjectYDelta, -2));

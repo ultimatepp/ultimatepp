@@ -206,6 +206,12 @@ void RichObject::SetData(const Value& v)
 	NewSerial();
 }
 
+void RichObject::AdjustPhysicalSize()
+{
+	if(physical_size.cx == 0 || physical_size.cy == 0)
+		physical_size = 600 * pixel_size / 96;
+}
+
 void   RichObject::Set(RichObjectType *_type, const Value& _data, Size maxsize, void *context)
 {
 	Clear();
@@ -215,6 +221,7 @@ void   RichObject::Set(RichObjectType *_type, const Value& _data, Size maxsize, 
 		physical_size = type->GetPhysicalSize(data, context);
 		pixel_size = type->GetPixelSize(data, context);
 		size = type->GetDefaultSize(data, maxsize, context);
+		AdjustPhysicalSize();
 	}
 	NewSerial();
 }
@@ -247,6 +254,7 @@ bool   RichObject::Read(const String& _type_name, const String& _data, Size sz, 
 		data = type->Read(_data);
 		physical_size = type->GetPhysicalSize(data, context);
 		pixel_size = type->GetPixelSize(data, context);
+		AdjustPhysicalSize();
 		size = sz;
 		return true;
 	}
