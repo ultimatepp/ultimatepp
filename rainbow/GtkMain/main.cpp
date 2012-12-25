@@ -29,7 +29,7 @@ struct MyApp : TopWindow {
 	
 	virtual void Layout()
 	{
-		Log("Layout");
+		Log("Layout " + AsString(GetScreenView()));
 	}
 	
 	virtual void GotFocus()
@@ -205,7 +205,7 @@ GUI_APP_MAIN
 #endif
 
 #if 0
-	MyApp3().Run();
+	MyApp().Run();
 	return;
 #endif
 

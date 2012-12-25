@@ -27,6 +27,7 @@
 	static int              WndCaretTime;
 	static bool             WndCaretVisible;
 	static Ptr<Ctrl>        grabwindow;
+	static GMainLoop       *gdk_loop;
 
 	int FindCtrl(Ctrl *ctrl);
 	int FindGtkWindow(GtkWidget *gtk);

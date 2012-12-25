@@ -214,7 +214,8 @@ bool Ctrl::Proc(GdkEvent *event)
 	default:
 		return false;
 	}
-	_this->PostInput();
+	if(_this)
+		_this->PostInput();
 	return true;
 }
 
