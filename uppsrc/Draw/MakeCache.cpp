@@ -28,7 +28,7 @@ struct scImageMaker : LRUCache<Image>::Maker {
 	}
 	virtual int    Make(Image& object) const {
 		object = m->Make();
-		DLOG("ImageMaker " << object.GetSerialId() << ", size " << object.GetSize() << ", paintonly: " << paintonly);
+		LLOG("ImageMaker " << object.GetSerialId() << ", size " << object.GetSize() << ", paintonly: " << paintonly);
 		if(paintonly && !IsNull(object))
 			SetPaintOnly__(object);
 		return object.GetLength() + 100;
