@@ -142,6 +142,7 @@ TestXMLMenu::TestXMLMenu()
 	// build default toolbars structure
 	menuCtrl.SetToolBars(STDBACK(toolBarsCb));
 	
+	menuCtrl.Context = THISBACK(RightDown);
 	
 	// don't allow dock right
 //	menuCtrl.NoDockBottom();

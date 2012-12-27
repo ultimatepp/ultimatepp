@@ -12,6 +12,13 @@ using namespace Upp;
 #define LAYOUTFILE <TestXMLMenu/TestXMLMenu.lay>
 #include <CtrlCore/lay.h>
 
+struct Pane : public StaticRect
+{
+	virtual void RightDown(Point p, dword d) { Context(p, d); }
+		
+	Callback2<Point, dword> Context;
+};
+
 class TestXMLMenu : public WithTestXMLMenuLayout<TopWindow>
 {
 		// context menu handler
@@ -26,7 +33,7 @@ class TestXMLMenu : public WithTestXMLMenuLayout<TopWindow>
 	public:
 		typedef TestXMLMenu CLASSNAME;
 
-		WithXMLMenu<StaticRect> menuCtrl;
+		WithXMLMenu<Pane> menuCtrl;
 		LineEdit bottomCtrl;
 
 		TestXMLMenu();
