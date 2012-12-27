@@ -41,8 +41,36 @@ Point GetMousePos() { syncMousePos(); return sMousepos; }
 void Ctrl::GtkMouseEvent(int action, GdkEvent *event)
 {
 	GdkEventButton *e = (GdkEventButton *)event;
-	DispatchMouse(action|(e->button == 2 ? MIDDLE : e->button == 3 ? RIGHT : LEFT),
-	              Point((int)e->x, (int)e->y));
+	int act = action;
+	if(action != MOUSEMOVE)
+		act |= e->button == 2 ? MIDDLE : e->button == 3 ? RIGHT : LEFT;
+	if(grabpopup && activePopup.GetCount()) {
+		Point p = GetMousePos();
+		for(int i = activePopup.GetCount() - 1; i >= 0; i--) {
+			Ctrl *w = activePopup[i];
+			Rect r = w->GetScreenRect();
+			if(r.Contains(p)) {
+				p -= r.TopLeft();
+				w->DispatchMouse(act, p);
+				return;
+			}
+		}
+		if(action == DOWN) { // Deactivate active popup(s) if clicked outside of active popups
+			IgnoreMouseUp();
+			Ptr<TopWindow> w = activePopup.Top()->GetTopWindow();
+			if(w)
+				w->ActivateWnd();
+			if(w) {
+				Rect r = w->GetScreenRect();
+				if(r.Contains(p)) {
+					p -= r.TopLeft();
+					w->DispatchMouse(MOUSEMOVE, p);
+				}
+			}
+		}
+		return;
+	}
+	DispatchMouse(act, Point((int)e->x, (int)e->y));
 }
 
 #ifdef LOG_EVENTS
@@ -138,20 +166,18 @@ bool Ctrl::Proc(GdkEvent *event)
 			GdkEventExpose *e = (GdkEventExpose *)event;
 			SystemDraw w(gdk_cairo_create(gdk()));
 			painting = true;
+			DDUMP(RectC(e->area.x, e->area.y, e->area.width, e->area.height));
 			UpdateArea(w, RectC(e->area.x, e->area.y, e->area.width, e->area.height));
 			cairo_destroy(w);
-			DDUMP((bool)top->dr);
 			if(top->dr)
 				DrawDragRect(*this, *top->dr);
 			painting = false;
 		}
 		return true;
-	case GDK_MOTION_NOTIFY: {
-		GdkEventMotion *e = (GdkEventMotion *)event;
-		DispatchMouse(MOUSEMOVE, Point((int)e->x, (int)e->y));
+	case GDK_MOTION_NOTIFY:
+		GtkMouseEvent(MOUSEMOVE, event);
 		DoCursorShape();
 		break;
-	}
 	case GDK_BUTTON_PRESS:
 		if(!HasWndFocus() && !popup)
 			SetWndFocus();
@@ -230,6 +256,105 @@ gboolean Ctrl::TimeHandler(GtkWidget *)
 gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 {
 	return ((Ctrl *)(user_data))->Proc(event);
+}
+
+void Ctrl::IMCommit(GtkIMContext *context, gchar *str, gpointer user_data)
+{
+	WString s = FromUtf8(str);
+	for(int i = 0; i < s.GetCount(); i++)
+		((Ctrl *)(user_data))->DispatchKey(s[i], 1);
+}
+
+bool Ctrl::IsWaitingEvent()
+{
+	GDK_THREADS_LEAVE ();  
+	bool result = g_main_context_pending(NULL);
+	GDK_THREADS_ENTER ();
+	return result;
+}
+
+bool Ctrl::ProcessEvent(bool *quit)
+{
+	ASSERT(IsMainThread());
+	bool r = false;
+	if(IsWaitingEvent()) {
+		g_main_context_iteration(NULL, FALSE);
+		if(quit)
+			*quit = IsEndSession();
+		r = true;
+	}
+	TimerProc(GetTickCount());
+	SyncCaret();
+	AnimateCaret();
+	gdk_flush();
+	return r;
+}
+
+void SweepMkImageCache();
+
+bool Ctrl::ProcessEvents(bool *quit)
+{
+	bool r = false;
+	while(IsWaitingEvent() && (!LoopCtrl || LoopCtrl->InLoop()))
+		r = ProcessEvent(quit) || r;
+	return r;
+}
+
+void Ctrl::SysEndLoop()
+{
+}
+
+void WakeUpGuiThread()
+{
+	g_main_context_wakeup(g_main_context_default());
+}
+
+void Ctrl::EventLoop0(Ctrl *ctrl)
+{
+	GuiLock __;
+	ASSERT(IsMainThread());
+	ASSERT(LoopLevel == 0 || ctrl);
+	LoopLevel++;
+	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
+	if(!GetMouseRight() && !GetMouseMiddle() && !GetMouseLeft())
+		ReleaseCtrlCapture();
+	Ptr<Ctrl> ploop;
+	if(ctrl) {
+		ploop = LoopCtrl;
+		LoopCtrl = ctrl;
+		ctrl->inloop = true;
+	}
+
+	GMainLoop *loop = g_main_loop_new(NULL, TRUE);
+
+	while(!IsEndSession() && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
+	{
+		GDK_THREADS_LEAVE();
+		g_main_context_iteration(NULL, TRUE);
+//		DLOG("g_main_context_iteration " << msecs());
+		GDK_THREADS_ENTER();
+		for(int i = 0; i < wins.GetCount(); i++) {
+			Ctrl *q = wins[i].ctrl;
+			if(q) q->SyncScroll();
+		}
+		TimerProc(GetTickCount());
+		SyncCaret();
+		AnimateCaret();
+		CheckMouseCtrl();
+		gdk_flush();
+	}
+
+	g_main_loop_unref(loop);
+
+	if(ctrl)
+		LoopCtrl = ploop;
+	LoopLevel--;
+	LLOG(LOG_END << "Leaving event loop ");
+}
+
+void Ctrl::GuiSleep0(int ms)
+{
+	GuiLock __;
 }
 
 END_UPP_NAMESPACE
