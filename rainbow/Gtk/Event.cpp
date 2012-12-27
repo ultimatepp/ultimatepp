@@ -38,39 +38,44 @@ bool  GetMouseRight() { syncMousePos(); return sModmask & GDK_BUTTON3_MASK; }
 bool  GetMouseMiddle() { syncMousePos(); return sModmask & GDK_BUTTON2_MASK; }
 Point GetMousePos() { syncMousePos(); return sMousepos; }
 
+bool Ctrl::DispatchMouseIn(int act, int zd)
+{
+	Point p = GetMousePos();
+	Rect r = GetScreenRect();
+	if(r.Contains(p)) {
+		p -= r.TopLeft();
+		DispatchMouse(act, p, zd);
+		return true;
+	}
+	return false;
+}
+
+void Ctrl::GtkMouseEvent(int action, int act, Point p, int zd)
+{
+	DDUMP(zd);
+	if(grabpopup && activePopup.GetCount()) {
+		for(int i = activePopup.GetCount() - 1; i >= 0; i--)
+			if(activePopup[i]->DispatchMouseIn(act, zd))
+				return;
+		Ptr<TopWindow> w = activePopup[0]->GetTopWindow();
+		if(action == DOWN) { // Deactivate active popup(s) if clicked outside of active popups
+			IgnoreMouseUp();
+			activePopup.Top()->GetTopWindow()->ActivateWnd();
+		}
+		else
+			w->DispatchMouseIn(act, zd);
+		return;
+	}
+	DispatchMouse(act, p, zd);
+}
+
 void Ctrl::GtkMouseEvent(int action, GdkEvent *event)
 {
 	GdkEventButton *e = (GdkEventButton *)event;
 	int act = action;
 	if(action != MOUSEMOVE)
 		act |= e->button == 2 ? MIDDLE : e->button == 3 ? RIGHT : LEFT;
-	if(grabpopup && activePopup.GetCount()) {
-		Point p = GetMousePos();
-		for(int i = activePopup.GetCount() - 1; i >= 0; i--) {
-			Ctrl *w = activePopup[i];
-			Rect r = w->GetScreenRect();
-			if(r.Contains(p)) {
-				p -= r.TopLeft();
-				w->DispatchMouse(act, p);
-				return;
-			}
-		}
-		if(action == DOWN) { // Deactivate active popup(s) if clicked outside of active popups
-			IgnoreMouseUp();
-			Ptr<TopWindow> w = activePopup.Top()->GetTopWindow();
-			if(w)
-				w->ActivateWnd();
-			if(w) {
-				Rect r = w->GetScreenRect();
-				if(r.Contains(p)) {
-					p -= r.TopLeft();
-					w->DispatchMouse(MOUSEMOVE, p);
-				}
-			}
-		}
-		return;
-	}
-	DispatchMouse(act, Point((int)e->x, (int)e->y));
+	GtkMouseEvent(action, act, Point((int)e->x, (int)e->y), 0);
 }
 
 #ifdef LOG_EVENTS
@@ -166,7 +171,6 @@ bool Ctrl::Proc(GdkEvent *event)
 			GdkEventExpose *e = (GdkEventExpose *)event;
 			SystemDraw w(gdk_cairo_create(gdk()));
 			painting = true;
-			DDUMP(RectC(e->area.x, e->area.y, e->area.width, e->area.height));
 			UpdateArea(w, RectC(e->area.x, e->area.y, e->area.width, e->area.height));
 			cairo_destroy(w);
 			if(top->dr)
@@ -193,6 +197,12 @@ bool Ctrl::Proc(GdkEvent *event)
 		else
 			GtkMouseEvent(UP, event);
 		break;
+	case GDK_SCROLL: {
+		GdkEventScroll *e = (GdkEventScroll *)event;
+		GtkMouseEvent(MOUSEWHEEL, MOUSEWHEEL, Point((int)e->x, (int)e->y),
+		              findarg(e->direction, GDK_SCROLL_UP, GDK_SCROLL_LEFT) < 0 ? -120 : 120);
+		break;
+	}
 	case GDK_KEY_PRESS:
 		pressed = true;
 		key = (GdkEventKey *)event;
