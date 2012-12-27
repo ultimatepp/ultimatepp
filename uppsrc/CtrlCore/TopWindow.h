@@ -154,7 +154,7 @@ public:
 	bool       IsTopMost() const;
 	TopWindow& FullScreen(bool b = true);
 	bool       IsFullScreen() const                   { return fullscreen; }
-	TopWindow& FrameLess(bool b = true)               { frameless = b; return *this; }
+	TopWindow& FrameLess(bool b = true);
 	bool       IsFrameLess() const                    { return frameless; }
 	TopWindow& Urgent(bool b = true);
 	bool       IsUrgent() const                       { return urgent; }

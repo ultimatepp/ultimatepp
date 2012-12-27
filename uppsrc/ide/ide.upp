@@ -17,7 +17,8 @@ uses
 	usvn,
 	TextDiffCtrl,
 	TabBar,
-	ide\Img;
+	ide\Img,
+	Gtk;
 
 uses(POSIX) ide\SrcUpdater;
 
@@ -94,7 +95,8 @@ mainconfig
 	"" = "GUI HEAPDBG CHECKINIT",
 	"" = "GUI TESTINSTALL",
 	"" = "GUI CHECKCLIPBOARD",
-	"" = "GUI SVO_VALUE";
+	"" = "GUI SVO_VALUE",
+	"" = "GUI GTK";
 
 custom() "",
 	"",
