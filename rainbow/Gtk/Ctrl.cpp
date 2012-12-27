@@ -18,10 +18,6 @@ void Ctrl::GuiPlatformDestruct()
 {
 }
 
-void Ctrl::GuiPlatformRemove()
-{
-}
-
 void Ctrl::GuiPlatformGetTopRect(Rect& r) const
 {
 }
@@ -56,7 +52,11 @@ bool GuiPlatformHasSizeGrip()
 
 void GuiPlatformGripResize(TopWindow *q)
 {
-	// TODO
+	if(q->top) {
+		Point p = GetMousePos();
+		gtk_window_begin_resize_drag(q->gtk(), GDK_WINDOW_EDGE_SOUTH_EAST,
+		                             1, p.x, p.y, gtk_get_current_event_time());
+	}
 }
 
 Color GuiPlatformGetScreenPixel(int x, int y)

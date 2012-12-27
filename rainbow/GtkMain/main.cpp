@@ -191,21 +191,141 @@ struct MyApp3 : TopWindow {
 	}
 };
 
+struct MyApp4 : TopWindow {
+	RichEditWithToolBar edit;
+	StatusBar status;
+	MenuBar   menu;
+
+	typedef MyApp4 CLASSNAME;
+	
+	void Test()
+	{
+		Exclamation("Test");
+	}
+	
+	void Exit()
+	{
+		Break();
+	}
+	
+	void DoMaximize()
+	{
+		Maximize();
+	}
+	
+	void DoMinimize()
+	{
+		Minimize();
+	}
+
+	void DoOverlap()
+	{
+		Overlap();
+	}
+
+	void DoFullscreen()
+	{
+		FullScreen();
+	}
+	
+	void DoAbove()
+	{
+		TopMost(!IsTopMost());
+	}
+	
+	void DoToolWindow()
+	{
+		ToolWindow(!IsToolWindow());
+	}
+	
+	void DoFrameless()
+	{
+		DLOG("FRAMELESS");
+		FrameLess(!IsFrameLess());
+	}
+
+	void DoUrgent()
+	{
+		Urgent(!IsUrgent());
+	}
+
+	void SubMenu(Bar& bar)
+	{
+		bar.Add("Test", THISBACK(Test));
+		bar.Add("Exit", THISBACK(Exit));
+	}
+	
+	void NewTool()
+	{
+		TopWindow win;
+		win.ToolWindow();
+		win.Run();
+	}
+
+	void NewUrgent()
+	{
+		TopWindow win;
+		win.Urgent();
+		win.Run();
+	}
+	
+	void Menu(Bar& bar)
+	{
+		bar.Add("Test", THISBACK(Test));
+		bar.Add("Maximize", THISBACK(DoMaximize));
+		bar.Add("Minimize", THISBACK(DoMinimize));
+		bar.Add("Overlap", THISBACK(DoOverlap));
+		bar.Add("Fullscreen", THISBACK(DoFullscreen));
+		bar.Add("TopMost", THISBACK(DoAbove)).Check(IsTopMost());
+		bar.Add("Tool window", THISBACK(DoToolWindow)).Check(IsToolWindow());
+		bar.Add("Frameless", THISBACK(DoFrameless)).Check(IsFrameLess());
+		bar.Add("Urgent", THISBACK(DoUrgent)).Check(IsUrgent());
+		bar.Add("New toolwindow", THISBACK(NewTool));
+		bar.Add("New urgent", THISBACK(NewUrgent));
+//		bar.Add("Change title", THISBACK(DoTitle));
+		bar.Separator();
+		bar.Add("SubMenu", THISBACK(SubMenu));
+		bar.Separator();
+		bar.Add("Exit", THISBACK(Exit));
+	}
+	
+	void MainMenu(Bar& bar)
+	{
+		bar.Add("Menu", THISBACK(Menu));
+	}
+	
+	void SetMenu()
+	{
+		menu.Set(THISBACK(MainMenu));
+	}
+	
+	MyApp4() {
+		ToolWindow();
+		Title("Complex Rainbow test");
+		edit.SetQTF("[A9 [/ Hello] [_ World]!");
+		Sizeable().Zoomable();
+		Add(edit.SizePos());
+		AddFrame(menu);
+		AddFrame(status);
+		SetMenu();
+	}
+};
+
 
 GUI_APP_MAIN
 {
 //	AppendClipboardText("Hello world! now it is " + AsString(GetSysTime()));
 //	AppendClipboardImage(CtrlImg::exclamation());
 //	return;
-#if 0
-	String txt = "Test";
-
-	EditText(txt, "Test", "Test");
+#if 1
+	MyApp4().Run();
 	return;
 #endif
 
 #if 0
-	MyApp().Run();
+	String txt = "Test";
+
+	EditText(txt, "Test", "Test");
 	return;
 #endif
 
@@ -216,7 +336,6 @@ GUI_APP_MAIN
 
 #if 1	
 	RichEditWithToolBar edit;
-	edit.SetQTF("[A9 [/ Hello] [_ World]!");
 	TopWindow win;
 	win.Sizeable();
 	win.Add(edit.SizePos());

@@ -14,8 +14,8 @@
 
 	void     GtkConnect();
 
-	GdkWindow *gdk() const { return top->window->window; }
-	GtkWindow *gtk() const { return (GtkWindow *)top->window; }
+	GdkWindow *gdk() const { return top ? top->window->window : NULL; }
+	GtkWindow *gtk() const { return top ? (GtkWindow *)top->window : NULL; }
 	
 	struct Win : Moveable<Win> {
 		GtkWidget *gtk;
@@ -23,25 +23,33 @@
 		Ptr<Ctrl>  ctrl;
 	};
 
-	static Vector<Win>      wins;
-	static int              WndCaretTime;
-	static bool             WndCaretVisible;
-	static Ptr<Ctrl>        grabwindow;
-	static GMainLoop       *gdk_loop;
+	static Vector<Ctrl *>      activePopup;
+	static Vector<Win>         wins;
+	static int                 WndCaretTime;
+	static bool                WndCaretVisible;
+	static Ptr<Ctrl>           grabwindow;
+	static Ptr<Ctrl>           grabpopup;
 
 	int FindCtrl(Ctrl *ctrl);
 	int FindGtkWindow(GtkWidget *gtk);
 	int FindGdkWindow(GdkWindow *gdk);
+
+	static void SyncPopupCapture();
+	void ReleasePopupCapture();
 	
 	static void FocusSync();
 	static void AnimateCaret();
 	static gboolean TimeHandler(GtkWidget *);
 	static void InvalidateMousePos();
-	
+	static void StopGrabPopup();
+	static void StartGrabPopup();
+	static bool ReleaseWndCapture0();
+
 	friend void InitGtkApp(int argc, char **argv, const char **envptr);
 	friend void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                              Color color, int type, int animation);
 	friend void FinishDragRect(Ctrl& q);
+	friend void GuiPlatformGripResize(TopWindow *q);
 
 public:
 	struct Gclipboard {
