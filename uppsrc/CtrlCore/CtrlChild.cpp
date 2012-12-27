@@ -259,8 +259,9 @@ const Ctrl *Ctrl::GetOwnerCtrl() const    { return const_cast<Ctrl *>(this)->Get
 TopWindow *Ctrl::GetTopWindow()
 {
 	GuiLock __;
-	Ctrl *q = GetTopCtrl();
+	Ctrl *q = this;
 	while(q) {
+		q = q->GetTopCtrl();
 		TopWindow *w = dynamic_cast<TopWindow *>(q);
 		if(w) return w;
 		q = q->GetOwner();

@@ -441,6 +441,14 @@ TopWindow& TopWindow::Urgent(bool b)
 	return *this;
 }
 
+TopWindow& TopWindow::FrameLess(bool b)
+{
+	GuiLock __;
+	frameless = b;
+	SyncCaption();
+	return *this;
+}
+
 void TopWindow::ShutdownWindow()
 {
 }
