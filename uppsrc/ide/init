@@ -17,5 +17,6 @@
 #include "TextDiffCtrl/init"
 #include "TabBar/init"
 #include "ide\Img/init"
+#include "Gtk/init"
 #include "ide\SrcUpdater/init"
 #endif
