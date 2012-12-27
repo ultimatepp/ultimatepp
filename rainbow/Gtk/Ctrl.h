@@ -4,7 +4,8 @@
 	static gboolean GtkProc(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 	static void     IMCommit(GtkIMContext *context, gchar *str, gpointer user_data);
 
-
+	bool   DispatchMouseIn(int act, int zd);
+	void   GtkMouseEvent(int action, int act, Point p, int zd);
 	void   GtkMouseEvent(int action, GdkEvent *event);
 	void   GtkKeyEvent(GdkEventKey *key, bool pressed);
 

@@ -292,6 +292,7 @@ struct MyApp4 : TopWindow {
 	void MainMenu(Bar& bar)
 	{
 		bar.Add("Menu", THISBACK(Menu));
+		bar.Add("Menu", THISBACK(Menu));
 	}
 	
 	void SetMenu()
@@ -302,7 +303,10 @@ struct MyApp4 : TopWindow {
 	MyApp4() {
 		ToolWindow();
 		Title("Complex Rainbow test");
-		edit.SetQTF("[A9 [/ Hello] [_ World]!");
+		String qtf;
+		for(int i = 0; i < 100; i++)
+			qtf << "[A9 [/ Hello] [_ World]!]";
+		edit.SetQTF(qtf);
 		Sizeable().Zoomable();
 		Add(edit.SizePos());
 		AddFrame(menu);
