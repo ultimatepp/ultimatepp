@@ -1,10 +1,13 @@
 #include "ScatterCtrl.h"
 
+NAMESPACE_UPP
+
 #define IMAGECLASS ScatterImg
 #define IMAGEFILE <ScatterCtrl/ScatterCtrl.iml>
 #include <Draw/iml.h>
 
-NAMESPACE_UPP
+#define TFILE <ScatterCtrl/ScatterCtrl.t>
+#include <Core/t.h>
 
 ScatterCtrl::MouseBehaviour defaultMouse[] = {
 	{false, false, false, true , false, 0, false, ScatterCtrl::SHOW_INFO}, 
@@ -55,6 +58,7 @@ void ScatterCtrl::SaveToClipboard(bool)
 
 void ScatterCtrl::Paint(Draw& w) 
 {
+	TimeStop t;
 	if (mode == MD_DRAW) 
 		SetDrawing(w, 1);
 	else {
@@ -64,6 +68,7 @@ void ScatterCtrl::Paint(Draw& w)
 		//bp.Translate(0, 0);
 		w.DrawImage(0, 0, ib);
 	}
+	lastRefresh_ms = t.Elapsed();
 }
 
 ScatterCtrl &ScatterCtrl::ShowInfo(bool show)
@@ -206,6 +211,12 @@ void ScatterCtrl::LabelPopUp(bool down, Point &pt)
 			if (IsNull(popLT))
 				popLT = pt;
 			popRB = pt;
+			Size sz = GetScreenSize();
+			Rect rc = GetScreenRect();
+			if (sz.cx - (rc.left + pt.x) < 200)
+				pt.x -= 200;
+			if (sz.cy - (rc.top + pt.y) < 200)
+				pt.y -= 200;
 			ProcessPopUp(pt);		
 		}	
 	} else {
@@ -289,11 +300,11 @@ void ScatterCtrl::MouseWheel(Point pt, int zdelta, dword keyFlags)
 
 void ScatterCtrl::MouseMove(Point pt, dword)
 {
-	if (isScrolling) 
-	{
+	if (isScrolling) {
 		int shiftX = pt.x - butDownX;
 		if (mouseHandlingX && shiftX != 0) {
-			double deltaX = shiftX*xRange/(GetSize().cx - (hPlotLeft + hPlotRight) - 1);
+			double factorX = double(shiftX)/(GetSize().cx - (hPlotLeft + hPlotRight) - 1);
+			double deltaX = factorX*xRange;
 			xMin -= deltaX;
 			xMinUnit += deltaX;
 			AdjustMinUnitX();
@@ -301,12 +312,13 @@ void ScatterCtrl::MouseMove(Point pt, dword)
 		}
 		int shiftY = pt.y - butDownY;
 		if (mouseHandlingY && shiftY != 0) {
-			double deltaY = -shiftY*yRange/(GetSize().cy - (vPlotTop + vPlotBottom) - 1);
+			double factorY = double(shiftY)/(GetSize().cy - (vPlotTop + vPlotBottom) - 1);
+			double deltaY = -factorY*yRange;
 			yMin -= deltaY;
 			yMinUnit += deltaY;
 			AdjustMinUnitY();
 			if (drawY2Reticle) {
-				double deltaY2 = -shiftY*yRange2/(GetSize().cy - 2*(vPlotTop + vPlotBottom) - 1);
+				double deltaY2 = -factorY*yRange2;
 				yMin2 -= deltaY2;
 				yMinUnit2 += deltaY2;
 				AdjustMinUnitY2();
@@ -321,8 +333,7 @@ void ScatterCtrl::MouseMove(Point pt, dword)
 	} 
 	if(isLabelPopUp) {
 		if (paintInfo && hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
-						(vPlotTop + titleFont.GetHeight()) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) 
-		{
+						(vPlotTop + titleFont.GetHeight()) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
 			if (IsNull(popLT))
 				popLT = pt;
 			popRB = pt;
@@ -342,6 +353,8 @@ void ScatterCtrl::MouseLeave()
 void ScatterCtrl::MouseZoom(int zdelta, bool hor, bool ver) 
 {
 	double scale = zdelta > 0 ? zdelta/100. : -100./zdelta;
+	if (((lastxRange < xRange*scale) || (lastyRange < yRange*scale)) && (lastRefresh_ms > maxRefresh_ms))
+		return;
 	Zoom(scale, mouseHandlingX, mouseHandlingY);
 }
 
@@ -371,6 +384,13 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 			bar.Add(t_("Scroll Up"), 	ScatterImg::UpArrow(), 	THISBACK2(ScatterDraw::Scroll, 0, -0.2));
 			bar.Add(t_("Scroll Down"), 	ScatterImg::DownArrow(), THISBACK2(ScatterDraw::Scroll, 0, 0.2));			
 		}
+		bar.Separator();
+	}
+#ifndef _DEBUG
+	if (showEditDlg)
+#endif	
+	{
+		bar.Add(t_("Properties"), ScatterImg::Gear(), THISBACK(DoShowEditDlg));			
 		bar.Separator();
 	}
 	bar.Add(t_("Copy"), ScatterImg::Copy(), 		THISBACK1(SaveToClipboard, false)).Key(K_CTRL_C);
@@ -420,10 +440,13 @@ ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(3)
 	popTextY2 = "y2";
 	popLT = popRB = Null;
 	showContextMenu = false;
+	showEditDlg = false;
 	Color(graphColor);	
 	BackPaint();
 	popText.SetColor(SColorFace);        
 	SetMouseBehavior(defaultMouse);
+	lastRefresh_ms = Null;
+	maxRefresh_ms = 200;
 }
 
 END_UPP_NAMESPACE

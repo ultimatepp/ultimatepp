@@ -1,4 +1,4 @@
-description "Scatter control\377";
+description "Scatter control to plot in GUI applications based on ScatterDraw\377";
 
 uses
 	CtrlLib,
@@ -8,10 +8,13 @@ uses
 file
 	ScatterCtrl.cpp,
 	ScatterCtrl.h,
-	ScatterCtrl.t,
-	ScatterCtrl.usc,
+	Properties.cpp,
+	Properties.h,
 	ScatterCtrl.iml,
 	PopUpText.cpp,
 	PopUpText.h,
+	ScatterCtrl.lay,
+	ScatterCtrl.t,
+	ScatterCtrl.usc,
 	src.tpp;
 

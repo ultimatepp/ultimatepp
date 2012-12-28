@@ -1,0 +1,48 @@
+LAYOUT(Properties, 536, 336)
+	ITEM(TabCtrl, tab, HSizePosZ(0, 0).VSizePosZ(0, 28))
+	ITEM(Button, close, SetLabel(t_("Close")).Tip(t_("Close this dialog")).RightPosZ(4, 68).BottomPosZ(4, 20))
+END_LAYOUT
+
+LAYOUT(General, 216, 100)
+	ITEM(Label, dv___0, SetLabel(t_("Label Y2:")).LeftPosZ(4, 56).TopPosZ(76, 21))
+	ITEM(EditString, yLabel2, HSizePosZ(64, 4).TopPosZ(76, 19))
+	ITEM(EditString, yLabel, HSizePosZ(64, 4).TopPosZ(52, 19))
+	ITEM(Label, dv___3, SetLabel(t_("Title:")).LeftPosZ(4, 56).TopPosZ(4, 21))
+	ITEM(EditString, title, HSizePosZ(64, 4).TopPosZ(4, 19))
+	ITEM(Label, dv___5, SetLabel(t_("Label X:")).LeftPosZ(4, 56).TopPosZ(28, 21))
+	ITEM(EditString, xLabel, HSizePosZ(64, 4).TopPosZ(28, 19))
+	ITEM(Label, dv___7, SetLabel(t_("Label Y:")).LeftPosZ(4, 56).TopPosZ(52, 21))
+END_LAYOUT
+
+LAYOUT(Series, 420, 180)
+	ITEM(ArrayCtrl, list, LeftPosZ(4, 120).VSizePosZ(4, 4))
+	ITEM(EditString, name, LeftPosZ(168, 168).TopPosZ(4, 19))
+	ITEM(Button, rename, SetLabel(t_("Rename")).Tip(t_("Rename currently selected series")).LeftPosZ(340, 60).TopPosZ(4, 19))
+	ITEM(EditDoubleSpin, linethickness, Min(0.0001).NotNull(true).LeftPosZ(200, 56).TopPosZ(72, 19))
+	ITEM(EditString, dash, LeftPosZ(200, 68).TopPosZ(48, 19))
+	ITEM(Option, visible, SetLabel(t_("Visible")).LeftPosZ(352, 56).TopPosZ(48, 16))
+	ITEM(DropList, markstyle, LeftPosZ(180, 116).TopPosZ(124, 19))
+	ITEM(EditDoubleSpin, markwidth, SetInc(0.5).Min(0.0001).NotNull(true).LeftPosZ(180, 56).TopPosZ(148, 19))
+	ITEM(LabelBox, dv___8, SetLabel(t_("Mark")).HSizePosZ(128, 4).TopPosZ(108, 68))
+	ITEM(Label, dv___9, SetLabel(t_("Style:")).LeftPosZ(136, 44).TopPosZ(124, 19))
+	ITEM(Label, dv___10, SetLabel(t_("Color:")).LeftPosZ(304, 40).TopPosZ(124, 19))
+	ITEM(ColorPusher, markcolor, LeftPosZ(348, 20).TopPosZ(124, 19))
+	ITEM(Label, dv___12, SetLabel(t_("Fill:")).LeftPosZ(276, 44).TopPosZ(72, 19))
+	ITEM(ColorPusher, fillcolor, LeftPosZ(324, 20).TopPosZ(72, 19))
+	ITEM(Label, dv___14, SetLabel(t_("Width:")).LeftPosZ(136, 44).TopPosZ(148, 19))
+	ITEM(LabelBox, dv___15, SetLabel(t_("Line:")).HSizePosZ(128, 4).TopPosZ(32, 68))
+	ITEM(Label, dv___16, SetLabel(t_("Color:")).LeftPosZ(276, 44).TopPosZ(48, 19))
+	ITEM(ColorPusher, linecolor, LeftPosZ(324, 20).TopPosZ(48, 19))
+	ITEM(Label, dv___18, SetLabel(t_("Dash:")).LeftPosZ(136, 64).TopPosZ(48, 19))
+	ITEM(Label, dv___19, SetLabel(t_("Thickness:")).LeftPosZ(136, 64).TopPosZ(72, 19))
+	ITEM(Label, dv___20, SetLabel(t_("Name:")).LeftPosZ(128, 40).TopPosZ(4, 21))
+END_LAYOUT
+
+LAYOUT(Data, 400, 200)
+	ITEM(TabCtrl, tab, HSizePosZ(0, 0).VSizePosZ(0, 0))
+END_LAYOUT
+
+LAYOUT(DataSeries, 400, 200)
+	ITEM(ArrayCtrl, data, HSizePosZ(0, 0).VSizePosZ(0, 0))
+END_LAYOUT
+
