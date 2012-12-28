@@ -7,18 +7,22 @@ NAMESPACE_UPP
 double DataSource::Min(Getdatafun getdata) 
 {
 	double minVal = -DOUBLE_NULL;
-	for (int i = 0; i < GetCount(); ++i)
-		if (minVal > Membercall(getdata)(i))
-			minVal = Membercall(getdata)(i);
+	for (int i = 0; i < GetCount(); ++i) {
+		double d = Membercall(getdata)(i);
+		if (!IsNull(d) && minVal > d)
+			minVal = d;
+	}
 	return minVal;		
 }
 
 double DataSource::Max(Getdatafun getdata) 
 {
 	double maxVal = DOUBLE_NULL;
-	for (int i = 0; i < GetCount(); ++i)
-		if (maxVal < Membercall(getdata)(i))
-			maxVal = Membercall(getdata)(i);
+	for (int i = 0; i < GetCount(); ++i) {
+		double d = Membercall(getdata)(i);
+		if (!IsNull(d) && maxVal < d)
+			maxVal = d;
+	}
 	return maxVal;
 }
 

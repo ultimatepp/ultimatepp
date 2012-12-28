@@ -14,6 +14,11 @@ ScatterDraw& ScatterDraw::SetTitle(const String& _title)
 	return *this;
 }
 
+const String& ScatterDraw::GetTitle() 
+{
+	return title;	
+}
+
 ScatterDraw& ScatterDraw::SetTitleFont(const Font& fontTitle)
 {
 	titleFont = fontTitle;
@@ -207,67 +212,30 @@ void ScatterDraw::DrawLegend(Draw& w, const int& scale) const
 void ScatterDraw::AdjustMinUnitX()
 {
 	if (xMajorUnit > 0) {
-		while (xMinUnit < 0)
-			xMinUnit += xMajorUnit;	
-		while (xMinUnit > xMajorUnit)
-			xMinUnit -= xMajorUnit;
+		if (xMinUnit < 0)
+			xMinUnit += (fabs(ceil(xMinUnit/xMajorUnit)) + 1)*xMajorUnit;
+		else if (xMinUnit > xMajorUnit)
+			xMinUnit -= (fabs(floor(xMinUnit/xMajorUnit)))*xMajorUnit;
 	}
 }
-/*
+
 void ScatterDraw::AdjustMinUnitY()
 {
 	if (yMajorUnit > 0) {
-		while (yMinUnit < 0)
-			yMinUnit += yMajorUnit;	
-		while (yMinUnit > yMajorUnit)
-			yMinUnit -= yMajorUnit;
+		if (yMinUnit < 0)
+			yMinUnit += (fabs(ceil(yMinUnit/yMajorUnit)) + 1)*yMajorUnit;
+		else if (yMinUnit > yMajorUnit)
+			yMinUnit -= (fabs(floor(yMinUnit/yMajorUnit)))*yMajorUnit;
 	}
 }
 
 void ScatterDraw::AdjustMinUnitY2()
 {
 	if (yMajorUnit2 > 0) {
-		while (yMinUnit2 < 0)
-			yMinUnit2 += yMajorUnit2;	
-		while (yMinUnit2 > yMajorUnit2)
-			yMinUnit2 -= yMajorUnit2;
-	}
-}
-*/
-
-void ScatterDraw::AdjustMinUnitY()
-{
-	if (yMajorUnit > 0) {
-		if (fabs(yMinUnit/yMajorUnit) > 100000000) 
-			yMinUnit = yMajorUnit;
-		else {
-			while (yMinUnit < 0)
-				yMinUnit += yMajorUnit;	
-		}
-		if (fabs(yMinUnit/yMajorUnit) > 100000000) 
-			yMinUnit = yMajorUnit;
-		else {
-			while (yMinUnit > yMajorUnit)
-				yMinUnit -= yMajorUnit;
-		}
-	}
-}
-
-void ScatterDraw::AdjustMinUnitY2()
-{
-	if (yMajorUnit2 > 0) {
-		if (fabs(yMinUnit2/yMajorUnit2) > 1000000000) 
-			yMinUnit2 = yMajorUnit2;
-		else {
-			while (yMinUnit2 < 0)
-				yMinUnit2 += yMajorUnit2;	
-		}
-		if (fabs(yMinUnit2/yMajorUnit2) > 1000000000) 
-			yMinUnit2 = yMajorUnit2;
-		else {
-			while (yMinUnit2 > yMajorUnit2)
-				yMinUnit2 -= yMajorUnit2;
-		}
+		if (yMinUnit2 < 0)
+			yMinUnit2 += (fabs(ceil(yMinUnit2/yMajorUnit2)) + 1)*yMajorUnit2;
+		else if (yMinUnit2 > yMajorUnit2)
+			yMinUnit2 -= (fabs(floor(yMinUnit2/yMajorUnit2)))*yMajorUnit2;
 	}
 }
 
@@ -368,26 +336,27 @@ void ScatterDraw::FitToData(bool vertical) {
 		}		
 	}
 	if (minx != -DOUBLE_NULL) {
-		double deltaX = xMin - minx;
+ 		double deltaX = xMin - minx;
 		xMin -= deltaX;
 		xMinUnit += deltaX;
 		AdjustMinUnitX();
-		xRange = maxx - minx;
+		if (maxx == minx)
+			xRange = 2*maxx;
+		else	
+			xRange = maxx - minx;
 	}
 	if (vertical) {
+		if (miny2 != -DOUBLE_NULL) {
+			double rminy = (miny - yMin)/yRange;
+			double rminy2 = (miny2 - yMin2)/yRange2;
+			if (rminy2 < rminy)
+				miny = yMin + yRange*(miny2 - yMin2)/yRange2;
+			double rmaxy = (maxy - yMin)/yRange;
+			double rmaxy2 = (maxy2 - yMin2)/yRange2;
+			if (rmaxy2 > rmaxy)
+				maxy = yMin + yRange*(maxy2 - yMin2)/yRange2;			
+		}
 		if (miny != -DOUBLE_NULL) {
-			/*
-			if (!IsNull(maxy2)) {
-				miny = min((miny-yMin)/yRange, (miny2-yMin2)/yRange2);
-				maxy = max((maxy-yMin-yRange)/yRange, (maxy2-yMin2-yRange2)/yRange2);
-			} else {
-				miny = (miny-yMin)/yRange;
-				maxy = (maxy-yMin-yRange)/yRange;
-			}
-			
-			miny = miny*yRange + yMin;
-			maxy = maxy*yRange + yMin + yRange;
-			*/
 			double fact = yRange2/yRange;
 			double deltaY = yMin - miny;
 			double deltaY2 = deltaY*fact;
@@ -395,7 +364,10 @@ void ScatterDraw::FitToData(bool vertical) {
 			yMin -= deltaY;
 			yMinUnit += deltaY;
 			AdjustMinUnitY();
-			yRange = maxy - miny;	
+			if (maxy == miny)
+				yRange = 2*maxy;
+			else	
+				yRange = maxy - miny;	
 			
 			yMin2 -= deltaY2;
 			yMinUnit2 += deltaY2;
@@ -441,9 +413,9 @@ ScatterDraw &ScatterDraw::Graduation_FormatY2(Formats fi)
 	return *this;
 }
 
-Color ScatterDraw::GetNewColor(int id)
+Color ScatterDraw::GetNewColor(int index)
 {
-	switch(id) {
+	switch(index) {
 	case 0:		return LtBlue();
 	case 1:		return LtRed();
 	case 2:		return LtGreen();
@@ -468,9 +440,9 @@ Color ScatterDraw::GetNewColor(int id)
 	return Color(Random(), Random(), Random());
 }
 	
-String ScatterDraw::GetNewDash(int id)
+String ScatterDraw::GetNewDash(int index)
 {
-	switch(id) {
+	switch(index) {
 	case 0:		return LINE_SOLID;
 	case 1:		return LINE_DOTTED;
 	case 2:		return LINE_DASHED;
@@ -492,9 +464,9 @@ String ScatterDraw::GetNewDash(int id)
 	return ret.Mid(0, 1) + space + ret.Mid(1, 1) + space + ret.Mid(2, 1) + space + ret.Mid(3, 1);
 }
 
-MarkPlot *ScatterDraw::GetNewMarkPlot(int id)
+MarkPlot *ScatterDraw::GetNewMarkPlot(int index)
 {
-	switch(id) {
+	switch(index) {
 	case 0:	return new CircleMarkPlot();
 	case 1:	return new SquareMarkPlot();
 	case 2:	return new TriangleMarkPlot();
@@ -532,13 +504,13 @@ ScatterDraw::ScatterBasicSeries::ScatterBasicSeries()
 	fillColor = Null;
 }
 
-void ScatterDraw::ScatterBasicSeries::Init(int id)
+void ScatterDraw::ScatterBasicSeries::Init(int index)
 {
-	color = GetNewColor(id);
+	color = GetNewColor(index);
 	markColor = Color(max(color.GetR()-30, 0), max(color.GetG()-30, 0), max(color.GetB()-30, 0));
 	
-	dash = GetNewDash(id);
-	markPlot = GetNewMarkPlot(id);
+	dash = GetNewDash(int(index/6));
+	markPlot = GetNewMarkPlot(index);
 }
 
 ScatterDraw &ScatterDraw::AddSeries(double *yData, int numData, double x0, double deltaX)
@@ -609,90 +581,152 @@ ScatterDraw &ScatterDraw::_AddSeries(DataSource *data)
 	return *this;	
 }
 
-void ScatterDraw::InsertSeries(int id, double *yData, int numData, double x0, double deltaX)
+void ScatterDraw::InsertSeries(int index, double *yData, int numData, double x0, double deltaX)
 {
-	InsertSeries<CArray>(id, yData, numData, x0, deltaX);
+	InsertSeries<CArray>(index, yData, numData, x0, deltaX);
 }
 	
-void ScatterDraw::InsertSeries(int id, double *xData, double *yData, int numData)
+void ScatterDraw::InsertSeries(int index, double *xData, double *yData, int numData)
 {
-	InsertSeries<CArray>(id, xData, yData, numData);
+	InsertSeries<CArray>(index, xData, yData, numData);
 }
 
-void ScatterDraw::InsertSeries(int id, Vector<double> &xData, Vector<double> &yData)
+void ScatterDraw::InsertSeries(int index, Vector<double> &xData, Vector<double> &yData)
 {
-	InsertSeries<VectorDouble>(id, xData, yData);
+	InsertSeries<VectorDouble>(index, xData, yData);
 }
 
-void ScatterDraw::InsertSeries(int id, Array<double> &xData, Array<double> &yData)
+void ScatterDraw::InsertSeries(int index, Array<double> &xData, Array<double> &yData)
 {
-	InsertSeries<ArrayDouble>(id, xData, yData);
+	InsertSeries<ArrayDouble>(index, xData, yData);
 }
 		
-void ScatterDraw::InsertSeries(int id, Vector<Pointf> &points)
+void ScatterDraw::InsertSeries(int index, Vector<Pointf> &points)
 {
-	InsertSeries<VectorPointf>(id, points);
+	InsertSeries<VectorPointf>(index, points);
 }
 
-void ScatterDraw::InsertSeries(int id, Array<Pointf> &points)
+void ScatterDraw::InsertSeries(int index, Array<Pointf> &points)
 {
-	InsertSeries<ArrayPointf>(id, points);
+	InsertSeries<ArrayPointf>(index, points);
 }
 
-void ScatterDraw::InsertSeries(int id, double (*function)(double))	
+void ScatterDraw::InsertSeries(int index, double (*function)(double))	
 {
-	InsertSeries<FuncSource>(id, function);
+	InsertSeries<FuncSource>(index, function);
 }
 
-void ScatterDraw::InsertSeries(int id, Pointf (*function)(double), int np, double from, double to)	
+void ScatterDraw::InsertSeries(int index, Pointf (*function)(double), int np, double from, double to)	
 {
-	InsertSeries<FuncSourcePara>(id, function, np, from, to);
+	InsertSeries<FuncSourcePara>(index, function, np, from, to);
 }
 
-void ScatterDraw::InsertSeries(int id, PlotFunc &function)	
+void ScatterDraw::InsertSeries(int index, PlotFunc &function)	
 {									
-	InsertSeries<PlotFuncSource>(id, function);
+	InsertSeries<PlotFuncSource>(index, function);
 }
 
-void ScatterDraw::InsertSeries(int id, PlotParamFunc function, int np, double from, double to)	
+void ScatterDraw::InsertSeries(int index, PlotParamFunc function, int np, double from, double to)	
 {
-	InsertSeries<PlotParamFuncSource>(id, function, np, from, to);
+	InsertSeries<PlotParamFuncSource>(index, function, np, from, to);
 }
 
-void ScatterDraw::_InsertSeries(int id, DataSource *data)
+void ScatterDraw::_InsertSeries(int index, DataSource *data)
 {
-	ASSERT(IsValid(id));
-	ScatterSeries &s = series.Insert(id);
-	s.Init(id);
+	ASSERT(IsValid(index));
+	ScatterSeries &s = series.Insert(index);
+	s.Init(index);
 	s.SetDataSource(data);
 	Refresh();	
 }
 
+int ScatterDraw::GetCount(int index)
+{
+	ASSERT(IsValid(index));
+	if (series[index].PointsData()->IsParam())
+		return Null;
+	else if (IsNull(series[index].PointsData()->GetCount())) 
+		return Null;
+	return series[index].PointsData()->GetCount();
+}
+
+void ScatterDraw::GetValues(int index, int idata, double &x, double &y)
+{
+	ASSERT(IsValid(index) && !IsNull(GetCount(index)));
+	ASSERT(idata >= 0 && idata < series[index].PointsData()->GetCount());
+	x = series[index].PointsData()->x(idata);
+	y = series[index].PointsData()->y(idata);
+}
+
+double ScatterDraw::GetValueX(int index, int idata)
+{
+	ASSERT(IsValid(index) && !IsNull(GetCount(index)));
+	ASSERT(idata >= 0 && idata < series[index].PointsData()->GetCount());
+	return series[index].PointsData()->x(idata);
+}
+
+double ScatterDraw::GetValueY(int index, int idata)
+{
+	ASSERT(IsValid(index) && !IsNull(GetCount(index)));
+	ASSERT(idata >= 0 && idata < series[index].PointsData()->GetCount());
+	return series[index].PointsData()->y(idata);
+}
+	
 ScatterDraw &ScatterDraw::PlotStyle(SeriesPlot *data)
 {
-	int id = series.GetCount() - 1;
+	int index = series.GetCount() - 1;
 	
-	series[id].seriesPlot = data;
+	series[index].seriesPlot = data;
 	return *this;
 }
 
 ScatterDraw &ScatterDraw::MarkStyle(MarkPlot *data)
 {
-	int id = series.GetCount() - 1;
+	int index = series.GetCount() - 1;
 	
-	series[id].markPlot = data;
+	return MarkStyle(index, data);
+}
+
+ScatterDraw &ScatterDraw::MarkStyle(int index, MarkPlot *data)
+{
+	ASSERT(IsValid(index));
+	
+	series[index].markPlot = data;
 	return *this;
+}
+
+ScatterDraw &ScatterDraw::MarkStyle(int index, const String name)
+{
+	ASSERT(IsValid(index));
+	
+	int typeidx = MarkPlot::TypeIndex(name);
+	
+	if (typeidx >= 0)
+		series[index].markPlot = MarkPlot::Create(typeidx);
+	else
+		series[index].markPlot = 0;
+	return *this;
+}
+
+const String ScatterDraw::GetMarkStyleName(int index)
+{
+	ASSERT(IsValid(index));
+	
+	if (series[index].markPlot)
+		return MarkPlot::TypeName(series[index].markPlot->GetType());
+	else
+		return t_("No mark");
 }
 
 ScatterDraw &ScatterDraw::Stroke(double thickness, Color color)
 {
-	int id = series.GetCount() - 1;
+	int index = series.GetCount() - 1;
 
 	if (IsNull(color))
-		color = GetNewColor(id);
-	series[id].color = color;
-	series[id].thickness = thickness;
-	//series[id].dash = GetNewDash(id);
+		color = GetNewColor(index);
+	series[index].color = color;
+	series[index].thickness = thickness;
+	//series[index].dash = GetNewDash(index);
 	
 	Refresh();
 	return *this;	
@@ -700,13 +734,13 @@ ScatterDraw &ScatterDraw::Stroke(double thickness, Color color)
 
 ScatterDraw &ScatterDraw::Fill(Color color)
 {
-	int id = series.GetCount() - 1;
+	int index = series.GetCount() - 1;
 
 	if (IsNull(color)) {
-		color = GetNewColor(id);
+		color = GetNewColor(index);
 		color = Color(min(color.GetR()+30, 255), min(color.GetG()+30, 255), min(color.GetB()+30, 255));
 	}
-	series[id].fillColor = color;
+	series[index].fillColor = color;
 	
 	Refresh();
 	return *this;	
@@ -714,13 +748,13 @@ ScatterDraw &ScatterDraw::Fill(Color color)
 
 ScatterDraw &ScatterDraw::MarkColor(Color color)
 {
-	int id = series.GetCount() - 1;
+	int index = series.GetCount() - 1;
 
 	if (IsNull(color)) {
-		color = GetNewColor(id);
+		color = GetNewColor(index);
 		color = Color(max(color.GetR()-30, 0), max(color.GetG()-30, 0), max(color.GetB()-30, 0));
 	}
-	series[id].markColor = color;
+	series[index].markColor = color;
 	
 	Refresh();
 	return *this;	
@@ -728,9 +762,9 @@ ScatterDraw &ScatterDraw::MarkColor(Color color)
 
 ScatterDraw &ScatterDraw::MarkWidth(const double& markWidth)
 {
-	int id = series.GetCount() - 1;
+	int index = series.GetCount() - 1;
 	
-	series[id].markWidth = markWidth;
+	series[index].markWidth = markWidth;
 	
 	Refresh();
 	return *this;
@@ -738,105 +772,132 @@ ScatterDraw &ScatterDraw::MarkWidth(const double& markWidth)
 
 ScatterDraw &ScatterDraw::Dash(const char *dash)
 {
-	int id = series.GetCount() - 1;
+	int index = series.GetCount() - 1;
 	
-	series[id].dash = dash;
+	return Dash(index, dash);		
+}
+
+ScatterDraw &ScatterDraw::Dash(int index, const char *dash)
+{
+	ASSERT(IsValid(index));
+	
+	series[index].dash = dash;
 	Refresh();
 	return *this;		
 }
 
+const String ScatterDraw::GetDash(int index)
+{
+	ASSERT(IsValid(index));
+	
+	return series[index].dash;
+}
+
 ScatterDraw &ScatterDraw::Legend(const String legend)
 {
-	int id = series.GetCount() - 1;
+	int index = series.GetCount() - 1;
 	
-	series[id].legend = legend;
+	return Legend(index, legend);
+}
+
+ScatterDraw& ScatterDraw::Legend(int index, const String legend)
+{
+	ASSERT(IsValid(index));
+	
+	series[index].legend = legend;
 	return *this;
 }
 
-void ScatterDraw::SetDataColor(const int& j, const Color& color)
+const String& ScatterDraw::GetLegend(int index)
 {
-	ASSERT(IsValid(j));
-	series[j].color = color;
+	ASSERT(IsValid(index));
+	return series[index].legend;
+}
+
+void ScatterDraw::SetDataColor(const int& index, const Color& color)
+{
+	ASSERT(IsValid(index));
+	series[index].color = color;
 	Refresh();
 }
 
-Color ScatterDraw::GetDataColor(const int& j) const
+Color ScatterDraw::GetDataColor(const int& index) const
 {
-	ASSERT(IsValid(j));
-	return series[j].color;
+	ASSERT(IsValid(index));
+	return series[index].color;
 }
 
-void ScatterDraw::SetDataThickness(const int& j, const double& thickness)
+void ScatterDraw::SetDataThickness(const int& index, const double& thickness)
 {
-	ASSERT(IsValid(j));
-	series[j].thickness = thickness;
+	ASSERT(IsValid(index));
+	series[index].thickness = thickness;
 	Refresh();
 }
 
-double ScatterDraw::GetDataThickness(const int& j) const
+double ScatterDraw::GetDataThickness(const int& index) const
 {
-	ASSERT(IsValid(j));
-	return series[j].thickness;
+	ASSERT(IsValid(index));
+	return series[index].thickness;
 }
 
-void ScatterDraw::SetFillColor(const int& j, const Color& color)
+void ScatterDraw::SetFillColor(const int& index, const Color& color)
 {
-	ASSERT(IsValid(j));
-	series[j].fillColor = color;
+	ASSERT(IsValid(index));
+	series[index].fillColor = color;
 	Refresh();
 }
 
-Color ScatterDraw::GetFillColor(const int& j) const
+Color ScatterDraw::GetFillColor(const int& index) const
 {
-	ASSERT(IsValid(j));
-	return series[j].fillColor;
+	ASSERT(IsValid(index));
+	return series[index].fillColor;
 }
 
-ScatterDraw &ScatterDraw::SetMarkWidth(const int& j, const double& markWidth)
+ScatterDraw &ScatterDraw::SetMarkWidth(const int& index, const double& markWidth)
 {
-	ASSERT(IsValid(j));
-	series[j].markWidth = markWidth;
+	ASSERT(IsValid(index));
+	series[index].markWidth = markWidth;
 	Refresh();
 	return *this;
 }
 
-double ScatterDraw::GetMarkWidth(const int& j) const
+double ScatterDraw::GetMarkWidth(const int& index) const
 {
-	ASSERT(IsValid(j));
-	return series[j].markWidth;
+	ASSERT(IsValid(index));
+	return series[index].markWidth;
 }
 
 
-void ScatterDraw::SetMarkColor(const int& j, const Color& color)
+void ScatterDraw::SetMarkColor(const int& index, const Color& color)
 {
-	ASSERT(IsValid(j));
-	series[j].markColor = color;
+	ASSERT(IsValid(index));
+	series[index].markColor = color;
 	Refresh();
 }
 
-Color ScatterDraw::GetMarkColor(const int& j) const
+Color ScatterDraw::GetMarkColor(const int& index) const
 {
-	ASSERT(IsValid(j));
-	return series[j].markColor;
+	ASSERT(IsValid(index));
+	return series[index].markColor;
 }
 
-void ScatterDraw::NoMark(const int& j)
+void ScatterDraw::NoMark(const int& index)
 {
-	ASSERT(IsValid(j));
-	series[j].markWidth = 0;
+	ASSERT(IsValid(index));
+	series[index].markWidth = 0;
 }
 
-bool ScatterDraw::IsShowMark(const int& j) const throw (Exc)
+bool ScatterDraw::IsShowMark(const int& index) const throw (Exc)
 {
-	ASSERT(IsValid(j));
-	return series[j].markWidth > 0;
+	ASSERT(IsValid(index));
+	return series[index].markWidth > 0;
 }
 
 
-void ScatterDraw::SetDataPrimaryY(const int& j, const bool& primary) 
+void ScatterDraw::SetDataPrimaryY(const int& index, const bool& primary) 
 {
-	ASSERT(IsValid(j));
-	series[j].primaryY = primary;
+	ASSERT(IsValid(index));
+	series[index].primaryY = primary;
 	Refresh();
 }
 
@@ -846,16 +907,16 @@ ScatterDraw &ScatterDraw::SetDataPrimaryY(const bool& primary)
 	return *this;
 }
 
-bool ScatterDraw::IsDataPrimaryY(const int& j) const throw (Exc)
+bool ScatterDraw::IsDataPrimaryY(const int& index) const throw (Exc)
 {
-	ASSERT(IsValid(j));
-	return series[j].primaryY;	
+	ASSERT(IsValid(index));
+	return series[index].primaryY;	
 }
 
-void ScatterDraw::SetSequentialX(const int& j, const bool& sequential) 
+void ScatterDraw::SetSequentialX(const int& index, const bool& sequential) 
 {
-	ASSERT(IsValid(j));
-	series[j].sequential = sequential;
+	ASSERT(IsValid(index));
+	series[index].sequential = sequential;
 	Refresh();
 }
 
@@ -873,17 +934,17 @@ ScatterDraw &ScatterDraw::SetSequentialXAll(const bool& sequential)
 	return *this;
 }
 
-void ScatterDraw::Show(const int& j, const bool& show) 
+void ScatterDraw::Show(const int& index, const bool& show) 
 {
-	ASSERT(IsValid(j));
-	series[j].opacity = show ? 1 : 0;
+	ASSERT(IsValid(index));
+	series[index].opacity = show ? 1 : 0;
 	Refresh();
 }
 
-bool ScatterDraw::IsVisible(const int& j) 
+bool ScatterDraw::IsVisible(const int& index) 
 {
-	ASSERT(IsValid(j));
-	return series[j].opacity > 0;
+	ASSERT(IsValid(index));
+	return series[index].opacity > 0;
 }
 
 ScatterDraw &ScatterDraw::ShowAll(const bool& show) 
@@ -898,23 +959,23 @@ ScatterDraw& ScatterDraw::Id(int id)
 	return Id(series.GetCount()-1, id);
 }
 
-ScatterDraw& ScatterDraw::Id(const int& j, int id)
+ScatterDraw& ScatterDraw::Id(const int& index, int id)
 {
-	ASSERT(IsValid(j));
-	series[j].id = id;
+	ASSERT(IsValid(index));
+	series[index].id = id;
 	return *this;
 }
 
-int ScatterDraw::GetId(const int& j)
+int ScatterDraw::GetId(const int& index)
 {
-	ASSERT(IsValid(j));
-	return series[j].id;
+	ASSERT(IsValid(index));
+	return series[index].id;
 }
 
-void ScatterDraw::RemoveSeries(const int& j)
+void ScatterDraw::RemoveSeries(const int& index)
 {
-	ASSERT(IsValid(j));
-	series.Remove(j);
+	ASSERT(IsValid(index));
+	series.Remove(index);
 	Refresh();
 }
 
@@ -929,6 +990,7 @@ Drawing ScatterDraw::GetDrawing()
 	DrawingDraw ddw(6*GetSize());
 	
 	SetDrawing (ddw, 6);
+
 	return ddw;
 }
 
@@ -939,8 +1001,7 @@ Image ScatterDraw::GetImage(const int &scale)
 #endif
 
 	ImageBuffer ib(scale*GetSize());	
-	BufferPainter bp(ib, mode);
-	
+	BufferPainter bp(ib, mode);	
 	SetDrawing(bp, scale);
 	
 	return ib;
@@ -973,11 +1034,10 @@ double ScatterDraw::GetYPointByValue(const double y)
 
 void ScatterDraw::Zoom(double scale, bool mouseX, bool mouseY) 
 {
-	mouseX = mouseX && ((minXZoom > 0 && xRange*scale > minXZoom) || (minXZoom < 0));
-	mouseX = mouseX && ((maxXZoom > 0 && xRange*scale < maxXZoom) || (maxXZoom < 0));
-	mouseY = mouseY && ((minYZoom > 0 && yRange*scale > minYZoom) || (minYZoom < 0));
-	mouseY = mouseY && ((maxYZoom > 0 && yRange*scale < maxYZoom) || (maxYZoom < 0));
-	if (mouseX) {
+	bool canX = (minXZoom > 0 && xRange*scale > minXZoom) || (minXZoom < 0) && (maxXZoom > 0 && xRange*scale < maxXZoom) || (maxXZoom < 0);
+	bool canY = (minYZoom > 0 && yRange*scale > minYZoom) || (minYZoom < 0) && (maxYZoom > 0 && yRange*scale < maxYZoom) || (maxYZoom < 0);
+	bool can = canX && canY;
+	if (mouseX && can) {
 		if (zoomStyleX == TO_CENTER) {
 			double oldXMin = xMin;
 			xMin += xRange*(1-scale)/2.;
@@ -991,8 +1051,9 @@ void ScatterDraw::Zoom(double scale, bool mouseX, bool mouseY)
 			else if (xRange/xMajorUnit > maxMajorUnitsX)
 				xMajorUnit *= 10;
 		}
+		lastxRange = xRange;
 	}
-	if (mouseY) {
+	if (mouseY && can) {
 		if (zoomStyleY == TO_CENTER) {
 			double oldYMin = yMin;
 			yMin += yRange*(1-scale)/2.;
@@ -1013,9 +1074,10 @@ void ScatterDraw::Zoom(double scale, bool mouseX, bool mouseY)
 				yMajorUnit *= 10;
 				yMajorUnit2 *= 10;
 			}
-		}		
+		}	
+		lastyRange = yRange;	
 	}
-	if (mouseX || mouseY) {
+	if ((mouseX || mouseY) && can) {
 		WhenSetRange();
 		Refresh();
 		WhenZoomScroll();
@@ -1075,8 +1137,11 @@ Vector <double> GetLineDash(String dash)
 	CParser p(dash);
 	try {
 		while(!p.IsEof())
-			if(!p.Char(':'))
-				d.Add(p.ReadDouble());
+			if(!p.Char(':')) {
+				double data = p.ReadDouble();
+				if (data > 0)
+					d.Add(p.ReadDouble());
+			}
 	}
 	catch(CParser::Error) {}
 
@@ -1156,6 +1221,8 @@ ScatterDraw::ScatterDraw()
 	maxMajorUnitsX = maxMajorUnitsY = Null;
 	SetMajorUnitsNum(5, 10);
 	Color(graphColor);	
+	lastxRange = xRange;
+	lastyRange = yRange;
 }
 
 void DrawLine(Draw &w, double x0, double y0, double x1, double y1, double width, const Color &color)
@@ -1327,6 +1394,8 @@ void DrawPolylineOpa(Draw& w, const Vector<Point> &p, const int &scale, const do
 		w.DrawPolyline(p, fround(thick), color);
 	else {
 		Vector <double> &pat = GetDashedArray(dash);
+		if (pat.IsEmpty())
+			return;
 		int iPat = 0; 
 		
 		double len = pat[0]*scale;			// Pixels per bar

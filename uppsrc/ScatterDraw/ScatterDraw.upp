@@ -1,15 +1,16 @@
-description "Scatter control\377";
+description "Scatter base class to plot in console applications \377";
 
 uses
 	Painter;
 
 file
+	ScatterDraw.cpp,
 	ScatterDraw.h,
+	DataSource.cpp,
 	DataSource.h,
 	DrawingFunctions.h,
 	SeriesPlot.h,
 	MarkPlot.h,
-	DataSource.cpp,
-	ScatterDraw.cpp,
-	ScatterDraw.t;
+	ScatterDraw.t,
+	src.tpp;
 
