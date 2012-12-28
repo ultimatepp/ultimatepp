@@ -12,8 +12,6 @@ file
 	Eigen.h,
 	ToStringPlugin.h,
 	srcdoc.tpp,
-	COPYING.GPL,
-	COPYING.LGPL,
 	Eigen readonly separator,
 	Eigen/Array highlight cpp,
 	Eigen/Core highlight cpp,
@@ -329,5 +327,12 @@ file
 	unsupported/Eigen/src/SparseExtra/SparseLLT.h,
 	unsupported/Eigen/src/SparseExtra/SparseLU.h,
 	unsupported/Eigen/src/SparseExtra/SuperLUSupport.h,
-	unsupported/Eigen/src/SparseExtra/UmfPackSupport.h;
+	unsupported/Eigen/src/SparseExtra/UmfPackSupport.h,
+	License readonly separator,
+	COPYING.README,
+	COPYING.BSD,
+	COPYING.MINPACK,
+	COPYING.MPL2,
+	COPYING.GPL,
+	COPYING.LGPL;
 
