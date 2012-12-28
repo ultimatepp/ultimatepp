@@ -36,9 +36,6 @@ void PaintArc(Painter &w, double cx, double cy, double R, double ang0, double an
 }
 	
 void EditFileFolder::Init() {
-	//EditString::AddFrame(butLeft);
-	//EditString::AddFrame(butRight);
-	//EditString::AddFrame(butUp);
 	EditString::AddFrame(butBrowse);
 	WhenEnter = THISBACK1(DoGo, true);
 	butBrowse.SetImage(Controls4UImg::Folder());
@@ -57,9 +54,21 @@ void EditFileFolder::Init() {
 	butGo <<= THISBACK1(DoGo, true); 
 	isFile = isLoad = true;
 	histInd = -1;
-	fs.Asking(!isLoad);
+	pfs = 0;
 }
 
+void EditFileFolder::InitFs() {
+	if (pfs)
+		return;
+	pfs = new FileSel();
+	pfs->Asking(!isLoad);
+}
+
+EditFileFolder::~EditFileFolder() {
+	if (pfs)
+		delete pfs;
+}
+	
 EditFileFolder &EditFileFolder::UseHistory(bool use) {
 	if (use) {
 		if (EditString::FindFrame(butLeft) == -1) {
@@ -98,31 +107,29 @@ EditFileFolder &EditFileFolder::UseBrowse(bool use) {
 }
 
 void EditFileFolder::DoBrowse() {
+	InitFs();
+	FileSel &fs = *pfs;
+	
 	String s = GetData();
-	//fs.Set(s);
-	if (DirectoryExists(s)) 
-		fs.PreSelect(s);
-	else {
-		fs.PreSelect(GetFileName(s));
-		//fs.BaseDir(s);
-		fs.dir <<= GetFileDirectory(s);
+	if (!s.IsEmpty()) {
+		if (DirectoryExists(s)) 
+			fs.PreSelect(s);
+		else {
+			if (GetFileFolder(s).IsEmpty())
+				s = AppendFileName(fs.GetActiveDir(), s);
+			fs.PreSelect(s);
+		}
 	}
 	if (isFile && isLoad) {
-		if (fs.ExecuteOpen(title)) {
+		if (fs.ExecuteOpen(title)) 
 			SetData(~fs);
-			//DoGo();//WhenChange();
-		}
 	} else if (isFile && !isLoad)  {
-		if (fs.ExecuteSaveAs(title)) {
+		if (fs.ExecuteSaveAs(title)) 
 			SetData(~fs);
-			//DoGo();//WhenChange();
-		}
 	} else if (!isFile) {
 		fs.ClearFiles();
-		if (fs.ExecuteSelectDir(title)) {
+		if (fs.ExecuteSelectDir(title)) 
 			SetData(~fs);
-			//DoGo();//WhenChange();
-		}
 	}
 }
 
@@ -130,7 +137,6 @@ void EditFileFolder::SetData(const Value& data) {
 	EditString::SetData(data);
 	DoGo();
 }
-
 
 void EditFileFolder::DoGo(bool add) {
 	Set(GetData());			// Write Edit to FileSel
@@ -148,6 +154,7 @@ void EditFileFolder::DoGo(bool add) {
 			butRight.Enable(false);
 	}
 	WhenChange();
+	Accept();
 }
 
 void EditFileFolder::DoLeft() {
@@ -203,14 +210,9 @@ bool SetFirstChild(Ctrl *ctrl) {
  void StaticImage::Layout() {
    	if (useAsBackground) {
   		Ctrl *q = GetFirstChild(); 
-		//if (StaticImage *c = dynamic_cast<StaticImage *>(q)) {
-		//	if (!c->useAsBackground) {
-				SetFirstChild((Ctrl *)this);
-				SizePos();
-		//	}
-		//}
+		SetFirstChild((Ctrl *)this);
+		SizePos();
 	}
-	//Ctrl::Layout();
 } 
 
 void StaticImage::Paint(Draw& w) {
@@ -287,12 +289,25 @@ StaticImage& StaticImage::SetAngle(int _angle) {
 	return *this;
 }	
 	
-void  StaticImage::RightDown(Point pos, dword keyflags)
-{
+void  StaticImage::RightDown(Point pos, dword keyflags) {
 	if(!IsEditable())
 		return;
 
 	WhenRightDown();
+}
+
+void  StaticImage::LeftDown(Point pos, dword keyflags) {
+	if(!IsEditable())
+		return;
+
+	WhenLeftDown();
+}
+
+void  StaticImage::LeftDouble(Point pos, dword keyflags) {
+	if(!IsEditable())
+		return;
+
+	WhenLeftDouble();
 }
 
 

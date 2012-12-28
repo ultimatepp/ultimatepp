@@ -21,28 +21,32 @@ protected:
 	FrameLeft<Button> butBrowse, butLeft, butRight, butUp;
 	FrameRight<Button> butGo;
 	
-	FileSel fs;
+	FileSel *pfs;
 	bool isFile, isLoad;
 	String title;
 	
 	Vector <String> history;
 	int histInd;
 	
+	void InitFs();
+		
 public:
 	EditFileFolder() 								{Init();};
+	~EditFileFolder();
+	
 	void Init();
 	void DoLeft(), DoRight(), DoUp();
 	void DoBrowse();
 	void DoGo(bool add = true);
-	void Type(const char *name, const char *ext)	{fs.Type(name, ext);};
-	void AllFilesType()								{fs.AllFilesType();};
-	void ActiveDir(const String& d) 				{fs.ActiveDir(d);};
-	void MkDirOption(bool b)						{fs.MkDirOption(b);};
+	void Type(const char *name, const char *ext)	{InitFs();	pfs->Type(name, ext);};
+	void AllFilesType()								{InitFs();	pfs->AllFilesType();};
+	void ActiveDir(const String& d) 				{InitFs();	pfs->ActiveDir(d);};
+	void MkDirOption(bool b)						{InitFs();	pfs->MkDirOption(b);};
 	String Get() const                           	{return GetData();};	
 	String operator~() const                     	{return Get();};
 	operator String() const                      	{return Get();};
 	operator const char *() const					{return Get();};
-	void Set(const String& s)						{fs.Set(s); EditString::SetData(s);};
+	void Set(const String& s)						{InitFs();	pfs->Set(s); EditString::SetData(s);};
 	void operator<<=(const String& s)            	{Set(s);};
 	void operator=(const String& s)              	{Set(s);};
 	bool IsEmpty()									{return GetData().IsNull();};
@@ -79,6 +83,8 @@ protected:
 	virtual void Paint(Draw& draw);
 	virtual void Layout();
 	virtual void RightDown(Point pos, dword keyflags);
+	virtual void LeftDown(Point pos, dword keyflags);
+	virtual void LeftDouble(Point pos, dword keyflags);
 	
 	String fileName;
 	Image image, origImage;
@@ -100,6 +106,8 @@ public:
 	StaticImage& UseAsBackground(bool b = true)	{useAsBackground = b; Refresh(); return *this;}
 	StaticImage();
 	
+	Callback WhenLeftDouble;
+	Callback WhenLeftDown;
 	Callback WhenRightDown;
 };
 
