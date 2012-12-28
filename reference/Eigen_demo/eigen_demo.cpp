@@ -620,7 +620,7 @@ CONSOLE_APP_MAIN
 		v << 0,1,2,3;
 		   
 		//add v to each row of m
-		mat.rowwise() += v;
+		mat.rowwise() += v.transpose();
 		
 		Cout() << "\nBroadcasting result: ";
 		Cout() << "\n" << mat;
