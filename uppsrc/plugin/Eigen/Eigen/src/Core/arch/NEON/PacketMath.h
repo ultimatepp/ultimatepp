@@ -5,27 +5,14 @@
 // Copyright (C) 2010 Konstantinos Margaritis <markos@codex.gr>
 // Heavily based on Gael's SSE version.
 //
-// Eigen is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3 of the License, or (at your option) any later version.
-//
-// Alternatively, you can redistribute it and/or
-// modify it under the terms of the GNU General Public License as
-// published by the Free Software Foundation; either version 2 of
-// the License, or (at your option) any later version.
-//
-// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License and a copy of the GNU General Public License along with
-// Eigen. If not, see <http://www.gnu.org/licenses/>.
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #ifndef EIGEN_PACKET_MATH_NEON_H
 #define EIGEN_PACKET_MATH_NEON_H
+
+namespace Eigen {
 
 namespace internal {
 
@@ -52,6 +39,16 @@ typedef uint32x4_t  Packet4ui;
 #define _EIGEN_DECLARE_CONST_Packet4i(NAME,X) \
   const Packet4i p4i_##NAME = pset1<Packet4i>(X)
 
+#if defined(__llvm__) && !defined(__clang__)
+  //Special treatment for Apple's llvm-gcc, its NEON packet types are unions
+  #define EIGEN_INIT_NEON_PACKET2(X, Y)       {{X, Y}}
+  #define EIGEN_INIT_NEON_PACKET4(X, Y, Z, W) {{X, Y, Z, W}}
+#else
+  //Default initializer for packets
+  #define EIGEN_INIT_NEON_PACKET2(X, Y)       {X, Y}
+  #define EIGEN_INIT_NEON_PACKET4(X, Y, Z, W) {X, Y, Z, W}
+#endif
+    
 #ifndef __pld
 #define __pld(x) asm volatile ( "   pld [%[addr]]\n" :: [addr] "r" (x) : "cc" );
 #endif
@@ -84,7 +81,7 @@ template<> struct packet_traits<int>    : default_packet_traits
   };
 };
 
-#if EIGEN_GNUC_AT_MOST(4,4)
+#if EIGEN_GNUC_AT_MOST(4,4) && !defined(__llvm__)
 // workaround gcc 4.2, 4.3 and 4.4 compilatin issue
 EIGEN_STRONG_INLINE float32x4_t vld1q_f32(const float* x) { return ::vld1q_f32((const float32_t*)x); }
 EIGEN_STRONG_INLINE float32x2_t vld1_f32 (const float* x) { return ::vld1_f32 ((const float32_t*)x); }
@@ -100,12 +97,12 @@ template<> EIGEN_STRONG_INLINE Packet4i pset1<Packet4i>(const int&    from)   { 
 
 template<> EIGEN_STRONG_INLINE Packet4f plset<float>(const float& a)
 {
-  Packet4f countdown = { 0, 1, 2, 3 };
+  Packet4f countdown = EIGEN_INIT_NEON_PACKET4(0, 1, 2, 3);
   return vaddq_f32(pset1<Packet4f>(a), countdown);
 }
 template<> EIGEN_STRONG_INLINE Packet4i plset<int>(const int& a)
 {
-  Packet4i countdown = { 0, 1, 2, 3 };
+  Packet4i countdown = EIGEN_INIT_NEON_PACKET4(0, 1, 2, 3);
   return vaddq_s32(pset1<Packet4i>(a), countdown);
 }
 
@@ -148,7 +145,8 @@ template<> EIGEN_STRONG_INLINE Packet4i pdiv<Packet4i>(const Packet4i& /*a*/, co
 }
 
 // for some weird raisons, it has to be overloaded for packet of integers
-template<> EIGEN_STRONG_INLINE Packet4i pmadd(const Packet4i& a, const Packet4i& b, const Packet4i& c) { return padd(pmul(a,b), c); }
+template<> EIGEN_STRONG_INLINE Packet4f pmadd(const Packet4f& a, const Packet4f& b, const Packet4f& c) { return vmlaq_f32(c,a,b); }
+template<> EIGEN_STRONG_INLINE Packet4i pmadd(const Packet4i& a, const Packet4i& b, const Packet4i& c) { return vmlaq_s32(c,a,b); }
 
 template<> EIGEN_STRONG_INLINE Packet4f pmin<Packet4f>(const Packet4f& a, const Packet4f& b) { return vminq_f32(a,b); }
 template<> EIGEN_STRONG_INLINE Packet4i pmin<Packet4i>(const Packet4i& a, const Packet4i& b) { return vminq_s32(a,b); }
@@ -395,26 +393,32 @@ template<> EIGEN_STRONG_INLINE int predux_max<Packet4i>(const Packet4i& a)
   return s[0];
 }
 
-template<int Offset>
-struct palign_impl<Offset,Packet4f>
-{
-  EIGEN_STRONG_INLINE static void run(Packet4f& first, const Packet4f& second)
-  {
-    if (Offset!=0)
-      first = vextq_f32(first, second, Offset);
-  }
-};
+// this PALIGN_NEON business is to work around a bug in LLVM Clang 3.0 causing incorrect compilation errors,
+// see bug 347 and this LLVM bug: http://llvm.org/bugs/show_bug.cgi?id=11074
+#define PALIGN_NEON(Offset,Type,Command) \
+template<>\
+struct palign_impl<Offset,Type>\
+{\
+    EIGEN_STRONG_INLINE static void run(Type& first, const Type& second)\
+    {\
+        if (Offset!=0)\
+            first = Command(first, second, Offset);\
+    }\
+};\
 
-template<int Offset>
-struct palign_impl<Offset,Packet4i>
-{
-  EIGEN_STRONG_INLINE static void run(Packet4i& first, const Packet4i& second)
-  {
-    if (Offset!=0)
-      first = vextq_s32(first, second, Offset);
-  }
-};
+PALIGN_NEON(0,Packet4f,vextq_f32)
+PALIGN_NEON(1,Packet4f,vextq_f32)
+PALIGN_NEON(2,Packet4f,vextq_f32)
+PALIGN_NEON(3,Packet4f,vextq_f32)
+PALIGN_NEON(0,Packet4i,vextq_s32)
+PALIGN_NEON(1,Packet4i,vextq_s32)
+PALIGN_NEON(2,Packet4i,vextq_s32)
+PALIGN_NEON(3,Packet4i,vextq_s32)
+    
+#undef PALIGN_NEON
 
 } // end namespace internal
+
+} // end namespace Eigen
 
 #endif // EIGEN_PACKET_MATH_NEON_H

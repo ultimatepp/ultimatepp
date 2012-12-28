@@ -3,27 +3,14 @@
 //
 // Copyright (C) 2009 Ilya Baran <ibaran@mit.edu>
 //
-// Eigen is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3 of the License, or (at your option) any later version.
-//
-// Alternatively, you can redistribute it and/or
-// modify it under the terms of the GNU General Public License as
-// published by the Free Software Foundation; either version 2 of
-// the License, or (at your option) any later version.
-//
-// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License and a copy of the GNU General Public License along with
-// Eigen. If not, see <http://www.gnu.org/licenses/>.
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #ifndef EIGEN_BVALGORITHMS_H
 #define EIGEN_BVALGORITHMS_H
+
+namespace Eigen { 
 
 namespace internal {
 
@@ -231,7 +218,7 @@ private:
 template<typename BVH, typename Minimizer>
 typename Minimizer::Scalar BVMinimize(const BVH &tree, Minimizer &minimizer)
 {
-  return internal::minimize_helper(tree, minimizer, tree.getRootIndex(), std::numeric_limits<typename Minimizer::Scalar>::max());
+  return internal::minimize_helper(tree, minimizer, tree.getRootIndex(), (std::numeric_limits<typename Minimizer::Scalar>::max)());
 }
 
 /**  Given two BVH's, runs the query on their cartesian product encapsulated by \a minimizer.
@@ -264,7 +251,7 @@ typename Minimizer::Scalar BVMinimize(const BVH1 &tree1, const BVH2 &tree2, Mini
   ObjIter2 oBegin2 = ObjIter2(), oEnd2 = ObjIter2(), oCur2 = ObjIter2();
   std::priority_queue<QueueElement, std::vector<QueueElement>, std::greater<QueueElement> > todo; //smallest is at the top
 
-  Scalar minimum = std::numeric_limits<Scalar>::max();
+  Scalar minimum = (std::numeric_limits<Scalar>::max)();
   todo.push(std::make_pair(Scalar(), std::make_pair(tree1.getRootIndex(), tree2.getRootIndex())));
 
   while(!todo.empty()) {
@@ -300,5 +287,7 @@ typename Minimizer::Scalar BVMinimize(const BVH1 &tree1, const BVH2 &tree2, Mini
   }
   return minimum;
 }
+
+} // end namespace Eigen
 
 #endif // EIGEN_BVALGORITHMS_H

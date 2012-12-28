@@ -5,24 +5,9 @@
 // Copyright (C) 2010 Gael Guennebaud <gael.guennebaud@inria.fr>
 // Copyright (C) 2009 Benoit Jacob <jacob.benoit.1@gmail.com>
 //
-// Eigen is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 3 of the License, or (at your option) any later version.
-//
-// Alternatively, you can redistribute it and/or
-// modify it under the terms of the GNU General Public License as
-// published by the Free Software Foundation; either version 2 of
-// the License, or (at your option) any later version.
-//
-// Eigen is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License or the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License and a copy of the GNU General Public License along with
-// Eigen. If not, see <http://www.gnu.org/licenses/>.
+// This Source Code Form is subject to the terms of the Mozilla
+// Public License v. 2.0. If a copy of the MPL was not distributed
+// with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 // The SSE code for the 4x4 float and double matrix inverse in this file
 // comes from the following Intel's library:
@@ -42,6 +27,8 @@
 #ifndef EIGEN_INVERSE_SSE_H
 #define EIGEN_INVERSE_SSE_H
 
+namespace Eigen { 
+
 namespace internal {
 
 template<typename MatrixType, typename ResultType>
@@ -55,7 +42,7 @@ struct compute_inverse_size4<Architecture::SSE, float, MatrixType, ResultType>
   
   static void run(const MatrixType& matrix, ResultType& result)
   {
-    EIGEN_ALIGN16 const  int _Sign_PNNP[4] = { 0x00000000, 0x80000000, 0x80000000, 0x00000000 };
+    EIGEN_ALIGN16 const unsigned int _Sign_PNNP[4] = { 0x00000000, 0x80000000, 0x80000000, 0x00000000 };
 
     // Load the full matrix into registers
     __m128 _L1 = matrix.template packet<MatrixAlignment>( 0);
@@ -335,6 +322,8 @@ struct compute_inverse_size4<Architecture::SSE, double, MatrixType, ResultType>
   }
 };
 
-}
+} // end namespace internal
+
+} // end namespace Eigen
 
 #endif // EIGEN_INVERSE_SSE_H

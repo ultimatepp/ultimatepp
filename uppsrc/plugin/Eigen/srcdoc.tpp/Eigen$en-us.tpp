@@ -17,13 +17,13 @@ vectors, numerical solvers and related algorithms.]&]
 [s0; [C2 -|Matrix2d res `= a`*b;-|// Just multiply them using `*]&]
 [s0;#2 &]
 [s0;#2 &]
-[s0;# [2 Eigen package is a wrapper of Eigen 3.0.1 library. It includes 
+[s0;# [2 Eigen package is a wrapper of Eigen 3.1.2 library. It includes 
 the library and helper functions to integrate better Eigen with 
-U`+`+. The Eigen sources are licensed under GPL and LGPL licenses. 
-Since the entire code consist of headers only, those licenses 
-means no restrictions for any use, as long as you do not modify 
-it. See the ][^http`:`/`/eigen`.tuxfamily`.org`/index`.php`?title`=Licensing`_FAQ^2 L
-icensing FAQ][2  on Eigen website for further details.]&]
+U`+`+. Starting from the 3.1.1 version, it is licensed under 
+the ][^http`:`/`/www`.mozilla`.org`/MPL`/2`.0`/^2 MPL2][2 , which 
+is a simple weak copyleft license. Common questions about the 
+MPL2 are answered in the official ][^http`:`/`/www`.mozilla`.org`/MPL`/2`.0`/FAQ`.html^2 M
+PL2 FAQ][2 .]&]
 [s0;#2 &]
 [s0;# [2 In addition Bazaar/Eigen package includes a sample package 
 (Eigen`_demo) to ease even more its use for U`+`+ users. It has 
@@ -105,4 +105,4 @@ As it is a template library no libraries or binaries are required.]&]
 [s0;# [2 Eigen packages have been prepared by ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 d
 olik.rce][2  and ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 k
 oldo][2 .]&]
-[s0;#/+75 ]
+[s0;#/+75 ]]
