@@ -14,7 +14,6 @@ void Server()
 		bool b = socket.Accept(server);
 		ServerMutex.Leave();
 		if(b) {
-			ServerMutex.Leave();
 			LOG("Connection accepted");
 			HttpHeader http;
 			http.Read(socket);
