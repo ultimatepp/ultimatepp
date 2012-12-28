@@ -102,9 +102,10 @@ public:
 	#define MAX_MOUSEBEHAVIOR 20
 	
 	bool SetMouseBehavior(MouseBehaviour *_mouseBehavior);
-	ScatterCtrl& ShowLegend(const bool& show=true);
-	ScatterCtrl& ShowContextMenu(const bool& show = true) {showContextMenu = show; return *this;}
-	void SetPopText(const String x, const String y1, const String y2) {popTextX = x; popTextY = y1; popTextY2 = y2;}
+	ScatterCtrl& ShowLegend(const bool& show = true);
+	ScatterCtrl& ShowContextMenu(const bool& show = true) 				{showContextMenu = show; return *this;}
+	ScatterCtrl& ShowEditDlg(const bool& show = true) 					{showEditDlg = show; return *this;}
+	void SetPopText(const String x, const String y1, const String y2) 	{popTextX = x; popTextY = y1; popTextY2 = y2;}
 	ScatterCtrl& SetMouseHandling(bool valx = true, bool valy = false);
 	ScatterCtrl &ShowInfo(bool show = true);	
 	
@@ -144,8 +145,11 @@ public:
 	using ScatterDraw::InsertSeries; 
 	void InsertSeries(int id, ArrayCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int numData = Null);	
 	
-	void SetCopyRatio(int ratio)		{copyRatio = ratio;}
-	int GetCopyRatio()					{return copyRatio;}
+	ScatterCtrl& SetCopyRatio(int ratio)				{copyRatio = ratio; return *this;}
+	int GetCopyRatio()									{return copyRatio;}
+	
+	ScatterCtrl& SetMaxRefreshTime(int _maxRefresh_ms) 	{maxRefresh_ms = _maxRefresh_ms; return *this;}
+	int GetMaxRefreshTime() 							{return maxRefresh_ms;}
 	
 private:
 	bool paintInfo;
@@ -161,6 +165,10 @@ private:
 	
 	bool mouseHandlingX, mouseHandlingY;
 	bool showContextMenu;
+	bool showEditDlg;
+	
+	int lastRefresh_ms;
+	int maxRefresh_ms;
 	
 	MouseBehaviour *mouseBehavior;
 	
@@ -184,6 +192,7 @@ private:
 	void MouseZoom(int zdelta, bool hor, bool ver);
 	
 	void ContextMenu(Bar& bar);
+	void DoShowEditDlg();
 	
 	virtual Image CursorImage(Point p, dword keyflags);
 	
@@ -205,4 +214,3 @@ void ScatterCtrl::SetDrawing(T& w, const int& scale) {
 END_UPP_NAMESPACE
 
 #endif
-
