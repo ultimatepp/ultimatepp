@@ -26,10 +26,10 @@ public:
 		typeMap().Remove(i);
 	}
 	static String         TypeName(int i)               {return typeMap()[i];}
-	static int            TypeIndex(const String& name) {return max(classMap().Find(name),0);}
+	static int            TypeIndex(const String& name) {return classMap().Find(name);}
 	static int            GetCount()                    {return classMap().GetCount();}
 	static SeriesPlot*	  Create(int i)                 {return classMap()[i]();}
-	static Vector<String> GetTypes()                    {return VectorMap<String,String>(typeMap(),1).GetValues();}
+	static Vector<String> GetTypes()                    {return VectorMap<String,String>(typeMap(), 1).GetValues();}
 	int GetType()const {return typeMap().Find(typeid(*this).name());}
 	SeriesPlot* Copy()const;
 	       	

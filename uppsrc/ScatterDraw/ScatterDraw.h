@@ -41,7 +41,7 @@ protected:
 	class ScatterBasicSeries {
 	public:
 		ScatterBasicSeries();
-		void Init(int id);
+		void Init(int index);
 		
 		bool primaryY;
 		bool sequential;
@@ -78,9 +78,9 @@ protected:
 		bool owns;
 	};
 
-	static Color GetNewColor(int id);
-	static String GetNewDash(int id);
-	static MarkPlot *GetNewMarkPlot(int id);
+	static Color GetNewColor(int index);
+	static String GetNewDash(int index);
+	static MarkPlot *GetNewMarkPlot(int index);
 	
 public:
 	Callback3<String&, int, double> cbModifFormatX, cbModifFormatDeltaX;
@@ -96,13 +96,17 @@ public:
 	
 	ScatterDraw& SetColor(const Color& _color);
 	ScatterDraw& SetTitle(const String& _title);
+	const String& GetTitle();
 	ScatterDraw& SetTitleFont(const Font& fontTitle);
 	ScatterDraw& SetTitleColor(const Color& colorTitle);
 	
 	void SetLabels(const String& _xLabel, const String& _yLabel, const String& _yLabel2 = "");
 	ScatterDraw& SetLabelX(const String& _xLabel);
+	const String &GetLabelX()	{return xLabel;} 
 	ScatterDraw& SetLabelY(const String& _yLabel);
+	const String &GetLabelY()	{return yLabel;} 
 	ScatterDraw& SetLabelY2(const String& _yLabel);
+	const String &GetLabelY2()	{return yLabel2;}
 	ScatterDraw& SetLabelsFont(const Font& fontLabels);
 	Font GetLabelsFont() {return labelsFont;};
 	ScatterDraw& SetLabelsColor(const Color& colorLabels);
@@ -123,7 +127,7 @@ public:
 	ScatterDraw& ShowVGrid(const bool& show);
 	ScatterDraw& ShowHGrid(const bool& show);
 	
-	ScatterDraw& ShowLegend(const bool& show=true);
+	ScatterDraw& ShowLegend(const bool& show = true);
 	ScatterDraw& SetLegendWeight(const int& weight);
 	
 	ScatterDraw& SetMode(int _mode = MD_ANTIALIASED)	{mode = _mode; Refresh(); return *this;};
@@ -202,47 +206,52 @@ public:
 	template <class X, class Y>
 	ScatterDraw &AddSeries(ArrayMap<X, Y> &data)	{return _AddSeries(new ArrayMapXY<X, Y>(data));}
 	
-	void InsertSeries(int id, double *yData, int numData, double x0 = 0, double deltaX = 1);
-	void InsertSeries(int id, double *xData, double *yData, int numData);
-	void InsertSeries(int id, Vector<double> &xData, Vector<double> &yData);
-	void InsertSeries(int id, Upp::Array<double> &xData, Upp::Array<double> &yData);
-	void InsertSeries(int id, Vector<Pointf> &points);
-	void InsertSeries(int id, Upp::Array<Pointf> &points);
-	void InsertSeries(int id, double (*function)(double));
-	void InsertSeries(int id, Pointf (*function)(double), int np, double from = 0, double to = 1);
-	void InsertSeries(int id, PlotFunc &function);
-	void InsertSeries(int id, PlotParamFunc function, int np, double from = 0, double to = 1);
-	void _InsertSeries(int id, DataSource *data);
+	void InsertSeries(int index, double *yData, int numData, double x0 = 0, double deltaX = 1);
+	void InsertSeries(int index, double *xData, double *yData, int numData);
+	void InsertSeries(int index, Vector<double> &xData, Vector<double> &yData);
+	void InsertSeries(int index, Upp::Array<double> &xData, Upp::Array<double> &yData);
+	void InsertSeries(int index, Vector<Pointf> &points);
+	void InsertSeries(int index, Upp::Array<Pointf> &points);
+	void InsertSeries(int index, double (*function)(double));
+	void InsertSeries(int index, Pointf (*function)(double), int np, double from = 0, double to = 1);
+	void InsertSeries(int index, PlotFunc &function);
+	void InsertSeries(int index, PlotParamFunc function, int np, double from = 0, double to = 1);
+	void _InsertSeries(int index, DataSource *data);
 	
 	template <class C>
-	void InsertSeries(int id) 		{_InsertSeries(id, new C());}	
+	void InsertSeries(int index) 		{_InsertSeries(index, new C());}	
 	template <class C, class T1>
-	void InsertSeries(int id, T1 &arg1) 				
-									{_InsertSeries(id, new C(arg1));}
+	void InsertSeries(int index, T1 &arg1) 				
+									{_InsertSeries(index, new C(arg1));}
 	template <class C, class T1, class T2>
-	void InsertSeries(int id, T1 &arg1, T2 &arg2) 		
-									{_InsertSeries(id, new C(arg1, arg2));}
+	void InsertSeries(int index, T1 &arg1, T2 &arg2) 		
+									{_InsertSeries(index, new C(arg1, arg2));}
 	template <class C, class T1, class T2, class T3>
-	void InsertSeries(int id, T1 &arg1, T2 &arg2, T3 &arg3) 								
-									{_InsertSeries(id, new C(arg1, arg2, arg3));}
+	void InsertSeries(int index, T1 &arg1, T2 &arg2, T3 &arg3) 								
+									{_InsertSeries(index, new C(arg1, arg2, arg3));}
 	template <class C, class T1, class T2, class T3, class T4>
-	void InsertSeries(int id, T1 &arg1, T2 &arg2, T3 &arg3, T4 &arg4)						
-									{_InsertSeries(id, new C(arg1, arg2, arg3, arg4));}
+	void InsertSeries(int index, T1 &arg1, T2 &arg2, T3 &arg3, T4 &arg4)						
+									{_InsertSeries(index, new C(arg1, arg2, arg3, arg4));}
 	template <class C, class T1, class T2, class T3, class T4, class T5>
-	void InsertSeries(int id, T1 &arg1, T2 &arg2, T3 &arg3, T4 &arg4, T5 &arg5)				
-									{_InsertSeries(id, new C(arg1, arg2, arg3, arg4, arg5));}
+	void InsertSeries(int index, T1 &arg1, T2 &arg2, T3 &arg3, T4 &arg4, T5 &arg5)				
+									{_InsertSeries(index, new C(arg1, arg2, arg3, arg4, arg5));}
 	template <class C, class T1, class T2, class T3, class T4, class T5, class T6>
-	void InsertSeries(int id, T1 &arg1, T2 &arg2, T3 &arg3, T4 &arg4, T5 &arg5, T6 &arg6)	
-									{_InsertSeries(id, new C(arg1, arg2, arg3, arg4, arg5, arg6));}
+	void InsertSeries(int index, T1 &arg1, T2 &arg2, T3 &arg3, T4 &arg4, T5 &arg5, T6 &arg6)	
+									{_InsertSeries(index, new C(arg1, arg2, arg3, arg4, arg5, arg6));}
 			
 	template <class Y>
-	void InsertSeries(int id, Vector<Y> &yData)		{_InsertSeries(id, new VectorY<Y>(yData));}
+	void InsertSeries(int index, Vector<Y> &yData)		{_InsertSeries(index, new VectorY<Y>(yData));}
 	template <class Y>
-	void InsertSeries(int id, Upp::Array<Y> &yData)	{_InsertSeries(id, new ArrayY<Y>(yData));}
+	void InsertSeries(int index, Upp::Array<Y> &yData)	{_InsertSeries(index, new ArrayY<Y>(yData));}
 	template <class X, class Y>
-	void InsertSeries(int id, VectorMap<X, Y> &data){_InsertSeries(id, new VectorMapXY<X, Y>(data));}
+	void InsertSeries(int index, VectorMap<X, Y> &data){_InsertSeries(index, new VectorMapXY<X, Y>(data));}
 	template <class X, class Y>
-	void InsertSeries(int id, ArrayMap<X, Y> &data)	{_InsertSeries(id, new ArrayMapXY<X, Y>(data));}
+	void InsertSeries(int index, ArrayMap<X, Y> &data)	{_InsertSeries(index, new ArrayMapXY<X, Y>(data));}
+	
+	int GetCount(int index);
+	void GetValues(int index, int idata, double &x, double &y);
+	double GetValueX(int index, int idata);
+	double GetValueY(int index, int idata);
 	
 	ScatterDraw &PlotStyle()								{return PlotStyle(0);};
 	template <class C>
@@ -267,11 +276,16 @@ public:
 	template <class C, class T1, class T2, class T3>
 	ScatterDraw &MarkStyle(T1 &arg1, T2 &arg2, T3 &arg3)	{return MarkStyle(new C(arg1, arg2, arg3));};			
 	ScatterDraw &MarkStyle(MarkPlot *data);
+	ScatterDraw &MarkStyle(int index, MarkPlot *data);
+	ScatterDraw &MarkStyle(int index, const String name);
+	const String GetMarkStyleName(int index);
 	
 	ScatterDraw &NoMark()	{return MarkStyle();};
 		
 	ScatterDraw &Stroke(double thickness = 3, Color color = Null);
 	ScatterDraw &Dash(const char *dash);
+	ScatterDraw &Dash(int index, const char *dash);
+	const String GetDash(int index);
 	ScatterDraw &Fill(Color color = Null);
 	ScatterDraw &MarkColor(Color color = Null);
 	ScatterDraw &MarkWidth(const double& markWidth = 8);
@@ -279,45 +293,47 @@ public:
 	
 	ScatterDraw &Opacity(double opacity = 1) {series[series.GetCount() - 1].opacity = opacity;	return *this;}
 	ScatterDraw &Legend(const String legend);
+	ScatterDraw& Legend(int index, const String legend);
+	const String& GetLegend(int index);
 	
-	inline bool IsValid(const int& j) const {return (j >= 0 && j < series.GetCount());}
+	inline bool IsValid(const int& index) const {return (index >= 0 && index < series.GetCount());}
 	
 	ScatterDraw& SetDrawXReticle(bool set = true);
 	ScatterDraw& SetDrawYReticle(bool set = true);
 	ScatterDraw& SetDrawY2Reticle(bool set = true);
 	
-	void SetDataColor(const int& j,const Color& pcolor);
-	Color GetDataColor (const int& j) const;
-	void SetDataThickness(const int& j, const double& thick);
-	double GetDataThickness(const int& j) const;
-	void SetFillColor(const int& j, const Color& color);
-	Color GetFillColor(const int& j) const;
+	void SetDataColor(const int& index,const Color& pcolor);
+	Color GetDataColor (const int& index) const;
+	void SetDataThickness(const int& index, const double& thick);
+	double GetDataThickness(const int& index) const;
+	void SetFillColor(const int& index, const Color& color);
+	Color GetFillColor(const int& index) const;
 
-	ScatterDraw &SetMarkWidth(const int& j, const double& width);
-	double GetMarkWidth(const int& j) const;
-	void SetMarkColor(const int& j, const Color& pcolor);
-	Color GetMarkColor (const int& j) const;
-	void NoMark(const int& j);
-	bool IsShowMark(const int& j) const throw (Exc);
+	ScatterDraw &SetMarkWidth(const int& index, const double& width);
+	double GetMarkWidth(const int& index) const;
+	void SetMarkColor(const int& index, const Color& pcolor);
+	Color GetMarkColor (const int& index) const;
+	void NoMark(const int& index);
+	bool IsShowMark(const int& index) const throw (Exc);
 	
-	void SetDataPrimaryY(const int& j, const bool& primary=true);
+	void SetDataPrimaryY(const int& index, const bool& primary=true);
 	ScatterDraw &SetDataPrimaryY(const bool& primary); 	
-	bool IsDataPrimaryY(const int& j) const throw (Exc);	
+	bool IsDataPrimaryY(const int& index) const throw (Exc);	
 	
-	void SetSequentialX(const int& j, const bool& sequential = true);
+	void SetSequentialX(const int& index, const bool& sequential = true);
 	ScatterDraw &SetSequentialX(const bool& sequential = true);
 	ScatterDraw &SetSequentialXAll(const bool& sequential = true);
 	
-	void Show(const int& j, const bool& show = true);
-	bool IsVisible(const int& j);
+	void Show(const int& index, const bool& show = true);
+	bool IsVisible(const int& index);
 	ScatterDraw &ShowAll(const bool& show = true);
 
-	void RemoveSeries(const int& j);
+	void RemoveSeries(const int& index);
 	void RemoveAllSeries();
 	
 	ScatterDraw& Id(int id);
-	ScatterDraw& Id(const int& j, int id);
-	int GetId(const int& j);
+	ScatterDraw& Id(const int& index, int id);
+	int GetId(const int& index);
 	
 	Drawing GetDrawing();
 	Image GetImage(const int& scale = 1);
@@ -330,10 +346,10 @@ public:
 	ScatterDraw& LogY(const bool& logy=true) {logY=logy; return *this;}	
 	ScatterDraw& LogY2(const bool& logy=true) {logY2=logy; return *this;}	
 	
-	ScatterDraw& SetMinZoom(double x, double y = -1) {minXZoom = x; minYZoom = y; return *this;}; 
-	ScatterDraw& SetMaxZoom(double x, double y = -1) {maxXZoom = x; maxYZoom = y; return *this;};
+	ScatterDraw& SetMinZoom(double x, double y = -1) 	{minXZoom = x; minYZoom = y; return *this;} 
+	ScatterDraw& SetMaxZoom(double x, double y = -1) 	{maxXZoom = x; maxYZoom = y; return *this;}
 
-	ScatterDraw& SetFastViewX(bool set = true) {fastViewX = set;	return *this;};
+	ScatterDraw& SetFastViewX(bool set = true) {fastViewX = set;	return *this;}
 	
 	Font& GetTitleFont() {return titleFont;};
 	
@@ -372,6 +388,7 @@ protected:
 	double xMajorUnit, yMajorUnit, yMajorUnit2;
 	double xMinUnit, yMinUnit, yMinUnit2;
 	double minXZoom, maxXZoom, minYZoom, maxYZoom;
+	double lastxRange, lastyRange;
 	bool drawXReticle, drawYReticle, drawY2Reticle;	
 	
 	int maxMajorUnitsX, maxMajorUnitsY;
@@ -436,8 +453,6 @@ void ScatterDraw::SetDrawing(T& w, const int& scale)
 {
 	if (GetSize().cx == 0 || GetSize().cy == 0)
 		return;
-	if (xRange == 0 || xMajorUnit == 0 || yRange == 0 || yMajorUnit == 0 || yRange2 == 0)
-		return;
 	
 	w.DrawRect(scale*GetSize(), graphColor);
 	
@@ -473,22 +488,28 @@ void ScatterDraw::SetDrawing(T& w, const int& scale)
 	Size lx  = GetTextSize(xLabel, 	fontLabel);
 	Size ly  = GetTextSize(yLabel, 	fontLabel);
 	Size ly2 = GetTextSize(yLabel2, fontLabel);
-	DrawText(w, (plotW - lx.cx)/2., scale*GetSize().cy - lx.cy - 70*scale, 0,   xLabel,  fontLabel, labelsColor);
-	DrawText(w, scale*2. - scale*hPlotLeft,  (plotH + ly.cx)/2., 900, yLabel,  fontLabel, labelsColor);
+	DrawText(w, (plotW - lx.cx)/2., plotH + scale*(vPlotBottom - 2) - lx.cy, 0, xLabel, fontLabel, labelsColor);
+	DrawText(w, scale*(2 - hPlotLeft), (plotH + ly.cx)/2., 900, yLabel,  fontLabel, labelsColor);
 	DrawText(w, scale*GetSize().cx - ly2.cy - 42*scale, (plotH + ly2.cx)/2., 900, yLabel2, fontLabel, labelsColor);
 
+	if (xRange == 0 || xMajorUnit == 0 || yRange == 0 || yMajorUnit == 0 || yRange2 == 0) {
+		ClipEnd(w);	
+		return;
+	}
+	
 	if (typeid(T) == typeid(BufferPainter)) {
 		Painter &p = (Painter &)w;
-		p.Translate(0.5, 0);
+		p.Translate(0.5, 0);	
 	}
 
+	Font standard6;
+	standard6.Height(scale*StdFont().GetHeight());
+	
 	if (drawXReticle)
 		for(int i = 0; xMinUnit + i*xMajorUnit <= xRange; i++){
 			w.DrawLine(fround(plotW*xMinUnit/xRange + i*plotW/(xRange/xMajorUnit)), plotH,   
 					   fround(plotW*xMinUnit/xRange + i*plotW/(xRange/xMajorUnit)), plotH + scale*4, 
 					   fround(gridWidth*scale), axisColor);             
-			Font standard6;
-			standard6.Height(scale*StdFont().GetHeight());
 			double gridX = xMinUnit + i*xMajorUnit + xMin;
 			String gridLabelX;
 			if (cbModifFormatX)
@@ -517,11 +538,9 @@ void ScatterDraw::SetDrawing(T& w, const int& scale)
 				cbModifFormatY(gridLabelY, i, gridY);
 			else
 				gridLabelY = VariableFormatY(gridY);
-			int dx=scale*GetTextSize(gridLabelY,StdFont()).cx;
-			Font Standard6;
-			Standard6.Height(scale*StdFont().GetHeight());  
+			int dx = scale*GetTextSize(gridLabelY,StdFont()).cx;
 			DrawText(w, -dx - scale*6, fround(-plotH*yMinUnit/yRange + plotH - i*plotH/(yRange/yMajorUnit)) - scale*8, 
-						0, gridLabelY, Standard6, axisColor);
+						0, gridLabelY, standard6, axisColor);
 		}	
 
 	if (drawY2Reticle)
@@ -535,8 +554,6 @@ void ScatterDraw::SetDrawing(T& w, const int& scale)
 				cbModifFormatY2(gridLabelY2, i, gridY2);
 			else
 				gridLabelY2 = VariableFormatY2(gridY2);
-			Font standard6;
-			standard6.Height(scale*StdFont().GetHeight());  
 			DrawText(w, plotW + scale*10, fround(-plotH*yMinUnit2/yRange2 + plotH - i*plotH/(yRange/yMajorUnit)) - scale*8, 
 						0, gridLabelY2, standard6, axisColor);
 		}	
