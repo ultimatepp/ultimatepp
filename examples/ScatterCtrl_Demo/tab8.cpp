@@ -17,7 +17,7 @@ void Tab8::Init()
 	s1<<Pointf(1,-6)<<Pointf(2,-4)<<Pointf(3,2)<<Pointf(4,8)<<Pointf(5,8)<<Pointf(6,15)<<Pointf(7,20)<<Pointf(8,25)<<Pointf(9,14)<<Pointf(10,10)<<Pointf(11,3)<<Pointf(12,-11);;
 	scatter.AddSeries(s1).Legend("Temperature").Stroke(3, Null).Dash(LINE_DASHED).MarkStyle<SquareMarkPlot>();
 	
-	s2 <<Pointf(1,1010)<<Pointf(2,1012)<<Pointf(3,1015)<<Pointf(4,1013)<<Pointf(5,1017)<<Pointf(6,1018)<<Pointf(7,1010)<<Pointf(8,1007)<<Pointf(9,1003)<<Pointf(10,1001)<<Pointf(11,1000)<<Pointf(12,1002);
+	s2 <<Pointf(1,1008)<<Pointf(2,1012)<<Pointf(3,1016)<<Pointf(4,1012)<<Pointf(5,1008)<<Pointf(6,1016)<<Pointf(7,1012)<<Pointf(8,1004)<<Pointf(9,1000)<<Pointf(10,1001)<<Pointf(11,1000)<<Pointf(12,1002);
 	scatter.AddSeries(s2).Legend("Pressure").Stroke(3, Null).Dash("15 6 6 6 3 6 6 6").SetDataPrimaryY(false);
 	scatter.SetDrawY2Reticle();
 	
