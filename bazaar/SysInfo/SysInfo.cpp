@@ -13,6 +13,10 @@
 
 NAMESPACE_UPP
 
+#define TFILE <SysInfo/SysInfo.t>
+#include <Core/t.h>;
+
+
 /////////////////////////////////////////////////////////////////////
 // Hardware Info
 #if defined(PLATFORM_WIN32) 
@@ -1612,6 +1616,21 @@ bool Window_SetRect(long windowId, long left, long top, long right, long bottom)
 	rcNormalPosition.right = right;
 	rcNormalPosition.bottom = bottom;
 	return PutWindowPlacement((HWND)windowId, rcNormalPosition, ptMinPosition, ptMaxPosition, showcmd, 0);
+}
+
+void Window_Bottom(long windowId)
+{
+	SetWindowPos((HWND)windowId, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE || SWP_NOSIZE || SWP_SHOWWINDOW);
+}
+
+void Window_Top(long windowId)
+{
+	SetWindowPos((HWND)windowId, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE || SWP_NOSIZE || SWP_SHOWWINDOW);
+}
+
+void Window_TopMost(long windowId)
+{
+	SetWindowPos((HWND)windowId, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE || SWP_NOSIZE || SWP_SHOWWINDOW);
 }
 
 #endif

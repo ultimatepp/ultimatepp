@@ -10,8 +10,8 @@
 	#include <Winioctl.h>
 	#define CY tagCY
 	// To compile in MinGW copy files Rpcsal.h, DispEx.h, WbemCli.h, WbemDisp.h, Wbemidl.h, 
-	// WbemProv.h and WbemTran.h from /plugin to MinGW/include and 
-	// wbemuuid.lib from /plugin to MinGW/lib
+	// WbemProv.h and WbemTran.h from /SysInfo/plugin to MinGW/include and 
+	// wbemuuid.lib from /SysInfo/plugin to MinGW/lib
 	#include <rpcsal.h>	
 	#include <Wbemidl.h>
 	#include <winnls.h> 

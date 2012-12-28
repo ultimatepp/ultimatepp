@@ -106,6 +106,10 @@ bool CloseCDTray(String drive);
 // Key and mouse keys
 bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bottom);
 bool Window_SetRect(long windowId, long left, long top, long right, long bottom);
+void Window_Bottom(long windowId);
+void Window_Top(long windowId);
+void Window_TopMost(long windowId);
+
 
 bool Mouse_GetPos(long &x, long &y);
 bool Mouse_SetPos(long x, long y, long windowId);

@@ -43,8 +43,8 @@ in Ubuntu can run properly in Fedora without recompiling.&]
 [s0; SysInfo has been tested in Linux using Gcc and in Windows using 
 MinGW and MSC.&]
 [s0; &]
-[s0;~~~2048; [*@6 IMPORTANT][* :] To compile using MinGW it is required 
-to copy the next files from SysInfo/plugin:&]
+[s0;~~~2048; [*@6 IMPORTANT][* :] To compile using MinGW in Windows it 
+is required to copy the next files from SysInfo/plugin:&]
 [s0;i150;O0; To `\MinGW`\include: &]
 [s0;l96; Files [* Rpcsal.h, DispEx.h, WbemCli.h, WbemDisp.h, Wbemidl.h, 
 WbemProv.h and WbemTran.h.]&]
@@ -570,4 +570,4 @@ tried and the reason:&]
 :: [s0; ]
 :: [s0; ]
 :: [s0; [$2 Live version not found]]}}&]
-[s0; ]
+[s0; ]]

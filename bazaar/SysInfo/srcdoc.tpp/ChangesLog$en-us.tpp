@@ -4,7 +4,7 @@ topic "News and changes log";
 [{_}%EN-US 
 [s0; [*R6 SysInfo. News and changes log]&]
 [s0;2 &]
-[s0;2 &]
+[s0; [2 2012/11/30-|Added Window`_Bottom(), Window`_Top() and Window`_TopMost().]&]
 [s0; [2 2012/07/03-|Improved GetAdapterInfo() thanks to mdelfede.]&]
 [s0; [2 2012/07/02-|Added GetNetworkInfo(). Included NAMESPACE`_UPP.]&]
 [s0; [2 2010/09/07-|Added GetAdapterInfo(). It substitutes GetMacAddress().]&]
