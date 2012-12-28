@@ -138,11 +138,11 @@ letter character set encoding according this table:&]
 [s0; will create dede2.tr file (in exe directory on Win32 and user`'s 
 home folder on Posix) ready for translation to deDE in windows`-1252. 
 If translations are already present, they are supplied, otherwise 
-.tr file contains english strings in place of translations.&]
+.tr file contains English strings in place of translations.&]
 [s0; &]
 [s0; It is also possible to output secondary already translated language 
 to .tr file as comments (e.g. in case that translator cannot 
-understand english, but can understand some other language):&]
+understand English, but can understand some other language):&]
 [s0; &]
 [s0; &]
 [s7; myapp `-`-export`-tr dede2 cscz&]
@@ -156,10 +156,10 @@ function does not add new languages to .t files `- just adds
 translations to languages added manually.&]
 [s0; &]
 [s0; When `-`-export`-tr is used without parameter, it exports all 
-compile`-time languages. This is useful for maintainance purposes.&]
+compile`-time languages. This is useful for maintenance purposes.&]
 [s0; &]
-[s0; You will need to include the following in one of your compiled 
-files (not a header):&]
+[s0; You will need to include the following in [* one of your compiled 
+files (not a header)]:&]
 [s0; &]
 [s7; #define TFILE <YourProject/YourTranslations.t>&]
 [s7; #include <Core/t.h>&]
@@ -174,4 +174,4 @@ add the following somewhere early in your application`'s execution:&]
 [s0; &]
 [s0; In multithreaded applications this setting works on per`-thread 
 basis (since release 5061); threads inherit the language setting 
-of main thread on startup.]
+of main thread on startup.]]
