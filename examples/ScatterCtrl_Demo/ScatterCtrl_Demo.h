@@ -118,7 +118,7 @@ public:
 	void Init();
 	void MyFormat(String& s, int i, double d)
 	{
-		s=Format("%Mon",fround(d)); 
+		s = Format("%Mon", fround(d)); 
 		if (!s.IsEmpty())
 			s << "\n2011";
 	}

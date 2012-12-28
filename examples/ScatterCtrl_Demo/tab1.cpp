@@ -35,7 +35,7 @@ void Tab1::Init()
 	//scatter.AddTrendline(SERIE2, 100, LINE);		// To come :-)
 	//scatter.AddTrendline(SERIE2, 100, POLINOMIAL, 3);
 	scatter.SetRange(60, 50).SetMajorUnits(10, 10);
-	scatter.ShowInfo().ShowContextMenu().SetPopText("h", "v", "v2");
+	scatter.ShowInfo().ShowContextMenu().ShowEditDlg().SetPopText("h", "v", "v2");
 }
 
 ScatterDemo *Construct1()
