@@ -1,6 +1,6 @@
 #include <Core/Core.h>
 
-#include "../bsdiffwrapper.h"
+#include "../bsdiff.h"
 
 NAMESPACE_UPP
 

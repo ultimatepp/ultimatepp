@@ -1,5 +1,5 @@
-#ifndef _Functions4U_bsdiffwrapper_h_
-#define _Functions4U_bsdiffwrapper_h_
+#ifndef _Functions4U_bsdiff_h_
+#define _Functions4U_bsdiff_h_
 
 #define ftello 	ftell
 #define fseeko 	fseek

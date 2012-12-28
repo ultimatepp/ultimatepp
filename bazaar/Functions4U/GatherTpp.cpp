@@ -2,8 +2,9 @@
 #include <CtrlLib/CtrlLib.h>
 #include <ide/Browser/Browser.h>
 
-#include "Functions4U/Functions4U.h"
+#include <Functions4U/Functions4U.h>
 #include "GatherTpp.h"
+#include <Functions4U/Html/htmld.h>
 
 NAMESPACE_UPP
 
@@ -62,6 +63,7 @@ struct GatherLinkIterator : RichText::Iterator {
 			if(!IsNull(l)) {
 				if(l[0] == ':') {
 					int q = reflink->Find(l);
+					int w = q;
 					if(q < 0)
 						q = reflink->Find(l + "::class");
 					if(q < 0)
@@ -101,14 +103,13 @@ void QtfAsPdf(PdfDraw &pdf, const char *qtf)
 	UPP::Print(pdf, txt, page);
 }
 
-/*
-Htmls RoundFrame(Htmls data, String border, Color bg)
+HtmlsD RoundFrame(HtmlsD data, String border, Color bg)
 {
-	return HtmlPackedTable().BgColor(bg).Width(-100)
-	          .Attr("style", "border-style: solid; border-width: 1px; border-color: #" + border + ";")
-	       / HtmlLine() / data;
+	return HtmlPackedTableD()
+				.BgColor(bg).Width(-100)
+				.Attr("style", "border-style: solid; border-width: 1px; border-color: #" + border + ";") 
+			/ HtmlLineD() / data;
 }
-*/
 
 bool ContainsAt(const String &source, const String &pattern, int pos)
 {
@@ -146,30 +147,31 @@ void GatherTpp::ExportPage(int i, String htmlFolder, String keywords)
 	String path = links.GetKey(i);
 	
 	String text = GetText(path);
+	int h;
+	h = ParseQTF(tt[i].text).GetHeight(1000);
 	
 	String qtflangs;	
 	String strlang;
 
 	String page = tt[i];
 	page = QtfAsHtml(page, css, links, labels, htmlFolder, links[i]);
-
-/*	
+	
 	Color paper = SWhite;
 	Color bg = Color(210, 217, 210);
 
-	Htmls html;
+	HtmlsD html;
 	html << 
-		HtmlPackedTable().Width(-100) /
-		   	HtmlLine().ColSpan(3)  +
-		HtmlPackedTable().Width(-100) / (
-			HtmlLine().ColSpan(3).BgColor(bg).Height(6) / "" +
-			HtmlRow() / (
-				HtmlTCell().Width(-100).BgColor(bg) / (
+		HtmlPackedTableD().Width(-100) /
+		   	HtmlLineD().ColSpan(3)  +
+		HtmlPackedTableD().Width(-100) / (
+			HtmlLineD().ColSpan(3).BgColor(bg).Height(6) / "" +
+			HtmlRowD() / (
+				HtmlTCellD().Width(-100).BgColor(bg) / (
 					RoundFrame(page , "6E89AE;padding: 10px;", White)
 				)
 			)
 		);
-*/
+
 	String topicTitle = tt.GetKey(i);
 	String pageTitle = tt[i].title;
 	if(IsNull(pageTitle))
@@ -182,10 +184,10 @@ void GatherTpp::ExportPage(int i, String htmlFolder, String keywords)
 */
 	if(pageTitle != title)
 		pageTitle << " :: " << title;
-/*
-	Htmls content =
+
+	HtmlsD content =
 	    "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n" +
-		HtmlHeader(pageTitle, AsCss(css) +
+		HtmlHeaderD(pageTitle, AsCss(css) +
 			"a.l1         { text-decoration:none; font-size: 8pt; font-family: sans-serif; "
 			              "font-weight: normal; }\n"
 			"a.l1:link    { color:#000000; }\n"
@@ -205,43 +207,7 @@ void GatherTpp::ExportPage(int i, String htmlFolder, String keywords)
 	    .BgColor(bg)
 	    .Alink(Red).Link(Black).Vlink(Blue)
 	    / html;
-*/	    
-
-	SaveFile(AppendFileName(htmlFolder, links[i]),
-	    String().Cat() <<
-		"<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">"
-		"<HTML>"
-		"<HEAD>"
-		"<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=utf-8\">"
-		"<META NAME=\"Generator\" CONTENT=\"U++ HTML Package\">"
-		"<TITLE>" << pageTitle << "</TITLE>"
-		"<STYLE TYPE=\"text/css\"><!--"
-		<< AsCss(css) << "a.l1         { text-decoration:none; font-size: 8pt; font-family: sans-serif; font-weight: normal; }"
-		"a.l1:link    { color:#000000; }"
-		"a.l1:visited { color:#000080; }"
-		"a.l1:hover   { color:#9933CC; }"
-		"a.l1:active  { color:#000000; }"
-		"a.l2         { text-decoration:none; font-size: 12pt; font-family: sans-serif; font-variant: small-caps; }"
-		"a.l2:link    { color:#0066FF; }"
-		"a.l2:visited { color:#FF6600; }"
-		"a.l2:hover   { color:#BC0624; }"
-		"a.l2:active  { color:#BC0024; }"
-		"-->"
-		"</STYLE>"
-		"<META NAME=\"keywords\" CONTENT=\"" << keywords << "\"><META name=\"robots\" content=\"index,follow\"></HEAD><BODY BGCOLOR=\"#D2D9D2\" ALINK=\"#800000\" LINK=\"#000000\" VLINK=\"#000080\"><TABLE BORDER=\"0\" CELLSPACING=\"0\" CELLPADDING=\"0\" WIDTH=\"100%\"><TR><TD COLSPAN=\"3\"></TD>"
-		"</TR>"
-		"</TABLE>"
-		"<TABLE BORDER=\"0\" CELLSPACING=\"0\" CELLPADDING=\"0\" WIDTH=\"100%\"><TR><TD COLSPAN=\"3\" BGCOLOR=\"#D2D9D2\" HEIGHT=\"6\"></TD>"
-		"</TR>"
-		"<TR><TD VALIGN=\"TOP\" WIDTH=\"100%\" BGCOLOR=\"#D2D9D2\"><TABLE BORDER=\"0\" CELLSPACING=\"0\" CELLPADDING=\"0\" BGCOLOR=\"#FFFFFF\" WIDTH=\"100%\" style=\"border-style: solid; border-width: 1px; border-color: #6E89AE;padding: 10px;;\"><TR>"
-		"<TD>" << page << "</TD>"
-		"</TR>"
-		"</TABLE>"
-		"</TD>"
-		"</TR>"
-		"</TABLE>"
-		"</BODY>"
-	);
+	SaveFile(AppendFileName(htmlFolder, links[i]), content);
 }
 
 String GatherTpp::TopicFileName(const char *topic)

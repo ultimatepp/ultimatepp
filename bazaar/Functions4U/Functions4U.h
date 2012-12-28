@@ -5,6 +5,7 @@
 #include <Draw/Draw.h>
 #ifdef flagGUI
 #include <ide/Browser/Browser.h>
+#include <Web/Web.h>
 #include "GatherTpp.h"
 #endif
 
@@ -38,6 +39,7 @@ inline String Trim(const String& s) {return TrimBoth(s);};
 String FitFileName(String fileName, int len);
 
 String Tokenize(const String &str, const String &token, int &pos);
+String Tokenize(const String &str, const String &token);
 	
 /////////
 bool DirectoryExistsX(const char *path, int flags = 0); 
@@ -48,6 +50,7 @@ bool DeleteFolderDeepX(const char *dir, int flags = 0);
 bool DirectoryCopyX(const char *dir, const char *newPlace);
 bool DeleteFolderDeepWildcards(const char *dir, int flags = 0);
 ///////////////////////////////
+bool RenameFolderDeepWildcards(const char *path, const char *namewc, const char *newname);
 
 bool UpperFolder(const char *folderName);
 String GetUpperFolder(const String &folderName);
@@ -112,7 +115,7 @@ String GetRootFolder();
 String GetTempFolder();
 String GetOsFolder();
 String GetSystemFolder();
-
+bool SetEnv(const char *id, const char *val);
 
 struct FileData : Moveable<FileData> {
 	bool isFolder;
@@ -222,8 +225,8 @@ Date StrToDate(const char *s);
 
 String BytesToString(Upp::uint64 bytes, bool units = true);
 
-String SecondsToString(double seconds, bool units = false);
-String HMSToString(int hour, int min, double seconds, bool units = false); 
+String SecondsToString(double seconds, bool units = false, bool dec = true);
+String HMSToString(int hour, int min, double seconds, bool units = false, bool dec = true); 
 double StringToSeconds(String str);		// The opposite
 void StringToHMS(String durat, int &hour, int &min, double &seconds); 
 
@@ -232,6 +235,7 @@ String FormatDoubleAdjust(double d, double range);
 String RemoveAccents(String str);
 String RemoveAccent(wchar c);
 bool IsPunctuation(wchar c);
+String RemovePunctuation(String str);
 	
 inline double ToRad(double angle)	{return angle*M_PI/180.;}
 inline double ToDeg(double angle)	{return angle*180./M_PI;}
@@ -309,14 +313,16 @@ inline const double Angle(const Point_<T>& p1, const Point_<T>& p2)  {
 	return Angle<T>(p1.x, p1.y, p2.x, p2.y);
 }
 
+
+Vector<Vector <Value> > ReadCSV(const String strFile, char separator = ',', bool removeRepeated = true);
+	
 // A String based class to parse into
 class StringParse :  public String {
 public:
 	void GoInit()	{pos = 0; lastSeparator='\0';};
 	StringParse():String("") {GoInit();};
 	StringParse(String s): String(s) {GoInit();};
-	bool GoBefore(const String text)
-	{
+	bool GoBefore(const String text) {
 		if (pos >= GetLength()) {
 			pos = GetLength()-1;
 			return false;
@@ -327,23 +333,20 @@ public:
 		pos = newpos;
 		return true;
 	};	
-	bool GoAfter(const String text)
-	{
+	bool GoAfter(const String text) {
 		if(!GoBefore(text))
 			return false;
 		pos += strlen(text);
 		return true;
 	};
-	bool GoAfter(const String text, const String text2)
-	{
+	bool GoAfter(const String text, const String text2) {
 		if(!GoAfter(text))
 			return false;
 		if(!GoAfter(text2))
 			return false;
 		return true;
 	};
-	bool GoAfter(const String text, const String text2, const String text3)
-	{
+	bool GoAfter(const String text, const String text2, const String text3) {
 		if(!GoAfter(text))
 			return false;
 		if(!GoAfter(text2))
@@ -356,23 +359,20 @@ public:
 	bool GoAfter_Init(const String text, const String text2) {GoInit();	return GoAfter(text, text2);};
 	bool GoAfter_Init(const String text, const String text2, const String text3) {GoInit();	return GoAfter(text, text2, text3);};		
 	
-	void GoBeginLine()
-	{
+	void GoBeginLine() {
 		for (; pos >= 0; --pos) {
 			if ((ToString()[pos-1] == '\r') || (ToString()[pos-1] == '\n'))
 				return;
 		} 
 	}
-	bool IsBeginLine()
-	{
+	bool IsBeginLine() {
 		if (pos == 0)
 			return true;
 		if ((ToString()[pos-1] == '\r') || (ToString()[pos-1] == '\n'))
 			return true;
 		return false;
 	}
-	bool IsSpaceRN(int c)
-	{
+	bool IsSpaceRN(int c) {
 		if (IsSpace(c))
 			return true;
 		if ((c == '\r') || (c == '\n'))
@@ -382,8 +382,7 @@ public:
 	// Gets text between "" or just a word until an space
 	// It considers special characters with \ if between ""
 	// If not between "" it gets the word when it finds one of the separator characters
-	String GetText(String separators = "")	
-	{
+	String GetText(String separators = "") {
 		String ret = "";
 		if (pos > GetCount() || pos == -1)
 			return ret;
@@ -437,8 +436,7 @@ public:
 		pos = ++newpos;		// After the separator: ", space or separator
 		return ret;
 	}
-	String GetLine()
-	{
+	String GetLine() {
 		return GetText("\r\n");
 	}
 	double GetDouble(String separators = "")  	{return atof(GetText(separators));};

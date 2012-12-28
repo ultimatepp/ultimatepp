@@ -33,9 +33,13 @@ file
 	SvgColors.cpp,
 	SvgColors.h,
 	BSDiff readonly separator,
-	bsdiffwrapper.h,
-	plugin/bsadditional.cpp,
-	plugin/bsdiff.cpp,
-	plugin/bspatch.cpp,
-	plugin/Credits.txt;
+	bsdiff.h,
+	Bsdiff\bsadditional.cpp,
+	Bsdiff\bsdiff.cpp,
+	Bsdiff\bspatch.cpp,
+	Bsdiff\bzlib.h,
+	Bsdiff\Credits.txt,
+	Html readonly separator,
+	Html/htmld.cpp,
+	Html/htmld.h;
 

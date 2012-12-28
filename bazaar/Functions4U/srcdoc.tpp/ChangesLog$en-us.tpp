@@ -4,7 +4,9 @@ topic "News and changes Log";
 [{_}%EN-US 
 [s0; [*R+184 Functions4U. News and changes log]&]
 [s0;%- &]
-[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2012/07/03]]
+[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2012/12/22]]
+:: [s0;# [2 Added ReadCSV().]]
+:: [s0;# [2 2012/07/03]]
 :: [s0;# [2 Included NAMESPACE`_UPP.]]
 :: [s0;# [2 2012/03/19]]
 :: [s0;# [2 Added new math and geometry functions as Distance() and Angle().]]

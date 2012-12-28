@@ -18,6 +18,9 @@
 
 NAMESPACE_UPP
 
+#define TFILE <Functions4U/Functions4U.t>
+#include <Core/t.h>
+
 /*
 Hi Koldo,
 
@@ -659,6 +662,17 @@ String GetSystemFolder()
 	return String(ret);
 }
 
+bool SetEnv(const char *id, const char *val) 
+{
+//	EnvMap().Put(WString(id), WString(val));
+#ifdef PLATFORM_POSIX
+	return setenv(id, val, 1) == 0;
+#else
+	return _wputenv(WString(id) + "=" + WString(val)) == 0;
+#endif
+}
+
+
 #endif
 #ifdef PLATFORM_POSIX
 
@@ -789,7 +803,7 @@ String formatSeconds(double seconds) {
 	return ret;
 }
 
-String HMSToString(int hour, int min, double seconds, bool units) {
+String HMSToString(int hour, int min, double seconds, bool units, bool dec) {
 	String sunits;
 	if (units) {
 		if (hour >= 2)
@@ -810,13 +824,16 @@ String HMSToString(int hour, int min, double seconds, bool units) {
 		ret << hour << ":";
 	if (min > 0 || hour > 0) 
 	    ret << (ret.IsEmpty() ? FormatInt(min) : FormatIntDec(min, 2, '0')) << ":";
-	ret << (ret.IsEmpty() ? FormatDouble(seconds, 2, FD_REL) : formatSeconds(seconds));
+	if (!dec)
+		ret << int(seconds);
+	else
+		ret << (ret.IsEmpty() ? FormatDouble(seconds, 2, FD_REL) : formatSeconds(seconds));
 	if (units)
 		ret << " " << sunits;
 	return ret;
 }
 
-String SecondsToString(double seconds, bool units) {
+String SecondsToString(double seconds, bool units, bool dec) {
 	int hour, min;
 	hour = (int)(seconds/3600.);
 	seconds -= hour*3600;
@@ -892,9 +909,9 @@ String RemoveAccent(wchar c) {
 }
 
 bool IsPunctuation(wchar c) {
-	//const WString punct = "\"’'()[]{}<>:;,‒–—―….,¡!¿?«»-‐‘’“”/\\&@*\\•^©¤฿¢$€ƒ£₦¥₩₪†‡〃#№ºª\%‰‱ ¶′®§℠℗~™_|¦=";
+	//const WString punct = "\"’'()[]{}<>:;,‒–—―….,¡!¿?«»-‐‘’“”/\\&@*\\•^©¤฿¢$€ƒ£₦¥₩₪†‡〃#№ºª\%‰‱ ¶′®§℠℗~™|¦=";
 	const WString punct = "\"\342\200\231'()[]{}<>:;,\342\200\222\342\200\223\342\200\224\342\200\225\342\200\246.,\302\241!\302\277?\302\253\302\273-\342\200\220\342\200\230\342\200\231\342\200\234\342\200\235/\\&@*\\\342\200\242^\302\251\302\244\340\270\277\302\242$\342\202\254\306\222\302\243\342\202\246\302\245\342\202\251\342\202\252\342\200\240\342\200\241\343\200\203#\342\204\226\302\272\302\252%\342\200\260\342\200\261 "
-     					  "\302\266\342\200\262\302\256\302\247\342\204\240\342\204\227~\342\204\242_|\302\246=";
+     					  "\302\266\342\200\262\302\256\302\247\342\204\240\342\204\227~\342\204\242|\302\246=";
 	for (int i = 0; punct[i]; ++i) {
 		if (punct[i] == c) 
 			return true;
@@ -914,6 +931,16 @@ String RemoveAccents(String str) {
 			}
 		} 
 		ret += schar;
+	}
+	return ret;
+}
+
+String RemovePunctuation(String str) {
+	String ret;
+	WString wstr = str.ToWString();
+	for (int i = 0; i < wstr.GetCount(); ++i) {
+		if (!IsPunctuation(wstr[i]))
+		    ret += wstr[i];
 	}
 	return ret;
 }
@@ -979,9 +1006,96 @@ String Tokenize(const String &str, const String &token, int &pos) {
 	}
 }
 
-//int DayOfYear(Date d) {
-//	return 1 + d - FirstDayOfYear(d);
-//}
+String Tokenize(const String &str, const String &token) {
+	int dummy = 0;
+	return Tokenize(str, token, dummy);
+}
+
+String GetLine(const String &str, int &pos) {
+	String ret;
+	int npos = str.Find("\n", pos);
+	if (npos == -1) {
+		ret = str.Mid(pos);
+		pos = -1;
+	} else {
+		ret = str.Mid(pos, npos - pos);
+		pos = npos + 1;
+	}
+	return TrimBoth(ret);
+}
+
+Value GetField(const String &str, int &pos, char separator) {
+	String sret;
+	int npos = str.Find(separator, pos);
+	if (npos <= -1) {
+		sret = str.Mid(pos);
+		pos = -1;
+	} else {
+		sret = str.Mid(pos, npos - pos);
+		pos = npos + 1;
+	}
+	sret = TrimBoth(sret);
+	if (!sret.IsEmpty() && sret[0] == '\"')
+		sret = sret.Mid(1);
+	if (!sret.IsEmpty() && sret[sret.GetLength()-1] == '\"')
+		sret = sret.Left(sret.GetLength()-1);
+	
+	if (sret.IsEmpty())
+		return Null;
+	
+	double dbl = ScanDouble(sret);
+		
+	if (IsNull(dbl)) 
+		return sret;
+	else {
+		int it = int(dbl);
+		if (dbl - double(it) != 0)
+			return dbl;				
+		else 
+			return it;
+	}
+}
+
+Vector<Vector <Value> > ReadCSV(const String strFile, char separator, bool removeRepeated) {
+	Vector<Vector<Value> > result;
+
+	String line;
+	int posLine = 0;
+	line = GetLine(strFile, posLine);
+	int pos = 0;
+	while (pos >= 0) {
+		Value name = GetField(line, pos, separator);
+		if (!IsNull(name)) {
+			Vector<Value> &data = result.Add();
+			data.Add(name);
+		} else
+			break;
+	}
+	while (posLine >= 0) {
+		pos = 0;
+		line = GetLine(strFile, posLine);
+		if (!line.IsEmpty()) {
+			bool repeated = removeRepeated;
+			int row = result[0].GetCount() - 1;
+			for (int col = 0; col < result.GetCount(); col++) {
+				if (pos >= 0) {
+					Value data = GetField(line, pos, separator);
+					result[col].Add(data);
+					if (row > 0 && result[col][row] != data)
+						repeated = false;
+				} else
+					result[col].Add();
+			}
+			if (row > 0 && repeated) {
+				for (int col = 0; col < result.GetCount(); col++) 
+					result[col].Remove(row+1);
+			}
+		} else
+			break;
+	}
+	return result;
+};
+
 
 #ifdef PLATFORM_POSIX
 String FileRealName(const char *fileName) {
@@ -1174,6 +1288,26 @@ bool DeleteFolderDeepWildcards(const char *path, int flags)
 		ff.Next();
 	}
 	return DirectoryDelete(dir);
+}
+
+bool RenameFolderDeepWildcards(const char *path, const char *namewc, const char *newname)
+{
+	FindFile ff(AppendFileName(path, "*.*"));
+	while(ff) {
+		if(ff.IsFolder()) {
+			String name = ff.GetName();
+			String folder = AppendFileName(path, name);
+			if (!RenameFolderDeepWildcards(folder, namewc, newname))
+				return false;
+			if (PatternMatch(namewc, name))
+				if (!FileMove(folder, AppendFileName(path, newname))) {
+					dword error = GetLastError();
+					return false;
+				}
+		}
+		ff.Next();
+	}
+	return true;
 }
 
 bool DirectoryCopy_Each(const char *dir, const char *newPlace, String relPath)

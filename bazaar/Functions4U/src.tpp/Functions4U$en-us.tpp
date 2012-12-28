@@ -216,6 +216,14 @@ in [%-*@3 token] is found. [%-*@3 pos] is updated to the next char
 after returned String.&]
 [s3; &]
 [s4;%- &]
+[s5;:ReadCSV`(const String`,char`,bool`):%- [_^Vector^ Vector]<[_^Vector^ Vector]_<[_^Value^ V
+alue]>_>_[* ReadCSV]([@(0.0.255) const]_[_^String^ String]_[*@3 strFile], 
+[@(0.0.255) char]_[*@3 separator], [@(0.0.255) bool]_[*@3 removeRepeated])&]
+[s2; Read a .csv file in String [%-*@3 strFile] where [%-*@3 separator] 
+can be defined.&]
+[s2; If [%-*@3 removeRepeated ]then repeated rows will be deleted.&]
+[s3; &]
+[s4; &]
 [s5;:ReverseFind`(const String`&`,const String`&`,int`):%- [@(0.0.255) int]_[* ReverseFin
 d]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s], [@(0.0.255) const]_[_^String^ S
 tring][@(0.0.255) `&]_[*@3 toFind], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
@@ -1775,4 +1783,4 @@ button can be pressed again so the function can be called twice.&]
 it opens a new window using, lets say, PromptOK(). This way ChildLostFocus 
 will be called twice: the second one because PromptOK() makes 
 the field to loose the focus.&]
-[s0; ]
+[s0; ]]
