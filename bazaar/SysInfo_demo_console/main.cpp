@@ -1,8 +1,7 @@
 #include <Core/Core.h>
+#include <SysInfo/SysInfo.h>
 
 using namespace Upp;
-
-#include <SysInfo/SysInfo.h>
 
 static bool end = false;
 
