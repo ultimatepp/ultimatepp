@@ -11,72 +11,25 @@ NAMESPACE_UPP
 #define LLOG(x)     LOG(x)
 #define LOG_EVENTS
 
-static Point            sMousepos;
-static GdkModifierType  sModmask;
-static bool             sMouseposValid;
+bool  Ctrl::EventMouseValid;
+Point Ctrl::EventMousePos;
+guint Ctrl::EventState;
 
-void syncMousePos()
-{
-	if(sMouseposValid)
-		return;
-	gint x, y;
-	gdk_window_get_pointer(gdk_get_default_root_window(), &x, &y, &sModmask);
-	sMousepos = Point(x, y);
-}
+BiVector<Ctrl::Event> Ctrl::Events;
 
-void Ctrl::InvalidateMousePos()
-{
-	sMouseposValid = false;
-}
+Point         Ctrl::CurrentMousePos;
+guint         Ctrl::CurrentState;
+guint32       Ctrl::CurrentTime;
+Ctrl::Event   Ctrl::CurrentEvent;
 
-bool  GetShift() { syncMousePos(); return sModmask & GDK_SHIFT_MASK; }
-bool  GetCtrl() { syncMousePos(); return sModmask & GDK_CONTROL_MASK ; }
-bool  GetAlt() { syncMousePos(); return sModmask & GDK_MOD1_MASK; }
-bool  GetCapsLock() { syncMousePos(); return sModmask & GDK_LOCK_MASK; }
-bool  GetMouseLeft() { syncMousePos(); return sModmask & GDK_BUTTON1_MASK; }
-bool  GetMouseRight() { syncMousePos(); return sModmask & GDK_BUTTON3_MASK; }
-bool  GetMouseMiddle() { syncMousePos(); return sModmask & GDK_BUTTON2_MASK; }
-Point GetMousePos() { syncMousePos(); return sMousepos; }
-
-bool Ctrl::DispatchMouseIn(int act, int zd)
-{
-	Point p = GetMousePos();
-	Rect r = GetScreenRect();
-	if(r.Contains(p)) {
-		p -= r.TopLeft();
-		DispatchMouse(act, p, zd);
-		return true;
-	}
-	return false;
-}
-
-void Ctrl::GtkMouseEvent(int action, int act, Point p, int zd)
-{
-	DDUMP(zd);
-	if(grabpopup && activePopup.GetCount()) {
-		for(int i = activePopup.GetCount() - 1; i >= 0; i--)
-			if(activePopup[i]->DispatchMouseIn(act, zd))
-				return;
-		Ptr<TopWindow> w = activePopup[0]->GetTopWindow();
-		if(action == DOWN) { // Deactivate active popup(s) if clicked outside of active popups
-			IgnoreMouseUp();
-			activePopup.Top()->GetTopWindow()->ActivateWnd();
-		}
-		else
-			w->DispatchMouseIn(act, zd);
-		return;
-	}
-	DispatchMouse(act, p, zd);
-}
-
-void Ctrl::GtkMouseEvent(int action, GdkEvent *event)
-{
-	GdkEventButton *e = (GdkEventButton *)event;
-	int act = action;
-	if(action != MOUSEMOVE)
-		act |= e->button == 2 ? MIDDLE : e->button == 3 ? RIGHT : LEFT;
-	GtkMouseEvent(action, act, Point((int)e->x, (int)e->y), 0);
-}
+bool  GetShift() { return Ctrl::CurrentState & GDK_SHIFT_MASK; }
+bool  GetCtrl() { return Ctrl::CurrentState & GDK_CONTROL_MASK ; }
+bool  GetAlt() { return Ctrl::CurrentState & GDK_MOD1_MASK; }
+bool  GetCapsLock() { return Ctrl::CurrentState & GDK_LOCK_MASK; }
+bool  GetMouseLeft() { return Ctrl::CurrentState & GDK_BUTTON1_MASK; }
+bool  GetMouseRight() { return Ctrl::CurrentState & GDK_BUTTON3_MASK; }
+bool  GetMouseMiddle() { return Ctrl::CurrentState & GDK_BUTTON2_MASK; }
+Point GetMousePos() { return Ctrl::CurrentMousePos; }
 
 #ifdef LOG_EVENTS
 Tuple2<int, const char *> xEvent[] = {
@@ -122,23 +75,249 @@ Tuple2<int, const char *> xEvent[] = {
 };
 #endif
 
-bool Ctrl::Proc(GdkEvent *event)
+Ctrl *Ctrl::GetTopCtrlFromId(int id)
 {
-	if(!top)
-		return false;
-	Ptr<Ctrl> _this = this;
+	int q = FindId(id);
+	DDUMP(q);
+	if(q >= 0) {
+		Ctrl *p = wins[q].ctrl;
+		if(p && p->top)
+			return p;
+	}
+	return NULL;
+}
+
+gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
+{
 #ifdef LOG_EVENTS
 	String ev = "?";
 	Tuple2<int, const char *> *f = FindTuple(xEvent, __countof(xEvent), event->type);
 	if(f)
 		ev = f->b;
-	LOG(rmsecs() << " EVENT " << Upp::Name(this) << " " << ev);
+	LOG(rmsecs() << " FETCH EVENT " << ev);
 #endif
 	GdkEventKey *key;
 	bool pressed = false;
-	int kv;
-	InvalidateMousePos();
+	bool  retval = true;
+	Value value;
+	Ctrl *p;
+
 	switch(event->type) {
+	case GDK_EXPOSE:
+	case GDK_DAMAGE:
+		p = GetTopCtrlFromId(user_data);
+		if(p) {
+			TimeStop expose_time;
+			DDUMP(p->GetScreenRect());
+			p->fullrefresh = false;
+			GdkEventExpose *e = (GdkEventExpose *)event;
+			SystemDraw w(gdk_cairo_create(p->gdk()));
+			painting = true;
+			Rect r = RectC(e->area.x, e->area.y, e->area.width, e->area.height);
+			w.Clip(r);
+			p->UpdateArea(w, r);
+			w.End();
+			cairo_destroy(w);
+			if(p->top->dr)
+				DrawDragRect(*p, *p->top->dr);
+			painting = false;
+			DDUMP(expose_time);
+		}
+		return true;
+	case GDK_DELETE:
+		break;
+	case GDK_FOCUS_CHANGE:
+		retval = false;
+		value = ((GdkEventFocus *)event)->in;
+		break;
+	case GDK_LEAVE_NOTIFY:
+		EventMouseValid = false;
+		return false;
+	case GDK_MOTION_NOTIFY: {
+		GdkEventMotion *e = (GdkEventMotion *)event;
+		DoMouseEvent(e->state, Point((int)e->x_root, (int)e->y_root));
+		break;
+	}
+	case GDK_BUTTON_PRESS:
+		value = DoButtonEvent(event, true);
+		if(IsNull(value))
+			return false;
+		break;
+	case GDK_2BUTTON_PRESS:
+		value = DoButtonEvent(event, true);
+		if(IsNull(value))
+			return false;
+		break;
+	case GDK_BUTTON_RELEASE:
+		value = DoButtonEvent(event, false);
+		if(IsNull(value))
+			return false;
+		break;
+	case GDK_SCROLL: {
+		GdkEventScroll *e = (GdkEventScroll *)event;
+		value = findarg(e->direction, GDK_SCROLL_UP, GDK_SCROLL_LEFT) < 0 ? -120 : 120;
+		DoMouseEvent(e->state, Point((int)e->x_root, (int)e->y_root));
+		break;
+	}
+	case GDK_KEY_PRESS:
+		pressed = true;
+	case GDK_KEY_RELEASE:
+		key = (GdkEventKey *)event;
+		EventState = key->state;
+		value = (int) key->keyval;
+		if(pressed) {
+			p = GetTopCtrlFromId(user_data);
+			if(p && gtk_im_context_filter_keypress(p->top->im_context, key))
+				return true;
+		}
+		break;
+	case GDK_CONFIGURE: {
+		retval = false;
+		GdkEventConfigure *e = (GdkEventConfigure *)event;
+		value = RectC(e->x, e->y, e->width, e->height);
+		break;
+	}
+	default:
+		return false;
+	}
+	AddEvent(user_data, event->type, value);
+	return retval;
+}
+
+void Ctrl::DoMouseEvent(int state, Point pos)
+{
+	EventMousePos = pos;
+	EventState = state;
+	EventMouseValid = true;
+}
+
+int Ctrl::DoButtonEvent(GdkEvent *event, bool press)
+{
+	GdkEventButton *e = (GdkEventButton *)event;
+	static int mask[] = { GDK_BUTTON1_MASK, GDK_BUTTON2_MASK, GDK_BUTTON3_MASK };
+	DDUMP(e->button);
+	if(e->button >= 1 && e->button <= 3) {
+		int m = mask[e->button - 1];
+		int state = e->state;
+		if(press) // gtk seems to provide state "before" the event, so buttons are wrong
+			state |= m;
+		else
+			state &= ~m;
+		DoMouseEvent(state, Point((int)e->x_root, (int)e->y_root));
+		return e->button;
+	}
+	return Null;
+}
+
+void Ctrl::AddEvent(gpointer user_data, int type, const Value& value)
+{
+	if(Events.GetCount() > 50000)
+		return;
+	Event& e = Events.AddTail();
+	e.time = gtk_get_current_event_time();
+	e.windowid = (uint32)(uintptr_t)user_data;
+	DDUMP(e.windowid);
+	e.type = type;
+	e.value = value;
+	if(!EventMouseValid) {
+		gint x, y;
+		GdkModifierType mod;
+		gdk_window_get_pointer(gdk_get_default_root_window(), &x, &y, &mod);
+		EventState = mod;
+		EventMousePos = Point(x, y);
+		EventMouseValid = true;
+	}
+	e.mousepos = EventMousePos;
+	e.state = EventState;
+	e.count = 1;
+	DDUMP(EventState & GDK_BUTTON1_MASK);
+}
+
+void Ctrl::IMCommit(GtkIMContext *context, gchar *str, gpointer user_data)
+{
+	AddEvent(user_data, EVENT_TEXT, FromUtf8(str));
+}
+
+void Ctrl::FetchEvents(bool may_block)
+{
+	while(g_main_context_iteration(NULL, may_block))
+		may_block = false;
+}
+
+bool Ctrl::IsWaitingEvent()
+{
+	FetchEvents(FALSE);
+	return Events.GetCount();
+}
+
+struct ProcStop {
+	TimeStop tm;
+	String   ev;
+	
+	~ProcStop() { LOG("* " << ev << " elapsed " << tm); }
+};
+
+bool Ctrl::DispatchMouseIn(int act, int zd)
+{
+	Point p = GetMousePos();
+	Rect r = GetScreenRect();
+	if(r.Contains(p)) {
+		p -= r.TopLeft();
+		DispatchMouse(act, p, zd);
+		return true;
+	}
+	return false;
+}
+
+void Ctrl::GtkMouseEvent(int action, int act, int zd)
+{
+	if(grabpopup && activePopup.GetCount()) {
+		DDUMPC(activePopup);
+		for(int i = activePopup.GetCount(); --i >= 0;)
+			if(activePopup[i] && activePopup[i]->DispatchMouseIn(act, zd))
+				return;
+		if(action == DOWN) { // Deactivate active popup(s) if clicked outside of active popups
+			IgnoreMouseUp();
+			if(activePopup.Top())
+				activePopup.Top()->GetTopWindow()->ActivateWnd();
+		}
+		else
+		if(activePopup[0]) { // Redirect other events to TopWindow that spawned first popup
+			Ptr<TopWindow> w = activePopup[0]->GetTopWindow();
+			if(w)
+				w->DispatchMouseIn(act, zd);
+		}
+		return;
+	}
+	DispatchMouse(act, GetMousePos() - GetScreenRect().TopLeft(), zd);
+}
+
+void Ctrl::GtkButtonEvent(int action)
+{
+	int act = action;
+	int button = CurrentEvent.value;
+	if(action != MOUSEMOVE)
+		act |= button == 2 ? MIDDLE : button == 3 ? RIGHT : LEFT;
+	GtkMouseEvent(action, act, 0);
+}
+
+void Ctrl::Proc()
+{
+#ifdef LOG_EVENTS
+	String ev = "?";
+	Tuple2<int, const char *> *f = FindTuple(xEvent, __countof(xEvent), CurrentEvent.type);
+	if(f)
+		ev = f->b;
+	LOG(rmsecs() << "PROCESS EVENT " << Upp::Name(this) << " " << ev);
+	ProcStop tm;
+	tm.ev = ev;
+#endif
+	if(!top)
+		return;
+	Ptr<Ctrl> _this = this;
+	bool pressed = false;
+	int  kv;
+	switch(CurrentEvent.type) {
 	case GDK_DELETE: {
 		TopWindow *w = dynamic_cast<TopWindow *>(this);
 		if(w) {
@@ -146,13 +325,11 @@ bool Ctrl::Proc(GdkEvent *event)
 				IgnoreMouseUp();
 				w->WhenClose();
 			}
-			return true;
 		}
-		return false;
 	}
 	case GDK_FOCUS_CHANGE:
-		LLOG("FocusChange in: " << ((GdkEventFocus *)event)->in << ", focusCtrlWnd " << focusCtrlWnd);
-		if(((GdkEventFocus *)event)->in) {
+		LLOG("FocusChange in: " << (bool)CurrentEvent.value << ", focusCtrlWnd " << focusCtrlWnd);
+		if((bool)CurrentEvent.value) {
 			gtk_im_context_focus_in(top->im_context);
 			if(this != focusCtrlWnd) {
 				LLOG("Activate " << Name());
@@ -163,58 +340,37 @@ bool Ctrl::Proc(GdkEvent *event)
 			gtk_im_context_focus_out(top->im_context);
 			KillFocusWnd();
 		}
-		return true;
-	case GDK_EXPOSE:
-	case GDK_DAMAGE:
-		if(top) {
-			fullrefresh = false;
-			GdkEventExpose *e = (GdkEventExpose *)event;
-			SystemDraw w(gdk_cairo_create(gdk()));
-			painting = true;
-			UpdateArea(w, RectC(e->area.x, e->area.y, e->area.width, e->area.height));
-			cairo_destroy(w);
-			if(top->dr)
-				DrawDragRect(*this, *top->dr);
-			painting = false;
-		}
-		return true;
-	case GDK_MOTION_NOTIFY:
-		GtkMouseEvent(MOUSEMOVE, event);
+		return;
+	case GDK_MOTION_NOTIFY: {
+		GtkMouseEvent(MOUSEMOVE, MOUSEMOVE, 0);
 		DoCursorShape();
 		break;
+	}
 	case GDK_BUTTON_PRESS:
 		if(!HasWndFocus() && !popup)
 			SetWndFocus();
 		ClickActivateWnd();
-		GtkMouseEvent(DOWN, event);
+		GtkButtonEvent(DOWN);
 		break;
 	case GDK_2BUTTON_PRESS:
-		GtkMouseEvent(DOUBLE, event);
+		GtkButtonEvent(DOUBLE);
 		break;
 	case GDK_BUTTON_RELEASE:
 		if(ignoreclick)
 			EndIgnore();
 		else
-			GtkMouseEvent(UP, event);
+			GtkButtonEvent(UP);
 		break;
 	case GDK_SCROLL: {
-		GdkEventScroll *e = (GdkEventScroll *)event;
-		GtkMouseEvent(MOUSEWHEEL, MOUSEWHEEL, Point((int)e->x, (int)e->y),
-		              findarg(e->direction, GDK_SCROLL_UP, GDK_SCROLL_LEFT) < 0 ? -120 : 120);
+		GtkMouseEvent(MOUSEWHEEL, MOUSEWHEEL, CurrentEvent.value);
 		break;
 	}
 	case GDK_KEY_PRESS:
 		pressed = true;
-		key = (GdkEventKey *)event;
 	case GDK_KEY_RELEASE:
-		key = (GdkEventKey *)event;
-		kv = key->keyval;
-		if(gtk_im_context_filter_keypress(top->im_context, key))
-			break;
+		kv = CurrentEvent.value;
 		if(kv >= 0 && kv < 65536) {
-			DDUMP(pressed);
 			LOG(FormatIntHex(kv) << ' ' << (char)kv);
-			DDUMP(key->state & GDK_CONTROL_MASK);
 			if(kv >= 'a' && kv <= 'z')
 				kv = kv - 'a' + 'A';
 			static Tuple2<int, int> cv[] = {
@@ -228,59 +384,33 @@ bool Ctrl::Proc(GdkEvent *event)
 				kv = x->b;
 			else
 				kv += K_DELTA;
-			if(key->state & GDK_SHIFT_MASK)
+			if(GetShift())
 				kv |= K_SHIFT;
-			if(key->state & GDK_CONTROL_MASK)
+			if(GetCtrl())
 				kv |= K_CTRL;
-			if(key->state & GDK_MOD1_MASK)
+			if(GetAlt())
 				kv |= K_ALT;
-			LLOG(GetKeyDesc(kv) << ", pressed: " << pressed);
-			DispatchKey(!pressed * K_KEYUP + kv, 1);
+			LLOG(GetKeyDesc(kv) << ", pressed: " << pressed << ", count: " << CurrentEvent.count);
+			DispatchKey(!pressed * K_KEYUP + kv, CurrentEvent.count); // TODO: Add compression
 		}
 		break;
+	case EVENT_TEXT: {
+		WString h = CurrentEvent.value;
+		for(int i = 0; i < h.GetCount(); i++) // TODO: Add compression
+			DispatchKey(h[i], 1);
+		break;
+	}
 	case GDK_CONFIGURE: {
-		GdkEventConfigure *e = (GdkEventConfigure *)event;
-		Rect rect = RectC(e->x, e->y, e->width, e->height);
-		LLOG("ConfigureNotify " << rect << ", GetRect() " << GetRect());
+		Rect rect = CurrentEvent.value;
 		if(GetRect() != rect)
 			SetWndRect(rect);
-		// TODO: Add DHCtrl support
 		}
-		return false; // 'return true' leads to size problems
+		break;
 	default:
-		return false;
+		return;
 	}
 	if(_this)
 		_this->PostInput();
-	return true;
-}
-
-gboolean Ctrl::TimeHandler(GtkWidget *)
-{
-	InvalidateMousePos();
-	TimerProc(GetTickCount());
-	AnimateCaret();
-	return true;
-}
-
-gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
-{
-	return ((Ctrl *)(user_data))->Proc(event);
-}
-
-void Ctrl::IMCommit(GtkIMContext *context, gchar *str, gpointer user_data)
-{
-	WString s = FromUtf8(str);
-	for(int i = 0; i < s.GetCount(); i++)
-		((Ctrl *)(user_data))->DispatchKey(s[i], 1);
-}
-
-bool Ctrl::IsWaitingEvent()
-{
-	GDK_THREADS_LEAVE ();  
-	bool result = g_main_context_pending(NULL);
-	GDK_THREADS_ENTER ();
-	return result;
 }
 
 bool Ctrl::ProcessEvent(bool *quit)
@@ -288,16 +418,45 @@ bool Ctrl::ProcessEvent(bool *quit)
 	ASSERT(IsMainThread());
 	bool r = false;
 	if(IsWaitingEvent()) {
-		g_main_context_iteration(NULL, FALSE);
-		if(quit)
-			*quit = IsEndSession();
+		while(Events.GetCount() > 1) { // Event compression (coalesce autorepeat, mouse moves/wheel, configure)
+			Event& a = Events[0];
+			Event& b = Events[1];
+			if(b.type == a.type && a.windowid == b.windowid && a.state == b.state) {
+				if(a.type == GDK_KEY_PRESS && a.value == b.value)
+					b.count += a.count;
+			    else
+			    if(a.type == GDK_SCROLL)
+			        b.value = (int)b.value + (int)a.value;
+			    else
+			    if(findarg(a.type, GDK_KEY_PRESS, GDK_CONFIGURE) < 0)
+			        break;
+				Events.DropHead();
+			}
+			else
+				break;
+		}
+		Event& e = Events.Head();
+		CurrentTime = e.time;
+		CurrentMousePos = e.mousepos;
+		CurrentState = e.state;
+		CurrentEvent = e;
+		Value val = e.value;
+		Events.DropHead();
+		Ctrl *w = GetTopCtrlFromId(e.windowid);
+		DDUMP(e.windowid);
+		DDUMP(w);
+		if(w) {
+			DDUMP(CurrentState & GDK_BUTTON1_MASK);
+			w->Proc();
+		}
 		r = true;
 	}
-	TimerProc(GetTickCount());
-	SyncCaret();
-	AnimateCaret();
-	gdk_flush();
 	return r;
+}
+
+gboolean Ctrl::TimeHandler(GtkWidget *)
+{
+	return true;
 }
 
 void SweepMkImageCache();
@@ -307,6 +466,16 @@ bool Ctrl::ProcessEvents(bool *quit)
 	bool r = false;
 	while(IsWaitingEvent() && (!LoopCtrl || LoopCtrl->InLoop()))
 		r = ProcessEvent(quit) || r;
+	TimerProc(GetTickCount());
+	AnimateCaret();
+	if(quit)
+		*quit = IsEndSession();
+	for(int i = 0; i < wins.GetCount(); i++)
+		if(wins[i].ctrl)
+			wins[i].ctrl->SyncScroll();
+	gdk_window_process_all_updates();
+	FetchEvents(FALSE); // To perform any pending GDK_EXPOSE
+	gdk_flush();
 	return r;
 }
 
@@ -339,19 +508,8 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 
 	while(!IsEndSession() && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
-		GDK_THREADS_LEAVE();
-		g_main_context_iteration(NULL, TRUE);
-//		DLOG("g_main_context_iteration " << msecs());
-		GDK_THREADS_ENTER();
-		for(int i = 0; i < wins.GetCount(); i++) {
-			Ctrl *q = wins[i].ctrl;
-			if(q) q->SyncScroll();
-		}
-		TimerProc(GetTickCount());
-		SyncCaret();
-		AnimateCaret();
-		CheckMouseCtrl();
-		gdk_flush();
+		FetchEvents(TRUE);
+		ProcessEvents();
 	}
 
 	g_main_loop_unref(loop);
@@ -362,9 +520,17 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	LLOG(LOG_END << "Leaving event loop ");
 }
 
+gboolean sOnce(GtkWidget *)
+{
+	return false;
+}
+
 void Ctrl::GuiSleep0(int ms)
 {
 	GuiLock __;
+	if(ms < 20) // Periodic timer is each 20ms, so that is the longest possible wait
+		g_timeout_add(ms, (GSourceFunc) sOnce, NULL); // otherwise setup shorter timer
+	FetchEvents(TRUE);
 }
 
 END_UPP_NAMESPACE

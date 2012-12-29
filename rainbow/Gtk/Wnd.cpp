@@ -19,6 +19,14 @@ Vector<Ctrl::Win> Ctrl::wins;
 int        Ctrl::WndCaretTime;
 bool       Ctrl::WndCaretVisible;
 
+int Ctrl::FindId(int id)
+{
+	for(int i = 0; i < wins.GetCount(); i++)
+		if(wins[i].id == id)
+			return i;
+	return -1;
+}
+
 int Ctrl::FindCtrl(Ctrl *ctrl)
 {
 	for(int i = 0; i < wins.GetCount(); i++)
@@ -65,6 +73,7 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 void  Ctrl::SetMouseCursor(const Image& image)
 {
 	GuiLock __;
+	DTIMING("SetMouseCursor");
 	int64 id = image.GetSerialId();
 	Ctrl *topctrl = NULL;
 	Top *top = NULL;
@@ -161,10 +170,20 @@ void Ctrl::FocusSync()
 	}
 }
 
+void  Ctrl::AnimateCaret()
+{
+	GuiLock __;
+	int v = !(((GetTickCount() - WndCaretTime) / 500) & 1);
+	if(v != WndCaretVisible) {
+		WndCaretVisible = v;
+		RefreshCaret();
+	}
+}
+
 void Ctrl::PaintCaret(SystemDraw& w)
 {
 	GuiLock __;
-	// LLOG("PaintCaret " << this << ", caretCtrl: " << caretCtrl << ", WndCaretVisible: " << WndCaretVisible);
+	LLOG("PaintCaret " << Name() << ", caretCtrl: " << caretCtrl << ", WndCaretVisible: " << WndCaretVisible);
 	if(this == caretCtrl && WndCaretVisible)
 		w.DrawRect(caretx, carety, caretcx, caretcy, InvertColor);
 }
@@ -172,6 +191,7 @@ void Ctrl::PaintCaret(SystemDraw& w)
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
 {
 	GuiLock __;
+	LLOG("SetCaret " << Name());
 	if(this == caretCtrl)
 		RefreshCaret();
 	caretx = x;
@@ -188,19 +208,10 @@ void Ctrl::SetCaret(int x, int y, int cx, int cy)
 void Ctrl::SyncCaret() {
 	GuiLock __;
 	if(focusCtrl != caretCtrl) {
+		LLOG("SyncCaret DO " << Upp::Name(caretCtrl) << " -> " << Upp::Name(focusCtrl));
 		RefreshCaret();
 		caretCtrl = focusCtrl;
 		RefreshCaret();
-	}
-}
-
-void  Ctrl::AnimateCaret()
-{
-	GuiLock __;
-	int v = !(((GetTickCount() - WndCaretTime) / 500) & 1);
-	if(v != WndCaretVisible) {
-		RefreshCaret();
-		WndCaretVisible = v;
 	}
 }
 
@@ -220,10 +231,12 @@ Rect Ctrl::GetWndScreenRect() const
 void Ctrl::WndShow0(bool b)
 {
 	GuiLock __;
-	if(b)
-		gtk_widget_show_now(top->window);
-	else
-		gtk_widget_hide(top->window);
+	LLOG("WndShow " << Name() << ", " << b);
+	if(top)
+		if(b)
+			gtk_widget_show_now(top->window);
+		else
+			gtk_widget_hide(top->window);
 }
 
 bool Ctrl::IsWndOpen() const {
@@ -318,6 +331,10 @@ void Ctrl::SetWndForeground0()
 bool Ctrl::IsWndForeground() const
 {
 	GuiLock __;
+	DLOG("IsWndForeground");
+	DDUMP(top);
+	DDUMP(gtk());
+	DDUMP(gtk_window_is_active(gtk()));
 	return top && gtk_window_is_active(gtk());
 }
 
@@ -335,7 +352,7 @@ void Ctrl::SetWndFocus0(bool *b)
 	if(top) {
 		DLOG("SetWndFocus0 DO " << top->window);
 		DDUMP(gtk_widget_get_can_focus(top->window));
-		gdk_window_focus(gdk(), gtk_get_current_event_time());
+		gdk_window_focus(gdk(), CurrentTime);
 //		gtk_window_present(gtk());
 		*b = true;
 	}
@@ -350,8 +367,9 @@ bool Ctrl::HasWndFocus() const
 void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
-	LLOG("WndInvalidateRect " << rect);
-	gtk_widget_queue_draw_area(top->window, r.left, r.top, r.GetWidth(), r.GetHeight());
+	LLOG("WndInvalidateRect " << r);
+	gdk_window_invalidate_rect(gdk(), GdkRect(r), TRUE);
+//	gtk_widget_queue_draw_area(top->window, r.left, r.top, r.GetWidth(), r.GetHeight());
 }
 
 void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
@@ -361,21 +379,47 @@ void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 	WndInvalidateRect(r);
 }
 
+bool Ctrl::SweepConfigure(bool wait)
+{
+	bool r = false;
+	FetchEvents(wait);
+	for(int i = 0; i < Events.GetCount(); i++) {
+		Event& e = Events[i];
+		if(e.type == GDK_CONFIGURE && top->id == e.windowid) {
+			Rect rect = e.value;
+			LLOG("SweepConfigure " << rect);
+			if(GetRect() != rect)
+				SetWndRect(rect);
+			r = true;
+			e.type = EVENT_NONE;
+		}
+	}
+	return r;
+}
+
 void Ctrl::WndSetPos0(const Rect& rect)
 {
 	GuiLock __;
 	LLOG("WndSetPos0 " << rect);
+	if(!top)
+		return;
+	SweepConfigure(false); // Remove any previous GDK_CONFIGURE for this window
 	gtk_window_move(gtk(), rect.left, rect.top);
 	gtk_window_resize(gtk(), rect.GetWidth(), rect.GetHeight());
+	int t0 = msecs();
+	do { // Wait up to 500ms for corresponding GDK_CONFIGURE to arrive
+		if(SweepConfigure(true))
+			break;
+	}
+	while(msecs() - t0 < 500);
+	LLOG("-- WndSetPos0 " << rect << " " << msecs() - t0);
 }
 
 void Ctrl::WndUpdate0r(const Rect& r)
 {
 	GuiLock __;
 	LLOG("WndUpdate0r " << r);
-	gtk_widget_draw(top->window, GdkRect(r));
-	ProcessEvents();
-	gdk_flush();
+	WndUpdate0(); // Not found a way how to update only part of window
 }
 
 void Ctrl::WndUpdate0()
@@ -383,7 +427,7 @@ void Ctrl::WndUpdate0()
 	GuiLock __;
 	LLOG("WndUpdate0");
 	gdk_window_process_updates(gdk(), TRUE);
-	ProcessEvents();
+	FetchEvents(FALSE); // Should pickup GDK_EXPOSE and repaint the window
 	gdk_flush();
 }
 

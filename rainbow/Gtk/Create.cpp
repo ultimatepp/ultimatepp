@@ -17,6 +17,15 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	top = new Top;
 	top->window = gtk_window_new(popup ? GTK_WINDOW_POPUP : GTK_WINDOW_TOPLEVEL);
 	top->owner = owner;
+	
+	static int id;
+	top->id = ++id;
+
+	Win& w = wins.Add();
+	w.id = top->id;
+	w.ctrl = this;
+	w.gtk = top->window;
+	w.gdk = top->window->window;
 
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
 	gtk_window_set_type_hint(gtk(), popup ? GDK_WINDOW_TYPE_HINT_COMBO
@@ -27,11 +36,13 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	top->cursor_id = -1;
 
 	gtk_widget_set_events(top->window, 0xffffffff);
-	g_signal_connect(top->window, "event", G_CALLBACK(GtkEvent), this);
+	g_signal_connect(top->window, "event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
 	
 	gtk_widget_realize(top->window);
 
-	WndSetPos0(GetRect());
+	Rect r = GetRect();
+	gtk_window_move(gtk(), rect.left, rect.top);
+	gtk_window_resize(gtk(), rect.GetWidth(), rect.GetHeight());
 
 	if(owner && owner->top)
 		gtk_window_set_transient_for(gtk(), owner->gtk());
@@ -42,14 +53,10 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	top->im_context = gtk_im_multicontext_new();
 	gtk_im_context_set_client_window(top->im_context, gdk());
  	gtk_im_context_set_use_preedit(top->im_context, false);
-	g_signal_connect(top->im_context, "commit", G_CALLBACK(IMCommit), this);
+	g_signal_connect(top->im_context, "commit", G_CALLBACK(IMCommit), (gpointer)(uintptr_t)top->id);
 
 	WndShow(IsShown());
 
-	Win& w = wins.Add();
-	w.ctrl = this;
-	w.gtk = top->window;
-	w.gdk = top->window->window;
 	FocusSync();
 	if(!popup)
 		SetWndFocus();
@@ -70,7 +77,7 @@ void Ctrl::WndDestroy0()
 		wins.Remove(q);
 }
 
-Vector<Ctrl *> Ctrl::activePopup;
+Vector< Ptr<Ctrl> > Ctrl::activePopup;
 
 void Ctrl::GuiPlatformRemove()
 {
@@ -92,10 +99,15 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 	Create(owner, true);
 	popup = true;
 	if(activate) {
+		Ptr<Ctrl> _this = this;
+		DLOG("activePopup::Add0 " << _this);
 		SetFocus();
-		activePopup.Add(this);
-		StartGrabPopup();
-		CheckMouseCtrl();
+		DLOG("activePopup::Add1 " << _this);
+		if(_this) {
+			activePopup.Add(this);
+			StartGrabPopup();
+			CheckMouseCtrl();
+		}
 	}
 	DDUMP(Upp::Name(owner));
 	DDUMP(Upp::Name(GetOwner()));

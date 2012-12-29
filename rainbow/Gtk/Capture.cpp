@@ -12,7 +12,7 @@ Ptr<Ctrl> Ctrl::grabpopup;
 void Ctrl::StopGrabPopup()
 {
 	if(grabpopup && gdk_pointer_is_grabbed()) {
-		gdk_pointer_ungrab(gtk_get_current_event_time());
+		gdk_pointer_ungrab(CurrentTime);
 		grabpopup = NULL;
 	}
 }
@@ -25,7 +25,7 @@ void Ctrl::StartGrabPopup()
 			ReleaseWndCapture0();
 			if(gdk_pointer_grab(w->gdk(), FALSE,
 							    GdkEventMask(GDK_BUTTON_RELEASE_MASK|GDK_BUTTON_PRESS_MASK|GDK_POINTER_MOTION_MASK),
-							    NULL, NULL, gtk_get_current_event_time()) == GDK_GRAB_SUCCESS)
+							    NULL, NULL, CurrentTime) == GDK_GRAB_SUCCESS)
 				grabpopup = w;
 		}
 	}
@@ -40,7 +40,7 @@ bool Ctrl::SetWndCapture()
 	ReleaseWndCapture();
 	if(gdk_pointer_grab(gdk(), FALSE,
 					    GdkEventMask(GDK_BUTTON_RELEASE_MASK|GDK_BUTTON_PRESS_MASK|GDK_POINTER_MOTION_MASK),
-					    NULL, NULL, gtk_get_current_event_time()) == GDK_GRAB_SUCCESS) {
+					    NULL, NULL, CurrentTime) == GDK_GRAB_SUCCESS) {
 		grabwindow = this;
 		return true;
 	}
@@ -53,7 +53,7 @@ bool Ctrl::ReleaseWndCapture0()
 	ASSERT(IsMainThread());
 	LLOG("ReleaseWndCapture");
 	if(grabwindow) {
-		gdk_pointer_ungrab(gtk_get_current_event_time());
+		gdk_pointer_ungrab(CurrentTime);
 		grabwindow = NULL;
 		StartGrabPopup();
 		return true;
@@ -63,7 +63,7 @@ bool Ctrl::ReleaseWndCapture0()
 
 bool Ctrl::ReleaseWndCapture()
 {
-	ReleaseWndCapture0();
+	return ReleaseWndCapture0();
 }
 
 bool Ctrl::HasWndCapture() const
