@@ -162,6 +162,10 @@ void  Ctrl::ScrollView(const Rect& _r, int dx, int dy)
 {
 	GuiLock __;
 	LLOG("ScrollView " << _r << " " << dx << " " << dy);
+#ifdef GUIPLATFORM_NOSCROLL
+	LLOG("NOSCROLL");
+	Refresh(_r);
+#else
 	if(IsFullRefresh() || !IsVisible())
 		return;
 	Size vsz = GetSize();
@@ -192,6 +196,7 @@ void  Ctrl::ScrollView(const Rect& _r, int dx, int dy)
 				if(q->InView() && q != this)
 					ScrollCtrl(top, q, r, q->GetScreenRect() - GetScreenView().TopLeft(), dx, dy);
 	}
+#endif
 }
 
 void  Ctrl::ScrollView(int x, int y, int cx, int cy, int dx, int dy) {

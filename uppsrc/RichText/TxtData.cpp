@@ -321,7 +321,7 @@ void RichTxt::GetRichPos(int pos, RichPos& rp, int ti, int maxlevel, const RichS
 				rp.parai = i;
 				rp.partcount = part.GetCount();
 				rp.paralen = l - 1;
-				Get(i, st).GetRichPos(rp, pos);
+				Get(i, st, true).GetRichPos(rp, pos);
 				return;
 			}
 		}
