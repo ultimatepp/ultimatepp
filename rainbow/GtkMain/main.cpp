@@ -269,9 +269,18 @@ struct MyApp4 : TopWindow {
 		win.Run();
 	}
 	
+	void GtkDlg()
+	{
+		GtkWidget *dialog = gtk_message_dialog_new(gtk(), GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
+		                                           GTK_BUTTONS_CLOSE, "Hello !");
+		gtk_dialog_run(GTK_DIALOG (dialog));
+		gtk_widget_destroy(dialog);
+	}
+	
 	void Menu(Bar& bar)
 	{
 		bar.Add("Test", THISBACK(Test));
+		bar.Add("GTK dialog", THISBACK(GtkDlg));
 		bar.Add("Maximize", THISBACK(DoMaximize));
 		bar.Add("Minimize", THISBACK(DoMinimize));
 		bar.Add("Overlap", THISBACK(DoOverlap));
@@ -301,11 +310,10 @@ struct MyApp4 : TopWindow {
 	}
 	
 	MyApp4() {
-		ToolWindow();
 		Title("Complex Rainbow test");
 		String qtf;
 		for(int i = 0; i < 100; i++)
-			qtf << "[A9 [/ Hello] [_ World]!]";
+			qtf << " [A9 " << i << "[/ Hello] [_ World]!]&";
 		edit.SetQTF(qtf);
 		Sizeable().Zoomable();
 		Add(edit.SizePos());

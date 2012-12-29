@@ -146,6 +146,7 @@ struct DrawDragRectInfo {
 	GtkIMContext         *im_context; \
 	int64                 cursor_id; \
 	One<DrawDragRectInfo> dr; \
+	int                   id; \
 //$ }
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <Gtk/Ctrl.h>
@@ -153,6 +154,8 @@ struct DrawDragRectInfo {
 #define GUIPLATFORM_PASTECLIP_DECLS
 
 #define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <Gtk/Top.h>
+
+#define GUIPLATFORM_NOSCROLL
 
 class PrinterJob {
 	NilDraw             nil;

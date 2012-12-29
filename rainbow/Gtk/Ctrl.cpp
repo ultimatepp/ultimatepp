@@ -55,7 +55,7 @@ void GuiPlatformGripResize(TopWindow *q)
 	if(q->top) {
 		Point p = GetMousePos();
 		gtk_window_begin_resize_drag(q->gtk(), GDK_WINDOW_EDGE_SOUTH_EAST,
-		                             1, p.x, p.y, gtk_get_current_event_time());
+		                             1, p.x, p.y, Ctrl::CurrentTime);
 	}
 }
 
