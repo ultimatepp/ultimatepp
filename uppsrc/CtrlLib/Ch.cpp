@@ -33,6 +33,7 @@ void SbWc(Value *look)
 void ChClassicSkin()
 {
 	LLOG("ChInitWinClassic");
+
 	ChSysInit();
 	GUI_GlobalStyle_Write(GUISTYLE_CLASSIC);
 
@@ -76,7 +77,7 @@ void ChClassicSkin()
 	LabelBoxTextColor_Write(SColorText());
 }
 
-#ifdef GUI_X11
+#ifdef PLATFORM_X11
 
 void ChSysInit()
 {

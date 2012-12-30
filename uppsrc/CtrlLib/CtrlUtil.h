@@ -43,13 +43,13 @@ struct Win32PrintDlg_;
 
 #ifndef PLATFORM_WINCE
 
-#if defined(GUI_WIN) || defined(GUI_X11)
+#if defined(GUI_WIN) || defined(PLATFORM_X11)
 
 class PrinterJob {
 #ifdef GUI_WIN
 	One<Win32PrintDlg_> pdlg;
 #endif
-#ifdef GUI_X11
+#ifdef PLATFORM_X11
 	Size                pgsz;
 	Size                GetDefaultPageSize();
 #endif
@@ -281,7 +281,7 @@ public:
 #endif
 #endif
 
-#ifdef GUI_X11
+#ifdef PLATFORM_X11
 typedef FileSel FileSelector;
 #endif
 
