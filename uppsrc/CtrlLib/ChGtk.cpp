@@ -1,7 +1,7 @@
 #include "CtrlLib.h"
 #include "ChGtk.h"
 
-#ifdef GUI_X11
+#ifdef PLATFORM_X11
 #ifndef flagNOGTK
 
 #define LLOG(x)  // DLOG(x)

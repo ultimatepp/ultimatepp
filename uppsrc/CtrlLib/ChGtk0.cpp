@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-#ifdef GUI_X11
+#ifdef PLATFORM_X11
 #ifdef flagNOGTK
 
 NAMESPACE_UPP
@@ -139,12 +139,22 @@ Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int t
 	Image m[2];
 	Color back = White;
 	for(int i = 0; i < 2; i++) {
-		ImageDraw iw(cx + 2 * margin, cy + 2 * margin);
+		Size isz(cx + 2 * margin, cy + 2 * margin);
+		ImageDraw iw(isz);
+#ifdef GUI_GTK
+		DDUMP(gdk_get_default_root_window());
+		GdkPixmap *pixmap = gdk_pixmap_new(gdk_get_default_root_window(), isz.cx, isz.cy, -1);
+		cairo_t *cairo = gdk_cairo_create(pixmap);
+		SystemDraw sw(cairo);
+		sw.DrawRect(isz, back);
+		cairo_destroy(cairo);
+#else
 		iw.DrawRect(0, 0, cx + 2 * margin, cy + 2 * margin, back);
 		static GdkColormap *cm = gdk_x11_colormap_foreign_new(
 			                        gdkx_visual_get(XVisualIDFromVisual(Xvisual)), Xcolormap);
 		GdkPixmap *pixmap = gdk_pixmap_foreign_new(iw.GetDrawable());
 		gdk_drawable_set_colormap(pixmap, cm);
+#endif
 		GdkRectangle cr;
 		cr.x = 0;
 		cr.y = 0;
@@ -208,8 +218,12 @@ Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int t
 			                rect.left + margin, rect.top + margin, rcx, rcy);
 			break;
 		}
-		g_object_unref(pixmap);
+#ifdef GUI_GTK
+		gdk_cairo_set_source_pixmap(iw, pixmap, 0, 0);
+		cairo_paint(iw);
+#endif
 		m[i] = Crop(iw, crop);
+		g_object_unref(pixmap);
 		back = Black;
 	}
 	if(type == GTK_ICON)

@@ -7,7 +7,7 @@ NAMESPACE_UPP
 
 void CtrlSetDefaultSkin(void (*fn1)(), void (*fn2)());
 
-#if defined(GUI_WIN) || defined(GUI_X11)
+#if defined(GUI_WIN) || defined(PLATFORM_X11)
 INITBLOCK {
 	CtrlSetDefaultSkin(ChStdSkin, ChHostSkin);
 };

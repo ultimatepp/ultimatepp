@@ -140,7 +140,7 @@ PrinterJob& PrinterJob::CurrentPage(int i)
 
 #endif
 
-#ifdef GUI_X11
+#ifdef PLATFORM_X11
 
 String System(const char *cmd, const String& in)
 {

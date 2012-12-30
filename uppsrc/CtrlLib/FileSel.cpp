@@ -81,7 +81,7 @@ Image GetFileIcon(const char *path, bool dir, bool force, bool large, bool quick
 
 #endif
 
-#if defined(GUI_X11) && !defined(flagNOGTK)
+#if defined(PLATFORM_X11) && !defined(flagNOGTK)
 
 Image GtkThemeIcon(const char *name, bool large);
 
@@ -342,7 +342,7 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 			   (fi.is_directory || PatternMatchMulti(patterns, fi.filename)) &&
 			   MatchSearch(fi.filename, search) && show) {
 				Image img;
-			#ifdef GUI_X11
+			#ifdef PLATFORM_X11
 				img = isdrive ? PosixGetDriveImage(fi.filename, false)
 				              : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111, false);
 			#endif
@@ -1273,7 +1273,7 @@ struct FolderDisplay : public Display {
 Image GetDirIcon(const String& s)
 {
 	Image img;
-#ifdef GUI_X11
+#ifdef PLATFORM_X11
 	img = GetFileIcon(GetFileFolder(s), GetFileName(s), true, false, false);
 #endif
 #ifdef GUI_WIN
