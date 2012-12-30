@@ -24,7 +24,7 @@ void Ctrl::PanicMsgBox(const char *title, const char *text)
 
 void InitGtkApp(int argc, char **argv, const char **envptr)
 {
-	gtk_init(0, NULL); // TODO?
+	gtk_init(&argc, &argv); // TODO?
 	Ctrl::GlobalBackBuffer();
 	SetStdFont(Arial(12));
 	g_timeout_add(20, (GSourceFunc) Ctrl::TimeHandler, NULL);
