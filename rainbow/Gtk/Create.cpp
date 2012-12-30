@@ -41,8 +41,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	gtk_widget_realize(top->window);
 
 	Rect r = GetRect();
-	gtk_window_move(gtk(), rect.left, rect.top);
-	gtk_window_resize(gtk(), rect.GetWidth(), rect.GetHeight());
+	gtk_window_move(gtk(), r.left, r.top);
+	gtk_window_resize(gtk(), r.GetWidth(), r.GetHeight());
 
 	if(owner && owner->top)
 		gtk_window_set_transient_for(gtk(), owner->gtk());

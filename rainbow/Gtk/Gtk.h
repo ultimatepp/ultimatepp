@@ -1,5 +1,7 @@
 #define GUI_GTK
 
+#define PLATFORM_X11 // To keep legacy code happy
+
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -67,6 +69,7 @@ class ImageDraw : public SystemDraw {
 	
 	SystemDraw       alpha;
 	cairo_surface_t *alpha_surface;
+	bool             del;
 
 	void Init(Size sz);
 	void FetchStraight(ImageBuffer& b) const;
@@ -81,6 +84,8 @@ public:
 	ImageDraw(Size sz);
 	ImageDraw(int cx, int cy);
 	~ImageDraw();
+
+	ImageDraw(cairo_t *cr, Size sz); // Special variant for chameleon skinning
 };
 
 class BackDraw : public SystemDraw {
@@ -156,29 +161,6 @@ struct DrawDragRectInfo {
 #define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <Gtk/Top.h>
 
 #define GUIPLATFORM_NOSCROLL
-
-class PrinterJob {
-	NilDraw             nil;
-	Vector<int>         pages;
-
-public:
-	Draw&               GetDraw()                       { return nil; }
-	operator            Draw&()                         { return GetDraw(); }
-	const Vector<int>&  GetPages() const                { return pages; }
-	int                 operator[](int i) const         { return 0; }
-	int                 GetPageCount() const            { return 0; }
-
-	bool                Execute()                       { return false; }
-
-	PrinterJob& Landscape(bool b = true)                { return *this; }
-	PrinterJob& MinMaxPage(int minpage, int maxpage)    { return *this; }
-	PrinterJob& PageCount(int n)                        { return *this; }
-	PrinterJob& CurrentPage(int currentpage)            { return *this; }
-	PrinterJob& Name(const char *_name)                 { return *this; }
-
-	PrinterJob(const char *name = NULL)                 {}
-	~PrinterJob()                                       {}
-};
 
 int rmsecs();
 

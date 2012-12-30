@@ -26,11 +26,18 @@ void InitGtkApp(int argc, char **argv, const char **envptr)
 {
 	gtk_init(&argc, &argv); // TODO?
 	Ctrl::GlobalBackBuffer();
-	SetStdFont(Arial(12));
+	Ctrl::ReSkin();
 	g_timeout_add(20, (GSourceFunc) Ctrl::TimeHandler, NULL);
 	InstallPanicMessageBox(Ctrl::PanicMsgBox);
 }
-
+/*
+void ChSysInit()
+{
+	CtrlImg::Reset();
+	CtrlsImg::Reset();
+	ChReset();
+}
+*/
 END_UPP_NAMESPACE
 
 #endif

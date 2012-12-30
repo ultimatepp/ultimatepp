@@ -21,7 +21,7 @@ void GtkGetClipData(GtkClipboard *clipboard, GtkSelectionData *selection_data,
 	ArrayMap<String, ClipData>& target = *(ArrayMap<String, ClipData> *)user_data;
 	LLOG("GtkGetClipData for " << target.GetKey(info));
 	String fmt = target.GetKey(info);
-	Value data = target[info].data;
+	String data = target[info].Render();
 	if(fmt == "text") {
 		String s = data;
 		gtk_selection_data_set_text(selection_data, (const gchar*)~s, s.GetCount());
@@ -37,7 +37,7 @@ void GtkGetClipData(GtkClipboard *clipboard, GtkSelectionData *selection_data,
 		}
 	}
 	else {
-		String s = target[info].Render();
+		String s = data;
 		gtk_selection_data_set(selection_data, GAtom(fmt), 8, (const guchar*)~s, s.GetCount());
 	}
 }
@@ -165,6 +165,13 @@ Ctrl::Gclipboard& Ctrl::gclipboard()
 {
 	GuiLock __; 
 	static Gclipboard c(GDK_SELECTION_CLIPBOARD);
+	return c;
+}
+
+Ctrl::Gclipboard& Ctrl::gselection()
+{
+	GuiLock __; 
+	static Gclipboard c(GDK_SELECTION_PRIMARY);
 	return c;
 }
 
@@ -342,7 +349,6 @@ bool IsAvailableFiles(PasteClip& clip)
 	return clip.IsAvailable("files");
 }
 
-
 // TODO:
 Vector<String> GetFiles(PasteClip& clip)
 {
@@ -353,6 +359,17 @@ Vector<String> GetFiles(PasteClip& clip)
 
 void PasteClip::GuiPlatformConstruct()
 {
+}
+/*
+Ptr<Ctrl>     Ctrl::sel_ctrl;
+*/
+void Ctrl::SetSelectionSource(const char *fmts)
+{
+	GuiLock __; 
+/*	LLOG("SetSelectionSource " << UPP::Name(this) << ": " << fmts);
+	sel_formats = Split(fmts, ';');
+	sel_ctrl = this;
+	XSetSelectionOwner(Xdisplay, XAtom("PRIMARY"), xclipboard().win, CurrentTime);*/
 }
 
 END_UPP_NAMESPACE

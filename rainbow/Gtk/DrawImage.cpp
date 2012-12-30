@@ -71,14 +71,6 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 	cache.Shrink(4 * 1024 * 768, 1000); // Cache must be after Paint because of PaintOnly!
 }
 
-void ImageDraw::Init(Size sz)
-{
-	isz = sz;
-	surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, isz.cx, isz.cy);
-	cr = cairo_create(surface);
-	alpha_surface = NULL;
-}
-
 Draw& ImageDraw::Alpha()
 {
 	if(!alpha_surface) {
@@ -88,7 +80,7 @@ Draw& ImageDraw::Alpha()
 	return alpha;
 }
 
-void ImageDraw::FetchStraight(ImageBuffer& b) const
+void CairoGet(ImageBuffer& b, Size isz, cairo_surface_t *surface, cairo_surface_t *alpha_surface)
 {
 	cairo_surface_flush(surface);
 	byte *a = (byte *)cairo_image_surface_get_data(surface);
@@ -119,6 +111,11 @@ void ImageDraw::FetchStraight(ImageBuffer& b) const
 	}
 }
 
+void ImageDraw::FetchStraight(ImageBuffer& b) const
+{
+	CairoGet(b, isz, surface, alpha_surface);
+}
+
 ImageDraw::operator Image() const
 {
 	ImageBuffer img(isz);
@@ -134,6 +131,15 @@ Image ImageDraw::GetStraight() const
 	return img;
 }
 
+void ImageDraw::Init(Size sz)
+{
+	isz = sz;
+	surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, isz.cx, isz.cy);
+	cr = cairo_create(surface);
+	alpha_surface = NULL;
+	del = true;
+}
+
 ImageDraw::ImageDraw(Size sz)
 {
 	Init(sz);
@@ -144,13 +150,24 @@ ImageDraw::ImageDraw(int cx, int cy)
 	Init(Size(cx, cy));
 }
 
+ImageDraw::ImageDraw(cairo_t *cr_, Size sz)
+{
+	isz = sz;
+	cr = cr_;
+	surface = cairo_get_target(cr);
+	alpha_surface = NULL;
+	del = false;
+}
+
 ImageDraw::~ImageDraw()
 {
-	cairo_destroy(cr);
-	cairo_surface_destroy(surface);
-	if(alpha_surface) {
-		cairo_destroy(alpha.cr);
-		cairo_surface_destroy(alpha_surface);
+	if(del) {
+		cairo_destroy(cr);
+		cairo_surface_destroy(surface);
+		if(alpha_surface) {
+			cairo_destroy(alpha.cr);
+			cairo_surface_destroy(alpha_surface);
+		}
 	}
 }
 

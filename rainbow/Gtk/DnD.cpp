@@ -33,8 +33,6 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	return DND_NONE;
 }
 
-void Ctrl::SetSelectionSource(const char *fmts) {}
-
 END_UPP_NAMESPACE
 
 #endif
