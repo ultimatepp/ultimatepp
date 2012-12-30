@@ -5,7 +5,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)   LOG(x)
+#define LLOG(x)   DLOG(x)
 
 GdkAtom GAtom(const String& id)
 {
@@ -360,16 +360,22 @@ Vector<String> GetFiles(PasteClip& clip)
 void PasteClip::GuiPlatformConstruct()
 {
 }
-/*
-Ptr<Ctrl>     Ctrl::sel_ctrl;
-*/
+
+Ptr<Ctrl> Ctrl::sel_ctrl;
+
+String Ctrl::RenderPrimarySelection(const Value& fmt)
+{
+	return sel_ctrl->GetSelectionData(fmt);
+}
+
 void Ctrl::SetSelectionSource(const char *fmts)
 {
 	GuiLock __; 
-/*	LLOG("SetSelectionSource " << UPP::Name(this) << ": " << fmts);
-	sel_formats = Split(fmts, ';');
+	LLOG("SetSelectionSource " << UPP::Name(this) << ": " << fmts);
+	Vector<String> s = Split(fmts, ';');
 	sel_ctrl = this;
-	XSetSelectionOwner(Xdisplay, XAtom("PRIMARY"), xclipboard().win, CurrentTime);*/
+	for(int i = 0; i < s.GetCount(); i++)
+		gselection().Put(s[i], ClipData(s[i], RenderPrimarySelection));
 }
 
 END_UPP_NAMESPACE

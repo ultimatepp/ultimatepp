@@ -50,6 +50,7 @@
 	static bool                WndCaretVisible;
 	static Ptr<Ctrl>           grabwindow;
 	static Ptr<Ctrl>           grabpopup;
+	static Ptr<Ctrl>           sel_ctrl;
 
 	static int FindId(int id);
 	static int FindCtrl(Ctrl *ctrl);
@@ -76,7 +77,7 @@
 	friend void FinishDragRect(Ctrl& q);
 	friend void GuiPlatformGripResize(TopWindow *q);
 
-public:
+public: // really private:
 	struct Gclipboard {
 		ArrayMap<String, ClipData> target;
 		GtkClipboard *clipboard;
@@ -91,6 +92,7 @@ public:
 
 	static Gclipboard& gclipboard();
 	static Gclipboard& gselection();
+	static String      RenderPrimarySelection(const Value& fmt);
                   
 public:
 	static void      EndSession()              {}
