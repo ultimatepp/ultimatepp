@@ -2,14 +2,14 @@
 
 NAMESPACE_UPP
 
-ClipData::ClipData(const Value& data, String (*render)(const Value& data))
-:	data(data), render(render)
-{}
-
 String sRawClipData(const Value& data)
 {
 	return data;
 }
+
+ClipData::ClipData(const Value& data, String (*render)(const Value& data))
+:	data(data), render(render ? render : sRawClipData)
+{}
 
 ClipData::ClipData(const String& data)
 :	data(data), render(sRawClipData)
