@@ -19,6 +19,5 @@ file
 	Top.h,
 	Top.cpp,
 	Clip.cpp,
-	DnD.cpp,
-	ChSysInit.cpp;
+	DnD.cpp;
 

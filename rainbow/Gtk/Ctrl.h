@@ -90,6 +90,7 @@ public:
 	};
 
 	static Gclipboard& gclipboard();
+	static Gclipboard& gselection();
                   
 public:
 	static void      EndSession()              {}

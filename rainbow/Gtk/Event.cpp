@@ -391,7 +391,7 @@ void Ctrl::Proc()
 			if(GetAlt())
 				kv |= K_ALT;
 			LLOG(GetKeyDesc(kv) << ", pressed: " << pressed << ", count: " << CurrentEvent.count);
-			DispatchKey(!pressed * K_KEYUP + kv, CurrentEvent.count); // TODO: Add compression
+			DispatchKey(!pressed * K_KEYUP + kv, CurrentEvent.count);
 		}
 		break;
 	case EVENT_TEXT: {
