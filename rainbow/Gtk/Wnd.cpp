@@ -232,11 +232,13 @@ void Ctrl::WndShow0(bool b)
 {
 	GuiLock __;
 	LLOG("WndShow " << Name() << ", " << b);
-	if(top)
+	if(top) {
 		if(b)
 			gtk_widget_show_now(top->window);
 		else
 			gtk_widget_hide(top->window);
+		StateH(SHOW);
+	}
 }
 
 bool Ctrl::IsWndOpen() const {
@@ -341,8 +343,10 @@ bool Ctrl::IsWndForeground() const
 void Ctrl::WndEnable0(bool *b)
 {
 	GuiLock __;
-	if(top)
+	if(top) {
 		gtk_widget_set_sensitive(top->window, *b);
+		StateH(ENABLE);
+	}
 }
 
 void Ctrl::SetWndFocus0(bool *b)

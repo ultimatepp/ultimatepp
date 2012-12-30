@@ -60,6 +60,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	FocusSync();
 	if(!popup)
 		SetWndFocus();
+	
+	StateH(OPEN);
 }
 
 void Ctrl::WndDestroy0()

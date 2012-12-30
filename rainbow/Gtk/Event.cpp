@@ -428,7 +428,7 @@ bool Ctrl::ProcessEvent(bool *quit)
 			    if(a.type == GDK_SCROLL)
 			        b.value = (int)b.value + (int)a.value;
 			    else
-			    if(findarg(a.type, GDK_KEY_PRESS, GDK_CONFIGURE) < 0)
+			    if(findarg(a.type, GDK_MOTION_NOTIFY, GDK_CONFIGURE) < 0)
 			        break;
 				Events.DropHead();
 			}
