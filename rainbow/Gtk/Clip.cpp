@@ -7,14 +7,6 @@ NAMESPACE_UPP
 
 #define LLOG(x)   DLOG(x)
 
-GdkAtom GAtom(const String& id)
-{
-	GuiLock __;
-	static VectorMap<String, GdkAtom> m;
-	int q = m.Find(id);
-	return q >= 0 ? m[q] : (m.Add(id) = gdk_atom_intern(~id, FALSE));
-}
-
 void GtkGetClipData(GtkClipboard *clipboard, GtkSelectionData *selection_data,
                     guint info, gpointer user_data)
 {
@@ -83,48 +75,20 @@ String Ctrl::Gclipboard::Get(const String& fmt)
 	if(fmt == "text") {
 		gchar *s = gtk_clipboard_wait_for_text(clipboard);
 		if(s) {
-			WString h = FromUtf8(s);
+			String h = s;
 			g_free(s);
-			return ToUtf8(h);
+			return h;
 		}
 	}
 	else
 	if(fmt == "image") {
-		GdkPixbuf *pixbuf = gtk_clipboard_wait_for_image(clipboard);
-		Image img;
-		if(pixbuf) {
-			if(gdk_pixbuf_get_n_channels (pixbuf) == 4 &&
-			   gdk_pixbuf_get_colorspace (pixbuf) == GDK_COLORSPACE_RGB &&
-			   gdk_pixbuf_get_bits_per_sample (pixbuf) == 8 && 
-			   gdk_pixbuf_get_has_alpha (pixbuf)) {
-				Size sz(gdk_pixbuf_get_width (pixbuf), gdk_pixbuf_get_height(pixbuf));
-				ImageBuffer m(sz);
-				int stride = gdk_pixbuf_get_rowstride(pixbuf);
-				byte *l = (byte *)gdk_pixbuf_get_pixels(pixbuf);
-				for(int y = 0; y < sz.cy; y++) {
-					RGBA *s = m[y];
-					const RGBA *e = s + sz.cx;
-					const byte *t = l;
-					while(s < e) {
-						s->r = *t++;
-						s->g = *t++;
-						s->b = *t++;
-						s->a = *t++;
-						s++;
-					}
-					l += stride;
-				}
-				img = m;
-			}
-			g_object_unref(pixbuf);
-		}
+		Image img = ImageFromPixbufUnref(gtk_clipboard_wait_for_image(clipboard));
 		return StoreAsString(img); // Not very optimal...
 	}
 	else {
 		GtkSelectionData *s = gtk_clipboard_wait_for_contents(clipboard, GAtom(fmt));
 		if(s) {
 			String h(gtk_selection_data_get_data(s), gtk_selection_data_get_length(s));
-			gtk_selection_data_free(s);
 			return h;
 		}
 	}
@@ -142,12 +106,23 @@ bool Ctrl::Gclipboard::IsAvailable(const String& fmt)
 
 bool PasteClip::IsAvailable(const char *fmt) const
 {
-	return Ctrl::gclipboard().IsAvailable(fmt);
+	DLOG("PasteClip::IsAvailable " << fmt << ", type: " << type);
+	if(type == 1)
+		return Ctrl::IsDragAvailable(fmt);
+	return (type == 0 ? Ctrl::gclipboard() : Ctrl::gselection()).IsAvailable(fmt);
 }
 
 String PasteClip::Get(const char *fmt) const
 {
-	return Ctrl::gclipboard().Get(fmt);
+	DLOG("PasteClip::Get " << fmt << ", type: " << type);
+	if(type == 1)
+		return Ctrl::DragGet(fmt);
+	return (type == 0 ? Ctrl::gclipboard() : Ctrl::gselection()).Get(fmt);
+}
+
+void PasteClip::GuiPlatformConstruct()
+{
+	type = 0;
 }
 
 void Ctrl::Gclipboard::Clear()
@@ -225,7 +200,7 @@ String GetString(PasteClip& clip)
 {
 	GuiLock __;
 	if(clip.IsAvailable("text"))
-		return ToCharset(CHARSET_DEFAULT, Ctrl::gclipboard().Get("text"), CHARSET_UTF8);
+		return ToCharset(CHARSET_DEFAULT, clip.Get("text"), CHARSET_UTF8);
 	return Null;
 }
 
@@ -233,7 +208,7 @@ WString GetWString(PasteClip& clip)
 {
 	GuiLock __;
 	if(clip.IsAvailable("text"))
-		return FromUtf8(Ctrl::gclipboard().Get("text"));
+		return FromUtf8(clip.Get("text"));
 	return Null;
 }
 
@@ -357,11 +332,13 @@ Vector<String> GetFiles(PasteClip& clip)
 	return f;
 }
 
-void PasteClip::GuiPlatformConstruct()
-{
-}
-
 Ptr<Ctrl> Ctrl::sel_ctrl;
+
+void Ctrl::GuiPlatformSelection(PasteClip& d)
+{
+	d.fmt.Clear();
+	d.type = 2;
+}
 
 String Ctrl::RenderPrimarySelection(const Value& fmt)
 {

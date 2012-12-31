@@ -98,6 +98,46 @@ GdkRect::GdkRect(const Rect& r)
 	height = r.GetHeight();
 }
 
+Image ImageFromPixbufUnref(GdkPixbuf *pixbuf)
+{
+	Image img;
+	if(pixbuf) {
+		if(gdk_pixbuf_get_n_channels (pixbuf) == 4 &&
+		   gdk_pixbuf_get_colorspace (pixbuf) == GDK_COLORSPACE_RGB &&
+		   gdk_pixbuf_get_bits_per_sample (pixbuf) == 8 && 
+		   gdk_pixbuf_get_has_alpha (pixbuf)) {
+			Size sz(gdk_pixbuf_get_width (pixbuf), gdk_pixbuf_get_height(pixbuf));
+			ImageBuffer m(sz);
+			int stride = gdk_pixbuf_get_rowstride(pixbuf);
+			byte *l = (byte *)gdk_pixbuf_get_pixels(pixbuf);
+			for(int y = 0; y < sz.cy; y++) {
+				RGBA *s = m[y];
+				const RGBA *e = s + sz.cx;
+				const byte *t = l;
+				while(s < e) {
+					s->r = *t++;
+					s->g = *t++;
+					s->b = *t++;
+					s->a = *t++;
+					s++;
+				}
+				l += stride;
+			}
+			img = m;
+		}
+		g_object_unref(pixbuf);
+	}
+	return img;
+}
+
+GdkAtom GAtom(const String& id)
+{
+	GuiLock __;
+	static VectorMap<String, GdkAtom> m;
+	int q = m.Find(id);
+	return q >= 0 ? m[q] : (m.Add(id) = gdk_atom_intern(~id, FALSE));
+}
+
 int rmsecs()
 {
 	static int msecs0 = msecs();
