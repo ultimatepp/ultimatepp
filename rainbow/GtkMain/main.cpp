@@ -152,8 +152,6 @@ struct MyApp2 : TopWindow {
 		Title("Widget test");
 		Add(text.SizePos());
 		text <<= "Test\nHello World!";
-
-		DDUMP(Ctrl::GetWorkArea());
 	}
 };
 
@@ -240,7 +238,6 @@ struct MyApp4 : TopWindow {
 	
 	void DoFrameless()
 	{
-		DLOG("FRAMELESS");
 		FrameLess(!IsFrameLess());
 	}
 
