@@ -210,6 +210,43 @@ int Ctrl::DoButtonEvent(GdkEvent *event, bool press)
 	return Null;
 }
 
+Ctrl::Event::Event()
+{
+	event = NULL;
+}
+
+void Ctrl::Event::Free()
+{
+	if(event) {
+		gdk_event_free(event);
+		event = NULL;
+	}
+}
+
+void Ctrl::Event::Set(const Event& e)
+{
+	*(Event0 *)this = e;
+	event = gdk_event_copy(e.event);
+}
+
+Ctrl::Event::~Event()
+{
+	Free();
+}
+
+Ctrl::Event::Event(const Event& e)
+{
+	Set(e);
+}
+
+void Ctrl::Event::operator=(const Event& e)
+{
+	if(this == &e)
+		return;
+	Free();
+	Set(e);
+}
+
 void Ctrl::AddEvent(gpointer user_data, int type, const Value& value)
 {
 	if(Events.GetCount() > 50000)
@@ -230,6 +267,7 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value)
 	e.mousepos = EventMousePos;
 	e.state = EventState;
 	e.count = 1;
+	e.event = gtk_get_current_event();
 }
 
 void Ctrl::IMCommit(GtkIMContext *context, gchar *str, gpointer user_data)

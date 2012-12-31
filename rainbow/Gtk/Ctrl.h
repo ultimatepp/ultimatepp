@@ -27,7 +27,7 @@
 		EVENT_TEXT,
 	};
 	
-	struct Event : Moveable<Event> {
+	struct Event0 {
 		int        time;
 		int        windowid;
 		int        type;
@@ -35,6 +35,18 @@
 		Point      mousepos;
 		guint      state;
 		int        count;
+	};
+	
+	struct Event : Moveable<Event, Event0> {
+		GdkEvent  *event;
+
+		void Free();
+		void Set(const Event& e);		
+		Event(const Event& e);
+		void operator=(const Event& e);
+
+		Event();
+		~Event();
 	};
 	
 	struct Win : Moveable<Win> {
@@ -84,7 +96,19 @@
 	static GtkWidget      *dnd_widget;
 	static GdkDragContext *dnd_context;
 	static guint           dnd_time;
+
+	static Ptr<Ctrl>                          dnd_source;
+	static const VectorMap<String, ClipData> *dnd_source_data;
+	static Vector<String>                     dnd_fmts;
+	static int                                dnd_result;
+	static Image                              dnd_icon;
 	
+	static void            GtkSelectionDataSet(GtkSelectionData *selection_data, const String& fmt, const String& data);
+	static void            GtkGetClipData(GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, gpointer user_data);
+	static void            AddFmt(GtkTargetList *list, const String& fmt, int info);
+	static GtkTargetList  *CreateTargetList(const VectorMap<String, ClipData>& target);
+	static String          GtkDataGet(GtkSelectionData *s); 
+
 	       void DndInit();
 	       void DndExit();
 
@@ -113,7 +137,7 @@
 
 public: // really private:
 	struct Gclipboard {
-		ArrayMap<String, ClipData> target;
+		VectorMap<String, ClipData> target;
 		GtkClipboard *clipboard;
 
 		String Get(const String& fmt);

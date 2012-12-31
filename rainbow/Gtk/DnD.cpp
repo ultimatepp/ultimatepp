@@ -4,19 +4,29 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 // --------------------------------------------------------------------------------------------
 
-Ptr<Ctrl> sDnDSource;
+Ptr<Ctrl>                          Ctrl::dnd_source;
+const VectorMap<String, ClipData> *Ctrl::dnd_source_data;
+Vector<String>                     Ctrl::dnd_fmts;
+int                                Ctrl::dnd_result;
+Image                              Ctrl::dnd_icon;
 
-Ctrl * Ctrl::GetDragAndDropSource()
+Ctrl *Ctrl::GetDragAndDropSource()
 {
-	return sDnDSource;
+	return dnd_source;
 }
 
 void Ctrl::GtkDragBegin(GtkWidget *widget, GdkDragContext *context, gpointer user_data)
 {
+	if(IsNull(dnd_icon))
+    	gtk_drag_set_icon_default(context);
+	else {
+		ImageGdk m(dnd_icon);
+		gtk_drag_set_icon_pixbuf(context, m, 0, 0);
+	}
 	LLOG("GtkDragBegin");
 }
 
@@ -25,21 +35,35 @@ void Ctrl::GtkDragDelete(GtkWidget *widget, GdkDragContext *context, gpointer us
 	LLOG("GtkDragDelete");
 }
 
-void Ctrl::GtkDragGetData(GtkWidget *widget, GdkDragContext   *context, GtkSelectionData *data,
-                       guint info, guint time, gpointer user_data)
+void Ctrl::GtkDragGetData(GtkWidget *widget, GdkDragContext *context, GtkSelectionData *data,
+                          guint info, guint time, gpointer user_data)
 {
 	LLOG("GtkDragGetData");
+	if(info < (guint)dnd_source_data->GetCount())
+		GtkSelectionDataSet(data, dnd_source_data->GetKey(info), (*dnd_source_data)[info].Render());
+	else {
+		info -= dnd_source_data->GetCount();
+		if(info < (guint)dnd_fmts.GetCount()) {
+			String fmt = dnd_fmts[info];
+			GtkSelectionDataSet(data, fmt, dnd_source->GetDropData(fmt));
+		}
+	}
 }
 
 void Ctrl::GtkDragEnd(GtkWidget *widget, GdkDragContext *context, gpointer user_data)
 {
 	LLOG("GtkDragEnd");
+	dnd_result = DND_NONE;
+	GdkDragAction a = gdk_drag_context_get_selected_action(context);
+	dnd_result = a == GDK_ACTION_MOVE ? DND_MOVE : a == GDK_ACTION_COPY ? DND_COPY : DND_NONE;
+	dnd_source = NULL;
 }
                                                        
 gboolean Ctrl::GtkDragFailed(GtkWidget *widget, GdkDragContext *context, GtkDragResult   result,
                              gpointer user_data)
 {
 	LLOG("GtkDragFailed");
+	dnd_source = NULL;
 	return FALSE;
 }
 
@@ -58,7 +82,49 @@ Image MakeDragImage(const Image& arrow, const Image& arrow98, Image sample)
 int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
                         const VectorMap<String, ClipData>& data)
 {
-	return DND_NONE;
+	LLOG("DoDragAndDrop");
+	TopWindow *w = GetTopWindow();
+	if(!w || !w->top)
+		return DND_NONE;
+	int gdk_actions = 0;
+	if(actions & DND_MOVE)
+		gdk_actions |= GDK_ACTION_MOVE;
+	if(actions & DND_COPY)
+		gdk_actions |= GDK_ACTION_COPY;
+	GtkTargetList *list = CreateTargetList(data);
+	Vector<String> f = Split(fmts, ';');
+	dnd_fmts.Clear();
+	for(int i = 0; i < f.GetCount(); i++) {
+		AddFmt(list, f[i], data.GetCount() + i);
+		dnd_fmts.Add(f[i]);
+	}
+	dnd_source_data = &data;
+	dnd_result = DND_NONE;
+	dnd_source = this;
+	if(IsNull(sample))
+		dnd_icon = Null;
+	else {
+		Size sz = sample.GetSize();
+		if(sz.cx > 128)
+			sz.cx = 128;
+		if(sz.cy > 128)
+			sz.cy = 128;
+		sz += 2;
+		ImageDraw iw(sz);
+		iw.DrawRect(sz, White());
+		DrawFrame(iw, sz, Black());
+		iw.DrawImage(1, 1, sz.cx, sz.cy, sample);
+		ImageBuffer b(128, 128);
+		dnd_icon = iw;
+	}
+	gtk_drag_begin(w->top->window, list, GdkDragAction(gdk_actions),
+	               GetMouseLeft() ? 1 : GetMouseMiddle() ? 2 : 3, CurrentEvent.event);
+	while(dnd_source && GetTopCtrls().GetCount())
+		ProcessEvents();
+	dnd_source_data = NULL;
+	gtk_target_list_unref (list);
+	LLOG("--DoDragAndDrop");
+	return dnd_result;
 }
 
 // --------------------------------------------------------------------------------------------
@@ -89,7 +155,6 @@ void ToIndex(GtkTargetList *target_list, Index<String>& ndx)
 		ndx.Add(t[i].target);
 	gtk_target_table_free(t, n);
 	gtk_target_list_unref(target_list);
-	DDUMPC(ndx);
 }
 
 void Ctrl::DndTargets(GdkDragContext *context)
@@ -108,7 +173,6 @@ void Ctrl::DndTargets(GdkDragContext *context)
 	dnd_text_target.Clear();
 	for(GList *list = gdk_drag_context_list_targets(context); list; list = g_list_next (list)) {
 		String g = gdk_atom_name((GdkAtom)list->data);
-		DDUMP(g);
 		if(text_targets.Find(g) >= 0) {
 			dnd_targets.Add("text");
 			if(dnd_text_target.IsEmpty())
@@ -144,7 +208,7 @@ void Ctrl::GtkDragDataReceived(GtkWidget *widget, GdkDragContext *context,
 		dnd_data = StoreAsString(img); // Not very optimal...
 	}
 	else
-		dnd_data = String(gtk_selection_data_get_data(data), gtk_selection_data_get_length(data));
+		dnd_data = GtkDataGet(data);
 }
 
 bool Ctrl::IsDragAvailable(const char *fmt)
@@ -162,16 +226,14 @@ String Ctrl::DragGet(const char *fmt)
 	dnd_data_wait = true;
 	dnd_data_fmt = fmt;
 	int t0 = msecs();
-	DDUMP(dnd_widget);
-	DDUMP(dnd_context);
 	gtk_drag_get_data(dnd_widget, dnd_context,
 	                  GAtom(strcmp(fmt, "image") == 0 ? ~dnd_image_target
-	                        : strcmp(fmt, "text") == 0 ? ~dnd_text_target : fmt),
+	                                                  : strcmp(fmt, "text") == 0 ? ~dnd_text_target
+	                                                                             : fmt),
 	                  dnd_time);
 	while(msecs() - t0 < 1000 && dnd_data_wait)
 		FetchEvents(true);
 	LLOG("DragGet data length " << dnd_data.GetLength());
-	DDUMPHEX(dnd_data);
 	return dnd_data;
 }
 
@@ -189,8 +251,10 @@ PasteClip Ctrl::GtkDnd(GtkWidget *widget, GdkDragContext *context, gint x, gint 
 	clip.paste = paste;
 	clip.accepted = false;
 	clip.allowed = DND_MOVE|DND_COPY;
-	clip.action = gdk_drag_context_get_suggested_action(context) == GDK_ACTION_COPY ? DND_COPY
-                                                                                    : DND_MOVE;
+	gint dummy;
+	GdkModifierType mod;
+	gdk_window_get_pointer(gdk_get_default_root_window(), &dummy, &dummy, &mod);
+	clip.action = mod & GDK_CONTROL_MASK ? DND_COPY : DND_MOVE;
 	Ctrl *w = DragWnd(user_data);
 	if(w) {
 		gint mx, my;
@@ -200,6 +264,9 @@ PasteClip Ctrl::GtkDnd(GtkWidget *widget, GdkDragContext *context, gint x, gint 
 		CurrentMousePos = Point(x, y) + w->GetScreenRect().TopLeft();	
 		w->DnD(CurrentMousePos, clip);
 	}
+	gdk_drag_status(context, clip.IsAccepted() ? clip.GetAction() == DND_MOVE ? GDK_ACTION_MOVE
+	                                                                          : GDK_ACTION_COPY
+	                                           : GdkDragAction(0), time);
 	return clip;
 }
 
@@ -209,9 +276,6 @@ gboolean Ctrl::GtkDragMotion(GtkWidget *widget, GdkDragContext *context, gint x,
 	LLOG("GtkDragMotion");
 
 	PasteClip clip = GtkDnd(widget, context, x, y, time, user_data, false);
-	gdk_drag_status(context, clip.IsAccepted() ? clip.GetAction() == DND_MOVE ? GDK_ACTION_MOVE
-	                                                                          : GDK_ACTION_COPY
-	                                           : GdkDragAction(0), time);
 	g_object_unref(widget);
 	g_object_unref(context);
 	return TRUE;
@@ -235,6 +299,8 @@ gboolean Ctrl::GtkDragDrop(GtkWidget *widget, GdkDragContext *context, gint x, g
 	DnDLeave();
 	return TRUE;
 }
+
+// -----------------------------------------------------------------------------------------
 
 void Ctrl::DndInit()
 {

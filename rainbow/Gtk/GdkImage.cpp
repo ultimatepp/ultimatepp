@@ -16,7 +16,7 @@ bool ImageGdk::Set(const Image& m)
 {
 	Free();
 	if(m.GetSerialId() != img.GetSerialId()) {
-		img = m;
+		img = Unmultiply(m);
 		if(!IsNull(img)) {
 			Size sz = img.GetSize();
 			pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, true, 8, sz.cx, sz.cy);
