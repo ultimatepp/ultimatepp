@@ -147,7 +147,7 @@ struct DrawDragRectInfo {
 #include <CtrlCore/stdids.h>
 #endif
 
-#define GUIPLATFORM_KEYCODES_INCLUDE <Gtk/Keys.h>
+#define GUIPLATFORM_KEYCODES_INCLUDE <Gtk/GtkKeys.h>
 
 //$	struct Ctrl::Top {
 #define GUIPLATFORM_CTRL_TOP_DECLS \
@@ -158,12 +158,12 @@ struct DrawDragRectInfo {
 	int                   id; \
 //$ }
 
-#define GUIPLATFORM_CTRL_DECLS_INCLUDE <Gtk/Ctrl.h>
+#define GUIPLATFORM_CTRL_DECLS_INCLUDE <Gtk/GtkCtrl.h>
 
 #define GUIPLATFORM_PASTECLIP_DECLS \
 int type; \
 
-#define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <Gtk/Top.h>
+#define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <Gtk/GtkTop.h>
 
 #define GUIPLATFORM_NOSCROLL
 
@@ -171,4 +171,4 @@ int rmsecs();
 
 END_UPP_NAMESPACE
 
-#define GUIPLATFORM_INCLUDE_AFTER <Gtk/After.h>
+#define GUIPLATFORM_INCLUDE_AFTER <Gtk/GtkAfter.h>
