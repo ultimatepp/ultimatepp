@@ -142,7 +142,6 @@ Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int t
 		Size isz(cx + 2 * margin, cy + 2 * margin);
 		ImageDraw iw(isz);
 #ifdef GUI_GTK
-		DDUMP(gdk_get_default_root_window());
 		GdkPixmap *pixmap = gdk_pixmap_new(gdk_get_default_root_window(), isz.cx, isz.cy, -1);
 		cairo_t *cairo = gdk_cairo_create(pixmap);
 		SystemDraw sw(cairo);
