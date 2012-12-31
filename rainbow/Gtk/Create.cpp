@@ -61,6 +61,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	if(!popup)
 		SetWndFocus();
 	
+	DndInit();
+	
 	StateH(OPEN);
 }
 
@@ -68,6 +70,7 @@ void Ctrl::WndDestroy0()
 {
 	GuiLock __;
 	LLOG("WndDestroy " << Name());
+	DndExit();
 	gtk_widget_destroy(top->window);
 	g_object_unref(top->im_context);
 	isopen = false;
@@ -102,17 +105,13 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 	popup = true;
 	if(activate) {
 		Ptr<Ctrl> _this = this;
-		DLOG("activePopup::Add0 " << _this);
 		SetFocus();
-		DLOG("activePopup::Add1 " << _this);
 		if(_this) {
 			activePopup.Add(this);
 			StartGrabPopup();
 			CheckMouseCtrl();
 		}
 	}
-	DDUMP(Upp::Name(owner));
-	DDUMP(Upp::Name(GetOwner()));
 }
 
 END_UPP_NAMESPACE

@@ -131,6 +131,10 @@ public:
 	~ImageGdk();
 };
 
+Image ImageFromPixbufUnref(GdkPixbuf *pixbuf);
+
+GdkAtom GAtom(const String& id);
+
 struct DrawDragRectInfo {
 	Rect  rect1, rect2, clip;
 	int   n;
@@ -156,7 +160,8 @@ struct DrawDragRectInfo {
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <Gtk/Ctrl.h>
 
-#define GUIPLATFORM_PASTECLIP_DECLS
+#define GUIPLATFORM_PASTECLIP_DECLS \
+int type; \
 
 #define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <Gtk/Top.h>
 

@@ -13,6 +13,10 @@
 	void   GtkMouseEvent(int action, int act, int zd);
 	void   GtkButtonEvent(int action);
 
+	static bool IsWaitingEvent0(bool fetch);
+	static bool ProcessEvent0(bool *quit, bool fetch);
+	static bool ProcessEvents0(bool *quit, bool fetch);
+
 	void   Proc();
 	bool   SweepConfigure(bool wait);
 
@@ -70,6 +74,36 @@
 	static void StopGrabPopup();
 	static void StartGrabPopup();
 	static bool ReleaseWndCapture0();
+
+	static Index<String>   dnd_targets;
+	static String          dnd_text_target;
+	static String          dnd_image_target;
+	static String          dnd_data;
+	static String          dnd_data_fmt;
+	static bool            dnd_data_wait;
+	static GtkWidget      *dnd_widget;
+	static GdkDragContext *dnd_context;
+	static guint           dnd_time;
+	
+	       void DndInit();
+	       void DndExit();
+
+	static void GtkDragBegin(GtkWidget *widget, GdkDragContext *context, gpointer user_data);
+	static void GtkDragDelete(GtkWidget *widget, GdkDragContext *context, gpointer user_data);
+	static void GtkDragGetData(GtkWidget *widget, GdkDragContext *context, GtkSelectionData *data, guint info, guint time, gpointer user_data);
+	static void GtkDragDataReceived(GtkWidget *widget, GdkDragContext *context, gint x, gint y, GtkSelectionData *data, guint info, guint time, gpointer user_data);
+	static gboolean GtkDragDrop(GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint time, gpointer user_data);
+	static void GtkDragEnd(GtkWidget *widget, GdkDragContext *context, gpointer user_data);
+	static gboolean GtkDragFailed(GtkWidget *widget, GdkDragContext *context, GtkDragResult result, gpointer user_data);
+	static void GtkDragLeave(GtkWidget *widget, GdkDragContext *context, guint time, gpointer user_data);
+	static gboolean GtkDragMotion(GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint time, gpointer user_data);
+
+	static Ctrl  *DragWnd(gpointer user_data);
+	static void   DndTargets(GdkDragContext *context);
+	static bool   IsDragAvailable(const char *fmt);
+	static String DragGet(const char *fmt);
+	static PasteClip GtkDnd(GtkWidget *widget, GdkDragContext *context, gint x, gint y,
+	                        guint time, gpointer user_data, bool paste);
 
 	friend void InitGtkApp(int argc, char **argv, const char **envptr);
 	friend void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,

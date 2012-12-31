@@ -78,7 +78,6 @@ Tuple2<int, const char *> xEvent[] = {
 Ctrl *Ctrl::GetTopCtrlFromId(int id)
 {
 	int q = FindId(id);
-	DDUMP(q);
 	if(q >= 0) {
 		Ctrl *p = wins[q].ctrl;
 		if(p && p->top)
@@ -107,8 +106,9 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	case GDK_DAMAGE:
 		p = GetTopCtrlFromId(user_data);
 		if(p) {
-			TimeStop expose_time;
-			DDUMP(p->GetScreenRect());
+#ifdef LOG_EVENTS
+			TimeStop tm;
+#endif
 			p->fullrefresh = false;
 			GdkEventExpose *e = (GdkEventExpose *)event;
 			SystemDraw w(gdk_cairo_create(p->gdk()));
@@ -121,7 +121,9 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 			if(p->top->dr)
 				DrawDragRect(*p, *p->top->dr);
 			painting = false;
-			DDUMP(expose_time);
+#ifdef LOG_EVENTS
+			LOG("* " << ev << " elapsed " << tm);
+#endif			
 		}
 		return true;
 	case GDK_DELETE:
@@ -195,7 +197,6 @@ int Ctrl::DoButtonEvent(GdkEvent *event, bool press)
 {
 	GdkEventButton *e = (GdkEventButton *)event;
 	static int mask[] = { GDK_BUTTON1_MASK, GDK_BUTTON2_MASK, GDK_BUTTON3_MASK };
-	DDUMP(e->button);
 	if(e->button >= 1 && e->button <= 3) {
 		int m = mask[e->button - 1];
 		int state = e->state;
@@ -216,7 +217,6 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value)
 	Event& e = Events.AddTail();
 	e.time = gtk_get_current_event_time();
 	e.windowid = (uint32)(uintptr_t)user_data;
-	DDUMP(e.windowid);
 	e.type = type;
 	e.value = value;
 	if(!EventMouseValid) {
@@ -230,7 +230,6 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value)
 	e.mousepos = EventMousePos;
 	e.state = EventState;
 	e.count = 1;
-	DDUMP(EventState & GDK_BUTTON1_MASK);
 }
 
 void Ctrl::IMCommit(GtkIMContext *context, gchar *str, gpointer user_data)
@@ -244,10 +243,16 @@ void Ctrl::FetchEvents(bool may_block)
 		may_block = false;
 }
 
+bool Ctrl::IsWaitingEvent0(bool fetch)
+{
+	if(fetch)
+		FetchEvents(FALSE);
+	return Events.GetCount();
+}
+
 bool Ctrl::IsWaitingEvent()
 {
-	FetchEvents(FALSE);
-	return Events.GetCount();
+	return IsWaitingEvent0(true);
 }
 
 struct ProcStop {
@@ -272,7 +277,6 @@ bool Ctrl::DispatchMouseIn(int act, int zd)
 void Ctrl::GtkMouseEvent(int action, int act, int zd)
 {
 	if(grabpopup && activePopup.GetCount()) {
-		DDUMPC(activePopup);
 		for(int i = activePopup.GetCount(); --i >= 0;)
 			if(activePopup[i] && activePopup[i]->DispatchMouseIn(act, zd))
 				return;
@@ -413,11 +417,11 @@ void Ctrl::Proc()
 		_this->PostInput();
 }
 
-bool Ctrl::ProcessEvent(bool *quit)
+bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 {
 	ASSERT(IsMainThread());
 	bool r = false;
-	if(IsWaitingEvent()) {
+	if(IsWaitingEvent0(fetch)) {
 		while(Events.GetCount() > 1) { // Event compression (coalesce autorepeat, mouse moves/wheel, configure)
 			Event& a = Events[0];
 			Event& b = Events[1];
@@ -443,15 +447,18 @@ bool Ctrl::ProcessEvent(bool *quit)
 		Value val = e.value;
 		Events.DropHead();
 		Ctrl *w = GetTopCtrlFromId(e.windowid);
-		DDUMP(e.windowid);
-		DDUMP(w);
-		if(w) {
-			DDUMP(CurrentState & GDK_BUTTON1_MASK);
+		if(w)
 			w->Proc();
-		}
 		r = true;
 	}
+	if(quit)
+		*quit = IsEndSession();
 	return r;
+}
+
+bool Ctrl::ProcessEvent(bool *quit)
+{
+	return ProcessEvent0(quit, true);
 }
 
 gboolean Ctrl::TimeHandler(GtkWidget *)
@@ -461,11 +468,11 @@ gboolean Ctrl::TimeHandler(GtkWidget *)
 
 void SweepMkImageCache();
 
-bool Ctrl::ProcessEvents(bool *quit)
+bool Ctrl::ProcessEvents0(bool *quit, bool fetch)
 {
 	bool r = false;
-	while(IsWaitingEvent() && (!LoopCtrl || LoopCtrl->InLoop()))
-		r = ProcessEvent(quit) || r;
+	while(IsWaitingEvent0(fetch) && (!LoopCtrl || LoopCtrl->InLoop()))
+		r = ProcessEvent0(quit, fetch) || r;
 	TimerProc(GetTickCount());
 	AnimateCaret();
 	if(quit)
@@ -477,6 +484,11 @@ bool Ctrl::ProcessEvents(bool *quit)
 	FetchEvents(FALSE); // To perform any pending GDK_EXPOSE
 	gdk_flush();
 	return r;
+}
+
+bool Ctrl::ProcessEvents(bool *quit)
+{
+	return ProcessEvents0(quit, true);
 }
 
 void Ctrl::SysEndLoop()
@@ -504,15 +516,11 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 		ctrl->inloop = true;
 	}
 
-	GMainLoop *loop = g_main_loop_new(NULL, TRUE);
-
 	while(!IsEndSession() && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
 		FetchEvents(TRUE);
 		ProcessEvents();
 	}
-
-	g_main_loop_unref(loop);
 
 	if(ctrl)
 		LoopCtrl = ploop;
