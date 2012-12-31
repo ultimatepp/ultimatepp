@@ -4,15 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)      DLOG(x)
-#define LOGTIMING 0
-
-#ifdef _DEBUG
-#define LOGMESSAGES 0
-#endif
-
-#define ELOGW(x)  // RLOG(GetSysTime() << ": " << x) // Only activate in MT!
-#define ELOG(x)   // RLOG(GetSysTime() << ": " << x)
+#define LLOG(x)      // DLOG(x)
 
 Vector<Ctrl::Win> Ctrl::wins;
 
@@ -73,7 +65,6 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 void  Ctrl::SetMouseCursor(const Image& image)
 {
 	GuiLock __;
-	DTIMING("SetMouseCursor");
 	int64 id = image.GetSerialId();
 	Ctrl *topctrl = NULL;
 	Top *top = NULL;
@@ -333,10 +324,7 @@ void Ctrl::SetWndForeground0()
 bool Ctrl::IsWndForeground() const
 {
 	GuiLock __;
-	DLOG("IsWndForeground");
-	DDUMP(top);
-	DDUMP(gtk());
-	DDUMP(gtk_window_is_active(gtk()));
+	LLOG("IsWndForeground");
 	return top && gtk_window_is_active(gtk());
 }
 
@@ -352,12 +340,10 @@ void Ctrl::WndEnable0(bool *b)
 void Ctrl::SetWndFocus0(bool *b)
 {
 	GuiLock __;
-	DLOG("SetWndFocus0 " << top);
+	LLOG("SetWndFocus0 " << top);
 	if(top) {
-		DLOG("SetWndFocus0 DO " << top->window);
-		DDUMP(gtk_widget_get_can_focus(top->window));
+		LLOG("SetWndFocus0 DO " << top->window);
 		gdk_window_focus(gdk(), CurrentTime);
-//		gtk_window_present(gtk());
 		*b = true;
 	}
 }

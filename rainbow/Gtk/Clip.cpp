@@ -5,15 +5,10 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)   DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
-void GtkGetClipData(GtkClipboard *clipboard, GtkSelectionData *selection_data,
-                    guint info, gpointer user_data)
+void Ctrl::GtkSelectionDataSet(GtkSelectionData *selection_data, const String& fmt, const String& data)
 {
-	ArrayMap<String, ClipData>& target = *(ArrayMap<String, ClipData> *)user_data;
-	LLOG("GtkGetClipData for " << target.GetKey(info));
-	String fmt = target.GetKey(info);
-	String data = target[info].Render();
 	if(fmt == "text") {
 		String s = data;
 		gtk_selection_data_set_text(selection_data, (const gchar*)~s, s.GetCount());
@@ -34,11 +29,38 @@ void GtkGetClipData(GtkClipboard *clipboard, GtkSelectionData *selection_data,
 	}
 }
 
+void Ctrl::GtkGetClipData(GtkClipboard *clipboard, GtkSelectionData *selection_data,
+                          guint info, gpointer user_data)
+{
+	ArrayMap<String, ClipData>& target = *(ArrayMap<String, ClipData> *)user_data;
+	LLOG("GtkGetClipData for " << target.GetKey(info));
+	GtkSelectionDataSet(selection_data, target.GetKey(info), target[info].Render());	
+}
+
 void ClearClipData(GtkClipboard *clipboard, gpointer) {}
 
 Ctrl::Gclipboard::Gclipboard(GdkAtom type)
 {
 	clipboard = gtk_clipboard_get(type);
+}
+
+void Ctrl::AddFmt(GtkTargetList *list, const String& fmt, int info)
+{
+	if(fmt == "text")
+		gtk_target_list_add_text_targets(list, info);
+	else
+	if(fmt == "image")
+		gtk_target_list_add_image_targets(list, info, TRUE);
+	else
+		gtk_target_list_add(list, GAtom(fmt), 0, info);
+}
+
+GtkTargetList *Ctrl::CreateTargetList(const VectorMap<String, ClipData>& target)
+{
+	GtkTargetList *list = gtk_target_list_new(NULL, 0);
+	for(int i = 0; i < target.GetCount(); i++)
+		AddFmt(list, target.GetKey(i), i);
+	return list;
 }
 
 void Ctrl::Gclipboard::Put(const String& fmt, const ClipData& data)
@@ -48,17 +70,7 @@ void Ctrl::Gclipboard::Put(const String& fmt, const ClipData& data)
 
 	target.GetAdd(fmt) = data;
 
-	GtkTargetList *list = gtk_target_list_new (NULL, 0);
-	for(int i = 0; i < target.GetCount(); i++) {
-		String fmt = target.GetKey(i);
-		if(fmt == "text")
-			gtk_target_list_add_text_targets(list, i);
-		else
-		if(fmt == "image")
-			gtk_target_list_add_image_targets(list, i, TRUE);
-		else
-			gtk_target_list_add(list, GAtom(fmt), 0, i);
-	}
+	GtkTargetList *list = CreateTargetList(target);
 	
 	gint n;
 	GtkTargetEntry *targets = gtk_target_table_new_from_list(list, &n);
@@ -66,8 +78,17 @@ void Ctrl::Gclipboard::Put(const String& fmt, const ClipData& data)
 	gtk_clipboard_set_with_data(clipboard, targets, n, GtkGetClipData, ClearClipData, &target);
 	gtk_clipboard_set_can_store(clipboard, NULL, 0);
 	
-	gtk_target_table_free (targets, n);
-	gtk_target_list_unref (list);
+	gtk_target_table_free(targets, n);
+	gtk_target_list_unref(list);
+}
+
+String Ctrl::GtkDataGet(GtkSelectionData *s)
+{
+	if(!s)
+		return Null;
+	const guchar *b = gtk_selection_data_get_data(s);
+	int n = gtk_selection_data_get_length(s);
+	return n >= 0 && b ? String(b, n) : String();
 }
 
 String Ctrl::Gclipboard::Get(const String& fmt)
@@ -79,20 +100,15 @@ String Ctrl::Gclipboard::Get(const String& fmt)
 			g_free(s);
 			return h;
 		}
+		return Null;
 	}
 	else
 	if(fmt == "image") {
 		Image img = ImageFromPixbufUnref(gtk_clipboard_wait_for_image(clipboard));
 		return StoreAsString(img); // Not very optimal...
 	}
-	else {
-		GtkSelectionData *s = gtk_clipboard_wait_for_contents(clipboard, GAtom(fmt));
-		if(s) {
-			String h(gtk_selection_data_get_data(s), gtk_selection_data_get_length(s));
-			return h;
-		}
-	}
-	return Null;
+	else
+		return GtkDataGet(gtk_clipboard_wait_for_contents(clipboard, GAtom(fmt)));
 }
 
 bool Ctrl::Gclipboard::IsAvailable(const String& fmt)
@@ -106,7 +122,7 @@ bool Ctrl::Gclipboard::IsAvailable(const String& fmt)
 
 bool PasteClip::IsAvailable(const char *fmt) const
 {
-	DLOG("PasteClip::IsAvailable " << fmt << ", type: " << type);
+	LLOG("PasteClip::IsAvailable " << fmt << ", type: " << type);
 	if(type == 1)
 		return Ctrl::IsDragAvailable(fmt);
 	return (type == 0 ? Ctrl::gclipboard() : Ctrl::gselection()).IsAvailable(fmt);
@@ -114,7 +130,7 @@ bool PasteClip::IsAvailable(const char *fmt) const
 
 String PasteClip::Get(const char *fmt) const
 {
-	DLOG("PasteClip::Get " << fmt << ", type: " << type);
+	LLOG("PasteClip::Get " << fmt << ", type: " << type);
 	if(type == 1)
 		return Ctrl::DragGet(fmt);
 	return (type == 0 ? Ctrl::gclipboard() : Ctrl::gselection()).Get(fmt);

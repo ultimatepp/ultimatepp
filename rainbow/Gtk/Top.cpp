@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)   DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 void    TopWindow::SyncSizeHints()
 {
@@ -101,7 +101,6 @@ void TopWindow::Open(Ctrl *owner)
 		SetRect(GetPrimaryScreenArea());
 	else
 		CenterRect(owner);
-	DDUMP(GetRect());
 	IgnoreMouseUp();
 	Create(owner, false);
 	g_signal_connect(top->window, "window-state-event", G_CALLBACK(StateEvent), this);
@@ -112,9 +111,6 @@ void TopWindow::Open(Ctrl *owner)
 	state = OVERLAPPED;
 	SetMode(q);
 	SyncTopMost();
-	gtk_window_set_type_hint(gtk(), tool ? GDK_WINDOW_TYPE_HINT_UTILITY
-                                         : GetOwner() ? GDK_WINDOW_TYPE_HINT_DIALOG
-                                                      : GDK_WINDOW_TYPE_HINT_NORMAL);
 }
 
 void TopWindow::Open()
