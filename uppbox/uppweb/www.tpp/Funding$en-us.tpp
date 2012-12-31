@@ -28,5 +28,5 @@ Jesús Pérez Burgos, yeohhs, Matt Ezell, Herbert Danler, Garry
 Everard, Jay Krell, mobilehunter, Michael Bzdega, Reza Fatahilah 
 Shah, Keith Willis, Brian Rich, Alex Nicolson, Jean`-François 
 GUCHENS, Daryl Warder, ][%%^http`:`/`/idexindia`.com`/^ Navin Vidhani], 
-Neil Neilson&]
+Neil Neilson, [^http`:`/`/www`.Whizical`.com^ Jeff L. Holcomb]&]
 [s0; ]]
