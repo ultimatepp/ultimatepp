@@ -213,7 +213,7 @@ private:
 
 public:
 	HttpQuery(const Nuller& = Null) : data(Empty())    { case_sensitive = false; }
-	explicit HttpQuery(String url) { data = Empty(); SetURL(url); case_sensitive = false; }
+	explicit HttpQuery(String url) { data = Empty(); case_sensitive = false; SetURL(url); case_sensitive = false; }
 
 	void                   CaseSensitive(bool b = true) { case_sensitive = b; }
 
