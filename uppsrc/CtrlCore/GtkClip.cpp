@@ -5,14 +5,12 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  // DLOG(x)
+#define LLOG(x)  DLOG(x)
 
 void Ctrl::GtkSelectionDataSet(GtkSelectionData *selection_data, const String& fmt, const String& data)
 {
-	if(fmt == "text") {
-		String s = data;
-		gtk_selection_data_set_text(selection_data, (const gchar*)~s, s.GetCount());
-	}
+	if(fmt == "text")
+		gtk_selection_data_set_text(selection_data, (const gchar*)~data, data.GetCount());
 	else
 	if(fmt == "image") {
 		Image img;
@@ -23,16 +21,14 @@ void Ctrl::GtkSelectionDataSet(GtkSelectionData *selection_data, const String& f
 			gtk_selection_data_set_pixbuf(selection_data, m);
 		}
 	}
-	else {
-		String s = data;
-		gtk_selection_data_set(selection_data, GAtom(fmt), 8, (const guchar*)~s, s.GetCount());
-	}
+	else
+		gtk_selection_data_set(selection_data, GAtom(fmt), 8, (const guchar*)~data, data.GetCount());
 }
 
 void Ctrl::GtkGetClipData(GtkClipboard *clipboard, GtkSelectionData *selection_data,
                           guint info, gpointer user_data)
 {
-	ArrayMap<String, ClipData>& target = *(ArrayMap<String, ClipData> *)user_data;
+	VectorMap<String, ClipData>& target = ((Gclipboard *)user_data)->target;
 	LLOG("GtkGetClipData for " << target.GetKey(info));
 	GtkSelectionDataSet(selection_data, target.GetKey(info), target[info].Render());	
 }
@@ -75,7 +71,7 @@ void Ctrl::Gclipboard::Put(const String& fmt, const ClipData& data)
 	gint n;
 	GtkTargetEntry *targets = gtk_target_table_new_from_list(list, &n);
 	
-	gtk_clipboard_set_with_data(clipboard, targets, n, GtkGetClipData, ClearClipData, &target);
+	gtk_clipboard_set_with_data(clipboard, targets, n, GtkGetClipData, ClearClipData, this);
 	gtk_clipboard_set_can_store(clipboard, NULL, 0);
 	
 	gtk_target_table_free(targets, n);
