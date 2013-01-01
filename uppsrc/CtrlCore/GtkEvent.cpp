@@ -8,7 +8,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)     LOG(x)
+#define LLOG(x)    // DLOG(x)
 #define LOG_EVENTS
 
 bool  Ctrl::EventMouseValid;

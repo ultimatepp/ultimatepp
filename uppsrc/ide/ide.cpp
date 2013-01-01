@@ -36,6 +36,8 @@ void Ide::MakeTitle()
 			if(NormalizePath(editfile) == NormalizePath(bookmark[i].file))
 				title << Format(" <%d>", i);
 	title << " { " << GetVarsName() << " }";
+	if(isscanning)
+		title << " (scanning files)";
 	Title(title.ToWString());
 }
 
