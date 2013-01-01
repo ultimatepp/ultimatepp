@@ -16,10 +16,14 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	Label& v1 = ctrl.Create<Label>();
 	l.SetImage(logo);
 	Size sz = Size(isz.cx, isz.cy + 80);
-	v = IDE_VERSION;
-	if(sizeof(void *) == 8) {
-		v = IDE_VERSION " (64 bit)";
-	}
+	String h;
+	h = IDE_VERSION;
+	if(sizeof(void *) == 8)
+		h << " (64 bit)";
+#ifdef GUI_GTK
+	h << " (Gtk)";
+#endif
+	v = h;
 	v.RightPos(10, Ctrl::MINSIZE).TopPos(70, 40);
 	l.Add(v);
 	v.SetFont(Arial(20));

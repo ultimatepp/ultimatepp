@@ -5,7 +5,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 void Ctrl::GtkSelectionDataSet(GtkSelectionData *selection_data, const String& fmt, const String& data)
 {

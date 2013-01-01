@@ -525,6 +525,7 @@ Ide::Ide()
 	output_per_assembly = true;
 	
 	issaving = 0;
+	isscanning = 0;
 }
 
 Ide::~Ide()
@@ -904,8 +905,12 @@ void AppMain___()
 		ide.LoadLastMain();
 		if(clset || ide.OpenMainPackage()) {
 			ide.SaveLastMain();
+			ide.isscanning++;
+			ide.MakeTitle();
 			SyncRefs();
 			ide.FileSelected();
+			ide.isscanning--;
+			ide.MakeTitle();
 			if(!IdeExit)
 				ide.Run();
 			ide.SaveConfigOnTime();

@@ -40,6 +40,7 @@ const CppItem *GetCodeRefItem(const String& ref);
 
 int            GetMatchLen(const char *s, const char *t);
 
+
 enum { WITHBODY = 33 };
 
 inline Font BrowserFont()

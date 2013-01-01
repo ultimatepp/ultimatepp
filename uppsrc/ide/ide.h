@@ -739,6 +739,7 @@ public:
 	VectorMap<String, String> abbr;
 	
 	int           issaving;
+	int           isscanning;
 
 // ------------------------------------
 
