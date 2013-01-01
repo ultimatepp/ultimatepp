@@ -5,6 +5,10 @@
 
 #include <guiplatform.h>
 
+#ifdef flagGTK
+#define GUIPLATFORM_INCLUDE "Gtk.h"
+#endif
+
 #ifndef GUIPLATFORM_INCLUDE
 
 #ifdef PLATFORM_WIN32
