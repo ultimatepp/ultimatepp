@@ -15,7 +15,7 @@ struct TopicModule : public IdeModule {
 			d->Open(path);
 			return d;
 		}
-		return false;
+		return NULL;
 	}
 	virtual void Serialize(Stream& s) {
 		TopicEditor::SerializeEditPos(s);
