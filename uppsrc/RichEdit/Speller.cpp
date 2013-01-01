@@ -151,10 +151,10 @@ Speller *sGetSpeller(int lang)
 		if(IsNull(path))
 			path = GetFileOnPath(ToLower(LNGAsText(lang)) + ".scd", pp);
 		if(IsNull(path))
-			return false;
+			return NULL;
 		FileIn in(path);
 		if(!in)
-			return false;
+			return NULL;
 		q = speller.GetCount();
 		Speller& f = speller.Add(lang);
 		FileIn user(sUserFile(lang));
