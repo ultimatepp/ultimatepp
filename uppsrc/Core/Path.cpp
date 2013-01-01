@@ -1008,12 +1008,11 @@ bool RealizeDirectory(const String& d)
 {
 	String dir = NormalizePath(d);
 	Vector<String> p;
-	while(dir.GetLength() > DIR_MIN) {
+	while(dir.GetLength() > DIR_MIN && !DirectoryExists(dir)) {
 		p.Add(dir);
 		dir = GetFileFolder(dir);
 	}
 	for(int i = p.GetCount() - 1; i >= 0; i--)
-		if(!DirectoryExists(p[i]))
 #ifdef POSIX
 			if(!DirectoryCreate(p[i], mode))
 #else
