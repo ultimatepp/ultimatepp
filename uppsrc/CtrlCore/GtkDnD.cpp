@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  // DLOG(x)
+#define LLOG(x) // DLOG(x)
 
 // --------------------------------------------------------------------------------------------
 
@@ -132,6 +132,7 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 Index<String>   Ctrl::dnd_targets;
 String          Ctrl::dnd_text_target;
 String          Ctrl::dnd_image_target;
+String          Ctrl::dnd_files_target;
 GtkWidget      *Ctrl::dnd_widget;
 GdkDragContext *Ctrl::dnd_context;
 guint           Ctrl::dnd_time;
@@ -161,13 +162,17 @@ void Ctrl::DndTargets(GdkDragContext *context)
 {
 	static Index<String> text_targets;
 	static Index<String> image_targets;
+	static Index<String> files_targets;
 	ONCELOCK {
 		GtkTargetList *target_list = gtk_target_list_new (NULL, 0);
-		gtk_target_list_add_text_targets (target_list, 0);
+		gtk_target_list_add_text_targets(target_list, 0);
 		ToIndex(target_list, text_targets);
 		GtkTargetList *target_list2 = gtk_target_list_new (NULL, 0);
-		gtk_target_list_add_image_targets (target_list2, 0, TRUE);
+		gtk_target_list_add_image_targets(target_list2, 0, TRUE);
 		ToIndex(target_list2, image_targets);
+		GtkTargetList *target_list3 = gtk_target_list_new (NULL, 0);
+		gtk_target_list_add_uri_targets(target_list3, 0);
+		ToIndex(target_list3, files_targets);
 	}
 	dnd_targets.Clear();
 	dnd_text_target.Clear();
@@ -185,6 +190,12 @@ void Ctrl::DndTargets(GdkDragContext *context)
 				dnd_image_target = g;
 		}
 		else
+		if(files_targets.Find(g) >= 0) {
+			dnd_targets.Add("files");
+			if(dnd_files_target.IsEmpty())
+				dnd_files_target = g;
+		}
+		else
 			dnd_targets.Add(g);
 	}
 }
@@ -193,7 +204,7 @@ void Ctrl::GtkDragDataReceived(GtkWidget *widget, GdkDragContext *context,
                                gint x, gint y, GtkSelectionData *data,
                                guint info, guint time, gpointer user_data)
 {
-	LLOG("GtkDragDataReceived");
+	LLOG("GtkDragDataReceived " << dnd_data_fmt);
 	dnd_data_wait = false;
 	if(dnd_data_fmt == "text") {
 		guchar *s = gtk_selection_data_get_text(data);
@@ -203,10 +214,11 @@ void Ctrl::GtkDragDataReceived(GtkWidget *widget, GdkDragContext *context,
 		}
 	}
 	else
-	if(dnd_data_fmt == "image") {
-		Image img = ImageFromPixbufUnref(gtk_selection_data_get_pixbuf(data));
-		dnd_data = StoreAsString(img); // Not very optimal...
-	}
+	if(dnd_data_fmt == "image")
+		dnd_data = ImageClipFromPixbufUnref(gtk_selection_data_get_pixbuf(data));
+	else
+	if(dnd_data_fmt == "files")
+		dnd_data = FilesClipFromUrisFree(gtk_selection_data_get_uris(data));
 	else
 		dnd_data = GtkDataGet(data);
 }
@@ -227,9 +239,9 @@ String Ctrl::DragGet(const char *fmt)
 	dnd_data_fmt = fmt;
 	int t0 = msecs();
 	gtk_drag_get_data(dnd_widget, dnd_context,
-	                  GAtom(strcmp(fmt, "image") == 0 ? ~dnd_image_target
-	                                                  : strcmp(fmt, "text") == 0 ? ~dnd_text_target
-	                                                                             : fmt),
+	                  GAtom(strcmp(fmt, "image") == 0 ? ~dnd_image_target :
+	                        strcmp(fmt, "text") == 0 ? ~dnd_text_target :
+	                        strcmp(fmt, "files") == 0 ? ~dnd_files_target : fmt),
 	                  dnd_time);
 	while(msecs() - t0 < 1000 && dnd_data_wait)
 		FetchEvents(true);

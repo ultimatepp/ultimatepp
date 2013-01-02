@@ -9,7 +9,7 @@
 NAMESPACE_UPP
 
 #define LLOG(x)    // DLOG(x)
-#define LOG_EVENTS
+//#define LOG_EVENTS _DBG_
 
 bool  Ctrl::EventMouseValid;
 Point Ctrl::EventMousePos;
@@ -368,6 +368,7 @@ void Ctrl::Proc()
 				w->WhenClose();
 			}
 		}
+		return;
 	}
 	case GDK_FOCUS_CHANGE:
 		LLOG("FocusChange in: " << (bool)CurrentEvent.value << ", focusCtrlWnd " << focusCtrlWnd);

@@ -197,6 +197,7 @@ bool TopWindow::IsTopMost() const
 
 void TopWindow::GuiPlatformConstruct()
 {
+	topmost = false;
 }
 
 void TopWindow::GuiPlatformDestruct()
