@@ -98,14 +98,15 @@ GdkRect::GdkRect(const Rect& r)
 	height = r.GetHeight();
 }
 
-Image ImageFromPixbufUnref(GdkPixbuf *pixbuf)
+String ImageClipFromPixbufUnref(GdkPixbuf *pixbuf)
 {
 	Image img;
 	if(pixbuf) {
-		if(gdk_pixbuf_get_n_channels (pixbuf) == 4 &&
-		   gdk_pixbuf_get_colorspace (pixbuf) == GDK_COLORSPACE_RGB &&
-		   gdk_pixbuf_get_bits_per_sample (pixbuf) == 8 && 
-		   gdk_pixbuf_get_has_alpha (pixbuf)) {
+		int chn = gdk_pixbuf_get_n_channels(pixbuf);
+		if((chn == 3 && !gdk_pixbuf_get_has_alpha(pixbuf) ||
+		    chn == 4 && gdk_pixbuf_get_has_alpha(pixbuf)) &&
+		   gdk_pixbuf_get_colorspace(pixbuf) == GDK_COLORSPACE_RGB &&
+		   gdk_pixbuf_get_bits_per_sample(pixbuf) == 8) {
 			Size sz(gdk_pixbuf_get_width (pixbuf), gdk_pixbuf_get_height(pixbuf));
 			ImageBuffer m(sz);
 			int stride = gdk_pixbuf_get_rowstride(pixbuf);
@@ -114,20 +115,41 @@ Image ImageFromPixbufUnref(GdkPixbuf *pixbuf)
 				RGBA *s = m[y];
 				const RGBA *e = s + sz.cx;
 				const byte *t = l;
-				while(s < e) {
-					s->r = *t++;
-					s->g = *t++;
-					s->b = *t++;
-					s->a = *t++;
-					s++;
-				}
+				if(chn == 4)
+					while(s < e) {
+						s->r = *t++;
+						s->g = *t++;
+						s->b = *t++;
+						s->a = *t++;
+						s++;
+					}
+				else
+					while(s < e) {
+						s->r = *t++;
+						s->g = *t++;
+						s->b = *t++;
+						s->a = 255;
+						s++;
+					}
 				l += stride;
 			}
 			img = m;
 		}
 		g_object_unref(pixbuf);
 	}
-	return img;
+	return StoreAsString(img);
+}
+
+String FilesClipFromUrisFree(gchar **uris)
+{
+	if(uris) {
+		String h;
+		for(int i = 0; uris[i]; i++)
+			h << uris[i] << '\n';
+		g_strfreev (uris);
+		return h;
+	}
+	return Null;
 }
 
 GdkAtom GAtom(const String& id)

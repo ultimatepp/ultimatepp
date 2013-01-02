@@ -73,7 +73,7 @@ void Ctrl::Gclipboard::Put(const String& fmt, const ClipData& data)
 	
 	gtk_clipboard_set_with_data(clipboard, targets, n, GtkGetClipData, ClearClipData, this);
 	gtk_clipboard_set_can_store(clipboard, NULL, 0);
-	
+
 	gtk_target_table_free(targets, n);
 	gtk_target_list_unref(list);
 }
@@ -89,6 +89,7 @@ String Ctrl::GtkDataGet(GtkSelectionData *s)
 
 String Ctrl::Gclipboard::Get(const String& fmt)
 {
+	LLOG("Ctrl::Gclipboard::Get " << fmt);
 	if(fmt == "text") {
 		gchar *s = gtk_clipboard_wait_for_text(clipboard);
 		if(s) {
@@ -99,16 +100,19 @@ String Ctrl::Gclipboard::Get(const String& fmt)
 		return Null;
 	}
 	else
-	if(fmt == "image") {
-		Image img = ImageFromPixbufUnref(gtk_clipboard_wait_for_image(clipboard));
-		return StoreAsString(img); // Not very optimal...
-	}
+	if(fmt == "image")
+		return ImageClipFromPixbufUnref(gtk_clipboard_wait_for_image(clipboard));
+	else
+	if(fmt == "files")
+		return FilesClipFromUrisFree(gtk_clipboard_wait_for_uris(clipboard));
 	else
 		return GtkDataGet(gtk_clipboard_wait_for_contents(clipboard, GAtom(fmt)));
 }
 
 bool Ctrl::Gclipboard::IsAvailable(const String& fmt)
 {
+	if(fmt == "files")
+		return gtk_clipboard_wait_is_uris_available(clipboard);
 	if(fmt == "text")
 		return gtk_clipboard_wait_is_text_available(clipboard);
 	if(fmt == "image")
@@ -336,12 +340,20 @@ bool IsAvailableFiles(PasteClip& clip)
 	return clip.IsAvailable("files");
 }
 
-// TODO:
+Vector<String> GetClipFiles(const String& data)
+{
+	Vector<String> r;
+	Vector<String> f = Split(data, '\n');
+	for(int i = 0; i < f.GetCount(); i++)
+		if(f[i].StartsWith("file://"))
+			r.Add(f[i].Mid(7));
+	return r;
+}
+
 Vector<String> GetFiles(PasteClip& clip)
 {
 	GuiLock __;
-	Vector<String> f;
-	return f;
+	return GetClipFiles(clip.Get("files"));
 }
 
 Ptr<Ctrl> Ctrl::sel_ctrl;

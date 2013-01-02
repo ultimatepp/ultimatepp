@@ -90,6 +90,7 @@
 	static Index<String>   dnd_targets;
 	static String          dnd_text_target;
 	static String          dnd_image_target;
+	static String          dnd_files_target;
 	static String          dnd_data;
 	static String          dnd_data_fmt;
 	static bool            dnd_data_wait;

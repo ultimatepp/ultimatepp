@@ -131,7 +131,8 @@ public:
 	~ImageGdk();
 };
 
-Image ImageFromPixbufUnref(GdkPixbuf *pixbuf);
+String FilesClipFromUrisFree(gchar **uris);
+String ImageClipFromPixbufUnref(GdkPixbuf *pixbuf);
 
 GdkAtom GAtom(const String& id);
 
