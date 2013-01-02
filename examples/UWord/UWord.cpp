@@ -139,11 +139,24 @@ void UWord::Open()
 
 void UWord::DragAndDrop(Point, PasteClip& d)
 {
-	if(AcceptFiles(d)) {
+	if(IsAvailableFiles(d)) {
 		Vector<String> fn = GetFiles(d);
-		for(int i = 0; i < fn.GetCount(); i++)
-			if(FileExists(fn[i]))
-				OpenFile(fn[i]);
+		for(int open = 0; open < 2; open++) {
+			for(int i = 0; i < fn.GetCount(); i++) {
+				String ext = GetFileExt(fn[i]);
+				if(FileExists(fn[i]) && (ext == ".rtf" || ext == ".qtf")) {
+					if(open)
+						OpenFile(fn[i]);
+					else {
+						if(d.Accept())
+							break;
+						return;
+					}
+				}
+			}
+			if(!d.IsAccepted())
+				return;
+		}
 	}
 }
 
