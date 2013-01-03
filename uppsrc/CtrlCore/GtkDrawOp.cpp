@@ -21,16 +21,24 @@ Point SystemDraw::GetOffset() const
 	return offset.GetCount() ? offset.Top() : Point(0, 0);
 }
 
+Rect  SystemDraw::GetClip() const
+{
+	return clip.GetCount() ? clip.Top() : Rect(-999999, -999999, 999999, 999999);
+}
+
 void SystemDraw::Push()
 {
 	cairo_save(cr);
 	offset.Add(GetOffset());
+	clip.Add(GetClip());
 }
 
 void SystemDraw::Pop()
 {
 	if(offset.GetCount())
 		offset.Drop();
+	if(clip.GetCount())
+		clip.Drop();
 	cairo_restore(cr);
 }
 
@@ -59,6 +67,7 @@ void SystemDraw::RectPath(const Rect& r)
 bool SystemDraw::ClipOp(const Rect& r)
 {
 	Push();
+	clip.Top() &= r.Offseted(GetOffset());
 	RectPath(r);
 	cairo_clip(cr);
 	return true;
@@ -67,6 +76,7 @@ bool SystemDraw::ClipOp(const Rect& r)
 bool SystemDraw::ClipoffOp(const Rect& r)
 {
 	Push();
+	clip.Top() &= r.Offseted(GetOffset());
 	offset.Top() += r.TopLeft();
 	RectPath(r);
 	cairo_clip(cr);
@@ -93,7 +103,7 @@ bool SystemDraw::IntersectClipOp(const Rect& r)
 
 bool SystemDraw::IsPaintingOp(const Rect& r) const
 {
-	return true;
+	return r.Offseted(GetOffset()).Intersects(GetClip());
 }
 
 Rect SystemDraw::GetPaintRect() const
