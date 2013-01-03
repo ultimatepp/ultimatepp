@@ -413,25 +413,52 @@ void Ctrl::Proc()
 	case GDK_KEY_RELEASE:
 		kv = CurrentEvent.value;
 		if(kv >= 0 && kv < 65536) {
-			LOG(FormatIntHex(kv) << ' ' << (char)kv);
+			LLOG(FormatIntHex(kv) << ' ' << (char)kv);
 			if(kv >= 'a' && kv <= 'z')
 				kv = kv - 'a' + 'A';
 			static Tuple2<int, int> cv[] = {
 				{ GDK_KEY_BackSpace, K_BACKSPACE },
 				{ GDK_KEY_Tab, K_TAB },
+				{ GDK_KEY_ISO_Left_Tab, K_TAB },
 				{ GDK_KEY_Return, K_ENTER },
 				{ GDK_KEY_Escape, K_ESCAPE },
+				{ GDK_KEY_space, K_SPACE },
+				{ GDK_KEY_Control_L, K_CTRL_KEY },
+				{ GDK_KEY_Control_R, K_CTRL_KEY },
+				{ GDK_KEY_Shift_L, K_SHIFT_KEY },
+				{ GDK_KEY_Shift_R, K_SHIFT_KEY },
+				{ GDK_KEY_Alt_L, K_ALT_KEY },
+				{ GDK_KEY_Alt_R, K_ALT_KEY },
+
+				{ GDK_KEY_KP_Space, K_SPACE },
+				{ GDK_KEY_KP_Tab, K_TAB },
+				{ GDK_KEY_KP_Enter, K_ENTER },
+				{ GDK_KEY_KP_F1, K_F1 },
+				{ GDK_KEY_KP_F2, K_F2 },
+				{ GDK_KEY_KP_F3, K_F3 },
+				{ GDK_KEY_KP_F4, K_F4 },
+				{ GDK_KEY_KP_Home, K_HOME },
+				{ GDK_KEY_KP_Left, K_LEFT },
+				{ GDK_KEY_KP_Up, K_UP },
+				{ GDK_KEY_KP_Right, K_RIGHT },
+				{ GDK_KEY_KP_Down, K_DOWN },
+				{ GDK_KEY_KP_Page_Up, K_PAGEUP },
+				{ GDK_KEY_KP_Page_Down, K_PAGEDOWN },
+				{ GDK_KEY_KP_End, K_END },
+				{ GDK_KEY_KP_Begin, K_HOME },
+				{ GDK_KEY_KP_Insert, K_INSERT },
+				{ GDK_KEY_KP_Delete, K_DELETE },
 			};
 			Tuple2<int, int> *x = FindTuple(cv, __countof(cv), kv);
 			if(x)
 				kv = x->b;
 			else
 				kv += K_DELTA;
-			if(GetShift())
+			if(GetShift() && kv != K_SHIFT_KEY)
 				kv |= K_SHIFT;
-			if(GetCtrl())
+			if(GetCtrl() && kv != K_CTRL_KEY)
 				kv |= K_CTRL;
-			if(GetAlt())
+			if(GetAlt() && kv != K_ALT_KEY)
 				kv |= K_ALT;
 			LLOG(GetKeyDesc(kv) << ", pressed: " << pressed << ", count: " << CurrentEvent.count);
 			DispatchKey(!pressed * K_KEYUP + kv, CurrentEvent.count);
