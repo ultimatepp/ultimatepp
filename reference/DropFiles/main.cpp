@@ -5,7 +5,7 @@ using namespace Upp;
 struct DndTest : public TopWindow {
 	virtual void Paint(Draw &w);
 	virtual void DragAndDrop(Point p, PasteClip& d);
-
+	virtual bool Key(dword key, int count);
 	Vector<String> files;
 
 	DndTest();
@@ -27,6 +27,16 @@ void DndTest::DragAndDrop(Point p, PasteClip& d)
 		files = GetFiles(d);
 		Refresh();
 	}
+}
+
+bool DndTest::Key(dword key, int count)
+{
+	if(key == K_CTRL_V) {
+		files = GetFiles(Ctrl::Clipboard());
+		Refresh();
+		return true;
+	}
+	return false;
 }
 
 DndTest::DndTest()
