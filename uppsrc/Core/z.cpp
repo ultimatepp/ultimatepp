@@ -421,7 +421,7 @@ static int sSkipZ(Stream& stream)
 	int q = 0;
 	while(stream.Get() > 0)
 		q++;
-	return q;
+	return q + 1;
 }
 
 int GZDecompress(Stream& out, Stream& in, int size, Gate2<int, int> progress)
@@ -453,7 +453,7 @@ int GZDecompress(Stream& out, Stream& in, int size, Gate2<int, int> progress)
 		return -1;
 	}
 	dword crc;
-	int sz = ZDecompress(out, in, size, progress, true, &crc);
+	int sz = size < 8 ? -1 : ZDecompress(out, in, size - 8, progress, true, &crc);
 	return sz < 0 || in.Get32le() != (int)crc || in.Get32le() != sz ? -1 : sz;
 }
 
