@@ -42,6 +42,7 @@ GUI_APP_MAIN
 	e.SetPosInfo(f);
 //	e.Pick(ParseQTF(AsQTF(CreateImageObject(CtrlImg::exclamation)) + " hahahaha"));
 	TopWindow w;
+	w.ToolWindow();
 	w.SetRect(0, 0, 700, 500);
 	w.Sizeable().Zoomable();
 	w.Add(e.SizePos());
