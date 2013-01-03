@@ -5,19 +5,17 @@
 
 #include <guiplatform.h>
 
-#ifdef flagGTK
-#define GUIPLATFORM_INCLUDE "Gtk.h"
-#endif
-
 #ifndef GUIPLATFORM_INCLUDE
 
-#ifdef PLATFORM_WIN32
-#define GUIPLATFORM_INCLUDE "Win32Gui.h"
-#endif
-
-#ifdef PLATFORM_POSIX
-#define GUIPLATFORM_INCLUDE "X11Gui.h"
-#endif
+	#ifdef PLATFORM_WIN32
+		#define GUIPLATFORM_INCLUDE "Win32Gui.h"
+	#else
+		#ifdef flagGTK
+			#define GUIPLATFORM_INCLUDE "Gtk.h"
+		#else
+			#define GUIPLATFORM_INCLUDE "X11Gui.h"
+		#endif
+	#endif
 
 #endif
 
