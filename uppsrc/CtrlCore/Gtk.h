@@ -44,13 +44,17 @@ private:
 	void  Push();
 	void  Pop();
 	Vector<Point> offset;
+	Vector<Rect>  clip;
 
 	cairo_t *cr;
+	
 	SystemDraw() {}
 	
 	friend class ImageDraw;
 	friend class BackDraw;
 	friend class ViewDraw;
+
+	Rect     GetClip() const;
 
 public:
 	void  SetColor(Color c);
