@@ -1,4 +1,4 @@
-description "Demonstration of basic input events";
+description "Demonstration of basic input events\377";
 
 uses
 	CtrlLib;

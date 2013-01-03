@@ -2,6 +2,14 @@
 
 using namespace Upp;
 
+String GetKeyDescEx(int key)
+{
+	String desc = GetKeyDesc(key & ~K_KEYUP);
+	if(key & K_KEYUP)
+		desc << " UP";
+	return desc;
+}
+
 struct App : TopWindow {
 	ArrayCtrl  log;
 
@@ -164,13 +172,7 @@ struct App : TopWindow {
 
 	virtual bool   Key(dword key, int count)
 	{
-		Log(Format("Key(%x, %d) ", (int)key, count) + GetKeyDesc(key));
-		return false;
-	}
-
-	virtual bool   WKey(dword key, int count)
-	{
-		Log(Format("WKey(%x, %d) ", (int)key, count) + GetKeyDesc(key));
+		Log(Format("Key(%x, %d) ", (int)key, count) + GetKeyDescEx(key));
 		return false;
 	}
 
@@ -186,7 +188,7 @@ struct App : TopWindow {
 
 	virtual bool   HotKey(dword key)
 	{
-		Log(Format("HotKey(%x) ", (int)key) + GetKeyDesc(key));
+		Log(Format("HotKey(%x) ", (int)key) + GetKeyDescEx(key));
 		return false;
 	}
 
