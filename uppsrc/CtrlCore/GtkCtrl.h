@@ -56,7 +56,6 @@
 	void   Proc();
 	bool   SweepConfigure(bool wait);
 	bool   SweepFocus(bool wait);
-	void   ProcessFocusEvent(const Event& e);
 
 	static bool                EventMouseValid;
 	static Point               EventMousePos;

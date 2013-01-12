@@ -331,6 +331,7 @@ void Ctrl::FocusSync()
 		ctrl = focus;
 		if(ctrl)
 			ctrl->SetFocusWnd();
+		SyncCaret();
 	}
 }
 
