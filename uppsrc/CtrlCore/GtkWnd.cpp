@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)      // DLOG(x)
+#define LLOG(x)   //  DLOG(rmsecs() << ' ' << x)
 
 Vector<Ctrl::Win> Ctrl::wins;
 
@@ -138,27 +138,6 @@ void Ctrl::UnregisterSystemHotKey(int id)
 		UnregisterHotKey(NULL, id);
 		hotkey[id].Clear();
 	}*/
-}
-
-void Ctrl::FocusSync()
-{
-	GuiLock __;
-	if(focusCtrlWnd && gtk_window_is_active(focusCtrlWnd->gtk()))
-		return;
-	Ptr<Ctrl> focus = NULL;
-	static Ctrl *ctrl;
-	for(int i = 0; i < wins.GetCount(); i++)
-		if(gtk_window_is_active((GtkWindow *)wins[i].gtk)) {
-			focus = wins[i].ctrl;
-			break;
-		}
-	if(focus != ctrl) {
-		if(ctrl)
-			ctrl->KillFocusWnd();
-		ctrl = focus;
-		if(ctrl)
-			ctrl->SetFocusWnd();
-	}
 }
 
 void  Ctrl::AnimateCaret()
@@ -328,30 +307,45 @@ bool Ctrl::IsWndForeground() const
 	return top && gtk_window_is_active(gtk());
 }
 
-void Ctrl::WndEnable0(bool *b)
+bool Ctrl::HasWndFocus() const
 {
 	GuiLock __;
-	if(top) {
-		gtk_widget_set_sensitive(top->window, *b);
-		StateH(ENABLE);
+	return top && gtk_window_is_active(gtk());
+}
+
+void Ctrl::FocusSync()
+{
+	GuiLock __;
+	if(focusCtrlWnd && gtk_window_is_active(focusCtrlWnd->gtk()))
+		return;
+	Ptr<Ctrl> focus = NULL;
+	static Ctrl *ctrl;
+	for(int i = 0; i < wins.GetCount(); i++)
+		if(gtk_window_is_active((GtkWindow *)wins[i].gtk)) {
+			focus = wins[i].ctrl;
+			break;
+		}
+	if(focus != ctrl) {
+		if(ctrl)
+			ctrl->KillFocusWnd();
+		ctrl = focus;
+		if(ctrl)
+			ctrl->SetFocusWnd();
 	}
 }
 
 void Ctrl::SetWndFocus0(bool *b)
 {
 	GuiLock __;
-	LLOG("SetWndFocus0 " << top);
+	LLOG("SetWndFocus0 " << Upp::Name(this) << ", top: " << top);
 	if(top) {
-		LLOG("SetWndFocus0 DO " << top->window);
-		gdk_window_focus(gdk(), CurrentTime);
-		*b = true;
+		LLOG("SetWndFocus0 DO gdk: " << gdk());
+		SetWndForeground0();
+		int t0 = msecs();
+		while(!gtk_window_is_active(gtk()) && msecs() - t0 < 500) // Wait up to 500ms for window to become active - not ideal, but only possibility
+			FetchEvents(true);
+		FocusSync();
 	}
-}
-
-bool Ctrl::HasWndFocus() const
-{
-	GuiLock __;
-	return top && gtk_widget_is_focus(top->window);
 }
 
 void Ctrl::WndInvalidateRect(const Rect& r)
@@ -371,11 +365,12 @@ void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 
 bool Ctrl::SweepConfigure(bool wait)
 {
+	Ptr<Ctrl> this_ = this;
 	bool r = false;
 	FetchEvents(wait);
-	for(int i = 0; i < Events.GetCount(); i++) {
+	for(int i = 0; i < Events.GetCount() && this_; i++) {
 		Event& e = Events[i];
-		if(e.type == GDK_CONFIGURE && top->id == e.windowid) {
+		if(e.type == GDK_CONFIGURE && this_ && top->id == e.windowid) {
 			Rect rect = e.value;
 			LLOG("SweepConfigure " << rect);
 			if(GetRect() != rect)
@@ -393,7 +388,10 @@ void Ctrl::WndSetPos0(const Rect& rect)
 	LLOG("WndSetPos0 " << rect);
 	if(!top)
 		return;
+	Ptr<Ctrl> this_ = this;
 	SweepConfigure(false); // Remove any previous GDK_CONFIGURE for this window
+	if(!this_)
+		return;
 	gtk_window_move(gtk(), rect.left, rect.top);
 	gtk_window_resize(gtk(), rect.GetWidth(), rect.GetHeight());
 	int t0 = msecs();
@@ -403,6 +401,62 @@ void Ctrl::WndSetPos0(const Rect& rect)
 	}
 	while(msecs() - t0 < 500);
 	LLOG("-- WndSetPos0 " << rect << " " << msecs() - t0);
+}
+
+/*
+bool Ctrl::SweepFocus(bool wait)
+{
+	bool r = false;
+	Ptr<Ctrl> this_ = this;
+	FetchEvents(wait);
+	for(int i = 0; i < Events.GetCount(); i++) {
+		Event& e = Events[i];
+		Ctrl *w = GetTopCtrlFromId(e.windowid);
+		if(w)
+			w->ProcessFocusEvent(e);
+		if(e.type == GDK_FOCUS_CHANGE) {
+			LLOG("Sweeping GDK_FOCUS_CHANGE for " << Upp::Name(w));
+			CurrentTime = e.time;
+			if(this_ && top->id == e.windowid && (bool)e.value)
+				r = true;
+			LLOG(" r: " << r);
+			e.type = EVENT_NONE;
+		}
+	}
+	LLOG("SweepFocus returns " << r);
+	return r;
+}
+
+void Ctrl::SetWndFocus0(bool *b)
+{
+	GuiLock __;
+	LLOG("SetWndFocus0 " << Upp::Name(this) << ", top: " << top);
+	if(!top)
+		return;
+	Ptr<Ctrl> this_ = this;
+	SweepFocus(false); // Remove any previous GDK_FOCUS_CHANGE for this window
+	if(!this_ || this == focusCtrlWnd)
+		return;
+	LLOG("SetWndFocus0 DO gdk: " << gdk());
+	gdk_window_focus(gdk(), CurrentTime);
+	DDUMP(gtk_window_is_active(gtk()));
+	*b = true;
+	int t0 = msecs();
+	do { // Wait up to 500ms for corresponding GDK_FOCUS_CHANGE to arrive
+		if(SweepFocus(true))
+			break;
+	}
+	while(msecs() - t0 < 500);
+	LLOG("-- SetWndFocus0 " << " " << msecs() - t0);
+}
+*/
+void Ctrl::WndEnable0(bool *b)
+{
+	GuiLock __;
+	if(top) {
+		gtk_widget_set_sensitive(top->window, *b);
+		StateH(ENABLE);
+	}
 }
 
 void Ctrl::WndUpdate0r(const Rect& r)

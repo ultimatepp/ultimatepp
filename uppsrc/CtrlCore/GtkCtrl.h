@@ -17,9 +17,6 @@
 	static bool ProcessEvent0(bool *quit, bool fetch);
 	static bool ProcessEvents0(bool *quit, bool fetch);
 
-	void   Proc();
-	bool   SweepConfigure(bool wait);
-
 	static gboolean GtkEvent(GtkWidget *widget, GdkEvent *key, gpointer user_data);
 
 	enum {
@@ -55,6 +52,11 @@
 		GdkWindow *gdk;
 		Ptr<Ctrl>  ctrl;
 	};
+
+	void   Proc();
+	bool   SweepConfigure(bool wait);
+	bool   SweepFocus(bool wait);
+	void   ProcessFocusEvent(const Event& e);
 
 	static bool                EventMouseValid;
 	static Point               EventMousePos;

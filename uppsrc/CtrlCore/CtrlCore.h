@@ -474,6 +474,7 @@ private:
 	static  Rect      caretRect;
 	static  Ptr<Ctrl> captureCtrl;
 	static  bool      ignoreclick;
+	static  bool      ignoremouseup;
 	static  bool      ignorekeyup;
 	static  bool      mouseinview;
 	static  bool      mouseinframe;

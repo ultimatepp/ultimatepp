@@ -2,14 +2,10 @@
 
 #ifdef GUI_GTK
 
-//#include <winnls.h>
-
-//#include "imm.h"
-
 NAMESPACE_UPP
 
-#define LLOG(x)    // DLOG(x)
-//#define LOG_EVENTS _DBG_
+#define LLOG(x)  //  DLOG(rmsecs() << ' ' << x)
+// #define LOG_EVENTS _DBG_
 
 bool  Ctrl::EventMouseValid;
 Point Ctrl::EventMousePos;
@@ -99,12 +95,11 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	bool pressed = false;
 	bool  retval = true;
 	Value value;
-	Ctrl *p;
+	Ctrl *p = GetTopCtrlFromId(user_data);
 
 	switch(event->type) {
 	case GDK_EXPOSE:
 	case GDK_DAMAGE:
-		p = GetTopCtrlFromId(user_data);
 		if(p) {
 #ifdef LOG_EVENTS
 			TimeStop tm;
@@ -129,9 +124,12 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	case GDK_DELETE:
 		break;
 	case GDK_FOCUS_CHANGE:
-		retval = false;
-		value = ((GdkEventFocus *)event)->in;
-		break;
+		if(p)
+			if(((GdkEventFocus *)event)->in)
+				gtk_im_context_focus_in(p->top->im_context);
+			else
+				gtk_im_context_focus_in(p->top->im_context);
+		return false;
 	case GDK_LEAVE_NOTIFY:
 		EventMouseValid = false;
 		return false;
@@ -350,7 +348,7 @@ void Ctrl::Proc()
 	Tuple2<int, const char *> *f = FindTuple(xEvent, __countof(xEvent), CurrentEvent.type);
 	if(f)
 		ev = f->b;
-	LOG(rmsecs() << "PROCESS EVENT " << Upp::Name(this) << " " << ev);
+	LOG(rmsecs() << " PROCESS EVENT " << Upp::Name(this) << " " << ev);
 	ProcStop tm;
 	tm.ev = ev;
 #endif
@@ -360,30 +358,6 @@ void Ctrl::Proc()
 	bool pressed = false;
 	int  kv;
 	switch(CurrentEvent.type) {
-	case GDK_DELETE: {
-		TopWindow *w = dynamic_cast<TopWindow *>(this);
-		if(w) {
-			if(IsEnabled()) {
-				IgnoreMouseUp();
-				w->WhenClose();
-			}
-		}
-		return;
-	}
-	case GDK_FOCUS_CHANGE:
-		LLOG("FocusChange in: " << (bool)CurrentEvent.value << ", focusCtrlWnd " << focusCtrlWnd);
-		if((bool)CurrentEvent.value) {
-			gtk_im_context_focus_in(top->im_context);
-			if(this != focusCtrlWnd) {
-				LLOG("Activate " << Name());
-				SetFocusWnd();
-			}
-		}
-		else {
-			gtk_im_context_focus_out(top->im_context);
-			KillFocusWnd();
-		}
-		return;
 	case GDK_MOTION_NOTIFY: {
 		GtkMouseEvent(MOUSEMOVE, MOUSEMOVE, 0);
 		DoCursorShape();
@@ -393,10 +367,17 @@ void Ctrl::Proc()
 		if(!HasWndFocus() && !popup)
 			SetWndFocus();
 		ClickActivateWnd();
-		GtkButtonEvent(DOWN);
+		if(ignoremouseup) {
+			KillRepeat();
+			ignoreclick = false;
+			ignoremouseup = false;
+		}
+		if(!ignoreclick)
+			GtkButtonEvent(DOWN);
 		break;
 	case GDK_2BUTTON_PRESS:
-		GtkButtonEvent(DOUBLE);
+		if(!ignoreclick)
+			GtkButtonEvent(DOUBLE);
 		break;
 	case GDK_BUTTON_RELEASE:
 		if(ignoreclick)
@@ -413,7 +394,7 @@ void Ctrl::Proc()
 	case GDK_KEY_RELEASE:
 		kv = CurrentEvent.value;
 		if(kv >= 0 && kv < 65536) {
-			LLOG(FormatIntHex(kv) << ' ' << (char)kv);
+			LLOG("keyval " << FormatIntHex(kv) << ' ' << (char)kv);
 			if(kv >= 'a' && kv <= 'z')
 				kv = kv - 'a' + 'A';
 			static Tuple2<int, int> cv[] = {
@@ -470,6 +451,19 @@ void Ctrl::Proc()
 			DispatchKey(h[i], 1);
 		break;
 	}
+	case GDK_DELETE: {
+		TopWindow *w = dynamic_cast<TopWindow *>(this);
+		if(w) {
+			if(IsEnabled()) {
+				IgnoreMouseUp();
+				w->WhenClose();
+			}
+		}
+		return;
+	}
+//	case GDK_FOCUS_CHANGE:
+//		ProcessFocusEvent(CurrentEvent);
+//		return;
 	case GDK_CONFIGURE: {
 		Rect rect = CurrentEvent.value;
 		if(GetRect() != rect)
@@ -481,6 +475,22 @@ void Ctrl::Proc()
 	}
 	if(_this)
 		_this->PostInput();
+}
+
+void Ctrl::ProcessFocusEvent(const Event& e)
+{
+	LLOG("FocusChange in: " << (bool)e.value << ", focusCtrlWnd " << Upp::Name(focusCtrlWnd));
+	if((bool)e.value) {
+		gtk_im_context_focus_in(top->im_context);
+		if(this != focusCtrlWnd) {
+			LLOG("Activate " << Name());
+			SetFocusWnd();
+		}
+	}
+	else {
+		gtk_im_context_focus_out(top->im_context);
+		KillFocusWnd();
+	}
 }
 
 bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
@@ -513,8 +523,10 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 		Value val = e.value;
 		Events.DropHead();
 		Ctrl *w = GetTopCtrlFromId(e.windowid);
+		FocusSync();
 		if(w)
 			w->Proc();
+		FocusSync();
 		r = true;
 	}
 	if(quit)

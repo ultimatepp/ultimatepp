@@ -642,7 +642,7 @@ void MultiButtonFrame::FrameAdd(Ctrl& parent)
 void MultiButtonFrame::FrameRemove()
 {
 	Remove();
-	SetWantFocus();
+	WantFocus();
 }
 
 void MultiButtonFrame::FrameLayout(Rect& r)
