@@ -95,7 +95,8 @@ mainconfig
 	"" = "GUI TESTINSTALL",
 	"" = "GUI CHECKCLIPBOARD",
 	"" = "GUI SVO_VALUE",
-	"" = "GUI GTK";
+	"" = "GUI GTK",
+	"" = "GUI X11";
 
 custom() "",
 	"",

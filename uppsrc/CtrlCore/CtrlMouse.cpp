@@ -10,6 +10,7 @@ Ptr<Ctrl> Ctrl::captureCtrl;
 Ptr<Ctrl> Ctrl::repeatTopCtrl;
 Point     Ctrl::repeatMousePos;
 bool      Ctrl::ignoreclick;
+bool      Ctrl::ignoremouseup;
 bool      Ctrl::mouseinframe;
 bool      Ctrl::mouseinview;
 Point     Ctrl::mousepos;
@@ -209,8 +210,10 @@ void Ctrl::IgnoreMouseUp()
 {
 	GuiLock __;
 	LLOG("Ctrl::IgnoreMouseUp");
-	if(GetMouseLeft() || GetMouseRight() || GetMouseMiddle())
+	if(GetMouseLeft() || GetMouseRight() || GetMouseMiddle()) {
 		IgnoreMouseClick();
+		ignoremouseup = true;
+	}
 }
 
 void Ctrl::EndIgnore()
@@ -220,6 +223,7 @@ void Ctrl::EndIgnore()
 	if(GetMouseLeft() || GetMouseRight() || GetMouseMiddle()) return;
 	KillRepeat();
 	ignoreclick = false;
+	ignoremouseup = false;
 }
 
 bool Ctrl::IsMouseActive() const

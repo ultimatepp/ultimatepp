@@ -7,7 +7,7 @@ NAMESPACE_UPP
 #define LLOG(x) // DLOG(x)
 
 void _DBG_Ungrab(void)
-{
+{   // This is a special nasty hack to make possible to ungrab mouse by debugger (see ide/Debuggers/PrettyPrinters.py)
 	gdk_pointer_ungrab(GDK_CURRENT_TIME);
 }
 
@@ -24,20 +24,14 @@ void Ctrl::PanicMsgBox(const char *title, const char *text)
 
 void InitGtkApp(int argc, char **argv, const char **envptr)
 {
-	gtk_init(&argc, &argv); // TODO?
+	LLOG(rmsecs() << " InitGtkApp");
+	gtk_init(&argc, &argv);
 	Ctrl::GlobalBackBuffer();
 	Ctrl::ReSkin();
 	g_timeout_add(20, (GSourceFunc) Ctrl::TimeHandler, NULL);
 	InstallPanicMessageBox(Ctrl::PanicMsgBox);
 }
-/*
-void ChSysInit()
-{
-	CtrlImg::Reset();
-	CtrlsImg::Reset();
-	ChReset();
-}
-*/
+
 END_UPP_NAMESPACE
 
 #endif

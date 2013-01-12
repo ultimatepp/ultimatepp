@@ -101,7 +101,7 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 {
 	GuiLock __;
 	LLOG("POPUP " << Name() << ", " << GetRect() << ", activate " << activate);
-	Create(owner, true);
+	Create(owner ? owner->GetTopCtrl() : GetActiveCtrl(), true);
 	popup = true;
 	if(activate) {
 		Ptr<Ctrl> _this = this;
