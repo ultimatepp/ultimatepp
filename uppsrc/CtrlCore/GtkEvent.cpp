@@ -124,11 +124,13 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	case GDK_DELETE:
 		break;
 	case GDK_FOCUS_CHANGE:
-		if(p)
+		if(p) {
 			if(((GdkEventFocus *)event)->in)
 				gtk_im_context_focus_in(p->top->im_context);
 			else
 				gtk_im_context_focus_in(p->top->im_context);
+			AddEvent(user_data, EVENT_NONE, value);
+		}
 		return false;
 	case GDK_LEAVE_NOTIFY:
 		EventMouseValid = false;
@@ -461,9 +463,6 @@ void Ctrl::Proc()
 		}
 		return;
 	}
-//	case GDK_FOCUS_CHANGE:
-//		ProcessFocusEvent(CurrentEvent);
-//		return;
 	case GDK_CONFIGURE: {
 		Rect rect = CurrentEvent.value;
 		if(GetRect() != rect)
@@ -477,21 +476,6 @@ void Ctrl::Proc()
 		_this->PostInput();
 }
 
-void Ctrl::ProcessFocusEvent(const Event& e)
-{
-	LLOG("FocusChange in: " << (bool)e.value << ", focusCtrlWnd " << Upp::Name(focusCtrlWnd));
-	if((bool)e.value) {
-		gtk_im_context_focus_in(top->im_context);
-		if(this != focusCtrlWnd) {
-			LLOG("Activate " << Name());
-			SetFocusWnd();
-		}
-	}
-	else {
-		gtk_im_context_focus_out(top->im_context);
-		KillFocusWnd();
-	}
-}
 
 bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 {
@@ -526,11 +510,12 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 		FocusSync();
 		if(w)
 			w->Proc();
-		FocusSync();
 		r = true;
 	}
 	if(quit)
 		*quit = IsEndSession();
+	FocusSync();
+	SyncCaret();
 	return r;
 }
 
@@ -540,7 +525,7 @@ bool Ctrl::ProcessEvent(bool *quit)
 }
 
 gboolean Ctrl::TimeHandler(GtkWidget *)
-{
+{ // we only need timer to periodically break blocking g_main_context_iteration
 	return true;
 }
 
