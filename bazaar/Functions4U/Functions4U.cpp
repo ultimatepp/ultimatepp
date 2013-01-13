@@ -792,7 +792,7 @@ double StringToSeconds(String duration) {
 	int hour, min;
 	double secs;
 	StringToHMS(duration, hour, min, secs);
-	return 60.*hour + 60.*min + secs;
+	return 3600.*hour + 60.*min + secs;
 }
 
 String formatSeconds(double seconds) {
@@ -806,10 +806,8 @@ String formatSeconds(double seconds) {
 String HMSToString(int hour, int min, double seconds, bool units, bool dec) {
 	String sunits;
 	if (units) {
-		if (hour >= 2)
+		if (hour >= 1)
 			sunits = t_("hours");
-		else if (hour == 1)
-			sunits = t_("hour");
 		else if (min >= 2)
 			sunits = t_("mins");
 		else if (min == 1)
@@ -825,9 +823,9 @@ String HMSToString(int hour, int min, double seconds, bool units, bool dec) {
 	if (min > 0 || hour > 0) 
 	    ret << (ret.IsEmpty() ? FormatInt(min) : FormatIntDec(min, 2, '0')) << ":";
 	if (!dec)
-		ret << int(seconds);
-	else
-		ret << (ret.IsEmpty() ? FormatDouble(seconds, 2, FD_REL) : formatSeconds(seconds));
+		seconds = int(seconds);
+	
+	ret << formatSeconds(seconds);
 	if (units)
 		ret << " " << sunits;
 	return ret;
@@ -839,7 +837,7 @@ String SecondsToString(double seconds, bool units, bool dec) {
 	seconds -= hour*3600;
 	min = (int)(seconds/60.);
 	seconds -= min*60;	
-	return HMSToString(hour, min, seconds, units);
+	return HMSToString(hour, min, seconds, units, dec);
 }
 
 String BytesToString(uint64 _bytes, bool units)
@@ -2180,36 +2178,36 @@ String WideToString(LPCWSTR wcs, int len) {
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
-Dl::Dl() {
-	hinstLib = 0;
-}
-
-Dl::~Dl() {
-	if (hinstLib) 
-		if (FreeLibrary(hinstLib) == 0)
-			throw Exc(t_("Dl cannot be released"));
-}
-
-#ifndef LOAD_IGNORE_CODE_AUTHZ_LEVEL
-	#define LOAD_IGNORE_CODE_AUTHZ_LEVEL	0x00000010
-#endif
-
-bool Dl::Load(const String &fileDll) {
-	if (hinstLib) 
-		if (FreeLibrary(hinstLib) == 0)
-			return false;
+	Dl::Dl() {
+		hinstLib = 0;
+	}
 	
-	hinstLib = LoadLibraryEx(TEXT(fileDll), NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
-	if (!hinstLib) 
-		return false;
-	return true;
-}
-
-void *Dl::GetFunction(const String &functionName) {
-	if (!hinstLib) 
-		return NULL;
-	return (void *)GetProcAddress(hinstLib, functionName);
-}
+	Dl::~Dl() {
+		if (hinstLib) 
+			if (FreeLibrary(hinstLib) == 0)
+				throw Exc(t_("Dl cannot be released"));
+	}
+	
+	#ifndef LOAD_IGNORE_CODE_AUTHZ_LEVEL
+		#define LOAD_IGNORE_CODE_AUTHZ_LEVEL	0x00000010
+	#endif
+	
+	bool Dl::Load(const String &fileDll) {
+		if (hinstLib) 
+			if (FreeLibrary(hinstLib) == 0)
+				return false;
+		
+		hinstLib = LoadLibraryEx(TEXT(fileDll), NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
+		if (!hinstLib) 
+			return false;
+		return true;
+	}
+	
+	void *Dl::GetFunction(const String &functionName) {
+		if (!hinstLib) 
+			return NULL;
+		return (void *)GetProcAddress(hinstLib, functionName);
+	}
 
 #else
 

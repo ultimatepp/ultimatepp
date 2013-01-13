@@ -9,12 +9,6 @@ esES("horas")
 euES("")
 frFR("")
 
-T_("hour")
-caES("")
-esES("hora")
-euES("")
-frFR("")
-
 T_("mins")
 caES("")
 esES("mins")
@@ -212,6 +206,12 @@ frFR("")
 
 
 // Obsolete
+
+T_("hour")
+caES("")
+esES("hora")
+euES("")
+frFR("")
 
 T_("Please set patch file where set the changes")
 caES("")
