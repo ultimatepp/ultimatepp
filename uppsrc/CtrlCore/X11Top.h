@@ -19,4 +19,6 @@ private:
 
 	Image         invert;
 	WString       title2;
+
+	static  Rect      windowFrameMargin;
 //$ };

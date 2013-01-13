@@ -90,7 +90,7 @@ file
 	X11Clip.cpp,
 	X11DnD.cpp,
 	X11Top.h,
-	TopWinX11.cpp,
+	X11Top.cpp,
 	X11ImgClip.cpp,
 	X11App.cpp,
 	X11DHCtrl.cpp,

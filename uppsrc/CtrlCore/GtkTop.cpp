@@ -6,6 +6,14 @@ NAMESPACE_UPP
 
 #define LLOG(x)  // DLOG(x)
 
+Rect Ctrl::frameMargins;
+
+Rect Ctrl::GetFrameMargins()
+{
+	GuiLock __;
+	return frameMargins != Rect(0, 0, 0, 0) ? frameMargins : Rect(8, 32, 8, 8);
+}
+
 void    TopWindow::SyncSizeHints()
 {
 	GuiLock __;
@@ -54,13 +62,17 @@ void TopWindow::CenterRect(Ctrl *owner)
 		Size sz = GetRect().Size();
 		Rect r, wr;
 		wr = Ctrl::GetWorkArea();
-		// TODO: Add Frame support
+		Rect fm = GetFrameMargins();
 		if(center == 1)
 			r = owner->GetRect();
 		else
 			r = wr;
 		Point p = r.CenterPos(sz);
 		r = RectC(p.x, p.y, sz.cx, sz.cy);
+		wr.left += fm.left;
+		wr.right -= fm.right;
+		wr.top += fm.top;
+		wr.bottom -= fm.bottom;
 		if(r.top < wr.top) {
 			r.bottom += wr.top - r.top;
 			r.top = wr.top;
@@ -111,6 +123,13 @@ void TopWindow::Open(Ctrl *owner)
 	state = OVERLAPPED;
 	SetMode(q);
 	SyncTopMost();
+	GdkRectangle fr;
+	gdk_window_get_frame_extents(gdk(), &fr);
+	Rect r = GetRect();
+	frameMargins.left = max(frameMargins.left, minmax(r.left - fr.x, 0, 32));
+	frameMargins.right = max(frameMargins.right, minmax(fr.x + fr.width - r.right, 0, 32));
+	frameMargins.top = max(frameMargins.top, minmax(r.top - fr.y, 0, 64));
+	frameMargins.bottom = max(frameMargins.bottom, minmax(fr.y + fr.height - r.bottom, 0, 48));
 }
 
 void TopWindow::Open()
@@ -125,12 +144,14 @@ void TopWindow::OpenMain()
 
 void TopWindow::SyncTopMost()
 {
+	GuiLock __;
 	if(top)
 		gtk_window_set_keep_above(gtk(), topmost);
 }
 
 void TopWindow::SetMode(int mode)
 {
+	GuiLock __;
 	GtkWindow *w = gtk();
 	if(w)
 		switch(state) {
@@ -158,7 +179,6 @@ void TopWindow::SetMode(int mode)
 			break;
 		}
 }
-
 
 void TopWindow::Minimize(bool effect)
 {
@@ -220,9 +240,7 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 	if(s.IsLoading()) {
 		if(mn) rect = overlapped;
 		Rect limit = GetWorkArea();
-		Rect fm = windowFrameMargin;
-		if((fm.left|fm.right|fm.top|fm.bottom) == 0)
-			fm = Rect(8, 32, 8, 8);
+		Rect fm = GetFrameMargins();
 		limit.left += fm.left;
 		limit.right -= fm.right;
 		limit.top += fm.top;
