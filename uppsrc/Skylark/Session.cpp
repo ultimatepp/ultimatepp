@@ -145,6 +145,7 @@ Http& Http::ClearSession()
 {
 	session_var.Clear();
 	session_id.Clear();
+	session_dirty = true;
 	return *this;
 }
 
