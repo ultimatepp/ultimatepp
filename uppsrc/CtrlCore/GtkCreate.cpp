@@ -61,6 +61,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	if(!popup)
 		SetWndFocus();
 	
+	SweepConfigure(true);
+	
 	DndInit();
 	
 	StateH(OPEN);

@@ -6,6 +6,8 @@ NAMESPACE_UPP
 
 #define LLOG(x)  //  DLOG(x)
 
+Rect TopWindow::windowFrameMargin;
+
 void TopWindow::SyncSizeHints()
 {
 	GuiLock __; 

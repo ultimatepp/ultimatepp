@@ -404,53 +404,6 @@ void Ctrl::WndSetPos0(const Rect& rect)
 	LLOG("-- WndSetPos0 " << rect << " " << msecs() - t0);
 }
 
-/*
-bool Ctrl::SweepFocus(bool wait)
-{
-	bool r = false;
-	Ptr<Ctrl> this_ = this;
-	FetchEvents(wait);
-	for(int i = 0; i < Events.GetCount(); i++) {
-		Event& e = Events[i];
-		Ctrl *w = GetTopCtrlFromId(e.windowid);
-		if(w)
-			w->ProcessFocusEvent(e);
-		if(e.type == GDK_FOCUS_CHANGE) {
-			LLOG("Sweeping GDK_FOCUS_CHANGE for " << Upp::Name(w));
-			CurrentTime = e.time;
-			if(this_ && top->id == e.windowid && (bool)e.value)
-				r = true;
-			LLOG(" r: " << r);
-			e.type = EVENT_NONE;
-		}
-	}
-	LLOG("SweepFocus returns " << r);
-	return r;
-}
-
-void Ctrl::SetWndFocus0(bool *b)
-{
-	GuiLock __;
-	LLOG("SetWndFocus0 " << Upp::Name(this) << ", top: " << top);
-	if(!top)
-		return;
-	Ptr<Ctrl> this_ = this;
-	SweepFocus(false); // Remove any previous GDK_FOCUS_CHANGE for this window
-	if(!this_ || this == focusCtrlWnd)
-		return;
-	LLOG("SetWndFocus0 DO gdk: " << gdk());
-	gdk_window_focus(gdk(), CurrentTime);
-	DDUMP(gtk_window_is_active(gtk()));
-	*b = true;
-	int t0 = msecs();
-	do { // Wait up to 500ms for corresponding GDK_FOCUS_CHANGE to arrive
-		if(SweepFocus(true))
-			break;
-	}
-	while(msecs() - t0 < 500);
-	LLOG("-- SetWndFocus0 " << " " << msecs() - t0);
-}
-*/
 void Ctrl::WndEnable0(bool *b)
 {
 	GuiLock __;

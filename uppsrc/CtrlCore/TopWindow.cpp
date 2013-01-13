@@ -4,8 +4,6 @@ NAMESPACE_UPP
 
 #define LLOG(x)  //  DLOG(x)
 
-Rect TopWindow::windowFrameMargin;
-
 String TopWindow::GetDesc() const
 {
 	return title.ToString();

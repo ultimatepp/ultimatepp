@@ -23,8 +23,6 @@ protected:
 		TIMEID_COUNT,
 	};
 
-	static  Rect      windowFrameMargin;
-
 private:
 	struct Abreak : Pte<Abreak> {
 		int         ID;

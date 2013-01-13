@@ -177,6 +177,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		retval = false;
 		GdkEventConfigure *e = (GdkEventConfigure *)event;
 		value = RectC(e->x, e->y, e->width, e->height);
+		LLOG("GDK_CONFIGURE " << value);
 		break;
 	}
 	default:

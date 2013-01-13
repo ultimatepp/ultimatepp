@@ -87,6 +87,9 @@
 	static void StopGrabPopup();
 	static void StartGrabPopup();
 	static bool ReleaseWndCapture0();
+	
+	static Rect frameMargins;
+	static Rect GetFrameMargins();
 
 	static Index<String>   dnd_targets;
 	static String          dnd_text_target;
