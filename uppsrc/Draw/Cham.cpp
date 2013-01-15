@@ -274,8 +274,10 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op)
 				ChDraw(w, r.right, p.y, sz2.cx, r.Height(), img,
 				       RectC(sr.right, p.y, sz2.cx, sr.Height()));
 				if(op == LOOK_PAINT) {
-					if(IsNull(r) || IsNull(sr))
+					if(IsNull(r) || IsNull(sr))	{
+						w.End();
 						return 1;
+					}
 					if(tile) {
 						LTIMING("Ch-Tiles");
 						LTIMING("Ch-Tiles");
