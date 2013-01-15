@@ -492,7 +492,7 @@ Raster::Info JPGRaster::Data::GetInfo()
 		info.bpp = 24;
 		info.colors = 0;
 		info.dots = dot_size;
-		info.hotspot = Null;
+		info.hotspot = Point(0, 0);
 		info.kind = IMAGE_OPAQUE;
 	}
 	catch(Exc e) {
