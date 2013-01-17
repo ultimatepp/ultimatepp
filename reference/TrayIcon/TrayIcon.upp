@@ -1,4 +1,4 @@
-description "Placing icon into platform tray area";
+description "Placing icon into platform tray area\377";
 
 uses
 	CtrlLib;
