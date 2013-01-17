@@ -30,7 +30,7 @@ struct App : TrayIcon {
 		Tip("This is U++ TrayIcon");
 	}
 };
-
+ 
 GUI_APP_MAIN
 {
 	App().Run();
