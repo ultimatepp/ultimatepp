@@ -360,6 +360,7 @@ void Ctrl::Proc()
 	Ptr<Ctrl> _this = this;
 	bool pressed = false;
 	int  kv;
+	static int clicktime = msecs() - 100000;
 	switch(CurrentEvent.type) {
 	case GDK_MOTION_NOTIFY: {
 		GtkMouseEvent(MOUSEMOVE, MOUSEMOVE, 0);
@@ -376,13 +377,14 @@ void Ctrl::Proc()
 			ignoremouseup = false;
 		}
 		if(!ignoreclick)
-			GtkButtonEvent(DOWN);
+			GtkButtonEvent(msecs(clicktime) < 250 ? DOUBLE : DOWN);
+		clicktime = msecs();
 		break;
-	case GDK_2BUTTON_PRESS:
+/*	case GDK_2BUTTON_PRESS:
 		if(!ignoreclick)
 			GtkButtonEvent(DOUBLE);
 		break;
-	case GDK_BUTTON_RELEASE:
+*/	case GDK_BUTTON_RELEASE:
 		if(ignoreclick)
 			EndIgnore();
 		else

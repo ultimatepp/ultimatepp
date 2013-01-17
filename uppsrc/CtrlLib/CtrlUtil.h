@@ -152,20 +152,26 @@ private:
 	ImageGdk       image;
 	bool           active;
 
-	static void PopupMenu(GtkStatusIcon *, guint, guint32, gpointer user_data);
-	static void DoActivate(GtkStatusIcon *, gpointer user_data);
+	static gboolean DoButtonPress(GtkStatusIcon *, GdkEventButton *e, gpointer user_data);
+	static gboolean DoButtonRelease(GtkStatusIcon *, GdkEventButton *e, gpointer user_data);
+	static void     PopupMenu(GtkStatusIcon *, guint, guint32, gpointer user_data);
+	static void     DoActivate(GtkStatusIcon *, gpointer user_data);
 
 	void DoMenu(Bar& bar);
 	void ExecuteMenu();
 
 	void Sync();
 
-public:
-	virtual void    LeftDouble(); // called by Activate
-	virtual void    Activate();
-	virtual void    Menu(Bar& bar);
+	void Message(int type, const char *title, const char *text, int timeout);
 
-	Callback        WhenActivate;
+public:
+	virtual void    Menu(Bar& bar);
+	virtual void    LeftDown();
+	virtual void    LeftUp();
+	virtual void    LeftDouble();
+
+	Callback        WhenLeftDown;
+	Callback        WhenLeftUp;
 	Callback        WhenLeftDouble;
 	Callback1<Bar&> WhenBar;
 
@@ -177,9 +183,9 @@ public:
 	bool            IsVisible() const;
 
 	// Not implemented by GTK:
-	void            Info(const char *title, const char *text, int timeout = 10)    {}
-	void            Warning(const char *title, const char *text, int timeout = 10) {}
-	void            Error(const char *title, const char *text, int timeout = 10)   {}
+	void            Info(const char *title, const char *text, int timeout = 10)    { Message(1, title, text, timeout); }
+	void            Warning(const char *title, const char *text, int timeout = 10) { Message(2, title, text, timeout); }
+	void            Error(const char *title, const char *text, int timeout = 10)   { Message(3, title, text, timeout); }
 
 	TrayIcon&  Icon(const Image &img)                      { if(image.Set(img)) Sync(); return *this; }
 	TrayIcon&  Tip(const char *text)                       { if(tooltip != text) tooltip = text; Sync(); return *this; }
