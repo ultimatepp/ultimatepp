@@ -90,6 +90,7 @@ file
 	Win32.cpp,
 	TrayIconWin32.cpp,
 	TrayIconX11.cpp,
+	TrayIconGtk.cpp,
 	Update.cpp,
 	CtrlUtil.cpp,
 	Ctrl.iml,

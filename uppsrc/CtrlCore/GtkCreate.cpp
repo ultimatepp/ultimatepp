@@ -15,7 +15,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	LLOG("Ungrab1");
 
 	top = new Top;
-	top->window = gtk_window_new(popup ? GTK_WINDOW_POPUP : GTK_WINDOW_TOPLEVEL);
+	top->window = gtk_window_new(popup && owner ? GTK_WINDOW_POPUP : GTK_WINDOW_TOPLEVEL);
 	top->owner = owner;
 	
 	static int id;
@@ -28,10 +28,16 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	w.gdk = top->window->window;
 
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
-	gtk_window_set_type_hint(gtk(), popup ? GDK_WINDOW_TYPE_HINT_COMBO
-	                                : tw && tw->tool ? GDK_WINDOW_TYPE_HINT_UTILITY
-	                                : owner ? GDK_WINDOW_TYPE_HINT_DIALOG
-	                                : GDK_WINDOW_TYPE_HINT_NORMAL);
+	if(popup && !owner) {
+		gtk_window_set_decorated(gtk(), FALSE);
+		gtk_window_set_has_frame(gtk(), FALSE);
+		gtk_window_set_type_hint(gtk(), GDK_WINDOW_TYPE_HINT_POPUP_MENU);
+	}
+	else
+		gtk_window_set_type_hint(gtk(), popup ? GDK_WINDOW_TYPE_HINT_COMBO
+		                                : tw && tw->tool ? GDK_WINDOW_TYPE_HINT_UTILITY
+		                                : owner ? GDK_WINDOW_TYPE_HINT_DIALOG
+		                                : GDK_WINDOW_TYPE_HINT_NORMAL);
 
 	top->cursor_id = -1;
 

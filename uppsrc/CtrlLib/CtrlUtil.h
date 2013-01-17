@@ -143,6 +143,55 @@ public:
 
 #endif
 
+#ifdef GUI_GTK
+
+class TrayIcon {
+private:
+	GtkStatusIcon *tray_icon;
+	String         tooltip;
+	ImageGdk       image;
+	bool           active;
+
+	static void PopupMenu(GtkStatusIcon *, guint, guint32, gpointer user_data);
+	static void DoActivate(GtkStatusIcon *, gpointer user_data);
+
+	void DoMenu(Bar& bar);
+	void ExecuteMenu();
+
+	void Sync();
+
+public:
+	virtual void    LeftDouble(); // called by Activate
+	virtual void    Activate();
+	virtual void    Menu(Bar& bar);
+
+	Callback        WhenActivate;
+	Callback        WhenLeftDouble;
+	Callback1<Bar&> WhenBar;
+
+	void            Break();
+	void            Run();
+
+	void            Show(bool b = true);
+	void            Hide()                                 { Show(false); }
+	bool            IsVisible() const;
+
+	// Not implemented by GTK:
+	void            Info(const char *title, const char *text, int timeout = 10)    {}
+	void            Warning(const char *title, const char *text, int timeout = 10) {}
+	void            Error(const char *title, const char *text, int timeout = 10)   {}
+
+	TrayIcon&  Icon(const Image &img)                      { if(image.Set(img)) Sync(); return *this; }
+	TrayIcon&  Tip(const char *text)                       { if(tooltip != text) tooltip = text; Sync(); return *this; }
+
+	typedef TrayIcon CLASSNAME;
+
+	TrayIcon();
+	~TrayIcon();
+};
+
+#endif
+
 #ifdef GUI_WIN
 #ifndef PLATFORM_WINCE
 
