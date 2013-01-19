@@ -140,6 +140,10 @@ String ImageClipFromPixbufUnref(GdkPixbuf *pixbuf);
 
 GdkAtom GAtom(const String& id);
 
+#ifdef GDK_WINDOWING_X11
+Vector<int> GetPropertyInts(GdkWindow *w, const char *property);
+#endif
+
 struct DrawDragRectInfo {
 	Rect  rect1, rect2, clip;
 	int   n;

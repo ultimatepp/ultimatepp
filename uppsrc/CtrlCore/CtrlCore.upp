@@ -7,7 +7,9 @@ uses
 
 library(WIN32 !MSC8ARM) "advapi32 comdlg32 comctl32";
 
-library((LINUX | BSD) & !NOGTK & !RAINBOW) "gtk-x11-2.0  gdk-x11-2.0  atk-1.0  gdk_pixbuf-2.0  m  pangocairo-1.0  fontconfig  Xext  Xrender  Xinerama  Xi  Xrandr  Xcursor Xfixes pango-1.0  cairo  X11  gobject-2.0  gmodule-2.0  glib-2.0";
+library((LINUX | BSD) & !NOGTK & !RAINBOW & !GTK3) "gtk-x11-2.0  gdk-x11-2.0  atk-1.0  gdk_pixbuf-2.0  m  pangocairo-1.0  fontconfig  Xext  Xrender  Xinerama  Xi  Xrandr  Xcursor Xfixes pango-1.0  cairo  X11  gobject-2.0  gmodule-2.0  glib-2.0";
+
+library((LINUX | BSD) & GTK3) "gtk-3.0  gdk-3.0  atk-1.0  gdk_3.0  m  pangocairo-1.0  fontconfig  Xext  Xrender  Xinerama  Xi  Xrandr  Xcursor Xfixes pango-1.0  cairo  X11  gobject-2.0  gmodule-2.0  glib-2.0";
 
 library(WIN32 !MSC8ARM) "user32 gdi32";
 
@@ -104,6 +106,7 @@ file
 	GtkDrawImage.cpp,
 	GdkImage.cpp,
 	GtkUtil.cpp,
+	GtkX11Util.cpp,
 	GtkCtrl.h,
 	GtkCtrl.cpp,
 	GtkCapture.cpp,
