@@ -156,7 +156,11 @@ public: // really private:
 	static Gclipboard& gclipboard();
 	static Gclipboard& gselection();
 	static String      RenderPrimarySelection(const Value& fmt);
-                  
+
+	static Vector<Callback> hotkey;
+	static Vector<dword>    keyhot;
+	static Vector<dword>    modhot;
+            
 public:
 	static void      EndSession()              {}
 	static bool      IsEndSession()            { return false; }
@@ -169,4 +173,7 @@ public:
 
 	GdkWindow *gdk() const { return top ? top->window->window : NULL; }
 	GtkWindow *gtk() const { return top ? (GtkWindow *)top->window : NULL; }
+
+	static GdkFilterReturn RootKeyFilter(GdkXEvent *xevent, GdkEvent *event, gpointer data);
+
 //$ };

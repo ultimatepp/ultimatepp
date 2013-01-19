@@ -30,6 +30,7 @@ void InitGtkApp(int argc, char **argv, const char **envptr)
 	Ctrl::ReSkin();
 	g_timeout_add(20, (GSourceFunc) Ctrl::TimeHandler, NULL);
 	InstallPanicMessageBox(Ctrl::PanicMsgBox);
+	gdk_window_add_filter(NULL, Ctrl::RootKeyFilter, NULL);
 }
 
 END_UPP_NAMESPACE
