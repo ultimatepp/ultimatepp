@@ -15,7 +15,7 @@ file
 	SysInfo.h,
 	SysInfo_in.h,
 	os.cpp,
-	scrrengrab.cpp,
+	screengrab.cpp,
 	mousekey.cpp,
 	cpuspeed.cpp,
 	battery.cpp,

@@ -14,7 +14,7 @@
 NAMESPACE_UPP
 
 #define TFILE <SysInfo/SysInfo.t>
-#include <Core/t.h>;
+#include <Core/t.h>
 
 
 /////////////////////////////////////////////////////////////////////
@@ -884,11 +884,11 @@ void GetWindowsList(Array<long> &hWnd, Array<long> &processId, Array<String> &na
 		if (GetModuleFileNameExW(hProcess, hInstance, str, sizeof(str)/sizeof(WCHAR)))
 			fileName.Add(WString(str).ToString());
 		else
-			fileName.Add(t_("UNKNOWN"));	
+			fileName.Add(t_("Unknown process"));	
 		if (GetModuleBaseNameW(hProcess, hInstance, str, sizeof(str)/sizeof(WCHAR)))
 			name.Add(WString(str).ToString());
 		else
-			name.Add(t_("UNKNOWN"));		
+			name.Add(t_("Unknown process"));		
 		CloseHandle(hProcess);
 		if (IsWindowVisible((HWND)hWnd[i])) {
 			int count = int(SendMessageW((HWND)hWnd[i], WM_GETTEXT, sizeof(str)/sizeof(WCHAR), (LPARAM)str));
@@ -1713,7 +1713,7 @@ void SetDesktopWallPaper(const char *path)
 			mode = 6;
 		Sys("dcop kdesktop KBackgroundIface setWallpaper \"" + String(path) + "\" " + AsString(mode));
 	} else
-		throw Exc(t_("Not possible to change Desktop bitmap"));
+		throw Exc(t_("Impossible to change Desktop bitmap"));
 }
 
 #endif
@@ -1723,7 +1723,7 @@ void SetDesktopWallPaper(const char *path)
 void SetDesktopWallPaper(const char *path)
 {
     if (0 == SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, (LPVOID)path, SPIF_UPDATEINIFILE || SPIF_SENDWININICHANGE))
-        throw Exc(Format(t_("Error %s changing Desktop bitmap"), AsString(GetLastError())));
+        throw Exc(String(t_("Impossible to change Desktop bitmap")) + ": " + AsString(GetLastError()));
 }
 #endif
 
