@@ -301,6 +301,17 @@ ool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% In JustName mode, if filename contains [* `\] or [* /] characters, 
 only the part after last such character is displayed as filename.&]
 [s3;%% &]
+[s4; &]
+[s5;:FileList`:`:AccelKey`(bool`): [_^FileList^ FileList][@(0.0.255) `&]_[* AccelKey]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% AccelKey activates searching for file starting on key press 
+(first letter of filename is matched).&]
+[s3;%% &]
+[s4; &]
+[s5;:FileList`:`:SelectDir`(bool`): [@(0.0.255) void]_[* SelectDir]([@(0.0.255) bool]_[*@3 b]_
+`=_[@(0.0.255) true])&]
+[s2;%% In SelectDir mode, directories can be selected (important 
+for multiselecting directories in FileSel).&]
 [s0;%% &]
 [s0;%% &]
 [s0; &]
@@ -403,4 +414,4 @@ specifies the file system interface.&]
 style])&]
 [s2;%% Returns the OS dependent icon of [%-*@3 drive`_style].&]
 [s3;%% &]
-[s0; ]
+[s0; ]]

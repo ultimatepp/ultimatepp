@@ -249,7 +249,7 @@ void FileList::Insert(int ii,
 	m.descfont = descfont;
 	m.data = data;
 	m.underline = uln;
-	ColumnList::Insert(ii, v, !m.isdir);
+	ColumnList::Insert(ii, v, !m.isdir || selectdir);
 	KillEdit();
 }
 
@@ -275,7 +275,7 @@ void FileList::Set(int ii,
 	m.descfont = descfont;
 	m.data = data;
 	m.underline = uln;
-	ColumnList::Set(ii, v, !m.isdir);
+	ColumnList::Set(ii, v, !m.isdir || selectdir);
 	KillEdit();
 }
 
@@ -319,7 +319,7 @@ void FileList::Add(const String& name, const Image& icon, Font font, Color ink,
 	m.descfont = descfont;
 	m.data = data;
 	m.underline = uln;
-	ColumnList::Add(v, !m.isdir);
+	ColumnList::Add(v, !m.isdir || selectdir);
 }
 
 const FileList::File& FileList::Get(int i) const
@@ -377,6 +377,7 @@ FileList::FileList() {
 	renaming = false;
 	justname = false;
 	accelkey = false;
+	selectdir = false;
 	SetDisplay(*this);
 }
 
