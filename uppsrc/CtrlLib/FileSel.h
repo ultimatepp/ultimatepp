@@ -53,6 +53,7 @@ private:
 	bool           renaming;
 	bool           justname;
 	bool           accelkey;
+	bool           selectdir;
 
 	void        UpdateSelect();
 	void        Update();
@@ -108,6 +109,7 @@ public:
 	FileList&   Renaming(bool b = true)              { renaming = b; return *this; }
 	FileList&   JustName(bool b = true)              { justname = b; Refresh(); return *this; }
 	FileList&   AccelKey(bool b = true)              { accelkey = b; return *this; }
+	FileList&   SelectDir(bool b = true)             { selectdir = b; return *this; }
 
 	typedef FileList CLASSNAME;
 

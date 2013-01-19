@@ -737,12 +737,23 @@ void FileSel::Finish() {
 	fn.Clear();
 	if(mode == SELECTDIR) {
 		String p = GetDir();
-		if(list.GetCursor() >= 0) {
-			const FileList::File& m = list[list.GetCursor()];
-			if(m.isdir)
-				p = AppendFileName(p, m.name);
+		if(list.IsSelection() && multi) {
+			for(int i = 0; i < list.GetCount(); i++)
+				if(list.IsSelected(i)) {
+					const FileList::File& m = list[i];
+					if(m.isdir)
+						fn.Add(AppendFileName(p, m.name));
+				}
 		}
-		fn.Add(p);
+		else {
+			String p = GetDir();
+			if(list.GetCursor() >= 0) {
+				const FileList::File& m = list[list.GetCursor()];
+				if(m.isdir)
+					p = AppendFileName(p, m.name);
+			}
+			fn.Add(p);
+		}
 		Break(IDOK);
 		return;
 	}
@@ -1380,7 +1391,8 @@ bool FileSel::Execute(int _mode) {
 		SetRect(r);
 	}
 	readonly.Show(rdonly && mode == OPEN);
-	list.Multi(multi && mode == OPEN);
+	list.Multi(multi && (mode == OPEN || mode == SELECTDIR));
+	list.SelectDir(multi && mode == SELECTDIR);
 	dir.ClearList();
 	file <<= Null;
 	if(basedir.IsEmpty()) {
