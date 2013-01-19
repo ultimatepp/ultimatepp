@@ -4,10 +4,11 @@
 
 NAMESPACE_UPP
 
-#define Time    XTime
-#define Font    XFont
-#define Display XDisplay
-#define Picture XPicture
+#define Time        XTime
+#define Font        XFont
+#define Display     XDisplay
+#define Picture     XPicture
+#define CurrentTime XCurrentTime
 
 #include <gdk/gdkx.h>
 
@@ -15,6 +16,7 @@ NAMESPACE_UPP
 #undef Time
 #undef Font
 #undef Display
+#undef CurrentTime
 
 XDisplay *Xdisplay()
 {

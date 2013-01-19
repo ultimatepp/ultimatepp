@@ -793,7 +793,8 @@ void LineEdit::DragAndDrop(Point p, PasteClip& d)
 		WString text = GetWString(d);
 		if(GetSelection(sell, selh)) {
 			if(c >= sell && c < selh) {
-				RemoveSelection();
+				if(!IsReadOnly())
+					RemoveSelection();
 				if(IsDragAndDropSource())
 					d.SetAction(DND_COPY);
 				c = sell;
@@ -802,7 +803,8 @@ void LineEdit::DragAndDrop(Point p, PasteClip& d)
 			if(d.GetAction() == DND_MOVE && IsDragAndDropSource()) {
 				if(c > sell)
 					c -= selh - sell;
-				RemoveSelection();
+				if(!IsReadOnly())
+					RemoveSelection();
 				d.SetAction(DND_COPY);
 			}
 		}
@@ -868,7 +870,7 @@ void LineEdit::LeftDrag(Point p, dword flags)
 		iw.Alpha().DrawRect(sz, Black());
 		DrawTLText(iw.Alpha(), 0, 0, 9999, sample, Courier(10), White());
 		NextUndo();
-		if(DoDragAndDrop(ClipFmtsText(), iw) == DND_MOVE) {
+		if(DoDragAndDrop(ClipFmtsText(), iw) == DND_MOVE && !IsReadOnly()) {
 			RemoveSelection();
 			Action();
 		}
