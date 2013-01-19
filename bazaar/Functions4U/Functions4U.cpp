@@ -795,9 +795,14 @@ double StringToSeconds(String duration) {
 	return 3600.*hour + 60.*min + secs;
 }
 
-String formatSeconds(double seconds) {
-	String ret = FormatIntDec((int)seconds, 2, '0');
-	double decs = seconds - (int)seconds;
+String formatSeconds(double seconds, bool fill) {
+	int iseconds = int(seconds);
+	String ret;
+	if (fill)
+		ret = FormatIntDec(iseconds, 2, '0');
+	else
+		ret = FormatInt(iseconds);
+	double decs = seconds - iseconds;
 	if (decs > 0) 
 		ret << "." << FormatIntDec((int)(decs*100), 2, '0');
 	return ret;
@@ -825,7 +830,7 @@ String HMSToString(int hour, int min, double seconds, bool units, bool dec) {
 	if (!dec)
 		seconds = int(seconds);
 	
-	ret << formatSeconds(seconds);
+	ret << formatSeconds(seconds, min > 0 || hour > 0);
 	if (units)
 		ret << " " << sunits;
 	return ret;
