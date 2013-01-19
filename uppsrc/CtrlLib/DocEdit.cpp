@@ -516,7 +516,8 @@ void DocEdit::DragAndDrop(Point p, PasteClip& d)
 		WString txt = GetWString(d);
 		if(GetSelection(sell, selh)) {
 			if(c >= sell && c < selh) {
-				RemoveSelection();
+				if(!IsReadOnly())
+					RemoveSelection();
 				if(IsDragAndDropSource())
 					d.SetAction(DND_COPY);
 				c = sell;
@@ -525,7 +526,8 @@ void DocEdit::DragAndDrop(Point p, PasteClip& d)
 			if(d.GetAction() == DND_MOVE && IsDragAndDropSource()) {
 				if(c > sell)
 					c -= selh - sell;
-				RemoveSelection();
+				if(!IsReadOnly())
+					RemoveSelection();
 				d.SetAction(DND_COPY);
 			}
 		}
@@ -586,7 +588,7 @@ void DocEdit::LeftDrag(Point p, dword flags)
 		iw.Alpha().DrawRect(ssz, Black());
 		DrawTLText(iw.Alpha(), 0, 0, ssz.cx, sample, StdFont(), White());
 		NextUndo();
-		if(DoDragAndDrop(ClipFmtsText(), iw) == DND_MOVE) {
+		if(DoDragAndDrop(ClipFmtsText(), iw) == DND_MOVE && !IsReadOnly()) {
 			RemoveSelection();
 			Action();
 		}

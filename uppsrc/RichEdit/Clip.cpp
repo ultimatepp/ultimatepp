@@ -103,7 +103,8 @@ void RichEdit::DragAndDrop(Point p, PasteClip& d)
 			int a = sb;
 			int c = dropcursor;
 			if(InSelection(c)) {
-				RemoveSelection();
+				if(!IsReadOnly())
+					RemoveSelection();
 				if(IsDragAndDropSource())
 					d.SetAction(DND_COPY);
 			}
@@ -111,7 +112,8 @@ void RichEdit::DragAndDrop(Point p, PasteClip& d)
 			if(GetSelection(sell, selh) && d.GetAction() == DND_MOVE && IsDragAndDropSource()) {
 				if(c > sell)
 					c -= selh - sell;
-				RemoveSelection();
+				if(!IsReadOnly())
+					RemoveSelection();
 				d.SetAction(DND_COPY);
 			}
 			Move(c);
@@ -244,7 +246,7 @@ void RichEdit::LeftDrag(Point p, dword flags)
 		sample.Paint(iw, 0, 0, 128);
 		NextUndo();
 		if(DoDragAndDrop(String().Cat() << "text/QTF;" RTFS ";" << ClipFmtsText(),
-		                 ColorMask(iw, White)) == DND_MOVE) {
+		                 ColorMask(iw, White)) == DND_MOVE && !IsReadOnly()) {
 			RemoveSelection();
 			Action();
 		}

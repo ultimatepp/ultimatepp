@@ -679,7 +679,8 @@ void EditField::DragAndDrop(Point p, PasteClip& d)
 		WString txt = GetWString(d);
 		if(GetSelection(sell, selh)) {
 			if(c >= sell && c < selh) {
-				RemoveSelection();
+				if(!IsReadOnly())
+					RemoveSelection();
 				if(IsDragAndDropSource())
 					d.SetAction(DND_COPY);
 				c = sell;
@@ -688,7 +689,8 @@ void EditField::DragAndDrop(Point p, PasteClip& d)
 			if(d.GetAction() == DND_MOVE && IsDragAndDropSource()) {
 				if(c > sell)
 					c -= selh - sell;
-				RemoveSelection();
+				if(!IsReadOnly())
+					RemoveSelection();
 				d.SetAction(DND_COPY);
 			}
 		}
@@ -754,7 +756,7 @@ void EditField::LeftDrag(Point p, dword flags)
 		Append(data, sel);
 		bool oks = keep_selection;
 		keep_selection = true;
-		if(DoDragAndDrop(data, iw) == DND_MOVE) {
+		if(DoDragAndDrop(data, iw) == DND_MOVE && !IsReadOnly()) {
 			CancelSelection();
 			SaveUndo();
 			Remove(sell, selh - sell);
