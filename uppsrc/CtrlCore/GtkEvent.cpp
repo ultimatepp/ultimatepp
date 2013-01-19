@@ -446,7 +446,20 @@ void Ctrl::Proc()
 				kv |= K_CTRL;
 			if(GetAlt() && kv != K_ALT_KEY)
 				kv |= K_ALT;
-			LLOG(GetKeyDesc(kv) << ", pressed: " << pressed << ", count: " << CurrentEvent.count);
+			DLOG(GetKeyDesc(kv) << ", pressed: " << pressed << ", count: " << CurrentEvent.count);
+#ifdef GDK_WINDOWING_X11
+			DDUMP(FormatIntHex(kv));
+			if(pressed)
+				for(int i = 0; i < hotkey.GetCount(); i++) {
+					DDUMP(FormatIntHex(keyhot[i]));
+					DDUMP((bool)hotkey[i]);
+					if(hotkey[i] && keyhot[i] == kv) {
+						DLOG("CALL!");
+						hotkey[i]();
+						return;
+					}
+				}
+#endif
 			DispatchKey(!pressed * K_KEYUP + kv, CurrentEvent.count);
 		}
 		break;

@@ -6,6 +6,10 @@ NAMESPACE_UPP
 
 #define LLOG(x)   //  DLOG(rmsecs() << ' ' << x)
 
+Vector<Callback>  Ctrl::hotkey;
+Vector<dword>     Ctrl::keyhot;
+Vector<dword>     Ctrl::modhot;
+
 Vector<Ctrl::Win> Ctrl::wins;
 
 int        Ctrl::WndCaretTime;
@@ -110,35 +114,20 @@ Ctrl *Ctrl::GetActiveCtrl()
 
 // Vector<Callback> Ctrl::hotkey;
 
+#ifndef GDK_WINDOWING_X11
+
+// There is no generic support in GTK for HotKey
+
 int Ctrl::RegisterSystemHotKey(dword key, Callback cb)
 {
-/*	ASSERT(key >= K_DELTA);
-	int q = hotkey.GetCount();
-	for(int i = 0; i < hotkey.GetCount(); i++)
-		if(!hotkey[i]) {
-			q = i;
-			break;
-		}
-	hotkey.At(q) = cb;
-	dword mod = 0;
-	if(key & K_ALT)
-		mod |= MOD_ALT;
-	if(key & K_SHIFT)
-		mod |= MOD_SHIFT;
-	if(key & K_CTRL)
-		mod |= MOD_CONTROL;
-	
-	return RegisterHotKey(NULL, q, mod, key & 0xffff) ? q : -1;*/
 	return -1;
 }
 
 void Ctrl::UnregisterSystemHotKey(int id)
 {
-/*	if(id >= 0 && id < hotkey.GetCount()) {
-		UnregisterHotKey(NULL, id);
-		hotkey[id].Clear();
-	}*/
 }
+
+#endif
 
 void  Ctrl::AnimateCaret()
 {
