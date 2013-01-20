@@ -27,7 +27,6 @@ INITBLOCK {
 	ImageAnyDrawSystem(sCD, sED);
 }
 
-void SetSurface(SystemDraw& w, int x, int y, int cx, int cy, const RGBA *pixels);
 void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size psz, Point poff);
 
 void SetSurface(Draw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point poff)

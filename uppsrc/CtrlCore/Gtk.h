@@ -61,7 +61,7 @@ public:
 	operator cairo_t*()              { return cr; }
 
 	Point    GetOffset() const;
-	bool     CanSetSurface()         { return false; } // TODO?
+	bool     CanSetSurface()         { return true; }
 	static void Flush()              {} // TODO?
 
 	SystemDraw(cairo_t *cr) : cr(cr) {}
