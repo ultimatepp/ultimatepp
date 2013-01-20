@@ -4,10 +4,6 @@
 
 NAMESPACE_UPP
 
-void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size psz, Point poff)
-{
-}
-
 void DrawDragLine(SystemDraw& w, bool horz, int x, int y, int len, int n, const int *pattern, Color color, int animation)
 {
 	if(len <= 0)

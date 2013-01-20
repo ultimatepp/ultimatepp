@@ -222,22 +222,22 @@ void Ctrl::GetWorkArea(Array<Rect>& rc)
 	GdkScreen *s = gdk_screen_get_default();
 	int n = gdk_screen_get_n_monitors(s);
 	rc.Clear();
+	Vector<int> netwa;
 	for(int i = 0; i < n; i++) {
 		GdkRectangle rr;
 		Rect r;
 #if GTK_CHECK_VERSION (3, 3, 5) // U++ does not work with gtk3 yet, but be prepared
-		gdk_screen_get_monitor_workarea (s, i, &rr);
+		gdk_screen_get_monitor_workarea(s, i, &rr);
 		r = RectC(r.x, r.y, r.width, r.height);
 #else
 		gdk_screen_get_monitor_geometry (s, i, &rr);
 		r = RectC(rr.x, rr.y, rr.width, rr.height);
 	#ifdef GDK_WINDOWING_X11
-		if(i == 0) {
-			Vector<int> x = GetPropertyInts(gdk_screen_get_root_window(gdk_screen_get_default()),
-			                                "_NET_WORKAREA");
-			if(x.GetCount())
-				r = RectC(x[0], x[1], x[2], x[3]);
-		}
+		if(i == 0)
+			netwa = GetPropertyInts(gdk_screen_get_root_window(gdk_screen_get_default()),
+			                        "_NET_WORKAREA");
+		if(netwa.GetCount())
+			r = r & RectC(netwa[0], netwa[1], netwa[2], netwa[3]);
 	#endif
 #endif
 		rc.Add(r);

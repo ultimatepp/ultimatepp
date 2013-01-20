@@ -9,8 +9,25 @@ NAMESPACE_UPP
 #define LTIMING(x) // RTIMING(x)
 #define LLOG(x)
 
-void SetSurface(SystemDraw& w, int x, int y, int cx, int cy, const RGBA *pixels);
-void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size psz, Point poff);
+void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point poff)
+{
+	Size dsz = dest.GetSize();
+	cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, dsz.cx, dsz.cy);
+	cairo_surface_flush(surface);
+	byte *a = (byte *)cairo_image_surface_get_data(surface);
+	int stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, dsz.cx);
+	for(int i = 0; i < dsz.cy; i++) {
+		int sl = poff.y + i;
+		if(i >= 0 && i < srcsz.cy)
+			Copy((RGBA *)a, pixels + srcsz.cx * sl + poff.x,
+			     minmax(srcsz.cx - poff.x, 0, min(dsz.cx, srcsz.cx)));
+		a += stride;
+	}
+	cairo_surface_mark_dirty(surface);
+	cairo_set_source_surface(w, surface, dest.left, dest.top);
+	cairo_paint(w);
+	cairo_surface_destroy(surface);
+}
 
 struct ImageSysData {
 	Image            img;

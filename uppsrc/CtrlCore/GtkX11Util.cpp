@@ -1,5 +1,7 @@
 #include "CtrlCore.h"
 
+#ifdef GUI_GTK
+
 #ifdef GDK_WINDOWING_X11
 
 NAMESPACE_UPP
@@ -108,7 +110,6 @@ dword X11mods(dword key)
 int Ctrl::RegisterSystemHotKey(dword key, Callback cb)
 {
 	GuiLock __;
-	DDUMP(FormatIntHex(key));
 	ASSERT(key >= K_DELTA);
 	gdk_error_trap_push();
 	KeyCode k = XKeysymToKeycode(Xdisplay(), key & 0xffff);
@@ -164,5 +165,7 @@ GdkFilterReturn Ctrl::RootKeyFilter(GdkXEvent *xevent, GdkEvent *Xevent, gpointe
 }
 
 END_UPP_NAMESPACE
+
+#endif
 
 #endif
