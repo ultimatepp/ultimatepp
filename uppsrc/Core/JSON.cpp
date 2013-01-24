@@ -235,7 +235,7 @@ template<> void Jsonize(JsonIO& io, int64& var)
 		if(IsNull(var))
 			io.Set(Null);
 		else
-		if(var >= INT_MIN && var <= INT_MAX)
+		if(var >= I64(-9007199254740992) && var <= I64(9007199254740991))
 			io.Set(var);
 		else
 			io.Set(AsString(var));
