@@ -307,13 +307,6 @@ class HttpRequest : public TcpSocket {
 		DEFAULT_HTTPS_PORT       = 443
 	};
 
-	enum {
-		METHOD_GET,
-		METHOD_POST,
-		METHOD_HEAD,
-		METHOD_PUT,
-	};
-
 	int          max_header_size;
 	int          max_content_size;
 	int          max_redirects;
@@ -387,6 +380,18 @@ class HttpRequest : public TcpSocket {
 	String       CalculateDigest(const String& authenticate) const;
 
 public:
+	enum {
+		METHOD_GET     = 0,
+		METHOD_POST    = 1,
+		METHOD_HEAD    = 2,
+		METHOD_PUT     = 3,
+		METHOD_DELETE  = 4,
+		METHOD_TRACE   = 5,
+		METHOD_OPTIONS = 6,
+		METHOD_CONNECT = 7,
+		METHOD_PATCH   = 8,
+	};
+
 	Callback2<const void *, int> WhenContent;
 	Callback                     WhenStart;
 	Callback                     WhenDo;
@@ -403,6 +408,11 @@ public:
 	HttpRequest&  POST()                                 { return Method(METHOD_POST); }
 	HttpRequest&  HEAD()                                 { return Method(METHOD_HEAD); }
 	HttpRequest&  PUT()                                  { return Method(METHOD_PUT); }
+	HttpRequest&  DEL()                                  { return Method(METHOD_DELETE); }
+	HttpRequest&  TRACE()                                { return Method(METHOD_TRACE); }
+	HttpRequest&  OPTIONS()                              { return Method(METHOD_OPTIONS); }
+	HttpRequest&  CONNECT()                              { return Method(METHOD_CONNECT); }
+	HttpRequest&  PATCH()                                { return Method(METHOD_PATCH); }
 
 	HttpRequest&  Host(const String& h)                  { host = h; return *this; }
 	HttpRequest&  Port(int p)                            { port = p; return *this; }
