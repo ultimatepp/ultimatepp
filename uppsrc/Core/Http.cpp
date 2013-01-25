@@ -454,13 +454,12 @@ void HttpRequest::StartRequest()
 	String ctype = contenttype;
 	if((method == METHOD_POST || method == METHOD_PUT) && IsNull(ctype))
 		ctype = "application/x-www-form-urlencoded";
-	switch(method) {
-	case METHOD_GET:  data << "GET "; break;
-	case METHOD_POST: data << "POST "; break;
-	case METHOD_PUT: data << "PUT "; break;
-	case METHOD_HEAD: data << "HEAD "; break;
-	default: NEVER(); // invalid method
-	}
+	static const char *smethod[] = {
+		"GET", "POST", "HEAD", "PUT", "DELETE", "TRACE", "OPTIONS", "CONNECT", "PATCH",
+	};
+	ASSERT(method >= 0 && method <= 8);
+	data = smethod[method];
+	data << ' ';
 	String host_port = host;
 	if(port)
 		host_port << ':' << port;
