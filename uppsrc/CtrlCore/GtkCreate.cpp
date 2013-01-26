@@ -4,9 +4,15 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)   //   DLOG(x)
+#define LLOG(x)    //  DLOG(x)
 
 void Ctrl::Create(Ctrl *owner, bool popup)
+{
+	LLOG("Create Call");
+	Call(callback2(this, &Ctrl::Create0, owner, popup));
+}
+
+void Ctrl::Create0(Ctrl *owner, bool popup)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
@@ -106,6 +112,11 @@ void Ctrl::GuiPlatformRemove()
 }
 
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
+{
+	Call(callback2(this, &Ctrl::PopUp0, owner, activate));
+}
+
+void Ctrl::PopUp0(Ctrl *owner, bool activate)
 {
 	GuiLock __;
 	LLOG("POPUP " << Name() << ", " << GetRect() << ", activate " << activate);

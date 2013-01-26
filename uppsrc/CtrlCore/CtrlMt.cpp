@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-#define LLOG(x)    // DLOG(x)
+#define LLOG(x)   //  DLOG(x)
 
 NAMESPACE_UPP
 
@@ -12,37 +12,41 @@ static thread__ int sGLockLevel = 0;
 
 void EnterGuiMutex()
 {
+	LLOG(">EnterGuiMutex " << sGLockLevel << ' ' << IsMainThread());
 	if(sGLockLevel++ == 0)
 		sGLock.Enter();
-	LLOG("EnterGuiMutex " << sGLockLevel);
+	LLOG("EnterGuiMutex " << sGLockLevel << ' ' << IsMainThread());
 }
 
 void EnterGuiMutex(int n)
 {
+	LLOG(">EnterGuiMutex: " << n << ' ' << sGLockLevel << ' ' << IsMainThread());
 	if(n > 0) {
 		if(sGLockLevel == 0)
 			sGLock.Enter();
 		sGLockLevel += n;
 	}
-	LLOG("EnterGuiMutex " << sGLockLevel);
+	LLOG("EnterGuiMutex " << sGLockLevel << ' ' << IsMainThread());
 }
 
 void LeaveGuiMutex()
 {
+	LLOG(">LeaveGuiMutex " << sGLockLevel << ' ' << IsMainThread());
 	ASSERT(sGLockLevel > 0);
 	if(--sGLockLevel == 0)
 		sGLock.Leave();
-	LLOG("LeaveGuiMutex " << sGLockLevel);
+	LLOG("LeaveGuiMutex " << sGLockLevel << ' ' << IsMainThread());
 }
 
 int LeaveGuiMutexAll()
 {
+	LLOG(">LeaveGuiMutexAll " << sGLockLevel << ' ' << IsMainThread());
 	int q = sGLockLevel;
 	if(q) {
 		sGLock.Leave();
 		sGLockLevel = 0;
 	}
-	LLOG("LeaveGuiMutex all " << q);
+	LLOG("LeaveGuiMutexAll " << q << ' ' << IsMainThread());
 	return q;
 }
 

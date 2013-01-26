@@ -9,6 +9,7 @@ void DrawDragRect(Ctrl& q, const DrawDragRectInfo& f);
 class DHCtrl : Ctrl {};
 
 void InitGtkApp(int argc, char **argv, const char **envptr);
+void ExitGtkApp();
 
 #define GUI_APP_MAIN \
 void GuiMainFn_(); \
@@ -18,6 +19,7 @@ int main(int argc, char **argv, const char **envptr) { \
 	UPP::InitGtkApp(argc, argv, envptr); \
 	GuiMainFn_(); \
 	UPP::Ctrl::CloseTopCtrls(); \
+	ExitGtkApp(); \
 	UPP::AppExit__(); \
 	return UPP::GetExitCode(); \
 } \

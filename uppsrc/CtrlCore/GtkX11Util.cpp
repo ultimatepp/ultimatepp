@@ -32,7 +32,7 @@ Window Xroot()
 
 String GetProperty(Window w, Atom property, Atom rtype)
 {
-	GuiLock __; 
+	GuiLock __;
 	String result;
 	int format;
 	unsigned long nitems, after = 1;
@@ -40,7 +40,6 @@ String GetProperty(Window w, Atom property, Atom rtype)
 	Atom type = None;
 	unsigned char *data;
 	long rsize = minmax((long)(XMaxRequestSize(Xdisplay()) - 100), (long)256, (long)65536);
-
 	while(after > 0) {
 		if(XGetWindowProperty(Xdisplay(), w, property, offset, rsize, 0,
 	                          rtype, &type, &format, &nitems, &after, &data) != Success)

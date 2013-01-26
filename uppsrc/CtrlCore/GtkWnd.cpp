@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)   //  DLOG(rmsecs() << ' ' << x)
+#define LLOG(x)   // DLOG(rmsecs() << ' ' << x)
 
 Vector<Callback>  Ctrl::hotkey;
 Vector<dword>     Ctrl::keyhot;

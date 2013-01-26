@@ -210,6 +210,7 @@ dword Random()
 
 dword Random(dword n)
 {
+	ASSERT(n);
 	dword mask = n;
 	mask |= mask >> 1;
 	mask |= mask >> 2;
