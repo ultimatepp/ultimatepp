@@ -11,7 +11,7 @@ struct App : TopWindow {
 	
 	typedef App CLASSNAME;
 
-	App();	
+	App();
 	~App();
 };
 
