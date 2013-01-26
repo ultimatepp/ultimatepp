@@ -31,8 +31,9 @@ String GetIdentity(const Renderer *r)
 	String s = http->var[0];
 	if(s.GetCount())
 		return s;
+	s = AsString(Uuid::Create());
 	http->SessionSet0("__identity__", s);
-	http->var[0] = s = AsString(Uuid::Create());
+	http->var[0] = s;
 	return s;
 }
 
