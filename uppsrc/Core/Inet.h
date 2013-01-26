@@ -88,7 +88,7 @@ class TcpSocket {
 
 	int                     global_timeout;
 	int                     start_time;
-#ifdef PLATFORM_WIN32
+#if defined(PLATFORM_WIN32) || defined(PLATFORM_BSD)
 	int                     connection_start;
 #endif
 	int                     ssl_start;

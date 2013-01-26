@@ -268,7 +268,7 @@ void TcpSocket::Reset()
 	sslinfo.Clear();
 	start_time = Null;
 	global_timeout = Null;
-#ifdef PLATFORM_WIN32
+#if defined(PLATFORM_WIN32) || defined(PLATFORM_BSD)
 	connection_start = Null;
 #endif
 	ssl_start = Null;
@@ -293,6 +293,9 @@ bool TcpSocket::SetupSocket()
 		return false;
 	}
 #else
+	#ifdef PLATFORM_BSD
+		connection_start = msecs();
+	#endif
 	if(fcntl(socket, F_SETFL, (fcntl(socket, F_GETFL, 0) | O_NONBLOCK))) {
 		SetSockError("fcntl(O_[NON]BLOCK)");
 		return false;
@@ -509,7 +512,11 @@ bool TcpSocket::WouldBlock()
 {
 	int c = GetErrorCode();
 #ifdef PLATFORM_POSIX
-	return c == SOCKERR(EWOULDBLOCK) || c == SOCKERR(EAGAIN);
+#ifdef PLATFORM_BSD
+		if(c == SOCKERR(ENOTCONN) && !IsNull(connection_start) && msecs(connection_start) < 20000)
+			return true;
+#endif
+	return c == c == SOCKERR(EWOULDBLOCK) || c == SOCKERR(EAGAIN);
 #endif
 #ifdef PLATFORM_WIN32
 	if(c == SOCKERR(ENOTCONN) && !IsNull(connection_start) && msecs(connection_start) < 20000) {
@@ -599,7 +606,7 @@ bool TcpSocket::RawWait(dword flags, int end_time)
 			return false;
 		}
 		if(avail > 0) {
-		#ifdef PLATFORM_WIN32
+		#if defined(PLATFORM_WIN32) || defined(PLATFORM_BSD)
 			connection_start = Null;
 		#endif
 			return true;
@@ -630,7 +637,7 @@ int  TcpSocket::GetEndTime() const
 { // Compute time limit for operation, based on global timeout and per-operation timeout settings
 	int o = min(IsNull(global_timeout) ? INT_MAX : start_time + global_timeout,
 	            IsNull(timeout) ? INT_MAX : msecs() + timeout);
-#ifdef PLATFORM_WIN32
+#if defined(PLATFORM_WIN32) || defined(PLATFORM_BSD)
 	if(GetErrorCode() == SOCKERR(ENOTCONN) && !IsNull(connection_start))
 		if(msecs(connection_start) < 20000)
 			o = connection_start + 20000;
