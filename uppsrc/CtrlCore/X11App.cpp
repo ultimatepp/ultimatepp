@@ -400,6 +400,9 @@ void Ctrl::InstallPanicBox()
 void Ctrl::InitX11(const char *display)
 {
 	GuiLock __; 
+
+	XInitThreads();
+
 	InstallPanicMessageBox(sPanicMessageBox);
 
 	InitX11Draw(display);

@@ -76,6 +76,7 @@ public:
 	void     Insert(int i, const Vector& x);
 	void     Insert(int i, const Vector& x, int offset, int count);
 	void     InsertPick(int i, pick_ Vector& x);
+	void     InsertSplit(int i, Vector<T>& v, int from);
 	void     Append(const Vector& x)               { Insert(GetCount(), x); }
 	void     Append(const Vector& x, int o, int c) { Insert(GetCount(), x, o, c); }
 	void     AppendPick(pick_ Vector& x)           { InsertPick(GetCount(), x); }

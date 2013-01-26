@@ -25,12 +25,26 @@ void Ctrl::PanicMsgBox(const char *title, const char *text)
 void InitGtkApp(int argc, char **argv, const char **envptr)
 {
 	LLOG(rmsecs() << " InitGtkApp");
+#ifdef _MULTITHREADED
+	if(!g_thread_supported())
+		g_thread_init( NULL );
+	gdk_threads_set_lock_functions(EnterGuiMutex, LeaveGuiMutex);
+	gdk_threads_init();
+	EnterGuiMutex();
+#endif
 	gtk_init(&argc, &argv);
 	Ctrl::GlobalBackBuffer();
 	Ctrl::ReSkin();
 	g_timeout_add(20, (GSourceFunc) Ctrl::TimeHandler, NULL);
 	InstallPanicMessageBox(Ctrl::PanicMsgBox);
 	gdk_window_add_filter(NULL, Ctrl::RootKeyFilter, NULL);
+}
+
+void ExitGtkApp()
+{
+#ifdef _MULTITHREADED
+	LeaveGuiMutex();
+#endif
 }
 
 END_UPP_NAMESPACE

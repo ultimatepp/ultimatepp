@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  //  DLOG(rmsecs() << ' ' << x)
+#define LLOG(x)    // DLOG(rmsecs() << ' ' << x)
 // #define LOG_EVENTS _DBG_
 
 bool  Ctrl::EventMouseValid;
@@ -91,6 +91,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		ev = f->b;
 	LOG(rmsecs() << " FETCH EVENT " << ev);
 #endif
+	GuiLock __;
 	GdkEventKey *key;
 	bool pressed = false;
 	bool  retval = true;
@@ -273,13 +274,17 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value)
 
 void Ctrl::IMCommit(GtkIMContext *context, gchar *str, gpointer user_data)
 {
+	GuiLock __;
 	AddEvent(user_data, EVENT_TEXT, FromUtf8(str));
 }
 
 void Ctrl::FetchEvents(bool may_block)
 {
+	LLOG("FetchEvents " << may_block);
+	int level = LeaveGuiMutexAll();
 	while(g_main_context_iteration(NULL, may_block))
 		may_block = false;
+	EnterGuiMutex(level);
 }
 
 bool Ctrl::IsWaitingEvent0(bool fetch)
@@ -591,8 +596,8 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 		ctrl->inloop = true;
 	}
 
-	while(!IsEndSession() && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
-	{
+	while(!IsEndSession() &&
+	      (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount())) {
 		FetchEvents(TRUE);
 		ProcessEvents();
 	}

@@ -354,6 +354,14 @@ copy constructor for T, but destroys source Vector.&]
 [s7; [*C@3 x]-|Source Vector.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Vector`:`:InsertSplit`(int`,Vector`<T`>`&`,int`):%- [@(0.0.255) void]_[* InsertSplit
+]([@(0.0.255) int]_[*@3 i], [_^Vector^ Vector]<[*@4 T]>`&_[*@3 v], [@(0.0.255) int]_[*@3 from])
+&]
+[s2; Insert the part of source vector [%-*@3 v] starting at element 
+[%-*@3 from] till the end at position [%-*@3 i] and trims [%-*@3 v] 
+at [%-*@3 from], effectively splitting [%-*@3 v] into two parts.&]
+[s3; &]
+[s4;%- &]
 [s5;:Vector`:`:Append`(const Vector`&`):%- [@(0.0.255) void]_[* Append]([@(0.0.255) const]_
 [_^Vector^ Vector][@(0.0.255) `&]_[*@3 x])&]
 [s2; Appends all elements of source Vector.&]
@@ -538,4 +546,4 @@ simple constant time operation.&]
 [s7; [*C@3 a]-|First Vector to swap.&]
 [s7; [*C@3 b]-|Second Vector to swap.&]
 [s3; &]
-[s0; ]
+[s0; ]]

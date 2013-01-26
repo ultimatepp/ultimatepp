@@ -309,6 +309,20 @@ void Vector<T>::InsertPick(int i, pick_ Vector<T>& v) {
 }
 
 template <class T>
+void Vector<T>::InsertSplit(int i, Vector<T>& v, int from)
+{
+	Chk();
+	v.Chk();
+	ASSERT(!vector || v.vector != vector && from <= v.GetCount());
+	int n = v.GetCount() - from;
+	if(n) {
+		RawInsert(i, n);
+		memcpy(vector + i, v.vector + from, sizeof(T) * n);
+	}
+	v.Trim(from);
+}
+
+template <class T>
 void Vector<T>::Set(int i, const T& x, int count) {
 	Chk();
 	ASSERT(i >= 0 && count >= 0);
