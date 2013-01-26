@@ -516,7 +516,7 @@ bool TcpSocket::WouldBlock()
 		if(c == SOCKERR(ENOTCONN) && !IsNull(connection_start) && msecs(connection_start) < 20000)
 			return true;
 #endif
-	return c == c == SOCKERR(EWOULDBLOCK) || c == SOCKERR(EAGAIN);
+	return c == SOCKERR(EWOULDBLOCK) || c == SOCKERR(EAGAIN);
 #endif
 #ifdef PLATFORM_WIN32
 	if(c == SOCKERR(ENOTCONN) && !IsNull(connection_start) && msecs(connection_start) < 20000) {
