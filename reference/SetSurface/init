@@ -1,0 +1,4 @@
+#ifndef _SetSurface_icpp_init_stub
+#define _SetSurface_icpp_init_stub
+#include "CtrlLib/init"
+#endif
