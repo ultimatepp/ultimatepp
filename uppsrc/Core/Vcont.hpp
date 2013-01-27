@@ -243,7 +243,7 @@ void Vector<T>::RawInsert(int q, int count)
 	ASSERT(q >= 0 && q <= items);
 	if(!count) return;
 	if(items + count > alloc) {
-		T *newvector = RawAlloc(alloc = alloc + ntl_max(alloc, count));
+		T *newvector = RawAlloc(alloc = max(alloc + count, int(alloc + ((unsigned)alloc >> 1))));
 		if(vector) {
 			memcpy(newvector, vector, q * sizeof(T));
 			memcpy(newvector + q + count, vector + q, (items - q) * sizeof(T));
