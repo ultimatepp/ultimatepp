@@ -131,10 +131,17 @@ void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
 	SetColor(color);
-	cairo_move_to(cr, x1, y1);
-	cairo_line_to(cr, x2, y2);
-	cairo_set_line_width (cr, width);
-	cairo_stroke(cr);
+	if(y1 == y2)
+		DrawRect(x1, y1, x2 - x1, width, color);
+	else
+	if(x1 == x2)
+		DrawRect(x1, y1, width, y2 - y1, color);
+	else {
+		cairo_move_to(cr, x1, y1);
+		cairo_line_to(cr, x2, y2);
+		cairo_set_line_width (cr, width);
+		cairo_stroke(cr);
+	}
 }
 
 void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor)
