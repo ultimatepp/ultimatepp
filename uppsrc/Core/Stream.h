@@ -181,8 +181,8 @@ public:
 //  Stream as serialization streamer
 	void      SetLoading()                 { ASSERT(style & STRM_READ); style |= STRM_LOADING; }
 	void      SetStoring()                 { ASSERT(style & STRM_WRITE); style &= ~STRM_LOADING; }
-	bool      IsLoading()                  { return style & STRM_LOADING; }
-	bool      IsStoring()                  { return !IsLoading(); }
+	bool      IsLoading() const            { return style & STRM_LOADING; }
+	bool      IsStoring() const            { return !IsLoading(); }
 
 	void      SerializeRaw(byte *data, int count);
 	void      SerializeRaw(word *data, int count);
