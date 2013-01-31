@@ -17,7 +17,12 @@ topic "IpAddrInfo";
 drinfo] API, also providing optional non`-blocking behaviour 
 (using auxiliary threads). Note that there is currently no synchronization 
 available for this non`-blocking behaviour (it is not possible 
-to e.g. select on IpAddrInfo).&]
+to e.g. select on IpAddrInfo). Also note that IpAddrInfo has 
+some maximum number (currently 32) of slots used to resolve hosts 
+similtaneously, however when this number is exceeded, it only 
+means that InProgress tries to put the request to the slot (and 
+returns true if non available or if request is not resolved yet), 
+so from the client view, this limit has little impact.&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
@@ -49,4 +54,4 @@ if address resolving was finished and successfull, NULL otherwise.&]
 [s5;:IpAddrInfo`:`:IpAddrInfo`(`): [* IpAddrInfo]()&]
 [s5;:IpAddrInfo`:`:`~IpAddrInfo`(`): [@(0.0.255) `~][* IpAddrInfo]()&]
 [s2;%% Constructor, destructor.&]
-[s3; ]
+[s3; ]]
