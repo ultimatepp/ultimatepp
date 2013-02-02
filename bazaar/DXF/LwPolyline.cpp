@@ -301,6 +301,17 @@ DXFLwPolyline &DXFLwPolyline::AddArcCenter(Pointf const &center, Pointf const &p
 	return *this;
 }
 		
+// adds an arc with point and bulge; if bulge is null, just add a line segment
+DXFLwPolyline &DXFLwPolyline::AddArc(Pointf const &p, double bulge)
+{
+	if(!vertices.GetCount())
+		return AddPoints(p);
+	bulges.Top() = bulge;
+	vertices.Add(T(p));
+	bulges.Add(0);
+	return *this;
+}
+		
 // close/open polyline
 DXFLwPolyline &DXFLwPolyline::Close(void)
 {

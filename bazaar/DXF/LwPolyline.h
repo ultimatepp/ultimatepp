@@ -64,6 +64,9 @@ class DXFLwPolyline : public DXFEntity
 		// if no previous point, simply add a point
 		DXFLwPolyline &AddArcCenter(Pointf const &center, Pointf const &p, bool big = false);
 		
+		// adds an arc with point and bulge; if bulge is null, just add a line segment
+		DXFLwPolyline &AddArc(Pointf const &p, double bulge);
+		
 		// close/open polyline
 		DXFLwPolyline &Close(void);
 		DXFLwPolyline &Open(void);
