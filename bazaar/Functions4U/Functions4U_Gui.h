@@ -51,6 +51,8 @@ private:
 	static Drawing Bracket(Drawing &data);
 	static Drawing Sqrt(Drawing &right);
 	static Drawing Exponent(Drawing &right);
+	static Drawing Der(Drawing &data);
+	static Drawing Abs(Drawing &data);
 	static Drawing Integral(Drawing &data, Drawing &sub, Drawing &sup);
 	static Drawing Summat(Drawing &data, Drawing &sub, Drawing &sup);
 	static Drawing Exp(Drawing &data, Drawing &exp);

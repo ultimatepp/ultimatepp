@@ -196,6 +196,20 @@ Drawing EquationDraw::Exponent(Drawing &right)
 	return EquationDraw::Exp(left, right);
 }
 
+Drawing EquationDraw::Der(Drawing &data)
+{
+	return EquationDraw::Function("d", data);
+}
+
+Drawing EquationDraw::Abs(Drawing &data)
+{
+	Drawing pizq = Text("|", true, 0, 0, 1.3);
+	Drawing pder = Text("|");
+	Drawing parizq = JoinFlex(pizq, 1, data, 1);
+	
+	return JoinFlex(parizq, 1, pder, 1);
+}
+
 Drawing EquationDraw::Integral(Drawing &data, Drawing &sub, Drawing &sup)
 {
 	Drawing left = Text("∫");
@@ -317,6 +331,18 @@ Drawing EquationDraw::Term(CParser& p, bool noBracket)
 		Drawing x = Exp(p);
 		p.PassChar(')');
 		return EquationDraw::Exponent(x);
+	}
+	if(p.Id("der")) {
+		p.PassChar('(');
+		Drawing x = Exp(p);
+		p.PassChar(')');
+		return EquationDraw::Der(x);
+	}
+	if(p.Id("abs")) {
+		p.PassChar('(');
+		Drawing x = Exp(p);
+		p.PassChar(')');
+		return EquationDraw::Abs(x);
 	}
 	String trig = TermTrig(p);
 	if (!IsNull(trig)) {
