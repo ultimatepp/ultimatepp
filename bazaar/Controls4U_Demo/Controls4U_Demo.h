@@ -57,6 +57,7 @@ public:
 	Functions4U_Demo();
 	void OnDiff();
 	void OnPatch();
+	void OnSet();
 };
 
 class PainterCanvas_Demo : public WithPainterCanvas<StaticRect> {

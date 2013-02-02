@@ -215,6 +215,7 @@ Functions4U_Demo::Functions4U_Demo() {
 
 	butDiff.WhenAction = THISBACK(OnDiff);	
 	butPatch.WhenAction = THISBACK(OnPatch);
+	butShowEquation.WhenAction = THISBACK(OnSet);
 }
 
 void Functions4U_Demo::OnDiff() {
@@ -227,6 +228,15 @@ void Functions4U_Demo::OnPatch() {
 		Exclamation(DeQtf(BsGetLastError()));
 }
 
+void Functions4U_Demo::OnSet() {
+	String myqtf;
+
+	QtfRichObject a = QtfEquation(strEquation);
+	
+	myqtf << a;
+
+	userEquation.SetData(myqtf);	
+}
 	
 PainterCanvas_Demo::PainterCanvas_Demo() {
 	CtrlLayout(*this);
