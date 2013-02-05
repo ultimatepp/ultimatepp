@@ -488,7 +488,7 @@ bool ODBCConnection::Fetch0()
 			int ct = binary[i] ? SQL_C_BINARY : SQL_C_CHAR;
 			if(!IsOk(SQLGetData(session->hstmt, i + 1, ct, &tm, 0, &li)))
 			   break;
-			if(li != SQL_NULL_DATA) {
+			if(li != SQL_NULL_DATA && li >= 0) {
 				StringBuffer sb;
 				sb.SetLength(li);
 				if(!IsOk(SQLGetData(session->hstmt, i + 1, ct, ~sb, li + 1, &li)))
