@@ -549,6 +549,6 @@ e]()_[@(0.0.255) const]&]
 [s5;:TabCtrl`:`:Item`:`:GetCtrl`(`):%- [_^Ctrl^ Ctrl]_`*[* GetCtrl]()&]
 [s5;:TabCtrl`:`:Item`:`:GetCtrl`(`)const:%- [@(0.0.255) const]_[_^Ctrl^ Ctrl]_`*[* GetCtrl](
 )_[@(0.0.255) const]&]
-[s2; Returns the control that apears inside the header tab.&]
+[s2; Returns the control that appears inside the header tab.&]
 [s3;%- &]
-[s0; ]
+[s0; ]]
