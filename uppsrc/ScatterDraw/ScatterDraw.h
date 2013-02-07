@@ -128,7 +128,7 @@ public:
 	ScatterDraw& ShowHGrid(const bool& show);
 	
 	ScatterDraw& ShowLegend(const bool& show = true);
-	ScatterDraw& SetLegendWeight(const int& weight);
+	ScatterDraw& SetLegendWidth(const int& width);
 	
 	ScatterDraw& SetMode(int _mode = MD_ANTIALIASED)	{mode = _mode; Refresh(); return *this;};
 	int GetMode()	{return mode;};
@@ -248,7 +248,7 @@ public:
 	template <class X, class Y>
 	void InsertSeries(int index, ArrayMap<X, Y> &data)	{_InsertSeries(index, new ArrayMapXY<X, Y>(data));}
 	
-	int GetCount(int index);
+	ptrdiff_t GetCount(int index);
 	void GetValues(int index, int idata, double &x, double &y);
 	double GetValueX(int index, int idata);
 	double GetValueY(int index, int idata);
@@ -342,10 +342,6 @@ public:
 	void SaveAsMetafile(const char* file) const;
 	#endif
 	
-	ScatterDraw& LogX(const bool& logx=true) {logX=logx; return *this;}
-	ScatterDraw& LogY(const bool& logy=true) {logY=logy; return *this;}	
-	ScatterDraw& LogY2(const bool& logy=true) {logY2=logy; return *this;}	
-	
 	ScatterDraw& SetMinZoom(double x, double y = -1) 	{minXZoom = x; minYZoom = y; return *this;} 
 	ScatterDraw& SetMaxZoom(double x, double y = -1) 	{maxXZoom = x; maxYZoom = y; return *this;}
 
@@ -370,6 +366,7 @@ protected:
 	String title;
 	Font titleFont;
 	Color titleColor;
+	int titleHeight;
 	
 	String xLabel, yLabel, yLabel2;
 	Font labelsFont;
@@ -404,7 +401,7 @@ protected:
 	Vector<ScatterSeries> series;
 	
 	bool showLegend;
-	int legendWeight;
+	int legendWidth;
 	
 	void DrawLegend(Draw& w,const int& scale) const;
 
@@ -440,8 +437,6 @@ protected:
 	void AdjustMinUnitY();
 	void AdjustMinUnitY2();
 	
-	bool logX, logY, logY2;	
-	
 private:
 	Size size;
 	static void ParseTextMultiline(const String &text, Font fnt, 
@@ -463,7 +458,7 @@ void ScatterDraw::SetDrawing(T& w, const int& scale)
 
 	Size sz(0, 0); 
 	
-	int titleHeight = !title.IsEmpty() ? scale*titleFont.GetHeight() : 0;
+	titleHeight = !title.IsEmpty() ? scale*titleFont.GetHeight() : 0;
 	
 	if(titleHeight > 0) {
 		Font fontTitle6;
@@ -562,6 +557,8 @@ void ScatterDraw::SetDrawing(T& w, const int& scale)
 	ClipEnd(w);	
 }
 
+void kk();
+
 template <class T>
 void ScatterDraw::Plot(T& w, const int& scale, const int& plotW, const int& plotH)
 {
@@ -592,7 +589,7 @@ void ScatterDraw::Plot(T& w, const int& scale, const int& plotW, const int& plot
 			if (series[j].opacity == 0 || (!series[j].seriesPlot && !series[j].markPlot))
 				continue;
 			Vector<Point> p1;
-			int imin, imax;
+			ptrdiff_t imin, imax;
 			if (series[j].sequential) {
 				imin = imax = Null;
 				for (int i = 1; i < series[j].PointsData()->GetCount() - 1; ++i) {
@@ -611,19 +608,19 @@ void ScatterDraw::Plot(T& w, const int& scale, const int& plotW, const int& plot
 			} else if (series[j].PointsData()->IsParam()) { 				// It is a param function
 				imin = 0;
 				imax = series[j].PointsData()->GetCount();
-			} else if (IsNull(series[j].PointsData()->GetCount())) {		// It is a function
+			} else if (IsNull(series[j].PointsData()->GetCount())) {			// It is a function
 				imin = fround(xMin) - 1;
 				imax = fround(xMin + xRange) + 1;
 			} else {
 			    imin = 0;
 			    imax = series[j].PointsData()->GetCount();
 			}
-			int numV; 
+			ptrdiff_t numV; 
 			if (fastViewX)
 				numV = 1 + (imax - imin)/plotW;
 			else
 				numV = 1;
-			for (int i = imin; i < imax; i += numV) {
+			for (ptrdiff_t i = imin; i < imax; i += numV) {
 				double xx, yy;
 				if (fastViewX && numV > 1) {
 					yy = 0;
@@ -634,10 +631,12 @@ void ScatterDraw::Plot(T& w, const int& scale, const int& plotW, const int& plot
 					xx = (series[j].PointsData()->x(i) + series[j].PointsData()->x(i + ii - 1))/2;
 				} else {
 					xx = series[j].PointsData()->x(i);
+					DUMP(i);
+					DUMP(series[j].PointsData()->x(i));
 					yy = series[j].PointsData()->y(i);
 				}
-				int ix, iy;
-				ix = fround(plotW*(xx - xMin)/xRange);
+				int ix = fround(plotW*(xx - xMin)/xRange);
+				int iy;
 				if (series[j].primaryY)
 					iy = fround(plotH*(yy - yMin)/yRange);
 				else
