@@ -232,12 +232,27 @@ void Image::Serialize(Stream& s)
 	Point p = GetHotSpot();
 	Size dots = GetDots();
 	s % sz % p % dots;
-	int len = sz.cx * sz.cy;
+	int64 len = (int64)sz.cx * (int64)sz.cy * (int64)sizeof(RGBA);
 	if(s.IsLoading())
 		if(len) {
 			ImageBuffer b(sz);
-			if(!s.GetAll(~b, len * sizeof(RGBA)))
+			
+			int64 offset = 0;
+			const byte* ptr = (byte*)~b;
+			
+			while(len>INT_MAX)
+			{
+				if(!s.GetAll((void*)(ptr+offset), INT_MAX))
+				{
+					s.SetError();
+					return;
+				}
+				len -= INT_MAX;
+				offset += INT_MAX;
+			}			
+			if(!s.GetAll((void*)(ptr+offset), len))
 				s.SetError();
+			
 			b.SetDots(dots);
 			b.SetHotSpot(p);
 			*this = b;
@@ -245,9 +260,19 @@ void Image::Serialize(Stream& s)
 		else
 			Clear();
 	else
-		s.Put(~*this, len * sizeof(RGBA));
+	{
+		int64 offset = 0;
+		const byte* ptr = (byte*)~*this;
+				
+		while(len>INT_MAX)
+		{
+			s.Put(ptr+offset, INT_MAX);
+			len -= INT_MAX;
+			offset += INT_MAX;
+		}
+		s.Put(ptr+offset, len);
+	}
 }
-
 INITBLOCK {
 	Value::Register<Image>("Image");
 }
