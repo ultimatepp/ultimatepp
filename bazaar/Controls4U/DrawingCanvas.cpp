@@ -90,7 +90,7 @@ String GetValueStringXml(String str, const char* var) {
 	int pos, endpos;
 	
 	if ((pos = str.Find(var)) >= 0) {
-		pos += strlen(var);
+		pos += int(strlen(var));
 		endpos = str.Find(';', pos+1);
 		if (endpos == -1)
 			endpos = str.GetCount();
@@ -122,7 +122,7 @@ Array<double> GetTransformArgs(String str, const char *command) {
 	if ((pos = str.Find(command)) < 0) 
 		return args;
 	
-	pos += strlen(command);
+	pos += int(strlen(command));
 	pos = 1 + str.Find('(', pos);
 	
 	while (true) {

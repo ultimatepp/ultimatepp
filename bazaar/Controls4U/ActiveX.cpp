@@ -28,7 +28,7 @@ String BSTRGet(BSTR &bstr) {
 	if (!(buffer = (char *)GlobalAlloc(GMEM_FIXED, sizeof(wchar_t) * size)))
 		return Null;
 	
-	int i = wcstombs(buffer, bstr, size);
+	size_t i = wcstombs(buffer, bstr, size);
 	buffer[i] = 0;
 	
 	String ret = buffer;

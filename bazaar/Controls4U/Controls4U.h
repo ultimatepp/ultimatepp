@@ -145,10 +145,10 @@ class StaticRectangle : public Ctrl {
 typedef StaticRectangle CLASSNAME;	
 public:
 	virtual void Paint(Draw& draw);
-	virtual void MouseEnter(Point p, dword keyflags) {WhenMouseEnter(p, keyflags);};
-	virtual void MouseLeave() {	WhenMouseLeave();};
-	virtual void LeftDown(Point p, dword keyflags) {WhenLeftDown(p, keyflags);};
-	virtual void LeftUp(Point p, dword keyflags) {WhenLeftUp(p, keyflags);};
+	virtual void MouseEnter(Point p, dword keyflags) 	{WhenMouseEnter(p, keyflags);};
+	virtual void MouseLeave() 							{WhenMouseLeave();};
+	virtual void LeftDown(Point p, dword keyflags) 		{WhenLeftDown(p, keyflags);};
+	virtual void LeftUp(Point p, dword keyflags) 		{WhenLeftUp(p, keyflags);};
 	virtual void Layout();
 	
 protected:
