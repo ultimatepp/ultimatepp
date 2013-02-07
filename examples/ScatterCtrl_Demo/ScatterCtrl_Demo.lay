@@ -22,7 +22,7 @@ LAYOUT(Tab3, 384, 284)
 END_LAYOUT
 
 LAYOUT(Tab4, 400, 316)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Temperature Average. X Axis mouse zoom + scroll")).SetTitleFont(SansSerifZ(14).Bold()).SetPlotAreaLeftMargin(40).SetLabelX(t_("Month")).SetLabelsFont(SansSerifZ(11)).SetLegendWeight(200).HSizePosZ(16, 16).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Temperature Average. X Axis mouse zoom + scroll")).SetTitleFont(SansSerifZ(14).Bold()).SetPlotAreaLeftMargin(40).SetLabelX(t_("Month")).SetLabelsFont(SansSerifZ(11)).SetLegendWidth(200).HSizePosZ(16, 16).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab5, 400, 288)
@@ -49,7 +49,7 @@ LAYOUT(Tab7, 388, 300)
 END_LAYOUT
 
 LAYOUT(Tab8, 400, 316)
-	ITEM(ScatterCtrl, scatter, SetLabelY2(t_("Legend Y2")).SetTitle(t_("Temperature & Pressure Averages. X-Y Axis mouse zoom + scroll")).SetTitleFont(SansSerifZ(15).Bold()).SetPlotAreaLeftMargin(40).SetPlotAreaRightMargin(70).SetPlotAreaTopMargin(50).SetPlotAreaBottomMargin(50).SetLabelX(t_("Month")).SetLabelY(t_("Legend Y")).SetLabelsFont(SansSerifZ(11)).SetLegendWeight(200).HSizePosZ(16, 16).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetLabelY2(t_("Legend Y2")).SetTitle(t_("Temperature & Pressure Averages. X-Y Axis mouse zoom + scroll")).SetTitleFont(SansSerifZ(15).Bold()).SetPlotAreaLeftMargin(40).SetPlotAreaRightMargin(70).SetPlotAreaTopMargin(50).SetPlotAreaBottomMargin(50).SetLabelX(t_("Month")).SetLabelY(t_("Legend Y")).SetLabelsFont(SansSerifZ(11)).SetLegendWidth(200).HSizePosZ(16, 16).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab9, 380, 348)
