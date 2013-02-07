@@ -14,7 +14,7 @@ double DataSource::Min(Getdatafun getdata)
 	}
 	return minVal;		
 }
-
+ 
 double DataSource::Max(Getdatafun getdata) 
 {
 	double maxVal = DOUBLE_NULL;

@@ -145,9 +145,9 @@ ScatterDraw& ScatterDraw::ShowLegend(const bool& show)
 	return *this;
 }
 
-ScatterDraw& ScatterDraw::SetLegendWeight(const int& weight)
+ScatterDraw& ScatterDraw::SetLegendWidth(const int& width)
 {
-	legendWeight = weight;
+	legendWidth = width;
 	return *this;
 }
 
@@ -171,7 +171,7 @@ ScatterDraw &ScatterDraw::SetDrawY2Reticle(bool set)
 
 void ScatterDraw::DrawLegend(Draw& w, const int& scale) const
 {
-	int nmr = fround((GetSize().cx - 2*(hPlotLeft + hPlotRight))/legendWeight);	//max number of labels per row
+	int nmr = fround((GetSize().cx - 2*(hPlotLeft + hPlotRight))/legendWidth);	//max number of labels per row
 	if (nmr <= 0) 
 		return;
 	int nLab = series.GetCount();	//number of labels
@@ -194,16 +194,16 @@ void ScatterDraw::DrawLegend(Draw& w, const int& scale) const
 		}
 		for(int i = start; i < end; i++) {
 			Vector <Point> vp;
-			vp << Point(scale*(i-start)*legendWeight, scale*(4-12*(j+1))) << 
-				  Point(scale*(i-start)*legendWeight+scale*23, scale*(4-12*(j+1)));
+			vp << Point(scale*(i-start)*legendWidth, scale*(4-12*(j+1))) << 
+				  Point(scale*(i-start)*legendWidth + scale*23, scale*(4-12*(j+1)));
 			if (series[i].opacity > 0 && series[i].seriesPlot)
 				DrawPolylineOpa(w, vp, scale, 1, scale*series[i].thickness, series[i].color, series[i].dash);
-			Point p(scale*((i-start)*legendWeight+7),scale*(4-12*(j+1))/*+scale*Thick.At(i)/12*/);
+			Point p(scale*((i-start)*legendWidth+7),scale*(4-12*(j+1))/*+scale*Thick.At(i)/12*/);
 			if (series[i].markWidth >= 1 && series[i].markPlot)
 				series[i].markPlot->Paint(w, scale, p, series[i].markWidth, series[i].markColor);   
 			Font scaledFont;
 			scaledFont.Height(scale*StdFont().GetHeight());
-			DrawText(w, scale*(i-start)*legendWeight+scale*25, scale*(-2-12*(j+1)), 0,
+			DrawText(w, scale*(i-start)*legendWidth+scale*25, scale*(-2-12*(j+1)), 0,
 						series[i].legend, scaledFont, series[i].color);                   
 		}
 	}
@@ -340,9 +340,13 @@ void ScatterDraw::FitToData(bool vertical) {
 		xMin -= deltaX;
 		xMinUnit += deltaX;
 		AdjustMinUnitX();
-		if (maxx == minx)
-			xRange = 2*maxx;
-		else	
+		if (maxx == minx) {
+			if (maxx == 0) {
+				xRange = 2;
+				xMin = -1;
+			} else	
+				xRange = 2*maxx;
+		} else	
 			xRange = maxx - minx;
 	}
 	if (vertical) {
@@ -640,7 +644,7 @@ void ScatterDraw::_InsertSeries(int index, DataSource *data)
 	Refresh();	
 }
 
-int ScatterDraw::GetCount(int index)
+ptrdiff_t ScatterDraw::GetCount(int index)
 {
 	ASSERT(IsValid(index));
 	if (series[index].PointsData()->IsParam())
@@ -987,9 +991,9 @@ void ScatterDraw::RemoveAllSeries()
 
 Drawing ScatterDraw::GetDrawing()
 {
-	DrawingDraw ddw(6*GetSize());
+	DrawingDraw ddw(3*GetSize());
 	
-	SetDrawing (ddw, 6);
+	SetDrawing(ddw, 3);
 
 	return ddw;
 }
@@ -1207,13 +1211,12 @@ ScatterDraw::ScatterDraw()
 	hPlotLeft = hPlotRight = vPlotTop = vPlotBottom = 30;
 	xRange = yRange = yRange2 = 100.0;
 	xMin = yMin = yMin2 = xMinUnit = yMinUnit = yMinUnit2 = 0.0;
-	logX = logY = logY2 = false;
 	gridColor = SColorDkShadow();
 	gridWidth = 1;
 	drawXReticle = true; drawYReticle = true;
 	drawY2Reticle = false;
 	drawVGrid = drawHGrid = showLegend = true;
-	legendWeight = 80;
+	legendWidth = 80;
 	minXZoom = maxXZoom = minYZoom = maxYZoom = -1;
 	fastViewX = false;
 	sequentialXAll = false;
