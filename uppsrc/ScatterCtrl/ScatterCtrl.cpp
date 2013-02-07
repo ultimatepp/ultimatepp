@@ -80,56 +80,48 @@ ScatterCtrl &ScatterCtrl::ShowInfo(bool show)
 void ScatterCtrl::ProcessPopUp(const Point & pt)
 {
 	double _x  = (popLT.x - hPlotLeft)*xRange/(GetSize().cx - (hPlotLeft + hPlotRight)-1) + xMin;		
-	double _y  = -(popLT.y - vPlotTop - titleFont.GetHeight())*yRange/(GetSize().cy - (vPlotTop + vPlotBottom + titleFont.GetHeight())+1) + yMin + yRange;		
-	double _y2 = -(popLT.y - vPlotTop - titleFont.GetHeight())*yRange2/(GetSize().cy - (vPlotTop + vPlotBottom + titleFont.GetHeight())+1) + yMin2 + yRange2;		
+	double _y  = -(popLT.y - vPlotTop - titleHeight)*yRange/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin + yRange;		
+	double _y2 = -(popLT.y - vPlotTop - titleHeight)*yRange2/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin2 + yRange2;		
 	double x   = (pt.x - hPlotLeft)*xRange/(GetSize().cx - (hPlotLeft + hPlotRight)-1) + xMin;		
-	double y   = -(pt.y - vPlotTop - titleFont.GetHeight())*yRange/(GetSize().cy - (vPlotTop + vPlotBottom + titleFont.GetHeight())+1) + yMin + yRange;		
-	double y2  = -(pt.y - vPlotTop - titleFont.GetHeight())*yRange2/(GetSize().cy - (vPlotTop + vPlotBottom + titleFont.GetHeight())+1) + yMin2 + yRange2;		
+	double y   = -(pt.y - vPlotTop - titleHeight)*yRange/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin + yRange;		
+	double y2  = -(pt.y - vPlotTop - titleHeight)*yRange2/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin2 + yRange2;		
 	
 	double dx  = x  - _x;
 	double dy  = y  - _y;
 	double dy2 = y2 - _y2;
-	if(logX) {
-		x  = pow(10.0, x);
-		_x = pow(10.0, _x);
-		dx = x - _x;
-	}
-	if(logY) {
-		y  = pow(10.0, y);
-		_y = pow(10.0, _y);
-		dy = pow(10.0, dy);
-	}
-	if(logY2) {
-		y2  = pow(10.0, y2);
-		_y2 = pow(10.0, _y2);
-		dy2 = pow(10.0, dy2);
-	}
+
 	String strx, _strx, dstrx, stry, _stry, dstry;
 	if (cbModifFormatX) {
-		cbModifFormatX(strx,  0, x); 		strx.Replace("\n", " ");
-		cbModifFormatX(_strx, 0, _x); 		_strx.Replace("\n", " ");
+		cbModifFormatX(strx,  0, x); 		
+		strx.Replace("\n", " ");
+		cbModifFormatX(_strx, 0, _x); 		
+		_strx.Replace("\n", " ");
 	} else {
 		strx  = VariableFormatX(x);
 		_strx = VariableFormatX(_x);
 	}
 	if (cbModifFormatDeltaX) {
-		cbModifFormatDeltaX(dstrx, 0, dx);	dstrx.Replace("\n", " "); 
-	} else {
+		cbModifFormatDeltaX(dstrx, 0, dx);	
+		dstrx.Replace("\n", " "); 
+	} else 
 		dstrx = VariableFormatX(dx);
-	}	
+	
 	if (cbModifFormatY) {
-		cbModifFormatY(stry,  0, y);		stry.Replace("\n", " ");
-		cbModifFormatY(_stry, 0, _y);		_stry.Replace("\n", " ");
+		cbModifFormatY(stry,  0, y);		
+		stry.Replace("\n", " ");
+		cbModifFormatY(_stry, 0, _y);		
+		_stry.Replace("\n", " ");
 	} else {
 		stry  = VariableFormatY(y);
 		_stry = VariableFormatY(_y);
 	}
 	if (cbModifFormatDeltaY) {
-		cbModifFormatDeltaY(dstry, 0, dy);	dstry.Replace("\n", " ");
-	} else {
+		cbModifFormatDeltaY(dstry, 0, dy);	
+		dstry.Replace("\n", " ");
+	} else 
 		dstry = VariableFormatY(dy);
-	}
-	String str= popTextX + ": " + _strx;
+	
+	String str = popTextX + ": " + _strx;
 	if (strx != _strx)
 		str << "; " + popTextX + "': " + strx + "; Δ" + popTextX + ": " + dstrx;
 	str << "\n" + popTextY + ": " + _stry;
@@ -138,23 +130,26 @@ void ScatterCtrl::ProcessPopUp(const Point & pt)
 	if (drawY2Reticle) {
 		String stry2, _stry2, dstry2;
 		if (cbModifFormatY2) {
-			cbModifFormatY2(stry2,  0, y2);			stry2.Replace("\n", " ");
-			cbModifFormatY2(_stry2, 0, _y2);		_stry2.Replace("\n", " ");
+			cbModifFormatY2(stry2,  0, y2);			
+			stry2.Replace("\n", " ");
+			cbModifFormatY2(_stry2, 0, _y2);		
+			_stry2.Replace("\n", " ");
 		} else {
 			stry2  = VariableFormatY2(y2);
 			_stry2 = VariableFormatY2(_y2);
 		}
 		if (cbModifFormatDeltaY2) {
-			cbModifFormatDeltaY2(dstry2, 0, dy2);	dstry2.Replace("\n", " ");
-		} else {
+			cbModifFormatDeltaY2(dstry2, 0, dy2);	
+			dstry2.Replace("\n", " ");
+		} else 
 			dstry2 = VariableFormatY(dy2);
-		}
+		
 		str << "\n" + popTextY2 + ": " + _stry2;
 		if (stry2 != _stry2)		
 			str << "; " + popTextY2 + ": " + stry2 + "; Δ" + popTextY2 + ": " + dstry2;
 	}
 	const Point p2 = pt + offset;
-	popText.SetText(str).Move(this,p2.x,p2.y);
+	popText.SetText(str).Move(this, p2.x, p2.y);
 }
 
 void ScatterCtrl::DoMouseAction(bool down, Point pt, MouseAction action, int value)
@@ -204,7 +199,7 @@ void ScatterCtrl::LabelPopUp(bool down, Point &pt)
 {
 	if (down) {
 		if(paintInfo && hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
-		  				(vPlotTop + titleFont.GetHeight()) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
+		  				(vPlotTop + titleHeight) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
 			popText.AppearOnly(this);
 			
 			isLabelPopUp = true;
@@ -238,7 +233,7 @@ void ScatterCtrl::Scrolling(bool down, Point &pt, bool isOut)
 	static Image mouseImg;
 	if (down) {
 		if((mouseHandlingX || mouseHandlingY) && hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
-			(vPlotTop + titleFont.GetHeight()) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
+			(vPlotTop + titleHeight) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
 			butDownX = pt.x;
 			butDownY = pt.y;	
 			isScrolling = true;
@@ -333,13 +328,14 @@ void ScatterCtrl::MouseMove(Point pt, dword)
 	} 
 	if(isLabelPopUp) {
 		if (paintInfo && hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
-						(vPlotTop + titleFont.GetHeight()) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
+						(vPlotTop + titleHeight) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
 			if (IsNull(popLT))
 				popLT = pt;
 			popRB = pt;
 			popText.AppearOnlyOpen(this);
 			
 			ProcessPopUp(pt);
+			Refresh();
 		}
 	}	
 }
@@ -432,7 +428,7 @@ void ScatterCtrl::InsertSeries(int id, ArrayCtrl &data, bool useCols, int idX, i
 	InsertSeries<ArrayCtrlSource>(id, data, useCols, idX, idY, beginData, numData);
 }
 
-ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(3)
+ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1)
 {
 	paintInfo = mouseHandlingX = mouseHandlingY = isScrolling = isLabelPopUp = false;
 	popTextX = "x";

@@ -14,7 +14,7 @@ private:
 	bool useCols;
 	int idX, idY, idZ;
 	int beginData;
-	int numData;
+	ptrdiff_t numData;
 
 public:
 	ArrayCtrlSource() : data(0), useCols(true), idX(0), idY(1), idZ(2), beginData(0), numData(Null) {};
@@ -36,7 +36,7 @@ public:
 		else
 			return useCols ? data->Get(beginData + id, idX) : data->Get(idX, beginData + id);
 	}
-	virtual inline int GetCount()	{return numData;};
+	virtual inline ptrdiff_t GetCount()	{return numData;};
 };
 
 class GridCtrlSource : public DataSource {
@@ -45,7 +45,7 @@ private:
 	bool useCols;
 	int idX, idY, idZ;
 	int beginData;
-	int numData;
+	ptrdiff_t numData;
 
 public:
 	GridCtrlSource() : data(0), useCols(true), idX(0), idY(1), idZ(2), beginData(0), numData(Null) {};
@@ -78,7 +78,7 @@ public:
 		else
 			return useCols ? data->Get(beginData + id, idX) : data->Get(idX, beginData + id);
 	}
-	virtual inline int GetCount()	{return numData;};
+	virtual inline ptrdiff_t GetCount()	{return numData;};
 };
 
 class ScatterCtrl : public StaticRect, public ScatterDraw {
@@ -122,7 +122,7 @@ public:
 	ScatterCtrl& SetGridColor(const Upp::Color& grid_color)		{ScatterDraw::SetGridColor(grid_color);		return *this;};
 	ScatterCtrl& SetGridWidth(const int& grid_width) 			{ScatterDraw::SetGridWidth(grid_width); 	return *this;};
 	ScatterCtrl& SetPlotAreaColor(const Upp::Color& p_a_color)	{ScatterDraw::SetPlotAreaColor(p_a_color); 	return *this;};
-	ScatterCtrl& SetLegendWeight(const int& weight)				{ScatterDraw::SetLegendWeight(weight); 		return *this;};
+	ScatterCtrl& SetLegendWidth(const int& width)				{ScatterDraw::SetLegendWidth(width); 		return *this;};
 	ScatterCtrl& SetAxisColor(const Upp::Color& axis_color)		{ScatterDraw::SetAxisColor(axis_color);		return *this;};
 	ScatterCtrl& SetAxisWidth(const int& axis_width)			{ScatterDraw::SetAxisWidth(axis_width);		return *this;};
 	ScatterCtrl& SetTitle(const String& title)		 			{ScatterDraw::SetTitle(title); 				return *this;};
@@ -174,16 +174,16 @@ private:
 	
 	void ProcessPopUp(const Point & pt);
 
-	virtual void  Paint(Draw& w);
-	virtual void  LeftDown(Point, dword);
-	virtual void  LeftUp(Point, dword);
-	virtual void  MiddleDown(Point, dword);
-	virtual void  MouseMove(Point, dword);
-	virtual void  MiddleUp(Point, dword);
-	virtual void  RightDown(Point, dword);
-	virtual void  RightUp(Point, dword);
-	virtual void  MouseLeave();
-	virtual void  MouseWheel(Point, int zdelta, dword);
+	virtual void Paint(Draw& w);
+	virtual void LeftDown(Point, dword);
+	virtual void LeftUp(Point, dword);
+	virtual void MiddleDown(Point, dword);
+	virtual void MouseMove(Point, dword);
+	virtual void MiddleUp(Point, dword);
+	virtual void RightDown(Point, dword);
+	virtual void RightUp(Point, dword);
+	virtual void MouseLeave();
+	virtual void MouseWheel(Point, int zdelta, dword);
 	
 	void DoMouseAction(bool down, Point pt, MouseAction action, int value);
 	void ProcessMouse(bool down, Point &pt, bool ctrl, bool alt, bool shift, bool left, bool middle, int middleWheel, bool right); 
