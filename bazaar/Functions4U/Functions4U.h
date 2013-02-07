@@ -336,7 +336,7 @@ public:
 	bool GoAfter(const String text) {
 		if(!GoBefore(text))
 			return false;
-		pos += strlen(text);
+		pos += int(strlen(text));
 		return true;
 	};
 	bool GoAfter(const String text, const String text2) {
