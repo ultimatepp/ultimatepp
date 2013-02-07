@@ -26,7 +26,7 @@ ctrl ScatterCtrl {
 	bool ShowHGrid = true;
 	bool ShowVGrid = true;
 	bool ShowLegend = true;
-	int SetLegendWeight = 80;	
+	int SetLegendWidth = 80;	
 	bool SetFastViewX = false;
 	bool SetSequentialXAll = false;
 

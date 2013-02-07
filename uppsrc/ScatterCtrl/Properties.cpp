@@ -175,7 +175,7 @@ void DataTab::OnTab()
 	ArrayCtrl &data = series[index].data;	
 	data.Reset();
 	data.SetLineCy(EditField::GetStdHeight());
-	data.SetVirtualCount(scatter.GetCount(index));
+	data.SetVirtualCount(int(scatter.GetCount(index)));
 	dataSourceX.pscatter = dataSourceY.pscatter = pscatter;
 	dataSourceX.index = dataSourceY.index = index;
 	data.AddRowNumColumn("x").SetConvert(dataSourceX);
