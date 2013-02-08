@@ -22,8 +22,8 @@ OfficeSheet::~OfficeSheet()	 {
 
 void OfficeSheet::CellToColRow(const char *cell, int &col, int &row) {
 	String s_col;
+	int lenCell = int(strlen(cell));
 	int i;
-	int lenCell = strlen(cell);
 	for (i = 0; (i < lenCell) && (cell[i] >= 'A') && (cell[i] <= 'Z'); ++i)
 		s_col.Cat(cell[i]);
 	
