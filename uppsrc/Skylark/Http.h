@@ -21,9 +21,9 @@ protected:
 	friend String GetIdentity(const Renderer *r);
 
 public:	
-	Renderer& operator()(const char *id, const char *v)   { var.Add(id, v); return *this; }
-	Renderer& operator()(const char *id, const String& v) { var.Add(id, v); return *this; }
-	Renderer& operator()(const char *id, const Value& v)  { var.Add(id, v); return *this; }
+	Renderer& operator()(const char *id, const char *v)   { var.GetAdd(id) = v; return *this; }
+	Renderer& operator()(const char *id, const String& v) { var.GetAdd(id) = v; return *this; }
+	Renderer& operator()(const char *id, const Value& v)  { var.GetAdd(id) = v; return *this; }
 	Renderer& operator()(const ValueMap& map);
 	Renderer& operator()(const char *id, const HandlerId& handler);
 	Renderer& operator()(const char *id, const HandlerId& handler, const Value& arg1);
