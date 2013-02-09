@@ -295,6 +295,36 @@ void GetBestDispatch(int method,
 	}
 }
 
+void SkylarkApp::NotFound(Http& http)
+{
+	http << "Page not found";
+	http.Response(404, "Not found");
+}
+
+void SkylarkApp::SqlError(Http& http, const SqlExc& e)
+{
+	http << "Internal server error<br>SQL ERROR: " << e;
+	http.Response(500, "Internal server error");
+}
+
+void SkylarkApp::InternalError(Http& http, const Exc& e)
+{
+	http << "Internal server error<br>" << e;
+	http.Response(500, "Internal server error");
+}
+
+void SkylarkApp::Unauthorized(Http& http, const AuthExc& e)
+{
+	http << e;
+	http.Response(403, "Unauthorized");
+}
+
+void SkylarkApp::BadRequest(Http& http, const BadRequestExc& e)
+{
+	http << "Bad request";
+	http.Response(400, "Bad request");
+}
+
 void Http::Dispatch(TcpSocket& socket)
 {
 	const Vector<DispatchNode>& DispatchMap = sDispatchMap();
@@ -381,44 +411,26 @@ void Http::Dispatch(TcpSocket& socket)
 			catch(SqlExc e) {
 				if(SQL.IsOpen())
 					SQL.Rollback();
-				response << "Internal server error<br>"
-				         << "SQL ERROR: " << e;
-				code = 500;
-				code_text = "Internal server error";
 				app.SqlError(*this, e);
 			}
 			catch(AuthExc e) {
 				if(SQL.IsOpen())
 					SQL.Rollback();
-				response << e;
-				code = 403;
-				code_text = "Unauthorized";
 				app.Unauthorized(*this, e);
 			}
 			catch(BadRequestExc e) {
 				if(SQL.IsOpen())
 					SQL.Rollback();
-				response << "Bad request";
-				code = 400;
-				code_text = "Bad request";
 				app.BadRequest(*this, e);
 			}
 			catch(Exc e) {
 				if(SQL.IsOpen())
 					SQL.Rollback();
-				response << "Internal server error<br>"
-				         << e;
-				code = 500;
-				code_text = "Internal server error";
 				app.InternalError(*this, e);
 			}
 		}
-		else {
-			response << "Page not found";
-			code = 404;
-			code_text = "Not found";
+		else
 			app.NotFound(*this);
-		}
 		Finalize();
 	}	
 }
