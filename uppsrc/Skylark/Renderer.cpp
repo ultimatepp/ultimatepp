@@ -10,13 +10,13 @@ Renderer& Renderer::operator()(const ValueMap& map)
 	ValueArray v = map.GetValues();
 	const Index<Value>& k = map.GetKeys();
 	for(int i = 0; i < map.GetCount(); i++)
-		var.Add(k[i], v[i]);
+		var.GetAdd(k[i]) = v[i];
 	return *this;
 }
 
 Renderer& Renderer::Link(const char *id, const HandlerId& handler, const Vector<Value>& arg)
 {
-	var.Add(id, Raw('\"' + MakeLink(handler, arg) + '\"'));
+	var.GetAdd(id) = Raw('\"' + MakeLink(handler, arg) + '\"');
 	return *this;
 }
 
