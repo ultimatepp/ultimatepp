@@ -200,7 +200,7 @@ void Heap::Make(MemoryProfile& f)
 		size_t sz = ((BigHdr *)((byte *)m + BIGHDRSZ - sizeof(Header)))->size;
 		f.large_count++;
 		f.large_total += sz;
-		if(ii < 4096)
+		if(ii < 1024)
 			f.large_size[ii++] = sz;
 		m = m->next;
 	}
@@ -211,13 +211,13 @@ void Heap::Make(MemoryProfile& f)
 			if(h->free) {
 				f.large_free_count++;
 				f.large_free_total += h->size;
-				if(fi < 4096)
+				if(fi < 1024)
 					f.large_free_size[fi++] = h->size;
 			}
 			else {
 				f.large_count++;
 				f.large_total += h->size;
-				if(ii < 4096)
+				if(ii < 1024)
 					f.large_size[ii++] = h->size;
 			}
 			h = h->Next();

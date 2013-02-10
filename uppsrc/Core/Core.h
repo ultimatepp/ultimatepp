@@ -278,6 +278,7 @@ class JsonIO;
 #include "BiCont.h"
 #include "Index.h"
 #include "Map.h"
+#include "InVector.h"
 #include "Tuple.h"
 #include "Other.h"
 #include "Algo.h"
