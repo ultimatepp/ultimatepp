@@ -22,10 +22,10 @@ private:
 	void SetBlkPar();
 
 	template <class L>
-	int  FindUpperBound(const T& val, const L& less, int& off, int& pos);
+	int  FindUpperBound(const T& val, const L& less, int& off, int& pos) const;
 
 	template <class L>
-	int  FindLowerBound(const T& val, const L& less, int& off, int& pos);
+	int  FindLowerBound(const T& val, const L& less, int& off, int& pos) const;
 
 	bool JoinSmall(int blki);
 	T   *Insert0(int ii, int blki, int pos, int off, const T *val);
@@ -38,6 +38,10 @@ private:
 	void SetEnd(ConstIterator& it) const;
 
 	void     Chk() const                            { ASSERT_(!IsPicked(), "Broken pick semantics"); }
+
+#ifdef flagIVTEST
+	void Check(int blki, int offset) const;
+#endif
 
 public:
 	T&       Insert(int i)                          { return *Insert0(i, NULL); }
@@ -74,20 +78,20 @@ public:
 	T        Pop()                                  { T h = Top(); Drop(); return h; }
 
 	template <class L>
-	int FindUpperBound(const T& val, const L& less) { int off, pos; FindUpperBound(val, less, off, pos); return off + pos; }
-	int FindUpperBound(const T& val)                { return FindUpperBound(val, StdLess<T>()); }
+	int FindUpperBound(const T& val, const L& less) const { int off, pos; FindUpperBound(val, less, off, pos); return off + pos; }
+	int FindUpperBound(const T& val) const                { return FindUpperBound(val, StdLess<T>()); }
 
 	template <class L>
-	int FindLowerBound(const T& val, const L& less) { int off, pos; FindLowerBound(val, less, off, pos); return off + pos; }
-	int FindLowerBound(const T& val)                { return FindLowerBound(val, StdLess<T>()); }
+	int FindLowerBound(const T& val, const L& less) const { int off, pos; FindLowerBound(val, less, off, pos); return off + pos; }
+	int FindLowerBound(const T& val) const                { return FindLowerBound(val, StdLess<T>()); }
 
 	template <class L>
 	int InsertUpperBound(const T& val, const L& less);
-	int InsertUpperBound(const T& val)              { return InsertUpperBound(val, StdLess<T>()); }
+	int InsertUpperBound(const T& val)                    { return InsertUpperBound(val, StdLess<T>()); }
 	
 	template <class L>
-	int Find(const T& val, const L& less);
-	int Find(const T& val)                          { return Find(val, StdLess<T>()); }
+	int Find(const T& val, const L& less) const;
+	int Find(const T& val) const                          { return Find(val, StdLess<T>()); }
 
 	typedef T        ValueType;
 
@@ -264,20 +268,20 @@ public:
 	T        Pop()                                  { T h = Top(); Drop(); return h; }
 
 	template <class L>
-	int FindUpperBound(const T& val, const L& less) { return iv.FindUpperBound((T*)&val, ALess<L>(less)); }
-	int FindUpperBound(const T& val)                { return FindUpperBound(val, StdLess<T>()); }
+	int FindUpperBound(const T& val, const L& less) const  { return iv.FindUpperBound((T*)&val, ALess<L>(less)); }
+	int FindUpperBound(const T& val) const                 { return FindUpperBound(val, StdLess<T>()); }
 
 	template <class L>
-	int FindLowerBound(const T& val, const L& less) { return iv.FindLowerBound((T*)&val, ALess<L>(less)); }
-	int FindLowerBound(const T& val)                { return FindLowerBound(val, StdLess<T>()); }
+	int FindLowerBound(const T& val, const L& less) const  { return iv.FindLowerBound((T*)&val, ALess<L>(less)); }
+	int FindLowerBound(const T& val) const                 { return FindLowerBound(val, StdLess<T>()); }
 
 	template <class L>
-	int InsertUpperBound(const T& val, const L& lss){ return iv.InsertUpperBound(new T(val), ALess<L>(lss)); }
-	int InsertUpperBound(const T& val)              { return InsertUpperBound(val, StdLess<T>()); }
+	int InsertUpperBound(const T& val, const L& lss)       { return iv.InsertUpperBound(new T(val), ALess<L>(lss)); }
+	int InsertUpperBound(const T& val)                     { return InsertUpperBound(val, StdLess<T>()); }
 	
 	template <class L>
-	int Find(const T& val, const L& less)           { return iv.Find((T*)&val, ALess<L>(less)); }
-	int Find(const T& val)                          { return Find(val, StdLess<T>()); }
+	int Find(const T& val, const L& less) const            { return iv.Find((T*)&val, ALess<L>(less)); }
+	int Find(const T& val) const                           { return Find(val, StdLess<T>()); }
 
 	typedef T        ValueType;
 

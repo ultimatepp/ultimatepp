@@ -31,6 +31,9 @@ extern thread__ int   invector_cache_end_;
 template <class T>
 force_inline void InVector<T>::SetCache(int blki, int offset) const
 {
+#ifdef flagIVTEST
+	Check(0, 0);
+#endif
 	invector_cache_serial_ = serial;
 	invector_cache_blki_ = blki;
 	invector_cache_offset_ = offset;
@@ -158,6 +161,9 @@ void InVector<T>::Reindex()
 		end = w.End();
 		n = w.GetCount();
 	}
+#ifdef flagIVTEST
+	Check(0, 0);
+#endif
 }
 
 template <class T>
@@ -299,15 +305,18 @@ void InVector<T>::InsertN(int ii, int n)
 		ASSERT(n == 0);
 		Reindex();
 	}
+#ifdef flagIVTEST
+	Check(0, 0);
+#endif
 }
 
 template <class T>
 void InVector<T>::Remove(int pos, int n)
 {
 	ASSERT(pos >= 0 && pos + n <= GetCount());
-	count -= n;
 	int off;
 	int blki = FindBlock(pos, off);
+	count -= n;
 	if(pos + n < data[blki].GetCount()) {
 		data[blki].Remove(pos, n);
 		if(JoinSmall(blki))
@@ -325,16 +334,20 @@ void InVector<T>::Remove(int pos, int n)
 		data[b1++].Remove(pos, nn);
 		n -= nn;
 		int b2 = b1;
-		while(n >= data[b2].GetCount()) {
+		while(b2 < data.GetCount() && n >= data[b2].GetCount()) {
 			n -= min(n, data[b2].GetCount());
 			b2++;
 		}
 		data.Remove(b1, b2 - b1);
-		data[b1].Remove(0, n);
+		if(b1 < data.GetCount())
+			data[b1].Remove(0, n);
 		JoinSmall(blki + 1);
 		JoinSmall(blki);
 		Reindex();
 	}
+#ifdef flagIVTEST
+	Check(0, 0);
+#endif
 }
 
 template <class T>
@@ -379,7 +392,7 @@ InVector<T>::InVector(const InVector<T>& v, int)
 
 template <class T>
 template <class L>
-int InVector<T>::FindUpperBound(const T& val, const L& less, int& off, int& pos)
+int InVector<T>::FindUpperBound(const T& val, const L& less, int& off, int& pos) const
 {
 	if(data.GetCount() == 0) {
 		pos = off = 0;
@@ -399,6 +412,9 @@ int InVector<T>::FindUpperBound(const T& val, const L& less, int& off, int& pos)
 		ii += ii;
 		half >>= 1;
 	}
+#ifdef flagIVTEST
+	Check(blki, offset);
+#endif
 	if(blki < data.GetCount()) {
 		if(!less(val, data[blki].Top()))
 			offset += data[blki++].GetCount();
@@ -412,12 +428,13 @@ int InVector<T>::FindUpperBound(const T& val, const L& less, int& off, int& pos)
 	pos = data.Top().GetCount();
 	off = count - pos;
 	blki--;
+	SetCache(blki, off);
 	return blki;
 }
 
 template <class T>
 template <class L>
-int InVector<T>::FindLowerBound(const T& val, const L& less, int& off, int& pos)
+int InVector<T>::FindLowerBound(const T& val, const L& less, int& off, int& pos) const
 {
 	if(data.GetCount() == 0) {
 		pos = off = 0;
@@ -437,6 +454,9 @@ int InVector<T>::FindLowerBound(const T& val, const L& less, int& off, int& pos)
 		ii += ii;
 		half >>= 1;
 	}
+#ifdef flagIVTEST
+	Check(blki, offset);
+#endif
 	if(blki < data.GetCount()) {
 		if(blki + 1 < data.GetCount() && less(data[blki + 1][0], val))
 			offset += data[blki++].GetCount();
@@ -450,6 +470,7 @@ int InVector<T>::FindLowerBound(const T& val, const L& less, int& off, int& pos)
 	pos = data.Top().GetCount();
 	off = count - pos;
 	blki--;
+	SetCache(blki, off);
 	return blki;
 }
 
@@ -472,7 +493,7 @@ int InVector<T>::InsertUpperBound(const T& val, const L& less)
 
 template <class T>
 template <class L>
-int InVector<T>::Find(const T& val, const L& less)
+int InVector<T>::Find(const T& val, const L& less) const
 {
 	int i = FindLowerBound(val, less);
 	return i < GetCount() && !less(val, (*this)[i]) ? i : -1;
@@ -591,6 +612,22 @@ void InVector<T>::DumpIndex()
 		DLOG(h);
 	}
 	DLOG(".");
+}
+#endif
+
+#ifdef flagIVTEST
+template <class T>
+void InVector<T>::Check(int blki, int offset) const
+{
+	int off = 0;
+	int all = 0;
+	for(int i = 0; i < data.GetCount(); i++) {
+		if(i < blki)
+			off += data[i].GetCount();
+		all += data[i].GetCount();
+	}
+	ASSERT(off == offset);
+	ASSERT(all == count);
 }
 #endif
 
