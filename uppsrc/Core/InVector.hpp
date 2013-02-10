@@ -480,7 +480,7 @@ int InVector<T>::Find(const T& val, const L& less)
 
 
 template <class T>
-void InVector<T>::SetIter(ConstIterator& it, int ii)
+void InVector<T>::SetIter(ConstIterator& it, int ii) const
 {
 	if(count) {
 		it.v = this;
@@ -494,7 +494,7 @@ void InVector<T>::SetIter(ConstIterator& it, int ii)
 }
 
 template <class T>
-void InVector<T>::SetBegin(ConstIterator& it)
+void InVector<T>::SetBegin(ConstIterator& it) const
 {
 	if(count) {
 		it.v = this;
@@ -508,7 +508,7 @@ void InVector<T>::SetBegin(ConstIterator& it)
 }
 
 template <class T>
-void InVector<T>::SetEnd(ConstIterator& it)
+void InVector<T>::SetEnd(ConstIterator& it) const
 {
 	if(count) {
 		it.v = this;
@@ -555,6 +555,18 @@ void InVector<T>::ConstIterator::PrevBlk()
 	begin = v->data[blki].Begin();
 	ptr = end = v->data[blki].End();
 	offset -= v->data[blki].GetCount();
+}
+
+template <typename T>
+void InVector<T>::Swap(InVector& b)
+{
+	Swap(data, b.data);
+	Swap(index, b.index);
+	Swap(count, b.count);
+	Swap(hcount, b.hcount);
+	Swap(serial, b.serial);
+	Swap(blk_high, b.blk_high);
+	Swap(blk_low, b.blk_low);
 }
 
 #ifdef _DEBUG

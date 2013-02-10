@@ -33,9 +33,9 @@ private:
 	
 	void Reset();
 
-	void SetIter(ConstIterator& it, int ii);
-	void SetBegin(ConstIterator& it);
-	void SetEnd(ConstIterator& it);
+	void SetIter(ConstIterator& it, int ii) const;
+	void SetBegin(ConstIterator& it) const;
+	void SetEnd(ConstIterator& it) const;
 
 	void     Chk() const                            { ASSERT_(!IsPicked(), "Broken pick semantics"); }
 
@@ -103,6 +103,8 @@ public:
 	bool IsPicked() const                           { return data.IsPicked(); }
 
 	InVector(const InVector& v, int);
+
+	void Swap(InVector& b);
 	
 	STL_VECTOR_COMPATIBILITY(InVector<T>)
 
@@ -113,12 +115,12 @@ public:
 
 template <class T>
 class InVector<T>::ConstIterator {
-	T        *ptr;
-	T        *begin;
-	T        *end;
-	InVector *v;
-	int       offset;
-	int       blki;
+	const T        *ptr;
+	const T        *begin;
+	const T        *end;
+	const InVector *v;
+	int             offset;
+	int             blki;
 
 	friend class InVector<T>;
 	friend class InVector<T>::Iterator;
@@ -173,8 +175,8 @@ public:
 
 	int  operator-(const Iterator& x) const        { return B::GetIndex() - x.GetIndex(); }
 
-	T& operator*()                                 { return *B::ptr; }
-	T *operator->()                                { return B::ptr; }
+	T& operator*()                                 { return *(T*)B::ptr; }
+	T *operator->()                                { return (T*)B::ptr; }
 	T& operator[](int i)                           { Iterator h = *this; h += i; return *h; }
 
 	const T& operator*() const                     { return *B::ptr; }
@@ -292,6 +294,8 @@ public:
 	InArray() {}
 	InArray(const InArray& v, int);
 	~InArray()                                      { Free(); }
+	
+	void Swap(InArray& b)                           { iv.Swap(b.iv); }
 	
 	STL_VECTOR_COMPATIBILITY(InArray<T>)
 
