@@ -20,6 +20,7 @@ void InVector<T>::Clear()
 	data.Clear();
 	index.Clear();
 	Reset();
+	ClearCache();
 }
 
 extern thread__ int64 invector_cache_serial_;
@@ -481,11 +482,15 @@ int InVector<T>::Find(const T& val, const L& less)
 template <class T>
 void InVector<T>::SetIter(ConstIterator& it, int ii)
 {
-	it.v = this;
-	it.blki = FindBlock(ii, it.offset);
-	it.begin = data[it.blki].Begin();
-	it.end = data[it.blki].End();
-	it.ptr = it.begin + ii;
+	if(count) {
+		it.v = this;
+		it.blki = FindBlock(ii, it.offset);
+		it.begin = data[it.blki].Begin();
+		it.end = data[it.blki].End();
+		it.ptr = it.begin + ii;
+	}
+	else
+		SetEnd(it);
 }
 
 template <class T>
@@ -576,3 +581,93 @@ void InVector<T>::DumpIndex()
 	DLOG(".");
 }
 #endif
+
+template <class T>
+void InArray<T>::Delete(IVIter it, int count)
+{
+	ASSERT(count >= 0);
+	while(count--)
+		delete (T *)*it++;
+}
+
+template <class T>
+void InArray<T>::Delete(int i, int count)
+{
+	Delete(iv.GetIter(i), count);
+}
+
+template <class T>
+void InArray<T>::Init(int i, int count)
+{
+	ASSERT(count >= 0);
+	IVIter it = iv.GetIter(i);
+	while(count--)
+		*it++ = new T;
+}
+
+template <class T>
+void InArray<T>::InsertN(int i, int count)
+{
+	iv.InsertN(i, count);
+	Init(i, count);
+}
+
+template <class T>
+void InArray<T>::Remove(int i, int count)
+{
+	Delete(i, count);
+	iv.Remove(i, count);
+}
+
+template <class T>
+void InArray<T>::SetCount(int n)
+{
+	if(n < GetCount())
+		Trim(n);
+	else
+		Insert(GetCount(), n - GetCount());
+}
+
+template <class T>
+void InArray<T>::Clear()
+{
+	Free();
+	iv.Clear();
+}
+
+template <class T>
+void InArray<T>::Set(int i, const T& x, int count)
+{
+	Iterator it = GetIter(i);
+	while(count-- > 0)
+		*it++ = x;
+}
+
+template <class T>
+void InArray<T>::SetIter(ConstIterator& it, int ii)
+{
+	it.it = iv.GetIter(ii);
+}
+
+template <class T>
+void InArray<T>::SetBegin(ConstIterator& it)
+{
+	it.it = iv.Begin();
+}
+
+template <class T>
+void InArray<T>::SetEnd(ConstIterator& it)
+{
+	it.it = iv.End();
+}
+
+template <class T>
+InArray<T>::InArray(const InArray& v, int)
+{
+	int n = v.GetCount();
+	iv.SetCount(v.GetCount());
+	ConstIterator s = v.Begin();
+	IVIter it = iv.Begin();
+	while(n--)
+		*it++ = new T(*s++);
+}
