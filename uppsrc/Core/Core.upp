@@ -84,6 +84,8 @@ file
 	Index.h,
 	Map.h,
 	Index.hpp,
+	InVector.h,
+	InVector.hpp,
 	Tuple.h,
 	Other.h,
 	Hash.cpp optimize_speed,
