@@ -2,7 +2,7 @@
 
 using namespace Upp;
 
-void Test(const char *text)
+void Test(const char *text, const char *fmt)
 {
 	Time tm;
 	const char *q = StrToTime(tm, text);
@@ -21,5 +21,7 @@ CONSOLE_APP_MAIN
 	Test("15.12.2005 12 foo!");
 	Test("15.12.2005 foo!");
 	Test("uck!");
+	
+	ASSERT(
 }
 
