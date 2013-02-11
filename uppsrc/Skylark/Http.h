@@ -90,9 +90,9 @@ class Http : public Renderer {
 	friend String GetIdentity(const Renderer *r);
 
 public:
-	Http&  operator()(const char *id, const char *v)   { var.Add(id, v); return *this; }
-	Http&  operator()(const char *id, const String& v) { var.Add(id, v); return *this; }
-	Http&  operator()(const char *id, const Value& v)  { var.Add(id, v); return *this; }
+	Http&  operator()(const char *id, const char *v)   { var.GetAdd(id) = v; return *this; }
+	Http&  operator()(const char *id, const String& v) { var.GetAdd(id) = v; return *this; }
+	Http&  operator()(const char *id, const Value& v)  { var.GetAdd(id) = v; return *this; }
 	Http&  operator()(const ValueMap& map)             { Renderer::operator()(map); return *this; }
 	Http&  operator()(const char *id, const HandlerId& handler) { Renderer::operator()(id, handler); return *this; }
 	Http&  operator()(const char *id, const HandlerId& handler, const Value& arg1) { Renderer::operator()(id, handler, arg1); return *this; }
