@@ -19,17 +19,11 @@ void Compare(C1& a, C2& b)
 	}
 }
 
-template <class T>
-void Check(const InVector<T>& iv)
-{
-	ASSERT(iv.GetCount() == 0 || iv.FindUpperBound(iv.Top()) == iv.GetCount());
-}
-
-void InVectorTest()
+void InArrayTest()
 {
 	SeedRandom();
 	Vector<int> q;
-	InVector<int> iv;
+	InArray<int> iv;
 	Compare(q, iv);
 	iv.Insert(0) = 0;
 	q.Insert(0) = 0;
@@ -42,11 +36,12 @@ void InVectorTest()
 		iv.Insert(i) = i;
 		q.Insert(i) = i;
 		Compare(q, iv);
+		ASSERT(iv.End() - iv.Begin() == iv.GetCount());
 	}
 
 	for(int i = 0; i < 100; i++) {
 		int n = Random(100) + 20;
-		InVector<int>::Iterator it2, it = iv.Begin();
+		InArray<int>::Iterator it2, it = iv.Begin();
 		it += n;
 		ASSERT(it - iv.Begin() == n);
 		it2 = it;
@@ -69,7 +64,7 @@ void InVectorTest()
 void TestUpperBound()
 {
 	{
-		InVector<int> v;
+		InArray<int> v;
 		for(int i = 0; i < 3000; i++) {
 			if(i % 1000 == 0)
 				LOG(i);
@@ -77,11 +72,10 @@ void TestUpperBound()
 			ASSERT(v.FindUpperBound(i) == i + 1);
 			for(int j = 0; j < i; j++)
 				ASSERT(v.FindUpperBound(j) == j + 1);
-			Check(v);
 		}
 	}
 	{
-		InVector<int> v;
+		InArray<int> v;
 		for(int i = 0; i < 3000; i++) {
 			if(i % 1000 == 0)
 				LOG(i);
@@ -90,7 +84,6 @@ void TestUpperBound()
 			ASSERT(v.FindUpperBound(i) == 7 * i + 7);
 			for(int j = 0; j < i; j++)
 				ASSERT(v.FindUpperBound(j) == 7 * j + 7);
-			Check(v);
 		}
 	}
 }
@@ -98,7 +91,7 @@ void TestUpperBound()
 void TestLowerBound()
 {
 	{
-		InVector<int> v;
+		InArray<int> v;
 		for(int i = 0; i < 3000; i++) {
 			if(i % 1000 == 0)
 				LOG(i);
@@ -106,11 +99,10 @@ void TestLowerBound()
 			ASSERT(v.FindLowerBound(i) == i);
 			for(int j = 0; j < i; j++)
 				ASSERT(v.FindLowerBound(j) == j);
-			Check(v);
 		}
 	}
 	{
-		InVector<int> v;
+		InArray<int> v;
 		for(int i = 0; i < 3000; i++) {
 			if(i % 1000 == 0)
 				LOG(i);
@@ -119,7 +111,6 @@ void TestLowerBound()
 			ASSERT(v.FindLowerBound(i) == 7 * i);
 			for(int j = 0; j < i; j++)
 				ASSERT(v.FindLowerBound(j) == 7 * j);
-			Check(v);
 		}
 	}
 }
@@ -129,14 +120,13 @@ void SetTest()
 	for(int j = 0; j < 100; j++) {
 		LOG(j);
 		Vector<int> va;
-		InVector<int> ia;
+		InArray<int> ia;
 		for(int i = 0; i < 1000; i++) {
 			int q = Random(100);
 			int ii = FindUpperBound(va, q);
 			va.Insert(ii) = q;
 			ia.InsertUpperBound(q);
 			Compare(va, ia);
-			Check(ia);
 			
 			ii = ia.Find(q);
 			ASSERT(ia[ii] == q);
@@ -149,7 +139,7 @@ void RemoveTest()
 {
 	SeedRandom();
 	Vector<int> q;
-	InVector<int> iv;
+	InArray<int> iv;
 	Compare(q, iv);
 	iv.Insert(0) = 0;
 	q.Insert(0) = 0;
@@ -178,7 +168,7 @@ void InsertNTest()
 {
 	SeedRandom();
 	Vector<int> av;
-	InVector<int> iv;
+	InArray<int> iv;
 	for(int i = 0; i < 100000; i++) {
 		if(i % 1000 == 0)
 			LOG(i);
@@ -204,10 +194,10 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_FILE|LOG_COUT);
 	SeedRandom();
 
+	RemoveTest();
+	InsertNTest();
 	SetTest();
 	TestLowerBound();
 	TestUpperBound();
-	RemoveTest();
-	InsertNTest();
-	InVectorTest();
+	InArrayTest();
 }
