@@ -398,7 +398,8 @@ struct PrinterDraw : PdfDraw {
 
 	PrinterDraw(Size sz) : PdfDraw(sz) {}
 	~PrinterDraw() {
-		System("lp " + options + " -", Finish());
+		if(!IsEmpty())
+			System("lp " + options + " -", Finish());
 	}
 };
 

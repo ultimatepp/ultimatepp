@@ -286,6 +286,7 @@ private:
 	int         margin;
 	uint64      patternid;
 	bool        pdfa;
+	bool        empty;
 
 	inline double Pt(double dot)        { return 0.12 * dot; }
 
@@ -335,6 +336,7 @@ private:
 public:
 	String Finish();
 	void   Clear();
+	bool   IsEmpty() const                                   { return empty; }
 
 	PdfDraw(int pagecx, int pagecy, bool pdfa = false)       { Init(pagecx, pagecy, 0, pdfa); }
 	PdfDraw(Size pgsz = Size(5100, 6600), bool pdfa = false) { Init(pgsz.cx, pgsz.cy, 0, pdfa); }

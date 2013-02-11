@@ -37,6 +37,7 @@ void  PdfDraw::Clear()
 	offset.Clear();
 	out << "%PDF-1.3\n";
 	out << "%\xf1\xf2\xf3\xf4\n\n";
+	empty = true;
 }
 
 int PdfDraw::BeginObj()
@@ -54,7 +55,7 @@ void PdfDraw::EndObj()
 void PdfDraw::PutRect(const Rect& rc)
 {
 	page << Pt(rc.left) << ' ' << Pt(pgsz.cy - rc.bottom) << ' '
-		<< Pt(rc.Width()) << ' ' << Pt(rc.Height()) << " re\n";
+		 << Pt(rc.Width()) << ' ' << Pt(rc.Height()) << " re\n";
 }
 
 int PdfDraw::PutStream(const String& data, const String& keys, bool compress)
@@ -128,6 +129,8 @@ void PdfDraw::EndPage()
 {
 	if(margin)
 		EndOp();
+	if(page.GetCount())
+		empty = false;
 	PutStream(page);
 	page.Clear();
 }
@@ -531,8 +534,10 @@ String GetGrayPdfImage(const Image& m, const Rect& sr)
 
 String PdfDraw::Finish()
 {
-	if(page.GetLength())
+	if(page.GetLength()) {
 		PutStream(page);
+		empty = false;
+	}
 
 	int pagecount = offset.GetCount();
 
