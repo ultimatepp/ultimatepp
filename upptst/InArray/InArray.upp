@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	InArray.cpp;
+
+mainconfig
+	"" = "SSE2 IVTEST";
+
