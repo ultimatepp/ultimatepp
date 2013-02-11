@@ -51,7 +51,7 @@ class PrinterJob {
 #endif
 #ifdef PLATFORM_X11
 	Size                pgsz;
-	Size                GetDefaultPageSize();
+	Size                GetDefaultPageSize(String *name = NULL);
 #endif
 	One<Draw>           draw;
 	Vector<int>         page;

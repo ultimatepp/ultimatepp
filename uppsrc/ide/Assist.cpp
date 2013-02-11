@@ -1244,4 +1244,3 @@ bool AssistEditor::Esc()
 	}
 	return r;
 }
-

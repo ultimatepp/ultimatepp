@@ -142,6 +142,53 @@ PrinterJob& PrinterJob::CurrentPage(int i)
 
 #ifdef PLATFORM_X11
 
+struct PageSizeName {
+	const char *name;
+	int   cx, cy;
+	
+	Size  GetDots() const { return Size(6000 * cx / 254, 6000 * cy / 254); }
+}
+static const PageName2Size[] = {
+	{ "A0", 841, 1189 },
+	{ "A1", 594, 841 },
+	{ "A2", 420, 594 },
+	{ "A3", 297, 420 },
+	{ "A4", 210, 297 },
+	{ "A5", 148, 210 },
+	{ "A6", 105, 148 },
+	{ "A7", 74, 105 },
+	{ "A8", 52, 74 },
+	{ "A9", 37, 52 },
+	{ "B0", 1030, 1456 },
+	{ "B1", 728, 1030 },
+	{ "B10", 32, 45 },
+	{ "B2", 515, 728 },
+	{ "B3", 364, 515 },
+	{ "B4", 257, 364 },
+	{ "B5", 182, 257 },
+	{ "B6", 128, 182 },
+	{ "B7", 91, 128 },
+	{ "B8", 64, 91 },
+	{ "B9", 45, 64 },
+	{ "C5E", 163, 229 },
+	{ "Comm10E", 105, 241 },
+	{ "DLE", 110, 220 },
+	{ "Executive", 191, 254 },
+	{ "Folio", 210, 330 },
+	{ "Ledger", 432, 279 },
+	{ "Legal", 216, 356 },
+	{ "Letter", 216, 279 },
+	{ "Tabloid", 279, 432 }
+};
+
+const PageSizeName *FindPageSize(const String& name)
+{
+	for(int i = 0; i < __countof(PageName2Size); i++)
+		if(PageName2Size[i].name == name)
+			return &PageName2Size[i];
+	return NULL;
+}
+
 String System(const char *cmd, const String& in)
 {
 	String ofn = GetTempFileName();
@@ -165,7 +212,7 @@ String System(const char *cmd)
 }
 
 struct PrinterDlg : WithPrinterLayout<TopWindow> {
-	void FillOpt(const String& s, const char *id, DropList& dl);
+	void FillOpt(const String& s, const char *id, DropList& dl, bool pgsz);
 	void SyncPrinterOptions();
 
 	typedef PrinterDlg CLASSNAME;
@@ -173,7 +220,7 @@ struct PrinterDlg : WithPrinterLayout<TopWindow> {
 	PrinterDlg();
 };
 
-void PrinterDlg::FillOpt(const String& s, const char *id, DropList& dl)
+void PrinterDlg::FillOpt(const String& s, const char *id, DropList& dl, bool pgsz)
 {
 	int a = s.Find('/');
 	int b = s.Find(':');
@@ -188,7 +235,8 @@ void PrinterDlg::FillOpt(const String& s, const char *id, DropList& dl)
 					o = o.Mid(1);
 					dl <<= o;
 				}
-				dl.Add(o);
+				if(!pgsz || FindPageSize(o))
+					dl.Add(o);
 			}
 		}
 	}
@@ -202,8 +250,8 @@ void PrinterDlg::SyncPrinterOptions()
 	slot.Disable();
 	slot.Clear();
 	for(int i = 0; i < l.GetCount(); i++) {
-		FillOpt(l[i], "pagesize", paper);
-		FillOpt(l[i], "inputslot", slot);
+		FillOpt(l[i], "pagesize", paper, true);
+		FillOpt(l[i], "inputslot", slot, false);
 	}
 }
 
@@ -243,46 +291,7 @@ PrinterDlg::PrinterDlg()
 	}
 }
 
-
-struct {
-	const char *name;
-	int   cx, cy;
-}
-static const PageName2Size[] = {
-	{ "A0", 841, 1189 },
-	{ "A1", 594, 841 },
-	{ "A2", 420, 594 },
-	{ "A3", 297, 420 },
-	{ "A4", 210, 297 },
-	{ "A5", 148, 210 },
-	{ "A6", 105, 148 },
-	{ "A7", 74, 105 },
-	{ "A8", 52, 74 },
-	{ "A9", 37, 52 },
-	{ "B0", 1030, 1456 },
-	{ "B1", 728, 1030 },
-	{ "B10", 32, 45 },
-	{ "B2", 515, 728 },
-	{ "B3", 364, 515 },
-	{ "B4", 257, 364 },
-	{ "B5", 182, 257 },
-	{ "B6", 128, 182 },
-	{ "B7", 91, 128 },
-	{ "B8", 64, 91 },
-	{ "B9", 45, 64 },
-	{ "C5E", 163, 229 },
-	{ "Comm10E", 105, 241 },
-	{ "DLE", 110, 220 },
-	{ "Executive", 191, 254 },
-	{ "Folio", 210, 330 },
-	{ "Ledger", 432, 279 },
-	{ "Legal", 216, 356 },
-	{ "Letter", 216, 279 },
-	{ "Tabloid", 279, 432 }
-};
-
-
-Size PrinterJob::GetDefaultPageSize()
+Size PrinterJob::GetDefaultPageSize(String *name)
 {
 	static const char PageSize[] = "Page Size:";
 	Size sz(6000 * 210 / 254, 6000 * 297 / 254);
@@ -303,13 +312,13 @@ Size PrinterJob::GetDefaultPageSize()
 			if (len < 0) len = dpp[i].GetLength();
 			len -= pos;
 			//page name
-			String pn = dpp[i].Mid(pos, len);
-			for (int p = 0; p < __countof(PageName2Size); p++){
-				if (pn == PageName2Size[p].name){
-					sz.cx = 6000 * PageName2Size[p].cx / 254;
-					sz.cy = 6000 * PageName2Size[p].cy / 254;
-					return sz;
-				}
+			String nm = dpp[i].Mid(pos, len);
+			if(name)
+				*name = nm;
+			const PageSizeName *p = FindPageSize(nm);
+			if(p) {
+				sz = p->GetDots();
+				return sz;
 			}
 		}
 	}
@@ -321,8 +330,8 @@ PrinterJob::PrinterJob(const char *_name)
 {
 	name = _name;
 	landscape = false;
-	from = to = 1;
-	current = 1;
+	from = to = 0;
+	current = 0;
 	pgsz = GetDefaultPageSize();
 }
 
@@ -337,6 +346,13 @@ bool PrinterJob::Execute0(bool dodlg)
 	dlg.to <<= to + 1;
 	dlg.from.Min(from + 1).Max(to + 1);
 	dlg.to.Min(from + 1).Max(to + 1);
+	dlg.from.Enable(from != to);
+	dlg.to.Enable(from != to);
+	dlg.range.EnableCase(1, from != to);
+	dlg.range.EnableCase(2, from != to);
+	String h;
+	GetDefaultPageSize(&h);
+	dlg.paper <<= h;
 	if(dodlg)
 		if(dlg.Run() != IDOK)
 			return false;
@@ -364,11 +380,11 @@ bool PrinterJob::Execute0(bool dodlg)
 		break;
 	}
 	pgsz = Size(5100, 6600);
-	for(int i = 0; i < __countof(PageName2Size); i++)
-		if((String)~dlg.paper == PageName2Size[i].name) {
-			pgsz.cx = 6000 * PageName2Size[i].cx / 254;
-			pgsz.cy = 6000 * PageName2Size[i].cy / 254;
-		}
+
+	const PageSizeName *p = FindPageSize(~dlg.paper);
+	if(p)
+		pgsz = p->GetDots();
+
 	return true;
 }
 
@@ -388,10 +404,13 @@ struct PrinterDraw : PdfDraw {
 
 Draw& PrinterJob::GetDraw()
 {
-	PrinterDraw *pd = new PrinterDraw(pgsz);
-	pd->options = options;
-	draw = pd;
-	return *pd;
+	if(!draw) {
+		Execute0(false);
+		PrinterDraw *pd = new PrinterDraw(pgsz);
+		pd->options = options;
+		draw = pd;
+	}
+	return *draw;
 }
 
 PrinterJob& PrinterJob::MinMaxPage(int minpage, int maxpage)
