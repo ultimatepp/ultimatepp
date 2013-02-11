@@ -109,6 +109,8 @@ public:
 	InVector(const InVector& v, int);
 
 	void Swap(InVector& b);
+
+	friend void Swap(InVector& a, InVector& b)      { a.Swap(b); }
 	
 	STL_VECTOR_COMPATIBILITY(InVector<T>)
 
@@ -301,6 +303,8 @@ public:
 	
 	void Swap(InArray& b)                           { iv.Swap(b.iv); }
 	
+	friend void Swap(InArray& a, InArray& b)        { a.Swap(b); }
+	
 	STL_VECTOR_COMPATIBILITY(InArray<T>)
 
 #ifdef _DEBUG
@@ -370,6 +374,62 @@ public:
 	const T& operator*() const                     { return *(T *)*B::it; }
 	const T *operator->() const                    { return (T *)*B::it; }
 	const T& operator[](int i) const               { Iterator h = *this; h += i; return *h; }
+};
+
+template <class T, class Less = StdLess<T> >
+class SortedIndex : MoveableAndDeepCopyOption< SortedIndex<T, Less> >{
+	InVector<T> iv;
+	Less less;
+
+public:
+	int           Add(const T& x)                  { return iv.InsertUpperBound(x, less); }
+	int           FindAdd(const T& key);
+	SortedIndex&  operator<<(const T& x)           { Add(x); return *this; }
+	
+	int           FindLowerBound(const T& x) const { return iv.FindLowerBound(x, less); }
+	int           FindUpperBound(const T& x) const { return iv.FindUpperBound(x, less); }
+
+	int           Find(const T& x) const           { return iv.Find(x, less); }
+	int           FindNext(int i) const;
+	int           FindLast(const T& x) const;
+	int           FindPrev(int i) const;
+
+	void          Remove(int i)                    { iv.Remove(i); }
+	void          Remove(int i, int count)         { iv.Remove(i, count); }
+	int           RemoveKey(const T& x);
+
+	const T&      operator[](int i) const          { return iv[i]; }
+	int           GetCount() const                 { return iv.GetCount(); }
+	bool          IsEmpty() const                  { return iv.IsEmpty(); }
+	void          Clear()                          { iv.Clear(); }
+
+	void          Trim(int n)                      { return iv.Trim(n); }
+	void          Drop(int n = 1)                  { iv.Drop(n); }
+	const T&      Top() const                      { return iv.Top(); }
+
+	void          Shrink()                         { iv.Shrink(); }
+	
+	typedef typename InVector<T>::Iterator      Iterator;
+	typedef typename InVector<T>::ConstIterator ConstIterator;
+	
+	typedef T        ValueType;
+
+	ConstIterator    Begin() const                  { return iv.Begin(); }
+	ConstIterator    End() const                    { return iv.End(); }
+	ConstIterator    GetIter(int pos) const         { return iv.GetIter(pos); }
+
+	Iterator         Begin()                        { return iv.Begin(); }
+	Iterator         End()                          { return iv.End(); }
+	Iterator         GetIter(int pos)               { return iv.GetIter(pos); }
+
+	SortedIndex()                                        {}
+	SortedIndex(const SortedIndex& s, int) : iv(s.iv, 1) {}
+
+	void Swap(SortedIndex& a)                       { iv.Swap(a.iv); }
+
+	friend void Swap(SortedIndex& a, SortedIndex& b){ a.Swap(b); }
+
+	STL_VECTOR_COMPATIBILITY(SortedIndex<T _cm_ Less>)
 };
 
 #define LLOG(x)   // DLOG(x)
