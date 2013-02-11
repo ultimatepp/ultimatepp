@@ -7,9 +7,22 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_FILE|LOG_COUT);
 //	SeedRandom();
 
+	SortedIndex<int> si0;
+	for(int i = 0; i < 10000; i++) {
+		int v = Random(100);
+		int q = si0.FindAdd(v);
+		ASSERT(si0[q] == v);
+	}
+	for(int i = 0; i < 100; i++) {
+		int q = si0.FindAdd(i);
+	}
+	ASSERT(si0.GetCount() == 100);
+	for(int i = 0; i < 100; i++)
+		ASSERT(si0[i] == i);
+	LOG("FindAdd passed");
 	SortedIndex<int> si;
 	int count = 0;
-	for(int i = 0; i < 100000000; i++) {
+	for(int i = 0; i < 1000000; i++) {
 		if(i % 1000 == 0)
 			LOG(i);
 		if(si.GetCount() > 1000 && Random(1000) == 0) {
