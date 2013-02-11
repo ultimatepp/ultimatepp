@@ -217,7 +217,8 @@ ReportWindow::ReportWindow()
 String Pdf(Report& report, bool pdfa)
 {
 	return GetDrawingToPdfFn() && report.GetCount() ?
-	      (*GetDrawingToPdfFn())(report.GetPages(), report.GetPage(0).GetSize(), 200, pdfa)
+	      (*GetDrawingToPdfFn())(report.GetPages(), report.GetPage(0).GetSize(),
+	                             Nvl(report.GetMargins().x, 200), pdfa)
 	      : String();
 }
 
