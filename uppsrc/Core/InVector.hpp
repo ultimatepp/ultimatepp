@@ -725,9 +725,9 @@ template <class T, class Less>
 int SortedIndex<T, Less>::FindAdd(const T& key)
 {
 	int i = FindLowerBound(key);
-	if(!less(key, iv[i]))
-		return i;
-	return Add(key);
+	if(i == GetCount() || less(key, iv[i]))
+		iv.Insert(i, key);
+	return i;
 }
 
 template <class T, class Less>

@@ -377,7 +377,7 @@ public:
 };
 
 template <class T, class Less = StdLess<T> >
-class SortedIndex : MoveableAndDeepCopyOption< SortedIndex<T, Less> >{
+class SortedIndex : MoveableAndDeepCopyOption< SortedIndex<T, Less> > {
 	InVector<T> iv;
 	Less less;
 
@@ -409,7 +409,6 @@ public:
 
 	void          Shrink()                         { iv.Shrink(); }
 	
-	typedef typename InVector<T>::Iterator      Iterator;
 	typedef typename InVector<T>::ConstIterator ConstIterator;
 	
 	typedef T        ValueType;
@@ -418,10 +417,6 @@ public:
 	ConstIterator    End() const                    { return iv.End(); }
 	ConstIterator    GetIter(int pos) const         { return iv.GetIter(pos); }
 
-	Iterator         Begin()                        { return iv.Begin(); }
-	Iterator         End()                          { return iv.End(); }
-	Iterator         GetIter(int pos)               { return iv.GetIter(pos); }
-
 	SortedIndex()                                        {}
 	SortedIndex(const SortedIndex& s, int) : iv(s.iv, 1) {}
 
@@ -429,7 +424,7 @@ public:
 
 	friend void Swap(SortedIndex& a, SortedIndex& b){ a.Swap(b); }
 
-	STL_VECTOR_COMPATIBILITY(SortedIndex<T _cm_ Less>)
+	STL_SINDEX_COMPATIBILITY(SortedIndex<T _cm_ Less>)
 };
 
 #define LLOG(x)   // DLOG(x)

@@ -426,6 +426,18 @@ template <class T> inline const T& ntl_max(const T& a, const T& b) { return a > 
 	size_type             size()                 { return B::GetCount(); } \
 	bool                  empty() const          { return B::IsEmpty(); } \
 
+#define STL_SINDEX_COMPATIBILITY(C) \
+	typedef T             value_type; \
+	typedef ConstIterator const_iterator; \
+	typedef const T&      const_reference; \
+	typedef int           size_type; \
+	typedef int           difference_type; \
+	const_iterator        begin() const          { return Begin(); } \
+	const_iterator        end() const            { return End(); } \
+	void                  clear()                { Clear(); } \
+	size_type             size()                 { return GetCount(); } \
+	bool                  empty() const          { return IsEmpty(); } \
+
 #define STL_BI_COMPATIBILITY(C) \
 	typedef T             value_type; \
 	typedef ConstIterator const_iterator; \
