@@ -16,15 +16,15 @@ LAYOUT(ConfigLayout, 724, 214)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
 END_LAYOUT
 
-LAYOUT(BaseSetupLayout, 420, 112)
+LAYOUT(BaseSetupLayout, 608, 112)
 	ITEM(Label, dv___0, SetLabel(t_("&Package nests:")).LeftPosZ(4, 88).TopPosZ(4, 19))
-	ITEM(EditString, upp, LeftPosZ(96, 316).TopPosZ(4, 19))
+	ITEM(EditString, upp, LeftPosZ(96, 508).TopPosZ(4, 19))
 	ITEM(Label, dv___2, SetLabel(t_("&Output directory:")).LeftPosZ(4, 88).TopPosZ(28, 19))
-	ITEM(EditString, output, LeftPosZ(96, 316).TopPosZ(28, 19))
+	ITEM(EditString, output, LeftPosZ(96, 508).TopPosZ(28, 19))
 	ITEM(Label, dv___4, SetLabel(t_("&Assembly name:")).LeftPosZ(4, 84).TopPosZ(52, 19))
 	ITEM(EditString, base, NotNull(true).LeftPosZ(96, 136).TopPosZ(52, 19))
-	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(272, 64).TopPosZ(80, 24))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(348, 64).TopPosZ(80, 24))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(460, 64).TopPosZ(80, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(536, 64).TopPosZ(80, 24))
 END_LAYOUT
 
 LAYOUT(ConfLayout, 344, 416)
