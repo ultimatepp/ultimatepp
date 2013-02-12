@@ -1,8 +1,14 @@
+template <class K, class T, class Less = StdLess<K> >
+class SortedVectorMap;
+
+
 template <class T>
 class InVector : public MoveableAndDeepCopyOption< InVector<T> > {
 public:
 	class ConstIterator;
 	class Iterator;
+
+	template <class K, class V, class L> friend class SortedVectorMap;
 
 private:	
 	Vector< Vector<T> > data;
@@ -229,6 +235,8 @@ private:
 		ALess(const L& less) : less(less) {}
 	};
 
+	template <class K, class V, class L> friend class SortedVectorMap;
+
 public:
 	T&       Insert(int i, T *newt)                 { iv.Insert(i, newt); return *newt; }
 	T&       Insert(int i)                          { return Insert(i, new T); }
@@ -380,6 +388,8 @@ template <class T, class Less = StdLess<T> >
 class SortedIndex : MoveableAndDeepCopyOption< SortedIndex<T, Less> > {
 	InVector<T> iv;
 	Less less;
+	
+	template <class K, class V, class L> friend class SortedVectorMap;
 
 public:
 	int           Add(const T& x)                  { return iv.InsertUpperBound(x, less); }
