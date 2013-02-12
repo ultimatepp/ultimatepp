@@ -318,8 +318,8 @@ void Vector<T>::InsertSplit(int i, Vector<T>& v, int from)
 	if(n) {
 		RawInsert(i, n);
 		memcpy(vector + i, v.vector + from, sizeof(T) * n);
+		v.items = from;
 	}
-	v.Trim(from);
 }
 
 template <class T>
