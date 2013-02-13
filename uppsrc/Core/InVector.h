@@ -1,6 +1,15 @@
 template <class K, class T, class Less = StdLess<K> >
 class SortedVectorMap;
 
+struct InVectorSlave__ {
+	virtual void Clear() = 0;
+	virtual void Split(int blki, int nextsize) = 0;
+	virtual void AddFirst() = 0;
+	virtual void Insert(int blki, int pos) = 0;
+	virtual void Join(int blki) = 0;
+	virtual void Remove(int blki, int pos, int n) = 0;
+	virtual void RemoveBlk(int blki, int n) = 0;
+};
 
 template <class T>
 class InVector : public MoveableAndDeepCopyOption< InVector<T> > {
@@ -10,14 +19,17 @@ public:
 
 	template <class K, class V, class L> friend class SortedVectorMap;
 
-private:	
+private:
 	Vector< Vector<T> > data;
 	Vector< Vector<int> > index;
-	int   count;
-	int   hcount;
-	int64 serial;
-	int   blk_high;
-	int   blk_low;
+
+	int    count;
+	int    hcount;
+	int64  serial;
+	int    blk_high;
+	int    blk_low;
+
+	InVectorSlave__ *slave;
 
 	void SetCache(int blki, int offset) const;
 	void ClearCache() const;
