@@ -17,6 +17,8 @@ void InVector<T>::Reset()
 template <class T>
 void InVector<T>::Clear()
 {
+	if(slave)
+		slave->Clear();
 	data.Clear();
 	index.Clear();
 	Reset();
@@ -183,6 +185,8 @@ template <class T>
 T *InVector<T>::Insert0(int ii, int blki, int pos, int off, const T *val)
 {
 	if(data[blki].GetCount() > blk_high) {
+		if(slave)
+			slave->Split(blki, data[blki].GetCount() / 2);
 		Vector<T>& x = data.Insert(blki + 1);
 		x.InsertSplit(0, data[blki], data[blki].GetCount() / 2);
 		Reindex();
@@ -194,6 +198,8 @@ T *InVector<T>::Insert0(int ii, int blki, int pos, int off, const T *val)
 	int q = blki;
 	for(int i = 0; i < index.GetCount(); i++)
 		index[i].At(q >>= 1, 0)++;
+	if(slave)
+		slave->Insert(blki, pos);
 	if(val)
 		data[blki].Insert(pos, *val);
 	else
@@ -203,42 +209,19 @@ T *InVector<T>::Insert0(int ii, int blki, int pos, int off, const T *val)
 }
 
 template <class T>
-force_inline bool InVector<T>::JoinSmall(int blki)
-{
-	if(blki < data.GetCount()) {
-		int n = data[blki].GetCount();
-		if(n == 0) {
-			data.Remove(blki);
-			return true;
-		}
-		if(n < blk_low) {
-			if(blki > 0 && data[blki - 1].GetCount() + n <= blk_high) {
-				data[blki - 1].AppendPick(data[blki]);
-				data.Remove(blki);
-				return true;
-			}
-			if(blki + 1 < data.GetCount() && n + data[blki + 1].GetCount() <= blk_high) {
-				data[blki].AppendPick(data[blki + 1]);
-				data.Remove(blki + 1);
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
-template <class T>
 T *InVector<T>::Insert0(int ii, const T *val)
 {
 	ASSERT(ii >= 0 && ii <= GetCount());
 	if(data.GetCount() == 0) {
 		count++;
 		ClearCache();
+		if(slave)
+			slave->AddFirst();
 		if(val) {
 			data.Add().Add(*val);
 			return &data[0][0];
 		}
-		return &data.Add().Insert(0);
+		return &data.Add().Add(0);
 	}
 	int pos = ii;
 	int off;
@@ -249,7 +232,7 @@ T *InVector<T>::Insert0(int ii, const T *val)
 template <class T>
 void InVector<T>::InsertN(int ii, int n)
 {
-	ASSERT(ii >= 0 && ii <= GetCount() && n >= 0);
+	ASSERT(ii >= 0 && ii <= GetCount() && n >= 0 && !slave);
 
 	if(n == 0)
 		return;
@@ -311,6 +294,37 @@ void InVector<T>::InsertN(int ii, int n)
 }
 
 template <class T>
+force_inline bool InVector<T>::JoinSmall(int blki)
+{
+	if(blki < data.GetCount()) {
+		int n = data[blki].GetCount();
+		if(n == 0) {
+			if(slave)
+				slave->RemoveBlk(blki, 1);
+			data.Remove(blki);
+			return true;
+		}
+		if(n < blk_low) {
+			if(blki > 0 && data[blki - 1].GetCount() + n <= blk_high) {
+				if(slave)
+					slave->Join(blki - 1);
+				data[blki - 1].AppendPick(data[blki]);
+				data.Remove(blki);
+				return true;
+			}
+			if(blki + 1 < data.GetCount() && n + data[blki + 1].GetCount() <= blk_high) {
+				if(slave)
+					slave->Join(blki);
+				data[blki].AppendPick(data[blki + 1]);
+				data.Remove(blki + 1);
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+template <class T>
 void InVector<T>::Remove(int pos, int n)
 {
 	ASSERT(pos >= 0 && pos + n <= GetCount());
@@ -318,6 +332,8 @@ void InVector<T>::Remove(int pos, int n)
 	int blki = FindBlock(pos, off);
 	count -= n;
 	if(pos + n < data[blki].GetCount()) {
+		if(slave)
+			slave->Remove(blki, pos, n);
 		data[blki].Remove(pos, n);
 		if(JoinSmall(blki))
 			Reindex();
@@ -331,6 +347,8 @@ void InVector<T>::Remove(int pos, int n)
 	else {
 		int b1 = blki;
 		int nn = min(n, data[b1].GetCount() - pos);
+		if(slave)
+			slave->Remove(b1, pos, nn);
 		data[b1++].Remove(pos, nn);
 		n -= nn;
 		int b2 = b1;
@@ -338,9 +356,14 @@ void InVector<T>::Remove(int pos, int n)
 			n -= min(n, data[b2].GetCount());
 			b2++;
 		}
+		if(slave)
+			slave->RemoveBlk(b1, b2 - b1);
 		data.Remove(b1, b2 - b1);
-		if(b1 < data.GetCount())
+		if(b1 < data.GetCount()) {
+			if(slave)
+				slave->Remove(b1, 0, n);
 			data[b1].Remove(0, n);
+		}
 		JoinSmall(blki + 1);
 		JoinSmall(blki);
 		Reindex();
@@ -481,6 +504,8 @@ int InVector<T>::InsertUpperBound(const T& val, const L& less)
 	if(data.GetCount() == 0) {
 		count++;
 		ClearCache();
+		if(slave)
+			slave->AddFirst();
 		data.Add().Insert(0) = val;
 		return 0;
 	}
