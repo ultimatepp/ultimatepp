@@ -1,9 +1,7 @@
 template <class I>
 inline void IterSwap(I a, I b) { if(a != b) Swap(*a, *b); }
 
-class EmptyClass
-{
-};
+struct EmptyClass {};
 
 template <class T, class B = EmptyClass>
 class RelOps : public B
@@ -239,8 +237,16 @@ public:
 	{ return ::new T(src, 0); }
 };
 
-template <class T, class B = EmptyClass>
-class MoveableAndDeepCopyOption : public Moveable< T, DeepCopyOption<T, B> > {};
+template <class T>
+class MoveableAndDeepCopyOption {
+	friend void AssertMoveable0(T *) {}
+	friend T& operator<<=(T& dest, const T& src)
+	{ if(&dest != &src) { (&dest)->T::~T(); ::new(&dest) T(src, 1); } return dest; }
+	friend T& DeepCopyConstruct(void *dest, const T& src)
+	{ return *(::new (dest) T(src, 0)); }
+	friend T *DeepCopyNew(const T& src)
+	{ return ::new T(src, 0); }
+};
 
 template <class T, class B = EmptyClass>
 class PolyDeepCopyNew : public B

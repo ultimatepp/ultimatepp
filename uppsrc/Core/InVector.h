@@ -1,14 +1,20 @@
-template <class K, class T, class Less = StdLess<K> >
-class SortedVectorMap;
+template <class K, class T, class Less, class Data>
+class SortedAMap;
+
+template <class T> struct Slaved_InVector__;
+template <class T> struct Slaved_InArray__;
 
 struct InVectorSlave__ {
 	virtual void Clear() = 0;
+	virtual void Count(int n) = 0;
 	virtual void Split(int blki, int nextsize) = 0;
 	virtual void AddFirst() = 0;
 	virtual void Insert(int blki, int pos) = 0;
 	virtual void Join(int blki) = 0;
 	virtual void Remove(int blki, int pos, int n) = 0;
 	virtual void RemoveBlk(int blki, int n) = 0;
+	virtual void Index(int blki, int n) = 0;
+	virtual void Reindex() = 0;
 };
 
 template <class T>
@@ -17,7 +23,9 @@ public:
 	class ConstIterator;
 	class Iterator;
 
-	template <class K, class V, class L> friend class SortedVectorMap;
+	template <class K, class TT, class Less, class Data> friend class SortedAMap;
+	template <class TT> friend struct Slaved_InVector__;
+	template <class TT> friend struct Slaved_InArray__;
 
 private:
 	Vector< Vector<T> > data;
@@ -36,7 +44,6 @@ private:
 	int  FindBlock0(int& pos, int& off) const;
 	int  FindBlock(int& pos, int& off) const;
 	int  FindBlock(int& pos) const;
-	void Reindex();
 	void SetBlkPar();
 
 	template <class L>
@@ -44,6 +51,11 @@ private:
 
 	template <class L>
 	int  FindLowerBound(const T& val, const L& less, int& off, int& pos) const;
+
+	void Reindex();
+	void Index(int q, int n);
+	void Count(int n)                               { count += n; }
+	void Join(int blki);
 
 	bool JoinSmall(int blki);
 	T   *Insert0(int ii, int blki, int pos, int off, const T *val);
@@ -210,6 +222,9 @@ public:
 
 template <class T>
 class InArray : public MoveableAndDeepCopyOption< InVector<T> > {
+	template <class K, class TT, class Less, class Data> friend class SortedAMap;
+	template <class TT> friend struct Slaved_InArray__;
+
 public:
 	class ConstIterator;
 	class Iterator;
@@ -399,19 +414,18 @@ public:
 template <class T, class Less = StdLess<T> >
 class SortedIndex : MoveableAndDeepCopyOption< SortedIndex<T, Less> > {
 	InVector<T> iv;
-	Less less;
 	
-	template <class K, class V, class L> friend class SortedVectorMap;
+	template <class K, class TT, class Lss, class Data> friend class SortedAMap;
 
 public:
-	int           Add(const T& x)                  { return iv.InsertUpperBound(x, less); }
+	int           Add(const T& x)                  { return iv.InsertUpperBound(x, Less()); }
 	int           FindAdd(const T& key);
 	SortedIndex&  operator<<(const T& x)           { Add(x); return *this; }
 	
-	int           FindLowerBound(const T& x) const { return iv.FindLowerBound(x, less); }
-	int           FindUpperBound(const T& x) const { return iv.FindUpperBound(x, less); }
+	int           FindLowerBound(const T& x) const { return iv.FindLowerBound(x, Less()); }
+	int           FindUpperBound(const T& x) const { return iv.FindUpperBound(x, Less()); }
 
-	int           Find(const T& x) const           { return iv.Find(x, less); }
+	int           Find(const T& x) const           { return iv.Find(x, Less()); }
 	int           FindNext(int i) const;
 	int           FindLast(const T& x) const;
 	int           FindPrev(int i) const;

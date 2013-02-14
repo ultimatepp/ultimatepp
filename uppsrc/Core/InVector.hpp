@@ -11,6 +11,7 @@ template <class T>
 void InVector<T>::Reset()
 {
 	hcount = count = 0;
+	slave = NULL;
 	SetBlkPar();
 }
 
@@ -129,6 +130,8 @@ void InVector<T>::Reindex()
 	ClearCache();
 	SetBlkPar();
 	index.Clear();
+	if(slave)
+		slave->Reindex();
 	hcount = 0;
 	Vector<T> *ds = data.Begin();
 	Vector<T> *dend = data.End();
@@ -182,6 +185,13 @@ void InVector<T>::SetBlkPar()
 }
 
 template <class T>
+void InVector<T>::Index(int q, int n)
+{
+	for(int i = 0; i < index.GetCount(); i++)
+		index[i].At(q >>= 1, 0) += n;
+}
+
+template <class T>
 T *InVector<T>::Insert0(int ii, int blki, int pos, int off, const T *val)
 {
 	if(data[blki].GetCount() > blk_high) {
@@ -195,11 +205,12 @@ T *InVector<T>::Insert0(int ii, int blki, int pos, int off, const T *val)
 	}
 	LLOG("blki: " << blki << ", pos: " << pos);
 	count++;
-	int q = blki;
-	for(int i = 0; i < index.GetCount(); i++)
-		index[i].At(q >>= 1, 0)++;
-	if(slave)
+	if(slave) {
+		slave->Count(1);
+		slave->Index(blki, 1);
 		slave->Insert(blki, pos);
+	}
+	Index(blki, 1);
 	if(val)
 		data[blki].Insert(pos, *val);
 	else
@@ -215,8 +226,10 @@ T *InVector<T>::Insert0(int ii, const T *val)
 	if(data.GetCount() == 0) {
 		count++;
 		ClearCache();
-		if(slave)
+		if(slave) {
+			slave->Count(1);
 			slave->AddFirst();
+		}
 		if(val) {
 			data.Add().Add(*val);
 			return &data[0][0];
@@ -253,9 +266,7 @@ void InVector<T>::InsertN(int ii, int n)
 
 	if(bc + n < blk_high) {
 		data[blki].InsertN(pos, n);
-		int q = blki;
-		for(int i = 0; i < index.GetCount(); i++)
-			index[i].At(q >>= 1, 0) += n;
+		Index(blki, n);
 		SetCache(blki, off);
 	}
 	else
@@ -294,6 +305,13 @@ void InVector<T>::InsertN(int ii, int n)
 }
 
 template <class T>
+void InVector<T>::Join(int blki)
+{
+	data[blki].AppendPick(data[blki + 1]);
+	data.Remove(blki + 1);
+}
+
+template <class T>
 force_inline bool InVector<T>::JoinSmall(int blki)
 {
 	if(blki < data.GetCount()) {
@@ -308,15 +326,13 @@ force_inline bool InVector<T>::JoinSmall(int blki)
 			if(blki > 0 && data[blki - 1].GetCount() + n <= blk_high) {
 				if(slave)
 					slave->Join(blki - 1);
-				data[blki - 1].AppendPick(data[blki]);
-				data.Remove(blki);
+				Join(blki - 1);
 				return true;
 			}
 			if(blki + 1 < data.GetCount() && n + data[blki + 1].GetCount() <= blk_high) {
 				if(slave)
 					slave->Join(blki);
-				data[blki].AppendPick(data[blki + 1]);
-				data.Remove(blki + 1);
+				Join(blki);
 				return true;
 			}
 		}
@@ -331,6 +347,8 @@ void InVector<T>::Remove(int pos, int n)
 	int off;
 	int blki = FindBlock(pos, off);
 	count -= n;
+	if(slave)
+		slave->Count(-n);
 	if(pos + n < data[blki].GetCount()) {
 		if(slave)
 			slave->Remove(blki, pos, n);
@@ -338,9 +356,9 @@ void InVector<T>::Remove(int pos, int n)
 		if(JoinSmall(blki))
 			Reindex();
 		else {
-			int q = blki;
-			for(int i = 0; i < index.GetCount(); i++)
-				index[i].At(q >>= 1, 0) -= n;
+			if(slave)
+				slave->Index(blki, -n);
+			Index(blki, -n);
 			SetCache(blki, off);
 		}
 	}
@@ -504,8 +522,10 @@ int InVector<T>::InsertUpperBound(const T& val, const L& less)
 	if(data.GetCount() == 0) {
 		count++;
 		ClearCache();
-		if(slave)
+		if(slave) {
+			slave->Count(1);
 			slave->AddFirst();
+		}
 		data.Add().Insert(0) = val;
 		return 0;
 	}
@@ -750,7 +770,7 @@ template <class T, class Less>
 int SortedIndex<T, Less>::FindAdd(const T& key)
 {
 	int i = FindLowerBound(key);
-	if(i == GetCount() || less(key, iv[i]))
+	if(i == GetCount() || Less()(key, iv[i]))
 		iv.Insert(i, key);
 	return i;
 }
@@ -758,20 +778,20 @@ int SortedIndex<T, Less>::FindAdd(const T& key)
 template <class T, class Less>
 int SortedIndex<T, Less>::FindNext(int i) const
 {
-	return i + 1 < iv.GetCount() && !less(iv[i], iv[i + 1]) ? i + 1 : -1;
+	return i + 1 < iv.GetCount() && !Less()(iv[i], iv[i + 1]) ? i + 1 : -1;
 }
 
 template <class T, class Less>
 int SortedIndex<T, Less>::FindLast(const T& x) const
 {
-	int i = iv.FindUpperBound(x, less);
-	return i > 0 && !less(iv[i - 1], x) ? i - 1 : -1;
+	int i = iv.FindUpperBound(x, Less());
+	return i > 0 && !Less()(iv[i - 1], x) ? i - 1 : -1;
 }
 
 template <class T, class Less>
 int SortedIndex<T, Less>::FindPrev(int i) const
 {
-	return i > 0 && !less(iv[i - 1], iv[i]) ? i - 1 : -1;
+	return i > 0 && !Less()(iv[i - 1], iv[i]) ? i - 1 : -1;
 }
 
 template <class T, class Less>

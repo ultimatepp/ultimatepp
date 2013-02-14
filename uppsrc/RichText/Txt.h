@@ -92,7 +92,7 @@ protected:
 		Para() { length = 0; Invalidate(); numbering = -1; checked = false; haspos = false; }
 	};
 
-	struct Part : MoveableAndDeepCopyOption< Part, Any> {
+	struct Part : MoveableAndDeepCopyOption<Part>, Any {
 		Part(const Part& src, int);
 		Part();
 	};
