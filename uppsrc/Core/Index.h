@@ -101,7 +101,7 @@ protected:
 	void     Hash();
 
 public:
-	HashFn   hashfn;
+	unsigned hashfn(const T& x) const             { return HashFn()(x); }
 
 	T&       Add(const T& x, unsigned _hash);
 	T&       Add(const T& x);
