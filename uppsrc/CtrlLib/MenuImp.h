@@ -5,8 +5,7 @@
 
 NAMESPACE_UPP
 
-class MenuItemBase : public Ctrl, public Bar::Item
-{
+class MenuItemBase : public Ctrl, public Bar::Item {
 public:
 	virtual Bar::Item& Text(const char *text);
 	virtual Bar::Item& Key(dword key);
@@ -22,6 +21,8 @@ public:
 	virtual String GetDesc() const;
 	virtual dword  GetAccessKeys() const;
 	virtual void   AssignAccessKeys(dword used);
+
+	using   Ctrl::Key;
 
 protected:
 	enum {
@@ -86,6 +87,7 @@ private:
 
 	void  SendHelpLine();
 	void  ClearHelpLine();
+	using MenuItemBase::Key;
 
 protected:
 	virtual int  GetVisualState();
@@ -151,6 +153,7 @@ public:
 
 private:
 	int  GetState();
+	using MenuItemBase::Key;
 
 public:
 	TopSubMenuItem() { NoInitFocus(); }
@@ -173,6 +176,7 @@ public:
 
 private:
 	int  GetState();
+	using MenuItemBase::Key;
 
 public:
 	TopMenuItem() { NoInitFocus(); }

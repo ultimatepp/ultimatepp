@@ -343,7 +343,7 @@ public:
 	static void Execute(Callback1<Bar&> proc, Point p) { Execute(GetActiveCtrl(), proc, p); }
 	static void Execute(Callback1<Bar&> proc)          { Execute(proc, GetMousePos()); }
 
-	bool     IsEmpty()                              { return item.IsEmpty(); }
+	bool     IsEmpty() const                         { return item.IsEmpty(); }
 	void     Clear();
 
 	static const Style& StyleDefault();
@@ -364,6 +364,8 @@ public:
 };
 
 class ToolButton : public Ctrl, public Bar::Item {
+	using Ctrl::Key;
+
 public:
 	virtual void   Paint(Draw& w);
 	virtual void   MouseEnter(Point, dword);

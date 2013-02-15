@@ -76,7 +76,7 @@ struct IconDesModule : public IdeModule {
 			delete d;
 			return NULL;
 		}
-		return false;
+		return NULL;
 	}
 	virtual void Serialize(Stream& s) {
 		int version = 0;

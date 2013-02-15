@@ -621,6 +621,8 @@ private:
 	friend class StyleKeysDlg;
 	friend class StyleManager;
 
+	using Ctrl::Accept;
+
 protected:
 	enum {
 		TIMEID_ENDSIZETRACKING = Ctrl::TIMEID_COUNT,

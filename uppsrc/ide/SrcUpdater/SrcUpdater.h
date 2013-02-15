@@ -100,7 +100,7 @@ public:
 		String desc;
 		Color c;
 		Font f;
-		void operator()(int fa,const String& description,const struct Color& color,bool italic){
+		void operator()(int fa,const String& description,const class Color& color,bool italic){
 			n=fa;
 			desc=description;
 			c=color;

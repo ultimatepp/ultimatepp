@@ -40,7 +40,7 @@ const char *AfterHeading(const char *txt, const char *heading)
 {
 	while(*heading)
 		if(*txt++ != *heading++)
-			return false;
+			return NULL;
 	return txt;
 }
 

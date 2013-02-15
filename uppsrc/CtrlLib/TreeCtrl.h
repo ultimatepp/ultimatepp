@@ -155,6 +155,8 @@ private:
 	void   SyncInfo();
 	void   SyncAfterSync(Ptr<Ctrl> restorefocus);
 
+	using Ctrl::Close;
+
 protected:
 	virtual void SetOption(int id);
 	void         SyncTree();
@@ -297,8 +299,6 @@ public:
 	void         CenterCursor();
 
 	Size         GetTreeSize() const         { return treesize; }
-
-	void   Dump();
 
 	TreeCtrl& NoCursor(bool b = true)        { nocursor = b; if(b) KillCursor(); return *this; }
 	TreeCtrl& NoRoot(bool b = true)          { noroot = b; Dirty(); Refresh(); return *this; }
