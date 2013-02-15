@@ -42,6 +42,10 @@ TOPIC("GettingStarted$en-us")
 #include "GettingStarted$en-us.tppi"
 END_TOPIC
 
+TOPIC("GettingStarted$ru-ru")
+#include "GettingStarted$ru-ru.tppi"
+END_TOPIC
+
 TOPIC("IconDes$en-us")
 #include "IconDes$en-us.tppi"
 END_TOPIC
@@ -66,6 +70,10 @@ TOPIC("PackagesAssembliesAndNests$en-us")
 #include "PackagesAssembliesAndNests$en-us.tppi"
 END_TOPIC
 
+TOPIC("PackagesAssembliesAndNests$ru-ru")
+#include "PackagesAssembliesAndNests$ru-ru.tppi"
+END_TOPIC
+
 TOPIC("Sponsor$en-us")
 #include "Sponsor$en-us.tppi"
 END_TOPIC
@@ -84,6 +92,10 @@ END_TOPIC
 
 TOPIC("index$en-us")
 #include "index$en-us.tppi"
+END_TOPIC
+
+TOPIC("index$ru-ru")
+#include "index$ru-ru.tppi"
 END_TOPIC
 
 TOPIC("install$en-us")
