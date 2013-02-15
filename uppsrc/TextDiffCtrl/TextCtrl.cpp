@@ -262,7 +262,7 @@ int TextCompareCtrl::MeasureLength(const char *text) const
 String TextCompareCtrl::ExpandTabs(const char *text) const
 {
 	String out;
-	for(char c; c = *text++;)
+	for(char c; (c = *text++);)
 		if(c == '\t')
 			out.Cat(' ', tabsize - out.GetLength() % tabsize);
 		else

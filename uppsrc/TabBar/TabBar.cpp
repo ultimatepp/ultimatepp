@@ -494,12 +494,12 @@ void TabBar::DoStacking()
 		t.stackid = GetStackId(t);
 	}
 	// Create stacks
-	Vector< Vector<Tab> > tstack;
+	Vector< Array<Tab> > tstack;
 	for (int i = 0; i < tabs.GetCount(); i++) {
 		Tab &ti = tabs[i];
 		if (ti.stack < 0) {
 			ti.stack = tstack.GetCount();
-			Vector<Tab> &ttabs = tstack.Add();
+			Array<Tab> &ttabs = tstack.Add();
 			ttabs.Add(ti);
 			for (int j = i + 1; j < tabs.GetCount(); j++)	{
 				Tab &tj = tabs[j];
@@ -2136,7 +2136,7 @@ void TabBar::DragAndDrop(Point p, PasteClip& d)
 			count = ix - tab;
 		}
 		// Copy tabs
-		Vector<Tab> stacktemp;
+		Array<Tab> stacktemp;
 		stacktemp.SetCount(count);
 		//Copy(&stacktemp[0], &tabs[tab], count);
 		for(int i = 0; i < count; i++)

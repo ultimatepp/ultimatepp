@@ -62,6 +62,9 @@ private:
 
 	struct FileOrder;
 
+	using ColumnList::GetStdSize;
+	using ColumnList::Paint;
+
 protected:
 	enum {
 		TIMEID_STARTEDIT = ColumnList::TIMEID_COUNT,

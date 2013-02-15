@@ -578,7 +578,7 @@ struct HelpModule : public IdeModule {
 			d->topic = &ide->doc;
 			return d;
 		}
-		return false;
+		return NULL;
 	}
 	virtual void Serialize(Stream& s) {
 		s % recent_topic;

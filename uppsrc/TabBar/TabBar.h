@@ -177,7 +177,7 @@ public:
 		
 		virtual void Serialize(Stream& s);
 		
-		Vector<TabItem> items;
+		Array<TabItem> items;
 		int itn;
 		
 		Tab() : id(-1), stack(-1), visible(true), itn(0) { items.SetCount(5); }
@@ -197,6 +197,7 @@ public:
 		TabItem& AddImage(const Image& img, int side = LEFT);
 		TabItem& AddSpace(int space = 5, int side = LEFT);
 		
+		virtual ~Tab() {}
 	};
 	
 	// Tab sorting structures
@@ -216,6 +217,8 @@ protected:
 		int last;
 		virtual void Serialize(Stream& s);
 		String ToString() const { return Format("%s - %d", name, count); }
+		
+		virtual ~Group() {}
 	};
 
 	struct TabValueSort : public TabSort {
@@ -230,10 +233,10 @@ protected:
 protected:
 	TabScrollBar 	sc;
 	
-	Vector<Group> 	groups;
-	Vector<Tab> 	tabs;
-	Vector<int>		separators;
-	int 			active;
+	Array<Group>    groups;
+	Array<Tab> 	    tabs;
+	Array<int>      separators;
+	int             active;
 	int             id;
 
 	int highlight;
@@ -308,6 +311,9 @@ protected:
 	static int GetStyleHeight();
 	static Image AlignImage(int align, const Image& img);
 	static Value AlignValue(int align, const Value& v, const Size& isz);
+
+	using Ctrl::GetStdSize;
+	using Ctrl::Close;
 	
 protected:	
 	virtual void Paint(Draw& w);
@@ -438,7 +444,7 @@ public:
 	TabBar&	AllowReorder(bool v = true)				{ allowreorder = v; return *this; }
 	
 	bool	IsGrouping() const				{ return grouping; }
-	bool	HasGroupSeparators() const		{ return separators; }
+	bool	HasGroupSeparators() const		{ return separators.GetCount(); }
 	bool	IsStacking() const				{ return stacking; }
 	bool	IsShowInactive() const			{ return inactivedisabled; }
 	

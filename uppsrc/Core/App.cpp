@@ -541,11 +541,14 @@ String GetDownloadFolder()
 
 String GetPathXdg(String xdgConfigHome, String xdgConfigDirs)
 {
-	String ret = "";
-	if (FileExists(ret = AppendFileName(xdgConfigHome, "user-dirs.dirs"))) ;
-  	else if (FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.defaults"))) ;
-  	else if (FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.dirs"))) ;
-  	return ret;
+	String ret;
+	if(FileExists(ret = AppendFileName(xdgConfigHome, "user-dirs.dirs")))
+		return ret;
+  	if(FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.defaults")))
+  		return ret;
+  	if(FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.dirs")))
+  		return ret;
+  	return Null;
 }
 
 String GetPathDataXdg(String fileConfig, const char *folder) 

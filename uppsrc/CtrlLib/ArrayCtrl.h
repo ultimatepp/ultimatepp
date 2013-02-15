@@ -313,6 +313,8 @@ private:
 	
 	int    AsNdx(const String& id)              { return id_ndx.FindAdd(id); }
 
+	using Ctrl::IsModified;
+
 public: // temporary (TRC 06/07/28) // will be removed!
 	Ctrl&  SetCtrl(int i, int j, Ctrl *newctrl) { return SetCtrl(i, j, newctrl, true, true); }
 

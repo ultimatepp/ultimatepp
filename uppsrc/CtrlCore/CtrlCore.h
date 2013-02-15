@@ -349,7 +349,7 @@ public:
 	class Logc {
 		dword data;
 
-		static int LSGN(dword d)       { return int16(d & 0x7fff | ((d & 0x4000) << 1)); }
+		static int LSGN(dword d)       { return int16((d & 0x7fff) | ((d & 0x4000) << 1)); }
 
 	public:
 		bool  operator==(Logc q) const { return data == q.data; }

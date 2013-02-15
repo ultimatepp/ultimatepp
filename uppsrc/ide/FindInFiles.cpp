@@ -167,35 +167,6 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 	return true;
 }
 
-static bool RawFileMatch(const char *pattern, const char *file, const char *& endptr)
-{
-	for(char c; (c = *pattern++) != 0;)
-		if(c == '*')
-		{
-			do
-				if(RawFileMatch(pattern, file, endptr))
-					return true;
-			while(*file++);
-			endptr = pattern;
-			return false;
-		}
-		else if(c == '?')
-		{
-			if(*file++ == 0)
-			{
-				endptr = pattern - 1;
-				return false;
-			}
-		}
-		else if(ToLower(c) != ToLower(*file++))
-		{
-			endptr = pattern - 1;
-			return false;
-		}
-	endptr = file;
-	return true;
-}
-
 int CharFilterFindFileMask(int c)
 {
 	return ToUpper(ToAscii(c));

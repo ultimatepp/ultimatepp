@@ -70,7 +70,7 @@ public:
 	void      SetLastError()         { SetError(errno); }
 #endif
 	int       GetError() const       { return errorcode; }
-	void      ClearError()           { style &= ~STRM_ERROR; errorcode = 0; }
+	void      ClearError()           { style = style & ~STRM_ERROR; errorcode = 0; }
 
 	int64     GetPos() const         { return dword(ptr - buffer) + pos; }
 	bool      IsEof() const          { return ptr >= rdlim && _IsEof(); }

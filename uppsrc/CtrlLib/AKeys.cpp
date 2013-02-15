@@ -254,7 +254,7 @@ dword ParseKeyDesc(CParser& p)
 	}
 	if(p.IsNumber()) {
 		uint32 q = p.ReadNumber(16);
-		if(q >= 0 && q <= 9)
+		if(q <= 9)
 			return f | (K_0 + q);
 		return f | q;
 	}
