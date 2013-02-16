@@ -72,7 +72,7 @@ class AssignValueTypeNo : public ValueType<T, type, B> {};
 template <class T>
 dword GetValueTypeNo() { return ValueTypeNo((T*)NULL); }
 
-class Value : Moveable<Value> {
+class Value : Moveable_<Value> {
 public:
 	class Void {
 	protected:

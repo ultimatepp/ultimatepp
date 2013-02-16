@@ -179,8 +179,8 @@ void InVector<T>::SetBlkPar()
 	blk_low = 5;
 #else
 	int n = 2500 + data.GetCount() / 4;
-	blk_high = max(n / (int)sizeof(T), 16);
-	blk_low = max(n / 3 / (int)sizeof(T), 16);
+	blk_high = minmax(n / (int)sizeof(T), 16, 65000);
+	blk_low = minmax(n / 3 / (int)sizeof(T), 16, 65000);
 #endif
 }
 

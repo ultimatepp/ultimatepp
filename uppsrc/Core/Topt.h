@@ -178,6 +178,10 @@ class Moveable : public B
 {
 };
 
+template <class T>
+struct Moveable_ {
+};
+
 #define NTL_MOVEABLE(T)
 
 #else
@@ -191,6 +195,11 @@ inline void AssertMoveable0(T *t) { AssertMoveablePtr(&**t, *t); }
 
 template <class T, class B = EmptyClass>
 struct Moveable : public B {
+	friend void AssertMoveable0(T *) {}
+};
+
+template <class T>
+struct Moveable_ {
 	friend void AssertMoveable0(T *) {}
 };
 
