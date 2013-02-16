@@ -849,7 +849,7 @@ void Slaved_InArray__<T>::Remove(int blki, int pos, int n)
 	Vector< typename InArray<T>::PointerType >& b = data.iv.data[blki];
 	for(int i = 0; i < n; i++)
 		if(b[i + pos])
-			delete b[i + pos];
+			delete (T *)b[i + pos];
 	b.Remove(pos, n);
 }
 
