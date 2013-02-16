@@ -1,0 +1,4 @@
+#ifndef _AllMaps_icpp_init_stub
+#define _AllMaps_icpp_init_stub
+#include "Core/init"
+#endif
