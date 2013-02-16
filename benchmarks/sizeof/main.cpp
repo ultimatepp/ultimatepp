@@ -1,9 +1,10 @@
-#include <CtrlLib/CtrlLib.h>
+#include <Draw/Draw.h>
 
 using namespace Upp;
 
-GUI_APP_MAIN
+CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
 	RDUMP(sizeof(bool));
 	RDUMP(sizeof(int));
 	RDUMP(sizeof(unsigned));
@@ -20,6 +21,7 @@ GUI_APP_MAIN
 	RDUMP(sizeof(float));
 	RDUMP(sizeof(double));
 	RDUMP(sizeof(long double));
+	RLOG("========================");
 	RDUMP(sizeof(Date));
 	RDUMP(sizeof(Time));
 	RDUMP(sizeof(Size));
@@ -28,15 +30,15 @@ GUI_APP_MAIN
 	RDUMP(sizeof(Color));
 	RDUMP(sizeof(Complex));
 	RDUMP(sizeof(Uuid));
-	RDUMP(sizeof(ValueArray));
-	RDUMP(sizeof(ValueMap));
 	RDUMP(sizeof(Mutex));
 	RDUMP(sizeof(RWMutex));
-	RDUMP(sizeof(Image));
-	RDUMP(sizeof(Font));
-	RDUMP(sizeof(AttrText));
-	RDUMP(sizeof(Painting));
-	RDUMP(sizeof(Drawing));
+	RLOG("========================");
+	RDUMP(sizeof(String));
+	RDUMP(sizeof(WString));
+	RDUMP(sizeof(Value));
+	RDUMP(sizeof(ValueArray));
+	RDUMP(sizeof(ValueMap));
+	RLOG("========================");
 	RDUMP(sizeof(Vector<int>));
 	RDUMP(sizeof(Array<int>));
 	RDUMP(sizeof(Index<int>));
@@ -48,6 +50,12 @@ GUI_APP_MAIN
 	RDUMP(sizeof(InVector<int>));
 	RDUMP(sizeof(InArray<int>));
 	RDUMP(sizeof(SortedIndex<int>));
-	RDUMP(sizeof(String));
-	RDUMP(sizeof(WString));
+	RDUMP(sizeof(SortedVectorMap<int, int>));
+	RDUMP(sizeof(SortedArrayMap<int, int>));
+	RLOG("========================");
+	RDUMP(sizeof(Image));
+	RDUMP(sizeof(Font));
+	RDUMP(sizeof(AttrText));
+	RDUMP(sizeof(Painting));
+	RDUMP(sizeof(Drawing));
 }

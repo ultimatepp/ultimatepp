@@ -1,6 +1,6 @@
 uses
 	Core,
-	CtrlLib;
+	Draw;
 
 file
 	main.cpp
@@ -8,5 +8,5 @@ file
 	info.txt;
 
 mainconfig
-	"" = "GUI MT";
+	"" = "MT";
 
