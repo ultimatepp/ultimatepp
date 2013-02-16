@@ -126,7 +126,7 @@ public:
 void Premultiply(ImageBuffer& b);
 void Unmultiply(ImageBuffer& b);
 
-class Image : public ValueType< Image, 150, Moveable<Image> > {
+class Image : public ValueType< Image, 150, Moveable_<Image> > {
 private:
 	struct Data {
 		Atomic refcount;
