@@ -4,7 +4,8 @@ uses
 
 file
 	main.cpp
-		depends() test.h;
+		depends() test.h,
+	info.txt;
 
 mainconfig
 	"" = "GUI MT";
