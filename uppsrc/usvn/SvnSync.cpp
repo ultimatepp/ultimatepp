@@ -370,8 +370,10 @@ bool IsSvnDir(const String& p)
 {
 	if(DirectoryExists(AppendFileName(p, ".svn")) || DirectoryExists(AppendFileName(p, "_svn")))
 		return true;
-	String path(p);
-	while(path.GetCount()>1){
+	String path = p;
+	String path0;
+	while(path != path0) {
+		path0 = path;
 		DirectoryUp(path);
 		if(DirectoryExists(AppendFileName(path, ".svn")))
 			return true;
