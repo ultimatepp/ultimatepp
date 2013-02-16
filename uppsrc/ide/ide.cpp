@@ -329,7 +329,8 @@ bool Ide::FindLineError(int l, Host& host) {
 	int lineno;
 	int error;
 	Console& c = GetConsole();
-	if (FindLineError(c.GetUtf8Line(l), host, file, lineno, error)) {
+	FindLineErrorCache cache;
+	if (FindLineError(c.GetUtf8Line(l), host, file, lineno, error, cache)) {
 		file = NormalizePath(file);
 		editastext.FindAdd(file);
 		EditFile(file);
@@ -345,8 +346,8 @@ bool Ide::FindLineError(int l, Host& host) {
 	return false;
 }
 
-bool Ide::FindLineError(String ln, Host& host, String& file, int& lineno, int& error) {
-	Vector<String> wspc_paths;
+bool Ide::FindLineError(String ln, Host& host, String& file, int& lineno, int& error,
+                        FindLineErrorCache& cache) {
 	VectorMap<String, String> bm = GetMethodVars(method);
 	bool is_java = (bm.Get("BUILDER", Null) == "JDK");
 	const char *s = ln;
@@ -377,18 +378,33 @@ bool Ide::FindLineError(String ln, Host& host, String& file, int& lineno, int& e
 				file = String(upp[0], 1) + ':' + file;
 		#endif
 			if(!IsFullPath(file) && *file != '\\' && *file != '/') {
-				if(wspc_paths.IsEmpty()) {
+				if(cache.wspc_paths.IsEmpty()) {
 					::Workspace  wspc;
 					wspc.Scan(main);
 					for(int i = 0; i < wspc.GetCount(); i++)
-						wspc_paths.Add(GetFileDirectory(PackagePath(wspc[i])));
+						cache.wspc_paths.Add(GetFileDirectory(PackagePath(wspc[i])));
 				}
-				for(int i = 0; i < wspc_paths.GetCount(); i++) {
-					String path = AppendFileName(wspc_paths[i], file);
-					FindFile ff;
-					if(ff.Search(path) && ff.IsFile()) {
-						file = path;
-						break;
+				for(int i = 0; i < cache.wspc_paths.GetCount(); i++) {
+					String path = AppendFileName(cache.wspc_paths[i], file);
+					int q = cache.ff.Find(path);
+					if(q >= 0) {
+						if(cache.ff[q]) {
+							file = path;
+							break;
+						}
+					}
+					else {
+						bool b = false;
+						String ext = ToLower(GetFileExt(path));
+						if(findarg(ext, ".obj", ".lib", ".o", ".so", ".a", ".", "") < 0) {
+							FindFile ff;
+							b = ff.Search(path) && ff.IsFile();
+						}
+						cache.ff.Add(path, b);
+						if(b) {
+							file = path;
+							break;
+						}
 					}
 				}
 			}
@@ -525,8 +541,9 @@ void Ide::SetErrorEditor()
 	String    hfile;
 	EditorBar hbar;
 	Vector<String> errorfiles;
+	FindLineErrorCache cache;
 	for(int i = 0; i < console.GetLineCount(); i++) {
-		if(FindLineError(console.GetUtf8Line(i), *host, file, lineno, error)) {
+		if(FindLineError(console.GetUtf8Line(i), *host, file, lineno, error, cache)) {
 			file = NormalizePath(file);
 		#ifdef PLATFORM_WIN32
 			errorfiles.Add(ToLower(file));

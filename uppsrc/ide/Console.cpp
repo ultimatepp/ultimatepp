@@ -55,17 +55,27 @@ void Console::Append(const String& s) {
 	EditPos p = GetEditPos();
 	SetEditable();
 	MoveTextEnd();
-	String t = Filter(s, sAppf);
-	if(wrap_text) {
-		int mg = sb.GetReducedViewSize().cx / GetFont().Info().GetAveWidth();
-		for(const char *q = t; *q; q++) {
-			if(mg > 2 && GetColumnLine(GetCursor()).x >= mg - 1)
-				Paste(ToUnicode("\n\t", CHARSET_WIN1252));
-			Paste(String(*q, 1).ToWString());
+	WString t = Filter(s, sAppf).ToWString();
+	int mg = sb.GetReducedViewSize().cx / GetFont().Info().GetAveWidth();
+	if(wrap_text && mg > 4) {
+		int x = GetColumnLine(GetCursor()).x;
+		WStringBuffer tt;
+		const wchar *q = t;
+		while(*q) {
+			if(x > mg - 1) {
+				tt.Cat('\n');
+				tt.Cat('\t');
+				x = 0;
+			}
+			x++;
+			if(*q == '\n')
+				x = 0;
+			tt.Cat(*q++);
 		}
+		Paste(tt);
 	}
 	else
-		Paste(t.ToWString());
+		Paste(t);
 	SetReadOnly();
 	if(l >= 0) {
 		SetEditPos(p);
@@ -171,18 +181,18 @@ int Console::Execute(const char *command, Stream *out, const char *envptr, bool 
 
 int Console::AllocSlot()
 {
-	int sleep = 0;
+	int ms0 = msecs();
+	
 	for(;;) {
 		for(int i = 0; i < processes.GetCount(); i++)
 			if(!IsRunning(i))
 				return i;
-		switch(Flush()) {
-			case -1: break;
-			case  0: sleep = min(sleep + 5, 20); break;
-			case +1: sleep = 0; break;
+		Flush();
+		Sleep(0);
+		if(ms0 != msecs()) {
+			ProcessEvents();
+			ms0 = msecs();
 		}
-		Sleep(sleep);
-		ProcessEvents();
 	}
 }
 
@@ -267,29 +277,29 @@ bool Console::IsRunning(int slot)
 
 void Console::Wait(int slot)
 {
-	int sleep = 0;
+	int ms0 = msecs();
 	while(processes[slot].process) {
-		ProcessEvents();
-		switch(Flush()) {
-			case -1: return;
-			case  0: sleep = min(sleep + 5, 20); break;
-			case +1: sleep = 0; break;
+		if(ms0 != msecs()) {
+			ProcessEvents();
+			ms0 = msecs();
 		}
-		Ctrl::GuiSleep(sleep);
+		if(Flush() == -1)
+			return;
+		Sleep(0);
 	}
 }
 
 bool Console::Wait()
 {
-	int sleep = 0;
+	int ms0 = msecs();
 	for(;;) {
-		ProcessEvents();
-		switch(Flush()) {
-			case -1: return error_keys.IsEmpty();
-			case  0: sleep = min(sleep + 5, 20); break;
-			case +1: sleep = 0; break;
+		if(ms0 != msecs()) {
+			ProcessEvents();
+			ms0 = msecs();
 		}
-		Ctrl::GuiSleep(sleep);
+		if(Flush() == -1)
+			return error_keys.IsEmpty();
+		Sleep(0);
 	}
 }
 

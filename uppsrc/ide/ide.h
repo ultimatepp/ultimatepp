@@ -998,7 +998,14 @@ public:
 	Console&  GetConsole();
 
 	bool      FindLineError(int l, Host& host);
-	bool      FindLineError(String ln, Host& host, String& file, int& lineno, int& error);
+	
+	struct FindLineErrorCache {
+		VectorMap<String, bool> ff;
+		Vector<String>          wspc_paths;
+	};
+	
+	bool      FindLineError(String ln, Host& host, String& file, int& lineno, int& error,
+	                        FindLineErrorCache& cache);
 	void      FindError();
 	void	  ClearErrorEditor(String file);
 
