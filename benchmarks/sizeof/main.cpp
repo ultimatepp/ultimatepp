@@ -20,16 +20,6 @@ GUI_APP_MAIN
 	RDUMP(sizeof(float));
 	RDUMP(sizeof(double));
 	RDUMP(sizeof(long double));
-	RDUMP(sizeof(Vector<int>));
-	RDUMP(sizeof(Array<int>));
-	RDUMP(sizeof(Index<int>));
-	RDUMP(sizeof(ArrayIndex<int>));
-	RDUMP(sizeof(ArrayMap<int, int>));
-	RDUMP(sizeof(VectorMap<int, int>));
-	RDUMP(sizeof(BiArray<int>));
-	RDUMP(sizeof(BiVector<int>));
-	RDUMP(sizeof(String));
-	RDUMP(sizeof(WString));
 	RDUMP(sizeof(Date));
 	RDUMP(sizeof(Time));
 	RDUMP(sizeof(Size));
@@ -47,4 +37,17 @@ GUI_APP_MAIN
 	RDUMP(sizeof(AttrText));
 	RDUMP(sizeof(Painting));
 	RDUMP(sizeof(Drawing));
+	RDUMP(sizeof(Vector<int>));
+	RDUMP(sizeof(Array<int>));
+	RDUMP(sizeof(Index<int>));
+	RDUMP(sizeof(ArrayIndex<int>));
+	RDUMP(sizeof(ArrayMap<int, int>));
+	RDUMP(sizeof(VectorMap<int, int>));
+	RDUMP(sizeof(BiArray<int>));
+	RDUMP(sizeof(BiVector<int>));
+	RDUMP(sizeof(InVector<int>));
+	RDUMP(sizeof(InArray<int>));
+	RDUMP(sizeof(SortedIndex<int>));
+	RDUMP(sizeof(String));
+	RDUMP(sizeof(WString));
 }
