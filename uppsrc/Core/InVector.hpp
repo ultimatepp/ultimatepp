@@ -11,7 +11,7 @@ template <class T>
 void InVector<T>::Reset()
 {
 	hcount = count = 0;
-	slave = NULL;
+	slave = 0;
 	SetBlkPar();
 }
 
@@ -19,7 +19,7 @@ template <class T>
 void InVector<T>::Clear()
 {
 	if(slave)
-		slave->Clear();
+		Slave()->Clear();
 	data.Clear();
 	index.Clear();
 	Reset();
@@ -131,7 +131,7 @@ void InVector<T>::Reindex()
 	SetBlkPar();
 	index.Clear();
 	if(slave)
-		slave->Reindex();
+		Slave()->Reindex();
 	hcount = 0;
 	Vector<T> *ds = data.Begin();
 	Vector<T> *dend = data.End();
@@ -196,7 +196,7 @@ T *InVector<T>::Insert0(int ii, int blki, int pos, int off, const T *val)
 {
 	if(data[blki].GetCount() > blk_high) {
 		if(slave)
-			slave->Split(blki, data[blki].GetCount() / 2);
+			Slave()->Split(blki, data[blki].GetCount() / 2);
 		Vector<T>& x = data.Insert(blki + 1);
 		x.InsertSplit(0, data[blki], data[blki].GetCount() / 2);
 		Reindex();
@@ -206,9 +206,9 @@ T *InVector<T>::Insert0(int ii, int blki, int pos, int off, const T *val)
 	LLOG("blki: " << blki << ", pos: " << pos);
 	count++;
 	if(slave) {
-		slave->Count(1);
-		slave->Index(blki, 1);
-		slave->Insert(blki, pos);
+		Slave()->Count(1);
+		Slave()->Index(blki, 1);
+		Slave()->Insert(blki, pos);
 	}
 	Index(blki, 1);
 	if(val)
@@ -227,8 +227,8 @@ T *InVector<T>::Insert0(int ii, const T *val)
 		count++;
 		ClearCache();
 		if(slave) {
-			slave->Count(1);
-			slave->AddFirst();
+			Slave()->Count(1);
+			Slave()->AddFirst();
 		}
 		if(val) {
 			data.Add().Add(*val);
@@ -318,20 +318,20 @@ force_inline bool InVector<T>::JoinSmall(int blki)
 		int n = data[blki].GetCount();
 		if(n == 0) {
 			if(slave)
-				slave->RemoveBlk(blki, 1);
+				Slave()->RemoveBlk(blki, 1);
 			data.Remove(blki);
 			return true;
 		}
 		if(n < blk_low) {
 			if(blki > 0 && data[blki - 1].GetCount() + n <= blk_high) {
 				if(slave)
-					slave->Join(blki - 1);
+					Slave()->Join(blki - 1);
 				Join(blki - 1);
 				return true;
 			}
 			if(blki + 1 < data.GetCount() && n + data[blki + 1].GetCount() <= blk_high) {
 				if(slave)
-					slave->Join(blki);
+					Slave()->Join(blki);
 				Join(blki);
 				return true;
 			}
@@ -348,16 +348,16 @@ void InVector<T>::Remove(int pos, int n)
 	int blki = FindBlock(pos, off);
 	count -= n;
 	if(slave)
-		slave->Count(-n);
+		Slave()->Count(-n);
 	if(pos + n < data[blki].GetCount()) {
 		if(slave)
-			slave->Remove(blki, pos, n);
+			Slave()->Remove(blki, pos, n);
 		data[blki].Remove(pos, n);
 		if(JoinSmall(blki))
 			Reindex();
 		else {
 			if(slave)
-				slave->Index(blki, -n);
+				Slave()->Index(blki, -n);
 			Index(blki, -n);
 			SetCache(blki, off);
 		}
@@ -366,7 +366,7 @@ void InVector<T>::Remove(int pos, int n)
 		int b1 = blki;
 		int nn = min(n, data[b1].GetCount() - pos);
 		if(slave)
-			slave->Remove(b1, pos, nn);
+			Slave()->Remove(b1, pos, nn);
 		data[b1++].Remove(pos, nn);
 		n -= nn;
 		int b2 = b1;
@@ -375,11 +375,11 @@ void InVector<T>::Remove(int pos, int n)
 			b2++;
 		}
 		if(slave)
-			slave->RemoveBlk(b1, b2 - b1);
+			Slave()->RemoveBlk(b1, b2 - b1);
 		data.Remove(b1, b2 - b1);
 		if(b1 < data.GetCount()) {
 			if(slave)
-				slave->Remove(b1, 0, n);
+				Slave()->Remove(b1, 0, n);
 			data[b1].Remove(0, n);
 		}
 		JoinSmall(blki + 1);
@@ -523,8 +523,8 @@ int InVector<T>::InsertUpperBound(const T& val, const L& less)
 		count++;
 		ClearCache();
 		if(slave) {
-			slave->Count(1);
-			slave->AddFirst();
+			Slave()->Count(1);
+			Slave()->AddFirst();
 		}
 		data.Add().Insert(0) = val;
 		return 0;
@@ -801,4 +801,60 @@ int SortedIndex<T, Less>::RemoveKey(const T& x)
 	int count = FindUpperBound(x) - l;
 	Remove(l, count);
 	return count;
+}
+
+template <class T>
+void Slaved_InVector__<T>::Insert(int blki, int pos)
+{
+	if(ptr)
+		data.data[blki].Insert(pos, *ptr);
+	else
+		data.data[blki].Insert(pos);
+	ptr = &data.data[blki][pos];
+}
+
+template <class T>
+void Slaved_InVector__<T>::Split(int blki, int nextsize)
+{
+	Vector<T>& x = data.data.Insert(blki + 1);
+	x.InsertSplit(0, data.data[blki], nextsize);
+}
+
+template <class T>
+void Slaved_InVector__<T>::AddFirst()
+{
+	if(ptr)
+		data.data.Add().Add(*ptr);
+	else
+		data.data.Add().Add();
+	ptr = &data.data[0][0];
+}
+
+template <class T>
+void Slaved_InArray__<T>::Insert(int blki, int pos)
+{
+	data.iv.data[blki].Insert(pos, mk ? new T(*ptr) : ptr ? ptr : new T);
+}
+
+template <class T>
+void Slaved_InArray__<T>::Split(int blki, int nextsize)
+{
+	Vector< typename InArray<T>::PointerType >& x = data.iv.data.Insert(blki + 1);
+	x.InsertSplit(0, data.iv.data[blki], nextsize);
+}
+
+template <class T>
+void Slaved_InArray__<T>::Remove(int blki, int pos, int n)
+{
+	Vector< typename InArray<T>::PointerType >& b = data.iv.data[blki];
+	for(int i = 0; i < n; i++)
+		if(b[i + pos])
+			delete b[i + pos];
+	b.Remove(pos, n);
+}
+
+template <class T>
+void Slaved_InArray__<T>::AddFirst()
+{
+	data.iv.data.Add().Add(mk ? new T(*ptr) : ptr ? ptr : new T);
 }
