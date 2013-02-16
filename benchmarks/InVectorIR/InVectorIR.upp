@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	main.cpp optimize_speed;
+
+mainconfig
+	"" = "MT";
+

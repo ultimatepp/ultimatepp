@@ -1,0 +1,4 @@
+#ifndef _InVectorIR_icpp_init_stub
+#define _InVectorIR_icpp_init_stub
+#include "Core/init"
+#endif
