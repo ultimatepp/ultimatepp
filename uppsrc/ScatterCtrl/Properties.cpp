@@ -2,6 +2,10 @@
 
 NAMESPACE_UPP
 
+#define IMAGECLASS ScatterImgP
+#define IMAGEFILE <ScatterCtrl/ScatterCtrl.iml>
+#include <Draw/iml.h>
+
 #define  LAYOUTFILE <ScatterCtrl/ScatterCtrl.lay>
 #include <CtrlCore/lay.h>
 
@@ -174,12 +178,36 @@ void DataTab::OnTab()
 	ScatterCtrl &scatter = *pscatter;
 	ArrayCtrl &data = series[index].data;	
 	data.Reset();
-	data.SetLineCy(EditField::GetStdHeight());
+	data.MultiSelect().SetLineCy(EditField::GetStdHeight());
 	data.SetVirtualCount(int(scatter.GetCount(index)));
 	dataSourceX.pscatter = dataSourceY.pscatter = pscatter;
 	dataSourceX.index = dataSourceY.index = index;
 	data.AddRowNumColumn("x").SetConvert(dataSourceX);
 	data.AddRowNumColumn("y").SetConvert(dataSourceY);	
+	data.WhenBar = THISBACK(OnArrayBar);
+}
+
+void DataTab::ArrayCopy() {
+	int index = tab.Get();
+	if (index < 0)
+		return;
+	
+	ArrayCtrl &data = series[index].data;
+	data.SetClipboard(true, true);
+}
+
+void DataTab::ArraySelect() {
+	int index = tab.Get();
+	if (index < 0)
+		return;
+	
+	ArrayCtrl &data = series[index].data;
+	data.Select(0, data.GetCount(), true);
+}
+
+void DataTab::OnArrayBar(Bar &menu) {
+	menu.Add(t_("Select all"), Null, THISBACK(ArraySelect)).Key(K_CTRL_A).Help(t_("Select all rows"));
+	menu.Add(t_("Copy"), ScatterImgP::Copy(), THISBACK(ArrayCopy)).Key(K_CTRL_C).Help(t_("Copy selected rows"));
 }
 
 PropertiesDlg::PropertiesDlg(ScatterCtrl& scatter) : scatter(scatter) 

@@ -33,6 +33,9 @@ public:
 	
 	void Init(ScatterCtrl& scatter);
 	void OnTab(); 
+	void OnArrayBar(Bar &menu);
+	void ArrayCopy();
+	void ArraySelect();
 	
 	class DataSourceX : public Convert {
 	public:
