@@ -96,6 +96,12 @@ esES("Sin marca")
 euES("Marka gabe")
 frFR("Sans marque")
 
+T_("Copy selected rows")
+caES("Copiar les files seleccionades")
+esES("Copiar las filas seleccionadas")
+euES("Kopiatu hautatutako errenkadak")
+frFR("Copie les lignes s\303\251lectionn\303\251es")
+
 T_("Scatter properties")
 caES("Propietats de gr\303\240fic")
 esES("Propiedades de gr\303\241fico")
