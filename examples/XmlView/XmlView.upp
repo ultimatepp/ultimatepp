@@ -1,4 +1,4 @@
-description "XML viewer";
+description "XML viewer\377";
 
 uses
 	CtrlLib;

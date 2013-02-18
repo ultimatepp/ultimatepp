@@ -1,4 +1,4 @@
-description "Analogue / digital clock";
+description "Analogue / digital clock\377";
 
 uses
 	CtrlLib;
