@@ -418,6 +418,29 @@ If there is not enough data in the stream, LoadError is invoked
 number of bytes was read.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Stream`:`:Put64`(const void`*`,int64`):%- [@(0.0.255) void]_[* Put64]([@(0.0.255) cons
+t]_[@(0.0.255) void]_`*[*@3 data], [_^int64^ int64]_[*@3 size])&]
+[s2; Writes a block of raw binary data to the output stream, unlike 
+regular Put, block size can be greater than 2GB, if CPU is 64 
+bit.&]
+[s3; &]
+[s4;%- &]
+[s5;:Stream`:`:Get64`(void`*`,int64`):%- [_^int64^ int64]_[* Get64]([@(0.0.255) void]_`*[*@3 d
+ata], [_^int64^ int64]_[*@3 size])&]
+[s2; Reads at most [%-*@3 size] bytes from the stream to [%-*@3 data]. 
+Returns the number of bytes actually read. Unlike regular Get, 
+block size can be greater than 2GB, if CPU is 64 bit.&]
+[s3; &]
+[s4;%- &]
+[s5;:Stream`:`:GetAll64`(void`*`,int64`):%- [@(0.0.255) bool]_[* GetAll64]([@(0.0.255) void
+]_`*[*@3 data], [_^int64^ int64]_[*@3 size])&]
+[s2; Reads [%-*@3 size] bytes from the stream to memory at [%-*@3 data]. 
+If there is not enough data in the stream, LoadError is invoked 
+(that in turn might throw an exception). Returns true if required 
+number of bytes was read. Unlike regular Get, block size can 
+be greater than 2GB, if CPU is 64 bit.&]
+[s3; &]
+[s4;%- &]
 [s5;:Stream`:`:LoadThrowing`(`):%- [@(0.0.255) void]_[* LoadThrowing]()&]
 [s2; Sets stream into the mode that throws LoadingError exception 
 when LoadError is invoked. This mode is typical for serialization 

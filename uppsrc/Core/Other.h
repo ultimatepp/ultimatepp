@@ -102,24 +102,23 @@ class Buffer : Moveable< Buffer<T> > {
 	mutable T *ptr;
 
 public:
-	operator T*()                     { return ptr; }
-	operator const T*() const         { return ptr; }
-	T *operator~()                    { return ptr; }
-	const T *operator~() const        { return ptr; }
+	operator T*()                        { return ptr; }
+	operator const T*() const            { return ptr; }
+	T *operator~()                       { return ptr; }
+	const T *operator~() const           { return ptr; }
 
-	void Alloc(int size)              { Clear(); ptr = new T[size]; }
-	void Alloc(int size, const T& in) { Clear(); ptr = new T[size];
-	                                    Fill(ptr, ptr + size, in); }
+	void Alloc(size_t size)              { Clear(); ptr = new T[size]; }
+	void Alloc(size_t size, const T& in) { Clear(); ptr = new T[size]; Fill(ptr, ptr + size, in); }
 
-	void Clear()                      { if(ptr) delete[] ptr; ptr = NULL; }
+	void Clear()                         { if(ptr) delete[] ptr; ptr = NULL; }
 
-	Buffer()                          { ptr = NULL; }
-	Buffer(int size)                  { ptr = new T[size]; }
-	Buffer(int size, const T& init)   { ptr = new T[size]; Fill(ptr, ptr + size, init); }
-	~Buffer()                         { if(ptr) delete[] ptr; }
+	Buffer()                             { ptr = NULL; }
+	Buffer(size_t size)                  { ptr = new T[size]; }
+	Buffer(size_t size, const T& init)   { ptr = new T[size]; Fill(ptr, ptr + size, init); }
+	~Buffer()                            { if(ptr) delete[] ptr; }
 
-	void operator=(pick_ Buffer& v)   { if(ptr) delete[] ptr; ptr = v.ptr; v.ptr = NULL; }
-	Buffer(pick_ Buffer& v)           { ptr = v.ptr; v.ptr = NULL; }
+	void operator=(pick_ Buffer& v)      { if(ptr) delete[] ptr; ptr = v.ptr; v.ptr = NULL; }
+	Buffer(pick_ Buffer& v)              { ptr = v.ptr; v.ptr = NULL; }
 };
 
 class Bits : Moveable<Bits> {
