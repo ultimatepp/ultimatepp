@@ -82,6 +82,52 @@ bool Stream::GetAll(void *data, int size) {
 	return true;
 }
 
+void Stream::Put64(const void *data, int64 size)
+{
+#ifdef CPU_64
+	byte *ptr = (byte *)data;
+	while(size > INT_MAX) {
+		Put(ptr, INT_MAX);
+		ptr += INT_MAX;
+		size -= INT_MAX;
+	}
+	Put(ptr, (int)size);
+#else
+	ASSERT(size <= INT_MAX);
+	Put(data, size);
+#endif
+}
+
+int64 Stream::Get64(void *data, int64 size)
+{
+#ifdef CPU_64
+	byte *ptr = (byte *)data;
+	int64 n = 0;
+	while(size > INT_MAX) {
+		int q = Get(ptr, INT_MAX);
+		n += q;
+		if(q != INT_MAX)
+			return n;
+		ptr += INT_MAX;
+		size -= INT_MAX;
+	}
+	int q = Get(ptr, (int)size);
+	return n + q;
+#else
+	ASSERT(size <= INT_MAX);
+	return Get(data, size);
+#endif
+}
+
+bool Stream::GetAll64(void *data, int64 size)
+{
+	if(Get64(data, size) != size) {
+		LoadError();
+		return false;
+	}
+	return true;
+}
+
 String Stream::Get(int size)
 {
 	StringBuffer b(size);

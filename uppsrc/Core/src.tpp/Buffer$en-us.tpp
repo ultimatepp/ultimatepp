@@ -40,12 +40,12 @@ error with the exceptions of:&]
 [s2; Constructs an empty buffer.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Buffer`:`:Buffer`(int`):%- [* Buffer]([@(0.0.255) int]_[*@3 size])&]
+[s5;:Buffer`:`:Buffer`(size`_t`):%- [* Buffer](size`_t_[*@3 size])&]
 [s2; Constructs the Buffer with a [%-*@3 size][%-  number of elements].&]
 [s6; T must have default constructor.&]
-[s3;%- &]
+[s3; &]
 [s4;%- &]
-[s5;:Buffer`:`:Buffer`(int`,const T`&`):%- [* Buffer]([@(0.0.255) int]_[*@3 size], 
+[s5;:Buffer`:`:Buffer`(size`_t`,const T`&`):%- [* Buffer](size`_t_[*@3 size], 
 [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 init])&]
 [s2; Constructs the Buffer initializing the [%-@3 size ]elements to 
 the specified value [%-@3 init].&]
@@ -89,22 +89,22 @@ onst]&]
 if the Buffer is empty.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Buffer`:`:Alloc`(int`):%- [@(0.0.255) void]_[* Alloc]([@(0.0.255) int]_[*@3 size])&]
+[s5;:Buffer`:`:Alloc`(size`_t`):%- [@(0.0.255) void]_[* Alloc](size`_t_[*@3 size])&]
 [s2; Clears the buffer and allocates it with the new size [%-*@3 size]. 
 All current elements are lost.&]
 [s6; T must have default constructor.&]
-[s3;%- &]
+[s3; &]
 [s4;%- &]
-[s5;:Buffer`:`:Alloc`(int`,const T`&`):%- [@(0.0.255) void]_[* Alloc]([@(0.0.255) int]_[*@3 s
-ize], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 in])&]
+[s5;:Buffer`:`:Alloc`(size`_t`,const T`&`):%- [@(0.0.255) void]_[* Alloc](size`_t_[*@3 size
+], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 in])&]
 [s2; Clears the buffer and allocates it with the new size [%-*@3 size], 
 using the initialization value [%-*@3 in]. All current elements 
 are lost.&]
 [s6; T must have deep copy constructor.&]
-[s3;%- &]
+[s3; &]
 [s4;%- &]
 [s5;:Buffer`:`:Clear`(`):%- [@(0.0.255) void]_[* Clear]()&]
 [s2; Clears the buffer to the same state as default constructor. 
 All current elements are destroyed.&]
 [s3; &]
-[s0; ]
+[s0; ]]

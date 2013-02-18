@@ -97,6 +97,10 @@ public:
 
 	bool      GetAll(void *data, int size);
 
+	void      Put64(const void *data, int64 size);
+	int64     Get64(void *data, int64 size);
+	bool      GetAll64(void *data, int64 size);
+
 	int       Get8()                 { return ptr < rdlim ? *ptr++ : _Get8(); }
 #ifdef CPU_X86
 	int       Get16()                { if(ptr + 1 >= rdlim) return _Get16(); int q = *(word *)ptr; ptr += 2; return q; }
