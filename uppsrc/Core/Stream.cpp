@@ -94,7 +94,7 @@ void Stream::Put64(const void *data, int64 size)
 	Put(ptr, (int)size);
 #else
 	ASSERT(size <= INT_MAX);
-	Put(data, size);
+	Put(data, (int)size);
 #endif
 }
 
@@ -115,7 +115,7 @@ int64 Stream::Get64(void *data, int64 size)
 	return n + q;
 #else
 	ASSERT(size <= INT_MAX);
-	return Get(data, size);
+	return Get(data, (int)size);
 #endif
 }
 
