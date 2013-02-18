@@ -177,7 +177,7 @@ Http& Http::NewSessionId()
 
 Http& Http::SetLanguage(int lang_)
 {
-	Renderer::SetLanguage(lang);
+	Renderer::SetLanguage(lang_);
 	Upp::SetLanguage(lang_);
 	SessionSet("__lang__", lang);
 	SessionSet("language", ToLower(LNGAsText(lang)));
