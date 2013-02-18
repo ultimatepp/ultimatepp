@@ -1,0 +1,4 @@
+#ifndef _Stream64PutGet_icpp_init_stub
+#define _Stream64PutGet_icpp_init_stub
+#include "Core/init"
+#endif
