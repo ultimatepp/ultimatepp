@@ -10,7 +10,7 @@ NAMESPACE_UPP
 #define LOG_UPP_SSL_MALLOC 0
 
 #if LOG_UPP_SSL_MALLOC
-static int UPP_SSL_alloc = 0;
+static size_t UPP_SSL_alloc = 0;
 #endif
 
 struct SSLInitCls {
@@ -55,10 +55,9 @@ void SSLInitCls::AddThread()
 
 void *SSLAlloc(size_t size)
 {
-	size_t alloc = size + sizeof(int);
-	int *aptr = (int *)MemoryAllocSz(alloc);
-	if(!aptr)
-	{
+	size_t alloc = size + sizeof(size_t);
+	size_t *aptr = (size_t *)MemoryAllocSz(alloc);
+	if(!aptr) {
 #if LOG_UPP_SSL_MALLOC
 		RLOG("UPP_SSL_MALLOC(" << (int)size << ", alloc " << alloc << ") -> failed, total = " << UPP_SSL_alloc);
 #endif
@@ -76,7 +75,7 @@ void SSLFree(void *ptr)
 {
 	if(!ptr)
 		return;
-	int *aptr = (int *)ptr - 1;
+	size_t *aptr = (size_t *)ptr - 1;
 #if LOG_UPP_SSL_MALLOC
 	UPP_SSL_alloc -= *aptr;
 	RLOG("UPP_SSL_FREE(" << ptr << ", alloc " << *aptr << "), total = " << UPP_SSL_alloc);
@@ -88,16 +87,16 @@ void *SSLRealloc(void *ptr, size_t size)
 {
 	if(!ptr)
 		return NULL;
-	int *aptr = (int *)ptr - 1;
-	if((int)(size + sizeof(int)) <= *aptr)
+	size_t *aptr = (size_t *)ptr - 1;
+	if(size + sizeof(size_t) <= *aptr)
 	{
 #if LOG_UPP_SSL_MALLOC
 		RLOG("UPP_SSL_REALLOC(" << ptr << ", " << (int)size << ", alloc " << *aptr << ") -> keep same block");
 #endif
 		return ptr;
 	}
-	size_t newalloc = size + sizeof(int);
-	int *newaptr = (int *)MemoryAllocSz(newalloc);
+	size_t newalloc = size + sizeof(size_t);
+	size_t *newaptr = (size_t *)MemoryAllocSz(newalloc);
 	if(!newaptr)
 	{
 #if LOG_UPP_SSL_MALLOC
@@ -106,7 +105,7 @@ void *SSLRealloc(void *ptr, size_t size)
 		return NULL;
 	}
 	*newaptr++ = newalloc;
-	memcpy(newaptr, ptr, min<int>(*aptr - sizeof(int), size));
+	memcpy(newaptr, ptr, min<size_t>(*aptr - sizeof(size_t), size));
 #if LOG_UPP_SSL_MALLOC
 	UPP_SSL_alloc += newalloc - *aptr;
 	RLOG("UPP_SSL_REALLOC(" << ptr << ", " << (int)size << ", alloc " << newalloc << ") -> "
@@ -115,21 +114,6 @@ void *SSLRealloc(void *ptr, size_t size)
 	MemoryFree(aptr);
 	return newaptr;
 }
-
-/*
-void SSLInit()
-{
-	static bool inited = false;
-	if(!inited)
-	{
-		inited = true;
-		Socket::Init();
-		CRYPTO_set_mem_functions(SSLAlloc, SSLRealloc, SSLFree);
-		SSL_load_error_strings();
-		SSL_library_init();
-	}
-}
-*/
 
 String SSLGetLastError(int& code)
 {
@@ -173,7 +157,7 @@ String SSLBuffer::Get() const
 {
 	if(IsEmpty())
 		return String::GetVoid();
-	return String(buf_mem->data, buf_mem->length);
+	return String(buf_mem->data, (int)buf_mem->length);
 }
 
 bool SSLBuffer::Grow(int length)
@@ -217,7 +201,7 @@ String SSLStream::GetResult() const
 	BIO_get_mem_ptr(bio, &bm);
 	if(!bm)
 		return String::GetVoid();
-	return String(bm->data, bm->length);
+	return String(bm->data, (int)bm->length);
 }
 
 bool SSLKey::Load(String data)
@@ -491,7 +475,7 @@ bool SSLSocketData::Secure()
 		SetSSLError("OpenClient / SSL_new");
 		return false;
 	}
-	if(!SSL_set_fd(ssl, socket))
+	if(!SSL_set_fd(ssl, (int)socket))
 	{
 		SetSSLError("OpenClient / SSL_set_fd");
 		return false;
@@ -515,7 +499,7 @@ bool SSLSocketData::OpenAccept(SOCKET conn, bool nodelay, bool blocking)
 		SetSSLError("Accept / SSL_new");
 		return false;
 	}
-	if(!SSL_set_fd(ssl, socket))
+	if(!SSL_set_fd(ssl, (int)socket))
 	{
 		SetSSLError("Accept / SSL_set_fd");
 		return false;

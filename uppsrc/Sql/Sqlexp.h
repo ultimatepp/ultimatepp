@@ -191,8 +191,8 @@ public:
 	SqlS(const char *s, int pr)             : text(s), priority(pr) {}
 	SqlS(const String& s, int pr)           : text(s), priority(pr) {}
 	
-	force_inline SqlS(const SqlS& a, const char *op, const SqlS& b, int pr, int prb) { Init(a, op, strlen(op), b, pr, prb); }
-	force_inline SqlS(const SqlS& a, const char *op, const SqlS& b, int pr)          { Init(a, op, strlen(op), b, pr, pr); }
+	force_inline SqlS(const SqlS& a, const char *op, const SqlS& b, int pr, int prb) { Init(a, op, (int)strlen(op), b, pr, prb); }
+	force_inline SqlS(const SqlS& a, const char *op, const SqlS& b, int pr)          { Init(a, op, (int)strlen(op), b, pr, pr); }
 };
 
 class SqlVal : public SqlS, Moveable<SqlVal> {

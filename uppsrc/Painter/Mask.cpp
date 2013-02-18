@@ -80,7 +80,7 @@ void BufferPainter::FinishMask()
 			if(c256) t = sSpan(t, 128, c256);
 			if(c0) t = sSpan(t, 0, c0);
 			cl[y].Clear();
-			cl[y].Set(~wb, t - ~wb);
+			cl[y].Set(~wb, int(t - ~wb));
 		}
 	ib = mask.Top();
 	mask.Drop();

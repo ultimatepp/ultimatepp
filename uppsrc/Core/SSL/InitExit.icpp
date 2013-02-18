@@ -42,7 +42,7 @@ static void *SslRealloc(void *ptr, size_t size)
 		return NULL;
 	}
 	*newaptr++ = newalloc;
-	memcpy(newaptr, ptr, min<int>((int)(*aptr - sizeof(int64)), size));
+	memcpy(newaptr, ptr, min<int>((int)(*aptr - sizeof(int64)), (int)size));
 	UPP_SSL_alloc += newalloc - *aptr;
 	LLOG("UPP_SSL_REALLOC(" << ptr << ", " << (int64)size << ", alloc " << newalloc << ") -> "
 		<< FormatIntHex(newaptr) << ", total = " << UPP_SSL_alloc);

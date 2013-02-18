@@ -217,7 +217,7 @@ void SubpixelFiller::Render(int val, int len)
 	if(len > 6) {
 		int q = (3333333 - (v + 2 - begin)) % 3;
 		len -= q + 2;
-		int l = v + 2 + q - begin;
+		int l = int(v + 2 + q - begin);
 		RenderN(val, h, q + 4);
 		Write(l / 3);
 		l = len / 3;
@@ -238,7 +238,7 @@ void SubpixelFiller::Render(int val, int len)
 		else {
 			if(val == 256)
 				if(!ss && color.a == 255) {
-					FillRGBA(t, color, e - t);
+					FillRGBA(t, color, int(e - t));
 					t = e;
 				}
 				else
@@ -293,7 +293,7 @@ void SubpixelFiller::Write(int len)
 void SubpixelFiller::End()
 {
 	v[3] = v[4] = v[5] = 0;
-	Write((v + 3 - begin) / 3);
+	Write(int(v + 3 - begin) / 3);
 }
 
 void SpanFiller::Start(int minx, int maxx)
@@ -415,7 +415,7 @@ void ClipFiller::Finish(ClippingLine& cl)
 	if(full)
 		cl.SetFull();
 	else
-		cl.Set(~buffer, t - ~buffer);
+		cl.Set(~buffer, int(t - ~buffer));
 }
 
 void MaskFillerFilter::Render(int val)
