@@ -6,7 +6,7 @@ String SslBuffer::Get() const
 {
 	if(IsEmpty())
 		return String::GetVoid();
-	return String(buf_mem->data, buf_mem->length);
+	return String(buf_mem->data, (int)buf_mem->length);
 }
 
 bool SslBuffer::Grow(int length)
@@ -50,7 +50,7 @@ String SslStream::GetResult() const
 	BIO_get_mem_ptr(bio, &bm);
 	if(!bm)
 		return String::GetVoid();
-	return String(bm->data, bm->length);
+	return String(bm->data, (int)bm->length);
 }
 
 bool SslKey::Load(const String& data)

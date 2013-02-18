@@ -153,7 +153,7 @@ bool PostgreSQLPerformScript(const String& txt, StatementExecutor& se, Gate2<int
 			else
 				stmt.Cat(*text++);
 		}
-		if(progress_canceled(text - txt.Begin(), txt.GetLength()))
+		if(progress_canceled(int(text - txt.Begin()), txt.GetLength()))
 			return false;
 		if(!se.Execute(stmt))
 			return false;
@@ -447,8 +447,8 @@ void PostgreSQLConnection::SetParam(int i, const Value& r)
 			String raw = SqlRaw(r);
 			size_t rl;
 			unsigned char *s = PQescapeByteaConn(conn, (const byte *)~raw, raw.GetLength(), &rl);
-			p.Reserve(rl + 16);
-			p = "\'" + String(s, rl - 1) + "\'::bytea";
+			p.Reserve(int(rl + 16));
+			p = "\'" + String(s, int(rl - 1)) + "\'::bytea";
 			PQfreemem(s);
 			break;
 		}
@@ -460,7 +460,7 @@ void PostgreSQLConnection::SetParam(int i, const Value& r)
 				char *q = b;
 				*q = '\'';
 				int *err = NULL;
-				int n = PQescapeStringConn(conn, q + 1, v, v.GetLength(), err);
+				int n = (int)PQescapeStringConn(conn, q + 1, v, v.GetLength(), err);
 				q[1 + n] = '\'';
 				b.SetCount(2 + n);
 				p = b;
@@ -638,11 +638,11 @@ void PostgreSQLConnection::GetColumn(int i, Ref f) const
 		default: {
 			if(oid[i] == PGSQL_BYTEAOID) {
 				if(session.hex_blobs)
-					f.SetValue(ScanHexString(s, strlen(s)));
+					f.SetValue(ScanHexString(s, (int)strlen(s)));
 				else {
 					size_t len;
 					unsigned char *q = PQunescapeBytea((const unsigned char *)s, &len);
-					f.SetValue(String(q, len));
+					f.SetValue(String(q, (int)len));
 					PQfreemem(q);
 				}
 			}
