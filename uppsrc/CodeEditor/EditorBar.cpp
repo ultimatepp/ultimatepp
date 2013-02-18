@@ -423,6 +423,9 @@ void EditorBar::ClearErrors(int line)
 		count = li.GetCount();
 	}
 	else
+	if(line >= li.GetCount())
+		return;
+	else
 		count = line + 1;
 
 	for(int i = line; i < count; i++)
