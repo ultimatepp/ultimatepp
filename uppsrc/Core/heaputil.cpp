@@ -18,8 +18,9 @@ void *MemoryAllocPermanentRaw(size_t size)
 		return malloc(size);
 	static byte *ptr = NULL;
 	static byte *limit = NULL;
+	ASSERT(size < INT_MAX);
 	if(ptr + size >= limit) {
-		ptr = (byte *)AllocRaw4KB(size);
+		ptr = (byte *)AllocRaw4KB((int)size);
 		limit = ptr + 4096;
 	}
 	void *p = ptr;
@@ -60,7 +61,7 @@ int sKB;
 
 int   MemoryUsedKb() { return sKB; }
 
-void *SysAllocRaw(size_t size, int reqsize)
+void *SysAllocRaw(size_t size, size_t reqsize)
 {
 	sKB += int(((size + 4095) & ~4095) >> 10);
 #ifdef PLATFORM_WIN32
@@ -75,7 +76,7 @@ void *SysAllocRaw(size_t size, int reqsize)
 		ptr = NULL;
 #endif
 	if(!ptr)
-		OutOfMemoryPanic((size_t)reqsize);
+		OutOfMemoryPanic(reqsize);
 	DoPeakProfile();
 	return ptr;
 }

@@ -186,7 +186,7 @@ void *Heap::LAlloc(size_t& size) {
 		ptr = TryLAlloc(bini, size);
 		if(ptr) return ptr;
 	}
-	DLink *n = AddChunk(size);
+	DLink *n = AddChunk((int)size);
 	if(!n)
 		Panic("Out of memory!");
 	ptr = DivideBlock(n, (int)size, LBINS - 1);
