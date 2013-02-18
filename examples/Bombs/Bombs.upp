@@ -1,4 +1,4 @@
-description "Mine sweeping game";
+description "Mine sweeping game\377";
 
 uses
 	CtrlLib;
