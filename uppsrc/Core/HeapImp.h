@@ -1,6 +1,6 @@
 void  OutOfMemoryPanic(size_t size);
 
-void *SysAllocRaw(size_t size, int reqsize);
+void *SysAllocRaw(size_t size, size_t reqsize);
 void  SysFreeRaw(void *ptr, size_t size);
 
 void *AllocRaw4KB(int reqsize);

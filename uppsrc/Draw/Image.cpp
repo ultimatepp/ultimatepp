@@ -250,7 +250,7 @@ void Image::Serialize(Stream& s)
 				len -= INT_MAX;
 				offset += INT_MAX;
 			}			
-			if(!s.GetAll((void*)(ptr+offset), len))
+			if(!s.GetAll((void*)(ptr+offset), (int)len))
 				s.SetError();
 			
 			b.SetDots(dots);
@@ -270,7 +270,7 @@ void Image::Serialize(Stream& s)
 			len -= INT_MAX;
 			offset += INT_MAX;
 		}
-		s.Put(ptr+offset, len);
+		s.Put(ptr+offset, (int)len);
 	}
 }
 INITBLOCK {
