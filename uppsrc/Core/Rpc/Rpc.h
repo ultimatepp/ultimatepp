@@ -225,7 +225,7 @@ struct RpcData {
 	void        Set(int i, const T& x)  { ASSERT(out_map.GetCount() == 0); Value v; ValuePut(v, x); out.Set(i, v); }
 
 	template <class T>
-	void operator=(const T& x)          { operator<<(x); }
+	void operator=(const T& x)          { out.Clear(); operator<<(x); }
 
 	void        Reset()                 { in.Clear(); out.Clear(); ii = 0; }
 
