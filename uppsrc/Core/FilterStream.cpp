@@ -113,6 +113,7 @@ void OutFilterStream::Close()
 		FlushOut();
 		End();
 		buffer.Clear();
+		out->Close();
 	}
 }
 
