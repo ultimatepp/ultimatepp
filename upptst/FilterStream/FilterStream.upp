@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	FilterStream.cpp;
+
+mainconfig
+	"" = "SSE2";
+
