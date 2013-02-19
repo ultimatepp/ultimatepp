@@ -1,4 +1,4 @@
-class InputFilterStream : public Stream {
+class InFilterStream : public Stream {
 public:
 	virtual   bool  IsOpen() const;
 
@@ -24,16 +24,16 @@ public:
 	template <class F>
 	void Set(Stream& in_, F& filter) {
 		in = &in_;
-		filter.WhenOut = callback(this, &InputFilterStream::Out);
+		filter.WhenOut = callback(this, &InFilterStream::Out);
 		Filter = callback<F, F, const void *, int>(&filter, &F::Put);
 		End = callback(&filter, &F::End);
 	}
 	
-	InputFilterStream();
-	template <class F> InputFilterStream(Stream& in, F& filter) { Init(); Set(in, filter); }
+	InFilterStream();
+	template <class F> InFilterStream(Stream& in, F& filter) { Init(); Set(in, filter); }
 };
 
-class OutputFilterStream : public Stream {
+class OutFilterStream : public Stream {
 public:
 	virtual   void  Close();
 	virtual   bool  IsOpen() const;
@@ -57,12 +57,12 @@ public:
 	template <class F>
 	void Set(Stream& out_, F& filter) {
 		out = &out_;
-		filter.WhenOut = callback(this, &OutputFilterStream::Out);
+		filter.WhenOut = callback(this, &OutFilterStream::Out);
 		Filter = callback<F, F, const void *, int>(&filter, &F::Put);
 		End = callback(&filter, &F::End);
 	}
 	
-	OutputFilterStream();
-	template <class F> OutputFilterStream(Stream& in, F& filter) { Init(); Set(in, filter); }
-	~OutputFilterStream();
+	OutFilterStream();
+	template <class F> OutFilterStream(Stream& in, F& filter) { Init(); Set(in, filter); }
+	~OutFilterStream();
 };
