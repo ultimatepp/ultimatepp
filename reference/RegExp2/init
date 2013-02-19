@@ -1,0 +1,5 @@
+#ifndef _RegExp2_icpp_init_stub
+#define _RegExp2_icpp_init_stub
+#include "CtrlLib/init"
+#include "plugin/pcre/init"
+#endif

@@ -1,0 +1,18 @@
+LAYOUT(mainwindow, 500, 452)
+	ITEM(EditString, t1, HSizePosZ(104, 5).TopPosZ(64, 24))
+	ITEM(EditString, t2, HSizePosZ(104, 5).TopPosZ(92, 24))
+	ITEM(EditString, t3, HSizePosZ(104, 5).TopPosZ(120, 24))
+	ITEM(LineEdit, t4, HSizePosZ(4, 6).VSizePosZ(234, 6))
+	ITEM(Label, l1, SetLabel(t_("Source Text:")).SetAlign(ALIGN_RIGHT).LeftPosZ(0, 100).TopPosZ(64, 19))
+	ITEM(Label, l2, SetLabel(t_("Regular Expression:")).SetAlign(ALIGN_RIGHT).LeftPosZ(0, 100).TopPosZ(92, 19))
+	ITEM(Label, l3, SetLabel(t_("Replace Text:")).SetAlign(ALIGN_RIGHT).LeftPosZ(0, 100).TopPosZ(120, 20))
+	ITEM(Label, l4, SetLabel(t_("Load Preset Tests:")).SetAlign(ALIGN_RIGHT).LeftPosZ(8, 100).TopPosZ(20, 19))
+	ITEM(Label, l5, SetLabel(t_("Options:")).SetAlign(ALIGN_RIGHT).LeftPosZ(0, 100).TopPosZ(148, 19))
+	ITEM(Button, b1, SetLabel(t_("Run")).RightPosZ(8, 100).TopPosZ(188, 32))
+	ITEM(Button, b2, SetLabel(t_("Clear")).RightPosZ(116, 108).TopPosZ(188, 32))
+	ITEM(DropList, d1, LeftPosZ(112, 128).TopPosZ(20, 22))
+	ITEM(LabelBox, dv___12, LeftPosZ(4, 260).TopPosZ(4, 52))
+	ITEM(DropList, d2, LeftPosZ(104, 232).TopPosZ(148, 23))
+	ITEM(Option, o1, NotNull(true).SetLabel(t_("Global")).LeftPosZ(396, 88).TopPosZ(148, 16))
+END_LAYOUT
+
