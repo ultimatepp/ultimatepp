@@ -63,11 +63,6 @@ Stream::Stream() {
 
 Stream::~Stream() {}
 
-bool Stream::_IsEof() const
-{
-	return GetPos() >= GetSize();
-}
-
 void Stream::LoadError() {
 	SetError(ERROR_LOADING_FAILED);
 	if(style & STRM_THROW)
