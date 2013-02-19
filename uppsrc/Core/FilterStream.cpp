@@ -2,12 +2,12 @@
 
 NAMESPACE_UPP
 
-InputFilterStream::InputFilterStream()
+InFilterStream::InFilterStream()
 {
 	Init();
 }
 
-void InputFilterStream::Init()
+void InFilterStream::Init()
 {
 	static byte h[1];
 	ptr = rdlim = h;
@@ -15,31 +15,31 @@ void InputFilterStream::Init()
 	eof = false;
 }
 
-dword InputFilterStream::Avail()
+dword InFilterStream::Avail()
 {
 	return dword(rdlim - ptr);
 }
 
-bool InputFilterStream::IsOpen() const
+bool InFilterStream::IsOpen() const
 {
 	return in->IsOpen();
 }
 
-int InputFilterStream::_Term()
+int InFilterStream::_Term()
 {
 	if(ptr == rdlim)
 		Fetch(1);
 	return ptr == rdlim ? -1 : *ptr;
 }
 
-int InputFilterStream::_Get()
+int InFilterStream::_Get()
 {
 	if(ptr == rdlim)
 		Fetch(1);
 	return ptr == rdlim ? -1 : *ptr++;
 }
 
-dword InputFilterStream::_Get(void *data, dword size)
+dword InFilterStream::_Get(void *data, dword size)
 {
 	byte *p = (byte *)data;
 	int nn = 0;
@@ -56,14 +56,14 @@ dword InputFilterStream::_Get(void *data, dword size)
 	return nn;
 }
 
-void InputFilterStream::Out(const void *ptr, int size)
+void InFilterStream::Out(const void *ptr, int size)
 {
 	int l = buffer.GetCount();
 	buffer.SetCount(l + size);
 	memcpy(buffer.Begin() + l, ptr, size);
 }
 
-void InputFilterStream::Fetch(int size)
+void InFilterStream::Fetch(int size)
 {
 	buffer.Clear();
 	if(eof) {
@@ -89,12 +89,12 @@ void InputFilterStream::Fetch(int size)
 	rdlim = buffer.End();
 }
 
-OutputFilterStream::OutputFilterStream()
+OutFilterStream::OutFilterStream()
 {
 	Init();
 }
 
-void OutputFilterStream::Init()
+void OutFilterStream::Init()
 {
 	buffer.Alloc(4096);
 	wrlim = ~buffer + 4096;
@@ -102,12 +102,12 @@ void OutputFilterStream::Init()
 	out = NULL;
 }
 
-OutputFilterStream::~OutputFilterStream()
+OutFilterStream::~OutFilterStream()
 {
 	Close();
 }
 
-void OutputFilterStream::Close()
+void OutFilterStream::Close()
 {
 	if(buffer) {
 		FlushOut();
@@ -116,7 +116,7 @@ void OutputFilterStream::Close()
 	}
 }
 
-void OutputFilterStream::FlushOut()
+void OutFilterStream::FlushOut()
 {
 	if(ptr != ~buffer) {
 		Filter(~buffer, ptr - ~buffer);
@@ -124,13 +124,13 @@ void OutputFilterStream::FlushOut()
 	}
 }
 
-void OutputFilterStream::_Put(int w)
+void OutFilterStream::_Put(int w)
 {
 	FlushOut();
 	*ptr++ = w;
 }
 
-void OutputFilterStream::_Put(const void *data, dword size)
+void OutFilterStream::_Put(const void *data, dword size)
 {
 	const byte *p = (const byte *)data;
 	for(;;) {
@@ -145,12 +145,12 @@ void OutputFilterStream::_Put(const void *data, dword size)
 	}
 }
 
-bool OutputFilterStream::IsOpen() const
+bool OutFilterStream::IsOpen() const
 {
 	return buffer;
 }
 
-void OutputFilterStream::Out(const void *ptr, int size)
+void OutFilterStream::Out(const void *ptr, int size)
 {
 	out->Put(ptr, size);
 }
