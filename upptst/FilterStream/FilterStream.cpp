@@ -6,26 +6,23 @@ CONSOLE_APP_MAIN
 {
 	{
 		HttpRequest http("www.ultimatepp.org");
-		InputFilterStream in;
-		http.WhenContent = callback(&in, &InputFilterStream::Out);
+		InFilterStream in;
+		http.WhenContent = callback(&in, &InFilterStream::Out);
 		in.More = callback(&http, &HttpRequest::Do);
 		http.Blocking();
 		ASSERT(!in.IsEof());
 		String h;
 		h = in.GetLine();
 		ASSERT(h.StartsWith("<!DOCTYPE"));
-		LOG(h);
-		while(!in.IsEof()) {
+		while(!in.IsEof())
 			h = in.GetLine();
-			LOG(h);
-		}
 		ASSERT(h.EndsWith("BODY>"));
 	}
 	String path = GetHomeDirFile("test.gz");
 	{
 		FileOut fout(path);
 		Zlib zlib;
-		OutputFilterStream out(fout, zlib);
+		OutFilterStream out(fout, zlib);
 		zlib.GZip().Compress();
 		for(int i = 0; i < 100000; i++)
 			out.Put(FormatIntBase(i, 27));
@@ -42,7 +39,7 @@ CONSOLE_APP_MAIN
 	for(int pass = 0; pass < 2; pass++) {	
 		FileIn fin(path);
 		Zlib zlib;
-		InputFilterStream in(fin, zlib);
+		InFilterStream in(fin, zlib);
 		zlib.GZip().Decompress();
 		if(pass)
 			for(int i = 0; i < data.GetCount(); i++) {
