@@ -29,6 +29,8 @@ SqlMassInsert& SqlMassInsert::operator()(SqlId col, const Value& val)
 SqlMassInsert& SqlMassInsert::EndRow(SqlBool remove)
 {
 	cache.Top().remove = remove;
+	if(pos == 0)
+		return *this;
 	if(cache.GetCount() && cache[0].value.GetCount() * cache.GetCount() > 5000)
 		Flush();
 	ASSERT(column.GetCount() == pos);
@@ -66,15 +68,17 @@ void SqlMassInsert::Flush()
 		insert << ") values ";
 		for(int i = 0; i < cache.GetCount(); i++) {
 			Row& r = cache[i];
-			if(i)
-				insert << ", ";
-			insert << "(";
-			for(int i = 0; i < r.value.GetCount(); i++) {
+			if(r.value.GetCount()) {
 				if(i)
 					insert << ", ";
-				insert << SqlCompile(dialect, SqlFormat(r.value[i]));
+				insert << "(";
+				for(int i = 0; i < r.value.GetCount(); i++) {
+					if(i)
+						insert << ", ";
+					insert << SqlCompile(dialect, SqlFormat(r.value[i]));
+				}
+				insert << ")";
 			}
-			insert << ")";
 		}
 	}
 	else
@@ -95,7 +99,7 @@ void SqlMassInsert::Flush()
 			bool nextsel = false;
 			for(int i = ii; i < cache.GetCount(); i++) {
 				Row& r = cache[i];
-				if(r.nulls == nulls) {
+				if(r.nulls == nulls && r.value.GetCount()) {
 					r.nulls = DONE;
 					if(nextsel)
 						insert << " union all";
