@@ -8,7 +8,7 @@ CONSOLE_APP_MAIN
 	{
 		FileOut fout(path);
 		Zlib zlib;
-		OutputFilterStream out(fout, zlib);
+		OutFilterStream out(fout, zlib);
 		zlib.GZip().Compress();
 		out.Put("Hello world!");
 		out.Close();
@@ -17,7 +17,7 @@ CONSOLE_APP_MAIN
 	{
 		FileIn fin(path);
 		Zlib zlib;
-		InputFilterStream in(fin, zlib);
+		InFilterStream in(fin, zlib);
 		zlib.GZip().Decompress();
 		LOG(in.GetLine());
 	}
@@ -25,8 +25,8 @@ CONSOLE_APP_MAIN
 
 	{
 		HttpRequest http("www.ultimatepp.org");
-		InputFilterStream in;
-		http.WhenContent = callback(&in, &InputFilterStream::Out);
+		InFilterStream in;
+		http.WhenContent = callback(&in, &InFilterStream::Out);
 		in.More = callback(&http, &HttpRequest::Do);
 		http.Blocking();
 		while(!in.IsEof())
