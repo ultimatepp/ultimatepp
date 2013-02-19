@@ -70,6 +70,11 @@ private:
 	int compile_options;
 	int execute_options;
 
+	bool ReplacePos(String& t, int p, int q, const String& r);
+	int  Replace0(String& t, const Vector<String>& rv, const int& rv_count, int& offset);
+	Vector<String> ResolveBackRef(const Vector<String>& rv);	
+	Vector<String> Make_rv(const String& r);
+	
 public:
 	void           Clear(bool freemem = false);
 	void           SetOptions(int options);
@@ -77,17 +82,25 @@ public:
 	void           SetPattern(const String &p);
 	bool           Compile(bool recompile = false);
 	bool           Study(bool restudy = false);
-	int            Execute(const String &t, int offset = 0);
-	bool           Match(const String &t, bool copy = true);
-	bool           FastMatch(const String &t);
-	bool           GlobalMatch(const String &t);
+	int            Execute(const String& t, int offset = 0);
+	bool           Match(const String& t, bool copy = true);
+	bool           FastMatch(const String& t);
+	bool           GlobalMatch(const String& t);
 	String         operator[](const int i);
 	int            GetCount();
 	String         GetString(int i);
 	void           GetMatchPos(int i, int& iPosStart, int& iPosAfterEnd);
+
+	int            Replace(String& t, const Vector<String>& rv, bool backref=false);
+	int            Replace(String& t, const String& r, bool backref=false);
+	int            Replace(String& t, Callback1<Vector<String>&> cbr);
+	
+	int            ReplaceGlobal(String& t, const Vector<String>& rv, bool backref=false);
+	int            ReplaceGlobal(String& t, const String& r, bool backref=false);
+	int            ReplaceGlobal(String& t, Callback1<Vector<String>&> cbr);
+	
 	Vector<String> GetStrings();
 	String         GetPattern() const { return pattern; }
-
 
 	bool           IsError() { return error_code != 0; }
 	const char    *GetError() { return error_string; }
@@ -100,3 +113,5 @@ public:
 };
 
 #endif
+
+
