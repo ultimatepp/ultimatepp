@@ -63,8 +63,6 @@ file
 	Stream.h,
 	Stream.cpp optimize_speed,
 	BlockStream.cpp optimize_speed,
-	FilterStream.h,
-	FilterStream.cpp,
 	Profile.h,
 	Diag.h,
 	Log.cpp,
