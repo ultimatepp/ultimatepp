@@ -295,6 +295,8 @@ class JsonIO;
 #include "Callback.h"
 #include "Util.h"
 
+#include "FilterStream.h"
+
 #include "Format.h"
 #include "Convert.h"
 

@@ -45,7 +45,6 @@ private:
 	int       _Get16();
 	int       _Get32();
 	int64     _Get64();
-	bool      _IsEof() const;
 
 public:
 	virtual   void  Seek(int64 pos);
@@ -73,10 +72,11 @@ public:
 	void      ClearError()           { style = style & ~STRM_ERROR; errorcode = 0; }
 
 	int64     GetPos() const         { return dword(ptr - buffer) + pos; }
-	bool      IsEof() const          { return ptr >= rdlim && _IsEof(); }
 	int64     GetLeft() const        { return GetSize() - GetPos(); }
 	void      SeekEnd(int64 rel = 0) { Seek(GetSize() + rel); }
 	void      SeekCur(int64 rel)     { Seek(GetPos() + rel); }
+
+	bool      IsEof()                { return ptr >= rdlim && _Term() < 0; }
 
 	void      Put(int c)             { if(ptr < wrlim) *ptr++ = c; else _Put(c); }
 	int       Term()                 { return ptr < rdlim ? *ptr : _Term(); }
