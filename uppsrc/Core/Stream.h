@@ -84,6 +84,7 @@ public:
 	int       Get()                  { return ptr < rdlim ? *ptr++ : _Get(); }
 
 	const byte *PeekPtr(int size = 1){ ASSERT(size > 0); return ptr + size <= rdlim ? ptr : NULL; }
+	const byte *GetPtr(int size = 1) { ASSERT(size > 0); if(ptr + size <= rdlim) { byte *p = ptr; ptr += size; return p; }; return NULL; }
 	byte       *PutPtr(int size = 1) { ASSERT(size > 0); if(ptr + size <= wrlim) { byte *p = ptr; ptr += size; return p; }; return NULL; }
 
 	void      Put(const void *data, int size)  { ASSERT(size >= 0); if(ptr + size <= wrlim) { memcpy(ptr, data, size); ptr += size; } else _Put(data, size); }

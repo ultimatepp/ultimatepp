@@ -383,7 +383,16 @@ nt]_[*@3 size]_`=_[@3 1])&]
 [s2; This is a special optimization method; it might return a pointer 
 to data of [%-*@3 size] bytes at current position in the stream, 
 but it is allowed to return NULL `- in that case you need to 
-load data into buffer using Get.&]
+use Get to load data. PeekPtr does not move the position forward, 
+you need to use some of Seek methods to do that.&]
+[s3; &]
+[s4;%- &]
+[s5;:Stream`:`:GetPtr`(int`):%- [@(0.0.255) const]_[_^byte^ byte]_`*[* GetPtr]([@(0.0.255) in
+t]_[*@3 size]_`=_[@3 1])&]
+[s2; This is a special optimization method; it might return a pointer 
+to data of [%-*@3 size] bytes at current position in the stream, 
+but it is allowed to return NULL `- in that case you need to 
+use Get to load data. Unlike PeekPtr, it advances stream by [%-*@3 size].&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:PutPtr`(int`):%- [_^byte^ byte]_`*[* PutPtr]([@(0.0.255) int]_[*@3 size]_`=_[@3 1
