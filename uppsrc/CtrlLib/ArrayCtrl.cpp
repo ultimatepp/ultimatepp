@@ -1886,6 +1886,9 @@ struct ArrayCtrlSeparatorDisplay : Display {
 		w.DrawRect(r.left, y, r.GetWidth(), 1, SColorShadow());
 		w.DrawRect(r.left, y + 1, r.GetWidth(), 1, SColorLight());
 	}
+	virtual Size GetStdSize(const Value& q) const {
+		return Size(0, 2);
+	}
 };
 
 void ArrayCtrl::AddSeparator()
