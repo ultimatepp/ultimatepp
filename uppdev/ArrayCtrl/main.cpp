@@ -59,6 +59,7 @@ struct App : TopWindow {
 		a.WhenDrop = THISBACK(DnD);
 		a.WhenDrag = THISBACK(Drag);
 		a.WhenLeftDouble = THISBACK(A);
+		a.Removing();
 		
 		b.AddColumn("Text");
 		b.MultiSelect();

@@ -3,8 +3,6 @@ uses
 	Painter;
 
 file
-	PainterTest.h,
-	lion.cpp,
 	main.cpp;
 
 mainconfig
