@@ -527,6 +527,9 @@ void DisplayPopup::Sync()
 			if(sz.cx + 2 * margin > item.GetWidth() || sz.cy > item.GetHeight()) {
 				slim = item + ctrl->GetScreenView().TopLeft();
 				if(slim.Contains(GetMousePos())) {
+					DDUMP(sz);
+					DDUMP(margin);
+					DDUMP(item);
 					Rect r = item;
 					r.right = max(r.right, r.left + sz.cx + 2 * margin);
 					r.bottom = max(r.bottom, r.top + sz.cy);
