@@ -37,7 +37,11 @@ Flush, [/ delete] statement is issued before inserting rows, using
 combined condition in the [/ where] clause. This is intended for 
 situation where rows are replaced (in addition to be inserted) 
 `- this it is possible to specify condition for row being inserted, 
-so that it is removed (if exists) before inserting a new value.&]
+so that it is removed (if exists) before inserting a new value. 
+Rows [/ must] always have the same columns before EndRow is invoked, 
+and exception to this rule is when EndRow is invoked without 
+[/ any] columns added `- in that case, nothing is inserted, only 
+[%-*@3 remove] condition is used.&]
 [s3; &]
 [s4; &]
 [s5;:SqlMassInsert`:`:Flush`(`):%- [@(0.0.255) void]_[* Flush]()&]
