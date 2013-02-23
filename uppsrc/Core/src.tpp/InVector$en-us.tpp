@@ -19,8 +19,9 @@ with very fast insertion times for large  numbers of elements.
 O(n) complexity of insertions is relativaly hard to evaluate, 
 but it should be log(n) for any realistic numbers of elements. 
 Index retrieval complexity is log(n), but thanks to per`-thread 
-cache it is quite fast for simple range scans using single index 
-over single container and fast for any iterator based scans.&]
+cache it is fast for simple range scans using increasing/decreasing 
+single index over single container and fast for any iterator 
+based scans.&]
 [s2; Generally, any method that changes the number of elements in 
 InVector (plus Shrink method) invalidate any iterators to InVector 
 and references to elements in InVector.&]
@@ -208,4 +209,42 @@ Vector][@(0.0.255) `&]_[*@3 v], [@(0.0.255) int])&]
 [s5;:InVector`:`:Swap`(InVector`&`):%- [@(0.0.255) void]_[* Swap]([_^InVector^ InVector][@(0.0.255) `&
 ]_[*@3 b])&]
 [s2; Swap with another InVector.&]
-[s3; ]]
+[s3; &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Exemples on InVector caching]]}}&]
+[s3;%- &]
+[s0; Following examples demonstrate what is meant by `"simple scan`" 
+which are using cache to accelerate index retrieval vs more complex 
+non`-cached scans:&]
+[s0; &]
+[s0; [4 Cached cases]&]
+[s0; &]
+[ {{10000 [s0; [C int m `= 0;]&]
+[s0; [C for(int i `= 0; i < x.GetCount(); i`+`+)]&]
+[s0; [C -|m `+`= x`[i`];]&]
+[s0; [C for(int i `= x.GetCount(); `-`-i >`= 0;)]&]
+[s0; [C -|m `+`= x`[i`];]]}}&]
+[s0; &]
+[s0; &]
+[ {{10000 [s0; [C InVector<int> y;]&]
+[s0; [C y <<`= x;]&]
+[s0; [C int m `= 0;]&]
+[s0; [C for(int i `= 0; i < x.GetCount(); i`+`+)]&]
+[s0; [C -|m `+`= x`[i`];]&]
+[s0; [C for(int i `= y.GetCount(); `-`-i >`= 0;)]&]
+[s0; [C -|m `+`= y`[i`];]]}}&]
+[s0; &]
+[s0; &]
+[s0; &]
+[s0; [4 Non`-Cached cases (about 8x times slower in this case)]&]
+[s0; &]
+[ {{10000 [s0; [C int m `= 0;]&]
+[s0; [C for(int i `= 0; i < x.GetCount(); i`+`+)]&]
+[s0; [C -|m `+`= x`[i`] `+ x`[x.GetCount() `- i `- 1`];]]}}&]
+[s0; &]
+[ {{10000 [s0; [C InVector<int> y;]&]
+[s0; [C y <<`= x;]&]
+[s0; [C int m `= 0;]&]
+[s0; [C for(int i `= 0; i < x.GetCount(); i`+`+)]&]
+[s0; [C -|m `+`= x`[i`] `+ y`[i`];]]}}&]
+[s0; ]]
