@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	InVectorCache.cpp;
+
+mainconfig
+	"" = "SSE2";
+
