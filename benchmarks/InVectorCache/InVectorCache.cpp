@@ -20,6 +20,34 @@ CONSOLE_APP_MAIN
 		RDUMP(m);
 	}
 	{
+		RTIMING("Simple scan, more complex OP");
+		int m = 0;
+		for(int j = 0; j < N; j++) {
+			for(int i = 0; i < x.GetCount(); i++)
+				if(x[i] > 500)
+					m += x[i];
+			for(int i = x.GetCount(); --i >= 0;)
+				if(x[i] > 500)
+					m += x[i];
+		}
+		RDUMP(m);
+	}
+	{
+		RTIMING("Iterator scan");
+		int m = 0;
+		for(int j = 0; j < N; j++) {
+			InVector<int>::Iterator e = x.End();
+			InVector<int>::Iterator i = x.Begin();
+			while(i != e)
+				m += *i++;
+			e = x.Begin();
+			i = x.End();
+			while(i != e)
+				m += *--i;
+		}
+		RDUMP(m);
+	}
+	{
 		RTIMING("Single InVector, problematic scan");
 		int m = 0;
 		for(int j = 0; j < N; j++) {
