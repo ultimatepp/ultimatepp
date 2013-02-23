@@ -26,6 +26,8 @@ based scans.&]
 InVector (plus Shrink method) invalidate any iterators to InVector 
 and references to elements in InVector.&]
 [s2; InVector has default pick transfer semantics with optional deep`-copy.&]
+[s2; InVector requires elements to be [^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ Move
+able].&]
 [s0;i448;a25;kKO9;@(0.0.255)%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
@@ -90,7 +92,7 @@ references to elements.&]
 [s4; &]
 [s5;:InVector`:`:SetCount`(int`):%- [@(0.0.255) void]_[* SetCount]([@(0.0.255) int]_[*@3 n])&]
 [s2; Sets the number of elements to be [%-*@3 n] either removing surplus 
-elements or using AddN to extendt the InVector. Invalidates iterators 
+elements or using AddN to extend the InVector. Invalidates iterators 
 and references to elements.&]
 [s3; &]
 [s4; &]
@@ -102,7 +104,7 @@ to elements.&]
 [s5;:InVector`:`:At`(int`):%- [*@4 T][@(0.0.255) `&]_[* At]([@(0.0.255) int]_[*@3 i])&]
 [s2; If [%-*@3 i] >`= GetCount, performs SetCount(i `+ 1) to make sure 
 element at [%-*@3 i] exists. elements. In all cases, returns a 
-reference to element at . Invalidates iterators and references 
+reference to element at [%-*@3 i]. Invalidates iterators and references 
 to elements.&]
 [s3; &]
 [s4; &]
@@ -113,8 +115,8 @@ iterators and references to elements.&]
 [s4; &]
 [s5;:InVector`:`:Set`(int`,const T`&`,int`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) int]_[*@3 i
 ], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) int]_[*@3 count])&]
-[s2; Sets the value of elements [%-*@3 count] elements starting at 
-[%-*@3 i] to [%-*@3 x].&]
+[s2; Sets the value of [%-*@3 count] elements starting at [%-*@3 i] to 
+[%-*@3 x].&]
 [s3; &]
 [s4; &]
 [s5;:InVector`:`:Set`(int`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Set]([@(0.0.255) int]_[*@3 i
@@ -156,7 +158,7 @@ same predicate.&]
 ]_[*@3 val], [@(0.0.255) const]_[*@4 L][@(0.0.255) `&]_[*@3 less])_[@(0.0.255) const]&]
 [s5;:InVector`:`:FindLowerBound`(const T`&`)const:%- [@(0.0.255) int]_[* FindLowerBound](
 [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 val])_[@(0.0.255) const]&]
-[s2; Finds the upper bound for [%-*@3 val] using [%-*@3 less] / StdLess<T> 
+[s2; Finds the lower bound for [%-*@3 val] using [%-*@3 less] / StdLess<T> 
 as comparison predicate. InVector must be sorted using the same 
 predicate.&]
 [s3; &]
@@ -198,7 +200,7 @@ nt]_[*@3 pos])&]
 [s3; &]
 [s4; &]
 [s5;:InVector`:`:IsPicked`(`)const:%- [@(0.0.255) bool]_[* IsPicked]()_[@(0.0.255) const]&]
-[s2; Returns true if InVector is picked.&]
+[s2; Returns constant/nonconstant iterator to the begin/end/[%-*@3 pos].&]
 [s3; &]
 [s4; &]
 [s5;:InVector`:`:InVector`(const InVector`&`,int`):%- [* InVector]([@(0.0.255) const]_[* In
@@ -211,7 +213,7 @@ Vector][@(0.0.255) `&]_[*@3 v], [@(0.0.255) int])&]
 [s2; Swap with another InVector.&]
 [s3; &]
 [s0; &]
-[ {{10000F(128)G(128)@1 [s0; [* Exemples on InVector caching]]}}&]
+[ {{10000F(128)G(128)@1 [s0; [* Examples on InVector caching]]}}&]
 [s3;%- &]
 [s0; Following examples demonstrate what is meant by `"simple scan`" 
 which are using cache to accelerate index retrieval vs more complex 
