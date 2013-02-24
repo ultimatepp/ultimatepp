@@ -18,11 +18,7 @@ ublic][3 _][*@3;3 Stream]&]
 object, typically of compression/decompression class.&]
 [s0;i448;a25;kKO9;:noref:@(0.0.255) &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
-[s0; &]
-[s1;:OutFilterStream`:`:class: [@(0.0.255)3 class][3 _][*3 OutFilterStream][3 _:_][@(0.0.255)3 p
-ublic][3 _][*@3;3 Stream]&]
-[s2;%% &]
-[s4; &]
+[s3; &]
 [s5;:OutFilterStream`:`:Close`(`): [@(0.0.255) virtual] [@(0.0.255) void]_[* Close]()&]
 [s2;%% Finalizes operations and closes the output stream. Repeated 
 call does nothing.&]
