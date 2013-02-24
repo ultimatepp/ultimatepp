@@ -1,4 +1,4 @@
-topic "";
+topic "InArray";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -16,13 +16,14 @@ topic "";
 [s1;:InArray`:`:class:%- [@(0.0.255) class]_[* InArray]_:_[@(0.0.255) public]_[*@3 MoveableAnd
 DeepCopyOption]<_[_^InVector^ InVector]<[*@4 T]>_>_&]
 [s2; InArray is an Array flavor of [^topic`:`/`/Core`/src`/InVector`$en`-us^ InVector].
- Unlike InVector, it does not require to elements to be Moveable 
-and even allows storing elements [/ derived] from T.&]
+ Unlike InVector, it does not require to elements to be [^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ M
+oveable] and even allows storing elements [/ derived] from T.&]
 [s2; Generally, any method that changes the number of elements in 
 InVector (plus Shrink method) invalidates any iterators to InVector 
 but, unlike InVector, DOES NOT invalidate references to elements 
 in InVector.&]
-[s2; InVector has default pick transfer semantics with optional deep`-copy.&]
+[s2; InVector has default pick transfer semantics with optional deep`-copy. 
+It is [^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ Moveable].&]
 [s0;i448;a25;kKO9;:noref:@(0.0.255)%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
@@ -222,5 +223,5 @@ y][@(0.0.255) `&]_[*@3 v], [@(0.0.255) int])&]
 [s4; &]
 [s5;:InArray`:`:Swap`(InArray`&`):%- [@(0.0.255) void]_[* Swap]([_^InArray^ InArray][@(0.0.255) `&
 ]_[*@3 b])&]
-[s2;  [%-*@3 b] .&]
+[s2; Swaps InArray with [%-*@3 b].&]
 [s0; ]]

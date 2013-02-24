@@ -1,4 +1,4 @@
-topic "";
+topic "InVector";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -25,7 +25,8 @@ based scans.&]
 [s2; Generally, any method that changes the number of elements in 
 InVector (plus Shrink method) invalidate any iterators to InVector 
 and references to elements in InVector.&]
-[s2; InVector has default pick transfer semantics with optional deep`-copy.&]
+[s2; InVector has default pick transfer semantics with optional deep`-copy. 
+It is [^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ Moveable].&]
 [s2; InVector requires elements to be [^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ Move
 able].&]
 [s0;i448;a25;kKO9;@(0.0.255)%- &]
