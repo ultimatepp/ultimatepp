@@ -45,7 +45,7 @@ protected:
 	Buffer<byte> buffer;
 
 	void   FlushOut();
-	dword  Avail()               { return 4096 - (ptr - ~buffer); }
+	dword  Avail()               { return dword(4096 - (ptr - ~buffer)); }
 	void   Init();
 
 public:
