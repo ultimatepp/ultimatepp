@@ -74,7 +74,7 @@ void LogOut::Create(bool append)
 			if(rot == (options >> 24))
 				FileDelete(current);
 			else
-			if(rot == 1 && !IsPanicMode())
+			if((options & LOG_ROTATE_GZIP) && rot == 1 && !IsPanicMode())
 				SaveFile(next, GZCompress(LoadFile(current)));
 			else
 				FileMove(current, next);
