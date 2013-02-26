@@ -325,6 +325,8 @@ class Gate : Moveable< Gate > {
 	bool operator==(const Gate&);
 	bool operator!=(const Gate&);
 
+	Gate(bool (*fn)()); // Avoid converting function pointers to bool
+
 public:
 	typedef Gate CLASSNAME;
 
@@ -372,6 +374,8 @@ class Gate1 : Moveable< Gate1<P1> > {
 
 	bool operator==(const Gate1&);
 	bool operator!=(const Gate1&);
+
+	template <class H> Gate1(bool (*fn)(H)); // Avoid converting function pointers to bool
 
 public:
 	typedef Gate1 CLASSNAME;
@@ -444,6 +448,8 @@ class Gate2 : Moveable< Gate2<P1, P2> > {
 	bool operator==(const Gate2&);
 	bool operator!=(const Gate2&);
 
+	template <class H1, class H2> Gate2(bool (*fn)(H1, H2)); // Avoid converting function pointers to bool
+
 public:
 	typedef Gate2 CLASSNAME;
 
@@ -514,6 +520,8 @@ class Gate3 : Moveable< Gate3<P1, P2, P3> > {
 	bool operator==(const Gate3&);
 	bool operator!=(const Gate3&);
 
+	template <class H1, class H2, class H3> Gate3(bool (*fn)(H1, H2, H3)); // Avoid converting function pointers to bool
+
 public:
 	typedef Gate3 CLASSNAME;
 
@@ -583,6 +591,8 @@ class Gate4 : Moveable< Gate4<P1, P2, P3, P4> > {
 
 	bool operator==(const Gate4&);
 	bool operator!=(const Gate4&);
+
+	template <class H1, class H2, class H3, class H4> Gate4(bool (*fn)(H1, H2, H3, H4)); // Avoid converting function pointers to bool
 
 public:
 	typedef Gate4 CLASSNAME;
