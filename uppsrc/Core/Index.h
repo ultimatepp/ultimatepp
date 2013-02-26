@@ -204,7 +204,7 @@ public:
 	Index() {}
 	Index(pick_ Index& s) : B(s)             {}
 	Index(const Index& s, int) : B(s, 1)     {}
-	Index(pick_ Vector<T>& s) : B(s)         {}
+	explicit Index(pick_ Vector<T>& s) : B(s){}
 	Index(const Vector<T>& s, int) : B(s, 1) {}
 
 	Index& operator=(pick_ Vector<T>& x)     { B::operator=(x); return *this; }
@@ -236,7 +236,7 @@ public:
 	ArrayIndex() {}
 	ArrayIndex(pick_ ArrayIndex& s) : B(s)          {}
 	ArrayIndex(const ArrayIndex& s, int) : B(s, 1)  {}
-	ArrayIndex(pick_ Array<T>& s) : B(s)            {}
+	explicit ArrayIndex(pick_ Array<T>& s) : B(s)   {}
 	ArrayIndex(const Array<T>& s, int) : B(s, 1)    {}
 
 	ArrayIndex& operator=(pick_ Array<T>& x)        { B::operator=(x); return *this; }

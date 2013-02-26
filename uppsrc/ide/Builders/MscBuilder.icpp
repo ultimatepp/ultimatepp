@@ -125,7 +125,7 @@ String MscBuilder::LinkerName() const
 
 static bool sContainsPchOptions(const String& x)
 {
-	Index<String> a = Split(x, ' ');
+	Index<String> a(Split(x, ' '));
 	return  a.Find("-GL") >= 0 || a.Find("/GL") >= 0 || a.Find("-Y-") >= 0 || a.Find("/Y-") >= 0
 	     || a.Find("-Yc") >= 0 || a.Find("/Yc") >= 0 || a.Find("-Yd") >= 0 || a.Find("/Yd") >= 0
 	     || a.Find("-Yl") >= 0 || a.Find("/Yl") >= 0 || a.Find("-Yu") >= 0 || a.Find("/Yu") >= 0
