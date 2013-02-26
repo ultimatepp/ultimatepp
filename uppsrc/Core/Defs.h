@@ -12,6 +12,7 @@
 	#pragma warning(disable : 4005)
 	#pragma warning(disable : 4675)
 	#pragma warning(disable : 4996)
+	#pragma warning(disable : 4180)
 
 	#pragma setlocale("C")
 #endif
