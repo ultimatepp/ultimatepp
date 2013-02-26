@@ -454,6 +454,9 @@ public:
 	ConstIterator    Begin() const                  { return iv.Begin(); }
 	ConstIterator    End() const                    { return iv.End(); }
 	ConstIterator    GetIter(int pos) const         { return iv.GetIter(pos); }
+	
+	const InVector<T>& GetKeys()                    { return iv; }
+
 
 	SortedIndex()                                        {}
 	SortedIndex(const SortedIndex& s, int) : iv(s.iv, 1) {}
@@ -513,7 +516,8 @@ public:
 	
 	bool     IsPicked() const                       { return value.IsPicked() || key.IsPicked(); }
 	
-	const SortedIndex<K>& GetKeys() const           { return key; }
+	const SortedIndex<K>& GetIndex() const          { return key; }
+	const InVector<K>& GetKeys() const              { return key.GetKeys(); }
 	const InVector<T>& GetValues() const            { return value; }
 
 	SortedAMap()                                    { SetSlave(); }
