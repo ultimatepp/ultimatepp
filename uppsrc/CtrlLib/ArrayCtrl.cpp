@@ -2085,8 +2085,11 @@ bool ArrayCtrl::DoRemove()
 	if(!IsCursor() || askremove && !PromptOKCancel(RowFormat(t_("Do you really want to delete the selected %s ?"))))
 		return false;
 	if(multiselect) {
+		Bits sel;
+		for(int i = 0; i < GetCount(); i++)
+			sel.Set(i, IsSelected(i));
 		for(int i = GetCount() - 1; i >= 0; i--)
-			if(IsSelected(i))
+			if(sel[i])
 				Remove(i);
 	}
 	else
