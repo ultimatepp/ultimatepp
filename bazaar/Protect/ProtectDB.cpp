@@ -265,7 +265,7 @@ Vector<String> ProtectDB::GetMACEMails(String const &mac)
 bool ProtectDB::UpdateMac(String const &mac, Vector<String> const &eMails)
 {
 	// get all emails connected to this MAC
-	Index<String>prevMails = GetMACEMails(mac);
+	Index<String> prevMails(GetMACEMails(mac));
 	
 	
 	// check if mail is already there
