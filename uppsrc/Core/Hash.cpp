@@ -345,7 +345,7 @@ void Bits::Set(int i, bool b)
 	ASSERT(i >= 0 && alloc >= 0);
 	int q = i >> 5;
 	if(q >= alloc) {
-		int nalloc = 2 * q + 1;
+		int nalloc = 4 * q / 3 + 1;
 		dword *nbp = new dword[nalloc];
 		if(bp) {
 			Copy(nbp, bp, bp + alloc);
@@ -361,7 +361,7 @@ void Bits::Set(int i, bool b)
 }
 
 void Bits::Set(int i, bool b, int count)
-{ //! Optimize !!!
+{
 	while(count--)
 		Set(i++, b);
 }
