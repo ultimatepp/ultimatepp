@@ -8,6 +8,11 @@ String FileName()
 	return GetExeDirFile("test.qtf");
 }
 
+struct MyApp : TopWindow {
+	virtual void Activate() { Title("Active"); TopWindow::Activate(); }
+	virtual void Deactivate() { Title("Deactivated"); TopWindow::Deactivate(); }
+};
+
 
 GUI_APP_MAIN
 {
@@ -41,7 +46,7 @@ GUI_APP_MAIN
 	LoadFromFile(f, ConfigFile("pos"));
 	e.SetPosInfo(f);
 //	e.Pick(ParseQTF(AsQTF(CreateImageObject(CtrlImg::exclamation)) + " hahahaha"));
-	TopWindow w;
+	MyApp w;
 	w.ToolWindow();
 	w.SetRect(0, 0, 700, 500);
 	w.Sizeable().Zoomable();
