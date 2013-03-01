@@ -76,6 +76,60 @@ public:
 	virtual inline ptrdiff_t GetCount()		{return yData->GetCount();}
 };
 
+template <class Y>
+class VectorVectorY : public DataSource {
+private:
+	Vector<Vector<Y> > *data;
+	bool useCols;
+	int idX, idY, idZ;
+	int beginData;
+	ptrdiff_t numData;
+	
+public:
+	VectorVectorY() : data(0), useCols(true), idX(0), idY(1), idZ(2), beginData(0), numData(Null) {}
+	VectorVectorY(Vector<Vector<Y> > &data, bool useCols = true, int idX = 0, int idY = 1, 
+				  int idZ = 2, int beginData = 0, int numData = Null) : 
+		data(&data), useCols(useCols), idX(idX), idY(idY), idZ(idZ), beginData(beginData), numData(numData) 
+	{
+		Init(data, useCols, idX, idY, idZ, beginData, numData);
+	}
+	void Init(Vector<Vector<Y> > &_data, bool _useCols = true, int _idX = 0, int _idY = 1, 
+			  int _idZ = 2, int _beginData = 0, int _numData = Null) 
+	{
+		data = &_data;
+		useCols = _useCols;
+		idX = _idX;
+		idY = _idY;
+		idZ = _idZ;
+		beginData = _beginData;
+		numData = _numData;
+		if (IsNull(_numData)) {
+			if (!useCols) {
+				if (data->IsEmpty())
+					numData = 0;
+				else	
+					numData = (*data)[0].GetCount() - beginData;
+			} else
+				numData = data->GetCount() - beginData;
+		}
+	}
+	virtual inline double z(int id)	{return useCols ? (*data)[beginData + id][idZ] : (*data)[idZ][beginData + id];}
+	virtual inline double y(int id)	{return useCols ? (*data)[beginData + id][idY] : (*data)[idY][beginData + id];}
+	virtual inline double x(int id) {
+		if (IsNull(idX))
+			return id;
+		else
+			return useCols ? (*data)[beginData + id][idX] : (*data)[idX][beginData + id];
+	}
+	virtual inline ptrdiff_t GetCount()	{return numData;};
+};
+
+
+
+
+
+
+
 class VectorDouble : public DataSource {
 private:
 	const Vector<double> *xData, *yData;
