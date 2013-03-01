@@ -35,8 +35,10 @@ GUI_APP_MAIN
 	Sort(Examples(), CompareExamples);
 	for (int i = 0; i < Examples().GetCount(); ++i)
 		Examples()[i].ctrl()->Init();
-
-	ScatterCtrl_Demo().Run();
+	
+	ScatterCtrl_Demo demo;
+	
+	demo.Run();
 }
 
 ScatterCtrl_Demo::ScatterCtrl_Demo()
@@ -73,7 +75,9 @@ void ScatterCtrl_Demo::Preview()
 	Report r;	
 	
 	const Drawing &w = Examples()[tab.Get()].ctrl()->Scatter().GetDrawing();
-	r.DrawDrawing(300, 300, w.GetSize().cx, w.GetSize().cy, w);
+	r.Landscape();
+	Size pageSize = r.GetPageSize();
+	r.DrawDrawing(0, 0, pageSize.cx, pageSize.cy, w);
 
 	Perform(r);
 }
