@@ -5,8 +5,8 @@ void Tab8::Init()
 {
 	CtrlLayout(*this);	
 	HSizePos().VSizePos();
-	scatter.SetRange(13,50,20);
-	scatter.SetMajorUnits(1,10);
+	scatter.SetRange(13, 50, 20);
+	scatter.SetMajorUnits(1, 10);
 	scatter.SetXYMin(0,-20, 1000);
 	scatter.SetMouseHandling(true, true);
 
