@@ -18,7 +18,7 @@ GridCtrl::GridCtrl() : holder(*this)
 	fixed_click = false;
 	fixed_top_click = false;
 	fixed_left_click = false;
-	fixed_size_changed = true;
+	size_changed = true;
 
 	resize_panel_open = false;
 
@@ -1604,7 +1604,7 @@ void GridCtrl::DrawHorzDragLine(Draw &w, int pos, int cx, int size, Color c)
 	//w.DrawRect(pos, 0, cx / 2, size - 1, Color(100, 100, 100, 100);
 	DrawFrame(w, pos + 1, 1, cx / 2 - 2, size - 2, c);
 	DrawFrame(w, pos, 0, cx / 2, size, c);
-//	DrawFatFrame(w, x, 0,¸ int cx¸ int cy¸ Color color¸ int n)
+//	DrawFatFrame(w, x, 0,ï¿½ int cxï¿½ int cyï¿½ Color colorï¿½ int n)
 }
 
 void GridCtrl::DrawVertDragLine(Draw &w, int pos, int size, int dx, Color c)
@@ -3332,11 +3332,11 @@ Image GridCtrl::CursorImage(Point p, dword keyflags)
 
 void GridCtrl::UpdateHolder(bool force)
 {
-	if(fixed_size_changed || force)
+	if(size_changed || force)
 	{
 		holder.SetOffset(Point(fixed_width, fixed_height));
 		holder.HSizePos(fixed_width, 0).VSizePos(fixed_height, summary_height);
-		fixed_size_changed = false;
+		size_changed = false;
 	}
 }
 
@@ -3904,8 +3904,12 @@ bool GridCtrl::UpdateSizes()
 {
 	total_width  = total_cols ? hitems[total_cols - 1].nRight() : 0;
 	total_height = total_rows ? vitems[total_rows - 1].nRight() : 0;
+
+	int prev_summary_height = summary_height;
 	
 	summary_height = summary_row ? GD_HDR_HEIGHT : 0;
+	
+	size_changed = prev_summary_height != summary_height;
 
 	int new_fixed_width  = fixed_cols ? hitems[fixed_cols - 1].nRight() : 0;
 	int new_fixed_height = fixed_rows ? vitems[fixed_rows - 1].nRight() : 0;
@@ -3921,21 +3925,19 @@ bool GridCtrl::UpdateSizes()
 	if(fixed_cols == 1 && !indicator)
 		new_fixed_width = 0;
 
-	fixed_size_changed = false;
-
 	if(new_fixed_width != fixed_width)
 	{
 		fixed_width = new_fixed_width;
-		fixed_size_changed = true;
+		size_changed = true;
 	}
 
 	if(new_fixed_height != fixed_height)
 	{
 		fixed_height = new_fixed_height;
-		fixed_size_changed = true;
+		size_changed = true;
 	}
 
-	return fixed_size_changed;
+	return size_changed;
 }
 
 bool GridCtrl::UpdateCols(bool force)

@@ -959,7 +959,7 @@ class GridCtrl : public Ctrl
 		bool fixed_click;
 		bool fixed_top_click;
 		bool fixed_left_click;
-		bool fixed_size_changed;
+		bool size_changed;
 		bool top_click;
 		bool just_clicked;
 		bool synced;
