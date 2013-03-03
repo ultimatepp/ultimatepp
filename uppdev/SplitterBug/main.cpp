@@ -33,5 +33,6 @@ TestSplitter::TestSplitter()
 	
 GUI_APP_MAIN
 {
+	Ctrl::GlobalBackPaint();
 	TestSplitter().Run();
 }
