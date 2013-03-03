@@ -86,6 +86,7 @@ void   Splitter::Paint(Draw& w) {
 void   Splitter::MouseMove(Point p, dword) {
 	if(HasCapture() && mouseindex >= 0 && mouseindex < pos.GetCount()) {
 		SetPos(ClientToPos(p), mouseindex);
+		Refresh();
 		WhenAction();
 	}
 }
