@@ -336,8 +336,48 @@ public:
 #endif
 #endif
 
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 typedef FileSel FileSelector;
+#endif
+
+#ifdef GUI_GTK
+class FileSelector {
+	Vector<String> path;
+	Vector< Tuple2<String, String> > type;
+	
+	String ipath;
+	bool   confirm;
+	bool   multi;
+	bool   hidden;
+	int    activetype;
+
+public:
+	bool   Execute(bool open, const char *title = NULL);
+	bool   ExecuteOpen(const char *title = NULL)          { return Execute(true, title); }
+	bool   ExecuteSaveAs(const char *title = NULL)        { return Execute(false, title); }
+
+	String Get() const                                    { return path.GetCount() ? path[0] : String::GetVoid(); }
+	operator String() const                               { return Get(); }
+	String operator~() const                              { return Get(); }
+	
+	void   Set(const String& s)                           { ipath = s; }
+	void   operator=(const String& s)                     { Set(s); }
+	void   operator<<=(const String& s)                   { Set(s); }
+
+	int    GetCount() const                               { return path.GetCount(); }
+	const  String& operator[](int i) const                { return path[i]; }
+
+	FileSelector& Type(const char *name, const char *ext) { type.Add(MakeTuple(String(name), String(ext))); return *this; }
+	FileSelector& AllFilesType();
+	FileSelector& Asking(bool b = true)                   { confirm = b; return *this; }
+	FileSelector& NoAsking()                              { return Asking(false); }
+	FileSelector& Multi(bool b = true)                    { multi = b; return *this; }
+	FileSelector& ShowHidden(bool b = true)               { hidden = b; return *this; }
+	FileSelector& ActiveDir(const String& dir)            { ipath = dir; return *this; }
+	FileSelector& ActiveType(int i)                       { activetype = i; return *this; }
+
+	FileSelector();
+};
 #endif
 
 class CtrlRetriever {
