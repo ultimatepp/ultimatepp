@@ -64,7 +64,9 @@ bool RichEdit::Key(dword key, int count)
 		Redo();
 		return true;
 	case K_ENTER:
-		if(singleline || !RemoveSelection() && InsertLineSpecial())
+		if(singleline)
+			return false;
+		if(!RemoveSelection() && InsertLineSpecial())
 			return true;
 		InsertLine();
 		ShowFormat();
