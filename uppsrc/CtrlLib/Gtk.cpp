@@ -2,6 +2,8 @@
 
 NAMESPACE_UPP
 
+#ifdef GUI_GTK
+
 FileSelector::FileSelector()
 {
 	confirm = true;
@@ -70,5 +72,7 @@ bool FileSelector::Execute(bool open, const char *title)
 	gtk_widget_destroy(fc);
 	return ret;
 }
+
+#endif
 
 END_UPP_NAMESPACE
