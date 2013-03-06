@@ -8,25 +8,10 @@ struct PainterTest : public TopWindow {
 		DrawPainter p(w, GetSize()/*, MODE_NOAA*/);
 
 		p.Clear(White());
-		p.Text(0, 0, "A", Roman(50));
-		p.Fill(Black());
-		
-		p.Translate(100, 100);
-		p.Rotate(1);
-		p.Fill(Blue());
-
-		p.Translate(200, -200);
-		p.Scale(1, -1);
-		p.Fill(Magenta());
-		
-		p.Scale(1, -1);
-		p.Translate(-200, 200);
-		
-		p.Rotate(-1);
-		p.Fill(Red());
-		
-		p.Translate(-100, -100);
-		p.Fill(Green());
+		p.Move(100, 100);
+		p.Line(200, 100);
+		p.Line(300, 300);
+		p.Fill(Pointf(100, 100), Blue(), Pointf(300, 300), Red());
 	}
 };
 
