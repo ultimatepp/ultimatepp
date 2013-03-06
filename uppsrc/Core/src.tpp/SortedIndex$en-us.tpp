@@ -23,8 +23,7 @@ nVector] `- use it as reference for performace aspects.&]
 [s2; [%-*@4 T] is required to by [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ moveable][*/  
 ]type. Like any other NTL container, AIndex is [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ m
 oveable][*/  ]type with [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ pick 
-and optional deep copy] transfer semantics, although these features 
-are more important in derived concrete index flavors.&]
+and optional deep copy] transfer semantics.&]
 [s0;3%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
