@@ -8,9 +8,6 @@ library
 file
 	Test.iml,
 	GtkApp.h,
-	GtkDraw.cpp,
-	ImageDraw.cpp,
-	BackDraw.cpp,
 	main.cpp;
 
 mainconfig
