@@ -2408,11 +2408,13 @@ void ArrayCtrl::Clear() {
 	if(cursor >= 0) {
 		WhenKillCursor();
 		cursor = -1;
-		WhenCursor();
-		WhenSel();
 		info.Cancel();
 	}
 	array.Clear();
+	if(cursor >= 0) {
+		WhenCursor();
+		WhenSel();
+	}
 	cellinfo.Clear();
 	ln.Clear();
 	ClearCache();
