@@ -10,11 +10,6 @@ static void LoadIniFile(const char *filename, VectorMap<String, String>& ret)
 	if(in) LoadIniStream(in, ret, filename);
 }
 
-bool sKeyChar(int c)
-{
-	return IsAlNum(c) || c == '_' || c == '@';
-}
-
 static void LoadIniStream(Stream& in, VectorMap<String, String>& key, const char *sfile)
 {
 	while(!in.IsEof()) {
