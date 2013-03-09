@@ -2,50 +2,56 @@
 
 namespace Upp {
 
-VectorMap<String, String> LoadIniStream(Stream &sin) {
-	Stream *in = &sin;
-	FileIn fin;
-	VectorMap<String, String> key;
-	int c;
-	if((c = in->Get()) < 0) return key;
-	for(;;) {
-		String k, v;
-		for(;;) {
-			if(IsAlNum(c) || c == '_')
-				k.Cat(c);
-			else
-				break;
-			if((c = in->Get()) < 0) return key;
-		}
-		for(;;) {
-			if(c != '=' && c != ' ') break;
-			if((c = in->Get()) < 0) return key;
-		}
-		for(;;) {
-			if(c < ' ') break;
-			v.Cat(c);
-			if((c = in->Get()) < 0) break;
-		}
-		if(!k.IsEmpty())
-			key.Add(k, v);
-		if(k == "LINK") {
-			if(in == &fin)
-				fin.Close();
-			if(!fin.Open(v) || (c = in->Get()) < 0) return key;
-			in = &fin;
+static void LoadIniStream(Stream &sin, VectorMap<String, String>& ret, const char *sfile);
+
+static void LoadIniFile(const char *filename, VectorMap<String, String>& ret)
+{
+	FileIn in(filename);
+	if(in) LoadIniStream(in, ret, filename);
+}
+
+bool sKeyChar(int c)
+{
+	return IsAlNum(c) || c == '_' || c == '@';
+}
+
+static void LoadIniStream(Stream& in, VectorMap<String, String>& key, const char *sfile)
+{
+	while(!in.IsEof()) {
+		String line = in.GetLine();
+		CParser p(line);
+		if(p.IsId()) {
+			String k = p.ReadId();
+			if(p.Char('='))
+				key.Add(k, p.GetSpacePtr());
 		}
 		else
-			for(;;) {
-				if(IsAlNum(c) || c == '_') break;
-				if((c = in->Get()) < 0) return key;
+		if(p.Char('@')) {
+			if(p.Id("include")) {
+				String fn = p.GetPtr();
+				if(!IsFullPath(fn) && sfile)
+					fn = AppendFileName(GetFileFolder(GetFullPath(sfile)), fn);
+				LoadIniFile(fn, key);
 			}
+			else
+			if(p.Id("end"))
+				return;
+		}
 	}
 }
 
-VectorMap<String, String> LoadIniFile(const char *filename) {
-	FileIn in(filename);
-	if(!in) return VectorMap<String, String>();
-	return LoadIniStream(in);
+VectorMap<String, String> LoadIniStream(Stream &sin)
+{
+    VectorMap<String, String> ret;
+    LoadIniStream(sin, ret, NULL);
+    return ret;
+}
+
+VectorMap<String, String> LoadIniFile(const char *filename)
+{
+    VectorMap<String, String> ret;
+    LoadIniFile(filename, ret);
+    return ret;
 }
 
 static StaticMutex sMtx;
