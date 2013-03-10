@@ -70,6 +70,7 @@
 	static Ptr<Ctrl>           grabwindow;
 	static Ptr<Ctrl>           grabpopup;
 	static Ptr<Ctrl>           sel_ctrl;
+	static Ptr<Ctrl>           activeCtrl;
 
 	static int FindId(int id);
 	static int FindCtrl(Ctrl *ctrl);

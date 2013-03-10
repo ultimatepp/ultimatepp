@@ -12,6 +12,8 @@ Vector<dword>     Ctrl::modhot;
 
 Vector<Ctrl::Win> Ctrl::wins;
 
+Ptr<Ctrl>         Ctrl::activeCtrl;
+
 int        Ctrl::WndCaretTime;
 bool       Ctrl::WndCaretVisible;
 
@@ -109,7 +111,9 @@ Ctrl *Ctrl::GetOwner()
 Ctrl *Ctrl::GetActiveCtrl()
 {
 	GuiLock __;
-	return focusCtrl ? focusCtrl->GetTopCtrl() : NULL;
+	if(focusCtrl)
+		return focusCtrl->GetTopCtrl();
+	return activeCtrl;
 }
 
 // Vector<Callback> Ctrl::hotkey;
