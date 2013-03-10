@@ -134,7 +134,7 @@ void TopWindow::Open(Ctrl *owner)
 
 void TopWindow::Open()
 {
-	Open(GetActiveWindow()); //TODO!
+	Open(GetActiveWindow());
 }
 
 void TopWindow::OpenMain()

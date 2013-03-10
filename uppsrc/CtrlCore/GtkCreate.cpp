@@ -78,6 +78,8 @@ void Ctrl::Create0(Ctrl *owner, bool popup)
 	DndInit();
 	
 	StateH(OPEN);
+
+	activeCtrl = this;
 }
 
 void Ctrl::WndDestroy0()
@@ -85,6 +87,16 @@ void Ctrl::WndDestroy0()
 	GuiLock __;
 	LLOG("WndDestroy " << Name());
 	DndExit();
+	Ctrl *owner = GetOwner();
+	if(owner && owner->top) {
+		for(int i = 0; i < wins.GetCount(); i++)
+			if(wins[i].ctrl && wins[i].ctrl->GetOwner() == this && wins[i].gtk) {
+				LLOG("Changing owner");
+				gtk_window_set_transient_for((GtkWindow *)wins[i].gtk, owner->gtk());
+			}
+		if(HasFocusDeep())
+			activeCtrl = owner;
+	}
 	gtk_widget_destroy(top->window);
 	g_object_unref(top->im_context);
 	isopen = false;
