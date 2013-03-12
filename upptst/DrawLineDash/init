@@ -1,0 +1,4 @@
+#ifndef _DrawLineDash_icpp_init_stub
+#define _DrawLineDash_icpp_init_stub
+#include "CtrlLib/init"
+#endif
