@@ -178,8 +178,18 @@ void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color col
 	}
 }
 
-void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor)
+void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts,
+                                    int count_count, int width, Color color, Color doxor)
 {
+	while(--count_count >= 0) {
+		const Point *pp = vertices;
+		vertices += *counts++;
+		cairo_move_to(cr, pp->x, pp->y);
+		while(++pp < vertices)
+			cairo_line_to(cr, pp->x, pp->y);
+		SetColor(color);
+		sDrawLineStroke(cr, width);
+	}
 }
 
 cairo_surface_t *CreateCairoSurface(const Image& img);
@@ -232,10 +242,40 @@ void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
 
 void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
 {
+	if(rc.Width() <= 0 || rc.Height() <= 0)
+		return;
+	Sizef radius = Sizef(rc.Size()) / 2.0;
+	Pointf center = Pointf(rc.TopLeft()) + radius;
+	double ang1 = Bearing((Pointf(start) - center) / radius);
+	double ang2 = Bearing((Pointf(end) - center) / radius);
+	
+	cairo_move_to(cr, center.x + radius.cx * cos(ang1), center.y + radius.cy * sin(ang1));
+	cairo_save(cr);
+	cairo_translate(cr, rc.left + radius.cx, rc.top + radius.cy);
+	cairo_scale(cr, radius.cx, radius.cy);
+	cairo_arc_negative(cr, 0, 0, 1, ang1, ang2);
+	cairo_restore(cr);
+
+	SetColor(color);
+	sDrawLineStroke(cr, width);
 }
 
 void SystemDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 {
+	cairo_save(cr);
+	Sizef h = Sizef(r.GetSize()) / 2.0;
+	cairo_translate (cr, r.left + h.cx, r.top + h.cy);
+	cairo_scale(cr, h.cx, h.cy);
+	cairo_arc(cr, 0, 0, 1, 0, 2 * M_PI);
+	cairo_restore(cr);
+	if(!IsNull(color)) {
+		SetColor(color);
+		cairo_fill_preserve(cr);
+	}
+	if(!IsNull(pencolor)) {
+		SetColor(pencolor);
+		sDrawLineStroke(cr, pen);
+	}
 }
 
 END_UPP_NAMESPACE
