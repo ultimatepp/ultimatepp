@@ -18,7 +18,7 @@ static void LoadIniStream(Stream& in, VectorMap<String, String>& key, const char
 		if(p.IsId()) {
 			String k = p.ReadId();
 			if(p.Char('='))
-				key.Add(k, p.GetSpacePtr());
+				key.Add(k, p.GetPtr());
 		}
 		else
 		if(p.Char('@')) {
