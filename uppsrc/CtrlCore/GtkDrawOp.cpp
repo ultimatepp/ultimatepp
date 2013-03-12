@@ -131,16 +131,45 @@ void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
 	SetColor(color);
-	if(y1 == y2)
+	if(width == PEN_SOLID)
+		width = 1;
+	if(y1 == y2 && width >= 0)
 		DrawRect(x1, y1, x2 - x1, width, color);
 	else
-	if(x1 == x2)
+	if(x1 == x2 && width >= 0)
 		DrawRect(x1, y1, width, y2 - y1, color);
 	else {
-		cairo_move_to(cr, x1, y1);
-		cairo_line_to(cr, x2, y2);
-		cairo_set_line_width (cr, width);
+		static double dash[] = { 18, 6 };
+		static double dot[] = { 3, 3 };
+		static double dashdot[] = { 9, 6, 3, 6 };
+		static double dashdotdot[] = { 9, 3, 3, 3, 3, 3 };
+		switch(width) {
+		case PEN_NULL:       return;
+		case PEN_DASH:       cairo_set_dash(cr, dash, __countof(dash), 0); break;
+		case PEN_DOT:        cairo_set_dash(cr, dot, __countof(dot), 0); break;
+		case PEN_DASHDOT:    cairo_set_dash(cr, dashdot, __countof(dashdot), 0); break;
+		case PEN_DASHDOTDOT: cairo_set_dash(cr, dashdotdot, __countof(dashdotdot), 0); break;
+		default:             break;
+		}
+		int w = width < 0 ? 1 : width;
+		double d = w / 2.0;
+		if(y1 == y2) {
+			cairo_move_to(cr, min(x1, x1) + 0.5, y1 + d);
+			cairo_line_to(cr, max(x1, x2) - 0.5, y1 + d);
+		}
+		else
+		if(x1 == x2) {
+			cairo_move_to(cr, x1 + d, min(y1, y2) + 0.5);
+			cairo_line_to(cr, x1 + d, max(y1, y2) - 0.5);
+		}
+		else {
+			cairo_move_to(cr, x1, y1);
+			cairo_line_to(cr, x2, y2);
+		}
+		cairo_set_line_width(cr, w);
 		cairo_stroke(cr);
+		if(width < 0)
+			cairo_set_dash(cr, dot, 0, 0);
 	}
 }
 
