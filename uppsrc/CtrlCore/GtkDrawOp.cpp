@@ -128,6 +128,26 @@ void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 	}
 }
 
+static void sDrawLineStroke(cairo_t *cr, int width)
+{
+	static double dash[] = { 18, 6 };
+	static double dot[] = { 3, 3 };
+	static double dashdot[] = { 9, 6, 3, 6 };
+	static double dashdotdot[] = { 9, 3, 3, 3, 3, 3 };
+	switch(width) {
+	case PEN_NULL:       return;
+	case PEN_DASH:       cairo_set_dash(cr, dash, __countof(dash), 0); break;
+	case PEN_DOT:        cairo_set_dash(cr, dot, __countof(dot), 0); break;
+	case PEN_DASHDOT:    cairo_set_dash(cr, dashdot, __countof(dashdot), 0); break;
+	case PEN_DASHDOTDOT: cairo_set_dash(cr, dashdotdot, __countof(dashdotdot), 0); break;
+	default:             break;
+	}
+	cairo_set_line_width(cr, width < 0 ? 1 : width);
+	cairo_stroke(cr);
+	if(width < 0)
+		cairo_set_dash(cr, dot, 0, 0);
+}
+
 void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
 	SetColor(color);
@@ -139,18 +159,6 @@ void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color col
 	if(x1 == x2 && width >= 0)
 		DrawRect(x1, y1, width, y2 - y1, color);
 	else {
-		static double dash[] = { 18, 6 };
-		static double dot[] = { 3, 3 };
-		static double dashdot[] = { 9, 6, 3, 6 };
-		static double dashdotdot[] = { 9, 3, 3, 3, 3, 3 };
-		switch(width) {
-		case PEN_NULL:       return;
-		case PEN_DASH:       cairo_set_dash(cr, dash, __countof(dash), 0); break;
-		case PEN_DOT:        cairo_set_dash(cr, dot, __countof(dot), 0); break;
-		case PEN_DASHDOT:    cairo_set_dash(cr, dashdot, __countof(dashdot), 0); break;
-		case PEN_DASHDOTDOT: cairo_set_dash(cr, dashdotdot, __countof(dashdotdot), 0); break;
-		default:             break;
-		}
 		int w = width < 0 ? 1 : width;
 		double d = w / 2.0;
 		if(y1 == y2) {
@@ -166,10 +174,7 @@ void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color col
 			cairo_move_to(cr, x1, y1);
 			cairo_line_to(cr, x2, y2);
 		}
-		cairo_set_line_width(cr, w);
-		cairo_stroke(cr);
-		if(width < 0)
-			cairo_set_dash(cr, dot, 0, 0);
+		sDrawLineStroke(cr, width);
 	}
 }
 
@@ -177,8 +182,52 @@ void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, con
 {
 }
 
-void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, const int *subpolygon_counts, int scc, const int *disjunct_polygon_counts, int dpcc, Color color, int width, Color outline, uint64 pattern, Color doxor)
+cairo_surface_t *CreateCairoSurface(const Image& img);
+
+void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
+                                  const int *subpolygon_counts, int scc, const int *disjunct_polygon_counts,
+                                  int dpcc, Color color, int width, Color outline, uint64 pattern, Color doxor)
 {
+	Image fill_img;
+	if(pattern && !IsNull(color)) {
+		ImageBuffer ibuf(8, 8);
+		RGBA r[2] = { color, RGBAZero() };
+		for(RGBA *out = ibuf, *end = out + 64; out < end; pattern >>= 1)
+			*out++ = r[(byte)pattern & 1];
+		fill_img = ibuf;
+	}
+	
+	while(--dpcc >= 0) {
+		const Point *sp = vertices;
+		vertices += *disjunct_polygon_counts++;
+		while(sp < vertices) {
+			const Point *pp = sp;
+			sp += *subpolygon_counts++;
+			cairo_move_to(cr, pp->x, pp->y);
+			while(++pp < sp)
+				cairo_line_to(cr, pp->x, pp->y);
+			cairo_close_path(cr);
+		}
+		if(!IsNull(fill_img)) {
+			cairo_surface_t *surface = CreateCairoSurface(fill_img);
+			Push();
+			cairo_set_source_surface(cr, surface, 0, 0);
+			cairo_pattern_set_extend(cairo_get_source(cr), CAIRO_EXTEND_REPEAT);
+			cairo_fill_preserve(cr);
+			Pop();
+			cairo_surface_destroy(surface);
+		}
+		else
+		if(!IsNull(color)) {
+			SetColor(color);
+			cairo_fill_preserve(cr);
+		}
+		if(!IsNull(outline)) {
+			SetColor(outline);
+			sDrawLineStroke(cr, width);
+		}
+	}
+	
 }
 
 void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)

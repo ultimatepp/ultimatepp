@@ -37,11 +37,10 @@ struct ImageSysData {
 	~ImageSysData();
 };
 
-void ImageSysData::Init(const Image& m)
+cairo_surface_t *CreateCairoSurface(const Image& img)
 {
-	img = m;
 	Size isz = img.GetSize();
-	surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, isz.cx, isz.cy);
+	cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, isz.cx, isz.cy);
 	cairo_surface_flush(surface);
 	byte *a = (byte *)cairo_image_surface_get_data(surface);
 	int stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, isz.cx);
@@ -50,6 +49,13 @@ void ImageSysData::Init(const Image& m)
 		a += stride;
 	}
 	cairo_surface_mark_dirty(surface);
+	return surface;
+}
+
+void ImageSysData::Init(const Image& m)
+{
+	img = m;
+	surface = CreateCairoSurface(img);
 	SysImageRealized(img);
 }
 
