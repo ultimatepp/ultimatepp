@@ -10,7 +10,7 @@ CONSOLE_APP_MAIN
 	const Tuple2<const char *, const char *> et[] = {
 		{ "alfa", "alfa_value" },
 		{ "_beta", "beta_value" },
-		{ "gamma", " gamma_value" },
+		{ "gamma", "gamma_value" },
 		{ "included", "included_value" },
 		{ "delta", "delta_value" },
 	};
