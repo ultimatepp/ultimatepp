@@ -43,8 +43,11 @@ void ESC_to_string(EscEscape& e)
 
 void ESC_to_number(EscEscape& e)
 {
-	if(e[0].IsArray())
-		e = ScanDouble((String)e[0]);
+	if(e[0].IsArray()) {
+		double d = ScanDouble((String)e[0]);
+		if(!IsNull(d))
+			e = d;
+	}
 }
 
 void ESC_rand(EscEscape& e)
@@ -240,6 +243,18 @@ void SIC_GetSysTime(EscEscape& e)
 	e = v;
 }
 
+void ESC_ToLower(EscEscape& e)
+{
+	String s = e[0];
+	e = ToLower(s);
+}
+
+void ESC_ToUpper(EscEscape& e)
+{
+	String s = e[0];
+	e = ToUpper(s);
+}
+
 void StdLib(ArrayMap<String, EscValue>& global)
 {
 	Escape(global, "is_number(value)", ESC_is_number);
@@ -256,6 +271,9 @@ void StdLib(ArrayMap<String, EscValue>& global)
 	Escape(global, "reverse(array)", ESC_reverse);
 	Escape(global, "sort(array)", ESC_sort);
 	Escape(global, "order(array)", ESC_order);
+
+	Escape(global, "ToUpper(value)", ESC_ToUpper);
+	Escape(global, "ToLower(value)", ESC_ToLower);
 
 	Escape(global, "len(x)", ESC_count);
 	Escape(global, "mid(array, pos, count)", ESC_mid);
