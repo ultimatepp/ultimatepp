@@ -130,6 +130,8 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 {
     WNDCLASSEX wcex;
 
+	ZeroMemory(&wcex,sizeof(WNDCLASSEX));
+
     wcex.cbSize = sizeof(WNDCLASSEX); 
 
     wcex.style          = CS_HREDRAW | CS_VREDRAW;
