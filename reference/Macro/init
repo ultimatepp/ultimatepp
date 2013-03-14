@@ -1,0 +1,4 @@
+#ifndef _Macro_icpp_init_stub
+#define _Macro_icpp_init_stub
+#include "Core/init"
+#endif

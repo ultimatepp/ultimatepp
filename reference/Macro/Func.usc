@@ -1,0 +1,5 @@
+// One of the functions used in the "Using functions" macro.
+// As you can see, it can be defined in completely separate file.
+fn FuncB(arg) {
+	return arg + "B";
+}
