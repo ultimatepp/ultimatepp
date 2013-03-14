@@ -74,6 +74,7 @@ RpcGet RpcRequest::Execute()
 	shouldExecute = false;
 	String request;
 	if(json) {
+		ContentType("application/json");
 		static Atomic id;
 		Json json;
 		json("jsonrpc", "2.0")
@@ -107,6 +108,7 @@ RpcGet RpcRequest::Execute()
 		request = ~json;
 	}
 	else {
+		ContentType("application/xml");
 		request = XmlHeader();
 		request << XmlTag("methodCall")(XmlTag("methodName")(method) + FormatXmlRpcParams(data.out));
 	}

@@ -36,13 +36,13 @@ String XmlRpcExecute(const String& request, const char *group, const char *peera
 inline
 bool   XmlRpcPerform(TcpSocket& http, const char *group)
 {
-	RpcPerform(http, group);
+	return RpcPerform(http, group);
 }
 
 inline
 bool   XmlRpcServerLoop(int port, const char *group = NULL)
 {
-	RpcServerLoop(port, group);
+	return RpcServerLoop(port, group);
 }
 
 inline
