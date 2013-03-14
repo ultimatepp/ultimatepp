@@ -263,7 +263,7 @@ bool RpcPerform(TcpSocket& http, const char *group)
 				"Server: U++ RPC server\r\n"
 				"Content-Length: " << r.GetCount() << "\r\n"
 				"Connection: close\r\n"
-				"Content-Type: text/" << (json ? "json" : "xml") << "\r\n\r\n"
+				"Content-Type: application/" << (json ? "json" : "xml") << "\r\n\r\n"
 				<< r;
 			LLOG(response);
 			if(r.GetCount())

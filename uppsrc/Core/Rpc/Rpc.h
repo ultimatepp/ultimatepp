@@ -256,7 +256,7 @@ bool   RpcServerLoop(int port, const char *group = NULL);
 void   ThrowRpcError(int code, const char *s);
 void   ThrowRpcError(const char *s);
 
-class RpcRequest : HttpRequest {
+class RpcRequest : public HttpRequest {
 	bool       shorted;
 	RpcData    data;
 	String     method;
