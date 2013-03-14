@@ -1108,8 +1108,18 @@ public:
 		void  MacroClearConsole(EscEscape& e);
 		void  MacroEditFile(EscEscape& e);
 		void  MacroSaveCurrentFile(EscEscape& e);
-		void  MacroProjectDir(EscEscape& e);
 		void  MacroFileName(EscEscape& e);
+		void  MacroMainPackage(EscEscape& e);
+		void  MacroActivePackage(EscEscape& e);
+		void  MacroPackageDir(EscEscape& e);
+		void  MacroAssembly(EscEscape& e);
+		void  MacroBuildMethod(EscEscape& e);
+		void  MacroBuildMode(EscEscape& e);
+		void  MacroFlags(EscEscape& e);
+		void  MacroEcho(EscEscape& e);
+		void  MacroCloseFile(EscEscape& e);
+		void  MacroPackageFiles(EscEscape& e);
+		void  MacroAllPackages(EscEscape& e);
 
 	typedef   Ide CLASSNAME;
 

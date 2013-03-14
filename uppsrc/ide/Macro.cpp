@@ -34,16 +34,32 @@ EscValue Ide::MacroEditor()
 	out.Escape("MovePageDown(...)", THISBACK(MacroMovePageDown));
 	out.Escape("MoveTextBegin(...)", THISBACK(MacroMoveTextBegin));
 	out.Escape("MoveTextEnd(...)", THISBACK(MacroMoveTextEnd));
+
+	out.Escape("EditFile(...)", THISBACK(MacroEditFile));
+	out.Escape("SaveCurrentFile()", THISBACK(MacroSaveCurrentFile));
+	out.Escape("CloseFile()",THISBACK(MacroCloseFile));
+	out.Escape("FileName()", THISBACK(MacroFileName));
+
 	out.Escape("Input(...)", THISBACK(MacroInput));
+	out.Escape("ClearConsole()", THISBACK(MacroClearConsole));
+	out.Escape("Echo(...)", THISBACK(MacroEcho));
+
 	out.Escape("Build(...)", THISBACK(MacroBuild));
 	out.Escape("BuildProject(...)", THISBACK(MacroBuildProject));
 	out.Escape("Execute(cmdline)", THISBACK(MacroExecute));
 	out.Escape("Launch(cmdline)", THISBACK(MacroLaunch));
-	out.Escape("ClearConsole()", THISBACK(MacroClearConsole));
-	out.Escape("EditFile(...)", THISBACK(MacroEditFile));
-	out.Escape("SaveCurrentFile()", THISBACK(MacroSaveCurrentFile));
-	out.Escape("ProjectDir()", THISBACK(MacroProjectDir));
-	out.Escape("FileName()", THISBACK(MacroFileName));
+
+	out.Escape("MainPackage()",THISBACK(MacroMainPackage));
+	out.Escape("ActivePackage()",THISBACK(MacroActivePackage));
+	out.Escape("PackageDir(...)",THISBACK(MacroPackageDir));
+	out.Escape("ProjectDir()", THISBACK(MacroPackageDir)); // BW compatibility
+	out.Escape("Assembly()",THISBACK(MacroAssembly));
+	out.Escape("BuildMethod()",THISBACK(MacroBuildMethod));
+	out.Escape("BuildMode()",THISBACK(MacroBuildMode));
+	out.Escape("Flags()",THISBACK(MacroFlags));
+	out.Escape("PackageFiles(...)",THISBACK(MacroPackageFiles));
+	out.Escape("AllPackages()",THISBACK(MacroAllPackages));
+
 	return out;
 }
 
@@ -419,12 +435,99 @@ void Ide::MacroSaveCurrentFile(EscEscape& e)
 	SaveFile();
 }
 
-void Ide::MacroProjectDir(EscEscape& e)
-{
-	e = GetFileFolder(PackagePathA(GetActivePackage()));
-}
-
 void Ide::MacroFileName(EscEscape& e)
 {
 	e = editfile;
+}
+
+void Ide::MacroMainPackage(EscEscape& e)
+{
+	e = GetMain();
+}
+
+void Ide::MacroActivePackage(EscEscape& e)
+{
+	e = GetActivePackage();
+}
+
+void Ide::MacroPackageDir(EscEscape& e)
+{
+	String pkg;
+	if(e.GetCount() == 0)
+		pkg = GetActivePackage();
+	else
+		pkg = e[0];
+	String pp = PackagePathA(pkg);
+	if(!FileExists(pp))
+		e.ThrowError("PackageDir: Package not found.");
+	e = GetFileFolder(pp);
+}
+
+void Ide::MacroAssembly(EscEscape& e)
+{
+	e = GetVarsName();
+}
+
+void Ide::MacroBuildMethod(EscEscape& e)
+{
+	e = method;
+}
+
+void Ide::MacroBuildMode(EscEscape& e)
+{
+	e = double(targetmode);
+}
+
+void Ide::MacroFlags(EscEscape& e)
+{
+	Vector<String> v = Split(mainconfigparam," ");
+	EscValue ret;
+	for(int i = 0; i < v.GetCount(); i++){
+		ret.ArrayAdd(v[i]);
+	}
+	e = ret;
+}
+
+void Ide::MacroEcho(EscEscape& e)
+{
+	ShowConsole();
+	for(int i = 0; i < e.GetCount(); i++){
+		PutConsole(String(e[i]));
+	}
+}
+
+void Ide::MacroCloseFile(EscEscape& e)
+{
+	int n = tabs.GetCursor();
+	if(n>=0)
+		tabs.Close(n,true);
+}
+
+void Ide::MacroPackageFiles(EscEscape& e)
+{
+	String pp;
+	Package pkg;
+	if(e.GetCount()==0)
+		pp = GetActivePackagePath();
+	else
+		pp = PackagePathA(String(e[0]));
+	if(!FileExists(pp))
+		e.ThrowError("PackageFiles: Package not found.");
+	pkg.Load(pp);
+	EscValue ret;
+	for(int i = 0; i < pkg.file.GetCount(); i++){
+		ret.ArrayAdd(pkg.file[i]);
+	}
+	e = ret;
+}
+
+void Ide::MacroAllPackages(EscEscape& e)
+{
+	EscValue ret;
+	for(int i = 0; i < package.GetCount(); i++){
+		String p = package.Get(i).name;
+		if(!IsAux(p))
+			ret.ArrayAdd(p);
+	}
+	e = ret;
 }
