@@ -327,7 +327,7 @@ GUI_APP_MAIN
 //	AppendClipboardImage(CtrlImg::exclamation());
 //	return;
 #if 1
-	MyApp4().Run();
+	MyApp().Run();
 	return;
 #endif
 
