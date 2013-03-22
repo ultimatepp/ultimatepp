@@ -12312,7 +12312,7 @@ movement]
 ³ıÖ¿¶ÿü¿…ò÷á±
 ]
 ::^ [s0; Knob handle to enter numerical data]
-:: [s0; SliderCtrlX]
+:: [s0; [^topic`:`/`/Controls4U`/src`/SliderCtrlX`$en`-us^ SliderCtrlX]]
 ::= [s0;= 
 @@image:1082&150
 €ƒÚ²€€€€€€€€€€ø¯œíÜ¿Ë•Ñ˜ÀñşÿÆ”ÿËˆ„ı…í—Ş²±è°–¡¦è°†œêòÆîÈ‹‹Ô¥¡ÆÇ«¡‰¤­©‘û¨³ÓÄÕÄñ
@@ -12602,4 +12602,4 @@ movement]
 ]
 :: [s0;= ]
 ::^ [s0; Folder and file browser with Drag`&Drop in a control]}}&]
-[s0; ]
+[s0; ]]
