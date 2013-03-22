@@ -616,7 +616,7 @@ void SqlConsole::TraceToExecute() {
 }
 
 void SqlConsole::SaveTrace() {
-	FileSelector fsel;
+	FileSel fsel;
 	fsel.ActiveDir(LastDir);
 	fsel.DefaultExt("sql");
 	fsel.Type(t_("SQL scripts (*.sql)"), "*.sql");
