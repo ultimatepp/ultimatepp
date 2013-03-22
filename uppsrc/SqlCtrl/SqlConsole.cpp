@@ -637,7 +637,7 @@ void SqlConsole::RunScript(bool quiet) {
 //		Exclamation(t_("Database connection doesn't support running scripts."));
 //		return;
 //	}
-	FileSelector fsel;
+	FileSel fsel;
 	fsel.ActiveDir(LastDir);
 	fsel.DefaultExt("sql");
 	fsel.Type(t_("SQL scripts (*.sql)"), "*.sql");
