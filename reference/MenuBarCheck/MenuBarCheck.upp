@@ -1,0 +1,11 @@
+description "Demonstrates the use of local menu with checked item\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI SSE2";
+
