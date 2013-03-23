@@ -16,4 +16,28 @@ CONSOLE_APP_MAIN
 	
 	ASSERT(decode(s, "3", 3, -1) == 3);
 	ASSERT(decode(s, "4", 3, -1) == -1);
+	
+	ASSERT(min(1, 5) == 1);
+	ASSERT(min(5, 1) == 1);
+
+	ASSERT(min(1, 5, 5) == 1);
+	ASSERT(min(5, 1, 5) == 1);
+	ASSERT(min(5, 5, 1) == 1);
+
+	ASSERT(min(1, 5, 5, 5) == 1);
+	ASSERT(min(5, 1, 5, 5) == 1);
+	ASSERT(min(5, 5, 1, 5) == 1);
+	ASSERT(min(5, 5, 5, 1) == 1);
+
+	ASSERT(max(1, 0) == 1);
+	ASSERT(max(0, 1) == 1);
+
+	ASSERT(max(1, 0, 0) == 1);
+	ASSERT(max(0, 1, 0) == 1);
+	ASSERT(max(0, 0, 1) == 1);
+
+	ASSERT(max(1, 0, 0, 0) == 1);
+	ASSERT(max(0, 1, 0, 0) == 1);
+	ASSERT(max(0, 0, 1, 0) == 1);
+	ASSERT(max(0, 0, 0, 1) == 1);
 }
