@@ -217,6 +217,9 @@ template <class T> inline const T& max(const T& a, const T& b) { return a > b ? 
 template <class T>
 inline T minmax(T x, T _min, T _max)                           { return min(max(x, _min), _max); }
 
+template <class T>
+inline T clamp(T x, T _min, T _max)                            { return minmax(x, _min, _max); }
+
 //$-int findarg(const T& x, const T1& p0, ...);
 inline void findarg_NOP() {} // Only to make List work for findarg
 
@@ -239,6 +242,48 @@ __Expand40(E__NFBody)
 #undef E__NFValue
 #undef E__NFBody
 
+//$+
+
+//$-D decode(const T& x, const T1& p0, const V1& v0, ...);
+#define E__TL(I)       typename COMBINE(T, I), typename COMBINE(V, I)
+#define E__NFIf(I)     findarg_NOP(); if(x == COMBINE(p, I)) return COMBINE(v, I); findarg_NOP()
+#define E__NFValue(I)  const COMBINE(T, I)& COMBINE(p, I), const COMBINE(V, I)& COMBINE(v, I)
+
+#define E__NFBody(I) \
+template <typename T, __List##I(E__TL), typename D> \
+D decode(const T& x, __List##I(E__NFValue), const D& def) \
+{ \
+	__List##I(E__NFIf); \
+	return def; \
+}
+
+__Expand40(E__NFBody)
+
+#undef E__TL
+#undef E__NFIf
+#undef E__NFValue
+#undef E__NFBody
+//$+
+
+//$-const char *decode(const T& x, const T1& p0, const char *v0, ...);
+#define E__TL(I)       typename COMBINE(T, I)
+#define E__NFIf(I)     findarg_NOP(); if(x == COMBINE(p, I)) return COMBINE(v, I); findarg_NOP()
+#define E__NFValue(I)  const COMBINE(T, I)& COMBINE(p, I), const char *COMBINE(v, I)
+
+#define E__NFBody(I) \
+template <typename T, __List##I(E__TL)> \
+const char *decode(const T& x, __List##I(E__NFValue), const char *def) \
+{ \
+	__List##I(E__NFIf); \
+	return def; \
+}
+
+__Expand40(E__NFBody)
+
+#undef E__TL
+#undef E__NFIf
+#undef E__NFValue
+#undef E__NFBody
 //$+
 
 typedef unsigned char      byte;
