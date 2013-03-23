@@ -87,7 +87,7 @@ Image RichTextView::CursorImage(Point p, dword keyflags)
 	if(WhenLink && pos >= 0 && !IsNull(GetLink(pos, p)))
 		return CtrlImg::HandCursor();
 	if(HasCapture())
-		return CtrlImg::ibeam0();
+		return Image::IBeam();
 	return Image::Arrow();
 }
 
