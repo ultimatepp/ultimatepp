@@ -212,13 +212,13 @@ static void COMBINE(x, _fn)()
 #endif
 
 template <class T> inline const T& min(const T& a, const T& b) { return a < b ? a : b; }
-template <class T> inline const T& max(const T& a, const T& b) { return a > b ? a : b; }
 
 template <class T> inline const T& min(const T& a, const T& b, const T& c)
 { return min(a, min(b, c)); }
 template <class T> inline const T& min(const T& a, const T& b, const T& c, const T& d)
 { return min(min(a, b), min(c, d)); }
 
+template <class T> inline const T& max(const T& a, const T& b) { return a > b ? a : b; }
 template <class T> inline const T& max(const T& a, const T& b, const T& c)
 { return max(a, max(b, c)); }
 template <class T> inline const T& max(const T& a, const T& b, const T& c, const T& d)
