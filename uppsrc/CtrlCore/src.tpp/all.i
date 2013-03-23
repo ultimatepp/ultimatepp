@@ -22,3 +22,7 @@ TOPIC("RectTracker$en-us")
 #include "RectTracker$en-us.tppi"
 END_TOPIC
 
+TOPIC("TopWindow$en-us")
+#include "TopWindow$en-us.tppi"
+END_TOPIC
+
