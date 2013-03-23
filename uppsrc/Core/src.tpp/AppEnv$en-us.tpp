@@ -144,17 +144,37 @@ URL that will be opened in the browser&]
 [s4; &]
 [s5;:minmax`(T`,T`,T`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* minmax]([*@4 T
 ]_[*@3 x], [*@4 T]_[*@3 `_min], [*@4 T]_[*@3 `_max])&]
+[s5;:clamp`(T`,T`,T`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* clamp]([*@4 T
+]_[*@3 x], [*@4 T]_[*@3 `_min], [*@4 T]_[*@3 `_max])&]
 [s2;%% Returns [%-*@3 x] if it is between [%-*@3 `_min] and [%-*@3 `_max].&]
 [s2; [%% If ][*@3 x][%%  is lower than ][*@3 `_min][%%  it returns ][*@3 `_min.]&]
 [s0;l288; [%% If ][*@3 x][%%  is higher than ][*@3 `_max][%%  it returns ][*@3 `_max.]&]
 [s3;%% &]
 [s4; &]
 [s5;:findarg`(const T`&`,const T1`&`,`.`.`.`): [@(0.0.255) template]_<[@(0.0.255) class]_
-[*@4 T]>_[@(0.0.255) int]_[* findarg]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x], 
-[@(0.0.255) const]_[*@4 T1][@(0.0.255) `&]_[*@3 p0], ...)&]
+[*@4 T], [@(0.0.255) class]_[*@4 T1], ...>_[@(0.0.255) int]_[* findarg]([@(0.0.255) const]_[*@4 T
+][@(0.0.255) `&]_[*@3 x], [@(0.0.255) const]_[*@4 T1][@(0.0.255) `&]_[*@3 p0], 
+...)&]
 [s2;%% Searches the list of arguments for the value of [%-*@3 x]. If 
 it is found, function returns the index of argument (starting 
 with 0). If not found, `-1 is returned.&]
+[s3;%% &]
+[s4; &]
+[s5;:decode`(const T`&`,const T1`&`,const V1`&`,`.`.`.`): [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 T], [@(0.0.255) class]_[*@4 T1], [@(0.0.255) class]_[*@4 V1], 
+..., [@(0.0.255) class]_[*@4 D]>&]
+[s5; [*@4 D]_[* decode]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) const]_[*@4 T1
+][@(0.0.255) `&]_[*@3 p0], [@(0.0.255) const]_[*@4 V1][@(0.0.255) `&]_[*@3 v0], 
+..., [@(0.0.255) const]_[*@4 D][@(0.0.255) `&]_[*@3 def])&]
+[s5;:decode`(const T`&`,const T1`&`,const char`*`,`.`.`.`): [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 T], [@(0.0.255) class]_[*@4 T1], ...>&]
+[s5; [@(0.0.255) const]_[@(0.0.255) char]_`*[* decode]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_
+[*@3 x], [@(0.0.255) const]_[*@4 T1][@(0.0.255) `&]_[*@3 p0], [@(0.0.255) const]_[@(0.0.255) ch
+ar]_`*[*@3 v0], ..., [@(0.0.255) const]_[*@4 D][@(0.0.255) `&]_[*@3 def])&]
+[s2;%% Searches the list of argument pairs for the value of [%-*@3 x] 
+to be equal to the first argument in the pair. If found, returns 
+the second argument of pair. If no match is found, returns the 
+last argument [%-*@3 def].&]
 [s3;%% &]
 [s4; &]
 [s5;:CpuSSE`(`): [@(0.0.255) bool]_[* CpuSSE]()&]
