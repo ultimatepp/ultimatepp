@@ -376,7 +376,7 @@ Image RichEdit::CursorImage(Point p, dword flags)
 				return Image::SizeHorz();
 			else {
 				int c = GetMousePos(p);
-				return InSelection(c) && !HasCapture() ? Image::Arrow() : CtrlImg::ibeam0;
+				return InSelection(c) && !HasCapture() ? Image::Arrow() : Image::IBeam();
 			}
 		}
 	}
