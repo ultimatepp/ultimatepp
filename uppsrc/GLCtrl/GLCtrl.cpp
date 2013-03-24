@@ -20,6 +20,8 @@ void GLCtrl::StdView()
 	glLoadIdentity();
 }
 
+#ifndef GUI_GTK
+
 Image GLCtrl::GLPane::MouseEvent(int event, Point p, int zdelta, dword keyflags)
 {
 	p = p - GetScreenView().TopLeft() + ctrl->GetScreenView().TopLeft();
@@ -31,5 +33,7 @@ Vector<int> GLCtrl::Pick(int x, int y)
 	pane.ActivateContext();
 	return picking.Pick(x, y, THISBACK2(GLResize, GetSize().cx, GetSize().cy), THISBACK(GLPickingPaint));
 }
+
+#endif
 
 END_UPP_NAMESPACE

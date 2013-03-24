@@ -2,6 +2,8 @@
 
 NAMESPACE_UPP
 
+#if defined(GUI_X11) || defined(GUI_WIN32)
+
 void GLCtrl::GLPicking::InitPickMatrix()
 {
 	if (_isPicking)
@@ -57,5 +59,7 @@ Vector<int> GLCtrl::GLPicking::ParseHits(GLuint *buffer, int hits)
 	
 	return result;
 }
+
+#endif
 
 END_UPP_NAMESPACE

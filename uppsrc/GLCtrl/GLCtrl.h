@@ -27,6 +27,22 @@
 
 NAMESPACE_UPP
 
+#ifdef GUI_GTK
+
+class GLCtrl : public Ctrl {
+public:
+	virtual void Paint(Draw& w);
+
+public:
+	Callback WhenGLPaint;
+
+	virtual void GLPaint();
+
+	void StdView();
+};
+
+#else
+
 class GLCtrl : public Ctrl {
 	typedef GLCtrl CLASSNAME;
 	
@@ -154,6 +170,8 @@ public:
 	
 	Vector<int> Pick(int x, int y);
 };
+
+#endif
 
 END_UPP_NAMESPACE
 
