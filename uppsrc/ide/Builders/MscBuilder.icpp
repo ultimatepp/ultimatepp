@@ -142,9 +142,9 @@ String MscBuilder::PdbPch(String package, int slot, bool do_pch) const
 	String pkg_slot = NFormat("%s-%d", GetAnyFileName(package), slot + 1);
 	String pdb = GetHostPathQ(CatAnyPath(outdir, pkg_slot + ".pdb"));
 	String cc;
-	cc << " -Gy -Fd" << pdb;
+	cc << " -Gy -Fd" << pdb << ' ';
 	if(do_pch && !IsMsc89()) // MSC8/9 does not support automatic precompiled headers...
-		cc << " -YX -Fp" << GetHostPathQ(CatAnyPath(outdir, pkg_slot + ".pch")) << ' ';
+		cc << "-YX -Fp" << GetHostPathQ(CatAnyPath(outdir, pkg_slot + ".pch")) << ' ';
 	return cc;
 }
 

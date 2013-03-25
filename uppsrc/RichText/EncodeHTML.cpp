@@ -106,13 +106,11 @@ void TabBorder(String& style, const char *txt, int border, Color bordercolor, co
 	      << ColorToHtml(border ? bordercolor : tf.gridcolor) << ';';
 }
 
-
 String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
               const VectorMap<String, String>& links,
               const VectorMap<String, String>& labels,
-              const String& outdir, const String& namebase, Zoom z, int& im,
-              const VectorMap<String, String>& escape,
-              int imtolerance)
+              Zoom z, const VectorMap<String, String>& escape,
+              HtmlObjectSaver& object_saver)
 {
 	String html;
 	for(int i = 0; i < text.GetPartCount(); i++)
@@ -171,8 +169,7 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 						if(c.vspan)
 							html << " rowspan=" << c.vspan + 1;
 						html << '>';
-						html << AsHtml(c.text, styles, css, links, labels, outdir, namebase, z,
-						               im, escape, imtolerance);
+						html << AsHtml(c.text, styles, css, links, labels, z, escape, object_saver);
 						html << "</td>\r\n";
 					}
 				}
@@ -221,26 +218,8 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 			for(int i = 0; i < p.part.GetCount(); i++) {
 				const RichPara::Part& part = p.part[i];
 				int q;
-				if(part.object) {
-					String name;
-					name << namebase << "_" << im++ << ".png";
-					Size psz = part.object.GetPixelSize();
-					String lname;
-					lname << "L$" << name;
-					Size sz = z * part.object.GetSize();
-					if(abs(100 * (psz.cx - sz.cx) / sz.cx) < imtolerance)
-						sz = psz;
-					PNGEncoder png;
-					png.SaveFile(AppendFileName(outdir, name), part.object.ToImage(sz));
-					if(psz.cx * psz.cy)
-						html << "<a href=\"" << lname << "\">";
-					html << "<img src=\"" << name << "\" border=\"0\" alt=\"\">";
-					if(psz.cx * psz.cy) {
-						html << "</a>";
-						PNGEncoder png;
-						png.SaveFile(AppendFileName(outdir, lname), part.object.ToImage(psz));
-					}
-				}
+				if(part.object)
+					html << object_saver.GetHtml(part.object);
 				else
 				if(part.format.indexentry.GetCount() &&
 				   (q = escape.Find(part.format.indexentry.ToString())) >= 0)
@@ -342,14 +321,63 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 	return html;
 }
 
+class DefaultHtmlObjectSaver : public HtmlObjectSaver
+{
+public:
+	DefaultHtmlObjectSaver(const String& outdir_, const String& namebase_, int imtolerance_, Zoom z_)
+	: outdir(outdir_), namebase(namebase_), imtolerance(imtolerance_), z(z_), im(0) {}
+
+	virtual String GetHtml(const RichObject& object);
+
+private:
+	String outdir;
+	String namebase;
+	Zoom z;
+	int imtolerance;
+	int im;
+};
+
+String DefaultHtmlObjectSaver::GetHtml(const RichObject& object)
+{
+	StringBuffer html;
+	String name;
+	name << namebase << "_" << im++ << ".png";
+	Size psz = object.GetPixelSize();
+	String lname;
+	lname << "L$" << name;
+	Size sz = z * object.GetSize();
+	if(abs(100 * (psz.cx - sz.cx) / sz.cx) < imtolerance)
+		sz = psz;
+	PNGEncoder png;
+	png.SaveFile(AppendFileName(outdir, name), object.ToImage(sz));
+	if(psz.cx * psz.cy)
+		html << "<a href=\"" << lname << "\">";
+	html << "<img src=\"" << name << "\" border=\"0\" alt=\"\">";
+	if(psz.cx * psz.cy) {
+		html << "</a>";
+		PNGEncoder png;
+		png.SaveFile(AppendFileName(outdir, lname), object.ToImage(psz));
+	}
+	return html;
+}
+
 String EncodeHtml(const RichText& text, Index<String>& css,
                   const VectorMap<String, String>& links,
                   const VectorMap<String, String>& labels,
                   const String& outdir, const String& namebase, Zoom z,
                   const VectorMap<String, String>& escape, int imt)
 {
-	int im = 0;
-	return AsHtml(text, text.GetStyles(), css, links, labels, outdir, namebase, z, im, escape, imt);
+	DefaultHtmlObjectSaver default_saver(outdir, namebase, imt, z);
+	return AsHtml(text, text.GetStyles(), css, links, labels, z, escape, default_saver);
+}
+
+String EncodeHtml(const RichText& text, Index<String>& css,
+                  const VectorMap<String, String>& links,
+                  const VectorMap<String, String>& labels,
+                  HtmlObjectSaver& object_saver, Zoom z,
+                  const VectorMap<String, String>& escape)
+{
+	return AsHtml(text, text.GetStyles(), css, links, labels, z, escape, object_saver);
 }
 
 String AsCss(Index<String>& ss)
