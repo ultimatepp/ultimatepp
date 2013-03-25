@@ -455,12 +455,25 @@ Zoom  GetRichTextStdScreenZoom();
 const Display& QTFDisplay();
 const Display& QTFDisplayVCenter();
 
+class HtmlObjectSaver
+{
+public:
+	virtual ~HtmlObjectSaver() {}
+	
+	virtual String GetHtml(const RichObject& object) = 0;
+};
+
 String EncodeHtml(const RichText& text, Index<String>& css,
                   const VectorMap<String, String>& links,
                   const VectorMap<String, String>& labels,
                   const String& path, const String& base = Null, Zoom z = Zoom(8, 40),
                   const VectorMap<String, String>& escape = VectorMap<String, String>(),
                   int imtolerance = 0);
+String EncodeHtml(const RichText& text, Index<String>& css,
+                  const VectorMap<String, String>& links,
+                  const VectorMap<String, String>& labels,
+                  HtmlObjectSaver& object_saver, Zoom z = Zoom(8, 40),
+                  const VectorMap<String, String>& escape = VectorMap<String, String>());
 String AsCss(Index<String>& ss);
 
 inline //BW - no labels
