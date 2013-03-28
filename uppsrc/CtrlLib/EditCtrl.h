@@ -97,8 +97,9 @@ public:
 	struct Highlight : Moveable<Highlight> {
 		Color ink;
 		Color paper;
+		bool  error;
 
-		bool operator!=(const Highlight& b) const { return ink != b.ink || paper != b.paper; }
+		bool operator!=(const Highlight& b) const { return ink != b.ink || paper != b.paper || error != b.error; }
 	};
 
 protected:
@@ -138,6 +139,7 @@ protected:
 	bool       nobg:1;
 	bool       alignright:1;
 	bool       errorbg:1;
+	bool       showspaces:1;
 
 	bool    FrameIsEdge();
 	void    SetEdge(int i);
@@ -146,7 +148,7 @@ protected:
 	int     GetCharWidth(int c) const { return font[c < 32 ? LowChar(c) : c]; }
 	int     GetTextCx(const wchar *text, int n, bool password, Font fnt) const;
 	void    Paints(Draw& w, int& x, int fcy, const wchar *&txt,
-		           Color ink, Color paper, int n, bool pwd, Font fnt);
+		           Color ink, Color paper, int n, bool pwd, Font fnt, bool error, bool showspaces);
 	int     GetStringCx(const wchar *text, int n);
 	int     GetCaret(int cursor) const;
 	int     GetCursor(int posx);
@@ -161,9 +163,10 @@ protected:
 	virtual void  HighlightText(Vector<Highlight>& hl);
 
 public:
-	Callback1<Bar&>     WhenBar;
-	Callback            WhenEnter;
-	Callback1<WString&> WhenPasteFilter;
+	Callback1<Bar&>               WhenBar;
+	Callback                      WhenEnter;
+	Callback1<WString&>           WhenPasteFilter;
+	Callback1<Vector<Highlight>&> WhenHighlight;
 
 	static const Style& StyleDefault();
 	EditField&  SetStyle(const Style& s);
@@ -241,6 +244,7 @@ public:
 	EditField& AlignRight(bool b = true)     { alignright = b; Refresh(); return *this; }
 	bool       IsNoBackground() const        { return nobg; }
 	bool       IsAlignRight() const          { return alignright; }
+	EditField& ShowSpaces(bool b = true)     { showspaces = b; Refresh(); return *this; }
 
 	CharFilter     GetFilter() const         { return filter; }
 	const Convert& GetConvert() const        { return *convert; }

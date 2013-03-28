@@ -189,6 +189,8 @@ public:
 };
 
 bool SpellWordRaw(const WString& wrd, int lang, Vector<String> *withdia = NULL);
+bool SpellWord(const wchar *ws, int len, int lang);
+bool SpellWord(const WString& ws, int lang);
 
 class RichEdit : public Ctrl, private TextArrayOps {
 public:
@@ -614,7 +616,6 @@ private:
 	void UserAction();
 	Callback User(Callback cb);
 
-	static bool   SpellWord(const wchar *wrd, int len, int lang);
 	static void   SpellerAdd(const WString& w, int lang);
 	static int    CompareStyle(const Value& a, const Value& b);
 
