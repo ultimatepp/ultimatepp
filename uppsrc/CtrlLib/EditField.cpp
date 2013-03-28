@@ -255,10 +255,11 @@ int  EditField::GetTy() const
 
 void EditField::HighlightText(Vector<Highlight>& hl)
 {
+	WhenHighlight(hl);
 }
 
 void EditField::Paints(Draw& w, int& x, int fcy, const wchar *&txt,
-					   Color ink, Color paper, int n, bool password, Font fnt)
+					   Color ink, Color paper, int n, bool password, Font fnt, bool error, bool showspaces)
 {
 	if(n < 0) return;
 	int cx = GetTextCx(txt, n, password, font);
@@ -280,7 +281,18 @@ void EditField::Paints(Draw& w, int& x, int fcy, const wchar *&txt,
 					*t++ = *q < 32 ? LowChar(*q) : *q;
 				txts = ~h;
 			}
+		if(error)
+			w.DrawRect(x, fnt.GetAscent() + 1, cx, 1, LtRed());
 		w.DrawText(x, 0, txts, fnt, ink, n);
+		if(showspaces) {
+			int xx = x;
+			Size sz = GetTextSize(" ", fnt) / 2;
+			for(const wchar *q = txts; q < e; q++) {
+				if(*q == ' ')
+					w.DrawRect(xx + sz.cx, sz.cy, 2, 2, Blend(SColorHighlight(), SColorPaper()));
+				xx += fnt[*q];
+			}
+		}
 	}
 	txt += n;
 	x += cx;
@@ -313,7 +325,7 @@ void EditField::Paint(Draw& w)
 			w.DrawImage(x, (fcy - nullicon.GetHeight()) / 2, nullicon);
 			x += icx + 4;
 		}
-		Paints(w, x, fcy, txt, nullink, paper, nulltext.GetLength(), false, nullfont);
+		Paints(w, x, fcy, txt, nullink, paper, nulltext.GetLength(), false, nullfont, false, false);
 	}
 	else {
 		const wchar *txt = text;
@@ -327,6 +339,7 @@ void EditField::Paint(Draw& w)
 		for(int i = 0; i < len; i++) {
 			hl[i].ink = ink;
 			hl[i].paper = paper;
+			hl[i].error = false;
 		}
 		HighlightText(hl);
 		len = hl.GetCount();
@@ -341,18 +354,9 @@ void EditField::Paint(Draw& w)
 		int b = 0;
 		for(int i = 0; i <= len; i++)
 			if((i == len || hl[i] != hl[b]) && b < len) {
-				Paints(w, x, fcy, txt, hl[b].ink, hl[b].paper, i - b, password, font);
+				Paints(w, x, fcy, txt, hl[b].ink, hl[b].paper, i - b, password, font, hl[b].error, showspaces);
 				b = i;
 			}
-/*		if(GetSelection(l, h)) {
-			Paints(w, x, fcy, txt, ink, paper, l, password, font);
-			Paints(w, x, fcy, txt, enabled ? style->selectedtext : paper,
-			                       enabled ? style->selected : ink, h - l, password, font);
-			Paints(w, x, fcy, txt, ink, paper, text.GetLength() - h, password, font);
-		}
-		else
-			Paints(w, x, fcy, txt, ink, paper, text.GetLength(), password, font);
-*/
 	}
 	if(!ar)
 		w.DrawRect(x, 0, 9999, fcy, paper);
@@ -1022,6 +1026,7 @@ void EditField::Reset()
 	SetStyle(StyleDefault());
 	SetFrame(edge);
 	font = StdFont();
+	showspaces = false;
 }
 
 EditField& EditField::SetFont(Font _font)

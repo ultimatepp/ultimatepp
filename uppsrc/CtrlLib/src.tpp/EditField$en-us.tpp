@@ -44,6 +44,13 @@ t]([_^Font^ Font]_[*@3 font]_`=_StdFont())&]
 used for edited text, including the standard static frame.&]
 [s3; &]
 [s4; &]
+[s5;:EditField`:`:HighlightText`(Vector`<EditField`:`:Highlight`>`&`): [@(0.0.255) virt
+ual] [@(0.0.255) void]_[* HighlightText]([_^Vector^ Vector]<[_^EditField`:`:Highlight^ Hi
+ghlight]>`&_[*@3 hl])&]
+[s2;%% Provides a chance to change the text color and background 
+for individual characters.&]
+[s3; &]
+[s4; &]
 [s5;:EditField`:`:WhenBar: [_^Callback1^ Callback1]<Bar[@(0.0.255) `&]>_[* WhenBar]&]
 [s2;%% This callback represents the context menu of EditField. The 
 default is StdBar.&]
@@ -60,6 +67,13 @@ PasteFilter]&]
 [s2;%% This callback is invoked when Paste operation is performed 
 and can be used to alter the text to be pasted. Default is no 
 change to the text.&]
+[s3; &]
+[s4; &]
+[s5;:EditField`:`:WhenHighlight: [_^Callback1^ Callback1]<[_^Vector^ Vector]<[_^EditField`:`:Highlight^ H
+ighlight]>`&>_[* WhenHighlight]&]
+[s2;%% Called by default implementation of HighlightText. Provides 
+a chance to change the text color and background for individual 
+characters.&]
 [s3; &]
 [s4; &]
 [s5;:EditField`:`:Insert`(int`,const WString`&`): [@(0.0.255) int]_[* Insert]([@(0.0.255) i
@@ -367,6 +381,11 @@ onst]&]
 [s2;%% Returns true if AlignRight is active.&]
 [s3; &]
 [s4; &]
+[s5;:EditField`:`:ShowSpaces`(bool`): [@(0.0.255) bool]_[* ShowSpaces]([@(0.0.255) bool]_[*@3 b
+]_`=_[@(0.0.255) true])&]
+[s2;%% When active, EditField paints blue dots to show spaces.&]
+[s3;%% &]
+[s4; &]
 [s5;:EditField`:`:GetChar`(int`)const: [@(0.0.255) virtual] [@(0.0.255) int]_[* GetChar]([@(0.0.255) i
 nt]_[*@3 i])_[@(0.0.255) const]&]
 [s2;%% Returns the character at [%-*@3 i] index.&]
@@ -398,5 +417,4 @@ tyle][@(0.0.255) `&]_[* StyleDefault]()&]
 [s1;:EditField`:`:Style`:`:struct: [@(0.0.255)3 struct][3 _][*3 Style][3 _:_][@(0.0.255)3 public
 ][3 _][*@3;3 ChStyle][@(0.0.255)3 <][*3 Style][@(0.0.255)3 >][3 _]&]
 [s9;%% This structure defines the visual style of an EditField.&]
-[s3; &]
 [s0; ]]

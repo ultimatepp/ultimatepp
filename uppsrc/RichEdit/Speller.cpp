@@ -258,13 +258,18 @@ struct SpellMaker : LRUCache<bool, SpellKey>::Maker {
 
 static LRUCache<bool, SpellKey> speller_cache;
 
-bool RichEdit::SpellWord(const wchar *ws, int len, int lang)
+bool SpellWord(const WString& ws, int lang)
 {
 	speller_cache.Shrink(2000);
 	SpellMaker m;
 	m.k.lang = lang;
-	m.k.wrd = WString(ws, len);
+	m.k.wrd = ws;
 	return speller_cache.Get(m);
+}
+
+bool SpellWord(const wchar *ws, int len, int lang)
+{
+	return SpellWord(WString(ws, len), lang);
 }
 
 void RichEdit::SpellerAdd(const WString& w, int lang)
