@@ -326,7 +326,7 @@ void EditField::Paint(Draw& w)
 			w.DrawImage(x, (fcy - nullicon.GetHeight()) / 2, nullicon);
 			x += icx + 4;
 		}
-		Paints(w, x, fcy, txt, nullink, paper, nulltext.GetLength(), false, nullfont, false, false);
+		Paints(w, x, fcy, txt, nullink, paper, nulltext.GetLength(), false, nullfont, Null, false);
 	}
 	else {
 		const wchar *txt = text;

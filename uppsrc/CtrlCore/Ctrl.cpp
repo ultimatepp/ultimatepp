@@ -15,11 +15,7 @@ static bool StdDisplayErrorFn(const Value& e)
 		return false;
 	String s = GetErrorText(e);
 #ifdef PLATFORM_WIN32
-#ifdef PLATFORM_WINCE
-	MessageBox(NULL, ToSystemCharset(s), ToSystemCharset(GetExeTitle()), MB_OK | MB_ICONQUESTION);
-#else
 	MessageBox(NULL, s, GetExeTitle(), MB_OK | MB_ICONQUESTION);
-#endif
 #else
 	fputs(String().Cat() << GetExeTitle() << ": " << s << '\n', stderr);
 #endif
