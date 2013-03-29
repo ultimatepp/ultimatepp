@@ -73,6 +73,9 @@ public:
 #else
 	operator dword() const             { return Get(); }
 #endif
+
+private:
+	Color(int);
 };
 
 RGBA operator*(int alpha, Color c);
