@@ -97,9 +97,9 @@ public:
 	struct Highlight : Moveable<Highlight> {
 		Color ink;
 		Color paper;
-		bool  error;
+		Color underline;
 
-		bool operator!=(const Highlight& b) const { return ink != b.ink || paper != b.paper || error != b.error; }
+		bool operator!=(const Highlight& b) const { return ink != b.ink || paper != b.paper || underline != b.underline; }
 	};
 
 protected:
@@ -148,7 +148,7 @@ protected:
 	int     GetCharWidth(int c) const { return font[c < 32 ? LowChar(c) : c]; }
 	int     GetTextCx(const wchar *text, int n, bool password, Font fnt) const;
 	void    Paints(Draw& w, int& x, int fcy, const wchar *&txt,
-		           Color ink, Color paper, int n, bool pwd, Font fnt, bool error, bool showspaces);
+		           Color ink, Color paper, int n, bool pwd, Font fnt, Color underline, bool showspaces);
 	int     GetStringCx(const wchar *text, int n);
 	int     GetCaret(int cursor) const;
 	int     GetCursor(int posx);
