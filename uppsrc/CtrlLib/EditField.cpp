@@ -259,7 +259,8 @@ void EditField::HighlightText(Vector<Highlight>& hl)
 }
 
 void EditField::Paints(Draw& w, int& x, int fcy, const wchar *&txt,
-					   Color ink, Color paper, int n, bool password, Font fnt, bool error, bool showspaces)
+					   Color ink, Color paper, int n, bool password, Font fnt, Color underline,
+					   bool showspaces)
 {
 	if(n < 0) return;
 	int cx = GetTextCx(txt, n, password, font);
@@ -281,8 +282,8 @@ void EditField::Paints(Draw& w, int& x, int fcy, const wchar *&txt,
 					*t++ = *q < 32 ? LowChar(*q) : *q;
 				txts = ~h;
 			}
-		if(error)
-			w.DrawRect(x, fnt.GetAscent() + 1, cx, 1, LtRed());
+		if(!IsNull(underline))
+			w.DrawRect(x, fnt.GetAscent() + 1, cx, 1, underline);
 		w.DrawText(x, 0, txts, fnt, ink, n);
 		if(showspaces) {
 			int xx = x;
@@ -339,7 +340,7 @@ void EditField::Paint(Draw& w)
 		for(int i = 0; i < len; i++) {
 			hl[i].ink = ink;
 			hl[i].paper = paper;
-			hl[i].error = false;
+			hl[i].underline = Null;
 		}
 		HighlightText(hl);
 		len = hl.GetCount();
@@ -354,7 +355,7 @@ void EditField::Paint(Draw& w)
 		int b = 0;
 		for(int i = 0; i <= len; i++)
 			if((i == len || hl[i] != hl[b]) && b < len) {
-				Paints(w, x, fcy, txt, hl[b].ink, hl[b].paper, i - b, password, font, hl[b].error, showspaces);
+				Paints(w, x, fcy, txt, hl[b].ink, hl[b].paper, i - b, password, font, hl[b].underline, showspaces);
 				b = i;
 			}
 	}
