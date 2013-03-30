@@ -144,7 +144,7 @@ public:
 };
 
 String Pdf(Report& report, bool pdfa = false);
-void   Print(Report& r, PrinterJob& pd, bool center = true);
+void   Print(Report& r, PrinterJob& pd);
 bool   DefaultPrint(Report& r, int i, const char *_name = t_("Report"));
 bool   Print(Report& r, int i, const char *name = t_("Report"));
 bool   Perform(Report& r, const char *name = t_("Report"));

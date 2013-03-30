@@ -4,18 +4,14 @@ NAMESPACE_UPP
 
 #define LLOG(x) // LOG(x)
 
-void Print(Report& r, PrinterJob& pd, bool center)
+void Print(Report& r, PrinterJob& pd)
 {
 	Draw& w = pd;
 	Size sz = w.GetPageSize();
 	Point mg = r.GetMargins();
 	Size pgsz = r.GetPage(0).GetSize();
-	int x = 0;
-	int y = 0;
-	if(center) {
-		x = Nvl(mg.x, (sz.cx - pgsz.cx) / 2);
-		y = Nvl(mg.y, (sz.cy - pgsz.cy) / 2);
-	}
+	int	x = Nvl(mg.x, (sz.cx - pgsz.cx) / 2);
+	int y = Nvl(mg.y, (sz.cy - pgsz.cy) / 2);
 	for(int i = 0; i < pd.GetPageCount(); i++) {
 		Drawing iw = r.GetPage(pd[i]);
 		Size sz = iw.GetSize();
