@@ -470,7 +470,7 @@ bool TcpSocket::Connect(IpAddrInfo& info)
 bool TcpSocket::Connect(const char *host, int port)
 {
 	LLOG("Connect(" << host << ':' << port << ')');
-
+	Close();
 	Init();
 	Reset();
 	IpAddrInfo info;
