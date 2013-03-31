@@ -146,6 +146,12 @@ GUI_APP_MAIN
 	EXP(Select(TABLE1(SqlAll())).From(TABLE1));
 	EXP(Select(SqlAll().Of(TABLE1)).From(TABLE1));
 
+	Vector<int> m;
+	for(int i = 0; i < 10; i++)
+		m.Add(i);
+	
+	EXP(Select(ID).From(TABLE1).Where(ID == SqlSetFrom(m)));
+
 #ifdef GENERATE_QTF
 	qtf << "}}";
 
