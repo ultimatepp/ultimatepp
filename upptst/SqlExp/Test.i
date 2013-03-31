@@ -1978,3 +1978,24 @@
 		Select(SqlTxt("123")).From(TABLE1),
 		"select 123 from \"TABLE1\""); // select 123 from "TABLE1"
 // ---------------------------------
+	TEST(MY_SQL,
+		Select(ID).From(TABLE1).Where(ID == SqlSetFrom(m)),
+		"select `ID` from `TABLE1` where `ID` in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')"); // select `ID` from `TABLE1` where `ID` in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+	TEST(SQLITE3,
+		Select(ID).From(TABLE1).Where(ID == SqlSetFrom(m)),
+		"select \"ID\" from \"TABLE1\" where \"ID\" in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')"); // select "ID" from "TABLE1" where "ID" in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+	TEST(ORACLE,
+		Select(ID).From(TABLE1).Where(ID == SqlSetFrom(m)),
+		"select \"ID\" from \"TABLE1\" where \"ID\" in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')"); // select "ID" from "TABLE1" where "ID" in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+	TEST(MSSQL,
+		Select(ID).From(TABLE1).Where(ID == SqlSetFrom(m)),
+		"select \"ID\" from \"TABLE1\" where \"ID\" in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')"); // select "ID" from "TABLE1" where "ID" in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+	TEST(PGSQL,
+		Select(ID).From(TABLE1).Where(ID == SqlSetFrom(m)),
+		"select \"ID\" from \"TABLE1\" where \"ID\" in (E'0', E'1', E'2', E'3', E'4', E'5', E'6', E'7', E'8', E'9')"); // select "ID" from "TABLE1" where "ID" in (E'0', E'1', E'2', E'3', E'4', E'5', E'6', E'7', E'8', E'9')
+	TEST(FIREBIRD,
+		Select(ID).From(TABLE1).Where(ID == SqlSetFrom(m)),
+		"select \"ID\" from \"TABLE1\" where \"ID\" in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')"); // select "ID" from "TABLE1" where "ID" in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+	TEST(DB2,
+		Select(ID).From(TABLE1).Where(ID == SqlSetFrom(m)),
+		"select \"ID\" from \"TABLE1\" where \"ID\" in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')"); // select "ID" from "TABLE1" where "ID" in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')

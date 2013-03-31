@@ -213,7 +213,14 @@ CONSOLE_APP_MAIN
 
 	EXP(Select(SqlTxt("123")).From(TABLE1));
 
+	VectorMap<int, String> m;
+	for(int i = 0; i < 10; i++)
+		m.Add(i, AsString(i));
+	
+	EXP(Select(ID).From(TABLE1).Where(ID == SqlSetFrom(m)));
+
 	LOG("\n\n\n=========================================================================");
 	#include "Test.i"
+	
 	LOG("OK");
 }
