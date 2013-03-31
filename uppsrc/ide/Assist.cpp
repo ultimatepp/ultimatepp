@@ -1148,7 +1148,7 @@ void Ide::ContextGoto0(int pos)
 			const Array<CppItem>& n = CodeBase()[q];
 			for(int i = 0; i < n.GetCount(); i++) {
 				if(n[i].IsType() == istype && n[i].name == id) {
-					JumpToDefinition(n, i);
+					JumpToDefinition(n, i, scope[j]);
 					return;
 				}
 			}
@@ -1166,7 +1166,7 @@ void Ide::CtrlClick(int pos)
 	ContextGoto0(pos);
 }
 
-void Ide::JumpToDefinition(const Array<CppItem>& n, int q)
+void Ide::JumpToDefinition(const Array<CppItem>& n, int q, const String& scope)
 {
 	String qitem = n[q].qitem;
 	int i = q;
@@ -1200,8 +1200,8 @@ void Ide::JumpToDefinition(const Array<CppItem>& n, int q)
 		EditFile(path);
 		LayDesigner *l = dynamic_cast<LayDesigner *>(~designer);
 		if(l) {
-			if(pos.name.StartsWith("With"))
-				l->FindLayout(pos.name.Mid(4));
+			if(scope.StartsWith("With"))
+				l->FindLayout(scope.Mid(4), pos.name);
 		}
 		else {
 			editor.SetCursor(editor.GetPos(pos.line - 1));
@@ -1226,7 +1226,7 @@ void Ide::IdeGotoCodeRef(String coderef)
 	const Array<CppItem>& n = CodeBase()[q];
 	q = FindItem(n, item);
 	if(q >= 0)
-		JumpToDefinition(n, q);
+		JumpToDefinition(n, q, scope);
 }
 
 bool AssistEditor::Esc()

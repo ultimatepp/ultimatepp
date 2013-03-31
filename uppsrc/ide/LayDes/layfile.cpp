@@ -81,9 +81,13 @@ void LayDes::RestoreEditPos()
 	SyncItems();
 }
 
-void LayDes::FindLayout(const String& name)
+void LayDes::FindLayout(const String& name, const String& item_name)
 {
-	layoutlist.FindSetCursor(name);
+	if(layoutlist.FindSetCursor(name) && !IsNull(item_name)) {
+		int q = item.Find(item_name, 1);
+		if(q >= 0)
+			SelectOne(q, 0);
+	}
 }
 
 bool LayDes::Load(const char *file, byte _charset)
