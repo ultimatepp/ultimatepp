@@ -457,6 +457,16 @@ public:
 	SqlSet(const String& s, PRIORITY p)   { text = s; priority = p; }
 };
 
+template <typename T>
+SqlSet SqlSetFrom(const T& cont)
+{
+	SqlSet set;
+	typename T::ConstIterator e = cont.End();
+	for(typename T::ConstIterator it = cont.Begin(); it != e; it++)
+		set.Cat(*it);
+	return set;
+}
+
 class SqlSetC : public SqlSet {
 public:
 	SqlSetC(const String& s)      { text = s; priority = SET; }
