@@ -1057,7 +1057,7 @@ public:
 	bool      OpenMainPackage();
 	void      NewMainPackage();
 
-	void      JumpToDefinition(const Array<CppItem>& scope, int q);
+	void      JumpToDefinition(const Array<CppItem>& n, int q, const String& scope);
 	void      SearchTopics();
 	void      ShowTopics();
 
