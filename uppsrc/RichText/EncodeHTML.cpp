@@ -325,7 +325,7 @@ class DefaultHtmlObjectSaver : public HtmlObjectSaver
 {
 public:
 	DefaultHtmlObjectSaver(const String& outdir_, const String& namebase_, int imtolerance_, Zoom z_)
-	: outdir(outdir_), namebase(namebase_), imtolerance(imtolerance_), z(z_), im(0) {}
+	: outdir(outdir_), namebase(namebase_), z(z_), imtolerance(imtolerance_), im(0) {}
 
 	virtual String GetHtml(const RichObject& object);
 
