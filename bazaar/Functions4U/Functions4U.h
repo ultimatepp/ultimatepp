@@ -43,20 +43,22 @@ String Tokenize(const String &str, const String &token);
 	
 /////////
 bool DirectoryExistsX(const char *path, int flags = 0); 
-///////////////////////////////
-bool DirectoryDeleteX(const char *path, int flags = 0);
-bool DirectoryDeleteDeepX(const char *path, int flags = 0);
-bool DeleteFolderDeepX(const char *dir, int flags = 0);
 bool DirectoryCopyX(const char *dir, const char *newPlace);
-bool DeleteFolderDeepWildcards(const char *dir, int flags = 0);
-///////////////////////////////
-bool RenameFolderDeepWildcards(const char *path, const char *namewc, const char *newname);
+bool DeleteDeepWildcardsX(const char *path, bool filefolder, int flags = 0);
+bool DeleteDeepWildcardsX(const char *pathwc, const char *namewc, bool filefolder, int flags = 0);
+bool DeleteFolderDeepWildcardsX(const char *path, int flags = 0);
+bool DeleteFileDeepWildcardsX(const char *path, int flags = 0);
+bool DeleteFolderDeepX(const char *path, int flags = 0);
+bool RenameDeepWildcardsX(const char *path, const char *namewc, const char *newname, bool forfile, bool forfolder, int flags = 0);
 
-bool UpperFolder(const char *folderName);
+bool IsRootFolder(const char *folderName);
 String GetUpperFolder(const String &folderName);
 String GetNextFolder(const String &folder, const String &lastFolder);
 String FileRealName(const char *fileName);
-
+bool IsFile(const char *fileName);
+bool IsFolder(const char *fileName);
+String GetRelativePath(String &from, String &path);
+	
 //bool GetSymLinkPath(const char *linkPath, String &filePath);
 bool IsSymLink(const char *path);
 
@@ -257,6 +259,7 @@ template<class T>
 inline T pow3(T a) {return (a*a*a);}
 template<class T>
 inline T pow4(T a) {return pow2(pow2(a));}
+/*
 template <class T> 
 inline const T& min(const T& a, const T& b, const T& c) { 
 	return a < b ? (a < c ? a : c) : ((b < c) ? b : c); }
@@ -275,7 +278,7 @@ inline const T& max(const T& a, const T& b, const T& c, const T& d) {
 	T cd = max(c, d);
 	return ab > cd ? ab : cd;
 }
-
+*/
 template <class T> 
 inline bool Between(const T& val, const T& min, const T& max) { 
 	return val >= min && val <= max;

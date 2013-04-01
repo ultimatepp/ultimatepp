@@ -201,6 +201,7 @@ String Replace(String str, char find, char replace) {
 	return ret;
 }
 
+// Rename file or folder
 bool FileMoveX(const char *oldpath, const char *newpath, int flags) {
 	bool usr, grp, oth;
 	if (flags & DELETE_READ_ONLY) {
@@ -223,6 +224,16 @@ bool FileDeleteX(const char *path, int flags) {
 	}
 }
 
+bool FolderDeleteX(const char *path, int flags) {
+	if (flags & USE_TRASH_BIN)
+		return FileToTrashBin(path);
+	else {
+		if (flags & DELETE_READ_ONLY) 
+			SetReadOnly(path, false, false, false);
+		return DirectoryDelete(path);
+	}
+}
+
 bool DirectoryExistsX(const char *path, int flags) {
 	if (!(flags & BROWSE_LINKS))
 		return DirectoryExists(path);
@@ -235,6 +246,42 @@ bool DirectoryExistsX(const char *path, int flags) {
 	if (filePath.IsEmpty())
 		return false;
 	return DirectoryExists(filePath); 
+}
+
+bool IsFile(const char *fileName) {
+	FindFile ff;
+	if(ff.Search(fileName) && ff.IsFile()) 
+		return true;
+	return false;
+}
+	
+bool IsFolder(const char *fileName) {
+	FindFile ff;
+	if(ff.Search(fileName) && ff.IsFolder()) 
+		return true;
+	return false;
+}
+
+String GetRelativePath(String &from, String &path) {
+	String ret;
+	int pos_from = 0, pos_path = 0;
+	bool first = true;
+	while (pos_from < from.GetCount()) {
+		String f_from = Tokenize(from, DIR_SEPS, pos_from);
+		String f_path = Tokenize(path, DIR_SEPS, pos_path);
+		if (f_from != f_path) {
+			if (first) 
+				return Null;
+			ret << ".." << DIR_SEPS << f_path << DIR_SEPS << path.Mid(pos_path);	
+			while (pos_from < from.GetCount()) {
+				ret.Insert(0, String("..") + DIR_SEPS);
+				Tokenize(from, DIR_SEPS, pos_from);		
+			}
+			return ret;
+		}
+		first = false;
+	}
+	return "";
 }
 
 bool ReadOnly(const char *path, bool readOnly) {
@@ -1231,7 +1278,7 @@ String GetNextFolder(const String &folder, const String &lastFolder) {
 		return lastFolder;
 }
 
-bool UpperFolder(const char *folderName) {
+bool IsRootFolder(const char *folderName) {
 	if (!folderName)
 		return false;
 	if (folderName[0] == '\0')
@@ -1246,7 +1293,7 @@ bool UpperFolder(const char *folderName) {
 }
 
 String GetUpperFolder(const String &folderName) {
-	if (!UpperFolder(folderName))
+	if (!IsRootFolder(folderName))
 		return folderName;
 	int len = folderName.GetCount();
 	if (folderName[len-1] == DIR_SEP)
@@ -1267,46 +1314,90 @@ bool CreateFolderDeep(const char *dir)
 		return DirectoryCreate(dir);
 	else
 		return false;
-/*	if (DirectoryExists(dir))
-		return true;
-	String upper = GetUpperFolder(dir);
-	if (CreateFolderDeep(upper))
-		return DirectoryCreate(dir);
-	else 
-		return false; */
 }
 
-bool DeleteFolderDeepWildcards(const char *path, int flags)
+bool DeleteDeepWildcardsX(const char *pathwc, bool filefolder, int flags)
 {
-	FindFile ff(path);
-	String dir = GetFileDirectory(path);
+	return DeleteDeepWildcardsX(GetFileFolder(pathwc), GetFileName(pathwc), filefolder, flags);	
+}
+
+bool DeleteDeepWildcardsX(const char *path, const char *namewc, bool filefolder, int flags)
+{
+	FindFile ff(AppendFileName(path, "*.*"));
+	while(ff) {
+		String name = ff.GetName();
+		String full = AppendFileName(path, name);
+		if (PatternMatch(namewc, name)) {
+			if (ff.IsFolder() && !filefolder) {
+				if (!DeleteFolderDeepX(full, flags)) {
+					dword error = GetLastError();
+					return false;
+				}
+			} else if (ff.IsFile() && filefolder) {
+				if (!FileDeleteX(full, flags)) {
+					dword error = GetLastError();
+					return false;
+				}
+			}
+		} else if(ff.IsFolder()) {
+			if (!DeleteDeepWildcardsX(full, namewc, filefolder, flags))
+				return false;
+		}	
+		ff.Next();
+	}
+	return true;
+}
+
+bool DeleteFolderDeepWildcardsX(const char *path, int flags) 	
+{
+	return DeleteDeepWildcardsX(path, false, flags);
+}
+
+bool DeleteFileDeepWildcardsX(const char *path, int flags) 	
+{
+	return DeleteDeepWildcardsX(path, true, flags);
+}
+
+bool DeleteFolderDeepX_Folder(const char *dir, int flags)
+{
+	FindFile ff(AppendFileName(dir, "*.*"));
 	while(ff) {
 		String name = ff.GetName();
 		String p = AppendFileName(dir, name);
 		if(ff.IsFile())
 			FileDeleteX(p, flags);
 		else
-			if(ff.IsFolder())
-				DeleteFolderDeep(p);
+		if(ff.IsFolder())
+			DeleteFolderDeepX_Folder(p, flags);
 		ff.Next();
 	}
-	return DirectoryDelete(dir);
+	return FolderDeleteX(dir, flags);
 }
 
-bool RenameFolderDeepWildcards(const char *path, const char *namewc, const char *newname)
+bool DeleteFolderDeepX(const char *path, int flags)
+{
+	if (flags & USE_TRASH_BIN)
+		return FileToTrashBin(path);
+	return DeleteFolderDeepX_Folder(path, flags);
+}
+
+bool RenameDeepWildcardsX(const char *path, const char *namewc, const char *newname, bool forfile, bool forfolder, int flags)
 {
 	FindFile ff(AppendFileName(path, "*.*"));
 	while(ff) {
+		String name = ff.GetName();
+		String full = AppendFileName(path, name);
 		if(ff.IsFolder()) {
-			String name = ff.GetName();
-			String folder = AppendFileName(path, name);
-			if (!RenameFolderDeepWildcards(folder, namewc, newname))
+			if (!RenameDeepWildcardsX(full, namewc, newname, forfile, forfolder, flags))
 				return false;
-			if (PatternMatch(namewc, name))
-				if (!FileMove(folder, AppendFileName(path, newname))) {
+		}
+		if (PatternMatch(namewc, name)) {
+			if ((ff.IsFolder() && forfolder) || (ff.IsFile() && forfile)) {
+				if (!FileMoveX(full, AppendFileName(path, newname)), flags) {
 					dword error = GetLastError();
 					return false;
 				}
+			}
 		}
 		ff.Next();
 	}

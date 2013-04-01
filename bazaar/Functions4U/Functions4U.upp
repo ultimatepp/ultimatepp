@@ -6,8 +6,8 @@ uses
 	Draw,
 	plugin\jpg,
 	plugin\gif,
-	plugin\tif,
-	plugin\png;
+	plugin\png,
+	plugin/tif;
 
 uses(GUI) ide/Browser;
 

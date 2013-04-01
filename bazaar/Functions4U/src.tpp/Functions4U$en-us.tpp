@@ -42,6 +42,13 @@ onst]_[@(0.0.255) char]_`*[*@3 file], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@
 [s2; Appends at the end of [%-*@3 file] the text [%-*@3 str].&]
 [s0;l288; Returns true in case of success.&]
 [s4;%- &]
+[s5;:AppendFile`(const char`*`,const char`*`):%- [@(0.0.255) bool]_[* AppendFile]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 filename], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 str])
+&]
+[s2; Appends at the end of file [%-*@3 filename] the text [%-*@3 str].&]
+[s2; Returns true in case of success.&]
+[s3; &]
+[s4;%- &]
 [s5;:AppendFileName`(const String`&`,const char`*`,const char`*`):%- [_^String^ String]_
 [* AppendFileName]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 path1], 
 [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path2], [@(0.0.255) const]_[@(0.0.255) char]_`*
@@ -54,10 +61,20 @@ nst]_[@(0.0.255) char]_`*[*@3 folderName])&]
 [s2; Returns the name of the folder over [%-*@3 folderName].&]
 [s3; &]
 [s4;%- &]
-[s5;:UpperFolder`(const char`*`):%- [@(0.0.255) bool]_[* UpperFolder]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 folderName])&]
+[s5;:IsRootFolder`(const char`*`):%- [@(0.0.255) bool]_[* IsRootFolder]([@(0.0.255) const]_
+[@(0.0.255) char]_`*[*@3 folderName])&]
 [s0;l288; Returns true if there is a folder over [%-*@3 folderName]. 
 It does not check if [%-*@3 folderName] exists.&]
+[s3; &]
+[s4;%- &]
+[s5;:GetRelativePath`(String`&`,String`&`):%- [_^String^ String]_[* GetRelativePath]([_^String^ S
+tring]_`&[*@3 from], [_^String^ String]_`&[*@3 path])&]
+[s2; Returns the relative path to go from [%-*@3 from] to [%-*@3 path].&]
+[s0;l288; For example, if:&]
+[s0;l288;i150;O0; [%-*@3 from] `= `"/books/technology/computers`"&]
+[s0;l288;i150;O0; [%-*@3 path ]`= `"/books/biology/mammals`"&]
+[s0;l288; GetRelativePath() would return `"../../biology/mammals`".&]
+[s0;l288; If there is no match between both paths it returns Null.&]
 [s3; &]
 [s4;%- &]
 [s5;:FileRealName`(const char`*`):%- [_^String^ String]_[* FileRealName]([@(0.0.255) const]_
@@ -75,13 +92,7 @@ of [%-*@3 lastFolder].&]
 [s2; For example: GetNextFolder(`"/home`", `"/home/user/documents`") 
 returns `"/home/user`".&]
 [s3; &]
-[s4;%- &]
-[s5;:CreateFolderDeep`(const char`*`):%- [@(0.0.255) bool]_[* CreateFolderDeep]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[*@3 dir]) [*@6 DEPRECATED]&]
-[s2; Creates folder [%-*@3 dir], creating intermediate folders if necessary.&]
-[s0;l288; Superseded by Core RealizePath()&]
-[s3; &]
-[s4;%- &]
+[s4; &]
 [s5;:FileCompare`(const char`*`,const char`*`):%- [@(0.0.255) int]_[* FileCompare]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 path1], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path2])&]
 [s2; Compares files [%-*@3 path1] and [%-*@3 path2]. &]
@@ -329,7 +340,7 @@ for all times [%-*@3 find] char appears.&]
 [s3; &]
 [s0; &]
 [ {{10000@1 [s0; [* Special folders]]}}&]
-[s4;%- &]
+[s4; &]
 [s5;:GetTempFolder`(`):%- [_^String^ String]_[* GetTempFolder]()&]
 [s2; Gets the default temp files folder path.&]
 [s3;%- &]
@@ -374,34 +385,6 @@ rage]([*@4 T]_[*@3 a], [*@4 T]_[*@3 b], [*@4 T]_[*@3 c], [*@4 T]_[*@3 d])&]
 [s2; Raises [%-*@3 a] to 4.&]
 [s3; &]
 [s4;%- &]
-[s5;:min`(const T`&`,const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
-[*@4 T]>_[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* min]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
-]_[*@3 a], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 b], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
-]_[*@3 c])&]
-[s2; Returns the min value of [%-*@3 a], [%-*@3 b] and [%-*@3 c].&]
-[s3; &]
-[s4;%- &]
-[s5;:min`(const T`&`,const T`&`,const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 T]>_[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* min]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
-]_[*@3 a], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 b], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
-]_[*@3 c], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 d])&]
-[s2; Returns the min value of [%-*@3 a], [%-*@3 b], [%-*@3 c] and [%-*@3 d].&]
-[s3; &]
-[s4;%- &]
-[s5;:max`(const T`&`,const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
-[*@4 T]>_[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* max]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
-]_[*@3 a], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 b], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
-]_[*@3 c])&]
-[s2; Returns the max value of [%-*@3 a], [%-*@3 b] and [%-*@3 c].&]
-[s3; &]
-[s4;%- &]
-[s5;:max`(const T`&`,const T`&`,const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 T]>_[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* max]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
-]_[*@3 a], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 b], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
-]_[*@3 c], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 d])&]
-[s2; Returns the max value of [%-*@3 a], [%-*@3 b], [%-*@3 c] and [%-*@3 d].&]
-[s3; &]
-[s4;%- &]
 [s5;:Between`(const T`&`,const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) cla
 ss]_[*@4 T]>_[@(0.0.255) bool]_[* Between]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 val],
  [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 min], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_
@@ -412,7 +395,7 @@ ss]_[*@4 T]>_[@(0.0.255) bool]_[* Between]([@(0.0.255) const]_[*@4 T][@(0.0.255)
 [s5;:AngleAdd360`(T`,T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* Angle
 Add360]([*@4 T]_[*@3 ang], [*@4 T]_[*@3 val])&]
 [s2; Adds [%-*@3 val] to [%-*@3 ang] taking care that result is between 
-0 and 365º.&]
+0 and 360º.&]
 [s3; &]
 [s4;%- &]
 [s5;:Distance`(const T`&`,const T`&`,const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) c

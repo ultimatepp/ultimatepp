@@ -5,7 +5,7 @@
 #include "Draw/init"
 #include "plugin\jpg/init"
 #include "plugin\gif/init"
-#include "plugin\tif/init"
 #include "plugin\png/init"
+#include "plugin/tif/init"
 #include "ide/Browser/init"
 #endif
