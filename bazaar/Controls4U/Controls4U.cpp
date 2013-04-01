@@ -115,8 +115,9 @@ void EditFileFolder::DoBrowse() {
 		if (DirectoryExists(s)) 
 			fs.PreSelect(s);
 		else {
-			if (GetFileFolder(s).IsEmpty())
-				s = AppendFileName(fs.GetActiveDir(), s);
+			String folder = GetFileFolder(s);
+			if (folder.IsEmpty() || folder.Find("..") >= 0 || !DirectoryExists(folder)) 
+				s = AppendFileName(NormalizePath(folder, fs.GetActiveDir()), GetFileName(s));
 			fs.PreSelect(s);
 		}
 	}
@@ -140,7 +141,7 @@ void EditFileFolder::SetData(const Value& data) {
 
 void EditFileFolder::DoGo(bool add) {
 	Set(GetData());			// Write Edit to FileSel
-	if (UpperFolder(GetData().ToString()))
+	if (IsRootFolder(GetData().ToString()))
 		butUp.Enable(true);
 	else
 		butUp.Enable(false);

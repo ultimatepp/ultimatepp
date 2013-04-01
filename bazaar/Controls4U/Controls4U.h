@@ -38,21 +38,21 @@ public:
 	void DoLeft(), DoRight(), DoUp();
 	void DoBrowse();
 	void DoGo(bool add = true);
-	void Type(const char *name, const char *ext)	{InitFs();	pfs->Type(name, ext);};
-	void AllFilesType()								{InitFs();	pfs->AllFilesType();};
-	void ActiveDir(const String& d) 				{InitFs();	pfs->ActiveDir(d);};
-	void MkDirOption(bool b)						{InitFs();	pfs->MkDirOption(b);};
-	String Get() const                           	{return GetData();};	
-	String operator~() const                     	{return Get();};
-	operator String() const                      	{return Get();};
-	operator const char *() const					{return Get();};
-	void Set(const String& s)						{InitFs();	pfs->Set(s); EditString::SetData(s);};
-	void operator<<=(const String& s)            	{Set(s);};
-	void operator=(const String& s)              	{Set(s);};
-	bool IsEmpty()									{return GetData().IsNull();};
-	EditFileFolder &NotNull(bool b)					{EditString::NotNull(b);  return *this;};
-	EditFileFolder &SelLoad(bool load) 				{isLoad = load; return *this;};
-	EditFileFolder &SetTitle(const char *_title)	{title = _title; return *this;};
+	void Type(const char *name, const char *ext)	{InitFs();	pfs->Type(name, ext);}
+	void AllFilesType()								{InitFs();	pfs->AllFilesType();}
+	void ActiveDir(const String& d) 				{InitFs();	pfs->ActiveDir(d);}
+	void MkDirOption(bool b)						{InitFs();	pfs->MkDirOption(b);}
+	String Get() const                           	{return GetData();}
+	operator const char *() const					{return Get();}
+	const char *operator~() const   				{return Get();}
+	void Set(const String& s)						{InitFs();	pfs->Set(s); EditString::SetData(s);}
+	void operator<<=(const String& s)            	{Set(s);}
+	EditFileFolder &operator=(const char *s)  	  	{Set(s); return *this;}
+	EditFileFolder &operator=(const String& s) 		{Set(s); return *this;}
+	bool IsEmpty()									{return GetData().IsNull();}
+	EditFileFolder &NotNull(bool b)					{EditString::NotNull(b);  return *this;}
+	EditFileFolder &SelLoad(bool load) 				{isLoad = load; return *this;}
+	EditFileFolder &SetTitle(const char *_title)	{title = _title; return *this;}
 	EditFileFolder &UseHistory(bool use);
 	EditFileFolder &UseUp(bool use);
 	EditFileFolder &UseBrowse(bool use);
@@ -65,12 +65,14 @@ class EditFile : public EditFileFolder {
 typedef EditFile CLASSNAME;		
 public:
 	EditFile();
+	using EditFileFolder::operator=;
 };
 
 class EditFolder : public EditFileFolder {
 typedef EditFolder CLASSNAME;		
 public:
 	EditFolder();
+	using EditFileFolder::operator=;
 };
 
 class StaticImage : public Ctrl {
