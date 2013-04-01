@@ -226,8 +226,11 @@ void Ctrl::UpdateRect0(bool sync)
 	if(parent)
 		rect = CalcRect(parent->GetRect(), parent->GetView());
 	else {
-		Rect r = GetWorkArea();
-		rect = CalcRect(r, r);
+		static Rect pwa;
+		ONCELOCK {
+			pwa = GetPrimaryWorkArea();
+		}
+		rect = CalcRect(pwa, pwa);
 	}
 	LLOG("UpdateRect0 " << Name() << " to " << rect);
 	LTIMING("UpdateRect0 SyncLayout");
