@@ -582,7 +582,9 @@ Ctrl::Ctrl() {
 	inframe = false;
 	ignoremouse = transparent = false;
 	caretcx = caretcy = caretx = carety = 0;
-	SetRect(Rect(0, 0, 0, 0));
+	pos.x = PosLeft(0, 0);
+	pos.y = PosTop(0, 0);
+//	SetRect(Rect(0, 0, 0, 0));
 	inloop = popup = isopen = false;
 	modify = false;
 	unicode = false;
