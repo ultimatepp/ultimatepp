@@ -63,8 +63,13 @@ nst]_[@(0.0.255) char]_`*[*@3 folderName])&]
 [s4;%- &]
 [s5;:IsRootFolder`(const char`*`):%- [@(0.0.255) bool]_[* IsRootFolder]([@(0.0.255) const]_
 [@(0.0.255) char]_`*[*@3 folderName])&]
-[s0;l288; Returns true if there is a folder over [%-*@3 folderName]. 
+[s0;l288; Returns false if there is a folder over [%-*@3 folderName]. 
 It does not check if [%-*@3 folderName] exists.&]
+[s3; &]
+[s4;%- &]
+[s5;:GetUpperFolder`(const String`&`):%- [_^String^ String]_[* GetUpperFolder]([@(0.0.255) c
+onst]_[_^String^ String]_`&[*@3 folderName])&]
+[s2; Returns the folder over [%-*@3 folderName].&]
 [s3; &]
 [s4;%- &]
 [s5;:GetRelativePath`(String`&`,String`&`):%- [_^String^ String]_[* GetRelativePath]([_^String^ S
@@ -148,16 +153,27 @@ depending on the value of[%-*@3  readOnly].&]
 [s5;:SetReadOnly`(const char`*`,bool`,bool`,bool`):%- [@(0.0.255) bool]_[* SetReadOnly]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 path], [@(0.0.255) bool]_[*@3 user], [@(0.0.255) bool]_[*@3 gr
 oup], [@(0.0.255) bool]_[*@3 others])&]
-[s2; Sets [%-*@3 path] [%-*@3  ](file or folder) as read only or write 
-permitted for[%-*@3  user], [%-*@3 group ]and [%-*@3 others].&]
+[s2; Sets [%-*@3 path] (file or folder) as read only or write permitted 
+for[%-*@3  user], [%-*@3 group ]and [%-*@3 others].&]
+[s0;l288; -|Returns true in case of success.&]
+[s3; &]
+[s4;%- &]
+[s5;:IsReadOnly`(const char`*`,bool`&`,bool`&`,bool`&`):%- [@(0.0.255) bool]_[* IsReadOnl
+y]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path], [@(0.0.255) bool]_`&[*@3 user], 
+[@(0.0.255) bool]_`&[*@3 group], [@(0.0.255) bool]_`&[*@3 others])&]
+[s2; Returns true in [%-*@3 user], [%-*@3 group] or [%-*@3 others] if [%-*@3 path 
+](file or folder) is read only for some of those user groups.&]
 [s0; -|Returns true in case of success.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:IsFile`(const char`*`):%- [@(0.0.255) bool]_[* IsFile]([@(0.0.255) const]_[@(0.0.255) ch
+ar]_`*[*@3 fileName])&]
+[s2; Returns true if [%-*@3 fileName] is a file.&]
 [s3; &]
 [s4; &]
-[s5;:DeleteFolderDeepWildcards`(const char`*`):%- [@(0.0.255) bool]_[* DeleteFolderDeepWi
-ldcards]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 dir])&]
-[s2;%- [%% Delete all files under ][*@3 dir ][%% folder that comply the 
-condition in wildcards included in ][*@3 dir.]&]
-[s0;l288; Returns true in case of success.&]
+[s5;:IsFolder`(const char`*`):%- [@(0.0.255) bool]_[* IsFolder]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 fileName])&]
+[s2; Returns true id [%-*@3 fileName] is a folder.&]
 [s3; &]
 [s4; &]
 [s5;:SearchFile`(String`,String`,String`,Array`<String`>`&`):%- [_^Array^ Array]<[_^String^ S
@@ -208,8 +224,78 @@ in the Trash Bin.&]
 Trash Bin.ç&]
 [s3; &]
 [s0; &]
-[ {{10000@1 [s0; [* String functions]]}}&]
+[s0;%- &]
+[ {{10000@1 [s0; [* File/Folder Handling `"X`" functions]]}}&]
+[s0; &]
+[s0;%- [%% File and folder handling functions with eXtras defined in 
+]EXT`_FILE`_FLAGS&]
+[s4;%- &]
+[s5;:USE`_TRASH`_BIN:%- [@(0.0.255) enum]_EXT`_FILE`_FLAGS_[* USE`_TRASH`_BIN]_`=_[@3 1]&]
+[s2; If true, removed fildes and fodlers will be moved to the Trash 
+(recycle) Bin.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:BROWSE`_LINKS:%- [@(0.0.255) enum]_EXT`_FILE`_FLAGS_[* BROWSE`_LINKS]_`=_[@3 2]&]
+[s2; If true, folder functions will follow symbolic links.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:DELETE`_READ`_ONLY:%- [@(0.0.255) enum]_EXT`_FILE`_FLAGS_[* DELETE`_READ`_ONLY]_`=_[@3 4
+]&]
+[s2; If true, file/folder deletion functions will not consider read 
+only flag.&]
+[s0; &]
+[s4;%- &]
+[s5;:DeleteFolderDeepWildcardsX`(const char`*`,EXT`_FILE`_FLAGS`):%- [@(0.0.255) bool]_
+[* DeleteFolderDeepWildcardsX]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path], 
+EXT`_FILE`_FLAGS_[*@3 flags]_`=_[@3 0])&]
+[s2;%- [%% Delete all folders under ][*@3 path ][%% using ][*@3 flags][%%  
+that comply the condition in wildcards included in ][*@3 path.]&]
+[s2; Returns true in case of success.&]
+[s3; &]
+[s4;%- &]
+[s5;:DeleteFileDeepWildcardsX`(const char`*`,EXT`_FILE`_FLAGS`):%- [@(0.0.255) bool]_[* D
+eleteFileDeepWildcardsX]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path], 
+EXT`_FILE`_FLAGS_[*@3 flags]_`=_[@3 0])&]
+[s2;%- [%% Delete all files under ][*@3 path ][%% using ][*@3 flags][%%  that 
+comply the condition in wildcards included in ][*@3 path.]&]
+[s2; Returns true in case of success.&]
+[s3; &]
+[s4;%- &]
+[s5;:DeleteFolderDeepX`(const char`*`,EXT`_FILE`_FLAGS`):%- [@(0.0.255) bool]_[* DeleteFo
+lderDeepX]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path], EXT`_FILE`_FLAGS_[*@3 flags
+]_`=_[@3 0])&]
+[s2; Delete [%-*@3 path] folder and all files and folders under it 
+using [%-*@3 flags].&]
+[s2; Returns true in case of success.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:RenameDeepWildcardsX`(const char`*`,const char`*`,const char`*`,bool`,bool`,EXT`_FILE`_FLAGS`):%- [@(0.0.255) b
+ool]_[* RenameDeepWildcardsX]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path], 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 namewc], [@(0.0.255) const]_[@(0.0.255) char]_`*
+[*@3 newname], [@(0.0.255) bool]_[*@3 forfile], [@(0.0.255) bool]_[*@3 forfolder], 
+EXT`_FILE`_FLAGS_[*@3 flags]_`=_NO`_FLAG)&]
+[s2; Rename to [%-*@3 newname] the files (if [%-*@3 forfile] is set to 
+true) and/or folders (if [%-*@3 forfolder] is set to true) under 
+[%-*@3 path] that comply the condition in wildcards included in 
+[%-*@3 namewc] using [%-*@3 flags] .&]
+[s2; Returns true in case of success.&]
+[s3; &]
+[s4;%- &]
+[s5;:FileMoveX`(const char`*`,const char`*`,EXT`_FILE`_FLAGS`):%- [@(0.0.255) bool]_[* Fi
+leMoveX]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 oldpath], [@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 newpath], EXT`_FILE`_FLAGS_[*@3 flags]_`=_NO`_FLAG)&]
+[s2; Moves or renames [%-*@3 oldpath] file to [%-*@3 newpath] using [%-*@3 flags].&]
+[s2; Returns true in case of success.&]
+[s3; &]
 [s4; &]
+[s5;:FileDeleteX`(const char`*`,EXT`_FILE`_FLAGS`):%- [@(0.0.255) bool]_[* FileDeleteX]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 path], EXT`_FILE`_FLAGS_[*@3 flags]_`=_NO`_FLAG)&]
+[s2; Deletes [%-*@3 path] file using [%-*@3 flags].&]
+[s2; Returns true in case of success.&]
+[s3; &]
+[s0; &]
+[ {{10000@1 [s0; [* String functions]]}}&]
+[s4;%- &]
 [s5;:Trim`(const String`&`):%- [_^String^ String]_[* Trim]([@(0.0.255) const]_[_^String^ Stri
 ng][@(0.0.255) `&]_[*@3 s])&]
 [s2; Like TrimBoth(), it removes left and right spaces in [%-*@3 s]. 
@@ -223,8 +309,17 @@ Spaces are chars like, `' `', `'`\t`', `'`\n`', ...&]
 [%-*@3 token] is a String that contains token identifier chars.&]
 [s0;l288; Returns the String from original [%-*@3 pos] to the char 
 after found token or until the end of the String if no token 
-in [%-*@3 token] is found. [%-*@3 pos] is updated to the next char 
-after returned String.&]
+is found. [%-*@3 pos] is updated to the next char after returned 
+String.&]
+[s3; &]
+[s4;%- &]
+[s5;:Tokenize`(const String`&`,const String`&`):%- [_^String^ String]_[* Tokenize]([@(0.0.255) c
+onst]_[_^String^ String]_`&[*@3 str], [@(0.0.255) const]_[_^String^ String]_`&[*@3 tokenEnd
+])&]
+[s2; Finds a token in [%-*@3 str]. [%-*@3 tokenEnd] is a String that 
+contains token identifier chars.&]
+[s2; Returns the String to the char after found token or until the 
+end of the String if no token is found.&]
 [s3; &]
 [s4;%- &]
 [s5;:ReadCSV`(const String`,char`,bool`):%- [_^Vector^ Vector]<[_^Vector^ Vector]_<[_^Value^ V
@@ -322,6 +417,12 @@ characters.&]
 [s0;l288; For example `"Århus Ørsted Ñandú crème brûlée`" 
 is converted in `"Aarhus Oersted Nandu creme brulee`"&]
 [s3;%- &]
+[s4;%- &]
+[s5;:FitFileName`(String`,int`):%- [_^String^ String]_[* FitFileName]([@(0.0.255) const]_[_^String^ S
+tring]_[*@3 fileName], [@(0.0.255) int]_[*@3 len])&]
+[s2; Fits String [%-*@3 fileName] length until [%-*@3 len] removing just 
+intermediate folder names replacing them with `"...`".&]
+[s3; &]
 [s4; &]
 [s5;:IsPunctuation`(wchar`):%- [@(0.0.255) bool]_[* IsPunctuation]([_^wchar^ wchar]_[*@3 c])&]
 [s2; Returns true if [%-*@3 c ]is a punctuation character.&]

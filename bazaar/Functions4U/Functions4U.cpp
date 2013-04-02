@@ -202,7 +202,7 @@ String Replace(String str, char find, char replace) {
 }
 
 // Rename file or folder
-bool FileMoveX(const char *oldpath, const char *newpath, int flags) {
+bool FileMoveX(const char *oldpath, const char *newpath, EXT_FILE_FLAGS flags) {
 	bool usr, grp, oth;
 	if (flags & DELETE_READ_ONLY) {
 		if (IsReadOnly(oldpath, usr, grp, oth))
@@ -214,7 +214,7 @@ bool FileMoveX(const char *oldpath, const char *newpath, int flags) {
 	return ret;
 }
 
-bool FileDeleteX(const char *path, int flags) {
+bool FileDeleteX(const char *path, EXT_FILE_FLAGS flags) {
 	if (flags & USE_TRASH_BIN)
 		return FileToTrashBin(path);
 	else {
@@ -224,7 +224,7 @@ bool FileDeleteX(const char *path, int flags) {
 	}
 }
 
-bool FolderDeleteX(const char *path, int flags) {
+bool FolderDeleteX(const char *path, EXT_FILE_FLAGS flags) {
 	if (flags & USE_TRASH_BIN)
 		return FileToTrashBin(path);
 	else {
@@ -234,7 +234,7 @@ bool FolderDeleteX(const char *path, int flags) {
 	}
 }
 
-bool DirectoryExistsX(const char *path, int flags) {
+bool DirectoryExistsX(const char *path, EXT_FILE_FLAGS flags) {
 	if (!(flags & BROWSE_LINKS))
 		return DirectoryExists(path);
 	if (DirectoryExists(path))
@@ -283,14 +283,14 @@ String GetRelativePath(String &from, String &path) {
 	}
 	return "";
 }
-
+/*
 bool ReadOnly(const char *path, bool readOnly) {
 	return SetReadOnly(path, readOnly);
 }
 
 bool ReadOnly(const char *path, bool usr, bool grp, bool oth) {
 	return SetReadOnly(path, usr, grp, oth);
-}
+}*/
 
 bool SetReadOnly(const char *path, bool readOnly) {
 	return SetReadOnly(path, readOnly, readOnly, readOnly);
@@ -995,7 +995,7 @@ String RemovePunctuation(String str) {
 	return ret;
 }
 
-String FitFileName(String fileName, int len) {
+String FitFileName(const String fileName, int len) {
 	if (fileName.GetCount() <= len)
 		return fileName;
 	
@@ -1284,16 +1284,16 @@ bool IsRootFolder(const char *folderName) {
 	if (folderName[0] == '\0')
 		return false;
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-	if (strlen(folderName) == 3)
+	if (strlen(folderName) == 3 && folderName[1] == ':' && folderName[2] == DIR_SEP)
 #else
-	if (strlen(folderName) == 1)
+	if (strlen(folderName) == 1 && folderName[0] == DIR_SEP)
 #endif
-		return false;
-	return true;
+		return true;
+	return false;
 }
 
 String GetUpperFolder(const String &folderName) {
-	if (!IsRootFolder(folderName))
+	if (IsRootFolder(folderName))
 		return folderName;
 	int len = folderName.GetCount();
 	if (folderName[len-1] == DIR_SEP)
@@ -1307,21 +1307,21 @@ String GetUpperFolder(const String &folderName) {
 		pos++;
 	return folderName.Left(pos);
 }
-
+/*
 bool CreateFolderDeep(const char *dir)
 {
 	if (RealizePath(dir))
 		return DirectoryCreate(dir);
 	else
 		return false;
-}
+}*/
 
-bool DeleteDeepWildcardsX(const char *pathwc, bool filefolder, int flags)
+bool DeleteDeepWildcardsX(const char *pathwc, bool filefolder, EXT_FILE_FLAGS flags)
 {
 	return DeleteDeepWildcardsX(GetFileFolder(pathwc), GetFileName(pathwc), filefolder, flags);	
 }
 
-bool DeleteDeepWildcardsX(const char *path, const char *namewc, bool filefolder, int flags)
+bool DeleteDeepWildcardsX(const char *path, const char *namewc, bool filefolder, EXT_FILE_FLAGS flags)
 {
 	FindFile ff(AppendFileName(path, "*.*"));
 	while(ff) {
@@ -1348,17 +1348,17 @@ bool DeleteDeepWildcardsX(const char *path, const char *namewc, bool filefolder,
 	return true;
 }
 
-bool DeleteFolderDeepWildcardsX(const char *path, int flags) 	
+bool DeleteFolderDeepWildcardsX(const char *path, EXT_FILE_FLAGS flags) 	
 {
 	return DeleteDeepWildcardsX(path, false, flags);
 }
 
-bool DeleteFileDeepWildcardsX(const char *path, int flags) 	
+bool DeleteFileDeepWildcardsX(const char *path, EXT_FILE_FLAGS flags) 	
 {
 	return DeleteDeepWildcardsX(path, true, flags);
 }
 
-bool DeleteFolderDeepX_Folder(const char *dir, int flags)
+bool DeleteFolderDeepX_Folder(const char *dir, EXT_FILE_FLAGS flags)
 {
 	FindFile ff(AppendFileName(dir, "*.*"));
 	while(ff) {
@@ -1374,14 +1374,14 @@ bool DeleteFolderDeepX_Folder(const char *dir, int flags)
 	return FolderDeleteX(dir, flags);
 }
 
-bool DeleteFolderDeepX(const char *path, int flags)
+bool DeleteFolderDeepX(const char *path, EXT_FILE_FLAGS flags)
 {
 	if (flags & USE_TRASH_BIN)
 		return FileToTrashBin(path);
 	return DeleteFolderDeepX_Folder(path, flags);
 }
 
-bool RenameDeepWildcardsX(const char *path, const char *namewc, const char *newname, bool forfile, bool forfolder, int flags)
+bool RenameDeepWildcardsX(const char *path, const char *namewc, const char *newname, bool forfile, bool forfolder, EXT_FILE_FLAGS flags)
 {
 	FindFile ff(AppendFileName(path, "*.*"));
 	while(ff) {
@@ -2077,7 +2077,7 @@ String WinLastError() {
 }
 #endif
 
-bool FileDiffArray::Apply(String toFolder, String fromFolder, int flags)
+bool FileDiffArray::Apply(String toFolder, String fromFolder, EXT_FILE_FLAGS flags)
 {
 	for (int i = 0; i < diffList.GetCount(); ++i) {
 		bool ok = true;

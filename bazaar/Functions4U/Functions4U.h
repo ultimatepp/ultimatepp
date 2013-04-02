@@ -15,10 +15,11 @@
 NAMESPACE_UPP
 
 
-enum EXT_FILE_FLAGS {USE_TRASH_BIN = 1,
+enum EXT_FILE_FLAGS {NO_FLAG = 0, 
+					 USE_TRASH_BIN = 1,
 					 BROWSE_LINKS = 2,
-					 DELETE_READ_ONLY = 4,
-					 ASK_BEFORE_DELETE = 8
+					 DELETE_READ_ONLY = 4//,
+					 //ASK_BEFORE_DELETE = 8
 };
 
 bool LaunchFile(const char *file);
@@ -42,14 +43,17 @@ String Tokenize(const String &str, const String &token, int &pos);
 String Tokenize(const String &str, const String &token);
 	
 /////////
-bool DirectoryExistsX(const char *path, int flags = 0); 
+bool DirectoryExistsX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG); 
 bool DirectoryCopyX(const char *dir, const char *newPlace);
-bool DeleteDeepWildcardsX(const char *path, bool filefolder, int flags = 0);
-bool DeleteDeepWildcardsX(const char *pathwc, const char *namewc, bool filefolder, int flags = 0);
-bool DeleteFolderDeepWildcardsX(const char *path, int flags = 0);
-bool DeleteFileDeepWildcardsX(const char *path, int flags = 0);
-bool DeleteFolderDeepX(const char *path, int flags = 0);
-bool RenameDeepWildcardsX(const char *path, const char *namewc, const char *newname, bool forfile, bool forfolder, int flags = 0);
+bool DeleteDeepWildcardsX(const char *path, bool filefolder, EXT_FILE_FLAGS flags = NO_FLAG);
+bool DeleteDeepWildcardsX(const char *pathwc, const char *namewc, bool filefolder, EXT_FILE_FLAGS flags = NO_FLAG);
+bool DeleteFolderDeepWildcardsX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG);
+bool DeleteFileDeepWildcardsX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG);
+bool DeleteFolderDeepX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG);
+bool RenameDeepWildcardsX(const char *path, const char *namewc, const char *newname, bool forfile, bool forfolder, EXT_FILE_FLAGS flags = NO_FLAG);
+
+bool FileMoveX(const char *oldpath, const char *newpath, EXT_FILE_FLAGS flags = NO_FLAG);
+bool FileDeleteX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG);
 
 bool IsRootFolder(const char *folderName);
 String GetUpperFolder(const String &folderName);
@@ -59,32 +63,10 @@ bool IsFile(const char *fileName);
 bool IsFolder(const char *fileName);
 String GetRelativePath(String &from, String &path);
 	
-//bool GetSymLinkPath(const char *linkPath, String &filePath);
 bool IsSymLink(const char *path);
 
-bool CreateFolderDeep(const char *dir);
-
-/////////
-bool FileMoveX(const char *oldpath, const char *newpath, int flags = 0);
-bool FileDeleteX(const char *path, int flags = 0);
-/////////
-
-
 bool SetReadOnly(const char *path, bool readOnly);
-bool ReadOnly(const char *path, bool readOnly)
-#if defined(__MINGW32__)
-	__attribute__ ((deprecated));
-#else
-	;
-#endif
-
 bool SetReadOnly(const char *path, bool usr, bool grp, bool oth);
-bool ReadOnly(const char *path, bool usr, bool grp, bool oth)
-#if defined(__MINGW32__)
-	__attribute__ ((deprecated));
-#else
-	;
-#endif
 bool IsReadOnly(const char *path, bool &usr, bool &grp, bool &oth);
 
 String LoadFile_Safe(String fileName);
@@ -104,15 +86,7 @@ bool FileToTrashBin(const char *path);
 Upp::int64 TrashBinGetCount();
 bool TrashBinClear();
 
-//String GetDesktopFolder();
-//String GetProgramsFolder();
-//String GetAppDataFolder();
-//String GetMusicFolder();
-//String GetPicturesFolder();
-//String GetVideoFolder();
 String GetPersonalFolder();
-//String GetTemplatesFolder();
-//String GetDownloadFolder();
 String GetRootFolder();
 String GetTempFolder();
 String GetOsFolder();
@@ -204,7 +178,7 @@ public:
 	FileDiff& operator[](long i)	{return diffList[i];}
 	bool Compare(FileDataArray &master, FileDataArray &secondary, const String folderFrom, 
 		Upp::Array<String> &excepFolders, Upp::Array<String> &excepFiles, int sensSecs = 0);
-	bool Apply(String toFolder, String fromFolder, int flags = 0);
+	bool Apply(String toFolder, String fromFolder, EXT_FILE_FLAGS flags = NO_FLAG);
 	long GetCount()				{return diffList.GetCount();};
 	bool SaveFile(const char *fileName);
 	bool LoadFile(const char *fileName);
