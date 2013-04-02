@@ -141,7 +141,7 @@ void EditFileFolder::SetData(const Value& data) {
 
 void EditFileFolder::DoGo(bool add) {
 	Set(GetData());			// Write Edit to FileSel
-	if (IsRootFolder(GetData().ToString()))
+	if (!IsRootFolder(GetData().ToString()))
 		butUp.Enable(true);
 	else
 		butUp.Enable(false);
@@ -1673,7 +1673,7 @@ struct FileLenConvert : public Convert {
 };
 
 FileBrowser::FileBrowser() {
-	flags = USE_TRASH_BIN | BROWSE_LINKS | ASK_BEFORE_DELETE;
+	flags = EXT_FILE_FLAGS(USE_TRASH_BIN | BROWSE_LINKS);	// | ASK_BEFORE_DELETE;
 	readOnly = false;
 	acceptDragAndDrop = true;	
 	

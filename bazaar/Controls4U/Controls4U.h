@@ -44,7 +44,7 @@ public:
 	void MkDirOption(bool b)						{InitFs();	pfs->MkDirOption(b);}
 	String Get() const                           	{return GetData();}
 	operator const char *() const					{return Get();}
-	const char *operator~() const   				{return Get();}
+	const String operator~() const   				{return Get();}
 	void Set(const String& s)						{InitFs();	pfs->Set(s); EditString::SetData(s);}
 	void operator<<=(const String& s)            	{Set(s);}
 	EditFileFolder &operator=(const char *s)  	  	{Set(s); return *this;}
@@ -545,7 +545,7 @@ private:
 	bool forceOpenTree;
 	String fileNameSelected;
 	bool readOnly;
-	int flags;
+	EXT_FILE_FLAGS flags;
 	bool acceptDragAndDrop;
 	
 	void SortByColumn(int col);
@@ -572,10 +572,10 @@ public:
  	String operator~()    {return GetFile();}	
  	String GetFolder();
 	FileBrowser &SetReadOnly(bool set = true) {readOnly = set; return *this;};
-	FileBrowser &SetUseTrashBin(bool set = true) {set ? flags |= USE_TRASH_BIN : flags &= ~USE_TRASH_BIN; return *this;};
-	FileBrowser &SetBrowseLinks(bool set = true) {set ? flags |= BROWSE_LINKS : flags &= ~BROWSE_LINKS;	return *this;};
-	FileBrowser &SetDeleteReadOnly(bool set = true) {set ? flags |= DELETE_READ_ONLY : flags &= ~DELETE_READ_ONLY; return *this;};
-	FileBrowser &SetAskBeforeDelete(bool set = true) {set ? flags |= ASK_BEFORE_DELETE : flags &= ~ASK_BEFORE_DELETE; return *this;};
+	FileBrowser &SetUseTrashBin(bool set = true) {flags = (set ? EXT_FILE_FLAGS(flags | USE_TRASH_BIN) : EXT_FILE_FLAGS(flags & ~USE_TRASH_BIN)); return *this;};
+	FileBrowser &SetBrowseLinks(bool set = true) {flags = (set ? EXT_FILE_FLAGS(flags | BROWSE_LINKS) : EXT_FILE_FLAGS(flags & ~BROWSE_LINKS)); return *this;};
+	FileBrowser &SetDeleteReadOnly(bool set = true) {flags = (set ? EXT_FILE_FLAGS(flags | DELETE_READ_ONLY) : EXT_FILE_FLAGS(flags & ~DELETE_READ_ONLY)); return *this;};
+//	FileBrowser &SetAskBeforeDelete(bool set = true) {set ? flags |= ASK_BEFORE_DELETE : flags &= ~ASK_BEFORE_DELETE; return *this;};
 	FileBrowser &SetDragAndDrop(bool set = true) {acceptDragAndDrop = set; return *this;};
 	FileBrowser &SetBrowseFiles(bool set = true) {browseFiles = set; return *this;};
 	
