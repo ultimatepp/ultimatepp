@@ -280,9 +280,13 @@ enum { FONTHEIGHT_TTF = -9999 };
 void PdfDraw::DrawTextOp(int x, int y, int angle, const wchar *s, Font fnt,
 		                 Color ink, int n, const int *dx)
 {
+	LLOG("DrawTextOp " << x << ", " << y << "angle: " << angle << ", text: " << s << ", font " << fnt);
 	if(!n) return;
-	if(fnt.GetHeight() == 0)
+	int h = fnt.GetHeight();
+	if(h == 0)
 		fnt.Height(100);
+	if(h < 0)
+		fnt.Height(-h);
 	Font ff = fnt;
 	int fh = fnt.GetHeight();
 	OutlineInfo of = GetOutlineInfo(fnt);
