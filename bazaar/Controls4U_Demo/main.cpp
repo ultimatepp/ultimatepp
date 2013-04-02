@@ -178,7 +178,7 @@ Meter_Demo::Meter_Demo() {
 FileBrowser_Demo::FileBrowser_Demo() {
 	CtrlLayout(*this);
 
-	browser.SetReadOnly().SetUseTrashBin().SetBrowseLinks().SetDeleteReadOnly().SetAskBeforeDelete().SetDragAndDrop();
+	browser.SetReadOnly().SetUseTrashBin().SetBrowseLinks().SetDeleteReadOnly()./*SetAskBeforeDelete().*/SetDragAndDrop();
 	
 	browser.WhenAction = THISBACK(FileOpened);
 	browser.WhenSelected = THISBACK(FileSelected);
