@@ -575,8 +575,8 @@ public:
 	int      FindAdd(const K& k)                    { B::value.ptr = NULL; return B::key.FindAdd(k); }
 	int      FindAdd(const K& k, const T& init)     { B::value.ptr = &init; return B::key.FindAdd(k); }
 
-	T&       GetAdd(const K& k)                     { return At(FindAdd(k)); }
-	T&       GetAdd(const K& k, const T& x)         { return At(FindAdd(k, x)); }
+	T&       GetAdd(const K& k)                     { return B::At(FindAdd(k)); }
+	T&       GetAdd(const K& k, const T& x)         { return B::At(FindAdd(k, x)); }
 
 	T        Pop()                                  { T h = B::Top(); B::Drop(); return h; }
 
