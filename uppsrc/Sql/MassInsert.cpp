@@ -20,9 +20,9 @@ SqlMassInsert& SqlMassInsert::operator()(SqlId col, const Value& val)
 	Row& r = cache.Top();
 	r.value.Add(val);
 	if(IsNull(val))
-		r.nulls |= (1 << pos);
+		r.nulls |= ((uint64)1 << pos);
 	pos++;
-	ASSERT(pos < 30);
+	ASSERT(pos < 62);
 	return *this;
 }
 
@@ -40,7 +40,7 @@ SqlMassInsert& SqlMassInsert::EndRow(SqlBool remove)
 
 void SqlMassInsert::Flush()
 {
-	const dword DONE = 0xffffffff;
+	const uint64 DONE = (uint64)-1;
 	if(cache.GetCount() == 0)
 		return;
 	if(use_transaction)
@@ -83,12 +83,12 @@ void SqlMassInsert::Flush()
 	}
 	else
 	for(int ii = 0; ii < cache.GetCount(); ii++) {
-		dword nulls = cache[ii].nulls;
+		uint64 nulls = cache[ii].nulls;
 		if(nulls != DONE) {
 			insert << "insert into " + ~table + '(';
 			bool nextcol = false;
 			for(int i = 0; i < column.GetCount(); i++) {
-				if(!(nulls & (1 << i))) {
+				if(!(nulls & ((uint64)1 << i))) {
 					if(nextcol)
 						insert << ", ";
 					nextcol = true;
@@ -107,7 +107,7 @@ void SqlMassInsert::Flush()
 					insert << " select ";
 					bool nextval = false;
 					for(int i = 0; i < r.value.GetCount(); i++)
-						if(!(nulls & (1 << i))) {
+						if(!(nulls & ((uint64)1 << i))) {
 							if(nextval)
 								insert << ", ";
 							nextval = true;
