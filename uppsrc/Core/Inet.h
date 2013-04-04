@@ -23,6 +23,7 @@ class IpAddrInfo {
 	struct Entry {
 		const char *host;
 		const char *port;
+		int         family;
 		int         status;
 		addrinfo   *addr;
 	};
@@ -33,6 +34,7 @@ class IpAddrInfo {
 	};
 
 	String host, port;
+	int    family;
 	Entry *entry;
 	Entry  exe[1];
 
@@ -45,9 +47,12 @@ class IpAddrInfo {
 	IpAddrInfo(const IpAddrInfo&);
 
 public:
-	void      Start(const String& host, int port);
+	enum IpAddrFamily {
+		FAMILY_ANY = 0, FAMILY_IPV4, FAMILY_IPV6
+	};
+	void      Start(const String& host, int port, int family = FAMILY_ANY);
 	bool      InProgress();
-	bool      Execute(const String& host, int port);
+	bool      Execute(const String& host, int port, int family = FAMILY_ANY);
 	addrinfo *GetResult();
 	void      Clear();
 
