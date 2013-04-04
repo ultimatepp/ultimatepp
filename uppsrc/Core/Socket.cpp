@@ -31,13 +31,14 @@ void IpAddrInfo::LeavePool()
 	IpAddrInfoPoolMutex.Leave();
 }
 
-int sGetAddrInfo(const char *host, const char *port, addrinfo **result)
+int sGetAddrInfo(const char *host, const char *port, int family, addrinfo **result)
 {
 	if(!host || !*host)
 		return EAI_NONAME;
 	addrinfo hints;
 	memset(&hints, 0, sizeof(addrinfo));
-	hints.ai_family = AF_UNSPEC;
+	const static int FamilyToAF[] = { AF_UNSPEC, AF_INET, AF_INET6 };
+	hints.ai_family = FamilyToAF[(family > 0 && family < __countof(FamilyToAF)) ? family : 0];
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
 
@@ -51,11 +52,12 @@ auxthread_t auxthread__ IpAddrInfo::Thread(void *ptr)
 	if(entry->status == WORKING) {
 		char host[1025];
 		char port[257];
+		int family = entry->family;
 		strcpy(host, entry->host);
 		strcpy(port, entry->port);
 		LeavePool();
 		addrinfo *result;
-		if(sGetAddrInfo(host, port, &result) == 0 && result) {
+		if(sGetAddrInfo(host, port, family, &result) == 0 && result) {
 			EnterPool();
 			if(entry->status == WORKING) {
 				entry->addr = result;
@@ -78,12 +80,12 @@ auxthread_t auxthread__ IpAddrInfo::Thread(void *ptr)
 	return 0;
 }
 
-bool IpAddrInfo::Execute(const String& host, int port)
+bool IpAddrInfo::Execute(const String& host, int port, int family)
 {
 	Clear();
 	entry = exe;
 	addrinfo *result;
-	entry->addr = sGetAddrInfo(~host, ~AsString(port), &result) == 0 ? result : NULL;
+	entry->addr = sGetAddrInfo(~host, ~AsString(port), family, &result) == 0 ? result : NULL;
 	return entry->addr;
 }
 
@@ -103,6 +105,7 @@ void IpAddrInfo::Start()
 				e->status = WORKING;
 				e->host = host;
 				e->port = port;
+				e->family = family;
 				StartAuxThread(&IpAddrInfo::Thread, e);
 			}
 			break;
@@ -111,11 +114,12 @@ void IpAddrInfo::Start()
 	LeavePool();
 }
 
-void IpAddrInfo::Start(const String& host_, int port_)
+void IpAddrInfo::Start(const String& host_, int port_, int family_)
 {
 	Clear();
 	port = AsString(port_);
 	host = host_;
+	family = family_;
 	Start();
 }
 
