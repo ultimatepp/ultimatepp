@@ -451,7 +451,7 @@ bool SqlPerformScript(const String& script,
 
 class SqlMassInsert {
 	struct Row : Moveable<Row> {
-		dword          nulls;
+		uint64         nulls;
 		Vector <Value> value;
 		SqlBool        remove;
 	};
