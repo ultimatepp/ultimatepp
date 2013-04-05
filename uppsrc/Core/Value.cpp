@@ -90,6 +90,37 @@ bool Value::operator==(const Value& v) const {
 	return svo[st]->IsEqual(&data, &v.data);
 }
 
+static bool sIsSame(const Value& a, const Value& b)
+{
+	if(a.Is<ValueMap>() && b.Is<ValueMap>()) {
+		ValueMap m = a;
+		ValueMap n = b;
+		for(int i = 0; i < m.GetCount(); i++)
+			if(!sIsSame(n[m.GetKey(i)], m.GetValue(i)))
+				return false;
+		for(int i = 0; i < n.GetCount(); i++)
+			if(!sIsSame(m[n.GetKey(i)], n.GetValue(i)))
+				return false;
+		return true;
+	}
+	else
+	if(a.Is<ValueArray>() && b.Is<ValueArray>()) {
+		if(a.GetCount() != b.GetCount())
+			return false;
+		for(int i = 0; i < a.GetCount(); i++)
+			if(!sIsSame(a[i], b[i]))
+				return false;
+		return true;
+	}
+	else
+		return a == b;
+}
+
+bool Value::IsSame(const Value& v) const
+{
+	return sIsSame(*this, v);
+}
+
 Value::Value(const WString& s) { InitRef(new RichValueRep<WString>(s)); Magic(); }
 
 Value::operator WString() const

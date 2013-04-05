@@ -215,6 +215,7 @@ public:
 
 	bool operator==(const Value& v) const;
 	bool operator!=(const Value& v) const { return !operator==(v); }
+	bool IsSame(const Value& v) const;
 
 	String ToString() const;
 	String GetTypeName() const       { return GetName(); }
