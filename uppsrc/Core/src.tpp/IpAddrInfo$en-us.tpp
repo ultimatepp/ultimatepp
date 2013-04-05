@@ -26,20 +26,25 @@ so from the client view, this limit has little impact.&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
-[s5;:IpAddrInfo`:`:Start`(const String`&`,int`): [@(0.0.255) void]_[* Start]([@(0.0.255) co
-nst]_[_^String^ String][@(0.0.255) `&]_[*@3 host], [@(0.0.255) int]_[*@3 port])&]
-[s2;%% Starts resolving address of [%-*@3 host] (with [%-*@3 port]).&]
+[s5;:IpAddrInfo`:`:Start`(const String`&`,int`,int`): [@(0.0.255) void]_[* Start]([@(0.0.255) c
+onst]_[_^String^ String][@(0.0.255) `&]_[*@3 host], [@(0.0.255) int]_[*@3 port], 
+[@(0.0.255) int]_[*@3 family]_`=_FAMILY`_ANY)&]
+[s2;%% Starts resolving address of [%-*@3 host] (with [%-*@3 port]). 
+[%-*@3 family] can be used to narrow the scan to particular IP 
+protocol (FAMILY`_IPV4, FAMILY`_IPV6).&]
 [s3;%% &]
 [s4; &]
 [s5;:IpAddrInfo`:`:InProgress`(`): [@(0.0.255) bool]_[* InProgress]()&]
 [s2;%% Returns true if resolving of address is still in progress.&]
 [s3; &]
 [s4; &]
-[s5;:IpAddrInfo`:`:Execute`(const String`&`,int`): [@(0.0.255) bool]_[* Execute]([@(0.0.255) c
-onst]_[_^String^ String][@(0.0.255) `&]_[*@3 host], [@(0.0.255) int]_[*@3 port])&]
+[s5;:IpAddrInfo`:`:Execute`(const String`&`,int`,int`): [@(0.0.255) bool]_[* Execute]([@(0.0.255) c
+onst]_[_^String^ String][@(0.0.255) `&]_[*@3 host], [@(0.0.255) int]_[*@3 port], 
+[@(0.0.255) int]_[*@3 family]_`=_FAMILY`_ANY)&]
 [s2;%% Resolves address [%-*@3 host] (with [%-*@3 port]). This is blocking 
 variant, returns after address is resolved. Returns true if address 
-was found.&]
+was found. [%-*@3 family] can be used to narrow the scan to particular 
+IP protocol (FAMILY`_IPV4, FAMILY`_IPV6).&]
 [s3;%% &]
 [s4; &]
 [s5;:IpAddrInfo`:`:GetResult`(`): addrinfo_`*[* GetResult]()&]
