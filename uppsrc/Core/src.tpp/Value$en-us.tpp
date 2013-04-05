@@ -148,6 +148,17 @@ with int (U`+`+ types, viable IsPolyEqual functions are already
 defined).&]
 [s3; &]
 [s4;%- &]
+[s5;:Value`:`:IsSame`(const Value`&`)const:%- [@(0.0.255) bool]_[* IsSame]([@(0.0.255) cons
+t]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v])_[@(0.0.255) const]&]
+[s2; ValueMap is ordered and is compared as such, which means that 
+even if values of keys are the same, if order is different, ValueMaps 
+or Values containing them are not considered equal (as with operator`=`=). 
+This method provides and alternative comparison of Values which 
+treats contained ValueMaps as unordered. It goes recursively 
+through any contained ValueMaps and ValueArrays too, for other 
+Value types it uses the normal operator`=`=.&]
+[s3; &]
+[s4;%- &]
 [s5;:Value`:`:ToString`(`)const:%- [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]
 [s2; Conversion to text for supporting rich types.&]
 [s3;%- &]
