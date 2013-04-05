@@ -1,4 +1,4 @@
-description "plugin/Eigen demo\377";
+description "Eigen package demo\377";
 
 uses
 	Core,

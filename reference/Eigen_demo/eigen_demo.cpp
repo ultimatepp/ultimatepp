@@ -8,6 +8,26 @@ using namespace Eigen;
 
 void NonLinearTests();
 
+struct SerialTest {
+	MatrixXd m;
+	VectorXd v;
+	SerialTest() : m(2, 2), v(3){}
+	void Print() {
+		Cout() << "\nHere is the matrix:\n" << m;
+		Cout() << "\nHere is the vector:\n" << v;
+	}
+	void Serialize(Stream& stream) {
+		::Serialize(stream, m);
+		::Serialize(stream, v);
+	}
+	void Jsonize(JsonIO &jio) {
+		jio("matrix", m)("vector", v);
+	}
+	void Xmlize(XmlIO &xml) {
+		xml("matrix", m)("vector", v);
+	}
+};
+		
 CONSOLE_APP_MAIN
 {	
 	// http://eigen.tuxfamily.org/dox/TutorialMatrixClass.html
@@ -130,14 +150,14 @@ CONSOLE_APP_MAIN
 		Cout() << "\nHere is mat.trace():     " << mat.trace();
 		
 		Matrix3f m = Matrix3f::Random();
-		int i, j;
-		float minOfM = m.minCoeff(&i,&j);
+		ptrdiff_t i, j;
+		float minOfM = m.minCoeff(&i, &j);
 		Cout() << "\nHere is the matrix m:\n" << m;
 		Cout() << "\nIts minimum coefficient (" << minOfM 
 		       << ") is at position (" << i << "," << j << ")\n";
 		
 		RowVector4i v = RowVector4i::Random();
-		int maxOfV = v.maxCoeff(&i);
+		ptrdiff_t maxOfV = v.maxCoeff(&i);
 		Cout() << "\nHere is the vector v: " << v;
 		Cout() << "\nIts maximum coefficient (" << maxOfV 
 			   << ") is at position " << i;
@@ -242,9 +262,9 @@ CONSOLE_APP_MAIN
 		   	 13,14,15,16;
 		Cout() << "\nBlock in the middle\n";
 		Cout() << m.block<2,2>(1,1);
-		for (int i = 1; i <= 3; ++i) {
+		for (ptrdiff_t i = 1; i <= 3; ++i) {
 			Cout() << "\nBlock of size " << i << "x" << i << "\n";
-			Cout() << m.block(0,0,i,i);
+			Cout() << m.block(0, 0, i, i);
 		}
 	}
 	{
@@ -349,7 +369,7 @@ CONSOLE_APP_MAIN
 		Cout() << "\n  Degrees   Radians      Sine    Cosine\n";
 		Cout() << table;
 		
-		const int size = 6;
+		const ptrdiff_t size = 6;
 		MatrixXd mat1(size, size);
 		mat1.topLeftCorner(size/2, size/2)     = MatrixXd::Zero(size/2, size/2);
 		mat1.topRightCorner(size/2, size/2)    = MatrixXd::Identity(size/2, size/2);
@@ -647,6 +667,32 @@ CONSOLE_APP_MAIN
 	Cout() << "\nPress enter to continue\n";
 	ReadStdIn();
 	
+	Cout() << "\n\nSerializing tests";
+	{
+		SerialTest serialTest, serialTest_j, serialTest_x, serialTest_s;
+		serialTest.m << 1, 2,
+		     			4, 8;
+		serialTest.v << 1, 2, 4;
+
+		StoreAsJsonFile(serialTest, AppendFileName(GetDesktopFolder(), "Json.txt"));
+		LoadFromJsonFile(serialTest_j, AppendFileName(GetDesktopFolder(), "Json.txt"));
+		Cout() << "\nJSON demo";
+		serialTest_j.Print();
+		
+		StoreAsXMLFile(serialTest, "XMLdata", AppendFileName(GetDesktopFolder(), "Xml.txt"));
+		LoadFromXMLFile(serialTest_x, AppendFileName(GetDesktopFolder(), "Xml.txt"));
+		Cout() << "\nXML demo";
+		serialTest_x.Print();
+		
+		StoreToFile(serialTest, AppendFileName(GetDesktopFolder(), "Serial.dat"));
+		LoadFromFile(serialTest_s, AppendFileName(GetDesktopFolder(), "Serial.dat"));
+		Cout() << "\nSerialization demo";
+		serialTest_s.Print();
+	}
+	
+	Cout() << "\nPress enter to continue\n";
+	ReadStdIn();
+		
 	NonLinearTests();
 	
 	Cout() << "\nPress enter to end";
