@@ -17,6 +17,8 @@
 
 #define EIGEN_EXCEPTIONS
 
+#define eigen_assert(x) ASSERT(x)
+
 //#undef Success
 #include "Eigen/Eigen"
 
@@ -25,77 +27,119 @@ NAMESPACE_UPP
 
 template <class T>
 void Xmlize(XmlIO &xml, Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &mat) {
+	Size_<int64> sz(mat.cols(), mat.rows());
+	xml ("size", sz);
 	if(xml.IsStoring()) {
-		Size sz(mat.cols(), mat.rows());
-		xml ("Size", sz);
 		for(int r = 0; r < mat.rows(); r++)
 			for(int c = 0; c < mat.cols(); c++) {
+				XmlIO io = xml.Add("item");
 				T data = mat(r, c);
-				xml.Attr("item", data);
+				Xmlize(io, data);
 			}
 	} else {
-		Size sz;
-		xml ("Size", sz);
-		mat.resize(sz.cy, sz.cx);
-		int r = 0; 
-		int c = 0;
-		for(int i = 1; i < xml->GetCount(); i++) {
-			T data;
-			xml.Attr("item", data);	
-			mat(r, c) = data;
-			++c;
-			if (c == sz.cx) {
-				c = 0;
-				r++;
+		mat.resize(ptrdiff_t(sz.cy), ptrdiff_t(sz.cx));
+		int r = 0, c = 0;
+		for(int i = 0; i < xml->GetCount(); i++) 
+			if(xml->Node(i).IsTag("item")) {
+				XmlIO io = xml.At(i);
+				T data;
+				Xmlize(io, data);
+				mat(r, c) = data;
+				++c;
+				if (c == sz.cx) {
+					c = 0;
+					r++;
+				}
 			}
-			if (r == sz.cy)
-				break;
-		}	
 	}
 }
 
 template <class T>
 void Xmlize(XmlIO &xml, Eigen::Matrix<T, Eigen::Dynamic, 1> &vec) {
+	int64 sz = vec.size();
+	xml ("size", sz);
 	if(xml.IsStoring()) {
-		int sz = vec.size();
-		xml ("Size", sz);
-		for(int r = 0; r < vec.size(); r++) {
+		for(int r = 0; r < sz; r++) {
+			XmlIO io = xml.Add("item");
 			T data = vec(r);
-			xml.Attr("item", data);	
+			Xmlize(io, data);
 		}
 	} else {
-		int sz;
-		xml ("Size", sz);
-		vec.resize(sz);
-		int r = 0; 
-		for(int i = 1; i < xml->GetCount(); i++) {
-			T data;
-			xml.Attr("item", data);	
-			vec(r) = data;
-			++r;
-			if (r == sz)
-				break;
-		}	
+		vec.resize(ptrdiff_t(sz));
+		int r = 0;
+		for(int i = 0; i < xml->GetCount(); i++)
+			if(xml->Node(i).IsTag("item")) {
+				XmlIO io = xml.At(i);
+				T data;
+				Xmlize(io, data);
+				vec(r++) = data;
+			}
 	}
 }
 
 template <class T>
-void Jsonize(JsonIO &xml, Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &mat) {
-	if(xml.IsStoring()) {
-		Size sz(mat.cols(), mat.rows());
-		xml.Set(sz);
+void Jsonize(JsonIO &io, Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &mat) {
+	Vector<T> vector;
+	Size_<int64> sz(mat.cols(), mat.rows());
+	io("size", sz);
+	if(io.IsStoring()) {
+		vector.SetCount(int(sz.cx)*int(sz.cy));
+		int i = 0;
+		for(int r = 0; r < mat.rows(); r++)
+			for(int c = 0; c < mat.cols(); c++) 
+				vector[i++] = mat(r, c);
+		io("data", vector);
+	} else {
+		io("data", vector);
+		mat.resize(ptrdiff_t(sz.cy), ptrdiff_t(sz.cx));
+		int r = 0, c = 0;
+		for (int i = 0; i < vector.GetCount(); ++i) {
+			mat(r, c) = vector[i];
+			++c;
+			if (c == sz.cx) {
+				c = 0;
+				r++;
+			}
+			if (r == sz.cy)
+				break;
+		}
+	}
+}
+
+template <class T>
+void Jsonize(JsonIO &io, Eigen::Matrix<T, Eigen::Dynamic, 1> &vec) {
+	Vector<T> vector;
+	int64 sz = vec.size();
+	io("size", sz);
+	if(io.IsStoring()) {
+		vector.SetCount(int(sz));
+		for (int i = 0; i < sz; ++i)
+			vector[i] = vec(i);
+		io("data", vector);
+	} else {
+		io("data", vector);
+		vec.resize(ptrdiff_t(sz));
+		for (int i = 0; i < vec.size(); ++i)
+			vec(i) = vector[i];
+	}
+}
+
+template <class T>
+void Serialize(Stream& stream, Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &mat) {
+	Size_<int64> sz(mat.cols(), mat.rows());
+	stream % sz;
+	if(stream.IsStoring()) {
 		for(int r = 0; r < mat.rows(); r++)
 			for(int c = 0; c < mat.cols(); c++) {
 				T data = mat(r, c);
-				xml.Set(data);	
+				stream % data;	
 			}
 	} else {
-		Size sz = xml.Get();
-		mat.resize(sz.cy, sz.cx);
-		int r = 0; 
-		int c = 0;
+		mat.resize(ptrdiff_t(sz.cy), ptrdiff_t(sz.cx));
+		int r = 0, c = 0;
 		for(int i = 0; i < sz.cy*sz.cx; i++) {
-			T data = xml.Get();
+			T data;
+			stream % data;
 			mat(r, c) = data;
 			++c;
 			if (c == sz.cx) {
@@ -109,18 +153,21 @@ void Jsonize(JsonIO &xml, Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &mat)
 }
 
 template <class T>
-void Jsonize(JsonIO &xml, Eigen::Matrix<T, Eigen::Dynamic, 1> &vec) {
-	Vector<T> vector;
-	if(xml.IsStoring()) {
-		vector.SetCount(vec.size());
-		for (int i = 0; i < vec.size(); ++i)
-			vector[i] = vec(i);
-		xml("vector", vector);
+void Serialize(Stream& stream, Eigen::Matrix<T, Eigen::Dynamic, 1> &vec) {
+	int64 sz = vec.size();
+	stream % sz;
+	if(stream.IsStoring()) {
+		for (int i = 0; i < sz; ++i) {
+			T data = vec(i);
+			stream % data;
+		}
 	} else {
-		xml("vector", vector);
-		vec.resize(vector.GetCount());
-		for (int i = 0; i < vec.size(); ++i)
-			vec(i) = vector[i];
+		vec.resize(ptrdiff_t(sz));
+		for (int i = 0; i < sz; ++i) {
+			T data;
+			stream % data;
+			vec(i) = data;
+		}
 	}
 }
 
