@@ -10,7 +10,7 @@ using namespace Eigen;
 #define VerifyIsApprox(a, b)	(fabs(a-(b)) < 0.0001)
 
 // Generic functor
-template<typename _Scalar, int nx = Dynamic, int ny = Dynamic>
+template<typename _Scalar, ptrdiff_t nx = Dynamic, ptrdiff_t ny = Dynamic>
 struct Functor {
 	typedef _Scalar Scalar;
 	enum {
@@ -21,13 +21,13 @@ struct Functor {
 	typedef Matrix<Scalar,ValuesAtCompileTime,1> ValueType;
 	typedef Matrix<Scalar,ValuesAtCompileTime,InputsAtCompileTime> JacobianType;
 	
-	const int m_inputs, m_values;
+	const ptrdiff_t m_inputs, m_values;
 	
 	Functor() : m_inputs(InputsAtCompileTime), m_values(ValuesAtCompileTime) {}
 	Functor(int inputs, int values) : m_inputs(inputs), m_values(values) {}
 	
-	int inputs() const {return m_inputs;}
-	int values() const {return m_values;}
+	ptrdiff_t inputs() const {return m_inputs;}
+	ptrdiff_t values() const {return m_values;}
 
 	// you should define that in the subclass :
 	virtual  void operator() (const InputType& x, ValueType* v, JacobianType* _j=0) const {};
@@ -38,9 +38,9 @@ struct eckerle4_functor : Functor<double> {
 	static const double x[35];
 	static const double y[35];
 	int operator()(const VectorXd &b, VectorXd &fvec) const {
-		ASSERT(b.size()==3);
-		ASSERT(fvec.size()==35);
-		for(int i=0; i<35; i++)
+		ASSERT(b.size() == 3);
+		ASSERT(fvec.size() == 35);
+		for(int i = 0; i < 35; i++)
 			fvec[i] = b[0]/b[1] * exp(-0.5*(x[i]-b[2])*(x[i]-b[2])/(b[1]*b[1])) - y[i];
 		return 0;
 	}
@@ -54,9 +54,9 @@ struct thurber_functor : Functor<double>
 	static const double _x[37];
 	static const double _y[37];
 	int operator()(const VectorXd &b, VectorXd &fvec) const {
-		ASSERT(b.size()==7);
-		ASSERT(fvec.size()==37);
-		for(int i=0; i<37; i++) {
+		ASSERT(b.size() == 7);
+		ASSERT(fvec.size() == 37);
+		for(int i = 0; i < 37; i++) {
 			double x = _x[i], xx=x*x, xxx=xx*x;
 			fvec[i] = (b[0]+b[1]*x+b[2]*xx+b[3]*xxx) / (1.+b[4]*x+b[5]*xx+b[6]*xxx) - _y[i];
 		}
@@ -134,10 +134,10 @@ struct hybrd_functor : Functor<double>
 	hybrd_functor(void) : Functor<double>(9,9) {}
 	int operator()(const VectorXd &x, VectorXd &fvec) const {
 		double temp, temp1, temp2;
-		const int n = x.size();
+		const ptrdiff_t n = x.size();
 		
 		ASSERT(fvec.size()==n);
-		for (int k=0; k < n; k++) {
+		for (ptrdiff_t k = 0; k < n; k++) {
 			temp = (3. - 2.*x[k])*x[k];
 			temp1 = 0.;
 			if (k) 
