@@ -45,8 +45,7 @@ struct GuiLock {
 	~GuiLock() { LeaveGuiMutex(); }
 };
 
-bool ScreenInPaletteMode();
-Size GetScreenSize();
+bool ScreenInPaletteMode(); // Deprecated
 
 typedef ImageDraw SystemImageDraw;
 
@@ -1250,6 +1249,8 @@ public:
 	Ctrl();
 	virtual ~Ctrl();
 };
+
+inline Size GetScreenSize()  { return Ctrl::GetVirtualScreenArea().GetSize(); } // Deprecated
 
 String GuiPlatformGetKeyDesc(dword key);
 bool   GuiPlatformHasSizeGrip();

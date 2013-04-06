@@ -453,11 +453,6 @@ bool ScreenInPaletteMode()
 	return Xpalette;
 }
 
-Size GetScreenSize()
-{
-	return Size(Xwidth, Xheight);
-}
-
 END_UPP_NAMESPACE
 
 #endif

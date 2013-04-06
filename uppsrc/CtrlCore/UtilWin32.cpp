@@ -11,11 +11,6 @@ bool ScreenInPaletteMode()
 	return ScreenInfo().PaletteMode();
 }
 
-Size GetScreenSize()
-{
-	return ScreenInfo().GetPageSize();
-}
-
 HRGN GetFrameRgn(const Rect& rect, int n) {
 	HRGN rgn = CreateRectRgnIndirect(rect);
 	Rect r = rect;

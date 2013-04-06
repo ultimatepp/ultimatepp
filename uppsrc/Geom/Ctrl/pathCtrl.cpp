@@ -1630,7 +1630,6 @@ DlgPathEditor::DlgPathEditor()
 	menu_bar.Set(THISBACK(ToolRoot));
 	tool_bar.Set(THISBACK(ToolRoot));
 	dialog << path.SizePos();
-//	dialog.SetRect(CalcWindowRect(dialog, Ctrl::GetWorkStock.GetScreenSize() >> 1));
 	dialog.Sizeable().Zoomable();
 	dialog.SetMinSize(Size(300, 200));
 	path.WhenRescan = THISBACK(Rescan);

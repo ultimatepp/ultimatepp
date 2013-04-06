@@ -603,7 +603,6 @@ DlgHelpEditor::DlgHelpEditor()
 	HelpTopic("DlgHelpEditor");
 	WhenClose = THISBACK(OnFileClose);
 	Sizeable().Zoomable();
-//	CalcWindowRect(*this, (Stock.GetScreenSize() * 3) >> 2);
 	AddFrame(menubar);
 	AddFrame(toolbar);
 	AddFrame(statusbar);
