@@ -10,8 +10,9 @@ public:
 
 public:
 	struct Style : ChStyle<Style> {
-		Value vert[2], horz[2];
-		int width;
+		Value  vert[2], horz[2];
+		int    width;
+		bool   dots;
 	};
 
 protected: // Because of docking... (will be private)
