@@ -80,6 +80,21 @@ Image Ctrl::FrameMouseEvent(int event, Point p, int zdelta, dword keyflags)
 	return Image::Arrow();
 }
 
+static bool sPropagated;
+
+Image Ctrl::MouseEvent0(int event, Point p, int zdelta, dword keyflags)
+{
+	GuiLock __;
+	Ptr<Ctrl> this_ = this;
+	bool pb = sPropagated;
+	sPropagated = false;
+	Image m = this_ ? MouseEvent(event, p, zdelta, keyflags) : Image();
+	if(event == MOUSEWHEEL && !sPropagated && this_ && parent)
+		parent->ChildMouseEvent(this, event, p, zdelta, keyflags);
+	sPropagated = pb;
+	return m;
+}
+
 Image Ctrl::MouseEventH(int event, Point p, int zdelta, dword keyflags)
 {
 	GuiLock __;
@@ -89,9 +104,21 @@ Image Ctrl::MouseEventH(int event, Point p, int zdelta, dword keyflags)
 			return Image::Arrow();
 	if(this_)
 		LogMouseEvent(NULL, this, event, p, zdelta, keyflags);
-	if(parent && this_)
+	if(this_ && parent && event != MOUSEWHEEL)
 		parent->ChildMouseEvent(this, event, p, zdelta, keyflags);
-	return this_ ? MouseEvent(event, p, zdelta, keyflags) : Image();
+	return MouseEvent0(event, p, zdelta, keyflags);
+}
+
+void Ctrl::MouseWheel(Point p, int zd, dword kf)
+{
+	if(parent) {
+		p += GetScreenView().TopLeft();
+		Rect r = parent->GetScreenView();
+		if(r.Contains(p)) {
+			parent->MouseEvent0(MOUSEWHEEL, p - r.TopLeft(), zd, kf);
+			sPropagated = true;
+		}
+	}
 }
 
 void Ctrl::ChildFrameMouseEvent(Ctrl *child, int event, Point p, int zdelta, dword keyflags)

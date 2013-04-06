@@ -57,7 +57,6 @@ void Ctrl::MouseMove(Point p, dword keyflags)       {}
 void Ctrl::LeftUp(Point, dword keyflags)            {}
 void Ctrl::RightUp(Point p, dword keyflags)         {}
 void Ctrl::MouseLeave()                             {}
-void Ctrl::MouseWheel(Point p, int zd, dword kf)    {}
 void Ctrl::LeftDrag(Point p, dword keyflags)        {}
 void Ctrl::LeftHold(Point p, dword keyflags)        {}
 void Ctrl::RightDrag(Point p, dword keyflags)       {}

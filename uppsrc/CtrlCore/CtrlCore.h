@@ -537,6 +537,7 @@ private:
 	static  void  DoCursorShape();
 	static  Image& CursorOverride();
 	bool    IsMouseActive() const;
+	Image   MouseEvent0(int event, Point p, int zdelta, dword keyflags);
 	Image   MouseEventH(int event, Point p, int zdelta, dword keyflags);
 	Image   FrameMouseEventH(int event, Point p, int zdelta, dword keyflags);
 	Image   MEvent0(int e, Point p, int zd);
