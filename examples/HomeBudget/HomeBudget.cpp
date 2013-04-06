@@ -813,7 +813,6 @@ void HomeBudget::About()
 	WithAboutLayout<TopWindow> dlg;
 	CtrlLayoutCancel(dlg, t_("About"));
 	dlg.info.NoSb();
-	Size sz = dlg.info.GetSize();
 	dlg.info.SetQTF(GetTopic(String("HomeBudget/src/About$") + (lang == 0 ? "en-us" : "pl-pl")), Zoom(150, 1400));
 	dlg.info.SetZoom(Zoom(1, 1));
 	dlg.Execute();
