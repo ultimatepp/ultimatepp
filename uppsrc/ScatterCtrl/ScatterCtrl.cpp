@@ -206,11 +206,11 @@ void ScatterCtrl::LabelPopUp(bool down, Point &pt)
 			if (IsNull(popLT))
 				popLT = pt;
 			popRB = pt;
-			Size sz = GetScreenSize();
+			Rect wa = GetWorkArea();
 			Rect rc = GetScreenRect();
-			if (sz.cx - (rc.left + pt.x) < 200)
+			if (wa.right - (rc.left + pt.x) < 200)
 				pt.x -= 200;
-			if (sz.cy - (rc.top + pt.y) < 200)
+			if (wa.bottom - (rc.top + pt.y) < 200)
 				pt.y -= 200;
 			ProcessPopUp(pt);		
 		}	

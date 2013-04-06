@@ -2056,9 +2056,9 @@ void GridCtrl::SyncPopup()
 					GetItemAttrs(it, r, c, vi, hi, popup.style, popup.gd, popup.fg, popup.bg, popup.fnt);
 					popup.gd->row = r < fixed_rows ? -1 : r - fixed_rows;
 					popup.gd->col = c < fixed_cols ? -1 : c - fixed_cols;
-					Size scrsz = GetScreenSize();
+					Rect scr = GetWorkArea();
 					int margin = popup.gd->lm + popup.gd->rm;
-					int cx = min(600, min((int) (scrsz.cx * 0.4), max(it.rcx + margin + 2, hi.nsize + 1)));
+					int cx = min(600, min((int) (scr.right * 0.4), max(it.rcx + margin + 2, hi.nsize + 1)));
 					int lines = popup.gd->GetLinesCount(cx - margin - 2, WString(val), popup.fnt, true);
 					int cy = max(lines * Draw::GetStdFontCy() + popup.gd->tm + popup.gd->bm + 2, vi.nsize + 1);
 					if(fr && r == 0)
@@ -3402,7 +3402,6 @@ GridCtrl::CurState GridCtrl::SetCursor0(Point p, int opt, int dirx, int diry)
 
 			bool hidden = true;
 			bool clickable = true;
-			bool editable = true;
 			bool group = true;
 
 			if(cur)
@@ -3413,7 +3412,6 @@ GridCtrl::CurState GridCtrl::SetCursor0(Point p, int opt, int dirx, int diry)
 				bool hy   = diry != 0 ? v.hidden : false;
 				hidden    = hx || hy;
 				clickable = h.clickable && v.clickable;
-				editable  = h.editable  && v.editable;
 				if(oit && oit->group >= 0 && !select_row)
 				{
 					nit = &GetItem(tmpcur);
@@ -6051,9 +6049,6 @@ bool GridCtrl::Go0(int jump, bool scroll, bool goleft, bool ctrlmode)
 	if(IsEmpty())
 		return false;
 
-	bool samerow = false;
-	bool doall = true;
-	
 	if(!ready)
 	{
 		UpdateSizes();
@@ -6070,9 +6065,6 @@ bool GridCtrl::Go0(int jump, bool scroll, bool goleft, bool ctrlmode)
 				sbx.Set(sbx.Get() + 5);
 			return false;
 		}
-
-		samerow = true;
-		doall = false;
 	}
 
 	if(jump == GO_PREV)

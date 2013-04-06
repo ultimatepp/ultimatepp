@@ -740,9 +740,6 @@ SqlConsole::SqlConsole(SqlSession& session)
 	Add(schema.BottomPos(0, ecy).RightPos(0, 80));
 	schema.SetLabel(t_("&Schema"));
 	schema <<= THISBACK(ObjectTree);
-//	hide = callback(this, &SqlConsole::Hide);
-//	Size sz = Stock.GetScreenSize();
-//	SetRect((sz.cx - 600) / 2, (sz.cy - 400) / 2, 600, 400);
 	ActiveFocus(command);
 }
 
