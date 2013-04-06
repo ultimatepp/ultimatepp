@@ -1,0 +1,4 @@
+#ifndef _MouseWheel_icpp_init_stub
+#define _MouseWheel_icpp_init_stub
+#include "CtrlLib/init"
+#endif
