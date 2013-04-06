@@ -8,6 +8,7 @@ CH_STYLE(Splitter, Style, StyleDefault)
 	vert[0] = horz[0] = SColorFace();
 	vert[1] = horz[1] = GUI_GlobalStyle() >= GUISTYLE_XP ? Blend(SColorHighlight, SColorFace)
 	                                                     : SColorShadow();
+	dots = true;
 }
 
 int Splitter::ClientToPos(Point p) const
@@ -80,6 +81,16 @@ void   Splitter::Paint(Draw& w) {
 			else
 			if(!IsTransparent())
 				ChPaint(w, r, ch[0]);
+			if(chstyle->dots) {
+				int x = r.left + r.GetWidth() / 2;
+				int y = r.top + r.GetHeight() / 2;
+				(vert ? x : y) -= 8 * 4;
+				for(int i = 0; i < 16; i++) {
+					w.DrawRect(x - 1, y - 1, 1, 1, SColorShadow());
+					w.DrawRect(x, y, 1, 1, SColorShadow());
+					(vert ? x : y) += 4;
+				}
+			}
 		}
 }
 
