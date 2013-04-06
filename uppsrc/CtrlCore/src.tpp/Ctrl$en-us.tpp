@@ -529,7 +529,9 @@ Ctrl and Alt keys.&]
 [@(0.0.255) void]_[* MouseWheel]([_^`:`:Point^ Point]_[*@3 p], [@(0.0.255) int]_[*@3 zdelta],
  [_^`:`:dword^ dword]_[*@3 keyflags])&]
 [s2;b17;a17; This method is called by default implementation of MouseEvent 
-when mouse wheel is rotated.&]
+when mouse wheel is rotated. Default implementation of this method 
+propagates event to the parent and suppresses call of ChildMouseEvent 
+for the parent.&]
 [s7;i1120;a17; [%-*C@3 p]-|Position of mouse cursor in view coordinates.&]
 [s7;i1120;a17; [%-*C@3 zdelta]-|Amount of rotation.&]
 [s7;i1120;a17; [%-*C@3 keyflags]-|Combination of key flags for Shift, 
