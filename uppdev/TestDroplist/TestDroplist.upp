@@ -2,8 +2,8 @@ uses
 	CtrlLib;
 
 file
-
-	"main.cpp";
+	main.cpp;
 
 mainconfig
 	"" = "GUI ST";
+
