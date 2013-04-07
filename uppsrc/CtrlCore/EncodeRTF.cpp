@@ -275,42 +275,6 @@ bool RTFEncoder::PutCharFormat(const RichPara::CharFormat& cf, const RichPara::C
 
 void RTFEncoder::PutObject(const RichObject& object)
 {
-/*
-#ifdef GUI_WIN
-#ifndef PLATFORM_WINCE
-	Size log_size = object.GetPhysicalSize(); // / 6;
-	Size out_size = object.GetSize();
-	Size out_size_01mm = iscale(out_size, 254, 60);
-	if(log_size.cx <= 0 || log_size.cy <= 0) log_size = out_size / 6;
-//	Size scale = out_size * 100 / log_size;
-	Group pict_grp(this, "pict");
-	Command("picw", out_size_01mm.cx);
-	Command("pich", out_size_01mm.cy);
-	Command("picwgoal", DotTwips(out_size.cx));
-	Command("pichgoal", DotTwips(out_size.cy));
-//	Command("picscalex", scale.cx);
-//	Command("picscaley", scale.cy);
-
-	if(object.GetTypeName() == "PNG") {
-		Command("pngblip");
-		PutBinHex(object.GetData());
-	}
-	else {
-		Command("wmetafile", 8);
-		WinMetaFileDraw wmd(log_size.cx, log_size.cy);
-		object.Paint(wmd, log_size, context);
-		WinMetaFile wmf = wmd.Close();
-		HENHMETAFILE hemf = wmf.GetHEMF();
-		int size = GetWinMetaFileBits(hemf, 0, 0, MM_ANISOTROPIC, ScreenHDC());
-		if(size > 0) {
-			Buffer<byte> buffer(size);
-			GetWinMetaFileBits(hemf, size, buffer, MM_ANISOTROPIC, ScreenHDC());
-			PutBinHex(buffer, size);
-		}
-	}
-#endif
-#else
-*/
 	Size log_size = object.GetPhysicalSize(); // / 6;
 	Size out_size = object.GetSize();
 	Size out_size_01mm = iscale(out_size, 254, 60);
@@ -322,7 +286,6 @@ void RTFEncoder::PutObject(const RichObject& object)
 	Command("pichgoal", DotTwips(out_size.cy));
 	Command("pngblip");
 	PutBinHex(PNGEncoder().SaveString(object.ToImage(out_size)));
-//#endif
 }
 
 bool RTFEncoder::PutParaFormat(const RichPara::Format& pf, const RichPara::Format& difpf)
