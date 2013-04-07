@@ -47,7 +47,7 @@ GUI_APP_MAIN
 	e.SetPosInfo(f);
 //	e.Pick(ParseQTF(AsQTF(CreateImageObject(CtrlImg::exclamation)) + " hahahaha"));
 	MyApp w;
-	w.ToolWindow();
+//	w.ToolWindow();
 	w.SetRect(0, 0, 700, 500);
 	w.Sizeable().Zoomable();
 	w.Add(e.SizePos());
@@ -61,5 +61,8 @@ GUI_APP_MAIN
 	SaveFile(FileName(), x);
 	f = e.GetPosInfo();
 	StoreToFile(f, ConfigFile("pos"));
+	
+	SaveFile(GetHomeDirFile("test.rtf"), EncodeRTF(e.Get()));
+	
 	LOG("Exit");
 }
