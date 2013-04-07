@@ -91,6 +91,7 @@ private:
 	Value            value;
 	int              valuecy;
 	bool             push;
+	bool             nobg;
 	String           tip;
 	Rect             pushrect;
 
@@ -147,6 +148,7 @@ public:
 	MultiButton& SetValueCy(int cy);
 	MultiButton& Set(const Value& v);
 	MultiButton& Tip(const char *s)                  { tip = s; return *this; }
+	MultiButton& NoBackground(bool b = true);
 
 	MultiButton& SetStyle(const Style& s)            { style = &s; Refresh(); return *this; }
 
