@@ -1,0 +1,7 @@
+#ifndef _GeoFun_icpp_init_stub
+#define _GeoFun_icpp_init_stub
+#include "CtrlLib/init"
+#include "Painter/init"
+#include "plugin/jpg/init"
+#include "Report/init"
+#endif

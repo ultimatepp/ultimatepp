@@ -1,0 +1,16 @@
+uses
+	CtrlLib,
+	Painter,
+	plugin/jpg,
+	Report;
+
+file
+	GeoFun.h,
+	GeoFun.cpp,
+	GeoFun.lay,
+	GeoFun.iml,
+	app.tpp;
+
+mainconfig
+	"" = "GUI MT SSE2";
+

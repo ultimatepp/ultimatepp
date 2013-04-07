@@ -1,0 +1,46 @@
+LAYOUT(GeoFunLayout, 680, 484)
+	ITEM(MenuBar, menu, LeftPosZ(4, 536).TopPosZ(4, 20))
+END_LAYOUT
+
+LAYOUT(InputLayout, 150, 456)
+	ITEM(EditDoubleSpin, edBaseCircleRad, SetInc(5).AlignRight(true).LeftPosZ(84, 60).TopPosZ(16, 19))
+	ITEM(EditDoubleSpin, edArmLength, SetInc(5).AlignRight(true).LeftPosZ(84, 60).TopPosZ(36, 19))
+	ITEM(EditIntSpin, edValP, AlignRight(true).LeftPosZ(84, 60).TopPosZ(56, 19))
+	ITEM(EditIntSpin, edValQ, AlignRight(true).LeftPosZ(84, 60).TopPosZ(76, 19))
+	ITEM(EditIntSpin, edPenWidth, AlignRight(true).LeftPosZ(84, 60).TopPosZ(96, 19))
+	ITEM(Switch, CurveType, SetLabel(t_("Epicycloid\nHypocycloid\nEpitrochoid\nHypotrochoid")).LeftPosZ(8, 128).TopPosZ(260, 60))
+	ITEM(LabelBox, InputData, SetLabel(t_("Input Data")).LeftPosZ(4, 144).TopPosZ(0, 316))
+	ITEM(Option, optZoom, SetLabel(t_("Zoom to Fit")).LeftPosZ(12, 124).TopPosZ(224, 16))
+	ITEM(Option, optGradient, SetLabel(t_("Gradient Fill")).LeftPosZ(12, 124).TopPosZ(208, 16))
+	ITEM(Option, optColorFill, SetLabel(t_("Color Fill")).LeftPosZ(12, 124).TopPosZ(192, 16))
+	ITEM(ColorPusher, LineColor, LeftPosZ(84, 28).TopPosZ(124, 16))
+	ITEM(ColorPusher, FillColorM1, LeftPosZ(84, 28).TopPosZ(144, 16))
+	ITEM(ColorPusher, FillColorM2, HSizePosZ(112, 10).TopPosZ(144, 16))
+	ITEM(ColorPusher, FillColorB1, LeftPosZ(84, 28).TopPosZ(168, 16))
+	ITEM(ColorPusher, FillColorB2, HSizePosZ(112, 10).TopPosZ(168, 16))
+	ITEM(Label, dv___15, SetLabel(t_("Fill Color Back")).SetAlign(ALIGN_RIGHT).LeftPosZ(0, 76).TopPosZ(164, 20))
+	ITEM(Label, dv___16, SetLabel(t_("Fill Color Main")).SetAlign(ALIGN_RIGHT).LeftPosZ(0, 76).TopPosZ(144, 16))
+	ITEM(Label, dv___17, SetLabel(t_("Curve Type")).SetFont(StdFont().Bold()).LeftPosZ(8, 128).TopPosZ(240, 18))
+	ITEM(Label, dv___18, SetLabel(t_("Line Color")).SetAlign(ALIGN_RIGHT).LeftPosZ(0, 76).TopPosZ(124, 16))
+	ITEM(Label, dv___19, SetLabel(t_("Vertex Points")).SetAlign(ALIGN_RIGHT).LeftPosZ(0, 76).TopPosZ(72, 26))
+	ITEM(Label, dv___20, SetLabel(t_("Draw Radius")).SetAlign(ALIGN_RIGHT).LeftPosZ(0, 76).TopPosZ(32, 26))
+	ITEM(Label, dv___21, SetLabel(t_("Revolutions")).SetAlign(ALIGN_RIGHT).LeftPosZ(0, 76).TopPosZ(52, 26))
+	ITEM(Label, dv___22, SetLabel(t_("Base Radius")).SetAlign(ALIGN_RIGHT).LeftPosZ(8, 68).TopPosZ(12, 26))
+	ITEM(Label, dv___23, SetLabel(t_("Width")).SetAlign(ALIGN_RIGHT).LeftPosZ(0, 76).TopPosZ(96, 20))
+	ITEM(EditIntSpin, edAnimSpeed, LeftPosZ(84, 44).TopPosZ(404, 28))
+	ITEM(Label, dv___25, SetLabel(t_("Animation\nSpeed")).SetAlign(ALIGN_RIGHT).LeftPosZ(0, 76).TopPosZ(404, 28))
+	ITEM(Label, RollingRad, SetLabel(t_("Rolling Radius")).LeftPosZ(4, 140).TopPosZ(432, 20))
+	ITEM(Button, btnImg, SetLabel(t_("Save as Image")).HSizePosZ(4, 6).TopPosZ(348, 24))
+	ITEM(Button, btnPrint, SetLabel(t_("Print")).HSizePosZ(4, 6).TopPosZ(376, 24))
+	ITEM(Button, btnShowAnimation, SetLabel(t_("Animated Plot")).HSizePosZ(4, 6).TopPosZ(320, 24))
+END_LAYOUT
+
+LAYOUT(HelpDialogLayout, 400, 200)
+END_LAYOUT
+
+LAYOUT(AboutLayout, 480, 320)
+	ITEM(LabelBox, dv___0, SetLabel(t_("GeoFun")).HSizePosZ(4, 4).VSizePosZ(4, 24))
+	ITEM(RichTextCtrl, AboutText, HSizePosZ(8, 8).VSizePosZ(20, 28))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(8, 464).TopPosZ(300, 15))
+END_LAYOUT
+
