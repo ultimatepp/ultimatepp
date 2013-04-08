@@ -2368,12 +2368,10 @@ void GridCtrl::RightDown(Point p, dword keyflags)
 
 	if(total_rows > fixed_rows)
 	{
-		//ClearSelection();
 		if(!EndEdit())
 			return;
 
-		if(!SetCursor0(p, CU_MOUSE).IsAccepted())
-			return;
+		SetCursor0(p, CU_MOUSE);
 	}
 
 	RebuildToolBar();
