@@ -3258,14 +3258,30 @@ void GridCtrl::MouseAccel(const Point &p, bool horz, bool vert, dword keyflags)
 
 }
 
+Image GridCtrl::HorzPosImage() {
+	#ifdef PLATFORM_X11
+		return Image::SizeHorz();
+	#else
+		return GridImg::HorzPos();
+	#endif 
+}
+
+Image GridCtrl::VertPosImage() {
+	#ifdef PLATFORM_X11
+		return Image::SizeVert();
+	#else
+		return GridImg::VertPos();
+	#endif 
+}
+
 Image GridCtrl::CursorImage(Point p, dword keyflags)
 {
 	if(!moving_header && !moving_body && HasCapture())
 	{
 		if(resizing_cols && curSplitCol >= 0)
-			return GridImg::HorzPos();
+			return HorzPosImage();
 		if(resizing_rows && curSplitRow >= 0)
-			return GridImg::VertPos();
+			return VertPosImage();
 		else
 			return Image::Arrow();
 	}
@@ -3307,7 +3323,7 @@ Image GridCtrl::CursorImage(Point p, dword keyflags)
 			}
 		}
 		curResizeCol = true;
-		return GridImg::HorzPos();
+		return HorzPosImage();
 	}
 	else if(resizing_rows && curSplitRow >= 0 || resizeRow)
 	{
@@ -3322,7 +3338,7 @@ Image GridCtrl::CursorImage(Point p, dword keyflags)
 			}
 		}
 		curResizeRow = true;
-		return GridImg::VertPos();
+		return VertPosImage();
 	}
 	return Image::Arrow();
 }
