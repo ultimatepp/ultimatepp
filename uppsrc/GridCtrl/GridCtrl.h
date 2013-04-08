@@ -1764,6 +1764,9 @@ class GridCtrl : public Ctrl
 		Value GetItemValue(const Item& it, int id, const ItemRect& hi, const ItemRect& vi);
 		void  GetItemAttrs(const Item& it, int r, int c, const ItemRect& vi, const ItemRect& hi, dword& style, GridDisplay*& gd, Color& fg, Color& bg, Font& fnt);
 		Item& GetItemSize(int &r, int &c, int &x, int &y, int &cx, int &cy, bool &skip, bool relx = true, bool rely = true);
+		
+		Image HorzPosImage();
+		Image VertPosImage();
 
 	private:
 		bool WhenInsertRow0();
