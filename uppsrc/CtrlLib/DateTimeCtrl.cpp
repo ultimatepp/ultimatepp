@@ -310,7 +310,7 @@ Image Calendar::CursorImage(Point p, dword keyflags)
 {
 	bool b = (selall == false ? Day(newday) > 0 : true);
 	if((newday != nullday && b) || istoday)
-		return CtrlImg::HandCursor();
+		return Image::Hand();
 	else
 		return Image::Arrow();
 }
