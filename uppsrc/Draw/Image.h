@@ -159,13 +159,13 @@ private:
 
 public:
 	const RGBA*    operator~() const;
-	operator const RGBA*() const;
-	const RGBA* operator[](int i) const;
+	operator const RGBA*() const              { return data ? ~data->buffer : NULL; }
+	const RGBA* operator[](int i) const       { ASSERT(data); return data->buffer[i]; }
 
-	Size  GetSize() const;
+	Size  GetSize() const                     { return data ? data->buffer.GetSize() : Size(0, 0); }
 	int   GetWidth() const                    { return GetSize().cx; }
 	int   GetHeight() const                   { return GetSize().cy; }
-	int   GetLength() const;
+	int   GetLength() const                   { return data ? data->buffer.GetLength() : 0; }
 	Point GetHotSpot() const;
 	Point Get2ndSpot() const;
 	Size  GetDots() const;

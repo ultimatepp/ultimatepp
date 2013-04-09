@@ -161,27 +161,6 @@ const RGBA* Image::operator~() const
 	return data ? ~data->buffer : NULL;
 }
 
-Image::operator const RGBA*() const
-{
-	return data ? ~data->buffer : NULL;
-}
-
-const RGBA* Image::operator[](int i) const
-{
-	ASSERT(data);
-	return data->buffer[i];
-}
-
-Size Image::GetSize() const
-{
-	return data ? data->buffer.GetSize() : Size(0, 0);
-}
-
-int Image::GetLength() const
-{
-	return data ? data->buffer.GetLength() : 0;
-}
-
 Point Image::GetHotSpot() const
 {
 	return data ? data->buffer.GetHotSpot() : Point(0, 0);

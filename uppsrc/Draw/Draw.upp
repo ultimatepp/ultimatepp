@@ -50,6 +50,7 @@ file
 	ImageOp.cpp,
 	ImageChOp.cpp,
 	ImageScale.cpp,
+	BiCubic.cpp,
 	MakeCache.cpp,
 	DrawRasterData.cpp,
 	iml.h,
