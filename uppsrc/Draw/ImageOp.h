@@ -75,6 +75,9 @@ Image Rescale(const Image& src, Size sz, const Rect& src_rc, Gate2<int, int> pro
 Image Rescale(const Image& src, Size sz, Gate2<int, int> progress = false);
 Image Rescale(const Image& src, int cx, int cy, Gate2<int, int> progress = false);
 
+Image RescaleBicubic(const Image& img, int cx, int cy);
+Image RescaleBicubic(const Image& img, Size sz);
+
 struct ImageFilter9 {
 	virtual RGBA operator()(const RGBA **mx) = 0;
 	virtual ~ImageFilter9() {}
