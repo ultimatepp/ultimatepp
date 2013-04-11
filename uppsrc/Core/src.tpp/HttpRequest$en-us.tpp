@@ -74,13 +74,16 @@ ize]([@(0.0.255) int]_[*@3 n])&]
 [s2;%% Specifies the maximum size of content data block for processing 
 (default is 4096). Returns `*this.&]
 [s3;%% &]
-[s4;%% &]
-[s5;:HttpRequest`:`:Method`(int`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[* Method]([@(0.0.255) i
-nt]_[*@3 m])&]
+[s4; &]
+[s5;:HttpRequest`:`:Method`(int`,const char`*`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&
+]_[* Method]([@(0.0.255) int]_[*@3 m], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 custom`_na
+me]_`=_NULL)&]
 [s2;%% Sets HTTP request method. [%-*@3 m] can be one of METHOD`_GET, 
 METHOD`_POST, METHOD`_HEAD, METHOD`_PUT, METHOD`_DELETE, METHOD`_TRACE, 
 METHOD`_OPTIONS, METHOD`_CONNECT, METHOD`_PATCH. Default setting 
-is METHOD`_GET. Returns `*this.&]
+is METHOD`_GET. If [%-*@3 custom`_name] is not NULL, HttpRequest 
+behaves likem performing method [%-*@3 m] but in HTTP request [%-*@3 custom`_name] 
+is used as method. Returns `*this.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:HttpRequest`:`:GET`(`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[* GET]()&]
