@@ -52,6 +52,13 @@ HttpRequest::HttpRequest(const char *url)
 	Url(url);
 }
 
+HttpRequest& HttpRequest::Method(int m, const char *custom_name)
+{
+	method = m;
+	custom_method = custom_name;
+	return *this;
+}
+
 HttpRequest& HttpRequest::Url(const char *u)
 {
 	ssl = memcmp(u, "https", 5) == 0;
@@ -458,7 +465,7 @@ void HttpRequest::StartRequest()
 		"GET", "POST", "HEAD", "PUT", "DELETE", "TRACE", "OPTIONS", "CONNECT", "PATCH",
 	};
 	ASSERT(method >= 0 && method <= 8);
-	data = smethod[method];
+	data = Nvl(custom_method, smethod[method]);
 	data << ' ';
 	String host_port = host;
 	if(port)

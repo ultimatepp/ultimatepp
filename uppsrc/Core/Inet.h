@@ -332,6 +332,7 @@ class HttpRequest : public TcpSocket {
 	bool         ssl;
 
 	int          method;
+	String       custom_method;
 	String       accept;
 	String       agent;
 	bool         force_digest;
@@ -408,7 +409,7 @@ public:
 	HttpRequest&  RequestTimeout(int ms)                 { timeout = ms; return *this; }
 	HttpRequest&  ChunkSize(int n)                       { chunk = n; return *this; }
 
-	HttpRequest&  Method(int m)                          { method = m; return *this; }
+	HttpRequest&  Method(int m, const char *custom_name = NULL);
 	HttpRequest&  GET()                                  { return Method(METHOD_GET); }
 	HttpRequest&  POST()                                 { return Method(METHOD_POST); }
 	HttpRequest&  HEAD()                                 { return Method(METHOD_HEAD); }
