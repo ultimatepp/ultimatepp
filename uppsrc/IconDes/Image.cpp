@@ -147,7 +147,7 @@ void IconDes::SmoothRescale()
 		return;
 	WithRescaleLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Rescale");
-	dlg.cx <<= dlg.cy <<= dlg.Breaker();
+	dlg.cx <<= dlg.cy <<= dlg.bicubic <<= dlg.Breaker();
 	Slot& c = Current();
 	BeginTransform();
 	Image bk = IsPasting() ? c.paste_image : c.image;
@@ -156,12 +156,17 @@ void IconDes::SmoothRescale()
 	dlg.keep <<= true;
 	for(;;) {
 		Size sz(minmax((int)~dlg.cx, 1, 9999), minmax((int)~dlg.cy, 1, 9999));
+		Image m;
+		if(dlg.bicubic)
+			m = RescaleBicubic(bk, sz);
+		else
+			m = Rescale(bk, sz);
 		if(IsPasting()) {
-			c.paste_image = Rescale(bk, sz);
+			c.paste_image = m;
 			MakePaste();
 		}
 		else {
-			c.image = Rescale(bk, sz);
+			c.image = m;
 			Refresh();
 		}
 		SyncImage();
