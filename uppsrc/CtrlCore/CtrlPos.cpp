@@ -187,29 +187,31 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 	GuiLock __;
 	if(p == pos && inframe == _inframe) return;
 	if(parent) {
-		Rect from = GetRect().Size();
-		Top *top = GetTopRect(from, true)->top;
-		if(top) {
-			LTIMING("SetPos0 MoveCtrl");
-			pos = p;
-			inframe = _inframe;
-			Rect to = GetRect().Size();
-			UpdateRect0();
-			GetTopRect(to, true);
-			MoveCtrl *s = FindMoveCtrlPtr(top->scroll_move, this);
-			if(s && s->from == from && s->to == to) {
-				s->ctrl = NULL;
-				LLOG("SetPos Matched " << from << " -> " << to);
+		if(globalbackbuffer) {
+			Rect from = GetRect().Size();
+			Top *top = GetTopRect(from, true)->top;
+			if(top) {
+				LTIMING("SetPos0 MoveCtrl");
+				pos = p;
+				inframe = _inframe;
+				Rect to = GetRect().Size();
+				UpdateRect0();
+				GetTopRect(to, true);
+				MoveCtrl *s = FindMoveCtrlPtr(top->scroll_move, this);
+				if(s && s->from == from && s->to == to) {
+					s->ctrl = NULL;
+					LLOG("SetPos Matched " << from << " -> " << to);
+				}
+				else {
+					MoveCtrl& m = top->move.Add(this);
+					m.ctrl = this;
+					m.from = from;
+					m.to = to;
+					LLOG("SetPos Add " << UPP::Name(this) << from << " -> " << to);
+				}
+				StateH(POSITION);
+				return;
 			}
-			else {
-				MoveCtrl& m = top->move.Add(this);
-				m.ctrl = this;
-				m.from = from;
-				m.to = to;
-				LLOG("SetPos Add " << UPP::Name(this) << from << " -> " << to);
-			}
-			StateH(POSITION);
-			return;
 		}
 		RefreshFrame();
 	}
