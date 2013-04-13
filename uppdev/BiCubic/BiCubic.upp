@@ -1,0 +1,18 @@
+optimize_speed;
+
+uses
+	CtrlLib,
+	Painter,
+	plugin/jpg;
+
+file
+	bicubic.h,
+	a.cpp,
+	b.cpp,
+	c.cpp,
+	d.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI SSE2";
+
