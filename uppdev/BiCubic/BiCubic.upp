@@ -3,14 +3,15 @@ optimize_speed;
 uses
 	CtrlLib,
 	Painter,
-	plugin/jpg;
+	plugin/jpg,
+	plugin/gif;
 
 file
 	bicubic.h,
-	a.cpp,
-	b.cpp,
-	c.cpp,
-	d.cpp,
+	exact.cpp,
+	fast.cpp,
+	DownScale.cpp,
+	image.iml,
 	main.cpp;
 
 mainconfig
