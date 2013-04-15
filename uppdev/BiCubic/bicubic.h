@@ -12,4 +12,6 @@ enum {
 Image RescaleWithKernelE(const Image& _img, int cx, int cy, double (*kernel)(double x), int a, int method = DOWNSCALE_WIDE);
 Image RescaleWithKernel(const Image& _img, int cx, int cy, double (*kernel)(double x), int a, int method = DOWNSCALE_WIDE);
 
+Image RescaleWithKernel2(const Image& _img, int cx, int cy, double (*kernel)(double x), int a, int method = DOWNSCALE_WIDE);
+
 Image DownScale(const Image& img, int nx, int ny);

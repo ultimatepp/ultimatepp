@@ -10,9 +10,11 @@ file
 	bicubic.h,
 	exact.cpp,
 	fast.cpp,
+	fast2.cpp,
 	DownScale.cpp,
 	image.iml,
-	main.cpp;
+	main.cpp,
+	help.txt;
 
 mainconfig
 	"" = "GUI SSE2";

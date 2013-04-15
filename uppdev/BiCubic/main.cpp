@@ -28,6 +28,65 @@ double BiCubicKernel2(double x)
 	return (1 / 6.0) * r;
 }
 
+double BiCubic(double x, double a)
+{
+	x = fabs(x);
+	return x <= 1 ? (a + 2) * x * x * x - (a + 3) * x * x + 1 :
+	       x <= 2 ? a * x * x * x - 5 * a * x * x + 8 * a * x - 4 * a :
+	       0;
+}
+
+double BiCubic0(double x)
+{
+	return BiCubic(x, 0);
+}
+
+double BiCubic1(double x)
+{
+	return BiCubic(x, -0.25);
+}
+
+double BiCubic2(double x)
+{
+	return BiCubic(x, -0.5);
+}
+
+double BiCubic3(double x)
+{
+	return BiCubic(x, -1.0);
+}
+
+double BiCubic4(double x)
+{
+	return BiCubic(x, -1.5);
+}
+
+double BiCubic_(double x, double B, double C)
+{
+	x = fabs(x);
+	double x2 = x * x;
+	double x3 = x * x * x;
+	return
+		1 / 6.0 * (x < 1 ? (12 - 9*B - 6*C) * x3 + (-18 + 12*B + 6*C) * x2 + (6 - 2*B) :
+		           x < 2 ? (-B - 6*C) * x3 + (6*B + 30*C) * x2 + (-12*B - 48*C) *x + (8*B + 24*C) :
+	    	       0);
+}
+
+double BiCubic_Bspline(double x)
+{
+	return BiCubic_(x, 1, 0);
+}
+
+double BiCubic_Mitchell(double x)
+{
+	return BiCubic_(x, 1 / 3.0, 1 / 3.0);
+}
+
+double BiCubic_CatmullRom(double x)
+{
+	return BiCubic_(x, 0, 1 / 2);
+}
+
 double Nearest(double x)
 {
 	return x >= -0.5 && x <= 0.5;
@@ -43,8 +102,7 @@ double LinearKernel(double x)
 
 double SimpleKernel(double x)
 {
-	x = fabs(x);
-	return x < 1.5 ? 1 : 0;
+	return 1;
 }
 
 double MagicKernel(double x)
@@ -52,6 +110,14 @@ double MagicKernel(double x)
 	x = fabs(x);
 	return x < 0.5 ? 0.75 - x * x :
 	       x < 1.5 ? 0.5 * (x - 1.5) * (x - 1.5) :
+	       0;
+}
+
+double BSpline(double x)
+{
+	x = fabs(x);
+	return x <= 1 ? (x * x * x) / 2 - x * x + 2.0 / 3 :
+	       x <= 2 ? -(x * x * x) / 6 + x * x - 2 * x + 4.0 / 3 :
 	       0;
 }
 
@@ -90,7 +156,7 @@ struct MyApp : TopWindow {
 	
 	DropList kernel;
 	DropList method;
-	Option   fast;
+	DropList fn;
 	
 	void Paint(Draw& w) {
 		w.DrawRect(GetSize(), LtGray());
@@ -99,19 +165,36 @@ struct MyApp : TopWindow {
 	
 		Image (*rescale)(const Image& _img, int cx, int cy, double (*kernel)(double x), int a, int method);
 		
-		if(fast)
+		if(~fn == 0)
+			rescale = RescaleWithKernelE;
+		else
+		if(~fn == 1)
 			rescale = RescaleWithKernel;
 		else
-			rescale = RescaleWithKernelE;
+			rescale = RescaleWithKernel2;
  
 		double (*k)(double) = (double (*)(double))(int64)~kernel;
 		int ka = k == Lanczos3 ? 3 : k == Lanczos4 ? 4 : k == Lanczos5 ? 5 : k == LinearKernel ? 1 : 2;
 
+		TimeStop tm;
+		
 		for(int i = 0; i < TestImg().GetCount(); i++) {
 			w.DrawImage(250 * i, 0, TestImg().Get(i));
 			w.DrawImage(250 * i, 200, rescale(TestImg().Get(i), 84, 84, k, ka, ~method));
+			w.DrawImage(250 * i + 84, 200, rescale(TestImg().Get(i), 42, 42, k, ka, ~method));
+			w.DrawImage(250 * i + 84 + 52, 200, rescale(TestImg().Get(i), 21, 21, k, ka, ~method));
+			w.DrawImage(250 * i + 84 + 52 + 31, 200, rescale(TestImg().Get(i), 10, 10, k, ka, ~method));
+			w.DrawImage(250 * i + 84 + 52 + 31 + 20, 200, rescale(TestImg().Get(i), 5, 5, k, ka, ~method));
+			w.DrawImage(250 * i + 84 + 52 + 31 + 20 + 20, 200, rescale(TestImg().Get(i), 1, 1, k, ka, ~method));
 			w.DrawImage(250 * i, 300, rescale(TestImg().Get(i), 250, 250, k, ka, ~method));
+			w.DrawImage(250 * i, GetSize().cy - 250 - 84 - 20, Rescale(TestImg().Get(i), 84, 84));
+			w.DrawImage(250 * i, GetSize().cy - 250 - 20, Rescale(TestImg().Get(i), 250, 250));
 		}
+		
+		w.DrawImage(GetSize().cx - 400, 100, rescale(TestImg::img2(), 400, 400, k, ka, ~method));
+		w.DrawImage(GetSize().cx - 400, 500, rescale(TestImg::img3(), 400, 400, k, ka, ~method));
+		
+		w.DrawText(0, GetSize().cy - 20, String().Cat() << "Elapsed " << tm);
 
 /*
 		w.DrawImage(0, 0, RescaleBicubic2(rings, 180, 180, k, ka, expand));
@@ -167,8 +250,19 @@ struct MyApp : TopWindow {
 		kernel.Add((int64)Nearest, "Nearest");
 		kernel.Add((int64)SimpleKernel, "Simple");
 		kernel.Add((int64)LinearKernel, "Linear");
-		kernel.Add((int64)BiCubicKernel2, "BiCubic");
+		kernel.Add((int64)BiCubicKernel2, "BiCubic old");
+		kernel.Add((int64)BiCubic0, "BiCubic0");
+		kernel.Add((int64)BiCubic1, "BiCubic1");
+		kernel.Add((int64)BiCubic2, "BiCubic2");
+		kernel.Add((int64)BiCubic3, "BiCubic3");
+		kernel.Add((int64)BiCubic4, "BiCubic4");
 		kernel.Add((int64)MagicKernel, "Magic");
+		kernel.Add((int64)BSpline, "BSpline");
+
+		kernel.Add((int64)BiCubic_Bspline, "BiCubic_Bspline");
+		kernel.Add((int64)BiCubic_Mitchell, "BiCubic_Mitchell");
+		kernel.Add((int64)BiCubic_CatmullRom, "BiCubic_CatmullRom");
+
 		kernel.Add((int64)Lanczos2, "Lanczos2");
 		kernel.Add((int64)Lanczos3, "Lanczos3");
 		kernel.Add((int64)Lanczos4, "Lanczos4");
@@ -182,12 +276,14 @@ struct MyApp : TopWindow {
 		method.Add(DOWNSCALE_WIDE, "Wide");
 		method <<= THISBACK(Sync);
 		Add(method.TopPos(0, STDSIZE).RightPos(200, 200));
-		method <<= DOWNSCALE_SIMPLE;
+		method <<= DOWNSCALE_WIDE;
 
-		Add(fast.TopPos(0, STDSIZE).RightPos(400, 200));
-		fast <<= THISBACK(Sync);
-		fast.SetLabel("Integer");
-		fast <<= true;
+		fn.Add(0, "FP");
+		fn.Add(1, "Integer");
+		fn.Add(2, "Optimized");
+		Add(fn.TopPos(0, STDSIZE).RightPos(400, 200));
+		fn <<= THISBACK(Sync);
+		fn <<= 2;
 		
 		Maximize();
 	}
@@ -195,24 +291,39 @@ struct MyApp : TopWindow {
 
 GUI_APP_MAIN
 {
+	Image img = TestImg::img1();
+	RescaleWithKernel2(img, 5, 5, LinearKernel, 1);
+
 	DUMP((int)Saturate255(5000));
 	DUMP((int)Saturate255(500));
 	DUMP((int)Saturate255(-1));
 	DUMP((int)Saturate255(-10000));
 	for(double x = -2; x <= 2; x += 0.1)
-		LOG(x << ' ' << Lanczos2(x) << ' ' << MagicKernel(x) << ' ' << LinearKernel(x));
+		RLOG(x << ' ' << Lanczos2(x) << ' ' << MagicKernel(x) << ' ' << BiCubic2(x));
 
-//	MyApp().Run();
+	MyApp().Run();
 #ifndef _DEBUG
-	Image img = TestImg::img1();
+#if 1
 	for(int i = 0; i < 100; i++) {
-		{
+/*		{
 			RTIMING("Rescale");
 			Rescale(img, 84, 84);
 		}
 		{
 			RTIMING("Rescale Linear integer");
 			RescaleWithKernel(img, 84, 84, LinearKernel, 1);
+		}
+		{
+			RTIMING("Rescale Linear integer optimized");
+			RescaleWithKernel2(img, 84, 84, LinearKernel, 1);
+		}
+*/		{
+			RTIMING("Rescale UP");
+			Rescale(img, 300, 300);
+		}
+		{
+			RTIMING("Rescale Linear integer optimized UP");
+			RescaleWithKernel2(img, 300, 300, LinearKernel, 1);
 		}
 	#if 0
 		{
@@ -245,5 +356,6 @@ GUI_APP_MAIN
 		}
 	#endif
 	}
+#endif
 #endif
 }
