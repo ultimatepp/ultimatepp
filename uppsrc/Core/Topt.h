@@ -462,7 +462,7 @@ template <class T> inline const T& ntl_max(const T& a, const T& b) { return a > 
 	const_iterator        begin() const          { return Begin(); } \
 	const_iterator        end() const            { return End(); } \
 	void                  clear()                { Clear(); } \
-	size_type             size()                 { return GetCount(); } \
+	size_type             size() const           { return GetCount(); } \
 	typedef Iterator      iterator; \
 	typedef T&            reference; \
 	bool                  empty() const          { return IsEmpty(); } \
@@ -478,7 +478,7 @@ template <class T> inline const T& ntl_max(const T& a, const T& b) { return a > 
 	const_iterator        begin() const          { return B::Begin(); } \
 	const_iterator        end() const            { return B::End(); } \
 	void                  clear()                { B::Clear(); } \
-	size_type             size()                 { return B::GetCount(); } \
+	size_type             size() const           { return B::GetCount(); } \
 	typedef Iterator      iterator; \
 	typedef T&            reference; \
 	bool                  empty() const          { return B::IsEmpty(); } \
@@ -494,7 +494,7 @@ template <class T> inline const T& ntl_max(const T& a, const T& b) { return a > 
 	const_iterator        begin() const          { return Begin(); } \
 	const_iterator        end() const            { return End(); } \
 	void                  clear()                { Clear(); } \
-	size_type             size()                 { return GetCount(); } \
+	size_type             size() const           { return GetCount(); } \
 	typedef Iterator      iterator; \
 	typedef T&            reference; \
 	iterator              begin()                { return Begin(); } \
