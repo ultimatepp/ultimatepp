@@ -776,6 +776,14 @@ ScrollBars& ScrollBars::FixedBox()
 	return *this;
 }
 
+ScrollBars& ScrollBars::WithSizeGrip()
+{
+	box_bg.Color(SColorFace());
+	the_box.Add(box_bg.SizePos());
+	the_box.Add(grip);
+	return *this;
+}
+
 ScrollBars::ScrollBars() {
 	box = &the_box;
 //	the_box.NoTransparent();

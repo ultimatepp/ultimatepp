@@ -164,6 +164,7 @@ public:
 protected:
 	Ctrl      *box;
 	ParentCtrl the_box;
+	StaticRect box_bg;
 	int        box_type;
 	SizeGrip   grip;
 
@@ -257,7 +258,7 @@ public:
 	ScrollBars& FixedBox();
 
 	ScrollBars& Box(Ctrl& box);
-	ScrollBars& WithSizeGrip()                       { the_box.Add(grip); return *this; }
+	ScrollBars& WithSizeGrip();
 
 	ScrollBars& SetStyle(const ScrollBar::Style& s)  { x.SetStyle(s); y.SetStyle(s); return *this; }
 
