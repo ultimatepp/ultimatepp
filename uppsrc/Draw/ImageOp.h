@@ -75,10 +75,6 @@ Image Rescale(const Image& src, Size sz, const Rect& src_rc, Gate2<int, int> pro
 Image Rescale(const Image& src, Size sz, Gate2<int, int> progress = false);
 Image Rescale(const Image& src, int cx, int cy, Gate2<int, int> progress = false);
 
-Image RescaleBicubic(const Image& src, Size sz, const Rect& src_rc, Gate2<int, int> progress = false);
-Image RescaleBicubic(const Image& img, int cx, int cy, Gate2<int, int> progress = false);
-Image RescaleBicubic(const Image& img, Size sz, Gate2<int, int> progress = false);
-
 struct ImageFilter9 {
 	virtual RGBA operator()(const RGBA **mx) = 0;
 	virtual ~ImageFilter9() {}
@@ -164,3 +160,31 @@ Image CachedRescale(const Image& m, Size sz, const Rect& src);
 Image CachedRescale(const Image& m, Size sz);
 Image CachedRescalePaintOnly(const Image& m, Size sz, const Rect& src);
 Image CachedRescalePaintOnly(const Image& m, Size sz);
+
+Image RescaleBicubic(const Image& src, Size sz, const Rect& src_rc, Gate2<int, int> progress = false);
+Image RescaleBicubic(const Image& img, Size sz, Gate2<int, int> progress = false);
+Image RescaleBicubic(const Image& img, int cx, int cy, Gate2<int, int> progress = false);
+
+Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
+                    double (*kernel_fn)(double x), int kernel_width, Gate2<int, int> progress);
+Image RescaleFilter(const Image& img, Size sz,
+                    double (*kernel_fn)(double x), int kernel_width, Gate2<int, int> progress);
+Image RescaleFilter(const Image& img, int cx, int cy,
+                    double (*kernel_fn)(double x), int kernel_width, Gate2<int, int> progress);
+
+enum {
+	FILTER_NEAREST = 0,
+	FILTER_BILINEAR = 1,
+	FILTER_BSPLINE = 2,
+	FILTER_COSTELLO = 3,
+	FILTER_BICUBIC_MITCHELL = 4,
+	FILTER_BICUBIC_CATMULLROM = 5,
+	FILTER_LANCZOS2 = 6,
+	FILTER_LANCZOS3 = 7,
+	FILTER_LANCZOS4 = 8,
+	FILTER_LANCZOS5 = 9,
+};
+
+Image RescaleFilter(const Image& img, Size sz, const Rect& sr, int filter, Gate2<int, int> progress = false);
+Image RescaleFilter(const Image& img, Size sz, int filter, Gate2<int, int> progress = false);
+Image RescaleFilter(const Image& img, int cx, int cy, int filter, Gate2<int, int> progress = false);
