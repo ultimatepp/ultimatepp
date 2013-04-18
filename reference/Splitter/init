@@ -1,0 +1,4 @@
+#ifndef _Splitter_icpp_init_stub
+#define _Splitter_icpp_init_stub
+#include "CtrlLib/init"
+#endif

@@ -1,4 +1,4 @@
-description "Splitting window into resizable parts";
+description "Splitting window into resizable parts\377";
 
 uses
 	CtrlLib;
