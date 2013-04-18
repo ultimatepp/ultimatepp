@@ -28,7 +28,7 @@ Image RescaleBicubic(const Image& img, Size sz, const Rect& sr, Gate2<int, int> 
 	double inv_cx = 1.0 / sz.cx;
 	for(int y = 0; y < sz.cy; y++) {
 		if(progress(y, sz.cy))
-			return false;
+			return ib;
 		int sy = y * isz.cy / sz.cy;
 		double dy = y * isz.cy / (double)sz.cy - sy;
 		for(int x = 0; x < sz.cx; x++) {

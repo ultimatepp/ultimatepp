@@ -212,17 +212,19 @@ static double sCostello(double x)
 
 Image RescaleFilter(const Image& img, Size sz, const Rect& sr, int filter, Gate2<int, int> progress)
 {
+	if(IsNull(filter))
+		return Rescale(img, sz, sr);
 	static Tuple2<double (*)(double), int> tab[] = {
-		sNearest, 1,
-		sLinear, 1,
-		sBspline, 2,
-		sCostello, 2,
-		sMitchell, 2,
-		sCatmullRom, 2,
-		sLanczos2, 2,
-		sLanczos3, 3,
-		sLanczos4, 4,
-		sLanczos5, 5,
+		{ sNearest, 1 },
+		{ sLinear, 1 },
+		{ sBspline, 2 },
+		{ sCostello, 2 },
+		{ sMitchell, 2 },
+		{ sCatmullRom, 2 },
+		{ sLanczos2, 2 },
+		{ sLanczos3, 3 },
+		{ sLanczos4, 4 },
+		{ sLanczos5, 5 },
 	};
 	ASSERT(filter >= FILTER_NEAREST && filter <= FILTER_LANCZOS5);
 	return RescaleFilter(img, sz, sr, tab[filter].a, tab[filter].b, progress);
