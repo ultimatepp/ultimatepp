@@ -87,22 +87,32 @@ t]_[*@3 m])&]
 [s2;%% Sets the absolute maximum of image data stored in cache. Default 
 is one million pixels.&]
 [s3;%% &]
-[s4; &]
-[s5;:CachedRescale`(const Image`&`,Size`,const Rect`&`): [_^Image^ Image]_[* CachedRescal
-e]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m], [_^Size^ Size]_[*@3 sz], 
-[@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 src])&]
-[s5;:CachedRescale`(const Image`&`,Size`): [_^Image^ Image]_[* CachedRescale]([@(0.0.255) c
-onst]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m], [_^Size^ Size]_[*@3 sz])&]
-[s2;%% Returns rescaled Image, with results being cached.&]
 [s3;%% &]
 [s4; &]
-[s5;:CachedRescalePaintOnly`(const Image`&`,Size`,const Rect`&`): [_^Image^ Image]_[* Cac
-hedRescalePaintOnly]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m], 
-[_^Size^ Size]_[*@3 sz], [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 src])&]
-[s5;:CachedRescalePaintOnly`(const Image`&`,Size`): [_^Image^ Image]_[* CachedRescalePain
-tOnly]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m], [_^Size^ Size]_[*@3 sz])&]
+[s5;:CachedRescale`(const Image`&`,Size`,const Rect`&`,int`): [_^Image^ Image]_[* CachedR
+escale]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m], [_^Size^ Size]_[*@3 sz], 
+[@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 src], [@(0.0.255) int]_[*@3 filter]_`=_
+Null)&]
+[s5;:CachedRescale`(const Image`&`,Size`,int`): [_^Image^ Image]_[* CachedRescale]([@(0.0.255) c
+onst]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m], [_^Size^ Size]_[*@3 sz], 
+[@(0.0.255) int]_[*@3 filter]_`=_Null)&]
+[s2;%% Returns rescaled Image, with results being cached. [%-*@3 filter] 
+can be one of predefined filters for RescaleFilter function (e.g. 
+FILTER`_BILINEAR), if Null, standard speed optimized custom algorithm 
+is used.&]
+[s3;%% &]
+[s4; &]
+[s5;:CachedRescalePaintOnly`(const Image`&`,Size`,const Rect`&`,int`): [_^Image^ Image]_
+[* CachedRescalePaintOnly]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m], 
+[_^Size^ Size]_[*@3 sz], [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 src], 
+[@(0.0.255) int]_[*@3 filter]_`=_Null)&]
+[s5;:CachedRescalePaintOnly`(const Image`&`,Size`,int`): [_^Image^ Image]_[* CachedRescal
+ePaintOnly]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m], 
+[_^Size^ Size]_[*@3 sz], [@(0.0.255) int]_[*@3 filter]_`=_Null)&]
 [s2;%% Returns rescaled Image, with results being cached, that can 
 only be used with Draw`::DrawImage(this is optimization hint that 
-can save some memory in certain situations).&]
-[s3;%% &]
+can save some memory in certain situations). [%-*@3 filter] can 
+be one of predefined filters for RescaleFilter function (e.g. 
+FILTER`_BILINEAR), if Null, standard speed optimized custom algorithm 
+is used.&]
 [s0;%% ]]

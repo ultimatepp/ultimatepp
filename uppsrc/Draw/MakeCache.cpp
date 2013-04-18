@@ -174,6 +174,7 @@ struct sCachedRescale : public ImageMaker
 	Rect  src;
 	Size  sz;
 	Image img;
+	int   filter;
 
 	virtual String Key() const {
 		StringBuffer h;
@@ -184,16 +185,17 @@ struct sCachedRescale : public ImageMaker
 		RawCat(h, sz.cx);
 		RawCat(h, sz.cy);
 		RawCat(h, img.GetSerialId());
+		RawCat(h, filter);
 		return h;
 	}
 
 	virtual Image Make() const {
-		return Rescale(img, sz, src);
+		return IsNull(filter) ? Rescale(img, sz, src) : RescaleFilter(img, sz, src, filter);
 	}
 
 };
 
-Image CachedRescale(const Image& m, Size sz, const Rect& src)
+Image CachedRescale(const Image& m, Size sz, const Rect& src, int filter)
 {
 	if(m.GetSize() == sz)
 		return m;
@@ -201,15 +203,16 @@ Image CachedRescale(const Image& m, Size sz, const Rect& src)
 	cr.sz = sz;
 	cr.src = src;
 	cr.img = m;
+	cr.filter = filter;
 	return MakeImage(cr);
 }
 
-Image CachedRescale(const Image& m, Size sz)
+Image CachedRescale(const Image& m, Size sz, int filter)
 {
-	return CachedRescale(m, sz, m.GetSize());
+	return CachedRescale(m, sz, m.GetSize(), filter);
 }
 
-Image CachedRescalePaintOnly(const Image& m, Size sz, const Rect& src)
+Image CachedRescalePaintOnly(const Image& m, Size sz, const Rect& src, int filter)
 {
 	if(m.GetSize() == sz)
 		return m;
@@ -217,12 +220,13 @@ Image CachedRescalePaintOnly(const Image& m, Size sz, const Rect& src)
 	cr.sz = sz;
 	cr.src = src;
 	cr.img = m;
+	cr.filter = filter;
 	return MakeImagePaintOnly(cr);
 }
 
-Image CachedRescalePaintOnly(const Image& m, Size sz)
+Image CachedRescalePaintOnly(const Image& m, Size sz, int filter)
 {
-	return CachedRescalePaintOnly(m, sz, m.GetSize());
+	return CachedRescalePaintOnly(m, sz, m.GetSize(), filter);
 }
 
 
