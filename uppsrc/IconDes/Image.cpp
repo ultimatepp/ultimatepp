@@ -147,20 +147,27 @@ void IconDes::SmoothRescale()
 		return;
 	WithRescaleLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Rescale");
-	dlg.cx <<= dlg.cy <<= dlg.bicubic <<= dlg.Breaker();
+	dlg.cx <<= dlg.cy <<= dlg.method <<= dlg.Breaker();
 	Slot& c = Current();
 	BeginTransform();
 	Image bk = IsPasting() ? c.paste_image : c.image;
 	dlg.cx <<= bk.GetWidth();
 	dlg.cy <<= bk.GetHeight();
 	dlg.keep <<= true;
+	dlg.method.Add(Null, "Rylek");
+	dlg.method.Add(FILTER_NEAREST, "Nearest");
+	dlg.method.Add(FILTER_BILINEAR, "Bilinear");
+	dlg.method.Add(FILTER_BSPLINE, "Bspline");
+	dlg.method.Add(FILTER_COSTELLO, "Costello");
+	dlg.method.Add(FILTER_BICUBIC_MITCHELL, "Bicubic Mitchell");
+	dlg.method.Add(FILTER_BICUBIC_CATMULLROM, "Bicubic Catmull Rom");
+	dlg.method.Add(FILTER_LANCZOS2, "Lanczos 2");
+	dlg.method.Add(FILTER_LANCZOS3, "Lanczos 3");
+	dlg.method.Add(FILTER_LANCZOS4, "Lanczos 4");
+//	dlg.method.Add(FILTER_LANCZOS5, "Lanczos 5");
 	for(;;) {
 		Size sz(minmax((int)~dlg.cx, 1, 9999), minmax((int)~dlg.cy, 1, 9999));
-		Image m;
-		if(dlg.bicubic)
-			m = RescaleBicubic(bk, sz);
-		else
-			m = Rescale(bk, sz);
+		Image m = RescaleFilter(bk, sz, ~dlg.method);
 		if(IsPasting()) {
 			c.paste_image = m;
 			MakePaste();

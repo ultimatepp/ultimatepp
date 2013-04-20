@@ -275,159 +275,14 @@ public:
 	WithDeepCopy()                                 {}
 };
 
-template <class V>
-class ConstIIterator {
-protected:
-	const V       *cont;
-	int            ii;
-	typedef        typename V::ValueType T;
-	struct NP { int dummy; };
-
-public:
-	const T&       operator*() const       { return (*cont)[ii]; }
-	const T       *operator->() const      { return &(*cont)[ii]; }
-	const T&       operator[](int i) const { return (*cont)[ii + i]; }
-
-	ConstIIterator& operator++()           { ++ii; return *this; }
-	ConstIIterator& operator--()           { --ii; return *this; }
-	ConstIIterator  operator++(int)        { ConstIIterator t = *this; ++ii; return t; }
-	ConstIIterator  operator--(int)        { ConstIIterator t = *this; --ii; return t; }
-
-	ConstIIterator& operator+=(int d)      { ii += d; return *this; }
-	ConstIIterator& operator-=(int d)      { ii -= d; return *this; }
-
-	ConstIIterator  operator+(int d) const { return ConstIIterator(*cont, ii + d); }
-	ConstIIterator  operator-(int d) const { return ConstIIterator(*cont, ii - d); }
-
-	int  operator-(const ConstIIterator& b) const   { return ii - b.ii; }
-
-	bool operator==(const ConstIIterator& b) const  { return ii == b.ii; }
-	bool operator!=(const ConstIIterator& b) const  { return ii != b.ii; }
-	bool operator<(const ConstIIterator& b) const   { return ii < b.ii; }
-	bool operator>(const ConstIIterator& b) const   { return ii > b.ii; }
-	bool operator<=(const ConstIIterator& b) const  { return ii <= b.ii; }
-	bool operator>=(const ConstIIterator& b) const  { return ii >= b.ii; }
-
-	operator bool() const     { return ii < 0; }
-
-	ConstIIterator()          {}
-	ConstIIterator(NP *null)  { ASSERT(null == NULL); ii = -1; }
-	ConstIIterator(const V& _cont, int ii) : cont(&_cont), ii(ii) {}
-};
-
-template <class V>
-class IIterator {
-protected:
-	V             *cont;
-	int            ii;
-	typedef        typename V::ValueType T;
-	struct NP { int dummy; };
-
-public:
-	T&       operator*()              { return (*cont)[ii]; }
-	T       *operator->()             { return &(*cont)[ii]; }
-	T&       operator[](int i)        { return (*cont)[ii + i]; }
-
-	const T& operator*() const        { return (*cont)[ii]; }
-	const T *operator->() const       { return &(*cont)[ii]; }
-	const T& operator[](int i) const  { return (*cont)[ii + i]; }
-
-	IIterator& operator++()           { ++ii; return *this; }
-	IIterator& operator--()           { --ii; return *this; }
-	IIterator  operator++(int)        { IIterator t = *this; ++ii; return t; }
-	IIterator  operator--(int)        { IIterator t = *this; --ii; return t; }
-
-	IIterator& operator+=(int d)      { ii += d; return *this; }
-	IIterator& operator-=(int d)      { ii -= d; return *this; }
-
-	IIterator  operator+(int d) const { return IIterator(*cont, ii + d); }
-	IIterator  operator-(int d) const { return IIterator(*cont, ii - d); }
-
-	int  operator-(const IIterator& b) const   { return ii - b.ii; }
-
-	bool operator==(const IIterator& b) const  { return ii == b.ii; }
-	bool operator!=(const IIterator& b) const  { return ii != b.ii; }
-	bool operator<(const IIterator& b) const   { return ii < b.ii; }
-	bool operator>(const IIterator& b) const   { return ii > b.ii; }
-	bool operator<=(const IIterator& b) const  { return ii <= b.ii; }
-	bool operator>=(const IIterator& b) const  { return ii >= b.ii; }
-
-	operator bool() const                      { return ii < 0; }
-
-	IIterator()          {}
-	IIterator(NP *null)  { ASSERT(null == NULL); ii = -1; }
-	IIterator(V& _cont, int ii) : cont(&_cont), ii(ii) {}
-};
-
-unsigned Pow2Bound(unsigned i);
-unsigned PrimeBound(unsigned i);
-
-unsigned memhash(const void *ptr, size_t size);
-
-template <class T>
-inline unsigned GetHashValue(const T& x)                            { return x.GetHashValue(); }
-
-struct CombineHash {
-	unsigned hash;
-
-	enum { INIT = 1234567890 };
-
-	template <class T> CombineHash& Do(const T& x)                  { Put(GetHashValue(x)); return *this; }
-
-public:
-	CombineHash& Put(unsigned h)                                    { hash = ((hash << 4) + hash) ^ h; return *this; }
-
-	operator unsigned() const                                       { return hash; }
-
-	CombineHash()                                                   { hash = INIT; }
-	template <class T>
-	CombineHash(const T& h1)                                        { hash = INIT; Do(h1); }
-	template <class T, class U>
-	CombineHash(const T& h1, const U& h2)                           { hash = INIT; Do(h1); Do(h2); }
-	template <class T, class U, class V>
-	CombineHash(const T& h1, const U& h2, const V& h3)              { hash = INIT; Do(h1); Do(h2); Do(h3); }
-	template <class T, class U, class V, class W>
-	CombineHash(const T& h1, const U& h2, const V& h3, const W& h4)	{ hash = INIT; Do(h1); Do(h2); Do(h3); Do(h4); }
-
-	template <class T> CombineHash& operator<<(const T& x)          { Do(x); return *this; }
-};
-
-template<> inline unsigned GetHashValue(const char& a)           { return (unsigned)a; }
-template<> inline unsigned GetHashValue(const signed char& a)    { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const unsigned char& a)  { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const short& a)          { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const unsigned short& a) { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const int& a)            { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const unsigned int& a)   { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const long& a)           { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const unsigned long& a)  { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const bool& a)           { return (const unsigned)a; }
-template<> inline unsigned GetHashValue(const wchar_t& a)        { return (const unsigned)a; }
-
-template<> inline unsigned GetHashValue(const int64& a)          { return CombineHash((unsigned)a, (unsigned)(a >> 32)); }
-template<> inline unsigned GetHashValue(const uint64& a)         { return GetHashValue((int64)a); }
-
-unsigned GetHashValue0(const double& a);
-
-template<> inline unsigned GetHashValue(const double& a)         { return GetHashValue0(a); }
-template<> inline unsigned GetHashValue(const float& a)          { double x = a; return GetHashValue0(x); }
-
-#ifdef CPU_32
-inline unsigned GetPtrHashValue(const void *a)                   { return (int)a; }
-#else
-inline unsigned GetPtrHashValue(const void *a)                   { return CombineHash((unsigned)(uintptr_t)a); }
-#endif
-
-//* Is it time to activate this?
-template <class T>
-inline unsigned GetHashValue(T *ptr)                             { return GetPtrHashValue(reinterpret_cast<const void *>(ptr)); }
-//*/
-
-// workaround for broken standard libraries...
-
-template <class T> inline const T& ntl_max(const T& a, const T& b) { return a > b ? a : b; }
-
 // STL compatibility hacks
+
+#define STL_ITERATOR_COMPATIBILITY \
+	typedef ptrdiff_t                        difference_type; \
+    typedef std::random_access_iterator_tag  iterator_category; \
+    typedef T                                value_type; \
+    typedef T                                pointer; \
+    typedef T                                reference; \
 
 #define STL_INDEX_COMPATIBILITY(C) \
 	typedef T             value_type; \
@@ -506,4 +361,160 @@ template <class T> inline const T& ntl_max(const T& a, const T& b) { return a > 
 	bool                  empty() const          { return IsEmpty(); } \
 	void                  push_back(const T& x)  { Add(x); } \
 	void                  pop_back()             { Drop(); } \
+
+template <class V>
+class ConstIIterator {
+protected:
+	const V       *cont;
+	int            ii;
+	typedef        typename V::ValueType T;
+	struct NP { int dummy; };
+
+public:
+	const T&       operator*() const       { return (*cont)[ii]; }
+	const T       *operator->() const      { return &(*cont)[ii]; }
+	const T&       operator[](int i) const { return (*cont)[ii + i]; }
+
+	ConstIIterator& operator++()           { ++ii; return *this; }
+	ConstIIterator& operator--()           { --ii; return *this; }
+	ConstIIterator  operator++(int)        { ConstIIterator t = *this; ++ii; return t; }
+	ConstIIterator  operator--(int)        { ConstIIterator t = *this; --ii; return t; }
+
+	ConstIIterator& operator+=(int d)      { ii += d; return *this; }
+	ConstIIterator& operator-=(int d)      { ii -= d; return *this; }
+
+	ConstIIterator  operator+(int d) const { return ConstIIterator(*cont, ii + d); }
+	ConstIIterator  operator-(int d) const { return ConstIIterator(*cont, ii - d); }
+
+	int  operator-(const ConstIIterator& b) const   { return ii - b.ii; }
+
+	bool operator==(const ConstIIterator& b) const  { return ii == b.ii; }
+	bool operator!=(const ConstIIterator& b) const  { return ii != b.ii; }
+	bool operator<(const ConstIIterator& b) const   { return ii < b.ii; }
+	bool operator>(const ConstIIterator& b) const   { return ii > b.ii; }
+	bool operator<=(const ConstIIterator& b) const  { return ii <= b.ii; }
+	bool operator>=(const ConstIIterator& b) const  { return ii >= b.ii; }
+
+	operator bool() const     { return ii < 0; }
+
+	ConstIIterator()          {}
+	ConstIIterator(NP *null)  { ASSERT(null == NULL); ii = -1; }
+	ConstIIterator(const V& _cont, int ii) : cont(&_cont), ii(ii) {}
+
+	STL_ITERATOR_COMPATIBILITY
+};
+
+template <class V>
+class IIterator {
+protected:
+	V             *cont;
+	int            ii;
+	typedef        typename V::ValueType T;
+	struct NP { int dummy; };
+
+public:
+	T&       operator*()              { return (*cont)[ii]; }
+	T       *operator->()             { return &(*cont)[ii]; }
+	T&       operator[](int i)        { return (*cont)[ii + i]; }
+
+	const T& operator*() const        { return (*cont)[ii]; }
+	const T *operator->() const       { return &(*cont)[ii]; }
+	const T& operator[](int i) const  { return (*cont)[ii + i]; }
+
+	IIterator& operator++()           { ++ii; return *this; }
+	IIterator& operator--()           { --ii; return *this; }
+	IIterator  operator++(int)        { IIterator t = *this; ++ii; return t; }
+	IIterator  operator--(int)        { IIterator t = *this; --ii; return t; }
+
+	IIterator& operator+=(int d)      { ii += d; return *this; }
+	IIterator& operator-=(int d)      { ii -= d; return *this; }
+
+	IIterator  operator+(int d) const { return IIterator(*cont, ii + d); }
+	IIterator  operator-(int d) const { return IIterator(*cont, ii - d); }
+
+	int  operator-(const IIterator& b) const   { return ii - b.ii; }
+
+	bool operator==(const IIterator& b) const  { return ii == b.ii; }
+	bool operator!=(const IIterator& b) const  { return ii != b.ii; }
+	bool operator<(const IIterator& b) const   { return ii < b.ii; }
+	bool operator>(const IIterator& b) const   { return ii > b.ii; }
+	bool operator<=(const IIterator& b) const  { return ii <= b.ii; }
+	bool operator>=(const IIterator& b) const  { return ii >= b.ii; }
+
+	operator bool() const                      { return ii < 0; }
+
+	IIterator()          {}
+	IIterator(NP *null)  { ASSERT(null == NULL); ii = -1; }
+	IIterator(V& _cont, int ii) : cont(&_cont), ii(ii) {}
+
+	STL_ITERATOR_COMPATIBILITY
+};
+
+unsigned Pow2Bound(unsigned i);
+unsigned PrimeBound(unsigned i);
+
+unsigned memhash(const void *ptr, size_t size);
+
+template <class T>
+inline unsigned GetHashValue(const T& x)                            { return x.GetHashValue(); }
+
+struct CombineHash {
+	unsigned hash;
+
+	enum { INIT = 1234567890 };
+
+	template <class T> CombineHash& Do(const T& x)                  { Put(GetHashValue(x)); return *this; }
+
+public:
+	CombineHash& Put(unsigned h)                                    { hash = ((hash << 4) + hash) ^ h; return *this; }
+
+	operator unsigned() const                                       { return hash; }
+
+	CombineHash()                                                   { hash = INIT; }
+	template <class T>
+	CombineHash(const T& h1)                                        { hash = INIT; Do(h1); }
+	template <class T, class U>
+	CombineHash(const T& h1, const U& h2)                           { hash = INIT; Do(h1); Do(h2); }
+	template <class T, class U, class V>
+	CombineHash(const T& h1, const U& h2, const V& h3)              { hash = INIT; Do(h1); Do(h2); Do(h3); }
+	template <class T, class U, class V, class W>
+	CombineHash(const T& h1, const U& h2, const V& h3, const W& h4)	{ hash = INIT; Do(h1); Do(h2); Do(h3); Do(h4); }
+
+	template <class T> CombineHash& operator<<(const T& x)          { Do(x); return *this; }
+};
+
+template<> inline unsigned GetHashValue(const char& a)           { return (unsigned)a; }
+template<> inline unsigned GetHashValue(const signed char& a)    { return (const unsigned)a; }
+template<> inline unsigned GetHashValue(const unsigned char& a)  { return (const unsigned)a; }
+template<> inline unsigned GetHashValue(const short& a)          { return (const unsigned)a; }
+template<> inline unsigned GetHashValue(const unsigned short& a) { return (const unsigned)a; }
+template<> inline unsigned GetHashValue(const int& a)            { return (const unsigned)a; }
+template<> inline unsigned GetHashValue(const unsigned int& a)   { return (const unsigned)a; }
+template<> inline unsigned GetHashValue(const long& a)           { return (const unsigned)a; }
+template<> inline unsigned GetHashValue(const unsigned long& a)  { return (const unsigned)a; }
+template<> inline unsigned GetHashValue(const bool& a)           { return (const unsigned)a; }
+template<> inline unsigned GetHashValue(const wchar_t& a)        { return (const unsigned)a; }
+
+template<> inline unsigned GetHashValue(const int64& a)          { return CombineHash((unsigned)a, (unsigned)(a >> 32)); }
+template<> inline unsigned GetHashValue(const uint64& a)         { return GetHashValue((int64)a); }
+
+unsigned GetHashValue0(const double& a);
+
+template<> inline unsigned GetHashValue(const double& a)         { return GetHashValue0(a); }
+template<> inline unsigned GetHashValue(const float& a)          { double x = a; return GetHashValue0(x); }
+
+#ifdef CPU_32
+inline unsigned GetPtrHashValue(const void *a)                   { return (int)a; }
+#else
+inline unsigned GetPtrHashValue(const void *a)                   { return CombineHash((unsigned)(uintptr_t)a); }
+#endif
+
+//* Is it time to activate this?
+template <class T>
+inline unsigned GetHashValue(T *ptr)                             { return GetPtrHashValue(reinterpret_cast<const void *>(ptr)); }
+//*/
+
+// workaround for broken standard libraries...
+
+template <class T> inline const T& ntl_max(const T& a, const T& b) { return a > b ? a : b; }
 

@@ -54,7 +54,7 @@ LAYOUT(RescaleLayout, 192, 108)
 	ITEM(Label, dv___2, SetLabel(t_("Height")).LeftPosZ(100, 36).TopPosZ(8, 19))
 	ITEM(EditInt, cy, Max(9999).Min(1).NotNull(true).LeftPosZ(140, 44).TopPosZ(8, 19))
 	ITEM(Option, keep, SetLabel(t_("Keep aspect ratio")).LeftPosZ(8, 176).TopPosZ(32, 20))
-	ITEM(Option, bicubic, SetLabel(t_("Use bicubic interpolation")).LeftPosZ(8, 176).TopPosZ(52, 20))
+	ITEM(DropList, method, LeftPosZ(8, 176).TopPosZ(53, 19))
 	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(52, 64).TopPosZ(76, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(120, 64).TopPosZ(76, 24))
 END_LAYOUT
