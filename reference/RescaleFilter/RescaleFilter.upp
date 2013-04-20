@@ -1,3 +1,5 @@
+description "Demonstrates RescaleFilter for hight-quality image resizing\377";
+
 optimize_speed;
 
 uses
