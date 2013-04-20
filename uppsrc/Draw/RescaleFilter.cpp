@@ -26,6 +26,7 @@ int sGetk(const int *kernel, int x, int a, int shift)
 {
 	x += a << shift;
 	ASSERT(x >= 0 && x < ((2 * a) << shift) + 1);
+	x = minmax(x, 0, (2 * a) << shift);
 	return kernel[x];
 }
 
@@ -54,8 +55,11 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 	Buffer<int> px(sz.cx * 2 * ax * 2 * ay * 2);
 	int *xd = px;
 	for(int x = 0; x < sz.cx; x++) {
-		int sx = x * isz.cx / sz.cx;
-		int dx = ((x * isz.cx) << shift) / sz.cx - (sx << shift);
+		int q = x * isz.cx - (sz.cx >> 1);
+		int sx = q / sz.cx;
+		int dx = (q << shift) / sz.cx - (sx << shift);
+		if(dx < 0)
+			dx = 0;
 		for(int yy = -ay + 1; yy <= ay; yy++) {
 			for(int xx = -ax + 1; xx <= ax; xx++) {
 				*xd++ = minmax(sx + xx, 0, isz.cx - 1) + sr.left;
@@ -69,8 +73,11 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 	for(int y = 0; y < sz.cy; y++) {
 		if(progress(y, sz.cy))
 			break;
-		int sy = y * isz.cy / sz.cy;
-		int dy = ((y * isz.cy) << shift) / sz.cy - (sy << shift);
+		int q = y * isz.cy - (sz.cy >> 1);
+		int sy = q / sz.cy;
+		int dy = (q << shift) / sz.cy - (sy << shift);
+		if(dy < 0)
+			dy = 0;
 		xd = ~px;
 		Buffer<int> py(2 * ay * 2);
 		int *yd = py;
@@ -100,18 +107,21 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 					w += weight;
 				}
 			}
-			if(hasalpha) {
-				t->a = alpha = Saturate255(alpha / w);
-				t->r = clamp(red / w, 0, alpha);
-				t->g = clamp(green / w, 0, alpha);
-				t->b = clamp(blue / w, 0, alpha);
-			}
-			else {
-				t->a = 255;
-				t->r = Saturate255(red / w);
-				t->g = Saturate255(green / w);
-				t->b = Saturate255(blue / w);
-			}
+			if(w)
+				if(hasalpha) {
+					t->a = alpha = Saturate255(alpha / w);
+					t->r = clamp(red / w, 0, alpha);
+					t->g = clamp(green / w, 0, alpha);
+					t->b = clamp(blue / w, 0, alpha);
+				}
+				else {
+					t->a = 255;
+					t->r = Saturate255(red / w);
+					t->g = Saturate255(green / w);
+					t->b = Saturate255(blue / w);
+				}
+			else
+				t->a = t->r = t->g = t->b = 0;
 			t++;
 		}
 	}

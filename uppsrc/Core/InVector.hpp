@@ -738,19 +738,19 @@ void InArray<T>::Set(int i, const T& x, int count)
 }
 
 template <class T>
-void InArray<T>::SetIter(ConstIterator& it, int ii)
+void InArray<T>::SetIter(ConstIterator& it, int ii) const
 {
 	it.it = iv.GetIter(ii);
 }
 
 template <class T>
-void InArray<T>::SetBegin(ConstIterator& it)
+void InArray<T>::SetBegin(ConstIterator& it) const
 {
 	it.it = iv.Begin();
 }
 
 template <class T>
-void InArray<T>::SetEnd(ConstIterator& it)
+void InArray<T>::SetEnd(ConstIterator& it) const
 {
 	it.it = iv.End();
 }

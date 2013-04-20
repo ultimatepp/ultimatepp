@@ -284,6 +284,8 @@ public:
 
 		ConstIterator()                         {}
 		ConstIterator(NP *null)                 { ASSERT(null == NULL); ptr = NULL; }
+		
+		STL_ITERATOR_COMPATIBILITY
 	};
 
 	class Iterator : public ConstIterator {
@@ -317,8 +319,7 @@ public:
 		Iterator()                               {}
 		Iterator(NP *null) : ConstIterator(null) {}
 
-	//G++
-	//	friend void IterSwap(Iterator a, Iterator b) { UPP::Swap(*a.ptr, *b.ptr); }
+		STL_ITERATOR_COMPATIBILITY
 	};
 
 // Standard container interface
@@ -345,6 +346,7 @@ public:
 	STL_VECTOR_COMPATIBILITY(Array<T>)
 };
 
+// OBSOLETE:
 template<class T, int NBLK = 16>
 class Segtor : public MoveableAndDeepCopyOption< Segtor<T, NBLK> > {
 protected:

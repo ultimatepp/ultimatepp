@@ -194,6 +194,8 @@ public:
 	const T& operator*() const                     { return *ptr; }
 	const T *operator->() const                    { return ptr; }
 	const T& operator[](int i) const               { ConstIterator h = *this; h += i; return *h; }
+
+	STL_ITERATOR_COMPATIBILITY
 };
 
 template <class T>
@@ -220,6 +222,10 @@ public:
 	const T& operator*() const                     { return *B::ptr; }
 	const T *operator->() const                    { return B::ptr; }
 	const T& operator[](int i) const               { ConstIterator h = *this; h += i; return *h; }
+	
+	InVector<T>::Iterator& operator=(const B& src) { *(B *)this = src; return *this; }
+
+	STL_ITERATOR_COMPATIBILITY
 };
 
 template <class T>
@@ -249,9 +255,9 @@ private:
 	void     Init(int i, int count);
 	void     Free()                 { if(!IsPicked()) Delete(iv.Begin(), GetCount()); }
 
-	void     SetIter(ConstIterator& it, int ii);
-	void     SetBegin(ConstIterator& it);
-	void     SetEnd(ConstIterator& it);
+	void     SetIter(ConstIterator& it, int ii) const;
+	void     SetBegin(ConstIterator& it) const;
+	void     SetEnd(ConstIterator& it) const;
 
 	template <class L>
 	struct ALess {
@@ -384,6 +390,8 @@ public:
 	const T& operator*() const                     { return *(T *)*it; }
 	const T *operator->() const                    { return (T *)*it; }
 	const T& operator[](int i) const               { ConstIterator h = *this; h += i; return *h; }
+
+	STL_ITERATOR_COMPATIBILITY
 };
 
 template <class T>
@@ -411,6 +419,8 @@ public:
 	const T& operator*() const                     { return *(T *)*B::it; }
 	const T *operator->() const                    { return (T *)*B::it; }
 	const T& operator[](int i) const               { Iterator h = *this; h += i; return *h; }
+
+	STL_ITERATOR_COMPATIBILITY
 };
 
 template <class T, class Less = StdLess<T> >

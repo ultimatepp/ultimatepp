@@ -77,9 +77,10 @@ the last one is used. ## is always replaced with single #.&]
 [s0; &]
 [s0; Witz code is marked by `'`$`' character (the end of code within 
 template is determined by syntax rules, in rare situations you 
-might have to enclose expressions in parenthesis).&]
+might have to enclose expressions in parenthesis). Character 
+`'`$`' can be escaped to be inserted into text as `'`$`$`'.&]
 [s0; &]
-[s0; Values&]
+[s0; [* Values]&]
 [s0; &]
 [s0; The type of values processed by Witz is basically equal to U`+`+ 
 Value. Skylark understands some of Value types and perform operations 
