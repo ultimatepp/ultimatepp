@@ -291,35 +291,54 @@ WString CodeEditor::GetReplaceText(WString rs, bool wildcards, bool samecase)
 		else
 		if(c >= ' ') {
 			if(wildcards) {
+				WString w;
 				if(c == '*')
-					rt.Cat(GetWild(WILDANY, anyi));
+					w = GetWild(WILDANY, anyi);
 				else
 				if(c == '?')
-					rt.Cat(GetWild(WILDONE, onei));
+					w = GetWild(WILDONE, onei);
 				else
 				if(c == '%')
-					rt.Cat(GetWild(WILDSPACE, spacei));
+					w = GetWild(WILDSPACE, spacei);
 				else
 				if(c == '#')
-					rt.Cat(GetWild(WILDNUMBER, numberi));
+					w = GetWild(WILDNUMBER, numberi);
 				else
 				if(c == '$')
-					rt.Cat(GetWild(WILDID, idi));
+					w = GetWild(WILDID, idi);
 				else
 				if(c == '@') {
 					c = *s++;
 					if(c == '\0') break;
 					if(c >= '1' && c <= '9') {
 						c -= '1';
-						rt.Cat(c < foundwild.GetCount() ? foundwild[c].text : WString());
+						w = c < foundwild.GetCount() ? foundwild[c].text : WString();
 					}
 					else {
 						rt.Cat('@');
 						if(c >= ' ' && c < 255) rt.Cat(c);
+						continue;
 					}
 				}
-				else
+				else {
 					rt.Cat(c);
+					continue;
+				}
+				if(*s == '+') {
+					w = ToUpper(w);
+					s++;
+				}
+				else
+				if(*s == '-') {
+					w = ToLower(w);
+					s++;
+				}
+				else
+				if(*s == '!') {
+					w = InitCaps(w);
+					s++;
+				}
+				rt.Cat(w);
 			}
 			else
 				rt.Cat(c);
@@ -519,6 +538,10 @@ void CodeEditor::ReplaceWildcard()
 	menu.Separator();
 	for(int i = 1; i <= 9; i++)
 		menu.Add(Format("Matched wildcard %d", i), THISBACK1(InsertWildcard, i));
+	menu.Separator();
+	menu.Add("To upper", THISBACK1(InsertWildcard, '+'));
+	menu.Add("To lower", THISBACK1(InsertWildcard, '-'));
+	menu.Add("InitCaps", THISBACK1(InsertWildcard, '!'));
 	menu.Separator();
 	menu.Add("Tab", THISBACK1(InsertWildcard, 20));
 	menu.Add("Line feed", THISBACK1(InsertWildcard, 21));
