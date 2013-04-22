@@ -204,6 +204,8 @@ struct Pdb : Debugger, ParentCtrl {
 	VectorMap<String, Val> global;
 
 	void       Error();
+	
+	String     Hex(adr_t);
 
 // debug
 	void       LoadModuleInfo();

@@ -2,7 +2,16 @@
 
 #ifdef COMPILER_MSC
 
-#define LLOG(x)   // LOG(x)
+#define LLOG(x)    LOG(x)
+
+String Pdb::Hex(adr_t a)
+{
+#ifdef CPU_64
+	return Format64Hex(a);
+#else
+	return FormatIntHex(a);
+#endif
+}
 
 void Pdb::Error()
 {
@@ -18,7 +27,7 @@ void Pdb::UnloadModuleSymbols()
 		ModuleInfo& f = module[i];
 		if(f.symbols) {
 			SymUnloadModule64(hProcess, f.base);
-			LLOG("Unloaded symbols for " << f.path << ' ' << FormatIntHex(module[i].base) << '/' << hProcess);
+			LLOG("Unloaded symbols for " << f.path << ' ' << Hex(module[i].base) << '/' << hProcess);
 		}
 	}
 }
@@ -69,7 +78,7 @@ void Pdb::LoadModuleInfo()
 				f.path = of.path;
 				f.symbols = of.symbols;
 				of.symbols = false;
-				LLOG("Stable " << FormatIntHex(f.base) << " (" << FormatIntHex(f.size) << "): " << f.path);
+				LLOG("Stable " << FormatIntHex(f.base) << " (" << Hex(f.size) << "): " << f.path);
 			}
 			else {
 				char name[MAX_PATH];
@@ -78,7 +87,7 @@ void Pdb::LoadModuleInfo()
 					if(FileExists(ForceExt(f.path, ".pdb"))) {
 						adr_t w = (adr_t)SymLoadModule64(hProcess, NULL, name, 0, f.base, f.size);
 						if(w) {
-							LLOG("Loading symbols " << FormatIntHex(f.base) << '/' << hProcess << " returned base " << FormatIntHex(w));
+							LLOG("Loading symbols " << Hex(f.base) << '/' << hProcess << " returned base " << FormatIntHex(w));
 							f.symbols = true;
 						#if 0
 							TimeStop t;
@@ -87,7 +96,7 @@ void Pdb::LoadModuleInfo()
 						}
 					}
 				}
-				LLOG(FormatIntHex(f.base) << " (" << FormatIntHex(f.size) << "): " << f.path);
+				LLOG(Hex(f.base) << " (" << Hex(f.size) << "): " << f.path);
 			}
 		}
 	}
@@ -98,15 +107,17 @@ void Pdb::LoadModuleInfo()
 
 bool Pdb::AddBp(adr_t address)
 {
-	LLOG("AddBp: " << FormatIntHex(address));
+	LLOG("AddBp: " << Hex(address));
 	if(bp_set.Find(address) >= 0)
 		return true;
 	byte prev;
 	if(!ReadProcessMemory(hProcess, (LPCVOID) address, &prev, 1, NULL))
 		return false;
+	LLOG("ReadProcessMemory OK");
 	byte int3 = 0xcc;
 	if(!WriteProcessMemory(hProcess, (LPVOID) address, &int3, 1, NULL))
 		return false;
+	LLOG("WriteProcessMemory OK");
 	FlushInstructionCache (hProcess, (LPCVOID)address, 1);
 	bp_set.Put(address, prev);
 	return true;
@@ -179,7 +190,7 @@ void Pdb::AddThread(dword dwThreadId, HANDLE hThread)
 	f.sp = ctx.Rsp;
 	#endif
 	f.hThread = hThread;
-	LLOG("Adding thread " << dwThreadId << ", Thread SP: " << FormatIntHex(ctx.Esp) << ", handle: " << FormatIntHex((dword)(hThread)));
+	LLOG("Adding thread " << dwThreadId << ", Thread SP: " << Hex(f.sp) << ", handle: " << FormatIntHex((dword)(hThread)));
 }
 
 void Pdb::RemoveThread(dword dwThreadId)
