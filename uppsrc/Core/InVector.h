@@ -223,7 +223,7 @@ public:
 	const T *operator->() const                    { return B::ptr; }
 	const T& operator[](int i) const               { ConstIterator h = *this; h += i; return *h; }
 	
-	InVector<T>::Iterator& operator=(const B& src) { *(B *)this = src; return *this; }
+	typename InVector<T>::Iterator& operator=(const B& src) { *(B *)this = src; return *this; }
 
 	STL_ITERATOR_COMPATIBILITY
 };
