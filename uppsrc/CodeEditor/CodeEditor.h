@@ -329,6 +329,8 @@ protected:
 	
 	Tip   tip;
 	int   tippos;
+	
+	int   replacei;
 
 	struct HlSt;
 	

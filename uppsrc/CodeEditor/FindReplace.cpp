@@ -310,6 +310,14 @@ WString CodeEditor::GetReplaceText(WString rs, bool wildcards, bool samecase)
 				if(c == '@') {
 					c = *s++;
 					if(c == '\0') break;
+					if(c == '@') {
+						rt << AsString(replacei).ToWString();
+						continue;
+					}
+					if(c == '#') {
+						rt << AsString(replacei + 1).ToWString();
+						continue;
+					}
 					if(c >= '1' && c <= '9') {
 						c -= '1';
 						w = c < foundwild.GetCount() ? foundwild[c].text : WString();
@@ -361,6 +369,7 @@ WString CodeEditor::GetReplaceText(WString rs, bool wildcards, bool samecase)
 					rt.Set(i, ToLower(rt[i]));
 		}
 	}
+	replacei++;
 	return rt;
 }
 
@@ -434,6 +443,7 @@ void CodeEditor::OpenNormalFindReplace(bool replace)
 void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 {
 	CloseFindReplace();
+	replacei = 0;
 	findreplace.CenterOwner();
 	WString find_text;
 	int find_pos = -1;
@@ -535,6 +545,8 @@ void CodeEditor::ReplaceWildcard()
 	menu.Add("Matched C++ identifier", THISBACK1(InsertWildcard, '$'));
 	menu.Add("Matched number", THISBACK1(InsertWildcard, '#'));
 	menu.Add("Matched any character", THISBACK1(InsertWildcard, '?'));
+	menu.Add("0-based replace index", THISBACK1(InsertWildcard, '0'));
+	menu.Add("1-based replace index", THISBACK1(InsertWildcard, '1'));
 	menu.Separator();
 	for(int i = 1; i <= 9; i++)
 		menu.Add(Format("Matched wildcard %d", i), THISBACK1(InsertWildcard, i));
@@ -562,6 +574,16 @@ void CodeEditor::ReplaceWildcard()
 		if(iwc == 21) {
 			findreplace.replace.Insert('\\');
 			findreplace.replace.Insert('n');
+		}
+		else
+		if(iwc == '0') {
+			findreplace.replace.Insert('@');
+			findreplace.replace.Insert('@');
+		}
+		else
+		if(iwc == '0') {
+			findreplace.replace.Insert('@');
+			findreplace.replace.Insert('#');
 		}
 		else
 		if(iwc >= 1 && iwc <= 9) {
