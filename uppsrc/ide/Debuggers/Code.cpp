@@ -200,7 +200,6 @@ void Pdb::SetFrame()
 bool Pdb::SetBreakpoint(const String& filename, int line, const String& bp)
 {
 	adr_t a = GetAddress(FilePos(filename, line));
-	DDUMP(a);
 	if(!a)
 		return false;
 	int q = breakpoint.Find(a);
