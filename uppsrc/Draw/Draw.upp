@@ -51,7 +51,7 @@ file
 	ImageChOp.cpp,
 	ImageScale.cpp optimize_speed,
 	BiCubic.cpp optimize_speed,
-	RescaleFilter.cpp,
+	RescaleFilter.cpp optimize_speed,
 	MakeCache.cpp,
 	DrawRasterData.cpp,
 	iml.h,
