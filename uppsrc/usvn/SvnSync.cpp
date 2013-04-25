@@ -251,6 +251,7 @@ void SvnSync::DoSync()
 	SyncList();
 	msgmap.Sweep();
 again:
+	Enable();
 	if(Run() != IDOK || list.GetCount() == 0) {
 		int repoi = 0;
 		for(int i = 0; i < list.GetCount(); i++)
