@@ -82,7 +82,7 @@ struct DebugDraw : b2DebugDraw
 			p[i] = conv(v[i]);
 		p[vertexCount] = p[0];
 		
-		w->DrawPolyline(p, vertexCount + 1, 1, conv(color, 150.0));
+		w->DrawPolyline(p, 1, conv(color, 150.0));
 	}
 	
 	void DrawSolidPolygon(const b2Vec2* v, int vertexCount, const b2Color& color)
