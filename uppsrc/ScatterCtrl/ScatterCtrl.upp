@@ -14,6 +14,8 @@ file
 	PopUpText.cpp,
 	PopUpText.h,
 	ScatterCtrl.lay,
+	PieCtrl.cpp,
+	PieCtrl.h,
 	ScatterCtrl.t,
 	ScatterCtrl.usc,
 	src.tpp;

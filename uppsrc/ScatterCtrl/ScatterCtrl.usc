@@ -25,6 +25,7 @@ ctrl ScatterCtrl {
 	int SetGridWidth = 1;
 	bool ShowHGrid = true;
 	bool ShowVGrid = true;
+	bool ShowInfo = true;
 	bool ShowLegend = true;
 	int SetLegendWidth = 80;	
 	bool SetFastViewX = false;
@@ -70,3 +71,220 @@ ctrl ScatterCtrl {
 	}
 };
 
+fn atan_base(z) {
+	return z - z*z*z/3 + z*z*z*z*z/5 - z*z*z*z*z*z*z/7 + z*z*z*z*z*z*z*z*z/9 
+			 - z*z*z*z*z*z*z*z*z*z*z/11 + z*z*z*z*z*z*z*z*z*z*z*z*z/13;
+}
+
+fn atan(z) {
+	if (z*z < 1)
+		return atan_base(z);
+	else if (z > 0)
+		return Pi()/2 - atan_base(1/z);
+	else 
+		return 3*Pi()/2 - atan_base(1/z);		
+}
+
+fn Pi() {
+	return 3.14159265358979323846;
+}
+
+fn ToRad(angle) {
+	if (angle > 0)
+		return angle*Pi()/180;
+	else
+		return (360+angle)*Pi()/180;
+}
+fn abs(a) {
+	if (a > 0)
+		return a;
+	else
+		return -a;
+}
+fn double(n) {
+	n += 1.1;
+	n -= 1.1;
+	return n;
+}
+
+fn PaintRect(w, left, top, right, bottom, width, color)
+{
+	w.DrawLine(left, top, right, top, width, color);
+	w.DrawLine(right, top, right, bottom, width, color);
+	w.DrawLine(right, bottom, left, bottom, width, color);
+	w.DrawLine(left, bottom, left, top, width, color);
+}
+
+fn PaintEllipse(w, left, top, right, bottom, width, color)
+{
+	if (width < 1)
+		width = 1;
+	a = (right-left)/2.;
+	b = (bottom-top)/2.;
+	width_2 = width/2.;
+	delta = Pi()/20.;
+	maxi = 2.*Pi();
+	for (i = 0; i < maxi; i += delta) {
+		if (i == 0) {
+			x0 = left + a + (a - width_2);
+			y0 = top  + b;
+		} else {
+			x0 = x1;
+			y0 = y1;
+		}
+		x1 = left + a + (a - width_2) * cos(i + delta);
+		y1 = top  + b + (b - width_2) * sin(i + delta);
+		w.DrawLine(x0, y0, x1, y1, width, color);
+	}
+}
+
+fn DrawCircle(w, cx, cy, R, width, color) {
+	PaintEllipse(w, cx-R-width/2., cy-R-width/2., cx+R+width/2., cy+R+width/2., width, color);
+}
+
+fn PaintArc(w, cx, cy, R, ang0, ang1, direction, width, color)
+{
+	if (direction == -1) {
+		c = ang0;
+		ang0 = ang1;
+		ang1 = c;
+	}
+	ang0 = ang0*Pi()/180;
+	ang1 = ang1*Pi()/180;
+	delta = 3*Pi()/180;
+	if (ang0 > ang1)
+		ang1 += 2*Pi();
+	for (i = ang0; i < ang1; i += delta) {
+		if (i == ang0) {
+			x0 = cx + R*cos(i);
+			y0 = cy - R*sin(i);
+		} else {
+			x0 = x1;
+			y0 = y1;
+		}
+		x1 = cx + R*cos(i + delta);
+		y1 = cy - R*sin(i + delta);
+		w.DrawLine(x0, y0, x1, y1, width, color);
+	}
+}
+
+fn FillEllipse(w, left, top, right, bottom, background)
+{
+	a = (right-left)/2.;
+	b = (bottom-top)/2.;
+	if (a <= 0.5 || b <= 0.5) {
+		w.DrawLine(left, top, right, bottom, 1, background);
+		return;
+	}
+	delta = Pi()/10.;
+	x0 = left + a;
+	y0 = top  + b;
+	
+	for (i = delta; i < Pi()/2.; i += delta) {
+		x1 = a * cos(i);
+		y1 = b * sin(i);
+		w.DrawRect(x0-x1 , y0-y1, 2*x1 , 2*y1, background);
+	}
+	width = min(a, b)/4.;
+	if (width > 1)
+		PaintEllipse(w, left, top, right, bottom, width, background);
+}
+
+fn FillCircle(w, cx, cy, R, color) {
+	FillEllipse(w, cx-R, cy-R, cx+R, cy+R, color);
+}
+
+enum_property titlePosition {
+	"0" : "BOTTOM",
+	"1" : "TOP"
+};
+
+ctrl PieCtrl {
+	group "Extra";
+	
+	GetMinSize() {sz.cx = 50; sz.cy = 50; return sz; }
+	GetStdSize() {sz.cx = 200; sz.cy = 200; return sz; }
+	
+	Frame  SetFrame @20;
+	Color  SetColor = :White @1;
+	Text SetTitle @5;
+	Font SetTitleFont = StdFont(16)@6;
+	Color SetTitleColor = :Black @7;
+	titlePosition SetTitlePos = 1;
+	int SetTitleGap = 2;
+	bool ShowPercent = true;
+	Color SetPercentBack = Null;
+	bool ShowLegend = true;
+	Font SetLegendFont;
+	Color SetLegendTextColor = :Black;
+	Color SetLegendBackColor = Null;
+	int SetLegendLeft = 10;
+	int SetLegendWidth = 60;
+	int SetLegendTop = Null;
+	int SetLegendHeight = 120;
+	double SetPieAngle = 0;
+	int SetPieMarginLeft = 40;
+	int SetPieMarginTop = 40;
+	int SetPieMarginRight = 40;
+	int SetPieMarginBottom = 40;
+	
+	Paint(w) {          
+		r = GetRect();
+		w.DrawRect(r, .SetColor);
+		DrawCtrlFrame(w, r, .SetFrame);
+		sz = GetSize();
+		textsize = GetTextSize(.SetTitle, .SetTitleFont);
+		Gap = 0;
+		if(.SetTitleGap > 0) 
+			Gap = .SetTitleGap;
+		if(.SetTitlePos == "1") 
+			w.DrawText((sz.cx - textsize.cx)/2, Gap, .SetTitle, .SetTitleFont, .SetTitleColor);
+		else 
+			w.DrawText((sz.cx - textsize.cx)/2, sz.cy-textsize.cy - Gap, .SetTitle, .SetTitleFont, .SetTitleColor);
+		
+		if(.SetTitle == "") 
+			textsize.cy = 0;
+		
+		lcx = 0;
+		lcy = 0;
+		legendBk = .SetColor;
+		if(.SetLegendBackColor != Null) 
+			legendBk = .SetLegendBackColor;
+		if(.SetLegendWidth > 0 && .ShowLegend) 
+			lcx = .SetLegendWidth; 
+		if(.SetLegendHeight > 0 && .ShowLegend) 
+			lcy = .SetLegendHeight;
+		left = - .SetLegendLeft + sz.cx - lcx;
+		if (.SetLegendTop <= :IntNull)
+			top = (sz.cy - Gap - textsize.cy - lcy)/2;
+		else
+			top = .SetLegendTop;
+		if(.ShowLegend) {
+			w.DrawRect(left, top, lcx, lcy, legendBk);
+			PaintRect(w, left, top, left + lcx, top + lcy, 2, :Gray);
+			w.DrawText(left + 2, top + 2, "Legend", .SetLegendFont, .SetLegendTextColor);
+		}
+			
+		circWidth = sz.cx - .SetPieMarginLeft - .SetPieMarginRight;
+		if (circWidth < 0)
+			circWidth = 0;
+		circHeight = sz.cy - .SetPieMarginTop - textsize.cy - .SetPieMarginBottom;
+		if (circHeight < 0)
+			circHeight = 0;
+		if (circWidth > circHeight)
+			circ_r = circHeight/2;
+		else
+			circ_r = circWidth/2;
+		circ_x = .SetPieMarginLeft + circWidth/2.;
+		if(.SetTitlePos == "1") 
+			circ_y = .SetPieMarginTop + textsize.cy + circHeight/2.;
+		else 
+ 			circ_y = .SetPieMarginTop + circHeight/2.;
+		
+		FillCircle(w, circ_x, circ_y, circ_r, Color(150, 255, 150));
+ 		DrawCircle(w, circ_x, circ_y, circ_r, 2, :SBlack);
+		w.DrawLine(circ_x, circ_y, circ_x + circ_r*cos(-.SetPieAngle + 0.5*Pi()),  circ_y - circ_r*sin(-.SetPieAngle + 0.5*Pi()), 2, :SBlack);
+		w.DrawLine(circ_x, circ_y, circ_x + circ_r*cos(-.SetPieAngle - 0.25*Pi()), circ_y - circ_r*sin(-.SetPieAngle - 0.25*Pi()), 2, :SBlack);
+		w.DrawLine(circ_x, circ_y, circ_x + circ_r*cos(-.SetPieAngle + Pi()), 	   circ_y - circ_r*sin(-.SetPieAngle + Pi()), 2, :SBlack);
+	}
+};

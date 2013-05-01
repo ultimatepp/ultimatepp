@@ -12,55 +12,23 @@ class ArrayCtrlSource : public DataSource {
 private:
 	ArrayCtrl *data;
 	bool useCols;
-	int idX, idY, idZ;
+	Vector<int> ids;
 	int beginData;
-	ptrdiff_t numData;
+	int64 numData;
 
 public:
-	ArrayCtrlSource() : data(0), useCols(true), idX(0), idY(1), idZ(2), beginData(0), numData(Null) {};
-	ArrayCtrlSource(ArrayCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int _numData = Null) : 
-		data(&data), useCols(useCols), idX(idX), idY(idY), idZ(idZ), beginData(beginData), numData(_numData) 
-	{
-		if (IsNull(_numData)) {
-			if (!useCols)
-				numData = data.GetColumnCount() - beginData;
-			else
-				numData = data.GetCount() - beginData;
-		}
+	ArrayCtrlSource() : data(0), useCols(true), beginData(0), numData(Null) {ids << 0 << 1;}
+	ArrayCtrlSource(ArrayCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int beginData = 0, int numData = Null) : 
+		data(&data), useCols(useCols), beginData(beginData), numData(numData) {
+		Init(data, ids, useCols, beginData, numData);
 	}
-	virtual inline double z(int id)	{return useCols ? data->Get(beginData + id, idZ) : data->Get(idZ, beginData + id);};
-	virtual inline double y(int id)	{return useCols ? data->Get(beginData + id, idY) : data->Get(idY, beginData + id);};
-	virtual inline double x(int id) {
-		if (IsNull(idX))
-			return id;
-		else
-			return useCols ? data->Get(beginData + id, idX) : data->Get(idX, beginData + id);
-	}
-	virtual inline ptrdiff_t GetCount()	{return numData;};
-};
-
-class GridCtrlSource : public DataSource {
-private:
-	GridCtrl *data;
-	bool useCols;
-	int idX, idY, idZ;
-	int beginData;
-	ptrdiff_t numData;
-
-public:
-	GridCtrlSource() : data(0), useCols(true), idX(0), idY(1), idZ(2), beginData(0), numData(Null) {};
-	GridCtrlSource(GridCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int _numData = Null) : 
-		data(&data), useCols(useCols), idX(idX), idY(idY), idZ(idZ), beginData(beginData), numData(_numData)
-	{
-		Init(data, useCols, idX, idY, idZ, beginData, _numData);
-	}
-	void Init(GridCtrl &_data, bool _useCols = true, int _idX = 0, int _idY = 1, int _idZ = 2, int _beginData = 0, int _numData = Null) 
-	{
+	void Init(ArrayCtrl &_data, Vector<int> &_ids, bool _useCols = true, int _beginData = 0, int _numData = Null) {
 		data = &_data;
 		useCols = _useCols;
-		idX = _idX;
-		idY = _idY;
-		idZ = _idZ;
+		
+		ids.SetCount(_ids.GetCount());
+		for (int i = 0; i < ids.GetCount(); ++i)
+			ids[i] = _ids[i];
 		beginData = _beginData;
 		numData = _numData;
 		if (IsNull(_numData)) {
@@ -68,17 +36,68 @@ public:
 				numData = data->GetColumnCount() - beginData;
 			else
 				numData = data->GetCount() - beginData;
+		}
+	}
+	void Init(ArrayCtrl &_data, int idY, int idX, bool _useCols = true, int _beginData = 0, int _numData = Null) {
+		Vector<int> ids;
+		ids << idY << idX;
+		Init(_data, ids, _useCols, _beginData, _numData);
+	}
+	virtual inline double y(int64 id)	{return useCols ? data->Get(beginData + int(id), ids[0]) : data->Get(ids[0], beginData + int(id));};
+	virtual inline double x(int64 id) {
+		if (IsNull(ids[1]))
+			return double(id);
+		else
+			return useCols ? data->Get(beginData + int(id), ids[1]) : data->Get(ids[1], beginData + int(id));
+	}
+	virtual inline double xn(int n, int64 id)	{return useCols ? data->Get(beginData + int(id), ids[n]) : data->Get(ids[n], beginData + int(id));}
+	virtual inline int64 GetCount()	{return numData;};
+};
+
+class GridCtrlSource : public DataSource {
+private:
+	GridCtrl *data;
+	bool useCols;
+	Vector<int> ids;
+	int beginData;
+	int64 numData;
+
+public:
+	GridCtrlSource() : data(0), useCols(true), beginData(0), numData(Null)  {ids << 0 << 1;}
+	GridCtrlSource(GridCtrl &data, Vector<int> &_ids, bool useCols = true, int beginData = 0, int numData = Null) : 
+		data(&data), useCols(useCols), beginData(beginData), numData(numData) {
+		Init(data, ids, useCols, beginData, numData);
+	}
+	void Init(GridCtrl &_data, Vector<int> &_ids, bool _useCols = true, int _beginData = 0, int _numData = Null) {
+		data = &_data;
+		useCols = _useCols;
+
+		ids.SetCount(_ids.GetCount());
+		for (int i = 0; i < ids.GetCount(); ++i)
+			ids[i] = _ids[i];
+		beginData = _beginData;
+		numData = _numData;
+		if (IsNull(_numData)) {
+			if (!useCols)
+				numData = data->GetColumnCount() - beginData;
+			else
+				numData = data->GetRowCount() - beginData;
 		}		
 	}
-	virtual inline double z(int id)	{return useCols ? data->Get(beginData + id, idZ) : data->Get(idZ, beginData + id);};
-	virtual inline double y(int id)	{return useCols ? data->Get(beginData + id, idY) : data->Get(idY, beginData + id);};
-	virtual inline double x(int id) {
-		if (IsNull(idX))
-			return id;
+	void Init(GridCtrl &_data, int idY, int idX, bool _useCols = true, int _beginData = 0, int _numData = Null) {
+		Vector<int> ids;
+		ids << idY << idX;
+		Init(_data, ids, _useCols, _beginData, _numData);
+	}	
+	virtual inline double y(int64 id)	{return useCols ? data->Get(beginData + int(id), ids[0]) : data->Get(ids[0], beginData + int(id));};
+	virtual inline double x(int64 id) {
+		if (IsNull(ids[1]))
+			return double(id);
 		else
-			return useCols ? data->Get(beginData + id, idX) : data->Get(idX, beginData + id);
+			return useCols ? data->Get(beginData + int(id), ids[1]) : data->Get(ids[1], beginData + int(id));
 	}
-	virtual inline ptrdiff_t GetCount()	{return numData;};
+	virtual inline double xn(int n, int64 id)	{return useCols ? data->Get(beginData + int(id), ids[n]) : data->Get(ids[n], beginData + int(id));}
+	virtual inline int64 GetCount()	{return numData;};
 };
 
 class ScatterCtrl : public StaticRect, public ScatterDraw {
@@ -102,12 +121,11 @@ public:
 	#define MAX_MOUSEBEHAVIOR 20
 	
 	bool SetMouseBehavior(MouseBehaviour *_mouseBehavior);
-	ScatterCtrl& ShowLegend(const bool& show = true);
 	ScatterCtrl& ShowContextMenu(const bool& show = true) 				{showContextMenu = show; return *this;}
-	ScatterCtrl& ShowEditDlg(const bool& show = true) 					{showEditDlg = show; return *this;}
+	ScatterCtrl& ShowPropertiesDlg(const bool& show = true) 			{showPropDlg = show; 	 return *this;}
 	void SetPopText(const String x, const String y1, const String y2) 	{popTextX = x; popTextY = y1; popTextY2 = y2;}
 	ScatterCtrl& SetMouseHandling(bool valx = true, bool valy = false);
-	ScatterCtrl &ShowInfo(bool show = true);	
+	ScatterCtrl& ShowInfo(bool show = true)								{paintInfo = show;		 return *this;}
 	
 #ifdef PLATFORM_WIN32
 	void SaveAsMetafile(const char* file);
@@ -123,6 +141,7 @@ public:
 	ScatterCtrl& SetGridWidth(const int& grid_width) 			{ScatterDraw::SetGridWidth(grid_width); 	return *this;};
 	ScatterCtrl& SetPlotAreaColor(const Upp::Color& p_a_color)	{ScatterDraw::SetPlotAreaColor(p_a_color); 	return *this;};
 	ScatterCtrl& SetLegendWidth(const int& width)				{ScatterDraw::SetLegendWidth(width); 		return *this;};
+	int GetLegendWidth()										{return ScatterDraw::GetLegendWidth();};
 	ScatterCtrl& SetAxisColor(const Upp::Color& axis_color)		{ScatterDraw::SetAxisColor(axis_color);		return *this;};
 	ScatterCtrl& SetAxisWidth(const int& axis_width)			{ScatterDraw::SetAxisWidth(axis_width);		return *this;};
 	ScatterCtrl& SetTitle(const String& title)		 			{ScatterDraw::SetTitle(title); 				return *this;};
@@ -136,9 +155,12 @@ public:
 	ScatterCtrl& SetPlotAreaMargin(const int hLeft, const int hRight, const int vTop, const int vBottom)
 																{ScatterDraw::SetPlotAreaMargin(hLeft, hRight, vTop, vBottom); return *this;};
 	ScatterCtrl& SetPlotAreaLeftMargin(const int margin)		{ScatterDraw::SetPlotAreaLeftMargin(margin);return *this;};
-	ScatterCtrl& SetPlotAreaTopMargin(const int margin)			{ScatterDraw::SetPlotAreaTopMargin(margin);return *this;};
+	ScatterCtrl& SetPlotAreaTopMargin(const int margin)			{ScatterDraw::SetPlotAreaTopMargin(margin);	return *this;};
 	ScatterCtrl& SetPlotAreaRightMargin(const int margin)		{ScatterDraw::SetPlotAreaRightMargin(margin);return *this;};
 	ScatterCtrl& SetPlotAreaBottomMargin(const int margin)		{ScatterDraw::SetPlotAreaBottomMargin(margin);return *this;};
+	
+	ScatterCtrl& ShowLegend(const bool& show = true) 			{ScatterDraw::ShowLegend(show); 			return *this;}
+	bool GetShowLegend() 										{return ScatterDraw::GetShowLegend();}
 	
 	using ScatterDraw::AddSeries; 
 	ScatterCtrl &AddSeries(ArrayCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int numData = Null);
@@ -165,7 +187,7 @@ private:
 	
 	bool mouseHandlingX, mouseHandlingY;
 	bool showContextMenu;
-	bool showEditDlg;
+	bool showPropDlg;
 	
 	int lastRefresh_ms;
 	int maxRefresh_ms;

@@ -1196,74 +1196,177 @@ ool]_[* SetMouseBehavior]([_^ScatterCtrl`:`:MouseBehaviour^ MouseBehaviour]_`*[*
 eBehavior])&]
 [s3; Sets [%-*@3 mouseBehavior] as the behavior of the mouse when used 
 in ScatterCtrl.&]
-[s3; See [^topic`:`/`/ScatterCtrl`/src`/ScatterCtrl`$en`-us`#ScatterCtrl`:`:MouseBehaviour`:`:struct^ S
-catterCtrl`::MouseBehavior].&]
+[s3; See [^topic`:`/`/ScatterCtrl`/src`/MouseBehavior`$en`-us^ ScatterCtrl`::MouseBehavi
+or].&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:ShowContextMenu`(const bool`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* ShowContextMenu]([@(0.0.255) const]_[@(0.0.255) bool`&]_[*@3 show]_`=_[@(0.0.255) true
+])&]
+[s3; If [%-*@3 show] is true the context menu can be opened (right 
+clicking by default).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:ShowPropertiesDlg`(const bool`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* ShowPropertiesDlg]([@(0.0.255) const]_[@(0.0.255) bool`&]_[*@3 show]_`=_[@(0.0.255) tr
+ue])&]
+[s3; If [%-*@3 show] is true, the context menu will have a `"Properties`" 
+dialog.&]
+[s3; In DEBUG mode the `"Properties`" menu will always appear.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:ShowInfo`(bool`):%- [_^ScatterCtrl^ ScatterCtrl]_`&[* ShowInfo]([@(0.0.255) b
+ool]_[*@3 show]_`=_[@(0.0.255) true])&]
+[s3; If [%-*@3 show] is true it shows a legend with mouse location 
+when mouse is clicked.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SaveAsMetafile`(const char`*`):%- [@(0.0.255) void]_[* SaveAsMetafile
+]([@(0.0.255) const]_[@(0.0.255) char`*]_[*@3 file])&]
+[s0;%- [*@(28.0.200)1 Windows]&]
+[s3; Saves the control as a windows metafile in [%-*@3 file].&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SaveToClipboard`(bool`):%- [@(0.0.255) void]_[* SaveToClipboard]([@(0.0.255) b
+ool]_[*@3 saveAsMetafile]_`=_[@(0.0.255) false])&]
+[s3; Saves the control to the clipboard as a bitmap.&]
+[s0;%- [*@(28.0.200)1 Windows]&]
+[s3; If [%-*@3 saveAsMetafile] is true it saves a windows metafile.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SaveToFile`(String`):%- [@(0.0.255) void]_[* SaveToFile]([_^String^ Str
+ing]_[*@3 fileName]_`=_Null)&]
+[s3; Saves the control to [%-*@3 fileName] as a bitmap depending of 
+file extension.&]
+[s3; JPEG and PNG are supported&]
+[s3; If [%-*@3 fileName] is Null a FileSel is opened to ask the user 
+for the name of the file.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:Refresh`(`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Refresh]()&]
+[s3; Calls to Ctrl`::Refresh().&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:GetSize`(`)const:%- [@(0.0.255) virtual] [_^Size^ Size]_[* GetSize]()_[@(0.0.255) c
+onst]&]
+[s3; Returns the control Size.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetColor`(const Color`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&]_[*@3 color])&]
+[s3; Calls to ScatterDraw`::SetColor(color).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetGridColor`(const Color`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetGridColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&]_[*@3 grid`_color
+])&]
+[s3; Calls to ScatterDraw`::SetGridColor(grid`_color).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetGridWidth`(const int`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetGridWidth]([@(0.0.255) const]_[@(0.0.255) int`&]_[*@3 grid`_width])&]
+[s3; Calls to ScatterDraw`::SetGridWidth(grid`_width).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetPlotAreaColor`(const Color`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetPlotAreaColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&]_[*@3 p`_a`_c
+olor])&]
+[s3; Calls to ScatterDraw`::SetPlotAreaColor(p`_a`_color).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetLegendWidth`(const int`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetLegendWidth]([@(0.0.255) const]_[@(0.0.255) int`&]_[*@3 width])&]
+[s3; Calls to ScatterDraw`::SetLegendWidth(width).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetAxisColor`(const Color`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetAxisColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&]_[*@3 axis`_color
+])&]
+[s3; Calls to ScatterDraw`::SetAxisColor(axis`_color).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetAxisWidth`(const int`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetAxisWidth]([@(0.0.255) const]_[@(0.0.255) int`&]_[*@3 axis`_width])&]
+[s3; ScatterDraw`::SetAxisWidth(axis`_width)&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetTitle`(const String`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetTitle]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 title])&]
+[s3; Calls to ScatterDraw`::SetTitle(title); &]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetTitleFont`(const Font`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetTitleFont]([@(0.0.255) const]_[_^Font^ Font][@(0.0.255) `&]_[*@3 fontTitle])&]
+[s3; Calls to ScatterDraw`::SetTitleFont(fontTitle).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetTitleColor`(const Color`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetTitleColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&]_[*@3 colorTitle
+])&]
+[s3; Calls to ScatterDraw`::SetTitleColor(colorTitle).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetLabelsFont`(const Font`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetLabelsFont]([@(0.0.255) const]_[_^Font^ Font][@(0.0.255) `&]_[*@3 fontLabels])&]
+[s3; Calls to ScatterDraw`::SetLabelsFont(fontLabels).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetLabelsColor`(const Color`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetLabelsColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&]_[*@3 colorLabe
+ls])&]
+[s3; Calls to ScatterDraw`::SetLabelsColor(colorLabels).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetLabelX`(const String`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetLabelX]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 xLabel])&]
+[s3; Calls to ScatterDraw`::SetLabelX(xLabel).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetLabelY`(const String`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetLabelY]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 yLabel])&]
+[s3; Calls to ScatterDraw`::SetLabelY(yLabel).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetLabelY2`(const String`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetLabelY2]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 yLabel])&]
+[s3; Calls to ScatterDraw`::SetLabelY(yLabel).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetPlotAreaMargin`(const int`,const int`,const int`,const int`):%- [_^ScatterCtrl^ S
+catterCtrl][@(0.0.255) `&]_[* SetPlotAreaMargin]([@(0.0.255) const]_[@(0.0.255) int]_[*@3 h
+Left], [@(0.0.255) const]_[@(0.0.255) int]_[*@3 hRight], [@(0.0.255) const]_[@(0.0.255) int
+]_[*@3 vTop], [@(0.0.255) const]_[@(0.0.255) int]_[*@3 vBottom])&]
+[s3; Calls to ScatterDraw`::SetPlotAreaMargin(hLeft, hRight, vTop, 
+vBottom).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetPlotAreaLeftMargin`(const int`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetPlotAreaLeftMargin]([@(0.0.255) const]_[@(0.0.255) int]_[*@3 margin])&]
+[s3; Calls ScatterDraw`::SetPlotAreaLeftMargin(margin).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetPlotAreaTopMargin`(const int`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetPlotAreaTopMargin]([@(0.0.255) const]_[@(0.0.255) int]_[*@3 margin])&]
+[s3; Calls to ScatterDraw`::SetPlotAreaTopMargin(margin).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetPlotAreaRightMargin`(const int`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetPlotAreaRightMargin]([@(0.0.255) const]_[@(0.0.255) int]_[*@3 margin])&]
+[s3; Calls to ScatterDraw`::SetPlotAreaRightMargin(margin).&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetPlotAreaBottomMargin`(const int`):%- [_^ScatterCtrl^ ScatterCtrl
+][@(0.0.255) `&]_[* SetPlotAreaBottomMargin]([@(0.0.255) const]_[@(0.0.255) int]_[*@3 margi
+n])&]
+[s3; Calls to ScatterDraw`::SetPlotAreaBottomMargin(margin).&]
 [s1; &]
 [s6;%- &]
 [s5;:ScatterCtrl`:`:ShowLegend`(const bool`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
 ]_[* ShowLegend]([@(0.0.255) const]_[@(0.0.255) bool`&]_[*@3 show]_`=_[@(0.0.255) true])&]
-[s3; If [%-*@3 show] is true it shows a legend with mouse location 
-when mouse is clicked.&]
-[s1;%- &]
-[s0;2%- &]
-[ {{10000@3 [s0; [*@(229)4 ScatterCtrl`::MouseBehavior]]}}&]
+[s3; Calls to ScatterDraw`::ShowLegend(show).&]
 [s1; &]
-[s2;:ScatterCtrl`:`:MouseBehaviour`:`:struct:%- [@(0.0.255)3 struct][3 _][*3 MouseBehavior]&]
-[s4; This structure is used to describe the behavior of the mouse 
-when used in ScatterCtrl. It includes the keyboard and mouse 
-conditions that, when complied, will launch the indicated action.&]
-[s4; It is used by SetMouseBehavior(MouseBehaviour `*`_mouseBehavior) 
-function to set an array of MouseBehavior items that will be 
-used to launch actions as zooming or scrolling when mouse is 
-used.&]
-[s4; The default array is in ScatterCtrl`::MouseBehaviour defaultMouse.&]
-[s1; &]
-[s0;%- &]
-[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
-[s1; &]
-[s5;:ScatterCtrl`:`:MouseBehaviour`:`:ctrl:%- [@(0.0.255) bool]_[* ctrl]&]
-[s3; Set to true if Ctrl has to be pressed.&]
-[s1;%- &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:MouseBehaviour`:`:alt:%- [@(0.0.255) bool]_[* alt]&]
-[s3; Set to true if Alt has to be pressed.&]
-[s1;%- &]
-[s6;%- &]
-[s5;:ScatterCtrl`:`:MouseBehaviour`:`:shift:%- [@(0.0.255) bool]_[* shift]&]
-[s3; Set to true if Shift has to be pressed.&]
-[s1;%- &]
-[s6;%- &]
-[s5;:ScatterCtrl`:`:MouseBehaviour`:`:left:%- [@(0.0.255) bool]_[* left]&]
-[s3; Set to true if mouse left button has to be pressed.&]
-[s1;%- &]
-[s6;%- &]
-[s5;:ScatterCtrl`:`:MouseBehaviour`:`:middle:%- [@(0.0.255) bool]_[* middle]&]
-[s3; Set to true if mouse middle button has to be pressed.&]
-[s1;%- &]
-[s6;%- &]
-[s5;:ScatterCtrl`:`:MouseBehaviour`:`:middleWheel:%- [@(0.0.255) int]_[* middleWheel]&]
-[s3; Set to true if mouse middle wheel has to be rolled.&]
-[s1;%- &]
-[s6;%- &]
-[s5;:ScatterCtrl`:`:MouseBehaviour`:`:right:%- [@(0.0.255) bool]_[* right]&]
-[s3; Set to true if mouse right button has to be pressed.&]
-[s1;%- &]
-[s6;%- &]
-[s5;:ScatterCtrl`:`:MouseBehaviour`:`:action:%- MouseAction_[* action]&]
-[s3; Is the action to be launched if the previous conditions are 
-complied. It can be:&]
-[s3;i150;O0;~~~1248; NO`_ACTION-|No action. It serves to mark the 
-end of MouseBehavior array.&]
-[s3;i150;O0;~~~1248; SCROLL-|Scrolls the graphs.&]
-[s3;i150;O0;~~~1248; ZOOM`_H`_ENL-|Zooms horizontally enlarging the 
-graphs. &]
-[s3;i150;O0;~~~1248; ZOOM`_H`_RED-|Zooms horizontally reducing the 
-graphs.&]
-[s3;i150;O0;~~~1248; ZOOM`_V`_ENL-|Zooms vertically enlarging the 
-graphs.&]
-[s3;i150;O0;~~~1248; ZOOM`_V`_RED-|Zooms horizontally reducing the 
-graphs.&]
-[s3;i150;O0;~~~1248; SHOW`_INFO-|Shows an info label including mouse 
-real X and Y coordinates.&]
+[s5;:ScatterCtrl`:`:GetShowLegend`(`):%- [@(0.0.255) bool]_[* GetShowLegend]()&]
+[s3; Returns ScatterDraw`::GetShowLegend().&]
 [s1; &]
 [s1; ]]
