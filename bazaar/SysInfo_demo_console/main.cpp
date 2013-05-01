@@ -110,9 +110,9 @@ void Test()
 	}
 	String compiler, mode;
 	Time tim;
-	int compilerVersion;
-	GetCompilerInfo(compiler, compilerVersion, tim, mode);
-	Puts(Format("\nProgram compiled with %s version %d. Compilation date: %s. Mode: %s", compiler, compilerVersion, Format(tim), mode));
+	int compilerVersion, bits;
+	GetCompilerInfo(compiler, compilerVersion, tim, mode, bits);
+	Puts(Format("\nProgram compiled with %s version %d. Compilation date: %s. Mode: %s. Bits: %d", compiler, compilerVersion, Format(tim), mode, bits));
 	
 	Puts("\nDefault exes info:");
 	const char *ext[] = {".html", ".doc", ".png", ".pdf", ".txt", ".xyz", ""};
@@ -143,8 +143,8 @@ void Test()
 			Puts (" Not mounted");
 	}
 	Puts("\nOther Info:");
-	int id = GetProcessId();
-	Puts(Format("Process Id:          %d", id));
+	uint64 id = GetProcessId();
+	Puts(Sprintf("Process Id:          %ld", id));
 	Puts(Format("Process name:        '%s'", GetProcessName(id)));
 	Puts(Format("Process file name:   '%s'", GetProcessFileName(id)));
 	int priority = GetProcessPriority(id);
@@ -168,7 +168,7 @@ void Test()
 	LaunchFile(fileTest);
 	{
 		TimeStop t;
-		long windowId;
+		uint64 windowId;
 		while(-1 == (windowId = GetWindowIdFromCaption("test.txt", false))) {
 			if (t.Elapsed() > 10000)
 				break;
@@ -178,7 +178,7 @@ void Test()
 			long left, top, right, bottom;
 			Window_GetRect(windowId, left, top, right, bottom);	
 			Puts(Format("Editor window is located at %d, %d, %d, %d", (int)left, (int)top, (int)right, (int)bottom));
-			Puts("Editor window id is " + FormatLong(windowId)); 
+			Puts("Editor window id is " + Format64(windowId)); 
 			            
 			long x, y;
 			Mouse_GetPos(x, y);
@@ -198,7 +198,7 @@ void Test()
 	}
 	Puts("\nPress enter to terminate 'test.txt'");	TestGetchar();
 
-	int processId;
+	uint64 processId;
 	TimeStop t;
 	while(-1 == (processId = GetProcessIdFromWindowCaption("test.txt", false))) {
 		if (t.Elapsed() > 10000)
@@ -216,7 +216,7 @@ void Test()
 	Puts("\nPress enter to continue...");	TestGetchar();
 	
 	Puts("\nWindows list:");
-	Array<long> widL, pidL;
+	Array<uint64> widL, pidL;
 	Array<String> name, fileName, caption;
 	GetWindowsList(widL, pidL, name, fileName, caption);
 	for (int i = 0; i < widL.GetCount(); ++i) {
