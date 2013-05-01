@@ -36,7 +36,7 @@ public:
 protected:
 	typedef SeriesPlot* (*CreateFunc)();
 	template<class T>	
-	static SeriesPlot*                      __Create() {return new T;}
+	static SeriesPlot*                    __Create() {return new T;}
 	static VectorMap<String, CreateFunc>& classMap() {static VectorMap<String, CreateFunc> cMap; return cMap;}
 	static VectorMap<String, String>&     typeMap()  {static VectorMap<String, String> tMap; 	 return tMap;}
 };

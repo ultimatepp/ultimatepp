@@ -1,4 +1,4 @@
-topic "";
+topic "ScatterDraw";
 [ $$0,0#00000000000000000000000000000000:Default]
 [0 $$1,0#96390100711032703541132217272105:end]
 [i448;a25;kKO9;2 $$2,0#37138531426314131252341829483380:class]
@@ -7,12 +7,12 @@ topic "";
 [i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:item]
 [H6;0 $$6,0#05600065144404261032431302351956:begin]
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
-[{_}%EN-US 
-[ {{10000@3 [s0; [*@(229)4 ScatterDraw]]}}&]
-[s1; &]
-[s2;:ScatterDraw`:`:class:%- [@(0.0.255)3 class][3 _][*3 ScatterDraw]&]
-[s0; &]
-[ {{4916:5084f0;g0;^ [s0; [2 
+[{_} 
+[ {{10000@3 [s0;%% [*@(229)4 ScatterDraw]]}}&]
+[s1;%% &]
+[s2;:ScatterDraw`:`:class: [@(0.0.255)3 class][3 _][*3 ScatterDraw]&]
+[s0;%% &]
+[ {{4916:5084f0;g0;^ [s0;%% [2 
 @@image:1845&1099
 Šƒ–‚‹€€€€€€€€€øÇœì‡ü”ÅÊ—Ç§—úÉîñÒûÏÈï•ôæÆ¯¡«¨ŠÒ“›€ˆ¢‚ Å ÑĞÀĞŞĞ¬”Áúï¬ÈàÃ”ù‹¢ˆ
 Š”¥ªûÿûóÿÙìõ¶·“äûæû¹ø¼››™·Û²¿ıïˆçç‘¢Ğ¨”ŠŠ…Â¡Ğ¨”ŠŠ…Â¡Ğ¨”ŠŠ…Â¡Ğ¨”ŠŠ…Â¡Ğ¨”ŠŠ…Â¡Ğ¨”
@@ -620,7 +620,7 @@ topic "";
 ¤ ˆ‚ ˆ‚ ’ˆ‚ ˆ‚ ˆÉ‚ ˆ‚ ˆ‚¤ ˆ‚ ˆ‚ ’ˆ‚ ˆ‚ ˆÉ‚ ˆ‚ ˆ‚¤ ˆ‚ ˆ‚ ’ˆ‚ ˆ‚ ˆÉ‚ ˆ‚ ˆ‚¤ ˆ‚ ˆ‚ 
 ’ˆ‚ ˆ‚ ˆÉ‚ ˆ‚ ˆ‚ä ˆ‚ “œÿ˜‡Ø—ÿë
 ]]
-::= [s0;> [*R1 
+::= [s0;>%% [*R1 
 @@image:1906&1076
 ‚ƒœ‚ù€€€€€€€€€ø“œìİ‡˜”ÅÚŞÏ½Œˆˆãê™€£œŠûˆ˜½Åˆ¨Í€àÀÓÓ±ü¨çÂ¹áå¼°ÑÏÏ¥Ë™Ğª‘Ã© ‚¢¨
 ÌÑòë’·çÚ¼³³Ó“çú¾ÿ«¿™ŞŞÉô»»Ó³ÓÅÔÕûüÏ¾ïÔ÷ÅôüÛİÕïÕ‚×¡åÙÀÀÀ€ÀÀÀÀÀÀÀ€ÀÀÀÀÀÀÀ€ÀÀÀÀÀÀÀ
@@ -1174,44 +1174,307 @@ topic "";
 âæÌ˜¹ò¤Æ¿ÄòùùùØ€Û›µìÙ²Ã‡Í©À  ˆ„Â´Ø·îúœúâÄ‰£şÇÖğô‚‚ü‚ì€Í°ñš¤µëšÓ¡À  ˆ„‚À
   ˆ„‚À  ˆ„‚àâ şŸ£ööÈ
 ]]}}&]
-[s0; &]
-[s0; [2 Versatile 2D scatter graph control. It does not require GUI 
+[s0;%% &]
+[s0;%% [2 Versatile 2D scatter graph control. It does not require GUI 
 so it works in command line programs.]&]
-[s0;2 &]
-[s0; [2 In case of GUI it can be used ][^topic`:`/`/ScatterCtrl`/src`/ScatterCtrl`$en`-us`#ScatterCtrl`:`:class^2 S
+[s0;2%% &]
+[s0;%% [2 In case of GUI it can be used ][^topic`:`/`/ScatterCtrl`/src`/ScatterCtrl`$en`-us`#ScatterCtrl`:`:class^2 S
 catterCtrl][2  that is based on ScatterDraw.]&]
+[s1;%% &]
+[s0;%% [2 ScatterDraw data is included in ][^topic`:`/`/ScatterDraw`/src`/DataSource`$en`-us^2 D
+ataSource][2 .]&]
+[s0;%% &]
 [s1; &]
-[s0;%- &]
-[ {{10000F(128)G(128)@1 [s0; [*2 Constructor Detail]]}}&]
-[s6;%- &]
-[s5;:ScatterDraw`:`:ScatterDraw`(`):%- [* ScatterDraw]()&]
-[s3; Initializes the class.&]
-[s1;%- &]
-[s0;%- &]
-[ {{10000F(128)G(128)@1 [s0; [*2 Public Member List]]}}&]
-[s6;%- &]
-[s5;:ScatterDraw`:`:SetColor`(const Color`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+[ {{10000F(128)G(128)@1 [s0;%% [*2 Constructor Detail]]}}&]
+[s6; &]
+[s5;:ScatterDraw`:`:ScatterDraw`(`): [* ScatterDraw]()&]
+[s3;%% Initializes the class.&]
+[s1; &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0;%% [*2 Public Member List]]}}&]
+[s6; &]
+[s5;:ScatterDraw`:`:WhenZoomScroll: [_^Callback^ Callback]_[* WhenZoomScroll]&]
+[s3;%% Callback called when the user does a zoom or a scroll.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:WhenSetRange: [_^Callback^ Callback]_[* WhenSetRange]&]
+[s3;%% Callback called when some of the control ranges is changed.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetSize`(Size`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* SetSize
+]([_^Size^ Size]_[*@3 sz])&]
+[s3;%% Sets the control size with [%-*@3 sz].&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetSize`(`)const: [@(0.0.255) virtual] [_^Size^ Size]_[* GetSize]()_[@(0.0.255) c
+onst]&]
+[s3;%% Returns the control size.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetColor`(const Color`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 color])&]
-[s3; Sets [%-*@3 color] .as graph background color.&]
-[s1; &]
-[s6;%- &]
-[s5;:ScatterDraw`:`:SetTitle`(const String`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+[s3;%% Sets [%-*@3 color] .as graph background color.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetTitle`(const String`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetTitle]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 title])&]
-[s3; Sets [%-*@3 title] as graph title.&]
+[s3;%% Sets [%-*@3 title] as graph title.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetTitle`(`): [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[* Get
+Title]()&]
+[s3;%% Returns graph title.&]
 [s1; &]
-[s6;%- &]
-[s5;:ScatterDraw`:`:GetTitle`(`):%- [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[* G
-etTitle]()&]
-[s3; Returns graph title.&]
-[s1;%- &]
-[s6;%- &]
-[s5;:ScatterDraw`:`:SetTitleFont`(const Font`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+[s6; &]
+[s5;:ScatterDraw`:`:SetTitleFont`(const Font`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetTitleFont]([@(0.0.255) const]_[_^Font^ Font][@(0.0.255) `&]_[*@3 fontTitle])&]
-[s3; Sets [%-*@3 fontTitle] as title font.&]
-[s1; &]
-[s6;%- &]
-[s5;:ScatterDraw`:`:SetTitleColor`(const Color`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+[s3;%% Sets [%-*@3 fontTitle] as title font.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetTitleColor`(const Color`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetTitleColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 colorTitle])&]
-[s3; Sets [%-*@3 colorTitle] as title text color.&]
+[s3;%% Sets [%-*@3 colorTitle] as title text color.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetTitleFont`(`): [_^Font^ Font][@(0.0.255) `&]_[* GetTitleFont]()&]
+[s3;%% Returns the title font.&]
 [s1; &]
-[s1; ]]
+[s6; &]
+[s5;:ScatterDraw`:`:SetLabels`(const String`&`,const String`&`,const String`&`): [@(0.0.255) v
+oid]_[* SetLabels]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 xLabel], 
+[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 yLabel], [@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 yLabel2]_`=_`"`")&]
+[s3;%% Sets the labels of the horizontal axis ([%-*@3 xLabel]), vertical 
+axis ([%-*@3 yLabel]) and secondary vertical axis ([%-*@3 yLabel2]).&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetLabelX`(const String`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetLabelX]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 xLabel])&]
+[s3;%% Sets [%-*@3 xLabel] as the label of the horizontal axis.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetLabelX`(`): [@(0.0.255) const]_[_^String^ String]_`&[* GetLabelX]()&]
+[s3;%% Returns the label of the horizontal axis.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetLabelY`(const String`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetLabelY]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 yLabel])&]
+[s3;%% Sets [%-*@3 yLabel] as the label of the vertical axis.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetLabelY`(`): [@(0.0.255) const]_[_^String^ String]_`&[* GetLabelY]()&]
+[s3;%% Returns the label of the vertical axis.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetLabelY2`(const String`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetLabelY2]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 yLabel])&]
+[s3;%% Sets [%-*@3 yLabel] as the label of the secondary vertical axis.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetLabelY2`(`): [@(0.0.255) const]_[_^String^ String]_`&[* GetLabelY2](
+)&]
+[s3;%% Returns the label of the secondary vertical axis.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetLabelsFont`(const Font`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetLabelsFont]([@(0.0.255) const]_[_^Font^ Font][@(0.0.255) `&]_[*@3 fontLabels])&]
+[s3;%% Sets [%-*@3 fontLabels] as the labels font.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetLabelsFont`(`): [_^Font^ Font]_[* GetLabelsFont]()&]
+[s3;%% Returns the font of the labels.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetLabelsColor`(const Color`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetLabelsColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 colorLabels])&]
+[s3;%% Sets [%-*@3 colorLabels] as the color of the labels.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetPlotAreaColor`(const Color`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetPlotAreaColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 p`_a`_color])
+&]
+[s3;%% Sets [%-*@3 p`_a`_color] as the background color of plot area.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetAxisColor`(const Color`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetAxisColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 axis`_color])&]
+[s3;%% Sets [%-*@3 axis`_color] as the color of the axis.&]
+[s0;%% -|
+@@image:756&406
+€ƒù€Á€€€€€€€€€€ø§œí™Áîƒ°ÌÅ»åİöÆÜ‚Ãğœ§Øç°Ü£ëü¯ª”Ú™’Ì¡ÁÄà™»şøïÅĞ¢—¯„—Ë¹Ş€€
+€€€€€€€€Œ€€ùñÓŠÕÕÕ¿Á´”Í“öà²üÿâş…½¸Í“µõ½Çµ‰¢ïû°‡ÓÄúşßÖÚªúí°Ó’ø¶ñÕ¿ÃÇªÊ¦â«
+‹¶­¾ş¡õ¹Å³Áª·¹˜ÚıŒ“¥¤“ØõÃÎ÷ìëĞê•çÆƒƒàÕó¢É¦Ğê°»Ñ½›¬úÆÉ¼èğĞêÉ–Äá«–óìŠÂîµÌ´¸å®
+ ÚØ²Ñà«Õ†¼›ÂÖ­Ÿ”Î¹­Ö”Ì”¹²êõÏ¦ÈÖîë‘Èª¯­ûÎÃ¹½ìûçİ•áŸÆ•´Ú¦íıÕíÛïòù­É¬Ú™î÷Æ±óÜ»—ó
+¶üÙµÛõü®¶÷ûŒ†Â×«É´¯×±¿öîÿ«ŞüµÇÉ£¿ê¦òéÃšÂÜû·ıÕ²¹¹Öïµ§÷“åšş¯¹ÏñûÁ²È‡şáªÙîŸä÷–
+Ï–ËõÕïÜ´ËåÖ¯îÕ¼Š³Á¯”“´æÑíİÕï¨ÍôùÔØÀÉè¬Î¤¯º–Ö—ƒö«‹¢¡…óõ¡àÕâÓ ÕâàÕâ éÕâàÕâ Õ
+´âàÕâ ÕâšàÕâ ÕâàíÕâ Õâ¼¤ıÚÎÔª£¡â§úÕëá˜Ğê’™Ğê±Ğê±¹°ê±ö«ş…€—Áüğ
+&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetAxisWidth`(const int`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetAxisWidth]([@(0.0.255) const]_[@(0.0.255) int`&]_[*@3 axis`_width])&]
+[s3;%% Sets [%-*@3 axis`_width] as the width of the axis in pixels.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetGridColor`(const Color`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetGridColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 grid`_color])&]
+[s3;%% Sets [%-*@3 grid`_color] as the color of the grid.&]
+[s0;%% -|
+@@image:737&400
+€ƒö€À€€€€€€€€€€ø¯œí—ÁíƒÀ˜Åı¥‡œÓ·„» ˆÊ¡Œ«ÄâÜÆÎóˆ³°²¬«õˆ—‹Ù†™ÿì–×Öôô‡õŒŸÏ€€€
+°€€€€àâ†èöÒ”Å®Ã¿ª‰”å™òÌ‚šıß»É»ŒÓì‚ÍÓ¤œ³€ƒ“Ìá˜Ì°™«Æ†§˜Œ»Æóÿç×›æ¤†æ†›æ†’æ†›ŞÍ×
+÷İîõ£ù¸Åô¿êûğ“¶³êÖÏ¹‘ë¦œå˜–»áÁÜêèÕ½ßò¼ığ‰‚ŒËíğàô÷Ãè¨®®¦Üİ¯Î³ŸÏ°ˆ°¬ôÃÿˆ£öãŞÎ
+ˆşßÒÇã‚ŒŒ‹¥²¶¨ñì€ÿş¾œİöÅç€áËìøşË§¶áè•™†¯»Óá”ÃØğ”üœÖê»í¸¼ñóï—àØ´Ëûáğ«ìİÃğø–ªó×
+Ì‚Œ‹İğşŒŠõø„°áî¬¢öø¿ßß‡ şš¶œñ¬ŞúÂ‡ƒœÛÃõ¼’¶ü‚Ã­‡È¦Î½äşÃ˜Ìåˆ±Üáîõ·³›Î£—é¬ö¸›Ş²·
+íáŒá°ÕáÁÌî½ö¶üŠŞ²Ñáüåˆ–Ñ¿á“İúôÚ÷øô½¤úÃ®’ô’ÒŸ›ñŞˆı›–ãÖÿ£¬ÃÒô’¢²‹ªÃˆÕËôëÑ°áÉ
+èúÉİ‡…òÔáçÏÏÔ½â›úíõÛ¶Šº€¬™…–ºùÌ¶ÌûúáÉàÃÜ ÃÍÜàÃÜüàøŒ«Ø¼±
+&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetGridWidth`(const int`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetGridWidth]([@(0.0.255) const]_[@(0.0.255) int`&]_[*@3 grid`_width])&]
+[s3;%% Sets [%-*@3 grid`_width] as the width of the grid in pixels.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:ShowVGrid`(const bool`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* ShowVGrid]([@(0.0.255) const]_[@(0.0.255) bool`&]_[*@3 show])&]
+[s3;%% If [%-*@3 show] is true the vertical grid is shown&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:ShowHGrid`(const bool`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* ShowHGrid]([@(0.0.255) const]_[@(0.0.255) bool`&]_[*@3 show])&]
+[s3;%% If [%-*@3 show] is true the horizontal grid is shown&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:ShowLegend`(const bool`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* ShowLegend]([@(0.0.255) const]_[@(0.0.255) bool`&]_[*@3 show]_`=_[@(0.0.255) true])&]
+[s3;%% If [%-*@3 show] is true it show the graphs name, color and style.&]
+[s0;%% -|
+@@image:1418&293
+‚ƒã€¯€€€€€€€€€€ø‡œíšËÈÔßÂœÇçˆò¡ä¸ìÂô‘Šà”â¬Ä°±¢·«ÍÂÅÛâÒ¢Ê¨ÁÓ–å¦ÙƒÁ´œéˆ†ªÂÕ¡¢
+‚ÂÑ¢¦‘Ü†ë‰àëáû²…ù¨«ÿİùşšÿ×»Çù¸†ó¯óÂşŸõÃïÎ½÷Ìï®ûïÏï¹÷–ÉÀ°ŒÃ°ŒÃ¤°ŒÃ°ŒÃ°’ŒÃ°ŒÃ°Œ
+ÉÃ°ŒÃ°ŒÃ¤°ŒÃœä¾É§ß¨Å»‹†‰ÿÁÅå‹æïæÔøç±¯¾şİà¬­İÎÎ§®ÆÁèèæ¼³İŠ–Î–––´®à£ÃñÎ®ÏŠ—êæõÔ
+÷–¥åøç¢‘ÿÃ‡çôÍú¹İ–’ŠèŒ«õªçìŒ¿èï‡Û˜úğ÷·–Ô¥·‰²Õò¢—Èä–ê´…ÿÿ¶çÏàğàïß§ÕçúñëåÖ
+±Òì’µëŠÕ‘ÛŒã˜ëÄçÆ¿úİˆÃï¤˜ÙÛó§¤øÊôÔìÔÉ‡ÂŸû§½¹¹°ÙüĞÙ‰ââĞã×ÕŞ·ÿÿğï¾òò Ó©»§Ñ‡ˆ•ê´…
+Ø“§ÎàæÍùûóêÕÕçî†áì´ù®Ù¹·è”è°Õö´çÂ¢×†Û¥ª‹¶‘†ŞÈ°¸ˆÍ“É¾ãÛíÃûë¥âÛêÜØ”“´™ØØóçÌÍ…Ëå
+‘™ÿü¼ò¹ïöîâİ»üü©™©Ğ…ÁÎ Õ³Ú²õ¨„ÚØüŠ¦¦§åÏÉ¸Éœ¹¢ê¼Åò¬šà’óÖ¯·èõ³úåŞÒŒÀßÃª·£İŒ‹õ¦¢Õ
+Æ…ŞñÄÇ¯üŸÏŸŠÙ¬“õ†À…ÊŸëáŸˆéê’ç¬ªìÂÏïõöİÂîÇÆö¦‚†œëÏŸùµÓõâàÃèÌë×’øù²ğòÚŠìÕ¼ßÂ½
+ãàùùäæª“×‹§»²–ôú²¹½øûå¯Ò±˜êõİõ–Ë¡¨‡¾úûÑÒë‡ıƒª÷‰”áÂ–ÀÆ‘”Ç¥£¢»¢¦Ş¦ªªÚ˜Ëøş¥£ƒ¥
+ø¥¨«ƒÅâéó¡ñ·î ¡Áà“‡›Æ‹éõ…ëˆ¶ë©ÔâÁğş‹µö‚ÑŸ¿Çù¹º¹ Ø §Œè§êŞÍ•œ™üÙ–«‹‰ô¤×¡ê”½è¨Á
+ôÉ™Ê¬°ì™¼Îä ¨Á°İïß¨Ô©êŞÊ¬®¢®ÎŞÀÆªËÖÎª±«ÑßƒÁ³›€”ÿü¸“«™ø³›åªˆó†–Â•ˆäÃøÔŒ„¯¯ãØ
+Î±Ïüš÷§¦âÓ°ÓİÅêêò·¹µŸœäÔ£ºñõ†˜ÂëÅ¯é”ï€‚ÅÊÿ§ËåêêêšÜ¥Óï©ÿ–‘¾êôóú´ª×­’’ä
+¾¯¡›ï½ÿôİ¯şıÚ‰•ü•‡‘´°Òâ˜±„ªÔ…¨Š„¦Ã¾û×ËÖßÛÔ¬Ôø×©Òê×êµÌ¸…€åáª‰ÉüèØ’¡âº·Ñå¿ğá‚Ø
+ı¨î·»   £¼¼¼««ëï»¨÷›££ûıÉºµå‰èïöÿô¨œĞÆêÓıûİãÄšóÏÆşÃˆŸ¿­’’ø‡’¥Ğ ã øğ—¯×‡õî«úÌÁ
+É£÷’“Ç¡ë•ÍÄæûø‰‰µ…Ò¢âÏ—¯æßÎœ¹ÃÁ¹Òóç¾ÿşœ‰‚ä÷¢¿Ÿ••½°Ú‘¦¦‡¹§µ•™™èâìÜå°Ş¼±Áÿ°Šª«ñú
+ƒ´ïÏ¨¦Ä§³ú¸Ñüˆàøªéºôğ¡Ü‰âÍ¾ò«Ğáé…µ›ÙÍõ£¶¢µƒ™è¾Ôë¨¥¥¥Ï¼ÙÚÚÒúŒœÇ•«×¨Ù°Ø¬Ï”‡Ï
+øè¢Éò›Â¶è¶Œïôöõ£É££Ş¤—Å„ƒ£ùœƒµÓ¼Åì¼ñ¦Æ‚ã„Å©›İíè›ÆÛŞ¾ôÑ£Õ´ˆÆö¸Ñ‡¬Ÿ¾Ü¹óÇì
+¾¶§¥¥­ÓŒœøüøñÍÍœ…µµµª¼ˆøæŒ³Ÿ¬Ì¦Ó«×¯¨ı¸ÿÿşíÛ·æ©°ÙìÔ´Ê³Ñ“§Ïê¶¹Îôèá¢‡µªÂµÚ­
+ş½¢€–ûò­İ÷ï´ô¿øñÉÂÿ¤Í¬ÉÒÊÿÌ¶—®İŠø÷Š‰„†«¡éªĞÏºõöùíÛŠ†††Î¹Ÿ¿ÏÁÙ³çóéÁªà¡Òä›¿™íŞ¼ù“
+ï”’ˆ×£óœúôºÍÍÃÍô×à´š•¹—ÑÔ„ÇŸÅ¿öíÚáá¡‚»Ğ«®Ô¦›²„Ó¨Ÿ¾ıå¢Â¥¥şÍûü¯úÀÌÌŒİ˜î÷ùÿï„—
+ßê°£ŠÄÉÜÑµÀ…êƒ­²ÇñÎ¡ĞğÂµ¸Ğãƒ»ª ˆ»ªóĞáÂíì¨¢ì¨Ä‰‹ïÑÅøÿš°°£Š°£ğ²‡•®ÔØÀıªÂš°ğ
+œÕ„÷¨‰‹‚»ªˆ»ªóĞµáÂì¨¢“ì¨‰‹ïÑÅÌ´ÜÿšŸéÖ
+&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetShowLegend`(`): [@(0.0.255) bool]_[* GetShowLegend]()&]
+[s3;%% Returns true if legend is shown.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetLegendWidth`(const int`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetLegendWidth]([@(0.0.255) const]_[@(0.0.255) int`&]_[*@3 width])&]
+[s3;%% Sets the [%-*@3 width] in pixels of every legend element.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetMode`(int`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* SetMode](
+[@(0.0.255) int]_[*@3 `_mode]_`=_MD`_ANTIALIASED)&]
+[s3;%% Sets the drawing [%-*@3 mode]. Values are:&]
+[s0;l288;i150;O0;%% [2 Drawn with Draw]&]
+[s0;l448;i150;O0; [2 MD`_DRAW]&]
+[s0;l288;i150;O0; [2 Drawn with PAINTER]&]
+[s0;l448;i150;O0; [2 MD`_ANTIALIASED-|`= MODE`_ANTIALIASED,]&]
+[s0;l448;i150;O0; [2 MD`_NOAA        -|`= MODE`_NOAA,]&]
+[s0;l448;i150;O0; [2 MD`_SUBPIXEL-|`= MODE`_SUBPIXEL]&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetMode`(`): [@(0.0.255) int]_[* GetMode]()&]
+[s3;%% Returns the drawing mode as documented in SetMode().&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:FitToData`(bool`): [@(0.0.255) void]_[* FitToData]([@(0.0.255) bool]_[*@3 Y
+]_`=_[@(0.0.255) false])&]
+[s3;%% Rescales the x axis (and y axis if [%-*@3 Y] is true) to show 
+all graphs data.on the control.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:Zoom`(double`,bool`,bool`): [@(0.0.255) void]_[* Zoom]([@(0.0.255) doub
+le]_[*@3 scale], [@(0.0.255) bool]_[*@3 hor]_`=_[@(0.0.255) true], [@(0.0.255) bool]_[*@3 ver
+]_`=_[@(0.0.255) true])&]
+[s3;%% Zooms plots by [%-*@3 scale] factor horizontally if [%-*@3 hor] 
+is true and vertically if [%-*@3 ver] is true.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:Scroll`(double`,double`): [@(0.0.255) void]_[* Scroll]([@(0.0.255) doub
+le]_[*@3 factorX], [@(0.0.255) double]_[*@3 factorY])&]
+[s3;%% Scrolls plots horizontally by [%-*@3 factorX] and vertically 
+by factor [%-*@3 factorY].&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetRange`(double`,double`,double`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetRange]([@(0.0.255) double]_[*@3 rx], [@(0.0.255) double]_[*@3 ry], 
+[@(0.0.255) double]_[*@3 ry2]_`=_[@3 100])&]
+[s3;%% Sets the horizontal ([%-*@3 rx]), vertical ([%-*@3 ry]) and secondary 
+vertical ([%-*@3 ry2]) axis ranges.&]
+[s3;%% Range is the visible with of the plot in series units (not 
+in pixels).&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetXRange`(`)const: [@(0.0.255) double]_[* GetXRange]()[@(0.0.255) cons
+t]&]
+[s3;%% Returns the x axis range.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetYRange`(`)const: [@(0.0.255) double]_[* GetYRange]()[@(0.0.255) cons
+t]&]
+[s3;%% Returns the y axis range.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetY2Range`(`)const: [@(0.0.255) double]_[* GetY2Range]()[@(0.0.255) co
+nst]&]
+[s3;%% Returns the secondary y axis range.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:Opacity`(double`): [_^ScatterDraw^ ScatterDraw]_`&[* Opacity]([@(0.0.255) d
+ouble]_[*@3 opacity]_`=_[@3 1])&]
+[s3;%% Sets the series [%-*@3 opacity] .from 1 (opaque) to 0 (transparent/invisible).&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:Legend`(const String`): [_^ScatterDraw^ ScatterDraw]_`&[* Legend]([@(0.0.255) c
+onst]_[_^String^ String]_[*@3 legend])&]
+[s3;%% Sets the series [%-*@3 legend].&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:Legend`(int`,const String`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* Legend]([@(0.0.255) int]_[*@3 index], [@(0.0.255) const]_[_^String^ String]_[*@3 legend])
+&]
+[s3;%% Sets the [%-*@3 legend] for [%-*@3 index] series.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetLegend`(int`): [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_
+[* GetLegend]([@(0.0.255) int]_[*@3 index])&]
+[s3;%% Returns the legend for [%-*@3 index] series.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SaveAsMetafile`(const char`*`)const: [@(0.0.255) void]_[* SaveAsMetaf
+ile]([@(0.0.255) const]_[@(0.0.255) char`*]_[*@3 file])_[@(0.0.255) const]&]
+[s0; [*@(28.0.200)1 Windows]&]
+[s3;%% Saves the control as a windows metafile in [%-*@3 file].&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetCount`(`): [@(0.0.255) int]_[* GetCount]()&]
+[s3;%% Returns the number of series loaded.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:IsEmpty`(`): [@(0.0.255) bool]_[* IsEmpty]()&]
+[s3;%% Returns true if there are no series.&]
+[s1; &]
+[s1;%% ]]
