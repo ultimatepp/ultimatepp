@@ -2,18 +2,21 @@
 
 #include "Functions4U.h"
 
-#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-#define Ptr Ptr_
-#define byte byte_
-#define CY win32_CY_
-
-#include <shellapi.h>
-#include <wincon.h>
-#include <shlobj.h>
-
-#undef Ptr
-#undef byte
-#undef CY
+#ifdef PLATFORM_WIN32 // || defined (PLATFORM_WIN64)
+	#define Ptr Ptr_
+	#define byte byte_
+	#ifndef win32_CY_
+		#define win32_CY_ long
+	#endif
+	#define CY win32_CY_
+	
+	#include <shellapi.h>
+	#include <wincon.h>
+	#include <shlobj.h>
+	
+	#undef Ptr
+	#undef byte
+	#undef CY
 #endif
 
 NAMESPACE_UPP
@@ -83,7 +86,7 @@ bool LaunchFileCreateProcess(const char *file) {
 }
 
 bool LaunchFileShellExecute(const char *file) {
-	return 32 < int(ShellExecuteW(NULL, L"open", ToSystemCharsetW(file), NULL, L".", SW_SHOWNORMAL));		 
+	return 32 < uint64(ShellExecuteW(NULL, L"open", ToSystemCharsetW(file), NULL, L".", SW_SHOWNORMAL));		 
 }
 
 bool LaunchFile(const char *_file) {
@@ -520,7 +523,7 @@ String GetExtExecutable(String ext)
 	WString fileW(file);
 	WCHAR exe[1024];
 	ret = FindExecutableW(fileW, NULL, exe);
-	if ((long)ret > 32)
+	if ((uint64)ret > 32)
 		exeFile = WString(exe).ToString();
 	DeleteFile(file);
 #endif

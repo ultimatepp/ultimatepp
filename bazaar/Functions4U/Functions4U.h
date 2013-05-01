@@ -194,7 +194,7 @@ String Replace(String str, char find, char replace);
 int ReverseFind(const String& s, const String& toFind, int from = 0);
 
 String FormatLong(long a); 
-
+	
 // const char *StrToTime(struct Upp::Time& d, const char *s);	Now included in TimeDate
 Time StrToTime(const char *s);
 Date StrToDate(const char *s);
@@ -228,9 +228,9 @@ inline T Average(T a, T b, T c)		{return T(a+b+c)/3;}
 template<class T>
 inline T Average(T a, T b, T c, T d){return T(a+b+c+d)/4;}
 template<class T>
-inline T pow2(T a) {return (a*a);}
+inline T pow2(T a) {return a*a;}
 template<class T>
-inline T pow3(T a) {return (a*a*a);}
+inline T pow3(T a) {return a*a*a;}
 template<class T>
 inline T pow4(T a) {return pow2(pow2(a));}
 /*
@@ -480,11 +480,6 @@ String GetExtExecutable(String ext);
 
 Upp::Array<String> GetDriveList();
 
-// Replaced by GetCurrentDirectory() and SetCurrentDirectory()
-// String Getcwd();
-// bool Chdir (const String &folder);
-
-//String Format(Time time, const char*fmt = "%2d:%2d");
 
 class Dl {
 public:
