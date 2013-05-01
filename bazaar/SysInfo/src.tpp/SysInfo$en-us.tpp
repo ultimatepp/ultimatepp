@@ -181,23 +181,14 @@ ool]_[* GetDriveInformation]([_^String^ String]_[*@3 drive], [_^String^ String]_
 [s2; Returns false if drive is not mounted or it is not accessible&]
 [s3; &]
 [s4; &]
-[s5;:GetCompilerInfo`(String`&`,int`&`,Time`&`,String`&`):%- [@(0.0.255) void]_[* GetComp
-ilerInfo]([_^String^ String]_`&[*@3 name], [@(0.0.255) int]_`&[*@3 version], 
-[_^Time^ Time]_`&[*@3 time], [_^String^ String]_`&[*@3 mode])&]
+[s5;:GetCompilerInfo`(String`&`,int`&`,Time`&`,String`&`,int`&`):%- [@(0.0.255) void]_[* G
+etCompilerInfo]([_^String^ String]_`&[*@3 name], [@(0.0.255) int]_`&[*@3 version], 
+[_^Time^ Time]_`&[*@3 time], [_^String^ String]_`&[*@3 mode], [_^String^ int]_`&[*@3 bits])&]
 [s2; Returns compiling information, like compiler [%-*@3 name, ]compiler 
-[%-*@3 version], program compilation [%-*@3 time]. and compiling 
-[%-*@3 mode].&]
+[%-*@3 version], program compilation [%-*@3 time], compiling [%-*@3 mode] 
+and [%-*@3 bits].&]
 [s3; &]
-[s4;%- &]
-[s5;:GetCompilerInfo`(String`&`,int`&`,String`&`,String`&`):%- [@(0.0.255) void]_[* GetCo
-mpilerInfo]([_^String^ String]_`&[*@3 name], [@(0.0.255) int]_`&[*@3 version], 
-[_^String^ String]_`&[*@3 time], [_^String^ String]_`&[*@3 mode])&]
-[s2; Returns compiling information, like compiler [%-*@3 name, ]compiler 
-[%-*@3 version], program compilation [%-*@3 time]. and compiling 
-[%-*@3 mode].&]
-[s6; This function is deprecated&]
-[s3; &]
-[s4;%- &]
+[s4; &]
 [s5;:GetBatteryStatus`(bool`&`,int`&`,int`&`):%- [@(0.0.255) bool]_[* GetBatteryStatus]([@(0.0.255) b
 ool]_`&[*@3 discharging], [@(0.0.255) int]_`&[*@3 percentage], [@(0.0.255) int]_`&[*@3 rema
 iningMin])&]

@@ -130,13 +130,13 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
          		kernel.Cat(" Server 2003");
          	// Test for the server type.
          	if (osvi.wProductType != VER_NT_WORKSTATION ) {
-            	if (si.wProcessorArchitecture==PROCESSOR_ARCHITECTURE_IA64 ) {
+            	if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_IA64 ) {
                 	if(osvi.wSuiteMask & VER_SUITE_DATACENTER )
                    		distro = "Datacenter Edition for Itanium-based Systems";
                 	else if(osvi.wSuiteMask & VER_SUITE_ENTERPRISE )
                    		distro = "Enterprise Edition for Itanium-based Systems";
             	}
-			} else if (si.wProcessorArchitecture==PROCESSOR_ARCHITECTURE_AMD64 ) {
+			} else if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64 ) {
             	if(osvi.wSuiteMask & VER_SUITE_DATACENTER )
              		distro = "Datacenter x64 Edition";
                 else if(osvi.wSuiteMask & VER_SUITE_ENTERPRISE )

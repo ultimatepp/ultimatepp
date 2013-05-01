@@ -4,7 +4,7 @@
 // SysInfo.cpp
 
 T_("Unknown process")
-caES("Procés desconegut")
+caES("Proc\351s desconegut")
 esES("Proceso desconocido")
 euES("Ezezaguna prozesua")
 frFR("Processus inconnu")
@@ -19,7 +19,7 @@ frFR("Impossible de changer bitmap de bureau")
 // screengrab.cpp
 
 T_("Unknown grab mode")
-caES("Mode de gravació desconegut")
+caES("Mode de gravaci\363 desconegut")
 esES("Modo de grabaci\303\263n desconocido")
 euES("Grabaketa mode ezezaguna")
-frFR("Mode déplacement inconnu")
+frFR("Mode d\351placement inconnu")

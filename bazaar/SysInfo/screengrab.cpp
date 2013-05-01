@@ -10,16 +10,17 @@ NAMESPACE_UPP
 	#define labs(x)	abs(x)
 #endif
 
-bool Window_SaveCapture(long windowId, String fileName, int left, int top, int width, int height)
+bool Window_SaveCapture(uint64 windowId, String fileName, int left, int top, int width, int height)
 {
-	if (windowId == 0)
-		windowId = (long)GetDesktopWindow();
+	HWND windowIdH = reinterpret_cast<HWND>(windowId);
+	if (windowIdH == 0)
+		windowIdH = GetDesktopWindow();
 
 	if (GetFileExt(fileName) != ".bmp")
 		fileName += ".bmp";
 	 
 	RECT rc;
-	GetWindowRect ((HWND)windowId, &rc); 
+	GetWindowRect (windowIdH, &rc); 
 
 	if (left == -1)
 		left = rc.left;
@@ -90,7 +91,7 @@ private:
 	bool viewMouse;
 	bool opened;
 	int grabMode;
-	int hwnd;
+	uint64 hwnd;
 	int left;
 	int top; 
 	int width;
@@ -109,7 +110,7 @@ public:
 	~ScreenGrab();
 	
 	bool IniGrabDesktop();
-	bool IniGrabWindow(long handle);
+	bool IniGrabWindow(uint64 handle);
 	bool IniGrabDesktopRectangle(int left, int top, int width, int height);
 	bool Grab(unsigned duration);
 	bool GrabSnapshot();
@@ -136,7 +137,8 @@ bool Record_DesktopRectangle(String fileName, int duration, int left, int top, i
 	grab.Close();
 	return true;
 }
-bool Record_Window(String fileName, int duration, long handle, double secsFrame, bool viewMouse)
+
+bool Record_Window(String fileName, int duration, uint64 handle, double secsFrame, bool viewMouse)
 {
 	ScreenGrab grab(fileName, secsFrame, viewMouse);
 	if (!grab.IniGrabWindow(handle))
@@ -223,7 +225,7 @@ HICON ScreenGrab::GetCursorHandle()
   	GetCursorPos(&lpPos);
     lHandle = WindowFromPoint(lpPos);
     lThreadID = GetWindowThreadProcessId(lHandle, 0);
-    lCurrentThreadID = GetWindowThreadProcessId((HWND)GetWindowIdFromProcessId(GetProcessId()), 0); 
+    lCurrentThreadID = GetWindowThreadProcessId(reinterpret_cast<HWND>(GetWindowIdFromProcessId(GetProcessId())), 0); 
     HICON ret;
     if (lThreadID != lCurrentThreadID) {
         if (AttachThreadInput(lCurrentThreadID, lThreadID, true)) {
@@ -296,7 +298,7 @@ bool ScreenGrab::ScreenshotMemory()
     	lPosY = lpRect.top;
     	break;
 	case GRAB_MODE_WINDOW:
-    	lHandle = (HWND)hwnd;
+    	lHandle = reinterpret_cast<HWND>(hwnd);
     	GetWindowRect(lHandle, &lpRect);
     	lWidth = lpRect.right - lpRect.left;
     	lHeight = lpRect.bottom - lpRect.top;
@@ -364,7 +366,7 @@ bool ScreenGrab::IniGrabDesktop()
 	return true;
 }
 
-bool ScreenGrab::IniGrabWindow(long handle)
+bool ScreenGrab::IniGrabWindow(uint64 handle)
 {
 	opened = true;
 	grabMode = GRAB_MODE_WINDOW;
@@ -423,7 +425,7 @@ bool ScreenGrab::GrabSnapshot()
 
 #ifdef PLATFORM_POSIX
 
-bool Window_SaveCapture(long windowId, String fileName, int left, int top, int width, int height)
+bool Window_SaveCapture(uint64 windowId, String fileName, int left, int top, int width, int height)
 {
 	if (GetFileExt(fileName) != ".xwd")
 		fileName += ".xwd";
@@ -450,7 +452,7 @@ bool Snap_DesktopRectangle(String fileName, int left, int top, int width, int he
 	return Window_SaveCapture(0, fileName, left, top, width, height);
 }
 
-bool Snap_Window(String fileName, long handle)
+bool Snap_Window(String fileName, uint64 handle)
 {
 	return Window_SaveCapture(handle, fileName);
 }

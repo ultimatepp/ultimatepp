@@ -3,13 +3,20 @@
 NAMESPACE_UPP
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-int64 start, end;
+uint64 start, end;
 unsigned long nCtr, nFreq, nCtrStop;
 
 #if defined(__MINGW32__)
-UINT64 __rdtsc() {
-	asm(".byte 0x0F");
-	asm(".byte 0x31");
+uint64 __rdtsc() {
+	#if defined(__MINGW64__)	// It does not work for now
+      	unsigned int lo, hi;
+      	__asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
+      	return uint64(lo) | (uint64(hi) << 32); 
+	#else
+      	unsigned int lo, hi;
+      	__asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
+      	return uint64(lo) | (uint64(hi) << 32); 
+	#endif
 }
 #endif
 
@@ -18,14 +25,14 @@ int GetCpuSpeed()
     if(!QueryPerformanceFrequency((LARGE_INTEGER *) &nFreq)) 
     	return 0;
     QueryPerformanceCounter((LARGE_INTEGER *) &nCtrStop);
-    nCtrStop += nFreq/10000;								
+    nCtrStop += nFreq;								
     
     start = __rdtsc();
     do 
          QueryPerformanceCounter((LARGE_INTEGER *) &nCtr);
     while (nCtr < nCtrStop);
     end = __rdtsc();
-	return int((end-start)/100);
+	return int((end - start)/1000000);
 }
 
 #endif

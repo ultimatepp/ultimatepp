@@ -52,30 +52,30 @@ bool GetMemoryInfo(int &memoryLoad, uint64 &totalPhys, uint64 &freePhys, uint64 
 // name: Window name
 // fileName: Window process program file name
 // title: Window title (caption)
-void GetWindowsList(Upp::Array<long> &wid, Upp::Array<long> &pid, Upp::Array<String> &name, 
+void GetWindowsList(Upp::Array<uint64> &wid, Upp::Array<uint64> &pid, Upp::Array<String> &name, 
 					Upp::Array<String> &fileName, Upp::Array<String> &title);
-Upp::Array<long> GetWindowsList();
+Upp::Array<uint64> GetWindowsList();
 
 /////////////////////////////////////////////////////////////////////
 // Process list
-bool GetProcessList(Upp::Array<long> &pid, Upp::Array<String> &pNames);
-Upp::Array<long> GetProcessList();
-String GetProcessName(long pid);
-String GetProcessFileName(long processID);
+bool GetProcessList(Upp::Array<uint64> &pid, Upp::Array<String> &pNames);
+Upp::Array<uint64> GetProcessList();
+String GetProcessName(uint64 pid);
+String GetProcessFileName(uint64 processID);
 
-long GetProcessIdFromWindowCaption(String windowCaption, bool exactMatch = false);
+uint64 GetProcessIdFromWindowCaption(String windowCaption, bool exactMatch = false);
 
-long GetWindowIdFromCaption(String windowCaption, bool exactMatch = false);
+uint64 GetWindowIdFromCaption(String windowCaption, bool exactMatch = false);
 
-long GetProcessIdFromWindowId(long wid);
-long GetWindowIdFromProcessId(long pid);
+uint64 GetProcessIdFromWindowId(uint64 wid);
+uint64 GetWindowIdFromProcessId(uint64 pid);
 
-bool ProcessTerminate(long pid, int timeout = 500);
+bool ProcessTerminate(uint64 pid, int timeout = 500);
 
-int GetProcessPriority(long pid);
-bool SetProcessPriority(long pid, int priority);
+int GetProcessPriority(uint64 pid);
+bool SetProcessPriority(uint64 pid, int priority);
 
-bool ProcessExists(long pid);
+bool ProcessExists(uint64 pid);
 
 /////////////////////////////////////////////////////////////////////
 // Os Info
@@ -89,12 +89,11 @@ bool GetDriveInformation(String drive, String &type, String &volume, /*uint64 &s
 
 /////////////////////////////////////////////////////////////////////
 // Others
-long GetProcessId();
+uint64 GetProcessId();
 
 bool Shutdown(String action);
 
-void GetCompilerInfo(String &name, int &version, Upp::Time &time, String &mode);
-void GetCompilerInfo(String &name, int &version, String &time, String &mode);
+void GetCompilerInfo(String &name, int &version, Upp::Time &time, String &mode, int &bits);
 
 bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin);
 bool GetBatteryInfo(bool &present/*, int &designCapacity, int &lastFullCapacity, String &vendor, String &type, String &model, String &serial*/);	
@@ -104,15 +103,15 @@ bool CloseCDTray(String drive);
 
 /////////////////////////////////////////////////////////////////////
 // Key and mouse keys
-bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bottom);
-bool Window_SetRect(long windowId, long left, long top, long right, long bottom);
-void Window_Bottom(long windowId);
-void Window_Top(long windowId);
-void Window_TopMost(long windowId);
+bool Window_GetRect(uint64 windowId, long &left, long &top, long &right, long &bottom);
+bool Window_SetRect(uint64 windowId, long left, long top, long right, long bottom);
+void Window_Bottom(uint64 windowId);
+void Window_Top(uint64 windowId);
+void Window_TopMost(uint64 windowId);
 
 
 bool Mouse_GetPos(long &x, long &y);
-bool Mouse_SetPos(long x, long y, long windowId);
+bool Mouse_SetPos(long x, long y, uint64 windowId);
 
 void Mouse_LeftClick();
 void Mouse_LeftDown();
@@ -129,11 +128,11 @@ void Mouse_RightDblClick();
 
 void Keyb_SendKeys(String text, long finalDelay = 100, long delayBetweenKeys = 50);
 
-bool Window_SaveCapture(long windowId, String fileName, int left = -1, int top = -1, int width = -1, int height = -1);
+bool Window_SaveCapture(uint64 windowId, String fileName, int left = -1, int top = -1, int width = -1, int height = -1);
 
 bool Snap_Desktop(String fileName);
 bool Snap_DesktopRectangle(String fileName, int left, int top, int width, int height);
-bool Snap_Window(String fileName, long handle);
+bool Snap_Window(String fileName, uint64 handle);
 
 bool GetKeyLockStatus(bool &caps, bool &num, bool &scroll);
 bool SetKeyLockStatus(bool caps, bool num, bool scroll);
@@ -142,7 +141,7 @@ bool SetKeyLockStatus(bool caps, bool num, bool scroll);
 
 bool Record_Desktop(String fileName, int duration, double secsFrame = 1, bool viewMouse = true);
 bool Record_DesktopRectangle(String fileName, int duration, int left, int top, int width, int height, double secsFrame = 1, bool viewMouse = true);
-bool Record_Window(String fileName, int duration, long handle, double secsFrame = 1, bool viewMouse = true);
+bool Record_Window(String fileName, int duration, uint64 handle, double secsFrame = 1, bool viewMouse = true);
 
 #endif
 
