@@ -16,9 +16,13 @@ void Tab2::Init()
 	scatter.SetRange(12, 60).SetXYMin(-6, -30).SetMajorUnits(2, 10);
 	scatter.SetMouseHandling(true);
 
-	scatter.AddSeries(&funct1).Legend("y = 3");
-	scatter.AddSeries(&funct2).Legend("x^2-5");
-	scatter.AddSeries(&funct3).Legend("-x^2-5");
+	scatter.AddSeries(&funct1).Legend("y = 3").NoMark();
+	scatter.AddSeries(&funct2).Legend("y = x^2-5").NoMark();
+	scatter.AddSeries(&funct3).Legend("y = -x^2-5").NoMark();
+	
+	scatter.AddSeries(&vfunct1).Legend("y = 0").NoMark();
+	scatter.AddSeries(&vfunct2).Legend("y = x^2").NoMark();
+	scatter.AddSeries(&vfunct3).Legend("y = -x^2").NoMark();
 }
 
 ScatterDemo *Construct2()
@@ -28,5 +32,5 @@ ScatterDemo *Construct2()
 }
 
 INITBLOCK {	
-	RegisterExample("Functions", Construct2, __FILE__);
+	RegisterExample("Explicit Functions", Construct2, __FILE__);
 }

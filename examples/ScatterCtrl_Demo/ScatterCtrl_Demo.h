@@ -2,6 +2,7 @@
 #define _ScatterCtrl_Demo_ScatterCtrl_Demo_h
 
 #include <ScatterCtrl/ScatterCtrl.h>
+#include <ScatterCtrl/PieCtrl.h>
 
 using namespace Upp;
 
@@ -156,6 +157,28 @@ private:
 	double sx[5], sy[5];
 };
 
+class Tab11 : public WithTab11<ScatterDemo> {
+public:
+	typedef Tab11 CLASSNAME;
+
+	Tab11() {};	
+	void Init();
+	virtual ScatterCtrl &Scatter()	{return scatter;};
+
+private:
+	Vector<double> sx, sy;
+	LinearEquation linear;
+	PolynomialEquation poly2, poly4;
+	FourierEquation fourier;
+};
+
+class TabPie : public WithTabPie<StaticRect> {
+public:
+	typedef TabPie CLASSNAME;
+	
+	void Init();
+};
+
 class ScatterCtrl_Demo : public WithScatterCtrl_Demo<TopWindow> {
 	typedef ScatterCtrl_Demo CLASSNAME;
 	
@@ -170,6 +193,8 @@ public:
 #endif
 	void CopyClipboard();
 	void SetMode();
+
+	TabPie tabPie;
 };
 
 #endif
