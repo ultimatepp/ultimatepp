@@ -134,12 +134,13 @@ void SystemInfo::Fill() {
 	}
 	String compiler, mode;
 	Time tim;
-	int compilerVersion;
-	GetCompilerInfo(compiler, compilerVersion, tim, mode);
+	int compilerVersion, bits;
+	GetCompilerInfo(compiler, compilerVersion, tim, mode, bits);
 	TextCompiler = compiler;
 	TextCompilerVersion = FormatInt(compilerVersion);
 	TextCompilationDate = Format(tim);	
 	TextCompilationMode = mode;
+	TextCompilationBits = FormatInt(bits);
 	
 	Processors.Reset();
 	Processors.AddColumn("Processor", 6);
@@ -234,11 +235,11 @@ void WindowsList_::Fill() {
 	Windows.AddColumn("Process Id", 6);
 	Windows.AddColumn("Name", 20);
 	Windows.AddColumn("File name", 30);
-	Array<long> widL, pidL;
+	Array<uint64> widL, pidL;
 	Array<String> name, fileName, caption;
 	GetWindowsList(widL, pidL, name, fileName, caption);
 	for (int i = 0; i < widL.GetCount(); ++i) 
-		Windows.Add(caption[i], FormatLong(widL[i]), FormatLong(pidL[i]), name[i], fileName[i]);
+		Windows.Add(caption[i], Format64(widL[i]), Format64(pidL[i]), name[i], fileName[i]);
 	ButUpdate.WhenPush = THISBACK(ButUpdate_Push);
 }
 
@@ -251,7 +252,7 @@ void ProcessList::Fill() {
 	Process.AddColumn("Id", 6);
 	Process.AddColumn("Priority", 6);
 	Process.AddColumn("Program", 12);
-	Array<long> pidL;
+	Array<uint64> pidL;
 	pidL.Clear(); 
 	Array<String> pNames;
 	if (!GetProcessList(pidL, pNames))
@@ -259,7 +260,7 @@ void ProcessList::Fill() {
 	else {
 		for (int i = 0; i < pidL.GetCount(); ++i) {
 			int priority = GetProcessPriority(pidL[i]);
-			Process.Add(FormatLong(pidL[i]), priority >= 0? FormatInt(priority): "Not accesible", pNames[i]);
+			Process.Add(Format64(pidL[i]), priority >= 0? FormatInt(priority): "Not accesible", pNames[i]);
 		}
 	}
 	ButUpdate.WhenPush = THISBACK(ButUpdate_Push);
@@ -390,8 +391,8 @@ void MouseKeyboard::OnButKey() {
 	LaunchFile(fileTest);
 	{
 		TimeStop t;
-		long windowId;
-		while(-1 == (windowId = GetWindowIdFromCaption("test.txt", false))) {
+		uint64 windowId;
+		while(INT64_MAX == (windowId = GetWindowIdFromCaption("test.txt", false))) {
 			if (t.Elapsed() > 10000)
 				break;
 		}
@@ -410,7 +411,7 @@ void MouseKeyboard::OnButKey() {
 
 void MouseKeyboard::OnButMouse()
 {
-	long wnd = GetWindowIdFromCaption("SysInfo", true);
+	uint64 wnd = GetWindowIdFromCaption("SysInfo", true);
 	
 	if (wnd == -1) {
 		Exclamation("Window not found");
