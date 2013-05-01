@@ -1,4 +1,5 @@
 #ifndef _ScatterDraw_icpp_init_stub
 #define _ScatterDraw_icpp_init_stub
 #include "Painter/init"
+#include "plugin/Eigen/init"
 #endif

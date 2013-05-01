@@ -5,31 +5,33 @@ NAMESPACE_UPP
 
 class DataSource {
 public:
-	typedef double (DataSource::*Getdatafun)(ptrdiff_t id);
+	typedef double (DataSource::*Getdatafun)(int64 id);
 
-	DataSource() : isParam(false) {}
+	DataSource() : isParam(false), isExplicit(false) {}
 	virtual ~DataSource() {}	
-	virtual double z(ptrdiff_t id)	{return Null;}
-	virtual double y(ptrdiff_t id)	{return Null;}
-	virtual double x(ptrdiff_t id)	{return Null;}
-	virtual ptrdiff_t GetCount()	{return Null;}
-	virtual ptrdiff_t GetCount(int series) {return Null;}
-	bool IsParam()			{return isParam;}
+	virtual double y(int64 id)			{return xn(0, id);}
+	virtual double x(int64 id)			{return xn(1, id);}
+	virtual double xn(int n, int64 id)	{NEVER();	return Null;}
+	virtual double y(double t)			{return xn(0, t);}
+	virtual double x(double t)			{return xn(1, t);}
+	virtual double xn(int n, double t)	{NEVER();	return Null;}
+	virtual double f(double x)			{NEVER();	return Null;}
+	virtual double f(Vector<double> xn)	{NEVER();	return Null;}
+	virtual int64 GetCount()			{NEVER();	return Null;}
+	bool IsParam()						{return isParam;}
+	bool IsExplicit()					{return isExplicit;}
 
-	virtual double MinX() 	{return Min(&DataSource::x);}	
-	virtual double MinY() 	{return Min(&DataSource::y);}	
-	virtual double MinZ() 	{return Min(&DataSource::z);}	
+	virtual double MinY() 		{return Min(&DataSource::y);}	
+	virtual double MinX() 		{return Min(&DataSource::x);}	
 
-	virtual double MaxX() 	{return Max(&DataSource::x);}				
-	virtual double MaxY() 	{return Max(&DataSource::y);}	
-	virtual double MaxZ() 	{return Max(&DataSource::z);}	
-
-	virtual double AvgX() 	{return Avg(&DataSource::x);}	
-	virtual double AvgY() 	{return Avg(&DataSource::y);}					
-	virtual double AvgZ() 	{return Avg(&DataSource::z);}	
+	virtual double MaxY() 		{return Max(&DataSource::y);}	
+	virtual double MaxX() 		{return Max(&DataSource::x);}	
+	
+	virtual double AvgY() 		{return Avg(&DataSource::y);}	
+	virtual double AvgX() 		{return Avg(&DataSource::x);}	
 	
 protected:
-	bool isParam;
+	bool isParam, isExplicit;
 
 	virtual double Min(Getdatafun getdata);
 	virtual double Max(Getdatafun getdata);
@@ -38,18 +40,18 @@ protected:
 
 class CArray : public DataSource {
 private:
-	double *xData, *yData, *zData;
-	ptrdiff_t numData;
+	double *yData, *x1Data, *x2Data;
+	int64 numData;
 	double x0, deltaX;
 	
 public:
-	CArray(double *yData, int numData, double x0, double deltaX) : yData(yData), numData(numData), x0(x0), deltaX(deltaX) { xData = NULL; }
-	CArray(double *xData, double *yData, int numData) : xData(xData), yData(yData), numData(numData) { zData = NULL; x0 = deltaX = 0; }
-	CArray(double *xData, double *yData, double *zData, int numData) : xData(xData), yData(yData), zData(zData), numData(numData) { x0 = deltaX = 0; }
-	virtual inline double z(ptrdiff_t id)	{ASSERT(zData);	return zData[id];}
-	virtual inline double y(ptrdiff_t id) 	{return yData[id];}
-	virtual inline double x(ptrdiff_t id) 	{return xData ? xData[id] : id*deltaX + x0;}
-	virtual inline ptrdiff_t GetCount()		{return numData;}
+	CArray(double *yData, int numData, double x0, double deltaX) : yData(yData), numData(numData), x0(x0), deltaX(deltaX) {x1Data = NULL;}
+	CArray(double *yData, double *xData, int numData) : yData(yData), x1Data(xData), numData(numData) {x2Data = NULL; x0 = deltaX = 0;}
+	CArray(double *yData, double *x1Data, double *x2Data, int numData) : yData(yData), x1Data(x1Data), x2Data(x2Data), numData(numData) {x0 = deltaX = 0;}
+	virtual inline double y(int64 id) 	{return yData[ptrdiff_t(id)];}
+	virtual inline double x(int64 id) 	{return x1Data ? x1Data[ptrdiff_t(id)] : id*deltaX + x0;}
+	virtual double xn(int n, int64 id);
+	virtual inline int64 GetCount()		{return numData;}
 };
 
 template <class Y>
@@ -59,9 +61,9 @@ private:
 
 public:
 	VectorY(Vector<Y> &yData) : yData(&yData) {}
-	virtual inline double y(ptrdiff_t id)	{return (*yData)[id];}
-	virtual inline double x(ptrdiff_t id) 	{return id;}
-	virtual inline ptrdiff_t GetCount()		{return yData->GetCount();}
+	virtual inline double y(int64 id)	{return (*yData)[id];}
+	virtual inline double x(int64 id) 	{return id;}
+	virtual inline int64 GetCount()		{return yData->GetCount();}
 };	
 
 template <class Y>
@@ -71,9 +73,9 @@ private:
 
 public:
 	ArrayY(Upp::Array<Y> &yData) : yData(&yData) {}
-	virtual inline double y(ptrdiff_t id)	{return (*yData)[id];}
-	virtual inline double x(ptrdiff_t id) 	{return id;}
-	virtual inline ptrdiff_t GetCount()		{return yData->GetCount();}
+	virtual inline double y(int64 id)	{return (*yData)[id];}
+	virtual inline double x(int64 id) 	{return id;}
+	virtual inline int64 GetCount()		{return yData->GetCount();}
 };
 
 template <class Y>
@@ -81,26 +83,23 @@ class VectorVectorY : public DataSource {
 private:
 	Vector<Vector<Y> > *data;
 	bool useCols;
-	int idX, idY, idZ;
+	Vector<int> ids;
 	int beginData;
-	ptrdiff_t numData;
+	int64 numData;
 	
 public:
-	VectorVectorY() : data(0), useCols(true), idX(0), idY(1), idZ(2), beginData(0), numData(Null) {}
-	VectorVectorY(Vector<Vector<Y> > &data, bool useCols = true, int idX = 0, int idY = 1, 
-				  int idZ = 2, int beginData = 0, int numData = Null) : 
-		data(&data), useCols(useCols), idX(idX), idY(idY), idZ(idZ), beginData(beginData), numData(numData) 
-	{
-		Init(data, useCols, idX, idY, idZ, beginData, numData);
+	VectorVectorY() : data(0), useCols(true), beginData(0), numData(Null) {ids << 0 << 1;}
+	VectorVectorY(Vector<Vector<Y> > &data, Vector<int> &ids, bool useCols = true, int beginData = 0, int numData = Null) : 
+		data(&data), useCols(useCols), beginData(beginData), numData(numData) {
+		Init(data, ids, useCols, beginData, numData);
 	}
-	void Init(Vector<Vector<Y> > &_data, bool _useCols = true, int _idX = 0, int _idY = 1, 
-			  int _idZ = 2, int _beginData = 0, int _numData = Null) 
-	{
+	void Init(Vector<Vector<Y> > &_data, Vector<int> &_ids, bool _useCols = true, int _beginData = 0, int _numData = Null) {
 		data = &_data;
 		useCols = _useCols;
-		idX = _idX;
-		idY = _idY;
-		idZ = _idZ;
+		
+		ids.SetCount(_ids.GetCount());
+		for (int i = 0; i < ids.GetCount(); ++i)
+			ids[i] = _ids[i];
 		beginData = _beginData;
 		numData = _numData;
 		if (IsNull(_numData)) {
@@ -113,32 +112,31 @@ public:
 				numData = data->GetCount() - beginData;
 		}
 	}
-	virtual inline double z(int id)	{return useCols ? (*data)[beginData + id][idZ] : (*data)[idZ][beginData + id];}
-	virtual inline double y(int id)	{return useCols ? (*data)[beginData + id][idY] : (*data)[idY][beginData + id];}
-	virtual inline double x(int id) {
-		if (IsNull(idX))
-			return id;
-		else
-			return useCols ? (*data)[beginData + id][idX] : (*data)[idX][beginData + id];
+	void Init(Vector<Vector<Y> > &_data, int idY, int idX, bool _useCols = true, int _beginData = 0, int _numData = Null) {
+		Vector<int> ids;
+		ids << idY << idX;
+		Init(_data, ids, _useCols, _beginData, _numData);
 	}
-	virtual inline ptrdiff_t GetCount()	{return numData;};
+	virtual inline double y(int64 id)	{return useCols ? (*data)[beginData + int(id)][ids[0]] : (*data)[ids[0]][beginData + int(id)];}
+	virtual inline double x(int64 id) {
+		if (IsNull(ids[1]))
+			return double(id);
+		else
+			return useCols ? (*data)[beginData + int(id)][ids[1]] : (*data)[ids[1]][beginData + int(id)];
+	}
+	virtual inline double xn(int n, int64 id)	{return useCols ? (*data)[beginData + int(id)][ids[n]] : (*data)[ids[n]][beginData + int(id)];}
+	virtual inline int64 GetCount()	{return numData;};
 };
-
-
-
-
-
-
 
 class VectorDouble : public DataSource {
 private:
 	const Vector<double> *xData, *yData;
 
 public:
-	VectorDouble(const Vector<double> &xData, Vector<double> &yData) : xData(&xData), yData(&yData) {}
-	virtual inline double y(ptrdiff_t id)	{return (*yData)[int(id)];}
-	virtual inline double x(ptrdiff_t id) 	{return (*xData)[int(id)];}
-	virtual inline ptrdiff_t GetCount()		{return xData->GetCount();}
+	VectorDouble(const Vector<double> &yData, Vector<double> &xData) : yData(&yData), xData(&xData) {}
+	virtual inline double y(int64 id)	{return (*yData)[int(id)];}
+	virtual inline double x(int64 id) 	{return (*xData)[int(id)];}
+	virtual inline int64 GetCount()		{return xData->GetCount();}
 };
 
 class ArrayDouble : public DataSource {
@@ -146,10 +144,10 @@ private:
 	const Upp::Array<double> *xData, *yData;
 
 public:
-	ArrayDouble(const Upp::Array<double> &xData, Upp::Array<double> &yData) : xData(&xData), yData(&yData) {}
-	virtual inline double y(ptrdiff_t id)	{return (*yData)[int(id)];}
-	virtual inline double x(ptrdiff_t id) 	{return (*xData)[int(id)];}
-	virtual inline ptrdiff_t GetCount()		{return xData->GetCount();}
+	ArrayDouble(const Upp::Array<double> &yData, Upp::Array<double> &xData) : yData(&yData), xData(&xData) {}
+	virtual inline double y(int64 id)	{return (*yData)[int(id)];}
+	virtual inline double x(int64 id) 	{return (*xData)[int(id)];}
+	virtual inline int64 GetCount()		{return xData->GetCount();}
 };
 
 class VectorPointf : public DataSource {
@@ -159,9 +157,9 @@ private:
 public:
 	VectorPointf(const Vector<Pointf> &data) : data(&data) 	{}
 	VectorPointf(Vector<Pointf> *data) : data(data) 		{}
-	virtual inline double y(ptrdiff_t id)	{return (*data)[int(id)].y;}
-	virtual inline double x(ptrdiff_t id) 	{return (*data)[int(id)].x;}
-	virtual inline ptrdiff_t GetCount()		{return data->GetCount();}
+	virtual inline double y(int64 id)	{return (*data)[int(id)].y;}
+	virtual inline double x(int64 id) 	{return (*data)[int(id)].x;}
+	virtual inline int64 GetCount()		{return data->GetCount();}
 };	
 
 class ArrayPointf : public DataSource {
@@ -170,9 +168,9 @@ private:
 
 public:
 	ArrayPointf(Upp::Array<Pointf> &data) : data(&data) {}
-	virtual inline double y(ptrdiff_t id)	{return (*data)[int(id)].y;}
-	virtual inline double x(ptrdiff_t id) 	{return (*data)[int(id)].x;}
-	virtual inline ptrdiff_t GetCount()		{return data->GetCount();}
+	virtual inline double y(int64 id)	{return (*data)[int(id)].y;}
+	virtual inline double x(int64 id) 	{return (*data)[int(id)].x;}
+	virtual inline int64 GetCount()		{return data->GetCount();}
 };	
 
 template <class X, class Y>
@@ -182,9 +180,9 @@ private:
 
 public:
 	VectorMapXY(VectorMap<X, Y> &data) : data(&data) {}
-	virtual inline double y(ptrdiff_t id)	{return (*data)[int(id)];}
-	virtual inline double x(ptrdiff_t id) 	{return (*data).GetKey(int(id));}
-	virtual inline ptrdiff_t GetCount()		{return data->GetCount();}
+	virtual inline double y(int64 id)	{return (*data)[int(id)];}
+	virtual inline double x(int64 id) 	{return (*data).GetKey(int(id));}
+	virtual inline int64 GetCount()		{return data->GetCount();}
 };	
 
 template <class X, class Y>
@@ -194,9 +192,9 @@ private:
 
 public:
 	ArrayMapXY(ArrayMap<X, Y> &data) : data(&data) {}
-	virtual inline double y(ptrdiff_t id)	{return (*data)[id];}
-	virtual inline double x(ptrdiff_t id) 	{return (*data).GetKey(id);}
-	virtual inline ptrdiff_t GetCount()		{return data->GetCount();}
+	virtual inline double y(int64 id)	{return (*data)[int(id)];}
+	virtual inline double x(int64 id) 	{return (*data).GetKey(int(id));}
+	virtual inline int64 GetCount()		{return data->GetCount();}
 };		
  
 class FuncSource : public DataSource {
@@ -204,10 +202,17 @@ private:
 	double (*function)(double);
 
 public:
-	FuncSource(double (*function)(double)) : function(function) {}
-	virtual inline double y(ptrdiff_t t)	{return function(double(t));}
-	virtual inline double x(ptrdiff_t t) 	{return double(t);}
-	virtual inline ptrdiff_t GetCount()		{return Null;}
+	FuncSource(double (*function)(double)) : function(function) {isExplicit = true;}
+	virtual inline double f(double x)	{return function(x);}
+};
+
+class FuncSourceV : public DataSource {
+private:
+	void (*function)(double&, double);
+
+public:
+	FuncSourceV(void (*function)(double&, double)) : function(function) {isExplicit = true;}
+	virtual inline double f(double x)	{double y; function(y, x); return y;}
 };
 
 class FuncSourcePara : public DataSource {
@@ -220,40 +225,37 @@ private:
 	
 public:
 	FuncSourcePara(Pointf (*function)(double), int np, double from, double to) : 
-									function(function), numPoints(np), minT(from), maxT(to) {
+							function(function), numPoints(np), minT(from), maxT(to) {
+		isParam = true; 
 		lastT = Null;
-		isParam = true;
 	}
-	virtual inline double y(ptrdiff_t t) {
+	virtual inline double y(double t) {
 		if (IsNull(lastT) || t != lastT) {
 			lastPointf = function(minT + t*(maxT-minT)/numPoints);
-			lastT = double(t);
+			lastT = t;
 		}
 		return lastPointf.y;
 	}
-	virtual inline double x(ptrdiff_t t) {
+	virtual inline double x(double t) {
 		if (IsNull(lastT) || t != lastT) {
 			lastPointf = function(minT + t*(maxT-minT)/numPoints);
-			lastT = double(t);
+			lastT = t;
 		}
 		return lastPointf.x;
 	}
-	virtual inline ptrdiff_t GetCount()	{return numPoints;}
+	virtual inline int64 GetCount()	{return numPoints;}
 };	
 
-typedef Callback2<double&, double> PlotFunc; 
+typedef Callback2<double&, double> PlotExplicFunc; 
 typedef Callback2<Pointf&, double> PlotParamFunc;
 
-class PlotFuncSource : public DataSource {
+class PlotExplicFuncSource : public DataSource {
 private:
-	PlotFunc function;
+	PlotExplicFunc function;
 
 public:
-	PlotFuncSource() 										{}
-	PlotFuncSource(PlotFunc &function) : function(function) {}
-	virtual inline double y(ptrdiff_t t)	{double y; function(y, double(t)); return y;}
-	virtual inline double x(ptrdiff_t t) 	{return double(t);}
-	virtual inline ptrdiff_t GetCount()		{return -1;}
+	PlotExplicFuncSource(PlotExplicFunc &function) : function(function) {isExplicit = true;}
+	virtual inline double f(double t)	{double y; function(y, t); return y;}
 };	
 
 class PlotParamFuncSource : public DataSource {
@@ -266,26 +268,25 @@ private:
 
 public:
 	PlotParamFuncSource(PlotParamFunc function, int np, double from, double to) : 
-									function(function), numPoints(np), minT(from), maxT(to) {
+						function(function), numPoints(np), minT(from), maxT(to) {
+		isParam = true; 
 		lastT = Null;
-		isParam = true;
 	}
-	inline double y(ptrdiff_t t) {
+	inline double y(double t) {
 		if (IsNull(lastT) || t != lastT) {
 			function(lastPointf, minT + t*(maxT-minT)/numPoints);
-			lastT = double(t);
+			lastT = t;
 		}
 		return lastPointf.y;
 	}
-	
-	inline double x(ptrdiff_t t) {
+	inline double x(double t) {
 		if (IsNull(lastT) || t != lastT) {
 			function(lastPointf, minT + t*(maxT-minT)/numPoints);
-			lastT = double(t);
+			lastT = t;
 		}
 		return lastPointf.x;
 	}
-	virtual inline ptrdiff_t GetCount()	{return numPoints;}
+	virtual inline int64 GetCount()	{return numPoints;}
 };	
 
 END_UPP_NAMESPACE
