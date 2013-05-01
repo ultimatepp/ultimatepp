@@ -31,6 +31,10 @@ void GeneralTab::Init(ScatterCtrl& scatter)
 	yLabel <<= THISBACK(Change);
 	yLabel2 <<= scatter.GetLabelY2();
 	yLabel2 <<= THISBACK(Change);
+	showLegend <<= scatter.GetShowLegend();
+	showLegend <<= THISBACK(Change);
+	setLegendWidth <<= scatter.GetLegendWidth();
+	setLegendWidth <<= THISBACK(Change);
 }
 
 void GeneralTab::Change() 
@@ -39,6 +43,8 @@ void GeneralTab::Change()
 	
 	scatter.SetTitle(title);
     scatter.SetLabels(xLabel, yLabel, yLabel2);
+    scatter.ShowLegend(showLegend);
+    scatter.SetLegendWidth(setLegendWidth);
                   
 	scatter.SetModify();
 	scatter.Refresh();

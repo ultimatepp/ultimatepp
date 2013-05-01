@@ -3,7 +3,7 @@ LAYOUT(Properties, 536, 336)
 	ITEM(Button, close, SetLabel(t_("Close")).Tip(t_("Close this dialog")).RightPosZ(4, 68).BottomPosZ(4, 20))
 END_LAYOUT
 
-LAYOUT(General, 216, 100)
+LAYOUT(General, 216, 184)
 	ITEM(Label, dv___0, SetLabel(t_("Label Y2:")).LeftPosZ(4, 56).TopPosZ(76, 21))
 	ITEM(EditString, yLabel2, HSizePosZ(64, 4).TopPosZ(76, 19))
 	ITEM(EditString, yLabel, HSizePosZ(64, 4).TopPosZ(52, 19))
@@ -12,6 +12,9 @@ LAYOUT(General, 216, 100)
 	ITEM(Label, dv___5, SetLabel(t_("Label X:")).LeftPosZ(4, 56).TopPosZ(28, 21))
 	ITEM(EditString, xLabel, HSizePosZ(64, 4).TopPosZ(28, 19))
 	ITEM(Label, dv___7, SetLabel(t_("Label Y:")).LeftPosZ(4, 56).TopPosZ(52, 21))
+	ITEM(Option, showLegend, SetLabel(t_("ShowLegend")).LeftPosZ(4, 92).TopPosZ(112, 16))
+	ITEM(Label, dv___9, SetLabel(t_("SetLegendWidth:")).LeftPosZ(4, 92).TopPosZ(132, 21))
+	ITEM(EditInt, setLegendWidth, Min(0).LeftPosZ(96, 44).TopPosZ(132, 19))
 END_LAYOUT
 
 LAYOUT(Series, 420, 180)

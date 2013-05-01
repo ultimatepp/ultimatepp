@@ -65,16 +65,9 @@ void ScatterCtrl::Paint(Draw& w)
 		ImageBuffer ib(GetSize());
 		BufferPainter bp(ib, mode);
 		SetDrawing(bp, 1);
-		//bp.Translate(0, 0);
 		w.DrawImage(0, 0, ib);
 	}
 	lastRefresh_ms = t.Elapsed();
-}
-
-ScatterCtrl &ScatterCtrl::ShowInfo(bool show)
-{
-	paintInfo = show;
-	return *this;
 }
 
 void ScatterCtrl::ProcessPopUp(const Point & pt)
@@ -349,7 +342,7 @@ void ScatterCtrl::MouseLeave()
 void ScatterCtrl::MouseZoom(int zdelta, bool hor, bool ver) 
 {
 	double scale = zdelta > 0 ? zdelta/100. : -100./zdelta;
-	if (((lastxRange < xRange*scale) || (lastyRange < yRange*scale)) && (lastRefresh_ms > maxRefresh_ms))
+	if (((lastxRange < xRange*scale) || (lastyRange < yRange*scale)) && (lastRefresh_ms > maxRefresh_ms)) 
 		return;
 	Zoom(scale, mouseHandlingX, mouseHandlingY);
 }
@@ -383,7 +376,7 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 		bar.Separator();
 	}
 #ifndef _DEBUG
-	if (showEditDlg)
+	if (showPropDlg)
 #endif	
 	{
 		bar.Add(t_("Properties"), ScatterImg::Gear(), THISBACK(DoShowEditDlg));			
@@ -436,13 +429,13 @@ ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1)
 	popTextY2 = "y2";
 	popLT = popRB = Null;
 	showContextMenu = false;
-	showEditDlg = false;
+	showPropDlg = false;
 	Color(graphColor);	
 	BackPaint();
 	popText.SetColor(SColorFace);        
 	SetMouseBehavior(defaultMouse);
 	lastRefresh_ms = Null;
-	maxRefresh_ms = 200;
+	maxRefresh_ms = 500;
 }
 
 END_UPP_NAMESPACE
