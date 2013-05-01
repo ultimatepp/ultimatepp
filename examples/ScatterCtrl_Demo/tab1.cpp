@@ -32,10 +32,8 @@ void Tab1::Init()
 	int barWidth = 4;
 	scatter.AddSeries(s5).Legend("Series 5").PlotStyle<BarSeriesPlot>(barWidth).Dash("").NoMark().Fill();
 	
-	//scatter.AddTrendline(SERIE2, 100, LINE);		// To come :-)
-	//scatter.AddTrendline(SERIE2, 100, POLINOMIAL, 3);
 	scatter.SetRange(60, 50).SetMajorUnits(10, 10);
-	scatter.ShowInfo().ShowContextMenu().ShowEditDlg().SetPopText("h", "v", "v2");
+	scatter.ShowInfo().ShowContextMenu().ShowPropertiesDlg().SetPopText("h", "v", "v2");
 }
 
 ScatterDemo *Construct1()

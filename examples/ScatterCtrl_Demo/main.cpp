@@ -38,6 +38,7 @@ GUI_APP_MAIN
 	
 	ScatterCtrl_Demo demo;
 	
+	demo.tabPie.Init();
 	demo.Run();
 }
 
@@ -48,6 +49,8 @@ ScatterCtrl_Demo::ScatterCtrl_Demo()
 	for (int i = 0; i < Examples().GetCount(); ++i)
 		tab.Add(*(Examples()[i].ctrl()), Examples()[i].name);
 
+	tab.Add(tabPie, "Pie chart");
+	
 	bPreview <<= THISBACK(Preview);
 	bSavePNG <<= THISBACK(SavePNG);
 	bSaveJPG <<= THISBACK(SaveJPG);
