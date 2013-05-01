@@ -284,7 +284,7 @@ void IconDes::Colorize()
 void IconDes::FreeRotate()
 {
 	WithFreeRotateLayout<TopWindow> dlg;
-	CtrlLayoutOKCancel(dlg, "Colorize");
+	CtrlLayoutOKCancel(dlg, "Rotate");
 	PlaceDlg(dlg);
 	dlg.angle <<= 0;
 	dlg.angle <<= dlg.Breaker();
