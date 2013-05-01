@@ -43,6 +43,9 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 {
 	ASSERT(Rect(img.GetSize()).Contains(sr));
 	Size isz = sr.GetSize();
+	
+	if(isz.cx <= 0 || isz.cy <= 0 || sz.cx <= 0 || sz.cy <= 0)
+		return Image();
 
 	int shiftx, shifty;
 	int ax = sGeta(a, isz.cx, sz.cx, shiftx);
@@ -54,18 +57,18 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 
 	Buffer<int> px(sz.cx * 2 * ax * 2 * ay * 2);
 	int *xd = px;
+	Size cr = (Size(1 << shift, 1 << shift) - (isz << shift) / sz) >> 1;
 	for(int x = 0; x < sz.cx; x++) {
-		int q = x * isz.cx - (sz.cx >> 1);
-		int sx = q / sz.cx;
-		int dx = (q << shift) / sz.cx - (sx << shift);
+		int dx = ((x * isz.cx) << shift) / sz.cx - cr.cx;
+		int sx = dx >> shift;
+		dx -= sx << shift;
 		if(dx < 0)
 			dx = 0;
-		for(int yy = -ay + 1; yy <= ay; yy++) {
+		for(int yy = -ay + 1; yy <= ay; yy++)
 			for(int xx = -ax + 1; xx <= ax; xx++) {
 				*xd++ = minmax(sx + xx, 0, isz.cx - 1) + sr.left;
 				*xd++ = sGetk(kernel, ((xx << shift) - dx) * a / ax, a, shift);
 			}
-		}
 	}
 
 	ImageBuffer ib(sz);
@@ -73,9 +76,9 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 	for(int y = 0; y < sz.cy; y++) {
 		if(progress(y, sz.cy))
 			break;
-		int q = y * isz.cy - (sz.cy >> 1);
-		int sy = q / sz.cy;
-		int dy = (q << shift) / sz.cy - (sy << shift);
+		int dy = ((y * isz.cy) << shift) / sz.cy - cr.cy;
+		int sy = dy >> shift;
+		dy -= sy << shift;
 		if(dy < 0)
 			dy = 0;
 		xd = ~px;
