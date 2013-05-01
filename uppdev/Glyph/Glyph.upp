@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	Painter;
+
+file
+	main.cpp optimize_speed,
+	help.txt;
+
+mainconfig
+	"" = "GUI SSE2";
+

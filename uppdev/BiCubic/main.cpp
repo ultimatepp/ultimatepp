@@ -151,6 +151,11 @@ double Lanczos5(double x)
 	return Lanczos(x, 5);
 }
 
+Image RescaleWithKernel2(const Image& img, int cx, int cy, double (*kernel)(double x), int a, int method = DOWNSCALE_WIDE)
+{
+	return RescaleFilter(img, Size(cx, cy), kernel, a);
+}
+
 struct MyApp : TopWindow {
 	typedef MyApp CLASSNAME;
 	
@@ -179,22 +184,26 @@ struct MyApp : TopWindow {
 		TimeStop tm;
 		
 		for(int i = 0; i < TestImg().GetCount(); i++) {
-			w.DrawImage(250 * i, 0, TestImg().Get(i));
-			w.DrawImage(250 * i, 200, rescale(TestImg().Get(i), 84, 84, k, ka, ~method));
-			w.DrawImage(250 * i + 84, 200, rescale(TestImg().Get(i), 42, 42, k, ka, ~method));
-			w.DrawImage(250 * i + 84 + 52, 200, rescale(TestImg().Get(i), 21, 21, k, ka, ~method));
-			w.DrawImage(250 * i + 84 + 52 + 31, 200, rescale(TestImg().Get(i), 10, 10, k, ka, ~method));
-			w.DrawImage(250 * i + 84 + 52 + 31 + 20, 200, rescale(TestImg().Get(i), 5, 5, k, ka, ~method));
-			w.DrawImage(250 * i + 84 + 52 + 31 + 20 + 20, 200, rescale(TestImg().Get(i), 1, 1, k, ka, ~method));
-			w.DrawImage(250 * i, 300, rescale(TestImg().Get(i), 250, 250, k, ka, ~method));
-			w.DrawImage(250 * i, GetSize().cy - 250 - 84 - 20, Rescale(TestImg().Get(i), 84, 84));
-			w.DrawImage(250 * i, GetSize().cy - 250 - 20, Rescale(TestImg().Get(i), 250, 250));
+			Image img = TestImg().Get(i);
+			w.DrawImage(250 * i, 0, img);
+			w.DrawImage(250 * i, 200, rescale(img, 84, 84, k, ka, ~method));
+			w.DrawImage(250 * i + 84, 200, rescale(img, 42, 42, k, ka, ~method));
+			w.DrawImage(250 * i + 84 + 52, 200, rescale(img, 21, 21, k, ka, ~method));
+			w.DrawImage(250 * i + 84 + 52 + 31, 200, rescale(img, 10, 10, k, ka, ~method));
+			w.DrawImage(250 * i + 84 + 52 + 31 + 20, 200, rescale(img, 5, 5, k, ka, ~method));
+			w.DrawImage(250 * i + 84 + 52 + 31 + 20 + 20, 200, rescale(img, 1, 1, k, ka, ~method));
+			w.DrawImage(250 * i, 300, rescale(img, 250, 250, k, ka, ~method));
+			w.DrawImage(250 * i, 550, RescaleFilter(img, Size(250, 250), RectC(10, 10, 100, 100), k, ka));
 		}
 		
 		w.DrawImage(GetSize().cx - 400, 100, rescale(TestImg::img2(), 400, 400, k, ka, ~method));
 		w.DrawImage(GetSize().cx - 400, 500, rescale(TestImg::img3(), 400, 400, k, ka, ~method));
 		
-		w.DrawText(0, GetSize().cy - 20, String().Cat() << "Elapsed " << tm);
+		w.DrawText(GetSize().cx - 200, 40, String().Cat() << "Time " << tm);
+
+		for(int i = 0; i < TestImg().GetCount(); i++) {
+			w.DrawImage(250 * i, GetSize().cy - 84, Rescale(TestImg().Get(i), 84, 84));
+		}
 
 /*
 		w.DrawImage(0, 0, RescaleBicubic2(rings, 180, 180, k, ka, expand));
@@ -285,6 +294,7 @@ struct MyApp : TopWindow {
 		fn <<= THISBACK(Sync);
 		fn <<= 2;
 		
+		Zoomable();
 		Maximize();
 	}
 };

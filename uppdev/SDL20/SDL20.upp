@@ -1,0 +1,14 @@
+uses
+	Core,
+	Draw;
+
+library
+	"SDLmain.lib SDL.lib";
+
+file
+	SDL20.cpp,
+	test.iml;
+
+mainconfig
+	"" = "SSE2 MT";
+

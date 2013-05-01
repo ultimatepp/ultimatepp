@@ -4,15 +4,15 @@ s1 == s2; // Is false, because they are two distinct objects.
 s1.valueOf() == s2.valueOf(); // Is true.
 
 //Automatic type coercion
-alert(true  ==    2 ); // false... true  → 1 !== 2 ←  2
-alert(false ==    2 ); // false... false → 0 !== 2 ←  2
-alert(true  ==    1 ); // true.... true  → 1 === 1 ←  1
-alert(false ==    0 ); // true.... false → 0 === 0 ←  0
-alert(true  ==   "2"); // false... true  → 1 !== 2 ← "2"
-alert(false ==   "2"); // false... false → 0 !== 2 ← "2"
-alert(true  ==   "1"); // true.... true  → 1 === 1 ← "1"
-alert(false ==   "0"); // true.... false → 0 === 0 ← "0"
-alert(false ==   "" ); // true.... false → 0 === 0 ← ""
+alert1(true  ==    2 ); // false... true  → 1 !== 2 ←  2
+alert2(false ==    2 ); // false... false → 0 !== 2 ←  2
+alert3(true  ==    1 ); // true.... true  → 1 === 1 ←  1
+alert4(false ==    0 ); // true.... false → 0 === 0 ←  0
+alert5(true  ==   "2"); // false... true  → 1 !== 2 ← "2"
+alert6(false ==   "2"); // false... false → 0 !== 2 ← "2"
+alert7(true  ==   "1"); // true.... true  → 1 === 1 ← "1"
+alert8(false ==   "0"); // true.... false → 0 === 0 ← "0"
+alert9(false ==   "" ); // true.... false → 0 === 0 ← ""
 alert(false ==   NaN); // false... false → 0 !== NaN
  
 //Type checked comparison (no conversion of types and values)
