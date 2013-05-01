@@ -153,6 +153,7 @@ void IconDes::ImageBar(Bar& bar)
 	bar.Add(c, AK_CONTRAST, IconDesImg::Contrast(), THISBACK(Contrast));
 	bar.Add(c, AK_ALPHA, IconDesImg::AlphaI(), THISBACK(Alpha));
 	bar.Add(c, AK_COLORS, IconDesImg::Colors(), THISBACK(Colors));
+	bar.Add(c, AK_SMOOTHEN, IconDesImg::Smoothen(), THISBACK(Smoothen));
 }
 
 void IconDes::DrawBar(Bar& bar)

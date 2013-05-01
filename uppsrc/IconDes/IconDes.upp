@@ -17,6 +17,7 @@ file
 	IconDes.cpp,
 	List.cpp,
 	Image.cpp,
+	Smoothen.cpp,
 	Bar.cpp,
 	EditPos.cpp,
 	ImlFile.cpp,

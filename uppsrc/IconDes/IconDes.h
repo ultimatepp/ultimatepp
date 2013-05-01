@@ -265,6 +265,7 @@ private:
 	void  Contrast();
 	void  Alpha();
 	void  Colors();
+	void  Smoothen();
 
 	void  SyncList();
 	void  ListCursor();
