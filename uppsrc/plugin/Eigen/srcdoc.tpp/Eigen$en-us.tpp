@@ -25,11 +25,11 @@ is a simple weak copyleft license. Common questions about the
 MPL2 are answered in the official ][^http`:`/`/www`.mozilla`.org`/MPL`/2`.0`/FAQ`.html^2 M
 PL2 FAQ][2 .]&]
 [s0;#2 &]
-[s0;# [2 In addition Bazaar/Eigen package includes a sample package 
-(Eigen`_demo) to ease even more its use for U`+`+ users. It has 
-many samples from Eigen library and nonlinear equation solving 
-and optimization like ][^http`:`/`/www`.itl`.nist`.gov`/div898`/strd`/nls`/data`/eckerle4`.shtml^2 E
-ckerle4][2  and ][^http`:`/`/www`.itl`.nist`.gov`/div898`/strd`/nls`/data`/thurber`.shtml^2 T
+[s0;# [2 Bazaar/Eigen package includes a sample package (Eigen`_demo) 
+to ease its use for U`+`+ users. It has many samples from Eigen 
+library and nonlinear equation solving and optimization like 
+][^http`:`/`/www`.itl`.nist`.gov`/div898`/strd`/nls`/data`/eckerle4`.shtml^2 Eckerl
+e4][2  and ][^http`:`/`/www`.itl`.nist`.gov`/div898`/strd`/nls`/data`/thurber`.shtml^2 T
 hurber][2  (see the graphs).]&]
 [s0;#2 &]
 [s0;= [2 
@@ -98,9 +98,6 @@ hurber][2  (see the graphs).]&]
 ¸€€ü¬úÝºÌ £Þ¿…®¡ÊÙ€¸ú…ˆâÉü‚„½ÞÙè€—€€€€€€ˆ€€œü‡ßŽƒý¸
 ]&]
 [s0;#2 &]
-[s0;#2 &]
-[s0;# [2 It is not necessary to install anything or set `"Build methods`". 
-As it is a template library no libraries or binaries are required.]&]
 [s0;#2 &]
 [s0;# [2 Eigen packages have been prepared by ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 d
 olik.rce][2  and ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 k

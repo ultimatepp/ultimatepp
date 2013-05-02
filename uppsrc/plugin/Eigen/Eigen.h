@@ -21,9 +21,32 @@
 
 //#undef Success
 #include "Eigen/Eigen"
-
+#include <plugin/Eigen/unsupported/Eigen/NonLinearOptimization>
 
 NAMESPACE_UPP
+
+using namespace Eigen;
+
+template<typename _Scalar, ptrdiff_t nx = Dynamic, ptrdiff_t ny = Dynamic>
+struct NonLinearOptimizationFunctor {
+	typedef _Scalar Scalar;
+	enum {
+		InputsAtCompileTime = nx,
+		ValuesAtCompileTime = ny
+	};
+	typedef Matrix<double, InputsAtCompileTime, 1> InputType;
+	typedef Matrix<double, ValuesAtCompileTime, 1> ValueType;
+	typedef Matrix<double, ValuesAtCompileTime, InputsAtCompileTime> JacobianType;
+	
+	int64 unknowns, datasetLen;
+	
+	NonLinearOptimizationFunctor() : unknowns(InputsAtCompileTime), datasetLen(ValuesAtCompileTime) {}
+	NonLinearOptimizationFunctor(int unknowns, int datasetLen) : unknowns(unknowns), datasetLen(datasetLen) {}
+	
+	ptrdiff_t inputs() const {return ptrdiff_t(unknowns);}
+	ptrdiff_t values() const {return ptrdiff_t(datasetLen);}
+	virtual void operator() (const InputType& x, ValueType* v, JacobianType* j = 0) const {};
+};
 
 template <class T>
 void Xmlize(XmlIO &xml, Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> &mat) {
