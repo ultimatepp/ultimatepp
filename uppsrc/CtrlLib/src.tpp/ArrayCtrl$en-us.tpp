@@ -219,7 +219,7 @@ trl]&]
 ]&]
 [s0;* &]
 [s0; [* ArrayCtrl] implements basic grid functionality. It is typically 
-used for display and editation of arrays of values or (heterogeneous) 
+used for display and editing of arrays of values or (heterogeneous) 
 records. The records correspond to rows in the array, the individual 
 fields within each record can be either bound to columns or to 
 any generic [* Ctrl]`'s, thus supporting basic master`-detail functionality 
@@ -232,7 +232,7 @@ functionality with the drop`-down mechanism very similar to the
 one used in popup menus. This opens the door for implementing 
 drop`-down controls like [* DropList] (aka [/ combo box]) or [* DropChoice] 
 (usually used together with a control of the [* EditField ]or [* DataPusher] 
-family to support coupling native data editation with drop`-down 
+family to support coupling native data editing with drop`-down 
 selection, widely used for history or commonly used predefined 
 values. The [* ArrayPair] is, as its name implies, a pair of [* ArrayCtrl]`'s 
 with arrow buttons between them allowing to visually select subsets 
@@ -288,7 +288,7 @@ is rather awkward. It is planned to enhance this feature in the
 future by adding support for access to external data via a data 
 accessor interface object. &]
 [s0; &]
-[s0; [*+117 ArrayCtrl GUI: selection, editation, and local menu]&]
+[s0; [*+117 ArrayCtrl GUI: selection, editing, and local menu]&]
 [s0; &]
 [s0; Array rows can be selected using the mouse or keyboard. ArrayCtrl`'s 
 support both single`-selection (plain cursor) and multiselection 
@@ -302,14 +302,14 @@ programmatically, or via common GUI elements (mouse and keyboard
 selection, local menu). It is possible to alter the standard 
 ArrayCtrl local menu using the [* WhenBar] callback.&]
 [s0; &]
-[s0; [* Note:] it is worth noting that the standard editation keys ([* Insert] 
-`= row insertion, [* Ctrl`+Enter] `= editation and [* Ctrl`+Delete] 
+[s0; [* Note:] it is worth noting that the standard editing keys ([* Insert] 
+`= row insertion, [* Ctrl`+Enter] `= editing and [* Ctrl`+Delete] 
 `= deletion) are not hardcoded in the ArrayCtrl`'s [* Key] method, 
 they are mere hotkeys for the relevant local menu items. When 
-you change the ArrayCtrl`'s local menu, the editation hotkeys 
-change accordingly.&]
+you change the ArrayCtrl`'s local menu, the editing hotkeys change 
+accordingly.&]
 [s0; &]
-[s0; A special but rather important case of array editation is [/ sorting]: 
+[s0; A special but rather important case of array editing is [/ sorting]: 
 there is no specific standard GUI for that. If you aren`'t content 
 with programmatic sorting (e.g. after opening a dialog or after 
 loading the array data), you have to implement some GUI for that 
@@ -541,7 +541,7 @@ external data]
 :: [s0; GetDisplay]
 :: [s0; returns column / cell display]
 :: [s0; SetCtrl]
-:: [s0; sets a [* Ctrl] object for custom editation of a given cell]
+:: [s0; sets a [* Ctrl] object for custom editing of a given cell]
 :: [s0; GetTotalCy]
 :: [s0; returns total row height]
 :: [s0; GetLineAt]
@@ -571,13 +571,13 @@ existing rows)]
 :: [s0; Get]
 :: [s0; returns given Value element of the source data matrix]
 :: [s0; GetOriginal]
-:: [s0; returns given element of source data matrix before editation]
+:: [s0; returns given element of source data matrix before editing]
 :: [s0; Set]
 :: [s0; sets given element of the source data matrix]
 :: [s0; GetKey]
 :: [s0; returns given primary key (column #0 in the data matrix)]
 :: [s0; GetOriginalKey]
-:: [s0; returns `'old`' value of primary key before editation]
+:: [s0; returns `'old`' value of primary key before editing]
 :: [s0; GetColumn]
 :: [s0; returns value of a given output column (according to its index 
 mapping)]
@@ -620,7 +620,7 @@ mapping)]
 :: [s0; KillCursor]
 :: [s0; removes the cursor away from the table]
 :: [s0; CancelCursor]
-:: [s0; cancels editation of current row]
+:: [s0; cancels editing of current row]
 :: [s0; IsCursor]
 :: [s0; checks whether cursor is in the table (identical to [* GetCursor() 
 >`= 0])]
@@ -711,7 +711,7 @@ use WhenSel)]]
 :: [s0; WhenAcceptRow]
 :: [s0; additional row validation callback]
 :: [s0; WhenStartEdit]
-:: [s0; called after initiating row editation]
+:: [s0; called after initiating row editing]
 :: [s0; WhenAcceptEdit]
 :: [s0; called after accepting changes to a given row]
 :: [s0; WhenArrayAction]
@@ -911,7 +911,7 @@ enable it (the default)&]
 [s5;:ArrayCtrl`:`:IsEditing`(`)const:%- [@(0.0.255) bool]_[* IsEditing]()_[@(0.0.255) const
 ]&]
 [s2; Checks whether at least one array column supports editing (whether 
-it is possible to [/ open] a row for editation).&]
+it is possible to [/ open] a row for editing).&]
 [s7; [*/ Return value]-|[* true] `= row editing is possible, [* false] when 
 not&]
 [s3; &]
@@ -1422,7 +1422,7 @@ row number is passed to the column`'s [* Convert] / [* Display].
 This allows the host application to decode somehow the external 
 data based on the row number. In the current U`+`+ version, the 
 [/ RowNum columns] cannot be edited (using the standard array inline 
-editation mechanism).&]
+editing mechanism).&]
 [s7; [%-*C@3 text]-|column name (displayed in the header)&]
 [s7; [%-*C@3 w]-|logical relative column width&]
 [s7; [*/ Return value]-|A reference to the [* Column] structure describing 
@@ -1493,8 +1493,8 @@ the array, array uses the control`'s [* SetData] method to set
 it to the current row number. The control must be ready for that 
 and it can use the row number value to decode some externally 
 located data for display. In the current U`+`+ version, such 
-controls cannot be used for editation (there is currently no 
-clean way to store the edited data back to its external storage).&]
+controls cannot be used for editing (there is currently no clean 
+way to store the edited data back to its external storage).&]
 [s7; [%-*C@3 ctrl]-|[/ RowNum]`-based freestanding editor control&]
 [s3; &]
 [s4;%- &]
@@ -1833,8 +1833,8 @@ cursor row. This is equivalent to [* Get(GetCursor(), id)].&]
 nt]_[*@3 ii])_[@(0.0.255) const]&]
 [s2; Returns the `'original`' value of a given source index at the 
 currently active cursor row. When the row is open for editing, 
-this function returns the `'old`' value before any editation 
-took place.&]
+this function returns the `'old`' value before any editing took 
+place.&]
 [s7; [%-*C@3 ii]-|zero`-based index ordinal number&]
 [s7; [*/ Return value]-|value at the given location in the cursor row&]
 [s3; &]
@@ -1857,8 +1857,8 @@ equivalent to [* Get(0)].&]
 [s5;:ArrayCtrl`:`:GetOriginalKey`(`)const:%- [_^Value^ Value]_[* GetOriginalKey]()_[@(0.0.255) c
 onst]&]
 [s2; Returns the original value of the current row`'s primary key. 
-During editation, the function returns the value at the time 
-of opening the row for editing, i.e. without any editing changes 
+During editing, the function returns the value at the time of 
+opening the row for editing, i.e. without any editing changes 
 applied. This is equivalent to [* GetOriginal(0)].&]
 [s7; [*/ Return value]-|value at the index #0 in the cursor row&]
 [s3; &]
@@ -2227,7 +2227,7 @@ row failed)&]
 [s3; &]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:CancelCursor`(`):%- [@(0.0.255) void]_[* CancelCursor]()&]
-[s2; Cancels editation of the row being currently edited. All changes 
+[s2; Cancels editing of the row being currently edited. All changes 
 made in the individual column editors are rejected.&]
 [s3; &]
 [s4;%- &]
@@ -2363,7 +2363,7 @@ cursor set), [* false] when not&]
 [s5;:ArrayCtrl`:`:StdBar`(Bar`&`):%- [@(0.0.255) void]_[* StdBar]([_^Bar^ Bar][@(0.0.255) `&]_
 [*@3 menu])&]
 [s2; The default array local menu. The default local menu consists 
-of the standard editation actions (inserting / appending / duplicating 
+of the standard editing actions (inserting / appending / duplicating 
 a row, editing a row, removing a row, moving a row, select all 
 rows) filtered by the array properties enabling / disabling the 
 various GUI elements (item insertion / deletion etc.). &]
@@ -2392,9 +2392,9 @@ changes.&]
 [s2; Opens the current cursor row for editing and sets focus to the 
 [/ d]`-th column.&]
 [s7; [%-*C@3 d]-|zero`-based column index&]
-[s7; [*/ Return value]-|[* true] `= editation successfully initiated, 
-[* false] when not (when the array is in [* ReadOnly] mode or it 
-has no editable columns)&]
+[s7; [*/ Return value]-|[* true] `= editing successfully initiated, [* false] 
+when not (when the array is in [* ReadOnly] mode or it has no editable 
+columns)&]
 [s3; &]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:GetEditColumn`(`)const:%- [@(0.0.255) int]_[* GetEditColumn]()_[@(0.0.255) c
@@ -2448,7 +2448,7 @@ current row is not removed.&]
 presses the [* Enter] key. The row being currently edited is committed 
 and, in the case it was a newly appended line and the [* NoInsertAppend] 
 property is not set, an additional row is added to the array 
-and opened for editation.&]
+and opened for editing.&]
 [s7; [*/ Return value]-|[* true] `= the current row has been successfully 
 committed, [* false] when not&]
 [s3; &]
@@ -2560,7 +2560,7 @@ deleting a row).&]
 [s3; &]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:WhenStartEdit:%- [_^Callback^ Callback]_[* WhenStartEdit]&]
-[s2; This callback is called whenever the array row editation process 
+[s2; This callback is called whenever the array row editing process 
 is initiated. It can be used e.g. to set up some additional properties 
 of the column editor objects, to fill in drop`-down lists pertaining 
 to certain column editors etc.&]
@@ -2579,10 +2579,9 @@ cursor is automatically considered part of the selection.&]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:WhenCtrlsAction:%- [_^Callback^ Callback]_[* WhenCtrlsAction]&]
 [s2; This callback is called whenever some of the editor controls 
-constructed automatically via the column editation [/ factory] 
-calls its [* WhenAction] method. It can be used to watch out for 
-changes in the cell editors and react to specific situations 
-accordingly.&]
+constructed automatically via the column editing [/ factory] calls 
+its [* WhenAction] method. It can be used to watch out for changes 
+in the cell editors and react to specific situations accordingly.&]
 [s3; &]
 [s0; &]
 [s0; &]
@@ -2822,7 +2821,7 @@ value generation&]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:Column`:`:NoClickEdit`(`):%- [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&
 ]_[* NoClickEdit]()&]
-[s2; Disables entering the editation mode when clicking the respective 
+[s2; Disables entering the editing mode when clicking the respective 
 column.&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
