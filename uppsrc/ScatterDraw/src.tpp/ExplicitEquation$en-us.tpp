@@ -1,4 +1,4 @@
-topic "ExplicitEquation";
+topic "3. ExplicitEquation";
 [ $$0,0#00000000000000000000000000000000:Default]
 [0 $$1,0#96390100711032703541132217272105:end]
 [i448;a25;kKO9;2 $$2,0#37138531426314131252341829483380:class]
@@ -16,13 +16,12 @@ that is to say, a function y `= f(x1, x2, ..., a1, a2, ...) where
 y is the dependent variable, x1, x2 are the independent variables 
 and a1, a2, ... are the specific coefficients. For example:]&]
 [s0; [2 -|]&]
-[s0; [2 -|y `= 4x `+ 3z]&]
 [s0; [2 -|y `= 3`*x`^2 `+ 2`*x `- 1]&]
 [s0;2 &]
-[s0; [2 where the number 4, 3, ... are the equation coefficients.]&]
+[s0; [2 where the numbers 3, 2 and `-1 are the equation coefficients.]&]
 [s0;2 &]
-[s0; [2 It can support any explicit equation so it is used to get trend 
-lines and non linear regression.]&]
+[s0; [2 It can support any explicit equation so it is used to handle 
+trend lines and non linear regression.]&]
 [s0;2 &]
 [s0; [2 Its normal use is subclassed to equation types like ][^topic`:`/`/ScatterDraw`/src`/LinearEquation`$en`-us^2 L
 inearEquation][2 , ][^topic`:`/`/ScatterDraw`/src`/PolynomialEquation`$en`-us^2 Polyn
@@ -45,7 +44,7 @@ thus the complexity of the equation.&]
 [s5;:ExplicitEquation`:`:Fit`(DataSource`&`,double`&`): [@(0.0.255) FitError]_[* Fit]([_^DataSource^ D
 ataSource]_`&[*@3 series], [@(0.0.255) double]_`&[*@3 r2])&]
 [s4; Searches for the best combination of coefficients of the equation 
-that match [*@3 series] data series. The quality of the matching 
+that matches [*@3 series] data series. The quality of the matching 
 is returned in the [^http`:`/`/en`.wikipedia`.org`/wiki`/Coefficient`_of`_determination^ c
 oefficient of determination] [*@3 r2].&]
 [s4; It uses [^http`:`/`/eigen`.tuxfamily`.org`/index`.php`?title`=Main`_Page^ Eigen] 
