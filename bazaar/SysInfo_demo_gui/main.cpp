@@ -235,7 +235,7 @@ void WindowsList_::Fill() {
 	Windows.AddColumn("Process Id", 6);
 	Windows.AddColumn("Name", 20);
 	Windows.AddColumn("File name", 30);
-	Array<uint64> widL, pidL;
+	Array<int64> widL, pidL;
 	Array<String> name, fileName, caption;
 	GetWindowsList(widL, pidL, name, fileName, caption);
 	for (int i = 0; i < widL.GetCount(); ++i) 
@@ -252,7 +252,7 @@ void ProcessList::Fill() {
 	Process.AddColumn("Id", 6);
 	Process.AddColumn("Priority", 6);
 	Process.AddColumn("Program", 12);
-	Array<uint64> pidL;
+	Array<int64> pidL;
 	pidL.Clear(); 
 	Array<String> pNames;
 	if (!GetProcessList(pidL, pNames))
