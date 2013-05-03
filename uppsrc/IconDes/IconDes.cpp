@@ -143,7 +143,7 @@ void IconDes::PenSet(Point p, dword flags)
 void IconDes::LineTool(Point p, dword flags)
 {
 	Size isz = GetImageSize();
-	ImageDraw iw(isz);
+	IconDraw iw(isz);
 	iw.DrawRect(isz, GrayColor(0));
 	iw.DrawLine(startpoint, p, pen, GrayColor(255));
 	ApplyDraw(iw, flags);
@@ -154,7 +154,7 @@ void IconDes::LineTool(Point p, dword flags)
 void IconDes::EllipseTool0(Point p, dword flags, Color inner)
 {
 	Size isz = GetImageSize();
-	ImageDraw iw(isz);
+	IconDraw iw(isz);
 	iw.DrawRect(isz, GrayColor(0));
 	iw.DrawEllipse(Rect(startpoint, p).Normalized(), inner, pen, GrayColor(255));
 	ApplyDraw(iw, flags);
@@ -173,7 +173,7 @@ void IconDes::EmptyEllipseTool(Point p, dword flags)
 void IconDes::RectTool0(Point p, dword flags, bool empty)
 {
 	Size isz = GetImageSize();
-	ImageDraw iw(isz);
+	IconDraw iw(isz);
 	iw.DrawRect(isz, GrayColor(0));
 	Rect r = Rect(startpoint, p + 1).Normalized();
 	if(empty)

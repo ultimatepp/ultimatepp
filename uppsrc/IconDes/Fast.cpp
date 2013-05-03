@@ -21,7 +21,7 @@ void IconDes::MaskSelection()
 	SyncShow();
 }
 
-void IconDes::ApplyDraw(const ImageDraw& iw, dword flags)
+void IconDes::ApplyDraw(IconDraw& iw, dword flags)
 {
 	if(!IsCurrent())
 		return;
