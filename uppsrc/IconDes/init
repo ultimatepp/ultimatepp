@@ -3,4 +3,5 @@
 #include "CtrlLib/init"
 #include "plugin\gif/init"
 #include "plugin\jpg/init"
+#include "Painter/init"
 #endif

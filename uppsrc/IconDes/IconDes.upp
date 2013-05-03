@@ -3,7 +3,8 @@ description "Image designer\377";
 uses
 	CtrlLib,
 	plugin\gif,
-	plugin\jpg;
+	plugin\jpg,
+	Painter;
 
 file
 	IconDes.h,

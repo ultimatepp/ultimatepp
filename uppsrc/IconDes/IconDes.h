@@ -2,6 +2,7 @@
 #define _IconDes_IconDes_h_
 
 #include <CtrlLib/CtrlLib.h>
+#include <Painter/Painter.h>
 
 
 NAMESPACE_UPP
@@ -97,6 +98,10 @@ void   MirrorVert(Image& img, const Rect& rect);
 String PackImlData(const Vector<Image>& image);
 Image  DownSample3x(const Image& src);
 
+struct IconDraw : ImagePainter {
+	IconDraw(Size sz) : ImagePainter(sz, MODE_NOAA) {}
+};
+
 class IconDes : public Ctrl {
 public:
 	virtual void  Layout();
@@ -190,7 +195,7 @@ private:
 	void  RefreshPixel(int x, int y, int cx = 1, int cy = 1);
 	Point GetPos(Point p);
 	void  Set(Point p, RGBA rgba, dword flags);
-	void  ApplyDraw(const ImageDraw& iw, dword flags);
+	void  ApplyDraw(IconDraw& iw, dword flags);
 
 	void  SyncImage();
 	void  Reset();
