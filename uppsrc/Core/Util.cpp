@@ -4,6 +4,11 @@
 #	include <winnls.h>
 #endif
 
+#if defined(PLATFORM_POSIX) && defined(COMPILER_GCC)
+#	include <execinfo.h>
+#	include <cxxabi.h>
+#endif
+
 NAMESPACE_UPP
 
 bool PanicMode;
@@ -31,6 +36,53 @@ void PanicMessageBox(const char *title, const char *text)
 		);
 	}
 }
+
+
+#if defined(PLATFORM_POSIX) && defined(COMPILER_GCC)
+void AddStackTrace(char * str, int len)
+{
+	const size_t max_depth = 100;
+    void *stack_addrs[max_depth];
+    char **stack_strings;
+    const char msg[] = "\nStack trace:\n";
+
+    size_t stack_depth = backtrace(stack_addrs, max_depth);
+    stack_strings = backtrace_symbols(stack_addrs, stack_depth);
+
+	int space = len - strlen(str);
+	strncat(str, msg, max(space, 0));
+	space -= sizeof(msg) - 1;
+	
+    for (size_t i = 0; i < stack_depth && space > 0; i++) {
+
+		char * start = strchr(stack_strings[i], '(');
+		if (start == NULL) continue;
+
+		size_t len;
+		int stat;
+
+		char * end = strchr(start, '+');
+		if (end != NULL) *end = '\0';
+
+		char * demangled = abi::__cxa_demangle(start+1, NULL, &len, &stat);
+
+		if (stat == 0 && demangled != NULL){
+			strncat(str, demangled, max(space, 0));
+			space -= len;
+		}else{
+			strncat(str, start, max(space, 0));
+			space -= strlen(start);
+		}
+		if (demangled != NULL) free(demangled);
+		
+		strncat(str, "\n", max(space, 0));
+		space -= 1;
+    }
+    
+    free(stack_strings);
+}
+#endif
+
 
 void    Panic(const char *msg)
 {
@@ -83,6 +135,10 @@ void    AssertFailed(const char *file, int line, const char *cond)
 	PanicMode = true;
 	char s[2048];
 	sprintf(s, "Assertion failed in %s, line %d\n%s\n", file, line, cond);
+#if defined(PLATFORM_POSIX) && defined(COMPILER_GCC)
+	AddStackTrace(s, sizeof(s));
+#endif
+
 	if(s_assert_hook)
 		(*s_assert_hook)(s);
 	RLOG("****************** ASSERT FAILED: " << s << "\n");
