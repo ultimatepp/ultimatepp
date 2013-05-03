@@ -215,9 +215,9 @@ resent]_)&]
 [s0;%- &]
 [ {{10000@1 [s0; [* Process handling]]}}&]
 [s3;%- &]
-[s5;:GetWindowsList`(Array`<long`>`&`,Array`<long`>`&`,Array`<String`>`&`,Array`<String`>`&`,Array`<String`>`&`):%- [@(0.0.255) v
-oid]_[* GetWindowsList]([_^Array^ Array]<[@(0.0.255) long]>_`&[*@3 wid], 
-[_^Array^ Array]<[@(0.0.255) long]>_`&[*@3 pid], [_^Array^ Array]<[_^String^ String]>_`&[*@3 n
+[s5;:GetWindowsList`(Array`<int64`>`&`,Array`<int64`>`&`,Array`<String`>`&`,Array`<String`>`&`,Array`<String`>`&`):%- [@(0.0.255) v
+oid]_[* GetWindowsList]([_^Array^ Array]<[@(0.0.255) int64]>_`&[*@3 wid], 
+[_^Array^ Array]<[@(0.0.255) int64]>_`&[*@3 pid], [_^Array^ Array]<[_^String^ String]>_`&[*@3 n
 ame], [_^Array^ Array]<[_^String^ String]>_`&[*@3 fileName], [_^Array^ Array]<[_^String^ St
 ring]>_`&[*@3 title])&]
 [s2; Gets arrays with handles to all the opened windows with additional 
@@ -229,34 +229,34 @@ info as:&]
 [s2; [%-*@3 title]: Window title (caption)&]
 [s3; &]
 [s4;%- &]
-[s5;:GetWindowsList`(`):%- [_^Array^ Array]<[@(0.0.255) long]>_[* GetWindowsList]()&]
+[s5;:GetWindowsList`(`):%- [_^Array^ Array]<[@(0.0.255) int64]>_[* GetWindowsList]()&]
 [s2; Gets an array with handles to all the opened windows.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:GetProcessList`(Array`<long`>`&`,Array`<String`>`&`):%- [@(0.0.255) bool]_[* GetProc
-essList]([_^Array^ Array]<[@(0.0.255) long]>_`&[*@3 pid], [_^Array^ Array]<[_^String^ Strin
-g]>_`&[*@3 pNames])&]
+[s5;:GetProcessList`(Array`<int64`>`&`,Array`<String`>`&`):%- [@(0.0.255) bool]_[* GetPro
+cessList]([_^Array^ Array]<[@(0.0.255) int64]>_`&[*@3 pid], [_^Array^ Array]<[_^String^ Str
+ing]>_`&[*@3 pNames])&]
 [s2; Gets arrays with handles to all the opened processes [%-*@3 pid 
 ]and process names [%-*@3 pNames].&]
 [s3; &]
 [s4;%- &]
-[s5;:GetProcessList`(`):%- [_^Array^ Array]<[@(0.0.255) long]>_[* GetProcessList]()&]
+[s5;:GetProcessList`(`):%- [_^Array^ Array]<[@(0.0.255) int64]>_[* GetProcessList]()&]
 [s2; Gets an array with handles to all the opened processes&]
 [s3;%- &]
 [s4;%- &]
-[s5;:GetProcessName`(long`):%- [_^String^ String]_[* GetProcessName]([@(0.0.255) long]_[*@3 p
+[s5;:GetProcessName`(int64`):%- [_^String^ String]_[* GetProcessName]([@(0.0.255) int64]_[*@3 p
 id])&]
 [s2; Returns the process name for a process with handle [%-*@3 pid].&]
 [s3; &]
 [s4;%- &]
-[s5;:GetProcessFileName`(long`):%- [_^String^ String]_[* GetProcessFileName]([@(0.0.255) lo
-ng]_[*@3 processID])&]
+[s5;:GetProcessFileName`(int64`):%- [_^String^ String]_[* GetProcessFileName]([@(0.0.255) i
+nt64]_[*@3 processID])&]
 [s2; Gets the program file name of a process with handle [%-*@3 processID].&]
 [s3; &]
 [s4;%- &]
-[s5;:GetProcessIdFromWindowCaption`(String`,bool`):%- [@(0.0.255) long]_[* GetProcessIdFr
-omWindowCaption]([_^String^ String]_[*@3 windowCaption], [@(0.0.255) bool]_[*@3 exactMatc
-h]_`=_[@(0.0.255) false])&]
+[s5;:GetProcessIdFromWindowCaption`(String`,bool`):%- [@(0.0.255) int64]_[* GetProcessIdF
+romWindowCaption]([_^String^ String]_[*@3 windowCaption], [@(0.0.255) bool]_[*@3 exactMat
+ch]_`=_[@(0.0.255) false])&]
 [s2;%- [%% Gets the process handle of a program with a window with 
 title ][*@3 windowCaption.]&]
 [s2;%- [%% If ][*@3 exactMatch][%% .is true it only returns the process 
@@ -265,8 +265,8 @@ handle of a process with a window title that is equal to ][*@3 windowCaption.
 the window title matches with ][*@3 windowCaption.]&]
 [s3; &]
 [s4;%- &]
-[s5;:GetWindowIdFromCaption`(String`,bool`):%- [@(0.0.255) long]_[* GetWindowIdFromCaptio
-n]([_^String^ String]_[*@3 windowCaption], [@(0.0.255) bool]_[*@3 exactMatch]_`=_[@(0.0.255) f
+[s5;:GetWindowIdFromCaption`(String`,bool`):%- [@(0.0.255) int64]_[* GetWindowIdFromCapti
+on]([_^String^ String]_[*@3 windowCaption], [@(0.0.255) bool]_[*@3 exactMatch]_`=_[@(0.0.255) f
 alse])&]
 [s2;%- [%% Gets the window handle of a program with a window with title 
 ][*@3 windowCaption.]&]
@@ -276,20 +276,20 @@ handle of a process with a window title that is equal to ][*@3 windowCaption.
 the window title matches with ][*@3 windowCaption.]&]
 [s3; &]
 [s4;%- &]
-[s5;:GetProcessIdFromWindowId`(long`):%- [@(0.0.255) long]_[* GetProcessIdFromWindowId]([@(0.0.255) l
-ong]_[*@3 wid])&]
+[s5;:GetProcessIdFromWindowId`(int64`):%- [@(0.0.255) int64]_[* GetProcessIdFromWindowId](
+[@(0.0.255) int64]_[*@3 wid])&]
 [s2;%- [%% Returns the process handle of a program with window handle 
 ][*@3 wid.]&]
 [s3; &]
 [s4;%- &]
-[s5;:GetWindowIdFromProcessId`(long`):%- [@(0.0.255) long]_[* GetWindowIdFromProcessId]([@(0.0.255) l
-ong]_[*@3 pid])&]
+[s5;:GetWindowIdFromProcessId`(int64`):%- [@(0.0.255) int64]_[* GetWindowIdFromProcessId](
+[@(0.0.255) int64]_[*@3 pid])&]
 [s2;%- [%% Returns the window handle of a program with process handle 
 ][*@3 pid.]&]
 [s3; &]
 [s4;%- &]
-[s5;:ProcessTerminate`(long`,int`):%- [@(0.0.255) bool]_[* ProcessTerminate]([@(0.0.255) lo
-ng]_[*@3 pid], [@(0.0.255) int]_[*@3 timeout]_`=_[@3 500])&]
+[s5;:ProcessTerminate`(int64`,int`):%- [@(0.0.255) bool]_[* ProcessTerminate]([@(0.0.255) i
+nt64]_[*@3 pid], [@(0.0.255) int]_[*@3 timeout]_`=_[@3 500])&]
 [s2;%- [%% Ends the program with handle ][*@3 pid.]&]
 [s2; If after asking the process to end [%-*@3 timeout ]is over, it 
 will kill the process by different means in order of increasing 
@@ -300,25 +300,25 @@ process remains running it will simply call WindowKill() to do
 the dirty job.&]
 [s3; &]
 [s4;%- &]
-[s5;:GetProcessPriority`(long`):%- [@(0.0.255) int]_[* GetProcessPriority]([@(0.0.255) long
-]_[*@3 pid])&]
+[s5;:GetProcessPriority`(int64`):%- [@(0.0.255) int]_[* GetProcessPriority]([@(0.0.255) int
+64]_[*@3 pid])&]
 [s2; Gets the process priority of the process with handle [%-*@3 pid] 
 as a number from 0 (minimum) to 10 (maximum), if possible.&]
 [s3; &]
 [s4;%- &]
-[s5;:SetProcessPriority`(long`,int`):%- [@(0.0.255) bool]_[* SetProcessPriority]([@(0.0.255) l
-ong]_[*@3 pid], [@(0.0.255) int]_[*@3 priority])&]
+[s5;:SetProcessPriority`(int64`,int`):%- [@(0.0.255) bool]_[* SetProcessPriority]([@(0.0.255) i
+nt64]_[*@3 pid], [@(0.0.255) int]_[*@3 priority])&]
 [s2; Sets the process priority to [%-*@3 priority ]of the process with 
 handle [%-*@3 pid] as a number from 0 (minimum) to 10 (maximum), 
 if possible.&]
 [s3; &]
 [s4;%- &]
-[s5;:ProcessExists`(long`):%- [@(0.0.255) bool]_[* ProcessExists]([@(0.0.255) long]_[*@3 pid])
-&]
+[s5;:ProcessExists`(int64`):%- [@(0.0.255) bool]_[* ProcessExists]([@(0.0.255) int64]_[*@3 pi
+d])&]
 [s2; Returns true if a process with handle [%-*@3 pid ]exists.&]
 [s3; &]
 [s4;%- &]
-[s5;:GetProcessId`(`):%- [@(0.0.255) long]_[* GetProcessId]()&]
+[s5;:GetProcessId`(`):%- [@(0.0.255) int64]_[* GetProcessId]()&]
 [s2; Gets actual running process handle.&]
 [s3;%- &]
 [s4;%- &]
@@ -330,8 +330,8 @@ and `"shutdown`".&]
 [s0; &]
 [ {{10000@1 [s0; [* Windows handling]]}}&]
 [s0; &]
-[s5;:Window`_GetRect`(long`,long`&`,long`&`,long`&`,long`&`):%- [@(0.0.255) bool]_[* Wind
-ow`_GetRect]([@(0.0.255) long]_[*@3 windowId], [@(0.0.255) long]_`&[*@3 left], 
+[s5;:Window`_GetRect`(int64`,long`&`,long`&`,long`&`,long`&`):%- [@(0.0.255) bool]_[* Win
+dow`_GetRect]([@(0.0.255) int64]_[*@3 windowId], [@(0.0.255) long]_`&[*@3 left], 
 [@(0.0.255) long]_`&[*@3 top], [@(0.0.255) long]_`&[*@3 right], [@(0.0.255) long]_`&[*@3 bott
 om])&]
 [s2; Giving this function the [%-*@3 windowId], it returns the window 
@@ -341,7 +341,7 @@ and [%-*@3 bottom].&]
 [s3; &]
 [s4; &]
 [s5;:Window`_SetRect`(long`,long`,long`,long`,long`):%- [@(0.0.255) void]_[* Window`_SetR
-ect]([@(0.0.255) long]_[*@3 windowId], [@(0.0.255) long]_[*@3 left], 
+ect]([@(0.0.255) int64]_[*@3 windowId], [@(0.0.255) long]_[*@3 left], 
 [@(0.0.255) long]_[*@3 top], [@(0.0.255) long]_[*@3 right], [@(0.0.255) long]_[*@3 bottom])&]
 [s2; Giving this function the [%-*@3 windowId], it sets the window 
 location in the screen in [%-*@3 left], [%-*@3 top], [%-*@3 right] 
@@ -358,8 +358,8 @@ left corner is (0, 0).&]
 [s2; Returns true if the operation has been done successfully.&]
 [s3; &]
 [s4;%- &]
-[s5;:Mouse`_SetPos`(long`,long`,long`):%- [@(0.0.255) bool]_[* Mouse`_SetPos]([@(0.0.255) l
-ong]_[*@3 x], [@(0.0.255) long]_[*@3 y], [@(0.0.255) long]_[*@3 windowId])&]
+[s5;:Mouse`_SetPos`(long`,long`,int64`):%- [@(0.0.255) bool]_[* Mouse`_SetPos]([@(0.0.255) l
+ong]_[*@3 x], [@(0.0.255) long]_[*@3 y], [@(0.0.255) int64]_[*@3 windowId])&]
 [s2; Sets the mouse position to [%-*@3 x] [%-*@3 y] referenced to the 
 upper left vertex of window with window handle [%-*@3 windowId].&]
 [s2; Returns true if the operation has been done successfully.&]
@@ -475,8 +475,8 @@ esktopRectangle]([_^String^ String]_[*@3 fileName], [@(0.0.255) int]_[*@3 left],
 [s2;i150;O0; Windows:-|bmp&]
 [s3; &]
 [s4;%- &]
-[s5;:Snap`_Window`(String`,long`):%- [@(0.0.255) bool]_[* Snap`_Window]([_^String^ String]_
-[*@3 fileName], [@(0.0.255) long]_[*@3 handle])&]
+[s5;:Snap`_Window`(String`,int64`):%- [@(0.0.255) bool]_[* Snap`_Window]([_^String^ String]_
+[*@3 fileName], [@(0.0.255) int64]_[*@3 handle])&]
 [s2; Saves a window defined by its [%-*@3 handle] in [%-*@3 fileName] 
 as an image file.&]
 [s2; Allowed formats are:&]
@@ -513,7 +513,7 @@ true.&]
 [s4;%- &]
 [s5;:Record`_Window`(String`,int`,long`,int`,bool`):%- [@(0.0.255) bool]_[* Record`_Windo
 w]([_^String^ String]_[*@3 fileName], [@(0.0.255) int]_[*@3 duration], 
-[@(0.0.255) long]_[*@3 handle], [@(0.0.255) int]_[*@3 secsFrame]_`=_[@3 1], 
+[@(0.0.255) int64]_[*@3 handle], [@(0.0.255) int]_[*@3 secsFrame]_`=_[@3 1], 
 [@(0.0.255) bool]_[*@3 viewMouse]_`=_[@(0.0.255) true])&]
 [s2; Records the activity of a window defined by its [%-*@3 handle] 
 in [%-*@3 fileName] as a video file of [%-*@3 duration] in seconds 

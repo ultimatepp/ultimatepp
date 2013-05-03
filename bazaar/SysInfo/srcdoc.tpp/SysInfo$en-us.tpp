@@ -51,7 +51,5 @@ ellaneous functions]&]
 [s0; &]
 [s0;i150;O0; [^topic`:`/`/SysInfo`/srcdoc`/SysInfoDemo`$en`-us^ SysInfo`_demo] 
 reviews the demo package&]
-[s0;i150;O0; [^topic`:`/`/SysInfo`/srcdoc`/ChangesLog`$en`-us^ Changes 
-log]&]
 [s0;i150;O0; [^topic`:`/`/SysInfo`/srcdoc`/ToDo`$en`-us^ ToDo list]&]
-[s0; ]
+[s0; ]]

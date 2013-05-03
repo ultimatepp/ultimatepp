@@ -548,7 +548,6 @@ Array<NetAdapter> GetAdapterInfo()
 			// failed, free buffer and leave
 			delete[] buf;
 			close(sck);
-			DLOG("Failed to get interfaces list");
 			return res;
 		}
 		
@@ -560,7 +559,6 @@ Array<NetAdapter> GetAdapterInfo()
 		delete[] buf;
 		bufSize *= 2;
 		if(iTry >= 3) {
-			DLOG("Max buffer size too small");
 			close(sck);
 			return res;
 		}
@@ -779,7 +777,7 @@ bool GetMemoryInfo(
 #if defined(PLATFORM_WIN32) 
 
 // Get the list of process identifiers.
-bool GetProcessList(Array<uint64> &pid, Array<String> &pNames)
+bool GetProcessList(Array<int64> &pid, Array<String> &pNames)
 {
 	PROCESSENTRY32 proc;
 	HANDLE hSnap = ::CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -796,10 +794,10 @@ bool GetProcessList(Array<uint64> &pid, Array<String> &pNames)
 	return true;	
 }
 
-Array<uint64> GetProcessList()
+Array<int64> GetProcessList()
 {
 	PROCESSENTRY32 proc;
-	Array<uint64> ret;
+	Array<int64> ret;
 	HANDLE hSnap = ::CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 	if (hSnap == INVALID_HANDLE_VALUE) 
 		return ret;
@@ -813,7 +811,7 @@ Array<uint64> GetProcessList()
 	return ret;	
 }
 
-String GetProcessName(uint64 processID)
+String GetProcessName(int64 processID)
 {
 	WCHAR szProcessName[MAX_PATH];
 	String ret;
@@ -836,7 +834,7 @@ String GetProcessName(uint64 processID)
     return ret;
 }
 
-String GetProcessFileName(uint64 processID)
+String GetProcessFileName(int64 processID)
 {
 	WCHAR szProcessName[MAX_PATH];
     String ret;
@@ -865,12 +863,12 @@ BOOL CALLBACK EnumGetWindowsList(HWND hWnd, LPARAM lParam)
 		return TRUE;		// Not a window
 	if (GetParent(hWnd) != 0)
 		return TRUE;		// Child window
-	Array<uint64> *ret = (Array<uint64> *)lParam;
-	ret->Add(reinterpret_cast<uint64>(hWnd));
+	Array<int64> *ret = (Array<int64> *)lParam;
+	ret->Add(reinterpret_cast<int64>(hWnd));
 	return TRUE;
 }
 
-void GetWindowsList(Array<uint64> &hWnd, Array<uint64> &processId, Array<String> &name, Array<String> &fileName, Array<String> &caption)
+void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &name, Array<String> &fileName, Array<String> &caption)
 {
 	HANDLE hProcess;
 	DWORD dwThreadId, dwProcessId;
@@ -901,9 +899,9 @@ void GetWindowsList(Array<uint64> &hWnd, Array<uint64> &processId, Array<String>
 	}
 }
 
-Array<uint64> GetWindowsList()
+Array<int64> GetWindowsList()
 {
-	Array<uint64> ret;
+	Array<int64> ret;
 	EnumWindows(EnumGetWindowsList, (LPARAM)&ret);	
 	return ret;
 }
@@ -919,7 +917,7 @@ BOOL CALLBACK TerminateAppEnum(HWND hwnd, LPARAM lParam)
 
 // pid	 	Process ID of the process to shut down.
 // timeout 	Wait time in milliseconds before shutting down the process.
-bool ProcessTerminate(uint64 processId, int timeout)
+bool ProcessTerminate(int64 processId, int timeout)
 {
   	// If we can't open the process with PROCESS_TERMINATE rights, then we give up immediately.
   	HANDLE hProc = ::OpenProcess(SYNCHRONIZE|PROCESS_TERMINATE, FALSE, DWORD(processId));
@@ -940,7 +938,7 @@ bool ProcessTerminate(uint64 processId, int timeout)
 	return ret;
 }
 
-int GetProcessPriority(uint64 pid)
+int GetProcessPriority(int64 pid)
 {
 	int priority;
 	HANDLE hProc = ::OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, DWORD(pid));
@@ -967,7 +965,7 @@ int GetProcessPriority(uint64 pid)
   	return priority;	
 }
  
-bool SetProcessPriority(uint64 pid, int priority)
+bool SetProcessPriority(int64 pid, int priority)
 {
 	HANDLE hProc = ::OpenProcess(PROCESS_SET_INFORMATION , FALSE, DWORD(pid));
   	if(hProc == NULL)
@@ -1001,7 +999,7 @@ bool IsInteger(String s)
 	return true;
 }
 
-bool GetProcessList(Array<uint64> &pid, Array<String> &pNames)
+bool GetProcessList(Array<int64> &pid, Array<String> &pNames)
 {
 	FindFile ff;
 	if(ff.Search("/proc/*")) {
@@ -1023,10 +1021,10 @@ bool GetProcessList(Array<uint64> &pid, Array<String> &pNames)
 	return true;
 }
 
-Array<uint64> GetProcessList()
+Array<int64> GetProcessList()
 {
 	FindFile ff;
-	Array<long> pid; 
+	Array<int64> pid; 
 	if(ff.Search("/proc/*")) {
 		do {
 			if (IsInteger(ff.GetName())) {
@@ -1043,13 +1041,13 @@ Array<uint64> GetProcessList()
 	return pid;
 }
 
-String GetProcessName(uint64 pid)
+String GetProcessName(int64 pid)
 {
 	return GetFileName(GetProcessFileName(pid));
 }
 
 // ls -l /proc/%d/fd gets also the files opened by the process
-String GetProcessFileName(uint64 pid)
+String GetProcessFileName(int64 pid)
 {
 	String ret = "";
 	String exe = Format("/proc/%s/exe", FormatLong(pid));
@@ -1064,7 +1062,7 @@ String GetProcessFileName(uint64 pid)
 	return ret;	
 }
 
-void GetWindowsList_Rec (_XDisplay *dpy, Window w, int depth, Array<long> &wid) 
+void GetWindowsList_Rec (_XDisplay *dpy, Window w, int depth, Array<int64> &wid) 
 { 
 	if (depth > 3) // 1 is enough for Gnome. 2 is necessary for Xfce and Kde
 		return; 
@@ -1087,9 +1085,9 @@ void GetWindowsList_Rec (_XDisplay *dpy, Window w, int depth, Array<long> &wid)
 	return; 
 }
 
-Array<long> GetWindowsList()
+Array<int64> GetWindowsList()
 {
-	Array<long> ret;	
+	Array<int64> ret;	
 	SetSysInfoX11ErrorHandler();
 	
 	_XDisplay *dpy = XOpenDisplay (NULL);
@@ -1103,7 +1101,7 @@ Array<long> GetWindowsList()
 	return ret;
 }
 
-void GetWindowsList(Array<uint64> &hWnd, Array<uint64> &processId, Array<String> &nameL, Array<String> &fileName, Array<String> &caption)
+void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &nameL, Array<String> &fileName, Array<String> &caption)
 {
 	SetSysInfoX11ErrorHandler();
 	_XDisplay *dpy = XOpenDisplay (NULL);
@@ -1137,7 +1135,7 @@ void GetWindowsList(Array<uint64> &hWnd, Array<uint64> &processId, Array<String>
 		Atom atomPID = XInternAtom(dpy, "_NET_WM_PID", true);
 		unsigned long pid = 0;
 		if (atomPID == None)
-			processId.Add(0L);
+			processId.Add(0LL);
 		else {
 			Atom type;        
 			int format;        
@@ -1150,9 +1148,9 @@ void GetWindowsList(Array<uint64> &hWnd, Array<uint64> &processId, Array<String>
 					processId.Add(pid);
 					XFree(propPID);
 				} else
-					processId.Add(0L);
+					processId.Add(0LL);
 			} else
-				processId.Add(0L);
+				processId.Add(0LL);
 		}
 		if (pid != 0L)
 			fileName.Add(GetProcessFileName(pid));
@@ -1179,7 +1177,7 @@ void GetWindowsList(Array<uint64> &hWnd, Array<uint64> &processId, Array<String>
 	return;
 }    
 
-bool WindowKill(uint64 wid)
+bool WindowKill(int64 wid)
 {
 	if (wid == 0)
 		return false;
@@ -1197,7 +1195,7 @@ bool WindowKill(uint64 wid)
 }
 
 // Also possible to stop or cont
-bool ProcessTerminate(uint64 pid, int timeout)
+bool ProcessTerminate(int64 pid, int timeout)
 {
 	if (!ProcessExists(pid))
 		return false;
@@ -1218,13 +1216,13 @@ bool ProcessTerminate(uint64 pid, int timeout)
 	return WindowKill(wid);
 }
 
-int GetProcessPriority(uint64 pid)
+int GetProcessPriority(int64 pid)
 {
 	int priority = getpriority(PRIO_PROCESS, pid);
 	return 10 - (priority + 20)/4;		// Rescale -20/20 to 10/0
 }
 
-bool SetProcessPriority(uint64 pid, int priority)
+bool SetProcessPriority(int64 pid, int priority)
 {
 	priority = 20 - 4*priority;
 	if (0 == setpriority(PRIO_PROCESS, pid, priority))
@@ -1234,9 +1232,9 @@ bool SetProcessPriority(uint64 pid, int priority)
 }
 #endif
 
-uint64 GetWindowIdFromCaption(String windowCaption, bool exactMatch)
+int64 GetWindowIdFromCaption(String windowCaption, bool exactMatch)
 {
-	Array<uint64> wid, pid;
+	Array<int64> wid, pid;
 	Array<String> name, fileName, caption;
 	GetWindowsList(wid, pid, name, fileName, caption);
 	for (int i = 0; i < wid.GetCount(); ++i) {
@@ -1248,12 +1246,12 @@ uint64 GetWindowIdFromCaption(String windowCaption, bool exactMatch)
 				return wid[i];
 		}
 	}
-	return INT64_MAX;
+	return -1;
 } 
 
-uint64 GetProcessIdFromWindowCaption(String windowCaption, bool exactMatch)
+int64 GetProcessIdFromWindowCaption(String windowCaption, bool exactMatch)
 {
-	Array<uint64> wid, pid;
+	Array<int64> wid, pid;
 	Array<String> name, fileName, caption;
 	GetWindowsList(wid, pid, name, fileName, caption);
 	for (int i = 0; i < wid.GetCount(); ++i) {
@@ -1268,31 +1266,31 @@ uint64 GetProcessIdFromWindowCaption(String windowCaption, bool exactMatch)
 	return -1;
 }    
 
-uint64 GetProcessIdFromWindowId(uint64 _wId)
+int64 GetProcessIdFromWindowId(int64 _wId)
 {
-	Array<uint64> wId, pid;
+	Array<int64> wId, pid;
 	Array<String> name, fileName, caption;
 	GetWindowsList(wId, pid, name, fileName, caption);
 	for (int i = 0; i < pid.GetCount(); ++i) {
 		if (wId[i] == _wId)
 			return pid[i];
 	}
-	return 0;
+	return -1;
 } 
 
-uint64 GetWindowIdFromProcessId(uint64 _pid)
+int64 GetWindowIdFromProcessId(int64 _pid)
 {
-	Array<uint64> wId, pid;
+	Array<int64> wId, pid;
 	Array<String> name, fileName, caption;
 	GetWindowsList(wId, pid, name, fileName, caption);
 	for (int i = 0; i < pid.GetCount(); ++i) {
 		if (pid[i] == _pid)
 			return wId[i];
 	}
-	return 0;
+	return -1;
 } 
 
-bool ProcessExists(uint64 pid)
+bool ProcessExists(int64 pid)
 {
 	return DirectoryExists(Format("/proc/%s", Sprintf("%ld", pid)));
 }
@@ -1300,7 +1298,7 @@ bool ProcessExists(uint64 pid)
 /////////////////////////////////////////////////////////////////////
 // Others
 
-uint64    GetProcessId()			{return getpid();}
+int64    GetProcessId()			{return getpid();}
 
 /////////////////////////////////////////////////////////////////////
 // Drives list
@@ -1595,7 +1593,7 @@ bool TakeWindowPlacement(HWND hwnd, RECT &rcNormalPosition, POINT &ptMinPosition
     return ret;
 }
 
-bool Window_GetRect(uint64 windowId, long &left, long &top, long &right, long &bottom)
+bool Window_GetRect(int64 windowId, long &left, long &top, long &right, long &bottom)
 {
 	RECT rcNormalPosition;
     POINT ptMinPosition, ptMaxPosition;
@@ -1611,7 +1609,7 @@ bool Window_GetRect(uint64 windowId, long &left, long &top, long &right, long &b
 	return true;
 }
 
-bool Window_SetRect(uint64 windowId, long left, long top, long right, long bottom)
+bool Window_SetRect(int64 windowId, long left, long top, long right, long bottom)
 {
 	RECT rcNormalPosition;
     POINT ptMinPosition, ptMaxPosition;
@@ -1627,17 +1625,17 @@ bool Window_SetRect(uint64 windowId, long left, long top, long right, long botto
 	return PutWindowPlacement(reinterpret_cast<HWND>(windowId), rcNormalPosition, ptMinPosition, ptMaxPosition, showcmd, 0);
 }
 
-void Window_Bottom(uint64 windowId)
+void Window_Bottom(int64 windowId)
 {
 	SetWindowPos(reinterpret_cast<HWND>(windowId), HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE || SWP_NOSIZE || SWP_SHOWWINDOW);
 }
 
-void Window_Top(uint64 windowId)
+void Window_Top(int64 windowId)
 {
 	SetWindowPos(reinterpret_cast<HWND>(windowId), HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE || SWP_NOSIZE || SWP_SHOWWINDOW);
 }
 
-void Window_TopMost(uint64 windowId)
+void Window_TopMost(int64 windowId)
 {
 	SetWindowPos(reinterpret_cast<HWND>(windowId), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE || SWP_NOSIZE || SWP_SHOWWINDOW);
 }
@@ -1646,7 +1644,7 @@ void Window_TopMost(uint64 windowId)
 
 #ifdef PLATFORM_POSIX
 
-bool Window_GetRect(uint64 windowId, long &left, long &top, long &right, long &bottom)
+bool Window_GetRect(int64 windowId, long &left, long &top, long &right, long &bottom)
 {
 	SetSysInfoX11ErrorHandler();
 	_XDisplay *dpy = XOpenDisplay (NULL);
@@ -1670,7 +1668,7 @@ bool Window_GetRect(uint64 windowId, long &left, long &top, long &right, long &b
 	return ret; 
 }
 
-bool Window_SetRect(uint64 windowId, long left, long top, long right, long bottom)
+bool Window_SetRect(int64 windowId, long left, long top, long right, long bottom)
 {
 	SetSysInfoX11ErrorHandler();
 	_XDisplay *dpy = XOpenDisplay (NULL);

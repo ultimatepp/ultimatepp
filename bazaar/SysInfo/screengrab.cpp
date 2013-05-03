@@ -10,7 +10,7 @@ NAMESPACE_UPP
 	#define labs(x)	abs(x)
 #endif
 
-bool Window_SaveCapture(uint64 windowId, String fileName, int left, int top, int width, int height)
+bool Window_SaveCapture(int64 windowId, String fileName, int left, int top, int width, int height)
 {
 	HWND windowIdH = reinterpret_cast<HWND>(windowId);
 	if (windowIdH == 0)
@@ -138,7 +138,7 @@ bool Record_DesktopRectangle(String fileName, int duration, int left, int top, i
 	return true;
 }
 
-bool Record_Window(String fileName, int duration, uint64 handle, double secsFrame, bool viewMouse)
+bool Record_Window(String fileName, int duration, int64 handle, double secsFrame, bool viewMouse)
 {
 	ScreenGrab grab(fileName, secsFrame, viewMouse);
 	if (!grab.IniGrabWindow(handle))
@@ -425,7 +425,7 @@ bool ScreenGrab::GrabSnapshot()
 
 #ifdef PLATFORM_POSIX
 
-bool Window_SaveCapture(uint64 windowId, String fileName, int left, int top, int width, int height)
+bool Window_SaveCapture(int64 windowId, String fileName, int left, int top, int width, int height)
 {
 	if (GetFileExt(fileName) != ".xwd")
 		fileName += ".xwd";
@@ -452,7 +452,7 @@ bool Snap_DesktopRectangle(String fileName, int left, int top, int width, int he
 	return Window_SaveCapture(0, fileName, left, top, width, height);
 }
 
-bool Snap_Window(String fileName, uint64 handle)
+bool Snap_Window(String fileName, int64 handle)
 {
 	return Window_SaveCapture(handle, fileName);
 }

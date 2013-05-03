@@ -48,7 +48,7 @@ void Mouse_RightUp()
 }
 
 
-bool Mouse_SetPos(long xMove, long yMove, uint64 windowId)
+bool Mouse_SetPos(long xMove, long yMove, int64 windowId)
 {
     long left, top, right, bottom;
     
@@ -274,7 +274,7 @@ bool Mouse_GetPos(long &x, long &y)
 	return ret;
 }
 
-bool Mouse_SetPos(long x, long y, uint64 windowId)
+bool Mouse_SetPos(long x, long y, int64 windowId)
 {
 	SetSysInfoX11ErrorHandler();
 	_XDisplay *dpy = XOpenDisplay (NULL);
