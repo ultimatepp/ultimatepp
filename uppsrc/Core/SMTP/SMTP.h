@@ -19,6 +19,7 @@ class Smtp : public TcpSocket {
 	bool           ssl;
 	String         auth_user;
 	String         auth_pwd;
+	String         sender;
 	String         from;
 	String         from_name;
 	Vector<String> to;
@@ -53,7 +54,7 @@ public:
 	Smtp&      Port(int p)                                        { port = p; return *this; }
 	Smtp&      SSL(bool b = true)                                 { ssl = b; return *this; }
 	Smtp&      Auth(const String& user, const String& pwd)        { auth_user = user; auth_pwd = pwd; return *this; }
-	Smtp&      From(const String& email, const String& name = Null);
+	Smtp&      From(const String& email, const String& name = Null, const String& sender = Null);
 	Smtp&      To(const String& email, const String& name, AS a = TO);
 	Smtp&      To(const String& email, AS a = TO)                     { return To(email, Null, a); }
 	Smtp&      Cc(const String& email, const String& name = Null)     { return To(email, name, CC); }
