@@ -128,10 +128,11 @@ Smtp& Smtp::ReplyTo(const String& r, const String& name)
 	return *this;
 }
 
-Smtp& Smtp::From(const String& f, const String& name)
+Smtp& Smtp::From(const String& f, const String& name, const String& s)
 {
 	from = f;
 	from_name = name;
+	sender = Nvl(s, f);
 	return *this;
 }
 
@@ -187,12 +188,12 @@ bool Smtp::Send()
 		// receive initial message & send hello
 		SendRecv(Null);
 		String org;
-		int pos = from.Find('@');
+		int pos = sender.Find('@');
 		if(pos >= 0) {
-			int start = ++pos, len = from.GetLength();
-			while(pos < len && from[pos] != '>')
+			int start = ++pos, len = sender.GetLength();
+			while(pos < len && sender[pos] != '>')
 				pos++;
-			org = from.Mid(start, pos - start);
+			org = sender.Mid(start, pos - start);
 		}
 		else
 			org << TcpSocket::GetHostName();
@@ -213,7 +214,7 @@ bool Smtp::Send()
 				else
 					throw Exc(ans);
 		}
-		SendRecvOK("MAIL FROM:<" + from + ">\r\n");
+		SendRecvOK("MAIL FROM:<" + sender + ">\r\n");
 		for(int i = 0; i < to.GetCount(); i++)
 			SendRecv("RCPT TO:<" + to[i] + ">\r\n");
 		ans = SendRecv("DATA\r\n");
@@ -230,6 +231,7 @@ bool Smtp::Send()
 		{ // format message
 			String msg;
 			if(!no_header) { // generate message header
+				if (sender != from) msg << "Sender: " << sender << "\r\n";
 				msg << "From: " << FormatAddr(from, from_name) << "\r\n";
 				static const AS as_list[] = { TO, CC, BCC };
 				static const char *as_name[] = { "To", "CC", "BCC" };
