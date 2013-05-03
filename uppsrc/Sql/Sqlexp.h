@@ -433,7 +433,9 @@ public:
 	String           operator()() const;
 	String           operator()(int at) const;
 	String           operator()(int at, byte cond) const;
-	bool             IsEmpty() const                { return text.IsEmpty(); }
+	bool             IsEmpty() const                    { return text.IsEmpty(); }
+	bool             operator==(const SqlSet& b) const  { return text == b.text && priority == b.priority; }
+	bool             operator!=(const SqlSet& b) const  { return !operator==(b); }
 
 	SqlSet&          Cat(const SqlVal& val); // adding a member
 	SqlSet&          Cat(const SqlSet& set);
