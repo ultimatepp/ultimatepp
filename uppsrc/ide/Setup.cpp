@@ -130,6 +130,7 @@ void Ide::UpdateFormat(CodeEditor& editor)
 	editor.AutoEnclose(auto_enclose);
 	editor.MarkLines(mark_lines);
 	editor.BorderColumn(bordercolumn, bordercolor);
+	editor.PersistentFindReplace(persistent_find_replace);
 	editor.Refresh();
 }
 
@@ -393,6 +394,7 @@ void Ide::SetupFormat() {
 		(edt.tabs_grouping, tabs_grouping)
 		(edt.tabs_stacking, tabs_stacking)
 		(edt.tabs_serialize, tabs_serialize)
+		(edt.persistent_find_replace, persistent_find_replace)
 
 		(assist.barline, barline)
 		(assist.auto_enclose, auto_enclose)
@@ -641,4 +643,9 @@ void Ide::MainConfig() {
 	SyncMainConfigList();
 	SetHdependDirs();
 	MakeTitle();
+}
+
+bool Ide::IsPersistentFindReplace()
+{
+	return persistent_find_replace;
 }

@@ -11,7 +11,7 @@ void RichEdit::FindReplaceAddHistory() {
 
 void RichEdit::CloseFindReplace()
 {
-	if(findreplace.IsOpen())
+	if(!persistent_findreplace && findreplace.IsOpen())
 		findreplace.Close();
 }
 
@@ -178,7 +178,7 @@ void RichEdit::OpenFindReplace()
 			findreplace.amend.Show();
 			findreplace.ok.SetLabel(t_("Find"));
 			findreplace.Title(t_("Find / Replace"));
-			findreplace.cancel <<= THISBACK(CloseFindReplace);
+			findreplace.cancel <<= callback(&findreplace, &TopWindow::Close);
 			findreplace.ok <<= THISBACK(Find);
 		}
 		else {

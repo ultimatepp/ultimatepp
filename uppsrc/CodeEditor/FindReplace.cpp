@@ -436,7 +436,7 @@ void CodeEditor::OpenNormalFindReplace(bool replace)
 	findreplace.findback.Show();
 	findreplace.ok.SetLabel("Find Next");
 	findreplace.ok <<= THISBACK(DoFind);
-	findreplace.cancel <<= findreplace.WhenClose = THISBACK(CloseFindReplace);
+	findreplace.cancel <<= findreplace.WhenClose = callback(&findreplace, &TopWindow::Close);
 	findreplace.Open();
 }
 
@@ -597,7 +597,8 @@ void CodeEditor::ReplaceWildcard()
 
 void CodeEditor::CloseFindReplace()
 {
-	findreplace.Close();
+	if(!persistent_find_replace && findreplace.IsOpen())
+		findreplace.Close();
 }
 
 void CodeEditor::DoFind()

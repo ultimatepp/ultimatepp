@@ -1201,6 +1201,7 @@ CodeEditor::CodeEditor() {
 	mark_lines = true;
 	check_edited = false;
 	tippos = -1;
+	persistent_find_replace =  false;
 }
 
 CodeEditor::~CodeEditor() {}
