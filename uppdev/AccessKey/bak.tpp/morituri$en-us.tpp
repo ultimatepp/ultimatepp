@@ -67,4 +67,4 @@ topic "Morituri te Salutant";
 [s0; [R1 a budem zasvěceni]&]
 [s0; [R1 Morituri te salutant]&]
 [s0; [R1 Morituri te salutant ]&]
-[s0;%% ]
+[s0;%% ]]
