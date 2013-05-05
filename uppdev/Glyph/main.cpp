@@ -1,7 +1,16 @@
 #include <CtrlLib/CtrlLib.h>
 #include <Painter/Painter.h>
+#include "glyph.h"
 
 using namespace Upp;
+
+#define IMAGECLASS GlyphImg
+#define IMAGEFILE <Glyph/glyph.iml>
+#include <Draw/iml_header.h>
+
+#define IMAGECLASS GlyphImg
+#define IMAGEFILE <Glyph/glyph.iml>
+#include <Draw/iml_source.h>
 
 bool IsUniform(const RGBA *s, RGBA c, int add, int n)
 {
@@ -102,15 +111,32 @@ Image DecompressGlyph(const String& g, Color c)
 	return ib;
 }
 
+struct ColorRenderer : MiniRenderer {
+	Draw *draw;
+	Color color;
 
+	virtual void PutHorz(int x, int y, int cx) {
+		draw->DrawRect(x, y, cx, 1, color);
+	}
+	virtual void PutVert(int x, int y, int cy) {
+		draw->DrawRect(x, y, 1, cy, color);
+	}
+	
+	ColorRenderer(int cy) : MiniRenderer(cy) {}
+};
 
 struct MyApp : TopWindow {
 	Point p;
 	
 	virtual void Paint(Draw& w);
 	virtual void MouseMove(Point p, dword keyflags);
-
+	virtual Image CursorImage(Point p, dword keyflags);
 };
+
+Image MyApp::CursorImage(Point p, dword keyflags)
+{
+	return GlyphImg::cursor();
+}
 
 void MyApp::MouseMove(Point p_, dword keyflags)
 {
@@ -118,36 +144,78 @@ void MyApp::MouseMove(Point p_, dword keyflags)
 	Refresh();
 }
 
+
 void DrawLine(Draw& w, Point p1, Point p2)
 {
-	if(p1.y == p2.y) {
-		return;
-	}
-	if(p2.y < p1.y)
-		Swap(p1, p2);
-	
-	int dy = p2.y - p1.y;
+	DLOG("----------------");
+	int dirx = sgn(p2.x - p1.x);
+	int diry = sgn(p2.y - p1.y);
 	int dx = abs(p2.x - p1.x);
-	int dir = sgn(p2.x - p1.x);
-
-	int dda = dy / 2;
+	int dy = abs(p2.y - p1.y);
 	int x = p1.x;
-	
-	for(int y = p1.y; y < p2.y; y++) {
-		w.DrawRect(x, y, 1, 1, LtBlue());
-		dda -= dx;
-		while(dy > 0 && dda < 0) {
-			dda += dy;
-			x += dir;
+	int y = p1.y;
+	int x0 = x;
+	int y0 = y;
+	if(dx < dy) {
+		int dda = dy >> 1;
+		int n = dy;
+		for(;;) {
+			if(x != x0) {
+				if(y0 < y)
+					w.DrawRect(x0, y0, 1, y - y0, LtBlue());
+				else
+					w.DrawRect(x0, y + 1, 1, y0 - y, LtBlue());
+				x0 = x;
+				y0 = y;
+			}
+			if(n-- <= 0)
+				break;
+			y += diry;
+			dda -= dx;
+			if(dda < 0) {
+				dda += dy;
+				x += dirx;
+			}
 		}
+		if(y0 < y)
+			w.DrawRect(x0, y0, 1, y - y0, LtBlue());
+		else
+			w.DrawRect(x0, y + 1, 1, y0 - y, LtBlue());
+	}
+	else {
+		int dda = dx >> 1;
+		int n = dx;
+		for(;;) {
+			if(y != y0) {
+				if(x0 < x)
+					w.DrawRect(x0, y0, x - x0, 1, LtBlue());
+				else
+					w.DrawRect(x + 1, y0, x0 - x, 1, LtBlue());
+				x0 = x;
+				y0 = y;
+			}
+			if(n-- <= 0)
+				break;
+			x += dirx;
+			dda -= dy;
+			if(dda < 0) {
+				dda += dx;
+				y += diry;
+			}
+		}
+		if(x0 < x)
+			w.DrawRect(x0, y0, x - x0, 1, LtBlue());
+		else
+			w.DrawRect(x + 1, y0, x0 - x, 1, LtBlue());
 	}
 }
+
 
 void MyApp::Paint(Draw& w)
 {
 	w.DrawRect(GetSize(), White());
-	DWORD gdiCount = GetGuiResources(GetCurrentProcess(), GR_GDIOBJECTS); 
-	w.DrawText(400, 0, AsString(gdiCount));
+//	DWORD gdiCount = GetGuiResources(GetCurrentProcess(), GR_GDIOBJECTS); 
+//	w.DrawText(400, 0, AsString(gdiCount));
 
 	w.DrawImage(0, 0, RenderGlyph(Arial(20), 'e'));
 
@@ -157,11 +225,31 @@ void MyApp::Paint(Draw& w)
 
 	Point p0(300, 300);
 
+	Vector< Vector<Point> > pgs;
+	
+	ColorRenderer r(GetSize().cy);
+
+	r.draw = &w;
+	r.color = Red();
+	
+	r.Ellipse(p0, p - p0);
+	r.Render();
+	
+	r.color = Green();
+	r.Move(p0);
+	r.Line(p);
+	r.Line(Point(700, 400));
+	r.Render();
+
 	w.DrawLine(p0, p, 0, LtGray());
-	
-	DrawLine(w, p0, p);
-	
-	__BREAK__;
+	w.DrawRect(p0.x - 1, p0.y - 1, 3, 3, LtGray());
+
+	r.color = LtBlue();
+	r.Line(p0, p);
+
+//	DrawLine(w, p0, p);
+
+//	__BREAK__;
 }
 
 GUI_APP_MAIN
@@ -182,10 +270,10 @@ GUI_APP_MAIN
 		for(int n = 10; n <= 100; n += 10) {
 			RLOG("-------------");
 			RLOG(n << ' ' << *s);
-			Size sz = AutoCrop(RenderGlyph(Tahoma(n), *s), RGBAZero()).GetSize();
+			Size sz = AutoCrop(RenderGlyph(StdFont(n), *s), RGBAZero()).GetSize();
 			RDUMP(sz);
 			RDUMP(sz.cx * sz.cy);
-			RDUMP(CompressGlyph(AutoCrop(RenderGlyph(Tahoma(n), *s), RGBAZero())).GetLength());
+			RDUMP(CompressGlyph(AutoCrop(RenderGlyph(StdFont(n), *s), RGBAZero())).GetLength());
 		}
 	MyApp().Run();
 }
