@@ -294,6 +294,7 @@ protected:
 	bool    auto_enclose;
 	bool    mark_lines;
 	bool    check_edited;
+	bool    persistent_find_replace;
 
 	FindReplaceDlg findreplace;
 	
@@ -519,6 +520,9 @@ public:
 	bool     GetMarkLines()                           { return mark_lines; }
 	void     AutoEnclose(bool b)                      { auto_enclose = b; }
 	void     BarLine(bool b)                          { barline = b; }
+	
+	void     PersistentFindReplace(bool b = true)     { persistent_find_replace = b; }
+	bool     IsPersistentFindReplace() const          { return persistent_find_replace; }
 	
 	void     Annotations(int width)                   { bar.Annotations(width); }
 	void     SetAnnotation(int i, const Image& icon, const String& a) { bar.SetAnnotation(i, icon, a); }

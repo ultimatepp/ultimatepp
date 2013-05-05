@@ -509,6 +509,8 @@ public:
 	virtual   String    IdeGetFileName();
 	virtual   String    IdeGetNestFolder();
 
+	virtual   bool      IsPersistentFindReplace();
+
 	virtual void   ConsoleShow();
 	virtual void   ConsoleSync();
 	virtual void   ConsoleClear();
@@ -675,6 +677,7 @@ public:
 	int       insert_include;
 	int       bordercolumn;
 	Color     bordercolor;
+	bool      persistent_find_replace;
 
 	/*
 		astyle code formatter control vars

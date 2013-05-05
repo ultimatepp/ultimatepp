@@ -270,6 +270,7 @@ private:
 	WithRichFindReplaceLayout<TopWindow> findreplace;
 
 	bool                     found, notfoundfw;
+	bool                     persistent_findreplace;
 
 	VectorMap<String, Value> vars;
 
@@ -781,6 +782,7 @@ public:
 	RichEdit&       ClipZoom(int m, int d)                { clipzoom = Zoom(m, d); return *this; }
 	Zoom            GetClipZoom() const                   { return clipzoom; }
 	RichEdit&       BulletIndent(int i)                   { bullet_indent = i; return *this; }
+	RichEdit&       PersistentFindReplace(bool b = true)  { persistent_findreplace = b; return *this; }
 
 	struct UndoInfo {
 		int              undoserial;

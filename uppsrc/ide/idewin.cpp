@@ -327,6 +327,8 @@ Ide::Ide()
 	filetabs = AlignedFrame::TOP;
 	auto_enclose = false;
 	mark_lines = true;
+	
+	persistent_find_replace = false;
 
 	idestate = EDITING;
 	debuglock = 0;

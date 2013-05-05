@@ -693,7 +693,7 @@ RichEdit::RichEdit()
 	paintcarect = false;
 
 	CtrlLayoutOKCancel(findreplace, t_("Find / Replace"));
-	findreplace.cancel <<= THISBACK(CloseFindReplace);
+	findreplace.cancel <<= callback(&findreplace, &TopWindow::Close);
 	findreplace.ok <<= THISBACK(Find);
 	findreplace.amend <<= THISBACK(Replace);
 	notfoundfw = found = false;
@@ -715,6 +715,8 @@ RichEdit::RichEdit()
 	clipzoom = Zoom(1, 1);
 	
 	bullet_indent = 150;
+	
+	persistent_findreplace = true;
 }
 
 RichEdit::~RichEdit() {}

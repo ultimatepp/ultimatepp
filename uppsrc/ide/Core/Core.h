@@ -80,6 +80,8 @@ public:
 
 	virtual String GetDefaultMethod();
 	virtual VectorMap<String, String> GetMethodVars(const String& method);
+	
+	virtual bool      IsPersistentFindReplace() = 0;
 
 	virtual ~IdeContext() {}
 };

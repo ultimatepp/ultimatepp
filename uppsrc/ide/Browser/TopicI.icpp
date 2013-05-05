@@ -12,6 +12,7 @@ struct TopicModule : public IdeModule {
 	virtual IdeDesigner *CreateDesigner(const char *path, byte cs) {
 		if(IsTopicGroup(path)) {
 			TopicEditor *d = new TopicEditor;
+			d->PersistentFindReplace(TheIde()->IsPersistentFindReplace());
 			d->Open(path);
 			return d;
 		}
