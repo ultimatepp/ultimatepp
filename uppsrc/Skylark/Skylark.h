@@ -91,6 +91,8 @@ public:
 	void RunThread();
 
 	void Run();
+
+	void Quit();
 	
 	static SkylarkApp& TheApp();
 	static const SkylarkConfig& Config();

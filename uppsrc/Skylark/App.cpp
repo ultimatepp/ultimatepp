@@ -86,14 +86,27 @@ void SkylarkApp::RunThread()
 	}
 }
 
+void SkylarkApp::Quit()
+{
+	quit = true;
+#ifdef PLATFORM_POSIX
+	Broadcast(SIGTERM);
+#endif
+	TcpSocket s;
+	s.Timeout(100);
+	s.Connect("127.0.0.1", port);
+}
+
+
 void SkylarkApp::Main()
 {
 	Buffer<Thread> uwt(threads);
 	for(int i = 0; i < threads; i++)
-		Thread::Start(THISBACK(ThreadRun));
-
-	while(Thread::GetCount())
-		Sleep(100);
+		uwt[i].Run(THISBACK(ThreadRun));
+	
+	/* Wait for threads to shut down */
+	for (int i = 0; i < threads; i++)
+		uwt[i].Wait();
 }
 
 void SkylarkApp::Broadcast(int signal)
