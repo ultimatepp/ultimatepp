@@ -1825,6 +1825,7 @@ class GridCtrl : public Ctrl
 		Callback StdEdit;
 		
 		Callback WhenSort;
+		Callback WhenSorted;
 		
 		Callback1<Value&> ProcessSummaryValue;
 
