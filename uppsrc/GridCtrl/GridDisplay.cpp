@@ -79,6 +79,7 @@ void GridDisplay::Paint(Draw &w, int x, int y, int cx, int cy, const Value &val,
 			Size isz = leftImg.GetSize();
 			w.DrawImage(nx, ny + (cy - isz.cy) / 2, style & GD::READONLY ? Grayscale(leftImg) : leftImg);
 			nx += isz.cx + 3;
+			ncx -= isz.cx + 3;
 		}
 		if(!rightImg.IsEmpty())
 		{
