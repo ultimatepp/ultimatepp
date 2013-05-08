@@ -6299,7 +6299,7 @@ void GridCtrl::GoCursorLeftRight()
 	{
 		int t = vitems[curpos.y].nTop(sby + fixed_height);
 		int b = vitems[curpos.y].nBottom(sby);
-		int h = GetSize().cy;
+		int h = GetSize().cy - summary_height;
 
 		if(t < 0)
 			sby.Set(sby + t);
