@@ -993,22 +993,14 @@ void GridCtrl::DrawLine(bool iniLine, bool delLine)
 
 Value GridCtrl::GetItemValue(const Item& it, int id, const ItemRect& hi, const ItemRect& vi)
 {
-	Value val;
-	
-	if(IsType<AttrText>(it.val))
-	{
-		const AttrText& t = ValueTo<AttrText>(it.val);
-		val = t.text;
-	}
-	else
-		val = hi.IsConvertion() && vi.IsConvertion() 
-			? GetConvertedColumn(id, it.val)
-			: it.val;
+	Value val = hi.IsConvertion() && vi.IsConvertion() 
+		? GetConvertedColumn(id, it.val)
+		: it.val;
 	
 	return val;	
 }
 
-void GridCtrl::GetItemAttrs(const Item& it, int r, int c, const ItemRect& vi, const ItemRect& hi, dword& style, GridDisplay*& gd, Color& fg, Color& bg, Font& fnt)
+void GridCtrl::GetItemAttrs(const Item& it, const Value& value, int r, int c, const ItemRect& vi, const ItemRect& hi, dword& style, GridDisplay*& gd, Color& fg, Color& bg, Font& fnt)
 {
 	if(!IsNull(vi.fg))
 		fg = vi.fg;
@@ -1029,11 +1021,21 @@ void GridCtrl::GetItemAttrs(const Item& it, int r, int c, const ItemRect& vi, co
 	else if(!IsNull(vi.fnt))
 		fnt = vi.fnt;
 	else if(!IsNull(hi.fnt))
-		fnt = hi.fnt;	
+		fnt = hi.fnt;
 
-	if(IsType<AttrText>(it.val))
+	GridDisplay * hd = hi.display;
+	GridDisplay * vd = vi.display;
+	gd = display;
+	if(!hi.ignore_display && !vi.ignore_display)
+		gd = vd ? vd : (hd ? hd : (it.display ? it.display : display));
+	
+	gd->SetLeftImage(Null);
+	
+	const Value& val = IsNull(value) ? it.val : value;
+
+	if(IsType<AttrText>(val))
 	{
-		const AttrText& t = ValueTo<AttrText>(it.val);
+		const AttrText& t = ValueTo<AttrText>(val);
 		
 		if(!IsNull(t.paper)) bg  = t.paper;
 		if(!IsNull(t.ink))   fg  = t.ink;
@@ -1050,13 +1052,10 @@ void GridCtrl::GetItemAttrs(const Item& it, int r, int c, const ItemRect& vi, co
 			style &= ~GD::HALIGN;
 			style |= s;
 		}
+		if(!IsNull(t.img))
+			gd->SetLeftImage(t.img);
 	}
 	
-	GridDisplay * hd = hi.display;
-	GridDisplay * vd = vi.display;
-	gd = display;
-	if(!hi.ignore_display && !vi.ignore_display)
-		gd = vd ? vd : (hd ? hd : (it.display ? it.display : display));	
 }
 
 GridCtrl::Item& GridCtrl::GetItemSize(int &r, int &c, int &x, int &y, int &cx, int &cy, bool &skip, bool relx, bool rely)
@@ -1442,7 +1441,7 @@ void GridCtrl::Paint(Draw &w)
 					Font fnt = StdFont();
 					GridDisplay* gd;
 					Value val = GetItemValue(it, id, hi, vi);
-					GetItemAttrs(it, i, j, vi, hi, style, gd, cfg, cbg, fnt);
+					GetItemAttrs(it, val, i, j, vi, hi, style, gd, cfg, cbg, fnt);
 
 					Color fg = SColorText;
 					Color bg = SColorPaper;
@@ -1508,6 +1507,13 @@ void GridCtrl::Paint(Draw &w)
 					gd->col = j - fixed_rows;
 					gd->row = i - fixed_cols;
 					gd->parent = this;
+
+					if(IsType<AttrText>(val))
+					{
+						const AttrText& t = ValueTo<AttrText>(val);
+						val = t.text;
+					}
+					
 					gd->Paint(w, x, y, cx, cy,
 					          val, style,
 					          fg, bg, fnt, it.style & GD::FOUND, it.fs, it.fe);
@@ -2053,7 +2059,7 @@ void GridCtrl::SyncPopup()
 					int x = hi.npos + p0.x - p.x - 1 - sbx.Get() * int(!fc);
 					int y = vi.npos + p0.y - p.y - 1 - sby.Get() * int(!fr);
 					
-					GetItemAttrs(it, r, c, vi, hi, popup.style, popup.gd, popup.fg, popup.bg, popup.fnt);
+					GetItemAttrs(it, Null, r, c, vi, hi, popup.style, popup.gd, popup.fg, popup.bg, popup.fnt);
 					popup.gd->row = r < fixed_rows ? -1 : r - fixed_rows;
 					popup.gd->col = c < fixed_cols ? -1 : c - fixed_cols;
 					Rect scr = GetWorkArea();
