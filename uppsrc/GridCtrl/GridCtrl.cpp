@@ -2303,11 +2303,10 @@ void GridCtrl::LeftUp(Point p, dword keyflags)
 			}
 
 			UpdateCursor();
-			if(WhenSort)
-				//RefreshTop();
-				;
-			else
-				Repaint(false, true);
+			Repaint(false, true);
+			
+			if(WhenSorted)
+				WhenSorted();
 		}
     }
 
@@ -3258,7 +3257,8 @@ void GridCtrl::MouseAccel(const Point &p, bool horz, bool vert, dword keyflags)
 
 }
 
-Image GridCtrl::HorzPosImage() {
+Image GridCtrl::HorzPosImage()
+{
 	#ifdef PLATFORM_X11
 		return Image::SizeHorz();
 	#else
@@ -3266,7 +3266,8 @@ Image GridCtrl::HorzPosImage() {
 	#endif 
 }
 
-Image GridCtrl::VertPosImage() {
+Image GridCtrl::VertPosImage()
+{
 	#ifdef PLATFORM_X11
 		return Image::SizeVert();
 	#else
