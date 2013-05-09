@@ -213,7 +213,7 @@ void DrawLine(Draw& w, Point p1, Point p2)
 
 void MyApp::Paint(Draw& w)
 {
-	w.DrawRect(GetSize(), White());
+	w.DrawRect(GetSize(), Gray());
 //	DWORD gdiCount = GetGuiResources(GetCurrentProcess(), GR_GDIOBJECTS); 
 //	w.DrawText(400, 0, AsString(gdiCount));
 
@@ -230,10 +230,21 @@ void MyApp::Paint(Draw& w)
 	ColorRenderer r(GetSize().cy);
 
 	r.draw = &w;
-	r.color = Red();
+	r.color = Black();
 	
-	r.Ellipse(p0, p - p0);
+	DLOG("########## Ellipse");
+	r.Ellipse(p0, p - p0/*Size(100, 100)*/);
 	r.Render();
+
+	{
+		Point center = p0;
+		Size radius = p - p0;
+		int n = max(abs(radius.cx), abs(radius.cy));
+		for(int i = 0; i < n; i++) {
+			Point p = center + Point(int(sin(M_2PI * i / n) * radius.cx), int(cos(M_2PI * i / n) * radius.cy));
+			w.DrawRect(p.x, p.y, 1, 1, White());
+		}
+	}
 	
 	r.color = Green();
 	r.Move(p0);
