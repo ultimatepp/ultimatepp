@@ -1,4 +1,4 @@
-topic "class SqlArray : public ArrayCtrl";
+topic "SqlArray";
 [ $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9; $$1,0#37138531426314131252341829483380:structitem]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -184,4 +184,4 @@ keys.&]
 [s5;:SqlArray`:`:Reset`(`): [@(0.0.255) void]_[* Reset]()&]
 [s2;%% Resets SqlArray to initial state `- all settings, indexes 
 and columns are removed.&]
-[s0; ]
+[s0; ]]
