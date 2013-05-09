@@ -135,7 +135,7 @@ struct MyApp : TopWindow {
 
 Image MyApp::CursorImage(Point p, dword keyflags)
 {
-	return GlyphImg::cursor();
+	return GlyphImg::cursor1();
 }
 
 void MyApp::MouseMove(Point p_, dword keyflags)
@@ -231,7 +231,7 @@ void MyApp::Paint(Draw& w)
 
 	r.draw = &w;
 	r.color = Black();
-	
+#if 0	
 	DLOG("########## Ellipse");
 	r.Ellipse(p0, p - p0/*Size(100, 100)*/);
 	r.Render();
@@ -247,16 +247,21 @@ void MyApp::Paint(Draw& w)
 	}
 	
 	r.color = Green();
+#endif
 	r.Move(p0);
 	r.Line(p);
 	r.Line(Point(700, 400));
 	r.Render();
+	
+	w.DrawRect(p.x, p.y, 1, 1, White());
+	w.DrawRect(700, 400, 1, 1, White());
+	
 
-	w.DrawLine(p0, p, 0, LtGray());
+//	w.DrawLine(p0, p, 0, LtGray());
 	w.DrawRect(p0.x - 1, p0.y - 1, 3, 3, LtGray());
 
 	r.color = LtBlue();
-	r.Line(p0, p);
+//	r.Line(p0, p);
 
 //	DrawLine(w, p0, p);
 
