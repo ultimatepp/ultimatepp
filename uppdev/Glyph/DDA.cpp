@@ -86,8 +86,7 @@ struct MiniRenderer::Segments : MiniRenderer {
 
 	Vector< Vector< Segment > > segment;
 	
-	static void Join(Segment& m, int x, int cx)
-	{
+	static void Join(Segment& m, int x, int cx) {
 		DLOG("-- JOIN");
 		DDUMP(m.x);
 		DDUMP(m.cx);
@@ -97,6 +96,13 @@ struct MiniRenderer::Segments : MiniRenderer {
 		m.cx = r - l;
 		DDUMP(m.x);
 		DDUMP(m.cx);
+	}
+
+	void JoinLast() {
+		if(!IsNull(first) && prev.y == first.y) {
+			Join(segment[first.y][first.x], segment[prev.y].Top().x, segment[prev.y].Top().cx);
+			segment[prev.y].Drop();
+		}
 	}
 	
 	virtual void PutHorz(int x, int y, int cx) {
@@ -121,7 +127,6 @@ struct MiniRenderer::Segments : MiniRenderer {
 		}
 	}
 	virtual void PutVert(int x, int y, int cy) {
-		DDUMP(diry);
 		if(diry > 0)
 			for(int i = 0; i < cy; i++)
 				PutHorz(x, y + i, 1);
@@ -135,7 +140,6 @@ struct MiniRenderer::Segments : MiniRenderer {
 
 void MiniRenderer::Move(Point p)
 {
-	DLOG("*** Move " << p);
 	if(pseg)
 		Close();
 	else
@@ -146,7 +150,6 @@ void MiniRenderer::Move(Point p)
 
 void MiniRenderer::Line(Point p)
 {
-	DLOG("*** Line " << p);
 	if(!pseg)
 		Move(Point(0, 0));
 	pseg->Line(p1, p);
@@ -160,7 +163,7 @@ void MiniRenderer::Close()
 		Move(Point(0, 0));
 	if(p1 != p0)
 		Line(p0);
-	// Todo: JOIN
+	pseg->JoinLast();
 }
 
 void MiniRenderer::Render()
@@ -175,6 +178,8 @@ void MiniRenderer::Render()
 		while(i < gg.GetCount()) {
 			if(i + 1 < gg.GetCount())
 				PutHorz(gg[i].x, y, gg[i + 1].x + gg[i + 1].cx - gg[i].x);
+			else
+				PutHorz(gg[i].x, y, gg[i].cx);
 			i += 2;
 		}
 	}
