@@ -12,16 +12,24 @@ struct MiniRenderer {
 	void AHorz(int x, int y, int cx);
 	void AVert(int x, int y, int cy);
 	
-	void DrawLine(Point p2);
+	void Line(Point p1, Point p2);
+
+	struct Segment : Moveable<Segment> {
+		int x;
+		int cx;
+		
+		bool operator<(const Segment& b) const { return x < b.x; }
+	};
 	
 	struct Segments;
 	
-	Segments *pseg;
-	Point     p0, p1;
-	int       cy;
-	int       diry;
+	int         cy;
+	int         diry;
+	int         dirx;
+	Segments   *pseg;
+	Point       p0, p1;
 
-	void Move(Point p)          { p0 = p1 = p; }
+	void Move(Point p);
 	void Line(Point p);
 	void Close();
 	void Render();
