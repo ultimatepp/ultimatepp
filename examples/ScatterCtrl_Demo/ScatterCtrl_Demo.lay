@@ -1,12 +1,13 @@
-LAYOUT(ScatterCtrl_Demo, 624, 392)
-	ITEM(TabCtrl, tab, HSizePosZ(12, 12).VSizePosZ(52, 12))
-	ITEM(Button, bPreview, SetLabel(t_("Print Preview")).LeftPosZ(12, 80).TopPosZ(12, 24))
-	ITEM(Button, bSavePNG, SetLabel(t_("Save as PNG")).LeftPosZ(204, 88).TopPosZ(12, 24))
-	ITEM(Button, bSaveJPG, SetLabel(t_("Save as JPEG")).LeftPosZ(300, 84).TopPosZ(12, 24))
-	ITEM(Button, bSaveEMF, SetLabel(t_("Save as EMF")).LeftPosZ(392, 80).TopPosZ(12, 24))
-	ITEM(Button, bCopyClipboard, SetLabel(t_("Copy to Clipboard")).LeftPosZ(100, 96).TopPosZ(12, 24))
-	ITEM(DropList, paintMode, LeftPosZ(484, 128).TopPosZ(24, 19))
-	ITEM(Label, dv___7, SetLabel(t_("Painting Mode")).LeftPosZ(484, 128).TopPosZ(4, 19))
+LAYOUT(ScatterCtrl_Demo, 624, 352)
+	ITEM(Button, bPreview, SetLabel(t_("Print Preview")).LeftPosZ(4, 88).BottomPosZ(4, 20))
+	ITEM(Button, bSavePNG, SetLabel(t_("Save as PNG")).LeftPosZ(4, 88).BottomPosZ(28, 20))
+	ITEM(Button, bSaveJPG, SetLabel(t_("Save as JPEG")).LeftPosZ(96, 80).BottomPosZ(28, 20))
+	ITEM(Button, bSaveEMF, SetLabel(t_("Save as EMF")).LeftPosZ(108, 68).BottomPosZ(52, 20))
+	ITEM(Button, bCopyClipboard, SetLabel(t_("Copy to Clipboard")).LeftPosZ(4, 100).BottomPosZ(52, 20))
+	ITEM(DropList, paintMode, LeftPosZ(4, 172).BottomPosZ(77, 19))
+	ITEM(Label, dv___6, SetLabel(t_("Painting Mode")).LeftPosZ(4, 172).BottomPosZ(97, 19))
+	ITEM(ArrayCtrl, examplesList, LeftPosZ(4, 168).VSizePosZ(28, 124))
+	ITEM(Label, dv___8, SetLabel(t_("Choose example")).LeftPosZ(4, 152).TopPosZ(4, 21))
 END_LAYOUT
 
 LAYOUT(Tab1, 380, 292)
@@ -70,7 +71,7 @@ LAYOUT(Tab11, 504, 468)
 END_LAYOUT
 
 LAYOUT(TabPie, 536, 440)
-	ITEM(PieCtrl, chart, SetLegendBackColor(Color(229, 229, 229)).SetLegendHeight(80).SetTitle(t_("Average Weather")).SetFrame(ThinInsetFrame()).HSizePosZ(8, 12).VSizePosZ(40, 12))
+	ITEM(PieCtrl, chart, SetLegendHeight(80).SetLegendBackColor(Color(229, 229, 229)).SetTitle(t_("Average Weather")).SetFrame(ThinInsetFrame()).HSizePosZ(8, 12).VSizePosZ(40, 12))
 	ITEM(Label, dv___1, SetLabel(t_(" EXPERIMENTAL")).SetFrame(ThinInsetFrame()).LeftPosZ(8, 84).TopPosZ(8, 24))
 END_LAYOUT
 

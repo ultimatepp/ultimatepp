@@ -33,24 +33,31 @@ bool CompareExamples(Example &a, Example &b) {return a.index < b.index;}
 GUI_APP_MAIN
 {
 	Sort(Examples(), CompareExamples);
-	for (int i = 0; i < Examples().GetCount(); ++i)
-		Examples()[i].ctrl()->Init();
 	
-	ScatterCtrl_Demo demo;
-	
-	demo.tabPie.Init();
-	demo.Run();
+	ScatterCtrl_Demo().Run();
 }
 
 ScatterCtrl_Demo::ScatterCtrl_Demo()
 {
 	CtrlLayout(*this, "Scatter Test");
-	
-	for (int i = 0; i < Examples().GetCount(); ++i)
-		tab.Add(*(Examples()[i].ctrl()), Examples()[i].name);
 
-	tab.Add(tabPie, "Pie chart");
+	for (int i = 0; i < Examples().GetCount(); ++i)
+		Examples()[i].ctrl()->Init();
+			
+	examplesList.AddColumn("Example name");
+	for (int i = 0; i < Examples().GetCount(); ++i) {
+		examplesList.Add(Examples()[i].name);
+		Add((*(Examples()[i].ctrl())).HSizePosZ(180, 4).VSizePosZ(4, 8));
+		examplesRects.Add(Examples()[i].ctrl());
+	}
+	examplesList.Add("Pie chart");
+	tabPie.Init();
+	Add(tabPie.HSizePosZ(180, 4).VSizePosZ(4, 8));
+	examplesRects.Add(&tabPie);
 	
+	for (int i = 0; i < examplesRects.GetCount(); ++i)
+		examplesRects[i]->Hide();
+		
 	bPreview <<= THISBACK(Preview);
 	bSavePNG <<= THISBACK(SavePNG);
 	bSaveJPG <<= THISBACK(SaveJPG);
@@ -70,14 +77,27 @@ ScatterCtrl_Demo::ScatterCtrl_Demo()
 	paintMode.SetData(ScatterDraw::MD_ANTIALIASED);
 	SetMode();
 
+	examplesList.WhenSel = THISBACK(OnSel);
+	examplesList.Select(0, false);
+	OnSel();
+
 	Sizeable().Zoomable().Icon(MyImages::i1());
 }
 
+void ScatterCtrl_Demo::OnSel()
+{
+	for (int i = 0; i < examplesRects.GetCount(); ++i)
+		examplesRects[i]->Hide();		
+	if (examplesList.GetCursor() < 0)
+		return;
+	examplesRects[examplesList.GetCursor()]->Show();
+}
+	
 void ScatterCtrl_Demo::Preview()
 {
 	Report r;	
 	
-	const Drawing &w = Examples()[tab.Get()].ctrl()->Scatter().GetDrawing();
+	const Drawing &w = Examples()[examplesList.GetCursor()].ctrl()->Scatter().GetDrawing();
 	r.Landscape();
 	Size pageSize = r.GetPageSize();
 	r.DrawDrawing(0, 0, pageSize.cx, pageSize.cy, w);
@@ -87,14 +107,14 @@ void ScatterCtrl_Demo::Preview()
 
 void ScatterCtrl_Demo::SavePNG()
 {
-	int ntab = tab.Get();	
+	int ntab = examplesList.GetCursor();	
 	
 	Examples()[ntab].ctrl()->Scatter().SaveToFile(Format("scatter%d.png", ntab));	
 }
 
 void ScatterCtrl_Demo::SaveJPG()
 {
-	int ntab = tab.Get();	
+	int ntab = examplesList.GetCursor();	
 	
 	Examples()[ntab].ctrl()->Scatter().SaveToFile(Format("scatter%d.jpg", ntab));				
 }
@@ -102,7 +122,7 @@ void ScatterCtrl_Demo::SaveJPG()
 #ifdef PLATFORM_WIN32
 void ScatterCtrl_Demo::SaveEMF()
 {
-	int ntab = tab.Get();	
+	int ntab = examplesList.GetCursor();	
 	
 	Examples()[ntab].ctrl()->Scatter().SaveAsMetafile(Format("scatter%d.emf", ntab));				
 }
@@ -110,7 +130,7 @@ void ScatterCtrl_Demo::SaveEMF()
 
 void ScatterCtrl_Demo::CopyClipboard()
 {
-	Examples()[tab.Get()].ctrl()->Scatter().SaveToClipboard();	
+	Examples()[examplesList.GetCursor()].ctrl()->Scatter().SaveToClipboard();	
 }
 
 void ScatterCtrl_Demo::SetMode()

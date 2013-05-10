@@ -4,7 +4,6 @@
 void TabPie::Init()
 {
 	CtrlLayout(*this);	
-	HSizePos().VSizePos();
 	
 	chart.ShowPercent();
 	chart.AddCategory("Sunny",  8, ::Color(90, 150, 255));

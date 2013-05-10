@@ -33,7 +33,7 @@ void Tab1::Init()
 	scatter.AddSeries(s5).Legend("Series 5").PlotStyle<BarSeriesPlot>(barWidth).Dash("").NoMark().Fill();
 	
 	scatter.SetRange(60, 50).SetMajorUnits(10, 10);
-	scatter.ShowInfo().ShowContextMenu().ShowPropertiesDlg().SetPopText("h", "v", "v2");
+	scatter.ShowInfo().ShowContextMenu().ShowPropertiesDlg().SetPopText("h", "v", "v2").SetMouseHandling(true, true);
 }
 
 ScatterDemo *Construct1()
