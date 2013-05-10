@@ -9,7 +9,7 @@ using namespace Eigen;
 struct Equation_functor : NonLinearOptimizationFunctor<double> {
 	DataSource *series;
 	ExplicitEquation *fSource;
-	Equation_functor() : NonLinearOptimizationFunctor() {}
+	Equation_functor() {}
 	
 	int operator()(const VectorXd &b, VectorXd &fvec) const {
 		ASSERT(b.size() == unknowns);

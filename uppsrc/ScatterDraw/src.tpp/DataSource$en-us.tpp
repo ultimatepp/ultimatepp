@@ -67,9 +67,14 @@ parameter.&]
 [s0; These equations are useful to represent closed functions as 
 circles, spirals and even epitrochoids.&]
 [s0; &]
-[s0; DataSource classes can be used to interface data sources and 
-containers and can be subclassed to be embedded in other classes 
-like [^topic`:`/`/ScatterDraw`/src`/ExplicitEquation`$en`-us^ ExplicitEquation].&]
+[s0; [^topic`:`/`/ScatterDraw`/src`/DataSource`$en`-us^ DataSource 
+]classes can be used to interface data sources and containers 
+and can be subclassed to be embedded in other classes like [^topic`:`/`/ScatterDraw`/src`/ExplicitEquation`$en`-us^ E
+xplicitEquation].&]
+[s0; &]
+[s0; Examples of [^topic`:`/`/ScatterDraw`/src`/DataSource`$en`-us^ DataSource 
+]classes are [^topic`:`/`/ScatterDraw`/src`/CArray`$en`-us^ CArray] 
+and [^topic`:`/`/ScatterDraw`/src`/VectorY`$en`-us^ VectorY] .&]
 [s0; &]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
