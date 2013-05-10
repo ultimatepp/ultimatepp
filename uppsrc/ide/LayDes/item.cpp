@@ -178,7 +178,7 @@ int  LayoutItem::FindProperty(const String& s) const
 	return -1;
 }
 
-String LayoutItem::SaveProperties() const
+String LayoutItem::SaveProperties(int y) const
 {
 	String out;
 	Vector<int> o = GetSortOrder(property, FieldRelation(&ItemProperty::level, StdLess<int>()));
@@ -194,7 +194,7 @@ String LayoutItem::SaveProperties() const
 	case Ctrl::CENTER: out << Format(".HCenterPosZ(%d, %d)", pos.x.GetB(), pos.x.GetA()); break;
 	}
 	switch(pos.y.GetAlign()) {
-	case Ctrl::TOP:    out << Format(".TopPosZ(%d, %d)", pos.y.GetA(), pos.y.GetB()); break;
+	case Ctrl::TOP:    out << Format(".TopPosZ(%d, %d)", pos.y.GetA() - y, pos.y.GetB()); break;
 	case Ctrl::BOTTOM: out << Format(".BottomPosZ(%d, %d)", pos.y.GetA(), pos.y.GetB()); break;
 	case Ctrl::SIZE:   out << Format(".VSizePosZ(%d, %d)", pos.y.GetA(), pos.y.GetB()); break;
 	case Ctrl::CENTER: out << Format(".VCenterPosZ(%d, %d)", pos.y.GetB(), pos.y.GetA()); break;
@@ -203,7 +203,7 @@ String LayoutItem::SaveProperties() const
 	return out;
 }
 
-String LayoutItem::Save(int i) const
+String LayoutItem::Save(int i, int y) const
 {
 	String out;
 	if(type.IsEmpty())
@@ -211,7 +211,7 @@ String LayoutItem::Save(int i) const
 	else
 		out << "\tITEM(" << type << ", ";
 	String var = variable.IsEmpty() ? Format("dv___%d", i) : variable;
-	out << var << ", " << SaveProperties() << ")\r\n";
+	out << var << ", " << SaveProperties(y) << ")\r\n";
 	return out;
 }
 
