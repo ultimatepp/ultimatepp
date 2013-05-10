@@ -1193,12 +1193,59 @@ ataSource][2 .]&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [*2 Public Member List]]}}&]
 [s6; &]
+[s5;:ScatterDraw`:`:cbModifFormatX: [_^Callback3^ Callback3]<String[@(0.0.255) `&], 
+[@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatX]&]
+[s3;%% If set this callback will give the String to be painted beside 
+every X axis grid line and in the pop window. The input values 
+are the X axis value set as int and double.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:cbModifFormatDeltaX: [_^Callback3^ Callback3]<String[@(0.0.255) `&], 
+[@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatDeltaX]&]
+[s3;%% If set this callback will give the String to be painted in 
+the pop window representing the delta between two X axis points. 
+The input values are the X axis value set as int and double.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:cbModifFormatY: [_^Callback3^ Callback3]<String[@(0.0.255) `&], 
+[@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatY]&]
+[s3;%% If set this callback will give the String to be painted beside 
+every main Y axis grid line and in the pop window. The input 
+values are the Y axis value set as int and double.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:cbModifFormatDeltaY: [_^Callback3^ Callback3]<String[@(0.0.255) `&], 
+[@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatDeltaY]&]
+[s3;%% If set this callback will give the String to be painted in 
+the pop window representing the delta between two Y axis points. 
+The input values are the Y axis value set as int and double.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:cbModifFormatY2: [_^Callback3^ Callback3]<String[@(0.0.255) `&], 
+[@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatY2]&]
+[s3;%% If set this callback will give the String to be painted beside 
+every secondary and in the pop window Y axis grid line. The input 
+values are the Y axis value set as int and double.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:cbModifFormatDeltaY2: [_^Callback3^ Callback3]<String[@(0.0.255) `&],
+ [@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatDeltaY2]&]
+[s3;%% If set this callback will give the String to be painted in 
+the pop window representing the secondary delta between two Y 
+axis points. The input values are the Y axis value set as int 
+and double.&]
+[s1; &]
+[s6; &]
 [s5;:ScatterDraw`:`:WhenZoomScroll: [_^Callback^ Callback]_[* WhenZoomScroll]&]
 [s3;%% Callback called when the user does a zoom or a scroll.&]
 [s1; &]
 [s6; &]
 [s5;:ScatterDraw`:`:WhenSetRange: [_^Callback^ Callback]_[* WhenSetRange]&]
 [s3;%% Callback called when some of the control ranges is changed.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:WhenSetXYMin: [_^Callback^ Callback]_[* WhenSetXYMin]&]
+[s3;%% Callback called when scatter plot origin is changed.&]
 [s1; &]
 [s6; &]
 [s5;:ScatterDraw`:`:SetSize`(Size`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* SetSize
@@ -1290,6 +1337,38 @@ axis ([%-*@3 yLabel]) and secondary vertical axis ([%-*@3 yLabel2]).&]
 [s3;%% Sets [%-*@3 colorLabels] as the color of the labels.&]
 [s1;%% &]
 [s6; &]
+[s5;:ScatterDraw`:`:SetPlotAreaMargin`(int`,int`,int`,int`): [_^ScatterDraw^ ScatterDra
+w][@(0.0.255) `&]_[* SetPlotAreaMargin]([@(0.0.255) int]_[*@3 hLeft], 
+[@(0.0.255) int]_[*@3 hRight], [@(0.0.255) int]_[*@3 vTop], [@(0.0.255) int]_[*@3 vBottom])&]
+[s3;%% Sets the left([%-*@3 hLeft]), right ([%-*@3 hRight]), top([%-*@3 vTop]) 
+and bottom ([%-*@3 vBottom]) margins of the scatter plots inside 
+ScatterDraw control.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetPlotAreaLeftMargin`(int`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetPlotAreaLeftMargin]([@(0.0.255) int]_[*@3 margin])&]
+[s3;%% Sets the left [%-*@3 margin] of scatter plot inside ScatterDraw 
+control.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetPlotAreaRightMargin`(int`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetPlotAreaRightMargin]([@(0.0.255) int]_[*@3 margin])&]
+[s3;%% Sets the right [%-*@3 margin] of scatter plot inside ScatterDraw 
+control.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetPlotAreaTopMargin`(int`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetPlotAreaTopMargin]([@(0.0.255) int]_[*@3 margin])&]
+[s3;%% Sets the top [%-*@3 margin] of scatter plot inside ScatterDraw 
+control.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetPlotAreaBottomMargin`(int`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetPlotAreaBottomMargin]([@(0.0.255) int]_[*@3 margin])&]
+[s3;%% Sets the bottom [%-*@3 margin] of scatter plot inside ScatterDraw 
+control.&]
+[s1;%% &]
+[s6; &]
 [s5;:ScatterDraw`:`:SetPlotAreaColor`(const Color`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetPlotAreaColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 p`_a`_color])
 &]
@@ -1311,8 +1390,8 @@ axis ([%-*@3 yLabel]) and secondary vertical axis ([%-*@3 yLabel2]).&]
 &]
 [s1;%% &]
 [s6; &]
-[s5;:ScatterDraw`:`:SetAxisWidth`(const int`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
-]_[* SetAxisWidth]([@(0.0.255) const]_[@(0.0.255) int`&]_[*@3 axis`_width])&]
+[s5;:ScatterDraw`:`:SetAxisWidth`(int`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* Set
+AxisWidth]([@(0.0.255) int]_[*@3 axis`_width])&]
 [s3;%% Sets [%-*@3 axis`_width] as the width of the axis in pixels.&]
 [s1;%% &]
 [s6; &]
@@ -1331,23 +1410,23 @@ axis ([%-*@3 yLabel]) and secondary vertical axis ([%-*@3 yLabel2]).&]
 &]
 [s1;%% &]
 [s6; &]
-[s5;:ScatterDraw`:`:SetGridWidth`(const int`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
-]_[* SetGridWidth]([@(0.0.255) const]_[@(0.0.255) int`&]_[*@3 grid`_width])&]
+[s5;:ScatterDraw`:`:SetGridWidth`(int`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* Set
+GridWidth]([@(0.0.255) int]_[*@3 grid`_width])&]
 [s3;%% Sets [%-*@3 grid`_width] as the width of the grid in pixels.&]
 [s1;%% &]
 [s6; &]
-[s5;:ScatterDraw`:`:ShowVGrid`(const bool`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
-]_[* ShowVGrid]([@(0.0.255) const]_[@(0.0.255) bool`&]_[*@3 show])&]
+[s5;:ScatterDraw`:`:ShowVGrid`(bool`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* ShowV
+Grid]([@(0.0.255) bool]_[*@3 show])&]
 [s3;%% If [%-*@3 show] is true the vertical grid is shown&]
 [s1;%% &]
 [s6; &]
-[s5;:ScatterDraw`:`:ShowHGrid`(const bool`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
-]_[* ShowHGrid]([@(0.0.255) const]_[@(0.0.255) bool`&]_[*@3 show])&]
+[s5;:ScatterDraw`:`:ShowHGrid`(bool`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* ShowH
+Grid]([@(0.0.255) bool]_[*@3 show])&]
 [s3;%% If [%-*@3 show] is true the horizontal grid is shown&]
 [s1;%% &]
 [s6; &]
-[s5;:ScatterDraw`:`:ShowLegend`(const bool`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
-]_[* ShowLegend]([@(0.0.255) const]_[@(0.0.255) bool`&]_[*@3 show]_`=_[@(0.0.255) true])&]
+[s5;:ScatterDraw`:`:ShowLegend`(bool`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* Show
+Legend]([@(0.0.255) bool]_[*@3 show]_`=_[@(0.0.255) true])&]
 [s3;%% If [%-*@3 show] is true it show the graphs name, color and style.&]
 [s0;%% -|
 @@image:1418&293
@@ -1380,10 +1459,14 @@ axis ([%-*@3 yLabel]) and secondary vertical axis ([%-*@3 yLabel2]).&]
 [s3;%% Returns true if legend is shown.&]
 [s1; &]
 [s6; &]
-[s5;:ScatterDraw`:`:SetLegendWidth`(const int`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
-]_[* SetLegendWidth]([@(0.0.255) const]_[@(0.0.255) int`&]_[*@3 width])&]
+[s5;:ScatterDraw`:`:SetLegendWidth`(int`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* S
+etLegendWidth]([@(0.0.255) int]_[*@3 width])&]
 [s3;%% Sets the [%-*@3 width] in pixels of every legend element.&]
 [s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetLegendWidth`(`): [@(0.0.255) int]_[* GetLegendWidth]()&]
+[s3;%% Returns the legend element width.&]
+[s1; &]
 [s6; &]
 [s5;:ScatterDraw`:`:SetMode`(int`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* SetMode](
 [@(0.0.255) int]_[*@3 `_mode]_`=_MD`_ANTIALIASED)&]
@@ -1419,6 +1502,20 @@ le]_[*@3 factorX], [@(0.0.255) double]_[*@3 factorY])&]
 by factor [%-*@3 factorY].&]
 [s1;%% &]
 [s6; &]
+[s5;:ScatterDraw`:`:SetZoomStyleX`(ZoomStyle`): [_^ScatterDraw^ ScatterDraw]_`&[* SetZoom
+StyleX](ZoomStyle_[*@3 style]_`=_TO`_CENTER)&]
+[s3;%% Sets the X zoom [%-*@3 style]. Valid values are:&]
+[s3;i150;O0;%% TO`_CENTER: Zoom is centered to the control center.&]
+[s3;i150;O0;%% FROM`_BASE: Zoom is centered to the X origin.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetZoomStyleY`(ZoomStyle`): [_^ScatterDraw^ ScatterDraw]_`&[* SetZoom
+StyleY](ZoomStyle_[*@3 style]_`=_TO`_CENTER)&]
+[s3;%% Sets the Y zoom [%-*@3 style]. Valid values are:&]
+[s3;i150;O0;%% TO`_CENTER: Zoom is centered to the control center.&]
+[s3;i150;O0;%% FROM`_BASE: Zoom is centered to the Y origin.&]
+[s1;%% &]
+[s6; &]
 [s5;:ScatterDraw`:`:SetRange`(double`,double`,double`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetRange]([@(0.0.255) double]_[*@3 rx], [@(0.0.255) double]_[*@3 ry], 
 [@(0.0.255) double]_[*@3 ry2]_`=_[@3 100])&]
@@ -1443,6 +1540,68 @@ nst]&]
 [s3;%% Returns the secondary y axis range.&]
 [s1; &]
 [s6; &]
+[s5;:ScatterDraw`:`:SetMajorUnits`(double`,double`): [_^ScatterDraw^ ScatterDraw]_`&[* Se
+tMajorUnits]([@(0.0.255) double]_[*@3 ux], [@(0.0.255) double]_[*@3 uy])&]
+[s3;%% Sets the horizontal ([%-*@3 ux]) and vertical ([%-*@3 uy]) distance 
+between grid lines.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetMajorUnitsNum`(int`,int`): [_^ScatterDraw^ ScatterDraw]_`&[* SetMa
+jorUnitsNum]([@(0.0.255) int]_[*@3 nx], [@(0.0.255) int]_[*@3 ny])&]
+[s3;%% Sets the horizontal ([%-*@3 nx]) and vertical ([%-*@3 ny]) number 
+of grid lines.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetMaxMajorUnits`(int`,int`): [_^ScatterDraw^ ScatterDraw]_`&[* SetMa
+xMajorUnits]([@(0.0.255) int]_[*@3 maxX], [@(0.0.255) int]_[*@3 maxY])&]
+[s3;%% Sets the maximum number of horizontal ([%-*@3 maxX]) and vertical 
+([%-*@3 maxY]) grid lines.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetMajorUnitsX`(`): [@(0.0.255) double]_[* GetMajorUnitsX]()&]
+[s3;%% Returns the maximum number of horizontal grid lines.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetMajorUnitsY`(`): [@(0.0.255) double]_[* GetMajorUnitsY]()&]
+[s3;%% Returns the maximum number of vertical grid lines.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetMinUnits`(double`,double`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetMinUnits]([@(0.0.255) double]_[*@3 ux], [@(0.0.255) double]_[*@3 uy])&]
+[s3;%% Sets with [%-*@3 ux] and [%-*@3 uy] the first X and Y axis grid 
+lines location.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetXMinUnit`(`)const: [@(0.0.255) double]_[* GetXMinUnit]_()_[@(0.0.255) c
+onst]&]
+[s3;%% Returns the first X axis grid line location.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetYMinUnit`(`)const: [@(0.0.255) double]_[* GetYMinUnit]_()_[@(0.0.255) c
+onst]&]
+[s3;%% Returns the first Y axis grid line location.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetXYMin`(double`,double`,double`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetXYMin]([@(0.0.255) double]_[*@3 xmin],[@(0.0.255) double]_[*@3 ymin],[@(0.0.255) doub
+le]_[*@3 ymin2]_`=_[@3 0])&]
+[s3;%% Sets with [%-*@3 xmin], [%-*@3 ymin] and [%-*@3 ymin2] the X, Y 
+and secondary Y axis origin.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetXMin`(`)const: [@(0.0.255) double]_[* GetXMin]_()_[@(0.0.255) const]&]
+[s3;%% Returns the X axis origin.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetYMin`(`)const: [@(0.0.255) double]_[* GetYMin]_()_[@(0.0.255) const]&]
+[s3;%% Returns the Y axis origin.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetYMin2`(`)const: [@(0.0.255) double]_[* GetYMin2]_()_[@(0.0.255) cons
+t]&]
+[s3;%% Returns the secondary Y axis origin.&]
+[s1; &]
+[s6; &]
 [s5;:ScatterDraw`:`:Opacity`(double`): [_^ScatterDraw^ ScatterDraw]_`&[* Opacity]([@(0.0.255) d
 ouble]_[*@3 opacity]_`=_[@3 1])&]
 [s3;%% Sets the series [%-*@3 opacity] .from 1 (opaque) to 0 (transparent/invisible).&]
@@ -1464,10 +1623,147 @@ onst]_[_^String^ String]_[*@3 legend])&]
 [s3;%% Returns the legend for [%-*@3 index] series.&]
 [s1;%% &]
 [s6; &]
+[s5;:ScatterDraw`:`:SetDrawXReticle`(bool`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_
+[* SetDrawXReticle]([@(0.0.255) bool]_[*@3 set]_`=_[@(0.0.255) true])&]
+[s3;%% If [%-*@3 set] is true the small lines and texts beside every 
+X grid line are shown.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetDrawYReticle`(bool`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_
+[* SetDrawYReticle]([@(0.0.255) bool]_[*@3 set]_`=_[@(0.0.255) true])&]
+[s3;%% If [%-*@3 set] is true the small lines and texts to the left 
+of  every Y grid line are shown.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetDrawY2Reticle`(bool`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_
+[* SetDrawY2Reticle]([@(0.0.255) bool]_[*@3 set]_`=_[@(0.0.255) true])&]
+[s3;%% If [%-*@3 set] is true the small lines and texts to the right 
+of  every Y grid line are shown.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetSequentialX`(int`,bool`): [@(0.0.255) void]_[* SetSequentialX]([@(0.0.255) i
+nt]_[*@3 index], [@(0.0.255) bool]_[*@3 sequential]_`=_[@(0.0.255) true])&]
+[s3;%% If [%-*@3 sequential] is true, [%-*@3 index] series is considered 
+to be sequential so all data points are ordered following the 
+X axis.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetSequentialX`(bool`): [_^ScatterDraw^ ScatterDraw]_`&[* SetSequenti
+alX]([@(0.0.255) bool]_[*@3 sequential]_`=_[@(0.0.255) true])&]
+[s3;%% If [%-*@3 sequential] is true the last added series is considered 
+to be sequential so all data points are ordered following the 
+X axis.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetSequentialXAll`(bool`): [_^ScatterDraw^ ScatterDraw]_`&[* SetSeque
+ntialXAll]([@(0.0.255) bool]_[*@3 sequential]_`=_[@(0.0.255) true])&]
+[s3;%% If [%-*@3 sequential] is true all series are considered to be 
+sequential so all data points are ordered following the X axis.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:Show`(int`,bool`): [@(0.0.255) void]_[* Show]([@(0.0.255) int]_[*@3 index
+], [@(0.0.255) bool]_[*@3 show]_`=_[@(0.0.255) true])&]
+[s3;%% If [%-*@3 show] is true it sets the opacity of [%-*@3 index] data 
+series to 1. If false, the opacity will be set to 0.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:IsVisible`(int`): [@(0.0.255) bool]_[* IsVisible]([@(0.0.255) int]_[*@3 i
+ndex])&]
+[s3;%% Returns true if [%-*@3 index] data series opacity is greater 
+than 0.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:ShowAll`(bool`): [_^ScatterDraw^ ScatterDraw]_`&[* ShowAll]([@(0.0.255) b
+ool]_[*@3 show]_`=_[@(0.0.255) true])&]
+[s3;%% If [%-*@3 show] is true it sets the opacity of all series to 
+1. If false, the opacity will be set to 0.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:RemoveSeries`(int`): [@(0.0.255) void]_[* RemoveSeries]([@(0.0.255) int
+]_[*@3 index])&]
+[s3;%% Remove [%-*@3 index] data series from control. It does not delete 
+the series data.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:RemoveAllSeries`(`): [@(0.0.255) void]_[* RemoveAllSeries]()&]
+[s3;%% Remove all data series from control. It does not delete the 
+series data.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:Id`(int`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* Id]([@(0.0.255) i
+nt]_[*@3 id])&]
+[s3;%% Sets the [%-*@3 id] of the last added data series.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:Id`(int`,int`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* Id]([@(0.0.255) i
+nt]_[*@3 index], [@(0.0.255) int]_[*@3 id])&]
+[s3;%% Sets the [%-*@3 id] if [%-*@3 index] data series.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetId`(int`): [@(0.0.255) int]_[* GetId]([@(0.0.255) int]_[*@3 index])&]
+[s3;%% Returns the id of [%-*@3 index] data series.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetDrawing`(`): [_^Drawing^ Drawing]_[* GetDrawing]()&]
+[s3;%% Returns the control Drawing.&]
+[s1; &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetImage`(int`): [_^Image^ Image]_[* GetImage]([@(0.0.255) int]_[*@3 scal
+e]_`=_[@3 1])&]
+[s3;%% Returns the control Image scaled at [%-*@3 scale].&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetXByPoint`(double`): [@(0.0.255) double]_[* GetXByPoint]([@(0.0.255) d
+ouble]_[*@3 x])&]
+[s3;%% Returns the X axis value of pixel [%-*@3 x] in data set units.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetYByPoint`(double`): [@(0.0.255) double]_[* GetYByPoint]([@(0.0.255) d
+ouble]_[*@3 y])&]
+[s3;%% Returns theY axis value of pixel [%-*@3 y] in data set units.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetY2ByPoint`(double`): [@(0.0.255) double]_[* GetY2ByPoint]([@(0.0.255) d
+ouble]_[*@3 y])&]
+[s3;%% Returns the secondary Y axis value of pixel [%-*@3 y] in data 
+set units.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetXPointByValue`(double`): [@(0.0.255) double]_[* GetXPointByValue](
+[@(0.0.255) double]_[*@3 x])&]
+[s3;%% Returns the X axis pixel value of [%-*@3 x] in data set units.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:GetYPointByValue`(double`): [@(0.0.255) double]_[* GetYPointByValue](
+[@(0.0.255) double]_[*@3 y])&]
+[s3;%% Returns the Y axis pixel value of [%-*@3 y] in data set units.&]
+[s1;%% &]
+[s6; &]
 [s5;:ScatterDraw`:`:SaveAsMetafile`(const char`*`)const: [@(0.0.255) void]_[* SaveAsMetaf
 ile]([@(0.0.255) const]_[@(0.0.255) char`*]_[*@3 file])_[@(0.0.255) const]&]
 [s0; [*@(28.0.200)1 Windows]&]
 [s3;%% Saves the control as a windows metafile in [%-*@3 file].&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetMinZoom`(double`,double`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetMinZoom]([@(0.0.255) double]_[*@3 x], [@(0.0.255) double]_[*@3 y]_`=_`-[@3 1])&]
+[s3;%% Sets [%-*@3 x] and [%-*@3 y] as the minimum zoom factor. If [%-*@3 y] 
+is `-1, only [%-*@3 x] zoom is considered.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetMaxZoom`(double`,double`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetMaxZoom]([@(0.0.255) double]_[*@3 x], [@(0.0.255) double]_[*@3 y]_`=_`-[@3 1])&]
+[s3;%% Sets [%-*@3 x] and [%-*@3 y] as the maximum zoom factor. If [%-*@3 y] 
+is `-1, only [%-*@3 x] zoom is considered.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetFastViewX`(bool`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* Se
+tFastViewX]([@(0.0.255) bool]_[*@3 set]_`=_[@(0.0.255) true])&]
+[s3;%% If [%-*@3 set] is true, only one point per screen pixel will 
+be drawn. The Y value of this point will be the average of all 
+data points between two pixels.&]
+[s3;%% In case of big datasets and zoom in with big detail, this 
+option can accelerate strongly the control refresh.&]
 [s1;%% &]
 [s6; &]
 [s5;:ScatterDraw`:`:GetCount`(`): [@(0.0.255) int]_[* GetCount]()&]

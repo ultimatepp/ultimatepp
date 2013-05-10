@@ -58,11 +58,12 @@ template <class Y>
 class VectorY : public DataSource {
 private:
 	Vector<Y> *yData;
+	double x0, deltaX;
 
 public:
-	VectorY(Vector<Y> &yData) : yData(&yData) {}
+	VectorY(Vector<Y> &yData, double x0, double deltaX) : yData(&yData), x0(x0), deltaX(deltaX) {}
 	virtual inline double y(int64 id)	{return (*yData)[id];}
-	virtual inline double x(int64 id) 	{return id;}
+	virtual inline double x(int64 id) 	{return id*deltaX + x0;}
 	virtual inline int64 GetCount()		{return yData->GetCount();}
 };	
 
@@ -70,11 +71,12 @@ template <class Y>
 class ArrayY : public DataSource {
 private:
 	Upp::Array<Y> *yData;
+	double x0, deltaX;
 
 public:
-	ArrayY(Upp::Array<Y> &yData) : yData(&yData) {}
+	ArrayY(Upp::Array<Y> &yData, double x0, double deltaX) : yData(&yData), x0(x0), deltaX(deltaX) {}
 	virtual inline double y(int64 id)	{return (*yData)[id];}
-	virtual inline double x(int64 id) 	{return id;}
+	virtual inline double x(int64 id) 	{return id*deltaX + x0;}
 	virtual inline int64 GetCount()		{return yData->GetCount();}
 };
 

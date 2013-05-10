@@ -109,7 +109,7 @@ ScatterDraw& ScatterDraw::SetAxisColor(const Color& axis_color)
 	return *this;
 }
 
-ScatterDraw& ScatterDraw::SetAxisWidth(const int& axis_width)
+ScatterDraw& ScatterDraw::SetAxisWidth(int axis_width)
 {
 	axisWidth = axis_width;
 	return *this;
@@ -121,19 +121,19 @@ ScatterDraw& ScatterDraw::SetGridColor(const Color& grid_color)
 	return *this;
 }
 
-ScatterDraw& ScatterDraw::SetGridWidth(const int& grid_width)
+ScatterDraw& ScatterDraw::SetGridWidth(int grid_width)
 {
 	gridWidth = grid_width;
 	return *this;
 }
 
-ScatterDraw& ScatterDraw::ShowHGrid(const bool& show)
+ScatterDraw& ScatterDraw::ShowHGrid(bool show)
 {
 	drawHGrid = show;
 	return *this;
 }
 
-ScatterDraw& ScatterDraw::ShowVGrid(const bool& show)
+ScatterDraw& ScatterDraw::ShowVGrid(bool show)
 {
 	drawVGrid = show;
 	return *this;
@@ -694,7 +694,7 @@ ScatterDraw &ScatterDraw::MarkColor(Color color)
 	return *this;	
 }
 
-ScatterDraw &ScatterDraw::MarkWidth(const double& markWidth)
+ScatterDraw &ScatterDraw::MarkWidth(double markWidth)
 {
 	int index = series.GetCount() - 1;
 	
@@ -748,46 +748,46 @@ const String& ScatterDraw::GetLegend(int index)
 	return series[index].legend;
 }
 
-void ScatterDraw::SetDataColor(const int& index, const Color& color)
+void ScatterDraw::SetDataColor(int index, const Color& color)
 {
 	ASSERT(IsValid(index));
 	series[index].color = color;
 	Refresh();
 }
 
-Color ScatterDraw::GetDataColor(const int& index) const
+Color ScatterDraw::GetDataColor(int index) const
 {
 	ASSERT(IsValid(index));
 	return series[index].color;
 }
 
-void ScatterDraw::SetDataThickness(const int& index, const double& thickness)
+void ScatterDraw::SetDataThickness(int index, double thickness)
 {
 	ASSERT(IsValid(index));
 	series[index].thickness = thickness;
 	Refresh();
 }
 
-double ScatterDraw::GetDataThickness(const int& index) const
+double ScatterDraw::GetDataThickness(int index) const
 {
 	ASSERT(IsValid(index));
 	return series[index].thickness;
 }
 
-void ScatterDraw::SetFillColor(const int& index, const Color& color)
+void ScatterDraw::SetFillColor(int index, const Color& color)
 {
 	ASSERT(IsValid(index));
 	series[index].fillColor = color;
 	Refresh();
 }
 
-Color ScatterDraw::GetFillColor(const int& index) const
+Color ScatterDraw::GetFillColor(int index) const
 {
 	ASSERT(IsValid(index));
 	return series[index].fillColor;
 }
 
-ScatterDraw &ScatterDraw::SetMarkWidth(const int& index, const double& markWidth)
+ScatterDraw &ScatterDraw::SetMarkWidth(int index, double markWidth)
 {
 	ASSERT(IsValid(index));
 	series[index].markWidth = markWidth;
@@ -795,72 +795,72 @@ ScatterDraw &ScatterDraw::SetMarkWidth(const int& index, const double& markWidth
 	return *this;
 }
 
-double ScatterDraw::GetMarkWidth(const int& index) const
+double ScatterDraw::GetMarkWidth(int index) const
 {
 	ASSERT(IsValid(index));
 	return series[index].markWidth;
 }
 
 
-void ScatterDraw::SetMarkColor(const int& index, const Color& color)
+void ScatterDraw::SetMarkColor(int index, const Color& color)
 {
 	ASSERT(IsValid(index));
 	series[index].markColor = color;
 	Refresh();
 }
 
-Color ScatterDraw::GetMarkColor(const int& index) const
+Color ScatterDraw::GetMarkColor(int index) const
 {
 	ASSERT(IsValid(index));
 	return series[index].markColor;
 }
 
-void ScatterDraw::NoMark(const int& index)
+void ScatterDraw::NoMark(int index)
 {
 	ASSERT(IsValid(index));
 	series[index].markWidth = 0;
 }
 
-bool ScatterDraw::IsShowMark(const int& index) const throw (Exc)
+bool ScatterDraw::IsShowMark(int index) const throw (Exc)
 {
 	ASSERT(IsValid(index));
 	return series[index].markWidth > 0;
 }
 
 
-void ScatterDraw::SetDataPrimaryY(const int& index, const bool& primary) 
+void ScatterDraw::SetDataPrimaryY(int index, bool primary) 
 {
 	ASSERT(IsValid(index));
 	series[index].primaryY = primary;
 	Refresh();
 }
 
-ScatterDraw &ScatterDraw::SetDataPrimaryY(const bool& primary) 
+ScatterDraw &ScatterDraw::SetDataPrimaryY(bool primary) 
 {
 	SetDataPrimaryY(series.GetCount()-1, primary);
 	return *this;
 }
 
-bool ScatterDraw::IsDataPrimaryY(const int& index) const throw (Exc)
+bool ScatterDraw::IsDataPrimaryY(int index) const throw (Exc)
 {
 	ASSERT(IsValid(index));
 	return series[index].primaryY;	
 }
 
-void ScatterDraw::SetSequentialX(const int& index, const bool& sequential) 
+void ScatterDraw::SetSequentialX(int index, bool sequential) 
 {
 	ASSERT(IsValid(index));
 	series[index].sequential = sequential;
 	Refresh();
 }
 
-ScatterDraw &ScatterDraw::SetSequentialX(const bool& sequential) 
+ScatterDraw &ScatterDraw::SetSequentialX(bool sequential) 
 {
 	SetSequentialX(series.GetCount()-1, sequential);
 	return *this;
 }
 
-ScatterDraw &ScatterDraw::SetSequentialXAll(const bool& sequential) 
+ScatterDraw &ScatterDraw::SetSequentialXAll(bool sequential) 
 {
 	for (int i = 0; i < series.GetCount(); ++i)
 		SetSequentialX(i, sequential);
@@ -868,20 +868,20 @@ ScatterDraw &ScatterDraw::SetSequentialXAll(const bool& sequential)
 	return *this;
 }
 
-void ScatterDraw::Show(const int& index, const bool& show) 
+void ScatterDraw::Show(int index, bool show) 
 {
 	ASSERT(IsValid(index));
 	series[index].opacity = show ? 1 : 0;
 	Refresh();
 }
 
-bool ScatterDraw::IsVisible(const int& index) 
+bool ScatterDraw::IsVisible(int index) 
 {
 	ASSERT(IsValid(index));
 	return series[index].opacity > 0;
 }
 
-ScatterDraw &ScatterDraw::ShowAll(const bool& show) 
+ScatterDraw &ScatterDraw::ShowAll(bool show) 
 {
 	for (int i = 0; i < series.GetCount(); ++i)
 		series[i].opacity = 1;
@@ -893,20 +893,20 @@ ScatterDraw& ScatterDraw::Id(int id)
 	return Id(series.GetCount()-1, id);
 }
 
-ScatterDraw& ScatterDraw::Id(const int& index, int id)
+ScatterDraw& ScatterDraw::Id(int index, int id)
 {
 	ASSERT(IsValid(index));
 	series[index].id = id;
 	return *this;
 }
 
-int ScatterDraw::GetId(const int& index)
+int ScatterDraw::GetId(int index)
 {
 	ASSERT(IsValid(index));
 	return series[index].id;
 }
 
-void ScatterDraw::RemoveSeries(const int& index)
+void ScatterDraw::RemoveSeries(int index)
 {
 	ASSERT(IsValid(index));
 	series.Remove(index);
@@ -928,7 +928,7 @@ Drawing ScatterDraw::GetDrawing()
 	return ddw;
 }
 
-Image ScatterDraw::GetImage(const int &scale)
+Image ScatterDraw::GetImage(int scale)
 {
 #ifndef flagGUI
 	ASSERT(mode != MD_DRAW);
@@ -941,17 +941,17 @@ Image ScatterDraw::GetImage(const int &scale)
 	return ib;
 }
 
-double ScatterDraw::GetXByPoint(const int x) 
+double ScatterDraw::GetXByPoint(const double x) 
 {
 	return (x - hPlotLeft)*GetXRange()/(GetSize().cx - (hPlotLeft + hPlotRight) - 1) + GetXMin();		
 }
 
-double ScatterDraw::GetYByPoint(const int y) 
+double ScatterDraw::GetYByPoint(const double y) 
 {
 	return (GetSize().cy - vPlotTop - y - 1)*GetYRange()/(GetSize().cy - (vPlotTop + vPlotBottom) - GetTitleFont().GetHeight() - 1) + GetYMin();
 }
 
-double ScatterDraw::GetY2ByPoint(const int y) 
+double ScatterDraw::GetY2ByPoint(const double y) 
 {
 	return (GetSize().cy - vPlotTop - y - 1)*GetY2Range()/(GetSize().cy - (vPlotTop + vPlotBottom) - GetTitleFont().GetHeight() - 1) + GetYMin2();
 }
@@ -986,10 +986,11 @@ void ScatterDraw::Zoom(double scale, bool mouseX, bool mouseY)
 		}
 		xRange *= scale;
 		if (!IsNull(maxMajorUnitsX)) {
-			if (xRange < xMajorUnit)
+			if (xRange < 2*xMajorUnit)
 				xMajorUnit /= 10;
 			else if (xRange/xMajorUnit > maxMajorUnitsX)
 				xMajorUnit *= 10;
+			AdjustMinUnitX();
 		}
 		lastxRange = xRange;
 	}
@@ -1007,13 +1008,14 @@ void ScatterDraw::Zoom(double scale, bool mouseX, bool mouseY)
 		yRange *= scale;
 		yRange2 *= scale;
 		if (!IsNull(maxMajorUnitsY)) {
-			if (yRange < yMajorUnit) {
-				yMajorUnit /= 10;
-				yMajorUnit2 /= 10;
+			if (yRange < 2*yMajorUnit) {
+				yMajorUnit /= 5;
+				yMajorUnit2 /= 5;
 			} else if (yRange/yMajorUnit > maxMajorUnitsY) {
-				yMajorUnit *= 10;
-				yMajorUnit2 *= 10;
+				yMajorUnit *= 5;
+				yMajorUnit2 *= 5;
 			}
+			AdjustMinUnitY();
 		}	
 		lastyRange = yRange;	
 	}
@@ -1157,7 +1159,7 @@ ScatterDraw::ScatterDraw()
 	fastViewX = false;
 	sequentialXAll = false;
 	zoomStyleX = zoomStyleY = TO_CENTER;
-	maxMajorUnitsX = maxMajorUnitsY = Null;
+	maxMajorUnitsX = maxMajorUnitsY = 10;
 	SetMajorUnitsNum(5, 10);
 	Color(graphColor);	
 	lastxRange = xRange;

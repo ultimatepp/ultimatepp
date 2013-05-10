@@ -1,3 +1,7 @@
+TOPIC("CArray$en-us")
+#include "CArray$en-us.tppi"
+END_TOPIC
+
 TOPIC("DataSource$en-us")
 #include "DataSource$en-us.tppi"
 END_TOPIC
@@ -20,5 +24,9 @@ END_TOPIC
 
 TOPIC("ScatterDraw$en-us")
 #include "ScatterDraw$en-us.tppi"
+END_TOPIC
+
+TOPIC("VectorY$en-us")
+#include "VectorY$en-us.tppi"
 END_TOPIC
 

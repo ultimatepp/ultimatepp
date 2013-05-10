@@ -12,7 +12,7 @@ NAMESPACE_UPP
 #include "SeriesPlot.h"
 #include "MarkPlot.h"
 
-Color GetOpaqueColor(const Color &color, const Color &background, const double opacity);
+Color GetOpaqueColor(const Color &color, const Color &background, double opacity);
 
 void debug_h();			// Dummy function used to debug .h files
 	
@@ -86,9 +86,12 @@ protected:
 	static MarkPlot *GetNewMarkPlot(int index);
 	
 public:
-	Callback3<String&, int, double> cbModifFormatX, cbModifFormatDeltaX;
-	Callback3<String&, int, double> cbModifFormatY, cbModifFormatDeltaY;
-	Callback3<String&, int, double> cbModifFormatY2, cbModifFormatDeltaY2;
+	Callback3<String&, int, double> cbModifFormatX;
+	Callback3<String&, int, double> cbModifFormatDeltaX;
+	Callback3<String&, int, double> cbModifFormatY;
+	Callback3<String&, int, double> cbModifFormatDeltaY;
+	Callback3<String&, int, double> cbModifFormatY2;
+	Callback3<String&, int, double> cbModifFormatDeltaY2;
 			
 	Callback WhenZoomScroll;
 	Callback WhenSetRange;
@@ -115,25 +118,25 @@ public:
 	Font GetLabelsFont() {return labelsFont;};
 	ScatterDraw& SetLabelsColor(const Color& colorLabels);
 	
-	ScatterDraw& SetPlotAreaMargin(const int hLeft, const int hRight, const int vTop, const int vBottom);
-	ScatterDraw& SetPlotAreaLeftMargin(const int margin);	
-	ScatterDraw& SetPlotAreaRightMargin(const int margin);	
-	ScatterDraw& SetPlotAreaTopMargin(const int margin);	
-	ScatterDraw& SetPlotAreaBottomMargin(const int margin);
+	ScatterDraw& SetPlotAreaMargin(int hLeft, int hRight, int vTop, int vBottom);
+	ScatterDraw& SetPlotAreaLeftMargin(int margin);	
+	ScatterDraw& SetPlotAreaRightMargin(int margin);	
+	ScatterDraw& SetPlotAreaTopMargin(int margin);	
+	ScatterDraw& SetPlotAreaBottomMargin(int margin);
 	
 	ScatterDraw& SetPlotAreaColor(const Color& p_a_color);
 	
 	ScatterDraw& SetAxisColor(const Color& axis_color);
-	ScatterDraw& SetAxisWidth(const int& axis_width);
+	ScatterDraw& SetAxisWidth(int axis_width);
 	
 	ScatterDraw& SetGridColor(const Color& grid_color);
-	ScatterDraw& SetGridWidth(const int& grid_width);
-	ScatterDraw& ShowVGrid(const bool& show);
-	ScatterDraw& ShowHGrid(const bool& show);
+	ScatterDraw& SetGridWidth(int grid_width);
+	ScatterDraw& ShowVGrid(bool show);
+	ScatterDraw& ShowHGrid(bool show);
 	
-	ScatterDraw& ShowLegend(const bool& show = true) 	{showLegend = show;		return *this;}
+	ScatterDraw& ShowLegend(bool show = true) 			{showLegend = show;		return *this;}
 	bool GetShowLegend()								{return showLegend;}
-	ScatterDraw& SetLegendWidth(const int& width)		{legendWidth = width;	return *this;}
+	ScatterDraw& SetLegendWidth(int width)				{legendWidth = width;	return *this;}
 	int GetLegendWidth()								{return legendWidth;}
 	
 	ScatterDraw& SetMode(int _mode = MD_ANTIALIASED)	{mode = _mode; Refresh(); return *this;};
@@ -153,7 +156,7 @@ public:
 	double GetY2Range()const {return yRange2;}
 	ScatterDraw &SetMajorUnits(double ux, double uy);
 	ScatterDraw &SetMajorUnitsNum(int nx, int ny);
-	ScatterDraw &SetMaxMajorUnitsX(int maxX, int maxY)	{maxMajorUnitsX = maxX; maxMajorUnitsY = maxY; return *this;}
+	ScatterDraw &SetMaxMajorUnits(int maxX, int maxY)	{maxMajorUnitsX = maxX; maxMajorUnitsY = maxY; return *this;}
 	double GetMajorUnitsX() {return xMajorUnit;}
 	double GetMajorUnitsY() {return yMajorUnit;}
 	ScatterDraw& SetMinUnits(double ux, double uy);
@@ -303,7 +306,7 @@ public:
 	const String GetDash(int index);
 	ScatterDraw &Fill(Color color = Null);
 	ScatterDraw &MarkColor(Color color = Null);
-	ScatterDraw &MarkWidth(const double& markWidth = 8);
+	ScatterDraw &MarkWidth(double markWidth = 8);
 	ScatterDraw &Hide() {series[series.GetCount() - 1].opacity = 0;	return *this;}
 	
 	ScatterDraw &Opacity(double opacity = 1) {series[series.GetCount() - 1].opacity = opacity;	return *this;}
@@ -311,47 +314,47 @@ public:
 	ScatterDraw& Legend(int index, const String legend);
 	const String& GetLegend(int index);
 	
-	inline bool IsValid(const int& index) const {return (index >= 0 && index < series.GetCount());}
+	inline bool IsValid(int index) const {return (index >= 0 && index < series.GetCount());}
 	
 	ScatterDraw& SetDrawXReticle(bool set = true);
 	ScatterDraw& SetDrawYReticle(bool set = true);
 	ScatterDraw& SetDrawY2Reticle(bool set = true);
 	
-	void SetDataColor(const int& index,const Color& pcolor);
-	Color GetDataColor (const int& index) const;
-	void SetDataThickness(const int& index, const double& thick);
-	double GetDataThickness(const int& index) const;
-	void SetFillColor(const int& index, const Color& color);
-	Color GetFillColor(const int& index) const;
+	void SetDataColor(int index, const Color& pcolor);
+	Color GetDataColor (int index) const;
+	void SetDataThickness(int index, double thick);
+	double GetDataThickness(int index) const;
+	void SetFillColor(int index, const Color& color);
+	Color GetFillColor(int index) const;
 
-	ScatterDraw &SetMarkWidth(const int& index, const double& width);
-	double GetMarkWidth(const int& index) const;
-	void SetMarkColor(const int& index, const Color& pcolor);
-	Color GetMarkColor (const int& index) const;
-	void NoMark(const int& index);
-	bool IsShowMark(const int& index) const throw (Exc);
+	ScatterDraw &SetMarkWidth(int index, double width);
+	double GetMarkWidth(int index) const;
+	void SetMarkColor(int index, const Color& pcolor);
+	Color GetMarkColor(int index) const;
+	void NoMark(int index);
+	bool IsShowMark(int index) const throw (Exc);
 	
-	void SetDataPrimaryY(const int& index, const bool& primary=true);
-	ScatterDraw &SetDataPrimaryY(const bool& primary); 	
-	bool IsDataPrimaryY(const int& index) const throw (Exc);	
+	void SetDataPrimaryY(int index, bool primary = true);
+	ScatterDraw &SetDataPrimaryY(bool primary); 	
+	bool IsDataPrimaryY(int index) const throw (Exc);	
 	
-	void SetSequentialX(const int& index, const bool& sequential = true);
-	ScatterDraw &SetSequentialX(const bool& sequential = true);
-	ScatterDraw &SetSequentialXAll(const bool& sequential = true);
+	void SetSequentialX(int index, bool sequential = true);
+	ScatterDraw &SetSequentialX(bool sequential = true);
+	ScatterDraw &SetSequentialXAll(bool sequential = true);
 	
-	void Show(const int& index, const bool& show = true);
-	bool IsVisible(const int& index);
-	ScatterDraw &ShowAll(const bool& show = true);
+	void Show(int index, bool show = true);
+	bool IsVisible(int index);
+	ScatterDraw &ShowAll(bool show = true);
 
-	void RemoveSeries(const int& index);
+	void RemoveSeries(int index);
 	void RemoveAllSeries();
 	
 	ScatterDraw& Id(int id);
-	ScatterDraw& Id(const int& index, int id);
-	int GetId(const int& index);
+	ScatterDraw& Id(int index, int id);
+	int GetId(int index);
 	
 	Drawing GetDrawing();
-	Image GetImage(const int& scale = 1);
+	Image GetImage(int scale = 1);
 	
 	#ifdef PLATFORM_WIN32
 	void SaveAsMetafile(const char* file) const;
@@ -360,13 +363,13 @@ public:
 	ScatterDraw& SetMinZoom(double x, double y = -1) 	{minXZoom = x; minYZoom = y; return *this;} 
 	ScatterDraw& SetMaxZoom(double x, double y = -1) 	{maxXZoom = x; maxYZoom = y; return *this;}
 
-	ScatterDraw& SetFastViewX(bool set = true) {fastViewX = set;	return *this;}
+	ScatterDraw& SetFastViewX(bool set = true) 			{fastViewX = set;	return *this;}
 	
-	double GetXByPoint(const int x);
-	double GetYByPoint(const int y);
-	double GetY2ByPoint(const int y);
-	double GetXPointByValue(const double x);
-	double GetYPointByValue(const double y);
+	double GetXByPoint(double x);
+	double GetYByPoint(double y);
+	double GetY2ByPoint(double y);
+	double GetXPointByValue(double x);
+	double GetYPointByValue(double y);
 
 	int GetCount() 	{return series.GetCount();}
 	bool IsEmpty()	{return series.IsEmpty();}
