@@ -14,7 +14,7 @@ using namespace Upp;
 #include <Draw/iml_header.h>
 
 
-struct ScatterDemo : ParentCtrl {
+struct ScatterDemo : StaticRect {
 	virtual void Init() {};
 	virtual ScatterCtrl &Scatter() = 0;
 };
@@ -184,7 +184,9 @@ class ScatterCtrl_Demo : public WithScatterCtrl_Demo<TopWindow> {
 	
 public:
 	ScatterCtrl_Demo();
+	TabPie tabPie;
 	
+private:
 	void Preview();
 	void SavePNG();
 	void SaveJPG();
@@ -194,7 +196,9 @@ public:
 	void CopyClipboard();
 	void SetMode();
 
-	TabPie tabPie;
+	void OnSel();
+
+	Vector<StaticRect *> examplesRects;
 };
 
 #endif

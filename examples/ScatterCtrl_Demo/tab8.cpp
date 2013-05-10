@@ -5,9 +5,7 @@ void Tab8::Init()
 {
 	CtrlLayout(*this);	
 	HSizePos().VSizePos();
-	scatter.SetRange(13, 50, 20);
-	scatter.SetMajorUnits(1, 10);
-	scatter.SetXYMin(0,-20, 1000);
+	scatter.SetRange(13, 50, 20).SetMajorUnits(1, 10).SetXYMin(0,-20, 1000);
 	scatter.SetMouseHandling(true, true);
 
 	s3 <<Pointf(1,-12)<<Pointf(2,-17)<<Pointf(3,-13)<<Pointf(4,15)<<Pointf(5,18)<<Pointf(6,25)<<Pointf(7,27)<<Pointf(8,20)<<Pointf(9,5)<<Pointf(10,-10)<<Pointf(11,24)<<Pointf(12,17);
