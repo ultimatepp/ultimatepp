@@ -1200,16 +1200,14 @@ in ScatterCtrl.&]
 or].&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:ShowContextMenu`(const bool`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* ShowContextMenu]([@(0.0.255) const]_[@(0.0.255) bool`&]_[*@3 show]_`=_[@(0.0.255) true
-])&]
+[s5;:ScatterCtrl`:`:ShowContextMenu`(bool`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* ShowContextMenu]([@(0.0.255) bool]_[*@3 show]_`=_[@(0.0.255) true])&]
 [s3; If [%-*@3 show] is true the context menu can be opened (right 
 clicking by default).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:ShowPropertiesDlg`(const bool`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* ShowPropertiesDlg]([@(0.0.255) const]_[@(0.0.255) bool`&]_[*@3 show]_`=_[@(0.0.255) tr
-ue])&]
+[s5;:ScatterCtrl`:`:ShowPropertiesDlg`(bool`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* ShowPropertiesDlg]([@(0.0.255) bool]_[*@3 show]_`=_[@(0.0.255) true])&]
 [s3; If [%-*@3 show] is true, the context menu will have a `"Properties`" 
 dialog.&]
 [s3; In DEBUG mode the `"Properties`" menu will always appear.&]
@@ -1263,8 +1261,8 @@ onst]&]
 [s3; Calls to ScatterDraw`::SetGridColor(grid`_color).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetGridWidth`(const int`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* SetGridWidth]([@(0.0.255) const]_[@(0.0.255) int`&]_[*@3 grid`_width])&]
+[s5;:ScatterCtrl`:`:SetGridWidth`(int`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&]_[* S
+etGridWidth]([@(0.0.255) int]_[*@3 grid`_width])&]
 [s3; Calls to ScatterDraw`::SetGridWidth(grid`_width).&]
 [s1; &]
 [s6;%- &]
@@ -1274,10 +1272,14 @@ olor])&]
 [s3; Calls to ScatterDraw`::SetPlotAreaColor(p`_a`_color).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetLegendWidth`(const int`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* SetLegendWidth]([@(0.0.255) const]_[@(0.0.255) int`&]_[*@3 width])&]
+[s5;:ScatterCtrl`:`:SetLegendWidth`(int`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&]_
+[* SetLegendWidth]([@(0.0.255) int]_[*@3 width])&]
 [s3; Calls to ScatterDraw`::SetLegendWidth(width).&]
 [s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:GetLegendWidth`(`):%- [@(0.0.255) int]_[* GetLegendWidth]()&]
+[s3; Calls to ScatterDraw`::GetLegendWidth().&]
+[s1;%- &]
 [s6;%- &]
 [s5;:ScatterCtrl`:`:SetAxisColor`(const Color`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
 ]_[* SetAxisColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&]_[*@3 axis`_color
@@ -1285,8 +1287,8 @@ olor])&]
 [s3; Calls to ScatterDraw`::SetAxisColor(axis`_color).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetAxisWidth`(const int`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* SetAxisWidth]([@(0.0.255) const]_[@(0.0.255) int`&]_[*@3 axis`_width])&]
+[s5;:ScatterCtrl`:`:SetAxisWidth`(int`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&]_[* S
+etAxisWidth]([@(0.0.255) int]_[*@3 axis`_width])&]
 [s3; ScatterDraw`::SetAxisWidth(axis`_width)&]
 [s1; &]
 [s6;%- &]
@@ -1331,38 +1333,36 @@ ls])&]
 ]_[* SetLabelY2]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 yLabel])&]
 [s3; Calls to ScatterDraw`::SetLabelY(yLabel).&]
 [s1; &]
-[s6;%- &]
+[s6;:ScatterCtrl`:`:SetPlotAreaMargin`(int`,int`,int`,int`):%- &]
 [s5;:ScatterCtrl`:`:SetPlotAreaMargin`(const int`,const int`,const int`,const int`):%- [_^ScatterCtrl^ S
-catterCtrl][@(0.0.255) `&]_[* SetPlotAreaMargin]([@(0.0.255) const]_[@(0.0.255) int]_[*@3 h
-Left], [@(0.0.255) const]_[@(0.0.255) int]_[*@3 hRight], [@(0.0.255) const]_[@(0.0.255) int
-]_[*@3 vTop], [@(0.0.255) const]_[@(0.0.255) int]_[*@3 vBottom])&]
+catterCtrl][@(0.0.255) `&]_[* SetPlotAreaMargin]([@(0.0.255) int]_[*@3 hLeft], 
+[@(0.0.255) int]_[*@3 hRight], [@(0.0.255) int]_[*@3 vTop], [@(0.0.255) int]_[*@3 vBottom])&]
 [s3; Calls to ScatterDraw`::SetPlotAreaMargin(hLeft, hRight, vTop, 
 vBottom).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetPlotAreaLeftMargin`(const int`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* SetPlotAreaLeftMargin]([@(0.0.255) const]_[@(0.0.255) int]_[*@3 margin])&]
+[s5;:ScatterCtrl`:`:SetPlotAreaLeftMargin`(int`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetPlotAreaLeftMargin]([@(0.0.255) int]_[*@3 margin])&]
 [s3; Calls ScatterDraw`::SetPlotAreaLeftMargin(margin).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetPlotAreaTopMargin`(const int`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* SetPlotAreaTopMargin]([@(0.0.255) const]_[@(0.0.255) int]_[*@3 margin])&]
+[s5;:ScatterCtrl`:`:SetPlotAreaTopMargin`(int`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetPlotAreaTopMargin]([@(0.0.255) int]_[*@3 margin])&]
 [s3; Calls to ScatterDraw`::SetPlotAreaTopMargin(margin).&]
 [s1; &]
-[s6;%- &]
+[s6;:ScatterCtrl`:`:SetPlotAreaRightMargin`(int`):%- &]
 [s5;:ScatterCtrl`:`:SetPlotAreaRightMargin`(const int`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* SetPlotAreaRightMargin]([@(0.0.255) const]_[@(0.0.255) int]_[*@3 margin])&]
+]_[* SetPlotAreaRightMargin]([@(0.0.255) int]_[*@3 margin])&]
 [s3; Calls to ScatterDraw`::SetPlotAreaRightMargin(margin).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetPlotAreaBottomMargin`(const int`):%- [_^ScatterCtrl^ ScatterCtrl
-][@(0.0.255) `&]_[* SetPlotAreaBottomMargin]([@(0.0.255) const]_[@(0.0.255) int]_[*@3 margi
-n])&]
+[s5;:ScatterCtrl`:`:SetPlotAreaBottomMargin`(int`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetPlotAreaBottomMargin]([@(0.0.255) int]_[*@3 margin])&]
 [s3; Calls to ScatterDraw`::SetPlotAreaBottomMargin(margin).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:ShowLegend`(const bool`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* ShowLegend]([@(0.0.255) const]_[@(0.0.255) bool`&]_[*@3 show]_`=_[@(0.0.255) true])&]
+[s5;:ScatterCtrl`:`:ShowLegend`(bool`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&]_[* Sh
+owLegend]([@(0.0.255) bool]_[*@3 show]_`=_[@(0.0.255) true])&]
 [s3; Calls to ScatterDraw`::ShowLegend(show).&]
 [s1; &]
 [s6;%- &]

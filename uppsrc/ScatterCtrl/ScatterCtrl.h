@@ -121,11 +121,12 @@ public:
 	#define MAX_MOUSEBEHAVIOR 20
 	
 	bool SetMouseBehavior(MouseBehaviour *_mouseBehavior);
-	ScatterCtrl& ShowContextMenu(const bool& show = true) 				{showContextMenu = show; return *this;}
-	ScatterCtrl& ShowPropertiesDlg(const bool& show = true) 			{showPropDlg = show; 	 return *this;}
-	void SetPopText(const String x, const String y1, const String y2) 	{popTextX = x; popTextY = y1; popTextY2 = y2;}
+	ScatterCtrl& ShowContextMenu(bool show = true) 			{showContextMenu = show; return *this;}
+	ScatterCtrl& ShowPropertiesDlg(bool show = true)		{showPropDlg = show; 	 return *this;}
+	ScatterCtrl& SetPopText(const String x, const String y1, const String y2) 	
+															{popTextX = x; popTextY = y1; popTextY2 = y2; return *this;}
 	ScatterCtrl& SetMouseHandling(bool valx = true, bool valy = false);
-	ScatterCtrl& ShowInfo(bool show = true)								{paintInfo = show;		 return *this;}
+	ScatterCtrl& ShowInfo(bool show = true)					{paintInfo = show;		 return *this;}
 	
 #ifdef PLATFORM_WIN32
 	void SaveAsMetafile(const char* file);
@@ -138,28 +139,28 @@ public:
 	
 	ScatterCtrl& SetColor(const Upp::Color& _color)				{ScatterDraw::SetColor(_color);				return *this;};
 	ScatterCtrl& SetGridColor(const Upp::Color& grid_color)		{ScatterDraw::SetGridColor(grid_color);		return *this;};
-	ScatterCtrl& SetGridWidth(const int& grid_width) 			{ScatterDraw::SetGridWidth(grid_width); 	return *this;};
+	ScatterCtrl& SetGridWidth(int grid_width) 					{ScatterDraw::SetGridWidth(grid_width); 	return *this;};
 	ScatterCtrl& SetPlotAreaColor(const Upp::Color& p_a_color)	{ScatterDraw::SetPlotAreaColor(p_a_color); 	return *this;};
-	ScatterCtrl& SetLegendWidth(const int& width)				{ScatterDraw::SetLegendWidth(width); 		return *this;};
+	ScatterCtrl& SetLegendWidth(int width)						{ScatterDraw::SetLegendWidth(width); 		return *this;};
 	int GetLegendWidth()										{return ScatterDraw::GetLegendWidth();};
 	ScatterCtrl& SetAxisColor(const Upp::Color& axis_color)		{ScatterDraw::SetAxisColor(axis_color);		return *this;};
-	ScatterCtrl& SetAxisWidth(const int& axis_width)			{ScatterDraw::SetAxisWidth(axis_width);		return *this;};
+	ScatterCtrl& SetAxisWidth(int axis_width)					{ScatterDraw::SetAxisWidth(axis_width);		return *this;};
 	ScatterCtrl& SetTitle(const String& title)		 			{ScatterDraw::SetTitle(title); 				return *this;};
 	ScatterCtrl& SetTitleFont(const Font& fontTitle) 			{ScatterDraw::SetTitleFont(fontTitle); 		return *this;};
 	ScatterCtrl& SetTitleColor(const Upp::Color& colorTitle)	{ScatterDraw::SetTitleColor(colorTitle);	return *this;};
 	ScatterCtrl& SetLabelsFont(const Font& fontLabels) 			{ScatterDraw::SetLabelsFont(fontLabels); 	return *this;};
 	ScatterCtrl& SetLabelsColor(const Upp::Color& colorLabels)	{ScatterDraw::SetLabelsColor(colorLabels);	return *this;};
-	ScatterCtrl& SetLabelX(const String& _xLabel)				{ScatterDraw::SetLabelX(_xLabel); 			return *this;};
-	ScatterCtrl& SetLabelY(const String& _yLabel)				{ScatterDraw::SetLabelY(_yLabel); 			return *this;};
-	ScatterCtrl& SetLabelY2(const String& _yLabel)				{ScatterDraw::SetLabelY2(_yLabel); 			return *this;};
-	ScatterCtrl& SetPlotAreaMargin(const int hLeft, const int hRight, const int vTop, const int vBottom)
+	ScatterCtrl& SetLabelX(const String& xLabel)				{ScatterDraw::SetLabelX(xLabel); 			return *this;};
+	ScatterCtrl& SetLabelY(const String& yLabel)				{ScatterDraw::SetLabelY(yLabel); 			return *this;};
+	ScatterCtrl& SetLabelY2(const String& yLabel)				{ScatterDraw::SetLabelY2(yLabel); 			return *this;};
+	ScatterCtrl& SetPlotAreaMargin(int hLeft, int hRight, int vTop, int vBottom)
 																{ScatterDraw::SetPlotAreaMargin(hLeft, hRight, vTop, vBottom); return *this;};
-	ScatterCtrl& SetPlotAreaLeftMargin(const int margin)		{ScatterDraw::SetPlotAreaLeftMargin(margin);return *this;};
-	ScatterCtrl& SetPlotAreaTopMargin(const int margin)			{ScatterDraw::SetPlotAreaTopMargin(margin);	return *this;};
-	ScatterCtrl& SetPlotAreaRightMargin(const int margin)		{ScatterDraw::SetPlotAreaRightMargin(margin);return *this;};
-	ScatterCtrl& SetPlotAreaBottomMargin(const int margin)		{ScatterDraw::SetPlotAreaBottomMargin(margin);return *this;};
+	ScatterCtrl& SetPlotAreaLeftMargin(int margin)				{ScatterDraw::SetPlotAreaLeftMargin(margin);return *this;};
+	ScatterCtrl& SetPlotAreaTopMargin(int margin)				{ScatterDraw::SetPlotAreaTopMargin(margin);	return *this;};
+	ScatterCtrl& SetPlotAreaRightMargin(int margin)				{ScatterDraw::SetPlotAreaRightMargin(margin);return *this;};
+	ScatterCtrl& SetPlotAreaBottomMargin(int margin)			{ScatterDraw::SetPlotAreaBottomMargin(margin);return *this;};
 	
-	ScatterCtrl& ShowLegend(const bool& show = true) 			{ScatterDraw::ShowLegend(show); 			return *this;}
+	ScatterCtrl& ShowLegend(bool show = true) 					{ScatterDraw::ShowLegend(show); 			return *this;}
 	bool GetShowLegend() 										{return ScatterDraw::GetShowLegend();}
 	
 	using ScatterDraw::AddSeries; 
