@@ -91,25 +91,25 @@ void  LayoutData::Read(CParser& p)
 	p.PassId("END_LAYOUT");
 }
 
-String LayoutData::Save()
+String LayoutData::Save(int y)
 {
 	String out;
 	out << "LAYOUT(" << name << ", " << size.cx << ", " << size.cy << ")\r\n";
 	for(int i = 0; i < item.GetCount(); i++) {
-		out << item[i].Save(i);
+		out << item[i].Save(i, y);
 	}
 	out << "END_LAYOUT\r\n";
 	return out;
 }
 
-String LayoutData::Save(const Vector<int>& sel)
+String LayoutData::Save(const Vector<int>& sel, int y)
 {
 	Vector<int> cs(sel, 1);
 	Sort(cs);
 	String out;
 	out << "LAYOUT(" << name << ", " << size.cx << ", " << size.cy << ")\r\n";
 	for(int i = 0; i < cs.GetCount(); i++)
-		out << item[cs[i]].Save(cs[i]);
+		out << item[cs[i]].Save(cs[i], y);
 	out << "END_LAYOUT\r\n";
 	return out;
 }
@@ -118,7 +118,7 @@ String LayoutData::MakeState()
 {
 	byte cs = charset;
 	SetCharset(CHARSET_UTF8);
-	String out = Save();
+	String out = Save(0);
 	SetCharset(cs);
 	return out;
 }

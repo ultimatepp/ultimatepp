@@ -978,7 +978,7 @@ void LayDes::Delete()
 
 String LayDes::SaveSelection()
 {
-	return CurrentLayout().Save(cursor) + "\r\n";
+	return CurrentLayout().Save(cursor, ZPoint(sb).y) + "\r\n";
 }
 
 LayoutData LayDes::LoadLayoutData(const String& s)

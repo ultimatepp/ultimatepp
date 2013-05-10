@@ -192,8 +192,8 @@ public:
 	int      FindProperty(const String& s) const;
 	void     SetCharset(byte charset);
 	void     ReadProperties(CParser& p, bool addunknow = true);
-	String   SaveProperties() const;
-	String   Save(int i) const;
+	String   SaveProperties(int y = 0) const;
+	String   Save(int i, int y) const;
 
 	LayoutItem()                      { csize.cx = -1; hide = false; charset = CHARSET_UNICODE; }
 };
@@ -230,8 +230,8 @@ private:
 public:
 	void        SetCharset(byte charset);
 	void        Read(CParser& p);
-	String      Save();
-	String      Save(const Vector<int>& sel);
+	String      Save(int y);
+	String      Save(const Vector<int>& sel, int y);
 	void        SaveState();
 	bool        IsUndo();
 	void        Undo();

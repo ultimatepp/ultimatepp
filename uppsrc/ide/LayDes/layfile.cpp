@@ -142,7 +142,7 @@ void LayDes::Save()
 	String r;
 	for(int i = 0; i < layout.GetCount(); i++) {
 		layout[i].SetCharset(charset);
-		r << layout[i].Save() << "\r\n";
+		r << layout[i].Save(0) << "\r\n";
 	}
 	layfile = r;
 	if(!SaveChangedFileFinish(filename, r))
