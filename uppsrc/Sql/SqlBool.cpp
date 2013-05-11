@@ -92,7 +92,7 @@ SqlBool SqlFirstRow() {
 
 SqlBool Like(const SqlVal& a, const SqlVal& b, bool cs) {
 	return SqlBool(a, SqlCase
-			(MY_SQL, " like binary ")
+			(MY_SQL, cs ? " like binary " : " like ")
 			(PGSQL, cs ? " like " : " ilike ")
 			(" like "),	b, SqlS::COMP);
 }
