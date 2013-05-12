@@ -5,6 +5,7 @@ uses
 file
 	glyph.h,
 	DDA.cpp,
+	Glyph.cpp,
 	main.cpp optimize_speed,
 	help.txt,
 	glyph.iml;

@@ -2,42 +2,61 @@
 #define _Glyph_glyph_h_
 
 #include <Draw/Draw.h>
+#include <Painter/Painter.h>
 
 using namespace Upp;
 
-struct MiniRenderer {
-	virtual void PutHorz(int x, int y, int cx) = 0;
-	virtual void PutVert(int x, int y, int cy) = 0;
-	
-	void AHorz(int x, int y, int cx);
-	void AVert(int x, int y, int cy);
-	
-	void Line(Point p1, Point p2);
-
+class MiniRenderer {
 	struct Segment : Moveable<Segment> {
-		int x;
-		int cx;
+		int l;
+		int h;
 		
-		bool operator<(const Segment& b) const { return x < b.x; }
+		bool operator<(const Segment& b) const { return l < b.l; }
 	};
 	
 	struct Segments;
 	
-	int         cy;
-	int         diry;
-	int         dirx;
-	Segments   *pseg;
-	Point       p0, p1;
+	int           cy;
+	int           diry;
+	int           dirx;
+	One<Segments> pseg;
+	Point         p0, p1;
+	int           width;
 
-	void Move(Point p);
-	void Line(Point p);
-	void Close();
-	void Render();
+	void AHorz(int x, int y, int cx);
+	void AVert(int x, int y, int cy);
+	void DoLine(Point p1, Point p2);
+
+public:
+	void FatLine(Point p1, Point p2, int n);
+
+	virtual void PutHorz(int x, int y, int cx) = 0;
+	virtual void PutVert(int x, int y, int cy) = 0;
 	
-	void Ellipse(Point center, Size radius);
+	int  GetDirx() const                      { return dirx; }
+	int  GetDiry() const                      { return diry; }
 	
-	MiniRenderer(int cy);
+	MiniRenderer& Move(Point p);
+	MiniRenderer& Line(Point p);
+	MiniRenderer& Close();
+	
+	MiniRenderer& Polygon();
+	MiniRenderer& Fill();
+	
+	MiniRenderer& Ellipse(Point center, Size radius);
+	
+	MiniRenderer& Width(int width_)           { width = width_; return *this; }
+
+	void Cy(int cy_)                          { cy = cy_; }
+	
+	MiniRenderer();
 	~MiniRenderer();
 };
+
+
+Image  AutoCrop(const Image& m, RGBA c);
+Image  RenderGlyph(Font fnt, int chr);
+String CompressGlyph(const Image& m);
+Image  DecompressGlyph(const String& g, Color c);
 
 #endif

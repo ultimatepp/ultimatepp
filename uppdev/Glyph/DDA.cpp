@@ -1,10 +1,10 @@
 #include "glyph.h"
 
-MiniRenderer::MiniRenderer(int cy)
-:	cy(cy)
+MiniRenderer::MiniRenderer()
 {
-	p0 = p1 = Null;
-	pseg = NULL;
+	cy = 0;
+	p0 = p1 = Point(0, 0);
+	width = 1;
 }
 
 void MiniRenderer::AHorz(int x, int y, int cx)
@@ -25,7 +25,7 @@ void MiniRenderer::AVert(int x, int y, int cy)
 			PutVert(x, y, cy);
 }
 
-void MiniRenderer::Line(Point p1, Point p2)
+void MiniRenderer::DoLine(Point p1, Point p2)
 {
 	dirx = sgn(p2.x - p1.x);
 	diry = sgn(p2.y - p1.y);
@@ -86,44 +86,49 @@ struct MiniRenderer::Segments : MiniRenderer {
 
 	Vector< Vector< Segment > > segment;
 	
-	static void Join(Segment& m, int x, int cx) {
-		DLOG("-- JOIN");
-		DDUMP(m.x);
-		DDUMP(m.cx);
-		int l = min(x, m.x);
-		int r = max(x + cx, m.x + m.cx);
-		m.x = l;
-		m.cx = r - l;
-		DDUMP(m.x);
-		DDUMP(m.cx);
+	static void Join(Segment& m, int l, int h) {
+		m.l = min(m.l, l);
+		m.h = max(m.h, h);
 	}
 
 	void JoinLast() {
+		DLOG("JoinLast");
 		if(!IsNull(first) && prev.y == first.y) {
-			Join(segment[first.y][first.x], segment[prev.y].Top().x, segment[prev.y].Top().cx);
+			DLOG("JOIN LAST");
+			ASSERT(first.y < segment.GetCount());
+			ASSERT(first.x < segment[first.y].GetCount());
+			Join(segment[first.y][first.x], segment[prev.y].Top().l, segment[prev.y].Top().h);
 			segment[prev.y].Drop();
+			first = Null;
 		}
 	}
 	
 	virtual void PutHorz(int x, int y, int cx) {
-		DLOG("PutHorz x: " << x << ", y: " << y << ", cx: " << cx);
+		DLOG("PutHorz " << x << ", " << y << ", cx: " << cx);
 		if(y >= 0 && y < cy) {
-			last.y = y;
-			last.x = segment.At(y).GetCount();
-			if(IsNull(first))
-				first = last;
 			if(prev.y == y) {
-				Join(segment[y].Top(), x, cx);
-				return;
+				DLOG("JOIN!");
+				Join(segment[y].Top(), x, x + cx);
+				last = prev;
+			}
+			else {
+				last.y = y;
+				last.x = segment.At(y).GetCount();
+				Segment& m = segment[y].Add();
+				m.l = x;
+				m.h = x + cx;
+				if(y < miny)
+					miny = y;
+				if(y > maxy)
+					maxy = y;
+			}
+			if(IsNull(first)) {
+				first = last;
+				DLOG("SET FIRST");
+				DDUMP(first);
+				DDUMP(segment[first.y].GetCount());
 			}
 			prev = Null;
-			Segment& m = segment[y].Add();
-			m.x = x;
-			m.cx = cx;
-			if(y < miny)
-				miny = y;
-			if(y > maxy)
-				maxy = y;
 		}
 	}
 	virtual void PutVert(int x, int y, int cy) {
@@ -135,63 +140,93 @@ struct MiniRenderer::Segments : MiniRenderer {
 				PutHorz(x, y + cy - 1 - i, 1);
 	}
 	
-	Segments(int cy) : MiniRenderer(cy) { miny = INT_MAX; maxy = 0; first = prev = last = Null; }
+	Segments() { miny = INT_MAX; maxy = 0; first = prev = last = Null; }
 };
 
-void MiniRenderer::Move(Point p)
+void MiniRenderer::FatLine(Point p1, Point p2, int n)
 {
-	if(pseg)
+	Point v = p2 - p1;
+	Pointf shift = n * Orthogonal(Pointf(v) / Length(v));
+	Point p = Pointf(p1) + shift / 2;
+	Polygon();
+	Move(p);
+	Line(p += v);
+	Line(p -= shift);
+	Line(p - v);
+	Fill();
+}
+
+MiniRenderer& MiniRenderer::Move(Point p)
+{
+	if(pseg) {
+		pseg->Close();
+		pseg->first = Null;
+		pseg->p0 = pseg->p1 = p;
+	}
+	else {
+		DLOG("Move " << p);
 		Close();
+		p0 = p1 = p;
+	}
+	return *this;
+}
+
+MiniRenderer& MiniRenderer::Line(Point p)
+{
+	if(pseg) {
+		pseg->Line(p);
+		pseg->prev = pseg->last;
+	}
+	else {
+		DLOG("Line " << p);
+		if(width <= 1)
+			DoLine(p1, p);
+		else
+			FatLine(p1, p, width);
+		p1 = p;
+	}
+	return *this;
+}
+
+MiniRenderer& MiniRenderer::Close()
+{
+	if(pseg) {
+		if(pseg->p1 != pseg->p0)
+			Line(pseg->p0);
+		pseg->JoinLast();
+	}
 	else
-		pseg = new Segments(cy);
-	p0 = p1 = p;
-	pseg->first = Null;
+		if(p1 != p0)
+			Line(p0);
+	return *this;
 }
 
-void MiniRenderer::Line(Point p)
+MiniRenderer& MiniRenderer::Polygon()
 {
-	if(!pseg)
-		Move(Point(0, 0));
-	pseg->Line(p1, p);
-	pseg->prev = pseg->last;
-	p1 = p;
+	pseg.Create();
+	pseg->Cy(cy);
+	return *this;
 }
 
-void MiniRenderer::Close()
+MiniRenderer& MiniRenderer::Fill()
 {
-	if(!pseg)
-		Move(Point(0, 0));
-	if(p1 != p0)
-		Line(p0);
-	pseg->JoinLast();
-}
-
-void MiniRenderer::Render()
-{
+	ASSERT(pseg);
 	Close();
-	if(!pseg)
-		return;
 	for(int y = pseg->miny; y <= pseg->maxy; y++) {
 		Vector<Segment>& gg = pseg->segment[y];
 		Sort(gg);
-		int i = 0;
-		while(i < gg.GetCount()) {
-			if(i + 1 < gg.GetCount())
-				PutHorz(gg[i].x, y, gg[i + 1].x + gg[i + 1].cx - gg[i].x);
-			else
-				PutHorz(gg[i].x, y, gg[i].cx);
-			i += 2;
-		}
+		for(int i = 0; i < gg.GetCount(); i += 2)
+			PutHorz(gg[i].l, y, gg[i + (i + 1 < gg.GetCount())].h - gg[i].l);
 	}
-	delete pseg;
-	pseg = NULL;
+	pseg.Clear();
+	return *this;
 }
 
-void MiniRenderer::Ellipse(Point center, Size radius)
+MiniRenderer& MiniRenderer::Ellipse(Point center, Size radius)
 {
+	DLOG("Ellipse");
 	int n = max(abs(radius.cx), abs(radius.cy));
 	Point p0;
-	DLOG("--------------------");
 	for(int i = 0; i < n; i++) {
 		Point p = center + Point(int(sin(M_2PI * i / n) * radius.cx), int(cos(M_2PI * i / n) * radius.cy));
 		if(i)
@@ -199,10 +234,9 @@ void MiniRenderer::Ellipse(Point center, Size radius)
 		else
 			Move(p);
 	}
+	Close();
+	return *this;
 }
 
 MiniRenderer::~MiniRenderer()
-{
-	if(pseg)
-		delete pseg;
-}
+{}
