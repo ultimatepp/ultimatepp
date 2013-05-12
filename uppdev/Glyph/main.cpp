@@ -12,105 +12,6 @@ using namespace Upp;
 #define IMAGEFILE <Glyph/glyph.iml>
 #include <Draw/iml_source.h>
 
-bool IsUniform(const RGBA *s, RGBA c, int add, int n)
-{
-	while(n-- > 0) {
-		if(*s != c)
-			return false;
-		s += add;
-	}
-	return true;
-}
-
-Image AutoCrop(const Image& m, RGBA c)
-{
-	Size isz = m.GetSize();
-	Rect r = isz;
-	for(r.top = 0; r.top < isz.cy && IsUniform(m[r.top], c, 1, isz.cx); r.top++)
-		;
-	for(r.bottom = isz.cy - 1; r.bottom >= r.top && IsUniform(m[r.bottom], c, 1, isz.cx); r.bottom--)
-		;
-	if(r.bottom <= r.top)
-		return Null;
-	int h = r.GetHeight();
-	const RGBA *p = m[r.top];
-	for(r.left = 0; r.left < isz.cy && IsUniform(p + r.left, c, isz.cx, h); r.left++)
-		;
-	for(r.right = isz.cx; r.right >= r.left && IsUniform(p + r.right, c, isz.cx, h); r.right--)
-		;
-	r.right++;
-	r.bottom++;
-	return WithHotSpot(Crop(m, r), 20, 20);
-}
-
-Image RenderGlyph(Font fnt, int chr)
-{
-	int cx = fnt[chr];
-	int cy = fnt.GetLineHeight();
-	ImageBuffer ib(2 * cx, 2 * cy);
-	BufferPainter sw(ib, MODE_ANTIALIASED);
-	sw.Clear(RGBAZero());
-	sw.DrawText(cx / 2, cy / 2, WString(chr, 1), fnt, Black());
-	ib.SetHotSpot(Point(20, 20));
-	return ib;
-}
-
-String CompressGlyph(const Image& m)
-{
-	const RGBA *s = m;
-	const RGBA *e = s + m.GetLength();
-	StringStream r;
-	Size sz = m.GetSize();
-	r / sz.cx / sz.cy;
-	Point p = m.GetHotSpot();
-	r / p.x / p.y;
-	while(s < e) {
-		const RGBA *b = s;
-		if(s->a == 0 || s->a == 255) {
-			byte a = s->a;
-			s++;
-			while(s < e && s - b < 63 && s->a == a)
-				s++;
-			if(a == 0 && s >= e)
-				return r;
-			r.Put((a & 0x40) | (s - b));
-		}
-		else {
-			r.Put((s->a >> 1) | 0x80);
-			s++;
-		}
-	}
-	return r;
-}
-
-Image DecompressGlyph(const String& g, Color c)
-{
-	StringStream r(g);
-	Size sz;
-	r / sz.cx / sz.cy;
-	ImageBuffer ib(sz);
-	Point p;
-	ib.SetHotSpot(p);
-	r / p.x / p.y;
-	RGBA *t = ib;
-	RGBA *te = ib.End();
-	RGBA full = c;
-	while(!r.IsEof()) {
-		byte b = r.Get();
-		ASSERT(t < te);
-		if(b & 0x80)
-			*t++ = (((b & 0x7f) << 1) | ((b & 0x40) >> 6)) * c;
-		else {
-			int n = b & 63;
-			ASSERT(t + n <= te);
-			Fill(t, b & 0x40 ? full : RGBAZero(), n);
-			t += n;
-		}
-	}
-	Fill(t, RGBAZero(), te - t);
-	return ib;
-}
-
 struct ColorRenderer : MiniRenderer {
 	Draw *draw;
 	Color color;
@@ -121,16 +22,18 @@ struct ColorRenderer : MiniRenderer {
 	virtual void PutVert(int x, int y, int cy) {
 		draw->DrawRect(x, y, 1, cy, color);
 	}
-	
-	ColorRenderer(int cy) : MiniRenderer(cy) {}
 };
 
 struct MyApp : TopWindow {
 	Point p;
+	int   width;
 	
 	virtual void Paint(Draw& w);
 	virtual void MouseMove(Point p, dword keyflags);
+	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual Image CursorImage(Point p, dword keyflags);
+	
+	MyApp() { width = 2; p = Point(0, 0); }
 };
 
 Image MyApp::CursorImage(Point p, dword keyflags)
@@ -144,75 +47,17 @@ void MyApp::MouseMove(Point p_, dword keyflags)
 	Refresh();
 }
 
-
-void DrawLine(Draw& w, Point p1, Point p2)
+void MyApp::MouseWheel(Point p, int zdelta, dword keyflags)
 {
-	DLOG("----------------");
-	int dirx = sgn(p2.x - p1.x);
-	int diry = sgn(p2.y - p1.y);
-	int dx = abs(p2.x - p1.x);
-	int dy = abs(p2.y - p1.y);
-	int x = p1.x;
-	int y = p1.y;
-	int x0 = x;
-	int y0 = y;
-	if(dx < dy) {
-		int dda = dy >> 1;
-		int n = dy;
-		for(;;) {
-			if(x != x0) {
-				if(y0 < y)
-					w.DrawRect(x0, y0, 1, y - y0, LtBlue());
-				else
-					w.DrawRect(x0, y + 1, 1, y0 - y, LtBlue());
-				x0 = x;
-				y0 = y;
-			}
-			if(n-- <= 0)
-				break;
-			y += diry;
-			dda -= dx;
-			if(dda < 0) {
-				dda += dy;
-				x += dirx;
-			}
-		}
-		if(y0 < y)
-			w.DrawRect(x0, y0, 1, y - y0, LtBlue());
-		else
-			w.DrawRect(x0, y + 1, 1, y0 - y, LtBlue());
-	}
-	else {
-		int dda = dx >> 1;
-		int n = dx;
-		for(;;) {
-			if(y != y0) {
-				if(x0 < x)
-					w.DrawRect(x0, y0, x - x0, 1, LtBlue());
-				else
-					w.DrawRect(x + 1, y0, x0 - x, 1, LtBlue());
-				x0 = x;
-				y0 = y;
-			}
-			if(n-- <= 0)
-				break;
-			x += dirx;
-			dda -= dy;
-			if(dda < 0) {
-				dda += dx;
-				y += diry;
-			}
-		}
-		if(x0 < x)
-			w.DrawRect(x0, y0, x - x0, 1, LtBlue());
-		else
-			w.DrawRect(x + 1, y0, x0 - x, 1, LtBlue());
-	}
+	width = minmax(1, 1000, width + sgn(zdelta));
+	Title(AsString(width));
+	Refresh();
 }
-
 
 void MyApp::Paint(Draw& w)
 {
+	Size sz = GetSize();
+/*
 	w.DrawRect(GetSize(), Gray());
 //	DWORD gdiCount = GetGuiResources(GetCurrentProcess(), GR_GDIOBJECTS); 
 //	w.DrawText(400, 0, AsString(gdiCount));
@@ -222,21 +67,25 @@ void MyApp::Paint(Draw& w)
 	String g = CompressGlyph(AutoCrop(RenderGlyph(Arial(20), 'e'), RGBAZero()));
 	w.DrawImage(20, 0, DecompressGlyph(g, White()));
 	w.DrawImage(0, 50, DecompressGlyph(g, Black()));
-
+*/
 	Point p0(300, 300);
 
 	Vector< Vector<Point> > pgs;
 	
-	ColorRenderer r(GetSize().cy);
+	ColorRenderer r;
+	r.Cy(sz.cy);
 
 	r.draw = &w;
-	r.color = Black();
-#if 0	
-	DLOG("########## Ellipse");
-	r.Ellipse(p0, p - p0/*Size(100, 100)*/);
-	r.Render();
-
-	{
+	r.color = Green();
+#if 1
+	DLOG("------------");
+	p = p0 + Size(16, 16);
+	r.Polygon();
+	r.Ellipse(p0, p - p0);
+	r.Ellipse(p0, p - p0 - width);
+	r.Fill();
+	return;
+	if(0) {
 		Point center = p0;
 		Size radius = p - p0;
 		int n = max(abs(radius.cx), abs(radius.cy));
@@ -245,20 +94,51 @@ void MyApp::Paint(Draw& w)
 			w.DrawRect(p.x, p.y, 1, 1, White());
 		}
 	}
-	
+
 	r.color = Green();
 #endif
-	r.Move(p0);
-	r.Line(p);
-	r.Line(Point(700, 400));
-	r.Render();
+
+	if(0) {
+		Sizef r = Size(abs(p.x - p0.x), abs(p.y - p0.y));
+		double rr = r.cx * r.cx;
+		for(int y = 0; y <= r.cy; y++) {
+			double y2 = r.cx * y / r.cy;
+			int x = (int)(sqrt(rr - (double)y2 * y2) + 0.5);
+			w.DrawRect(p0.x - x, p0.y + y, 2 * x, 1, Black());
+			w.DrawRect(p0.x - x, p0.y - y, 2 * x, 1, Black());
+		}
+	}
+
+	for(int i = 0; i < 0; i++) {
+		RTIMING("RenderTriangle");
+		r.Polygon();
+		r.Move(p0);
+		r.Line(p);
+		r.Line(Point(700, 400));
+		r.Fill();
+	}
 	
 	w.DrawRect(p.x, p.y, 1, 1, White());
-	w.DrawRect(700, 400, 1, 1, White());
+//	w.DrawRect(700, 400, 1, 1, White());
 	
+/*
+	for(int i = 0; i < 0; i++) {
+		r.color = Color(Color(Random(256), Random(256), Random(256)));
+		r.Move(Point(Random(sz.cx), Random(sz.cy)));
+		r.Line(Point(Random(sz.cx), Random(sz.cy)));
+		r.Line(Point(Random(sz.cx), Random(sz.cy)));
+		r.Fill();
+	}
+*/
+	r.Width(width);
+	r.Move(p0);
+	r.Line(p);
+	
+	r.FatLine(p0, p, width);
 
-//	w.DrawLine(p0, p, 0, LtGray());
-	w.DrawRect(p0.x - 1, p0.y - 1, 3, 3, LtGray());
+	w.DrawRect(p0.x, p0.y, 1, 1, White());
+
+//	w.DrawRect(p0.x - 1, p0.y - 1, 3, 3, LtGray());
 
 	r.color = LtBlue();
 //	r.Line(p0, p);
@@ -270,6 +150,7 @@ void MyApp::Paint(Draw& w)
 
 GUI_APP_MAIN
 {
+	#if 0
 	{
 		for(int i = 0; i < 10000; i++) {
 			RTIMING("RenderGlyph");
@@ -291,5 +172,6 @@ GUI_APP_MAIN
 			RDUMP(sz.cx * sz.cy);
 			RDUMP(CompressGlyph(AutoCrop(RenderGlyph(StdFont(n), *s), RGBAZero())).GetLength());
 		}
+	#endif
 	MyApp().Run();
 }
