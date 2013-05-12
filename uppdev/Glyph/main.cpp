@@ -33,7 +33,7 @@ struct MyApp : TopWindow {
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual Image CursorImage(Point p, dword keyflags);
 	
-	MyApp() { width = 2; p = Point(0, 0); }
+	MyApp() { width = 2; p = Point(0, 0); Sizeable().Zoomable(); }
 };
 
 Image MyApp::CursorImage(Point p, dword keyflags)
@@ -69,7 +69,7 @@ void MyApp::Paint(Draw& w)
 	w.DrawImage(20, 0, DecompressGlyph(g, White()));
 	w.DrawImage(0, 50, DecompressGlyph(g, Black()));
 
-	Point p0(300, 300);
+	Point p0(10, 10);
 
 	Vector< Vector<Point> > pgs;
 	
@@ -83,8 +83,9 @@ void MyApp::Paint(Draw& w)
 //	p = p0 + Size(16, 16);
 	DrawFrame(w, Rect(p0, p), LtRed());
 	r.Polygon();
-	r.Ellipse(Rect(p0, p));
-//	r.Ellipse(p0, p - p0 - width, -1);
+	Rect er(p0, p);
+	r.Ellipse(er);
+	r.Ellipse(er.Deflated(width));
 	r.Fill();
 	return;
 

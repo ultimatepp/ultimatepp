@@ -184,15 +184,27 @@ MiniRenderer& MiniRenderer::Fill()
 
 MiniRenderer& MiniRenderer::Ellipse(const Rect& rect)
 {
-	Sizef size = rect.GetSize();
-	size /= 2;
-	Pointf center = Pointf(rect.TopLeft()) + size;
-	int n = max(abs(rect.GetWidth()), abs(rect.GetHeight()));
-	Move(center + Size(-size, size.cy));
-	for(int i = 1; i < n; i++) {
-		double angle = M_PI * i / n / 2;
-		Line(center + Sizef(cos(angle) * size.cx, sin(angle) * size.cy));
+	Size size = rect.GetSize() / 2;
+	int n = 16;
+	Buffer<Point> p(n);
+	for(int i = 0; i < n; i++) {
+		double angle = M_PI * i / (n - 1) / 2;
+		p[i].x = min(size.cx, int(sin(angle) * size.cx + 0.5));
+		p[i].y = min(size.cy, int(cos(angle) * size.cy + 0.5));
 	}
+	Point center = rect.TopLeft() + size;
+	Move(Point(center.x - p[0].x, center.y - p[0].y));
+	for(int i = 1; i < n; i++)
+		Line(Point(center.x - p[i].x, center.y - p[i].y));
+	center.y = rect.bottom - 1 - size.cy;
+	for(int i = n - 1; i >= 0; i--)
+		Line(Point(center.x - p[i].x, center.y + p[i].y));
+	center.x = rect.right - 1 - size.cx;
+	for(int i = 0; i < n; i++)
+		Line(Point(center.x + p[i].x, center.y + p[i].y));
+	center.y = rect.top + size.cy;
+	for(int i = n - 1; i >= 0; i--)
+		Line(Point(center.x + p[i].x, center.y - p[i].y));
 	Close();
 	return *this;
 }
