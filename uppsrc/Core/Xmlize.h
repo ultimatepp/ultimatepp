@@ -264,7 +264,6 @@ void XmlizeBySerialize(XmlIO& xio, T& x)
 		}
 }
 
-
 void  StoreJsonValue(XmlIO& xio, const Value& v);
 Value LoadJsonValue(const XmlNode& n);
 
