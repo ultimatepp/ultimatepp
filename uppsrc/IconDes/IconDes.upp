@@ -9,6 +9,7 @@ uses
 file
 	IconDes.h,
 	IconDes.key,
+	IconDraw.cpp,
 	AlphaCtrl.cpp,
 	RGBACtrl.cpp,
 	ImageOp.cpp optimize_speed,
