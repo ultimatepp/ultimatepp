@@ -36,7 +36,7 @@ enum { XML_DOC, XML_TAG, XML_END, XML_TEXT, XML_DECL, XML_PI, XML_COMMENT, XML_E
 
 struct XmlError : public Exc
 {
-	XmlError(const char *s) : Exc(s) { DDUMP(s); }
+	XmlError(const char *s) : Exc(s) {}
 };
 
 class XmlParser {
