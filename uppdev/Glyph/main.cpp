@@ -81,11 +81,13 @@ void MyApp::Paint(Draw& w)
 #if 1
 	DLOG("------------");
 //	p = p0 + Size(16, 16);
+	DrawFrame(w, Rect(p0, p), LtRed());
 	r.Polygon();
-	r.Ellipse(p0, p - p0);
-	r.Ellipse(p0, p - p0 - width, -1);
+	r.Ellipse(Rect(p0, p));
+//	r.Ellipse(p0, p - p0 - width, -1);
 	r.Fill();
 	return;
+
 	if(0) {
 		Point center = p0;
 		Size radius = p - p0;
@@ -110,7 +112,8 @@ void MyApp::Paint(Draw& w)
 		}
 	}
 
-	for(int i = 0; i < 0; i++) {
+	r.color = Black();
+	for(int i = 0; i < 1; i++) {
 		RTIMING("RenderTriangle");
 		r.Polygon();
 		r.Move(p0);
@@ -131,12 +134,13 @@ void MyApp::Paint(Draw& w)
 		r.Fill();
 	}
 */
-/*	r.Width(width);
+	r.color = LtRed();
+	r.Width(width);
 	r.Move(p0);
 	r.Line(p);
 	
 	r.FatLine(p0, p, width);
-*/
+
 	w.DrawRect(p0.x, p0.y, 1, 1, White());
 	w.DrawRect(700, 400, 1, 1, White());
 
