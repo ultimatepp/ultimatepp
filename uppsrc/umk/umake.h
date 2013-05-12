@@ -143,6 +143,8 @@ struct Ide : public IdeContext, public MakeBuild {
 	virtual String         GetDefaultMethod();
 	virtual VectorMap<String, String> GetMethodVars(const String& method);
 
+	virtual bool IsPersistentFindReplace() { return false; }
+
 	void ExportMakefile(const String& ep);
 	void ExportProject(const String& ep, bool all, bool deletedir = true);
 
