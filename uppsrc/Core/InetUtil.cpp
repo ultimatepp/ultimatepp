@@ -471,7 +471,6 @@ bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,
 	if(content_type)
 		r << "Content-Type: " << content_type << "\r\n";
 	r << "\r\n";
-	LOG(r + data);
 	if(!socket.PutAll(r))
 		return false;
 	return data.GetCount() == 0 || socket.PutAll(data);

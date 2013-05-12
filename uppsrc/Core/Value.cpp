@@ -390,6 +390,9 @@ void Value::Xmlize(XmlIO& xio)
 	}
 	else {
 		String name = xio.GetAttr("type");
+		if(Upp::IsNull(name))
+			*this = Value();
+		else
 		if(name == s_binary) {
 			String s;
 			Upp::Xmlize(xio, s);
