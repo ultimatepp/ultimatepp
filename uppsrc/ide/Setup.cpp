@@ -566,7 +566,7 @@ void MainConfigDlg::FlagDlg()
 		cfg.accepts.Set(i, CC_NAME, accepts[i]);
 		cfg.accepts.Set(i, CC_PACKAGES, Join(pkg, ","));
 	}
-	
+
 	cfg.other.SetFilter(FlagFilterM);
 	cfg.dll <<= cfg.gui <<= cfg.mt <<= cfg.sse2 <<= 0;
 	String other;

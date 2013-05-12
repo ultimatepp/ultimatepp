@@ -98,8 +98,26 @@ void   MirrorVert(Image& img, const Rect& rect);
 String PackImlData(const Vector<Image>& image);
 Image  DownSample3x(const Image& src);
 
+/*
 struct IconDraw : ImagePainter {
 	IconDraw(Size sz) : ImagePainter(sz, MODE_NOAA) {}
+};
+*/
+
+struct IconDraw : NilDraw, DDARasterizer {
+	RGBA        docolor;
+	ImageBuffer image;
+	
+	virtual void PutHorz(int x, int y, int cx);
+	virtual void PutVert(int x, int y, int cy);
+
+	virtual void DrawRectOp(int x, int y, int cx, int cy, Color color);
+	virtual void DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color);
+	virtual void DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor);
+	
+	operator Image() { return image; }
+	
+	IconDraw(Size sz) { image.Create(sz); Cy(sz.cy); }
 };
 
 class IconDes : public Ctrl {

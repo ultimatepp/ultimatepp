@@ -18,7 +18,6 @@ rectangular area. References to Displays are used in many widgets
 as attributes affecting the rendering of widget Values. Default 
 implementation uses StdDisplay to perform all actions (see below 
 for StdDisplay description).&]
-[s3; &]
 [s0; &]
 [s0; [* Visual style constants ]are used as `"style`" parameter bit 
 flags of rendering methods and provide additional information 
@@ -296,4 +295,4 @@ border.]
 ::^ [s0;:DrawingDisplay: [* DrawingDisplay]]
 ::= [s0; Displays Drawing scaled to fit the rectangle.]}}&]
 [s3; &]
-[s0; ]
+[s0; ]]
