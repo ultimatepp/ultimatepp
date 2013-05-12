@@ -57,17 +57,18 @@ void MyApp::MouseWheel(Point p, int zdelta, dword keyflags)
 void MyApp::Paint(Draw& w)
 {
 	Size sz = GetSize();
-/*
+
 	w.DrawRect(GetSize(), Gray());
+/*
 //	DWORD gdiCount = GetGuiResources(GetCurrentProcess(), GR_GDIOBJECTS); 
 //	w.DrawText(400, 0, AsString(gdiCount));
 
 	w.DrawImage(0, 0, RenderGlyph(Arial(20), 'e'));
-
+*/
 	String g = CompressGlyph(AutoCrop(RenderGlyph(Arial(20), 'e'), RGBAZero()));
 	w.DrawImage(20, 0, DecompressGlyph(g, White()));
 	w.DrawImage(0, 50, DecompressGlyph(g, Black()));
-*/
+
 	Point p0(300, 300);
 
 	Vector< Vector<Point> > pgs;
@@ -79,10 +80,10 @@ void MyApp::Paint(Draw& w)
 	r.color = Green();
 #if 1
 	DLOG("------------");
-	p = p0 + Size(16, 16);
+//	p = p0 + Size(16, 16);
 	r.Polygon();
 	r.Ellipse(p0, p - p0);
-	r.Ellipse(p0, p - p0 - width);
+	r.Ellipse(p0, p - p0 - width, -1);
 	r.Fill();
 	return;
 	if(0) {
@@ -130,13 +131,14 @@ void MyApp::Paint(Draw& w)
 		r.Fill();
 	}
 */
-	r.Width(width);
+/*	r.Width(width);
 	r.Move(p0);
 	r.Line(p);
 	
 	r.FatLine(p0, p, width);
-
+*/
 	w.DrawRect(p0.x, p0.y, 1, 1, White());
+	w.DrawRect(700, 400, 1, 1, White());
 
 //	w.DrawRect(p0.x - 1, p0.y - 1, 3, 3, LtGray());
 

@@ -10,6 +10,7 @@ class MiniRenderer {
 	struct Segment : Moveable<Segment> {
 		int l;
 		int h;
+		int dir;
 		
 		bool operator<(const Segment& b) const { return l < b.l; }
 	};
@@ -43,7 +44,7 @@ public:
 	MiniRenderer& Polygon();
 	MiniRenderer& Fill();
 	
-	MiniRenderer& Ellipse(Point center, Size radius);
+	MiniRenderer& Ellipse(Point center, Size radius, int dir = 1);
 	
 	MiniRenderer& Width(int width_)           { width = width_; return *this; }
 
