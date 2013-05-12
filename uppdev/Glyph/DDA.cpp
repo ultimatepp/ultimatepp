@@ -25,7 +25,7 @@ void MiniRenderer::AVert(int x, int y, int cy)
 			PutVert(x, y, cy);
 }
 
-void MiniRenderer::DoLine(Point p1, Point p2)
+void MiniRenderer::DoLine(Point p1, Point p2, bool last)
 {
 	dirx = sgn(p2.x - p1.x);
 	diry = sgn(p2.y - p1.y);
@@ -37,7 +37,7 @@ void MiniRenderer::DoLine(Point p1, Point p2)
 	int y0 = y;
 	if(dx < dy) {
 		int dda = dy >> 1;
-		int n = dy;
+		int n = dy + last;
 		for(;;) {
 			if(x != x0) {
 				AVert(x0, y0, y - y0);
@@ -57,7 +57,7 @@ void MiniRenderer::DoLine(Point p1, Point p2)
 	}
 	else {
 		int dda = dx >> 1;
-		int n = dx;
+		int n = dx + last;
 		for(;;) {
 			if(y != y0) {
 				AHorz(x0, y0, x - x0);
@@ -80,6 +80,7 @@ void MiniRenderer::DoLine(Point p1, Point p2)
 struct MiniRenderer::Segments : MiniRenderer {
 	int         miny;
 	int         maxy;
+	bool        flag;
 	Vector< Vector< Segment > > segment;
 	
 	virtual void PutHorz(int x, int y, int cx) {
@@ -88,9 +89,8 @@ struct MiniRenderer::Segments : MiniRenderer {
 			Segment& m = segment.At(y).Add();
 			m.l = x;
 			m.h = x + cx;
-			m.dir = GetDiry() * GetDirx();
-//			if(!m.dir)
-//				m.dir = GetDirx();
+			m.flag = flag;
+			flag = true;
 			miny = min(y, miny);
 			maxy = max(y, maxy);
 		}
@@ -118,27 +118,25 @@ void MiniRenderer::FatLine(Point p1, Point p2, int n)
 
 MiniRenderer& MiniRenderer::Move(Point p)
 {
-	if(pseg) {
-		pseg->Close();
-		pseg->p0 = pseg->p1 = p;
-	}
-	else {
-		DLOG("Move " << p);
-		Close();
-		p0 = p1 = p;
-	}
+	Close();
+	p0 = p1 = p;
 	return *this;
 }
 
 MiniRenderer& MiniRenderer::Line(Point p)
 {
 	if(pseg) {
-		pseg->Line(p);
+		Point a = p1;
+		Point b = p;
+		if(a.y > b.y)
+			Swap(a, b);
+		pseg->flag = false;
+		pseg->DoLine(a, b, true);
+		p1 = p;
 	}
 	else {
-		DLOG("Line " << p << ' ' << width);
 		if(width <= 1)
-			DoLine(p1, p);
+			DoLine(p1, p, false);
 		else
 			FatLine(p1, p, width);
 		p1 = p;
@@ -148,13 +146,8 @@ MiniRenderer& MiniRenderer::Line(Point p)
 
 MiniRenderer& MiniRenderer::Close()
 {
-	if(pseg) {
-		if(pseg->p1 != pseg->p0)
-			Line(pseg->p0);
-	}
-	else
-		if(p1 != p0)
-			Line(p0);
+	if(p1 != p0)
+		Line(p0);
 	return *this;
 }
 
@@ -173,14 +166,14 @@ MiniRenderer& MiniRenderer::Fill()
 		Vector<Segment>& gg = pseg->segment[y];
 		Sort(gg);
 		int i = 0;
-		int dir = 0;
+		bool flag = false;
 		while(i < gg.GetCount()) {
 			int l = gg[i].l;
 			int h = gg[i].h;
-			dir += gg[i++].dir;
-			while(i < gg.GetCount() && dir) {
+			flag ^= gg[i++].flag;
+			while(i < gg.GetCount() && flag) {
 				h = gg[i].h;
-				dir += gg[i++].dir;
+				flag ^= gg[i++].flag;
 			}
 			PutHorz(l, y, h - l);
 		}
@@ -189,22 +182,19 @@ MiniRenderer& MiniRenderer::Fill()
 	return *this;
 }
 
-MiniRenderer& MiniRenderer::Ellipse(Point center, Size radius, int dir)
+MiniRenderer& MiniRenderer::Ellipse(const Rect& rect)
 {
-	DLOG("Ellipse");
-	int n = max(abs(radius.cx), abs(radius.cy));
-	Point p0;
-	for(int i = 0; i < n; i++) {
-		double angle = dir * M_2PI * i / n;
-		Point p = center + Point(int(sin(angle) * radius.cx), int(cos(angle) * radius.cy));
-		if(i)
-			Line(p);
-		else
-			Move(p);
+	Sizef size = rect.GetSize();
+	size /= 2;
+	Pointf center = Pointf(rect.TopLeft()) + size;
+	int n = max(abs(rect.GetWidth()), abs(rect.GetHeight()));
+	Move(center + Size(-size, size.cy));
+	for(int i = 1; i < n; i++) {
+		double angle = M_PI * i / n / 2;
+		Line(center + Sizef(cos(angle) * size.cx, sin(angle) * size.cy));
 	}
 	Close();
 	return *this;
 }
 
-MiniRenderer::~MiniRenderer()
-{}
+MiniRenderer::~MiniRenderer() {}

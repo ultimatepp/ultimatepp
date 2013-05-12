@@ -8,9 +8,9 @@ using namespace Upp;
 
 class MiniRenderer {
 	struct Segment : Moveable<Segment> {
-		int l;
-		int h;
-		int dir;
+		int  l;
+		int  h;
+		bool flag;
 		
 		bool operator<(const Segment& b) const { return l < b.l; }
 	};
@@ -26,7 +26,7 @@ class MiniRenderer {
 
 	void AHorz(int x, int y, int cx);
 	void AVert(int x, int y, int cy);
-	void DoLine(Point p1, Point p2);
+	void DoLine(Point p1, Point p2, bool last);
 
 public:
 	void FatLine(Point p1, Point p2, int n);
@@ -44,7 +44,7 @@ public:
 	MiniRenderer& Polygon();
 	MiniRenderer& Fill();
 	
-	MiniRenderer& Ellipse(Point center, Size radius, int dir = 1);
+	MiniRenderer& Ellipse(const Rect& rect);
 	
 	MiniRenderer& Width(int width_)           { width = width_; return *this; }
 
