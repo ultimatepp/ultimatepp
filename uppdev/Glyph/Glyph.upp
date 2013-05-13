@@ -4,7 +4,10 @@ uses
 
 file
 	glyph.h,
-	DDA.cpp,
+	TestDraw.cpp,
+	FDrawClip.cpp,
+	FDrawPut.cpp,
+	FDraw.cpp,
 	Glyph.cpp,
 	main.cpp optimize_speed,
 	help.txt,
