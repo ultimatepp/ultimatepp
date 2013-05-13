@@ -238,7 +238,7 @@ void Draw::DrawImage(int x, int y, const Image& img, const Rect& src, Color colo
 {
 	if(IsNull(color)) return;
 	Size sz = img.GetSize();
-	DrawImageOp(x, y, sz.cx, sz.cy, img, src, color);
+	DrawImageOp(x, y, src.Width(), src.Height(), img, src, color);
 }
 
 void Draw::DrawImage(int x, int y, const Image& img, Color color)
