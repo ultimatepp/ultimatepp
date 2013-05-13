@@ -12,16 +12,15 @@ Image  RenderGlyph(Font fnt, int chr);
 String CompressGlyph(const Image& m);
 Image  DecompressGlyph(const String& g, Color c);
 
-struct FDraw : NilDraw {
+struct FDraw : Draw {
 	struct Cloff {
 		Vector<Rect> clip;
 		Point        offset;
 	};
 	
-	Array<Cloff> state;
+	Array<Cloff> cloff;
 	
-	virtual void PutImage(Point p, const Image& m, const Rect& src) = 0;
-	virtual void PutRect(const Rect& r, Color color) = 0;
+	virtual dword GetInfo() const;
 
 	virtual void BeginOp();
 	virtual bool ClipOp(const Rect& r);
@@ -29,6 +28,7 @@ struct FDraw : NilDraw {
 	virtual bool IntersectClipOp(const Rect& r);
 	virtual bool IsPaintingOp(const Rect& r) const;
 	virtual void OffsetOp(Point p);
+	virtual bool ExcludeClipOp(const Rect& r);
 	virtual void EndOp();
 
 
@@ -45,8 +45,9 @@ struct FDraw : NilDraw {
 	virtual void DrawPaintingOp(const Rect& target, const Painting& w);
 	virtual void DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, const int *subpolygon_counts, int scc, const int *disjunct_polygon_counts, int dpcc, Color color, int width, Color outline, uint64 pattern, Color doxor);
 	virtual void DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor);
-	
-	FDraw(
+
+	virtual void PutImage(Point p, const Image& m, const Rect& src) = 0;
+	virtual void PutRect(const Rect& r, Color color) = 0;
 };
 
 struct TestDraw : FDraw {

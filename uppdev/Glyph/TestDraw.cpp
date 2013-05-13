@@ -1,9 +1,11 @@
 #include "glyph.h"
 
-void FDraw::PutImage(Point p, const Image& m, const Rect& src)
+void TestDraw::PutImage(Point p, const Image& m, const Rect& src)
 {
+	draw->DrawImage(p.x, p.y, m, src);
 }
 
-void FDraw::PutRect(const Rect& r, Color color)
+void TestDraw::PutRect(const Rect& r, Color color)
 {
+	draw->DrawRect(r, color);
 }

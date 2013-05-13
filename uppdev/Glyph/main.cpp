@@ -58,125 +58,31 @@ void MyApp::Paint(Draw& w)
 {
 	Size sz = GetSize();
 
-	w.DrawRect(GetSize(), Gray());
-/*
-//	DWORD gdiCount = GetGuiResources(GetCurrentProcess(), GR_GDIOBJECTS); 
-//	w.DrawText(400, 0, AsString(gdiCount));
-
-	w.DrawImage(0, 0, RenderGlyph(Arial(20), 'e'));
-*/
-	String g = CompressGlyph(AutoCrop(RenderGlyph(Arial(20), 'e'), RGBAZero()));
-	w.DrawImage(20, 0, DecompressGlyph(g, White()));
-	w.DrawImage(0, 50, DecompressGlyph(g, Black()));
-
-	Point p0(10, 10);
-
-	Vector< Vector<Point> > pgs;
+	w.DrawRect(sz, Gray());
 	
-	ColorRenderer r;
-	r.Cy(sz.cy);
+	Vector<Rect> clip;
+	clip.Add(RectC(50, 50, 10, 10));
+	clip.Add(RectC(100, 100, 20, 20));
+	clip.Add(RectC(200, 100, 40, 40));
+	clip.Add(RectC(200, 100, 40, 40));
+	clip.Add(RectC(200, 200, 40, 40));
+	clip.Add(RectC(220, 210, 30, 30));
 
-	r.draw = &w;
-	r.color = Green();
-#if 1
-	DLOG("------------");
-//	p = p0 + Size(16, 16);
-	DrawFrame(w, Rect(p0, p), LtRed());
-	r.Polygon();
-	Rect er(p0, p);
-	r.Ellipse(er);
-	r.Ellipse(er.Deflated(width));
-	r.Fill();
-	return;
-
-	if(0) {
-		Point center = p0;
-		Size radius = p - p0;
-		int n = max(abs(radius.cx), abs(radius.cy));
-		for(int i = 0; i < n; i++) {
-			Point p = center + Point(int(sin(M_2PI * i / n) * radius.cx), int(cos(M_2PI * i / n) * radius.cy));
-			w.DrawRect(p.x, p.y, 1, 1, White());
-		}
-	}
-
-	r.color = Green();
-#endif
-
-	if(0) {
-		Sizef r = Size(abs(p.x - p0.x), abs(p.y - p0.y));
-		double rr = r.cx * r.cx;
-		for(int y = 0; y <= r.cy; y++) {
-			double y2 = r.cx * y / r.cy;
-			int x = (int)(sqrt(rr - (double)y2 * y2) + 0.5);
-			w.DrawRect(p0.x - x, p0.y + y, 2 * x, 1, Black());
-			w.DrawRect(p0.x - x, p0.y - y, 2 * x, 1, Black());
-		}
-	}
-
-	r.color = Black();
-	for(int i = 0; i < 1; i++) {
-		RTIMING("RenderTriangle");
-		r.Polygon();
-		r.Move(p0);
-		r.Line(p);
-		r.Line(Point(700, 400));
-		r.Fill();
+	
+	TestDraw fw;
+	fw.draw = &w;
+	fw.cloff.Add();
+	fw.cloff.Top().offset = Point(0, 0);
+	for(int i = 0; i < clip.GetCount(); i++) {
+		w.DrawRect(clip[i], LtGray());
+		fw.cloff.Top().clip.Add(clip[i]);
 	}
 	
-	w.DrawRect(p.x, p.y, 1, 1, White());
-//	w.DrawRect(700, 400, 1, 1, White());
-	
-/*
-	for(int i = 0; i < 0; i++) {
-		r.color = Color(Color(Random(256), Random(256), Random(256)));
-		r.Move(Point(Random(sz.cx), Random(sz.cy)));
-		r.Line(Point(Random(sz.cx), Random(sz.cy)));
-		r.Line(Point(Random(sz.cx), Random(sz.cy)));
-		r.Fill();
-	}
-*/
-	r.color = LtRed();
-	r.Width(width);
-	r.Move(p0);
-	r.Line(p);
-	
-	w.DrawRect(p0.x, p0.y, 1, 1, White());
-	w.DrawRect(700, 400, 1, 1, White());
-
-//	w.DrawRect(p0.x - 1, p0.y - 1, 3, 3, LtGray());
-
-	r.color = LtBlue();
-//	r.Line(p0, p);
-
-//	DrawLine(w, p0, p);
-
-//	__BREAK__;
+	fw.DrawImage(p.x, p.y, CtrlImg::reporticon(), RectC(0, 0, 20, 12), Blue());
+//	fw.DrawRect(p.x, p.y, 16, 16, Red());
 }
 
 GUI_APP_MAIN
 {
-	#if 0
-	{
-		for(int i = 0; i < 10000; i++) {
-			RTIMING("RenderGlyph");
-			RenderGlyph(Arial(20), 'e');
-		}
-		String g = CompressGlyph(AutoCrop(RenderGlyph(Arial(20), 'e'), RGBAZero()));
-		RDUMPHEX(g);
-		for(int i = 0; i < 10000; i++) {
-			RTIMING("DecompressGlyph");
-			DecompressGlyph(g, White());
-		}
-	}
-	for(const char *s = "compres"; *s; s++)
-		for(int n = 10; n <= 100; n += 10) {
-			RLOG("-------------");
-			RLOG(n << ' ' << *s);
-			Size sz = AutoCrop(RenderGlyph(StdFont(n), *s), RGBAZero()).GetSize();
-			RDUMP(sz);
-			RDUMP(sz.cx * sz.cy);
-			RDUMP(CompressGlyph(AutoCrop(RenderGlyph(StdFont(n), *s), RGBAZero())).GetLength());
-		}
-	#endif
 	MyApp().Run();
 }
