@@ -28,19 +28,21 @@ Image AutoCrop(const Image& m, RGBA c)
 		;
 	r.right++;
 	r.bottom++;
-	return WithHotSpot(Crop(m, r), 20, 20);
+	Point p1 = m.GetHotSpot() - r.TopLeft();
+	Point p2 = m.Get2ndSpot() - r.TopLeft();
+	return WithHotSpots(Crop(m, r), p1.x, p1.y, p2.x, p2.y);
 }
 
-Image RenderGlyph(Font fnt, int chr)
+Image RenderGlyph(Font fnt, int chr, Color color, int angle)
 {
 	int cx = fnt[chr];
 	int cy = fnt.GetLineHeight();
-	ImageBuffer ib(2 * cx, 2 * cy);
+	ImageBuffer ib(2 * (cx + cy), 2 * (cx + cy));
 	BufferPainter sw(ib, MODE_ANTIALIASED);
 	sw.Clear(RGBAZero());
-	sw.DrawText(cx / 2, cy / 2, WString(chr, 1), fnt, Black());
-	ib.SetHotSpot(Point(20, 20));
-	return ib;
+	sw.DrawText(cx + cy, cx + cy, angle, WString(chr, 1), fnt, color);
+	ib.SetHotSpot(Point(cx + cy, cx + cy));
+	return AutoCrop(ib, RGBAZero());
 }
 
 String CompressGlyph(const Image& m)
