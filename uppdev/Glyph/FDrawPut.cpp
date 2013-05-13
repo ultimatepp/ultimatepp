@@ -29,12 +29,8 @@ void FDraw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Colo
 	}
 	Rect sr(Point(x, y) + cloff.Top().offset, (src & img.GetSize()).GetSize());
 	const Vector<Rect>& clip = cloff.Top().clip;
-	DLOG("=======");
 	for(int i = 0; i < clip.GetCount(); i++) {
 		Rect cr = clip[i] & sr;
-		DDUMP(cr);
-		DDUMP(sr);
-		DDUMP(src);
 		if(!cr.IsEmpty())
 			PutImage(cr.TopLeft(), img, Rect(cr.TopLeft() - sr.TopLeft() + src.TopLeft(), cr.GetSize()));
 	}
@@ -57,3 +53,14 @@ void FDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 	}
 }
 
+void FDraw::PutHorz(int x, int y, int cx)
+{
+	RTIMING("PutHorz");
+	DrawRect(x, y, cx, 1, docolor);
+}
+
+void FDraw::PutVert(int x, int y, int cy)
+{
+	RTIMING("PutVert");
+	DrawRect(x, y, 1, cy, docolor);
+}
