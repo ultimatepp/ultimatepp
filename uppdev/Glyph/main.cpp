@@ -12,7 +12,7 @@ using namespace Upp;
 #define IMAGEFILE <Glyph/glyph.iml>
 #include <Draw/iml_source.h>
 
-struct ColorRenderer : MiniRenderer {
+struct ColorRenderer : DDARasterizer {
 	Draw *draw;
 	Color color;
 
@@ -140,8 +140,6 @@ void MyApp::Paint(Draw& w)
 	r.Move(p0);
 	r.Line(p);
 	
-	r.FatLine(p0, p, width);
-
 	w.DrawRect(p0.x, p0.y, 1, 1, White());
 	w.DrawRect(700, 400, 1, 1, White());
 
