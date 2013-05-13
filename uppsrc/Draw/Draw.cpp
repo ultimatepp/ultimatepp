@@ -237,7 +237,6 @@ void Draw::DrawImage(int x, int y, const Image& img)
 void Draw::DrawImage(int x, int y, const Image& img, const Rect& src, Color color)
 {
 	if(IsNull(color)) return;
-	Size sz = img.GetSize();
 	DrawImageOp(x, y, src.Width(), src.Height(), img, src, color);
 }
 
@@ -245,7 +244,7 @@ void Draw::DrawImage(int x, int y, const Image& img, Color color)
 {
 	if(IsNull(color)) return;
 	Size sz = img.GetSize();
-	DrawImageOp(x, y, sz.cx, sz.cy, img, img.GetSize(), color);
+	DrawImageOp(x, y, sz.cx, sz.cy, img, sz, color);
 }
 
 void Draw::DrawData(int x, int y, int cx, int cy, const String& data, const char *type)
