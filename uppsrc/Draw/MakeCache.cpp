@@ -192,7 +192,6 @@ struct sCachedRescale : public ImageMaker
 	virtual Image Make() const {
 		return IsNull(filter) ? Rescale(img, sz, src) : RescaleFilter(img, sz, src, filter);
 	}
-
 };
 
 Image CachedRescale(const Image& m, Size sz, const Rect& src, int filter)
