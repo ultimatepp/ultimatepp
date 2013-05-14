@@ -6,6 +6,9 @@ DDARasterizer::DDARasterizer()
 {
 	cy = 0;
 	p0 = p1 = Point(0, 0);
+	j1 = j2 = Null;
+	b1 = b2 = Null;
+	close = false;
 	width = 1;
 }
 
@@ -91,10 +94,10 @@ struct DDARasterizer::Segments : DDARasterizer {
 			m.l = x;
 			m.h = x + cx;
 			m.flag = flag;
-			flag = true;
 			miny = min(y, miny);
 			maxy = max(y, maxy);
 		}
+		flag = true;
 	}
 	virtual void PutVert(int x, int y, int cy) {
 		for(int i = 0; i < cy; i++)
@@ -104,23 +107,45 @@ struct DDARasterizer::Segments : DDARasterizer {
 	Segments() { miny = INT_MAX; maxy = 0; }
 };
 
-void DDARasterizer::FatLine(Point p1, Point p2, int n)
+void DDARasterizer::FatLine(Point p2)
 {
 	Point v = p2 - p1;
-	Pointf shift = n * Orthogonal(Pointf(v) / Length((Pointf(v))));
+	Pointf shift = width * Orthogonal(Pointf(v) / Length((Pointf(v))));
 	Point p = Pointf(p1) + shift / 2;
+	Point pp = p0;
+	p0 = p1; // avoid Close
 	Polygon();
-	Move(p);
+	Point bj2 = j2;
+	if(!IsNull(j1)) {
+		Move(j1);
+		Line(p);
+	}
+	else
+		Move(p);
+	if(IsNull(b1))
+		b1 = p;
 	Line(p += v);
+//	if(close && !IsNull(b1))
+//		Line(b1);
+	j1 = p;
 	Line(p -= shift);
+//	if(close && !IsNull(b2))
+//		Line(b2);
+	j2 = p;
 	Line(p - v);
+	if(!IsNull(bj2))
+		Line(bj2);
+	if(IsNull(b2))
+		b2 = p;
 	Fill();
+	p0 = pp;
 }
 
 DDARasterizer& DDARasterizer::Move(Point p)
 {
 	Close();
 	p0 = p1 = p;
+	j1 = j2 = Null;
 	return *this;
 }
 
@@ -139,7 +164,7 @@ DDARasterizer& DDARasterizer::Line(Point p)
 		if(width <= 1)
 			DoLine(p1, p, false);
 		else
-			FatLine(p1, p, width);
+			FatLine(p);
 		p1 = p;
 	}
 	return *this;
@@ -147,8 +172,12 @@ DDARasterizer& DDARasterizer::Line(Point p)
 
 DDARasterizer& DDARasterizer::Close()
 {
-	if(p1 != p0)
+	if(p1 != p0) {
+		close = true;
 		Line(p0);
+		close = false;
+		b1 = b2 = Null;
+	}
 	return *this;
 }
 
