@@ -75,7 +75,7 @@ void MyApp::Paint(Draw& w)
 	r.Line(Point(700, 400));
 	r.Fill();
 */	
-	DLOG("---------------");
+#if 1
 	w.DrawRect(p.x, p.y, 1, 1, White());
 	r.color = LtRed();
 	r.Width(width);
@@ -86,6 +86,12 @@ void MyApp::Paint(Draw& w)
 	r.Line(Point(sz.cx / 2, 300));
 //	r.color = LtGreen();
 	r.Close();
+#endif
+
+	r.color = LtRed();
+	r.Width(2);
+	r.Move(Point(800, 100));
+	r.Line(Point(800, 200));
 	
 	w.DrawRect(p0.x, p0.y, 1, 1, White());
 	w.DrawRect(700, 400, 1, 1, White());
