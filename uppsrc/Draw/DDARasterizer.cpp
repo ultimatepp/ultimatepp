@@ -110,8 +110,8 @@ struct DDARasterizer::Segments : DDARasterizer {
 void DDARasterizer::FatLine(Point p2)
 {
 	Point v = p2 - p1;
-	Pointf shift = width * Orthogonal(Pointf(v) / Length((Pointf(v))));
-	Point p = Pointf(p1) + shift / 2;
+	Pointf shift = (double)width * Orthogonal(Pointf(v) / Length((Pointf(v))));
+	Point p = Pointf(p1) + shift / 2.0;
 	Point pp = p0;
 	p0 = p1; // avoid Close
 	Polygon();
