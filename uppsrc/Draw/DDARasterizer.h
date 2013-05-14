@@ -14,12 +14,15 @@ class DDARasterizer {
 	int           dirx;
 	One<Segments> pseg;
 	Point         p0, p1;
+	Point         j1, j2;
+	Point         b1, b2;
 	int           width;
+	bool          close;
 
 	void AHorz(int x, int y, int cx);
 	void AVert(int x, int y, int cy);
 	void DoLine(Point p1, Point p2, bool last);
-	void FatLine(Point p1, Point p2, int n);
+	void FatLine(Point p2);
 
 public:
 	virtual void PutHorz(int x, int y, int cx) = 0;
