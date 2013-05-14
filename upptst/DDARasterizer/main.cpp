@@ -31,7 +31,7 @@ struct MyApp : TopWindow {
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual Image CursorImage(Point p, dword keyflags);
 	
-	MyApp() { width = 2; p = Point(0, 0); Sizeable().Zoomable(); }
+	MyApp() { width = 20; p = Point(0, 0); Sizeable().Zoomable(); }
 };
 
 Image MyApp::CursorImage(Point p, dword keyflags)
@@ -67,19 +67,25 @@ void MyApp::Paint(Draw& w)
 
 	r.draw = &w;
 	r.color = Green();
-
+/*
 	r.color = Black();
 	r.Polygon();
 	r.Move(p0);
 	r.Line(p);
 	r.Line(Point(700, 400));
 	r.Fill();
-	
+*/	
+	DLOG("---------------");
 	w.DrawRect(p.x, p.y, 1, 1, White());
 	r.color = LtRed();
 	r.Width(width);
-	r.Move(p0);
+	r.Move(Point(50, 200));
 	r.Line(p);
+	r.color = LtBlue();
+//	r.Move(p);
+	r.Line(Point(sz.cx / 2, 300));
+//	r.color = LtGreen();
+	r.Close();
 	
 	w.DrawRect(p0.x, p0.y, 1, 1, White());
 	w.DrawRect(700, 400, 1, 1, White());
