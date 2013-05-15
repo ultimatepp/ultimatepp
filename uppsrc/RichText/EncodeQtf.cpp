@@ -530,8 +530,7 @@ String   AsQTF(const RichText& text, byte charset, dword options)
 }
 
 String DeQtf(const char *s) {
-	String r;
-	r.Reserve(256);
+	StringBuffer r;
 	for(; *s; s++) {
 		if(*s == '\n')
 			r.Cat('&');
@@ -545,8 +544,7 @@ String DeQtf(const char *s) {
 }
 
 String DeQtfLf(const char *s) {
-	String r;
-	r.Reserve(256);
+	StringBuffer r;
 	while(*s) {
 		if((byte)*s > ' ' && !IsDigit(*s) && !IsAlpha(*s) && (byte)*s < 128)
 			r.Cat('`');
