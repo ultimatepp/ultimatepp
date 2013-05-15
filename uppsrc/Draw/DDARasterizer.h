@@ -4,7 +4,7 @@ class DDARasterizer {
 		int  h;
 		bool flag;
 		
-		bool operator<(const Segment& b) const { return l < b.l; }
+		bool operator<(const Segment& b) const { return h < b.h; }
 	};
 	
 	struct Segments;
@@ -40,7 +40,7 @@ public:
 	
 	DDARasterizer& Ellipse(const Rect& rect);
 	
-	DDARasterizer& Width(int width_)           { width = width_; return *this; }
+	DDARasterizer& Width(int width_)          { width = width_; return *this; }
 
 	void Cy(int cy_)                          { cy = cy_; }
 	
