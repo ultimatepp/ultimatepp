@@ -177,36 +177,18 @@ void XmlParser::Ent(StringBuffer& out)
 		term = t;
 		return;
 	}
-	if(t[0] == 'l' && t[1] == 't' && t[2] == ';') {
-		t += 3;
-		out.Cat('<');
-	}
-	else
-	if(t[0] == 'g' && t[1] == 't' && t[2] == ';') {
-		t += 3;
-		out.Cat('>');
-	}
-	else
-	if(t[0] == 'a')
-		if(t[1] == 'm' && t[2] == 'p' && t[3] == ';') {
-			t += 4;
-			out.Cat('&');
+	const char *b = t;
+	while(*t && *t != ';')
+		t++;
+	if(*t == ';') {
+		int q = entity.Find(String(b, t));
+		if(q >= 0) {
+			out.Cat(entity[q]);
+			term = t + 1;
+			return;
 		}
-		else
-		if(t[1] == 'p' && t[2] == 'o' && t[3] == 's' && t[4] == ';') {
-			t += 5;
-			out.Cat('\'');
-		}
-		else
-			out.Cat('&');
-	else
-	if(t[0] == 'q' && t[1] == 'u' && t[2] == 'o' && t[3] == 't' && t[4] == ';') {
-		t += 5;
-		out.Cat('\"');
 	}
-	else
-		out.Cat('&');
-	term = t;
+	out.Cat('&');
 }
 
 inline static bool IsXmlNameChar(int c)
@@ -423,6 +405,11 @@ void XmlParser::Next()
 			}
 		}
 	}
+}
+
+void XmlParser::RegisterEntity(const String& id, const String& text)
+{
+	entity.Add(id, text);
 }
 
 bool   XmlParser::IsEof()
@@ -677,6 +664,11 @@ int XmlParser::GetColumn() const
 
 XmlParser::XmlParser(const char *s)
 {
+	RegisterEntity("lt", "<");
+	RegisterEntity("gt", ">");
+	RegisterEntity("amp", "&");
+	RegisterEntity("apos", "\'");
+	RegisterEntity("quot", "\"");
 	relaxed = false;
 	empty_tag = false;
 	npreserve = false;

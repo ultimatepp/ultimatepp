@@ -46,6 +46,8 @@ class XmlParser {
 		bool   preserve_blanks;
 	};
 
+	VectorMap<String, String> entity;
+
 	const char               *begin;
 	const char               *term;
 	String                    attr1, attrval1;
@@ -73,6 +75,8 @@ class XmlParser {
 
 public:
 	void   SkipWhites();
+	
+	void   RegisterEntity(const String& id, const String& text);
 
 	bool   IsEof();
 	const char *GetPtr() const                                { return term; }

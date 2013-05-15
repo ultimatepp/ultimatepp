@@ -23,6 +23,12 @@ for implementation of descent parsers of XML.&]
 [s2;%% Skips any whitespaces in the input XML.&]
 [s3; &]
 [s4; &]
+[s5;:XmlParser`:`:RegisterEntity`(const String`&`,const String`&`): [@(0.0.255) void]_[* R
+egisterEntity]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 id], 
+[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 text])&]
+[s2;%% Registers a new XML entity [%-*@3 id] with value [%-*@3 text].&]
+[s3;%% &]
+[s4; &]
 [s5;:XmlParser`:`:IsEof`(`): [@(0.0.255) bool]_[* IsEof]()&]
 [s2;%% Returns true if parser reached the end of text.&]
 [s3; &]
@@ -207,4 +213,4 @@ har]_`*[*@3 s])&]
 text must be valid through the whole parsing process (XmlParser 
 does not make copy of the text).&]
 [s3; &]
-[s0; ]
+[s0; ]]
