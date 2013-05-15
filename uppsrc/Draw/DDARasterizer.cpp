@@ -109,13 +109,15 @@ struct DDARasterizer::Segments : DDARasterizer {
 
 void DDARasterizer::FatLine(Point p2)
 {
-	Point v = p2 - p1;
-	Pointf shift = (double)width * Orthogonal(Pointf(v) / Length((Pointf(v))));
-	Point p = Pointf(p1) + shift / 2.0;
+	if(p1 == p2)
+		return;
 	Point pp = p0;
 	p0 = p1; // avoid Close
-	Polygon();
+	Point v = p2 - p1;
+	Point shift = (width - 0.5) * Orthogonal(Pointf(v) / Length((Pointf(v))));
+	Point p = p1 + shift / 2;
 	Point bj2 = j2;
+	Polygon();
 	if(!IsNull(j1)) {
 		Move(j1);
 		Line(p);
@@ -125,14 +127,14 @@ void DDARasterizer::FatLine(Point p2)
 	if(IsNull(b1))
 		b1 = p;
 	Line(p += v);
-//	if(close && !IsNull(b1))
-//		Line(b1);
 	j1 = p;
+	if(close && !IsNull(b1)) {
+		Line(b1);
+		Line(b2);
+	}
 	Line(p -= shift);
-//	if(close && !IsNull(b2))
-//		Line(b2);
 	j2 = p;
-	Line(p - v);
+	Line(p -= v);
 	if(!IsNull(bj2))
 		Line(bj2);
 	if(IsNull(b2))
@@ -176,7 +178,8 @@ DDARasterizer& DDARasterizer::Close()
 		close = true;
 		Line(p0);
 		close = false;
-		b1 = b2 = Null;
+		if(!pseg)
+			b1 = b2 = Null;
 	}
 	return *this;
 }

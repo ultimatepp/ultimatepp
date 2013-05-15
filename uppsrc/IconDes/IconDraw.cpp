@@ -54,10 +54,8 @@ void IconDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor
 	}
 	if(!IsNull(pen) && !IsNull(pencolor)) {
 		docolor = pencolor;
-		if(pen == 1)
-			Ellipse(r);
-		else
-			Polygon().Ellipse(r).Ellipse(r.Deflated(pen - 1)).Fill();
+		Width(pen);
+		Ellipse(r);
 	}
 }
 
