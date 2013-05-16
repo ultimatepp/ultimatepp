@@ -292,6 +292,7 @@ SystemDraw::SystemDraw() {
 	actual_offset = Point(0, 0);
 	Reset();
 	handle = NULL;
+	dcMem = NULL;
 }
 
 SystemDraw::SystemDraw(HDC hdc) {
@@ -318,10 +319,26 @@ void SystemDraw::Unselect() {
 	Unselect0();
 }
 
+void  SystemDraw::Attach(HDC ahandle)
+{
+	handle = ahandle;
+	dcMem = ::CreateCompatibleDC(handle);
+	Init();
+}
+
+HDC   SystemDraw::Detach()
+{
+	Unselect();
+	HDC h = handle;
+	handle = NULL;
+	::DeleteDC(dcMem);
+	dcMem = NULL;
+	return h;
+}
+
 SystemDraw::~SystemDraw() {
 	GuiLock __;
-	if(handle)
-		Unselect();
+	Detach();
 }
 
 HDC SystemDraw::BeginGdi() {
@@ -344,6 +361,7 @@ void BackDraw::Create(SystemDraw& w, int cx, int cy) {
 	size.cy = cy;
 	hbmp = ::CreateCompatibleBitmap(w.GetHandle(), cx, cy);
 	handle = ::CreateCompatibleDC(w.GetHandle());
+	dcMem = ::CreateCompatibleDC(handle);
 	ASSERT(hbmp);
 	ASSERT(handle);
 #ifndef PLATFORM_WINCE
@@ -377,6 +395,8 @@ void BackDraw::Destroy() {
 		::DeleteDC(handle);
 		::DeleteObject(hbmp);
 		handle = NULL;
+		::DeleteDC(dcMem);
+		dcMem = NULL;
 	}
 }
 
@@ -457,8 +477,6 @@ PrintDraw::~PrintDraw() {
 		::AbortDoc(handle);
 	else
 		::EndDoc(handle);
-	DeleteDC(handle);
-	handle = NULL;
 }
 #endif
 

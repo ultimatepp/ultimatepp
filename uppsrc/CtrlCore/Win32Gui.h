@@ -95,7 +95,7 @@ private:
 
 protected:
 	dword style;
-	HDC   handle;
+	HDC   handle, dcMem;
 	Point actual_offset;
 
 	SystemDraw();
@@ -134,8 +134,10 @@ public:
 	HDC   GetHandle()                    { return handle; }
 	operator HDC() const                 { return handle; }
 	void  Unselect();
-	void  Attach(HDC ahandle)            { handle = ahandle; Init(); }
-	HDC   Detach()                       { Unselect(); HDC h = handle; handle = NULL; return h; }
+	void  Attach(HDC ahandle);
+	HDC   Detach();
+	
+	HDC   GetCompatibleDC()              { return dcMem; }
 
 	SystemDraw(HDC hdc);
 	virtual ~SystemDraw();

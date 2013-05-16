@@ -6,8 +6,8 @@
 
 NAMESPACE_UPP
 
-#define LTIMING(x) // RTIMING(x)
-#define LLOG(x)    // DLOG(x)
+#define LTIMING(x)  // RTIMING(x)
+#define LLOG(x)     // DLOG(x)
 
 bool ImageFallBack
 // = true
@@ -51,6 +51,7 @@ BitmapInfo32__::BitmapInfo32__(int cx, int cy)
 
 HBITMAP CreateBitMask(const RGBA *data, Size sz, Size tsz, Size csz, RGBA *ct)
 {
+	LTIMING("CreateBitMask");
 	GuiLock __;
 	memset(ct, 0, tsz.cx * tsz.cy * sizeof(RGBA));
 	int linelen = (tsz.cx + 15) >> 4 << 1;
@@ -81,6 +82,7 @@ HBITMAP CreateBitMask(const RGBA *data, Size sz, Size tsz, Size csz, RGBA *ct)
 
 void SetSurface(HDC dc, const Rect& dest, const RGBA *pixels, Size srcsz, Point srcoff)
 {
+	LTIMING("SetSurface");
 	GuiLock __;
 	BitmapInfo32__ bi(srcsz.cx, srcsz.cy);
 	::SetDIBitsToDevice(dc, dest.left, dest.top, dest.GetWidth(), dest.GetHeight(),
@@ -127,6 +129,7 @@ public:
 
 void DrawSurface::Init(SystemDraw& w, int _x, int _y, int cx, int cy)
 {
+	LTIMING("DrawSurface");
 	GuiLock __;
 	dc = w.GetHandle();
 	size = Size(cx, cy);
@@ -221,6 +224,7 @@ ImageSysData::~ImageSysData()
 
 void ImageSysData::CreateHBMP(HDC dc, const RGBA *data)
 {
+	LTIMING("CreateHBMP");
 	LLOG("Creating BMP for " << img.GetSerialId() << ' ' << img.GetSize());
 	Size sz = img.GetSize();
 	BitmapInfo32__ bi(sz.cx, sz.cy);
@@ -268,14 +272,14 @@ void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 			CreateHBMP(dc, ~img);
 		}
 		LTIMING("Image Opaque blit");
-		HDC dcMem = ::CreateCompatibleDC(dc);
+		HDC dcMem = w.GetCompatibleDC();
 		HBITMAP o = (HBITMAP)::SelectObject(dcMem, hbmp);
 		::BitBlt(dc, x, y, ssz.cx, ssz.cy, dcMem, sr.left, sr.top, SRCCOPY);
 		::SelectObject(dcMem, o);
-		::DeleteDC(dcMem);
 		SysImageRealized(img);
 		return;
 	}
+#if 0
 	if(kind == IMAGE_MASK/* || GetKind() == IMAGE_OPAQUE*/) {
 		HDC dcMem = ::CreateCompatibleDC(dc);
 		if(!hmask) {
@@ -307,6 +311,7 @@ void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 		SysImageRealized(img);
 		return;
 	}
+#endif
 #ifndef PLATFORM_WINCE
 	if(fnAlphaBlend() && IsNull(c) && !ImageFallBack) {
 		if(!himg) {
@@ -321,10 +326,12 @@ void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 		bf.BlendFlags = 0;
 		bf.SourceConstantAlpha = 255;
 		bf.AlphaFormat = AC_SRC_ALPHA;
-		HDC dcMem = ::CreateCompatibleDC(dc);
-		::SelectObject(dcMem, himg);
+//		HDC dcMem = ::CreateCompatibleDC(dc);
+		HDC dcMem = w.GetCompatibleDC();
+		HBITMAP o = (HBITMAP)::SelectObject(dcMem, himg);
 		fnAlphaBlend()(dc, x, y, ssz.cx, ssz.cy, dcMem, sr.left, sr.top, ssz.cx, ssz.cy, bf);
-		::DeleteDC(dcMem);
+		::SelectObject(dcMem, o);
+//		::DeleteDC(dcMem);
 		SysImageRealized(img);
 	}
 	else
