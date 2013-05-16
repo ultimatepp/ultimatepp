@@ -68,6 +68,8 @@ void MyApp::Paint(Draw& w)
 	fw.Cy(sz.cy);
 	fw.draw = &w;
 	fw.Init(sz);
+	
+	fw.DrawText(0, 0, "Ahoj!", Roman(400));
 /*
 	fw.cloff.Add();
 	fw.cloff.Top().offset = Point(0, 0);
@@ -76,8 +78,8 @@ void MyApp::Paint(Draw& w)
 		fw.cloff.Top().clip.Add(clip[i]);
 	}
 */
-	String txt = LoadFile(GetDataFile("text.qtf"));
-	ParseQTF(txt).Paint(Zoom(2, 10), fw, 0, 0, sz.cx);
+//	String txt = LoadFile(GetDataFile("text.qtf"));
+//	ParseQTF(txt).Paint(Zoom(2, 10), fw, 0, 0, sz.cx);
 
 //	fw.DrawText(sz.cx / 2, sz.cy / 2, -3600 * Bearing(p - sz / 2) / M_2PI,
 //	            "Hello world! abcdefghijklmnopqrstuv", Roman(40).Underline(), Red());

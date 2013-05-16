@@ -43,6 +43,19 @@ Image RenderGlyph(Font fnt, int chr, Color color, int angle)
 	return AutoCrop(ib, RGBAZero());
 }
 
+Image RenderGlyph(Font fnt, int chr, Color color, int angle, Size sz, Point offset)
+{
+	int cx = fnt[chr];
+	int cy = fnt.GetLineHeight();
+	ImageBuffer ib(sz);
+	BufferPainter sw(ib, MODE_ANTIALIASED);
+	sw.Offset(offset);
+	sw.Clear(RGBAZero());
+	sw.DrawText(cx + cy, cx + cy, angle, WString(chr, 1), fnt, color);
+	ib.SetHotSpot(Point(cx + cy, cx + cy));
+	return ib;
+}
+
 String CompressGlyph(const Image& m)
 {
 	const RGBA *s = m;
