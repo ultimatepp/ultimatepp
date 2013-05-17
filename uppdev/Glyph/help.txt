@@ -276,3 +276,13 @@ GUI_APP_MAIN
 		}
 	MyApp().Run();
 }
+
+	String txt = LoadFile(GetDataFile("text.qtf"));
+	{
+		RTIMING("SDraw");
+		ParseQTF(txt).Paint(Zoom(2, 10), fw, 0, 0, sz.cx);
+	}
+	{
+		RTIMING("Draw");
+	//	ParseQTF(txt).Paint(Zoom(2, 10), w, 0, 0, sz.cx);
+	}
