@@ -242,6 +242,7 @@ void PropertiesDlg::OnTab()
 }
 
 void PropertiesDlg::OnClose() {
+	RejectBreak(IDOK);
 	Close();	Close();
 }
 
