@@ -68,7 +68,7 @@ ScatterDraw& ScatterDraw::SetLabelsColor(const Color& colorLabels)
 	return *this;
 }
 
-ScatterDraw& ScatterDraw::SetPlotAreaMargin(const int hLeft, const int hRight, const int vTop, const int vBottom)
+ScatterDraw& ScatterDraw::SetPlotAreaMargin(int hLeft, int hRight, int vTop, int vBottom)
 {
 	hPlotLeft   = hLeft;	
 	hPlotRight  = hRight;
@@ -77,22 +77,22 @@ ScatterDraw& ScatterDraw::SetPlotAreaMargin(const int hLeft, const int hRight, c
 	return *this;
 }
 
-ScatterDraw& ScatterDraw::SetPlotAreaLeftMargin(const int margin) {	
+ScatterDraw& ScatterDraw::SetPlotAreaLeftMargin(int margin) {	
 	hPlotLeft = margin;	
 	return *this;
 }
 
-ScatterDraw& ScatterDraw::SetPlotAreaRightMargin(const int margin) {	
+ScatterDraw& ScatterDraw::SetPlotAreaRightMargin(int margin) {	
 	hPlotRight = margin;	
 	return *this;
 }
 
-ScatterDraw& ScatterDraw::SetPlotAreaTopMargin(const int margin) {	
+ScatterDraw& ScatterDraw::SetPlotAreaTopMargin(int margin) {	
 	vPlotTop = margin;	
 	return *this;
 }
 
-ScatterDraw& ScatterDraw::SetPlotAreaBottomMargin(const int margin) {	
+ScatterDraw& ScatterDraw::SetPlotAreaBottomMargin(int margin) {	
 	vPlotBottom = margin;	
 	return *this;
 }
@@ -157,9 +157,9 @@ ScatterDraw &ScatterDraw::SetDrawY2Reticle(bool set)
 	return *this;
 }
 
-void ScatterDraw::DrawLegend(Draw& w, const int& scale) const
+void ScatterDraw::DrawLegend(Draw& w, const Size &size, int scale) const
 {
-	int nmr = fround((GetSize().cx - 2*(hPlotLeft + hPlotRight))/legendWidth);	// Max number of labels per row
+	int nmr = fround((size.cx - 2*(hPlotLeft + hPlotRight))/legendWidth);	// Max number of labels per row
 	if (nmr <= 0) 
 		return;
 	int nLab = series.GetCount();	//number of labels
@@ -461,7 +461,7 @@ MarkPlot *ScatterDraw::GetNewMarkPlot(int index)
 	return new CircleMarkPlot();
 }
 
-Color GetOpaqueColor(const Color &color, const Color &background, const double opacity) 
+Color GetOpaqueColor(const Color &color, const Color &background, double opacity) 
 {
 	if (opacity == 1)
 		return color;
@@ -795,7 +795,7 @@ ScatterDraw &ScatterDraw::SetMarkWidth(int index, double markWidth)
 	return *this;
 }
 
-double ScatterDraw::GetMarkWidth(int index) const
+double ScatterDraw::GetMarkWidth(int index)
 {
 	ASSERT(IsValid(index));
 	return series[index].markWidth;
@@ -919,49 +919,58 @@ void ScatterDraw::RemoveAllSeries()
 	Refresh();
 }
 
-Drawing ScatterDraw::GetDrawing()
+Drawing ScatterDraw::GetDrawing(bool ctrl)
 {
 	DrawingDraw ddw(3*GetSize());
 	
-	SetDrawing(ddw, 3);
+	SetDrawing(ddw, GetSize(), 3);
+	if (ctrl)
+		PlotTexts(ddw, GetSize(), 3);
 
 	return ddw;
 }
 
-Image ScatterDraw::GetImage(int scale)
+Image ScatterDraw::GetImage(const Size &size, int scale, bool ctrl)
 {
 #ifndef flagGUI
 	ASSERT(mode != MD_DRAW);
 #endif
 
-	ImageBuffer ib(scale*GetSize());	
+	ImageBuffer ib(scale*size);	
 	BufferPainter bp(ib, mode);	
-	SetDrawing(bp, scale);
-	
+	SetDrawing(bp, size, scale);
+	if (ctrl)
+		PlotTexts(bp, size, scale);
+
 	return ib;
 }
 
-double ScatterDraw::GetXByPoint(const double x) 
+Image ScatterDraw::GetImage(int scale)
+{
+	return GetImage(GetSize(), scale, false);
+}
+
+double ScatterDraw::GetXByPoint(double x) 
 {
 	return (x - hPlotLeft)*GetXRange()/(GetSize().cx - (hPlotLeft + hPlotRight) - 1) + GetXMin();		
 }
 
-double ScatterDraw::GetYByPoint(const double y) 
+double ScatterDraw::GetYByPoint(double y) 
 {
 	return (GetSize().cy - vPlotTop - y - 1)*GetYRange()/(GetSize().cy - (vPlotTop + vPlotBottom) - GetTitleFont().GetHeight() - 1) + GetYMin();
 }
 
-double ScatterDraw::GetY2ByPoint(const double y) 
+double ScatterDraw::GetY2ByPoint(double y) 
 {
 	return (GetSize().cy - vPlotTop - y - 1)*GetY2Range()/(GetSize().cy - (vPlotTop + vPlotBottom) - GetTitleFont().GetHeight() - 1) + GetYMin2();
 }
 
-double ScatterDraw::GetXPointByValue(const double x) 
+double ScatterDraw::GetXPointByValue(double x) 
 {
 	return (x - GetXMin())/GetXRange()*(GetSize().cx - (hPlotLeft + hPlotRight) - 1) + hPlotLeft;
 }
 
-double ScatterDraw::GetYPointByValue(const double y) 
+double ScatterDraw::GetYPointByValue(double y) 
 {
 	return (GetSize().cy - vPlotTop - 1) - (y - GetYMin())/GetYRange()*(GetSize().cy - (vPlotTop + vPlotBottom) - GetTitleFont().GetHeight() - 1);
 }
@@ -1137,7 +1146,7 @@ Size GetTextSizeMultiline(Array <Size> &sizes) {
 ScatterDraw::ScatterDraw()
 {
 	mode = MD_ANTIALIASED;
-	size = Size(0, 0);
+	size = Size(800, 600);
 	titleColor = SColorText();
 	graphColor = White();
 	titleFont = Roman(20);
@@ -1241,13 +1250,10 @@ void DrawText(Draw &w, double x, double y, int angle, const String &text, Font f
 
 void DrawText(Painter &w, double x, double y, int angle, const String &text, Font font, Color color)
 {
-	if(font.GetHeight() > 15) {
-		w.Begin();
-		w.Translate(x, y).Rotate(-angle*M_PI/1800.);
-		w.Text(0, 0, text, font).Fill(color);
-		w.End();
-	} else
-		w.DrawText(fround(x), fround(y), angle, text, font, color);
+	w.Begin();
+	w.Translate(x, y).Rotate(-angle*M_PI/1800.);
+	w.Text(0, 0, text, font).Fill(color);
+	w.End();
 }
 
 void Clip(Draw &w, double x, double y, double cx, double cy)
@@ -1270,9 +1276,8 @@ void ClipEnd(Painter &w)
 	;	
 }
 
-void DrawLineOpa(Draw& w, const int x0, const int y0, const int x1, const int y1, const int &scale, 
-				const double opacity, double thick, const Color &_color, String dash, 
-				const Color &background) 
+void DrawLineOpa(Draw& w, int x0, int y0, int x1, int y1, int scale, double opacity, 
+				double thick, const Color &_color, String dash, const Color &background) 
 {
 	Vector<Point> p;
 	p << Point(x0, y0) << Point(x1, y1);
@@ -1297,8 +1302,8 @@ void DashScaled(Painter& w, const String dash, double scale)
 	}
 }
 
-void DrawLineOpa(Painter& w, const int x0, const int y0, const int x1, const int y1, const int &scale, 
-				const double opacity, double thick, const Color &color, String dash, 
+void DrawLineOpa(Painter& w, int x0, int y0, int x1, int y1, int scale, 
+				double opacity, double thick, const Color &color, String dash, 
 				const Color &background) 
 {	
 	w.Move(Pointf(x0, y0));
@@ -1308,8 +1313,8 @@ void DrawLineOpa(Painter& w, const int x0, const int y0, const int x1, const int
 	w.Stroke(thick*scale, color);
 }
 
-void FillRectangleOpa(Draw &w, double x0, double y0, double x1, double y1, const int &scale, 
-					const double opacity, const Color &background, const Color &color)
+void FillRectangleOpa(Draw &w, double x0, double y0, double x1, double y1, int scale, 
+					double opacity, const Color &background, const Color &color)
 {
 	if (IsNull(color))
 		return;
@@ -1321,15 +1326,15 @@ void FillRectangleOpa(Draw &w, double x0, double y0, double x1, double y1, const
 	w.DrawRect(int(x0), int(y0), abs(int(x1 - x0)), abs(int(y1 - y0)), opacolor);
 }
 
-void FillRectangleOpa(Painter &w, double x0, double y0, double x1, double y1, const int &scale, 
-					const double opacity, const Color &background, const Color &color)
+void FillRectangleOpa(Painter &w, double x0, double y0, double x1, double y1, int scale, 
+					double opacity, const Color &background, const Color &color)
 {
 	if (IsNull(color))
 		return;
 	w.Rectangle(x0, y0, x1 - x0, y1 - y0).Opacity(opacity).Fill(color);
 }
 
-void DrawPolylineOpa(Draw& w, const Vector<Point> &p, const int &scale, const double opacity, 
+void DrawPolylineOpa(Draw& w, const Vector<Point> &p, int scale, double opacity, 
 				double thick, const Color &_color, String dash, const Color &background) 
 {
 	ASSERT(!p.IsEmpty());
@@ -1367,7 +1372,7 @@ void DrawPolylineOpa(Draw& w, const Vector<Point> &p, const int &scale, const do
 	}		
 }
 
-void DrawPolylineOpa(Painter& w, const Vector<Point> &p, const int &scale, const double opacity, 
+void DrawPolylineOpa(Painter& w, const Vector<Point> &p, int scale, double opacity, 
 				double thick, const Color &color, String dash, const Color &background) 
 {	
 	ASSERT(!p.IsEmpty());
@@ -1379,7 +1384,7 @@ void DrawPolylineOpa(Painter& w, const Vector<Point> &p, const int &scale, const
 	w.Stroke(thick*scale, color);
 }
 
-void FillPolylineOpa(Draw& w, const Vector<Point> &p, const int &scale, const double opacity, 
+void FillPolylineOpa(Draw& w, const Vector<Point> &p, int scale, double opacity, 
 				const Color &background, const Color &fillColor) 
 {
 	ASSERT(!p.IsEmpty());
@@ -1388,7 +1393,7 @@ void FillPolylineOpa(Draw& w, const Vector<Point> &p, const int &scale, const do
 	w.DrawPolygon(p, opacolor);
 }
 
-void FillPolylineOpa(Painter& w, const Vector<Point> &p, const int &scale, const double opacity, 
+void FillPolylineOpa(Painter& w, const Vector<Point> &p, int scale, double opacity, 
 				const Color &background, const Color &fillColor) 
 {	
 	ASSERT(!p.IsEmpty());
