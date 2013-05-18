@@ -7,7 +7,7 @@ LAYOUT(ScatterCtrl_Demo, 624, 352)
 	ITEM(DropList, paintMode, LeftPosZ(4, 172).BottomPosZ(77, 19))
 	ITEM(Label, dv___6, SetLabel(t_("Painting Mode")).LeftPosZ(4, 172).BottomPosZ(97, 19))
 	ITEM(ArrayCtrl, examplesList, LeftPosZ(4, 168).VSizePosZ(28, 124))
-	ITEM(Label, dv___8, SetLabel(t_("Choose example")).LeftPosZ(4, 152).TopPosZ(4, 21))
+	ITEM(Label, dv___8, SetLabel(t_("Choose example")).LeftPosZ(4, 168).TopPosZ(4, 21))
 END_LAYOUT
 
 LAYOUT(Tab1, 380, 292)
@@ -71,7 +71,7 @@ LAYOUT(Tab11, 504, 468)
 END_LAYOUT
 
 LAYOUT(TabPie, 536, 440)
-	ITEM(PieCtrl, chart, SetLegendHeight(80).SetLegendBackColor(Color(229, 229, 229)).SetTitle(t_("Average Weather")).SetFrame(ThinInsetFrame()).HSizePosZ(8, 12).VSizePosZ(40, 12))
+	ITEM(PieCtrl, chart, SetLegendBackColor(Color(229, 229, 229)).SetLegendHeight(80).SetTitle(t_("Average Weather")).SetFrame(ThinInsetFrame()).HSizePosZ(8, 12).VSizePosZ(40, 12))
 	ITEM(Label, dv___1, SetLabel(t_(" EXPERIMENTAL")).SetFrame(ThinInsetFrame()).LeftPosZ(8, 84).TopPosZ(8, 24))
 END_LAYOUT
 

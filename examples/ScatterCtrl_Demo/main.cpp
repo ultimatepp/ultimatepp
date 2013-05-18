@@ -44,6 +44,7 @@ ScatterCtrl_Demo::ScatterCtrl_Demo()
 	for (int i = 0; i < Examples().GetCount(); ++i)
 		Examples()[i].ctrl()->Init();
 			
+	examplesList.NoHorzGrid().NoVertGrid();
 	examplesList.AddColumn("Example name");
 	for (int i = 0; i < Examples().GetCount(); ++i) {
 		examplesList.Add(Examples()[i].name);
@@ -109,14 +110,14 @@ void ScatterCtrl_Demo::SavePNG()
 {
 	int ntab = examplesList.GetCursor();	
 	
-	Examples()[ntab].ctrl()->Scatter().SaveToFile(Format("scatter%d.png", ntab));	
+	Examples()[ntab].ctrl()->Scatter().SaveToFile(AppendFileName(GetDesktopFolder(), Format("scatter%d.png", ntab)));	
 }
 
 void ScatterCtrl_Demo::SaveJPG()
 {
 	int ntab = examplesList.GetCursor();	
 	
-	Examples()[ntab].ctrl()->Scatter().SaveToFile(Format("scatter%d.jpg", ntab));				
+	Examples()[ntab].ctrl()->Scatter().SaveToFile(AppendFileName(GetDesktopFolder(), Format("scatter%d.jpg", ntab)));				
 }
 
 #ifdef PLATFORM_WIN32
@@ -124,7 +125,7 @@ void ScatterCtrl_Demo::SaveEMF()
 {
 	int ntab = examplesList.GetCursor();	
 	
-	Examples()[ntab].ctrl()->Scatter().SaveAsMetafile(Format("scatter%d.emf", ntab));				
+	Examples()[ntab].ctrl()->Scatter().SaveAsMetafile(AppendFileName(GetDesktopFolder(), Format("scatter%d.emf", ntab)));				
 }
 #endif
 
