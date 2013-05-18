@@ -26,8 +26,8 @@ void ScatterCtrl::SaveAsMetafile(const char* file)
 {
 	GuiLock __;
 	WinMetaFileDraw wmfd;	
-	wmfd.Create(copyRatio*GetSize().cx, copyRatio*GetSize().cy, "ScatterCtrl", "chart", file);
-	SetDrawing<Draw>(wmfd, copyRatio);	
+	wmfd.Create(copyRatio*ScatterDraw::GetSize().cx, copyRatio*ScatterDraw::GetSize().cy, "ScatterCtrl", "chart", file);
+	SetDrawing<Draw>(wmfd, ScatterDraw::GetSize(), copyRatio);	
 	wmfd.Close();	
 }
 
@@ -36,12 +36,12 @@ void ScatterCtrl::SaveToClipboard(bool saveAsMetafile)
 	GuiLock __;
 	if (saveAsMetafile) {
 		WinMetaFileDraw wmfd;	
-		wmfd.Create(copyRatio*GetSize().cx, copyRatio*GetSize().cy, "ScatterCtrl", "chart");
-		SetDrawing<Draw>(wmfd, copyRatio);	
+		wmfd.Create(copyRatio*ScatterDraw::GetSize().cx, copyRatio*ScatterDraw::GetSize().cy, "ScatterCtrl", "chart");
+		SetDrawing<Draw>(wmfd, ScatterDraw::GetSize(), copyRatio);	
 		WinMetaFile wmf = wmfd.Close();	 
 		wmf.WriteClipboard();
 	} else {
-		Image img = GetImage(copyRatio);
+		Image img = GetImage(ScatterDraw::GetSize(), copyRatio);
 		WriteClipboardImage(img);	
 	}
 }
@@ -50,7 +50,7 @@ void ScatterCtrl::SaveToClipboard(bool saveAsMetafile)
 void ScatterCtrl::SaveToClipboard(bool) 
 {
 	GuiLock __;
-	Image img = GetImage(copyRatio);
+	Image img = GetImage(ScatterDraw::GetSize(), copyRatio);
 	WriteClipboardImage(img);
 }
 
@@ -59,14 +59,17 @@ void ScatterCtrl::SaveToClipboard(bool)
 void ScatterCtrl::Paint(Draw& w) 
 {
 	TimeStop t;
-	if (mode == MD_DRAW) 
-		SetDrawing(w, 1);
-	else {
+	if (mode == MD_DRAW) {
+		ScatterCtrl::SetDrawing(w, GetSize(), 1);
+		PlotTexts(w, GetSize(), 1);
+	} else {
 		ImageBuffer ib(GetSize());
 		BufferPainter bp(ib, mode);
-		SetDrawing(bp, 1);
+		ScatterCtrl::SetDrawing(bp, GetSize(), 1);
 		w.DrawImage(0, 0, ib);
-	}
+		PlotTexts(w, GetSize(), 1);
+	}	
+	w.End();
 	lastRefresh_ms = t.Elapsed();
 }
 
@@ -402,10 +405,10 @@ void ScatterCtrl::SaveToFile(String fileName)
 	} 
 	if (GetFileExt(fileName) == ".png") {
 		PNGEncoder encoder;
-		encoder.SaveFile(fileName, GetImage(copyRatio));
+		encoder.SaveFile(fileName, GetImage(ScatterDraw::GetSize(), copyRatio, false));
 	} else if (GetFileExt(fileName) == ".jpg") {	
 		JPGEncoder encoder(90);
-		encoder.SaveFile(fileName, GetImage(copyRatio));		
+		encoder.SaveFile(fileName, GetImage(ScatterDraw::GetSize(), copyRatio, false));		
 	} else
 		Exclamation(Format(t_("File format \"%s\" not found"), GetFileExt(fileName)));
 }

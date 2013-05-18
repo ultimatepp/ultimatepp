@@ -220,12 +220,12 @@ private:
 	virtual Image CursorImage(Point p, dword keyflags);
 	
 	template <class T>
-	void SetDrawing(T& w, const int& scale);		
+	void SetDrawing(T& w, const Size &size, int scale);		
 };
 
 template <class T>
-void ScatterCtrl::SetDrawing(T& w, const int& scale) {
-	ScatterDraw::SetDrawing(w, scale);
+void ScatterCtrl::SetDrawing(T& w, const Size &size, int scale) {
+	ScatterDraw::SetDrawing(w, size, scale, true);
 	if (!IsNull(popLT) && popLT != popRB) {
 		DrawVArrow(w, popLT.x, popLT.y, popLT.x, popRB.y, 1, 4, 15, SColorHighlight());
 		DrawHArrow(w, popLT.x, popRB.y, popRB.x, popRB.y, 1, 4, 15, SColorHighlight());
