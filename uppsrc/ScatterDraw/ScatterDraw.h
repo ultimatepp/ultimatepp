@@ -97,8 +97,8 @@ public:
 	Callback WhenSetRange;
 	Callback WhenSetXYMin;
 	
-	ScatterDraw& SetSize(Size sz) {size = sz; return *this;};
-	virtual Size GetSize() const {return size;};
+	ScatterDraw& SetSize(Size sz) 	{size = sz; return *this;};
+	virtual Size GetSize() 			{return size;};
 	
 	ScatterDraw& SetColor(const Color& _color);
 	ScatterDraw& SetTitle(const String& _title);
@@ -328,7 +328,7 @@ public:
 	Color GetFillColor(int index) const;
 
 	ScatterDraw &SetMarkWidth(int index, double width);
-	double GetMarkWidth(int index) const;
+	double GetMarkWidth(int index);
 	void SetMarkColor(int index, const Color& pcolor);
 	Color GetMarkColor(int index) const;
 	void NoMark(int index);
@@ -353,8 +353,9 @@ public:
 	ScatterDraw& Id(int index, int id);
 	int GetId(int index);
 	
-	Drawing GetDrawing();
-	Image GetImage(int scale = 1);
+	Drawing GetDrawing(bool ctrl = true);
+	Image GetImage(const Size &size, int scale = 2, bool ctrl = true);
+	Image GetImage(int scale = 2);
 	
 	#ifdef PLATFORM_WIN32
 	void SaveAsMetafile(const char* file) const;
@@ -419,7 +420,7 @@ protected:
 	bool showLegend;
 	int legendWidth;
 	
-	void DrawLegend(Draw& w,const int& scale) const;
+	void DrawLegend(Draw& w, const Size &size, int scale) const;
 
 	void Scrolling(bool down, Point &pt, bool isOut = false);
 	
@@ -441,62 +442,69 @@ protected:
 							else				   return FormatDouble(d, 0);
 		} else return FormatDoubleExp(d, 2);
 	}	
-	String VariableFormatX(const double& d) const  {return VariableFormat(xRange, d);}
-	String VariableFormatY(const double& d) const  {return VariableFormat(yRange, d);} 
-	String VariableFormatY2(const double& d) const {return VariableFormat(yRange2, d);}
+	String VariableFormatX(double d) const  {return VariableFormat(xRange, d);}
+	String VariableFormatY(double d) const  {return VariableFormat(yRange, d);} 
+	String VariableFormatY2(double d) const {return VariableFormat(yRange2, d);}
 
 	template<class T>
-	void SetDrawing(T& w, const int& scale);
+	void SetDrawing(T& w, const Size &size, int scale, bool ctrl = false);
 	template<class T>
-	void Plot(T& w, const int& scale,const int& l,const int& h);	
+	void Plot(T& w, const Size &size, int scale);	
+	template<class T>
+	bool PlotTexts(T& w, const Size &size, int scale);
 		
 	void AdjustMinUnitX();
 	void AdjustMinUnitY();
 	void AdjustMinUnitY2();
 	
 private:
-	Size size;
+	Size size;		// Size to be used for all but screen painting
 	static void ParseTextMultiline(const String &text, Font fnt, 
 								   Upp::Array <String> &texts, Upp::Array <Size> &sizes);
+	int plotW, plotH;
 };
 
 template <class T>
-void ScatterDraw::SetDrawing(T& w, const int& scale)
+void ScatterDraw::SetDrawing(T& w, const Size& size, int scale, bool ctrl)
 {
-	if (GetSize().cx == 0 || GetSize().cy == 0)
+	if (size.cx == 0 || size.cy == 0)
 		return;
 	
-	w.DrawRect(scale*GetSize(), graphColor);
-	
-	if (typeid(T) == typeid(BufferPainter)) {
-		Painter &p = (Painter &)w;
-		p.Translate(0, 0.5);
-	}
-
-	Size sz(0, 0); 
+	w.DrawRect(scale*size, graphColor);
 	
 	titleHeight = !title.IsEmpty() ? scale*titleFont.GetHeight() : 0;
 	
+	plotW = scale*(size.cx - (hPlotLeft + hPlotRight));
+	plotH = scale*(size.cy - (vPlotTop + vPlotBottom)) - titleHeight;
+	
+	if (!ctrl) {
+		if (!PlotTexts(w, GetSize(), scale)) 
+			return;
+	} else 
+		w.Offset(Point(scale*hPlotLeft, scale*vPlotTop + titleHeight));
+	
+	Plot(w, size, scale);	
+	
+	ClipEnd(w);
+}
+
+template <class T>
+bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
+{
 	if(titleHeight > 0) {
 		Font fontTitle6;
 		fontTitle6 = titleFont;
 		fontTitle6.Height(titleHeight);
 		fontTitle6.Width(scale*titleFont.GetWidth());
-		sz = GetTextSize(title, fontTitle6);
-		DrawText(w, (scale*GetSize().cx - sz.cx)/2., scale*2., 0, title, fontTitle6, titleColor);   
-	}
-	
+		Size sz = GetTextSize(title, fontTitle6);
+		DrawText(w, (scale*size.cx - sz.cx)/2., scale*2., 0, title, fontTitle6, titleColor);   
+	}	
 	w.Offset(Point(scale*hPlotLeft, scale*vPlotTop + titleHeight));
 	if(showLegend) 
-		DrawLegend(w, scale);
+		DrawLegend(w, size, scale);
 	
-	int plotW = scale*(GetSize().cx - (hPlotLeft + hPlotRight));
-	int plotH = scale*(GetSize().cy - (vPlotTop + vPlotBottom)) - titleHeight;
-
-	if (plotW < 0 || plotH < 0) {
-		ClipEnd(w);	
-		return;
-	}		
+	if (plotW < 0 || plotH < 0) 
+		return false;
 
 	Font fontLabel;
 	fontLabel = labelsFont;
@@ -507,18 +515,11 @@ void ScatterDraw::SetDrawing(T& w, const int& scale)
 	Size ly2 = GetTextSize(yLabel2, fontLabel);
 	DrawText(w, (plotW - lx.cx)/2., plotH + scale*(vPlotBottom - 2) - lx.cy, 0, xLabel, fontLabel, labelsColor);
 	DrawText(w, scale*(2 - hPlotLeft), (plotH + ly.cx)/2., 900, yLabel,  fontLabel, labelsColor);
-	DrawText(w, scale*GetSize().cx - ly2.cy - 42*scale, (plotH + ly2.cx)/2., 900, yLabel2, fontLabel, labelsColor);
+	DrawText(w, scale*size.cx - ly2.cy - 42*scale, (plotH + ly2.cx)/2., 900, yLabel2, fontLabel, labelsColor);
 
-	if (xRange == 0 || xMajorUnit == 0 || yRange == 0 || yMajorUnit == 0 || yRange2 == 0) {
-		ClipEnd(w);	
-		return;
-	}
+	if (xRange == 0 || xMajorUnit == 0 || yRange == 0 || yMajorUnit == 0 || yRange2 == 0) 
+		return false;
 	
-	if (typeid(T) == typeid(BufferPainter)) {
-		Painter &p = (Painter &)w;
-		p.Translate(0.5, 0);	
-	}
-
 	Font standard6 = GetStdFont();
 	standard6.Height(scale*GetStdFont().GetHeight());
 	
@@ -567,36 +568,42 @@ void ScatterDraw::SetDrawing(T& w, const int& scale)
 					gridLabelY2 = VariableFormatY2(gridY2);
 				DrawText(w, plotW + scale*10, reticleY - scale*8, 0, gridLabelY2, standard6, axisColor);
 			}
-		}	
-	Plot(w, scale, plotW, plotH);	
-	ClipEnd(w);	
-}
-
-
-template <class T>
-void ScatterDraw::Plot(T& w, const int& scale, const int& plotW, const int& plotH)
-{
-	double d1 = xRange/xMajorUnit;
-	double d2 = yRange/yMajorUnit;
-
-	w.DrawRect(1, 1, plotW - 2, plotH - 1, plotAreaColor);	
-
-	if (drawVGrid) 
-		for(int i = 0; xMinUnit + i*xMajorUnit < xRange; i++) 
-			DrawLineOpa(w, fround(plotW*xMinUnit/xRange + i*plotW/d1), 0, fround(plotW*xMinUnit/xRange + i*plotW/d1), plotH, 
-						1, 1, gridWidth, gridColor, "2 2");
-	
-	if (drawHGrid)
-		for(int i = 0; yMinUnit + i*yMajorUnit < yRange; i++) 
-			DrawLineOpa(w, 0, fround(-plotH*yMinUnit/yRange + plotH - i*plotH/d2), plotW, fround(-plotH*yMinUnit/yRange + plotH - i*plotH/d2), 
-						1, 1, gridWidth, gridColor, "2 2");
-
+		}
+		
 	w.DrawLine(0, plotH, plotW, plotH, fround(gridWidth*scale), Black);
 	w.DrawLine(0, 0, plotW, 0, fround(gridWidth*scale), Black);
 	w.DrawLine(0, 0, 0, plotH, fround(gridWidth*scale), Black);
 	w.DrawLine(plotW, 0, plotW, plotH + 1, fround(gridWidth*scale), Black);
 	
+	return true;
+}
+
+template <class T>
+void ScatterDraw::Plot(T& w, const Size &size, int scale)
+{
+	double d1 = xRange/xMajorUnit;
+	double d2 = yRange/yMajorUnit;
+
 	Clip(w, 0, 0, plotW, plotH);
+
+	w.DrawRect(0, 0, plotW, plotH, plotAreaColor);	
+
+	if (drawVGrid) {
+		double x0 = plotW*xMinUnit/xRange;
+		for(int i = 0; xMinUnit + i*xMajorUnit < xRange; i++) {
+			int xg = fround(x0 + i*plotW/d1);
+			if (xg > gridWidth || xg < plotW - gridWidth)
+				DrawLineOpa(w, xg, 0, xg, fround(plotH), 1, 1, gridWidth, gridColor, "2 2");
+		}
+	}	
+	if (drawHGrid) {
+		double y0 = -plotH*yMinUnit/yRange + plotH;
+		for(int i = 0; yMinUnit + i*yMajorUnit < yRange; i++) {
+			int yg = fround(y0 - i*plotH/d2);
+			if (yg > gridWidth || yg < plotH - gridWidth)
+				DrawLineOpa(w, 0, yg, fround(plotW), yg, 1, 1, gridWidth, gridColor, "2 2");
+		}
+	}
 
 	if (!series.IsEmpty()) {
 		for (int j = 0; j < series.GetCount(); j++) {
@@ -691,7 +698,7 @@ void ScatterDraw::Plot(T& w, const int& scale, const int& plotW, const int& plot
 			}	
 		}
 	}
-	w.End();
+	ClipEnd(w);
 }
 
 END_UPP_NAMESPACE
