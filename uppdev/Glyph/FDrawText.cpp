@@ -1,5 +1,7 @@
 #include "glyph.h"
 
+#define LTIMING(x) // RTIMING(x)
+
 struct sMakeGlyph : public ImageMaker
 {
 	int    chr;
@@ -17,8 +19,10 @@ struct sMakeGlyph : public ImageMaker
 	}
 
 	virtual Image Make() const {
-		RTIMING("Render glyph");
-		return RenderGlyph(font, chr, color, angle);
+		LTIMING("Render glyph");
+		Point at(font[chr], font.GetLineHeight());
+		int n = 2 * (at.x + at.y);
+		return AutoCrop(RenderGlyph(at, angle, chr, font, color, Size(n, n)), RGBAZero());
 	}
 };
 
@@ -27,18 +31,18 @@ void FDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Co
 	sMakeGlyph g;
 	g.font = font;
 	g.color = ink;
-	g.angle = angle; // TODO!
+	g.angle = angle;
 	for(int i = 0; i < n; i++) {
 		g.chr = text[i];
-		RTIMING("Paint glyph");
+		LTIMING("Paint glyph");
 		if(font.GetHeight() > 200) {
-			Size sz(font[g.chr], font.GetLineHeight());
-			int w = 2 * (sz.cx + sz.cy);
-			Size bandsz(w, 32);
-			for(int yy = 0; yy < w; yy += bandsz.cy) {
-				Image m = RenderGlyph(font, g.chr, ink, angle, bandsz, Point(0, -yy));
-				if(yy & 1)
-					SysDrawImageOp(x - (sz.cx + sz.cy), y + yy - (sz.cx + sz.cy), m, m.GetSize(), Null);
+			Point at(font[g.chr], font.GetLineHeight());
+			int n = at.x + at.y;
+			Size bandsz(2 * n, 32);
+			for(int yy = 0; yy < n; yy += bandsz.cy) {
+				Image m = RenderGlyph(Point(0, -yy), angle, g.chr, font, ink, bandsz);
+				DDUMP(m.GetSize());
+				SysDrawImageOp(x, y + yy, m, m.GetSize(), Null);
 			}
 		}
 		else {

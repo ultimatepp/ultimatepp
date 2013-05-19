@@ -43,16 +43,17 @@ Image RenderGlyph(Font fnt, int chr, Color color, int angle)
 	return AutoCrop(ib, RGBAZero());
 }
 
-Image RenderGlyph(Font fnt, int chr, Color color, int angle, Size sz, Point offset)
+Image RenderGlyph(Point at, int angle, int chr, Font fnt, Color color, Size sz)
 {
 	int cx = fnt[chr];
 	int cy = fnt.GetLineHeight();
 	ImageBuffer ib(sz);
-	BufferPainter sw(ib, MODE_ANTIALIASED);
-	sw.Offset(offset);
+	BufferPainter sw(ib);
 	sw.Clear(RGBAZero());
-	sw.DrawText(cx + cy, cx + cy, angle, WString(chr, 1), fnt, color);
-	ib.SetHotSpot(Point(cx + cy, cx + cy));
+	sw.DrawText(at.x, at.y, angle, WString(chr, 1), fnt, color);
+	ib.SetHotSpot(at);
+	for(RGBA *s = ib; s < ib.End(); s++)
+		s->a = (s->a & 0xf8);
 	return ib;
 }
 
