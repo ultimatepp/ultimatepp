@@ -885,6 +885,7 @@ DrawingToPdfFnType GetDrawingToPdfFn();
 #include "Display.h"
 #include "Cham.h"
 #include "DDARasterizer.h"
+#include "SDraw.h"
 
 END_UPP_NAMESPACE
 

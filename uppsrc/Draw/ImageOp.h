@@ -18,6 +18,8 @@ void  Crop(RasterEncoder& tgt, Raster& img, const Rect& rc);
 Image Crop(const Image& img, const Rect& rc);
 Image Crop(const Image& img, int x, int y, int cx, int cy);
 
+Image AutoCrop(const Image& m, RGBA c);
+
 Image ColorMask(const Image& src, Color transparent);
 
 void  CanvasSize(RasterEncoder& tgt, Raster& img, int cx, int cy);

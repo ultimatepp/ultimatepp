@@ -306,6 +306,12 @@ mage][@(0.0.255) `&]_[*@3 img], [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]
 [%-*@3 y], width [%-*@3 cx] and height [%-*@3 cy].&]
 [s3;%% &]
 [s4; &]
+[s5;:AutoCrop`(const Image`&`,RGBA`): [_^Image^ Image]_[* AutoCrop]([@(0.0.255) const]_[_^Image^ I
+mage][@(0.0.255) `&]_[*@3 m], [_^RGBA^ RGBA]_[*@3 c])&]
+[s2;%% Detects rectangular margin with uniform color [%-*@3 c] and 
+then crops this margin out.&]
+[s3;%% &]
+[s4; &]
 [s5;:ColorMask`(const Image`&`,Color`): [_^Image^ Image]_[* ColorMask]([@(0.0.255) const]_[_^Image^ I
 mage][@(0.0.255) `&]_[*@3 src], [_^Color^ Color]_[*@3 transparent])&]
 [s2;%% Returns a new Image based on [%-*@3 src] replaced Color [%-*@3 transparent] 
