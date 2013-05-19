@@ -8,9 +8,7 @@ using namespace Upp;
 
 
 Image  AutoCrop(const Image& m, RGBA c);
-Image  RenderGlyph(Font fnt, int chr, Color color, int angle);
-
-Image  RenderGlyph(Font fnt, int chr, Color color, int angle, Size sz, Point offset);
+Image  RenderGlyph(Point at, int angle, int chr, Font fnt, Color color, Size sz);
 
 String CompressGlyph(const Image& m);
 Image  DecompressGlyph(const String& g, Color c);

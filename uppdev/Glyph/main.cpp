@@ -69,7 +69,18 @@ void MyApp::Paint(Draw& w)
 	fw.draw = &w;
 	fw.Init(sz);
 	
-	fw.DrawText(0, 0, "Ahoj!", Roman(400));
+	fw.DrawText(100, 100, "Ahoj!", Roman(400));
+
+	
+	RichText txt = ParseQTF(LoadFile(GetDataFile("text.qtf")));
+	if(0) {
+		RTIMING("SDraw");
+		txt.Paint(Zoom(2, 10), fw, 0, 0, sz.cx);
+	}
+	if(0) {
+		RTIMING("Draw");
+		txt.Paint(Zoom(2, 10), w, 0, 0, sz.cx);
+	}
 /*
 	fw.cloff.Add();
 	fw.cloff.Top().offset = Point(0, 0);
