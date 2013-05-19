@@ -5,10 +5,6 @@ uses
 file
 	glyph.h,
 	TestDraw.cpp,
-	FDrawClip.cpp,
-	FDrawPut.cpp,
-	FDrawText.cpp,
-	FDraw.cpp,
 	Glyph.cpp,
 	main.cpp optimize_speed,
 	text.qtf,

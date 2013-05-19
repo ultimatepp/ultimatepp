@@ -1,35 +1,5 @@
 #include "glyph.h"
 
-bool IsUniform(const RGBA *s, RGBA c, int add, int n)
-{
-	while(n-- > 0) {
-		if(*s != c)
-			return false;
-		s += add;
-	}
-	return true;
-}
-
-Image AutoCrop(const Image& m, RGBA c)
-{
-	Size isz = m.GetSize();
-	Rect r = isz;
-	for(r.top = 0; r.top < isz.cy && IsUniform(m[r.top], c, 1, isz.cx); r.top++)
-		;
-	for(r.bottom = isz.cy; r.bottom > r.top && IsUniform(m[r.bottom - 1], c, 1, isz.cx); r.bottom--)
-		;
-	if(r.bottom <= r.top)
-		return Null;
-	int h = r.GetHeight();
-	const RGBA *p = m[r.top];
-	for(r.left = 0; r.left < isz.cy && IsUniform(p + r.left, c, isz.cx, h); r.left++)
-		;
-	for(r.right = isz.cx; r.right > r.left && IsUniform(p + r.right - 1, c, isz.cx, h); r.right--)
-		;
-	Point p1 = m.GetHotSpot() - r.TopLeft();
-	Point p2 = m.Get2ndSpot() - r.TopLeft();
-	return WithHotSpots(Crop(m, r), p1.x, p1.y, p2.x, p2.y);
-}
 
 Image RenderGlyph(Font fnt, int chr, Color color, int angle)
 {
@@ -43,6 +13,7 @@ Image RenderGlyph(Font fnt, int chr, Color color, int angle)
 	return AutoCrop(ib, RGBAZero());
 }
 
+/*
 Image RenderGlyph(Point at, int angle, int chr, Font fnt, Color color, Size sz)
 {
 	int cx = fnt[chr];
@@ -56,6 +27,7 @@ Image RenderGlyph(Point at, int angle, int chr, Font fnt, Color color, Size sz)
 		s->a = (s->a & 0xf8);
 	return ib;
 }
+*/
 
 String CompressGlyph(const Image& m)
 {
