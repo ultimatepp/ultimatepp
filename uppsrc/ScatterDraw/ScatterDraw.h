@@ -485,6 +485,9 @@ void ScatterDraw::SetDrawing(T& w, const Size& size, int scale, bool ctrl)
 	
 	Plot(w, size, scale);	
 	
+	if (ctrl)
+		w.Offset(Point(-scale*hPlotLeft, -(scale*vPlotTop + titleHeight)));
+	
 	ClipEnd(w);
 }
 
