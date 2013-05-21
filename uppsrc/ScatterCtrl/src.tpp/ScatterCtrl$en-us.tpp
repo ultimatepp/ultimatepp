@@ -1247,7 +1247,8 @@ for the name of the file.&]
 [s6;%- &]
 [s5;:ScatterCtrl`:`:GetSize`(`)const:%- [@(0.0.255) virtual] [_^Size^ Size]_[* GetSize]()_[@(0.0.255) c
 onst]&]
-[s3; Returns the control Size.&]
+[s3; Returns the visual control Size. ScatterDraw`::GetImage() will 
+return the Size of Image to be get by functions like GetImage().&]
 [s1;%- &]
 [s6;%- &]
 [s5;:ScatterCtrl`:`:SetColor`(const Color`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&

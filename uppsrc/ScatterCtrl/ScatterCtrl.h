@@ -232,6 +232,7 @@ void ScatterCtrl::SetDrawing(T& w, const Size &size, int scale) {
 		Ctrl::Refresh(min(popLT.x-4, popRB.x-4), min(popLT.y-4, popRB.y-4), 
 					  abs(popRB.x-popLT.x) + 9, abs(popRB.y-popLT.y) + 9);
 	}
+	ClipEnd(w);
 }
 
 END_UPP_NAMESPACE
