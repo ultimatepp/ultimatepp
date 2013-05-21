@@ -15,6 +15,10 @@ void GetStdFontSys(String& name, int& height)
 	name = "Arial";
 	height = 10;
 #else
+	BOOL (STDAPICALLTYPE * SetProcessDPIAware)(void);
+	DllFn(SetProcessDPIAware, "User32.dll", "SetProcessDPIAware");
+	if(SetProcessDPIAware)
+		(*SetProcessDPIAware)();
 	NONCLIENTMETRICS ncm;
 	ncm.cbSize = sizeof(ncm);
 	::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
