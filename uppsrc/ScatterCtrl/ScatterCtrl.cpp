@@ -41,7 +41,7 @@ void ScatterCtrl::SaveToClipboard(bool saveAsMetafile)
 		WinMetaFile wmf = wmfd.Close();	 
 		wmf.WriteClipboard();
 	} else {
-		Image img = GetImage(ScatterDraw::GetSize(), copyRatio);
+		Image img = GetImage(ScatterDraw::GetSize(), copyRatio, false);
 		WriteClipboardImage(img);	
 	}
 }
@@ -50,7 +50,7 @@ void ScatterCtrl::SaveToClipboard(bool saveAsMetafile)
 void ScatterCtrl::SaveToClipboard(bool) 
 {
 	GuiLock __;
-	Image img = GetImage(ScatterDraw::GetSize(), copyRatio);
+	Image img = GetImage(ScatterDraw::GetSize(), copyRatio, false);
 	WriteClipboardImage(img);
 }
 
@@ -68,8 +68,7 @@ void ScatterCtrl::Paint(Draw& w)
 		ScatterCtrl::SetDrawing(bp, GetSize(), 1);
 		w.DrawImage(0, 0, ib);
 		PlotTexts(w, GetSize(), 1);
-	}	
-	w.End();
+	}
 	lastRefresh_ms = t.Elapsed();
 }
 
