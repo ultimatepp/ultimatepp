@@ -120,7 +120,7 @@ void OutFilterStream::Close()
 void OutFilterStream::FlushOut()
 {
 	if(ptr != ~buffer) {
-		Filter(~buffer, ptr - ~buffer);
+		Filter(~buffer, (int)(ptr - ~buffer));
 		ptr = ~buffer;
 	}
 }
