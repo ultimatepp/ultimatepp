@@ -1250,12 +1250,14 @@ and double.&]
 [s6; &]
 [s5;:ScatterDraw`:`:SetSize`(Size`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* SetSize
 ]([_^Size^ Size]_[*@3 sz])&]
-[s3;%% Sets the control size with [%-*@3 sz].&]
+[s3;%% Sets the control size with [%-*@3 sz]. Functions like GetImage() 
+will return a bitmap of [%-*@3 sz] size.&]
 [s1;%% &]
 [s6; &]
 [s5;:ScatterDraw`:`:GetSize`(`)const: [@(0.0.255) virtual] [_^Size^ Size]_[* GetSize]()_[@(0.0.255) c
 onst]&]
-[s3;%% Returns the control size.&]
+[s3;%% Returns the control size. Functions like GetImage() will return 
+a bitmap of [%-*@3 sz] size.&]
 [s1; &]
 [s6; &]
 [s5;:ScatterDraw`:`:SetColor`(const Color`&`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
@@ -1602,6 +1604,59 @@ t]&]
 [s3;%% Returns the secondary Y axis origin.&]
 [s1; &]
 [s6; &]
+[s5;:ScatterDraw`:`:AddSeries`(double`*`,int`,double`,double`): [_^ScatterDraw^ Scatter
+Draw]_`&[* AddSeries]([@(0.0.255) double]_`*[*@3 yData], [@(0.0.255) int]_[*@3 numData], 
+[@(0.0.255) double]_[*@3 x0]_`=_[@3 0], [@(0.0.255) double]_[*@3 deltaX]_`=_[@3 1])&]
+[s3;%% Adds a new series stored in [%-*@3 yData ]C array with [%-*@3 numData] 
+where the [%-*@3 yData`[0`] ]X value is [%-*@3 x0] and the horizontal 
+distance between [%-*@3 yData] values is [%-*@3 deltaX].&]
+[s3;%% [%-*@3 yData] has to be stored in a permanent location during 
+ScatterDraw life to avoid memory problems.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:AddSeries`(double`*`,double`*`,int`): [_^ScatterDraw^ ScatterDraw]_
+`&[* AddSeries]([@(0.0.255) double]_`*[*@3 xData], [@(0.0.255) double]_`*[*@3 yData], 
+[@(0.0.255) int]_[*@3 numData])&]
+[s3;%% Adds a new series stored in [%-*@3 xData] and [%-*@3 yData] C 
+arrays with [%-*@3 numData].&]
+[s3;%% [%-*@3 xData] and [%-*@3 yData] has to be stored in a permanent 
+location during ScatterDraw life to avoid memory problems.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:AddSeries`(Vector`<double`>`&`,Vector`<double`>`&`): [_^ScatterDraw^ S
+catterDraw]_`&[* AddSeries]([_^Vector^ Vector]<[@(0.0.255) double]>_`&[*@3 xData], 
+[_^Vector^ Vector]<[@(0.0.255) double]>_`&[*@3 yData])&]
+[s3;%% Adds a new series stored in [%-*@3 xData] and [%-*@3 yData] [%-_^Vector^ Vector][%- <][%-@(0.0.255) d
+ouble][%- >].&]
+[s3;%% [%-*@3 xData] and [%-*@3 yData] has to be stored in a permanent 
+location during ScatterDraw life to avoid memory problems.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:AddSeries`(Array`<double`>`&`,Array`<double`>`&`): [_^ScatterDraw^ S
+catterDraw]_`&[* AddSeries]([_^Array^ Array]<[@(0.0.255) double]>_`&[*@3 xData], 
+[_^Array^ Array]<[@(0.0.255) double]>_`&[*@3 yData])&]
+[s3;%% Adds a new series stored in [%-*@3 xData] and [%-*@3 yData] [%-_^Vector^ Array][%- <][%-@(0.0.255) d
+ouble][%- >].&]
+[s3;%% [%-*@3 xData] and [%-*@3 yData] has to be stored in a permanent 
+location during ScatterDraw life to avoid memory problems.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:AddSeries`(Vector`<Pointf`>`&`): [_^ScatterDraw^ ScatterDraw]_`&[* Ad
+dSeries]([_^Vector^ Vector]<[_^Pointf^ Pointf]>_`&[*@3 points])&]
+[s3;%% Adds a new series stored in [%-*@3 points] [%-_^Vector^ Vector][%- <][%-_^Pointf^ Poin
+tf][%- >].&]
+[s3;%% [%-*@3 points] has to be stored in a permanent location during 
+ScatterDraw life to avoid memory problems.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:AddSeries`(Array`<Pointf`>`&`): [_^ScatterDraw^ ScatterDraw]_`&[* Add
+Series]([_^Array^ Array]<[_^Pointf^ Pointf]>_`&[*@3 points])&]
+[s3;%% Adds a new series stored in [%-*@3 points] [%-_^Vector^ Array][%- <][%-_^Pointf^ Point
+f][%- >].&]
+[s3;%% [%-*@3 points] has to be stored in a permanent location during 
+ScatterDraw life to avoid memory problems.&]
+[s1;%% &]
+[s6; &]
 [s5;:ScatterDraw`:`:Opacity`(double`): [_^ScatterDraw^ ScatterDraw]_`&[* Opacity]([@(0.0.255) d
 ouble]_[*@3 opacity]_`=_[@3 1])&]
 [s3;%% Sets the series [%-*@3 opacity] .from 1 (opaque) to 0 (transparent/invisible).&]
@@ -1639,6 +1694,25 @@ of  every Y grid line are shown.&]
 [* SetDrawY2Reticle]([@(0.0.255) bool]_[*@3 set]_`=_[@(0.0.255) true])&]
 [s3;%% If [%-*@3 set] is true the small lines and texts to the right 
 of  every Y grid line are shown.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetDataPrimaryY`(int`,bool`): [@(0.0.255) void]_[* SetDataPrimaryY]([@(0.0.255) i
+nt]_[*@3 index], [@(0.0.255) bool]_[*@3 primary]_`=_[@(0.0.255) true])&]
+[s3;%% If [%-*@3 primary] is true, [%-*@3 index] series is considered 
+to be a primary series so it uses the left vertical axis. If 
+false it uses right vertical axis.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetDataPrimaryY`(bool`): [_^ScatterDraw^ ScatterDraw]_`&[* SetDataPri
+maryY]([@(0.0.255) bool]_[*@3 primary])&]
+[s3;%% If [%-*@3 primary] is true, last added series is considered 
+to be a primary series so it uses the left vertical axis. If 
+false it uses right vertical axis..&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:IsDataPrimaryY`(int`)const throw`(Exc`): [@(0.0.255) bool]_[* IsDataP
+rimaryY]([@(0.0.255) int]_[*@3 index])_[@(0.0.255) const]_[@(0.0.255) throw]_(Exc)&]
+[s3;%% Returns true if [%-*@3 index] series is primary.&]
 [s1;%% &]
 [s6; &]
 [s5;:ScatterDraw`:`:SetSequentialX`(int`,bool`): [@(0.0.255) void]_[* SetSequentialX]([@(0.0.255) i
@@ -1704,7 +1778,7 @@ nt]_[*@3 index], [@(0.0.255) int]_[*@3 id])&]
 [s3;%% Returns the id of [%-*@3 index] data series.&]
 [s1;%% &]
 [s6; &]
-[s5;:ScatterDraw`:`:GetDrawing`(`): [_^Drawing^ Drawing]_[* GetDrawing]()&]
+[s5;:ScatterDraw`:`:GetDrawing`(bool`): [_^Drawing^ Drawing]_[* GetDrawing]()&]
 [s3;%% Returns the control Drawing.&]
 [s1; &]
 [s6; &]

@@ -65,9 +65,6 @@ protected:
 		double opacity;
 
 		int id;
-		
-		bool trendLine;
-		//double trend
 	};
 		
 	class ScatterSeries : public Moveable<ScatterSeries>, public ScatterBasicSeries {
@@ -98,7 +95,7 @@ public:
 	Callback WhenSetXYMin;
 	
 	ScatterDraw& SetSize(Size sz) 	{size = sz; return *this;};
-	virtual Size GetSize() 			{return size;};
+	virtual Size GetSize() const	{return size;};
 	
 	ScatterDraw& SetColor(const Color& _color);
 	ScatterDraw& SetTitle(const String& _title);
@@ -191,7 +188,6 @@ public:
 	ScatterDraw &AddSeries(PlotParamFunc function, int np, double from = 0, double to = 1)	
 														{return AddSeries<PlotParamFuncSource>(function, np, from, to);}
 	
-	ScatterDraw &_AddSeries(DataSource *data);
 	ScatterDraw &AddSeries(DataSource &data);
 	
 	template <class C>
@@ -354,7 +350,6 @@ public:
 	int GetId(int index);
 	
 	Drawing GetDrawing(bool ctrl = true);
-	Image GetImage(const Size &size, int scale = 2, bool ctrl = true);
 	Image GetImage(int scale = 2);
 	
 	#ifdef PLATFORM_WIN32
@@ -375,9 +370,11 @@ public:
 	int GetCount() 	{return series.GetCount();}
 	bool IsEmpty()	{return series.IsEmpty();}
 	
-	virtual void Refresh() {};
-	
 protected:
+	ScatterDraw &_AddSeries(DataSource *data);
+	Image GetImage(const Size &size, int scale = 2, bool ctrl = true);
+	virtual void Refresh() {};
+
 	int mode;
 	Color graphColor;	
 	String title;
@@ -424,9 +421,9 @@ protected:
 
 	void Scrolling(bool down, Point &pt, bool isOut = false);
 	
-	void ExpFormat(String& s, int i, double d)	{s = FormatDoubleExp(d,1);}
-	void MonFormat(String& s, int i, double d)	{s = Format("%Mon",int(d));}
-	void DyFormat(String& s, int i, double d)	{s = Format("%Dy",int(d));}
+	void ExpFormat(String& s, int i, double d)	{s = FormatDoubleExp(d, 1);}
+	void MonFormat(String& s, int i, double d)	{s = Format("%Mon", int(d));}
+	void DyFormat(String& s, int i, double d)	{s = Format("%Dy", int(d));}
 	
 	static String VariableFormat(double range, double d)
 	{
@@ -478,17 +475,17 @@ void ScatterDraw::SetDrawing(T& w, const Size& size, int scale, bool ctrl)
 	plotH = scale*(size.cy - (vPlotTop + vPlotBottom)) - titleHeight;
 	
 	if (!ctrl) {
-		if (!PlotTexts(w, GetSize(), scale)) 
+		if (!PlotTexts(w, size, scale)) 
 			return;
 	} else 
 		w.Offset(Point(scale*hPlotLeft, scale*vPlotTop + titleHeight));
 	
 	Plot(w, size, scale);	
 	
+	ClipEnd(w);
+	
 	if (ctrl)
 		w.Offset(Point(-scale*hPlotLeft, -(scale*vPlotTop + titleHeight)));
-	
-	ClipEnd(w);
 }
 
 template <class T>
@@ -578,6 +575,8 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 	w.DrawLine(0, 0, 0, plotH, fround(gridWidth*scale), Black);
 	w.DrawLine(plotW, 0, plotW, plotH + 1, fround(gridWidth*scale), Black);
 	
+	ClipEnd(w);	
+	
 	return true;
 }
 
@@ -595,7 +594,7 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 		double x0 = plotW*xMinUnit/xRange;
 		for(int i = 0; xMinUnit + i*xMajorUnit < xRange; i++) {
 			int xg = fround(x0 + i*plotW/d1);
-			if (xg > gridWidth || xg < plotW - gridWidth)
+			if (xg > 2*gridWidth && xg < plotW - 2*gridWidth)
 				DrawLineOpa(w, xg, 0, xg, fround(plotH), 1, 1, gridWidth, gridColor, "2 2");
 		}
 	}	
@@ -603,7 +602,7 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 		double y0 = -plotH*yMinUnit/yRange + plotH;
 		for(int i = 0; yMinUnit + i*yMajorUnit < yRange; i++) {
 			int yg = fround(y0 - i*plotH/d2);
-			if (yg > gridWidth || yg < plotH - gridWidth)
+			if (yg > 2*gridWidth && yg < plotH - 2*gridWidth)
 				DrawLineOpa(w, 0, yg, fround(plotW), yg, 1, 1, gridWidth, gridColor, "2 2");
 		}
 	}
