@@ -198,6 +198,7 @@ void IconDes::MainToolBar(Bar& bar)
 void IconDes::SetBar()
 {
 	toolbar.Set(THISBACK(MainToolBar));
+	SetSb();
 }
 
 struct CachedIconImage : public Display {
