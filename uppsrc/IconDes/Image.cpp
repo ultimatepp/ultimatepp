@@ -280,7 +280,6 @@ void IconDes::Colorize()
 	}
 }
 
-
 void IconDes::FreeRotate()
 {
 	WithFreeRotateLayout<TopWindow> dlg;
