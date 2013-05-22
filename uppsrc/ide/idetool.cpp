@@ -344,6 +344,8 @@ void Ide::SyncSvnDirs(const Vector<String>& working)
 {
 	SaveFile();
 	SvnSyncDirs(working);
+	ScanWorkspace();
+	SyncWorkspace();
 }
 
 void Ide::SyncSvn()
