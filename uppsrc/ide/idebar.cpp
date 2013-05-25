@@ -54,11 +54,11 @@ void Ide::File(Bar& menu) {
 		    .Help("Close the current file tab");
 		menu.Add(AK_CLOSETABS, THISBACK(ClearTabs))
 		    .Help("Close all file tabs");
+		menu.Add("Go back", THISBACK(HistoryBk))
+		    .Key(K_ALT_LEFT);
+		menu.Add("Go forward", THISBACK(HistoryFw))
+		    .Key(K_ALT_RIGHT);
 		if(!designer) {
-			menu.Add("Go back", THISBACK(HistoryBk))
-			    .Key(K_ALT_LEFT);
-			menu.Add("Go forward", THISBACK(HistoryFw))
-			    .Key(K_ALT_RIGHT);
 			menu.Add("Bookmarks", THISBACK(FileBookmark))
 				.Help("Set one of available bookmarks (1..9, 0) on current file");
 			menu.MenuSeparator();
