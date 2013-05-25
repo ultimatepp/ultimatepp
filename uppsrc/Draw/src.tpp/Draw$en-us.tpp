@@ -703,17 +703,28 @@ wDrawing]([@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[
 respectively [%-*@3 x],[%-*@3 y],[%-*@3 cx],[%-*@3 cy]. Frontend to DrawDrawing 
 op.&]
 [s3;%% &]
+[s4; &]
+[s5;:Draw`:`:DrawDrawing`(int`,int`,const Drawing`&`): [@(0.0.255) void]_[* DrawDrawing](
+[@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) const]_[_^Drawing^ Drawing][@(0.0.255) `&
+]_[*@3 iw])&]
+[s2;%% Draws [^Drawing^ Drawing] [%-*@3 iw] at [%-*@3 x],[%-*@3 y], using 
+its original size. Frontend to DrawDrawing op.&]
+[s3;%% &]
 [s4;%% &]
-[s5;:Draw`:`:DrawPainting`(const Rect`&`,const Painting`&`): [@(0.0.255) void]_[* DrawPai
-nting]([@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[_^Painting^ P
+[s5;:Draw`:`:DrawPainting`(int`,int`,const Painting`&`): [@(0.0.255) void]_[* DrawPaintin
+g]([@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[_^Painting^ P
 ainting][@(0.0.255) `&]_[*@3 iw])&]
 [s5;:Draw`:`:DrawPainting`(int`,int`,int`,int`,const Painting`&`): [@(0.0.255) void]_[* D
 rawPainting]([@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 cx], 
 [@(0.0.255) int]_[*@3 cy], [@(0.0.255) const]_[_^Painting^ Painting][@(0.0.255) `&]_[*@3 iw])
 &]
+[s5;:Draw`:`:DrawPainting`(int`,int`,const Painting`&`): [@(0.0.255) void]_[* DrawPaintin
+g]([@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) const]_[_^Painting^ Painti
+ng][@(0.0.255) `&]_[*@3 iw])&]
 [s2;%% Draws [^Painting^ Painting] [%-*@3 iw] scaled to rectangle [%-*@3 r] 
 respectively [%-*@3 x],[%-*@3 y],[%-*@3 cx],[%-*@3 cy]. Painter package 
-has to be included in the project for this to work. Frontend 
+has to be included in the project for this to work. Variant without 
+[%-*@3 cx],[%-*@3 cy] paints Painting in its original size. Frontend 
 to DrawPaintingOp.&]
 [s3;%% &]
 [s4;%% &]
