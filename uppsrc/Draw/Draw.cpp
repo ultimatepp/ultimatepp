@@ -480,6 +480,12 @@ void Draw::DrawPainting(int x, int y, int cx, int cy, const Painting& ig)
 	DrawPainting(RectC(x, y, cx, cy), ig);
 }
 
+void Draw::DrawPainting(int x, int y, const Painting& iw)
+{
+	Size sz = iw.GetSize();
+	DrawPainting(RectC(x, y, sz.cx, sz.cy), iw);
+}
+
 // ---------------------------
 
 dword NilDraw::GetInfo() const { return DOTS; }

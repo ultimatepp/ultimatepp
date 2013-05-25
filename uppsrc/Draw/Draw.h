@@ -560,9 +560,11 @@ public:
 
 	void DrawDrawing(const Rect& r, const Drawing& iw) { DrawDrawingOp(r, iw); }
 	void DrawDrawing(int x, int y, int cx, int cy, const Drawing& iw);
+	void DrawDrawing(int x, int y, const Drawing& iw);
 
 	void DrawPainting(const Rect& r, const Painting& iw) { DrawPaintingOp(r, iw); }
 	void DrawPainting(int x, int y, int cx, int cy, const Painting& iw);
+	void DrawPainting(int x, int y, const Painting& iw);
 
 	void DrawText(int x, int y, int angle, const wchar *text, Font font = StdFont(),
 		          Color ink = DefaultInk, int n = -1, const int *dx = NULL);

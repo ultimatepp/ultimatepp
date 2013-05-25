@@ -632,6 +632,12 @@ void Draw::DrawDrawing(int x, int y, int cx, int cy, const Drawing& w) {
 	DrawDrawing(RectC(x, y, cx, cy), w);
 }
 
+void Draw::DrawDrawing(int x, int y, const Drawing& iw)
+{
+	Size sz = iw.GetSize();
+	DrawDrawing(RectC(x, y, sz.cx, sz.cy), iw);
+}
+
 void  DrawingDraw::Create(int cx, int cy, bool dots_) {
 	Create(Size(cx, cy), dots_);
 }
