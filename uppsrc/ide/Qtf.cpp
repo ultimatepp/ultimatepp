@@ -5,7 +5,7 @@ INITBLOCK {
 	RegisterGlobalConfig("QTF-designer-editor");
 }
 
-class QtfDlg : public WithQtfLayout<TopWindow> {
+class QtfDlg : public TopWindow {
 	typedef QtfDlg CLASSNAME;
 
 	void Text();
@@ -14,6 +14,11 @@ class QtfDlg : public WithQtfLayout<TopWindow> {
 	void Editor();
 
 public:
+	Splitter leftSplit, mainSplit;
+	WithQtfLayout<ParentCtrl> qtfText;
+	RichTextCtrl qtf;
+	RichTextView help;
+
 	void Serialize(Stream& s);
 
 	QtfDlg();
@@ -21,18 +26,18 @@ public:
 
 void QtfDlg::Text()
 {
-	qtf <<= ~text;
+	qtf <<= ~qtfText.text;
 }
 
 void QtfDlg::Clear()
 {
-	text.Clear();
+	qtfText.text.Clear();
 	Text();
 }
 
 void QtfDlg::Copy()
 {
-	WriteClipboardText(~text);
+	WriteClipboardText(~qtfText.text);
 	Break();
 }
 
@@ -60,10 +65,10 @@ void QtfDlg::Editor()
 {
 	QtfDlgEditor dlg;
 	LoadFromGlobal(dlg, "QTF-designer-editor");
-	dlg.editor.SetQTF((String)~text);
+	dlg.editor.SetQTF((String)~qtfText.text);
 	dlg.Run();
 	if(PromptYesNo("Use the text?")) {
-		text <<= AsQTF(dlg.editor.Get(),
+		qtfText.text <<= AsQTF(dlg.editor.Get(),
 		               CHARSET_UTF8, QTF_BODY|QTF_NOSTYLES|QTF_NOCHARSET|QTF_NOLANG);
 		Text();
 	}
@@ -72,31 +77,41 @@ void QtfDlg::Editor()
 
 QtfDlg::QtfDlg()
 {
-	CtrlLayout(*this, "QTF designer");
-	text <<= THISBACK(Text);
+	Title("QTF designer");
+	CtrlLayout(qtfText);
+	qtfText.text <<= THISBACK(Text);
 	qtf.SetFrame(ViewFrame());
 	qtf.Background(SColorPaper);
 	Sizeable().Zoomable();
 	Rect r = GetWorkArea();
 	SetRect(0, 0, r.GetWidth() - 100, r.GetHeight() - 200);
+	SetMinSize(Size(min(640, r.GetWidth() - 100), min(480, r.GetHeight() - 200)));
 
 	String path = AppendFileName(AppendFileName(PackageDirectory("RichText"), "srcdoc.tpp"), "QTF$en-us.tpp");
 	if(FileExists(path))
 		help.SetQTF(ReadTopic(LoadFile(path)).text);
 	else
 		help <<= "[= &&&QTF documentation not found";
-	
-	clear <<= THISBACK(Clear);
-	copy <<= THISBACK(Copy);
-	editor <<= THISBACK(Editor);
+
+	qtfText.clear <<= THISBACK(Clear);
+	qtfText.copy <<= THISBACK(Copy);
+	qtfText.editor <<= THISBACK(Editor);
+
+	leftSplit.Vert(qtfText, qtf).SetPos(4000);
+	mainSplit.Horz(leftSplit, help).SetPos(3500);
+	Add(mainSplit.HSizePosZ(4, 4).VSizePosZ(4, 4));
 }
 
 void QtfDlg::Serialize(Stream& s)
 {
-	int version = 0;
+	int version = 1;
 	s / version;
-	s % text;
+	s % qtfText.text;
 	SerializePlacement(s);
+	if(version >= 1) {
+		leftSplit.Serialize(s);
+		mainSplit.Serialize(s);
+	}
 	Text();
 }
 
@@ -107,14 +122,14 @@ void Ide::Qtf()
 	int l,h;
 	bool sel=editor.GetSelection(l,h);
 	if(qtfsel && sel){
-		dlg.text<<=(~editor).ToString().Mid(l,h-l);
-		dlg.copy.SetLabel("Apply and close");
+		dlg.qtfText.text<<=(~editor).ToString().Mid(l,h-l);
+		dlg.qtfText.copy.SetLabel("Apply and close");
 		dlg.Run();
 		editor.Remove(l,h-l);
-		editor.Insert(l,(~dlg.text).ToString());
+		editor.Insert(l,(~dlg.qtfText.text).ToString());
 	}
 	else{
-		dlg.copy.SetLabel("Copy and close");
+		dlg.qtfText.copy.SetLabel("Copy and close");
 		dlg.Run();
 	}
 	StoreToGlobal(dlg, "QTF-designer");
