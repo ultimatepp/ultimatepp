@@ -166,7 +166,15 @@ by [%-*@3 name], if NULL, it is set to `"app`".&]
 [s5;:LoadFromXML`(T`&`,const String`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>
 _[@(0.0.255) bool]_[* LoadFromXML]([*@4 T][@(0.0.255) `&]_[*@3 data], [@(0.0.255) const]_[_^String^ S
 tring][@(0.0.255) `&]_[*@3 xml])&]
-[s2;%% Loads [%-*@3 data] from XML string [%-*@3 xml].&]
+[s2;%% Loads [%-*@3 data] from XML string [%-*@3 xml]. In case of error 
+or empty [%-*@3 xml] returns false.&]
+[s3;%% &]
+[s4; &]
+[s5;:TryLoadFromXML`(T`&`,const String`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T
+]>_[@(0.0.255) bool]_[* TryLoadFromXML]([*@4 T][@(0.0.255) `&]_[*@3 data], 
+[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 xml])&]
+[s2;%% Loads [%-*@3 data] from XML string [%-*@3 xml]. If [%-*@3 xml] is 
+empty returns false. In case of error, throws XmlError.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:StoreAsXMLFile`(T`&`,const char`*`,const char`*`): [@(0.0.255) template]_<[@(0.0.255) c
@@ -184,7 +192,17 @@ used as the file path.&]
 [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 file]_`=_NULL)&]
 [s2;%% Loads [%-*@3 data] from XML file, using [%-*@3 file] as the path 
 of file. If [%-*@3 file] is NULL, ConfigFile(GetExeTitle() `+ `".xml`") 
-is used as the file path.&]
+is used as the file path. In case of error or empty [%-*@3 xml] 
+returns false.&]
+[s3;%% &]
+[s4; &]
+[s5;:TryLoadFromXMLFile`(T`&`,const char`*`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T
+]>_[@(0.0.255) bool]_[* TryLoadFromXMLFile]([*@4 T][@(0.0.255) `&]_[*@3 data], 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 file]_`=_NULL)&]
+[s2;%% Loads [%-*@3 data] from XML file, using [%-*@3 file] as the path 
+of file. If [%-*@3 file] is NULL, ConfigFile(GetExeTitle() `+ `".xml`") 
+is used as the file path. If [%-*@3 xml] is empty returns false. 
+In case of error, throws XmlError.&]
 [s3;%% &]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Standard Xmlize template specializations]]}}&]

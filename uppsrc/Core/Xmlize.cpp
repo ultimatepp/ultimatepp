@@ -178,22 +178,32 @@ String StoreAsXML(Callback1<XmlIO> xmlize, const char *name)
 	return AsXML(node);
 }
 
+bool LoadFromXML0(Callback1<XmlIO> xmlize, const String& xml)
+{
+	XmlNode node = ParseXML(xml);
+	if(node.GetCount() == 0)
+		return false;
+	for(int i = 0; i < node.GetCount(); i++)
+		if(node.Node(i).IsTag()) {
+			Value dummy;
+			xmlize(XmlIO(node.At(i), true, dummy));
+			break;
+		}
+	return true;
+}
+
 bool LoadFromXML(Callback1<XmlIO> xmlize, const String& xml)
 {
 	try {
-		XmlNode node = ParseXML(xml);
-		if(node.GetCount() == 0)
-			return false;
-		for(int i = 0; i < node.GetCount(); i++)
-			if(node.Node(i).IsTag()) {
-				Value dummy;
-				xmlize(XmlIO(node.At(i), true, dummy));
-				break;
-			}
-		return true;
+		return LoadFromXML0(xmlize, xml);
 	}
 	catch(XmlError) {}
 	return false;
+}
+
+bool TryLoadFromXML(Callback1<XmlIO> xmlize, const String& xml)
+{
+	return LoadFromXML0(xmlize, xml);
 }
 
 static String sXMLFile(const char *file)
@@ -211,6 +221,10 @@ bool LoadFromXMLFile(Callback1<XmlIO> xmlize, const char *file)
 	return LoadFromXML(xmlize, LoadFile(sXMLFile(file)));
 }
 
+bool TryLoadFromXMLFile(Callback1<XmlIO> xmlize, const char *file)
+{
+	return TryLoadFromXML(xmlize, LoadFile(sXMLFile(file)));
+}
 
 void StoreJsonValue(XmlIO& xio, const Value& v)
 {

@@ -216,6 +216,7 @@ struct ParamHelper__ {
 
 String StoreAsXML(Callback1<XmlIO> xmlize, const char *name);
 bool   LoadFromXML(Callback1<XmlIO> xmlize, const String& xml);
+bool   TryLoadFromXML(Callback1<XmlIO> xmlize, const String& xml);
 
 template <class T>
 String StoreAsXML(const T& data, const char *name = NULL)
@@ -231,8 +232,16 @@ bool LoadFromXML(T& data, const String& xml)
 	return LoadFromXML(callback(&p, &ParamHelper__<T>::Invoke), xml);
 }
 
+template <class T>
+bool TryLoadFromXML(T& data, const String& xml)
+{
+	ParamHelper__<T> p(data);
+	return TryLoadFromXML(callback(&p, &ParamHelper__<T>::Invoke), xml);
+}
+
 bool StoreAsXMLFile(Callback1<XmlIO> xmlize, const char *name = NULL, const char *file = NULL);
 bool LoadFromXMLFile(Callback1<XmlIO> xmlize, const char *file = NULL);
+bool TryLoadFromXMLFile(Callback1<XmlIO> xmlize, const char *file = NULL);
 
 template <class T>
 bool StoreAsXMLFile(T& data, const char *name = NULL, const char *file = NULL)
@@ -246,6 +255,13 @@ bool LoadFromXMLFile(T& data, const char *file = NULL)
 {
 	ParamHelper__<T> p(data);
 	return LoadFromXMLFile(callback(&p, &ParamHelper__<T>::Invoke), file);
+}
+
+template <class T>
+bool TryLoadFromXMLFile(T& data, const char *file = NULL)
+{
+	ParamHelper__<T> p(data);
+	return TryLoadFromXMLFile(callback(&p, &ParamHelper__<T>::Invoke), file);
 }
 
 template <class T>
