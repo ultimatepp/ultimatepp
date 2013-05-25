@@ -1316,6 +1316,31 @@ void LayDes::AddLayout()
 	LayoutCursor();
 }
 
+void LayDes::DuplicateLayout()
+{
+	if(currentlayout < 0)
+		return;
+	LayoutData& c = CurrentLayout();
+	String name = c.name;
+	for(;;) {
+		if(!EditText(name, "Duplicate layout", "Layout", CharFilterCid))
+			return;
+		CParser p(name);
+		if(p.IsId())
+			break;
+		Exclamation("Invalid name!");
+	}
+	String data = c.Save(0);
+	CParser p(data);
+	int next = currentlayout + 1;
+	LayoutData& d = layout.Insert(next);
+	d.Read(p);
+	d.name = name;
+	SyncLayoutList();
+	layoutlist.SetCursor(next);
+	LayoutCursor();
+}
+
 void LayDes::RenameLayout()
 {
 	if(currentlayout < 0)
@@ -1365,13 +1390,15 @@ void LayDes::MoveLayoutDown()
 
 void LayDes::LayoutMenu(Bar& bar)
 {
+	bool iscursor = layoutlist.IsCursor();
 	bar.Add("Add new layout..", THISBACK(AddLayout));
-	bar.Add("Rename layout..", THISBACK(RenameLayout));
-	bar.Add("Remove layout..", THISBACK(RemoveLayout));
+	bar.Add(iscursor, "Duplicate layout..", THISBACK(DuplicateLayout));
+	bar.Add(iscursor, "Rename layout..", THISBACK(RenameLayout));
+	bar.Add(iscursor, "Remove layout..", THISBACK(RemoveLayout));
 	bar.Separator();
-	bar.Add(layoutlist.IsCursor() && layoutlist.GetCursor() > 0,
+	bar.Add(iscursor && layoutlist.GetCursor() > 0,
 	        AK_MOVELAYOUTUP, LayImg::MoveUp(), THISBACK(MoveLayoutUp));
-	bar.Add(layoutlist.IsCursor() && layoutlist.GetCursor() < layoutlist.GetCount() - 1,
+	bar.Add(iscursor && layoutlist.GetCursor() < layoutlist.GetCount() - 1,
 	        AK_MOVELAYOUTDOWN, LayImg::MoveDown(), THISBACK(MoveLayoutDown));
 }
 

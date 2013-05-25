@@ -407,6 +407,7 @@ private:
 	void        ShowSelection(bool s);
 
 	void        AddLayout();
+	void        DuplicateLayout();
 	void        RenameLayout();
 	void        RemoveLayout();
 	void        PrevLayout();
