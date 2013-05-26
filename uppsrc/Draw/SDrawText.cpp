@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-#define LTIMING(x)  RTIMING(x)
+#define LTIMING(x)  // RTIMING(x)
 
 NAMESPACE_UPP
 

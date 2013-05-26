@@ -19,6 +19,7 @@ static const int *sGetKernel(double (*kfn)(double x), int a, int shift)
 			ktab[i] = int((1 << shift) * (*kfn)((double)i / (1 << shift) - a));
 		return ktab;
 	}
+	return NULL;
 }
 
 force_inline
