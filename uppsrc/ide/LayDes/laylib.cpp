@@ -385,11 +385,8 @@ void EscDraw::DrawSmartText(EscEscape& e)
 	if(ii < e.GetCount())
 		color = ColorEsc(e[ii++]);
 	int cx = INT_MAX;
-	DDUMP(e.GetCount());
-	DDUMP(ii);
 	if(ii < e.GetCount())
 		cx = e.Int(ii++);
-	DDUMP(cx);
 	::DrawSmartText(w, x, y, cx, text, font, color, accesskey);
 }
 
