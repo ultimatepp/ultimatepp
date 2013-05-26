@@ -1,7 +1,7 @@
 LAYOUT(AccessKeyLayout, 200, 100)
 	ITEM(Base, ok, RightPosZ(90, 80).BottomPosZ(4, 22))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
-	ITEM(Label, dv___2, SetLabel(t_("asdfasdf\aTest")).SetFont(SansSerifZ(20)).LeftPosZ(4, 48).TopPosZ(4, 32))
+	ITEM(Label, dv___2, SetLabel(t_("asdfasdf\aTest\\a\\n\\b\001asdfasdf")).SetFont(SansSerifZ(20)).LeftPosZ(0, 136).TopPosZ(32, 32))
 	ITEM(EditDate, dv___3, LeftPosZ(56, 140).TopPosZ(4, 19))
 END_LAYOUT
 

@@ -1,11 +1,18 @@
 uses
 	Core,
-	Draw;
+	Draw,
+	Painter,
+	RichText;
 
-library
-	"SDLmain.lib SDL.lib";
+library(WIN32) "SDLmain.lib SDL.lib";
+
+library(POSIX) "SDL2 SDL2main";
 
 file
+	SDL20.h,
+	Window.cpp,
+	SDLDraw.cpp,
+	text.qtf,
 	SDL20.cpp,
 	test.iml;
 
