@@ -363,14 +363,11 @@ void EscDraw::DrawText(EscEscape& e)
 
 void EscDraw::DrawSmartText(EscEscape& e)
 {
-	if(e.GetCount() < 3 || e.GetCount() > 6)
+	if(e.GetCount() < 3 || e.GetCount() > 7)
 		e.ThrowError("wrong number of arguments in call to 'DrawSmartText'");
 	int x = e.Int(0);
 	int y = e.Int(1);
 	int ii = 2;
-//	int cx = INT_MAX;
-//	if(e[ii].IsInt())
-//		cx = e.Int(ii++);
 	String text;
 	if(ii < e.GetCount() && e[ii].IsArray())
 		text = ToUtf8((WString)e[ii++]);
@@ -387,7 +384,13 @@ void EscDraw::DrawSmartText(EscEscape& e)
 	Color color = SColorText;
 	if(ii < e.GetCount())
 		color = ColorEsc(e[ii++]);
-	::DrawSmartText(w, x, y, INT_MAX, text, font, color, accesskey);
+	int cx = INT_MAX;
+	DDUMP(e.GetCount());
+	DDUMP(ii);
+	if(ii < e.GetCount())
+		cx = e.Int(ii++);
+	DDUMP(cx);
+	::DrawSmartText(w, x, y, cx, text, font, color, accesskey);
 }
 
 void EscDraw::DrawQtf(EscEscape& e)
