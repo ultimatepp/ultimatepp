@@ -90,6 +90,10 @@ the loop used to process Http requests.&]
 [s2; This method should be called from APP`_MAIN to start Skylark 
 application. There can be only one SkylarkApp in single binary.&]
 [s3; &]
+[s4;%- &]
+[s5;:SkylarkApp`:`:Quit`(`):%- [@(0.0.255) void]_[* Quit]()&]
+[s2; Quits the Skylark application (can be called from another thread).&]
+[s3;%- &]
 [s4; &]
 [s5;:SkylarkApp`:`:TheApp`(`):%- [@(0.0.255) static] [_^SkylarkApp^ SkylarkApp][@(0.0.255) `&
 ]_[* TheApp]()&]
