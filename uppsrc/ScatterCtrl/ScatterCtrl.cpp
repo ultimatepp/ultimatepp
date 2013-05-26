@@ -65,6 +65,8 @@ void ScatterCtrl::Paint(Draw& w)
 	} else {
 		ImageBuffer ib(GetSize());
 		BufferPainter bp(ib, mode);
+		bp.Clear(White());
+		PlotTexts(bp, GetSize(), 1);
 		ScatterCtrl::SetDrawing(bp, GetSize(), 1);
 		w.DrawImage(0, 0, ib);
 		PlotTexts(w, GetSize(), 1);
@@ -233,12 +235,7 @@ void ScatterCtrl::Scrolling(bool down, Point &pt, bool isOut)
 			butDownY = pt.y;	
 			isScrolling = true;
 			INTERLOCKED { 
-#ifdef PLATFORM_WIN32
-				static Image img = Win32Cursor(IDC_SIZEALL);
-#else
-				static Image img = X11Cursor(XC_fleur);
-#endif
-				mouseImg = Ctrl::OverrideCursor(img);
+				mouseImg = Ctrl::OverrideCursor(Image::SizeAll());
 			}
 		}
 	} else {

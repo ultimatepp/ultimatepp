@@ -135,7 +135,7 @@ private:
 	const Vector<double> *xData, *yData;
 
 public:
-	VectorDouble(const Vector<double> &yData, Vector<double> &xData) : yData(&yData), xData(&xData) {}
+	VectorDouble(const Vector<double> &yData, Vector<double> &xData) : xData(&xData), yData(&yData) {}
 	virtual inline double y(int64 id)	{return (*yData)[int(id)];}
 	virtual inline double x(int64 id) 	{return (*xData)[int(id)];}
 	virtual inline int64 GetCount()		{return xData->GetCount();}
@@ -146,7 +146,7 @@ private:
 	const Upp::Array<double> *xData, *yData;
 
 public:
-	ArrayDouble(const Upp::Array<double> &yData, Upp::Array<double> &xData) : yData(&yData), xData(&xData) {}
+	ArrayDouble(const Upp::Array<double> &yData, Upp::Array<double> &xData) : xData(&xData), yData(&yData) {}
 	virtual inline double y(int64 id)	{return (*yData)[int(id)];}
 	virtual inline double x(int64 id) 	{return (*xData)[int(id)];}
 	virtual inline int64 GetCount()		{return xData->GetCount();}

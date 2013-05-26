@@ -97,7 +97,6 @@ void SkylarkApp::Quit()
 	s.Connect("127.0.0.1", port);
 }
 
-
 void SkylarkApp::Main()
 {
 	Buffer<Thread> uwt(threads);
