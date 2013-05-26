@@ -304,7 +304,7 @@ void RichEdit::CutTool(Bar& bar, dword key)
 
 void RichEdit::CopyTool(Bar& bar, dword key)
 {
-	bar.Add(!IsReadOnly() && IsSelection() || objectpos >= 0,
+	bar.Add(IsSelection() || objectpos >= 0,
 	        t_("Copy"), CtrlImg::copy(), USERBACK(Copy))
 	   .Key(K_CTRL_INSERT)
 	   .Key(key);
