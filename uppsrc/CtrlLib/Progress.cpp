@@ -108,7 +108,7 @@ void ProgressIndicator::Set(int _actual, int _total) {
 	}
 	else {
 		int l = max(1, max(sz.cx, sz.cy));
-		p = total ? min(actual * l / total, l) : 0;
+		p = total ? min(iscale(actual, l, total), l) : 0;
 	}
 	if(p != pxp) {
 		pxp = p;
