@@ -459,7 +459,8 @@ bool JPGRaster::Data::Init()
 			}
 			break;
 		}
-		case 3: {
+		case 3:
+		case 4: {
 			format.Set24le(0xFF, 0xFF00, 0xFF0000);
 			break;
 		}
@@ -521,6 +522,18 @@ Raster::Line JPGRaster::Data::GetLine(int line)
 	while(next_line++ < line)
 		jpeg_read_scanlines(&cinfo, rowptr, 1);
 	jpeg_read_scanlines(&cinfo, rowptr, 1);
+
+	if(cinfo.output_components == 4) { 
+		/* Convert CMYK scanline to RGB */
+		JSAMPLE k;
+		for(int i = 0, j = 0; i < row_bytes_4; i++){			
+			k = GETJSAMPLE(rowbuf[i+3]);
+			rowbuf[j++] = GETJSAMPLE(rowbuf[i++]) * k / 255;
+		    rowbuf[j++] = GETJSAMPLE(rowbuf[i++]) * k / 255;
+		    rowbuf[j++] = GETJSAMPLE(rowbuf[i++]) * k / 255;
+		}	
+	}
+
 	return Raster::Line(rowbuf, &owner, true);
 }
 
