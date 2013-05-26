@@ -185,7 +185,7 @@ subctrl TextCtrl {
 			px = (sz.cx - textsize.cx) / 2;
 		if(.SetAlign == "ALIGN_RIGHT")
 			px = sz.cx - textsize.cx;
-		w.DrawSmartText(px, (sz.cy - textsize.cy) / 2, .SetLabel, .SetFont, .SetInk);
+		w.DrawSmartText(px, (sz.cy - textsize.cy) / 2, .SetLabel, .SetFont, .SetInk, sz.cx);
 	}
 };
 
@@ -212,7 +212,7 @@ ctrl Label {
 			px = (sz.cx - textsize.cx) / 2;
 		if(.SetAlign == "ALIGN_RIGHT")
 			px = sz.cx - textsize.cx;
-		w.DrawSmartText(px, (sz.cy - textsize.cy) / 2, .SetLabel, .SetFont, .SetInk);
+		w.DrawSmartText(px, (sz.cy - textsize.cy) / 2, .SetLabel, .SetFont, .SetInk, sz.cx);
 	}
 	Sample() {
 		.SetLabel = "Label";
