@@ -21,8 +21,6 @@ file
 	tab8.cpp,
 	tab9.cpp,
 	tab10.cpp,
-	tab11.cpp,
-	tabPie.cpp,
 	symbol.iml;
 
 mainconfig
