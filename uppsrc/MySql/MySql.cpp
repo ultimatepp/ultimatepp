@@ -46,6 +46,14 @@ static const char *sEmpNull(const char *s) {
 	return s && *s == '\0' ? NULL : s;
 }
 
+INITBLOCK {
+	mysql_library_init(0, NULL, NULL);
+}
+
+EXITBLOCK {
+	mysql_library_end();
+}
+
 bool MySqlSession::DoConnect()
 {
 	mysql = mysql_init((MYSQL*) 0);
