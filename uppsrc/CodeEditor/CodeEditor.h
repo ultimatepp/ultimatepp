@@ -207,8 +207,8 @@ protected:
 	EditorBar   bar;
 	Vector<int> line2;
 
-	static Index<String> keyword[HIGHLIGHT_COUNT];
-	static Index<String> name[HIGHLIGHT_COUNT];
+	static Vector< Index<String> > keyword;
+	static Vector< Index<String> > name;
 	static Index<String> kw_upp;
 	static int kw_macros, kw_logs, kw_sql_base, kw_sql_func;
 
@@ -336,7 +336,6 @@ protected:
 	struct HlSt;
 	
 	static int  InitUpp(const char **q);
-	static void InitKeywords();
 
 	const wchar *HlString(HlSt& hls, const wchar *p);
 
@@ -405,6 +404,8 @@ private:
 	HlStyle  hl_style[HL_COUNT];
 
 public:
+	static int  LoadSyntax(const char *keywords[], const char *names[]);
+
 	struct MouseTip {
 		int            pos;
 		Value          value;
@@ -547,6 +548,7 @@ public:
 	virtual ~CodeEditor();
 
 	static const Index<String>& CppKeywords();
+	static void InitKeywords();
 };
 
 END_UPP_NAMESPACE
