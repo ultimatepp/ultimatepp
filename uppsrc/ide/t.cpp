@@ -538,13 +538,13 @@ void Ide::SyncT(int kind)
 					tf.file = pk.file[iFile];
 					tf.map = tmap;
 					tf.MakeLS();
+					// mark that we've found a local translation file
+					localT = true;
+					
+					// store index of main package translation(s) file(s)
+					if(iPackage == 0)
+						mainsT.Add(tfile.GetCount() - 1);
 				}
-				// mark that we've found a local translation file
-				localT = true;
-				
-				// store index of main package translation(s) file(s)
-				if(iPackage == 0)
-					mainsT.Add(tfile.GetCount() - 1);
 			}
 		}
 		// if no local translation file(s), we append translation to
