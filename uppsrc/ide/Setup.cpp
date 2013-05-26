@@ -471,7 +471,7 @@ void Ide::SetupFormat() {
 		font2 = f2.Get();
 		editortabsize = Nvl((int)~edt.tabsize, 4);
 		rtvr.Retrieve();
-		console.SetSlots(hydra1_threads);
+		console.SetSlots(minmax(hydra1_threads, 1, 256));
 		hilite_scope = hs;
 		if(indent_spaces)
 			indent_amount = ~edt.indent_amount;
