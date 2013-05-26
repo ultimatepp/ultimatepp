@@ -217,7 +217,7 @@ void ChHostSkin()
 					hs.look[i] = s.look[i];
 			else {
 				ChGtkNew(button, "button", GTK_BOX);
-				hs.look[0] = GtkMakeCh(2|GTKELEMENT_TABFLAG, /*0*/4, Rect(6, 3, 6, 0));
+				hs.look[0] = GtkMakeCh(2|GTKELEMENT_TABFLAG, 4, Rect(6, 3, 6, 0));
 				hs.look[1] = GtkMakeCh(2|GTKELEMENT_TABFLAG, 2, Rect(6, 3, 6, 0));
 				hs.look[2] = GtkMakeCh(1|GTKELEMENT_TABFLAG, 1, Rect(6, 3, 6, 0));
 				hs.look[3] = GtkMakeCh(2|GTKELEMENT_TABFLAG, 4, Rect(6, 3, 6, 0));
@@ -539,6 +539,7 @@ void ChHostSkin()
 	static int shadowtype;
 	static GtkWidget *top_item;
 	static GtkWidget *menu_item;
+	static GtkWidget *menu;
 	if(!popup) {
 		gtk_widget_style_get(bar, "shadow_type", &shadowtype, NULL);
 		top_item = gtk_menu_item_new_with_label("M");
@@ -551,6 +552,7 @@ void ChHostSkin()
 		gtk_widget_show(popup);
 		GTK_MENU_SHELL(bar)->active = true;
 		menu_item = gtk_menu_item_new_with_label("M");
+		menu = gtk_menu_new ();
 		gtk_menu_shell_append(GTK_MENU_SHELL(popup), menu_item);
 		gtk_widget_realize(menu_item);
 		gtk_widget_show(menu_item);
@@ -559,9 +561,10 @@ void ChHostSkin()
 	Image mimg = GetGTK(popup, 0, 2, "menu", GTK_BGBOX, 32, 32);
 	Color c = mimg[16][16];
 	Value rlook;
-	if(!IsNull(c)/* && Diff(c, SColorPaper()) < 200*/)
+	if(!IsNull(c))
 		SColorMenu_Write(c);
 	{
+		
 		MenuBar::Style& s = MenuBar::StyleDefault().Write();
 		s.pullshift.y = 0;
 		int m = ImageMargin(mimg, 4, 5);
@@ -581,8 +584,9 @@ void ChHostSkin()
 		ChGtkNew(top_item, "menuitem", GTK_BOX);
 		if(gtk_major_version > 2 || (gtk_major_version == 2 && gtk_minor_version >= 1))
 			sw = GtkInt("selected_shadow_type");
+		
 		s.topitemtext[0] = ChGtkColor(0, top_item);
-		s.topitemtext[1] = ChGtkColor(1, top_item);
+		s.topitemtext[1] = ChGtkColor(1, menu);
 		s.topitemtext[2] = ChGtkColor(2, top_item);
 		SColorMenuText_Write(s.topitemtext[1]);
 		s.topitem[1] = s.topitem[0];
@@ -603,6 +607,7 @@ void ChHostSkin()
 		TopSeparator1_Write(s.breaksep.l1);
 		s.breaksep.l2 = Null;
 	}
+
 	{
 		ToolBar::Style& s = ToolBar::StyleDefault().Write();
 		static GtkWidget *toolbar;
