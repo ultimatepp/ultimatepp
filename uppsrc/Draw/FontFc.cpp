@@ -21,6 +21,12 @@ void GetStdFontSys(String& name, int& height)
 
 static FT_Library sFTlib;
 
+EXITBLOCK 
+{
+	if(sFTlib)
+		FT_Done_FreeType(sFTlib);
+}
+
 bool sInitFt(void)
 {
 	if(sFTlib)
