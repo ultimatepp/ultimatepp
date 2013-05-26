@@ -143,7 +143,7 @@ void Test()
 			Puts (" Not mounted");
 	}
 	Puts("\nOther Info:");
-	uint64 id = GetProcessId();
+	int64 id = GetProcessId();
 	Puts(Sprintf("Process Id:          %ld", id));
 	Puts(Format("Process name:        '%s'", GetProcessName(id)));
 	Puts(Format("Process file name:   '%s'", GetProcessFileName(id)));
@@ -168,7 +168,7 @@ void Test()
 	LaunchFile(fileTest);
 	{
 		TimeStop t;
-		uint64 windowId;
+		int64 windowId;
 		while(-1 == (windowId = GetWindowIdFromCaption("test.txt", false))) {
 			if (t.Elapsed() > 10000)
 				break;
@@ -198,7 +198,7 @@ void Test()
 	}
 	Puts("\nPress enter to terminate 'test.txt'");	TestGetchar();
 
-	uint64 processId;
+	int64 processId;
 	TimeStop t;
 	while(-1 == (processId = GetProcessIdFromWindowCaption("test.txt", false))) {
 		if (t.Elapsed() > 10000)
@@ -216,7 +216,7 @@ void Test()
 	Puts("\nPress enter to continue...");	TestGetchar();
 	
 	Puts("\nWindows list:");
-	Array<uint64> widL, pidL;
+	Array<int64> widL, pidL;
 	Array<String> name, fileName, caption;
 	GetWindowsList(widL, pidL, name, fileName, caption);
 	for (int i = 0; i < widL.GetCount(); ++i) {
