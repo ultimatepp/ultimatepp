@@ -455,7 +455,7 @@ void  Stream::Put(Stream& s, int64 size, dword click) {
 		dword n = s.Get(buffer, (int)min<int64>(click, size));
 		if(n == 0)
 			break;
-		Put(buffer.operator const byte *(), click);
+		Put(~buffer, n);
 		size -= n;
 	}
 }
