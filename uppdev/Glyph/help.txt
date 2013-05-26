@@ -286,3 +286,9 @@ GUI_APP_MAIN
 		RTIMING("Draw");
 	//	ParseQTF(txt).Paint(Zoom(2, 10), w, 0, 0, sz.cx);
 	}
+
+TIMING Painter        :  2.11 s  - 11.39 ms ( 2.11 s  / 185 ), min:  7.00 ms, max: 16.00 ms, nesting: 1 - 185
+TIMING Draw           : 117.99 ms - 637.79 us (118.00 ms / 185 ), min:  0.00 ns, max:  7.00 ms, nesting: 1 - 185
+TIMING Render glyph   :  5.99 ms - 49.95 us ( 6.00 ms / 120 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 120
+TIMING Paint glyph    : 944.23 ms -  6.49 us (951.00 ms / 145410 ), min:  0.00 ns, max:  3.00 ms, nesting: 1 - 145410
+TIMING SDraw          :  1.10 s  -  5.94 ms ( 1.10 s  / 185 ), min:  4.00 ms, max: 18.00 ms, nesting: 1 - 185

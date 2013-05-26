@@ -81,6 +81,13 @@ void MyApp::Paint(Draw& w)
 		RTIMING("Draw");
 		txt.Paint(Zoom(2, 10), w, 0, 0, sz.cx);
 	}
+	if(1) {
+		RTIMING("Painter");
+		ImageBuffer ib(sz);
+		BufferPainter sw(ib);
+		sw.Clear(White());
+		txt.Paint(Zoom(2, 10), sw, 0, 0, sz.cx);
+	}
 /*
 	fw.cloff.Add();
 	fw.cloff.Top().offset = Point(0, 0);

@@ -50,6 +50,7 @@ GUI_APP_MAIN
 //	w.ToolWindow();
 	w.SetRect(0, 0, 700, 500);
 	w.Sizeable().Zoomable();
+	e.SetReadOnly();
 	w.Add(e.SizePos());
 	w.Run();
 /*	
