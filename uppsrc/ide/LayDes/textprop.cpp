@@ -168,11 +168,11 @@ struct SmartTextEditProperty : public TextEditProperty<Editor> {
 				s++;
 			}
 			else
-			if(*s == '\\' && s[1] == 'b') {
-				r.Cat('\b');
-				s++;
-			}
-			else
+//			if(*s == '\\' && s[1] == 'b') {
+//				r.Cat('\b');
+//				s++;
+//			}
+//			else
 			if(*s == '\n' || *s >= ' ')
 				r.Cat(*s);
 		}
@@ -184,9 +184,9 @@ struct SmartTextEditProperty : public TextEditProperty<Editor> {
 			if(*s == '\1')
 				r.Cat("\\1");
 			else
-			if(*s == '\b')
-				r.Cat("\\b");
-			else
+//			if(*s == '\b')
+//				r.Cat("\\b");
+//			else
 			if(*s == '\n' || *s >= ' ')
 				r.Cat(*s);
 		}
