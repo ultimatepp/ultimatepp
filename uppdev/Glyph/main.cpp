@@ -27,6 +27,17 @@ struct MyApp : TopWindow {
 
 Image MyApp::CursorImage(Point p, dword keyflags)
 {
+	static Image img;
+	ONCELOCK {
+		SImageDraw w(64, 64);
+		w.DrawRect(0, 0, 64, 64, White());
+		w.DrawText(2, 2, "A", Roman(60), Black());
+		for(int x = -2; x <= 2; x++)
+			for(int y = -2; y <= 2; y++)
+				w.Alpha().DrawText(2 + x, 2 + y, "A", Roman(60), White());
+		img = w;
+	}
+	return img;
 	return GlyphImg::cursor1();
 }
 
@@ -105,14 +116,9 @@ void MyApp::Paint(Draw& w)
 
 //	clip.Add(sz);
 
-#if 0
 	TestDraw fw;
 	fw.draw = &w;
 	fw.Init(sz);
-#else
-	SImageDraw fw(sz);
-	fw.DrawRect(sz, WhiteGray());
-#endif
 	
 //	fw.DrawText(100, 100, "Ahoj!", Roman(400));
 
@@ -134,6 +140,7 @@ void MyApp::Paint(Draw& w)
 		sw.Clear(White());
 		txt.Paint(Zoom(2, 10), sw, 0, 0, sz.cx);
 	}
+	
 /*
 	fw.cloff.Add();
 	fw.cloff.Top().offset = Point(0, 0);
@@ -148,8 +155,6 @@ void MyApp::Paint(Draw& w)
 //	fw.DrawText(sz.cx / 2, sz.cy / 2, -3600 * Bearing(p - sz / 2) / M_2PI,
 //	            "Hello world! abcdefghijklmnopqrstuv", Roman(40).Underline(), Red());
 	fw.DrawImage(p.x, p.y, CtrlImg::reporticon(), RectC(0, 0, 20, 12), Blue());
-	
-	w.DrawImage(0, 0, fw.PickResult());
 }
 
 GUI_APP_MAIN
