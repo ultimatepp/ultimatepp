@@ -20,17 +20,30 @@ struct TestDraw : SDraw {
 };
 
 
-struct SImageDraw : SDraw {
-	ImageBuffer b;
+class SImageDraw1 : public SDraw {
+protected:
+	ImageBuffer ib;
+	friend class SImageDraw;
 
+public:
 	virtual void  PutImage(Point p, const Image& m, const Rect& src);
 	virtual void  PutRect(const Rect& r, Color color);
-	
-	Image PickResult()       { return b; }
 
+	void Create(Size sz);
+};
+
+class SImageDraw : public SImageDraw1 {
+	SImageDraw1 alpha;
+	
+	bool has_alpha;
+
+public:
+	Draw& Alpha();
+
+	operator Image() const;
+	
 	SImageDraw(Size sz);
 	SImageDraw(int cx, int cy);
-	~SImageDraw();
 };
 
 
