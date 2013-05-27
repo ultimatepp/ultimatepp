@@ -1,5 +1,6 @@
 #include "glyph.h"
 
+#if 0
 
 Image RenderGlyph(Font fnt, int chr, Color color, int angle)
 {
@@ -84,3 +85,5 @@ Image DecompressGlyph(const String& g, Color c)
 	Fill(t, RGBAZero(), te - t);
 	return ib;
 }
+
+#endif

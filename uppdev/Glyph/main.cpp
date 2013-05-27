@@ -104,18 +104,22 @@ void MyApp::Paint(Draw& w)
 		clip.Add(RectC(Random(sz.cx), Random(sz.cy), Random(100), Random(100)));
 
 //	clip.Add(sz);
-	
+
+#if 0
 	TestDraw fw;
-	fw.Cy(sz.cy);
 	fw.draw = &w;
 	fw.Init(sz);
+#else
+	SImageDraw fw(sz);
+	fw.DrawRect(sz, WhiteGray());
+#endif
 	
 //	fw.DrawText(100, 100, "Ahoj!", Roman(400));
 
 	PolyPolyPolygon(fw);
 
 	RichText txt = ParseQTF(LoadFile(GetDataFile("text.qtf")));
-	if(0) {
+	if(1) {
 		RTIMING("SDraw");
 		txt.Paint(Zoom(2, 10), fw, 0, 0, sz.cx);
 	}
@@ -123,7 +127,7 @@ void MyApp::Paint(Draw& w)
 		RTIMING("Draw");
 		txt.Paint(Zoom(2, 10), w, 0, 0, sz.cx);
 	}
-	if(0) {
+	if(1) {
 		RTIMING("Painter");
 		ImageBuffer ib(sz);
 		BufferPainter sw(ib);
@@ -144,6 +148,8 @@ void MyApp::Paint(Draw& w)
 //	fw.DrawText(sz.cx / 2, sz.cy / 2, -3600 * Bearing(p - sz / 2) / M_2PI,
 //	            "Hello world! abcdefghijklmnopqrstuv", Roman(40).Underline(), Red());
 	fw.DrawImage(p.x, p.y, CtrlImg::reporticon(), RectC(0, 0, 20, 12), Blue());
+	
+	w.DrawImage(0, 0, fw.PickResult());
 }
 
 GUI_APP_MAIN
