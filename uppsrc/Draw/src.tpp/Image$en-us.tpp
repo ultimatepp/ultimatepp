@@ -254,6 +254,12 @@ t][@(0.0.255) `&]_[*@3 srect])&]
 of ImageBuffer [%-*@3 dest].&]
 [s3;%% &]
 [s4; &]
+[s5;:Fill`(ImageBuffer`&`,const Rect`&`,RGBA`): [@(0.0.255) void]_[* Fill]([_^ImageBuffer^ I
+mageBuffer][@(0.0.255) `&]_[*@3 dest], [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 r
+ect], [_^RGBA^ RGBA]_[*@3 color])&]
+[s2;%% Fills rectangular are [%-*@3 rect] with [%-*@3 color] .&]
+[s3;%% &]
+[s4; &]
 [s5;:Copy`(Image`&`,Point`,const Image`&`,const Rect`&`): [@(0.0.255) void]_[* Copy]([_^Image^ I
 mage][@(0.0.255) `&]_[*@3 dest], [_^Point^ Point]_[*@3 p], [@(0.0.255) const]_[_^Image^ Image
 ][@(0.0.255) `&]_[*@3 src], [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 srect])&]
@@ -274,6 +280,12 @@ mage][@(0.0.255) `&]_[*@3 dest], [_^Point^ Point]_[*@3 p], [@(0.0.255) const]_[_
 ][@(0.0.255) `&]_[*@3 src], [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 srect])&]
 [s2;%% Mixes using alpha information Rect [%-*@3 srect] of Image [%-*@3 src] 
 into Point [%-*@3 p] of Image [%-*@3 dest].&]
+[s3;%% &]
+[s4; &]
+[s5;:Fill`(Image`&`,const Rect`&`,RGBA`): [@(0.0.255) void]_[* Fill]([_^Image^ Image][@(0.0.255) `&
+]_[*@3 dest], [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 rect], 
+[_^RGBA^ RGBA]_[*@3 color])&]
+[s2;%% Fills rectangular are [%-*@3 rect] with [%-*@3 color].&]
 [s3;%% &]
 [s4; &]
 [s5;:OverStraightOpaque`(ImageBuffer`&`,Point`,const Image`&`,const Rect`&`): [@(0.0.255) v

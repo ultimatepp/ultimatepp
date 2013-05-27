@@ -7,9 +7,11 @@ Image WithHotSpot(const Image& m, int x1, int y1);
 
 void Over(ImageBuffer& dest, Point p, const Image& src, const Rect& srect);
 void Copy(ImageBuffer& dest, Point p, const Image& src, const Rect& srect);
+void Fill(ImageBuffer& dest, const Rect& rect, RGBA color);
 
 void  Copy(Image& dest, Point p, const Image& src, const Rect& srect);
 void  Over(Image& dest, Point p, const Image& src, const Rect& srect);
+void  Fill(Image& dest, const Rect& rect, RGBA color);
 
 void  OverStraightOpaque(ImageBuffer& dest, Point p, const Image& src, const Rect& srect);
 void  OverStraightOpaque(Image& dest, Point p, const Image& _src, const Rect& srect);

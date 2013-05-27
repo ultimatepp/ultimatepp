@@ -31,7 +31,7 @@ Image CreateImage(Size sz, Color color)
 	return CreateImage(sz, (RGBA)color);
 }
 
-Size DstSrc(ImageBuffer& dest, Point& p, const Image& src, Rect& sr)
+force_inline Size DstSrc(ImageBuffer& dest, Point& p, const Image& src, Rect& sr)
 {
 	if(p.x < 0) {
 		sr.left += -p.x;
@@ -49,7 +49,7 @@ Size DstSrc(ImageBuffer& dest, Point& p, const Image& src, Rect& sr)
 }
 
 void DstSrcOp(ImageBuffer& dest, Point p, const Image& src, const Rect& srect,
-              void (*op)(RGBA *t, const RGBA *s, int n))
+                           void (*op)(RGBA *t, const RGBA *s, int n))
 {
 	Rect sr = srect;
 	Size sz = DstSrc(dest, p, src, sr);
@@ -66,6 +66,15 @@ void Copy(ImageBuffer& dest, Point p, const Image& src, const Rect& srect)
 void Over(ImageBuffer& dest, Point p, const Image& src, const Rect& srect)
 {
 	DstSrcOp(dest, p, src, srect, AlphaBlend);
+}
+
+void Fill(ImageBuffer& dest, const Rect& rect, RGBA color)
+{
+	Rect r = dest.GetSize() & rect;
+	int cx = r.GetWidth();
+	if(cx)
+		for(int y = r.top; y < r.bottom; y++)
+			Fill(dest[y] + r.left, color, cx);
 }
 
 void OverStraightOpaque(ImageBuffer& dest, Point p, const Image& src, const Rect& srect)
@@ -86,6 +95,13 @@ void  Over(Image& dest, Point p, const Image& _src, const Rect& srect)
 	Image src = _src;
 	ImageBuffer b(dest);
 	Over(b, p, src, srect);
+	dest = b;
+}
+
+void Fill(Image& dest, const Rect& rect, RGBA color)
+{
+	ImageBuffer b(dest);
+	Fill(b, rect, color);
 	dest = b;
 }
 

@@ -4,6 +4,14 @@
 
 NAMESPACE_UPP
 
+Image RenderGlyphByPainter(Point at, int angle, int chr, Font fnt, Color color, Size sz);
+
+Image SDraw::RenderGlyph(Point at, int angle, int chr, Font fnt, Color color, Size sz)
+{
+	ASSERT(HasPainter());
+	return RenderGlyphByPainter(at, angle, chr, fnt, color, sz);
+}
+
 struct sMakeTextGlyph : public ImageMaker
 {
 	int    chr;

@@ -411,19 +411,27 @@ bool Draw::IsPainting(int x, int y, int cx, int cy) const
 	return IsPainting(RectC(x, y, cx, cy));
 }
 
-static void (*sIgfn)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos, int mode);
-static void (*sIwfn)(ImageBuffer& ib, const Drawing& p, int mode);
+static void  (*sIgfn)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos, int mode);
+static void  (*sIwfn)(ImageBuffer& ib, const Drawing& p, int mode);
+static Image (*sRG)(Point at, int angle, int chr, Font fnt, Color color, Size sz);
 
 void RegisterPaintingFns__(void (*ig)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos, int mode),
-                           void (*iw)(ImageBuffer& ib, const Drawing& p, int mode))
+                           void (*iw)(ImageBuffer& ib, const Drawing& p, int mode),
+                           Image (*rg)(Point at, int angle, int chr, Font fnt, Color color, Size sz))
 {
 	sIgfn = ig;
 	sIwfn = iw;
+	sRG = rg;
 }
 
 bool HasPainter()
 {
-	return sIgfn && sIwfn;
+	return sIgfn && sIwfn && sRG;
+}
+
+Image RenderGlyphByPainter(Point at, int angle, int chr, Font fnt, Color color, Size sz)
+{
+	return sRG ? (*sRG)(at, angle, chr, fnt, color, sz) : Image();
 }
 
 void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos, int mode)

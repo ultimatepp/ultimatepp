@@ -40,7 +40,7 @@ private:
 public:
 	virtual void  PutImage(Point p, const Image& m, const Rect& src) = 0;
 	virtual void  PutRect(const Rect& r, Color color) = 0;
-	virtual Image RenderGlyph(Point at, int angle, int chr, Font fnt, Color color, Size sz) = 0;
+	virtual Image RenderGlyph(Point at, int angle, int chr, Font fnt, Color color, Size sz);
 
 	void Init(const Rect& r);
 };
