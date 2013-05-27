@@ -261,7 +261,8 @@ void PaintImageBufferDrawingFn(ImageBuffer& ib, const Drawing& iw, int mode)
 }
 
 void RegisterPaintingFns__(void (*ig)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos, int mode),
-                           void (*iw)(ImageBuffer& ib, const Drawing& p, int mode));
+                           void (*iw)(ImageBuffer& ib, const Drawing& p, int mode),
+                           Image (*rg)(Point at, int angle, int chr, Font fnt, Color color, Size sz));
 
 void ImageAnyDrawPainter(Draw *(*f)(Size sz), Image (*e)(Draw *w));
 
@@ -276,10 +277,18 @@ static Image sEP(Draw *w)
 	return ip ? (Image)(*ip) : Image();
 }
 
+static Image sRenderGlyph(Point at, int angle, int chr, Font fnt, Color color, Size sz)
+{
+	ImageBuffer ib(sz);
+	BufferPainter sw(ib);
+	sw.Clear(RGBAZero());
+	sw.DrawText(at.x, at.y, angle, WString(chr, 1), fnt, color);
+	return ib;
+}
 
 INITBLOCK
 {
-	RegisterPaintingFns__(PaintImageBufferPaintingFn, PaintImageBufferDrawingFn);
+	RegisterPaintingFns__(PaintImageBufferPaintingFn, PaintImageBufferDrawingFn, sRenderGlyph);
 	ImageAnyDrawPainter(sCP, sEP);
 }
 

@@ -4,6 +4,7 @@ NAMESPACE_UPP
 
 void SDraw::Init(const Rect& r)
 {
+	Cy(r.GetWidth());
 	Cloff& c = cloff.Add();
 	c.clip.Add(r);
 	c.offset = Point(0, 0);
