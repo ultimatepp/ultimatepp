@@ -274,12 +274,12 @@ ctrl LabelBox {
 		d = ts.cy / 2;
 		if(2 * GetSmartTextSize("X").cy > sz.cy) {
 			d = sz.cy / 2;
-			w.DrawSmartText(d, (sz.cy - ts.cy) / 2, .SetLabel, .SetFont, .SetInk);
+			w.DrawSmartText(d, (sz.cy - ts.cy) / 2, .SetLabel, .SetFont, .SetInk, sz.cx);
 			w.DrawRect(1, d, d - 1, 1, :SGray);
 			w.DrawRect(1, d + 1, d - 1, 1, :SWhite);
 		}
 		else {
-			w.DrawSmartText(d, 0, .SetLabel, .SetFont, .SetInk);
+			w.DrawSmartText(d, 0, .SetLabel, .SetFont, .SetInk, sz.cx);
 			w.DrawRect(0, d + 2, 1, sz.cy - d - 4, :SGray);
 			w.DrawRect(1, d + 2, 1, sz.cy - d - 4, :SWhite);
 			w.DrawRect(sz.cx - 2, d, 1, sz.cy - d - 2, :SGray);
@@ -333,9 +333,13 @@ ctrl Button {
 		n = int(sz.cy / 8);
 		w.DrawRect(r.left, r.top, sz.cx, sz.cy, :SLtGray);
 		textsize = GetSmartTextSize(.SetLabel, .SetFont);
-		px = (sz.cx - textsize.cx) / 2;
 		py = (sz.cy - textsize.cy) / 2;
-		w.DrawSmartText(px + r.left, py + r.top, .SetLabel, .SetFont, :SBlack);
+		if((.SetLabel)[0] == 1)
+			w.DrawSmartText(r.left, r.top + py, .SetLabel, .SetFont, :SBlack, sz.cx);
+		else {
+			px = (sz.cx - textsize.cx) / 2;
+			w.DrawSmartText(px + r.left, py + r.top, .SetLabel, .SetFont, :SBlack, sz.cx);
+		}
 	}
 }
 
