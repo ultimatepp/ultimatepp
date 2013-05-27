@@ -145,7 +145,8 @@ void DDARasterizer::FatLine(Point p2)
 
 DDARasterizer& DDARasterizer::Move(Point p)
 {
-	Close();
+	if(pseg)
+		Close();
 	p0 = p1 = p;
 	j1 = j2 = Null;
 	return *this;
