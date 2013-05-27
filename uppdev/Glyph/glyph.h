@@ -17,7 +17,21 @@ struct TestDraw : SDraw {
 
 	virtual void  PutImage(Point p, const Image& m, const Rect& src);
 	virtual void  PutRect(const Rect& r, Color color);
-	virtual Image RenderGlyph(Point at, int angle, int chr, Font fnt, Color color, Size sz);
 };
+
+
+struct SImageDraw : SDraw {
+	ImageBuffer b;
+
+	virtual void  PutImage(Point p, const Image& m, const Rect& src);
+	virtual void  PutRect(const Rect& r, Color color);
+	
+	Image PickResult()       { return b; }
+
+	SImageDraw(Size sz);
+	SImageDraw(int cx, int cy);
+	~SImageDraw();
+};
+
 
 #endif

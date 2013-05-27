@@ -87,15 +87,6 @@ void SDLDraw::PutRect(const Rect& r, Color color)
 	}
 }
 
-Image SDLDraw::RenderGlyph(Point at, int angle, int chr, Font fnt, Color color, Size sz)
-{
-	ImageBuffer ib(sz);
-	BufferPainter sw(ib);
-	sw.Clear(RGBAZero());
-	sw.DrawText(at.x, at.y, angle, WString(chr, 1), fnt, color);
-	return ib;
-}
-
 void SDLDraw::Set(SDLWindow& win_)
 {
 	win = win_.ren ? &win_ : NULL;
