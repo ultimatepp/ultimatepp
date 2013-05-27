@@ -67,6 +67,7 @@ file
 	SDrawPut.cpp,
 	SDrawText.cpp,
 	SDraw.cpp,
+	SImageDraw.cpp,
 	Chameleon readonly separator,
 	Cham.h,
 	Cham.cpp,
