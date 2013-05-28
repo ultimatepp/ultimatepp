@@ -164,7 +164,7 @@ void AutoSetup()
 	if(!FileExists(AppendFileName(vc9_64, "cl.exe")))
 		vc9_64 = AppendFileName(bin9, "VC\\Bin\\amd64");
 	if(bin9.GetLength() && FileExists(AppendFileName(vc9_64, "cl.exe")))
-		msc8.create64 = true;
+		msc9.create64 = true;
 	msc9.method64 <<= "MSC9x64";
 
 
