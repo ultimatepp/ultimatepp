@@ -181,8 +181,7 @@ void  RichTextView::LeftDown(Point p, dword keyflags)
 {
 	int pos = GetPointPos(p);
 	if(pos < 0) {
-		cursor = 0;
-		anchor = 0;
+		cursor = anchor = 0;
 		return;
 	}
 	String link = GetLink(pos, p);
@@ -195,6 +194,23 @@ void  RichTextView::LeftDown(Point p, dword keyflags)
 		RefreshSel();
 		SetFocus();
 		SetCapture();
+	}
+}
+
+void RichTextView::LeftDouble(Point p, dword keyflags)
+{
+	int pos = GetPointPos(p);
+	if(IsLeNum(text[pos])) {
+		anchor = pos;
+		while(anchor > 0 && IsLeNum(text[anchor - 1]))
+			anchor--;
+		cursor = pos;
+		while(cursor + 1 < text.GetLength() && IsLeNum(text[cursor]))
+			cursor++;
+		while(cursor + 1 < text.GetLength() && text[cursor] == ' ')
+			cursor++;
+		RefreshSel();
+		SetFocus();
 	}
 }
 
