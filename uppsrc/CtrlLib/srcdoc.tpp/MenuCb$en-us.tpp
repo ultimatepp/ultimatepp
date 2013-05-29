@@ -124,4 +124,4 @@ value of the [* callback] function.  For the FileMenu example above,
 the return type of the [* callback] function is Callback1<Bar`&>. 
 (In U`+`+, Callback classes start with upper case C and callback 
 functions have lower case c). &]
-[s0; ]
+[s0; ]]

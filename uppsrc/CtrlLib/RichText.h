@@ -10,6 +10,7 @@ public:
 	virtual void  LeftDown(Point p, dword keyflags);
 	virtual void  MouseMove(Point p, dword keyflags);
 	virtual void  LeftRepeat(Point p, dword keyflags);
+	virtual void  LeftDouble(Point p, dword keyflags);
 	virtual void  RightDown(Point p, dword keyflags);
 
 private:
@@ -69,6 +70,7 @@ public:
 
 	int             GetLength() const                         { return text.GetLength(); }
 
+	bool            IsSelection() const                       { return anchor != cursor; }
 	void            Copy();
 
 	void            ScrollUp()                                { sb.PrevLine(); }
