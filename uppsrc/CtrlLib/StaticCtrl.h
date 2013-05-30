@@ -41,7 +41,11 @@ public:
 	virtual void   AssignAccessKeys(dword used);
 	virtual Rect   GetVoidRect() const;
 
+	Color color;
+
 public:
+	LabelBox& SetColor(Color c)          { color = c; return *this; }
+
 	LabelBox();
 	virtual ~LabelBox();
 	LabelBox& operator=(const char *s)   { SetText(s); return *this; }
