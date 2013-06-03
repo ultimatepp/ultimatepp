@@ -481,9 +481,9 @@ void Ctrl::Proc()
 		return;
 	}
 	case GDK_CONFIGURE: {
-		Rect rect = CurrentEvent.value;
-		if(GetRect() != rect)
-			SetWndRect(rect);
+			Rect rect = CurrentEvent.value;
+			if(GetRect() != rect)
+				SetWndRect(rect);
 		}
 		break;
 	default:
