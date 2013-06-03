@@ -28,7 +28,6 @@ struct SDLDraw : SDraw {
 
 	virtual void  PutImage(Point p, const Image& m, const Rect& src);
 	virtual void  PutRect(const Rect& r, Color color);
-	virtual Image RenderGlyph(Point at, int angle, int chr, Font fnt, Color color, Size sz);
 
 	void Set(SDLWindow& win_);
 
