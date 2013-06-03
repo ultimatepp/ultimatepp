@@ -1,0 +1,4 @@
+#ifndef _DockWindow_icpp_init_stub
+#define _DockWindow_icpp_init_stub
+#include "CtrlLib/init"
+#endif
