@@ -344,6 +344,8 @@ template <class T>
 void InVector<T>::Remove(int pos, int n)
 {
 	ASSERT(pos >= 0 && pos + n <= GetCount());
+	if(n == 0)
+		return;
 	int off;
 	int blki = FindBlock(pos, off);
 	count -= n;
