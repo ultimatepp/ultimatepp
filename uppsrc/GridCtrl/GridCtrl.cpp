@@ -99,7 +99,8 @@ GridCtrl::GridCtrl() : holder(*this)
 	row_changing           = true;
 	edit_mode              = GE_ROW;
 	one_click_edit         = false;
-	coloring_mode           = 0;
+	goto_first_edit        = true; 
+	coloring_mode          = 0;
 	isedit                 = false;
 	genr_ctrls             = 0;
 	edit_ctrls             = false;
@@ -6582,7 +6583,7 @@ bool GridCtrl::StartEdit()
 	WhenStartEdit();
 	
 	SetCtrlsData();
-	UpdateCtrls(UC_SHOW | UC_GOFIRST | UC_CURSOR | UC_CTRLS);
+	UpdateCtrls(UC_SHOW | UC_CURSOR | UC_CTRLS | (goto_first_edit ? UC_GOFIRST : 0));
 	return true;
 }
 

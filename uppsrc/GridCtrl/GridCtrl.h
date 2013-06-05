@@ -864,6 +864,7 @@ class GridCtrl : public Ctrl
 		int  resize_row_mode;
 		int  edit_mode;
 		bool one_click_edit:1;
+		bool goto_first_edit:1;
 
 		bool inserting:1;
 		bool appending:1;
@@ -1091,6 +1092,7 @@ class GridCtrl : public Ctrl
 		GridCtrl& EditRow()         			  { edit_mode           = GE_ROW;  return *this; }
 		GridCtrl& EditCell()         			  { edit_mode           = GE_CELL; return *this; }
 		GridCtrl& OneClickEdit(bool b = true)     { one_click_edit      = b; return *this; }
+		GridCtrl& GotoFirstEdit(bool b = true)    { goto_first_edit     = b; return *this; }
 		GridCtrl& Absolute()					  { return ResizeColMode(0);               }
 		GridCtrl& Proportional()				  { return ResizeColMode(1);               }
 		GridCtrl& SelectRow(bool b = true)        { select_row          = b; return *this; }
