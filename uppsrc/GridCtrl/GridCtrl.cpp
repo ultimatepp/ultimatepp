@@ -997,7 +997,17 @@ Value GridCtrl::GetItemValue(const Item& it, int id, const ItemRect& hi, const I
 		? GetConvertedColumn(id, it.val)
 		: it.val;
 	
-	return val;	
+	return val;
+}
+
+Value GridCtrl::GetAttrTextVal(const Value& val)
+{
+	if(IsType<AttrText>(val))
+	{
+		const AttrText& t = ValueTo<AttrText>(val);
+		return t.text;
+	}
+	return val;
 }
 
 void GridCtrl::GetItemAttrs(const Item& it, const Value& value, int r, int c, const ItemRect& vi, const ItemRect& hi, dword& style, GridDisplay*& gd, Color& fg, Color& bg, Font& fnt)
@@ -1508,11 +1518,7 @@ void GridCtrl::Paint(Draw &w)
 					gd->row = i - fixed_cols;
 					gd->parent = this;
 
-					if(IsType<AttrText>(val))
-					{
-						const AttrText& t = ValueTo<AttrText>(val);
-						val = t.text;
-					}
+					val = GetAttrTextVal(val);
 					
 					gd->Paint(w, x, y, cx, cy,
 					          val, style,
@@ -1618,9 +1624,19 @@ void GridCtrl::DrawVertDragLine(Draw &w, int pos, int size, int dx, Color c)
 	w.DrawRect(1 + dx, pos, size - dx - 1, 2, c);
 }
 
-Value GridCtrl::GetStdConvertedValue(const Value& v)
+Value GridCtrl::GetStdConvertedValue(const Value& v) const
 {
-	return IsString(v) ? v : StdConvert().Format(v);
+	if(IsString(v))
+	{
+		return v;
+	}
+	else if(IsType<AttrText>(v))
+	{
+		const AttrText& t = ValueTo<AttrText>(v);
+		return t.text;
+	}
+	else
+		return StdConvert().Format(v);
 }
 
 Value GridCtrl::GetConvertedColumn(int col, const Value &v) const
@@ -1632,17 +1648,7 @@ Value GridCtrl::GetConvertedColumn(int col, const Value &v) const
 Value GridCtrl::GetStdConvertedColumn(int col, const Value &v) const
 {
 	Value val = GetConvertedColumn(col, v);
-	if(IsString(val))
-	{
-		return val;
-	}
-	else if(IsType<AttrText>(val))
-	{
-		const AttrText& t = ValueTo<AttrText>(val);
-		return t.text;
-	}
-	else
-		return StdConvert().Format(val);//GetStdConvertedValue(val);
+	return GetStdConvertedValue(val);
 }
 
 String GridCtrl::GetString(Id id) const
