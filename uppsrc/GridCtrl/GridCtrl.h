@@ -1598,7 +1598,7 @@ class GridCtrl : public Ctrl
 		ScrollBar& HorzScroll() { return sbx; }
 		ScrollBar& VertScroll() { return sby; }
 
-		Value GetStdConvertedValue(const Value& v);
+		Value GetStdConvertedValue(const Value& v) const;
 		Value GetConvertedColumn(int col, const Value& v) const;
 		Value GetStdConvertedColumn(int col, const Value& v) const;
 		String GetString(Id id) const;
@@ -1764,6 +1764,7 @@ class GridCtrl : public Ctrl
 		Value GetItemValue(const Item& it, int id, const ItemRect& hi, const ItemRect& vi);
 		void  GetItemAttrs(const Item& it, const Value& val, int r, int c, const ItemRect& vi, const ItemRect& hi, dword& style, GridDisplay*& gd, Color& fg, Color& bg, Font& fnt);
 		Item& GetItemSize(int &r, int &c, int &x, int &y, int &cx, int &cy, bool &skip, bool relx = true, bool rely = true);
+		Value GetAttrTextVal(const Value& val);
 		
 		Image HorzPosImage();
 		Image VertPosImage();
