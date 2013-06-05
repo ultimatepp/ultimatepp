@@ -334,7 +334,7 @@ ctrl Button {
 		w.DrawRect(r.left, r.top, sz.cx, sz.cy, :SLtGray);
 		textsize = GetSmartTextSize(.SetLabel, .SetFont);
 		py = (sz.cy - textsize.cy) / 2;
-		if((.SetLabel)[0] == 1)
+		if(count(.SetLabel) && (.SetLabel)[0] == 1)
 			w.DrawSmartText(r.left, r.top + py, .SetLabel, .SetFont, :SBlack, sz.cx);
 		else {
 			px = (sz.cx - textsize.cx) / 2;
