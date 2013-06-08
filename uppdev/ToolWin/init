@@ -1,0 +1,4 @@
+#ifndef _ToolWin_icpp_init_stub
+#define _ToolWin_icpp_init_stub
+#include "CtrlLib/init"
+#endif
