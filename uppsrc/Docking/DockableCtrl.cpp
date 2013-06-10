@@ -1,11 +1,10 @@
-#include "DockableCtrl.h"
-#include <Docking/DockCont.h>
+#include "Docking.h"
+
+NAMESPACE_UPP
 
 #define IMAGECLASS DockingImg
 #define IMAGEFILE <Docking/Docking.iml>
 #include <Draw/iml_source.h>
-
-NAMESPACE_UPP
 
 DockCont * DockableCtrl::GetContainer() const
 {

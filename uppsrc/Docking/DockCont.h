@@ -1,12 +1,3 @@
-#ifndef _Docking_DockCont_h_
-#define _Docking_DockCont_h_
-
-#include <Docking/DockMenu.h>
-#include <Docking/DockableCtrl.h>
-#include <Docking/DockTabBar.h>
-
-NAMESPACE_UPP
-
 class DockWindow;
 
 struct ImgButton : public Pusher {
@@ -23,31 +14,23 @@ struct ImgButton : public Pusher {
 		ImgButton& 	SetLook(const Value *_look) 		{ look = _look; Refresh(); return *this; }
 };
 
-#define DOCKCONT_WND_OFFSET 4 // Should get from API?
-
-class DockCont : public TopWindow {
+class DockCont : public ToolWin {
 public:
 	typedef DockCont CLASSNAME;
 
-	virtual void LeftDown(Point p, dword keyflags)		{ SetFocus(); }
 	virtual void RightDown(Point p, dword keyflags) 	{ WindowMenu(); }
 	
 	virtual void Layout();
 	virtual void ChildRemoved(Ctrl *child);
 	virtual void ChildAdded(Ctrl *child);
 	virtual bool Key(dword key, int count);
+
+
 /*	virtual void ChildGotFocus() 						{ handle.RefreshFocus(true); TopWindow::ChildGotFocus(); }
 	virtual void ChildLostFocus() 						{ handle.RefreshFocus(HasFocusDeep()); TopWindow::ChildLostFocus(); }
 	virtual void GotFocus() 							{ handle.RefreshFocus(true); }
 	virtual void LostFocus() 							{ handle.RefreshFocus(HasFocusDeep()); } */
 public:
-#if defined(PLATFORM_WIN32)
-	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
-#elif defined(PLATFORM_X11)
-	virtual void EventProc(XWindow& w, XEvent *event);
-	void Notify();
-#endif
-
 	enum DockState {
 		STATE_NONE = -1,
 		STATE_FLOATING,
@@ -55,6 +38,7 @@ public:
 		STATE_AUTOHIDE,
 		STATE_TABBED
 	};
+
 private:
 	class DockContMenu : public DockMenu {
 	public:
@@ -85,9 +69,9 @@ private:
 		Callback WhenContext;
 		Callback WhenLeftDrag;
 		Callback WhenLeftDouble;
-		DockContHandle() 										{ dc = NULL; focus = false; }
+		DockContHandle() 										{ dc = NULL; /*focus = false;*/ }
 		DockableCtrl *dc;
-		bool focus;
+//		bool focus;
 		virtual void FrameLayout(Rect& r);
 		virtual void FrameAddSize(Size& sz);
 		
@@ -99,8 +83,7 @@ private:
 		//void	RefreshFocus(bool _focus);
 		int		GetHandleSize(const DockableCtrl::Style& s) const;
 	};
-		
-	int 			dragging;
+	
 	DockState		dockstate;	
 	DockTabBar 		tabbar;
 	DockContHandle 	handle;
@@ -183,7 +166,6 @@ public:
 	void 			StateFloating(DockWindow& dock)				{ State(dock, STATE_FLOATING); Title(GetTitle()); }
 	void			StateAutoHide(DockWindow& dock)				{ State(dock, STATE_AUTOHIDE); Hide(); }
 	void			StateTabbed(DockWindow& dock)				{ State(dock, STATE_TABBED); Hide(); }	
-	void			StartMouseDrag();
 	
 	void			SetAllDockerPos();
 	
@@ -222,7 +204,3 @@ public:
 	
 	DockCont();		
 };
-
-END_UPP_NAMESPACE
-
-#endif

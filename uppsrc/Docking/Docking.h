@@ -2,13 +2,18 @@
 #define _Docking_Docking_h_
 
 #include <CtrlLib/CtrlLib.h>
-
-#include <Docking/DockableCtrl.h>
-#include <Docking/DockCont.h>
-#include <Docking/DockPane.h>
-#include <Docking/DockMenu.h>
+#include <TabBar/TabBar.h>
 
 NAMESPACE_UPP
+
+class DockWindow;
+
+#include "ToolWin.h"
+#include "DockableCtrl.h"
+#include "DockMenu.h"
+#include "DockTabBar.h"
+#include "DockCont.h"
+#include "DockPane.h"
 
 class DockWindow : public TopWindow {
 public:

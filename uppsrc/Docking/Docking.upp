@@ -13,6 +13,8 @@ file
 	DockMenu.cpp,
 	DockableCtrl.h,
 	DockableCtrl.cpp,
+	ToolWin.h,
+	ToolWin.cpp,
 	DockCont.h,
 	DockCont.cpp,
 	DockPane.h,
