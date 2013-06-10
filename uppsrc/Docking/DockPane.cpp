@@ -1,4 +1,4 @@
-#include "DockPane.h"
+#include "Docking.h"
 
 NAMESPACE_UPP
 

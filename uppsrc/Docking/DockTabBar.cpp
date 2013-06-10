@@ -1,5 +1,4 @@
-#include "DockTabBar.h"
-#include "DockCont.h"
+#include "Docking.h"
 
 #define ANIM_SPEED 10
 #define ANIM_FRAMES 10

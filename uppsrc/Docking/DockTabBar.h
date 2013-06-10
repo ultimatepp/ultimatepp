@@ -1,11 +1,3 @@
-#ifndef _Docking_DockTabBar_h_
-#define _Docking_DockTabBar_h_
-
-#include <CtrlLib/CtrlLib.h>
-#include <TabBar/TabBar.h>
-
-NAMESPACE_UPP
-
 class DockTabBar : public TabBar { 
 public:
 	typedef DockTabBar CLASSNAME;
@@ -89,7 +81,3 @@ struct DockTabable
 {
 	virtual Value GetSortValue() = 0;
 };
-
-END_UPP_NAMESPACE
-
-#endif

@@ -1,12 +1,4 @@
-#ifndef _Docking_DockPane_h_
-#define _Docking_DockPane_h_
-
-#include <CtrlLib/CtrlLib.h>
-
-NAMESPACE_UPP
-
-class DockPane : public Splitter
-{
+class DockPane : public Splitter {
 public:
 	typedef DockPane CLASSNAME;
 
@@ -68,7 +60,3 @@ public:
 	
 	DockPane();
 };
-
-END_UPP_NAMESPACE
-
-#endif
