@@ -243,6 +243,14 @@ void Ctrl::IgnoreMouseUp()
 	}
 }
 
+void Ctrl::UnIgnoreMouse()
+{
+	GuiLock __;
+	KillRepeat();
+	ignoreclick = false;
+	ignoremouseup = false;
+}
+
 void Ctrl::EndIgnore()
 {
 	GuiLock __;
@@ -621,7 +629,15 @@ bool Ctrl::ReleaseCtrlCapture() {
 
 bool Ctrl::HasCapture() const {
 	GuiLock __;
+	if(captureCtrl != this)
+		return false;
 	return captureCtrl == this && GetTopCtrl()->HasWndCapture();
+}
+
+Ctrl * Ctrl::GetCaptureCtrl()
+{
+	GuiLock __;
+	return captureCtrl && captureCtrl->GetTopCtrl()->HasWndCapture() ? captureCtrl : NULL;
 }
 
 Ctrl *Ctrl::GetVisibleChild(Ctrl *ctrl, Point p, bool pointinframe)

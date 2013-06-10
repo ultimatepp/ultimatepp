@@ -1027,11 +1027,13 @@ public:
 
 	static void IgnoreMouseClick();
 	static void IgnoreMouseUp();
+	static void UnIgnoreMouse();
 
 	bool    SetCapture();
 	bool    ReleaseCapture();
 	bool    HasCapture() const;
-	static bool ReleaseCtrlCapture();
+	static bool  ReleaseCtrlCapture();
+	static Ctrl *GetCaptureCtrl();
 
 	bool    SetFocus();
 	bool    HasFocus() const                   { return FocusCtrl() == this; }
@@ -1220,7 +1222,8 @@ public:
 
 	static void   ReSkin();
 
-	String      Name() const;
+	String        Name() const;
+	static String Name(Ctrl *ctrl);
 
 #ifdef _DEBUG
 	virtual void   Dump() const;

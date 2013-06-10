@@ -32,7 +32,8 @@ void    TopWindow::SyncSizeHints()
 	m.max_width = sz.cx;
 	m.max_height = sz.cy;
 	gtk_window_set_resizable(gtk(), sizeable);
-	gtk_window_set_geometry_hints(gtk(), top->window, &m, GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE));
+	gtk_window_set_geometry_hints(gtk(), top->window, &m,
+	                              GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE));
 }
 
 void TopWindow::SyncTitle0()

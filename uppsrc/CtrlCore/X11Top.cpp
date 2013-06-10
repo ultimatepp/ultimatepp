@@ -16,7 +16,7 @@ void TopWindow::SyncSizeHints()
 	if(!sizeable)
 		min = max = GetRect().Size();
 	Window w = GetWindow();
-	if(w && (min != xminsize || max != xmaxsize)) {
+	if(w && (min != xminsize || max != xmaxsize) && !frameless) {
 		xminsize = min;
 		xmaxsize = max;
 		size_hints->min_width = min.cx;
@@ -153,6 +153,18 @@ void TopWindow::SyncState()
 	Call(THISBACK(SyncState0));
 }
 
+typedef struct {
+    unsigned long flags;
+    unsigned long functions;
+    unsigned long decorations;
+    long input_mode;
+    unsigned long status;
+} MWMHints;
+
+#define MWM_HINTS_DECORATIONS   (1L << 1)
+#define PROP_MOTIF_WM_HINTS_ELEMENTS 5
+#define PROP_MWM_HINTS_ELEMENTS PROP_MOTIF_WM_HINTS_ELEMENTS
+
 void TopWindow::SyncCaption0()
 {
 	GuiLock __; 
@@ -203,6 +215,14 @@ void TopWindow::SyncCaption0()
 			                (const unsigned char *)~data, len);
 		}
 		XSetWMHints(Xdisplay, w, wm_hints);
+
+		MWMHints mwmhints;
+		memset(&mwmhints, 0, sizeof(mwmhints));
+		mwmhints.flags = MWM_HINTS_DECORATIONS;
+		mwmhints.decorations = !frameless;
+		XChangeProperty(Xdisplay, w, XAtom("_MOTIF_WM_HINTS"), XAtom("_MOTIF_WM_HINTS"), 32,
+		                PropModeReplace,
+		                (unsigned char *) &mwmhints, PROP_MWM_HINTS_ELEMENTS);
 	}
 }
 

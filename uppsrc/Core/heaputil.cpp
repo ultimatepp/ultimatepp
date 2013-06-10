@@ -135,7 +135,7 @@ void *AllocRaw64KB(int reqsize)
 void HeapPanic(const char *text, void *pos, int size)
 {
 	RLOG("\n\n" << text << "\n");
-	HexDump(VppLog(), pos, size, 64);
+	HexDump(VppLog(), pos, size, 1024);
 	Panic(text);
 }
 

@@ -1803,6 +1803,12 @@ over its owner as well (TopWindow`::Close calls this function).&]
 pressed.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Ctrl`:`:UnIgnoreMouse`(`):%- [@(0.0.255) static] [@(0.0.255) void]_[* UnIgnoreMouse]()
+&]
+[s2; Cancels the effect or IgnoreMouseClick and IgnoreMouseUp (clicks 
+are not ignored anymore).&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Ctrl`:`:SetCapture`(`):%- [@(0.0.255) bool]_[* SetCapture]()&]
 [s2;b17;a17; Sets mouse capture for Ctrl. This method should be called 
 in MouseLeft or MouseRight methods only. Ctrl will receive all 
@@ -1820,6 +1826,13 @@ released.&]
 [s5;:Ctrl`:`:HasCapture`(`)const:%- [@(0.0.255) bool]_[* HasCapture]()_[@(0.0.255) const]&]
 [s7;i1120;a17; [*/ Return value]-|True if Ctrl has mouse capture.&]
 [s3;%- &]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:GetCaptureCtrl`(`):%- [@(0.0.255) static] [_^Ctrl^ Ctrl]_`*[* GetCaptureCtrl](
+)&]
+[s2; Returns a pointer to the Ctrl that is currently capturing the 
+mouse.&]
+[s3; &]
 [s4;%- &]
 [s5;:Ctrl`:`:ReleaseCtrlCapture`(`):%- [@(0.0.255) static] [@(0.0.255) bool]_[* ReleaseCtrl
 Capture]()&]
