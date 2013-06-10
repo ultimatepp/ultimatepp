@@ -72,6 +72,17 @@ bool Ctrl::HasWndCapture() const
 	return this == grabwindow && gdk_pointer_is_grabbed();
 }
 
+void Ctrl::CaptureSync()
+{
+	if(grabwindow && !gdk_pointer_is_grabbed()) {
+		if(gdk_pointer_grab(grabwindow->gdk(), FALSE,
+		                    GdkEventMask(GDK_BUTTON_RELEASE_MASK|GDK_BUTTON_PRESS_MASK|GDK_POINTER_MOTION_MASK),
+		                    NULL, NULL, CurrentTime) != GDK_GRAB_SUCCESS) {
+			grabwindow = NULL;
+		}		
+	}
+}
+
 END_UPP_NAMESPACE
 
 #endif

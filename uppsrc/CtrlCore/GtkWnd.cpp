@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)   // DLOG(rmsecs() << ' ' << x)
+#define LLOG(x)   // DLOG(x)
 
 Vector<Callback>  Ctrl::hotkey;
 Vector<dword>     Ctrl::keyhot;
@@ -393,16 +393,17 @@ bool Ctrl::SweepConfigure(bool wait)
 
 void Ctrl::WndSetPos0(const Rect& rect)
 {
-	GuiLock __;
 	LLOG("WndSetPos0 " << rect);
+	GuiLock __;
 	if(!top)
 		return;
 	Ptr<Ctrl> this_ = this;
 	SweepConfigure(false); // Remove any previous GDK_CONFIGURE for this window
 	if(!this_)
 		return;
-	gtk_window_move(gtk(), rect.left, rect.top);
-	gtk_window_resize(gtk(), rect.GetWidth(), rect.GetHeight());
+//	gtk_window_move(gtk(), rect.left, rect.top);
+//	gtk_window_resize(gtk(), rect.GetWidth(), rect.GetHeight());
+	gdk_window_move_resize(gdk(), rect.left, rect.top, rect.GetWidth(), rect.GetHeight());
 	int t0 = msecs();
 	do { // Wait up to 500ms for corresponding GDK_CONFIGURE to arrive
 		if(SweepConfigure(true))

@@ -5,7 +5,7 @@
 NAMESPACE_UPP
 
 #define LLOG(x)    // DLOG(rmsecs() << ' ' << x)
-// #define LOG_EVENTS _DBG_
+#define LOG_EVENTS // _DBG_
 
 bool  Ctrl::EventMouseValid;
 Point Ctrl::EventMousePos;
@@ -84,19 +84,19 @@ Ctrl *Ctrl::GetTopCtrlFromId(int id)
 
 gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 {
-#ifdef LOG_EVENTS
-	String ev = "?";
-	Tuple2<int, const char *> *f = FindTuple(xEvent, __countof(xEvent), event->type);
-	if(f)
-		ev = f->b;
-	LOG(rmsecs() << " FETCH EVENT " << ev);
-#endif
 	GuiLock __;
 	GdkEventKey *key;
 	bool pressed = false;
 	bool  retval = true;
 	Value value;
 	Ctrl *p = GetTopCtrlFromId(user_data);
+#ifdef LOG_EVENTS
+	String ev = "?";
+	Tuple2<int, const char *> *f = FindTuple(xEvent, __countof(xEvent), event->type);
+	if(f)
+		ev = f->b;
+	LOG(rmsecs() << " FETCH EVENT " << ev << " ctrl: " << Name(p));
+#endif
 
 	switch(event->type) {
 	case GDK_EXPOSE:
@@ -525,6 +525,7 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 		Events.DropHead();
 		Ctrl *w = GetTopCtrlFromId(e.windowid);
 		FocusSync();
+		CaptureSync();
 		if(w)
 			w->Proc();
 		r = true;

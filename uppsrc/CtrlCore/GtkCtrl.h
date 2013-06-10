@@ -19,6 +19,8 @@
 	static bool ProcessEvent0(bool *quit, bool fetch);
 	static bool ProcessEvents0(bool *quit, bool fetch);
 
+	static void CaptureSync();
+
 	static gboolean GtkEvent(GtkWidget *widget, GdkEvent *key, gpointer user_data);
 
 	enum {

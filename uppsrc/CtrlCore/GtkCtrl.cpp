@@ -72,6 +72,11 @@ String Ctrl::Name() const {
 	return s;
 }
 
+String Ctrl::Name(Ctrl *ctrl)
+{
+	return Upp::Name(ctrl);
+}
+
 void Ctrl::InstallPanicBox()
 {
 }
