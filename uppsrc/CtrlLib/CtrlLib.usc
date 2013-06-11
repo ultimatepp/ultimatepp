@@ -700,6 +700,7 @@ ctrl DropList {
 	bool  WantFocus = true;
 	bool  DisplayAll = false;
 	bool  AlwaysDrop = false @1;
+	bool  NotNull = false;
 	Text  Tip;
 //	Qtf   SetInfo @1 ? "Info of control" ;
 
