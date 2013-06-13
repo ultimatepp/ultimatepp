@@ -823,7 +823,7 @@ public:
 	void      LoadAbbr();
 	void      SaveAbbr();
 
-	Vector<String> SvnDirs();
+	Vector<String> SvnDirs(bool actual = false);
 
 	void      File(Bar& menu);
 		void   EditWorkspace();

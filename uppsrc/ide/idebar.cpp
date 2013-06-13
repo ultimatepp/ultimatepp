@@ -327,10 +327,7 @@ void Ide::Setup(Bar& menu) {
 
 void Ide::ProjectSvn(Bar& menu)
 {
-	Vector<String> w = SvnDirs();
-	String p = GetFileFolder(PackagePath(actualpackage));
-	if(IsSvnDir(p))
-		w.Insert(0, p);
+	Vector<String> w = SvnDirs(true);
 	for(int i = 0; i < w.GetCount(); i++)
 		menu.Add("Synchronize " + w[i], IdeImg::svn_dir(), THISBACK1(SyncSvnDir, w[i]));
 	menu.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncSvn));
@@ -365,7 +362,7 @@ void Ide::Project(Bar& menu) {
 	if(OldLang())
 		menu.Add("Convert s_ -> t_", THISBACK(ConvertST));
 	FilePropertiesMenu(menu);
-	if(SvnDirs().GetCount())
+	if(SvnDirs(true).GetCount())
 		if(menu.IsMenuBar())
 			menu.Add("SVN", THISBACK(ProjectSvn));
 		else
