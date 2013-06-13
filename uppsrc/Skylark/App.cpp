@@ -185,17 +185,21 @@ void SkylarkApp::Run()
 
 	main_pid = getpid();
 	quit = false;
+	
+	IpAddrInfo ipinfo;
+	ipinfo.Execute(ip, port, IpAddrInfo::FAMILY_IPV4);
+	addrinfo *addr = ipinfo.GetResult();
 
 #ifdef _DEBUG
 	int qq = 0;
 	for(;;) {
-		if(server.Listen(port, 5))
+		if(server.Listen(ipinfo, port, 5, false, true))
 			break;
 		Cout() << "Trying to start listening (other process using the same port?) " << ++qq << "\n";
 		Sleep(1000);
 	}
 #else
-	if(!server.Listen(port, 5)) {
+	if(!server.Listen(ipinfo, port, 5, false, true)) {
 		SKYLARKLOG("Cannot open server socket for listening!");
 		Exit(1);
 	}
@@ -212,7 +216,7 @@ void SkylarkApp::Run()
 		sigaction(SIGINT, &sa, NULL);
 		sigaction(SIGHUP, &sa, NULL);
 		sigaction(SIGALRM, &sa, NULL);
-//		EnableHUP();	
+//		EnableHUP();
 		while(!quit) {
 			while(child_pid.GetCount() < prefork && !quit) {
 				pid_t p = fork();
@@ -280,6 +284,7 @@ const SkylarkConfig& SkylarkApp::Config()
 
 namespace Ini {
 INI_INT(port, 8001, "TCP/IP server port to listen on");
+INI_STRING(ip, "0.0.0.0", "IP address to listen on");
 INI_STRING(path, Nvl(GetEnv("UPP_ASSEMBLY__"), GetFileFolder(GetExeFilePath())), "Path to witz templates and static files");
 INI_INT(threads, 3 * CPU_Cores() + 1, "Number of threads in each Skylark subprocess");
 #ifdef _DEBUG
@@ -304,6 +309,7 @@ SkylarkApp::SkylarkApp()
 	app = this;
 	threads = Ini::threads;
 	port = Ini::port;
+	ip = Ini::ip;
 	use_caching = Ini::use_caching;
 	prefork = Ini::prefork;
 	timeout = Ini::timeout;

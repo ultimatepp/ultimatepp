@@ -53,7 +53,7 @@ public:
 	void      Start(const String& host, int port, int family = FAMILY_ANY);
 	bool      InProgress();
 	bool      Execute(const String& host, int port, int family = FAMILY_ANY);
-	addrinfo *GetResult();
+	addrinfo *GetResult() const;
 	void      Clear();
 
 	IpAddrInfo();
@@ -136,7 +136,7 @@ class TcpSocket {
 	int                     Recv(void *buffer, int maxlen);
 	int                     RawSend(const void *buffer, int maxlen);
 	int                     Send(const void *buffer, int maxlen);
-	bool                    RawConnect(addrinfo *info);
+	bool                    RawConnect(addrinfo *arp);
 	void                    RawClose();
 
 	void                    ReadBuffer(int end_time);
@@ -186,7 +186,8 @@ public:
 	void            Attach(SOCKET socket);
 	bool            Connect(const char *host, int port);
 	bool            Connect(IpAddrInfo& info);
-	bool            Listen(int port, int listen_count = 5, bool ipv6 = false, bool reuse = true);
+	bool            Listen(int port, int listen_count = 5, bool ipv6 = false, bool reuse = true, void* addr = NULL);
+	bool            Listen(const IpAddrInfo& addr, int port, int listen_count = 5, bool ipv6 = false, bool reuse = true);
 	bool            Accept(TcpSocket& listen_socket);
 	void            Close();
 	void            Shutdown();

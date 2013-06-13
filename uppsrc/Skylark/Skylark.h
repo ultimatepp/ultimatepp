@@ -44,6 +44,7 @@ struct SkylarkConfig {
 	SkylarkSessionConfig      session;
 	int                       threads;
 	int                       port;
+	String                    ip;
 	int                       prefork;
 	int                       timeout;
 	bool                      use_caching;

@@ -135,7 +135,7 @@ bool IpAddrInfo::InProgress()
 	return s == WORKING;
 }
 
-addrinfo *IpAddrInfo::GetResult()
+addrinfo *IpAddrInfo::GetResult() const
 {
 	EnterPool();
 	addrinfo *ai = entry ? entry->addr : NULL;
@@ -321,7 +321,7 @@ bool TcpSocket::Open(int family, int type, int protocol)
 	return SetupSocket();
 }
 
-bool TcpSocket::Listen(int port, int listen_count, bool ipv6_, bool reuse)
+bool TcpSocket::Listen(int port, int listen_count, bool ipv6_, bool reuse, void *addr)
 {
 	Close();
 	Init();
@@ -340,15 +340,15 @@ bool TcpSocket::Listen(int port, int listen_count, bool ipv6_, bool reuse)
 #endif
 	{
 		Zero(sin6);
-		sin.sin_family = AF_INET6;
-		sin.sin_port = htons(port);
-		sin.sin_addr.s_addr = htonl(INADDR_ANY);
+		sin6.sin6_family = AF_INET6;
+		sin6.sin6_port = htons(port);
+		sin6.sin6_addr = addr?(*(in6_addr*)addr):in6addr_any;
 	}
 	else {
 		Zero(sin);
 		sin.sin_family = AF_INET;
 		sin.sin_port = htons(port);
-		sin.sin_addr.s_addr = htonl(INADDR_ANY);
+		sin.sin_addr.s_addr = addr?(*(uint32*)addr):htonl(INADDR_ANY);
 	}
 	if(reuse) {
 		int optval = 1;
@@ -364,6 +364,12 @@ bool TcpSocket::Listen(int port, int listen_count, bool ipv6_, bool reuse)
 		return false;
 	}
 	return true;
+}
+
+bool TcpSocket::Listen(const IpAddrInfo& addr, int port, int listen_count, bool ipv6, bool reuse)
+{
+	addrinfo *a = addr.GetResult();
+	return Listen(port, listen_count, ipv6, reuse, &(((sockaddr_in*)a->ai_addr)->sin_addr.s_addr));
 }
 
 bool TcpSocket::Accept(TcpSocket& ls)

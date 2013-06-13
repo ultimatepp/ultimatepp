@@ -116,6 +116,11 @@ Default value is loaded from `"port`" .ini parameter, which defaults
 to 8001.&]
 [s3; &]
 [s4; &]
+[s5;:SkylarkConfig`:`:ip: [_^String^ String]_[* ip]&]
+[s2;%% Allows to specify the IP address Skylark listens on. Default 
+is empty which makes Skylark listen on the default port.&]
+[s3; &]
+[s4; &]
 [s5;:SkylarkConfig`:`:prefork: [@(0.0.255) int]_[* prefork]&]
 [s2;%% Number of processes spawned to handle requests. Master process 
 maintains this number of running processes, spawning additional 
