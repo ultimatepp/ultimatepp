@@ -123,15 +123,6 @@ to be dereferenced and assigned to sockaddr`_in6`::sin6`_addr
 for ipv6`=`=true.&]
 [s3;%% &]
 [s4;%% &]
-[s5;:TcpSocket`:`:Listen`(int`,int`,bool`,bool`): [@(0.0.255) bool]_[* Listen]([@(0.0.255) i
-nt]_[*@3 port], [@(0.0.255) int]_[*@3 listen`_count]_`=_5, [@(0.0.255) bool]_[*@3 ipv6]_`=_
-[@(0.0.255) false], [@(0.0.255) bool]_[*@3 reuse]_`=_[@(0.0.255) true])&]
-[s2;%% Starts a listening server socket at [%-*@3 port] with input 
-queue [%-*@3 listen`_count]. [%-*@3 ipv6] sets the socket to IPv6 
-mode, [%-*@3 reuse] sets [^http`:`/`/www`.kernel`.org`/doc`/man`-pages`/online`/pages`/man7`/socket`.7`.html^ S
-O`_REUSEADDR] socket option.&]
-[s3;%% &]
-[s4;%% &]
 [s5;:TcpSocket`:`:Accept`(TcpSocket`&`): [@(0.0.255) bool]_[* Accept]([_^TcpSocket^ TcpSock
 et][@(0.0.255) `&]_[*@3 listen`_socket])&]
 [s2;%% Accepts a connection from [%-*@3 listen`_socket].&]
