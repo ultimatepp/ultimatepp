@@ -47,7 +47,7 @@ was found. [%-*@3 family] can be used to narrow the scan to particular
 IP protocol (FAMILY`_IPV4, FAMILY`_IPV6).&]
 [s3;%% &]
 [s4; &]
-[s5;:IpAddrInfo`:`:GetResult`(`): addrinfo_`*[* GetResult]()&]
+[s5;:IpAddrInfo`:`:GetResult`(`): addrinfo_`*[* GetResult]()_[@(0.0.255) const]&]
 [s2;%% Returns resulting [^http`:`/`/en`.wikipedia`.org`/wiki`/Getaddrinfo^ addrinfo] 
 if address resolving was finished and successfull, NULL otherwise.&]
 [s3; &]

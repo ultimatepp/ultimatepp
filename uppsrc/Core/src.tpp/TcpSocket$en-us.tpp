@@ -102,6 +102,26 @@ is blocking.&]
 ddrInfo][@(0.0.255) `&]_[*@3 info])&]
 [s2;%% Connects socket to server found at [%-*@3 info]. Non`-blocking.&]
 [s3;%% &]
+[s4; &]
+[s5;:TcpSocket`:`:Listen`(int`,int`,bool`,bool`,void`*`): [@(0.0.255) bool]_[* Listen]([@(0.0.255) i
+nt]_[*@3 port], [@(0.0.255) int]_[*@3 listen`_count]_`=_[@3 5], [@(0.0.255) bool]_[*@3 ipv6]_
+`=_[@(0.0.255) false], [@(0.0.255) bool]_[*@3 reuse]_`=_[@(0.0.255) true], 
+[@(0.0.255) void`*]_[*@3 addr]_`=_NULL)&]
+[s5;:TcpSocket`:`:Listen`(const IpAddrInfo`&`,int`,int`,bool`,bool`): [@(0.0.255) bool]_
+[* Listen]([@(0.0.255) const]_[_^IpAddrInfo^ IpAddrInfo][@(0.0.255) `&]_[*@3 addr], 
+[@(0.0.255) int]_[*@3 port], [@(0.0.255) int]_[*@3 listen`_count]_`=_[@3 5], 
+[@(0.0.255) bool]_[*@3 ipv6]_`=_[@(0.0.255) false], [@(0.0.255) bool]_[*@3 reuse]_`=_[@(0.0.255) t
+rue])&]
+[s2;%% Starts a listening server socket at [%-*@3 port] with input 
+queue [%-*@3 listen`_count]. [%-*@3 ipv6] sets the socket to IPv6 
+mode, [%-*@3 reuse] sets [^http`:`/`/www`.kernel`.org`/doc`/man`-pages`/online`/pages`/man7`/socket`.7`.html^ S
+O`_REUSEADDR] socket option. [%-*@3 addr] can be used to speficy 
+on what interface to listen on. As last void`* parameter, it 
+has to be pointer to uint32 that is dereferenced and assigned 
+to sockaddr`_in`::sin`_addr.s`_addr for ipv6`=`=true and/or in6`_addr 
+to be dereferenced and assigned to sockaddr`_in6`::sin6`_addr 
+for ipv6`=`=true.&]
+[s3;%% &]
 [s4;%% &]
 [s5;:TcpSocket`:`:Listen`(int`,int`,bool`,bool`): [@(0.0.255) bool]_[* Listen]([@(0.0.255) i
 nt]_[*@3 port], [@(0.0.255) int]_[*@3 listen`_count]_`=_5, [@(0.0.255) bool]_[*@3 ipv6]_`=_
