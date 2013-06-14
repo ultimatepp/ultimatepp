@@ -508,7 +508,7 @@ void Calendar::Paint(Draw &w)
 			wcolor = st.selectday;
 		}
 		
-		w.DrawText(bs + (cw - GetTextSize(str, fnt).cx) / 2, yp + yc, str, wfnt, wcolor);
+		w.DrawText(bs + (cw - GetTextSize(str, wfnt).cx) / 2, yp + yc, str, wfnt, wcolor);
 
 		for(int j = 0; j < cols; j++)
 		{
