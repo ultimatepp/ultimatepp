@@ -316,18 +316,50 @@ list and MapConvert.&]
 [s5;:Add`(DropList`&`,const VectorMap`<Value`,Value`>`&`): [@(0.0.255) void]_[* Add]([_^DropList^ D
 ropList][@(0.0.255) `&]_[*@3 list], [@(0.0.255) const]_[_^VectorMap^ VectorMap][@(0.0.255) <
 ][_^Value^ Value], [_^Value^ Value][@(0.0.255) >`&]_[*@3 values])&]
+[s5;:Add`(DropList`&`,const VectorMap`<int`,String`>`&`): [@(0.0.255) void]_[* Add]([_^DropList^ D
+ropList][@(0.0.255) `&]_[*@3 list], [@(0.0.255) const]_[_^VectorMap^ VectorMap]<[@(0.0.255) i
+nt], [_^String^ String]>`&_[*@3 values])&]
 [s2;%% Fills the DropList from VectorMap.&]
 [s3; &]
 [s4; &]
 [s5;:Add`(MapConvert`&`,const VectorMap`<Value`,Value`>`&`): [@(0.0.255) void]_[* Add]([_^MapConvert^ M
 apConvert][@(0.0.255) `&]_[*@3 convert], [@(0.0.255) const]_[_^VectorMap^ VectorMap][@(0.0.255) <
 ][_^Value^ Value], [_^Value^ Value][@(0.0.255) >`&]_[*@3 values])&]
+[s5;:Add`(MapConvert`&`,const VectorMap`<int`,String`>`&`): [@(0.0.255) void]_[* Add]([_^MapConvert^ M
+apConvert][@(0.0.255) `&]_[*@3 convert], [@(0.0.255) const]_[_^VectorMap^ VectorMap]<[@(0.0.255) i
+nt], [_^String^ String]>`&_[*@3 values])&]
 [s2;%% Fills the MapConvert from VectorMap.&]
-[s3; &]
+[s3;%% &]
 [s4; &]
 [s5;:Add`(DropList`&`,const MapConvert`&`): [@(0.0.255) void]_[* Add]([_^DropList^ DropList
 ][@(0.0.255) `&]_[*@3 list], [@(0.0.255) const]_[_^MapConvert^ MapConvert][@(0.0.255) `&]_[*@3 c
 onvert])&]
 [s2;%% Fills the DropList from MapConvert.&]
-[s3; &]
-[s0; ]
+[s3;%% &]
+[s4; &]
+[s5;:operator`*`=`(DropList`&`,const VectorMap`<Value`,Value`>`&`): [@(0.0.255) void]_[* o
+perator`*`=]([_^DropList^ DropList][@(0.0.255) `&]_[*@3 list], [@(0.0.255) const]_[_^VectorMap^ V
+ectorMap]<[_^Value^ Value], [_^Value^ Value]>`&_[*@3 values])&]
+[s5;:operator`*`=`(DropList`&`,const VectorMap`<int`,String`>`&`): [@(0.0.255) void]_[* o
+perator`*`=]([_^DropList^ DropList][@(0.0.255) `&]_[*@3 list], [@(0.0.255) const]_[_^VectorMap^ V
+ectorMap]<[@(0.0.255) int], [_^String^ String]>`&_[*@3 values])&]
+[s2;%% Clears and fills the DropList from VectorMap.&]
+[s3;%% &]
+[s4; &]
+[s5;:operator`*`=`(MapConvert`&`,const VectorMap`<Value`,Value`>`&`): [@(0.0.255) void]_
+[* operator`*`=]([_^MapConvert^ MapConvert][@(0.0.255) `&]_[*@3 convert], 
+[@(0.0.255) const]_[_^VectorMap^ VectorMap]<[_^Value^ Value], [_^Value^ Value]>`&_[*@3 valu
+es])&]
+[s5;:operator`*`=`(MapConvert`&`,const VectorMap`<int`,String`>`&`): [@(0.0.255) void]_
+[* operator`*`=]([_^MapConvert^ MapConvert][@(0.0.255) `&]_[*@3 convert], 
+[@(0.0.255) const]_[_^VectorMap^ VectorMap]<[@(0.0.255) int], [_^String^ String]>`&_[*@3 va
+lues])&]
+[s2;%% Clears and fills the MapConvert from VectorMap.&]
+[s3;%% &]
+[s4; &]
+[s5;:operator`*`=`(DropList`&`,const MapConvert`&`): [@(0.0.255) void]_[* operator`*`=]([_^DropList^ D
+ropList][@(0.0.255) `&]_[*@3 list], [@(0.0.255) const]_[_^MapConvert^ MapConvert][@(0.0.255) `&
+]_[*@3 convert])&]
+[s2;%% Clears and fills the DropList from MapConvert.&]
+[s3;%% &]
+[s0;%% ]]
