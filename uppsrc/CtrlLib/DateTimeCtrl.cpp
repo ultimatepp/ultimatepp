@@ -72,6 +72,7 @@ void Calendar::Reset()
 	wastoday = false;
 
 	newday = oldday = nullday;
+	newweek = oldweek = -1;
 	stoday = Format("%s: %s", t_("Today"), time_mode ? Format(today) : Format(Date(today)));
 
 	UpdateFields();
@@ -199,6 +200,31 @@ int Calendar::WeekOfYear(int day, int month, int year) /* ISO-8601 */
 
 void Calendar::LeftDown(Point p, dword keyflags)
 {
+	if(WhenWeek && newweek >= 0) {
+		if(PopUpCtrl::IsPopUp())
+			Deactivate();
+		Date d = view;
+		int wday = days[newweek][0];
+		d.day = wday;
+		if(wday < 0) {
+			d.day = -wday;
+			if(newweek == 0)
+				d.month--;
+			else
+				d.month++;
+			if(d.month < 1) {
+				d.month = 12;
+				d.year--;
+			}
+			if(d.month > 12) {
+				d.month = 1;
+				d.year++;
+			}
+		}
+		WhenWeek(d);
+		return;
+	}
+
 	bool isnewday = newday != nullday;
 	int day = 1;
 	bool refall = false;
@@ -210,7 +236,7 @@ void Calendar::LeftDown(Point p, dword keyflags)
 		if(day < 0)
 		{
 			view.day = -day;
-			if(lastrow < 3)
+			if(newday.y == 0)
 				view.month--;
 			else
 				view.month++;
@@ -263,11 +289,11 @@ void Calendar::LeftDown(Point p, dword keyflags)
 			return;
 		}
 
-		RefreshDay(prevday);
+		Refresh();
 		if(istoday)
 			SetDate(tm);
 		else
-			RefreshDay(newday);
+			Refresh();
 	}
 
 	WhenSelect();
@@ -284,7 +310,7 @@ void Calendar::MouseMove(Point p, dword keyflags)
 			if(b)
 			{
 				view.day = 0;
-				RefreshDay(oldday);
+				Refresh();
 			}
 		}
 		if(newday != nullday)
@@ -293,16 +319,21 @@ void Calendar::MouseMove(Point p, dword keyflags)
 			if(b)
 			{
 				view.day = Day(newday);
-				RefreshDay(newday);
+				Refresh();
 			}
 		}
 		oldday = newday;
+	}
+	newweek = GetWeek(p);
+	if(newweek != oldweek && WhenWeek) {
+		Refresh();
+		oldweek = newweek;
 	}
 	istoday = MouseOnToday(p);
 	if(istoday != wastoday)
 	{
 		wastoday = istoday;
-		RefreshToday();
+		Refresh();
 	}
 }
 
@@ -325,29 +356,6 @@ bool Calendar::MouseOnToday(Point p)
 	return (p.x >= x0 && p.x <= x1 && p.y >= y0 && p.y <= y1);
 }
 
-void Calendar::RefreshDay(Point p)
-{
-	col = p.x;
-	row = p.y;
-
-	int y0 = 2 + (int)((p.y + 1) * rowh + hs);
-	int x0 = bs + 2 + (int)((p.x + 1) * colw);
-
-	Refresh(x0, y0, cw, rh);
-}
-
-void Calendar::RefreshToday()
-{
-	Size sz = GetSize();
-	Refresh(0, sz.cy - ts, sz.cx, ts);
-}
-
-void Calendar::RefreshHeader()
-{
-	Size sz = GetSize();
-	Refresh(0, 0, sz.cx, hs);
-}
-
 Point Calendar::GetDay(Point p)
 {
 	for(int i = 0; i < rows; i++)
@@ -355,16 +363,29 @@ Point Calendar::GetDay(Point p)
 		int y0 = 2 + (int)((i + 1) * rowh + hs);
 		int y1 = y0 + rh;
 
-		if(p.y >= y0 && p.y < y1)
-		for(int j = 0; j < cols; j++)
-		{
-			int x0 = bs + 2 + (int)((j + 1) * colw);
-			int x1 = x0 + cw;
-			if(p.x >= x0 && p.x < x1)
-				return Point(j, i);
+		if(p.y >= y0 && p.y < y1) {
+			for(int j = 0; j < cols; j++)
+			{
+				int x0 = bs + 2 + (int)((j + 1) * colw);
+				int x1 = x0 + cw;
+				if(p.x >= x0 && p.x < x1)
+					return Point(j, i);
+			}
 		}
 	}
 	return Point(-1, -1);
+}
+
+int Calendar::GetWeek(Point p)
+{
+	for(int i = 0; i < rows; i++)
+	{
+		int y0 = 2 + (int)((i + 1) * rowh + hs);
+		int y1 = y0 + rh;
+		if(p.y >= y0 && p.y < y1 && p.x < bs + 2 + colw)
+			return i;
+	}
+	return -1;
 }
 
 Size Calendar::ComputeSize()
@@ -478,7 +499,16 @@ void Calendar::Paint(Draw &w)
 		int yc = (rh - fh) / 2;
 
 		str = AsString(WeekOfYear(d, m, y));
-		w.DrawText(bs + (cw - GetTextSize(str, fnt).cx) / 2, yp + yc, str, fnt.NoBold().NoUnderline(), st.week);
+		
+		Font wfnt = fnt;
+		wfnt.NoBold().NoUnderline();
+		Color wcolor = st.week;
+		if(newweek >= 0 && WhenWeek && newweek == i) {
+			wfnt.Bold().Underline();
+			wcolor = st.selectday;
+		}
+		
+		w.DrawText(bs + (cw - GetTextSize(str, fnt).cx) / 2, yp + yc, str, wfnt, wcolor);
 
 		for(int j = 0; j < cols; j++)
 		{
@@ -631,7 +661,7 @@ void Calendar::MouseLeave()
 	{
 		istoday = false;
 		wastoday = false;
-		RefreshToday();
+		Refresh();
 	}
 	else
 		MouseMove(Point(-1, -1), 0);

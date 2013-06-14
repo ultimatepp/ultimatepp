@@ -277,10 +277,53 @@ void Add(MapConvert& convert, const VectorMap<Value, Value>& values)
 		convert.Add(values.GetKey(i), values[i]);
 }
 
+void Add(DropList& list, const VectorMap<int, String>& values)
+{
+	for(int i = 0; i < values.GetCount(); i++)
+		list.Add(values.GetKey(i), values[i]);
+}
+
+void Add(MapConvert& convert, const VectorMap<int, String>& values)
+{
+	for(int i = 0; i < values.GetCount(); i++)
+		convert.Add(values.GetKey(i), values[i]);
+}
+
 void Add(DropList& list, const MapConvert& convert)
 {
 	for(int i = 0; i < convert.GetCount(); i++)
 		list.Add(convert.GetKey(i), convert.GetValue(i));
 }
+
+void operator*=(DropList& list, const VectorMap<Value, Value>& values)
+{
+	list.ClearList();
+	Add(list, values);
+}
+
+void operator*=(MapConvert& convert, const VectorMap<Value, Value>& values)
+{
+	convert.Clear();
+	Add(convert, values);
+}
+
+void operator*=(DropList& list, const VectorMap<int, String>& values)
+{
+	list.ClearList();
+	Add(list, values);
+}
+
+void operator*=(MapConvert& convert, const VectorMap<int, String>& values)
+{
+	convert.Clear();
+	Add(convert, values);
+}
+
+void operator*=(DropList& list, const MapConvert& convert)
+{
+	list.ClearList();
+	Add(list, convert);
+}
+
 
 END_UPP_NAMESPACE

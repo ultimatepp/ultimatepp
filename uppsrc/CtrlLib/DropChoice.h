@@ -135,8 +135,16 @@ public:
 };
 
 void Add(DropList& list, const VectorMap<Value, Value>& values);
+void Add(DropList& list, const VectorMap<int, String>& values);
 void Add(MapConvert& convert, const VectorMap<Value, Value>& values);
+void Add(MapConvert& convert, const VectorMap<int, String>& values);
 void Add(DropList& list, const MapConvert& convert);
+
+void operator*=(DropList& list, const VectorMap<Value, Value>& values);
+void operator*=(DropList& list, const VectorMap<int, String>& values);
+void operator*=(MapConvert& convert, const VectorMap<Value, Value>& values);
+void operator*=(MapConvert& convert, const VectorMap<int, String>& values);
+void operator*=(DropList& list, const MapConvert& convert);
 
 class DropChoice : public MultiButtonFrame {
 public:

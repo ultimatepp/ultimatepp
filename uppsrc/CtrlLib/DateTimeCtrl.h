@@ -162,6 +162,7 @@ private:
 	Point oldday;
 	Point prevday;
 	Point curday, firstday;
+	int   newweek, oldweek;
 
 	String stoday;
 	Size sztoday;
@@ -199,17 +200,16 @@ private:
 	virtual Image CursorImage(Point p, dword keyflags);
 
 	int& Day(int x, int y) { return days[y][x]; }
-	int& Day(Point p) 	   { return days[p.y][p.x]; }
+	int& Day(Point p) 	   { return Day(p.x, p.y); }
 	Point GetDay(Point p);
+	int GetWeek(Point p);
 
-	void RefreshDay(Point p);
-	void RefreshToday();
-	void RefreshHeader();
 	virtual Size ComputeSize();
 
 public:
 	Calendar();
 	Callback1<Time &> WhenTime;
+	Callback1<Date>   WhenWeek;
 
 	static const Style& StyleDefault();
 
@@ -481,6 +481,10 @@ class DateTimeCtrl : public T {
 			r.right += diff;
 
 		}
+		if(WhenWeek)
+			cc.calendar.WhenWeek = Proxy(WhenWeek);
+		else
+			cc.calendar.WhenWeek.Clear();
 		cc.PopUp(this, r);
 		cc.calendar <<= this->GetData();
 		cc.clock <<= this->GetData();
@@ -488,6 +492,8 @@ class DateTimeCtrl : public T {
 
 public:
 	typedef DateTimeCtrl CLASSNAME;
+	
+	Callback1<Date> WhenWeek;
 
 	DateTimeCtrl(int m) : cc(m) {
 		drop.AddTo(*this);
