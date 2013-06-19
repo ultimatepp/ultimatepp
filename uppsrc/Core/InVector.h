@@ -39,7 +39,7 @@ private:
 	uint16 slave;
 
 	InVectorSlave__ *Slave()          { return (InVectorSlave__ *)((byte *)this + slave); }
-	void SetSlave(InVectorSlave__ *s) { slave = (byte *)s - (byte *)this; }
+	void SetSlave(InVectorSlave__ *s) { slave = (uint16)((byte *)s - (byte *)this); }
 
 	void SetCache(int blki, int offset) const;
 	void ClearCache() const;
