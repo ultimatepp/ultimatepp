@@ -51,6 +51,8 @@ void TestV(const T& x) {
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_FILE|LOG_COUT);
+
 	TestV(String("Just a test!"));
 	TestV(WString("Just a test!"));
 	TestV((int) 123);
@@ -79,4 +81,6 @@ CONSOLE_APP_MAIN
 	TestV(Rectf(23, 12, 56, 88));
 
 	TestV(Magenta());
+	
+	LOG("*************** OK");
 }
