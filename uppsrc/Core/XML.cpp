@@ -739,17 +739,31 @@ int  XmlNode::AttrInt(const char *id, int def) const
 	return p.IsInt() ? p.ReadInt() : def;
 }
 
+XmlNode& XmlNode::SetAttr(const char *id, const String& text)
+{
+	if(!attr)
+		attr.Create();
+	attr->GetAdd(id) = text;
+	return *this;
+}
+
+void XmlNode::SetAttrsPick(pick_ VectorMap<String, String>& a)
+{
+	if(a.GetCount() == 0)
+		attr.Clear();
+	else {
+		if(!attr)
+			attr.Create();
+		*attr = a;
+	}
+}
+
 XmlNode& XmlNode::SetAttr(const char *id, int i)
 {
 	SetAttr(id, AsString(i));
 	return *this;
 }
 
-XmlNode& XmlNode::SetAttr(const char *id, const String& text)
-{
-	attr.GetAdd(id) = text;
-	return *this;
-}
 
 bool Ignore(XmlParser& p, dword style)
 {

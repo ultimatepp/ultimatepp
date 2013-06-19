@@ -134,10 +134,10 @@ public:
 };
 
 class XmlNode {
-	int                       type;
-	String                    text;
-	VectorMap<String, String> attr;
-	Array<XmlNode>            node;
+	int                              type;
+	String                           text;
+	Array<XmlNode>                   node;
+	One< VectorMap<String, String> > attr;
 
 public:
 	static const XmlNode& Void();
@@ -176,15 +176,15 @@ public:
 	String         GatherText() const;
 	String         operator~() const                          { return GatherText(); }
 
-	int            GetAttrCount() const                       { return attr.GetCount(); }
-	String         AttrId(int i) const                        { return attr.GetKey(i); }
-	String         Attr(int i) const                          { return attr[i]; }
-	String         Attr(const char *id) const                 { return attr.Get(id, Null); }
+	int            GetAttrCount() const                       { return attr ? attr->GetCount() : 0; }
+	String         AttrId(int i) const                        { return attr->GetKey(i); }
+	String         Attr(int i) const                          { return (*attr)[i]; }
+	String         Attr(const char *id) const                 { return attr ? attr->Get(id, Null) : String(); }
 	XmlNode&       SetAttr(const char *id, const String& val);
 	int            AttrInt(const char *id, int def = Null) const;
 	XmlNode&       SetAttr(const char *id, int val);
 
-	void           SetAttrsPick(pick_ VectorMap<String, String>& a) { attr = a; }
+	void           SetAttrsPick(pick_ VectorMap<String, String>& a);
 
 	XmlNode()      { type = XML_DOC; }
 };
