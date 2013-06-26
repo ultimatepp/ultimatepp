@@ -84,7 +84,7 @@ void ToolWin::StartMouseDrag()
 
 void ToolWin::MouseMove(Point, dword)
 {
-	if(!HasCapture())
+	if(!HasCapture() || GetParent())
 		return;
 	Rect r = rect0;
 	Point off = GetMousePos() - p0;
@@ -133,6 +133,8 @@ Image ToolWin::CursorImage(Point, dword)
 
 Image ToolWin::FrameMouseEvent(int event, Point p, int zdelta, dword keyflags)
 {
+	if(GetParent())
+		return Image::Arrow();
 	switch(event) {
 	case LEFTDOWN:
 		StartMouseDrag0();
