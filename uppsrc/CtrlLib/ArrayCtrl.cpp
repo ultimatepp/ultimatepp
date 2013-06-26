@@ -2505,7 +2505,8 @@ void ArrayCtrl::MouseWheel(Point p, int zdelta, dword keyflags) {
 
 Vector<Value> ArrayCtrl::ReadRow(int i) const {
 	Vector<Value> v;
-	for(int j = 0; j < idx.GetCount(); j++)
+	int n = max(idx.GetCount(), i < array.GetCount() ? array[i].line.GetCount() : 0);
+	for(int j = 0; j < n; j++)
 		v.Add(Get(i, j));
 	return v;
 }
