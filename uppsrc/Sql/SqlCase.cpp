@@ -133,6 +133,7 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 				*r << Format("to_date('%d/%d/%d', 'SYYYY/MM/DD')", x.year, x.month, x.day);
 				break;
 			case PGSQL:
+				if(x.year < 1) x.year = 1; // Date::Low()
 				*r << "date ";
 			default:
 				*r << Format("\'%04d-%02d-%02d\'", x.year, x.month, x.day);
