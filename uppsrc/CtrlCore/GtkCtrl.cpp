@@ -2,7 +2,7 @@
 
 #ifdef GUI_GTK
 
-#define LLOG(x) DLOG(x)
+#define LLOG(x) // DLOG(x)
 
 NAMESPACE_UPP
 
