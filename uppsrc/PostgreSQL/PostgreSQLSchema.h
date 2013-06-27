@@ -79,6 +79,10 @@
 
 #define INDEX                      ATTRIBUTE("create index IDX_@x on @t(@c);", \
                                              "drop index IDX_@x;")
+
+#define PARTIAL_INDEX(cond)        ATTRIBUTE("create index IDX_@x on @t(@c) where " cond ";", \
+                                             "drop index IDX_@x;")
+
 #ifndef REFERENCES
 #define REFERENCES(x)              ATTRIBUTE("alter table @t add constraint FK_@x foreign key "\
                                              "(@c) references " #x ";",\
@@ -126,6 +130,10 @@ ATTRIBUTE("alter table @t add constraint FKL_@t$" #name " foreign key " \
 
 #define INDEX_LIST(name, keys) \
 ATTRIBUTE("create index IDXL_@t$" #name " on @t(" keys ");", \
+          "drop index IDXL_@t$" #name ";");
+
+#define PARTIAL_INDEX_LIST(name, keys, where) \
+ATTRIBUTE("create index IDXL_@t$" #name " on @t(" keys ") where " where ";", \
           "drop index IDXL_@t$" #name ";");
 
 #define UNIQUE_LIST(name, list) \
@@ -195,6 +203,7 @@ ATTRIBUTE("alter table @t add constraint UQ_@t$" #name " unique (" list ");", \
 #undef PRIMARY_KEY
 #undef NOT_NULL
 #undef INDEX
+#undef PARTIAL_INDEX
 #undef UNIQUE
 #undef SQLDEFAULT
 #undef REFERENCES
@@ -205,3 +214,7 @@ ATTRIBUTE("alter table @t add constraint UQ_@t$" #name " unique (" list ");", \
 #undef DUAL_UNIQUE
 #undef UNIQUE_LIST
 #undef SQLCHECK
+#undef INDEX_LIST
+#undef PARTIAL_INDEX_LIST
+#undef PRIMARY_KEY_LIST
+#undef REFERENCES_LIST
