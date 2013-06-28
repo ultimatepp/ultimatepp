@@ -1117,12 +1117,12 @@ String FormatFileSize(int64 n)
 		return Format("%d B  ", n);
 	else
 	if(n < 10000 * 1024)
-		return Format("%d K  ", n >> 10);
+		return Format("%d.%d K  ", n >> 10, (n & 1023) / 103);
 	else
 	if(n < I64(10000000) * 1024)
-		return Format("%d M  ", n >> 20);
+		return Format("%d.%d M  ", n >> 20, (n & 1023) / 103);
 	else
-		return Format("%d G  ", n >> 30);
+		return Format("%d.%d G  ", n >> 30, (n & 1023) / 103);
 }
 
 void FileSel::Update() {
