@@ -22,7 +22,7 @@ XftFont *CreateXftFont(Font font, int angle)
 	String face = font.GetFaceName();
 	FcPattern *p = FcPatternCreate();
 	FcPatternAddString(p, FC_FAMILY, (FcChar8*)~face);
-	FcPatternAddInteger(p, FC_SLANT, font.IsItalic() ? 110 : 0);
+	FcPatternAddInteger(p, FC_SLANT, font.IsItalic() ? FC_SLANT_ITALIC : FC_SLANT_ROMAN);
 	FcPatternAddInteger(p, FC_PIXEL_SIZE, hg);
 	FcPatternAddInteger(p, FC_WEIGHT, font.IsBold() ? FC_WEIGHT_BOLD : FC_WEIGHT_NORMAL);
 	FcPatternAddBool(p, FC_MINSPACE, 1);

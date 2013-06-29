@@ -346,6 +346,7 @@ class HttpRequest : public TcpSocket {
 	String       digest;
 	String       request_headers;
 	String       postdata;
+	String       multipart;
 	VectorMap<String, HttpCookie> cookies;
 
 	String       protocol;
@@ -435,13 +436,15 @@ public:
 	HttpRequest&  PostUData(const String& pd)             { return PostData(UrlEncode(pd)); }
 	HttpRequest&  Post(const String& data)                { POST(); return PostData(data); }
 	HttpRequest&  Post(const char *id, const String& data);
-	HttpRequest&  ClearPost()                             { PostData(Null); GET(); return *this; }
+	HttpRequest&  Part(const char *id, const String& data,
+	                   const char *content_type = NULL, const char *filename = NULL);
+	HttpRequest&  ClearPost()                             { PostData(Null); multipart.Clear(); GET(); return *this; }
 
 	HttpRequest&  Headers(const String& h)                { request_headers = h; return *this; }
 	HttpRequest&  ClearHeaders()                          { return Headers(Null); }
 	HttpRequest&  AddHeaders(const String& h)             { request_headers.Cat(h); return *this; }
 	HttpRequest&  Header(const char *id, const String& data);
-
+	
 	HttpRequest&  Cookie(const HttpCookie& c);
 	HttpRequest&  Cookie(const String& id, const String& value,
 	                     const String& domain = Null, const String& path = Null);
@@ -487,7 +490,7 @@ public:
 		SSLPROXYREQUEST, SSLPROXYRESPONSE, SSLHANDSHAKE,
 		REQUEST, HEADER, BODY,
 		CHUNK_HEADER, CHUNK_BODY, TRAILER,
-		FINISHED, FAILED
+		FINISHED, FAILED,
 	};
 
 	bool    Do();

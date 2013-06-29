@@ -118,6 +118,25 @@ HttpRequest& HttpRequest::Post(const char *id, const String& data)
 	return *this;
 }
 
+HttpRequest& HttpRequest::Part(const char *id, const String& data,
+                               const char *content_type, const char *filename)
+{
+	if(IsNull(multipart)) {
+		POST();
+		multipart = AsString(Uuid::Create());
+		ContentType("multipart/form-data; boundary=" + multipart);
+	}
+	postdata << "--" << multipart << "\r\n"
+	         << "Content-Disposition: form-data; name=\"" << id << "\"";
+	if(filename && *filename)
+	postdata << "; filename=\"" << filename << "\"";
+	postdata << "\r\n";
+	if(content_type && *content_type)
+		postdata << "Content-Type: " << content_type << "\r\n";
+	postdata << "\r\n" << data << "\r\n";
+	return *this;
+}
+
 HttpRequest& HttpRequest::UrlVar(const char *id, const String& data)
 {
 	int c = *path.Last();
@@ -481,6 +500,8 @@ void HttpRequest::StartRequest()
 	}
 	data << " HTTP/1.1\r\n";
 	String pd = postdata;
+	if(!IsNull(multipart))
+		pd << "--" << multipart << "--\r\n";
 	if(method == METHOD_GET || method == METHOD_HEAD)
 		pd.Clear();
 	if(std_headers) {
@@ -521,7 +542,8 @@ void HttpRequest::StartRequest()
 	else
 	if(!force_digest && (!IsNull(username) || !IsNull(password)))
 		data << "Authorization: Basic " << Base64Encode(username + ":" + password) << "\r\n";
-	data << request_headers << "\r\n" << pd;
+	data << request_headers;
+	data << "\r\n" << pd;
 	LLOG("HTTP REQUEST " << host << ":" << port);
 	LLOG("HTTP request:\n" << data);
 }
@@ -717,7 +739,6 @@ void HttpRequest::Finish()
 	}
 	if(status_code >= 300 && status_code < 400) {
 		String url = GetRedirectUrl();
-		GET();
 		if(url.GetCount() && redirect_count++ < max_redirects) {
 			LLOG("--- HTTP redirect " << url);
 			Url(url);
@@ -752,6 +773,8 @@ String HttpRequest::GetPhaseName() const
 		"Receiving chunk header",
 		"Receiving content chunk",
 		"Receiving trailer",
+		"Request with continue",
+		"Waiting for continue header",
 		"Finished",
 		"Failed",
 	};

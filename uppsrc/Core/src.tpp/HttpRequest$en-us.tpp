@@ -202,6 +202,19 @@ ing][@(0.0.255) `&]_[*@3 data])&]
 the format used by HTML forms with `"POST`" method. Returns `*this.&]
 [s3;%% &]
 [s4; &]
+[s5;:HttpRequest`:`:Part`(const char`*`,const String`&`,const char`*`,const char`*`): [_^HttpRequest^ H
+ttpRequest][@(0.0.255) `&]_[* Part]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], 
+[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 data], [@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 content`_type]_`=_NULL, [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 filename]_
+`=_NULL)&]
+[s2;%% First call sets HttpRequest to the multipart mode; unique 
+part boundary is generated automatically. [%-*@3 id] is name of 
+the part, [%-*@3 data] is cotnet. If [%-*@3 content`_type] is not 
+NULL nor empty, it defines `"Content`-Type`" part header. [%-*@3 filename] 
+can be used to define the `"filename`" part of `"Content`-Disposition`" 
+part header.&]
+[s3;%% &]
+[s4; &]
 [s5;:HttpRequest`:`:ClearPost`(`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[* ClearPost
 ]()&]
 [s2;%% Empties all Post data and sets the method to GET.&]
