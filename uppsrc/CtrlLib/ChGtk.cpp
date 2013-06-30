@@ -330,7 +330,7 @@ void ChHostSkin()
 			static GtkWidget *hscrollbar = gtk_hscrollbar_new(GTK_ADJUSTMENT(adj));
 			ChGtkNew(hscrollbar, "slider", GTK_SLIDER|GTK_MARGIN1|GTK_XMARGIN);
 			GtkChSlider(s.hthumb);
-			s.overthumb = false;
+			s.overthumb = true;
 		}
 		else {
 			GtkChScrollBar(s.up.look, s.up2.look, s.vlower, s.vthumb, s.vupper, s.down2.look, s.down.look,
@@ -539,7 +539,6 @@ void ChHostSkin()
 	static int shadowtype;
 	static GtkWidget *top_item;
 	static GtkWidget *menu_item;
-	static GtkWidget *menu;
 	if(!popup) {
 		gtk_widget_style_get(bar, "shadow_type", &shadowtype, NULL);
 		top_item = gtk_menu_item_new_with_label("M");
@@ -552,7 +551,7 @@ void ChHostSkin()
 		gtk_widget_show(popup);
 		GTK_MENU_SHELL(bar)->active = true;
 		menu_item = gtk_menu_item_new_with_label("M");
-		menu = gtk_menu_new ();
+		
 		gtk_menu_shell_append(GTK_MENU_SHELL(popup), menu_item);
 		gtk_widget_realize(menu_item);
 		gtk_widget_show(menu_item);
@@ -586,7 +585,7 @@ void ChHostSkin()
 			sw = GtkInt("selected_shadow_type");
 		
 		s.topitemtext[0] = ChGtkColor(0, top_item);
-		s.topitemtext[1] = ChGtkColor(1, menu);
+		s.topitemtext[1] = ChGtkColor(0, top_item);
 		s.topitemtext[2] = ChGtkColor(2, top_item);
 		SColorMenuText_Write(s.topitemtext[1]);
 		s.topitem[1] = s.topitem[0];
