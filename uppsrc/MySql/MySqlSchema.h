@@ -77,6 +77,15 @@
 #undef INT_
 #undef INT_ARRAY_
 
+#undef INT64
+#undef INT64_ARRAY
+#undef INT64_
+#undef INT64_ARRAY_
+#undef BOOL
+#undef BOOL_ARRAY
+#undef BOOL_
+#undef BOOL_ARRAY_
+
 #undef DOUBLE
 #undef DOUBLE_ARRAY
 #undef DOUBLE_
