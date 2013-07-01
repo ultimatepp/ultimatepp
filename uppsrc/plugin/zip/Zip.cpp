@@ -102,6 +102,8 @@ Zip::Zip()
 
 Zip::Zip(Stream& out)
 {
+	done = 0;
+	zip = NULL;
 	Create(out);
 }
 
@@ -130,7 +132,7 @@ bool FileZip::Finish()
 
 void StringZip::Create()
 {
-	zip.Create();
+	Zip::Create(zip);
 }
 
 String StringZip::Finish()

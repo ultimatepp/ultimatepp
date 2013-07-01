@@ -96,7 +96,7 @@ void UnZip::Create(Stream& _zip)
 
 bool UnZip::IsEof() const
 {
-	return eof || !zip || eof || error || zip->IsEof();
+	return eof || !zip || error || zip->IsEof();
 }
 
 bool UnZip::IsFolder() const
