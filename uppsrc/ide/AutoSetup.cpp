@@ -197,18 +197,18 @@ void AutoSetup()
 		                                       "SOFTWARE\\Microsoft\\Microsoft SDKs\\Windows\\v8.0",
 		                                       HKEY_LOCAL_MACHINE));
 	String bin11;
-	if(!IsNull(sdk11) && FileExists(AppendFileName(sdk11, "VC\\Bin\\cl.exe")))
+	if(!IsNull(sdk11) && FileExists(AppendFileName(sdk11, "VC\\bin\\cl.exe")))
 		bin11 = sdk11;
 	else
-		ExistProgram(bin11, "Program Files (x86)\\Microsoft Visual Studio 11.0", "VC\\Bin\\cl.exe")
-		|| ExistProgram(bin11, "Program Files\\Microsoft Visual Studio 11.0", "VC\\Bin\\cl.exe");
+		ExistProgram(bin11, "Program Files (x86)\\Microsoft Visual Studio 11.0", "VC\\bin\\cl.exe")
+		|| ExistProgram(bin11, "Program Files\\Microsoft Visual Studio 11.0", "VC\\bin\\cl.exe");
 	msc11.sdk <<= sdk11;
 	msc11.dir <<= bin11;
 	msc11.method <<= "MSC11";
 	msc11.create <<= !IsNull(msc11.dir);
-	String vc11_64 = AppendFileName(bin11, "VC\\Bin\\x64");
+	String vc11_64 = AppendFileName(bin11, "VC\\bin\\x64");
 	if(!FileExists(AppendFileName(vc11_64, "cl.exe")))
-		vc11_64 = AppendFileName(bin11, "VC\\Bin\\x86_amd64");
+		vc11_64 = AppendFileName(bin11, "VC\\bin\\x86_amd64");
 	if(bin11.GetLength() && FileExists(AppendFileName(vc11_64, "cl.exe")))
 		msc11.create64 = true;
 	msc11.method64 <<= "MSC11x64";
@@ -324,7 +324,7 @@ void AutoSetup()
 
 	String vs11 = ~msc11.dir;
 	if(!IsNull(vs11) && msc11.create64) {
-		String vc = AppendFileName(vs11, "Vc");
+		String vc = AppendFileName(vs11, "VC");
 		String m = ~msc11.method64;
 		String sdk = ~msc11.sdk;
 		if(IsNull(sdk))
@@ -351,17 +351,19 @@ void AutoSetup()
 			"PATH = " + AsCString(
 			                AppendFileName(vs11, "Common7\\Ide") + ';' +
 							vc11_64 + ';' +
-							AppendFileName(sdk, "Bin") +
+							AppendFileName(sdk, "bin\\x64") +
 							exe
 						) + ";\n"
 			"INCLUDE = " + AsCString(
 							AppendFileName(vc, "Include") + ';' +
-							AppendFileName(sdk, "Include") +
+							AppendFileName(sdk, "Include\\um") + ';' +
+							AppendFileName(sdk, "Include\\shared") + ';' +
+							AppendFileName(sdk, "Include\\winrt") +
 							include
 						   ) + ";\n"
 			"LIB = " + AsCString(
 							vc_lib + ';' +
-							AppendFileName(sdk, "Lib\\x64") +
+							AppendFileName(sdk, "Lib\\win8\\um\\x64") +
 							lib
 			           ) + ";\n"
 		);
@@ -369,7 +371,7 @@ void AutoSetup()
 	}
 
 	if(!IsNull(vs11) && msc11.create) {
-		String vc = AppendFileName(vs11, "Vc");
+		String vc = AppendFileName(vs11, "VC");
 		String m = ~msc11.method;
 		String sdk = ~msc11.sdk;
 		if(IsNull(sdk))
@@ -392,18 +394,20 @@ void AutoSetup()
 			"REMOTE_MAP = \"\";\n"
 			"PATH = " + AsCString(
 			                AppendFileName(vs11, "Common7\\Ide") + ';' +
-							AppendFileName(vc, "Bin") + ';' +
-							AppendFileName(sdk, "Bin") +
+							AppendFileName(vc, "bin") + ';' +
+							AppendFileName(sdk, "bin\\x86") +
 							exe
 						) + ";\n"
 			"INCLUDE = " + AsCString(
 							AppendFileName(vc, "Include") + ';' +
-							AppendFileName(sdk, "Include") +
+							AppendFileName(sdk, "Include\\um") + ';' +
+							AppendFileName(sdk, "Include\\shared") + ';' +
+							AppendFileName(sdk, "Include\\winrt") +
 							include
 						   ) + ";\n"
 			"LIB = " + AsCString(
 							AppendFileName(vc, "Lib") + ';' +
-							AppendFileName(sdk, "Lib") +
+							AppendFileName(sdk, "Lib\\win8\\um\\x86") +
 							lib
 			           ) + ";\n"
 		);
