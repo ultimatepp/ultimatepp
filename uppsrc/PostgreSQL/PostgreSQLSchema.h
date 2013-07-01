@@ -82,7 +82,8 @@
 
 #define PARTIAL_INDEX(cond)        ATTRIBUTE("create index IDX_@x on @t(@c) where " cond ";", \
                                              "drop index IDX_@x;")
-
+#define PARTIAL_INDEX_(name, cond) ATTRIBUTE("create index IDXP_@x" #name " on @t(@c) where " cond ";", \
+                                             "drop index IDXP_@x" #name ";")
 #ifndef REFERENCES
 #define REFERENCES(x)              ATTRIBUTE("alter table @t add constraint FK_@x foreign key "\
                                              "(@c) references " #x ";",\
