@@ -15,35 +15,34 @@ static void sCheckCPU()
 	if(done) return;
 	done = true;
 #ifdef PLATFORM_OSX11
-//	__asm__("pushl %%ebx\n\tmovl $1, %%eax\n\tcpuid\n\tpopl %%ebx" : "=d" (info1), "=c" (info2) : : "%eax");
 	sHasMMX = true;
 	sHasSSE = true;
 	sHasSSE2 = true;
 #else
-#ifdef CPU_AMD64
-	sHasMMX = true;
-	sHasSSE = true;
-	sHasSSE2 = true;
-#else
-#ifdef COMPILER_MSC
-	dword info1;
-	dword info2;
-	__asm {
-		mov eax, 1
-		cpuid
-		mov info1, edx
-		mov info2, ecx
-	}
-#else
-	dword info1;
-	dword info2;
-	__asm__("movl $1, %%eax\n\tcpuid" : "=d" (info1), "=c" (info2) : : "%eax", "%ebx");
-#endif
-	sHasMMX = ((info1 >> 23) & 0x1);
-	sHasSSE = ((info1 >> 25) & 0x1);
-	sHasSSE2 = ((info1 >> 26) & 0x1);
-	sHasSSE3 = ((info2) & 0x1);
-#endif
+	#ifdef CPU_AMD64
+		sHasMMX = true;
+		sHasSSE = true;
+		sHasSSE2 = true;
+	#else
+		#ifdef COMPILER_MSC
+			dword info1;
+			dword info2;
+			__asm {
+				mov eax, 1
+				cpuid
+				mov info1, edx
+				mov info2, ecx
+			}
+		#else
+			dword info1;
+			dword info2;
+			__asm__("pushl %%ebx\n\tmovl $1, %%eax\n\tcpuid\n\tpopl %%ebx" : "=d" (info1), "=c" (info2) : : "%eax");
+		#endif
+		sHasMMX = ((info1 >> 23) & 0x1);
+		sHasSSE = ((info1 >> 25) & 0x1);
+		sHasSSE2 = ((info1 >> 26) & 0x1);
+		sHasSSE3 = ((info2) & 0x1);
+	#endif
 #endif
 }
 
