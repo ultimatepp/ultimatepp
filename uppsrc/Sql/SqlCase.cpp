@@ -162,6 +162,7 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 				             x.year, x.month, x.day, x.second + 60 * (x.minute + 60 * x.hour));
 				break;
 			case PGSQL:
+				if(x.year < 1) x.year = 1; // Date::Low()
 				*r << "timestamp ";
 			default:
 				*r << Format("\'%04d-%02d-%02d %02d:%02d:%02d\'",
