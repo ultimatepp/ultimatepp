@@ -590,10 +590,7 @@ private:
 	String  GetInfoPart(int i) const;
 
 // System window interface...
-	void WndShow0(bool b);
 	void WndShow(bool b);
-
-	void WndSetPos0(const Rect& rect);
 	void WndSetPos(const Rect& rect);
 
 	bool IsWndOpen() const;
@@ -608,36 +605,28 @@ private:
 	static void DoKillFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl);
 	static void DoSetFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl, bool activate);
 
+	bool SetFocus0(bool activate);
 	void ActivateWnd();
 	void ClickActivateWnd();
-	bool SetFocus0(bool activate);
-	void SetWndFocus0(bool *b);
 	bool SetWndFocus();
 	bool HasWndFocus() const;
 
 	void WndInvalidateRect(const Rect& r);
 
-	void WndScrollView0(const Rect& r, int dx, int dy);
 	void WndScrollView(const Rect& r, int dx, int dy);
 
-	void SetWndForeground0();
 	void SetWndForeground();
 	bool IsWndForeground() const;
 
-	void WndEnable0(bool *b);
-	bool WndEnable(bool b);
+	void WndEnable(bool b);
 
 	Rect GetWndScreenRect() const;
-	void WndUpdate0();
+
 	void WndUpdate();
-	void WndUpdate0r(const Rect& r);
 	void WndUpdate(const Rect& r);
 
 	void WndFree();
-	void WndDestroy0();
 	void WndDestroy();
-
-	static void GuiSleep0(int ms);
 
 	void SysEndLoop();
 
@@ -1156,7 +1145,6 @@ public:
 
 	bool   IsPopUp() const          { return popup; }
 
-	static void  EventLoop0(Ctrl *ctrl);
 	static void  EventLoop(Ctrl *loopctrl = NULL);
 	static int   GetLoopLevel()     { return LoopLevel; }
 	static Ctrl *GetLoopCtrl()      { return LoopCtrl; }

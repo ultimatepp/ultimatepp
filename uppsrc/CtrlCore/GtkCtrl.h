@@ -1,7 +1,5 @@
 //$ class Ctrl {
-	void Create0(Ctrl *owner, bool popup);
 	void Create(Ctrl *owner, bool popup);
-	void PopUp0(Ctrl *owner, bool activate);
 
 	static gboolean GtkProc(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 	static void     IMCommit(GtkIMContext *context, gchar *str, gpointer user_data);

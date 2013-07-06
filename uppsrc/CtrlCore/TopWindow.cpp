@@ -66,16 +66,6 @@ bool TopWindow::IsShowEnabled() const
 	return true;
 }
 
-void TopWindow::SyncCaption()
-{
-	Call(THISBACK(SyncCaption0));
-}
-
-void TopWindow::SyncTitle()
-{
-	Call(THISBACK(SyncTitle0));
-}
-
 void TopWindow::DefaultBreak()
 {
 	if(FindAction(IDCANCEL))

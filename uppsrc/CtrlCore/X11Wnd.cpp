@@ -420,7 +420,7 @@ void Ctrl::SysEndLoop()
 void Ctrl::EventLoop0(Ctrl *ctrl)
 {
 	GuiLock __;
-	ASSERT(IsMainThread());
+	ASSERT_(IsMainThread(), "Event loop can only run in the main thread");
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
 	int64 loopno = ++EventLoopNo;
@@ -465,13 +465,8 @@ void Ctrl::SyncExpose()
 
 void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 {
-	Call(callback3(this, &Ctrl::Create0, owner, redirect, savebits));
-}
-
-void Ctrl::Create0(Ctrl *owner, bool redirect, bool savebits)
-{
 	GuiLock __;
-	ASSERT(IsMainThread());
+	ASSERT(IsMainThread(), "Only main thread can create windows");
 	LLOG("Create " << Name() << " " << GetRect());
 	ASSERT(!IsChild() && !IsOpen());
 	LLOG("Ungrab1");
@@ -534,7 +529,7 @@ void Ctrl::Create0(Ctrl *owner, bool redirect, bool savebits)
 	SyncIMPosition();
 }
 
-void Ctrl::WndDestroy0()
+void Ctrl::WndDestroy()
 {
 	GuiLock __;
 	LLOG("WndDestroy " << Name());

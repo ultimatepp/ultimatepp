@@ -28,6 +28,20 @@ static void sAdd(Ctrl& dlg, int fcy, int bcy, int& bx, int bcx, int gap, Button&
 	}
 }
 
+void sExecutePrompt(PromptDlgWnd__ *dlg, int *result)
+{
+	dlg->Open();
+	Vector<Ctrl *> wins = Ctrl::GetTopWindows();
+	for(int i = 0; i < wins.GetCount(); i++) {
+		TopWindow *w = dynamic_cast<TopWindow *>(wins[i]);
+		if(w && w->IsTopMost()) {
+			dlg->TopMost();
+			break;
+		}
+	}
+	*result = dlg->RunAppModal();
+}
+
 int Prompt(Callback1<const String&> WhenLink,
            const char *title, const Image& iconbmp, const char *qtf, bool okcancel,
            const char *button1, const char *button2, const char *button3,
@@ -106,17 +120,10 @@ int Prompt(Callback1<const String&> WhenLink,
 		sAdd(dlg, fcy, bcy, bx, bcx, gap, b3, button3, im3);
 	}
 	dlg.WhenClose = dlg.Breaker(button3 ? -1 : 0);
-	dlg.Open();
-	Vector<Ctrl *> wins = Ctrl::GetTopWindows();
-	for(int i = 0; i < wins.GetCount(); i++) {
-		TopWindow *w = dynamic_cast<TopWindow *>(wins[i]);
-		if(w && w->IsTopMost()) {
-			dlg.TopMost();
-			break;
-		}
-	}
 	dlg.Title(title);
-	return dlg.RunAppModal();
+	int result;
+	Ctrl::Call(callback2(sExecutePrompt, &dlg, &result));
+	return result;
 }
 
 int Prompt(Callback1<const String&> WhenLink,

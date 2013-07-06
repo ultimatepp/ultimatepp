@@ -49,7 +49,6 @@ private:
 
 protected:
 	       void   Create(Ctrl *owner, bool redirect, bool savebits);
-	       void   Create0(Ctrl *owner, bool redirect, bool savebits);
 	       void   SyncExpose();
 	       void   TakeFocus();
 	static Window GetXServerFocusWindow();

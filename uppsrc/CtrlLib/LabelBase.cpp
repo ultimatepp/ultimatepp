@@ -521,7 +521,7 @@ DisplayPopup::~DisplayPopup()
 void DisplayPopup::Sync()
 {
 	if(!IsMainThread()) {
-		PostCallback(THISBACK(Sync));
+		PostCallback(PTEBACK(Sync));
 		return;
 	}
 	if(display && ctrl && !ctrl->IsDragAndDropTarget() && !IsDragAndDropTarget()) {

@@ -485,119 +485,44 @@ Ctrl *Ctrl::GetActiveCtrl()
 
 UDropTarget *NewUDropTarget(Ctrl *);
 
-struct Ctrl::CreateBox {
-	HWND  parent;
-	DWORD style;
-	DWORD exstyle;
-	bool  savebits;
-	int   show;
-	bool  dropshadow;
-};
-
 void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int show, bool dropshadow)
 {
-	CreateBox cr;
-	cr.parent = parent;
-	cr.style = style;
-	cr.exstyle = exstyle;
-	cr.savebits = savebits;
-	cr.show = show;
-	cr.dropshadow = dropshadow;
-	Call(callback1(this, &Ctrl::Create0, &cr));
-}
-
-#if 0
-void Ctrl::Create0(Ctrl::CreateBox *cr)
-{
 	GuiLock __;
-	ASSERT(IsMainThread());
-	LLOG("Ctrl::Create(parent = " << (void *)parent << ") in " <<UPP::Name(this) << BeginIndent);
-	ASSERT(!IsChild() && !IsOpen());
-	Rect r = GetRect();
-	AdjustWindowRectEx(r, cr->style, FALSE, cr->exstyle);
-	isopen = true;
-	top = new Top;
-	ASSERT(!cr->parent || IsWindow(cr->parent));
-	if(!IsWinXP())
-		cr->dropshadow = false;
-#ifdef PLATFORM_WINCE
-		if(parent)
-			top->hwnd = CreateWindowExW(cr->exstyle,
-			                            cr->savebits ? cr->dropshadow ? L"UPP-CLASS-SB-DS-W" : L"UPP-CLASS-SB-W"
-			                                         : cr->dropshadow ? L"UPP-CLASS-DS-W"    : L"UPP-CLASS-W",
-			                            L"", cr->style, r.left, r.top, r.Width(), r.Height(),
-			                            cr->parent, NULL, hInstance, this);
-		else
-			top->hwnd = CreateWindowW(L"UPP-CLASS-W",
-			                          L"", WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-			                          cr->parent, NULL, hInstance, this);
-#else
-	if(IsWinNT() && (!cr->parent || IsWindowUnicode(cr->parent)))
-		top->hwnd = CreateWindowExW(cr->exstyle,
-		                            cr->savebits ? cr->dropshadow ? L"UPP-CLASS-SB-DS-W" : L"UPP-CLASS-SB-W"
-		                                         : cr->dropshadow ? L"UPP-CLASS-DS-W"    : L"UPP-CLASS-W",
-		                            L"", cr->style, r.left, r.top, r.Width(), r.Height(),
-		                            cr->parent, NULL, hInstance, this);
-	else
-		top->hwnd = CreateWindowEx(cr->exstyle,
-		                           cr->savebits ? cr->dropshadow ? "UPP-CLASS-SB-DS-A" : "UPP-CLASS-SB-A"
-		                                        : cr->dropshadow ? "UPP-CLASS-DS-A"    : "UPP-CLASS-A",
-		                           "", cr->style, r.left, r.top, r.Width(), r.Height(),
-		                           cr->parent, NULL, hInstance, this);
-#endif
-
-	inloop = false;
-
-	ASSERT(top->hwnd);
-
-	::ShowWindow(top->hwnd, visible ? cr->show : SW_HIDE);
-//	::UpdateWindow(hwnd);
-	StateH(OPEN);
-	LLOG(EndIndent << "//Ctrl::Create in " <<UPP::Name(this));
-	RegisterDragDrop(top->hwnd, (LPDROPTARGET) (top->dndtgt = NewUDropTarget(this)));
-	CancelMode();
-	RefreshLayoutDeep();
-}
-#else
-// Fix to avoid black corners temorarily artifact
-void Ctrl::Create0(Ctrl::CreateBox *cr)
-{
-	GuiLock __;
-	ASSERT(IsMainThread());
+	ASSERT_(IsMainThread(), "Window creation can only happen in the main thread");
 	LLOG("Ctrl::Create(parent = " << (void *)parent << ") in " <<UPP::Name(this) << LOG_BEGIN);
 	ASSERT(!IsChild() && !IsOpen());
 	Rect r = GetRect();
-	AdjustWindowRectEx(r, cr->style, FALSE, cr->exstyle);
+	AdjustWindowRectEx(r, style, FALSE, exstyle);
 	isopen = true;
 	top = new Top;
-	ASSERT(!cr->parent || IsWindow(cr->parent));
-	cr->style &= ~WS_VISIBLE;
+	ASSERT(!parent || IsWindow(parent));
+	style &= ~WS_VISIBLE;
 	if(!IsWinXP())
-		cr->dropshadow = false;
+		dropshadow = false;
 #ifdef PLATFORM_WINCE
 		if(parent)
-			top->hwnd = CreateWindowExW(cr->exstyle,
-			                            cr->savebits ? cr->dropshadow ? L"UPP-CLASS-SB-DS-W" : L"UPP-CLASS-SB-W"
-			                                         : cr->dropshadow ? L"UPP-CLASS-DS-W"    : L"UPP-CLASS-W",
-			                            L"", cr->style, 0, 0, 0, 0,
-			                            cr->parent, NULL, hInstance, this);
+			top->hwnd = CreateWindowExW(exstyle,
+			                            savebits ? dropshadow ? L"UPP-CLASS-SB-DS-W" : L"UPP-CLASS-SB-W"
+			                                         : dropshadow ? L"UPP-CLASS-DS-W"    : L"UPP-CLASS-W",
+			                            L"", style, 0, 0, 0, 0,
+			                            parent, NULL, hInstance, this);
 		else
 			top->hwnd = CreateWindowW(L"UPP-CLASS-W",
 			                          L"", WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-			                          cr->parent, NULL, hInstance, this);
+			                          parent, NULL, hInstance, this);
 #else
-	if(IsWinNT() && (!cr->parent || IsWindowUnicode(cr->parent)))
-		top->hwnd = CreateWindowExW(cr->exstyle,
-		                            cr->savebits ? cr->dropshadow ? L"UPP-CLASS-SB-DS-W" : L"UPP-CLASS-SB-W"
-		                                         : cr->dropshadow ? L"UPP-CLASS-DS-W"    : L"UPP-CLASS-W",
-		                            L"", cr->style, 0, 0, 0, 0,
-		                            cr->parent, NULL, hInstance, this);
+	if(IsWinNT() && (!parent || IsWindowUnicode(parent)))
+		top->hwnd = CreateWindowExW(exstyle,
+		                            savebits ? dropshadow ? L"UPP-CLASS-SB-DS-W" : L"UPP-CLASS-SB-W"
+		                                         : dropshadow ? L"UPP-CLASS-DS-W"    : L"UPP-CLASS-W",
+		                            L"", style, 0, 0, 0, 0,
+		                            parent, NULL, hInstance, this);
 	else
-		top->hwnd = CreateWindowEx(cr->exstyle,
-		                           cr->savebits ? cr->dropshadow ? "UPP-CLASS-SB-DS-A" : "UPP-CLASS-SB-A"
-		                                        : cr->dropshadow ? "UPP-CLASS-DS-A"    : "UPP-CLASS-A",
-		                           "", cr->style, 0, 0, 0, 0,
-		                           cr->parent, NULL, hInstance, this);
+		top->hwnd = CreateWindowEx(exstyle,
+		                           savebits ? dropshadow ? "UPP-CLASS-SB-DS-A" : "UPP-CLASS-SB-A"
+		                                        : dropshadow ? "UPP-CLASS-DS-A"    : "UPP-CLASS-A",
+		                           "", style, 0, 0, 0, 0,
+		                           parent, NULL, hInstance, this);
 #endif
 
 	inloop = false;
@@ -605,7 +530,7 @@ void Ctrl::Create0(Ctrl::CreateBox *cr)
 	ASSERT(top->hwnd);
 
 	::MoveWindow(top->hwnd, r.left, r.top, r.Width(), r.Height(), false); // To avoid "black corners" artifact effect
-	::ShowWindow(top->hwnd, visible ? cr->show : SW_HIDE);
+	::ShowWindow(top->hwnd, visible ? show : SW_HIDE);
 //	::UpdateWindow(hwnd);
 	StateH(OPEN);
 	LLOG(LOG_END << "//Ctrl::Create in " <<UPP::Name(this));
@@ -613,8 +538,6 @@ void Ctrl::Create0(Ctrl::CreateBox *cr)
 	CancelMode();
 	RefreshLayoutDeep();
 }
-
-#endif
 
 void ReleaseUDropTarget(UDropTarget *dt);
 
@@ -640,7 +563,7 @@ void Ctrl::WndFree()
 	top = NULL;
 }
 
-void Ctrl::WndDestroy0()
+void Ctrl::WndDestroy()
 {
 	GuiLock __;
 	if(top && top->hwnd) {
@@ -884,10 +807,10 @@ bool Ctrl::ProcessEvents(bool *quit)
 	return false;
 }
 
-void Ctrl::EventLoop0(Ctrl *ctrl)
+void Ctrl::EventLoop(Ctrl *ctrl)
 {
 	GuiLock __;
-	ASSERT(IsMainThread());
+	ASSERT_(IsMainThread(), "Event loop can only run in the main thread");
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
 	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
@@ -917,7 +840,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	LLOG(LOG_END << "Leaving event loop ");
 }
 
-void Ctrl::GuiSleep0(int ms)
+void Ctrl::GuiSleep(int ms)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
@@ -946,7 +869,7 @@ void Ctrl::WndDestroyCaret()
 	::DestroyCaret();
 }
 
-void Ctrl::WndCreateCaret0(const Rect& cr)
+void Ctrl::WndCreateCaret(const Rect& cr)
 {
 	GuiLock __;
 	LLOG("Ctrl::WndCreateCaret(" << cr << ") in " << UPP::Name(this));
@@ -971,7 +894,7 @@ Rect Ctrl::GetWndScreenRect() const
 	return r;
 }
 
-void Ctrl::WndShow0(bool b)
+void Ctrl::WndShow(bool b)
 {
 	GuiLock __;
 	HWND hwnd = GetHWND();
@@ -979,7 +902,7 @@ void Ctrl::WndShow0(bool b)
 		::ShowWindow(hwnd, b ? SW_SHOW : SW_HIDE);
 }
 
-void Ctrl::WndUpdate0()
+void Ctrl::WndUpdate()
 {
 	GuiLock __;
 	HWND hwnd = GetHWND();
@@ -1117,7 +1040,7 @@ int Ctrl::GetKbdSpeed()
 #endif
 }
 
-void Ctrl::SetWndForeground0()
+void Ctrl::SetWndForeground()
 {
 	GuiLock __;
 	LLOG("Ctrl::SetWndForeground() in " << UPP::Name(this));
@@ -1142,16 +1065,16 @@ bool Ctrl::IsWndForeground() const
 	return hwnd == fore;
 }
 
-void Ctrl::WndEnable0(bool *b)
+void Ctrl::WndEnable(bool b)
 {
 	GuiLock __;
 	LLOG("Ctrl::WndEnable(" << (b && *b) << ") in " << UPP::Name(this) << ", focusCtrlWnd = " << UPP::Name(~focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
-	if(*b)
+	if(b)
 		ReleaseCapture();
 	LLOG("//Ctrl::WndEnable(" << (b && *b) << ") -> false " <<UPP::Name(this) << ", focusCtrlWnd = " <<UPP::Name(~focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
 }
 
-void Ctrl::SetWndFocus0(bool *b)
+bool Ctrl::SetWndFocus()
 {
 	GuiLock __;
 	LLOG("Ctrl::SetWndFocus() in " << UPP::Name(this));
@@ -1160,11 +1083,10 @@ void Ctrl::SetWndFocus0(bool *b)
 		LLOG("Ctrl::SetWndFocus() -> ::SetFocus(" << (void *)hwnd << ")");
 //		::SetActiveWindow(hwnd);
 		::SetFocus(hwnd);
-		*b = true;
-		return;
+		return true;
 	}
 	LLOG("//Ctrl::SetWndFocus() in " <<UPP::Name(this) << ", active window = " << (void *)::GetActiveWindow());
-	*b = false;
+	return false;
 }
 
 bool Ctrl::HasWndFocus() const
@@ -1219,7 +1141,7 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 		::InvalidateRect(hwnd, r, false);
 }
 
-void Ctrl::WndSetPos0(const Rect& rect)
+void Ctrl::WndSetPos(const Rect& rect)
 {
 	GuiLock __;
 	LLOG("WndSetPos " << UPP::Name(this));
@@ -1238,7 +1160,7 @@ void Ctrl::WndSetPos0(const Rect& rect)
 	fullrefresh = false;
 }
 
-void Ctrl::WndUpdate0r(const Rect& r)
+void Ctrl::WndUpdate(const Rect& r)
 {
 	GuiLock __;
 	LLOG("WndUpdate " << UPP::Name(this));
@@ -1264,7 +1186,7 @@ void Ctrl::WndUpdate0r(const Rect& r)
 	}
 }
 
-void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
+void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
 	LLOG("WndScrollView " << UPP::Name(this));

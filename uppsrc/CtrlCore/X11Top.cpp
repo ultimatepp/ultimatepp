@@ -148,11 +148,6 @@ void TopWindow::SyncState0()
 	}
 }
 
-void TopWindow::SyncState()
-{
-	Call(THISBACK(SyncState0));
-}
-
 typedef struct {
     unsigned long flags;
     unsigned long functions;
@@ -262,7 +257,7 @@ void TopWindow::CenterRect(Ctrl *owner)
 
 void TopWindow::Open(Ctrl *owner)
 {
-	Call(PTEBACK1(Open0, owner));
+	Open0(owner);
 }
 
 void TopWindow::Open0(Ctrl *owner)
