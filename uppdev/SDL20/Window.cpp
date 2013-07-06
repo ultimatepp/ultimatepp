@@ -1,5 +1,7 @@
 #include "SDL20.h"
 
+NAMESPACE_UPP
+
 bool SDLWindow::Create(const Rect& rect, const char *title)
 {
 	win = SDL_CreateWindow(title, rect.left, rect.top, rect.GetWidth(), rect.GetHeight(),
@@ -48,3 +50,5 @@ SDLWindow::~SDLWindow()
 {
 	Destroy();
 }
+
+END_UPP_NAMESPACE
