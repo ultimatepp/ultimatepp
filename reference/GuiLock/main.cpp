@@ -6,6 +6,7 @@ struct App : TopWindow {
 	Thread work;
 
 	void Work();
+	void AskQuit(bool *quit);
 	
 	ArrayCtrl list;
 	
@@ -15,6 +16,11 @@ struct App : TopWindow {
 	~App();
 };
 
+void App::AskQuit(bool *quit)
+{
+	*quit = PromptYesNo("Quit?");
+}
+
 void App::Work()
 {
 	for(;;) {
@@ -23,7 +29,9 @@ void App::Work()
 		if(IsShutdownThreads())
 			break;
 		if(list.GetCount() > 100) {
-			if(PromptYesNo("Quit?")) {
+			bool quit;
+			Call(PTEBACK1(AskQuit, &quit));
+			if(quit) {
 				Break();
 				return;
 			}
