@@ -71,7 +71,7 @@ void Ctrl::DoPaint(const Vector<Rect>& invalid)
 	}
 }
 
-void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
+void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
 	if(r.IsEmpty() || !GetWindow()) return;
@@ -383,11 +383,11 @@ void WakeUpGuiThread()
 		IGNORE_RESULT(write(WakePipe[1], "\1", 1));
 }
 
-void Ctrl::GuiSleep0(int ms)
+void Ctrl::GuiSleep(int ms)
 {
 	GuiLock __;
 	LLOG(GetTickCount() << " GUISLEEP " << ms);
-	ASSERT(IsMainThread());
+	ASSERT_(IsMainThread(), "Only main thread can perform GuiSleep");
 	timeval timeout;
 	timeout.tv_sec = ms / 1000;
 	timeout.tv_usec = ms % 1000 * 1000;
@@ -417,7 +417,7 @@ void Ctrl::SysEndLoop()
 {
 }
 
-void Ctrl::EventLoop0(Ctrl *ctrl)
+void Ctrl::EventLoop(Ctrl *ctrl)
 {
 	GuiLock __;
 	ASSERT_(IsMainThread(), "Event loop can only run in the main thread");
@@ -434,7 +434,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 
 	while(loopno > EndSessionLoopNo && (ctrl ? ctrl->InLoop() && ctrl->IsOpen() : GetTopCtrls().GetCount())) {
 		XEvent event;
-		GuiSleep0(granularity);
+		GuiSleep(granularity);
 		SyncMousePos();
 		while(IsWaitingEvent()) {
 			LTIMING("XNextEvent");
@@ -466,7 +466,7 @@ void Ctrl::SyncExpose()
 void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 {
 	GuiLock __;
-	ASSERT(IsMainThread(), "Only main thread can create windows");
+	ASSERT_(IsMainThread(), "Only main thread can create windows");
 	LLOG("Create " << Name() << " " << GetRect());
 	ASSERT(!IsChild() && !IsOpen());
 	LLOG("Ungrab1");
@@ -682,7 +682,7 @@ Ctrl *Ctrl::GetOwner()
 	return q >= 0 ? Xwindow()[q].owner : NULL;
 }
 
-void Ctrl::WndShow0(bool b)
+void Ctrl::WndShow(bool b)
 {
 	GuiLock __;
 	LLOG("WndShow " << b);
@@ -700,7 +700,7 @@ void Ctrl::WndShow0(bool b)
 	}
 }
 
-void Ctrl::WndUpdate0()
+void Ctrl::WndUpdate()
 {
 	GuiLock __;
 	LTIMING("WndUpdate");
@@ -718,7 +718,7 @@ void Ctrl::WndUpdate0()
 	}
 }
 
-void Ctrl::WndUpdate0r(const Rect& r)
+void Ctrl::WndUpdate(const Rect& r)
 {
 	GuiLock __;
 	LTIMING("WndUpdate Rect");
@@ -734,7 +734,7 @@ void Ctrl::WndUpdate0r(const Rect& r)
 	xw.invalid = Subtract(xw.invalid, r, dummy);
 }
 
-void Ctrl::WndSetPos0(const Rect& r)
+void Ctrl::WndSetPos(const Rect& r)
 {
 	GuiLock __;
 	if(!top) return;
@@ -882,11 +882,10 @@ void Ctrl::KillFocus(Window window)
 		w.ctrl->KillFocusWnd();
 }
 
-void Ctrl::SetWndFocus0(bool *b)
+bool Ctrl::SetWndFocus()
 {
 	GuiLock __;
 	LLOG("SetWndFocus " << Name());
-	*b = false;
 	if(top && top->window != focusWindow && IsEnabled() && IsVisible()) {
 		LLOG("Setting focus... ");
 		LTIMING("XSetInfputFocus");
@@ -897,8 +896,9 @@ void Ctrl::SetWndFocus0(bool *b)
 			focusWindow = top->window;
 			SetFocusWnd();
 		}
-		*b = true;
+		return true;
 	}
+	return false;
 }
 
 bool Ctrl::HasWndFocus() const
@@ -1010,7 +1010,7 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 	Invalidate(Xwindow().Get(top->window), r);
 }
 
-void Ctrl::SetWndForeground0()
+void Ctrl::SetWndForeground()
 {
 	GuiLock __;
 	LLOG("SetWndForeground " << Name());
@@ -1037,20 +1037,16 @@ bool Ctrl::IsWndForeground() const
 	return ~focusCtrlWnd == (q ? q : GetTopCtrl());
 }
 
-void Ctrl::WndEnable0(bool *b)
+void Ctrl::WndEnable(bool b)
 {
 	GuiLock __;
 	LLOG("WndEnable");
-	if(!top) {
-		*b = false;
-		return;
-	}
-	if(!*b) {
+	if(!top) return;
+	if(!b) {
 		ReleaseCapture();
 		if(HasWndFocus())
 			XSetInputFocus(Xdisplay, None, RevertToPointerRoot, CurrentTime);
 	}
-	*b = true;
 }
 
 // 01/12/2007 - mdelfede

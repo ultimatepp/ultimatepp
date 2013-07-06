@@ -843,7 +843,7 @@ void Ctrl::EventLoop(Ctrl *ctrl)
 void Ctrl::GuiSleep(int ms)
 {
 	GuiLock __;
-	ASSERT(IsMainThread());
+	ASSERT_(IsMainThread(), "Only the main thread can perform GuiSleep");
 	ELOG("GuiSleep");
 	int level = LeaveGuiMutexAll();
 #if !defined(flagDLL) && !defined(PLATFORM_WINCE)

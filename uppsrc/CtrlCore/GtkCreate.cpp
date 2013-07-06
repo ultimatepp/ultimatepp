@@ -9,7 +9,7 @@ NAMESPACE_UPP
 void Ctrl::Create(Ctrl *owner, bool popup)
 {
 	GuiLock __;
-	ASSERT(IsMainThread());
+	ASSERT_(IsMainThread(), "Only the main thread can open a window");
 	LLOG("Create " << Name() << " " << GetRect());
 	ASSERT(!IsChild() && !IsOpen());
 	LLOG("Ungrab1");
@@ -117,12 +117,7 @@ void Ctrl::GuiPlatformRemove()
 			i++;
 }
 
-void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
-{
-	Call(callback2(this, &Ctrl::PopUp0, owner, activate));
-}
-
-void Ctrl::PopUp0(Ctrl *owner, bool activate)
+void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool, bool)
 {
 	GuiLock __;
 	LLOG("POPUP " << Name() << ", " << GetRect() << ", activate " << activate);

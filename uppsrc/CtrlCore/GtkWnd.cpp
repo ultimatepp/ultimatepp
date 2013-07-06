@@ -191,7 +191,7 @@ Rect Ctrl::GetWndScreenRect() const
 	return Null;
 }
 
-void Ctrl::WndShow0(bool b)
+void Ctrl::WndShow(bool b)
 {
 	GuiLock __;
 	LLOG("WndShow " << Name() << ", " << b);
@@ -301,7 +301,7 @@ int Ctrl::GetKbdSpeed()
 	return 1000 / 32;
 }
 
-void Ctrl::SetWndForeground0()
+void Ctrl::SetWndForeground()
 {
 	GuiLock __;
 	if(top)
@@ -343,18 +343,19 @@ void Ctrl::FocusSync()
 	}
 }
 
-void Ctrl::SetWndFocus(bool *b)
+bool Ctrl::SetWndFocus()
 {
 	GuiLock __;
 	LLOG("SetWndFocus0 " << Upp::Name(this) << ", top: " << top);
 	if(top) {
 		LLOG("SetWndFocus0 DO gdk: " << gdk());
-		SetWndForeground0();
+		SetWndForeground();
 		int t0 = msecs();
 		while(!gtk_window_is_active(gtk()) && msecs() - t0 < 500) // Wait up to 500ms for window to become active - not ideal, but only possibility
 			FetchEvents(true);
 		FocusSync();
 	}
+	return true;
 }
 
 void Ctrl::WndInvalidateRect(const Rect& r)
@@ -365,7 +366,7 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 //	gtk_widget_queue_draw_area(top->window, r.left, r.top, r.GetWidth(), r.GetHeight());
 }
 
-void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
+void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
 	LLOG("ScrollView " << rect);
@@ -391,7 +392,7 @@ bool Ctrl::SweepConfigure(bool wait)
 	return r;
 }
 
-void Ctrl::WndSetPos0(const Rect& rect)
+void Ctrl::WndSetPos(const Rect& rect)
 {
 	LLOG("WndSetPos0 " << rect);
 	GuiLock __;
@@ -413,11 +414,11 @@ void Ctrl::WndSetPos0(const Rect& rect)
 	LLOG("-- WndSetPos0 " << rect << " " << msecs() - t0);
 }
 
-void Ctrl::WndEnable(bool *b)
+void Ctrl::WndEnable(bool b)
 {
 	GuiLock __;
 	if(top) {
-		gtk_widget_set_sensitive(top->window, *b);
+		gtk_widget_set_sensitive(top->window, b);
 		StateH(ENABLE);
 	}
 }
@@ -426,7 +427,7 @@ void Ctrl::WndUpdate(const Rect& r)
 {
 	GuiLock __;
 	LLOG("WndUpdate0r " << r);
-	WndUpdate0(); // Not found a way how to update only part of window
+	WndUpdate(); // Not found a way how to update only part of window
 }
 
 void Ctrl::WndUpdate()
