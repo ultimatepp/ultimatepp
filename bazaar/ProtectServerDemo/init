@@ -1,4 +1,4 @@
 #ifndef _ProtectServerDemo_icpp_init_stub
 #define _ProtectServerDemo_icpp_init_stub
-#include "Protect/init"
+#include "ProtectServer/init"
 #endif

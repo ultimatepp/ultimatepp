@@ -1,31 +1,12 @@
-description "Software copy protection module\377";
+description "Copy protection Protect package - code encryption\377";
 
 uses
 	Core,
 	Cypher,
-	Web,
 	ProductVersion;
 
-uses(USE_SQLITE) plugin\sqlite3;
-
-uses(!USE_SQLITE) MySql;
-
 file
-	ProtectStatus.h,
-	Protect.t,
-	ProtectTranslations.icpp,
-	ProtectStatus.cpp,
 	Protect.h,
 	Protect.cpp,
-	NetworkAdapter.h,
-	NetworkAdapter_WIN.cpp,
-	NetworkAdapter_POSIX.cpp,
-	ProtectDB.sch,
-	ProtectDB.h,
-	ProtectDB.cpp,
-	ProtectServer.h,
-	ProtectServer.cpp,
-	ProtectClient.h,
-	ProtectClient.cpp,
 	srcdoc.tpp;
 

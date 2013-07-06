@@ -1,0 +1,19 @@
+description "Copy protection Protect package - client side\377";
+
+uses
+	Core,
+	Cypher,
+	Web,
+	ProductVersion;
+
+file
+	NetworkAdapter.h,
+	NetworkAdapter_WIN.cpp,
+	NetworkAdapter_POSIX.cpp,
+	ProtectStatus.h,
+	ProtectClient.t,
+	ProtectTranslations.icpp,
+	ProtectStatus.cpp,
+	ProtectClient.h,
+	ProtectClient.cpp;
+

@@ -27,8 +27,9 @@ ProtectClientDemo::ProtectClientDemo()
 	
 	// setup client url and key
 	client
-//		.SetURL("localhost/scgi/testing")
-		.SetURL("timberstruct.it/scgi/testing")
+		.SetURL("localhost/scgi/testing")
+//		.SetURL("localhost/scgi")
+//		.SetURL("timberstruct.it/scgi/testing")
 		.SetCommunicationKey(ScanHexString("aabbccddeeff00112233445566778899"))
 	;
 	

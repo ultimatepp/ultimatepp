@@ -1,0 +1,4 @@
+#include <Core/Core.h>
+
+#define TFILE <ProtectClient/ProtectClient.t>
+#include <Core/t.h>

@@ -1,7 +1,7 @@
 description "Protect server demo\377";
 
 uses
-	Protect;
+	ProtectServer;
 
 file
 	main.cpp;

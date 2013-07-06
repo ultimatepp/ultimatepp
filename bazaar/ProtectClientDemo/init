@@ -1,6 +1,5 @@
 #ifndef _ProtectClientDemo_icpp_init_stub
 #define _ProtectClientDemo_icpp_init_stub
 #include "CtrlLib/init"
-#include "Web/init"
-#include "Protect/init"
+#include "ProtectClient/init"
 #endif

@@ -5,7 +5,7 @@
 #include <Web/Web.h>
 #include <Cypher/Cypher.h>
 
-#include "ProtectStatus.h"
+#include <ProtectClient/ProtectStatus.h>
 #include "ProtectDB.h"
 
 NAMESPACE_UPP

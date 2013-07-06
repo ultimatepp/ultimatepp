@@ -2,8 +2,7 @@ description "Web client for Protect web-authentication\377";
 
 uses
 	CtrlLib,
-	Web,
-	Protect;
+	ProtectClient;
 
 file
 	ProtectClientDemo.h,

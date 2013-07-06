@@ -1,0 +1,10 @@
+#ifndef _ProtectClient_icpp_init_stub
+#define _ProtectClient_icpp_init_stub
+#include "Core/init"
+#include "Cypher/init"
+#include "Web/init"
+#include "ProductVersion/init"
+#define BLITZ_INDEX__ Ff67c7a83ae1614721772180b50291b82
+#include "ProtectTranslations.icpp"
+#undef BLITZ_INDEX__
+#endif

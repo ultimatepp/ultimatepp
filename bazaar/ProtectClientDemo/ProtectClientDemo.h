@@ -3,7 +3,7 @@
 
 #include <CtrlLib/CtrlLib.h>
 
-#include <Protect/ProtectClient.h>
+#include <ProtectClient/ProtectClient.h>
 
 using namespace Upp;
 

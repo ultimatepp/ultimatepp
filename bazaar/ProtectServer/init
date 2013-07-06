@@ -1,0 +1,9 @@
+#ifndef _ProtectServer_icpp_init_stub
+#define _ProtectServer_icpp_init_stub
+#include "Core/init"
+#include "Cypher/init"
+#include "Web/init"
+#include "ProtectClient/init"
+#include "plugin\sqlite3/init"
+#include "MySql/init"
+#endif

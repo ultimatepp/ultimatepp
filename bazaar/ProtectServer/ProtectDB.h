@@ -16,7 +16,7 @@ NAMESPACE_UPP
 #else
 #define SCHEMADIALECT <plugin/sqlite3/Sqlite3Schema.h>
 #endif
-#define MODEL <Protect/ProtectDB.sch>
+#define MODEL <ProtectServer/ProtectDB.sch>
 #include "Sql/sch_header.h"
 
 // encapsulation of Protect database
