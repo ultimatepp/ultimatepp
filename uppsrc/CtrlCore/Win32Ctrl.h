@@ -4,7 +4,6 @@ private:
 	bool         isdhctrl:1;
 
 	static void WndDestroyCaret();
-	void WndCreateCaret0(const Rect& cr);
 	void WndCreateCaret(const Rect& cr);
 
 	static  bool GetMsg(MSG& msg);

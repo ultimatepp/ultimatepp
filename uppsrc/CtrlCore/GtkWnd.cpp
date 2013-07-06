@@ -343,7 +343,7 @@ void Ctrl::FocusSync()
 	}
 }
 
-void Ctrl::SetWndFocus0(bool *b)
+void Ctrl::SetWndFocus(bool *b)
 {
 	GuiLock __;
 	LLOG("SetWndFocus0 " << Upp::Name(this) << ", top: " << top);
@@ -413,7 +413,7 @@ void Ctrl::WndSetPos0(const Rect& rect)
 	LLOG("-- WndSetPos0 " << rect << " " << msecs() - t0);
 }
 
-void Ctrl::WndEnable0(bool *b)
+void Ctrl::WndEnable(bool *b)
 {
 	GuiLock __;
 	if(top) {
@@ -422,14 +422,14 @@ void Ctrl::WndEnable0(bool *b)
 	}
 }
 
-void Ctrl::WndUpdate0r(const Rect& r)
+void Ctrl::WndUpdate(const Rect& r)
 {
 	GuiLock __;
 	LLOG("WndUpdate0r " << r);
 	WndUpdate0(); // Not found a way how to update only part of window
 }
 
-void Ctrl::WndUpdate0()
+void Ctrl::WndUpdate()
 {
 	GuiLock __;
 	LLOG("WndUpdate0");

@@ -8,12 +8,6 @@ NAMESPACE_UPP
 
 void Ctrl::Create(Ctrl *owner, bool popup)
 {
-	LLOG("Create Call");
-	Call(callback2(this, &Ctrl::Create0, owner, popup));
-}
-
-void Ctrl::Create0(Ctrl *owner, bool popup)
-{
 	GuiLock __;
 	ASSERT(IsMainThread());
 	LLOG("Create " << Name() << " " << GetRect());
@@ -82,7 +76,7 @@ void Ctrl::Create0(Ctrl *owner, bool popup)
 	activeCtrl = this;
 }
 
-void Ctrl::WndDestroy0()
+void Ctrl::WndDestroy()
 {
 	GuiLock __;
 	LLOG("WndDestroy " << Name());

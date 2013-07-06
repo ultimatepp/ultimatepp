@@ -70,7 +70,7 @@ LRESULT TopWindow::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	return Ctrl::WindowProc(message, wParam, lParam);
 }
 
-void TopWindow::SyncTitle0()
+void TopWindow::SyncTitle()
 {
 	GuiLock __;
 	LLOG("TopWindow::SyncTitle0 " << UPP::Name(this));
@@ -95,7 +95,7 @@ void TopWindow::DeleteIco()
 	ico = lico = NULL;
 }
 
-void TopWindow::SyncCaption0()
+void TopWindow::SyncCaption()
 {
 	GuiLock __;
 	LLOG("TopWindow::SyncCaption " << UPP::Name(this));

@@ -50,10 +50,8 @@ private:
 
 	Rect        overlapped;
 
-	void        SyncTitle0();
 	void        SyncSizeHints();
 	void        SyncTitle();
-	void        SyncCaption0();
 	void        SyncCaption();
 
 	void        SetupRect();
