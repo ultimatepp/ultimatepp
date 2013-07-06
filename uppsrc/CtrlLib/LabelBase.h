@@ -131,6 +131,8 @@ private:
 	static bool StateHook(Ctrl *, int reason);
 	static bool MouseHook(Ctrl *, bool, int, Point, int, dword);
 	static void SyncAll();
+	
+	typedef DisplayPopup CLASSNAME;
 
 public:
 	void Set(Ctrl *ctrl, const Rect& item, const Value& v, const Display *display,

@@ -520,6 +520,10 @@ DisplayPopup::~DisplayPopup()
 
 void DisplayPopup::Sync()
 {
+	if(!IsMainThread()) {
+		PostCallback(THISBACK(Sync));
+		return;
+	}
 	if(display && ctrl && !ctrl->IsDragAndDropTarget() && !IsDragAndDropTarget()) {
 		Ctrl *top = ctrl->GetTopCtrl();
 		if(top && top->HasFocusDeep()) {
