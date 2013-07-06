@@ -581,10 +581,10 @@ void WakeUpGuiThread()
 	g_main_context_wakeup(g_main_context_default());
 }
 
-void Ctrl::EventLoop0(Ctrl *ctrl)
+void Ctrl::EventLoop(Ctrl *ctrl)
 {
 	GuiLock __;
-	ASSERT(IsMainThread());
+	ASSERT_(IsMainThread(), "Event loop can only run in the main thread");
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
 	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
@@ -614,9 +614,10 @@ gboolean sOnce(GtkWidget *)
 	return false;
 }
 
-void Ctrl::GuiSleep0(int ms)
+void Ctrl::GuiSleep(int ms)
 {
 	GuiLock __;
+	ASSERT_(IsMainThread(), "Only the main thread can perform GuiSleep");
 	if(ms < 20) // Periodic timer is each 20ms, so that is the longest possible wait
 		g_timeout_add(ms, (GSourceFunc) sOnce, NULL); // otherwise setup shorter timer
 	FetchEvents(TRUE);

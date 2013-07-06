@@ -2298,7 +2298,8 @@ view or frame coordinates.&]
 HWND_[*@3 hwnd], [@(0.0.255) bool]_[*@3 savebits]_`=_[@(0.0.255) true], 
 [@(0.0.255) bool]_[*@3 activate]_`=_[@(0.0.255) true], [@(0.0.255) bool]_[*@3 dropshadow]_`=
 _[@(0.0.255) false], [@(0.0.255) bool]_[*@3 topmost]_`=_[@(0.0.255) false])&]
-[s2;b17;a17; Opens top`-level Ctrl as pop`-up window.&]
+[s2;b17;a17; Opens top`-level Ctrl as pop`-up window. [*/ This method 
+can only be invoked in the main thread.]&]
 [s6; [2 Win32 specific.]&]
 [s7;i1120;a17; [%-*C@3 hwnd]-|Win32 handle of owner window.&]
 [s7;i1120;a17; [%-*C@3 savebits]-|Indicates that system should try to 
@@ -2313,7 +2314,8 @@ preserve background bits.&]
 trl]_`*[*@3 owner]_`=_NULL, [@(0.0.255) bool]_[*@3 savebits]_`=_[@(0.0.255) true], 
 [@(0.0.255) bool]_[*@3 activate]_`=_[@(0.0.255) true], [@(0.0.255) bool]_[*@3 dropshadow]_`=
 _[@(0.0.255) false], [@(0.0.255) bool]_[*@3 topmost]_`=_[@(0.0.255) false])&]
-[s2;b17;a17; Opens top`-level Ctrl as pop`-up window.&]
+[s2;b17;a17; Opens top`-level Ctrl as pop`-up window. [*/ This method 
+can only be invoked in the main thread.]&]
 [s7;i1120;a17; [%-*C@3 owner]-|Owner.&]
 [s7;i1120;a17; [%-*C@3 savebits]-|Indicates that system should try to 
 preserve background bits.&]
@@ -2362,15 +2364,16 @@ were processed, false that queue was empty.&]
 [s4;%- &]
 [s5;:Ctrl`:`:IsPopUp`(`)const:%- [@(0.0.255) bool]_[* IsPopUp]()_[@(0.0.255) const]&]
 [s7;i1120;a17; [*/ Return value]-|True if Ctrl is pop`-up window.&]
-[s3;%- &]
+[s3; &]
 [s4;%- &]
-[s5;:Ctrl`:`:EventLoop`(`:`:Ctrl`*`):%- [@(0.0.255) static] [@(0.0.255) void]_[* EventLoop](
-[_^`:`:Ctrl^ Ctrl]_`*[*@3 loopctrl]_`=_NULL)&]
+[s5;:Ctrl`:`:EventLoop`(Ctrl`*`):%- [@(0.0.255) static] [@(0.0.255) void]_[* EventLoop]([_^`:`:Ctrl^ C
+trl]_`*[*@3 loopctrl]_`=_NULL)&]
 [s2;b17;a17; Executes event`-loop. If [*@3 loopctrl ]is not NULL, it 
 must be opened top`-level Ctrl and loop is executed until EndLoop 
 method for [*@3 loopctrl ]is invoked. If [*@3 loopctrl] is NULL, 
 loop is executed as long as any top`-level Ctrl exists or application 
-is terminated by OS specific `"shutdown`" event.&]
+is terminated by OS specific `"shutdown`" event. [*/ This method 
+can only be invoked in the main thread.]&]
 [s7;i1120;a17; [%-*C@3 loopctrl]-|Looping Ctrl.&]
 [s3;%- &]
 [s4;%- &]
@@ -2612,7 +2615,7 @@ does is platform specific).&]
 nt]_[*@3 ms])&]
 [s2;b17;a17; Sleeps (while allowing other applications or threads 
 to run) for at least [*@3 ms] milliseconds or until new input event 
-is available.&]
+is available. [*/ This method can only be invoked in the main thread.]&]
 [s7;i1120;a17; [%-*@3 ms]-|Time to sleep.&]
 [s3; &]
 [s4;%- &]
@@ -2622,7 +2625,11 @@ allback]_[*@3 cb])&]
 for GUI). It works by posting callback into timer queue (with 
 zero delay), then waits its completion using Semaphore. Main 
 GUI thread has to run timer queue management for callback to 
-be executed (by running event`-loop (TopWindow`::Run) or ProcessEvents).&]
+be executed (by running event`-loop (TopWindow`::Run) or ProcessEvents). 
+Warning: Call unlocks GuiLock so that the main thread can run 
+on GUI, this is possible source of race`-conditions. Be prepared 
+that some other code can run on GUI between call to Call and 
+cb being executed!&]
 [s3; &]
 [s4;%- &]
 [s5;:Ctrl`:`:IsShutdownThreads`(`):%- [@(0.0.255) static] [@(0.0.255) bool]_[* IsShutdownTh

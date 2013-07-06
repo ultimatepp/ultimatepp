@@ -36,17 +36,17 @@ void    TopWindow::SyncSizeHints()
 	                              GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE));
 }
 
-void TopWindow::SyncTitle0()
+void TopWindow::SyncTitle()
 {
 	GuiLock __;
 	if(top)
 		gtk_window_set_title(gtk(), FromUnicode(title, CHARSET_UTF8));
 }
 
-void TopWindow::SyncCaption0()
+void TopWindow::SyncCaption()
 {
 	GuiLock __;
-	SyncTitle0();
+	SyncTitle();
 	if(top) {
 		if(gdk_icon.Set(icon))
 			gtk_window_set_icon(gtk(), gdk_icon);

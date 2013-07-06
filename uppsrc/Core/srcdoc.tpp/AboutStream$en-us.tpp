@@ -138,4 +138,4 @@ somewhere or what ever..)&]
 again, and when time has come, pushes it to 2 other streams..(so 
 a little `'data latency`' is expected..if you want to make the 
 data be available at once, call Flush() after your operations..&]
-[s0; ]
+[s0; ]]

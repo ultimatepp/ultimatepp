@@ -105,7 +105,7 @@ void TopWindow::DefSyncTitle()
 	}
 }
 
-void TopWindow::SyncTitle0()
+void TopWindow::SyncTitle()
 {
 	GuiLock __; 
 	LLOG("SyncTitle: " << title);
@@ -129,7 +129,7 @@ void WmState(Window w, bool set, Atom a1, Atom a2 = 0)
 	XSendEvent(Xdisplay, Xroot, false, SubstructureNotifyMask | SubstructureRedirectMask, &e);
 }
 
-void TopWindow::SyncState0()
+void TopWindow::SyncState()
 {
 	GuiLock __; 
 	LLOG("SyncState");
@@ -160,11 +160,11 @@ typedef struct {
 #define PROP_MOTIF_WM_HINTS_ELEMENTS 5
 #define PROP_MWM_HINTS_ELEMENTS PROP_MOTIF_WM_HINTS_ELEMENTS
 
-void TopWindow::SyncCaption0()
+void TopWindow::SyncCaption()
 {
 	GuiLock __; 
 	LLOG("SyncCaption0");
-	SyncTitle0();
+	SyncTitle();
 	if(IsOpen() && GetWindow()) {
 		unsigned long wina[6];
 		memset(wina, 0, sizeof(wina));
@@ -257,11 +257,6 @@ void TopWindow::CenterRect(Ctrl *owner)
 
 void TopWindow::Open(Ctrl *owner)
 {
-	Open0(owner);
-}
-
-void TopWindow::Open0(Ctrl *owner)
-{
 	LLOG("TopWindow::Open");
 	GuiLock __; 
 	if(dokeys && (!GUI_AKD_Conservative() || GetAccessKeysDeep() <= 1))
@@ -281,7 +276,7 @@ void TopWindow::Open0(Ctrl *owner)
 	title2.Clear();
 	if(!weplace) {
 		LLOG("SyncCaption");
-		SyncCaption0();
+		SyncCaption();
 	}
 	LLOG("SyncSizeHints");
 	size_hints->flags = 0;
@@ -382,7 +377,7 @@ void TopWindow::Open0(Ctrl *owner)
 	XChangeProperty(Xdisplay, win, XAtom("XdndAware"), XA_ATOM, 32,
 					0, (byte *)&version, 1);
 
-	SyncState0(); 
+	SyncState();
 	FixIcons();
 }
 
