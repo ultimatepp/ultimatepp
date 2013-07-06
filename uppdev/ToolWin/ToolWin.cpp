@@ -39,7 +39,9 @@ void ToolWin::FrameLayout(Rect& r)
 		return;
 	}
 	close.Show();
-	close.SetFrameRect(r.right - 18, r.top, 16, 16);
+	int c = GetTitleCy();
+	int b = GetBorder();
+	close.SetFrameRect(r.right - c - b + 1, r.top + b, c - 1, c - 1);
 	Rect m = GetMargins();
 	r.left += m.left;
 	r.right -= m.right;
@@ -107,12 +109,11 @@ void ToolWin::MouseMove(Point, dword)
 		if(dragdir.x == 1)
 			r.right = minmax(r.right + off.x, r.left + minsz.cx, r.left + maxsz.cx);
 		if(dragdir.y == -1)
-			r.top = minmax(r.top + off.y, r.bottom - maxsz.cy, r.bottom - maxsz.cy);
+			r.top = minmax(r.top + off.y, r.bottom - maxsz.cy, r.bottom - minsz.cy);
 		if(dragdir.y == 1)
 			r.bottom = minmax(r.bottom + off.y, r.top + minsz.cy, r.top + maxsz.cy);
 	}
 	SetRect(r);
-	DDUMP(HasCapture());
 }
 
 void ToolWin::LeftUp(Point, dword)
@@ -182,18 +183,6 @@ Point ToolWin::GetDir(Point p) const
 	return r;
 }
 
-/*
-Size ToolWin::GetMinSize() const
-{
-	return AddMargins(client ? client->GetMinSize() : Size(0, 0));
-}
-
-Size ToolWin::GetMaxSize() const
-{
-	return AddMargins(client ? client->GetMaxSize() : Size(99999, 99999));
-}
-*/
-
 void ToolWin::SetClientRect(Rect r)
 {
 	Rect m = GetMargins();
@@ -241,6 +230,7 @@ ToolWin::ToolWin()
 	close.Image(CtrlImg::cross());
 	close <<= THISBACK(DoClose);
 	AddFrame(*this);
+	Sizeable();
 	FrameLess();
 }
 

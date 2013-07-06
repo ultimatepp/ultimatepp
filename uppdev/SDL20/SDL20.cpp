@@ -16,25 +16,35 @@ int main(int argc, char** argv){
 	SDLWindow win;
 	win.Create(RectC(100, 100, 1024, 768), "First test");
 
-	bool quit = false;
-	int i = 0;
-	while(!quit) {
-		SDLDraw w;
+	{
+		SystemDraw w;
 		w.Set(win);
 		Size sz = Size(1024, 768);
 		w.Init(sz);
 		
 		w.DrawRect(sz, White);
-//		w.DrawText(10, 10, "Hello world!", Arial(40));
+		w.DrawText(10, 10, "Hello world!", Arial(40));
+	}
+
+	bool quit = false;
+	int i = 0;
+	while(!quit) {
+		SystemDraw w;
+		w.Set(win);
+		Size sz = Size(1024, 768);
+		w.Init(sz);
 		
+		w.DrawText(i++, i, "Hello world!", Arial(40));
+
+/*		
 //		w.DrawImage(300, 300, TestImg::pinkie());
 
 		RichText txt = ParseQTF(LoadFile(GetDataFile("text.qtf")));
 		if(1) {
-			RTIMING("SDLDraw");
+			RTIMING("SystemDraw");
 			txt.Paint(Zoom(2, 10), w, 0, 0, sz.cx);
 		}
-
+*/
 		win.Present();	
 
 		SDL_Event e;

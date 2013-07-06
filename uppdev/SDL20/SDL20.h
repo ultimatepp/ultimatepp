@@ -7,6 +7,8 @@
 
 using namespace Upp;
 
+NAMESPACE_UPP
+
 struct SDLWindow {
 	SDL_Window   *win;
 	SDL_Renderer *ren;
@@ -23,7 +25,7 @@ struct SDLWindow {
 	~SDLWindow();
 };
 
-struct SDLDraw : SDraw {
+struct SystemDraw : SDraw {
 	SDLWindow *win;
 
 	virtual void  PutImage(Point p, const Image& m, const Rect& src);
@@ -31,8 +33,38 @@ struct SDLDraw : SDraw {
 
 	void Set(SDLWindow& win_);
 
-	SDLDraw();	
-	~SDLDraw();
+	SystemDraw();	
+	~SystemDraw();
 };
+
+END_UPP_NAMESPACE
+
+/*
+class BackDraw : public SDLDraw {
+public:
+	virtual bool  IsPaintingOp(const Rect& r) const;
+
+protected:
+	HBITMAP hbmpold;
+	HBITMAP hbmp;
+
+	Size    size;
+	Draw   *painting;
+	Point   painting_offset;
+
+public:
+	void  Put(SystemDraw& w, int x, int y);
+	void  Put(SystemDraw& w, Point p)                  { Put(w, p.x, p.y); }
+
+	void Create(SystemDraw& w, int cx, int cy);
+	void Create(SystemDraw& w, Size sz)                { Create(w, sz.cx, sz.cy); }
+	void Destroy();
+
+	void SetPaintingDraw(Draw& w, Point off)           { painting = &w; painting_offset = off; }
+
+	BackDraw();
+	~BackDraw();
+};
+*/
 
 #endif

@@ -2,6 +2,8 @@
 
 #define LLOG(x) // DLOG(x)
 
+NAMESPACE_UPP
+
 struct RectSDL {
 	SDL_Rect sr;
 	
@@ -19,8 +21,6 @@ struct RectSDL {
 SDL_Texture *TextureFromImage(SDL_Renderer *renderer, const Image& m)
 {
 	Size isz = m.GetSize();
-    void *pixels;
-    int   pitch;
 	SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
 	                                         SDL_TEXTUREACCESS_STATIC, isz.cx, isz.cy);
 	if(texture) {
@@ -60,7 +60,7 @@ struct ImageSysDataMaker : LRUCache<ImageSysData, int64>::Maker {
 	virtual int    Make(ImageSysData& object) const { object.Init(renderer, img); return img.GetLength(); }
 };
 
-void SDLDraw::PutImage(Point p, const Image& img, const Rect& src)
+void SystemDraw::PutImage(Point p, const Image& img, const Rect& src)
 {
 	if(img.GetLength() == 0 || !win)
 		return;
@@ -73,13 +73,13 @@ void SDLDraw::PutImage(Point p, const Image& img, const Rect& src)
 	m.wserial = win->serial;
 	ImageSysData& sd = cache.Get(m);
 	{
-	RTIMING("SDL_RenderCopy");
-	SDL_RenderCopy(win->ren, sd.texture, RectSDL(src), RectSDL(Rect(p, src.GetSize())));
+		RTIMING("SDL_RenderCopy");
+		SDL_RenderCopy(win->ren, sd.texture, RectSDL(src), RectSDL(Rect(p, src.GetSize())));
 	}
 	cache.Shrink(4 * 1024 * 768, 1000); // Cache shrink must be after Paint because of PaintOnly!
 }
 
-void SDLDraw::PutRect(const Rect& r, Color color)
+void SystemDraw::PutRect(const Rect& r, Color color)
 {
 	if(win && !IsNull(color)) {
 		SDL_SetRenderDrawColor(win->ren, color.GetR(), color.GetG(), color.GetB(), 255); // Optimize?
@@ -87,16 +87,18 @@ void SDLDraw::PutRect(const Rect& r, Color color)
 	}
 }
 
-void SDLDraw::Set(SDLWindow& win_)
+void SystemDraw::Set(SDLWindow& win_)
 {
 	win = win_.ren ? &win_ : NULL;
 }
 
-SDLDraw::SDLDraw()
+SystemDraw::SystemDraw()
 {
 	win = NULL;
 }
 
-SDLDraw::~SDLDraw()
+SystemDraw::~SystemDraw()
 {
 }
+
+END_UPP_NAMESPACE
