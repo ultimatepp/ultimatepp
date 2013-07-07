@@ -1,7 +1,6 @@
 #ifndef _ProtectClient_h_
 #define _ProtectClient_h_
 
-#include <Web/Web.h>
 #include <Cypher/Cypher.h>
 
 #include<ProductVersion/ProductVersion.h>
@@ -15,7 +14,7 @@ class ProtectClient
 	private:
 	
 		// the HTTP client
-		HttpClient client;
+		HttpRequest client;
 		
 		// last error code for failed operations
 		int lastError;
@@ -96,7 +95,7 @@ class ProtectClient
 		void SetCypher(Cypher *c);
 		
 		// sets server's URL
-		ProtectClient &SetURL(String const &url) { client.URL(url); return *this; }
+		ProtectClient &SetURL(String const &url) { client.Url(url); return *this; }
 		
 		// sets communication key
 		ProtectClient &SetCommunicationKey(String const &_key) { communicationKey = _key; return *this; }

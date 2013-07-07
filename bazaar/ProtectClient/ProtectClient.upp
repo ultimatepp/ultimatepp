@@ -3,7 +3,6 @@ description "Copy protection Protect package - client side\377";
 uses
 	Core,
 	Cypher,
-	Web,
 	ProductVersion;
 
 file

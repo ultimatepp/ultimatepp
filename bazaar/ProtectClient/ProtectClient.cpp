@@ -25,7 +25,7 @@ ProtectClient::ProtectClient()
 	
 	// setup timeout for http server
 	// a couple of seconds should be enough !
-	client.TimeoutMsecs(2000);
+	client.Timeout(2000);
 }
 
 ProtectClient::~ProtectClient()
@@ -121,7 +121,9 @@ VectorMap<String, Value> ProtectClient::SendMap(VectorMap<String, Value> const &
 	postData += HexString((*cypher)(StoreAsXML(dataMap, "ProtectClient")));
 
 	client.Post(postData);
-	String contents = client.ExecuteRedirect();
+	
+	// WARNING -- PREVIOUSLY WAS ExecuteRedirect -- check on remote server!!!
+	String contents = client.Execute();
 
 	// if contents start with "ERROR", just fetch the error desc
 	// and put it in result map

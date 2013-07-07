@@ -3,8 +3,9 @@ description "Copy protection Protect package - server side\377";
 uses
 	Core,
 	Cypher,
-	Web,
-	ProtectClient;
+	ProtectClient,
+	Core/SMTP,
+	Scgi;
 
 uses(USE_SQLITE) plugin\sqlite3;
 

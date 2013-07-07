@@ -19,6 +19,7 @@ CONSOLE_APP_MAIN
 		.GetSmtp()
 			.Host("localhost")
 			.Port(25)
+//			.Auth("user", "password")		// use if mail server requires auth
 	;
 	server
 		.SetWelcomeSubject("ProtectDemo user activation")

@@ -2,15 +2,17 @@
 #define _ProtectServer_h_
 
 #include <Core/Core.h>
-#include <Web/Web.h>
+#include <Core/SMTP/SMTP.h>
+
 #include <Cypher/Cypher.h>
+#include <Scgi/Scgi.h>
 
 #include <ProtectClient/ProtectStatus.h>
 #include "ProtectDB.h"
 
 NAMESPACE_UPP
 
-class ProtectServer : public ScgiServer
+class ProtectServer : public Scgi
 {
 	private:
 	
@@ -27,7 +29,7 @@ class ProtectServer : public ScgiServer
 		ProtectDB db;
 		
 		// mailer for activation mails
-		SmtpMail smtp;
+		Smtp smtp;
 		
 		// last ID cleanup time
 		Time lastIDCleanupTime;
@@ -136,7 +138,7 @@ public:
 	ProtectDB &GetDB(void) { return db; }
 	
 	// gets mailer
-	SmtpMail &GetSmtp(void) { return smtp; }
+	Smtp &GetSmtp(void) { return smtp; }
 	
 	// sets application key (to be returned on auth success)
 	ProtectServer &SetAppKey(String const &k) { appKey = k; return *this; }

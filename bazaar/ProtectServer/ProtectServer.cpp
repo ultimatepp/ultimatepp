@@ -62,7 +62,7 @@ bool ValidateEMail(const char *address)
 }
 
 // constructor - defaults to port 8787 and connection timeout of 5 minutes (300 sec.)
-ProtectServer::ProtectServer(int port) : ScgiServer(port)
+ProtectServer::ProtectServer(int port) : Scgi(port)
 {
 	// setup default cypher
 	cypher = new Snow2;
@@ -216,7 +216,7 @@ bool ProtectServer::SendMACAlert(String const &eMail, Vector<String> const &mail
 	body += "E-Mails connected to this one by MAC addresses :\n";
 	for(int i = 0; i < mails.GetCount(); i++)
 		body += mails[i] + "\n";
-	smtp.Text(body, "text/plain; charset=utf-8");
+	smtp.Body(body, "text/plain; charset=utf-8");
 	return smtp.Send();
 }
 
@@ -279,7 +279,7 @@ bool ProtectServer::ProcessMACList(String const &mail, String const &MACList, bo
 
 void ProtectServer::OnAccepted()
 {
-	Cout() << "Accepted connection from client " << FormatIP(clientIP) << "\n";
+	Cout() << "Accepted connection from client " << ClientIP() << "\n";
 }
 
 void ProtectServer::OnRequest()
@@ -290,20 +290,20 @@ void ProtectServer::OnRequest()
 	String IV;
 	
 	// we handle just POST requests, GET not allowed
-	if(HasPostData())
+	if(Post().GetCount())
 	{
 		// all requests besides PROTECT_ACTIVATE go through post
-		if(post.Find("IV") < 0)
+		if(Post().Find("IV") < 0)
 			err = PROTECT_MISSING_IV;
 		else
 		{
-			IV = ScanHexString(post.GetString("IV"));
-			if(post.Find("DATA") < 0)
+			IV = ScanHexString(Post().Get("IV"));
+			if(Post().Find("DATA") < 0)
 				err = PROTECT_MISSING_DATA;
 			else
 			{
 				cypher->SetKey(communicationKey, IV);
-				String decoded = (*cypher)(ScanHexString(post.GetString("DATA")));
+				String decoded = (*cypher)(ScanHexString(Post().Get("DATA")));
 				LoadFromXML(data, decoded);
 			}
 		}
@@ -337,11 +337,11 @@ void ProtectServer::OnRequest()
 		results.Add("ERRORMSG", ProtectMessage(results.Get("ERROR")));
 
 	// encodes results and send back to client
-	clientSock.Write("Content-Type: text/plain\r\n\r\n");
+	ClientSock().Put("Content-Type: text/plain\r\n\r\n");
 	cypher->SetKey(communicationKey);
-	clientSock.Write("IV=" + HexString(cypher->GetNonce()) + "\r\n");
+	ClientSock().Put("IV=" + HexString(cypher->GetNonce()) + "\r\n");
 	String encoded = HexString((*cypher)(StoreAsXML(results, "ProtectServer")));
-	clientSock.Write("DATA=" + encoded + "\r\n");
+	ClientSock().Put("DATA=" + encoded + "\r\n");
 }
 
 void ProtectServer::OnClosed()
@@ -355,7 +355,7 @@ void ProtectServer::OnClosed()
 	if(now - lastDBCleanupTime > dbCleanupTime)
 		DBCleanup();
 
-	Cout() << "Connection with " << FormatIP(clientIP) << " closed\n";
+	Cout() << "Connection with " << ClientIP() << " closed\n";
 }
 
 // process client request
@@ -775,7 +775,7 @@ bool ProtectServer::SendActivationMail(VectorMap<String, Value> const &userData,
 	smtp.To(userData.Get("EMAIL"));
 	smtp.Subject(subject);
 //	smtp.From(serverVars.Get("SERVER_NAME"));
-	smtp.Text(body, mime);
+	smtp.Body(body, mime);
 	return smtp.Send();
 }
 
@@ -838,7 +838,7 @@ void ProtectServer::Run(void)
 	}
 	
 	// runs the SCGI server
-	ScgiServer::Run();
+	Scgi::Run();
 }
 
 END_UPP_NAMESPACE
