@@ -10,6 +10,8 @@ NAMESPACE_UPP
 class Updater
 {
 	public:
+		typedef Updater CLASSNAME;
+		
 		// state of updater engine
 		typedef enum
 		{
@@ -26,6 +28,16 @@ class Updater
 		typedef enum { AbortExecution, AskUser, ContinueExecution } ErrorBehaviours;
 
 	private:
+	
+		// progress bar, used to show/abort download
+		Progress progress;
+		
+		// progress callback
+		void doProgress(void);
+		
+		// http request object used to fetch file when on server
+		HttpRequest http;
+
 		// state of updater engine
 		UpdaterState state;
 		

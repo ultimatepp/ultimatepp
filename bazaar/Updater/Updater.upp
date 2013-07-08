@@ -2,7 +2,6 @@ description "Web Installer/Updater module\377";
 
 uses
 	CtrlLib,
-	Web,
 	SysExecGui,
 	ProductVersion,
 	ProductVersion;
