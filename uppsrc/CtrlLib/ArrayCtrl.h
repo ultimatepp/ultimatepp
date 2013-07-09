@@ -252,6 +252,7 @@ private:
 	void   SetSb();
 	void   MinMaxLine();
 	void   HeaderLayout();
+	void   HeaderScroll();
 	void   Scroll();
 	int    FindEnabled(int i, int dir);
 	void   Page(int q);
@@ -338,6 +339,7 @@ public:
 	Callback          WhenCtrlsAction;
 	Callback          WhenSel;
 	Callback          WhenScroll;
+	Callback          WhenHeaderLayout;
 
 	Callback                        WhenDrag;
 	Callback3<int, int, PasteClip&> WhenDropCell;
