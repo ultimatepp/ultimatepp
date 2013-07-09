@@ -912,6 +912,13 @@ void ArrayCtrl::HeaderLayout() {
 	SyncInfo();
 	SyncPageCtrls();
 	PlaceEdits();
+	WhenHeaderLayout();
+}
+
+void ArrayCtrl::HeaderScroll()
+{
+	Scroll();
+	WhenHeaderLayout();
 }
 
 void ArrayCtrl::HeaderScrollVisibility()
@@ -2793,7 +2800,8 @@ ArrayCtrl::ArrayCtrl() {
 	AddFrame(sb);
 	AddFrame(header);
 	header.WhenLayout = THISBACK(HeaderLayout);
-	header.WhenScroll = sb.WhenScroll = THISBACK(Scroll);
+	header.WhenScroll = THISBACK(HeaderScroll);
+	sb.WhenScroll = THISBACK(Scroll);
 	header.Moving();
 	WhenAcceptRow = true;
 	WhenBar = THISBACK(StdBar);
