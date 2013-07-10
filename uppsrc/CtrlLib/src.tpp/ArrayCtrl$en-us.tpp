@@ -2894,13 +2894,18 @@ of ArrayCtrl).&]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:Column`:`:HeaderTab`(`):%- [_^HeaderCtrl`:`:Column^ HeaderCtrl`::Colum
 n][@(0.0.255) `&]_[* HeaderTab]()&]
+[s5;:ArrayCtrl`:`:Column`:`:HeaderTab`(`)const:%- [@(0.0.255) const]_[_^HeaderCtrl`:`:Column^ H
+eaderCtrl`::Column][@(0.0.255) `&]_[* HeaderTab]()_[@(0.0.255) const]&]
 [s2; Returns the [* HeaderCtrl`::Column] object describing the given 
 column. This object can be used to set up additional column properties 
 (like column width constraints or the [*^topic`:`/`/CtrlLib`/src`/HeaderCtrl`$en`-us`#`:`:HeaderCtrl`:`:Column`:`:Callback WhenAction^ W
 henAction] callback).&]
-[s3; &]
-[s0; &]
-[s0; &]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:Column`:`:Tip`(const char`*`):%- [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&
+]_[* Tip]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 tip])&]
+[s2; Assigns a [%-*@3 tip] to header tab column.&]
+[s0;%- &]
 [s0;%- &]
 [ {{10000t/25b/25@3 [s0;%- [*@(229)4 ArrayCtrl`::Order]]}}&]
 [s3; &]

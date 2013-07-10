@@ -151,12 +151,13 @@ double HeaderCtrl::Denominator() const {
 	return rs;
 }
 
-void HeaderCtrl::SbTotal()
+void HeaderCtrl::DoSbTotal()
 {
 	if(mode == SCROLL) {
 		int cx = 0;
 		for(int i = 0; i < col.GetCount(); i++)
-			cx += (int)col[i].ratio;
+			if(col[i].visible)
+				cx += (int)col[i].ratio;
 		sb.AutoHide(autohidesb);
 		sb.SetTotal(cx);
 	}
@@ -164,6 +165,13 @@ void HeaderCtrl::SbTotal()
 		sb.AutoHide();
 		sb.SetTotal(0);
 	}
+}
+
+void HeaderCtrl::SbTotal()
+{
+	if(HasCapture())
+		return;
+	DoSbTotal();
 }
 
 HeaderCtrl& HeaderCtrl::Proportional() { mode = PROPORTIONAL; SbTotal(); return *this; }
@@ -678,6 +686,7 @@ void HeaderCtrl::LeftUp(Point, dword) {
 		Action();
 		WhenLayout();
 	}
+	DoSbTotal();
 }
 
 void HeaderCtrl::CancelMode() {
@@ -693,6 +702,16 @@ void HeaderCtrl::ShowTab(int i, bool show) {
 		InvalidateDistribution();
 	Refresh();
 	WhenLayout();
+	SbTotal();
+}
+
+void HeaderCtrl::Column::Show(bool b)
+{
+	if(!header)
+		return;
+	int q = header->FindIndex(GetIndex());
+	if(q >= 0)
+		header->ShowTab(q, b);
 }
 
 int HeaderCtrl::FindIndex(int ndx) const

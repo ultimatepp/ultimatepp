@@ -163,6 +163,11 @@ HeaderCtrl::Column& ArrayCtrl::Column::HeaderTab() {
 	return arrayctrl->header.Tab(arrayctrl->header.FindIndex(index));
 }
 
+const HeaderCtrl::Column& ArrayCtrl::Column::HeaderTab() const
+{
+	return arrayctrl->header.Tab(arrayctrl->header.FindIndex(index));
+}
+
 void ArrayCtrl::InvalidateCache(int ri)
 {
 	for(int i = 0; i < column.GetCount(); i++)
