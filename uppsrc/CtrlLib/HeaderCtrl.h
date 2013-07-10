@@ -58,9 +58,13 @@ public:
 		Column&  SetRatio(double ratio);
 		Column&  SetMargin(int m);
 
+		void     Show(bool b = true);
+		void     Hide()                            { Show(false); }
+
 		int      GetMargin() const                 { return margin + 2; }
 		Color    GetPaper() const                  { return paper; }
 		int      GetIndex() const                  { return index; }
+		bool     IsVisible() const                 { return visible; }
 
 		Column();
 	};
@@ -99,6 +103,7 @@ protected:
 	void   WScroll();
 	void   Scroll();
 	void   ScrollVisibility();
+	void   DoSbTotal();
 	void   SbTotal();
 	void   SetTabWidth0(int i, int cx);
 	int    SumMin(int from);
