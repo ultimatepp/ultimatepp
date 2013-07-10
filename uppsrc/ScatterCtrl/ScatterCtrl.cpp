@@ -65,8 +65,8 @@ void ScatterCtrl::Paint(Draw& w)
 	} else {
 		ImageBuffer ib(GetSize());
 		BufferPainter bp(ib, mode);
-		bp.Clear(White());
-		PlotTexts(bp, GetSize(), 1);
+		//bp.Clear(White());
+		//PlotTexts(bp, GetSize(), 1);
 		ScatterCtrl::SetDrawing(bp, GetSize(), 1);
 		w.DrawImage(0, 0, ib);
 		PlotTexts(w, GetSize(), 1);
