@@ -5,6 +5,8 @@ void DrawLine(Draw &w, double x0, double y0, double x1, double y1, double width,
 void DrawLine(Painter &w, double x0, double y0, double x1, double y1, double width, const Color &color);
 void DrawLineOpa(Draw& w, int x0, int y0, int x1, int y1, int scale, double opacity, double thick, const Color &_color, String pattern, const Color &background = Null);	
 void DrawLineOpa(Painter& w, int x0, int y0, int x1, int y1, int scale, double opacity, double thick, const Color &_color, String pattern, const Color &background = Null);	
+void DrawCircleOpa(Draw& w, int x, int y, int r, int scale, double opacity, double thick, const Color &_color, String pattern, const Color &background = Null);	
+void DrawCircleOpa(Painter& w, int x, int y, int r, int scale, double opacity, double thick, const Color &_color, String pattern, const Color &background = Null);	
 void FillRectangleOpa(Draw &w, double x0, double y0, double x1, double y1, int scale, double opacity, const Color &background, const Color &color);
 void FillRectangleOpa(Painter &w, double x0, double y0, double x1, double y1, int scale, double opacity, const Color &background, const Color &color);
 void DrawPolylineOpa(Draw& w, const Vector<Point> &p, int scale, double opacity, double thick, const Color &color, String pattern = "", const Color &background = Null);
