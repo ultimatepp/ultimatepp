@@ -172,6 +172,17 @@ private:
 	FourierEquation fourier;
 };
 
+class Tab12 : public WithTab12<ScatterDemo> {
+public:
+	typedef Tab12 CLASSNAME;
+	
+	virtual void Init();
+	virtual ScatterCtrl &Scatter()	{return scatter;};
+
+private:
+	Vector<Pointf> s1;
+};
+
 class TabPie : public WithTabPie<StaticRect> {
 public:
 	typedef TabPie CLASSNAME;

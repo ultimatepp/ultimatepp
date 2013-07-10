@@ -23,7 +23,7 @@ LAYOUT(Tab3, 384, 284)
 END_LAYOUT
 
 LAYOUT(Tab4, 400, 316)
-	ITEM(ScatterCtrl, scatter, SetLabelsFont(SansSerifZ(11)).SetTitle(t_("Temperature Average. X Axis mouse zoom + scroll")).SetTitleFont(SansSerifZ(14).Bold()).SetPlotAreaLeftMargin(40).SetLabelX(t_("Month")).SetLegendWidth(200).HSizePosZ(16, 16).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetLabelsFont(SansSerifZ(11)).SetTitle(t_("Temperature Average. X Axis mouse zoom + scroll")).SetTitleFont(SansSerifZ(14).Bold()).SetPlotAreaLeftMargin(40).SetPlotAreaBottomMargin(40).SetLabelX(t_("Month")).SetLegendWidth(200).HSizePosZ(16, 16).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab5, 400, 288)
@@ -70,8 +70,12 @@ LAYOUT(Tab11, 504, 468)
 	ITEM(Label, dv___2, SetLabel(t_("Trend Lines Details:")).LeftPosZ(8, 100).BottomPosZ(83, 21))
 END_LAYOUT
 
+LAYOUT(Tab12, 400, 260)
+	ITEM(ScatterCtrl, scatter, SetLabelsFont(StdFontZ(11)).SetTitle(t_("Polar Plot")).SetTitleFont(SansSerifZ(14).Bold()).SetPlotAreaColor(LtGray).HSizePosZ(4, 4).VSizePosZ(4, 4))
+END_LAYOUT
+
 LAYOUT(TabPie, 536, 440)
-	ITEM(PieCtrl, chart, SetLegendBackColor(Color(229, 229, 229)).SetLegendHeight(80).SetTitle(t_("Average Weather")).SetFrame(ThinInsetFrame()).HSizePosZ(8, 12).VSizePosZ(40, 12))
+	ITEM(PieCtrl, chart, SetLegendHeight(80).SetLegendBackColor(Color(229, 229, 229)).SetTitle(t_("Average Weather")).SetFrame(ThinInsetFrame()).HSizePosZ(8, 12).VSizePosZ(40, 12))
 	ITEM(Label, dv___1, SetLabel(t_(" EXPERIMENTAL")).SetFrame(ThinInsetFrame()).LeftPosZ(8, 84).TopPosZ(8, 24))
 END_LAYOUT
 

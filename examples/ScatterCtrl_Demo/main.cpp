@@ -52,7 +52,7 @@ ScatterCtrl_Demo::ScatterCtrl_Demo()
 		examplesRects.Add(Examples()[i].ctrl());
 	}
 	examplesList.Add("Pie chart");
-//	tabPie.Init();
+	tabPie.Init();
 	Add(tabPie.HSizePosZ(180, 4).VSizePosZ(4, 8));
 	examplesRects.Add(&tabPie);
 	
