@@ -1284,6 +1284,15 @@ void DrawLineOpa(Draw& w, int x0, int y0, int x1, int y1, int scale, double opac
 	DrawPolylineOpa(w, p, scale, opacity, thick, _color, dash, background);
 }
 
+void DrawCircleOpa(Draw& w, int x, int y, int r, int scale, double opacity, 
+				double thick, const Color &_color, String dash, const Color &background) 
+{
+	Vector<Point> p;
+	for (double ang = 0; ang <= 2*M_PI; ang += 2*M_PI/50) 
+		p << Point(fround(x + r*cos(ang)), fround(y + r*sin(ang)));
+	DrawPolylineOpa(w, p, scale, opacity, thick, _color, dash, background);
+}
+
 void DashScaled(Painter& w, const String dash, double scale)
 {
 	if (!dash.IsEmpty()) {		
@@ -1308,6 +1317,16 @@ void DrawLineOpa(Painter& w, int x0, int y0, int x1, int y1, int scale,
 {	
 	w.Move(Pointf(x0, y0));
 	w.Line(Pointf(x1, y1));
+	DashScaled(w, dash, scale);
+	w.Opacity(opacity);				// Before Stroke()
+	w.Stroke(thick*scale, color);
+}
+
+void DrawCircleOpa(Painter& w, int x, int y, int r, int scale, 
+				double opacity, double thick, const Color &color, String dash, 
+				const Color &background) 
+{	
+	w.Circle(x, y, r);
 	DashScaled(w, dash, scale);
 	w.Opacity(opacity);				// Before Stroke()
 	w.Stroke(thick*scale, color);

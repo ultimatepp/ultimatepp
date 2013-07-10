@@ -169,6 +169,8 @@ public:
 	ScatterDraw &Graduation_FormatY(Formats fi);
 	ScatterDraw &Graduation_FormatY2(Formats fi);
 	
+	ScatterDraw &SetPolar(bool polar = true)			{isPolar = polar; 	return *this;};
+	
 	ScatterDraw &AddSeries(double *yData, int numData, double x0 = 0, double deltaX = 1)
 														{return AddSeries<CArray>(yData, numData, x0, deltaX);}
 	ScatterDraw &AddSeries(double *xData, double *yData, int numData)
@@ -417,6 +419,8 @@ protected:
 	bool showLegend;
 	int legendWidth;
 	
+	bool isPolar;
+	
 	void DrawLegend(Draw& w, const Size &size, int scale) const;
 
 	void Scrolling(bool down, Point &pt, bool isOut = false);
@@ -588,23 +592,53 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 
 	Clip(w, 0, 0, plotW, plotH);
 
-	w.DrawRect(0, 0, plotW, plotH, plotAreaColor);	
-
+	double left, top, d = min(plotW, plotH), r = d/2.;
+	if (!isPolar)
+		w.DrawRect(0, 0, plotW, plotH, plotAreaColor);	
+	else {
+		if (plotW > plotH) {
+			left = (plotW - d)/2;
+			top = 0;
+		} else {
+			left = 0;
+			top = (plotH - d)/2;
+		}
+		w.DrawEllipse(fround(left), fround(top), fround(d), fround(d), plotAreaColor);
+	}
+	double x_c = plotW/2;
+	double y_c = plotH/2;
+	
 	if (drawVGrid) {
-		double x0 = plotW*xMinUnit/xRange;
-		for(int i = 0; xMinUnit + i*xMajorUnit < xRange; i++) {
-			int xg = fround(x0 + i*plotW/d1);
-			if (xg > 2*gridWidth && xg < plotW - 2*gridWidth)
-				DrawLineOpa(w, xg, 0, xg, fround(plotH), 1, 1, gridWidth, gridColor, "2 2");
+		if (!isPolar) {
+			double x0 = plotW*xMinUnit/xRange;
+			for(int i = 0; xMinUnit + i*xMajorUnit < xRange; i++) {
+				int xg = fround(x0 + i*plotW/d1);
+				if (xg > 2*gridWidth && xg < plotW - 2*gridWidth)
+					DrawLineOpa(w, xg, 0, xg, fround(plotH), 1, 1, gridWidth, gridColor, "2 2");
+			}
+		} else {
+			double ang0 = 2*M_PI*xMinUnit/xRange;
+			for(double i = 0; xMinUnit + i*xMajorUnit < xRange; i++) {
+				double ang = ang0 + i*2*M_PI*xMajorUnit/xRange;
+				DrawLineOpa(w, fround(x_c), fround(y_c), fround(x_c + r*cos(ang)), fround(y_c + r*sin(ang)), 1, 1, gridWidth, gridColor, "2 2");
+			}				
 		}
-	}	
+	}
 	if (drawHGrid) {
-		double y0 = -plotH*yMinUnit/yRange + plotH;
-		for(int i = 0; yMinUnit + i*yMajorUnit < yRange; i++) {
-			int yg = fround(y0 - i*plotH/d2);
-			if (yg > 2*gridWidth && yg < plotH - 2*gridWidth)
-				DrawLineOpa(w, 0, yg, fround(plotW), yg, 1, 1, gridWidth, gridColor, "2 2");
-		}
+		if (!isPolar) {
+			double y0 = -plotH*yMinUnit/yRange + plotH;
+			for(int i = 0; yMinUnit + i*yMajorUnit < yRange; i++) {
+				int yg = fround(y0 - i*plotH/d2);
+				if (yg > 2*gridWidth && yg < plotH - 2*gridWidth) 
+					DrawLineOpa(w, 0, yg, fround(plotW), yg, 1, 1, gridWidth, gridColor, "2 2");
+			}
+		} /*else {
+			double y0 = -plotH*yMinUnit/r + plotH;
+			for(double i = 0; yMinUnit + i*yMajorUnit < yRange; i++) {
+				double yg = y0 + i*r*yRange/yMajorUnit;
+				DrawCircleOpa(w, fround(plotW/2), fround(plotH/2), yg, 1, 1, gridWidth, gridColor, "2 2");
+			}
+		}*/
 	}
 
 	if (!series.IsEmpty()) {

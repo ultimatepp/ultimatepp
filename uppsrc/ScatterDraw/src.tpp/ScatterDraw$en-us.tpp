@@ -1604,6 +1604,12 @@ t]&]
 [s3;%% Returns the secondary Y axis origin.&]
 [s1; &]
 [s6; &]
+[s5;:ScatterDraw`:`:SetPolar`(bool`): [_^ScatterDraw^ ScatterDraw]_`&[* SetPolar]([@(0.0.255) b
+ool]_[*@3 polar]_`=_[@(0.0.255) true])&]
+[s3;%% If [%-*@3 polar] is true, ScatterDraw is converted into a Polar 
+plot..&]
+[s1;%% &]
+[s6; &]
 [s5;:ScatterDraw`:`:AddSeries`(double`*`,int`,double`,double`): [_^ScatterDraw^ Scatter
 Draw]_`&[* AddSeries]([@(0.0.255) double]_`*[*@3 yData], [@(0.0.255) int]_[*@3 numData], 
 [@(0.0.255) double]_[*@3 x0]_`=_[@3 0], [@(0.0.255) double]_[*@3 deltaX]_`=_[@3 1])&]

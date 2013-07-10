@@ -215,9 +215,8 @@ Image PieDraw::GetImage(int scale)
 	return Image(idraw.GetResult());
 }
 
-PieDraw::PieDraw(): backColor(White), titleFont(StdFont(16)),
-                    titleColor(Black), titlePos(TOP), titleGap(2),
-					showPercent(true), percentBack(Null),
+PieDraw::PieDraw(): backColor(White), titleFont(StdFont(16)), titleColor(Black), titlePos(TOP), 
+					titleGap(2), showPercent(true), percentBack(Null),
 					legendFont(StdFont()), legendTextColor(Black), legendBackColor(Null),
 					showLegend(true), legendLeft(10), legendTop(Null), legendWidth(60), 
 					legendHeight(120), pieAngle(0), pieMarginLeft(40), pieMarginTop(40), 
