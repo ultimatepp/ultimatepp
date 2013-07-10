@@ -573,7 +573,7 @@ bool SetSysTime(Time time)
 	systime.wSecond	= time.second;
 	systime.wDayOfWeek = 0;
 	systime.wMilliseconds = 0;
-	return SetSystemTime( &systime );
+	return SetLocalTime( &systime );
 #endif
 }
 
