@@ -9,6 +9,9 @@ bool EditText(String& s, const char *title, const char *label, int maxlen = 0);
 bool EditText(WString& s, const char *title, const char *label, int (*filter)(int), int maxlen = 0);
 bool EditText(WString& s, const char *title, const char *label, int maxlen = 0);
 
+bool EditNumber(int& n, const char *title, const char *label, int min = INT_MIN, int max = INT_MAX, bool notnull = false);
+bool EditNumber(double& n, const char *title, const char *label, double min = DBL_MIN, double max = DBL_MAX, bool notnull = false);
+
 void Show2(Ctrl& ctrl1, Ctrl& ctrl, bool show = true);
 void Hide2(Ctrl& ctrl1, Ctrl& ctrl);
 
