@@ -1,5 +1,7 @@
 #include "Scrollbar.h"
 
+#ifdef GUI_WINGL
+
 NAMESPACE_UPP
 
 void AlignedFrame::FrameLayout(Rect &r)
@@ -322,3 +324,5 @@ bool SlimScrollBar::IsScrollable() const
 }
 
 END_UPP_NAMESPACE
+
+#endif

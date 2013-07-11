@@ -12,6 +12,14 @@ Point GetMousePos() {
 	return glmousepos;
 }
 
+void Ctrl::SysEndLoop()
+{
+}
+
+void WakeUpGuiThread()
+{
+}
+
 void Ctrl::MouseEventGl(Ptr<Ctrl> t, int event, Point p, int zdelta)
 {
 	if(!t->IsEnabled() && (t != (Ctrl*) &infoPanel && t != (Ctrl*) &console))

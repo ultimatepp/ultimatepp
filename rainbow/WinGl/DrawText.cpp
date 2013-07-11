@@ -279,6 +279,7 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 
 void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx)
 {
+	GuiLock __;
 	Text(x, y, angle, text, font, ink, 0, White, 0, White, n, dx);
 }
 

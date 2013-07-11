@@ -65,6 +65,10 @@ void GuiPlatformAfterMenuPopUp()
 {
 }
 
+void Ctrl::InstallPanicBox()
+{
+}
+
 void Ctrl::ApplyLayout()
 {
 	GuiLock __;

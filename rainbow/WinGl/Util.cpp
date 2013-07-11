@@ -4,11 +4,6 @@
 
 NAMESPACE_UPP
 
-Size GetScreenSize()
-{
-	return Ctrl::screenRect.GetSize();
-}
-
 void DDRect(RGBA *t, int dir, const byte *pattern, int pos, int count)
 {
 	while(count-- > 0) {
@@ -44,7 +39,7 @@ void DrawLine(const Vector<Rect>& clip, int x, int y, int cx, int cy, bool horz,
 		//glVertex2i(10, 10);
 		//glVertex2i(100, 100);
 	glEnd();
-	glDisable(GL_LINE_STIPPLE);
+	//glDisable(GL_LINE_STIPPLE);
 }
 
 void DragRectDraw0(const Vector<Rect>& clip, const Rect& rect, int n, const byte *pattern, int animation)
@@ -80,6 +75,10 @@ void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rec
 
 void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                   Color color, int type, int animation)
+{
+}
+
+void FinishDragRect(Ctrl& q)
 {
 }
 

@@ -1,4 +1,7 @@
 #include <CtrlLib/CtrlLib.h>
+
+#ifdef GUI_WINGL
+
 #include "Shaders.h"
 
 NAMESPACE_UPP
@@ -238,3 +241,5 @@ Shader::Shader() : program(-1)
 {}
 
 END_UPP_NAMESPACE
+
+#endif

@@ -1,5 +1,7 @@
 #include "Console.h"
 
+#ifdef GUI_WINGL
+
 NAMESPACE_UPP
 
 void Console::Paint(Draw& w)
@@ -177,3 +179,5 @@ Console::Console() : init(true), resize(false)
 }
 
 END_UPP_NAMESPACE
+
+#endif

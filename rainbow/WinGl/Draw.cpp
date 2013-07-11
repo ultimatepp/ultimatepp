@@ -42,6 +42,7 @@ int SystemDraw::GetCloffLevel() const
 
 void SystemDraw::InitClip(const Rect& clip)
 {
+	GuiLock __;
 	drawing_clip = clip;
 }
 
@@ -63,10 +64,12 @@ void SystemDraw::Reset() {
 }
 
 SystemDraw::SystemDraw() {
+	GuiLock __;
 	Reset();
 }
 
 SystemDraw::SystemDraw(Size sz) {
+	GuiLock __;
 	Reset();
 	drawing_clip = sz;
 	drawing_size = sz;
@@ -107,6 +110,7 @@ void SystemDraw::Init()
 
 void SystemDraw::Clear(bool ontransforms)
 {
+	GuiLock __;
 	if(ontransforms && (angle == 0 && scale == 1))
 		return;
 #if CLIP_MODE == 0
@@ -120,11 +124,13 @@ void SystemDraw::Clear(bool ontransforms)
 
 void SystemDraw::ViewPort(int width, int height)
 {
+	GuiLock __;
 	glViewport(0, 0, (GLsizei) width < 0 ? drawing_size.cx : width, (GLsizei) height < 0 ? drawing_size.cy : height);
 }
 
 void SystemDraw::OrthogonalView(bool clear_modelview)
 {
+	GuiLock __;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0, drawing_size.cx, drawing_size.cy, 0, -100, 100);
@@ -135,6 +141,7 @@ void SystemDraw::OrthogonalView(bool clear_modelview)
 
 void SystemDraw::PerspectiveView(bool clear_modelview)
 {
+	GuiLock __;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(45.0f, GetAspect(), 1.f, 100.0f);
@@ -145,6 +152,7 @@ void SystemDraw::PerspectiveView(bool clear_modelview)
 
 void SystemDraw::ApplyTransforms()
 {
+	GuiLock __;
 	float dx = (float) drawing_size.cx / 2;
 	float dy = (float) drawing_size.cy / 2;
 	glTranslatef(dx, dy, 0.f);
@@ -155,6 +163,7 @@ void SystemDraw::ApplyTransforms()
 
 void SystemDraw::PushContext()
 {
+	GuiLock __;
 	MatrixStack& m = mstack[mi++];	
 	glGetDoublev(GL_PROJECTION_MATRIX, m.projection_matrix);
 	glGetDoublev(GL_MODELVIEW_MATRIX, m.modelview_matrix);
@@ -163,6 +172,7 @@ void SystemDraw::PushContext()
 
 void SystemDraw::PopContext()
 {
+	GuiLock __;
 	MatrixStack& m = mstack[--mi];
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixd(m.projection_matrix);
