@@ -5,6 +5,20 @@ LAYOUT(EditStringLayout, 236, 62)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
 END_LAYOUT
 
+LAYOUT(EditIntLayout, 236, 62)
+	ITEM(Label, lbl, SetLabel(t_("Test")).LeftPosZ(4, 68).TopPosZ(4, 19))
+	ITEM(EditInt, number, HSizePosZ(68, 4).TopPosZ(4, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(80, -10).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(EditDoubleLayout, 236, 62)
+	ITEM(Label, lbl, SetLabel(t_("Test")).LeftPosZ(4, 68).TopPosZ(4, 19))
+	ITEM(EditDouble, number, HSizePosZ(68, 4).TopPosZ(4, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(80, -10).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
 LAYOUT(ProgressLayout, 320, 72)
 	ITEM(Button, stop, SetLabel(t_("Cancel")).HCenterPosZ(68, 0).BottomPosZ(4, 24))
 	UNTYPED(pi, HSizePosZ(4, 4).TopPosZ(28, 12))

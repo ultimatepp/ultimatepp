@@ -172,6 +172,34 @@ bool EditText(WString& s, const char *title, const char *label, int maxlen)
 	return EditText(s, title, label, CharFilterUnicode, maxlen);
 }
 
+bool EditNumber(int& n, const char *title, const char *label, int min, int max, bool notnull)
+{
+	WithEditIntLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, title);
+	dlg.lbl = label;
+	dlg.number <<= n;
+	dlg.number.MinMax(min, max);
+	if(dlg.Execute() == IDOK) {
+		n = ~dlg.number;
+		return true;
+	}
+	return false;
+}
+
+bool EditNumber(int& n, const char *title, const char *label, double min, double max, bool notnull)
+{
+	WithEditDoubleLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, title);
+	dlg.lbl = label;
+	dlg.number <<= n;
+	dlg.number.MinMax(min, max);
+	if(dlg.Execute() == IDOK) {
+		n = ~dlg.number;
+		return true;
+	}
+	return false;	
+}
+
 Callback CtrlRetriever::operator<<=(Callback cb)
 {
 	for(int i = 0; i < item.GetCount(); i++) {
