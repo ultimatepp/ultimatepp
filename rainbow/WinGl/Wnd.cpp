@@ -28,11 +28,13 @@ int            Ctrl::PaintLock;
 
 void GlLog(int line, const char* text, Color ink)
 {
+	GuiLock __;
 	Ctrl::console.Log(line, text, ink);
 }
 
 void GlLog(const char* text, Color ink)
 {
+	GuiLock __;
 	Ctrl::console.Log(text, ink);
 }
 
@@ -205,9 +207,13 @@ bool Ctrl::ProcessEvent(bool *quit)
 	}
 	else if(glDrawMode == DRAW_ON_IDLE)
 	{
-		TimerProc(GetTickCount());
-		SweepMkImageCache();
-		DrawScreen();
+		if(!painting)
+		{
+			GuiSleep(0);
+			TimerProc(GetTickCount());
+			SweepMkImageCache();
+			DrawScreen();
+		}
 	}
 	
 	return false;
@@ -216,10 +222,10 @@ bool Ctrl::ProcessEvent(bool *quit)
 void Ctrl::DrawScreen()
 {
 	if(hRC && desktop && !painting) {
+		painting = true;
 		resources.BindStatic();
 		int64 t0 = GetHighTickCount();
 		frameInfo.curr_tick_count = t0;
-		painting = true;
 		desktop->ApplyLayout();
 		desktop->ApplyTransform(TS_BEFORE_SCREEN);
 		for(int i = 0; i < topctrl.GetCount(); i++) {
@@ -295,8 +301,9 @@ void Ctrl::DrawScreen()
 		}
 
 		CursorSync(draw);
-			
-		desktop->ApplyTransform(TS_AFTER_PAINT);		
+	
+ 		desktop->PostPaint(draw);
+		desktop->ApplyTransform(TS_AFTER_PAINT);
 
 		glLoadIdentity();
 		#if CLIP_MODE == 2
@@ -320,14 +327,13 @@ void Ctrl::DrawScreen()
 		//glEnable(GL_STENCIL_TEST);
 		#endif
 		MouseSync(draw);
-
 		SwapBuffers(hDC);
-		painting = false;
 		int64 t1 = GetHighTickCount();
 		frameInfo.frame_time = t1 - t0;
 		frameInfo.frame_factor = frameInfo.frame_time * frameInfo.frame_skip / 1000.f;
 		frameInfo.fps = frameInfo.frame_time > 0.f ? 1000.f / (float)frameInfo.frame_time : 0.f;
 		//LOGF("ft: %d, t0: %d, t1: %d\n", frameInfo.frame_time, t0, t1);
+		painting = false;
 	}
 }
 
@@ -369,8 +375,8 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	while(loopno > EndSessionLoopNo && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
 		SyncCaret();
-		if(glDrawMode == DRAW_ON_TIMER)
-			GuiSleep(20);
+		//if(glDrawMode == DRAW_ON_TIMER)
+		//	GuiSleep(20);
 		ProcessEvents(&quit);
 	}
 

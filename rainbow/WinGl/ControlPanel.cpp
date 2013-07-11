@@ -1,5 +1,7 @@
 #include "ControlPanel.h"
 
+#ifdef GUI_WINGL
+
 NAMESPACE_UPP
 
 ValueSlider::ValueSlider()
@@ -205,3 +207,5 @@ float InfoPanel::GetScale()
 }
 
 END_UPP_NAMESPACE
+
+#endif
