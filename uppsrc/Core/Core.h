@@ -70,6 +70,7 @@
 	#include <dirent.h>
 	#include <signal.h>
 	#include <syslog.h>
+	#include <float.h>
 	#ifdef PLATFORM_SOLARIS
 		#include <inttypes.h>
 	#else
