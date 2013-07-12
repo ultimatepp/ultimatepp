@@ -739,6 +739,7 @@ void HttpRequest::Finish()
 	}
 	if(status_code >= 300 && status_code < 400) {
 		String url = GetRedirectUrl();
+		GET();
 		if(url.GetCount() && redirect_count++ < max_redirects) {
 			LLOG("--- HTTP redirect " << url);
 			Url(url);
