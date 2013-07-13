@@ -484,7 +484,7 @@ void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 	                         r.left, r.top, r.Width(), r.Height(),
 	                         0, CopyFromParent, InputOutput, CopyFromParent,
 	                         CWBitGravity|CWSaveUnder|CWOverrideRedirect|
-	                         (IsCompositedGui() ? CWBackPixel : CWBackPixmap),
+	                         (IsCompositedGui() ? CWBackPixmap : CWBackPixel),
 	                         &swa);
 	if(!w) XError("XCreateWindow failed !");
 	int i = Xwindow().Find(None);
