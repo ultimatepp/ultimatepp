@@ -186,7 +186,7 @@ bool EditNumber(int& n, const char *title, const char *label, int min, int max, 
 	return false;
 }
 
-bool EditNumber(int& n, const char *title, const char *label, double min, double max, bool notnull)
+bool EditNumber(double& n, const char *title, const char *label, double min, double max, bool notnull)
 {
 	WithEditDoubleLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, title);

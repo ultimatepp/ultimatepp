@@ -103,8 +103,11 @@
 		#endif
 	#endif
 
-	#if defined(COMPILER_MINGW) && !defined(WINVER)
-		#define WINVER 0xFFFF	
+	#if defined(COMPILER_MINGW)
+		#if !defined(WINVER)
+			#define WINVER 0xFFFF
+		#endif
+		#include <float.h>
 	#endif
 
 	#define DIR_SEP  '\\'

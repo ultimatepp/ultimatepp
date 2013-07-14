@@ -1,8 +1,6 @@
 #include "Geom.h"
 #pragma hdrstop
 
-#include <float.h>
-
 NAMESPACE_UPP
 
 #define POLY_TIMING(n) // RTIMING(n)

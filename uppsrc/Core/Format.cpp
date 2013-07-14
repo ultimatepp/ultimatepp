@@ -1,6 +1,5 @@
 #include "Core.h"
 //#BLITZ_APPROVE
-#include <float.h>
 
 NAMESPACE_UPP
 
