@@ -330,7 +330,7 @@ void ChHostSkin()
 			static GtkWidget *hscrollbar = gtk_hscrollbar_new(GTK_ADJUSTMENT(adj));
 			ChGtkNew(hscrollbar, "slider", GTK_SLIDER|GTK_MARGIN1|GTK_XMARGIN);
 			GtkChSlider(s.hthumb);
-			s.overthumb = true;
+			s.overthumb = false;
 		}
 		else {
 			GtkChScrollBar(s.up.look, s.up2.look, s.vlower, s.vthumb, s.vupper, s.down2.look, s.down.look,
