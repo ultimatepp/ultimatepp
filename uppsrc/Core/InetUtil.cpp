@@ -399,7 +399,7 @@ bool HttpHeader::ParseSCGI(const String& scgi_hdr)
 	first_line = f1 + ' ' + f2 + ' ' + f3;
 	if(!IsNull(content_length) && content_length && fields.Find("content-length") < 0)
 		fields.Add("content-length", AsString(content_length));
-	return false;
+	return true;
 }
 
 bool HttpHeader::Read(TcpSocket& socket)
