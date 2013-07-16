@@ -1861,6 +1861,7 @@ bool ArrayCtrl::AcceptEnter() {
 }
 
 void  ArrayCtrl::Set(int i, const Vector<Value>& v) {
+	array.At(i).line.Clear();
 	for(int ii = 0; ii < v.GetCount(); ii++)
 		Set(i, ii, v[ii]);
 	InvalidateCache(i);
