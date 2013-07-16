@@ -440,6 +440,8 @@ void Http::Finalize()
 	if(rsocket) {
 		SKYLARKLOG("=== Response: " << code << ' ' << code_text);
 		String r;
+		if(hdr.scgi)
+			r << "Status: ";
 		if(redirect.GetCount()) {
 			SKYLARKLOG("Redirect to: " << redirect);
 			r << "HTTP/1.1 " << code << " Found\r\n";
