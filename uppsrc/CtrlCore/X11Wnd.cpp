@@ -483,8 +483,7 @@ void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 	Window w = XCreateWindow(Xdisplay, RootWindow(Xdisplay, Xscreenno),
 	                         r.left, r.top, r.Width(), r.Height(),
 	                         0, CopyFromParent, InputOutput, CopyFromParent,
-	                         CWBitGravity|CWSaveUnder|CWOverrideRedirect|
-	                         (IsCompositedGui() ? CWBackPixmap : CWBackPixel),
+	                         CWBitGravity|CWSaveUnder|CWOverrideRedirect|CWBackPixmap,
 	                         &swa);
 	if(!w) XError("XCreateWindow failed !");
 	int i = Xwindow().Find(None);
