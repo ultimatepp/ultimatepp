@@ -577,7 +577,7 @@ Image Ctrl::DispatchMouse(int e, Point p, int zd) {
 
 Image Ctrl::DispatchMouseEvent(int e, Point p, int zd) {
 	GuiLock __;
-#ifdef flagWINGL
+#if defined(flagWINGL) || defined(flagLINUXGL)
 	if(!IsEnabled() && this != (Ctrl*) &infoPanel)
 		return Image::Arrow();
 #else

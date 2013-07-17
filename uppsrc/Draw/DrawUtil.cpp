@@ -329,7 +329,7 @@ void DrawRect(Draw& w, const Rect& rect, const Image& img, bool ralgn)
 	DrawRect(w, rect.left, rect.top, rect.Width(), rect.Height(), img, ralgn);
 }
 
-#ifdef flagWINGL
+#if defined(flagWINGL) || defined(flagLINUXGL)
 void DrawTiles(Draw& w, int x, int y, int cx, int cy, const Image& img, const Size& isz, const Rect& src) {
 	w.Clip(x, y, cx, cy);
 	Size sz = isz;

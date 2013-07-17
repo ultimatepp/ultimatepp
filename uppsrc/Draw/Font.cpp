@@ -129,7 +129,7 @@ void Font::InitStdFont()
 		int    height = 0;
 		GetStdFontSys(name, height);
 #ifdef PLATFORM_WIN32
-#ifdef flagWINGL
+#if defined(flagWINGL)
 		AStdFont = Font(FindFaceNameIndex("Tahoma"), 12);
 #else
 		int q = FindFaceNameIndex(name);

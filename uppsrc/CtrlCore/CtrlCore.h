@@ -582,7 +582,7 @@ private:
 	Ctrl   *FindBestOpaque(const Rect& clip);
 	void    UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint);
 	void    UpdateArea(SystemDraw& draw, const Rect& clip);
-	Ctrl   *GetTopRect(Rect& r, bool inframe);
+	Ctrl   *GetTopRect(Rect& r, bool inframe, bool clip = true);
 	void    DoSync(Ctrl *q, Rect r, bool inframe);
 	bool    HasDHCtrl() const;
 	void    SyncDHCtrl();
