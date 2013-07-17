@@ -360,7 +360,7 @@ void EditField::Paint(Draw& w)
 			}
 	}
 	if(!ar)
-		w.DrawRect(x, 0, 9999, fcy, paper);
+		w.DrawRect(x, 0, sz.cx - x, fcy, paper);
 	w.End();
 	DrawTiles(w, dropcaret, CtrlImg::checkers());
 }

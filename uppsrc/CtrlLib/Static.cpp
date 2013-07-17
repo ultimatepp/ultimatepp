@@ -88,7 +88,7 @@ LabelBox::LabelBox()
 	color = Null;
 	LabelBase::SetInk(LabelBoxTextColor, LabelBoxDisabledTextColor);
 	SetVAlign(ALIGN_TOP);
-	#ifdef flagWINGL
+	#if defined(flagWINGL) || defined(flagLINUXGL)
 	ClipToBounds(false);
 	#endif
 }
