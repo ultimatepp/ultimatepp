@@ -1,3 +1,5 @@
+#define GUI_LINUXGL
+ 
 #ifndef _LinuxGl_LinuxGl_h_
 #define _LinuxGl_LinuxGl_h_
 
@@ -32,8 +34,6 @@
 #undef Complex
 
 #include <LinuxGl/stdids.h>
-
-#define GUI_LINUXGL
 
 #include <Painter/Painter.h>
 

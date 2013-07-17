@@ -447,5 +447,5 @@ float GetFps()
 	return fps;
 }
 
-#endif
 END_UPP_NAMESPACE
+#endif

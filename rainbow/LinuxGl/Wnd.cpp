@@ -333,7 +333,7 @@ void Ctrl::DrawScreen()
 	}
 }
 
-void Ctrl::WndUpdate0r(const Rect& r)
+void Ctrl::WndUpdate(const Rect& r)
 {
 	GuiLock __;
 }
@@ -352,7 +352,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 	return true;
 }
 
-void Ctrl::EventLoop0(Ctrl *ctrl)
+void Ctrl::EventLoop(Ctrl *ctrl)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
@@ -381,7 +381,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	LoopLevel--;
 }
 
-void Ctrl::GuiSleep0(int ms)
+void Ctrl::GuiSleep(int ms)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
@@ -396,12 +396,12 @@ Rect Ctrl::GetWndScreenRect() const
 	return GetRect();
 }
 
-void Ctrl::WndShow0(bool b)
+void Ctrl::WndShow(bool b)
 {
 	GuiLock __;
 }
 
-void Ctrl::WndUpdate0()
+void Ctrl::WndUpdate()
 {
 	GuiLock __;
 }
@@ -470,7 +470,7 @@ void Ctrl::DestroyWnd()
 {
 	for(int i = 0; i < topctrl.GetCount(); i++)
 		if(topctrl[i]->top && topctrl[i]->top->owner_window == this)
-			topctrl[i]->WndDestroy0();
+			topctrl[i]->WndDestroy();
 	int q = FindTopCtrl();
 	if(q >= 0) {
 		topctrl.Remove(q);
@@ -485,7 +485,7 @@ void Ctrl::DestroyWnd()
 		win->DestroyFrame();
 }
 
-void Ctrl::WndDestroy0()
+void Ctrl::WndDestroy()
 {
 	DestroyWnd();
 	if(topctrl.GetCount())
@@ -508,7 +508,7 @@ void Ctrl::PutForeground()
 			fw[i]->PutForeground();
 }
 
-void Ctrl::SetWndForeground0()
+void Ctrl::SetWndForeground()
 {
 	GuiLock __;
 	ASSERT(IsOpen());
@@ -534,16 +534,15 @@ bool Ctrl::IsWndForeground() const
 	return b;
 }
 
-void Ctrl::WndEnable0(bool *b)
+void Ctrl::WndEnable(bool b)
 {
 	GuiLock __;
-	*b = true;
 }
 
-void Ctrl::SetWndFocus0(bool *b)
+bool Ctrl::SetWndFocus()
 {
 	GuiLock __;
-	*b = true;
+	return true;
 }
 
 bool Ctrl::HasWndFocus() const
@@ -578,7 +577,7 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 	//::InvalidateRect(glHwnd, NULL, false);
 }
 
-void Ctrl::WndSetPos0(const Rect& rect)
+void Ctrl::WndSetPos(const Rect& rect)
 {
 	GuiLock __;
 	TopWindow *w = dynamic_cast<TopWindow *>(this);
@@ -587,7 +586,7 @@ void Ctrl::WndSetPos0(const Rect& rect)
 	SetWndRect(rect);
 }
 
-void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
+void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
 }

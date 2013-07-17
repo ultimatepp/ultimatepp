@@ -24,15 +24,15 @@ void TopWindow::GripResize()
 
 void TopWindow::SyncSizeHints()
 {
-	SyncCaption0();
+	SyncCaption();
 }
 
-void TopWindow::SyncTitle0()
+void TopWindow::SyncTitle()
 {
-	SyncCaption0();
+	SyncCaption();
 }
 
-void TopWindow::SyncCaption0()
+void TopWindow::SyncCaption()
 {
 	GuiLock __;
 	frame->title = title.ToString();
@@ -49,7 +49,7 @@ void TopWindow::SyncCaption0()
 
 void TopWindow::State(int reason)
 {
-	SyncCaption0();
+	SyncCaption();
 }
 
 void TopWindow::SyncRect()
@@ -80,7 +80,7 @@ void TopWindow::Open(Ctrl *owner)
 	PopUp(frame, false, true);
 	popup = false;
 	SetRect(frame->GetClient());
-	SyncCaption0();
+	SyncCaption();
 	if(state == MAXIMIZED)
 		frame->Maximize();
 }
