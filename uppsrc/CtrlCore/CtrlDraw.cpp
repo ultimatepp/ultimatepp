@@ -261,7 +261,7 @@ struct sDrawLevelCheck {
 #define LEVELCHECK(w, q)
 #define DOLEVELCHECK
 #endif
-#ifdef flagWINGL
+#if defined(flagWINGL) || defined(flagLINUXGL)
 void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	GuiLock __;
 	LEVELCHECK(w, this);
@@ -272,7 +272,8 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	if(!IsShown() || orect.IsEmpty() || clip.IsEmpty() || !clip.Intersects(orect))
 		return;
 	
-	glPushMatrix();
+	w.PushContext();
+	//glPushMatrix();
 	ApplyTransform(TS_BEFORE_CTRL_PAINT);
 		
 	Ctrl *q;
@@ -338,7 +339,8 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	}
 	
 	ApplyTransform(TS_AFTER_CTRL_PAINT);
-	glPopMatrix();
+	//glPopMatrix();
+	w.PopContext();
 }
 #else
 void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
@@ -639,16 +641,17 @@ void Ctrl::RemoveFullRefresh()
 		q->RemoveFullRefresh();
 }
 
-Ctrl *Ctrl::GetTopRect(Rect& r, bool inframe)
+Ctrl *Ctrl::GetTopRect(Rect& r, bool inframe, bool clip)
 {
 	GuiLock __;
 	if(!inframe) {
-		r &= Rect(GetSize());
+		if(clip)
+			r &= Rect(GetSize());
 		r.Offset(GetView().TopLeft());
 	}
 	if(parent) {
 		r.Offset(GetRect().TopLeft());
-		return parent->GetTopRect(r, InFrame());
+		return parent->GetTopRect(r, InFrame(), clip);
 	}
 	return this;
 }

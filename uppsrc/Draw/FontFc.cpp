@@ -179,6 +179,21 @@ CommonFontInfo GetFontInfoSys(Font font)
 
 GlyphInfo (*GetGlyphInfoSysXft)(Font font, int chr);
 
+#ifdef flagLINUXGL
+#include <LinuxGl/FontGl.h>
+#include <LinuxGl/ResGl.h>
+GlyphInfo  GetGlyphInfoSys(Font font, int chr)
+{
+	static GlyphInfo gi;
+	const OpenGLFont& fi = resources.GetFont(font);
+	gi.width = chr < fi.chars.GetCount() 
+		? int(fi.chars[chr].xadvance * fi.scale + 0.5f)
+		: 0;
+	gi.lspc = 0;
+	gi.rspc = 0;
+	return gi;
+}
+#else
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
 	LTIMING("GetGlyphInfoSys");
@@ -207,6 +222,7 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 	}
 	return gi;
 }
+#endif
 
 Vector<FaceInfo> GetAllFacesSys()
 {
