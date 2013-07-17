@@ -172,7 +172,6 @@ void SlimScrollBar::Paint(Draw &w)
 		Size rsz(int(size), IsVert() ? sz.cx : sz.cy);
 		Fix(p);
 		Fix(rsz);
-		w.DrawRect(p.x, p.y, rsz.cx, rsz.cy, White().Alpha(150));
 	}
 }
 

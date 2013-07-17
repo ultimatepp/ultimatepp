@@ -33,3 +33,8 @@
 #define GUIPLATFORM_KEYCODES_INCLUDE <WinGl/Keys.h>
 #define GUIPLATFORM_INCLUDE          <WinGl/WinGl.h>
 #endif
+
+#ifdef flagLINUXGL
+#define GUIPLATFORM_KEYCODES_INCLUDE <LinuxGl/Keys.h>
+#define GUIPLATFORM_INCLUDE          <LinuxGl/LinuxGl.h>
+#endif

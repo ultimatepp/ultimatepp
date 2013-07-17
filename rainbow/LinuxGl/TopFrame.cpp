@@ -74,8 +74,9 @@ void TopWindowFrame::Paint(Draw& w)
 	int tcx = sz.cx - m.left - m.right - 4 - c * (close.IsShown() + maximize.IsShown());
 	if(!IsNull(icon)) {
 		Image h = icon;
-		if(h.GetWidth() > c || h.GetHeight() > c)
-			h = Rescale(h, GetFitSize(h.GetSize(), Size(c)));
+		//TODO: Eliminate crash in Gate2
+		//if(h.GetWidth() > c || h.GetHeight() > c)
+		//	h = Rescale(h, GetFitSize(h.GetSize(), Size(c)));
 		w.DrawImage(tx, m.top + 2, h);
 		tx += c;
 		tcx -= c;
