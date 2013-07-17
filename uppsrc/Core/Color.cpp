@@ -70,12 +70,19 @@ Color::operator RGBA() const
 {
 	RGBA color;
 	if(IsNullInstance())
+	{
 		Zero(color);
+		#if defined(flagWINGL) || defined(flagLINUXGL)
+		color.a = 255;
+		#endif
+	}
 	else {
 		color.r = GetR();
 		color.g = GetG();
 		color.b = GetB();
-		color.a = 255;
+		#if defined(flagWINGL) || defined(flagLINUXGL)
+		color.a = alpha;
+		#endif
 	}
 	return color;
 }
