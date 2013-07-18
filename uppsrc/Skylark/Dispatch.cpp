@@ -437,34 +437,43 @@ void Http::Dispatch(TcpSocket& socket)
 
 void Http::Finalize()
 {
-	if(rsocket) {
-		SKYLARKLOG("=== Response: " << code << ' ' << code_text);
-		String r;
-		if(hdr.scgi)
-			r << "Status : ";
-		if(redirect.GetCount()) {
-			SKYLARKLOG("Redirect to: " << redirect);
-			r << "HTTP/1.1 " << code << " Found\r\n";
-			r << "Location: " << redirect << "\r\n";
-			for(int i = 0; i < cookies.GetCount(); i++)
-				r << cookies[i];
-		}
-		else {
-			r <<
-				"HTTP/1.1 " << code << ' ' << code_text << "\r\n"
-				"Date: " <<  WwwFormat(GetUtcTime()) << "\r\n"
-				"Content-Length: " << response.GetCount() << "\r\n"
-				"Content-Type: " << content_type << "\r\n";
-			for(int i = 0; i < headers.GetCount(); i++)
-				r << headers.GetKey(i) << ": " << headers[i] << "\r\n";
-			for(int i = 0; i < cookies.GetCount(); i++)
-				r << cookies[i];
-			r << "\r\n";
-		}
-		rsocket->PutAll(r);
-		rsocket->PutAll(response);
-		rsocket = NULL;
-	}
+    if(rsocket) {
+        SKYLARKLOG("=== Response: " << code << ' ' << code_text);
+        String r;
+
+        // weird apache2 mod_scgi behaviour
+        if(hdr.scgi)
+            r << "Status: ";
+        else
+            r << "HTTP/1.1 ";
+
+        if(redirect.GetCount()) {
+            // for SCGI (at least on apache 2 mod_scgi), we need protocol inside url
+            if(hdr.scgi && redirect.Find(":") < 0)
+                redirect = "http:" + redirect;
+
+            SKYLARKLOG("Redirect to: " << redirect);
+            r << code << " Found\r\n";
+            r << "Location: " << redirect << "\r\n";
+            for(int i = 0; i < cookies.GetCount(); i++)
+                r << cookies[i];
+        }
+        else {
+            r <<
+                code << ' ' << code_text << "\r\n" 
+                "Date: " <<  WwwFormat(GetUtcTime()) << "\r\n" 
+                "Content-Length: " << response.GetCount() << "\r\n" 
+                "Content-Type: " << content_type << "\r\n";
+            for(int i = 0; i < headers.GetCount(); i++)
+                r << headers.GetKey(i) << ": " << headers[i] << "\r\n";
+            for(int i = 0; i < cookies.GetCount(); i++)
+                r << cookies[i];
+        }
+        r << "\r\n";
+        rsocket->PutAll(r);
+        rsocket->PutAll(response);
+        rsocket = NULL;
+    }
 }
 
 };
