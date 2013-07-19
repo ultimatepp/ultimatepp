@@ -2554,6 +2554,16 @@ ArrayCtrl& ArrayCtrl::ColumnWidths(const char *s)
 	return *this;
 }
 
+String ArrayCtrl::GetColumnWidths()
+{
+	String text;
+	for(int i = 0; i < header.GetCount(); i++)
+		text << Format(i ? " %d" : "%d",
+		              header.GetMode() == HeaderCtrl::SCROLL ? (int)header[i].GetRatio()
+		                                                     : header.GetTabWidth(i));
+	return text;
+}
+
 ArrayCtrl& ArrayCtrl::OddRowColor(Color paper, Color ink)
 {
 	oddpaper = paper;

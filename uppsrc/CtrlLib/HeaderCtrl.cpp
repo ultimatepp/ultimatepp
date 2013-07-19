@@ -550,6 +550,10 @@ void HeaderCtrl::LeftDown(Point p, dword keyflags) {
 	}
 	li = pushi = -1 - split;
 	col[pushi].WhenLeftClick();
+#ifdef _DEBUG
+	if((keyflags & K_ALT) && pushi >= 0)
+		WriteClipboardText(AsString(GetTabWidth(pushi)));
+#endif
 	if(pushi >= 0) {
 		if(!col[pushi].WhenAction) {
 			pushi = -1;
