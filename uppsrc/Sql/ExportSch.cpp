@@ -19,7 +19,7 @@ String ExportSch(SqlSession& session, const String& database)
 	Vector<String> tab = session.EnumTables(database);
 	Index<String> id;
 	for(int i = 0; i < tab.GetCount(); i++) {
-		r << sPutId("TABLE", id, tab[i]) << ")\r\n";
+		r << sPutId("TABLE", id, ToUpper(tab[i])) << ")\r\n";
 		Vector<SqlColumnInfo> c = session.EnumColumns(database, tab[i]);
 		for(int i = 0; i < c.GetCount(); i++) {
 			String type;
@@ -40,13 +40,15 @@ String ExportSch(SqlSession& session, const String& database)
 			case STRING_V:
 				type = "STRING";
 				width = c[i].width;
+				if(width < 0 || width > 40000)
+					width = 2000;
 				break;
 			default:
 				type = "STRING";
 				width = 200;
 				break;
 			}
-			r << '\t' << sPutId(type, id, c[i].name, 8);
+			r << '\t' << sPutId(type, id, ToUpper(c[i].name), 8);
 			if(width > 0 && width < 40000)
 				r << ", " << width;
 			r << ")\r\n";
