@@ -637,6 +637,7 @@ public:
 	ArrayCtrl& NoColumnSortSecondary()                 { columnsortsecondary = NULL; return *this; }
 
 	ArrayCtrl& ColumnWidths(const char *s);
+	String     GetColumnWidths();
 
 	ArrayCtrl& SetScrollBarStyle(const ScrollBar::Style& s)   { sb.SetStyle(s); header.SetScrollBarStyle(s); return *this; }
 	ArrayCtrl& SetHeaderCtrlStyle(const HeaderCtrl::Style& s) { header.SetStyle(s); return *this; }

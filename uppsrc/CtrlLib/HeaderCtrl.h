@@ -56,7 +56,7 @@ public:
 		Column&  Tip(const char *s)                { tip = s; return *this; }
 		Column&  SetPaper(Color c)                 { paper = c; return *this; }
 		Column&  SetRatio(double ratio);
-		Column&  SetMargin(int m);
+		Column&  SetMargin(int m)      ;
 
 		void     Show(bool b = true);
 		void     Hide()                            { Show(false); }
@@ -65,6 +65,7 @@ public:
 		Color    GetPaper() const                  { return paper; }
 		int      GetIndex() const                  { return index; }
 		bool     IsVisible() const                 { return visible; }
+		double   GetRatio() const                  { return ratio; }
 
 		Column();
 	};
