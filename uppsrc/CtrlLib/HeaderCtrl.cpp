@@ -733,8 +733,34 @@ int HeaderCtrl::FindIndex(int ndx) const
 #endif
 
 void HeaderCtrl::Serialize(Stream& s) {
-	int version = 0x03;
+	int version = 0x04;
 	s / version;
+	if(version >= 0x04) {
+		int n = col.GetCount();
+		s / n;
+		if(s.IsLoading())
+			col.InsertN(0, n);
+		for(int i = 0; i < n; i++) {
+			int ndx = col[i].index;
+			s % ndx;
+			if(s.IsLoading())
+				LOG("LOADING " << ndx);
+			else
+				LOG("SAVING " << ndx);
+			if(s.IsLoading())
+				for(int j = n; j < col.GetCount(); j++)
+					if(col[j].index == ndx) {
+						col.Swap(i, j);
+						break;
+					}
+			col[i].index = ndx;
+			s % col[i].ratio;
+			s % col[i].visible;			
+		}
+		if(s.IsLoading())
+			col.Trim(n);
+	}
+	else
 	if(version < 0x01) {
 		int n = col.GetCount();
 		s / n;
