@@ -82,6 +82,8 @@ Color::operator RGBA() const
 		color.b = GetB();
 		#if defined(flagWINGL) || defined(flagLINUXGL)
 		color.a = alpha;
+		#else
+		color.a = 255;
 		#endif
 	}
 	return color;
