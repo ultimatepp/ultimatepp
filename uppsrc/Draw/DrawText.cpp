@@ -6,10 +6,6 @@ NAMESPACE_UPP
 #include <WinGl/FontGl.h>
 #include <WinGl/ResGl.h>
 #endif
-#ifdef flagLINUXGL
-#include <LinuxGl/FontGl.h>
-#include <LinuxGl/ResGl.h>
-#endif
 
 #define LLOG(x)    // LOG(x)
 #define LTIMING(x) // TIMING(x)
@@ -35,7 +31,7 @@ WString TextUnicode(const char *s, int n, byte cs, Font font)
 void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 		            Color ink, int n, const int *dx)
 {
-#if defined(flagWINGL) || defined(flagLINUXGL)
+#ifdef flagWINGL
 	if(IsNull(ink))
 		return;
 	DrawTextOp(x, y, angle, text, font, ink, n, dx);
@@ -225,7 +221,7 @@ void Draw::DrawText(int x, int y, const String& text, Font font, Color ink, cons
 
 Size GetTextSize(const wchar *text, Font font, int n)
 {
-#if defined(flagWINGL) || defined(flagLINUXGL)
+#ifdef flagWINGL
 	return GetTextSize(text, resources.GetFont(font), n); 
 #else
 	FontInfo fi = font.Info();
