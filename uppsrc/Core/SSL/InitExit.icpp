@@ -70,6 +70,11 @@ EXITBLOCK
 	CRYPTO_cleanup_all_ex_data();
 	ERR_remove_state(0);
 	ERR_free_strings();
+	
+	stack_st_SSL_COMP* pCOMP = SSL_COMP_get_compression_methods();
+	if( pCOMP ) {
+		sk_SSL_COMP_free( pCOMP );
+	}
 }
 
 #ifdef _MULTITHREADED
