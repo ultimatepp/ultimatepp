@@ -577,30 +577,30 @@ void Stream::Pack(dword& w) {
 void    Stream::Pack(bool& a, bool& b, bool& c, bool& d, bool& e, bool& f, bool& g, bool& h) {
 	if(IsError()) return;
 	if(IsLoading()) {
-		int f = Get();
-		if(f < 0) LoadError();
+		int ff = Get();
+		if(ff < 0) LoadError();
 		else {
-			a = !!(f & 0x80);
-			b = !!(f & 0x40);
-			c = !!(f & 0x20);
-			d = !!(f & 0x10);
-			e = !!(f & 0x08);
-			f = !!(f & 0x04);
-			g = !!(f & 0x02);
-			h = !!(f & 0x01);
+			a = !!(ff & 0x80);
+			b = !!(ff & 0x40);
+			c = !!(ff & 0x20);
+			d = !!(ff & 0x10);
+			e = !!(ff & 0x08);
+			f = !!(ff & 0x04);
+			g = !!(ff & 0x02);
+			h = !!(ff & 0x01);
 		}
 	}
 	else {
-		int f = 0;
-		if(a) f |= 0x80;
-		if(b) f |= 0x40;
-		if(c) f |= 0x20;
-		if(d) f |= 0x10;
-		if(e) f |= 0x08;
-		if(f) f |= 0x04;
-		if(g) f |= 0x02;
-		if(h) f |= 0x01;
-		Put(f);
+		int ff = 0;
+		if(a) ff |= 0x80;
+		if(b) ff |= 0x40;
+		if(c) ff |= 0x20;
+		if(d) ff |= 0x10;
+		if(e) ff |= 0x08;
+		if(f) ff |= 0x04;
+		if(g) ff |= 0x02;
+		if(h) ff |= 0x01;
+		Put(ff);
 	}
 }
 
