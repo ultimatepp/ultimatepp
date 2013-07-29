@@ -90,6 +90,11 @@ Image GnomeImage(const char *s, bool large = false)
 	return GtkThemeIcon(String("gnome-") + s, large);
 }
 
+Image SystemImage(const char *s, bool large = false)
+{
+	return GtkThemeIcon(s, large);
+}
+
 struct ExtToMime {
 	Index<String> major;
 	Index<String> minor;
@@ -160,21 +165,48 @@ struct FileExtMaker : ImageMaker {
 		String minor;
 		if(!Single<ExtToMime>().GetMime(ext, major, minor))
 			return Null;
-		Image img = GnomeImage("mime-" + major + '-' + minor, large);
-		return IsNull(img) ? GnomeImage("mime-" + major) : img;
+		Image img = SystemImage(major + '-' + minor, large);
+		return IsNull(img) ? SystemImage(major) : img;
 	}
 };
 
 Image PosixGetDriveImage(String dir, bool large)
 {
-	static Image cdrom = GnomeImage("dev-cdrom");
-	static Image lcdrom = GnomeImage("dev-cdrom", true);
-	static Image harddisk = GnomeImage("dev-harddisk");
-	static Image lharddisk = GnomeImage("dev-harddisk", true);
-	static Image floppy = GnomeImage("dev-floppy");
-	static Image lfloppy = GnomeImage("dev-floppy", true);
-	static Image computer = GnomeImage("dev-computer");
-	static Image lcomputer = GnomeImage("dev-computer", true);
+	static bool init = false;
+	static Image cdrom;
+	static Image lcdrom;
+	static Image harddisk;
+	static Image lharddisk;
+	static Image floppy;
+	static Image lfloppy;
+	static Image computer;
+	static Image lcomputer;
+	
+	if (!init) {
+		bool KDE = Environment().Get("KDE_FULL_SESSION", String()) == "true";
+		if (KDE) {
+			cdrom     = SystemImage("media-optical");
+			lcdrom    = SystemImage("media-optical", true);
+			harddisk  = SystemImage("drive-harddisk");
+			lharddisk = SystemImage("drive-harddisk", true);
+			floppy    = SystemImage("media-floppy");
+			lfloppy   = SystemImage("media-floppy", true);
+			computer  = SystemImage("computer");
+			lcomputer = SystemImage("computer", true);
+		}
+		else {
+			cdrom     = GnomeImage("dev-cdrom");
+			lcdrom    = GnomeImage("dev-cdrom", true);
+			harddisk  = GnomeImage("dev-harddisk");
+			lharddisk = GnomeImage("dev-harddisk", true);
+			floppy    = GnomeImage("dev-floppy");
+			lfloppy   = GnomeImage("dev-floppy", true);
+			computer  = GnomeImage("dev-computer");
+			lcomputer = GnomeImage("dev-computer", true);
+		}
+		
+		init = true;
+	}
 	if(dir.GetCount() == 0 || dir == "/") {
 		Image m = large ? lcomputer : computer;
 		return IsNull(m) ? CtrlImg::Computer() : m;
@@ -193,23 +225,128 @@ Image PosixGetDriveImage(String dir, bool large)
 
 Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool isexe, bool large)
 {
-	static Image file = GnomeImage("fs-regular");
-	static Image lfile = GnomeImage("fs-regular", true);
-	static Image dir = GnomeImage("fs-directory");
-	static Image ldir = GnomeImage("fs-directory", true);
-	static Image exe = GnomeImage("fs-executable");
-	static Image lexe = GnomeImage("fs-executable", true);
-	static Image home = GnomeImage("fs-home");
-	static Image lhome = GnomeImage("fs-home", true);
-	static Image desktop = GnomeImage("fs-desktop");
-	static Image ldesktop = GnomeImage("fs-desktop", true);
+	static bool init = false;
+	static bool KDE  = Environment().Get("KDE_FULL_SESSION", String()) == "true";
+	
+	static Image file;
+	static Image lfile;
+	static Image dir;
+	static Image ldir;
+	static Image exe;
+	static Image lexe;
+	static Image home;
+	static Image lhome;
+	static Image desktop;
+	static Image ldesktop;
+	static Image music;
+	static Image lmusic;
+	static Image pictures;
+	static Image lpictures;
+	static Image video;
+	static Image lvideo;
+	static Image documents;
+	static Image ldocuments;
+	static Image download;
+	static Image ldownload;
+	static Image help;
+	static Image lhelp;
+	static Image translation;
+	static Image ltranslation;
+	static Image layout;
+	static Image llayout;
+	
+	static Image fileImage;
+	static Image fileMusic  = SystemImage("audio-x-generic");
+	static Image fileScript = SystemImage("text-x-script");
+	
+	if (!init) {
+		if (KDE) {
+			file         = SystemImage("text-plain");
+			lfile        = SystemImage("text-plain", true);
+			dir          = SystemImage("folder");
+			ldir         = SystemImage("folder", true);
+			exe          = SystemImage("application-x-executable");
+			lexe         = SystemImage("application-x-executable", true);
+			home         = SystemImage("user-home");
+			lhome        = SystemImage("user-home", true);
+			desktop      = SystemImage("user-desktop");
+			ldesktop     = SystemImage("user-desktop", true);
+			music        = SystemImage("folder-sound");
+			lmusic       = SystemImage("folder-sound", true);
+			pictures     = SystemImage("folder-image");
+			lpictures    = SystemImage("folder-image", true);
+			video        = SystemImage("folder-video");
+			lvideo       = SystemImage("folder-video", true);
+			documents    = SystemImage("folder-documents");
+			ldocuments   = SystemImage("folder-documents", true);
+			download     = SystemImage("folder-downloads");
+			ldownload    = SystemImage("folder-downloads", true);
+			help         = SystemImage("help-contents");
+			lhelp        = SystemImage("help-contents", true);
+			translation  = SystemImage("applications-education-language");
+			ltranslation = SystemImage("applications-education-language", true);
+			layout       = SystemImage("applications-development");
+			llayout      = SystemImage("applications-development", true);
+			
+			fileImage    = SystemImage("application-x-egon");
+		} 
+		else {
+			file         = GnomeImage("fs-regular");
+			lfile        = GnomeImage("fs-regular", true);
+			dir          = GnomeImage("fs-directory");
+			ldir         = GnomeImage("fs-directory", true);
+			exe          = GnomeImage("fs-executable");
+			lexe         = GnomeImage("fs-executable", true);
+			home         = GnomeImage("fs-home");
+			lhome        = GnomeImage("fs-home", true);
+			desktop      = GnomeImage("fs-desktop");
+			ldesktop     = GnomeImage("fs-desktop", true);
+			music        = SystemImage("folder-music");
+			lmusic       = SystemImage("folder-music", true);
+			pictures     = SystemImage("folder-pictures");
+			lpictures    = SystemImage("folder-pictures", true);
+			video        = SystemImage("folder-video");
+			lvideo       = SystemImage("folder-video", true);
+			documents    = SystemImage("folder-documents");
+			ldocuments   = SystemImage("folder-documents", true);
+			download     = SystemImage("folder-downloads");
+			ldownload    = SystemImage("folder-downloads", true);
+			help         = SystemImage("help");
+			lhelp        = SystemImage("help", true);
+			translation  = SystemImage("preferences-desktop-locale");
+			ltranslation = SystemImage("preferences-desktop-locale", true);
+			layout       = SystemImage("applications-development");
+			llayout      = SystemImage("applications-development", true);			
+
+			fileImage    = SystemImage("image-x-generic");
+		}
+		
+		init = true;
+	}
+	if (filename == "Help Topics")
+		return large ? lhelp : help; 
 	if(isdir) {
 		Image img = dir;
 		if(AppendFileName(folder, filename) == GetHomeDirectory())
 			return large ? lhome : home;
 		else
-		if(folder == GetHomeDirectory() && filename == "Desktop")
+		if(AppendFileName(folder, filename) ==  GetDesktopFolder ()) 
 			return large ? ldesktop : desktop;
+		else
+		if(AppendFileName(folder, filename) == GetMusicFolder ())
+			return large ? lmusic : music;
+		else
+		if(AppendFileName(folder, filename) == GetPicturesFolder())
+			return large ? lpictures : pictures;
+		else
+		if(AppendFileName(folder, filename) == GetVideoFolder())
+			return large ? lvideo : video;
+		else
+		if(AppendFileName(folder, filename) == GetDocumentsFolder())
+			return large ? ldocuments : documents;
+		else
+		if(AppendFileName(folder, filename) == GetDownloadFolder())
+			return large ? ldownload : download;
 		else
 		if(folder == "/media" || filename.GetCount() == 0)
 			return PosixGetDriveImage(filename, large);
@@ -217,11 +354,38 @@ Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool
 	}
 	FileExtMaker m;
 	m.ext = GetFileExt(filename);
+	for (int i = 1; i < m.ext.GetCount(); ++i)
+		m.ext.Set (i, ToLower(m.ext[i]));
+	
+	// Fixing format problems
+	if (m.ext == ".gz") m.ext = ".tar.gz";
+	
+	// Ultimate++ - files extensions
+	if (m.ext == ".t" || m.ext == ".lng") return large ? ltranslation : translation;
+	if (m.ext == ".lay") return large ? llayout : layout;
+	if (m.ext == ".iml") return fileImage;
+	if (m.ext == ".usc") return fileScript;
+	
+	// Binary - files extensions (It seems that KDE has problem with multimedia MIME icons handling)
+	if (KDE) {
+		if (m.ext == ".bmp" || m.ext == ".dib" ||
+	    	m.ext == ".gif" ||
+	    	m.ext == ".jpg" || m.ext == ".jpeg" || m.ext == ".jpe" ||
+	    	m.ext == ".png" ||
+	    	m.ext == ".tif" || m.ext == ".tiff" ||
+	    	m.ext == ".svg" ||
+	    	m.ext == ".ico" ||
+	    	m.ext == ".xcf")
+	    	return fileImage;
+		if (m.ext == ".aac" || m.ext == ".ogg" || m.ext == ".mp3")  return fileMusic;
+	}
+
 	Image img;
 	if(m.ext.GetCount()) {
 		m.ext = m.ext.Mid(1);
 		m.large = large;
 		img = MakeImage(m);
+		isexe = false;
 	}
 	return IsNull(img) ? isexe ? (large ? lexe : exe) : (large ? lfile : file) : img;
 }
