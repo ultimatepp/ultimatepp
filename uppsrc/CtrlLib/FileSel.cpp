@@ -1821,7 +1821,7 @@ FileSel::FileSel() {
 	type <<= THISBACK(Load);
 	sortext <<= 0;
 
-	search.NullText("Search", StdFont().Italic(), SColorDisabled());
+	search.NullText(t_("Search"), StdFont().Italic(), SColorDisabled());
 	search.SetFilter(CharFilterDefaultToUpperAscii);
 	search <<= THISBACK(SearchLoad);
 
