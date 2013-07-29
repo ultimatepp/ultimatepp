@@ -51,6 +51,10 @@ struct SkylarkConfig {
 	int                       caching;
 };
 
+#ifdef BadRequest // X11 macro name clash
+#undef BadRequest
+#endif
+
 class SkylarkApp : protected SkylarkConfig {
 	TcpSocket    server;
 	Mutex        accept_mutex;
