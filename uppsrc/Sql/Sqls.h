@@ -286,7 +286,7 @@ struct SqlR : Sql {
 };
 #endif
 
-struct StatementExecutor { // Deprecated, use SqlPerforScript
+struct StatementExecutor { // Deprecated, use SqlPerformScript
 	virtual bool Execute(const String& stmt) = 0;
 	virtual ~StatementExecutor() {}
 };
