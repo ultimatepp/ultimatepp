@@ -250,7 +250,7 @@ public:
 	String Savepoint(); // deprecated
 	void   RollbackTo(const String& savepoint); // deprecated
 
-	bool   IsOpen(); // 
+	bool   IsOpen();
 
 	bool   WasError() const; // deprecated, use SqlSession::WasError
 
