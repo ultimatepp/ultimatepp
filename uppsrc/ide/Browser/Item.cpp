@@ -74,6 +74,9 @@ Vector<ItemTextPart> ParseItemNatural(const String& name, const CppItem& m, cons
 	LLOG("ParseItemNatural " << m.natural << ", pname: " << m.pname
 	                         << ", tname: " << m.tname << ", m.ctname: " << m.ctname);
 	Vector<ItemTextPart> part;
+	int len = name.GetLength();
+	if(len == 0)
+		return part;
 	bool param = false;
 	int pari = -1;
 	int par = 0;
@@ -90,9 +93,9 @@ Vector<ItemTextPart> ParseItemNatural(const String& name, const CppItem& m, cons
 		}
 		else
 		if(iscid(*s) || *s == ':') {
-			if(strncmp(s, name, name.GetLength()) == 0 && !iscid(s[name.GetLength()])) {
+			if(strncmp(s, name, len) == 0 && !iscid(s[len])) {
 				p.type = ITEM_NAME;
-				n = name.GetLength();
+				n = len;
 				param = true;
 			}
 			else {
