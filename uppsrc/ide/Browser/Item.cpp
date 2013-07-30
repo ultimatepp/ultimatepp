@@ -75,8 +75,14 @@ Vector<ItemTextPart> ParseItemNatural(const String& name, const CppItem& m, cons
 	                         << ", tname: " << m.tname << ", m.ctname: " << m.ctname);
 	Vector<ItemTextPart> part;
 	int len = name.GetLength();
-	if(len == 0)
-		return part;
+	if(len == 0) {
+		ItemTextPart& p = part.Add();
+		p.pos = 0;
+		p.len = m.natural.GetLength();
+		p.type = ITEM_TEXT;
+		p.pari = -1;
+ 		return part;
+	}
 	bool param = false;
 	int pari = -1;
 	int par = 0;
