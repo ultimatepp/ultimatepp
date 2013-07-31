@@ -208,7 +208,9 @@ struct RpcData {
 	ValueMap   in_map;
 	ValueArray out;
 	ValueMap   out_map;
-	
+
+	int      GetRemainingCount() const  { return in.GetCount() - ii; }
+
 	Value Get()                         { if(ii >= in.GetCount()) throw ValueTypeMismatch(); return in[ii++]; }
 	
 	template <class T>
