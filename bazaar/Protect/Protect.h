@@ -254,10 +254,6 @@ using namespace Upp;
 		__asm jmp __next2 \
 		_PROTECT_END_MARKER \
 		__asm __next2: \
-		__asm pushf \
-		__asm inc eax \
-		__asm dec eax \
-		__asm popf \
 	};
 
 #define OBFUSCATE_START_FUNC \
