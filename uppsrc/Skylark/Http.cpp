@@ -37,7 +37,14 @@ void Http::ParseRequest(const char *p)
 		while(*p && *p != '&')
 			p++;
 		if(*key != '.' && *key != '@')
-			var.GetAdd(key) = UrlDecode(last, p);
+			if(key.EndsWith("[]")) {
+				Value &v = var.GetAdd(key);
+				if(v.IsNull())
+					v = ValueArray();
+				(ValueArray &)v << UrlDecode(last, p);
+			}
+			else
+				var.GetAdd(key) = UrlDecode(last, p);
 		if(*p)
 			p++;
 	}
@@ -169,6 +176,11 @@ void Http::ReadMultiPart(const String& buffer)
 	if(e - p < delta)
 		return;
 	e -= delta;
+	
+	// multipart can have many parts with same name, which should
+	// be read as ValueArrays -- we read all parts as arrays and we pack them later
+	VectorMap<String, ValueArray>filenames, content_types, contents;
+
 	while(p < e) { // read individual parts
 		String filename, content_type, name;
 		while(!MemICmp(p, "content-", 8)) { // parse content specifiers
@@ -237,15 +249,43 @@ void Http::ReadMultiPart(const String& buffer)
 			p++;
 		}
 		if(!name.IsEmpty() && *name != '.' && *name != '@') { // add variables
-			if(!filename.IsEmpty())
-				var.GetAdd(name + ".filename") = filename;
-			if(!content_type.IsEmpty())
-				var.GetAdd(name + ".content_type") = content_type;
-			var.Add(name, String(b, p));
+			filenames.GetAdd(name).Add(filename);
+			content_types.GetAdd(name).Add(content_type);
+			contents.GetAdd(name).Add(String(b, p));
 		}
 		p += delta;
 		while(*p && *p++ != '\n')
 			;
+	}
+	
+	// now pack contents inside var map
+	// names ending with '[]' are built as Arrays, others as simple values
+	// keys CAN be repeated in latter case, and empty values will be missig as before
+	for(int i = 0; i < filenames.GetCount(); i++) {
+		String name = filenames.GetKey(i);
+		if(name.EndsWith("[]")) {
+			// treat as array
+			name.Trim(name.GetCount()-2);
+			var.Add(name + ".filename[]", filenames[i]);
+			var.Add(name + ".content_type[]", content_types[i]);
+			var.Add(name + "[]", contents[i]);
+		}
+		else {
+			// single values
+			ValueArray &vf = filenames[i];
+			ValueArray &vct = content_types[i];
+			ValueArray &vc = contents[i];
+			for(int j = 0; j < vf.GetCount(); j++) {
+				Value v;
+				v = vf[j];
+				if(!v.IsNull())
+					var.Add(name + ".filename", v);
+				v = vct[j];
+				if(!v.IsNull())
+					var.Add(name + ".content_type", v);
+				var.Add(name, vc[j]);
+			}
+		}
 	}
 }
 

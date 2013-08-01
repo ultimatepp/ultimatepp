@@ -1,3 +1,6 @@
+// progress reasons
+enum { PROGRESS_HEADER, PROGRESS_CONTENT, PROGRESS_END, PROGRESS_QUERY = -1 };
+
 void MakeLink(StringBuffer& out, const Vector<String>& part, const Vector<Value>& arg);
 void ServeStaticPage(Http& http);
 
@@ -88,6 +91,8 @@ class Http : public Renderer {
 
 	void   SessionSet0(const char *id, const Value& value);
 	friend String GetIdentity(const Renderer *r);
+	
+	void WaitHandler(int (*progress)(int, Http&, int), TcpSocket *socket);
 
 public:
 	Http&  operator()(const char *id, const char *v)   { var.GetAdd(id) = v; return *this; }
@@ -169,10 +174,11 @@ public:
 	Http();
 };
 
-void RegisterHandler(void (*handler)(Http& http), const char *id, const char *path);
-void RegisterHandler(Callback1<Http&> handler, const char *id, const char *path);
+void RegisterHandler(void (*handler)(Http& http), const char *id, const char *path, int (*progress)(int, Http&, int) = NULL);
+void RegisterHandler(Callback1<Http&> handler, const char *id, const char *path, int (*progress)(int, Http&, int) = NULL);
 
 #define SKYLARK(name, path)  void name(Http& http); INITBLOCK { UPP::RegisterHandler(name, #name, path); } void name(Http& http)
+#define SKYLARK_PROGRESS(name, path, progressCb)  void name(Http& http); INITBLOCK { UPP::RegisterHandler(name, #name, path, progressCb); } void name(Http& http)
 
 Vector<String> *GetUrlViewLinkParts(const String& id);
 
