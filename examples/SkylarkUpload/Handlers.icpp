@@ -1,0 +1,112 @@
+#include "SkylarkUpload.h"
+
+struct UploadStat : Moveable<UploadStat>
+{
+	int totalSize;
+	int currentSize;
+};
+
+int ProgressHandler(int reason, Http &http, int size)
+{
+	static VectorMap<String, UploadStat> stats;
+
+	// get the upload unique identifier
+	Value id = http["uploadid"];
+	
+	// must be reentrant
+	INTERLOCKED {
+		switch(reason)
+		{
+			// got headers ?
+			case PROGRESS_HEADER:
+			{
+				UploadStat &stat = stats.Add(id);
+				stat.totalSize = size;
+				stat.currentSize = 0;
+				break;
+			}
+				
+			// reading contents ?
+			case PROGRESS_CONTENT:
+			{
+				stats.Get(id).currentSize = size;
+				break;
+			}
+				
+			// finished reading contents ?
+			case PROGRESS_END:
+			{
+				// signals end by resetting total size
+				// we can't remove the key here, progress query
+				// can happen after
+				stats.Get(id).totalSize = 0;
+				break;
+			}
+			
+			// default, used by query handler
+			default: // PROGRESS_QUERY
+			{
+				// check if key is there --> upload started
+				int i = stats.Find(id);
+				if(i >= 0)
+				{
+					// upload has started
+					UploadStat &stat = stats[i];
+
+					if(stat.totalSize)
+					{
+						// if upload not ended, return the progress %
+						// take care to NOT return 100% up to upload ended really
+						return min(99, (int)(100.0 * stat.currentSize / stat.totalSize));
+					}
+					else
+					{
+						// upload ended, remove id from map and return 100%
+						stats.RemoveKey(id);
+						return 100;
+					}
+				}
+				else
+					// upload still not started, return 0 progress
+					return 0;
+			}
+		}
+	}
+	return true;
+}
+
+SKYLARK(Home, "home")
+{
+	// we need a session variable for upload id
+	if(http["@__skylark_session_cookie__"].IsNull())
+		http.NewSessionId();
+	
+	// show rootpath in html page
+	http("UploadFolder", Upload().GetRootPath());
+
+	http.RenderResult("SkylarkUpload/SkylarkUpload");
+}
+
+SKYLARK(Default, "**")
+{
+	http.Redirect(Home);
+}
+
+SKYLARK_PROGRESS(PostUpload, "upload:POST", &ProgressHandler)
+{
+	String fileName = AppendFileName(Upload().GetRootPath(), (String)http["filename"]);
+
+	Value const &contents = http["filestoupload[]"];
+	Value const &filenames = http["filestoupload.filename[]"];
+	if(contents.IsNull() || filenames.IsNull())
+		return;
+	for(int i = 0; i < contents.GetCount(); i++)
+		SaveFile(AppendFileName(Upload().GetRootPath(), (String)filenames[i]), contents[i]);
+}
+
+SKYLARK(Progress,"progress")
+{
+	int p = ProgressHandler(PROGRESS_QUERY, http, 0);
+	http.Content("text/plain", Format("%d", p));
+	http.Response(200, "OK");
+}

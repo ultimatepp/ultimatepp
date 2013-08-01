@@ -1,0 +1,17 @@
+description "Skylark upload with ajax progress bar\377";
+
+uses
+	Core,
+	Skylark;
+
+file
+	SkylarkUpload.h,
+	Handlers.icpp,
+	SkylarkUpload.cpp,
+	SkylarkUpload.witz,
+	SkylarkUpload.css,
+	upload.js;
+
+mainconfig
+	"" = "MT";
+
