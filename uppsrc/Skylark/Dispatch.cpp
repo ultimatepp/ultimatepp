@@ -26,9 +26,11 @@ struct DispatchNode : Moveable<DispatchNode> { // Single node in url hierarchy t
 	bool             post_raw; // true for POST_RAW
 	String           id; // Handler ID
 	
+	int (*progress)(int, Http&, int);
+	
 	enum { GET, POST };
 
-	DispatchNode() { argpos = Null; method = GET; post_raw = false; }
+	DispatchNode() { argpos = Null; method = GET; post_raw = false; progress = NULL;}
 };
 
 static Vector<DispatchNode>& sDispatchMap()
@@ -100,7 +102,7 @@ String MakeLink(const HandlerId& id, const Vector<Value>& arg)
 	return MakeLink0(id.handler ? sHandlerIndex().Find((uintptr_t)id.handler) : sLinkMap().Find(id.id), arg);
 }
 
-void RegisterView0(void (*fn)(Http&), Callback1<Http&> cb, const char *id, String path, bool primary)
+void RegisterView0(void (*fn)(Http&), Callback1<Http&> cb, const char *id, String path, int (*progress)(int, Http&, int), bool primary)
 {
 	SKYLARKLOG("Register Handler " << id << " -> " << path);
 	ASSERT_(sLinkMap().Find(id) < 0, "duplicate handler id " + String(id));
@@ -161,6 +163,7 @@ void RegisterView0(void (*fn)(Http&), Callback1<Http&> cb, const char *id, Strin
 	DispatchMap[q].method = method;
 	DispatchMap[q].id = id;
 	DispatchMap[q].post_raw = post_raw;
+	DispatchMap[q].progress = progress;
 //	DumpDispatchMap();
 }
 
@@ -170,7 +173,9 @@ struct HandlerData { // temporary storage of handlers until FinalizeViews call
 	String           id;
 	String           path;
 	
-	HandlerData() { fn = NULL; }
+	int(*progress)(int, Http&, int);
+	
+	HandlerData() { fn = NULL; progress = NULL; }
 };
 
 static Array<HandlerData>& sHandlerData()
@@ -179,22 +184,24 @@ static Array<HandlerData>& sHandlerData()
 	return x;
 }
 
-void RegisterHandler(void (*fn)(Http&), const char *id, const char *path)
+void RegisterHandler(void (*fn)(Http&), const char *id, const char *path, int (*progress)(int, Http&, int))
 {
 	Array<HandlerData>& v = sHandlerData();
 	HandlerData& w = v.Add();
 	w.fn = fn;
 	w.id = id;
 	w.path = path;
+	w.progress = progress;
 }
 
-void RegisterHandler(Callback1<Http&> cb, const char *id, const char *path)
+void RegisterHandler(Callback1<Http&> cb, const char *id, const char *path, int (*progress)(int, Http&, int))
 {
 	Array<HandlerData>& v = sHandlerData();
 	HandlerData& w = v.Add();
 	w.cb = cb;
 	w.id = id;
 	w.path = path;
+	w.progress = progress;
 }
 
 void SkylarkApp::FinalizeViews()
@@ -209,7 +216,7 @@ void SkylarkApp::FinalizeViews()
 			p = root + '/' + p;
 		Vector<String> h = Split(ReplaceVars(p, view_var, '$'), ';');
 		for(int i = 0; i < h.GetCount(); i++)
-			RegisterView0(v.fn, v.cb, v.id, h[i], i == 0);
+			RegisterView0(v.fn, v.cb, v.id, h[i], v.progress, i == 0);
 	}
 	w.Clear();
 }
@@ -221,8 +228,9 @@ struct BestDispatch { // Information about the best dispatch node for given path
 	Vector<String>&  arg;            // arguments extracted
 	String           id;             // id of handler
 	bool             post_raw;       // handler is POST_RAW type
+	int(*progress)(int, Http&, int);
 	
-	BestDispatch(Vector<String>& arg) : arg(arg) { matched_parts = -1; matched_params = 0; post_raw = false; }
+	BestDispatch(Vector<String>& arg) : arg(arg) { matched_parts = -1; matched_params = 0; post_raw = false; progress = NULL;}
 };
 
 void GetBestDispatch(int method,
@@ -240,6 +248,7 @@ void GetBestDispatch(int method,
 			bd.matched_parts = matched_parts;
 			bd.id = n.id;
 			bd.post_raw = n.post_raw;
+			bd.progress = n.progress;
 		}
 		if(!bd.handler) { // node does not have handler, try '**' subnode
 			int q = n.subnode.Find(String());
@@ -249,6 +258,7 @@ void GetBestDispatch(int method,
 					bd.handler = an.handler;
 					bd.id = n.id;
 					bd.arg.Clear();
+					bd.progress = n.progress;
 					break;
 				}
 				q = n.subnode.FindNext(q);
@@ -275,6 +285,7 @@ void GetBestDispatch(int method,
 				bd.handler = an.handler;
 				bd.matched_parts = matched_parts;
 				bd.id = an.id;
+				bd.progress = an.progress;
 			}
 		}
 		else {
@@ -325,13 +336,19 @@ void SkylarkApp::BadRequest(Http& http, const BadRequestExc& e)
 	http.Response(400, "Bad request");
 }
 
+void Http::WaitHandler(int (*progress)(int, Http&, int), TcpSocket *socket)
+{
+	if(!progress)
+		return;
+	if(!(*progress)(PROGRESS_CONTENT, *this, socket->GetDone()))
+		socket->Abort();
+}
+
 void Http::Dispatch(TcpSocket& socket)
 {
 	const Vector<DispatchNode>& DispatchMap = sDispatchMap();
 	if(hdr.Read(socket)) {
 		rsocket = &socket;
-		int len = GetLength();
-		content = socket.GetAll(len);
 		LLOG("--------------------------------------------");
 		SKYLARKLOG(hdr.GetMethod() << " " << hdr.GetURI());
 		LDUMP(content);
@@ -341,17 +358,11 @@ void Http::Dispatch(TcpSocket& socket)
 		request_content_type = GetHeader("content-type");
 		String rc = ToLower(request_content_type);
 		bool post = hdr.GetMethod() == "POST";
-		if(post)
-			if(rc.StartsWith("application/x-www-form-urlencoded"))
-				ParseRequest(content);
-			else
-			if(rc.StartsWith("multipart/"))
-				ReadMultiPart(content);
+
 		String uri = hdr.GetURI();
 		int q = uri.Find('?');
 		if(q >= 0) {
-			if(!post)
-				ParseRequest(~uri + q + 1);
+			ParseRequest(~uri + q + 1);
 			uri.Trim(q);
 		}
 		var.GetAdd(".__identity__"); // To make StdLib.icpp GetIndentity work, this has to be at index 0
@@ -384,6 +395,26 @@ void Http::Dispatch(TcpSocket& socket)
 		if(DispatchMap.GetCount())
 			GetBestDispatch(post ? DispatchNode::POST : DispatchNode::GET, part, 0, DispatchMap[0], a, bd, 0, 0);
 		LDUMPC(arg);
+		
+		int len = GetLength();
+		if(bd.progress)
+		{
+			(*bd.progress)( PROGRESS_HEADER, *this, len);
+			socket.WhenWait = callback2(this, &Http::WaitHandler, bd.progress, rsocket);
+		}
+		content = socket.GetAll(len);
+		if(bd.progress)
+		{
+			socket.WhenWait.Clear();
+			(*bd.progress)(PROGRESS_END, *this, len);
+		}
+		if(post)
+			if(rc.StartsWith("application/x-www-form-urlencoded"))
+				ParseRequest(content);
+			else
+			if(rc.StartsWith("multipart/"))
+				ReadMultiPart(content);
+
 		response.Clear();
 		if(bd.handler) {
 			try {
