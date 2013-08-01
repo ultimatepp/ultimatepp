@@ -1,0 +1,36 @@
+/* body container -- used just to center on screen */
+#bodyContainer {
+	text-align:center;
+	width:100%;
+	height:20em;
+	background-color:#eee;
+}
+
+/* a fancy header */
+#header {
+	font-size:30px;
+	color:white;
+	background-color:blue;
+}
+
+/* progress bar container -- sets the maximum bar width */
+#progress_container {
+  border: solid 1px #000;
+  height: 20px;
+  width: 300px;
+  text-align:center;
+  margin:0 auto;
+}
+
+/* progress bar */
+#progress {
+  background-color: #006666;
+  color:white;
+  height: 20px;
+  width: 0px;
+}
+
+/* progress and hidden frame not showing */
+#progress_container, #hidden_iframe {
+  display: none;
+}

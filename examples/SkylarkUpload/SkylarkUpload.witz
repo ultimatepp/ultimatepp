@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<title>File Upload Progress Bar</title>
+		<link rel='stylesheet' type='text/css' href='static/SkylarkUpload/SkylarkUpload.css'>
+
+		<!-- this script does all the upload magics -->
+		<script type='text/javascript' src='static/SkylarkUpload/upload.js'></script>
+	</head>
+	<body>
+		<div id='bodyContainer'>
+		
+			<div id='header'>
+				Skylark file upload demo
+			</div>
+			<br>
+			<br>
+			This demo supports uploading multiple files at once
+			<br>
+			Files will be uploaded in '$UploadFolder' folder on server
+			<br>
+			<br>
+			<!--
+				POST URL -- javascript code will read it and build the 'action' of following form
+				You MUST insert in 'value' field the upload url (here 'upload')
+			-->
+			<input type='hidden' id='uploadurl' value='upload'>
+			
+			<!--
+				progress handler URL -- javascript will use it to make periodic calls on server
+				querying upload progress and showing it in progress bar
+				You MUST insert in 'value' field the progress url (here 'progress')
+			-->
+			<input type='hidden' id='progressurl' value='progress'>
+	
+			<!--
+				POST form
+				action is a dummy value, will be filled by javascript code
+				which sets the POST
+			-->
+			<form action='xxxxxx' method='POST' id='myForm' enctype='multipart/form-data' target='hidden_iframe' onsubmit='startUpload(this);'>
+			
+				<!--
+					ending [] in filestoupload[] makes a ValueArray of multipart data
+					in Skylark arrays will be :
+						filestoupload[]					a ValueArray with file contents
+						filestoupload.content_type[]	a ValueArray with file content types
+						filestoupload.filename[]		a ValueArray with filenames
+					The 'multiple' field allows select and upload more files at once
+				-->
+				<input type='file' name='filestoupload[]' multiple=''>
+				<br><br>
+				<input type='submit' value='Start Upload'>
+				<br>
+			</form>
+			
+			<!-- Progress bar -->
+			<div id='progress_container'>
+				<div id='progress'></div>
+			</div>
+			
+			<!--
+				hidden frame doing the upload process
+				it's used to 'free' the browser window during upload phase
+			--> 
+			<iframe id='hidden_iframe' name='hidden_iframe' src='about:blank'></iframe>
+	
+			<!--
+				these fields are used to build an unique identifier of this upload job
+				in order to allow progress handler to identify correctly its related upload job
+				(we need it because we can have more upload jobs calls on server
+			-->
+			<input type='hidden' id='session' value='$@__skylark_session_cookie__'>
+			<input type='hidden' id='submittime' value=''>
+		</div>
+	</body>
+</html>

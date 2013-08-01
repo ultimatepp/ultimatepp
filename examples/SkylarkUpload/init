@@ -1,0 +1,8 @@
+#ifndef _SkylarkUpload_icpp_init_stub
+#define _SkylarkUpload_icpp_init_stub
+#include "Core/init"
+#include "Skylark/init"
+#define BLITZ_INDEX__ Fb64938f71485ee02b357f1bc5f6229a0
+#include "Handlers.icpp"
+#undef BLITZ_INDEX__
+#endif
