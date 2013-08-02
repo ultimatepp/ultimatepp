@@ -744,10 +744,6 @@ void HeaderCtrl::Serialize(Stream& s) {
 			int ndx = col[i].index;
 			s % ndx;
 			if(s.IsLoading())
-				LOG("LOADING " << ndx);
-			else
-				LOG("SAVING " << ndx);
-			if(s.IsLoading())
 				for(int j = n; j < col.GetCount(); j++)
 					if(col[j].index == ndx) {
 						col.Swap(i, j);

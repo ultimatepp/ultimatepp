@@ -126,6 +126,15 @@ void S_##x::FieldLayoutRaw(FieldOperator& fo, const String& prefix) {\
 
 #include SCHEMADIALECT
 
+// S_*::Get(SqlId column_id)
+
+#define TYPE(x)                                      Value S_##x::Get(SqlId column_id) const { String col = ~column_id;
+#define COLUMN(type, ctype, name, width, prec)          static String _x0_x_##name(#name); if(_x0_x_##name == col) return name;
+#define END_TYPE                                        return Value(); }
+
+#include SCHEMADIALECT
+
+
 // Introspection
 
 #define TYPE(x)                   void SchDbInfo##x() {
