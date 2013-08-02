@@ -15,6 +15,7 @@ public:\
 	bool operator==(const S_##Table& x) const  { return EqualFields(const_cast<S_##Table&>(*this), const_cast<S_##Table&>(x)); } \
 	bool operator!=(const S_##Table& x) const  { return !EqualFields(const_cast<S_##Table&>(*this), const_cast<S_##Table&>(x)); } \
 	String ToString() const        { return AsString((Fields)const_cast<S_##Table&>(*this)); } \
+	Value  Get(SqlId column_id) const; \
 	S_##Table();
 
 #define TYPE(Table)                  CODETYPE(Table, __NIL)
