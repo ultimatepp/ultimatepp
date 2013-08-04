@@ -256,7 +256,7 @@ source data matrix are called [/ indices] whereas the visual (output)
 columns are called simply [/ columns].&]
 [s0; &]
 [s0; The visual ArrayCtrl structure can be entirely independent of 
-the source data strucrure (although it`'s seldom helpful to make 
+the source data structure (although it`'s seldom helpful to make 
 the mapping completely arbitrary). Basically, each column can 
 have an arbitrary number of indices defining its source data. 
 Of course, the most common case is one index per column. This 
@@ -294,7 +294,7 @@ accessor interface object. &]
 support both single`-selection (plain cursor) and multiselection 
 model. Of course, row selection can be controlled via the programmatic 
 array interface as well. The selection and cursor always spans 
-entire rows, it is not possible (without substantical patchwork) 
+entire rows, it is not possible (without substantial patchwork) 
 to select only certain columns or individual cells.&]
 [s0; &]
 [s0; The ArrayCtrl rows can be inserted, edited and deleted either 
@@ -2909,7 +2909,7 @@ henAction] callback).&]
 [s5;:ArrayCtrl`:`:Column`:`:Tip`(const char`*`):%- [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&
 ]_[* Tip]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 tip])&]
 [s2; Assigns a [%-*@3 tip] to header tab column.&]
-[s0;%- &]
+[s3;%- &]
 [s0;%- &]
 [ {{10000t/25b/25@3 [s0;%- [*@(229)4 ArrayCtrl`::Order]]}}&]
 [s3; &]
