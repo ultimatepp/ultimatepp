@@ -102,6 +102,6 @@ value is not null)&]
 [s2;%% Sets the treads priority to [%-*@3 percent ][%- (0 to 200)]. In 
 reality, current implementation supports only 5 levels, 25%, 
 75%, 125%, 175% and more than 175%; last two levels require root 
-priviledges. Returns true if setting the priority was successfull.&]
+privileges. Returns true if setting the priority was successful.&]
 [s3;%% &]
-[s0; ]
+[s0; ]]
