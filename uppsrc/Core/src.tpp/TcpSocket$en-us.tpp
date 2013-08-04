@@ -13,7 +13,7 @@ topic "TcpSocket";
 [ {{10000@(113.42.0) [s0;%% [*@7;4 TcpSocket]]}}&]
 [s3; &]
 [s1;:TcpSocket`:`:class: [@(0.0.255)3 class][3 _][*3 TcpSocket]&]
-[s2;%% This class represents an TCP/IP socket. It extendes the basic 
+[s2;%% This class represents an TCP/IP socket. It extends the basic 
 semantics of sockets to allow non`-blocking or time constrained 
 operations.&]
 [s3; &]
@@ -115,7 +115,7 @@ rue])&]
 [s2;%% Starts a listening server socket at [%-*@3 port] with input 
 queue [%-*@3 listen`_count]. [%-*@3 ipv6] sets the socket to IPv6 
 mode, [%-*@3 reuse] sets [^http`:`/`/www`.kernel`.org`/doc`/man`-pages`/online`/pages`/man7`/socket`.7`.html^ S
-O`_REUSEADDR] socket option. [%-*@3 addr] can be used to speficy 
+O`_REUSEADDR] socket option. [%-*@3 addr] can be used to specify 
 on what interface to listen on. As last void`* parameter, it 
 has to be pointer to uint32 that is dereferenced and assigned 
 to sockaddr`_in`::sin`_addr.s`_addr for ipv6`=`=true and/or in6`_addr 
@@ -270,7 +270,7 @@ connection or NULL if such information is not available.&]
 [s5;:TcpSocket`:`:Timeout`(int`): [_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[* Timeout]([@(0.0.255) i
 nt]_[*@3 ms])&]
 [s2;%% Sets timeout for all operations. Zero means that all operations 
-return immediatelly (in that case it is usually a good idea to 
+return immediately (in that case it is usually a good idea to 
 perform some sort of external blocking on socket or socket group 
 using e.g. SocketWaitEvent). Null means operations are blocking 
 (but they still can invoke WhenProgress periodically if defined). 
