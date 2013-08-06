@@ -1,17 +1,11 @@
 #include "SkylarkUpload.h"
 
-struct UploadStat : Moveable<UploadStat>
-{
-	int totalSize;
-	int currentSize;
-};
-
 int ProgressHandler(int reason, Http &http, int size)
 {
-	static VectorMap<String, UploadStat> stats;
-
 	// get the upload unique identifier
-	Value id = http["uploadid"];
+	String id = http["uploadid"];
+	String currentId = "." + id + ".currentSize";
+	String totalId = "." + id + ".totalSize";
 	
 	// must be reentrant
 	INTERLOCKED {
@@ -20,16 +14,20 @@ int ProgressHandler(int reason, Http &http, int size)
 			// got headers ?
 			case PROGRESS_HEADER:
 			{
-				UploadStat &stat = stats.Add(id);
-				stat.totalSize = size;
-				stat.currentSize = 0;
+				http
+					.SessionSet(currentId, 0)
+					.SessionSet(totalId, size)
+				;
 				break;
 			}
 				
 			// reading contents ?
 			case PROGRESS_CONTENT:
 			{
-				stats.Get(id).currentSize = size;
+				// avoid unnnedded session storing
+				int oldCurrent = http[currentId];
+				if(oldCurrent != size)
+					http.SessionSet(currentId, size);
 				break;
 			}
 				
@@ -37,9 +35,7 @@ int ProgressHandler(int reason, Http &http, int size)
 			case PROGRESS_END:
 			{
 				// signals end by resetting total size
-				// we can't remove the key here, progress query
-				// can happen after
-				stats.Get(id).totalSize = 0;
+				http.SessionSet(totalId, 0);
 				break;
 			}
 			
@@ -47,22 +43,23 @@ int ProgressHandler(int reason, Http &http, int size)
 			default: // PROGRESS_QUERY
 			{
 				// check if key is there --> upload started
-				int i = stats.Find(id);
-				if(i >= 0)
+				int total = http[totalId];
+				if(!IsNull(total))
 				{
-					// upload has started
-					UploadStat &stat = stats[i];
-
-					if(stat.totalSize)
+					if(total)
 					{
 						// if upload not ended, return the progress %
 						// take care to NOT return 100% up to upload ended really
-						return min(99, (int)(100.0 * stat.currentSize / stat.totalSize));
+						int current = http[currentId];
+						return min(99, (int)(100.0 * current / total));
 					}
 					else
 					{
-						// upload ended, remove id from map and return 100%
-						stats.RemoveKey(id);
+						// upload ended, nullify session variables and return 100%
+						http
+							.SessionSet(currentId, Null)
+							.SessionSet(totalId, Null)
+						;
 						return 100;
 					}
 				}
