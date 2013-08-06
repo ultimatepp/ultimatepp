@@ -24,10 +24,15 @@ int ProgressHandler(int reason, Http &http, int size)
 			// reading contents ?
 			case PROGRESS_CONTENT:
 			{
+				int oldPercent = http[currentId];
+				int total = http[totalId];
+
+				// take care to NOT return 100% up to upload ended really
+				int percent = min(99, (int)(100.0 * size / total));
+
 				// avoid unnnedded session storing
-				int oldCurrent = http[currentId];
-				if(oldCurrent != size)
-					http.SessionSet(currentId, size);
+				if(oldPercent != percent)
+					http.SessionSet(currentId, percent);
 				break;
 			}
 				
@@ -47,12 +52,8 @@ int ProgressHandler(int reason, Http &http, int size)
 				if(!IsNull(total))
 				{
 					if(total)
-					{
 						// if upload not ended, return the progress %
-						// take care to NOT return 100% up to upload ended really
-						int current = http[currentId];
-						return min(99, (int)(100.0 * current / total));
-					}
+						return http[currentId];
 					else
 					{
 						// upload ended, nullify session variables and return 100%
