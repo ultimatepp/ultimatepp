@@ -396,32 +396,34 @@ void Http::Dispatch(TcpSocket& socket)
 			GetBestDispatch(post ? DispatchNode::POST : DispatchNode::GET, part, 0, DispatchMap[0], a, bd, 0, 0);
 		LDUMPC(arg);
 		
-		int len = GetLength();
-		if(bd.progress)
-		{
-			(*bd.progress)( PROGRESS_HEADER, *this, len);
-			socket.WhenWait = callback2(this, &Http::WaitHandler, bd.progress, rsocket);
-		}
-		content = socket.GetAll(len);
-		if(bd.progress)
-		{
-			socket.WhenWait.Clear();
-			(*bd.progress)(PROGRESS_END, *this, len);
-		}
-		if(post)
-			if(rc.StartsWith("application/x-www-form-urlencoded"))
-				ParseRequest(content);
-			else
-			if(rc.StartsWith("multipart/"))
-				ReadMultiPart(content);
+		// we need session loaded before progress handler is called
+		try {
+			if(SQL.IsOpen())
+				SQL.Begin();
+			LoadSession();
+			session_dirty = false;
 
-		response.Clear();
-		if(bd.handler) {
-			try {
-				if(SQL.IsOpen())
-					SQL.Begin();
-				LoadSession();
-				session_dirty = false;
+			int len = GetLength();
+			if(bd.progress)
+			{
+				(*bd.progress)( PROGRESS_HEADER, *this, len);
+				socket.WhenWait = callback2(this, &Http::WaitHandler, bd.progress, rsocket);
+			}
+			content = socket.GetAll(len);
+			if(bd.progress)
+			{
+				socket.WhenWait.Clear();
+				(*bd.progress)(PROGRESS_END, *this, len);
+			}
+			if(post)
+				if(rc.StartsWith("application/x-www-form-urlencoded"))
+					ParseRequest(content);
+				else
+				if(rc.StartsWith("multipart/"))
+					ReadMultiPart(content);
+	
+			response.Clear();
+			if(bd.handler) {
 				if(post && !bd.post_raw) {
 					String id = Nvl((*this)["__post_identity__"], (*this)["__js_identity__"]);
 					if(id != (*this)[".__identity__"])
@@ -439,29 +441,29 @@ void Http::Dispatch(TcpSocket& socket)
 				if(SQL.IsOpen())
 					SQL.Commit();
 			}
-			catch(SqlExc e) {
-				if(SQL.IsOpen())
-					SQL.Rollback();
-				app.SqlError(*this, e);
-			}
-			catch(AuthExc e) {
-				if(SQL.IsOpen())
-					SQL.Rollback();
-				app.Unauthorized(*this, e);
-			}
-			catch(BadRequestExc e) {
-				if(SQL.IsOpen())
-					SQL.Rollback();
-				app.BadRequest(*this, e);
-			}
-			catch(Exc e) {
-				if(SQL.IsOpen())
-					SQL.Rollback();
-				app.InternalError(*this, e);
-			}
+			else
+				app.NotFound(*this);
 		}
-		else
-			app.NotFound(*this);
+		catch(SqlExc e) {
+			if(SQL.IsOpen())
+				SQL.Rollback();
+			app.SqlError(*this, e);
+		}
+		catch(AuthExc e) {
+			if(SQL.IsOpen())
+				SQL.Rollback();
+			app.Unauthorized(*this, e);
+		}
+		catch(BadRequestExc e) {
+			if(SQL.IsOpen())
+				SQL.Rollback();
+			app.BadRequest(*this, e);
+		}
+		catch(Exc e) {
+			if(SQL.IsOpen())
+				SQL.Rollback();
+			app.InternalError(*this, e);
+		}
 		Finalize();
 	}	
 }
