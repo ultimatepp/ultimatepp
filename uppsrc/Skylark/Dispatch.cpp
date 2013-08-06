@@ -344,6 +344,7 @@ void Http::WaitHandler(int (*progress)(int, Http&, int), TcpSocket *socket)
 		socket->Abort();
 	if(session_dirty)
 		SaveSession();
+	session_dirty = false;
 }
 
 void Http::Dispatch(TcpSocket& socket)
@@ -411,6 +412,7 @@ void Http::Dispatch(TcpSocket& socket)
 				(*bd.progress)( PROGRESS_HEADER, *this, len);
 				if(session_dirty)
 					SaveSession();
+				session_dirty = false;
 				socket.WhenWait = callback2(this, &Http::WaitHandler, bd.progress, rsocket);
 			}
 			content = socket.GetAll(len);
