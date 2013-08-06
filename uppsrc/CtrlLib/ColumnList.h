@@ -183,9 +183,9 @@ public:
 	ColumnList&  ColumnMode()                         { return Mode(MODE_COLUMN); }
 	ColumnList&  Columns(int _n)                      { ncl = _n; Refresh(); return *this; }
 	int          GetColumns() const                   { return ncl; }
-	ColumnList&  ItemHeight(int _cy)                  { cy = _cy; RefreshLayout(); Refresh(); return *this; }
+	ColumnList&  ItemHeight(int _cy)                  { cy = _cy; RefreshLayout(); SetSb(); Refresh(); return *this; }
 	int          GetItemHeight() const                { return cy; }
-	ColumnList&  ItemWidth(int _cx)                   { cx = _cx; RefreshLayout(); Refresh(); return *this; }
+	ColumnList&  ItemWidth(int _cx)                   { cx = _cx; RefreshLayout(); SetSb(); Refresh(); return *this; }
 	int          GetItemWidth() const                 { return cx; }
 	ColumnList&  RoundSize(bool b = true);
 	ColumnList&  NoRoundSize()                        { return RoundSize(false); }
