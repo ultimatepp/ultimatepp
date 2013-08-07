@@ -96,6 +96,13 @@ d],[@(0.0.255) int]_[*@3 len])&]
 ])&]
 [s2;%% Seeds random with single value [%-*@3 seed]. This is good to 
 get always the same sequence of numbers (for the same seed)&]
+[s3; &]
+[s4; &]
+[s5;:SeedRandom`(`): [@(0.0.255) void]_[* SeedRandom]()&]
+[s2; Seeds random from the host platform randomness sources. Note 
+that this is done by default by random number generator, there 
+is no need to call this function unless you are doing something 
+special.&]
 [s3;%% &]
 [s4; &]
 [s5;:ZeroArray`(x`): [* ZeroArray]([*@3 x])&]
@@ -243,4 +250,4 @@ numerator:&]
 [s2;%% [%- Returns the string representation of ][%-*@3 x][%-  with] [%-*@3 nDigits][%-  
 precision].&]
 [s3; &]
-[s0; ]
+[s0; ]]
