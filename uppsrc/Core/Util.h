@@ -296,7 +296,6 @@ qword  Random64();
 qword  Random64(qword n);
 double Randomf();
 
-void  SeedRandom();
 void  SeedRandom(dword *seed,int len);
 void  SeedRandom(dword seed = 0);
 

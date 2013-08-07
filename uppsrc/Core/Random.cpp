@@ -58,6 +58,9 @@ struct MTrand {
 	dword mt[N];
 	int   mti;         /* mti==N+1 means mt[N] is not initialized */
 	dword mag01[2];
+#ifdef PLATFORM_POSIX
+	int   pid;
+#endif
 	
 	void seed();
 	void init_genrand(dword s);
@@ -160,6 +163,9 @@ MTrand::MTrand()
 	mag01[0] = 0;
 	mag01[1] = MATRIX_A;
 	seed();
+#ifdef PLATFORM_POSIX
+	pid = getpid();
+#endif
 }
 
 void MTrand::seed()
@@ -192,14 +198,6 @@ thread__ MTrand *sRng;
 thread__ byte    sRb[sizeof(MTrand)];
 #endif
 
-void SeedRandom()
-{
-	if(!sRng) {
-		sRng = new(sRb) MTrand;
-	}
-	sRng->seed();
-}
-
 void SeedRandom(dword *seed, int len){
 	if(!sRng) {
 		sRng = new(sRb) MTrand;
@@ -219,6 +217,13 @@ dword Random()
 	if(!sRng) {
 		sRng = new(sRb) MTrand;
 	}
+#ifdef PLATFORM_POSIX // Be fork safe...
+	int pid = getpid();
+	if(sRng->pid != pid) {
+		sRng->seed();
+		sRng->pid = pid;
+	}
+#endif
 	return sRng->genrand();
 }
 
