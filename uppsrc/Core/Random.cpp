@@ -59,6 +59,7 @@ struct MTrand {
 	int   mti;         /* mti==N+1 means mt[N] is not initialized */
 	dword mag01[2];
 	
+	void seed();
 	void init_genrand(dword s);
 	void init_by_array(dword *init_key, int key_length);
 	dword genrand();
@@ -158,6 +159,11 @@ MTrand::MTrand()
 	mti = N + 1;
 	mag01[0] = 0;
 	mag01[1] = MATRIX_A;
+	seed();
+}
+
+void MTrand::seed()
+{
 	dword seed[1024];
 #ifdef PLATFORM_POSIX
 	int fd = open("/dev/urandom", O_RDONLY);
@@ -185,6 +191,14 @@ byte    sRb[sizeof(MTrand)];
 thread__ MTrand *sRng;
 thread__ byte    sRb[sizeof(MTrand)];
 #endif
+
+void SeedRandom()
+{
+	if(!sRng) {
+		sRng = new(sRb) MTrand;
+	}
+	sRng->seed();
+}
 
 void SeedRandom(dword *seed, int len){
 	if(!sRng) {
