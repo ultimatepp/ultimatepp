@@ -113,6 +113,7 @@ public:
 	PopUpTable&   ListObject()                          { return list; }
 
 	DropList&     SetDropLines(int d)                   { list.SetDropLines(d); return *this; }
+	DropList&     SetValueConvert(const Convert& cv);
 	DropList&     SetConvert(const Convert& cv);
 	DropList&     SetDisplay(int i, const Display& d);
 	DropList&     SetDisplay(const Display& d);

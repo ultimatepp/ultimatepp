@@ -179,12 +179,17 @@ void  DropList::SetValue(const Value& v) {
 	Sync();
 }
 
-DropList& DropList::SetConvert(const Convert& cv)
+DropList& DropList::SetValueConvert(const Convert& cv)
 {
-	list.ColumnAt(0).SetConvert(cv);
 	valueconvert = &cv;
 	Sync();
 	return *this;
+}
+
+DropList& DropList::SetConvert(const Convert& cv)
+{
+	list.ColumnAt(0).SetConvert(cv);
+	return SetValueConvert(cv);
 }
 
 DropList& DropList::SetDisplay(int i, const Display& d)
