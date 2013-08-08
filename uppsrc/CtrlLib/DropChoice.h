@@ -134,11 +134,11 @@ public:
 	virtual ~DropList();
 };
 
-void Add(DropList& list, const VectorMap<Value, Value>& values);
-void Add(DropList& list, const VectorMap<int, String>& values);
-void Add(MapConvert& convert, const VectorMap<Value, Value>& values);
-void Add(MapConvert& convert, const VectorMap<int, String>& values);
-void Add(DropList& list, const MapConvert& convert);
+void Append(DropList& list, const VectorMap<Value, Value>& values);
+void Append(DropList& list, const VectorMap<int, String>& values);
+void Append(MapConvert& convert, const VectorMap<Value, Value>& values);
+void Append(MapConvert& convert, const VectorMap<int, String>& values);
+void Append(DropList& list, const MapConvert& convert);
 
 void operator*=(DropList& list, const VectorMap<Value, Value>& values);
 void operator*=(DropList& list, const VectorMap<int, String>& values);
