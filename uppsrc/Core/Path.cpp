@@ -1013,7 +1013,7 @@ bool RealizeDirectory(const String& d)
 		dir = GetFileFolder(dir);
 	}
 	for(int i = p.GetCount() - 1; i >= 0; i--)
-#ifdef POSIX
+#ifdef PLATFORM_POSIX
 			if(!DirectoryCreate(p[i], mode))
 #else
 			if(!DirectoryCreate(p[i]))

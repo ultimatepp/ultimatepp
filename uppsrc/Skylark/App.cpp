@@ -252,7 +252,7 @@ void SkylarkApp::Run()
 #endif
 		Main();
 
-#if defined(_DEBUG) && defined(POSIX)
+#if defined(_DEBUG) && defined(PLATFORM_POSIX)
 	FileDelete(pidf);
 #endif
 

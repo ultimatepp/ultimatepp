@@ -312,28 +312,28 @@ list.&]
 [s9;%% These are simple utility function for filling DropList`'s 
 list and MapConvert.&]
 [s3;%% &]
-[s0;%% &]
-[s5;:Add`(DropList`&`,const VectorMap`<Value`,Value`>`&`): [@(0.0.255) void]_[* Add]([_^DropList^ D
-ropList][@(0.0.255) `&]_[*@3 list], [@(0.0.255) const]_[_^VectorMap^ VectorMap][@(0.0.255) <
-][_^Value^ Value], [_^Value^ Value][@(0.0.255) >`&]_[*@3 values])&]
-[s5;:Add`(DropList`&`,const VectorMap`<int`,String`>`&`): [@(0.0.255) void]_[* Add]([_^DropList^ D
-ropList][@(0.0.255) `&]_[*@3 list], [@(0.0.255) const]_[_^VectorMap^ VectorMap]<[@(0.0.255) i
-nt], [_^String^ String]>`&_[*@3 values])&]
+[s3;%% &]
+[s5;:Append`(DropList`&`,const VectorMap`<Value`,Value`>`&`): [@(0.0.255) void]_[* Append
+]([_^DropList^ DropList][@(0.0.255) `&]_[*@3 list], [@(0.0.255) const]_[_^VectorMap^ Vector
+Map]<[_^Value^ Value], [_^Value^ Value]>`&_[*@3 values])&]
+[s5;:Append`(DropList`&`,const VectorMap`<int`,String`>`&`): [@(0.0.255) void]_[* Append](
+[_^DropList^ DropList][@(0.0.255) `&]_[*@3 list], [@(0.0.255) const]_[_^VectorMap^ VectorMa
+p]<[@(0.0.255) int], [_^String^ String]>`&_[*@3 values])&]
 [s2;%% Fills the DropList from VectorMap.&]
-[s3; &]
+[s3;%% &]
 [s4; &]
-[s5;:Add`(MapConvert`&`,const VectorMap`<Value`,Value`>`&`): [@(0.0.255) void]_[* Add]([_^MapConvert^ M
-apConvert][@(0.0.255) `&]_[*@3 convert], [@(0.0.255) const]_[_^VectorMap^ VectorMap][@(0.0.255) <
-][_^Value^ Value], [_^Value^ Value][@(0.0.255) >`&]_[*@3 values])&]
-[s5;:Add`(MapConvert`&`,const VectorMap`<int`,String`>`&`): [@(0.0.255) void]_[* Add]([_^MapConvert^ M
-apConvert][@(0.0.255) `&]_[*@3 convert], [@(0.0.255) const]_[_^VectorMap^ VectorMap]<[@(0.0.255) i
-nt], [_^String^ String]>`&_[*@3 values])&]
+[s5;:Append`(MapConvert`&`,const VectorMap`<Value`,Value`>`&`): [@(0.0.255) void]_[* Appe
+nd]([_^MapConvert^ MapConvert][@(0.0.255) `&]_[*@3 convert], [@(0.0.255) const]_[_^VectorMap^ V
+ectorMap]<[_^Value^ Value], [_^Value^ Value]>`&_[*@3 values])&]
+[s5;:Append`(MapConvert`&`,const VectorMap`<int`,String`>`&`): [@(0.0.255) void]_[* Appen
+d]([_^MapConvert^ MapConvert][@(0.0.255) `&]_[*@3 convert], [@(0.0.255) const]_[_^VectorMap^ V
+ectorMap]<[@(0.0.255) int], [_^String^ String]>`&_[*@3 values])&]
 [s2;%% Fills the MapConvert from VectorMap.&]
 [s3;%% &]
 [s4; &]
-[s5;:Add`(DropList`&`,const MapConvert`&`): [@(0.0.255) void]_[* Add]([_^DropList^ DropList
-][@(0.0.255) `&]_[*@3 list], [@(0.0.255) const]_[_^MapConvert^ MapConvert][@(0.0.255) `&]_[*@3 c
-onvert])&]
+[s5;:Append`(DropList`&`,const MapConvert`&`): [@(0.0.255) void]_[* Append]([_^DropList^ Dr
+opList][@(0.0.255) `&]_[*@3 list], [@(0.0.255) const]_[_^MapConvert^ MapConvert][@(0.0.255) `&
+]_[*@3 convert])&]
 [s2;%% Fills the DropList from MapConvert.&]
 [s3;%% &]
 [s4; &]
