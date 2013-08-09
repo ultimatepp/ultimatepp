@@ -511,7 +511,7 @@ void HttpRequest::StartRequest()
 		     << "Accept: " << Nvl(accept, "*/*") << "\r\n"
 		     << "Accept-Encoding: gzip\r\n"
 		     << "User-Agent: " << Nvl(agent, "U++ HTTP request") << "\r\n";
-		if(pd.GetCount())
+		if(pd.GetCount() || method == METHOD_POST || method == METHOD_PUT)
 			data << "Content-Length: " << pd.GetCount() << "\r\n";
 		if(ctype.GetCount())
 			data << "Content-Type: " << ctype << "\r\n";
