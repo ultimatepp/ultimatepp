@@ -373,9 +373,10 @@ struct AssistEditor : CodeEditor {
 	void           Context(Parser& parser, int pos);
 	void           ExpressionType(const String& type, const Vector<String>& xp, int ii,
 	                              Index<String>& typeset, bool variable,
-	                              bool can_shortcut_operator, Index<String>& visited_bases);
+	                              bool can_shortcut_operator, Index<String>& visited_bases,
+	                              int lvl);
 	void           ExpressionType(const String& type, const Vector<String>& xp, int ii,
-	                              Index<String>& typeset, bool variable);
+	                              Index<String>& typeset, bool variable, int lvl);
 //	void           ExpressionType(const String& type, const Vector<String>& xp, int ii,
 //	                              Index<String>& typeset);
 	Index<String>  ExpressionType(const Parser& parser, const Vector<String>& xp);
