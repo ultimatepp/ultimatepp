@@ -447,6 +447,7 @@ bool TcpSocket::RawConnect(addrinfo *arp)
 		SetSockError("connect", -1, "not found");
 		return false;
 	}
+	String err;
 	for(int pass = 0; pass < 2; pass++) {
 		addrinfo *rp = arp;
 		while(rp) {
@@ -458,12 +459,15 @@ bool TcpSocket::RawConnect(addrinfo *arp)
 					mode = CONNECT;
 					return true;
 				}
+				if(err.GetCount())
+					err << '\n';
+				err << TcpSocketErrorDesc(GetErrorCode());
 				Close();
 			}
 			rp = rp->ai_next;
 		}
     }
-	SetSockError("connect", -1, "failed");
+	SetSockError("connect", -1, Nvl(err, "failed"));
 	return false;
 }
 
