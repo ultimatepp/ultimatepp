@@ -189,7 +189,7 @@ Image CachedRescale(const Image& m, Size sz, int filter = Null);
 Image CachedRescalePaintOnly(const Image& m, Size sz, const Rect& src, int filter = Null);
 Image CachedRescalePaintOnly(const Image& m, Size sz, int filter = Null);
 
-// Obsolere, replace with RescaleFilter!
+// Obsolete, replace with RescaleFilter!
 Image RescaleBicubic(const Image& src, Size sz, const Rect& src_rc, Gate2<int, int> progress = false);
 Image RescaleBicubic(const Image& img, Size sz, Gate2<int, int> progress = false);
 Image RescaleBicubic(const Image& img, int cx, int cy, Gate2<int, int> progress = false);
