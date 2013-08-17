@@ -874,6 +874,15 @@ void BeepExclamation()
 #endif
 }
 
+void BeepError()
+{
+#ifdef PLATFORM_WIN32
+	MessageBeep(MB_ICONERROR);
+#else
+	LinuxBeep("error.wav");
+#endif
+}
+
 void BeepQuestion()
 {
 #ifdef PLATFORM_WIN32

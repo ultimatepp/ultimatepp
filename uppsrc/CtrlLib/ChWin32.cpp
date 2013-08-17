@@ -610,6 +610,7 @@ void ChSysInit()
 	CtrlImg::Set(CtrlImg::I_information, Win32Icon(IDI_INFORMATION));
 	CtrlImg::Set(CtrlImg::I_question, Win32Icon(IDI_QUESTION));
 	CtrlImg::Set(CtrlImg::I_exclamation, Win32Icon(IDI_EXCLAMATION));
+	CtrlImg::Set(CtrlImg::I_error, Win32Icon(IDI_ERROR));
 
 	FrameButtonWidth_Write(GetSystemMetrics(SM_CYHSCROLL));
 	ScrollBarArrowSize_Write(GetSystemMetrics(SM_CXHSCROLL));

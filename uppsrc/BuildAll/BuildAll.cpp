@@ -16,7 +16,7 @@ bool failed;
 const char *exclude[] = {
 	"SDLEXAMPLE", "OLECALC", // REACTIVATE LATER
 	"LOG:R",
-	"WINFB", "LINUXFB", "FRAMEBUFFER", "COUNTER",
+	"WINFB", "LINUXFB", "FRAMEBUFFER", "COUNTER", "REGEXPEXT",
 #ifdef PLATFORM_WIN32
 	"SQL_MYSQL",
 #endif

@@ -138,6 +138,7 @@ int  PromptAbortRetry(const char *qtf);
 int  PromptAbortRetryIgnore(const char *qtf);
 
 void Exclamation(const char *qtf);
+void ErrorOK(const char *qtf);
 
 Image YesButtonImage();
 Image NoButtonImage();

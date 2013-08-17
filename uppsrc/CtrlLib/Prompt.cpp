@@ -164,6 +164,11 @@ void ShowExc(const Exc& exc) {
 	Prompt(Ctrl::GetAppName(), CtrlImg::exclamation(), DeQtf(exc), t_("OK"));
 }
 
+void ErrorOK(const char *qtf) {
+	BeepError();
+	Prompt(Ctrl::GetAppName(), CtrlImg::error(), qtf, t_("OK"));
+}
+
 int PromptOKCancel(const char *qtf) {
 	BeepQuestion();
 	return Prompt(Ctrl::GetAppName(), CtrlImg::question(), qtf, t_("OK"), t_("Cancel"));
