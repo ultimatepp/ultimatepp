@@ -649,6 +649,7 @@ void ChHostSkin()
 	ChCtrlImg(CtrlImg::I_information, "gtk-dialog-info", 6);
 	ChCtrlImg(CtrlImg::I_question, "gtk-dialog-question", 6);
 	ChCtrlImg(CtrlImg::I_exclamation, "gtk-dialog-warning", 6);
+	ChCtrlImg(CtrlImg::I_error, "gtk-dialog-error", 6);
 
 	static struct {
 		void  (*set)(Image);

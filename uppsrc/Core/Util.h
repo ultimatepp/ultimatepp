@@ -213,6 +213,7 @@ String GetLastErrorMessage();
 void   BeepInformation();
 void   BeepExclamation();
 void   BeepQuestion();
+void   BeepError();
 
 inline
 void memsetw(void *t, word value, int count)
