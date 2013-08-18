@@ -327,8 +327,9 @@ class OptionTree : public TreeCtrl {
 	Array<Option>    aux;
 	bool             manualmode;
 
-	void SetOption(int i);
-	void SetChildren(int id, bool b);
+protected:
+	virtual void SetOption(int id);
+	virtual void SetChildren(int id, bool b);
 
 public:
 	Callback WhenOption;
