@@ -134,6 +134,7 @@ SplitterFrame::SplitterFrame()
 	size = size0 = 4;
 	minsize = 0;
 	sizemin = 0;
+	style = NULL;
 	SetStyle(Splitter::StyleDefault());
 }
 
