@@ -2689,10 +2689,11 @@ void ArrayCtrl::DragLeave()
 
 void ArrayCtrl::RemoveSelection()
 {
-	for(int i = GetCount() - 1; i >= 0; i--)
-		if(IsSel(i))
-			Remove(i); // Optimize!
+	int ci = cursor;
 	KillCursor();
+	for(int i = GetCount() - 1; i >= 0; i--)
+		if(IsSel(i) || i == ci)
+			Remove(i); // Optimize!
 }
 
 void ArrayCtrl::InsertDrop(int line, const Vector< Vector<Value> >& data, PasteClip& d, bool self)
