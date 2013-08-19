@@ -1562,3 +1562,63 @@ void LruAdd(C& lru, T value, int limit = 10) {
 	if(lru.GetCount() > limit)
 		lru.SetCount(limit);
 }
+
+template <class Map, class Less>
+void SortByKey(Map& map, const Less& less)
+{
+	typename Map::KeyContainer k = map.PickKeys();
+	typename Map::ValueContainer v = map.PickValues();
+	IndexSort(k, v, less);
+	map = Map(k, v);
+}
+
+template <class Map>
+void SortByKey(Map& map)
+{
+	SortByKey(map, StdLess<typename Map::KeyType>());
+}
+
+template <class Map, class Less>
+void SortByValue(Map& map, const Less& less)
+{
+	typename Map::KeyContainer k = map.PickKeys();
+	typename Map::ValueContainer v = map.PickValues();
+	IndexSort(v, k, less);
+	map = Map(k, v);
+}
+
+template <class Map>
+void SortByValue(Map& map)
+{
+	SortByValue(map, StdLess<typename Map::ValueType>());
+}
+
+template <class Map, class Less>
+void StableSortByKey(Map& map, const Less& less)
+{
+	typename Map::KeyContainer k = map.PickKeys();
+	typename Map::ValueContainer v = map.PickValues();
+	StableIndexSort(k, v, less);
+	map = Map(k, v);
+}
+
+template <class Map>
+void StableSortByKey(Map& map)
+{
+	StableSortByKey(map, StdLess<typename Map::KeyType>());
+}
+
+template <class Map, class Less>
+void StableSortByValue(Map& map, const Less& less)
+{
+	typename Map::KeyContainer k = map.PickKeys();
+	typename Map::ValueContainer v = map.PickValues();
+	StableIndexSort(v, k, less);
+	map = Map(k, v);
+}
+
+template <class Map>
+void StableSortByValue(Map& map)
+{
+	StableSortByValue(map, StdLess<typename Map::ValueType>());
+}
