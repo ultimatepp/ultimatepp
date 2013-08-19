@@ -112,13 +112,15 @@ public:
 	AMap(pick_ Index<K, HashFn>& ndx, pick_ V& val) : value(val), key(ndx) {}
 	AMap(pick_ Vector<K>& ndx, pick_ V& val) : value(val), key(ndx) {}
 
-	typedef K        KeyType;
+	typedef Vector<K> KeyContainer;
+	typedef K         KeyType;
 	typedef typename Index<K, HashFn>::ConstIterator KeyConstIterator;
 
 	KeyConstIterator KeyBegin() const                             { return key.Begin(); }
 	KeyConstIterator KeyEnd() const                               { return key.End(); }
 	KeyConstIterator KeyGetIter(int pos) const                    { return key.GetIter(pos); }
 
+	typedef V                          ValueContainer;
 	typedef T                          ValueType;
 	typedef typename V::ConstIterator  ConstIterator;
 	typedef typename V::Iterator       Iterator;

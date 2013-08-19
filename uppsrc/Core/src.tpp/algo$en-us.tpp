@@ -431,4 +431,66 @@ by const method of [* T].&]
 [s7; [*C@3 relation]-|Ordering relation for value returned by method.&]
 [s7; [*/ Return value]-|Ordering predicate.&]
 [s3; &]
-[s0; ]
+[s4;%- &]
+[s5;:SortByKey`(Map`&`,const Less`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Map
+], [@(0.0.255) class]_[*@4 Less]>_[@(0.0.255) void]_[* SortByKey]([*@4 Map][@(0.0.255) `&]_[*@3 m
+ap], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
+[s2; Sorts VectorMap or ArrayMap (or any other hypothetical container 
+that supports required interfaces) [%-*@3 map] by keys, using [%-*@3 less] 
+as sorting predicate.&]
+[s3; &]
+[s4;%- &]
+[s5;:SortByKey`(Map`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Map]>_[@(0.0.255) v
+oid]_[* SortByKey]([*@4 Map][@(0.0.255) `&]_[*@3 map])&]
+[s2; Sorts VectorMap or ArrayMap (or any other hypothetical container 
+that supports required interfaces) [%-*@3 map] by keys, using operator< 
+as sorting predicate.&]
+[s3; &]
+[s4;%- &]
+[s5;:SortByValue`(Map`&`,const Less`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 M
+ap], [@(0.0.255) class]_[*@4 Less]>_[@(0.0.255) void]_[* SortByValue]([*@4 Map][@(0.0.255) `&
+]_[*@3 map], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
+[s2; Sorts VectorMap or ArrayMap (or any other hypothetical container 
+that supports required interfaces) [%-*@3 map] by values, using 
+[%-*@3 less] as sorting predicate.&]
+[s3; &]
+[s4;%- &]
+[s5;:SortByValue`(Map`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Map]>_[@(0.0.255) v
+oid]_[* SortByValue]([*@4 Map][@(0.0.255) `&]_[*@3 map])&]
+[s2; Sorts VectorMap or ArrayMap (or any other hypothetical container 
+that supports required interfaces) [%-*@3 map] by values, using 
+operator< as sorting predicate.&]
+[s3; &]
+[s4;%- &]
+[s5;:StableSortByKey`(Map`&`,const Less`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
+[*@4 Map], [@(0.0.255) class]_[*@4 Less]>_[@(0.0.255) void]_[* StableSortByKey]([*@4 Map][@(0.0.255) `&
+]_[*@3 map], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
+[s2; Sorts VectorMap or ArrayMap (or any other hypothetical container 
+that supports required interfaces) [%-*@3 map] by keys, using [%-*@3 less] 
+as sorting predicate. Stable: retains the order of equal elements.&]
+[s3; &]
+[s4;%- &]
+[s5;:StableSortByKey`(Map`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Map]>_[@(0.0.255) v
+oid]_[* StableSortByKey]([*@4 Map][@(0.0.255) `&]_[*@3 map])&]
+[s2; Sorts VectorMap or ArrayMap (or any other hypothetical container 
+that supports required interfaces) [%-*@3 map] by keys, using operator< 
+as sorting predicate. Stable: retains the order of equal elements.&]
+[s3; &]
+[s4;%- &]
+[s5;:StableSortByValue`(Map`&`,const Less`&`):%- [@(0.0.255) template]_<[@(0.0.255) class
+]_[*@4 Map], [@(0.0.255) class]_[*@4 Less]>_[@(0.0.255) void]_[* StableSortByValue]([*@4 Map][@(0.0.255) `&
+]_[*@3 map], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
+[s2; Sorts VectorMap or ArrayMap (or any other hypothetical container 
+that supports required interfaces) [%-*@3 map] by values, using 
+[%-*@3 less] as sorting predicate. Stable: retains the order of 
+equal elements.&]
+[s3; &]
+[s4;%- &]
+[s5;:StableSortByValue`(Map`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Map]>_[@(0.0.255) v
+oid]_[* StableSortByValue]([*@4 Map][@(0.0.255) `&]_[*@3 map])&]
+[s2; Sorts VectorMap or ArrayMap (or any other hypothetical container 
+that supports required interfaces) [%-*@3 map] by values, using 
+operator< as sorting predicate. Stable: retains the order of equal 
+elements.&]
+[s3; &]
+[s0; ]]
