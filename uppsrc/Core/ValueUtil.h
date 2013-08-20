@@ -209,6 +209,7 @@ class ValueArray : ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArray> > {
 	
 	friend Value::Void *ValueArrayDataCreate();
 	friend class Value;
+	friend class ValueMap;
 
 public:
 	ValueArray()                              { Init0(); }
@@ -323,6 +324,12 @@ public:
 	void SetKey(int i, const char* key)             { SetKey(i, Value(key)); }
 	void SetKey(int i, int key)                     { SetKey(i, Value(key)); }
 	void SetKey(int i, Id key)                      { SetKey(i, Value(key.ToString())); }
+
+	int  RemoveKey(const Value& key);
+	int  RemoveKey(const String& key)               { return RemoveKey(Value(key)); }
+	int  RemoveKey(const char* key)                 { return RemoveKey(Value(key)); }
+	int  RemoveKey(int key)                         { return RemoveKey(Value(key)); }
+	int  RemoveKey(Id key)                          { return RemoveKey(Value(key.ToString())); }
 	void Remove(int i);
 
 	const Index<Value>& GetKeys() const             { return data->key; }
