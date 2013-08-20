@@ -500,6 +500,23 @@ void ValueMap::SetKey(int i, const Value& k) {
 	Clone().key.Set(i, k);
 }
 
+int ValueMap::RemoveKey(const Value& key)
+{
+	Data& d = Clone();
+	Vector<int> rk;
+	int q = d.key.Find(key);
+	while(q >= 0) {
+		rk.Add(q);
+		q = d.key.FindNext(q);
+	}
+	int count = rk.GetCount();
+	if(count) {
+		d.key.Remove(rk);
+		d.value.data->data.Remove(rk);
+	}
+	return count;
+}
+
 void ValueMap::Remove(int i)
 {
 	Data& d = Clone();

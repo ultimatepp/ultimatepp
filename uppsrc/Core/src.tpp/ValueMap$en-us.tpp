@@ -168,6 +168,18 @@ t]_[*@3 i], [@(0.0.255) const]_[@(0.0.255) char`*]_[*@3 key])&]
 required to make Id and SqlId work with ValueMap.&]
 [s3; &]
 [s4;%- &]
+[s5;:ValueMap`:`:RemoveKey`(const Value`&`):%- [@(0.0.255) int]_[* RemoveKey]([@(0.0.255) c
+onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 key])&]
+[s5;:ValueMap`:`:RemoveKey`(const String`&`):%- [@(0.0.255) int]_[* RemoveKey]([@(0.0.255) c
+onst]_[_^String^ String][@(0.0.255) `&]_[*@3 key])&]
+[s5;:ValueMap`:`:RemoveKey`(const char`*`):%- [@(0.0.255) int]_[* RemoveKey]([@(0.0.255) co
+nst]_[@(0.0.255) char`*]_[*@3 key])&]
+[s5;:ValueMap`:`:RemoveKey`(int`):%- [@(0.0.255) int]_[* RemoveKey]([@(0.0.255) int]_[*@3 key
+])&]
+[s5;:ValueMap`:`:RemoveKey`(Id`):%- [@(0.0.255) int]_[* RemoveKey]([_^Id^ Id]_[*@3 key])&]
+[s2; Removes all key`-value pairs with given key. Slow O(n) operation.&]
+[s3; &]
+[s4;%- &]
 [s5;:ValueMap`:`:Remove`(int`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) int]_[*@3 i])&]
 [s2; Removes key`-value pair at index [%-*@3 i].&]
 [s3; &]
