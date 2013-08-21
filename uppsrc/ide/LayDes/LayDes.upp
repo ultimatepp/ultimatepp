@@ -24,7 +24,7 @@ file
 	layfile.cpp,
 	laywin.cpp,
 	LayDes.lay,
-	LayDes.iml,
 	Info readonly separator,
+	LayDes.iml,
 	Copying;
 

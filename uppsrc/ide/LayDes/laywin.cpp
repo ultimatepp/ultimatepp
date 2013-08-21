@@ -48,6 +48,7 @@ void LayDes::MoveBar(Bar& bar)
 	bool iscursor = currentlayout >= 0 && cursor.GetCount();
 	bar.Add(iscursor, AK_MOVEUP, LayImg::MoveUp(), THISBACK(MoveUp));
 	bar.Add(iscursor, AK_MOVEDOWN, LayImg::MoveDown(), THISBACK(MoveDown));
+	bar.Add(cursor.GetCount() >= 2, AK_SORTITEMS, LayImg::SortItems(), THISBACK(SortItems));
 }
 
 void LayDes::AlignBar(Bar& bar)

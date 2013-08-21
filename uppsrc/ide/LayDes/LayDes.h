@@ -384,6 +384,7 @@ private:
 	void        Duplicate();
 	void        MoveUp();
 	void        MoveDown();
+	void        SortItems();
 	void        SelectAll();
 
 	void        Matrix();
