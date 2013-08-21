@@ -1252,6 +1252,38 @@ void LayDes::MoveDown()
 	ReloadItems();
 }
 
+bool RectLess(const Rect& a, const Rect& b)
+{
+	return max(a.top, b.top) < min(a.bottom, b.bottom) ? a.left < b.left : a.top < b.top;
+}
+
+void LayDes::SortItems()
+{
+	SaveState();
+	if(currentlayout < 0 || cursor.GetCount() < 2)
+		return;
+	LayoutData& l = CurrentLayout();
+	Vector<int> sc(cursor, 1);
+	Sort(sc);
+	int count = sc.GetCount();
+
+	Vector<Rect> rect;
+	for(int i = 0; i < count; ++i)
+		rect.Add(CtrlRect(l.item[sc[i]].pos, l.size));
+
+	// Use selection sort as RectLess is not transitive
+	for(int i = 0; i < count - 1; i++) {
+		int ii = i;
+		for(int j = i + 1; j < count; j++)
+			if(RectLess(rect[j], rect[ii]))
+				ii = j;
+		Swap(rect[i], rect[ii]);
+		Swap(l.item[sc[i]], l.item[sc[ii]]);
+	}
+
+	ReloadItems();
+}
+
 void LayDes::Flush()
 {
 	currentlayout = -1;
