@@ -1,0 +1,13 @@
+description "Abstract Data Types\377";
+
+uses
+	Core;
+
+file
+	List.h,
+	ADT.h,
+	ADT.cpp;
+
+mainconfig
+	"" = "SSE2";
+
