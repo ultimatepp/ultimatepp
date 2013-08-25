@@ -18,15 +18,21 @@ INITBLOCK {
 	Value::Register<Font>("Font");
 }
 
+static bool sListValid;
+
+void InvalidateFontList()
+{
+	sListValid = false;
+}
+
 const Vector<FaceInfo>& Font::List()
 {
-	static Vector<FaceInfo> *q;
-	ONCELOCK {
-		static Vector<FaceInfo> x;
-		x = GetAllFacesSys();
-		q = &x;
+	static Vector<FaceInfo> list;
+	if(!sListValid) {
+		Set__(sListValid);
+		list = GetAllFacesSys();
 	}
-	return *q;
+	return list;
 }
 
 void sInitFonts()

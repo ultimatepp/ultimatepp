@@ -51,6 +51,8 @@ const     CommonFontInfo& GetFontInfo(Font font);
 bool      IsNormal(Font font, int chr);
 void      GlyphMetrics(GlyphInfo& f, Font font, int chr);
 
+void      InvalidateFontList();
+
 // Platform specific font interface
 
 CommonFontInfo   GetFontInfoSys(Font font);
