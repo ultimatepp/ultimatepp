@@ -44,6 +44,7 @@ public:
 		DisableLine(index);
 		SetCtrl(index, 0, ctrl.SizePos());
 		SetLineCy(index, ctrl.GetLayoutSize().cy);
+		AddSeparator();
 		return *this;
 	}
 };
@@ -54,6 +55,7 @@ void AutoSetup()
 	CtrlLayoutOKCancel(dlg, "Ultimate++ methods auto-setup");
 	dlg.Sizeable().Zoomable().SetRect(Size(640, 480));
 
+	WithAutoSetupMSC12<ParentCtrl> msc12; CtrlLayout(msc12);
 	WithAutoSetupMSC11<ParentCtrl> msc11; CtrlLayout(msc11);
 	WithAutoSetupMSC10<ParentCtrl> msc10; CtrlLayout(msc10);
 	WithAutoSetupMSC9<ParentCtrl> msc9; CtrlLayout(msc9);
@@ -65,7 +67,8 @@ void AutoSetup()
 
 	CtrlList msclist, mingwlist, owclist, otherlist;
 
-	msclist.AddLayout(msc11)
+	msclist.AddLayout(msc12)
+		.AddLayout(msc11)
 		.AddLayout(msc10)
 		.AddLayout(msc9)
 		.AddLayout(msc8)
@@ -214,6 +217,27 @@ void AutoSetup()
 	msc11.method64 <<= "MSC11x64";
 
 
+	String sdk12 = NormalizePathNN(GetWinRegString("InstallationFolder",
+		                                       "SOFTWARE\\Microsoft\\Microsoft SDKs\\Windows\\v8.1",
+		                                       HKEY_LOCAL_MACHINE));
+	String bin12;
+	if(!IsNull(sdk12) && FileExists(AppendFileName(sdk12, "VC\\bin\\cl.exe")))
+		bin12 = sdk12;
+	else
+		ExistProgram(bin12, "Program Files (x86)\\Microsoft Visual Studio 12.0", "VC\\bin\\cl.exe")
+		|| ExistProgram(bin12, "Program Files\\Microsoft Visual Studio 12.0", "VC\\bin\\cl.exe");
+	msc12.sdk <<= sdk12;
+	msc12.dir <<= bin12;
+	msc12.method <<= "MSC12";
+	msc12.create <<= !IsNull(msc12.dir);
+	String vc12_64 = AppendFileName(bin12, "VC\\bin\\x64");
+	if(!FileExists(AppendFileName(vc12_64, "cl.exe")))
+		vc12_64 = AppendFileName(bin12, "VC\\bin\\x86_amd64");
+	if(bin12.GetLength() && FileExists(AppendFileName(vc12_64, "cl.exe")))
+		msc12.create64 = true;
+	msc12.method64 <<= "MSC12x64";
+
+
 	other.mysql <<= NormalizePathNN(GetWinRegString("Location", "SOFTWARE\\MySQL AB\\MySQL Server 4.1"));
 
 	String sdl = NormalizePathNN(ConfigFile("sdl"));
@@ -228,11 +252,13 @@ void AutoSetup()
 	DirSel(msc9.dir, bd.Add());
 	DirSel(msc10.dir, bd.Add());
 	DirSel(msc11.dir, bd.Add());
+	DirSel(msc12.dir, bd.Add());
 	DirSel(msc7_1.sdk, bd.Add());
 	DirSel(msc8.sdk, bd.Add());
 	DirSel(msc9.sdk, bd.Add());
 	DirSel(msc10.sdk, bd.Add());
 	DirSel(msc11.sdk, bd.Add());
+	DirSel(msc12.sdk, bd.Add());
 	DirSel(other.sdl, bd.Add());
 	DirSel(other.mysql, bd.Add());
 	if(dlg.Run() != IDOK)
@@ -320,6 +346,98 @@ void AutoSetup()
 
 	if(!IsNull(mysql)) {
 		lib << ";" << AppendFileName(mysql, "lib");
+	}
+
+	String vs12 = ~msc12.dir;
+	if(!IsNull(vs12) && msc12.create64) {
+		String vc = AppendFileName(vs12, "VC");
+		String m = ~msc12.method64;
+		String sdk = ~msc12.sdk;
+		if(IsNull(sdk))
+			sdk = AppendFileName(vc, "PlatformSDK");
+		String vc_lib = AppendFileName(vc, "lib\\x64");
+		if(!DirectoryExists(vc_lib))
+			vc_lib = AppendFileName(vc, "lib\\amd64");
+		SaveFile(
+			AppendFileName(dir, m + ".bm"),
+			"BUILDER = \"MSC12X64\";\n"
+			"DEBUG_INFO = \"2\";\n"
+			"DEBUG_BLITZ = \"1\";\n"
+			"DEBUG_LINKMODE = \"0\";\n"
+			"DEBUG_OPTIONS = \"-Od\";\n"
+			"RELEASE_BLITZ = \"0\";\n"
+			"RELEASE_LINKMODE = \"0\";\n"
+			"RELEASE_OPTIONS = \"-O1 -GS-\";\n"
+			"RELEASE_SIZE_OPTIONS = \"-O1 -GS-\";\n"
+			"DEBUGGER = \"\";\n"
+			"REMOTE_HOST = \"\";\n"
+			"REMOTE_OS = \"\";\n"
+			"REMOTE_TRANSFER = \"\";\n"
+			"REMOTE_MAP = \"\";\n"
+			"PATH = " + AsCString(
+			                AppendFileName(vs12, "Common7\\IDE") + ';' +
+							vc12_64 + ';' +
+							AppendFileName(sdk, "bin\\x64") +
+							exe
+						) + ";\n"
+			"INCLUDE = " + AsCString(
+							AppendFileName(vc, "include") + ';' +
+							AppendFileName(sdk, "Include\\um") + ';' +
+							AppendFileName(sdk, "Include\\shared") + ';' +
+							AppendFileName(sdk, "Include\\winrt") +
+							include
+						   ) + ";\n"
+			"LIB = " + AsCString(
+							vc_lib + ';' +
+							AppendFileName(sdk, "Lib\\winv6.3\\um\\x64") +
+							lib
+			           ) + ";\n"
+		);
+		SaveFile(AppendFileName(dir, "default_method"), m);
+	}
+
+	if(!IsNull(vs12) && msc12.create) {
+		String vc = AppendFileName(vs12, "VC");
+		String m = ~msc12.method;
+		String sdk = ~msc12.sdk;
+		if(IsNull(sdk))
+			sdk = AppendFileName(vc, "PlatformSDK");
+		SaveFile(
+			AppendFileName(dir, m + ".bm"),
+			"BUILDER = \"MSC12\";\n"
+			"DEBUG_INFO = \"2\";\n"
+			"DEBUG_BLITZ = \"1\";\n"
+			"DEBUG_LINKMODE = \"0\";\n"
+			"DEBUG_OPTIONS = \"-Od\";\n"
+			"RELEASE_BLITZ = \"0\";\n"
+			"RELEASE_LINKMODE = \"0\";\n"
+			"RELEASE_OPTIONS = \"-O2 -GS-\";\n"
+			"RELEASE_SIZE_OPTIONS = \"-O1 -GS-\";\n"
+			"DEBUGGER = \"\";\n"
+			"REMOTE_HOST = \"\";\n"
+			"REMOTE_OS = \"\";\n"
+			"REMOTE_TRANSFER = \"\";\n"
+			"REMOTE_MAP = \"\";\n"
+			"PATH = " + AsCString(
+			                AppendFileName(vs12, "Common7\\IDE") + ';' +
+							AppendFileName(vc, "bin") + ';' +
+							AppendFileName(sdk, "bin\\x86") +
+							exe
+						) + ";\n"
+			"INCLUDE = " + AsCString(
+							AppendFileName(vc, "include") + ';' +
+							AppendFileName(sdk, "Include\\um") + ';' +
+							AppendFileName(sdk, "Include\\shared") + ';' +
+							AppendFileName(sdk, "Include\\winrt") +
+							include
+						   ) + ";\n"
+			"LIB = " + AsCString(
+							AppendFileName(vc, "lib") + ';' +
+							AppendFileName(sdk, "Lib\\winv6.3\\um\\x86") +
+							lib
+			           ) + ";\n"
+		);
+		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
 
 	String vs11 = ~msc11.dir;

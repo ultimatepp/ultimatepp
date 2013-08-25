@@ -271,6 +271,17 @@ LAYOUT(AutoSetupLayout, 320, 240)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 56).BottomPosZ(4, 20))
 END_LAYOUT
 
+LAYOUT(AutoSetupMSC12, 276, 132)
+	ITEM(Option, create, SetLabel(t_("Create Visual C++ 12.0 build method")).LeftPosZ(0, 200).TopPosZ(4, 15))
+	ITEM(EditString, method, HSizePosZ(204, 0).TopPosZ(2, 19))
+	ITEM(Option, create64, SetLabel(t_("Create VC++ 12.0 x64 build method")).LeftPosZ(0, 200).TopPosZ(28, 15))
+	ITEM(EditString, method64, HSizePosZ(204, 0).TopPosZ(26, 19))
+	ITEM(Label, dv___4, SetLabel(t_("Visual C++ 12.0 directory")).LeftPosZ(0, 276).TopPosZ(48, 19))
+	ITEM(EditString, dir, HSizePosZ(0, 0).TopPosZ(68, 19))
+	ITEM(Label, dv___6, SetLabel(t_("Win32 SDK for Visual C++ 12.0 directory")).LeftPosZ(0, 276).TopPosZ(92, 19))
+	ITEM(EditString, sdk, HSizePosZ(0, 0).TopPosZ(112, 19))
+END_LAYOUT
+
 LAYOUT(AutoSetupMSC11, 276, 132)
 	ITEM(Option, create, SetLabel(t_("Create Visual C++ 11.0 build method")).LeftPosZ(0, 200).TopPosZ(4, 15))
 	ITEM(EditString, method, HSizePosZ(204, 0).TopPosZ(2, 19))
