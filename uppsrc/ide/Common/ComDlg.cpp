@@ -165,12 +165,18 @@ void ShellOpenFolder(const String& dir)
 	#if defined(PLATFORM_WIN32)
 		LaunchWebBrowser(dir);
 	#elif __APPLE__
+		String tempDir = dir;
+		tempDir.Replace(" ", "\\ ");
+
 		IGNORE_RESULT(
 			system("open " + dir + " &")
 		);
 	#else
+		String tempDir = dir;
+		tempDir.Replace(" ", "\\ ");
+		
 		IGNORE_RESULT(
-			system("xdg-open " + dir + " &")
+			system("xdg-open " + tempDir + " &")
 		);
 	#endif
 }
