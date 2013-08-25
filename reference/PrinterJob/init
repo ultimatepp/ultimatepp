@@ -1,0 +1,4 @@
+#ifndef _PrinterJob_icpp_init_stub
+#define _PrinterJob_icpp_init_stub
+#include "CtrlLib/init"
+#endif
