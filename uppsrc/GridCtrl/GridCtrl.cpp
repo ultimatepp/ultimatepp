@@ -9,6 +9,8 @@ NAMESPACE_UPP
 #define TFILE <GridCtrl/GridCtrl.t>
 #include <Core/t.h>
 
+bool GridCtrl::index_as_column = false;
+
 GridCtrl::GridCtrl() : holder(*this)
 {
 	sortCol = -1;
@@ -1689,6 +1691,13 @@ GridCtrl::ItemRect& GridCtrl::AddColumn(const char *name, int size, bool idx)
 	ib.uid    = coluid++;
 	ib.index  = idx;
 
+	if(index_as_column && idx)
+	{
+		size = 70;
+		ib.prop = size;
+		ib.Fixed(size);
+	}
+	
 	ib.Size(size);
 	if(!ib.hidden)
 	{

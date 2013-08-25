@@ -914,6 +914,8 @@ class GridCtrl : public Ctrl
 		bool search_move_cursor:1;
 		bool search_display:1;
 		int  find_offset;
+		
+		static bool index_as_column;
 
 		/* States */
 
@@ -1168,6 +1170,7 @@ class GridCtrl : public Ctrl
 		GridCtrl& SearchImmediate(bool b = true)    { search_immediate     = b;  return *this; }
 		GridCtrl& SearchHideRows(bool b = true)     { search_hide          = b;  return *this; }
 		GridCtrl& SearchDisplay(bool b = true)      { search_display       = b;  return *this; }
+		static void IndexAsColumn(bool b = true)	{ index_as_column      = b;                }
 
 		GridCtrl& SetToolBar(bool b = true, int align = BarCtrl::BAR_BOTTOM, int frame = 1);
 		ToolBar&  GetToolBar() { return bar; }
