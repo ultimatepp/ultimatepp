@@ -246,7 +246,7 @@ GridCtrl::GridCtrl() : holder(*this)
 	fg_select = Black;
 	bg_select = Color(217, 198, 251);
 	fg_live   = SColorText;
-	bg_live   = Blend(SColorHighlight, White, 100);
+	bg_live   = IsDarkColorFace() ? Blend(SColorHighlight, Black, 132) : Blend(SColorHighlight, White, 132);
 	fg_found  = Color(0, 0, 0);
 	bg_found  = Blend(SColorHighlight, Color(189,231,237), 200);
 	fg_even   = SColorText;
