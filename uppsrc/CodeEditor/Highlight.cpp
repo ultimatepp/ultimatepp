@@ -270,6 +270,10 @@ void CodeEditor::InitKeywords()
 		"double", "__leave", "static_cast",
 		"dynamic_cast", "long", "__stdcall", "while",
 		"force_inline",
+		// C++11
+		"char16_t", "char32_t", "constexpr", "decltype",
+		"noexcept", "nullptr", "static_assert",
+		"override", "final",
 		NULL
 	};
 	static const char *cs[] = {
