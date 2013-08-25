@@ -10,7 +10,11 @@
 #define IMAGEFILE <SDL20/test.iml>
 #include <Draw/iml_source.h>
 
-int main(int argc, char** argv){
+
+CONSOLE_APP_MAIN {
+	SetFileFont(Font::SANSSERIF, "C:\\u\\exsrc\\droid\\DroidSans.ttf");
+//	SetFileFont(Font::SANSSERIF, "C:\\u\\exsrc\\droid\\DroidSans-Bold.ttf", FtBOLD);
+
 	SDL_Init(SDL_INIT_EVERYTHING);
 
 	SDLWindow win;
@@ -34,17 +38,18 @@ int main(int argc, char** argv){
 		Size sz = Size(1024, 768);
 		w.Init(sz);
 		
-		w.DrawText(i++, i, "Hello world!", Arial(40));
+//		w.DrawText(i++, i, "Hello world!", Arial(40));
 
-/*		
+		
 //		w.DrawImage(300, 300, TestImg::pinkie());
 
+		w.DrawRect(0, 0, 1024, 768, White());
 		RichText txt = ParseQTF(LoadFile(GetDataFile("text.qtf")));
 		if(1) {
 			RTIMING("SystemDraw");
 			txt.Paint(Zoom(2, 10), w, 0, 0, sz.cx);
 		}
-*/
+
 		win.Present();	
 
 		SDL_Event e;
@@ -63,5 +68,4 @@ int main(int argc, char** argv){
 	}
 
 	SDL_Quit();
- 	return 0;
 }

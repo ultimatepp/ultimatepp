@@ -16,7 +16,7 @@ and characters&]
 [s0; &]
 [s0; [*@4 . , ; ! ? % ( ) / < > #]&]
 [s0; &]
-[s0; and bytes greater than 127 are guaranteed to be never used as 
+[s0; and bytes [* greater] than 127 are guaranteed to be never used as 
 command characters (not even in future versions of QTF). Other 
 characters should be prefixed with escape character `` (reverse 
 apostrophe). Group of characters can be escaped using byte 1. 

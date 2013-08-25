@@ -4,4 +4,5 @@
 #include "Draw/init"
 #include "Painter/init"
 #include "RichText/init"
+#include "freetype/init"
 #endif

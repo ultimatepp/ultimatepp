@@ -53,7 +53,7 @@ ImageSysData::~ImageSysData()
 
 struct ImageSysDataMaker : LRUCache<ImageSysData, int64>::Maker {
 	Image         img;
-	int           wserial;
+	int64         wserial;
 	SDL_Renderer *renderer;
 
 	virtual int64  Key() const                      { return img.GetSerialId(); } // TODO! add ren_serial
