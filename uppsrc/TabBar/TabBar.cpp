@@ -1922,14 +1922,19 @@ void TabBar::LeftDown(Point p, dword keyflags)
 		return;
 
 	if(cross != -1) {
-		Value v = tabs[cross].key;
-		Vector<Value>vv;
-		vv.Add(v);
-		int ix = cross;
-		if (!CancelClose(v) && !CancelCloseSome(Vector<Value>(vv, 0))) {
-			Close(ix);
-			WhenClose(v);
-			WhenCloseSome(vv);
+		if (cross < tabs.GetCount()) {
+			int tempCross = cross;
+			Value v = tabs[cross].key;
+			Vector<Value>vv;
+			vv.Add(v);
+			int ix = cross;
+			if (!CancelClose(v) && !CancelCloseSome(Vector<Value>(vv, 0))) {
+				Close(ix);
+				WhenClose(v);
+				WhenCloseSome(vv);
+			}
+			if (tempCross >= 0 && tempCross < tabs.GetCount())
+				ProcessMouse(tempCross, p);
 		}
 	}
 	else if(highlight >= 0) {
