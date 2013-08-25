@@ -55,7 +55,7 @@ void Console::Append(const String& s) {
 	EditPos p = GetEditPos();
 	SetEditable();
 	MoveTextEnd();
-	WString t = Filter(s, sAppf).ToWString();
+	WString t = Filter(FromSystemCharset(s), sAppf).ToWString();
 	int mg = sb.GetReducedViewSize().cx / GetFont().Info().GetAveWidth();
 	if(wrap_text && mg > 4) {
 		int x = GetColumnLine(GetCursor()).x;
@@ -132,7 +132,6 @@ int Console::Flush()
 			if(slot.outfile)
 				slot.outfile->Put(s);
 			if(!slot.quiet) {
-				s = FromSystemCharset(s);
 				if(console_lock < 0 || console_lock == i) {
 					console_lock = i;
 					Append(s);
