@@ -1,0 +1,4 @@
+#ifndef _TabDlg_icpp_init_stub
+#define _TabDlg_icpp_init_stub
+#include "CtrlLib/init"
+#endif

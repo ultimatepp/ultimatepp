@@ -1,4 +1,4 @@
-description "Printing in U++";
+description "Printing in U++\377";
 
 uses
 	CtrlLib;
