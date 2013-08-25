@@ -352,13 +352,14 @@ bool PrinterJob::Execute0(bool dodlg)
 	dlg.range.EnableCase(2, from != to);
 	String h;
 	GetDefaultPageSize(&h);
-	dlg.paper <<= h;
+	h.IsEmpty() ? dlg.paper <<= "A4" : dlg.paper <<= h;
 	if(dodlg)
 		if(dlg.Run() != IDOK)
 			return false;
 	options.Clear();
-	options << " -d " << ~dlg.printer;
-	options << " -o media=" << ~dlg.paper << "," << ~dlg.slot;
+	options << "-d " << ~dlg.printer;
+	options << " -o media=";
+	dlg.paper.GetIndex() < 0 ? options << ~dlg.slot : options << ~dlg.paper << "," << ~dlg.slot;
 	if(dlg.landscape)
 		options << " -o landscape";
 	options << " -o number-up=" << ~dlg.npage;
@@ -390,7 +391,7 @@ bool PrinterJob::Execute0(bool dodlg)
 
 bool PrinterJob::Execute()
 {
-	return Execute0(true);
+	return Execute0(false);
 }
 
 struct PrinterDraw : PdfDraw {
@@ -398,15 +399,16 @@ struct PrinterDraw : PdfDraw {
 
 	PrinterDraw(Size sz) : PdfDraw(sz) {}
 	~PrinterDraw() {
-		if(!IsEmpty())
-			System("lp " + options + " -", Finish());
+		if(!IsEmpty()) {
+			System("lp " + options, Finish());
+		}
 	}
 };
 
 Draw& PrinterJob::GetDraw()
 {
 	if(!draw) {
-		Execute0(false);
+		Execute0(true);
 		PrinterDraw *pd = new PrinterDraw(pgsz);
 		pd->options = options;
 		draw = pd;
