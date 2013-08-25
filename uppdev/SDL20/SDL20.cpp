@@ -12,8 +12,21 @@
 
 
 CONSOLE_APP_MAIN {
+#ifdef PLATFORM_POSIX
+//	SetFileFont(0, "/usr/share/fonts/truetype/droid/DroidSans.ttf");
+//	SetFileFont(0, "/usr/share/fonts/truetype/droid/DroidSans-Bold.ttf", FtBOLD);
+
+	SetFileFont(Font::SANSSERIF, "/usr/share/fonts/truetype/droid/DroidSans.ttf");
+//	SetFileFont(Font::SANSSERIF, "/usr/share/fonts/truetype/droid/DroidSans-Bold.ttf", FtBOLD);
+	
+	SetStdFont(Arial(20));
+#else
+	SetFileFont(0, "C:\\u\\exsrc\\droid\\DroidSans.ttf");
+	SetFileFont(0, "C:\\u\\exsrc\\droid\\DroidSans-Bold.ttf", FtBOLD);
+
 	SetFileFont(Font::SANSSERIF, "C:\\u\\exsrc\\droid\\DroidSans.ttf");
-//	SetFileFont(Font::SANSSERIF, "C:\\u\\exsrc\\droid\\DroidSans-Bold.ttf", FtBOLD);
+	SetFileFont(Font::SANSSERIF, "C:\\u\\exsrc\\droid\\DroidSans-Bold.ttf", FtBOLD);
+#endif
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 
