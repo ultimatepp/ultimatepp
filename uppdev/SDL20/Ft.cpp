@@ -2,8 +2,9 @@
 
 #include "freetype/ft2build.h"
 #include FT_FREETYPE_H
+#include <freetype/ftoutln.h>
 
-#define LLOG(x)     //  LOG(x)
+#define LLOG(x)       DLOG(x)
 #define LTIMING(x)  //  TIMING(x)
 
 NAMESPACE_UPP
@@ -38,6 +39,7 @@ void sSetFont(int index, const String& path, const byte *data, int size, dword s
 		sSetFont(index, path, data, size, 0);
 	if(!fd.At(0).style[0])
 		sSetFont(0, path, data, size, 0);
+	InvalidateFontList();
 }
 
 void SetFileFont(int face, const char *path, dword style)
@@ -90,18 +92,83 @@ bool sInitFt(void)
 	return FT_Init_FreeType(&sFTlib) == 0;
 }
 
+void FT_ITALIC(FT_GlyphSlot slot)
+{
+	FT_Matrix    transform;
+	FT_Outline*  outline = &slot->outline;
+	/* only oblique outline glyphs */
+	if ( slot->format != FT_GLYPH_FORMAT_OUTLINE )
+	  return;
+	
+	/* we don't touch the advance width */
+	/* For italic, simply apply a shear transform, with an angle */
+	/* of about 12 degrees.                                      */
+	
+	transform.xx = 0x10000L;
+	transform.yx = 0x00000L;
+	
+	transform.xy = 0x06000L;
+	transform.yy = 0x10000L;
+	
+	FT_Outline_Transform( outline, &transform );
+}
+
+void FT_BOLD(FT_GlyphSlot slot)
+{
+    FT_Face     face = slot->face;
+    FT_Pos      xstr, ystr;
+
+    if(slot->format != FT_GLYPH_FORMAT_OUTLINE)
+      return;
+
+    /* some reasonable strength */
+    xstr = FT_MulFix( face->units_per_EM,
+                      face->size->metrics.y_scale ) / 24;
+    ystr = xstr;
+
+    if ( slot->format == FT_GLYPH_FORMAT_OUTLINE )
+    {
+      /* ignore error */
+      (void)FT_Outline_Embolden( &slot->outline, xstr );
+
+      /* this is more than enough for most glyphs; if you need accurate */
+      /* values, you have to call FT_Outline_Get_CBox                   */
+      xstr = xstr * 2;
+      ystr = xstr;
+    }
+
+    if ( slot->advance.x )
+      slot->advance.x += xstr;
+
+    if ( slot->advance.y )
+      slot->advance.y += ystr;
+
+    slot->metrics.width        += xstr;
+    slot->metrics.height       += ystr;
+    slot->metrics.horiBearingY += ystr;
+    slot->metrics.horiAdvance  += xstr;
+    slot->metrics.vertBearingX -= xstr / 2;
+    slot->metrics.vertBearingY += ystr;
+    slot->metrics.vertAdvance  += ystr;
+
+    /* XXX: 16-bit overflow case must be excluded before here */
+    if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
+      slot->bitmap_top += (FT_Int)( ystr >> 6 );
+}
+
 FT_Face CreateFTFace(Font fnt)
 {
 	sInitFt();
 
 	FtFontStyle f = GetFontStyle(fnt);
 	
-	if(f)
+	if(!f)
 		return NULL;
 
 	FT_Face face;
-	if(IsNull(f.path) ? FT_New_Face(sFTlib, f.path, 0, &face)
-	                  : FT_New_Memory_Face(sFTlib, f.data, f.size, 0, &face))
+	DDUMP(f.path);
+	if(IsNull(f.path) ? FT_New_Memory_Face(sFTlib, f.data, f.size, 0, &face)
+	                  : FT_New_Face(sFTlib, f.path, 0, &face))
 		return NULL;
 
 	FT_Set_Pixel_Sizes(face, 0, fnt.GetHeight());
@@ -126,6 +193,7 @@ void ClearFtFaceCache()
 FT_Face FTFace(Font fnt)
 {
 	LTIMING("FTFace");
+	LLOG("FTFace " << fnt);
 	ONCELOCK {
 		ClearFtFaceCache();
 	}
@@ -138,6 +206,7 @@ FT_Face FTFace(Font fnt)
 		if(e.font == fnt && e.face) {
 			if(i)
 				ft_cache[0] = e;
+			LLOG("Found " << e.face);
 			return e.face;
 		}
 		be = e;
@@ -150,6 +219,7 @@ FT_Face FTFace(Font fnt)
 	be.font = fnt;
 	be.face = CreateFTFace(be.font);
 	ft_cache[0] = be;
+	LLOG("Created " << be.face);
 	return be.face;
 }
 
@@ -183,6 +253,20 @@ CommonFontInfo GetFontInfoSys(Font font)
 #define TRUNC(x)    ((x) >> 6)
 #define ROUND(x)    (((x)+32) & -64)
 
+static bool sLoadGlyph(Font fnt, FT_Face face, int chr)
+{
+	int glyph_index = FT_Get_Char_Index(face, chr);
+	if(!glyph_index)
+		return false;
+	if(FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT|FT_LOAD_NO_BITMAP))
+		return false;
+	if(fnt.IsBold() && !(face->style_flags & FT_STYLE_FLAG_BOLD))
+		FT_BOLD(face->glyph);
+	if(fnt.IsItalic() && !(face->style_flags & FT_STYLE_FLAG_ITALIC))
+		FT_ITALIC(face->glyph);
+	return true;
+}
+
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
 	LTIMING("GetGlyphInfoSys");
@@ -193,18 +277,13 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 	LLOG("GetGlyphInfoSys " << font << " " << (char)chr << " " << FormatIntHex(chr));
 	if(face) {
 		LTIMING("GetGlyphInfoSys 2");
-		int glyph_index = FT_Get_Char_Index(face, chr);
-		if(glyph_index) {
-			if(FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT|FT_LOAD_NO_BITMAP) == 0 ||
-			   FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT) == 0) {
-				FT_Glyph_Metrics& m = face->glyph->metrics;
-				int left  = FLOOR(m.horiBearingX);
-				int width = TRUNC(CEIL(m.horiBearingX + m.width) - left);				
-				gi.width = TRUNC(ROUND(face->glyph->advance.x));
-				gi.lspc = TRUNC(left);
-				gi.rspc = gi.width - width - gi.lspc;
-				gi.glyphi = glyph_index;
-			}
+		if(sLoadGlyph(font, face, chr)) {
+			FT_Glyph_Metrics& m = face->glyph->metrics;
+			int left  = FLOOR(m.horiBearingX);
+			int width = TRUNC(CEIL(m.horiBearingX + m.width) - left);				
+			gi.width = TRUNC(ROUND(face->glyph->advance.x));
+			gi.lspc = TRUNC(left);
+			gi.rspc = gi.width - width - gi.lspc;
 		}
 	}
 	return gi;
@@ -226,10 +305,10 @@ Vector<FaceInfo> GetAllFacesSys()
 		fi.info = (i == 3) ? Font::SCALEABLE|Font::FIXEDPITCH : Font::SCALEABLE;
 	}
 
-	const Vector<FtFontData>& fd = sFontData();
-	for(int i = __countof(basic_fonts); i < fd.GetCount(); i++) {
-		FaceInfo& fi = list.Add();
-	}
+//	const Vector<FtFontData>& fd = sFontData();
+//	for(int i = __countof(basic_fonts); i < fd.GetCount(); i++) {
+//		FaceInfo& fi = list.Add();
+//	}
 
 	return list;
 }
@@ -351,8 +430,7 @@ bool RenderOutline(const FT_Outline& outline, FontGlyphConsumer& path, double xx
 void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int ch, Font fnt)
 {
 	FT_Face face = FTFace(fnt);
-	int glyph_index = FT_Get_Char_Index(face, ch);
-	if(glyph_index && FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT) == 0)
+	if(sLoadGlyph(fnt, face, ch))
 		RenderOutline(face->glyph->outline, sw, x, y + fnt.GetAscent());
 }
 
