@@ -2,7 +2,9 @@ uses
 	Core,
 	Draw,
 	Painter,
-	RichText;
+	RichText,
+	freetype,
+	freetype;
 
 library(WIN32) "SDLmain.lib SDL.lib";
 
@@ -10,6 +12,7 @@ library(POSIX) "SDL2 SDL2main";
 
 file
 	SDL20.h,
+	Ft.cpp,
 	Window.cpp,
 	SDLDraw.cpp,
 	text.qtf,
@@ -17,5 +20,5 @@ file
 	test.iml;
 
 mainconfig
-	"" = "SSE2 MT";
+	"" = "SSE2 MT CFONTS";
 

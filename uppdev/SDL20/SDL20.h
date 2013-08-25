@@ -3,11 +3,19 @@
 
 #include <Painter/Painter.h>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 using namespace Upp;
 
 NAMESPACE_UPP
+
+enum FtStyle {
+	FtBOLD = 1,
+	FtITALIC = 2
+};
+
+void SetFileFont(int face, const char *path, dword style = 0);
+void SetMemoryFont(int face, const byte *data, int size, dword style = 0);
 
 struct SDLWindow {
 	SDL_Window   *win;
@@ -25,7 +33,8 @@ struct SDLWindow {
 	~SDLWindow();
 };
 
-struct SystemDraw : SDraw {
+class SystemDraw : public SDraw {
+public:
 	SDLWindow *win;
 
 	virtual void  PutImage(Point p, const Image& m, const Rect& src);
