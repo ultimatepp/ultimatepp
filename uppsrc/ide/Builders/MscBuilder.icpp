@@ -103,7 +103,8 @@ bool MscBuilder::IsMsc89() const
 
 bool MscBuilder::IsMsc86() const
 {
-	return HasFlag("MSC8") || HasFlag("MSC9") || HasFlag("MSC10") || HasFlag("MSC11");
+	return HasFlag("MSC8") || HasFlag("MSC9") || HasFlag("MSC10") || HasFlag("MSC11")
+		|| HasFlag("MSC12");
 }
 
 bool MscBuilder::IsMscArm() const
@@ -113,7 +114,8 @@ bool MscBuilder::IsMscArm() const
 
 bool MscBuilder::IsMsc64() const
 {
-	return HasFlag("MSC8X64") || HasFlag("MSC9X64") || HasFlag("MSC10X64") || HasFlag("MSC11X64");
+	return HasFlag("MSC8X64") || HasFlag("MSC9X64") || HasFlag("MSC10X64") || HasFlag("MSC11X64")
+		|| HasFlag("MSC12X64");
 }
 
 String MscBuilder::LinkerName() const
@@ -372,7 +374,8 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 			IdeConsoleEndGroup();
 			return false;
 		}
-		bool isgemsc10 = HasFlag("MSC10") || HasFlag("MSC10X64") || HasFlag("MSC11") || HasFlag("MSC11X64");
+		bool isgemsc10 = HasFlag("MSC10") || HasFlag("MSC10X64") || HasFlag("MSC11")
+			|| HasFlag("MSC11X64") || HasFlag("MSC12X64");
 		Vector<Host::FileInfo> objinfo = host->GetFileInfo(obj);
 		for(int i = 0; i < obj.GetCount(); i++)
 			if(objinfo[i] > producttime) {
@@ -517,7 +520,8 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 	int time = GetTickCount();
 	if(!Wait())
 		return false;
-	bool isgemsc10 = HasFlag("MSC10") || HasFlag("MSC10X64") || HasFlag("MSC11") || HasFlag("MSC11X64");
+	bool isgemsc10 = HasFlag("MSC10") || HasFlag("MSC10X64") || HasFlag("MSC11")
+		|| HasFlag("MSC11X64") || HasFlag("MSC12X64");
 	for(int i = 0; i < linkfile.GetCount(); i++)
 		if(GetFileTime(linkfile[i]) >= targettime) {
 			String link;
@@ -605,11 +609,13 @@ INITBLOCK
 	RegisterBuilder("MSC8ARM", CreateMscBuilder);
 	RegisterBuilder("MSC9", CreateMscBuilder);
 	RegisterBuilder("MSC9X64", CreateMscBuilder);
+	RegisterBuilder("MSC9ARM", CreateMscBuilder);
 	RegisterBuilder("MSC10", CreateMscBuilder);
 	RegisterBuilder("MSC10X64", CreateMscBuilder);
 	RegisterBuilder("MSC11", CreateMscBuilder);
 	RegisterBuilder("MSC11X64", CreateMscBuilder);
-	RegisterBuilder("MSC9ARM", CreateMscBuilder);
+	RegisterBuilder("MSC12", CreateMscBuilder);
+	RegisterBuilder("MSC12X64", CreateMscBuilder);
 	RegisterBuilder("EVC_ARM", CreateMscBuilder);
 	RegisterBuilder("EVC_MIPS", CreateMscBuilder);
 	RegisterBuilder("EVC_SH3", CreateMscBuilder);
