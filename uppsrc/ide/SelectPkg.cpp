@@ -11,7 +11,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 {
 	CtrlLayoutOKCancel(*this, title);
 	Sizeable().Zoomable();
-	Icon(IdeImg::Package(), IdeImg::Package());
+	Icon(IdeImg::Package(), IdeImg::PackageLarge());
 	base.AutoHideSb();
 	base.NoGrid();
 	base.AddColumn("Assembly");
