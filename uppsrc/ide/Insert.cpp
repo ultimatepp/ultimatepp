@@ -4,7 +4,8 @@ class InsertColorDlg : public WithInsertColorLayout<TopWindow> {
 	typedef InsertColorDlg CLASSNAME;
 
 	String r[5];
-
+	bool canceled;
+	
 	void Sync();
 	void Select(int i);
 
@@ -12,11 +13,13 @@ public:
 	String result;
 
 	InsertColorDlg();
+	bool IsCanceled();
 };
 
 void InsertColorDlg::Select(int i)
 {
 	result = r[i];
+	canceled = false;
 	Break(IDOK);
 }
 
@@ -35,7 +38,7 @@ void InsertColorDlg::Sync()
 	qtf.SetLabel(r[4]);
 }
 
-InsertColorDlg::InsertColorDlg()
+InsertColorDlg::InsertColorDlg() : canceled(true)
 {
 	CtrlLayoutCancel(*this, "Insert color");
 	rgbactrl <<= THISBACK(Sync);
@@ -47,11 +50,17 @@ InsertColorDlg::InsertColorDlg()
 	Sync();
 }
 
+bool InsertColorDlg::IsCanceled()
+{
+	return canceled;
+}
+
 void Ide::InsertColor()
 {
 	InsertColorDlg dlg;
 	dlg.Execute();
-	editor.Paste(dlg.result.ToWString());
+	if (!dlg.IsCanceled())
+		editor.Paste(dlg.result.ToWString());
 }
 
 void Ide::InsertLay(const String& fn)
