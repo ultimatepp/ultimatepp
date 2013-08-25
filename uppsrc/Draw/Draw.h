@@ -5,6 +5,10 @@
 
 #include <Core/Core.h>
 
+#ifdef flagCFONTS
+#define CUSTOM_FONTSYS
+#endif
+
 NAMESPACE_UPP
 
 class Drawing;
