@@ -121,7 +121,7 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 	One<Builder> b = (*BuilderMap().Get(builder))();
 	b->host = host;
 	b->compiler = bm.Get("COMPILER", "");
-	b->include = SplitDirs(GetVar("UPP") + ';' + bm.Get("INCLUDE", ""));
+	b->include = SplitDirs(GetVar("UPP") + ';' + bm.Get("INCLUDE", "") + ';' + add_includes);
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
@@ -309,8 +309,9 @@ void MakeBuild::SetHdependDirs()
 		+ GetMethodVars(method).Get("INCLUDE", "") + ';'
 		+ Environment().Get("INCLUDE", "")
 #ifdef PLATFORM_POSIX
-		+ ";/usr/include;/usr/local/include"
+		+ ";/usr/include;/usr/local/include;"
 #endif
+		+ add_includes
 		);
 	// Also adding internal includes
 	const Workspace& wspc = GetIdeWorkspace();
@@ -376,6 +377,31 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 	BeginBuilding(true, clear_console);
 	bool ok = true;
 	if(wspc.GetCount()) {
+		String main_conf;
+		for(int i = 0; i < wspc.GetCount(); i++) {
+			const Package& pk = wspc.package[i];
+			for(int j = 0; j < pk.GetCount(); j++)
+				if(pk[j] == "main.conf") {
+					String pn = wspc[i];
+					main_conf << "// " << pn << "\r\n"
+					          << LoadFile(SourcePath(pn, "main.conf")) << "\r\n";
+				}
+		}
+		{
+			VectorMap<String, String> bm = GetMethodVars(method);
+			One<Host> host = CreateHost(false);
+			One<Builder> b = CreateBuilder(~host);
+			if(b) {
+				Index<String> mcfg = PackageConfig(wspc, 0, bm, mainparam, *host, *b, NULL);
+				DDUMP(main_conf);
+				String outdir = OutDir(mcfg, wspc[0], bm, use_target);
+				DDUMP(AppendFileName(outdir, "main.conf.h"));
+				SaveFile(AppendFileName(outdir, "main.conf.h"),
+			             main_conf);
+				add_includes << outdir << ';';
+			}
+		}
+
 		Vector<int> build_order;
 		if(GetTargetMode().linkmode != 2) {
 			for(int i = 1; i < wspc.GetCount(); i++)
@@ -404,6 +430,7 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 				remaining.Remove(t);
 			}
 		}
+
 		String mainpackage = wspc[0];
 		Vector<String> linkfile;
 		String linkopt = GetMethodVars(method).Get(targetmode ? "RELEASE_LINK" : "DEBUG_LINK", Null);

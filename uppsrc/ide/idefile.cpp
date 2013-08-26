@@ -14,7 +14,7 @@ void Ide::SetupEditor(int f, String hl, String fn)
 		hl = ext.Mid(1);
 	if(hl == "c" || hl == "cpp" || hl == "cc" || hl == "cxx" ||
 	   hl == "h" || hl == "hpp" || hl == "hh" || hl == "hxx" ||
-	   hl == "m" || hl == "mm" || hl == "icpp")
+	   hl == "m" || hl == "mm" || hl == "icpp" || hl == "conf")
 		editor.Highlight(CodeEditor::HIGHLIGHT_CPP);
 	else
 	if(hl == "cs")

@@ -42,6 +42,8 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img)
 		img = IdeCommonImg::Sql();
 	if(filename == "Copying")
 		img = IdeCommonImg::License();
+	if(filename == "main.conf")
+		img = IdeCommonImg::MainConf();
 }
 
 struct sImageAdd : ImageMaker {
