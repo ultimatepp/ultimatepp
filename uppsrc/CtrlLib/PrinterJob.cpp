@@ -211,13 +211,21 @@ String System(const char *cmd)
 	return System(cmd, Null);
 }
 
-struct PrinterDlg : WithPrinterLayout<TopWindow> {
+class PrinterDlg : public WithPrinterLayout<TopWindow> {
+	typedef PrinterDlg CLASSNAME;
+	
+public:
 	void FillOpt(const String& s, const char *id, DropList& dl, bool pgsz);
 	void SyncPrinterOptions();
 
-	typedef PrinterDlg CLASSNAME;
-
 	PrinterDlg();
+	bool IsCanceled();	
+
+private:
+	void OnOK();
+	
+private:
+	bool canceled;
 };
 
 void PrinterDlg::FillOpt(const String& s, const char *id, DropList& dl, bool pgsz)
@@ -255,10 +263,11 @@ void PrinterDlg::SyncPrinterOptions()
 	}
 }
 
-PrinterDlg::PrinterDlg()
-{
+PrinterDlg::PrinterDlg() : canceled(true)
+{	
 	CtrlLayoutOKCancel(*this, "Print");
 	printer <<= THISBACK(SyncPrinterOptions);
+	ok <<= THISBACK(OnOK);
 	npage.Add(1);
 	npage.Add(2);
 	npage.Add(4);
@@ -289,6 +298,17 @@ PrinterDlg::PrinterDlg()
 		printer.SetIndex(0);
 		SyncPrinterOptions();
 	}
+}
+
+bool PrinterDlg::IsCanceled()
+{
+	return canceled;
+}
+
+void PrinterDlg::OnOK()
+{
+	canceled = false;
+	Close();
 }
 
 Size PrinterJob::GetDefaultPageSize(String *name)
@@ -353,9 +373,11 @@ bool PrinterJob::Execute0(bool dodlg)
 	String h;
 	GetDefaultPageSize(&h);
 	h.IsEmpty() ? dlg.paper <<= "A4" : dlg.paper <<= h;
-	if(dodlg)
-		if(dlg.Run() != IDOK)
+	if(dodlg) {
+		dlg.Run();
+		if (!dlg.IsCanceled())
 			return false;
+	}
 	options.Clear();
 	options << "-d " << ~dlg.printer;
 	options << " -o media=";
@@ -396,10 +418,11 @@ bool PrinterJob::Execute()
 
 struct PrinterDraw : PdfDraw {
 	String options;
-
-	PrinterDraw(Size sz) : PdfDraw(sz) {}
+	bool canceled;
+	
+	PrinterDraw(Size sz) : PdfDraw(sz), canceled(true) {}
 	~PrinterDraw() {
-		if(!IsEmpty()) {
+		if(!canceled && !IsEmpty()) {
 			System("lp " + options, Finish());
 		}
 	}
@@ -408,8 +431,9 @@ struct PrinterDraw : PdfDraw {
 Draw& PrinterJob::GetDraw()
 {
 	if(!draw) {
-		Execute0(true);
+		bool canceled = Execute0(true);
 		PrinterDraw *pd = new PrinterDraw(pgsz);
+		pd->canceled = canceled;
 		pd->options = options;
 		draw = pd;
 	}
