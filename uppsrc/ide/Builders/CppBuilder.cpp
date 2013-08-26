@@ -393,6 +393,7 @@ String CppBuilder::IncludesDefinesTargetTime(const String& package, const Packag
 	cc << " -DbmHOUR=" << (int)t.hour;
 	cc << " -DbmMINUTE=" << (int)t.minute;
 	cc << " -DbmSECOND=" << (int)t.second;
+	cc << " -DMAIN_CONF";
 	targettime = GetFileTime(target);
 	return cc;
 }

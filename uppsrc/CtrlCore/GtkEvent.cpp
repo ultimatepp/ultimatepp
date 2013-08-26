@@ -5,7 +5,7 @@
 NAMESPACE_UPP
 
 #define LLOG(x)    // DLOG(rmsecs() << ' ' << x)
-#define LOG_EVENTS // _DBG_
+//_DBG_ #define LOG_EVENTS
 
 bool  Ctrl::EventMouseValid;
 Point Ctrl::EventMousePos;
