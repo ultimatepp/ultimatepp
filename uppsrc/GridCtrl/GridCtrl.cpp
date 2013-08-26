@@ -10,6 +10,7 @@ NAMESPACE_UPP
 #include <Core/t.h>
 
 bool GridCtrl::index_as_column = false;
+bool GridCtrl::reverse_sort_icon = false;
 
 GridCtrl::GridCtrl() : holder(*this)
 {
@@ -1209,6 +1210,7 @@ void GridCtrl::Paint(Draw &w)
 
 					Font fnt(stdfont);
 					gd->SetLeftImage(hi.img);
+					gd->ReverseSortIcon(reverse_sort_icon);
 					gd->PaintFixed(w, jj == firstcol, i == 0, x, y, cx, cy,
 								i == 0 ? it.val : GetConvertedColumn(hi.id, it.val),
 								style | en, IsNull(hi.hfnt) ? fnt : hi.hfnt, false, false,
