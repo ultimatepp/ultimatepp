@@ -916,6 +916,7 @@ class GridCtrl : public Ctrl
 		int  find_offset;
 		
 		static bool index_as_column;
+		static bool reverse_sort_icon;
 
 		/* States */
 
@@ -1171,6 +1172,7 @@ class GridCtrl : public Ctrl
 		GridCtrl& SearchHideRows(bool b = true)     { search_hide          = b;  return *this; }
 		GridCtrl& SearchDisplay(bool b = true)      { search_display       = b;  return *this; }
 		static void IndexAsColumn(bool b = true)	{ index_as_column      = b;                }
+		static void ReverseSortIcon(bool b = true)	{ reverse_sort_icon    = b;                }
 
 		GridCtrl& SetToolBar(bool b = true, int align = BarCtrl::BAR_BOTTOM, int frame = 1);
 		ToolBar&  GetToolBar() { return bar; }

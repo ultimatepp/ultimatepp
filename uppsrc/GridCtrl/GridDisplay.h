@@ -53,6 +53,8 @@ class GridDisplay
 		Image	bgImg;
 		Image   hdrhigh;
 		
+		bool	reverse_sort_icon;
+		
 		int 	align;
 		int		lm, rm, tm, bm;
 		int     theme;
@@ -79,6 +81,7 @@ class GridDisplay
 		void SetTextAlign(int al = GD::TOP | GD::LEFT)  { align = al;                  }
 		void SetHorzMargin(int left = 4, int right = 4) { lm = left; rm = right;  	   }
 		void SetVertMargin(int top = 0, int bottom = 0) { tm = top;  bm = bottom;      }
+		void ReverseSortIcon(bool b = true)				{ reverse_sort_icon = b;       }
 		void SetTheme(int th = 6);
 		int  GetThemeCount()                            { return 7;                    }
 		bool IsFixedRow()                               { return row < 0;              }

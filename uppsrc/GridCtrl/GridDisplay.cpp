@@ -28,6 +28,7 @@ void GridDisplay::SetDefault()
 	SetHorzMargin();
 	SetVertMargin();
 	SetTheme();
+	ReverseSortIcon(false);
 }
 
 void GridDisplay::SetTheme(int th)
@@ -211,10 +212,11 @@ void GridDisplay::PaintFixed(Draw &w, bool firstx, bool firsty, int x, int y, in
 			tx += tsz.cx;
 		}
 
-		if(sortmode == 1)
-			w.DrawImage(xf, yf, GridImg::SortAsc(), col);
-		else
-			w.DrawImage(xf, yf, GridImg::SortDsc(), col);
+		bool asc = sortmode == 1;
+		if(reverse_sort_icon)
+			asc = !asc;
+		
+		w.DrawImage(xf, yf, asc ? GridImg::SortAsc() : GridImg::SortDsc(), col);
 
 		tx += 3;
 	}
