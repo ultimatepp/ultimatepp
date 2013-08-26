@@ -1909,8 +1909,9 @@ void GridCtrl::MouseMove(Point p, dword keyflags)
 		UpdateHighlighting(GS_MOVE, p);
 	}
 
-	if(live_cursor)
+	if(live_cursor && popup.IsOpen())
 	{
+		LG(2, "MouseMove:LiveCursor");
 		if(IsMouseBody(p))
 			SetCursor0(p, CU_MOUSE | CU_HIGHLIGHT);
 		else
@@ -2473,11 +2474,12 @@ void GridCtrl::ChildAction(Ctrl *child, int event)
 			WhenCtrlAction();
 		}
 	}
-	
+
 	if(event == MOUSEMOVE)
 	{
 		if(live_cursor)
 		{
+			LG(2, "Child:LiveCursor");
 			Point p = GetMouseViewPos();
 			if(IsMouseBody(p))
 				SetCursor0(p, CU_MOUSE | CU_HIGHLIGHT);
@@ -2485,6 +2487,7 @@ void GridCtrl::ChildAction(Ctrl *child, int event)
 				SetCursor0(-1, -1, CU_HIGHLIGHT);
 		}
 	}
+	
 }
 
 void GridCtrl::ChildMouseEvent(Ctrl *child, int event, Point p, int zdelta, dword keyflags)
@@ -5723,8 +5726,11 @@ void GridCtrl::SwapDown(int cnt)
 
 void GridCtrl::MouseLeave()
 {
-	if(live_cursor && !HasMouseDeep())
+	if(live_cursor)
+	{
+		LG(2, "MouseLeave:LiveCursor");
 		SetCursor0(-1, -1, CU_HIGHLIGHT);
+	}
 	UpdateHighlighting(GS_BORDER, Point(0, 0));
 	oldSplitCol = -1;
 	oldSplitRow = -1;
