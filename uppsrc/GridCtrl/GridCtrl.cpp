@@ -1472,8 +1472,7 @@ void GridCtrl::Paint(Draw &w)
 						}
 						else
 						{
-							fg = fg_focus;
-							bg = Blend(bg_focus, White, 170);
+							bg = Blend(SColorDisabled, bg);
 						}
 						custom = false;
 					}
