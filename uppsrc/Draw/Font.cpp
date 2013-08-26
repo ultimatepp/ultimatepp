@@ -25,12 +25,16 @@ void InvalidateFontList()
 	sListValid = false;
 }
 
+void Set__(volatile bool& b);
+
 const Vector<FaceInfo>& Font::List()
 {
 	static Vector<FaceInfo> list;
 	if(!sListValid) {
-		Set__(sListValid);
-		list = GetAllFacesSys();
+		INTERLOCKED {
+			Set__(sListValid);
+			list = GetAllFacesSys();
+		}
 	}
 	return list;
 }
