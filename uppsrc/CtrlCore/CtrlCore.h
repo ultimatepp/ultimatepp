@@ -1134,11 +1134,6 @@ public:
 
 	void   SetAlpha(byte alpha);
 
-#ifdef PLATFORM_WIN32
-	static bool ProcessPaintEvent();
-	static bool ProcessPaintEvents();
-#endif
-
 	static bool IsWaitingEvent();
 	static bool ProcessEvent(bool *quit = NULL);
 	static bool ProcessEvents(bool *quit = NULL);
