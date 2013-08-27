@@ -29,10 +29,10 @@ void Resources::SetTextureFiltring(int opts)
 	}
 }
 
-const Texture& Resources::CreateTexture(const Image& img, int width, int height)
+const TextureResource& Resources::CreateTexture(const Image& img, int width, int height)
 {
 	int64 serialId = img.GetSerialId();
-	Texture& t = textures.Add(serialId);
+	TextureResource& t = textures.Add(serialId);
 	t.serialId = serialId;
 	t.atlasSerialId = -1;
 	t.width = width > 0 ? width : img.GetWidth();
@@ -48,17 +48,17 @@ const Texture& Resources::CreateTexture(const Image& img, int width, int height)
 	return t;
 }
 
-void Resources::CreateSubTexture(const Texture& t, const Image& img, int x, int y)
+void Resources::CreateSubTexture(const TextureResource& t, const Image& img, int x, int y)
 {
 	Bind(autoAtlas.serialId, 0);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, img.GetWidth(), img.GetHeight(), GL_BGRA, GL_UNSIGNED_BYTE, img);
 }
 
- const Texture& Resources::Bind(const Image& img, int opts)
+ const TextureResource& Resources::Bind(const Image& img, int opts)
 {
 	int64 serialId = img.GetSerialId();
 
-	const Texture* texture = textures.FindPtr(serialId);
+	const TextureResource* texture = textures.FindPtr(serialId);
 	if(texture)
 	{
 		if(texture->atlasSerialId >= 0)
@@ -93,7 +93,7 @@ void Resources::CreateSubTexture(const Texture& t, const Image& img, int x, int 
 				if(h > maxh)
 					maxh = h;
 				
-				Texture& t = textures.Add(img.GetSerialId());
+				TextureResource& t = textures.Add(img.GetSerialId());
 				t.atlasSerialId = autoAtlas.serialId;
 				t.width = w;
 				t.height = h;
@@ -192,20 +192,20 @@ void Resources::Add(Iml* images, bool linear)
 
 void Resources::AddAtlas(const char* atlasName, const Image& img)
 {
-	Atlas& atlas = staticAtlases.GetAdd(atlasName);
+	AtlasResource& atlas = staticAtlases.GetAdd(atlasName);
 	atlas.linear = false;
 	atlas.parts.Add(img);
 }
 
 void Resources::AddAtlas(const char* atlasName, Iml* images)
 {
-	Atlas& atlas = staticAtlases.GetAdd(atlasName);
+	AtlasResource& atlas = staticAtlases.GetAdd(atlasName);
 	atlas.linear = false;
 	for(int i = 0; i < images->GetCount(); i++)
 		atlas.parts.Add(images->Get(i));
 }
 
-Image Atlas::Make(ArrayMap<int64, Texture>& textures)
+Image AtlasResource::Make(ArrayMap<int64, TextureResource>& textures)
 {
 	width = 512;
 	height = 512;
@@ -241,7 +241,7 @@ Image Atlas::Make(ArrayMap<int64, Texture>& textures)
 		if(h > maxh)
 			maxh = h;
 		
-		Texture& t = textures.Add(img.GetSerialId());
+		TextureResource& t = textures.Add(img.GetSerialId());
 		t.width = w;
 		t.height = h;
 		t.realWidth = width;

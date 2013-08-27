@@ -6,19 +6,17 @@ NAMESPACE_UPP
 
 void Console::Paint(Draw& w)
 {
-	SystemDraw& sw = (SystemDraw&) w;
 	Size sz = GetSize();
-	sw.alpha = 100.f;
-	w.DrawRect(sz, Black);
-	w.DrawRect(0, 0, sz.cx, 1, Yellow);
-	w.DrawRect(sz.cx - 1, 1, 1, sz.cy - 1, Yellow);
-	w.DrawRect(0, 1, 1, sz.cy, Yellow);
-	w.DrawRect(1, sz.cy - 1, sz.cx - 2, 1, Yellow);
+	Color frame = Yellow().Alpha(100);
+	w.DrawRect(sz, Black().Alpha(100));
+	w.DrawRect(0, 0, sz.cx, 1, frame);
+	w.DrawRect(sz.cx - 1, 1, 1, sz.cy - 1, frame);
+	w.DrawRect(0, 1, 1, sz.cy, frame);
+	w.DrawRect(1, sz.cy - 1, sz.cx - 2, 1, frame);
 	//DrawFrame(w, sz, Yellow);
 	//w.DrawImage(sz.cx - 18, sz.cy - 21, WinGlImg::ResizeMarker());
-	w.DrawRect(1, sz.cy - 22, sz.cx - 2, 1, Yellow);
+	w.DrawRect(1, sz.cy - 22, sz.cx - 2, 1, frame);
 	w.Clip(5, 5, sz.cx - 10, sz.cy - 5 - 21);
-	sw.alpha = 255.f;
 	int y = 5;
 	int ty = Draw::GetStdFontCy() + 2;
 	for(int i = 0; i < fixedText.GetCount(); i++)
@@ -29,10 +27,8 @@ void Console::Paint(Draw& w)
 
 	if(fixedText.GetCount() > 0 && floatText.GetCount() > 0)
 	{
-		sw.alpha = 150.f;
-		w.DrawRect(5, y, sz.cx - 10, 1, Yellow);
+		w.DrawRect(5, y, sz.cx - 10, 1, frame);
 		y += 2;
-		sw.alpha = 255.f;
 	}
 
 	int lines = (sz.cy - y - 22) / ty;

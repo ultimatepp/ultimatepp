@@ -337,11 +337,6 @@ void Ctrl::DrawScreen()
 	}
 }
 
-void Ctrl::WndUpdate0r(const Rect& r)
-{
-	GuiLock __;
-}
-
 bool Ctrl::ProcessEvents(bool *quit)
 {
 	if(!ProcessEvent(quit))
@@ -356,7 +351,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 	return true;
 }
 
-void Ctrl::EventLoop0(Ctrl *ctrl)
+/*void Ctrl::EventLoop0(Ctrl *ctrl)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
@@ -383,16 +378,16 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	if(ctrl)
 		LoopCtrl = ploop;
 	LoopLevel--;
-}
+}*/
 
-void Ctrl::GuiSleep0(int ms)
+/*void Ctrl::GuiSleep0(int ms)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
 	int level = LeaveGuiMutexAll();
 	GlSleep(ms);
 	EnterGuiMutex(level);
-}
+}*/
 
 Rect Ctrl::GetWndScreenRect() const
 {
@@ -400,7 +395,7 @@ Rect Ctrl::GetWndScreenRect() const
 	return GetRect();
 }
 
-void Ctrl::WndShow0(bool b)
+/*void Ctrl::WndShow0(bool b)
 {
 	GuiLock __;
 }
@@ -409,7 +404,7 @@ void Ctrl::WndUpdate0()
 {
 	GuiLock __;
 }
-
+*/
 bool Ctrl::IsWndOpen() const {
 	GuiLock __;
 	return FindTopCtrl() >= 0 || this == desktop;
@@ -474,7 +469,7 @@ void Ctrl::DestroyWnd()
 {
 	for(int i = 0; i < topctrl.GetCount(); i++)
 		if(topctrl[i]->top && topctrl[i]->top->owner_window == this)
-			topctrl[i]->WndDestroy0();
+			topctrl[i]->WndDestroy();
 	int q = FindTopCtrl();
 	if(q >= 0) {
 		topctrl.Remove(q);
@@ -489,12 +484,14 @@ void Ctrl::DestroyWnd()
 		win->DestroyFrame();
 }
 
-void Ctrl::WndDestroy0()
-{
-	DestroyWnd();
-	if(topctrl.GetCount())
-		topctrl.Top()->ActivateWnd();
-}
+/*
+ * void Ctrl::WndDestroy0()
+ * {
+ * 	DestroyWnd();
+ * 	if(topctrl.GetCount())
+ * 		topctrl.Top()->ActivateWnd();
+ * }
+ */
 
 void Ctrl::PutForeground()
 {
@@ -512,19 +509,21 @@ void Ctrl::PutForeground()
 			fw[i]->PutForeground();
 }
 
-void Ctrl::SetWndForeground0()
-{
-	GuiLock __;
-	ASSERT(IsOpen());
-	if(IsWndForeground())
-		return;
-	Ctrl *to = this;
-	while(to->top && to->top->owner_window)
-		to = to->top->owner_window;
-	to->PutForeground();
-	if(this != focusCtrl)
-		ActivateWnd();
-}
+/*
+ * void Ctrl::SetWndForeground0()
+ * {
+ * 	GuiLock __;
+ * 	ASSERT(IsOpen());
+ * 	if(IsWndForeground())
+ * 		return;
+ * 	Ctrl *to = this;
+ * 	while(to->top && to->top->owner_window)
+ * 		to = to->top->owner_window;
+ * 	to->PutForeground();
+ * 	if(this != focusCtrl)
+ * 		ActivateWnd();
+ * }
+ */
 
 bool Ctrl::IsWndForeground() const
 {
@@ -538,17 +537,19 @@ bool Ctrl::IsWndForeground() const
 	return b;
 }
 
-void Ctrl::WndEnable0(bool *b)
-{
-	GuiLock __;
-	*b = true;
-}
-
-void Ctrl::SetWndFocus0(bool *b)
-{
-	GuiLock __;
-	*b = true;
-}
+/*
+ * void Ctrl::WndEnable0(bool *b)
+ * {
+ * 	GuiLock __;
+ * 	*b = true;
+ * }
+ * 
+ * void Ctrl::SetWndFocus0(bool *b)
+ * {
+ * 	GuiLock __;
+ * 	*b = true;
+ * }
+ */
 
 bool Ctrl::HasWndFocus() const
 {
@@ -582,19 +583,21 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 	//::InvalidateRect(glHwnd, NULL, false);
 }
 
-void Ctrl::WndSetPos0(const Rect& rect)
-{
-	GuiLock __;
-	TopWindow *w = dynamic_cast<TopWindow *>(this);
-	if(w)
-		w->SyncFrameRect(rect);
-	SetWndRect(rect);
-}
-
-void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
-{
-	GuiLock __;
-}
+/*
+ * void Ctrl::WndSetPos0(const Rect& rect)
+ * {
+ * 	GuiLock __;
+ * 	TopWindow *w = dynamic_cast<TopWindow *>(this);
+ * 	if(w)
+ * 		w->SyncFrameRect(rect);
+ * 	SetWndRect(rect);
+ * }
+ * 
+ * void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
+ * {
+ * 	GuiLock __;
+ * }
+ */
 
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
