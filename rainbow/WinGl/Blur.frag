@@ -10,7 +10,7 @@ uniform float blurSize;  // This should usually be equal to
 
 uniform sampler2D blurSampler;  // Texture that will be blurred by this shader
 
-const float numBlurPixelsPerSide = 3;
+const float numBlurPixelsPerSide = 3.0f;
 // 9x9 - 4
 // 7x7 - 3
 // 5x5 - 2
@@ -24,7 +24,7 @@ uniform float blurStrength;
 void main() {
 
 	vec4 v = texture2D(blurSampler, gl_TexCoord[0].xy);
-	if(blurStrength > 0)
+	if(blurStrength > 0.0f)
 	{
 		vec4 avgValue = vec4(0.0f, 0.0f, 0.0f, 0.0f);
 		float coefficientSum = 0.0f;
@@ -38,7 +38,7 @@ void main() {
 			vec2 pos = i * blurSize * blurMultiplyVec;
 			avgValue += texture2D(blurSampler, gl_TexCoord[0].xy - pos) * incGaussian.x;         
 			avgValue += texture2D(blurSampler, gl_TexCoord[0].xy + pos) * incGaussian.x;         
-			coefficientSum += 2 * incGaussian.x;
+			coefficientSum += 2.0f * incGaussian.x;
 			incGaussian.xy *= incGaussian.yz;
 		}
 			

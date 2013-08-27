@@ -172,12 +172,14 @@ void SystemDraw::EndOp()
 
 void SystemDraw::OffsetOp(Point p)
 {
+	GuiLock __;
 	BeginOp();
 	drawing_offset += p;
 }
 
 bool SystemDraw::ClipOp(const Rect& r)
 {
+	GuiLock __;
 	BeginOp();
 	cloff[ci - 1].clipping = true;
 	drawing_clip = r + drawing_offset;
@@ -187,6 +189,7 @@ bool SystemDraw::ClipOp(const Rect& r)
 
 bool SystemDraw::ClipoffOp(const Rect& r)
 {
+	GuiLock __;
 	BeginOp();
 	cloff[ci - 1].clipping = true;
 	drawing_clip = r + drawing_offset;
@@ -197,6 +200,7 @@ bool SystemDraw::ClipoffOp(const Rect& r)
 
 bool SystemDraw::ExcludeClipOp(const Rect& r)
 {
+	GuiLock __;
 	ASSERT(ci > 0);
 	cloff[ci - 1].clipping = true;
 	cloff[ci - 1].exclude = true;
@@ -207,6 +211,7 @@ bool SystemDraw::ExcludeClipOp(const Rect& r)
 
 bool SystemDraw::IntersectClipOp(const Rect& r)
 {
+	GuiLock __;
 	Cloff& w = cloff[ci];
 	drawing_clip = r + drawing_offset;
 	SetClip(drawing_clip);
@@ -220,11 +225,13 @@ bool SystemDraw::IsPaintingOp(const Rect& r) const
 
 Rect SystemDraw::GetPaintRect() const
 {
+	GuiLock __;
 	return drawing_clip;
 }
 
 void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 {
+	GuiLock __;
 	if(IsNull(color))
 		return;
 	
@@ -256,8 +263,7 @@ void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 	if(dy > cb)
 		dy = cb;
 #endif
-	
-	glColor4ub(color.GetR(), color.GetG(), color.GetB(), (int) alpha);
+	glColor4ub(color.GetR(), color.GetG(), color.GetB(), color.GetA() >= 255 ? (int) alpha : color.GetA());
 	
 /*	float vtx[] = {
 		sx, dy,
@@ -271,11 +277,12 @@ void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 	glVertexPointer(projection_mode ? 3 : 2, GL_FLOAT, 0, vtx);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-	glColor4ub(255, 255, 255, (int) alpha);
+	glColor4ub(255, 255, 255, /*(int) alpha*/255);
 }
 
 void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)
 {
+	GuiLock __;
 	if(cx <= 0 || cy <= 0) return;
 
 	float sx = (float) x + drawing_offset.x;
@@ -334,7 +341,7 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 	}
 #endif
 	
-	const Texture& t = resources.Bind(img, Resources::AUTO_ATLAS | Resources::NEAREST_FILTERING);
+	const TextureResource& t = resources.Bind(img, Resources::AUTO_ATLAS | Resources::NEAREST_FILTERING);
 
 	float tw = 1.f / (float) t.realWidth;
 	float th = 1.f / (float) t.realHeight;
@@ -349,8 +356,10 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 		if(IsNull(color))	
 			glColor4ub(255, 255, 255, (int) alpha);
 		else
-			glColor4ub(color.GetR(), color.GetG(), color.GetB(), (int) alpha);
+			glColor4ub(color.GetR(), color.GetG(), color.GetB(), color.GetA() >= 255 ? (int) alpha : color.GetA());
 	}
+	
+	glColor4ub(255, 255, 255, 255);
 	
 	float vtx[12];
 	SetVtx(vtx, sx, sy, dx, dy);
@@ -373,6 +382,7 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 
 void SystemDraw::DrawTextureOp(const RectF& r, int textureId, int width, int height, const RectF& src)
 {
+	GuiLock __;
 	float sx = r.left + drawing_offset.x;
 	float sy = r.top + drawing_offset.y;
 	float dx = sx + r.GetWidth();
@@ -417,6 +427,7 @@ void SystemDraw::DrawTextureOp(const RectF& r, int textureId, int width, int hei
 
 void SystemDraw::DrawImageOp(float x0, float y0, float z0, float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, const Image& img, const Rect& src, Color color)
 {
+	GuiLock __;
 	float tl = (float) src.left;
 	float tr = (float) src.right;
 	float tt = (float) src.top;
@@ -425,7 +436,7 @@ void SystemDraw::DrawImageOp(float x0, float y0, float z0, float x1, float y1, f
 	float sw = (float) src.GetWidth();
 	float sh = (float) src.GetHeight();
 
-	const Texture& t = resources.Bind(img, Resources::AUTO_ATLAS | Resources::NEAREST_FILTERING);
+	const TextureResource& t = resources.Bind(img, Resources::AUTO_ATLAS | Resources::NEAREST_FILTERING);
 
 	float tw = 1.f / (float) t.realWidth;
 	float th = 1.f / (float) t.realHeight;
@@ -440,7 +451,7 @@ void SystemDraw::DrawImageOp(float x0, float y0, float z0, float x1, float y1, f
 		if(IsNull(color))	
 			glColor4ub(255, 255, 255, (int) alpha);
 		else
-			glColor4ub(color.GetR(), color.GetG(), color.GetB(), (int) alpha);
+			glColor4ub(color.GetR(), color.GetG(), color.GetB(), color.GetA());
 	}
 	
 	glEnable(GL_TEXTURE_2D);
@@ -470,7 +481,8 @@ void SystemDraw::DrawImageOp(float x0, float y0, float z0, float x1, float y1, f
 
 void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
-	glColor4ub(color.GetR(), color.GetG(), color.GetB(), (int) alpha);
+	GuiLock __;
+	glColor4ub(color.GetR(), color.GetG(), color.GetB(), color.GetA());
 	glLineWidth((GLfloat) width);
 	glBegin(GL_LINES);
 		glVertex2i(x1 + drawing_offset.x, y1 + drawing_offset.y);
@@ -480,32 +492,39 @@ void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color col
 
 void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor)
 {
+	GuiLock __;
 }
 
 void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, const int *subpolygon_counts, int scc, const int *disjunct_polygon_counts, int dpcc, Color color, int width, Color outline, uint64 pattern, Color doxor)
 {
+	GuiLock __;
 }
 
 void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
 {
+	GuiLock __;
 }
 
 void SystemDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 {
+	GuiLock __;
 }
 
 void SystemDraw::SaveCurrentColor()
 {
+	GuiLock __;
 	glGetFloatv(GL_CURRENT_COLOR, current_color);
 }
 
 void SystemDraw::RestoreLastColor()
 {
+	GuiLock __;
 	glColor4f(current_color[0], current_color[1], current_color[2], current_color[3]);
 }
 
 RectF SystemDraw::UnProject(const RectF& r, float& depth)
 {
+	GuiLock __;
 	double projMat[16];
 	double modelMat[16];
 	int viewPort[4];
@@ -528,6 +547,7 @@ RectF SystemDraw::UnProject(const RectF& r, float& depth)
 
 void SystemDraw::UnProject(float* vtx, float sx, float sy, float dx, float dy)
 {
+	GuiLock __;
 	double projMat[16];
 	double modelMat[16] = {
 		1, 0, 0, 0, 
@@ -563,6 +583,7 @@ void SystemDraw::UnProject(float* vtx, float sx, float sy, float dx, float dy)
 
 void SystemDraw::UnProject(float& x, float& y, float &z)
 {
+	GuiLock __;
 	double projMat[16];
 	double modelMat[16] = {
 		1, 0, 0, 0, 

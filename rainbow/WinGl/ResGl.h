@@ -1,7 +1,7 @@
 #ifndef _WinGl_ResGl_h_
 #define _WinGl_ResGl_h_
 
-struct Texture : Moveable<Texture>
+struct TextureResource : Moveable<TextureResource>
 {
 	int64 serialId;
 	int64 atlasSerialId;
@@ -12,7 +12,7 @@ struct Texture : Moveable<Texture>
 	int x;
 	int y;
 	
-	Texture(int w = 0, int h = 0)
+	TextureResource(int w = 0, int h = 0)
 	{
 		serialId = -1;
 		atlasSerialId = -1;
@@ -30,13 +30,13 @@ struct Texture : Moveable<Texture>
 	}
 };
 
-struct Atlas : Moveable<Atlas>
+struct AtlasResource : Moveable<AtlasResource>
 {
 	int width;
 	int height;
 	bool linear;
 	Vector<Image> parts;
-	Image Make(ArrayMap<int64, Texture>& textures);
+	Image Make(ArrayMap<int64, TextureResource>& textures);
 };
 
 struct ImageResource : Moveable<ImageResource>
@@ -64,10 +64,10 @@ struct Resources
 	};
 	
 	Vector<ImageResource> staticImages;
-	VectorMap<String, Atlas> staticAtlases;
+	VectorMap<String, AtlasResource> staticAtlases;
 	Vector<Font> staticFonts;
 	
-	Texture autoAtlas;
+	TextureResource autoAtlas;
 	ImageBuffer autoAtlasBuffer;
 	Image autoAtlasImage;
 	int px, py, maxh;
@@ -75,13 +75,13 @@ struct Resources
 	int bindedTextures;
 	
 	int64 currentSerialId;
-	ArrayMap<int64, Texture> textures;
+	ArrayMap<int64, TextureResource> textures;
 	ArrayMap<String, OpenGLFont> fonts;
 	
-	const Texture& CreateTexture(const Image& img, int width = -1, int height = -1);
-	void CreateSubTexture(const Texture& t, const Image& img, int x, int y);
+	const TextureResource& CreateTexture(const Image& img, int width = -1, int height = -1);
+	void CreateSubTexture(const TextureResource& t, const Image& img, int x, int y);
 	
-	const Texture& Bind(const Image& img, int opts = NEAREST_FILTERING);
+	const TextureResource& Bind(const Image& img, int opts = NEAREST_FILTERING);
 	bool Bind(int64 serialId, int opts = NEAREST_FILTERING);
 	void Add(const Image& img, bool linear = false);
 	void Add(Iml* images, bool linear = false);
