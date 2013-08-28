@@ -1,6 +1,6 @@
-#include <CtrlCore/CtrlCore.h>
+#ifdef flagLINUXGL
 
-#ifdef GUI_LINUXGL
+#include <CtrlCore/CtrlCore.h>
 
 NAMESPACE_UPP
 

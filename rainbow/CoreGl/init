@@ -1,0 +1,4 @@
+#ifndef _CoreGl_icpp_init_stub
+#define _CoreGl_icpp_init_stub
+#include "Painter/init"
+#endif

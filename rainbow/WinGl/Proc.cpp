@@ -1,6 +1,6 @@
-#include <CtrlCore/CtrlCore.h>
+#ifdef flagWINGL
 
-#ifdef GUI_WINGL
+#include <CtrlCore/CtrlCore.h>
 
 NAMESPACE_UPP
 
