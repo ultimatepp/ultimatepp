@@ -191,7 +191,10 @@ private:
 	bool showPropDlg;
 	
 	int lastRefresh_ms;
+	dword lastRefresh0_ms;
 	int maxRefresh_ms;
+	
+	bool highlighting;
 	
 	MouseBehaviour *mouseBehavior;
 	
@@ -220,7 +223,8 @@ private:
 	virtual Image CursorImage(Point p, dword keyflags);
 	
 	template <class T>
-	void SetDrawing(T& w, const Size &size, int scale);		
+	void SetDrawing(T& w, const Size &size, int scale);	
+	void TimerCallback();	
 };
 
 template <class T>

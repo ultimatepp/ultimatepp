@@ -1200,6 +1200,13 @@ in ScatterCtrl.&]
 or].&]
 [s1; &]
 [s6;%- &]
+[s5;:ScatterCtrl`:`:SetMouseHandling`(bool`,bool`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* SetMouseHandling]([@(0.0.255) bool]_[*@3 valx]_`=_[@(0.0.255) true], 
+[@(0.0.255) bool]_[*@3 valy]_`=_[@(0.0.255) false])&]
+[s3; If [%-*@3 valx] mouse can scroll or zoom in X axis.&]
+[s3; If [%-*@3 valy]  mouse can scroll or zoom in Y axis.&]
+[s1; &]
+[s6;%- &]
 [s5;:ScatterCtrl`:`:ShowContextMenu`(bool`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
 ]_[* ShowContextMenu]([@(0.0.255) bool]_[*@3 show]_`=_[@(0.0.255) true])&]
 [s3; If [%-*@3 show] is true the context menu can be opened (right 

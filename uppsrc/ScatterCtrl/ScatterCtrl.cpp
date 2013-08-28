@@ -58,7 +58,16 @@ void ScatterCtrl::SaveToClipboard(bool)
 
 void ScatterCtrl::Paint(Draw& w) 
 {
+	if (IsNull(highlight_0) && highlighting) {
+		highlighting = false;
+		KillTimeCallback();
+	}
+	if (!IsNull(highlight_0) && !highlighting) {
+		highlighting = true;
+		SetTimeCallback(-200, THISBACK(TimerCallback));
+	}
 	TimeStop t;
+	lastRefresh0_ms = GetTickCount();
 	if (mode == MD_DRAW) {
 		ScatterCtrl::SetDrawing(w, GetSize(), 1);
 		PlotTexts(w, GetSize(), 1);
@@ -72,6 +81,10 @@ void ScatterCtrl::Paint(Draw& w)
 		PlotTexts(w, GetSize(), 1);
 	}
 	lastRefresh_ms = t.Elapsed();
+}
+
+void ScatterCtrl::TimerCallback() {
+	Refresh();
 }
 
 void ScatterCtrl::ProcessPopUp(const Point & pt)
@@ -288,35 +301,17 @@ void ScatterCtrl::MouseWheel(Point pt, int zdelta, dword keyFlags)
 void ScatterCtrl::MouseMove(Point pt, dword)
 {
 	if (isScrolling) {
+		double factorX = 0, factorY = 0;
 		int shiftX = pt.x - butDownX;
-		if (mouseHandlingX && shiftX != 0) {
-			double factorX = double(shiftX)/(GetSize().cx - (hPlotLeft + hPlotRight) - 1);
-			double deltaX = factorX*xRange;
-			xMin -= deltaX;
-			xMinUnit += deltaX;
-			AdjustMinUnitX();
-			butDownX = pt.x;
-		}
+		if (mouseHandlingX && shiftX != 0) 
+			factorX = double(shiftX)/(GetSize().cx - (hPlotLeft + hPlotRight) - 1);
 		int shiftY = pt.y - butDownY;
-		if (mouseHandlingY && shiftY != 0) {
-			double factorY = double(shiftY)/(GetSize().cy - (vPlotTop + vPlotBottom) - 1);
-			double deltaY = -factorY*yRange;
-			yMin -= deltaY;
-			yMinUnit += deltaY;
-			AdjustMinUnitY();
-			if (drawY2Reticle) {
-				double deltaY2 = -factorY*yRange2;
-				yMin2 -= deltaY2;
-				yMinUnit2 += deltaY2;
-				AdjustMinUnitY2();
-			}
-			butDownY = pt.y;
-		}		
-		if ((mouseHandlingX && shiftX != 0) || (mouseHandlingY && shiftY != 0)) {
-			WhenSetXYMin();
-			Refresh();
-			WhenZoomScroll();
-		}
+		if (mouseHandlingY && shiftY != 0) 
+			factorY = double(shiftY)/(GetSize().cy - (vPlotTop + vPlotBottom) - 1);
+		butDownX = pt.x;
+		butDownY = pt.y;
+		if ((mouseHandlingX && shiftX != 0) || (mouseHandlingY && shiftY != 0)) 
+			ScatterDraw::Scroll(factorX, -factorY);
 	} 
 	if(isLabelPopUp) {
 		if (paintInfo && hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
@@ -341,7 +336,15 @@ void ScatterCtrl::MouseLeave()
 void ScatterCtrl::MouseZoom(int zdelta, bool hor, bool ver) 
 {
 	double scale = zdelta > 0 ? zdelta/100. : -100./zdelta;
-	if (((lastxRange < xRange*scale) || (lastyRange < yRange*scale)) && (lastRefresh_ms > maxRefresh_ms)) 
+//	if (hor && (lastxRange < xRange*scale))
+//		return;
+//	if (ver && (lastyRange < yRange*scale))
+//		return;
+	if (lastRefresh_sign != ((scale >= 0) ? 1 : -1))	
+		lastRefresh_ms = Null;					// Change of scale sign resets lastRefresh check
+	if (GetTickCount() - lastRefresh0_ms > 1000)
+		lastRefresh_ms = Null;					// 1 sec resets lastRefresh check
+	if (!IsNull(lastRefresh_ms) && (lastRefresh_ms > maxRefresh_ms))
 		return;
 	Zoom(scale, mouseHandlingX, mouseHandlingY);
 }
@@ -366,8 +369,8 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 		bar.Add(t_("Fit to data"), 	ScatterImg::ShapeHandles(), THISBACK1(FitToData, mouseHandlingY));
 		bar.Add(t_("Zoom +"), 		ScatterImg::ZoomPlus(), 	THISBACK3(Zoom, 1/1.2, true, mouseHandlingY));
 		bar.Add(t_("Zoom -"), 		ScatterImg::ZoomMinus(), 	THISBACK3(Zoom, 1.2, true, mouseHandlingY));
-		bar.Add(t_("Scroll Left"), 	ScatterImg::LeftArrow(), 	THISBACK2(ScatterDraw::Scroll, -0.2, 0));
-		bar.Add(t_("Scroll Right"), ScatterImg::RightArrow(), 	THISBACK2(ScatterDraw::Scroll, 0.2, 0));
+		bar.Add(t_("Scroll Left"), 	ScatterImg::LeftArrow(), 	THISBACK2(ScatterDraw::Scroll, 0.2, 0));
+		bar.Add(t_("Scroll Right"), ScatterImg::RightArrow(), 	THISBACK2(ScatterDraw::Scroll, -0.2, 0));
 		if (mouseHandlingY) {
 			bar.Add(t_("Scroll Up"), 	ScatterImg::UpArrow(), 	THISBACK2(ScatterDraw::Scroll, 0, -0.2));
 			bar.Add(t_("Scroll Down"), 	ScatterImg::DownArrow(), THISBACK2(ScatterDraw::Scroll, 0, 0.2));			
@@ -435,6 +438,7 @@ ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1)
 	SetMouseBehavior(defaultMouse);
 	lastRefresh_ms = Null;
 	maxRefresh_ms = 500;
+	highlighting = false;
 }
 
 END_UPP_NAMESPACE
