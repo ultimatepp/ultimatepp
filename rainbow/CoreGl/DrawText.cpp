@@ -151,14 +151,25 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 	alphaMagProg.Start();
 
 	const float ic = 1.f / 255.f;
-	float ac = alpha / 255.f;
 
 	float outlineCenter = ConvStrength(0.1f, 0.45f, (float) 100 - min(outlineStrength, 100));
 	float glowCenter = ConvStrength(0.55f, 0.95f, (float) 100 - min(glowStrength, 100));
 	
-	alphaMagProg.Set("GlyphColor", ink.GetR() * ic, ink.GetG() * ic, ink.GetB() * ic, ink.GetA() * ic * ac);
-	alphaMagProg.Set("OutlineColor", outlineColor.GetR() * ic, outlineColor.GetG() * ic, outlineColor.GetB() * ic, outlineColor.GetA() * ic * ac);
-	alphaMagProg.Set("GlowColor", glowColor.GetR() * ic, glowColor.GetG() * ic, glowColor.GetB() * ic, glowColor.GetA() * ic * ac);
+	#ifdef COLOR_ALPHA
+	float ac = alpha / 255.f;
+	int inkA = ink.GetA();
+	int outlineA = outlineColor.GetA();
+	int glowA = glowColor.GetA();
+	#else
+	float ac = alpha;
+	int inkA = 1;
+	int outlineA = 1;
+	int glowA = 1;
+	#endif
+	
+	alphaMagProg.Set("GlyphColor", ink.GetR() * ic, ink.GetG() * ic, ink.GetB() * ic, inkA * ic * ac);
+	alphaMagProg.Set("OutlineColor", outlineColor.GetR() * ic, outlineColor.GetG() * ic, outlineColor.GetB() * ic, outlineA * ic * ac);
+	alphaMagProg.Set("GlowColor", glowColor.GetR() * ic, glowColor.GetG() * ic, glowColor.GetB() * ic, glowA * ic * ac);
 	alphaMagProg.Set("Outline", outlineStrength > 0); //0.1 - 0.45
 	alphaMagProg.Set("Glow", glowStrength > 0); //0.55 - 0.095
 	alphaMagProg.Set("Shadow", false);

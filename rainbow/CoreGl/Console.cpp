@@ -7,8 +7,18 @@ NAMESPACE_UPP
 void Console::Paint(Draw& w)
 {
 	Size sz = GetSize();
+
+	#ifndef COLOR_ALPHA
+	SystemDraw& sw = (SystemDraw&) w;
+	sw.alpha = 100.f;
+	Color frame = Yellow;
+	Color body = Black;
+	#else		
 	Color frame = Yellow().Alpha(100);
-	w.DrawRect(sz, Black().Alpha(100));
+	Color body = Black().Alpha(100);
+	#endif
+	
+	w.DrawRect(sz, body);
 	w.DrawRect(0, 0, sz.cx, 1, frame);
 	w.DrawRect(sz.cx - 1, 1, 1, sz.cy - 1, frame);
 	w.DrawRect(0, 1, 1, sz.cy, frame);
@@ -17,6 +27,9 @@ void Console::Paint(Draw& w)
 	//w.DrawImage(sz.cx - 18, sz.cy - 21, LinuxGlImg::ResizeMarker());
 	w.DrawRect(1, sz.cy - 22, sz.cx - 2, 1, frame);
 	w.Clip(5, 5, sz.cx - 10, sz.cy - 5 - 21);
+	#ifndef COLOR_ALPHA
+	sw.alpha = 255.f;
+	#endif
 	int y = 5;
 	//int ty = Draw::GetStdFontCy() + 2;
 	int ty = 12 + 2;
@@ -28,7 +41,13 @@ void Console::Paint(Draw& w)
 
 	if(fixedText.GetCount() > 0 && floatText.GetCount() > 0)
 	{
+		#ifndef COLOR_ALPHA
+		sw.alpha = 150.f;
+		#endif
 		w.DrawRect(5, y, sz.cx - 10, 1, frame);
+		#ifndef COLOR_ALPHA
+		sw.alpha = 255.f;
+		#endif
 		y += 2;
 	}
 
