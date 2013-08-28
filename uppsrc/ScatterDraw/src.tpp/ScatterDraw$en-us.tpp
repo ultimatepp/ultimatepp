@@ -1827,14 +1827,28 @@ ile]([@(0.0.255) const]_[@(0.0.255) char`*]_[*@3 file])_[@(0.0.255) const]&]
 [s6; &]
 [s5;:ScatterDraw`:`:SetMinZoom`(double`,double`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetMinZoom]([@(0.0.255) double]_[*@3 x], [@(0.0.255) double]_[*@3 y]_`=_`-[@3 1])&]
-[s3;%% Sets [%-*@3 x] and [%-*@3 y] as the minimum zoom factor. If [%-*@3 y] 
-is `-1, only [%-*@3 x] zoom is considered.&]
+[s3;%% Sets [%-*@3 x] and [%-*@3 y] as the minimum visible range. If 
+[%-*@3 y] is `-1, only [%-*@3 x] zoom is considered.&]
+[s3;%% Equal to SetMinRange().&]
 [s1;%% &]
 [s6; &]
 [s5;:ScatterDraw`:`:SetMaxZoom`(double`,double`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetMaxZoom]([@(0.0.255) double]_[*@3 x], [@(0.0.255) double]_[*@3 y]_`=_`-[@3 1])&]
-[s3;%% Sets [%-*@3 x] and [%-*@3 y] as the maximum zoom factor. If [%-*@3 y] 
-is `-1, only [%-*@3 x] zoom is considered.&]
+[s3;%% Sets [%-*@3 x] and [%-*@3 y] as the maximum visible range. If 
+[%-*@3 y] is `-1, only [%-*@3 x] zoom is considered.&]
+[s3;%% Equal to SetMaxRange().&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetMinRange`(double`,double`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetMinRange]([@(0.0.255) double]_[*@3 x], [@(0.0.255) double]_[*@3 y]_`=_`-[@3 1])&]
+[s3;%% Sets [%-*@3 x] and [%-*@3 y] as the minimum visible range. If 
+[%-*@3 y] is `-1, only [%-*@3 x] zoom is considered.&]
+[s1;%% &]
+[s6; &]
+[s5;:ScatterDraw`:`:SetMaxRange`(double`,double`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetMaxRange]([@(0.0.255) double]_[*@3 x], [@(0.0.255) double]_[*@3 y]_`=_`-[@3 1])&]
+[s3;%% Sets [%-*@3 x] and [%-*@3 y] as the maximum visible range. If 
+[%-*@3 y] is `-1, only [%-*@3 x] zoom is considered.&]
 [s1;%% &]
 [s6; &]
 [s5;:ScatterDraw`:`:SetFastViewX`(bool`): [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* Se
