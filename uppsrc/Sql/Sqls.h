@@ -499,6 +499,16 @@ void SqlLoadColumn(T& t, SqlId table, SqlId column, SqlId key = SqlId("ID"))
 		t.Add(sql[key], sql[column]);
 }
 
+template<class K, class V>
+void operator*=(VectorMap<K, V>& map, SqlSelect select)
+{
+	map.Clear();
+	Sql sql;
+	sql * select;
+	while(sql.Fetch())
+		map.Add(sql[0], sql[1]);
+}
+
 // Deprecated, use SqlPerformScript instead
 struct StdStatementExecutor : StatementExecutor {
 	StdStatementExecutor(SqlSession& session) : cursor(session) {}

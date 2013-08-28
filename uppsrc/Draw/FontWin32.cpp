@@ -246,8 +246,8 @@ Vector<FaceInfo> GetAllFacesSys()
 #define GLYPHINFOCACHE 31
 
 #ifdef flagWINGL
-#include <WinGl/FontGl.h>
-#include <WinGl/ResGl.h>
+#include <CoreGl/FontGl.h>
+#include <CoreGl/ResGl.h>
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
 	static GlyphInfo gi;
