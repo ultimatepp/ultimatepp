@@ -8,7 +8,7 @@ NAMESPACE_UPP
 #define LOGTIMING 0
 
 #ifdef _DEBUG
-#define LOGMESSAGES 0
+// #define LOGMESSAGES 1
 #endif
 
 #define ELOGW(x)   // RLOG(GetSysTime() << ": " << x) // Only activate in MT!
@@ -761,6 +761,22 @@ void Ctrl::sProcessMSG(MSG& msg)
 	if(msg.message != WM_SYSKEYDOWN && msg.message != WM_SYSKEYUP
 	|| PassWindowsKey((dword)msg.wParam) || msg.wParam == VK_MENU) //17.11 Mirek - fix to get windows menu invoked on Alt+Space
 		TranslateMessage(&msg); // 04/09/07: TRC fix to make barcode reader going better
+
+#if 0
+	DDUMP(msg.hwnd);
+		for(WinMsg *m = sWinMsg; m->ID; m++)
+			if(m->ID == msg.message) {
+				RLOG(m->name << ' ' <<
+					Sprintf(", wParam = %d (0x%x), lParam = %d (0x%x)",
+					        msg.wParam, msg.wParam, msg.lParam, msg.lParam));
+				break;
+			}
+
+	char cls[200];
+	GetClassName(msg.hwnd, cls, 200);
+	DDUMP(cls);
+#endif
+
 	if(IsWindowUnicode(msg.hwnd))
 		DispatchMessageW(&msg);
 	else

@@ -818,7 +818,7 @@ void AddRefreshRect(Vector<Rect>& invalid, const Rect& _r);
 void DrawRect(Draw& w, const Rect& rect, const Image& img, bool ralgn = false); //??? TODO
 void DrawRect(Draw& w, int x, int y, int cx, int cy, const Image& img, bool ra = false);
 
-#ifdef flagWINGL
+#if defined(flagWINGL) || defined(flagLINUXGL)
 void DrawTiles(Draw& w, int x, int y, int cx, int cy, const Image& img, const Size& isz, const Rect& src);
 void DrawTiles(Draw& w, const Rect& rect, const Image& img, const Size& isz, const Rect& src);
 #endif
