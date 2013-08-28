@@ -186,7 +186,7 @@ forms with `"GET`" method. Returns `*this.&]
 [s4;%% &]
 [s5;:HttpRequest`:`:PostUData`(const String`&`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&
 ]_[* PostUData]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 pd])&]
-[s2;%% Sets data to be posted with request, performas url`-encoding 
+[s2;%% Sets data to be posted with request, perform as url`-encoding 
 of data. Returns `*this.&]
 [s3;%% &]
 [s4;%% &]
