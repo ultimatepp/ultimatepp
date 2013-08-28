@@ -202,7 +202,7 @@ void ScatterDraw::AdjustMinUnitX()
 	if (xMajorUnit > 0) {
 		if (xMinUnit < 0)
 			xMinUnit += (fabs(ceil(xMinUnit/xMajorUnit)) + 1)*xMajorUnit;
-		else if (xMinUnit > xMajorUnit)
+		else if (xMinUnit >= xMajorUnit)
 			xMinUnit -= (fabs(floor(xMinUnit/xMajorUnit)))*xMajorUnit;
 	}
 }
@@ -212,7 +212,7 @@ void ScatterDraw::AdjustMinUnitY()
 	if (yMajorUnit > 0) {
 		if (yMinUnit < 0)
 			yMinUnit += (fabs(ceil(yMinUnit/yMajorUnit)) + 1)*yMajorUnit;
-		else if (yMinUnit > yMajorUnit)
+		else if (yMinUnit >= yMajorUnit)
 			yMinUnit -= (fabs(floor(yMinUnit/yMajorUnit)))*yMajorUnit;
 	}
 }
@@ -222,7 +222,7 @@ void ScatterDraw::AdjustMinUnitY2()
 	if (yMajorUnit2 > 0) {
 		if (yMinUnit2 < 0)
 			yMinUnit2 += (fabs(ceil(yMinUnit2/yMajorUnit2)) + 1)*yMajorUnit2;
-		else if (yMinUnit2 > yMajorUnit2)
+		else if (yMinUnit2 >= yMajorUnit2)
 			yMinUnit2 -= (fabs(floor(yMinUnit2/yMajorUnit2)))*yMajorUnit2;
 	}
 }
@@ -977,17 +977,71 @@ double ScatterDraw::GetYPointByValue(double y)
 
 void ScatterDraw::Zoom(double scale, bool mouseX, bool mouseY) 
 {
-	bool canX = (minXZoom > 0 && xRange*scale > minXZoom) || (minXZoom < 0) && (maxXZoom > 0 && xRange*scale < maxXZoom) || (maxXZoom < 0);
-	bool canY = (minYZoom > 0 && yRange*scale > minYZoom) || (minYZoom < 0) && (maxYZoom > 0 && yRange*scale < maxYZoom) || (maxYZoom < 0);
+	if (scale == 1)
+		return;
+	lastRefresh_sign = (scale >= 0) ? 1 : -1;
 	
+	if (scale > 1) {
+		if (maxXRange > 0) {
+			if (xRange*scale > maxXRange) {
+				highlight_0 = GetTickCount();
+				if (xRange == maxXRange) {
+					Refresh();
+					return;
+				} else 
+					scale = maxXRange/xRange;
+			} 
+		}
+		if (maxYRange > 0) {
+			if (yRange*scale > maxYRange) {
+				highlight_0 = GetTickCount();
+				if (yRange == maxYRange) {
+					Refresh();
+					return;
+				} else 
+					scale = maxYRange/xRange;
+			} 
+		}
+	} else {
+		if (maxXRange > 0) {
+			if (xRange*scale < minXRange) {
+				highlight_0 = GetTickCount();
+				if (xRange == minXRange) {
+					Refresh();
+					return;
+				} else 
+					scale = minXRange/xRange;
+			} 
+		}
+		if (maxYRange > 0) {
+			if (yRange*scale < minYRange) {
+				highlight_0 = GetTickCount();
+				if (yRange == minYRange) {
+					Refresh();
+					return;
+				} else 
+					scale = minYRange/xRange;
+			} 
+		}
+	}
 	double plotW = scale*(GetSize().cx - (hPlotLeft + hPlotRight));
 	double plotH = scale*(GetSize().cy - (vPlotTop + vPlotBottom)) - titleHeight;
 	double dw = plotW*xMajorUnit/double(xRange);
 	double dh = plotH*yMajorUnit/double(yRange);
 	
-	bool can = canX && canY && (min<double>(dw, dh) > 20 || scale < 1);
+	bool can = true;//min<double>(dw, dh) > 20 || scale < 1;
 	if (mouseX && can) {
 		if (zoomStyleX == TO_CENTER) {
+			if (!IsNull(minXmin) && xMin + xRange*(1-scale)/2. <= minXmin) {
+				highlight_0 = GetTickCount();
+				Refresh();
+				return;
+			}
+			if (!IsNull(maxXmax) && xMin + xRange*scale + xRange*(1-scale)/2. >= maxXmax) {
+				highlight_0 = GetTickCount();
+				Refresh();
+				return;
+			}
 			double oldXMin = xMin;
 			xMin += xRange*(1-scale)/2.;
 			xMinUnit = oldXMin + xMinUnit - xMin;
@@ -1005,6 +1059,16 @@ void ScatterDraw::Zoom(double scale, bool mouseX, bool mouseY)
 	}
 	if (mouseY && can) {
 		if (zoomStyleY == TO_CENTER) {
+			if (!IsNull(minYmin) && yMin + yRange*(1-scale)/2. <= minYmin) {
+				highlight_0 = GetTickCount();
+				Refresh();
+				return;
+			}
+			if (!IsNull(maxYmax) && yMin + yRange*scale + yRange*(1-scale)/2. >= maxYmax) {
+				highlight_0 = GetTickCount();
+				Refresh();
+				return;
+			}
 			double oldYMin = yMin;
 			yMin += yRange*(1-scale)/2.;
 			yMinUnit = oldYMin + yMinUnit - yMin;
@@ -1030,6 +1094,8 @@ void ScatterDraw::Zoom(double scale, bool mouseX, bool mouseY)
 	}
 	if ((mouseX || mouseY) && can) {
 		WhenSetRange();
+		if (zoomStyleX == TO_CENTER || zoomStyleY == TO_CENTER)
+			WhenSetXYMin();
 		Refresh();
 		WhenZoomScroll();
 	}
@@ -1039,23 +1105,74 @@ void ScatterDraw::Scroll(double factorX, double factorY)
 {
 	if (factorX != 0) {
 		double deltaX = factorX*xRange;
-		xMin -= deltaX;
-		xMinUnit += deltaX;
-		AdjustMinUnitX();
-	}
-	if (factorY != 0) {
-		double deltaY = -factorY*yRange;
-		yMin -= deltaY;
-		yMinUnit += deltaY;
-		AdjustMinUnitY();
-		if (drawY2Reticle) {
-			double deltaY2 = -factorY*yRange2;
-			yMin2 -= deltaY2;
-			yMinUnit2 += deltaY2;
-			AdjustMinUnitY2();
+		if (!IsNull(minXmin) && factorX > 0) {
+			if (xMin > minXmin) {
+				if (xMin - deltaX < minXmin) {
+					highlight_0 = GetTickCount();
+					deltaX = xMin - minXmin;
+				}
+			} else {
+				factorX = Null;
+				highlight_0 = GetTickCount();
+			}
+		}
+		if (!IsNull(maxXmax) && factorX < 0) {
+			if (xMin + xRange < maxXmax) {
+				if (xMin + xRange - deltaX > maxXmax) {
+					highlight_0 = GetTickCount();
+					deltaX = xMin + xRange - maxXmax;
+				}
+			} else {
+				factorX = Null;
+				highlight_0 = GetTickCount();
+			}
+		}
+		if (factorX != 0 && !IsNull(factorX)) {	
+			xMin -= deltaX;
+			xMinUnit += deltaX;
+			AdjustMinUnitX();
 		}
 	}
-	if (factorX != 0 || factorY != 0) {		
+	if (factorY != 0) {
+		double deltaY = factorY*yRange;
+		if (!IsNull(minYmin) && factorY > 0) {
+			if (yMin > minYmin) {
+				if (yMin - deltaY < minYmin) {
+					highlight_0 = GetTickCount();
+					deltaY = yMin - minYmin;
+				}
+			} else {
+				factorY = Null;
+				highlight_0 = GetTickCount();
+			}
+		}
+		if (!IsNull(maxYmax) && factorY < 0) {
+			if (yMin + yRange < maxYmax) {
+				if (yMin + yRange - deltaY > maxYmax) {
+					highlight_0 = GetTickCount();
+					deltaY = yMin + yRange - maxYmax;
+				}
+			} else {
+				factorY = Null;
+				highlight_0 = GetTickCount();
+			}
+		}	
+		if (factorY != 0 && !IsNull(factorY)) {	
+			yMin -= deltaY;
+			yMinUnit += deltaY;
+			AdjustMinUnitY();
+			if (drawY2Reticle) {
+				double deltaY2 = factorY*yRange2;
+				yMin2 -= deltaY2;
+				yMinUnit2 += deltaY2;
+				AdjustMinUnitY2();
+			}
+		}
+	}
+	if (IsNull(factorX) || IsNull(factorY)) 
+		Refresh();
+	else if (factorX != 0 || factorY != 0) {	
+		WhenSetXYMin();	
 		Refresh();
 		WhenZoomScroll();
 	}
@@ -1164,15 +1281,18 @@ ScatterDraw::ScatterDraw()
 	drawY2Reticle = false;
 	drawVGrid = drawHGrid = showLegend = true;
 	legendWidth = 80;
-	minXZoom = maxXZoom = minYZoom = maxYZoom = -1;
+	minXRange = maxXRange = minYRange = maxYRange = -1;
+	minXmin = minYmin = maxXmax = maxYmax = Null;
 	fastViewX = false;
 	sequentialXAll = false;
 	zoomStyleX = zoomStyleY = TO_CENTER;
 	maxMajorUnitsX = maxMajorUnitsY = 10;
 	SetMajorUnitsNum(5, 10);
 	Color(graphColor);	
+	isPolar = false;
 	lastxRange = xRange;
 	lastyRange = yRange;
+	highlight_0 = Null;
 }
 
 void DrawLine(Draw &w, double x0, double y0, double x1, double y1, double width, const Color &color)

@@ -358,8 +358,14 @@ public:
 	void SaveAsMetafile(const char* file) const;
 	#endif
 	
-	ScatterDraw& SetMinZoom(double x, double y = -1) 	{minXZoom = x; minYZoom = y; return *this;} 
-	ScatterDraw& SetMaxZoom(double x, double y = -1) 	{maxXZoom = x; maxYZoom = y; return *this;}
+	ScatterDraw& SetMinZoom(double x, double y = -1) 	{return SetMinRange(x, y);} 
+	ScatterDraw& SetMaxZoom(double x, double y = -1) 	{return SetMaxRange(x, y);}
+	ScatterDraw& SetMinRange(double x, double y = -1) 	{minXRange = x; minYRange = y; return *this;} 
+	ScatterDraw& SetMaxRange(double x, double y = -1) 	{maxXRange = x; maxYRange = y; return *this;}
+	ScatterDraw& SetMinXmin(double val)					{minXmin = val; return *this;}
+	ScatterDraw& SetMinYmin(double val)					{minYmin = val; return *this;}
+	ScatterDraw& SetMaxXmax(double val)					{maxXmax = val; return *this;}
+	ScatterDraw& SetMaxYmax(double val)					{maxYmax = val; return *this;}
 
 	ScatterDraw& SetFastViewX(bool set = true) 			{fastViewX = set;	return *this;}
 	
@@ -400,7 +406,8 @@ protected:
 	double xMin, yMin, yMin2;
 	double xMajorUnit, yMajorUnit, yMajorUnit2;
 	double xMinUnit, yMinUnit, yMinUnit2;
-	double minXZoom, maxXZoom, minYZoom, maxYZoom;
+	double minXRange, maxXRange, minYRange, maxYRange;
+	double minXmin, minYmin, maxXmax, maxYmax;
 	double lastxRange, lastyRange;
 	bool drawXReticle, drawYReticle, drawY2Reticle;	
 	
@@ -420,6 +427,9 @@ protected:
 	int legendWidth;
 	
 	bool isPolar;
+	
+	int lastRefresh_sign;
+	int highlight_0;
 	
 	void DrawLegend(Draw& w, const Size &size, int scale) const;
 
@@ -573,11 +583,23 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 				DrawText(w, plotW + scale*10, reticleY - scale*8, 0, gridLabelY2, standard6, axisColor);
 			}
 		}
-		
-	w.DrawLine(0, plotH, plotW, plotH, fround(gridWidth*scale), Black);
-	w.DrawLine(0, 0, plotW, 0, fround(gridWidth*scale), Black);
-	w.DrawLine(0, 0, 0, plotH, fround(gridWidth*scale), Black);
-	w.DrawLine(plotW, 0, plotW, plotH + 1, fround(gridWidth*scale), Black);
+	
+	int borderWidth = fround(gridWidth*scale);
+#ifdef flagGUI
+	if (!IsNull(highlight_0)) {
+		double delayFactor = 4*(1000. - (GetTickCount() - highlight_0))/1000.;
+		if (delayFactor < 1) {
+			delayFactor = 1;
+			highlight_0 = Null;
+		} else
+			debug_h();
+		borderWidth = fround(delayFactor*borderWidth);
+	}
+#endif
+	w.DrawLine(0, plotH, plotW, plotH, borderWidth, Black);
+	w.DrawLine(0, 0, plotW, 0, borderWidth, Black);
+	w.DrawLine(0, 0, 0, plotH, borderWidth, Black);
+	w.DrawLine(plotW, 0, plotW, plotH + 1, borderWidth, Black);
 	
 	ClipEnd(w);	
 	
