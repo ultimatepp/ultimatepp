@@ -18,7 +18,8 @@ void Tab4::Init()
 	
 	scatter.Graduation_FormatX(ScatterCtrl::MON)
 		   .SetLabelY("Temperature [176 C]")
-		   .SetMarkWidth(1, 4);
+		   .SetMarkWidth(1, 4)
+		   .SetMinXmin(0).SetMaxXmax(13);
 }
 
 ScatterDemo *Construct4()
