@@ -81,7 +81,7 @@ bool Shader::IsProgramCompiled(int program)
 bool Shader::IsProgramLinked(int program)
 {
 	GLint result = GL_FALSE;
-	glGetShaderiv(program, GL_LINK_STATUS, &result);
+	glGetProgramiv(program, GL_LINK_STATUS, &result);
 	return result == GL_TRUE;
 }
 
@@ -106,6 +106,7 @@ int Shader::CompileProgram(const char* vs, const char* fs)
 	{
 		PrintShaderInfoLog(vertexShader, "shader_vertex.log");
 		error = "Vertex shader compilation error:\n\n" + compileError;
+		glDeleteShader(vertexShader);
 		return -1;
 	}
 	
@@ -117,6 +118,7 @@ int Shader::CompileProgram(const char* vs, const char* fs)
 	{
 		PrintShaderInfoLog(fragmentShader, "shader_fragment.log");
 		error = "Fragment shader compilation error:\n\n" + compileError;
+		glDeleteShader(fragmentShader);
 		return -1;
 	}
 
@@ -131,7 +133,8 @@ int Shader::CompileProgram(const char* vs, const char* fs)
 		{
 			PrintProgramInfoLog(program, "shader_link.log");
 			PrintProgramValidationLog(program, "shader_validation.log");
-			return -1;
+			glDeleteProgram(program);
+			program = -1;
 		}
 	}
 	else
