@@ -260,21 +260,24 @@ void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 	if(dy > cb)
 		dy = cb;
 #endif
+
+	#ifdef COLOR_ALPHA	
 	glColor4ub(color.GetR(), color.GetG(), color.GetB(), color.GetA() >= 255 ? (int) alpha : color.GetA());
+	#else
+	glColor4ub(color.GetR(), color.GetG(), color.GetB(), (int) alpha);
+	#endif
 	
-/*	float vtx[] = {
-		sx, dy,
-		sx, sy,
-		dx, dy,
-		dx, sy
-	};*/
 	float vtx[12];
 	SetVtx(vtx, sx, sy, dx, dy);
 	
 	glVertexPointer(projection_mode ? 3 : 2, GL_FLOAT, 0, vtx);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-	glColor4ub(255, 255, 255, /*(int) alpha*/255);
+	#ifdef COLOR_ALPHA
+	glColor4ub(255, 255, 255, 255);
+	#else
+	glColor4ub(255, 255, 255, (int) alpha);
+	#endif
 }
 
 void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)
@@ -350,10 +353,16 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 
 	if(image_coloring)
 	{
-		if(IsNull(color))	
+		if(IsNull(color))
 			glColor4ub(255, 255, 255, (int) alpha);
 		else
+		{
+			#ifdef COLOR_ALPHA
 			glColor4ub(color.GetR(), color.GetG(), color.GetB(), color.GetA() >= 255 ? (int) alpha : color.GetA());
+			#else
+			glColor4ub(color.GetR(), color.GetG(), color.GetB(), (int) alpha);
+			#endif
+		}
 	}
 	
 	glColor4ub(255, 255, 255, 255);
@@ -448,7 +457,13 @@ void SystemDraw::DrawImageOp(float x0, float y0, float z0, float x1, float y1, f
 		if(IsNull(color))	
 			glColor4ub(255, 255, 255, (int) alpha);
 		else
+		{
+			#ifdef COLOR_ALPHA
 			glColor4ub(color.GetR(), color.GetG(), color.GetB(), color.GetA());
+			#else
+			glColor4ub(color.GetR(), color.GetG(), color.GetB(), (int) alpha);
+			#endif
+		}
 	}
 	
 	glEnable(GL_TEXTURE_2D);
@@ -479,7 +494,11 @@ void SystemDraw::DrawImageOp(float x0, float y0, float z0, float x1, float y1, f
 void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
 	GuiLock __;
+	#ifdef COLOR_ALPHA
 	glColor4ub(color.GetR(), color.GetG(), color.GetB(), color.GetA());
+	#else
+	glColor4ub(color.GetR(), color.GetG(), color.GetB(), (int) alpha);
+	#endif
 	glLineWidth((GLfloat) width);
 	glBegin(GL_LINES);
 		glVertex2i(x1 + drawing_offset.x, y1 + drawing_offset.y);
