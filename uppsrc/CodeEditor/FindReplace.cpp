@@ -437,6 +437,8 @@ void CodeEditor::OpenNormalFindReplace(bool replace)
 	findreplace.ok.SetLabel("Find Next");
 	findreplace.ok <<= THISBACK(DoFind);
 	findreplace.cancel <<= findreplace.WhenClose = callback(&findreplace, &TopWindow::Close);
+	if(findreplace.IsOpen())
+		findreplace.Close();
 	findreplace.Open();
 }
 
