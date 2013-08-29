@@ -538,7 +538,7 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 	standard6.Height(scale*GetStdFont().GetHeight());
 	
 	if (drawXReticle)
-		for(int i = 0; xMinUnit + i*xMajorUnit <= xRange; i++){
+		for(int i = 0; xMinUnit + i*xMajorUnit <= xRange; i++) {
 			w.DrawLine(fround(plotW*xMinUnit/xRange + i*plotW/(xRange/xMajorUnit)), plotH,   
 					   fround(plotW*xMinUnit/xRange + i*plotW/(xRange/xMajorUnit)), plotH + scale*4, 
 					   fround(gridWidth*scale), axisColor);             
@@ -585,7 +585,7 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 		}
 	
 	int borderWidth = fround(gridWidth*scale);
-#ifdef flagGUI
+#ifdef flagGUI		// Control highlight
 	if (!IsNull(highlight_0)) {
 		double delayFactor = 4*(1000. - (GetTickCount() - highlight_0))/1000.;
 		if (delayFactor < 1) {

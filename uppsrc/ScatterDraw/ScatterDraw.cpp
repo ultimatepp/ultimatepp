@@ -299,14 +299,14 @@ void ScatterDraw::FitToData(bool vertical) {
 	maxx = maxy = maxy2 = DOUBLE_NULL;
 	
 	for (int j = 0; j < series.GetCount(); j++) {
-		if (series[j].opacity == 0)
+		if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
 			continue;
 		minx = min(minx, series[j].PointsData()->MinX());
 		maxx = max(maxx, series[j].PointsData()->MaxX());
 	}
 	if (vertical) {
 		for (int j = 0; j < series.GetCount(); j++) {
-			if (series[j].opacity == 0)
+			if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
 				continue;
 			for (int64 i = 0; i < series[j].PointsData()->GetCount(); i++) {
 				if (series[j].primaryY) {
@@ -1050,9 +1050,9 @@ void ScatterDraw::Zoom(double scale, bool mouseX, bool mouseY)
 		xRange *= scale;
 		if (!IsNull(maxMajorUnitsX)) {
 			if (xRange < 2*xMajorUnit)
-				xMajorUnit /= 10;
+				xMajorUnit /= 5;
 			else if (xRange/xMajorUnit > maxMajorUnitsX)
-				xMajorUnit *= 10;
+				xMajorUnit *= 5;
 			AdjustMinUnitX();
 		}
 		lastxRange = xRange;
