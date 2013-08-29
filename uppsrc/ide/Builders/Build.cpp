@@ -393,9 +393,7 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 			One<Builder> b = CreateBuilder(~host);
 			if(b) {
 				Index<String> mcfg = PackageConfig(wspc, 0, bm, mainparam, *host, *b, NULL);
-				DDUMP(main_conf);
 				String outdir = OutDir(mcfg, wspc[0], bm, use_target);
-				DDUMP(AppendFileName(outdir, "main.conf.h"));
 				SaveFile(AppendFileName(outdir, "main.conf.h"),
 			             main_conf);
 				add_includes << outdir << ';';
