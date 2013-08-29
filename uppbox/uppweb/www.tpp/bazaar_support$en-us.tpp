@@ -108,4 +108,4 @@ you can pack the files in a .zip file.]&]
 sure you have your real name in the personal information. It 
 would save the package author one personal message as we want 
 to have all contributors listed in Authors `& License.]&]
-[s0;2%- ]
+[s0;2%- ]]

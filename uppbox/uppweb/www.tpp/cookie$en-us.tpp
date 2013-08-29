@@ -4315,7 +4315,14 @@ winner can vote but are excluded as candidates.]]
 [s0; &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 News]]}}&]
 [s0;*2 &]
-[ {{1184:8816f0;g0;^t/25b/25 [s0;# [2 2012/03/13]]
+[ {{1318:8682f0;g0;^t/25b/25 [s0;# [2 2012/07/04]]
+:: [s0; [2 After a long delay the shipment has been delivered with a Rioja 
+wine box.]]
+:: [s0;# [2 2012/04/09]]
+:: [s0; [2 Unfortunately this year there has been too few votes so the 
+prize will not be awarded. However we will do an exception and 
+the prize will be for Mirek.]]
+:: [s0;# [2 2012/03/13]]
 :: [s0;# [2 Cookie Prize 2012 is announced. End date is March 30th.]&]
 [s0;# [2 Do not wait to the last date to give your vote!]]
 :: [s0;# [2 2011/04/23]]
@@ -4339,4 +4346,4 @@ olik.rce][2 .because of his efforts launching ][^https`:`/`/launchpad`.net`/`~do
 aunchPad for U`+`+][2 . This year gift has been a Prince Hubert 
 de Polignac XO Royal Cognac bottle. The award was presented on 
 2010/03/23 IRC meeting.]]}}&]
-[s0; ]
+[s0; ]]
