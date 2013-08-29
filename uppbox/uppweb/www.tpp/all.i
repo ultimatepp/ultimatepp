@@ -30,12 +30,24 @@ TOPIC("bazaar$de-de")
 #include "bazaar$de-de.tppi"
 END_TOPIC
 
+TOPIC("bazaar$en-us")
+#include "bazaar$en-us.tppi"
+END_TOPIC
+
+TOPIC("bazaar_cont_koldo$en-us")
+#include "bazaar_cont_koldo$en-us.tppi"
+END_TOPIC
+
 TOPIC("bazaar_submission$de-de")
 #include "bazaar_submission$de-de.tppi"
 END_TOPIC
 
 TOPIC("bazaar_submission$en-us")
 #include "bazaar_submission$en-us.tppi"
+END_TOPIC
+
+TOPIC("bazaar_support$en-us")
+#include "bazaar_support$en-us.tppi"
 END_TOPIC
 
 TOPIC("chss$de-de")
