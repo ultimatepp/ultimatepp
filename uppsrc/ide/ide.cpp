@@ -744,9 +744,9 @@ void Ide::SetIcon()
 		return;
 	state_icon = new_state_icon;
 	switch(state_icon) {
-	case 1:  Icon(IdeImg::IconDebugging()); break;
-	case 2:  Icon(IdeImg::IconRunning()); break;
-	case 3:  Icon(IdeImg::IconBuilding()); break;
+	case 1:  Icon(IdeImg::IconDebugging(), IdeImg::IconDebuggingLarge()); break;
+	case 2:  Icon(IdeImg::IconRunning(), IdeImg::IconRunningLarge()); break;
+	case 3:  Icon(IdeImg::IconBuilding(), IdeImg::IconBuildingLarge()); break;
 	default: Icon(IdeImg::Package(), IdeImg::PackageLarge());
 	}
 }
