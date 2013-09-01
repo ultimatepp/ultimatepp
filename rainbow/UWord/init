@@ -4,6 +4,7 @@
 #include "RichEdit/init"
 #include "PdfDraw/init"
 #include "plugin\jpg/init"
+#include "SDL20/init"
 #include "Skeleton/init"
 #include "WinAlt/init"
 #include "WinFb/init"

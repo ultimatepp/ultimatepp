@@ -2,10 +2,6 @@
 #define GUIPLATFORM_INCLUDE <Skeleton/Skeleton.h>
 #endif
 
-#ifdef flagGTK
-#define GUIPLATFORM_INCLUDE <Gtk/Gtk.h>
-#endif
-
 #ifdef flagWINALT
 #define GUIPLATFORM_INCLUDE <WinAlt/WinAlt.h>
 #endif
@@ -37,4 +33,10 @@
 #ifdef flagLINUXGL
 #define GUIPLATFORM_KEYCODES_INCLUDE <LinuxGl/Keys.h>
 #define GUIPLATFORM_INCLUDE          <LinuxGl/LinuxGl.h>
+#endif
+
+#ifdef flagSDL20
+#define GUIPLATFORM_KEYCODES_INCLUDE <SDL20/Keys.h>
+//need to make SDL_keysym.h known before K_ enum
+#define GUIPLATFORM_INCLUDE          <SDL20/SDL20.h>
 #endif

@@ -1,6 +1,6 @@
-#include "Fb.h"
+#include "Local.h"
 
-#ifdef GUI_FB
+#ifdef GUI_SDL20
 
 NAMESPACE_UPP
 

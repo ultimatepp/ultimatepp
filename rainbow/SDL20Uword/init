@@ -1,0 +1,5 @@
+#ifndef _SDL20Uword_icpp_init_stub
+#define _SDL20Uword_icpp_init_stub
+#include "CtrlLib/init"
+#include "SDL20/init"
+#endif

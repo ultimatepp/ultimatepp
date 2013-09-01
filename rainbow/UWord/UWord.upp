@@ -4,7 +4,8 @@ uses
 	CtrlLib,
 	RichEdit,
 	PdfDraw,
-	plugin\jpg;
+	plugin\jpg,
+	SDL20;
 
 uses(SKELETON) Skeleton;
 
@@ -29,5 +30,6 @@ mainconfig
 	"" = "GUI LINUXFB",
 	"" = "GUI SDLFB",
 	"" = "GUI WINGL",
-	"" = "GUI";
+	"" = "GUI",
+	"" = "GUI SDL20";
 
