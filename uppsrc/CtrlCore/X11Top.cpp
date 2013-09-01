@@ -238,8 +238,9 @@ void TopWindow::CenterRect(Ctrl *owner)
 		else
 			r = wr;
 		Point p = r.CenterPos(sz);
-		r = RectC(p.x, p.y, sz.cx, sz.cy);
+		
 		if (p.x <= wr.Width() && p.y <= wr.Height()) {
+			r = RectC(p.x, p.y, sz.cx, sz.cy);
 			wr.left += fm.left;
 			wr.right -= fm.right;
 			wr.top += fm.top;
@@ -252,8 +253,8 @@ void TopWindow::CenterRect(Ctrl *owner)
 				r.bottom = wr.bottom;
 			minsize.cx = min(minsize.cx, r.GetWidth());
 			minsize.cy = min(minsize.cy, r.GetHeight());
+			SetRect(r);
 		}
-		SetRect(r);
 	}
 }
 
