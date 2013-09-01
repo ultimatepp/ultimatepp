@@ -216,7 +216,11 @@ void LogOut::Line(const char *s, int len, int depth)
 		Create(false);
 }
 
+#ifdef PLATFORM_POSIX
+static LogOut sLog = { LOG_FILE, 10 * 1024 * 1024, -1 };
+#else
 static LogOut sLog = { LOG_FILE, 10 * 1024 * 1024 };
+#endif
 
 struct ThreadLog {
 	char  buffer[512];
