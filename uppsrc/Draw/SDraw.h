@@ -42,6 +42,8 @@ public:
 	virtual void  PutRect(const Rect& r, Color color) = 0;
 	virtual Image RenderGlyph(Point at, int angle, int chr, Font fnt, Color color, Size sz);
 
+	Point GetOffset() const                                       { return cloff.Top().offset; }
+
 	void Init(const Rect& r);
 };
 
