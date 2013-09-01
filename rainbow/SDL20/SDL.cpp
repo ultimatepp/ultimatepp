@@ -1,5 +1,7 @@
 #include "Local.h"
 
+#ifdef GUI_SDL20
+
 NAMESPACE_UPP
 
 #define LLOG(x)       //LOG(x)
@@ -156,3 +158,5 @@ void FBDeInit()
 }
 
 END_UPP_NAMESPACE
+
+#endif

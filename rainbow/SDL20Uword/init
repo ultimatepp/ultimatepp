@@ -2,4 +2,5 @@
 #define _SDL20Uword_icpp_init_stub
 #include "CtrlLib/init"
 #include "SDL20/init"
+#include "RichEdit/init"
 #endif
