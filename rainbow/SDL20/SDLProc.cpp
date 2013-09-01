@@ -1,5 +1,7 @@
 #include "Local.h"
 
+#ifdef GUI_SDL20
+
 NAMESPACE_UPP
 
 #define LLOG(x)       //LOG(x)
@@ -56,7 +58,7 @@ dword lastbdowntime[8] = {0};
 dword isdblclick[8] = {0};
 void HandleSDLEvent(SDL_Event* event)
 {
-	DLOG("HandleSDLEvent");
+	DLOG("HandleSDLEvent " << event->type);
 	switch(event->type) {
 //		case SDL_ACTIVEEVENT: //SDL_ActiveEvent
 //			break;
@@ -202,3 +204,5 @@ void HandleUserEvent(SDL_Event* event)
 }
 
 END_UPP_NAMESPACE
+
+#endif

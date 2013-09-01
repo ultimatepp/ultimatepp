@@ -1,5 +1,7 @@
 #include "Local.h"
 
+#ifdef GUI_SDL20
+
 NAMESPACE_UPP
 
 bool SDLWindow::Create(const Rect& rect, const char *title)
@@ -52,3 +54,5 @@ SDLWindow::~SDLWindow()
 }
 
 END_UPP_NAMESPACE
+
+#endif

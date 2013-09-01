@@ -1,5 +1,7 @@
 #include <CtrlLib/CtrlLib.h>
 
+#ifdef GUI_SDL20
+
 NAMESPACE_UPP
 
 class TopWindowFrame : public Ctrl {
@@ -63,3 +65,5 @@ extern Size screen_size;
 extern SDLWindow screen;
 
 END_UPP_NAMESPACE
+
+#endif
