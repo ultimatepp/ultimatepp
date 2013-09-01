@@ -2621,7 +2621,7 @@ is available. [*/ This method can only be invoked in the main thread.]&]
 [s4;%- &]
 [s5;:Ctrl`:`:Call`(Callback`):%- [@(0.0.255) static] [@(0.0.255) void]_[* Call]([_^Callback^ C
 allback]_[*@3 cb])&]
-[s2; Ececutes a callback in the main thread (the one responsible 
+[s2; Executes a callback in the main thread (the one responsible 
 for GUI). It works by posting callback into timer queue (with 
 zero delay), then waits its completion using Semaphore. Main 
 GUI thread has to run timer queue management for callback to 
