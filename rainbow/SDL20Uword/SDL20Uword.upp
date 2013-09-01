@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	SDL20;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI SSE2",
+	"" = "GUI SDL20";
+

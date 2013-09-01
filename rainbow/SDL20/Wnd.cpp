@@ -1,6 +1,6 @@
-#include "Fb.h"
+#include "Local.h"
 
-#ifdef GUI_FB
+#ifdef GUI_SDL20
 
 NAMESPACE_UPP
 
@@ -248,6 +248,7 @@ void Ctrl::DoUpdate()
 	invalid.Clear();
 	CursorSync();
 	LDUMPC(update);
+	screen.Present();
 #if 0
 	FBUpdate(framebuffer.GetSize());
 #else
@@ -346,27 +347,27 @@ void Ctrl::DoPaint()
 			for(int phase = 0; phase < 2; phase++) {
 				LLOG("DoPaint invalid phase " << phase);
 				LDUMPC(invalid);
-				SystemDraw painter;
-				painter.Begin();
+				SystemDraw draw;
+				draw.Set(screen);
+				draw.Init(screen_size);
 				for(int i = 0; i < invalid.GetCount(); i++) {
-					painter.RectPath(invalid[i]);
+					draw.Clip(invalid[i]);
 					AddUpdate(invalid[i]);
 				}
-				painter.Painter::Clip();
 				for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
 					Rect r = topctrl[i]->GetRect();
 					Rect ri = GetClipBound(invalid, r);
 					if(!IsNull(ri)) {
-						painter.Clipoff(r);
-						topctrl[i]->UpdateArea(painter, ri - r.TopLeft());
-						painter.End();
+						draw.Clipoff(r);
+						topctrl[i]->UpdateArea(draw, ri - r.TopLeft());
+						draw.End();
 						Subtract(invalid, r);
-						painter.ExcludeClip(r);
+						draw.ExcludeClip(r);
 					}
 				}
 				Rect ri = GetClipBound(invalid, framebuffer.GetSize());
 				if(!IsNull(ri))
-					desktop->UpdateArea(painter, ri);
+					desktop->UpdateArea(draw, ri);
 			}
 		}
 	}
@@ -598,7 +599,7 @@ bool Ctrl::IsWndForeground() const
 	return b;
 }
 
-void Ctrl::WndEnable(bool b)
+void Ctrl::WndEnable(bool)
 {
 	GuiLock __;
 }
