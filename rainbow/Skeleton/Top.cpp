@@ -8,12 +8,12 @@ NAMESPACE_UPP
 
 void    TopWindow::SyncSizeHints() {}
 
-void TopWindow::SyncTitle0()
+void TopWindow::SyncTitle()
 {
 	GuiLock __;
 }
 
-void TopWindow::SyncCaption0()
+void TopWindow::SyncCaption()
 {
 	GuiLock __;
 }

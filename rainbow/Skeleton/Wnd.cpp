@@ -106,7 +106,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 }
 
 
-void Ctrl::EventLoop0(Ctrl *ctrl)
+void Ctrl::EventLoop(Ctrl *ctrl)
 {
 	GuiLock __;
 /*	ASSERT(IsMainThread());
@@ -139,7 +139,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	LLOG(EndIndent << "Leaving event loop ");*/
 }
 
-void Ctrl::GuiSleep0(int ms)
+void Ctrl::GuiSleep(int ms)
 {
 	GuiLock __;
 /*	ASSERT(IsMainThread());
@@ -172,12 +172,12 @@ Rect Ctrl::GetWndScreenRect() const
 	return r;
 }
 
-void Ctrl::WndShow0(bool b)
+void Ctrl::WndShow(bool b)
 {
 	GuiLock __;
 }
 
-void Ctrl::WndUpdate0()
+void Ctrl::WndUpdate()
 {
 	GuiLock __;
 }
@@ -252,11 +252,11 @@ int Ctrl::GetKbdSpeed()
 	return 1000 / 32;
 }
 
-void Ctrl::WndDestroy0()
+void Ctrl::WndDestroy()
 {
 }
 
-void Ctrl::SetWndForeground0()
+void Ctrl::SetWndForeground()
 {
 	GuiLock __;
 }
@@ -267,14 +267,15 @@ bool Ctrl::IsWndForeground() const
 	return true;
 }
 
-void Ctrl::WndEnable0(bool *b)
+void Ctrl::WndEnable(bool)
 {
 	GuiLock __;
 }
 
-void Ctrl::SetWndFocus0(bool *b)
+bool Ctrl::SetWndFocus()
 {
 	GuiLock __;
+	return true;
 }
 
 bool Ctrl::HasWndFocus() const
@@ -308,18 +309,18 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 	GuiLock __;
 }
 
-void Ctrl::WndSetPos0(const Rect& rect)
+void Ctrl::WndSetPos(const Rect& rect)
 {
 	GuiLock __;
 }
 
-void Ctrl::WndUpdate0r(const Rect& r)
+void Ctrl::WndUpdate(const Rect& r)
 {
 	GuiLock __;
 
 }
 
-void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
+void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
 }
