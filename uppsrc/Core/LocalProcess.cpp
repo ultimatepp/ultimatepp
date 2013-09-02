@@ -384,12 +384,48 @@ void LocalProcess::Write(String s)
 		s = ToSystemCharset(s);
 #ifdef PLATFORM_WIN32
 	dword n;
-	WriteFile(hInputWrite, s, s.GetLength(), &n, NULL);
+	if (hInputWrite)
+		WriteFile(hInputWrite, s, s.GetLength(), &n, NULL);
 #endif
 #ifdef PLATFORM_POSIX
-	IGNORE_RESULT(
-		write(rpipe[1], s, s.GetLength())
-	);
+	if (rpipe[1] >= 0) {
+		int ret=1;
+		for (int wn=0; (ret>0 || errno==EINTR) && wn<s.GetLength(); wn+=ret) {
+			ret = write(rpipe[1], s + wn, s.GetLength() - wn);
+		}
+	}
+#endif
+}
+
+void LocalProcess::CloseRead()
+{
+#ifdef PLATFORM_WIN32
+	if(hOutputRead) {
+		CloseHandle(hOutputRead);
+		hOutputRead = NULL;
+	}
+#endif
+#ifdef PLATFORM_POSIX
+	if (wpipe[0] >= 0) {
+		close(wpipe[0]);
+		wpipe[0]=-1;
+	}
+#endif
+}
+
+void LocalProcess::CloseWrite()
+{
+#ifdef PLATFORM_WIN32
+	if(hInputWrite) {
+		CloseHandle(hInputWrite);
+		hInputWrite = NULL;
+	}
+#endif
+#ifdef PLATFORM_POSIX
+	if (rpipe[1] >= 0) {
+		close(rpipe[1]);
+		rpipe[1]=-1;
+	}
 #endif
 }
 

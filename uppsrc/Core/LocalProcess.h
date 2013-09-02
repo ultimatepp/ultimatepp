@@ -5,6 +5,8 @@ public:
 	virtual void Write(String s) = 0;
 	virtual bool Read(String& s) = 0;
 	virtual int  GetExitCode() = 0;
+	virtual void CloseRead()       {}
+	virtual void CloseWrite()      {}
 	virtual void Detach()          {};
 	
 	String  Get()                  { String x; if(Read(x)) return x; return String::GetVoid(); }
@@ -20,6 +22,8 @@ public:
 	virtual void Write(String s);
 	virtual bool Read(String& s);
 	virtual int  GetExitCode();
+	virtual void CloseRead();
+	virtual void CloseWrite();
 	virtual void Detach();
 
 private:

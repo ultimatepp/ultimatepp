@@ -48,6 +48,16 @@ _[@3 0]&]
 [s2;%% Returns an exit code of terminated process.&]
 [s3; &]
 [s4; &]
+[s5;:AProcess`:`:CloseRead`(`): [@(0.0.255) virtual] [@(0.0.255) void]_[* CloseRead]()&]
+[s2;%% Closes handle to process output.&]
+[s3; &]
+[s4; &]
+[s5;:AProcess`:`:CloseWrite`(`): [@(0.0.255) virtual] [@(0.0.255) void]_[* CloseWrite]()&]
+[s2;%% Closes handle to process input. This is useful e.g.  in case 
+that process waits for the end of input data before processing 
+them and providing output.&]
+[s3; &]
+[s4; &]
 [s5;:AProcess`:`:Detach`(`): [@(0.0.255) virtual] [@(0.0.255) void]_[* Detach]()&]
 [s2;%% Disconnects AProcess instance from running child process. 
 Process continues to run while AProcess instance can be destructed.&]
@@ -119,4 +129,4 @@ its standard output, otherwise returns String`::GetVoid(). If
 [%-*@3 convertcharset] is true, output is converted from system 
 character encoding to application encoding.&]
 [s3; &]
-[s0; ]
+[s0; ]]
