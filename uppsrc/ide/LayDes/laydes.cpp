@@ -1263,23 +1263,36 @@ void LayDes::SortItems()
 	if(currentlayout < 0 || cursor.GetCount() < 2)
 		return;
 	LayoutData& l = CurrentLayout();
-	Vector<int> sc(cursor, 1);
-	Sort(sc);
-	int count = sc.GetCount();
 
+	Sort(cursor);
+	int count = cursor.GetCount();
+
+	Array<LayoutItem> item;
 	Vector<Rect> rect;
-	for(int i = 0; i < count; ++i)
-		rect.Add(CtrlRect(l.item[sc[i]].pos, l.size));
-
-	// Use selection sort as RectLess is not transitive
-	for(int i = 0; i < count - 1; i++) {
-		int ii = i;
-		for(int j = i + 1; j < count; j++)
-			if(RectLess(rect[j], rect[ii]))
-				ii = j;
-		Swap(rect[i], rect[ii]);
-		Swap(l.item[sc[i]], l.item[sc[ii]]);
+	for(int i = 0; i < count; ++i) {
+		rect.Add(CtrlRect(l.item[cursor[i]].pos, l.size));
+		item.Add() = l.item[cursor[i]];
 	}
+	l.item.Remove(cursor);
+
+	bool swap = false;
+	do {
+		swap = false;
+		for(int i = 0; i < count - 1; i++)
+			if(RectLess(rect[i + 1], rect[i])) {
+				Swap(rect[i], rect[i + 1]);
+				Swap(item[i], item[i + 1]);
+				swap = true;
+			}
+	}
+	while(swap);
+	
+	int ii = cursor[0];
+	l.item.InsertPick(ii, item);
+	
+	cursor.Clear();
+	for(int i = 0; i < count; i++)
+		cursor.Add(i + ii);
 
 	ReloadItems();
 }
