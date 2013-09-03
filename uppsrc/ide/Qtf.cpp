@@ -56,9 +56,12 @@ void QtfDlgEditor::Serialize(Stream& s)
 
 QtfDlgEditor::QtfDlgEditor()
 {
-	Add(editor.SizePos());
-	Rect r = GetWorkArea();
-	SetRect(0, 0, r.GetWidth() - 100, r.GetHeight() - 100);
+    Add(editor.SizePos());
+    Rect r = GetWorkArea();
+    Sizeable().Zoomable();
+    SetRect(0, 0, r.GetWidth() - 100, r.GetHeight() - 100);
+    SetMinSize(Size(min(640, r.GetWidth() - 100), min(480, r.GetHeight() - 100)));
+    Title("Editor");
 }
 
 void QtfDlg::Editor()
