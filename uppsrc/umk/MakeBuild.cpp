@@ -29,6 +29,7 @@ String Ide::GetMain()
 void Ide::BeginBuilding(bool sync_files, bool clear_console)
 {
 	SetupDefaultMethod();
+	SetHdependDirs();
 	HdependTimeDirty();
 	build_time = GetTickCount();
 }
