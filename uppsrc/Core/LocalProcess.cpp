@@ -189,6 +189,11 @@ bool LocalProcess::Start(const char *command, const char *envptr)
 	dup2(wpipe[1], 1);
 	dup2(wpipe[1], 2);
 
+	close(rpipe[0]);
+	close(rpipe[1]);
+    close(wpipe[0]);
+	close(wpipe[1]);
+
 #if DO_LLOG
 	LLOG(args.GetCount() << "arguments:");
 	for(int a = 0; a < args.GetCount(); a++)
