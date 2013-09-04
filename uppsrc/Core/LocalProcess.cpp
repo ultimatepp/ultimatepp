@@ -17,8 +17,7 @@ void LocalProcess::Init() {
 #endif
 #ifdef PLATFORM_POSIX
 	pid = 0;
-	rpipe[0] = rpipe[1] = wpipe[0] = wpipe[1] = -1;
-	output_read = false;
+	rpipe[0] = rpipe[1] = wpipe[0] = wpipe[1] = epipe[0] = epipe[1] = -1;
 #endif
 	exit_code = Null;
 	convertcharset = true;
@@ -47,13 +46,14 @@ void LocalProcess::Free() {
 	if(rpipe[1] >= 0) { close(rpipe[1]); rpipe[1] = -1; }
 	if(wpipe[0] >= 0) { close(wpipe[0]); wpipe[0] = -1; }
 	if(wpipe[1] >= 0) { close(wpipe[1]); wpipe[1] = -1; }
+	if(epipe[0] >= 0) { close(epipe[0]); epipe[0] = -1; }
+	if(epipe[1] >= 0) { close(epipe[1]); epipe[1] = -1; }
 	if(pid) waitpid(pid, 0, WNOHANG | WUNTRACED);
 	pid = 0;
-	output_read = false;
 #endif
 }
 
-bool LocalProcess::Start(const char *command, const char *envptr)
+bool LocalProcess::Start(const char *command, bool spliterr, const char *envptr)
 {
 	LLOG("LocalProcess::Start(\"" << command << "\")");
 
@@ -73,6 +73,8 @@ bool LocalProcess::Start(const char *command, const char *envptr)
 	sa.bInheritHandle = TRUE;
 
 	HANDLE hp = GetCurrentProcess();
+
+	ASSERT(!spliterr); //spliterr NOT IMPLEMENTED (yet)
 
 	CreatePipe(&hOutputReadTmp, &hOutputWrite, &sa, 0);
 	DuplicateHandle(hp, hOutputWrite, hp, &hErrorWrite, 0, TRUE, DUPLICATE_SAME_ACCESS);
@@ -165,10 +167,16 @@ bool LocalProcess::Start(const char *command, const char *envptr)
 		return false;
 //		throw Exc(NFormat(t_("pipe() error; error code = %d"), errno));
 
+	if(spliterr && pipe(epipe))
+		return false;
+//		throw Exc(NFormat(t_("pipe() error; error code = %d"), errno));
+
 	LLOG("\nLocalProcess::Start");
 	LLOG("rpipe[" << rpipe[0] << ", " << rpipe[1] << "]");
  
  	LLOG("wpipe[" << wpipe[0] << ", " << wpipe[1] << "]");
+
+ 	LLOG("epipe[" << epipe[0] << ", " << epipe[1] << "]");
 #ifdef CPU_BLACKFIN
 	pid = vfork(); //we *can* use vfork here, since exec is done later or the parent will exit
 #else
@@ -181,18 +189,27 @@ bool LocalProcess::Start(const char *command, const char *envptr)
 
 	if(pid) {
 		LLOG("parent process - continue");
+		close(rpipe[0]); rpipe[0]=-1;
+		close(wpipe[1]); wpipe[1]=-1;
+		if (spliterr) {
+			close(epipe[1]); epipe[1]=-1;
+		}
 		return true;
 	}
 	LLOG("child process - execute application");
 //	rpipe[1] = wpipe[0] = -1;
 	dup2(rpipe[0], 0);
 	dup2(wpipe[1], 1);
-	dup2(wpipe[1], 2);
-
+	dup2(spliterr ? epipe[1] : wpipe[1], 2);
 	close(rpipe[0]);
 	close(rpipe[1]);
-    close(wpipe[0]);
+	close(wpipe[0]);
 	close(wpipe[1]);
+	if (spliterr) {
+		close(epipe[0]);
+		close(epipe[1]);
+	}
+	rpipe[0] = rpipe[1] = wpipe[0] = wpipe[1] = epipe[0] = epipe[1] = -1;
 
 #if DO_LLOG
 	LLOG(args.GetCount() << "arguments:");
@@ -308,7 +325,8 @@ bool LocalProcess::IsRunning() {
 		return false;
 	}
 	int status = 0, wp;
-	if((wp = waitpid(pid, &status, WNOHANG | WUNTRACED)) != pid || !DecodeExitCode(status))
+	if(!( (wp = waitpid(pid, &status, WNOHANG | WUNTRACED)) == pid && 
+	      DecodeExitCode(status) ))
 		return true;
 	LLOG("IsRunning() -> no, just exited, exit code = " << exit_code);
 	return false;
@@ -323,18 +341,30 @@ int  LocalProcess::GetExitCode() {
 	if(!IsRunning())
 		return Nvl(exit_code, -1);
 	int status;
-	if(waitpid(pid, &status, WNOHANG | WUNTRACED) != pid || !DecodeExitCode(status))
+	if(!( waitpid(pid, &status, WNOHANG | WUNTRACED) == pid && 
+	      DecodeExitCode(status) ))
 		return -1;
-	exit_code = WEXITSTATUS(status);
 	LLOG("GetExitCode() -> " << exit_code << " (just exited)");
 	return exit_code;
 #endif
 }
 
+String LocalProcess::GetExitMessage() {
+#ifdef PLATFORM_POSIX
+	if (!IsRunning() && GetExitCode() == -1)
+		return exit_string;
+	else
+#endif
+		return String();
+}
+
 bool LocalProcess::Read(String& res) {
+#ifdef PLATFORM_POSIX
+	return Read2(res, res);
+#endif
+#ifdef PLATFORM_WIN32
 	LLOG("LocalProcess::Read");
 	res = Null;
-#ifdef PLATFORM_WIN32
 	if(!hOutputRead) return false;
 	dword n;
 	if(!PeekNamedPipe(hOutputRead, NULL, 0, NULL, &n, NULL) || n == 0)
@@ -347,39 +377,55 @@ bool LocalProcess::Read(String& res) {
 		res = FromSystemCharset(res);
 	return true;
 #endif
+}
+
+bool LocalProcess::Read2(String& reso, String& rese)
+{
+	LLOG("LocalProcess::Read2");
+	String res[2] = {Null, Null};
+#ifdef PLATFORM_WIN32
+	NEVER(); //Not implemented
+#endif
 #ifdef PLATFORM_POSIX
-//??!
-	if(wpipe[0] < 0) return false;
-	bool was_running = IsRunning();
-	LLOG("output_read = " << (output_read ? "yes" : "no"));
-	if(!was_running && output_read) {
-		if(exit_string.IsEmpty())
-			return false;
-		res = exit_string;
-		exit_string = Null;
-		return true;
+	bool was_running = IsRunning() || wpipe[0] >= 0 || epipe[0] >= 0;
+	for (int wp=0; wp<2;wp++) {
+		int *pipe = wp ? epipe : wpipe;
+		if (pipe[0] < 0) {
+			LLOG("Pipe["<<wp<<"] closed");
+			continue;
+		}
+		fd_set set[1];
+		FD_ZERO(set);
+		FD_SET(pipe[0], set);
+		timeval tval = { 0, 0 };
+		int sv;
+		while((sv = select(pipe[0]+1, set, NULL, NULL, &tval)) > 0) {
+			LLOG("Read() -> select");
+			char buffer[1024];
+			int done = read(pipe[0], buffer, sizeof(buffer));
+			LLOG("Read(), read -> " << done << ": " << String(buffer, done));
+			if(done > 0)
+				res[wp].Cat(buffer, done);
+			else if (done == 0) {
+				close(pipe[0]);
+				pipe[0] = -1;
+			}
+		}
+		LLOG("Pipe["<<wp<<"]=="<<pipe[0]<<" sv:"<<sv);
+		if(sv < 0) {
+			LLOG("select -> " << sv);
+		}
 	}
-	fd_set set[1];
-	FD_ZERO(set);
-	FD_SET(wpipe[0], set);
-	timeval tval = { 0, 0 };
-	int sv;
-	while((sv = select(wpipe[0] + 1, set, NULL, NULL, &tval)) > 0) {
-		LLOG("Read() -> select");
-		char buffer[1024];
-		int done = read(wpipe[0], buffer, sizeof(buffer));
-		LLOG("Read(), read -> " << done << ": " << String(buffer, done));
-		if(done > 0)
-			res.Cat(buffer, done);
+	reso = Null;
+	rese = Null;
+	if(convertcharset) {
+		reso << FromSystemCharset(res[0]);
+		rese << FromSystemCharset(res[1]);
+	} else {
+		reso << res[0];
+		rese << res[1];
 	}
-	if(sv < 0) {
-		LLOG("select -> " << sv);
-	}
-	if(!was_running)
-		output_read = true;
-	if(convertcharset)
-		res = FromSystemCharset(res);
-	return !IsNull(res) || was_running;
+	return !IsNull(res[0]) || !IsNull(res[1]) || was_running;
 #endif
 }
 

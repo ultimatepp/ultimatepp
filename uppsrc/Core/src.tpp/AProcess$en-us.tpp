@@ -39,13 +39,29 @@ tring]_[*@3 s])_`=_[@3 0]&]
 [s4; &]
 [s5;:AProcess`:`:Read`(String`&`): [@(0.0.255) virtual] [@(0.0.255) bool]_[* Read]([_^String^ S
 tring][@(0.0.255) `&]_[*@3 s])_`=_[@3 0]&]
-[s2;%% Reads data from standard output. Returns true if there process 
-was running or there are more data to be read.&]
+[s2;%% Reads data from standard output combined with standard error 
+output. Returns true if there process was running or there are 
+more data to be read.&]
+[s3;%% &]
+[s4; &]
+[s5;:AProcess`:`:Read2`(String`&`,String`&`): [@(0.0.255) virtual] 
+[@(0.0.255) bool]_[* Read2]([_^String^ String][@(0.0.255) `&]_[*@3 os], 
+[_^String^ String][@(0.0.255) `&]_[*@3 es])&]
+[s2;%% Reads data separately from standard output combined and from 
+standard error output. Returns true if there process was running 
+or there are more data to be read. Usually, implementing class 
+has to be in special mode for this to work (e.g. LocalProcess 
+must be started with Start2).&]
 [s3;%% &]
 [s4; &]
 [s5;:AProcess`:`:GetExitCode`(`): [@(0.0.255) virtual] [@(0.0.255) int]_[* GetExitCode]()_`=
 _[@3 0]&]
 [s2;%% Returns an exit code of terminated process.&]
+[s3; &]
+[s4; &]
+[s5;:AProcess`:`:GetExitMessage`(`): [@(0.0.255) virtual] [_^String^ String]_[* GetExitMess
+age]()&]
+[s2;%% In case of error, might return its text description.&]
 [s3; &]
 [s4; &]
 [s5;:AProcess`:`:CloseRead`(`): [@(0.0.255) virtual] [@(0.0.255) void]_[* CloseRead]()&]
@@ -85,6 +101,16 @@ onst]_[@(0.0.255) char]_`*[*@3 cmdline], [@(0.0.255) const]_[@(0.0.255) char]_`*
 [s2;%% Starts a new process defined by [%-*@3 cmdline], [%-*@3 envptr 
 ]can provide a new environment for the process, if NULL, then 
 the new process inherits caller`'s environment.&]
+[s3;%% &]
+[s4; &]
+[s5;:LocalProcess`:`:Start2`(const char`*`,const char`*`): [@(0.0.255) bool]_[* Start2]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 cmdline], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr
+]_`=_NULL)&]
+[s2;%% Starts a new process defined by [%-*@3 cmdline], [%-*@3 envptr 
+]can provide a new environment for the process, if NULL, then 
+the new process inherits caller`'s environment. This variant 
+activates mode when standard output and stadart error output 
+are read separately using Read2 method.&]
 [s3;%% &]
 [s4; &]
 [s5;:LocalProcess`:`:ConvertCharset`(bool`): [_^LocalProcess^ LocalProcess][@(0.0.255) `&
