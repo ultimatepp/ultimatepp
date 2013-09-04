@@ -27,6 +27,13 @@ Insert][@(0.0.255) `&]_[* operator()]([_^SqlId^ SqlId]_[*@3 col], [@(0.0.255) co
 alue][@(0.0.255) `&]_[*@3 val])&]
 [s2; Adds a single column to be inserted.&]
 [s3; &]
+[s4;%- &]
+[s5;:SqlMassInsert`:`:operator`(`)`(const ValueMap`&`):%- [_^SqlMassInsert^ SqlMassInse
+rt][@(0.0.255) `&]_[* operator()]([@(0.0.255) const]_[_^ValueMap^ ValueMap][@(0.0.255) `&]_
+[*@3 data])&]
+[s2; Inserts a set of columns defined by key`-value pairs of [%-*@3 data] 
+(key is the name of column, value is the inserted value).&]
+[s3; &]
 [s4; &]
 [s5;:SqlMassInsert`:`:EndRow`(SqlBool`):%- [_^SqlMassInsert^ SqlMassInsert][@(0.0.255) `&
 ]_[* EndRow]([_^SqlBool^ SqlBool]_[*@3 remove]_`=_[_^SqlBool^ SqlBool]())&]

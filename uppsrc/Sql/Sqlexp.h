@@ -590,6 +590,7 @@ SqlSelect operator|(const SqlSelect& s1, const SqlSelect& s2);
 SqlSelect operator&(const SqlSelect& s1, const SqlSelect& s2);
 SqlSelect operator-(const SqlSelect& s1, const SqlSelect& s2);
 
+inline SqlSelect SelectAll()                { return SqlSelect(SqlAll()); }
 inline SqlSelect Select(const SqlSet& set)  { return SqlSelect(set); }
 inline SqlSelect Select(Fields f)           { return SqlSelect(f); }
 
