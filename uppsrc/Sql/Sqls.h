@@ -468,6 +468,7 @@ class SqlMassInsert {
 
 public:
 	SqlMassInsert& operator()(SqlId col, const Value& val);
+	SqlMassInsert& operator()(const ValueMap& data);
 	SqlMassInsert& EndRow(SqlBool remove = SqlBool());
 	void           Flush();
 	bool           IsError() const                                 { return error; }
@@ -497,6 +498,24 @@ void SqlLoadColumn(T& t, SqlId table, SqlId column, SqlId key = SqlId("ID"))
 	sql * Select(key, column).From(table);
 	while(sql.Fetch())
 		t.Add(sql[key], sql[column]);
+}
+
+template <class T>
+void SqlLoadTable(T& t, SqlSelect select, SqlId key = SqlId("ID"))
+{
+	Sql sql;
+	sql * select;
+	while(sql.Fetch())
+		sql.Get(t.Add(sql[key]));
+}
+
+template <class T>
+void SqlLoadColumn(T& t, SqlSelect select)
+{
+	Sql sql;
+	sql * select;
+	while(sql.Fetch())
+		t.Add(sql[0], sql[1]);
 }
 
 template<class K, class V>

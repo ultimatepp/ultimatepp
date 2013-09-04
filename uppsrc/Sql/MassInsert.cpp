@@ -26,6 +26,13 @@ SqlMassInsert& SqlMassInsert::operator()(SqlId col, const Value& val)
 	return *this;
 }
 
+SqlMassInsert& SqlMassInsert::operator()(const ValueMap& data)
+{
+	for(int i = 0; i < data.GetCount(); i++)
+		operator()((String)data.GetKey(i), data.GetValue(i));
+	return *this;
+}
+
 SqlMassInsert& SqlMassInsert::EndRow(SqlBool remove)
 {
 	cache.Top().remove = remove;
