@@ -73,6 +73,7 @@ GUI_APP_MAIN
 	EXP(Select(All(COL)).From(TABLE1));
 	EXP(Select(Count(COL)).From(TABLE1));
 	EXP(Select(SqlAll()).From(TABLE1));
+	EXP(SelectAll().From(TABLE1));
 	EXP(Select(SqlCountRows()).From(TABLE1));
 	EXP(Select(COL).From(TABLE1).OrderBy(Descending(COL)));
 	EXP(Select(SqlMax(COL)).From(TABLE1));
