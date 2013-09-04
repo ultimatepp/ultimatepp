@@ -56,10 +56,11 @@ private:
 
 	typedef LocalProcess CLASSNAME;
 
-	bool Start(const char *cmdline, bool spliterr, const char *envptr = NULL);
+	bool DoStart(const char *cmdline, bool spliterr, const char *envptr = NULL);
+
 public:
-	bool Start(const char *cmdline, const char *envptr = NULL) { return Start(cmdline, false, envptr); }
-	bool Start2(const char *cmdline, const char *envptr = NULL) { return Start(cmdline, true, envptr); }
+	bool Start(const char *cmdline, const char *envptr = NULL)        { return DoStart(cmdline, false, envptr); }
+	bool Start2(const char *cmdline, const char *envptr = NULL)       { return DoStart(cmdline, true, envptr); }
 	
 	LocalProcess& ConvertCharset(bool b = true)                       { convertcharset = b; return *this; }
 	LocalProcess& NoConvertCharset()                                  { return ConvertCharset(false); }

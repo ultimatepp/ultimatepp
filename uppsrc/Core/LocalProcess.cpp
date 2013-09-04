@@ -53,7 +53,7 @@ void LocalProcess::Free() {
 #endif
 }
 
-bool LocalProcess::Start(const char *command, bool spliterr, const char *envptr)
+bool LocalProcess::DoStart(const char *command, bool spliterr, const char *envptr)
 {
 	LLOG("LocalProcess::Start(\"" << command << "\")");
 

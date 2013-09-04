@@ -1254,7 +1254,9 @@ void LayDes::MoveDown()
 
 bool RectLess(const Rect& a, const Rect& b)
 {
-	return max(a.top, b.top) < min(a.bottom, b.bottom) ? a.left < b.left : a.top < b.top;
+	int d = min(a.bottom, b.bottom) - max(a.top, b.top);
+	int w = min(a.GetHeight(), b.GetHeight());
+	return d > w / 2 ? a.left < b.left : a.top < b.top;
 }
 
 void LayDes::SortItems()
@@ -1491,7 +1493,12 @@ void LayDes::ItemClick()
 	else if(item.IsCursor()) {
 		if(!GetCtrl())
 			cursor.Clear();
-		cursor.Add(item.GetCursor());
+		int c = item.GetCursor();
+		int q = FindIndex(cursor, c);
+		if(q >= 0)
+			cursor.Remove(q);
+		else
+			cursor.Add(c);
 	}
 	SetFocus();
 	SyncItems();
