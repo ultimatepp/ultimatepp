@@ -183,7 +183,9 @@ public:
 	const Ctrl& operator[](int i) const              { return *item[i].ctrl; }
 	SqlId       operator()(int i) const              { return item[i].id; }
 
-	void      Reset()                                { item.Clear(); }
+	ValueMap    Get() const;
+
+	void        Reset()                                { item.Clear(); }
 };
 
 class SqlDetail : public StaticRect {

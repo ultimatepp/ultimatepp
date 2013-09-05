@@ -109,8 +109,8 @@ public:
 
 	AMap()                                         {}
 	AMap(const AMap& s, int) : key(s.key, 0), value(s.value, 0) {}
-	AMap(pick_ Index<K, HashFn>& ndx, pick_ V& val) : value(val), key(ndx) {}
-	AMap(pick_ Vector<K>& ndx, pick_ V& val) : value(val), key(ndx) {}
+	AMap(pick_ Index<K, HashFn>& ndx, pick_ V& val) : key(ndx), value(val) {}
+	AMap(pick_ Vector<K>& ndx, pick_ V& val) : key(ndx), value(val) {}
 
 	typedef Vector<K> KeyContainer;
 	typedef K         KeyType;

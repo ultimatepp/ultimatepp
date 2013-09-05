@@ -149,7 +149,7 @@ SqlBool FindSchJoin(const String& tables)
 				}
 			}
 	}
-	NEVER_("Schema join not found");
+	NEVER_("Schema join not found " + tables);
 	return SqlBool::False();
 }
 

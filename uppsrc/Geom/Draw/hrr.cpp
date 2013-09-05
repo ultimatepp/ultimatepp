@@ -2,7 +2,6 @@
 // hrr: high resolution raster.
 
 #include "GeomDraw.h"
-#pragma hdrstop
 
 #include "hrr.h"
 

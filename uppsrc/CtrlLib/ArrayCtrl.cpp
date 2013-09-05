@@ -1892,6 +1892,34 @@ void  ArrayCtrl::Add(const Vector<Value>& v)
 	Set(array.GetCount(), v);
 }
 
+void ArrayCtrl::Set(int ii, const VectorMap<String, Value>& m)
+{
+	for(int i = 0; i < m.GetCount(); i++) {
+		int j = GetPos(m.GetKey(i));
+		if(j >= 0)
+			Set(ii, j, m[i]);
+	}
+}
+
+void ArrayCtrl::Set(int ii, const ValueMap& m)
+{
+	for(int i = 0; i < m.GetCount(); i++) {
+		int j = GetPos((String)m.GetKey(i));
+		if(j >= 0)
+			Set(ii, j, m.GetValue(i));
+	}
+}
+
+void ArrayCtrl::Add(const VectorMap<String, Value>& m)
+{
+	Set(array.GetCount(), m);
+}
+
+void ArrayCtrl::Add(const ValueMap& m)
+{
+	Set(array.GetCount(), m);
+}
+
 struct ArrayCtrlSeparatorDisplay : Display {
 	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const {
 		int y = r.top + r.GetHeight() / 2;

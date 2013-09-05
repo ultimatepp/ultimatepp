@@ -1969,6 +1969,36 @@ the new row of the matrix.&]
 [s7; [%-*C@3 v]-|new matrix row&]
 [s3; &]
 [s4;%- &]
+[s5;:ArrayCtrl`:`:Set`(int`,const VectorMap`<String`,Value`>`&`):%- [@(0.0.255) void]_[* S
+et]([@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[_^VectorMap^ VectorMap]<[_^String^ String
+], [_^Value^ Value]>`&_[*@3 m])&]
+[s2; Sets the row based on map. Keys are matched to row Ids, keys 
+that are not found are ignored, those found are assigned correspoding 
+map values.&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:Set`(int`,const ValueMap`&`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) int
+]_[*@3 i], [@(0.0.255) const]_[_^ValueMap^ ValueMap][@(0.0.255) `&]_[*@3 m])&]
+[s2; Sets the row based on map. Keys are matched to row Ids, keys 
+that are not found are ignored, those found are assigned correspoding 
+map values.&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:Add`(const VectorMap`<String`,Value`>`&`):%- [@(0.0.255) void]_[* Add](
+[@(0.0.255) const]_[_^VectorMap^ VectorMap]<[_^String^ String], [_^Value^ Value]>`&_[*@3 m])
+&]
+[s2; Adds the row based on map. Keys are matched to row Ids, keys 
+that are not found are ignored, those found are assigned correspoding 
+map values.&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:Add`(const ValueMap`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[_^ValueMap^ V
+alueMap][@(0.0.255) `&]_[*@3 m])&]
+[s2; Adds the row based on map. Keys are matched to row Ids, keys 
+that are not found are ignored, those found are assigned correspoding 
+map values.&]
+[s3; &]
+[s4;%- &]
 [s5;:ArrayCtrl`:`:Add`(const Value`&`[`,const Value`&`]`.`.`.`):%- [@(0.0.255) void]_[* A
 dd]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_`[, [@(0.0.255) const]_[_^Value^ Val
 ue][@(0.0.255) `&]_`]...)&]
@@ -1977,6 +2007,12 @@ is in fact a series of functions (generated automatically using
 the [* Expand] macro) which takes an arbitrary number of arguments. 
 Its arguments are used to initialize the source indices in the 
 newly added row.&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:Add`(const Nuller`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[_^Nuller^ N
+uller][@(0.0.255) `&]_[*@3 null])&]
+[s2; This is helper method required for correct overloading resolution 
+of Add(Null).&]
 [s3; &]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:Insert`(int`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) int]_[*@3 i])&]

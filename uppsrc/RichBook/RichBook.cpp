@@ -1,5 +1,4 @@
 #include "RichBook.h"
-#pragma hdrstop
 
 #include <DocTypes/DocTypes.h>
 #include <PdfDraw/PdfDraw.h>
