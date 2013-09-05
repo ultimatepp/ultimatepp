@@ -1,6 +1,5 @@
 #include "Oracle8.h"
 #include "OciCommon.h"
-#pragma hdrstop
 
 NAMESPACE_UPP
 

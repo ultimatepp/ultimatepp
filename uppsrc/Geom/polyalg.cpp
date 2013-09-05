@@ -1,5 +1,4 @@
 #include "Geom.h"
-#pragma hdrstop
 
 NAMESPACE_UPP
 

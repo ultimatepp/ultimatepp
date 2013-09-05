@@ -1,6 +1,5 @@
 #include "Oracle7.h"
 #include "OciCommon.h"
-#pragma hdrstop
 
 /*
 extern "C" {

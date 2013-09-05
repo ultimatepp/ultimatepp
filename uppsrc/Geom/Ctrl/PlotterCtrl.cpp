@@ -1,5 +1,4 @@
 #include "GeomCtrl.h"
-#pragma hdrstop
 
 NAMESPACE_UPP
 

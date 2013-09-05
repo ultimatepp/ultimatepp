@@ -160,6 +160,14 @@ void SqlCtrls::Enable(bool b)
 		item[i].ctrl->Enable(b);
 }
 
+ValueMap SqlCtrls::Get() const
+{
+	ValueMap m;
+	for(int i = 0; i < item.GetCount(); i++)
+		m.Add(item[i].id, item[i].ctrl->GetData());
+	return m;
+}
+
 void SqlCtrls::SetNull()
 {
 	for(int i = 0; i < item.GetCount(); i++)

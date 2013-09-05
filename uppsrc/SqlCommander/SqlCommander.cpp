@@ -1,6 +1,5 @@
 #include <OleDB/OleDB.h>
 #include <SqlCtrl/SqlCtrl.h>
-#pragma hdrstop
 
 #define HAVE_ORACLE
 
