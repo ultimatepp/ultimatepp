@@ -385,6 +385,7 @@ bool LocalProcess::Read2(String& reso, String& rese)
 	String res[2] = {Null, Null};
 #ifdef PLATFORM_WIN32
 	NEVER(); //Not implemented
+	return false;
 #endif
 #ifdef PLATFORM_POSIX
 	bool was_running = IsRunning() || wpipe[0] >= 0 || epipe[0] >= 0;
