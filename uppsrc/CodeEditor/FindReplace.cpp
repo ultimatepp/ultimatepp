@@ -429,11 +429,7 @@ void CodeEditor::BlockReplace()
 
 void CodeEditor::OpenNormalFindReplace(bool replace)
 {
-	if(findreplace.IsOpen())
-		findreplace.Close();
-
 	findreplace.Setup(replace);
-
 	findreplace.itext = GetI();
 	findreplace.Title(replace ? "Find and Replace" : "Find");
 	findreplace.findback.Show();
@@ -445,7 +441,9 @@ void CodeEditor::OpenNormalFindReplace(bool replace)
 
 void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 {
-	CloseFindReplace();
+	if(findreplace.IsOpen())
+		findreplace.Close();
+
 	replacei = 0;
 	findreplace.CenterOwner();
 	WString find_text;

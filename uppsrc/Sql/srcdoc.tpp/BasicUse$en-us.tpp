@@ -1,4 +1,5 @@
-topic "Basic Use and Description";[2 $$0,0#00000000000000000000000000000000:Default]
+topic "Basic Use and Description";
+[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [b83;*4 $$3,5#07864147445237544204411237157677:title]
@@ -100,7 +101,7 @@ object to use.&]
 user`=user1 password`=pass1`")&]
 [s24; The [C Open()] function returns a true or false value depending 
 on success of connecting to database.&]
-[s25;ISqlid objects; SqlId objects:&]
+[s25; [ISqlid objects; SqlId objects:]&]
 [s24; SqlId objects aid the formation of sql statements by mapping 
 database field/column names to local variables.&]
 [s7; SqlId all(`"`*`");&]
@@ -110,7 +111,7 @@ SQL CRUD statements in our code.&]
 [s24; As mentioned previously, all of the declarations in our schema 
 file that end in an underscore will automatically be declared 
 as SqlId variables we can access in our source code. &]
-[s25;1 Example use of SqlId variables:&]
+[s25; [1 Example use of SqlId variables:]&]
 [s7; sql `* Insert(PERSON)(NAME, `"John Smith`") (BIRTH`_DATE, Date(1980,8,20)) 
 (NUM`_CHILDREN, 1)&]
 [s24; The variables [C PERSON, NAME, BIRTH`_DATE, NUM`_CHILDREN] were 
@@ -123,7 +124,7 @@ operate on a session.&]
 [s7; Sql sql(m`_session); //define Sql object to act on Session object 
 m`_session.&]
 [s25; Queries&]
-[s25;1 Select example:&]
+[s25; [1 Select example:]&]
 [s7; sql `* Select(all).From(PERSON).Where(person`_name `=`= `"John 
 Smith`");&]
 [s24; Note: Here we can use `"all`" because we defined it as an [C SqlId 
@@ -165,4 +166,4 @@ array index (Ie. `"[C sql`[0`]]`").&]
 [s24; Notice the use of AsString() here. sql`[id`] returns a U`+`+ 
 Value type object. You can then convert that Value type to its 
 appropriate type afterward.&]
-[s0; ]
+[s0; ]]
