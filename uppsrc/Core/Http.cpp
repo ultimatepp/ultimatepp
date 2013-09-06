@@ -4,9 +4,11 @@ NAMESPACE_UPP
 
 namespace Ini {
 	INI_BOOL(HttpRequest_Trace, false, "Activates HTTP requests tracing")
+	INI_BOOL(HttpRequest_TraceBody, false, "Activates HTTP requests body tracing")
 };
 
 #define LLOG(x)      LOG_(Ini::HttpRequest_Trace, x)
+#define LLOGB(x)     LOG_(Ini::HttpRequest_TraceBody, x)
 	
 #ifdef _DEBUG
 _DBG_
@@ -16,6 +18,7 @@ _DBG_
 void HttpRequest::Trace(bool b)
 {
 	Ini::HttpRequest_Trace = b;
+	Ini::HttpRequest_TraceBody = b;
 }
 
 void HttpRequest::Init()
@@ -543,9 +546,10 @@ void HttpRequest::StartRequest()
 	if(!force_digest && (!IsNull(username) || !IsNull(password)))
 		data << "Authorization: Basic " << Base64Encode(username + ":" + password) << "\r\n";
 	data << request_headers;
-	data << "\r\n" << pd;
 	LLOG("HTTP REQUEST " << host << ":" << port);
 	LLOG("HTTP request:\n" << data);
+	data << "\r\n" << pd;
+	LLOGB("HTTP request body:\n" << pd);
 }
 
 bool HttpRequest::SendingData()
