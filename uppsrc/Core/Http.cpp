@@ -21,6 +21,16 @@ void HttpRequest::Trace(bool b)
 	Ini::HttpRequest_TraceBody = b;
 }
 
+void HttpRequest::TraceHeader(bool b)
+{
+	Ini::HttpRequest_Trace = b;
+}
+
+void HttpRequest::TraceBody(bool b)
+{
+	Ini::HttpRequest_TraceBody = b;
+}
+
 void HttpRequest::Init()
 {
 	port = 0;
