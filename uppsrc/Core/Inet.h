@@ -508,6 +508,8 @@ public:
 	HttpRequest(const char *url);
 	
 	static void  Trace(bool b = true);
+	static void  TraceHeader(bool b);
+	static void  TraceBody(bool b);
 };
 
 bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,
