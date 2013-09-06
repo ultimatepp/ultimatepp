@@ -49,6 +49,9 @@ int IsCommaOrColon(int c)
 
 CONSOLE_APP_MAIN
 {
+#ifdef PLATFORM_POSIX
+	setlinebuf(stdout);
+#endif
 	Ide ide;
 	TheIde(&ide);
 	ide.console.SetSlots(CPU_Cores());
