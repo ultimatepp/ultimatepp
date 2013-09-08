@@ -192,14 +192,14 @@ void TopWindow::SyncCaption()
 		Ctrl *owner = GetOwner();
 		wm_hints->window_group = owner ? owner->GetWindow() : w;
 		if(!icon.IsEmpty()) {
-			Size isz = largeicon.IsEmpty() ? icon.GetSize() : largeicon.GetSize();
+			Size isz = icon.GetSize();
 			int len = 2 + isz.cx * isz.cy;
 			Buffer<unsigned long> data(len);
 			unsigned long *t = data;
 			*t++ = isz.cx;
 			*t++ = isz.cy;
 			for(int y = 0; y < isz.cy; y++) {
-				const RGBA *q = largeicon.IsEmpty() ? icon[y] : largeicon[y];
+				const RGBA *q = icon[y];
 				for(int x = isz.cx; x--;) {
 					*t++ = ((dword)q->a << 24) |
 					       (dword)q->b | ((dword)q->g << 8) | ((dword)q->r << 16);
@@ -238,9 +238,8 @@ void TopWindow::CenterRect(Ctrl *owner)
 		else
 			r = wr;
 		Point p = r.CenterPos(sz);
-		
-		if (p.x + sz.cx <= wr.Width() && p.y + sz.cy <= wr.Height()) {
-			r = RectC(p.x, p.y, sz.cx, sz.cy);
+		r = RectC(p.x, p.y, sz.cx, sz.cy);
+		if (p.x <= wr.Width() && p.y <= wr.Height()) {
 			wr.left += fm.left;
 			wr.right -= fm.right;
 			wr.top += fm.top;
@@ -253,8 +252,8 @@ void TopWindow::CenterRect(Ctrl *owner)
 				r.bottom = wr.bottom;
 			minsize.cx = min(minsize.cx, r.GetWidth());
 			minsize.cy = min(minsize.cy, r.GetHeight());
-			SetRect(r);
 		}
+		SetRect(r);
 	}
 }
 

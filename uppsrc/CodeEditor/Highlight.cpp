@@ -248,7 +248,7 @@ int CodeEditor::InitUpp(const char **q)
 void CodeEditor::InitKeywords()
 {
 	static const char *cpp[] = {
-		"namespace", "__asm", "else", "struct",
+		"namespace", "asm", "__asm", "else", "struct",
 		"enum", "switch", "auto", "__except", "template",
 		"explicit", "this",
 		"bool", "extern", "mutable", "thread",
@@ -270,7 +270,9 @@ void CodeEditor::InitKeywords()
 		"double", "__leave", "static_cast",
 		"dynamic_cast", "long", "__stdcall", "while",
 		"force_inline",
-		// C++11
+		"and", "bitor", "or", "xor", 
+		"compl", "bitand", "and_eq", "or_eq",
+		"xor_eq", "not", "not_eq",
 		"char16_t", "char32_t", "constexpr", "decltype",
 		"noexcept", "nullptr", "static_assert",
 		"override", "final",
