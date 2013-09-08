@@ -4,6 +4,7 @@ uses
 options(WIN32) "-D_WIN32 -DGLEW_STATIC";
 
 file
+	Gl.h,
 	CoreGl.h,
 	FontGl.h,
 	ResGl.h,
@@ -40,6 +41,8 @@ file
 	Resources readonly separator,
 	Resources.cpp,
 	Resources.brc,
+	Fbo.h,
+	Fbo.cpp,
 	Shaders.h,
 	Shaders.cpp,
 	AlphaMag.vert,

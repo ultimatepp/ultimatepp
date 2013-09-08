@@ -46,7 +46,8 @@ public:
 
 	static Console console;
 	static Rect screenRect;
-
+	static bool screenReady;
+	
 	static void InitGl();
 	static void ExitGl();
 	static void EndSession();
