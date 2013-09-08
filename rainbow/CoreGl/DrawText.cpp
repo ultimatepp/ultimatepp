@@ -167,14 +167,14 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 	int glowA = 1;
 	#endif
 	
-	alphaMagProg.Set("GlyphColor", ink.GetR() * ic, ink.GetG() * ic, ink.GetB() * ic, inkA * ic * ac);
-	alphaMagProg.Set("OutlineColor", outlineColor.GetR() * ic, outlineColor.GetG() * ic, outlineColor.GetB() * ic, outlineA * ic * ac);
-	alphaMagProg.Set("GlowColor", glowColor.GetR() * ic, glowColor.GetG() * ic, glowColor.GetB() * ic, glowA * ic * ac);
-	alphaMagProg.Set("Outline", outlineStrength > 0); //0.1 - 0.45
-	alphaMagProg.Set("Glow", glowStrength > 0); //0.55 - 0.095
-	alphaMagProg.Set("Shadow", false);
-	alphaMagProg.Set("OutlineCenter", outlineCenter);
-	alphaMagProg.Set("GlowCenter", glowCenter);
+	alphaMagProg.SetUniform("GlyphColor", ink.GetR() * ic, ink.GetG() * ic, ink.GetB() * ic, inkA * ic * ac);
+	alphaMagProg.SetUniform("OutlineColor", outlineColor.GetR() * ic, outlineColor.GetG() * ic, outlineColor.GetB() * ic, outlineA * ic * ac);
+	alphaMagProg.SetUniform("GlowColor", glowColor.GetR() * ic, glowColor.GetG() * ic, glowColor.GetB() * ic, glowA * ic * ac);
+	alphaMagProg.SetUniform("Outline", outlineStrength > 0); //0.1 - 0.45
+	alphaMagProg.SetUniform("Glow", glowStrength > 0); //0.55 - 0.095
+	alphaMagProg.SetUniform("Shadow", false);
+	alphaMagProg.SetUniform("OutlineCenter", outlineCenter);
+	alphaMagProg.SetUniform("GlowCenter", glowCenter);
 	
 	float xp = (float) x;
 	float yp = (float) y;
@@ -201,7 +201,7 @@ void SystemDraw::Text(int x, int y, int angle, const wchar *text, Font font, Col
 			{
 				resources.Bind(fi.pages[ci.page], Resources::LINEAR_FILTERING);
 				glActiveTexture(GL_TEXTURE0);
-				alphaMagProg.Set("Texture", 0);
+				alphaMagProg.SetUniform("Texture", 0);
 				page = ci.page;
 			}
 			

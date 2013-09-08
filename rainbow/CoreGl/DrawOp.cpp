@@ -364,8 +364,8 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 			#endif
 		}
 	}
-	
-	glColor4ub(255, 255, 255, 255);
+	else
+		glColor4ub(255, 255, 255, 255);
 	
 	float vtx[12];
 	SetVtx(vtx, sx, sy, dx, dy);

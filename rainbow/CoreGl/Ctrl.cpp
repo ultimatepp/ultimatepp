@@ -10,7 +10,6 @@ int       Ctrl::Xbuttons;
 int       Ctrl::Xbuttontime;
 Point     Ctrl::Xbuttonpos;
 
-
 void Ctrl::GuiPlatformConstruct()
 {
 	cliptobounds = true;

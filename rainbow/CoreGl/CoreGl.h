@@ -16,44 +16,11 @@
 2 - Stencil clip
 3 - Manual clip
 */
-
-#ifdef flagLINUXGL
-#define Time    XTime
-#define Font    XFont
-#define Display XDisplay
-#define Picture XPicture
-#define Screen  XScreen
-#define Window  XWindow
-#define Complex XComplex
-#include <X11/X.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/Xatom.h>
-#endif
-
-#include <CoreGl/glew.h>
-
-#ifdef flagWINGL
-#include <CoreGl/wglew.h>
-#endif
-
-#include <GL/gl.h>
-#include <GL/glu.h>
-#ifdef flagLINUXGL
-#include <GL/glx.h>
-#endif
-
-#ifdef flagLINUXGL
-#undef Picture
-#undef Time
-#undef Font
-#undef Display
-#undef Screen
-#undef Window
-#undef Complex
-#endif
-
+#include "Gl.h"
 #include <Painter/Painter.h>
+
+#include "Shaders.h"
+#include "Fbo.h"
 
 NAMESPACE_UPP
 
@@ -74,34 +41,10 @@ float GetFps();
 #define IMAGEFILE <CoreGl/CoreGl.iml>
 #include <Draw/iml_header.h>
 
-#include "Shaders.h"
 #include "Resources.brc"
 
 typedef Rect_<float> RectF;
 typedef Point_<float> PointF;
-
-struct Fbo : Moveable<Fbo>
-{
-	GLuint texId;
-	GLuint fbId;
-	GLuint rbId;
-	GLenum status;
-	int width;
-	int height;
-	bool ready;
-	
-	bool Create(int width, int height, bool resize = false);
-	void Resize(int width, int height);
-	void Bind();
-	void Unbind();
-	void Clear();
-	void BlitToScreen();
-	void BlitTo(const Fbo& fbo);
-	String GetError();
-	
-	Fbo() : width(0), height(0), ready(false)
-	{}
-};
 
 #include "FontGl.h"
 #include "ResGl.h"

@@ -18,6 +18,7 @@ float          Ctrl::angle = 0.f;
 float          Ctrl::scale = 1.f;
 float          Ctrl::alpha = 255.f;
 Rect           Ctrl::screenRect;
+bool           Ctrl::screenReady = false;
 Point          Ctrl::glCursorPos = Null;
 Image          Ctrl::glCursorImage;
 Rect           Ctrl::glCaretRect;
@@ -222,6 +223,7 @@ void Ctrl::DrawScreen()
 	if(hRC)
 	#endif
 	if(desktop && !painting) {
+		screenReady = true;
 		painting = true;
 		resources.BindStatic();
 		int64 t0 = GetHighTickCount();
@@ -263,19 +265,19 @@ void Ctrl::DrawScreen()
 			float blurSizeHorz = 1.f / (float) screenFbo0.width;
 			float blurSizeVert = 1.f / (float) screenFbo0.height;
 			blurProg.Start();
-			blurProg.Set("blurSize", blurSizeHorz);
-			blurProg.Set("gaussian", gx, gy, gz);
-			blurProg.Set("blurMultiplyVec", 1, 0);
-			blurProg.Set("blurStrength", blur);
-			blurProg.Set("grayStrength", gray);
+			blurProg.SetUniform("blurSize", blurSizeHorz);
+			blurProg.SetUniform("gaussian", gx, gy, gz);
+			blurProg.SetUniform("blurMultiplyVec", 1, 0);
+			blurProg.SetUniform("blurStrength", blur);
+			blurProg.SetUniform("grayStrength", gray);
 			screenFbo1.Bind();
 			draw.DrawTextureOp(drawRect, screenFbo0.texId, screenFbo0.width, screenFbo0.height, drawRect);
 			screenFbo1.Unbind();
 			
-			blurProg.Set("blurSize", blurSizeVert);
-			blurProg.Set("blurMultiplyVec", 0, 1);
-			blurProg.Set("blurStrength", blur);
-			blurProg.Set("grayStrength", gray);
+			blurProg.SetUniform("blurSize", blurSizeVert);
+			blurProg.SetUniform("blurMultiplyVec", 0, 1);
+			blurProg.SetUniform("blurStrength", blur);
+			blurProg.SetUniform("grayStrength", gray);
 			draw.ApplyTransforms();
 			draw.DrawTextureOp(drawRect, screenFbo1.texId, screenFbo1.width, screenFbo1.height, drawRect);
 			blurProg.Stop();
