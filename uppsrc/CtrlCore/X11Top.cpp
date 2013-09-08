@@ -160,6 +160,8 @@ typedef struct {
 #define PROP_MOTIF_WM_HINTS_ELEMENTS 5
 #define PROP_MWM_HINTS_ELEMENTS PROP_MOTIF_WM_HINTS_ELEMENTS
 
+
+
 void TopWindow::SyncCaption()
 {
 	GuiLock __; 
@@ -192,22 +194,15 @@ void TopWindow::SyncCaption()
 		Ctrl *owner = GetOwner();
 		wm_hints->window_group = owner ? owner->GetWindow() : w;
 		if(!icon.IsEmpty()) {
-			Size isz = icon.GetSize();
-			int len = 2 + isz.cx * isz.cy;
-			Buffer<unsigned long> data(len);
-			unsigned long *t = data;
-			*t++ = isz.cx;
-			*t++ = isz.cy;
-			for(int y = 0; y < isz.cy; y++) {
-				const RGBA *q = icon[y];
-				for(int x = isz.cx; x--;) {
-					*t++ = ((dword)q->a << 24) |
-					       (dword)q->b | ((dword)q->g << 8) | ((dword)q->r << 16);
-					q++;
-				}
-			}
+			int len = 0;
+			Buffer<unsigned long> data = PreperIcon(icon, len);
 			XChangeProperty(Xdisplay, w, XAtom("_NET_WM_ICON"), XA_CARDINAL, 32, PropModeReplace,
-			                (const unsigned char *)~data, len);
+			               (const unsigned char *)~data, len);
+			if (!largeicon.IsEmpty()) {
+				data = PreperIcon(largeicon, len);
+				XChangeProperty(Xdisplay, w, XAtom("_NET_WM_ICON"), XA_CARDINAL, 32, PropModePrepend,
+			                   (const unsigned char *)~data, len);
+			}
 		}
 		XSetWMHints(Xdisplay, w, wm_hints);
 
@@ -219,6 +214,24 @@ void TopWindow::SyncCaption()
 		                PropModeReplace,
 		                (unsigned char *) &mwmhints, PROP_MWM_HINTS_ELEMENTS);
 	}
+}
+
+Buffer<unsigned long> TopWindow::PreperIcon(const Image& icon, int& len) {
+	Size isz = icon.GetSize();
+	len = 2 + isz.cx * isz.cy;
+	Buffer<unsigned long> data(len);
+	unsigned long *t = data;
+	*t++ = isz.cx;
+	*t++ = isz.cy;
+	for(int y = 0; y < isz.cy; y++) {
+		const RGBA *q = icon[y];
+		for(int x = isz.cx; x--;) {
+			*t++ = ((dword)q->a << 24) |
+				   (dword)q->b | ((dword)q->g << 8) | ((dword)q->r << 16);
+			q++;
+		}
+	}
+	return data;
 }
 
 void TopWindow::CenterRect(Ctrl *owner)
@@ -238,8 +251,9 @@ void TopWindow::CenterRect(Ctrl *owner)
 		else
 			r = wr;
 		Point p = r.CenterPos(sz);
-		r = RectC(p.x, p.y, sz.cx, sz.cy);
-		if (p.x <= wr.Width() && p.y <= wr.Height()) {
+		
+		if (p.x + sz.cx <= wr.Width() && p.y + sz.cy <= wr.Height()) {
+			r = RectC(p.x, p.y, sz.cx, sz.cy);
 			wr.left += fm.left;
 			wr.right -= fm.right;
 			wr.top += fm.top;
@@ -252,8 +266,8 @@ void TopWindow::CenterRect(Ctrl *owner)
 				r.bottom = wr.bottom;
 			minsize.cx = min(minsize.cx, r.GetWidth());
 			minsize.cy = min(minsize.cy, r.GetHeight());
+			SetRect(r);
 		}
-		SetRect(r);
 	}
 }
 
