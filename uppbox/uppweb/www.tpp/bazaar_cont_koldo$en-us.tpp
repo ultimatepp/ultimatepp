@@ -31,8 +31,10 @@ iceAutomation]&]
 [s0;2 &]
 [s0; [2 I am interested in engineering and scientific applications.]&]
 [s0;2 &]
-[s0; [2 If you have any idea you can address me ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 h
+[s0; [2 If you have any idea you can address it to me ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 h
 ere][2  for an opinion or even create a new joint venture to do 
 a new package or project.]&]
 [s0;2 &]
-[s0;2 ]]
+[s0; [2 I am ][^http`:`/`/en`.wikipedia`.org`/wiki`/Basque`_people^2 Basque][2  
+and I live in the ][^http`:`/`/en`.wikipedia`.org`/wiki`/Basque`_Country`_`%28greater`_region`%29^2 B
+asque Country][2 . If you plan to come here I can advise you!]]]
