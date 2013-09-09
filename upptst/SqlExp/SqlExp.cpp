@@ -193,6 +193,8 @@ CONSOLE_APP_MAIN
 	EXP(Insert(TABLE1)(COLUMN1, 12)(COLUMN2, "hello")(COL, Date(2007, 1, 1)));
 	EXP(Insert(TABLE1)(COLUMN1, 12)(COLUMN2)(COL).From(TABLE1).Where(COL >= 0));
 
+	EXP(Insert(TABLE1)(COLUMN1, 1).Where(NotExists(Select(ID).From(TABLE1).Where(COLUMN1 == 1))));
+
 	EXP(Update(TABLE1)(COLUMN1, 13)(COLUMN2, "world").Where(COL > Date(2007, 1, 1)));
 	
 	EXP(Insert(TABLE1)(COL, Select(COLUMN1).From(TABLE1).Where(COLUMN2 == 21).AsValue()));
