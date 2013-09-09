@@ -93,6 +93,7 @@ GUI_APP_MAIN
 	EXP(Select(NextVal(SEQ)).Get());
 	EXP(Select(CurrVal(SEQ)).Get());
 	EXP(Select(SqlArg()).From(TABLE1));
+	EXP(Select(Case(COL == 1, "one")(COL == 2, "two")("?")).From(TABLE1));
 
 	EXP(Select(COL).From(TABLE1).Where(COL / 2 > 1 && COLUMN1 == "A" || COLUMN2 == Date(2006, 1, 1)));
 	EXP(Select(COL).From(TABLE1).Where(!(COL == 1)));
@@ -125,14 +126,13 @@ GUI_APP_MAIN
 	EXP(Select(COL).From(TABLE1).RightJoin(TABLE1).On(COL.Of(TABLE1) == COLUMN1.Of(TABLE1)));
 	EXP(Select(COL).From(TABLE1).FullJoin(TABLE1).On(COL.Of(TABLE1) == COLUMN1.Of(TABLE1)));
 
-	EXP(Delete(TABLE1).Where(COL < 0));
-
 	EXP(Insert(TABLE1)(COLUMN1, 12)(COLUMN2, "hello")(COL, Date(2007, 1, 1)));
 	EXP(Insert(TABLE1)(COLUMN1, 12)(COLUMN2)(COL).From(TABLE1).Where(COL >= 0));
+	EXP(Insert(TABLE1)(COL, Select(COLUMN1).From(TABLE1).Where(COLUMN2 == 21).AsValue()));
+	EXP(Insert(TABLE1)(COLUMN1, "unique_value").Where(NotExists(Select(ID).From(TABLE1).Where(COLUMN1 == "unique_value"))));
 
 	EXP(Update(TABLE1)(COLUMN1, 13)(COLUMN2, "world").Where(COL > Date(2007, 1, 1)));
-	
-	EXP(Insert(TABLE1)(COL, Select(COLUMN1).From(TABLE1).Where(COLUMN2 == 21).AsValue()));
+	EXP(Delete(TABLE1).Where(COL < 0));
 
 	EXP(Select(COL).From(Select(COL).From(TABLE1)));
 	EXP(Select(COL).From(Select(COL).From(TABLE1).AsTable(TABLE2)));
