@@ -137,6 +137,8 @@ SqlSelect& SqlSelect::Get() {
 }
 
 SqlSelect& SqlSelect::From(const SqlSet& table) {
+	if(table.IsEmpty())
+		return Get();
 	String ts = table(SqlSet::SETOP + 1);
 	text = "select " + text + " from " + ts;
 	tables << ',' << Filter(ts, CharFilterNotWhitespace);
@@ -300,7 +302,7 @@ SqlInsert::operator SqlStatement() const {
 	String s = "insert into " + table.Quoted();
 	if(!set1.IsEmpty()) {
 		s << set1();
-		if(from.IsEmpty()) {
+		if(from.IsEmpty() && where.IsEmpty()) {
 			if(!set2.IsEmpty())
 				s << " values " << set2();
 		}
