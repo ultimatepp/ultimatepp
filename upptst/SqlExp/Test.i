@@ -1715,6 +1715,28 @@
 		"insert into \"TABLE1\"(\"COLUMN1\", \"COLUMN2\", \"COL\") select 12, \"COLUMN2\", \"COL\" from \"TABLE1\" where \"COL\" >= 0"); // insert into "TABLE1"("COLUMN1", "COLUMN2", "COL") select 12, "COLUMN2", "COL" from "TABLE1" where "COL" >= 0
 // ---------------------------------
 	TEST(MY_SQL,
+		Insert(TABLE1)(COLUMN1, 1).Where(NotExists(Select(ID).From(TABLE1).Where(COLUMN1 == 1))),
+		"insert into `TABLE1`(`COLUMN1`) select 1 where not exists (select `ID` from `TABLE1` where `COLUMN1` = 1)"); // insert into `TABLE1`(`COLUMN1`) select 1 where not exists (select `ID` from `TABLE1` where `COLUMN1` = 1)
+	TEST(SQLITE3,
+		Insert(TABLE1)(COLUMN1, 1).Where(NotExists(Select(ID).From(TABLE1).Where(COLUMN1 == 1))),
+		"insert into \"TABLE1\"(\"COLUMN1\") select 1 where not exists (select \"ID\" from \"TABLE1\" where \"COLUMN1\" = 1)"); // insert into "TABLE1"("COLUMN1") select 1 where not exists (select "ID" from "TABLE1" where "COLUMN1" = 1)
+	TEST(ORACLE,
+		Insert(TABLE1)(COLUMN1, 1).Where(NotExists(Select(ID).From(TABLE1).Where(COLUMN1 == 1))),
+		"insert into \"TABLE1\"(\"COLUMN1\") select 1 from DUAL where not exists (select \"ID\" from \"TABLE1\" where \"COLUMN1\" = 1)"); // insert into "TABLE1"("COLUMN1") select 1 from DUAL where not exists (select "ID" from "TABLE1" where "COLUMN1" = 1)
+	TEST(MSSQL,
+		Insert(TABLE1)(COLUMN1, 1).Where(NotExists(Select(ID).From(TABLE1).Where(COLUMN1 == 1))),
+		"insert into \"TABLE1\"(\"COLUMN1\") select 1 where not exists (select \"ID\" from \"TABLE1\" where \"COLUMN1\" = 1)"); // insert into "TABLE1"("COLUMN1") select 1 where not exists (select "ID" from "TABLE1" where "COLUMN1" = 1)
+	TEST(PGSQL,
+		Insert(TABLE1)(COLUMN1, 1).Where(NotExists(Select(ID).From(TABLE1).Where(COLUMN1 == 1))),
+		"insert into \"TABLE1\"(\"COLUMN1\") select 1 where not exists (select \"ID\" from \"TABLE1\" where \"COLUMN1\" = 1)"); // insert into "TABLE1"("COLUMN1") select 1 where not exists (select "ID" from "TABLE1" where "COLUMN1" = 1)
+	TEST(FIREBIRD,
+		Insert(TABLE1)(COLUMN1, 1).Where(NotExists(Select(ID).From(TABLE1).Where(COLUMN1 == 1))),
+		"insert into \"TABLE1\"(\"COLUMN1\") select 1 where not exists (select \"ID\" from \"TABLE1\" where \"COLUMN1\" = 1)"); // insert into "TABLE1"("COLUMN1") select 1 where not exists (select "ID" from "TABLE1" where "COLUMN1" = 1)
+	TEST(DB2,
+		Insert(TABLE1)(COLUMN1, 1).Where(NotExists(Select(ID).From(TABLE1).Where(COLUMN1 == 1))),
+		"insert into \"TABLE1\"(\"COLUMN1\") select 1 where not exists (select \"ID\" from \"TABLE1\" where \"COLUMN1\" = 1)"); // insert into "TABLE1"("COLUMN1") select 1 where not exists (select "ID" from "TABLE1" where "COLUMN1" = 1)
+// ---------------------------------
+	TEST(MY_SQL,
 		Update(TABLE1)(COLUMN1, 13)(COLUMN2, "world").Where(COL > Date(2007, 1, 1)),
 		"update `TABLE1` set `COLUMN1` = 13, `COLUMN2` = 'world' where `COL` > '2007-01-01'"); // update `TABLE1` set `COLUMN1` = 13, `COLUMN2` = 'world' where `COL` > '2007-01-01'
 	TEST(SQLITE3,
@@ -1999,3 +2021,4 @@
 	TEST(DB2,
 		Select(ID).From(TABLE1).Where(ID == SqlSetFrom(m)),
 		"select \"ID\" from \"TABLE1\" where \"ID\" in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')"); // select "ID" from "TABLE1" where "ID" in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+// ---------------------------------
