@@ -536,6 +536,28 @@ void DisplayPopup::Sync()
 					r.bottom = max(r.bottom, r.top + sz.cy);
 					r.Inflate(1, 1);
 					r.Offset(ctrl->GetScreenView().TopLeft());
+
+					Rect wa = GetWorkArea();
+					Size sz = r.GetSize();
+					if(r.left < wa.left) {
+						r.left = wa.left;
+						r.right = min(wa.right, r.left + sz.cx);
+					}
+					else
+					if(r.right > wa.right) {
+						r.left = max(wa.left, wa.right - sz.cx);
+						r.right = wa.right;
+					}
+					if(r.top < wa.top) {
+						r.top = wa.top;
+						r.bottom = min(wa.bottom, wa.top + sz.cy);
+					}
+					else
+					if(r.bottom > wa.bottom) {
+						r.top = max(wa.top, wa.bottom - sz.cy);
+						r.bottom = wa.bottom;
+					}
+					
 					SetRect(r);
 					if(!IsOpen())
 						Ctrl::PopUp(ctrl, true, false, false);
