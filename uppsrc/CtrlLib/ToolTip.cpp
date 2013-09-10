@@ -11,7 +11,7 @@ ToolTip::ToolTip()
 
 Size ToolTip::GetMinSize() const
 {
-	return AddFrameSize(GetSmartTextSize(text) + 4);
+	return AddFrameSize(GetSmartTextSize(text, StdFont(), GetWorkArea().GetWidth() / 2) + 4);
 }
 
 void ToolTip::Paint(Draw& w)

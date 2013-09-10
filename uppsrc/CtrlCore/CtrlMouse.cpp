@@ -449,9 +449,7 @@ bool    Ctrl::HasMouseIn(const Rect& r) const
 	GuiLock __;
 	if(!HasMouse())
 		return false;
-	Rect q = GetVisibleScreenView();
-	q = r.Offseted(q.TopLeft()) & q;
-	return q.Contains(GetMousePos());
+	return (r.Offseted(GetScreenView().TopLeft()) & GetVisibleScreenView()).Contains(GetMousePos());
 }
 
 Point Ctrl::GetMouseViewPos() const
