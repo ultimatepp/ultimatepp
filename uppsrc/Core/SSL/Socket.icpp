@@ -123,7 +123,7 @@ bool TcpSocket::SSLImp::Start()
 		SetSSLError("Start: SSL_new");
 		return false;
 	}
-	if(!SSL_set_fd(ssl, socket.GetSOCKET())) {
+	if(!SSL_set_fd(ssl, (int)socket.GetSOCKET())) {
 		SetSSLError("Start: SSL_set_fd");
 		return false;
 	}

@@ -321,7 +321,7 @@ String SqlFormat(const char *s, int l)
 
 String SqlFormat(const char *s)
 {
-	return SqlFormat(s, strlen(s));
+	return SqlFormat(s, (int)strlen(s));
 }
 
 String SqlFormat(const String& x)
