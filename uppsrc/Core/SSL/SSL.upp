@@ -12,6 +12,8 @@ library(WIN32 MSC SHARED DEBUG) "libeay32MDd ssleay32MDd";
 
 library(WIN32) gdi32;
 
+library( WIN32 GCC) "libeay32.a ssleay32.a";
+
 link(WIN32 MSC SO) /nodefaultlib:libc;
 
 file
