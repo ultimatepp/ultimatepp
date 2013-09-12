@@ -231,7 +231,7 @@ bool PNGRaster::Create()
 	}
 */
 
-	data->row_bytes = png_get_rowbytes(data->png_ptr, data->info_ptr);
+	data->row_bytes = (int)png_get_rowbytes(data->png_ptr, data->info_ptr);
 	data->next_row = 0;
 	data->preload = (interlace_type != PNG_INTERLACE_NONE);
 	data->loaded = false;
