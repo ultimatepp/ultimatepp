@@ -1,18 +1,9 @@
 uses
-	Core;
-
-library(MSC) "out32\\libeay32.lib gdi32.lib";
-
-library(WIN32 !MSC) out32dll\libeay32.lib;
-
-library(!WIN32) ssl;
-
-include
-	plugin\openssl\inc32;
+	Core,
+	Core/SSL;
 
 file
 	AESStream.cpp,
-	Sha.cpp,
 	AESStream.h,
 	src.tpp;
 

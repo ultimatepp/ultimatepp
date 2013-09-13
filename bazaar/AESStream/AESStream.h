@@ -79,15 +79,4 @@ inline AESDecoderStream & operator << (AESDecoderStream &stream, const String &s
 //----------------------------------------------------------------------------------------------
 extern const dword AES_CONTAINER_DWORD_HEADER;
 
-// SHA2 functions
-
-String SHA224String(const String& data);
-String SHA224Hex(const String& data);
-String SHA256String(const String& data);
-String SHA256Hex(const String& data);
-String SHA384String(const String& data);
-String SHA384Hex(const String& data);
-String SHA512String(const String& data);
-String SHA512Hex(const String& data);
-
 #endif

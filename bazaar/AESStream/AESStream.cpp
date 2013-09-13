@@ -41,7 +41,7 @@ String AESPadString(const String &s, int l)
 dword rdtsc()
 {
 	dword _out;
-	#ifndef flagGCC
+	#if !defined(flagGCC) && !defined(PLATFORM_WIN64)
 	__asm 
 	{
 		rdtsc
