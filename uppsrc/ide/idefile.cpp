@@ -41,7 +41,7 @@ void Ide::SetupEditor(int f, String hl, String fn)
 	if(hl == "sch")
 		editor.Highlight(CodeEditor::HIGHLIGHT_SCH);
 	else
-	if(hl == "sql")
+	if(hl == "sql" || hl == "ddl")
 		editor.Highlight(CodeEditor::HIGHLIGHT_SQL);
 	else
 		editor.Highlight(CodeEditor::HIGHLIGHT_NONE);
