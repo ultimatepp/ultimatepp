@@ -12,7 +12,7 @@ topic "WithFactory";
 [s0;*@3;4 &]
 [s1;:noref:%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>&]
 [s1;:WithFactory`:`:class:%- [@(0.0.255) class]_[* WithFactory]&]
-[s4; [*C@4 T]-|Type of base class of polymorphic hyerarchy.&]
+[s4; [*C@4 T]-|Type of base class of polymorphic hierarchy.&]
 [s5; This template class adds some RTTI (Run Time Type Identification) 
 to your classes, and implements a so called `'class factory`', 
 bringing the ability to register class hierarchies, construct 
@@ -169,4 +169,4 @@ oid])&]
 [s2; Returns a string containing the class name.&]
 [s3;%- &]
 [s6;%- &]
-[s0; ]
+[s0; ]]
