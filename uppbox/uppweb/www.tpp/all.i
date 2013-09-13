@@ -34,6 +34,10 @@ TOPIC("bazaar$en-us")
 #include "bazaar$en-us.tppi"
 END_TOPIC
 
+TOPIC("bazaar$ru-ru")
+#include "bazaar$ru-ru.tppi"
+END_TOPIC
+
 TOPIC("bazaar_cont_koldo$en-us")
 #include "bazaar_cont_koldo$en-us.tppi"
 END_TOPIC

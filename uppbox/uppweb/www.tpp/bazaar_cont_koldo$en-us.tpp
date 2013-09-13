@@ -9,6 +9,9 @@ topic "Bazaar contributors: Koldo Ramirez";
 [s0;l160;i150;O0; [^topic`:`/`/ScatterCtrl`/src`/ScatterCtrl`$en`-us^2 ScatterCtrl]&]
 [s0;l160;i150;O0; [^topic`:`/`/ScatterDraw`/src`/ScatterDraw`$en`-us^2 ScatterDraw]&]
 [s0;l160;i150;O0; [^topic`:`/`/RasterPlayer`/src`/RasterPlayer`$en`-us^2 RasterPlayer]&]
+[s0;l160;i150;O0; [^topic`:`/`/plugin`/Eigen`/srcdoc`/Eigen`$en`-us^2 Eigen][2  
+(with ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 d
+olik.rce][2 )]&]
 [s0;l160;2 &]
 [s0;l160; [*2 Bazaar]&]
 [s0;l160;i150;O0; [2 Main packages]&]
