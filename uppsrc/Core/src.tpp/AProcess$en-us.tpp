@@ -109,7 +109,7 @@ onst]_[@(0.0.255) char]_`*[*@3 cmdline], [@(0.0.255) const]_[@(0.0.255) char]_`*
 [s2;%% Starts a new process defined by [%-*@3 cmdline], [%-*@3 envptr 
 ]can provide a new environment for the process, if NULL, then 
 the new process inherits caller`'s environment. This variant 
-activates mode when standard output and stadart error output 
+activates mode when standard output and standard error output 
 are read separately using Read2 method.&]
 [s3;%% &]
 [s4; &]
