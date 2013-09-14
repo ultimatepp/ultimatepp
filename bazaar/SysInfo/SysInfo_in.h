@@ -19,6 +19,9 @@
 	typedef ACCESS_MASK REGSAM;
 	#include <PowrProf.h>
 	#include <lm.h>
+	#ifndef PROCESS_QUERY_LIMITED_INFORMATION
+	#define PROCESS_QUERY_LIMITED_INFORMATION 0x1000
+	#endif	
 #endif
 #ifdef PLATFORM_POSIX
 	#include <sys/time.h>

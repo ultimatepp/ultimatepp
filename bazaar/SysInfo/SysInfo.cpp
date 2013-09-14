@@ -244,6 +244,22 @@ Array <NetAdapter> GetAdapterInfo() {
 			adapter.mac = ToUpper(HexString(pAdd->PhysicalAddress, len, 1, ':'));
 		adapter.description = Trim(WideToString(pAdd->Description));
 		adapter.fullname = Trim(WideToString(pAdd->FriendlyName));
+    
+		PIP_ADAPTER_UNICAST_ADDRESS pUnicast = pAdd->FirstUnicastAddress;
+    	if (pUnicast != NULL) {
+          	for (int i = 0; pUnicast != NULL; i++) {
+           		if (pUnicast->Address.lpSockaddr->sa_family == AF_INET) {
+					sockaddr_in *sa_in = (sockaddr_in *)pUnicast->Address.lpSockaddr;
+					adapter.ip4 = inet_ntoa(sa_in->sin_addr);
+               	} /*else if (pUnicast->Address.lpSockaddr->sa_family == AF_INET6) {
+               		char buff[100];
+    				DWORD bufflen = 100;
+					sockaddr_in6 *sa_in6 = (sockaddr_in6 *)pUnicast->Address.lpSockaddr;
+					adapter.ip6 = inet_ntop(AF_INET6, &(sa_in6->sin6_addr), buff, bufflen);
+               	} */
+            	pUnicast = pUnicast->Next;
+         	}
+      	} 
 		switch (pAdd->IfType) {
 		case IF_TYPE_ETHERNET_CSMACD: 		adapter.type = "ETHERNET";	break;
 		case IF_TYPE_ISO88025_TOKENRING: 	adapter.type = "TOKENRING";	break;
@@ -519,44 +535,32 @@ Array <NetAdapter> GetAdapterInfo() {
 }
 */
 
+#include <arpa/inet.h>
+
 Array<NetAdapter> GetAdapterInfo()
 {
 	Array<NetAdapter> res;
-
-	// this is used to avoid adding duplicate entries
-	// with same MAC and differing only by adapter family
-	// (posix may return same interface twice for IPV4 and IPV6)
 	Index<String> macs;
 	
-	// Get a socket handle
 	int sck = socket(PF_INET, SOCK_DGRAM, 0);
 	if(sck < 0)
 		return res;
 	
-	// get a list of all available interfaces
-	// as buffer size is unknown, we check results and retry as needed
 	int bufSize = 4096;
 	struct ifconf ifc =	{ 0	};
-	caddr_t buf;
+	byte buf[bufSize];
 	for(int iTry = 0; iTry < 4; iTry++) {
-		buf = (caddr_t)new byte[bufSize];
 		ifc.ifc_len = bufSize;
-		ifc.ifc_buf = buf;
-
-		// get interfaces list, 
+		ifc.ifc_buf = (__caddr_t)buf;
+ 
 		if (ioctl(sck, SIOCGIFCONF, &ifc) < 0) {
-			// failed, free buffer and leave
-			delete[] buf;
 			close(sck);
 			return res;
 		}
 		
-		// check if buffer size was big enough
 		if(ifc.ifc_len != bufSize)
 			break;
 
-		// not big enough, double size and retry
-		delete[] buf;
 		bufSize *= 2;
 		if(iTry >= 3) {
 			close(sck);
@@ -564,20 +568,15 @@ Array<NetAdapter> GetAdapterInfo()
 		}
 	}
 		
-	// iterate through returned data fill result vector
 	int nIfaces = ifc.ifc_len / sizeof(struct ifreq);
 	struct ifreq *iface = ifc.ifc_req;
 	for(int iIface = 0; iIface < nIfaces; iIface++) {
-		// platform dependent code to get MAC address
 		String MAC;
 		
-// LINUX
 #ifdef SIOCGIFHWADDR
-		if(ioctl(sck, SIOCGIFHWADDR, iface) < 0)
-		{
-			// couldn't get MAC, just leave it empty
+		if(ioctl(sck, SIOCGIFHWADDR, iface) < 0) 
 			continue;
-		}
+		
 		MAC = Format("%02x:%02x:%02x:%02x:%02x:%02x",
 						(byte)iface->ifr_hwaddr.sa_data[0],
 						(byte)iface->ifr_hwaddr.sa_data[1],
@@ -587,13 +586,10 @@ Array<NetAdapter> GetAdapterInfo()
 						(byte)iface->ifr_hwaddr.sa_data[5]
 		);
 
-// SOLARIS AND SysVR4 systems
 #elif SIOCGENADDR
-		if (ioctl(sck, SIOCGENADDR, iface) < 0)
-		{
-			// couldn't get MAC, just leave it empty
+		if (ioctl(sck, SIOCGENADDR, iface) < 0) 
 			continue;
-		}
+		
 		MAC = Format("%02x:%02x:%02x:%02x:%02x:%02x",
 						(byte)iface->ifr_enaddr[0],
 						(byte)iface->ifr_enaddr[1],
@@ -603,9 +599,7 @@ Array<NetAdapter> GetAdapterInfo()
 						(byte)iface->ifr_enaddr[5]
 		);
 
-// Mac OSX and other BSD
 #elif __MACH__ || __NetBSD__ || __OpenBSD__ || __FreeBSD__
-
 		int mib[6];
 		mib[0] = CTL_NET;
 		mib[1] = AF_ROUTE;
@@ -620,14 +614,12 @@ Array<NetAdapter> GetAdapterInfo()
 		if (sysctl(mib, 6, NULL, (size_t*)&len, NULL, 0) != 0) 
 			continue;	// sysctl error, just leave MAC empty
 
-		char *macbuf = new char[len];
+		char macbuf[len];
 		if (!macbuf) 	// can't allocat buffer, skip this MAC
 			continue;
 		
-		if (sysctl(mib, 6, macbuf, (size_t*)&len, NULL, 0) != 0) {
-			delete[] macbuf;
+		if (sysctl(mib, 6, macbuf, (size_t*)&len, NULL, 0) != 0) 
 			continue;
-		}
 
 		struct if_msghdr *ifm = (struct if_msghdr *)macbuf;
 		struct sockaddr_dl *sdl = (struct sockaddr_dl *)(ifm + 1);
@@ -636,28 +628,21 @@ Array<NetAdapter> GetAdapterInfo()
 		MAC = Format("%02x:%02x:%02x:%02x:%02x:%02x", 
 					ptr[0], ptr[1], ptr[2], ptr[3], ptr[4], ptr[5]);
 
-		delete[] macbuf;
 #else
 #error OS Distribution Not Recognized
 #endif
 
-		// remove MAC addresses of 6 nulls...
-		// loopback interface, for example, don't have a MAC
 		if(MAC == "00:00:00:00:00:00")
 			MAC.Clear();
 
-		// check out if we've already stored this MAC
-		// in case, we just skip the interface
 		if(!MAC.IsEmpty() && macs.Find(MAC) >= 0)
 			continue;
 		macs.Add(MAC);
 
 		NetAdapter &adapter = res.Add();
 		
-		// set MAC in result
 		adapter.mac = MAC;
 		
-		// get interface name
 		adapter.fullname = iface->ifr_name;
 		
 		// set interface type from name
@@ -681,12 +666,15 @@ Array<NetAdapter> GetAdapterInfo()
 		else
 			adapter.type = "OTHER";
 		
-		// description as name... we dont' have any better choice
 		adapter.description = adapter.fullname;
+		
+		if (!ioctl(sck, SIOCGIFADDR, iface))
+			continue;
+        
+        adapter.ip4 = inet_ntoa(((struct sockaddr_in *)&(iface->ifr_addr))->sin_addr);  
 		
 		iface++;
 	}
-	delete[] buf;
 	close(sck);
 
 	return res;
@@ -856,6 +844,42 @@ String GetProcessFileName(int64 processID)
 
     return ret;
 }
+
+
+ULONGLONG SubtractFILETIME(FILETIME &hasta, FILETIME &desde) {
+	__int64 timeDesde = ((__int64)desde.dwHighDateTime << 32) + desde.dwLowDateTime;
+	__int64 timeHasta = ((__int64)hasta.dwHighDateTime << 32) + hasta.dwLowDateTime;
+	__int64 delta = timeHasta - timeDesde;
+	return delta;
+}
+
+int GetProcessCPUUsage(int64 pid)
+{
+	HANDLE hp = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, 0, DWORD(pid));
+	if (hp == NULL){
+	    CloseHandle(hp);
+	    return Null;
+	}
+	FILETIME iddleTime, kernelTimeS, userTimeS, kernelTimeS_0, userTimeS_0;
+	FILETIME creationTime, exitTime, kernelTimeP, userTimeP, kernelTimeP_0, userTimeP_0;
+    GetSystemTimes(&iddleTime, &kernelTimeS_0, &userTimeS_0);
+	GetProcessTimes(hp, &creationTime, &exitTime, &kernelTimeP_0, &userTimeP_0);
+	Sleep(50);		// It spends some ms elapsing the process used time
+	GetSystemTimes(&iddleTime, &kernelTimeS, &userTimeS);
+	GetProcessTimes(hp, &creationTime, &exitTime, &kernelTimeP, &userTimeP);
+	
+	int64 kernelS = SubtractFILETIME(kernelTimeS, kernelTimeS_0);
+	int64 userS = SubtractFILETIME(userTimeS, userTimeS_0);
+	int64 totalS = kernelS + userS;
+	int64 kernelP = SubtractFILETIME(kernelTimeP, kernelTimeP_0);
+	int64 userP = SubtractFILETIME(userTimeP, userTimeP_0);
+	int64 totalP = kernelP + userP;
+
+	int cpu = int((100*totalP)/totalS);
+	CloseHandle(hp);
+	return cpu;
+}
+
 
 BOOL CALLBACK EnumGetWindowsList(HWND hWnd, LPARAM lParam) 
 {
@@ -1230,6 +1254,12 @@ bool SetProcessPriority(int64 pid, int priority)
 	else
 		return false;
 }
+
+bool ProcessExists(int64 pid)
+{
+	return DirectoryExists(Format("/proc/%s", Sprintf("%ld", pid)));
+}
+
 #endif
 
 int64 GetWindowIdFromCaption(String windowCaption, bool exactMatch)
@@ -1290,10 +1320,20 @@ int64 GetWindowIdFromProcessId(int64 _pid)
 	return -1;
 } 
 
-bool ProcessExists(int64 pid)
+int64 GetProcessIdFromName(String name) 
 {
-	return DirectoryExists(Format("/proc/%s", Sprintf("%ld", pid)));
+	Array<int64> pid;
+	Array<String> pNames;
+	if (!GetProcessList(pid, pNames))
+		return Null;
+	name = ToLower(name);
+	for (int i = 0; i < pid.GetCount(); ++i) {
+		if (ToLower(pNames[i]) == name)
+			return pid[i];
+	}
+	return Null;
 }
+
 
 /////////////////////////////////////////////////////////////////////
 // Others

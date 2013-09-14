@@ -250,8 +250,19 @@ id])&]
 [s3; &]
 [s4;%- &]
 [s5;:GetProcessFileName`(int64`):%- [_^String^ String]_[* GetProcessFileName]([@(0.0.255) i
-nt64]_[*@3 processID])&]
-[s2; Gets the program file name of a process with handle [%-*@3 processID].&]
+nt64]_[*@3 pid])&]
+[s2; Gets the program file name of a process with handle [%-*@3 pid].&]
+[s3; &]
+[s4; &]
+[s5;:GetProcessCPUUsage`(int64`):%- [@(0.0.255) int]_[* GetProcessCPUUsage]([@(0.0.255) int
+64]_[*@3 pid])&]
+[s2; Gets the percentage of CPU usage for process [%-*@3 pid].&]
+[s6; Only available in Windows&]
+[s3; &]
+[s4;%- &]
+[s5;:GetProcessIdFromName`(String`):%- [_^int64^ int64]_[* GetProcessIdFromName]([_^String^ S
+tring]_[*@3 name])&]
+[s2; Gets the process handle of a program named [%-*@3 name].&]
 [s3; &]
 [s4;%- &]
 [s5;:GetProcessIdFromWindowCaption`(String`,bool`):%- [@(0.0.255) int64]_[* GetProcessIdF

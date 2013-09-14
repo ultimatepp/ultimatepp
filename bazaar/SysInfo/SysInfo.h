@@ -18,6 +18,7 @@ struct NetAdapter : DeepCopyOption<NetAdapter> {
 	String fullname;
 	String mac;
 	String type;
+	String ip4, ip6;
 	
 	void Xmlize(XmlIO &xml);
 	void Jsonize(JsonIO &json);
@@ -63,7 +64,12 @@ Upp::Array<int64> GetProcessList();
 String GetProcessName(int64 pid);
 String GetProcessFileName(int64 processID);
 
+#if defined(PLATFORM_WIN32) 
+int GetProcessCPUUsage(int64 pid);
+#endif
+
 int64 GetProcessIdFromWindowCaption(String windowCaption, bool exactMatch = false);
+int64 GetProcessIdFromName(String name);
 
 int64 GetWindowIdFromCaption(String windowCaption, bool exactMatch = false);
 
