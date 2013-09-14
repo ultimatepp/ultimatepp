@@ -99,7 +99,6 @@ String FtpClient::Load(const char *path)
 		return String::GetVoid();
 	}
 	load_data = Null;
-	int p = 0;
 	while(!WhenProgress(load_data.GetLength(), 0)) {
 		byte buffer[1024];
 		int ndata = FtpRead(buffer, sizeof(buffer), ftpdata);
@@ -232,7 +231,6 @@ String FtpClient::List(const char *path)
 		error = FtpError(ftpconn);
 		return String::GetVoid();
 	}
-	int p = 0;
 	while(!WhenProgress(load_data.GetLength(),0)) {
 		byte buffer[1024];
 		int ndata = FtpRead(buffer, sizeof(buffer), ftpdata);
