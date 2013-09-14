@@ -28,7 +28,7 @@ bool FileCat(const char *file, const char *appendFile);
 
 int FileCompare(const char *path1, const char *path2);
 
-Upp::int64 FindStringInFile(const char *file, const String text, Upp::int64 pos0 = 0);
+int64 FindStringInFile(const char *file, const String text, int64 pos0 = 0);
 
 bool FileStrAppend(const char *file, const char *str);
 bool AppendFile(const char *filename, const char *str);
@@ -71,8 +71,8 @@ bool IsReadOnly(const char *path, bool &usr, bool &grp, bool &oth);
 
 String LoadFile_Safe(String fileName);
 
-Upp::int64 GetLength(const char *fileDirName);
-Upp::int64 GetDirectoryLength(const char *directoryName);
+int64 GetLength(const char *fileDirName);
+int64 GetDirectoryLength(const char *directoryName);
 
 ///////////////////////////////
 Upp::Array<String> SearchFile(String dir, const Upp::Array<String> &condFiles, const Upp::Array<String> &condFolders, 
@@ -83,7 +83,7 @@ Upp::Array<String> SearchFile(String dir, String condFile, String text = "");//,
 ///////////////////////////////
 
 bool FileToTrashBin(const char *path);
-Upp::int64 TrashBinGetCount();
+int64 TrashBinGetCount();
 bool TrashBinClear();
 
 String GetPersonalFolder();
@@ -97,26 +97,26 @@ struct FileData : Moveable<FileData> {
 	bool isFolder;
 	String fileName;
 	String relFilename;
-	Upp::int64 length;
+	int64 length;
 	struct Upp::Time t;
-	Upp::int64 id;
+	int64 id;
 	
 	String ToString() const { return Format("%s %0n", fileName, length); }
 
-	FileData(bool isFolder, String fileName, String relFilename, Upp::int64 length, 
-		struct Upp::Time t, Upp::uint64 id) : isFolder(isFolder), fileName(fileName), 
+	FileData(bool isFolder, String fileName, String relFilename, int64 length, 
+		struct Upp::Time t, uint64 id) : isFolder(isFolder), fileName(fileName), 
 		relFilename(relFilename), length(length), t(t), id(id) {}
 	FileData() {}
 };
 
-struct FileDiff {
+struct FileDiffData {
 	char action;	// 'n': New, 'u': Update, 'd': Delete, 'p': Problem
 	bool isFolder;
 	String relPath;
 	String fileName;
-	Upp::uint64 idMaster, idSecondary;
+	uint64 idMaster, idSecondary;
 	struct Upp::Time tMaster, tSecondary;
-	Upp::uint64 lengthMaster, lengthSecondary;
+	uint64 lengthMaster, lengthSecondary;
 };
 
 class ErrorHandling
@@ -142,7 +142,7 @@ public:
 	long GetFileCount()				{return fileCount;};
 	long GetFolderCount()			{return folderCount;};
 	long GetCount() 				{return fileCount + folderCount;};
-	Upp::int64 GetSize()			{return fileSize;};
+	int64 GetSize()					{return fileSize;};
 	inline bool UseId() 			{return useId;};
 	void SortByName(bool ascending = true);
 	void SortByDate(bool ascending = true);
@@ -157,7 +157,7 @@ public:
 
 private:
 	void Search_Each(String dir, String condFile, bool recurse, String text);
-	Upp::int64 GetFileId(String fileName);
+	int64 GetFileId(String fileName);
 	String GetRelativePath(const String &fullPath);
 	String GetFileText();
 	
@@ -165,7 +165,7 @@ private:
 	Upp::Array<String> errorList;
 	String basePath;
 	long fileCount, folderCount;
-	Upp::int64 fileSize;
+	int64 fileSize;
 	bool useId;
 	int fileFlags;
 };
@@ -175,7 +175,7 @@ class FileDiffArray : public ErrorHandling
 public:
 	FileDiffArray();
 	void Clear();
-	FileDiff& operator[](long i)	{return diffList[i];}
+	FileDiffData& operator[](long i)	{return diffList[i];}
 	bool Compare(FileDataArray &master, FileDataArray &secondary, const String folderFrom, 
 		Upp::Array<String> &excepFolders, Upp::Array<String> &excepFiles, int sensSecs = 0);
 	bool Apply(String toFolder, String fromFolder, EXT_FILE_FLAGS flags = NO_FLAG);
@@ -185,7 +185,7 @@ public:
 	String ToString();
 	
 private:
-	Upp::Array<FileDiff> diffList;
+	Upp::Array<FileDiffData> diffList;
 };
 
 String Replace(String str, String find, String replace); 
@@ -199,7 +199,7 @@ String FormatLong(long a);
 Time StrToTime(const char *s);
 Date StrToDate(const char *s);
 
-String BytesToString(Upp::uint64 bytes, bool units = true);
+String BytesToString(uint64 bytes, bool units = true);
 
 String SecondsToString(double seconds, bool units = false, bool dec = true);
 String HMSToString(int hour, int min, double seconds, bool units = false, bool dec = true); 
@@ -419,7 +419,7 @@ public:
 	double GetDouble(String separators = "")  	{return atof(GetText(separators));};
 	int GetInt(String separators = "")			{return atoi(GetText(separators));};
 	long GetLong(String separators = "")		{return atol(GetText(separators));};
-	Upp::uint64 GetUInt64(String separators = "")	
+	uint64 GetUInt64(String separators = "")	
 #if defined(PLATFORM_WIN32) 
 	{return _atoi64(GetText(separators));};
 #endif

@@ -284,16 +284,8 @@ String GetRelativePath(String &from, String &path) {
 		}
 		first = false;
 	}
-	return "";
+	return path.Mid(pos_path);
 }
-/*
-bool ReadOnly(const char *path, bool readOnly) {
-	return SetReadOnly(path, readOnly);
-}
-
-bool ReadOnly(const char *path, bool usr, bool grp, bool oth) {
-	return SetReadOnly(path, usr, grp, oth);
-}*/
 
 bool SetReadOnly(const char *path, bool readOnly) {
 	return SetReadOnly(path, readOnly, readOnly, readOnly);
@@ -1197,6 +1189,9 @@ String FileRealName(const char *_fileName) {
 	
 	ret.Reserve(len);
 	
+	if (fileName.Left(2) == "\\\\")
+		return String("");	// Not valid for UNC paths
+
 	ret = ToUpper(fileName.Left(1)) + ":";
 	
 	while (GetRealName_Next(ret, fileName)) ;
@@ -1992,7 +1987,7 @@ bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, con
 					;
 				else {
 					equal = false;
-					FileDiff &f = diffList.Add();
+					FileDiffData &f = diffList.Add();
 					bool isf = f.isFolder = master[i].isFolder;
 					f.relPath = master[i].relFilename;
 					String name = f.fileName = master[i].fileName;
@@ -2009,7 +2004,7 @@ bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, con
 				}
 			} else {
 				equal = false;
-				FileDiff &f = diffList.Add();
+				FileDiffData &f = diffList.Add();
 				f.isFolder = master[i].isFolder;
 				f.relPath = master[i].relFilename;
 				f.fileName = master[i].fileName;
@@ -2048,7 +2043,7 @@ bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, con
 			}
 			if (cont) {
 				equal = false;
-				FileDiff &f = diffList.Add();
+				FileDiffData &f = diffList.Add();
 				f.isFolder = secondary[i].isFolder;
 				f.relPath = secondary[i].relFilename;
 				f.fileName = secondary[i].fileName;

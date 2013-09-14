@@ -1,12 +1,12 @@
 #ifdef flagGUI
 
 #include <CtrlLib/CtrlLib.h>
-
-#include "Functions4U.h"
-#include <plugin/jpg/jpg.h>
 #include <plugin/tif/tif.h>
+#include <plugin/jpg/jpg.h>
 #include <plugin/gif/gif.h>
 #include <plugin/bmp/bmp.h>
+
+#include "Functions4U.h"
 
 NAMESPACE_UPP
 
