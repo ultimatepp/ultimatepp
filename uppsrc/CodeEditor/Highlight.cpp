@@ -695,15 +695,22 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 		if(IsDigit(*p)) {
 			const wchar *t = p;
 			int c = INK_CONST_INT;
+			bool isDot, isFloat = false;
 			if(*p == '0') c = INK_CONST_OCT;
-			while(IsDigit(*p)) p++;
+			while(IsDigit(*p)) p++; 
 			if(*p == '.' || (*p == 'e' || *p == 'E') && highlight != HIGHLIGHT_CSS) {
+				if(*p == '.')
+					isDot = true;
 				c = INK_CONST_FLOAT;
 				p++;
 				if(*p == '-')
 					p++;
 			}
-			while(IsDigit(*p)) p++;
+			while((IsDigit(*p) || (isDot && *p == 'f')) && (isFloat == false)) {
+				if(*p == 'f')
+					isFloat = true;
+				p++;
+			}
 			if(c == INK_CONST_OCT && p - t == 1)
 				c = INK_CONST_INT;
 			if(p - t > 0)
