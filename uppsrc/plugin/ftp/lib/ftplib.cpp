@@ -80,7 +80,7 @@ struct NetBuf {
 	char perror[256];
 };
 
-static char *version =
+static const char version[] =
 	"ftplib Release 3.1-1 9/16/00, copyright 1996-2000 Thomas Pfau";
 
 GLOBALDEF int ftplib_debug = 0;
@@ -386,14 +386,6 @@ static int FtpBlock(int sockno, int block, char perror[])
 	}
 #endif
 	return 1;
-}
-
-static int FtpCheckRead(int sockno, struct timeval *tv)
-{
-	fd_set mask;
-	FD_ZERO(&mask);
-	FD_SET(sockno, &mask);
-	return select(sockno + 1, &mask, NULL, &mask, tv) > 0 ? 1 : 0;
 }
 
 static int FtpCheckWrite(int sockno, struct timeval *tv)
@@ -749,7 +741,6 @@ static int FtpOpenPort(netbuf *nControl, netbuf **nData, int mode, int dir)
 
 //*
 		if (connect(sData, &sin.sa, sizeof(sin.sa)) == -1) {
-			int t0 = UPP::msecs(), tlim = 0;
 			if(nControl->idlecb && FtpLastError() == ERRPENDING) {
 				while(!FtpCheckWrite(sData, &nControl->idletime)) {
 					if(!nControl->idlecb(nControl, -2, nControl->idlearg)) {

@@ -238,19 +238,34 @@ int  CharFilterDate(int c)
 	return 0;
 }
 
-int Date::Get() const {
-	return year * 365 + s_month_off[month - 1] + (day - 1) +
-	       (year - 1) / 4 - (year - 1) / 100 + (year - 1) / 400 + 1 +
-	       (month > 2) * IsLeapYear(year);
+int Date::Get() const
+{
+	if(IsNull(*this))
+		return Null;
+	int y400 = (year / 400 ) - 2;
+	int ym = year - y400 * 400;
+	return y400 * (400 * 365 + 100 - 3) +
+	        ym * 365 + s_month_off[month - 1] + (day - 1) +
+	       (ym - 1) / 4 - (ym - 1) / 100 + (ym - 1) / 400 + 1 +
+	       (month > 2) * IsLeapYear(ym);
 }
 
-void Date::Set(int d) {
+void Date::Set(int d)
+{
+	if(IsNull(d)) {
+		*this = Null;
+		return;
+	}
 	int q, leap;
 	year = 0;
 	q = d / (400 * 365 + 100 - 3);
 	year += 400 * q;
 	d -= q * (400 * 365 + 100 - 3);
-	leap = 1;
+	if(d < 0) {
+		year -= 400;
+		d += 400 * 365 + 100 - 3;
+	}
+ 	leap = 1;
 	if(d >= 100 * 365 + 24 + 1) {
 		d--;
 		q = d / (100 * 365 + 24);
