@@ -126,6 +126,7 @@ void GLDraw::SetColor(Color c)
 
 void GLDraw::PutRect(const Rect& r, Color color)
 {
+	DLOG("PutRect " << r << " " << color);
 	if(color == InvertColor()) {
 		glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
 		glColor3f(1.0f, 1.0f, 1.0f);
@@ -142,21 +143,16 @@ void GLDraw::PutRect(const Rect& r, Color color)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void GLDraw::InitGL(const Rect& r)
+void GLDraw::InitGL(Size sz)
 {
-	SDraw::Init(r);
+	SDraw::Init(sz);
 
 	glEnable(GL_BLEND);
-//	glShadeModel(GL_SMOOTH);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-//	glOrtho(0.0f, r.GetWidth(), r.GetHeight(), 0.0f, 0.0f, 1.0f);
-
-	DDUMP(r);
-
-	glOrtho(/*r.left*/0, r.right, r.bottom, /*r.top*/0, 0.0f, 1.0f);
+	glOrtho(0, sz.cx, sz.cy, 0, 0.0f, 1.0f);
 	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

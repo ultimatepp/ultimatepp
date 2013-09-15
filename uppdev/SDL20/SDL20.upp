@@ -3,6 +3,7 @@ uses
 	Draw,
 	Painter,
 	RichText,
+	freetype,
 	freetype;
 
 library(WIN32) "SDLmain.lib SDL.lib";

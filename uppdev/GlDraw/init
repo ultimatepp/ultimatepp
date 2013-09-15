@@ -2,4 +2,5 @@
 #define _GlDraw_icpp_init_stub
 #include "CtrlLib/init"
 #include "GLCtrl/init"
+#include "Painter/init"
 #endif
