@@ -518,6 +518,7 @@ public:
 	SqlSelect& Hint(const char *hint);
 
 	SqlSelect& Get();
+	SqlSelect& From()                                 { return Get(); }
 	SqlSelect& From(const SqlSet& set);
 	SqlSelect& From(const SqlId& table);
 	SqlSelect& From(const SqlId& table1, const SqlId& table2);
@@ -565,8 +566,8 @@ public:
 	SqlSet    AsTable(const SqlId& tab) const;
 
 	SqlSelect(Fields f);
-	SqlSelect(const SqlSet& s)                        { text = ~s; on = false; }
-	SqlSelect()                                       { on = false; }
+	SqlSelect(const SqlSet& s)                        { text = "select " + ~s; on = false; }
+	SqlSelect()                                       { on = false; text = "select "; }
 #define E__QSelect(I)   SqlSelect(__List##I(E__SqlVal));
 __Expand(E__QSelect);
 #undef  E__QSelect
