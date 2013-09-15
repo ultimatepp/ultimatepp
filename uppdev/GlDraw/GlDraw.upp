@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	GLCtrl;
+
+file
+	GlDraw.h,
+	GlDraw.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI SSE2";
+

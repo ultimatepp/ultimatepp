@@ -7,6 +7,10 @@
 
 using namespace Upp;
 
+#ifdef PLATFORM_POSIX
+#include <CtrlCore/stdids.h>
+#endif
+
 NAMESPACE_UPP
 
 enum FtStyle {

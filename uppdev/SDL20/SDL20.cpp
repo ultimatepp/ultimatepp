@@ -1,5 +1,9 @@
 #include "SDL20.h"
 
+#ifdef MAIN_CONF
+#include <main.conf.h>
+#endif
+
 #include <RichText/RichText.h>
 
 #define IMAGECLASS TestImg
@@ -10,8 +14,9 @@
 #define IMAGEFILE <SDL20/test.iml>
 #include <Draw/iml_source.h>
 
-
 CONSOLE_APP_MAIN {
+	LOG("HERE:");
+
 #ifdef PLATFORM_POSIX
 //	SetFileFont(0, "/usr/share/fonts/truetype/droid/DroidSans.ttf");
 //	SetFileFont(0, "/usr/share/fonts/truetype/droid/DroidSans-Bold.ttf", FtBOLD);
@@ -62,6 +67,8 @@ CONSOLE_APP_MAIN {
 			RTIMING("SystemDraw");
 			txt.Paint(Zoom(2, 10), w, 0, 0, sz.cx);
 		}
+		
+		w.DrawRect(100, 100, 200, 200, InvertColor());
 
 		win.Present();	
 

@@ -3,7 +3,6 @@ uses
 	Draw,
 	Painter,
 	RichText,
-	freetype,
 	freetype;
 
 library(WIN32) "SDLmain.lib SDL.lib";
@@ -17,7 +16,8 @@ file
 	SDLDraw.cpp,
 	text.qtf,
 	SDL20.cpp,
-	test.iml;
+	test.iml,
+	main.conf;
 
 mainconfig
 	"" = "SSE2 MT CFONTS";

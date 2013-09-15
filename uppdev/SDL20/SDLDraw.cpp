@@ -81,8 +81,16 @@ void SystemDraw::PutImage(Point p, const Image& img, const Rect& src)
 
 void SystemDraw::PutRect(const Rect& r, Color color)
 {
+	
+	if(color == InvertColor()) {
+		SDL_SetRenderDrawBlendMode(win->ren, SDL_BLENDMODE_ADD);
+		SDL_SetRenderDrawColor(win->ren, 127, 127, 127, 255);
+		SDL_RenderFillRect(win->ren, RectSDL(r));
+		SDL_SetRenderDrawBlendMode(win->ren, SDL_BLENDMODE_NONE);
+	}
+	else
 	if(win && !IsNull(color)) {
-		SDL_SetRenderDrawColor(win->ren, color.GetR(), color.GetG(), color.GetB(), 255); // Optimize?
+		SDL_SetRenderDrawColor(win->ren, color.GetR(), color.GetG(), color.GetB(), 255);
 		SDL_RenderFillRect(win->ren, RectSDL(r));
 	}
 }
