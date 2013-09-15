@@ -256,7 +256,7 @@ void CodeEditor::InitKeywords()
 		"case", "__fastcall", "true",
 		"catch", "__finally", "new", "try",
 		"__cdecl", "float", "__try",
-		"char", "for", "operator", "typedef",
+		"char", "wchar_t", "for", "operator", "typedef",
 		"class", "friend", "private", "typeid",
 		"const", "goto", "protected", "typename",
 		"const_cast", "if", "public", "union",
