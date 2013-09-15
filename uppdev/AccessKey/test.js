@@ -4,7 +4,7 @@ s1 == s2; // Is false, because they are two distinct objects.
 s1.valueOf() == s2.valueOf(); // Is true.
 
 //Automatic type coercion
-alert1(true  ==    2 ); // false... true  → 1 !== 2 ←  2
+f1(true  ==    2 ); // false... true  → 1 !== 2 ←  2
 alert2(false ==    2 ); // false... false → 0 !== 2 ←  2
 alert3(true  ==    1 ); // true.... true  → 1 === 1 ←  1
 alert4(false ==    0 ); // true.... false → 0 === 0 ←  0

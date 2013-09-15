@@ -107,7 +107,7 @@ void FT_ITALIC(FT_GlyphSlot slot)
 	transform.xx = 0x10000L;
 	transform.yx = 0x00000L;
 	
-	transform.xy = 0x06000L;
+	transform.xy = 0x03000L;
 	transform.yy = 0x10000L;
 	
 	FT_Outline_Transform( outline, &transform );
@@ -116,44 +116,29 @@ void FT_ITALIC(FT_GlyphSlot slot)
 void FT_BOLD(FT_GlyphSlot slot)
 {
     FT_Face     face = slot->face;
-    FT_Pos      xstr, ystr;
+    FT_Pos      amount;
 
     if(slot->format != FT_GLYPH_FORMAT_OUTLINE)
       return;
 
     /* some reasonable strength */
-    xstr = FT_MulFix( face->units_per_EM,
-                      face->size->metrics.y_scale ) / 24;
-    ystr = xstr;
-
-    if ( slot->format == FT_GLYPH_FORMAT_OUTLINE )
-    {
-      /* ignore error */
-      (void)FT_Outline_Embolden( &slot->outline, xstr );
-
-      /* this is more than enough for most glyphs; if you need accurate */
-      /* values, you have to call FT_Outline_Get_CBox                   */
-      xstr = xstr * 2;
-      ystr = xstr;
-    }
+    amount = FT_MulFix(face->units_per_EM,
+                       face->size->metrics.y_scale ) / 18;
+	(void)FT_Outline_Embolden( &slot->outline, amount);
 
     if ( slot->advance.x )
-      slot->advance.x += xstr;
+      slot->advance.x += amount;
 
     if ( slot->advance.y )
-      slot->advance.y += ystr;
+      slot->advance.y += amount;
 
-    slot->metrics.width        += xstr;
-    slot->metrics.height       += ystr;
-    slot->metrics.horiBearingY += ystr;
-    slot->metrics.horiAdvance  += xstr;
-    slot->metrics.vertBearingX -= xstr / 2;
-    slot->metrics.vertBearingY += ystr;
-    slot->metrics.vertAdvance  += ystr;
-
-    /* XXX: 16-bit overflow case must be excluded before here */
-    if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
-      slot->bitmap_top += (FT_Int)( ystr >> 6 );
+    slot->metrics.width        += amount;
+    slot->metrics.height       += amount;
+    slot->metrics.horiBearingY += amount;
+    slot->metrics.horiAdvance  += amount;
+    slot->metrics.vertBearingX -= amount / 2;
+    slot->metrics.vertBearingY += amount;
+    slot->metrics.vertAdvance  += amount;
 }
 
 FT_Face CreateFTFace(Font fnt)
