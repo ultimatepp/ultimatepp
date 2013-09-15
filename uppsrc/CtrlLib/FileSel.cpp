@@ -479,7 +479,12 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 					GetDriveImage(root[i].root_style),
 			#endif
 					StdFont().Bold(), SColorText, true, -1, Null, SColorDisabled,
-					root[i].root_desc, StdFont()
+			#ifdef PLATFORM_WIN32
+					Nvl(root[i].root_desc, String(" ") + t_("Local Disk")),
+			#else
+					root[i].root_desc,
+			#endif
+					StdFont()
 				);
 		#ifdef PLATFORM_WIN32
 			list.Add(t_("Network"), CtrlImg::Network(), StdFont().Bold(), SColorText,
@@ -1874,10 +1879,9 @@ void FileSel::AddSystemPlaces(int row)
 			if(*n.Last() == '\\')
 				n.Trim(n.GetCount() - 1);
 		#endif
-			if(desc.GetCount())
-				desc << " (" << n << ")";
-			else
-				desc = n;
+			if(desc.GetCount() == 0)
+			    desc << " " << t_("Local Disk");
+			desc << " (" << n << ")";
 			AddPlace(root[i].filename, desc, "PLACES:SYSTEM", row++);
 		}
 	}
