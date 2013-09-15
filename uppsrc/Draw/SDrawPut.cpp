@@ -50,6 +50,8 @@ void SDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 
 void SDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 {
+	if(IsNull(color))
+		return;
 	Rect r = RectC(x, y, cx, cy);
 	r += cloff.Top().offset;
 	const Vector<Rect>& clip = cloff.Top().clip;
