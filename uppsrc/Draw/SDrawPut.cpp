@@ -20,21 +20,26 @@ struct sColorize : public ImageMaker
 
 };
 
-void SDraw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color)
+void SDraw::PutImage(Point p, const Image& img, const Rect& src, Color color)
 {
 	if(!IsNull(color)) {
 		sColorize m;
 		m.img = img;
 		m.color = color;
-		SysDrawImageOp(x, y, MakeImage(m), src, Null);
-		return;
+		PutImage(p, MakeImage(m), src);
 	}
+	else
+		PutImage(p, img, src);
+}
+
+void SDraw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color)
+{
 	Rect sr(Point(x, y) + cloff.Top().offset, (src & img.GetSize()).GetSize());
 	const Vector<Rect>& clip = cloff.Top().clip;
 	for(int i = 0; i < clip.GetCount(); i++) {
 		Rect cr = clip[i] & sr;
 		if(!cr.IsEmpty())
-			PutImage(cr.TopLeft(), img, Rect(cr.TopLeft() - sr.TopLeft() + src.TopLeft(), cr.GetSize()));
+			PutImage(cr.TopLeft(), img, Rect(cr.TopLeft() - sr.TopLeft() + src.TopLeft(), cr.GetSize()), color);
 	}
 }
 
