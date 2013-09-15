@@ -1,11 +1,13 @@
 uses
 	CtrlLib,
-	GLCtrl;
+	GLCtrl,
+	Painter;
 
 file
 	GlDraw.h,
 	GlDraw.cpp,
-	main.cpp;
+	main.cpp,
+	test.qtf;
 
 mainconfig
 	"" = "GUI SSE2";

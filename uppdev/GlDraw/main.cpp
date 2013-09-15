@@ -15,9 +15,7 @@ struct OpenGLExample : GLCtrl {
 		
 		Rect r = Rect(GetSize()).Deflated(20, 20);
 		
-		r = GetSize();
-		
-		w.InitGL(r);
+		w.InitGL(GetSize());
 
 		w.DrawRect(sz, LtRed());
 		DrawFatFrame(w, r, LtBlue(), 2);
@@ -41,7 +39,28 @@ struct OpenGLExample : GLCtrl {
 		
 		w.DrawRect(50, 50, 20, 20, InvertColor());
 		w.DrawRect(55, 55, 8, 8, InvertColor());
-		
+
+		w.DrawRect(0, 0, sz.cx, sz.cy, SWhite);
+		w.DrawRect(10, 10, 30, 30, SRed);
+		w.DrawLine(45, 45, 80, 120, 4, Blue);
+		w.DrawLine(80, 90, 400, 0, PEN_DASHDOT);
+		w.DrawEllipse(200, 200, 50, 100, Green);
+		w.DrawImage(200, 10, CtrlImg::HandCursor());
+		const char *text = "This text is centered";
+		Size tsz = GetTextSize(text, Arial(25).Bold());
+		w.DrawText((sz.cx - tsz.cx) / 2, (sz.cy - tsz.cy) / 2, text, Arial(27).Bold(), SBlue);
+		w.Clipoff(200, 50, 95, 100);
+		w.DrawText(0, 80, "CLIPPED", Roman(25));
+		w.End();
+
+		RichText txt = ParseQTF(LoadFile(GetDataFile("test.qtf")));
+		DDUMP(txt.GetLength());
+		if(1) {
+			RTIMING("SystemDraw");
+			DLOG("---------------------------------------");
+			txt.Paint(Zoom(2, 10), w, 20, 20, 500);
+		}
+	
 		GLDraw::ClearCache();
 	}
 
