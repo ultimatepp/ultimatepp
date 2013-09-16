@@ -6,7 +6,7 @@
 
 namespace Upp {
 
-class GLDraw : SDraw {
+class GLDraw : public SDraw {
 	void SetColor(Color c);
 
 	uint64   context;
@@ -15,7 +15,7 @@ public:
 	virtual void  PutImage(Point p, const Image& m, const Rect& src);
 	virtual void  PutRect(const Rect& r, Color color);
 	
-	void InitGL(Size sz, uint64 context = 0);
+	void Init(Size sz, uint64 context = 0);
 	
 	static void ClearCache();
 	static void ResetCache();
