@@ -1,7 +1,7 @@
 uses
 	CtrlLib,
-	SDL20,
-	RichEdit;
+	RichEdit,
+	SDL20GL;
 
 file
 	main.cpp;
