@@ -145,7 +145,7 @@ void GLDraw::PutRect(const Rect& r, Color color)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void GLDraw::InitGL(Size sz, uint64 context_)
+void GLDraw::Init(Size sz, uint64 context_)
 {
 	context = context_;
 
