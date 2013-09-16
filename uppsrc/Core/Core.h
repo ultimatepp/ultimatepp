@@ -390,4 +390,8 @@ using Upp::byte; // Dirty solution to Windows.h typedef byte...
 #include <Core/dli_header.h>
 #endif
 
+#ifdef MAIN_CONF
+#include <main.conf.h>
+#endif
+
 #endif //CORE_H

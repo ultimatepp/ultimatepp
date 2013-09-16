@@ -1,0 +1,7 @@
+BINARY(Font_DroidSans, "DroidSans.ttf")
+BINARY(Font_DroidSans_Bold, "DroidSans-Bold.ttf")
+BINARY(Font_DroidSerif, "DroidSerif-Regular.ttf")
+BINARY(Font_DroidSerif_Bold, "DroidSerif-Bold.ttf")
+BINARY(Font_DroidSerif_Italic, "DroidSerif-Italic.ttf")
+BINARY(Font_DroidSerif_BoldItalic, "DroidSerif-BoldItalic.ttf")
+BINARY(Font_DroidSansMono, "DroidSansMono.ttf")

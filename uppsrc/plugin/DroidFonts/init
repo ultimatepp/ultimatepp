@@ -1,0 +1,7 @@
+#ifndef _plugin_DroidFonts_icpp_init_stub
+#define _plugin_DroidFonts_icpp_init_stub
+#include "plugin/FT_fontsys/init"
+#define BLITZ_INDEX__ F3e7c51a94c0c592c4447edc4e38a808b
+#include "DroidFonts.icpp"
+#undef BLITZ_INDEX__
+#endif
