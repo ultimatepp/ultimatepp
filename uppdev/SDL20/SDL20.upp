@@ -3,8 +3,8 @@ uses
 	Draw,
 	Painter,
 	RichText,
-	freetype,
-	freetype;
+	plugin/FT_fontsys,
+	plugin/DroidFonts;
 
 library(WIN32) "SDLmain.lib SDL.lib";
 
@@ -12,7 +12,6 @@ library(POSIX) "SDL2 SDL2main";
 
 file
 	SDL20.h,
-	Ft.cpp,
 	Window.cpp,
 	SDLDraw.cpp,
 	text.qtf,
@@ -21,5 +20,5 @@ file
 	main.conf;
 
 mainconfig
-	"" = "SSE2 MT CFONTS";
+	"" = "SSE2 MT";
 
