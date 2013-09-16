@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	GLCtrl,
+	GLDraw;
+
+file
+	main.cpp,
+	test.qtf;
+
+mainconfig
+	"" = "GUI SSE2";
+
