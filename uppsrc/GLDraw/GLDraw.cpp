@@ -30,7 +30,7 @@ void ImageGLData::Init(const Image& img)
 //	SysImageRealized(img); // ?
 }
 
-static LRUCache<ImageGLData, int64> sTextureCache;
+static LRUCache<ImageGLData, Tuple2<uint64, uint64> > sTextureCache;
 static bool sReset;
 
 ImageGLData::~ImageGLData()
@@ -54,11 +54,12 @@ void GLDraw::ResetCache()
 	sReset = false;
 }
 
-struct ImageGLDataMaker : LRUCache<ImageGLData, int64>::Maker {
+struct ImageGLDataMaker : LRUCache<ImageGLData, Tuple2<uint64, uint64> >::Maker {
 	Image         img;
+	uint64        context;
 
-	virtual int64  Key() const                      { return img.GetSerialId(); }
-	virtual int    Make(ImageGLData& object) const  { object.Init(img); return img.GetLength(); }
+	virtual Tuple2<uint64, uint64>  Key() const                      { return MakeTuple<uint64, uint64>(img.GetSerialId(), context); }
+	virtual int                     Make(ImageGLData& object) const  { object.Init(img); return img.GetLength(); }
 };
 
 
@@ -71,6 +72,7 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 	LLOG("SysImage cache pixels " << sTextureCache.GetSize() << ", count " << sTextureCache.GetCount());
 	ImageGLDataMaker m;
 	m.img = img;
+	m.context = context;
 	ImageGLData& sd = sTextureCache.Get(m);
 
 	glEnable(GL_TEXTURE_2D);
@@ -143,8 +145,10 @@ void GLDraw::PutRect(const Rect& r, Color color)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void GLDraw::InitGL(Size sz)
+void GLDraw::InitGL(Size sz, uint64 context_)
 {
+	context = context_;
+
 	SDraw::Init(sz);
 
 	glEnable(GL_BLEND);
