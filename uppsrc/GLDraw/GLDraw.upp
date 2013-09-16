@@ -1,0 +1,8 @@
+uses
+	Draw,
+	Painter;
+
+file
+	GLDraw.h,
+	GLDraw.cpp;
+
