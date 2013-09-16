@@ -5,6 +5,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <plugin/FT_fontsys/FT_fontsys.h>
+
 using namespace Upp;
 
 #ifdef PLATFORM_POSIX
@@ -12,14 +14,6 @@ using namespace Upp;
 #endif
 
 NAMESPACE_UPP
-
-enum FtStyle {
-	FtBOLD = 1,
-	FtITALIC = 2
-};
-
-void SetFileFont(int face, const char *path, dword style = 0);
-void SetMemoryFont(int face, const byte *data, int size, dword style = 0);
 
 struct SDLWindow {
 	SDL_Window   *win;
