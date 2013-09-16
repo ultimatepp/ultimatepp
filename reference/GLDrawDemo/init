@@ -1,0 +1,6 @@
+#ifndef _GLDrawDemo_icpp_init_stub
+#define _GLDrawDemo_icpp_init_stub
+#include "CtrlLib/init"
+#include "GLDraw/init"
+#include "GLCtrl/init"
+#endif
