@@ -1,4 +1,5 @@
 #ifndef _OpenGL_icpp_init_stub
 #define _OpenGL_icpp_init_stub
 #include "GLCtrl/init"
+#include "PaintGL/init"
 #endif
