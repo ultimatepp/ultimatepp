@@ -3,5 +3,7 @@ uses
 
 file
 	DroidFonts.icpp,
-	DroidFonts.brc;
+	DroidFonts.brc,
+	Info readonly separator,
+	Copying;
 

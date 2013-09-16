@@ -112,6 +112,7 @@ file
 	src/type1/type1.c,
 	src/type42/type42.c,
 	src/winfonts/winfnt.c,
-	main.conf,
-	src/winfonts/winfnt.h;
+	src/winfonts/winfnt.h,
+	Info readonly separator,
+	Copying;
 
