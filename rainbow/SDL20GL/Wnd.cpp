@@ -348,8 +348,7 @@ void Ctrl::DoPaint()
 				LLOG("DoPaint invalid phase " << phase);
 				LDUMPC(invalid);
 				SystemDraw draw;
-				draw.Set(screen);
-				draw.Init(screen_size);
+				draw.Init(screen_size, (uint64)screen.glcontext);
 				for(int i = 0; i < invalid.GetCount(); i++) {
 					draw.Clip(invalid[i]);
 					AddUpdate(invalid[i]);

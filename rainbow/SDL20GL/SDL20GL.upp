@@ -5,15 +5,14 @@ uses
 	CtrlLib,
 	GLDraw;
 
-library(POSIX) "SDL2 SDL2main";
+library(POSIX) "SDL2 SDL2main GL";
 
 file
-	SDL20.h,
+	SDL20GL.h,
 	Keys.h,
 	After.h,
 	Local.h,
 	Window.cpp,
-	Draw.cpp,
 	Image.cpp,
 	Util.cpp,
 	FB.iml,

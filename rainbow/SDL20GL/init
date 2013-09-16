@@ -1,5 +1,5 @@
-#ifndef _SDL20_icpp_init_stub
-#define _SDL20_icpp_init_stub
+#ifndef _SDL20GL_icpp_init_stub
+#define _SDL20GL_icpp_init_stub
 #include "Painter/init"
 #include "CtrlLib/init"
 #include "GLDraw/init"

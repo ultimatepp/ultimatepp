@@ -11,7 +11,7 @@ bool SDLWindow::Create(const Rect& rect, const char *title)
 	if(!win)
 		return false;
 	MemoryIgnoreLeaksBegin();
-	glcontext = SDL_GL_CreateContext(window)
+	glcontext = SDL_GL_CreateContext(win);
 	MemoryIgnoreLeaksEnd();
 	if(!glcontext) {
 		Destroy();
@@ -39,7 +39,7 @@ void SDLWindow::Destroy()
 
 void SDLWindow::Present()
 {
-	SDL_GL_SwapWindow(window);
+	SDL_GL_SwapWindow(win);
 }
 
 SDLWindow::SDLWindow()

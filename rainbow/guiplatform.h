@@ -40,3 +40,9 @@
 //need to make SDL_keysym.h known before K_ enum
 #define GUIPLATFORM_INCLUDE          <SDL20/SDL20.h>
 #endif
+
+#ifdef flagSDL20GL
+#define GUIPLATFORM_KEYCODES_INCLUDE <SDL20GL/Keys.h>
+//need to make SDL_keysym.h known before K_ enum
+#define GUIPLATFORM_INCLUDE          <SDL20GL/SDL20GL.h>
+#endif
