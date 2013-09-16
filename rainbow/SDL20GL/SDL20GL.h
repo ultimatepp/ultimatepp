@@ -30,21 +30,10 @@ struct SDLWindow {
 	~SDLWindow();
 };
 
-class SystemDraw : public SDraw {
+class SystemDraw : public GLDraw {
 public:
-	SDLWindow *win;
-
-	virtual void  PutImage(Point p, const Image& m, const Rect& src);
-	virtual void  PutRect(const Rect& r, Color color);
-
-	void Set(SDLWindow& win_);
-
 	bool    CanSetSurface()                         { return false; }
-	
 	static void Flush()                             {}
-
-	SystemDraw();	
-	~SystemDraw();
 };
 
 struct BackDraw__ : public SystemDraw {

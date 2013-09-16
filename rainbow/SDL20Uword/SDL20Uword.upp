@@ -8,5 +8,5 @@ file
 
 mainconfig
 	"" = "GUI SSE2",
-	"" = "GUI SDL20";
+	"" = "GUI SDL20GL";
 
