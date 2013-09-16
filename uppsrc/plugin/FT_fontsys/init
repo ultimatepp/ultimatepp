@@ -1,0 +1,4 @@
+#ifndef _plugin_FT_fontsys_icpp_init_stub
+#define _plugin_FT_fontsys_icpp_init_stub
+#include "Draw/init"
+#endif
