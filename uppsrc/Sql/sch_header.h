@@ -5,10 +5,11 @@ struct S_##Table b { \
 public:\
 	void Shrink(); \
 	void Clear(); \
-	static const char         TableName[]; \
-	static const SqlSet&      ColumnSet(); \
-	static SqlSet             ColumnSet(const String& prefix); \
-	static SqlSet             Of(SqlId table); \
+	static const char           TableName[]; \
+	static const SqlSet&        ColumnSet(); \
+	static SqlSet               ColumnSet(const String& prefix); \
+	static SqlSet               Of(SqlId table); \
+	static const Vector<SqlId>& GetColumnIds(); \
 	void FieldLayoutRaw(FieldOperator& f, const String& prefix = String()); \
 	void FieldLayout(FieldOperator& f); \
 	operator Fields()              { return callback(this, &S_##Table::FieldLayout); } \
@@ -16,6 +17,7 @@ public:\
 	bool operator!=(const S_##Table& x) const  { return !EqualFields(const_cast<S_##Table&>(*this), const_cast<S_##Table&>(x)); } \
 	String ToString() const        { return AsString((Fields)const_cast<S_##Table&>(*this)); } \
 	Value  Get(SqlId column_id) const; \
+	ValueMap Get() const; \
 	S_##Table();
 
 #define TYPE(Table)                  CODETYPE(Table, __NIL)

@@ -302,12 +302,19 @@ SqlInsert::operator SqlStatement() const {
 	String s = "insert into " + table.Quoted();
 	if(!set1.IsEmpty()) {
 		s << set1();
-		if(from.IsEmpty() && where.IsEmpty()) {
+		if(from.IsEmpty() && where.IsEmpty() && groupby.IsEmpty()) {
 			if(!set2.IsEmpty())
 				s << " values " << set2();
 		}
-		else
-			s << ' ' + SqlStatement(Select(set2).From(from).Where(where)).GetText();
+		else {
+			SqlSelect sel;
+			sel = Select(set2).From(from).Where(where);
+			if(!groupby.IsEmpty())
+				sel.GroupBy(groupby);
+			if(!having.IsEmpty())
+				sel.Having(having);
+			s << ' ' + SqlStatement(sel).GetText();
+		}
 	}
 	return SqlStatement(s);
 }

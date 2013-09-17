@@ -628,6 +628,8 @@ class SqlInsert {
 	SqlSet  set2;
 	SqlSet  from;
 	SqlBool where;
+	SqlSet  groupby;
+	SqlBool having;
 
 public:
 	void Column(const SqlId& column, SqlVal val);
@@ -640,6 +642,11 @@ public:
 	SqlInsert& From(SqlSet _from)                    { from = _from; return *this; }
 	SqlInsert& From(SqlVal from)                     { return From(SqlSet(from)); }
 	SqlInsert& Where(SqlBool w)                      { where = w; return *this; }
+	SqlInsert& GroupBy(const SqlSet& columnset)      { groupby = columnset; return *this; }
+	SqlInsert& GroupBy(SqlVal a)                     { return GroupBy(SqlSet(a)); }
+	SqlInsert& GroupBy(SqlVal a, SqlVal b)           { return GroupBy(SqlSet(a, b)); }
+	SqlInsert& GroupBy(SqlVal a, SqlVal b, SqlVal c) { return GroupBy(SqlSet(a, b, c)); }
+	SqlInsert& Having(const SqlBool& exp)            { having = exp; return *this; }
 
 	SqlId    GetTable() const                        { return table; }
 	SqlId    GetKeyColumn() const                    { return keycolumn; }
