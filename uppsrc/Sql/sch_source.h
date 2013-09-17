@@ -126,14 +126,30 @@ void S_##x::FieldLayoutRaw(FieldOperator& fo, const String& prefix) {\
 
 #include SCHEMADIALECT
 
-// S_*::Get(SqlId column_id)
+// S_*::Get(SqlId column_id) const
 
 #define TYPE(x)                                      Value S_##x::Get(SqlId column_id) const { String col = ~column_id;
-#define COLUMN(type, ctype, name, width, prec)          static String _x0_x_##name(#name); if(_x0_x_##name == col) return name;
-#define END_TYPE                                        return Value(); }
+#define COLUMN(type, ctype, name, width, prec)       static String _x0_x_##name(#name); if(_x0_x_##name == col) return name;
+#define END_TYPE                                     return Value(); }
 
 #include SCHEMADIALECT
 
+
+// ValueMap S_*::Get() const
+
+#define TYPE(x)                                      ValueMap S_##x::Get() const { ValueMap vm;
+#define COLUMN(type, ctype, name, width, prec)       static String _x0_x_##name(#name); vm.Add(_x0_x_##name, name);
+#define END_TYPE                                     return vm; }
+
+#include SCHEMADIALECT
+
+//	static const Vector<SqlId>& GetColumnIds();
+
+#define TYPE(x)                                      const Vector<SqlId>& S_##x::GetColumnIds() { static Vector<SqlId> cols; ONCELOCK {
+#define COLUMN(type, ctype, name, width, prec)       cols.Add(#name);
+#define END_TYPE                                     } return cols; }
+
+#include SCHEMADIALECT
 
 // Introspection
 
