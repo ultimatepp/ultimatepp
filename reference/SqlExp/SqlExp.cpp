@@ -130,6 +130,7 @@ GUI_APP_MAIN
 	EXP(Insert(TABLE1)(COLUMN1, 12)(COLUMN2)(COL).From(TABLE1).Where(COL >= 0));
 	EXP(Insert(TABLE1)(COL, Select(COLUMN1).From(TABLE1).Where(COLUMN2 == 21).AsValue()));
 	EXP(Insert(TABLE1)(COLUMN1, "unique_value").Where(NotExists(Select(ID).From(TABLE1).Where(COLUMN1 == "unique_value"))));
+	EXP(Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1).Having(COLUMN2 > 10));
 
 	EXP(Update(TABLE1)(COLUMN1, 13)(COLUMN2, "world").Where(COL > Date(2007, 1, 1)));
 	EXP(Delete(TABLE1).Where(COL < 0));
