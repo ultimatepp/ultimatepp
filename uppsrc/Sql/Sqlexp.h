@@ -566,8 +566,8 @@ public:
 	SqlSet    AsTable(const SqlId& tab) const;
 
 	SqlSelect(Fields f);
-	SqlSelect(const SqlSet& s)                        { text = "select " + ~s; on = false; }
-	SqlSelect()                                       { on = false; text = "select "; }
+	SqlSelect(const SqlSet& s)                        { text = ~s; on = false; }
+	SqlSelect()                                       { on = false; }
 #define E__QSelect(I)   SqlSelect(__List##I(E__SqlVal));
 __Expand(E__QSelect);
 #undef  E__QSelect
