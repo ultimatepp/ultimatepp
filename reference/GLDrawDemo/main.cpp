@@ -12,7 +12,7 @@ struct OpenGLExample : GLCtrl {
 	
 		GLDraw w;
 		
-		w.InitGL(sz);
+		w.Init(sz);
 
 		w.DrawRect(0, 0, sz.cx, sz.cy, SWhite);
 		w.DrawRect(10, 10, 30, 30, SRed);
