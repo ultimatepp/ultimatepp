@@ -2,8 +2,12 @@
 
 #define LLOG(x) LOG(x)
 
+#ifndef GL_BGRA  // Win32 missing these
+#define GL_BGRA 0x80E1
+#endif
+
 namespace Upp {
-	
+
 struct ImageGLData {
 //	Image        img;
 	GLuint       texture_id;
@@ -23,8 +27,8 @@ void ImageGLData::Init(const Image& img)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	LLOG("Texture id created: " << texture_id);
 //	SysImageRealized(img); // ?
