@@ -271,7 +271,7 @@ String IdeGetLine(int i)
 
 bool SaveChangedFile(const char *path, String data, bool delete_empty)
 {
-	if(LoadFile(path) == data)
+	if(LoadFile(path) == data && (FileExists(path) || delete_empty))
 		return true;
 	if(delete_empty && IsNull(data))
 		return FileDelete(path);
