@@ -335,14 +335,14 @@ void CodeEditor::InitKeywords()
 		NULL
 	};
 	static const char *java[] = {
-		"abstract", "boolean", "break", "byte", "case",
+		"abstract", "assert", "boolean", "break", "byte", "case",
 		"catch", "char", "class", "const", "continue",
-		"default", "do", "double", "else", "extends",
+		"default", "do", "double", "else", "enum", "extends",
 		"false", "final", "finally", "float", "for",
 		"goto", "if", "implements", "import", "instanceof",
 		"int", "interface", "long", "native", "new",
 		"null", "package", "private", "protected", "public",
-		"return", "short", "static", "super", "switch",
+		"return", "short", "static", "strictfp", "super", "switch",
 		"synchronized", "this", "throw", "throws", "transient",
 		"true", "try", "void", "volatile", "while",
 		NULL
