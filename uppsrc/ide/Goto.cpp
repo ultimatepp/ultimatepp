@@ -245,14 +245,17 @@ bool Ide::SwapSIf(const char *cref)
 	q = FindItem(n, qitem);
 	int count = q >= 0 ? GetCount(n, q) : 0;
 	if(!cref && count < 2) {
+		int typei = -1;
 		for(int i = 0; i < n.GetCount(); i++) {
-			if(i >= n.GetCount())
-				return false;
+			if(n[i].IsType())
+				typei = i;
 			if(i != q && n[i].name == p.current_name) {
 				GotoCpp(n[i]);
 				return true;
 			}
 		}
+		if(typei >= 0)
+			GotoCpp(n[typei]);
 		return false;
 	}
 	if(count < 1)
