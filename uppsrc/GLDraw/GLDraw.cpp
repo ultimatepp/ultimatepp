@@ -157,6 +157,8 @@ void GLDraw::Init(Size sz, uint64 context_)
 
 	glEnable(GL_BLEND);
 
+	glViewport(0, 0, (GLsizei)sz.cx, (GLsizei)sz.cy);
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
