@@ -1,8 +1,7 @@
 description "GLCtrl widget example\377";
 
 uses
-	GLCtrl,
-	PaintGL;
+	GLCtrl;
 
 file
 	main.cpp;
