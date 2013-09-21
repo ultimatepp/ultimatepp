@@ -91,6 +91,12 @@ Http& Http::SetRawCookie(const char *id, const String& value, Time expires,
 	return *this;
 }
 
+String Http::GetPeerAddr() const
+{
+	String forwarded = hdr["x-forwarded-for"];
+	return Nvl(forwarded, rsocket?rsocket->GetPeerAddr():Null);
+}
+
 int Http::Int(const char *id) const
 {
 	Value v = operator[](id);

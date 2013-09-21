@@ -198,6 +198,15 @@ ttp][@(0.0.255) `&]_[* SetRawCookie]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3
 [%-*@3 path], [%-*@3 domain], [%-*@3 secure], [%-*@3 httponly] to setup 
 cookie attributes. [%-*@3 value] is not url`-encoded. Returns `*this.&]
 [s3;%% &]
+[s4; &]
+[s5;:Http`:`:GetPeerAddr`(`)const: [_^String^ String]_[* GetPeerAddr]()_[@(0.0.255) const]&]
+[s2;%% Returns IP address of client. If there is `"X`-Forwarded`-For`" 
+header present (e.g. when using proxy or load balancer), it`'s 
+value is used, otherwise returns value reported by [^topic`:`/`/Core`/src`/TcpSocket`$en`-us`#TcpSocket`:`:GetPeerAddr`(`)const^ T
+cpSocket`::GetPeerAddr()]. This function may return empty string 
+if called when socket is not available (e.g. after calling [^topic`:`/`/Skylark`/src`/Http`$en`-us`#Http`:`:Finalize`(`)^ H
+ttp`::Finalize()]).&]
+[s3; &]
 [s4;%% &]
 [s5;:Http`:`:SetCookie`(const char`*`,const String`&`,Time`,const char`*`,const char`*`,bool`,bool`): [_^Http^ H
 ttp][@(0.0.255) `&]_[* SetCookie]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], 
