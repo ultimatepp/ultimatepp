@@ -1,10 +1,11 @@
-description "Automation of Office suites OpenOffice and Microsoft\377B255,170,0";
+description "Automation of Office suites OpenOffice and Microsoft\377B";
 
 noblitz;
 
 uses
 	Core,
-	Functions4U;
+	Functions4U,
+	SysInfo;
 
 library(WIN32) Oleaut32;
 
@@ -15,6 +16,8 @@ file
 	OfficeAutomation.cpp,
 	OfficeAutomationMethods.h,
 	OfficeAutomationBase.h,
+	cogetserverpid\cogetserverpid.cpp,
+	cogetserverpid\LICENSE,
 	srcdoc.tpp,
 	src.tpp,
 	OfficeAutomation.t,

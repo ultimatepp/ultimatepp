@@ -17,6 +17,10 @@ Office.]&]
 ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=922`&^2 Ratah
 ][2 .]&]
 [s0;2 &]
+[s0; [^http`:`/`/www`.kontrollbehov`.com`/articles`/cogetserverpid`/^2 CoGetServerPID][2  
+code is included thanks to Kim Gräsman and Jon Robertson. Please 
+see the new BSD LICENSE file.]&]
+[s0;2 &]
 [s0;2 &]
 [s0; [*2 Help requested]&]
 [s0;2 &]
@@ -29,4 +33,4 @@ OfficeAutomation in Posix systems will be acknowledged.]&]
 [s0;2 &]
 [s0; [2 An important documentation source is ][^http`:`/`/wiki`.services`.openoffice`.org`/wiki`/Using`_Cpp`_with`_the`_OOo`_SDK^2 h
 ere][2 .]&]
-[s0; ]
+[s0; ]]

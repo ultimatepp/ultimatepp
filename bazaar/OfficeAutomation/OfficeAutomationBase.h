@@ -57,6 +57,8 @@ private:
 	
 	bool SetVisible(bool visible);
 	bool SetBorder(ObjectOle &borders, int borderIndx, int lineStyle, int weight, Color color);
+	
+	bool killProcess;
 };
 
 class MSDoc : public OfficeDoc
@@ -68,6 +70,7 @@ public:
 	virtual bool IsAvailable();
 	
 	Doc_METHOD_LIST
+	bool Close();
 	
 private:
 	ObjectOle App;	
@@ -172,5 +175,7 @@ public:
 private:
 	static int numOleInit;
 };
+
+HRESULT CoGetServerPID(IUnknown* punk, DWORD* pdwPID);
 
 #endif

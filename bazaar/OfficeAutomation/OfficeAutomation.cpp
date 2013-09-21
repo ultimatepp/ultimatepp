@@ -9,6 +9,7 @@ using namespace Upp;
 #include <winnls.h>
 
 #include <Functions4U/Functions4U.h>
+#include <SysInfo/SysInfo.h>
 #include "OfficeAutomation.h"
 #include "OfficeAutomationBase.h"
 
@@ -402,6 +403,7 @@ MSSheet::MSSheet() {
 		LOG("Excel workbooks not loaded properly");
 		return;
 	}
+	killProcess = false;
 }
 
 MSSheet::~MSSheet() {
@@ -422,9 +424,15 @@ MSSheet::~MSSheet() {
 		Books = 0;
 	}
 	if (App) {
+		HRESULT res;
+		DWORD pid;
+		if (killProcess)
+			res = CoGetServerPID(App, &pid);
 		Quit();
 		App->Release();
 		App = 0;
+		if (killProcess && !FAILED(res)) 
+			ProcessTerminate(pid);
 	}
 }
 
@@ -434,6 +442,7 @@ bool MSSheet::IsAvailable() {
 	if (!app) 
 		return false;
 	else {
+		Ole::Method(app, "Quit");
 		app->Release();
 		return true;
 	}
@@ -469,6 +478,7 @@ bool MSSheet::Quit()
 }
 
 bool MSSheet::AddSheet(bool visible) {
+	killProcess = true;
 	if (!Books)
 		return false;
 	
@@ -482,6 +492,7 @@ bool MSSheet::AddSheet(bool visible) {
 }
 
 bool MSSheet::OpenSheet(String fileName, bool visible) {
+	killProcess = true;
 	if (!Books)
 		return false;
 
@@ -1142,9 +1153,11 @@ MSDoc::MSDoc() {
 MSDoc::~MSDoc() {
 	if (Selection)
 		Selection->Release();
-	if (Doc)
+	if (Doc) {
+		Close();
 		Doc->Release();
-	if (Docs)
+	}
+	if (Docs) 
 		Docs->Release();
 	if (App) {
 		Quit();
@@ -1168,6 +1181,7 @@ bool MSDoc::IsAvailable() {
 	if (!app) 
 		return false;
 	else {
+		Ole::Method(app, "Quit");
 		app->Release();
 		return true;
 	}
@@ -1180,6 +1194,10 @@ bool MSDoc::SetSaved(bool saved) {
 	VariantOle vSaved;
 	vSaved.Int4(saved? 1: 0);
 	return Ole::SetValue(Doc, "Saved", vSaved);
+}
+
+bool MSDoc::Close() {
+	return Ole::Method(Doc, "Close"); 
 }
 
 bool MSDoc::Quit() {
