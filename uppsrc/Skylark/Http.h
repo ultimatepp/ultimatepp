@@ -115,6 +115,7 @@ public:
 
 	String GetHeader(const char *s) const              { return hdr[s]; }
 	int    GetLength() const                           { return atoi(GetHeader("content-length")); }
+	String GetPeerAddr() const;
 
 	String GetHandlerId() const                        { return handlerid; }
 
