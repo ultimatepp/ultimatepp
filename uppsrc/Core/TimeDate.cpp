@@ -22,6 +22,7 @@ void Date::Serialize(Stream& s)
 }
 
 int  GetDaysOfMonth(int m, int y) {
+	ASSERT(m >= 1 && m <= 12);
 	return s_month[m - 1] + (m == 2) * IsLeapYear(y);
 }
 
