@@ -234,7 +234,7 @@ T *InVector<T>::Insert0(int ii, const T *val)
 			data.Add().Add(*val);
 			return &data[0][0];
 		}
-		return &data.Add().Add(0);
+		return &data.Add().Add();
 	}
 	int pos = ii;
 	int off;
