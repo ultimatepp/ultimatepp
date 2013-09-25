@@ -47,7 +47,7 @@ Date& operator-=(Date& a, int b);
 
 bool IsLeapYear(int year);
 
-int  GetDaysOfMonth(int m, int y);
+int  GetDaysOfMonth(int month, int year);
 
 int  DayOfWeek(Date date);
 Date LastDayOfMonth(Date d);
