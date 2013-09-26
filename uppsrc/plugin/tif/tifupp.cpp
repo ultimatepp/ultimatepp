@@ -906,7 +906,7 @@ bool TIFRaster::Data::SeekPage(int pgx)
 
 	char emsg[1024];
 	if(!TIFFRGBAImageBegin(this, tiff, 0, emsg)) {
-		TIFFError(TIFFFileName(tiff), emsg);
+		TIFFError(TIFFFileName(tiff), "%s", emsg);
 		page_error = true;
 		return false;
 	}
