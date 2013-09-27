@@ -1267,15 +1267,11 @@ class CerrStream : public Stream {
 		putc(w, stderr);
 	#endif
 	}
+#ifdef PLATFORM_POSIX
 	virtual   void  _Put(const void *data, dword size) {
-	#ifdef PLATFORM_WIN32
-		static HANDLE h = GetStdHandle(STD_ERROR_HANDLE);
-		dword dummy;
-		WriteFile(h, data, size, &dummy, NULL);
-	#else
 		fwrite(data, 1, size, stderr);
-	#endif
 	}
+#endif
 	virtual   bool  IsOpen() const { return true; }
 };
 
