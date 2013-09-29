@@ -1,10 +1,10 @@
 #include "Local.h"
 
-#ifdef GUI_SDL20
+#ifdef GUI_SDL20GL
 
 NAMESPACE_UPP
 
-#define LLOG(x) //DLOG(x)
+#define LLOG(x)  LOG(x)
 #define LDUMP(x) //DDUMP(x)
 
 static Point fbmousepos;
@@ -76,45 +76,14 @@ void Ctrl::DoMouseFB(int event, Point p, int zdelta)
 
 bool Ctrl::DoKeyFB(dword key, int cnt)
 {
+	LLOG("DoKeyFB " << GetKeyDesc(key) << ", " << cnt);
+
 	bool b = DispatchKey(key, cnt);
 	SyncCaret();
 	Ctrl *desktop = GetDesktop();
 	if(desktop)
 		desktop->PostInput();
 	return b;
-}
-
-Image Ctrl::GetBak(Rect& tr)
-{
-	Image bak;
-	tr.Intersect(framebuffer.GetSize());
-	if(!tr.IsEmpty()) {
-		Image h = framebuffer;
-		bak = CreateImage(tr.GetSize(), Black);
-		Copy(bak, Point(0, 0), h, tr);
-		framebuffer = h;
-	}
-	return bak;
-}
-
-void Ctrl::RemoveCursor()
-{
-	if(!IsNull(fbCursorBakPos)) {
-		Copy(framebuffer, fbCursorBakPos, fbCursorBak, fbCursorBak.GetSize());
-		AddUpdate(Rect(fbCursorBakPos, fbCursorBak.GetSize()));
-	}
-	fbCursorPos = fbCursorBakPos = Null;
-	fbCursorBak = Null;
-}
-
-void Ctrl::RemoveCaret()
-{
-	if(!IsNull(fbCaretRect)) {
-		Copy(framebuffer, fbCaretRect.TopLeft(), fbCaretBak, fbCaretBak.GetSize());
-		AddUpdate(fbCaretRect);
-	}
-	fbCaretRect = Null;
-	fbCaretBak = Null;
 }
 
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
@@ -130,7 +99,7 @@ void Ctrl::SetCaret(int x, int y, int cx, int cy)
 
 void Ctrl::SyncCaret()
 {
-	GuiLock __;
+	CursorSync();
 }
 
 void Ctrl::CursorSync()
@@ -141,37 +110,10 @@ void Ctrl::CursorSync()
 	if(focusCtrl && (((GetTickCount() - fbCaretTm) / 500) & 1) == 0)
 		cr = (RectC(focusCtrl->caretx, focusCtrl->carety, focusCtrl->caretcx, focusCtrl->caretcy)
 		      + focusCtrl->GetScreenView().TopLeft()) & focusCtrl->GetScreenView();
-	LDUMP(GetTickCount());
 	if(fbCursorPos != p || cr != fbCaretRect) {
-		LDUMP(fbCaretRect);
-		RemoveCursor();
-		RemoveCaret();
-
-		fbCursorPos = p;
-		Size sz = fbCursorImage.GetSize();
-		Rect tr(p, sz);
-		fbCursorBak = GetBak(tr);
-		fbCursorBakPos = tr.TopLeft();
-
 		fbCaretRect = cr;
-		if(!cr.IsEmpty()) {
-			fbCaretBak = GetBak(cr);
-			for(int y = cr.top; y < cr.bottom; y++) {
-				RGBA *s = framebuffer[y] + cr.left;
-				const RGBA *e = framebuffer[y] + cr.right;
-				while(s < e) {
-					s->r = ~s->r;
-					s->g = ~s->g;
-					s->b = ~s->b;
-					s++;
-				}
-			}
-			AddUpdate(fbCaretRect);
-		}
-
-		Over(framebuffer, p, fbCursorImage, sz);
-		LLOG("Cursor: " << p << ", rect " << tr);
-		AddUpdate(tr);
+		fbCursorPos = p;
+		Invalidate();
 	}
 }
 
@@ -182,6 +124,67 @@ void  Ctrl::SetMouseCursor(const Image& image)
 		fbCursorImage = image;
 		fbCursorPos = Null;
 	}
+}
+
+bool Ctrl::ProcessEvents(bool *quit)
+{
+	//LOGBLOCK("@ ProcessEvents");
+//	MemoryCheckDebug();
+	if(!ProcessEvent(quit))
+		return false;
+	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()));
+	TimeStop tm;
+	LLOG("TimerProc invoked at " << msecs());
+	TimerProc(GetTickCount());
+	LLOG("TimerProc elapsed: " << tm);
+	SweepMkImageCache();
+	DoPaint();
+	return true;
+}
+
+void Ctrl::EventLoop(Ctrl *ctrl)
+{
+	GuiLock __;
+	ASSERT(IsMainThread());
+	ASSERT(LoopLevel == 0 || ctrl);
+	LoopLevel++;
+	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
+	Ptr<Ctrl> ploop;
+	if(ctrl) {
+		ploop = LoopCtrl;
+		LoopCtrl = ctrl;
+		ctrl->inloop = true;
+	}
+
+	bool quit = false;
+	int64 loopno = ++EventLoopNo;
+	ProcessEvents(&quit);
+	while(loopno > EndSessionLoopNo && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
+	{
+//		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
+		SyncCaret();
+		GuiSleep(20);
+//		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / ProcessEvents");
+		ProcessEvents(&quit);
+//		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / after ProcessEvents");
+		LDUMP(loopno);
+		LDUMP(fbEndSessionLoop);
+	}
+
+	if(ctrl)
+		LoopCtrl = ploop;
+	LoopLevel--;
+	LLOG(LOG_END << "Leaving event loop ");
+}
+
+void Ctrl::GuiSleep(int ms)
+{
+	GuiLock __;
+	ASSERT(IsMainThread());
+	LLOG("GuiSleep");
+	int level = LeaveGuiMutexAll();
+	SDL_WaitEventTimeout(NULL, ms);
+	EnterGuiMutex(level);
 }
 
 END_UPP_NAMESPACE

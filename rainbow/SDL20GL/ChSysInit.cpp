@@ -1,6 +1,6 @@
 #include "Local.h"
 
-#ifdef GUI_SDL20
+#ifdef GUI_SDL20GL
 
 NAMESPACE_UPP
 

@@ -4,7 +4,8 @@ uses
 	SDL20GL;
 
 file
-	main.cpp;
+	main.cpp,
+	test.qtf;
 
 mainconfig
 	"" = "GUI SSE2",

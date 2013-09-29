@@ -1,6 +1,6 @@
 #include <CtrlCore/CtrlCore.h>
 
-#ifdef GUI_SDL20
+#ifdef GUI_SDL20GL
 
 NAMESPACE_UPP
 

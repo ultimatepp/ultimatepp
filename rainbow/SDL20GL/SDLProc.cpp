@@ -1,10 +1,10 @@
 #include "Local.h"
 
-#ifdef GUI_SDL20
+#ifdef GUI_SDL20GL
 
 NAMESPACE_UPP
 
-#define LLOG(x)       //LOG(x)
+#define LLOG(x)       LOG(x)
 
 dword mouseb = 0;
 dword modkeys = 0;
@@ -58,10 +58,19 @@ dword lastbdowntime[8] = {0};
 dword isdblclick[8] = {0};
 void HandleSDLEvent(SDL_Event* event)
 {
-	DLOG("HandleSDLEvent " << event->type);
+	LLOG("HandleSDLEvent " << event->type);
 	switch(event->type) {
 //		case SDL_ACTIVEEVENT: //SDL_ActiveEvent
 //			break;
+		case SDL_TEXTINPUT: {
+				//send respective keyup things as char events as well
+			WString text = FromUtf8(event->text.text);
+			for(int i = 0; i < text.GetCount(); i++) {
+				int c = text[i];
+				if(c != 127)
+					Ctrl::DoKeyFB(c, 1);
+			}
+		}
 		case SDL_KEYDOWN:
 		case SDL_KEYUP: //SDL_KeyboardEvent
 		{
@@ -80,12 +89,8 @@ void HandleSDLEvent(SDL_Event* event)
 				}
 				
 				keycode = fbKEYtoK((dword)event->key.keysym.sym);
+				
 				if(keycode != K_SPACE) //dont send space on keydown
-					/*b = */Ctrl::DoKeyFB(keycode, 1);
-
-				//send respective keyup things as char events as well
-				keycode = (dword)event->key.keysym.unicode;
-				if((keycode != 127 && keycode >= 32 && keycode < 255))
 					/*b = */Ctrl::DoKeyFB(keycode, 1);
 			}
 			else

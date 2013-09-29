@@ -1,4 +1,4 @@
-#define GUI_SDL20
+#define GUI_SDL20GL
 
 #include <SDL2/SDL.h>
 
@@ -21,8 +21,6 @@ struct SDLWindow {
 
 	bool Create(const Rect& rect, const char *title);
 	void Destroy();
-	
-	void Present();
 	
 	operator bool() const { return win; }
 	
@@ -76,25 +74,13 @@ class TopWindowFrame;
 
 #define GUIPLATFORM_CTRL_TOP_DECLS   Ctrl *owner_window;
 
-#define GUIPLATFORM_CTRL_DECLS_INCLUDE <Framebuffer/Ctrl.h>
+#define GUIPLATFORM_CTRL_DECLS_INCLUDE <SDL20GL/Ctrl.h>
 
 #define GUIPLATFORM_PASTECLIP_DECLS \
 	bool dnd; \
 	friend struct DnDLoop; \
 
-#define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <Framebuffer/Top.h>
-
-// to be implemented by final FB {
-
-bool FBIsWaitingEvent();
-bool FBProcessEvent(bool *quit);
-void FBSleep(int ms);
-void FBInitUpdate();
-void FBUpdate(const Rect& area);
-void FBFlush();
-void FBQuitSession();
-
-// }
+#define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <SDL20GL/Top.h>
 
 class PrinterJob { // Dummy only...
 	NilDraw             nil;

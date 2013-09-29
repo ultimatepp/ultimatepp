@@ -1,6 +1,6 @@
 #include "Local.h"
 
-#ifdef GUI_SDL20
+#ifdef GUI_SDL20GL
 
 NAMESPACE_UPP
 
@@ -24,7 +24,7 @@ TopWindowFrame::TopWindowFrame()
 void TopWindowFrame::SyncRect()
 {
 	if(maximized) {
-		Size sz = framebuffer.GetSize();
+		Size sz = GetWorkArea().GetSize();
 		if(GetRect().GetSize() != sz)
 			SetRect(sz);
 	}
@@ -35,7 +35,7 @@ void TopWindowFrame::Maximize()
 	if(!maximized && maximize.IsShown()) {
 		maximized = true;
 		overlapped = GetRect();
-		SetRect(framebuffer.GetSize());
+		SetRect(GetWorkArea().GetSize());
 		maximize.SetImage(FBImg::overlap());
 	}
 }
@@ -139,26 +139,9 @@ void TopWindowFrame::StartDrag()
 		return;
 	if(!sizeable && (dir.x || dir.y))
 		return;
-	if(FullWindowDrag) {
-		SetCapture();
-		startrect = GetRect();
-		startpos = GetMousePos();
-	}
-	else {
-		Rect r = GetScreenRect();
-		RectTracker tr(*this);
-		tr.SetCursorImage(GetDragImage(dir))
-		  .MaxRect(framebuffer.GetSize())
-		  .MinSize(ComputeClient(minsize).GetSize())
-		  .Pattern(DRAWDRAGRECT_DASHED | DRAWDRAGRECT_SCREEN)
-		  .Width(2)
-		  .Animation();
-		PaintLock++;
-		r = tr.Track(r, dir.x < 0 ? ALIGN_LEFT : dir.x > 0 ? ALIGN_RIGHT : ALIGN_CENTER,
-		                dir.y < 0 ? ALIGN_TOP : dir.y > 0 ? ALIGN_BOTTOM : ALIGN_CENTER);
-		PaintLock--;
-		SetRect(r);
-	}
+	SetCapture();
+	startrect = GetRect();
+	startpos = GetMousePos();
 	LLOG("START DRAG ---------------");
 }
 
@@ -171,13 +154,7 @@ void TopWindowFrame::GripResize()
 void TopWindowFrame::LeftDown(Point p, dword keyflags)
 {
 	dir = GetDragMode(p);
-	if(dir.x || dir.y || FullWindowDrag)
-		StartDrag();
-	else {
-		SetCapture();
-		holding = true;
-		hold.Set(GetKbdDelay() / 3, THISBACK(Hold));
-	}
+	StartDrag();
 }
 
 void TopWindowFrame::CancelMode()
@@ -202,11 +179,11 @@ void TopWindowFrame::Hold()
 
 void TopWindowFrame::LeftHold(Point p, dword keyflags)
 {
-	if(HasCapture() || FullWindowDrag)
+/*	if(HasCapture() || FullWindowDrag)
 		return;
 	dir = GetDragMode(p);
 	if(!dir.x && !dir.y)
-		StartDrag();
+		StartDrag();*/
 }
 
 void TopWindowFrame::LeftDouble(Point p, dword keyflags)

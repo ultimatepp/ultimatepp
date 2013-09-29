@@ -1,4 +1,4 @@
-#define GUI_SDL20
+#define GUI_SDL20GL
 
 NAMESPACE_UPP
 

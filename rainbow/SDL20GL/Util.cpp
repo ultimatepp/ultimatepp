@@ -1,6 +1,6 @@
 #include <CtrlCore/CtrlCore.h>
 
-#ifdef GUI_SDL20
+#ifdef GUI_SDL20GL
 
 NAMESPACE_UPP
 
@@ -59,18 +59,6 @@ Size GetScreenSize()
 	return ScreenInfo().GetPageSize();
 }
 */
-
-void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
-                  Color color, int type, int animation)
-{
-	// q.DragRectDraw(rect1, rect2, clip, n, color, type, animation);
-	_DBG_
-	// TODO: Implement
-}
-
-void FinishDragRect(Ctrl& q)
-{
-}
 
 END_UPP_NAMESPACE
 
