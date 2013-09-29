@@ -1,6 +1,6 @@
 #include "Local.h"
 
-#ifdef GUI_SDL20
+#ifdef GUI_SDL20GL
 
 NAMESPACE_UPP
 
@@ -35,11 +35,6 @@ void SDLWindow::Destroy()
 		SDL_DestroyWindow(win);
 		win = NULL;
 	}
-}
-
-void SDLWindow::Present()
-{
-	SDL_GL_SwapWindow(win);
 }
 
 SDLWindow::SDLWindow()

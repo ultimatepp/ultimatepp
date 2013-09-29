@@ -227,6 +227,8 @@ UWord::UWord()
 	editor.WhenRefreshBar = THISBACK(SetBar);
 	OpenMain();
 	ActiveFocus(editor);
+	
+	editor <<= LoadFile(GetDataFile("test.qtf"));
 }
 
 void UWord::SerializeApp(Stream& s)
@@ -248,6 +250,7 @@ GUI_APP_MAIN
 	         .DefaultExt("qtf");
 
 	LoadFromFile(callback(UWord::SerializeApp));
+	UWord uword;
 	new UWord;
 	Ctrl::EventLoop();
 	StoreToFile(callback(UWord::SerializeApp));

@@ -1,52 +1,38 @@
 #include "Local.h"
 
-#ifdef GUI_SDL20
+#ifdef GUI_SDL20GL
 
 NAMESPACE_UPP
 
-#define LLOG(x)   //DLOG(x)
+#define LLOG(x)     LOG(x)
 #define LDUMP(x)  //DDUMP(x)
 #define LDUMPC(x) //DDUMPC(x)
-
-ImageBuffer    Ctrl::framebuffer;
-Vector<Rect>   Ctrl::invalid;
-Vector<Rect>   Ctrl::update;
+#define LTIMING(x)  RTIMING(x)
 
 Ptr<Ctrl>      Ctrl::desktop;
 Vector<Ctrl *> Ctrl::topctrl;
 
+bool           Ctrl::invalid;
+
 Point          Ctrl::fbCursorPos = Null;
 Image          Ctrl::fbCursorImage;
-Point          Ctrl::fbCursorBakPos = Null;
-Image          Ctrl::fbCursorBak;
 Rect           Ctrl::fbCaretRect;
-Image          Ctrl::fbCaretBak;
 int            Ctrl::fbCaretTm;
-int            Ctrl::renderingMode = MODE_ANTIALIASED;
 bool           Ctrl::fbEndSession;
-bool           Ctrl::FullWindowDrag;
 int            Ctrl::PaintLock;
 
 void Ctrl::SetDesktop(Ctrl& q)
 {
 	desktop = &q;
-	desktop->SetRect(framebuffer.GetSize());
 	desktop->SetOpen(true);
 	desktop->NewTop();
-	invalid.Add(framebuffer.GetSize());
-}
-
-void Ctrl::SetRenderingMode(int mode)
-{
-	renderingMode = mode;
-	invalid.Add(framebuffer.GetSize());
+	invalid = true;
 }
 
 void Ctrl::InitFB()
 {
 	Ctrl::GlobalBackBuffer();
 	Ctrl::InitTimer();
-	framebuffer.Create(1, 1);
 
 #ifdef PLATFORM_POSIX
 	SetStdFont(ScreenSans(12)); //FIXME general handling
@@ -70,16 +56,18 @@ void Ctrl::ExitFB()
 {
 	TopWindow::ShutdownWindows();
 	Ctrl::CloseTopCtrls();
-	if(fbEndSession)
-		FBQuitSession();
+	if(fbEndSession) {
+		SDL_Event event;
+		event.type = SDL_QUIT;
+		SDL_PushEvent(&event);
+	}
 }
 
-void Ctrl::SetFramebufferSize(Size sz)
+void Ctrl::SetDesktopSize(Size sz)
 {
-	framebuffer.Create(sz);
 	if(desktop)
 		desktop->SetRect(sz);
-	invalid.Add(sz);
+	invalid = true;
 	SyncTopWindows();
 }
 
@@ -164,19 +152,9 @@ void Ctrl::UnregisterSystemHotKey(int id)
 
 bool Ctrl::IsWaitingEvent()
 {
-	return FBIsWaitingEvent();
-}
-
-void Ctrl::AddUpdate(const Rect& rect)
-{
-	LLOG("@AddUpdate " << rect);
-	AddRefreshRect(update, rect);
-}
-
-void Ctrl::AddInvalid(const Rect& rect)
-{
-	LLOG("@AddInvalid " << rect);
-	AddRefreshRect(invalid, rect);
+	SDL_PumpEvents();
+	SDL_Event events;
+	return SDL_PeepEvents(&events, 1, SDL_PEEKEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT) > 0;
 }
 
 void Ctrl::SyncTopWindows()
@@ -194,33 +172,27 @@ bool Ctrl::ProcessEvent(bool *quit)
 	ASSERT(IsMainThread());
 	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
 		ReleaseCtrlCapture();
-	if(FBProcessEvent(quit)) {
-		LLOG("FBProcesEvent returned true");
+
+	SDL_Event event;
+	if(SDL_PollEvent(&event)) {
+		if(event.type == SDL_QUIT && quit)
+			*quit = true;
+		HandleSDLEvent(&event);
 		SyncTopWindows();
 		DefferedFocusSync();
 		SyncCaret();
+		SyncTopWindows();
 		return true;
 	}
 	return false;
 }
 
-Rect Ctrl::GetClipBound(const Vector<Rect>& inv, const Rect& r)
-{
-	Rect ri = Null;
-	for(int j = 0; j < inv.GetCount(); j++) {
-		Rect rr = inv[j] & r;
-		if(!rr.IsEmpty())
-			ri = IsNull(ri) ? rr : rr | ri;
-	}
-	return ri;
-}
-
-
+/*
 ViewDraw::ViewDraw(Ctrl *ctrl)
 {
-	if(Ctrl::invalid.GetCount())
+	if(Ctrl::invalid)
 		Ctrl::DoPaint();
-	Ctrl::invalid.Clear();
+	Ctrl::invalid = false;
 	Ctrl::RemoveCursor();
 	Ctrl::RemoveCaret();
 	Rect r = ctrl->GetScreenView();
@@ -236,218 +208,73 @@ ViewDraw::ViewDraw(Ctrl *ctrl)
 
 ViewDraw::~ViewDraw()
 {
-	FBInitUpdate();
 	Ctrl::DoUpdate();
-	FBFlush();
-//	Ctrl::invalid.Clear();
 }
+*/
 
-void Ctrl::DoUpdate()
+Rect Ctrl::GetClipBound(const Vector<Rect>& inv, const Rect& r)
 {
-	LLOG("DoUpdate");
-	invalid.Clear();
-	CursorSync();
-	LDUMPC(update);
-	screen.Present();
-#if 0
-	FBUpdate(framebuffer.GetSize());
-#else
-	for(int i = 0; i < update.GetCount(); i++) {
-		LDUMP(update[i]);
-		FBUpdate(update[i]);
+	Rect ri = Null;
+	for(int j = 0; j < inv.GetCount(); j++) {
+		Rect rr = inv[j] & r;
+		if(!rr.IsEmpty())
+			ri = IsNull(ri) ? rr : rr | ri;
 	}
-#endif
-	update.Clear();
-//	Sleep(1000);
+	return ri;
 }
 
-Vector<Rect> Ctrl::GetPaintRects()
+void Ctrl::PaintScene(SystemDraw& draw)
 {
-	Vector<Rect> r;
-	r.Add(GetScreenRect());
-	for(int i = max(FindTopCtrl() + 1, 0); i < topctrl.GetCount(); i++)
-		Subtract(r, topctrl[i]->GetScreenRect());
-	return r;
-}
-
-
-void DDRect(RGBA *t, int dir, const byte *pattern, int pos, int count)
-{
-	while(count-- > 0) {
-		byte p = pattern[7 & pos++];
-		t->r ^= p;
-		t->g ^= p;
-		t->b ^= p;
-		t += dir;
-	}
-}
-
-void Ctrl::DrawLine(const Vector<Rect>& clip, int x, int y, int cx, int cy, bool horz, const byte *pattern, int animation)
-{
-	if(cx <= 0 || cy <= 0)
+	if(!desktop)
 		return;
-	Vector<Rect> rr = Intersection(clip, RectC(x, y, cx, cy));
-	for(int i = 0; i < rr.GetCount(); i++) {
-		Rect r = rr[i];
-		AddUpdate(r);
-		if(horz)
-			for(int y = r.top; y < r.bottom; y++)
-				DDRect(framebuffer[y] + r.left, 1, pattern, r.left + animation, r.GetWidth());
-		else
-			for(int x = r.left; x < r.right; x++)
-				DDRect(framebuffer[r.top] + x, framebuffer.GetWidth(), pattern, r.top + animation, r.GetHeight());
+	LLOG("@ DoPaint");
+	LTIMING("DoPaint paint");
+	draw.Init(screen_size, (uint64)screen.glcontext);
+	draw.Begin();
+	Vector<Rect> invalid;
+	invalid.Add(screen_size);
+	for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
+		Rect r = topctrl[i]->GetRect();
+		Rect ri = GetClipBound(invalid, r);
+		if(!IsNull(ri)) {
+			draw.Clipoff(r);
+			topctrl[i]->UpdateArea(draw, ri - r.TopLeft());
+			draw.End();
+			Subtract(invalid, r);
+			draw.ExcludeClip(r);
+		}
 	}
+	Rect ri = GetClipBound(invalid, desktop->GetRect().GetSize());
+	if(!IsNull(ri))
+		desktop->UpdateArea(draw, ri);
+	draw.End();
 }
 
-void Ctrl::DragRectDraw0(const Vector<Rect>& clip, const Rect& rect, int n, const byte *pattern, int animation)
+void Ctrl::PaintCaretCursor(SystemDraw& draw)
 {
-	int hn = min(rect.GetHeight(), n);
-	int vn = min(rect.GetWidth(), n);
-	DrawLine(clip, rect.left, rect.top, rect.GetWidth(), hn, true, pattern, animation);
-	DrawLine(clip, rect.left, rect.top + hn, vn, rect.GetHeight() - hn, false, pattern, animation);
-	DrawLine(clip, rect.right - vn, rect.top + hn, vn, rect.GetHeight() - hn, false, pattern, animation);
-	DrawLine(clip, rect.left + vn, rect.bottom - hn, rect.GetWidth() - 2 * vn, hn, true, pattern, animation);
-}
-
-void Ctrl::DragRectDraw(const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
-                        Color color, int type, int animation)
-{
-	static byte solid[] =  { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
-	static byte normal[] = { 0xff, 0x00, 0xff, 0x00, 0xff, 0x00, 0xff, 0x00 };
-	static byte dashed[] = { 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 };
-	Point p = GetScreenView().TopLeft();
-	Vector<Rect> pr;
-	if(type & DRAWDRAGRECT_SCREEN) {
-		pr.Add(Rect(framebuffer.GetSize()));
-		type &= ~DRAWDRAGRECT_SCREEN;
-		p = Point(0, 0);
-	}
-	else
-		pr = Intersection(GetPaintRects(), clip.Offseted(p));
-	const byte *pattern = type == DRAWDRAGRECT_DASHED ? dashed :
-	                      type == DRAWDRAGRECT_NORMAL ? normal : solid;
-	RemoveCursor();
-	RemoveCaret();
-	DragRectDraw0(pr, rect1.Offseted(p), n, pattern, animation);
-	DragRectDraw0(pr, rect2.Offseted(p), n, pattern, animation);
+	if(!IsNull(fbCaretRect))
+		draw.DrawRect(fbCaretRect, InvertColor);
+	draw.DrawImage(fbCursorPos.x, fbCursorPos.y, fbCursorImage);
 }
 
 void Ctrl::DoPaint()
 {
-	LLOG("@ DoPaint");
 	if(!PaintLock) {
-		bool scroll = false;
-		if(desktop)
-			desktop->SyncScroll();
-		for(int i = 0; i < topctrl.GetCount(); i++)
-			topctrl[i]->SyncScroll();
-		if((invalid.GetCount() || scroll) && desktop) {
-			RemoveCursor();
-			RemoveCaret();
-			for(int phase = 0; phase < 2; phase++) {
-				LLOG("DoPaint invalid phase " << phase);
-				LDUMPC(invalid);
-				SystemDraw draw;
-				draw.Init(screen_size, (uint64)screen.glcontext);
-				for(int i = 0; i < invalid.GetCount(); i++) {
-					draw.Clip(invalid[i]);
-					AddUpdate(invalid[i]);
-				}
-				for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
-					Rect r = topctrl[i]->GetRect();
-					Rect ri = GetClipBound(invalid, r);
-					if(!IsNull(ri)) {
-						draw.Clipoff(r);
-						topctrl[i]->UpdateArea(draw, ri - r.TopLeft());
-						draw.End();
-						Subtract(invalid, r);
-						draw.ExcludeClip(r);
-					}
-				}
-				Rect ri = GetClipBound(invalid, framebuffer.GetSize());
-				if(!IsNull(ri))
-					desktop->UpdateArea(draw, ri);
-			}
+		if(invalid && desktop) {
+			invalid = false;
+			SystemDraw draw;
+			PaintScene(draw);
+			PaintCaretCursor(draw);
+			SDL_GL_SwapWindow(screen.win);
 		}
 	}
-	DoUpdate();
 }
 
-void Ctrl::WndUpdate(const Rect& r)
+void Ctrl::WndUpdate(const Rect&)
 {
 	GuiLock __;
-	Rect rr = r + GetRect().TopLeft();
-	bool dummy;
-	Vector<Rect> h;
-	h <<= invalid;
-	invalid = Intersect(invalid, rr, dummy);
-	FBInitUpdate();
+	Invalidate();
 	DoPaint();
-	invalid <<= h;
-	Subtract(invalid, rr);
-	FBFlush();
-}
-
-bool Ctrl::ProcessEvents(bool *quit)
-{
-	//LOGBLOCK("@ ProcessEvents");
-//	MemoryCheckDebug();
-	if(!ProcessEvent(quit))
-		return false;
-	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()));
-	TimeStop tm;
-	TimerProc(GetTickCount());
-	LLOG("TimerProc elapsed: " << tm);
-	SweepMkImageCache();
-	FBInitUpdate();
-	DoPaint();
-	FBFlush();
-	return true;
-}
-
-void Ctrl::EventLoop(Ctrl *ctrl)
-{
-	GuiLock __;
-	ASSERT(IsMainThread());
-	ASSERT(LoopLevel == 0 || ctrl);
-	LoopLevel++;
-	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
-	Ptr<Ctrl> ploop;
-	if(ctrl) {
-		ploop = LoopCtrl;
-		LoopCtrl = ctrl;
-		ctrl->inloop = true;
-	}
-
-	bool quit = false;
-	int64 loopno = ++EventLoopNo;
-	ProcessEvents(&quit);
-	while(loopno > EndSessionLoopNo && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
-	{
-//		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
-		SyncCaret();
-		GuiSleep(20);
-//		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / ProcessEvents");
-		ProcessEvents(&quit);
-//		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / after ProcessEvents");
-		LDUMP(loopno);
-		LDUMP(fbEndSessionLoop);
-	}
-
-	if(ctrl)
-		LoopCtrl = ploop;
-	LoopLevel--;
-	LLOG(LOG_END << "Leaving event loop ");
-}
-
-void Ctrl::GuiSleep(int ms)
-{
-	GuiLock __;
-	ASSERT(IsMainThread());
-	LLOG("GuiSleep");
-	int level = LeaveGuiMutexAll();
-	FBSleep(ms);
-	EnterGuiMutex(level);
 }
 
 Rect Ctrl::GetWndScreenRect() const
@@ -479,41 +306,40 @@ void Ctrl::SetAlpha(byte alpha)
 Rect Ctrl::GetWorkArea() const
 {
 	GuiLock __;
-	return framebuffer.GetSize();
+	return GetVirtualScreenArea();
 }
 
 void Ctrl::GetWorkArea(Array<Rect>& rc)
 {
 	GuiLock __;
 	Array<Rect> r;
-	r.Add(framebuffer.GetSize());
+	r.Add(GetVirtualScreenArea());
 }
 
 Rect Ctrl::GetVirtualWorkArea()
 {
-	return framebuffer.GetSize();
+	return GetVirtualScreenArea();
 }
 
 Rect Ctrl::GetWorkArea(Point pt)
 {
-	return framebuffer.GetSize();
+	return GetVirtualScreenArea();
 }
 
 Rect Ctrl::GetVirtualScreenArea()
 {
 	GuiLock __;
-	return framebuffer.GetSize();
+	return desktop ? desktop->GetRect() : Rect(0, 0, 0, 0);
 }
 
 Rect Ctrl::GetPrimaryWorkArea()
 {
-	Rect r;
-	return framebuffer.GetSize();
+	return GetVirtualScreenArea();
 }
 
 Rect Ctrl::GetPrimaryScreenArea()
 {
-	return framebuffer.GetSize();
+	return GetVirtualScreenArea();
 }
 
 int Ctrl::GetKbdDelay()
@@ -535,7 +361,7 @@ void Ctrl::DestroyWnd()
 			topctrl[i]->WndDestroy();
 	int q = FindTopCtrl();
 	if(q >= 0) {
-		AddInvalid(GetRect());
+		Invalidate();
 		topctrl.Remove(q);
 	}
 	if(top) {
@@ -559,7 +385,7 @@ void Ctrl::PutForeground()
 {
 	int q = FindTopCtrl();
 	if(q >= 0) {
-		AddInvalid(GetRect());
+		Invalidate();
 		topctrl.Remove(q);
 		topctrl.Add(this);
 	}
@@ -635,14 +461,10 @@ bool Ctrl::HasWndCapture() const
 	return captureCtrl && captureCtrl->GetTopCtrl() == this;
 }
 
-void Ctrl::WndInvalidateRect(const Rect& r)
+void Ctrl::WndInvalidateRect(const Rect&)
 {
 	GuiLock __;
-	int q = FindTopCtrl();
-	if(q >= 0)
-		AddInvalid(r + topctrl[q]->GetRect().TopLeft());
-	else
-		AddInvalid(r);
+	Invalidate();
 }
 
 void Ctrl::WndSetPos(const Rect& rect)
@@ -651,54 +473,15 @@ void Ctrl::WndSetPos(const Rect& rect)
 	TopWindow *w = dynamic_cast<TopWindow *>(this);
 	if(w)
 		w->SyncFrameRect(rect);
-	invalid.Add(GetRect());
+	Invalidate();
 	SetWndRect(rect);
-	invalid.Add(rect);
 }
 
 void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
-	if(dx == 0 && dy == 0)
-		return;
-	if(dx && dy) {
-		Refresh(r);
-		return;
-	}
-	RemoveCursor();
-	RemoveCaret();
-	Rect sr = r.Offseted(GetScreenRect().TopLeft());
-	Vector<Rect> pr = Intersection(GetPaintRects(), sr);
-	for(int i = 0; i < pr.GetCount(); i++) {
-		Rect r = pr[i];
-		if(dx) {
-			int n = r.GetWidth() - abs(dx);
-			if(n > 0) {
-				int to = r.left + dx * (dx > 0);
-				int from = r.left - dx * (dx < 0);
-				for(int y = r.top; y < r.bottom; y++)
-					memmove(framebuffer[y] + to, framebuffer[y] + from, n * sizeof(RGBA));
-			}
-			n = min(abs(dx), r.GetWidth());	
-			Refresh(dx < 0 ? r.left : r.right - n, r.top, n, r.GetHeight());
-		}
-		else {
-			int n = r.GetHeight() - abs(dy);
-			for(int y = 0; y < n; y++)
-				memmove(framebuffer[dy < 0 ? r.top + y : r.bottom - 1 - y] + r.left,
-				        framebuffer[dy < 0 ? r.top + y - dy : r.bottom - 1 - y - dy] + r.left,
-				        r.GetWidth() * sizeof(RGBA));
-			n = min(abs(dy), r.GetHeight());	
-			Refresh(r.left, dy < 0 ? r.bottom - n : r.top, r.GetWidth(), n);
-		}
-	}
-
-	Vector<Rect> ur;
-	for(int i = 0; i < invalid.GetCount(); i++)
-		if(invalid[i].Intersects(sr))
-			ur.Add(invalid[i]);
-	for(int i = 0; i < ur.GetCount(); i++)
-		AddInvalid(ur[i].Offseted(dx, dy));
+	LLOG("ScrollView " << rect);
+	WndInvalidateRect(r);
 }
 
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
@@ -719,14 +502,14 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 	popup = isopen = true;
 	RefreshLayoutDeep();
 	if(activate) SetFocusWnd();
-	AddInvalid(GetRect());
+	Invalidate();
 }
 
 Rect Ctrl::GetDefaultWindowRect() {
 	GuiLock __;
 	static int ii = 0;
-	Size sz = framebuffer.GetSize();
-	Rect rect = framebuffer.GetSize();
+	Rect rect = GetVirtualScreenArea();
+	Size sz = rect.GetSize();
 	rect.Deflate(sz / 10);
 	rect.Offset(Size(GetStdFontCy(), 2 * GetStdFontCy()) * (++ii % 8));
 	return rect;

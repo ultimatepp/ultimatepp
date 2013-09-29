@@ -1,6 +1,6 @@
 #include "Local.h"
 
-#ifdef GUI_SDL20
+#ifdef GUI_SDL20GL
 
 #define LLOG(x) // DLOG(x)
 
@@ -57,7 +57,7 @@ void GuiPlatformGripResize(TopWindow *q)
 
 Color GuiPlatformGetScreenPixel(int x, int y)
 {
-	return Ctrl::GetFrameBuffer()[y][x];
+	return Null;
 }
 
 void GuiPlatformAfterMenuPopUp()

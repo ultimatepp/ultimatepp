@@ -17,6 +17,7 @@ file
 	Util.cpp,
 	FB.iml,
 	Ctrl.h,
+	DrawDragRect.cpp,
 	Ctrl.cpp,
 	Wnd.cpp,
 	Event.cpp,
