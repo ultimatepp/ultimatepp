@@ -28,7 +28,6 @@ private:
 	void NewTop()                       { top = new Top; top->owner_window = NULL; }
 	void PutForeground();
 	static void MouseEventFB(Ptr<Ctrl> t, int event, Point p, int zdelta);
-	Vector<Rect> GetPaintRects();
 
 	static void DrawLine(const Vector<Rect>& clip, int x, int y, int cx, int cy, bool horz,
 	                     const byte *pattern, int animation);

@@ -166,27 +166,6 @@ void Ctrl::SyncTopWindows()
 	}
 }
 
-bool Ctrl::ProcessEvent(bool *quit)
-{
-	LLOG("@ ProcessEvent");
-	ASSERT(IsMainThread());
-	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
-		ReleaseCtrlCapture();
-
-	SDL_Event event;
-	if(SDL_PollEvent(&event)) {
-		if(event.type == SDL_QUIT && quit)
-			*quit = true;
-		HandleSDLEvent(&event);
-		SyncTopWindows();
-		DefferedFocusSync();
-		SyncCaret();
-		SyncTopWindows();
-		return true;
-	}
-	return false;
-}
-
 /*
 ViewDraw::ViewDraw(Ctrl *ctrl)
 {

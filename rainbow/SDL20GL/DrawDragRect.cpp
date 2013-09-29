@@ -89,13 +89,4 @@ void FinishDragRect(Ctrl& q)
 	SDL_GL_SwapWindow(screen.win);
 }
 
-Vector<Rect> Ctrl::GetPaintRects() // TODO: Remove(?)
-{
-	Vector<Rect> r;
-	r.Add(GetScreenRect());
-	for(int i = max(FindTopCtrl() + 1, 0); i < topctrl.GetCount(); i++)
-		Subtract(r, topctrl[i]->GetScreenRect());
-	return r;
-}
-
 END_UPP_NAMESPACE
