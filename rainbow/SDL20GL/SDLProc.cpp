@@ -112,9 +112,16 @@ void HandleSDLEvent(SDL_Event* event)
 			}
 		}
 			break;
-		case SDL_MOUSEMOTION: //SDL_MouseMotionEvent
+		case SDL_MOUSEMOTION:
+		{
+			SDL_PumpEvents();
+			SDL_Event next_event;
+			if(SDL_PeepEvents(&next_event, 1, SDL_PEEKEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT) > 0 &&
+			   next_event.type == SDL_MOUSEMOTION)
+				break; // MouseMove compression
 			Ctrl::DoMouseFB(Ctrl::MOUSEMOVE, Point(event->motion.x, event->motion.y));
 			break;
+		}
 		case SDL_MOUSEWHEEL: Ctrl::DoMouseFB(Ctrl::MOUSEWHEEL, GetMousePos(), sgn(event->wheel.y) * 120); break;
 		case SDL_MOUSEBUTTONDOWN: //SDL_MouseButtonEvent, FIXME DoubleClick
 		{
