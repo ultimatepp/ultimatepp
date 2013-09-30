@@ -26,6 +26,7 @@ void   SetAssertFailedHook(void (*h)(const char *));
 
 void   ReloadIniFile();
 void   SetIniFile(const char *path = NULL);
+String GetIniFile();
 String GetIniKey(const char *id, const String& def);
 String GetIniKey(const char *id);
 
