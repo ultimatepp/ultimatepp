@@ -80,7 +80,7 @@ bool IniChanged__(int version)
 
 String GetIniFile()
 {
-	return *sIniFile ? sIniFile : ~ConfigFile("q.ini")
+	return *sIniFile ? sIniFile : ~ConfigFile("q.ini");
 }
 
 String GetIniKey(const char *id, const String& def) {
