@@ -62,7 +62,7 @@ void ReloadIniFile()
 
 void SetIniFile(const char *name) {
 	Mutex::Lock __(sMtx);
-	strcpy(sIniFile, name, 511);
+	strncpy(sIniFile, name, 511);
 	ReloadIniFile();
 }
 
