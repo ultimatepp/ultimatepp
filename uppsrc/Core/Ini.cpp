@@ -50,7 +50,7 @@ VectorMap<String, String> LoadIniFile(const char *filename)
 }
 
 static StaticMutex sMtx;
-static char  sIniFile[256];
+static char  sIniFile[512];
 
 int ini_version__ = 1;
 
@@ -62,7 +62,7 @@ void ReloadIniFile()
 
 void SetIniFile(const char *name) {
 	Mutex::Lock __(sMtx);
-	strcpy(sIniFile, name);
+	strcpy(sIniFile, name, 511);
 	ReloadIniFile();
 }
 
@@ -78,6 +78,11 @@ bool IniChanged__(int version)
 }
 #endif
 
+String GetIniFile()
+{
+	return *sIniFile ? sIniFile : ~ConfigFile("q.ini")
+}
+
 String GetIniKey(const char *id, const String& def) {
 	ASSERT_(IsMainRunning(), "GetIniKey is allowed only after APP_MAIN has started");
 	Mutex::Lock __(sMtx);
@@ -85,7 +90,7 @@ String GetIniKey(const char *id, const String& def) {
 	static int version;
 	if(version != ini_version__) {
 		version = ini_version__;
-		key = LoadIniFile(*sIniFile ? sIniFile : ~ConfigFile("q.ini"));
+		key = LoadIniFile(GetIniFile());
 	#ifdef PLATFORM_WIN32
 		if(key.GetCount() == 0)
 			key = LoadIniFile(~GetExeDirFile("q.ini"));
