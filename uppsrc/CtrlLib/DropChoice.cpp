@@ -11,6 +11,7 @@ DropChoice::DropChoice() {
 	dropfocus = true;
 	EnableDrop(false);
 	dropwidth = 0;
+	appending = false;
 }
 
 void DropChoice::EnableDrop(bool b)
@@ -66,6 +67,12 @@ bool DropChoice::DataSelect(Ctrl& owner, DropChoice& drop, const String& appends
 	owner.SetData(s);
 	owner.WhenAction();
 	return true;
+}
+
+void DropChoice::DoWheel(int zdelta)
+{
+	if(!appending)
+		DoKey(zdelta < 0 ? K_UP : K_DOWN);
 }
 
 bool DropChoice::DoKey(dword key) {
