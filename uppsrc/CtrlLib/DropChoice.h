@@ -171,6 +171,7 @@ public:
 	Callback    WhenSelect;
 
 	bool        DoKey(dword key);
+	void        DoWheel(int zdelta);
 
 	void        Clear();
 	void        Add(const Value& data);
@@ -214,6 +215,7 @@ public:
 	virtual bool   Key(dword key, int repcnt);
 	virtual void   MouseEnter(Point p, dword keyflags);
 	virtual void   MouseLeave();
+	virtual void   MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void   GotFocus();
 	virtual void   LostFocus();
 
@@ -221,6 +223,7 @@ public:
 protected:
 	DropChoice      select;
 	String          appends;
+	bool            withwheel;
 
 	void            DoWhenSelect();
 	void            DoWhenDrop()                          { WhenDrop(); }
@@ -257,6 +260,8 @@ public:
 	WithDropChoice& SetDisplay(const Display& d, int lcy) { select.SetDisplay(d, lcy); return *this; }
 	WithDropChoice& SetConvert(const Convert& d)          { select.SetConvert(d); return *this; }
 	WithDropChoice& AlwaysDrop(bool b = true)             { select.AlwaysDrop(b); return *this; }
+	WithDropChoice& WithWheel(bool b = true)              { withwheel = b; return *this; }
+	WithDropChoice& NoWithWheel()                         { return WithWheel(false); }
 
 	WithDropChoice& DropWidth(int w)                      { select.DropWidth(w); return *this; }
 	WithDropChoice& DropWidthZ(int w)                     { select.DropWidthZ(w); return *this; }
@@ -270,12 +275,20 @@ WithDropChoice<T>::WithDropChoice() {
 	select.WhenDrop = callback(this, &WithDropChoice::DoWhenDrop);
 	select.WhenSelect = callback(this, &WithDropChoice::DoWhenSelect);
 	appends = String::GetVoid();
+	withwheel = true;
 	SetStyle(StyleDefault());
 }
 
 template <class T>
 bool WithDropChoice<T>::Key(dword key, int repcnt) {
 	return select.DoKey(key) || T::Key(key, repcnt);
+}
+
+template <class T>
+void WithDropChoice<T>::MouseWheel(Point p, int zdelta, dword keyflags)
+{
+	if(withwheel)
+		select.DoWheel(zdelta);
 }
 
 template <class T>
