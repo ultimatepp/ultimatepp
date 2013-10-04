@@ -83,10 +83,22 @@ String GetIniFile()
 	return *sIniFile ? sIniFile : ~ConfigFile("q.ini");
 }
 
+static VectorMap<String, String>& sIniKeys()
+{
+	static VectorMap<String, String> key;
+	return key;
+}
+
+VectorMap<String, String> GetIniKeys()
+{
+	Mutex::Lock __(sMtx);
+	return VectorMap<String, String>(sIniKeys(), 0);
+}
+
 String GetIniKey(const char *id, const String& def) {
 	ASSERT_(IsMainRunning(), "GetIniKey is allowed only after APP_MAIN has started");
 	Mutex::Lock __(sMtx);
-	static VectorMap<String, String> key;
+	VectorMap<String, String>& key = sIniKeys();
 	static int version;
 	if(version != ini_version__) {
 		version = ini_version__;
