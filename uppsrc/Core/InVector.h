@@ -590,6 +590,8 @@ public:
 
 	T        Pop()                                  { T h = B::Top(); B::Drop(); return h; }
 
+	SortedVectorMap& operator()(const K& k, const T& v) { Add(k, v); return *this; }
+
 	SortedVectorMap(const SortedVectorMap& s, int) : B(s, 1) {}
 	SortedVectorMap()                                                       {}
 
@@ -643,6 +645,8 @@ public:
 
 	T       *Detach(int i)                        { T *x = B::value.Detach(i); B::Remove(i); return x; }
 	T       *PopDetach()                          { return Detach(B::GetCount() - 1); }
+
+	SortedArrayMap& operator()(const K& k, const T& v) { Add(k, v); return *this; }
 
 	SortedArrayMap(const SortedArrayMap& s, int) : B(s, 1) {}
 	SortedArrayMap() {}

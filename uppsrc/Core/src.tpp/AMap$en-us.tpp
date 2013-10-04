@@ -755,6 +755,13 @@ by picking.&]
 [s7; [*/ Return value]-|Basic random access container of values.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:AMap`:`:operator`(`)`(const K`&`,const T`&`):%- [_^AMap^ AMap][@(0.0.255) `&]_[* opera
+tor()]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 v])&]
+[s2; Same as Add([%-*@3 k], [%-*@3 v]), returns `*this. Syntax sugar 
+for creating map.&]
+[s3; &]
+[s4;%- &]
 [s5;:AMap`:`:KeyType`:`:typedef:%- [@(0.0.255) typedef]_K_[* KeyType]&]
 [s2; Typedef of K for use in templated algorithms.&]
 [s3;%- &]

@@ -20,7 +20,7 @@
 #define __FTOPTION_H__
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 
 
 FT_BEGIN_HEADER
@@ -51,7 +51,7 @@ FT_BEGIN_HEADER
   /*    locate this file during the build.  For example,                   */
   /*                                                                       */
   /*      #define FT_CONFIG_OPTIONS_H  <myftoptions.h>                     */
-  /*      #include <freetype/config/ftheader.h>                            */
+  /*      #include <plugin/FT_fontsys/config/ftheader.h>                            */
   /*                                                                       */
   /*    will use `$BUILD/myftoptions.h' instead of this file for macro     */
   /*    definitions.                                                       */
@@ -59,7 +59,7 @@ FT_BEGIN_HEADER
   /*    Note also that you can similarly pre-define the macro              */
   /*    FT_CONFIG_MODULES_H used to locate the file listing of the modules */
   /*    that are statically linked to the library at compile time.  By     */
-  /*    default, this file is <freetype/config/ftmodule.h>.                */
+  /*    default, this file is <plugin/FT_fontsys/config/ftmodule.h>.                */
   /*                                                                       */
   /*  We highly recommend using the third method whenever possible.        */
   /*                                                                       */

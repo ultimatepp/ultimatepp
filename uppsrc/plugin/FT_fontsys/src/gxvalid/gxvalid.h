@@ -27,7 +27,7 @@
 #ifndef __GXVALID_H__
 #define __GXVALID_H__
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include FT_FREETYPE_H
 
 #include "gxverror.h"          /* must come before FT_INTERNAL_VALIDATE_H */

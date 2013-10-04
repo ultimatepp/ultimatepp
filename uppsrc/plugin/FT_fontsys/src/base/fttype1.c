@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_SERVICE_H
 #include FT_SERVICE_POSTSCRIPT_INFO_H

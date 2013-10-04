@@ -20,7 +20,7 @@
 #define __TTGLOAD_H__
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include "ttobjs.h"
 
 #ifdef TT_USE_BYTECODE_INTERPRETER

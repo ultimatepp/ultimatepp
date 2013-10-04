@@ -20,7 +20,7 @@
 #define __T1PARSE_H__
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include FT_INTERNAL_TYPE1_TYPES_H
 #include FT_INTERNAL_STREAM_H
 

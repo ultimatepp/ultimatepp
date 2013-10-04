@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include FT_STROKER_H
 #include FT_TRIGONOMETRY_H
 #include FT_OUTLINE_H

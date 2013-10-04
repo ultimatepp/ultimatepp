@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include "bdflib.c"
 #include "bdfdrivr.c"
 

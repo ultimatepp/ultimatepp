@@ -66,7 +66,7 @@
   */
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include FT_FREETYPE_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_INTERNAL_STREAM_H

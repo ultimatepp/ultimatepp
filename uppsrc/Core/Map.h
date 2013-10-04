@@ -47,11 +47,6 @@ public:
 	T       *FindPtr(const K& k)       { int i = Find(k); return i >= 0 ? &value[i] : NULL; }
 	const T *FindPtr(const K& k) const { int i = Find(k); return i >= 0 ? &value[i] : NULL; }
 
-//  PRECHANGE VACATION :)
-//	T&       operator()(const K& k)                   { return Get(k); }
-//	const T& operator()(const K& k) const             { return Get(k); }
-//	const T& operator()(const K& k, const T& d) const { return Get(k, d); }
-
 	void     Unlink(int i)                            { key.Unlink(i); }
 	int      UnlinkKey(const K& k, unsigned h)        { return key.UnlinkKey(k, h); }
 	int      UnlinkKey(const K& k)                    { return key.UnlinkKey(k); }
@@ -106,6 +101,8 @@ public:
 	V                PickValues() pick_            { return value; }
 	
 	bool             IsPicked() const              { return value.IsPicked() || key.IsPicked(); }
+
+	AMap& operator()(const K& k, const T& v)       { Add(k, v); return *this; }
 
 	AMap()                                         {}
 	AMap(const AMap& s, int) : key(s.key, 0), value(s.value, 0) {}

@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include "psauxmod.h"
 #include "psobjs.h"
 #include "t1decode.h"

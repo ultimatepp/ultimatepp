@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include "cidload.h"
 #include "cidgload.h"
 #include FT_INTERNAL_DEBUG_H

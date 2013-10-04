@@ -20,7 +20,7 @@
 #define __CFF_PARSE_H__
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include "cfftypes.h"
 #include FT_INTERNAL_OBJECTS_H
 
