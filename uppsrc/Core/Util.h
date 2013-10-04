@@ -30,6 +30,8 @@ String GetIniFile();
 String GetIniKey(const char *id, const String& def);
 String GetIniKey(const char *id);
 
+VectorMap<String, String> GetIniKeys();
+
 #ifdef flagSO
 bool IniChanged__(int version);
 #else
