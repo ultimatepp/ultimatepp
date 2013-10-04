@@ -19,7 +19,7 @@
 #ifndef __T1AFM_H__
 #define __T1AFM_H__
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include "t1objs.h"
 #include FT_INTERNAL_TYPE1_TYPES_H
 

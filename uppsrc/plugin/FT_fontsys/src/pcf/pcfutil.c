@@ -32,7 +32,7 @@ in this Software without prior written authorization from The Open Group.
 /* Modified for use with FreeType */
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include "pcfutil.h"
 
 

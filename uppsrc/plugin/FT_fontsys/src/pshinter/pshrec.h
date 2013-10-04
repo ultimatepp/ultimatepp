@@ -32,7 +32,7 @@
 #define __PSHREC_H__
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
 #include "pshglob.h"
 

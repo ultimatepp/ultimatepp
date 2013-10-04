@@ -94,6 +94,13 @@ This pointer should be deleted by client code.&]
 [s2; Removes the last element and returns the pointer to value. This 
 pointer should be deleted by client code.&]
 [s3; &]
+[s4;%- &]
+[s5;:SortedArrayMap`:`:operator`(`)`(const K`&`,const T`&`):%- [_^SortedArrayMap^ Sorte
+dArrayMap][@(0.0.255) `&]_[* operator()]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], 
+[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 v])&]
+[s2; Same as Add([%-*@3 k], [%-*@3 v]), returns `*this. Syntax sugar 
+for creating map.&]
+[s3; &]
 [s4; &]
 [s5;:SortedArrayMap`:`:SortedArrayMap`(const SortedArrayMap`&`,int`):%- [* SortedArrayM
 ap]([@(0.0.255) const]_[* SortedArrayMap][@(0.0.255) `&]_[*@3 s], [@(0.0.255) int])&]

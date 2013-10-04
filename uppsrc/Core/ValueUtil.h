@@ -311,6 +311,12 @@ public:
 	void Add(const char *key, const Value& value)   { Add(Value(key), value); }
 	void Add(int key, const Value& value)           { Add(Value(key), value); }
 	void Add(Id key, const Value& value)            { Add(Value(key.ToString()), value); }
+	
+	ValueMap& operator()(const Value& key, const Value& value)  { Add(key, value); return *this; }
+	ValueMap& operator()(const String& key, const Value& value) { Add(Value(key), value); return *this; }
+	ValueMap& operator()(const char *key, const Value& value)   { Add(Value(key), value); return *this; }
+	ValueMap& operator()(int key, const Value& value)           { Add(Value(key), value); return *this; }
+	ValueMap& operator()(Id key, const Value& value)            { Add(Value(key.ToString()), value); return *this; }
 
 	void Set(const Value& key, const Value& value);
 	void Set(const String& key, const Value& value) { Set(Value(key), value); }

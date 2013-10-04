@@ -19,7 +19,7 @@
 #ifndef __T1CMAP_H__
 #define __T1CMAP_H__
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_TYPE1_TYPES_H
 

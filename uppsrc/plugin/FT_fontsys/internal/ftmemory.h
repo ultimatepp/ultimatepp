@@ -20,7 +20,7 @@
 #define __FTMEMORY_H__
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include FT_TYPES_H
 

@@ -19,7 +19,7 @@
 #ifndef __PFRTYPES_H__
 #define __PFRTYPES_H__
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 
 FT_BEGIN_HEADER

@@ -15,7 +15,7 @@
 /*                                                                         */
 /***************************************************************************/
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include FT_TYPE1_TABLES_H
 #include FT_TRUETYPE_TABLES_H
 #include FT_INTERNAL_SERVICE_H

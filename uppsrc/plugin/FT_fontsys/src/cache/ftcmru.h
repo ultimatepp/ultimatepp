@@ -44,7 +44,7 @@
 #define __FTCMRU_H__
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include FT_FREETYPE_H
 
 #ifdef FREETYPE_H

@@ -1,8 +1,8 @@
 #include "FT_fontsys.h"
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 
-#include <freetype/ftoutln.h>
+#include <plugin/FT_fontsys/ftoutln.h>
 
 #define LLOG(x)     //  DLOG(x)
 #define LTIMING(x)  //  TIMING(x)

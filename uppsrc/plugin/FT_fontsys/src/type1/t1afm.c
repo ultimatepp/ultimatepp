@@ -17,7 +17,7 @@
 /***************************************************************************/
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include "t1afm.h"
 #include "t1errors.h"
 #include FT_INTERNAL_STREAM_H

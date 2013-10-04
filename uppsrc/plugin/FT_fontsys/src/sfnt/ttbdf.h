@@ -20,7 +20,7 @@
 #define __TTBDF_H__
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include "ttload.h"
 #include FT_BDF_H
 

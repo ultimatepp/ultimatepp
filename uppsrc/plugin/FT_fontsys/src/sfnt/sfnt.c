@@ -18,7 +18,7 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include "sfntpic.c"
 #include "ttload.c"
 #include "ttmtx.c"

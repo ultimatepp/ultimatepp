@@ -20,7 +20,7 @@
 #define __T1GLOAD_H__
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include "t1objs.h"
 
 

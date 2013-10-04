@@ -24,7 +24,7 @@
   /*************************************************************************/
 
 
-#include <freetype/ft2build.h>
+#include <plugin/FT_fontsys/ft2build.h>
 #include FT_BBOX_H
 #include FT_IMAGE_H
 #include FT_OUTLINE_H

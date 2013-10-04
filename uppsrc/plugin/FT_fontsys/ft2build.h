@@ -31,7 +31,7 @@
 #ifndef __FT2_BUILD_GENERIC_H__
 #define __FT2_BUILD_GENERIC_H__
 
-#include <freetype/config/ftheader.h>
+#include <plugin/FT_fontsys/config/ftheader.h>
 
 #endif /* __FT2_BUILD_GENERIC_H__ */
 
