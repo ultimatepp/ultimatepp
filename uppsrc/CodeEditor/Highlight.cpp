@@ -479,6 +479,7 @@ void CodeEditor::InitKeywords()
 		"COLUMN", "COLUMN_ARRAY", "ATTRIBUTE", "INLINE_ATTRIBUTE",
 		"TYPE", "TYPE_I", "TYPE_II", "TYPE_III", "END_TYPE",
 		"TYPE_", "TYPE_I_", "TYPE_II_", "TYPE_III_", "SERIAL", "ISERIAL",
+		"INDEX_LIST",
 		NULL
 	};
 	static const char *sql[] = {
