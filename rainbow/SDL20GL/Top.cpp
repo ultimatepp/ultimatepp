@@ -56,9 +56,8 @@ void TopWindow::SyncRect()
 {
 	frame->SyncRect();
 	Rect r = frame->GetClient();
-	if(r != GetRect()) {
+	if(r != GetRect())
 		SetRect(r);
-	}
 }
 
 void TopWindow::Open(Ctrl *owner)

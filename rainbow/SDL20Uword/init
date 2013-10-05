@@ -3,4 +3,5 @@
 #include "CtrlLib/init"
 #include "RichEdit/init"
 #include "SDL20GL/init"
+#include "plugin/DroidFonts/init"
 #endif

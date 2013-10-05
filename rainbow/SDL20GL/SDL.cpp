@@ -6,6 +6,13 @@ NAMESPACE_UPP
 
 #define LLOG(x)       //LOG(x)
 
+dword SDLsettings;
+
+void USDLSetup(dword flags)
+{
+	SDLsettings = flags;
+}
+
 Size      screen_size;
 SDLWindow screen;
 
@@ -58,7 +65,7 @@ void FBInit()
 
 	SDL_ShowCursor(0);
 
-	screen_size = Size(1024, 768);
+	screen_size = Size(1500, 900);
 	screen.Create(screen_size, "First test");
 
 	Ctrl::SetDesktopSize(screen_size);
