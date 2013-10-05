@@ -84,11 +84,10 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 	
 	LLOG("Texture ID: " << sd.texture_id);
 
-	glColor3f(1.0f, 1.0f, 1.0f);
-	
 	if(src == img.GetSize()) {
 		Rect r(p, img.GetSize());
 		glBegin(GL_TRIANGLE_STRIP);
+			glColor3f(1.0f, 1.0f, 1.0f);
 			glTexCoord2f(0, 0);
 			glVertex2i(r.left, r.top);
 			glTexCoord2f(1, 0);
@@ -109,6 +108,7 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 		h.top = (double)s.top / iszf.cy;
 		h.bottom = (double)s.bottom / iszf.cy;
 		glBegin(GL_TRIANGLE_STRIP);
+			glColor3f(1.0f, 1.0f, 1.0f);
 			glTexCoord2f(h.left, h.top);
 			glVertex2i(r.left, r.top);
 			glTexCoord2f(h.right, h.top);
@@ -133,19 +133,20 @@ void GLDraw::SetColor(Color c)
 void GLDraw::PutRect(const Rect& r, Color color)
 {
 	LLOG("PutRect " << r << " " << color);
-	if(color == InvertColor()) {
+	bool inv = color == InvertColor();
+	if(inv)
 		glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
-		glColor3f(1.0f, 1.0f, 1.0f);
-	}
-	else
-		SetColor(color);
 	glBegin(GL_TRIANGLE_STRIP);
+		if(inv)
+			glColor3f(1.0f, 1.0f, 1.0f);
+		else
+			SetColor(color);
 		glVertex2i(r.left, r.top);
 		glVertex2i(r.right, r.top);
 		glVertex2i(r.left, r.bottom);
 		glVertex2i(r.right, r.bottom);
 	glEnd();
-	if(color == InvertColor())
+	if(inv)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
