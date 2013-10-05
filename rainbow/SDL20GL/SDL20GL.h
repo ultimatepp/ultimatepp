@@ -105,6 +105,8 @@ public:
 	~PrinterJob()                                       {}
 };
 
+void USDLSetup(dword flags);
+
 END_UPP_NAMESPACE
 
 #define GUIPLATFORM_INCLUDE_AFTER <SDL20/After.h>

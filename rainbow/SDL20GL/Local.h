@@ -58,11 +58,10 @@ public:
 	TopWindowFrame();
 };
 
-void HandleSDLEvent(SDL_Event* event);
-void HandleUserEvent(SDL_Event* event);
-
 extern Size screen_size;
 extern SDLWindow screen;
+
+extern dword SDLsettings;
 
 END_UPP_NAMESPACE
 

@@ -6,6 +6,7 @@ private:
 
 	static Point fbCursorPos;
 	static Image fbCursorImage;
+	static bool  sdlMouseIsIn;
 	
 	static Rect  fbCaretRect;
 	static int   fbCaretTm;
@@ -13,7 +14,7 @@ private:
 	static bool  fbEndSession;
 	static int64 fbEventLoop;
 	static int64 fbEndSessionLoop;
-
+	
 	static void CursorSync();
 	
 	int FindTopCtrl() const;
@@ -45,6 +46,8 @@ protected:
 	static int PaintLock;
 
 public:
+	static void HandleSDLEvent(SDL_Event* event);
+
 	static void DoMouseFB(int event, Point p, int zdelta = 0);
 	static bool DoKeyFB(dword key, int cnt);
 

@@ -14,7 +14,6 @@ file
 	Local.h,
 	Window.cpp,
 	Image.cpp,
-	Util.cpp,
 	FB.iml,
 	Ctrl.h,
 	DrawDragRect.cpp,
@@ -27,6 +26,5 @@ file
 	Clip.cpp,
 	DnD.cpp,
 	ChSysInit.cpp,
-	SDL.cpp,
-	SDLProc.cpp;
+	SDL.cpp;
 

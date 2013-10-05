@@ -1,7 +1,8 @@
 uses
 	CtrlLib,
 	RichEdit,
-	SDL20GL;
+	SDL20GL,
+	plugin/DroidFonts;
 
 file
 	main.cpp,

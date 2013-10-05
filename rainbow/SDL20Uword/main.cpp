@@ -251,7 +251,6 @@ GUI_APP_MAIN
 
 	LoadFromFile(callback(UWord::SerializeApp));
 	UWord uword;
-	new UWord;
 	Ctrl::EventLoop();
 	StoreToFile(callback(UWord::SerializeApp));
 }

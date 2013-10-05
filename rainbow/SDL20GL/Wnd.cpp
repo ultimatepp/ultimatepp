@@ -14,6 +14,8 @@ Vector<Ctrl *> Ctrl::topctrl;
 
 bool           Ctrl::invalid;
 
+bool           Ctrl::sdlMouseIsIn;
+
 Point          Ctrl::fbCursorPos = Null;
 Image          Ctrl::fbCursorImage;
 Rect           Ctrl::fbCaretRect;
@@ -233,7 +235,8 @@ void Ctrl::PaintCaretCursor(SystemDraw& draw)
 {
 	if(!IsNull(fbCaretRect))
 		draw.DrawRect(fbCaretRect, InvertColor);
-	draw.DrawImage(fbCursorPos.x, fbCursorPos.y, fbCursorImage);
+	if(sdlMouseIsIn)
+		draw.DrawImage(fbCursorPos.x, fbCursorPos.y, fbCursorImage);
 }
 
 void Ctrl::DoPaint()
