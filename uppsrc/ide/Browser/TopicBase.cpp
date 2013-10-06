@@ -4,7 +4,7 @@
 #define LTIMING(x)  // DTIMING(x)
 
 #ifdef _DEBUG
-#define LSLOW()        Sleep(300)
+#define LSLOW()     // Sleep(300)
 #else
 #define LSLOW()
 #endif

@@ -314,6 +314,7 @@ protected:
 	Array<Found> foundwild;
 	bool   foundsel;
 	bool   found, notfoundfw, notfoundbk;
+	int    foundpos, foundsize;
 
 	int    iwc;
 
@@ -434,6 +435,7 @@ public:
 
 	void   CloseFindReplace();
 	void   FindReplace(bool pick_selection, bool pick_text, bool replace);
+	bool   FindFrom(int pos, bool back, const wchar *text, bool wholeword, bool ignorecase, bool wildcards, bool block);
 	bool   Find(bool back, const wchar *text, bool wholeword, bool ignorecase, bool wildcards,
 	            bool block);
 	bool   Find(bool back = false, bool blockreplace = false, bool replace = false);
