@@ -447,7 +447,7 @@ void Ide::SetupFormat() {
 	hlt.hlstyle.AddColumn("Bold").Ctrls<Option>();
 	hlt.hlstyle.AddColumn("Italic").Ctrls<Option>();
 	hlt.hlstyle.AddColumn("Underline").Ctrls<Option>();
-	hlt.hlstyle.ColumnWidths("130 70 40 40 70");
+	hlt.hlstyle.ColumnWidths("211 80 45 45 80");
 	hlt.hlstyle.EvenRowColor().NoHorzGrid().SetLineCy(EditField::GetStdHeight() + 2);
 	ReadHlStyles(hlt.hlstyle);
 	edt.charset <<= (int)default_charset;
