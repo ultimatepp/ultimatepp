@@ -374,6 +374,16 @@ SqlVal NextDay(const SqlVal& date) {//TODO Dialect!
 	return SqlFunc("next_day", date);
 }
 
+SqlVal SqlCurrentDate() {
+	return SqlVal(SqlCase(SQLITE3, "date('now')")
+	                     ("current_date"), SqlVal::HIGH);
+}
+
+SqlVal SqlCurrentTime() {
+	return SqlVal(SqlCase(SQLITE3, "time('now')")
+	                     ("current_timestamp"), SqlVal::HIGH);
+}
+
 SqlVal Cast(const char* type, const SqlId& a) {
 	return SqlFunc(type, a);
 }

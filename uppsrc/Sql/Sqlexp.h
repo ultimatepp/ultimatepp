@@ -285,6 +285,9 @@ SqlVal LastDay(const SqlVal& date);
 SqlVal MonthsBetween(const SqlVal& date1, const SqlVal& date2);
 SqlVal NextDay(const SqlVal& date);
 
+SqlVal SqlCurrentDate();
+SqlVal SqlCurrentTime();
+
 SqlVal Cast(const char* type, const SqlId& a);
 
 SqlVal SqlNvl(const SqlVal& a);
