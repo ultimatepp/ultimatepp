@@ -19,7 +19,8 @@ only part of whole text (e.g. when to parse just single element
 of array `- parser then stops at the end of element. Elements 
 of JSON are parsed into corresponding Value types, JSON objects 
 are represented by ValueMap, JSON arrays by ValueArray. If input 
-JSON is invalid throws CParser`::Error.&]
+JSON is invalid throws CParser`::Error. ParseJSON supports Date/Time 
+using .NET trick as `"`\/Date([/ miliseconds`_since`_1970`-1`-1])`\/`".&]
 [s3;%% &]
 [s4; &]
 [s5;:ParseJSON`(const char`*`): [_^Value^ Value]_[* ParseJSON]([@(0.0.255) const]_[@(0.0.255) c
@@ -39,6 +40,12 @@ String][@(0.0.255) `&]_[*@3 s])&]
 [s5;:AsJSON`(const char`*`): [_^String^ String]_[* AsJSON]([@(0.0.255) const]_[@(0.0.255) cha
 r]_`*[*@3 s])&]
 [s2;%% Converts basic values to JSON representation.&]
+[s3;%% &]
+[s4; &]
+[s5;:AsJSON`(Time`): [_^String^ String]_[* AsJSON]([_^Time^ Time]_[*@3 tm])&]
+[s5;:AsJSON`(Date`): [_^String^ String]_[* AsJSON]([_^Date^ Date]_[*@3 dt])&]
+[s2;%% Converts Time/Date using .NET trick as `"`\/Date([/ miliseconds`_since`_1970`-1`-
+1])`\/`".&]
 [s3;%% &]
 [s4; &]
 [s5;:AsJSON`(const Value`&`,const String`&`,bool`): [_^String^ String]_[* AsJSON]([@(0.0.255) c
@@ -84,6 +91,10 @@ ey], [@(0.0.255) int]_[*@3 i])&]
 [*@3 key], [@(0.0.255) double]_[*@3 n])&]
 [s5;:Json`:`:Json`(const char`*`,bool`): [* Json]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 k
 ey], [@(0.0.255) bool]_[*@3 b])&]
+[s5;:Json`:`:Json`(const char`*`,Date`): [* Json]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 k
+ey], [_^Date^ Date]_[*@3 d])&]
+[s5;:Json`:`:Json`(const char`*`,Time`): [* Json]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 k
+ey], [_^Time^ Time]_[*@3 t])&]
 [s5;:Json`:`:Json`(const char`*`,const String`&`): [* Json]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 key], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
 [s5;:Json`:`:Json`(const char`*`,const WString`&`): [* Json]([@(0.0.255) const]_[@(0.0.255) c
@@ -94,7 +105,9 @@ ar]_`*[*@3 key], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
 ar]_`*[*@3 key], [@(0.0.255) const]_[* Json][@(0.0.255) `&]_[*@3 object])&]
 [s5;:Json`:`:Json`(const char`*`,const JsonArray`&`): [* Json]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 key], [@(0.0.255) const]_[_^JsonArray^ JsonArray][@(0.0.255) `&]_[*@3 array])&]
-[s2;%% Construct JSON object with single key`-value pair.&]
+[s2;%% Construct JSON object with single key`-value pair. Date/Time 
+is converted using .NET trick as `"`\/Date([/ miliseconds`_since`_1970`-1`-1])`\/`"
+.&]
 [s3;%% &]
 [s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
@@ -103,7 +116,7 @@ har]_`*[*@3 key], [@(0.0.255) const]_[_^JsonArray^ JsonArray][@(0.0.255) `&]_[*@
 [s5;:Json`:`:operator`~`(`)const: [_^String^ String]_[* operator`~]()_[@(0.0.255) const]&]
 [s5;:Json`:`:operator String`(`)const: [* operator_String]()_[@(0.0.255) const]&]
 [s2;%% Returns current JSON formatted text.&]
-[s3; &]
+[s3;%% &]
 [s4; &]
 [s5;:Json`:`:operator bool`(`)const: [* operator_bool]()_[@(0.0.255) const]&]
 [s2;%% Returns true if any key`-value pairs were added to this JSON 
@@ -119,6 +132,10 @@ alue][@(0.0.255) `&]_[*@3 value])&]
 r()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) double]_[*@3 n])&]
 [s5;:Json`:`:operator`(`)`(const char`*`,bool`): [_^Json^ Json][@(0.0.255) `&]_[* operator(
 )]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) bool]_[*@3 b])&]
+[s5;:Json`:`:operator`(`)`(const char`*`,Date`): [_^Json^ Json][@(0.0.255) `&]_[* operator(
+)]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [_^Date^ Date]_[*@3 d])&]
+[s5;:Json`:`:operator`(`)`(const char`*`,Time`): [_^Json^ Json][@(0.0.255) `&]_[* operator(
+)]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [_^Time^ Time]_[*@3 t])&]
 [s5;:Json`:`:operator`(`)`(const char`*`,const String`&`): [_^Json^ Json][@(0.0.255) `&]_
 [* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) const]_[_^String^ S
 tring][@(0.0.255) `&]_[*@3 s])&]
@@ -134,8 +151,8 @@ on][@(0.0.255) `&]_[*@3 object])&]
 [s5;:Json`:`:operator`(`)`(const char`*`,const JsonArray`&`): [_^Json^ Json][@(0.0.255) `&
 ]_[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) const]_[_^JsonArray^ J
 sonArray][@(0.0.255) `&]_[*@3 array])&]
-[s2;%% Adds key`-value pair to JSON object.&]
-[s3;%% &]
+[s2;%% Adds key`-value pair to JSON object. Date/Time is converted 
+using .NET trick as `"`\/Date([/ miliseconds`_since`_1970`-1`-1])`\/`".&]
 [s0;%% &]
 [s0;%% &]
 [s0; &]
@@ -178,6 +195,10 @@ element.&]
 or<<]([@(0.0.255) double]_[*@3 n])&]
 [s5;:JsonArray`:`:operator`<`<`(bool`): [_^JsonArray^ JsonArray][@(0.0.255) `&]_[* operator
 <<]([@(0.0.255) bool]_[*@3 b])&]
+[s5;:JsonArray`:`:operator`<`<`(Date`): [_^JsonArray^ JsonArray][@(0.0.255) `&]_[* operator
+<<]([_^Date^ Date]_[*@3 d])&]
+[s5;:JsonArray`:`:operator`<`<`(Time`): [_^JsonArray^ JsonArray][@(0.0.255) `&]_[* operator
+<<]([_^Time^ Time]_[*@3 t])&]
 [s5;:JsonArray`:`:operator`<`<`(const String`&`): [_^JsonArray^ JsonArray][@(0.0.255) `&]_
 [* operator<<]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
 [s5;:JsonArray`:`:operator`<`<`(const WString`&`): [_^JsonArray^ JsonArray][@(0.0.255) `&
@@ -188,5 +209,7 @@ perator<<]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
 perator<<]([@(0.0.255) const]_[_^Json^ Json][@(0.0.255) `&]_[*@3 object])&]
 [s5;:JsonArray`:`:operator`<`<`(const JsonArray`&`): [_^JsonArray^ JsonArray][@(0.0.255) `&
 ]_[* operator<<]([@(0.0.255) const]_[_^JsonArray^ JsonArray][@(0.0.255) `&]_[*@3 array])&]
-[s2;%% Adds an element to JSON array.&]
+[s2;%% Adds an element to JSON array. Date/Time is converted using 
+.NET trick as `"`\/Date([/ miliseconds`_since`_1970`-1`-1])`\/`".&]
+[s2;%% &]
 [s3;%% ]]

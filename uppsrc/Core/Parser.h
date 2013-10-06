@@ -47,8 +47,11 @@ public:
 	String ReadId() throw(Error);
 	String ReadIdt() throw(Error);
 	bool   IsInt() const;
+	int    Sgn();
 	int    ReadInt() throw(Error);
 	int    ReadInt(int min, int max) throw(Error);
+	int64  ReadInt64() throw(Error);
+	int64  ReadInt64(int64 min, int64 max) throw(Error);
 	bool   IsNumber() const                   { return IsDigit(*term); }
 	bool   IsNumber(int base) const;
 	uint32 ReadNumber(int base = 10) throw(Error);

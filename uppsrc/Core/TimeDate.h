@@ -154,3 +154,7 @@ inline String AsString(const Time& time) { return Format(time); }
 bool SetSysTime(Time time); // only root/sysadmin can do this...
 
 String GetTimeZoneText();
+
+int   GetLeapSeconds(Date dt);
+int64 GetUTCSeconds(Time tm);
+Time  TimeFromUTC(int64 seconds);

@@ -134,8 +134,8 @@ bool CParser::IsInt() const {
 	return IsDigit(*t);
 }
 
-int  CParser::ReadInt() throw(Error) {
-	LTIMING("ReadInt");
+int  CParser::Sgn()
+{
 	int sign = 1;
 	if(*term == '-') {
 		sign = -1;
@@ -145,18 +145,33 @@ int  CParser::ReadInt() throw(Error) {
 	if(*term == '+')
 		term++;
 	Spaces();
-	if(!IsDigit(*term))
-		ThrowError("missing number");
-	int n = 0;
-	while(IsDigit(*term))
-		n = 10 * n + *term++ - '0';
-	DoSpaces();
-	return sign * n;
+	return sign;
+}
+
+int  CParser::ReadInt() throw(Error) {
+	LTIMING("ReadInt");
+	int sign = Sgn();
+	return sign * ReadNumber(10);
 }
 
 int CParser::ReadInt(int min, int max) throw(Error)
 {
 	int n = ReadInt();
+	if(n < min || n > max)
+		ThrowError("number is out of range");
+	return n;
+}
+
+int64 CParser::ReadInt64() throw(Error)
+{
+	LTIMING("ReadInt64");
+	int sign = Sgn();
+	return sign * ReadNumber64(10);
+}
+
+int64 CParser::ReadInt64(int64 min, int64 max) throw(Error)
+{
+	int64 n = ReadInt();
 	if(n < min || n > max)
 		ThrowError("number is out of range");
 	return n;
@@ -209,15 +224,7 @@ uint64  CParser::ReadNumber64(int base) throw(Error)
 double CParser::ReadDouble() throw(Error)
 {
 	LTIMING("ReadDouble");
-	int sign = 1;
-	if(*term == '-') {
-		sign = -1;
-		term++;
-	}
-	else
-	if(*term == '+')
-		term++;
-	Spaces();
+	int sign = Sgn();
 	if(!IsDigit(*term))
 		ThrowError("missing number");
 	double n = 0;
