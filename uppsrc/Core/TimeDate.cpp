@@ -601,4 +601,33 @@ String GetTimeZoneText()
 	return Format("+%02.2d%01.1d0", d / 6, d % 6);
 }
 
+int GetLeapSeconds(Date dt)
+{
+	static Tuple2<int, int> sLeapSeconds[] = {
+		{ 1972,6 }, { 1972,12 }, { 1973,12 }, { 1974,12 }, { 1975,12 }, { 1976,12 }, { 1977,12 },
+		{ 1978,12 }, { 1979,12 }, { 1981,6 }, { 1982,6 }, { 1983,6 }, { 1985,6 }, { 1987,12 },
+		{ 1989,12 }, { 1990,12 }, { 1992,6 }, { 1993,6 }, { 1994,6 }, { 1995,12 }, { 1997,6 },
+		{ 1998,12 }, { 2005,12 }, { 2008,12 }, { 2012,6 },
+	};
+	static byte ls[1200]; // 100 years of leap seconds per month
+	ONCELOCK {
+		for(int i = 0; i < __countof(sLeapSeconds); i++) {
+			int l = (sLeapSeconds[i].a - 1970) * 12 + sLeapSeconds[i].b - 1;
+			memset(ls + l, i + 1, __countof(ls) - l);
+		}
+	}
+	return ls[minmax(12 * (dt.year - 1970) + dt.month - 1, 0, __countof(ls) - 1)];
+}
+
+int64 GetUTCSeconds(Time tm)
+{
+	return tm - Time(1970, 1, 1) + GetLeapSeconds(tm);
+}
+
+Time TimeFromUTC(int64 seconds)
+{
+	Time tm = Time(1970, 1, 1) + seconds;
+	return tm - GetLeapSeconds(tm);
+}
+
 END_UPP_NAMESPACE

@@ -205,6 +205,11 @@ be digit, or `'`+`' or `'`-`' sign followed by any number of
 spaces and digit.&]
 [s3; &]
 [s4; &]
+[s5;:CParser`:`:Sgn`(`): [@(0.0.255) int]_[* Sgn]()&]
+[s2;%% If there are characters `'`-`' or `'`+`' at current posisition, 
+skips them. If `'`-`' was skipped, returns `-1, otherwise 1.&]
+[s3; &]
+[s4; &]
 [s5;:CParser`:`:ReadInt`(`)throw`(CParser`:`:Error`): [@(0.0.255) int]_[* ReadInt]()_[@(0.0.255) t
 hrow](Error)&]
 [s2;%% Reads the integer from the current position. If [* IsInt ]is 
@@ -215,6 +220,21 @@ Parser`::Error.]&]
 [s5;:CParser`:`:ReadInt`(int`,int`)throw`(CParser`:`:Error`): [@(0.0.255) int]_[* ReadInt
 ]([@(0.0.255) int]_[*@3 min], [@(0.0.255) int]_[*@3 max])_[@(0.0.255) throw](Error)&]
 [s2;%% Performs ReadInt and then checks the result to be in [%-*@3 min] 
+<`= result <`= [%-*@3 max]. If not, throws a [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Error`:`:struct^ C
+Parser`::Error], otherwise returns it.&]
+[s3;%% &]
+[s4; &]
+[s5;:CParser`:`:ReadInt64`(`)throw`(CParser`:`:Error`): [_^int64^ int64]_[* ReadInt64]()_
+[@(0.0.255) throw](Error)&]
+[s2;%% Reads the 64`-bit integer from the current position. If [* IsInt 
+]is false, throws an [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Error`:`:struct^ C
+Parser`::Error.]&]
+[s3; &]
+[s4; &]
+[s5;:CParser`:`:ReadInt64`(int64`,int64`)throw`(CParser`:`:Error`): [_^int64^ int64]_[* R
+eadInt64]([_^int64^ int64]_[*@3 min], [_^int64^ int64]_[*@3 max])_[@(0.0.255) throw](Error)
+&]
+[s2;%% Performs ReadInt64 and then checks the result to be in [%-*@3 min] 
 <`= result <`= [%-*@3 max]. If not, throws a [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Error`:`:struct^ C
 Parser`::Error], otherwise returns it.&]
 [s3;%% &]

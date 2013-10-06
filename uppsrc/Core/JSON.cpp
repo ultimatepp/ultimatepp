@@ -7,8 +7,19 @@ Value ParseJSON(CParser& p)
 	p.UnicodeEscape();
 	if(p.IsDouble())
 		return p.ReadDouble();
-	if(p.IsString())
-		return p.ReadString();
+	if(p.IsString()) {
+		bool dt = p.IsChar2('\"', '\\');
+		String s = p.ReadString();
+		if(dt) {
+			CParser p(s);
+			if(p.Char('/') && p.Id("Date") && p.Char('(') && p.IsInt()) {
+				int64 n = p.ReadInt64();
+				if(!IsNull(n))
+					return Time(1970, 1, 1) + n / 1000;
+			}
+		}
+		return s;
+	}
 	if(p.Id("null"))
 		return Null;
 	if(p.Id("true"))
@@ -49,6 +60,16 @@ Value ParseJSON(const char *s)
 	catch(CParser::Error) {
 		return ErrorValue();
 	}
+}
+
+String AsJSON(Time tm)
+{
+	return "\"\\/Date(" + AsString(1000 * (tm - Time(1970, 1, 1))) + ")\\/\"";
+}
+
+String AsJSON(Date dt)
+{
+	return AsJSON(ToTime(dt));
 }
 
 Json& Json::CatRaw(const char *key, const String& val)
@@ -128,6 +149,8 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 		return Format("%.16g", (double)v);
 	if(IsString(v))
 		return AsCString((String)v, INT_MAX, NULL, ASCSTRING_JSON);
+	if(IsDateTime(v))
+		return AsJSON((Time)v);
 	if(IsNull(v))
 		return "null";
 	NEVER_("Non-JSON value in AsJSON: " + v.GetTypeName());

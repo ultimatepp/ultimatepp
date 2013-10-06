@@ -7,6 +7,8 @@ inline String AsJSON(bool b)            { return b ? "true" : "false"; }
 inline String AsJSON(const String& s)   { return AsCString(s, INT_MAX, NULL, ASCSTRING_JSON); }
 inline String AsJSON(const WString& s)  { return AsCString(s.ToString(), INT_MAX, NULL, ASCSTRING_JSON); }
 inline String AsJSON(const char *s)     { return AsCString(s, INT_MAX, NULL, ASCSTRING_JSON); }
+String AsJSON(Time tm);
+String AsJSON(Date dt);
 
 String AsJSON(const Value& v, const String& indent, bool pretty);
 String AsJSON(const Value& v, bool pretty = false);
@@ -29,6 +31,8 @@ public:
 	Json& operator()(const char *key, int i)                    { return CatRaw(key, AsJSON(i)); }
 	Json& operator()(const char *key, double n)                 { return CatRaw(key, AsJSON(n)); }
 	Json& operator()(const char *key, bool b)                   { return CatRaw(key, AsJSON(b)); }
+	Json& operator()(const char *key, Date d)                   { return CatRaw(key, AsJSON(d)); }
+	Json& operator()(const char *key, Time t)                   { return CatRaw(key, AsJSON(t)); }
 	Json& operator()(const char *key, const String& s)          { return CatRaw(key, AsJSON(s)); }
 	Json& operator()(const char *key, const WString& s)         { return CatRaw(key, AsJSON(s)); }
 	Json& operator()(const char *key, const char *s)            { return CatRaw(key, AsJSON(s)); }
@@ -40,6 +44,8 @@ public:
 	Json(const char *key, int i)                                { CatRaw(key, AsJSON(i)); }
 	Json(const char *key, double n)                             { CatRaw(key, AsJSON(n)); }
 	Json(const char *key, bool b)                               { CatRaw(key, AsJSON(b)); }
+	Json(const char *key, Date d)                               { CatRaw(key, AsJSON(d)); }
+	Json(const char *key, Time t)                               { CatRaw(key, AsJSON(t)); }
 	Json(const char *key, const String& s)                      { CatRaw(key, AsJSON(s)); }
 	Json(const char *key, const WString& s)                     { CatRaw(key, AsJSON(s)); }
 	Json(const char *key, const char *s)                        { CatRaw(key, AsJSON(s)); }
@@ -63,6 +69,8 @@ public:
 	JsonArray& operator<<(int i)                                { return CatRaw(AsJSON(i)); }
 	JsonArray& operator<<(double n)                             { return CatRaw(AsJSON(n)); }
 	JsonArray& operator<<(bool b)                               { return CatRaw(AsJSON(b)); }
+	JsonArray& operator<<(Date d)                               { return CatRaw(AsJSON(d)); }
+	JsonArray& operator<<(Time t)                               { return CatRaw(AsJSON(t)); }
 	JsonArray& operator<<(const String& s)                      { return CatRaw(AsJSON(s)); }
 	JsonArray& operator<<(const WString& s)                     { return CatRaw(AsJSON(s)); }
 	JsonArray& operator<<(const char *s)                        { return CatRaw(AsJSON(s)); }
