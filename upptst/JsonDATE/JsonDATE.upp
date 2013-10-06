@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	JsonDATE.cpp;
+
+mainconfig
+	"" = "SSE2";
+
