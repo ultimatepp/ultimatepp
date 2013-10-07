@@ -1,0 +1,17 @@
+description "Demonstrates utility functions of S_ structures\377";
+
+uses
+	Core,
+	Sql,
+	RichText,
+	CtrlLib,
+	RichEdit;
+
+file
+	Schema.sch,
+	main.cpp;
+
+mainconfig
+	"" = "GUI",
+	"" = "GUI QTF";
+

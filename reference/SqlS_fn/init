@@ -1,0 +1,8 @@
+#ifndef _SqlS_fn_icpp_init_stub
+#define _SqlS_fn_icpp_init_stub
+#include "Core/init"
+#include "Sql/init"
+#include "RichText/init"
+#include "CtrlLib/init"
+#include "RichEdit/init"
+#endif
