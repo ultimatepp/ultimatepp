@@ -370,7 +370,6 @@ void EditorBar::SetBreakpoint(int ln, const String& s)
 
 void EditorBar::SetEdited(int ln, int count)
 {
-	DTIMING("SetEdited");
 	if(ignored_next_edit) {
 		ignored_next_edit = false;
 		return;
