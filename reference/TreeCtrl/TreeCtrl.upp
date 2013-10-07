@@ -1,4 +1,4 @@
-description "TreeCtrl used to show file hierarchy, editors in TreeCtrl and OptionTree example";
+description "TreeCtrl used to show file hierarchy, editors in TreeCtrl and OptionTree example\377";
 
 uses
 	CtrlLib;
