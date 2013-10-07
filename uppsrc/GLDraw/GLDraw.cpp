@@ -1,6 +1,6 @@
 #include "GLDraw.h"
 
-#define LLOG(x) LOG(x)
+#define LLOG(x) // LOG(x)
 
 #ifndef GL_BGRA  // Win32 missing these
 #define GL_BGRA 0x80E1
@@ -66,13 +66,12 @@ struct ImageGLDataMaker : LRUCache<ImageGLData, Tuple2<uint64, uint64> >::Maker 
 	virtual int                     Make(ImageGLData& object) const  { object.Init(img); return img.GetLength(); }
 };
 
-
 void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 {
 	if(img.GetLength() == 0)
 		return;
 
-	LLOG("PutImage " << img.GetSerialId() << ' ' << p.x << ", " << p.y << ", "<< img.GetSize());
+	DLOG("PutImage " << img.GetSerialId() << ' ' << p.x << ", " << p.y << ", "<< img.GetSize());
 	LLOG("SysImage cache pixels " << sTextureCache.GetSize() << ", count " << sTextureCache.GetCount());
 	ImageGLDataMaker m;
 	m.img = img;
@@ -132,7 +131,7 @@ void GLDraw::SetColor(Color c)
 
 void GLDraw::PutRect(const Rect& r, Color color)
 {
-	LLOG("PutRect " << r << " " << color);
+	DLOG("PutRect " << r << " " << color);
 	bool inv = color == InvertColor();
 	if(inv)
 		glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
@@ -170,6 +169,25 @@ void GLDraw::Init(Size sz, uint64 context_)
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	LOG("==============================================================================");
+/*	
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
+
+	glGenBuffers(1, &tbo);
+	glBindBuffer(GL_
+*/
 }
 
-};
+GLDraw::~GLDraw()
+{
+#ifdef USE_VBO
+	if(context) {
+		glDeleteBuffers(1, &vbo);
+		glDeleteBuffers(1, &tbo);
+	}
+#endif
+}
+
+}
