@@ -177,8 +177,6 @@ enu])&]
 [s4; &]
 [s5;:EditField`:`:SetText`(const WString`&`): [@(0.0.255) void]_[* SetText]([@(0.0.255) con
 st]_[_^WString^ WString][@(0.0.255) `&]_[*@3 text])&]
-[s5;:EditField`:`:operator`=`(const WString`&`): [@(0.0.255) void]_[* operator`=]([@(0.0.255) c
-onst]_[_^WString^ WString][@(0.0.255) `&]_[*@3 s])&]
 [s2;%% [%- Sets the] [%-*@3 text].&]
 [s3; &]
 [s4; &]

@@ -207,7 +207,7 @@ public:
 
 	operator const WString&() const          { return text; }
 	operator String() const                  { return text.ToString(); }
-	void operator=(const WString& s)         { SetText(s); }
+	void operator=(const WString& s)         { SetText(s); } // Deprecated, use operator<<=
 	int     GetLength() const                { return text.GetLength(); }
 	int     GetChar(int i) const             { return text[i]; }
 
@@ -259,7 +259,7 @@ public:
 template <class DataType, class Cv>
 class EditValue : public EditField, public Cv {
 public:
-	EditValue& operator=(const DataType& t)  { EditField::SetData(t); return *this; }
+	EditValue& operator=(const DataType& t)  { EditField::SetData(t); return *this; }  // Deprecated, use operator<<=
 	operator DataType() const                { return EditField::GetData(); }
 
 	EditValue()                              { SetConvert(*this); }
@@ -268,7 +268,7 @@ public:
 template <class DataType, class Cv>
 class EditMinMax : public EditValue<DataType, Cv> {
 public:
-	EditMinMax& operator=(const DataType& t)          { EditField::SetData(t); return *this; }
+	EditMinMax& operator=(const DataType& t)          { EditField::SetData(t); return *this; }  // Deprecated, use operator<<=
 
 	EditMinMax() {}
 	EditMinMax(DataType min, DataType max)            { Cv::MinMax(min, max); }
@@ -282,7 +282,7 @@ public:
 template <class DataType, class Base>
 class EditMinMaxNotNull : public Base {
 public:
-	EditMinMaxNotNull& operator=(const DataType& t)   { EditField::SetData(t); return *this; }
+	EditMinMaxNotNull& operator=(const DataType& t)   { EditField::SetData(t); return *this; }  // Deprecated, use operator<<=
 
 	EditMinMaxNotNull()                               { Base::NotNull(); }
 	EditMinMaxNotNull(DataType min, DataType max)     { Base::NotNull(); Base::MinMax(min, max); }
@@ -308,8 +308,8 @@ class EditString : public EditValue<WString, ConvertString> {
 public:
 	operator const WString&() const                  { return GetText(); }
 
-	EditString& operator=(const WString& data)       { SetData(data); return *this; }
-	EditString& operator=(const String& data)        { SetData(data); return *this; }
+	EditString& operator=(const WString& data)       { SetData(data); return *this; } // Deprecated, use operator<<=
+	EditString& operator=(const String& data)        { SetData(data); return *this; } // Deprecated, use operator<<=
 
 	EditString() {}
 	EditString(int maxlen)                           { MaxLen(maxlen); }
@@ -323,8 +323,8 @@ public:
 
 class EditStringNotNull : public EditString {
 public:
-	EditStringNotNull& operator=(const WString& data) { SetData(data); return *this; }
-	EditStringNotNull& operator=(const String& data)  { SetData(data); return *this; }
+	EditStringNotNull& operator=(const WString& data) { SetData(data); return *this; } // Deprecated, use operator<<=
+	EditStringNotNull& operator=(const String& data)  { SetData(data); return *this; } // Deprecated, use operator<<=
 
 	EditStringNotNull()                               { NotNull(); }
 	EditStringNotNull(int maxlen)                     { NotNull(); MaxLen(maxlen); }
