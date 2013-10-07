@@ -129,7 +129,6 @@ int CodeEditor::Match(const wchar *f, const wchar *s, int line, bool we, bool ig
 bool CodeEditor::Find(bool back, const wchar *text, bool wholeword, bool ignorecase,
                       bool wildcards, bool block)
 {
-	DTIMING("Find");
 	if(notfoundfw) MoveTextBegin();
 	if(notfoundbk) MoveTextEnd();
 	int cursor, pos;
@@ -144,7 +143,6 @@ bool CodeEditor::Find(bool back, const wchar *text, bool wholeword, bool ignorec
 
 bool CodeEditor::FindFrom(int pos, bool back, const wchar *text, bool wholeword, bool ignorecase,
                           bool wildcards, bool block) {
-	DTIMING("Find2");
 	WString ft;
 	const wchar *s = text;
 	while(*s) {
@@ -183,13 +181,11 @@ bool CodeEditor::FindFrom(int pos, bool back, const wchar *text, bool wholeword,
 	WString ln = GetWLine(line);
 	const wchar *l = ln;
 	s = l + pos;
-	DTIMING("Find3");
 	for(;;) {
 		for(;;) {
 			if(!wb || (s == l || !iscidl(s[-1]))) {
 				int n = Match(ft, s, line, we, ignorecase);
 				if(n >= 0) {
-					DTIMING("Find4");
 					int pos = GetPos(line, int(s - l));
 					if(!back || pos + n < cursor) {
 						if(!block) {
@@ -213,14 +209,12 @@ bool CodeEditor::FindFrom(int pos, bool back, const wchar *text, bool wholeword,
 		}
 		if(back) {
 			if(--line < 0) break;
-			DTIMING("Find5");
 			ln = GetWLine(line);
 			l = ln;
 			s = ln.End();
 		}
 		else {
 			if(++line >= linecount) break;
-			DTIMING("Find6");
 			ln = GetWLine(line);
 			l = s = ln;
 		}
@@ -286,7 +280,6 @@ WString CodeEditor::GetReplaceText()
 
 WString CodeEditor::GetReplaceText(WString rs, bool wildcards, bool samecase)
 {
-	DTIMING("GetReplaceText");
 	int anyi = 0, onei = 0, spacei = 0, numberi = 0, idi = 0;
 	WString rt;
 	const wchar *s = rs;

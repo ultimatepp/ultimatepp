@@ -26,7 +26,6 @@ inline bool IsComment(int a, int b) {
 }
 
 void CodeEditor::PreInsert(int pos, const WString& text) {
-	DTIMING("PreInsert");
 	if(IsFullRefresh()) return;
 	rm_ins = ScanSyntax(GetLine(pos) + 1);
 }
@@ -46,7 +45,6 @@ void CodeEditor::CheckBraces(const WString& text)
 }
 
 void CodeEditor::PostInsert(int pos, const WString& text) {
-	DTIMING("PostInsert");
 	if(check_edited)
 		bar.SetEdited(GetLine(pos));
 	if(IsFullRefresh()) return;
@@ -65,7 +63,6 @@ void CodeEditor::PostInsert(int pos, const WString& text) {
 }
 
 void CodeEditor::PreRemove(int pos, int size) {
-	DTIMING("PreRemove");
 	if(IsFullRefresh()) return;
 	if(size > 200)
 		Refresh();
@@ -80,7 +77,6 @@ void CodeEditor::PreRemove(int pos, int size) {
 }
 
 void CodeEditor::PostRemove(int pos, int size) {
-	DTIMING("PostRemove");
 	if(check_edited)
 		bar.SetEdited(GetLine(pos));
 	if(IsFullRefresh()) return;

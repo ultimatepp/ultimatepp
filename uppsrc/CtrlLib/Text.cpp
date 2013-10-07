@@ -81,7 +81,6 @@ void TextCtrl::SetSb() {}
 void TextCtrl::PlaceCaret(int newcursor, bool sel) {}
 
 void   TextCtrl::CachePos(int pos) {
-	DTIMING("CachePos");
 	int p = pos;
 	cline = GetLinePos(p);
 	cpos = pos - p;
@@ -476,7 +475,6 @@ void TextCtrl::RemoveU(int pos, int size) {
 }
 
 int TextCtrl::Insert(int pos, const WString& _txt, bool typing) {
-	DTIMING("Insert");
 	WString txt = _txt;
 	if(charset != CHARSET_UNICODE && charset != CHARSET_UTF8_BOM)
 		for(int i = 0; i < txt.GetCount(); i++)
@@ -493,7 +491,6 @@ int TextCtrl::Insert(int pos, const String& txt, byte charset)
 }
 
 void TextCtrl::Remove(int pos, int size) {
-	DTIMING("Remove");
 	RemoveU(pos, size);
 	Undodo();
 }
@@ -638,7 +635,6 @@ void TextCtrl::SelectAll() {
 }
 
 int  TextCtrl::Paste(const WString& text) {
-	DTIMING("Paste");
 	if(IsReadOnly()) return 0;
 	RemoveSelection();
 	int n = Insert(cursor, text);
