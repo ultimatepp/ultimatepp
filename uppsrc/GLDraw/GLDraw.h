@@ -5,11 +5,18 @@
 #include <GL/gl.h>
 
 namespace Upp {
+	
+// #define USE_VBO 1
 
 class GLDraw : public SDraw {
 	void SetColor(Color c);
 
 	uint64   context;
+
+#ifdef USE_VBO
+	GLuint   vbo, tbo;
+	
+#endif
 
 public:
 	virtual void  PutImage(Point p, const Image& m, const Rect& src);
@@ -20,7 +27,9 @@ public:
 	static void ClearCache();
 	static void ResetCache();
 	
-	GLDraw() { context = 0; }
+	GLDraw()  { context = 0; /* vbo = 0; tbo = 0; */ }
+
+	~GLDraw();
 };
 
 };

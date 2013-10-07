@@ -4,5 +4,6 @@ uses
 
 file
 	GLDraw.h,
-	GLDraw.cpp;
+	GLDraw.cpp,
+	src.tpp;
 

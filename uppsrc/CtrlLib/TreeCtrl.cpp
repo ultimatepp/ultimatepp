@@ -293,9 +293,12 @@ bool TreeCtrl::IsValid(int id) const
 
 void   TreeCtrl::SetNode(int id, const TreeCtrl::Node& n)
 {
-	(TreeCtrl::Node&)item[id] = n;
+	TreeCtrl::Node& m = item[id];
+	m = n;
 	Dirty(id);
 	SetOption(id);
+	if(m.ctrl)
+		AddChildBefore(m.ctrl, GetLastChild());
 }
 
 void   TreeCtrl::RemoveChildren(int id)
