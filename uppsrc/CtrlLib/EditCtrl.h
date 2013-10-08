@@ -140,6 +140,7 @@ protected:
 	bool       alignright:1;
 	bool       errorbg:1;
 	bool       showspaces:1;
+	bool       no_internal_margin:1;
 
 	bool    FrameIsEdge();
 	void    SetEdge(int i);
@@ -245,6 +246,7 @@ public:
 	bool       IsNoBackground() const        { return nobg; }
 	bool       IsAlignRight() const          { return alignright; }
 	EditField& ShowSpaces(bool b = true)     { showspaces = b; Refresh(); return *this; }
+	EditField& NoInternalMargin(bool b = true) { no_internal_margin = b; return *this; }
 
 	CharFilter     GetFilter() const         { return filter; }
 	const Convert& GetConvert() const        { return *convert; }
