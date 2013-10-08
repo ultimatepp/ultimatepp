@@ -384,6 +384,13 @@ onst]&]
 [s2;%% When active, EditField paints blue dots to show spaces.&]
 [s3;%% &]
 [s4; &]
+[s5;:EditField`:`:NoInternalMargin`(bool`): [_^EditField^ EditField][@(0.0.255) `&]_[* NoIn
+ternalMargin]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% Normally, EditField has small internal margin between frame 
+and edited text. Calling this method with [%-@(0.0.255) true] removes 
+it.&]
+[s3;%% &]
+[s4; &]
 [s5;:EditField`:`:GetChar`(int`)const: [@(0.0.255) virtual] [@(0.0.255) int]_[* GetChar]([@(0.0.255) i
 nt]_[*@3 i])_[@(0.0.255) const]&]
 [s2;%% Returns the character at [%-*@3 i] index.&]

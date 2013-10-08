@@ -218,7 +218,7 @@ int  EditField::GetStdHeight(Font font)
 
 Size EditField::GetMinSize() const
 {
-	return AddFrameSize(10, font.GetCy() + 4);
+	return AddFrameSize(10, font.GetCy() + (no_internal_margin ? 0 : 4));
 }
 
 int  EditField::GetCursor(int posx)
@@ -311,11 +311,13 @@ void EditField::Paint(Draw& w)
 		paper = style->invalid;
 	int fcy = font.GetCy();
 	int yy = GetTy();
-	w.DrawRect(0, 0, 2, sz.cy, paper);
-	w.DrawRect(0, 0, sz.cx, yy, paper);
-	w.DrawRect(0, yy + fcy, sz.cx, sz.cy - yy - fcy, paper);
-	w.DrawRect(sz.cx - 2, 0, 2, sz.cy, paper);
-	w.Clipoff(2, yy, sz.cx - 4, fcy);
+	if(!no_internal_margin) {
+		w.DrawRect(0, 0, 2, sz.cy, paper);
+		w.DrawRect(0, 0, sz.cx, yy, paper);
+		w.DrawRect(0, yy + fcy, sz.cx, sz.cy - yy - fcy, paper);
+		w.DrawRect(sz.cx - 2, 0, 2, sz.cy, paper);
+		w.Clipoff(2, yy, sz.cx - 4, fcy);
+	}
 	int x = -sc;
 	bool ar = alignright && !HasFocus();
 	if(IsNull(text) && (!IsNull(nulltext) || !IsNull(nullicon))) {
@@ -1028,6 +1030,7 @@ void EditField::Reset()
 	SetFrame(edge);
 	font = StdFont();
 	showspaces = false;
+	no_internal_margin = false;
 }
 
 EditField& EditField::SetFont(Font _font)
