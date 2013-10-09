@@ -717,8 +717,8 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 				c = INK_CONST_INT;
 			int n = int(p - t);
 			for(int i = 0; i < n; i++) {
-				int q = fixdigits - i;
-				hls.Put(fixdigits > 4 && q > 0 && q % 3 == 0 && c != INK_CONST_OCT ?
+				int q = fixdigits - i - 1;
+				hls.Put(q > 0 && ((q / 3) & 1) == 1 && c != INK_CONST_OCT ?
 				        hl_style[c == INK_CONST_INT ? INK_CONST_INT_3 : INK_CONST_FLOAT_3]
 				        : hl_style[c]);
 			}
