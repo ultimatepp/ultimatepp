@@ -109,12 +109,12 @@ void   LineEdit::Paint0(Draw& w) {
 			if(l < h)
 				for(int i = l; i < h; i++) {
 					hl[i].paper = color[PAPER_SELECTED];
-					hl[i].ink = color[INK_SELECTED];
+					hl[i].ink = hl[i].flag_color = color[INK_SELECTED];
 				}
 			if(sell <= len && selh > len)
 				for(int i = len; i < hl.GetCount(); i++) {
 					hl[i].paper = color[PAPER_SELECTED];
-					hl[i].ink = color[INK_SELECTED];
+					hl[i].ink = hl[i].flag_color = color[INK_SELECTED];
 				}
 			Buffer<wchar> txt(ln);
 			for(int i = 0; i < ln; i++)
@@ -162,7 +162,8 @@ void   LineEdit::Paint0(Draw& w) {
 						else {
 							bool cjk = IsCJKIdeograph(txt[q]);
 							int p = q + 1;
-							while(p < len && h == hl[p] && txt[p] != '\t' && txt[p] != ' ' && IsCJKIdeograph(txt[p]) == cjk && p - q < 128)
+							while(p < len && h == hl[p] && !hl[p].flags && txt[p] != '\t'
+							      && txt[p] != ' ' && IsCJKIdeograph(txt[p]) == cjk && p - q < 128)
 								p++;
 							int l = p - q;
 							int ll = cjk ? 2 * l : l;
@@ -180,8 +181,13 @@ void   LineEdit::Paint0(Draw& w) {
 										dx2.At(l, 2 * fsz.cx);
 									else
 										dx.At(l, fsz.cx);
-									w.DrawText(x,
-									           y + fascent - h.font.Info().GetAscent(),
+									if(h.flags && fsz.cx > 4 && h.font.GetDescent() > 2) {
+										if((h.flags & COMMA_L))
+											w.DrawRect(x + fsz.cx - 1, y + fascent + 1, 1, 2, h.flag_color);
+										if((h.flags & COMMA_R))
+											w.DrawRect(x, y + fascent, 1, 2, h.flag_color);
+									}
+									w.DrawText(x, y + fascent - h.font.GetAscent(),
 									           ~txt + q, h.font, h.ink, l, cjk ? dx2 : dx);
 								}
 							q = p;

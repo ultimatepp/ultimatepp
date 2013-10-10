@@ -82,8 +82,9 @@ struct CodeEditor::HlSt {
 	void SetFont(int pos, int count, const HlStyle& f);
 	void SetPaper(int pos, int count, Color paper);
 	void SetInk(int pos, int count, Color ink);
-	void Put(int count, const HlStyle& ink)                  { Set(pos, count, ink); pos += count; }
-	void Put(const HlStyle& ink)                             { Put(1, ink); }
+	void Put(int count, const HlStyle& ink)           { Set(pos, count, ink); pos += count; }
+	void Put(const HlStyle& ink)                      { Put(1, ink); }
+	void Put(const HlStyle& ink, word flags, Color c) { Put(1, ink); v[pos - 1].flags = flags; v[pos - 1].flag_color = c; }
 
 	HlSt(Vector<LineEdit::Highlight>& v) : v(v) {
 		pos = 0;
@@ -717,10 +718,15 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 				c = INK_CONST_INT;
 			int n = int(p - t);
 			for(int i = 0; i < n; i++) {
-				int q = fixdigits - i - 1;
-				hls.Put(q > 0 && ((q / 3) & 1) == 1 && c != INK_CONST_OCT ?
-				        hl_style[c == INK_CONST_INT ? INK_CONST_INT_3 : INK_CONST_FLOAT_3]
-				        : hl_style[c]);
+				int q = fixdigits - i;
+				hls.Put(hl_style[c],
+				        c == INK_CONST_OCT ? 0 :
+				        q % 3 == 0 && i && q > 0 ? LineEdit::COMMA_R :
+				        q % 3 == 1 && q > 1 ? LineEdit::COMMA_L : 0,
+				        hl_style[c == INK_CONST_INT ? INK_CONST_INT_3 : INK_CONST_FLOAT_3].color);
+//				hls.Put(q > 0 && ((q / 3) & 1) == 1 && c != INK_CONST_OCT ?
+//				        hl_style[c == INK_CONST_INT ? INK_CONST_INT_3 : INK_CONST_FLOAT_3]
+//				        : hl_style[c]);
 			}
 		}
 		else
