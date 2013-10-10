@@ -220,14 +220,23 @@ protected:
 	virtual void  PlaceCaret(int newcursor, bool sel = false);
 
 public:
+	enum {
+		COMMA_L = 1,
+		COMMA_R = 2,
+	};
+
 	struct Highlight : Moveable<Highlight> {
 		Color paper;
 		Color ink;
+		Color flag_color;
 		Font  font;
+		word  flags;
 		wchar chr;
 
 		bool operator==(const Highlight& h) const
 		     { return paper == h.paper && ink == h.ink && font == h.font; }
+		
+		Highlight() { flags = 0; }
 	};
 
 	struct EditPos : Moveable<EditPos> {
