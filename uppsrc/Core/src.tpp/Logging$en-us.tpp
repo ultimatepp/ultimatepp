@@ -64,23 +64,23 @@ of replacing it.]
 :: [s0; When starting a new log file, up to [*@3 x] older logs is preserved 
 (renamed with extension `'.1`', `'.2`' etc...).]
 :: [s0; LOG`_ROTATE`_GZIP]
-:: [s0; Older preserved log files are compresed using gzip (except the 
-most recent log `'.1`'.]}}&]
+:: [s0; Older preserved log files are compressed using gzip (except 
+the most recent log `'.1`'.]}}&]
 [s3; &]
 [s4;%- &]
 [s5;:StdLog`(`):%- [_^Stream^ Stream][@(0.0.255) `&]_[* StdLog]()&]
-[s2; Returns a reference to stadard log stream.&]
+[s2; Returns a reference to standard log stream.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:LOG`_BEGIN:%- [@(0.0.255) const]_[@(0.0.255) char]_[* LOG`_BEGIN `= 
 `'`\x1e`';]&]
-[s2; Putting this character into standard log stream adds one tabelator 
+[s2; Putting this character into standard log stream adds one tabulator 
 of indentation to all subsequent lines (moves text `"right`").&]
 [s3;%- &]
 [s4;%- &]
 [s5;:LOG`_END:%- [@(0.0.255) const]_[@(0.0.255) char]_[* LOG`_END `= `'`\x1f`';]&]
 [s2; Putting this character into standard log stream removes one 
-tabelator of indentation to all subsequent lines (moves text 
+tabulator of indentation to all subsequent lines (moves text 
 `"left`").&]
 [s3;%- &]
 [s4;%- &]
@@ -100,7 +100,7 @@ with global lifetime).&]
 [s0; Standard logging macros come in 3 basic flavors. `"Normal`" 
 macros (LOG, DUMP, ...) only emit code in debug mode, `"Debugging`" 
 macros (DLOG, DDUMP, ..., first letter is `'D`') only [*/ compile] 
-in debug mode and their presence causes relase mode compilation 
+in debug mode and their presence causes release mode compilation 
 to fail (this is to prevent any forgotten debugging macros in 
 code) and finally `"Release`" macros (RLOG, RDUMP, ..., first 
 letter is `'R`') produce output even in release mode.&]
