@@ -441,7 +441,6 @@ public:
 	void       Set(int i, const ValueMap& m);
 
 	void       Add();
-	void       Add(const Vector<Value>& v);
 
 //$-void Add(const Value& [, const Value& ]...);
 #define  E__Add(I)      void Add(__List##I(E__Value));
@@ -449,9 +448,13 @@ public:
 #undef   E__Add
 //$+
 
+	void       Add(const Vector<Value>& v);
 	void       Add(const Nuller& null)                          { Add((Value)Null); }
 	void       Add(const VectorMap<String, Value>& m);
 	void       Add(const ValueMap& m);
+
+	void       SetArray(int i, const ValueArray& va);
+	void       AddArray(const ValueArray& va);
 
 	void       AddSeparator();
 

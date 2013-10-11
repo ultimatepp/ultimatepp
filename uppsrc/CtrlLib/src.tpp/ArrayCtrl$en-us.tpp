@@ -1944,11 +1944,13 @@ array is equal to the [* GetIndexCount()] of the source ArrayCtrl.&]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:Set`(int`,const Vector`<Value`>`&`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) i
 nt]_[*@3 i], [@(0.0.255) const]_[_^Vector^ Vector]<[_^Value^ Value]>`&_[*@3 v])&]
-[s2; Modified a given row by setting all source index values to values 
+[s2; Modifies a given row by setting all source index values to values 
 passed in the parameter [/ v].&]
-[s7; [%-*C@3 i]-|zero`-based row index&]
-[s7; [%-*C@3 v]-|an array of values to set to the source data matrix 
-row&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:SetArray`(int`,const ValueArray`&`):%- [@(0.0.255) void]_[* SetArray]([@(0.0.255) i
+nt]_[*@3 i], [@(0.0.255) const]_[_^ValueArray^ ValueArray][@(0.0.255) `&]_[*@3 va])&]
+[s2; Sets the row [%-*@3 i] to [%-*@3 va].&]
 [s3; &]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:Add`(`):%- [@(0.0.255) void]_[* Add]()&]
@@ -1967,6 +1969,11 @@ onst]_[_^Vector^ Vector]<[_^Value^ Value]>`&_[*@3 v])&]
 ector] parameter contains the values to be used to initialize 
 the new row of the matrix.&]
 [s7; [%-*C@3 v]-|new matrix row&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:AddArray`(const ValueArray`&`):%- [@(0.0.255) void]_[* AddArray]([@(0.0.255) c
+onst]_[_^ValueArray^ ValueArray][@(0.0.255) `&]_[*@3 va])&]
+[s2; Adds a new row at the end of source with value [%-*@3 va].&]
 [s3; &]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:Set`(int`,const VectorMap`<String`,Value`>`&`):%- [@(0.0.255) void]_[* S

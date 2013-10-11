@@ -719,11 +719,18 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 			int n = int(p - t);
 			for(int i = 0; i < n; i++) {
 				int q = fixdigits - i;
+
 				hls.Put(hl_style[c],
-				        c == INK_CONST_OCT ? 0 :
-				        q % 3 == 0 && i && q > 0 ? LineEdit::COMMA_R :
-				        q % 3 == 1 && q > 1 ? LineEdit::COMMA_L : 0,
+				        c == INK_CONST_OCT || fixdigits < 4 || q < 0 ? 0 :
+				        decode(q % 3, 1, LineEdit::SHIFT_L, 0, LineEdit::SHIFT_R, 0),
 				        hl_style[c == INK_CONST_INT ? INK_CONST_INT_3 : INK_CONST_FLOAT_3].color);
+
+//				hls.Put(hl_style[c],
+//				        c == INK_CONST_OCT ? 0 :
+//				        q % 3 == 0 && i && q > 0 ? LineEdit::COMMA_R :
+//				        q % 3 == 1 && q > 1 ? LineEdit::COMMA_L : 0,
+//				        hl_style[c == INK_CONST_INT ? INK_CONST_INT_3 : INK_CONST_FLOAT_3].color);
+
 //				hls.Put(q > 0 && ((q / 3) & 1) == 1 && c != INK_CONST_OCT ?
 //				        hl_style[c == INK_CONST_INT ? INK_CONST_INT_3 : INK_CONST_FLOAT_3]
 //				        : hl_style[c]);
