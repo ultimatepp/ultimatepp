@@ -923,7 +923,7 @@ Drawing ScatterDraw::GetDrawing(bool ctrl)
 {
 	DrawingDraw ddw(3*GetSize());
 	
-	SetDrawing(ddw, GetSize(), 3);
+	SetDrawing(ddw, GetSize(), 3, ctrl, true);
 	if (ctrl)
 		PlotTexts(ddw, GetSize(), 3);
 
@@ -938,7 +938,7 @@ Image ScatterDraw::GetImage(const Size &size, int scale, bool ctrl)
 
 	ImageBuffer ib(scale*size);	
 	BufferPainter bp(ib, mode);	
-	SetDrawing(bp, size, scale);
+	SetDrawing(bp, size, scale, ctrl);
 	if (ctrl)
 		PlotTexts(bp, size, scale);
 

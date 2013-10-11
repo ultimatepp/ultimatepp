@@ -16,13 +16,13 @@ public:
 		TooManyFunctionEvaluation = -4
 	};
 	FitError Fit(DataSource &series, double &r2);
-	FitError Fit(DataSource &series)				{double dummy; return Fit(series, dummy);}
+	FitError Fit(DataSource &series)		{double dummy; return Fit(series, dummy);}
 
 	virtual double f(double x1) 			= 0;
 	virtual double f(double x1, double x2) 	{NEVER();	return Null;}
 	virtual double f(Vector <double> x) 	{NEVER();	return Null;}
 	virtual String GetName() = 0;
-	virtual String GetFullName()					{return GetName();}
+	virtual String GetFullName()			{return GetName();}
 	virtual String GetEquation() = 0;
 	
 	void SetNumDigits(int n)				{numDigits = n;}
@@ -31,6 +31,8 @@ public:
 	int GetMaxFitFunctionEvaluations()		{return maxFitFunctionEvaluations;}
 	
 	friend struct Equation_functor;
+	
+	const Array<double> &GetCoeff()			{return coeff;}
 	
 protected:
 	Array<double> coeff;
@@ -45,6 +47,7 @@ protected:
 	}
 	void SetCoeff(double c0, double c1, double c2)	{coeff.Clear();	coeff << c0 << c1 << c2;}
 	void SetCoeff(double c0, double c1) 			{coeff.Clear();	coeff << c0 << c1;}
+	void SetCoeff(double c0) 						{coeff.Clear();	coeff << c0;}
 	void SetCoeffVal(int id, double c) 				{coeff[id] = c;}
 };
 
