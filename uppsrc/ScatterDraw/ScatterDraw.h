@@ -458,7 +458,7 @@ protected:
 	String VariableFormatY2(double d) const {return VariableFormat(yRange2, d);}
 
 	template<class T>
-	void SetDrawing(T& w, const Size &size, int scale, bool ctrl = false);
+	void SetDrawing(T& w, const Size &size, int scale, bool ctrl = false, bool setD = false);
 	template<class T>
 	void Plot(T& w, const Size &size, int scale);	
 	template<class T>
@@ -476,7 +476,7 @@ private:
 };
 
 template <class T>
-void ScatterDraw::SetDrawing(T& w, const Size& size, int scale, bool ctrl)
+void ScatterDraw::SetDrawing(T& w, const Size& size, int scale, bool ctrl, bool setD)
 {
 	if (size.cx == 0 || size.cy == 0)
 		return;
@@ -496,9 +496,10 @@ void ScatterDraw::SetDrawing(T& w, const Size& size, int scale, bool ctrl)
 	
 	Plot(w, size, scale);	
 	
-	ClipEnd(w);
-	
 	if (ctrl)
+		ClipEnd(w);
+	
+	if (!setD)
 		w.Offset(Point(-scale*hPlotLeft, -(scale*vPlotTop + titleHeight)));
 }
 
