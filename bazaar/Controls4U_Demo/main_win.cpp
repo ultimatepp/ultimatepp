@@ -258,4 +258,5 @@ void VLC_Demo::UpdateInfo() {
 		length = FormatDouble(l/1000., 2, FD_ZERO);
 }
 
+
 #endif

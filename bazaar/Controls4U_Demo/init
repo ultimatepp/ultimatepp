@@ -4,5 +4,4 @@
 #include "Controls4U/init"
 #include "plugin\gif/init"
 #include "plugin\jpg/init"
-#include "plugin\tif/init"
 #endif

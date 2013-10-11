@@ -49,5 +49,4 @@ public:
 	void SwitchOn();
 };
 
-
 #endif
