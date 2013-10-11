@@ -1002,9 +1002,7 @@ void CodeEditor::DefaultHlStyles()
 
 	SetHlStyle(INK_CONST_STRINGOP, LtBlue);
 	SetHlStyle(INK_CONST_INT, Red);
-	SetHlStyle(INK_CONST_INT_3, LtGray);
 	SetHlStyle(INK_CONST_FLOAT, Magenta);
-	SetHlStyle(INK_CONST_FLOAT_3, LtGray);
 	SetHlStyle(INK_CONST_HEX, Blue);
 	SetHlStyle(INK_CONST_OCT, Blue);
 
@@ -1187,6 +1185,7 @@ CodeEditor::CodeEditor() {
 	hilite_bracket = 1;
 	hilite_ifdef = 1;
 	barline = true;
+	thousands_separator = true;
 	indent_spaces = false;
 	indent_amount = GetTabSize();
 	no_parenthesis_indent = false;

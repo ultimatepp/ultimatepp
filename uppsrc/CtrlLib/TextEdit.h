@@ -221,16 +221,13 @@ protected:
 
 public:
 	enum {
-		COMMA_L = 1,
-		COMMA_R = 2,
-		SHIFT_L = 4,
-		SHIFT_R = 8,
+		SHIFT_L = 1,
+		SHIFT_R = 2,
 	};
 
 	struct Highlight : Moveable<Highlight> {
 		Color paper;
 		Color ink;
-		Color flag_color;
 		Font  font;
 		word  flags;
 		wchar chr;

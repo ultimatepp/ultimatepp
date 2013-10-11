@@ -447,8 +447,9 @@ LAYOUT(SetupHlLayout, 544, 272)
 	ITEM(Switch, hilite_bracket, SetLabel(t_("None\nNormal\nFlashing")).LeftPosZ(380, 64).TopPosZ(92, 50))
 	ITEM(Label, dv___5, SetLabel(t_("#else/#elif/#endif info")).LeftPosZ(380, 148).TopPosZ(148, 16))
 	ITEM(Switch, hilite_ifdef, SetLabel(t_("None\nNormal\nWith line number")).LeftPosZ(380, 148).TopPosZ(164, 50))
-	ITEM(Option, hilite_if_endif, SetLabel(t_("#if/#endif tracing")).LeftPosZ(380, 128).TopPosZ(224, 18))
-	ITEM(Button, hl_restore, SetLabel(t_("Restore default colors")).LeftPosZ(380, 144).TopPosZ(244, 24))
+	ITEM(Option, hilite_if_endif, SetLabel(t_("#if/#endif tracing")).LeftPosZ(380, 128).TopPosZ(216, 18))
+	ITEM(Option, thousands_separator, SetLabel(t_("Thousands separator")).LeftPosZ(380, 128).TopPosZ(232, 18))
+	ITEM(Button, hl_restore, SetLabel(t_("Restore default colors")).LeftPosZ(380, 156).TopPosZ(252, 16))
 END_LAYOUT
 
 LAYOUT(SetupEditorLayout, 488, 280)

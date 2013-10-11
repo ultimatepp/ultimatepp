@@ -665,6 +665,7 @@ public:
 	bool      tabs_serialize;
 	bool      no_parenthesis_indent;
 	bool      hilite_if_endif;
+	bool      thousands_separator;
 	bool      wrap_console_text;
 	bool      mute_sounds;
 	bool      line_numbers;
