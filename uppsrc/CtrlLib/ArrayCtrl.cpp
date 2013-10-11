@@ -1917,7 +1917,7 @@ void ArrayCtrl::Add(const VectorMap<String, Value>& m)
 
 void ArrayCtrl::AddMap(const ValueMap& m)
 {
-	Set(array.GetCount(), m);
+	SetMap(array.GetCount(), m);
 }
 
 void ArrayCtrl::SetArray(int i, const ValueArray& va)
