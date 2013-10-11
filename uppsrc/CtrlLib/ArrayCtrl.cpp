@@ -1901,7 +1901,7 @@ void ArrayCtrl::Set(int ii, const VectorMap<String, Value>& m)
 	}
 }
 
-void ArrayCtrl::Set(int ii, const ValueMap& m)
+void ArrayCtrl::SetMap(int ii, const ValueMap& m)
 {
 	for(int i = 0; i < m.GetCount(); i++) {
 		int j = GetPos((String)m.GetKey(i));
@@ -1915,7 +1915,7 @@ void ArrayCtrl::Add(const VectorMap<String, Value>& m)
 	Set(array.GetCount(), m);
 }
 
-void ArrayCtrl::Add(const ValueMap& m)
+void ArrayCtrl::AddMap(const ValueMap& m)
 {
 	Set(array.GetCount(), m);
 }
