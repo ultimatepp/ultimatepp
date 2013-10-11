@@ -60,6 +60,9 @@ bool OfficeDoc::WriteText(String value) {return (static_cast<DocPlugin *>(GetDat
 bool DocPlugin::Select() {return false;}
 bool OfficeDoc::Select() {return (static_cast<DocPlugin *>(GetData()))->Select();}
 
+bool DocPlugin::EnableCommandVars(bool) {return false;}
+bool OfficeDoc::EnableCommandVars(bool enable) {return (static_cast<DocPlugin *>(GetData()))->EnableCommandVars(enable);}
+
 bool DocPlugin::Replace(String search, String replace) {return false;}
 bool OfficeDoc::Replace(String search, String replace) {return (static_cast<DocPlugin *>(GetData()))->Replace(search, replace);}
 

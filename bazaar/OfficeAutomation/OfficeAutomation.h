@@ -1,6 +1,8 @@
 #ifndef _OfficeAutomation_h
 #define _OfficeAutomation_h
 
+#include <Functions4U/Functions4U.h>
+
 using namespace Upp;
 
 #include "OfficeAutomationMethods.h"

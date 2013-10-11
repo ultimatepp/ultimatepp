@@ -57,6 +57,7 @@
 	virtual bool Select(String range);								\
 	virtual bool Select(int fromX, int fromY, int toX, int toY);	\
 	virtual bool Select();											\
+	virtual bool EnableCommandVars(bool enable); 				\
 																\
 	virtual void DefMatrix(int width, int height);				\
 	virtual bool FillSelectionMatrix();							\
@@ -86,6 +87,7 @@
 	virtual bool WriteText(String value);					\
 															\
 	virtual bool Select();									\
+	virtual bool EnableCommandVars(bool enable); 			\
 															\
 	virtual bool Replace(String search, String replace);	\
 															\

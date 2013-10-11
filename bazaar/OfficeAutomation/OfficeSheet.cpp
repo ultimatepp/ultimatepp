@@ -237,6 +237,9 @@ bool OfficeSheet::Select(String range) {return (static_cast<SheetPlugin *>(GetDa
 
 bool SheetPlugin::Select(int fromX, int fromY, int toX, int toY) {return false;}
 bool OfficeSheet::Select(int fromX, int fromY, int toX, int toY) {return (static_cast<SheetPlugin *>(GetData()))->Select(fromX, fromY, toX, toY);}
+
+bool SheetPlugin::EnableCommandVars(bool) {return false;}
+bool OfficeSheet::EnableCommandVars(bool enable) {return (static_cast<DocPlugin *>(GetData()))->EnableCommandVars(enable);}
 	
 void SheetPlugin::DefMatrix(int width, int height) {}
 void OfficeSheet::DefMatrix(int width, int height) {(static_cast<SheetPlugin *>(GetData()))->DefMatrix(width, height);}

@@ -532,6 +532,16 @@ bool MSSheet::Select() {
 	return Ole::Method(Range, "Select");
 }
 
+bool MSSheet::EnableCommandVars(bool enable) {
+	ObjectOle commandBars;
+	if(!(commandBars = Ole::GetObject(App, "CommandBars")))
+		return false;	
+
+	VariantOle vEnabled;
+	vEnabled.Int4(enable? 1: 0);
+	return Ole::SetValue(App, "Enabled", vEnabled);
+}
+
 void MSSheet::DefMatrix(int width, int height) {
 	Matrix.ArrayDim(width, height);
 }
@@ -1238,6 +1248,17 @@ bool MSDoc::OpenDoc(String fileName, bool visible) {
 	return true;
 }
 
+bool MSDoc::EnableCommandVars(bool enable) {
+	ObjectOle commandBars;
+	if(!(commandBars = Ole::GetObject(App, "CommandBars")))
+		return false;	
+
+	VariantOle vEnabled;
+	vEnabled.Int4(enable? 1: 0);
+	return Ole::SetValue(App, "Enabled", vEnabled);
+}
+
+
 bool MSDoc::SaveAs(String fileName, String type) {
 	if (!Doc)
 		return false;
@@ -1549,7 +1570,10 @@ bool OPENSheet::SetSaved(bool saved) {
 bool OPENSheet::Quit() {
 	if (!quit) {
 		quit = true;
-		return Ole::Method(Desktop, "Terminate");
+		if (Desktop) {
+			Ole::Method(Desktop, "Dispose");
+			return Ole::Method(Desktop, "Terminate");
+		}
 	}
 	return true;
 }
@@ -1927,6 +1951,11 @@ bool OPENSheet::SetHyperlink(String address, String text) {
 	return false;
 }
 
+bool OPENSheet::EnableCommandVars(bool enable) {
+/**/	
+	return false;
+}
+	
 bool OPENSheet::SetItalic(String cell, bool italic) {
 	int col, row;
 	OfficeSheet::CellToColRow(cell, col, row);
@@ -2453,6 +2482,11 @@ bool OPENDoc::Print() {
 
 	return Ole::Method(Document, "print", vArrayPrint);
 }
+
+bool OPENDoc::EnableCommandVars(bool enable) {
+/**/	
+	return false;
+}
 	
 bool OPENDoc::SetSaved(bool saved) {
 	VariantOle vval;
@@ -2503,8 +2537,10 @@ bool OPENDoc::SaveAs(String fileName, String type) {
 bool OPENDoc::Quit() {
 	if (!quit) {
 		quit = true;
-		if (Document)
-			return Ole::Method(Document, "Dispose");
+		if (Document) {
+			Ole::Method(Document, "Dispose");
+			return Ole::Method(Document, "Terminate");
+		}
 	}
 	return true;
 }
