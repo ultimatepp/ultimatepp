@@ -60,7 +60,7 @@ void EditFileFolder::Init() {
 void EditFileFolder::InitFs() {
 	if (pfs)
 		return;
-	pfs = new FileSel();
+	pfs = new FileSel_();
 	pfs->Asking(!isLoad);
 }
 
@@ -108,15 +108,16 @@ EditFileFolder &EditFileFolder::UseBrowse(bool use) {
 
 void EditFileFolder::DoBrowse() {
 	InitFs();
-	FileSel &fs = *pfs;
+	FileSel_ &fs = *pfs;
 	
 	String s = GetData();
 	if (!s.IsEmpty()) {
-		if (DirectoryExists(s)) 
+		if (DirectoryExists(AppendFileName(fs.GetBaseDir(), s))) 
 			fs.PreSelect(s);
 		else {
 			String folder = GetFileFolder(s);
-			if (folder.IsEmpty() || folder.Find("..") >= 0 || !DirectoryExists(folder)) 
+			if (folder.IsEmpty() || folder.Find("..") >= 0 || 
+				!DirectoryExists(AppendFileName(fs.GetBaseDir(), folder))) 
 				s = AppendFileName(NormalizePath(folder, fs.GetActiveDir()), GetFileName(s));
 			fs.PreSelect(s);
 		}
@@ -208,7 +209,135 @@ bool SetFirstChild(Ctrl *ctrl) {
 		return false;
 }
 
- void StaticImage::Layout() {
+void ImagePopUp::Paint(Draw &w) {
+	Size sz = GetSize();
+	Size imagesize = image.GetSize();	
+	
+	switch (fit) {
+	case StaticImage::BestFit: {
+		Rect rect = FitInFrame(sz, imagesize);
+		sz = rect.GetSize();
+		w.DrawImage(sz, image);
+		break; }
+	case StaticImage::FillFrame:
+		w.DrawImage(0, 0, sz.cx, sz.cy, image);
+		break;
+	case StaticImage::NoScale:
+		w.DrawImage(0, 0, image);
+		break;		
+	case StaticImage::RepeatToFill:
+		for (int left = 0; left < sz.cx; left += imagesize.cx) 
+			for (int top = 0; top < sz.cy; top += imagesize.cy) 
+				w.DrawImage(left, top, image);
+		break;	
+	}
+	
+	DrawBorder(w, sz, BlackBorder);
+}
+
+Point ImagePopUp::Offset(Point p) {
+	return p + GetScreenView().TopLeft() - ctrl->GetScreenView().TopLeft();
+}
+
+void ImagePopUp::LeftDown(Point p, dword flags) {
+	ctrl->LeftDown(Offset(p), flags);
+}
+
+void ImagePopUp::LeftDrag(Point p, dword flags) {
+	Close();
+	ctrl->LeftDrag(Offset(p), flags);
+}
+
+void ImagePopUp::LeftDouble(Point p, dword flags) {
+	ctrl->LeftDouble(Offset(p), flags);
+}
+
+void ImagePopUp::RightDown(Point p, dword flags) {
+	ctrl->RightDown(Offset(p), flags);
+}
+
+void ImagePopUp::LeftUp(Point p, dword flags) {
+	ctrl->LeftUp(Offset(p), flags);
+}
+
+void ImagePopUp::MouseWheel(Point p, int zdelta, dword flags) {
+	ctrl->MouseWheel(Offset(p), zdelta, flags);
+}
+
+void ImagePopUp::MouseLeave() {
+	ctrl->MouseLeave();
+	Close();
+}
+
+void ImagePopUp::MouseEnter(Point p, dword flags) {
+	ctrl->MouseEnter(Offset(p), flags);
+}
+
+void ImagePopUp::MouseMove(Point p, dword flags) {
+	ctrl->MouseMove(Offset(p), flags);
+}
+
+Image ImagePopUp::CursorImage(Point p, dword flags) {
+	return ctrl->CursorImage(Offset(p), flags);
+}
+
+void ImagePopUp::LostFocus() {
+	Close();
+}
+
+void ImagePopUp::PopUp(Ctrl *owner, int x, int y, int width, int height, Image &_image, int _angle, int _fit) {
+	if (width == 0 || height == 0 || IsNull(_image)) 
+		return;
+
+	Size imagesize = _image.GetSize();	
+	if (imagesize.cx == 0 || imagesize.cy == 0) 
+		return;
+	
+	Rect r(x, y, x + width, y + height);
+	if (fit == StaticImage::BestFit) {
+		r = FitInFrame(r.GetSize(), imagesize);
+		Size sz = r.GetSize();
+		r.left = x;
+		r.top = y;
+		r.SetSize(sz);
+	}
+	Size ssz = GetScreenSize();
+	if (ssz.cx < r.left + r.GetWidth()) {
+		r.left = ssz.cx - r.GetWidth();
+		r.right = ssz.cx;
+	}
+	if (ssz.cy < r.top + r.GetHeight()) {
+		r.top = ssz.cy - r.GetHeight();
+		r.bottom = ssz.cy;
+	}
+	if(r != GetRect())
+		SetRect(r);
+	
+	ctrl = owner;
+	image = ::GetRect(_image, _image.GetSize());
+	angle = _angle;
+	fit = _fit;
+	Ctrl::PopUp(owner, true, false, GUI_DropShadows());
+	SetAlpha(230);
+}
+
+void ImagePopUp::Close() {
+	Ctrl::Close();
+}
+
+void StaticImage::MouseEnter(Point pos, dword keyflags) {
+	if (isPopUp) { 
+		Point pt = GetScreenRect().TopLeft();		
+		popup.PopUp(this, pt.x, pt.y, szPopUp.cx, szPopUp.cy, origImage, angle, fit);
+	}
+}
+
+void StaticImage::MouseLeave() {
+	if (isPopUp) 
+		popup.Close();
+}
+
+void StaticImage::Layout() {
    	if (useAsBackground) {
   		Ctrl *q = GetFirstChild(); 
 		SetFirstChild((Ctrl *)this);
@@ -229,28 +358,28 @@ void StaticImage::Paint(Draw& w) {
 		return;
 	
 	Image *imageView;
-	if (angle == Angle_0)
+	if (angle == StaticImage::Angle_0)
 		imageView = &origImage;
 	else {
 		imageView = &image;
 		imagesize = imageView->GetSize();
 	}
 	switch (fit) {
-	case BestFit:
+	case StaticImage::BestFit:
 		w.DrawImage(FitInFrame(sz, imagesize), *imageView);
 		break;
-	case FillFrame:
+	case StaticImage::FillFrame:
 		w.DrawImage(0, 0, sz.cx, sz.cy, *imageView);
 		break;
-	case NoScale:
+	case StaticImage::NoScale:
 		w.DrawImage(0, 0, *imageView);
 		break;		
-	case RepeatToFill:
+	case StaticImage::RepeatToFill:
 		for (int left = 0; left < sz.cx; left += imagesize.cx) 
 			for (int top = 0; top < sz.cy; top += imagesize.cy) 
 				w.DrawImage(left, top, *imageView);
 		break;	
-	}
+	}	
 }
 
 bool StaticImage::Set(String _fileName) {
@@ -321,6 +450,8 @@ StaticImage::StaticImage() {
 	angle = Angle_0;
 	fit = BestFit;
 	useAsBackground = false;
+	isPopUp = false;
+	szPopUp = Size(300, 300);
 }
 
 void StaticImageSet::Paint(Draw& w) {

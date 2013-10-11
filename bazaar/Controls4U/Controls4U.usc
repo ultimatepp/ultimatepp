@@ -1007,7 +1007,7 @@ ctrl FirefoxBrowser {
 	}
 }
 
-ctrl IExplorerBrowser {
+ctrl InternetExplorerBrowser {
 	group "Complex";
 
 	GetMinSize() { return Size(0, 0); }

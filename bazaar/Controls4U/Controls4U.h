@@ -15,13 +15,18 @@ NAMESPACE_UPP;
 
 double AngAdd(double ang, double val);
 
+class FileSel_ : public FileSel {
+public:
+	String GetBaseDir()	{return basedir;}	
+};
+
 class EditFileFolder : public EditString {
 typedef EditFileFolder CLASSNAME;
 protected:
 	FrameLeft<Button> butBrowse, butLeft, butRight, butUp;
 	FrameRight<Button> butGo;
 	
-	FileSel *pfs;
+	FileSel_ *pfs;
 	bool isFile, isLoad;
 	String title;
 	
@@ -42,6 +47,7 @@ public:
 	void AllFilesType()								{InitFs();	pfs->AllFilesType();}
 	void ActiveDir(const String& d) 				{InitFs();	pfs->ActiveDir(d);}
 	void MkDirOption(bool b)						{InitFs();	pfs->MkDirOption(b);}
+	void BaseDir(const char *dir)					{InitFs();	pfs->BaseDir(dir);}
 	String Get() const                           	{return GetData();}
 	operator const char *() const					{return Get();}
 	const String operator~() const   				{return Get();}
@@ -75,6 +81,32 @@ public:
 	using EditFileFolder::operator=;
 };
 
+class ImagePopUp : public Ctrl {
+	public:
+		Ctrl* ctrl;
+
+		ImagePopUp() {}
+		Point Offset(Point p);
+
+		virtual void  Paint(Draw &w);
+		virtual void  LeftDown(Point p, dword flags);
+		virtual void  LeftDrag(Point p, dword flags);
+		virtual void  LeftDouble(Point p, dword flags);
+		virtual void  RightDown(Point p, dword flags);
+		virtual void  LeftUp(Point p, dword flags);
+		virtual void  MouseWheel(Point p, int zdelta, dword flags);
+		virtual void  MouseLeave();
+		virtual void  MouseEnter(Point p, dword flags);
+		virtual void  MouseMove(Point p, dword flags);
+	    virtual Image CursorImage(Point p, dword flags);
+	    virtual void  LostFocus();
+		void PopUp(Ctrl *owner, int x, int y, int width, int height, Image &_image, int _angle, int _fit);
+		virtual void Close();
+		
+		Image image;
+		int angle, fit;
+};
+
 class StaticImage : public Ctrl {
 typedef StaticImage CLASSNAME;		
 public:
@@ -87,16 +119,22 @@ protected:
 	virtual void RightDown(Point pos, dword keyflags);
 	virtual void LeftDown(Point pos, dword keyflags);
 	virtual void LeftDouble(Point pos, dword keyflags);
+	virtual void MouseEnter(Point pos, dword keyflags);
+	virtual void MouseLeave();
 	
 	String fileName;
 	Image image, origImage;
 	Color background;
 	int angle, fit;
 	bool useAsBackground;
+	ImagePopUp popup;
+	bool isPopUp;
+	Size szPopUp;
 
 public:
-	bool  Set(String fileName);
-	bool  Set(Image image);
+	bool Set(String fileName);
+	bool Set(Image image);
+	void Clear()							{Set(Image());}
 	Image &Get()							{return origImage;}
 	
 	void  operator=(String fileName)      	{Set(fileName);}
@@ -106,6 +144,8 @@ public:
 	StaticImage& SetFit(int _fit)				{fit = _fit; 		  Refresh(); return *this;}
 	StaticImage& SetBackground(Color c) 		{background = c; 	  Refresh(); return *this;}
 	StaticImage& UseAsBackground(bool b = true)	{useAsBackground = b; Refresh(); return *this;}
+	StaticImage& SetPopUp(bool pop = true)		{isPopUp = pop;	return *this;}
+	StaticImage& SetPopUpSize(Size sz)			{szPopUp = sz;	return *this;}
 	StaticImage();
 	
 	Callback WhenLeftDouble;
