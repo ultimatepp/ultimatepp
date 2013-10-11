@@ -97,10 +97,10 @@ void ScatterCtrl_Demo::OnSel()
 void ScatterCtrl_Demo::Preview()
 {
 	Report r;	
-	
-	const Drawing &w = Examples()[examplesList.GetCursor()].ctrl()->Scatter().GetDrawing();
+
 	r.Landscape();
-	Size pageSize = r.GetPageSize();
+	Size pageSize = r.GetPageSize();	
+	const Drawing &w = Examples()[examplesList.GetCursor()].ctrl()->Scatter().GetDrawing(true);
 	r.DrawDrawing(0, 0, pageSize.cx, pageSize.cy, w);
 
 	Perform(r);
