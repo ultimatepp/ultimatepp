@@ -494,7 +494,7 @@ void CodeEditor::InitKeywords()
 		"IS", "ISNULL", "JOIN", "KEY", "LEFT", "LIKE", "LIMIT", "MATCH", "NATURAL", "NOT",
 		"NOTNULL", "NULL", "OF", "OFFSET", "ON", "OR", "ORDER", "OUTER", "PRIMARY", "RAISE",
 		"REFERENCES", "REPLACE", "RESTRICT", "UPDATE", "SET", "WHERE", "NEW", "OLD", "TRIGGER",
-		"SELECT",
+		"SELECT", "TABLE"
 		NULL
 	};
 	static const char *javan[] = {
