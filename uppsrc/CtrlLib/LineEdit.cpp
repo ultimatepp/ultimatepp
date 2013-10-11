@@ -109,12 +109,12 @@ void   LineEdit::Paint0(Draw& w) {
 			if(l < h)
 				for(int i = l; i < h; i++) {
 					hl[i].paper = color[PAPER_SELECTED];
-					hl[i].ink = hl[i].flag_color = color[INK_SELECTED];
+					hl[i].ink = color[INK_SELECTED];
 				}
 			if(sell <= len && selh > len)
 				for(int i = len; i < hl.GetCount(); i++) {
 					hl[i].paper = color[PAPER_SELECTED];
-					hl[i].ink = hl[i].flag_color = color[INK_SELECTED];
+					hl[i].ink = color[INK_SELECTED];
 				}
 			Buffer<wchar> txt(ln);
 			for(int i = 0; i < ln; i++)
@@ -182,13 +182,7 @@ void   LineEdit::Paint0(Draw& w) {
 										dx2.At(l, 2 * fsz.cx);
 									else
 										dx.At(l, fsz.cx);
-									if((h.flags & (COMMA_L|COMMA_R)) && fsz.cx > 4 && h.font.GetDescent() > 2) {
-										if((h.flags & COMMA_L))
-											w.DrawRect(x + fsz.cx - 1, y + fascent + 1, 1, 2, h.flag_color);
-										if((h.flags & COMMA_R))
-											w.DrawRect(x, y + fascent, 1, 2, h.flag_color);
-									}
-									w.DrawText(x + (h.flags & SHIFT_L ? -1 : h.flags & SHIFT_R ? 1 : 0),
+									w.DrawText(x + (h.flags & SHIFT_L ? -fsz.cx / 6 : h.flags & SHIFT_R ? fsz.cx / 6 : 0),
 									           y + fascent - h.font.GetAscent(),
 									           ~txt + q, h.font, h.ink, l, cjk ? dx2 : dx);
 								}

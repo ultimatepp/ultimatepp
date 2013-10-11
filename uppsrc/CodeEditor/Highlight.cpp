@@ -84,7 +84,7 @@ struct CodeEditor::HlSt {
 	void SetInk(int pos, int count, Color ink);
 	void Put(int count, const HlStyle& ink)           { Set(pos, count, ink); pos += count; }
 	void Put(const HlStyle& ink)                      { Put(1, ink); }
-	void Put(const HlStyle& ink, word flags, Color c) { Put(1, ink); v[pos - 1].flags = flags; v[pos - 1].flag_color = c; }
+	void Put(const HlStyle& ink, word flags)          { Put(1, ink); v[pos - 1].flags = flags; }
 
 	HlSt(Vector<LineEdit::Highlight>& v) : v(v) {
 		pos = 0;
@@ -494,7 +494,7 @@ void CodeEditor::InitKeywords()
 		"IS", "ISNULL", "JOIN", "KEY", "LEFT", "LIKE", "LIMIT", "MATCH", "NATURAL", "NOT",
 		"NOTNULL", "NULL", "OF", "OFFSET", "ON", "OR", "ORDER", "OUTER", "PRIMARY", "RAISE",
 		"REFERENCES", "REPLACE", "RESTRICT", "UPDATE", "SET", "WHERE", "NEW", "OLD", "TRIGGER",
-		"SELECT", "TABLE"
+		"SELECT", "TABLE",
 		NULL
 	};
 	static const char *javan[] = {
@@ -717,24 +717,15 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 			if(c == INK_CONST_OCT && p - t == 1)
 				c = INK_CONST_INT;
 			int n = int(p - t);
-			for(int i = 0; i < n; i++) {
-				int q = fixdigits - i;
-
+			for(int i = 0; i < n; i++)
 				hls.Put(hl_style[c],
-				        c == INK_CONST_OCT || fixdigits < 4 || q < 0 ? 0 :
-				        decode(q % 3, 1, LineEdit::SHIFT_L, 0, LineEdit::SHIFT_R, 0),
-				        hl_style[c == INK_CONST_INT ? INK_CONST_INT_3 : INK_CONST_FLOAT_3].color);
-
-//				hls.Put(hl_style[c],
-//				        c == INK_CONST_OCT ? 0 :
-//				        q % 3 == 0 && i && q > 0 ? LineEdit::COMMA_R :
-//				        q % 3 == 1 && q > 1 ? LineEdit::COMMA_L : 0,
-//				        hl_style[c == INK_CONST_INT ? INK_CONST_INT_3 : INK_CONST_FLOAT_3].color);
+				        c == INK_CONST_OCT || (fixdigits < 4 && n - fixdigits < 5) || i == fixdigits || !thousands_separator ? 0 :
+				        i < fixdigits ? decode((fixdigits - i) % 3, 1, LineEdit::SHIFT_L, 0, LineEdit::SHIFT_R, 0) :
+				                        decode((i + 1) % 3, 1, LineEdit::SHIFT_R, 0, LineEdit::SHIFT_L, 0));
 
 //				hls.Put(q > 0 && ((q / 3) & 1) == 1 && c != INK_CONST_OCT ?
 //				        hl_style[c == INK_CONST_INT ? INK_CONST_INT_3 : INK_CONST_FLOAT_3]
 //				        : hl_style[c]);
-			}
 		}
 		else
 		if(pair == MAKELONG('t', '_') && p[2] == '(' && p[3] == '\"') {

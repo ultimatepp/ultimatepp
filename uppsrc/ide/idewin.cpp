@@ -470,6 +470,7 @@ Ide::Ide()
 	barline = true;
 	qtfsel = true;
 	hilite_if_endif = false;
+	thousands_separator = true;
 	wrap_console_text = true;
 	mute_sounds = false;
 	line_numbers = false;

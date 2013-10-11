@@ -284,6 +284,7 @@ protected:
 
 	byte    hilite_scope;
 	byte    hilite_ifdef;
+	bool    thousands_separator;
 	bool    indent_spaces : 1;
 	bool    no_parenthesis_indent : 1;
 	bool    barline : 1;
@@ -515,6 +516,7 @@ public:
 	void     HiliteBracket(byte b)                    { hilite_bracket = b; Refresh(); }
 	void     HiliteIfDef(byte b)                      { hilite_ifdef = b; Refresh(); }
 	void     HiliteIfEndif(bool b)                    { bar.HiliteIfEndif(b); }
+	void     ThousandsSeparator(bool b)               { thousands_separator = b; Refresh(); }
 	void     IndentSpaces(bool is)                    { indent_spaces = is; }
 	void     IndentAmount(int ia)                     { indent_amount = ia; }
 	void     NoParenthesisIndent(bool b)              { no_parenthesis_indent = b; }
