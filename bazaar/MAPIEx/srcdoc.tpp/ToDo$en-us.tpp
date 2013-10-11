@@ -3,4 +3,4 @@ topic "ToDo list";
 [{_}%EN-US 
 [s0; [*R+184 MAPIEx. ToDo list]&]
 [s0;2 &]
-[s0;i150;O0;~~~608; [2 MinGW compatibility.]]
+[s0;i150;O0;~~~608; [2 MinGW compatibility.]]]

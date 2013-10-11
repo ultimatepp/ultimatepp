@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // File: MAPIEx.cpp
@@ -14,8 +16,8 @@
 
 // Ported to U++ Framework by Koldo. See License.txt file
 
-#include <MapiUtil.h>
 #include "MAPIEx.h"
+#include "MapiUtil.h"
 #include "MAPISink.h"
 
 #ifdef _WIN32_WCE
@@ -276,7 +278,7 @@ bool MAPIEx::OpenMessageStore(String szStore, ULONG ulFlags) {
 							bResult = true;
 					} else {
 						String strStore = GetValidString(pRows->aRow[0].lpProps[0]);
-						if(strStore.Find(szStore)!=-1) 
+						if(strStore.Find(szStore) != -1) 
 							bResult = true;
 					}
 					if(!bResult) {
@@ -689,3 +691,4 @@ Time MAPIEx::GetSystemTime(SYSTEMTIME& tm) {
 	return Time(tm.wYear, tm.wMonth, tm.wDay, tm.wHour, tm.wMinute, tm.wSecond);
 }
 	
+#endif

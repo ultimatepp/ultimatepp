@@ -4,7 +4,7 @@
 #include <Core/Core.h>
 
 using namespace Upp;
-
+#undef CY
 #define CY tagCY
 
 
@@ -118,6 +118,7 @@ protected:
 	ULONG GetMessageStoreSupport();
 	
 	bool OpenFolder(unsigned long ulFolderID, MAPIFolder &folder);
+public:	////////
 	static String ValidateString(LPCTSTR s);
 	IMAPISession* GetSession() 	{return m_pSession;}
 	LPMDB GetMessageStore() 	{return m_pMsgStore;}

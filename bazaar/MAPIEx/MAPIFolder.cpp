@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // File: MAPIFolder.cpp
@@ -14,8 +16,8 @@
 
 // Ported to U++ Framework by Koldo. See License.txt file
 
-#include <MapiUtil.h>
 #include "MAPIEx.h"
+#include "MapiUtil.h"
 
 /////////////////////////////////////////////////////////////
 // MAPIFolder
@@ -255,7 +257,7 @@ bool MAPIFolder::GetNextAppointment(MAPIAppointment& appointment) {
 #ifdef _WIN32_WCE
 	return m_poom.GetNextAppointment(m_pMAPI,appointment);
 #else
-	SRow* pRow=GetNextRow();
+	SRow* pRow = GetNextRow();
 	return pRow ? appointment.Open(m_pMAPI, pRow->lpProps[PROP_ENTRYID].Value.bin) : false;
 #endif
 }
@@ -319,3 +321,5 @@ bool MAPIFolder::DeleteObject(MAPIObject& object) {
 	HRESULT hr = Folder()->DeleteMessages(&entries, 0, NULL, 0);
 	return (hr==S_OK);
 }
+
+#endif

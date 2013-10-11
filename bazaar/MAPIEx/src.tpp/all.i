@@ -1,7 +1,3 @@
-TOPIC("aa$en-us")
-#include "aa$en-us.tppi"
-END_TOPIC
-
 TOPIC("MAPIAppointment$en-us")
 #include "MAPIAppointment$en-us.tppi"
 END_TOPIC
@@ -24,5 +20,9 @@ END_TOPIC
 
 TOPIC("MAPIMessage$en-us")
 #include "MAPIMessage$en-us.tppi"
+END_TOPIC
+
+TOPIC("aa$en-us")
+#include "aa$en-us.tppi"
 END_TOPIC
 

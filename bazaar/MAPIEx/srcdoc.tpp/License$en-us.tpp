@@ -27,4 +27,4 @@ ucian Wischik MAPI Utils][2 . Its license is:]&]
 [s0; [C+75 This code (c) 2002`-2006 Lucian Wischik.]&]
 [s0;C+75 &]
 [s0; [C+75 The code is free and anyone can do with it whatever they 
-like, including incorporating it in commercial products.]]
+like, including incorporating it in commercial products.]]]

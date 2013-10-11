@@ -510,7 +510,7 @@ BOOL CMAPIMessage::SaveAsMsg(LPCTSTR szPath)
 	CString strPath=szPath;
 	if(strPath.GetLength()<4 || strPath.Right(4).CompareNoCase(".msg")) strPath+=".msg";
 #ifdef _WIN32_WCE
-	return FALSE;
+		return FALSE;
 #else
 	LPSTORAGE pStorage;
 	DWORD dwFlags=STGM_READWRITE | STGM_TRANSACTED | STGM_CREATE;
@@ -524,14 +524,11 @@ BOOL CMAPIMessage::SaveAsMsg(LPCTSTR szPath)
 	{
 		LPMSGSESS pMsgSession;
 		LPMALLOC pMalloc = MAPIGetDefaultMalloc();
-		if(OpenIMsgSession(pMalloc, 0, &pMsgSession) == S_OK) 
-		{
+		if(OpenIMsgSession(pMalloc, 0, &pMsgSession) == S_OK) {
 			LPMESSAGE pIMsg;
-			if(OpenIMsgOnIStg(pMsgSession, MAPIAllocateBuffer, MAPIAllocateMore, MAPIFreeBuffer, pMalloc, NULL, pStorage, NULL, 0, 0, &pIMsg) == S_OK) 
-			{
+			if(OpenIMsgOnIStg(pMsgSession, MAPIAllocateBuffer, MAPIAllocateMore, MAPIFreeBuffer, pMalloc, NULL, pStorage, NULL, 0, 0, &pIMsg) == S_OK) {
 				// client must support CLSID_MailMessage as the compound document
-				if(WriteClassStg(pStorage, CLSID_MailMessage) == S_OK) 
-				{
+				if(WriteClassStg(pStorage, CLSID_MailMessage) == S_OK) {
 					// exclude these properties from the copy operation to speed things up
 					SizedSPropTagArray ( 7, excludeTags );
 					excludeTags.cValues=7;
@@ -543,8 +540,7 @@ BOOL CMAPIMessage::SaveAsMsg(LPCTSTR szPath)
 					excludeTags.aulPropTag[5]=PR_RTF_SYNC_PREFIX_COUNT;
 					excludeTags.aulPropTag[6]=PR_RTF_SYNC_TRAILING_COUNT;
 
-					if(Message()->CopyTo(0, NULL, (LPSPropTagArray)&excludeTags, NULL, NULL, (LPIID)&IID_IMessage, pIMsg, 0, NULL ) == S_OK) 
-					{
+					if(Message()->CopyTo(0, NULL, (LPSPropTagArray)&excludeTags, NULL, NULL, (LPIID)&IID_IMessage, pIMsg, 0, NULL ) == S_OK) {
 						pIMsg->SaveChanges(KEEP_OPEN_READWRITE);
 						pStorage->Commit(STGC_DEFAULT);
 					}
@@ -553,7 +549,6 @@ BOOL CMAPIMessage::SaveAsMsg(LPCTSTR szPath)
 			}
 			CloseIMsgSession(pMsgSession);
 		}
-
 		RELEASE(pStorage);
 		return TRUE;
 	}

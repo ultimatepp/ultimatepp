@@ -682,15 +682,17 @@ int CMAPIEx::ShowAddressBook(LPADRLIST& pAddressList, LPCTSTR szCaption)
 			adrparm.lpszCaption=(LPTSTR)szNarrowCaption;
 		}
 #endif
-		adrparm.cDestFields=1;
-		adrparm.lppszDestTitles=(LPTSTR*)lppszDestTitles;
-		adrparm.lpulDestComps=lpulDestComps;
+		adrparm.cDestFields = 1;
+		adrparm.lppszDestTitles = (LPTSTR*)lppszDestTitles;
+		adrparm.lpulDestComps = lpulDestComps;
 
-		HWND hDesktop=::GetDesktopWindow();
-		HRESULT hr=pAddressBook->Address((ULONG_PTR*)&hDesktop, &adrparm, &pAddressList);
+		HWND hDesktop = ::GetDesktopWindow();
+		HRESULT hr = pAddressBook->Address((ULONG_PTR*)&hDesktop, &adrparm, &pAddressList);
 		RELEASE(pAddressBook);
-		if(hr==S_OK) return IDOK;
-		if(hr==MAPI_E_USER_CANCEL) return IDCANCEL;
+		if(hr == S_OK) 
+			return IDOK;
+		if(hr == MAPI_E_USER_CANCEL) 
+			return IDCANCEL;
 	}
 #endif
 	return FALSE;

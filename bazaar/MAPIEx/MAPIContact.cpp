@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // File: MAPIContact.cpp
@@ -14,9 +16,11 @@
 
 // Ported to U++ Framework by Koldo. See License.txt file
 
-#include <MapiUtil.h>
 #include "MAPIEx.h"
-String Tokenize(const String &str, const String &token, int &pos);
+#include "MapiUtil.h"
+
+#include <Functions4U/Functions4U.h>
+
 
 #define CATEGORIES_PROPERTY "Keywords"
 
@@ -659,14 +663,14 @@ bool MAPIContact::SetCategories(const String &szCategories) {
 		nCount = 0;
 		nIndex = 0;
 		int nLen = 0;
-		strCategory=Tokenize(strCategories, ";", nIndex);		
+		strCategory = Tokenize(strCategories, ";", nIndex);		
 		do {
 			nLen = strCategory.GetLength();
 			if(nLen > 0) {
 				arCategories[nCount] = new TCHAR[nLen+1];
 				memcpy(arCategories[nCount], (LPCTSTR)strCategory, nLen*sizeof(TCHAR));
 				arCategories[nCount++][nLen] = (TCHAR)0;
-				strCategory=Tokenize(strCategories, ";", nIndex);		
+				strCategory = Tokenize(strCategories, ";", nIndex);		
 			}
 		} while(nLen);
 
@@ -711,3 +715,5 @@ bool MAPIContact::SetPicture(const String &szPath) {
 	return bPicture;
 #endif
 }
+
+#endif

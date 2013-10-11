@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // File: MAPIAttachment.cpp
@@ -197,3 +199,5 @@ bool MAPIAttachment::SaveAttachment(const String &szPath) {
 	} while(ulRead >= BUF_SIZE);
 	return SaveFile(szPath, file);
 }
+
+#endif

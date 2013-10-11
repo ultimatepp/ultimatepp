@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // File: MAPIObject.cpp
@@ -14,8 +16,9 @@
 
 // Ported to U++ Framework by Koldo. See License.txt file
 
-#include <MapiUtil.h>
 #include "MAPIEx.h"
+#include "MapiUtil.h"
+#include <winnls.h>
 
 /////////////////////////////////////////////////////////////
 // MAPIObject
@@ -741,3 +744,5 @@ bool MAPIObject::SetLastModified(const Time &tm) {
 	SystemTimeToFileTime(&st, &prop.Value.ft);
 	return (m_pItem && m_pItem->SetProps(1, &prop, NULL) == S_OK);
 }
+
+#endif

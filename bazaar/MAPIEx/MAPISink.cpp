@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // File: MAPISink.cpp
@@ -52,3 +54,4 @@ ULONG MAPISink::OnNotify(ULONG cNotification, LPNOTIFICATION lpNotifications) {
 	return 0;
 }
 
+#endif
