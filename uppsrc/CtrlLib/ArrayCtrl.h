@@ -317,6 +317,10 @@ private:
 
 	using Ctrl::IsModified;
 
+	// These are listed here as private because name has changed to SetMap/AddMap
+	void       Set(int i, const ValueMap& m);
+	void       Add(const ValueMap& m);
+
 public: // temporary (TRC 06/07/28) // will be removed!
 	Ctrl&  SetCtrl(int i, int j, Ctrl *newctrl) { return SetCtrl(i, j, newctrl, true, true); }
 
@@ -438,7 +442,6 @@ public:
 
 	void       Set(int i, const Vector<Value>& v);
 	void       Set(int i, const VectorMap<String, Value>& m);
-	void       Set(int i, const ValueMap& m);
 
 	void       Add();
 
@@ -451,7 +454,9 @@ public:
 	void       Add(const Vector<Value>& v);
 	void       Add(const Nuller& null)                          { Add((Value)Null); }
 	void       Add(const VectorMap<String, Value>& m);
-	void       Add(const ValueMap& m);
+
+	void       SetMap(int i, const ValueMap& m);
+	void       AddMap(const ValueMap& m);
 
 	void       SetArray(int i, const ValueArray& va);
 	void       AddArray(const ValueArray& va);
