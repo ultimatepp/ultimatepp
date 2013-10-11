@@ -1920,6 +1920,16 @@ void ArrayCtrl::Add(const ValueMap& m)
 	Set(array.GetCount(), m);
 }
 
+void ArrayCtrl::SetArray(int i, const ValueArray& va)
+{
+	Set(i, va.Get());
+}
+
+void ArrayCtrl::AddArray(const ValueArray& va)
+{
+	SetArray(array.GetCount(), va);
+}
+
 struct ArrayCtrlSeparatorDisplay : Display {
 	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const {
 		int y = r.top + r.GetHeight() / 2;

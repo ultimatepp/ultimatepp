@@ -223,6 +223,8 @@ public:
 	enum {
 		COMMA_L = 1,
 		COMMA_R = 2,
+		SHIFT_L = 4,
+		SHIFT_R = 8,
 	};
 
 	struct Highlight : Moveable<Highlight> {
