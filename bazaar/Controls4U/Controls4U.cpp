@@ -345,6 +345,14 @@ void StaticImage::Layout() {
 	}
 } 
 
+StaticImage& StaticImage::SetPopUpSize(Size sz) {
+	if (!IsNull(sz))
+		szPopUp = sz;	
+	else
+		szPopUp = origImage.GetSize();
+	return *this;
+}
+
 void StaticImage::Paint(Draw& w) {
 	Size sz = GetSize();
 

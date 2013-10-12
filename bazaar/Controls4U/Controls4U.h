@@ -145,7 +145,7 @@ public:
 	StaticImage& SetBackground(Color c) 		{background = c; 	  Refresh(); return *this;}
 	StaticImage& UseAsBackground(bool b = true)	{useAsBackground = b; Refresh(); return *this;}
 	StaticImage& SetPopUp(bool pop = true)		{isPopUp = pop;	return *this;}
-	StaticImage& SetPopUpSize(Size sz)			{szPopUp = sz;	return *this;}
+	StaticImage& SetPopUpSize(Size sz);
 	StaticImage();
 	
 	Callback WhenLeftDouble;
