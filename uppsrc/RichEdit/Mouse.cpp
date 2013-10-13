@@ -140,7 +140,7 @@ void RichEdit::MouseMove(Point p, dword flags)
 			RichTable::Format fmt = text.GetTableFormat(tabmove.table);
 			if(tabmove.column >= fmt.column.GetCount() - 1)
 				return;
-			int sum = Sum0(fmt.column);
+			int sum = Sum(fmt.column);
 			int nl = 0;
 			for(int i = 0; i < tabmove.column; i++)
 				nl += fmt.column[i];

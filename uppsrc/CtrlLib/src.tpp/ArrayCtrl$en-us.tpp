@@ -1984,13 +1984,6 @@ that are not found are ignored, those found are assigned correspoding
 map values.&]
 [s3; &]
 [s4;%- &]
-[s5;:ArrayCtrl`:`:Set`(int`,const ValueMap`&`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) int
-]_[*@3 i], [@(0.0.255) const]_[_^ValueMap^ ValueMap][@(0.0.255) `&]_[*@3 m])&]
-[s2; Sets the row based on map. Keys are matched to row Ids, keys 
-that are not found are ignored, those found are assigned correspoding 
-map values.&]
-[s3; &]
-[s4;%- &]
 [s5;:ArrayCtrl`:`:Add`(const VectorMap`<String`,Value`>`&`):%- [@(0.0.255) void]_[* Add](
 [@(0.0.255) const]_[_^VectorMap^ VectorMap]<[_^String^ String], [_^Value^ Value]>`&_[*@3 m])
 &]
@@ -1999,8 +1992,15 @@ that are not found are ignored, those found are assigned correspoding
 map values.&]
 [s3; &]
 [s4;%- &]
-[s5;:ArrayCtrl`:`:Add`(const ValueMap`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[_^ValueMap^ V
-alueMap][@(0.0.255) `&]_[*@3 m])&]
+[s5;:ArrayCtrl`:`:SetMap`(int`,const ValueMap`&`):%- [@(0.0.255) void]_[* SetMap]([@(0.0.255) i
+nt]_[*@3 i], [@(0.0.255) const]_[_^ValueMap^ ValueMap][@(0.0.255) `&]_[*@3 m])&]
+[s2; Sets the row based on map. Keys are matched to row Ids, keys 
+that are not found are ignored, those found are assigned correspoding 
+map values.&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:AddMap`(const ValueMap`&`):%- [@(0.0.255) void]_[* AddMap]([@(0.0.255) co
+nst]_[_^ValueMap^ ValueMap][@(0.0.255) `&]_[*@3 m])&]
 [s2; Adds the row based on map. Keys are matched to row Ids, keys 
 that are not found are ignored, those found are assigned correspoding 
 map values.&]

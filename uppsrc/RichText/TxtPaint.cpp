@@ -32,7 +32,7 @@ void RichTxt::Sync0(const Para& pp, int parti, const RichContext& rc) const
 	pp.linecy.SetCount(pl.GetCount());
 	for(int i = 0; i < pl.GetCount(); i++)
 		pp.linecy[i] = pl[i].Sum();
-	pp.cy = Sum0(pp.linecy);
+	pp.cy = Sum(pp.linecy);
 	pp.after = p.format.after;
 	pp.newpage = p.format.newpage;
 	pp.keep = p.format.keep;

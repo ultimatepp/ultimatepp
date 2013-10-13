@@ -134,7 +134,7 @@ void RichTable::Normalize()
 		}
 		else
 			j++;
-	int sum = Sum0(format.column);
+	int sum = Sum(format.column);
 	if(sum != 10000) {
 		r_row = -1;
 		if(format.column.GetCount()) {
