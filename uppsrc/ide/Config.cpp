@@ -165,7 +165,7 @@ void Ide::Serialize(Stream& s)
 	s % hilite_if_endif;
 	s % hilite_bracket;
 	s % hilite_ifdef;
-	if(version >= 2)
+	if(version >= 3)
 		s % thousands_separator;
 	s % barline;
 	s % qtfsel;

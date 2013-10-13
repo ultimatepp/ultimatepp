@@ -721,7 +721,7 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 				hls.Put(hl_style[c],
 				        c == INK_CONST_OCT || (fixdigits < 4 && n - fixdigits < 5) || i == fixdigits || !thousands_separator ? 0 :
 				        i < fixdigits ? decode((fixdigits - i) % 3, 1, LineEdit::SHIFT_L, 0, LineEdit::SHIFT_R, 0) :
-				                        decode((i + 1) % 3, 1, LineEdit::SHIFT_R, 0, LineEdit::SHIFT_L, 0));
+				                        decode((i - fixdigits) % 3, 1, LineEdit::SHIFT_R, 0, LineEdit::SHIFT_L, 0));
 
 //				hls.Put(q > 0 && ((q / 3) & 1) == 1 && c != INK_CONST_OCT ?
 //				        hl_style[c == INK_CONST_INT ? INK_CONST_INT_3 : INK_CONST_FLOAT_3]
