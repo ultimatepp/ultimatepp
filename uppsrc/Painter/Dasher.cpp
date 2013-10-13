@@ -40,7 +40,7 @@ void Dasher::Line(const Pointf& p)
 void Dasher::Init(const Vector<double>& p, double distance)
 {
 	pattern = &p;
-	sum = Sum0(p);
+	sum = Sum(p);
 	if(sum == 0)
 		return;
 	distance -= int(distance / sum) * sum;

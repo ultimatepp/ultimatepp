@@ -498,7 +498,7 @@ String   AsQTF(const RichText& text, byte charset, dword options)
 				RichPara p = text.Get(i);
 				lngc.GetAdd(p.format.language, 0)++;
 			}
-		dword lang = lngc.GetCount() ? lngc.GetKey(MaxIndex(lngc.GetValues())) : 0;
+		dword lang = lngc.GetCount() ? lngc.GetKey(FindMax(lngc.GetValues())) : 0;
 		qtf << "[";
 		if(!(options & QTF_NOCHARSET)) {
 			qtf << "{";

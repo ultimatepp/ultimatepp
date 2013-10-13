@@ -1,3 +1,20 @@
+template<class T>
+struct StdEqual
+{
+	bool operator () (const T& a, const T& b) const { return a == b; }
+};
+
+template<class T>
+struct StdLess {
+	bool operator () (const T& a, const T& b) const { return a < b; }
+};
+
+template<class T>
+struct StdGreater
+{
+	bool operator () (const T& a, const T& b) const { return a > b; }
+};
+
 template <class T>
 inline int sgn(T a) { return a > 0 ? 1 : a < 0 ? -1 : 0; }
 
@@ -31,40 +48,28 @@ void Sum(V& sum, T ptr, T end)
 }
 
 template <class T>
-typename T::ValueType Sum(const T& c, const typename T::ValueType& init = typename T::ValueType())
+typename T::ValueType Sum(const T& c, const typename T::ValueType& zero)
 {
-	typename T::ValueType sum = init;
+	typename T::ValueType sum = zero;
 	Sum(sum, c.Begin(), c.End());
 	return sum;
 }
 
 template <class T>
-typename T::ValueType Sum0(const T& c)
+typename T::ValueType Sum(const T& c)
 {
-	typename T::ValueType sum = 0;
-	Sum(sum, c.Begin(), c.End());
-	return sum;
+	return Sum(c, 0);
 }
 
-template <class T>
-T MinElement(T ptr, T end)
+template <class C, class Pred>
+int FindBest(const C& c, int pos, int count, const Pred& pred)
 {
-	ASSERT(ptr != end);
-	T min = ptr;
-	while(++ptr != end)
-		if(*ptr < *min) min = ptr;
-	return min;
-}
-
-template <class C>
-int MinIndex(const C& c)
-{
-	if(c.GetCount() == 0)
+	if(count == 0)
 		return -1;
-	typename C::ValueType m = c[0];
-	int mi = 0;
+	typename C::ValueType m = c[pos];
+	int mi = pos;
 	for(int i = 1; i < c.GetCount(); i++)
-		if(c[i] < m) {
+		if(pred(c[i], m)) {
 			m = c[i];
 			mi = i;
 		}
@@ -72,81 +77,54 @@ int MinIndex(const C& c)
 }
 
 template <class C>
-int MaxIndex(const C& c)
+int FindMin(const C& c, int pos, int count)
 {
-	if(c.GetCount() == 0)
-		return -1;
-	typename C::ValueType m = c[0];
-	int mi = 0;
-	for(int i = 1; i < c.GetCount(); i++)
-		if(c[i] > m) {
-			m = c[i];
-			mi = i;
-		}
-	return mi;
+	return FindBest(c, pos, count, StdLess<C::ValueType>());
 }
 
-template <class T>
-const typename T::ValueType& Min(const T& c)
+template <class C>
+int FindMin(const C& c)
 {
-	return *MinElement(c.Begin(), c.End());
+	return FindMin(c, 0, c.GetCount());
 }
 
-template <class T>
-T MaxElement(T ptr, T end)
+template <class C>
+int Min(const C& c)
 {
-	ASSERT(ptr != end);
-	T max = ptr;
-	while(++ptr != end)
-		if(*max < *ptr) max = ptr;
-	return max;
+	return c[FindMin(c)];
 }
 
-template <class T>
-const typename T::ValueType& Max(const T& c)
+template <class C>
+int Min(const C& c, const typename C::ValueType& def)
 {
-	return *MaxElement(c.Begin(), c.End());
+	int q = FindMax(c);
+	return q < 0 ? def : c[q];
 }
 
-template<class T>
-struct StdEqual
+template <class C>
+int FindMax(const C& c, int pos, int count)
 {
-	bool operator () (const T& a, const T& b) const { return a == b; }
-};
-
-template<class T>
-struct StdLess {
-	bool operator () (const T& a, const T& b) const { return a < b; }
-};
-
-template<class T>
-struct StdGreater
-{
-	bool operator () (const T& a, const T& b) const { return a > b; }
-};
-
-/*
-template <class T, class C>
-bool Compare(T ptr1, T end1, T ptr2, T end2, const C& compare)
-{
-	for(; ptr1 != end1 && ptr2 != end2; ++ptr1, ++ptr2)
-		if(!compare(*ptr1, *ptr2)) return false;
-	return ptr1 == end1 && ptr2 == end2;
+	return FindBest(c, pos, count, StdGreater<C::ValueType>());
 }
 
-template <class T, class C>
-bool Compare(const T& c1, const T& c2, const C& compare)
+template <class C>
+int FindMax(const C& c)
 {
-	return Compare(c1.Begin(), c1.End(), c2.Begin(), c2.End(), compare);
+	return FindMax(c, 0, c.GetCount());
 }
 
-template <class T>
-bool Compare(const T& c1, const T& c2)
+template <class C>
+int Max(const C& c)
 {
-	typedef typename T::ValueType VT;
-	return Compare(c1, c2, StdEqual<VT>());
+	return c[FindMax(c)];
 }
-*/
+
+template <class C>
+int Max(const C& c, const typename C::ValueType& def)
+{
+	int q = FindMax(c);
+	return q < 0 ? def : c[q];
+}
 
 template <class T, class C>
 bool IsEqual(T ptr1, T end1, T ptr2, T end2, const C& equal)
@@ -1622,3 +1600,16 @@ void StableSortByValue(Map& map)
 {
 	StableSortByValue(map, StdLess<typename Map::ValueType>());
 }
+
+/*
+// OLD DEPRECATED NAMES:
+template <class C> // Deprecated
+int MinIndex(const C& c) { return FindMin(c); }
+
+template <class C> // Deprecated
+int MaxIndex(const C& c) { return FindMax(c); }
+
+template <class C> // Deprecated
+typename C::ValueType Sum0(const C& c) { return Sum(c); }
+
+*/
