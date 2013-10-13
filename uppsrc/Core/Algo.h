@@ -79,7 +79,7 @@ int FindBest(const C& c, int pos, int count, const Pred& pred)
 template <class C>
 int FindMin(const C& c, int pos, int count)
 {
-	return FindBest(c, pos, count, StdLess<C::ValueType>());
+	return FindBest(c, pos, count, StdLess<typename C::ValueType>());
 }
 
 template <class C>
@@ -104,7 +104,7 @@ int Min(const C& c, const typename C::ValueType& def)
 template <class C>
 int FindMax(const C& c, int pos, int count)
 {
-	return FindBest(c, pos, count, StdGreater<C::ValueType>());
+	return FindBest(c, pos, count, StdGreater<typename C::ValueType>());
 }
 
 template <class C>
