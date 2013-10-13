@@ -1,0 +1,11 @@
+description "Basic function templates (min/max/sum/findarg/decode)\377";
+
+uses
+	Core;
+
+file
+	BasicAlgo.cpp;
+
+mainconfig
+	"" = "SSE2";
+
