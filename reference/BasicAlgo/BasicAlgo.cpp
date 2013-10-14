@@ -9,8 +9,8 @@ CONSOLE_APP_MAIN{
 	DUMP(sgn(0));
 	DUMP(sgn(-7));
 	
-	DDUMP(min(6, 2, 7, 4));
-	DDUMP(max(6, 2, 7, 4));
+	DUMP(min(6, 2, 7, 4));
+	DUMP(max(6, 2, 7, 4));
 	
 	DUMP(findarg(3, 1, 7, 6, 3, 2));
 	DUMP(findarg(5, 1, 7, 6));
@@ -20,9 +20,10 @@ CONSOLE_APP_MAIN{
 
 	Vector<int> data, empty;
 	data << 10 << 5 << 11 << 9 << 2;
+	//       0    1    2     3    4
 
-	DUMP(FindMin(data, 0, data.GetCount() - 1));
 	DUMP(FindMin(data));
+	DUMP(FindMin(data, 0, 4));
 	DUMP(Min(data));
 //	DUMP(Min(empty)); // This is undefined (fails in ASSERT)
 	DUMP(Min(empty, -99999));
@@ -33,10 +34,9 @@ CONSOLE_APP_MAIN{
 	DUMP(Max(data));
 //	DUMP(Max(empty)); // This is undefined (fails in ASSERT)
 	DUMP(Max(empty, 99999));
-	
-	Vector<String> s = Split("one;two;three", ';');
-	DUMP(Sum(s, ""));
 
 	DUMP(Sum(data));
 	
+	Vector<String> s = Split("one;two;three", ';');
+	DUMP(Sum(s, ""));
 }
