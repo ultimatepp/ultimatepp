@@ -6,7 +6,7 @@
 #include "plugin\gif/init"
 #include "PdfDraw/init"
 #include "DocTypes/init"
-#define BLITZ_INDEX__ F93CC30092DE132AD1876E89F7DE8ED06
+#define BLITZ_INDEX__ F129aade12840874565c94814972fbf43
 #include "TCtrlLib_init.icpp"
 #undef BLITZ_INDEX__
 #endif
