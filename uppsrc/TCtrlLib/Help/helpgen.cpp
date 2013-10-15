@@ -65,8 +65,8 @@ static void sEnumObjects(String& qtf)
 	}
 	qtf << NFormat("[A [a100 %d typ(y) objektù:&\n]", scanner.map.GetCount());
 	for(i = 0; i < scanner.map.GetCount(); i++) {
-		int total = Sum0(scanner.map[i]);
-		qtf << NFormat("[* \1%s\1] - [/ %d výskytù]&\n", scanner.map.GetKey(i), Sum0(scanner.map[i]));
+		int total = Sum(scanner.map[i]);
+		qtf << NFormat("[* \1%s\1] - [/ %d výskytù]&\n", scanner.map.GetKey(i), Sum(scanner.map[i]));
 	}
 	for(i = 0; i < scanner.map.GetCount(); i++) {
 		qtf << NFormat("[3*_b200a100 \1%s\1]&\n", scanner.map.GetKey(i));
@@ -114,8 +114,8 @@ static void sEnumStyles(String& qtf)
 	}
 	qtf << NFormat(t_("[A [a100 %d used styles:&\n]"), style_map.GetCount());
 	for(i = 0; i < style_map.GetCount(); i++) {
-		int total = Sum0(style_map[i]);
-		qtf << NFormat(t_("[* \1%s\1] - [/ %d occurrences]&\n"), style_map.GetKey(i), Sum0(style_map[i]));
+		int total = Sum(style_map[i]);
+		qtf << NFormat(t_("[* \1%s\1] - [/ %d occurrences]&\n"), style_map.GetKey(i), Sum(style_map[i]));
 	}
 	for(i = 0; i < style_map.GetCount(); i++) {
 		qtf << NFormat(t_("[3*_b200a100 \1%s\1]&\n"), style_map.GetKey(i));
