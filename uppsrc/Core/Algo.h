@@ -97,7 +97,7 @@ int Min(const C& c)
 template <class C>
 int Min(const C& c, const typename C::ValueType& def)
 {
-	int q = FindMax(c);
+	int q = FindMin(c);
 	return q < 0 ? def : c[q];
 }
 
@@ -1601,6 +1601,34 @@ void StableSortByValue(Map& map)
 	StableSortByValue(map, StdLess<typename Map::ValueType>());
 }
 
+
+template <class Index, class Less>
+void SortIndex(Index& index, const Less& less)
+{
+	typename Index::ValueContainer k = index.PickKeys();
+	Sort(k, less);
+	index = Index(k);
+}
+
+template <class Index>
+void SortIndex(Index& index)
+{
+	SortIndex(index, StdLess<Index::ValueType>());
+}
+
+template <class Index, class Less>
+void StableSortIndex(Index& index, const Less& less)
+{
+	typename Index::ValueContainer k = index.PickKeys();
+	StableSort(k, less);
+	index = Index(k);
+}
+
+template <class Index>
+void StableSortIndex(Index& index)
+{
+	StableSortIndex(index, StdLess<Index::ValueType>());
+}
 /*
 // OLD DEPRECATED NAMES:
 template <class C> // Deprecated

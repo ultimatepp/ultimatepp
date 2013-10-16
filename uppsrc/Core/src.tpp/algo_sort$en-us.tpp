@@ -209,4 +209,27 @@ that supports required interfaces) [%-*@3 map] by values, using
 operator< as sorting predicate. Stable: retains the order of equal 
 elements.&]
 [s3;%% &]
-[s0;%% ]]
+[s4; &]
+[s5;:SortIndex`(Index`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Ind
+ex], [@(0.0.255) class]_[*@4 Less]>_[@(0.0.255) void]_[* SortIndex]([*@4 Index][@(0.0.255) `&
+]_[*@3 index], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
+[s2;%% Sorts Index or ArrayIndex using [%-*@3 less] as sorting predicate.&]
+[s3;%% &]
+[s4; &]
+[s5;:SortIndex`(Index`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Index]>_[@(0.0.255) v
+oid]_[* SortIndex]([*@4 Index][@(0.0.255) `&]_[*@3 index])&]
+[s2;%% Sorts Index or ArrayIndex.&]
+[s3;%% &]
+[s4; &]
+[s5;:StableSortIndex`(Index`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) class]_
+[*@4 Index], [@(0.0.255) class]_[*@4 Less]>_[@(0.0.255) void]_[* StableSortIndex]([*@4 Index][@(0.0.255) `&
+]_[*@3 index], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
+[s2;%% Sorts Index or ArrayIndex using [%-*@3 less] as sorting predicate. 
+Stable: retains the order of equal elements.&]
+[s3;%% &]
+[s4; &]
+[s5;:StableSortIndex`(Index`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Index]>_[@(0.0.255) v
+oid]_[* StableSortIndex]([*@4 Index][@(0.0.255) `&]_[*@3 index])&]
+[s2;%% Sorts Index or ArrayIndex.  Stable: retains the order of equal 
+elements.&]
+[s3;%% ]]

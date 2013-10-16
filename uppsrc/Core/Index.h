@@ -177,6 +177,7 @@ public:
 
 // Standard container interface
 	typedef T                ValueType;
+	typedef V                ValueContainer;
 	typedef typename V::ConstIterator ConstIterator;
 	ConstIterator  Begin() const                          { return key.Begin(); }
 	ConstIterator  End() const                            { return key.End(); }
