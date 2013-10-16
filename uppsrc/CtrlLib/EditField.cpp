@@ -363,7 +363,8 @@ void EditField::Paint(Draw& w)
 	}
 	if(!ar)
 		w.DrawRect(x, 0, sz.cx - x, fcy, paper);
-	w.End();
+	if(!no_internal_margin)
+		w.End();
 	DrawTiles(w, dropcaret, CtrlImg::checkers());
 }
 
@@ -391,7 +392,8 @@ bool EditField::IsSelection() const
 
 Rect EditField::GetCaretRect(int pos) const
 {
-	return RectC(GetCaret(pos) - sc + 2 - font.GetRightSpace('o') + font.GetLeftSpace('o'), GetTy(),
+	return RectC(GetCaret(pos) - sc + 2 * !no_internal_margin
+	               - font.GetRightSpace('o') + font.GetLeftSpace('o'), GetTy(),
 	             1, min(GetSize().cy - 2 * GetTy(), font.GetCy()));
 }
 
