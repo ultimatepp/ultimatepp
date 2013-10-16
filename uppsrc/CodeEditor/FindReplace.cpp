@@ -409,6 +409,7 @@ int CodeEditor::BlockReplace(WString find, WString replace, bool wholeword, bool
 		Remove(foundpos, foundsize);
 		WString rt = GetReplaceText(replace, wildcards, ignorecase && samecase);
 		Insert(foundpos, rt);
+		foundpos += rt.GetCount();
 		h = h - foundsize + rt.GetCount();
 		count++;
 	}
