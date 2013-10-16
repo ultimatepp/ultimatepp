@@ -5,5 +5,9 @@ uses
 file
 	GLDraw.h,
 	GLDraw.cpp,
-	src.tpp;
+	GLEW readonly separator,
+	glew.c,
+	glew.h,
+	glxew.h,
+	wglew.h;
 

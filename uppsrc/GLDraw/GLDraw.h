@@ -2,6 +2,13 @@
 #define _GlDraw_GlDraw_h_
 
 #include <Draw/Draw.h>
+
+#include "glew.h"
+
+#ifdef flagWINGL
+#include "wglew.h"
+#endif
+
 #include <GL/gl.h>
 
 namespace Upp {
