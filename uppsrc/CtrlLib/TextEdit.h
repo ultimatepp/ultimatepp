@@ -220,7 +220,7 @@ protected:
 	virtual void  PlaceCaret(int newcursor, bool sel = false);
 
 public:
-	enum {
+	enum Flags {
 		SHIFT_L = 1,
 		SHIFT_R = 2,
 	};
