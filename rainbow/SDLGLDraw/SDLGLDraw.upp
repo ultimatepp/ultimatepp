@@ -1,0 +1,14 @@
+uses
+	CtrlLib,
+	SDL20GL,
+	plugin/DroidFonts;
+
+file
+	SDLGLDraw.h,
+	GLutil.cpp,
+	main.cpp,
+	SDLGLDraw.lay;
+
+mainconfig
+	"" = "GUI SSE2 SDL20GL";
+
