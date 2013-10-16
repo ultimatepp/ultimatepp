@@ -1613,7 +1613,7 @@ void SortIndex(Index& index, const Less& less)
 template <class Index>
 void SortIndex(Index& index)
 {
-	SortIndex(index, StdLess<Index::ValueType>());
+	SortIndex(index, StdLess<typename Index::ValueType>());
 }
 
 template <class Index, class Less>
@@ -1627,9 +1627,9 @@ void StableSortIndex(Index& index, const Less& less)
 template <class Index>
 void StableSortIndex(Index& index)
 {
-	StableSortIndex(index, StdLess<Index::ValueType>());
+	StableSortIndex(index, StdLess<typename Index::ValueType>());
 }
-/*
+
 // OLD DEPRECATED NAMES:
 template <class C> // Deprecated
 int MinIndex(const C& c) { return FindMin(c); }
@@ -1639,5 +1639,3 @@ int MaxIndex(const C& c) { return FindMax(c); }
 
 template <class C> // Deprecated
 typename C::ValueType Sum0(const C& c) { return Sum(c); }
-
-*/
