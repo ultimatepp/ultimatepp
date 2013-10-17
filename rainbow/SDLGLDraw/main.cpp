@@ -126,7 +126,7 @@ void initializeGL()
 		"void main() \n"
 		"{ \n"
 		" gl_Position = u_projection * a_position; \n"
-		" v_color = a_color; \n"
+		" v_color = a_color * vec4((1.0 / 255.0), (1.0 / 255.0), (1.0 / 255.0), 1); \n"
 		"}",
 
 		"#ifdef GL_ES\n"
@@ -179,10 +179,17 @@ void GLRect(Size sz, const Rect& rect, const Color& color)
 	    rect.right, rect.bottom,
 	    rect.right, rect.top,
 	};
-	float r = color.GetR() / 255.0;
-	float g = color.GetG() / 255.0;
-	float b = color.GetB() / 255.0;
-	float colors[] = {
+
+//	float h = 128.0;	
+//	GLfloat r = color.GetR() / h;
+//	GLfloat g = color.GetG() / h;
+//	GLfloat b = color.GetB() / h;
+
+	GLint r = color.GetR();
+	GLint g = color.GetG();
+	GLint b = color.GetB();
+
+	GLfloat colors[] = {
 		r, g, b,
 		r, g, b,
 		r, g, b,
@@ -191,7 +198,7 @@ void GLRect(Size sz, const Rect& rect, const Color& color)
 	GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
 
 	glVertexAttribPointer(m_posLoc2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), vertexCoords );
-	glVertexAttribPointer(m_colorLoc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), colors );
+	glVertexAttribPointer(m_colorLoc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLint), colors);
  
 	glEnableVertexAttribArray(m_posLoc2);
 	glEnableVertexAttribArray(m_colorLoc);
@@ -252,7 +259,7 @@ void paintGL(Size sz)
 
 	for(int i = 0; i < 10; i++)
 		for(int j = 0; j < 10; j++)
-			GLRect(sz, RectC(i * 16, j * 16, 12, 12), LtRed());
+			GLRect(sz, RectC(i * 16, j * 16, 12, 12), decode(i, 0, LtBlue(), 1, White(), LtRed()));
  // CheckError();
 }
 
