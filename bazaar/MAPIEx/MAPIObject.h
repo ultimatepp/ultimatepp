@@ -31,8 +31,8 @@ public:
 
 // Attributes
 protected:
-	MAPIEx* m_pMAPI;
-	IMAPIProp* m_pItem;
+	MAPIEx *m_pMAPI;
+	IMAPIProp *m_pItem;
 	SBinary m_entryID;
 
 // Operations

@@ -36,11 +36,20 @@ removed. They have been substituted by String.]&]
 [s0;i150;O0; [^topic`:`/`/MAPIEx`/src`/MAPIAttachment`$en`-us^2 MAPIAttachment]&]
 [s0;i150;O0; [^topic`:`/`/MAPIEx`/src`/MAPIContact`$en`-us^2 MAPIContact]&]
 [s0;2 &]
+[s0; [2 There is a ][^topic`:`/`/MAPIEx`/srcdoc`/ChangesLog`$en`-us^2 News 
+and changes log][2 , ][^topic`:`/`/MAPIEx`/srcdoc`/License`$en`-us^2 License][2  
+and a ][^topic`:`/`/MAPIEx`/srcdoc`/ToDo`$en`-us^2 ToDo list][2 .]&]
 [s0;2 &]
+[s0;2 &]
+[s0; [*+92 Compiler support and Requirements]&]
+[s0;*+92 &]
 [s0; [2 As MAPIEx uses internal Microsoft infrastructure, it can only 
 work in Windows.]&]
 [s0;2 &]
-[s0; [2 There is also a ][^topic`:`/`/MAPIEx`/srcdoc`/ChangesLog`$en`-us^2 News 
-and changes log][2 , ][^topic`:`/`/MAPIEx`/srcdoc`/License`$en`-us^2 License][2  
-and a ][^topic`:`/`/MAPIEx`/srcdoc`/ToDo`$en`-us^2 ToDo list][2 .]&]
-[s0;2 ]
+[s0; [2 MAPIEx has been tested with MSC 32 bits.]&]
+[s0;2 &]
+[s0; [2 To compile using MinGW32 in Windows it is required to copy 
+the files in MAPIEx/include`_MINGW32 to MINGW32`\include.]&]
+[s0;*+92 &]
+[s0;2 &]
+[s0;2 ]]

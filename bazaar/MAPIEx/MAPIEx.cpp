@@ -17,7 +17,7 @@
 // Ported to U++ Framework by Koldo. See License.txt file
 
 #include "MAPIEx.h"
-#include "MapiUtil.h"
+//#include "MapiUtil.h"
 #include "MAPISink.h"
 
 #ifdef _WIN32_WCE
@@ -25,13 +25,14 @@
 #pragma comment(lib,"cemapi.lib")
 #pragma comment(lib,"pimstore.lib")
 
-#else
-#pragma comment (lib,"mapi32.lib")
+//#else
+//#pragma comment (lib, "mapi32.lib")
 #endif
-#pragma comment(lib,"Ole32.lib")
+//#pragma comment(lib,"Ole32.lib")
 
 INITBLOCK {
-	MAPIEx::Init();
+	if (!MAPIEx::Init())
+		Panic("Impossible to initialize MAPI");
 }
 	
 EXITBLOCK {

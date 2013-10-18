@@ -4,7 +4,7 @@ uses
 	Core,
 	Functions4U;
 
-library(GCC WIN32) "mapi32 kernel32";
+library(WIN32) mapi32;
 
 file
 	MAPIAppointment.cpp,

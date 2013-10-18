@@ -17,7 +17,7 @@
 // Ported to U++ Framework by Koldo. See License.txt file
 
 #include "MAPIEx.h"
-#include "MapiUtil.h"
+//#include "MapiUtil.h"
 #include <imessage.h>
 
 const GUID CLSID_MailMessage={ 0x00020D0B, 0x0000, 0x0000, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46 };

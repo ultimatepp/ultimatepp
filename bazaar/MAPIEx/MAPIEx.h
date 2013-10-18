@@ -4,8 +4,8 @@
 #include <Core/Core.h>
 
 using namespace Upp;
-#undef CY
-#define CY tagCY
+//#undef CY
+//#define CY tagCY
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,11 +28,29 @@ using namespace Upp;
 #include <cemapi.h>
 #include <objidl.h>
 #else
+#undef __MINGW_EXTENSION
+	#if defined(__GNUC__) || defined(__GNUG__)
+		#define __MINGW_EXTENSION       __extension__
+	#else
+		#define __MINGW_EXTENSION
+	#endif
+	#define _FILETIME_
+	#define _tagCY_DEFINED
+	#define CY tagCY
+	#ifndef __LP64__        /* 32 bit target, 64 bit Mingw target */ 
+		#define __LONG32 long 
+	#else                   /* 64 bit Cygwin target */ 
+		#define __LONG32 int 
+	#endif 
+	#ifndef __C89_NAMELESS 
+		#define __C89_NAMELESS __MINGW_EXTENSION 
+	#endif 
 #include <mapix.h>
+#include <wabutil.h>
 #include <objbase.h>
 #endif
 
-#define RELEASE(s) if(s!=NULL) { s->Release();s=NULL; }
+#define RELEASE(s) if(s != NULL) {s->Release(); s=NULL;}
 
 #define MAPI_NO_CACHE ((ULONG)0x00000200)
 

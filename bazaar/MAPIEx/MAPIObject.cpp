@@ -17,7 +17,7 @@
 // Ported to U++ Framework by Koldo. See License.txt file
 
 #include "MAPIEx.h"
-#include "MapiUtil.h"
+//#include "MapiUtil.h"
 #include <winnls.h>
 
 /////////////////////////////////////////////////////////////
@@ -630,7 +630,7 @@ bool MAPIObject::SetHTML(const String &strHTML) {
 	} else {
 		// otherwise lets encode it into RTF 
 		const char *szCodePage = "1252"; // default codepage is ANSI - Latin I
-		GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_IDEFAULTANSICODEPAGE, (CHAR*)szCodePage, strlen(szCodePage));
+		GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_IDEFAULTANSICODEPAGE, (CHAR*)szCodePage, (int)strlen(szCodePage));
 
 		String strRTF;
 		strRTF = Format("{\\rtf1\\ansi\\ansicpg%s\\fromhtml1 {\\*\\htmltag1 ", szCodePage);

@@ -17,7 +17,7 @@
 // Ported to U++ Framework by Koldo. See License.txt file
 
 #include "MAPIEx.h"
-#include "MapiUtil.h"
+//#include "MapiUtil.h"
 
 #include <Functions4U/Functions4U.h>
 
