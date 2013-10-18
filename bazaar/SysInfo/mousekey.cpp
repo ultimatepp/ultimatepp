@@ -352,8 +352,8 @@ void PressKey(wchar key, _XDisplay *dpy = NULL) {
  	bool shift = false;
 	KeyCode code = XKeysymToKeycode(dpy, key);
 	if (code != 0) { 
-		if (XKeycodeToKeysym(dpy, code, 0) != key) {
-			if (XKeycodeToKeysym(dpy, code, 1) == key) 
+		if (XkbKeycodeToKeysym(dpy, code, 0, 0) != key) {
+			if (XkbKeycodeToKeysym(dpy, code, 1, 0) == key) 
 				shift = true;
 			else
 				code = 0;
@@ -369,8 +369,8 @@ void PressKey(wchar key, _XDisplay *dpy = NULL) {
       	XChangeKeyboardMapping(dpy, firstKeycode, keysymsPerKeycode, keysyms, maxKeycode-firstKeycode);
       	XSync(dpy, False);
       	code = maxKeycode-1;
-      	if (XKeycodeToKeysym(dpy, code, 0) != key) {
-			if (XKeycodeToKeysym(dpy, code, 1) == key) 
+      	if (XkbKeycodeToKeysym(dpy, code, 0, 0) != key) {
+			if (XkbKeycodeToKeysym(dpy, code, 1, 0) == key) 
 				shift = true;
 		}
     }

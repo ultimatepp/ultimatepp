@@ -4,35 +4,89 @@ NAMESPACE_UPP
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
-#if !defined(PRODUCT_ULTIMATE)
-#define PRODUCT_UNDEFINED                       0x00000000
-#define PRODUCT_ULTIMATE                        0x00000001
-#define PRODUCT_HOME_BASIC                      0x00000002
-#define PRODUCT_HOME_PREMIUM                    0x00000003
-#define PRODUCT_ENTERPRISE                      0x00000004
-#define PRODUCT_HOME_BASIC_N                    0x00000005
-#define PRODUCT_BUSINESS                        0x00000006
-#define PRODUCT_STANDARD_SERVER                 0x00000007
-#define PRODUCT_DATACENTER_SERVER               0x00000008
-#define PRODUCT_SMALLBUSINESS_SERVER            0x00000009
-#define PRODUCT_ENTERPRISE_SERVER               0x0000000A
-#define PRODUCT_STARTER                         0x0000000B
-#define PRODUCT_DATACENTER_SERVER_CORE          0x0000000C
-#define PRODUCT_STANDARD_SERVER_CORE            0x0000000D
-#define PRODUCT_ENTERPRISE_SERVER_CORE          0x0000000E
-#define PRODUCT_ENTERPRISE_SERVER_IA64          0x0000000F
-#define PRODUCT_BUSINESS_N                      0x00000010
-#define PRODUCT_WEB_SERVER                      0x00000011
-#define PRODUCT_CLUSTER_SERVER                  0x00000012
-#define PRODUCT_HOME_SERVER                     0x00000013
-#define PRODUCT_STORAGE_EXPRESS_SERVER          0x00000014
-#define PRODUCT_STORAGE_STANDARD_SERVER         0x00000015
-#define PRODUCT_STORAGE_WORKGROUP_SERVER        0x00000016
-#define PRODUCT_STORAGE_ENTERPRISE_SERVER       0x00000017
-#define PRODUCT_SERVER_FOR_SMALLBUSINESS        0x00000018
-#define PRODUCT_SMALLBUSINESS_SERVER_PREMIUM    0x00000019
-#define PRODUCT_UNLICENSED                      0xABCDABCD
-#endif
+#define PRODUCT_UNLICENSED     			0xABCDABCD	
+#define PRODUCT_BUSINESS				0x00000006	
+#define PRODUCT_BUSINESS_N				0x00000010	
+#define PRODUCT_CLUSTER_SERVER			0x00000012	
+#define PRODUCT_CLUSTER_SERVER_V		0x00000040	
+#define PRODUCT_CORE					0x00000065	
+#define PRODUCT_CORE_N					0x00000062	
+#define PRODUCT_CORE_COUNTRYSPECIFIC	0x00000063	
+#define PRODUCT_CORE_SINGLELANGUAGE		0x00000064	
+#define PRODUCT_DATACENTER_EVALUATION_SERVER	0x00000050	
+#define PRODUCT_DATACENTER_SERVER		0x00000008	
+#define PRODUCT_DATACENTER_SERVER_CORE	0x0000000C	
+#define PRODUCT_DATACENTER_SERVER_CORE_V	0x00000027	
+#define PRODUCT_DATACENTER_SERVER_V			0x00000025	
+#define PRODUCT_ENTERPRISE				0x00000004	
+#define PRODUCT_ENTERPRISE_E			0x00000046	
+#define PRODUCT_ENTERPRISE_N_EVALUATION	0x00000054	
+#define PRODUCT_ENTERPRISE_N			0x0000001B	
+#define PRODUCT_ENTERPRISE_EVALUATION	0x00000048	
+#define PRODUCT_ENTERPRISE_SERVER		0x0000000A	
+#define PRODUCT_ENTERPRISE_SERVER_CORE	0x0000000E
+#define PRODUCT_ENTERPRISE_SERVER_CORE_V	0x00000029	
+#define PRODUCT_ENTERPRISE_SERVER_IA64	0x0000000F	
+#define PRODUCT_ENTERPRISE_SERVER_V		0x00000026	
+#define PRODUCT_ESSENTIALBUSINESS_SERVER_MGMT		0x0000003B	
+#define PRODUCT_ESSENTIALBUSINESS_SERVER_ADDL		0x0000003C	
+#define PRODUCT_ESSENTIALBUSINESS_SERVER_MGMTSVC	0x0000003D	
+#define PRODUCT_ESSENTIALBUSINESS_SERVER_ADDLSVC	0x0000003E	
+#define PRODUCT_HOME_BASIC				0x00000002	
+#define PRODUCT_HOME_BASIC_E			0x00000043	
+#define PRODUCT_HOME_BASIC_N			0x00000005
+#define PRODUCT_HOME_PREMIUM			0x00000003
+#define PRODUCT_HOME_PREMIUM_E			0x00000044	
+#define PRODUCT_HOME_PREMIUM_N			0x0000001A	
+#define PRODUCT_HOME_PREMIUM_SERVER		0x00000022	
+#define PRODUCT_HOME_SERVER				0x00000013	
+#define PRODUCT_HYPERV					0x0000002A	
+#define PRODUCT_MEDIUMBUSINESS_SERVER_MANAGEMENT	0x0000001E	
+#define PRODUCT_MEDIUMBUSINESS_SERVER_MESSAGING		0x00000020	
+#define PRODUCT_MEDIUMBUSINESS_SERVER_SECURITY		0x0000001F	
+#define PRODUCT_MULTIPOINT_STANDARD_SERVER			0x0000004C	
+#define PRODUCT_MULTIPOINT_PREMIUM_SERVER			0x0000004D	
+#define PRODUCT_PROFESSIONAL			0x00000030	
+#define PRODUCT_PROFESSIONAL_E			0x00000045	
+#define PRODUCT_PROFESSIONAL_N			0x00000031	
+#define PRODUCT_PROFESSIONAL_WMC		0x00000067	
+#define PRODUCT_SB_SOLUTION_SERVER_EM	0x00000036	
+#define PRODUCT_SERVER_FOR_SB_SOLUTIONS	0x00000033	
+#define PRODUCT_SERVER_FOR_SB_SOLUTIONS_EM	0x00000037
+#define PRODUCT_SERVER_FOR_SMALLBUSINESS	0x00000018
+#define PRODUCT_SERVER_FOR_SMALLBUSINESS_V	0x00000023
+#define PRODUCT_SERVER_FOUNDATION		0x00000021	
+#define PRODUCT_SB_SOLUTION_SERVER		0x00000032	
+#define PRODUCT_SMALLBUSINESS_SERVER	0x00000009	
+#define PRODUCT_SMALLBUSINESS_SERVER_PREMIUM		0x00000019	
+#define PRODUCT_SMALLBUSINESS_SERVER_PREMIUM_CORE	0x0000003F	
+#define PRODUCT_SOLUTION_EMBEDDEDSERVER		0x00000038	
+#define PRODUCT_STANDARD_EVALUATION_SERVER	0x0000004F	
+#define PRODUCT_STANDARD_SERVER				0x00000007	
+#define PRODUCT_STANDARD_SERVER_CORE		0x0000000D	
+#define PRODUCT_STANDARD_SERVER_V			0x00000024	
+#define PRODUCT_STANDARD_SERVER_CORE_V		0x00000028	
+#define PRODUCT_STANDARD_SERVER_SOLUTIONS		0x00000034	
+#define PRODUCT_STANDARD_SERVER_SOLUTIONS_CORE	0x00000035	
+#define PRODUCT_STARTER			0x0000000B	
+#define PRODUCT_STARTER_E		0x00000042	
+#define PRODUCT_STARTER_N		0x0000002F	
+#define PRODUCT_STORAGE_ENTERPRISE_SERVER			0x00000017	
+#define PRODUCT_STORAGE_ENTERPRISE_SERVER_CORE		0x0000002E	
+#define PRODUCT_STORAGE_EXPRESS_SERVER				0x00000014	
+#define PRODUCT_STORAGE_EXPRESS_SERVER_CORE			0x0000002B	
+#define PRODUCT_STORAGE_STANDARD_EVALUATION_SERVER	0x00000060	
+#define PRODUCT_STORAGE_STANDARD_SERVER				0x00000015	
+#define PRODUCT_STORAGE_STANDARD_SERVER_CORE		0x0000002C	
+#define PRODUCT_STORAGE_WORKGROUP_EVALUATION_SERVER	0x0000005F	
+#define PRODUCT_STORAGE_WORKGROUP_SERVER			0x00000016	
+#define PRODUCT_STORAGE_WORKGROUP_SERVER_CORE		0x0000002D	
+#define PRODUCT_UNDEFINED		0x00000000	
+#define PRODUCT_ULTIMATE		0x00000001	
+#define PRODUCT_ULTIMATE_E		0x00000047	
+#define PRODUCT_ULTIMATE_N		0x0000001C	
+#define PRODUCT_WEB_SERVER		0x00000011	
+#define PRODUCT_WEB_SERVER_CORE	0x0000001D 	
 
 #if !defined(SM_SERVERR2)
 #define SM_SERVERR2             89
@@ -76,12 +130,21 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
    	case PROCESSOR_ARCHITECTURE_INTEL:	kerArchitecture = "32 bits";			break;
 	default:							kerArchitecture = "Unknown";
 	}
-   	if (VER_PLATFORM_WIN32_NT == osvi.dwPlatformId && osvi.dwMajorVersion > 4 ) {
-      	// Test for the specific product.
+   	if (VER_PLATFORM_WIN32_NT == osvi.dwPlatformId && osvi.dwMajorVersion > 4) {
 		if (osvi.dwMajorVersion == 6) {
-			if (osvi.dwMinorVersion == 1) {
+			if (osvi.dwMinorVersion == 3) {
             	if (osvi.wProductType == VER_NT_WORKSTATION)
-                	kernel.Cat(" Seven");
+                	kernel.Cat(" 8.1");
+            	else 
+					kernel.Cat(" Server 2012 R2");
+			} else if (osvi.dwMinorVersion == 2) {
+            	if (osvi.wProductType == VER_NT_WORKSTATION)
+                	kernel.Cat(" 8");
+            	else 
+					kernel.Cat(" Server 2012");
+			} else if (osvi.dwMinorVersion == 1) {
+            	if (osvi.wProductType == VER_NT_WORKSTATION)
+                	kernel.Cat(" 7");
             	else 
 					kernel.Cat(" Server 2008 R2");
 			} else if (osvi.dwMinorVersion == 0) {
@@ -94,27 +157,89 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
          	DWORD dwType;
          	if (pGPI(osvi.dwMajorVersion, osvi.dwMinorVersion, 0, 0, &dwType)) {
 	         	switch(dwType) {
-	         	case PRODUCT_UNLICENSED:				distro = "Unlicensed";			break;
-	            case PRODUCT_ULTIMATE:					distro = "Ultimate Edition";	break;
-	            case PRODUCT_HOME_PREMIUM:				distro = "Home Premium Edition";break;
-	            case PRODUCT_HOME_BASIC:	
-	            case PRODUCT_HOME_BASIC_N:				distro = "Home Basic Edition";	break;
-	            case PRODUCT_ENTERPRISE:				distro = "Enterprise Edition";	break;
-	            case PRODUCT_BUSINESS:		
-	            case PRODUCT_BUSINESS_N:				distro = "Business Edition";	break;
-	            case PRODUCT_STARTER:					distro = "Starter Edition";		break;
-	            case PRODUCT_CLUSTER_SERVER:			distro = "Cluster Server Edition";	break;
-	            case PRODUCT_DATACENTER_SERVER:			distro = "Datacenter Edition";		break;
-	            case PRODUCT_DATACENTER_SERVER_CORE:	distro = "Datacenter Edition (core installation)";		break;
-	            case PRODUCT_ENTERPRISE_SERVER:			distro = "Enterprise Edition";		break;
-	            case PRODUCT_ENTERPRISE_SERVER_CORE:	distro = "Enterprise Edition (core installation)";		break;
-	            case PRODUCT_ENTERPRISE_SERVER_IA64:	distro = "Enterprise Edition for Itanium-based Systems";break;
-	            case PRODUCT_SMALLBUSINESS_SERVER:		distro = "Small Business Server";   break;
-	            case PRODUCT_SMALLBUSINESS_SERVER_PREMIUM:	distro = "Small Business Server Premium Edition";   break;
-	            case PRODUCT_STANDARD_SERVER:				distro = "Standard Edition";    break;
-	            case PRODUCT_STANDARD_SERVER_CORE:			distro = "Standard Edition (core installation)";    break;
-	            case PRODUCT_WEB_SERVER:				distro = "Web Server Edition";	break;
-				case PRODUCT_UNDEFINED:					distro = "Undefined";			break;
+	         	case PRODUCT_UNLICENSED:				distro = "Unlicensed"; break;
+	            case PRODUCT_BUSINESS:					distro = "Business Edition"; break;
+	            case PRODUCT_BUSINESS_N:				distro = "Business Edition N"; break;
+				case PRODUCT_CLUSTER_SERVER:			distro = "HPC Edition"; break;
+                case PRODUCT_CLUSTER_SERVER_V:			distro = "Server Hyper Core V"; break;
+                case PRODUCT_CORE:						distro = "Windows 8"; break;
+                case PRODUCT_CORE_N:					distro = "Windows 8 N"; break;
+                case PRODUCT_CORE_COUNTRYSPECIFIC:		distro = "Windows 8 China"; break;
+                case PRODUCT_CORE_SINGLELANGUAGE:		distro = "Windows 8 Single Language"; break;
+                case PRODUCT_DATACENTER_EVALUATION_SERVER:	distro = "Server Datacenter (evaluation installation)"; break;
+                case PRODUCT_DATACENTER_SERVER:			distro = "Server Datacenter (full installation)"; break;
+                case PRODUCT_DATACENTER_SERVER_CORE:	distro = "Server Datacenter (core installation)"; break;
+                case PRODUCT_DATACENTER_SERVER_CORE_V:	distro = "Server Datacenter without Hyper-V (core installation)"; break;
+                case PRODUCT_DATACENTER_SERVER_V:		distro = "Server Datacenter without Hyper-V (full installation)"; break;
+                case PRODUCT_ENTERPRISE:				distro = "Enterprise"; break;
+                case PRODUCT_ENTERPRISE_E:				distro = "Not supported"; break;
+                case PRODUCT_ENTERPRISE_N_EVALUATION:	distro = "Enterprise N (evaluation installation)"; break;
+                case PRODUCT_ENTERPRISE_N:				distro = "Enterprise N"; break;
+                case PRODUCT_ENTERPRISE_EVALUATION:		distro = "Server Enterprise (evaluation installation)"; break;
+                case PRODUCT_ENTERPRISE_SERVER:			distro = "Server Enterprise (full installation)"; break;
+                case PRODUCT_ENTERPRISE_SERVER_CORE:	distro = "Server Enterprise (core installation)"; break;
+                case PRODUCT_ENTERPRISE_SERVER_CORE_V:	distro = "Server Enterprise without Hyper-V (core installation)"; break;
+                case PRODUCT_ENTERPRISE_SERVER_IA64:	distro = "Server Enterprise for Itanium-based Systems"; break;
+                case PRODUCT_ENTERPRISE_SERVER_V:		distro = "Server Enterprise without Hyper-V (full installation)"; break;
+                case PRODUCT_ESSENTIALBUSINESS_SERVER_MGMT:		distro = "Windows Essential Server Solution Management"; break;
+                case PRODUCT_ESSENTIALBUSINESS_SERVER_ADDL:		distro = "Windows Essential Server Solution Additional"; break;
+                case PRODUCT_ESSENTIALBUSINESS_SERVER_MGMTSVC:	distro = "Windows Essential Server Solution Management SVC"; break;
+                case PRODUCT_ESSENTIALBUSINESS_SERVER_ADDLSVC:	distro = "Windows Essential Server Solution Additional SVC"; break;
+                case PRODUCT_HOME_BASIC:				distro = "Home Basic"; break;
+                case PRODUCT_HOME_BASIC_E:				distro = "Not supported"; break;
+                case PRODUCT_HOME_BASIC_N:				distro = "Home Basic N"; break;
+                case PRODUCT_HOME_PREMIUM:				distro = "Home Premium"; break;
+                case PRODUCT_HOME_PREMIUM_E:			distro = "Not supported"; break;
+                case PRODUCT_HOME_PREMIUM_N:			distro = "Home Premium N"; break;
+                case PRODUCT_HOME_PREMIUM_SERVER:		distro = "Windows Home Server 2011"; break;
+                case PRODUCT_HOME_SERVER:				distro = "Windows Storage Server 2008 R2 Essentials"; break;
+                case PRODUCT_HYPERV:					distro = "Microsoft Hyper-V Server"; break;
+                case PRODUCT_MEDIUMBUSINESS_SERVER_MANAGEMENT:	distro = "Windows Essential Business Server Management Server"; break;
+                case PRODUCT_MEDIUMBUSINESS_SERVER_MESSAGING:	distro = "Windows Essential Business Server Messaging Server"; break;
+                case PRODUCT_MEDIUMBUSINESS_SERVER_SECURITY:	distro = "Windows Essential Business Server Security Server"; break;
+                case PRODUCT_MULTIPOINT_STANDARD_SERVER:		distro = "Windows MultiPoint Server Standard (full installation)"; break;
+                case PRODUCT_MULTIPOINT_PREMIUM_SERVER:	distro = "Windows MultiPoint Server Premium (full installation)"; break;
+                case PRODUCT_PROFESSIONAL:				distro = "Professional"; break;
+                case PRODUCT_PROFESSIONAL_E:			distro = "Not supported"; break;
+                case PRODUCT_PROFESSIONAL_N:			distro = "Professional N"; break;
+                case PRODUCT_PROFESSIONAL_WMC:			distro = "Professional with Media Center"; break;
+                case PRODUCT_SB_SOLUTION_SERVER_EM:		distro = "Server For SB Solutions EM"; break;
+                case PRODUCT_SERVER_FOR_SB_SOLUTIONS:	distro = "Server For SB Solutions"; break;
+                case PRODUCT_SERVER_FOR_SB_SOLUTIONS_EM:	distro = "Server For SB Solutions EM"; break;
+                case PRODUCT_SERVER_FOR_SMALLBUSINESS:		distro = "Windows Server 2008 for Windows Essential Server Solutions"; break;
+                case PRODUCT_SERVER_FOR_SMALLBUSINESS_V:	distro = "Windows Server 2008 without Hyper-V for Windows Essential Server Solutions"; break;
+                case PRODUCT_SERVER_FOUNDATION:			distro = "Server Foundation"; break;
+                case PRODUCT_SB_SOLUTION_SERVER:		distro = "Windows Small Business Server 2011 Essentials"; break;
+                case PRODUCT_SMALLBUSINESS_SERVER:		distro = "Windows Small Business Server"; break;
+                case PRODUCT_SMALLBUSINESS_SERVER_PREMIUM:		distro = "Small Business Server Premium"; break;
+                case PRODUCT_SMALLBUSINESS_SERVER_PREMIUM_CORE:	distro = "Small Business Server Premium (core installation)"; break;
+                case PRODUCT_SOLUTION_EMBEDDEDSERVER:			distro = "Windows MultiPoint Server"; break;
+                case PRODUCT_STANDARD_EVALUATION_SERVER:		distro = "Server Standard (evaluation installation)"; break;
+                case PRODUCT_STANDARD_SERVER:			distro = "Server Standard"; break;
+                case PRODUCT_STANDARD_SERVER_CORE:		distro = "Server Standard (core installation)"; break;
+                case PRODUCT_STANDARD_SERVER_V:			distro = "Server Standard without Hyper-V"; break;
+                case PRODUCT_STANDARD_SERVER_CORE_V:	distro = "Server Standard without Hyper-V (core installation)"; break;
+                case PRODUCT_STANDARD_SERVER_SOLUTIONS:	distro = "Server Solutions Premium"; break;
+                case PRODUCT_STANDARD_SERVER_SOLUTIONS_CORE:	distro = "Server Solutions Premium (core installation)"; break;
+                case PRODUCT_STARTER:					distro = "Starter"; break;
+                case PRODUCT_STARTER_E:					distro = "Not supported"; break;
+                case PRODUCT_STARTER_N:					distro = "Starter N"; break;
+                case PRODUCT_STORAGE_ENTERPRISE_SERVER:	distro = "Storage Server Enterprise"; break;
+                case PRODUCT_STORAGE_ENTERPRISE_SERVER_CORE:		distro = "Storage Server Enterprise (core installation)"; break;
+                case PRODUCT_STORAGE_EXPRESS_SERVER:				distro = "Storage Server Express"; break;
+                case PRODUCT_STORAGE_EXPRESS_SERVER_CORE:			distro = "Storage Server Express (core installation)"; break;
+                case PRODUCT_STORAGE_STANDARD_EVALUATION_SERVER:	distro = "Storage Server Standard (evaluation installation)"; break;
+                case PRODUCT_STORAGE_STANDARD_SERVER:				distro = "Storage Server Standard"; break;
+                case PRODUCT_STORAGE_STANDARD_SERVER_CORE:			distro = "Storage Server Standard (core installation)"; break;
+                case PRODUCT_STORAGE_WORKGROUP_EVALUATION_SERVER:	distro = "Storage Server Workgroup (evaluation installation)"; break;
+                case PRODUCT_STORAGE_WORKGROUP_SERVER:				distro = "Storage Server Workgroup"; break;
+                case PRODUCT_STORAGE_WORKGROUP_SERVER_CORE:			distro = "Storage Server Workgroup (core installation)"; break;
+                case PRODUCT_UNDEFINED:			distro = "An unknown product"; break;
+                case PRODUCT_ULTIMATE:			distro = "Ultimate"; break;
+                case PRODUCT_ULTIMATE_E:		distro = "Not supported"; break;
+                case PRODUCT_ULTIMATE_N:		distro = "Ultimate N"; break;
+                case PRODUCT_WEB_SERVER:		distro = "Web Server (full installation)"; break;
+                case PRODUCT_WEB_SERVER_CORE:	distro = "Web Server (core installation)"; break;
 	         	}
          	}
       	} else if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 2) {
@@ -211,18 +336,22 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
 #endif
 #ifdef PLATFORM_POSIX
 
-bool GetOsInfo_CheckLsb(String &distro, String &distVersion) {
-	StringParse lsb;			
-	lsb = LoadFile_Safe("/etc/lsb-release");		
-	if (lsb == "")
+static bool GetOsInfoCheckRelease(String &distro, String &distVersion) {
+	StringParse release;			
+	for (FindFile ff("/etc/*-release"); ff; ff.Next())
+		release += LoadFile_Safe(ff.GetPath());		
+	if (release.IsEmpty())
 		return false;
-	if(!lsb.GoAfter("DISTRIB_ID="))
-		return false;				
-	distro = ToLower(lsb.GetText());
-	if (distro == "")
+	if(!release.GoAfter("DISTRIB_ID=")) 
+		if (!release.GoAfter("ID="))
+			return false;				
+	distro = ToLower(release.GetText());
+	if (distro.IsEmpty())
 		return false;
-	lsb.GoAfter_Init("DISTRIB_RELEASE=");
-	distVersion = lsb.GetText();
+	if (!release.GoAfter_Init("DISTRIB_RELEASE="))
+		if (!release.GoAfter_Init("VERSION_ID="))
+			return false;
+	distVersion = ToLower(release.GetText());
 
 	return true;
 }
@@ -236,65 +365,92 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
     	kerVersion = String(buf.release) + " " + String(buf.version);
         kerArchitecture = buf.machine;
 	}
-	if (kernel == "")
+	if (kernel.IsEmpty())
 		kernel = LoadFile_Safe("/proc/sys/kernel/ostype");
-	if (kernel == "")
+	if (kernel.IsEmpty())
 		kernel = LoadFile_Safe("/proc/version");
-	if (kernel == "") {
+	if (kernel.IsEmpty()) {
 		if (Sys("sysctl_cmd -n kern.version").Find("FreeBSD") >= 0)
 			kernel = "freebsd";
 	}
-	if (kerVersion == "")
+	if (kernel.IsEmpty()) 
+		kernel = ToLower(Sys("uname -s"));
+	
+	if (kerVersion.IsEmpty())
 		kerVersion = LoadFile_Safe("/proc/sys/kernel/osrelease") + " " + LoadFile_Safe("/proc/sys/kernel/version");
-	if (kerArchitecture == "")
-		kerArchitecture = Sys("uname -m");	// Kernel. See too /proc/version, /proc/version_signature and uname -a looking for architecture
-	
-	if (kernel == "")
-		kernel = kerVersion = kerArchitecture = "UNKNOWN";	
-	
-	// Desktop
-    if(GetEnv("GNOME_DESKTOP_SESSION_ID").GetCount() || GetEnv("GNOME_KEYRING_SOCKET").GetCount()) {
+	if (kerVersion.IsEmpty())
+		kerArchitecture = ToLower(Sys("uname -v"));
+		
+	if (kerArchitecture.IsEmpty())
+		kerArchitecture = ToLower(Sys("uname -m"));
+
+	// printenv
+    if (GetEnv("GNOME_DESKTOP_SESSION_ID").GetCount() || GetEnv("GNOME_KEYRING_SOCKET").GetCount()) {
 		desktop = "gnome";
 		StringParse gnomeVersion = Sys("gnome-about --version");
 		gnomeVersion.GoAfter("gnome-about");
 		deskVersion = gnomeVersion.GetText();
-	} else if(GetEnv("KDE_FULL_SESSION").GetCount() || GetEnv("KDEDIR").GetCount() || GetEnv("KDE_MULTIHEAD").GetCount()) {
+	} else if (GetEnv("KDE_FULL_SESSION").GetCount() || GetEnv("KDEDIR").GetCount() || GetEnv("KDE_MULTIHEAD").GetCount()) {
         desktop = "kde"; 
         StringParse konsole = Sys("konsole --version");
-        konsole.GoAfter("KDE:");
-        deskVersion = konsole.GetText("\r\n");						
-		if (deskVersion == "")		
+        konsole.GoAfter("KDE", ":");
+        deskVersion = konsole.GetText();						
+		if (deskVersion.IsEmpty())		
 			deskVersion = GetEnv("KDE_SESSION_VERSION");        
+	} else if (GetEnv("MATE_KEYRING_CONTROL").GetCount()) {
+		desktop = "mate"; 
+		StringParse mateVersion = Sys("mate-about --version");
+		while (true) {
+			String str = mateVersion.GetText();
+			if (atof(str) > 0) {
+				deskVersion = str;
+				break;
+			} else if (str.IsEmpty())
+				break;
+		}
 	} else {
-		StringParse desktopStr;
-		if (Sys("xprop -root _DT_SAVE_MODE").Find("xfce") >= 0)
-			desktop = "xfce";
-		else if ((desktopStr = Sys("xprop -root")).Find("ENLIGHTENMENT") >= 0) {
-			desktop = "enlightenment";
-			desktopStr.GoAfter("ENLIGHTENMENT_VERSION(STRING)", "=");
-			desktopStr = desktopStr.GetText();
-			if (desktopStr.GetText() == "Enlightenment")
+		String str = GetEnv("CINNAMON_VERSION");
+		if (!str.IsEmpty()) {
+			desktop = "cinnamon";
+			deskVersion = str;
+		} else {
+			StringParse desktopStr = ToLower(Sys("xprop -root"));
+			if (desktopStr.Find("lxde") >= 0 || ToLower(GetEnv("DESKTOP_SESSION")) == "lxde") {
+				desktop = "lxde";
+				desktopStr.GoAfter("_OB_VERSION", "=");
 				deskVersion = desktopStr.GetText();
-		} else
-			desktop = GetEnv("DESKTOP_SESSION");
+			} else if (desktopStr.Find("xfce") >= 0) {
+				desktopStr.GoAfter("_DT_SAVE_MODE", "=");
+				desktop = desktopStr.GetText();
+				StringParse xfceVersion = Sys(Format("%s-about --version", desktop));
+				while (true) {
+					String str = xfceVersion.GetText();
+					if (atof(str) > 0) {
+						deskVersion = str;
+						break;
+					} else if (str.IsEmpty())
+						break;
+				}			
+			} else if (desktopStr.Find("ENLIGHTENMENT") >= 0) {
+				desktop = "enlightenment";
+				desktopStr.GoAfter("ENLIGHTENMENT_VERSION(STRING)", "=");
+				desktopStr = desktopStr.GetText();
+				if (desktopStr.GetText() == "Enlightenment")
+					deskVersion = desktopStr.GetText();
+			} else
+				desktop = GetEnv("DESKTOP_SESSION");
+		}
 	}
-	if (desktop == "")
-		desktop = deskVersion = "UNKNOWN";
 	
-	// Distro
-	if (GetOsInfo_CheckLsb(distro, distVersion))
+	if (GetOsInfoCheckRelease(distro, distVersion))
 		;
 	else if (FileExists("/usr/share/doc/ubuntu-minimal") || FileExists("/usr/share/ubuntu-docs"))
 		distro = "ubuntu";
 	else if (FileExists("/etc/fedora-release")) {
 		distro = "fedora";
 		StringParse strFile = LoadFile_Safe("/etc/fedora-release");
-		String str;
-		do {
-			str = strFile.GetText();
-			if ((str != "fedora") && (str != "release"))
-				distVersion << str << " ";
-		} while (str != "");
+		strFile.GoAfter("release");
+		distVersion = strFile.GetText();
 	} else if (FileExists("/etc/redhat-release")) {
 		distro = "redhat";
 		distVersion = LoadFile_Safe("/etc/redhat-release");
@@ -334,15 +490,17 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
 		distVersion = LoadFile_Safe("/etc/debian_version");
 	} else if (LoadFile_Safe("/etc/release").Find("Solaris") >= 0)
 		distro = "solaris";
-	else if (Sys("uname -r").Find("solaris") >= 0)
+	else if (ToLower(Sys("uname -r")).Find("freebsd") >= 0)
+		distro = "freebsd";
+	else if (ToLower(Sys("uname -r")).Find("solaris") >= 0)
 		distro = "solaris";
-	else {					// If not try with /etc/osname_version
+	else {					
 		distro = LoadFile_Safe("/etc/osname_version");
 		distVersion = "";
 	} 
-	if (distro == "") 
+	if (distro.IsEmpty()) 
 		distro = LoadFile_Safe("/etc/issue");
-	if (distro == "") 
+	if (distro.IsEmpty()) 
 		distro = distVersion = "UNKNOWN";
 	
 	return true;

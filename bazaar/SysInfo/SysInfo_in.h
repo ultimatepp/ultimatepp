@@ -49,7 +49,7 @@
 	#include <X11/Xutil.h>
 	#include <X11/Xatom.h>
 	#include <X11/extensions/XTest.h>
-	
+	#include <X11/XKBlib.h>
 	#ifdef flagGUI
 		#define SetX11ErrorHandler();
 		#define SetSysInfoX11ErrorHandler();
