@@ -6,7 +6,7 @@
 	#define OLERENDER_DRAW	1
 #endif
 
-#define CY void *
+#define CY tagCY
 
 #include <windows.h>
 #include <Mshtml.h>  
