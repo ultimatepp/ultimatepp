@@ -18,7 +18,6 @@ void Puts(String s)
 	SaveFile(file, LoadFile(file) + "\n" + s);
 }
 
-
 void Test()
 {
 	Puts("SysInfo functions demo");
@@ -44,6 +43,13 @@ void Test()
 		Puts(Format("Name '%s', Domain '%s'", nname, domain));
 	else
 		Puts("Problem reading newtwork data");
+	
+	Puts("\nNetwork adapter info");
+	Array <NetAdapter> netAdapters = GetAdapterInfo();
+	for (int i = 0; i < netAdapters.GetCount(); ++i) 
+		Puts(Format("- %s %s %s\n  %s\n  IP4: %s IP6: %s", netAdapters[i].type, 
+						netAdapters[i].mac, netAdapters[i].fullname, 
+						netAdapters[i].description, netAdapters[i].ip4, netAdapters[i].ip6));
 	
 	Puts("\nSystem info:");		
 	String manufacturer, productName, version, mbSerial;
@@ -244,7 +250,18 @@ void Test()
 } 
 
 CONSOLE_APP_MAIN
-{
+{			 
+	Puts("\nOs info:");
+	String kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion;
+	if (!GetOsInfo(kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion))
+		Puts("Error getting Os info");
+	else { 	
+		Puts(Format("Kernel:  %s, version: %s,\narchitecture: %s", kernel, kerVersion, kerArchitecture));
+		Puts(Format("Distro:  %s, version: %s", distro, distVersion, desktop, deskVersion));
+		Puts(Format("Desktop: %s, version: %s", desktop, deskVersion));
+	}
+	getchar();
+       
 	FileDelete(AppendFileName(GetDesktopFolder(), "log"));
 	Puts("Introduce enter or (l) to log off, (r) to reboot or (s) to shutdown");
 	char str[50];
