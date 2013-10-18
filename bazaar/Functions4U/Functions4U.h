@@ -69,7 +69,7 @@ bool SetReadOnly(const char *path, bool readOnly);
 bool SetReadOnly(const char *path, bool usr, bool grp, bool oth);
 bool IsReadOnly(const char *path, bool &usr, bool &grp, bool &oth);
 
-String LoadFile_Safe(String fileName);
+String LoadFile_Safe(const String fileName);
 
 int64 GetLength(const char *fileDirName);
 int64 GetDirectoryLength(const char *directoryName);
@@ -476,7 +476,7 @@ String WideToString(LPCWSTR wcs, int len = -1);
 	#include "Functions4U/Functions4U_Gui.h"
 #endif
 
-String GetExtExecutable(String ext);
+String GetExtExecutable(const String ext);
 
 Upp::Array<String> GetDriveList();
 

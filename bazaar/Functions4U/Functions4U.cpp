@@ -480,7 +480,7 @@ bool TrashBinClear()
 #include <fcntl.h>
 
 // This system files are like pipes: it is not possible to get the length to size the buffer
-String LoadFile_Safe(String fileName)
+String LoadFile_Safe(const String fileName)
 {
 #ifdef PLATFORM_POSIX
 	int fid = open(fileName, O_RDONLY);
@@ -501,8 +501,9 @@ String LoadFile_Safe(String fileName)
 	return s;
 }
 
-String GetExtExecutable(String ext)
+String GetExtExecutable(const String _ext)
 {
+	String ext = _ext;
 	String exeFile = "";
 	if (ext[0] != '.')
 		ext = String(".") + ext;
