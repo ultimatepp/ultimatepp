@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LTIMING(x) //  TIMING(x)
+#define LTIMING(x)  // DTIMING(x)
 
 ArrayCtrl::Column::Column() {
 	convert = NULL;
@@ -796,6 +796,7 @@ const Display& ArrayCtrl::GetCellInfo(int i, int j, bool f0,
 
 Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 	LTIMING("Paint");
+	SyncColumnsPos();
 	bool hasfocus0 = HasFocusDeep() || sample;
 	Size size = sample ? StdSampleSize() : GetSize();
 	Rect r;
@@ -903,6 +904,7 @@ void ArrayCtrl::MinMaxLine()
 }
 
 void ArrayCtrl::Scroll() {
+	SyncColumnsPos();
 	MinMaxLine();
 	SyncPageCtrls();
 	PlaceEdits();
@@ -911,7 +913,22 @@ void ArrayCtrl::Scroll() {
 	WhenScroll();
 }
 
+void ArrayCtrl::SyncColumnsPos()
+{
+	int x = 0;
+	column_pos.Clear();
+	column_width.Clear();
+	for(int i = 0; i < header.GetCount(); i++) {
+		int w = header.GetTabWidth(i);
+		int ii = header.GetTabIndex(i);
+		column_pos.At(ii, 0) = x;
+		column_width.At(ii, 0) = w;
+		x += w;
+	}
+}
+
 void ArrayCtrl::HeaderLayout() {
+	SyncColumnsPos();
 	MinMaxLine();
 	Refresh();
 	SyncInfo();
@@ -1054,15 +1071,13 @@ void ArrayCtrl::AddRowNumCtrl(Ctrl& ctrl) {
 
 Rect ArrayCtrl::GetCellRect(int i, int col) const
 {
+	LTIMING("GetCellRect");
 	Rect r;
 	r.top = GetLineY(i) - sb;
 	r.bottom = r.top + GetLineCy(i);
-	int x = 0;
-	HeaderCtrl& h = const_cast<HeaderCtrl&>(header); // Ugly!!!
-	for(i = 0; header.GetTabIndex(i) != col; i++)
-		x += h.GetTabWidth(i);
-	r.left = x - header.GetScroll();
-	r.right = r.left + h.GetTabWidth(i) - vertgrid + (col == column.GetCount() - 1);
+	r.left = (col < column_pos.GetCount() ? column_pos[col] : 0) - header.GetScroll();
+	r.right = r.left + (col < column_width.GetCount() ? column_width[col] : 0) - vertgrid +
+	          (col == column.GetCount() - 1);
 	return r;
 }
 

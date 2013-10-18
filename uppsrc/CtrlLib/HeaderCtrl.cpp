@@ -323,8 +323,8 @@ void HeaderCtrl::RefreshDistribution()
 			}
 		else {
 			Distribute(GetVisibleCi(0), 0);
-			oszcx = szcx;
 		}
+		oszcx = szcx;
 		ReCompute();
 	}
 }

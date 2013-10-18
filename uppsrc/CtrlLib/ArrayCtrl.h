@@ -188,6 +188,7 @@ private:
 	Vector< Vector<CellInfo> > cellinfo;
 	Vector<bool>               modify;
 	FrameBottom<ParentCtrl>    scrollbox;
+	Vector<int>                column_width, column_pos;
 	DisplayPopup               info;
 	const Order               *columnsortsecondary;
 	int                        min_visible_line, max_visible_line;
@@ -252,6 +253,7 @@ private:
 
 	void   SetSb();
 	void   MinMaxLine();
+	void   SyncColumnsPos();
 	void   HeaderLayout();
 	void   HeaderScroll();
 	void   Scroll();
