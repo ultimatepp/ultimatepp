@@ -171,7 +171,7 @@ int64 CParser::ReadInt64() throw(Error)
 
 int64 CParser::ReadInt64(int64 min, int64 max) throw(Error)
 {
-	int64 n = ReadInt();
+	int64 n = ReadInt64();
 	if(n < min || n > max)
 		ThrowError("number is out of range");
 	return n;
