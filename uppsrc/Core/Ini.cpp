@@ -2,6 +2,27 @@
 
 namespace Upp {
 
+String ReplaceEnvVars(CParser& p) {
+	const VectorMap<String, String>& vars = Environment();
+	String r;
+	const char* s = p.GetPtr();
+	while (!p.IsEof()) {
+		if(p.Char2('$', '$')) {
+			r.Cat('$');
+		} else if(p.Char('$') && p.IsId()) {
+			String id = p.ReadId();
+			int q = vars.Find(id);
+			if(q >= 0)
+				r.Cat(vars[q]);
+		} else {
+			p.SkipTerm();
+			r.Cat(s, p.GetPtr());
+		}
+		s = p.GetPtr();
+	}
+	return r;
+}
+
 static void LoadIniStream(Stream &sin, VectorMap<String, String>& ret, const char *sfile);
 
 static void LoadIniFile(const char *filename, VectorMap<String, String>& ret)
@@ -12,13 +33,14 @@ static void LoadIniFile(const char *filename, VectorMap<String, String>& ret)
 
 static void LoadIniStream(Stream& in, VectorMap<String, String>& key, const char *sfile)
 {
+	bool env = false;
 	while(!in.IsEof()) {
 		String line = in.GetLine();
 		CParser p(line);
 		if(p.IsId()) {
 			String k = p.ReadId();
 			if(p.Char('='))
-				key.Add(k, p.GetPtr());
+				key.Add(k, env ? ReplaceEnvVars(p) : (String)p.GetPtr());
 		}
 		else
 		if(p.Char('@')) {
@@ -31,6 +53,12 @@ static void LoadIniStream(Stream& in, VectorMap<String, String>& key, const char
 			else
 			if(p.Id("end"))
 				return;
+			else
+			if(p.Id("replace-env"))
+				env = true;
+			else
+			if(p.Id("ignore-env"))
+				env = false;
 		}
 	}
 }
