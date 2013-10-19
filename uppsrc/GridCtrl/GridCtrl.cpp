@@ -1661,9 +1661,76 @@ String GridCtrl::GetString(Id id) const
 	return GetStdConvertedColumn(c, Get0(rowidx, c));
 }
 
-GridCtrl::ItemRect& GridCtrl::InsertColumn(int pos, const char *name, int size, bool idx)
+GridCtrl::ItemRect& GridCtrl::InsertColumn(int col, const char *name, int size, bool idx)
 {
-	return hitems[0];
+	int id;
+	
+	if(size < 0)
+		size = GD_COL_WIDTH;
+
+	if(col < total_cols)
+	{
+		id = hitems[col].id;
+		for(int i = 0; i < total_cols; i++)
+		{
+			if(hitems[i].id >= id)
+				hitems[i].id += 1;			
+		}
+	}
+	else
+		id = total_cols;
+
+	ItemRect& ir = hitems.Insert(col);
+	ir.parent = this;
+	ir.items = &items;
+	ir.edits = &edits;
+	ir.prop = size;
+	ir.id = id;
+	ir.uid = coluid++;
+	ir.index = idx;
+
+	if(index_as_column && idx)
+	{
+		size = 70;
+		ir.prop = size;
+		ir.Fixed(size);
+	}
+	
+	ir.Size(size);
+	String lname(name);
+	aliases.Insert(col, ToLower(lname), ir.id);
+	rowbkp.Insert(col);
+
+	edits.Insert(col);
+	summary.Insert(col);
+	
+	for(int i = 0; i < total_rows; i++)
+		items[i].Insert(id);
+	
+	items[0][id].val = name;
+
+	colidx = col;
+	total_cols++;
+
+	UpdateJoins(-1, col, 1);
+
+	firstCol = -1;
+
+	if(ready)
+	{
+		RecalcCols();
+		UpdateSizes();
+		UpdateSb();
+		SyncSummary();
+		SyncCtrls();
+		Refresh(); //RefreshFromCol??
+	}
+	else
+		recalc_cols = true;
+
+	SetModify();
+
+	return  hitems[col];
 }
 
 GridCtrl::ItemRect& GridCtrl::AddColumn(const char *name, int size, bool idx)
@@ -6657,7 +6724,7 @@ void GridCtrl::Insert0(int row, int cnt /* = 1*/, bool recalc /* = true*/, bool 
 		for(int i = 0; i < total_rows; i++)
 		{
 			if(vitems[i].id >= id)
-				vitems[i].id += cnt;
+				vitems[i].id += cnt;			
 		}
 	}
 	else
@@ -6683,20 +6750,27 @@ void GridCtrl::Insert0(int row, int cnt /* = 1*/, bool recalc /* = true*/, bool 
 		WhenCreateRow();
 	}
 
+	UpdateJoins(row, -1, cnt);
+
 	firstRow = -1;
 
-	if(ready && recalc)
+	if(recalc)
 	{
-		RecalcRows();
-		UpdateSizes();
-
-		if(refresh)
+		if(ready)
 		{
-			UpdateSb();
-			SyncSummary();
-			SyncCtrls();
-			RefreshFrom(row);
+			RecalcRows();
+			UpdateSizes();
+	
+			if(refresh)
+			{
+				UpdateSb();
+				SyncSummary();
+				SyncCtrls();
+				RefreshFrom(row);
+			}
 		}
+		else
+			recalc_rows = true;
 	}
 
 	SetOrder();
@@ -6811,29 +6885,32 @@ bool GridCtrl::Remove0(int row, int cnt /* = 1*/, bool recalc /* = true*/, bool 
 			WhenRemovedRow();
 	}
 
-	if(ready && recalc)
+	if(recalc)
 	{
-		RecalcRows();
-		UpdateSizes();
-
-		if(refresh)
+		if(ready)
 		{
-			UpdateSb();
-			SyncSummary();
-			SyncCtrls();
-			RefreshFrom(row);
-
-			if(x >= 0 && y >= 0)
-				SetCursor0(x, max(fixed_rows, min(total_rows - 1, y)), 0, 0, -1);
-
-			if(!valid_cursor)
-				RebuildToolBar();
+			RecalcRows();
+			UpdateSizes();
+	
+			if(refresh)
+			{
+				UpdateSb();
+				SyncSummary();
+				SyncCtrls();
+				RefreshFrom(row);
+	
+				if(x >= 0 && y >= 0)
+					SetCursor0(x, max(fixed_rows, min(total_rows - 1, y)), 0, 0, -1);
+	
+				if(!valid_cursor)
+					RebuildToolBar();
+			}
 		}
-	}
-	else if(recalc)
-	{
-		UpdateVisColRow(false);
-		recalc_rows = true;
+		else
+		{
+			UpdateVisColRow(false);
+			recalc_rows = true;
+		}
 	}
 		
 	firstRow = -1;
@@ -6963,18 +7040,23 @@ bool GridCtrl::Duplicate0(int row, int cnt, bool recalc, bool refresh)
 
 	firstRow = -1;
 
-	if(ready && recalc)
+	if(recalc)
 	{
-		RecalcRows();
-		UpdateSizes();
-
-		if(refresh)
+		if(ready)
 		{
-			UpdateSb();
-			SyncSummary();
-			SyncCtrls();
-			RefreshFrom(nrow);
+			RecalcRows();
+			UpdateSizes();
+	
+			if(refresh)
+			{
+				UpdateSb();
+				SyncSummary();
+				SyncCtrls();
+				RefreshFrom(nrow);
+			}
 		}
+		else
+			recalc_rows = true;
 	}
 
 	if(duplicated > 0)
@@ -7959,6 +8041,11 @@ void GridCtrl::JoinCells(int left, int top, int right, int bottom, bool relative
 	right  += fc;
 	bottom += fr;
 
+	int idx = hitems[left].id;
+	int idy = vitems[top].id;
+	int cx = right - left;
+	int cy = bottom - top;
+	
 	for(int i = top; i <= bottom; ++i)
 	{
 		vitems[i].join++;
@@ -7967,10 +8054,10 @@ void GridCtrl::JoinCells(int left, int top, int right, int bottom, bool relative
 		{
 			Item &it = items[i][j];
 
-			it.idx = hitems[left].id;
-			it.idy = vitems[top].id;
-			it.cx  = right - left;
-			it.cy  = bottom - top;
+			it.idx = idx;
+			it.idy = idy;
+			it.cx  = cx;
+			it.cy  = cy;
 			it.group = join_group;
 			it.isjoined = true;
 
@@ -7978,6 +8065,13 @@ void GridCtrl::JoinCells(int left, int top, int right, int bottom, bool relative
 				hitems[j].join++;
 		}
 	}
+	
+	JoinRect& jr = joins.Add();
+	jr.r.Set(left, top, right, bottom);
+	jr.group = join_group;
+	jr.idx = idx;
+	jr.idy = idy;
+	
 	join_group++;
 }
 
@@ -8007,6 +8101,144 @@ void GridCtrl::JoinRow(int n, int left, int right)
 void GridCtrl::JoinRow(int left, int right)
 {
 	JoinRow(-1, left, right);
+}
+
+/*
+
+jr.r.top = 2;
+jr.r.bottom = 6
+
+2 -----------------------
+3 ----------------------- 
+  +++++++++++++++++++++++  //insert at 4
+  +++++++++++++++++++++++
+4 -----------------------
+5 -----------------------
+6 -----------------------
+
+*/
+
+void GridCtrl::UpdateJoins(int row, int col, int cnt)
+{
+	if(row >= 0)
+	{
+		for(int i = 0; i < joins.GetCount(); i++)
+		{
+			JoinRect& jr = joins[i];
+			
+			int top = jr.r.top;
+			int bottom = jr.r.bottom;
+
+			if(row > top && row < bottom) // new row is inside cell rect, idy doesn't change but cy does
+			{
+				for(int r = jr.r.top; r <= jr.r.bottom; r++)
+				{
+					for(int c = jr.r.left; c <= jr.r.right; c++)
+					{
+						if(r < row || r > row)
+						{
+							Item& it = GetItem(r, c);
+							it.cy += cnt;
+						}
+						else if(r == row)
+						{
+							for(int n = 0; n < cnt; n++)
+							{
+								Item& it = GetItem(r + n, c);
+								it.group = jr.group;
+								it.idx = jr.idx;
+								it.idy = jr.idy;
+								it.cx = jr.r.Width();
+								it.cy = jr.r.Height() + cnt;
+								it.isjoined = true;
+			
+								if(c == jr.r.left)
+									vitems[r + n].join++;
+							}
+						}
+					}				
+				}
+								
+				jr.r.bottom += cnt;
+			}
+			else if(row <= top) // idy changes
+			{
+				jr.idy += cnt;
+				
+				for(int r = jr.r.top; r <= jr.r.bottom; r++)
+				{
+					for(int c = jr.r.left; c <= jr.r.right; c++)
+					{
+						Item& it = GetItem(r + cnt, c);
+						it.idy = jr.idy;
+					}
+				}
+
+				jr.r.top += cnt;
+				jr.r.bottom += cnt;
+			}
+		}	
+	}
+	
+	if(col >= 0)
+	{
+		for(int i = 0; i < joins.GetCount(); i++)
+		{
+			JoinRect& jr = joins[i];
+			
+			int left = jr.r.left;
+			int right = jr.r.right;
+
+			if(col > left && col < right)
+			{
+				for(int c = jr.r.left; c <= jr.r.right; c++)
+				{
+					for(int r = jr.r.top; r <= jr.r.bottom; r++)
+					{
+						if(c < col || c > col)
+						{
+							Item& it = GetItem(r, c);
+							it.cx += cnt;
+						}
+						else if(c == col)
+						{
+							for(int n = 0; n < cnt; n++)
+							{
+								Item& it = GetItem(r, c + n);
+								it.group = jr.group;
+								it.idx = jr.idx;
+								it.idy = jr.idy;
+								it.cx = jr.r.Width() + cnt;
+								it.cy = jr.r.Height();
+								it.isjoined = true;
+			
+								if(r == jr.r.top)
+									hitems[c + n].join++;
+							}
+						}
+					}				
+				}
+								
+				jr.r.right += cnt;
+			}
+			else if(col <= left)
+			{
+				jr.idx += cnt;
+				
+				for(int c = jr.r.left; c <= jr.r.right; c++)
+				{
+					for(int r = jr.r.top; r <= jr.r.bottom; r++)
+					{
+						Item& it = GetItem(r, c + cnt);
+						it.idx = jr.idx;
+					}
+				}
+
+				jr.r.left += cnt;
+				jr.r.right += cnt;
+			}
+		}	
+	}
 }
 
 /*----------------------------------------------------------------------------------------*/

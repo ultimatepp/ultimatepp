@@ -506,6 +506,13 @@ class GridCtrl : public Ctrl
 		typedef Vector< Vector<Item> > Items;
 		typedef Vector< Edit > Edits;
 
+		struct JoinRect : Moveable<JoinRect>
+		{
+			Rect r;
+			int group;
+			int idx, idy;
+		};
+
 		public: class ItemRect : public Moveable<ItemRect>
 		{
 			friend class GridCtrl;
@@ -805,12 +812,14 @@ class GridCtrl : public Ctrl
 		typedef Vector<ItemRect> RectItems;
 		typedef Vector<ItemRect> VItems;
 		typedef Vector<ItemRect> HItems;
+		typedef Vector<JoinRect> JItems;
 
 		typedef GridCtrl CLASSNAME;
 
 		Items  items;
 		HItems hitems;
 		VItems vitems;
+		JItems joins;
 		
 		Vector<Item> summary;
 		Vector<Value> rowbkp;
@@ -1589,6 +1598,7 @@ class GridCtrl : public Ctrl
 		void JoinFixedCells(int left, int top, int right, int bottom);
 		void JoinRow(int n, int left, int right);
 		void JoinRow(int left = -1, int right = -1);
+		void UpdateJoins(int row, int col, int cnt = 1);
 
 		GridCtrl& Sort(int sort_col, int sort_mode = SORT_UP, bool multisort = false, bool repaint = true);
 		GridCtrl& Sort(Id id, int sort_mode = SORT_UP, bool multisort = false, bool repaint = true);
