@@ -1697,12 +1697,10 @@ GridCtrl::ItemRect& GridCtrl::InsertColumn(int col, const char *name, int size, 
 	}
 	
 	ir.Size(size);
-	String lname(name);
-	aliases.Insert(col, ToLower(lname), ir.id);
-	rowbkp.Insert(col);
-
-	edits.Insert(col);
-	summary.Insert(col);
+	aliases.Add(ToLower(name), id);
+	rowbkp.Insert(id);
+	edits.Insert(id);
+	summary.Insert(id);
 	
 	for(int i = 0; i < total_rows; i++)
 		items[i].Insert(id);
@@ -1787,10 +1785,8 @@ GridCtrl::ItemRect& GridCtrl::AddColumn(const char *name, int size, bool idx)
 	
 	edits.Add();
 	summary.Add();
-
-	String lname(name);
-	aliases.Add(ToLower(lname), ib.id);
 	rowbkp.Add();
+	aliases.Add(ToLower(name), ib.id);
 	total_cols++;
 
 	if(ready && IsOpen())
@@ -1821,12 +1817,21 @@ void GridCtrl::RemoveColumn(int n, int count)
 		return;
 	for(int i = 0; i < total_rows; i++)
 		items[i].Remove(n, count);
+	
+	Vector<int> r;
 	for(int i = 0; i < count; i++)
+	{
 		if(edits[hitems[n + i].id].factory)
 			--genr_ctrls;
-	//TODO: Add removing edits!
+		r.Add(hitems[n + i].id);
+	}
+		
+	int id = hitems[n].id;
+	
 	hitems.Remove(n, count);
-	rowbkp.Remove(n, count);
+	rowbkp.Remove(r);
+	summary.Remove(r);
+	edits.Remove(r);
 	total_cols -= count;
 	recalc_cols = true;
 	valid_cursor = SetCursor0(min(curpos.x, total_cols - 1), curpos.y).IsValid();
