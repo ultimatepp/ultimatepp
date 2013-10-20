@@ -6,6 +6,7 @@ uses
 file
 	SDLGLDraw.h,
 	GLutil.cpp,
+	main2.cpp,
 	main.cpp,
 	SDLGLDraw.lay;
 

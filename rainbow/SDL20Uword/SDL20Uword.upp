@@ -6,7 +6,8 @@ uses
 
 file
 	main.cpp,
-	test.qtf;
+	test.qtf,
+	help.txt;
 
 mainconfig
 	"" = "GUI SSE2",

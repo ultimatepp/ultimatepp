@@ -9,6 +9,9 @@ NAMESPACE_UPP
 
 static Point fbmousepos;
 
+int SDLwidth;
+int SDLheight;
+
 Point GetMousePos() {
 	return fbmousepos;
 }
@@ -190,6 +193,10 @@ void Ctrl::HandleSDLEvent(SDL_Event* event)
             break;
         case SDL_WINDOWEVENT_MOVED:
             break;
+		case SDL_WINDOWEVENT_SIZE_CHANGED:
+			SDLwidth = event->window.data1;
+			SDLheight = event->window.data2;
+        	break;
         case SDL_WINDOWEVENT_RESIZED:
             break;
         case SDL_WINDOWEVENT_MINIMIZED:

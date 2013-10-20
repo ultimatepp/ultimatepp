@@ -14,32 +14,35 @@ static GLuint LoadShader(const char *src, GLenum type) {
 	// Check the compile status
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
 	if(!compiled) {
+		String error = "shader failed to compile ";
 		GLint infoLen = 0;
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
 		if(infoLen > 1) {
 			Buffer<char> infoLog(infoLen);
 			glGetShaderInfoLog(shader, infoLen, NULL, infoLog);
-			Panic(infoLog);
+			error << ~infoLog;
 		}
-
-		glDeleteShader(shader);
-		return 0;
+		Panic(error);
 	}
 
 	return shader;
 }
 
-void GLProgram::Create(const char *vertex_shader_src, const char *fragment_shader_src)
+void GLProgram::Create(const char *vertex_shader_, const char *fragment_shader_,
+                       Tuple2<int, const char *> *bind_attr, int bind_count)
 {
 	Clear();
 
 	program = glCreateProgram();
 
-	vertex_shader = LoadShader(vertex_shader_src, GL_VERTEX_SHADER);
-	fragment_shader = LoadShader(fragment_shader_src, GL_FRAGMENT_SHADER);
+	vertex_shader = LoadShader(vertex_shader_, GL_VERTEX_SHADER);
+	fragment_shader = LoadShader(fragment_shader_, GL_FRAGMENT_SHADER);
 	
 	glAttachShader(program, vertex_shader);
 	glAttachShader(program, fragment_shader);
+	
+	for(int i = 0; i < bind_count; i++)
+		glBindAttribLocation(program, bind_attr[i].a, bind_attr[i].b);
 
 	glLinkProgram(program);
 
@@ -54,8 +57,42 @@ void GLProgram::Create(const char *vertex_shader_src, const char *fragment_shade
 			glGetProgramInfoLog(program, infoLen, NULL, infoLog);
 			Panic(infoLog);
 		}
+		Panic("Failed to link");
 		Clear();
 	}
+}
+
+void GLProgram::Create(const char *vertex_shader, const char *fragment_shader,
+                       int attr1, const char *attr1name)
+{
+	Tuple2<int, const char *> bind[] = {
+		{ attr1, attr1name },
+	};
+	Create(vertex_shader, fragment_shader, bind, __countof(bind));
+}
+
+void GLProgram::Create(const char *vertex_shader, const char *fragment_shader,
+                       int attr1, const char *attr1name,
+                       int attr2, const char *attr2name)
+{
+	Tuple2<int, const char *> bind[] = {
+		{ attr1, attr1name },
+		{ attr2, attr2name },
+	};
+	Create(vertex_shader, fragment_shader, bind, __countof(bind));
+}
+
+void GLProgram::Create(const char *vertex_shader, const char *fragment_shader,
+                       int attr1, const char *attr1name,
+                       int attr2, const char *attr2name,
+                       int attr3, const char *attr3name)
+{
+	Tuple2<int, const char *> bind[] = {
+		{ attr1, attr1name },
+		{ attr2, attr2name },
+		{ attr3, attr3name },
+	};
+	Create(vertex_shader, fragment_shader, bind, __countof(bind));
 }
 
 void GLProgram::Clear()
