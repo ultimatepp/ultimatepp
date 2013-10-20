@@ -330,7 +330,7 @@ void AddIniInfo(const char *id, String (*current)(), String (*def)(), const char
 	f.info = info;
 }
 
-const Array<IniInfo> GetIniInfo()
+const Array<IniInfo>& GetIniInfo()
 {
 	return sIniInfo();
 }
