@@ -44,7 +44,7 @@ int ImageSizeAdjuster(const Image& img)
 }
 
 void SysImageRealized(const Image& img)
-{ // CtrlCore created handle for img, no need to keep pixels data in cache if it is paintonly kind
+{ // Pixel data copied to host platform, no need to keep pixels data in cache if it is paintonly kind
 	Mutex::Lock __(sMakeImage);
 	if(sFinished)
 		return;

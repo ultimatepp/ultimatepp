@@ -116,7 +116,7 @@ struct IniInfo {
 	String (*def)();
 };
 
-const Array<IniInfo> GetIniInfo();
+const Array<IniInfo>& GetIniInfo();
 String GetIniInfoFormatted();
 
 #define INI_TYPE(var, def, info, type, decl, ref)\

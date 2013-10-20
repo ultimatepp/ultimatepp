@@ -1,88 +1,22 @@
 #include "GLDraw.h"
 
+#ifndef GL_USE_SHADERS
+
 #define LLOG(x) // LOG(x)
 
-#ifndef GL_BGRA  // Win32 missing these
-#define GL_BGRA 0x80E1
-#endif
-
 namespace Upp {
-
-struct ImageGLData {
-//	Image        img;
-	GLuint       texture_id;
-	
-	void Init(const Image& img);
-	~ImageGLData();
-};
-
-void ImageGLData::Init(const Image& img)
-{
-	Size sz = img.GetSize();
-
-	glGenTextures(1, &texture_id);
-	glBindTexture(GL_TEXTURE_2D, texture_id);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sz.cx, sz.cy, 0, GL_BGRA, GL_UNSIGNED_BYTE, ~img);
-	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	LLOG("Texture id created: " << texture_id);
-//	SysImageRealized(img); // ?
-}
-
-static LRUCache<ImageGLData, Tuple2<uint64, uint64> > sTextureCache;
-static bool sReset;
-
-ImageGLData::~ImageGLData()
-{
-//	SysImageReleased(img); // ?
-	if(!sReset)
-		glDeleteTextures(1, &texture_id);
-	LLOG("Texture id deleted: " << texture_id);
-}
-
-void GLDraw::ClearCache()
-{
-	sReset = false;
-	sTextureCache.Clear();
-}
-
-void GLDraw::ResetCache()
-{
-	sReset = true;
-	sTextureCache.Clear();
-	sReset = false;
-}
-
-struct ImageGLDataMaker : LRUCache<ImageGLData, Tuple2<uint64, uint64> >::Maker {
-	Image         img;
-	uint64        context;
-
-	virtual Tuple2<uint64, uint64>  Key() const                      { return MakeTuple<uint64, uint64>(img.GetSerialId(), context); }
-	virtual int                     Make(ImageGLData& object) const  { object.Init(img); return img.GetLength(); }
-};
 
 void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 {
 	if(img.GetLength() == 0)
 		return;
 
-	DLOG("PutImage " << img.GetSerialId() << ' ' << p.x << ", " << p.y << ", "<< img.GetSize());
+	LLOG("PutImage " << img.GetSerialId() << ' ' << p.x << ", " << p.y << ", "<< img.GetSize());
 	LLOG("SysImage cache pixels " << sTextureCache.GetSize() << ", count " << sTextureCache.GetCount());
-	ImageGLDataMaker m;
-	m.img = img;
-	m.context = context;
-	ImageGLData& sd = sTextureCache.Get(m);
 
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, sd.texture_id);
+	glBindTexture(GL_TEXTURE_2D, GetTextureForImage(img));
 	
-	LLOG("Texture ID: " << sd.texture_id);
-
 	if(src == img.GetSize()) {
 		Rect r(p, img.GetSize());
 		glBegin(GL_TRIANGLE_STRIP);
@@ -120,8 +54,6 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 	}
 
    	glDisable(GL_TEXTURE_2D);
-
-	sTextureCache.Shrink(4 * 1024 * 768, 1000);
 }
 
 void GLDraw::SetColor(Color c)
@@ -131,7 +63,7 @@ void GLDraw::SetColor(Color c)
 
 void GLDraw::PutRect(const Rect& r, Color color)
 {
-	DLOG("PutRect " << r << " " << color);
+	LLOG("PutRect " << r << " " << color);
 	bool inv = color == InvertColor();
 	if(inv)
 		glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
@@ -182,12 +114,8 @@ void GLDraw::Init(Size sz, uint64 context_)
 
 GLDraw::~GLDraw()
 {
-#ifdef USE_VBO
-	if(context) {
-		glDeleteBuffers(1, &vbo);
-		glDeleteBuffers(1, &tbo);
-	}
-#endif
 }
 
 }
+
+#endif

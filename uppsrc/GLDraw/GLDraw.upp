@@ -4,7 +4,10 @@ uses
 
 file
 	GLDraw.h,
+	Texture.cpp,
 	GLDraw.cpp,
+	GLShaders.cpp,
+	GLDrawS.cpp,
 	GLEW readonly separator,
 	glew.c,
 	glew.h,
