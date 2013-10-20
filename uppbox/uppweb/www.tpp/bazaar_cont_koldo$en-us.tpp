@@ -15,7 +15,12 @@ olik.rce][2 )]&]
 [s0;l160;2 &]
 [s0;l160; [*2 Bazaar]&]
 [s0;l160;i150;O0; [2 Main packages]&]
-[s0;l320;i150;O0; [^topic`:`/`/Controls4U`/srcdoc`/Controls4U`$en`-us^2 Controls4U]&]
+[s0;l320;i150;O0; [^topic`:`/`/Controls4U`/srcdoc`/Controls4U`$en`-us^2 Controls4U.]&]
+[s0;l480; [2 It includes classes from ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=309`&^2 j
+ibe][2  (like SliderCtrlX and StarIndicator) and support from ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&goto`=25572`&^2 j
+iangjiuzhi ][2 and][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&goto`=25572`&^2  
+][^http`:`/`/www`.codeguru`.com`/Cpp`/I`-N`/ieprogram`/article`.php`/c4379^2 Jeff 
+Glatt.]&]
 [s0;l320;i150;O0; [^topic`:`/`/Functions4U`/srcdoc`/Functions4U`$en`-us^2 Functions4U]&]
 [s0;l320;i150;O0; [^topic`:`/`/MAPIEx`/srcdoc`/MAPIEx`$en`-us^2 MAPIEx]&]
 [s0;l320;i150;O0; [^topic`:`/`/Media`/srcdoc`/Media`$en`-us^2 Media]&]
