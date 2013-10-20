@@ -1,0 +1,1 @@
+TIMING DoPaint paint  :  8.79 s  - 15.82 ms ( 8.79 s  / 556 ), min:  7.00 ms, max: 69.00 ms, nesting: 1 - 556

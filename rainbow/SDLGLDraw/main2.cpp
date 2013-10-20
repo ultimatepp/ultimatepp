@@ -1,47 +1,12 @@
 #include "SDLGLDraw.h"
 
-#if 0
+#if 1
 
-extern unsigned short *BaseAddress;
+int u_rectprojection;
+int u_imageprojection;
+int u_imagetexture;
 
 GLProgram gl_image, gl_rect;
-
-GLuint m_posLoc;
-GLuint m_texLoc;
-GLuint m_samplerLoc;
-GLuint m_texture;
-GLuint m_posLoc2;
-GLuint m_colorLoc;
-
-GLuint u_projection, u_projection2;
-
-float vertexCoords[] =
-{
-    10, 10,
-    20, 10,
-    20, 20,
-    10, 20,
-};
-
-float texCoords[] =
-{
-0.0, 0.0,
-0.0, 1.0,
-1.0, 0.0,
-1.0, 1.0
-};
-
-float colors[] =
-{
-1.0, 1.0, 0.0,
-1.0, 1.0, 0.0,
-1.0, 1.0, 0.0,
-1.0, 1.0, 0.0,
-};
-
-GLushort indices[] = { 0, 1, 2, 2, 1, 3 };
-
-#define INDEX 0 //ARRAY
 
 void CheckError()
 {
@@ -51,6 +16,8 @@ void CheckError()
         Panic(String().Cat() << " OpenGL error: " << gl_error);
     }
 }
+
+GLuint m_texture;
 
 void InitTexture(const Image &img)
 {
@@ -92,6 +59,7 @@ void initializeGL()
 	glDisable(GL_CULL_FACE);
 	CheckError();
 */
+
 	gl_image.Create(
 		"attribute vec4 a_position; \n"
 		"attribute vec2 a_texCoord; \n"
@@ -111,14 +79,14 @@ void initializeGL()
 		"uniform sampler2D s_texture; \n"
 		"void main() \n"
 		"{ \n"
-		"   gl_FragColor = texture2D( s_texture, v_texCoord ); \n"
-		"} \n"
+		"   gl_FragColor = texture2D(s_texture, v_texCoord); \n"
+		"} \n",
+		ATTRIB_VERTEX, "a_position",
+		ATTRIB_TEXPOS, "a_texCoord"
 	);
 
-	m_posLoc = gl_image.GetAttrib("a_position");
-	m_texLoc = gl_image.GetAttrib("a_texCoord");
-	m_samplerLoc = gl_image.GetUniform("s_texture");
-	u_projection = gl_image.GetUniform("u_projection");
+	u_imagetexture = gl_image.GetUniform("s_texture");
+	u_imageprojection = gl_image.GetUniform("u_projection");
 
 	gl_rect.Create(
 		"attribute vec4 a_position; \n"
@@ -140,28 +108,35 @@ void initializeGL()
 		"void main()\n"
 		"{\n"
 		"    gl_FragColor = v_color;\n"
-		"}"
+		"}",
+		ATTRIB_VERTEX, "a_position",
+		ATTRIB_COLOR, "a_color"
 	);
 
-	m_posLoc2 = gl_rect.GetAttrib("a_position");
-	m_colorLoc = gl_rect.GetAttrib("a_color");
-	u_projection2 = gl_rect.GetUniform("u_projection");
-
-	glEnableVertexAttribArray(m_posLoc2);
-	glEnableVertexAttribArray(m_colorLoc);
+	u_rectprojection = gl_rect.GetUniform("u_projection");
 	
+	glEnableVertexAttribArray(ATTRIB_VERTEX);
+	glEnableVertexAttribArray(ATTRIB_TEXPOS);
+	glEnableVertexAttribArray(ATTRIB_COLOR);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	InitTexture(CtrlImg::exclamation());
 }
 
 void GLOrtho(float left, float right, float bottom, float top, float near, float far, GLuint u_projection)
 {
+	right *= 1.25;
+	bottom *= 1.25;
+	
     float a = 2.0f / (right - left);
     float b = 2.0f / (top - bottom);
     float c = -2.0f / (far - near);
 
-    float tx = - (right + left)/(right - left);
-    float ty = - (top + bottom)/(top - bottom);
-    float tz = - (far + near)/(far - near);
+    float tx = - (right + left) / (right - left);
+    float ty = - (top + bottom) / (top - bottom);
+    float tz = - (far + near) / (far - near);
 
 	float ortho[16] = {
 	    a, 0, 0, 0,
@@ -170,25 +145,21 @@ void GLOrtho(float left, float right, float bottom, float top, float near, float
 	    tx, ty, tz, 1
 	};
 
-    glUniformMatrix4fv(u_projection, 1, 0, &ortho[0]);
+    glUniformMatrix4fv(u_projection, 1, 0, ortho);
 }
 
 void GLRect(Size sz, const Rect& rect, const Color& color)
 {
 	gl_rect.Use();
-	GLOrtho(0, sz.cx, sz.cy, 0, 0.0f, 1.0f, u_projection2);
 
-	float vertexCoords[] = {
+	GLOrtho(0, sz.cx, sz.cy, 0, 0.0f, 1.0f, u_rectprojection); // TODO
+
+	GLshort vertex[] = {
 	    rect.left, rect.top,
 	    rect.left, rect.bottom,
 	    rect.right, rect.bottom,
 	    rect.right, rect.top,
 	};
-
-//	float h = 128.0;	
-//	GLfloat r = color.GetR() / h;
-//	GLfloat g = color.GetG() / h;
-//	GLfloat b = color.GetB() / h;
 
 	GLubyte r = color.GetR();
 	GLubyte g = color.GetG();
@@ -200,79 +171,98 @@ void GLRect(Size sz, const Rect& rect, const Color& color)
 		r, g, b,
 		r, g, b,
 	};
-	GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
+	
+	static GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
 
-	glVertexAttribPointer(gl_rect.GetAttrib("a_position"), 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), vertexCoords );
-	glVertexAttribPointer(gl_rect.GetAttrib("a_color"), 3, GL_UNSIGNED_BYTE, GL_FALSE, 3 * sizeof(GLubyte), colors);
+	glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_SHORT, GL_FALSE, 2 * sizeof(GLshort), vertex);
+	glVertexAttribPointer(ATTRIB_COLOR, 3, GL_UNSIGNED_BYTE, GL_FALSE, 3 * sizeof(GLubyte), colors);
  
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+}
 
-//	glDisableVertexAttribArray(m_posLoc2);
-//	glDisableVertexAttribArray(m_colorLoc);
+void GLImage(Size sz, Point p, const Image& m)
+{
+	gl_image.Use();
+
+	GLOrtho(0, sz.cx, sz.cy, 0, 0.0f, 1.0f, u_imageprojection); // TODO
+
+	sz = m.GetSize();
+	DDUMP(sz);
+	GLshort vertexCoords[] = {
+		p.x, p.y,
+		p.x, p.y + sz.cy,
+		p.x + sz.cx, p.y + sz.cy,
+		p.x + sz.cx, p.y,
+	};
+
+	static GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
+
+	static float texCoords[] = // TODO
+	{
+		0.0, 0.0,
+		0.0, 1.0,
+		1.0, 1.0,
+		1.0, 0.0
+	};
+
+	glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_SHORT, GL_FALSE, 2 * sizeof(GLshort), vertexCoords );
+	glVertexAttribPointer(ATTRIB_TEXPOS, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), texCoords );
+
+	glBindTexture(GL_TEXTURE_2D, GetTextureForImage(m));
+	glUniform1i(u_imagetexture, 0);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 }
 
 void paintGL(Size sz)
 {
-
-	glClear( GL_COLOR_BUFFER_BIT );
-
-#if 0
-	// Use the program object
-	glUseProgram ( m_program );
-
-	glVertexAttribPointer(m_posLoc, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), vertexCoords );
-	glVertexAttribPointer(m_texLoc, 2, GL_FLOAT, GL_FALSE, 2*sizeof(GLfloat), texCoords );
-
-	glEnableVertexAttribArray(m_posLoc);
-	glEnableVertexAttribArray(m_texLoc);
-	glBindTexture(GL_TEXTURE_2D, m_texture);
-	glUniform1i( m_samplerLoc, 0 );
-	glDisableVertexAttribArray(m_posLoc);
-	glDisableVertexAttribArray(m_texLoc);
-#endif
-
-#if 0
-	CheckError();
-
-	glVertexAttribPointer( m_posLoc2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), vertexCoords );
-	CheckError();
-	glVertexAttribPointer( m_colorLoc, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), colors );
-
-	CheckError();
-
-	glEnableVertexAttribArray( m_posLoc );
-	CheckError();
-	glEnableVertexAttribArray( m_colorLoc );
-	CheckError();
-
-	glBindTexture(GL_TEXTURE_2D, m_texture);
-/*	
-	copyScreen( m_ScreenPtr, BaseAddress );
+//	glClear( GL_COLOR_BUFFER_BIT );
 	
-	glTexSubImage2D( GL_TEXTURE_2D,0,
-				 0,0, 256,256,
-				 GL_RGB,GL_UNSIGNED_SHORT_5_6_5, m_ScreenPtr );
-*/
-	CheckError();
+//	GLRect(sz, sz, LtRed());
+//	GLRect(sz, Rect(sz).Deflated(2), Blue());
+//	return;
 
-	glDrawElements( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );
-#endif
+//	GLOrtho(0, sz.cx, sz.cy, 0, 0.0f, 1.0f);
+
+	DDUMP(sz);
+
+//	GLRect(sz, sz, LtGray());
+	GLRect(sz, RectC(sz.cx - 1, sz.cy - 1, 1, 1), Black());
 
 	for(int i = 0; i < 10; i++)
 		for(int j = 0; j < 10; j++)
-			GLRect(sz, RectC(i * 16, j * 16, 12, 12), decode(i, 0, LtBlue(), 1, White(), LtRed()));
+			GLRect(sz, RectC(i * 16, j * 16, 2, 2), decode(i, 0, LtBlue(), 1, White(), LtRed()));
+
+
+	for(int i = 0; i < sz.cx / 2; i++)
+		GLRect(sz, RectC(i * 2, 500, 1, 2), Black());
+
+	for(int i = 0; i < 5; i++)
+		GLRect(sz, RectC(i * 2, 520, 1, 1), Black());
+
+	for(int i = 0; i < 5; i++)
+		GLRect(sz, RectC(i, 530 + 2 * i, 1, 1), Black());
+
+	for(int i = 0; i < 5; i++)
+		GLRect(sz, RectC(2 * i, 600 + 2 * i, 1, 1), Black());
+
+	for(int i = 0; i < 10; i++)
+		for(int j = 0; j < 10; j++) {
+			GLRect(sz, RectC(120 + i * 40, 120 + j * 40, 32, 32), LtCyan());
+			GLImage(sz, Point(120 + i * 40, 120 + j * 40), CtrlImg::reporticon());
+		}
  // CheckError();
 }
 
+namespace Upp {
 extern int SDLwidth;
 extern int SDLheight;
+};
 
 void SDLGLDraw::Paint(Draw& w)
 {
-//	w.DrawRect(GetSize(), White());
-//	w.DrawText(0, 0, "Hello world!");
-	
+	w.DrawRect(GetSize(), White());
+	w.DrawText(0, 0, "Hello world!");
 	paintGL(Size(SDLwidth, SDLheight));
 }
 
