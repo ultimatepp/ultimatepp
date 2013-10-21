@@ -60,7 +60,10 @@ class GLDraw : public SDraw {
 	uint64   context;
 
 public:
-	virtual void  PutImage(Point p, const Image& m, const Rect& src);
+	virtual void  PutImage(Point p, const Image& img, const Rect& src);
+#ifdef GL_USE_SHADERS
+	virtual void  PutImage(Point p, const Image& img, const Rect& src, Color color);
+#endif
 	virtual void  PutRect(const Rect& r, Color color);
 	
 	void Init(Size sz, uint64 context = 0);

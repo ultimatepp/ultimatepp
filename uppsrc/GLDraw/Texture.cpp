@@ -1,5 +1,7 @@
 #include "GLDraw.h"
 
+#define LTIMING(x) // RTIMING(x)
+
 #define LLOG(x) // DLOG(x)
 
 namespace Upp {
@@ -14,6 +16,7 @@ struct ImageGLData {
 
 void ImageGLData::Init(const Image& img)
 {
+	LTIMING("CreateTexture");
 	Size sz = img.GetSize();
 
 	glGenTextures(1, &texture_id);
