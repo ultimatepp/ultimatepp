@@ -1,12 +1,14 @@
 #include "GLDraw.h"
 
+#define LTIMING(x) // RTIMING(x)
+
 #ifdef GL_USE_SHADERS
 
 namespace Upp {
 
 int u_imagetexture;
 
-GLProgram gl_image, gl_rect;
+GLProgram gl_image, gl_image_colored, gl_rect;
 
 void CheckError()
 {
@@ -30,8 +32,8 @@ void initializeGL()
 		"{ \n"
 		"   gl_Position = u_projection * a_position; \n"
 		"   v_texCoord = a_texCoord; \n"
-		"} \n",
-
+		"} \n"
+		,
 		"#ifdef GL_ES\n"
 		"precision mediump float; \n"
 		"precision mediump int; \n"
@@ -48,6 +50,40 @@ void initializeGL()
 
 	glUniform1i(gl_image.GetUniform("s_texture"), 0);
 
+	gl_image_colored.Create(
+		"attribute vec4 a_position; \n"
+		"attribute vec2 a_texCoord; \n"
+		"attribute vec4 a_color; \n"
+		"uniform mat4 u_projection; \n"
+		"varying vec2 v_texCoord; \n"
+		"varying vec4 v_color; \n"
+		"void main() \n"
+		"{ \n"
+		"   gl_Position = u_projection * a_position; \n"
+		"   v_texCoord = a_texCoord; \n"
+		"   v_color = a_color * vec4((1.0 / 255.0), (1.0 / 255.0), (1.0 / 255.0), 1); \n"
+		"} \n"
+		,
+		"#ifdef GL_ES\n"
+		"precision mediump float; \n"
+		"precision mediump int; \n"
+		"#endif\n"
+		"varying vec2 v_texCoord; \n"
+		"varying vec4 v_color; \n"
+		"uniform sampler2D s_texture; \n"
+		"void main() \n"
+		"{ \n"
+		"   gl_FragColor = texture2D(s_texture, v_texCoord); \n"
+		"   gl_FragColor = v_color;\n"
+		"   gl_FragColor[3] = texture2D(s_texture, v_texCoord)[3]; \n"
+		"} \n",
+		ATTRIB_VERTEX, "a_position",
+		ATTRIB_TEXPOS, "a_texCoord",
+		ATTRIB_COLOR, "a_color"
+	);
+
+	glUniform1i(gl_image_colored.GetUniform("s_texture"), 0);
+
 	gl_rect.Create(
 		"attribute vec4 a_position; \n"
 		"attribute vec4 a_color; \n"
@@ -57,14 +93,13 @@ void initializeGL()
 		"{ \n"
 		" gl_Position = u_projection * a_position; \n"
 		" v_color = a_color * vec4((1.0 / 255.0), (1.0 / 255.0), (1.0 / 255.0), 1); \n"
-		"}",
-
+		"}"
+		,
 		"#ifdef GL_ES\n"
 		"precision mediump float;\n"
 		"precision mediump int;\n"
 		"#endif\n"
 		"varying vec4 v_color;\n"
-		"\n"
 		"void main()\n"
 		"{\n"
 		"    gl_FragColor = v_color;\n"
@@ -101,6 +136,7 @@ void GLOrtho(float left, float right, float bottom, float top, float near, float
 
 void GLDraw::PutRect(const Rect& rect, Color color)
 {
+	LTIMING("PutRect");
 	gl_rect.Use();
 
 	GLshort vertex[] = {
@@ -143,12 +179,13 @@ void GLDraw::PutRect(const Rect& rect, Color color)
 
 void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 {
+	LTIMING("PutImage");
 	gl_image.Use();
 
 	Rect s = src & img.GetSize();
 	Rect r(p, s.GetSize());
 
-	GLshort vertexCoords[] = {
+	GLshort vertex[] = {
 	    r.left, r.top,
 	    r.left, r.bottom,
 	    r.right, r.bottom,
@@ -186,11 +223,79 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 
 	glEnableVertexAttribArray(ATTRIB_TEXPOS);
 	glVertexAttribPointer(ATTRIB_TEXPOS, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), tc);
-	glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_SHORT, GL_FALSE, 2 * sizeof(GLshort), vertexCoords);
+	glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_SHORT, GL_FALSE, 2 * sizeof(GLshort), vertex);
 	glBindTexture(GL_TEXTURE_2D, GetTextureForImage(img));
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 
+	glDisableVertexAttribArray(ATTRIB_TEXPOS);
+}
+
+void GLDraw::PutImage(Point p, const Image& img, const Rect& src, Color color)
+{
+	RTIMING("PutImage colored");
+	gl_image_colored.Use();
+
+	Rect s = src & img.GetSize();
+	Rect rect(p, s.GetSize());
+
+	GLshort vertex[] = {
+	    rect.left, rect.top,
+	    rect.left, rect.bottom,
+	    rect.right, rect.bottom,
+	    rect.right, rect.top,
+	};
+
+	GLubyte r = color.GetR();
+	GLubyte g = color.GetG();
+	GLubyte b = color.GetB();
+
+	GLubyte colors[] = {
+		r, g, b,
+		r, g, b,
+		r, g, b,
+		r, g, b,
+	};
+
+	static GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
+
+	const float *tc;
+
+	if(src == img.GetSize()) {
+		static float fixed[] = {
+			0.0, 0.0,
+			0.0, 1.0,
+			1.0, 1.0,
+			1.0, 0.0,
+		};
+		tc = fixed;
+	}
+	else {
+		Sizef iszf = img.GetSize();
+		Rectf h;
+		h.left = s.left / iszf.cx;
+		h.right = s.right / iszf.cx;
+		h.top = s.top / iszf.cy;
+		h.bottom = s.bottom / iszf.cy;
+		float partial[] = {
+		    h.left, h.top,
+		    h.left, h.bottom,
+		    h.right, h.bottom,
+		    h.right, h.top,
+		};
+		tc = partial;
+	}
+
+	glEnableVertexAttribArray(ATTRIB_TEXPOS);
+	glVertexAttribPointer(ATTRIB_TEXPOS, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), tc);
+	glEnableVertexAttribArray(ATTRIB_COLOR);
+	glVertexAttribPointer(ATTRIB_COLOR, 3, GL_UNSIGNED_BYTE, GL_FALSE, 3 * sizeof(GLubyte), colors);
+	glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_SHORT, GL_FALSE, 2 * sizeof(GLshort), vertex);
+	glBindTexture(GL_TEXTURE_2D, GetTextureForImage(img));
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+
+	glDisableVertexAttribArray(ATTRIB_COLOR);
 	glDisableVertexAttribArray(ATTRIB_TEXPOS);
 }
 
@@ -203,6 +308,9 @@ void GLDraw::Init(Size sz, uint64 context_)
 	}
 
 	gl_image.Use();
+	GLOrtho(0, sz.cx, sz.cy, 0, 0.0f, 1.0f, gl_image.GetUniform("u_projection"));
+
+	gl_image_colored.Use();
 	GLOrtho(0, sz.cx, sz.cy, 0, 0.0f, 1.0f, gl_image.GetUniform("u_projection"));
 
 	gl_rect.Use();

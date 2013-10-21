@@ -64,6 +64,8 @@ void GLProgram::Create(const char *vertex_shader_, const char *fragment_shader_,
 		Panic("Failed to link");
 		Clear();
 	}
+	
+	Use();
 }
 
 void GLProgram::Create(const char *vertex_shader, const char *fragment_shader,

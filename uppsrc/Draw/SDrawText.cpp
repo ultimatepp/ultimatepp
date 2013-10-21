@@ -41,7 +41,7 @@ void SDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Co
 {
 	sMakeTextGlyph g;
 	g.font = font;
-	g.color = ink;
+	g.color = White();
 	g.angle = angle;
 	g.draw = this;
 	for(int i = 0; i < n; i++) {
@@ -52,14 +52,14 @@ void SDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Co
 			int n = at.x + at.y;
 			Size bandsz(2 * n, 32);
 			for(int yy = 0; yy < n; yy += bandsz.cy) {
-				Image m = RenderGlyph(Point(0, -yy), angle, g.chr, font, ink, bandsz);
-				SysDrawImageOp(x, y + yy, m, m.GetSize(), Null);
+				Image m = RenderGlyph(Point(0, -yy), angle, g.chr, font, White(), bandsz);
+				SysDrawImageOp(x, y + yy, m, m.GetSize(), ink);
 			}
 		}
 		else {
 			Image m = MakeImage(g);
 			Point h = m.GetHotSpot();
-			SysDrawImageOp(x - h.x, y - h.y, m, m.GetSize(), Null);
+			SysDrawImageOp(x - h.x, y - h.y, m, m.GetSize(), ink);
 		}
 		x += dx ? *dx++ : font[g.chr];
 	}

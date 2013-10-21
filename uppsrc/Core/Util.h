@@ -134,43 +134,6 @@ INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var,
 #define INI_STRING(var, def, info) String& DefRef_##var() { static String x; return x; }\
                                    INI_TYPE(var, def, info, String, IniString, DefRef_##var);
 
-/*
-#define INI_BOOL(var, def, info)\
-bool DefIni_##var() { return def; }\
-IniBool var = { #var, DefIni_##var };\
-String AsStringIniCurrent_##var() { return AsString(var); } \
-String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
-INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var, info); }
-
-#define INI_STRING(var, def, info)\
-String DefIni_##var() { return def; }\
-IniString var = { #var, DefIni_##var };\
-String AsStringIniCurrent_##var() { return AsString(var); } \
-String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
-INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var, info); }
-
-#define INI_INT(var, def, info)\
-int DefIni_##var() { return def; }\
-IniInt var = { #var, DefIni_##var };\
-String AsStringIniCurrent_##var() { return AsString(var); } \
-String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
-INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var, info); }
-
-#define INI_INT64(var, def, info)\
-int64 DefIni_##var() { return def; }\
-Ini64Int var = { #var, DefIni_##var };\
-String AsStringIniCurrent_##var() { return AsString(var); } \
-String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
-INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var, info); }
-
-#define INI_DOUBLE(var, def, info)\
-double DefIni_##var() { return def; }\
-IniDouble var = { #var, DefIni_##var };\
-String AsStringIniCurrent_##var() { return AsString(var); } \
-String AsStringIniDefault_##var() { return AsString(DefIni_##var()); } \
-INITBLOCK { AddIniInfo(#var, AsStringIniCurrent_##var, AsStringIniDefault_##var, info); }
-*/
-
 VectorMap<String, String> LoadIniStream(Stream &in);
 VectorMap<String, String> LoadIniFile(const char *filename);
 
