@@ -1,5 +1,7 @@
 #include "GLDraw.h"
 
+#define LTIMING(x) RTIMING(x)
+
 #ifndef GL_USE_SHADERS
 
 #define LLOG(x) // LOG(x)
@@ -8,6 +10,8 @@ namespace Upp {
 
 void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 {
+	LTIMING("PutImage");
+	
 	if(img.GetLength() == 0)
 		return;
 
@@ -63,6 +67,7 @@ void GLDraw::SetColor(Color c)
 
 void GLDraw::PutRect(const Rect& r, Color color)
 {
+	LTIMING("PutRect");
 	LLOG("PutRect " << r << " " << color);
 	bool inv = color == InvertColor();
 	if(inv)
@@ -110,6 +115,10 @@ void GLDraw::Init(Size sz, uint64 context_)
 	glGenBuffers(1, &tbo);
 	glBindBuffer(GL_
 */
+}
+
+void GLDraw::Finish()
+{
 }
 
 GLDraw::~GLDraw()

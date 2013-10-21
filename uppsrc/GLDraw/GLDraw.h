@@ -11,6 +11,8 @@
 
 #define GL_USE_SHADERS
 
+#define GL_COMB_OPT
+
 #include <GL/gl.h>
 
 namespace Upp {
@@ -58,6 +60,16 @@ class GLDraw : public SDraw {
 	void SetColor(Color c);
 
 	uint64   context;
+	
+#ifdef GL_COMB_OPT
+	struct RectColor : Moveable<RectColor> {
+		Rect  rect;
+		Color color;
+	};
+	Vector<RectColor> put_rect;
+	
+	void FlushPutRect();
+#endif
 
 public:
 	virtual void  PutImage(Point p, const Image& img, const Rect& src);
@@ -67,6 +79,7 @@ public:
 	virtual void  PutRect(const Rect& r, Color color);
 	
 	void Init(Size sz, uint64 context = 0);
+	void Finish();
 	
 	static void ClearCache();
 	static void ResetCache();

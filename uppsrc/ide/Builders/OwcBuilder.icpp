@@ -118,6 +118,7 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 				objfile = ForceExt(objfile, ".res");
 				int slot = AllocSlot();
 				if (slot < 0 || !Run("wrc -q -r -x -fo=" + GetHostPathQ(objfile) + Includes(" -i=", package, pkg)
+				    + DefinesTargetTime(" -d", package, pkg) + (HasFlag("DEBUG")?" -d_DEBUG":"") 
 					+ ' ' + GetHostPathQ(fn), slot, GetHostPath(objfile), 1))
 					execerr = true;
 			}
