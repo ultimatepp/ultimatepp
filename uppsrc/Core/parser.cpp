@@ -151,7 +151,10 @@ int  CParser::Sgn()
 int  CParser::ReadInt() throw(Error) {
 	LTIMING("ReadInt");
 	int sign = Sgn();
-	return sign * ReadNumber(10);
+	uint32 n = ReadNumber(10);
+	if(sign > 0 ? n > INT_MAX : n > (uint32)INT_MAX + 1)
+		ThrowError("number is too big");
+	return sign * (int)n;
 }
 
 int CParser::ReadInt(int min, int max) throw(Error)
@@ -166,7 +169,10 @@ int64 CParser::ReadInt64() throw(Error)
 {
 	LTIMING("ReadInt64");
 	int sign = Sgn();
-	return sign * ReadNumber64(10);
+	uint64 n = ReadNumber64(10);
+	if(sign > 0 ? n > INT64_MAX : n > (uint64)INT64_MAX + 1)
+		ThrowError("number is too big");
+	return sign * n;
 }
 
 int64 CParser::ReadInt64(int64 min, int64 max) throw(Error)
@@ -196,7 +202,10 @@ uint32  CParser::ReadNumber(int base) throw(Error)
 		int c = ctoi(*term);
 		if(c < 0 || c >= base)
 			break;
+		uint32 n1 = n;
 		n = base * n + c;
+		if(n1 > n)
+			ThrowError("number is too big");
 		term++;
 	}
 	DoSpaces();
@@ -214,7 +223,10 @@ uint64  CParser::ReadNumber64(int base) throw(Error)
 		int c = ctoi(*term);
 		if(c < 0 || c >= base)
 			break;
+		uint64 n1 = n;
 		n = base * n + c;
+		if(n1 > n)
+			ThrowError("number is too big");
 		term++;
 	}
 	DoSpaces();
@@ -240,7 +252,10 @@ double CParser::ReadDouble() throw(Error)
 	if(Char('e') || Char('E'))
 		n *= pow(10.0, ReadInt());
 	DoSpaces();
-	return sign * n;
+	n = sign * n;
+//	if(IsNaN(n) || n == HUGE_VAL)
+//		ThrowError("number is too big");
+	return n;
 }
 
 String CParser::ReadOneString(int delim, bool chkend) throw(Error) {
