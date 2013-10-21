@@ -208,10 +208,11 @@ void SkylarkApp::Run()
 	SKYLARKLOG("Starting Skylark, current static path: " << path);
 
 #ifdef PLATFORM_POSIX
+	struct sigaction sa;
+	memset(&sa, 0, sizeof(sa));
+	sa.sa_handler = SignalHandler;
+	sigaction(SIGUSR1, &sa, NULL);
 	if(prefork) {
-		struct sigaction sa;
-		memset(&sa, 0, sizeof(sa));
-		sa.sa_handler = SignalHandler;
 		sigaction(SIGTERM, &sa, NULL);
 		sigaction(SIGINT, &sa, NULL);
 		sigaction(SIGHUP, &sa, NULL);
