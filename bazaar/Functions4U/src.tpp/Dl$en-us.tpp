@@ -16,7 +16,7 @@ topic "Dl";
 [s0;i150;a25;kKO0; Windows: DLL.&]
 [s0;i150;a25;kKO0; Linux: Shared libraries, relocatable files, or 
 programs&]
-[s0;i448;a25;kKO9; &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s4; &]
 [s5;:Dl`:`:Load`(const String`&`): [@(0.0.255) bool]_[* Load]([@(0.0.255) const]_[_^String^ S
@@ -64,4 +64,4 @@ dll`"), `"GetDevice`"));]&]
 [s0;%% [C+75 -|throw Exc(Format(t`_(`"Function %s does not found in 
 dl`"), `"cosine`"));]&]
 [s0;%% [C+75 double val `= cosine(3.1416);]&]
-[s0; ]
+[s0; ]]

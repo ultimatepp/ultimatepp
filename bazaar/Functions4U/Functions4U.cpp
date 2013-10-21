@@ -2273,36 +2273,36 @@ String WideToString(LPCWSTR wcs, int len) {
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
-	Dl::Dl() {
-		hinstLib = 0;
-	}
-	
-	Dl::~Dl() {
-		if (hinstLib) 
-			if (FreeLibrary(hinstLib) == 0)
-				throw Exc(t_("Dl cannot be released"));
-	}
-	
-	#ifndef LOAD_IGNORE_CODE_AUTHZ_LEVEL
-		#define LOAD_IGNORE_CODE_AUTHZ_LEVEL	0x00000010
-	#endif
-	
-	bool Dl::Load(const String &fileDll) {
-		if (hinstLib) 
-			if (FreeLibrary(hinstLib) == 0)
-				return false;
-		
-		hinstLib = LoadLibraryEx(TEXT(fileDll), NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
-		if (!hinstLib) 
+Dl::Dl() {
+	hinstLib = 0;
+}
+
+Dl::~Dl() {
+	if (hinstLib) 
+		if (FreeLibrary(hinstLib) == 0)
+			throw Exc(t_("Dl cannot be released"));
+}
+
+#ifndef LOAD_IGNORE_CODE_AUTHZ_LEVEL
+	#define LOAD_IGNORE_CODE_AUTHZ_LEVEL	0x00000010
+#endif
+
+bool Dl::Load(const String &fileDll) {
+	if (hinstLib) 
+		if (FreeLibrary(hinstLib) == 0)
 			return false;
-		return true;
-	}
 	
-	void *Dl::GetFunction(const String &functionName) {
-		if (!hinstLib) 
-			return NULL;
-		return (void *)GetProcAddress(hinstLib, functionName);
-	}
+	hinstLib = LoadLibraryEx(TEXT(fileDll), NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
+	if (!hinstLib) 
+		return false;
+	return true;
+}
+
+void *Dl::GetFunction(const String &functionName) {
+	if (!hinstLib) 
+		return NULL;
+	return (void *)GetProcAddress(hinstLib, functionName);
+}
 
 #else
 
