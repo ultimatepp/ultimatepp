@@ -1,14 +1,14 @@
 #include "GLDraw.h"
 
-#define LTIMING(x) // RTIMING(x)
+#define LTIMING(x)  RTIMING(x)
 
 #ifdef GL_USE_SHADERS
 
 namespace Upp {
 
-int u_imagetexture;
-
 GLProgram gl_image, gl_image_colored, gl_rect;
+
+int u_color;
 
 void CheckError()
 {
@@ -83,7 +83,7 @@ void initializeGL()
 	);
 
 	glUniform1i(gl_image_colored.GetUniform("s_texture"), 0);
-
+/*
 	gl_rect.Create(
 		"attribute vec4 a_position; \n"
 		"attribute vec4 a_color; \n"
@@ -107,6 +107,29 @@ void initializeGL()
 		ATTRIB_VERTEX, "a_position",
 		ATTRIB_COLOR, "a_color"
 	);
+*/
+	gl_rect.Create(
+		"attribute vec4 a_position; \n"
+		"attribute vec4 a_color; \n"
+		"uniform mat4 u_projection; \n"
+		"void main() \n"
+		"{ \n"
+		" gl_Position = u_projection * a_position; \n"
+		"}"
+		,
+		"#ifdef GL_ES\n"
+		"precision mediump float;\n"
+		"precision mediump int;\n"
+		"#endif\n"
+		"uniform vec4 u_color; \n"
+		"void main()\n"
+		"{\n"
+		"    gl_FragColor = u_color;\n"
+		"}",
+		ATTRIB_VERTEX, "a_position"
+	);
+
+	u_color = gl_rect.GetUniform("u_color");
 
 	glEnableVertexAttribArray(ATTRIB_VERTEX);
 
@@ -134,9 +157,100 @@ void GLOrtho(float left, float right, float bottom, float top, float near, float
     glUniformMatrix4fv(u_projection, 1, 0, ortho);
 }
 
+void GLDraw::FlushPutRect()
+{
+	if(put_rect.GetCount() == 0)
+		return;
+
+	LTIMING("FlushPutRect");
+
+	gl_rect.Use();
+
+	Buffer<GLshort> vertex(8 * put_rect.GetCount());
+	Buffer<GLubyte> color(12 * put_rect.GetCount());
+	Buffer<GLushort> index(6 * put_rect.GetCount());
+	GLshort *v = vertex;
+	GLubyte *c = color;
+	GLushort *n = index;
+	for(int i = 0; i < put_rect.GetCount(); i++) {
+		const RectColor& rc = put_rect[i];
+	    *v++ = rc.rect.left;  *v++ = rc.rect.top;
+	    *v++ = rc.rect.left;  *v++ = rc.rect.bottom;
+	    *v++ = rc.rect.right; *v++ = rc.rect.bottom,
+	    *v++ = rc.rect.right; *v++ = rc.rect.top;
+		GLubyte r = rc.color.GetR();
+		GLubyte g = rc.color.GetG();
+		GLubyte b = rc.color.GetB();
+		*c++ = r; *c++ = g; *c++ = b;
+		*c++ = r; *c++ = g; *c++ = b;
+		*c++ = r; *c++ = g; *c++ = b;
+		*c++ = r; *c++ = g; *c++ = b;
+		*n++ = 4 * i + 0;
+		*n++ = 4 * i + 1;
+		*n++ = 4 * i + 2;
+		*n++ = 4 * i + 0;
+		*n++ = 4 * i + 2;
+		*n++ = 4 * i + 3;
+	}
+
+	glEnableVertexAttribArray(ATTRIB_COLOR);
+	glVertexAttribPointer(ATTRIB_COLOR, 3, GL_UNSIGNED_BYTE, GL_FALSE, 3 * sizeof(GLubyte), color);
+	glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_SHORT, GL_FALSE, 2 * sizeof(GLshort), vertex);
+
+	glDrawElements(GL_TRIANGLES, 6 * put_rect.GetCount(), GL_UNSIGNED_SHORT, index);
+
+	glDisableVertexAttribArray(ATTRIB_COLOR);
+	
+	put_rect.Clear();
+}
+
 void GLDraw::PutRect(const Rect& rect, Color color)
 {
 	LTIMING("PutRect");
+
+	gl_rect.Use();
+
+	GLshort vertex[] = {
+	    rect.left, rect.top,
+	    rect.left, rect.bottom,
+	    rect.right, rect.bottom,
+	    rect.right, rect.top,
+	};
+
+	bool inv = color == InvertColor();
+	if(inv) {
+		glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
+		color = Color(255, 255, 255);
+	}
+
+	GLubyte r = color.GetR();
+	GLubyte g = color.GetG();
+	GLubyte b = color.GetB();
+
+	glUniform4f(u_color, r / 255.0, g / 255.0, b / 255.0, 1.0);
+	
+	static GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
+
+	glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_SHORT, GL_FALSE, 2 * sizeof(GLshort), vertex);
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+
+	if(inv)
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+#if 0
+	LTIMING("PutRect");
+#ifdef GL_COMB_OPT
+	if(color != InvertColor()) {
+		RectColor& rc = put_rect.Add();
+		rc.rect = rect;
+		rc.color = color;
+		if(put_rect.GetCount() > 100)
+			FlushPutRect();
+		return;
+	}
+#endif
+
 	gl_rect.Use();
 
 	GLshort vertex[] = {
@@ -175,11 +289,14 @@ void GLDraw::PutRect(const Rect& rect, Color color)
 
 	if(inv)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+#endif
 }
 
 void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 {
 	LTIMING("PutImage");
+	FlushPutRect();
+
 	gl_image.Use();
 
 	Rect s = src & img.GetSize();
@@ -233,6 +350,8 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 
 void GLDraw::PutImage(Point p, const Image& img, const Rect& src, Color color)
 {
+	FlushPutRect();
+
 	RTIMING("PutImage colored");
 	gl_image_colored.Use();
 
@@ -315,6 +434,13 @@ void GLDraw::Init(Size sz, uint64 context_)
 
 	gl_rect.Use();
 	GLOrtho(0, sz.cx, sz.cy, 0, 0.0f, 1.0f, gl_rect.GetUniform("u_projection"));
+}
+
+void GLDraw::Finish()
+{
+#ifdef GL_COMB_OPT
+	FlushPutRect();
+#endif
 }
 
 GLDraw::~GLDraw()

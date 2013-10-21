@@ -53,6 +53,7 @@ struct CppBuilder : Builder {
 
 	String                 Includes(const char *sep, const String& package, const Package& pkg);
 	String                 IncludesShort(const char *sep, const String& package, const Package& pkg);
+	String                 DefinesTargetTime(const char *sep, const String& package, const Package& pkg);
 	String                 IncludesDefinesTargetTime(const String& package, const Package& pkg);
 
 	String                 GetMakePath(String fn) const;

@@ -381,19 +381,26 @@ String CppBuilder::IncludesShort(const char *sep, const String& package, const P
 	return cc;
 }
 
+String CppBuilder::DefinesTargetTime(const char *sep, const String& package, const Package& pkg)
+{
+	String cc;
+	for(int i = 0; i < config.GetCount(); i++)
+		cc << sep << "flag" << config[i];
+	Time t = GetSysTime();
+	cc << sep << "bmYEAR=" << (int)t.year;
+	cc << sep << "bmMONTH=" << (int)t.month;
+	cc << sep << "bmDAY=" << (int)t.day;
+	cc << sep << "bmHOUR=" << (int)t.hour;
+	cc << sep << "bmMINUTE=" << (int)t.minute;
+	cc << sep << "bmSECOND=" << (int)t.second;
+	cc << sep << "MAIN_CONF";
+	targettime = GetFileTime(target);
+	return cc;
+}
+
 String CppBuilder::IncludesDefinesTargetTime(const String& package, const Package& pkg)
 {
 	String cc = Includes(" -I", package, pkg);
-	for(int i = 0; i < config.GetCount(); i++)
-		cc << " -Dflag" << config[i];
-	Time t = GetSysTime();
-	cc << " -DbmYEAR=" << (int)t.year;
-	cc << " -DbmMONTH=" << (int)t.month;
-	cc << " -DbmDAY=" << (int)t.day;
-	cc << " -DbmHOUR=" << (int)t.hour;
-	cc << " -DbmMINUTE=" << (int)t.minute;
-	cc << " -DbmSECOND=" << (int)t.second;
-	cc << " -DMAIN_CONF";
-	targettime = GetFileTime(target);
+	cc << DefinesTargetTime(" -D", package, pkg);
 	return cc;
 }
