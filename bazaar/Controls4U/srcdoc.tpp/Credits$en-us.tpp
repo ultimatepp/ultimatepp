@@ -48,4 +48,4 @@ retouche by Richard Bartz.]&]
 [s0; [2 SVG files used in Controls4U`_demo are taken from http://www.openclipart.org 
 and licensed Public Domain Dedication, CC0 1.0 Universal (CC0 
 1.0).]&]
-[s0;2 ]
+[s0;2 ]]

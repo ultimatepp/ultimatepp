@@ -1,4 +1,4 @@
-description "Some additional controls\377B";
+description "Some additional controls\377B255,170,0";
 
 uses
 	CtrlLib,
