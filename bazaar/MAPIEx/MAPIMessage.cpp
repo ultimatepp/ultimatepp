@@ -17,10 +17,8 @@
 // Ported to U++ Framework by Koldo. See License.txt file
 
 #include "MAPIEx.h"
-//#include "MapiUtil.h"
-#include <imessage.h>
 
-const GUID CLSID_MailMessage={ 0x00020D0B, 0x0000, 0x0000, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46 };
+const GUID CLSID_MailMessage = {0x00020D0B, 0x0000, 0x0000, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46};
 
 #ifndef _WIN32_WCE
 #define INITGUID
@@ -28,10 +26,6 @@ const GUID CLSID_MailMessage={ 0x00020D0B, 0x0000, 0x0000, 0xC0, 0x00, 0x00, 0x0
 #include <InitGuid.h>
 #include <MAPIGuid.h>
 #endif
-
-extern "C" {
-  STDAPI_(void) CloseIMsgSession(LPMSGSESS lpMsgSess);
-}
 
   					
 /////////////////////////////////////////////////////////////
@@ -150,7 +144,7 @@ bool MAPIMessage::GetNextRecipient(String& strName, String& strEmail, int &nType
 				strEmail = MAPIEx::GetValidString(pRows->aRow[0].lpProps[PROP_RECIPIENT_EMAIL]);
 			bResult = true;
 		}
-		FreeProws(pRows);
+		MAPIEx::FreeProws(pRows);
 	}
 	return bResult;
 }
@@ -461,10 +455,10 @@ bool MAPIMessage::SaveToFile(const String &fileName) {
 	if(StgCreateDocfile(fileName.ToWString(), dwFlags, 0, &pStorage) != S_OK) 
 		return false;
 	LPMSGSESS pMsgSession;
-	LPMALLOC pMalloc = MAPIGetDefaultMalloc();
-	if(OpenIMsgSession(pMalloc, 0, &pMsgSession) == S_OK) {
+	LPMALLOC pMalloc = MF().MAPIGetDefaultMalloc();
+	if(MF().OpenIMsgSession(pMalloc, 0, &pMsgSession) == S_OK) {
 		LPMESSAGE pIMsg;
-		if(OpenIMsgOnIStg(pMsgSession, MAPIAllocateBuffer, MAPIAllocateMore, MAPIFreeBuffer, 
+		if(MF().OpenIMsgOnIStg(pMsgSession, MAPIAllocateBuffer, MAPIAllocateMore, MAPIFreeBuffer, 
 										pMalloc, NULL, pStorage, NULL, 0, 0, &pIMsg) == S_OK) {
 			// client must support CLSID_MailMessage as the compound document
 			if(WriteClassStg(pStorage, CLSID_MailMessage) == S_OK) {
@@ -487,7 +481,7 @@ bool MAPIMessage::SaveToFile(const String &fileName) {
 			}
 			RELEASE(pIMsg);
 		}
-		CloseIMsgSession(pMsgSession);
+		MF().CloseIMsgSession(pMsgSession);
 	}
 	RELEASE(pStorage);
 	return true;

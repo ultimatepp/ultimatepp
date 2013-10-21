@@ -2,6 +2,7 @@
 #define __MAPIEX_H__
 
 #include <Core/Core.h>
+#include <Functions4U/Functions4U.h>
 
 using namespace Upp;
 //#undef CY
@@ -48,6 +49,7 @@ using namespace Upp;
 #include <mapix.h>
 #include <wabutil.h>
 #include <objbase.h>
+#include <imessage.h>
 #endif
 
 #define RELEASE(s) if(s != NULL) {s->Release(); s=NULL;}
@@ -189,4 +191,21 @@ public:	////////
 #define MAPI_NO_COINIT 0x8
 #endif
 
+
+class MAPIFunctions {
+public:	
+	MAPIFunctions();
+	const void (*CloseIMsgSession)(LPMSGSESS lpMsgSess);
+	const void (*FreePadrlist)(LPADRLIST lpAdrlist);
+	const LPMALLOC (*MAPIGetDefaultMalloc)(VOID);
+	const SCODE (*OpenIMsgSession)(LPMALLOC lpMalloc,ULONG ulFlags,LPMSGSESS *lppMsgSess);
+	const SCODE (*OpenIMsgOnIStg)(LPMSGSESS lpMsgSess,LPALLOCATEBUFFER lpAllocateBuffer,LPALLOCATEMORE lpAllocateMore,LPFREEBUFFER lpFreeBuffer,LPMALLOC lpMalloc,LPVOID lpMapiSup,LPSTORAGE lpStg,MSGCALLRELEASE *lpfMsgCallRelease,ULONG ulCallerData,ULONG ulFlags,LPMESSAGE *lppMsg);
+	const LPSPropValue (*PpropFindProp)(LPSPropValue lpPropArray,ULONG cValues,ULONG ulPropTag);
+	
+private:
+	Dl dll;
+};
+
+MAPIFunctions &MF();
+	
 #endif

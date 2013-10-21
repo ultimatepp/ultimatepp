@@ -17,7 +17,6 @@
 // Ported to U++ Framework by Koldo. See License.txt file
 
 #include "MAPIEx.h"
-//#include "MapiUtil.h"
 
 /////////////////////////////////////////////////////////////
 // MAPIAppointment

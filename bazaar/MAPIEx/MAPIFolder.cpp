@@ -17,7 +17,6 @@
 // Ported to U++ Framework by Koldo. See License.txt file
 
 #include "MAPIEx.h"
-//#include "MapiUtil.h"
 
 /////////////////////////////////////////////////////////////
 // MAPIFolder
@@ -58,7 +57,7 @@ void MAPIFolder::SetBufferSize(int nSize) {
 
 void MAPIFolder::ClearBuffer() {
 	if(m_pRows) {
-		FreeProws(m_pRows);
+		MAPIEx::FreeProws(m_pRows);
 		m_pRows = NULL;
 	}
 	m_nRowsIndex = 0;
@@ -280,7 +279,7 @@ bool MAPIFolder::GetNextSubFolder(MAPIFolder& folder, String& strFolder) {
 				folder.Attach(m_pMAPI, pSubFolder, strFolder);
 			}
 		}
-		FreeProws(pRows);
+		MAPIEx::FreeProws(pRows);
 	}
 	if (!pSubFolder)
 		return false;

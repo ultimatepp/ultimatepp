@@ -17,7 +17,6 @@
 // Ported to U++ Framework by Koldo. See License.txt file
 
 #include "MAPIEx.h"
-//#include "MapiUtil.h"
 #include <winnls.h>
 
 /////////////////////////////////////////////////////////////
@@ -457,7 +456,7 @@ int MAPIObject::GetAttachmentCount() {
 						}
 						cRows = pRows->cRows;
 						ulCount += cRows;
-						FreeProws(pRows);
+						MAPIEx::FreeProws(pRows);
 					} while(cRows);
 				}
 #endif
@@ -517,7 +516,7 @@ bool MAPIObject::SaveAttachment(LPCTSTR szFolder, int nIndex, LPCTSTR szFileName
 					bResult = attachment.SaveAttachment(strPath);
 				}
 			}
-			FreeProws(pRows);
+			MAPIEx::FreeProws(pRows);
 			if(nIndex >= 0) 
 				break;
 		}
@@ -549,7 +548,7 @@ bool MAPIObject::DeleteAttachment(int nIndex)
 				} else
 					bResult = (Message()->DeleteAttach(pRows->aRow[0].lpProps[PROP_ATTACH_NUM].Value.ul, 
 																		0, NULL, 0) == S_OK);
-				FreeProws(pRows);
+				MAPIEx::FreeProws(pRows);
 				if(!bResult || nIndex == i) 
 					break;
 			}

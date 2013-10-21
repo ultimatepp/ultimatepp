@@ -16,7 +16,6 @@
 
 // Ported to U++ Framework by Koldo. See License.txt file
 
-//#include "MAPIExPCH.h"
 #include "MAPIEx.h"
 
 /////////////////////////////////////////////////////////////

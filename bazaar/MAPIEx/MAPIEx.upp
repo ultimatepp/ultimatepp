@@ -27,6 +27,4 @@ file
 	src.tpp,
 	License.txt;
 
-mainconfig
-	"" = "";
 

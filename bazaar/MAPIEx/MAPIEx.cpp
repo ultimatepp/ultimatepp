@@ -17,18 +17,30 @@
 // Ported to U++ Framework by Koldo. See License.txt file
 
 #include "MAPIEx.h"
-//#include "MapiUtil.h"
 #include "MAPISink.h"
 
 #ifdef _WIN32_WCE
 #include <cemapi.h>
 #pragma comment(lib,"cemapi.lib")
 #pragma comment(lib,"pimstore.lib")
-
-//#else
-//#pragma comment (lib, "mapi32.lib")
 #endif
-//#pragma comment(lib,"Ole32.lib")
+
+
+MAPIFunctions::MAPIFunctions() {
+	dll.Load("mapi32.dll");
+	CloseIMsgSession = (const void (*)(LPMSGSESS lpMsgSess))dll.GetFunction("CloseIMsgSession");
+	FreePadrlist	 = (const void (*)(LPADRLIST lpAdrlist))dll.GetFunction("FreePadrlist");
+	MAPIGetDefaultMalloc = (const LPMALLOC (*)(VOID))dll.GetFunction("MAPIGetDefaultMalloc");
+	OpenIMsgSession = (const SCODE (*)(LPMALLOC lpMalloc,ULONG ulFlags,LPMSGSESS *lppMsgSess))dll.GetFunction("OpenIMsgSession");
+	OpenIMsgOnIStg = (const SCODE (*)(LPMSGSESS lpMsgSess,LPALLOCATEBUFFER lpAllocateBuffer,LPALLOCATEMORE lpAllocateMore,LPFREEBUFFER lpFreeBuffer,LPMALLOC lpMalloc,LPVOID lpMapiSup,LPSTORAGE lpStg,MSGCALLRELEASE *lpfMsgCallRelease,ULONG ulCallerData,ULONG ulFlags,LPMESSAGE *lppMsg))dll.GetFunction("OpenIMsgOnIStg");
+	PpropFindProp = (const LPSPropValue (*)(LPSPropValue lpPropArray,ULONG cValues,ULONG ulPropTag))dll.GetFunction("PpropFindProp");
+}
+
+MAPIFunctions &MF() {
+	static MAPIFunctions data;
+	return data;
+}
+
 
 INITBLOCK {
 	if (!MAPIEx::Init())
@@ -63,7 +75,6 @@ MAPIEx::~MAPIEx() {
 	Logout();
 }
 
-// flags are ignored on Windows CE
 bool MAPIEx::Init(DWORD dwFlags, bool bInitAsService) {
 	if(CoInitializeEx(NULL, COINIT_MULTITHREADED) == S_OK) 
 		cm_bComInit = true;
@@ -114,7 +125,7 @@ void MAPIEx::Logout() {
 }
 
 bool MAPIEx::CreateProfile(String szProfileName) {
-	LPPROFADMIN	lpProfAdmin = NULL;
+	LPPROFADMIN	lpProfAdmin = NULL; 
 	if(MAPIAdminProfiles(0, &lpProfAdmin) != S_OK) 
 		return false;
 	HRESULT hr = lpProfAdmin->CreateProfile((LPTSTR)(szProfileName.Begin()), NULL, 0, 0);
@@ -295,7 +306,7 @@ bool MAPIEx::OpenMessageStore(String szStore, ULONG ulFlags) {
 				bResult = (m_pSession->OpenMsgStore(0, pRows->aRow[0].lpProps[1].Value.bin.cb, 
 									(ENTRYID*)pRows->aRow[0].lpProps[1].Value.bin.lpb, NULL,
 									MDB_NO_DIALOG | MAPI_BEST_ACCESS, &m_pMsgStore) == S_OK);
-				FreeProws(pRows);
+				MAPIEx::FreeProws(pRows);
 			}
 		}
 		RELEASE(pMsgStoresTable);
@@ -579,7 +590,7 @@ int MAPIEx::ShowAddressBook(LPADRLIST& pAddressList, const String caption) {
 // utility function to release ADRLIST entries
 void MAPIEx::ReleaseAddressList(LPADRLIST pAddressList) {
 #ifndef _WIN32_WCE
-	FreePadrlist(pAddressList);
+	MF().FreePadrlist(pAddressList);
 #else
 	if(pAddressList) {
 		for(ULONG i = 0; i < pAddressList->cEntries; i++) 
@@ -599,14 +610,14 @@ bool MAPIEx::CompareEntryIDs(ULONG cb1, LPENTRYID lpb1, ULONG cb2, LPENTRYID lpb
 // ADDRENTRY objects from Address don't come in unicode so I check for _A and force narrow strings
 bool MAPIEx::GetEmail(ADRENTRY& adrEntry, String& strEmail) {
 #ifndef _WIN32_WCE
-	LPSPropValue pProp = PpropFindProp(adrEntry.rgPropVals,adrEntry.cValues, PR_ADDRTYPE);
+	LPSPropValue pProp = MF().PpropFindProp(adrEntry.rgPropVals,adrEntry.cValues, PR_ADDRTYPE);
 	if(!pProp) 
-		pProp = PpropFindProp(adrEntry.rgPropVals,adrEntry.cValues, PR_ADDRTYPE_A);
+		pProp = MF().PpropFindProp(adrEntry.rgPropVals,adrEntry.cValues, PR_ADDRTYPE_A);
 	if(pProp) {
 		String strAddrType;
 		GetNarrowString(*pProp, strAddrType);
 		if(strAddrType == "EX") {
-			pProp = PpropFindProp(adrEntry.rgPropVals,adrEntry.cValues, PR_ENTRYID);
+			pProp = MF().PpropFindProp(adrEntry.rgPropVals,adrEntry.cValues, PR_ENTRYID);
 
 			SBinary entryID;
 			entryID.cb = pProp->Value.bin.cb;
@@ -615,9 +626,9 @@ bool MAPIEx::GetEmail(ADRENTRY& adrEntry, String& strEmail) {
 			return GetExEmail(entryID, strEmail);
 		}
 	}
-	pProp = PpropFindProp(adrEntry.rgPropVals,adrEntry.cValues, PR_EMAIL_ADDRESS);
+	pProp = MF().PpropFindProp(adrEntry.rgPropVals,adrEntry.cValues, PR_EMAIL_ADDRESS);
 	if(!pProp) 
-		pProp = PpropFindProp(adrEntry.rgPropVals,adrEntry.cValues, PR_EMAIL_ADDRESS_A);
+		pProp = MF().PpropFindProp(adrEntry.rgPropVals,adrEntry.cValues, PR_EMAIL_ADDRESS_A);
 	if(pProp) {
 		GetNarrowString(*pProp, strEmail);
 		return true;
