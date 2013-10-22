@@ -236,6 +236,11 @@ uint64  CParser::ReadNumber64(int base) throw(Error)
 double CParser::ReadDouble() throw(Error)
 {
 	LTIMING("ReadDouble");
+#ifdef PLATFORM_POSIX
+#ifdef FE_OVERFLOW
+	feclearexcept(FE_OVERFLOW);
+#endif
+#endif
 	int sign = Sgn();
 	if(!IsDigit(*term))
 		ThrowError("missing number");
@@ -253,8 +258,12 @@ double CParser::ReadDouble() throw(Error)
 		n *= pow(10.0, ReadInt());
 	DoSpaces();
 	n = sign * n;
-//	if(IsNaN(n) || n == HUGE_VAL)
-//		ThrowError("number is too big");
+#ifdef PLATFORM_POSIX
+#ifdef FE_OVERFLOW
+	if(fetestexcept(FE_OVERFLOW))
+		ThrowError("number is too big");
+#endif
+#endif
 	return n;
 }
 
