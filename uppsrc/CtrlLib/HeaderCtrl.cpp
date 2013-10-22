@@ -704,6 +704,7 @@ void HeaderCtrl::ShowTab(int i, bool show) {
 	cm.visible = show;
 	if(mode == PROPORTIONAL)
 		InvalidateDistribution();
+	ReCompute();
 	Refresh();
 	WhenLayout();
 	SbTotal();

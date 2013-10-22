@@ -114,9 +114,13 @@ void Ide::LoadAbbr()
 		abbr.Add("eib", "else\r\nif(@) {\r\n\t;\r\n}");
 		abbr.Add("f", "for(@;;)\r\n\t;");
 		abbr.Add("fb", "for(@;;) {\r\n\t\r\n}");
-		abbr.Add("fi", "for(int i = 0; i < @; i++)");
-		abbr.Add("fj", "for(int j = 0; j < @; j++)");
-		abbr.Add("fk", "for(int k = 0; k < @; k++)");
+		abbr.Add("fi", "for(int i = 0; i < @.GetCount(); i++)");
+		abbr.Add("fib", "for(int i = 0; i < @.GetCount(); i++) {\r\n\t\r\n}");
+		abbr.Add("fij", "for(int i = 0; i < @.GetCount(); i++)\tfor(int j = 0; j < .GetCount(); j++)");
+		abbr.Add("fj", "for(int j = 0; j < @.GetCount(); j++)");
+		abbr.Add("fjb", "for(int j = 0; j < @.GetCount(); j++) {\r\n\t\r\n}");
+		abbr.Add("fk", "for(int k = 0; k < @.GetCount(); k++)");
+		abbr.Add("fkb", "for(int k = 0; k < @.GetCount(); k++) {\r\n\t\r\n}");
 		abbr.Add("i", "if(@)\r\n\t;");
 		abbr.Add("ib", "if(@) {\r\n\t\r\n}");
 		abbr.Add("ie", "if(@)\r\n\t;\r\nelse\r\n\t;");
