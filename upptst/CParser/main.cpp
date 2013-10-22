@@ -10,8 +10,8 @@ using namespace Upp;
 		CParser p(s); \
 		DDUMP(p.method); \
 	} \
-	catch(CParser::Error) { \
-		DLOG("Overflow"); \
+	catch(CParser::Error e) { \
+		DLOG("Overflow: " << e); \
 		isoverflow = true; \
 	} \
 	ASSERT(isoverflow == overflow); \
@@ -46,8 +46,8 @@ CONSOLE_APP_MAIN
 	CHECK_OVERFLOW("ffffffffffffffff", ReadNumber64(16), false);
 	CHECK_OVERFLOW("10000000000000000", ReadNumber64(16), true);
 
-//	CHECK_OVERFLOW("1e300", ReadDouble(), false);
-//	CHECK_OVERFLOW("1e500", ReadDouble(), true);
-//	CHECK_OVERFLOW("-1e300", ReadDouble(), false);
-//	CHECK_OVERFLOW("-1e500", ReadDouble(), true);
+	CHECK_OVERFLOW("1e300", ReadDouble(), false);
+	CHECK_OVERFLOW("1e500", ReadDouble(), true);
+	CHECK_OVERFLOW("-1e300", ReadDouble(), false);
+	CHECK_OVERFLOW("-1e500", ReadDouble(), true);
 }
