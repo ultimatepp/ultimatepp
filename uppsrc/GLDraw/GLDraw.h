@@ -67,9 +67,9 @@ class GLDraw : public SDraw {
 		Color color;
 	};
 	Vector<RectColor> put_rect;
-	
-	void FlushPutRect();
 #endif
+
+	void FlushPutRect();
 
 public:
 	virtual void  PutImage(Point p, const Image& img, const Rect& src);
