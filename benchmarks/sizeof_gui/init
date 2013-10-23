@@ -1,0 +1,5 @@
+#ifndef _sizeof_gui_icpp_init_stub
+#define _sizeof_gui_icpp_init_stub
+#include "CtrlLib/init"
+#include "RichEdit/init"
+#endif
