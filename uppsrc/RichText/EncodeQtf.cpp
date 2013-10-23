@@ -475,6 +475,14 @@ String   AsQTF(const RichText& text, byte charset, dword options)
 //		for(i = 0; i < text.GetPartCount(); i++)
 //			sm.FindAdd(text.GetParaStyle(i));
 
+	String hdr = text.GetHeaderQtf(charset, options);
+	if(hdr.GetCount())
+		qtf << "^H" << hdr << "^^\r\n";
+
+	String ftr = text.GetFooterQtf(charset, options);
+	if(hdr.GetCount())
+		qtf << "^F" << ftr << "^^\r\n";
+
 	if(!(options & QTF_NOSTYLES))
 		for(i = 0; i < sm.GetCount(); i++) {
 			Uuid id = sm[i];

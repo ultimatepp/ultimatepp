@@ -169,13 +169,12 @@ Array<Drawing> RenderPages(const RichText& txt, Size pagesize)
 {
 	DrawingPageDraw__ pd;
 	pd.size = pagesize;
-	PageY py(0, 0);
 	PaintInfo paintinfo;
 	paintinfo.top = PageY(0, 0);
 	paintinfo.bottom = PageY(INT_MAX, INT_MAX);
 	paintinfo.indexentry = Null;
 	paintinfo.hyperlink = Null;
-	txt.Paint(pd, PageY(0, 0), pagesize, paintinfo);
+	txt.Paint(pd, pagesize, paintinfo);
 	pd.Flush();
 	return pd.page;
 }

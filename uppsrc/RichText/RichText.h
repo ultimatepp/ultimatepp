@@ -273,7 +273,7 @@ struct PaintInfo {
 	int     highlightpara;
 	Color   highlight;
 	bool    coloroverride;
-	void    *context;
+	void   *context;
 	bool    showlabels;
 	bool    shrink_oversized_objects;
 
@@ -369,6 +369,17 @@ struct RichContext {
 
 struct RichCellPos;
 
+enum {
+	QTF_BODY = 1,
+	QTF_ALL_STYLES = 2,
+	QTF_NOSTYLES = 4,
+	QTF_CRLF = 8,
+	QTF_NOCHARSET = 16,
+	QTF_NOLANG = 32,
+	
+	QTF_ALL = 0xffffffff
+};
+
 #include "Txt.h"
 #include "Table.h"
 #include "Text.h"
@@ -413,16 +424,6 @@ String   AsQTF(const RichObject& obj);
 RichText ParseQTF(const char *qtf, int accesskey = 0, void *context = NULL);
 
 RichText AsRichText(const wchar *s, const RichPara::Format& f = RichPara::Format());
-
-enum
-{
-	QTF_BODY = 1,
-	QTF_ALL_STYLES = 2,
-	QTF_NOSTYLES = 4,
-	QTF_CRLF = 8,
-	QTF_NOCHARSET = 16,
-	QTF_NOLANG = 32,
-};
 
 String   AsQTF(const RichText& doc, byte charset = CHARSET_UTF8,
                dword options = QTF_BODY|QTF_ALL_STYLES|QTF_CRLF);

@@ -295,7 +295,10 @@ void RichEdit::PasteText(const RichText& text)
 	RemoveSelection();
 	Insert(cursor, text, false);
 	ReadStyles();
+	DDUMP(text.GetLength());
+	DDUMP(cursor);
 	Move(cursor + text.GetLength(), false);
+	DDUMP(cursor);
 }
 
 struct ToParaIterator : RichText::Iterator {

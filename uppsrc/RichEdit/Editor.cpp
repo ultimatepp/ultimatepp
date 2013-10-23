@@ -731,6 +731,13 @@ void RichEditWithToolBar::RefreshBar()
 	toolbar.Set(THISBACK(TheBar));
 }
 
+void RichEdit::EvaluateFields()
+{
+	WhenStartEvaluating();
+	text.EvaluateFields(vars);
+	Finish();
+}
+
 RichEditWithToolBar::RichEditWithToolBar()
 {
 	InsertFrame(0, toolbar);

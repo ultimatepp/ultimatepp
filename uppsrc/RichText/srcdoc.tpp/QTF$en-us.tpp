@@ -407,8 +407,8 @@ code. Example: [*C@3 `"`[l200;4 `"]]
 [s0; Paragraph styles are defined using normal character/paragraph 
 formatting sequence with&]
 [s0; &]
-[s0; [@(128.0.255) `$`$][@(0.0.255) number][@(128.0.255) ,][@(0.0.255) nnumber][@(128.0.255) #][@(0.0.255) u
-uid][@(128.0.255) :][@(0.0.255) name]&]
+[s0; [@(128.0.255) `$`$][/@(0.0.255) number][@(128.0.255) ,][/@(0.0.255) nnumber][@(128.0.255) #
+][/@(0.0.255) uuid][@(128.0.255) :][/@(0.0.255) name]&]
 [s0; &]
 [s0; instead of text, where&]
 [s0; &]
@@ -437,12 +437,12 @@ paragraph format command code.]}}&]
 [s0; Object plays the role of the single character and is displayed 
 according to its type. It is started with a header in the form&]
 [s0; &]
-[s0; [@(128.0.255) `@`@][@(0.0.255) format][@(128.0.255) :][@(0.0.255) cx][@(128.0.255) `&][@(0.0.255) c
+[s0; [@(128.0.255) `@`@][/@(0.0.255) format][@(128.0.255) :][/@(0.0.255) cx][@(128.0.255) `&][/@(0.0.255) c
 y]&]
 [s0;@(0.0.255) &]
 [s0;%- or&]
 [s0;%- &]
-[s0; [@(128.0.255) `@`@][@(0.0.255) format][@(128.0.255) :][@(0.0.255) cx][@(128.0.255) `*][@(0.0.255) c
+[s0; [@(128.0.255) `@`@][/@(0.0.255) format][@(128.0.255) :][/@(0.0.255) cx][@(128.0.255) `*][/@(0.0.255) c
 y]&]
 [s0;%- &]
 [s0;%- where&]
@@ -487,7 +487,32 @@ mage`_name]. Example of full object definition in [*/ iml] format:&]
 [s0; [*C@3 `"`@`@iml:400`*400``CtrlImg:exclamation```"]&]
 [s0;@(0.0.255) &]
 [s0;@(0.0.255) &]
+[s2; Fields&]
 [s0;@(0.0.255) &]
+[s0; Fields are special elements of text that are evaluated by client 
+code into rich text. QTF format for fields is&]
+[s0;@(0.0.255) &]
+[s0; [@(128.0.255) `{:][/@(0.0.255) field`_type`_id][@(128.0.255) :][/@(0.0.255) parameter][@(128.0.255) :
+`}]&]
+[s0;@(128.0.255) &]
+[ {{1879:8121^ [s0; [@(0.0.255) field`_type`_id]]
+:: [s0; Type of field. Field types are represented by RichPara`::FieldType 
+derived instances and registred using RichPara`::Register function.]
+:: [s0; [@(0.0.255) parameter]]
+:: [s0; Additional string parameter that gets passed to FieldType`::Evaluate 
+method]}}&]
+[s0;@(128.0.255) &]
+[s0;@(0.0.255) &]
+[s2; Header and Footer&]
+[s0; &]
+[s0; Gloval text header is defined using [%-C@(128.0.255) `^H][%-/C@(0.0.255) qtf`_text][%-C@(128.0.255) `^
+`^], footer [%-C@(128.0.255) `^F][%-/C@(0.0.255) qtf`_text][%-C@(128.0.255) `^`^], 
+where [%-C@(128.0.255) H][%-/C@(0.0.255) qtf`_text] is complete embeded 
+QTF representing header/footer. This QTF can contain field[@5  
+`{:VALUE:PAGENUMBER:`} ]to represent page number and[@5  `{:VALUE:PAGECOUNT:`}] 
+to represent total number of pages.&]
+[s0;3 &]
+[s0;3 &]
 [s2; Tables&]
 [s0; &]
 [s0; Table definition starts with&]
@@ -598,6 +623,17 @@ in dots.]
 previous QTF version) that is based on [@(128.0.255) `+`+ ]pair 
 as table start/stop and [@(128.0.255) `|`| `-`-] to divide cells/lines. 
 &]
+[s0;3 &]
+[s0;3 &]
+[s2; Header and Footer&]
+[s0; &]
+[s0; Gloval text header is defined using [%-C@(128.0.255) `^H][%-/C@(0.0.255) qtf`_text][%-C@(128.0.255) `^
+`^], footer [%-C@(128.0.255) `^F][%-/C@(0.0.255) qtf`_text][%-C@(128.0.255) `^`^], 
+where [%-C@(128.0.255) H][%-/C@(0.0.255) qtf`_text] is complete embeded 
+QTF representing header/footer. This QTF can contain field[@5  
+`{:VALUE:PAGENUMBER:`} ]to represent page number and[@5  `{:VALUE:PAGECOUNT:`}] 
+to represent total number of pages.&]
+[s0;3 &]
 [s0;3 &]
 [s0;3 &]
 [s2; [3 Examples]&]

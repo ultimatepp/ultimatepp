@@ -130,7 +130,7 @@ bool IsPainting(PageDraw& pw, Zoom z, const Rect& page, PageY top, PageY bottom)
 }
 
 
-void RichTxt::Paint(PageDraw& pw, RichContext rc, const PaintInfo& _pi) const
+void RichTxt::Paint(PageDraw& pw, RichContext& rc, const PaintInfo& _pi) const
 {
 	PaintInfo pi = _pi;
 	int parti = 0;

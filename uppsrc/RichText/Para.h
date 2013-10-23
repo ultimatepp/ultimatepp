@@ -227,6 +227,7 @@ struct RichPara {
 
 	static const VectorMap<Id, FieldType *>& fieldtype();
 	static void  Register(Id id, FieldType& ft) init_;
+	template <class T> static void Register(Id id) init_  { static T x; Register(id, x); }
 
 	int64       cacheid;
 	bool        incache;

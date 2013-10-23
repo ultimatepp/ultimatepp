@@ -5,8 +5,8 @@ NAMESPACE_UPP
 RichContext RichText::Context(const Rect& page) const
 {
 	RichContext c(style);
-	c.page = page;
-	c.py = PageY(0, page.top);
+	c.page = GetPageMinusHeaderFooter(page);
+	c.py = PageY(0, c.page.top);
 	return c;
 }
 
@@ -30,13 +30,20 @@ int   RichText::GetWidth() const
 void RichText::Paint(PageDraw& w, PageY py, const Rect& page, const PaintInfo& pi) const
 {
 	RichContext ctx = Context(page);
+	int from_page = py.page;
+	if(py.y < ctx.page.top)
+		py.y = ctx.page.top;
 	ctx.py = py;
 	RichTxt::Paint(w, ctx, pi);
+	PaintHeaderFooter(w, page, pi, from_page, ctx.py.page, 9999);
 }
 
 void  RichText::Paint(PageDraw& w, const Rect& page, const PaintInfo& pi) const
 {
-	RichTxt::Paint(w, Context(page), pi);
+	RichContext ctx = Context(page);
+	int from_page = ctx.py.page;
+	RichTxt::Paint(w, ctx, pi);
+	PaintHeaderFooter(w, page, pi, from_page, ctx.py.page, 9999);
 }
 
 RichCaret RichText::GetCaret(int pos, const Rect& page) const

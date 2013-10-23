@@ -69,6 +69,7 @@ class RichQtfParser {
 	int    GetNumber();
 	int    ReadNumber();
 	String GetText(int delim);
+	String GetText2(int delim1, int delim2);
 	Color  GetColor();
 	void   Number2(int& a, int& b);
 
@@ -149,6 +150,25 @@ String RichQtfParser::GetText(int delim) {
 		else
 		if(*term == delim) {
 			term++;
+			return s;
+		}
+		else
+			s.Cat(*term++);
+	}
+}
+
+String RichQtfParser::GetText2(int delim1, int delim2) {
+	String s;
+	for(;;) {
+		if(*term == '\0') return s;
+		if(*term == '`') {
+			term++;
+			if(*term == '\0') return s;
+			s.Cat(*term++);
+		}
+		else
+		if(term[0] == delim1 && term[1] == delim2) {
+			term += 2;
 			return s;
 		}
 		else
@@ -824,6 +844,12 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 				term++;
 			SetFormat();
 		}
+		else
+		if(Key2('^', 'H'))
+			target.SetHeaderQtf(GetText2('^', '^'));
+		else
+		if(Key2('^', 'F'))
+			target.SetFooterQtf(GetText2('^', '^'));
 		else
 		if(Key2('{', ':')) {
 			Flush();
