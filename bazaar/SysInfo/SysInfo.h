@@ -12,6 +12,9 @@ void GetBiosInfo(String &biosVersion, Date &biosReleaseDate, String &biosSerial)
 bool GetProcessorInfo(int number, String &vendor, String &identifier, String &architecture, int &speed);		
 int GetCpuSpeed();
 double GetCpuTemperature();
+#ifdef PLATFORM_POSIX
+void GetSensors();
+#endif
 
 struct NetAdapter : DeepCopyOption<NetAdapter> {
 	String description;

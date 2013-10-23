@@ -6,7 +6,7 @@ uses
 
 library(WIN32) "psapi gdi32 vfw32 oleaut32 wbemuuid iphlpapi PowrProf netapi32";
 
-library(!WIN32) "Xtst X11 ";
+library(POSIX | LINUX | FREEBSD) "Xtst X11 sensors";
 
 options(MSC) "/D PSAPI_VERSION=1";
 
@@ -23,5 +23,6 @@ file
 	srcimp.tpp,
 	src.tpp,
 	SysInfo.t,
+	sensors.cpp,
 	License.txt;
 

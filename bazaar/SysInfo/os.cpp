@@ -417,10 +417,10 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
 			StringParse desktopStr = ToLower(Sys("xprop -root"));
 			if (desktopStr.Find("lxde") >= 0 || ToLower(GetEnv("DESKTOP_SESSION")) == "lxde") {
 				desktop = "lxde";
-				desktopStr.GoAfter("_OB_VERSION", "=");
+				desktopStr.GoAfter("_ob_version", "=");
 				deskVersion = desktopStr.GetText();
 			} else if (desktopStr.Find("xfce") >= 0) {
-				desktopStr.GoAfter("_DT_SAVE_MODE", "=");
+				desktopStr.GoAfter("_dt_save_mode", "=");
 				desktop = desktopStr.GetText();
 				StringParse xfceVersion = Sys(Format("%s-about --version", desktop));
 				while (true) {
@@ -431,11 +431,11 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
 					} else if (str.IsEmpty())
 						break;
 				}			
-			} else if (desktopStr.Find("ENLIGHTENMENT") >= 0) {
+			} else if (desktopStr.Find("enlightenment") >= 0) {
 				desktop = "enlightenment";
-				desktopStr.GoAfter("ENLIGHTENMENT_VERSION(STRING)", "=");
+				desktopStr.GoAfter("enlightenment_version", "=");
 				desktopStr = desktopStr.GetText();
-				if (desktopStr.GetText() == "Enlightenment")
+				if (desktopStr.GetText() == "enlightenment")
 					deskVersion = desktopStr.GetText();
 			} else
 				desktop = GetEnv("DESKTOP_SESSION");
