@@ -442,7 +442,10 @@ void    LaunchWebBrowser(const String& url)
 	for(int i = 0; i < __countof(browser); i++)
 		if(system("which " + String(browser[i])) == 0) {
 			IGNORE_RESULT(
-				system(String(browser[i]) + " " + url + " &")
+				url.Replace("\\", "\\\\");
+				url.Replace("\"", "\\\"");
+				url.Replace("$", "\\$");
+				system(String(browser[i]) + " \"" + url + "\" &")
 			);
 			break;
 		}
