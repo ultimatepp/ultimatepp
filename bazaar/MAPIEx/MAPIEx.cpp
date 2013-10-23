@@ -44,7 +44,8 @@ MAPIFunctions &MF() {
 
 INITBLOCK {
 	if (!MAPIEx::Init())
-		Panic("Impossible to initialize MAPI");
+		MessageBox(::GetActiveWindow(),	"MAPI Error", "Impossible to initialize MAPI",
+	           MB_ICONSTOP|MB_OK|MB_APPLMODAL);
 }
 	
 EXITBLOCK {
