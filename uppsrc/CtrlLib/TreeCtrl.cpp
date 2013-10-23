@@ -123,12 +123,12 @@ Size   TreeCtrl::Item::GetSize(const Display *treedisplay) const
 {
 	Size sz = GetValueSize(treedisplay);
 	Size csz = GetCtrlSize();
-	sz += Size(2 * margin, 2 * margin);
 	Size isz = image.GetSize();
 	sz.cx += isz.cx;
 	sz.cy = max(sz.cy, isz.cy);
 	sz.cx += csz.cx;
 	sz.cy = max(sz.cy, csz.cy);
+	sz += Size(2 * margin, 2 * margin);
 	return sz;
 }
 
@@ -387,12 +387,8 @@ void TreeCtrl::ReLine(int itemi, int level, Size& sz)
 	l.y = sz.cy;
 	l.ll = -1;
 	Item& m = item[itemi];
-	if(m.ctrl) {
+	if(m.ctrl)
 		hasctrls = true;
-//		chldlck = true;
-//		m.ctrl->Remove();
-//		chldlck = false;
-	}
 	m.linei = ii;
 	Size msz = m.GetSize(display);
 	sz.cy += msz.cy;
