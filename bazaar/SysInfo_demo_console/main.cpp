@@ -1,6 +1,7 @@
 #include <Core/Core.h>
 #include <SysInfo/SysInfo.h>
 
+
 using namespace Upp;
 
 static bool end = false;
@@ -249,9 +250,18 @@ void Test()
 	Puts("\nPress enter to end...");	TestGetchar();
 } 
 
+
+
 CONSOLE_APP_MAIN
-{			 
-	Puts("\nOs info:");
+{	
+#ifdef PLATFORM_POSIX
+	Puts("\nLibSensors test. Please report the results to U++ Forum");
+	GetSensors();
+	Puts("\nPress enter to continue");
+	getchar();
+#endif
+
+	Puts("\nBasic system identification:");
 	String kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion;
 	if (!GetOsInfo(kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion))
 		Puts("Error getting Os info");
@@ -260,6 +270,7 @@ CONSOLE_APP_MAIN
 		Puts(Format("Distro:  %s, version: %s", distro, distVersion, desktop, deskVersion));
 		Puts(Format("Desktop: %s, version: %s", desktop, deskVersion));
 	}
+	Puts("\nPress enter to follow with system identification:");
 	getchar();
        
 	FileDelete(AppendFileName(GetDesktopFolder(), "log"));
