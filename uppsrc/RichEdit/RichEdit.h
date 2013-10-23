@@ -605,6 +605,8 @@ private:
 	
 	void     StyleKeys();
 	void     ApplyStyleKey(int i);
+	
+	void     HeaderFooter();
 
 	bool     BegSelTabFix();
 	void     BegSelTabFixEnd(bool fix);
@@ -749,10 +751,14 @@ public:
 
 	void   InsertImageTool(Bar& bar);
 	void   StyleKeysTool(Bar& bar);
+	
+	void   HeaderFooterTool(Bar& bar);
 
 	void   DefaultBar(Bar& bar, bool extended = true);
 
-	void            EvaluateFields()               { WhenStartEvaluating(); text.EvaluateFields(vars); }
+	void            SetVar(const String& id, const Value& v) { vars.GetAdd(id) = v; }
+	Value           GetVar(const String& id) const           { return vars.Get(id, Value()); }
+	void            EvaluateFields();
 
 	void            GotoLabel(const String& lbl);
 	void            BeginPara();

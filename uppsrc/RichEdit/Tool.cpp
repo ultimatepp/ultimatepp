@@ -440,6 +440,11 @@ void RichEdit::StyleKeysTool(Bar& bar)
 	bar.Add(t_("Style keys.."), USERBACK(StyleKeys));
 }
 
+void RichEdit::HeaderFooterTool(Bar& bar)
+{
+	bar.Add(t_("Header/Footer.."), RichEditImg::HeaderFooter(), USERBACK(HeaderFooter));
+}
+
 void RichEdit::DefaultBar(Bar& bar, bool extended)
 {
 	EditTools(bar);
@@ -461,6 +466,10 @@ void RichEdit::DefaultBar(Bar& bar, bool extended)
 	StyleTool(bar);
 	bar.Gap();
 	ParaTools(bar);
+	if(extended) {
+		bar.Gap();
+		HeaderFooterTool(bar);
+	}
 	bar.Gap();
 	if(extended) {
 		LabelTool(bar);

@@ -172,7 +172,7 @@ protected:
 	PageY                 GetTop(RichContext rc) const;
 	PageY                 GetHeight(RichContext rc) const;
 	int                   GetWidth(const RichStyles& st) const;
-	void                  Paint(PageDraw& w, RichContext rc, const PaintInfo& pi) const;
+	void                  Paint(PageDraw& w, RichContext& rc, const PaintInfo& pi) const;
 	RichCaret             GetCaret(int pos, RichContext rc) const;
 	int                   GetPos(int x, PageY y, RichContext rc) const;
 	int                   GetVertMove(int pos, int gx, RichContext rc, int dir) const;

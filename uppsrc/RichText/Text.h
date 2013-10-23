@@ -1,9 +1,16 @@
 class RichText : public RichTxt, public DeepCopyOption<RichText> {
 	RichStyles style;
-	String     footer; // ugly hack
+	String     footer_hack; // ugly hack
+
+	mutable One<RichText> header, footer;
+
 	bool       nolinks;
 
 	void       Init();
+
+	Rect       GetPageMinusHeaderFooter(const Rect& page) const;
+	void       PaintHeaderFooter(PageDraw& pw, const Rect& page, const PaintInfo& pi,
+	                             int from_page, int to_page, int page_count) const;
 
 	struct StyleChangeOp;
 	struct SetStylesOp;
@@ -123,10 +130,19 @@ public:
 	};
 
 	static void           Register(ClipboardType& type);
+	
+	void                  PickHeader(pick_ RichText& txt);
+	void                  PickFooter(pick_ RichText& txt);
+	void                  SetHeaderQtf(const char *qtf);
+	void                  SetFooterQtf(const char *qtf);
+	void                  ClearHeader()                                       { header.Clear(); }
+	void                  ClearFooter()                                       { footer.Clear(); }
+	String                GetHeaderQtf(byte charset = CHARSET_UTF8, dword options = QTF_ALL) const;
+	String                GetFooterQtf(byte charset = CHARSET_UTF8, dword options = QTF_ALL) const;
 
 	//Ugly hacks
-	void                  SetFooter(const String& s)                          { footer = s; }
-	String                GetFooter() const                                   { return footer; }
+	void                  SetFooter(const String& s)                          { footer_hack = s; }
+	String                GetFooter() const                                   { return footer_hack; }
 	void                  PrintNoLinks(bool b = true)                         { nolinks = b; }
 	bool                  IsPrintNoLinks() const                              { return nolinks; }
 

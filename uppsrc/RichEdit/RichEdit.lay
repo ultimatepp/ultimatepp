@@ -213,3 +213,13 @@ LAYOUT(StyleKeysLayout, 736, 556)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(664, 64).TopPosZ(524, 24))
 END_LAYOUT
 
+LAYOUT(HeaderFooterLayout, 548, 580)
+	ITEM(Option, use_header, SetLabel(t_("Use header")).LeftPosZ(4, 120).TopPosZ(4, 16))
+	UNTYPED(header_editor, HSizePosZ(0, 0).TopPosZ(24, 240))
+	ITEM(Option, use_footer, SetLabel(t_("Use footer")).LeftPosZ(4, 120).VSizePosZ(280, 284))
+	UNTYPED(footer_editor, HSizePosZ(0, 0).BottomPosZ(40, 240))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+	ITEM(LabelBox, dv___6, LeftPosZ(0, 548).TopPosZ(260, 24))
+END_LAYOUT
+
