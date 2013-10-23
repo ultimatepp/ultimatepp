@@ -4,6 +4,8 @@
 
 #include <cairo/cairo-ft.h>
 
+#include <plugin/FT_fontsys/ftoutln.h>
+
 NAMESPACE_UPP
 
 #define LLOG(x)
@@ -28,11 +30,45 @@ void FontSysData::Init(Font font, int angle)
 	cairo_matrix_t font_matrix[1], ctm[1];
 	cairo_matrix_init_identity(ctm);
 	cairo_matrix_init_scale(font_matrix, font.GetHeight(), font.GetHeight());
+
+	FT_Face ft = FTFace(font);
+	if(font.IsItalic() && !(FTFace(font)->style_flags & FT_STYLE_FLAG_ITALIC)) {
+		cairo_matrix_t sheer[1];	
+		cairo_matrix_init_identity(sheer);
+		sheer->xy = -0.3;
+		cairo_matrix_multiply(font_matrix, font_matrix, sheer);
+	}
+	
 	if(angle)
 		cairo_matrix_rotate(font_matrix, -angle * M_2PI / 3600);
 	cairo_font_options_t *opt = cairo_font_options_create();
 	scaled_font = cairo_scaled_font_create(font_face, font_matrix, ctm, opt);
 
+#if 0
+	int synth = 0;
+	FT_Face ft = cairo_ft_scaled_font_lock_face(scaled_font);
+	if(ft) {
+//		if(font.IsBold() && !(ft->style_flags & FT_STYLE_FLAG_BOLD))
+//			synth |= CAIRO_FT_SYNTHESIZE_BOLD;    
+		if() {
+			FT_Matrix    transform;
+			transform.xx = 0x10000L;
+			transform.yx = 0x00000L;
+			
+			transform.xy = 0x03000L;
+			transform.yy = 0x10000L;
+			
+			FT_Outline_Transform( outline, &transform );
+		}
+		//	synth |= CAIRO_FT_SYNTHESIZE_OBLIQUE;
+	 	cairo_ft_scaled_font_unlock_face(scaled_font);
+	}
+//	if(synth) {
+//		cairo_ft_font_face_set_synthesize(font_face, synth);
+ //		cairo_scaled_font_destroy(scaled_font);
+//		scaled_font = cairo_scaled_font_create(font_face, font_matrix, ctm, opt);
+//	}
+#endif
 	cairo_font_options_destroy(opt);
  	cairo_font_face_destroy(font_face);
 }

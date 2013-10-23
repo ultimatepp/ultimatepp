@@ -83,7 +83,7 @@ void initializeGL()
 	);
 
 	glUniform1i(gl_image_colored.GetUniform("s_texture"), 0);
-/*
+
 	gl_rect.Create(
 		"attribute vec4 a_position; \n"
 		"attribute vec4 a_color; \n"
@@ -106,27 +106,6 @@ void initializeGL()
 		"}",
 		ATTRIB_VERTEX, "a_position",
 		ATTRIB_COLOR, "a_color"
-	);
-*/
-	gl_rect.Create(
-		"attribute vec4 a_position; \n"
-		"attribute vec4 a_color; \n"
-		"uniform mat4 u_projection; \n"
-		"void main() \n"
-		"{ \n"
-		" gl_Position = u_projection * a_position; \n"
-		"}"
-		,
-		"#ifdef GL_ES\n"
-		"precision mediump float;\n"
-		"precision mediump int;\n"
-		"#endif\n"
-		"uniform vec4 u_color; \n"
-		"void main()\n"
-		"{\n"
-		"    gl_FragColor = u_color;\n"
-		"}",
-		ATTRIB_VERTEX, "a_position"
 	);
 
 	u_color = gl_rect.GetUniform("u_color");
@@ -197,7 +176,9 @@ void GLDraw::FlushPutRect()
 	glVertexAttribPointer(ATTRIB_COLOR, 3, GL_UNSIGNED_BYTE, GL_FALSE, 3 * sizeof(GLubyte), color);
 	glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_SHORT, GL_FALSE, 2 * sizeof(GLshort), vertex);
 
+	glDisable(GL_BLEND);
 	glDrawElements(GL_TRIANGLES, 6 * put_rect.GetCount(), GL_UNSIGNED_SHORT, index);
+	glEnable(GL_BLEND);
 
 	glDisableVertexAttribArray(ATTRIB_COLOR);
 	
@@ -207,7 +188,8 @@ void GLDraw::FlushPutRect()
 void GLDraw::PutRect(const Rect& rect, Color color)
 {
 	LTIMING("PutRect");
-
+	
+#if 0
 	gl_rect.Use();
 
 	GLshort vertex[] = {
@@ -222,6 +204,8 @@ void GLDraw::PutRect(const Rect& rect, Color color)
 		glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
 		color = Color(255, 255, 255);
 	}
+	else
+		glDisable(GL_BLEND);
 
 	GLubyte r = color.GetR();
 	GLubyte g = color.GetG();
@@ -237,8 +221,11 @@ void GLDraw::PutRect(const Rect& rect, Color color)
 
 	if(inv)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	else
+		glEnable(GL_BLEND);
+#endif
 
-#if 0
+#if 1
 	LTIMING("PutRect");
 #ifdef GL_COMB_OPT
 	if(color != InvertColor()) {
@@ -265,6 +252,8 @@ void GLDraw::PutRect(const Rect& rect, Color color)
 		glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
 		color = Color(255, 255, 255);
 	}
+	else
+		glDisable(GL_BLEND);
 
 	GLubyte r = color.GetR();
 	GLubyte g = color.GetG();
@@ -289,7 +278,15 @@ void GLDraw::PutRect(const Rect& rect, Color color)
 
 	if(inv)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	else
+		glEnable(GL_BLEND);
 #endif
+}
+
+int PutImagePixels;
+
+EXITBLOCK {
+	RDUMP(PutImagePixels);
 }
 
 void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
@@ -299,8 +296,11 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 
 	gl_image.Use();
 
-	Rect s = src & img.GetSize();
+	Size isz = img.GetSize();
+	Rect s = src & isz;
 	Rect r(p, s.GetSize());
+	
+	PutImagePixels += isz.cx * isz.cy;
 
 	GLshort vertex[] = {
 	    r.left, r.top,
@@ -313,7 +313,7 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 
 	const float *tc;
 
-	if(src == img.GetSize()) {
+	if(src == isz) {
 		static float fixed[] = {
 			0.0, 0.0,
 			0.0, 1.0,
@@ -323,7 +323,7 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 		tc = fixed;
 	}
 	else {
-		Sizef iszf = img.GetSize();
+		Sizef iszf = isz;
 		Rectf h;
 		h.left = s.left / iszf.cx;
 		h.right = s.right / iszf.cx;
@@ -348,6 +348,12 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 	glDisableVertexAttribArray(ATTRIB_TEXPOS);
 }
 
+int PutImageCPixels;
+
+EXITBLOCK {
+	RDUMP(PutImageCPixels);
+}
+
 void GLDraw::PutImage(Point p, const Image& img, const Rect& src, Color color)
 {
 	FlushPutRect();
@@ -355,8 +361,11 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src, Color color)
 	RTIMING("PutImage colored");
 	gl_image_colored.Use();
 
-	Rect s = src & img.GetSize();
+	Size isz = img.GetSize();
+	Rect s = src & isz;
 	Rect rect(p, s.GetSize());
+
+	PutImageCPixels += isz.cx * isz.cy;
 
 	GLshort vertex[] = {
 	    rect.left, rect.top,
@@ -390,7 +399,7 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src, Color color)
 		tc = fixed;
 	}
 	else {
-		Sizef iszf = img.GetSize();
+		Sizef iszf = isz;
 		Rectf h;
 		h.left = s.left / iszf.cx;
 		h.right = s.right / iszf.cx;
@@ -430,7 +439,7 @@ void GLDraw::Init(Size sz, uint64 context_)
 	GLOrtho(0, sz.cx, sz.cy, 0, 0.0f, 1.0f, gl_image.GetUniform("u_projection"));
 
 	gl_image_colored.Use();
-	GLOrtho(0, sz.cx, sz.cy, 0, 0.0f, 1.0f, gl_image.GetUniform("u_projection"));
+	GLOrtho(0, sz.cx, sz.cy, 0, 0.0f, 1.0f, gl_image_colored.GetUniform("u_projection"));
 
 	gl_rect.Use();
 	GLOrtho(0, sz.cx, sz.cy, 0, 0.0f, 1.0f, gl_rect.GetUniform("u_projection"));
