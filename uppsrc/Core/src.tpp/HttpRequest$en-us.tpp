@@ -332,6 +332,29 @@ pRequest][@(0.0.255) `&]_[* SSLProxyAuth]([@(0.0.255) const]_[_^String^ String][
 [s2;%% Defines username and password authentication for SSL proxy. 
 Returns `*this.&]
 [s3;%% &]
+[s4; &]
+[s5;:HttpRequest`:`:CommonProxy`(const String`&`,int`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&
+]_[* CommonProxy]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 host], 
+[@(0.0.255) int]_[*@3 port])&]
+[s2;%% Defines both SSL and non`-SSL proxies to the same [%-*@3 host] 
+and [%-*@3 port]. Same as Proxy(host, port); SSLProxy(host, port). 
+Returns `*this.&]
+[s3;%% &]
+[s4; &]
+[s5;:HttpRequest`:`:CommonProxy`(const char`*`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&
+]_[* CommonProxy]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 p])&]
+[s2;%% Defines both SSL and non`-SSL proxies to the same server. 
+Same as Proxy(p); SSLProxy(p), including default port definitions. 
+Returns `*this.&]
+[s3;%% &]
+[s4; &]
+[s5;:HttpRequest`:`:CommonProxyAuth`(const String`&`,const String`&`): [_^HttpRequest^ H
+ttpRequest][@(0.0.255) `&]_[* CommonProxyAuth]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
+]_[*@3 u], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 p])&]
+[s2;%% Defines username and password authentication for both SSL 
+and non`-SSL proxis. Same as ProxyAuth(u, p); SSLProxyAuth(u, 
+p). Returns `*this.&]
+[s3;%% &]
 [s4;%% &]
 [s5;:HttpRequest`:`:IsSocketError`(`)const: [@(0.0.255) bool]_[* IsSocketError]()_[@(0.0.255) c
 onst]&]

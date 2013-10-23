@@ -464,6 +464,14 @@ public:
 	HttpRequest&  SSLProxy(const char *p);
 	HttpRequest&  SSLProxyAuth(const String& u, const String& p) {  ssl_proxy_username = u; ssl_proxy_password = p; return *this; }
 
+	HttpRequest&  SSLProxy(const String& host, int port)     { ssl_proxy_host = host; ssl_proxy_port = port; return *this; }
+	HttpRequest&  SSLProxy(const char *p);
+	HttpRequest&  SSLProxyAuth(const String& u, const String& p) {  ssl_proxy_username = u; ssl_proxy_password = p; return *this; }
+
+	HttpRequest&  CommonProxy(const String& host, int port)         { Proxy(host, port); return SSLProxy(host, port); }
+	HttpRequest&  CommonProxy(const char *p)                        { Proxy(p); return SSLProxy(p); }
+	HttpRequest&  CommonProxyAuth(const String& u, const String& p) { ProxyAuth(u, p); return SSLProxyAuth(u, p); }
+
 	bool         IsSocketError() const                    { return TcpSocket::IsError(); }
 	bool         IsHttpError() const                      { return !IsNull(error) ; }
 	bool         IsError() const                          { return IsSocketError() || IsHttpError(); }
