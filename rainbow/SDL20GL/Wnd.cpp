@@ -247,6 +247,7 @@ void Ctrl::DoPaint()
 			SystemDraw draw;
 			PaintScene(draw);
 			PaintCaretCursor(draw);
+			draw.Finish();
 			SDL_GL_SwapWindow(screen.win);
 		}
 	}
