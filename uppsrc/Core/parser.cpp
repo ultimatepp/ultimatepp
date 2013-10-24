@@ -236,7 +236,7 @@ uint64  CParser::ReadNumber64(int base) throw(Error)
 double CParser::ReadDouble() throw(Error)
 {
 	LTIMING("ReadDouble");
-#ifdef PLARFORM_WIN32
+#ifdef PLATFORM_WIN32
 	_clearfp();
 #endif
 #if defined(PLATFORM_POSIX) && defined(FE_OVERFLOW)
