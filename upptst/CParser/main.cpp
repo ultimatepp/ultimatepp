@@ -19,6 +19,8 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_FILE|LOG_COUT);
+
 	CParser p("i if while 12345 alfa");
 	ASSERT(p.Id("i"));
 	ASSERT(p.Id("if"));
@@ -45,6 +47,10 @@ CONSOLE_APP_MAIN
 
 	CHECK_OVERFLOW("ffffffffffffffff", ReadNumber64(16), false);
 	CHECK_OVERFLOW("10000000000000000", ReadNumber64(16), true);
+
+	DDUMP(1 * pow(10.0, 500));
+	
+//	DDUMP(_clearfp() & SW_OVERFLOW);
 
 	CHECK_OVERFLOW("1e300", ReadDouble(), false);
 	CHECK_OVERFLOW("1e500", ReadDouble(), true);
