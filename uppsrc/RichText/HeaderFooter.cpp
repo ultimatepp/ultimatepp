@@ -64,14 +64,16 @@ void RichText::PaintHeaderFooter(PageDraw& pw, const Rect& page, const PaintInfo
 
 void RichText::PickHeader(pick_ RichText& txt)
 {
-	txt.ClearHeader();
-	header.Create() = txt;
+	RichText b = txt;
+	b.ClearHeader();
+	header.Create() = b;
 }
 
 void RichText::PickFooter(pick_ RichText& txt)
 {
-	txt.ClearFooter();
-	footer.Create() = txt;
+	RichText b = txt;
+	b.ClearFooter();
+	footer.Create() = b;
 }
 
 void RichText::SetHeaderQtf(const char *qtf)
