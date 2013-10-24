@@ -42,12 +42,8 @@ void RichEditHdrFtr::TheBar(Bar& bar)
 
 void RichEditHdrFtr::PageNumber()
 {
-	DLOG("PAGENUMBER");
-	DDUMP(GetCursor());
 	PasteText(ParseQTF("{:VALUE:PAGENUMBER:}"));
-	DDUMP(GetCursor());
 	EvaluateFields();
-	DDUMP(GetCursor());
 }
 
 void RichEditHdrFtr::PageCount()
