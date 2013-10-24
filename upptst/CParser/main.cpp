@@ -50,10 +50,10 @@ CONSOLE_APP_MAIN
 
 	DDUMP(1 * pow(10.0, 500));
 	
-//	DDUMP(_clearfp() & SW_OVERFLOW);
-
 	CHECK_OVERFLOW("1e300", ReadDouble(), false);
 	CHECK_OVERFLOW("1e500", ReadDouble(), true);
 	CHECK_OVERFLOW("-1e300", ReadDouble(), false);
 	CHECK_OVERFLOW("-1e500", ReadDouble(), true);
+	
+	LOG("OK");
 }
