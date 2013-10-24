@@ -43,6 +43,7 @@ void HttpRequest::Init()
 	force_digest = false;
 	std_headers = true;
 	hasurlvar = false;
+	keep_alive = false;
 	method = METHOD_GET;
 	phase = BEGIN;
 	redirect_count = 0;
@@ -520,7 +521,7 @@ void HttpRequest::StartRequest()
 	if(std_headers) {
 		data << "URL: " << url << "\r\n"
 		     << "Host: " << host_port << "\r\n"
-		     << "Connection: close\r\n"
+		     << "Connection: " << (keep_alive ? "keep-alive\r\n" : "close\r\n") 
 		     << "Accept: " << Nvl(accept, "*/*") << "\r\n"
 		     << "Accept-Encoding: gzip\r\n"
 		     << "User-Agent: " << Nvl(agent, "U++ HTTP request") << "\r\n";
