@@ -294,6 +294,12 @@ HTTP request`". Returns `*this.&]
 ]_[* ContentType]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 a])&]
 [s2;%% Specifies `"Content`-Type`" HTTP request field. Returns `*this.&]
 [s3;%% &]
+[s4; &]
+[s5;:HttpRequest`:`:KeepAlive`(bool`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[* KeepA
+live]([@(0.0.255) bool]_[*@3 ka]_`=_[@(0.0.255) true])&]
+[s2;%% If active, `"Connection`" HTTP request field is `"keep`-alive`", 
+otherwise `"close`". Returns `*this.&]
+[s3;%% &]
 [s4;%% &]
 [s5;:HttpRequest`:`:Proxy`(const String`&`,int`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&
 ]_[* Proxy]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 host], 
