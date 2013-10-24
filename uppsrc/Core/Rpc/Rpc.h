@@ -196,8 +196,11 @@ struct RpcGet {
 	Value v;
 	
 	template <class T>
-	operator T() { T x; ValueGet(x, v); return x; }
-	
+	operator T() const { T x; ValueGet(x, v); return x; }
+
+	template <class T>
+	T Get() const { T x; ValueGet(x, v); return x; } // Ugly workaround for MSC compiler bug
+
 	String ToString() const { return v.ToString(); }
 };
 
