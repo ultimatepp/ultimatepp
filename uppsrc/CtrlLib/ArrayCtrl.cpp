@@ -552,6 +552,7 @@ void ArrayCtrl::SetSb() {
 }
 
 void ArrayCtrl::Layout() {
+	SyncColumnsPos();
 	SetSb();
 	HeaderScrollVisibility();
 	PlaceEdits();
