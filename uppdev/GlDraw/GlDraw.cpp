@@ -76,8 +76,6 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, sd.texture_id);
 	
-	DDUMP(sd.texture_id);
-
 	glColor3f(1.0f, 1.0f, 1.0f);
 	
 	if(src == img.GetSize()) {
@@ -126,7 +124,6 @@ void GLDraw::SetColor(Color c)
 
 void GLDraw::PutRect(const Rect& r, Color color)
 {
-	DLOG("PutRect " << r << " " << color);
 	if(color == InvertColor()) {
 		glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
 		glColor3f(1.0f, 1.0f, 1.0f);

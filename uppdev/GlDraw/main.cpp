@@ -8,7 +8,6 @@ struct OpenGLExample : GLCtrl {
 	Point point;
 
 	virtual void GLPaint() {
-		DLOG("GLPaint");
 		Size sz = GetSize();
 	
 		GLDraw w;
@@ -17,6 +16,7 @@ struct OpenGLExample : GLCtrl {
 		
 		w.InitGL(GetSize());
 
+#if 0
 		w.DrawRect(sz, LtRed());
 		DrawFatFrame(w, r, LtBlue(), 2);
 
@@ -54,13 +54,11 @@ struct OpenGLExample : GLCtrl {
 		w.End();
 
 		RichText txt = ParseQTF(LoadFile(GetDataFile("test.qtf")));
-		DDUMP(txt.GetLength());
-		if(1) {
-			RTIMING("SystemDraw");
-			DLOG("---------------------------------------");
+		for(int i = 0; i < 100; i++) {
+			RTIMING("PaintText");
 			txt.Paint(Zoom(2, 10), w, 20, 20, 500);
 		}
-	
+#endif	
 		GLDraw::ClearCache();
 	}
 
