@@ -60,6 +60,7 @@ struct MakeBuild {
 	bool         use_target;
 	String       mainconfigparam;
 	String       add_includes;
+	String       main_conf;
 
 	const TargetMode& GetTargetMode();
 	Index<String> PackageConfig(const Workspace& wspc, int package, const VectorMap<String, String>& bm,
