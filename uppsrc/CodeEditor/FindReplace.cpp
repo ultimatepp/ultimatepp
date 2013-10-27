@@ -187,6 +187,7 @@ bool CodeEditor::FindFrom(int pos, bool back, const wchar *text, bool wholeword,
 				int n = Match(ft, s, line, we, ignorecase);
 				if(n >= 0) {
 					int pos = GetPos(line, int(s - l));
+					foundtext = GetW(pos, n);
 					if(!back || pos + n < cursor) {
 						if(!block) {
 							foundsel = true;
@@ -362,18 +363,17 @@ WString CodeEditor::GetReplaceText(WString rs, bool wildcards, bool samecase)
 		}
 	}
 	if(samecase) {
-		WString h = GetSelectionW();
-		if(h.GetCount() && rt.GetCount()) {
-			if(IsUpper(h[0]))
+		if(foundtext.GetCount() && rt.GetCount()) {
+			if(IsUpper(foundtext[0]))
 				rt.Set(0, ToUpper(rt[0]));
-			if(IsLower(h[0]))
+			if(IsLower(foundtext[0]))
 				rt.Set(0, ToLower(rt[0]));
 		}
-		if(h.GetCount() > 1) {
-			if(IsUpper(h[1]))
+		if(foundtext.GetCount() > 1) {
+			if(IsUpper(foundtext[1]))
 				for(int i = 1; i < rt.GetCount(); i++)
 					rt.Set(i, ToUpper(rt[i]));
-			if(IsLower(h[1]))
+			if(IsLower(foundtext[1]))
 				for(int i = 1; i < rt.GetCount(); i++)
 					rt.Set(i, ToLower(rt[i]));
 		}
