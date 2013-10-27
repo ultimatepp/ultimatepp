@@ -135,6 +135,7 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 	b->debug_link = bm.Get("DEBUG_LINK", "");
 	b->release_link = bm.Get("RELEASE_LINK", "");
 	b->script = bm.Get("SCRIPT", "");
+	b->main_conf = !!main_conf.GetCount();
 	return b;
 }
 
@@ -377,17 +378,18 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 	BeginBuilding(true, clear_console);
 	bool ok = true;
 	if(wspc.GetCount()) {
-		String main_conf;
 		for(int i = 0; i < wspc.GetCount(); i++) {
 			const Package& pk = wspc.package[i];
 			for(int j = 0; j < pk.GetCount(); j++)
 				if(pk[j] == "main.conf") {
 					String pn = wspc[i];
-					main_conf << "// " << pn << "\r\n"
-					          << LoadFile(SourcePath(pn, "main.conf")) << "\r\n";
+					String p = SourcePath(pn, "main.conf");
+					main_conf << "// " << pn << "\r\n" << LoadFile(p) << "\r\n";
+					PutConsole("Found " + p);
 				}
 		}
-		{
+
+		if(main_conf.GetCount()) {
 			VectorMap<String, String> bm = GetMethodVars(method);
 			One<Host> host = CreateHost(false);
 			One<Builder> b = CreateBuilder(~host);
@@ -397,6 +399,7 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 				String path = AppendFileName(outdir, "main.conf.h");
 				RealizePath(path);
 				SaveChangedFile(path, main_conf);
+				PutConsole("Saving " + path);
 				add_includes << outdir << ';';
 			}
 		}

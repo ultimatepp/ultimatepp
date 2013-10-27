@@ -385,6 +385,7 @@ struct Builder {
 	String           script;
 	String           mainpackage;
 	bool             doall;
+	bool             main_conf;
 
 	virtual bool BuildPackage(const String& package, Vector<String>& linkfile, String& linkoptions,
 		const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize)
@@ -399,7 +400,7 @@ struct Builder {
 		const Index<String>& common_config, bool exporting) {}
 	virtual String GetTargetExt() const = 0;
 
-	Builder()          { doall = false; }
+	Builder()          { doall = false; main_conf = false; }
 	virtual ~Builder() {}
 };
 

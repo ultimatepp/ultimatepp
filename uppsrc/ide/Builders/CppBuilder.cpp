@@ -393,7 +393,8 @@ String CppBuilder::DefinesTargetTime(const char *sep, const String& package, con
 	cc << sep << "bmHOUR=" << (int)t.hour;
 	cc << sep << "bmMINUTE=" << (int)t.minute;
 	cc << sep << "bmSECOND=" << (int)t.second;
-	cc << sep << "MAIN_CONF";
+	if(main_conf)
+		cc << sep << "MAIN_CONF";
 	targettime = GetFileTime(target);
 	return cc;
 }
