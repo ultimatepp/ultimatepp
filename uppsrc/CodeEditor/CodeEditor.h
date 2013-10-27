@@ -313,6 +313,7 @@ protected:
 	};
 
 	Array<Found> foundwild;
+	WString      foundtext;
 	bool   foundsel;
 	bool   found, notfoundfw, notfoundbk;
 	int    foundpos, foundsize;
