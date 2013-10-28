@@ -4,4 +4,5 @@
 #include "plugin\gif/init"
 #include "plugin\jpg/init"
 #include "Painter/init"
+#include "RichEdit/init"
 #endif

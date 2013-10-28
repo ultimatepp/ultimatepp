@@ -447,7 +447,7 @@ RichEdit& RichEdit::FontFaces(const Vector<int>& ff)
 	return *this;
 }
 
-void RichEdit::SetupFaceList(DropList& face)
+void SetupFaceList(DropList& face)
 {
 	face.ValueDisplay(Single<ValueDisplayFont>());
 	face.SetDisplay(Single<DisplayFont>());
