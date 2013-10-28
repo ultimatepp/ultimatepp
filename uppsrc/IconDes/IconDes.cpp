@@ -110,6 +110,7 @@ Point IconDes::GetPos(Point p)
 
 void IconDes::FinishPaste()
 {
+	CloseText();
 	if(IsCurrent()) {
 		Current().pastepos = Null;
 		Current().base_image.Clear();
@@ -230,6 +231,7 @@ void IconDes::ColorChanged()
 {
 	cursor_image = MakeIconDesCursor(IconDesImg::Arrow(), IconDesImg::ArrowColor());
 	fill_cursor = MakeIconDesCursor(IconDesImg::Fill(), IconDesImg::FillColor());
+	PasteText();
 }
 
 void IconDes::SetTool(void (IconDes::*_tool)(Point p, dword flags))

@@ -192,6 +192,8 @@ bool SpellWordRaw(const WString& wrd, int lang, Vector<String> *withdia = NULL);
 bool SpellWord(const wchar *ws, int len, int lang);
 bool SpellWord(const WString& ws, int lang);
 
+void SetupFaceList(DropList& face);
+
 class RichEdit : public Ctrl, private TextArrayOps {
 public:
 	virtual void  Layout();
@@ -516,7 +518,6 @@ private:
 	void       ReplaceObject(const RichObject& obj);
 
 	static bool   IsW(int c);
-	static void   SetupFaceList(DropList& face);
 
 	void Insert(int pos, const RichText& text, bool typing = false);
 	void Remove(int pos, int len, bool forward = false);

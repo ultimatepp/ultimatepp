@@ -3,6 +3,7 @@
 
 #include <CtrlLib/CtrlLib.h>
 #include <Painter/Painter.h>
+#include <RichEdit/RichEdit.h>
 
 
 NAMESPACE_UPP
@@ -177,6 +178,17 @@ private:
 
 	Array<Slot>    removed;
 
+
+	struct TextDlg : WithIconDesTextLayout<TopWindow> {
+		typedef TextDlg CLASSNAME;
+		
+		Font GetFont();
+		
+		TextDlg();
+	};
+	
+	TextDlg        textdlg;
+
 	void  PenSet(Point p, dword flags);
 
 	void  LineTool(Point p, dword f);
@@ -191,6 +203,10 @@ private:
 	void  EmptyRectTool(Point p, dword f);
 
 	void  HotSpotTool(Point p, dword f);
+
+	void  Text();
+	void  PasteText();
+	void  CloseText();
 
 	bool         IsCurrent()            { return list.IsCursor(); }
 	Slot&        Current();
@@ -214,6 +230,7 @@ private:
 	Point GetPos(Point p);
 	void  Set(Point p, RGBA rgba, dword flags);
 	void  ApplyDraw(IconDraw& iw, dword flags);
+	void  ApplyImage(Image m, dword flags, bool alpha = false);
 
 	void  SyncImage();
 	void  Reset();

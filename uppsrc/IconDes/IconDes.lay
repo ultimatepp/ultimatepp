@@ -81,3 +81,17 @@ LAYOUT(ImgColorLayout, 188, 164)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(116, 64).TopPosZ(132, 24))
 END_LAYOUT
 
+LAYOUT(IconDesTextLayout, 356, 76)
+	ITEM(Label, dv___0, SetLabel(t_("Text")).LeftPosZ(8, 33).TopPosZ(4, 19))
+	ITEM(EditString, text, LeftPosZ(44, 304).TopPosZ(4, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Font")).LeftPosZ(8, 33).TopPosZ(28, 19))
+	ITEM(DropList, face, LeftPosZ(44, 188).TopPosZ(28, 19))
+	ITEM(Label, dv___4, SetLabel(t_("Height")).LeftPosZ(252, 39).TopPosZ(28, 19))
+	ITEM(WithDropChoice<EditInt>, height, LeftPosZ(292, 56).TopPosZ(28, 19))
+	ITEM(Option, bold, SetLabel(t_("Bold")).LeftPosZ(8, 52).TopPosZ(52, 18))
+	ITEM(Option, italic, SetLabel(t_("Italic")).LeftPosZ(60, 52).TopPosZ(52, 18))
+	ITEM(Option, underline, SetLabel(t_("Underline")).LeftPosZ(112, 72).TopPosZ(52, 18))
+	ITEM(Option, strikeout, SetLabel(t_("Strikeout")).LeftPosZ(184, 68).TopPosZ(52, 18))
+	ITEM(Option, nonaa, SetLabel(t_("NonAntiAliased")).LeftPosZ(252, 96).TopPosZ(52, 18))
+END_LAYOUT
+

@@ -174,6 +174,8 @@ void IconDes::DrawBar(Bar& bar)
 	   .Check(tool == &IconDes::EmptyRectTool && notpasting && !selectrect);
 	bar.Add(AK_HOTSPOTS, IconDesImg::HotSpot(), THISBACK1(SetTool, &IconDes::HotSpotTool))
 	   .Check(tool == &IconDes::HotSpotTool);
+	bar.Add(AK_TEXT, IconDesImg::Text(), THISBACK(Text))
+	   .Check(textdlg.IsOpen());
 	bar.Separator();
 	for(int i = 1; i <= 6; i++)
 		bar.Add("Pen " + AsString(i), IconDesImg::Get(IconDesImg::I_Pen1 + i - 1), THISBACK1(SetPen, i))

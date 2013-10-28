@@ -4,7 +4,8 @@ uses
 	CtrlLib,
 	plugin\gif,
 	plugin\jpg,
-	Painter;
+	Painter,
+	RichEdit;
 
 file
 	IconDes.h,
@@ -20,6 +21,7 @@ file
 	List.cpp,
 	Image.cpp,
 	Smoothen.cpp,
+	Text.cpp,
 	Bar.cpp,
 	EditPos.cpp,
 	ImlFile.cpp,
