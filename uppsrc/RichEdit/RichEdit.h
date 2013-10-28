@@ -443,6 +443,8 @@ private:
 	StyleKey   stylekey[20];
 	
 	Zoom       clipzoom;
+	
+	double     floating_zoom;
 
 	Rect       GetTextRect() const;
 	Size       GetZoomedPage() const;
@@ -790,6 +792,8 @@ public:
 	Zoom            GetClipZoom() const                   { return clipzoom; }
 	RichEdit&       BulletIndent(int i)                   { bullet_indent = i; return *this; }
 	RichEdit&       PersistentFindReplace(bool b = true)  { persistent_findreplace = b; return *this; }
+	RichEdit&       Floating(double zoomlevel_ = 1);
+	RichEdit&       NoFloating(double zoomlevel_ = 1)     { return Floating(Null); }
 
 	struct UndoInfo {
 		int              undoserial;

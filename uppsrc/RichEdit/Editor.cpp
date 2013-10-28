@@ -208,9 +208,20 @@ void RichEdit::FixObjectRect()
 	}
 }
 
+RichEdit& RichEdit::Floating(double zoomlevel_)
+{
+	floating_zoom = zoomlevel_;
+	RefreshLayoutDeep();
+	return *this;
+}
+
 void RichEdit::Layout()
 {
-	Size sz = GetTextRect().Size();
+	Size sz = GetTextRect().GetSize();
+	if(!IsNull(floating_zoom)) {
+		Zoom m = GetRichTextStdScreenZoom();
+		SetPage(Size(int(1 / floating_zoom * m.d / m.m * sz.cx), INT_MAX));
+	}
 	sb.SetPage(sz.cy > 10 ? sz.cy - 4 : sz.cy);
 	SetupRuler();
 	SetSb();
