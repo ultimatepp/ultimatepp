@@ -254,13 +254,6 @@ void Test()
 
 CONSOLE_APP_MAIN
 {	
-#ifdef PLATFORM_POSIX
-	Puts("\nLibSensors test. Please report the results to U++ Forum");
-	GetSensors();
-	Puts("\nPress enter to continue");
-	getchar();
-#endif
-
 	Puts("\nBasic system identification:");
 	String kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion;
 	if (!GetOsInfo(kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion))
