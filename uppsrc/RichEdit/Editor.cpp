@@ -728,6 +728,8 @@ RichEdit::RichEdit()
 	bullet_indent = 150;
 	
 	persistent_findreplace = true;
+	
+	floating_zoom = Null;
 }
 
 RichEdit::~RichEdit() {}
