@@ -387,15 +387,7 @@ double GetCpuTemperature() {
 	return Null;
 }
 #endif
-/*
-String GetMacAddress() {
-	Array <NetAdapter> ret = GetAdapterInfo();	
-	if (!ret.IsEmpty())
-		return ret[0].mac;
-	else
-		return Null;
-}
-*/
+
 
 void NetAdapter::Copy(const NetAdapter& src) {
 	description <<= src.description;
@@ -480,7 +472,7 @@ static double GetCpuTemperatureACPI() {
 			if (ff.IsDirectory()) {
 				String name = ff.GetName();
 				if (name != "." && name != "..") {
-					StringParse str = LoadFile_Safe(AppendFileName(AppendFileName("/proc/acpi/thermal_zone", name), "temperature"));			
+					StringParse str = LoadFile_Safe(AppendFileName("/proc/acpi/thermal_zone", name, "temperature"));			
 					str.GoAfter("temperature:");
 					return str.GetDouble();
 				}
@@ -509,9 +501,9 @@ static double GetCpuTemperatureHWMON() {
 }
 
 double GetCpuTemperature()  {
-	double temp = GetCpuTemperatureACPI();
+	double temp = GetCpuTemperatureHWMON();
 	if (IsNull(temp)) 
-		temp = GetCpuTemperatureHWMON();
+		temp = GetCpuTemperatureACPI();
 	
 	return temp;
 }

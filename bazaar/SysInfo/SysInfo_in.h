@@ -40,8 +40,6 @@
 	#include <time.h>
 	#include <signal.h>
 	#include <sys/reboot.h>
-//#include <linux/kd.h>
-//#include <sys/ioctl.h>
 	
 	#include <X11/Xlib.h>
 	#include <X11/Xos.h>
