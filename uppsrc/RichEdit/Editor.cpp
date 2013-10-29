@@ -589,6 +589,8 @@ void StdLabelDlg(String& s)
 
 RichEdit::RichEdit()
 {
+	floating_zoom = Null;
+
 	Unicode();
 	BackPaint();
 
@@ -728,8 +730,6 @@ RichEdit::RichEdit()
 	bullet_indent = 150;
 	
 	persistent_findreplace = true;
-	
-	floating_zoom = Null;
 }
 
 RichEdit::~RichEdit() {}
