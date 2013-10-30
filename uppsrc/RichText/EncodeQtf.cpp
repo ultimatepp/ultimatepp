@@ -480,7 +480,7 @@ String   AsQTF(const RichText& text, byte charset, dword options)
 		qtf << "^H" << hdr << "^^\r\n";
 
 	String ftr = text.GetFooterQtf(charset, options);
-	if(hdr.GetCount())
+	if(ftr.GetCount())
 		qtf << "^F" << ftr << "^^\r\n";
 
 	if(!(options & QTF_NOSTYLES))
