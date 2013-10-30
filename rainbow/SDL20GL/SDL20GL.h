@@ -11,7 +11,7 @@
 NAMESPACE_UPP
 
 #define IMAGECLASS FBImg
-#define IMAGEFILE <Framebuffer/FB.iml>
+#define IMAGEFILE <SDL20GL/FB.iml>
 #include <Draw/iml_header.h>
 
 struct SDLWindow {

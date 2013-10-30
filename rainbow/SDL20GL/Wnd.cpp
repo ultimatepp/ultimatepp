@@ -23,6 +23,8 @@ int            Ctrl::fbCaretTm;
 bool           Ctrl::fbEndSession;
 int            Ctrl::PaintLock;
 
+bool           Ctrl::SystemCursor;
+
 void Ctrl::SetDesktop(Ctrl& q)
 {
 	desktop = &q;
@@ -235,7 +237,7 @@ void Ctrl::PaintCaretCursor(SystemDraw& draw)
 {
 	if(!IsNull(fbCaretRect))
 		draw.DrawRect(fbCaretRect, InvertColor);
-	if(sdlMouseIsIn)
+	if(sdlMouseIsIn && !SystemCursor)
 		draw.DrawImage(fbCursorPos.x, fbCursorPos.y, fbCursorImage);
 }
 
