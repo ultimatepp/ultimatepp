@@ -62,9 +62,6 @@ void FBInit()
 	//FIXME adjustable
 	videoflags = SDL_HWSURFACE | SDL_HWACCEL | SDL_DOUBLEBUF | SDL_RESIZABLE;// | SDL_NOFRAME | SDL_FULLSCREEN;
 #endif
-
-	SDL_ShowCursor(0);
-
 	screen_size = Size(1500, 900);
 	screen.Create(screen_size, "First test");
 

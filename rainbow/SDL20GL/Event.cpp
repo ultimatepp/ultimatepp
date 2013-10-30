@@ -324,19 +324,10 @@ void Ctrl::CursorSync()
 	if(focusCtrl && (((GetTickCount() - fbCaretTm) / 500) & 1) == 0)
 		cr = (RectC(focusCtrl->caretx, focusCtrl->carety, focusCtrl->caretcx, focusCtrl->caretcy)
 		      + focusCtrl->GetScreenView().TopLeft()) & focusCtrl->GetScreenView();
-	if(fbCursorPos != p || cr != fbCaretRect) {
+	if(fbCursorPos != p && !SystemCursor || cr != fbCaretRect) {
 		fbCaretRect = cr;
 		fbCursorPos = p;
 		Invalidate();
-	}
-}
-
-void  Ctrl::SetMouseCursor(const Image& image)
-{
-	GuiLock __;
-	if(image.GetSerialId() != fbCursorImage.GetSerialId()) {
-		fbCursorImage = image;
-		fbCursorPos = Null;
 	}
 }
 

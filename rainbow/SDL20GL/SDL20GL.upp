@@ -19,6 +19,7 @@ file
 	DrawDragRect.cpp,
 	Ctrl.cpp,
 	Wnd.cpp,
+	Cursor.cpp,
 	Event.cpp,
 	Top.h,
 	TopFrame.cpp,

@@ -19,25 +19,28 @@ void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size psz, P
 }
 
 #define IMAGECLASS FBImg
-#define IMAGEFILE <Framebuffer/FB.iml>
+#define IMAGEFILE <SDL20GL/FB.iml>
 #include <Draw/iml_source.h>
 
-Image Image::Arrow() { return FBImg::arrow(); }
-Image Image::Wait() { return FBImg::wait(); }
-Image Image::IBeam() { return FBImg::ibeam(); }
-Image Image::No() { return FBImg::no(); }
-Image Image::SizeAll() { return FBImg::sizeall(); }
-Image Image::SizeHorz() { return FBImg::sizehorz(); }
-Image Image::SizeVert() { return FBImg::sizevert(); }
-Image Image::SizeTopLeft() { return FBImg::sizetopleft(); }
-Image Image::SizeTop() { return FBImg::sizetop(); }
-Image Image::SizeTopRight() { return FBImg::sizetopright(); }
-Image Image::SizeLeft() { return FBImg::sizeleft(); }
-Image Image::SizeRight() { return FBImg::sizeright(); }
-Image Image::SizeBottomLeft() { return FBImg::sizebottomleft(); }
-Image Image::SizeBottom() { return FBImg::sizebottom(); }
-Image Image::SizeBottomRight() { return FBImg::sizebottomright(); }
-Image Image::Hand() { return FBImg::hand(); }
+#define STD_CURSOR(name, sdl) \
+Image Image::name() { static Image img; ONCELOCK { img = FBImg::name(); img.SetAuxData(sdl + 1); } return img; }
+
+STD_CURSOR(Arrow, SDL_SYSTEM_CURSOR_ARROW)
+STD_CURSOR(Wait, SDL_SYSTEM_CURSOR_WAIT)
+STD_CURSOR(IBeam, SDL_SYSTEM_CURSOR_IBEAM)
+STD_CURSOR(No, SDL_SYSTEM_CURSOR_NO)
+STD_CURSOR(SizeAll, SDL_SYSTEM_CURSOR_SIZEALL)
+STD_CURSOR(SizeHorz, SDL_SYSTEM_CURSOR_SIZEWE)
+STD_CURSOR(SizeVert, SDL_SYSTEM_CURSOR_SIZENS)
+STD_CURSOR(SizeTopLeft, SDL_SYSTEM_CURSOR_SIZENWSE)
+STD_CURSOR(SizeTop, SDL_SYSTEM_CURSOR_SIZENS)
+STD_CURSOR(SizeTopRight, SDL_SYSTEM_CURSOR_SIZENESW)
+STD_CURSOR(SizeLeft, SDL_SYSTEM_CURSOR_SIZEWE)
+STD_CURSOR(SizeRight, SDL_SYSTEM_CURSOR_SIZEWE)
+STD_CURSOR(SizeBottomLeft, SDL_SYSTEM_CURSOR_SIZENWSE)
+STD_CURSOR(SizeBottom, SDL_SYSTEM_CURSOR_SIZENS)
+STD_CURSOR(SizeBottomRight, SDL_SYSTEM_CURSOR_SIZENESW)
+STD_CURSOR(Hand, SDL_SYSTEM_CURSOR_HAND)
 
 END_UPP_NAMESPACE
 

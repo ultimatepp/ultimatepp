@@ -68,6 +68,8 @@ public:
 
 	static void PaintScene(SystemDraw& draw);
 	static void PaintCaretCursor(SystemDraw& draw);
+	
+	static bool SystemCursor;
 
 	enum { DRAWDRAGRECT_SCREEN = 0x8000 };
 
