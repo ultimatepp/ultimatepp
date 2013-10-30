@@ -230,6 +230,10 @@ that this is not as simple as adding year attribute of Date because
 of leap years.&]
 [s3;%% &]
 [s4; &]
+[s5;:EasterDay`(int`): [_^Date^ Date]_[* EasterDay]([@(0.0.255) int]_[*@3 year])&]
+[s2;%% Returns the Easter day for given [%-*@3 year].&]
+[s3;%% &]
+[s4; &]
 [s5;:GetLeapSeconds`(Date`): [@(0.0.255) int]_[* GetLeapSeconds]([_^Date^ Date]_[*@3 dt])&]
 [s2;%% Returns the number of leap seconds that has occured since 
 the start of adding leap seconds till [%-*@3 dt].&]

@@ -369,6 +369,19 @@ Date AddYears(Date date, int years) {
 	return date;
 }
 
+Date EasterDay(int year)
+{
+    int a = year % 19;
+    int b = year >> 2;
+    int c = b / 25 + 1;
+    int d = (c * 3) >> 2;
+    int e = ((a * 19) - ((c * 8 + 5) / 25) + d + 15) % 30;
+    e += (29578 - a - e * 32) >> 10;
+    e -= ((year % 7) + b - d + e + 2) % 7;
+    d = e >> 5;
+    return Date(year, d + 3, e - d * 31);
+}
+
 void Time::Serialize(Stream& s)
 {
 	s % day % month % year % hour % minute % second;
