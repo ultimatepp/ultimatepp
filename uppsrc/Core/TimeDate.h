@@ -56,10 +56,11 @@ Date LastDayOfYear(Date d);
 Date FirstDayOfYear(Date d);
 int  DayOfYear(Date d);
 
-
 Date AddMonths(Date date, int months);
 int  GetMonths(Date since, Date till);
 Date AddYears(Date date, int years);
+
+Date EasterDay(int year);
 
 Date GetSysDate();
 
