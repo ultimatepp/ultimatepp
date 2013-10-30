@@ -483,20 +483,16 @@ static double GetCpuTemperatureACPI() {
 }
 
 static double GetCpuTemperatureHWMON() {
-	Vector <double> temps;
+	double sumTemps = 0.;
 	for (FindFile ff("/sys/class/hwmon/hwmon0/device/*input"); ff; ff.Next()) {
 		if (!ff.IsHidden()) {
 			String temp = LoadFile_Safe(ff.GetPath());
 			if (!temp.IsEmpty())
-				temps.Add((double)StrInt(temp) / 1000.0);
+				sumTemps += double(StrInt(temp))/1000.;
 		}
 	}
 	if (temps.IsEmpty())
 		return Null;
-	double sumTemps = 0.;
-	for (int i = 0; i < temps.GetCount(); i++)
-		sumTemps += temps[i];
-	
 	return sumTemps/double(temps.GetCount());
 }
 
