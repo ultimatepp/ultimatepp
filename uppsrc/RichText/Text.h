@@ -139,6 +139,8 @@ public:
 	void                  ClearFooter()                                       { footer.Clear(); }
 	String                GetHeaderQtf(byte charset = CHARSET_UTF8, dword options = QTF_ALL) const;
 	String                GetFooterQtf(byte charset = CHARSET_UTF8, dword options = QTF_ALL) const;
+	const RichText       *GetHeaderPtr() const                                { return ~header; }
+	const RichText       *GetFooterPtr() const                                { return ~footer; }
 
 	//Ugly hacks
 	void                  SetFooter(const String& s)                          { footer_hack = s; }
