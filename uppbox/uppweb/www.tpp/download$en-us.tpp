@@ -23,10 +23,10 @@ installer]]
 :: [s0;=2 ]
 :: [s0;= [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`-nightly^2 PPA][2 , 
 ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`-nightly`/`+packages^2 d
-eb, dsc]]
+eb, dsc][2  (install ][*2 upp`_`*`_all.deb][2 )]]
 :: [s0;= [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^2 PPA][2 , 
 ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`/`+packages^2 deb, 
-dsc]]
+dsc][2  (install ][*2 upp`_`*`_all.deb][2 )]]
 :: [s0; [*2 Debian]]
 :: [s0;=2 ]
 :: [s0;= [^http`:`/`/upp`.invothink`.com`/nightly`/^2 repository]]

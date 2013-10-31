@@ -865,8 +865,8 @@ in32 installer]&]
 11`-src]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^+75 Ubun
 tu packages]&]
-[s0;i150;a17;O0;%% [%RU-RU^topic`:`/`/uppweb`/svn`/svn`$ru`-ru^2 SVN][%RU-RU2 : 
-][ILATESTSVN;2 latestsvn]]
+[s0;i150;a17;O0;%% [%RU-RU^http`:`/`/www`.ultimatepp`.org`/www`$uppweb`$nightly`$ru`-ru`.html^2 S
+VN][%RU-RU2 : ][ILATESTSVN;2 latestsvn]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r/0t8/25b8/25R(165)-1 [s0;*+34 ]
 ::r/25t0/15b0/15R0 [s0;%- ]
@@ -897,4 +897,4 @@ of Code ресурсы]]
 поддержка U`+`+]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/cookie`$ru`-ru^2 Cookie`-приз]]
 ::=l0/25r0/25t0/15b0/15R0 [s0;%- ]}}&]
-[s0; ]
+[s0; ]]

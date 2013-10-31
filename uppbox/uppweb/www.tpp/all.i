@@ -106,6 +106,14 @@ TOPIC("idess$de-de")
 #include "idess$de-de.tppi"
 END_TOPIC
 
+TOPIC("index$ca-es")
+#include "index$ca-es.tppi"
+END_TOPIC
+
+TOPIC("index$cs-cz")
+#include "index$cs-cz.tppi"
+END_TOPIC
+
 TOPIC("index$de-de")
 #include "index$de-de.tppi"
 END_TOPIC
@@ -122,8 +130,24 @@ TOPIC("index$eu-es")
 #include "index$eu-es.tppi"
 END_TOPIC
 
+TOPIC("index$fr-fr")
+#include "index$fr-fr.tppi"
+END_TOPIC
+
+TOPIC("index$ro-ro")
+#include "index$ro-ro.tppi"
+END_TOPIC
+
 TOPIC("index$ru-ru")
 #include "index$ru-ru.tppi"
+END_TOPIC
+
+TOPIC("index$zh-cn")
+#include "index$zh-cn.tppi"
+END_TOPIC
+
+TOPIC("index$zh-tw")
+#include "index$zh-tw.tppi"
 END_TOPIC
 
 TOPIC("nightly$en-us")

@@ -833,8 +833,8 @@ in32 installer]&]
 11`-src]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^+75 Pach
 ete Ubuntu]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/svn`/svn`$en`-us^2 Ultimul svn][2 : 
-][ILATESTSVN;2 latestsvn]]
+[s0;i150;a17;O0; [^http`:`/`/www`.ultimatepp`.org`/www`$uppweb`$nightly`$en`-us`.html^2 U
+ltimul svn][2 : ][ILATESTSVN;2 latestsvn]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r/0t8/25b8/25R(165)-1 [s0;*+34 ]
 ::r/25t0/15b0/15R0 [s0;%- ]
@@ -866,4 +866,4 @@ U`+`+]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/cookie`$en`-us^2 Premiu 
 fursec]]
 ::=l0/25r0/25t0/15b0/15R0 [s0;%- ]}}&]
-[s0; ]
+[s0; ]]

@@ -824,8 +824,9 @@ in32 ][^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`
 11`-src][+75  ]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^+75 Ubun
 tu ][^http`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^+92 套件]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/svn`/svn`$en`-us^2 SVN][^topic`:`/`/uppweb`/svn`/svn`$en`-us^+92 上
-的最新版本][2 : ][ILATESTSVN;2 latestsvn]]
+[s0;i150;a17;O0; [^http`:`/`/www`.ultimatepp`.org`/www`$uppweb`$nightly`$en`-us`.html^2 S
+VN][^http`:`/`/www`.ultimatepp`.org`/www`$uppweb`$nightly`$en`-us`.html^+92 上的最
+新版本][2 : ][ILATESTSVN;2 latestsvn]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r/0t8/25b8/25R(165)-1 [s0;*+34 ]
 ::r/25t0/15b0/15R0 [s0;%- ]
@@ -855,4 +856,4 @@ of Code][^topic`:`/`/uppweb`/gsoc`/gsoc`$en`-us^+92 資源]]
 `+`+]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/cookie`$en`-us^+92 金餅獎]]
 ::=l0/25r0/25t0/15b0/15R0 [s0;%- ]}}&]
-[s0; ]
+[s0; ]]
