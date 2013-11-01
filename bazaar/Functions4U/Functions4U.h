@@ -414,7 +414,22 @@ public:
 		return ret;
 	}
 	String GetLine() {
-		return GetText("\r\n");
+		String ret;
+		if (pos > GetCount() || pos == -1)
+			return String();
+		while (ToString()[pos] != '\0') {
+			if (ToString()[pos] == '\n') {
+				pos++;
+				return ret;
+			}
+			if (ToString()[pos] == '\r' && ToString()[pos+1] == '\n') {
+				pos += 2;
+				return ret;
+			}
+			ret.Cat(ToString()[pos]);
+			pos++;
+		}
+		return ret;
 	}
 	double GetDouble(String separators = "")  	{return atof(GetText(separators));};
 	int GetInt(String separators = "")			{return atoi(GetText(separators));};

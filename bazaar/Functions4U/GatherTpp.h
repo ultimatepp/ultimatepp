@@ -5,7 +5,6 @@ NAMESPACE_UPP
 
 class GatherTpp {
 public:
-	//GatherTpp();
 	void AddFolder(const char *folder) {rootFolders.Add(folder);};
 	bool Load(String indexFile, Gate2<int, int> progress = false);
 	
