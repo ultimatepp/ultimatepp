@@ -3149,4 +3149,4 @@ you must set the `".MYSQLDLL`" build flag.&]
 [s0; Note: Multithreading is not required, even though mysqlclient.lib 
 is a multithreaded library (according to information shown in 
 MySql website).&]
-[s0; ]
+[s0; ]]
