@@ -466,46 +466,69 @@ bool GetProcessorInfo(int number, String &vendor, String &identifier, String &ar
 }
 
 static double GetCpuTemperatureACPI() {
-	FindFile ff;
-	if(ff.Search("/proc/acpi/thermal_zone/*")) {
-		do {
-			if (ff.IsDirectory()) {
-				String name = ff.GetName();
-				if (name != "." && name != "..") {
-					StringParse str = LoadFile_Safe(AppendFileName("/proc/acpi/thermal_zone", name, "temperature"));			
-					str.GoAfter("temperature:");
-					return str.GetDouble();
-				}
-			}
-		} while(ff.Next());
-	}
-	return Null;
-}
-
-static double GetCpuTemperatureHWMON() {
-	double sumTemps = 0.;
+	StringParse info = Sys("acpi -t");
+	if (info.IsEmpty())
+		return Null;
+	StringParse line;
+	double tempAcc = 0;
 	int count = 0;
-	for (FindFile ff("/sys/class/hwmon/hwmon0/device/*input"); ff; ff.Next()) {
-		if (!ff.IsHidden()) {
-			String temp = LoadFile_Safe(ff.GetPath());
-			if (!temp.IsEmpty()) {
-				sumTemps += double(StrInt(temp))/1000.;
-				count++;
-			}
-		}
+	while (true) {
+		line = info.GetLine();
+		if (line.IsEmpty())
+			if (info.Eof())
+				break;
+			else
+				continue;
+		if (!line.GoAfter("Thermal", "ok,"))
+			continue;
+		double temp = line.GetDouble();
+		if (IsNull(temp))
+			continue;
+		tempAcc += temp;
+		count++;
 	}
 	if (count == 0)
 		return Null;
-	return sumTemps/count;
+	return tempAcc/count;	
 }
 
-double GetCpuTemperature()  {
-	double temp = GetCpuTemperatureHWMON();
+static double GetCpuTemperatureSensors() {
+	StringParse info = Sys("sensors");
+	if (info.IsEmpty())
+		return Null;
+	StringParse line;
+	double tempAcc = 0;
+	int count = 0;
+	while (true) {
+		if (!info.GoAfter("coretemp"))
+			break;
+		while(true) {
+			line = info.GetLine();
+			if (line.IsEmpty())
+				break;
+			if (!line.GoAfter("Core", ":"))
+				continue;
+			double temp = line.GetDouble();
+			if (IsNull(temp))
+				continue;
+			tempAcc += temp;
+			count++;
+		}
+		if (info.Eof())
+			break;		
+	}
+	if (count == 0)
+		return Null;
+	return tempAcc/count;		
+}
+
+double GetCpuTemperature() {
+	double temp = GetCpuTemperatureACPI();
 	if (IsNull(temp)) 
-		temp = GetCpuTemperatureACPI();
-	
+		temp = GetCpuTemperatureSensors();	
 	return temp;
 }
+
 
 /*
 Array <NetAdapter> GetAdapterInfo() {
