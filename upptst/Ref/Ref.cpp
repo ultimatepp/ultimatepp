@@ -71,13 +71,13 @@ CONSOLE_APP_MAIN
 	
 	TestRef(Value("hello Value!"));
 
-	TestRef(ValueMap()("key1", 1)("key2", 2));
+//	TestRef(ValueMap()("key1", 1)("key2", 2));
 
-	TestRef(ValueArray() << "v1" << "v2");
+//	TestRef(ValueArray() << "v1" << "v2");
 	
 	TestRef(Blue());
 	
-	TestRef(Rect(1, 2, 3, 4));
+//	TestRef(Rect(1, 2, 3, 4));
 	
 	String text;
 	Ref textref(text);
