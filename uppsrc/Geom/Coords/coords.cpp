@@ -87,10 +87,10 @@ GisCoords::Arg GisCoords::Arg::DropList(String& v, String ident, String name, St
 
 struct GeomBoolRef : public RefManager
 {
-	virtual int        GetType()                         { return UNKNOWN_V; }
-	virtual Value      GetValue(const void *x)           { return *(const bool *)x ? 1 : 0; }
-	virtual void       SetValue(void *x, const Value& v) { *(bool *)x = !UPP::IsNull(v) && (double)v; }
-	virtual void       SetNull(void *x)                  { *(bool *)x = false; }
+	virtual int        GetType() const                         { return UNKNOWN_V; }
+	virtual Value      GetValue(const void *x) const           { return *(const bool *)x ? 1 : 0; }
+	virtual void       SetValue(void *x, const Value& v) const { *(bool *)x = !UPP::IsNull(v) && (double)v; }
+	virtual void       SetNull(void *x) const                  { *(bool *)x = false; }
 
 	static RefManager *Manager()                         { static GeomBoolRef m; return &m; }
 };

@@ -81,11 +81,6 @@ onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v])&]
 [s2;%% Support for standard Value types and Value.&]
 [s3;%% &]
 [s4; &]
-[s5;:Ref`:`:Ref`(const ValueTypeRef`&`): [* Ref]([@(0.0.255) const]_[_^ValueTypeRef^ ValueT
-ypeRef][@(0.0.255) `&]_[*@3 r])&]
-[s2;%% Support for rich Value types based on ValueType.&]
-[s3;%% &]
-[s4; &]
 [s5;:Ref`:`:Ref`(`): [* Ref]()&]
 [s2;%% Default constructor, constructs empty Ref (no variable referenced, 
 no value can be assigned).&]
