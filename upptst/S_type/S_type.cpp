@@ -1,8 +1,8 @@
 #include <Sql/Sql.h>
 
 using namespace Upp;
-#define SCHEMADIALECT <plugin/sqlite3/S_type.h>
-#define MODEL <Sqlite3Bug/Sqlite3bug.sch>
+#define SCHEMADIALECT <plugin/sqlite3/Sqlite3Schema.h>
+#define MODEL <S_type/S_type.sch>
 #include <Sql/sch_header.h>
 #include <Sql/sch_source.h>
 #include <Sql/sch_schema.h>
