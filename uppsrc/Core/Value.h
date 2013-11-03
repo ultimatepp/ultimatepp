@@ -63,7 +63,7 @@ public:
 	bool     operator==(const T&) const             { NEVER(); return false; }
 	String   ToString() const                       { return typeid(T).name(); }
 	
-	operator ValueTypeRef();
+//	operator ValueTypeRef();
 };
 
 template <class T, dword type, class B = EmptyClass> // Backward compatiblity

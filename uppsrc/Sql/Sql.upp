@@ -24,6 +24,7 @@ file
 	Schema readonly separator,
 	SqlSchema.h,
 	SqlSchema.cpp,
+	S_info.cpp,
 	sch_model.h,
 	sch_header.h,
 	sch_source.h,

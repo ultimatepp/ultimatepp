@@ -6,12 +6,13 @@ static String sAsString(const Vector<Value>& v);
 
 #define LTIMING(x) // RTIMING(x)
 
+/*
 struct Ref::ValueRef : public RefManager {
-	virtual int   GetType()                            { return VALUE_V; }
-	virtual Value GetValue(const void *ptr)            { return *(Value *) ptr; }
-	virtual bool  IsNull(const void *ptr)              { return UPP::IsNull(*(Value *) ptr); }
-	virtual void  SetValue(void *ptr, const Value& v)  { *(Value *) ptr = v; }
-	virtual void  SetNull(void *ptr)                   { *(Value *) ptr = Null; }
+	virtual int   GetType() const                           { return VALUE_V; }
+	virtual Value GetValue(const void *ptr) const           { return *(Value *) ptr; }
+	virtual bool  IsNull(const void *ptr) const             { return UPP::IsNull(*(Value *) ptr); }
+	virtual void  SetValue(void *ptr, const Value& v) const { *(Value *) ptr = v; }
+	virtual void  SetNull(void *ptr) const                  { *(Value *) ptr = Null; }
 };
 
 Ref::Ref(String& s)  { ptr = &s; m = &Single< StdRef<String> >(); }
@@ -23,7 +24,7 @@ Ref::Ref(bool& b)    { ptr = &b; m = &Single< StdRef<bool> >(); }
 Ref::Ref(Date& d)    { ptr = &d; m = &Single< StdRef<Date> >(); }
 Ref::Ref(Time& t)    { ptr = &t; m = &Single< StdRef<Time> >(); }
 Ref::Ref(Value& v)   { ptr = &v; m = &Single< ValueRef >(); }
-
+*/
 // ----------------------------------
 
 bool ValueArray::Data::IsNull() const

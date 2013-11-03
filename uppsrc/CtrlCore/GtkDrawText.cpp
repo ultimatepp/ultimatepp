@@ -35,7 +35,7 @@ void FontSysData::Init(Font font, int angle)
 	if(font.IsItalic() && !(FTFace(font)->style_flags & FT_STYLE_FLAG_ITALIC)) {
 		cairo_matrix_t sheer[1];	
 		cairo_matrix_init_identity(sheer);
-		sheer->xy = -0.3;
+		sheer->xy = -0.2;
 		cairo_matrix_multiply(font_matrix, font_matrix, sheer);
 	}
 	

@@ -7,58 +7,21 @@
 
 // constructor
 
-#define TYPE(x)  S_##x::S_##x() {
-#define COLUMN(type, ctype, name, width, prec)               SqlSchemaInitClear(ADD_SCHEMA_PREFIX_CPP(name));
-#define COLUMN_ARRAY(type, ctype, name, width, prec, items)  SqlSchemaInitClear(ADD_SCHEMA_PREFIX_CPP(name), items);
-#define END_TYPE }
+#define TYPE(x)  const S_info *S_##x::info; S_##x::S_##x()   { ONCELOCK { info = &GetInfo(); }
+#define COLUMN(type, ctype, name, width, prec)                 SqlSchemaInitClear(ADD_SCHEMA_PREFIX_CPP(name));
+#define COLUMN_ARRAY(type, ctype, name, width, prec, items)    SqlSchemaInitClear(ADD_SCHEMA_PREFIX_CPP(name), items);
+#define END_TYPE                                             }
 
 #include SCHEMADIALECT
 
-// constructor, ColumnSet, TableName, SqlField
+// constructor from ValueMap
 
-#define TYPECODE(x, y) \
-const char S_##x::TableName[] = #x; \
-const SqlSet& S_##x::ColumnSet() { \
-	static SqlSet set = ColumnSet(""); \
-	return set; \
-} \
-SqlSet S_##x::Of(SqlId id) { \
-	return ColumnSet(id.ToString() + '.'); \
-} \
-SqlSet S_##x::ColumnSet(const String& prefix) { \
-	SqlSet set; \
-	y \
-
-#define TYPE(x)                 TYPECODE(x, __NIL)
-
-#define BASECODE(b) \
-set.Cat(S_##b::ColumnSet(prefix));
-#define TYPE_I(x, b)            TYPECODE(x, BASECODE(b))
-
-#define BASE2CODE(b1, b2)\
-set.Cat(S_##b1::ColumnSet(prefix)); \
-set.Cat(S_##b2::ColumnSet(prefix));
-#define TYPE_II(x, b1, b2)      TYPECODE(x, BASE2CODE(b1, b2))
-
-#define BASE3CODE(b1, b2, b3)\
-set.Cat(S_##b1::ColumnSet(prefix)); \
-set.Cat(S_##b2::ColumnSet(prefix)); \
-set.Cat(S_##b3::ColumnSet(prefix));
-#define TYPE_III(x, b1, b2, b3) TYPECODE(x, BASE3CODE(b1, b2, b3))
-
-#define VAR(type, x)             td_var(set, prefix, #x, &S_##type::ColumnSet);
-
-#define COLUMN(type, ctype, name, width, prec)               td_scalar(set, prefix, #name);
-#define COLUMN_ARRAY(type, ctype, name, width, prec, items)  td_array(set, prefix, #name, items);
-
-#define END_TYPE                 return set; }
+#define TYPE(x)  S_##x::S_##x(const ValueMap& m)             { ONCELOCK { info = &GetInfo(); }
+#define COLUMN(type, ctype, name, width, prec)                 SqlSchemaInitClear(ADD_SCHEMA_PREFIX_CPP(name));
+#define COLUMN_ARRAY(type, ctype, name, width, prec, items)    SqlSchemaInitClear(ADD_SCHEMA_PREFIX_CPP(name), items);
+#define END_TYPE                                               Set(m); }
 
 #include SCHEMADIALECT
-
-#undef  TYPECODE
-#undef  BASECODE
-#undef  BASE2CODE
-#undef  BASE3CODE
 
 // Clear
 
@@ -83,13 +46,28 @@ void S_##x::Clear() { S_##b1::Clear(); S_##b2::Clear(); S_##b3::Clear();
 
 #include SCHEMADIALECT
 
-// FieldLayout
+// TableName, FieldLayout and GetInfo
 
 #define TYPE(x) \
+const char S_##x::TableName[] = #x; \
+\
 void S_##x::FieldLayout(FieldOperator& fo) {\
 	fo.Table(#x);\
 	FieldLayoutRaw(fo);\
-}
+} \
+\
+const S_info& S_##x::GetInfo() {\
+	static S_info *info; \
+	ONCELOCK { \
+		static S_info f; \
+		S_##x prot(0); \
+		S_info_maker m(f, &prot); \
+		prot.FieldLayoutRaw(m); \
+		f.Init(); \
+		info = &f; \
+	} \
+	return *info; \
+} \
 
 #include SCHEMADIALECT
 
@@ -123,31 +101,6 @@ void S_##x::FieldLayoutRaw(FieldOperator& fo, const String& prefix) {\
 #define VAR(type, x)             x.FieldLayoutRaw(fo, prefix + #x + "$");
 
 #define END_TYPE                 }
-
-#include SCHEMADIALECT
-
-// S_*::Get(SqlId column_id) const
-
-#define TYPE(x)                                      Value S_##x::Get(SqlId column_id) const { String col = ~column_id;
-#define COLUMN(type, ctype, name, width, prec)       static String _x0_x_##name(#name); if(_x0_x_##name == col) return name;
-#define END_TYPE                                     return Value(); }
-
-#include SCHEMADIALECT
-
-
-// ValueMap S_*::Get() const
-
-#define TYPE(x)                                      ValueMap S_##x::Get() const { ValueMap vm;
-#define COLUMN(type, ctype, name, width, prec)       static String _x0_x_##name(#name); vm.Add(_x0_x_##name, name);
-#define END_TYPE                                     return vm; }
-
-#include SCHEMADIALECT
-
-//	static const Vector<SqlId>& GetColumnIds();
-
-#define TYPE(x)                                      const Vector<SqlId>& S_##x::GetColumnIds() { static Vector<SqlId> cols; ONCELOCK {
-#define COLUMN(type, ctype, name, width, prec)       cols.Add(#name);
-#define END_TYPE                                     } return cols; }
 
 #include SCHEMADIALECT
 
