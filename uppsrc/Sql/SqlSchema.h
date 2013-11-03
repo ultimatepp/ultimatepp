@@ -132,7 +132,7 @@ String ExportIds(const String& database);
 #endif
 
 struct S_info {
-	VectorMap< String, Tuple2<intptr_t, const RefManager *> > column;
+	VectorMap< String, Tuple2<intptr_t, RefManager *> > column;
 	SqlSet        set;
 	Vector<SqlId> ids;
 	

@@ -80,26 +80,27 @@ public:
 };
 
 struct RefManager {
-	virtual int   GetType() const = 0;
-	virtual Value GetValue(const void *) const           { return Null; }
-	virtual bool  IsNull(const void *) const             { return false; }
-	virtual void  SetValue(void *, const Value& v) const { NEVER(); }
-	virtual void  SetNull(void *) const                  { NEVER(); }
-	virtual ~RefManager()                                {}
+	virtual int   GetType() = 0;
+	virtual Value GetValue(const void *)            { return Null; }
+	virtual bool  IsNull(const void *)              { return false; }
+	virtual void  SetValue(void *, const Value& v)  { NEVER(); }
+	virtual void  SetNull(void *)                   { NEVER(); }
+	virtual ~RefManager() {}
 };
 
 template <class T>
 struct StdRef : public RefManager {
-	virtual int   GetType() const                         { return GetValueTypeNo<T>(); }
-	virtual Value GetValue(const void *p) const           { return *(const T *) p; }
-	virtual bool  IsNull(const void *p) const             { return UPP::IsNull(*(T *) p); }
-	virtual void  SetValue(void *p, const Value& v) const { *(T *) p = (T)v; }
-	virtual void  SetNull(void *p) const                  { UPP::SetNull(*(T *)p); }
+	virtual void  SetValue(void *p, const Value& v) { *(T *) p = (T)v; }
+	virtual Value GetValue(const void *p)           { return *(const T *) p; }
+	virtual int   GetType()                         { return GetValueTypeNo<T>(); }
+	virtual bool  IsNull(const void *p)             { return UPP::IsNull(*(T *) p); }
+	virtual void  SetNull(void *p)                  { UPP::SetNull(*(T *)p); }
+	virtual ~StdRef() {}
 };
 
 class Ref : Moveable<Ref> {
 protected:
-	const RefManager *m;
+	RefManager *m;
 	void       *ptr;
 	struct      ValueRef;
 
@@ -107,11 +108,11 @@ public:
 	dword    GetType() const           { return m ? m->GetType() : VOID_V; }
 	bool     IsNull() const            { return m ? m->IsNull(ptr) : true; }
 
-	void             *GetVoidPtr() const { return ptr; }
-	const RefManager *GetManager() const { return m; }
+	void       *GetVoidPtr() const     { return ptr; }
+	RefManager *GetManager() const     { return m; }
 
 	template <class T>
-	bool     Is() const                { return GetType() == GetValueTypeNo<T>(); }
+	bool     Is() const                { return GetType() == GetValueTypeNo<T>(); } // VALUE_V!!!
 	template <class T>
 	T&       Get() const               { ASSERT(GetValueTypeNo<T>() == GetType()); return *(T *)GetVoidPtr(); }
 
@@ -121,14 +122,8 @@ public:
 
 	operator Value() const             { return GetValue(); }
 	Value    operator~() const         { return GetValue(); }
-
 	Ref&     operator=(const Value& v) { SetValue(v); return *this; }
-	Ref&     operator=(const Nuller&)  { SetNull(); return *this; }
-	Ref&     operator=(const char *s)  { Get<String>() = s; return *this; }
 
-	template <class T>
-	Ref(T& x)                          { ptr = &x; m = &Single< StdRef<T> >(); }
-/*
 	Ref(String& s);
 	Ref(WString& s);
 	Ref(int& i);
@@ -138,34 +133,33 @@ public:
 	Ref(Date& d);
 	Ref(Time& t);
 	Ref(Value& v);
-*/
-	Ref(void *_ptr, const RefManager *_m)    { ptr = _ptr, m = _m; }
-//	Ref(const ValueTypeRef& r);
-	Ref()                                    { ptr = NULL; m = NULL; }
+	Ref(void *_ptr, RefManager *_m)    { ptr = _ptr, m = _m; }
+	Ref(const ValueTypeRef& r);
+	Ref()                              { ptr = m = NULL; }
 };
 
 template <class T>
-T& GetRef(Ref r, T *x = NULL) { // Deprecated, use Ref::Get<T>
+T& GetRef(Ref r, T *x = NULL) {
 	ASSERT(GetValueTypeNo<T>() == r.GetType());
 	return *(T *) r.GetVoidPtr();
 }
 
-inline String&  RefString(Ref f)  { return GetRef<String>(f); } // Deprecated, use Ref::Get<T>
-inline WString& RefWString(Ref f) { return GetRef<WString>(f); } // Deprecated, use Ref::Get<T>
-inline int&     RefInt(Ref f)     { return GetRef<int>(f); } // Deprecated, use Ref::Get<T>
-inline int64&   RefInt64(Ref f)   { return GetRef<int64>(f); } // Deprecated, use Ref::Get<T>
-inline double&  RefDouble(Ref f)  { return GetRef<double>(f); } // Deprecated, use Ref::Get<T>
-inline bool&    RefBool(Ref f)    { return GetRef<bool>(f); } // Deprecated, use Ref::Get<T>
-inline Date&    RefDate(Ref f)    { return GetRef<Date>(f); } // Deprecated, use Ref::Get<T>
-inline Time&    RefTime(Ref f)    { return GetRef<Time>(f); } // Deprecated, use Ref::Get<T>
-inline Value&   RefValue(Ref f)   { ASSERT(f.GetType() == VALUE_V); // Deprecated, use Ref::Get<T>
+inline String&  RefString(Ref f)  { return GetRef<String>(f); }
+inline WString& RefWString(Ref f) { return GetRef<WString>(f); }
+inline int&     RefInt(Ref f)     { return GetRef<int>(f); }
+inline int64&   RefInt64(Ref f)   { return GetRef<int64>(f); }
+inline double&  RefDouble(Ref f)  { return GetRef<double>(f); }
+inline bool&    RefBool(Ref f)    { return GetRef<bool>(f); }
+inline Date&    RefDate(Ref f)    { return GetRef<Date>(f); }
+inline Time&    RefTime(Ref f)    { return GetRef<Time>(f); }
+inline Value&   RefValue(Ref f)   { ASSERT(f.GetType() == VALUE_V);
                                     return *(Value *)f.GetVoidPtr(); }
 
 template <class T>
 Ref AsRef(T& x) {
 	return Ref(&x, &Single< StdRef<T> >());
 }
-/*
+
 struct ValueTypeRef {
 	RefManager *m;
 	void       *ptr;
@@ -186,7 +180,7 @@ ValueType<T, type, B>::operator ValueTypeRef()
 	h.m = &Single< StdRef<T> >();
 	return h;
 }
-*/
+
 #define E__Value(I)   Value p##I
 #define E__Ref(I)     Ref p##I
 
