@@ -127,10 +127,10 @@ bool           FileFlush(FileStream& fstream);
 
 struct BoolRef : public RefManager
 {
-	virtual int        GetType() const                   { return UNKNOWN_V; }
-	virtual Value      GetValue(const void *x) const     { return *(const bool *)x ? 1 : 0; }
-	virtual void       SetValue(void *x, const Value& v) const { *(bool *)x = !UPP::IsNull(v) && (double)v; }
-	virtual void       SetNull(void *x) const                 { *(bool *)x = false; }
+	virtual int        GetType()                { return UNKNOWN_V; }
+	virtual Value      GetValue(const void *x)     { return *(const bool *)x ? 1 : 0; }
+	virtual void       SetValue(void *x, const Value& v) { *(bool *)x = !UPP::IsNull(v) && (double)v; }
+	virtual void       SetNull(void *x) { *(bool *)x = false; }
 
 	static RefManager *Manager()                         { static BoolRef m; return &m; }
 };
