@@ -28,16 +28,23 @@ CONSOLE_APP_MAIN
 
 	DUMP(p.TableName);
 
-	DUMP(~p.ColumnSet());
-	DUMP(~p.ColumnSet("PREFIX_"));
-	DUMP(~p.Of(PERSON));
+	DUMP(SqlCompile(SQLITE3, ~p.ColumnSet()));
+	DUMP(SqlCompile(SQLITE3, ~p.ColumnSet("PREFIX_")));
+	DUMP(SqlCompile(SQLITE3, ~p.Of(PERSON)));
 
 	DUMPC(p.GetColumnIds());
 
 	DUMP(p.Get(ID));
 	DUMP(p.Get(LASTNAME));
+	DUMP(p.Get());
 	
-	DUMP(p.Get());	
+	p.Set(LASTNAME, "Carpenter");
+	DUMP(p.Get());
+	
+	ValueMap m;
+	m(ID, 123);
+	p.Set(m);
+	DUMP(p);
 
 	S_PERSON p2;
 	p2 = p;
@@ -49,4 +56,10 @@ CONSOLE_APP_MAIN
 	p.FieldLayout(fo);
 	
 	DUMP(p.NAME);
+	
+	DUMP(p.GetCount());
+	for(int i = 0; i < p.GetCount(); i++) {
+		DUMP(p.GetId(i));
+		DUMP(p.Get(i));
+	}
 }
