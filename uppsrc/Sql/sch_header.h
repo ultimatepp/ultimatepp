@@ -15,6 +15,7 @@ public: \
 	static const Vector<SqlId>& GetColumnIds()                    { return GetInfo().ids; } \
 	\
 	void                        Clear(); \
+	void                        FieldLayoutRaw(FieldOperator& f, const String& prefix = String()); \
 	void                        FieldLayout(FieldOperator& f); \
 	operator                    Fields()                              { return callback(this, &S_##Table::FieldLayout); } \
 	bool                        operator==(const S_##Table& x) const  { return EqualFields(const_cast<S_##Table&>(*this), const_cast<S_##Table&>(x)); } \

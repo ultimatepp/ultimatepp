@@ -64,7 +64,7 @@ for S`_[/ type].&]
 [s3; &]
 [s4; &]
 [s5;:S`_type`:`:operator Fields`(`):%- [* operator_Fields]()&]
-[s2; Returns callback(this, `&S`_##Table`::FieldLayout). This method 
+[s2; Returns callback(this, `&S`_[/ type]`::FieldLayout). This method 
 provides unified access to all S`_[/ type]s, which is then used 
 in Sql`::Fetch.&]
 [s3; &]
