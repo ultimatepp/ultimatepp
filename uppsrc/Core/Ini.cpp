@@ -346,6 +346,29 @@ String GetIniInfoFormatted()
 	return r;
 }
 
+String DefaultIniFileContent()
+{
+	String r;
+	for(int i = 0; i < sIniInfo().GetCount(); i++) {
+		IniInfo& f = sIniInfo()[i];
+		r << "#" << f.info << "\r\n" << f.id << '=' << (*f.def)() << "\r\n\r\n";
+	}
+	return r;
+}
+
+String CurrentIniFileContent(bool comment_defaults)
+{
+	String r;
+	for(int i = 0; i < sIniInfo().GetCount(); i++) {
+		IniInfo& f = sIniInfo()[i];
+		r << "#" << f.info << "\r\n";
+		if (comment_defaults && (*f.current)() == (*f.def)())
+			r << '#';
+		r << f.id << '=' << (*f.current)() << "\r\n\r\n";
+	}
+	return r;
+}
+
 void TextSettings::Load(const char *filename)
 {
 	FileIn in(filename);

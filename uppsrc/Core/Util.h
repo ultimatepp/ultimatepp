@@ -118,6 +118,8 @@ struct IniInfo {
 
 const Array<IniInfo>& GetIniInfo();
 String GetIniInfoFormatted();
+String DefaultIniFileContent();
+String CurrentIniFileContent(bool comment_defaults);
 
 #define INI_TYPE(var, def, info, type, decl, ref)\
 type DefIni_##var() { return def; }\
