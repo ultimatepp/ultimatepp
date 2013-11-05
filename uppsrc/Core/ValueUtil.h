@@ -226,6 +226,8 @@ public:
 
 	ValueArray(const Nuller&)                 { Init0(); }
 	bool IsNullInstance() const               { return IsEmpty(); }
+	
+	operator Ref()                            { return AsRef(*this); }
 
 	void Clear();
 	void SetCount(int n);
@@ -300,6 +302,8 @@ public:
 
 	ValueMap(const Nuller&)                         { Init0(); }
 	bool IsNullInstance() const                     { return IsEmpty(); }
+
+	operator Ref()                                  { return AsRef(*this); }
 
 	void Clear();
 	int  GetCount() const                           { return data->value.GetCount(); }
