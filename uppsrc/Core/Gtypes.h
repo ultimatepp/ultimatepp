@@ -75,6 +75,8 @@ struct Size_ : Moveable< Size_<T> > {
 	operator Value() const                     { return FitsSvoValue<Size_>() ? SvoToValue(*this) : RichToValue(*this); }
 	Size_(const Value& src)                    { *this = src.Get<Size_>(); }
 
+	operator Ref()                             { return AsRef(*this); }
+
 	void Serialize(Stream& s)                  { s % cx % cy; }
 	void Jsonize(JsonIO& jio)                  { jio("cx", cx)("cy", cy); }
 	void Xmlize(XmlIO& xio)                    { xio.Attr("cx", cx).Attr("cy", cy); }
@@ -178,6 +180,8 @@ struct Point_ : Moveable< Point_<T> > {
 
 	operator Value() const                          { return FitsSvoValue<Point_>() ? SvoToValue(*this) : RichToValue(*this); }
 	Point_(const Value& src)                        { *this = src.Get<Point_>(); }
+
+	operator Ref()                                  { return AsRef(*this); }
 
 	void Serialize(Stream& s)                       { s % x % y; }
 	void Jsonize(JsonIO& jio)                       { jio("x", x)("y", y); }
@@ -359,6 +363,8 @@ struct Rect_ : Moveable< Rect_<T> > {
 
 	operator Value() const           { return RichValue<Rect_>(*this); }
 	/*explicit */Rect_(const Value& src) { *this = RichValue<Rect_>::Extract(src); }
+
+	operator Ref()                   { return AsRef(*this); }
 
 	void     Serialize(Stream& s) { s % left % top % right % bottom; }
 	void     Jsonize(JsonIO& jio) { jio("left", left)("top", top)("right", right)("bottom", bottom); }

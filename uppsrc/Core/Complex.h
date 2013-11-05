@@ -13,6 +13,8 @@ struct Complex : std::complex<double>
 	operator Value() const                  { return RichValue<Complex>(*this); } 
 	Complex(const Value& v) : C(IsNumber(v) ? Complex((double)v) : RichValue<Complex>::Extract(v)) {}
 
+	operator Ref()                          { return AsRef(*this); }
+
 	bool operator==(const Complex& c) const { return (const C&)(*this) == (const C&)c; }
 	bool operator!=(const Complex& c) const { return (const C&)(*this) != (const C&)c; }
 
