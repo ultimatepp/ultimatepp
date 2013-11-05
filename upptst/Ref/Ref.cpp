@@ -1,4 +1,5 @@
-#include <Core/Core.h>
+#include <Draw/Draw.h>
+#include <Painter/Painter.h>
 
 using namespace Upp;
 
@@ -60,6 +61,8 @@ void TestRef(const T& x)
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
 	TestRef(Date(2012, 3, 4));
 	TestRef(Time(2012, 3, 4, 23, 1));
 	TestRef(String("hello!"));
@@ -71,14 +74,35 @@ CONSOLE_APP_MAIN
 	
 	TestRef(Value("hello Value!"));
 
-//	TestRef(ValueMap()("key1", 1)("key2", 2));
+	TestRef(ValueMap()("key1", 1)("key2", 2));
 
-//	TestRef(ValueArray() << "v1" << "v2");
+	TestRef(ValueArray() << "v1" << "v2");
 	
 	TestRef(Blue());
 	
-//	TestRef(Rect(1, 2, 3, 4));
+	TestRef(Rect(1, 2, 3, 4));
+	TestRef(Rectf(1, 2, 3, 4));
+
+	TestRef(Point(1, 4));
+	TestRef(Pointf(1, 4));
+
+	TestRef(Size(1, 4));
+	TestRef(Sizef(1, 4));
 	
+	TestRef(Complex(1, 2));
+
+	TestRef(CreateImage(Size(1, 2), Blue()));
+
+	TestRef(Arial(20).Bold());
+	
+	DrawingDraw w(20, 20);
+	w.DrawRect(1, 1, 1, 1, Black());
+	TestRef(w.GetResult());
+	
+	PaintingPainter p(20, 20);
+	p.DrawRect(1, 1, 1, 1, Black());
+	TestRef(p.GetResult());
+
 	String text;
 	Ref textref(text);
 	textref = "TEST";
