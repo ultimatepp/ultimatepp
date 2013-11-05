@@ -1,5 +1,7 @@
 uses
-	Core;
+	Core,
+	Draw,
+	Painter;
 
 file
 	Ref.cpp;
