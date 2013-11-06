@@ -171,7 +171,8 @@ nt]_[* Insert]([@(0.0.255) int]_[*@3 parentid], [@(0.0.255) int]_[*@3 i],
 ], [@(0.0.255) int]_[*@3 cx]_`=_[@3 0], [@(0.0.255) int]_[*@3 cy]_`=_[@3 0], 
 [@(0.0.255) bool]_[*@3 wo]_`=_[@(0.0.255) false])&]
 [s2; Inserts child item to parent specified by id. Distinct variants 
-set various attributes to TreeCtrl`::Node of insterted item.&]
+set various attributes to TreeCtrl`::Node of insterted item. Returns 
+id of new item.&]
 [s3; &]
 [s4; &]
 [s5;:TreeCtrl`:`:Add`(int`,const TreeCtrl`:`:Node`&`): [@(0.0.255) int]_[* Add]([@(0.0.255) i
@@ -191,7 +192,7 @@ mg], [_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl], [@(0.0.255) int]_[*@3 cx]_`=_[@3 
 [@(0.0.255) int]_[*@3 cy]_`=_[@3 0], [@(0.0.255) bool]_[*@3 withopen]_`=_[@(0.0.255) false])&]
 [s2; Inserts child item at the end of list of parent`'s child items. 
 Parent is specified by id. Distinct variants set various attributes 
-to TreeCtrl`::Node of insterted item.&]
+to TreeCtrl`::Node of insterted item. Returns id of new item.&]
 [s3; &]
 [s4; &]
 [s5;:TreeCtrl`:`:Remove`(int`): [@(0.0.255) void]_[* Remove]([@(0.0.255) int]_[*@3 id])&]
@@ -720,4 +721,4 @@ pen]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 nSelect]([@(0.0.255) bool]_[*@3 b])&]
 [s2;%% Sets canselect flag.&]
 [s3; &]
-[s0; ]
+[s0; ]]
