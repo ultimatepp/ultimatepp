@@ -172,7 +172,6 @@ struct S_type {
 	static SqlSet               Of(SqlId table);
 	static const Vector<SqlId>& GetColumnIds();
 	
-	void                        Shrink();
 	void                        Clear();
 
 	void                        FieldLayoutRaw(FieldOperator& f, const String& prefix = String());
