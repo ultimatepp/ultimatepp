@@ -214,6 +214,16 @@ void RichTextView::LeftDouble(Point p, dword keyflags)
 	}
 }
 
+void RichTextView::LeftTriple(Point p, dword keyflags)
+{
+    int pos = GetPointPos(p);
+	RichPos rp = text.GetRichPos(pos);
+	anchor = pos - rp.posinpara;
+	cursor = anchor + rp.paralen + 1;
+    RefreshSel();
+    SetFocus();
+}
+
 void RichTextView::MouseMove(Point p, dword keyflags)
 {
 	int pos = GetPointPos(p);

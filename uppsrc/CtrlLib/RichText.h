@@ -11,6 +11,7 @@ public:
 	virtual void  MouseMove(Point p, dword keyflags);
 	virtual void  LeftRepeat(Point p, dword keyflags);
 	virtual void  LeftDouble(Point p, dword keyflags);
+	virtual void  LeftTriple(Point p, dword keyflags);
 	virtual void  RightDown(Point p, dword keyflags);
 
 private:
