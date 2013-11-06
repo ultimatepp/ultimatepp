@@ -20,15 +20,47 @@ void ScanSchFile(const char *fn)
 	String s = LoadFile(fn);
 	CParser p(s);
 	String r, rr;
+	String S_name;
 	int line;
 	while(!p.IsEof())
 		try {
 			line = p.GetLine();
-			if(p.Id("TABLE") || p.Id("TABLE_") || p.Id("TYPE") || p.Id("TYPE_"))
-				r << "struct S_" << ReadId(p, rr) << " {";
+			if(p.Id("TABLE") || p.Id("TABLE_") || p.Id("TYPE") || p.Id("TYPE_")) {
+				S_name = "S_" + ReadId(p, rr);
+				r << "struct " << S_name << " {";
+			}
 			else
 			if(p.Id("END_TABLE") || p.Id("END_TYPE"))
-				r << "};";
+				r <<
+					"static const char           TableName[];"
+					"static const SqlSet&        ColumnSet();"
+					"static SqlSet               ColumnSet(const String& prefix);"
+					"static SqlSet               Of(SqlId table);"
+					"static const Vector<SqlId>& GetColumnIds();"
+					""
+					"void                        Clear();"
+					""
+					"void                        FieldLayoutRaw(FieldOperator& f, const String& prefix = String());"
+					"void                        FieldLayout(FieldOperator& f);"
+					"operator                    Fields();"
+					""
+					"bool                        operator==(const " << S_name << "& x) const;"
+					"bool                        operator!=(const " << S_name << "& x) const;"
+					"String                      ToString() const;"
+					""
+					"int                         GetCount() const;"
+					"SqlId                       GetId(int i) const;"
+					"Ref                         GetRef(int i);"
+					"Ref                         GetRef(const SqlId& id);"
+					"Value                       Get(const SqlId& id) const;"
+					"Value                       Get(int i) const;"
+					"ValueMap                    Get() const;"
+					"void                        Set(int i, const Value& v);"
+					"void                        Set(const SqlId& id, const Value& v);"
+					"void                        Set(const ValueMap& m);"
+					<< S_name << "();"
+					<< S_name << "(const ValueMap& m);"
+					"};";
 			else
 			if(p.Id("LONGRAW") || p.Id("LONGRAW_") || p.Id("BLOB") || p.Id("BLOB_") ||
 			   p.Id("STRING_") || p.Id("STRING") || p.Id("CLOB") || p.Id("CLOB_"))

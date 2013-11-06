@@ -967,6 +967,7 @@ public:
 		void  ContextGoto();
 		void  CtrlClick(int pos);
 		void  Qtf();
+		void  Xml();
 
 
 	void      ConsoleMenu(Bar& menu);

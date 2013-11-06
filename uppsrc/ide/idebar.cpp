@@ -526,6 +526,7 @@ void Ide::BrowseMenu(Bar& menu) {
 	menu.AddMenu(AK_CALC, IdeImg::calc(), THISBACK1(ToggleBottom, BCALC))
 	     .Check(IsBottomShown() && btabs.GetCursor() == BCALC);
 	menu.AddMenu(AK_QTF, IdeImg::qtf(), THISBACK(Qtf));
+	menu.AddMenu(!designer, AK_XML, IdeImg::XmlIcon(), THISBACK(Xml));
 	menu.MenuSeparator();
 	menu.Add(AK_BROWSETOPICS, IdeImg::help(), THISBACK(ShowTopics));
 	menu.Add(AK_SEARCHTOPICS, THISBACK(SearchTopics));

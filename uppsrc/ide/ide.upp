@@ -67,6 +67,7 @@ file
 	FormatCode.cpp,
 	Abbr.cpp,
 	Qtf.cpp,
+	Xml.cpp,
 	Update.cpp,
 	Compile readonly separator,
 	Methods.cpp,
