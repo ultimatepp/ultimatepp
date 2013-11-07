@@ -106,7 +106,7 @@ XmlView::XmlView()
 
 	Sizeable().Zoomable();
 
-	Icon(IdeImg::XmlIcon());
+	Icon(IdeCommonImg::xml());
 	
 	xml.WhenLeftDouble = THISBACK(CopyPath);
 }
