@@ -174,6 +174,8 @@ int    TreeCtrl::Insert(int parentid, int i, const TreeCtrl::Node& n)
 		parent.child.Insert(i, id);
 	}
 	dirty = true;
+	if(m.ctrl) // Done during SyncTree too, however we need widget to be child (and Open) until then
+		AddChild(m.ctrl);
 	Dirty(parentid);
 	return id;
 }
@@ -416,7 +418,7 @@ void TreeCtrl::SyncAfterSync(Ptr<Ctrl> restorefocus)
 	SyncInfo();
 }
 
-void TreeCtrl::SyncTree()
+void TreeCtrl::SyncTree(bool immediate)
 {
 	if(!dirty)
 		return;
@@ -442,7 +444,10 @@ void TreeCtrl::SyncTree()
 	dirty = false;
 	if(cursorid >= 0)
 		SetCursor(cursorid, false, false, false);
-	PostCallback(PTEBACK1(SyncAfterSync, restorefocus));
+	if(immediate)
+		SyncAfterSync(restorefocus);
+	else
+		PostCallback(PTEBACK1(SyncAfterSync, restorefocus));
 }
 
 void TreeCtrl::SyncCtrls(bool add, Ctrl *restorefocus)
@@ -684,7 +689,7 @@ void TreeCtrl::SetCursor(int id, bool sc, bool sel, bool cb)
 	while(id > 0) {
 		ASSERT(id >= 0 && id < item.GetCount());
 		MakeVisible(id);
-		SyncTree();
+		SyncTree(true);
 		const Item& m = item[id];
 		if(m.linei >= 0) {
 			SetCursorLine(m.linei, sc, sel, cb);

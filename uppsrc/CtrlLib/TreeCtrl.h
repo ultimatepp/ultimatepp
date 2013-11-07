@@ -159,7 +159,7 @@ private:
 
 protected:
 	virtual void SetOption(int id);
-	void         SyncTree();
+	void SyncTree(bool immediate = false);
 	virtual void Select();
 	
 	friend class PopUpTree;
