@@ -25,6 +25,10 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img)
 		img = IdeCommonImg::witz();
 	if(ext == ".js")
 		img = IdeCommonImg::js();
+	if(ext == ".json")
+		img = IdeCommonImg::json();
+	if(ext == ".xml")
+		img == IdeCommonImg::xml();
 	if(ext == ".usc")
 		img = IdeCommonImg::Script();
 	if(ext == ".lng" || ext == ".lngj" || ext == ".t" || ext == ".jt")
