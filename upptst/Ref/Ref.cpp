@@ -120,4 +120,6 @@ CONSOLE_APP_MAIN
 	DUMP(empty.IsNull());
 	DUMP(IsNull(empty.GetValue()));
 	DUMP(~empty);
+	
+	LOG("--- OK: All tests finished successfully");
 }
