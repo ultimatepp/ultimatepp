@@ -303,7 +303,7 @@ WString RichTxt::GetPlainText(bool withcr) const {
 								clip.Cat('\r');
 							clip.Cat('\n');
 						}
-						clip << tab[i][j].text.GetPlainText();
+						clip << tab[i][j].text.GetPlainText(withcr);
 					}
 		}
 		else
