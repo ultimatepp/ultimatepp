@@ -186,7 +186,7 @@ ValueType<T, type, B>::operator ValueTypeRef()
 
 // ---------------------- Value Array
 
-class ValueArray : ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArray> > {
+class ValueArray : public ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArray> > {
 	struct Data : Value::Void {
 		virtual dword      GetType() const             { return VALUEARRAY_V; }
 		virtual bool       IsNull() const;
@@ -227,7 +227,7 @@ public:
 	ValueArray(const Nuller&)                 { Init0(); }
 	bool IsNullInstance() const               { return IsEmpty(); }
 	
-	operator Ref()                            { return AsRef(*this); }
+//	operator Ref()                            { return AsRef(*this); }
 
 	void Clear();
 	void SetCount(int n);
@@ -261,7 +261,7 @@ public:
 template<>
 String AsString(const ValueArray& v);
 
-class ValueMap : ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
+class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 	struct Data : Value::Void {
 		virtual dword      GetType() const             { return VALUEMAP_V; }
 		virtual bool       IsNull() const;
@@ -303,7 +303,7 @@ public:
 	ValueMap(const Nuller&)                         { Init0(); }
 	bool IsNullInstance() const                     { return IsEmpty(); }
 
-	operator Ref()                                  { return AsRef(*this); }
+//	operator Ref()                                  { return AsRef(*this); }
 
 	void Clear();
 	int  GetCount() const                           { return data->value.GetCount(); }
