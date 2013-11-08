@@ -25,7 +25,7 @@ void XmlView::Load(int parent, XmlParser& p)
 		String txt = tag;
 		for(int i = 0; i < p.GetAttrCount(); i++)
 			txt << ' ' << p.GetAttr(i) << "=\"" << p[i] << "\"";
-		parent = xml.Add(parent, IdeImg::XmlTag(), tag, txt);
+		parent = xml.Add(parent, IdeImg::XmlTag(), tag, Value(txt));
 		while(!p.End()) {
 			if(p.IsEof())
 				throw XmlError("Unexpected end of text.");
@@ -34,16 +34,16 @@ void XmlView::Load(int parent, XmlParser& p)
 	}
 	else
 	if(p.IsText())
-		xml.Add(parent, IdeImg::XmlText(), Null, NormalizeSpaces(p.ReadText()));
+		xml.Add(parent, IdeImg::XmlText(), Null, Value(NormalizeSpaces(p.ReadText())));
 	else
 	if(p.IsPI())
-		xml.Add(parent, IdeImg::XmlPI(), Null, NormalizeSpaces(p.ReadPI()));
+		xml.Add(parent, IdeImg::XmlPI(), Null, Value(NormalizeSpaces(p.ReadPI())));
 	else
 	if(p.IsDecl())
-		xml.Add(parent, IdeImg::XmlDecl(), Null, NormalizeSpaces(p.ReadDecl()));
+		xml.Add(parent, IdeImg::XmlDecl(), Null, Value(NormalizeSpaces(p.ReadDecl())));
 	else
 	if(p.IsComment())
-		xml.Add(parent, IdeImg::XmlComment(), Null, NormalizeSpaces(p.ReadComment()));
+		xml.Add(parent, IdeImg::XmlComment(), Null, Value(NormalizeSpaces(p.ReadComment())));
 	else
 		throw XmlError("Unexpected input.");
 }
