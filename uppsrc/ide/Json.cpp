@@ -18,13 +18,13 @@ int JsonView::AddNode(int parent_id, const Value& id, const String& name, const 
 {
 	if(v.Is<ValueMap>()) {
 		ValueMap m = v;
-		parent_id = tree.Add(parent_id, IdeImg::JsonStruct(), id, "[G1 [* " + name);
+		parent_id = tree.Add(parent_id, IdeImg::JsonStruct(), id, Value("[G1 [* " + name));
 		for(int i = 0; i < m.GetCount(); i++)
 			AddNode(parent_id, m.GetKey(i), "[@B \1" + String(m.GetKey(i)) + "\1:]", m.GetValue(i));
 	}
 	else
 	if(v.Is<ValueArray>()) {
-		parent_id = tree.Add(parent_id, IdeImg::JsonArray(), id, "[G1 [* " + name);
+		parent_id = tree.Add(parent_id, IdeImg::JsonArray(), id, Value("[G1 [* " + name));
 		for(int i = 0; i < v.GetCount(); i++)
 			AddNode(parent_id, i, "[@c " + AsString(i) + ":]", v[i]);
 	}
@@ -46,7 +46,7 @@ int JsonView::AddNode(int parent_id, const Value& id, const String& name, const 
 			else
 				qtf << "\1 " + AsString(v);
 		}
-		parent_id = tree.Add(parent_id, img, id, qtf);
+		parent_id = tree.Add(parent_id, img, id, Value(qtf));
 	}
 	return parent_id;
 }
