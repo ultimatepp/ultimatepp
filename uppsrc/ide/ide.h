@@ -968,6 +968,7 @@ public:
 		void  CtrlClick(int pos);
 		void  Qtf();
 		void  Xml();
+		void  Json();
 
 
 	void      ConsoleMenu(Bar& menu);
