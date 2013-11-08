@@ -68,6 +68,7 @@ file
 	Abbr.cpp,
 	Qtf.cpp,
 	Xml.cpp,
+	Json.cpp,
 	Update.cpp,
 	Compile readonly separator,
 	Methods.cpp,
