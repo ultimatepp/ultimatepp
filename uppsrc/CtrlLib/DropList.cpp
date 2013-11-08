@@ -67,7 +67,8 @@ bool DropList::Key(dword k, int) {
 
 void DropList::MouseWheel(Point, int zdelta, dword)
 {
-	Change(zdelta < 0 ? 1 : -1);
+	if(usewheel)
+		Change(zdelta < 0 ? 1 : -1);
 }
 
 void DropList::Drop() {
@@ -266,6 +267,7 @@ DropList::DropList()
 	list.WhenSelect = THISBACK(Select);
 	list.WhenCancel = THISBACK(Cancel);
 	dropwidth = 0;
+	usewheel = true;
 }
 
 DropList::~DropList() {}

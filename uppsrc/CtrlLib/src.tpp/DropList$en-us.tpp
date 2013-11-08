@@ -299,6 +299,16 @@ nt]_[*@3 w])&]
 the width according to current standard GUI font zooming.&]
 [s3;%% &]
 [s4; &]
+[s5;:DropList`:`:Wheel`(bool`): [_^DropList^ DropList][@(0.0.255) `&]_[* Wheel]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% If active, the value of DropList can be changed by the mouse 
+wheel. Default is active.&]
+[s3;%% &]
+[s4; &]
+[s5;:DropList`:`:NoWheel`(`): [_^DropList^ DropList][@(0.0.255) `&]_[* NoWheel]()&]
+[s2;%% Same as Wheel(false).&]
+[s3; &]
+[s4; &]
 [s5;:DropList`:`:SetScrollBarStyle`(const ScrollBar`:`:Style`&`): [_^DropList^ DropList
 ][@(0.0.255) `&]_[* SetScrollBarStyle]([@(0.0.255) const]_[_^ScrollBar`:`:Style^ ScrollBa
 r`::Style][@(0.0.255) `&]_[*@3 s])&]
