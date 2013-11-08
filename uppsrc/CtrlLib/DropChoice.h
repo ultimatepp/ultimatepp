@@ -59,6 +59,7 @@ private:
 	bool               dropfocus;
 	bool               notnull;
 	bool               alwaysdrop;
+	bool               usewheel;
 
 	void          Select();
 	void          Cancel();
@@ -128,6 +129,8 @@ public:
 	DropList&     NotNull(bool b = true)                { notnull = b; return *this; }
 	DropList&     DropWidth(int w)                      { dropwidth = w; return *this; }
 	DropList&     DropWidthZ(int w)                     { dropwidth = HorzLayoutZoom(w); return *this; }
+	DropList&     Wheel(bool b = true)                  { usewheel = b; return *this; }
+	DropList&     NoWheel()                             { return Wheel(false); }
 
 	DropList&     SetScrollBarStyle(const ScrollBar::Style& s) { list.SetScrollBarStyle(s); return *this; }
 
