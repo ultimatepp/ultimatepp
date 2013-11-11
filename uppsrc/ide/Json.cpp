@@ -3,6 +3,8 @@
 struct JsonView : TopWindow {
 	TreeCtrl  tree;
 	
+	virtual bool Key(dword key, int count);
+
 	int  AddNode(int parent_id, const Value& id, const String& name, const Value& v);
 	void Load(const char *json);
 	void CopyPath();
@@ -13,6 +15,15 @@ struct JsonView : TopWindow {
 	
 	JsonView();
 };
+
+bool JsonView::Key(dword key, int count)
+{
+	if(key == K_ESCAPE) {
+		Close();
+		return true;
+	}
+	return false;
+}
 
 int JsonView::AddNode(int parent_id, const Value& id, const String& name, const Value& v)
 {
@@ -82,6 +93,7 @@ void JsonView::Serialize(Stream& s)
 
 JsonView::JsonView()
 {
+	Title("JSON view");
 	Add(tree.SizePos()); tree.SetDisplay(QTFDisplay()); tree.NoRoot();	Sizeable().Zoomable();
 	Icon(IdeCommonImg::xml());
 	tree.WhenLeftDouble = THISBACK(CopyPath);
