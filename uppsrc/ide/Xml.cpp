@@ -7,6 +7,8 @@ struct XmlView : public TopWindow {
 	Label                 error;
 	ParentCtrl            data;
 
+	virtual bool Key(dword key, int count);
+
 	void Load(int parent, XmlParser& p);
 	void Load(const String& txt);
 	void CopyPath();
@@ -17,6 +19,15 @@ struct XmlView : public TopWindow {
 
 	XmlView();
 };
+
+bool XmlView::Key(dword key, int count)
+{
+	if(key == K_ESCAPE) {
+		Close();
+		return true;
+	}
+	return false;
+}
 
 void XmlView::Load(int parent, XmlParser& p)
 {
