@@ -637,8 +637,8 @@ void TreeCtrl::SetCursorLine(int i, bool sc, bool sel, bool cb)
 		RefreshLine(cursor);
 		cursor = i;
 		RefreshLine(cursor);
-		if(m.ctrl && m.ctrl->SetWantFocus())
-			return;
+		if(m.ctrl)
+			m.ctrl->SetWantFocus();
 		if(cb) {
 			WhenCursor();
 			if(!multiselect) WhenSel();
