@@ -502,6 +502,9 @@ void Ide::DebugMenu(Bar& menu)
 	menu.Add(!editfile.IsEmpty() /*&& !debuglock*/, AK_CLEARBREAKPOINTS, THISBACK(DebugClearBreakpoints))
 		.Help("Clear all breakpoints");
 	menu.Separator();
+	DDUMP(target.GetCount());
+	DDUMP(GetLogPath());
+	DDUMP(FileExists(GetLogPath()));
 	menu.Add(target.GetCount() && FileExists(GetLogPath()), AK_OPENLOG, THISBACK(OpenLog));
 }
 
