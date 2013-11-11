@@ -306,7 +306,7 @@ HelpWindow::HelpWindow()
 	view.SetZoom(Zoom(1, 1));
 	zoom.m = 160;
 	SetZoom();
-	view.Margins(Rect(12, 12, 2, 2));
+	view.Margins(Rect(12, 0, 12, 0));
 	SetRect(Ctrl::GetWorkArea().Deflated(80));
 	tree.WhenSel = THISBACK(TreeCursor);
 	tree.NoRoot();
