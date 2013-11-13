@@ -24,9 +24,11 @@ void FieldOperator::Field(Ref f) {}
 
 void FieldOperator::Field(const char *name, Ref f) { Field(f); }
 
+void FieldOperator::Field(const char *name, Ref f, bool *b) { Field(name, f); }
+
 FieldOperator& FieldOperator::operator()(const char *name, bool& b) {
 	String x = BoolToSql(b);
-	Field(name, x);
+	Field(name, x, &b);
 	b = SqlToBool(x);
 	return *this;
 }

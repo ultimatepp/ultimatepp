@@ -2,8 +2,9 @@
 
 NAMESPACE_UPP
 
-void S_info_maker::Field(const char *name, Ref f)
+void S_info_maker::Field(const char *name, Ref f, bool *b)
 {
+	if(b) f = Ref(*b);
 	info.column.Add(name, MakeTuple((byte *)f.GetVoidPtr() - (byte *)s, f.GetManager()));		
 }
 
@@ -38,7 +39,13 @@ ValueMap S_info::Get(const void *s) const
 
 void S_info::Set(const void *s, int i, const Value& v) const
 {
-	GetRef(s, i) = v;
+	Ref f = GetRef(s, i);
+	if(f.Is<bool>() && IsString(v)) {
+		String h = v;
+		f = !(h == "0" || IsNull(h));
+	}
+	else
+		f = v;
 }
 
 void S_info::Set(const void *s, const SqlId& id, const Value& v) const
