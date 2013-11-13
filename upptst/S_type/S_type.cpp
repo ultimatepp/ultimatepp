@@ -32,26 +32,36 @@ CONSOLE_APP_MAIN
 		test.Clear();
 		DUMP(test);
 		for(int i = 0; i < test.GetCount(); i++) {
-			ASSERT(IsNull(test.Get(i)));
 			Ref f = test.GetRef(i);
+			if(!f.Is<bool>())
+				ASSERT(IsNull(test.Get(i)));
 			Value v;
+			if(f.Is<bool>())
+				v = (bool)(i % 2);
+			else
 			if(f.Is<int>())
 				v = i + 1000;
 			else
 				v = "text " + AsString(i);
 			m.Add(test.GetId(i), v);
 			test.Set(i, v);
+			ASSERT(test.Get(i) == v);
 		}
 		DUMP(test);
 		DUMP(test.Get());
 		ASSERT(test.Get() == m);
 	}
 	
+	test.Set(FLAG, "1");
+	ASSERT(test.FLAG);
+	test.Set(FLAG, "0");
+	ASSERT(!test.FLAG);
+	
 	LOG("------------------------");
 	ASSERT(test.Get(TEST).IsVoid());
 	
 	ValueMap m;
-	m(TEXT, "texttest")(NUMBER1, 123456)(A[2], 10);
+	m(TEXT, "texttest")(NUMBER1, 123456)(A[2], 10)(FLAG, true)(FLAG2, "1");
 	test.Set(m);
 	DUMP(test);
 	test = m;
