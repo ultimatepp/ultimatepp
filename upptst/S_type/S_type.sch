@@ -2,6 +2,8 @@ TABLE_ (BASE1)
 	INT_       (NUMBER1)
 	STRING_	   (TEXT1, 200)
 	INT_ARRAY_ (A, 5)
+	BOOL_      (FLAG)
+	BOOL_      (FLAG2)
 END_TABLE
 
 TABLE_ (BASE2)
