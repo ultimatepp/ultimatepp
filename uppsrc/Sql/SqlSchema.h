@@ -159,7 +159,7 @@ struct S_info_maker : FieldOperator {
 	S_info&  info;
 	void    *s;
 
-	virtual void Field(const char *name, Ref f);
+	virtual void Field(const char *name, Ref f, bool *b);
 	
 	S_info_maker(S_info& f, void *s) : info(f), s(s) {}
 };

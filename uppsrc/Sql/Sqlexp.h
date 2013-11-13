@@ -23,9 +23,10 @@ struct FieldOperator {
 
 	virtual void Field(Ref f);
 	virtual void Field(const char *name, Ref f);
+	virtual void Field(const char *name, Ref f, bool *b); // Ugly fix to resolve bool issue with S_info creation
 
-	FieldOperator& operator()(const char *name, Ref f)     { Field(name, f); return *this; }
-	FieldOperator& operator()(const String& name, Ref f)   { Field(name, f); return *this; }
+	FieldOperator& operator()(const char *name, Ref f)     { Field(name, f, NULL); return *this; }
+	FieldOperator& operator()(const String& name, Ref f)   { Field(name, f, NULL); return *this; }
 	FieldOperator& operator()(Id id, Ref f)                { Field(~id, f); return *this; }
 	FieldOperator& operator()(const char *name, bool& b);
 	FieldOperator& operator()(const String& name, bool& b) { return (*this)(~name, b); }
