@@ -81,6 +81,12 @@ String XmlComment(const char *text)
 	return out;
 }
 
+#if 0
+String  XmlTag::operator()()
+{
+	return tag + "/>\r\n";
+}
+
 XmlTag& XmlTag::Tag(const char *s)
 {
 	tag.Clear();
@@ -88,11 +94,6 @@ XmlTag& XmlTag::Tag(const char *s)
 	tag << '<' << s;
 	end << "</" << s << ">\r\n";
 	return *this;
-}
-
-String  XmlTag::operator()()
-{
-	return tag + "/>\r\n";
 }
 
 String  XmlTag::operator()(const char *text)
@@ -132,6 +133,64 @@ String  XmlTag::operator()(const char *text)
 		if(last2 == '/' && last == '>')
 			r.Cat('\t');
 	}
+}
+#endif
+
+String  XmlTag::operator()()
+{
+	return tag + "/>";
+}
+
+XmlTag& XmlTag::Tag(const char *s)
+{
+	tag.Clear();
+	end.Clear();
+	tag << '<' << s;
+	end << "</" << s << '>';
+	return *this;
+}
+
+String  XmlTag::operator()(const char *text)
+{
+	StringBuffer r;
+	r << tag << ">";
+	int fbi = r.GetCount();
+	const char *s = text;
+	bool wastag = true;
+	bool wasslash = true;
+	bool first = true;
+	while(*s) {
+		const char *b = s;
+		while(*s == ' ' || *s == '\t')
+			s++;
+		if(s[0] == '<') {
+			if(first)
+				r << "\r\n";
+			if(wastag && (wasslash || s[1] != '/'))
+				r.Cat('\t');
+		}
+		else
+		if(first) {
+			r << text << end;
+			return r;
+		}
+		first = false;
+		wasslash = false;
+		char last = 0;
+		while(*s && *s != '\n' && *s != '\r') {
+			if(*s == '<')
+				wasslash = s[1] == '/';
+			last = *s++;
+		}
+		wastag = last == '>';
+		if(*s == '\r')
+			s++;
+		if(*s == '\n')
+			s++;
+		r.Cat(b, s);
+	}
+	r << "\r\n" << end;
+	return r;
 }
 
 String  XmlTag::Text(const char *text, byte charset)
