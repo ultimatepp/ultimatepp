@@ -233,6 +233,8 @@ public:
 	SqlDetail();
 };
 
+void        SqlViewValue(const String& title, const String& value);
+
 void        SQLCommander(SqlSession& session);
 #ifndef NOAPPSQL
 inline void SQLCommander() { SQLCommander(SQL.GetSession()); }

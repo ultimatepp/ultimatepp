@@ -22,3 +22,9 @@ LAYOUT(SqlExportLayout, 412, 332)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
 END_LAYOUT
 
+LAYOUT(SqlValueViewLayout, 636, 552)
+	ITEM(Switch, format, SetLabel(t_("Text\nHex")).LeftPosZ(4, 296).TopPosZ(4, 16))
+	ITEM(DocEdit, text, SetEditable(false).LeftPosZ(0, 636).TopPosZ(20, 532))
+	ITEM(Button, save, SetLabel(t_("Save..")).LeftPosZ(580, 56).TopPosZ(0, 20))
+END_LAYOUT
+
