@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	XmlTag.cpp;
+
+mainconfig
+	"" = "SSE2";
+
