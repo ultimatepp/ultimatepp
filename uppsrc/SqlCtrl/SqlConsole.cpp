@@ -1,4 +1,5 @@
 #include "SqlCtrl.h"
+#include "SqlDlg.h"
 #include <Report/Report.h>
 
 NAMESPACE_UPP
@@ -390,6 +391,8 @@ protected:
 		
 	};
 
+	void ViewRecord();
+
 public:
 	typedef SqlConsole CLASSNAME;
 
@@ -713,6 +716,58 @@ void SqlConsole::ListExport()
 	RunDlgSqlExport(cursor, lastquery, Null);
 }
 
+struct SqlValueViewDlg : public WithSqlValueViewLayout<TopWindow> {
+	typedef SqlValueViewDlg CLASSNAME;
+	
+	String value;
+	
+	void Sync();
+	void Save();
+
+	SqlValueViewDlg();
+};
+
+void SqlValueViewDlg::Sync()
+{
+	if(~format) {
+		StringStream ss;
+		HexDumpData(ss, ~value, value.GetLength(), false, 1000000);
+		text <<= ss.GetResult();
+	}		
+	else
+		text <<= value;
+}
+
+void SqlValueViewDlg::Save()
+{
+	SelectSaveFile("File\t*.*", value);
+}
+
+SqlValueViewDlg::SqlValueViewDlg()
+{
+	CtrlLayout(*this, "");
+	text.SetFont(Monospace(GetStdFont().GetHeight()));
+	format <<= THISBACK(Sync);
+	save <<= THISBACK(Save);
+	format = 0;
+}
+
+void SqlViewValue(const String& title, const String& value)
+{
+	SqlValueViewDlg dlg;
+	dlg.Title(title);
+	dlg.value = value;
+	dlg.Sync();
+	dlg.Execute();
+}
+
+void SqlConsole::ViewRecord()
+{
+	if(!record.IsCursor())
+		return;
+	SqlViewValue(record.Get(0), AsString(record.Get(1)));
+}
+
 SqlConsole::SqlConsole(SqlSession& session)
 : cursor(session)
 {
@@ -723,9 +778,9 @@ SqlConsole::SqlConsole(SqlSession& session)
 	errortext.SetFont(Courier(12));
 	errortext.Hide();
 	vsplit.Vert(lires, trace);
-	record.NoCursor();
 	record.AddColumn(t_("Column"), 5);
 	record.AddColumn(t_("Value"), 10);
+	record.WhenLeftDouble = THISBACK(ViewRecord);
 	trace.AddColumn(t_("Command"), 8);
 	trace.AddColumn(t_("Result"), 1);
 	trace.AddColumn(t_("Duration"), 1);

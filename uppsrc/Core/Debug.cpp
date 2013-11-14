@@ -127,28 +127,26 @@ HitCountInspector::~HitCountInspector()
 	RLOG("HITCOUNT " << name << ": hit count = " << hitcount);
 }
 
-void  HexDump(Stream& s, const void *ptr, int size, int maxsize) {
+void  HexDumpData(Stream& s, const void *ptr, int size, bool adr, int maxsize) {
 	char h[256];
-	sprintf(h, "Memory at %p, size 0x%X = %d\n", ptr, size, size);
-	s.Put(h);
-#ifdef PLATFORM_WIN32
-	if(IsBadReadPtr(ptr, size)) {
-		s.Put("   <MEMORY ACCESS VIOLATION>\n");
-		return;
-	}
-#endif
 	int a, b;
 	byte *q = (byte *)ptr;
 	a = 0;
 	if(size > maxsize) size = maxsize;
 	while(a < size) {
-	#ifdef CPU_64
-		uint64 aa = a + (uint64)ptr;
-		sprintf(h, "%+6d 0x%08X%08X ", a, (int)(aa >> 32), (int)aa);
-		s.Put(h);
-	#else
-		sprintf(h, "%+6d 0x%08X ", a, a + dword(ptr));
-		s.Put(h);
+		if(adr) {
+		#ifdef CPU_64
+			uint64 aa = a + (uint64)ptr;
+			sprintf(h, "%+6d 0x%08X%08X ", a, (int)(aa >> 32), (int)aa);
+			s.Put(h);
+		#else
+			sprintf(h, "%+6d 0x%08X ", a, a + dword(ptr));
+			s.Put(h);
+		}
+		else {
+			sprintf(h, "%+6d ", a);
+			s.Put(h);
+		}
 	#endif
 		for(b = 0; b < 16; b++)
 			if(a + b < size) {
@@ -159,13 +157,28 @@ void  HexDump(Stream& s, const void *ptr, int size, int maxsize) {
 				s.Put("   ");
 		s.Put("    ");
 		for(b = 0; b < 16; b++)
-			if(a + b < size)
-				s.Put(q[a + b] < ' ' ? '.' : q[a + b]);
+			if(a + b < size) {
+				int c = q[a + b];
+				s.Put(c >= 32 && c < 128 ? c : '.');
+			}
 			else
 				s.Put(' ');
 		a += 16;
 		s << '\n';
 	}
+}
+
+void  HexDump(Stream& s, const void *ptr, int size, int maxsize) {
+	char h[256];
+	sprintf(h, "Memory at %p, size 0x%X = %d\n", ptr, size, size);
+	s.Put(h);
+#ifdef PLATFORM_WIN32
+	if(IsBadReadPtr(ptr, size)) {
+		s.Put("   <MEMORY ACCESS VIOLATION>\n");
+		return;
+	}
+#endif
+	HexDumpData(s, ptr, size, true, maxsize);
 }
 
 void LogHex(const String& s)

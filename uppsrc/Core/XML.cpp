@@ -95,39 +95,43 @@ String  XmlTag::operator()()
 	return tag + "/>\r\n";
 }
 
-String  XmlTag::operator()(const char* text)
+String  XmlTag::operator()(const char *text)
 {
 	StringBuffer r;
-	r << tag << '>';
-	if(strchr(text, '\n') && strchr(text, '<')) {
-		r << "\r\n";
-		bool was = true;
-		for(;;) {
-			const char *s = text;
-			while(*s == ' ' || *s == '\t')
-				s++;
-			if(*s == '<') {
-				if(was)
-					r.Cat('\t');
-				was = true;
-			}
-			else
-				was = false;
-			r.Cat(text, s);
-			text = s;
-			while(*s && *s != '\n')
-				s++;
-			r.Cat(text, s);
-			if(*s == '\0')
-				break;
-			r.Cat('\n');
-			text = s + 1;
+	r << tag << ">";
+	int fbi = r.GetCount();
+	r << "\r\n\t";
+	const char *s = text;
+	bool wastag = true;
+	for(;;) {
+		const char *b = s;
+		int last = 0;
+		int last2 = 0;
+		while(*s && *s != '\n' && *s != '\r') {
+			last2 = last;
+			last = *s++;
 		}
+		if(*s == '\r')
+			s++;
+		r.Cat(b, s);
+		if(*s == '\n') {
+			r.Cat('\n');
+			s++;
+		}
+		if(last2 == '/' && last == '>')
+			wastag = true;
+		if(*s == '\0') {
+			if(wastag)
+				r << end;
+			else {
+				r.SetCount(fbi);
+				r << text << end;
+			}
+			return r;
+		}
+		if(last2 == '/' && last == '>')
+			r.Cat('\t');
 	}
-	else
-		r << text;
-	r << end;
-	return r;
 }
 
 String  XmlTag::Text(const char *text, byte charset)
