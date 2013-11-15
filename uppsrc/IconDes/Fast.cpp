@@ -46,24 +46,22 @@ void IconDes::ApplyImage(Image m, dword flags, bool alpha)
 				cc.a = d->r;
 				AlphaBlendStraight(&c, &cc, 1);
 			}
-			else
-			if(d->r == 255) {
-				if(flags & K_ALT)
-					c.a = cc.a;
-				else
-				if(flags & K_CTRL) {
-					RGBA h = cc;
-					h.a = c.a;
-					c = h;
+			else {
+				if(d->r == 255) {
+					if(flags & K_ALT)
+						c.a = cc.a;
+					else
+					if(flags & K_CTRL) {
+						RGBA h = cc;
+						h.a = c.a;
+						c = h;
+					}
+					else
+						c = cc;
 				}
-				else {
-					c = cc;
-					c.a = d->r;
-				}
+				if(d->r == 128)
+					c.a = c.r = c.g = c.b = empty;
 			}
-			else
-			if(d->r == 128)
-				c.a = c.r = c.g = c.b = empty;
 			if(c != *t && (doselection || k->r)) {
 				*t = c;
 				RefreshPixel(x, y);
