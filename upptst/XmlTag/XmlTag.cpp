@@ -27,17 +27,8 @@ CONSOLE_APP_MAIN
 //	LOG("=============");
 //	LOG(XmlTag("hhh")(h));
 
-	Check("text");
-	Check("text\n");
-	Check("\ntext");
-	Check("\ntext\n");
-	Check("\nte\nxt\n");
-	Check("\n");
-	Check("\n\n");
-	Check("\n\n\n");
-	
-	LOG("----------------------------------------------------");
 	XML(XmlTag("a")(XmlTag("b")()));
+	XML(XmlTag("c")(XmlTag("a")(XmlTag("b")())));
 	XML(XmlTag("a")(XmlTag("b").Text("text/")));
 	XML(XmlTag("simple")("text"));
 	XML(XmlTag("tag2").Text("text"));
@@ -64,6 +55,17 @@ CONSOLE_APP_MAIN
 	XML(XmlTag("param")(XmlTag("int")("123")));
 	XML(XmlTag("params")(XmlTag("param")(XmlTag("int")("123"))));
 	XML(XmlTag("tag2")(XmlTag("tag")("attrib","bad\n<value").Text("text")));
+
+	LOG("----------------------------------------------------");
+	
+	Check("text");
+	Check("text\n");
+	Check("\ntext");
+	Check("\ntext\n");
+	Check("\nte\nxt\n");
+	Check("\n");
+	Check("\n\n");
+	Check("\n\n\n");
 	
 	return;
 	String h = XmlTag("int")("123");
