@@ -111,7 +111,7 @@ void SourceFs(FileSel& fs) {
 	fs.Type("Language files (*.lng)", "*.lng");
 	fs.Type("Web development files (*.html *.js *.css *.witz)", "*.html *.js *.css *.witz");
 	fs.Type("Other special files (*.sch *.usc *.rc *.brc *.upt)", "*.sch *.usc *.rc *.brc *.upt");
-	String mask = "*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.lay *.iml *.lng *.sch *.usc *.rc *.brc *.upt *.html *.js *.css *.witz";
+	String mask = "*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.lay *.iml *.lng *.sch *.usc *.rc *.brc *.upt *.html *.js *.css *.witz *.json *.xml";
 	fs.Type("All source files (" + mask + ")", mask);
 	IdeFs(fs);
 }

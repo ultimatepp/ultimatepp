@@ -12,7 +12,7 @@ void Ide::SetupEditor(int f, String hl, String fn)
 	}
 	if(IsNull(hl) && *ext == '.')
 		hl = ext.Mid(1);
-	if(findarg(hl, "c", "cpp", "cc", "cxx", "h", "hpp", "hh", "hxx", "m", "mm", "icpp", "conf", "json") >= 0)
+	if(findarg(hl, "c", "cpp", "cc", "cxx", "h", "hpp", "hh", "hxx", "m", "mm", "icpp", "conf") >= 0)
 		editor.Highlight(CodeEditor::HIGHLIGHT_CPP);
 	else
 	if(hl == "cs")
@@ -29,6 +29,9 @@ void Ide::SetupEditor(int f, String hl, String fn)
 	else
 	if(hl == "css")
 		editor.Highlight(CodeEditor::HIGHLIGHT_CSS);
+	else
+	if(hl == "json")
+		editor.Highlight(CodeEditor::HIGHLIGHT_JSON);
 	else
 	if(hl == "t" || hl == "jt")
 		editor.Highlight(CodeEditor::HIGHLIGHT_T);
