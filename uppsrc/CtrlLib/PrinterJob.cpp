@@ -58,7 +58,7 @@ bool PrinterJob::Execute0(bool dodlg)
 	dlg.nMaxPage = to;
 	if(from != to)
 		dlg.Flags |= PD_ALLPAGES;
-	dlg.hwndOwner = GetActiveWindow();
+	dlg.hwndOwner = 0;
 	dlg.Flags |= PD_RETURNDEFAULT;
 	dlg.nCopies = 1;
 	if(!PrintDlg(&dlg)) return false;
