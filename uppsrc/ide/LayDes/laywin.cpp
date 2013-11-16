@@ -26,7 +26,7 @@ void LayDes::EditBar(Bar& bar)
 	   .Key(K_DELETE);
 	bar.Add(iscursor, AK_DUPLICATESEL, LayImg::Duplicate(), THISBACK(Duplicate));
 	bar.Add(iscursor, AK_MATRIXDUPLICATE, THISBACK(Matrix));
-	bar.Add(islayout, "Select all", THISBACK(SelectAll))
+	bar.Add(islayout, "Select all", CtrlImg::select_all(), THISBACK(SelectAll))
 	   .Key(K_CTRL_A);
 	bar.Add(islayout, AK_VISGEN, LayImg::Members(), THISBACK(VisGen));
 	bar.Separator();

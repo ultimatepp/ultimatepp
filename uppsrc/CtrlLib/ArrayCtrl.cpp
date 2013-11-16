@@ -2234,7 +2234,7 @@ void ArrayCtrl::StdBar(Bar& menu)
 			.Key(K_CTRL_DOWN);
 	}
 	if(multiselect) {
-		menu.Add(GetCount() > 0, RowFormat(t_("Select all")), THISBACK(DoSelectAll))
+		menu.Add(GetCount() > 0, RowFormat(t_("Select all")), CtrlImg::select_all(), THISBACK(DoSelectAll))
 			.Help(t_("Select all table rows"))
 			.Key(K_CTRL_A);
 	}

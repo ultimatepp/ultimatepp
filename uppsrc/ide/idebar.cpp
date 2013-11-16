@@ -199,11 +199,10 @@ void Ide::Edit(Bar& menu) {
 		(menu.*add)("Paste", CtrlImg::paste(), THISBACK(EditPaste))
 			.Key(K_CTRL_V)
 			.Help("Insert text from clipboard at cursor location");
+		(menu.*add)("Select All", CtrlImg::select_all(), callback(&editor, &LineEdit::SelectAll));		
 
 		if(!toolbar_in_row || menu.IsMenuBar())
 			menu.Separator();
-
-		(menu.*add)("Select All", CtrlImg::copy(), callback(&editor, &LineEdit::SelectAll));		
 	}
 
 	menu.MenuSeparator();
