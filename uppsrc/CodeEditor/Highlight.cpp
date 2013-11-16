@@ -497,22 +497,26 @@ void CodeEditor::InitKeywords()
 		"SELECT", "TABLE",
 		NULL
 	};
-	static const char *javan[] = {
+	static const char *empty[] = {
 		NULL
 	};
 	static const char *javascriptn[] = {
 		"alert", "eval", "toString", "valueOf", "length",
 		NULL
 	};
-	static const char **kw[HIGHLIGHT_COUNT] = {
-		cpp, usc, java, tfile, usc, lay, sch, sql, cs, javascript, css,
-	};
-	static const char **nm[HIGHLIGHT_COUNT] = {
-		upp, usclib, javan, tlng, usclib, javan, javan, javan, javan, javascriptn, cssn
-	};
 
-	for(int i = 0; i < HIGHLIGHT_COUNT; i++) 
-		LoadSyntax(kw[i], nm[i]);
+	LoadSyntax(cpp, upp); // Order here is important, must be the same as enum
+	LoadSyntax(usc, usclib);
+	LoadSyntax(java, empty);
+	LoadSyntax(tfile, tlng);
+	LoadSyntax(usc, usclib);
+	LoadSyntax(lay, empty);
+	LoadSyntax(sch, empty);
+	LoadSyntax(sql, empty);
+	LoadSyntax(cs, empty);
+	LoadSyntax(javascript, javascriptn);
+	LoadSyntax(css, cssn);
+	LoadSyntax(empty, empty);
 
 	kw_macros = InitUpp(upp_macros);
 	kw_logs = InitUpp(upp_logs);
@@ -581,7 +585,7 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 			p++;
 			hls.Put(hl_style[INK_NORMAL]);
 		}
-		if(*p == '#' && highlight != HIGHLIGHT_JAVASCRIPT && highlight != HIGHLIGHT_CSS) {
+		if(*p == '#' && findarg(highlight, HIGHLIGHT_JAVASCRIPT, HIGHLIGHT_CSS, HIGHLIGHT_JSON) < 0) {
 			static const char *pd[] = {
 				"define", "error", "if", "elif", "else", "endif",
 				"ifdef", "ifndef", "include", "line", "undef", "pragma",
@@ -610,13 +614,13 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 	bool is_comment = false;
 	while(p < e) {
 		int pair = MAKELONG(p[0], p[1]);
-		if(ss.linecomment && ss.linecont || pair == MAKELONG('/', '/') && highlight != HIGHLIGHT_CSS) {
+		if(ss.linecomment && ss.linecont || pair == MAKELONG('/', '/') && highlight != HIGHLIGHT_CSS && highlight != HIGHLIGHT_JSON) {
 			hls.Put(text.GetLength() + 1 - hls.pos, hl_style[INK_COMMENT]);
 			is_comment = true;
 			break;
 		}
 		else
-		if(ss.comment)
+		if(ss.comment && highlight != HIGHLIGHT_JSON)
 			if(pair == MAKELONG('*', '/')) {
 				hls.Put(2, hl_style[INK_COMMENT]);
 				p += 2;
@@ -630,7 +634,7 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 		if((*p == '\"' || *p == '\'') || ss.linecont && ss.string)
 			p = HlString(hls, p);
 		else
-		if(pair == MAKELONG('/', '*')) {
+		if(pair == MAKELONG('/', '*') && highlight != HIGHLIGHT_JSON) {
 			hls.Put(2, hl_style[INK_COMMENT]);
 			p += 2;
 			ss.comment = true;
