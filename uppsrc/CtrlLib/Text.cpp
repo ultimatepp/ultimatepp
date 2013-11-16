@@ -679,7 +679,7 @@ void TextCtrl::StdBar(Bar& menu) {
 		.Key(K_DELETE);
 	menu.Separator();
 	menu.Add(GetLength(),
-			t_("Select all"), THISBACK(SelectAll))
+			t_("Select all"), CtrlImg::select_all(), THISBACK(SelectAll))
 		.Key(K_CTRL_A);
 }
 
