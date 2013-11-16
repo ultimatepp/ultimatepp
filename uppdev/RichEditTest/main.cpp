@@ -50,8 +50,14 @@ GUI_APP_MAIN
 //	w.ToolWindow();
 	w.SetRect(0, 0, 700, 500);
 	w.Sizeable().Zoomable();
-	e.SetReadOnly();
+//	e.SetReadOnly();
+	StaticRect r;
+#if 1
+	r.Add(e.SizePos());
+	w.Add(r.SizePos());
+#else
 	w.Add(e.SizePos());
+#endif
 	w.Run();
 /*	
 	String strQTF = e.GetQTF(CHARSET_ISO8859_1);
