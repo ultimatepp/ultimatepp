@@ -331,6 +331,7 @@ void SvnSyncDirs(const Vector<String>& working)
 {
 	if(!CheckSvn())
 		return;
+	Ptr<Ctrl> f = Ctrl::GetFocusCtrl();
 	SvnSync svn;
 	String msgs;
 	LoadFromGlobal(msgs, "svn-msgs");
@@ -340,6 +341,8 @@ void SvnSyncDirs(const Vector<String>& working)
 	svn.DoSync();
 	msgs = svn.GetMsgs();
 	StoreToGlobal(msgs, "svn-msgs");
+	if(f)
+		f->SetFocus();
 }
 
 void Ide::SyncSvnDirs(const Vector<String>& working)
