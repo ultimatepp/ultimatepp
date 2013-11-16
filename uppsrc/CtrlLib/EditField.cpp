@@ -855,7 +855,7 @@ void EditField::StdBar(Bar& menu) {
 	menu.Add(IsEditable(), t_("Erase"), CtrlImg::remove(), THISBACK(Erase))
 		.Key(K_DELETE);
 	menu.Separator();
-	menu.Add(GetLength(), t_("Select all"), THISBACK(SelectAll))
+	menu.Add(GetLength(), t_("Select all"), CtrlImg::select_all(), THISBACK(SelectAll))
 		.Key(K_CTRL_A);
 }
 
