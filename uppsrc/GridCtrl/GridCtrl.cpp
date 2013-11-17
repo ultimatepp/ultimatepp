@@ -600,7 +600,7 @@ void GridCtrl::MovingMenu(Bar &bar)
 
 void GridCtrl::SelectMenu(Bar &bar)
 {
-	bar.Add(total_rows > fixed_rows, RowFormat(t_("Select all")), CtrlImg::select_all(), THISBACK(DoSelectAll))
+	bar.Add(total_rows > fixed_rows, RowFormat(t_("Select all")), THISBACK(DoSelectAll))
 	   .Image(GridImg::SelectAll())
 	   .Help(t_("Select all table rows"))
 	   .Key(K_CTRL_A);
