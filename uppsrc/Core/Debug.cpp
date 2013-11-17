@@ -142,12 +142,12 @@ void  HexDumpData(Stream& s, const void *ptr, int size, bool adr, int maxsize) {
 		#else
 			sprintf(h, "%+6d 0x%08X ", a, a + dword(ptr));
 			s.Put(h);
+		#endif
 		}
 		else {
 			sprintf(h, "%+6d ", a);
 			s.Put(h);
 		}
-	#endif
 		for(b = 0; b < 16; b++)
 			if(a + b < size) {
 				sprintf(h, "%02X ", q[a + b]);
