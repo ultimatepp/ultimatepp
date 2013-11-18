@@ -170,10 +170,21 @@ nt]_[* Insert]([@(0.0.255) int]_[*@3 parentid], [@(0.0.255) int]_[*@3 i],
 [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img], [_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 c
 ], [@(0.0.255) int]_[*@3 cx]_`=_[@3 0], [@(0.0.255) int]_[*@3 cy]_`=_[@3 0], 
 [@(0.0.255) bool]_[*@3 wo]_`=_[@(0.0.255) false])&]
+[s5;:TreeCtrl`:`:Insert`(int`,int`,const Image`&`,Value`,const String`&`,bool`): [@(0.0.255) i
+nt]_[* Insert]([@(0.0.255) int]_[*@3 parentid], [@(0.0.255) int]_[*@3 i], 
+[@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img], [_^Value^ Value]_[*@3 key], 
+[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 value], [@(0.0.255) bool]_[*@3 with
+open]_`=_[@(0.0.255) false])&]
+[s5;:TreeCtrl`:`:Insert`(int`,int`,const Image`&`,Value`,const char`*`,bool`): [@(0.0.255) i
+nt]_[* Insert]([@(0.0.255) int]_[*@3 parentid], [@(0.0.255) int]_[*@3 i], 
+[@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img], [_^Value^ Value]_[*@3 key], 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 value], [@(0.0.255) bool]_[*@3 withopen]_`=_[@(0.0.255) f
+alse])&]
 [s2; Inserts child item to parent specified by id. Distinct variants 
 set various attributes to TreeCtrl`::Node of insterted item. Returns 
-id of new item.&]
-[s3; &]
+id of new item. Note: Last two overloads are  to avoid overloading 
+ambiguity.&]
+[s3;%% &]
 [s4; &]
 [s5;:TreeCtrl`:`:Add`(int`,const TreeCtrl`:`:Node`&`): [@(0.0.255) int]_[* Add]([@(0.0.255) i
 nt]_[*@3 parentid], [@(0.0.255) const]_[_^TreeCtrl`:`:Node^ TreeCtrl`::Node][@(0.0.255) `&
@@ -190,9 +201,18 @@ _[@(0.0.255) false])&]
 dd]([@(0.0.255) int]_[*@3 parentid], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 i
 mg], [_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl], [@(0.0.255) int]_[*@3 cx]_`=_[@3 0], 
 [@(0.0.255) int]_[*@3 cy]_`=_[@3 0], [@(0.0.255) bool]_[*@3 withopen]_`=_[@(0.0.255) false])&]
+[s5;:TreeCtrl`:`:Add`(int`,const Image`&`,Value`,const String`&`,bool`): [@(0.0.255) in
+t]_[* Add]([@(0.0.255) int]_[*@3 parentid], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&
+]_[*@3 img], [_^Value^ Value]_[*@3 key], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_
+[*@3 value], [@(0.0.255) bool]_[*@3 withopen]_`=_[@(0.0.255) false])&]
+[s5;:TreeCtrl`:`:Add`(int`,const Image`&`,Value`,const char`*`,bool`): [@(0.0.255) int]_
+[* Add]([@(0.0.255) int]_[*@3 parentid], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 i
+mg], [_^Value^ Value]_[*@3 key], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 value], 
+[@(0.0.255) bool]_[*@3 withopen]_`=_[@(0.0.255) false])&]
 [s2; Inserts child item at the end of list of parent`'s child items. 
 Parent is specified by id. Distinct variants set various attributes 
-to TreeCtrl`::Node of insterted item. Returns id of new item.&]
+to TreeCtrl`::Node of insterted item. Returns id of new item. 
+Note: Last two overloads are  to avoid overloading ambiguity.&]
 [s3; &]
 [s4; &]
 [s5;:TreeCtrl`:`:Remove`(int`): [@(0.0.255) void]_[* Remove]([@(0.0.255) int]_[*@3 id])&]

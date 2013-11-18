@@ -206,8 +206,8 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 		LTIMING("GetGlyphInfoSys 2");
 		int glyph_index = FT_Get_Char_Index(face, chr);
 		if(glyph_index) {
-			if(GetGlyphInfoSysXft)
-				return (*GetGlyphInfoSysXft)(font, chr);
+//			if(GetGlyphInfoSysXft)
+//				return (*GetGlyphInfoSysXft)(font, chr);
 			if(FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT|FT_LOAD_NO_BITMAP) == 0 ||
 			   FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT) == 0) {
 				FT_Glyph_Metrics& m = face->glyph->metrics;

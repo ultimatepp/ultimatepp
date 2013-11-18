@@ -81,7 +81,7 @@ struct FontDataSysMaker : LRUCache<FontSysData, Tuple2<Font, int> >::Maker {
 	virtual int Make(FontSysData& object) const   { object.Init(font, angle); return 1; }
 };
 
-int    gtk_antialias = -1;
+int    gtk_antialias = -1; // These are not really used with GTK backed.....
 int    gtk_hinting = -1;
 String gtk_hintstyle;
 String gtk_rgba;
@@ -100,8 +100,8 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	for(int i = 0; i < n; i++) {
 		cairo_glyph_t& g = gs[i];
 		g.index = GetGlyphInfo(font, text[i]).glyphi;
-		g.x = fround(x + cosa * xpos + sina * ascent);
-		g.y = fround(y + cosa * ascent - sina * xpos);
+		g.x = int(x + cosa * xpos + sina * ascent);
+		g.y = int(y + cosa * ascent - sina * xpos);
 		xpos += dx ? dx[i] : font[text[i]];
 	}
 

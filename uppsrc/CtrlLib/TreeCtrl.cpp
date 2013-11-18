@@ -214,12 +214,12 @@ int    TreeCtrl::Insert(int parentid, int i, const Image& img, Value v, Value t,
 
 int TreeCtrl::Insert(int parentid, int i, const Image& img, Value key, const String& value, bool withopen)
 {
-	return Insert(parentid, i, img, key, value, withopen);
+	return Insert(parentid, i, img, key, (Value)value, withopen);
 }
 
 int TreeCtrl::Insert(int parentid, int i, const Image& img, Value key, const char *value, bool withopen)
 {
-	return Insert(parentid, i, img, key, value, withopen);
+	return Insert(parentid, i, img, key, (Value)value, withopen);
 }
 
 int    TreeCtrl::Add(int parentid, const Image& img, Value v, bool withopen)
@@ -234,12 +234,12 @@ int    TreeCtrl::Add(int parentid, const Image& img, Value v, Value t, bool with
 
 int TreeCtrl::Add(int parentid, const Image& img, Value key, const String& value, bool withopen)
 {
-	return Add(parentid, img, key, value, withopen);
+	return Add(parentid, img, key, (Value)value, withopen);
 }
 
 int TreeCtrl::Add(int parentid, const Image& img, Value key, const char *value, bool withopen)
 {
-	return Add(parentid, img, key, value, withopen);
+	return Add(parentid, img, key, (Value)value, withopen);
 }
 
 int    TreeCtrl::Insert(int parentid, int i, const Image& img, Ctrl& ctrl, int cx, int cy, bool withopen)
