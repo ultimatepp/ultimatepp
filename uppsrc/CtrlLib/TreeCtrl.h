@@ -189,11 +189,15 @@ public:
 	int    Insert(int parentid, int i);
 	int    Insert(int parentid, int i, const Image& img, Value value, bool withopen = false);
 	int    Insert(int parentid, int i, const Image& img, Value key, Value value, bool withopen = false);
+	int    Insert(int parentid, int i, const Image& img, Value key, const String& value, bool withopen = false);
+	int    Insert(int parentid, int i, const Image& img, Value key, const char *value, bool withopen = false);
 	int    Insert(int parentid, int i, const Image& img, Ctrl& c, int cx = 0, int cy = 0, bool wo = false);
 	int    Add(int parentid, const Node& n);
 	int    Add(int parentid);
 	int    Add(int parentid, const Image& img, Value value, bool withopen = false);
 	int    Add(int parentid, const Image& img, Value key, Value value, bool withopen = false);
+	int    Add(int parentid, const Image& img, Value key, const String& value, bool withopen = false);
+	int    Add(int parentid, const Image& img, Value key, const char *value, bool withopen = false);
 	int    Add(int parentid, const Image& img, Ctrl& ctrl, int cx = 0, int cy = 0, bool withopen = false);
 	void   Remove(int id);
 	void   RemoveChildren(int id);
