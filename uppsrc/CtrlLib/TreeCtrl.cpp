@@ -212,6 +212,16 @@ int    TreeCtrl::Insert(int parentid, int i, const Image& img, Value v, Value t,
 	return Insert(parentid, i, TreeCtrl::Node(img, v, t).CanOpen(withopen));
 }
 
+int TreeCtrl::Insert(int parentid, int i, const Image& img, Value key, const String& value, bool withopen)
+{
+	return Insert(parentid, i, img, key, value, withopen);
+}
+
+int TreeCtrl::Insert(int parentid, int i, const Image& img, Value key, const char *value, bool withopen)
+{
+	return Insert(parentid, i, img, key, value, withopen);
+}
+
 int    TreeCtrl::Add(int parentid, const Image& img, Value v, bool withopen)
 {
 	return Add(parentid, TreeCtrl::Node(img, v).CanOpen(withopen));
@@ -220,6 +230,16 @@ int    TreeCtrl::Add(int parentid, const Image& img, Value v, bool withopen)
 int    TreeCtrl::Add(int parentid, const Image& img, Value v, Value t, bool withopen)
 {
 	return Add(parentid, TreeCtrl::Node(img, v, t).CanOpen(withopen));
+}
+
+int TreeCtrl::Add(int parentid, const Image& img, Value key, const String& value, bool withopen)
+{
+	return Add(parentid, img, key, value, withopen);
+}
+
+int TreeCtrl::Add(int parentid, const Image& img, Value key, const char *value, bool withopen)
+{
+	return Add(parentid, img, key, value, withopen);
 }
 
 int    TreeCtrl::Insert(int parentid, int i, const Image& img, Ctrl& ctrl, int cx, int cy, bool withopen)
