@@ -6,16 +6,11 @@ GUI_APP_MAIN
 {
 	EditString es;
 	TopWindow win;
-<<<<<<< .mine
-	String h;
-	h << "CCCCCCCC";
-	es <<= h;
-=======
-	es <<= "CCCCCCCCCCCCCCC";
->>>>>>> .r5593
+	es <<= "devout eeeev";
+	es.AlignRight();
 	win.Add(es.HSizePos().TopPos(0, Ctrl::STDSIZE));
 	win.Run();
 	
-	DDUMP(StoreAsXML(es));
-	DDUMP(StoreAsJson(es, true));
+	DUMP(StoreAsXML(es));
+	DUMP(StoreAsJson(es, true));
 }

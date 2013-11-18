@@ -320,6 +320,7 @@ void EditField::Paint(Draw& w)
 	}
 	int x = -sc;
 	bool ar = alignright && !HasFocus();
+	w.DrawRect(x, 0, sz.cx, fcy, paper);
 	if(IsNull(text) && (!IsNull(nulltext) || !IsNull(nullicon))) {
 		const wchar *txt = nulltext;
 		if(!IsNull(nullicon)) {
@@ -361,8 +362,6 @@ void EditField::Paint(Draw& w)
 				b = i;
 			}
 	}
-	if(!ar)
-		w.DrawRect(x, 0, sz.cx - x, fcy, paper);
 	if(!no_internal_margin)
 		w.End();
 	DrawTiles(w, dropcaret, CtrlImg::checkers());

@@ -228,20 +228,22 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 		}
 	}
 	else {
-		if(dx) {
+	//	if(dx) {
+	DLOG("------------");
 			int xpos = ox;
 			Buffer<XftCharSpec> ch(n);
 			for(int i = 0; i < n; i++) {
 				ch[i].ucs4 = text[i];
 				ch[i].x = xpos;
 				ch[i].y = oy + ascent;
-				xpos += dx[i];
+				DLOG((char)text[i] << ", " << font[text[i]] << ", " << xpos);
+				xpos += dx ? dx[i] : font[text[i]];
 			}
 			XftDrawCharSpec(xftdraw, &c, xftfont, ch, n);
-		}
-		else
-			XftDrawString16(xftdraw, &c, xftfont, ox, oy + ascent,
-			                (FcChar16 *)text, n);
+	//	}
+	//	else
+	//		XftDrawString16(xftdraw, &c, xftfont, ox, oy + ascent,
+	//		                (FcChar16 *)text, n);
 		LLOG("XftColor: r=" << c.color.red << ", g=" << c.color.green << ", b=" << c.color.blue
 			 << ", alpha=" << c.color.alpha << ", pixel=" << FormatIntHex(c.pixel));
 		if(font.IsUnderline() || font.IsStrikeout()) {
