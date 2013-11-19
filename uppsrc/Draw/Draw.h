@@ -361,7 +361,7 @@ void SColorDkShadow_Write(Color c);
 
 
 inline Color InvertColor() { return Color(255, 0); }
-inline Color DefaultInk() { return Black(); } //TODO!
+inline Color DefaultInk() { return Black(); } //TODO?
 
 Drawing AsDrawing(const Painting& pw);
 

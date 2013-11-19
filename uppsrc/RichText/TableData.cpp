@@ -485,9 +485,9 @@ RichCell::Format RichTable::GetCellFormat(const Rect& sel) const
 				if(fmt.align != f.align)
 					fmt.align = Null;
 				if(fmt.color != f.color)
-					fmt.color = Null;
+					fmt.color = VoidColor;
 				if(fmt.bordercolor != f.bordercolor)
-					fmt.bordercolor = Null;
+					fmt.bordercolor = VoidColor;
 			}
 	return fmt;
 }
@@ -514,9 +514,9 @@ void  RichTable::SetCellFormat(const Rect& sel, const RichCell::Format& fmt, boo
 				sSetRect(f.margin, fmt.margin);
 				if(!IsNull(fmt.align))
 					f.align = fmt.align;
-				if(!IsNull(fmt.color))
+				if(fmt.color != VoidColor)
 					f.color = fmt.color;
-				if(!IsNull(fmt.bordercolor))
+				if(fmt.bordercolor != VoidColor)
 					f.bordercolor = fmt.bordercolor;
 				if(!IsNull(fmt.minheight))
 					f.minheight = fmt.minheight;

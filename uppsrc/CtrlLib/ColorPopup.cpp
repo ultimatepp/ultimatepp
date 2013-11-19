@@ -61,6 +61,8 @@ INITBLOCK {
 
 void ColorPopUp::Hint(Color c)
 {
+	if(IsNull(c) || c == VoidColor)
+		return;
 	for(int i = 0; i < 17; i++)
 		if(hint[i] == c) {
 			memmove(&hint[i], &hint[i + 1], (17 - i) * sizeof(Color));
@@ -158,7 +160,8 @@ int ColorPopUp::GetCy()
 {
 	return ((GetColorCount() + 17) / 18) * 16 +
 			(norampwheel ? 0 : 2) +
-	        (notnull ? 0 : StdFont().Info().GetHeight() + 3 + 2);
+	        (notnull ? 0 : StdFont().Info().GetHeight() + 3 + 2) +
+	        (withvoid ? StdFont().Info().GetHeight() + 3 + 2 : 0);
 }
 
 void ColorPopUp::DrawFilledFrame(Draw &w, int x, int y, int cx, int cy, Color fcol, Color bcol)
@@ -181,6 +184,22 @@ void ColorPopUp::Paint(Draw& w)
 	w.DrawRect(sz, SColorMenu);
 
 	int y = 1;
+
+	if(withvoid) {
+		Size fsz = GetTextSize(nulltext, StdFont());
+		Rect r(1, y, sz.cx - 1, fsz.cy + y + 2);
+		DrawFrame(w, r, SColorText);
+		w.DrawText((sz.cx - fsz.cx) / 2, y, voidtext, StdFont(), SColorText());
+		y = r.bottom + 3;
+		if(colori == 997)
+		{
+			r.Inflate(1);
+			if(GetMouseLeft())
+				DrawFrame(w, r, SColorShadow, SColorLight);
+			else
+				DrawFrame(w, r, GUI_GlobalStyle() >= GUISTYLE_XP ? SColorText : SColorHighlight);
+		}
+	}
 
 	if(!notnull) {
 		Size fsz = GetTextSize(nulltext, StdFont());
@@ -235,6 +254,12 @@ int ColorPopUp::Get(Point p)
 {
 	if(p.y >= GetCy())
 		return 999;
+	if(withvoid) {
+		int y0 = StdFont().Info().GetHeight() + 4;
+		if(p.y < y0)
+			return 997;
+		p.y -= y0;
+	}
 	if(!notnull) {
 		int y0 = StdFont().Info().GetHeight() + 4;
 		if(p.y < y0)
@@ -313,6 +338,9 @@ Color ColorPopUp::Get() const
 	if(colori == 999)
 		return color;
 	else
+	if(colori == 997)
+		return VoidColor();
+	else
 		return Null;
 }
 
@@ -388,6 +416,7 @@ ColorPopUp::ColorPopUp()
 {
 	norampwheel = false;
 	notnull = false;
+	withvoid = false;
 	scolors = false;
 	animating = false;
 	hints = false;
@@ -400,6 +429,7 @@ ColorPopUp::ColorPopUp()
 	ramp.WhenLeftDouble = wheel.WhenLeftDouble = THISBACK(Select);
 	BackPaint();
 	nulltext = t_("(transparent)");
+	voidtext = t_("(none)");
 }
 
 END_UPP_NAMESPACE

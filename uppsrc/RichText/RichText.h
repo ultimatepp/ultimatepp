@@ -11,6 +11,8 @@ struct RichPara;
 class  RichTable;
 class  RichTxt;
 
+inline Color VoidColor() { return Color(223, 0); } // Used for mixed/no change in Get/SetCellFormat
+
 struct Zoom {
 	int m, d;
 

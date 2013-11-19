@@ -149,6 +149,8 @@ template<>
 String AsString(const Color& c) {
 	if(IsNull(c))
 		return "Color(Null)";
+	if(c.GetRaw() & 0x80000000)
+		return Format("Color(%d, 0)", int(c.GetRaw() & ~0x80000000));
 	return Format("Color(%d, %d, %d)", c.GetR(), c.GetG(), c.GetB());
 }
 

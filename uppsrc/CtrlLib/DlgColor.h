@@ -170,7 +170,9 @@ private:
 	bool     animating;
 	bool     hints;
 	bool     open;
+	bool     withvoid;
 	String   nulltext;
+	String   voidtext;
 	Color    color;
 
 	ColorRampCtrl  ramp;
@@ -195,6 +197,8 @@ public:
 	ColorPopUp& NotNull(bool b = true)               { notnull = b; return *this; }
 	ColorPopUp& SColors(bool b = true)               { scolors = b; return *this; }//Deprecated
 	ColorPopUp& NullText(const char *s)              { nulltext = s; Refresh(); return *this; }
+	ColorPopUp& VoidText(const char *s)              { voidtext = s; Refresh(); return *this; }
+	ColorPopUp& WithVoid(bool b = true)              { withvoid = b; Refresh(); return *this; }
 	ColorPopUp& NoRampWheel(bool b = true)           { norampwheel = b; return *this; }
 	ColorPopUp& Hints(bool b = true)                 { hints = b; return *this; }
 
@@ -219,6 +223,7 @@ protected:
 	Color      color, saved_color;
 	ColorPopUp colors;
 	String     nulltext;
+	String     voidtext;
 
 	void AcceptColors();
 	void CloseColors();
@@ -230,6 +235,8 @@ public:
 
 	ColorPusher& NullText(const char *s)    { nulltext = s; colors.NullText(s); Refresh(); return *this; }
 	ColorPusher& NotNull(bool b = true)     { colors.NotNull(b); return *this; }
+	ColorPusher& VoidText(const char *s)    { voidtext = s; colors.VoidText(s); Refresh(); return *this; }
+	ColorPusher& WithVoid(bool b = true)    { colors.WithVoid(b); return *this; }
 	ColorPusher& SColors(bool b = true)     { colors.SColors(b); return *this; }
 	ColorPusher& WithText()                 { withtext = true; return *this; }
 	ColorPusher& Track(bool b = true)       { track = b; return *this; }
