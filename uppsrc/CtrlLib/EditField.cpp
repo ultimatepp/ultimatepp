@@ -320,7 +320,7 @@ void EditField::Paint(Draw& w)
 	}
 	int x = -sc;
 	bool ar = alignright && !HasFocus();
-	w.DrawRect(x, 0, sz.cx, fcy, paper);
+	w.DrawRect(0, 0, sz.cx, fcy, paper);
 	if(IsNull(text) && (!IsNull(nulltext) || !IsNull(nullicon))) {
 		const wchar *txt = nulltext;
 		if(!IsNull(nullicon)) {
