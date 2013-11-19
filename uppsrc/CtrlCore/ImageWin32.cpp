@@ -254,13 +254,18 @@ void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 	if(sr.IsEmpty())
 		return;
 	int kind = img.GetKind();
+
+//	DDUMP(GetDeviceCaps(dc, RASTERCAPS) & RC_BITBLT);
+//	DDUMP(GetDeviceCaps(dc, RASTERCAPS) & RC_DI_BITMAP);
+	
 	if(kind == IMAGE_EMPTY)
 		return;
 	if(kind == IMAGE_OPAQUE && !IsNull(c)) {
 		w.DrawRect(x, y, sz.cx, sz.cy, c);
 		return;
 	}
-	if(kind == IMAGE_OPAQUE && paintcount == 0 && sr == Rect(sz) && IsWinNT() && w.IsGui()) {
+	if(kind == IMAGE_OPAQUE && (paintcount == 0 || w.IsPrinter()) && sr == Rect(sz) &&
+	   (GetDeviceCaps(dc, RASTERCAPS) & RC_DIBTODEV)) {
 		LTIMING("Image Opaque direct set");
 		SetSurface(w, x, y, sz.cx, sz.cy, ~img);
 		paintcount++;
@@ -279,41 +284,9 @@ void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 		SysImageRealized(img);
 		return;
 	}
-#if 0
-	if(kind == IMAGE_MASK/* || GetKind() == IMAGE_OPAQUE*/) {
-		HDC dcMem = ::CreateCompatibleDC(dc);
-		if(!hmask) {
-			LTIMING("Image Mask create");
-			Buffer<RGBA> bmp(len);
-			hmask = CreateBitMask(~img, sz, sz, sz, bmp);
-			if(!hbmp)
-				CreateHBMP(dc, bmp);
-		}
-		LTIMING("Image Mask blt");
-		HBITMAP o = (HBITMAP)::SelectObject(dcMem, ::CreateCompatibleBitmap(dc, sz.cx, sz.cy));
-		::BitBlt(dcMem, 0, 0, ssz.cx, ssz.cy, dc, x, y, SRCCOPY);
-		HDC dcMem2 = ::CreateCompatibleDC(dc);
-		::SelectObject(dcMem2, hmask);
-		::BitBlt(dcMem, 0, 0, ssz.cx, ssz.cy, dcMem2, sr.left, sr.top, SRCAND);
-		if(IsNull(c)) {
-			::SelectObject(dcMem2, hbmp);
-			::BitBlt(dcMem, 0, 0, ssz.cx, ssz.cy, dcMem2, sr.left, sr.top, SRCPAINT);
-		}
-		else {
-			HBRUSH ho = (HBRUSH) SelectObject(dcMem, CreateSolidBrush(c));
-			::BitBlt(dcMem, 0, 0, ssz.cx, ssz.cy, dcMem2, sr.left, sr.top, 0xba0b09);
-			::DeleteObject(::SelectObject(dcMem, ho));
-		}
-		::BitBlt(dc, x, y, ssz.cx, ssz.cy, dcMem, 0, 0, SRCCOPY);
-		::DeleteObject(::SelectObject(dcMem, o));
-		::DeleteDC(dcMem2);
-		::DeleteDC(dcMem);
-		SysImageRealized(img);
-		return;
-	}
-#endif
-#ifndef PLATFORM_WINCE
-	if(fnAlphaBlend() && IsNull(c) && !ImageFallBack) {
+	if(fnAlphaBlend() && IsNull(c) && !ImageFallBack &&
+	   !(w.IsPrinter() && (GetDeviceCaps(dc, SHADEBLENDCAPS) & (SB_PIXEL_ALPHA|SB_PREMULT_ALPHA)) !=
+	                     (SB_PIXEL_ALPHA|SB_PREMULT_ALPHA))) {
 		if(!himg) {
 			LTIMING("Image Alpha create");
 			BitmapInfo32__ bi(sz.cx, sz.cy);
@@ -334,12 +307,12 @@ void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 //		::DeleteDC(dcMem);
 		SysImageRealized(img);
 	}
-	else
-#endif
-	{
+	else {
 		LTIMING("Image Alpha sw");
 		DrawSurface sf(w, x, y, ssz.cx, ssz.cy);
 		RGBA *t = sf;
+		if(w.IsPrinter()) // We have got here because printer does not support alpha blending
+			Fill(t, White(), ssz.cx * ssz.cy);
 		for(int i = sr.top; i < sr.bottom; i++) {
 			if(IsNull(c))
 				AlphaBlendOpaque(t, img[i] + sr.left, ssz.cx);

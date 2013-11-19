@@ -2,6 +2,8 @@
 
 NAMESPACE_UPP
 
+#define LLOG(x) DLOG(x)
+
 Report::Report()
 {
 	mg.x = mg.y = Null;
@@ -64,6 +66,7 @@ void Report::StartPage(int i)
 {
 	DrawingDraw dw(GetSize());
 	page.At(i) = dw;
+	LLOG("Creating page " << i);
 	Create(GetSize());
 	WhenPage();
 	PaintHF(*this, 0, header, i);
@@ -124,6 +127,13 @@ Report& Report::Footer(const char *qtf, int spc)
 	footer = qtf;
 	footerspc = spc;
 	footercy = qtf ? GetHeightHF(qtf) : 0;
+	RestartPage();
+	return *this;
+}
+
+Report& Report::OnPage(Callback whenpage)
+{
+	WhenPage = whenpage;
 	RestartPage();
 	return *this;
 }

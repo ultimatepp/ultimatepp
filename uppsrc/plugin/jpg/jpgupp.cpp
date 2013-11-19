@@ -341,7 +341,7 @@ int JPGRaster::Data::ExifDir(const char *begin, int offset, IFD_TYPE type)
 //			i, tag, fmt, count, BinHexEncode(data, data + len)));
 		if(type == BASE_IFD) {
 			if(tag == 0x112)
-				metadata.Add("orientation", int(data[0]));
+				metadata.Add("orientation", Exif16(data[0]));
 			if(tag == 0x8825) {
 				int offset = Exif32(data);
 	//			puts(NFormat("GPS IFD at %08x", offset));

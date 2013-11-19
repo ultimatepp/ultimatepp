@@ -14,13 +14,13 @@ public:
 	virtual Draw& Page(int i);
 
 private:
-	Array<Drawing>  page;
-	int             pagei;
-	int             y;
-	String          header, footer;
-	int             headercy, headerspc, footercy, footerspc;
-	Point           mg;
-	One<PrinterJob> printerjob;
+	Array<Drawing>      page;
+	int                 pagei;
+	int                 y;
+	String              header, footer;
+	int                 headercy, headerspc, footercy, footerspc;
+	Point               mg;
+	One<PrinterJob>     printerjob;
 
 	void    Flush();
 	String  FormatHF(const char *s, int pageno);
@@ -28,9 +28,10 @@ private:
 	void    PaintHF(Draw& w, int y, const char *qtf, int i);
 	void    StartPage(int i);
 	void    RestartPage();
+
+	Callback              WhenPage;
 	
 public:
-	Callback              WhenPage;
 
 	int                   GetCount()                  { Flush(); return page.GetCount(); }
 	Drawing               GetPage(int i)              { Flush(); return page[i]; }
@@ -65,6 +66,7 @@ public:
 	Report&               Margins(int top, int left)  { mg.y = top; mg.x = left; return *this; }
 	Report&               Header(const char *qtf, int spc = 150);
 	Report&               Footer(const char *qtf, int spc = 150);
+	Report&               OnPage(Callback whenpage);
 	Report&               NoHeader()                  { return Header(NULL, 0); }
 	Report&               NoFooter()                  { return Footer(NULL, 0); }
 
