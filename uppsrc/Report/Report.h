@@ -30,6 +30,8 @@ private:
 	void    RestartPage();
 	
 public:
+	Callback              WhenPage;
+
 	int                   GetCount()                  { Flush(); return page.GetCount(); }
 	Drawing               GetPage(int i)              { Flush(); return page[i]; }
 	Drawing               operator[](int i)           { return GetPage(i); }
