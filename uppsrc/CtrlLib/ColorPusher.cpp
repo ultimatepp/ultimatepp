@@ -9,20 +9,22 @@ void ColorPusher::Paint(Draw& w)
 	Size sz = GetSize();
 	w.DrawRect(sz, push ? SColorHighlight : SColorPaper);
 	int ty = (sz.cy - StdFont().Info().GetHeight()) / 2;
+	if(IsNull(color))
+		w.DrawText(max(2, (sz.cx - GetTextSize(nulltext, StdFont()).cx) / 2), ty,
+		           nulltext, StdFont(), SColorText());
+	else
+	if(color == VoidColor)
+		w.DrawText(max(2, (sz.cx - GetTextSize(nulltext, StdFont()).cx) / 2), ty,
+		           voidtext, StdFont(), SColorText());
+	else
 	if(withtext) {
 		w.DrawRect(2, 2, sz.cy - 4, sz.cy - 4, color);
 		DrawFrame(w, 1, 1, sz.cy - 2, sz.cy - 2, SColorText);
 		w.DrawText(sz.cy + 2, ty, FormatColor(color), StdFont(), SColorText());
 	}
 	else {
-		if(!IsNull(color)) {
-			w.DrawRect(2, 2, sz.cx - 4, sz.cy - 4, color);
-			DrawFrame(w, 1, 1, sz.cx - 2, sz.cy - 2, SColorText);
-		}
-		else
-		if(!withtext)
-			w.DrawText(max(2, (sz.cx - GetTextSize(nulltext, StdFont()).cx) / 2), ty,
-			           nulltext, StdFont(), SColorText());
+		w.DrawRect(2, 2, sz.cx - 4, sz.cy - 4, color);
+		DrawFrame(w, 1, 1, sz.cx - 2, sz.cy - 2, SColorText);
 	}
 	if(HasFocus())
 		DrawFocus(w, GetSize());
@@ -97,6 +99,7 @@ void ColorPusher::NewColor()
 ColorPusher::ColorPusher()
 {
 	nulltext = t_("(transparent)");
+	voidtext = t_("(none)");
 	color = Null;
 	track = push = withtext = false;
 	colors.WhenSelect = THISBACK(AcceptColors);
