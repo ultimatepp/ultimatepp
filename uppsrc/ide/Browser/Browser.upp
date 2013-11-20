@@ -10,6 +10,7 @@ file
 	Browser.h,
 	Browser readonly separator,
 	Lay.cpp,
+	Iml.cpp,
 	Sch.cpp,
 	Base.cpp optimize_speed,
 	Util.cpp,
