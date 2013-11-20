@@ -2,12 +2,24 @@
 
 using namespace Upp;
 
+void Background(Report *r)
+{
+	Draw& w = *r;
+	Size sz = r->GetSize();
+	Image m = CtrlImg::exclamation();
+	Size isz = m.GetSize();
+	for(int x = -isz.cx / 2; x < sz.cx; x += isz.cx)
+		for(int y = -isz.cy / 2; y < sz.cy; y += isz.cy)
+			w.DrawImage(x, y, m);
+}
+
 GUI_APP_MAIN
 {
 	Report r;
+	r.WhenPage = callback1(Background, &r);
 	r.Header("[A2< Header Page $$P");
 	r.Footer("[A2> Footer Page $$P");
-	r << "This is some [* QTF text";
+	r << "This is some [* QTF text&something else";
 	r << t_("顯示[* QTF 文字");
 	r << "&&Let's report some table:";
 	r << t_("輸出表格式報表：");
