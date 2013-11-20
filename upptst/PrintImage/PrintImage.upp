@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	Arrow.iml;
+
+mainconfig
+	"" = "GUI SSE2";
+

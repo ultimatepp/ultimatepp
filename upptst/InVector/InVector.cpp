@@ -242,7 +242,7 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
 	SeedRandom();
-/*
+
 	SetTest<int>();
 	TestLowerBound<int>();
 	TestUpperBound<int>();
@@ -256,7 +256,7 @@ CONSOLE_APP_MAIN
 	RemoveTest<String>();
 	InsertNTest<String>();
 	InVectorTest<String>();
-*/
+
 	SetTest<TestType>();
 	TestLowerBound<TestType>();
 	TestUpperBound<TestType>();
