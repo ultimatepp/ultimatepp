@@ -31,6 +31,7 @@ void           ReQualifyCodeBase();
 void           CodeBaseScanLay(const String& fn);
 void           ScanLayFile(const char *fn);
 void           ScanSchFile(const char *fn);
+void           ScanImlFile(const char *fn);
 
 String         MakeCodeRef(const String& scope, const String& item);
 void           SplitCodeRef(const String& ref, String& scope, String& item);
