@@ -2,30 +2,9 @@
 
 NAMESPACE_UPP
 
-struct sColorize : public ImageMaker
-{
-	Image img;
-	Color color;
-
-	virtual String Key() const {
-		StringBuffer h;
-		RawCat(h, color);
-		RawCat(h, img.GetSerialId());
-		return h;
-	}
-
-	virtual Image Make() const {
-		return SetColorKeepAlpha(img, color);
-	}
-
-};
-
 void SDraw::PutImage(Point p, const Image& img, const Rect& src, Color color)
 {
-	sColorize m;
-	m.img = img;
-	m.color = color;
-	PutImage(p, MakeImage(m), src);
+	PutImage(p, CachedSetColorKeepAlpha(img, color), src);
 }
 
 void SDraw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color)

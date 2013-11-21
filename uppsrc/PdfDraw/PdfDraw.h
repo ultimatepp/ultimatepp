@@ -270,9 +270,8 @@ private:
 	VectorMap<Font, OutlineInfo>                outline_info;
 	VectorMap<Font, Vector<wchar> >             pdffont;
 	VectorMap<Font, VectorMap<wchar, CharPos> > fontchars;
-	Vector<Image>                               image;
-	Vector<Rect>                                imagerect;
 	Index<uint64>                               patterns;
+	VectorMap< Tuple2<int64, Rect>, Image>      images;
 	
 	Vector<int>  offset;
 	StringBuffer out;

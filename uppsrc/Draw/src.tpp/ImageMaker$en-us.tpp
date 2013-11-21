@@ -115,4 +115,11 @@ can save some memory in certain situations). [%-*@3 filter] can
 be one of predefined filters for RescaleFilter function (e.g. 
 FILTER`_BILINEAR), if Null, standard speed optimized custom algorithm 
 is used.&]
+[s3;%% &]
+[s4; &]
+[s5;:CachedSetColorKeepAlpha`(const Image`&`,Color`): [_^Image^ Image]_[* CachedSetColorK
+eepAlpha]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img], 
+[_^Color^ Color]_[*@3 color])&]
+[s2;%% Cached variant of SetColorKeepAlpha. Replaces all pixel colors 
+in Image with [%-*@3 color] while not changing the alpha value.&]
 [s0;%% ]]
