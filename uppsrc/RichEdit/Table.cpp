@@ -316,8 +316,8 @@ void RichEdit::CellProperties()
 	dlg.align.Set(0, ALIGN_TOP);
 	dlg.align.Set(1, ALIGN_CENTER);
 	dlg.align.Set(2, ALIGN_BOTTOM);
-	dlg.color.WithVoid().VoidText("(no change)");
-	dlg.border.WithVoid().VoidText("(no change)");
+	dlg.color.WithVoid().VoidText(t_("(no change)"));
+	dlg.border.WithVoid().VoidText(t_("(no change)"));
 	if(dlg.Run() != IDOK)
 		return;
 	r.Retrieve();

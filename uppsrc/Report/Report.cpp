@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x) DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 Report::Report()
 {
@@ -66,10 +66,12 @@ void Report::StartPage(int i)
 {
 	DrawingDraw dw(GetSize());
 	page.At(i) = dw;
-	LLOG("Creating page " << i);
+	LLOG("Start page " << i);
 	Create(GetSize());
 	WhenPage();
+	LLOG("Paint header");
 	PaintHF(*this, 0, header, i);
+	LLOG("Paint footer");
 	PaintHF(*this, GetSize().cy - footercy, footer, i);
 	y = GetPageRect().top;
 }
@@ -154,6 +156,7 @@ Report& Report::Landscape()
 void Report::Put(const RichText& txt, void *context)
 {
 	PageY py(pagei, y);
+	LLOG("Put RichText, py: " << py << ", pagerect: " << GetPageRect());
 	PaintInfo paintinfo;
 	paintinfo.top = PageY(0, 0);
 	paintinfo.bottom = PageY(INT_MAX, INT_MAX);
@@ -162,6 +165,7 @@ void Report::Put(const RichText& txt, void *context)
 	paintinfo.context = context;
 	txt.Paint(*this, py, GetPageRect(), paintinfo);
 	py = txt.GetHeight(py, GetPageRect());
+	LLOG("Final pos: " << py);
 	Page(py.page);
 	y = py.y;
 }

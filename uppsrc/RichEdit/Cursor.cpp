@@ -16,7 +16,7 @@ void RichEdit::FinishNF()
 		}
 		else
 		if(p.table != anchorp.table) {
-			if(text.GetRichPos(anchor, 1).table == 1 && anchor < cursor) {
+			if(anchor == 0 && anchorp.level == 1 && text.GetRichPos(anchor, 1).table == 1 && anchor < cursor) {
 				begtabsel = true;
 				anchor = 0;
 			}

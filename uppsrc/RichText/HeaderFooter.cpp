@@ -38,7 +38,7 @@ Rect RichText::GetPageMinusHeaderFooter(const Rect& page) const
 }
 
 void RichText::PaintHeaderFooter(PageDraw& pw, const Rect& page, const PaintInfo& pi_,
-                                 int from_page, int to_page, int page_count) const
+                                 int from_page, int to_page) const
 {
 	Rect rpage = GetPageMinusHeaderFooter(page);
 	if(rpage == page)
@@ -46,7 +46,7 @@ void RichText::PaintHeaderFooter(PageDraw& pw, const Rect& page, const PaintInfo
 	PaintInfo pi = pi_;
 	pi.sell = pi.selh = 0;
 	VectorMap<String, Value> vars;
-	vars.Add("PAGECOUNT", GetHeight(rpage).page);
+	vars.Add("PAGECOUNT", GetHeight(page).page + 1);
 	for(int i = from_page; i <= to_page; i++) {
 		vars.GetAdd("PAGENUMBER") = i + 1;
 		if(header) {
