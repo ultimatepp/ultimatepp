@@ -150,8 +150,8 @@ void RichEdit::MouseMove(Point p, dword flags)
 			for(int i = 0; i < tabmove.column; i++)
 				nl += fmt.column[i];
 			int xn = fmt.column[tabmove.column] + fmt.column[tabmove.column + 1];
-			int xl = tabmove.left + tabmove.cx * nl / sum + 120;
-			int xh = tabmove.left + tabmove.cx * (nl + xn) / sum - 120;
+			int xl = tabmove.left + tabmove.cx * nl / sum + 12;
+			int xh = tabmove.left + tabmove.cx * (nl + xn) / sum - 12;
 			if(xl >= xh)
 				return;
 			int xx = minmax(GetSnapX(p.x) - tabmove.delta, xl, xh) - tabmove.left;

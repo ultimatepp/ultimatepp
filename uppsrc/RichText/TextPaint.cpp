@@ -35,7 +35,7 @@ void RichText::Paint(PageDraw& w, PageY py, const Rect& page, const PaintInfo& p
 		py.y = ctx.page.top;
 	ctx.py = py;
 	RichTxt::Paint(w, ctx, pi);
-	PaintHeaderFooter(w, page, pi, from_page, ctx.py.page, 9999);
+	PaintHeaderFooter(w, page, pi, from_page, ctx.py.page);
 }
 
 void  RichText::Paint(PageDraw& w, const Rect& page, const PaintInfo& pi) const
@@ -43,7 +43,7 @@ void  RichText::Paint(PageDraw& w, const Rect& page, const PaintInfo& pi) const
 	RichContext ctx = Context(page);
 	int from_page = ctx.py.page;
 	RichTxt::Paint(w, ctx, pi);
-	PaintHeaderFooter(w, page, pi, from_page, ctx.py.page, 9999);
+	PaintHeaderFooter(w, page, pi, from_page, ctx.py.page);
 }
 
 RichCaret RichText::GetCaret(int pos, const Rect& page) const

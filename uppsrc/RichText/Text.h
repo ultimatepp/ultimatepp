@@ -10,7 +10,7 @@ class RichText : public RichTxt, public DeepCopyOption<RichText> {
 
 	Rect       GetPageMinusHeaderFooter(const Rect& page) const;
 	void       PaintHeaderFooter(PageDraw& pw, const Rect& page, const PaintInfo& pi,
-	                             int from_page, int to_page, int page_count) const;
+	                             int from_page, int to_page) const;
 
 	struct StyleChangeOp;
 	struct SetStylesOp;
