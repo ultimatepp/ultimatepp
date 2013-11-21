@@ -114,7 +114,7 @@ String Purify(const char *s, const char *qname, const String& name) {
 	while(*s && (byte)*s <= ' ') s++;
 	while(*s) {
 		const char *w = bew(qname, s);
-		if(w) {
+		if(w && w > s) {
 			res.Cat(name);
 			s = w;
 		}
