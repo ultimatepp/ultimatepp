@@ -406,13 +406,19 @@ void PdfDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& _img, const
 {
 	Image img = _img;
 	if(!IsNull(c))
-		img = SetColorKeepAlpha(img, c);
-	image.Add(img);
-	imagerect.Add(src);
+		img = CachedSetColorKeepAlpha(img, c);
+	
+	Tuple2<int64, Rect> key = MakeTuple(img.GetSerialId(), src);
+	int q = images.Find(key);
+	if(q < 0) {
+		q = images.GetCount();
+		images.Add(key, img);
+	}
+	
 	page << "q "
 	     << Pt(cx) << " 0 0 " << Pt(cy) << ' '
 	     << Pt(x) << ' ' << Pt(pgsz.cy - y - cy)
-	     << " cm /Image" << image.GetCount() << " Do Q\n";
+	     << " cm /Image" << q + 1 << " Do Q\n";
 }
 
 void PdfDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count,
@@ -546,13 +552,13 @@ String PdfDraw::Finish()
 	int pagecount = offset.GetCount();
 
 	Vector<int> imageobj;
-	for(int i = 0; i < image.GetCount(); i++) {
-		Size sz = image[i].GetSize();
-		Rect sr = sz & imagerect[i];
+	for(int i = 0; i < images.GetCount(); i++) {
+		Size sz = images[i].GetSize();
+		Rect sr = images.GetKey(i).b & sz;
 		String data;
 		String wh;
 		wh << " /Width " << sr.Width() << " /Height " << sr.Height();
-		const Image& m = image[i];
+		const Image& m = images[i];
 		int mask = -1;
 		int smask = -1;
 		if(m.GetKind() == IMAGE_MASK) {

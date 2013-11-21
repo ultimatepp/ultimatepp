@@ -228,5 +228,30 @@ Image CachedRescalePaintOnly(const Image& m, Size sz, int filter)
 	return CachedRescalePaintOnly(m, sz, m.GetSize(), filter);
 }
 
+struct sColorize : public ImageMaker
+{
+	Image img;
+	Color color;
+
+	virtual String Key() const {
+		StringBuffer h;
+		RawCat(h, color);
+		RawCat(h, img.GetSerialId());
+		return h;
+	}
+
+	virtual Image Make() const {
+		return SetColorKeepAlpha(img, color);
+	}
+
+};
+
+Image CachedSetColorKeepAlpha(const Image& img, Color color)
+{
+	sColorize m;
+	m.img = img;
+	m.color = color;
+	return MakeImage(m);
+}
 
 END_UPP_NAMESPACE
