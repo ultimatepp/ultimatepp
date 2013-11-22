@@ -830,4 +830,10 @@ mode.&]
 any dynamic page elements.&]
 [s2; Returns true if ok.&]
 [s4;%- &]
-[s0; ]
+[s6;%- &]
+[s5;:InternetExplorerBrowser`:`:SetSilent`(bool`):%- [@(0.0.255) bool]_[* SetSilent]([@(0.0.255) b
+ool]_[*@3 val]_`=_[@(0.0.255) true])&]
+[s2; Sets a value [%-*@3 val] that indicates if the object can display 
+dialog boxes.&]
+[s4; &]
+[s0; ]]

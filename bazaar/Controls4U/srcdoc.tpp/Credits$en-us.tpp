@@ -1,5 +1,6 @@
 topic "Credits";
 [ $$0,0#00000000000000000000000000000000:Default]
+[l288;2 $$1,1#27521748481378242620020725143825:desc]
 [{_}%EN-US 
 [s0; [*R+184 Controls4U. Credits]&]
 [s0; &]
@@ -21,6 +22,12 @@ limited to:]&]
 [s0;i150;O0; [2 Mirek Fidler]&]
 [s0; &]
 [s0; &]
+[s0; [2 Also thanks to]&]
+[s0;2 &]
+[s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=794`&^2 Z
+bigniew Czapiga (Zbych)]&]
+[s0; &]
+[s0; &]
 [s0; [*2 SliderCtrlX control]&]
 [s0;*2 &]
 [s0; [2 Made by avpavp, jerson and jibe based on SliderCtrl.]&]
@@ -29,7 +36,7 @@ limited to:]&]
 [s0; [*2 StarIndicator control]&]
 [s0;2 &]
 [s0; [2 Made by jibe.]&]
-[s0;2 &]
+[s0;^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=794`&^2 &]
 [s0; &]
 [s0; [*^http`:`/`/en`.wikipedia`.org`/wiki`/File`:Biandintz`_eta`_zaldiak`_`-`_modified2`.jpg^2 H
 orses picture]&]

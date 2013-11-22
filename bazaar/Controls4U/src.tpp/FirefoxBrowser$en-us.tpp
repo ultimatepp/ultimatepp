@@ -919,4 +919,10 @@ mode.&]
 [s2; Cancels any pending navigation or download operation and stops 
 any dynamic page elements.&]
 [s2; Returns true if ok.&]
-[s0; ]
+[s6;%- &]
+[s5;:FirefoxBrowser`:`:SetSilent`(bool`):%- [@(0.0.255) bool]_[* SetSilent]([@(0.0.255) boo
+l]_[*@3 val])&]
+[s2; Sets a value [%-*@3 val] that indicates if the object can display 
+dialog boxes.&]
+[s4; &]
+[s0; ]]

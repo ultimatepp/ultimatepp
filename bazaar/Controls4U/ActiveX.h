@@ -34,7 +34,8 @@ public:
 	String GetReadyState();
 	bool GoHome();
 	bool RefreshPage();
-	bool Stop();	
+	bool Stop();
+	bool SetSilent(bool val);
 
 private:	
 	class IIWebBrowser {
@@ -71,6 +72,7 @@ public:
 	bool GoHome();
 	bool RefreshPage();
 	bool Stop();
+	bool SetSilent(bool val = true);
 
 private:
 	class IIWebBrowser {

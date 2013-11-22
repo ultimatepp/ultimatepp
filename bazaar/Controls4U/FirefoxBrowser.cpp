@@ -170,6 +170,18 @@ bool FirefoxBrowser::Stop() {
 	return false;
 }
 
+bool FirefoxBrowser::SetSilent(bool val) {
+	IIWebBrowser webBrowser(this);
+	if (!webBrowser) 
+		return false;	
+	
+	VARIANT_BOOL vb = val ? VARIANT_TRUE : VARIANT_FALSE;
+	if (webBrowser->put_Silent(vb) == S_OK) 
+		return true;
+	
+	return false;
+}
+
 END_UPP_NAMESPACE
 
 #endif
