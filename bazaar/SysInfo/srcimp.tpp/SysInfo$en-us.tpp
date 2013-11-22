@@ -40,17 +40,9 @@ in Ubuntu can run properly in Fedora without recompiling.&]
 [s0; &]
 [s0; [*+92 2. Compiler support and Requirements]&]
 [s0; &]
-[s0; SysInfo has been tested in Linux using GCC and in Windows using 
-MinGW and MSC.&]
+[s0; SysInfo has been tested in 32 and 64 bits in Linux using GCC 
+and in Windows using MinGW and MSC.&]
 [s0; &]
-[s0;~~~2048; [*@6 IMPORTANT][* :] To compile using MinGW in Windows it 
-is required to copy the next files from SysInfo/plugin:&]
-[s0;i150;O0; To `\MinGW`\include: &]
-[s0;l96; Files [* Rpcsal.h, DispEx.h, WbemCli.h, WbemDisp.h, Wbemidl.h, 
-WbemProv.h and WbemTran.h.]&]
-[s0; &]
-[s0;i150;O0;%- To `\MinGW`\lib: &]
-[s0;l96; File [* wbemuuid.lib]&]
 [s0; &]
 [s0; [*@6 IMPORTANT][* :] To compile it in Linux it is necessary to include 
 package XTest. In Ubuntu the aptitude package name is [* libxtst`-dev] 
