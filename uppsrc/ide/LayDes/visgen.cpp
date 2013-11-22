@@ -38,8 +38,10 @@ void VisGenDlg::Refresh()
 	pars.Enable(q >= 2);
 	toupper1.Enable(q >= 2);
 	name1.Enable(q >= 2);
+	quotes1.Enable(q >= 2);
 	toupper2.Enable(q >= 3);
 	name2.Enable(q >= 3);
+	quotes2.Enable(q >= 3);
 	String oce = "\tCtrlLayout";
 	bool ok = false;
 	if(HasItem("ok")) {
@@ -98,20 +100,28 @@ void VisGenDlg::Refresh()
 			if(!IsNull(id)) {
 				if(pars)
 					s << '(';
+				String ss;
 				if(name1 && !IsNull(~name))
-					s << ~name << '.';
+					ss << ~name << '.';
 				if(toupper1)
-					s << ToUpper(id);
+					ss << ToUpper(id);
 				else
-					s << id;
+					ss << id;
+				if(quotes1)
+					ss = AsCString(ss);
+				s << ss;
 				if(q == 4) {
 					s << ", ";
+					String ss;
 					if(name2 && !IsNull(~name))
-						s << ~name << '.';
+						ss << ~name << '.';
 					if(toupper2)
-						s << ToUpper(id);
+						ss << ToUpper(id);
 					else
-						s << id;
+						ss << id;
+					if(quotes2)
+						ss = AsCString(ss);
+					s << ss;
 				}
 				if(pars)
 					s << ')';
@@ -147,8 +157,10 @@ VisGenDlg::VisGenDlg(LayoutData& layout, const Vector<int>& cursor)
 	name <<=
 	pars <<=
 	toupper1 <<=
+	quotes1 <<=
 	name1 <<=
 	toupper2 <<=
+	quotes2 <<=
 	name2 <<= THISBACK(Refresh);
 	Refresh();
 	view.Highlight(CodeEditor::HIGHLIGHT_CPP);
