@@ -515,6 +515,7 @@ void Ide::BrowseMenu(Bar& menu) {
 	menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
 	menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Thisbacks));
 	menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
+	menu.Add(!designer, AK_COMPLETE2, callback(&editor, &AssistEditor::Complete2));
 	menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
 	menu.Add(!designer, "Insert", THISBACK(InsertMenu));
 	menu.MenuSeparator();

@@ -534,9 +534,8 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 		popup.Ctrl::PopUp(this, false, false, true);
 }
 
-void AssistEditor::Complete()
+Vector<String> AssistEditor::GetFileIds()
 {
-	CloseAssist();
 	Index<String> id;
 	int l = GetCursorLine() - 1;
 	while(l >= 0) {
@@ -549,6 +548,13 @@ void AssistEditor::Complete()
 				p.SkipTerm();
 		l--;
 	}
+	return id.PickKeys();
+}
+
+void AssistEditor::Complete()
+{
+	CloseAssist();
+	Vector<String> id = GetFileIds();
 	for(int i = 0; i < id.GetCount(); i++) {
 		CppItemInfo& f = assist_item.Add(id[i]);
 		f.name = id[i];
@@ -558,6 +564,33 @@ void AssistEditor::Complete()
 	}
 	assist_type.Clear();
 	PopUpAssist(true);
+}
+
+void AssistEditor::Complete2()
+{
+	CloseAssist();
+	int c = GetCursor();
+	String q = IdBack(c);
+	if(IsNull(q))
+		return;
+	String h;
+	Vector<String> id = GetFileIds();
+	for(int i = 0; i < id.GetCount(); i++) {
+		String s = id[i];
+		if(s.StartsWith(q))
+			if(IsNull(h))
+				h = s;
+			else {
+				s.Trim(min(s.GetCount(), h.GetCount()));
+				for(int j = 0; j < s.GetCount(); j++)
+					if(s[j] != h[j]) {
+						h.Trim(j);
+						break;
+					}
+			}
+	}
+	if(h.GetCount() > q.GetCount())
+		Paste(h.Mid(q.GetCount()).ToWString());
 }
 
 void AssistEditor::Abbr()
