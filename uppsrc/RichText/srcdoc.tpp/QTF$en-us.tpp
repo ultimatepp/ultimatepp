@@ -470,13 +470,17 @@ text format. In that case, object data are terminated with another
 `'```' character. If there needs to be `'```' in the text, `'`````' 
 can be used as escape sequence.&]
 [s0; &]
-[s0; If there is not `'```', header is in binary 7 bit format. Bit 
-7 of data bytes is always 1, so that actual data bytes are in 
-range 128`-255. First byte in range 32`-127 ends data sequence. 
+[s0; If header is followed by `'(`', it countains BASE64 encoded 
+binary data, ending with `')`'. [* This is default format for binary 
+data].&]
+[s0; &]
+[s0; If there is no `'```' nor `'(`', header is in binary 7 bit format. 
+Bit 7 of data bytes is always 1, so that actual data bytes are 
+in range 128`-255. First byte in range 32`-127 ends data sequence. 
 Data are encoded in 7 byte groups, which corresponds to 8 bytes 
 of encoded format. First byte of this 8 bytes block always contains 
 eight bits of following bytes, LSB (that is bit 0) being the 
-eight bit for first byte in block.&]
+eight bit for first byte in block. [/ This format is deprecated.]&]
 [s0; &]
 [s0; [*/3 iml][*3  format]&]
 [s0;* &]
@@ -503,15 +507,6 @@ derived instances and registred using RichPara`::Register function.]
 method]}}&]
 [s0;@(128.0.255) &]
 [s0;@(0.0.255) &]
-[s2; Header and Footer&]
-[s0; &]
-[s0; Gloval text header is defined using [%-C@(128.0.255) `^H][%-/C@(0.0.255) qtf`_text][%-C@(128.0.255) `^
-`^], footer [%-C@(128.0.255) `^F][%-/C@(0.0.255) qtf`_text][%-C@(128.0.255) `^`^], 
-where [%-C@(128.0.255) H][%-/C@(0.0.255) qtf`_text] is complete embeded 
-QTF representing header/footer. This QTF can contain field[@5  
-`{:VALUE:PAGENUMBER:`} ]to represent page number and[@5  `{:VALUE:PAGECOUNT:`}] 
-to represent total number of pages.&]
-[s0;3 &]
 [s0;3 &]
 [s2; Tables&]
 [s0; &]
@@ -627,7 +622,7 @@ as table start/stop and [@(128.0.255) `|`| `-`-] to divide cells/lines.
 [s0;3 &]
 [s2; Header and Footer&]
 [s0; &]
-[s0; Gloval text header is defined using [%-C@(128.0.255) `^H][%-/C@(0.0.255) qtf`_text][%-C@(128.0.255) `^
+[s0; Global text header is defined using [%-C@(128.0.255) `^H][%-/C@(0.0.255) qtf`_text][%-C@(128.0.255) `^
 `^], footer [%-C@(128.0.255) `^F][%-/C@(0.0.255) qtf`_text][%-C@(128.0.255) `^`^], 
 where [%-C@(128.0.255) H][%-/C@(0.0.255) qtf`_text] is complete embeded 
 QTF representing header/footer. This QTF can contain field[@5  
