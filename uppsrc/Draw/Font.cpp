@@ -4,6 +4,8 @@
 
 NAMESPACE_UPP
 
+static StaticMutex sFontLock;
+
 bool Replace(Font fnt, int chr, Font& rfnt);
 
 void Std(Font& font)
@@ -25,23 +27,19 @@ void InvalidateFontList()
 	sListValid = false;
 }
 
-void Set__(volatile bool& b);
-
-const Vector<FaceInfo>& Font::List()
+Vector<FaceInfo>& Font::FaceList()
 {
 	static Vector<FaceInfo> list;
-	if(!sListValid) {
-		INTERLOCKED {
-			Set__(sListValid);
-			list = GetAllFacesSys();
-		}
+	ONCELOCK {
+		list = GetAllFacesSys();
 	}
 	return list;
 }
 
 void sInitFonts()
 {
-	Font::List();
+	Mutex::Lock __(sFontLock);
+	Font::FaceList();
 	GetStdFont();
 }
 
@@ -51,14 +49,16 @@ INITBLOCK {
 
 int Font::GetFaceCount()
 {
-	return List().GetCount();
+	Mutex::Lock __(sFontLock);
+	return FaceList().GetCount();
 }
 
 String Font::GetFaceName(int index)
 {
+	Mutex::Lock __(sFontLock);
 	if(index == 0)
 		return "STDFONT";
-	const Vector<FaceInfo>& l = List();
+	const Vector<FaceInfo>& l = FaceList();
 	if(index >= 0 && index < l.GetCount())
 		return l[index].name;
 	return Null;
@@ -66,10 +66,19 @@ String Font::GetFaceName(int index)
 
 dword Font::GetFaceInfo(int index)
 {
-	const Vector<FaceInfo>& l = List();
+	Mutex::Lock __(sFontLock);
+	const Vector<FaceInfo>& l = FaceList();
 	if(index >= 0 && index < l.GetCount())
 		return l[index].info;
 	return 0;
+}
+
+void Font::SetFace(int index, const String& name, dword info)
+{
+	Mutex::Lock __(sFontLock);
+	FaceInfo& f = FaceList().At(index);
+	f.name = name;
+	f.info = info;
 }
 
 int FontFilter(int c)
@@ -97,8 +106,6 @@ int  Font::FindFaceNameIndex(const String& name) {
 		return STDFONT;
 	return 0;
 }
-
-static StaticMutex sFontLock;
 
 void Font::SyncStdFont()
 {
@@ -133,7 +140,7 @@ void Font::InitStdFont()
 {
 	ONCELOCK {
 		Mutex::Lock __(sFontLock);
-		List();
+		FaceList();
 		AStdFont = Arial(12);
 		String name;
 		int    height = 0;
