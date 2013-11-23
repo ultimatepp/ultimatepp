@@ -242,6 +242,9 @@ void QTFEncodePara(String& qtf, const RichPara& p, const RichPara::Format& style
 			else {
 				if(crlf)
 					qtf << "\r\n";
+#if 1
+				qtf << '(' << Base64Encode(q, slim) << ')';
+#else
 				while(q < slim - 7) {
 					byte data[8];
 					data[0] = ((q[0] & 0x80) >> 7) |
@@ -278,6 +281,7 @@ void QTFEncodePara(String& qtf, const RichPara& p, const RichPara::Format& style
 						qtf << "\r\n";
 					q += 7;
 				}
+#endif
 			}
 			if(crlf)
 				qtf << "\r\n";

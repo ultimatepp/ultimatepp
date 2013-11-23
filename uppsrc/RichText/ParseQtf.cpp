@@ -296,24 +296,34 @@ void RichQtfParser::ReadObject()
 		int yd = 0;
 		if(Key('/'))
 			yd = GetNumber();
-		StringBuffer data;
 		while(*term && (byte)*term < 32)
 			term++;
+		String odata;
 		if(Key('`'))
 			while(*term) {
 				if(*term == '`') {
 					term++;
 					if(*term == '`')
-						data.Cat('`');
+						odata.Cat('`');
 					else
 						break;
 				}
 				else
 				if((byte)*term >= 32)
-					data.Cat(*term);
+					odata.Cat(*term);
 				term++;
 			}
 		else
+		if(Key('(')) {
+			const char *b = term;
+			while(*term && *term != ')')
+				term++;
+			odata = Base64Decode(b, term);
+			if(*term == ')')
+				term++;
+		}
+		else {
+			StringBuffer data;
 			for(;;) {
 				while(*term < 32 && *term > 0) term++;
 				if((byte)*term >= ' ' && (byte)*term <= 127 || *term == '\0') break;
@@ -325,7 +335,9 @@ void RichQtfParser::ReadObject()
 					seven >>= 1;
 				}
 			}
-		obj.Read(type, data, sz, context);
+			odata = data;
+		}
+		obj.Read(type, odata, sz, context);
 		obj.KeepRatio(keepratio);
 		obj.SetYDelta(yd);
 	}

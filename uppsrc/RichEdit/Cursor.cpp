@@ -55,6 +55,7 @@ void RichEdit::FinishNF()
 		sb = 0;
 	else
 		sb.ScrollInto(r.top, r.Height());
+	sb.ScrollInto(r.bottom, 1); // if r.Height is bigger than view height, make sure we rather see the bottom
 	SetZsc();
 	PageY top, bottom;
 	int sell = min(cursor, anchor);
