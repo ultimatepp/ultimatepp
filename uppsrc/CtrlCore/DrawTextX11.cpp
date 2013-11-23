@@ -229,14 +229,12 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	}
 	else {
 	//	if(dx) {
-	DLOG("------------");
 			int xpos = ox;
 			Buffer<XftCharSpec> ch(n);
 			for(int i = 0; i < n; i++) {
 				ch[i].ucs4 = text[i];
 				ch[i].x = xpos;
 				ch[i].y = oy + ascent;
-				DLOG((char)text[i] << ", " << font[text[i]] << ", " << xpos);
 				xpos += dx ? dx[i] : font[text[i]];
 			}
 			XftDrawCharSpec(xftdraw, &c, xftfont, ch, n);
