@@ -16,7 +16,7 @@ topic "OutFilterStream";
 ublic][3 _][*@3;3 Stream]&]
 [s2;%% Adapter Stream that glues an input stream with some filtering 
 object, typically of compression/decompression class.&]
-[s0;i448;a25;kKO9;:noref:@(0.0.255) &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:OutFilterStream`:`:Close`(`): [@(0.0.255) virtual] [@(0.0.255) void]_[* Close]()&]

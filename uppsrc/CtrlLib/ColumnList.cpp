@@ -249,7 +249,7 @@ dword ColumnList::SwapKey(dword key)
 
 bool ColumnList::Key(dword _key, int count) {
 	int c = cursor;
-	bool sel = _key & K_SHIFT;
+	bool sel = (_key & K_SHIFT) && multi;
 	int key = _key & ~K_SHIFT;
 	key = SwapKey(key);
 	switch(key) {
