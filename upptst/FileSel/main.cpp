@@ -8,6 +8,8 @@ GUI_APP_MAIN
 	sel.AllFilesType();
 	sel.Type("Test2", "*.tst");
 	sel.ActiveType(1);
+	for(int i = 0; i < sel.GetCount(); i++)
+		DDUMP(sel[i]);
 	sel.Multi();
 	if(!sel.ExecuteSaveAs("Test!"))
 		return;

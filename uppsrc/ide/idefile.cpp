@@ -730,10 +730,17 @@ void Ide::ReloadFile()
 
 void Ide::EditAnyFile() {
 	FileSel& fs = AnySourceFs();
+#if 0
 	fs.Multi(false);
 	if(!fs.ExecuteOpen()) return;
 	EditFile(fs);
 	FileSelected();
+#endif
+	if(fs.ExecuteOpen())
+		for(int i = 0; i < fs.GetCount(); i++) {
+			EditFile(fs[i]);
+			FileSelected();
+		}
 }
 
 void Ide::DragAndDrop(Point, PasteClip& d)
