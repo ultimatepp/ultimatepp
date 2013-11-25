@@ -44,31 +44,6 @@ void FontSysData::Init(Font font, int angle)
 	cairo_font_options_t *opt = cairo_font_options_create();
 	scaled_font = cairo_scaled_font_create(font_face, font_matrix, ctm, opt);
 
-#if 0
-	int synth = 0;
-	FT_Face ft = cairo_ft_scaled_font_lock_face(scaled_font);
-	if(ft) {
-//		if(font.IsBold() && !(ft->style_flags & FT_STYLE_FLAG_BOLD))
-//			synth |= CAIRO_FT_SYNTHESIZE_BOLD;    
-		if() {
-			FT_Matrix    transform;
-			transform.xx = 0x10000L;
-			transform.yx = 0x00000L;
-			
-			transform.xy = 0x03000L;
-			transform.yy = 0x10000L;
-			
-			FT_Outline_Transform( outline, &transform );
-		}
-		//	synth |= CAIRO_FT_SYNTHESIZE_OBLIQUE;
-	 	cairo_ft_scaled_font_unlock_face(scaled_font);
-	}
-//	if(synth) {
-//		cairo_ft_font_face_set_synthesize(font_face, synth);
- //		cairo_scaled_font_destroy(scaled_font);
-//		scaled_font = cairo_scaled_font_create(font_face, font_matrix, ctm, opt);
-//	}
-#endif
 	cairo_font_options_destroy(opt);
  	cairo_font_face_destroy(font_face);
 }

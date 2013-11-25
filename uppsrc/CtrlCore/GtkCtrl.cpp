@@ -30,7 +30,22 @@ bool Ctrl::GuiPlatformSetFullRefreshSpecial()
 
 String GuiPlatformGetKeyDesc(dword key)
 {
-	return Null;
+	static Tuple2<dword, const char *> nkey[] = {
+		{ K_DELTA|GDK_KEY_grave, "[`]" },
+		{ K_DELTA|GDK_KEY_minus, "[-]" },
+		{ K_DELTA|GDK_KEY_equal, "[=]" },
+		{ K_DELTA|GDK_KEY_backslash, "[\\]" },
+		{ K_DELTA|GDK_KEY_bracketleft, "[[]" },
+		{ K_DELTA|GDK_KEY_bracketright, "[]]" },
+		{ K_DELTA|GDK_KEY_semicolon, "[;]" },
+		{ K_DELTA|GDK_KEY_apostrophe, "[']" },
+		{ K_DELTA|GDK_KEY_comma, "[,]" },
+		{ K_DELTA|GDK_KEY_period, "[.]" },
+		{ K_DELTA|GDK_KEY_underscore, "[/]" },
+		{ 0, NULL }
+	};
+	const Tuple2<dword, const char *> *x = FindTuple(nkey, __countof(nkey), key);
+	return x ? String(x->b) : String();
 }
 
 void GuiPlatformAdjustDragImage(ImageBuffer&)
