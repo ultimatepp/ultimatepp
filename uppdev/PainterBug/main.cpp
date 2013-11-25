@@ -56,7 +56,6 @@ public:
 
 HelloWorld::HelloWorld()
 {
-	SetTimeCallback(-1, THISBACK(Animate));
 	BackPaint();
 	Zoomable().Sizeable();
 	pos = 0;
@@ -84,8 +83,12 @@ void HelloWorld::Animate()
 
 void HelloWorld::Paint(Draw& w)
 {
-	w.DrawRect(GetSize(), White());
-	DrawFrame(w, Size(pos, pos), InvertColor);
+	ImagePainter iw(50, 50);
+//	iw.Clear(RGBAZero());
+	iw.DrawImage(0, 0, CtrlImg::exclamation());
+	Image m = iw;
+	w.DrawRect(GetSize(), Gray);
+	w.DrawImage(100, 100, m);
 }
 
 GUI_APP_MAIN
