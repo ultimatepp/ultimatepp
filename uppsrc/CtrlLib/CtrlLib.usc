@@ -1036,6 +1036,8 @@ ctrl DropTime {
 	bool  SelectAll = true;
 	bool  SwapMonthYear = false;
 	bool  Seconds = true;
+	bool  DayEnd = false;
+	bool  TimeAlways = false;
 	bool  NotNull = false;
 	Frame SetFrame = InsetFrame();
 	bool  SetEditable = true @2 ? "Editable";
