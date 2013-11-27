@@ -212,9 +212,11 @@ Value StrDblValue(const char *s)
 	return (double)Null;
 }
 
-Value Scan(dword qtype, const String& text, const Value& def) {
+Value Scan(dword qtype, const String& text, const Value& def, bool *hastime) {
 	Date date;
 	const char *s;
+	if(hastime)
+		*hastime = false;
 	switch(qtype) {
 	case INT64_V:
 	case INT_V:
@@ -245,6 +247,8 @@ Value Scan(dword qtype, const String& text, const Value& def) {
 				tm.second = d.second;
 				if(p.IsEof())
 					return tm;
+				if(hastime)
+					*hastime = true;
 				int q = p.ReadInt();
 				if(q < 0 || q > 23)
 					throw CParser::Error("");
@@ -423,6 +427,8 @@ int   ConvertDate::Filter(int chr) const {
 ConvertTime::ConvertTime(Time minval, Time maxval, bool notnull)
 : minval(minval), maxval(maxval), notnull(notnull), seconds(true) {
 	defaultval = Null;
+	timealways = false;
+	dayend = false;
 }
 
 ConvertTime::~ConvertTime()
@@ -431,10 +437,17 @@ ConvertTime::~ConvertTime()
 
 Value ConvertTime::Scan(const Value& text) const
 {
-	Value v = UPP::Scan(TIME_V, text);
+	bool hastime;
+	Value v = UPP::Scan(TIME_V, text, defaultval, &hastime);
 	if(IsError(v)) return v;
 	if(IsNull(v)) return notnull ? NotNullError() : v;
 	Time m = v;
+	if(!hastime && dayend) {
+		m.hour = 23;
+		m.minute = 59;
+		m.second = 59;
+		v = m;
+	}
 	if(m >= minval && m <= maxval) return v;
 	return ErrorValue(t_("Time must be between ") + UPP::Format(minval) + t_("range\v and ") + UPP::Format(maxval) + ".");
 }
@@ -452,8 +465,9 @@ Value ConvertTime::Format(const Value& q) const
 {
 	if(IsVoid(q) || q.IsNull())
 		return String();
-	else if(q.GetType() == TIME_V)
-		return UPP::Format(Time(q), seconds);
+	else
+	if(q.GetType() == TIME_V || timealways)
+		return ToTime((Date)q) != (Time)q || timealways ? UPP::Format(Time(q), seconds) : UPP::Format(Date(q));
 	else
 		return Convert::Format(q);
 }
