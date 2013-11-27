@@ -157,6 +157,8 @@ protected:
 	Time minval, maxval, defaultval;
 	bool notnull;
 	bool seconds;
+	bool timealways;
+	bool dayend;
 
 public:
 	ConvertTime& MinMax(Time _min, Time _max)      { minval = _min; maxval = _max; return *this; }
@@ -166,11 +168,15 @@ public:
 	ConvertTime& NoNotNull()                       { return NotNull(false); }
 	ConvertTime& Seconds(bool b = true)            { seconds = b; return *this; }
 	ConvertTime& NoSeconds()                       { return Seconds(false); }
+	ConvertTime& TimeAlways(bool b = true)         { timealways = b; return *this; }
+	ConvertTime& DayEnd(bool b = true)             { dayend = b; return *this; }
 	ConvertTime& Default(Time d)                   { defaultval = d; return *this; }
 	Time         GetMin() const                    { return minval; }
 	Time         GetMax() const                    { return maxval; }
 	bool         IsNotNull() const                 { return notnull; }
 	bool         IsSeconds() const                 { return seconds; }
+	bool         IsTimeAlways() const              { return timealways; }
+	bool         IsDayEnd() const                  { return dayend; }
 
 	ConvertTime(Time minval = ToTime(Date::Low()), Time maxval = ToTime(Date::High()), bool notnull = false);
 	virtual ~ConvertTime();

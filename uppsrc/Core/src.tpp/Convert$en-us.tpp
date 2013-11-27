@@ -420,6 +420,18 @@ ll]()&]
 otNull](false).&]
 [s3; &]
 [s4;%- &]
+[s5;:ConvertTime`:`:TimeAlways`(bool`):%- [_^ConvertTime^ ConvertTime][@(0.0.255) `&]_[* Ti
+meAlways]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; If active, Format always shows time, even if the Value is Date 
+or is at midnight.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertTime`:`:DayEnd`(bool`):%- [_^ConvertTime^ ConvertTime][@(0.0.255) `&]_[* DayEnd
+]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; If active, when Scan encounters date without time, it sets the 
+time to 23:59:59.&]
+[s3; &]
+[s4;%- &]
 [s5;:ConvertTime`:`:GetMin`(`)const:%- [_^Time^ Time]_[* GetMin]()_[@(0.0.255) const]&]
 [s7; [*/ Return value]-|Lower limit.&]
 [s3; &]
@@ -585,4 +597,4 @@ ll, Null, true)]&]
 [s2; [C^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertString`:`:class^1 ConvertString][C1 (
 INT`_MAX, true)]&]
 [s3;%- &]
-[s0; ]
+[s0; ]]

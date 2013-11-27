@@ -1,4 +1,4 @@
-Value Scan(dword stdtype, const String& text, const Value& def = Null);
+Value Scan(dword stdtype, const String& text, const Value& def = Null, bool *hastime = NULL);
 
 inline const String&  Nvl(const String& a, const String& b)    { return IsNull(a) ? b : a; }
 inline int            Nvl(int a, int b)                        { return IsNull(a) ? b : a; }
