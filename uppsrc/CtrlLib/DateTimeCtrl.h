@@ -428,7 +428,16 @@ class DateTimeCtrl : public T {
 	int mode;
 
 	void OnCalendarChoice() {
-		this->SetData(~cc.calendar);
+		Date dt = ~cc.calendar;
+		ConvertTime *cv = dynamic_cast<ConvertTime *>(this);
+		if(cv && cv->IsDayEnd()) {
+			Time tm = ToTime(dt);
+			tm.hour = 23;
+			tm.minute = tm.second = 59;
+			this->SetData(tm);
+		}
+		else
+			this->SetData(dt);
 		this->WhenAction();
 	}
 
