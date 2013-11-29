@@ -19,6 +19,13 @@ LAYOUT(EditDoubleLayout, 236, 62)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
 END_LAYOUT
 
+LAYOUT(EditDateLayout, 236, 62)
+	ITEM(Label, lbl, SetLabel(t_("Test")).LeftPosZ(4, 120).TopPosZ(4, 19))
+	ITEM(DropDate, date, HSizePosZ(128, 8).TopPosZ(4, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(80, -14).BottomPosZ(8, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 80).BottomPosZ(8, 22))
+END_LAYOUT
+
 LAYOUT(ProgressLayout, 320, 72)
 	ITEM(Button, stop, SetLabel(t_("Cancel")).HCenterPosZ(68, 0).BottomPosZ(4, 24))
 	UNTYPED(pi, HSizePosZ(4, 4).TopPosZ(28, 12))
