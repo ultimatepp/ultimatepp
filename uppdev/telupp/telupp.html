@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="myCanvas" width="200" height="100" style="border:1px solid #c3c3c3;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+<script>
+function Log(msg)
+{
+  if (window.console && console.log)
+    console.log(msg); //for firebug
+}
+
+function Char(p, ch)
+{
+	if(p.pos < p.text.length && (255 & p.text.charCodeAt(p.pos)) == ch) {
+		p.pos++;
+		return true;
+	}
+	return false;
+}
+
+function Get8(p)
+{
+	return p.pos < p.text.length ? (255 & p.text.charCodeAt(p.pos++)) : 0;
+}
+
+function Get16(p)
+{
+	var l = Get8(p);
+	var h = Get8(p);
+	return (h << 8) | l;
+}
+
+function ProcessDraw(s)
+{
+	var p = new Object;
+	p.text = s;
+	p.pos = 0;
+
+	var c=document.getElementById("myCanvas");
+	var ctx=c.getContext("2d");
+
+    while(p.pos < p.text.length) {
+    	Log(p.pos + ": " + p.text.charCodeAt(p.pos));
+        if(Char(p, 0)) {
+        	var x = Get16(p);
+        	var y = Get16(p);
+        	var cx = Get16(p);
+        	var cy = Get16(p);
+        	var r = Get8(p);
+        	var g = Get8(p);
+        	var b = Get8(p);
+        	Log("rect: " + x + ", " + y + ", " + cx + ", " + cy);
+        	var c = "rgb(" + r + "," + g + "," + b + ")";
+        	ctx.fillStyle = c;
+        	Log("color: " + c);
+        	ctx.fillRect(x, y, cx, cy);
+        }
+        else
+        	p.pos++;
+    }
+}
+
+
+var req = new XMLHttpRequest();
+req.open('GET', 'localhost', true);
+req.overrideMimeType('text/plain; charset=x-user-defined');
+req.send(null);
+Log("send");
+req.onreadystatechange = function() {
+	Log("onreadystatechange");
+	if(req.readyState == 4 && req.status == 200)
+		ProcessDraw(req.responseText);
+}
+
+</script>
+
+</body>
+</html>
