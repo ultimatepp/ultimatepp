@@ -200,6 +200,21 @@ bool EditNumber(double& n, const char *title, const char *label, double min, dou
 	return false;	
 }
 
+bool EditDateDlg(Date& d, const char *title, const char *label, Date min, Date max, bool notnull)
+{
+	WithEditDateLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, title);
+	dlg.lbl = label;
+	dlg.date <<= d;
+	dlg.date.MinMax(min, max);
+	if(dlg.Execute() == IDOK) {
+		d = ~dlg.date;
+		return true;
+	}
+	return false;	
+}
+
+
 Callback CtrlRetriever::operator<<=(Callback cb)
 {
 	for(int i = 0; i < item.GetCount(); i++) {
