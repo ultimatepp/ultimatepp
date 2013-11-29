@@ -107,7 +107,7 @@ int   TextCtrl::Load(Stream& s, byte charset) {
 		if(c == '\r')
 			cr = true;
 		if(c == '\n') {
-			if(b8 & 128) { // There are some chars > 127, need to convert
+			if(charset != CHARSET_UTF8 || (b8 & 128)) {
 				WString w = ToUnicode(~ln, ln.GetCount(), charset);
 				line.Add(w);
 				total += w.GetLength() + 1;
