@@ -101,18 +101,30 @@ int   TextCtrl::Load(Stream& s, byte charset) {
 		charset = CHARSET_UTF8;
 	}
 	bool cr = false;
+	byte b8 = 0;
 	while(!s.IsEof()) {
 		int c = s.Get();
 		if(c == '\r')
 			cr = true;
 		if(c == '\n') {
-			WString w = ToUnicode(~ln, ln.GetCount(), charset);
-			line.Add(w);
-			total += w.GetLength() + 1;
+			if(b8 & 128) { // There are some chars > 127, need to convert
+				WString w = ToUnicode(~ln, ln.GetCount(), charset);
+				line.Add(w);
+				total += w.GetLength() + 1;
+			}
+			else {
+				total += ln.GetCount() + 1;
+				Ln& l = line.Add();
+				l.len = ln.GetCount();
+				l.text = ln;
+			}
 			ln.Clear();
+			b8 = 0;
 		}
-		if(c >= ' ' || c == '\t')
+		if(c >= ' ' || c == '\t') {
+			b8 |= c;
 			ln.Cat(c);
+		}
 	}
 	WString w = ToUnicode(~ln, ln.GetCount(), charset);
 	line.Add(w);
