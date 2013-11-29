@@ -90,7 +90,7 @@ int   TextCtrl::Load(Stream& s, byte charset) {
 	Clear();
 	line.Clear();
 	ClearLines();
-	String ln;
+	StringBuffer ln;
 	total = 0;
 	SetCharset(charset);
 	if(charset == CHARSET_UTF8_BOM && s.GetLeft() >= 3) {
@@ -106,17 +106,15 @@ int   TextCtrl::Load(Stream& s, byte charset) {
 		if(c == '\r')
 			cr = true;
 		if(c == '\n') {
-			WString w = ToUnicode(ln, charset);
+			WString w = ToUnicode(~ln, ln.GetCount(), charset);
 			line.Add(w);
 			total += w.GetLength() + 1;
 			ln.Clear();
-			ln.Reserve(1000);
 		}
 		if(c >= ' ' || c == '\t')
 			ln.Cat(c);
 	}
-	ln.Shrink();
-	WString w = ToUnicode(ln, charset);
+	WString w = ToUnicode(~ln, ln.GetCount(), charset);
 	line.Add(w);
 	total += w.GetLength();
 	InsertLines(0, line.GetCount());
