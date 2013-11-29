@@ -1,0 +1,13 @@
+uses
+	Core,
+	Draw;
+
+file
+	telupp.h,
+	TelDraw.cpp,
+	telupp.cpp,
+	telupp.html;
+
+mainconfig
+	"" = "SSE2";
+
