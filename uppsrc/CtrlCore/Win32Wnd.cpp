@@ -754,7 +754,7 @@ void Ctrl::UnregisterSystemHotKey(int id)
 void Ctrl::sProcessMSG(MSG& msg)
 {
 	if (msg.message == WM_HOTKEY) {
-		if(msg.wParam >= 0 && (int)msg.wParam < Ctrl::hotkey.GetCount())
+		if((int)msg.wParam >= 0 && (int)msg.wParam < Ctrl::hotkey.GetCount())
 			Ctrl::hotkey[(int)msg.wParam]();
 		return;
 	}
