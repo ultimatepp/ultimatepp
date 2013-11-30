@@ -1,9 +1,18 @@
 #include "telupp.h"
 
+#define IMAGECLASS TeltestImg
+#define IMAGEFILE <telupp/teltest.iml>
+#include <Draw/iml_header.h>
+
+#define IMAGECLASS TeltestImg
+#define IMAGEFILE <telupp/teltest.iml>
+#include <Draw/iml_source.h>
+
 void DrawSomething(Draw& w)
 {
 	w.DrawRect(0, 0, 100, 100, LtGray);
 	w.DrawRect(30, 30, 25, 50, Red);
+	w.DrawImage(10, 10, TeltestImg::Test());
 }
 
 TcpSocket   server;

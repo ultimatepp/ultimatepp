@@ -36,23 +36,24 @@ function Get16(p)
 
 function ProcessDraw(s)
 {
+	var x, y, cx, cy, r, g, b, imgData, i, n, px, py;
 	var p = new Object;
 	p.text = s;
 	p.pos = 0;
 
-	var c=document.getElementById("myCanvas");
-	var ctx=c.getContext("2d");
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
 
     while(p.pos < p.text.length) {
     	Log(p.pos + ": " + p.text.charCodeAt(p.pos));
         if(Char(p, 0)) {
-        	var x = Get16(p);
-        	var y = Get16(p);
-        	var cx = Get16(p);
-        	var cy = Get16(p);
-        	var r = Get8(p);
-        	var g = Get8(p);
-        	var b = Get8(p);
+        	x = Get16(p);
+        	y = Get16(p);
+        	cx = Get16(p);
+        	cy = Get16(p);
+        	r = Get8(p);
+        	g = Get8(p);
+        	b = Get8(p);
         	Log("rect: " + x + ", " + y + ", " + cx + ", " + cy);
         	var c = "rgb(" + r + "," + g + "," + b + ")";
         	ctx.fillStyle = c;
@@ -60,10 +61,23 @@ function ProcessDraw(s)
         	ctx.fillRect(x, y, cx, cy);
         }
         else
-        	p.pos++;
-    }
+        if(Char(p, 1)) {
+        	cx = Get16(p);
+        	cy = Get16(p);
+			imgData = ctx.createImageData(cx, cy);
+			n = icx * icy * 4;
+			for(i = 0; i < n; i++)
+				imgData.data[i] = Get8(p);
+			px = Get16(p);
+			py = Get16(p);
+        	x = Get16(p);
+        	y = Get16(p);
+        	cx = Get16(p);
+        	cy = Get16(p);
+        	ctx.putImageData(imgData, px, py, x, y, cx, cy);
+		}
+	}			
 }
-
 
 var req = new XMLHttpRequest();
 req.open('GET', 'localhost', true);
