@@ -1,14 +1,9 @@
 #ifndef _telupp_telupp_h_
 #define _telupp_telupp_h_
 
-#include <Draw/Draw.h>
+#include <RichText/RichText.h>
 
 using namespace Upp;
-
-enum Code {
-	DRAW_RECT = 0,
-	DRAW_IMAGE = 1,
-};
 
 struct TelDraw : public SDraw {
 public:
@@ -16,6 +11,14 @@ public:
 	virtual void  PutRect(const Rect& r, Color color);
 	
 public:	
+	enum Code {
+		RECT = 0,
+		IMAGE = 1,
+		SETIMAGE = 2,
+	};
+	
+	Index<int64>                  img_index;
+
 	StringBuffer result;
 
 	void Put8(int x)              { result.Cat(x); }
@@ -23,7 +26,6 @@ public:
 	void Put(Point p);
 	void Put(Size sz);
 	void Put(const Rect& r);
-
 };
 
 #endif

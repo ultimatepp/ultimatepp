@@ -1,13 +1,16 @@
 uses
 	Core,
-	Draw;
+	Draw,
+	RichText,
+	Painter;
 
 file
 	telupp.h,
 	teltest.iml,
 	TelDraw.cpp,
+	telupp.html,
 	telupp.cpp,
-	telupp.html;
+	test.qtf;
 
 mainconfig
 	"" = "SSE2";
