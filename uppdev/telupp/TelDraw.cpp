@@ -25,22 +25,31 @@ void TelDraw::Put(const Rect& r)
 
 void TelDraw::PutImage(Point p, const Image& img, const Rect& src)
 {
-	Put8(DRAW_IMAGE);
-	Put(img.GetSize());
-	const RGBA *end = ~img + img.GetLength();
-	for(const RGBA *s = ~img; s < end; s++) {
-		Put8(s->r);
-		Put8(s->g);
-		Put8(s->b);
-		Put8(s->a);
+	int id = img.GetSerialId();
+	int q = img_index.Find(id);
+	if(q < 0) { // TODO: Implement some sort of victim elimination
+		q = img_index.GetCount();
+		img_index.Add(id);
+		Put8(SETIMAGE);
+		Put16(q);
+		Put(img.GetSize());
+		const RGBA *end = ~img + img.GetLength();
+		for(const RGBA *s = ~img; s < end; s++) {
+			Put8(s->r);
+			Put8(s->g);
+			Put8(s->b);
+			Put8(s->a);
+		}
 	}
+	Put8(IMAGE);
+	Put16(q);
 	Put(p);
 	Put(src);
 }
 
 void TelDraw::PutRect(const Rect& r, Color color)
-{
-	Put8(DRAW_RECT);
+{ // TODO: Support InvertColor
+	Put8(RECT);
 	Put(r);
 	Put8(color.GetR());
 	Put8(color.GetG());

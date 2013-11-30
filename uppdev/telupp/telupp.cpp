@@ -8,11 +8,29 @@
 #define IMAGEFILE <telupp/teltest.iml>
 #include <Draw/iml_source.h>
 
+int mouse_x, mouse_y;
+
 void DrawSomething(Draw& w)
 {
-	w.DrawRect(0, 0, 100, 100, LtGray);
-	w.DrawRect(30, 30, 25, 50, Red);
-	w.DrawImage(10, 10, TeltestImg::Test());
+	w.DrawRect(0, 0, 1000, 1000, White);
+//	ParseQTF(LoadFile(GetDataFile("test.qtf"))).Paint(Zoom(2, 10), w, 20, 20, 500);
+	w.DrawImage(mouse_x, mouse_y, TeltestImg::Test());
+}
+
+void ProcessEventQueue(const String& event_queue)
+{
+	StringStream ss(event_queue);
+	while(!ss.IsEof()) {
+		String s = ss.GetLine();
+		CParser p(s);
+		try {
+			if(p.Id("MM")) {
+				mouse_x = p.ReadInt();
+				mouse_y = p.ReadInt();
+			}
+		}
+		catch(CParser::Error) {}
+	}
 }
 
 TcpSocket   server;
@@ -24,19 +42,33 @@ void Server()
 {
 	for(;;) {
 		TcpSocket socket;
-		LOG("Waiting...");
+//		LOG("Waiting...");
 		ServerMutex.Enter();
 		bool b = socket.Accept(server);
 		ServerMutex.Leave();
 		if(b) {
-			LOG("Connection accepted");
+//			LOG("Connection accepted");
 			HttpHeader http;
+			TimeStop tm;
 			http.Read(socket);
-			DDUMP(http.GetURI());
+//			DDUMP(http.GetURI());
+//			DDUMP(http.GetContentLength());
+			String event_queue = socket.Get((int)http.GetContentLength());
+//			DDUMP(event_queue);
+			
+			ProcessEventQueue(event_queue);
+			
+			TelDraw draw;
+			draw.Init(Size(1000, 1000));
+			DrawSomething(draw);
+
+			String content = draw.result;
+
 			if(http.GetURI().GetCount() < 2)
 				HttpResponse(socket, http.scgi, 200, "OK", "text/html", LoadFile(GetDataFile("telupp.html")));
 			else	
 				HttpResponse(socket, http.scgi, 200, "OK", "text/plain; charset=x-user-defined", content);
+			DDUMP(tm);
 		}
 	}
 }
@@ -45,15 +77,7 @@ void Server()
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
-
-	TelDraw draw;
-	draw.Init(Size(400, 400));
-	DrawSomething(draw);
 	
-	content = draw.result;
-	
-	DUMPHEX(content);
-
 	if(!server.Listen(80, 10)) {
 		LOG("Cannot open server port for listening\r\n");
 		return;

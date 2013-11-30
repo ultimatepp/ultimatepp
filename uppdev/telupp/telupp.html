@@ -2,15 +2,15 @@
 <html>
 <body>
 
-<canvas id="myCanvas" width="200" height="100" style="border:1px solid #c3c3c3;">
+<canvas id="myCanvas" width="1000" height="1000" style="border:1px solid #c3c3c3;">
 Your browser does not support the HTML5 canvas tag.
 </canvas>
 
 <script>
 function Log(msg)
 {
-  if (window.console && console.log)
-    console.log(msg); //for firebug
+	if (window.console && console.log)
+    	console.log(msg); //for firebug
 }
 
 function Char(p, ch)
@@ -61,34 +61,87 @@ function ProcessDraw(s)
         	ctx.fillRect(x, y, cx, cy);
         }
         else
-        if(Char(p, 1)) {
+        if(Char(p, 2)) {
+        	r = Get16(p);
         	cx = Get16(p);
         	cy = Get16(p);
+			n = cx * cy * 4;
 			imgData = ctx.createImageData(cx, cy);
-			n = icx * icy * 4;
 			for(i = 0; i < n; i++)
 				imgData.data[i] = Get8(p);
-			px = Get16(p);
-			py = Get16(p);
+        	var img = document.createElement('canvas');
+			img.width = cx;
+			img.height = cy;
+			img.getContext("2d").putImageData(imgData, 0, 0);
+        	window.img_cache[r] = img;
+        }
+        else
+        if(Char(p, 1)) {
+        	n = Get16(p);
+
+        	px = Get16(p);
+        	py = Get16(p);
         	x = Get16(p);
         	y = Get16(p);
         	cx = Get16(p);
         	cy = Get16(p);
-        	ctx.putImageData(imgData, px, py, x, y, cx, cy);
+			
+			ctx.drawImage(window.img_cache[n], x, y, cx, cy, px, py, cx, cy);
 		}
 	}			
 }
 
-var req = new XMLHttpRequest();
-req.open('GET', 'localhost', true);
-req.overrideMimeType('text/plain; charset=x-user-defined');
-req.send(null);
-Log("send");
-req.onreadystatechange = function() {
-	Log("onreadystatechange");
-	if(req.readyState == 4 && req.status == 200)
-		ProcessDraw(req.responseText);
+window.img_cache = {};
+window.event_queue = "";
+
+var canvas = document.getElementById("myCanvas");
+
+canvas.onmousedown = function(event)
+{
+	event_queue += "MD " + event.button + " " + event.clientX + " " + event.clientY + "\n";
+	Ping();
 }
+
+canvas.onmouseup = function(event)
+{
+	event_queue += "MU " + event.button + " " + event.clientX + " " + event.clientY + "\n";
+	Ping();
+}
+
+canvas.onmousemove = function(event)
+{
+	event_queue += "MM " + event.clientX + " " + event.clientY + "\n";
+	Ping();
+}
+
+var Processing = false;
+var timerID;
+
+function Ping()
+{
+	if(!Processing) {
+		Processing = true;
+		var req = new XMLHttpRequest();
+		req.open('POST', 'localhost', true);
+		req.overrideMimeType('text/plain; charset=x-user-defined');
+		Log("SEND");
+		req.send(event_queue);
+		event_queue = "";
+		req.onreadystatechange = function() {
+			Log("onreadystatechange");
+			if(req.readyState == 4 && req.status == 200) {
+				ProcessDraw(req.responseText);
+				Processing = false; // TODO: Resolve timeout
+				Log("FINISH");
+			}
+		}
+	}
+	if(timerID != undefined)
+		clearTimeout(timerID);
+	setTimeout(Ping, 20);
+}
+
+Ping();
 
 </script>
 
