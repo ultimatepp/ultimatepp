@@ -82,6 +82,15 @@ is determined, it is then stored (in private Image instance variable)
 for future use and returned.&]
 [s3; &]
 [s4; &]
+[s5;:Image`:`:Begin`(`)const: [@(0.0.255) const]_[_^RGBA^ RGBA]_`*[* Begin]()_[@(0.0.255) con
+st]&]
+[s2;%% Returns a pointer to the first pixel.&]
+[s3; &]
+[s4; &]
+[s5;:Image`:`:End`(`)const: [@(0.0.255) const]_[_^RGBA^ RGBA]_`*[* End]()_[@(0.0.255) const]&]
+[s2;%% Returns Begin() `+ GetLength().&]
+[s3; &]
+[s4; &]
 [s5;:Image`:`:GetSerialId`(`)const: [_^int64^ int64]_GetSerialId()[@(64) _][@(0.0.255) cons
 t]&]
 [s2;%% Returns the unique, per application run, identifier of Image. 
