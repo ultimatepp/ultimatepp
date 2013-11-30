@@ -156,11 +156,6 @@ Image& Image::operator=(const Image& img)
 	return *this;
 }
 
-const RGBA* Image::operator~() const
-{
-	return data ? ~data->buffer : NULL;
-}
-
 Point Image::GetHotSpot() const
 {
 	return data ? data->buffer.GetHotSpot() : Point(0, 0);

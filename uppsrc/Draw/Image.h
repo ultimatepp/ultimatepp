@@ -157,10 +157,6 @@ private:
 	void         SetAuxData(uint64 data);
 
 public:
-	const RGBA*    operator~() const;
-	operator const RGBA*() const              { return data ? ~data->buffer : NULL; }
-	const RGBA* operator[](int i) const       { ASSERT(data); return data->buffer[i]; }
-
 	Size  GetSize() const                     { return data ? data->buffer.GetSize() : Size(0, 0); }
 	int   GetWidth() const                    { return GetSize().cx; }
 	int   GetHeight() const                   { return GetSize().cy; }
@@ -171,6 +167,12 @@ public:
 	Size  GetDPI();	
 	int   GetKindNoScan() const;
 	int   GetKind() const;
+
+	const RGBA *Begin() const                 { return data ? ~data->buffer : NULL; } 
+	const RGBA *End() const                   { return Begin() + GetLength(); }
+	const RGBA* operator~() const             { return Begin(); }
+	operator const RGBA*() const              { return Begin(); }
+	const RGBA* operator[](int i) const       { ASSERT(data); return data->buffer[i]; }
 
 	int64 GetSerialId() const                 { return data ? data->serial : 0; }
 	bool  IsSame(const Image& img) const      { return GetSerialId() == img.GetSerialId(); }
