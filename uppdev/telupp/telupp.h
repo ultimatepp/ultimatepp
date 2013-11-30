@@ -17,7 +17,10 @@ public:
 		SETIMAGE = 2,
 	};
 	
-	Index<int64>                  img_index;
+	static Index<int64>           img_index;
+	
+	static int GetImageI(TelDraw& w, const Image& img);
+	static void ResetI()          { img_index.Clear(); }
 
 	StringBuffer result;
 

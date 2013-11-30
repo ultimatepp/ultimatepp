@@ -13,7 +13,8 @@ int mouse_x, mouse_y;
 void DrawSomething(Draw& w)
 {
 	w.DrawRect(0, 0, 1000, 1000, White);
-//	ParseQTF(LoadFile(GetDataFile("test.qtf"))).Paint(Zoom(2, 10), w, 20, 20, 500);
+	ParseQTF(LoadFile(GetDataFile("test.qtf"))).Paint(Zoom(2, 10), w, 20, 20, 500);
+	w.DrawText(10, 10, AsString(mouse_x) + ' ' + AsString(mouse_y));
 	w.DrawImage(mouse_x, mouse_y, TeltestImg::Test());
 }
 
@@ -24,6 +25,9 @@ void ProcessEventQueue(const String& event_queue)
 		String s = ss.GetLine();
 		CParser p(s);
 		try {
+			if(p.Id("RI"))
+				TelDraw::ResetI();
+			else
 			if(p.Id("MM")) {
 				mouse_x = p.ReadInt();
 				mouse_y = p.ReadInt();
@@ -54,7 +58,7 @@ void Server()
 //			DDUMP(http.GetURI());
 //			DDUMP(http.GetContentLength());
 			String event_queue = socket.Get((int)http.GetContentLength());
-//			DDUMP(event_queue);
+			DDUMP(event_queue);
 			
 			ProcessEventQueue(event_queue);
 			
@@ -63,6 +67,9 @@ void Server()
 			DrawSomething(draw);
 
 			String content = draw.result;
+			
+			DDUMP(content.GetLength());
+			DDUMP(ZCompress(content).GetLength());
 
 			if(http.GetURI().GetCount() < 2)
 				HttpResponse(socket, http.scgi, 200, "OK", "text/html", LoadFile(GetDataFile("telupp.html")));
@@ -76,7 +83,7 @@ void Server()
 
 CONSOLE_APP_MAIN
 {
-	StdLogSetup(LOG_COUT|LOG_FILE);
+//	StdLogSetup(LOG_COUT|LOG_FILE);
 	
 	if(!server.Listen(80, 10)) {
 		LOG("Cannot open server port for listening\r\n");

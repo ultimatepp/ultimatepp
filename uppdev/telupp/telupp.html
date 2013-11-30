@@ -1,5 +1,17 @@
 <!DOCTYPE html>
 <html>
+
+<head>
+<style>
+html, body {
+  width:  100%;
+  height: 100%;
+  margin: 0px;
+  overflow: hidden;
+}
+</style>
+</head>
+
 <body>
 
 <canvas id="myCanvas" width="1000" height="1000" style="border:1px solid #c3c3c3;">
@@ -74,6 +86,7 @@ function ProcessDraw(s)
 			img.height = cy;
 			img.getContext("2d").putImageData(imgData, 0, 0);
         	window.img_cache[r] = img;
+        	Log("Set image: " + r);
         }
         else
         if(Char(p, 1)) {
@@ -85,14 +98,15 @@ function ProcessDraw(s)
         	y = Get16(p);
         	cx = Get16(p);
         	cy = Get16(p);
-			
+
+			Log("Draw image: " + n);			
 			ctx.drawImage(window.img_cache[n], x, y, cx, cy, px, py, cx, cy);
 		}
 	}			
 }
 
 window.img_cache = {};
-window.event_queue = "";
+window.event_queue = "RI\n";
 
 var canvas = document.getElementById("myCanvas");
 
@@ -114,6 +128,14 @@ canvas.onmousemove = function(event)
 	Ping();
 }
 
+function ResizeCanvas()
+{
+	canvas.width  = window.innerWidth;
+	canvas.height = window.innerHeight;
+}
+
+window.onresize = ResizeCanvas();
+
 var Processing = false;
 var timerID;
 
@@ -124,7 +146,6 @@ function Ping()
 		var req = new XMLHttpRequest();
 		req.open('POST', 'localhost', true);
 		req.overrideMimeType('text/plain; charset=x-user-defined');
-		Log("SEND");
 		req.send(event_queue);
 		event_queue = "";
 		req.onreadystatechange = function() {
@@ -132,7 +153,6 @@ function Ping()
 			if(req.readyState == 4 && req.status == 200) {
 				ProcessDraw(req.responseText);
 				Processing = false; // TODO: Resolve timeout
-				Log("FINISH");
 			}
 		}
 	}
@@ -141,9 +161,10 @@ function Ping()
 	setTimeout(Ping, 20);
 }
 
+ResizeCanvas();
+
 Ping();
 
 </script>
-
 </body>
 </html>
