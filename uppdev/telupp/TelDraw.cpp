@@ -25,6 +25,17 @@ void TelDraw::Put(const Rect& r)
 
 void TelDraw::PutImage(Point p, const Image& img, const Rect& src)
 {
+	Put8(DRAW_IMAGE);
+	Put(img.GetSize());
+	const RGBA *end = ~img + img.GetLength();
+	for(const RGBA *s = ~img; s < end; s++) {
+		Put8(s->r);
+		Put8(s->g);
+		Put8(s->b);
+		Put8(s->a);
+	}
+	Put(p);
+	Put(src);
 }
 
 void TelDraw::PutRect(const Rect& r, Color color)

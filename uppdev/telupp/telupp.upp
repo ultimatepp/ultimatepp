@@ -4,6 +4,7 @@ uses
 
 file
 	telupp.h,
+	teltest.iml,
 	TelDraw.cpp,
 	telupp.cpp,
 	telupp.html;
