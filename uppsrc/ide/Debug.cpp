@@ -27,6 +27,7 @@ void Ide::RunArgs() {
 
 	dlg.runmode <<= runmode;
 	dlg.external = runexternal;
+	dlg.forceconsole = forceconsole;
 	dlg.runmode <<= dlg.Breaker(222);
 
 	for(;;) {
@@ -38,6 +39,7 @@ void Ide::RunArgs() {
 			runarg  = ~dlg.arg;
 			runmode = ~dlg.runmode;
 			runexternal = dlg.external;
+			forceconsole = dlg.forceconsole;
 			stdout_file = ~dlg.stdout_file;
 			dlg.arg.AddHistory();
 			{
@@ -82,7 +84,7 @@ void Ide::BuildAndExecute()
 		switch(runmode) {
 		case RUN_WINDOW:
 			HideBottom();
-			h->Launch(cmdline, FindIndex(SplitFlags(mainconfigparam, true), "GUI") < 0);
+			h->Launch(cmdline, FindIndex(SplitFlags(mainconfigparam, true), "GUI") < 0 || forceconsole);
 			break;
 		case RUN_CONSOLE:
 			ShowConsole();

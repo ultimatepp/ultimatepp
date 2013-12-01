@@ -634,6 +634,7 @@ public:
 	enum      { RUN_WINDOW, RUN_CONSOLE, RUN_FILE, RUN_FILE_CONSOLE };
 	int       runmode;
 	bool      runexternal;
+	bool      forceconsole;
 	String    stdout_file;
 	String    recent_stdout_file;
 
