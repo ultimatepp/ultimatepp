@@ -53,7 +53,7 @@ LAYOUT(CustomLayout, 608, 410)
 	ITEM(Button, exit, SetLabel(t_("Close")).RightPosZ(4, 80).BottomPosZ(4, 22))
 END_LAYOUT
 
-LAYOUT(RunLayout, 410, 144)
+LAYOUT(RunLayout, 410, 148)
 	ITEM(Label, dv___0, SetLabel(t_("&Program arguments:")).LeftPosZ(4, 100).TopPosZ(4, 19))
 	ITEM(WithDropChoice<EditString>, arg, HSizePosZ(106, 4).TopPosZ(4, 19))
 	ITEM(Label, dv___2, SetLabel(t_("&Working directory:")).LeftPosZ(4, 100).TopPosZ(28, 19))
@@ -63,6 +63,7 @@ LAYOUT(RunLayout, 410, 144)
 	ITEM(Label, dv___6, SetLabel(t_("Standard output:")).LeftPosZ(4, 100).TopPosZ(76, 19))
 	ITEM(Switch, runmode, SetLabel(t_("&Standalone\n&Console\n&File")).LeftPosZ(106, 196).TopPosZ(78, 19))
 	ITEM(Option, external, SetLabel(t_("&External application")).LeftPosZ(106, 122).TopPosZ(100, 15))
+	ITEM(Option, forceconsole, SetLabel(t_("&Always open console (POSIX)")).LeftPosZ(236, 160).TopPosZ(100, 15))
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(74, 64).BottomPosZ(4, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(6, 64).BottomPosZ(4, 24))
 END_LAYOUT

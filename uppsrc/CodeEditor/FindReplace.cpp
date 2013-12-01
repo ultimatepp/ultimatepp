@@ -593,7 +593,7 @@ void CodeEditor::ReplaceWildcard()
 			findreplace.replace.Insert('@');
 		}
 		else
-		if(iwc == '0') {
+		if(iwc == '1') {
 			findreplace.replace.Insert('@');
 			findreplace.replace.Insert('#');
 		}
