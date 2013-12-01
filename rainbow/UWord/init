@@ -5,6 +5,7 @@
 #include "PdfDraw/init"
 #include "plugin\jpg/init"
 #include "SDL20/init"
+#include "Telpp/init"
 #include "Skeleton/init"
 #include "WinAlt/init"
 #include "WinFb/init"

@@ -5,7 +5,8 @@ uses
 	RichEdit,
 	PdfDraw,
 	plugin\jpg,
-	SDL20;
+	SDL20,
+	Telpp;
 
 uses(SKELETON) Skeleton;
 
@@ -31,5 +32,6 @@ mainconfig
 	"" = "GUI SDLFB",
 	"" = "GUI WINGL",
 	"" = "GUI",
-	"" = "GUI SDL20";
+	"" = "GUI SDL20",
+	"" = "GUI TELPP";
 
