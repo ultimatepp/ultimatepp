@@ -1,0 +1,33 @@
+description "SDL20 U++ backend\377";
+
+uses
+	Painter,
+	CtrlLib,
+	GLDraw;
+
+library(POSIX) "SDL2 SDL2main GL";
+
+file
+	Telpp.h,
+	Keys.h,
+	After.h,
+	Local.h,
+	TelDraw.cpp,
+	Image.cpp,
+	FB.iml,
+	Ctrl.h,
+	DrawDragRect.cpp,
+	Ctrl.cpp,
+	Wnd.cpp,
+	Cursor.cpp,
+	Paint.cpp,
+	Event.cpp,
+	Top.h,
+	TopFrame.cpp,
+	Top.cpp,
+	Clip.cpp,
+	DnD.cpp,
+	ChSysInit.cpp,
+	Telpp.brc,
+	Telpp.html;
+
