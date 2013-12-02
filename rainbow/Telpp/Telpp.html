@@ -14,7 +14,7 @@ html, body {
 
 <body>
 
-<canvas id="myCanvas" width="1000" height="1000" style="border:1px solid #c3c3c3;">
+<canvas id="myCanvas" width="1000" height="1000" style="border:0px" tabindex="1">
 Your browser does not support the HTML5 canvas tag.
 </canvas>
 
@@ -106,26 +106,41 @@ function ProcessDraw(s)
 }
 
 window.img_cache = {};
-window.event_queue = "RI\n";
+window.event_queue = "I\n";
 
 var canvas = document.getElementById("myCanvas");
 
 canvas.onmousedown = function(event)
 {
-	event_queue += "MD " + event.button + " " + event.clientX + " " + event.clientY + "\n";
+	event_queue += "D " + event.button + " " + event.clientX + " " + event.clientY + "\n";
 	Ping();
 }
 
 canvas.onmouseup = function(event)
 {
-	event_queue += "MU " + event.button + " " + event.clientX + " " + event.clientY + "\n";
+	event_queue += "U " + event.button + " " + event.clientX + " " + event.clientY + "\n";
 	Ping();
 }
 
-canvas.onmousemove = function(event)
+canvas.addEventListener('mousemove',
+	function(event)
+	{
+		event_queue += "M " + event.clientX + " " + event.clientY + "\n";
+		Ping();
+	},
+	
+	
+
+
+document.onkeydown = function(event)
 {
-	event_queue += "MM " + event.clientX + " " + event.clientY + "\n";
-	Ping();
+	Log("DoKeyDown " + event);
+	event_queue += "K " + event.keyCode + " " + event.which + "\n";
+}
+
+document.onkeyup = function(event)
+{
+	event_queue += "k " + event.keyCode + " " + event.which + "\n";
 }
 
 function ResizeCanvas()

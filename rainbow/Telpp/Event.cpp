@@ -254,6 +254,14 @@ void Ctrl::DoPaint()
 	}
 }
 
+void Ctrl::DoMouseButton(int event, CParser& p)
+{
+	int button = p.ReadInt();
+	int x = p.ReadInt();
+	int y = p.ReadInt();
+	DoMouseFB(decode(button, 0, LEFT, 2, RIGHT, MIDDLE)|event, Point(x, y));
+}
+
 bool Ctrl::ProcessEventQueue(const String& event_queue)
 {
 	StringStream ss(event_queue);
@@ -261,13 +269,27 @@ bool Ctrl::ProcessEventQueue(const String& event_queue)
 		String s = ss.GetLine();
 		CParser p(s);
 		try {
-			if(p.Id("RI"))
+			if(p.Id("I"))
 				SystemDraw::ResetI();
 			else
-			if(p.Id("MM")) {
+			if(p.Id("M")) {
 				int x = p.ReadInt();
 				int y = p.ReadInt();
 				DoMouseFB(MOUSEMOVE, Point(x, y), 0);
+			}
+			else
+			if(p.Id("D"))
+				DoMouseButton(DOWN, p);
+			else
+			if(p.Id("U"))
+				DoMouseButton(UP, p);
+			else
+			if(p.Id("K")) {
+				int code = p.ReadInt();
+				int which = p.ReadInt();
+				DoKeyFB(code, 1);
+				if(which)
+					DoKeyFB(which, 1);
 			}
 		}
 		catch(CParser::Error) {}
