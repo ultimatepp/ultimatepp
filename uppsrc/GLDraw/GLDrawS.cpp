@@ -116,15 +116,15 @@ void initializeGL()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void GLOrtho(float left, float right, float bottom, float top, float near, float far, GLuint u_projection)
+void GLOrtho(float left, float right, float bottom, float top, float near_, float far_, GLuint u_projection)
 {
 	float a = 2.0f / (right - left);
 	float b = 2.0f / (top - bottom);
-	float c = -2.0f / (far - near);
+	float c = -2.0f / (far_ - near_);
 
 	float tx = - (right + left) / (right - left);
 	float ty = - (top + bottom) / (top - bottom);
-	float tz = - (far + near) / (far - near);
+	float tz = - (far_ + near_) / (far_ - near_);
 	
 	float ortho[16] = {
 		a, 0, 0, 0,
@@ -330,10 +330,10 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 		h.top = s.top / iszf.cy;
 		h.bottom = s.bottom / iszf.cy;
 		float partial[] = {
-		    h.left, h.top,
-		    h.left, h.bottom,
-		    h.right, h.bottom,
-		    h.right, h.top,
+			(float)h.left, (float)h.top,
+			(float)h.left, (float)h.bottom,
+			(float)h.right, (float)h.bottom,
+			(float)h.right, (float)h.top,
 		};
 		tc = partial;
 	}
@@ -406,10 +406,10 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src, Color color)
 		h.top = s.top / iszf.cy;
 		h.bottom = s.bottom / iszf.cy;
 		float partial[] = {
-		    h.left, h.top,
-		    h.left, h.bottom,
-		    h.right, h.bottom,
-		    h.right, h.top,
+		    (float)h.left, (float)h.top,
+		    (float)h.left, (float)h.bottom,
+		    (float)h.right, (float)h.bottom,
+		    (float)h.right, (float)h.top,
 		};
 		tc = partial;
 	}
@@ -436,13 +436,13 @@ void GLDraw::Init(Size sz, uint64 context_)
 	}
 
 	gl_image.Use();
-	GLOrtho(0, sz.cx, sz.cy, 0, 0.0f, 1.0f, gl_image.GetUniform("u_projection"));
+	GLOrtho(0, (float)sz.cx, (float)sz.cy, 0, 0.0f, 1.0f, gl_image.GetUniform("u_projection"));
 
 	gl_image_colored.Use();
-	GLOrtho(0, sz.cx, sz.cy, 0, 0.0f, 1.0f, gl_image_colored.GetUniform("u_projection"));
+	GLOrtho(0, (float)sz.cx, (float)sz.cy, 0, 0.0f, 1.0f, gl_image_colored.GetUniform("u_projection"));
 
 	gl_rect.Use();
-	GLOrtho(0, sz.cx, sz.cy, 0, 0.0f, 1.0f, gl_rect.GetUniform("u_projection"));
+	GLOrtho(0, (float)sz.cx, (float)sz.cy, 0, 0.0f, 1.0f, gl_rect.GetUniform("u_projection"));
 }
 
 void GLDraw::Finish()
