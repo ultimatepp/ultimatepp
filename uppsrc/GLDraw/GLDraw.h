@@ -5,7 +5,7 @@
 
 #include "glew.h"
 
-#ifdef flagWINGL
+#ifdef PLATFORM_WIN32
 #include "wglew.h"
 #endif
 
