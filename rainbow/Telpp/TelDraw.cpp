@@ -29,7 +29,7 @@ Index<int64> SystemDraw::img_index;
 
 int SystemDraw::GetImageI(SystemDraw& w, const Image& img)
 {
-	int id = img.GetSerialId();
+	int64 id = img.GetSerialId();
 	int q = img_index.Find(id);
 	if(q < 0) { // TODO: Implement some sort of victim elimination
 		q = img_index.GetCount();

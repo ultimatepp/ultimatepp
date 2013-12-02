@@ -18,12 +18,11 @@ class DHCtrl : Ctrl {};
 #define GUI_APP_MAIN \
 void GuiMainFn_(); \
 \
-extern "C" int main(int argc, char *argv[]) { \
-	UPP::AppInit__(argc, (const char **)argv); \
-	FBInit(); \
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR lpCmdLine, int nCmdShow) { \
+	UPP::AppInitEnvironment__(); \
+	UPP::Ctrl::InitTelpp(); \
 	GuiMainFn_(); \
 	UPP::Ctrl::CloseTopCtrls(); \
-	FBDeInit(); \
 	return UPP::GetExitCode(); \
 } \
 \
