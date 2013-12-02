@@ -7,8 +7,8 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  LOG(x)
-#define LDUMP(x) DDUMP(x)
+#define LLOG(x)  // LOG(x)
+#define LDUMP(x) // DDUMP(x)
 #define LTIMING(x)
 
 static Point MousePos;
@@ -76,7 +76,7 @@ bool GetAlt()         { return modkeys & KM_ALT; }
 bool GetCapsLock()    { return modkeys & KM_CAPS; }
 
 dword fbKEYtoK(dword chr) {
-_TODO_
+	return chr + K_DELTA;
 /*
 	if(chr == SDLK_TAB)
 		chr = K_TAB;
@@ -287,13 +287,18 @@ bool Ctrl::ProcessEventQueue(const String& event_queue)
 			if(p.Id("K")) {
 				int code = p.ReadInt();
 				int which = p.ReadInt();
-				DoKeyFB(code, 1);
-				if(which)
-					DoKeyFB(which, 1);
+				DoKeyFB(which + K_DELTA, 1);
+			}
+			else
+			if(p.Id("C")) {
+				int code = p.ReadInt();
+				int which = p.ReadInt();
+				DoKeyFB(which, 1);
 			}
 		}
 		catch(CParser::Error) {}
 	}
+	return true;
 }
 
 bool Ctrl::IsWaitingEvent()
@@ -322,7 +327,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 		return false;
 	}
 	String event_queue = socket.Get((int)http.GetContentLength());
-	LDUMP(event_queue);
+	LOG(event_queue);
 	content.Clear();
 	bool r = ProcessEventQueue(event_queue);
 	_TODO_ // Resolve eventloop exit issue

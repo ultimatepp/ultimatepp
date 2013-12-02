@@ -14,7 +14,7 @@ NAMESPACE_UPP
 #define IMAGEFILE <Telpp/FB.iml>
 #include <Draw/iml_header.h>
 
-struct SystemDraw : public SDraw {
+class SystemDraw : public SDraw {
 public:
 	virtual void  PutImage(Point p, const Image& img, const Rect& src);
 	virtual void  PutRect(const Rect& r, Color color);

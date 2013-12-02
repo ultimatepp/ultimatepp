@@ -122,20 +122,14 @@ canvas.onmouseup = function(event)
 	Ping();
 }
 
-canvas.addEventListener('mousemove',
-	function(event)
-	{
-		event_queue += "M " + event.clientX + " " + event.clientY + "\n";
-		Ping();
-	},
-	
-	
-
-
 document.onkeydown = function(event)
 {
-	Log("DoKeyDown " + event);
 	event_queue += "K " + event.keyCode + " " + event.which + "\n";
+}
+
+document.onkeypress = function(event)
+{
+	event_queue += "C " + event.keyCode + " " + event.which + "\n";
 }
 
 document.onkeyup = function(event)

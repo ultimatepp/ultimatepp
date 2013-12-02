@@ -2,8 +2,7 @@ description "SDL20 U++ backend\377";
 
 uses
 	Painter,
-	CtrlLib,
-	GLDraw;
+	CtrlLib;
 
 library(POSIX) "SDL2 SDL2main GL";
 
