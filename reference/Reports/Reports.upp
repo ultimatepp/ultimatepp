@@ -1,4 +1,4 @@
-description "Report example";
+description "Report example\377";
 
 uses
 	CtrlLib,
