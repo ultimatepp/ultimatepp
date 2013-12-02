@@ -1,6 +1,6 @@
 #include <CtrlLib/CtrlLib.h>
-#include <GLCtrl/GLCtrl.h>
 #include <GLDraw/GLDraw.h>
+#include <GLCtrl/GLCtrl.h>
 
 using namespace Upp;
 
