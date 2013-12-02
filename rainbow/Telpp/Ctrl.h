@@ -35,6 +35,8 @@ private:
 	static void DragRectDraw0(const Vector<Rect>& clip, const Rect& rect, int n,
 	                          const byte *pattern, int animation);
 
+	static void DoMouseButton(int event, CParser& p);
+
 	friend struct PaintProxy__;
 	friend class TopWindowFrame;
 	friend class SystemDraw;
