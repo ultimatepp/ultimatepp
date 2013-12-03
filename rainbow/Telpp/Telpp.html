@@ -21,8 +21,8 @@ Your browser does not support the HTML5 canvas tag.
 <script>
 function Log(msg)
 {
-	if (window.console && console.log)
-    	console.log(msg); //for firebug
+//	if (window.console && console.log)
+ //   	console.log(msg); //for firebug
 }
 
 function Char(p, ch)
@@ -110,6 +110,12 @@ window.event_queue = "I\n";
 
 var canvas = document.getElementById("myCanvas");
 
+canvas.onmousemove = function(event)
+{
+	event_queue += "M " + event.clientX + " " + event.clientY + "\n";
+	Ping();
+}
+
 canvas.onmousedown = function(event)
 {
 	event_queue += "D " + event.button + " " + event.clientX + " " + event.clientY + "\n";
@@ -125,16 +131,19 @@ canvas.onmouseup = function(event)
 document.onkeydown = function(event)
 {
 	event_queue += "K " + event.keyCode + " " + event.which + "\n";
+	event.preventDefault();
 }
 
 document.onkeypress = function(event)
 {
 	event_queue += "C " + event.keyCode + " " + event.which + "\n";
+	event.preventDefault();
 }
 
 document.onkeyup = function(event)
 {
 	event_queue += "k " + event.keyCode + " " + event.which + "\n";
+	event.preventDefault();
 }
 
 function ResizeCanvas()

@@ -18,7 +18,7 @@ class DHCtrl : Ctrl {};
 #define GUI_APP_MAIN \
 void GuiMainFn_(); \
 \
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR lpCmdLine, int nCmdShow) { \
+extern "C" int main(int argc, const char **argv, const char **envptr) { \
 	UPP::AppInitEnvironment__(); \
 	UPP::Ctrl::InitTelpp(); \
 	GuiMainFn_(); \
