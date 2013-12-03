@@ -79,11 +79,11 @@ struct Heap {
 	};
 	static StaticMutex mutex;
 
-	Page      work[NKLASS][1];
-	Page      full[NKLASS][1];
-	Page     *empty[NKLASS];
-	FreeLink *cache[NKLASS];
-	int       cachen[NKLASS];
+	Page      work[NKLASS][1];   // circular list of pages that contain some empty blocks
+	Page      full[NKLASS][1];   // circular list of pages that contain NO empty blocks
+	Page     *empty[NKLASS];     // last fully freed page per klass (hot)
+	FreeLink *cache[NKLASS];     // hot frontend cache of small blocks
+	int       cachen[NKLASS];    // counter of small blocks that are allowed to be stored in cache
 
 	bool      initialized;
 
@@ -99,7 +99,7 @@ struct Heap {
 	FreeLink *remote_free;
 
 	static DLink big[1];
-	static Heap  aux;
+	static Heap  aux;           // Single global auxiliary heap to store orphans and global list of free pages
 
 #ifdef HEAPDBG
 	static void  DbgFreeFill(void *ptr, size_t size);

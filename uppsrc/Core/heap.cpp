@@ -44,7 +44,7 @@ void Heap::Init()
 void Heap::RemoteFree(void *ptr)
 {
 	LLOG("RemoteFree " << ptr);
-	Mutex::Lock __(mutex); // TODO: Go lockless!
+	Mutex::Lock __(mutex);
 	FreeLink *f = (FreeLink *)ptr;
 	f->next = remote_free;
 	remote_free = f;
@@ -68,7 +68,7 @@ void Heap::FreeRemote()
 }
 
 void Heap::Shutdown()
-{
+{ // Move all pages to global aux heap
 	LLOG("Shutdown");
 	Mutex::Lock __(mutex);
 	Init();

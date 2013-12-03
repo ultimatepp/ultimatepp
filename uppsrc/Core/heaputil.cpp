@@ -193,6 +193,13 @@ void Heap::Make(MemoryProfile& f)
 			f.allocated[qq] += p->active;
 			p = p->next;
 		}
+		if(empty[i])
+			f.freepages++;
+		p = aux.empty[i];
+		while(p) {
+			f.freepages++;
+			p = p->next;
+		}
 	}
 	int ii = 0;
 	int fi = 0;
