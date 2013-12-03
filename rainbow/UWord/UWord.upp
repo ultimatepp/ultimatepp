@@ -22,7 +22,8 @@ uses(WINGL) WinGl;
 
 file
 	UWord.cpp,
-	UWord.iml;
+	UWord.iml,
+	test.qtf;
 
 mainconfig
 	"" = "GUI SKELETON",
@@ -33,5 +34,5 @@ mainconfig
 	"" = "GUI WINGL",
 	"" = "GUI",
 	"" = "GUI SDL20",
-	"" = "GUI TELPP";
+	"" = "TELPP";
 

@@ -163,7 +163,7 @@ void Ctrl::DoMouseFB(int event, Point p, int zdelta)
 
 bool Ctrl::DoKeyFB(dword key, int cnt)
 {
-	LLOG("DoKeyFB " << GetKeyDesc(key) << ", " << cnt);
+	DLOG("DoKeyFB " << GetKeyDesc(key) << ", " << cnt);
 
 	bool b = DispatchKey(key, cnt);
 	SyncCaret();
@@ -290,6 +290,12 @@ bool Ctrl::ProcessEventQueue(const String& event_queue)
 				DoKeyFB(which + K_DELTA, 1);
 			}
 			else
+			if(p.Id("k")) {
+				int code = p.ReadInt();
+				int which = p.ReadInt();
+				DoKeyFB(K_KEYUP|(which + K_DELTA), 1);
+			}
+			else
 			if(p.Id("C")) {
 				int code = p.ReadInt();
 				int which = p.ReadInt();
@@ -327,7 +333,8 @@ bool Ctrl::ProcessEvents(bool *quit)
 		return false;
 	}
 	String event_queue = socket.Get((int)http.GetContentLength());
-	LOG(event_queue);
+	if(event_queue.GetCount())
+		LOG(event_queue);
 	content.Clear();
 	bool r = ProcessEventQueue(event_queue);
 	_TODO_ // Resolve eventloop exit issue

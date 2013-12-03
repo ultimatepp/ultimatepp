@@ -19,14 +19,13 @@ FileSel& PdfFs()
 	return fs;
 }
 
-class UWord : public TopWindow {
+struct UWord : public TopWindow {
 public:
 	virtual void DragAndDrop(Point, PasteClip& d);
 	virtual void FrameDragAndDrop(Point, PasteClip& d);
 	
 	virtual void ShutdownWindow();
 
-protected:
 	RichEdit   editor;
 	MenuBar    menubar;
 	ToolBar    toolbar;
@@ -274,7 +273,7 @@ GUI_APP_MAIN
 	       .DefaultExt("pdf");
 
 	LoadFromFile(callback(UWord::SerializeApp));
-	new UWord;
+	(new UWord)->editor.SetQTF(LoadFile(GetDataFile("test.qtf")));
 	Ctrl::EventLoop();
 	StoreToFile(callback(UWord::SerializeApp));
 }
