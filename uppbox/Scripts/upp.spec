@@ -79,13 +79,14 @@ programming. It provides:
 
 sed -e "s@-I((INCLUDES))@@g" uppsrc/Makefile.in >uppsrc/Makefile
 
-make -C uppsrc \
+make %{?_smp_mflags} \
+     -C uppsrc \
      -e LIBPATH=$(pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)     \
      -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)" \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/ide.out" \
 %if "%?fedora" != ""
-     -e LINKOPTIONS="$(pkg-config --libs libpng12 freetype2) "
+     -e LINKOPTIONS="$(pkg-config --libs libpng freetype2) "
 %endif
 
 # We remove WbemUuid.Lib to prevent strip application to crash at build time in Fedora
