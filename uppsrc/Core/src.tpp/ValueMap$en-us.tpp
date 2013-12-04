@@ -212,8 +212,9 @@ e][@(0.0.255) `&]_[* operator`[`]]([@(0.0.255) const]_[_^String^ String][@(0.0.2
 [s5;:ValueMap`:`:operator`[`]`(const int`)const:%- [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
 ]_[* operator`[`]]([@(0.0.255) const]_[@(0.0.255) int]_[*@3 key])_[@(0.0.255) const]&]
 [s2;%- [%% Returns value for ][*@3 key][%% . If ][*@3 key][%%  is not present, 
-returns void Value. ]Note: multiple overloads are required to 
-make Id and SqlId work with ValueMap.&]
+returns ErrorValue (which is also void and Null Value). ]Note: 
+multiple overloads are required to make Id and SqlId work with 
+ValueMap.&]
 [s3; &]
 [s4;%- &]
 [s5;:ValueMap`:`:GetAndClear`(const Value`&`):%- [_^Value^ Value]_[* GetAndClear]([@(0.0.255) c
