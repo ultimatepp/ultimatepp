@@ -2,3 +2,8 @@ Windows 7:
 
 Standard:     GetRichTextStdScreenZoom() = 102/600
 SansSerif(8): GetRichTextStdScreenZoom() = 68/600
+
+X11:
+
+GetRichTextStdScreenZoom() = 110/600
+GetRichTextStdScreenZoom() = 73/600

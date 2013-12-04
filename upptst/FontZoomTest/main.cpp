@@ -13,8 +13,8 @@ String AsString(const Zoom& m)
 GUI_APP_MAIN
 {
 	PromptYesNoCancel("This is an example of prompt Yes No Cancel!");
-	DDUMP(GetRichTextStdScreenZoom());
+	DUMP(GetRichTextStdScreenZoom());
 	SetStdFont(SansSerif(8));
 	PromptYesNoCancel("This is an example of prompt  Yes No Cancel after changing font!");
-	DDUMP(GetRichTextStdScreenZoom());
+	DUMP(GetRichTextStdScreenZoom());
 }
