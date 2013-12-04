@@ -55,7 +55,9 @@ class Font : public ValueType<Font, FONT_V, Moveable<Font> >{
 
 	static Font AStdFont;
 	static Size StdFontSize;
+	static bool std_font_override;
 
+	static void SetStdFont0(Font font);
 	static Vector<FaceInfo>& FaceList();
 	static void SyncStdFont();
 	static void InitStdFont();
@@ -79,6 +81,7 @@ public:
 	static dword  GetFaceInfo(int index);
 	static void   SetFace(int index, const String& name, dword info);
 
+	static void   SetDefaultFont(Font font);
 	static void   SetStdFont(Font font);
 	static Font   GetStdFont();
 	static Size   GetStdFontSize();
