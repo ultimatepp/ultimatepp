@@ -2,9 +2,19 @@
 
 using namespace Upp;
 
+namespace Upp {
+template<>
+String AsString(const Zoom& m)
+{
+	return String().Cat() << m.m << '/' << m.d;
+}
+};
+
 GUI_APP_MAIN
 {
-	PromptYesNoCancel("&&&&This is an example of prompt!");
-	SetStdFont(Serif(10));
-	PromptYesNoCancel("&&&&This is an example of prompt after changing font!");
+	PromptYesNoCancel("This is an example of prompt Yes No Cancel!");
+	DDUMP(GetRichTextStdScreenZoom());
+	SetStdFont(SansSerif(8));
+	PromptYesNoCancel("This is an example of prompt  Yes No Cancel after changing font!");
+	DDUMP(GetRichTextStdScreenZoom());
 }
