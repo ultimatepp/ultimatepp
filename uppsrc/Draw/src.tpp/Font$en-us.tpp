@@ -66,6 +66,14 @@ Truetype).]
 fonts).]}}&]
 [s3; &]
 [s4; &]
+[s5;:Font`:`:SetDefaultFont`(Font`): [@(0.0.255) static] [@(0.0.255) void]_[* SetDefaultFon
+t]([_^Font^ Font]_[*@3 font])&]
+[s2;%% Sets the standard font, unless SetStdFont was used. This variant 
+is used by Chameleon skin to set font matching platform setting, 
+while SetStdFont can be used by client code to override this 
+setting (and thus has higher priority).&]
+[s3;%% &]
+[s4; &]
 [s5;:Font`:`:SetStdFont`(Font`): [@(0.0.255) static] [@(0.0.255) void]_[* SetStdFont]([_^Font^ F
 ont]_[@3 font])&]
 [s2;%% Sets the standard font. U`+`+ sets the standard font to match 
