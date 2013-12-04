@@ -2,7 +2,8 @@ uses
 	CtrlLib;
 
 file
-	main.cpp;
+	main.cpp,
+	info.txt;
 
 mainconfig
 	"" = "GUI SSE2";
