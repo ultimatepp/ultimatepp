@@ -134,8 +134,8 @@ void ChHostSkin()
 		}
 	}
 
-	Draw::SetStdFont(Font(fontname, (fontheight * xdpi + 512*72) / (1024*72))
-	                 .Bold(bold).Italic(italic));
+	Font::SetDefaultFont(Font(fontname, (fontheight * xdpi + 512*72) / (1024*72))
+	                     .Bold(bold).Italic(italic));
 
 	ClearFtFaceCache();
 

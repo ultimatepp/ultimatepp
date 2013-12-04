@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-#define LLOG(x)
+#define LLOG(x) // DLOG(x)
 
 NAMESPACE_UPP
 
@@ -115,7 +115,7 @@ void Font::SyncStdFont()
 
 void (*whenSetStdFont)();
 
-void Font::SetStdFont(Font font)
+void Font::SetStdFont0(Font font)
 {
 	LLOG("SetStdFont " << font);
 	Mutex::Lock __(sFontLock);
@@ -124,16 +124,34 @@ void Font::SetStdFont(Font font)
 	x++;
 	InitStdFont();
 	AStdFont = font;
+	LLOG("AStdFont1: " << AStdFont);
 	SyncStdFont();
+	LLOG("AStdFont2: " << AStdFont);
 	if(whenSetStdFont)
 		(*whenSetStdFont)();
+	LLOG("AStdFont3: " << AStdFont);
 	x--;
 	static int w = 0;
 	if(w) return;
 	w++;
 	if(whenSetStdFont)
 		(*whenSetStdFont)();
+	LLOG("AStdFont4: " << AStdFont);
 	w--;
+}
+
+bool Font::std_font_override;
+
+void Font::SetDefaultFont(Font font)
+{
+	if(!std_font_override)
+		SetStdFont0(font);
+}
+
+void Font::SetStdFont(Font font)
+{
+	std_font_override = true;
+	SetStdFont0(font);
 }
 
 void Font::InitStdFont()
