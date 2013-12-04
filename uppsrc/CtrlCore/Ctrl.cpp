@@ -733,7 +733,7 @@ bool Ctrl::IsNoLayoutZoom;
 
 void InitRichTextZoom()
 {
-	SetRichTextStdScreenZoom(Ctrl::HorzLayoutZoom(96), 600);
+	SetRichTextStdScreenZoom(min(Ctrl::VertLayoutZoom(96), Ctrl::HorzLayoutZoom(96)), 600);
 	Ctrl::ReSkin();
 }
 
