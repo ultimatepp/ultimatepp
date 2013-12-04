@@ -727,13 +727,15 @@ const char *Ctrl::GetZoomText()
 	return sZoomText;
 }
 
+Size Ctrl::Bsize;
 Size Ctrl::Dsize;
 Size Ctrl::Csize;
 bool Ctrl::IsNoLayoutZoom;
 
 void InitRichTextZoom()
 {
-	SetRichTextStdScreenZoom(min(Ctrl::VertLayoutZoom(96), Ctrl::HorzLayoutZoom(96)), 600);
+	Size h = 96 * Ctrl::Bsize / Ctrl::Dsize;
+	SetRichTextStdScreenZoom(min(h.cx, h.cy), 600);
 	Ctrl::ReSkin();
 }
 
@@ -743,6 +745,7 @@ void Ctrl::Csizeinit()
 	if(Csize.cx == 0 || Dsize.cx == 0) {
 		if(Csize.cx == 0)
 			Csize = GetTextSize(sZoomText, StdFont());
+		Bsize = Csize;
 		if(Dsize.cx == 0)
 			Dsize = Size(99, 13);
 		Csize.cx = max(Csize.cx, Dsize.cx);

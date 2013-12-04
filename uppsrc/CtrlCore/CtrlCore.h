@@ -634,14 +634,16 @@ private:
 
 	static String appname;
 
+	static Size Bsize;
 	static Size Dsize;
 	static Size Csize;
 	static bool IsNoLayoutZoom;
 	static void Csizeinit();
 	static void (*skin)();
 
+	friend void  InitRichTextZoom();
 	friend void  AvoidPaintingCheck__();
-	friend void CtrlSetDefaultSkin(void (*fn1)(), void (*fn2)());
+	friend void  CtrlSetDefaultSkin(void (*fn1)(), void (*fn2)());
 	friend class DHCtrl;
 	friend class ViewDraw;
 	friend class TopWindow;
