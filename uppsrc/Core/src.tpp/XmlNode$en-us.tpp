@@ -236,6 +236,14 @@ ser][@(0.0.255) `&]_[*@3 p], [_^dword^ dword]_[*@3 style]_`=_XML`_IGNORE`_DECLS[
 [s5;:ParseXML`(const char`*`,dword`): [_^XmlNode^ XmlNode]_[* ParseXML]([@(0.0.255) const]_
 [@(0.0.255) char]_`*[*@3 s], [_^dword^ dword]_[*@3 style]_`=_XML`_IGNORE`_DECLS[@(0.0.255) `|
 ]XML`_IGNORE`_PIS[@(0.0.255) `|]XML`_IGNORE`_COMMENTS)&]
+[s5;:ParseXML`(XmlParser`&`,ParseXmlFilter`&`,dword`): [_^XmlNode^ XmlNode]_[* ParseXML](
+[_^XmlParser^ XmlParser][@(0.0.255) `&]_[*@3 p], [_^ParseXmlFilter^ ParseXmlFilter][@(0.0.255) `&
+]_[*@3 filter], [_^dword^ dword]_[*@3 style]_`=_XML`_IGNORE`_DECLS[@(0.0.255) `|]XML`_IGN
+ORE`_PIS[@(0.0.255) `|]XML`_IGNORE`_COMMENTS)&]
+[s5;:ParseXML`(const char`*`,ParseXmlFilter`&`,dword`): [_^XmlNode^ XmlNode]_[* ParseXML](
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s], [_^ParseXmlFilter^ ParseXmlFilter][@(0.0.255) `&
+]_[*@3 filter], [_^dword^ dword]_[*@3 style]_`=_XML`_IGNORE`_DECLS[@(0.0.255) `|]XML`_IGN
+ORE`_PIS[@(0.0.255) `|]XML`_IGNORE`_COMMENTS)&]
 [s2;%% Creates XmlNode parsing XML document supplied either as string 
 or XmlParser. [%-*@3 style] can be a combination of&]
 [s2;%% &]
@@ -245,6 +253,10 @@ or XmlParser. [%-*@3 style] can be a combination of&]
 ::= [s2;l64;%% Processing info elements are ignored.]
 ::^ [s2;l32;%% XML`_IGNORE`_COMMENTS]
 ::= [s2;l64;%% Comments are ignored.]}}&]
+[s3;%% &]
+[s2;%% Variants with [%-*@3 filter] allow to speficy a [^topic`:`/`/Core`/src`/ParseXmlFilter`$en`-us`#ParseXmlFilter`:`:struct^ f
+ilter class] to exclude some parts of XML, usually to preserve 
+memory.&]
 [s3;%% &]
 [s4; &]
 [s5;:AsXML`(const XmlNode`&`,dword`): [_^String^ String]_[* AsXML]([@(0.0.255) const]_[_^XmlNode^ X
@@ -260,4 +272,4 @@ be a combination &]
 with type taken as id of first XML`_TAG sub`-node (which represents 
 the root element).]}}&]
 [s3;%% &]
-[s0; ]
+[s0; ]]

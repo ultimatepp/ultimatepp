@@ -786,15 +786,22 @@ bool Ignore(XmlParser& p, dword style)
 	return false;
 }
 
-static XmlNode sReadXmlNode(XmlParser& p, dword style)
+static XmlNode sReadXmlNode(XmlParser& p, ParseXmlFilter *filter, dword style)
 {
 	XmlNode m;
 	if(p.IsTag()) {
-		m.CreateTag(p.ReadTag());
-		m.SetAttrsPick(p.PickAttrs());
-		while(!p.End())
-			if(!Ignore(p, style))
-				m.Add() = sReadXmlNode(p, style);
+		String tag = p.ReadTag();
+		if(!filter || filter->DoTag(tag)) {
+			m.CreateTag(tag);
+			m.SetAttrsPick(p.PickAttrs());
+			while(!p.End())
+				if(!Ignore(p, style))
+					m.Add() = sReadXmlNode(p, filter, style);
+			if(filter)
+				filter->EndTag();
+		}
+		else
+			p.SkipEnd();
 		return m;
 	}
 	if(p.IsPI()) {
@@ -813,19 +820,37 @@ static XmlNode sReadXmlNode(XmlParser& p, dword style)
 	return m;
 }
 
-XmlNode ParseXML(XmlParser& p, dword style)
+void ParseXmlFilter::EndTag() {}
+
+XmlNode ParseXML(XmlParser& p, dword style, ParseXmlFilter *filter)
 {
 	XmlNode r;
 	while(!p.IsEof())
 		if(!Ignore(p, style))
-			r.Add() = sReadXmlNode(p, style);
+			r.Add() = sReadXmlNode(p, filter, style);
 	return r;
+}
+
+XmlNode ParseXML(XmlParser& p, dword style)
+{
+	return ParseXML(p, style, NULL);
 }
 
 XmlNode ParseXML(const char *s, dword style)
 {
 	XmlParser p(s);
 	return ParseXML(p, style);
+}
+
+XmlNode ParseXML(XmlParser& p, ParseXmlFilter& filter, dword style)
+{
+	return ParseXML(p, style, &filter);
+}
+
+XmlNode ParseXML(const char *s, ParseXmlFilter& filter, dword style)
+{
+	XmlParser p(s);
+	return ParseXML(p, filter, style);
 }
 
 bool ShouldPreserve(const String& s)
@@ -887,6 +912,28 @@ String AsXML(const XmlNode& node, dword style)
 			r << tag();
 	}
 	return r;
+}
+
+bool IgnoreXmlPaths::DoTag(const String& id)
+{
+	String new_path;
+	if(path.GetCount())
+		new_path = path.Top();
+	new_path << '/' << id;
+	if(list.Find(new_path) >= 0)
+		return false;
+	path.Add(new_path);
+	return true;
+}
+
+void IgnoreXmlPaths::EndTag()
+{
+	path.Drop();
+}
+
+IgnoreXmlPaths::IgnoreXmlPaths(const char *s)
+{
+	list = Split(s, ';');
 }
 
 END_UPP_NAMESPACE

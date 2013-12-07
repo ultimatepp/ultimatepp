@@ -195,8 +195,29 @@ enum {
 	XML_IGNORE_COMMENTS = 0x04,
 };
 
+struct ParseXmlFilter {
+	virtual bool DoTag(const String& tag) = 0;
+	virtual void EndTag();
+};
+
 XmlNode ParseXML(XmlParser& p, dword style = XML_IGNORE_DECLS|XML_IGNORE_PIS|XML_IGNORE_COMMENTS);
 XmlNode ParseXML(const char *s, dword style = XML_IGNORE_DECLS|XML_IGNORE_PIS|XML_IGNORE_COMMENTS);
+
+XmlNode ParseXML(XmlParser& p, ParseXmlFilter& filter, dword style = XML_IGNORE_DECLS|XML_IGNORE_PIS|XML_IGNORE_COMMENTS);
+XmlNode ParseXML(const char *s, ParseXmlFilter& filter, dword style = XML_IGNORE_DECLS|XML_IGNORE_PIS|XML_IGNORE_COMMENTS);
+
+class IgnoreXmlPaths : public ParseXmlFilter {
+public:
+	virtual bool DoTag(const String& id);
+	virtual void EndTag();
+
+private:
+	Index<String>  list;
+	Vector<String> path;
+
+public:
+	IgnoreXmlPaths(const char *s);
+};
 
 enum {
 	XML_HEADER  = 0x01,
