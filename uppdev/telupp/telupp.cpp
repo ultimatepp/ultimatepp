@@ -85,7 +85,7 @@ CONSOLE_APP_MAIN
 {
 //	StdLogSetup(LOG_COUT|LOG_FILE);
 	
-	if(!server.Listen(80, 10)) {
+	if(!server.Listen(8000, 10)) {
 		LOG("Cannot open server port for listening\r\n");
 		return;
 	}
