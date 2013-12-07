@@ -1,0 +1,4 @@
+#ifndef _XmlNodeFilter_icpp_init_stub
+#define _XmlNodeFilter_icpp_init_stub
+#include "Core/init"
+#endif
