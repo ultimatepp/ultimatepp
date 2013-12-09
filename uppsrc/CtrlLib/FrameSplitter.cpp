@@ -51,8 +51,19 @@ void SplitterFrame::FrameLayout(Rect& r)
 
 void SplitterFrame::Paint(Draw& draw)
 {
-	const Value *ch = type == LEFT || type == RIGHT ? style->vert : style->horz;
-	ChPaint(draw, Ctrl::GetSize(), ch[HasCapture()]);
+	bool horz = type == LEFT || type == RIGHT;
+	const Value *ch = horz ? style->vert : style->horz;
+	Size sz = Ctrl::GetSize();
+	Rect r(sz);
+	switch(type) {
+	case LEFT: r.left = r.right - style->width; break;
+	case RIGHT: r.right = r.left + style->width; break;
+	case TOP: r.top = r.bottom - style->width; break;
+	case BOTTOM: r.bottom = r.top + style->width; break;
+	}
+	ChPaint(draw, r, ch[HasCapture()]);
+	if(style->dots)
+		Splitter::PaintDots(draw, r, !horz);
 }
 
 void SplitterFrame::LeftDown(Point p, dword)
@@ -95,10 +106,10 @@ SplitterFrame& SplitterFrame::Set(Ctrl& c, int _size, int _type)
 	size = _size;
 	Add(c.SizePos());
 	switch(type) {
-	case LEFT: c.HSizePos(0, 4); break;
-	case RIGHT: c.HSizePos(4, 0); break;
-	case TOP: c.VSizePos(0, 4); break;
-	case BOTTOM: c.VSizePos(4, 0); break;
+	case LEFT: c.HSizePos(0, style->width); break;
+	case RIGHT: c.HSizePos(style->width, 0); break;
+	case TOP: c.VSizePos(0, style->width); break;
+	case BOTTOM: c.VSizePos(style->width, 0); break;
 	}
 	RefreshParentLayout();
 	return *this;
