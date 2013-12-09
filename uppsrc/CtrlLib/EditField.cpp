@@ -463,7 +463,7 @@ void EditField::GotFocus()
 
 void EditField::LostFocus()
 {
-	if(autoformat && IsEditable() && !IsNull(text)) {
+	if(autoformat && IsEditable() && !IsNull(text) && !IsDragAndDropSource()) {
 		Value v = convert->Scan(text);
 		if(!v.IsError()) {
 			const Convert * cv = inactive_convert ? inactive_convert : convert;
