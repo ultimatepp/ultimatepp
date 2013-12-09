@@ -25,8 +25,13 @@ protected: // Because of docking... (will be private)
 	int         inset;
 	const Style *chstyle;
 
-	int       FindIndex(Point client) const;
-	int       GetMins(int i) const;
+	int         FindIndex(Point client) const;
+	int         GetMins(int i) const;
+	int         GetBarWidth() const;
+
+	static void PaintDots(Draw& w, const Rect& r, bool vert);
+	
+	friend class SplitterFrame;
 
 public:
 	Callback  WhenSplitFinish;

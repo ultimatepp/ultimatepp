@@ -44,7 +44,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	filter <<= main ? MAIN|FIRST : 0;
 	progress.Hide();
 	brief <<= THISBACK(SyncBrief);
-	search.NullText("Search (Ctrl+Q)", StdFont().Italic(), SColorDisabled());
+	search.NullText("Search (Ctrl+K)", StdFont().Italic(), SColorDisabled());
 	search <<= THISBACK(SyncList);
 	search.SetFilter(CharFilterDefaultToUpperAscii);
 	SyncBrief();
@@ -62,6 +62,10 @@ bool SelectPackageDlg::Key(dword key, int count)
 {
 	if(key == K_ALT_ENTER) {
 		ChangeDescription();
+		return true;
+	}
+	else if(key == K_CTRL_K) {
+		search.SetFocus();
 		return true;
 	}
 	if((clist.HasFocus() || alist.HasFocus()) && search.Key(key, count))
