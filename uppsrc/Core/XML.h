@@ -40,6 +40,16 @@ struct XmlError : public Exc
 };
 
 class XmlParser {
+	enum {
+#ifdef flagTEST_XML // This is for testing purposes only to increase boundary condition frequency
+		MCHARS = 128,
+		CHUNK = 256
+#else
+		MCHARS = 256,
+		CHUNK = 16384
+#endif
+	};
+	
 	struct Nesting {
 		Nesting(String tag = Null, bool blanks = false) : tag(tag), preserve_blanks(blanks) {}
 		String tag;
@@ -48,8 +58,13 @@ class XmlParser {
 
 	VectorMap<String, String> entity;
 
+	Stream                   *in;
+	Buffer<char>              buffer;
+	int                       len;
+	int                       begincolumn;
 	const char               *begin;
 	const char               *term;
+
 	String                    attr1, attrval1;
 	VectorMap<String, String> attr;
 	Array<Nesting>            stack;
@@ -65,6 +80,11 @@ class XmlParser {
 
 	int                       line;
 
+	void                      Init();
+	void                      LoadMore0();
+	void                      LoadMore()              { if(len - (term - begin) < MCHARS) LoadMore0(); }
+	bool                      More();
+	bool                      HasMore()               { return *term || More(); }
 	void                      Ent(StringBuffer& out);
 	void                      Next();
 	void                      ReadAttr(StringBuffer& b, int c);
@@ -72,6 +92,7 @@ class XmlParser {
 	String                    ReadDecl(bool next);
 	String                    ReadPI(bool next);
 	String                    ReadComment(bool next);
+	int                       GetColumn0() const;
 
 public:
 	void   SkipWhites();
@@ -125,12 +146,13 @@ public:
 	VectorMap<String, String> PickAttrs() pick_;
 
 	int    GetLine() const                                    { return line; }
-	int    GetColumn() const;
+	int    GetColumn() const                                  { return GetColumn0() + 1; }
 
 	void   Relaxed(bool b)                                    { relaxed = b; }
 	void   PreserveAllWhiteSpaces(bool b = true)              { preserveall = b; }
 
 	XmlParser(const char *s);
+	XmlParser(Stream& in);
 };
 
 class XmlNode {
@@ -185,6 +207,8 @@ public:
 	XmlNode&       SetAttr(const char *id, int val);
 
 	void           SetAttrsPick(pick_ VectorMap<String, String>& a);
+	
+	void           Shrink();
 
 	XmlNode()      { type = XML_DOC; }
 };
@@ -202,9 +226,13 @@ struct ParseXmlFilter {
 
 XmlNode ParseXML(XmlParser& p, dword style = XML_IGNORE_DECLS|XML_IGNORE_PIS|XML_IGNORE_COMMENTS);
 XmlNode ParseXML(const char *s, dword style = XML_IGNORE_DECLS|XML_IGNORE_PIS|XML_IGNORE_COMMENTS);
+XmlNode ParseXML(Stream& in, dword style = XML_IGNORE_DECLS|XML_IGNORE_PIS|XML_IGNORE_COMMENTS);
+XmlNode ParseXMLFile(const char *path, dword style = XML_IGNORE_DECLS|XML_IGNORE_PIS|XML_IGNORE_COMMENTS);
 
 XmlNode ParseXML(XmlParser& p, ParseXmlFilter& filter, dword style = XML_IGNORE_DECLS|XML_IGNORE_PIS|XML_IGNORE_COMMENTS);
 XmlNode ParseXML(const char *s, ParseXmlFilter& filter, dword style = XML_IGNORE_DECLS|XML_IGNORE_PIS|XML_IGNORE_COMMENTS);
+XmlNode ParseXML(Stream& in, ParseXmlFilter& filter, dword style = XML_IGNORE_DECLS|XML_IGNORE_PIS|XML_IGNORE_COMMENTS);
+XmlNode ParseXMLFile(const char *path, ParseXmlFilter& filter, dword style = XML_IGNORE_DECLS|XML_IGNORE_PIS|XML_IGNORE_COMMENTS);
 
 class IgnoreXmlPaths : public ParseXmlFilter {
 public:

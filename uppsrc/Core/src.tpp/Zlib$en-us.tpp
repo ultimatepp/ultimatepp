@@ -166,6 +166,9 @@ true cancels it.&]
 ress]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 in],
  [@(0.0.255) int]_[*@3 size], [_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 progr
 ess]_`=_[@(0.0.255) false])&]
+[s5;:GZCompress`(Stream`&`,Stream`&`,Gate2`<int`,int`>`): [@(0.0.255) int]_[* GZCompress](
+[_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 in], 
+[_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])&]
 [s5;:GZCompress`(const void`*`,int`,Gate2`<int`,int`>`): [_^String^ String]_[* GZCompress
 ]([@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], [@(0.0.255) int]_[*@3 len], 
 [_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])&]
@@ -184,6 +187,10 @@ operation, returning true cancels it.&]
 compress]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 i
 n], [@(0.0.255) int]_[*@3 size], [_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 pr
 ogress]_`=_[@(0.0.255) false])&]
+[s5;:GZDecompress`(Stream`&`,Stream`&`,Gate2`<int`,int`>`): [@(0.0.255) int]_[* GZDecompr
+ess]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 in],
+ [_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])
+&]
 [s5;:GZDecompress`(const void`*`,int`,Gate2`<int`,int`>`): [_^String^ String]_[* GZDecomp
 ress]([@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], [@(0.0.255) int]_[*@3 len], 
 [_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])&]
@@ -196,5 +203,4 @@ to output stream [%-*@3 out] (in this case returns a number of
 bytes written or negative integer to signal error) or into String 
 return value. [%-*@3 progress] can be used to track progress of 
 operation, returning true cancels it.&]
-[s3;%% &]
-[s0;%% ]
+[s0;%% ]]

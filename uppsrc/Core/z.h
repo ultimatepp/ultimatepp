@@ -85,9 +85,17 @@ String ZDecompress(const String& s, Gate2<int, int> progress = false);
 String ZDecompress(const void *data, int len, Gate2<int, int> progress = false);
 
 int    GZCompress(Stream& out, Stream& in, int size, Gate2<int, int> progress = false);
+int    GZCompress(Stream& out, Stream& in, Gate2<int, int> progress = false);
 String GZCompress(const void *data, int len, Gate2<int, int> progress = false);
 String GZCompress(const String& s, Gate2<int, int> progress = false);
 
+bool   GZCompressFile(const char *dstfile, const char *srcfile, Gate2<int, int> progress = false);
+bool   GZCompressFile(const char *srcfile, Gate2<int, int> progress = false);
+
 int    GZDecompress(Stream& out, Stream& in, int size, Gate2<int, int> progress = false);
+int    GZDecompress(Stream& out, Stream& in, Gate2<int, int> progress = false);
 String GZDecompress(const void *data, int len, Gate2<int, int> progress = false);
 String GZDecompress(const String& s, Gate2<int, int> progress = false);
+
+bool   GZDecompressFile(const char *dstfile, const char *srcfile, Gate2<int, int> progress = false);
+bool   GZDecompressFile(const char *srcfile, Gate2<int, int> progress = false);

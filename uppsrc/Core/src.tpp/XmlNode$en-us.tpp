@@ -244,8 +244,24 @@ ORE`_PIS[@(0.0.255) `|]XML`_IGNORE`_COMMENTS)&]
 [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s], [_^ParseXmlFilter^ ParseXmlFilter][@(0.0.255) `&
 ]_[*@3 filter], [_^dword^ dword]_[*@3 style]_`=_XML`_IGNORE`_DECLS[@(0.0.255) `|]XML`_IGN
 ORE`_PIS[@(0.0.255) `|]XML`_IGNORE`_COMMENTS)&]
-[s2;%% Creates XmlNode parsing XML document supplied either as string 
-or XmlParser. [%-*@3 style] can be a combination of&]
+[s5;:ParseXML`(Stream`&`,dword`): [_^XmlNode^ XmlNode]_[* ParseXML]([_^Stream^ Stream][@(0.0.255) `&
+]_[*@3 in], [_^dword^ dword]_[*@3 style]_`=_XML`_IGNORE`_DECLS[@(0.0.255) `|]XML`_IGNORE`_
+PIS[@(0.0.255) `|]XML`_IGNORE`_COMMENTS)&]
+[s5;:ParseXMLFile`(const char`*`,dword`): [_^XmlNode^ XmlNode]_[* ParseXMLFile]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 path], [_^dword^ dword]_[*@3 style]_`=_XML`_IGNORE`_DECLS[@(0.0.255) `|
+]XML`_IGNORE`_PIS[@(0.0.255) `|]XML`_IGNORE`_COMMENTS)&]
+[s5;:ParseXML`(Stream`&`,ParseXmlFilter`&`,dword`): [_^XmlNode^ XmlNode]_[* ParseXML]([_^Stream^ S
+tream][@(0.0.255) `&]_[*@3 in], [_^ParseXmlFilter^ ParseXmlFilter][@(0.0.255) `&]_[*@3 filt
+er], [_^dword^ dword]_[*@3 style]_`=_XML`_IGNORE`_DECLS[@(0.0.255) `|]XML`_IGNORE`_PIS[@(0.0.255) `|
+]XML`_IGNORE`_COMMENTS)&]
+[s5;:ParseXMLFile`(const char`*`,ParseXmlFilter`&`,dword`): [_^XmlNode^ XmlNode]_[* Parse
+XMLFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path], [_^ParseXmlFilter^ ParseXmlFi
+lter][@(0.0.255) `&]_[*@3 filter], [_^dword^ dword]_[*@3 style]_`=_XML`_IGNORE`_DECLS[@(0.0.255) `|
+]XML`_IGNORE`_PIS[@(0.0.255) `|]XML`_IGNORE`_COMMENTS)&]
+[s0; &]
+[s2;%% Creates XmlNode parsing XML document supplied either as XmlParser, 
+string, input stream or file path. [%-*@3 style] can be a combination 
+of&]
 [s2;%% &]
 [ {{3581:6419<288;^ [s2;l32;%% XML`_IGNORE`_DECLS]
 ::= [s2;l64;%% Declaration elements are ignored.]
