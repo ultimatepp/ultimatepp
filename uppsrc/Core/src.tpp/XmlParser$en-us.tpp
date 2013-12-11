@@ -42,6 +42,11 @@ onst]&]
 [s2;%% Returns true if the parser is at XML start`-tag.&]
 [s3; &]
 [s4; &]
+[s5;:XmlParser`:`:PeekTag`(`): [_^String^ String]_[* PeekTag]()&]
+[s2;%% Returns the next tag id, but does not advance. If the parser 
+is not at start`-tag, XmlError is thrown.&]
+[s3; &]
+[s4; &]
 [s5;:XmlParser`:`:ReadTag`(`): [_^String^ String]_[* ReadTag]()&]
 [s2;%% Returns XML start`-tag id and advances. If the parser is not 
 at start`-tag, XmlError is thrown.&]
@@ -213,4 +218,9 @@ har]_`*[*@3 s])&]
 text must be valid through the whole parsing process (XmlParser 
 does not make copy of the text).&]
 [s3; &]
+[s4; &]
+[s5;:XmlParser`:`:XmlParser`(Stream`&`): [* XmlParser]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 i
+n])&]
+[s2;%% Creates the parser for xml input stream [%-*@3 in].&]
+[s3;%% &]
 [s0; ]]

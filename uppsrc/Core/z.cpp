@@ -457,12 +457,12 @@ int GZDecompress(Stream& out, Stream& in, int size, Gate2<int, int> progress)
 	return sz < 0 || in.Get32le() != (int)crc || in.Get32le() != sz ? -1 : sz;
 }
 
-int GZCompress(Stream& out, Stream& in, Gate2<int, int> progress = false)
+int GZCompress(Stream& out, Stream& in, Gate2<int, int> progress)
 {
 	return GZCompress(out, in, (int)in.GetLeft(), progress);
 }
 
-int GZDecompress(Stream& out, Stream& in, Gate2<int, int> progress = false)
+int GZDecompress(Stream& out, Stream& in, Gate2<int, int> progress)
 {
 	return GZDecompress(out, in, (int)in.GetLeft(), progress);
 }
@@ -493,5 +493,47 @@ String GZDecompress(const String& s, Gate2<int, int> progress)
 	return GZDecompress(~s, s.GetCount(), progress);
 }
 
+bool GZCompressFile(const char *dstfile, const char *srcfile, Gate2<int, int> progress)
+{
+	FileIn in(srcfile);
+	if(!in)
+		return false;
+	FileOut out(dstfile);
+	if(!out)
+		return false;
+	if(GZCompress(out, in, (int)in.GetLeft()) < 0)
+		return false;
+	out.Close();
+	return !out.IsError();
+}
+
+bool GZCompressFile(const char *srcfile, Gate2<int, int> progress)
+{
+	String dstfile = String(srcfile) + ".gz";
+	return GZCompressFile(dstfile, srcfile, progress);
+}
+
+bool GZDecompressFile(const char *dstfile, const char *srcfile, Gate2<int, int> progress)
+{
+	FileIn in(srcfile);
+	if(!in)
+		return false;
+	FileOut out(dstfile);
+	if(!out)
+		return false;
+	if(GZDecompress(out, in, (int)in.GetLeft()) < 0)
+		return false;
+	out.Close();
+	return !out.IsError();
+}
+
+bool GZDecompressFile(const char *srcfile, Gate2<int, int> progress)
+{
+	String dstfile = srcfile;
+	if(!dstfile.EndsWith(".gz"))
+		return false;
+	dstfile.Trim(dstfile.GetLength() - 3);
+	return GZDecompressFile(dstfile, srcfile, progress);
+}
 
 END_UPP_NAMESPACE

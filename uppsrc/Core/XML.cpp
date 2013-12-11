@@ -170,6 +170,7 @@ XmlTag& XmlTag::operator()(const char *attr, double q)
 
 void XmlParser::Ent(StringBuffer& out)
 {
+	LoadMore();
 	int outconst = 0;
 	const char *t = ++term;
 	if(*t == '#') {
@@ -206,28 +207,50 @@ inline static bool IsXmlNameChar(int c)
 	return IsAlNum(c) || c == '.' || c == '-' || c == '_' || c == ':';
 }
 
+void XmlParser::LoadMore0()
+{
+	if(in) {
+		int pos = term - begin;
+		if(len - pos < MCHARS) {
+			begincolumn = GetColumn0();
+			len -= pos;
+			memcpy(buffer, term, len);
+			term = begin = buffer;
+			len += in->Get(~buffer + len, CHUNK);
+			buffer[len] = '\0';
+		}
+	}
+}
+
+bool XmlParser::More()
+{
+	begincolumn = GetColumn();
+	if(!in)
+		return false;
+	len = in->Get(buffer, CHUNK);
+	buffer[len] = '\0';
+	term = begin = buffer;
+	return len;
+}
+
 void XmlParser::SkipWhites()
 {
-	while(*term && (byte)*term <= ' ') {
+	while(HasMore() && (byte)*term <= ' ') {
 		if(*term == '\n')
 			line++;
 		term++;
 	}
+	LoadMore();
 }
 
 void XmlParser::ReadAttr(StringBuffer& attrval, int c)
 {
 	term++;
-	while(*term && *term != c)
+	while(HasMore() && *term != c)
 		if(*term == '&')
 			Ent(attrval);
-		else {
-			const char *e = term;
-			while(*++e && *e != '&' && *e != c)
-				;
-			attrval.Cat(term, (int)(e - term));
-			term = e;
-		}
+		else
+			attrval.Cat(*term++);
 	if(*term == c)
 		term++;
 }
@@ -245,17 +268,18 @@ void XmlParser::Next()
 	type = Null;
 	StringBuffer raw_text;
 	for(;;) {
-		if(*term == '\0') {
+		if(!HasMore()) {
 			type = XML_EOF;
 			return;
 		}
+		LoadMore();
 		if(*term == '<') {
 			if(term[1] == '!' && term[2] == '[' &&
 			   term[3] == 'C' && term[4] == 'D' && term[5] == 'A' && term[6] == 'T' && term[7] == 'A' &&
 			   term[8] == '[') { // ![CDATA[
 				term += 9;
 				for(;;) {
-					if(*term == '\0')
+					if(!HasMore())
 						throw XmlError("Unterminated CDATA");
 					if(term[0] == ']' && term[1] == ']' && term[2] == '>') { // ]]>
 						term += 3;
@@ -292,7 +316,9 @@ void XmlParser::Next()
 		return;
 	
 	term++;
+	LoadMore();
 	if(*term == '!') {
+		tagtext.Clear();
 		type = XML_DECL;
 		term++;
 		if(term[0] == '-' && term[1] == '-') {
@@ -301,7 +327,7 @@ void XmlParser::Next()
 			for(;;) {
 				if(term[0] == '-' && term[1] == '-' && term[2] == '>')
 					break;
-				if(*term == '\0')
+				if(!HasMore())
 					throw XmlError("Unterminated comment");
 				if(*term == '\n')
 					line++;
@@ -323,7 +349,7 @@ void XmlParser::Next()
 				term++;
 				break;
 			}
-			if(*term == '\0')
+			if(!HasMore())
 				throw XmlError("Unterminated declaration");
 			if(*term == '\n')
 				line++;
@@ -332,6 +358,7 @@ void XmlParser::Next()
 	}
 	else
 	if(*term == '?') {
+		tagtext.Clear();
 		type = XML_PI;
 		term++;
 		for(;;) {
@@ -339,7 +366,7 @@ void XmlParser::Next()
 				term += 2;
 				return;
 			}
-			if(*term == '\0')
+			if(!HasMore())
 				throw XmlError("Unterminated processing info");
 			if(*term == '\n')
 				line++;
@@ -361,7 +388,7 @@ void XmlParser::Next()
 	else {
 		type = XML_TAG;
 		const char *t = term;
-		while(IsXmlNameChar(*term))
+		while(HasMore() && IsXmlNameChar(*term))
 			term++;
 		tagtext = String(t, term);
 		for(;;) {
@@ -376,10 +403,10 @@ void XmlParser::Next()
 				term += 2;
 				break;
 			}
-			if(*term == '\0')
+			if(!HasMore())
 				throw XmlError("Unterminated tag");
 			const char *t = term++;
-			while((byte)*term > ' ' && *term != '=' && *term != '>')
+			while(HasMore() && (byte)*term > ' ' && *term != '=' && *term != '>')
 				term++;
 			String attr(t, term);
 			SkipWhites();
@@ -393,16 +420,11 @@ void XmlParser::Next()
 				if(*term == '\'')
 					ReadAttr(attrval, '\'');
 				else
-					while((byte)*term > ' ' && *term != '>' && *term != '/')
+					while(HasMore() && (byte)*term > ' ' && *term != '>' && *term != '/')
 						if(*term == '&')
 							Ent(attrval);
-						else {
-							const char *e = term;
-							while((byte)*++e > ' ' && *e != '>' && *e != '&')
-								;
-							attrval.Cat(term,(int) (e - term));
-							term = e;
-						}
+						else
+							attrval.Cat(*term++);
 				if(attr == "xml:space" && attrval.GetLength() == 8 && !memcmp(~attrval, "preserve", 8))
 					npreserve = true;
 				String aval = FromUtf8(~attrval, attrval.GetLength()).ToString();
@@ -661,18 +683,18 @@ void XmlParser::SkipEnd()
 	PassEnd();
 }
 
-int XmlParser::GetColumn() const
+int XmlParser::GetColumn0() const
 {
 	const char *s = term;
-	int n = 1;
+	int n = 0;
 	while(s > begin && *(s - 1) != '\n') {
 		s--;
 		n++;
 	}
-	return n;
+	return n + begincolumn;
 }
 
-XmlParser::XmlParser(const char *s)
+void XmlParser::Init()
 {
 	RegisterEntity("lt", "<");
 	RegisterEntity("gt", ">");
@@ -682,9 +704,27 @@ XmlParser::XmlParser(const char *s)
 	relaxed = false;
 	empty_tag = false;
 	npreserve = false;
-	begin = term = s;
 	line = 1;
 	preserveall = false;
+	begincolumn = 0;
+	in = NULL;
+	len = 0;
+}
+
+XmlParser::XmlParser(const char *s)
+{
+	Init();
+	begin = term = s;
+	len = INT_MAX;
+	Next();
+}
+
+XmlParser::XmlParser(Stream& in_)
+{
+	Init();
+	buffer.Alloc(CHUNK + MCHARS + 1);
+	begin = term = "";
+	in = &in_;
 	Next();
 }
 
@@ -774,6 +814,15 @@ XmlNode& XmlNode::SetAttr(const char *id, int i)
 	return *this;
 }
 
+void XmlNode::Shrink()
+{
+	if(attr)
+		if(attr->GetCount() == 0)
+			attr.Clear();
+		else
+			attr->Shrink();
+	node.Shrink();
+}
 
 bool Ignore(XmlParser& p, dword style)
 {
@@ -795,8 +844,11 @@ static XmlNode sReadXmlNode(XmlParser& p, ParseXmlFilter *filter, dword style)
 			m.CreateTag(tag);
 			m.SetAttrsPick(p.PickAttrs());
 			while(!p.End())
-				if(!Ignore(p, style))
-					m.Add() = sReadXmlNode(p, filter, style);
+				if(!Ignore(p, style)) {
+					XmlNode n = sReadXmlNode(p, filter, style);
+					if(n.GetType() != XML_DOC) // tag was ignored
+						m.Add() = n;
+				}
 			if(filter)
 				filter->EndTag();
 		}
@@ -817,6 +869,7 @@ static XmlNode sReadXmlNode(XmlParser& p, ParseXmlFilter *filter, dword style)
 		return m;
 	}
 	m.CreateText(p.ReadText());
+	m.Shrink();
 	return m;
 }
 
@@ -842,6 +895,20 @@ XmlNode ParseXML(const char *s, dword style)
 	return ParseXML(p, style);
 }
 
+XmlNode ParseXML(Stream& in, dword style)
+{
+	XmlParser p(in);
+	return ParseXML(p, style);
+}
+
+XmlNode ParseXMLFile(const char *path, dword style)
+{
+	FileIn in(path);
+	if(!in)
+		throw XmlError("Unable to open intput file!");
+	return ParseXML(in, style);
+}
+
 XmlNode ParseXML(XmlParser& p, ParseXmlFilter& filter, dword style)
 {
 	return ParseXML(p, style, &filter);
@@ -852,6 +919,21 @@ XmlNode ParseXML(const char *s, ParseXmlFilter& filter, dword style)
 	XmlParser p(s);
 	return ParseXML(p, filter, style);
 }
+
+XmlNode ParseXML(Stream& in, ParseXmlFilter& filter, dword style)
+{
+	XmlParser p(in);
+	return ParseXML(p, filter, style);
+}
+
+XmlNode ParseXMLFile(const char *path, ParseXmlFilter& filter, dword style)
+{
+	FileIn in(path);
+	if(!in)
+		throw XmlError("Unable to open intput file!");
+	return ParseXML(in, filter, style);
+}
+
 
 bool ShouldPreserve(const String& s)
 {
