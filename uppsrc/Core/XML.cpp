@@ -949,6 +949,7 @@ bool ShouldPreserve(const String& s)
 	return false;
 }
 
+/*
 String AsXML(const XmlNode& node, dword style)
 {
 	StringBuffer r;
@@ -994,6 +995,84 @@ String AsXML(const XmlNode& node, dword style)
 			r << tag();
 	}
 	return r;
+}
+*/
+
+static void sAsXML(Stream& out, const XmlNode& node, dword style, const String& indent)
+{
+	if(style & XML_HEADER) {
+		String h = XmlHeader();
+		if(!(style & XML_PRETTY))
+			h.Trim(h.GetCount() - 2);
+		out << h;
+	}
+	if(style & XML_DOCTYPE)
+		for(int i = 0; i < node.GetCount(); i++) {
+			const XmlNode& m = node.Node(i);
+			if(m.GetType() == XML_TAG) {
+				String h = XmlDocType(m.GetText());
+				h.Trim(h.GetCount() - 2);
+				out << h;
+				break;
+			}
+		}
+	style &= ~(XML_HEADER|XML_DOCTYPE);
+	switch(node.GetType()) {
+	case XML_PI:
+		out << indent << "<?" << node.GetText() << "?>\r\n";
+		break;
+	case XML_DECL:
+		out << indent << "<!" << node.GetText() << ">\r\n";
+		break;
+	case XML_COMMENT:
+		out << indent << "<!--" << node.GetText() << "-->\r\n";
+		break;
+	case XML_DOC:
+		for(int i = 0; i < node.GetCount(); i++)
+			sAsXML(out, node.Node(i), style, indent);
+		break;
+	case XML_TEXT:
+		out << DeXml(node.GetText());
+		break;
+	case XML_TAG:
+		XmlTag tag(node.GetText());
+		for(int i = 0; i < node.GetAttrCount(); i++)
+			tag(node.AttrId(i), node.Attr(i));
+		if(node.GetCount()) {
+			out << indent << tag.GetBegin();
+			String indent2 = (style & XML_PRETTY) && node[0].IsTag() && node[node.GetCount() - 1].IsTag() ?
+			                 indent + '\t' : String();
+			for(int i = 0; i < node.GetCount(); i++)
+				sAsXML(out, node.Node(i), style, indent2);
+			if(indent2.GetCount())
+				out << indent;
+			out << tag.GetEnd();
+		}
+		else
+			out << indent << tag();
+	}
+}
+
+void AsXML(Stream& out, const XmlNode& n, dword style)
+{
+	sAsXML(out, n, style, style & XML_PRETTY ? "\r\n" : "");
+}
+
+String AsXML(const XmlNode& n, dword style)
+{
+	StringStream ss;
+	AsXML(ss, n, style);
+	return ss.GetResult();
+}
+
+bool AsXMLFile(const char *path, const XmlNode& n, dword style)
+{
+	FileOut out(path);
+	if(!out)
+		return false;
+	AsXML(out, n, style);
+	out.Close();
+	return !out.IsError();
 }
 
 bool IgnoreXmlPaths::DoTag(const String& id)

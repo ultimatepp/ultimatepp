@@ -221,6 +221,6 @@ does not make copy of the text).&]
 [s4; &]
 [s5;:XmlParser`:`:XmlParser`(Stream`&`): [* XmlParser]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 i
 n])&]
-[s2;%% Creates the parser for xml input stream [%-*@3 in].&]
+[s2;%% Creates the parser for the input stream [%-*@3 in].&]
 [s3;%% &]
 [s0; ]]
