@@ -23,6 +23,9 @@ public:
 	String  Text(const String& s, byte charset = CHARSET_DEFAULT) { return Text(~s, charset); }
 	String  PreservedText(const char *s, byte charset = CHARSET_DEFAULT);
 	String  PreservedText(const String& s, byte charset = CHARSET_DEFAULT) { return PreservedText(~s, charset); }
+	
+	String  GetBegin() const                                      { return tag + '>'; }
+	String  GetEnd() const                                        { return end; }
 
 	XmlTag& operator()(const char *attr, const char *val);
 	XmlTag& operator()(const char *attr, int q);
@@ -250,6 +253,9 @@ public:
 enum {
 	XML_HEADER  = 0x01,
 	XML_DOCTYPE = 0x02,
+	XML_PRETTY =  0x04,
 };
 
-String  AsXML(const XmlNode& n, dword style = XML_HEADER|XML_DOCTYPE);
+void    AsXML(Stream& out, const XmlNode& n, dword style = XML_HEADER|XML_DOCTYPE|XML_PRETTY);
+String  AsXML(const XmlNode& n, dword style = XML_HEADER|XML_DOCTYPE|XML_PRETTY);
+bool    AsXMLFile(const char *path, const XmlNode& n, dword style = XML_HEADER|XML_DOCTYPE|XML_PRETTY);

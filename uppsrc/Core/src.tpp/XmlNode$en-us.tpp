@@ -228,7 +228,7 @@ is destroyed in operation).&]
 [s0; &]
 [s0; &]
 [s0; &]
-[ {{10000@(113.42.0) [s0;%% [*@7;4 XmlNode `- parser and output functions]]}}&]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 XmlNode `- parse and output functions]]}}&]
 [s4;H0; &]
 [s5;:ParseXML`(XmlParser`&`,dword`): [_^XmlNode^ XmlNode]_[* ParseXML]([_^XmlParser^ XmlPar
 ser][@(0.0.255) `&]_[*@3 p], [_^dword^ dword]_[*@3 style]_`=_XML`_IGNORE`_DECLS[@(0.0.255) `|
@@ -275,17 +275,33 @@ ilter class] to exclude some parts of XML, usually to preserve
 memory.&]
 [s3;%% &]
 [s4; &]
+[s5;:AsXML`(Stream`&`,const XmlNode`&`,dword`): [@(0.0.255) void]_[* AsXML]([_^Stream^ Stre
+am][@(0.0.255) `&]_[*@3 out], [@(0.0.255) const]_[_^XmlNode^ XmlNode][@(0.0.255) `&]_[*@3 n],
+ [_^dword^ dword]_[*@3 style]_`=_XML`_HEADER[@(0.0.255) `|]XML`_DOCTYPE[@(0.0.255) `|]XML
+`_PRETTY)&]
 [s5;:AsXML`(const XmlNode`&`,dword`): [_^String^ String]_[* AsXML]([@(0.0.255) const]_[_^XmlNode^ X
 mlNode][@(0.0.255) `&]_[*@3 n], [_^dword^ dword]_[*@3 style]_`=_XML`_HEADER[@(0.0.255) `|]X
-ML`_DOCTYPE)&]
+ML`_DOCTYPE[@(0.0.255) `|]XML`_PRETTY)&]
+[s5;:AsXMLFile`(const char`*`,const XmlNode`&`,dword`): [@(0.0.255) bool]_[* AsXMLFile]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 path], [@(0.0.255) const]_[_^XmlNode^ XmlNode][@(0.0.255) `&
+]_[*@3 n], [_^dword^ dword]_[*@3 style]_`=_XML`_HEADER[@(0.0.255) `|]XML`_DOCTYPE[@(0.0.255) `|
+]XML`_PRETTY)&]
+[s0; &]
 [s2;%% Creates a XML document from XmlNode [%-*@3 n]. [%-*@3 style] can 
-be a combination &]
+be a combination of&]
 [s2;%% &]
 [ {{3581:6419<288;^ [s2;l32; XML`_HEADER]
 ::= [s2;l64;%% Adds standard XML header at the beginning of the document.]
 ::^ [s2;l32; XML`_DOCTYPE]
 ::= [s2;l64;%% Adds DOCTYPE declaration at the beginning of the document 
 with type taken as id of first XML`_TAG sub`-node (which represents 
-the root element).]}}&]
-[s3;%% &]
-[s0; ]]
+the root element).]
+::^ [s2;l32; XML`_PRETTY]
+::= [s2;l64;%% XML document is formatted as multiline document with nice 
+indentation. If not active, everything is in sigle line with 
+no identantion.]}}&]
+[s2; &]
+[s2; Output is stored to Stream, returned as String or (with AsXMLFile) 
+stored to file. AsXMLFile returns true if output file was successfully 
+created.&]
+[s2; ]]
