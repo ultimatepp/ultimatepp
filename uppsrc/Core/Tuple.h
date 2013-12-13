@@ -13,6 +13,8 @@ struct Tuple2 {
 	bool operator>(const Tuple2& x) const     { return Compare(x) > 0; }
 	
 	unsigned GetHashValue() const             { return CombineHash(a, b); }
+	
+	void Serialize(Stream& s)                 { s % a % b; }
 
 	String   ToString() const                 { return String().Cat() << '(' << a << ", " << b << ')'; }
 };
@@ -49,6 +51,8 @@ struct Tuple3 {
 	bool operator>(const Tuple3& x) const     { return Compare(x) > 0; }
 	
 	unsigned GetHashValue() const             { return CombineHash(a, b, c); }
+
+	void Serialize(Stream& s)                 { s % a % b % c; }
 	
 	String   ToString() const                 { return String().Cat() << '(' << a << ", " << b << ", " << c << ')'; }
 };
@@ -88,6 +92,8 @@ struct Tuple4 {
 	bool operator>(const Tuple4& x) const     { return Compare(x) > 0; }
 	
 	unsigned GetHashValue() const             { return CombineHash(a, b, c, d); }
+
+	void Serialize(Stream& s)                 { s % a % b % c % d; }
 
 	String   ToString() const                 { return String().Cat() << '(' << a << ", " << b << ", " << c << ", " << d << ')'; }
 };
