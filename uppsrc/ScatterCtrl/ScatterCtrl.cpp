@@ -58,6 +58,7 @@ void ScatterCtrl::SaveToClipboard(bool)
 
 void ScatterCtrl::Paint(Draw& w) 
 {
+	GuiLock __;
 	if (IsNull(highlight_0) && highlighting) {
 		highlighting = false;
 		KillTimeCallback();
