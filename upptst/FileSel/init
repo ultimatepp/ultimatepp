@@ -1,0 +1,4 @@
+#ifndef _FileSel_icpp_init_stub
+#define _FileSel_icpp_init_stub
+#include "CtrlLib/init"
+#endif

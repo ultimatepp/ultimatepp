@@ -62,7 +62,7 @@ void InVectorTest()
 
 	for(int i = 0; i < 100; i++) {
 		int n = Random(100) + 20;
-		InVector<T>::Iterator it2, it = iv.Begin();
+		typename InVector<T>::Iterator it2, it = iv.Begin();
 		it += n;
 		ASSERT(it - iv.Begin() == n);
 		it2 = it;
