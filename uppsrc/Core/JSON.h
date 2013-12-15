@@ -254,6 +254,33 @@ void JsonizeMap(JsonIO& io, T& map, const char *keyid, const char *valueid)
 }
 
 template <class T, class K, class V>
+void JsonizeSortedMap(JsonIO& io, T& map, const char *keyid, const char *valueid)
+{
+	if(io.IsLoading()) {
+		map.Clear();
+		const Value& va = io.Get();
+		for(int i = 0; i < va.GetCount(); i++) {
+			K key;
+			V value;
+			LoadFromJsonValue(key, va[i][keyid]);
+			LoadFromJsonValue(value, va[i][valueid]);	
+			map.Add(key, value);
+		}
+	}
+	else {
+		Vector<Value> va;
+		va.SetCount(map.GetCount());
+		for(int i = 0; i < map.GetCount(); i++) {
+			ValueMap item;
+			item.Add(keyid, StoreAsJsonValue(map.GetKey(i)));
+			item.Add(valueid, StoreAsJsonValue(map[i]));
+			va[i] = item;
+		}
+		io.Set(ValueArray(va));
+	}
+}
+
+template <class T, class K, class V>
 void JsonizeStringMap(JsonIO& io, T& map)
 {
 	if(io.IsLoading()) {

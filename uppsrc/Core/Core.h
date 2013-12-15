@@ -331,6 +331,10 @@ class JsonIO;
 #include "Vcont.hpp"
 #include "Index.hpp"
 
+#define LLOG(x)   // DLOG(x)
+#include "InVector.hpp"
+#undef  LLOG
+
 #if (defined(HEAPDBG) || defined(TESTLEAKS)) && defined(PLATFORM_POSIX)
 extern int sMemDiagInitCount;
 #endif
