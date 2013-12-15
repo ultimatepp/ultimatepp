@@ -233,6 +233,11 @@ uint64  CParser::ReadNumber64(int base) throw(Error)
 	return n;
 }
 
+#if defined(COMPILER_MINGW)
+_CRTIMP unsigned int __cdecl __MINGW_NOTHROW _clearfp (void);    
+#define SW_OVERFLOW    0x00000004              
+#endif
+
 double CParser::ReadDouble() throw(Error)
 {
 	LTIMING("ReadDouble");
