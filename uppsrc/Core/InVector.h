@@ -15,6 +15,8 @@ struct InVectorSlave__ {
 	virtual void RemoveBlk(int blki, int n) = 0;
 	virtual void Index(int blki, int n) = 0;
 	virtual void Reindex() = 0;
+//	virtual void Serialize(Stream& s) = 0;
+	virtual void Shrink() = 0;
 };
 
 template <class T>
@@ -141,6 +143,12 @@ public:
 	InVector(const InVector& v, int);
 
 	void Swap(InVector& b);
+
+#ifdef UPP
+	void     Serialize(Stream& s)                             { StreamContainer(s, *this); }
+	void     Xmlize(XmlIO& xio, const char *itemtag = "item");
+	void     Jsonize(JsonIO& jio);
+#endif
 
 	friend void Swap(InVector& a, InVector& b)      { a.Swap(b); }
 	
@@ -346,6 +354,12 @@ public:
 	
 	void Swap(InArray& b)                           { iv.Swap(b.iv); }
 	
+#ifdef UPP
+	void     Serialize(Stream& s)                             { StreamContainer(s, *this); }
+	void     Xmlize(XmlIO& xio, const char *itemtag = "item");
+	void     Jsonize(JsonIO& jio);
+#endif
+
 	friend void Swap(InArray& a, InArray& b)        { a.Swap(b); }
 	
 	STL_VECTOR_COMPATIBILITY(InArray<T>)
@@ -471,7 +485,13 @@ public:
 	SortedIndex()                                        {}
 	SortedIndex(const SortedIndex& s, int) : iv(s.iv, 1) {}
 
-	void Swap(SortedIndex& a)                       { iv.Swap(a.iv); }
+	void Swap(SortedIndex& a)                        { iv.Swap(a.iv); }
+
+#ifdef UPP
+	void     Serialize(Stream& s)                               { iv.Serialize(s); }
+	void     Xmlize(XmlIO& xio, const char *itemtag = "key")    { iv.Xmlize(xio, itemtag); }
+	void     Jsonize(JsonIO& jio)                               { iv.Jsonize(jio); }
+#endif
 
 	friend void Swap(SortedIndex& a, SortedIndex& b){ a.Swap(b); }
 
@@ -523,7 +543,7 @@ public:
 	void     Trim(int n)                            { key.Trim(n); }
 
 	void     Swap(SortedAMap& x)                    { Swap(value, x.value); Swap(key, x.key); }
-	
+
 	bool     IsPicked() const                       { return value.IsPicked() || key.IsPicked(); }
 	
 	const SortedIndex<K>& GetIndex() const          { return key; }
@@ -569,6 +589,8 @@ struct Slaved_InVector__ : InVectorSlave__ {
 	virtual void Remove(int blki, int pos, int n) { data.data[blki].Remove(pos, n); }
 	virtual void Index(int blki, int n)           { data.Index(blki, n); }
 	virtual void Reindex()                        { data.Reindex(); }
+//	virtual void Serialize(Stream& s)             { data.Serialize(s); }
+	virtual void Shrink()                         { data.Shrink(); }
 
 	T& Get(int blki, int i) const                 { return *(T*)&data.data[blki][i]; }
 };
@@ -595,6 +617,12 @@ public:
 	SortedVectorMap(const SortedVectorMap& s, int) : B(s, 1) {}
 	SortedVectorMap()                                                       {}
 
+#ifdef UPP
+	void     Serialize(Stream& s);
+	void     Xmlize(XmlIO& xio);
+	void     Jsonize(JsonIO& jio);
+#endif
+
 	friend void    Swap(SortedVectorMap& a, SortedVectorMap& b) { a.Swap(b); }
 
 	typedef typename B::ConstIterator ConstIterator;
@@ -619,6 +647,8 @@ struct Slaved_InArray__ : InVectorSlave__ {
 	virtual void Remove(int blki, int pos, int n);
 	virtual void Index(int blki, int n)           { data.iv.Index(blki, n); }
 	virtual void Reindex()                        { data.iv.Reindex(); }
+//	virtual void Serialize(Stream& s)             { data.iv.Serialize(s); }
+	virtual void Shrink()                         { data.iv.Shrink(); }
 
 	T& Get(int blki, int i) const                 { return *(T*)data.iv.data[blki][i]; }
 	T *Detach(int i)                              { T *x = data.iv[i]; data.iv[i] = NULL; return x; }
@@ -651,13 +681,15 @@ public:
 	SortedArrayMap(const SortedArrayMap& s, int) : B(s, 1) {}
 	SortedArrayMap() {}
 
+#ifdef UPP
+	void     Serialize(Stream& s);
+	void     Xmlize(XmlIO& xio);
+	void     Jsonize(JsonIO& jio);
+#endif
+
 	friend void    Swap(SortedArrayMap& a, SortedArrayMap& b) { a.Swap(b); }
 
 	typedef typename B::ConstIterator ConstIterator;
 	typedef typename B::Iterator      Iterator;
 	STL_MAP_COMPATIBILITY(SortedArrayMap<K _cm_ T _cm_ HashFn>)
 };
-
-#define LLOG(x)   // DLOG(x)
-#include "InVector.hpp"
-#undef  LLOG

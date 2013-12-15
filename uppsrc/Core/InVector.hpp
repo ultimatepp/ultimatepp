@@ -4,6 +4,7 @@ template <class T>
 InVector<T>::InVector()
 {
 	serial = NewInVectorSerial();
+	slave = 0;
 	Reset();
 }
 
@@ -11,7 +12,6 @@ template <class T>
 void InVector<T>::Reset()
 {
 	hcount = count = 0;
-	slave = 0;
 	SetBlkPar();
 }
 
@@ -399,7 +399,7 @@ void InVector<T>::SetCount(int n)
 	if(n < GetCount())
 		Trim(n);
 	else
-		Insert(GetCount(), n - GetCount());
+		InsertN(GetCount(), n - GetCount());
 }
 
 template <class T>
@@ -637,6 +637,20 @@ void InVector<T>::Swap(InVector& b)
 	Swap(blk_low, b.blk_low);
 }
 
+#ifdef UPP
+template <class T>
+void InVector<T>::Xmlize(XmlIO& xio, const char *itemtag)
+{
+	XmlizeContainer(xio, itemtag, *this);
+}
+
+template <class T>
+void InVector<T>::Jsonize(JsonIO& jio)
+{
+	JsonizeArray<InVector<T>, T>(jio, *this);
+}
+#endif
+
 #ifdef _DEBUG
 template <class T>
 void InVector<T>::DumpIndex()
@@ -721,7 +735,7 @@ void InArray<T>::SetCount(int n)
 	if(n < GetCount())
 		Trim(n);
 	else
-		Insert(GetCount(), n - GetCount());
+		InsertN(GetCount(), n - GetCount());
 }
 
 template <class T>
@@ -767,6 +781,20 @@ InArray<T>::InArray(const InArray& v, int)
 	while(n--)
 		*it++ = new T(*s++);
 }
+
+#ifdef UPP
+template <class T>
+void InArray<T>::Xmlize(XmlIO& xio, const char *itemtag)
+{
+	XmlizeContainer(xio, itemtag, *this);
+}
+
+template <class T>
+void InArray<T>::Jsonize(JsonIO& jio)
+{
+	JsonizeArray<InArray<T>, T>(jio, *this);
+}
+#endif
 
 template <class T, class Less>
 int SortedIndex<T, Less>::FindAdd(const T& key)
@@ -860,3 +888,64 @@ void Slaved_InArray__<T>::AddFirst()
 {
 	data.iv.data.Add().Add(mk ? new T(*ptr) : ptr ? ptr : new T);
 }
+
+#ifdef UPP
+template <class K, class T>
+void StreamSortedMap(Stream& s, T& cont)
+{
+	int n = cont.GetCount();
+	s / n;
+	if(n < 0) {
+		s.LoadError();
+		return;
+	}
+	if(s.IsLoading()) {
+		cont.Clear();
+		while(n--) {
+			K key;
+			s % key;
+			s % cont.Add(key);
+		}
+	}
+	else
+		for(int i = 0; i < cont.GetCount(); i++) {
+			K key = cont.GetKey(i);
+			s % key;
+			s % cont[i];
+		}
+}
+
+template <class K, class T, class Less>
+void SortedVectorMap<K, T, Less>::Serialize(Stream& s) {
+	StreamSortedMap<K, SortedVectorMap<K, T, Less> >(s, *this);
+}
+
+template <class K, class T, class Less>
+void SortedVectorMap<K, T, Less>::Xmlize(XmlIO& xio)
+{
+	XmlizeSortedMap<K, T, SortedVectorMap<K, T, Less> >(xio, "key", "value", *this);
+}
+
+template <class K, class T, class Less>
+void SortedVectorMap<K, T, Less>::Jsonize(JsonIO& jio)
+{
+	JsonizeSortedMap<SortedVectorMap<K, T, Less>, K, T>(jio, *this, "key", "value");
+}
+
+template <class K, class T, class Less>
+void SortedArrayMap<K, T, Less>::Serialize(Stream& s) {
+	StreamSortedMap<K, SortedArrayMap<K, T, Less> >(s, *this);
+}
+
+template <class K, class T, class Less>
+void SortedArrayMap<K, T, Less>::Xmlize(XmlIO& xio)
+{
+	XmlizeSortedMap<K, T, SortedArrayMap<K, T, Less> >(xio, "key", "value", *this);
+}
+
+template <class K, class T, class Less>
+void SortedArrayMap<K, T, Less>::Jsonize(JsonIO& jio)
+{
+	JsonizeSortedMap<SortedArrayMap<K, T, Less>, K, T>(jio, *this, "key", "value");
+}
+#endif

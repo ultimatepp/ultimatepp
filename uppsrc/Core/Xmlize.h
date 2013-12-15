@@ -178,6 +178,30 @@ void XmlizeMap(XmlIO& xml, const char *keytag, const char *valuetag, T& data)
 	}
 }
 
+template<class K, class V, class T>
+void XmlizeSortedMap(XmlIO& xml, const char *keytag, const char *valuetag, T& data)
+{
+	if(xml.IsStoring()) {
+		for(int i = 0; i < data.GetCount(); i++) {
+			XmlIO k = xml.Add(keytag);
+			XmlizeStore(k, data.GetKey(i));
+			XmlIO v = xml.Add(valuetag);
+			XmlizeStore(v, data[i]);
+		}
+	}
+	else {
+		data.Clear();
+		int i = 0;
+		while(i < xml->GetCount() - 1 && xml->Node(i).IsTag(keytag) && xml->Node(i + 1).IsTag(valuetag)) {
+			K key;
+			XmlIO k = xml.At(i++);
+			Xmlize(k, key);
+			XmlIO v = xml.At(i++);
+			Xmlize(v, data.Add(key));
+		}
+	}
+}
+
 template<class K, class T>
 void XmlizeIndex(XmlIO& xml, const char *keytag, T& data)
 {
