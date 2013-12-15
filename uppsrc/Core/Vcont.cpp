@@ -30,13 +30,13 @@ void VectorReAlloc_(void *v_, int newalloc, int sizeofT)
 	Vector_ *v = (Vector_*)v_;
 	ASSERT(newalloc >= v->items);
 	ASSERT(v->items >= 0); // Pick semantics broken
-	size_t sz0 = newalloc * sizeofT;
+	size_t sz0 = (size_t)newalloc * sizeofT;
 	size_t sz = sz0;
 	void *newvector = newalloc ? MemoryAllocSz(sz) : NULL;
 //	v->alloc = /*(sz - sz0) / sizeofT + */newalloc; //Benchmark...
 	v->alloc = (int)((sz - sz0) / sizeofT + newalloc); //Benchmark...
 	if(v->vector)
-		memcpy(newvector, v->vector, v->items * sizeofT);
+		memcpy(newvector, v->vector, (size_t)v->items * sizeofT);
 	v->vector = newvector;
 }
 
