@@ -585,7 +585,6 @@ bool TcpSocket::IsGlobalTimeout()
 
 bool TcpSocket::RawWait(dword flags, int end_time)
 { // wait till end_time
-	LLOG("Wait(" << msecs() << " - " << end_time << ", " << flags << ")");
 	if((flags & WAIT_READ) && ptr != end)
 		return true;
 	if(socket == INVALID_SOCKET)
@@ -770,7 +769,6 @@ int TcpSocket::Get(void *buffer, int count)
 	if(!IsOpen() || IsError() || IsEof() || IsAbort())
 		return 0;
 	
-	String out;
 	int l = (int)(end - ptr);
 	done = 0;
 	if(l > 0)
@@ -831,13 +829,17 @@ String TcpSocket::GetAll(int len)
 
 String TcpSocket::GetLine(int maxlen)
 {
+	LLOG("GetLine " << maxlen);
 	String ln;
 	int end_time = GetEndTime();
 	for(;;) {
 		int c = Peek(end_time);
 		if(c < 0) {
 			if(!IsError())
-				SetSockError("GetLine", -1, "timeout");
+				if(msecs() > end_time)
+					SetSockError("GetLine", -1, "timeout");
+				else
+					continue;
 			return String::GetVoid();
 		}
 		Get();
