@@ -9,8 +9,8 @@ void *LAlloc(size_t& size);
 void  LFree(void *ptr);
 
 #ifdef MEMORY_SHRINK
-void *FreeRaw4KB(void *ptr);
-void *FreeRaw64KB(void *ptr);
+void  FreeRaw4KB(void *ptr);
+void  FreeRaw64KB(void *ptr);
 #endif
 
 struct Heap {
