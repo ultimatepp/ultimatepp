@@ -73,17 +73,18 @@ void *SysAllocRaw(size_t size, size_t reqsize)
 	size_t rsz = int(((size + 4095) & ~4095) >> 10);
 	void *ptr = NULL;
 	for(int pass = 0; pass < 2; pass++) {
-		if(sKB + rsz < sKBLimit) {
+		if(sKB + (int)rsz < sKBLimit) {
 		#ifdef PLATFORM_WIN32
 			ptr = VirtualAlloc(NULL, size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
-		#else
-		#ifdef PLATFORM_LINUX
+		#elif PLATFORM_LINUX
 			ptr =  mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-		#else
-			ptr =  mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);
-		#endif
 			if(ptr == MAP_FAILED)
 				ptr = NULL;
+		#else
+			ptr =  mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);
+			if(ptr == MAP_FAILED)
+				ptr = NULL;
+		#endif
 			if(ptr)
 				break;
 		}
@@ -91,7 +92,6 @@ void *SysAllocRaw(size_t size, size_t reqsize)
 		MemoryShrink(); // Freeing large / small empty might help
 	#endif
 	}
-	#endif
 	if(!ptr)
 		OutOfMemoryPanic(reqsize);
 	sKB += rsz;
@@ -131,14 +131,14 @@ void *AllocRaw64KB(int reqsize)
 	return ptr;
 }
 
-void *FreeRaw4KB(void *ptr)
+void FreeRaw4KB(void *ptr)
 {
 	RTIMING("FreeRaw4KB");
 	SysFreeRaw(ptr, 4096);
 	s4kb__--;
 }
 
-void *FreeRaw64KB(void *ptr)
+void FreeRaw64KB(void *ptr)
 {
 	RTIMING("FreeRaw64KB");
 	SysFreeRaw(ptr, 65536);
