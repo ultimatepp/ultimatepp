@@ -23,7 +23,7 @@ void Server()
 			     << "<b>URI:</b> " << http.GetURI() << "<br>";
 			for(int i = 0; i < http.fields.GetCount(); i++)
 				html << "<b>" << http.fields.GetKey(i) << ":</b> " << http.fields[i] << "<br>";
-			int len = http.GetContentLength();
+			int len = (int)http.GetContentLength();
 			if(len > 0)
 				socket.GetAll(len);
 			html << "<b><i>Current time:</i></b> " << GetSysTime() << "</html>";
