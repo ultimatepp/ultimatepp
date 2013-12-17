@@ -25,13 +25,26 @@ void DumpMap(const XmlNode& n)
 	DUMP(tag_count);
 }
 
-//const char *xmlfile = "/home/cxl/20131117_ST_ZZSZ.xml";
-const char *xmlfile = "/home/cxl/20131106_ST_ZZSZ.xml";
+const char *xmlfile = "/home/cxl/20131117_ST_ZZSZ.xml";
+//const char *xmlfile = "/home/cxl/20131106_ST_ZZSZ.xml";
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_FILE|LOG_COUT);
+
+	MemoryLimitKb(550 * 1024);
+
 	RLOG(MemoryProfile());
 	{
+		Vector<String> x;
+		for(int i = 0; i < 1024; i++)
+			x.Add(String('a', 30000));
+		RLOG(MemoryUsedKb() << " KB used -------");
+		RLOG(MemoryProfile());
+	}
+	RLOG("* After large " << MemoryUsedKb() << " KB used -------");
+	RLOG(MemoryProfile());
+	if(0) {
 		RTIMING("Parse with ignore!");
 		IgnoreXmlPaths ignore("/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Geometrie;/vf:VymennyFormat/vf:Data/vf:Parcely");
 		XmlNode n = ParseXML(LoadFile(xmlfile), ignore);
@@ -51,5 +64,14 @@ CONSOLE_APP_MAIN
 		DumpMap(n);
 	}
 	RLOG("-----------");
+	RLOG(MemoryUsedKb() << " KB used -------");
 	RLOG(MemoryProfile());
+	RLOG("Press a key to continue");
+	getchar();
+	RLOG("----------- Shrink");
+	MemoryShrink();
+	RLOG(MemoryUsedKb() << " KB used -------");
+	RLOG(MemoryProfile());
+	RLOG("Press a key to continue");
+	getchar();
 }
