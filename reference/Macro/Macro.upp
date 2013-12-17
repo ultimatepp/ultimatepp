@@ -1,4 +1,4 @@
-description "Examples of using macrosin TheIDE\377";
+description "Examples of using macros in TheIDE\377";
 
 uses
 	Core;
