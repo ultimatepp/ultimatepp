@@ -2,8 +2,8 @@ uses
 	Core;
 
 file
-	Heap.cpp;
+	FixedMap.cpp;
 
 mainconfig
-	"" = "";
+	"" = "SSE2";
 

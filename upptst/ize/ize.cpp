@@ -53,6 +53,20 @@ void TestMap()
 	Test(data);
 }
 
+template <class T>
+void TestFixedMap()
+{
+	T data;
+
+	data.Add(1, typeid(T).name());
+	data.Add(2, "123");
+	data.Add(3, "433");
+	
+	data.Finish();
+	
+	Test(data);
+}
+
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
@@ -89,6 +103,12 @@ CONSOLE_APP_MAIN
 
 	TestMap< SortedArrayMap<int, String> >();
 	TestMap< WithDeepCopy< SortedArrayMap<int, String> > >();
+
+	TestFixedMap< FixedVectorMap<int, String> >();
+	TestFixedMap< WithDeepCopy< FixedVectorMap<int, String> > >();
+
+	TestFixedMap< FixedArrayMap<int, String> >();
+	TestFixedMap< WithDeepCopy< FixedArrayMap<int, String> > >();
 
 	LOG("========= EVERYTHING OK ==========");
 }
