@@ -8,6 +8,11 @@ void *AllocRaw64KB(int reqsize);
 void *LAlloc(size_t& size);
 void  LFree(void *ptr);
 
+#ifdef MEMORY_SHRINK
+void *FreeRaw4KB(void *ptr);
+void *FreeRaw64KB(void *ptr);
+#endif
+
 struct Heap {
 	enum { CACHE = 16 };
 
@@ -81,7 +86,7 @@ struct Heap {
 
 	Page      work[NKLASS][1];   // circular list of pages that contain some empty blocks
 	Page      full[NKLASS][1];   // circular list of pages that contain NO empty blocks
-	Page     *empty[NKLASS];     // last fully freed page per klass (hot)
+	Page     *empty[NKLASS];     // last fully freed page per klass (hot) or global list of empty pages in aux
 	FreeLink *cache[NKLASS];     // hot frontend cache of small blocks
 	int       cachen[NKLASS];    // counter of small blocks that are allowed to be stored in cache
 
@@ -149,6 +154,8 @@ struct Heap {
 	void  *LAlloc(size_t& size);
 	void   LFree(void *ptr);
 	void   Make(MemoryProfile& f);
+
+	static void Shrink();
 
 	void RemoteFree(void *ptr);
 	void Shutdown();

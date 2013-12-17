@@ -154,9 +154,7 @@ public:
 	
 	STL_VECTOR_COMPATIBILITY(InVector<T>)
 
-#ifdef _DEBUG
-	void DumpIndex();
-#endif
+	void DumpIndex() const;
 };
 
 template <class T>
@@ -479,7 +477,7 @@ public:
 	ConstIterator    End() const                    { return iv.End(); }
 	ConstIterator    GetIter(int pos) const         { return iv.GetIter(pos); }
 	
-	const InVector<T>& GetKeys()                    { return iv; }
+	const InVector<T>& GetKeys()  const             { return iv; }
 
 
 	SortedIndex()                                        {}
@@ -548,7 +546,6 @@ public:
 	
 	const SortedIndex<K>& GetIndex() const          { return key; }
 	const InVector<K>& GetKeys() const              { return key.GetKeys(); }
-	const InVector<T>& GetValues() const            { return value; }
 
 	SortedAMap()                                    { SetSlave(); }
 	SortedAMap(const SortedAMap& s, int) : key(s.key, 0), value(s.value, 0) { SetSlave(); }
@@ -614,6 +611,8 @@ public:
 
 	SortedVectorMap& operator()(const K& k, const T& v) { Add(k, v); return *this; }
 
+	const InVector<T>& GetValues() const            { return B::value.data; }
+
 	SortedVectorMap(const SortedVectorMap& s, int) : B(s, 1) {}
 	SortedVectorMap()                                                       {}
 
@@ -675,6 +674,8 @@ public:
 
 	T       *Detach(int i)                        { T *x = B::value.Detach(i); B::Remove(i); return x; }
 	T       *PopDetach()                          { return Detach(B::GetCount() - 1); }
+
+	const InArray<T>& GetValues() const           { return B::value.data; }
 
 	SortedArrayMap& operator()(const K& k, const T& v) { Add(k, v); return *this; }
 

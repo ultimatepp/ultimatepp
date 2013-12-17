@@ -567,3 +567,22 @@ void AMap<K, T, V, HashFn>::Sweep()
 	key.Remove(b);
 	value.Remove(b);
 }
+
+#ifdef UPP
+template <class K, class T, class V, class Less>
+void FixedAMap<K, T, V, Less>::Serialize(Stream& s) {
+	s % key % value;
+}
+
+template <class K, class T, class V, class Less>
+void FixedAMap<K, T, V, Less>::Xmlize(XmlIO& xio)
+{
+	XmlizeSortedMap<K, T, FixedAMap<K, T, V, Less> >(xio, "key", "value", *this);
+}
+
+template <class K, class T, class V, class Less>
+void FixedAMap<K, T, V, Less>::Jsonize(JsonIO& jio)
+{
+	JsonizeSortedMap<FixedAMap<K, T, V, Less>, K, T>(jio, *this, "key", "value");
+}
+#endif

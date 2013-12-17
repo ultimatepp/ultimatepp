@@ -300,11 +300,15 @@ String AsString(const MemoryProfile& mem)
 		}
 	text << Format(" TOTAL, %6d allocated (%5d KB), %6d fragmented (%5d KB)\n",
 	              acount, int(asize >> 10), fcount, int(fsize >> 10));
-	text << "Free pages " << mem.freepages << " (" << mem.freepages * 4 << " KB)\n";
+	text << "Free 4KB pages " << mem.freepages << " (" << mem.freepages * 4 << " KB)\n";
 	text << "Large block count " << mem.large_count
-	    << ", total size " << (mem.large_total >> 10) << " KB\n";
+	     << ", total size " << (mem.large_total >> 10) << " KB\n";
 	text << "Large fragments count " << mem.large_free_count
-	    << ", total size " << (mem.large_free_total >> 10) << " KB\n";
+	     << ", total size " << (mem.large_free_total >> 10) << " KB\n";
+	text << "Large free 64KB pages " << mem.large_empty
+	     << ", total size " << 64 * mem.large_empty << " KB\n";
+	text << "Big block count " << mem.big_count
+	     << ", total size " << int(mem.big_size >> 10) << " KB\n";
 	return text;
 }
 

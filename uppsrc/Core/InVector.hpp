@@ -1,3 +1,5 @@
+#define LLOG(x)   // DLOG(x)
+
 int64 NewInVectorSerial();
 
 template <class T>
@@ -199,6 +201,7 @@ T *InVector<T>::Insert0(int ii, int blki, int pos, int off, const T *val)
 			Slave()->Split(blki, data[blki].GetCount() / 2);
 		Vector<T>& x = data.Insert(blki + 1);
 		x.InsertSplit(0, data[blki], data[blki].GetCount() / 2);
+		data[blki].Shrink();
 		Reindex();
 		pos = ii;
 		blki = FindBlock(pos, off);
@@ -651,30 +654,33 @@ void InVector<T>::Jsonize(JsonIO& jio)
 }
 #endif
 
-#ifdef _DEBUG
 template <class T>
-void InVector<T>::DumpIndex()
+void InVector<T>::DumpIndex() const
 {
 	String h;
-	DLOG("------- InVector dump, " << index.GetCount());
+	RLOG("------- InVector dump, count: " << GetCount() << ", index depth: " << index.GetCount());
+	int64 alloc = 0;
 	for(int i = 0; i < data.GetCount(); i++) {
 		if(i)
 			h << ", ";
-		h << data[i].GetCount();
+		h << data[i].GetCount() << " (" << data[i].GetAlloc() << ")";
+		alloc += data[i].GetAlloc();
 	}
-	DLOG(h);
+	RLOG("Data blocks: " << data.GetCount() << ", sizeof: " << data.GetCount() * sizeof(Vector<T>));
+	RLOG("Total alloc: " << alloc);
+	RLOG(h);
 	for(int j = 0; j < index.GetCount(); j++) {
 		h.Clear();
+		h << index[j].GetCount() << ": ";
 		for(int k = 0; k < index[j].GetCount(); k++) {
 			if(k)
 				h << ", ";
 			h << index[j][k];
 		}
-		DLOG(h);
+		RLOG(h);
 	}
-	DLOG(".");
+	RLOG(".");
 }
-#endif
 
 #ifdef flagIVTEST
 template <class T>
@@ -848,6 +854,7 @@ void Slaved_InVector__<T>::Split(int blki, int nextsize)
 {
 	Vector<T>& x = data.data.Insert(blki + 1);
 	x.InsertSplit(0, data.data[blki], nextsize);
+	data.data[blki].Shrink();
 }
 
 template <class T>
@@ -948,4 +955,8 @@ void SortedArrayMap<K, T, Less>::Jsonize(JsonIO& jio)
 {
 	JsonizeSortedMap<SortedArrayMap<K, T, Less>, K, T>(jio, *this, "key", "value");
 }
+#endif
+
+#ifdef LLOG
+#undef  LLOG
 #endif

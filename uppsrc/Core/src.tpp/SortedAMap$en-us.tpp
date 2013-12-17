@@ -173,11 +173,6 @@ _[* GetKeys]()_[@(0.0.255) const]&]
 [s2; Returns a reference to the internal InVector of keys.&]
 [s3; &]
 [s4; &]
-[s5;:SortedAMap`:`:GetValues`(`)const:%- [@(0.0.255) const]_[_^InVector^ InVector]<[*@4 T]>
-`&_[* GetValues]()_[@(0.0.255) const]&]
-[s2; Returns a reference to te internal InVector of values.&]
-[s3; &]
-[s4; &]
 [s5;:SortedAMap`:`:SortedAMap`(const SortedAMap`&`,int`):%- [* SortedAMap]([@(0.0.255) co
 nst]_[* SortedAMap][@(0.0.255) `&]_[*@3 s], [@(0.0.255) int])&]
 [s2; Deep copy constructor.&]

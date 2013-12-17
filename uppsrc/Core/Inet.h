@@ -143,7 +143,7 @@ class TcpSocket {
 	int                     Get_();
 	int                     Peek_();
 	int                     Peek_(int end_time);
-	int                     Peek(int end_time)          { return ptr < end ? *ptr : Peek_(end_time); }
+	int                     Peek(int end_time)          { return ptr < end ? (byte)*ptr : Peek_(end_time); }
 	bool                    IsGlobalTimeout();
 
 	void                    Reset();
@@ -200,9 +200,9 @@ public:
 	bool            WaitRead()                               { return Wait(WAIT_READ); }
 	bool            WaitWrite()                              { return Wait(WAIT_WRITE); }
 
-	int             Peek()                                   { return ptr < end ? *ptr : Peek_(); }
+	int             Peek()                                   { return ptr < end ? (byte)*ptr : Peek_(); }
 	int             Term()                                   { return Peek(); }
-	int             Get()                                    { return ptr < end ? *ptr++ : Get_(); }
+	int             Get()                                    { return ptr < end ? (byte)*ptr++ : Get_(); }
 	int             Get(void *buffer, int len);
 	String          Get(int len);
 

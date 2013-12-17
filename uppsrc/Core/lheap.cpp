@@ -9,10 +9,19 @@ NAMESPACE_UPP
 #include "HeapImp.h"
 
 word  Heap::BinSz[LBINS];
-byte  Heap::SzBin[MAXBLOCK / 8 + 1];
-byte  Heap::BlBin[MAXBLOCK / 8 + 1];
+byte  Heap::SzBin[MAXBLOCK / 8 + 1]; // Minimal bin for size (request -> bin)
+byte  Heap::BlBin[MAXBLOCK / 8 + 1]; // Largest bin less or equal to size (free -> bin)
 
 Heap::DLink Heap::lempty[1];
+
+const char *asString(int i)
+{
+	thread__ static char h[4][1024];
+	thread__ static int ii;
+	ii = (ii + 1) & 3;
+	sprintf(h[ii], "%d", i);
+	return h[ii];
+}
 
 void Heap::GlobalLInit()
 {
@@ -46,8 +55,9 @@ void Heap::GlobalLInit()
 inline
 void Heap::LinkFree(DLink *b, int size)
 {
-	int q = BlBin[size >> 4];
+	int q = BlBin[size >> 3];
 	b->Link(freebin[q]);
+	LLOG("Linked " << asString(size) << " to freebin " << asString(q));
 }
 
 Heap::DLink *Heap::AddChunk(int reqsize)
@@ -136,6 +146,7 @@ void Heap::MoveToEmpty(DLink *l, Header *bh)
 inline
 void *Heap::TryLAlloc(int ii, size_t size)
 {
+	LLOG("TryLAlloc bin: " << asString(ii) << " size: " << asString(size));
 	while(ii < LBINS) {
 		if(freebin[ii] != freebin[ii]->next) {
 			void *ptr = DivideBlock(freebin[ii]->next, (int)size, ii);
@@ -151,7 +162,7 @@ void *Heap::TryLAlloc(int ii, size_t size)
 int sBig__;
 
 void *Heap::LAlloc(size_t& size) {
-	LLOG("LAlloc " << size);
+	LLOG("+++ LAlloc " << size);
 	ASSERT(size > 256);
 	if(!initialized)
 		Init();
@@ -169,6 +180,7 @@ void *Heap::LAlloc(size_t& size) {
 	}
 	int bini = SizeToBin((int)size);
 	size = BinSz[bini];
+	LLOG("Binned size " << asString(size));
 	void *ptr = TryLAlloc(bini, size);
 	if(ptr)
 		return ptr;
@@ -213,6 +225,7 @@ void Heap::LFree(void *ptr) {
 		bh->heap->RemoteFree(ptr);
 		return;
 	}
+	LLOG("--- LFree " << asString(bh->size));
 	if(bh->prev) {
 		Header *p = bh->Prev();
 		if(p->free) {
@@ -232,7 +245,7 @@ void Heap::LFree(void *ptr) {
 	bh->free = true;
 	LinkFree(b, bh->size);
 	DbgFreeFill(b + 1, bh->size - sizeof(DLink));
-	LLOG("Freed, joined size " << bh->size << " lcount " << lcount);
+	LLOG("Freed, joined size " << asString(bh->size) << " lcount " << asString(lcount));
 	if(bh->size == MAXBLOCK && lcount > 1) {
 		DLink *l = (DLink *)((byte *)bh - LARGEHDRSZ);
 		lcount--;
