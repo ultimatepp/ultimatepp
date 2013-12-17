@@ -1,9 +1,9 @@
-39460 KB used -------
-TIMING Parse!         : 147.00 ms - 147.00 ms (147.00 ms / 1 ), min: 147.00 ms, max: 147.00 ms, nesting: 1 - 1
+POSIX
 
-=======================
------------
-40484 KB used -------
-TIMING Parse!         : 152.00 ms - 152.00 ms (152.00 ms / 1 ), min: 152.00 ms, max: 152.00 ms, nesting: 1 - 1
-
-=======================
+TIMING FreeRaw4KB     : 114.03 ms -  1.12 us (116.00 ms / 102216 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 102216
+TIMING FreeRaw64KB    :  1.99 ms -  3.89 us ( 2.00 ms / 512 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 512
+TIMING Shrink         : 125.00 ms - 62.50 ms (125.00 ms / 2 ), min:  2.00 ms, max: 123.00 ms, nesting: 1 - 2
+TIMING Parse all!     :  2.28 s  -  2.28 s  ( 2.28 s  / 1 ), min:  2.28 s , max:  2.28 s , nesting: 1 - 1
+TIMING AllocRaw64KB   : 990.13 us -  1.93 us ( 1.00 ms / 513 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 513
+TIMING AllocRaw4KB    : 26.03 ms - 254.57 ns (28.00 ms / 102258 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 102258
+-------------

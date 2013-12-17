@@ -13,25 +13,47 @@ String RandomString(int maxlen = 70)
 
 void Test()
 {
-	SeedRandom();
-	for(int pass = 0; pass < 2; pass++) {
-		NanoStrings ns;
-		Vector<dword> ws;
-		Vector<String> vs;
-	
-		for(int i = 0; i < 100000000; i++) {
-			String s = pass ? "x" : RandomString();
-			ws.Add(ns.Add(s));
-			vs.Add(s);
-		}
-		
-		for(int i = 0; i < ws.GetCount(); i++)
-			if(ns.Get(ws[i]) != vs[i]) {
-				DUMP(i);
-				DUMP(ns.Get(ws[i]));
-				DUMP(vs[i]);
-				NEVER();
+	MemoryLimitKb(8000000);
+	for(int sz = 0; sz < 2; sz++) {
+		for(int pass = 0; pass < 2; pass++) {
+			RLOG("--------------------");
+			DUMP(sz);
+			DUMP(pass);
+			{
+				NanoStrings ns;
+				Vector<dword> ws;
+				
+				ns.ZeroTerminated(sz);
+			
+				SeedRandom();
+				for(int i = 0; i < 140000000; i++) {
+					if(i % 10000000 == 0)
+						RLOG("Created " << i);
+					String s = pass ? "x" : RandomString(Random(4) ? 5 : 50);
+					ws.Add(ns.Add(s));
+				}
+				
+//				ns.DumpProfile();
+				RLOG("---- Strings " << MemoryUsedKb() << " KB used -------");
+				RLOG(MemoryProfile());
+				
+				SeedRandom();
+				for(int i = 0; i < ws.GetCount(); i++) {	
+					if(i % 10000000 == 0)
+						RLOG("Tested " << i);
+					String s = pass ? "x" : RandomString(Random(4) ? 5 : 50);
+					if((sz ? String(ns.GetPtr(ws[i])) : ns.Get(ws[i])) != s) {
+						DUMP(i);
+						DUMP(ns.Get(ws[i]));
+						DUMP(s);
+						NEVER();
+					}
+				}
+				RLOG("Test OK");
 			}
+			RLOG("===== EMPTY " << MemoryUsedKb() << " KB used -------");
+			RLOG(MemoryProfile());		
+		}
 	}
 }
 
@@ -58,6 +80,9 @@ void Scan(const XmlNode& n, bool nano)
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+	Test(); return;
+	
 	RLOG(MemoryProfile());
 	
 	{
@@ -72,6 +97,6 @@ CONSOLE_APP_MAIN
 		RLOG("---- Strings " << MemoryUsedKb() - used << " KB used -------");
 		RLOG(MemoryProfile());
 		
-		ns.Profile();
+		ns.DumpProfile();
 	}
 }
