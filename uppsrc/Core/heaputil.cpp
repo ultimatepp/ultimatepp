@@ -61,22 +61,40 @@ int sKB;
 
 int   MemoryUsedKb() { return sKB; }
 
+int sKBLimit = INT_MAX;
+
+void  MemoryLimitKb(int kb)
+{
+	sKBLimit = kb;
+}
+
 void *SysAllocRaw(size_t size, size_t reqsize)
 {
-	sKB += int(((size + 4095) & ~4095) >> 10);
-#ifdef PLATFORM_WIN32
-	void *ptr = VirtualAlloc(NULL, size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
-#else
-#ifdef PLATFORM_LINUX
-	void *ptr =  mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-#else
-	void *ptr =  mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);
-#endif
-	if(ptr == MAP_FAILED)
-		ptr = NULL;
-#endif
+	size_t rsz = int(((size + 4095) & ~4095) >> 10);
+	void *ptr = NULL;
+	for(int pass = 0; pass < 2; pass++) {
+		if(sKB + rsz < sKBLimit) {
+		#ifdef PLATFORM_WIN32
+			ptr = VirtualAlloc(NULL, size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
+		#else
+		#ifdef PLATFORM_LINUX
+			ptr =  mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+		#else
+			ptr =  mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);
+		#endif
+			if(ptr == MAP_FAILED)
+				ptr = NULL;
+			if(ptr)
+				break;
+		}
+	#ifdef MEMORY_SHRINK
+		MemoryShrink(); // Freeing large / small empty might help
+	#endif
+	}
+	#endif
 	if(!ptr)
 		OutOfMemoryPanic(reqsize);
+	sKB += rsz;
 	DoPeakProfile();
 	return ptr;
 }
@@ -93,6 +111,41 @@ void  SysFreeRaw(void *ptr, size_t size)
 
 int s4kb__;
 int s64kb__;
+
+#ifdef MEMORY_SHRINK
+void *AllocRaw4KB(int reqsize)
+{
+	RTIMING("AllocRaw4KB");
+	void *ptr = (byte *)SysAllocRaw(4096, reqsize);
+	s4kb__++;
+	DoPeakProfile();
+	return ptr;
+}
+
+void *AllocRaw64KB(int reqsize)
+{
+	RTIMING("AllocRaw64KB");
+	void *ptr = (byte *)SysAllocRaw(65536, reqsize);
+	s64kb__++;
+	DoPeakProfile();
+	return ptr;
+}
+
+void *FreeRaw4KB(void *ptr)
+{
+	RTIMING("FreeRaw4KB");
+	SysFreeRaw(ptr, 4096);
+	s4kb__--;
+}
+
+void *FreeRaw64KB(void *ptr)
+{
+	RTIMING("FreeRaw64KB");
+	SysFreeRaw(ptr, 65536);
+	s64kb__--;
+}
+
+#else
 
 void *AllocRaw4KB(int reqsize)
 {
@@ -131,6 +184,7 @@ void *AllocRaw64KB(int reqsize)
 	DoPeakProfile();
 	return p;
 }
+#endif
 
 void HeapPanic(const char *text, void *pos, int size)
 {
@@ -205,11 +259,8 @@ void Heap::Make(MemoryProfile& f)
 	int fi = 0;
 	DLink *m = big->next;
 	while(m != big) {
-		size_t sz = ((BigHdr *)((byte *)m + BIGHDRSZ - sizeof(Header)))->size;
-		f.large_count++;
-		f.large_total += sz;
-		if(ii < 1024)
-			f.large_size[ii++] = sz;
+		f.big_count++;
+		f.big_size += ((BigHdr *)m)->size;
 		m = m->next;
 	}
 	m = large->next;
@@ -230,6 +281,11 @@ void Heap::Make(MemoryProfile& f)
 			}
 			h = h->Next();
 		}
+		m = m->next;
+	}
+	m = lempty->next;
+	while(m != lempty) {
+		f.large_empty++;
 		m = m->next;
 	}
 }

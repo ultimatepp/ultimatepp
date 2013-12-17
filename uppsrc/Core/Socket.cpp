@@ -746,7 +746,7 @@ int TcpSocket::Get_()
 	if(!IsOpen() || IsError() || IsEof() || IsAbort())
 		return -1;
 	ReadBuffer(GetEndTime());
-	return ptr < end ? *ptr++ : -1;
+	return ptr < end ? (byte)*ptr++ : -1;
 }
 
 int TcpSocket::Peek_(int end_time)
@@ -754,7 +754,7 @@ int TcpSocket::Peek_(int end_time)
 	if(!IsOpen() || IsError() || IsEof() || IsAbort())
 		return -1;
 	ReadBuffer(end_time);
-	return ptr < end ? *ptr : -1;
+	return ptr < end ? (byte)*ptr : -1;
 }
 
 int TcpSocket::Peek_()

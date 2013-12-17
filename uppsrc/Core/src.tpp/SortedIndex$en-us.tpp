@@ -141,9 +141,9 @@ d]()_[@(0.0.255) const]&]
 or]_[* GetIter]([@(0.0.255) int]_[*@3 pos])_[@(0.0.255) const]&]
 [s2; Returns iterator at the index [%-*@3 pos] .&]
 [s3; &]
-[s4; &]
-[s5;:SortedIndex`:`:GetKeys`(`):%- [@(0.0.255) const]_[_^InVector^ InVector]<[*@4 T]>`&_[* Ge
-tKeys]()&]
+[s4;%- &]
+[s5;:SortedIndex`:`:GetKeys`(`)const:%- [@(0.0.255) const]_[_^InVector^ InVector]<[*@4 T]>`&
+_[* GetKeys]()_[@(0.0.255) const]&]
 [s2; Retruns a reference to InVector of keys.&]
 [s3; &]
 [s4; &]

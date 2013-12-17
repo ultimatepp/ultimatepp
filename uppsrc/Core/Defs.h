@@ -1,3 +1,5 @@
+#define MEMORY_SHRINK
+
 #ifdef PLATFORM_WIN32
 #define __BREAK__        (*(int *)0 = 0)
 #else
@@ -465,6 +467,11 @@ void  MemoryFreeThread();
 void  MemoryCheck();
 int   MemoryUsedKb();
 
+void  MemoryLimitKb(int kb);
+
+#ifdef MEMORY_SHRINK
+void  MemoryShrink();
+#endif
 
 void  MemoryBreakpoint(dword serial);
 
@@ -501,6 +508,9 @@ struct MemoryProfile {
 	int    large_free_count;
 	size_t large_free_size[1024];
 	int    large_free_total;
+	int    large_empty;
+	int    big_count;
+	size_t big_size;
 
 	MemoryProfile();
 };

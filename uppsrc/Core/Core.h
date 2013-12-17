@@ -286,6 +286,7 @@ class JsonIO;
 #include "Tuple.h"
 #include "Other.h"
 #include "Algo.h"
+#include "FixedMap.h"
 #include "InVector.h"
 
 #include "Value.h"
@@ -329,11 +330,8 @@ class JsonIO;
 #include "Win32Util.h"
 
 #include "Vcont.hpp"
-#include "Index.hpp"
-
-#define LLOG(x)   // DLOG(x)
+#include "Map.hpp"
 #include "InVector.hpp"
-#undef  LLOG
 
 #if (defined(HEAPDBG) || defined(TESTLEAKS)) && defined(PLATFORM_POSIX)
 extern int sMemDiagInitCount;

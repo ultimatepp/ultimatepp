@@ -234,6 +234,36 @@ void Heap::AuxFinalCheck()
 	AssertLeaks(big == big->next);
 }
 
+#ifdef MEMORY_SHRINK
+void Heap::Shrink()
+{
+	Mutex::Lock __(mutex);
+	RTIMING("Shrink");
+	RLOG("Memory shrink");
+	for(int i = 0; i < NKLASS; i++) {
+		Page *p = aux.empty[i];
+		while(p) {
+			Page *q = p;
+			p = p->next;
+			FreeRaw4KB(q);
+		}
+		aux.empty[i] = NULL;
+	}
+	DLink *m = lempty->next;
+	while(m != lempty) {
+		DLink *q = m;
+		m = m->next;
+		q->Unlink();
+		FreeRaw64KB(q);
+	}
+}
+
+void MemoryShrink()
+{
+	Heap::Shrink();
+}
+#endif
+
 void MemoryFreeThread()
 {
 	heap.Shutdown();
