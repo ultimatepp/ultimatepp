@@ -43,6 +43,7 @@ protected:
 	virtual   void  _Put(const void *data, dword size);
 
 	Buffer<byte> buffer;
+	int64        count;
 
 	void   FlushOut();
 	dword  Avail()               { return dword(4096 - (ptr - ~buffer)); }
@@ -53,6 +54,8 @@ public:
 	Callback2<const void *, int> Filter;
 	Callback                     End;
 	void                         Out(const void *ptr, int size);
+	
+	int64                        GetCount() const             { return count; }
 
 	template <class F>
 	void Set(Stream& out_, F& filter) {
@@ -60,6 +63,7 @@ public:
 		filter.WhenOut = callback(this, &OutFilterStream::Out);
 		Filter = callback<F, F, const void *, int>(&filter, &F::Put);
 		End = callback(&filter, &F::End);
+		count = 0;
 	}
 	
 	OutFilterStream();

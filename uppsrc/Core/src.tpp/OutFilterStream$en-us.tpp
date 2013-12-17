@@ -42,6 +42,11 @@ d]_`*, [@(0.0.255) int]>_[* Filter]&]
 st]_[@(0.0.255) void]_`*[*@3 ptr], [@(0.0.255) int]_[*@3 size])&]
 [s2;%% Method serving as filter output.&]
 [s3;%% &]
+[s4; &]
+[s5;:OutFilterStream`:`:GetCount`(`)const: [@(0.0.255) int64]_[* GetCount]()_[@(0.0.255) co
+nst]&]
+[s2;%% Returns a number of bytes written to the output.&]
+[s3; &]
 [s4;%% &]
 [s5;:OutFilterStream`:`:Set`(Stream`&`,F`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 F
 ]>_[@(0.0.255) void]_[* Set]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out`_], 

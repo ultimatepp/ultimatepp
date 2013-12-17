@@ -128,79 +128,116 @@ in single zlib call.&]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Compression / decompression functions]]}}&]
 [s3; &]
-[s5;:ZCompress`(Stream`&`,Stream`&`,Gate2`<int`,int`>`): [@(0.0.255) int]_[* ZCompress]([_^Stream^ S
-tream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 in], 
-[_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])&]
-[s5;:ZCompress`(const void`*`,int`,Gate2`<int`,int`>`): [_^String^ String]_[* ZCompress](
-[@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], [@(0.0.255) int]_[*@3 len], 
-[_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])&]
-[s5;:ZCompress`(const String`&`,Gate2`<int`,int`>`): [_^String^ String]_[* ZCompress]([@(0.0.255) c
-onst]_[_^String^ String][@(0.0.255) `&]_[*@3 s], [_^Gate2^ Gate2]<[@(0.0.255) int], 
-[@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])&]
+[s5;:ZCompress`(Stream`&`,Stream`&`,int64`,Gate2`<int64`,int64`>`): [_^int64^ int64]_[* Z
+Compress]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 i
+n], [_^int64^ int64]_[*@3 size], [_^Gate2^ Gate2]<[_^int64^ int64], [_^int64^ int64]>_[*@3 pr
+ogress]_`=_[@(0.0.255) false])&]
+[s5;:ZCompress`(Stream`&`,Stream`&`,Gate2`<int64`,int64`>`): [_^int64^ int64]_[* ZCompres
+s]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 in], 
+[_^Gate2^ Gate2]<[_^int64^ int64], [_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
+[s5;:ZCompress`(const void`*`,int64`,Gate2`<int64`,int64`>`): [_^String^ String]_[* ZComp
+ress]([@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], [_^int64^ int64]_[*@3 len], 
+[_^Gate2^ Gate2]<[_^int64^ int64], [_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
+[s5;:ZCompress`(const String`&`,Gate2`<int64`,int64`>`): [_^String^ String]_[* ZCompress](
+[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s], [_^Gate2^ Gate2]<[_^int64^ int6
+4], [_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
 [s2;%% Compresses raw data using zlib from input stream [%-*@3 in], 
 memory [%-*@3 data][%- , ][%-*@3 len] or input string [%-*@3 s] to output 
 stream [%-*@3 out] (in this case returns a number of bytes written 
-or negative integer to signal error) or into String return value. 
-[%-*@3 progress] can be used to track progress of operation, returning 
-true cancels it.&]
+or negative integer to signal error) or into String return value 
+(returns IsVoid String on error). [%-*@3 progress] can be used 
+to track progress of operation, returning true cancels operation.&]
 [s3;%% &]
 [s4;%% &]
-[s5;:ZDecompress`(Stream`&`,Stream`&`,Gate2`<int`,int`>`): [@(0.0.255) int]_[* ZDecompres
-s]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 in], 
-[_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])&]
-[s5;:ZDecompress`(const String`&`,Gate2`<int`,int`>`): [_^String^ String]_[* ZDecompress](
-[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s], [_^Gate2^ Gate2]<[@(0.0.255) in
-t], [@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])&]
-[s5;:ZDecompress`(const void`*`,int`,Gate2`<int`,int`>`): [_^String^ String]_[* ZDecompre
-ss]([@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], [@(0.0.255) int]_[*@3 len], 
-[_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])&]
+[s5;:ZDecompress`(Stream`&`,Stream`&`,int64`,Gate2`<int64`,int64`>`): [_^int64^ int64]_
+[* ZDecompress]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&
+]_[*@3 in], [_^int64^ int64]_[*@3 size], [_^Gate2^ Gate2]<[_^int64^ int64], 
+[_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
+[s5;:ZDecompress`(Stream`&`,Stream`&`,Gate2`<int64`,int64`>`): [_^int64^ int64]_[* ZDecom
+press]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 in
+], [_^Gate2^ Gate2]<[_^int64^ int64], [_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false
+])&]
+[s5;:ZDecompress`(const void`*`,int64`,Gate2`<int64`,int64`>`): [_^String^ String]_[* ZDe
+compress]([@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], [_^int64^ int64]_[*@3 len], 
+[_^Gate2^ Gate2]<[_^int64^ int64], [_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
+[s5;:ZDecompress`(const String`&`,Gate2`<int64`,int64`>`): [_^String^ String]_[* ZDecompr
+ess]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s], [_^Gate2^ Gate2]<[_^int64^ i
+nt64], [_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
 [s2;%% Decompresses raw data using zlib from input stream [%-*@3 in], 
 memory [%-*@3 data][%- , ][%-*@3 len] or input string [%-*@3 s] to output 
 stream [%-*@3 out] (in this case returns a number of bytes written 
-or negative integer to signal error) or into String return value. 
-[%-*@3 progress] can be used to track progress of operation, returning 
-true cancels it.&]
+or negative integer to signal error) or into String return value 
+(returns IsVoid String on error). [%-*@3 progress] can be used 
+to track progress of operation, returning true cancels operation.&]
 [s3;%% &]
 [s4;%% &]
-[s5;:GZCompress`(Stream`&`,Stream`&`,int`,Gate2`<int`,int`>`): [@(0.0.255) int]_[* GZComp
-ress]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 in],
- [@(0.0.255) int]_[*@3 size], [_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 progr
-ess]_`=_[@(0.0.255) false])&]
-[s5;:GZCompress`(Stream`&`,Stream`&`,Gate2`<int`,int`>`): [@(0.0.255) int]_[* GZCompress](
-[_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 in], 
-[_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])&]
-[s5;:GZCompress`(const void`*`,int`,Gate2`<int`,int`>`): [_^String^ String]_[* GZCompress
-]([@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], [@(0.0.255) int]_[*@3 len], 
-[_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])&]
-[s5;:GZCompress`(const String`&`,Gate2`<int`,int`>`): [_^String^ String]_[* GZCompress]([@(0.0.255) c
-onst]_[_^String^ String][@(0.0.255) `&]_[*@3 s], [_^Gate2^ Gate2]<[@(0.0.255) int], 
-[@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])&]
+[s5;:GZCompress`(Stream`&`,Stream`&`,int64`,Gate2`<int64`,int64`>`): [_^int64^ int64]_[* G
+ZCompress]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 i
+n], [_^int64^ int64]_[*@3 size], [_^Gate2^ Gate2]<[_^int64^ int64], [_^int64^ int64]>_[*@3 pr
+ogress]_`=_[@(0.0.255) false])&]
+[s5;:GZCompress`(Stream`&`,Stream`&`,Gate2`<int64`,int64`>`): [_^int64^ int64]_[* GZCompr
+ess]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 in],
+ [_^Gate2^ Gate2]<[_^int64^ int64], [_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])
+&]
+[s5;:GZCompress`(const void`*`,int`,Gate2`<int64`,int64`>`): [_^String^ String]_[* GZComp
+ress]([@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], [@(0.0.255) int]_[*@3 len], 
+[_^Gate2^ Gate2]<[_^int64^ int64], [_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
+[s5;:GZCompress`(const String`&`,Gate2`<int64`,int64`>`): [_^String^ String]_[* GZCompres
+s]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s], [_^Gate2^ Gate2]<[_^int64^ i
+nt64], [_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
 [s2;%% Compresses raw data into gzip file format from input stream 
 [%-*@3 in], memory [%-*@3 data][%- , ][%-*@3 len] or input string [%-*@3 s] 
 to output stream [%-*@3 out] (in this case returns a number of 
 bytes written or negative integer to signal error) or into String 
-return value. [%-*@3 progress] can be used to track progress of 
-operation, returning true cancels it.&]
+return value (returns IsVoid String on error). [%-*@3 progress] 
+can be used to track progress of operation, returning true cancels 
+operation.&]
 [s3;%% &]
 [s4;%% &]
-[s5;:GZDecompress`(Stream`&`,Stream`&`,int`,Gate2`<int`,int`>`): [@(0.0.255) int]_[* GZDe
-compress]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 i
-n], [@(0.0.255) int]_[*@3 size], [_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 pr
-ogress]_`=_[@(0.0.255) false])&]
-[s5;:GZDecompress`(Stream`&`,Stream`&`,Gate2`<int`,int`>`): [@(0.0.255) int]_[* GZDecompr
-ess]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 in],
- [_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])
-&]
-[s5;:GZDecompress`(const void`*`,int`,Gate2`<int`,int`>`): [_^String^ String]_[* GZDecomp
-ress]([@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], [@(0.0.255) int]_[*@3 len], 
-[_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])&]
-[s5;:GZDecompress`(const String`&`,Gate2`<int`,int`>`): [_^String^ String]_[* GZDecompres
-s]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s], [_^Gate2^ Gate2]<[@(0.0.255) i
-nt], [@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])&]
+[s5;:GZDecompress`(Stream`&`,Stream`&`,int64`,Gate2`<int64`,int64`>`): [_^int64^ int64]_
+[* GZDecompress]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&
+]_[*@3 in], [_^int64^ int64]_[*@3 size], [_^Gate2^ Gate2]<[_^int64^ int64], 
+[_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
+[s5;:GZDecompress`(Stream`&`,Stream`&`,Gate2`<int64`,int64`>`): [_^int64^ int64]_[* GZDec
+ompress]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 i
+n], [_^Gate2^ Gate2]<[_^int64^ int64], [_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) fals
+e])&]
+[s5;:GZDecompress`(const void`*`,int`,Gate2`<int64`,int64`>`): [_^String^ String]_[* GZDe
+compress]([@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], [@(0.0.255) int]_[*@3 len], 
+[_^Gate2^ Gate2]<[_^int64^ int64], [_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
+[s5;:GZDecompress`(const String`&`,Gate2`<int64`,int64`>`): [_^String^ String]_[* GZDecom
+press]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s], 
+[_^Gate2^ Gate2]<[_^int64^ int64], [_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
 [s2;%% Decompresses raw data into gzip file format from input stream 
 [%-*@3 in], memory [%-*@3 data][%- , ][%-*@3 len] or input string [%-*@3 s] 
 to output stream [%-*@3 out] (in this case returns a number of 
 bytes written or negative integer to signal error) or into String 
-return value. [%-*@3 progress] can be used to track progress of 
-operation, returning true cancels it.&]
+return value (returns IsVoid String on error). [%-*@3 progress] 
+can be used to track progress of operation, returning true cancels 
+operation.&]
+[s3;%% &]
+[s4;%% &]
+[s5;:GZCompressFile`(const char`*`,const char`*`,Gate2`<int64`,int64`>`): [@(0.0.255) b
+ool]_[* GZCompressFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 dstfile], 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 srcfile], [_^Gate2^ Gate2]<[_^int64^ int64], 
+[_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
+[s5;:GZCompressFile`(const char`*`,Gate2`<int64`,int64`>`): [@(0.0.255) bool]_[* GZCompre
+ssFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 srcfile], [_^Gate2^ Gate2]<[_^int64^ in
+t64], [_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
+[s2;%% Compresses file into gzip format. If [%-*@3 dstfile] is not 
+present, the name is created by appending .gz extension to [%-*@3 srcfile]. 
+Returns true on success.&]
+[s3;%% &]
+[s4;%% &]
+[s5;:GZDecompressFile`(const char`*`,const char`*`,Gate2`<int64`,int64`>`): [@(0.0.255) b
+ool]_[* GZDecompressFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 dstfile], 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 srcfile], [_^Gate2^ Gate2]<[_^int64^ int64], 
+[_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
+[s5;:GZDecompressFile`(const char`*`,Gate2`<int64`,int64`>`): [@(0.0.255) bool]_[* GZDeco
+mpressFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 srcfile], [_^Gate2^ Gate2]<[_^int64^ i
+nt64], [_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
+[s2;%% Compresses file from gzip format. If [%-*@3 dstfile] is not 
+present, the name is created by removing .gz extension to [%-*@3 srcfile]. 
+If [%-*@3 srcfile] does not have .gz extension, function returns 
+false to signal error and does nothing. Returns true on success.&]
 [s0;%% ]]
