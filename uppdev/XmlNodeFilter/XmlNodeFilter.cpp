@@ -25,14 +25,22 @@ void DumpMap(const XmlNode& n)
 	DUMP(tag_count);
 }
 
+#ifdef PLATFORM_WIN32
+const char *xmlfile = "d:/20131117_ST_ZZSZ.xml";
+#else
 const char *xmlfile = "/home/cxl/20131117_ST_ZZSZ.xml";
+#endif
 //const char *xmlfile = "/home/cxl/20131106_ST_ZZSZ.xml";
+
+namespace Upp {
+void *SysAllocRaw(size_t size, size_t reqsize);
+};
 
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
 
-	MemoryLimitKb(550 * 1024);
+//	MemoryLimitKb(550 * 1024);
 
 	RLOG(MemoryProfile());
 	{
