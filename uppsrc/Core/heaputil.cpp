@@ -77,11 +77,11 @@ void *SysAllocRaw(size_t size, size_t reqsize)
 		#ifdef PLATFORM_WIN32
 			ptr = VirtualAlloc(NULL, size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
 		#elif PLATFORM_LINUX
-			ptr =  mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+			ptr = mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
 			if(ptr == MAP_FAILED)
 				ptr = NULL;
 		#else
-			ptr =  mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);
+			ptr = mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);
 			if(ptr == MAP_FAILED)
 				ptr = NULL;
 		#endif
@@ -93,7 +93,7 @@ void *SysAllocRaw(size_t size, size_t reqsize)
 	#endif
 	}
 	if(!ptr)
-		OutOfMemoryPanic(reqsize);
+		OutOfMemoryPanic(size/*reqsize*/);
 	sKB += rsz;
 	DoPeakProfile();
 	return ptr;
@@ -115,32 +115,41 @@ int s64kb__;
 #ifdef MEMORY_SHRINK
 void *AllocRaw4KB(int reqsize)
 {
-	RTIMING("AllocRaw4KB");
-	void *ptr = (byte *)SysAllocRaw(4096, reqsize);
+	static int   left;
+	static byte *ptr;
+	static int   n = 32;
+	if(left == 0) {
+		left = n >> 5;
+		ptr = (byte *)SysAllocRaw(left * 4096, reqsize);
+	}
+	n = n + 1;
+	if(n > 4096) n = 4096;
+	void *p = ptr;
+	ptr += 4096;
+	left--;
 	s4kb__++;
 	DoPeakProfile();
-	return ptr;
+	return p;
 }
 
 void *AllocRaw64KB(int reqsize)
 {
-	RTIMING("AllocRaw64KB");
 	void *ptr = (byte *)SysAllocRaw(65536, reqsize);
 	s64kb__++;
 	DoPeakProfile();
 	return ptr;
 }
 
+#if 0
 void FreeRaw4KB(void *ptr)
 {
-	RTIMING("FreeRaw4KB");
 	SysFreeRaw(ptr, 4096);
 	s4kb__--;
 }
+#endif
 
 void FreeRaw64KB(void *ptr)
 {
-	RTIMING("FreeRaw64KB");
 	SysFreeRaw(ptr, 65536);
 	s64kb__--;
 }

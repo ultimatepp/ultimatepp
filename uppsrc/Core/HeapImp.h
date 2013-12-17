@@ -9,7 +9,9 @@ void *LAlloc(size_t& size);
 void  LFree(void *ptr);
 
 #ifdef MEMORY_SHRINK
-void  FreeRaw4KB(void *ptr);
+#if 0
+void  FreeRaw4KB(void *ptr); // Win32 does not allow simple support here
+#endif
 void  FreeRaw64KB(void *ptr);
 #endif
 

@@ -237,9 +237,9 @@ void Heap::AuxFinalCheck()
 #ifdef MEMORY_SHRINK
 void Heap::Shrink()
 {
+	LLOG("MemoryShrink");
 	Mutex::Lock __(mutex);
-	RTIMING("Shrink");
-	RLOG("Memory shrink");
+#if 0
 	for(int i = 0; i < NKLASS; i++) {
 		Page *p = aux.empty[i];
 		while(p) {
@@ -249,6 +249,7 @@ void Heap::Shrink()
 		}
 		aux.empty[i] = NULL;
 	}
+#endif
 	DLink *m = lempty->next;
 	while(m != lempty) {
 		DLink *q = m;
