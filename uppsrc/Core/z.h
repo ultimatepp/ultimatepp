@@ -73,29 +73,51 @@ public:
 	~Zlib();
 };
 
-int    ZCompress(Stream& out, Stream& in, int size, Gate2<int, int> progress = false, bool nohdr = false, dword *crc = NULL);
-int    ZDecompress(Stream& out, Stream& in, int size, Gate2<int, int> progress = false, bool nohdr = false, dword *crc = NULL);
 
-int    ZCompress(Stream& out, Stream& in, Gate2<int, int> progress = false);
-String ZCompress(const void *data, int len, Gate2<int, int> progress = false);
-String ZCompress(const String& s, Gate2<int, int> progress = false);
+int64  ZCompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress = false);
+int64  ZCompress(Stream& out, Stream& in, Gate2<int64, int64> progress = false);
+String ZCompress(const void *data, int64 len, Gate2<int64, int64> progress = false);
+String ZCompress(const String& s, Gate2<int64, int64> progress = false);
 
-int    ZDecompress(Stream& out, Stream& in, Gate2<int, int> progress = false);
-String ZDecompress(const String& s, Gate2<int, int> progress = false);
-String ZDecompress(const void *data, int len, Gate2<int, int> progress = false);
+int64  ZDecompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress = false);
+int64  ZDecompress(Stream& out, Stream& in, Gate2<int64, int64> progress = false);
+String ZDecompress(const void *data, int64 len, Gate2<int64, int64> progress = false);
+String ZDecompress(const String& s, Gate2<int64, int64> progress = false);
 
-int    GZCompress(Stream& out, Stream& in, int size, Gate2<int, int> progress = false);
-int    GZCompress(Stream& out, Stream& in, Gate2<int, int> progress = false);
-String GZCompress(const void *data, int len, Gate2<int, int> progress = false);
-String GZCompress(const String& s, Gate2<int, int> progress = false);
+int64  GZCompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress = false);
+int64  GZCompress(Stream& out, Stream& in, Gate2<int64, int64> progress = false);
+String GZCompress(const void *data, int len, Gate2<int64, int64> progress = false);
+String GZCompress(const String& s, Gate2<int64, int64> progress = false);
 
-bool   GZCompressFile(const char *dstfile, const char *srcfile, Gate2<int, int> progress = false);
-bool   GZCompressFile(const char *srcfile, Gate2<int, int> progress = false);
+int64  GZDecompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress = false);
+int64  GZDecompress(Stream& out, Stream& in, Gate2<int64, int64> progress = false);
+String GZDecompress(const void *data, int len, Gate2<int64, int64> progress = false);
+String GZDecompress(const String& s, Gate2<int64, int64> progress = false);
 
-int    GZDecompress(Stream& out, Stream& in, int size, Gate2<int, int> progress = false);
-int    GZDecompress(Stream& out, Stream& in, Gate2<int, int> progress = false);
-String GZDecompress(const void *data, int len, Gate2<int, int> progress = false);
-String GZDecompress(const String& s, Gate2<int, int> progress = false);
+bool   GZCompressFile(const char *dstfile, const char *srcfile, Gate2<int64, int64> progress = false);
+bool   GZCompressFile(const char *srcfile, Gate2<int64, int64> progress = false);
 
-bool   GZDecompressFile(const char *dstfile, const char *srcfile, Gate2<int, int> progress = false);
-bool   GZDecompressFile(const char *srcfile, Gate2<int, int> progress = false);
+bool   GZDecompressFile(const char *dstfile, const char *srcfile, Gate2<int64, int64> progress = false);
+bool   GZDecompressFile(const char *srcfile, Gate2<int64, int64> progress = false);
+
+/// Backward compatibility:
+
+Gate2<int64, int64> AsGate64(Gate2<int, int> gate);
+
+inline int ZCompress(Stream& out, Stream& in, Gate2<int, int> progress)        { return (int)ZCompress(out, in, AsGate64(progress)); }
+inline String ZCompress(const void *data, int len, Gate2<int, int> progress)   { return ZCompress(data, len, AsGate64(progress)); }
+inline String ZCompress(const String& s, Gate2<int, int> progress)             { return ZCompress(s, AsGate64(progress)); }
+
+inline int    ZDecompress(Stream& out, Stream& in, Gate2<int, int> progress)   { return (int)ZDecompress(out, in, AsGate64(progress)); }
+inline String ZDecompress(const String& s, Gate2<int, int> progress)           { return ZDecompress(s, AsGate64(progress)); }
+inline String ZDecompress(const void *data, int len, Gate2<int, int> progress) { return ZDecompress(data, len, AsGate64(progress)); }
+
+inline int    GZCompress(Stream& out, Stream& in, int size, Gate2<int, int> progress) { return (int)GZCompress(out, in, size, AsGate64(progress)); }
+inline int    GZCompress(Stream& out, Stream& in, Gate2<int, int> progress)           { return (int)GZCompress(out, in, AsGate64(progress)); }
+inline String GZCompress(const void *data, int len, Gate2<int, int> progress)         { return GZCompress(data, len, AsGate64(progress)); }
+inline String GZCompress(const String& s, Gate2<int, int> progress)                   { return GZCompress(s, AsGate64(progress)); }
+
+inline int    GZDecompress(Stream& out, Stream& in, int size, Gate2<int, int> progress) { return (int)GZDecompress(out, in, size, AsGate64(progress)); }
+inline int    GZDecompress(Stream& out, Stream& in, Gate2<int, int> progress)           { return (int)GZDecompress(out, in, AsGate64(progress)); }
+inline String GZDecompress(const void *data, int len, Gate2<int, int> progress)         { return GZDecompress(data, len, AsGate64(progress)); }
+inline String GZDecompress(const String& s, Gate2<int, int> progress)                   { return GZDecompress(s, AsGate64(progress)); }

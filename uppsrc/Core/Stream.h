@@ -300,10 +300,10 @@ public:
 	virtual   bool  IsOpen() const;
 
 public:
-	void Create(void *data, int size);
+	void Create(void *data, int64 size);
 
 	MemStream();
-	MemStream(void *data, int size);
+	MemStream(void *data, int64 size);
 #ifdef flagSO
 	virtual ~MemStream();
 #endif
@@ -311,9 +311,9 @@ public:
 
 class MemReadStream : public MemStream {
 public:
-	void Create(const void *data, int size);
+	void Create(const void *data, int64 size);
 
-	MemReadStream(const void *data, int size);
+	MemReadStream(const void *data, int64 size);
 	MemReadStream();
 };
 

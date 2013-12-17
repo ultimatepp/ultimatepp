@@ -100,6 +100,7 @@ void OutFilterStream::Init()
 	wrlim = ~buffer + 4096;
 	ptr = ~buffer;
 	out = NULL;
+	count = 0;
 }
 
 OutFilterStream::~OutFilterStream()
@@ -153,6 +154,7 @@ bool OutFilterStream::IsOpen() const
 
 void OutFilterStream::Out(const void *ptr, int size)
 {
+	count += size;
 	out->Put(ptr, size);
 }
 

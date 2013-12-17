@@ -988,15 +988,15 @@ bool  MemStream::IsOpen() const {
 	return true;
 }
 
-void MemStream::Create(void *data, int size)
+void MemStream::Create(void *data, int64 size)
 {
 	style = STRM_WRITE|STRM_READ|STRM_SEEK|STRM_LOADING;
 	ptr = buffer = (byte *) data;
-	wrlim = rdlim = buffer + size;
+	wrlim = rdlim = buffer + (size_t)size;
 	pos = 0;
 }
 
-MemStream::MemStream(void *data, int size) {
+MemStream::MemStream(void *data, int64 size) {
 	Create(data, size);
 }
 
@@ -1008,14 +1008,14 @@ MemStream::~MemStream() {}
 
 // ----------------------- Memory read streamer -------------------------
 
-void MemReadStream::Create(const void *data, int size)
+void MemReadStream::Create(const void *data, int64 size)
 {
 	MemStream::Create((void *)data, size);
 	style = STRM_READ|STRM_SEEK|STRM_LOADING;
 	wrlim = buffer;
 }
 
-MemReadStream::MemReadStream(const void *data, int size)
+MemReadStream::MemReadStream(const void *data, int64 size)
 {
 	Create(data, size);
 }
