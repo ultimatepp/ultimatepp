@@ -16,7 +16,7 @@ bool Gdb::Result(String& result, const String& s)
 
 void Gdb::DebugBar(Bar& bar)
 {
-	bar.Add("Stop debugging", THISBACK(Stop))
+	bar.Add("Stop debugging", DbgImg::StopDebug(), THISBACK(Stop))
 	   .Key(K_SHIFT_F5);
 	bar.Separator();
 	bool b = !IdeIsDebugLock();
@@ -32,9 +32,9 @@ void Gdb::DebugBar(Bar& bar)
 	   .Key(K_CTRL_F10);
 	bar.Add(b, "Run", DbgImg::Run(), THISBACK(Run))
 	   .Key(K_F5);
-	bar.Separator();
+	bar.MenuSeparator();
 	bar.Add(b, "Quick watch", THISBACK(QuickWatch))
-	   .Key(K_CTRL_Q);
+	   	.Key(K_CTRL_Q);
 	bar.MenuSeparator();
 	bar.Add(b, "Copy backtrace", THISBACK(CopyStack));
 	bar.Add(b, "Copy dissassembly", THISBACK(CopyDisas));

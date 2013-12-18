@@ -41,7 +41,7 @@ void WatchEdit::HighlightLine(int line, Vector<Highlight>& h, int pos)
 
 void Gdb_MI2::DebugBar(Bar& bar)
 {
-	bar.Add("Stop debugging", THISBACK(Stop)).Key(K_SHIFT_F5);
+	bar.Add("Stop debugging", DbgImg::StopDebug(), THISBACK(Stop)).Key(K_SHIFT_F5);
 	bar.Separator();
 // see note on Run() function -- crashes X on my machine, so removed by now
 //	bar.Add(!stopped, "Asynchronous break", THISBACK(AsyncBrk));
@@ -51,7 +51,7 @@ void Gdb_MI2::DebugBar(Bar& bar)
 	bar.Add(b, "Step out", DbgImg::StepOut(), THISBACK1(Step, "exec-finish")).Key(K_SHIFT_F11);
 	bar.Add(b, "Run to", DbgImg::RunTo(), THISBACK(doRunTo)).Key(K_CTRL_F10);
 	bar.Add(b, "Run", DbgImg::Run(), THISBACK(Run)).Key(K_F5);
-	bar.Separator();
+	bar.MenuSeparator();
 	bar.Add(b, "Quick watch", THISBACK(QuickWatch)).Key(K_CTRL_Q);
 	bar.MenuSeparator();
 	bar.Add(b, "Copy backtrace", THISBACK(CopyStack));
