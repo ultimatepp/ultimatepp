@@ -1233,10 +1233,10 @@ class GridCtrl : public Ctrl
 
 		/* Methods */
 
-		ItemRect& InsertColumn(int pos, const char *name = NULL, int size = -1, bool idx = false);
-		ItemRect& AddColumn(const Id id, const char *name = NULL, int size = -1, bool idx = false);
+		ItemRect& InsertColumn(int pos, const char *name = "", int size = -1, bool idx = false);
+		ItemRect& AddColumn(const Id id, const char *name = "", int size = -1, bool idx = false);
 		ItemRect& AddColumn(const String& name, int size = -1, bool idx = false);
-		ItemRect& AddColumn(const char *name = NULL, int size = -1, bool idx = false);
+		ItemRect& AddColumn(const char *name = "", int size = -1, bool idx = false);
 
 		void RemoveColumn(int n, int count = 1);
 
