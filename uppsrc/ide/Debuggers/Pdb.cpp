@@ -16,7 +16,7 @@ using namespace PdbKeys;
 
 void Pdb::DebugBar(Bar& bar)
 {
-	bar.Add(AK_STOP, THISBACK(Stop));
+	bar.Add(AK_STOP, DbgImg::StopDebug(), THISBACK(Stop));
 	bool b = !IdeIsDebugLock();
 	bar.Separator();
 	bar.Add(b, AK_STEPINTO, DbgImg::StepInto(), THISBACK1(Trace, false));

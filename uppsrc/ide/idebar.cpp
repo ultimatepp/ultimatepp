@@ -199,8 +199,12 @@ void Ide::Edit(Bar& menu) {
 		(menu.*add)("Paste", CtrlImg::paste(), THISBACK(EditPaste))
 			.Key(K_CTRL_V)
 			.Help("Insert text from clipboard at cursor location");
-		(menu.*add)("Select All", CtrlImg::select_all(), callback(&editor, &LineEdit::SelectAll))
-		    .Key(K_CTRL_A);
+
+		if(!toolbar_in_row || menu.IsMenuBar())
+			menu.Separator();
+
+		(menu.*add)("Select all", CtrlImg::select_all(), callback(&editor, &LineEdit::SelectAll))
+			.Key(K_CTRL_A);
 	}
 
 	menu.MenuSeparator();
@@ -466,40 +470,45 @@ void Ide::DebugMenu(Bar& menu)
 	bool b = idestate == EDITING && !IdeIsDebugLock();
 	if(debugger) {
 		debugger->DebugBar(menu);
-		menu.Separator();
+		menu.MenuSeparator();
 	}
 	else {
 		if(console.IsRunning())
 			menu.Add("Stop !", THISBACK(StopDebug))
 			    .Help("Stop controlled process");
-		menu.Add(AK_RUNOPTIONS, THISBACK(RunArgs))
-			.Help("Current directory, command line, stdout redirection");
-		menu.Add(b, AK_EXECUTE, IdeImg::debug_run(), THISBACK(BuildAndExecute))
+		if(menu.IsMenuBar()) 
+			menu.Add(AK_RUNOPTIONS, THISBACK(RunArgs))
+				.Help("Current directory, command line, stdout redirection");
+		menu.Add(b, AK_EXECUTE, IdeImg::execute(), THISBACK(BuildAndExecute))
 			.Help("Build and execute the application");
-		menu.Add(b, AK_DEBUG, THISBACK1(BuildAndDebug, false))
+		menu.Add(b, AK_DEBUG, IdeImg::debug_run(), THISBACK1(BuildAndDebug, false))
 			.Help("Build application & run debugger");
-		menu.Add(b, AK_DEBUGTO, THISBACK1(BuildAndDebug, true))
-			.Help("Build application & run to cursor in debugger");
-		menu.Add(b, AK_DEBUGEXT, THISBACK(BuildAndExtDebug))
-			.Help("Build application & run external debugger (see Base setup, default \"msdev.exe\")");
-		menu.Add(b, AK_DEBUGFILEEXT, THISBACK(BuildAndExtDebugFile))
-			.Help("Build application & run external debugger, trying to start with current file");
-	#ifdef PLATFORM_POSIX
-		if(IsValgrind())
-			menu.Add(b, AK_VALGRIND, THISBACK(Valgrind))
-				.Help("Build application & run in valgring");
-	#endif
+		if(menu.IsMenuBar()) {
+			menu.Add(b, AK_DEBUGTO, THISBACK1(BuildAndDebug, true))
+				.Help("Build application & run to cursor in debugger");
+			menu.Add(b, AK_DEBUGEXT, THISBACK(BuildAndExtDebug))
+				.Help("Build application & run external debugger (see Base setup, default \"msdev.exe\")");
+			menu.Add(b, AK_DEBUGFILEEXT, THISBACK(BuildAndExtDebugFile))
+				.Help("Build application & run external debugger, trying to start with current file");
+		#ifdef PLATFORM_POSIX
+			if(IsValgrind())
+				menu.Add(b, AK_VALGRIND, THISBACK(Valgrind))
+					.Help("Build application & run in valgring");
+		#endif
 
-		menu.Separator();
+			menu.Separator();
+		}
 	}
-	menu.Add(!editfile.IsEmpty() /*&& !debuglock*/, AK_BREAKPOINT, THISBACK(DebugToggleBreak))
-		.Help("Set / clear breakpoint on current line");
-	menu.Add(!editfile.IsEmpty(), AK_CONDBREAKPOINT, THISBACK(ConditionalBreak))
-		.Help("Edit conditional breakpoint");
-	menu.Add(!editfile.IsEmpty() /*&& !debuglock*/, AK_CLEARBREAKPOINTS, THISBACK(DebugClearBreakpoints))
-		.Help("Clear all breakpoints");
-	menu.Separator();
-	menu.Add(target.GetCount() && FileExists(GetLogPath()), AK_OPENLOG, THISBACK(OpenLog));
+	if(menu.IsMenuBar()) {
+		menu.Add(!editfile.IsEmpty() /*&& !debuglock*/, AK_BREAKPOINT, THISBACK(DebugToggleBreak))
+			.Help("Set / clear breakpoint on current line");
+		menu.Add(!editfile.IsEmpty(), AK_CONDBREAKPOINT, THISBACK(ConditionalBreak))
+			.Help("Edit conditional breakpoint");
+		menu.Add(!editfile.IsEmpty() /*&& !debuglock*/, AK_CLEARBREAKPOINTS, THISBACK(DebugClearBreakpoints))
+			.Help("Clear all breakpoints");
+		menu.Separator();
+		menu.Add(target.GetCount() && FileExists(GetLogPath()), AK_OPENLOG, THISBACK(OpenLog));
+	}
 }
 
 void Ide::BrowseMenu(Bar& menu) {
@@ -555,14 +564,20 @@ void Ide::MainMenu(Bar& menu) {
 void Ide::MainTool(Bar& bar)
 {
 	Edit(bar);
-	if(debugger)
+	if(debugger) {
+		if(!designer)
+			bar.Separator();
 		DebugMenu(bar);
-	else
+	}
 	if(!designer)
 		bar.Separator();
 	Project(bar);
 	BuildMenu(bar);
 	bar.Separator();
+	if(!debugger) {
+		DebugMenu(bar);
+		bar.Separator();
+	}
 	Setup(bar);
 	BrowseMenu(bar);
 }
