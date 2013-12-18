@@ -356,7 +356,7 @@ String ZCompress(const void *data, int64 len, Gate2<int64, int64> progress)
 {
 	StringStream out;
 	MemReadStream in(data, len);
-	return ZCompress(out, in, progress) < 0 ? String::GetVoid() : out;
+	return ZCompress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
 }
 
 String ZCompress(const String& s, Gate2<int64, int64> progress)
@@ -368,7 +368,7 @@ String ZDecompress(const void *data, int64 len, Gate2<int64, int64> progress)
 {
 	StringStream out;
 	MemReadStream in(data, len);
-	return ZDecompress(out, in, progress) < 0 ? String::GetVoid() : out;
+	return ZDecompress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
 }
 
 String ZDecompress(const String& s, Gate2<int64, int64> progress)
@@ -395,7 +395,7 @@ String GZCompress(const void *data, int len, Gate2<int64, int64> progress)
 {
 	StringStream out;
 	MemReadStream in(data, len);
-	return GZCompress(out, in, progress) < 0 ? String::GetVoid() : out;
+	return GZCompress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
 }
 
 String GZCompress(const String& s, Gate2<int64, int64> progress)
@@ -412,7 +412,7 @@ String GZDecompress(const void *data, int len, Gate2<int64, int64> progress)
 {
 	StringStream out;
 	MemReadStream in(data, len);
-	return GZDecompress(out, in, progress) < 0 ? String::GetVoid() : out;
+	return GZDecompress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
 }
 
 String GZDecompress(const String& s, Gate2<int64, int64> progress)
