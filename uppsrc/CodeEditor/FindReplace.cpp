@@ -49,6 +49,7 @@ void FindReplaceDlg::Setup(bool doreplace)
 	r.SetSize(sz);
 	SetRect(r);
 	ActiveFocus(find);
+	Sync();
 }
 
 void CodeEditor::SetFound(int fi, int type, const WString& text)
