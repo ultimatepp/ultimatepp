@@ -457,9 +457,13 @@ bool GZDecompressFile(const char *dstfile, const char *srcfile, Gate2<int64, int
 bool GZDecompressFile(const char *srcfile, Gate2<int64, int64> progress)
 {
 	String dstfile = srcfile;
-	if(!dstfile.EndsWith(".gz"))
+	if(dstfile.EndsWith(".gz"))
+		dstfile.Trim(dstfile.GetLength() - 3);
+	else
+	if(dstfile.EndsWith(".gzip"))
+		dstfile.Trim(dstfile.GetLength() - 5);
+	else
 		return false;
-	dstfile.Trim(dstfile.GetLength() - 3);
 	return GZDecompressFile(dstfile, srcfile, progress);
 }
 
