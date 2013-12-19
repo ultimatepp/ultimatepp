@@ -36,6 +36,9 @@ private:
 	                          const byte *pattern, int animation);
 
 	static void DoMouseButton(int event, CParser& p);
+	static void ReadMouseButtons(CParser& p);
+
+	static void Reply();
 
 	friend struct PaintProxy__;
 	friend class TopWindowFrame;
