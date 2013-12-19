@@ -1,0 +1,4 @@
+#ifndef _SimpleEditDlgs_icpp_init_stub
+#define _SimpleEditDlgs_icpp_init_stub
+#include "CtrlLib/init"
+#endif

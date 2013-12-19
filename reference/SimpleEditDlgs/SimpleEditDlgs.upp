@@ -1,0 +1,11 @@
+description "Demonstrates the use of EditText, EditNumber and EditDateDlg\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI SSE2";
+
