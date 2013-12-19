@@ -97,6 +97,14 @@ void Ide::InsertCString()
 		editor.Paste(AsCString(txt).ToWString());
 }
 
+void Ide::InsertFilePath()
+{
+	String path = SelectFileOpen("All files\t*.*");
+	path.Replace("\\", "/");
+	if(path.GetCount())
+		editor.Paste(path.ToWString());
+}
+
 void Ide::InsertMenu(Bar& bar)
 {
 	if(bar.IsScanKeys())
@@ -140,6 +148,7 @@ void Ide::InsertMenu(Bar& bar)
 		}
 	}
 	bar.Add("Insert clipboard as C string", THISBACK(InsertCString));
+	bar.Add("Insert file path..", THISBACK(InsertFilePath));
 }
 
 void Ide::EditorMenu(Bar& bar)
