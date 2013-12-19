@@ -264,6 +264,10 @@ GUI_APP_MAIN
 	
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
+	
+	String xxx;
+	EditText(xxx, "Edit", "Edit");
+	return;
 
 	UWordFs().Type("QTF files", "*.qtf")
 	         .AllFilesType()

@@ -7,7 +7,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  // LOG(x)
+#define LLOG(x)  //  DLOG(x)
 #define LDUMP(x) // DDUMP(x)
 #define LTIMING(x)
 
@@ -46,7 +46,12 @@ Point GetMousePos() {
 	return MousePos;
 }
 
-dword mouseb = 0;
+bool mouseButtons;
+
+bool GetMouseLeft()   { return mouseButtons & 1; }
+bool GetMouseRight()  { return mouseButtons & 2; }
+bool GetMouseMiddle() { return mouseButtons & 4; }
+
 dword modkeys = 0;
 
 enum KM {
@@ -67,9 +72,6 @@ enum KM {
 	KM_ALT = KM_LALT | KM_RALT,
 };
 
-bool GetMouseLeft()   { return mouseb & (1<<0); }
-bool GetMouseRight()  { return mouseb & (1<<1); }
-bool GetMouseMiddle() { return mouseb & (1<<2); }
 bool GetShift()       { return modkeys & KM_SHIFT; }
 bool GetCtrl()        { return modkeys & KM_CTRL; }
 bool GetAlt()         { return modkeys & KM_ALT; }
@@ -262,6 +264,11 @@ void Ctrl::DoMouseButton(int event, CParser& p)
 	DoMouseFB(decode(button, 0, LEFT, 2, RIGHT, MIDDLE)|event, Point(x, y));
 }
 
+void Ctrl::ReadMouseButtons(CParser& p)
+{
+	mouseButtons = p.ReadInt();
+}
+
 bool Ctrl::ProcessEventQueue(const String& event_queue)
 {
 	StringStream ss(event_queue);
@@ -275,14 +282,19 @@ bool Ctrl::ProcessEventQueue(const String& event_queue)
 			if(p.Id("M")) {
 				int x = p.ReadInt();
 				int y = p.ReadInt();
+				ReadMouseButtons(p);
 				DoMouseFB(MOUSEMOVE, Point(x, y), 0);
 			}
 			else
-			if(p.Id("D"))
+			if(p.Id("D")) {
+				ReadMouseButtons(p);
 				DoMouseButton(DOWN, p);
+			}
 			else
-			if(p.Id("U"))
+			if(p.Id("U")) {
+				ReadMouseButtons(p);
 				DoMouseButton(UP, p);
+			}
 			else
 			if(p.Id("K")) {
 				int code = p.ReadInt();
@@ -307,23 +319,40 @@ bool Ctrl::ProcessEventQueue(const String& event_queue)
 	return true;
 }
 
+HttpHeader http;
+
+void Ctrl::Reply()
+{
+	GuiLock __;
+	if(socket.IsOpen()) {
+		TimerProc(GetTickCount());
+		DefferedFocusSync();
+		SyncCaret();
+		SyncTopWindows();
+		SweepMkImageCache();
+		DoPaint();
+		if(http.GetURI().GetCount() < 2)
+			HttpResponse(socket, http.scgi, 200, "OK", "text/html", String(telpp_html, telpp_html_length));
+		else	
+			HttpResponse(socket, http.scgi, 200, "OK", "text/plain; charset=x-user-defined", content);
+		socket.Close();
+	}
+}
+
 bool Ctrl::IsWaitingEvent()
 {
-//	LLOG("IsWaitingEvent");
-	if(socket.IsOpen())
-		return true;
+	GuiLock __;
+	Reply();
 	return socket.Timeout(0).Accept(server);
 }
 
 bool Ctrl::ProcessEvents(bool *quit)
 {
+	GuiLock __;
 	LLOG("ProcessEvents");
-	if(!socket.IsOpen()) {
-		if(!IsWaitingEvent())
-			return false;
-	}
+	if(!IsWaitingEvent())
+		return false;
 
-	HttpHeader http;
 	TimeStop tm;
 	LLOG("Trying to read socket");
 	socket.Timeout(20000);
@@ -338,29 +367,18 @@ bool Ctrl::ProcessEvents(bool *quit)
 	content.Clear();
 	bool r = ProcessEventQueue(event_queue);
 	_TODO_ // Resolve eventloop exit issue
-	TimerProc(GetTickCount());
-	DefferedFocusSync();
-	SyncCaret();
-	SyncTopWindows();
-	SweepMkImageCache();
-	DoPaint();
-
-	if(http.GetURI().GetCount() < 2)
-		HttpResponse(socket, http.scgi, 200, "OK", "text/html", String(telpp_html, telpp_html_length));
-	else	
-		HttpResponse(socket, http.scgi, 200, "OK", "text/plain; charset=x-user-defined", content);
-
-	socket.Close();
+	Reply();
 	return r;
 }
 
 void Ctrl::EventLoop(Ctrl *ctrl)
 {
 	GuiLock __;
+	Reply();
 	ASSERT(IsMainThread());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
-	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
+	DLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
 	Ptr<Ctrl> ploop;
 	if(ctrl) {
 		ploop = LoopCtrl;
@@ -391,6 +409,7 @@ void Ctrl::EventLoop(Ctrl *ctrl)
 void Ctrl::GuiSleep(int ms)
 {
 	GuiLock __;
+	Reply();
 	ASSERT(IsMainThread());
 //	LLOG("GuiSleep");
 	int level = LeaveGuiMutexAll();

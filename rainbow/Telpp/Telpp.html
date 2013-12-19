@@ -110,40 +110,53 @@ window.event_queue = "I\n";
 
 var canvas = document.getElementById("myCanvas");
 
+function key_flags(event)
+{
+	return " " + 1*event.shiftKey + ' ' + 1*event.ctrlKey + ' ' + 1*event.altKey + "\n";
+}
+
+function mouse_event(event)
+{
+	return " " + event.clientX + " " + event.clientY + " " + event.buttons + key_flags(event);
+}
+
 canvas.onmousemove = function(event)
 {
-	event_queue += "M " + event.clientX + " " + event.clientY + "\n";
+	event_queue += "M" + mouse_event(event);
 	Ping();
 }
 
 canvas.onmousedown = function(event)
 {
-	event_queue += "D " + event.button + " " + event.clientX + " " + event.clientY + "\n";
+	event_queue += "D " + event.button + mouse_event(event);
 	Ping();
 }
 
 canvas.onmouseup = function(event)
 {
-	event_queue += "U " + event.button + " " + event.clientX + " " + event.clientY + "\n";
+	event_queue += "U " + event.button + mouse_event(event) + "\n";
 	Ping();
 }
 
 document.onkeydown = function(event)
 {
-	event_queue += "K " + event.keyCode + " " + event.which + "\n";
+	event_queue += "K " + event.keyCode + " " + event.which + key_flags(event);
 	event.preventDefault();
+	Ping();
 }
 
 document.onkeypress = function(event)
 {
-	event_queue += "C " + event.keyCode + " " + event.which + "\n";
+	event_queue += "C " + event.keyCode + " " + event.which + key_flags(event);
 	event.preventDefault();
+	Ping();
 }
 
 document.onkeyup = function(event)
 {
-	event_queue += "k " + event.keyCode + " " + event.which + "\n";
+	event_queue += "k " + event.keyCode + " " + event.which + key_flags(event);
 	event.preventDefault();
+	Ping();
 }
 
 function ResizeCanvas()
@@ -152,7 +165,7 @@ function ResizeCanvas()
 	canvas.height = window.innerHeight;
 }
 
-window.onresize = ResizeCanvas();
+window.onresize = ResizeCanvas;
 
 var Processing = false;
 var timerID;
