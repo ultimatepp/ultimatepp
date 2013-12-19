@@ -179,6 +179,7 @@ bool EditNumber(int& n, const char *title, const char *label, int min, int max, 
 	dlg.lbl = label;
 	dlg.number <<= n;
 	dlg.number.MinMax(min, max);
+	dlg.number.NotNull(notnull);
 	if(dlg.Execute() == IDOK) {
 		n = ~dlg.number;
 		return true;
@@ -193,6 +194,7 @@ bool EditNumber(double& n, const char *title, const char *label, double min, dou
 	dlg.lbl = label;
 	dlg.number <<= n;
 	dlg.number.MinMax(min, max);
+	dlg.number.NotNull(notnull);
 	if(dlg.Execute() == IDOK) {
 		n = ~dlg.number;
 		return true;
@@ -207,13 +209,13 @@ bool EditDateDlg(Date& d, const char *title, const char *label, Date min, Date m
 	dlg.lbl = label;
 	dlg.date <<= d;
 	dlg.date.MinMax(min, max);
+	dlg.date.NotNull(notnull);
 	if(dlg.Execute() == IDOK) {
 		d = ~dlg.date;
 		return true;
 	}
 	return false;	
 }
-
 
 Callback CtrlRetriever::operator<<=(Callback cb)
 {
