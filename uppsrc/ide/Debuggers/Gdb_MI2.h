@@ -212,6 +212,10 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		// lock/unlock debugger controls
 		void Lock();
 		void Unlock();
+		
+		// Period check for killed console
+		TimeCallback periodic;
+		void Periodic();
 
 		String GetHostPath(const String& path) { return host->GetHostPath(path); }
 		String GetLocalPath(const String& path) { return host->GetLocalPath(path); }
@@ -233,7 +237,7 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		virtual bool Tip(const String& exp, CodeEditor::MouseTip& mt);
 
 		// create GDB process and initializes it
-		bool Create(One<Host> _host, const String& exefile, const String& cmdline);
+		bool Create(One<Host> _host, const String& exefile, const String& cmdline, bool console);
 
 		Gdb_MI2();
 		virtual ~Gdb_MI2();

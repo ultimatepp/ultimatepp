@@ -6,11 +6,12 @@ uses
 	HexView;
 
 file
-	MIValue.h,
-	MIValue.cpp,
 	Debuggers.h,
 	Debuggers.iml,
 	Gdb.lay,
+	MIValue.h,
+	MIValue.cpp,
+	Terminal.cpp,
 	Disas.cpp,
 	Dbg.cpp,
 	Gdb.cpp,

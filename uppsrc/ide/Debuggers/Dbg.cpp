@@ -117,6 +117,8 @@ String Dbg::Cmd(const char *command)
 		GuiSleep(sleep);
 		Ctrl::ProcessEvents();
 		sleep = min(20, sleep + max(1, 3 * sleep / 2));
+		if(TTYQuit())
+			Stop();
 	}
 	Unlock();
 #ifdef _DEBUG
@@ -141,6 +143,8 @@ String Dbg::FastCmd(const char *command)
 		String s;
 //		if(!lock)
 			Sleep(0);
+		if(TTYQuit())
+			Stop();
 		if(!dbg->Read(s)) {
 			LLOG(result);
 			PutVerbose(result);
@@ -231,5 +235,4 @@ Dbg::Dbg()
 	quickwatch.Icon(DbgImg::QuickWatch());
 
 	Transparent();
-//	log.Open(ConfigFile("debug.log"));
 }

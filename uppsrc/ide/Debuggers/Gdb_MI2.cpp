@@ -218,6 +218,12 @@ bool Gdb_MI2::Tip(const String& exp, CodeEditor::MouseTip& mt)
 //											CONSTRUCTOR / DESTRUCTOR
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void Gdb_MI2::Periodic()
+{
+	if(TTYQuit())
+		Stop();
+}
+
 Gdb_MI2::Gdb_MI2()
 {
 	CtrlLayout(regs);
@@ -319,12 +325,15 @@ Gdb_MI2::Gdb_MI2()
 
 	started = false;
 	stopped = false;
+	
+	periodic.Set(-50, THISBACK(Periodic));
 }
 
 Gdb_MI2::~Gdb_MI2()
 {
 	IdeRemoveBottom(*this);
 	IdeRemoveRight(disas);
+	KillDebugTTY();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1716,10 +1725,10 @@ void Gdb_MI2::ExplorerMenu(Bar& bar)
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // create GDB process and initializes it
-bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdline)
+bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdline, bool console)
 {
 	host = _host;
-	dbg = host->StartProcess("gdb " + GetHostPath(exefile) + " --interpreter=mi -q");
+	dbg = host->StartProcess(GdbCommand(console) + GetHostPath(exefile) + " --interpreter=mi -q");
 	if(!dbg) {
 		Exclamation(t_("Error invoking gdb !"));
 		return false;
@@ -1776,10 +1785,10 @@ bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdli
 	return true;
 }
 
-One<Debugger> Gdb_MI2Create(One<Host> host, const String& exefile, const String& cmdline)
+One<Debugger> Gdb_MI2Create(One<Host> host, const String& exefile, const String& cmdline, bool console)
 {
 	Gdb_MI2 *dbg = new Gdb_MI2;
-	if(!dbg->Create(host, exefile, cmdline))
+	if(!dbg->Create(host, exefile, cmdline, console))
 	{
 		delete dbg;
 		return NULL;

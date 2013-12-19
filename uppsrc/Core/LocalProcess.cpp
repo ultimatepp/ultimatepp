@@ -134,25 +134,27 @@ bool LocalProcess::DoStart(const char *command, bool spliterr, const char *envpt
 			p++;
 		else {
 			args.Add(cmd_out);
-			while(*p && (byte)*p > ' ')
-				if(*p == '\\') {
+			while(*p && (byte)*p > ' ') {
+				int c = *p;
+				if(c == '\\') {
 					if(*++p)
 						*cmd_out++ = *p++;
 				}
-				else if(*p == '\"') {
+				else if(c == '\"' || c == '\'') {
 					p++;
-					while(*p && *p != '\"')
+					while(*p && *p != c)
 						if(*p == '\\') {
 							if(*++p)
 								*cmd_out++ = *p++;
 						}
 						else
 							*cmd_out++ = *p++;
-					if(*p == '\"')
+					if(*p == c)
 						p++;
 				}
 				else
 					*cmd_out++ = *p++;
+			}
 			*cmd_out++ = '\0';
 		}
 

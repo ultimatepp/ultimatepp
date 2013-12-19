@@ -14,6 +14,14 @@
 
 typedef uintptr_t adr_t;
 
+#ifdef PLATFORM_POSIX
+String CreateDebugTTY();
+void   KillDebugTTY();
+bool   TTYQuit();
+#endif
+
+String GdbCommand(bool console);
+
 class DbgDisas : public Ctrl {
 public:
 	virtual void Paint(Draw& w);
@@ -162,11 +170,16 @@ struct Gdb : Dbg {
 	void      CopyStack();
 	void      CopyDisas();
 
-	bool      Create(One<Host> host, const String& exefile, const String& cmdline);
+	bool      Create(One<Host> host, const String& exefile, const String& cmdline, bool console);
+
+	// Period check for killed console
+	TimeCallback periodic;
+	void Periodic();
 
 	typedef Gdb CLASSNAME;
 
 	virtual ~Gdb();
+	Gdb();
 };
 
 #include "Gdb_MI2.h"
