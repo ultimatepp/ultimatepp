@@ -254,7 +254,7 @@ bool Ide::SwapSIf(const char *cref)
 				return true;
 			}
 		}
-		if(typei >= 0)
+		if(typei >= 0 && n[typei].name.GetCount())
 			GotoCpp(n[typei]);
 		return false;
 	}

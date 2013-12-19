@@ -161,22 +161,18 @@ bool LocalProcess::DoStart(const char *command, bool spliterr, const char *envpt
 	String app_full = GetFileOnPath(app, getenv("PATH"), true);
 	if(IsNull(app_full))
 		return false;
-//		throw Exc(Format("Cannot find executable '%s'\n", app));
 
 	if(pipe(rpipe) || pipe(wpipe))
 		return false;
-//		throw Exc(NFormat(t_("pipe() error; error code = %d"), errno));
 
 	if(spliterr && pipe(epipe))
 		return false;
-//		throw Exc(NFormat(t_("pipe() error; error code = %d"), errno));
 
 	LLOG("\nLocalProcess::Start");
 	LLOG("rpipe[" << rpipe[0] << ", " << rpipe[1] << "]");
- 
- 	LLOG("wpipe[" << wpipe[0] << ", " << wpipe[1] << "]");
+	LLOG("wpipe[" << wpipe[0] << ", " << wpipe[1] << "]");
+	LLOG("epipe[" << epipe[0] << ", " << epipe[1] << "]");
 
- 	LLOG("epipe[" << epipe[0] << ", " << epipe[1] << "]");
 #ifdef CPU_BLACKFIN
 	pid = vfork(); //we *can* use vfork here, since exec is done later or the parent will exit
 #else
