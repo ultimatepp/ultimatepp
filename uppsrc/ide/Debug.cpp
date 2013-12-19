@@ -154,8 +154,8 @@ void Ide::BuildAndExtDebugFile()
 	BuildAndDebug0(editfile);
 }
 
-One<Debugger> GdbCreate(One<Host> host, const String& exefile, const String& cmdline);
-One<Debugger> Gdb_MI2Create(One<Host> host, const String& exefile, const String& cmdline);
+One<Debugger> GdbCreate(One<Host> host, const String& exefile, const String& cmdline, bool console);
+One<Debugger> Gdb_MI2Create(One<Host> host, const String& exefile, const String& cmdline, bool console);
 #ifdef PLATFORM_WIN32
 One<Debugger> CdbCreate(One<Host> host, const String& exefile, const String& cmdline);
 One<Debugger> PdbCreate(One<Host> host, const String& exefile, const String& cmdline);
@@ -175,19 +175,22 @@ void Ide::BuildAndDebug(bool runto)
 	host->ChDir(Nvl(rundir, GetFileFolder(target)));
 	HideBottom();
 	editor.Disable();
+
+	bool console = FindIndex(SplitFlags(mainconfigparam, true), "GUI") < 0 || forceconsole;
+
 #ifdef COMPILER_MSC
 	if(builder == "GCC")
 		if(gdbSelector)
-			debugger = Gdb_MI2Create(host, target, runarg);
+			debugger = Gdb_MI2Create(host, target, runarg, console);
 		else
-			debugger = GdbCreate(host, target, runarg);
+			debugger = GdbCreate(host, target, runarg, console);
 	else
 		debugger = PdbCreate(host, target, runarg);
 #else
 	if(gdbSelector)
-		debugger = Gdb_MI2Create(host, target, runarg);
+		debugger = Gdb_MI2Create(host, target, runarg, console);
 	else
-		debugger = GdbCreate(host, target, runarg);
+		debugger = GdbCreate(host, target, runarg, console);
 #endif
 	if(!debugger) return;
 	debuglock = 0;

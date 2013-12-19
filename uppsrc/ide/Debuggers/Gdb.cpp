@@ -551,10 +551,10 @@ bool Gdb::Key(dword key, int count)
 	return Ctrl::Key(key, count);
 }
 
-bool Gdb::Create(One<Host> _host, const String& exefile, const String& cmdline)
+bool Gdb::Create(One<Host> _host, const String& exefile, const String& cmdline, bool console)
 {
 	host = _host;
-	dbg = host->StartProcess("gdb " + GetHostPath(exefile));
+	dbg = host->StartProcess(GdbCommand(console) + GetHostPath(exefile));
 	if(!dbg) {
 		Exclamation("Error invoking gdb !");
 		return false;
@@ -593,12 +593,24 @@ Gdb::~Gdb()
 {
 	IdeRemoveBottom(*this);
 	IdeRemoveRight(disas);
+	KillDebugTTY();
 }
 
-One<Debugger> GdbCreate(One<Host> host, const String& exefile, const String& cmdline)
+void Gdb::Periodic()
+{
+	if(TTYQuit())
+		Stop();
+}
+
+Gdb::Gdb()
+{
+	periodic.Set(-50, THISBACK(Periodic));
+}
+
+One<Debugger> GdbCreate(One<Host> host, const String& exefile, const String& cmdline, bool console)
 {
 	Gdb *dbg = new Gdb;
-	if(!dbg->Create(host, exefile, cmdline)) {
+	if(!dbg->Create(host, exefile, cmdline, console)) {
 		delete dbg;
 		return NULL;
 	}

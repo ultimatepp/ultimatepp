@@ -62,6 +62,10 @@ public:
 	bool Start(const char *cmdline, const char *envptr = NULL)        { return DoStart(cmdline, false, envptr); }
 	bool Start2(const char *cmdline, const char *envptr = NULL)       { return DoStart(cmdline, true, envptr); }
 	
+#ifdef PLATFORM_POSIX
+	int  GetPid()  const                                              { return pid; }
+#endif
+	
 	LocalProcess& ConvertCharset(bool b = true)                       { convertcharset = b; return *this; }
 	LocalProcess& NoConvertCharset()                                  { return ConvertCharset(false); }
 
