@@ -62,24 +62,28 @@ void LogOut::Create(bool append)
 {
 	Close();
 	
-	char next[512];
-	for(int rot = options >> 24; rot >= 0; rot--) {
-		char current[512];
-		if(rot == 0)
-			strcpy(current, filepath);
-		else
-			sprintf(current, rot > 1 && (options & LOG_ROTATE_GZIP) ? "%s.%d.gzip" : "%s.%d",
-			        filepath, rot);
-		if(FileExists(current)) {
-			if(rot == (options >> 24))
-				FileDelete(current);
+	int rotn = options >> 24;
+	if(rotn) {
+		char next[512];
+		for(int rot = rotn; rot >= 0; rot--) {
+			char current[512];
+			if(rot == 0)
+				strcpy(current, filepath);
 			else
-			if((options & LOG_ROTATE_GZIP) && rot == 1 && !IsPanicMode())
-				SaveFile(next, GZCompress(LoadFile(current)));
-			else
-				FileMove(current, next);
+				sprintf(current, rot > 1 && (options & LOG_ROTATE_GZIP) ? "%s.%d.gz" : "%s.%d",
+				        filepath, rot);
+			if(FileExists(current)) {
+				if(rot == rotn)
+					FileDelete(current);
+				else
+				if((options & LOG_ROTATE_GZIP) && rot == 1 && !IsPanicMode()) {
+					GZCompressFile(next, current); // Should be OK to use heap in Create...
+				}
+				else
+					FileMove(current, next);
+			}
+			strcpy(next, current);
 		}
-		strcpy(next, current);
 	}
 	
 	filesize = 0;
