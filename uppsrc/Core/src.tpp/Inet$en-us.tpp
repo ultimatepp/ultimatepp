@@ -71,12 +71,13 @@ r]_`*[*@3 s])&]
 < 31 as html entities and escapes character 31 as `"`&nbsp;`".&]
 [s3;%% &]
 [s4; &]
-[s5;:HttpResponse`(TcpSocket`&`,bool`,int`,const char`*`,const char`*`,const String`&`,const char`*`): [@(0.0.255) b
+[s5;:HttpResponse`(TcpSocket`&`,bool`,int`,const char`*`,const char`*`,const String`&`,const char`*`,bool`): [@(0.0.255) b
 ool]_[* HttpResponse]([_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[*@3 socket], 
 [@(0.0.255) bool]_[*@3 scgi], [@(0.0.255) int]_[*@3 code], [@(0.0.255) const]_[@(0.0.255) cha
 r]_`*[*@3 phrase], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 content`_type]_`=_NULL, 
 [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 data]_`=_Null, 
-[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 server]_`=_NULL)&]
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 server]_`=_NULL, [@(0.0.255) bool]_[*@3 gzip]_`=
+_[@(0.0.255) false])&]
 [s2;%% This function sends simple HTTP response over [%-*@3 socket]. 
 If [%-*@3 scgi] is true, first line of response is formatted for 
 SCGI (rest is the same for normal HTTP and SCGI). [%-*@3 code] 
@@ -85,7 +86,9 @@ sets the respective http header (if NULL, it is not send). If
 [%-*@3 data] is not empty, `"content`-length`" header is sent and 
 [%-*@3 data] is sent after the header. [%-*@3 server] sets the `"server`" 
 field of http header, if not present, it is set to `"U`+`+ based 
-server`".&]
+server`". If [%-*@3 gzip] is true, function adds `"content`-encoding: 
+gzip`" header, but does NOT actually zip the content (that is 
+up to caller).&]
 [s3; &]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 HttpHeader]]}}&]
