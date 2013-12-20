@@ -14,11 +14,9 @@
 
 typedef uintptr_t adr_t;
 
-#ifdef PLATFORM_POSIX
 String CreateDebugTTY();
 void   KillDebugTTY();
 bool   TTYQuit();
-#endif
 
 String GdbCommand(bool console);
 

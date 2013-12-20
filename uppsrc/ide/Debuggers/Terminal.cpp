@@ -76,6 +76,13 @@ bool TTYQuit()
 	}
 	return false;
 }
+#else
+
+String CreateDebugTTY() { return Null; }
+void KillDebugTTY()     {}
+bool TTYQuit()          { return false; }
+
+#endif
 
 String GdbCommand(bool console)
 {
@@ -90,4 +97,3 @@ String GdbCommand(bool console)
 	return gdb;
 }
 
-#endif
