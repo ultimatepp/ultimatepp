@@ -520,4 +520,4 @@ public:
 
 bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,
                   const char *content_type = NULL, const String& data = Null,
-                  const char *server = NULL);
+                  const char *server = NULL, bool gzip = false);

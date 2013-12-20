@@ -270,6 +270,8 @@ void Zlib::Init()
 	mode = NONE;
 	gzip = false;
 	error = false;
+	z.next_in = (byte*)"";
+	z.avail_in = 0;
 }
 
 void Zlib::Clear()

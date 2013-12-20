@@ -459,7 +459,8 @@ bool HttpHeader::Response(String& protocol, int& code, String& reason) const
 }
 
 bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,
-                  const char *content_type, const String& data, const char *server)
+                  const char *content_type, const String& data, const char *server,
+                  bool gzip)
 {
 	String r;
 	r << (scgi ? "Status: " : "HTTP/1.1 ") << code << ' ' << phrase << "\r\n"
@@ -470,6 +471,8 @@ bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,
 		r << "Content-Length: " << data.GetCount() << "\r\n";
 	if(content_type)
 		r << "Content-Type: " << content_type << "\r\n";
+	if(gzip)
+		r << "Content-Encoding: gzip\r\n";
 	r << "\r\n";
 	if(!socket.PutAll(r))
 		return false;
