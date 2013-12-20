@@ -112,7 +112,7 @@ var canvas = document.getElementById("myCanvas");
 
 function key_flags(event)
 {
-	return " " + 1*event.shiftKey + ' ' + 1*event.ctrlKey + ' ' + 1*event.altKey + "\n";
+	return " " + 1*event.shiftKey + 1*event.ctrlKey + 1*event.altKey + "\n";
 }
 
 function mouse_event(event)
@@ -134,14 +134,14 @@ canvas.onmousedown = function(event)
 
 canvas.onmouseup = function(event)
 {
-	event_queue += "U " + event.button + mouse_event(event) + "\n";
+	event_queue += "U " + event.button + mouse_event(event);
 	Ping();
 }
 
 document.onkeydown = function(event)
 {
 	event_queue += "K " + event.keyCode + " " + event.which + key_flags(event);
-	event.preventDefault();
+//	event.preventDefault();
 	Ping();
 }
 
@@ -151,6 +151,7 @@ document.onkeypress = function(event)
 	event.preventDefault();
 	Ping();
 }
+
 
 document.onkeyup = function(event)
 {

@@ -133,36 +133,6 @@ Ctrl *Ctrl::FindMouseTopCtrl()
 	return desktop->IsEnabled() ? desktop : NULL;
 }
 
-void Ctrl::DoMouseFB(int event, Point p, int zdelta)
-{
-	MousePos = p;
-	int a = event & Ctrl::ACTION;
-	if(a == Ctrl::UP && Ctrl::ignoreclick) {
-		EndIgnore();
-		return;
-	}
-	else
-	if(a == Ctrl::DOWN && ignoreclick)
-		return;
-	LLOG("### Mouse event: " << event << " position " << p << " zdelta " << zdelta << ", capture " << Upp::Name(captureCtrl));
-	if(captureCtrl)
-		MouseEventFB(captureCtrl->GetTopCtrl(), event, p, zdelta);
-	else
-		for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
-			Ptr<Ctrl> t = topctrl[i];
-			Rect rr = t->GetRect();
-			if(rr.Contains(p)) {
-				MouseEventFB(t, event, p, zdelta);
-				return;
-			}
-		}
-	Ctrl *desktop = GetDesktop();
-	if(desktop) {
-		desktop->DispatchMouse(event, p, zdelta);
-		desktop->PostInput();
-	}
-}
-
 bool Ctrl::DoKeyFB(dword key, int cnt)
 {
 	DLOG("DoKeyFB " << GetKeyDesc(key) << ", " << cnt);
@@ -244,7 +214,7 @@ void Ctrl::PaintCaretCursor(SystemDraw& draw)
 }
 
 void Ctrl::DoPaint()
-{
+{ 
 	if(!PaintLock) {
 		if(invalid && desktop) {
 			invalid = false;
@@ -256,17 +226,43 @@ void Ctrl::DoPaint()
 	}
 }
 
+void Ctrl::DoMouseFB(int event, Point p, int zdelta, CParser& cp)
+{
+	mouseButtons = cp.ReadInt();
+	MousePos = p;
+	int a = event & ACTION;
+	if(a == UP && Ctrl::ignoreclick) {
+		EndIgnore();
+		return;
+	}
+	else
+	if(a == DOWN && ignoreclick)
+		return;
+	DLOG("### Mouse event: " << event << " position " << p << " zdelta " << zdelta << ", capture " << Upp::Name(captureCtrl));
+	if(captureCtrl)
+		MouseEventFB(captureCtrl->GetTopCtrl(), event, p, zdelta);
+	else
+		for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
+			Ptr<Ctrl> t = topctrl[i];
+			Rect rr = t->GetRect();
+			if(rr.Contains(p)) {
+				MouseEventFB(t, event, p, zdelta);
+				return;
+			}
+		}
+	Ctrl *desktop = GetDesktop();
+	if(desktop) {
+		desktop->DispatchMouse(event, p, zdelta);
+		desktop->PostInput();
+	}
+}
+
 void Ctrl::DoMouseButton(int event, CParser& p)
 {
 	int button = p.ReadInt();
 	int x = p.ReadInt();
 	int y = p.ReadInt();
-	DoMouseFB(decode(button, 0, LEFT, 2, RIGHT, MIDDLE)|event, Point(x, y));
-}
-
-void Ctrl::ReadMouseButtons(CParser& p)
-{
-	mouseButtons = p.ReadInt();
+	DoMouseFB(decode(button, 0, LEFT, 2, RIGHT, MIDDLE)|event, Point(x, y), 0, p);
 }
 
 bool Ctrl::ProcessEventQueue(const String& event_queue)
@@ -282,17 +278,14 @@ bool Ctrl::ProcessEventQueue(const String& event_queue)
 			if(p.Id("M")) {
 				int x = p.ReadInt();
 				int y = p.ReadInt();
-				ReadMouseButtons(p);
-				DoMouseFB(MOUSEMOVE, Point(x, y), 0);
+				DoMouseFB(MOUSEMOVE, Point(x, y), 0, p);
 			}
 			else
 			if(p.Id("D")) {
-				ReadMouseButtons(p);
 				DoMouseButton(DOWN, p);
 			}
 			else
 			if(p.Id("U")) {
-				ReadMouseButtons(p);
 				DoMouseButton(UP, p);
 			}
 			else
@@ -332,9 +325,12 @@ void Ctrl::Reply()
 		SweepMkImageCache();
 		DoPaint();
 		if(http.GetURI().GetCount() < 2)
-			HttpResponse(socket, http.scgi, 200, "OK", "text/html", String(telpp_html, telpp_html_length));
-		else	
-			HttpResponse(socket, http.scgi, 200, "OK", "text/plain; charset=x-user-defined", content);
+			HttpResponse(socket, http.scgi, 200, "OK", "text/html", String(telpp_html, telpp_html_length)); // This is weird place, but whatever
+		else {
+			String s = GZCompress(content);
+			HttpResponse(socket, http.scgi, 200, "OK", "text/plain; charset=x-user-defined",
+			             s, "U++ Tel++ server", true);
+		}
 		socket.Close();
 	}
 }

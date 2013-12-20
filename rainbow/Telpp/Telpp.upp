@@ -4,8 +4,6 @@ uses
 	Painter,
 	CtrlLib;
 
-library(POSIX) "SDL2 SDL2main GL";
-
 file
 	Telpp.h,
 	Keys.h,
