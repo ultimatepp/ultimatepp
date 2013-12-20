@@ -36,7 +36,8 @@ private:
 	                          const byte *pattern, int animation);
 
 	static void DoMouseButton(int event, CParser& p);
-	static void ReadMouseButtons(CParser& p);
+
+	static void DoMouseFB(int event, Point p, int zdelta, CParser& cp);
 
 	static void Reply();
 
@@ -51,7 +52,6 @@ protected:
 	static int PaintLock;
 
 public:
-	static void DoMouseFB(int event, Point p, int zdelta = 0);
 	static bool DoKeyFB(dword key, int cnt);
 
 	static void InitTelpp();

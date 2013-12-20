@@ -41,6 +41,8 @@ private:
 	static void MouseEventFB(Ptr<Ctrl> t, int event, Point p, int zdelta);
 	Vector<Rect> GetPaintRects();
 
+	static void DoMouseFB(int event, Point p, int zdelta);
+
 	static void DrawLine(const Vector<Rect>& clip, int x, int y, int cx, int cy, bool horz,
 	                     const byte *pattern, int animation);
 	static void DragRectDraw0(const Vector<Rect>& clip, const Rect& rect, int n,
@@ -57,7 +59,6 @@ protected:
 	static int PaintLock;
 
 public:
-	static void DoMouseFB(int event, Point p, int zdelta = 0);
 	static bool DoKeyFB(dword key, int cnt);
 
 	static void InitFB();
