@@ -13,12 +13,8 @@ String RandomString(int len)
 	return r;
 }
 
-CONSOLE_APP_MAIN
+void Check(const String& data)
 {
-	StdLogSetup(LOG_FILE|LOG_COUT);
-
-	String data = RandomString(2000000);
-	
 	ASSERT(ZDecompress(ZCompress(data)) == data);
 	ASSERT(GZDecompress(GZCompress(data)) == data);
 	
@@ -28,6 +24,18 @@ CONSOLE_APP_MAIN
 	GZDecompressFile(path + ".2", path + ".gz");
 	
 	ASSERT(LoadFile(path + ".2") == data);
+}
+
+CONSOLE_APP_MAIN
+{
+	StdLogSetup(LOG_FILE|LOG_COUT);
+
+	Check(String());
+	for(int i = 1; i < 2000; i++)
+		Check(RandomString(i));
+	Check(RandomString(20000));
+	Check(RandomString(2000000));
+	
 
 	LOG("============= OK");
 }
