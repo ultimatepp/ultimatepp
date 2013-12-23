@@ -1002,6 +1002,19 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 	FlushStyles();
 }
 
+bool ParseQTF(RichText& txt, const char *qtf, int accesskey, void *context)
+{
+	RichQtfParser p(context);
+	try {
+		p.Parse(qtf, accesskey);
+	}
+	catch(RichQtfParser::Exc) {
+		return false;
+	}
+	txt = p.target;
+	return true;
+}
+
 RichText ParseQTF(const char *qtf, int accesskey, void *context)
 {
 	RichQtfParser p(context);

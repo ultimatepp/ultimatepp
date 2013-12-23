@@ -1,7 +1,0 @@
-description "\377B";
-
-file
-	Img.h,
-	Png.cpp,
-	Img.icpp;
-

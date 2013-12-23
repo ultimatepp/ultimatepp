@@ -1,6 +1,0 @@
-#ifndef _ide_Img_icpp_init_stub
-#define _ide_Img_icpp_init_stub
-#define BLITZ_INDEX__ F0fc5d23dbb33a5227fd533699d97f95c
-#include "Img.icpp"
-#undef BLITZ_INDEX__
-#endif

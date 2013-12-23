@@ -532,7 +532,7 @@ void Ide::BrowseMenu(Bar& menu) {
 	menu.MenuSeparator();
 	menu.AddMenu(AK_CALC, IdeImg::calc(), THISBACK1(ToggleBottom, BCALC))
 	     .Check(IsBottomShown() && btabs.GetCursor() == BCALC);
-	menu.AddMenu(AK_QTF, IdeImg::qtf(), THISBACK(Qtf));
+	menu.AddMenu(AK_QTF, IdeCommonImg::Qtf(), THISBACK(Qtf));
 	menu.AddMenu(!designer, AK_XML, IdeCommonImg::xml(), THISBACK(Xml));
 	menu.AddMenu(!designer, AK_JSON, IdeCommonImg::json(), THISBACK(Json));
 	menu.MenuSeparator();
