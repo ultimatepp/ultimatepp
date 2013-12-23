@@ -17,7 +17,7 @@ uses
 	usvn,
 	TextDiffCtrl,
 	TabBar,
-	ide\Img;
+	ide/Designers;
 
 uses(POSIX) ide\SrcUpdater;
 

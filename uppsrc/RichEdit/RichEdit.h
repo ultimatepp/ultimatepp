@@ -799,6 +799,8 @@ public:
 		int              undoserial;
 		BiArray<UndoRec> undo;
 		Array<UndoRec>   redo;
+		
+		void Clear()     { undo.Clear(); redo.Clear(); undoserial = 0; }
 	};
 
 	struct PosInfo {

@@ -423,6 +423,8 @@ public:
 RichText AsRichText(const RichObject& obj);
 String   AsQTF(const RichObject& obj);
 
+bool ParseQTF(RichText& txt, const char *qtf, int accesskey = 0, void *context = NULL);
+
 RichText ParseQTF(const char *qtf, int accesskey = 0, void *context = NULL);
 
 RichText AsRichText(const wchar *s, const RichPara::Format& f = RichPara::Format());

@@ -80,6 +80,7 @@ void IdeIconDes::Serialize(Stream& s)
 {
 	SerializeSettings(s);
 }
+
 String IdeIconDes::GetFileName() const
 {
 	return filename;

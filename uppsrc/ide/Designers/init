@@ -1,0 +1,9 @@
+#ifndef _ide_Designers_icpp_init_stub
+#define _ide_Designers_icpp_init_stub
+#define BLITZ_INDEX__ Fadb0baddbb7b757e3ed9acaca887cd9a
+#include "Img.icpp"
+#undef BLITZ_INDEX__
+#define BLITZ_INDEX__ F421424bc1424dfd0a7a9d53622c87987
+#include "Qtf.icpp"
+#undef BLITZ_INDEX__
+#endif

@@ -16,6 +16,6 @@
 #include "usvn/init"
 #include "TextDiffCtrl/init"
 #include "TabBar/init"
-#include "ide\Img/init"
+#include "ide/Designers/init"
 #include "ide\SrcUpdater/init"
 #endif
