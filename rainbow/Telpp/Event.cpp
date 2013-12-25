@@ -46,59 +46,6 @@ Point GetMousePos() {
 	return MousePos;
 }
 
-bool mouseButtons;
-
-bool GetMouseLeft()   { return mouseButtons & 1; }
-bool GetMouseRight()  { return mouseButtons & 2; }
-bool GetMouseMiddle() { return mouseButtons & 4; }
-
-dword modkeys = 0;
-
-enum KM {
-	KM_NONE  = 0x00,
-
-	KM_LSHIFT= 0x01,
-	KM_RSHIFT= 0x02,
-	KM_LCTRL = 0x04,
-	KM_RCTRL = 0x08,
-	KM_LALT  = 0x10,
-	KM_RALT  = 0x20,
-
-	KM_CAPS  = 0x40,
-	KM_NUM   = 0x80,
-	
-	KM_CTRL = KM_LCTRL | KM_RCTRL,
-	KM_SHIFT = KM_LSHIFT | KM_RSHIFT,
-	KM_ALT = KM_LALT | KM_RALT,
-};
-
-bool GetShift()       { return modkeys & KM_SHIFT; }
-bool GetCtrl()        { return modkeys & KM_CTRL; }
-bool GetAlt()         { return modkeys & KM_ALT; }
-bool GetCapsLock()    { return modkeys & KM_CAPS; }
-
-dword fbKEYtoK(dword chr) {
-	return chr + K_DELTA;
-/*
-	if(chr == SDLK_TAB)
-		chr = K_TAB;
-	else
-	if(chr == SDLK_SPACE)
-		chr = K_SPACE;
-	else
-	if(chr == SDLK_RETURN)
-		chr = K_RETURN;
-	else
-		chr = chr + K_DELTA;
-	if(chr == K_ALT_KEY || chr == K_CTRL_KEY || chr == K_SHIFT_KEY)
-		return chr;
-	if(GetCtrl()) chr |= K_CTRL;
-	if(GetAlt()) chr |= K_ALT;
-	if(GetShift()) chr |= K_SHIFT;
-	return chr;
-*/
-}
-
 dword lastbdowntime[8] = {0};
 dword isdblclick[8] = {0};
 
@@ -131,18 +78,6 @@ Ctrl *Ctrl::FindMouseTopCtrl()
 			return t->IsEnabled() ? t : NULL;
 	}
 	return desktop->IsEnabled() ? desktop : NULL;
-}
-
-bool Ctrl::DoKeyFB(dword key, int cnt)
-{
-	DLOG("DoKeyFB " << GetKeyDesc(key) << ", " << cnt);
-
-	bool b = DispatchKey(key, cnt);
-	SyncCaret();
-	Ctrl *desktop = GetDesktop();
-	if(desktop)
-		desktop->PostInput();
-	return b;
 }
 
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
@@ -209,8 +144,24 @@ void Ctrl::PaintCaretCursor(SystemDraw& draw)
 {
 	if(!IsNull(fbCaretRect))
 		draw.DrawRect(fbCaretRect, InvertColor);
-	if(sdlMouseIsIn && !SystemCursor)
-		draw.DrawImage(fbCursorPos.x, fbCursorPos.y, fbCursorImage);
+	int64 q = fbCursorImage.GetAuxData();
+	if(q) {
+		draw.Put8(SystemDraw::STD_CURSORIMAGE);
+		draw.Put8(clamp((int)q, 1, 16));
+	}
+	else {
+		String h;
+		Point p = fbCursorImage.GetHotSpot();
+		h << "url('data:image/png;base64,"
+		  << Base64Encode(PNGEncoder().SaveString(fbCursorImage))
+		  << "') " << p.x << ' ' << p.y << ", default";
+		DDUMP(h);
+		draw.Put8(SystemDraw::SETCURSORIMAGE);
+		draw.Put16(0); // _TODO_ Cursor cache
+		draw.Put(h);
+		draw.Put8(SystemDraw::CURSORIMAGE);
+		draw.Put16(0); // _TODO_ Cursor cache
+	}
 }
 
 void Ctrl::DoPaint()
@@ -226,9 +177,72 @@ void Ctrl::DoPaint()
 	}
 }
 
+bool keyShift;
+bool keyCtrl;
+bool keyAlt;
+
+bool GetShift()       { return keyShift; }
+bool GetCtrl()        { return keyCtrl; }
+bool GetAlt()         { return keyAlt; }
+bool GetCapsLock()    { return false; } // Impossible to implement
+
+dword fbKEYtoK(dword chr) {
+	chr = chr + K_DELTA;
+	if(chr == K_ALT_KEY || chr == K_CTRL_KEY || chr == K_SHIFT_KEY)
+		return chr;
+	if(GetCtrl()) chr |= K_CTRL;
+	if(GetAlt()) chr |= K_ALT;
+	if(GetShift()) chr |= K_SHIFT;
+	return chr;
+/*
+	if(chr == SDLK_TAB)
+		chr = K_TAB;
+	else
+	if(chr == SDLK_SPACE)
+		chr = K_SPACE;
+	else
+	if(chr == SDLK_RETURN)
+		chr = K_RETURN;
+	else
+		chr = chr + K_DELTA;
+*/
+}
+
+void Ctrl::ReadKeyMods(CParser& p)
+{
+	const char *s = p.GetPtr();
+	if(*s)
+		keyShift = *s++ == '1';
+	if(*s)
+		keyCtrl = *s++ == '1';
+	if(*s)
+		keyAlt = *s++ == '1';
+}
+
+bool Ctrl::DoKeyFB(dword key, int cnt)
+{
+	DLOG("DoKeyFB [" << GetKeyDesc(key) << "] " << key << ", " << cnt);
+
+	bool b = DispatchKey(key, cnt);
+	SyncCaret();
+	Ctrl *desktop = GetDesktop();
+	if(desktop)
+		desktop->PostInput();
+	return b;
+}
+
+
+bool  mouseLeft, mouseMiddle, mouseRight;
+Point mouseDownPos;
+int64 mouseDownTime;
+
+bool GetMouseLeft()   { return mouseLeft; }
+bool GetMouseRight()  { return mouseRight; }
+bool GetMouseMiddle() { return mouseMiddle; }
+
 void Ctrl::DoMouseFB(int event, Point p, int zdelta, CParser& cp)
 {
-	mouseButtons = cp.ReadInt();
+	ReadKeyMods(cp);
 	MousePos = p;
 	int a = event & ACTION;
 	if(a == UP && Ctrl::ignoreclick) {
@@ -257,12 +271,29 @@ void Ctrl::DoMouseFB(int event, Point p, int zdelta, CParser& cp)
 	}
 }
 
+static int sDistMax(Point a, Point b)
+{
+	return IsNull(a) ? INT_MAX : max(abs(a.x - b.x), abs(a.y - b.y));
+}
+
 void Ctrl::DoMouseButton(int event, CParser& p)
 {
 	int button = p.ReadInt();
 	int x = p.ReadInt();
 	int y = p.ReadInt();
-	DoMouseFB(decode(button, 0, LEFT, 2, RIGHT, MIDDLE)|event, Point(x, y), 0, p);
+	Point pt(x, y);
+	int64 tm = p.ReadInt64();
+	(button == 0 ? mouseLeft : button == 2 ? mouseRight : mouseMiddle) = event == DOWN;
+	if(event == DOWN)
+		if(sDistMax(mouseDownPos, pt) < GUI_DragDistance() && tm - mouseDownTime < 800) {
+			event = DOUBLE;
+			mouseDownTime = 0;
+		}
+		else {
+			mouseDownPos = pt;
+			mouseDownTime = tm;
+		}
+	DoMouseFB(decode(button, 0, LEFT, 2, RIGHT, MIDDLE)|event, pt, 0, p);
 }
 
 bool Ctrl::ProcessEventQueue(const String& event_queue)
@@ -278,7 +309,13 @@ bool Ctrl::ProcessEventQueue(const String& event_queue)
 			if(p.Id("M")) {
 				int x = p.ReadInt();
 				int y = p.ReadInt();
+				int64 tm = p.ReadInt64();
 				DoMouseFB(MOUSEMOVE, Point(x, y), 0, p);
+			}
+			else
+			if(p.Id("O")) {
+				mouseLeft = mouseMiddle = mouseRight = false;
+				mouseDownTime = 0;
 			}
 			else
 			if(p.Id("D")) {
@@ -292,19 +329,23 @@ bool Ctrl::ProcessEventQueue(const String& event_queue)
 			if(p.Id("K")) {
 				int code = p.ReadInt();
 				int which = p.ReadInt();
-				DoKeyFB(which + K_DELTA, 1);
+				ReadKeyMods(p);
+				DoKeyFB(fbKEYtoK(which), 1);
 			}
 			else
 			if(p.Id("k")) {
 				int code = p.ReadInt();
 				int which = p.ReadInt();
-				DoKeyFB(K_KEYUP|(which + K_DELTA), 1);
+				ReadKeyMods(p);
+				DoKeyFB(K_KEYUP|fbKEYtoK(which), 1);
 			}
 			else
 			if(p.Id("C")) {
 				int code = p.ReadInt();
 				int which = p.ReadInt();
-				DoKeyFB(which, 1);
+				ReadKeyMods(p);
+				if(which && !keyAlt && !keyCtrl)
+					DoKeyFB(which, 1);
 			}
 		}
 		catch(CParser::Error) {}
@@ -358,6 +399,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 		return false;
 	}
 	String event_queue = socket.Get((int)http.GetContentLength());
+	LLOG("---- Process events");
 	if(event_queue.GetCount())
 		LOG(event_queue);
 	content.Clear();

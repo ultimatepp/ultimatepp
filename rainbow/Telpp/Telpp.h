@@ -24,6 +24,10 @@ public:
 		RECT = 0,
 		IMAGE = 1,
 		SETIMAGE = 2,
+		INVERTRECT = 3,
+		STD_CURSORIMAGE = 4,
+		SETCURSORIMAGE = 5,
+		CURSORIMAGE = 6,
 	};
 	
 	static Index<int64>           img_index;
@@ -35,9 +39,11 @@ public:
 
 	void Put8(int x)              { result.Cat(x); }
 	void Put16(int x);
+	void Put32(int x);
 	void Put(Point p);
 	void Put(Size sz);
 	void Put(const Rect& r);
+	void Put(const String& s);
 
 	bool    CanSetSurface()                         { return false; }
 	static void Flush()                             {}

@@ -8,6 +8,12 @@ void SystemDraw::Put16(int x)
 	result.Cat(HIBYTE(x));
 }
 
+void SystemDraw::Put32(int x)
+{
+	Put16(LOWORD(x));
+	Put16(HIWORD(x));
+}
+
 void SystemDraw::Put(Point p)
 {// TODO: Clamp?
 	Put16(p.x);
@@ -23,6 +29,12 @@ void SystemDraw::Put(const Rect& r)
 {
 	Put(r.TopLeft());
 	Put(r.GetSize());
+}
+
+void SystemDraw::Put(const String& s)
+{
+	Put32(s.GetLength());
+	result.Cat(s);
 }
 
 Index<int64> SystemDraw::img_index;
@@ -59,11 +71,17 @@ void SystemDraw::PutImage(Point p, const Image& img, const Rect& src)
 
 void SystemDraw::PutRect(const Rect& r, Color color)
 { // TODO: Support InvertColor
-	Put8(RECT);
-	Put(r);
-	Put8(color.GetR());
-	Put8(color.GetG());
-	Put8(color.GetB());
+	if(color == InvertColor()) {
+		Put8(INVERTRECT);
+		Put(r);
+	}
+	else {
+		Put8(RECT);
+		Put(r);
+		Put8(color.GetR());
+		Put8(color.GetG());
+		Put8(color.GetB());
+	}
 }
 
 END_UPP_NAMESPACE

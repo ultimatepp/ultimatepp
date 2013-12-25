@@ -23,7 +23,7 @@ void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size psz, P
 #include <Draw/iml_source.h>
 
 #define STD_CURSOR(name, sdl) \
-Image Image::name() { static Image img; ONCELOCK { img = FBImg::name(); img.SetAuxData(sdl + 1); } return img; }
+Image Image::name() { static Image img; ONCELOCK { img = FBImg::name(); img.SetAuxData(sdl); } return img; }
 
 STD_CURSOR(Arrow, 1)
 STD_CURSOR(Wait, 2)

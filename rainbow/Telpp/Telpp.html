@@ -22,7 +22,7 @@ Your browser does not support the HTML5 canvas tag.
 function Log(msg)
 {
 //	if (window.console && console.log)
- //   	console.log(msg); //for firebug
+//	   	console.log(msg); //for firebug
 }
 
 function Char(p, ch)
@@ -46,6 +46,22 @@ function Get16(p)
 	return (h << 8) | l;
 }
 
+function Get32(p)
+{
+	var l = Get16(p);
+	var h = Get16(p);
+	return (h << 16) | l;
+}
+
+function GetString(p)
+{
+	var n = Get32(p);
+	var s = "";
+	for(var i = 0; i < n; i++)
+		s += String.fromCharCode(Get8(p));
+	return s;
+}
+
 function ProcessDraw(s)
 {
 	var x, y, cx, cy, r, g, b, imgData, i, n, px, py;
@@ -53,9 +69,9 @@ function ProcessDraw(s)
 	p.text = s;
 	p.pos = 0;
 
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
-
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	
     while(p.pos < p.text.length) {
     	Log(p.pos + ": " + p.text.charCodeAt(p.pos));
         if(Char(p, 0)) {
@@ -71,6 +87,22 @@ function ProcessDraw(s)
         	ctx.fillStyle = c;
         	Log("color: " + c);
         	ctx.fillRect(x, y, cx, cy);
+        }
+        else
+        if(Char(p, 3)) {
+        	x = Get16(p);
+        	y = Get16(p);
+        	cx = Get16(p);
+        	cy = Get16(p);
+        	Log("irect: " + x + ", " + y + ", " + cx + ", " + cy);
+        	var imageData = ctx.getImageData(x, y, cx, cy);
+			var data = imageData.data;
+			for(var i = 0; i < data.length; i += 4) {
+			    data[i] = 255 - data[i];
+			    data[i + 1] = 255 - data[i + 1];
+			    data[i + 2] = 255 - data[i + 2];
+			}
+			ctx.putImageData(imageData, x, y);
         }
         else
         if(Char(p, 2)) {
@@ -102,11 +134,45 @@ function ProcessDraw(s)
 			Log("Draw image: " + n);			
 			ctx.drawImage(window.img_cache[n], x, y, cx, cy, px, py, cx, cy);
 		}
+		else
+		if(Char(p, 4)) {
+			canvas.style.cursor = [
+				"default", // should not happen
+				"default", // Arrow
+			    "wait", // Wait
+			    "text", // IBeam
+			    "not-allowed", // No
+			    "move", // SizeAll
+			    "ew-resize", // SizeHorz
+			    "ns-resize", // SizeVert
+			    "nw-resize", // SizeTopLeft
+			    "n-resize", // SizeTop
+			    "ne-resize", // SizeTopRight
+			    "w-resize", // SizeLeft
+			    "e-resize", // SizeRight
+			    "sw-resize", // SizeBottomLeft
+			    "s-resize", // SizeBottom
+			    "se-resize", // SizeBottomRight
+			    "pointer" // Hand
+			][Get8(p)];
+		}
+		else
+		if(Char(p, 5)) {
+			i = Get16(p);
+			cursor_cache[i] = GetString(p);
+		}
+		else
+		if(Char(p, 6)) {
+			i = Get16(p);
+			canvas.style.cursor = cursor_cache[i];
+			Log(cursor_cache[i]);
+		}
 	}			
 }
 
 window.img_cache = {};
 window.event_queue = "I\n";
+window.cursor_cache = {};
 
 var canvas = document.getElementById("myCanvas");
 
@@ -117,31 +183,40 @@ function key_flags(event)
 
 function mouse_event(event)
 {
-	return " " + event.clientX + " " + event.clientY + " " + event.buttons + key_flags(event);
+	return " " + event.clientX + " " + event.clientY + " " + (new Date).getTime() + key_flags(event);
 }
 
 canvas.onmousemove = function(event)
 {
 	event_queue += "M" + mouse_event(event);
 	Ping();
+	event.preventDefault();
 }
 
 canvas.onmousedown = function(event)
 {
 	event_queue += "D " + event.button + mouse_event(event);
 	Ping();
+	event.preventDefault();
+}
+
+canvas.onmouseout = function(event)
+{
+	event_queue += "O\n";
+	Ping();
+	event.preventDefault();
 }
 
 canvas.onmouseup = function(event)
 {
 	event_queue += "U " + event.button + mouse_event(event);
 	Ping();
+	event.preventDefault();
 }
 
 document.onkeydown = function(event)
 {
 	event_queue += "K " + event.keyCode + " " + event.which + key_flags(event);
-//	event.preventDefault();
 	Ping();
 }
 
@@ -151,7 +226,6 @@ document.onkeypress = function(event)
 	event.preventDefault();
 	Ping();
 }
-
 
 document.onkeyup = function(event)
 {
@@ -190,7 +264,8 @@ function Ping()
 	}
 	if(timerID != undefined)
 		clearTimeout(timerID);
-	setTimeout(Ping, 20);
+	timerID = setTimeout(Ping, 20);
+//	Log("Ping");
 }
 
 ResizeCanvas();

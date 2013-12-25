@@ -35,6 +35,7 @@ private:
 	static void DragRectDraw0(const Vector<Rect>& clip, const Rect& rect, int n,
 	                          const byte *pattern, int animation);
 
+	static void ReadKeyMods(CParser& p);
 	static void DoMouseButton(int event, CParser& p);
 
 	static void DoMouseFB(int event, Point p, int zdelta, CParser& cp);
