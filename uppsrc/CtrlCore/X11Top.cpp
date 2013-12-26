@@ -238,21 +238,20 @@ void TopWindow::CenterRect(Ctrl *owner)
 {
 	GuiLock __;
 	SetupRect();
-	if(owner && center == 1 || center == 2) {
-		Size sz = GetRect().Size();
+	if((owner&& center == 1) || center == 2) {
 		Rect r, wr;
 		wr = Ctrl::GetWorkArea();
-		GuiLock __;
+		Size sz = GetRect().Size();
 		Rect fm = windowFrameMargin;
 		if((fm.left|fm.right|fm.top|fm.bottom) == 0)
 			fm = Rect(8, 32, 8, 8);
-		if(center == 1)
+		if(owner && center == 1)
 			r = owner->GetRect();
 		else
 			r = wr;
 		Point p = r.CenterPos(sz);
 		
-		if (p.x + sz.cx <= wr.Width() && p.y + sz.cy <= wr.Height()) {
+		if ((p.x + sz.cx <= wr.Width() + wr.left) && (p.y + sz.cy <= wr.Height() + wr.top)) {
 			r = RectC(p.x, p.y, sz.cx, sz.cy);
 			wr.left += fm.left;
 			wr.right -= fm.right;
@@ -267,7 +266,7 @@ void TopWindow::CenterRect(Ctrl *owner)
 			minsize.cx = min(minsize.cx, r.GetWidth());
 			minsize.cy = min(minsize.cy, r.GetHeight());
 			SetRect(r);
-		}
+		}	
 	}
 }
 
@@ -482,7 +481,7 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 	LLOG("rect = " << rect << ", overlapped = " << overlapped);
 	if(s.IsLoading()) {
 		if(mn) rect = overlapped;
-		Rect limit = GetWorkArea();
+		Rect limit = GetVirtualWorkArea();
 		Rect fm = windowFrameMargin;
 		if((fm.left|fm.right|fm.top|fm.bottom) == 0)
 			fm = Rect(8, 32, 8, 8);

@@ -12,6 +12,7 @@
 
 #include <X11/Xft/Xft.h>
 #include <X11/extensions/Xrender.h>
+#include <X11/extensions/Xinerama.h>
 
 #undef Picture
 #undef Time

@@ -13,7 +13,7 @@ library((LINUX | BSD) & GTK3) "gtk-3.0  gdk-3.0  atk-1.0  gdk_3.0  m  pangocairo
 
 library(WIN32 !MSC8ARM) "user32 gdi32";
 
-library(LINUX !RAINBOW) "X11 Xrender";
+library(LINUX !RAINBOW) "X11 Xrender Xinerama";
 
 library(LINUX  !RAINBOW) dl;
 
