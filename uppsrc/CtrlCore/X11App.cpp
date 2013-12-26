@@ -455,16 +455,65 @@ void Ctrl::ExitX11()
 		XCloseIM(xim);
 }
 
+Vector<Rect> FindScreensResolutions()
+{
+	Vector<Rect> screensResolutions;
+	int event, error;
+	
+	if(XineramaQueryExtension(Xdisplay, &event, &error)) {
+		if(XineramaIsActive(Xdisplay)) {
+			int screensNumber = 0;
+			XineramaScreenInfo* info = XineramaQueryScreens(Xdisplay, &screensNumber);
+			for(int i = 0; i < screensNumber; i++)
+				screensResolutions.Add(Rect(info[i].x_org, info[i].y_org, info[i].x_org + info[i].width, info[i].y_org + info[i].height));
+			XFree(info);
+		}
+	}
+	return screensResolutions;
+}
+
+Vector<Rect> FindScreensStruts()
+{
+	Vector<Rect> struts;
+	
+	Vector<int> clients = GetPropertyInts(Xroot, XAtom("_NET_CLIENT_LIST"));
+	for (int i = 0; i < clients.GetCount(); i++) {
+		Vector<int> strut = GetPropertyInts(clients[i], XAtom("_NET_WM_STRUT"));
+		if(strut.GetCount() == 4)
+			struts.Add(Rect(strut[0], strut[2], strut[1], strut[3]));
+	}
+	return struts;
+}
+
 Rect Ctrl::GetDefaultWindowRect()
 {
-	GuiLock __; 
-	static int pos = min(Xwidth / 10, 50);
+	GuiLock __;
+
+	static int width  = 0;
+	static int height = 0;
+	static int left   = 0;
+	static int top    = 0;
+	if (width == 0 && height == 0) {
+		Vector<Rect> screens = FindScreensResolutions();
+		if(screens.GetCount()) {
+			width  = screens[0].Width();
+			height = screens[0].Height();
+			left   = screens[0].left;
+			top    = screens[0].top;
+		}
+		else {
+			width  = Xwidth;
+			height = Xheight;
+		}
+	}
+	
+	static int pos = min(width / 10, 50);
 	pos += 10;
-	int cx = Xwidth * 2 / 3;
-	int cy = Xheight * 2 / 3;
-	if(pos + cx + 50 > Xwidth || pos + cy + 50 > Xheight)
+	int cx = width * 2 / 3;
+	int cy = height * 2 / 3;
+	if(pos + cx + 50 > width || pos + cy + 50 > height)
 		pos = 0;
-	return RectC(pos + 20, pos + 20, cx, cy);
+	return RectC(left + pos + 20, top + pos + 20, cx, cy);
 }
 
 void Ctrl::GetWorkArea(Array<Rect>& out)
@@ -489,17 +538,8 @@ Rect Ctrl::GetWorkArea(Point pt)
 
 Rect Ctrl::GetVirtualWorkArea()
 {
-	return GetPrimaryWorkArea();
-}
-
-Rect Ctrl::GetVirtualScreenArea()
-{
-	return GetPrimaryScreenArea();
-}
-
-Rect Ctrl::GetPrimaryWorkArea()
-{
-	GuiLock __; 
+	GuiLock __;
+	
 	static Rect r;
 	if(r.right == 0) {
 		Vector<int> x = GetPropertyInts(Xroot, XAtom("_NET_WORKAREA"));
@@ -511,9 +551,40 @@ Rect Ctrl::GetPrimaryWorkArea()
 	return r;
 }
 
-Rect Ctrl::GetPrimaryScreenArea()
+Rect Ctrl::GetVirtualScreenArea()
 {
 	return RectC(0, 0, Xwidth, Xheight);
+}
+
+Rect Ctrl::GetPrimaryWorkArea()
+{
+	GuiLock __;
+	
+	static Rect r;
+	if(r.right == 0) {
+		Vector<Rect> workAreas = FindScreensResolutions();
+		Vector<Rect> struts    = FindScreensStruts();
+		for (int i = 0; i < struts.GetCount() && i < workAreas.GetCount(); i++) {
+			workAreas[i].left   += struts[i].left;
+			workAreas[i].right  -= struts[i].right;
+			workAreas[i].top    += struts[i].top;
+			workAreas[i].bottom -= struts[i].bottom;
+		}
+		workAreas.GetCount() ? r = workAreas[0] : r = GetVirtualScreenArea();
+	}
+	return r;
+}
+
+Rect Ctrl::GetPrimaryScreenArea()
+{
+	GuiLock __;
+	
+	static Rect r;
+	if(r.right == 0) {
+		Vector<Rect> screens = FindScreensResolutions();
+		screens.GetCount() ? r = screens[0] : r = GetVirtualScreenArea();
+	}
+	return r;
 }
 
 int Ctrl::GetKbdDelay()

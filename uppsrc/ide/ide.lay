@@ -54,7 +54,7 @@ LAYOUT(CustomLayout, 608, 410)
 END_LAYOUT
 
 LAYOUT(RunLayout, 410, 148)
-	ITEM(Label, dv___0, SetLabel(t_("&Program arguments:")).LeftPosZ(4, 100).TopPosZ(4, 19))
+	ITEM(Label, dv___0, SetLabel(t_("&Program arguments:")).LeftPosZ(4, 128).TopPosZ(4, 19))
 	ITEM(WithDropChoice<EditString>, arg, HSizePosZ(106, 4).TopPosZ(4, 19))
 	ITEM(Label, dv___2, SetLabel(t_("&Working directory:")).LeftPosZ(4, 100).TopPosZ(28, 19))
 	ITEM(EditString, dir, HSizePosZ(106, 4).TopPosZ(28, 19))

@@ -10,10 +10,13 @@
 	#ifdef PLATFORM_WIN32
 		#define GUIPLATFORM_INCLUDE "Win32Gui.h"
 	#else
-		#ifdef flagGTK
-			#define GUIPLATFORM_INCLUDE "Gtk.h"
-		#else
+		#ifdef flagX11
 			#define GUIPLATFORM_INCLUDE "X11Gui.h"
+		#else
+			#ifndef flagGTK
+				#define flagGTK
+			#endif
+			#define GUIPLATFORM_INCLUDE "Gtk.h"
 		#endif
 	#endif
 
