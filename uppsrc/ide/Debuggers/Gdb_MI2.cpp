@@ -197,7 +197,7 @@ bool Gdb_MI2::IsFinished()
 bool Gdb_MI2::Tip(const String& exp, CodeEditor::MouseTip& mt)
 {
 	// quick exit
-	if(exp.IsEmpty())
+	if(exp.IsEmpty() || !stopped || !started)
 		return false;
 	
 	// if local vars are empty, update them
