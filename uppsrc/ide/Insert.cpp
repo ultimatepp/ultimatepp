@@ -151,9 +151,15 @@ void Ide::InsertMenu(Bar& bar)
 	bar.Add("Insert file path..", THISBACK(InsertFilePath));
 }
 
-void Ide::EditorMenu(Bar& bar)
+void Ide::InsertAdvanced(Bar& bar)
 {
 	bar.Add("Insert", THISBACK(InsertMenu));
+	bar.Add("Advanced", THISBACK(EditSpecial));
+}
+
+void Ide::EditorMenu(Bar& bar)
+{
+	InsertAdvanced(bar);
 	bar.MenuSeparator();
 	editor.StdBar(bar);
 }

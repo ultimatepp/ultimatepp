@@ -212,10 +212,8 @@ void Ide::Edit(Bar& menu) {
 	if(menu.IsMenuBar())
 		menu.Add("Find and Replace", THISBACK(SearchMenu));
 
-	if(!designer && menu.IsMenuBar()) {
-		menu.Add("Insert", THISBACK(InsertMenu));
-		menu.Add("Advanced", THISBACK(EditSpecial));
-	}
+	if(!designer && menu.IsMenuBar())
+		InsertAdvanced(menu);
 
 	if(editor.GetLineCount() && editor.GetUtf8Line(0) == "$uvs: PENDING CONFLICT") {
 		menu.MenuSeparator();
