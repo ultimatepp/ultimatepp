@@ -869,6 +869,7 @@ public:
 		void  InsertCString();
 		void  InsertFilePath();
 		void  InsertMenu(Bar& bar);
+		void  InsertAdvanced(Bar& bar);
 		void  EditorMenu(Bar& bar);
 
 	void SearchMenu(Bar& bar);
