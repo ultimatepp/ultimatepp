@@ -98,7 +98,8 @@ mainconfig
 	"" = "GUI CHECKCLIPBOARD",
 	"" = "GUI SVO_VALUE",
 	"" = "GUI GTK",
-	"" = "GUI X11";
+	"" = "GUI X11",
+	"" = "GUI NOGTK";
 
 custom() "",
 	"",
