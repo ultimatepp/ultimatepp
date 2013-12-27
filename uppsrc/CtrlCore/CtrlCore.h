@@ -3,6 +3,11 @@
 
 #include <RichText/RichText.h>
 
+#ifdef  flagNOGTK
+#undef  flagGTK
+#define flagX11
+#endif
+
 #include <guiplatform.h>
 
 #ifndef GUIPLATFORM_INCLUDE
