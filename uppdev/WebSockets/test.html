@@ -1,0 +1,30 @@
+    <!DOCTYPE HTML>  
+    <html>  
+    <head>  
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">  
+    </head>  
+    <body>  
+    <button onclick="webs()">WebSocket message</button>  
+    <script>  
+      
+    function webs() {  
+        if("WebSocket" in window) {  
+            var ws = new WebSocket("ws://127.0.0.1:9998/echo");  
+            ws.onopen = function(){  
+                ws.send("A message that consist of 39 characters");  
+            };  
+            ws.onmessage = function(evt){  
+                alert(evt.data);  
+            };  
+            ws.onclose = function(ev){  
+                  
+            };  
+            ws.onerror = function(ev){  
+                alert("Connection error: " + ev.reason);  
+            };  
+        }  
+    }  
+      
+    </script>  
+    </body>  
+    </html> 
