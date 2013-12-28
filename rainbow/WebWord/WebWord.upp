@@ -1,0 +1,12 @@
+uses
+	Core,
+	Telpp,
+	plugin/DroidFonts,
+	RichEdit;
+
+file
+	WebWord.cpp;
+
+mainconfig
+	"" = "SSE2 TELPP RAINBOW";
+
