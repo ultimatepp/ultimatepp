@@ -148,7 +148,6 @@ class TcpSocket {
 
 	void                    Reset();
 
-	void                    SetSockError(const char *context, int code, const char *errdesc);
 	void                    SetSockError(const char *context, const char *errdesc);
 	void                    SetSockError(const char *context);
 
@@ -162,7 +161,9 @@ class TcpSocket {
 public:
 	Callback        WhenWait;
 	
-	enum { ERROR_GLOBAL_TIMEOUT = -1000000, ERROR_SSLHANDSHAKE_TIMEOUT };
+	void            SetSockError(const char *context, int code, const char *errdesc);
+
+	enum { ERROR_GLOBAL_TIMEOUT = -1000000, ERROR_SSLHANDSHAKE_TIMEOUT, ERROR_LAST };
 
 	static String   GetHostName();
 	
