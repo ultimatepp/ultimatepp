@@ -13,13 +13,17 @@ NAMESPACE_UPP
 
 static Point MousePos;
 
-int Width = 1000;
-int Height = 1000;
-
 TcpSocket   server;
 TcpSocket   socket;
 
-One<Ctrl>   desktop_ctrl;
+Size   DesktopSize = Size(1000, 1000);
+
+StaticRect& Desktop()
+{
+	static StaticRect x;
+	return x;
+}
+
 
 void Ctrl::InitTelpp()
 {
@@ -36,10 +40,9 @@ void Ctrl::InitTelpp()
 #endif
 	ChStdSkin();
 
-	static StaticRect x;
-	x.Color(Cyan());
-	x.SetRect(0, 0, Width, Height);
-	SetDesktop(x);
+	Desktop().Color(Cyan());
+	Desktop().SetRect(0, 0, DesktopSize.cx, DesktopSize.cy);
+	SetDesktop(Desktop());
 }
 
 Point GetMousePos() {
@@ -119,10 +122,10 @@ void Ctrl::PaintScene(SystemDraw& draw)
 		return;
 	LLOG("@ DoPaint");
 	LTIMING("DoPaint paint");
-	draw.Init(Size(Width, Height));
+	draw.Init(DesktopSize);
 	draw.Begin();
 	Vector<Rect> invalid;
-	invalid.Add(Size(Width, Height));
+	invalid.Add(DesktopSize); _TODO_
 	for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
 		Rect r = topctrl[i]->GetRect();
 		Rect ri = GetClipBound(invalid, r);
@@ -155,7 +158,6 @@ void Ctrl::PaintCaretCursor(SystemDraw& draw)
 		h << "url('data:image/png;base64,"
 		  << Base64Encode(PNGEncoder().SaveString(fbCursorImage))
 		  << "') " << p.x << ' ' << p.y << ", default";
-		DDUMP(h);
 		draw.Put8(SystemDraw::SETCURSORIMAGE);
 		draw.Put16(0); // _TODO_ Cursor cache
 		draw.Put(h);
@@ -221,7 +223,7 @@ void Ctrl::ReadKeyMods(CParser& p)
 
 bool Ctrl::DoKeyFB(dword key, int cnt)
 {
-	DLOG("DoKeyFB [" << GetKeyDesc(key) << "] " << key << ", " << cnt);
+	LLOG("DoKeyFB [" << GetKeyDesc(key) << "] " << key << ", " << cnt);
 
 	bool b = DispatchKey(key, cnt);
 	SyncCaret();
@@ -252,7 +254,7 @@ void Ctrl::DoMouseFB(int event, Point p, int zdelta, CParser& cp)
 	else
 	if(a == DOWN && ignoreclick)
 		return;
-	DLOG("### Mouse event: " << event << " position " << p << " zdelta " << zdelta << ", capture " << Upp::Name(captureCtrl));
+	LLOG("### Mouse event: " << event << " position " << p << " zdelta " << zdelta << ", capture " << Upp::Name(captureCtrl));
 	if(captureCtrl)
 		MouseEventFB(captureCtrl->GetTopCtrl(), event, p, zdelta);
 	else
@@ -276,12 +278,18 @@ static int sDistMax(Point a, Point b)
 	return IsNull(a) ? INT_MAX : max(abs(a.x - b.x), abs(a.y - b.y));
 }
 
+Point ReadPoint(CParser& p)
+{
+	Point pt;
+	pt.x = p.ReadInt();
+	pt.y = p.ReadInt();
+	return pt;
+}
+
 void Ctrl::DoMouseButton(int event, CParser& p)
 {
 	int button = p.ReadInt();
-	int x = p.ReadInt();
-	int y = p.ReadInt();
-	Point pt(x, y);
+	Point pt = ReadPoint(p);
 	int64 tm = p.ReadInt64();
 	(button == 0 ? mouseLeft : button == 2 ? mouseRight : mouseMiddle) = event == DOWN;
 	if(event == DOWN)
@@ -306,11 +314,21 @@ bool Ctrl::ProcessEventQueue(const String& event_queue)
 			if(p.Id("I"))
 				SystemDraw::ResetI();
 			else
+			if(p.Id("R")) {
+				DesktopSize = ReadPoint(p);
+				Desktop().SetRect(0, 0, DesktopSize.cx, DesktopSize.cy);				
+			}
 			if(p.Id("M")) {
-				int x = p.ReadInt();
-				int y = p.ReadInt();
+				Point pt = ReadPoint(p);
 				int64 tm = p.ReadInt64();
-				DoMouseFB(MOUSEMOVE, Point(x, y), 0, p);
+				DoMouseFB(MOUSEMOVE, pt, 0, p);
+			}
+			else
+			if(p.Id("W")) {
+				double w = p.ReadDouble();
+				Point pt = ReadPoint(p);
+				int64 tm = p.ReadInt64();
+				DoMouseFB(MOUSEWHEEL, pt, w < 0 ? 120 : -120, p);
 			}
 			else
 			if(p.Id("O")) {
@@ -416,7 +434,7 @@ void Ctrl::EventLoop(Ctrl *ctrl)
 	ASSERT(IsMainThread());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
-	DLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
+	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
 	Ptr<Ctrl> ploop;
 	if(ctrl) {
 		ploop = LoopCtrl;

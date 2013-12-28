@@ -1,6 +1,6 @@
 #define GUI_TELPP
 
-#define _TODO_ _DBG_
+#define _TODO_ // _DBG_
 
 #include <Draw/Draw.h>
 
@@ -30,10 +30,11 @@ public:
 		CURSORIMAGE = 6,
 	};
 	
-	static Index<int64>           img_index;
+	static Index<int64>           img_index[3];
 	
+	static int GetImageI(int from, Index<int64>& img_index, int maxcount, SystemDraw& w, const Image& img);
 	static int GetImageI(SystemDraw& w, const Image& img);
-	static void ResetI()          { img_index.Clear(); }
+	static void ResetI()          { for(int i = 0; i < 3; i++) img_index[i].Clear(); }
 
 	StringBuffer result;
 

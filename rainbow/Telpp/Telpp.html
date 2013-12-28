@@ -14,7 +14,7 @@ html, body {
 
 <body>
 
-<canvas id="myCanvas" width="1000" height="1000" style="border:0px" tabindex="1">
+<canvas id="myCanvas" width="1000" height="1000" style="border:0px" tabindex="1" oncontextmenu="return false;">
 Your browser does not support the HTML5 canvas tag.
 </canvas>
 
@@ -214,6 +214,11 @@ canvas.onmouseup = function(event)
 	event.preventDefault();
 }
 
+canvas.onwheel = function(event)
+{
+	event_queue += "W " + event.deltaY + mouse_event(event);
+}
+
 document.onkeydown = function(event)
 {
 	event_queue += "K " + event.keyCode + " " + event.which + key_flags(event);
@@ -238,6 +243,8 @@ function ResizeCanvas()
 {
 	canvas.width  = window.innerWidth;
 	canvas.height = window.innerHeight;
+	event_queue += "R " + canvas.width + ' ' + canvas.height + "\n";
+	Ping();
 }
 
 window.onresize = ResizeCanvas;
