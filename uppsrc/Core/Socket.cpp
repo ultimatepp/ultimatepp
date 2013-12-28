@@ -663,10 +663,11 @@ bool TcpSocket::Wait(dword flags)
 	return Wait(flags, GetEndTime());
 }
 
-int TcpSocket::Put(const char *s, int length)
+int TcpSocket::Put(const void *s_, int length)
 {
 	LLOG("Put " << socket << ": " << length);
 	ASSERT(IsOpen());
+	const char *s = (const char *)s_;
 	if(length < 0 && s)
 		length = (int)strlen(s);
 	if(!s || length <= 0 || IsError() || IsAbort())
@@ -690,7 +691,7 @@ int TcpSocket::Put(const char *s, int length)
 	return done;
 }
 
-bool TcpSocket::PutAll(const char *s, int len)
+bool TcpSocket::PutAll(const void *s, int len)
 {
 	if(Put(s, len) != len) {
 		if(!IsError())
