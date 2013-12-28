@@ -207,14 +207,14 @@ public:
 	int             Get(void *buffer, int len);
 	String          Get(int len);
 
-	int             Put(const char *s, int len);
+	int             Put(const void *s, int len);
 	int             Put(const String& s)                     { return Put(s.Begin(), s.GetLength()); }
 
 	bool            GetAll(void *buffer, int len);
 	String          GetAll(int len);
 	String          GetLine(int maxlen = 65536);
 
-	bool            PutAll(const char *s, int len);
+	bool            PutAll(const void *s, int len);
 	bool            PutAll(const String& s);
 	
 	bool            StartSSL();

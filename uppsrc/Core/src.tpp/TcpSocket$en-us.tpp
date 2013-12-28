@@ -187,9 +187,9 @@ actually read.&]
 [s2;%% Reads at most [%-*@3 len] bytes, trying to do so at most for 
 specified timeout. Returns a String with read data.&]
 [s3;%% &]
-[s4;%% &]
-[s5;:TcpSocket`:`:Put`(const char`*`,int`): [@(0.0.255) int]_[* Put]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 s], [@(0.0.255) int]_[*@3 len])&]
+[s4; &]
+[s5;:TcpSocket`:`:Put`(const void`*`,int`): [@(0.0.255) int]_[* Put]([@(0.0.255) const]_[@(0.0.255) v
+oid]_`*[*@3 s], [@(0.0.255) int]_[*@3 len])&]
 [s2;%% Writes at most [%-*@3 len] bytes from [%-*@3 buffer], trying to 
 do so at most for specified timeout. Returns the number of bytes 
 actually written.&]
@@ -220,9 +220,9 @@ error for TcpSocket.&]
 If the whole line cannot be read within timeout or line length 
 is longer than [%-*@3 maxlen] sets error and returns String`::GetVoid().&]
 [s3;%% &]
-[s4;%% &]
-[s5;:TcpSocket`:`:PutAll`(const char`*`,int`): [@(0.0.255) bool]_[* PutAll]([@(0.0.255) con
-st]_[@(0.0.255) char]_`*[*@3 s], [@(0.0.255) int]_[*@3 len])&]
+[s4; &]
+[s5;:TcpSocket`:`:PutAll`(const void`*`,int`): [@(0.0.255) bool]_[* PutAll]([@(0.0.255) con
+st]_[@(0.0.255) void]_`*[*@3 s], [@(0.0.255) int]_[*@3 len])&]
 [s2;%% Outputs exactly [%-*@3 len] bytes. If such number of bytes cannot 
 be written in time specified by timeout, sets error and returns 
 false.&]
