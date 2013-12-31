@@ -61,6 +61,7 @@ protected:
 		Color fillColor;
 		
 		String legend;
+		String unitsX, unitsY;
 		
 		double opacity;
 
@@ -106,11 +107,11 @@ public:
 	
 	void SetLabels(const String& _xLabel, const String& _yLabel, const String& _yLabel2 = "");
 	ScatterDraw& SetLabelX(const String& _xLabel);
-	const String &GetLabelX()	{return xLabel;} 
+	const String &GetLabelX()	{return xLabel_base;} 
 	ScatterDraw& SetLabelY(const String& _yLabel);
-	const String &GetLabelY()	{return yLabel;} 
+	const String &GetLabelY()	{return yLabel_base;} 
 	ScatterDraw& SetLabelY2(const String& _yLabel);
-	const String &GetLabelY2()	{return yLabel2;}
+	const String &GetLabelY2()	{return yLabel2_base;}
 	ScatterDraw& SetLabelsFont(const Font& fontLabels);
 	Font GetLabelsFont() {return labelsFont;};
 	ScatterDraw& SetLabelsColor(const Color& colorLabels);
@@ -309,8 +310,12 @@ public:
 	
 	ScatterDraw &Opacity(double opacity = 1) {series[series.GetCount() - 1].opacity = opacity;	return *this;}
 	ScatterDraw &Legend(const String legend);
-	ScatterDraw& Legend(int index, const String legend);
-	const String& GetLegend(int index);
+	ScatterDraw &Legend(int index, const String legend);
+	const String &GetLegend(int index);
+	ScatterDraw &Units(const String unitsY, const String unitsX = "");
+	ScatterDraw &Units(int index, const String unitsY, const String unitsX = "");
+	const String GetUnitsX(int index);
+	const String GetUnitsY(int index);
 	
 	inline bool IsValid(int index) const {return (index >= 0 && index < series.GetCount());}
 	
@@ -391,6 +396,7 @@ protected:
 	int titleHeight;
 	
 	String xLabel, yLabel, yLabel2;
+	String xLabel_base, yLabel_base, yLabel2_base;
 	Font labelsFont;
 	Color labelsColor;
 	
@@ -473,6 +479,7 @@ private:
 	static void ParseTextMultiline(const String &text, Font fnt, 
 								   Upp::Array <String> &texts, Upp::Array <Size> &sizes);
 	int plotW, plotH;
+	bool labelsChanged;
 };
 
 template <class T>
@@ -518,22 +525,62 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 	if(showLegend) 
 		DrawLegend(w, size, scale);
 	
-	if (plotW < 0 || plotH < 0) 
+	if (plotW < 0 || plotH < 0) {
+		ClipEnd(w);	
 		return false;
-
+	}
+	
 	Font fontLabel;
 	fontLabel = labelsFont;
 	fontLabel.Height(scale*labelsFont.GetHeight());
 	
+	if (labelsChanged) {
+		xLabel = xLabel_base;
+		yLabel = yLabel_base;
+		yLabel2 = yLabel2_base;
+		Index<String> xUnits, yUnits, yUnits2;
+		for (int i = 0; i < series.GetCount(); ++i) {
+			ScatterSeries &serie = series[i];
+			if (!serie.unitsX.IsEmpty())
+				xUnits.FindAdd(serie.unitsX);
+			if (!serie.unitsY.IsEmpty()) {
+				if (serie.primaryY) 
+					yUnits.FindAdd(serie.unitsY);
+				else
+					yUnits2.FindAdd(serie.unitsY);
+			}
+		}
+		if (!xUnits.IsEmpty()) {
+			xLabel += " ";
+			for (int i = 0; i < xUnits.GetCount(); ++i)
+				xLabel += "[" + xUnits[i] + "]";
+		}
+		if (!yUnits.IsEmpty()) {
+			yLabel += " ";
+			for (int i = 0; i < yUnits.GetCount(); ++i)
+				yLabel += "[" + yUnits[i] + "]";
+		}				
+		if (!yUnits2.IsEmpty()) {
+			yLabel2 += " ";
+			for (int i = 0; i < yUnits2.GetCount(); ++i)
+				yLabel2 += "[" + yUnits2[i] + "]";
+		}						
+		labelsChanged = false;	
+	}
 	Size lx  = GetTextSize(xLabel, 	fontLabel);
 	Size ly  = GetTextSize(yLabel, 	fontLabel);
 	Size ly2 = GetTextSize(yLabel2, fontLabel);
 	DrawText(w, (plotW - lx.cx)/2., plotH + scale*(vPlotBottom - 2) - lx.cy, 0, xLabel, fontLabel, labelsColor);
-	DrawText(w, scale*(2 - hPlotLeft), (plotH + ly.cx)/2., 900, yLabel,  fontLabel, labelsColor);
-	DrawText(w, scale*size.cx - ly2.cy - 42*scale, (plotH + ly2.cx)/2., 900, yLabel2, fontLabel, labelsColor);
+	DrawText(w, scale*(2 - hPlotLeft), 			   (plotH + ly.cx)/2.,  900, yLabel,  fontLabel, labelsColor);
+	DrawText(w, scale*(size.cx - 2) - ly2.cy - hPlotLeft, (plotH + ly2.cx)/2., 900, yLabel2, fontLabel, labelsColor);
 
-	if (xRange == 0 || xMajorUnit == 0 || yRange == 0 || yMajorUnit == 0 || yRange2 == 0) 
+	/*if (xRange == 0 || xMajorUnit == 0 || yRange == 0 || yMajorUnit == 0 || yRange2 == 0) {
+		ClipEnd(w);	
 		return false;
+	}*/
+	drawXReticle &=  (xRange != 0 && xMajorUnit != 0);
+	drawYReticle &=  (yRange != 0 && yMajorUnit != 0);
+	drawY2Reticle &= (yRange2 != 0 && yMajorUnit != 0);
 	
 	Font standard6 = GetStdFont();
 	standard6.Height(scale*GetStdFont().GetHeight());
@@ -592,8 +639,7 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 		if (delayFactor < 1) {
 			delayFactor = 1;
 			highlight_0 = Null;
-		} else
-			debug_h();
+		} 
 		borderWidth = fround(delayFactor*borderWidth);
 	}
 #endif
@@ -706,35 +752,38 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 							if (series[j].PointsData()->x(i) >= xMin)
 								imin = i - 1;
 						} else if (IsNull(imax)) {
-							if (series[j].PointsData()->x(i) >= xMin + xRange)
+							if (series[j].PointsData()->x(i) >= xMin + xRange) 
 								imax = i + 1;
 						}
 					}
 					if (IsNull(imin))
 					    imin = 0;
 					if (IsNull(imax))
-					    imax = series[j].PointsData()->GetCount();
+					    imax = series[j].PointsData()->GetCount() - 1;
 				} else {
 					imin = 0;
 					imax = series[j].PointsData()->GetCount();
 				}
-				int64 dx;
-				if (fastViewX)
-					dx = max<int64>(1, (imax - imin)/plotW);			
-				else
-					dx = 1;
-				for (int64 i = imin; i < imax; i += dx) {
+				double dxpix;
+				if (fastViewX) 
+					dxpix = (series[j].PointsData()->x(imax) - series[j].PointsData()->x(imin))/plotW;			
+				int npix = 1;
+				for (int64 i = imin; i < imax; ) {
 					double xx, yy;
 					if (fastViewX) {					
-						yy = 0;
-						int ii;
-						for (ii = 0; ii < dx && i + ii < imax; ++ii) 
+						yy = series[j].PointsData()->y(i);
+						int64 ii;
+						double maxv = dxpix*npix;
+						for (ii = 1; series[j].PointsData()->x(i + ii) < maxv && i + ii < imax; ++ii) 
 							yy += series[j].PointsData()->y(i + ii);
 						yy /= double(ii);
-						xx = (series[j].PointsData()->x(i) + series[j].PointsData()->x(i + ii - 1))/2;
+						xx = series[j].PointsData()->x(i);
+						i += ii;
+						npix++;
 					} else {
 						xx = series[j].PointsData()->x(i);
 						yy = series[j].PointsData()->y(i);
+						++i;
 					}
 					int ix = fround(plotW*(xx - xMin)/xRange);
 					int iy;
