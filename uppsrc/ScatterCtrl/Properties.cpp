@@ -82,7 +82,11 @@ void SeriesTab::Init(ScatterCtrl& scatter)
 	markcolor <<= THISBACK(Change);
 	markwidth <<= THISBACK(Change);
 
-	rename <<= THISBACK(Rename);
+	unitsY <<= THISBACK(Change);
+	unitsX <<= THISBACK(Change);
+
+	name <<= THISBACK(Change);
+	primary <<= THISBACK(Change);
 	
 	name.SetFocus();
 }
@@ -104,7 +108,14 @@ void SeriesTab::Change()
 	scatter.MarkStyle(index, ~markstyle);
 	scatter.SetMarkColor(index, Upp::Color(~markcolor));
 	scatter.SetMarkWidth(index, ~markwidth);
+	
+	scatter.Units(index, ~unitsY, ~unitsX);
                          
+ 	scatter.SetDataPrimaryY(index, ~primary);                   
+      
+	list.Set(index, ~name);
+	scatter.Legend(index, ~name);
+                   
 	scatter.SetModify();
 	scatter.Refresh();
 }
@@ -128,22 +139,13 @@ void SeriesTab::UpdateFields()
 	markstyle <<= scatter.GetMarkStyleName(index);
 	markcolor <<= scatter.GetMarkColor(index);
 	markwidth <<= scatter.GetMarkWidth(index);
+	
+	unitsY <<= scatter.GetUnitsY(index);
+	unitsX <<= scatter.GetUnitsX(index);
+	
+	primary <<= scatter.IsDataPrimaryY(index);
 }
 
-void SeriesTab::Rename() 
-{
-	int index = list.GetCursor();
-	if (index < 0)
-		return;
-	
-	ScatterCtrl &scatter = *pscatter;
-	
-	list.Set(index, ~name);
-	scatter.Legend(index, ~name);
-	
-	scatter.SetModify();
-	scatter.Refresh();
-}
 
 void DataTab::Init(ScatterCtrl& scatter) 
 {
