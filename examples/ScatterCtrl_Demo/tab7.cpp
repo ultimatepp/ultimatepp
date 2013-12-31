@@ -5,6 +5,7 @@ void Tab7::Init()
 {
 	CtrlLayout(*this);	
 	HSizePos().VSizePos();
+	scatter.SetRange(80, 100);
 	
 	bAddSeries 			<<= THISBACK(AddSeries);
 	bRemoveLastSeries 	<<= THISBACK(RemoveLastSeries);
