@@ -75,8 +75,6 @@ void ScatterCtrl::Paint(Draw& w)
 	} else {
 		ImageBuffer ib(GetSize());
 		BufferPainter bp(ib, mode);
-		//bp.Clear(White());
-		//PlotTexts(bp, GetSize(), 1);
 		ScatterCtrl::SetDrawing(bp, GetSize(), 1);
 		w.DrawImage(0, 0, ib);
 		PlotTexts(w, GetSize(), 1);
@@ -393,15 +391,15 @@ void ScatterCtrl::SaveToFile(String fileName)
 {
 	GuiLock __;
 	if (IsNull(fileName)) {
-		FileSel fs;
-		
-		fs.Type("PNG file", "*.png");
-		fs.Type("JPEG file", "*.jpg");
-	    if(!fs.ExecuteSaveAs(t_("Saving plot to PNG or JPEG file"))) {
+		fileToSave.Set(ForceExt(GetTitle(), ".jpg"));
+		fileToSave.ClearTypes();
+		fileToSave.Type(Format(t_("%s file"), "JPEG"), "*.jpg");
+		fileToSave.Type(Format(t_("%s file"), "PNG"), "*.png");
+	    if(!fileToSave.ExecuteSaveAs(t_("Saving plot to PNG or JPEG file"))) {
 	        Exclamation(t_("Plot has not been saved"));
 	        return;
 	    }
-        fileName = fs;
+        fileName = fileToSave;
 	} 
 	if (GetFileExt(fileName) == ".png") {
 		PNGEncoder encoder;

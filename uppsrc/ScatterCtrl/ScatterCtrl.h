@@ -225,6 +225,8 @@ private:
 	template <class T>
 	void SetDrawing(T& w, const Size &size, int scale);	
 	void TimerCallback();	
+	
+	FileSel fileToSave;
 };
 
 template <class T>

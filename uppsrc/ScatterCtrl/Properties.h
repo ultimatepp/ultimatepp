@@ -24,7 +24,6 @@ private:
 	
 	void Change();
 	void UpdateFields();
-	void Rename();
 };
 
 class DataTab : public WithData<StaticRect> {
