@@ -154,6 +154,7 @@ file
 	InetUtil.cpp,
 	Socket.cpp,
 	Http.cpp,
+	WebSocket.cpp,
 	"Runtime linking" readonly separator,
 	dli.h,
 	dli_header.h,
