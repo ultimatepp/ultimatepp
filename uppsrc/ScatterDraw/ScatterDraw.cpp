@@ -33,26 +33,30 @@ ScatterDraw& ScatterDraw::SetTitleColor(const Color& colorTitle)
 
 void ScatterDraw::SetLabels(const String& _xLabel, const String& _yLabel, const String& _yLabel2)
 {
-	xLabel = _xLabel;
-	yLabel = _yLabel;
-	yLabel2 = _yLabel2;	
+	xLabel_base = _xLabel;
+	yLabel_base = _yLabel;
+	yLabel2_base = _yLabel2;
+	labelsChanged = true;	
 }
 
 ScatterDraw& ScatterDraw::SetLabelX(const String& _xLabel)
 {
-	xLabel = _xLabel;
+	xLabel_base = _xLabel;
+	labelsChanged = true;
 	return *this;
 }
 
 ScatterDraw& ScatterDraw::SetLabelY(const String& _yLabel)
 {
-	yLabel = _yLabel;
+	yLabel_base = _yLabel;
+	labelsChanged = true;
 	return *this;
 }
 
 ScatterDraw& ScatterDraw::SetLabelY2(const String& _yLabel)
 {
-	yLabel2 = _yLabel;
+	yLabel2_base = _yLabel;
+	labelsChanged = true;
 	return *this;
 }
 
@@ -191,8 +195,11 @@ void ScatterDraw::DrawLegend(Draw& w, const Size &size, int scale) const
 				series[i].markPlot->Paint(w, scale, p, series[i].markWidth, series[i].markColor);   
 			Font scaledFont = GetStdFont();
 			scaledFont.Height(scale*GetStdFont().GetHeight());
+			String legend = series[i].legend;
+			if (!series[i].unitsY.IsEmpty())
+				legend += " [" + series[i].unitsY + "]";
 			DrawText(w, scale*(i-start)*legendWidth+scale*25, scale*(-2-12*(j+1)), 0,
-						series[i].legend, scaledFont, series[i].color);                   
+						legend, scaledFont, series[i].color);                   
 		}
 	}
 }	
@@ -344,7 +351,7 @@ void ScatterDraw::FitToData(bool vertical) {
 			yMinUnit += deltaY;
 			AdjustMinUnitY();
 			if (maxy == miny) 
-				yRange = 2*maxy;
+				yRange2 = maxy > 0 ? 2*maxy : 1;
 			else	
 				yRange = maxy - miny;
 		}
@@ -354,7 +361,7 @@ void ScatterDraw::FitToData(bool vertical) {
 			yMinUnit2 += deltaY2;
 			AdjustMinUnitY2();
 			if (maxy2 == miny2) 
-				yRange2 = 2*maxy2;
+				yRange2 = maxy2 > 0 ? 2*maxy2 : 1;
 			else	
 				yRange2 = maxy2 - miny2;
 		}
@@ -477,6 +484,8 @@ ScatterDraw::ScatterBasicSeries::ScatterBasicSeries()
 	color = Null;
 	thickness = 3;
 	legend = "";
+	unitsX = "";
+	unitsY = "";
 	opacity = 1;
 	primaryY = true;
 	sequential = false;
@@ -746,6 +755,36 @@ const String& ScatterDraw::GetLegend(int index)
 {
 	ASSERT(IsValid(index));
 	return series[index].legend;
+}
+
+ScatterDraw &ScatterDraw::Units(const String unitsY, const String unitsX)
+{
+	int index = series.GetCount() - 1;
+	
+	return Units(index, unitsY, unitsX);
+}
+
+ScatterDraw& ScatterDraw::Units(int index, const String unitsY, const String unitsX)
+{
+	ASSERT(IsValid(index));
+	
+	series[index].unitsX = unitsX;
+	series[index].unitsY = unitsY;
+	labelsChanged = true;
+	
+	return *this;
+}
+
+const String ScatterDraw::GetUnitsX(int index)
+{
+	ASSERT(IsValid(index));
+	return series[index].unitsX;
+}
+
+const String ScatterDraw::GetUnitsY(int index)
+{
+	ASSERT(IsValid(index));
+	return series[index].unitsY;
 }
 
 void ScatterDraw::SetDataColor(int index, const Color& color)
@@ -1293,6 +1332,7 @@ ScatterDraw::ScatterDraw()
 	lastxRange = xRange;
 	lastyRange = yRange;
 	highlight_0 = Null;
+	labelsChanged = false;
 }
 
 void DrawLine(Draw &w, double x0, double y0, double x1, double y1, double width, const Color &color)
