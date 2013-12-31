@@ -96,11 +96,11 @@ String WebSocket::Recieve()
 			return String::GetVoid();
 		if(GetOpCode() == PING)
 			SendRaw(PONG, ~data, data.GetLength());
-		else
-		if(GetOpCode() == CLOSE)
-			SendRaw(CLOSE, ~data, data.GetLength());
-		else
+		else {
+			if(GetOpCode() == CLOSE)
+				SendRaw(CLOSE, ~data, data.GetLength());
 			break;
+		}
 	}
 	return data;
 }
@@ -147,5 +147,14 @@ void WebSocket::Reset()
 	data.Clear();
 	maxlen = 10 * 1024 * 1024;
 }
+
+
+void WebSocket::Close()
+{
+	TcpSocket::Close();
+	opcode = 0;
+	data.Clear();
+}
+
 
 END_UPP_NAMESPACE
