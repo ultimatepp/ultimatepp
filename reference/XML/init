@@ -1,0 +1,4 @@
+#ifndef _XML_icpp_init_stub
+#define _XML_icpp_init_stub
+#include "Core/init"
+#endif

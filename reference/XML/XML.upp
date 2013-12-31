@@ -1,4 +1,4 @@
-description "Creating and parsing XML files";
+description "Creating and parsing XML files\377";
 
 uses
 	Core;
