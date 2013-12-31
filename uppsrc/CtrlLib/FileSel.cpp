@@ -875,6 +875,9 @@ String TrimDot(String f) {
 
 void FileSel::AddName(Vector<String>& fn, String& f) {
 	if(!f.IsEmpty()) {
+		f = TrimDot(f);
+		if(f[0] == '\"' && f.GetCount() > 2)
+			f = f.Mid(1, f.GetCount() - 2);
 		if(f.Find('.') < 0) {
 			String t = GetMask();
 			int q = t.Find('.');
@@ -888,11 +891,7 @@ void FileSel::AddName(Vector<String>& fn, String& f) {
 			if(defext.GetCount())
 				f << '.' << defext;
 		}
-		f = TrimDot(f);
-		if(f[0] == '\"' && f.GetCount() > 2)
-			fn.Add(f.Mid(1, f.GetCount() - 2));
-		else
-			fn.Add(f);
+		fn.Add(f);
 	}
 	f.Clear();
 }
@@ -938,10 +937,7 @@ void FileSel::Finish() {
 				AddName(fn, o);
 				s++;
 				for(;;) {
-					if(*s == '\0')
-						AddName(fn, o);
-					else
-					if(*s == '\"') {
+					if(*s == '\0' || *s == '\"') {
 						AddName(fn, o);
 						break;
 					}
