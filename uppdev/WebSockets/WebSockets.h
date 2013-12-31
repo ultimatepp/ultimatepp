@@ -14,7 +14,7 @@ class WebSocket : public TcpSocket {
 
 public:
 	enum {
-		ERROR_NOHEADER = TcpSocket::ERROR_LAST, ERROR_NOKEY, ERROR_INVALID_DATA, ERROR_SEND, ERROR_SIZE_LIMIT
+		ERROR_NOHEADER = TcpSocket::ERROR_LAST, ERROR_NOKEY, ERROR_DATA, ERROR_SEND, ERROR_LEN_LIMIT
 	};
 	enum {
 		FIN = 0x80,
@@ -40,11 +40,11 @@ public:
 
 	bool   SendRaw(int hdr, const void *data, int64 len);
 
-	bool   SendText(const void *data, int64 len, bool fin = true)   { SendRaw((fin ? 0x80 : 0)|TEXT, data, len); }
-	bool   SendText(const String& data, bool fin = true)            { SendText(~data, data.GetCount(), fin); }
+	bool   SendText(const void *data, int64 len, bool fin = true)   { return SendRaw((fin ? 0x80 : 0)|TEXT, data, len); }
+	bool   SendText(const String& data, bool fin = true)            { return SendText(~data, data.GetCount(), fin); }
 
-	bool   SendBinary(const void *data, int64 len, bool fin = true) { SendRaw((fin ? 0x80 : 0)|BINARY, data, len); }
-	bool   SendBinary(const String& data, bool fin = true)          { SendBinary(~data, data.GetCount(), fin); }
+	bool   SendBinary(const void *data, int64 len, bool fin = true) { return SendRaw((fin ? 0x80 : 0)|BINARY, data, len); }
+	bool   SendBinary(const String& data, bool fin = true)          { return SendBinary(~data, data.GetCount(), fin); }
 
 	void   Reset();
 	
