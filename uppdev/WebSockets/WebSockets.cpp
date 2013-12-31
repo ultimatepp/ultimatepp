@@ -58,19 +58,19 @@ bool WebSocket::RecieveRaw()
 		Get(key, 4);
 
 	if(IsError()) {
-		SetSockError("websocket recieve", ERROR_INVALID_DATA, "Invalid data");
+		SetSockError("websocket recieve", ERROR_DATA, "Invalid data");
 		return false;
 	}
 
 	if(len > maxlen) {
-		SetSockError("websocket recieve", ERROR_SIZE_LIMIT, "Frame limit exceeded, size " + AsString(len));
+		SetSockError("websocket recieve", ERROR_LEN_LIMIT, "Frame limit exceeded, size " + AsString(len));
 		return false;
 	}
 
-	StringBuffer frame(len);
+	StringBuffer frame((int)len); // TODO int64
 	char *buffer = ~frame;
-	if(!GetAll(buffer, len)) {
-		SetSockError("websocket recieve", ERROR_INVALID_DATA, "Invalid data");
+	if(!GetAll(buffer, (int)len)) {
+		SetSockError("websocket recieve", ERROR_DATA, "Invalid data");
 		return false;
 	}
 	
@@ -103,6 +103,7 @@ bool WebSocket::SendRaw(int hdr, const void *data, int64 len)
 	if(IsError())
 		return false;
 	
+	ASSERT(len < INT_MAX); // temporary, todo
 	String b;
 	b.Cat(hdr);
 	if(len > 65535) {
@@ -123,9 +124,9 @@ bool WebSocket::SendRaw(int hdr, const void *data, int64 len)
 		b.Cat(byte(len));
 	}
 	else
-		b.Cat(len);
+		b.Cat((int)len);
 	
-	if(IsError() || !PutAll(~b, b.GetLength()) || !PutAll(data, len)) {
+	if(IsError() || !PutAll(~b, b.GetLength()) || !PutAll(data, (int)len)) {
 		SetSockError("websocket send", ERROR_SEND, "Failed to send data");
 		return false;
 	}
