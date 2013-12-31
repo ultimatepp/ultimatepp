@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+</head>
+<body>
+<button onclick="webs()">Test WebSocket</button>
+<script>
+
+function webs() {
+    if("WebSocket" in window) {
+        var ws = new WebSocket("ws://localhost:8888");
+        ws.onopen = function(){
+            ws.send("Hello server!");
+        };
+        ws.onmessage = function(evt){
+            alert(evt.data);
+        };
+        ws.onclose = function(ev) {
+        };
+        ws.onerror = function(ev){
+            alert("Connection error: " + ev.reason);
+        };
+    }
+}
+
+</script>
+</body>
+</html> 

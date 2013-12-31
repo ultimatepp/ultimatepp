@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	WebSocket.cpp,
+	demo.html;
+
+mainconfig
+	"" = "SSE2";
+
