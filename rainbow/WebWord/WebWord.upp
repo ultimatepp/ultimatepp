@@ -2,11 +2,13 @@ uses
 	Core,
 	Telpp,
 	plugin/DroidFonts,
-	RichEdit;
+	RichEdit,
+	Turtle,
+	PdfDraw;
 
 file
 	WebWord.cpp;
 
 mainconfig
-	"" = "SSE2 TELPP RAINBOW";
+	"" = "SSE2 TURTLE RAINBOW";
 

@@ -27,7 +27,7 @@ function Log(msg)
 
 function Char(p, ch)
 {
-	if(p.pos < p.text.length && (255 & p.text.charCodeAt(p.pos)) == ch) {
+	if(p.pos < p.data.length && (255 & p.data[p.pos]) == ch) {
 		p.pos++;
 		return true;
 	}
@@ -36,7 +36,7 @@ function Char(p, ch)
 
 function Get8(p)
 {
-	return p.pos < p.text.length ? (255 & p.text.charCodeAt(p.pos++)) : 0;
+	return p.pos < p.data.length ? (255 & p.data[p.pos++]) : 0;
 }
 
 function Get16(p)
@@ -66,14 +66,14 @@ function ProcessDraw(s)
 {
 	var x, y, cx, cy, r, g, b, imgData, i, n, px, py;
 	var p = new Object;
-	p.text = s;
+	p.data = s;
 	p.pos = 0;
 
 	var canvas = document.getElementById("myCanvas");
 	var ctx = canvas.getContext("2d");
 	
-    while(p.pos < p.text.length) {
-    	Log(p.pos + ": " + p.text.charCodeAt(p.pos));
+    while(p.pos < p.data.length) {
+    	Log(p.pos + ": " + p.data[p.pos]);
         if(Char(p, 0)) {
         	x = Get16(p);
         	y = Get16(p);
@@ -223,7 +223,6 @@ document.onkeydown = function(event)
 {
 	event_queue += "K " + event.keyCode + " " + event.which + key_flags(event);
 	Ping();
-	Ping();
 }
 
 document.onkeypress = function(event)
@@ -253,22 +252,15 @@ window.onresize = ResizeCanvas;
 var Processing = false;
 var timerID;
 
+var ws = new WebSocket("ws://localhost:8088");
+ws.binaryType = "arraybuffer";
+
 function Ping()
 {
 	if(!Processing) {
 		Processing = true;
-		var req = new XMLHttpRequest();
-		req.open('POST', 'localhost', true);
-		req.overrideMimeType('text/plain; charset=x-user-defined');
-		req.send(event_queue);
+		ws.send(event_queue);
 		event_queue = "";
-		req.onreadystatechange = function() {
-			Log("onreadystatechange");
-			if(req.readyState == 4 && req.status == 200) {
-				ProcessDraw(req.responseText);
-				Processing = false; // TODO: Resolve timeout
-			}
-		}
 	}
 	if(timerID != undefined)
 		clearTimeout(timerID);
@@ -276,9 +268,25 @@ function Ping()
 //	Log("Ping");
 }
 
-ResizeCanvas();
+ws.onopen = function() {
+	ResizeCanvas();
+};
 
-Ping();
+ws.onmessage = function(event) {
+	if(event.data instanceof ArrayBuffer) {
+		var a = new Uint8Array(event.data);
+		ProcessDraw(a);
+	}
+	Processing = false;
+};
+
+ws.onclose = function(ev) {
+    alert("Connection closed");
+};
+
+ws.onerror = function(ev) {
+    alert("Connection error: " + ev.reason);
+};
 
 </script>
 </body>

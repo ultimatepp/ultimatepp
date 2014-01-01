@@ -52,3 +52,9 @@
 //need to make SDL_keysym.h known before K_ enum
 #define GUIPLATFORM_INCLUDE          <Telpp/Telpp.h>
 #endif
+
+#ifdef flagTURTLE
+#define GUIPLATFORM_KEYCODES_INCLUDE <Turtle/Keys.h>
+//need to make SDL_keysym.h known before K_ enum
+#define GUIPLATFORM_INCLUDE          <Turtle/Turtle.h>
+#endif
