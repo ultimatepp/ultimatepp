@@ -15,8 +15,9 @@ CONSOLE_APP_MAIN
 	}
 
 	for(;;) {
+		TcpSocket socket;
 		WebSocket ws;
-		if(ws.WebAccept(server)) {
+		if(socket.Accept(server) && ws.WebAccept(socket)) {
 			LOG("Accepted connection");
 			LOG(ws.Recieve());
 			ws.SendText("Hello browser!");
