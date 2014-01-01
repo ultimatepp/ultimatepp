@@ -12,16 +12,25 @@ topic "WebSocket";
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 WebSocket]]}}&]
 [s3;%- &]
-[s1;:WebSocket`:`:class:%- [@(0.0.255)3 class][3 _][*3 WebSocket][3 _:_][@(0.0.255)3 public][3 _][*@3;3 T
-cpSocket]&]
-[s2; Provides the WebSocket protocol support.&]
+[s1;:WebSocket`:`:class:%- [@(0.0.255)3 class][3 _][*3 WebSocket]&]
+[s2; Provides the WebSocket protocol support. WebSocket is a wrapper 
+over existing TcpSocket connection, which performs server handshake 
+by calling WebAccept method.&]
 [s0;i448;a25;kKO9;:noref:@(0.0.255)%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
+[s5;:WebSocket`:`:WebAccept`(TcpSocket`&`,HttpHeader`&`):%- [@(0.0.255) bool]_[* WebAccep
+t]([_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[*@3 socket], [_^HttpHeader^ HttpHeader][@(0.0.255) `&
+]_[*@3 hdr])&]
+[s2; Attempts to open websocket connection with [%-*@3 socket], [%-*@3 hdr] 
+is HTTP header read from socket `- prereading allows to distinguish 
+between websocket and normal HTTP connection to server.&]
+[s3; &]
+[s4;%- &]
 [s5;:WebSocket`:`:WebAccept`(TcpSocket`&`):%- [@(0.0.255) bool]_[* WebAccept]([_^TcpSocket^ T
-cpSocket][@(0.0.255) `&]_[*@3 server])&]
-[s2; Accepts a websocekt connectiont from listening socket [%-*@3 server] 
-and performs a handshake. Returns true on success.&]
+cpSocket][@(0.0.255) `&]_[*@3 socket])&]
+[s2; Reads HTTP header from [%-*@3 socket] and calls other WebAccept 
+variant.&]
 [s3; &]
 [s4; &]
 [s5;:WebSocket`:`:RecieveRaw`(`):%- [@(0.0.255) bool]_[* RecieveRaw]()&]
@@ -89,6 +98,30 @@ ary]([@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], [_^int64^ int64]_[*@3 le
 [s5;:WebSocket`:`:Close`(`):%- [@(0.0.255) void]_[* Close]()&]
 [s2; Closes the websocket.&]
 [s3; &]
+[s4;%- &]
+[s5;:WebSocket`:`:IsOpen`(`)const:%- [@(0.0.255) bool]_[* IsOpen]()_[@(0.0.255) const]&]
+[s2; Returns true if WebSocket is associated with open socket.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:WebSocket`:`:IsError`(`)const:%- [@(0.0.255) bool]_[* IsError]()_[@(0.0.255) const]&]
+[s2; Returns true if WebSocket is associated with socket and this 
+socket returns IsError.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:WebSocket`:`:ClearError`(`):%- [@(0.0.255) void]_[* ClearError]()&]
+[s2; Clears error in associated socket (if any).&]
+[s3;%- &]
+[s4;%- &]
+[s5;:WebSocket`:`:GetError`(`)const:%- [@(0.0.255) int]_[* GetError]()_[@(0.0.255) const]&]
+[s2; Returns error`-code in associated socket, or zero if there is 
+none.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:WebSocket`:`:GetErrorDesc`(`)const:%- [_^String^ String]_[* GetErrorDesc]()_[@(0.0.255) c
+onst]&]
+[s2; Returns error descroption in associated socket, or empty string 
+if there is none.&]
+[s3;%- &]
 [s4; &]
 [s5;:WebSocket`:`:MaxLen`(int64`):%- [_^WebSocket^ WebSocket][@(0.0.255) `&]_[* MaxLen]([_^int64^ i
 nt64]_[*@3 maxlen`_])&]

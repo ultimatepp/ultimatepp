@@ -523,12 +523,13 @@ bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,
                   const char *content_type = NULL, const String& data = Null,
                   const char *server = NULL, bool gzip = false);
 
-class WebSocket : public TcpSocket {
+class WebSocket {
 	int64 ReadLen(int n);
 
-	int    opcode;
-	String data;
-	int64  maxlen;
+	int        opcode;
+	String     data;
+	int64      maxlen;
+	TcpSocket *socket;
 
 	void Reset();
 	bool Handshake();
@@ -547,7 +548,8 @@ public:
 		PONG = 0xa,
 	};
 
-	bool   WebAccept(TcpSocket& server);
+	bool   WebAccept(TcpSocket& socket, HttpHeader& hdr);
+	bool   WebAccept(TcpSocket& socket);
 
 	bool   RecieveRaw();
 	String Recieve();
@@ -568,6 +570,12 @@ public:
 	bool   SendBinary(const String& data, bool fin = true)          { return SendBinary(~data, data.GetCount(), fin); }
 
 	void   Close();
+
+	bool   IsOpen() const                                           { return socket && socket->IsOpen(); }
+	bool   IsError() const                                          { return socket && socket->IsError(); }
+	void   ClearError()                                             { if(socket) socket->ClearError(); }
+	int    GetError() const                                         { return socket ? socket->GetError() : 0; }
+	String GetErrorDesc() const                                     { return socket ? socket->GetErrorDesc() : String(); }
 	
 	WebSocket& MaxLen(int64 maxlen_)                                { maxlen = maxlen_; return *this; }
 	

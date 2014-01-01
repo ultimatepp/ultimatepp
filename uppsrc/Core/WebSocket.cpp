@@ -1,36 +1,22 @@
 #include "Core.h"
 
+#define LLOG(x) // DLOG(x)
+
 NAMESPACE_UPP
 
-bool WebSocket::WebAccept(TcpSocket& server)
+bool WebSocket::WebAccept(TcpSocket& socket_, HttpHeader& hdr)
 {
-	return Accept(server) && Handshake();
-}
-
-bool WebSocket::Handshake()
-{
-	HttpHeader hdr;
-	if(!hdr.Read(*this)) {
-		SetSockError("websocket handshake", ERROR_NOHEADER, "Failed to read HTTP header");
-		return false;
-	}
+	socket = &socket_;
 	String key = hdr["sec-websocket-key"];
 	if(IsNull(key)) {
-		SetSockError("websocket handshake", ERROR_NOKEY, "Missing sec-websocket-key");
+		socket->SetSockError("websocket handshake", ERROR_NOKEY, "Missing sec-websocket-key");
 		return false;
 	}
 	
 	byte sha1[20];
 	SHA1(sha1, key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
 	
-	DLOG(
-		"HTTP/1.1 101 Switching Protocols\r\n"
-		"Upgrade: websocket\r\n"
-		"Connection: Upgrade\r\n"
-		"Sec-WebSocket-Accept: " + Base64Encode((char *)sha1, 20) + "\r\n\r\n"
-	);
-	
-	return PutAll(
+	return socket->PutAll(
 		"HTTP/1.1 101 Switching Protocols\r\n"
 		"Upgrade: websocket\r\n"
 		"Connection: Upgrade\r\n"
@@ -38,11 +24,21 @@ bool WebSocket::Handshake()
 	);
 }
 
+bool WebSocket::WebAccept(TcpSocket& socket)
+{
+	HttpHeader hdr;
+	if(!hdr.Read(socket)) {
+		socket.SetSockError("websocket handshake", ERROR_NOHEADER, "Failed to read HTTP header");
+		return false;
+	}
+	return WebAccept(socket, hdr);
+}
+
 int64 WebSocket::ReadLen(int n)
 {
 	int64 len = 0;
 	while(n-- > 0)
-		len = (len << 8) | (byte)Get();
+		len = (len << 8) | (byte)socket->Get();
 	return len;
 }
 
@@ -51,8 +47,8 @@ bool WebSocket::RecieveRaw()
 	if(IsError())
 		return false;
 
-	opcode = Get();
-	int64 len = Get();
+	opcode = socket->Get();
+	int64 len = socket->Get();
 	bool mask = len & 128;
 	len &= 127;
 	if(len == 127)
@@ -62,22 +58,22 @@ bool WebSocket::RecieveRaw()
 
 	byte key[4];
 	if(mask)
-		Get(key, 4);
+		socket->Get(key, 4);
 
 	if(IsError()) {
-		SetSockError("websocket recieve", ERROR_DATA, "Invalid data");
+		socket->SetSockError("websocket recieve", ERROR_DATA, "Invalid data");
 		return false;
 	}
 
 	if(len > maxlen) {
-		SetSockError("websocket recieve", ERROR_LEN_LIMIT, "Frame limit exceeded, size " + AsString(len));
+		socket->SetSockError("websocket recieve", ERROR_LEN_LIMIT, "Frame limit exceeded, size " + AsString(len));
 		return false;
 	}
 
 	StringBuffer frame((int)len); // TODO int64
 	char *buffer = ~frame;
-	if(!GetAll(buffer, (int)len)) {
-		SetSockError("websocket recieve", ERROR_DATA, "Invalid data");
+	if(!socket->GetAll(buffer, (int)len)) {
+		socket->SetSockError("websocket recieve", ERROR_DATA, "Invalid data");
 		return false;
 	}
 	
@@ -133,8 +129,8 @@ bool WebSocket::SendRaw(int hdr, const void *data, int64 len)
 	else
 		b.Cat((int)len);
 	
-	if(IsError() || !PutAll(~b, b.GetLength()) || !PutAll(data, (int)len)) {
-		SetSockError("websocket send", ERROR_SEND, "Failed to send data");
+	if(IsError() || !socket->PutAll(~b, b.GetLength()) || !socket->PutAll(data, (int)len)) {
+		socket->SetSockError("websocket send", ERROR_SEND, "Failed to send data");
 		return false;
 	}
 	
@@ -146,14 +142,18 @@ void WebSocket::Reset()
 	opcode = 0;
 	data.Clear();
 	maxlen = 10 * 1024 * 1024;
+	socket = NULL;
 }
 
 
 void WebSocket::Close()
 {
-	TcpSocket::Close();
-	opcode = 0;
-	data.Clear();
+	if(socket) {
+		socket->Close();
+		opcode = 0;
+		data.Clear();
+		socket = NULL;
+	}
 }
 
 
