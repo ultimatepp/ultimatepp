@@ -1,6 +1,6 @@
 #include "Local.h"
 
-#ifdef GUI_TELPP
+#ifdef GUI_TURTLE
 
 NAMESPACE_UPP
 

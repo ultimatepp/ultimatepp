@@ -4,4 +4,6 @@
 #include "Telpp/init"
 #include "plugin/DroidFonts/init"
 #include "RichEdit/init"
+#include "Turtle/init"
+#include "PdfDraw/init"
 #endif

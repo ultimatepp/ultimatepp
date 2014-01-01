@@ -1,0 +1,30 @@
+description "HTML5 backend\377";
+
+uses
+	Painter,
+	CtrlLib;
+
+file
+	Turtle.h,
+	Keys.h,
+	After.h,
+	Local.h,
+	Draw.cpp,
+	Image.cpp,
+	FB.iml,
+	Ctrl.h,
+	DrawDragRect.cpp,
+	Ctrl.cpp,
+	Wnd.cpp,
+	Cursor.cpp,
+	Socket.cpp,
+	Event.cpp,
+	Top.h,
+	TopFrame.cpp,
+	Top.cpp,
+	Clip.cpp,
+	DnD.cpp,
+	ChSysInit.cpp,
+	Turtle.brc,
+	Turtle.html;
+
