@@ -8,10 +8,8 @@ bool WebSocket::WebAccept(TcpSocket& socket_, HttpHeader& hdr)
 {
 	socket = &socket_;
 	String key = hdr["sec-websocket-key"];
-	if(IsNull(key)) {
-		socket->SetSockError("websocket handshake", ERROR_NOKEY, "Missing sec-websocket-key");
+	if(IsNull(key))
 		return false;
-	}
 	
 	byte sha1[20];
 	SHA1(sha1, key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
@@ -27,10 +25,8 @@ bool WebSocket::WebAccept(TcpSocket& socket_, HttpHeader& hdr)
 bool WebSocket::WebAccept(TcpSocket& socket)
 {
 	HttpHeader hdr;
-	if(!hdr.Read(socket)) {
-		socket.SetSockError("websocket handshake", ERROR_NOHEADER, "Failed to read HTTP header");
+	if(!hdr.Read(socket))
 		return false;
-	}
 	return WebAccept(socket, hdr);
 }
 

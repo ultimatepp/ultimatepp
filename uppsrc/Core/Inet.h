@@ -536,7 +536,7 @@ class WebSocket {
 
 public:
 	enum {
-		ERROR_NOHEADER = TcpSocket::ERROR_LAST, ERROR_NOKEY, ERROR_DATA, ERROR_SEND, ERROR_LEN_LIMIT
+		ERROR_DATA = TcpSocket::ERROR_LAST, ERROR_SEND, ERROR_LEN_LIMIT
 	};
 	enum {
 		FIN = 0x80,
