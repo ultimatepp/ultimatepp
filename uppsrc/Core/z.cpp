@@ -322,16 +322,23 @@ int64 CopyStream(Stream& dest, Stream& src, int64 count, Gate2<int64, int64> pro
 	return done;
 }
 
-int64 zPress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool gzip, bool compress)
+int64 zPress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool gzip, bool compress,
+             dword *crc = NULL)
 {
 	Zlib zlib;
-	OutFilterStream outs(out, zlib);
-	zlib.GZip(gzip);
-	if(compress)
-		zlib.Compress();
-	else
-		zlib.Decompress();
-	return CopyStream(outs, in, size, progress) >= 0 && !out.IsError() ? outs.GetCount() : -1;
+	zlib.GZip(gzip).CRC(crc);
+	bool r;
+	{
+		OutFilterStream outs(out, zlib);
+		if(compress)
+			zlib.Compress();
+		else
+			zlib.Decompress();
+		r = CopyStream(outs, in, size, progress) >= 0 && !out.IsError() ? outs.GetCount() : -1;
+	}
+	if(r && crc)
+		*crc = zlib.GetCRC();
+	return r;
 }
 
 int64 ZCompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress)

@@ -73,7 +73,6 @@ public:
 	~Zlib();
 };
 
-
 int64  ZCompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress = false);
 int64  ZCompress(Stream& out, Stream& in, Gate2<int64, int64> progress = false);
 String ZCompress(const void *data, int64 len, Gate2<int64, int64> progress = false);
