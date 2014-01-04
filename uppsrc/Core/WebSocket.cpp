@@ -44,6 +44,8 @@ bool WebSocket::RecieveRaw()
 		return false;
 
 	opcode = socket->Get();
+	if(opcode < 0)
+		return false;
 	int64 len = socket->Get();
 	bool mask = len & 128;
 	len &= 127;
@@ -61,7 +63,7 @@ bool WebSocket::RecieveRaw()
 		return false;
 	}
 
-	if(len > maxlen) {
+	if(len > maxlen || len < 0) {
 		socket->SetSockError("websocket recieve", ERROR_LEN_LIMIT, "Frame limit exceeded, size " + AsString(len));
 		return false;
 	}
@@ -83,9 +85,12 @@ bool WebSocket::RecieveRaw()
 
 String WebSocket::Recieve()
 {
+	LLOG("WebSocket::Recieve");
 	for(;;) {
-		if(!RecieveRaw())
+		if(!RecieveRaw()) {
+			LLOG("WebSocket::Recieve failed");
 			return String::GetVoid();
+		}
 		if(GetOpCode() == PING)
 			SendRaw(PONG, ~data, data.GetLength());
 		else {
@@ -94,6 +99,7 @@ String WebSocket::Recieve()
 			break;
 		}
 	}
+	LLOG("WebSocket::Recieve len: " << data.GetLength());
 	return data;
 }
 
@@ -124,11 +130,16 @@ bool WebSocket::SendRaw(int hdr, const void *data, int64 len)
 	}
 	else
 		b.Cat((int)len);
+
+	LLOG("WebSocket::SendRaw hdr: " << hdr << ", len: " << len);
 	
 	if(IsError() || !socket->PutAll(~b, b.GetLength()) || !socket->PutAll(data, (int)len)) {
 		socket->SetSockError("websocket send", ERROR_SEND, "Failed to send data");
+		LLOG("WebSocket::SendRaw FAILED");
 		return false;
 	}
+	
+	LLOG("WebSocket::SendRaw OK");
 	
 	return true;
 }
