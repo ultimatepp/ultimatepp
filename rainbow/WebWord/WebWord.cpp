@@ -298,9 +298,11 @@ struct EventsWnd : TopWindow {
 
 GUI_APP_MAIN
 {
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	StdLogSetup(LOG_COUT|LOG_FILE);
-#endif
+//#endif
+
+	LOG("Test");
 
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);

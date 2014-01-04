@@ -21,8 +21,8 @@ Your browser does not support the HTML5 canvas tag.
 <script>
 function Log(msg)
 {
-//	if (window.console && console.log)
-//	   	console.log(msg); //for firebug
+	if (window.console && console.log)
+	   	console.log(msg); //for firebug
 }
 
 function Char(p, ch)
@@ -73,7 +73,7 @@ function ProcessDraw(s)
 	var ctx = canvas.getContext("2d");
 	
     while(p.pos < p.data.length) {
-    	Log(p.pos + ": " + p.data[p.pos]);
+    	// Log(p.pos + ": " + p.data[p.pos]);
         if(Char(p, 0)) {
         	x = Get16(p);
         	y = Get16(p);
@@ -82,10 +82,10 @@ function ProcessDraw(s)
         	r = Get8(p);
         	g = Get8(p);
         	b = Get8(p);
-        	Log("rect: " + x + ", " + y + ", " + cx + ", " + cy);
+        	// Log("rect: " + x + ", " + y + ", " + cx + ", " + cy);
         	var c = "rgb(" + r + "," + g + "," + b + ")";
         	ctx.fillStyle = c;
-        	Log("color: " + c);
+        	// Log("color: " + c);
         	ctx.fillRect(x, y, cx, cy);
         }
         else
@@ -94,7 +94,7 @@ function ProcessDraw(s)
         	y = Get16(p);
         	cx = Get16(p);
         	cy = Get16(p);
-        	Log("irect: " + x + ", " + y + ", " + cx + ", " + cy);
+        	// Log("irect: " + x + ", " + y + ", " + cx + ", " + cy);
         	var imageData = ctx.getImageData(x, y, cx, cy);
 			var data = imageData.data;
 			for(var i = 0; i < data.length; i += 4) {
@@ -118,7 +118,7 @@ function ProcessDraw(s)
 			img.height = cy;
 			img.getContext("2d").putImageData(imgData, 0, 0);
         	window.img_cache[r] = img;
-        	Log("Set image: " + r);
+        	// Log("Set image: " + r);
         }
         else
         if(Char(p, 1)) {
@@ -131,7 +131,7 @@ function ProcessDraw(s)
         	cx = Get16(p);
         	cy = Get16(p);
 
-			Log("Draw image: " + n);			
+			// Log("Draw image: " + n);			
 			ctx.drawImage(window.img_cache[n], x, y, cx, cy, px, py, cx, cy);
 		}
 		else
@@ -165,7 +165,7 @@ function ProcessDraw(s)
 		if(Char(p, 6)) {
 			i = Get16(p);
 			canvas.style.cursor = cursor_cache[i];
-			Log(cursor_cache[i]);
+			// Log(cursor_cache[i]);
 		}
 	}			
 }
@@ -257,35 +257,36 @@ ws.binaryType = "arraybuffer";
 
 function Ping()
 {
+	Log("Ping " + Processing);
 	if(!Processing) {
 		Processing = true;
+		Log("Sending " + event_queue);
 		ws.send(event_queue);
 		event_queue = "";
 	}
 	if(timerID != undefined)
 		clearTimeout(timerID);
 	timerID = setTimeout(Ping, 20);
-//	Log("Ping");
 }
 
-ws.onopen = function() {
+ws.onopen = function()
+{
 	ResizeCanvas();
 };
 
-ws.onmessage = function(event) {
-	if(event.data instanceof ArrayBuffer) {
-		var a = new Uint8Array(event.data);
-		ProcessDraw(a);
-	}
+ws.onmessage = function(event) 
+{
+	Log("onmessage");
+	if(event.data instanceof ArrayBuffer)
+		ProcessDraw(new Uint8Array(event.data));
 	Processing = false;
+	if(event_queue.length > 0)
+		Ping();
 };
 
-ws.onclose = function(ev) {
+ws.onclose = function(ev)
+{
     alert("Connection closed");
-};
-
-ws.onerror = function(ev) {
-    alert("Connection error: " + ev.reason);
 };
 
 </script>
