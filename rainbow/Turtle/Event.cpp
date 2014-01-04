@@ -67,6 +67,7 @@ void Ctrl::InitTelpp()
 void Ctrl::Reply()
 {
 	GuiLock __;
+	LLOG("Reply");
 	if(websocket.IsOpen()) {
 		TimerProc(GetTickCount());
 		DefferedFocusSync();
@@ -76,32 +77,36 @@ void Ctrl::Reply()
 		DoPaint();
 //		String s = GZCompress(content);
 		String s = content;
+		LLOG("About to send " << s.GetLength());
 		websocket.SendBinary(s);
+		content.Clear();
 	}
 }
+
+String event_queue;
 
 bool Ctrl::IsWaitingEvent()
 {
 	GuiLock __;
-	Reply();
-	return socket.Timeout(0).Peek() >= 0;
+	if(socket.Timeout(0).WaitRead()) {
+		socket.Timeout(20000);
+		event_queue.Cat(websocket.Recieve());
+		return true; // TODO: Each recieved message needs a reply
+	}
+	return false;
 }
 
 bool Ctrl::ProcessEvents(bool *quit)
 {
 	GuiLock __;
-	LLOG("ProcessEvents");
 	if(!IsWaitingEvent())
 		return false;
 
-	TimeStop tm;
-	LLOG("Trying to read socket");
-	String event_queue = websocket.Recieve();
 	LLOG("---- Process events");
-	if(event_queue.GetCount())
-		LOG(event_queue);
+	LLOG(event_queue);
 	content.Clear();
 	bool r = ProcessEventQueue(event_queue);
+	event_queue.Clear();
 	_TODO_ // Resolve eventloop exit issue
 	Reply();
 	return r;
@@ -110,11 +115,10 @@ bool Ctrl::ProcessEvents(bool *quit)
 void Ctrl::GuiSleep(int ms)
 {
 	GuiLock __;
-	Reply();
 	ASSERT(IsMainThread());
 //	LLOG("GuiSleep");
 	int level = LeaveGuiMutexAll();
-	Sleep(ms); _TODO_
+	socket.Timeout(ms).WaitRead();
 	EnterGuiMutex(level);
 }
 
