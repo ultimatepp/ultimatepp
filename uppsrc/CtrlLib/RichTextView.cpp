@@ -111,7 +111,7 @@ void RichTextView::Copy()
 void RichTextView::RightDown(Point p, dword keyflags)
 {
 	MenuBar b;
-	b.Add(CtrlImg::copy(), t_("Copy"), THISBACK(Copy)).Key(K_CTRL_C);
+	b.Add(cursor != anchor, t_("Copy"), CtrlImg::copy(), THISBACK(Copy)).Key(K_CTRL_C);
 	b.Execute();
 }
 
