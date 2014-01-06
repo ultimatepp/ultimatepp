@@ -65,17 +65,17 @@ String HtmlParaStyle(const RichPara::Format& f, Zoom z)
 	String style;
 	int lm = z * f.lm;
 	if(f.bullet && f.bullet != RichPara::BULLET_TEXT) {
-		style << "display:list-item;line-style-type:";
+		style << "display:list-item;list-style-type:";
 		switch(f.bullet) {
 		case RichPara::BULLET_ROUND: style << "disc"; break;
 		case RichPara::BULLET_ROUNDWHITE: style << "circle"; break;
 		case RichPara::BULLET_BOX:
 		case RichPara::BULLET_BOXWHITE: style << "square"; break;
 		}
-		style << ";line-style-position:inside;";
+		style << ";list-style-position:inside;";
 		lm += 20;
 	}
-	style << Format("margin:%d %d %d %d;text-indent:%d;",
+	style << Format("margin:%dpx %dpx %dpx %dpx;text-indent:%dpx;",
 	                z * f.before,
 	                z * f.rm,
 	                z * f.after,
