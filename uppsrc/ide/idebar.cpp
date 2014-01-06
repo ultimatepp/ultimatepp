@@ -314,6 +314,7 @@ void Ide::Setup(Bar& menu) {
 #ifdef PLATFORM_POSIX
 	menu.Add("Source managment..", THISBACK(AutoSetup))
 	    .Help("Source code updater settings..");
+	menu.Separator();
 	if(UpdaterCfg().method%2==0) //local copy or svn
 		if(UpdaterCfg().available)
 			menu.Add("Install updates..", IdeImg::install_updates(), THISBACK(CheckUpdatesManual))
@@ -571,10 +572,9 @@ void Ide::MainTool(Bar& bar)
 		bar.Separator();
 	Project(bar);
 	BuildMenu(bar);
-	bar.Separator();
 	if(!debugger) {
-		DebugMenu(bar);
 		bar.Separator();
+		DebugMenu(bar);
 	}
 	Setup(bar);
 	BrowseMenu(bar);
@@ -582,14 +582,18 @@ void Ide::MainTool(Bar& bar)
 
 void Ide::ConsoleMenu(Bar& menu)
 {
-	menu.Add("Clear", THISBACK(ConsoleClear))
-		.Help("Empty system console");
-	menu.Add("Copy", THISBACK(ConsoleCopy))
+	String selection = GetConsole().GetSelection();
+	
+	menu.Add("Copy", CtrlImg::copy(), THISBACK(ConsoleCopy))
 		.Key(K_CTRL_C)
+		.Enable(!selection.IsEmpty())
 		.Help("Copy selection on system clipboard");
-	menu.Add("Paste", THISBACK(ConsolePaste))
+	menu.Add("Paste", CtrlImg::paste(), THISBACK(ConsolePaste))
 		.Key(K_CTRL_V)
 		.Help("Append selection to system console");
+	menu.Separator();
+	menu.Add("Clear", THISBACK(ConsoleClear))
+		.Help("Empty system console");
 }
 
 void Ide::SetBar()
