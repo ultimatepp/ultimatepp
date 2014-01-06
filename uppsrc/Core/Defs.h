@@ -536,17 +536,7 @@ inline void  MemoryIgnoreLeaksBegin() {}
 inline void  MemoryIgnoreLeaksEnd() {}
 
 struct MemoryProfile {
-	int allocated[1024];
-	int fragmented[1024];
-	int freepages;
-	int large_count;
-	int large_size[4096];
-	int large_total;
-	int large_free_count;
-	int large_free_size[4096];
-	int large_free_total;
-
-	MemoryProfile() { memset(this, 0, sizeof(MemoryProfile)); }
+	int empty__;
 };
 
 inline MemoryProfile *PeakMemoryProfile() { return NULL; }
