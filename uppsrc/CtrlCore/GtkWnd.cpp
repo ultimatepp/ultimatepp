@@ -56,7 +56,9 @@ bool Ctrl::IsAlphaSupported()
 
 bool Ctrl::IsCompositedGui()
 {
-	return false;
+    GuiLock __;
+    static bool b = gdk_display_supports_composite(gdk_display_get_default());
+    return b;
 }
 
 Vector<Ctrl *> Ctrl::GetTopCtrls()
