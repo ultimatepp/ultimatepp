@@ -26,8 +26,10 @@ void InitGtkApp(int argc, char **argv, const char **envptr)
 {
 	LLOG(rmsecs() << " InitGtkApp");
 #ifdef _MULTITHREADED
+#if GLIB_MAJOR_VERSION <= 2 && GLIB_MINOR_VERSION < 32
 	if(!g_thread_supported())
-		g_thread_init( NULL );
+		g_thread_init(NULL);
+#endif
 	gdk_threads_set_lock_functions(EnterGuiMutex, LeaveGuiMutex);
 	gdk_threads_init();
 	EnterGuiMutex();
