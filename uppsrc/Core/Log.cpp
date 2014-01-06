@@ -287,6 +287,7 @@ void  LogStream::_Put(const void *data, dword size)
 String AsString(const MemoryProfile& mem)
 {
 	String text;
+#ifdef UPP_HEAP
 	int acount = 0;
 	size_t asize = 0;
 	int fcount = 0;
@@ -313,6 +314,7 @@ String AsString(const MemoryProfile& mem)
 	     << ", total size " << 64 * mem.large_empty << " KB\n";
 	text << "Big block count " << mem.big_count
 	     << ", total size " << int(mem.big_size >> 10) << " KB\n";
+#endif
 	return text;
 }
 
