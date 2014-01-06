@@ -100,6 +100,7 @@ void  Ctrl::SetMouseCursor(const Image& image)
 		if(c) {
 			gdk_window_set_cursor(topctrl->gdk(), c);
 			gdk_cursor_unref(c);
+			gdk_flush(); // Make it visible immediately
 		}
 	}
 }
