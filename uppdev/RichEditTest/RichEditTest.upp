@@ -10,7 +10,7 @@ file
 	test.iml;
 
 mainconfig
-	"" = "GUI",
+	"" = "GUI X11",
 	"" = "GUI NOGTK",
 	"" = "GUI MT",
 	"" = "GUI USEMALLOC";
