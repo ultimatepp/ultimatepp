@@ -518,18 +518,42 @@ Rect Ctrl::GetDefaultWindowRect()
 
 void Ctrl::GetWorkArea(Array<Rect>& out)
 {
-	out.Add(GetPrimaryWorkArea());
+	Vector<Rect> workAreas = FindScreensResolutions();
+	Vector<Rect> struts    = FindScreensStruts();
+	for (int i = 0; i < workAreas.GetCount(); i++) {
+		if (i < struts.GetCount()) {
+			workAreas[i].left   += struts[i].left;
+			workAreas[i].right  -= struts[i].right;
+			workAreas[i].top    += struts[i].top;
+			workAreas[i].bottom -= struts[i].bottom;
+		}
+		out.Add(workAreas[i]);
+	}
+	if (out.IsEmpty())
+		out.Add(GetPrimaryWorkArea());
 }
 
 Rect Ctrl::GetWorkArea() const
 {
+	GuiLock __;
+	SyncMousePos();
+	
+	static Array<Rect> rc;
+	if (rc.IsEmpty())
+		GetWorkArea(rc);
+	
+	Point pt = GetMousePos();
+	for (int i = 0; i < rc.GetCount(); i++)
+		if(rc[i].Contains(pt))
+			return rc[i];
 	return GetPrimaryWorkArea();
 }
 
 Rect Ctrl::GetWorkArea(Point pt)
 {
-	Array<Rect> rc;
-	GetWorkArea(rc);
+	static Array<Rect> rc;
+	if (rc.IsEmpty())
+		GetWorkArea(rc);
 	for(int i = 0; i < rc.GetCount(); i++)
 		if(rc[i].Contains(pt))
 			return rc[i];
@@ -562,15 +586,10 @@ Rect Ctrl::GetPrimaryWorkArea()
 	
 	static Rect r;
 	if(r.right == 0) {
-		Vector<Rect> workAreas = FindScreensResolutions();
-		Vector<Rect> struts    = FindScreensStruts();
-		for (int i = 0; i < struts.GetCount() && i < workAreas.GetCount(); i++) {
-			workAreas[i].left   += struts[i].left;
-			workAreas[i].right  -= struts[i].right;
-			workAreas[i].top    += struts[i].top;
-			workAreas[i].bottom -= struts[i].bottom;
-		}
-		workAreas.GetCount() ? r = workAreas[0] : r = GetVirtualScreenArea();
+		static Array<Rect> rc;
+		if (rc.IsEmpty())
+			GetWorkArea(rc);
+		rc.GetCount() ? r = rc[0] : r = GetVirtualScreenArea();
 	}
 	return r;
 }
