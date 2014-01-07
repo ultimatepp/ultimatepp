@@ -54,8 +54,12 @@ void Ctrl::GtkDragEnd(GtkWidget *widget, GdkDragContext *context, gpointer user_
 {
 	LLOG("GtkDragEnd");
 	dnd_result = DND_NONE;
+#if GTK_CHECK_VERSION(2,22,0) // No drag&drop support before 2.22, sorry...
 	GdkDragAction a = gdk_drag_context_get_selected_action(context);
 	dnd_result = a == GDK_ACTION_MOVE ? DND_MOVE : a == GDK_ACTION_COPY ? DND_COPY : DND_NONE;
+#else
+	dnd_result = DND_NONE;
+#endif
 	dnd_source = NULL;
 }
                                                        
@@ -176,6 +180,7 @@ void Ctrl::DndTargets(GdkDragContext *context)
 	}
 	dnd_targets.Clear();
 	dnd_text_target.Clear();
+#if GTK_CHECK_VERSION(2,22,0) // No drag&drop support before 2.22, sorry...
 	for(GList *list = gdk_drag_context_list_targets(context); list; list = g_list_next (list)) {
 		String g = gdk_atom_name((GdkAtom)list->data);
 		if(text_targets.Find(g) >= 0) {
@@ -198,6 +203,7 @@ void Ctrl::DndTargets(GdkDragContext *context)
 		else
 			dnd_targets.Add(g);
 	}
+#endif
 }
 
 void Ctrl::GtkDragDataReceived(GtkWidget *widget, GdkDragContext *context,

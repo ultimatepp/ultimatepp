@@ -31,17 +31,17 @@ bool Ctrl::GuiPlatformSetFullRefreshSpecial()
 String GuiPlatformGetKeyDesc(dword key)
 {
 	static Tuple2<dword, const char *> nkey[] = {
-		{ K_DELTA|GDK_KEY_grave, "[`]" },
-		{ K_DELTA|GDK_KEY_minus, "[-]" },
-		{ K_DELTA|GDK_KEY_equal, "[=]" },
-		{ K_DELTA|GDK_KEY_backslash, "[\\]" },
-		{ K_DELTA|GDK_KEY_bracketleft, "[[]" },
-		{ K_DELTA|GDK_KEY_bracketright, "[]]" },
-		{ K_DELTA|GDK_KEY_semicolon, "[;]" },
-		{ K_DELTA|GDK_KEY_apostrophe, "[']" },
-		{ K_DELTA|GDK_KEY_comma, "[,]" },
-		{ K_DELTA|GDK_KEY_period, "[.]" },
-		{ K_DELTA|GDK_KEY_underscore, "[/]" },
+		{ K_DELTA|GDKEY(grave), "[`]" },
+		{ K_DELTA|GDKEY(minus), "[-]" },
+		{ K_DELTA|GDKEY(equal), "[=]" },
+		{ K_DELTA|GDKEY(backslash), "[\\]" },
+		{ K_DELTA|GDKEY(bracketleft), "[[]" },
+		{ K_DELTA|GDKEY(bracketright), "[]]" },
+		{ K_DELTA|GDKEY(semicolon), "[;]" },
+		{ K_DELTA|GDKEY(apostrophe), "[']" },
+		{ K_DELTA|GDKEY(comma), "[,]" },
+		{ K_DELTA|GDKEY(period), "[.]" },
+		{ K_DELTA|GDKEY(underscore), "[/]" },
 		{ 0, NULL }
 	};
 	const Tuple2<dword, const char *> *x = FindTuple(nkey, __countof(nkey), key);
