@@ -187,8 +187,13 @@ Rect Ctrl::GetWndScreenRect() const
 	if(top) {
 		gint x, y;
 		gdk_window_get_position(gdk(), &x, &y);
+	#if GTK_CHECK_VERSION(2, 24, 0)
 		gint width = gdk_window_get_width(gdk());
 		gint height = gdk_window_get_height(gdk());
+	#else
+		gint width, height;
+		gdk_drawable_get_size(gdk(), &width, &height);
+	#endif
 		return RectC(x, y, width, height);
 	}
 	return Null;

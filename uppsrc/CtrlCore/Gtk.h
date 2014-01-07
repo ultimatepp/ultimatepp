@@ -2,6 +2,12 @@
 
 #define PLATFORM_X11 // To keep legacy code happy
 
+#ifdef GDK_KEY_Delete
+#define GDKEY(x) GDK_KEY_##x
+#else
+#define GDKEY(x) GDK_##x
+#endif
+
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -46,7 +52,8 @@ private:
 	Vector<Point> offset;
 	Vector<Rect>  clip;
 
-	cairo_t *cr;
+	cairo_t      *cr;
+	GdkDrawable  *drawable;
 	
 	SystemDraw() {}
 	
@@ -64,7 +71,7 @@ public:
 	bool     CanSetSurface()         { return true; }
 	static void Flush()              {} // TODO?
 
-	SystemDraw(cairo_t *cr) : cr(cr) {}
+	SystemDraw(cairo_t *cr, GdkDrawable *dw = NULL) : cr(cr), drawable(dw) {}
 };
 
 class ImageDraw : public SystemDraw {
