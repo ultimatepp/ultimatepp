@@ -19,9 +19,13 @@ topic "LRUCache";
 used) type of caches. Cache keeps the track of size of data contained 
 and provides Shrink method, that reduces this size to requested 
 number, removing least recently used items first. LRUCache also 
-provides two size counters, `"found size`" and `"new size`", 
-that can be used to further finetuning of cache.&]
-[s3; &]
+provides two size counters, GetFoundSize and GetNewSize, that 
+can be used to further finetuning of cache.&]
+[s2;%% GetFoundSize basically says how much data was reused since 
+the last counter reset. GetNewSize says how much data had to 
+be added since the last counter reset. GetSize() `- GetFoundSize() 
+`- GetNewSize() is amount of data that has not been used since 
+the last counter reset.&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Maker subclass]]}}&]
 [s3; &]
@@ -113,13 +117,13 @@ onst]_[_^LRUCache`:`:Maker^ Maker][@(0.0.255) `&]_[*@3 m])&]
 [s4; &]
 [s5;:LRUCache`:`:GetFoundSize`(`)const: [@(0.0.255) int]_[* GetFoundSize]()_[@(0.0.255) con
 st]&]
-[s2;%% Returns the size of data that have been retrieved from the 
-cache since the last ClearCounters call (or constructor if there 
-was none).&]
+[s2;%% Returns the size of data in the cache that has been reused 
+since the last ClearCounters call (or constructor if there was 
+none).&]
 [s3; &]
 [s4; &]
 [s5;:LRUCache`:`:GetNewSize`(`)const: [@(0.0.255) int]_[* GetNewSize]()_[@(0.0.255) const]&]
-[s2;%% Returns the size of data that have to be created since the 
+[s2;%% Returns the size of data that had to be created since the 
 last ClearCounters call (or constructor if there was none).&]
 [s3; &]
 [s0;%% ]]
