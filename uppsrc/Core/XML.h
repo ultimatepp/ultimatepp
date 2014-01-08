@@ -117,6 +117,8 @@ public:
 	void   PassEnd();
 	bool   TagE(const char *tag);
 	void   PassTagE(const char *tag);
+	bool   TagElseSkip(const char *tag);
+	bool   LoopTag(const char *tag);
 
 	int    GetAttrCount() const                               { return attr.GetCount() + !IsNull(attr1); }
 	String GetAttr(int i) const                               { return i ? attr.GetKey(i - 1) : attr1; }
