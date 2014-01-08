@@ -110,8 +110,8 @@ and returns else. This is a shortcut to relatively common construct
 returns true, returns true. Otherwise it calls Skip and repeats. 
 This is useful if we are only interested in just one type of 
 subtag of current level, e.g.: [*C while(LoopTag(`"foo`")) `{ ... 
-`}] `- is an equivalent of common construct  [*C while(!End()) 
-if(Tag(][%-*C@3 tag][*C )) `{ ... `} else Skip();]&]
+`}] is an equivalent of common construct  [*C while(!End()) if(Tag(][%-*C@3 tag][*C )) 
+`{ ... `} else Skip();]&]
 [s3;%% &]
 [s4;%% &]
 [s5;:XmlParser`:`:GetAttrCount`(`)const: [@(0.0.255) int]_[* GetAttrCount]()_[@(0.0.255) co
