@@ -1865,7 +1865,7 @@ void GridCtrl::SetColCount(int n, int size)
 {
 	Reset();
 	for(int i = 0; i < n; i++)
-		AddColumn(NULL, size, false);
+		AddColumn("", size, false);
 }
 
 void GridCtrl::MouseMove(Point p, dword keyflags)

@@ -787,11 +787,11 @@ class GridCtrl : public Ctrl
 
 				ItemRect& Skip(bool b)                           { skip = b;          return *this; }
 				
-				ItemRect& DoAvg(const char *s = NULL)            { sop = SOP_AVG; sopfrm = s; return *this; }
-				ItemRect& DoSum(const char *s = NULL)            { sop = SOP_SUM; sopfrm = s; return *this; }
-				ItemRect& DoMin(const char *s = NULL)            { sop = SOP_MIN; sopfrm = s; return *this; }
-				ItemRect& DoMax(const char *s = NULL)            { sop = SOP_MAX; sopfrm = s; return *this; }
-				ItemRect& DoCount(const char *s = NULL)          { sop = SOP_CNT; sopfrm = s; return *this; }
+				ItemRect& DoAvg(const char *s = "")            	 { sop = SOP_AVG; sopfrm = s; return *this; }
+				ItemRect& DoSum(const char *s = "")              { sop = SOP_SUM; sopfrm = s; return *this; }
+				ItemRect& DoMin(const char *s = "")              { sop = SOP_MIN; sopfrm = s; return *this; }
+				ItemRect& DoMax(const char *s = "")              { sop = SOP_MAX; sopfrm = s; return *this; }
+				ItemRect& DoCount(const char *s = "")          	 { sop = SOP_CNT; sopfrm = s; return *this; }
 
 				int  GetId()                                     { return id;                       }
 				int  GetNumber()                                 { return id - parent->fixed_cols;  }
@@ -1244,7 +1244,7 @@ class GridCtrl : public Ctrl
 		ItemRect& AddHiddenColumn(const char *name) { return AddColumn(name, 0); }
 		ItemRect& AddHiddenColumn(String &name)     { return AddColumn(name, 0); }
 
-		ItemRect& AddIndex()                        { return AddColumn(0, 0, true);    }
+		ItemRect& AddIndex()                        { return AddColumn("", 0, true);    }
 		ItemRect& AddIndex(Id id)                   { return AddColumn(id, ~id, 0, true); }
 		ItemRect& AddIndex(const char *name)        { return AddColumn(name, 0, true); }
 		ItemRect& AddIndex(String &name)            { return AddColumn(name, 0, true); }
