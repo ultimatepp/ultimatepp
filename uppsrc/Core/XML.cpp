@@ -556,6 +556,24 @@ void  XmlParser::PassTagE(const char *tag)
 	SkipEnd();
 }
 
+bool XmlParser::TagElseSkip(const char *tag)
+{
+	if(Tag(tag))
+		return true;
+	Skip();
+	return false;
+}
+
+bool XmlParser::LoopTag(const char *tag)
+{
+	while(!End()) {
+		if(Tag(tag))
+			return true;
+		Skip();
+	}
+	return false;
+}
+
 VectorMap<String, String> XmlParser::PickAttrs() pick_
 {
 	if(!IsNull(attr1))

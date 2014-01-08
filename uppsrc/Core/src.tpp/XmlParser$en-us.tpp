@@ -96,6 +96,23 @@ t]_[@(0.0.255) char]_`*[*@3 tag])&]
 [s2;%% Calls PassTag([%-*@3 tag]) and then PassEnd(). In other words, 
 requires to advance over element with empty content.&]
 [s3;%% &]
+[s4; &]
+[s5;:XmlParser`:`:TagElseSkip`(const char`*`): [@(0.0.255) bool]_[* TagElseSkip]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 tag])&]
+[s2;%% If call Tag([%-*@3 tag]).returns true. Otherwise calls Skip 
+and returns else. This is a shortcut to relatively common construct 
+ [*C if(Tag(][%-*C@3 tag][*C )) `{ ... `} else Skip()][* ;]&]
+[s3;%% &]
+[s4; &]
+[s5;:XmlParser`:`:LoopTag`(const char`*`): [@(0.0.255) bool]_[* LoopTag]([@(0.0.255) const]_
+[@(0.0.255) char]_`*[*@3 tag])&]
+[s2;%% If End call returns true, returns false. If call to Tag([%-*@3 tag]) 
+returns true, returns true. Otherwise it calls Skip and repeats. 
+This is useful if we are only interested in just one type of 
+subtag of current level, e.g.: [*C while(LoopTag(`"foo`")) `{ ... 
+`}] `- is an equivalent of common construct  [*C while(!End()) 
+if(Tag(][%-*C@3 tag][*C )) `{ ... `} else Skip();]&]
+[s3;%% &]
 [s4;%% &]
 [s5;:XmlParser`:`:GetAttrCount`(`)const: [@(0.0.255) int]_[* GetAttrCount]()_[@(0.0.255) co
 nst]&]
@@ -105,6 +122,11 @@ nst]&]
 [s5;:XmlParser`:`:GetAttr`(int`)const: [_^String^ String]_[* GetAttr]([@(0.0.255) int]_[*@3 i
 ])_[@(0.0.255) const]&]
 [s2;%% Returns the name of attribute [%-*@3 i ]of the last start`-tag.&]
+[s3;%% &]
+[s4; &]
+[s5;:XmlParser`:`:IsAttr`(const char`*`)const: [@(0.0.255) bool]_[* IsAttr]([@(0.0.255) con
+st]_[@(0.0.255) char]_`*[*@3 id])_[@(0.0.255) const]&]
+[s2;%% Returns true if [%-*@3 id] an attribute of the last start`-tag.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:XmlParser`:`:operator`[`]`(int`)const: [_^String^ String]_[* operator`[`]]([@(0.0.255) i
