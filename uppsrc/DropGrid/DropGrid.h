@@ -117,7 +117,7 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		DropGrid& DropEnter(bool b = true);
 		DropGrid& DataAction(bool b = true);
 		DropGrid& Searching(bool b = true);
-		DropGrid& MustChange(bool b = true, const char* s = NULL);
+		DropGrid& MustChange(bool b = true, const char* s = "");
 		DropGrid& NullAction(bool b = true);
 		DropGrid& ClearButton(bool b = true);
 		DropGrid& NoDrop(bool b = true);
@@ -126,7 +126,7 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 
 		GridCtrl::ItemRect& AddColumn(const char *name, int width = -1, bool idx = false);
 		GridCtrl::ItemRect& AddColumn(Id id, const char *name, int width = -1, bool idx = false);
-		GridCtrl::ItemRect& AddIndex(const char *name = NULL);
+		GridCtrl::ItemRect& AddIndex(const char *name = "");
 		GridCtrl::ItemRect& AddIndex(Id id);
 
 		MultiButton::SubButton& AddButton(int type, const Callback &cb);

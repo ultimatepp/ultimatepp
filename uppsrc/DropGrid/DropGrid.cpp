@@ -441,7 +441,7 @@ DropGrid& DropGrid::Searching(bool b /* = true*/)
 	return *this;
 }
 
-DropGrid& DropGrid::MustChange(bool b /* = true*/, const char* s /* = NULL*/)
+DropGrid& DropGrid::MustChange(bool b /* = true*/, const char* s /* = ""*/)
 {
 	must_change = b;
 	if(s)
