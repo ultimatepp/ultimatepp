@@ -197,8 +197,8 @@ void RichEdit::StdBar(Bar& menu)
 	String ofieldparam;
 	RichObject object;
 	if(GetSelection(l, h)) {
-		CopyTool(menu);
 		CutTool(menu);
+		CopyTool(menu);
 		PasteTool(menu);
 	}
 	else {
