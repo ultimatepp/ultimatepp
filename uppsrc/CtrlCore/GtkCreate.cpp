@@ -79,6 +79,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 void Ctrl::WndDestroy()
 {
 	GuiLock __;
+	DLOG("WndDestroy " << msecs());
 	LLOG("WndDestroy " << Name());
 	DndExit();
 	Ctrl *owner = GetOwner();
@@ -100,6 +101,8 @@ void Ctrl::WndDestroy()
 	int q = FindCtrl(this);
 	if(q >= 0)
 		wins.Remove(q);
+	if(owner)
+		owner->WndUpdate();
 }
 
 Vector< Ptr<Ctrl> > Ctrl::activePopup;
