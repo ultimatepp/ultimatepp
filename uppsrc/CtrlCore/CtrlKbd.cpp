@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)   // DLOG(x)
+#define LLOG(x)   DLOG(x)
 
 Ptr<Ctrl> Ctrl::focusCtrl;
 Ptr<Ctrl> Ctrl::focusCtrlWnd;
@@ -121,12 +121,14 @@ bool Ctrl::HotKey(dword key)
 	if(!IsEnabled() || !IsVisible()) return false;
 	for(Ptr<Ctrl> ctrl = firstchild; ctrl; ctrl = ctrl->next)
 	{
+		LLOG("Trying HotKey " << GetKeyDesc(key) << " at " << Name(ctrl));
 		if(ctrl->IsOpen() && ctrl->IsVisible() && ctrl->IsEnabled() && ctrl->HotKey(key))
 		{
 			if(Ini::user_log && s_hotkey) {
 				USRLOG("  HOT-> " << UPP::Name(ctrl));
 				s_hotkey = false;
 			}
+			LLOG("ACCEPTED");
 			return true;
 		}
 	}

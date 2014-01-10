@@ -972,7 +972,8 @@ String Ctrl::Name0() const {
 	String path;
 	while(q) {
 		String id = q->GetLayoutId();
-		path = "." + Nvl(id, "?") + path;
+		if(id.GetCount())
+			path = '.' + q->GetLayoutId() + path;
 		q = q->parent;
 	}
 	s << ' ' << path;
