@@ -369,7 +369,6 @@ void Ctrl::Proc()
 	switch(CurrentEvent.type) {
 	case GDK_MOTION_NOTIFY: {
 		GtkMouseEvent(MOUSEMOVE, MOUSEMOVE, 0);
-		DoCursorShape();
 		break;
 	}
 	case GDK_BUTTON_PRESS:

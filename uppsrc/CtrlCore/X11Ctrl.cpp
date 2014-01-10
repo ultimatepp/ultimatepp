@@ -25,17 +25,7 @@ void Ctrl::GuiPlatformGetTopRect(Rect& r) const
 }
 
 String Ctrl::Name() const {
-	GuiLock __;
-#ifdef CPU_64
-	String s = String(typeid(*this).name()) + " : 0x" + FormatIntHex(this);
-#else
-	String s = String(typeid(*this).name()) + " : " + Format("0x%x", (int) this);
-#endif
-	if(IsChild())
-		s << "(parent " << String(typeid(*parent).name()) << ")";
-	else
-		s << Format("(window 0x%x)", (int)(intptr_t) GetWindow());
-	return s;
+	return Name0();
 }
 
 bool Ctrl::GuiPlatformRefreshFrameSpecial(const Rect&)
