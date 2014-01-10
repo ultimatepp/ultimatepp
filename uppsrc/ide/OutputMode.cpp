@@ -299,6 +299,7 @@ void Ide::SelectMethod()
 		SerializeOutputMode(ss);
 	}
 	SyncBuildMode();
+	SetHdependDirs();
 }
 
 void Ide::DropModeList()
