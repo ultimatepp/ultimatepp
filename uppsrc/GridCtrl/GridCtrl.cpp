@@ -1620,7 +1620,7 @@ void GridCtrl::DrawHorzDragLine(Draw &w, int pos, int cx, int size, Color c)
 	//w.DrawRect(pos, 0, cx / 2, size - 1, Color(100, 100, 100, 100);
 	DrawFrame(w, pos + 1, 1, cx / 2 - 2, size - 2, c);
 	DrawFrame(w, pos, 0, cx / 2, size, c);
-//	DrawFatFrame(w, x, 0,� int cx� int cy� Color color� int n)
+//	DrawFatFrame(w, x, 0,ďż˝ int cxďż˝ int cyďż˝ Color colorďż˝ int n)
 }
 
 void GridCtrl::DrawVertDragLine(Draw &w, int pos, int size, int dx, Color c)
