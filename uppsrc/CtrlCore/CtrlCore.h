@@ -638,6 +638,8 @@ private:
 
 	void SysEndLoop();
 
+	String Name0() const;
+
 	static void InitTimer();
 
 	static String appname;

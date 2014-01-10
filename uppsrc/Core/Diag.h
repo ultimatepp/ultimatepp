@@ -220,6 +220,7 @@ void DumpMap(Stream& s, const T& t) {
 
 String AsString(const MemoryProfile& mem);
 
+String CppDemangle(const char* name);
 
 #if 0 // rare cases when release-mode DLOG/DDUMP is needed
 

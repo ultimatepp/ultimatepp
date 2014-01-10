@@ -74,12 +74,18 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	StateH(OPEN);
 
 	activeCtrl = this;
+
+	int mousex, mousey;
+	gdk_window_get_pointer(gdk(), &mousex, &mousey, NULL);
+	Point m(mousex, mousey);
+	r = GetWndScreenRect().GetSize();
+	if(r.Contains(m))
+		DispatchMouse(MOUSEMOVE, m);
 }
 
 void Ctrl::WndDestroy()
 {
 	GuiLock __;
-	DLOG("WndDestroy " << msecs());
 	LLOG("WndDestroy " << Name());
 	DndExit();
 	Ctrl *owner = GetOwner();

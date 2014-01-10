@@ -965,4 +965,30 @@ CH_INT(GUI_AKD_Conservative, 0);
 CH_INT(GUI_DragDistance, 4);
 CH_INT(GUI_DblClickTime, 500);
 
+String Ctrl::Name0() const {
+	GuiLock __;
+	String s = CppDemangle(typeid(*this).name());
+	const Ctrl *q = this;
+	String path;
+	while(q) {
+		String id = q->GetLayoutId();
+		path = "." + Nvl(id, "?") + path;
+		q = q->parent;
+	}
+	s << ' ' << path;
+#ifdef CPU_64
+	s << " : 0x" + FormatIntHex(this);
+#else
+	s << " : " + Format("0x%x", (int) this);
+#endif
+	if(IsChild())
+		s << " (parent " << CppDemangle(typeid(*parent).name()) << ")";
+	return s;
+}
+
+String Ctrl::Name(Ctrl *ctrl)
+{
+	return Upp::Name(ctrl);
+}
+
 END_UPP_NAMESPACE

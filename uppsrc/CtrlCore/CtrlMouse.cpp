@@ -471,6 +471,7 @@ void    Ctrl::DoCursorShape() {
 }
 
 void    Ctrl::CheckMouseCtrl() {
+	LLOG("CheckMouseCtrl " << mouseCtrl);
 	GuiLock __;
 	Point p = GetMousePos();
 	if(mouseCtrl) {

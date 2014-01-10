@@ -283,3 +283,32 @@ String  _DBG_Value_AsString(Value const &v)	{ return AsString(v); }
 #endif
 
 END_UPP_NAMESPACE
+
+#if defined(__GNUG__) && defined(PLATFORM_POSIX)
+#include <cstdlib>
+#include <memory>
+#include <cxxabi.h>
+
+NAMESPACE_UPP
+
+struct cpp_demangle_handle__ {
+    char* p;
+    cpp_demangle_handle__(char* ptr) : p(ptr) { }
+    ~cpp_demangle_handle__() { std::free(p); }
+};
+
+String CppDemangle(const char* name) {
+    int status = -4;
+    cpp_demangle_handle__ result( abi::__cxa_demangle(name, NULL, NULL, &status) );
+    return (status==0) ? result.p : name ;
+}
+
+#else
+
+String CppDemangle(const char* name) {
+    return name;
+}
+
+#endif
+
+END_UPP_NAMESPACE

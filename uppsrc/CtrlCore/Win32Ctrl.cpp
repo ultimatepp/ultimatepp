@@ -136,15 +136,9 @@ void Ctrl::SyncCaret() {
 
 String Ctrl::Name() const {
 	GuiLock __;
-#ifdef CPU_64
-	String s = String(typeid(*this).name()) + " : 0x" + FormatIntHex(this);
-#else
-	String s = String(typeid(*this).name()) + " : " + Format("0x%x", (int) this);
-#endif
-	if(IsChild())
-		s << "(parent " << String(typeid(*parent).name()) << ")";
-	else
-		s << Format("(hwnd 0x%x)", (int)(intptr_t) GetHWND());
+	String s = Name0();
+	if(!IsChild())
+		s << Format(" (hwnd 0x%x)", (int)(intptr_t) GetHWND());
 	return s;
 }
 
