@@ -1,0 +1,4 @@
+#ifndef _GZCompressFile_icpp_init_stub
+#define _GZCompressFile_icpp_init_stub
+#include "Core/init"
+#endif
