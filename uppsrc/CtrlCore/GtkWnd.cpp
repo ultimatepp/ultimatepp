@@ -335,7 +335,7 @@ void Ctrl::FocusSync()
 	if(focusCtrlWnd && gtk_window_is_active(focusCtrlWnd->gtk()))
 		return;
 	Ptr<Ctrl> focus = NULL;
-	static Ctrl *ctrl;
+	static Ptr<Ctrl> ctrl;
 	for(int i = 0; i < wins.GetCount(); i++)
 		if(gtk_window_is_active((GtkWindow *)wins[i].gtk)) {
 			focus = wins[i].ctrl;
