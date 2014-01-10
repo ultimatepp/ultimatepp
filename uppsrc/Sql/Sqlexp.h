@@ -31,6 +31,8 @@ struct FieldOperator {
 	FieldOperator& operator()(const char *name, bool& b);
 	FieldOperator& operator()(const String& name, bool& b) { return (*this)(~name, b); }
 	FieldOperator& operator()(Id id, bool& b)              { return (*this)(~id, b); }
+	
+	virtual void Width(int width); // Only to be used for S_info
 
 	FieldOperator();
 	virtual ~FieldOperator();

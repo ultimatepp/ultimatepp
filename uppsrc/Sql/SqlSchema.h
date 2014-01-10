@@ -132,12 +132,21 @@ String ExportIds(const String& database);
 #endif
 
 struct S_info {
-	VectorMap< String, Tuple2<intptr_t, RefManager *> > column;
+	struct Column : Moveable<Column> {
+		intptr_t    offset;
+		RefManager *manager;
+		int         width;
+	};
+	VectorMap<String, Column> column;
 	SqlSet        set;
 	Vector<SqlId> ids;
 	
-	SqlId    GetId(int i) const                             { return column.GetKey(i); }
 	int      GetCount() const                               { return column.GetCount(); }
+
+	SqlId    GetId(int i) const                             { return column.GetKey(i); }
+	
+	int      GetWidth(int i) const                          { return column[i].width; }
+	int      GetWidth(const SqlId& id) const;
 
 	Ref      GetRef(const void *s, int i) const;
 	Ref      GetRef(const void *s, const SqlId& id) const;
@@ -160,7 +169,8 @@ struct S_info_maker : FieldOperator {
 	void    *s;
 
 	virtual void Field(const char *name, Ref f, bool *b);
-	
+	virtual void Width(int width);
+
 	S_info_maker(S_info& f, void *s) : info(f), s(s) {}
 };
 
@@ -184,6 +194,8 @@ struct S_type {
 
 	int                         GetCount() const;
 	SqlId                       GetId(int i) const;
+	int                         GetWidth(int i) const;
+	int                         GetWidth(const SqlId& id) const;
 	Ref                         GetRef(int i);
 	Ref                         GetRef(const SqlId& id);
 	Value                       Get(const SqlId& id) const;

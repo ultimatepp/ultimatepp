@@ -23,6 +23,8 @@ public: \
 	String                      ToString() const                      { return AsString((Fields)const_cast<S_##Table&>(*this)); } \
 	int                         GetCount() const                      { return info->GetCount(); } \
 	SqlId                       GetId(int i) const                    { return info->GetId(i); } \
+	int                         GetWidth(int i) const                 { return info->GetWidth(i); } \
+	int                         GetWidth(const SqlId& id) const       { return info->GetWidth(id); } \
 	Ref                         GetRef(int i)                         { return info->GetRef(this, i); } \
 	Ref                         GetRef(const SqlId& id)               { return info->GetRef(this, id); } \
 	Value                       Get(const SqlId& id) const            { return info->Get(this, id); } \

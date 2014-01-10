@@ -91,11 +91,11 @@ void S_##x::FieldLayoutRaw(FieldOperator& fo, const String& prefix) {\
 	S_##b2::FieldLayoutRaw(fo, prefix);\
 	S_##b3::FieldLayoutRaw(fo, prefix);
 
-#define COLUMN(type, ctype, name, width, prec)               fo(prefix + #name, ADD_SCHEMA_PREFIX_CPP(name));
+#define COLUMN(type, ctype, name, width, prec)               fo(prefix + #name, ADD_SCHEMA_PREFIX_CPP(name)), fo.Width(width);
 #define COLUMN_ARRAY(type, ctype, name, width, prec, items) \
 { \
 	for(int i = 0; i < items; i++)\
-		fo(Format("%s%s%d", ~prefix, #name, i), ADD_SCHEMA_PREFIX_CPP(name)[i]); \
+		fo(Format("%s%s%d", ~prefix, #name, i), ADD_SCHEMA_PREFIX_CPP(name)[i]), fo.Width(width); \
 }
 
 #define VAR(type, x)             x.FieldLayoutRaw(fo, prefix + #x + "$");
