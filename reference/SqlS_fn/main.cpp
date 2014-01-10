@@ -18,6 +18,8 @@ struct MyFieldOperator : FieldOperator {
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
 	S_PERSON p;
 	
 	p.ID = 100;
@@ -59,7 +61,9 @@ CONSOLE_APP_MAIN
 	
 	DUMP(p.GetCount());
 	for(int i = 0; i < p.GetCount(); i++) {
+		LOG("------");
 		DUMP(p.GetId(i));
 		DUMP(p.Get(i));
+		DUMP(p.GetWidth(i));
 	}
 }
