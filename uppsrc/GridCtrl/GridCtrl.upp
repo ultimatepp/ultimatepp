@@ -1,6 +1,6 @@
 description "Grid control\377";
 
-charset "windows-1250";
+charset "UTF-8";
 
 uses
 	CtrlLib;
