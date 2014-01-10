@@ -468,12 +468,13 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		}
 		return 0L;
 #endif
-	case WM_SETTINGCHANGE:
+/*	case WM_SETTINGCHANGE:
 	case 0x031A: // WM_THEMECHANGED
 		ReSkin();
 		RefreshLayoutDeep();
 		RefreshFrame();
 		break;
+*/
 /*
     case WM_IME_COMPOSITION:
 		HIMC himc = ImmGetContext(hwnd);
