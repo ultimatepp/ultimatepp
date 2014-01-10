@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	GZCompressFile.cpp;
+
+mainconfig
+	"" = "SSE2";
+
