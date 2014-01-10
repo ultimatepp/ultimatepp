@@ -1027,7 +1027,7 @@ void LayDes::Duplicate()
 	cursor.Clear();
 	for(int i = 0; i < d.item.GetCount(); i++) {
 		LayoutItem& m = d.item[i];
-		d.item[i].pos = MakeLogPos(m.pos, CtrlRect(m.pos, l.size).Offseted(20, 20), l.size);
+		d.item[i].pos = MakeLogPos(m.pos, CtrlRect(m.pos, l.size).Offseted(0, 24), l.size);
 		cursor.Add(q + i);
 	}
 	CurrentLayout().item.InsertPick(q, d.item);
