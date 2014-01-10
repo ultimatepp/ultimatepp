@@ -5,12 +5,26 @@ NAMESPACE_UPP
 void S_info_maker::Field(const char *name, Ref f, bool *b)
 {
 	if(b) f = Ref(*b);
-	info.column.Add(name, MakeTuple((byte *)f.GetVoidPtr() - (byte *)s, f.GetManager()));		
+	S_info::Column& c = info.column.Add(name);
+	c.offset = (byte *)f.GetVoidPtr() - (byte *)s;
+	c.manager = f.GetManager();
+	c.width = 0;
+}
+
+void S_info_maker::Width(int width)
+{
+	info.column.Top().width = width;
 }
 
 Ref S_info::GetRef(const void *s, int i) const
 {
-	return Ref((byte *)s + column[i].a, column[i].b);
+	return Ref((byte *)s + column[i].offset, column[i].manager);
+}
+
+int S_info::GetWidth(const SqlId& id) const
+{
+	int q = column.Find(~id);
+	return q >= 0 ? GetWidth(q) : 0;
 }
 
 Ref S_info::GetRef(const void *s, const SqlId& id) const

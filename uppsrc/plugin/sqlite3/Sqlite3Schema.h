@@ -13,10 +13,10 @@
 #define DOUBLE_(x)                 COLUMN_("real", double, x, 0, 0)
 #define DOUBLE_ARRAY_(x, items)    COLUMN_ARRAY_("real", double, x, 0, 0, items)
 
-#define STRING(x, n)               COLUMN("text", String, x, 0, 0)
-#define STRING_ARRAY(x, n, items)  COLUMN_ARRAY("text", String, x, 0, 0, items)
-#define STRING_(x, n)              COLUMN_("text", String, x, 0, 0)
-#define STRING_ARRAY_(x, n, items) COLUMN_ARRAY_("text", String, x, 0, 0, items)
+#define STRING(x, n)               COLUMN("text", String, x, n, 0)
+#define STRING_ARRAY(x, n, items)  COLUMN_ARRAY("text", String, x, n, 0, items)
+#define STRING_(x, n)              COLUMN_("text", String, x, n, 0)
+#define STRING_ARRAY_(x, n, items) COLUMN_ARRAY_("text", String, x, n, 0, items)
 
 #define DATE(x)                    COLUMN("date", Date, x, 0, 0)
 #define DATE_ARRAY(x, items)       COLUMN_ARRAY("date", Date, x, 0, 0, items)

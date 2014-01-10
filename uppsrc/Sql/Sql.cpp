@@ -26,6 +26,9 @@ void FieldOperator::Field(const char *name, Ref f) { Field(f); }
 
 void FieldOperator::Field(const char *name, Ref f, bool *b) { Field(name, f); }
 
+void FieldOperator::Width(int width) {}
+
+
 FieldOperator& FieldOperator::operator()(const char *name, bool& b) {
 	String x = BoolToSql(b);
 	Field(name, x, &b);

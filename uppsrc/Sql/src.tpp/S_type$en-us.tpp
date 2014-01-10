@@ -94,6 +94,18 @@ purposes.&]
 onst]&]
 [s2; Returns a column ID for column at [%-*@3 i].&]
 [s3; &]
+[s4;%- &]
+[s5;:S`_type`:`:GetWidth`(int`)const:%- [@(0.0.255) int]_[* GetWidth]([@(0.0.255) int]_[*@3 i
+])_[@(0.0.255) const]&]
+[s2; Returns the width of column (usually text) as defined in the 
+schema. If column does not have width, returns 0.&]
+[s3; &]
+[s4;%- &]
+[s5;:S`_type`:`:GetWidth`(const SqlId`&`)const:%- [@(0.0.255) int]_[* GetWidth]([@(0.0.255) c
+onst]_[_^SqlId^ SqlId][@(0.0.255) `&]_[*@3 id])_[@(0.0.255) const]&]
+[s2; Returns the width of column (usually text) as defined in the 
+schema.If [%-*@3 id] is not in S`_[/ type], returns 0.&]
+[s3; &]
 [s4; &]
 [s5;:S`_type`:`:GetRef`(int`):%- [_^Ref^ Ref]_[* GetRef]([@(0.0.255) int]_[*@3 i])&]
 [s2; Returns a reference to column at [%-*@3 i].&]
