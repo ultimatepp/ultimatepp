@@ -100,7 +100,7 @@ void ScatterCtrl_Demo::Preview()
 
 	r.Landscape();
 	Size pageSize = r.GetPageSize();	
-	const Drawing &w = Examples()[examplesList.GetCursor()].ctrl()->Scatter().GetDrawing(true);
+	const Drawing &w = Examples()[examplesList.GetCursor()].ctrl()->Scatter().GetDrawing(Size(800, 600));
 	r.DrawDrawing(0, 0, pageSize.cx, pageSize.cy, w);
 
 	Perform(r);
