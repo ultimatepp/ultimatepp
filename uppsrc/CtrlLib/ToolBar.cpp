@@ -82,7 +82,7 @@ void ToolBar::Clear()
 
 bool ToolBar::HotKey(dword key)
 {
-	return Bar::Scan(proc, key);
+	return Bar::Scan(proc, key) || Ctrl::HotKey(key);
 }
 
 void ToolBar::Set(Callback1<Bar&> bar)

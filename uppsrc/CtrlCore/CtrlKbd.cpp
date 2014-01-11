@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)   DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 Ptr<Ctrl> Ctrl::focusCtrl;
 Ptr<Ctrl> Ctrl::focusCtrlWnd;
@@ -118,6 +118,7 @@ bool Ctrl::DispatchKey(dword keycode, int count)
 bool Ctrl::HotKey(dword key)
 {
 	GuiLock __;
+	LLOG("HotKey " << GetKeyDesc(key) << " at " << Name(this));
 	if(!IsEnabled() || !IsVisible()) return false;
 	for(Ptr<Ctrl> ctrl = firstchild; ctrl; ctrl = ctrl->next)
 	{

@@ -313,6 +313,7 @@ String CppDemangle(const char* name) {
     return TrimLeft("struct ", TrimLeft("class ", name));
 }
 
+END_UPP_NAMESPACE
+
 #endif
 
-END_UPP_NAMESPACE
