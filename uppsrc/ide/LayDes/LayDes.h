@@ -263,6 +263,7 @@ public:
 	virtual void   LeftUp(Point p, dword keyflags);
 	virtual void   RightDown(Point p, dword keyflags);
 	virtual void   Layout();
+	virtual bool   HotKey(dword key);
 
 private:
 	bool   DoKey(dword key, int count);

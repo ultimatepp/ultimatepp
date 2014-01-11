@@ -246,6 +246,13 @@ int VariableFilter(int c)
 	return iscid(c) || c == '.' || c == '[' || c == ']' ? c : 0;
 }
 
+bool LayDes::HotKey(dword key)
+{
+	return MenuBar::Scan(layoutlist.WhenBar, key) ||
+	       MenuBar::Scan(item.WhenBar, key) ||
+	       StaticRect::HotKey(key);
+}
+
 LayDes::LayDes()
 {
 	charset = CHARSET_UTF8;
