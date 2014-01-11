@@ -59,9 +59,6 @@
 	bool   SweepConfigure(bool wait);
 	bool   SweepFocus(bool wait);
 
-	static bool                EventMouseValid;
-	static Point               EventMousePos;
-	static guint               EventState; 
 	static BiVector<Event>     Events;
 	static Vector< Ptr<Ctrl> > activePopup;
 	static Vector<Win>         wins;
