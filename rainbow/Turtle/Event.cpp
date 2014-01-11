@@ -75,8 +75,8 @@ void Ctrl::Reply()
 		SyncTopWindows();
 		SweepMkImageCache();
 		DoPaint();
-//		String s = GZCompress(content);
-		String s = content;
+		String s = ZCompress(content);
+//		String s = content;
 		LLOG("About to send " << s.GetLength());
 		websocket.SendBinary(s);
 		content.Clear();
