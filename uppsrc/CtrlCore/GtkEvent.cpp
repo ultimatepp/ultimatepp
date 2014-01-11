@@ -7,10 +7,6 @@ NAMESPACE_UPP
 #define LLOG(x)    // DLOG(rmsecs() << ' ' << x)
 //_DBG_ #define LOG_EVENTS
 
-bool  Ctrl::EventMouseValid;
-Point Ctrl::EventMousePos;
-guint Ctrl::EventState;
-
 BiVector<Ctrl::Event> Ctrl::Events;
 
 Point         Ctrl::CurrentMousePos;
@@ -19,7 +15,7 @@ guint32       Ctrl::CurrentTime;
 Ctrl::Event   Ctrl::CurrentEvent;
 
 bool  GetShift() { return Ctrl::CurrentState & GDK_SHIFT_MASK; }
-bool  GetCtrl() { return Ctrl::CurrentState & GDK_CONTROL_MASK ; }
+bool  GetCtrl() { return Ctrl::CurrentState & GDK_CONTROL_MASK; }
 bool  GetAlt() { return Ctrl::CurrentState & GDK_MOD1_MASK; }
 bool  GetCapsLock() { return Ctrl::CurrentState & GDK_LOCK_MASK; }
 bool  GetMouseLeft() { return Ctrl::CurrentState & GDK_BUTTON1_MASK; }
@@ -134,7 +130,6 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		}
 		return false;
 	case GDK_LEAVE_NOTIFY:
-		EventMouseValid = false;
 		return false;
 	case GDK_MOTION_NOTIFY: {
 		GdkEventMotion *e = (GdkEventMotion *)event;
@@ -166,7 +161,6 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		pressed = true;
 	case GDK_KEY_RELEASE:
 		key = (GdkEventKey *)event;
-		EventState = key->state;
 		value = (int) key->keyval;
 		if(pressed) {
 			p = GetTopCtrlFromId(user_data);
@@ -190,9 +184,6 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 
 void Ctrl::DoMouseEvent(int state, Point pos)
 {
-	EventMousePos = pos;
-	EventState = state;
-	EventMouseValid = true;
 }
 
 int Ctrl::DoButtonEvent(GdkEvent *event, bool press)
@@ -258,16 +249,11 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value)
 	e.windowid = (uint32)(uintptr_t)user_data;
 	e.type = type;
 	e.value = value;
-	if(!EventMouseValid) {
-		gint x, y;
-		GdkModifierType mod;
-		gdk_window_get_pointer(gdk_get_default_root_window(), &x, &y, &mod);
-		EventState = mod;
-		EventMousePos = Point(x, y);
-		EventMouseValid = true;
-	}
-	e.mousepos = EventMousePos;
-	e.state = EventState;
+	gint x, y;
+	GdkModifierType mod;
+	gdk_window_get_pointer(gdk_get_default_root_window(), &x, &y, &mod);
+	e.mousepos = Point(x, y);
+	e.state = mod;
 	e.count = 1;
 	e.event = gtk_get_current_event();
 }
