@@ -41,7 +41,7 @@ void ScatterCtrl::SaveToClipboard(bool saveAsMetafile)
 		WinMetaFile wmf = wmfd.Close();	 
 		wmf.WriteClipboard();
 	} else {
-		Image img = GetImage(ScatterDraw::GetSize(), copyRatio, false);
+		Image img = GetImage(ScatterDraw::GetSize(), copyRatio);
 		WriteClipboardImage(img);	
 	}
 }
@@ -50,7 +50,7 @@ void ScatterCtrl::SaveToClipboard(bool saveAsMetafile)
 void ScatterCtrl::SaveToClipboard(bool) 
 {
 	GuiLock __;
-	Image img = GetImage(ScatterDraw::GetSize(), copyRatio, false);
+	Image img = GetImage(ScatterDraw::GetSize(), copyRatio);
 	WriteClipboardImage(img);
 }
 
@@ -403,10 +403,10 @@ void ScatterCtrl::SaveToFile(String fileName)
 	} 
 	if (GetFileExt(fileName) == ".png") {
 		PNGEncoder encoder;
-		encoder.SaveFile(fileName, GetImage(ScatterDraw::GetSize(), copyRatio, false));
+		encoder.SaveFile(fileName, GetImage(ScatterDraw::GetSize(), copyRatio));
 	} else if (GetFileExt(fileName) == ".jpg") {	
 		JPGEncoder encoder(90);
-		encoder.SaveFile(fileName, GetImage(ScatterDraw::GetSize(), copyRatio, false));		
+		encoder.SaveFile(fileName, GetImage(ScatterDraw::GetSize(), copyRatio));		
 	} else
 		Exclamation(Format(t_("File format \"%s\" not found"), GetFileExt(fileName)));
 }

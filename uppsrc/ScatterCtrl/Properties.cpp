@@ -11,13 +11,11 @@ NAMESPACE_UPP
 
 #include "Properties.h"
 
-void ScatterCtrl::DoShowEditDlg() 
-{
+void ScatterCtrl::DoShowEditDlg() {
 	PropertiesDlg(*this).Run(true);
 }
 
-void GeneralTab::Init(ScatterCtrl& scatter) 
-{
+void GeneralTab::Init(ScatterCtrl& scatter) {
 	CtrlLayout(*this);
 	SizePos();
 	
@@ -31,27 +29,110 @@ void GeneralTab::Init(ScatterCtrl& scatter)
 	yLabel <<= THISBACK(Change);
 	yLabel2 <<= scatter.GetLabelY2();
 	yLabel2 <<= THISBACK(Change);
-	showLegend <<= scatter.GetShowLegend();
-	showLegend <<= THISBACK(Change);
-	setLegendWidth <<= scatter.GetLegendWidth();
-	setLegendWidth <<= THISBACK(Change);
+	
+	Change();
 }
-
-void GeneralTab::Change() 
-{
+	
+void GeneralTab::Change() {
 	ScatterCtrl &scatter = *pscatter;
 	
 	scatter.SetTitle(title);
     scatter.SetLabels(xLabel, yLabel, yLabel2);
-    scatter.ShowLegend(showLegend);
-    scatter.SetLegendWidth(setLegendWidth);
-                  
+
 	scatter.SetModify();
 	scatter.Refresh();
 }
 
-void SeriesTab::Init(ScatterCtrl& scatter) 
-{
+void LegendTab::Init(ScatterCtrl& scatter) {
+	CtrlLayout(*this);
+	SizePos();
+	
+	pscatter = &scatter;
+	
+	showLegend <<= scatter.GetShowLegend();
+	showLegend <<= THISBACK(Change);
+	
+	legendPosition <<= (scatter.GetLegendAnchor() == ScatterDraw::LEGEND_TOP ? 0 : 1);
+	legendPosition <<= THISBACK(Change);
+	legendAnchorRT = true;	
+	switch(scatter.GetLegendAnchor()) {
+	case ScatterDraw::LEGEND_ANCHOR_LEFT_TOP: 		legendAnchorLT = true;	break;
+	case ScatterDraw::LEGEND_ANCHOR_RIGHT_TOP: 		legendAnchorRT = true;	break;
+	case ScatterDraw::LEGEND_ANCHOR_LEFT_BOTTOM: 	legendAnchorLB = true;	break;
+	case ScatterDraw::LEGEND_ANCHOR_RIGHT_BOTTOM: 	legendAnchorRB = true;	break;
+	}
+	legendAnchorLT <<= THISBACK1(ChangeAnchor, &legendAnchorLT);
+	legendAnchorRT <<= THISBACK1(ChangeAnchor, &legendAnchorRT);
+	legendAnchorLB <<= THISBACK1(ChangeAnchor, &legendAnchorLB);
+	legendAnchorRB <<= THISBACK1(ChangeAnchor, &legendAnchorRB);
+	
+	fillColor <<= scatter.GetLegendFillColor();
+	fillColor <<= THISBACK(Change);
+	borderColor <<= scatter.GetLegendBorderColor();
+	borderColor <<= THISBACK(Change);
+	Point p = scatter.GetLegendPos();	
+	tableHoriz <<= p.x;
+	tableHoriz <<= THISBACK(Change);
+	tableVert <<= p.y;
+	tableVert <<= THISBACK(Change);
+	numCols <<= scatter.GetLegendNumCols();
+	numCols <<= THISBACK(Change);
+	
+	rowSpacing <<= scatter.GetLegendRowSpacing();
+	rowSpacing <<= THISBACK(Change);
+	
+	Change();
+}
+
+void LegendTab::ChangeAnchor(Option *op) {
+	legendAnchorLT <<= false;
+	legendAnchorRT <<= false;
+	legendAnchorLB <<= false;
+	legendAnchorRB <<= false;
+	*op <<= true;
+	
+	Change();
+}
+	
+void LegendTab::Change() {
+	ScatterCtrl &scatter = *pscatter;
+	
+    scatter.ShowLegend(showLegend);
+    scatter.SetLegendRowSpacing(rowSpacing);
+    int legendTableAnchor;
+    if (legendPosition == 0)
+        legendTableAnchor = ScatterDraw::LEGEND_TOP;
+    else if (legendAnchorLT)
+        legendTableAnchor = ScatterDraw::LEGEND_ANCHOR_LEFT_TOP;
+    else if (legendAnchorRT)
+        legendTableAnchor = ScatterDraw::LEGEND_ANCHOR_RIGHT_TOP;
+    else if (legendAnchorLB)
+        legendTableAnchor = ScatterDraw::LEGEND_ANCHOR_LEFT_BOTTOM;
+    else if (legendAnchorRB)
+        legendTableAnchor = ScatterDraw::LEGEND_ANCHOR_RIGHT_BOTTOM;
+    scatter.SetLegendAnchor(legendTableAnchor);
+    bool enable = (legendPosition != 0);
+	table.Enable(enable);    
+	fillColor.Enable(enable);		borderColor.Enable(enable);
+	tableHoriz.Enable(enable);		tableVert.Enable(enable);
+	numCols.Enable(enable);			rowSpacing.Enable(enable);
+	labelFill.Enable(enable);		labelBorder.Enable(enable);
+	labelDistance.Enable(enable);
+	labelHoriz.Enable(enable);		labelVert.Enable(enable);
+	labelNumCols.Enable(enable);	labelRowSpacing.Enable(enable);
+	labelAnchorCorner.Enable(enable);	
+	legendAnchorLT.Enable(enable);	legendAnchorRT.Enable(enable);
+	legendAnchorLB.Enable(enable);	legendAnchorRB.Enable(enable);	
+		
+	scatter.SetLegendFillColor(fillColor.GetData()).SetLegendBorderColor(borderColor.GetData());
+	scatter.SetLegendPosX(tableHoriz).SetLegendPosY(tableVert);
+	scatter.SetLegendNumCols(numCols);
+              
+	scatter.SetModify();
+	scatter.Refresh();
+}
+
+void SeriesTab::Init(ScatterCtrl& scatter) {
 	CtrlLayout(*this);
 	SizePos();
 	
@@ -91,8 +172,7 @@ void SeriesTab::Init(ScatterCtrl& scatter)
 	name.SetFocus();
 }
 
-void SeriesTab::Change() 
-{
+void SeriesTab::Change() {
 	int index = list.GetCursor();
 	if (index < 0)
 		return;
@@ -120,8 +200,7 @@ void SeriesTab::Change()
 	scatter.Refresh();
 }
 
-void SeriesTab::UpdateFields() 
-{
+void SeriesTab::UpdateFields() {
 	int index = list.GetCursor();
 	if (index < 0)
 		return;
@@ -190,8 +269,12 @@ void DataTab::OnTab()
 	data.SetVirtualCount(int(scatter.GetCount(index)));
 	dataSourceX.pscatter = dataSourceY.pscatter = pscatter;
 	dataSourceX.index = dataSourceY.index = index;
-	data.AddRowNumColumn("x").SetConvert(dataSourceX);
-	data.AddRowNumColumn("y").SetConvert(dataSourceY);	
+	String textX = pscatter->GetLabelX() + 
+				   (pscatter->GetUnitsX(index).IsEmpty() ? "" : " [" + pscatter->GetUnitsX(index) + "]"); 
+	String textY = pscatter->GetLegend(index) + 
+				   (pscatter->GetUnitsY(index).IsEmpty() ? "" : " [" + pscatter->GetUnitsY(index) + "]"); 
+	data.AddRowNumColumn(textX).SetConvert(dataSourceX);
+	data.AddRowNumColumn(textY).SetConvert(dataSourceY);	
 	data.WhenBar = THISBACK(OnArrayBar);
 }
 
@@ -225,6 +308,7 @@ PropertiesDlg::PropertiesDlg(ScatterCtrl& scatter) : scatter(scatter)
 	Title(t_("Scatter properties"));
 	
 	tab.Add(general, t_("General"));
+	tab.Add(legend, t_("Legend"));
 	tab.Add(series, t_("Series"));
 	tab.Add(data, t_("Data"));
 	OnTab(); 
@@ -237,6 +321,8 @@ void PropertiesDlg::OnTab()
 {
 	if (tab.IsAt(general))
 		general.Init(scatter);
+	else if (tab.IsAt(legend))
+		legend.Init(scatter);
 	else if (tab.IsAt(series))
 		series.Init(scatter);
 	else if (tab.IsAt(data))
