@@ -296,8 +296,10 @@ ws.onopen = function()
 ws.onmessage = function(event) 
 {
 	Log("onmessage");
-	if(event.data instanceof ArrayBuffer)
-		ProcessDraw(new Uint8Array(event.data));
+	if(event.data instanceof ArrayBuffer) {
+		var inflate = new Zlib.Inflate(new Uint8Array(event.data));
+		ProcessDraw(inflate.decompress());
+	}
 	Processing = false;
 	if(event_queue.length > 0)
 		Ping();
