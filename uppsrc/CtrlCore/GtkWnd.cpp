@@ -72,12 +72,15 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 
 void  Ctrl::SetMouseCursor(const Image& image)
 {
+	LLOG("SetMouseCursor");
 	GuiLock __;
 	int64 id = image.GetSerialId();
 	Ctrl *topctrl = NULL;
 	Top *top = NULL;
 	if(mouseCtrl)
 		topctrl = mouseCtrl->GetTopCtrl();
+	else
+		topctrl = GetActiveCtrl();
 	if(topctrl)
 		top = topctrl->top;
 	if(top && id != top->cursor_id) {

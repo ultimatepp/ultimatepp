@@ -686,6 +686,7 @@ Image& Ctrl::CursorOverride()
 
 Image Ctrl::OverrideCursor(const Image& m)
 {
+	LLOG("OverrideCursor");
 	GuiLock __;
 	Image om = CursorOverride();
 	CursorOverride() = m;
@@ -702,6 +703,7 @@ void WaitCursor::Show() {
 }
 
 WaitCursor::WaitCursor(bool show) {
+	LLOG("WaitCursor");
 	flag = true;
 	if(show) Show();
 }
