@@ -303,10 +303,14 @@ String CppDemangle(const char* name) {
     return (status==0) ? result.p : name ;
 }
 
+END_UPP_NAMESPACE
+
 #else
 
+NAMESPACE_UPP
+
 String CppDemangle(const char* name) {
-    return name;
+    return TrimLeft("struct ", TrimLeft("class ", name));
 }
 
 #endif
