@@ -4,8 +4,7 @@ NAMESPACE_UPP
 
 
 static void DrawPie(Draw& w, double c_x, double c_y, double r, int start, int alpha, int width = 0, 
-					Color fill = Null, Color outline = Black, uint64 pattern = 0, Color background = White)
-{
+					Color fill = Null, Color outline = Black, uint64 pattern = 0, Color background = White) {
 	const int dalpha = 1;
 	int n = alpha/dalpha;
 	
@@ -29,16 +28,14 @@ static void DrawPie(Draw& w, double c_x, double c_y, double r, int start, int al
 	w.DrawPolygon(vP, fill, width, outline, pattern, Null);
 }
 
-void PieDraw::AddCategory(const String& name, const double& value, const Color& catcolor)
-{
+void PieDraw::AddCategory(const String& name, const double& value, const Color& catcolor) {
 	vNames.Add(name);
 	vValues.Add(value);
 	vColors.Add(catcolor);
 	Refresh();
 }
 
-void PieDraw::RemoveCategory(const int& index)
-{
+void PieDraw::RemoveCategory(const int& index) {
 	ASSERT(!vValues.IsEmpty() && vValues.GetCount() > index);
 	vNames.Remove(index);
 	vValues.Remove(index);
@@ -46,50 +43,43 @@ void PieDraw::RemoveCategory(const int& index)
 	Refresh();
 }
 
-PieDraw& PieDraw::SetCatValue(const int& index, const double& value)
-{
+PieDraw& PieDraw::SetCatValue(const int& index, const double& value) {
 	ASSERT(!vValues.IsEmpty() && vValues.GetCount() > index);
 	vValues[index] = value;
 	Refresh();
 	return *this;
 }
 
-PieDraw& PieDraw::SetCatName(const int& index, const String& name)
-{
+PieDraw& PieDraw::SetCatName(const int& index, const String& name) {
 	ASSERT(!vNames.IsEmpty() && vNames.GetCount() > index);
 	vNames[index] = name;
 	Refresh();
 	return *this;
 }
 
-PieDraw& PieDraw::SetCatColor(const int& index, const Color& catcolor)
-{
+PieDraw& PieDraw::SetCatColor(const int& index, const Color& catcolor) {
 	ASSERT(!vColors.IsEmpty() && vColors.GetCount() > index);
 	vColors[index] = catcolor;
 	Refresh();
 	return *this;
 }
 
-double PieDraw::GetCatValue(const int& index) const
-{
+double PieDraw::GetCatValue(const int& index) const {
 	ASSERT(!vValues.IsEmpty() && vValues.GetCount() > index);
 	return vValues[index];
 }
 
-String PieDraw::GetCatName(const int& index) const
-{
+String PieDraw::GetCatName(const int& index) const {
 	ASSERT(!vNames.IsEmpty() && vNames.GetCount() > index);
 	return vNames[index];
 }
 
-Color PieDraw::GetCatColor(const int& index) const
-{
+Color PieDraw::GetCatColor(const int& index) const {
 	ASSERT(!vColors.IsEmpty() && vColors.GetCount() > index);
 	return vColors[index];
 }
 
-void PieDraw::PaintPie(Draw& w, int scale)
-{
+void PieDraw::PaintPie(Draw& w, int scale) {
 	Size sz = GetSize();	
 	
 	w.DrawRect(scale*sz, backColor);	
@@ -195,21 +185,18 @@ void PieDraw::PaintPie(Draw& w, int scale)
 	}
 }		                  
 
-String PieDraw::GetPercent(double a, double total)
-{
+String PieDraw::GetPercent(double a, double total) {
 	double p = a*100/total;
 	return FormatDouble(p, 1) + '%';
 }
 
-Drawing PieDraw::GetDrawing() 
-{
+Drawing PieDraw::GetDrawing() {
 	DrawingDraw ddw(3*GetSize());
 	PaintPie(ddw, 3);
 	return ddw;
 }
 
-Image PieDraw::GetImage(int scale) 
-{
+Image PieDraw::GetImage(int scale) {
 	DrawingDraw idraw(scale*GetSize());
 	PaintPie(idraw,scale);
 	return Image(idraw.GetResult());
