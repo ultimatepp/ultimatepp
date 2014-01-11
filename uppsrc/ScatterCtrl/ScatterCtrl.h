@@ -141,8 +141,6 @@ public:
 	ScatterCtrl& SetGridColor(const Upp::Color& grid_color)		{ScatterDraw::SetGridColor(grid_color);		return *this;};
 	ScatterCtrl& SetGridWidth(int grid_width) 					{ScatterDraw::SetGridWidth(grid_width); 	return *this;};
 	ScatterCtrl& SetPlotAreaColor(const Upp::Color& p_a_color)	{ScatterDraw::SetPlotAreaColor(p_a_color); 	return *this;};
-	ScatterCtrl& SetLegendWidth(int width)						{ScatterDraw::SetLegendWidth(width); 		return *this;};
-	int GetLegendWidth()										{return ScatterDraw::GetLegendWidth();};
 	ScatterCtrl& SetAxisColor(const Upp::Color& axis_color)		{ScatterDraw::SetAxisColor(axis_color);		return *this;};
 	ScatterCtrl& SetAxisWidth(int axis_width)					{ScatterDraw::SetAxisWidth(axis_width);		return *this;};
 	ScatterCtrl& SetTitle(const String& title)		 			{ScatterDraw::SetTitle(title); 				return *this;};
@@ -162,7 +160,21 @@ public:
 	
 	ScatterCtrl& ShowLegend(bool show = true) 					{ScatterDraw::ShowLegend(show); 			return *this;}
 	bool GetShowLegend() 										{return ScatterDraw::GetShowLegend();}
-	
+	ScatterCtrl& SetLegendPos(const Point &pos) 				{ScatterDraw::SetLegendPos(pos);			return *this;}
+	ScatterCtrl& SetLegendPosX(int x)			 				{ScatterDraw::SetLegendPosX(x);				return *this;}
+	ScatterCtrl& SetLegendPosY(int y) 							{ScatterDraw::SetLegendPosY(y);				return *this;}
+	Point& GetLegendPos() 										{return ScatterDraw::GetLegendPos();}
+	ScatterCtrl& SetLegendNumCols(int num) 						{ScatterDraw::SetLegendNumCols(num);		return *this;}
+	int GetLegendNumCols() 										{return ScatterDraw::GetLegendNumCols();}
+	ScatterCtrl& SetLegendRowSpacing(int num) 					{ScatterDraw::SetLegendRowSpacing(num);		return *this;}
+	int GetLegendRowSpacing() 									{return ScatterDraw::GetLegendRowSpacing();}
+	ScatterCtrl& SetLegendAnchor(int anchor) 					{ScatterDraw::SetLegendAnchor(anchor);		return *this;}
+	int GetLegendAnchor() 										{return ScatterDraw::GetLegendAnchor();}
+	ScatterCtrl& SetLegendFillColor(const Upp::Color &fill)		{ScatterDraw::SetLegendFillColor(fill);		return *this;}
+	ScatterCtrl& SetLegendBorderColor(const Upp::Color &border)	{ScatterDraw::SetLegendBorderColor(border);	return *this;}
+	Upp::Color& GetLegendFillColor() 							{return ScatterDraw::GetLegendFillColor();}
+	Upp::Color& GetLegendBorderColor() 							{return ScatterDraw::GetLegendBorderColor();}
+
 	using ScatterDraw::AddSeries; 
 	ScatterCtrl &AddSeries(ArrayCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int numData = Null);
 	using ScatterDraw::InsertSeries; 
@@ -238,7 +250,6 @@ void ScatterCtrl::SetDrawing(T& w, const Size &size, int scale) {
 		Ctrl::Refresh(min(popLT.x-4, popRB.x-4), min(popLT.y-4, popRB.y-4), 
 					  abs(popRB.x-popLT.x) + 9, abs(popRB.y-popLT.y) + 9);
 	}
-	ClipEnd(w);
 }
 
 END_UPP_NAMESPACE

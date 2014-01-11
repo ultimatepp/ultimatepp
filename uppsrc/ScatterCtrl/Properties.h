@@ -13,6 +13,19 @@ private:
 	void Change();
 };
 
+class LegendTab : public WithLegend<StaticRect> {
+public:
+	typedef LegendTab CLASSNAME;
+	
+	void Init(ScatterCtrl &scatter);
+
+private:
+	ScatterCtrl *pscatter;
+	
+	void Change();
+	void ChangeAnchor(Option *op);
+};
+
 class SeriesTab : public WithSeries<StaticRect> {
 public:
 	typedef SeriesTab CLASSNAME;
@@ -67,6 +80,7 @@ public:
 private:
 	ScatterCtrl& scatter;
 	GeneralTab general;
+	LegendTab legend;
 	SeriesTab series;
 	DataTab data;
 };

@@ -1,4 +1,12 @@
-ctrl ScatterCtrl {
+	enum_property LEGEND_POS {
+		"0" : "LEGEND_TOP",
+		"1" : "LEGEND_ANCHOR_LEFT_TOP",
+		"2" : "LEGEND_ANCHOR_RIGHT_TOP",
+		"3" : "LEGEND_ANCHOR_LEFT_BOTTOM",
+		"4" : "LEGEND_ANCHOR_RIGHT_BOTTOM"
+	};
+	
+	ctrl ScatterCtrl {
 	group "Extra";
 
 	GetMinSize() {sz.cx=150; sz.cy = 100; return sz; }
@@ -18,7 +26,7 @@ ctrl ScatterCtrl {
 	Text SetLabelY;
 	Text SetLabelY2;
 	Font SetLabelsFont;
-	Color SetLabelsColor= :Black;
+	Color SetLabelsColor = :Black;
 	Color SetAxisColor = :Black;
 	int SetAxisWidth = 6;
 	Color SetGridColor = :Color(102,102,102);
@@ -27,7 +35,14 @@ ctrl ScatterCtrl {
 	bool ShowVGrid = true;
 	bool ShowInfo = true;
 	bool ShowLegend = true;
-	int SetLegendWidth = 80;	
+	LEGEND_POS SetLegendAnchor; 					
+	int SetLegendPosX = 5;
+	int SetLegendPosY = 5;
+	int SetLegendNumCols = 1; 	
+	int SetLegendRowSpacing = 5; 		
+	Color SetLegendFillColor = :Black;
+	Color SetLegendBorderColor = :White;
+	
 	bool SetFastViewX = false;
 	bool SetSequentialXAll = false;
 
