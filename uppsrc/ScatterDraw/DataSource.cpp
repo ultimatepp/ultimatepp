@@ -4,8 +4,7 @@ NAMESPACE_UPP
 
 #define Membercall(fun)	(this->*fun)
 		
-double DataSource::Min(Getdatafun getdata) 
-{
+double DataSource::Min(Getdatafun getdata) {
 	double minVal = -DOUBLE_NULL;
 	for (int64 i = 0; i < GetCount(); ++i) {
 		double d = Membercall(getdata)(i);
@@ -15,8 +14,7 @@ double DataSource::Min(Getdatafun getdata)
 	return minVal;		
 }
  
-double DataSource::Max(Getdatafun getdata) 
-{
+double DataSource::Max(Getdatafun getdata) {
 	double maxVal = DOUBLE_NULL;
 	for (int64 i = 0; i < GetCount(); ++i) {
 		double d = Membercall(getdata)(i);
@@ -26,8 +24,7 @@ double DataSource::Max(Getdatafun getdata)
 	return maxVal;
 }
 
-double DataSource::Avg(Getdatafun getdata) 
-{
+double DataSource::Avg(Getdatafun getdata) {
 	double ret = 0;
 	for (int64 i = 0; i < GetCount(); ++i)
 		ret += Membercall(getdata)(i);

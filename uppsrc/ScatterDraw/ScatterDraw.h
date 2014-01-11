@@ -132,10 +132,29 @@ public:
 	ScatterDraw& ShowVGrid(bool show);
 	ScatterDraw& ShowHGrid(bool show);
 	
-	ScatterDraw& ShowLegend(bool show = true) 			{showLegend = show;		return *this;}
-	bool GetShowLegend()								{return showLegend;}
-	ScatterDraw& SetLegendWidth(int width)				{legendWidth = width;	return *this;}
-	int GetLegendWidth()								{return legendWidth;}
+	ScatterDraw& ShowLegend(bool show = true) 		{showLegend = show;		return *this;}
+	bool GetShowLegend()							{return showLegend;}
+	ScatterDraw& SetLegendPos(const Point &pos) 	{legendPos = pos;		return *this;}
+	ScatterDraw& SetLegendPosX(int x) 				{legendPos.x = x;		return *this;}
+	ScatterDraw& SetLegendPosY(int y) 				{legendPos.y = y;		return *this;}
+	Point& GetLegendPos() 							{return legendPos;}
+	ScatterDraw& SetLegendNumCols(int num) 			{legendNumCols = num;	return *this;}
+	int GetLegendNumCols() 							{return legendNumCols;}
+	ScatterDraw& SetLegendRowSpacing(int num) 		{legendRowSpacing = num;	return *this;}
+	int GetLegendRowSpacing() 						{return legendRowSpacing;}
+	enum LEGEND_POS {
+		LEGEND_TOP,
+		LEGEND_ANCHOR_LEFT_TOP, 
+		LEGEND_ANCHOR_RIGHT_TOP, 
+		LEGEND_ANCHOR_LEFT_BOTTOM, 
+		LEGEND_ANCHOR_RIGHT_BOTTOM
+	};
+	ScatterDraw& SetLegendAnchor(int anchor) 		{legendAnchor = anchor;	return *this;}
+	int GetLegendAnchor() 							{return legendAnchor;}
+	ScatterDraw& SetLegendFillColor(const Color &color) {legendFillColor = color;	return *this;}
+	ScatterDraw& SetLegendBorderColor(const Color &color) {legendBorderColor = color;	return *this;}	
+	Color& GetLegendFillColor() 					{return legendFillColor;}
+	Color& GetLegendBorderColor() 					{return legendBorderColor;}
 	
 	ScatterDraw& SetMode(int _mode = MD_ANTIALIASED)	{mode = _mode; Refresh(); return *this;};
 	int GetMode()	{return mode;};
@@ -356,8 +375,9 @@ public:
 	ScatterDraw& Id(int index, int id);
 	int GetId(int index);
 	
-	Drawing GetDrawing(bool ctrl = true);
+	Drawing GetDrawing(const Size size = Null);
 	Image GetImage(int scale = 2);
+	Image GetImage(const Size &size, int scale = 2);
 	
 	#ifdef PLATFORM_WIN32
 	void SaveAsMetafile(const char* file) const;
@@ -385,7 +405,6 @@ public:
 	
 protected:
 	ScatterDraw &_AddSeries(DataSource *data);
-	Image GetImage(const Size &size, int scale = 2, bool ctrl = true);
 	virtual void Refresh() {};
 
 	int mode;
@@ -430,12 +449,18 @@ protected:
 	Vector<ScatterSeries> series;
 	
 	bool showLegend;
-	int legendWidth;
 	
 	bool isPolar;
 	
 	int lastRefresh_sign;
 	int highlight_0;
+	
+	Point legendPos;
+	int legendNumCols;
+	int legendAnchor;
+	int legendRowSpacing;
+	Color legendFillColor;
+	Color legendBorderColor;
 	
 	void DrawLegend(Draw& w, const Size &size, int scale) const;
 
@@ -445,26 +470,13 @@ protected:
 	void MonFormat(String& s, int i, double d)	{s = Format("%Mon", int(d));}
 	void DyFormat(String& s, int i, double d)	{s = Format("%Dy", int(d));}
 	
-	static String VariableFormat(double range, double d)
-	{
-		if (fabs(d) <= 1e-15)
-			d = 0;
-		if 		(0.001 <= range && range < 0.01)   return FormatDouble(d, 5);
-		else if (0.01  <= range && range < 0.1)    return FormatDouble(d, 4);
-		else if (0.1   <= range && range < 1) 	   return FormatDouble(d, 3);
-		else if (1	   <= range && range < 10) 	   return FormatDouble(d, 2);
-		else if (10	   <= range && range < 100)    return FormatDouble(d, 1);
-		else if (100   <= range && range < 100000) {
-							if (d < 1 && d > -1)   return "0";	// Never -0
-							else				   return FormatDouble(d, 0);
-		} else return FormatDoubleExp(d, 2);
-	}	
+	static String VariableFormat(double range, double d);	
 	String VariableFormatX(double d) const  {return VariableFormat(xRange, d);}
 	String VariableFormatY(double d) const  {return VariableFormat(yRange, d);} 
 	String VariableFormatY2(double d) const {return VariableFormat(yRange2, d);}
 
 	template<class T>
-	void SetDrawing(T& w, const Size &size, int scale, bool ctrl = false, bool setD = false);
+	void SetDrawing(T& w, const Size &size, int scale, bool ctrl = false);
 	template<class T>
 	void Plot(T& w, const Size &size, int scale);	
 	template<class T>
@@ -483,11 +495,8 @@ private:
 };
 
 template <class T>
-void ScatterDraw::SetDrawing(T& w, const Size& size, int scale, bool ctrl, bool setD)
+void ScatterDraw::SetDrawing(T& w, const Size& size, int scale, bool ctrl)
 {
-	if (size.cx == 0 || size.cy == 0)
-		return;
-	
 	w.DrawRect(scale*size, graphColor);
 	
 	titleHeight = !title.IsEmpty() ? scale*titleFont.GetHeight() : 0;
@@ -495,19 +504,12 @@ void ScatterDraw::SetDrawing(T& w, const Size& size, int scale, bool ctrl, bool 
 	plotW = scale*(size.cx - (hPlotLeft + hPlotRight));
 	plotH = scale*(size.cy - (vPlotTop + vPlotBottom)) - titleHeight;
 	
+	Plot(w, size, scale);	
+		
 	if (!ctrl) {
 		if (!PlotTexts(w, size, scale)) 
 			return;
-	} else 
-		w.Offset(Point(scale*hPlotLeft, scale*vPlotTop + titleHeight));
-	
-	Plot(w, size, scale);	
-	
-	if (ctrl)
-		ClipEnd(w);
-	
-	if (!setD)
-		w.Offset(Point(-scale*hPlotLeft, -(scale*vPlotTop + titleHeight)));
+	} 
 }
 
 template <class T>
@@ -521,18 +523,19 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 		Size sz = GetTextSize(title, fontTitle6);
 		DrawText(w, (scale*size.cx - sz.cx)/2., scale*2., 0, title, fontTitle6, titleColor);   
 	}	
-	w.Offset(Point(scale*hPlotLeft, scale*vPlotTop + titleHeight));
 	if(showLegend) 
 		DrawLegend(w, size, scale);
-	
-	if (plotW < 0 || plotH < 0) {
-		ClipEnd(w);	
+		
+	if (plotW < 0 || plotH < 0)
 		return false;
-	}
+	
+	w.Offset(Point(scale*hPlotLeft, scale*vPlotTop + titleHeight));
 	
 	Font fontLabel;
 	fontLabel = labelsFont;
 	fontLabel.Height(scale*labelsFont.GetHeight());
+	Font italicLabel = fontLabel;
+	italicLabel.Italic();
 	
 	if (labelsChanged) {
 		xLabel = xLabel_base;
@@ -569,15 +572,11 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 	}
 	Size lx  = GetTextSize(xLabel, 	fontLabel);
 	Size ly  = GetTextSize(yLabel, 	fontLabel);
-	Size ly2 = GetTextSize(yLabel2, fontLabel);
+	Size ly2 = GetTextSize(yLabel2, italicLabel);
 	DrawText(w, (plotW - lx.cx)/2., plotH + scale*(vPlotBottom - 2) - lx.cy, 0, xLabel, fontLabel, labelsColor);
 	DrawText(w, scale*(2 - hPlotLeft), 			   (plotH + ly.cx)/2.,  900, yLabel,  fontLabel, labelsColor);
-	DrawText(w, scale*(size.cx - 2) - ly2.cy - hPlotLeft, (plotH + ly2.cx)/2., 900, yLabel2, fontLabel, labelsColor);
+	DrawText(w, scale*(size.cx - 2) - ly2.cy - hPlotLeft, (plotH + ly2.cx)/2., 900, yLabel2, italicLabel, labelsColor);
 
-	/*if (xRange == 0 || xMajorUnit == 0 || yRange == 0 || yMajorUnit == 0 || yRange2 == 0) {
-		ClipEnd(w);	
-		return false;
-	}*/
 	drawXReticle &=  (xRange != 0 && xMajorUnit != 0);
 	drawYReticle &=  (yRange != 0 && yMajorUnit != 0);
 	drawY2Reticle &= (yRange2 != 0 && yMajorUnit != 0);
@@ -607,6 +606,8 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 			}
 		}
 
+	Font italic = standard6;
+	italic.Italic();
 	if (drawYReticle)
 		for(int i = 0; yMinUnit + i*yMajorUnit <= yRange; i++) {
 			int reticleY = fround(-plotH*yMinUnit/yRange + plotH - i*plotH/(yRange/yMajorUnit));
@@ -628,7 +629,7 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 					cbModifFormatY2(gridLabelY2, i, gridY2);
 				else
 					gridLabelY2 = VariableFormatY2(gridY2);
-				DrawText(w, plotW + scale*10, reticleY - scale*8, 0, gridLabelY2, standard6, axisColor);
+				DrawText(w, plotW + scale*10, reticleY - scale*8, 0, gridLabelY2, italic, axisColor);
 			}
 		}
 	
@@ -648,7 +649,7 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 	w.DrawLine(0, 0, 0, plotH, borderWidth, Black);
 	w.DrawLine(plotW, 0, plotW, plotH + 1, borderWidth, Black);
 	
-	ClipEnd(w);	
+	w.End();	
 	
 	return true;
 }
@@ -656,10 +657,11 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 template <class T>
 void ScatterDraw::Plot(T& w, const Size &size, int scale)
 {
+	w.Offset(Point(scale*hPlotLeft, scale*vPlotTop + titleHeight));
+	Clip(w, 0, 0, plotW, plotH);
+		
 	double d1 = xRange/xMajorUnit;
 	double d2 = yRange/yMajorUnit;
-
-	Clip(w, 0, 0, plotW, plotH);
 
 	double left, top, d = min(plotW, plotH), r = d/2.;
 	if (!isPolar)
@@ -807,6 +809,7 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 		}
 	}
 	ClipEnd(w);
+	w.End();
 }
 
 END_UPP_NAMESPACE
