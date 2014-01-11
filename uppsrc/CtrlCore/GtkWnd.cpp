@@ -290,9 +290,11 @@ Rect Ctrl::GetVirtualScreenArea()
 
 Rect Ctrl::GetPrimaryWorkArea()
 {
+	GuiLock __;
+	int primary = gdk_screen_get_primary_monitor(gdk_screen_get_default());
 	Array<Rect> rc;
 	GetWorkArea(rc);
-	return rc.GetCount() ? rc[0] : GetVirtualScreenArea();
+	return primary < rc.GetCount() ? rc[primary] : GetVirtualScreenArea();
 }
 
 Rect Ctrl::GetPrimaryScreenArea()
@@ -453,14 +455,16 @@ void Ctrl::WndUpdate()
 Rect Ctrl::GetDefaultWindowRect()
 {
 	GuiLock __; 
-	Size sz = GetPrimaryWorkArea().GetSize();
+	Rect r  = GetPrimaryWorkArea();
+	Size sz = r.GetSize();
+	
 	static int pos = min(sz.cx / 10, 50);
 	pos += 10;
 	int cx = sz.cx * 2 / 3;
 	int cy = sz.cy * 2 / 3;
 	if(pos + cx + 50 > sz.cx || pos + cy + 50 > sz.cy)
 		pos = 0;
-	return RectC(pos + 20, pos + 20, cx, cy);
+	return RectC(r.left + pos + 20, r.top + pos + 20, cx, cy);
 }
 
 ViewDraw::ViewDraw(Ctrl *ctrl)
