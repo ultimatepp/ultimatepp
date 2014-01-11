@@ -34,6 +34,7 @@ void Tab1::Init()
 	
 	scatter.SetRange(60, 50).SetMajorUnits(10, 10);
 	scatter.ShowInfo().ShowContextMenu().ShowPropertiesDlg().SetPopText("h", "v", "v2").SetMouseHandling(true, true);
+	scatter.SetLegendPos(Point(20, 20));
 }
 
 ScatterDemo *Construct1()
