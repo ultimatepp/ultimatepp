@@ -17,5 +17,6 @@ file
 	PieDraw.cpp,
 	PieDraw.h,
 	ScatterDraw.t,
+	srcdoc.tpp,
 	src.tpp;
 
