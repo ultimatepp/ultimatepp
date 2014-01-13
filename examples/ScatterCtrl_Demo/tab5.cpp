@@ -6,8 +6,8 @@ void Tab5::Init()
 	CtrlLayout(*this);	
 	HSizePos().VSizePos();
 	scatter.SetRange(10, 100);
-	scatter.AddSeries(s1).Legend("U-t").NoMark();
-	scatter.AddSeries(s2).Legend("I-t").NoMark();
+	scatter.AddSeries(s1).Legend("U-t").Units("V", "s").NoMark();
+	scatter.AddSeries(s2).Legend("I-t").Units("A", "s").NoMark();
 	bStart <<=(THISBACK(Start));
 	bStop <<=(THISBACK(Stop));
 	bReset <<=(THISBACK(Reset));
