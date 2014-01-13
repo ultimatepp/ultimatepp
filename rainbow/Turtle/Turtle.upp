@@ -17,7 +17,6 @@ file
 	Ctrl.cpp,
 	Wnd.cpp,
 	Cursor.cpp,
-	Socket.cpp,
 	Event.cpp,
 	Top.h,
 	TopFrame.cpp,

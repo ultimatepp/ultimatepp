@@ -52,10 +52,14 @@ private:
 protected:
 	static int PaintLock;
 
+	static bool Connect();
+	static void TimerAndPaint();
+	static bool ProcessEvent(const String& event);
+
 public:
 	static bool DoKeyFB(dword key, int cnt);
 
-	static void InitTelpp();
+	static void InitTelpp(const String& host = Null);
 	static void Exit();
 
 	static void EndSession();

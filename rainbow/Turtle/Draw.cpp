@@ -41,7 +41,7 @@ void SystemDraw::Put(const String& s)
 
 Index<int64> SystemDraw::img_index[3];
 
-int SystemDraw::GetImageI(int from, Index<int64>& img_index, int maxcount, SystemDraw& w, const Image& img)
+int SystemDraw::GetImageI(int from, Index<int64>& img_index, int maxcount, const Image& img)
 {
 	int64 id = img.GetSerialId();
 	int q = img_index.Find(id);
@@ -54,31 +54,31 @@ int SystemDraw::GetImageI(int from, Index<int64>& img_index, int maxcount, Syste
 			q = Random(maxcount);
 			img_index.Set(q, id);
 		}
-		w.Put8(SETIMAGE);
-		w.Put16(q + from);
-		w.Put(img.GetSize());
+		Put8(SETIMAGE);
+		Put16(q + from);
+		Put(img.GetSize());
 		const RGBA *end = ~img + img.GetLength();
 		for(const RGBA *s = ~img; s < end; s++) {
-			w.Put8(s->r);
-			w.Put8(s->g);
-			w.Put8(s->b);
-			w.Put8(s->a);
+			Put8(s->r);
+			Put8(s->g);
+			Put8(s->b);
+			Put8(s->a);
 		}
 	}
 	return q + from;
 }
 
-int SystemDraw::GetImageI(SystemDraw& w, const Image& img)
+int SystemDraw::GetImageI(const Image& img)
 {
 	int area = img.GetWidth() * img.GetHeight();
-	return area <= 64*64     ? GetImageI(0, img_index[0], 2048, w, img) :
-	       area <= 512 * 512 ? GetImageI(2048, img_index[1], 64, w, img) :
-	                           GetImageI(2048 + 64, img_index[2], 8, w, img);
+	return area <= 64*64     ? GetImageI(0, img_index[0], 2048, img) :
+	       area <= 512 * 512 ? GetImageI(2048, img_index[1], 64, img) :
+	                           GetImageI(2048 + 64, img_index[2], 8, img);
 }
 
 void SystemDraw::PutImage(Point p, const Image& img, const Rect& src)
 {
-	int i = GetImageI(*this, img);
+	int i = GetImageI(img);
 	Put8(IMAGE);
 	Put16(i);
 	Put(p);

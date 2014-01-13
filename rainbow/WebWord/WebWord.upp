@@ -1,12 +1,12 @@
 uses
 	Core,
-	Telpp,
 	plugin/DroidFonts,
 	RichEdit,
 	Turtle,
 	PdfDraw;
 
 file
+	test.qtf,
 	WebWord.cpp;
 
 mainconfig

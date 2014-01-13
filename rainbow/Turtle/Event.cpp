@@ -6,8 +6,8 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)    DLOG(x)
-#define LDUMP(x)   DDUMP(x)
+#define LLOG(x)     // RLOG(x)
+#define LDUMP(x)    // RDUMP(x)
 #define LTIMING(x)
 
 static Point MousePos;
@@ -25,29 +25,54 @@ TcpSocket   server;
 TcpSocket   socket;
 WebSocket   websocket;
 
-String      content;
+BiVector<String> event_queue;
+String           content;
 
+String           hostname;
 
-void Ctrl::InitTelpp()
+void SetHostName(const String& h)
 {
+	hostname = h;
+}
+
+bool Ctrl::Connect()
+{
+	RLOG("Connect");
 	if(!server.Listen(8088, 10)) {
-		LOG("Cannot open server port for listening\r\n");
-		return;
+		RLOG("Cannot open server port for listening\r\n");
+		return false;
 	}
-	LLOG("Starting to listen");
+	RLOG("Starting to listen on 8088");
 	socket.Timeout(20000);
 	for(;;) {
 		if(socket.Accept(server)) {
 			if(http.Read(socket)) {
-				LLOG("Accepted, header read");
+				RLOG("Accepted, header read");
 				if(websocket.WebAccept(socket, http))
 					break;
-				LLOG("Sending HTML");
-				HttpResponse(socket, http.scgi, 200, "OK", "text/html", String(turtle_html, turtle_html_length));
+				RLOG("Sending HTML");
+				String html = String(turtle_html, turtle_html_length);
+			#ifdef _DEBUG
+				html.Replace("%%host%%", Nvl(GetIniKey("turtle_host"), Nvl(hostname, "ws://localhost:8088")));
+			#else
+				html.Replace("%%host%%", "ws://eventcraft.eu:8088");
+			#endif
+				HttpResponse(socket, http.scgi, 200, "OK", "text/html", html);
 			}
 			socket.Close();
 		}
 	}
+	RLOG("Connection established");
+	return true;
+}
+
+void Ctrl::InitTelpp(const String& hostname_)
+{
+	RLOG("InitTelpp");
+
+	hostname = hostname_;
+
+	Connect();
 	
 	LLOG("WebSocket connected");
 
@@ -64,51 +89,50 @@ void Ctrl::InitTelpp()
 	SetDesktop(Desktop());
 }
 
-void Ctrl::Reply()
+void Ctrl::TimerAndPaint()
 {
-	GuiLock __;
-	LLOG("Reply");
-	if(websocket.IsOpen()) {
-		TimerProc(GetTickCount());
-		DefferedFocusSync();
-		SyncCaret();
-		SyncTopWindows();
-		SweepMkImageCache();
-		DoPaint();
-		String s = ZCompress(content);
-//		String s = content;
-		LLOG("About to send " << s.GetLength());
-		websocket.SendBinary(s);
-		content.Clear();
-	}
+	LLOG("TimerAndPaint " << msecs());
+	TimerProc(GetTickCount());
+	DefferedFocusSync();
+	SyncCaret();
+	SyncTopWindows();
+	SweepMkImageCache();
+	DoPaint();
+	String s = ZCompress(content);
+	if(content.GetCount() > 10)
+		RLOG("Sending " << s.GetLength());
+	websocket.SendBinary(s);
+	content.Clear();
 }
-
-String event_queue;
 
 bool Ctrl::IsWaitingEvent()
 {
 	GuiLock __;
-	if(socket.Timeout(0).WaitRead()) {
+	while(socket.Timeout(0).WaitRead()) {
 		socket.Timeout(20000);
-		event_queue.Cat(websocket.Recieve());
-		return true; // TODO: Each recieved message needs a reply
+		String s = websocket.Recieve();
+		RLOG("Recieved data " << s);
+		StringStream ss(s);
+		while(!ss.IsEof())
+			event_queue.AddTail(ss.GetLine());
 	}
-	return false;
+	return event_queue.GetCount();
 }
 
 bool Ctrl::ProcessEvents(bool *quit)
 {
 	GuiLock __;
-	if(!IsWaitingEvent())
-		return false;
-
 	LLOG("---- Process events");
-	LLOG(event_queue);
-	content.Clear();
-	bool r = ProcessEventQueue(event_queue);
-	event_queue.Clear();
-	_TODO_ // Resolve eventloop exit issue
-	Reply();
+	bool r = false;
+	while(IsWaitingEvent()) {
+		while(event_queue.GetCount() >= 2 && *event_queue[0] == 'M' && *event_queue[1] == 'M')
+			event_queue.DropHead(); // MouseMove compression
+		String ev = event_queue[0];
+		event_queue.DropHead();
+		ProcessEvent(ev);
+		r = true;
+	}
+	TimerAndPaint();
 	return r;
 }
 
@@ -375,70 +399,67 @@ void Ctrl::DoMouseButton(int event, CParser& p)
 	DoMouseFB(decode(button, 0, LEFT, 2, RIGHT, MIDDLE)|event, pt, 0, p);
 }
 
-bool Ctrl::ProcessEventQueue(const String& event_queue)
+bool Ctrl::ProcessEvent(const String& event)
 {
-	StringStream ss(event_queue);
-	while(!ss.IsEof()) {
-		String s = ss.GetLine();
-		CParser p(s);
-		try {
-			if(p.Id("I"))
-				SystemDraw::ResetI();
-			else
-			if(p.Id("R")) {
-				DesktopSize = ReadPoint(p);
-				Desktop().SetRect(0, 0, DesktopSize.cx, DesktopSize.cy);				
-			}
-			if(p.Id("M")) {
-				Point pt = ReadPoint(p);
-				int64 tm = p.ReadInt64();
-				DoMouseFB(MOUSEMOVE, pt, 0, p);
-			}
-			else
-			if(p.Id("W")) {
-				double w = p.ReadDouble();
-				Point pt = ReadPoint(p);
-				int64 tm = p.ReadInt64();
-				DoMouseFB(MOUSEWHEEL, pt, w < 0 ? 120 : -120, p);
-			}
-			else
-			if(p.Id("O")) {
-				mouseLeft = mouseMiddle = mouseRight = false;
-				mouseDownTime = 0;
-			}
-			else
-			if(p.Id("D")) {
-				DoMouseButton(DOWN, p);
-			}
-			else
-			if(p.Id("U")) {
-				DoMouseButton(UP, p);
-			}
-			else
-			if(p.Id("K")) {
-				int code = p.ReadInt();
-				int which = p.ReadInt();
-				ReadKeyMods(p);
-				DoKeyFB(fbKEYtoK(which), 1);
-			}
-			else
-			if(p.Id("k")) {
-				int code = p.ReadInt();
-				int which = p.ReadInt();
-				ReadKeyMods(p);
-				DoKeyFB(K_KEYUP|fbKEYtoK(which), 1);
-			}
-			else
-			if(p.Id("C")) {
-				int code = p.ReadInt();
-				int which = p.ReadInt();
-				ReadKeyMods(p);
-				if(which && !keyAlt && !keyCtrl)
-					DoKeyFB(which, 1);
-			}
+	RLOG("Processing event " << event);
+	CParser p(event);
+	try {
+		if(p.Id("I"))
+			SystemDraw::ResetI();
+		else
+		if(p.Id("R")) {
+			DesktopSize = ReadPoint(p);
+			Desktop().SetRect(0, 0, DesktopSize.cx, DesktopSize.cy);				
 		}
-		catch(CParser::Error) {}
+		if(p.Id("M")) {
+			Point pt = ReadPoint(p);
+			int64 tm = p.ReadInt64();
+			DoMouseFB(MOUSEMOVE, pt, 0, p);
+		}
+		else
+		if(p.Id("W")) {
+			double w = p.ReadDouble();
+			Point pt = ReadPoint(p);
+			int64 tm = p.ReadInt64();
+			DoMouseFB(MOUSEWHEEL, pt, w < 0 ? 120 : -120, p);
+		}
+		else
+		if(p.Id("O")) {
+			mouseLeft = mouseMiddle = mouseRight = false;
+			mouseDownTime = 0;
+		}
+		else
+		if(p.Id("D")) {
+			DoMouseButton(DOWN, p);
+		}
+		else
+		if(p.Id("U")) {
+			DoMouseButton(UP, p);
+		}
+		else
+		if(p.Id("K")) {
+			int code = p.ReadInt();
+			int which = p.ReadInt();
+			ReadKeyMods(p);
+			DoKeyFB(fbKEYtoK(which), 1);
+		}
+		else
+		if(p.Id("k")) {
+			int code = p.ReadInt();
+			int which = p.ReadInt();
+			ReadKeyMods(p);
+			DoKeyFB(K_KEYUP|fbKEYtoK(which), 1);
+		}
+		else
+		if(p.Id("C")) {
+			int code = p.ReadInt();
+			int which = p.ReadInt();
+			ReadKeyMods(p);
+			if(which && !keyAlt && !keyCtrl)
+				DoKeyFB(which, 1);
+		}
 	}
+	catch(CParser::Error) {}
 	return true;
 }
 
@@ -449,7 +470,6 @@ Point GetMousePos() {
 void Ctrl::EventLoop(Ctrl *ctrl)
 {
 	GuiLock __;
-	Reply();
 	ASSERT(IsMainThread());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
