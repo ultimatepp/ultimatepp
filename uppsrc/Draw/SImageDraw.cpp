@@ -33,10 +33,10 @@ SImageDraw::operator Image() const
 {
 	ImageBuffer b(ib.GetSize());
 	memcpy(b, ib.Begin(), sizeof(RGBA) * ib.GetLength());
-	const RGBA *s = alpha.ib.Begin();
 	RGBA *t = b;
 	const RGBA *e = b.End();;
 	if(has_alpha) {
+		const RGBA *s = alpha.ib.Begin();
 		while(t < e) {
 			t->a = s->r;
 			t++;
@@ -57,11 +57,13 @@ SImageDraw::operator Image() const
 
 SImageDraw::SImageDraw(Size sz)
 {
+	has_alpha = false;
 	SImageDraw1::Create(sz);
 }
 
 SImageDraw::SImageDraw(int cx, int cy)
 {
+	has_alpha = false;
 	SImageDraw1::Create(Size(cx, cy));
 }
 
