@@ -118,11 +118,16 @@ public:
 	
 	ScatterDraw& SetPlotAreaMargin(int hLeft, int hRight, int vTop, int vBottom);
 	ScatterDraw& SetPlotAreaLeftMargin(int margin);	
+	int GetPlotAreaLeftMargin()						{return hPlotLeft;}
 	ScatterDraw& SetPlotAreaRightMargin(int margin);	
+	int GetPlotAreaRightMargin()					{return hPlotRight;}
 	ScatterDraw& SetPlotAreaTopMargin(int margin);	
+	int GetPlotAreaTopMargin()						{return vPlotTop;}
 	ScatterDraw& SetPlotAreaBottomMargin(int margin);
+	int GetPlotAreaBottomMargin()					{return vPlotBottom;}
 	
 	ScatterDraw& SetPlotAreaColor(const Color& p_a_color);
+	Color& GetPlotAreaColor()						{return plotAreaColor;}
 	
 	ScatterDraw& SetAxisColor(const Color& axis_color);
 	ScatterDraw& SetAxisWidth(int axis_width);
