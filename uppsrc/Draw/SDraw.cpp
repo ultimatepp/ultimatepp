@@ -14,7 +14,15 @@ void SDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color c
 
 void SDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 {
-	// TODO
+	if(!IsNull(color)) {
+		docolor = color;
+		Polygon().Ellipse(r).Fill();
+	}
+	if(!IsNull(pen) && !IsNull(pencolor)) {
+		docolor = pencolor;
+		Width(pen);
+		Ellipse(r);
+	}
 }
 
 void SDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
