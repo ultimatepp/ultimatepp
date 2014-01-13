@@ -1,3 +1,5 @@
+#ifndef flagNOI18N
+
 #ifndef _Core_lng_h_
 #define _Core_lng_h_
 
@@ -296,5 +298,7 @@ INITBLOCK_(COMBINE3(LNG_MODULE, LNG_VERB, LNG_VERA))
 #undef jaJP
 
 #undef T_
+
+#endif
 
 #endif
