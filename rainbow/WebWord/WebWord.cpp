@@ -296,27 +296,27 @@ struct EventsWnd : TopWindow {
 	}
 };
 
-GUI_APP_MAIN
+
+#ifndef _DEBUG
+namespace Upp {
+void SetHostName(const String& h);
+};
+
+INITBLOCK {
+	SetHostName("ws://eventcraft.eu:8088");
+}
+#endif
+
+CONSOLE_APP_MAIN
 {
-//#ifdef _DEBUG
 	StdLogSetup(LOG_COUT|LOG_FILE);
-//#endif
 
-	LOG("Test");
+	RLOG("APP_MAIN");
 
+	UPP::Ctrl::InitTelpp();
+	
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
-
-#if 0
-	EventsWnd().Run();
-	return;
-#endif
-
-#if 0
-	String xxx;
-	EditText(xxx, "Edit", "Edit");
-	return;
-#endif
 
 	UWordFs().Type("QTF files", "*.qtf")
 	         .AllFilesType()
@@ -329,4 +329,6 @@ GUI_APP_MAIN
 	(new UWord)->editor.SetQTF(LoadFile(GetDataFile("test.qtf")));
 	Ctrl::EventLoop();
 	StoreToFile(callback(UWord::SerializeApp));
+
+	UPP::Ctrl::CloseTopCtrls();
 }

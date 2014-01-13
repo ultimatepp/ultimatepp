@@ -36,7 +36,7 @@ w.prototype.e=function(){var b=new (u?Uint8Array:Array)(this.b-32768),d=this.b-3
 w.prototype.z=function(b){var d,a=this.input.length/this.a+1|0,c,f,e,g=this.input,h=this.c;b&&("number"===typeof b.p&&(a=b.p),"number"===typeof b.u&&(a+=b.u));2>a?(c=(g.length-this.a)/this.o[2],e=258*(c/2)|0,f=e<h.length?h.length+e:h.length<<1):f=h.length*a;u?(d=new Uint8Array(f),d.set(h)):d=h;return this.c=d};
 w.prototype.n=function(){var b=0,d=this.c,a=this.g,c,f=new (u?Uint8Array:Array)(this.l+(this.b-32768)),e,g,h,k;if(0===a.length)return u?this.c.subarray(32768,this.b):this.c.slice(32768,this.b);e=0;for(g=a.length;e<g;++e){c=a[e];h=0;for(k=c.length;h<k;++h)f[b++]=c[h]}e=32768;for(g=this.b;e<g;++e)f[b++]=d[e];this.g=[];return this.buffer=f};
 w.prototype.v=function(){var b,d=this.b;u?this.r?(b=new Uint8Array(d),b.set(this.c.subarray(0,d))):b=this.c.subarray(0,d):(this.c.length>d&&(this.c.length=d),b=this.c);return this.buffer=b};function U(b,d){var a,c;this.input=b;this.a=0;if(d||!(d={}))d.index&&(this.a=d.index),d.verify&&(this.A=d.verify);a=b[this.a++];c=b[this.a++];switch(a&15){case V:this.method=V;break;default:m(Error("unsupported compression method"))}0!==((a<<8)+c)%31&&m(Error("invalid fcheck flag:"+((a<<8)+c)%31));c&32&&m(Error("fdict flag is not supported"));this.q=new w(b,{index:this.a,bufferSize:d.bufferSize,bufferType:d.bufferType,resize:d.resize})}
-U.prototype.k=function(){var b=this.input,d,a;d=this.q.k();this.a=this.q.a;if(this.A){a=(b[this.a++]<<24|b[this.a++]<<16|b[this.a++]<<8|b[this.a++])>>>0;var c=d;if("string"===typeof c){var f=c.split(""),e,g;e=0;for(g=f.length;e<g;e++)f[e]=(f[e].charCodeAt(0)&255)>>>0;c=f}for(var h=1,k=0,l=c.length,q,p=0;0<l;){q=1024<l?1024:l;l-=q;do h+=c[p++],k+=h;while(--q);h%=65521;k%=65521}a!==(k<<16|h)>>>0&&m(Error("invalid adler-32 checksum"))}return d};var V=8;s("Zlib.Inflate",U);s("Zlib.Inflate.prototype.decompress",U.prototype.k);var W={ADAPTIVE:z.s,BLOCK:z.t},X,Y,Z,$;if(Object.keys)X=Object.keys(W);else for(Y in X=[],Z=0,W)X[Z++]=Y;Z=0;for($=X.length;Z<$;++Z)Y=X[Z],s("Zlib.Inflate.BufferType."+Y,W[Y]);}).call(this); //@ sourceMappingURL=inflate.min.js.map
+U.prototype.k=function(){var b=this.input,d,a;d=this.q.k();this.a=this.q.a;if(this.A){a=(b[this.a++]<<24|b[this.a++]<<16|b[this.a++]<<8|b[this.a++])>>>0;var c=d;if("string"===typeof c){var f=c.split(""),e,g;e=0;for(g=f.length;e<g;e++)f[e]=(f[e].charCodeAt(0)&255)>>>0;c=f}for(var h=1,k=0,l=c.length,q,p=0;0<l;){q=1024<l?1024:l;l-=q;do h+=c[p++],k+=h;while(--q);h%=65521;k%=65521}a!==(k<<16|h)>>>0&&m(Error("invalid adler-32 checksum"))}return d};var V=8;s("Zlib.Inflate",U);s("Zlib.Inflate.prototype.decompress",U.prototype.k);var W={ADAPTIVE:z.s,BLOCK:z.t},X,Y,Z,$;if(Object.keys)X=Object.keys(W);else for(Y in X=[],Z=0,W)X[Z++]=Y;Z=0;for($=X.length;Z<$;++Z)Y=X[Z],s("Zlib.Inflate.BufferType."+Y,W[Y]);}).call(this);
 
 function Log(msg)
 {
@@ -83,7 +83,8 @@ function GetString(p)
 
 function ProcessDraw(s)
 {
-	var x, y, cx, cy, r, g, b, imgData, i, n, px, py;
+//	console.clear();
+
 	var p = new Object;
 	p.data = s;
 	p.pos = 0;
@@ -93,14 +94,14 @@ function ProcessDraw(s)
 	
     while(p.pos < p.data.length) {
     	// Log(p.pos + ": " + p.data[p.pos]);
-        if(Char(p, 0)) {
-        	x = Get16(p);
-        	y = Get16(p);
-        	cx = Get16(p);
-        	cy = Get16(p);
-        	r = Get8(p);
-        	g = Get8(p);
-        	b = Get8(p);
+        if(Char(p, 0)) { // RECT
+        	var x = Get16(p);
+        	var y = Get16(p);
+        	var cx = Get16(p);
+        	var cy = Get16(p);
+        	var r = Get8(p);
+        	var g = Get8(p);
+        	var b = Get8(p);
         	// Log("rect: " + x + ", " + y + ", " + cx + ", " + cy);
         	var c = "rgb(" + r + "," + g + "," + b + ")";
         	ctx.fillStyle = c;
@@ -108,11 +109,11 @@ function ProcessDraw(s)
         	ctx.fillRect(x, y, cx, cy);
         }
         else
-        if(Char(p, 3)) {
-        	x = Get16(p);
-        	y = Get16(p);
-        	cx = Get16(p);
-        	cy = Get16(p);
+        if(Char(p, 3)) { // INVERTRECT
+        	var x = Get16(p);
+        	var y = Get16(p);
+        	var cx = Get16(p);
+        	var cy = Get16(p);
         	// Log("irect: " + x + ", " + y + ", " + cx + ", " + cy);
         	var imageData = ctx.getImageData(x, y, cx, cy);
 			var data = imageData.data;
@@ -124,12 +125,12 @@ function ProcessDraw(s)
 			ctx.putImageData(imageData, x, y);
         }
         else
-        if(Char(p, 2)) {
-        	r = Get16(p);
-        	cx = Get16(p);
-        	cy = Get16(p);
-			n = cx * cy * 4;
-			imgData = ctx.createImageData(cx, cy);
+        if(Char(p, 2)) { // SETIMAGE
+        	var r = Get16(p);
+        	var cx = Get16(p);
+        	var cy = Get16(p);
+			var n = cx * cy * 4;
+			var imgData = ctx.createImageData(cx, cy);
 			for(i = 0; i < n; i++)
 				imgData.data[i] = Get8(p);
         	var img = document.createElement('canvas');
@@ -138,23 +139,29 @@ function ProcessDraw(s)
 			img.getContext("2d").putImageData(imgData, 0, 0);
         	window.img_cache[r] = img;
         	// Log("Set image: " + r);
+        	if(img == undefined) // TODO: Remove after debugging this
+				alert("Undefined in set: " + n);
+			if(window.img_cache[r] == undefined)
+				alert("Undefined 2: " + n);
         }
         else
-        if(Char(p, 1)) {
-        	n = Get16(p);
+        if(Char(p, 1)) { // IMAGE
+        	var n = Get16(p);
 
-        	px = Get16(p);
-        	py = Get16(p);
-        	x = Get16(p);
-        	y = Get16(p);
-        	cx = Get16(p);
-        	cy = Get16(p);
+        	var px = Get16(p);
+        	var py = Get16(p);
+        	var x = Get16(p);
+        	var y = Get16(p);
+        	var cx = Get16(p);
+        	var cy = Get16(p);
 
-			// Log("Draw image: " + n);			
+//			Log("Draw image: " + n);
+			if(window.img_cache[n] == undefined)
+				alert("Undefined: " + n);
 			ctx.drawImage(window.img_cache[n], x, y, cx, cy, px, py, cx, cy);
 		}
 		else
-		if(Char(p, 4)) {
+		if(Char(p, 4)) { // STD_CURSORIMAGE
 			canvas.style.cursor = [
 				"default", // should not happen
 				"default", // Arrow
@@ -176,14 +183,14 @@ function ProcessDraw(s)
 			][Get8(p)];
 		}
 		else
-		if(Char(p, 5)) {
+		if(Char(p, 5)) { // SETCURSORIMAGE
 			i = Get16(p);
-			cursor_cache[i] = GetString(p);
+			window.cursor_cache[i] = GetString(p);
 		}
 		else
-		if(Char(p, 6)) {
+		if(Char(p, 6)) { // CURSORIMAGE
 			i = Get16(p);
-			canvas.style.cursor = cursor_cache[i];
+			canvas.style.cursor = window.cursor_cache[i];
 			// Log(cursor_cache[i]);
 		}
 	}			
@@ -208,28 +215,28 @@ function mouse_event(event)
 canvas.onmousemove = function(event)
 {
 	event_queue += "M" + mouse_event(event);
-	Ping();
+	ScheduleSend();
 	event.preventDefault();
 }
 
 canvas.onmousedown = function(event)
 {
 	event_queue += "D " + event.button + mouse_event(event);
-	Ping();
+	ScheduleSend();
 	event.preventDefault();
 }
 
 canvas.onmouseout = function(event)
 {
 	event_queue += "O\n";
-	Ping();
+	ScheduleSend();
 	event.preventDefault();
 }
 
 canvas.onmouseup = function(event)
 {
 	event_queue += "U " + event.button + mouse_event(event);
-	Ping();
+	ScheduleSend();
 	event.preventDefault();
 }
 
@@ -241,21 +248,21 @@ canvas.onwheel = function(event)
 document.onkeydown = function(event)
 {
 	event_queue += "K " + event.keyCode + " " + event.which + key_flags(event);
-	Ping();
+	ScheduleSend();
 }
 
 document.onkeypress = function(event)
 {
 	event_queue += "C " + event.keyCode + " " + event.which + key_flags(event);
 	event.preventDefault();
-	Ping();
+	ScheduleSend();
 }
 
 document.onkeyup = function(event)
 {
 	event_queue += "k " + event.keyCode + " " + event.which + key_flags(event);
 	event.preventDefault();
-	Ping();
+	ScheduleSend();
 }
 
 function ResizeCanvas()
@@ -263,33 +270,37 @@ function ResizeCanvas()
 	canvas.width  = window.innerWidth;
 	canvas.height = window.innerHeight;
 	event_queue += "R " + canvas.width + ' ' + canvas.height + "\n";
-	Ping();
+	ScheduleSend();
 }
 
 window.onresize = ResizeCanvas;
 
-var Processing = false;
 var timerID;
 
-var ws = new WebSocket("ws://localhost:8088");
+var ws = new WebSocket("%%host%%");
 ws.binaryType = "arraybuffer";
 
-function Ping()
+function ScheduleSend()
 {
-	Log("Ping " + Processing);
-	if(!Processing) {
-		Processing = true;
-		Log("Sending " + event_queue);
-		ws.send(event_queue);
-		event_queue = "";
-	}
 	if(timerID != undefined)
 		clearTimeout(timerID);
-	timerID = setTimeout(Ping, 20);
+	timerID = setTimeout(SendEvents, 0);
+}
+
+function SendEvents()
+{
+	if(event_queue.length)
+		Log("Sending " + event_queue);
+	ws.send(event_queue);
+	event_queue = "";
+	if(timerID != undefined)
+		clearTimeout(timerID);
+	timerID = setTimeout(SendEvents, 20);
 }
 
 ws.onopen = function()
 {
+	Log("websocket connection opened");
 	ResizeCanvas();
 };
 
@@ -300,14 +311,11 @@ ws.onmessage = function(event)
 		var inflate = new Zlib.Inflate(new Uint8Array(event.data));
 		ProcessDraw(inflate.decompress());
 	}
-	Processing = false;
-	if(event_queue.length > 0)
-		Ping();
 };
 
 ws.onclose = function(ev)
 {
-    alert("Connection closed");
+    alert("Connection closed.");
 };
 
 </script>

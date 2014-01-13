@@ -40,7 +40,7 @@ private:
 
 	static void DoMouseFB(int event, Point p, int zdelta, CParser& cp);
 
-	static void Reply();
+	static void TimerAndPaint();
 
 	friend struct PaintProxy__;
 	friend class TopWindowFrame;
@@ -52,10 +52,15 @@ private:
 protected:
 	static int PaintLock;
 
+	static void ProcessEvent(const String& event);
+
 public:
 	static bool DoKeyFB(dword key, int cnt);
 
-	static void InitTelpp();
+	static void InitTelpp(const String& hostname);
+
+	static void Connect();
+
 	static void Exit();
 
 	static void EndSession();
@@ -77,8 +82,4 @@ public:
 	static bool SystemCursor;
 
 	enum { DRAWDRAGRECT_SCREEN = 0x8000 };
-
-	_TODO_
-	static bool ProcessEventQueue(const String& event_queue);
-
 //$ };

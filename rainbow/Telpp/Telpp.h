@@ -32,8 +32,9 @@ public:
 	
 	static Index<int64>           img_index[3];
 	
-	static int GetImageI(int from, Index<int64>& img_index, int maxcount, SystemDraw& w, const Image& img);
-	static int GetImageI(SystemDraw& w, const Image& img);
+	int GetImageI(int from, Index<int64>& img_index, int maxcount, const Image& img);
+	int GetImageI(const Image& img);
+
 	static void ResetI()          { for(int i = 0; i < 3; i++) img_index[i].Clear(); }
 
 	StringBuffer result;
