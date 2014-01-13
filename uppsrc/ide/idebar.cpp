@@ -374,14 +374,14 @@ void Ide::FilePropertiesMenu(Bar& menu)
 	menu.MenuSeparator();
 	menu.Add(IsActiveFile(), AK_FILEPROPERTIES, THISBACK(FileProperties))
 		.Help("File properties stored in package");
-	menu.Add(IsActiveFile(), AK_SAVEENCODING, THISBACK(ChangeCharset))
+	menu.Add(IsActiveFile() && !designer, AK_SAVEENCODING, THISBACK(ChangeCharset))
 	    .Help("Convert actual file to different encoding");
-	menu.AddMenu(IsActiveFile() && !IsFolder(editfile), AK_DIFF, IdeImg::Diff(), THISBACK(Diff))
+	menu.AddMenu(IsActiveFile() && !IsFolder(editfile) && !designer, AK_DIFF, IdeImg::Diff(), THISBACK(Diff))
 	    .Help("Show differences between the project and arbitrary files");
-	menu.AddMenu(IsActiveFile() && !IsFolder(editfile), AK_PATCH, IdeImg::Patch(), THISBACK(Patch))
+	menu.AddMenu(IsActiveFile() && !IsFolder(editfile) && !designer, AK_PATCH, IdeImg::Patch(), THISBACK(Patch))
 	    .Help("Show differences with patch file applied");
 	if(IsSvnDir(GetFileFolder(editfile)))
-		menu.AddMenu(IsActiveFile() && !IsFolder(editfile), AK_SVNDIFF, IdeImg::SvnDiff(), THISBACK(SvnHistory))
+		menu.AddMenu(IsActiveFile() && !IsFolder(editfile) && !designer, AK_SVNDIFF, IdeImg::SvnDiff(), THISBACK(SvnHistory))
 		    .Help("Show svn history of file");
 }
 
