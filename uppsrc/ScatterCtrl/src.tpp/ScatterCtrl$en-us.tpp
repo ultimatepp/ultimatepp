@@ -191,10 +191,25 @@ vBottom).&]
 [s3; Calls ScatterDraw`::SetPlotAreaLeftMargin(margin).&]
 [s1; &]
 [s6;%- &]
+[s5;:ScatterCtrl`:`:GetPlotAreaLeftMargin`(`):%- [@(0.0.255) int]_[* GetPlotAreaLeftMargi
+n]()&]
+[s3;%- [%% Returns ScatterDraw`::]GetPlotAreaLeftMargin().&]
+[s1;%- &]
+[s6;%- &]
 [s5;:ScatterCtrl`:`:SetPlotAreaTopMargin`(int`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
 ]_[* SetPlotAreaTopMargin]([@(0.0.255) int]_[*@3 margin])&]
 [s3; Calls to ScatterDraw`::SetPlotAreaTopMargin(margin).&]
 [s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:GetPlotAreaTopMargin`(`):%- [@(0.0.255) int]_[* GetPlotAreaTopMargin](
+)&]
+[s3;%- [%% Returns ScatterDraw`::]GetPlotAreaTopMargin().&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:GetPlotAreaRightMargin`(`):%- [@(0.0.255) int]_[* GetPlotAreaRightMar
+gin]()&]
+[s3;%- [%% Returns ScatterDraw`::]GetPlotAreaRightMargin().&]
+[s1;%- &]
 [s6;:ScatterCtrl`:`:SetPlotAreaRightMargin`(int`):%- &]
 [s5;:ScatterCtrl`:`:SetPlotAreaRightMargin`(const int`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
 ]_[* SetPlotAreaRightMargin]([@(0.0.255) int]_[*@3 margin])&]
@@ -205,6 +220,11 @@ vBottom).&]
 ]_[* SetPlotAreaBottomMargin]([@(0.0.255) int]_[*@3 margin])&]
 [s3; Calls to ScatterDraw`::SetPlotAreaBottomMargin(margin).&]
 [s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:GetPlotAreaBottomMargin`(`):%- [@(0.0.255) int]_[* GetPlotAreaBottomM
+argin]()&]
+[s3;%- [%% Returns ScatterDraw`::]GetPlotAreaBottomMargin().&]
+[s1;%- &]
 [s6;%- &]
 [s5;:ScatterCtrl`:`:ShowLegend`(bool`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&]_[* Sh
 owLegend]([@(0.0.255) bool]_[*@3 show]_`=_[@(0.0.255) true])&]

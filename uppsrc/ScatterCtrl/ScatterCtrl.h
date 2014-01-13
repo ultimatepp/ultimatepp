@@ -154,9 +154,13 @@ public:
 	ScatterCtrl& SetPlotAreaMargin(int hLeft, int hRight, int vTop, int vBottom)
 																{ScatterDraw::SetPlotAreaMargin(hLeft, hRight, vTop, vBottom); return *this;};
 	ScatterCtrl& SetPlotAreaLeftMargin(int margin)				{ScatterDraw::SetPlotAreaLeftMargin(margin);return *this;};
+	int GetPlotAreaLeftMargin()									{return ScatterDraw::GetPlotAreaLeftMargin();};
 	ScatterCtrl& SetPlotAreaTopMargin(int margin)				{ScatterDraw::SetPlotAreaTopMargin(margin);	return *this;};
+	int GetPlotAreaTopMargin()									{return ScatterDraw::GetPlotAreaTopMargin();};
 	ScatterCtrl& SetPlotAreaRightMargin(int margin)				{ScatterDraw::SetPlotAreaRightMargin(margin);return *this;};
+	int GetPlotAreaRightMargin()								{return ScatterDraw::GetPlotAreaRightMargin();};
 	ScatterCtrl& SetPlotAreaBottomMargin(int margin)			{ScatterDraw::SetPlotAreaBottomMargin(margin);return *this;};
+	int GetPlotAreaBottomMargin()								{return ScatterDraw::GetPlotAreaBottomMargin();};
 	
 	ScatterCtrl& ShowLegend(bool show = true) 					{ScatterDraw::ShowLegend(show); 			return *this;}
 	bool GetShowLegend() 										{return ScatterDraw::GetShowLegend();}

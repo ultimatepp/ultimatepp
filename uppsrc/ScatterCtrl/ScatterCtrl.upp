@@ -18,5 +18,6 @@ file
 	PieCtrl.h,
 	ScatterCtrl.t,
 	ScatterCtrl.usc,
+	srcdoc.tpp,
 	src.tpp;
 

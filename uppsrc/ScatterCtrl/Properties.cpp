@@ -29,6 +29,14 @@ void GeneralTab::Init(ScatterCtrl& scatter) {
 	yLabel <<= THISBACK(Change);
 	yLabel2 <<= scatter.GetLabelY2();
 	yLabel2 <<= THISBACK(Change);
+	leftMargin <<= scatter.GetPlotAreaLeftMargin();
+	leftMargin <<= THISBACK(Change);
+	rightMargin <<= scatter.GetPlotAreaRightMargin();
+	rightMargin <<= THISBACK(Change);
+	topMargin <<= scatter.GetPlotAreaTopMargin();
+	topMargin <<= THISBACK(Change);
+	bottomMargin <<= scatter.GetPlotAreaBottomMargin();
+	bottomMargin <<= THISBACK(Change);
 	
 	Change();
 }
@@ -38,6 +46,7 @@ void GeneralTab::Change() {
 	
 	scatter.SetTitle(title);
     scatter.SetLabels(xLabel, yLabel, yLabel2);
+	scatter.SetPlotAreaMargin(~leftMargin, ~rightMargin, ~topMargin, ~bottomMargin);
 
 	scatter.SetModify();
 	scatter.Refresh();
