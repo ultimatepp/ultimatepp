@@ -27,7 +27,7 @@ LAYOUT(Tab4, 400, 316)
 END_LAYOUT
 
 LAYOUT(Tab5, 400, 288)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Dynamic")).SetTitleFont(StdFontZ(14).Bold()).SetPlotAreaLeftMargin(40).SetPlotAreaRightMargin(10).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelX(t_("time")).SetLabelY(t_("Electric circuit performance")).SetLegendAnchor(2).HSizePosZ(16, 12).VSizePosZ(12, 36))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Dynamic")).SetTitleFont(StdFontZ(14).Bold()).SetPlotAreaLeftMargin(40).SetPlotAreaRightMargin(10).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelX(t_("time")).SetLabelY(t_("Electric circuit performance")).SetLegendAnchor(2).SetLegendPosX(10).SetLegendPosY(10).HSizePosZ(16, 12).VSizePosZ(12, 36))
 	ITEM(Button, bStart, SetLabel(t_("Start")).LeftPosZ(16, 42).BottomPosZ(5, 23))
 	ITEM(Button, bStop, SetLabel(t_("Stop")).LeftPosZ(64, 42).BottomPosZ(5, 23))
 	ITEM(Button, bReset, SetLabel(t_("Reset")).LeftPosZ(112, 42).BottomPosZ(5, 23))
