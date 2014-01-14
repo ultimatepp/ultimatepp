@@ -63,6 +63,8 @@ bool Ctrl::Connect()
 		}
 	}
 	RLOG("Connection established");
+	if(socket.IsError())
+		RLOG("CONNECT ERROR: " << socket.GetErrorDesc());
 	return true;
 }
 
@@ -101,6 +103,7 @@ void Ctrl::TimerAndPaint()
 	String s = ZCompress(content);
 	if(content.GetCount() > 10)
 		RLOG("Sending " << s.GetLength());
+	socket.Timeout(20000);
 	websocket.SendBinary(s);
 	content.Clear();
 }
@@ -116,6 +119,9 @@ bool Ctrl::IsWaitingEvent()
 		while(!ss.IsEof())
 			event_queue.AddTail(ss.GetLine());
 	}
+	socket.Timeout(20000);
+	if(socket.IsError())
+		RLOG("ERROR: " << socket.GetErrorDesc());
 	return event_queue.GetCount();
 }
 
@@ -143,6 +149,7 @@ void Ctrl::GuiSleep(int ms)
 //	LLOG("GuiSleep");
 	int level = LeaveGuiMutexAll();
 	socket.Timeout(ms).WaitRead();
+	socket.Timeout(20000);
 	EnterGuiMutex(level);
 }
 
