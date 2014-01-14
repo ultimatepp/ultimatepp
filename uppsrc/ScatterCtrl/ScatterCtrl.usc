@@ -1,12 +1,20 @@
-	enum_property LEGEND_POS {
-		"0" : "LEGEND_TOP",
-		"1" : "LEGEND_ANCHOR_LEFT_TOP",
-		"2" : "LEGEND_ANCHOR_RIGHT_TOP",
-		"3" : "LEGEND_ANCHOR_LEFT_BOTTOM",
-		"4" : "LEGEND_ANCHOR_RIGHT_BOTTOM"
-	};
+fn PaintRect(w, left, top, right, bottom, width, color)
+{
+	w.DrawLine(left, top, right, top, width, color);
+	w.DrawLine(right, top, right, bottom, width, color);
+	w.DrawLine(right, bottom, left, bottom, width, color);
+	w.DrawLine(left, bottom, left, top, width, color);
+}
+
+enum_property LEGEND_POS {
+	"0" : "LEGEND_TOP",
+	"1" : "LEGEND_ANCHOR_LEFT_TOP",
+	"2" : "LEGEND_ANCHOR_RIGHT_TOP",
+	"3" : "LEGEND_ANCHOR_LEFT_BOTTOM",
+	"4" : "LEGEND_ANCHOR_RIGHT_BOTTOM"
+};
 	
-	ctrl ScatterCtrl {
+ctrl ScatterCtrl {
 	group "Extra";
 
 	GetMinSize() {sz.cx=150; sz.cy = 100; return sz; }
@@ -40,8 +48,8 @@
 	int SetLegendPosY = 5;
 	int SetLegendNumCols = 1; 	
 	int SetLegendRowSpacing = 5; 		
-	Color SetLegendFillColor = :Black;
-	Color SetLegendBorderColor = :White;
+	Color SetLegendFillColor = :White;
+	Color SetLegendBorderColor = :Black;
 	
 	bool SetFastViewX = false;
 	bool SetSequentialXAll = false;
@@ -52,7 +60,7 @@
 		DrawCtrlFrame(w, r, .SetFrame);
 		sz = GetSize();
 		textsize = GetTextSize(.SetTitle, .SetTitleFont); 
-		if(.SetTitle=="") 
+		if(.SetTitle == "") 
 			textsize.cy = 0;
 		w.DrawRect(.SetPlotAreaLeftMargin-1, .SetPlotAreaTopMargin - 1 + textsize.cy, sz.cx - (.SetPlotAreaLeftMargin + .SetPlotAreaRightMargin) + 2, - (.SetPlotAreaTopMargin  + .SetPlotAreaBottomMargin) + 2 - textsize.cy + sz.cy, :Gray);
 		aw = 6;
@@ -83,6 +91,38 @@
 		w.DrawText(int((sz.cx - lx.cx)/2), sz.cy - (ly.cy + 2),  .SetLabelX, .SetLabelsFont, .SetLabelsColor);
 		w.DrawText(2, int((sz.cy + textsize.cy + ly.cx)/2), 900, .SetLabelY, .SetLabelsFont, .SetLabelsColor);	
 		w.DrawText(sz.cx - textsize.cy, int((sz.cy + textsize.cy + ly.cx)/2), 900, .SetLabelY2, .SetLabelsFont, .SetLabelsColor);	
+		
+		legWidth = 66;
+		legHeight = 18;
+		legFont = StdFont(12);
+		legFontSize = GetTextSize("X", legFont); 
+		legFontHeight = legFontSize.cy;
+		if (.ShowLegend) {
+			if (.SetLegendAnchor == "0") {
+				w.DrawLine(gx0, gy0 - legFontHeight/2, gx0 + 20, gy0 - legFontHeight/2, 2, :SLtRed);
+				w.DrawText(gx0 + 24, gy0 - legFontHeight, "Series 1", legFont, :SLtRed);
+			} else {
+				if (.SetLegendAnchor == "1") {
+					lgx = gx0 + .SetLegendPosX;
+					lgy = gy0 + .SetLegendPosY;	
+				} else if (.SetLegendAnchor == "2") {
+					lgx = gx0 + gwidth - .SetLegendPosX - legWidth;
+					lgy = gy0 + .SetLegendPosY;	
+				} else if (.SetLegendAnchor == "3") {
+					lgx = gx0 + .SetLegendPosX;
+					lgy = gy0 + gheight - .SetLegendPosY - legHeight;	
+				} else if (.SetLegendAnchor == "4") {
+					lgx = gx0 + gwidth - .SetLegendPosX - legWidth;
+					lgy = gy0 + gheight - .SetLegendPosY - legHeight;	
+				}
+				if (.SetLegendPosX > :IntNull && .SetLegendPosY > :IntNull) {
+					w.DrawRect(lgx, lgy, legWidth, legHeight, .SetLegendFillColor);
+					PaintRect(w, lgx, lgy, lgx + legWidth, lgy + legHeight, 1, .SetLegendBorderColor);
+					w.DrawLine(lgx + 2, lgy + legFontHeight/2., lgx + 2 + 20, lgy + legFontHeight/2., 2, :SLtRed);
+					w.DrawText(lgx + 24, lgy, "Series 1", legFont, :SLtRed);
+				}
+			}
+		}
 	}
 };
 
@@ -110,24 +150,18 @@ fn ToRad(angle) {
 	else
 		return (360+angle)*Pi()/180;
 }
+
 fn abs(a) {
 	if (a > 0)
 		return a;
 	else
 		return -a;
 }
+
 fn double(n) {
 	n += 1.1;
 	n -= 1.1;
 	return n;
-}
-
-fn PaintRect(w, left, top, right, bottom, width, color)
-{
-	w.DrawLine(left, top, right, top, width, color);
-	w.DrawLine(right, top, right, bottom, width, color);
-	w.DrawLine(right, bottom, left, bottom, width, color);
-	w.DrawLine(left, bottom, left, top, width, color);
 }
 
 fn PaintEllipse(w, left, top, right, bottom, width, color)
