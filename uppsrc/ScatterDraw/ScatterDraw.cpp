@@ -140,6 +140,8 @@ ScatterDraw &ScatterDraw::SetDrawY2Reticle(bool set) {
 }
 
 void ScatterDraw::DrawLegend(Draw& w, const Size &size, int scale) const {
+	if (series.IsEmpty())
+		return;
 	Font scaledFont = GetStdFont();
 	int rowHeight = scale*GetStdFont().GetHeight();
 	scaledFont.Height(rowHeight);
@@ -190,7 +192,7 @@ void ScatterDraw::DrawLegend(Draw& w, const Size &size, int scale) const {
 	if (nlr <= 0) 
 		return;
 	
-	int nrows = fceil(double(nlab)/nlr);	// Number of rows
+	int nrows = fceil(double(nlab)/nlr);	
 
 	if (legendAnchor != LEGEND_TOP) 
 		rectHeight = int(rowHeight*(nrows + 0.2)) + loclegendRowSpacing*nrows;
