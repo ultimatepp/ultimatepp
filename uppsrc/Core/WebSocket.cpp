@@ -152,7 +152,6 @@ void WebSocket::Reset()
 	socket = NULL;
 }
 
-
 void WebSocket::Close()
 {
 	if(socket) {
