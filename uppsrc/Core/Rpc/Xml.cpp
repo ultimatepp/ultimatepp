@@ -178,7 +178,7 @@ String FormatXmlRpcError(int code, const char *text)
 		        "</member>"
 		        "<member>"
 		          "<name>faultString</name>"
-		          "<value><string>" << text << "</string></value>"
+		          "<value><string>" << DeXml(text) << "</string></value>"
 		        "</member>"
 		      "</struct>"
 		    "</value>"
