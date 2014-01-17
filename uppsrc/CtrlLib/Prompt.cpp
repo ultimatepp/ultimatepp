@@ -174,6 +174,11 @@ int PromptOKCancel(const char *qtf) {
 	return Prompt(Ctrl::GetAppName(), CtrlImg::question(), qtf, t_("OK"), t_("Cancel"));
 }
 
+int ErrorOKCancel(const char *qtf) {
+	BeepError();
+	return Prompt(Ctrl::GetAppName(), CtrlImg::error(), qtf, t_("OK"), t_("Cancel"));
+}
+
 CH_IMAGE(YesButtonImage, Null);
 CH_IMAGE(NoButtonImage, Null);
 CH_IMAGE(AbortButtonImage, Null);
@@ -187,10 +192,26 @@ int PromptYesNo(const char *qtf) {
 	              YesButtonImage(), NoButtonImage(), Null);
 }
 
+int ErrorYesNo(const char *qtf) {
+	BeepError();
+	return Prompt(callback(LaunchWebBrowser),
+	              Ctrl::GetAppName(), CtrlImg::error(), qtf, false,
+	              t_("&Yes"), t_("&No"), NULL, 0,
+	              YesButtonImage(), NoButtonImage(), Null);
+}
+
 int PromptYesNoCancel(const char *qtf) {
 	BeepQuestion();
 	return Prompt(callback(LaunchWebBrowser),
 	              Ctrl::GetAppName(), CtrlImg::question(), qtf, true,
+	              t_("&Yes"), t_("&No"), t_("Cancel"), 0,
+	              YesButtonImage(), NoButtonImage(), Null);
+}
+
+int ErrorYesNoCancel(const char *qtf) {
+	BeepError();
+	return Prompt(callback(LaunchWebBrowser),
+	              Ctrl::GetAppName(), CtrlImg::error(), qtf, true,
 	              t_("&Yes"), t_("&No"), t_("Cancel"), 0,
 	              YesButtonImage(), NoButtonImage(), Null);
 }
@@ -203,6 +224,14 @@ int PromptAbortRetry(const char *qtf) {
 	              AbortButtonImage(), RetryButtonImage(), Null);
 }
 
+int ErrorAbortRetry(const char *qtf) {
+	BeepError();
+	return Prompt(callback(LaunchWebBrowser),
+	              Ctrl::GetAppName(), CtrlImg::error(), qtf, false,
+	              t_("&Abort"), t_("&Retry"), NULL, 0,
+	              AbortButtonImage(), RetryButtonImage(), Null);
+}
+
 int PromptRetryCancel(const char *qtf) {
 	BeepExclamation();
 	return Prompt(callback(LaunchWebBrowser),
@@ -211,10 +240,26 @@ int PromptRetryCancel(const char *qtf) {
 	              RetryButtonImage(), Null, Null);
 }
 
+int ErrorRetryCancel(const char *qtf) {
+	BeepError();
+	return Prompt(callback(LaunchWebBrowser),
+	              Ctrl::GetAppName(), CtrlImg::error(), qtf, true,
+	              t_("&Retry"), t_("Cancel"), NULL, 0,
+	              RetryButtonImage(), Null, Null);
+}
+
 int PromptAbortRetryIgnore(const char *qtf) {
 	BeepExclamation();
 	return Prompt(callback(LaunchWebBrowser),
 	              Ctrl::GetAppName(), CtrlImg::exclamation(), qtf, false,
+	              t_("&Abort"), t_("&Retry"), t_("&Ignore"), 0,
+	              AbortButtonImage(), RetryButtonImage(), Null);
+}
+
+int ErrorAbortRetryIgnore(const char *qtf) {
+	BeepError();
+	return Prompt(callback(LaunchWebBrowser),
+	              Ctrl::GetAppName(), CtrlImg::error(), qtf, false,
 	              t_("&Abort"), t_("&Retry"), t_("&Ignore"), 0,
 	              AbortButtonImage(), RetryButtonImage(), Null);
 }
