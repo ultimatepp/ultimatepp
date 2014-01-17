@@ -2,7 +2,7 @@ topic "Copyright © 1999-2009 Ultimate++ team";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0;*IGetLocalDir;+117 &]
-[s0; [*+117 Copyright © 1999`-2013 Ultimate`+`+ team]&]
+[s0; [*+117 Copyright © 1998, 2014 Ultimate`+`+ team]&]
 [s0;i704;O9; Authors:[+117 -|][*+117 Mirek_Fídler, Koldo_Ramirez,][+117  
 ][*+117 Tomáš_Rylek, ][*^http`:`/`/www`.digitalsoftware`.pl^+117 Daniel_Kos][* , 
 ][*+117 Massimo Del Fedele]&]
@@ -42,36 +42,33 @@ matepp.org]]
 [s0;+108 &]
 [s0;+108 &]
 [s0; [+108 Ultimate`+`+ has BSD license:]&]
-[ {{10000@(254.255.232) [s0; [2 Copyright (C) 2012 Mirek Fidler, Tomas Rylek and various contributors 
-(see AUTHORS)]&]
+[ {{10000@(254.255.232) [s0; [2 Copyright (c) 1998, 2014, The U`+`+ Project]&]
+[s0; [2 All rights reserved.]&]
 [s0;2 &]
-[s0; [2 Permission is hereby granted, free of charge, to any person 
-obtaining a copy of this software and associated documentation 
-files (the `"Software`"), to deal in the Software without restriction, 
-including without limitation the rights to use, copy, modify, 
-merge, publish, distribute, sublicense, and/or sell copies of 
-the Software, and to permit persons to whom the Software is furnished 
-to do so, subject to the following conditions:]&]
+[s0; [2 Redistribution and use in source and binary forms, with or 
+without modification, are permitted provided that the following 
+conditions are met:]&]
 [s0;2 &]
-[s0; [2 The above copyright notice and this permission notice shall 
-be included in all copies of the Software and its Copyright notices. 
-In addition publicly documented acknowledgment must be given 
-that this software has been used if no source code of this software 
-is made available publicly. This includes]&]
-[s0; [2 acknowledgments in either Copyright notices, Manuals, Publicity 
-and Marketing documents or any documentation provided with any 
-product containing this software. This License does not apply 
-to any software that links to the libraries provided by this 
-software (statically or dynamically), but only to]&]
-[s0; [2 the software provided.]&]
+[s0; [2 1. Redistributions of source code must retain the above copyright 
+notice, this list of conditions and the following disclaimer.]&]
 [s0;2 &]
-[s0; [*2 THE SOFTWARE IS PROVIDED `"AS IS`", WITHOUT WARRANTY OF ANY 
-KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES 
-OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
-OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
-OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.]]}}&]
+[s0; [2 2. Redistributions in binary form must reproduce the above 
+copyright notice, this list of conditions and the following disclaimer 
+in the documentation and/or other materials provided with the 
+distribution.]&]
+[s0;2 &]
+[s0; [2 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+`"AS IS`" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT 
+NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY 
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE 
+GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.]]}}&]
 [s0;+108 &]
 [s0;+92 &]
 [s0; [+92 Ultimate`+`+ includes sources of following libraries:]&]
