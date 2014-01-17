@@ -266,6 +266,11 @@ resembling Switch.&]
 [s2; Enables the item (default is enabled).&]
 [s3; &]
 [s4;%- &]
+[s5;:Bar`:`:Item`:`:Bold`(bool`):%- [@(0.0.255) virtual] [_^Bar`:`:Item^ Item][@(0.0.255) `&
+]_[* Bold]([@(0.0.255) bool]_[*@3 bold]_`=_[@(0.0.255) true])&]
+[s2; Sets bold text to menu item [%-*@3 bold].&]
+[s3; &]
+[s4;%- &]
 [s5;:Bar`:`:Item`:`:Tip`(const char`*`):%- [@(0.0.255) virtual] [_^Bar`:`:Item^ Item][@(0.0.255) `&
 ]_[* Tip]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 tip])&]
 [s2; Adds a tooltip to the ToolBar item.&]

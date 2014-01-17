@@ -17,6 +17,7 @@ public:
 	virtual Bar::Item& Description(const char *desc);
 	virtual Bar::Item& Check(bool check);
 	virtual Bar::Item& Radio(bool check);
+	virtual Bar::Item& Bold(bool bold);
 
 	virtual String GetDesc() const;
 	virtual dword  GetAccessKeys() const;

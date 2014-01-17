@@ -70,6 +70,12 @@ Bar::Item& MenuItemBase::Radio(bool check)
 	return *this;
 }
 
+Bar::Item& MenuItemBase::Bold(bool bold)
+{
+	font.Bold(bold);
+	return *this;
+}
+
 Bar::Item& MenuItemBase::Tip(const char *s)
 {
 	return *this;
