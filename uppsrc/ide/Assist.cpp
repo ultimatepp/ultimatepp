@@ -1043,8 +1043,6 @@ void Ide::ContextGoto0(int pos)
 {
 	if(designer)
 		return;
-	if(!editor.assist_active)
-		return;
 	int li = editor.GetLine(pos);
 	String l = editor.GetUtf8Line(li);
 	if(IsPif(l) || IsPelse(l)) {
