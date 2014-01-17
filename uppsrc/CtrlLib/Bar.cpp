@@ -229,6 +229,7 @@ Bar::Item& Bar::Item::Text(const char *text)        { return *this; }
 Bar::Item& Bar::Item::Key(dword key)                { return *this; }
 Bar::Item& Bar::Item::Repeat(bool b)                { return *this; }
 Bar::Item& Bar::Item::Image(const UPP::Image& img)  { return *this; }
+Bar::Item& Bar::Item::Bold(bool bold)               { return *this; }
 Bar::Item& Bar::Item::Enable(bool _enable)          { return *this; }
 Bar::Item& Bar::Item::Tip(const char *tip)          { return *this; }
 Bar::Item& Bar::Item::Help(const char *help)        { return *this; }

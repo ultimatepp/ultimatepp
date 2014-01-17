@@ -57,6 +57,7 @@ public:
 		virtual Item& Check(bool check);
 		virtual Item& Radio(bool check);
 		virtual Item& Enable(bool _enable = true);
+		virtual Item& Bold(bool bold = true);
 		virtual Item& Tip(const char *tip);
 		virtual Item& Help(const char *help);
 		virtual Item& Topic(const char *topic);
