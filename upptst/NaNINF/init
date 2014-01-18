@@ -1,4 +1,4 @@
-#ifndef _NaNInf_icpp_init_stub
-#define _NaNInf_icpp_init_stub
+#ifndef _NaNINF_icpp_init_stub
+#define _NaNINF_icpp_init_stub
 #include "Core/init"
 #endif
