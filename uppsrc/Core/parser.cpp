@@ -233,25 +233,9 @@ uint64  CParser::ReadNumber64(int base) throw(Error)
 	return n;
 }
 
-#if defined(COMPILER_MINGW)
-
-extern "C" {
-	_CRTIMP unsigned int __cdecl __MINGW_NOTHROW _clearfp(void);
-}
-
-#define SW_OVERFLOW 0x00000004
-
-#endif
-
 double CParser::ReadDouble() throw(Error)
 {
 	LTIMING("ReadDouble");
-#ifdef PLATFORM_WIN32
-	_clearfp();
-#endif
-#if defined(PLATFORM_POSIX) && defined(FE_OVERFLOW)
-	feclearexcept(FE_OVERFLOW);
-#endif
 	int sign = Sgn();
 	if(!IsDigit(*term))
 		ThrowError("missing number");
@@ -269,16 +253,8 @@ double CParser::ReadDouble() throw(Error)
 		n *= pow(10.0, ReadInt());
 	DoSpaces();
 	n = sign * n;
-#ifdef PLATFORM_WIN32
-    if(_clearfp() & SW_OVERFLOW) 
+	if(!IsFin(n))
 		ThrowError("number is too big");
-#endif
-#if defined(PLATFORM_POSIX) && defined(FE_OVERFLOW)
-	if(fetestexcept(FE_OVERFLOW)) {
-		ThrowError("number is too big");
-		feclearexcept(FE_OVERFLOW);
-	}
-#endif
 	return n;
 }
 
