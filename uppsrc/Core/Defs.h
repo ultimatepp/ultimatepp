@@ -330,16 +330,14 @@ typedef long long unsigned uint64;
 typedef uint64             qword;
 
 #ifdef PLATFORM_WIN32
-#ifdef COMPILER_MINGW
-inline bool IsNaN(double d)        { return std::isnan(d); }
+inline bool IsNaN(double d) { return findarg(_fpclass(d), _FPCLASS_QNAN, _FPCLASS_SNAN) >= 0; }
+inline bool IsInf(double d) { return findarg(_fpclass(d), _FPCLASS_PINF, _FPCLASS_NINF) >= 0; }
 #else
-inline bool IsNaN(double d)        { return _isnan(d); }
+inline bool IsNaN(double d) { return fpclassify(d) == FP_NAN; }
+inline bool IsInf(double d) { return fpclassify(d) == FP_INFINITY; }
 #endif
-#elif __APPLE__
-inline bool IsNaN(double d)        { return std::isnan(d); }
-#else
-inline bool IsNaN(double d)        { return isnan(d); }
-#endif
+
+inline bool IsFin(double d) { return !IsNaN(d) && !IsInf(d); }
 
 #ifdef COMPILER_MSC
 	#define I64(c) ((int64)COMBINE(c, i64))

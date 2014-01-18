@@ -13,8 +13,12 @@ unsigned stou(const char *s, void *endptr, unsigned base)
 		return ~0;
 	}
 	unsigned value = digit;
-	while((digit = ctoi(*++s)) < base)
+	while((digit = ctoi(*++s)) < base) {
+		unsigned v0 = value;
 		value = value * base + digit;
+		if(v0 > value) // overflow
+			return ~0;
+	}
 	if(endptr)
 		*(const char **)endptr = s;
 	return value;
@@ -31,8 +35,12 @@ unsigned stou(const wchar *s, void *endptr, unsigned base)
 		return ~0;
 	}
 	unsigned value = digit;
-	while((digit = ctoi(*++s)) < base)
+	while((digit = ctoi(*++s)) < base) {
+		unsigned v0 = value;
 		value = value * base + digit;
+		if(v0 > value) // overflow
+			return ~0;
+	}
 	if(endptr)
 		*(const wchar **)endptr = s;
 	return value;
@@ -50,8 +58,12 @@ uint64 stou64(const char *s, void *endptr, unsigned base)
 		return ~0;
 	}
 	uint64 value = digit;
-	while((digit = ctoi(*++s)) < base)
+	while((digit = ctoi(*++s)) < base) {
+		uint64 v0 = value;
 		value = value * base + digit;
+		if(v0 > value) // overflow
+			return ~0;
+	}
 	if(endptr)
 		*(const char **)endptr = s;
 	return value;
@@ -102,9 +114,10 @@ int64 ScanInt64(const char *ptr, const char **endptr, int base)
 		return Null;
 }
 
-double ScanDouble(const char *p, const char **endptr, bool accept_comma)
+template <class T>
+double ScanDoubleT(const T *p, const T **endptr, bool accept_comma)
 {
-	const char *begin = p;
+	const T *begin = p;
 	while(*p && (byte)*p <= ' ')
 		p++;
 	bool neg = false;
@@ -115,7 +128,7 @@ double ScanDouble(const char *p, const char **endptr, bool accept_comma)
 		return Null;
 	}
 	double mantissa = 0;
-	char c;
+	T c;
 	int exp = 0;
 	while((byte)(*p - '0') < 10)
 		if((c = *p++) != '0') {
@@ -131,13 +144,16 @@ double ScanDouble(const char *p, const char **endptr, bool accept_comma)
 				if(raise) { mantissa *= ipow10(raise); exp -= raise; raise = 0; }
 				exp--;
 				mantissa = 10 * mantissa + c - '0';
+				if(!IsFin(mantissa))
+					return Null;
 			}
 			else
 				raise++;
 	if(*p == 'E' || *p == 'e') { // exponent
 		int vexp = ScanInt(p + 1, endptr);
-		if(!IsNull(vexp))
-			exp += vexp;
+		if(IsNull(vexp))
+			return Null;
+		exp += vexp;
 	}
 	else
 		if(endptr) *endptr = p;
@@ -145,53 +161,19 @@ double ScanDouble(const char *p, const char **endptr, bool accept_comma)
 		double e = ipow10(tabs(exp));
 		mantissa = (exp > 0 ? mantissa * e : mantissa / e);
 	}
+	if(!IsFin(mantissa))
+		return Null;
 	return neg ? -mantissa : mantissa;
+}
+
+double ScanDouble(const char *p, const char **endptr, bool accept_comma)
+{
+	return ScanDoubleT(p, endptr, accept_comma);
 }
 
 double ScanDouble(const wchar *p, const wchar **endptr, bool accept_comma)
 {
-	const wchar *begin = p;
-	while(*p && *p <= ' ')
-		p++;
-	bool neg = false;
-	if(*p == '+' || *p == '-')
-		neg = (*p++ == '-');
-	if((unsigned)(*p - '0') >= 10) {
-		if(endptr) *endptr = begin;
-		return Null;
-	}
-	double mantissa = 0;
-	wchar c;
-	int exp = 0;
-	while((unsigned)(*p - '0') < 10)
-		if((c = *p++) != '0') {
-			if(exp) { mantissa *= ipow10(exp); exp = 0; }
-			mantissa = 10 * mantissa + c - '0';
-		}
-		else
-			exp++;
-	int raise = exp;
-	if(*p == '.' || accept_comma && *p == ',') // decimal part
-		while((unsigned)((c = *++p) - '0') < 10)
-			if(c != '0') {
-				if(raise) { mantissa *= ipow10(raise); exp -= raise; raise = 0; }
-				exp--;
-				mantissa = 10 * mantissa + c - '0';
-			}
-			else
-				raise++;
-	if(*p == 'E' || *p == 'e') { // exponent
-		int vexp = ScanInt(p + 1, endptr);
-		if(!IsNull(vexp))
-			exp += vexp;
-	}
-	else
-		if(endptr) *endptr = p;
-	if(exp) {
-		double e = ipow10(tabs(exp));
-		mantissa = (exp > 0 ? mantissa * e : mantissa / e);
-	}
-	return neg ? -mantissa : mantissa;
+	return ScanDoubleT(p, endptr, accept_comma);
 }
 
 Value StrIntValue(const char *s)
