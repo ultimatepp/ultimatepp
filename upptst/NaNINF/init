@@ -1,0 +1,4 @@
+#ifndef _NaNInf_icpp_init_stub
+#define _NaNInf_icpp_init_stub
+#include "Core/init"
+#endif
