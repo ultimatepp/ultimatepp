@@ -54,6 +54,7 @@ CONSOLE_APP_MAIN
 	CHECK_OVERFLOW("1e500", ReadDouble(), true);
 	CHECK_OVERFLOW("-1e300", ReadDouble(), false);
 	CHECK_OVERFLOW("-1e500", ReadDouble(), true);
+	CHECK_OVERFLOW(String('0', 500), ReadDouble(), true);
 	
 	LOG("OK");
 }
