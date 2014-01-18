@@ -2,7 +2,7 @@
 
 using namespace Upp;
 
-#define CHECK_OVERFLOW(s, cls, overflow) { cls x; Value v = x.Scan(s); LOG(s << " -> " << v); }
+#define CHECK_OVERFLOW(s, cls, overflow) { cls x; Value v = x.Scan(s); LOG(s << " -> " << v); ASSERT(v.IsError() == overflow); }
 
 CONSOLE_APP_MAIN
 {
@@ -11,6 +11,6 @@ CONSOLE_APP_MAIN
 	CHECK_OVERFLOW("2147483647", ConvertInt, false);
 	CHECK_OVERFLOW("2147483648", ConvertInt, true);
 
-	CHECK_OVERFLOW("-2147483648", ConvertInt, false);
-	CHECK_OVERFLOW("-2147483649", ConvertInt, true);
+	CHECK_OVERFLOW("-2147483647", ConvertInt, false);
+	CHECK_OVERFLOW("-2147483648", ConvertInt, true);
 }
