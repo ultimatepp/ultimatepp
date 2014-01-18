@@ -335,7 +335,7 @@ inline bool IsNaN(double d)        { return std::isnan(d); }
 inline bool IsInf(double d)        { return std::isinf(d); }
 #else
 inline bool IsNaN(double d)        { return _isnan(d); }
-inline bool IsInf(double d)        { return _finite(d) && !_isnan(d); }
+inline bool IsInf(double d)        { return !_finite(d) && !_isnan(d); }
 #endif
 #elif __APPLE__
 inline bool IsNaN(double d)        { return std::isnan(d); }
