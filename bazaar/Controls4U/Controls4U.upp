@@ -28,7 +28,6 @@ file
 	VLC readonly separator,
 	plugin\vlc\axvlc_idl.c,
 	plugin\vlc\axvlc_idl.h,
-	License.txt,
 	JBControls readonly separator,
 	SliderCtrlX.cpp,
 	SliderCtrlX.h,
@@ -37,5 +36,6 @@ file
 	StarIndicator.cpp,
 	StarIndicator.h,
 	StarIndicator.iml,
-	StarIndicator.usc;
+	StarIndicator.usc,
+	Copying;
 
