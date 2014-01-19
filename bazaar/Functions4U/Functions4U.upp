@@ -22,7 +22,6 @@ file
 	srcdoc.tpp,
 	src.tpp,
 	Functions4U.t,
-	License.txt,
 	StaticPlugin readonly separator,
 	StaticPlugin.cpp,
 	StaticPlugin.h,
@@ -41,5 +40,6 @@ file
 	Bsdiff\Credits.txt,
 	Html readonly separator,
 	Html/htmld.cpp,
-	Html/htmld.h;
+	Html/htmld.h,
+	Copying;
 
