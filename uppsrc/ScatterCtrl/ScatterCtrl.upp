@@ -19,5 +19,6 @@ file
 	ScatterCtrl.t,
 	ScatterCtrl.usc,
 	srcdoc.tpp,
-	src.tpp;
+	src.tpp,
+	Copying;
 
