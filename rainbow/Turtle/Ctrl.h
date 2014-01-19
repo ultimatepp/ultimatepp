@@ -60,7 +60,7 @@ public:
 	static bool DoKeyFB(dword key, int cnt);
 
 	static void InitTelpp(const String& host = Null);
-	static void Exit();
+	static void ExitTurtle();
 
 	static void EndSession();
 

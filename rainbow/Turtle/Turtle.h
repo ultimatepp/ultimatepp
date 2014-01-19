@@ -14,6 +14,23 @@ NAMESPACE_UPP
 #define IMAGEFILE <Turtle/FB.iml>
 #include <Draw/iml_header.h>
 
+class TurtleStream : public OutStream {
+public:
+	virtual void Out(const void *data, dword size);
+
+private:
+	Zlib zlib;
+
+	void Reset();
+
+public:
+	String FlushStream();
+
+	TurtleStream() { Reset(); }
+};
+
+extern TurtleStream turtle_stream;
+
 class SystemDraw : public SDraw {
 public:
 	virtual void  PutImage(Point p, const Image& img, const Rect& src);
@@ -28,6 +45,7 @@ public:
 		STD_CURSORIMAGE = 4,
 		SETCURSORIMAGE = 5,
 		CURSORIMAGE = 6,
+		DISABLESENDING = 7,
 	};
 	
 	static Index<int64>           img_index[3];
@@ -36,9 +54,7 @@ public:
 	int GetImageI(const Image& img);
 	static void ResetI()          { for(int i = 0; i < 3; i++) img_index[i].Clear(); }
 
-	StringBuffer result;
-
-	void Put8(int x)              { result.Cat(x); }
+	void Put8(int x)              { turtle_stream.Put(x); }
 	void Put16(int x);
 	void Put32(int x);
 	void Put(Point p);

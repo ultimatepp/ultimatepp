@@ -40,8 +40,8 @@ U.prototype.k=function(){var b=this.input,d,a;d=this.q.k();this.a=this.q.a;if(th
 
 function Log(msg)
 {
-	if (window.console && console.log)
-	   	console.log(msg); //for firebug
+//	if (window.console && console.log)
+//	   	console.log(msg); //for firebug
 }
 
 function Char(p, ch)
@@ -81,6 +81,8 @@ function GetString(p)
 	return s;
 }
 
+var SendingEnabled = true;
+
 function ProcessDraw(s)
 {
 //	console.clear();
@@ -91,6 +93,8 @@ function ProcessDraw(s)
 
 	var canvas = document.getElementById("myCanvas");
 	var ctx = canvas.getContext("2d");
+	
+	SendingEnabled = true;
 	
     while(p.pos < p.data.length) {
     	// Log(p.pos + ": " + p.data[p.pos]);
@@ -193,7 +197,13 @@ function ProcessDraw(s)
 			canvas.style.cursor = window.cursor_cache[i];
 			// Log(cursor_cache[i]);
 		}
-	}			
+		else
+		if(Char(p, 7)) { // DISABLESENDING
+			SendingEnabled = true;
+		}
+	}
+	if(SendingEnabled && event_queue.length)
+		ScheduleSend();		
 }
 
 window.img_cache = {};
@@ -282,20 +292,24 @@ ws.binaryType = "arraybuffer";
 
 function ScheduleSend()
 {
-	if(timerID != undefined)
-		clearTimeout(timerID);
-	timerID = setTimeout(SendEvents, 0);
+	if(SendingEnabled) {
+		if(timerID != undefined)
+			clearTimeout(timerID);
+		timerID = setTimeout(SendEvents, 0);
+	}
 }
 
 function SendEvents()
 {
-	if(event_queue.length)
-		Log("Sending " + event_queue);
-	ws.send(event_queue);
-	event_queue = "";
-	if(timerID != undefined)
-		clearTimeout(timerID);
-	timerID = setTimeout(SendEvents, 20);
+	if(SendingEnabled) {
+		if(event_queue.length)
+			Log("Sending " + event_queue);
+		ws.send(event_queue);
+		event_queue = "";
+		if(timerID != undefined)
+			clearTimeout(timerID);
+		timerID = setTimeout(SendEvents, 20);
+	}
 }
 
 ws.onopen = function()

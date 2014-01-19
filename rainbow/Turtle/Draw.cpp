@@ -6,8 +6,8 @@ NAMESPACE_UPP
 
 void SystemDraw::Put16(int x)
 {
-	result.Cat(LOBYTE(x));
-	result.Cat(HIBYTE(x));
+	Put8(LOBYTE(x));
+	Put8(HIBYTE(x));
 }
 
 void SystemDraw::Put32(int x)
@@ -36,7 +36,7 @@ void SystemDraw::Put(const Rect& r)
 void SystemDraw::Put(const String& s)
 {
 	Put32(s.GetLength());
-	result.Cat(s);
+	turtle_stream.Put(s);
 }
 
 Index<int64> SystemDraw::img_index[3];
