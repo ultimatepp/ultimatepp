@@ -18,5 +18,6 @@ file
 	PieDraw.h,
 	ScatterDraw.t,
 	srcdoc.tpp,
-	src.tpp;
+	src.tpp,
+	Copying;
 
