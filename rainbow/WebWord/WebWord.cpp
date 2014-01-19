@@ -61,6 +61,7 @@ public:
 
 void UWord::FileBar(Bar& bar)
 {
+/*
 	bar.Add("New", CtrlImg::new_doc(), THISBACK(New))
 	   .Key(K_CTRL_N)
 	   .Help("Open new window");
@@ -85,6 +86,7 @@ void UWord::FileBar(Bar& bar)
 		bar.Separator();
 		bar.Add("Exit", THISBACK1(Destroy, false));
 	}
+*/
 }
 
 void UWord::AboutMenu(Bar& bar)
@@ -94,7 +96,7 @@ void UWord::AboutMenu(Bar& bar)
 
 void UWord::MainMenu(Bar& bar)
 {
-	bar.Add("File", THISBACK(FileBar));
+//	bar.Add("File", THISBACK(FileBar));
 	bar.Add("Window", callback(WindowsMenu));
 	bar.Add("Help", THISBACK(AboutMenu));
 }
@@ -311,7 +313,9 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
-	RLOG("APP_MAIN");
+#ifdef _DEBUG
+	MemoryLimitKb(10000);
+#endif
 
 	UPP::Ctrl::InitTelpp();
 	
@@ -326,7 +330,11 @@ CONSOLE_APP_MAIN
 	       .DefaultExt("pdf");
 
 	LoadFromFile(callback(UWord::SerializeApp));
+#ifdef _DEBUG
 	(new UWord)->editor.SetQTF(LoadFile(GetDataFile("test.qtf")));
+#else
+	new UWord;
+#endif
 	Ctrl::EventLoop();
 	StoreToFile(callback(UWord::SerializeApp));
 

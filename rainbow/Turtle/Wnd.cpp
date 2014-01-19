@@ -41,7 +41,7 @@ void Ctrl::EndSession()
 	EndSessionLoopNo = EventLoopNo;
 }
 
-void Ctrl::Exit()
+void Ctrl::ExitTurtle()
 {
 	TopWindow::ShutdownWindows();
 	Ctrl::CloseTopCtrls();

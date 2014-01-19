@@ -6,7 +6,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)     // RLOG(x)
+#define LLOG(x)     // LLOG(x)
 #define LDUMP(x)    // RDUMP(x)
 #define LTIMING(x)
 
@@ -26,7 +26,6 @@ TcpSocket   socket;
 WebSocket   websocket;
 
 BiVector<String> event_queue;
-String           content;
 
 String           hostname;
 
@@ -37,20 +36,29 @@ void SetHostName(const String& h)
 
 bool Ctrl::Connect()
 {
-	RLOG("Connect");
+	LLOG("Connect");
 	if(!server.Listen(8088, 10)) {
-		RLOG("Cannot open server port for listening\r\n");
-		return false;
+		LLOG("Cannot open server port for listening\r\n");
+		Exit(1);
 	}
-	RLOG("Starting to listen on 8088");
+	LLOG("Starting to listen on 8088");
 	socket.Timeout(20000);
 	for(;;) {
 		if(socket.Accept(server)) {
 			if(http.Read(socket)) {
-				RLOG("Accepted, header read");
+				LLOG("Accepted, header read");
 				if(websocket.WebAccept(socket, http))
+				#ifdef _DEBUG
 					break;
-				RLOG("Sending HTML");
+				#else
+					if(fork() == 0)
+						break;
+					else {
+						socket.Close();
+						continue;
+					}
+				#endif
+				LLOG("Sending HTML");
 				String html = String(turtle_html, turtle_html_length);
 			#ifdef _DEBUG
 				html.Replace("%%host%%", Nvl(GetIniKey("turtle_host"), Nvl(hostname, "ws://localhost:8088")));
@@ -62,15 +70,16 @@ bool Ctrl::Connect()
 			socket.Close();
 		}
 	}
-	RLOG("Connection established");
+	LLOG("Connection established");
+	server.Close();
 	if(socket.IsError())
-		RLOG("CONNECT ERROR: " << socket.GetErrorDesc());
+		LLOG("CONNECT ERROR: " << socket.GetErrorDesc());
 	return true;
 }
 
 void Ctrl::InitTelpp(const String& hostname_)
 {
-	RLOG("InitTelpp");
+	LLOG("InitTelpp");
 
 	hostname = hostname_;
 
@@ -100,12 +109,12 @@ void Ctrl::TimerAndPaint()
 	SyncTopWindows();
 	SweepMkImageCache();
 	DoPaint();
-	String s = ZCompress(content);
-	if(content.GetCount() > 10)
-		RLOG("Sending " << s.GetLength());
 	socket.Timeout(20000);
+	websocket.SendBinary(ZCompress(String(SystemDraw::DISABLESENDING, 1))); // Do not send events until data transfered and processed
+	String s = turtle_stream.FlushStream();
+	if(s.GetCount() > 10)
+		LLOG("Sending " << s.GetLength());
 	websocket.SendBinary(s);
-	content.Clear();
 }
 
 bool Ctrl::IsWaitingEvent()
@@ -114,14 +123,14 @@ bool Ctrl::IsWaitingEvent()
 	while(socket.Timeout(0).WaitRead()) {
 		socket.Timeout(20000);
 		String s = websocket.Recieve();
-		RLOG("Recieved data " << s);
+		LLOG("Recieved data " << s);
 		StringStream ss(s);
 		while(!ss.IsEof())
 			event_queue.AddTail(ss.GetLine());
 	}
 	socket.Timeout(20000);
 	if(socket.IsError())
-		RLOG("ERROR: " << socket.GetErrorDesc());
+		LLOG("ERROR: " << socket.GetErrorDesc());
 	return event_queue.GetCount();
 }
 
@@ -276,7 +285,6 @@ void Ctrl::DoPaint()
 			SystemDraw draw;
 			PaintScene(draw);
 			PaintCaretCursor(draw);
-			content << String(draw.result);
 		}
 	}
 }
@@ -408,7 +416,7 @@ void Ctrl::DoMouseButton(int event, CParser& p)
 
 bool Ctrl::ProcessEvent(const String& event)
 {
-	RLOG("Processing event " << event);
+	LLOG("Processing event " << event);
 	CParser p(event);
 	try {
 		if(p.Id("I"))
