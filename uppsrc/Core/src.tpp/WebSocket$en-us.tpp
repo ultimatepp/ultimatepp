@@ -43,7 +43,10 @@ PING and CLOSE messages. Returns true on success.&]
 are not returned; PING message is replied with PONG and not reported 
 to client `- Recieve does not return and waits for the next message, 
 CLOSE is replied by CLOSE and Recieve returns. Returns the content 
-of message recieved on String`::GetVoid().&]
+of message recieved or String`::GetVoid() if there was none. Note: 
+If WaitRead was used to wait for read on socket before calling 
+Recieve, returning String`::GetVoid() means that connection was 
+broken.&]
 [s3; &]
 [s4; &]
 [s5;:WebSocket`:`:IsFin`(`):%- [@(0.0.255) bool]_[* IsFin]()&]
