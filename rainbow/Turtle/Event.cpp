@@ -123,6 +123,10 @@ bool Ctrl::IsWaitingEvent()
 	while(socket.Timeout(0).WaitRead()) {
 		socket.Timeout(20000);
 		String s = websocket.Recieve();
+		if(s.IsVoid()) { // No data returned -> means EOF was reached
+			TurtleWhenDisconnect();
+			Exit(0);
+		}
 		LLOG("Recieved data " << s);
 		StringStream ss(s);
 		while(!ss.IsEof())

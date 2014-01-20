@@ -30,6 +30,7 @@ public:
 };
 
 extern TurtleStream turtle_stream;
+extern Callback TurtleWhenDisconnect;
 
 class SystemDraw : public SDraw {
 public:

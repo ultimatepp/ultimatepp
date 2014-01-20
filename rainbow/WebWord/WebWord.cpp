@@ -312,6 +312,8 @@ INITBLOCK {
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
+	
+	LOG("Session Started");
 
 #ifdef _DEBUG
 	MemoryLimitKb(10000);
@@ -339,4 +341,6 @@ CONSOLE_APP_MAIN
 	StoreToFile(callback(UWord::SerializeApp));
 
 	UPP::Ctrl::CloseTopCtrls();
+	
+	LOG("Session Finished");
 }

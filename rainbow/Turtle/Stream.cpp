@@ -30,6 +30,8 @@ String TurtleStream::FlushStream()
 	return s;
 }
 
+Callback TurtleWhenDisconnect;
+
 END_UPP_NAMESPACE
 
 #endif
