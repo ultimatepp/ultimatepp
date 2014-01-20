@@ -25,18 +25,6 @@ bool IsNan(double t)
 #endif
 }
 
-bool IsInf(double t)
-{
-#ifdef PLATFORM_WIN32
-	return !_finite(t);
-#elif defined(PLATFORM_POSIX)
-	return !finite(t);
-#else
-	#error
-	return false;
-#endif
-}
-
 void WeakBase::Chk() const
 {
 	if(!this)
