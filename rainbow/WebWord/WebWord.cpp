@@ -299,15 +299,10 @@ struct EventsWnd : TopWindow {
 };
 
 
-#ifndef _DEBUG
-namespace Upp {
-void SetHostName(const String& h);
-};
-
-INITBLOCK {
-	SetHostName("ws://eventcraft.eu:8088");
+void FinishApp()
+{
+	LOG("Disconnected");
 }
-#endif
 
 CONSOLE_APP_MAIN
 {
@@ -319,28 +314,34 @@ CONSOLE_APP_MAIN
 	MemoryLimitKb(10000);
 #endif
 
-	UPP::Ctrl::InitTelpp();
-	
-	SetLanguage(LNG_ENGLISH);
-	SetDefaultCharset(CHARSET_UTF8);
+	Ctrl::WhenDisconnect = callback(FinishApp);
 
-	UWordFs().Type("QTF files", "*.qtf")
-	         .AllFilesType()
-	         .DefaultExt("qtf");
-	PdfFs().Type("PDF files", "*.pdf")
-	       .AllFilesType()
-	       .DefaultExt("pdf");
-
-	LoadFromFile(callback(UWord::SerializeApp));
-#ifdef _DEBUG
-	(new UWord)->editor.SetQTF(LoadFile(GetDataFile("test.qtf")));
-#else
-	new UWord;
+#ifndef _DEBUG
+	Ctrl::host = "eventcraft.eu";
 #endif
-	Ctrl::EventLoop();
-	StoreToFile(callback(UWord::SerializeApp));
 
-	UPP::Ctrl::CloseTopCtrls();
+	if(Ctrl::StartSession())
+	{
+		SetLanguage(LNG_ENGLISH);
+		SetDefaultCharset(CHARSET_UTF8);
 	
+		UWordFs().Type("QTF files", "*.qtf")
+		         .AllFilesType()
+		         .DefaultExt("qtf");
+		PdfFs().Type("PDF files", "*.pdf")
+		       .AllFilesType()
+		       .DefaultExt("pdf");
+	
+		LoadFromFile(callback(UWord::SerializeApp));
+	#ifdef _DEBUG
+		(new UWord)->editor.SetQTF(LoadFile(GetDataFile("test.qtf")));
+	#else
+		new UWord;
+	#endif
+		Ctrl::EventLoop();
+
+		Ctrl::EndSession();
+	}
+
 	LOG("Session Finished");
 }

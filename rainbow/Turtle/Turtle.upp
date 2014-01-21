@@ -18,6 +18,7 @@ file
 	Wnd.cpp,
 	Cursor.cpp,
 	Stream.cpp,
+	Server.cpp,
 	Event.cpp,
 	Top.h,
 	TopFrame.cpp,

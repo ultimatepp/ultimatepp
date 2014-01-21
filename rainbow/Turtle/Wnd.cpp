@@ -21,7 +21,6 @@ Image          Ctrl::fbCursorImage;
 Rect           Ctrl::fbCaretRect;
 int            Ctrl::fbCaretTm;
 bool           Ctrl::fbEndSession;
-int            Ctrl::PaintLock;
 
 bool           Ctrl::SystemCursor;
 
@@ -31,21 +30,6 @@ void Ctrl::SetDesktop(Ctrl& q)
 	desktop->SetOpen(true);
 	desktop->NewTop();
 	invalid = true;
-}
-
-void Ctrl::EndSession()
-{
-	GuiLock __;
-	LLOG("Ctrl::EndSession");
-	fbEndSession = true;
-	EndSessionLoopNo = EventLoopNo;
-}
-
-void Ctrl::ExitTurtle()
-{
-	TopWindow::ShutdownWindows();
-	Ctrl::CloseTopCtrls();
-	_TODO_
 }
 
 void Ctrl::SetDesktopSize(Size sz)
