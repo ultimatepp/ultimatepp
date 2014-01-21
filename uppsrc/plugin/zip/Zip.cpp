@@ -10,7 +10,8 @@ void Zip::WriteFolder(const char *path, Time tm)
 	WriteFile(~p, 0, p, false, tm);
 }
 
-int64 zPress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool gzip, bool compress, dword *crc);
+int64 zPress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool gzip,
+             bool compress, dword *crc, bool hdr);
 
 void Zip::WriteFile(const void *ptr, int size, const char *path, Gate2<int, int> progress, Time tm)
 {
@@ -19,7 +20,7 @@ void Zip::WriteFile(const void *ptr, int size, const char *path, Gate2<int, int>
 	StringStream ss;
 	MemReadStream ms(ptr, size);
 	dword crc;
-	zPress(ss, ms, size, AsGate64(progress), true, true, &crc);
+	zPress(ss, ms, size, AsGate64(progress), false, true, &crc, false);
 	String data = ss.GetResult();
 	const void *r = ~data;
 	int   csize = data.GetLength();

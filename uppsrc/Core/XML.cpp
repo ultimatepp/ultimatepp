@@ -784,6 +784,11 @@ const XmlNode& XmlNode::operator[](const char *tag) const
 	return q < 0 ? Void() : node[q];
 }
 
+void XmlNode::Remove(int i)
+{
+	node.Remove(i);
+}
+
 void XmlNode::Remove(const char *tag)
 {
 	int q = FindTag(tag);

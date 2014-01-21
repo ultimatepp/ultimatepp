@@ -312,10 +312,10 @@ int64 CopyStream(Stream& dest, Stream& src, int64 count, Gate2<int64, int64> pro
 	int loaded;
 	int64 done = 0;
 	int64 total = count;
-	while(count > 0 && (loaded = src.Get(temp, (int)min<int64>(count, block))) > 0) {
+	while(count > 0 && (loaded = src.Get(~temp, (int)min<int64>(count, block))) > 0) {
 		if(progress(done, total))
 			return -1;
-		dest.Put(temp.operator const byte *(), loaded);
+		dest.Put(~temp, loaded);
 		count -= loaded;
 		done += loaded;
 	}
@@ -323,20 +323,25 @@ int64 CopyStream(Stream& dest, Stream& src, int64 count, Gate2<int64, int64> pro
 }
 
 int64 zPress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool gzip, bool compress,
-             dword *crc = NULL)
+             dword *crc = NULL, bool hdr = true)
 {
 	Zlib zlib;
-	zlib.GZip(gzip).CRC(crc);
-	bool r;
+	zlib.GZip(gzip).CRC(crc).Header(hdr);
+	
+	int64 r = -1;
 	{
 		OutFilterStream outs(out, zlib);
 		if(compress)
 			zlib.Compress();
 		else
 			zlib.Decompress();
-		r = CopyStream(outs, in, size, progress) >= 0 && !out.IsError() ? outs.GetCount() : -1;
+		if(CopyStream(outs, in, size, progress) >= 0) {
+			outs.Close();
+			if(!out.IsError() && !outs.IsError())
+				r = outs.GetCount();
+		}
 	}
-	if(r && crc)
+	if(r >= 0 && crc)
 		*crc = zlib.GetCRC();
 	return r;
 }

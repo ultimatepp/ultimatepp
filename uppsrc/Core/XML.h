@@ -193,6 +193,7 @@ public:
 	const XmlNode& operator[](int i) const                    { return i >= 0 && i < node.GetCount() ? node[i] : Void(); }
 	const XmlNode& operator[](const char *tag) const;
 	XmlNode&       Add()                                      { return node.Add(); }
+	void           Remove(int i);
 	void           AddText(const String& txt)                 { Add().CreateText(txt); }
 	int            FindTag(const char *tag) const;
 	XmlNode&       Add(const char *tag);

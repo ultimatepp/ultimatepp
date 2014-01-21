@@ -39,8 +39,8 @@ void XmlView::Load(const char *filename)
 	int64 l = GetFileLength(filename);
 	if(l < 0 || l > 16000000)
 		return;
-	String txt = LoadFile(filename);
-	XmlParser p(txt);
+	FileIn in(filename);
+	XmlParser p(in);
 	xml.Clear();
 	try {
 		while(!p.IsEof())
@@ -49,7 +49,7 @@ void XmlView::Load(const char *filename)
 	catch(XmlError e) {
 		error = "XML parsing error: " + e;
 		view.Show();
-		view <<= txt;
+		view <<= LoadFile(filename);
 		view.SetCursor(view.GetPos(p.GetLine() - 1, p.GetColumn() - 1));
 		view.SetFocus();
 		return;
