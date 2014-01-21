@@ -43,7 +43,8 @@ void UnZip::SkipFile()
 	ReadHeader();
 }
 
-int64 zPress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool gzip, bool compress, dword *crc);
+int64 zPress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool gzip,
+             bool compress, dword *crc, bool hdr);
 
 bool UnZip::ReadFile(Stream& out, Gate2<int, int> progress)
 {
@@ -68,7 +69,7 @@ bool UnZip::ReadFile(Stream& out, Gate2<int, int> progress)
 	}
 	else
 	if(method == 8)
-		l = (int)zPress(out, *zip, csize, AsGate64(progress), true, false, &crc);
+		l = (int)zPress(out, *zip, csize, AsGate64(progress), false, false, &crc, false);
 	else {
 		SetError();
 		return false;
