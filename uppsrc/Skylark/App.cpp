@@ -188,8 +188,7 @@ void SkylarkApp::Run()
 	
 	IpAddrInfo ipinfo;
 	ipinfo.Execute(ip, port, IpAddrInfo::FAMILY_IPV4);
-//	addrinfo *addr = ipinfo.GetResult();
-
+	
 #ifdef _DEBUG
 	int qq = 0;
 	for(;;) {

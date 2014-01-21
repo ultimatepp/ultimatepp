@@ -388,7 +388,7 @@ bool TcpSocket::Accept(TcpSocket& ls)
 		socket = accept(ls.GetSOCKET(), NULL, NULL);
 		if(socket != INVALID_SOCKET)
 			break;
-		if(!WouldBlock()) { // In prefork condition, Wait is not enough, as other process can accept
+		if(!WouldBlock() && GetErrorCode() != SOCKERR(EINTR)) { // In prefork condition, Wait is not enough, as other process can accept
 			SetSockError("accept");
 			return false;
 		}
@@ -614,7 +614,7 @@ bool TcpSocket::RawWait(dword flags, int end_time)
 		FD_SET(socket, fdsetx);
 		int avail = select((int)socket + 1, fdsetr, fdsetw, fdsetx, tvalp);
 		LLOG("Wait select avail: " << avail);
-		if(avail < 0) {
+		if(avail < 0 && GetErrorCode() != SOCKERR(EINTR)) {
 			SetSockError("wait");
 			return false;
 		}
