@@ -1,7 +1,5 @@
 #include "Local.h"
 
-#include "Turtle.brc"
-
 #ifdef GUI_TURTLE
 
 NAMESPACE_UPP
@@ -14,91 +12,18 @@ static Point MousePos;
 
 Size   DesktopSize = Size(1000, 1000);
 
-StaticRect& Desktop()
+StaticRect& DesktopRect()
 {
 	static StaticRect x;
 	return x;
 }
 
-HttpHeader  http;
-TcpSocket   server;
-TcpSocket   socket;
-WebSocket   websocket;
+Ctrl& Ctrl::Desktop()
+{
+	return DesktopRect();
+}
 
 BiVector<String> event_queue;
-
-String           hostname;
-
-void SetHostName(const String& h)
-{
-	hostname = h;
-}
-
-bool Ctrl::Connect()
-{
-	LLOG("Connect");
-	if(!server.Listen(8088, 10)) {
-		LLOG("Cannot open server port for listening\r\n");
-		Exit(1);
-	}
-	LLOG("Starting to listen on 8088");
-	socket.Timeout(20000);
-	for(;;) {
-		if(socket.Accept(server)) {
-			if(http.Read(socket)) {
-				LLOG("Accepted, header read");
-				if(websocket.WebAccept(socket, http))
-				#ifdef _DEBUG
-					break;
-				#else
-					if(fork() == 0)
-						break;
-					else {
-						socket.Close();
-						continue;
-					}
-				#endif
-				LLOG("Sending HTML");
-				String html = String(turtle_html, turtle_html_length);
-			#ifdef _DEBUG
-				html.Replace("%%host%%", Nvl(GetIniKey("turtle_host"), Nvl(hostname, "ws://localhost:8088")));
-			#else
-				html.Replace("%%host%%", "ws://eventcraft.eu:8088");
-			#endif
-				HttpResponse(socket, http.scgi, 200, "OK", "text/html", html);
-			}
-			socket.Close();
-		}
-	}
-	LLOG("Connection established");
-	server.Close();
-	if(socket.IsError())
-		LLOG("CONNECT ERROR: " << socket.GetErrorDesc());
-	return true;
-}
-
-void Ctrl::InitTelpp(const String& hostname_)
-{
-	LLOG("InitTelpp");
-
-	hostname = hostname_;
-
-	Connect();
-	
-	LLOG("WebSocket connected");
-
-	Ctrl::GlobalBackBuffer();
-	Ctrl::InitTimer();
-
-#ifdef PLATFORM_POSIX
-	SetStdFont(ScreenSans(12)); //FIXME general handling
-#endif
-	ChStdSkin();
-
-	Desktop().Color(Cyan());
-	Desktop().SetRect(0, 0, DesktopSize.cx, DesktopSize.cy);
-	SetDesktop(Desktop());
-}
 
 void Ctrl::TimerAndPaint()
 {
@@ -117,14 +42,26 @@ void Ctrl::TimerAndPaint()
 	websocket.SendBinary(s);
 }
 
+void Ctrl::EndSession()
+{
+	GuiLock __;
+	Ctrl::CloseTopCtrls();
+}
+
 bool Ctrl::IsWaitingEvent()
 {
 	GuiLock __;
+	if(quit) {
+		WhenDisconnect();
+		EndSession();
+		Exit(0);
+	}
 	while(socket.Timeout(0).WaitRead()) {
 		socket.Timeout(20000);
 		String s = websocket.Recieve();
 		if(s.IsVoid()) { // No data returned -> means EOF was reached
-			TurtleWhenDisconnect();
+			WhenDisconnect();
+			EndSession();
 			Exit(0);
 		}
 		LLOG("Recieved data " << s);
@@ -283,13 +220,11 @@ void Ctrl::PaintCaretCursor(SystemDraw& draw)
 
 void Ctrl::DoPaint()
 { 
-	if(!PaintLock) {
-		if(invalid && desktop) {
-			invalid = false;
-			SystemDraw draw;
-			PaintScene(draw);
-			PaintCaretCursor(draw);
-		}
+	if(invalid && desktop) {
+		invalid = false;
+		SystemDraw draw;
+		PaintScene(draw);
+		PaintCaretCursor(draw);
 	}
 }
 

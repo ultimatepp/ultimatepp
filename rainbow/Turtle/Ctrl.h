@@ -50,19 +50,31 @@ private:
 	void  SetOpen(bool b)               { isopen = b; }
 
 protected:
-	static int PaintLock;
+	static Ctrl& Desktop();
 
-	static bool Connect();
 	static void TimerAndPaint();
 	static bool ProcessEvent(const String& event);
 
+	static bool        quit;
+	static int         main_pid;
+	static Vector<int> pid;
+	static TcpSocket   socket;
+	static WebSocket   websocket;
+
+	static void Signal(int signal);
+	static void Broadcast(int signal);
+
 public:
 	static bool DoKeyFB(dword key, int cnt);
+	
+	static String host;
+	static int    port;
+	static bool   debugmode;
+	static String ip;
 
-	static void InitTelpp(const String& host = Null);
-	static void ExitTurtle();
-
-	static void EndSession();
+	static bool     StartSession();
+	static Callback WhenDisconnect;
+	static void     EndSession();
 
 	static void  SetDesktop(Ctrl& q);
 	static Ctrl *GetDesktop()                  { return desktop; }
