@@ -23,7 +23,8 @@ directory enumeration.&]
 har]_`*[*@3 path])&]
 [s2;%% Starts a new listing. [%-*@3 path] can contain wildcards (`'`*`', 
 `'?`') to list more than single file. Returns true if first file 
-is found.&]
+is found. Wildcard pattern follows Windows conventions, `*.`* 
+matches all files, even those without extension.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:FindFile`:`:Next`(`): [@(0.0.255) bool]_[* Next]()&]
@@ -150,4 +151,4 @@ this is used as condition to the loop that enumerates directory.&]
 ]_`*[*@3 name])&]
 [s2;%% Initializes and performs Search([%-*@3 name]).&]
 [s3;%% &]
-[s0;%% ]
+[s0;%% ]]
