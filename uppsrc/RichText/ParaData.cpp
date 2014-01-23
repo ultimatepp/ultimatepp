@@ -56,6 +56,7 @@ PaintInfo::PaintInfo()
 	highlightpara = -1;
 	highlight = Yellow();
 	indexentry = LtGreen();
+	indexentrybg = false;
 	coloroverride = false;
 	context = NULL;
 	showlabels = false;

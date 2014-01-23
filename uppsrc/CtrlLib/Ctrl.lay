@@ -1,7 +1,7 @@
-LAYOUT(EditStringLayout, 236, 62)
-	ITEM(Label, lbl, SetLabel(t_("Test")).LeftPosZ(4, 68).TopPosZ(4, 19))
-	ITEM(EditString, text, HSizePosZ(68, 4).TopPosZ(4, 19))
-	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(80, -10).BottomPosZ(4, 22))
+LAYOUT(EditStringLayout, 376, 62)
+	ITEM(Label, lbl, SetLabel(t_("Test")).LeftPosZ(4, 116).TopPosZ(4, 19))
+	ITEM(EditString, text, HSizePosZ(124, 4).TopPosZ(4, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(80, 60).BottomPosZ(4, 22))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
 END_LAYOUT
 

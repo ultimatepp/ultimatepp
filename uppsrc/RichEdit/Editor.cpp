@@ -112,7 +112,7 @@ void RichEdit::Paint(Draw& w)
 			for(int i = 0; i <= py.page; i++)
 				DrawFrame(w, tr.left - 1, i * (pw.size.cy + 3) + 1 - sb,
 				          pw.size.cx + 4, pw.size.cy + 2, SColorShadow);
-		PaintInfo pi;
+		PaintInfo pi = paint_info;
 		pi.context = context;
 		pi.zoom = zoom;
 		pi.top = GetPageY(sb);
@@ -587,6 +587,11 @@ void StdLabelDlg(String& s)
 	EditText(s, t_("Paragraph label"), t_("Label"), CharFilterAscii128, 100);
 }
 
+void StdIndexEntryDlg(String& s)
+{
+	EditText(s, t_("Index Entry"), t_("Index entry"), CharFilterAscii128, 100);
+}
+
 RichEdit::RichEdit()
 {
 	floating_zoom = Null;
@@ -714,6 +719,7 @@ RichEdit::RichEdit()
 
 	WhenHyperlink = callback(StdLinkDlg);
 	WhenLabel = callback(StdLabelDlg);
+	WhenIndexEntry = callback(StdIndexEntryDlg);
 
 	p_size = Size(-1, -1);
 
@@ -730,6 +736,8 @@ RichEdit::RichEdit()
 	bullet_indent = 150;
 	
 	persistent_findreplace = true;
+	
+	ignore_physical_size = false;
 }
 
 RichEdit::~RichEdit() {}

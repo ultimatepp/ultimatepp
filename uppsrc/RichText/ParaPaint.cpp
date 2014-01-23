@@ -39,11 +39,15 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 		int width = z * x - z * x0;
 		int zy0 = z * y0;
 		int zx0 = z * x0;
+		if(!IsNull(f.indexentry) && !IsNull(pi.indexentry))
+			if(pi.indexentrybg)
+				draw.DrawRect(zx0, z * y, width, z * (y + linecy) - z * y,
+				              pi.coloroverride ? SColorPaper() : pi.indexentry);
+			else
+				draw.DrawRect(zx0, zy0, width, 2, pi.indexentry);
 		if(!IsNull(f.paper) && !highlight)
 			draw.DrawRect(zx0, z * y, width, z * (y + linecy) - z * y,
 			              pi.coloroverride ? SColorPaper() : f.paper);
-		if(!IsNull(f.indexentry) && !IsNull(pi.indexentry))
-			draw.DrawRect(zx0, zy0, width, 2, pi.indexentry);
 		Font fnt = f;
 		int zht = z * tabs(f.GetHeight());
 		int ssa = 0;

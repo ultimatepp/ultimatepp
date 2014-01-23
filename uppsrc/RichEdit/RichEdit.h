@@ -288,6 +288,9 @@ private:
 	Vector<int>              ffs;
 	
 	int                      bullet_indent;
+	
+	PaintInfo                paint_info;
+	bool                     ignore_physical_size;
 
 	static int fh[];
 
@@ -614,6 +617,8 @@ private:
 	bool     BegSelTabFix();
 	void     BegSelTabFixEnd(bool fix);
 
+	Size     GetPhysicalSize(const RichObject& obj);
+
 	struct DisplayDefault : public Display {
 		virtual void Paint(Draw& w, const Rect& r, const Value& q,
 		                   Color ink, Color paper, dword style) const;
@@ -649,6 +654,7 @@ public:
 	Callback                     WhenStartEvaluating;
 	Callback2<String&, WString&> WhenHyperlink;
 	Callback1<String&>           WhenLabel;
+	Callback1<String&>           WhenIndexEntry;
 	Callback1<Bar&>              WhenBar;
 
 	void   StdBar(Bar& menu);
@@ -690,7 +696,6 @@ public:
 	void   Cut();
 	void   Paste();
 	void   InsertObject(int type);
-	void   LoadImage();
 
 	void   Styles();
 
@@ -770,30 +775,32 @@ public:
 
 	void            Clear();
 	void            Pick(pick_ RichText& t);
-	void            SetQTF(const char *qtf)               { Pick(ParseQTF(qtf, 0, context)); }
-	const RichText& Get() const                           { return text; }
-	String          GetQTF(byte cs = CHARSET_UTF8) const  { return AsQTF(text, cs); }
+	void            SetQTF(const char *qtf)                { Pick(ParseQTF(qtf, 0, context)); }
+	const RichText& Get() const                            { return text; }
+	String          GetQTF(byte cs = CHARSET_UTF8) const   { return AsQTF(text, cs); }
 	void            ApplyStylesheet(const RichText& r);
-	void            SetPage(const Size& sz)               { pagesz = sz; Finish(); }
-	Size            GetPage()                             { return pagesz; }
+	void            SetPage(const Size& sz)                { pagesz = sz; Finish(); }
+	Size            GetPage()                              { return pagesz; }
 
-	RichEdit&       NoRuler()                             { RemoveFrame(ruler); return *this; }
-	RichEdit&       SingleLine(bool b = true)             { singleline = b; return *this; }
+	RichEdit&       NoRuler()                              { RemoveFrame(ruler); return *this; }
+	RichEdit&       SingleLine(bool b = true)              { singleline = b; return *this; }
 	RichEdit&       FontFaces(const Vector<int>& face);
-	RichEdit&       ViewBorder(int cx)                    { viewborder = cx; Refresh(); return *this; }
-	RichEdit&       ShowCodes(Color c)                    { showcodes = c; Refresh(); return *this; }
-	RichEdit&       Unit(int u)                           { unit = u; Refresh(); return *this; }
-	RichEdit&       SpellCheck(bool b)                    { spellcheck = b; Refresh(); return *this; }
-	RichEdit&       SetZoom(int z)                        { zoom = z; Refresh(); return *this; }
-	RichEdit&       SetContext(void *ctx)                 { context = ctx; Refresh(); return *this; }
-	void           *GetContext() const                    { return context; }
-	RichEdit&       ClipZoom(Zoom z)                      { clipzoom = z; return *this; }
-	RichEdit&       ClipZoom(int m, int d)                { clipzoom = Zoom(m, d); return *this; }
-	Zoom            GetClipZoom() const                   { return clipzoom; }
-	RichEdit&       BulletIndent(int i)                   { bullet_indent = i; return *this; }
-	RichEdit&       PersistentFindReplace(bool b = true)  { persistent_findreplace = b; return *this; }
+	RichEdit&       ViewBorder(int cx)                     { viewborder = cx; Refresh(); return *this; }
+	RichEdit&       ShowCodes(Color c)                     { showcodes = c; Refresh(); return *this; }
+	RichEdit&       Unit(int u)                            { unit = u; Refresh(); return *this; }
+	RichEdit&       SpellCheck(bool b)                     { spellcheck = b; Refresh(); return *this; }
+	RichEdit&       SetZoom(int z)                         { zoom = z; Refresh(); return *this; }
+	RichEdit&       SetContext(void *ctx)                  { context = ctx; Refresh(); return *this; }
+	void           *GetContext() const                     { return context; }
+	RichEdit&       ClipZoom(Zoom z)                       { clipzoom = z; return *this; }
+	RichEdit&       ClipZoom(int m, int d)                 { clipzoom = Zoom(m, d); return *this; }
+	Zoom            GetClipZoom() const                    { return clipzoom; }
+	RichEdit&       BulletIndent(int i)                    { bullet_indent = i; return *this; }
+	RichEdit&       PersistentFindReplace(bool b = true)   { persistent_findreplace = b; return *this; }
 	RichEdit&       Floating(double zoomlevel_ = 1);
-	RichEdit&       NoFloating(double zoomlevel_ = 1)     { return Floating(Null); }
+	RichEdit&       NoFloating(double zoomlevel_ = 1)      { return Floating(Null); }
+	RichEdit&       SetPaintInfo(const PaintInfo pi)       { paint_info = pi; return *this; }
+	RichEdit&       IgnorePhysicalObjectSize(bool b = true){ ignore_physical_size = b; return *this; }
 
 	struct UndoInfo {
 		int              undoserial;

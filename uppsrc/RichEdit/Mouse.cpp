@@ -2,6 +2,13 @@
 
 NAMESPACE_UPP
 
+Size RichEdit::GetPhysicalSize(const RichObject& obj)
+{
+	if(ignore_physical_size)
+		return 600 * obj.GetPixelSize() / 96;
+	return obj.GetPhysicalSize();
+}
+
 void RichEdit::CancelMode()
 {
 	tabmove.table = 0;
@@ -31,7 +38,7 @@ void RichEdit::SetObjectPercent(int p)
 {
 	if(objectpos >= 0) {
 		RichObject obj = GetObject();
-		Size sz = obj.GetPhysicalSize() * p / 100;
+		Size sz = GetPhysicalSize(obj) * p / 100;
 		if(sz.cx > 0 && sz.cy > 0) {
 			obj.SetSize(sz);
 			obj.KeepRatio(true);
@@ -189,6 +196,16 @@ void RichEdit::MouseMove(Point p, dword flags)
 	}
 }
 
+static bool IsObjectPercent(Sizef percent, int p)
+{
+	return abs(percent.cx - p) < 1 && abs(percent.cy - p) < 1;
+}
+
+static bool IsObjectDelta(int delta, int d)
+{
+	return d * 25 / 3 == delta;
+}
+
 void RichEdit::StdBar(Bar& menu)
 {
 	int l, h;
@@ -208,24 +225,30 @@ void RichEdit::StdBar(Bar& menu)
 			bar_object.Menu(menu, context);
 			if(!menu.IsEmpty())
 				menu.Separator();
-			Size sz = bar_object.GetPhysicalSize();
+			Size sz = GetPhysicalSize(bar_object);
+			Sizef percent = bar_object.GetSize();
+			percent = 100 * percent / Sizef(sz);
 			bool b = sz.cx || sz.cy;
 			menu.Add(t_("Object position.."), THISBACK(AdjustObjectSize));
 			menu.Separator();
-			menu.Add(b, "20 %", THISBACK1(SetObjectPercent, 20));
-			menu.Add(b, "40 %", THISBACK1(SetObjectPercent, 40));
-			menu.Add(b, "60 %", THISBACK1(SetObjectPercent, 60));
-			menu.Add(b, "80 %", THISBACK1(SetObjectPercent, 80));
-			menu.Add(b, "90 %", THISBACK1(SetObjectPercent, 90));
-			menu.Add(b, "100 %", THISBACK1(SetObjectPercent, 100));
+			menu.Add(b, "20 %", THISBACK1(SetObjectPercent, 20)).Check(IsObjectPercent(percent, 20));
+			menu.Add(b, "30 %", THISBACK1(SetObjectPercent, 30)).Check(IsObjectPercent(percent, 30));
+			menu.Add(b, "40 %", THISBACK1(SetObjectPercent, 40)).Check(IsObjectPercent(percent, 40));
+			menu.Add(b, "50 %", THISBACK1(SetObjectPercent, 50)).Check(IsObjectPercent(percent, 50));
+			menu.Add(b, "60 %", THISBACK1(SetObjectPercent, 60)).Check(IsObjectPercent(percent, 60));
+			menu.Add(b, "70 %", THISBACK1(SetObjectPercent, 70)).Check(IsObjectPercent(percent, 70));
+			menu.Add(b, "80 %", THISBACK1(SetObjectPercent, 80)).Check(IsObjectPercent(percent, 80));
+			menu.Add(b, "90 %", THISBACK1(SetObjectPercent, 90)).Check(IsObjectPercent(percent, 90));
+			menu.Add(b, "100 %", THISBACK1(SetObjectPercent, 100)).Check(IsObjectPercent(percent, 100));
 			menu.Break();
-			menu.Add(t_("3 pt up"), THISBACK1(SetObjectYDelta, -3));
-			menu.Add(t_("2 pt up"), THISBACK1(SetObjectYDelta, -2));
-			menu.Add(t_("1 pt up"), THISBACK1(SetObjectYDelta, -1));
-			menu.Add(t_("Baseline"), THISBACK1(SetObjectYDelta, 0));
-			menu.Add(t_("1 pt down"), THISBACK1(SetObjectYDelta, 1));
-			menu.Add(t_("2 pt down"), THISBACK1(SetObjectYDelta, 2));
-			menu.Add(t_("3 pt down"), THISBACK1(SetObjectYDelta, 3));
+			int delta = bar_object.GetYDelta();
+			menu.Add(t_("3 pt up"), THISBACK1(SetObjectYDelta, -3)).Check(IsObjectDelta(delta, -3));
+			menu.Add(t_("2 pt up"), THISBACK1(SetObjectYDelta, -2)).Check(IsObjectDelta(delta, -2));
+			menu.Add(t_("1 pt up"), THISBACK1(SetObjectYDelta, -1)).Check(IsObjectDelta(delta, -1));
+			menu.Add(t_("Baseline"), THISBACK1(SetObjectYDelta, 0)).Check(IsObjectDelta(delta, 0));
+			menu.Add(t_("1 pt down"), THISBACK1(SetObjectYDelta, 1)).Check(IsObjectDelta(delta, 1));
+			menu.Add(t_("2 pt down"), THISBACK1(SetObjectYDelta, 2)).Check(IsObjectDelta(delta, 2));
+			menu.Add(t_("3 pt down"), THISBACK1(SetObjectYDelta, 3)).Check(IsObjectDelta(delta, 3));
 			menu.Separator();
 			CopyTool(menu);
 			CutTool(menu);

@@ -133,7 +133,7 @@ String RichObjectType::GetLink(const Value& data, Point pt, Size sz, void *conte
 void RichObject::InitSize(int cx, int cy, void *context)
 {
 	Size sz;
-	Size phsz = GetPixelSize();
+	Size phsz = 600 * GetPixelSize() / 96; // 100% size...
 	if(cx || cy)
 		sz = GetRatioSize(phsz, cx, cy);
 	else
