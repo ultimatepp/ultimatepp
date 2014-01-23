@@ -268,6 +268,7 @@ struct PaintInfo {
 	PageY   bottom;
 	Color   hyperlink;
 	Color   indexentry;
+	bool    indexentrybg;
 	bool    usecache;
 	bool    sizetracking;
 	Color   showcodes;

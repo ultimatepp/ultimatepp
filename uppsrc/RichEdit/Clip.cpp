@@ -6,17 +6,17 @@ NAMESPACE_UPP
 
 void RichEdit::InsertImage()
 {
-	if(!imagefs.ExecuteOpen())
+	if(!imagefs.ExecuteOpen(t_("Open image from file")))
 		return;
 	String fn = ~imagefs;
-	if(GetFileLength(fn) >= 10 * 1024 * 1024) {
+	if(GetFileLength(fn) > 17000000) {
 		Exclamation("Image is too large!");
 		return;
 	}
-	String data = LoadFile(~imagefs);
+	String data = LoadFile(fn);
 	StringStream ss(data);
 	if(!StreamRaster::OpenAny(ss)) {
-		Exclamation("Invalid file format!");
+		Exclamation(NFormat(t_("Unsupported image format in file [* \1%s\1]."), ~imagefs));
 		return;
 	}
 	RichText clip;

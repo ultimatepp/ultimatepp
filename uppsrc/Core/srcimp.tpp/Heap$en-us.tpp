@@ -118,4 +118,4 @@ to directly obtain virtual memory. It stores information about
 the block in the header at the beginning of block, also makeing 
 block 16`-bytes unaligned in the process. Free then returns virtual 
 memory back to the system.&]
-[s0; ]
+[s0; ]]
