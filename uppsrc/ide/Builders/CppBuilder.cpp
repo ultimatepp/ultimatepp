@@ -14,14 +14,78 @@ String CppBuilder::GetTargetExt() const
 		return HasFlag("DLL") ? ".dll" : ".exe";
 }
 
+// POSIX lib files has names in form of libXXXXXX.so.ver.minver(.rel)
+// so we can't simply get file extension
+String CppBuilder::GetSrcType(String fn) const
+{
+	fn = ToLower(fn);
+	String ext = GetFileExt(fn);
+	if(!HasFlag("POSIX") || ext == ".so")
+		return ext;
+	int soPos = fn.ReverseFind(".so");
+	if(soPos < 0)
+		return ext;
+	fn = fn.Mid(soPos + 3);
+	const char *c = ~fn;
+	while(*c)
+	{
+		if(*c != '.' && !IsDigit(*c))
+			return ext;
+		c++;
+	}
+	return ".so";
+}
+
+// from complete lib name/path (libXXX.so.ver.minVer) gets the soname (libXXX.so.ver)
+String CppBuilder::GetSoname(String libName) const
+{
+	
+	String soname = GetFileName(libName);
+	int soLen = soname.GetCount();
+	int soPos = ToLower(soname).ReverseFind(".so");
+	if(soPos < 0)
+		soPos = soLen;
+	else
+		soPos += 3;
+	if(soname.Mid(soPos, 1) == ".")
+	{
+		soPos++;
+		while(soPos < soLen && IsDigit(soname[soPos]))
+			soPos++;
+	}
+	return soname.Left(soPos);
+}
+
+// from complete lib name/path (libXXX.so.ver.minVer) gets the link name (libXXX.so)
+String CppBuilder::GetSoLinkName(String libName) const
+{
+	
+	String linkName = GetFileName(libName);
+	int soPos = ToLower(linkName).ReverseFind(".so");
+	if(soPos < 0)
+		soPos = linkName.GetCount();
+	else
+		soPos += 3;
+	return linkName.Left(soPos);
+}
+
 String CppBuilder::GetSharedLibPath(const String& package) const
 {
 	String outfn;
+	if(HasFlag("POSIX"))
+	   outfn << "lib";
 	for(const char *p = package; *p; p++)
 		outfn.Cat(IsAlNum(*p) || *p == '-' ? *p : '_');
-	if(!IsNull(version))
+	if(!IsNull(version) && !HasFlag("POSIX"))
 		outfn << version;
 	outfn << (HasFlag("WIN32") || HasFlag("WINCE") ? ".dll" : ".so");
+	if(HasFlag("POSIX"))
+	{
+		Point p = ExtractVersion();
+		int ver = IsNull(p.x) ? 1 : p.x;
+		int minver = IsNull(p.y) ? 0 : p.y;
+		outfn << '.' << ver << '.' << minver;
+	}
 	return CatAnyPath(GetFileFolder(target), outfn);
 }
 

@@ -57,7 +57,17 @@ struct CppBuilder : Builder {
 	String                 IncludesDefinesTargetTime(const String& package, const Package& pkg);
 
 	String                 GetMakePath(String fn) const;
-	Point                  ExtractVersion();
+	Point                  ExtractVersion() const;
+	
+	// POSIX lib files has names in form of libXXXXXX.so.ver.minver(.rel)
+	// so we can't simply get file extension
+	String                 GetSrcType(String fn) const;
+
+	// from complete lib name/path (libXXX.so.ver.minVer) gets the soname (libXXX.so.ver)
+	String                 GetSoname(String libName) const;
+
+	// from complete lib name/path (libXXX.so.ver.minVer) gets the link name (libXXX.so)
+	String                 GetSoLinkName(String libName) const;
 
 	void                   ShowTime(int count, int start_time);
 

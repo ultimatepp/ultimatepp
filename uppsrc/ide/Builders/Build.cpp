@@ -95,6 +95,15 @@ One<Host> MakeBuild::CreateHost(bool sync_files)
 		env.GetAdd("PATH") = Join(host->exedirs, ";");
 		env.GetAdd("UPP_MAIN__") = GetFileDirectory(PackagePath(GetMain()));
 		env.GetAdd("UPP_ASSEMBLY__") = GetVar("UPP");
+		
+		// setup LD_LIBRARY_PATH on target dir, needed for all shared builds on posix
+#ifdef PLATFORM_POSIX
+		if(target != "")
+		{
+			String ldPath = GetFileFolder(target) + ";" + env.Get("LD_LIBRARY_PATH", "");
+			env.GetAdd("LD_LIBRARY_PATH") = ldPath;
+		}
+#endif
 		for(int i = 0; i < env.GetCount(); i++) {
 			LDUMP(env.GetKey(i));
 			LDUMP(env[i]);

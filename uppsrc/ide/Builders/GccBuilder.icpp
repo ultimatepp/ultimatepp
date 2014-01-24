@@ -107,7 +107,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 				error = true;
 			for(int j = 0; j < srcfile.GetCount(); j++) {
 				String fn = srcfile[j];
-				String ext = ToLower(GetFileExt(fn));
+				String ext = GetSrcType(fn);
 				if(ext == ".c" || ext == ".cpp" || ext == ".cc" || ext == ".cxx" || ext == ".m" || ext == ".mm"
 				|| ext == ".s" || ext == ".S"
 				|| ext == ".brc" || (ext == ".rc" && HasFlag("WIN32"))) {
@@ -266,6 +266,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 							lib << " -Xlinker --minor-image-version -Xlinker " << p.y;
 					}
 					lib << ' ' << Gather(pkg.link, config.GetKeys());
+					
 					lib << " -o ";
 				}
 				else
@@ -285,6 +286,9 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 						llib << ' ' << GetHostPathQ(GetSharedLibPath(all_uses[i]));
 					for(int i = 0; i < all_libraries.GetCount(); i++)
 						llib << " -l" << GetHostPathQ(all_libraries[i]);
+					
+					if(HasFlag("POSIX"))
+						llib << " -Wl,-soname," << GetSoname(product);
 				}
 
 				String tmpFileName;
@@ -326,10 +330,35 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 				int res = Execute(lib);
 				if(tmpFileName != "")
 					FileDelete(tmpFileName);
+#ifdef PLATFORM_POSIX
+				String folder, libF, soF, linkF;
+				if(HasFlag("SO"))
+				{
+					folder = GetFileFolder(hproduct);
+					libF = GetFileName(hproduct);
+					soF = AppendFileName(folder, GetSoname(hproduct));
+					linkF = AppendFileName(folder, GetSoLinkName(hproduct));
+				}
+#endif
 				if(!res == 0) {
 					DeleteFile(hproduct);
+#ifdef PLATFORM_POSIX
+					if(HasFlag("SO")) {
+						DeleteFile(libF);
+						DeleteFile(linkF);
+					}
+ #endif
 					return false;
 				}
+#ifdef PLATFORM_POSIX
+				if(HasFlag("SO"))
+				{
+					int r;
+					r = symlink(libF, soF);
+					r = symlink(libF, linkF);
+					(void)r;
+				}
+#endif
 				PutConsole(String().Cat() << hproduct << " (" << GetFileInfo(hproduct).length
 				           << " B) created in " << GetPrintTime(libtime));
 				break;
@@ -423,6 +452,20 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				for(i = 0; i < lib.GetCount(); i++) {
 					String ln = lib[i];
 					String ext = ToLower(GetFileExt(ln));
+					
+					// unix shared libs shall have version number AFTER .so (sic)
+					// so we shall find the true extension....
+					if(HasFlag("POSIX") && ext != ".so")
+					{
+						const char *c = ln.Last();
+						while(*--c)
+							if(!IsDigit(*c) && *c != '.')
+								break;
+						int pos = c - ~ln - 2;
+						if(pos >= 0 && ToLower(ln.Mid(pos, 3)) == ".so")
+							ext = ".so";
+					}
+							
 					if(pass == 0) {
 						if(ext == ".a")
 							lnk << ' ' << GetHostPathQ(FindInDirs(libpath, lib[i]));
