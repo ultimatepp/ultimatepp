@@ -221,7 +221,7 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 */
 }
 
-Point CppBuilder::ExtractVersion()
+Point CppBuilder::ExtractVersion() const
 {
 	Point v = Point(Null, Null);
 	CParser p(version);
