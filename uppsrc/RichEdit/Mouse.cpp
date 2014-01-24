@@ -198,7 +198,7 @@ void RichEdit::MouseMove(Point p, dword flags)
 
 static bool IsObjectPercent(Sizef percent, int p)
 {
-	return abs(percent.cx - p) < 1 && abs(percent.cy - p) < 1;
+	return fabs(percent.cx - p) < 1 && fabs(percent.cy - p) < 1;
 }
 
 static bool IsObjectDelta(int delta, int d)
