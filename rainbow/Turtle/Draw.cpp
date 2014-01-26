@@ -2,42 +2,9 @@
 
 #ifdef GUI_TURTLE
 
+#define LLOG(x) // LOG(x)
+
 NAMESPACE_UPP
-
-void SystemDraw::Put16(int x)
-{
-	Put8(LOBYTE(x));
-	Put8(HIBYTE(x));
-}
-
-void SystemDraw::Put32(int x)
-{
-	Put16(LOWORD(x));
-	Put16(HIWORD(x));
-}
-
-void SystemDraw::Put(Point p)
-{// TODO: Clamp?
-	Put16(p.x);
-	Put16(p.y);
-}
-
-void SystemDraw::Put(Size sz)
-{
-	Put((Point)sz);
-}
-
-void SystemDraw::Put(const Rect& r)
-{
-	Put(r.TopLeft());
-	Put(r.GetSize());
-}
-
-void SystemDraw::Put(const String& s)
-{
-	Put32(s.GetLength());
-	turtle_stream.Put(s);
-}
 
 Index<int64> SystemDraw::img_index[3];
 
@@ -54,15 +21,16 @@ int SystemDraw::GetImageI(int from, Index<int64>& img_index, int maxcount, const
 			q = Random(maxcount);
 			img_index.Set(q, id);
 		}
-		Put8(SETIMAGE);
-		Put16(q + from);
-		Put(img.GetSize());
+		LLOG("SetImage " << q + from << ", size: " << img.GetLength());
+		Ctrl::Put8(SETIMAGE);
+		Ctrl::Put16(q + from);
+		Ctrl::Put(img.GetSize());
 		const RGBA *end = ~img + img.GetLength();
 		for(const RGBA *s = ~img; s < end; s++) {
-			Put8(s->r);
-			Put8(s->g);
-			Put8(s->b);
-			Put8(s->a);
+			Ctrl::Put8(s->r);
+			Ctrl::Put8(s->g);
+			Ctrl::Put8(s->b);
+			Ctrl::Put8(s->a);
 		}
 	}
 	return q + from;
@@ -78,26 +46,53 @@ int SystemDraw::GetImageI(const Image& img)
 
 void SystemDraw::PutImage(Point p, const Image& img, const Rect& src)
 {
+	LLOG("Ctrl::PutImage " << p << ", size: " << img.GetSize() << ", src: " << src << ", id: " << img.GetSerialId());
 	int i = GetImageI(img);
-	Put8(IMAGE);
-	Put16(i);
-	Put(p);
-	Put(src);
+	if(Rect(img.GetSize()) == src) {
+		Point dp = p - pos;
+		if(abs(dp.x) < 256 && abs(dp.y) < 256) {
+			Ctrl::Put8(dp.x < 0 ? dp.y < 0 ? IMAGENN : IMAGENP : dp.y < 0 ? IMAGEPN : IMAGEPP);
+			Ctrl::Put8(abs(dp.x));
+			Ctrl::Put8(abs(dp.y));
+			Ctrl::Put16(i);
+			pos = p;
+			return;
+		}
+	}
+	Ctrl::Put8(IMAGE);
+	Ctrl::Put16(i);
+	Ctrl::Put(p);
+	Ctrl::Put(src);
+	pos = p;
 }
 
 void SystemDraw::PutRect(const Rect& r, Color color)
-{ // TODO: Support InvertColor
+{
+	LLOG("Ctrl::PutRect " << r << ", color " << color);
+	Point p = r.TopLeft();
 	if(color == InvertColor()) {
-		Put8(INVERTRECT);
-		Put(r);
+		Ctrl::Put8(INVERTRECT);
+		Ctrl::Put(r);
 	}
 	else {
-		Put8(RECT);
-		Put(r);
-		Put8(color.GetR());
-		Put8(color.GetG());
-		Put8(color.GetB());
+		Size sz = r.GetSize();
+		Point dp = p - pos;
+		if(abs(dp.x) < 256 && abs(dp.y) < 256 && sz.cx < 256 && sz.cy < 256 && 0) {
+			Ctrl::Put8(dp.x < 0 ? dp.y < 0 ? RECTNN : RECTNP : dp.y < 0 ? RECTPN : RECTPP);
+			Ctrl::Put8(abs(dp.x));
+			Ctrl::Put8(abs(dp.y));
+			Ctrl::Put8(sz.cx);
+			Ctrl::Put8(sz.cy);
+		}
+		else {
+			Ctrl::Put8(RECT);
+			Ctrl::Put(r);
+		}
+		Ctrl::Put8(color.GetR());
+		Ctrl::Put8(color.GetG());
+		Ctrl::Put8(color.GetB());
 	}
+	pos = p;
 }
 
 END_UPP_NAMESPACE

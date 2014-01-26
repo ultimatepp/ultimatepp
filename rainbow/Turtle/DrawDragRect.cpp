@@ -63,7 +63,7 @@ void DrawDragRect(Ctrl& q, const DrawDragRectInfo& f)
 	DrawDragFrame(w, f.rect1, f.n, dash, f.animation);
 	DrawDragFrame(w, f.rect2, f.n, dash, f.animation);
 //	w.End();
-	Ctrl::PaintCaretCursor(w);
+//	Ctrl::PaintCaretCursor(w);
 //	SDL_GL_SwapWindow(screen.win);
 }
 
@@ -88,7 +88,7 @@ void FinishDragRect(Ctrl& q)
 {
 	SystemDraw w;
 	Ctrl::PaintScene(w);
-	Ctrl::PaintCaretCursor(w);
+//	Ctrl::PaintCaretCursor(w);
 	_TODO_
 	//SDL_GL_SwapWindow(screen.win);
 }

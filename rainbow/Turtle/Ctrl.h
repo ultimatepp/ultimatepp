@@ -2,11 +2,9 @@
 private:
 	static Ptr<Ctrl>      desktop;
 	static Vector<Ctrl *> topctrl;
-	static bool           invalid;
 
 	static Point fbCursorPos;
 	static Image fbCursorImage;
-	static bool  sdlMouseIsIn;
 	
 	static Rect  fbCaretRect;
 	static int   fbCaretTm;
@@ -14,8 +12,29 @@ private:
 	static bool  fbEndSession;
 	static int64 fbEventLoop;
 	static int64 fbEndSessionLoop;
+
+	static Ctrl& Desktop();
+
+	static void TimerAndPaint();
+	static bool ProcessEvent(const String& event);
+
+	static bool        quit;
+	static int         main_pid;
+	static Vector<int> pid;
+	static TcpSocket   socket;
+	static WebSocket   websocket;
+	static int64       update_serial;
+	static int64       recieved_update_serial;
 	
-	static void CursorSync();
+	static Vector<Rect> invalid;
+
+	static BiVector<String> event_queue;
+	static Size DesktopSize;
+	
+	static void AddInvalid(const Rect& r);
+	       void AddInvalid()                     { AddInvalid(GetScreenRect()); }
+	
+	static void InvalidateDesktop();
 	
 	int FindTopCtrl() const;
 	static Rect GetClipBound(const Vector<Rect>& inv, const Rect& r);
@@ -49,20 +68,16 @@ private:
 
 	void  SetOpen(bool b)               { isopen = b; }
 
-protected:
-	static Ctrl& Desktop();
-
-	static void TimerAndPaint();
-	static bool ProcessEvent(const String& event);
-
-	static bool        quit;
-	static int         main_pid;
-	static Vector<int> pid;
-	static TcpSocket   socket;
-	static WebSocket   websocket;
-
 	static void Signal(int signal);
 	static void Broadcast(int signal);
+
+	static void Put8(int x)              { turtle_stream.Put(x); }
+	static void Put16(int x);
+	static void Put32(int x);
+	static void Put(Point p);
+	static void Put(Size sz);
+	static void Put(const Rect& r);
+	static void Put(const String& s);
 
 public:
 	static bool DoKeyFB(dword key, int cnt);
@@ -71,6 +86,9 @@ public:
 	static int    port;
 	static bool   debugmode;
 	static String ip;
+	
+	static Time   stat_started;
+	static int64  stat_data_send;
 
 	static bool     StartSession();
 	static Callback WhenDisconnect;
@@ -80,21 +98,12 @@ public:
 	static Ctrl *GetDesktop()                  { return desktop; }
 	static void  SetDesktopSize(Size sz);
 	
-	static void Invalidate()                   { invalid = true; }
-
 	void DragRectDraw(const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
 	                  Color color, int type, int animation);
 
 	static Ctrl *FindMouseTopCtrl();
 
 	static void PaintScene(SystemDraw& draw);
-	static void PaintCaretCursor(SystemDraw& draw);
 	
-	static bool SystemCursor;
-
 	enum { DRAWDRAGRECT_SCREEN = 0x8000 };
-
-	_TODO_
-	static bool ProcessEventQueue(const String& event_queue);
-
 //$ };

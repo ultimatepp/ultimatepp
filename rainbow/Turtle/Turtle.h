@@ -20,11 +20,13 @@ public:
 
 private:
 	Zlib zlib;
+	bool hasdata;
 
 	void Reset();
 
 public:
 	String FlushStream();
+	bool   HasData() const         { return hasdata; }
 
 	TurtleStream() { Reset(); }
 };
@@ -46,24 +48,33 @@ public:
 		SETCURSORIMAGE = 5,
 		CURSORIMAGE = 6,
 		DISABLESENDING = 7,
+		UPDATESERIAL = 8,
+		
+		IMAGEPP = 9,
+		IMAGENP = 10,
+		IMAGEPN = 11,
+		IMAGENN = 12,
+
+		RECTPP = 13,
+		RECTNP = 14,
+		RECTPN = 15,
+		RECTNN = 16,
+
+		SETCARET = 17,
 	};
 	
 	static Index<int64>           img_index[3];
+
+	Point pos;
 	
 	int GetImageI(int from, Index<int64>& img_index, int maxcount, const Image& img);
 	int GetImageI(const Image& img);
 	static void ResetI()          { for(int i = 0; i < 3; i++) img_index[i].Clear(); }
 
-	void Put8(int x)              { turtle_stream.Put(x); }
-	void Put16(int x);
-	void Put32(int x);
-	void Put(Point p);
-	void Put(Size sz);
-	void Put(const Rect& r);
-	void Put(const String& s);
-
 	bool    CanSetSurface()                         { return false; }
 	static void Flush()                             {}
+	
+	SystemDraw()                                    { pos = Point(0, 0); }
 };
 
 struct BackDraw__ : public SystemDraw {
@@ -114,7 +125,7 @@ class TopWindowFrame;
 
 #define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <Turtle/Top.h>
 
-class PrinterJob { // Dummy only...
+class PrinterJob { // _TODO_
 	NilDraw             nil;
 	Vector<int>         pages;
 
@@ -136,11 +147,6 @@ public:
 	PrinterJob(const char *name = NULL)                 {}
 	~PrinterJob()                                       {}
 };
-
-void USDLSetup(dword flags);
-
-
-void InitTelpp();
 
 END_UPP_NAMESPACE
 

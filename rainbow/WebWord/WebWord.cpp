@@ -1,7 +1,4 @@
-#include <RichEdit/RichEdit.h>
-#include <PdfDraw/PdfDraw.h>
-
-using namespace Upp;
+#include "WebWord.h"
 
 #define IMAGECLASS UWordImg
 #define IMAGEFILE  <UWord/UWord.iml>
@@ -18,46 +15,6 @@ FileSel& PdfFs()
 	static FileSel fs;
 	return fs;
 }
-
-struct UWord : public TopWindow {
-public:
-	virtual void DragAndDrop(Point, PasteClip& d);
-	virtual void FrameDragAndDrop(Point, PasteClip& d);
-	
-	virtual void ShutdownWindow();
-
-	RichEdit   editor;
-	MenuBar    menubar;
-	ToolBar    toolbar;
-	StatusBar  statusbar;
-	String     filename;
-
-	static LRUList& lrufile() { static LRUList l; return l; }
-
-	void Load(const String& filename);
-	void OpenFile(const String& fn);
-	void New();
-	void Open();
-	void Save0();
-	void Save();
-	void SaveAs();
-	void Print();
-	void Pdf();
-	void About();
-	void Destroy(bool shutdown);
-	void SetBar();
-	void FileBar(Bar& bar);
-	void AboutMenu(Bar& bar);
-	void MainMenu(Bar& bar);
-	void MainBar(Bar& bar);
-
-public:
-	typedef UWord CLASSNAME;
-
-	static void SerializeApp(Stream& s);
-
-	UWord();
-};
 
 void UWord::FileBar(Bar& bar)
 {
@@ -92,6 +49,36 @@ void UWord::FileBar(Bar& bar)
 void UWord::AboutMenu(Bar& bar)
 {
 	bar.Add("About..", THISBACK(About));
+}
+
+String FormatSize(int64 n)
+{
+	if(n < 10000)
+		return Format("%d B", n);
+	else
+	if(n < 10000 * 1024)
+		return Format("%d.%d KB", n >> 10, (n & 1023) / 103);
+	else
+	if(n < I64(10000000) * 1024)
+		return Format("%d.%d MB", n >> 20, (n & 1023) / 103);
+	else
+		return Format("%d.%d GB", n >> 30, (n & 1023) / 103);
+}
+
+
+void UWord::ShowInfo()
+{
+	String s;
+	s << "Mem " << MemoryUsedKb() << " KB";
+	int secs = GetSysTime() - Ctrl::stat_started;
+	Time tm = Time(1, 1, 1, 0, 0, 0) + secs;
+	s << ", uptime " << Format("%d:%0d:%02d:%02d", tm - Date(1, 1, 1), tm.hour, tm.minute, tm.second);
+	s << ", data sent " << FormatSize(Ctrl::stat_data_send);
+	if(secs)
+		s << ", average bandwidth " << FormatSize(Ctrl::stat_data_send / secs) << "/s";
+	s << ", actual bandwidth " << FormatSize(Ctrl::stat_data_send - sent_prev);
+	sent_prev = Ctrl::stat_data_send;
+	statusbar.Set(s);
 }
 
 void UWord::MainMenu(Bar& bar)
@@ -248,6 +235,9 @@ UWord::UWord()
 	editor.WhenRefreshBar = THISBACK(SetBar);
 	OpenMain();
 	ActiveFocus(editor);
+
+	SetTimeCallback(-1000, THISBACK(ShowInfo));
+	sent_prev = 0;
 }
 
 void UWord::SerializeApp(Stream& s)
@@ -294,7 +284,7 @@ struct EventsWnd : TopWindow {
 
 	EventsWnd() {
 		Add(l.SizePos());
-		SetTimeCallback(-100, THISBACK(Do));
+		SetTimeCallback(-1000, THISBACK(Do));
 	}
 };
 
@@ -311,7 +301,8 @@ CONSOLE_APP_MAIN
 	LOG("Session Started");
 
 #ifdef _DEBUG
-	MemoryLimitKb(10000);
+	MemoryLimitKb(5000000);
+	Ctrl::debugmode = true;
 #endif
 
 	Ctrl::WhenDisconnect = callback(FinishApp);
@@ -324,6 +315,8 @@ CONSOLE_APP_MAIN
 	{
 		SetLanguage(LNG_ENGLISH);
 		SetDefaultCharset(CHARSET_UTF8);
+		
+		PromptOK("Session started");
 	
 		UWordFs().Type("QTF files", "*.qtf")
 		         .AllFilesType()

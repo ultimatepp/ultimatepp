@@ -8,9 +8,12 @@ NAMESPACE_UPP
 #define LDUMP(x)    // RDUMP(x)
 #define LTIMING(x)
 
+Time  Ctrl::stat_started;
+int64 Ctrl::stat_data_send;
+
 static Point MousePos;
 
-Size   DesktopSize = Size(1000, 1000);
+Size   Ctrl::DesktopSize = Size(1000, 1000);
 
 StaticRect& DesktopRect()
 {
@@ -23,24 +26,7 @@ Ctrl& Ctrl::Desktop()
 	return DesktopRect();
 }
 
-BiVector<String> event_queue;
-
-void Ctrl::TimerAndPaint()
-{
-	LLOG("TimerAndPaint " << msecs());
-	TimerProc(GetTickCount());
-	DefferedFocusSync();
-	SyncCaret();
-	SyncTopWindows();
-	SweepMkImageCache();
-	DoPaint();
-	socket.Timeout(20000);
-	websocket.SendBinary(ZCompress(String(SystemDraw::DISABLESENDING, 1))); // Do not send events until data transfered and processed
-	String s = turtle_stream.FlushStream();
-	if(s.GetCount() > 10)
-		LLOG("Sending " << s.GetLength());
-	websocket.SendBinary(s);
-}
+BiVector<String> Ctrl::event_queue;
 
 void Ctrl::EndSession()
 {
@@ -66,8 +52,20 @@ bool Ctrl::IsWaitingEvent()
 		}
 		LLOG("Recieved data " << s);
 		StringStream ss(s);
-		while(!ss.IsEof())
-			event_queue.AddTail(ss.GetLine());
+		while(!ss.IsEof()) {
+			String s = ss.GetLine();
+			CParser p(s);
+			try {
+				if(p.Id("S")) {
+					uint32 l = p.ReadNumber();
+					uint32 h = p.ReadNumber();
+					recieved_update_serial = MAKEQWORD(l, h);
+				}
+				else
+					event_queue.AddTail(s);
+			}
+			catch(CParser::Error) {}
+		}
 	}
 	socket.Timeout(20000);
 	if(socket.IsError())
@@ -148,86 +146,6 @@ void Ctrl::SetCaret(int x, int y, int cx, int cy)
 	SyncCaret();
 }
 
-void Ctrl::SyncCaret()
-{
-	CursorSync();
-}
-
-void Ctrl::CursorSync()
-{
-//	LLOG("@ CursorSync");
-	Point p = GetMousePos() - fbCursorImage.GetHotSpot();
-	Rect cr = Null;
-	if(focusCtrl && (((GetTickCount() - fbCaretTm) / 500) & 1) == 0)
-		cr = (RectC(focusCtrl->caretx, focusCtrl->carety, focusCtrl->caretcx, focusCtrl->caretcy)
-		      + focusCtrl->GetScreenView().TopLeft()) & focusCtrl->GetScreenView();
-	if(fbCursorPos != p && !SystemCursor || cr != fbCaretRect) {
-		fbCaretRect = cr;
-		fbCursorPos = p;
-		Invalidate();
-	}
-}
-
-void Ctrl::PaintScene(SystemDraw& draw)
-{
-	if(!desktop)
-		return;
-	LLOG("@ DoPaint");
-	LTIMING("DoPaint paint");
-	draw.Init(DesktopSize);
-	draw.Begin();
-	Vector<Rect> invalid;
-	invalid.Add(DesktopSize); _TODO_
-	for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
-		Rect r = topctrl[i]->GetRect();
-		Rect ri = GetClipBound(invalid, r);
-		if(!IsNull(ri)) {
-			draw.Clipoff(r);
-			topctrl[i]->UpdateArea(draw, ri - r.TopLeft());
-			draw.End();
-			Subtract(invalid, r);
-			draw.ExcludeClip(r);
-		}
-	}
-	Rect ri = GetClipBound(invalid, desktop->GetRect().GetSize());
-	if(!IsNull(ri))
-		desktop->UpdateArea(draw, ri);
-	draw.End();
-}
-
-void Ctrl::PaintCaretCursor(SystemDraw& draw)
-{
-	if(!IsNull(fbCaretRect))
-		draw.DrawRect(fbCaretRect, InvertColor);
-	int64 q = fbCursorImage.GetAuxData();
-	if(q) {
-		draw.Put8(SystemDraw::STD_CURSORIMAGE);
-		draw.Put8(clamp((int)q, 1, 16));
-	}
-	else {
-		String h;
-		Point p = fbCursorImage.GetHotSpot();
-		h << "url('data:image/png;base64,"
-		  << Base64Encode(PNGEncoder().SaveString(fbCursorImage))
-		  << "') " << p.x << ' ' << p.y << ", default";
-		draw.Put8(SystemDraw::SETCURSORIMAGE);
-		draw.Put16(0); // _TODO_ Cursor cache
-		draw.Put(h);
-		draw.Put8(SystemDraw::CURSORIMAGE);
-		draw.Put16(0); // _TODO_ Cursor cache
-	}
-}
-
-void Ctrl::DoPaint()
-{ 
-	if(invalid && desktop) {
-		invalid = false;
-		SystemDraw draw;
-		PaintScene(draw);
-		PaintCaretCursor(draw);
-	}
-}
-
 bool keyShift;
 bool keyCtrl;
 bool keyAlt;
@@ -238,7 +156,8 @@ bool GetAlt()         { return keyAlt; }
 bool GetCapsLock()    { return false; } // Impossible to implement
 
 dword fbKEYtoK(dword chr) {
-	chr = chr + K_DELTA;
+	if(findarg(chr, 9, 0xd) < 0)
+		chr = chr + K_DELTA;
 	if(chr == K_ALT_KEY || chr == K_CTRL_KEY || chr == K_SHIFT_KEY)
 		return chr;
 	if(GetCtrl()) chr |= K_CTRL;
@@ -409,7 +328,7 @@ bool Ctrl::ProcessEvent(const String& event)
 			int code = p.ReadInt();
 			int which = p.ReadInt();
 			ReadKeyMods(p);
-			if(which && !keyAlt && !keyCtrl)
+			if(which && !keyAlt && !keyCtrl && findarg(which, 9, 0xd) < 0)
 				DoKeyFB(which, 1);
 		}
 	}

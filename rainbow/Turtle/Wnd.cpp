@@ -12,31 +12,32 @@ NAMESPACE_UPP
 Ptr<Ctrl>      Ctrl::desktop;
 Vector<Ctrl *> Ctrl::topctrl;
 
-bool           Ctrl::invalid;
-
-bool           Ctrl::sdlMouseIsIn;
-
 Point          Ctrl::fbCursorPos = Null;
 Image          Ctrl::fbCursorImage;
 Rect           Ctrl::fbCaretRect;
 int            Ctrl::fbCaretTm;
 bool           Ctrl::fbEndSession;
 
-bool           Ctrl::SystemCursor;
+Vector<Rect>   Ctrl::invalid;
+
+void Ctrl::InvalidateDesktop()
+{
+	AddInvalid(desktop->GetSize());
+}
 
 void Ctrl::SetDesktop(Ctrl& q)
 {
 	desktop = &q;
 	desktop->SetOpen(true);
 	desktop->NewTop();
-	invalid = true;
+	InvalidateDesktop();
 }
 
 void Ctrl::SetDesktopSize(Size sz)
 {
 	if(desktop)
 		desktop->SetRect(sz);
-	invalid = true;
+	InvalidateDesktop();
 	SyncTopWindows();
 }
 
@@ -164,11 +165,11 @@ Rect Ctrl::GetClipBound(const Vector<Rect>& inv, const Rect& r)
 	return ri;
 }
 
-void Ctrl::WndUpdate(const Rect&)
+void Ctrl::WndUpdate(const Rect& r)
 {
 	GuiLock __;
-	Invalidate();
-	DoPaint();
+//	WndInvalidateRect(r);
+//	DoPaint(); // TODO
 }
 
 Rect Ctrl::GetWndScreenRect() const
@@ -255,7 +256,7 @@ void Ctrl::DestroyWnd()
 			topctrl[i]->WndDestroy();
 	int q = FindTopCtrl();
 	if(q >= 0) {
-		Invalidate();
+		AddInvalid();
 		topctrl.Remove(q);
 	}
 	if(top) {
@@ -279,7 +280,7 @@ void Ctrl::PutForeground()
 {
 	int q = FindTopCtrl();
 	if(q >= 0) {
-		Invalidate();
+		AddInvalid();
 		topctrl.Remove(q);
 		topctrl.Add(this);
 	}
@@ -355,10 +356,21 @@ bool Ctrl::HasWndCapture() const
 	return captureCtrl && captureCtrl->GetTopCtrl() == this;
 }
 
-void Ctrl::WndInvalidateRect(const Rect&)
+void Ctrl::AddInvalid(const Rect& r_)
+{
+	Rect r = r_ & Rect(DesktopSize);
+	if(!IsNull(r))
+		AddRefreshRect(invalid, r);
+}
+
+void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
-	Invalidate();
+	int q = FindTopCtrl();
+	if(q >= 0)
+		AddInvalid(r + topctrl[q]->GetRect().TopLeft());
+	else
+		AddInvalid(r);
 }
 
 void Ctrl::WndSetPos(const Rect& rect)
@@ -367,14 +379,15 @@ void Ctrl::WndSetPos(const Rect& rect)
 	TopWindow *w = dynamic_cast<TopWindow *>(this);
 	if(w)
 		w->SyncFrameRect(rect);
-	Invalidate();
+	AddInvalid();
 	SetWndRect(rect);
+	AddInvalid(rect);
 }
 
 void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
-	LLOG("ScrollView " << rect);
+	LLOG("ScrollView " << r << ", size " << GetSize());
 	WndInvalidateRect(r);
 }
 
@@ -396,7 +409,7 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 	popup = isopen = true;
 	RefreshLayoutDeep();
 	if(activate) SetFocusWnd();
-	Invalidate();
+	AddInvalid();
 }
 
 Rect Ctrl::GetDefaultWindowRect() {

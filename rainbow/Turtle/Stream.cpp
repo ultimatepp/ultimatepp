@@ -14,11 +14,13 @@ void TurtleStream::Reset()
 {
 	zlib.Clear();
 	zlib.Compress();
+	hasdata = false;
 }
 
 void TurtleStream::Out(const void *data, dword size)
 {
 	zlib.Put(data, (int)size);
+	hasdata = true;
 }
 
 String TurtleStream::FlushStream()

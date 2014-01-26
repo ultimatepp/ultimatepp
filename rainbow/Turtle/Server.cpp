@@ -25,35 +25,6 @@ void Ctrl::Broadcast(int signal) {
 			kill(pid[i], signal);	
 #endif
 }
-
-void Ctrl::Signal(int signal)
-{
-#ifdef PLATFORM_POSIX
-	int i = 0;
-	while(i < pid.GetCount())
-		if(pid[i] && waitpid(pid[i], 0, WNOHANG | WUNTRACED) > 0)
-			pid.Remove(i);
-		else
-			i++;
-	switch(signal) {
-	case SIGTERM:
-	case SIGHUP:
-		quit = true;
-		Broadcast(signal);
-		break;
-	case SIGINT:
-		Broadcast(signal);
-		exit(0);
-		break;
-	case SIGALRM:
-		if(getpid() != main_pid) {
-			// "Timeout - session stoped"
-			exit(0);
-		}
-		break;
-	}
-#endif
-}
 	
 String    Ctrl::host = "localhost";
 int       Ctrl::port = 8088;
@@ -61,21 +32,14 @@ bool      Ctrl::debugmode;
 String    Ctrl::ip = "0.0.0.0";
 TcpSocket Ctrl::socket;
 WebSocket Ctrl::websocket;
+int64     Ctrl::update_serial;
+int64     Ctrl::recieved_update_serial;
 
 bool Ctrl::StartSession()
 {
 	LLOG("Connect");
 
 #ifdef PLATFORM_POSIX
-	struct sigaction sa;
-	memset(&sa, 0, sizeof(sa));
-	sa.sa_handler = Signal;
-	sigaction(SIGTERM, &sa, NULL);
-	sigaction(SIGINT, &sa, NULL);
-	sigaction(SIGHUP, &sa, NULL);
-	sigaction(SIGALRM, &sa, NULL);
-	sigaction(SIGCHLD, &sa, NULL);
-	
 	main_pid = getpid();
 #endif
 
@@ -99,11 +63,19 @@ bool Ctrl::StartSession()
 	}
 #endif
 
-	RLOG("Starting to listen on 8088");
+	RLOG("Starting to listen on 8088, pid: " << getpid());
 	socket.Timeout(2000); // TODO: Not quite ideal way to make quit work..
 	for(;;) {
 		if(quit)
 			return false;
+#ifdef PLATFORM_POSIX
+		int i = 0;
+		while(i < pid.GetCount())
+			if(pid[i] && waitpid(pid[i], 0, WNOHANG | WUNTRACED) > 0)
+				pid.Remove(i);
+			else
+				i++;
+#endif
 		if(server.IsError())
 			server.ClearError();
 		if(socket.Accept(server)) {
@@ -112,8 +84,10 @@ bool Ctrl::StartSession()
 				RLOG("Accepted, header read");
 				if(websocket.WebAccept(socket, http)) { // TODO: Connection limit, info
 #ifdef PLATFORM_POSIX
+					if(debugmode)
+						break;
 					int newpid = fork();
-					if(debugmode || newpid == 0)
+					if(newpid == 0)
 						break;
 					else {
 						pid.Add(newpid);
@@ -132,7 +106,7 @@ bool Ctrl::StartSession()
 			socket.Close();
 		}
 	}
-	RLOG("Connection established with " << socket.GetPeerAddr());
+	RLOG("Connection established with " << socket.GetPeerAddr() << ", pid: " << getpid());
 	server.Close();
 	if(socket.IsError())
 		RLOG("CONNECT ERROR: " << socket.GetErrorDesc());
@@ -145,12 +119,18 @@ bool Ctrl::StartSession()
 #endif
 	ChStdSkin();
 
-	extern Size DesktopSize;
 	extern StaticRect& DesktopRect();
 
 	DesktopRect().Color(Cyan());
 	DesktopRect().SetRect(0, 0, DesktopSize.cx, DesktopSize.cy);
 	SetDesktop(Desktop());
+	
+	stat_started = GetSysTime();
+	
+	while(!IsWaitingEvent())
+		GuiSleep(10);
+	
+	ProcessEvents();
 
 	return true;
 }
