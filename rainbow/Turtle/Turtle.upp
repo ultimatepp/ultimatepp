@@ -19,6 +19,7 @@ file
 	Cursor.cpp,
 	Stream.cpp,
 	Server.cpp,
+	Output.cpp,
 	Event.cpp,
 	Top.h,
 	TopFrame.cpp,
