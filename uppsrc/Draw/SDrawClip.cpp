@@ -10,6 +10,14 @@ void SDraw::Init(const Rect& r)
 	c.offset = r.TopLeft();
 }
 
+void SDraw::Init(const Vector<Rect>& rs, int height, Point offset)
+{
+	Cy(height);
+	Cloff& c = cloff.Add();
+	c.clip <<= rs;
+	c.offset = offset;
+}
+
 void SDraw::BeginOp()
 {
 	Cloff& c = cloff.Top();

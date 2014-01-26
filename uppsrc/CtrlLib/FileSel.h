@@ -152,6 +152,8 @@ public:
 
 String DirectoryUp(String& dir, bool basedir = false);
 
+String FormatFileSize(int64 n);
+
 class FileSel : public WithFileSelectorLayout<TopWindow> {
 public:
 	virtual bool Key(dword key, int count);

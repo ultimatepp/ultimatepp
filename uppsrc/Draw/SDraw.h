@@ -42,10 +42,11 @@ public:
 	virtual void  PutImage(Point p, const Image& img, const Rect& src, Color color);
 	virtual void  PutRect(const Rect& r, Color color) = 0;
 	virtual Image RenderGlyph(Point at, int angle, int chr, Font fnt, Color color, Size sz);
-
+	
 	Point GetOffset() const                                       { return cloff.Top().offset; }
 
 	void Init(const Rect& r);
+	void Init(const Vector<Rect>& rs, int height, Point offset = Point(0, 0));
 };
 
 class SImageDraw1 : public SDraw {
