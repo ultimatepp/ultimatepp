@@ -27,6 +27,8 @@ struct MyApp : TopWindow {
 
 Image MyApp::CursorImage(Point p, dword keyflags)
 {
+	return Image::Arrow();
+	
 	static Image img;
 	ONCELOCK {
 		SImageDraw w(64, 64);
