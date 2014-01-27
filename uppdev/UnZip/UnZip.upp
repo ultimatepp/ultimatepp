@@ -1,10 +1,10 @@
 uses
 	Core,
-	plugin\zip;
+	plugin/zip;
 
 file
-	main.cpp;
+	UnZip.cpp;
 
 mainconfig
-	"" = "";
+	"" = "SSE2";
 
