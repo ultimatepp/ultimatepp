@@ -10,7 +10,8 @@
 #include <fontconfig/fontconfig.h>
 #include <fontconfig/fcfreetype.h>
 
-#include <freetype/ftxf86.h>
+// #include <ftxf86.h> // The only function required from that header:
+FT_EXPORT( const char* ) FT_Get_X11_Font_Format( FT_Face  face ); // Put here to avoid include path issues...
 
 NAMESPACE_UPP
 
