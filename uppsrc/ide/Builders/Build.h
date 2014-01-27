@@ -61,6 +61,7 @@ struct MakeBuild {
 	String       mainconfigparam;
 	String       add_includes;
 	String       main_conf;
+	Index<String> cfg;
 
 	const TargetMode& GetTargetMode();
 	Index<String> PackageConfig(const Workspace& wspc, int package, const VectorMap<String, String>& bm,
@@ -74,7 +75,8 @@ struct MakeBuild {
 	                  String mainparam, String outfile, Vector<String>& linkfile, String& linkopt,
 	                  bool link = false);
 	void SetHdependDirs();
-	Vector<String> GetAllUses(const Workspace& wspc, int f);
+	Vector<String> GetAllUses(const Workspace& wspc, int f, const VectorMap<String, String>& bm,
+	                          String mainparam, Host& host, Builder& builder);
 	Vector<String> GetAllLibraries(const Workspace& wspc, int index,
 	                               const VectorMap<String, String>& bm, String mainparam,
 	                               Host& host, Builder& builder);
