@@ -227,8 +227,8 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 
 	int libtime = GetTickCount();
 	if(!HasFlag("MAIN")) {
-		if(HasFlag("BLITZ") || HasFlag("NOLIB")) {
-			linkfile.Append(obj);
+		if(HasFlag("BLITZ") && !HasFlag("SO")  || HasFlag("NOLIB")) {
+			linkfile.Append(obj); // Simply link everything as .o files...
 			IdeConsoleEndGroup();
 //			if(ccount)
 //				PutCompileTime(time, ccount);

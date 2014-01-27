@@ -220,9 +220,8 @@ LAYOUT(ModePaneLayout, 288, 460)
 	ITEM(DropList, debug, HSizePosZ(92, 120).TopPosZ(84, 19))
 	ITEM(Option, blitz, SetLabel(t_("BLITZ")).HSizePosZ(188, 46).TopPosZ(86, 15))
 	ITEM(ArrayCtrl, package, AutoHideSb(true).HSizePosZ(0, 0).VSizePosZ(120, 0))
-	ITEM(Switch, linkmode, SetLabel(t_("All static\nUse shared libs\nAll shared")).LeftPosZ(56, 228).TopPosZ(28, 16))
+	ITEM(Switch, linkmode, SetLabel(t_("All static\nUse shared libs\nAll shared")).LeftPosZ(0, 284).TopPosZ(28, 16))
 	ITEM(Label, dv___10, SetLabel(t_("Shared packages postfix")).LeftPosZ(0, 124).TopPosZ(48, 19))
-	ITEM(Label, dv___11, SetLabel(t_("Link mode")).LeftPosZ(0, 52).TopPosZ(28, 16))
 END_LAYOUT
 
 LAYOUT(LicenseLayout, 700, 536)

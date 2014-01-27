@@ -22,7 +22,7 @@ Index<String> MakeBuild::PackageConfig(const Workspace& wspc, int package,
 {
 	String packagepath = PackagePath(wspc[package]);
 	const Package& pkg = wspc.package[package];
-	Index<String> cfg;
+	cfg.Clear();
 	mainparam << ' ' << bm.Get(targetmode ? "RELEASE_FLAGS" : "DEBUG_FLAGS", NULL);
 	cfg = SplitFlags(mainparam, package == 0, wspc.GetAllAccepts(package));
 	cfg.FindAdd(bm.Get("BUILDER", "GCC"));
@@ -296,7 +296,7 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 	else
 		b->config.FindAdd("NOLIB");
 	bool ok = b->BuildPackage(package, linkfile, linkopt,
-		                      GetAllUses(wspc, pkindex),
+		                      GetAllUses(wspc, pkindex, bm, mainparam, *host, *b),
 		                      GetAllLibraries(wspc, pkindex, bm, mainparam, *host, *b),
 		                      targetmode - 1);
 	Vector<String> errors = PickErrors();
@@ -334,21 +334,26 @@ void MakeBuild::SetHdependDirs()
 	HdependSetDirs(include);
 }
 
-Vector<String> MakeBuild::GetAllUses(const Workspace& wspc, int f)
-{ // Warning: This does not seem to do what it is supposed to do...
+Vector<String> MakeBuild::GetAllUses(const Workspace& wspc, int f,
+	const VectorMap<String, String>& bm, String mainparam, Host& host, Builder& builder)
+{ // Gathers all uses, including subpackages, to support SO builds
 	String package = wspc[f];
 	Index<String> all_uses;
 	bool warn = true;
 	int n = 0;
 	while(f >= 0) {
 		const Package& p = wspc.package[f];
-		for(int fu = 0; fu < p.uses.GetCount(); fu++)
-			if(p.uses[fu].text != package)
-				all_uses.FindAdd(p.uses[fu].text);
-			else if(warn) {
-				PutConsole(NFormat("%s: circular 'uses' chain", package));
-				warn = false;
+		Index<String> config = PackageConfig(wspc, f, bm, mainparam, host, builder);
+		for(int fu = 0; fu < p.uses.GetCount(); fu++) {
+			if(MatchWhen(p.uses[fu].when, config.GetKeys())) {
+				if(p.uses[fu].text != package)
+					all_uses.FindAdd(p.uses[fu].text);
+				else if(warn) {
+					PutConsole(NFormat("%s: circular 'uses' chain", package));
+					warn = false;
+				}
 			}
+		}
 		f = -1;
 		while(n < all_uses.GetCount() && (f = wspc.package.Find(all_uses[n++])) < 0)
 			;
@@ -360,7 +365,7 @@ Vector<String> MakeBuild::GetAllLibraries(const Workspace& wspc, int index,
 	const VectorMap<String, String>& bm, String mainparam,
 	Host& host, Builder& builder)
 { // Warning: This does not seem to do what it is supposed to do...
-	Vector<String> uses = GetAllUses(wspc, index);
+	Vector<String> uses = GetAllUses(wspc, index, bm, mainparam, host, builder);
 	uses.Add(wspc[index]);
 	Index<String> libraries;
 	
@@ -427,15 +432,16 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 				for(t = 0; t < remaining.GetCount(); t++) {
 					const Package& pk = wspc.package[remaining[t]];
 					bool delay = false;
-					for(int u = 0; u < pk.uses.GetCount(); u++)
-						if(remaining.Find(wspc.package.Find(pk.uses[u].text)) >= 0) {
+					for(int u = 0; u < pk.uses.GetCount(); u++) {
+						if(remaining.Find(wspc.package.Find(UnixPath(pk.uses[u].text))) >= 0) {
 							delay = true;
 							break;
 						}
+					}
 					if(!delay)
 						break;
 				}
-				if(t >= remaining.GetCount())
+				if(t >= remaining.GetCount()) // Progress even if circular references present
 					t = 0;
 				build_order.Add(remaining[t]);
 				remaining.Remove(t);
@@ -577,7 +583,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 		b->version = tm.version;
 		b->method = method;
 		MakeFile mf;
-		b->AddMakeFile(mf, wspc[i], GetAllUses(wspc, i),
+		b->AddMakeFile(mf, wspc[i], GetAllUses(wspc, i, bm, mainconfigparam, *host, *b),
 		               GetAllLibraries(wspc, i, bm, mainconfigparam, *host, *b), allconfig,
 		               exporting);
 		if(!i) {
