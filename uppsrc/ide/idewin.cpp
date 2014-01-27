@@ -306,7 +306,8 @@ void Ide::SetupBars()
 Ide::Ide()
 {
 	editor.theide = this;
-
+	editor.WhenSel = THISBACK(SetToolBar);
+	
 	start_time = GetSysTime();
 	stat_build_time = 0;
 	build_start_time = Null;
