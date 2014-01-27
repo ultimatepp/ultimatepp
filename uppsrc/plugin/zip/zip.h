@@ -5,6 +5,64 @@
 
 NAMESPACE_UPP
 
+#ifndef OLD_UNZIP
+
+class UnZip {
+	struct File : Moveable<File> {
+		word   bit;
+		String path;
+		dword  time;
+		int    method;
+		dword  crc;
+		dword  csize;
+		dword  usize;
+		int64  offset;
+	};
+	
+	Stream      *zip;
+	bool         error;
+	Vector<File> file;
+	int          current;
+
+	void   ReadDir();
+
+	static Time   GetTime(dword time);
+
+public:
+	bool   IsEof() const          { return current >= file.GetCount(); }
+	operator bool() const         { return !IsEof() && !IsError(); }
+	
+	bool   IsError() const        { return error; }
+	void   ClearError()           { error = false; }
+
+	int    GetCount() const       { return file.GetCount(); }
+	String GetPath(int i) const   { return file[i].path; }
+	bool   IsFolder(int i) const  { return *file[i].path.Last() == '/'; }
+	int    GetLength(int i) const { return file[i].usize; }
+
+	void   Seek(int i)            { ASSERT(i >= 0 && i < file.GetCount()); current = i; }
+
+	bool   IsFolder() const       { return IsFolder(current); }
+	String GetPath() const        { return GetPath(current); }
+	int    GetLength() const      { return GetLength(current); }
+	Time   GetTime() const        { return GetTime(current); }
+
+	void   Skip()                 { current++; }
+	void   SkipFile()             { current++; }
+	bool   ReadFile(Stream& out, Gate2<int, int> progress = false);
+	String ReadFile(Gate2<int, int> progress = false);
+	
+	dword  GetPos() const;
+
+	void   Create(Stream& in);
+
+	UnZip(Stream& in);
+	UnZip();
+	virtual ~UnZip();
+};
+
+#else
+
 class UnZip {
 	Stream *zip;
 	
@@ -46,6 +104,8 @@ public:
 	UnZip();
 	virtual ~UnZip();
 };
+
+#endif
 
 class FileUnZip : public UnZip {
 	FileIn zip;
