@@ -563,7 +563,6 @@ void ChHostSkin()
 	if(!IsNull(c))
 		SColorMenu_Write(c);
 	{
-		
 		MenuBar::Style& s = MenuBar::StyleDefault().Write();
 		s.pullshift.y = 0;
 		int m = ImageMargin(mimg, 4, 5);
@@ -572,7 +571,7 @@ void ChHostSkin()
 		s.leftgap = 26;
 		ChGtkNew(menu_item, "menuitem", GTK_BOX);
 		int sw = GTK_SHADOW_OUT;
-		if(gtk_major_version > 2 || (gtk_major_version == 2 && gtk_minor_version >= 1))
+		if(gtk_check_version(2, 1, 0))
 			sw = GtkInt("selected_shadow_type");
 		GtkCh(s.item, sw, GTK_STATE_PRELIGHT);
 		s.itemtext = ChGtkColor(2, menu_item);
@@ -581,14 +580,20 @@ void ChHostSkin()
 			s.menutext = IsDark(c) ? White() : Black();
 
 		ChGtkNew(top_item, "menuitem", GTK_BOX);
-		if(gtk_major_version > 2 || (gtk_major_version == 2 && gtk_minor_version >= 1))
+		if(gtk_check_version(2, 1, 0))
 			sw = GtkInt("selected_shadow_type");
 		
 		s.topitemtext[0] = ChGtkColor(0, top_item);
-		s.topitemtext[1] = ChGtkColor(0, top_item);
+		if(Qt)
+			s.topitemtext[1] = ChGtkColor(2, top_item);
+		else
+			s.topitemtext[1] = ChGtkColor(0, top_item);
 		s.topitemtext[2] = ChGtkColor(2, top_item);
 		SColorMenuText_Write(s.topitemtext[1]);
-		s.topitem[1] = s.topitem[0];
+		if(Qt)
+			GtkCh(s.topitem[1], sw, GTK_STATE_PRELIGHT);
+		else
+			s.topitem[1] = s.topitem[2];
 		GtkCh(s.topitem[2], sw, GTK_STATE_PRELIGHT);
 		s.topitemtext[2] = ChGtkColor(2, top_item);
 		if(engine == "Redmond") {
