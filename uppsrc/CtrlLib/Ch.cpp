@@ -16,9 +16,10 @@ void ChSysInit();
 
 void ChStdSkin()
 {
-	ChSysInit();
-	GUI_GlobalStyle_Write(GUISTYLE_XP);
-	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
+    ChSysInit();
+    GUI_GlobalStyle_Write(GUISTYLE_XP); // <- Hard theme restart!
+    GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
+    ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
 }
 
 void SbWc(Value *look)
