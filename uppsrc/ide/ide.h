@@ -1061,7 +1061,9 @@ public:
 	void      ResolveUvsConflict();
 
 	void      SetBar();
-
+	void      SetMenuBar();
+	void      SetToolBar();
+	
 	void      UpdateFormat(CodeEditor& editor);
 	void      UpdateFormat();
 	void      ReadHlStyles(ArrayCtrl& hlstyle);

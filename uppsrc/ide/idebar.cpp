@@ -165,6 +165,8 @@ void Ide::Edit(Bar& menu) {
 			designer->EditMenu(menu);
 	}
 	else {
+		String selection = editor.GetSelection();
+		
 		if(GetFileExt(editfile) == ".t") {
 			if(editastext.Find(editfile) >= 0)
 				menu.Add(AK_DESIGNER, THISBACK(EditUsingDesigner))
@@ -184,17 +186,21 @@ void Ide::Edit(Bar& menu) {
 		if(toolbar_in_row) add = &MenuBar::AddMenu;
 		(menu.*add)("Undo", CtrlImg::undo(), callback(&editor, &LineEdit::Undo))
 			.Key(K_CTRL_Z)
+			.Enable(editor.IsUndo())
 			.Help("Undo changes to text");
 		(menu.*add)("Redo", CtrlImg::redo(), callback(&editor, &LineEdit::Redo))
 			.Key(K_SHIFT|K_CTRL_Z)
+			.Enable(editor.IsRedo())
 			.Help("Redo undone changes");
 		if(!toolbar_in_row || menu.IsMenuBar())
 			menu.Separator();
 		(menu.*add)("Cut", CtrlImg::cut(), callback(&editor, &LineEdit::Cut))
 			.Key(K_CTRL_X)
+			.Enable(!selection.IsEmpty())
 			.Help("Cut selection and place it on the system clipboard");
 		(menu.*add)("Copy", CtrlImg::copy(), callback(&editor, &LineEdit::Copy))
 			.Key(K_CTRL_C)
+			.Enable(!selection.IsEmpty())
 			.Help("Copy current selection on the system clipboard");
 		(menu.*add)("Paste", CtrlImg::paste(), THISBACK(EditPaste))
 			.Key(K_CTRL_V)
@@ -511,30 +517,32 @@ void Ide::DebugMenu(Bar& menu)
 }
 
 void Ide::BrowseMenu(Bar& menu) {
-	menu.AddMenu(AK_NAVIGATOR, IdeImg::Navigator(), THISBACK(ToggleNavigator))
-	     .Check(editor.IsNavigator());
-	menu.Add(AK_SEARCHCODE, THISBACK(SearchCode));
-	menu.Add(!designer, AK_GOTO, THISBACK(Goto));
-	menu.Add(AK_GOTOGLOBAL, THISBACK(GotoGlobal));
-	menu.Add(!designer, AK_JUMPS, THISBACK(ContextGoto));
-	menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
-	menu.Add(!designer, AK_ASSIST, callback(&editor, &AssistEditor::Assist));
-	menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
-	menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
-	menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Thisbacks));
-	menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
-	menu.Add(!designer, AK_COMPLETE2, callback(&editor, &AssistEditor::Complete2));
-	menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
-	menu.Add(!designer, "Insert", THISBACK(InsertMenu));
-	menu.MenuSeparator();
-	menu.Add("Rescan code", THISBACK(RescanCode));
-	menu.MenuSeparator();
-	menu.AddMenu(AK_CALC, IdeImg::calc(), THISBACK1(ToggleBottom, BCALC))
+	if (menu.IsMenuBar()) {
+		menu.AddMenu(AK_NAVIGATOR, IdeImg::Navigator(), THISBACK(ToggleNavigator))
+	    	 .Check(editor.IsNavigator());
+		menu.Add(AK_SEARCHCODE, THISBACK(SearchCode));
+		menu.Add(!designer, AK_GOTO, THISBACK(Goto));
+		menu.Add(AK_GOTOGLOBAL, THISBACK(GotoGlobal));
+		menu.Add(!designer, AK_JUMPS, THISBACK(ContextGoto));
+		menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
+		menu.Add(!designer, AK_ASSIST, callback(&editor, &AssistEditor::Assist));
+		menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
+		menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
+		menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Thisbacks));
+		menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
+		menu.Add(!designer, AK_COMPLETE2, callback(&editor, &AssistEditor::Complete2));
+		menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
+		menu.Add(!designer, "Insert", THISBACK(InsertMenu));
+		menu.MenuSeparator();
+		menu.Add("Rescan code", THISBACK(RescanCode));
+		menu.MenuSeparator();
+		menu.AddMenu(AK_CALC, IdeImg::calc(), THISBACK1(ToggleBottom, BCALC))
 	     .Check(IsBottomShown() && btabs.GetCursor() == BCALC);
-	menu.AddMenu(AK_QTF, IdeCommonImg::Qtf(), THISBACK(Qtf));
-	menu.AddMenu(!designer, AK_XML, IdeCommonImg::xml(), THISBACK(Xml));
-	menu.AddMenu(!designer, AK_JSON, IdeCommonImg::json(), THISBACK(Json));
-	menu.MenuSeparator();
+		menu.AddMenu(AK_QTF, IdeCommonImg::Qtf(), THISBACK(Qtf));
+		menu.AddMenu(!designer, AK_XML, IdeCommonImg::xml(), THISBACK(Xml));
+		menu.AddMenu(!designer, AK_JSON, IdeCommonImg::json(), THISBACK(Json));
+	}
+	menu.Separator();
 	menu.Add(AK_BROWSETOPICS, IdeImg::help(), THISBACK(ShowTopics));
 	menu.Add(AK_SEARCHTOPICS, THISBACK(SearchTopics));
 	menu.Add("About..", THISBACK(About));
@@ -572,6 +580,7 @@ void Ide::MainTool(Bar& bar)
 		bar.Separator();
 	Project(bar);
 	BuildMenu(bar);
+	
 	if(!debugger) {
 		bar.Separator();
 		DebugMenu(bar);
@@ -598,6 +607,16 @@ void Ide::ConsoleMenu(Bar& menu)
 
 void Ide::SetBar()
 {
+	SetMenuBar();
+	SetToolBar();
+}
+
+void Ide::SetMenuBar()
+{
 	menubar.Set(THISBACK(MainMenu));
+}
+
+void Ide::SetToolBar()
+{
 	toolbar.Set(THISBACK(MainTool));
 }
