@@ -482,8 +482,9 @@ void ChHostSkin()
 				img = GetGTK(w, GTK_STATE_NORMAL, GTK_SHADOW_IN, "entry", GTK_SHADOW, 20, 20);
 				efm = max(ImageMargin(img, 4, 0), 1);
 			}
-			img = GetGTK(w, GTK_STATE_NORMAL, GTK_SHADOW_IN,
-			             "entry", GTK_SHADOW, 2 * efm + 3, 2 * efm + 3);
+			if(!Qt)
+				img = GetGTK(w, GTK_STATE_NORMAL, GTK_SHADOW_IN,
+				             "entry", GTK_SHADOW, 2 * efm + 3, 2 * efm + 3);
 			ImageBuffer eb(img);
 			eb.SetHotSpot(Point(efm, efm));
 			s.edge[i] = Image(eb);
