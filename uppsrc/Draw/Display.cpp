@@ -15,7 +15,12 @@ AttrText::operator Value() const
 
 AttrText::AttrText(const Value& v)
 {
-	*this = ValueTo<AttrText>(v);
+	if(IsString(v)) {
+		Init();
+		text = v;
+	}
+	else
+		*this = ValueTo<AttrText>(v);
 }
 
 void AttrText::Init()

@@ -132,6 +132,11 @@ void DelayCallback::Invoke() {
 	SetTimeCallback(delay, target, this);
 }
 
+void sSyncLabel(Label *lbl, const char *label, EditString *text)
+{
+	lbl->SetLabel(String().Cat() << label << " (" << text->GetLength() << "/" << text->GetMaxLength() << ")");
+}
+
 bool EditText(String& s, const char *title, const char *label, int (*f)(int), int maxlen)
 {
 	WithEditStringLayout<TopWindow> dlg;
@@ -139,7 +144,10 @@ bool EditText(String& s, const char *title, const char *label, int (*f)(int), in
 	dlg.lbl = label;
 	dlg.text = s.ToWString();
 	dlg.text.SetFilter(f);
-	if(maxlen) dlg.text.MaxLen(maxlen);
+	if(maxlen) {
+		dlg.text.MaxLen(maxlen);
+		dlg.text <<= callback3(sSyncLabel, &dlg.lbl, label, &dlg.text);
+	}
 	if(dlg.Execute() == IDOK) {
 		s = dlg.text;
 		return true;
