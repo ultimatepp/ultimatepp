@@ -85,24 +85,24 @@ st]&]
 [s2; Converts S`_[/ type] to (multiline) text, mostly for debugging 
 purposes.&]
 [s3; &]
-[s4; &]
-[s5;:S`_type`:`:GetCount`(`)const:%- [@(0.0.255) int]_[* GetCount]()_[@(0.0.255) const]&]
+[s4;%- &]
+[s5;:S`_type`:`:GetCount`(`):%- [@(0.0.255) static] [@(0.0.255) int]_[* GetCount]()&]
 [s2; Returns a number of columns of this S`_[/ type].&]
-[s3; &]
-[s4; &]
-[s5;:S`_type`:`:GetId`(int`)const:%- [_^SqlId^ SqlId]_[* GetId]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) c
-onst]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:S`_type`:`:GetId`(int`):%- [@(0.0.255) static] [_^SqlId^ SqlId]_[* GetId]([@(0.0.255) in
+t]_[*@3 i])&]
 [s2; Returns a column ID for column at [%-*@3 i].&]
 [s3; &]
 [s4;%- &]
-[s5;:S`_type`:`:GetWidth`(int`)const:%- [@(0.0.255) int]_[* GetWidth]([@(0.0.255) int]_[*@3 i
-])_[@(0.0.255) const]&]
+[s5;:S`_type`:`:GetWidth`(int`):%- [@(0.0.255) static] [@(0.0.255) int]_[* GetWidth]([@(0.0.255) i
+nt]_[*@3 i])&]
 [s2; Returns the width of column (usually text) as defined in the 
 schema. If column does not have width, returns 0.&]
 [s3; &]
 [s4;%- &]
-[s5;:S`_type`:`:GetWidth`(const SqlId`&`)const:%- [@(0.0.255) int]_[* GetWidth]([@(0.0.255) c
-onst]_[_^SqlId^ SqlId][@(0.0.255) `&]_[*@3 id])_[@(0.0.255) const]&]
+[s5;:S`_type`:`:GetWidth`(const SqlId`&`):%- [@(0.0.255) static] [@(0.0.255) int]_[* GetWid
+th]([@(0.0.255) const]_[_^SqlId^ SqlId][@(0.0.255) `&]_[*@3 id])&]
 [s2; Returns the width of column (usually text) as defined in the 
 schema.If [%-*@3 id] is not in S`_[/ type], returns 0.&]
 [s3; &]

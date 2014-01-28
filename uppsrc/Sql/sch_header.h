@@ -21,10 +21,12 @@ public: \
 	bool                        operator==(const S_##Table& x) const  { return EqualFields(const_cast<S_##Table&>(*this), const_cast<S_##Table&>(x)); } \
 	bool                        operator!=(const S_##Table& x) const  { return !operator==(x); } \
 	String                      ToString() const                      { return AsString((Fields)const_cast<S_##Table&>(*this)); } \
-	int                         GetCount() const                      { return info->GetCount(); } \
-	SqlId                       GetId(int i) const                    { return info->GetId(i); } \
-	int                         GetWidth(int i) const                 { return info->GetWidth(i); } \
-	int                         GetWidth(const SqlId& id) const       { return info->GetWidth(id); } \
+	\
+	static int                  GetCount()                            { return GetInfo().GetCount(); } \
+	static SqlId                GetId(int i)                          { return GetInfo().GetId(i); } \
+	static int                  GetWidth(int i)                       { return GetInfo().GetWidth(i); } \
+	static int                  GetWidth(const SqlId& id)             { return GetInfo().GetWidth(id); } \
+	\
 	Ref                         GetRef(int i)                         { return info->GetRef(this, i); } \
 	Ref                         GetRef(const SqlId& id)               { return info->GetRef(this, id); } \
 	Value                       Get(const SqlId& id) const            { return info->Get(this, id); } \

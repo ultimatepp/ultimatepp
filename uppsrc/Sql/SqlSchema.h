@@ -192,10 +192,11 @@ struct S_type {
 	bool                        operator!=(const S_type& x) const;
 	String                      ToString() const;
 
-	int                         GetCount() const;
-	SqlId                       GetId(int i) const;
-	int                         GetWidth(int i) const;
-	int                         GetWidth(const SqlId& id) const;
+	static int                  GetCount();
+	static SqlId                GetId(int i);
+	static int                  GetWidth(int i);
+	static int                  GetWidth(const SqlId& id);
+
 	Ref                         GetRef(int i);
 	Ref                         GetRef(const SqlId& id);
 	Value                       Get(const SqlId& id) const;
@@ -204,6 +205,7 @@ struct S_type {
 	void                        Set(int i, const Value& v);
 	void                        Set(const SqlId& id, const Value& v);
 	void                        Set(const ValueMap& m);
+
 	S_type();
 	S_type(const ValueMap& m);
 };
