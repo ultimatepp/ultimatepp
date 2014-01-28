@@ -237,7 +237,8 @@ SetImage([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[@3 m], [@(0.0.255) 
 [s4;%- &]
 [s5;:AttrText`:`:AttrText`(const Value`&`):%- [* AttrText]([@(0.0.255) const]_[_^Value^ Val
 ue][@(0.0.255) `&]_[*@3 v])&]
-[s2; Converts Value to AttrText.&]
+[s2; Converts Value to AttrText. Value can be either of AttrText 
+type, or IsString type.&]
 [s3; &]
 [s4;%- &]
 [s5;:AttrText`:`:AttrText`(const char`*`):%- [* AttrText]([@(0.0.255) const]_[@(0.0.255) ch
