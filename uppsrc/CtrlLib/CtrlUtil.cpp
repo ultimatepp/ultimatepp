@@ -147,6 +147,7 @@ bool EditText(String& s, const char *title, const char *label, int (*f)(int), in
 	if(maxlen) {
 		dlg.text.MaxLen(maxlen);
 		dlg.text <<= callback3(sSyncLabel, &dlg.lbl, label, &dlg.text);
+		dlg.text.WhenAction();
 	}
 	if(dlg.Execute() == IDOK) {
 		s = dlg.text;

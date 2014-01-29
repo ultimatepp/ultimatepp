@@ -543,14 +543,14 @@ subctrl EditNotNull {
 
 ctrl EditString {
 	>EditNotNull;
+	raw MaxLen;
 	bool TrimLeft = false;
 	bool TrimRight = false;
-	raw MaxLen;
 
 	PaintData(w) {
 		text = (.NotNull ? "!" : "") + "Str";
 		if(.MaxLen != "")
-			text << " < " << .MaxLen;
+			text << "(" << .MaxLen << ")";
 		PaintText(w, text);
 	}
 }
