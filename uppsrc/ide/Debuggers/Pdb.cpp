@@ -134,7 +134,7 @@ bool Pdb::Create(One<Host> local, const String& exefile, const String& cmdline)
 	RunToException();
 //	Sync();
 
-	return true;
+	return !terminated;
 }
 
 INITBLOCK {
