@@ -50,7 +50,7 @@ struct FileTime : FILETIME, CompareRelOps<const FileTime&, &Compare_FileTime> {
 	                                      dwHighDateTime = ft.dwHighDateTime; }
 };
 
-class  FindFile {
+class  FindFile : NoCopy {
 	WIN32_FIND_DATA  *a;
 	WIN32_FIND_DATAW *w;
 	HANDLE            handle;
@@ -109,7 +109,7 @@ struct FileTime : CompareRelOps<const FileTime&, &Compare_FileTime>
 
 inline int Compare_FileTime(const FileTime& f, const FileTime& g) { return f.ft < g.ft ? -1 : f.ft > g.ft ? 1 : 0; }
 
-class FindFile {
+class FindFile : NoCopy {
 	bool           file;
 	DIR           *dir;
 	mutable bool   statis;
