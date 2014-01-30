@@ -150,19 +150,19 @@ struct Pdb : Debugger, ParentCtrl {
 	bool                     	stop;
 	HANDLE                   	hProcess;
 	DWORD                    	processid;
-	ArrayMap<dword, Thread>  threads;
+	ArrayMap<dword, Thread>     threads;
 	bool                     	terminated;
 	bool                     	refreshmodules;
 	Vector<ModuleInfo>       	module;
 	DEBUG_EVENT              	event;
 	HWND                     	hWnd;
-	VectorMap<adr_t, byte>   bp_set;
+	VectorMap<adr_t, byte>      bp_set;
 	CONTEXT                  	context;
 
 	Index<adr_t>            	invalidpage;
 	VectorMap<adr_t, MemPg> 	mempage;
 
-	Index<adr_t>            breakpoint;
+	Index<adr_t>                 breakpoint;
 
 	ArrayMap<int, Type>     	type;
 
