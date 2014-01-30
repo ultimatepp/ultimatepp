@@ -23,6 +23,8 @@ static void AddObjectExports(const char *path, Index<String>& out)
 	if(!mapping.Open(path))
 		return;
 	const byte *begin = mapping.Begin();
+if(!begin)
+	return;
 	const COFF_IMAGE_FILE_HEADER *hdr = (const COFF_IMAGE_FILE_HEADER *)begin;
 	if(hdr->Machine != COFF_IMAGE_FILE_MACHINE_I386)
 		return;
@@ -382,7 +384,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 			if(objinfo[i] > producttime) {
 				String linker, lib;
 				if(is_shared) {
-					linker << LinkerName() << "-dll -nologo ";
+					linker << LinkerName() << " -dll -nologo ";
 					lib << "-machine:" << MachineName()
 						<< " -pdb:" << GetHostPathQ(ForceExt(product, ".pdb"))
 						<< " -out:" << GetHostPathQ(product);
@@ -525,7 +527,7 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 		|| HasFlag("MSC11X64") || HasFlag("MSC12X64");
 	for(int i = 0; i < linkfile.GetCount(); i++)
 		if(GetFileTime(linkfile[i]) >= targettime) {
-			String link;
+			String link, lib;
 			link << LinkerName() << " -nologo -machine:" << MachineName()
 			<< " -pdb:" << GetHostPathQ(ForceExt(target, ".pdb"))
 			<< " -out:" << GetHostPathQ(target);
@@ -558,13 +560,47 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				link << " -MAP";
 			if(HasFlag("DLL"))
 				link << " -DLL";
+
 			for(i = 0; i < libpath.GetCount(); i++)
 				link << " -LIBPATH:\"" << libpath[i] << '\"';
 			link << ' ' << linkoptions << ' ';
 			for(i = 0; i < linkfile.GetCount(); i++)
-				link << ' ' << GetHostPathQ(AppendExt(linkfile[i], ".lib"));
+				lib << ' ' << GetHostPathQ(AppendExt(linkfile[i], ".lib"));
 			PutConsole("Linking...");
 			bool error = false;
+
+			String tmpFileName;
+			if(link.GetCount() + lib.GetCount() >= 8192)
+			{
+				tmpFileName = GetTempFileName();
+				// we can't simply put all data on a single line
+				// as it has a limit of around 130000 chars too, so we split
+				// in multiple lines
+				FileOut f(tmpFileName);
+				while(lib != "")
+				{
+					int found = 0;
+					bool quotes = false;
+					int lim = min(8192, lib.GetCount());
+					for(int i = 0; i < lim; i++)
+					{
+						char c = lib[i];
+						if(isspace(c) && !quotes)
+							found = i;
+						else if(c == '"')
+							quotes = !quotes;
+					}
+					if(!found)
+						found = lib.GetCount();
+					f.PutLine(lib.Left(found));
+					lib.Remove(0, found);
+				}
+				f.Close();
+				link << "@" << tmpFileName;
+			}
+			else
+				link << lib;
+
 			CustomStep(".pre-link", Null, error);
 			if(!error && Execute(link) == 0) {
 				CustomStep(".post-link", Null, error);
@@ -576,12 +612,14 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				}
 				PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
 				           << " B) linked in " << GetPrintTime(time));
-				return !error;
 			}
 			else {
 				DeleteFile(target);
-				return false;
+				error = true;
 			}
+			if(tmpFileName != "")
+				FileDelete(tmpFileName);
+			return !error;
 		}
 	PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
 	           << " B) is up to date.");
