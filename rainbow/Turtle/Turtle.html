@@ -103,6 +103,22 @@ function InvertRect(x, y, cx, cy)
 	ctx.putImageData(imageData, x, y);
 }
 
+function DrawDragLine(x, y, cx, cy, anim)
+{
+	if(cx <= 0 || cy <= 0)
+		return;
+	var imageData = ctx.getImageData(x, y, cx, cy);
+	var data = imageData.data;
+	for(var i = 0; i < data.length; i += 4) {
+		if(((i / 4 + anim) / 4) & 1) {
+		    data[i] = 255 - data[i];
+		    data[i + 1] = 255 - data[i + 1];
+		    data[i + 2] = 255 - data[i + 2];
+		}
+	}
+	ctx.putImageData(imageData, x, y);
+}
+
 function InvertCaret()
 {
 //	Log("InvertCaret " + caretx + " " + carety + " " + caretcx + " " + caretcy);
@@ -144,7 +160,7 @@ function HideCaret(x, y, cx, cy)
 		return;
 	if(Math.max(x, caretx) < Math.min(x + cx, caretx + caretcx) &&
 	   Math.max(y, carety) < Math.min(y + cy, carety + caretcy)) {
-	    Log("Hiding caret");
+	    // Log("Hiding caret");
 	    InvertShownCaret();
 		caretHidden = true;
 	}
@@ -153,6 +169,8 @@ function HideCaret(x, y, cx, cy)
 function ProcessDraw(s)
 {
 //	console.clear();
+
+//	Log("Painting started " + s.length);
 
 //	window.document.title = "Processing draw";
 	
@@ -317,11 +335,28 @@ function ProcessDraw(s)
 			CaretTimer();
 		//	Log("SET CARET " + caretx + " " + carety + " " + caretcx + " " + caretcy);
 		}
+		else
+		if(Char(p, 18)) { // HORZDRAGLINE,
+			var x = Get16(p);
+			var y = Get16(p);
+			var l = Get16(p);
+			var anim = Get16(p);
+			DrawDragLine(x, y, l, 1, anim);
+		}
+		else
+		if(Char(p, 19)) { // VERTDRAGLINE,
+			var x = Get16(p);
+			var y = Get16(p);
+			var l = Get16(p);
+			var anim = Get16(p);
+			DrawDragLine(x, y, 1, l, anim);
+		}
 	}
 	InvertShownCaret();
 //	window.document.title = "OK";
 	if(SendingEnabled && event_queue.length)
 		ScheduleSend();
+//	Log("Painting finished");
 }
 
 function SImage(p, sx, sy)
@@ -458,9 +493,11 @@ function SendEvents()
 {
 	if(SendingEnabled) {
 		if(event_queue.length) {
-			Log(event_queue);
+			// Log(event_queue);
 			ws.send(event_queue);
 		}
+		else
+			ws.send("PING");
 		event_queue = "";
 		if(timerID != undefined)
 			clearTimeout(timerID);

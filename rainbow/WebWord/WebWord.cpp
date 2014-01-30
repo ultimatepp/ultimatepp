@@ -77,6 +77,9 @@ void UWord::ShowInfo()
 	if(secs)
 		s << ", average bandwidth " << FormatSize(Ctrl::stat_data_send / secs) << "/s";
 	s << ", actual bandwidth " << FormatSize(Ctrl::stat_data_send - sent_prev);
+	s << ", putimage " << Ctrl::stat_putimage;
+	s << ", putrect " << Ctrl::stat_putrect;
+	s << ", setimage " << Ctrl::stat_setimage << " len " << FormatSize(Ctrl::stat_setimage_len);
 	sent_prev = Ctrl::stat_data_send;
 	statusbar.Set(s);
 }

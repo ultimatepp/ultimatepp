@@ -16,7 +16,6 @@ file
 	DrawDragRect.cpp,
 	Ctrl.cpp,
 	Wnd.cpp,
-	Cursor.cpp,
 	Stream.cpp,
 	Server.cpp,
 	Output.cpp,

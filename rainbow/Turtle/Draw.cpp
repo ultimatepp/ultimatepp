@@ -32,6 +32,8 @@ int SystemDraw::GetImageI(int from, Index<int64>& img_index, int maxcount, const
 			Ctrl::Put8(s->b);
 			Ctrl::Put8(s->a);
 		}
+		Ctrl::stat_setimage++;
+		Ctrl::stat_setimage_len += img.GetLength() * sizeof(RGBA);
 	}
 	return q + from;
 }
@@ -47,6 +49,7 @@ int SystemDraw::GetImageI(const Image& img)
 void SystemDraw::PutImage(Point p, const Image& img, const Rect& src)
 {
 	LLOG("Ctrl::PutImage " << p << ", size: " << img.GetSize() << ", src: " << src << ", id: " << img.GetSerialId());
+	Ctrl::stat_putimage++;
 	int i = GetImageI(img);
 	if(Rect(img.GetSize()) == src) {
 		Point dp = p - pos;
@@ -69,6 +72,7 @@ void SystemDraw::PutImage(Point p, const Image& img, const Rect& src)
 void SystemDraw::PutRect(const Rect& r, Color color)
 {
 	LLOG("Ctrl::PutRect " << r << ", color " << color);
+	Ctrl::stat_putrect++;
 	Point p = r.TopLeft();
 	if(color == InvertColor()) {
 		Ctrl::Put8(INVERTRECT);

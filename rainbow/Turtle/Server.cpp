@@ -18,6 +18,7 @@ int         Ctrl::main_pid;
 Vector<int> Ctrl::pid;
 bool        Ctrl::quit;
 
+
 void Ctrl::Broadcast(int signal) {
 #ifdef PLATFORM_POSIX
 	if(getpid() == main_pid)

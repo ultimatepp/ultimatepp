@@ -8,8 +8,6 @@ NAMESPACE_UPP
 #define LDUMP(x)    // RDUMP(x)
 #define LTIMING(x)
 
-TurtleStream turtle_stream;
-
 void TurtleStream::Reset()
 {
 	zlib.Clear();
@@ -20,7 +18,6 @@ void TurtleStream::Reset()
 void TurtleStream::Out(const void *data, dword size)
 {
 	zlib.Put(data, (int)size);
-	hasdata = true;
 }
 
 String TurtleStream::FlushStream()
