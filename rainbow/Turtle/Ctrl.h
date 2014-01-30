@@ -59,7 +59,7 @@ private:
 
 	static void DoMouseFB(int event, Point p, int zdelta, CParser& cp);
 
-	static void Reply();
+	static void Output();
 
 	friend struct PaintProxy__;
 	friend class TopWindowFrame;
@@ -71,13 +71,22 @@ private:
 	static void Signal(int signal);
 	static void Broadcast(int signal);
 
-	static void Put8(int x)              { turtle_stream.Put(x); }
+	static TurtleStream                  turtle_stream;
+	static Stream& OutputStream()        { turtle_stream.SetDataFlag(); return turtle_stream; }
+	static void Put8(int x)              { turtle_stream.SetDataFlag(); turtle_stream.Put(x); }
 	static void Put16(int x);
 	static void Put32(int x);
 	static void Put(Point p);
 	static void Put(Size sz);
 	static void Put(const Rect& r);
 	static void Put(const String& s);
+
+	static void SyncClient();
+
+	friend void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip,
+	                         int n, Color color, int type, int animation);
+	friend void DrawDragLine(SystemDraw& w, bool horz, int x, int y, int len, int n, int animation);
+
 
 public:
 	static bool DoKeyFB(dword key, int cnt);
@@ -89,6 +98,10 @@ public:
 	
 	static Time   stat_started;
 	static int64  stat_data_send;
+	static int    stat_putrect;
+	static int    stat_putimage;
+	static int    stat_setimage;
+	static int64  stat_setimage_len;
 
 	static bool     StartSession();
 	static Callback WhenDisconnect;
@@ -97,6 +110,7 @@ public:
 	static void  SetDesktop(Ctrl& q);
 	static Ctrl *GetDesktop()                  { return desktop; }
 	static void  SetDesktopSize(Size sz);
+	static Size  GetDesktopSize()              { return DesktopSize; }
 	
 	void DragRectDraw(const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
 	                  Color color, int type, int animation);

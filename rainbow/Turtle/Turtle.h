@@ -25,13 +25,12 @@ private:
 	void Reset();
 
 public:
-	String FlushStream();
+	void   SetDataFlag()           { hasdata = true; }
 	bool   HasData() const         { return hasdata; }
+	String FlushStream();
 
 	TurtleStream() { Reset(); }
 };
-
-extern TurtleStream turtle_stream;
 
 class SystemDraw : public SDraw {
 public:
@@ -61,6 +60,9 @@ public:
 		RECTNN = 16,
 
 		SETCARET = 17,
+		
+		HORZDRAGLINE = 18,
+		VERTDRAGLINE = 19,
 	};
 	
 	static Index<int64>           img_index[3];

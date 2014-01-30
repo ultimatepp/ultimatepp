@@ -8,6 +8,8 @@ NAMESPACE_UPP
 #define LDUMP(x)    // RDUMP(x)
 #define LTIMING(x)
 
+TurtleStream Ctrl::turtle_stream;
+
 void Ctrl::Put16(int x)
 {
 	Put8(LOBYTE(x));
@@ -40,7 +42,24 @@ void Ctrl::Put(const Rect& r)
 void Ctrl::Put(const String& s)
 {
 	Put32(s.GetLength());
+	turtle_stream.SetDataFlag();
 	turtle_stream.Put(s);
+}
+
+void Ctrl::Output()
+{
+	socket.Timeout(20000);
+	if(turtle_stream.HasData()) {
+		websocket.SendBinary(ZCompress(String(SystemDraw::DISABLESENDING, 1))); // Do not send events until data transfered and processed
+		int64 x = ++update_serial;
+		Put8(SystemDraw::UPDATESERIAL);
+		Put32(LODWORD(x));
+		Put32(HIDWORD(x));
+		String s = turtle_stream.FlushStream();
+		stat_data_send += s.GetCount();
+		DLOG("Sending " << s.GetLength());
+		websocket.SendBinary(s);
+	}
 }
 
 void Ctrl::TimerAndPaint()
@@ -52,18 +71,7 @@ void Ctrl::TimerAndPaint()
 	SyncTopWindows();
 	SweepMkImageCache();
 	DoPaint();
-	socket.Timeout(20000);
-	if(turtle_stream.HasData()) {
-		websocket.SendBinary(ZCompress(String(SystemDraw::DISABLESENDING, 1))); // Do not send events until data transfered and processed
-		int64 x = ++update_serial;
-		Put8(SystemDraw::UPDATESERIAL);
-		Put32(LODWORD(x));
-		Put32(HIDWORD(x));
-		String s = turtle_stream.FlushStream();
-		stat_data_send += s.GetCount();
-		LLOG("Sending " << s.GetLength());
-		websocket.SendBinary(s);
-	}
+	Output();
 }
 
 void Ctrl::SyncCaret()
@@ -107,6 +115,23 @@ void Ctrl::PaintScene(SystemDraw& draw)
 	draw.End();
 	
 //	DDUMP(turtle_stream.FlushStream().GetCount()); abort();
+}
+
+void  Ctrl::SetMouseCursor(const Image& image)
+{
+	GuiLock __;
+	if(image.GetSerialId() != fbCursorImage.GetSerialId()) {
+		fbCursorImage = image;
+		fbCursorPos = Null;
+	}
+}
+
+void Ctrl::SyncClient()
+{
+	while(recieved_update_serial < update_serial) {
+		GuiSleep(10);
+		IsWaitingEvent();
+	}
 }
 
 void Ctrl::DoPaint()

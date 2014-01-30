@@ -10,6 +10,10 @@ NAMESPACE_UPP
 
 Time  Ctrl::stat_started;
 int64 Ctrl::stat_data_send;
+int   Ctrl::stat_putrect;
+int   Ctrl::stat_putimage;
+int   Ctrl::stat_setimage;
+int64 Ctrl::stat_setimage_len;
 
 static Point MousePos;
 
@@ -274,7 +278,7 @@ void Ctrl::DoMouseButton(int event, CParser& p)
 
 bool Ctrl::ProcessEvent(const String& event)
 {
-	LLOG("Processing event " << event);
+	DLOG("Processing event " << event);
 	CParser p(event);
 	try {
 		if(p.Id("I"))

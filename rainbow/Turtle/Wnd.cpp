@@ -168,8 +168,8 @@ Rect Ctrl::GetClipBound(const Vector<Rect>& inv, const Rect& r)
 void Ctrl::WndUpdate(const Rect& r)
 {
 	GuiLock __;
-//	WndInvalidateRect(r);
-//	DoPaint(); // TODO
+	WndInvalidateRect(r);
+	WndUpdate();
 }
 
 Rect Ctrl::GetWndScreenRect() const
@@ -186,6 +186,9 @@ void Ctrl::WndShow(bool b)
 void Ctrl::WndUpdate()
 {
 	GuiLock __;
+	SyncClient();
+	DoPaint();
+	Output();
 }
 
 bool Ctrl::IsWndOpen() const {
