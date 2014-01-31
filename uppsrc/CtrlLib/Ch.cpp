@@ -16,10 +16,10 @@ void ChSysInit();
 
 void ChStdSkin()
 {
-    ChSysInit();
-    GUI_GlobalStyle_Write(GUISTYLE_XP); // <- Hard theme restart!
-    GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
-    ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
+	ChSysInit();
+	GUI_GlobalStyle_Write(GUISTYLE_XP);
+	GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
+	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
 }
 
 void SbWc(Value *look)
@@ -37,7 +37,8 @@ void ChClassicSkin()
 
 	ChSysInit();
 	GUI_GlobalStyle_Write(GUISTYLE_CLASSIC);
-
+	GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
+	
 	ColoredOverride(CtrlsImg::Iml(), ClassicCtrlsImg::Iml());
 	for(int q = 0; q < 4; q++)
 		CtrlsImg::Set(CtrlsImg::I_HTB + q, AdjustColors(CtrlsImg::Get(ClassicCtrlsImg::I_B + q)));
