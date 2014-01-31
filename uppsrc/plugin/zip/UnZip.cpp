@@ -100,18 +100,12 @@ bool UnZip::ReadFile(Stream& out, Gate2<int, int> progress)
 	if(zip->Get32le() != 0x04034b50)
 		return false;
 	int ver = zip->Get16le();
-	if(zip->Get16le() != f.bit)
-		return false;
-	if(zip->Get16le() != f.method)
-		return false;
-	if(zip->Get32le() != f.time)
-		return false;
-	if(zip->Get32le() != f.crc)
-		return false;
-	if(zip->Get32le() != f.csize)
-		return false;
-	if(zip->Get32le() != f.usize)
-		return false;
+	zip->Get16le(); // Skip header, use info from centrall dir
+	zip->Get16le();
+	zip->Get32le();
+	zip->Get32le();
+	zip->Get32le();
+	zip->Get32le();
 	dword filelen = zip->Get16le();
 	dword extralen = zip->Get16le();
 	zip->SeekCur(filelen + extralen);
