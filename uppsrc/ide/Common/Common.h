@@ -44,6 +44,7 @@ struct IdeDesigner  {
 	virtual void   Save() = 0;
 	virtual void   SyncUsc()                                        {}
 	virtual void   SaveEditPos()                                    {}
+	virtual void   RestoreEditPos()                                 {}
 	virtual void   EditMenu(Bar& menu) = 0;
 	virtual int    GetCharset() const                               { return -1; }
 	virtual Ctrl&  DesignerCtrl() = 0;

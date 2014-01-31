@@ -224,7 +224,6 @@ struct CachedIconImage : public Display {
 
 void IconDes::SerializeSettings(Stream& s)
 {
-
 	void (IconDes::*toollist[])(Point p, dword flags) = {
 		&IconDes::LineTool,
 		&IconDes::FreehandTool,

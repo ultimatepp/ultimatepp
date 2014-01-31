@@ -70,7 +70,6 @@ struct IconDesModule : public IdeModule {
 			IdeIconDes *d = new IdeIconDes;
 			LoadFromGlobal(*d, "icondes-ctrl");
 			if(d->Load(path)) {
-				d->RestoreEditPos();
 				return d;
 			}
 			delete d;

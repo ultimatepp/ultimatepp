@@ -8,6 +8,7 @@ struct IdeIconDes : IdeDesigner, IconDes {
 	virtual String GetFileName() const;
 	virtual void   Save();
 	virtual void   SaveEditPos();
+	virtual void   RestoreEditPos();
 	virtual void   EditMenu(Bar& menu);
 	virtual Ctrl&  DesignerCtrl()             { return *this; }
 
@@ -23,7 +24,6 @@ struct IdeIconDes : IdeDesigner, IconDes {
 	bool   Load(const char *filename);
 	void   FileProperties();
 	void   CopyId(const String& n);
-	void   RestoreEditPos();
 
 	typedef IdeIconDes CLASSNAME;
 
