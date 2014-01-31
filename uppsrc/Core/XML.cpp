@@ -210,7 +210,7 @@ inline static bool IsXmlNameChar(int c)
 void XmlParser::LoadMore0()
 {
 	if(in) {
-		int pos = term - begin;
+		int pos = int(term - begin);
 		if(len - pos < MCHARS) {
 			begincolumn = GetColumn0();
 			len -= pos;
