@@ -17,7 +17,7 @@ IconDes::EditPos IconDes::GetEditPos()
 {
 	EditPos e;
 	e.cursor = list.GetCursor();
-	e.sc = list.GetCursorSc();
+	e.sc = list.GetScroll();
 	e.slot.Clear();
 	e.slot.SetCount(slot.GetCount());
 	for(int i = 0; i < slot.GetCount(); i++) {
@@ -53,10 +53,9 @@ void IconDes::SetEditPos(const EditPos& e)
 		}
 		if(e.cursor >= 0 && e.cursor < list.GetCount()) {
 			list.SetCursor(e.cursor);
-			list.ScCursor(e.sc);
+			list.ScrollTo(e.sc);
 		}
 	}
-	list.ScrollIntoCursor();
 	SyncImage();
 }
 
