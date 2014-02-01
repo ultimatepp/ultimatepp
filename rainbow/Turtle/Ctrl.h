@@ -86,22 +86,28 @@ private:
 	friend void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip,
 	                         int n, Color color, int type, int animation);
 	friend void DrawDragLine(SystemDraw& w, bool horz, int x, int y, int len, int n, int animation);
+	
+	static int   serial_time0;
+	static int64 serial_0;
 
+	friend struct ImageSysData;
 
 public:
 	static bool DoKeyFB(dword key, int cnt);
 	
-	static String host;
-	static int    port;
-	static bool   debugmode;
-	static String ip;
+	static String   host;
+	static int      port;
+	static bool     debugmode;
+	static String   ip;
 	
-	static Time   stat_started;
-	static int64  stat_data_send;
-	static int    stat_putrect;
-	static int    stat_putimage;
-	static int    stat_setimage;
-	static int64  stat_setimage_len;
+	static Time     stat_started;
+	static int64    stat_data_send;
+	static int      stat_putrect;
+	static int      stat_putimage;
+	static int      stat_setimage;
+	static int64    stat_setimage_len;
+	static int      stat_roundtrip_ms;
+	static int      stat_client_ms;
 
 	static bool     StartSession();
 	static Callback WhenDisconnect;

@@ -8,12 +8,17 @@ NAMESPACE_UPP
 #define LDUMP(x)    // RDUMP(x)
 #define LTIMING(x)
 
+int   Ctrl::serial_time0 = Null;
+int64 Ctrl::serial_0;
+
 Time  Ctrl::stat_started;
 int64 Ctrl::stat_data_send;
 int   Ctrl::stat_putrect;
 int   Ctrl::stat_putimage;
 int   Ctrl::stat_setimage;
 int64 Ctrl::stat_setimage_len;
+int   Ctrl::stat_roundtrip_ms;
+int   Ctrl::stat_client_ms;
 
 static Point MousePos;
 
@@ -64,34 +69,23 @@ bool Ctrl::IsWaitingEvent()
 					uint32 l = p.ReadNumber();
 					uint32 h = p.ReadNumber();
 					recieved_update_serial = MAKEQWORD(l, h);
+					stat_client_ms = p.ReadNumber();
 				}
 				else
 					event_queue.AddTail(s);
 			}
 			catch(CParser::Error) {}
 		}
+		if(recieved_update_serial == serial_0) {
+			serial_0 = 0;
+			stat_roundtrip_ms = msecs() - serial_time0;
+			serial_time0 = Null;
+		}
 	}
 	socket.Timeout(20000);
 	if(socket.IsError())
 		LLOG("ERROR: " << socket.GetErrorDesc());
 	return event_queue.GetCount();
-}
-
-bool Ctrl::ProcessEvents(bool *quit)
-{
-	GuiLock __;
-	LLOG("---- Process events");
-	bool r = false;
-	while(IsWaitingEvent()) {
-		while(event_queue.GetCount() >= 2 && *event_queue[0] == 'M' && *event_queue[1] == 'M')
-			event_queue.DropHead(); // MouseMove compression
-		String ev = event_queue[0];
-		event_queue.DropHead();
-		ProcessEvent(ev);
-		r = true;
-	}
-	TimerAndPaint();
-	return r;
 }
 
 void Ctrl::GuiSleep(int ms)
@@ -317,8 +311,25 @@ bool Ctrl::ProcessEvent(const String& event)
 		if(p.Id("K")) {
 			int code = p.ReadInt();
 			int which = p.ReadInt();
+			int count = 1;
+			for(;;) {
+				if(event_queue.GetCount() && event_queue[0] == event) { // Chrome autorepeat
+					event_queue.DropHead();
+					count++;
+				}
+				else
+				if(event_queue.GetCount() >= 2 && *event_queue[0] == 'C' && event_queue[1] == event) { // Firefox autorepeat
+					String h = event_queue[0];
+					event_queue.DropHead();
+					event_queue.DropHead();
+					event_queue.AddHead(h);
+					count++;
+				}
+				else
+					break;
+			}
 			ReadKeyMods(p);
-			DoKeyFB(fbKEYtoK(which), 1);
+			DoKeyFB(fbKEYtoK(which), count);
 		}
 		else
 		if(p.Id("k")) {
@@ -332,12 +343,34 @@ bool Ctrl::ProcessEvent(const String& event)
 			int code = p.ReadInt();
 			int which = p.ReadInt();
 			ReadKeyMods(p);
+			int count = 1;
+			while(event_queue.GetCount() && event_queue[0] == event) { // 'K's are not there anymore
+				event_queue.DropHead();
+				count++;
+			}
 			if(which && !keyAlt && !keyCtrl && findarg(which, 9, 0xd) < 0)
 				DoKeyFB(which, 1);
 		}
 	}
 	catch(CParser::Error) {}
 	return true;
+}
+
+bool Ctrl::ProcessEvents(bool *quit)
+{
+	GuiLock __;
+	LLOG("---- Process events");
+	bool r = false;
+	while(IsWaitingEvent()) {
+		while(event_queue.GetCount() >= 2 && *event_queue[0] == 'M' && *event_queue[1] == 'M')
+			event_queue.DropHead(); // MouseMove compression
+		String ev = event_queue[0];
+		event_queue.DropHead();
+		ProcessEvent(ev);
+		r = true;
+	}
+	TimerAndPaint();
+	return r;
 }
 
 Point GetMousePos() {

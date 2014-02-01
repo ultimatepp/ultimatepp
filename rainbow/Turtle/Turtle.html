@@ -173,6 +173,8 @@ function ProcessDraw(s)
 //	Log("Painting started " + s.length);
 
 //	window.document.title = "Processing draw";
+
+	var time0 = (new Date).getTime();
 	
 	var p = new Object;
 	p.data = s;
@@ -299,7 +301,7 @@ function ProcessDraw(s)
 		if(Char(p, 8)) { // UPDATESERIAL
 			update_serial_l = Get32(p);
 			update_serial_h = Get32(p);
-			ws.send("S " + update_serial_l + " " + update_serial_h + "\n");
+			ws.send("S " + update_serial_l + " " + update_serial_h + " " + ((new Date).getTime() -  time0) + "\n");
 		}
 		else
         if(Char(p, 9)) // IMAGEPP
@@ -477,7 +479,13 @@ window.onresize = ResizeCanvas;
 
 var timerID;
 
-var ws = new WebSocket("%%host%%");
+function ConnectWebsocket()
+{
+	return new WebSocket("%%host%%");
+}
+
+var ws = ConnectWebsocket();
+
 ws.binaryType = "arraybuffer";
 
 function ScheduleSend()
@@ -507,7 +515,7 @@ function SendEvents()
 
 ws.onopen = function()
 {
-	Log("websocket connection opened");
+//	Log("websocket connection opened");
 	ResizeCanvas();
 };
 

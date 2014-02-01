@@ -23,7 +23,7 @@ void Ctrl::Broadcast(int signal) {
 #ifdef PLATFORM_POSIX
 	if(getpid() == main_pid)
 		for(int i = 0; i < pid.GetCount(); i++)
-			kill(pid[i], signal);	
+			kill(pid[i], signal);
 #endif
 }
 	

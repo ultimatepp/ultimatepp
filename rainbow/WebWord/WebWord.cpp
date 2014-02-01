@@ -80,6 +80,8 @@ void UWord::ShowInfo()
 	s << ", putimage " << Ctrl::stat_putimage;
 	s << ", putrect " << Ctrl::stat_putrect;
 	s << ", setimage " << Ctrl::stat_setimage << " len " << FormatSize(Ctrl::stat_setimage_len);
+	s << ", roundtrip " << Ctrl::stat_roundtrip_ms << " ms";
+	s << ", client " << Ctrl::stat_client_ms << " ms";
 	sent_prev = Ctrl::stat_data_send;
 	statusbar.Set(s);
 }
@@ -319,8 +321,6 @@ CONSOLE_APP_MAIN
 		SetLanguage(LNG_ENGLISH);
 		SetDefaultCharset(CHARSET_UTF8);
 		
-		PromptOK("Session started");
-	
 		UWordFs().Type("QTF files", "*.qtf")
 		         .AllFilesType()
 		         .DefaultExt("qtf");
