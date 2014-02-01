@@ -122,4 +122,14 @@ eepAlpha]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img],
 [_^Color^ Color]_[*@3 color])&]
 [s2;%% Cached variant of SetColorKeepAlpha. Replaces all pixel colors 
 in Image with [%-*@3 color] while not changing the alpha value.&]
+[s3;%% &]
+[s4; &]
+[s5;:CachedSetColorKeepAlphaPaintOnly`(const Image`&`,Color`): [_^Image^ Image]_[* Cached
+SetColorKeepAlphaPaintOnly]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img],
+ [_^Color^ Color]_[*@3 color])&]
+[s2;%% Cached variant of SetColorKeepAlpha. Replaces all pixel colors 
+in Image with [%-*@3 color] while not changing the alpha value, 
+with results being cached, that can only be used with Draw`::DrawImage(this 
+is optimization hint that can save some memory in certain situations).&]
+[s3;%% &]
 [s0;%% ]]

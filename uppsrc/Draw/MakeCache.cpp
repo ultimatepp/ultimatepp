@@ -254,4 +254,12 @@ Image CachedSetColorKeepAlpha(const Image& img, Color color)
 	return MakeImage(m);
 }
 
+Image CachedSetColorKeepAlphaPaintOnly(const Image& img, Color color)
+{
+	sColorize m;
+	m.img = img;
+	m.color = color;
+	return MakeImagePaintOnly(m);
+}
+
 END_UPP_NAMESPACE

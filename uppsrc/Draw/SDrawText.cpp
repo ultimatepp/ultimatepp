@@ -19,6 +19,7 @@ struct sMakeTextGlyph : public ImageMaker
 	int    angle;
 	Color  color;
 	SDraw *draw;
+	int    yy;
 
 	virtual String Key() const {
 		StringBuffer h;
@@ -26,14 +27,22 @@ struct sMakeTextGlyph : public ImageMaker
 		RawCat(h, font);
 		RawCat(h, angle);
 		RawCat(h, color);
+		RawCat(h, yy);
 		return h;
 	}
 
 	virtual Image Make() const {
 		LTIMING("Render glyph");
 		Point at(font[chr], font.GetLineHeight());
-		int n = 2 * (at.x + at.y);
-		return AutoCrop(WithHotSpot(draw->RenderGlyph(at, angle, chr, font, color, Size(n, n)), at.x, at.y), RGBAZero());
+		if(IsNull(yy)) {
+			int n = 2 * (at.x + at.y);
+			return AutoCrop(WithHotSpot(draw->RenderGlyph(at, angle, chr, font, color, Size(n, n)), at.x, at.y), RGBAZero());
+		}
+		else {
+			int n = at.x + at.y;
+			Size bandsz(2 * n, 32);
+			return AutoCrop(WithHotSpot(draw->RenderGlyph(Point(0, -yy), angle, chr, font, color, bandsz), 0, 0), RGBAZero());
+		}
 	}
 };
 
@@ -48,16 +57,16 @@ void SDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Co
 		g.chr = text[i];
 		LTIMING("Paint glyph");
 		if(font.GetHeight() > 200) {
-			Point at(font[g.chr], font.GetLineHeight());
-			int n = at.x + at.y;
-			Size bandsz(2 * n, 32);
-			for(int yy = 0; yy < n; yy += bandsz.cy) {
-				Image m = RenderGlyph(Point(0, -yy), angle, g.chr, font, White(), bandsz);
-				SysDrawImageOp(x, y + yy, m, m.GetSize(), ink);
+			int bn = font[g.chr] + font.GetLineHeight();
+			for(g.yy = 0; g.yy < bn; g.yy += 32) {
+				Image m = MakeImagePaintOnly(g);
+				Point h = m.GetHotSpot();
+				SysDrawImageOp(x - h.x, y + g.yy - h.y, m, m.GetSize(), ink);
 			}
 		}
 		else {
-			Image m = MakeImage(g);
+			g.yy = Null;
+			Image m = MakeImagePaintOnly(g);
 			Point h = m.GetHotSpot();
 			SysDrawImageOp(x - h.x, y - h.y, m, m.GetSize(), ink);
 		}

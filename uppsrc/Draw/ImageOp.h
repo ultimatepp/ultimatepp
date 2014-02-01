@@ -190,6 +190,7 @@ Image CachedRescalePaintOnly(const Image& m, Size sz, const Rect& src, int filte
 Image CachedRescalePaintOnly(const Image& m, Size sz, int filter = Null);
 
 Image CachedSetColorKeepAlpha(const Image& img, Color color);
+Image CachedSetColorKeepAlphaPaintOnly(const Image& img, Color color);
 
 // Obsolete, replace with RescaleFilter!
 Image RescaleBicubic(const Image& src, Size sz, const Rect& src_rc, Gate2<int, int> progress = false);
