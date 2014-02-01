@@ -20,7 +20,7 @@
 #define __CFFLOAD_H__
 
 
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 #include "cfftypes.h"
 
 
@@ -60,7 +60,7 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( FT_Error )
-  cff_font_load( FT_Library library, 
+  cff_font_load( FT_Library library,
                  FT_Stream  stream,
                  FT_Int     face_index,
                  CFF_Font   font,

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType API for accessing BDF-specific strings (body).              */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004 by                                          */
+/*  Copyright 2002-2004, 2013 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_SERVICE_BDF_H
 
@@ -33,7 +33,7 @@
     const char*  registry = NULL;
 
 
-    error = FT_Err_Invalid_Argument;
+    error = FT_ERR( Invalid_Argument );
 
     if ( face )
     {
@@ -66,7 +66,7 @@
     FT_Error  error;
 
 
-    error = FT_Err_Invalid_Argument;
+    error = FT_ERR( Invalid_Argument );
 
     aproperty->type = BDF_PROPERTY_TYPE_NONE;
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType API for accessing CID font information.                     */
 /*                                                                         */
-/*  Copyright 2007, 2009 by Derek Clegg, Michael Toftdal.                  */
+/*  Copyright 2007, 2009, 2013 by Derek Clegg, Michael Toftdal.            */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -15,7 +15,7 @@
 /***************************************************************************/
 
 
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 #include FT_CID_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_SERVICE_CID_H
@@ -35,7 +35,7 @@
     FT_Int       s = 0;
 
 
-    error = FT_Err_Invalid_Argument;
+    error = FT_ERR( Invalid_Argument );
 
     if ( face )
     {
@@ -65,7 +65,7 @@
   FT_Get_CID_Is_Internally_CID_Keyed( FT_Face   face,
                                       FT_Bool  *is_cid )
   {
-    FT_Error  error = FT_Err_Invalid_Argument;
+    FT_Error  error = FT_ERR( Invalid_Argument );
     FT_Bool   ic = 0;
 
 
@@ -92,7 +92,7 @@
                                FT_UInt   glyph_index,
                                FT_UInt  *cid )
   {
-    FT_Error  error = FT_Err_Invalid_Argument;
+    FT_Error  error = FT_ERR( Invalid_Argument );
     FT_UInt   c = 0;
 
 

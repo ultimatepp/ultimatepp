@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_CACHE_H
 #include "ftcglyph.h"

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Callback functions of the caching sub-system (specification only).   */
 /*                                                                         */
-/*  Copyright 2004, 2005, 2006, 2011 by                                    */
+/*  Copyright 2004-2006, 2011, 2013 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -18,7 +18,7 @@
 #ifndef __FTCCBACK_H__
 #define __FTCCBACK_H__
 
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 #include FT_CACHE_H
 #include "ftcmru.h"
 #include "ftcimage.h"
@@ -81,11 +81,10 @@
   FT_LOCAL( void )
   ftc_cache_done( FTC_Cache  cache );
 
-#ifndef FT_CONFIG_OPTION_OLD_INTERNALS
   FT_LOCAL( void )
   ftc_node_destroy( FTC_Node     node,
                     FTC_Manager  manager );
-#endif
+
 
 #endif /* __FTCCBACK_H__ */
 

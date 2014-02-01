@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType exact bbox computation (specification).                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2003, 2007, 2011 by                               */
+/*  Copyright 1996-2001, 2003, 2007, 2011, 2013 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -31,7 +31,7 @@
 #define __FTBBOX_H__
 
 
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 #include FT_FREETYPE_H
 
 #ifdef FREETYPE_H
@@ -60,7 +60,7 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    Compute the exact bounding box of an outline.  This is slower      */
   /*    than computing the control box.  However, it uses an advanced      */
-  /*    algorithm which returns _very_ quickly when the two boxes          */
+  /*    algorithm that returns _very_ quickly when the two boxes           */
   /*    coincide.  Otherwise, the outline Bézier arcs are traversed to     */
   /*    extract their extrema.                                             */
   /*                                                                       */
@@ -78,7 +78,7 @@ FT_BEGIN_HEADER
   /*    @FT_LOAD_NO_SCALE, the resulting BBox is meaningless.  To get      */
   /*    reasonable values for the BBox it is necessary to load the glyph   */
   /*    at a large ppem value (so that the hinting instructions can        */
-  /*    properly shift and scale the subglyphs), then extracting the BBox  */
+  /*    properly shift and scale the subglyphs), then extracting the BBox, */
   /*    which can be eventually converted back to font units.              */
   /*                                                                       */
   FT_EXPORT( FT_Error )

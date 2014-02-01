@@ -20,7 +20,7 @@
 #define __TTGLOAD_H__
 
 
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 #include "ttobjs.h"
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
@@ -43,6 +43,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   TT_Get_VMetrics( TT_Face     face,
                    FT_UInt     idx,
+                   FT_Pos      yMax,
                    FT_Short*   tsb,
                    FT_UShort*  ah );
 

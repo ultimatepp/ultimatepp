@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines (specification).                        */
 /*                                                                         */
-/*  Copyright 2003-2008, 2010-2011 by                                      */
+/*  Copyright 2003-2008, 2010-2012 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -62,15 +62,19 @@ FT_BEGIN_HEADER
    *
    *  by David Turner and Werner Lemberg
    *
-   *   http://www.tug.org/TUGboat/Articles/tb24-3/lemberg.pdf
+   *    http://www.tug.org/TUGboat/Articles/tb24-3/lemberg.pdf
+   *
+   *  with appropriate updates.
    *
    *
    *  Segments
    *
    *    `af_{cjk,latin,...}_hints_compute_segments' are the functions to
-   *    find segments in an outline.  A segment is a series of consecutive
-   *    points that are approximately aligned along a coordinate axis.  The
-   *    analysis to do so is specific to a script.
+   *    find segments in an outline.
+   *
+   *    A segment is a series of consecutive points that are approximately
+   *    aligned along a coordinate axis.  The analysis to do so is specific
+   *    to a writing system.
    *
    *    A segment must have at least two points, except in the case of
    *    `fake' segments that are generated to hint metrics appropriately,
@@ -79,16 +83,17 @@ FT_BEGIN_HEADER
    *
    *  Edges
    *
+   *    `af_{cjk,latin,...}_hints_compute_edges' are the functions to find
+   *    edges.
+   *
    *    As soon as segments are defined, the auto-hinter groups them into
    *    edges.  An edge corresponds to a single position on the main
    *    dimension that collects one or more segments (allowing for a small
    *    threshold).
    *
-   *    The auto-hinter first tries to grid fit edges, then to align
-   *    segments on the edges unless it detects that they form a serif.
-   *
-   *    `af_{cjk,latin,...}_hints_compute_edges' are the functions to find
-   *    edges; they are specific to a script.
+   *    As an example, the `latin' writing system first tries to grid-fit
+   *    edges, then to align segments on the edges unless it detects that
+   *    they form a serif.
    *
    *
    *                      A          H
@@ -106,6 +111,8 @@ FT_BEGIN_HEADER
    *
    *
    *  Stems
+   *
+   *    Stems are detected by `af_{cjk,latin,...}_hint_edges'.
    *
    *    Segments need to be `linked' to other ones in order to detect stems.
    *    A stem is made of two segments that face each other in opposite
@@ -127,17 +134,21 @@ FT_BEGIN_HEADER
    *    The best candidate is stored in field `link' in structure
    *    `AF_Segment'.
    *
-   *    Stems are detected by `af_{cjk,latin,...}_hint_edges'.
-   *
    *    In the above ASCII drawing, the best candidate for both AB and CD is
    *    GH, while the best candidate for GH is AB.  Similarly, the best
    *    candidate for EF and GH is AB, while the best candidate for AB is
    *    GH.
    *
+   *    The detection and handling of stems is dependent on the writing
+   *    system.
+   *
    *
    *  Serifs
    *
-   *    On the opposite, a serif has
+   *    Serifs are detected by `af_{cjk,latin,...}_hint_edges'.
+   *
+   *    In comparison to a stem, a serif (as handled by the auto-hinter
+   *    module which takes care of the `latin' writing system) has
    *
    *      best segment_1 = segment_2 && best segment_2 != segment_1
    *
@@ -146,8 +157,6 @@ FT_BEGIN_HEADER
    *
    *    The best candidate is stored in field `serif' in structure
    *    `AF_Segment' (and `link' is set to NULL).
-   *
-   *    Serifs are detected by `af_{cjk,latin,...}_hint_edges'.
    *
    *
    *  Touched points
@@ -178,7 +187,8 @@ FT_BEGIN_HEADER
    *      differ greatly)
    *
    *    - inflection points (i.e., where the `in' and `out' angles are the
-   *      same, but the curvature changes sign)
+   *      same, but the curvature changes sign) [currently, such points
+   *      aren't handled in the auto-hinter]
    *
    *    `af_glyph_hints_align_strong_points' is the function which takes
    *    care of such situations; it is equivalent to the TrueType `IP'
@@ -226,7 +236,10 @@ FT_BEGIN_HEADER
     AF_FLAG_WEAK_INTERPOLATION = 1 << 8,
 
     /* all inflection points in the outline have this flag set */
-    AF_FLAG_INFLECTION = 1 << 9
+    AF_FLAG_INFLECTION = 1 << 9,
+
+    /* the current point is very near to another one */
+    AF_FLAG_NEAR = 1 << 10
 
   } AF_Flags;
 
@@ -254,7 +267,7 @@ FT_BEGIN_HEADER
     FT_Char    out_dir;  /* direction of outwards vector */
 
     FT_Pos     ox, oy;   /* original, scaled position                   */
-    FT_Short   fx, fy;   /* original, unscaled position (font units)    */
+    FT_Short   fx, fy;   /* original, unscaled position (in font units) */
     FT_Pos     x, y;     /* current position                            */
     FT_Pos     u, v;     /* current (x,y) or (y,x) depending on context */
 
@@ -290,19 +303,19 @@ FT_BEGIN_HEADER
 
   typedef struct  AF_EdgeRec_
   {
-    FT_Short    fpos;       /* original, unscaled position (font units) */
-    FT_Pos      opos;       /* original, scaled position                */
-    FT_Pos      pos;        /* current position                         */
+    FT_Short    fpos;       /* original, unscaled position (in font units) */
+    FT_Pos      opos;       /* original, scaled position                   */
+    FT_Pos      pos;        /* current position                            */
 
     FT_Byte     flags;      /* edge flags                                   */
     FT_Char     dir;        /* edge direction                               */
     FT_Fixed    scale;      /* used to speed up interpolation between edges */
-    AF_Width    blue_edge;  /* non-NULL if this is a blue edge              */
 
-    AF_Edge     link;       /* link edge                 */
-    AF_Edge     serif;      /* primary edge for serifs   */
-    FT_Short    num_linked; /* number of linked edges    */
-    FT_Int      score;      /* used during stem matching */
+    AF_Width    blue_edge;  /* non-NULL if this is a blue edge */
+    AF_Edge     link;       /* link edge                       */
+    AF_Edge     serif;      /* primary edge for serifs         */
+    FT_Short    num_linked; /* number of linked edges          */
+    FT_Int      score;      /* used during stem matching       */
 
     AF_Segment  first;      /* first segment in edge */
     AF_Segment  last;       /* last segment in edge  */

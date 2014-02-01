@@ -5,7 +5,7 @@
 /*    Basic OpenType/CFF type definitions and interface (specification     */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2003, 2006-2008, 2010-2011 by                           */
+/*  Copyright 1996-2003, 2006-2008, 2010-2011, 2013 by                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -21,7 +21,7 @@
 #define __CFFTYPES_H__
 
 
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_TYPE1_TABLES_H
 #include FT_INTERNAL_SERVICE_H
@@ -117,6 +117,7 @@ FT_BEGIN_HEADER
     FT_Int     paint_type;
     FT_Int     charstring_type;
     FT_Matrix  font_matrix;
+    FT_Bool    has_font_matrix;
     FT_ULong   units_per_em;  /* temporarily used as scaling value also */
     FT_Vector  font_offset;
     FT_ULong   unique_id;
@@ -268,7 +269,10 @@ FT_BEGIN_HEADER
     /* since version 2.3.6 */
     FT_String*       registry;
     FT_String*       ordering;
-      
+
+    /* since version 2.4.12 */
+    FT_Generic       cf2_instance;
+
   } CFF_FontRec, *CFF_Font;
 
 

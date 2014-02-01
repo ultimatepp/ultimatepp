@@ -21,7 +21,7 @@
 #define __WINFNT_H__
 
 
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 #include FT_WINFONTS_H
 #include FT_INTERNAL_DRIVER_H
 
@@ -30,7 +30,7 @@ FT_BEGIN_HEADER
 
 #ifdef FT_CONFIG_OPTION_PIC
 #error "this module does not support PIC yet"
-#endif 
+#endif
 
   typedef struct  WinMZ_HeaderRec_
   {

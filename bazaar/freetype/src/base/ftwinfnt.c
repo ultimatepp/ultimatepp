@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 #include FT_WINFONTS_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_SERVICE_WINFNT_H
@@ -32,7 +32,7 @@
     FT_Error           error;
 
 
-    error = FT_Err_Invalid_Argument;
+    error = FT_ERR( Invalid_Argument );
 
     if ( face != NULL )
     {

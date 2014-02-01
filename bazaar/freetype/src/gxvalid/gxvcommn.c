@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueTypeGX/AAT common tables validation (body).                      */
 /*                                                                         */
-/*  Copyright 2004, 2005, 2009, 2010                                       */
+/*  Copyright 2004, 2005, 2009, 2010, 2013                                 */
 /*  by suzuki toshiya, Masatake YAMATO, Red Hat K.K.,                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
@@ -900,7 +900,7 @@
     nnames = FT_Get_Sfnt_Name_Count( valid->face );
     for ( i = 0; i < nnames; i++ )
     {
-      if ( FT_Get_Sfnt_Name( valid->face, i, &name ) != GXV_Err_Ok )
+      if ( FT_Get_Sfnt_Name( valid->face, i, &name ) != FT_Err_Ok )
         continue ;
 
       if ( name.name_id == name_index )
@@ -1288,7 +1288,9 @@
                                valid );
     else
     {
+#if 0
       maxState = 1;     /* 0:start of text, 1:start of line are predefined */
+#endif
       maxEntry = 0;
     }
 
@@ -1334,7 +1336,7 @@
     l[1] = stateArray_length_p;
     l[2] = entryTable_length_p;
 
-    gxv_set_length_by_ulong_offset( o, l, buff, 4, table_size, valid );
+    gxv_set_length_by_ulong_offset( o, l, buff, 3, table_size, valid );
   }
 
 
@@ -1621,8 +1623,10 @@
       gxv_LookupTable_validate( table + classTable,
                                 table + classTable + classTable_length,
                                 valid );
+#if 0
       if ( valid->subtable_length < classTable_length )
         classTable_length = valid->subtable_length;
+#endif
     }
     else
     {
@@ -1641,7 +1645,9 @@
                                 valid );
     else
     {
+#if 0
       maxState = 1; /* 0:start of text, 1:start of line are predefined */
+#endif
       maxEntry = 0;
     }
 
@@ -1704,9 +1710,9 @@
                         const FT_String*  name,
                         GXV_odtect_Range  odtect )
   {
-    odtect->range[ odtect->nRanges ].start  = start;
-    odtect->range[ odtect->nRanges ].length = length;
-    odtect->range[ odtect->nRanges ].name   = (FT_String*)name;
+    odtect->range[odtect->nRanges].start  = start;
+    odtect->range[odtect->nRanges].length = length;
+    odtect->range[odtect->nRanges].name   = (FT_String*)name;
     odtect->nRanges++;
   }
 
@@ -1727,6 +1733,7 @@
                                       odtect->range[j].start,
                                       odtect->range[j].length ) )
         {
+#ifdef FT_DEBUG_LEVEL_TRACE
           if ( odtect->range[i].name || odtect->range[j].name )
             GXV_TRACE(( "found overlap between range %d and range %d\n",
                         i, j ));
@@ -1734,6 +1741,7 @@
             GXV_TRACE(( "found overlap between `%s' and `%s\'\n",
                         odtect->range[i].name,
                         odtect->range[j].name ));
+#endif
           FT_INVALID_OFFSET;
         }
 

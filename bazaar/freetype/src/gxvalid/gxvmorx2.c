@@ -5,7 +5,7 @@
 /*    TrueTypeGX/AAT morx table validation                                 */
 /*    body for type2 (Ligature Substitution) subtable.                     */
 /*                                                                         */
-/*  Copyright 2005 by suzuki toshiya, Masatake YAMATO, Red Hat K.K.,       */
+/*  Copyright 2005, 2013 by suzuki toshiya, Masatake YAMATO, Red Hat K.K., */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -173,6 +173,7 @@
       FT_UShort  store;
 #endif
       FT_ULong   offset;
+      FT_Long    gid_limit;
 
 
       lig_action = FT_NEXT_ULONG( p );
@@ -186,8 +187,9 @@
       /* this offset is 30-bit signed value to add to GID */
       /* it is different from the location offset in mort */
       if ( ( offset & 0x3FFF0000UL ) == 0x3FFF0000UL )
-      {
-        if ( offset + valid->face->num_glyphs > 0x40000000UL )
+      { /* negative offset */
+        gid_limit = valid->face->num_glyphs - ( offset & 0x0000FFFFUL );
+        if ( gid_limit > 0 )
           return;
 
         GXV_TRACE(( "ligature action table includes"
@@ -197,8 +199,8 @@
         GXV_SET_ERR_IF_PARANOID( FT_INVALID_OFFSET );
       }
       else if ( ( offset & 0x3FFF0000UL ) == 0x0000000UL )
-      {
-        if ( offset + valid->face->num_glyphs < 0 )
+      { /* positive offset */
+        if ( (FT_Long)offset < valid->face->num_glyphs )
           return;
 
         GXV_TRACE(( "ligature action table includes"
@@ -315,7 +317,9 @@
 
     gxv_XStateTable_validate( p, limit, valid );
 
+#if 0
     p += valid->subtable_length;
+#endif
     gxv_morx_subtable_type2_ligatureTable_validate( table, valid );
 
     GXV_EXIT;

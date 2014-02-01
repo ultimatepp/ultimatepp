@@ -19,7 +19,7 @@
 /***************************************************************************/
 
 
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 #include FT_SFNT_NAMES_H
 #include FT_INTERNAL_TRUETYPE_TYPES_H
 #include FT_INTERNAL_STREAM_H
@@ -44,7 +44,7 @@
                     FT_UInt       idx,
                     FT_SfntName  *aname )
   {
-    FT_Error  error = FT_Err_Invalid_Argument;
+    FT_Error  error = FT_ERR( Invalid_Argument );
 
 
     if ( aname && face && FT_IS_SFNT( face ) )

@@ -1,7 +1,7 @@
 /***************************************************************************/
 /*                                                                         */
 /* This file defines the structure of the FreeType reference.              */
-/* It is used by the python script which generates the HTML files.         */
+/* It is used by the python script that generates the HTML files.          */
 /*                                                                         */
 /***************************************************************************/
 
@@ -60,6 +60,22 @@
 /*    winfnt_fonts                                                         */
 /*    font_formats                                                         */
 /*    gasp_table                                                           */
+/*                                                                         */
+/***************************************************************************/
+
+
+/***************************************************************************/
+/*                                                                         */
+/* <Chapter>                                                               */
+/*    module_specific                                                      */
+/*                                                                         */
+/* <Title>                                                                 */
+/*    Controlling FreeType Modules                                         */
+/*                                                                         */
+/* <Sections>                                                              */
+/*    auto_hinter                                                          */
+/*    cff_driver                                                           */
+/*    tt_driver                                                            */
 /*                                                                         */
 /***************************************************************************/
 

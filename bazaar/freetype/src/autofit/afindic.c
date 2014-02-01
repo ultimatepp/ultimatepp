@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter hinting routines for Indic scripts (body).               */
 /*                                                                         */
-/*  Copyright 2007, 2011 by                                                */
+/*  Copyright 2007, 2011-2013 by                                           */
 /*  Rahul Bhalerao <rahul.bhalerao@redhat.com>, <b.rahul.pm@gmail.com>.    */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -46,7 +46,7 @@
       face->charmap = NULL;
     else
     {
-      af_cjk_metrics_init_widths( metrics, face, 0x7530 );
+      af_cjk_metrics_init_widths( metrics, face );
 #if 0
       /* either need indic specific blue_chars[] or just skip blue zones */
       af_cjk_metrics_init_blues( metrics, face, af_cjk_blue_chars );
@@ -56,7 +56,7 @@
 
     FT_Set_Charmap( face, oldmap );
 
-    return AF_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -97,27 +97,12 @@
   /*************************************************************************/
 
 
-  static const AF_Script_UniRangeRec  af_indic_uniranges[] =
-  {
-#if 0
-    AF_UNIRANGE_REC( 0x0100UL, 0xFFFFUL ),  /* why this? */
-#endif
-    AF_UNIRANGE_REC( 0x0900UL, 0x0DFFUL),    /* Indic Range */
-    AF_UNIRANGE_REC( 0x0F00UL, 0x0FFFUL),    /* Tibetan */
-    AF_UNIRANGE_REC( 0x1900UL, 0x194FUL),    /* Limbu */
-    AF_UNIRANGE_REC( 0x1B80UL, 0x1BBFUL),    /* Sundanese */
-    AF_UNIRANGE_REC( 0x1C80UL, 0x1CDFUL),    /* Meetei Mayak */
-    AF_UNIRANGE_REC( 0xA800UL, 0xA82FUL),    /* Syloti Nagri */
-    AF_UNIRANGE_REC( 0x11800UL, 0x118DFUL),  /* Sharada */
-    AF_UNIRANGE_REC(      0UL,      0UL)
-  };
+  AF_DEFINE_WRITING_SYSTEM_CLASS(
+    af_indic_writing_system_class,
 
+    AF_WRITING_SYSTEM_INDIC,
 
-  AF_DEFINE_SCRIPT_CLASS(af_indic_script_class,
-    AF_SCRIPT_INDIC,
-    af_indic_uniranges,
-
-    sizeof( AF_CJKMetricsRec ),
+    sizeof ( AF_CJKMetricsRec ),
 
     (AF_Script_InitMetricsFunc) af_indic_metrics_init,
     (AF_Script_ScaleMetricsFunc)af_indic_metrics_scale,
@@ -127,19 +112,30 @@
     (AF_Script_ApplyHintsFunc)  af_indic_hints_apply
   )
 
-#else /* !AF_CONFIG_OPTION_INDIC */
+  /* XXX: this should probably fine tuned to differentiate better between */
+  /*      scripts...                                                      */
 
-  static const AF_Script_UniRangeRec  af_indic_uniranges[] =
+  static const AF_Script_UniRangeRec  af_deva_uniranges[] =
   {
-    { 0, 0 }
+    AF_UNIRANGE_REC(  0x0900UL,  0x0DFFUL ),  /* Indic Range  */
+    AF_UNIRANGE_REC(  0x0F00UL,  0x0FFFUL ),  /* Tibetan      */
+    AF_UNIRANGE_REC(  0x1900UL,  0x194FUL ),  /* Limbu        */
+    AF_UNIRANGE_REC(  0x1B80UL,  0x1BBFUL ),  /* Sundanese    */
+    AF_UNIRANGE_REC(  0x1C80UL,  0x1CDFUL ),  /* Meetei Mayak */
+    AF_UNIRANGE_REC(  0xA800UL,  0xA82FUL ),  /* Syloti Nagri */
+    AF_UNIRANGE_REC( 0x11800UL, 0x118DFUL ),  /* Sharada      */
+    AF_UNIRANGE_REC(       0UL,       0UL )
   };
 
 
-  AF_DEFINE_SCRIPT_CLASS(af_indic_script_class,
-    AF_SCRIPT_INDIC,
-    af_indic_uniranges,
+#else /* !AF_CONFIG_OPTION_INDIC */
 
-    sizeof( AF_CJKMetricsRec ),
+  AF_DEFINE_WRITING_SYSTEM_CLASS(
+    af_indic_writing_system_class,
+
+    AF_WRITING_SYSTEM_INDIC,
+
+    sizeof ( AF_CJKMetricsRec ),
 
     (AF_Script_InitMetricsFunc) NULL,
     (AF_Script_ScaleMetricsFunc)NULL,
@@ -149,7 +145,25 @@
     (AF_Script_ApplyHintsFunc)  NULL
   )
 
+
+  static const AF_Script_UniRangeRec  af_deva_uniranges[] =
+  {
+    AF_UNIRANGE_REC( 0UL, 0UL )
+  };
+
 #endif /* !AF_CONFIG_OPTION_INDIC */
+
+
+  AF_DEFINE_SCRIPT_CLASS(
+    af_deva_script_class,
+
+    AF_SCRIPT_DEVA,
+    (AF_Blue_Stringset)0, /* XXX */
+    AF_WRITING_SYSTEM_INDIC,
+
+    af_deva_uniranges,
+    'o' /* XXX */
+  )
 
 
 /* END */

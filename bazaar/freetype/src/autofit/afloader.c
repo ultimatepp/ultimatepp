@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-fitter glyph loading routines (body).                           */
 /*                                                                         */
-/*  Copyright 2003-2009, 2011 by                                           */
+/*  Copyright 2003-2009, 2011-2013 by                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -16,18 +16,23 @@
 /***************************************************************************/
 
 
+#include "afglobal.h"
 #include "afloader.h"
 #include "afhints.h"
-#include "afglobal.h"
 #include "aferrors.h"
+#include "afmodule.h"
+#include "afpic.h"
 
 
   /* Initialize glyph loader. */
 
   FT_LOCAL_DEF( FT_Error )
-  af_loader_init( AF_Loader  loader,
-                  FT_Memory  memory )
+  af_loader_init( AF_Module  module )
   {
+    AF_Loader  loader = module->loader;
+    FT_Memory  memory = module->root.library->memory;
+
+
     FT_ZERO( loader );
 
     af_glyph_hints_init( &loader->hints, memory );
@@ -41,10 +46,11 @@
   /* Reset glyph loader and compute globals if necessary. */
 
   FT_LOCAL_DEF( FT_Error )
-  af_loader_reset( AF_Loader  loader,
+  af_loader_reset( AF_Module  module,
                    FT_Face    face )
   {
-    FT_Error  error = AF_Err_Ok;
+    FT_Error   error  = FT_Err_Ok;
+    AF_Loader  loader = module->loader;
 
 
     loader->face    = face;
@@ -54,7 +60,7 @@
 
     if ( loader->globals == NULL )
     {
-      error = af_face_globals_new( face, &loader->globals );
+      error = af_face_globals_new( face, &loader->globals, module );
       if ( !error )
       {
         face->autohint.data =
@@ -71,8 +77,11 @@
   /* Finalize glyph loader. */
 
   FT_LOCAL_DEF( void )
-  af_loader_done( AF_Loader  loader )
+  af_loader_done( AF_Module  module )
   {
+    AF_Loader  loader = module->loader;
+
+
     af_glyph_hints_done( &loader->hints );
 
     loader->face    = NULL;
@@ -104,9 +113,11 @@
     AF_GlyphHints     hints    = &loader->hints;
     FT_GlyphSlot      slot     = face->glyph;
     FT_Slot_Internal  internal = slot->internal;
+    FT_Int32          flags;
 
 
-    error = FT_Load_Glyph( face, glyph_index, load_flags );
+    flags = load_flags | FT_LOAD_LINEAR_DESIGN;
+    error = FT_Load_Glyph( face, glyph_index, flags );
     if ( error )
       goto Exit;
 
@@ -124,10 +135,6 @@
       FT_Vector_Transform( &loader->trans_delta, &inverse );
     }
 
-    /* set linear metrics */
-    slot->linearHoriAdvance = slot->metrics.horiAdvance;
-    slot->linearVertAdvance = slot->metrics.vertAdvance;
-
     switch ( slot->format )
     {
     case FT_GLYPH_FORMAT_OUTLINE:
@@ -137,8 +144,8 @@
                               loader->trans_delta.x,
                               loader->trans_delta.y );
 
-      /* copy the outline points in the loader's current               */
-      /* extra points which is used to keep original glyph coordinates */
+      /* copy the outline points in the loader's current                */
+      /* extra points which are used to keep original glyph coordinates */
       error = FT_GLYPHLOADER_CHECK_POINTS( gloader,
                                            slot->outline.n_points + 4,
                                            slot->outline.n_contours );
@@ -174,10 +181,20 @@
 
       /* now load the slot image into the auto-outline and run the */
       /* automatic hinting process                                 */
-      if ( metrics->clazz->script_hints_apply )
-        metrics->clazz->script_hints_apply( hints,
-                                            &gloader->current.outline,
-                                            metrics );
+      {
+#ifdef FT_CONFIG_OPTION_PIC
+        AF_FaceGlobals         globals              = loader->globals;
+#endif
+        AF_WritingSystemClass  writing_system_class =
+                                 AF_WRITING_SYSTEM_CLASSES_GET
+                                   [metrics->script_class->writing_system];
+
+
+        if ( writing_system_class->script_hints_apply )
+          writing_system_class->script_hints_apply( hints,
+                                                    &gloader->current.outline,
+                                                    metrics );
+      }
 
       /* we now need to adjust the metrics according to the change in */
       /* width/positioning that occurred during the hinting process   */
@@ -343,14 +360,14 @@
             if ( start_point + k >= num_base_points         ||
                                l >= (FT_UInt)num_new_points )
             {
-              error = AF_Err_Invalid_Composite;
+              error = FT_THROW( Invalid_Composite );
               goto Exit;
             }
 
             l += num_base_points;
 
-            /* for now, only use the current point coordinates;    */
-            /* we may consider another approach in the near future */
+            /* for now, only use the current point coordinates; */
+            /* we eventually may consider another approach      */
             p1 = gloader->base.outline.points + start_point + k;
             p2 = gloader->base.outline.points + start_point + l;
 
@@ -381,7 +398,7 @@
 
     default:
       /* we don't support other formats (yet?) */
-      error = AF_Err_Unimplemented_Feature;
+      error = FT_THROW( Unimplemented_Feature );
     }
 
   Hint_Metrics:
@@ -433,9 +450,10 @@
         slot->metrics.horiAdvance = FT_MulFix( slot->metrics.horiAdvance,
                                                x_scale );
 #else
-      if ( FT_IS_FIXED_WIDTH( slot->face )                              ||
-           ( af_face_globals_is_digit( loader->globals, glyph_index ) &&
-             metrics->digits_have_same_width                          ) )
+      if ( scaler->render_mode != FT_RENDER_MODE_LIGHT                      &&
+           ( FT_IS_FIXED_WIDTH( slot->face )                              ||
+             ( af_face_globals_is_digit( loader->globals, glyph_index ) &&
+               metrics->digits_have_same_width                          ) ) )
       {
         slot->metrics.horiAdvance = FT_MulFix( slot->metrics.horiAdvance,
                                                metrics->scaler.x_scale );
@@ -465,7 +483,13 @@
       if ( error )
         goto Exit;
 
-      slot->outline = internal->loader->base.outline;
+      /* reassign all outline fields except flags to protect them */
+      slot->outline.n_contours = internal->loader->base.outline.n_contours;
+      slot->outline.n_points   = internal->loader->base.outline.n_points;
+      slot->outline.points     = internal->loader->base.outline.points;
+      slot->outline.tags       = internal->loader->base.outline.tags;
+      slot->outline.contours   = internal->loader->base.outline.contours;
+
       slot->format  = FT_GLYPH_FORMAT_OUTLINE;
     }
 
@@ -477,18 +501,19 @@
   /* Load a glyph. */
 
   FT_LOCAL_DEF( FT_Error )
-  af_loader_load_glyph( AF_Loader  loader,
+  af_loader_load_glyph( AF_Module  module,
                         FT_Face    face,
                         FT_UInt    gindex,
-                        FT_UInt32  load_flags )
+                        FT_Int32   load_flags )
   {
     FT_Error      error;
-    FT_Size       size = face->size;
+    FT_Size       size   = face->size;
+    AF_Loader     loader = module->loader;
     AF_ScalerRec  scaler;
 
 
     if ( !size )
-      return AF_Err_Invalid_Argument;
+      return FT_THROW( Invalid_Argument );
 
     FT_ZERO( &scaler );
 
@@ -501,37 +526,45 @@
     scaler.render_mode = FT_LOAD_TARGET_MODE( load_flags );
     scaler.flags       = 0;  /* XXX: fix this */
 
-    error = af_loader_reset( loader, face );
+    error = af_loader_reset( module, face );
     if ( !error )
     {
       AF_ScriptMetrics  metrics;
-      FT_UInt           options = 0;
+      FT_UInt           options = AF_SCRIPT_DFLT;
 
 
 #ifdef FT_OPTION_AUTOFIT2
-      /* XXX: undocumented hook to activate the latin2 hinter */
+      /* XXX: undocumented hook to activate the latin2 writing system */
       if ( load_flags & ( 1UL << 20 ) )
-        options = 2;
+        options = AF_SCRIPT_LTN2;
 #endif
 
       error = af_face_globals_get_metrics( loader->globals, gindex,
                                            options, &metrics );
       if ( !error )
       {
+#ifdef FT_CONFIG_OPTION_PIC
+        AF_FaceGlobals         globals              = loader->globals;
+#endif
+        AF_WritingSystemClass  writing_system_class =
+                                 AF_WRITING_SYSTEM_CLASSES_GET
+                                   [metrics->script_class->writing_system];
+
+
         loader->metrics = metrics;
 
-        if ( metrics->clazz->script_metrics_scale )
-          metrics->clazz->script_metrics_scale( metrics, &scaler );
+        if ( writing_system_class->script_metrics_scale )
+          writing_system_class->script_metrics_scale( metrics, &scaler );
         else
           metrics->scaler = scaler;
 
         load_flags |=  FT_LOAD_NO_SCALE | FT_LOAD_IGNORE_TRANSFORM;
         load_flags &= ~FT_LOAD_RENDER;
 
-        if ( metrics->clazz->script_hints_init )
+        if ( writing_system_class->script_hints_init )
         {
-          error = metrics->clazz->script_hints_init( &loader->hints,
-                                                     metrics );
+          error = writing_system_class->script_hints_init( &loader->hints,
+                                                           metrics );
           if ( error )
             goto Exit;
         }

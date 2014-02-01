@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 
 #define  FT_MAKE_OPTION_SINGLE_OBJECT
 
@@ -34,7 +34,7 @@
 #include "fttrigon.c"
 #include "ftutil.c"
 
-#if defined( FT_MACINTOSH ) && !defined ( DARWIN_NO_CARBON )
+#ifdef FT_MACINTOSH
 #include "ftmac.c"
 #endif
 

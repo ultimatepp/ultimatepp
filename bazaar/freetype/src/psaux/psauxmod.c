@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 #include "psauxmod.h"
 #include "psobjs.h"
 #include "t1decode.h"
@@ -123,7 +123,7 @@
   const FT_Module_Class  psaux_module_class =
   {
     0,
-    sizeof( FT_ModuleRec ),
+    sizeof ( FT_ModuleRec ),
     "psaux",
     0x20000L,
     0x20000L,
