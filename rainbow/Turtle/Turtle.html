@@ -219,6 +219,8 @@ function ProcessDraw(s)
         	// Log("irect: " + x + ", " + y + ", " + cx + ", " + cy);
         	HideCaret(x, y, cx, cy);
 			InvertRect(x, y, cx, cy);
+			posx = x;
+			posy = y;
         }
         else
         if(Char(p, 2)) { // SETIMAGE
