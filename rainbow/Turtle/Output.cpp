@@ -50,9 +50,13 @@ void Ctrl::Output()
 {
 	socket.Timeout(20000);
 	if(turtle_stream.HasData()) {
-		websocket.SendBinary(ZCompress(String(SystemDraw::DISABLESENDING, 1))); // Do not send events until data transfered and processed
+		websocket.SendBinary(ZCompress(String(DISABLESENDING, 1))); // Do not send events until data transfered and processed
 		int64 x = ++update_serial;
-		Put8(SystemDraw::UPDATESERIAL);
+		if(IsNull(serial_time0)) {
+			serial_time0 = msecs();
+			serial_0 = update_serial;
+		}
+		Put8(UPDATESERIAL);
 		Put32(LODWORD(x));
 		Put32(HIDWORD(x));
 		String s = turtle_stream.FlushStream();
@@ -81,7 +85,7 @@ void Ctrl::SyncCaret()
 		cr = (RectC(focusCtrl->caretx, focusCtrl->carety, focusCtrl->caretcx, focusCtrl->caretcy)
 		      + focusCtrl->GetScreenView().TopLeft()) & focusCtrl->GetScreenView();
 	if(cr != fbCaretRect) { // TODO: SetCaret should perhaps be called on Ctrl::SetCaret
-		Put8(SystemDraw::SETCARET);
+		Put8(SETCARET);
 		Put(cr);
 		fbCaretRect = cr;
 	}
@@ -147,7 +151,7 @@ void Ctrl::DoPaint()
 			prev_cursor_id = id;
 			int64 q = fbCursorImage.GetAuxData();
 			if(q) {
-				Put8(SystemDraw::STD_CURSORIMAGE);
+				Put8(STD_CURSORIMAGE);
 				Put8(clamp((int)q, 1, 16));
 			}
 			else {
@@ -156,10 +160,10 @@ void Ctrl::DoPaint()
 				h << "url('data:image/png;base64,"
 				  << Base64Encode(PNGEncoder().SaveString(fbCursorImage))
 				  << "') " << p.x << ' ' << p.y << ", default";
-				Put8(SystemDraw::SETCURSORIMAGE);
+				Put8(SETCURSORIMAGE);
 				Put16(0); // _TODO_ Cursor cache
 				Put(h);
-				Put8(SystemDraw::CURSORIMAGE);
+				Put8(CURSORIMAGE);
 				Put16(0); // _TODO_ Cursor cache
 			}
 		}

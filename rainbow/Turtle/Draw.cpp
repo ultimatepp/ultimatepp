@@ -6,6 +6,7 @@
 
 NAMESPACE_UPP
 
+#if 0
 Index<int64> SystemDraw::img_index[3];
 
 int SystemDraw::GetImageI(int from, Index<int64>& img_index, int maxcount, const Image& img)
@@ -68,6 +69,7 @@ void SystemDraw::PutImage(Point p, const Image& img, const Rect& src)
 	Ctrl::Put(src);
 	pos = p;
 }
+#endif
 
 void SystemDraw::PutRect(const Rect& r, Color color)
 {

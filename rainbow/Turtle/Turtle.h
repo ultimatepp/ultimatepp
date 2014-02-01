@@ -32,46 +32,60 @@ public:
 	TurtleStream() { Reset(); }
 };
 
+enum Command {
+	RECT = 0,
+	IMAGE = 1,
+	SETIMAGE = 2,
+	INVERTRECT = 3,
+	STD_CURSORIMAGE = 4,
+	SETCURSORIMAGE = 5,
+	CURSORIMAGE = 6,
+	DISABLESENDING = 7,
+	UPDATESERIAL = 8,
+	
+	IMAGEPP = 9,
+	IMAGENP = 10,
+	IMAGEPN = 11,
+	IMAGENN = 12,
+
+	RECTPP = 13,
+	RECTNP = 14,
+	RECTPN = 15,
+	RECTNN = 16,
+
+	SETCARET = 17,
+	
+	HORZDRAGLINE = 18,
+	VERTDRAGLINE = 19,
+};
+
+
 class SystemDraw : public SDraw {
 public:
 	virtual void  PutImage(Point p, const Image& img, const Rect& src);
 	virtual void  PutRect(const Rect& r, Color color);
-	
-public:	
-	enum Code {
-		RECT = 0,
-		IMAGE = 1,
-		SETIMAGE = 2,
-		INVERTRECT = 3,
-		STD_CURSORIMAGE = 4,
-		SETCURSORIMAGE = 5,
-		CURSORIMAGE = 6,
-		DISABLESENDING = 7,
-		UPDATESERIAL = 8,
-		
-		IMAGEPP = 9,
-		IMAGENP = 10,
-		IMAGEPN = 11,
-		IMAGENN = 12,
 
-		RECTPP = 13,
-		RECTNP = 14,
-		RECTPN = 15,
-		RECTNN = 16,
+public:
+	struct ImageSysData {
+		Image      img;
+		int        handle;
 
-		SETCARET = 17,
+		static Vector<int> free_handle;
+		static int handle_count;
+
+		static int  AllocImageHandle();
+		static void FreeImageHandle(int handle);
 		
-		HORZDRAGLINE = 18,
-		VERTDRAGLINE = 19,
+		void Init(const Image& img);
+		~ImageSysData();
 	};
+
 	
-	static Index<int64>           img_index[3];
+	static LRUCache<ImageSysData, int64> cache;
 
 	Point pos;
-	
-	int GetImageI(int from, Index<int64>& img_index, int maxcount, const Image& img);
-	int GetImageI(const Image& img);
-	static void ResetI()          { for(int i = 0; i < 3; i++) img_index[i].Clear(); }
+
+	static void ResetI();
 
 	bool    CanSetSurface()                         { return false; }
 	static void Flush()                             {}
