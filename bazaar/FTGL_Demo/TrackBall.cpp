@@ -12,6 +12,7 @@ void TrackBall::_Animate(void)
 {
 	add_quats(lastquat, curquat, curquat);
 	owner->Refresh();
+	owner->RefreshLayoutDeep();
 	if(enableAnimCb)
 		owner->SetTimeCallback(10, THISBACK(_Animate));
 }
