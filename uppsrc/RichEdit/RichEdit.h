@@ -115,6 +115,8 @@ public:
 
 struct FontHeight : public WithDropChoice<EditDouble> {
 	virtual bool Key(dword key, int);
+	
+	FontHeight()   { MinMax(1, 72); }
 };
 
 #define LAYOUTFILE <RichEdit/RichEdit.lay>
