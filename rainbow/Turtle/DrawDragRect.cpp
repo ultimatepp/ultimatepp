@@ -63,8 +63,8 @@ void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& cli
 		f.type = type;
 		f.animation = animation;
 		DrawDragRect(*top, f);
+		Ctrl::SyncClient();
 		Ctrl::Output();
-		top->Sync();
 	}
 }
 
