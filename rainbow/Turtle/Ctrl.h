@@ -81,8 +81,6 @@ private:
 	static void Put(const Rect& r);
 	static void Put(const String& s);
 
-	static void SyncClient();
-
 	friend void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip,
 	                         int n, Color color, int type, int animation);
 	friend void DrawDragLine(SystemDraw& w, bool horz, int x, int y, int len, int n, int animation);
@@ -94,6 +92,8 @@ private:
 
 public:
 	static bool DoKeyFB(dword key, int cnt);
+
+	static void SyncClient();
 	
 	static String   host;
 	static int      port;
