@@ -29,7 +29,7 @@
 #define __ftgl__
 
 /* We need the Freetype headers */
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 #include FT_OUTLINE_H

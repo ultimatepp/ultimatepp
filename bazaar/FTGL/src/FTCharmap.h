@@ -27,7 +27,7 @@
 #define     __FTCharmap__
 
 
-#include <freetype/ft2build.h>
+#include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 
