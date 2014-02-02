@@ -1,7 +1,7 @@
 noblitz;
 
 uses
-	freetype;
+	FreeType;
 
 library(LINUX) "GL GLU";
 
