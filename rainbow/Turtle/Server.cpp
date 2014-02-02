@@ -30,11 +30,15 @@ void Ctrl::Broadcast(int signal) {
 String    Ctrl::host = "localhost";
 int       Ctrl::port = 8088;
 bool      Ctrl::debugmode;
+int       Ctrl::connection_limit = INT_MAX;
 String    Ctrl::ip = "0.0.0.0";
 TcpSocket Ctrl::socket;
 WebSocket Ctrl::websocket;
 int64     Ctrl::update_serial;
 int64     Ctrl::recieved_update_serial;
+
+Callback2<int, String> Ctrl::WhenConnect;
+Callback1<int>         Ctrl::WhenTerminate;
 
 bool Ctrl::StartSession()
 {
@@ -72,8 +76,10 @@ bool Ctrl::StartSession()
 #ifdef PLATFORM_POSIX
 		int i = 0;
 		while(i < pid.GetCount())
-			if(pid[i] && waitpid(pid[i], 0, WNOHANG | WUNTRACED) > 0)
+			if(pid[i] && waitpid(pid[i], 0, WNOHANG | WUNTRACED) > 0) {
+				WhenTerminate(pid[i]);
 				pid.Remove(i);
+			}
 			else
 				i++;
 #endif
@@ -84,6 +90,10 @@ bool Ctrl::StartSession()
 			if(http.Read(socket)) {
 				RLOG("Accepted, header read");
 				if(websocket.WebAccept(socket, http)) { // TODO: Connection limit, info
+					if(pid.GetCount() >= connection_limit) {
+						socket.Close();
+						continue;
+					}
 #ifdef PLATFORM_POSIX
 					if(debugmode)
 						break;
@@ -92,6 +102,7 @@ bool Ctrl::StartSession()
 						break;
 					else {
 						pid.Add(newpid);
+						WhenConnect(newpid, socket.GetPeerAddr());
 						socket.Close();
 						continue;
 					}

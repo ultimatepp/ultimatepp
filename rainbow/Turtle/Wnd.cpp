@@ -186,9 +186,9 @@ void Ctrl::WndShow(bool b)
 void Ctrl::WndUpdate()
 {
 	GuiLock __;
-	SyncClient();
-	DoPaint();
-	Output();
+//	SyncClient();
+//	DoPaint();
+//	Output();
 }
 
 bool Ctrl::IsWndOpen() const {

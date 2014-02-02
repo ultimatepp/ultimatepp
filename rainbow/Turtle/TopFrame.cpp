@@ -80,7 +80,7 @@ void TopWindowFrame::Paint(Draw& w)
 		tx += c;
 		tcx -= c;
 	}
-	DrawTextEllipsis(w, tx, m.top + 2, tcx, title, "..", StdFont(), SColorHighlightText());
+	DrawTextEllipsis(w, tx, m.top + 2, tcx, title, "..", StdFont(), SColorText());
 }
 
 void TopWindowFrame::Layout()
