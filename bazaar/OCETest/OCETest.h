@@ -4,9 +4,5 @@
 #include "CascadeDocument.h"
 #include "CascadeView.h"
 
-#include <OCE/OCE.h>
-
-using namespace Upp;
-
 #endif
 

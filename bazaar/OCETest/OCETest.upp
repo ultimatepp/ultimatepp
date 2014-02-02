@@ -2,12 +2,10 @@ noblitz;
 
 uses
 	CtrlLib,
-	OCE,
-	FTGL;
+	OCE;
 
 file
 	CascadeDocument.h,
-	CascadeDocument.cpp,
 	CascadeView.h,
 	CascadeView.cpp,
 	MakeBottle.h,
@@ -16,5 +14,6 @@ file
 	OCETest.cpp;
 
 mainconfig
-	"" = "GUI USEMALLOC";
+	"" = "GUI USEMALLOC",
+	"" = "GUI USEMALLOC NOGTK";
 

@@ -2,5 +2,4 @@
 #define _OCETest_icpp_init_stub
 #include "CtrlLib/init"
 #include "OCE/init"
-#include "FTGL/init"
 #endif
