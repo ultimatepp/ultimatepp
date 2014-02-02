@@ -5,12 +5,12 @@ NAMESPACE_UPP
 bool FontHeight::Key(dword key, int count)
 {
 	if(key == K_ENTER) {
-		WhenSelect();
+		if(!IsError(GetData()))
+			WhenSelect();
 		return true;
 	}
 	return WithDropChoice<EditDouble>::Key(key, count);
 }
-
 
 double RichEdit::DotToPt(int dt)
 {
