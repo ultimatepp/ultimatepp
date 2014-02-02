@@ -1,0 +1,12 @@
+LAYOUT(SelectorLayout, 576, 200)
+	ITEM(Label, dv___0, SetLabel(t_("OpenCascade OCE Upp Packager")).SetAlign(ALIGN_CENTER).SetFont(StdFontZ(16).Bold()).RightPosZ(4, 568).TopPosZ(4, 27))
+	ITEM(Label, dv___1, SetLabel(t_("Generated packages dest folder :")).LeftPosZ(4, 216).TopPosZ(80, 27))
+	ITEM(Button, cancelButton, SetLabel(t_("Cancel")).RightPosZ(4, 68).BottomPosZ(5, 19))
+	ITEM(Button, goButton, SetLabel(t_("Generate")).LeftPosZ(4, 68).BottomPosZ(5, 19))
+	ITEM(EditFolder, destFolder, HSizePosZ(228, 4).TopPosZ(80, 19))
+	ITEM(ProgressIndicator, progress, HSizePosZ(4, 4).BottomPosZ(36, 24))
+	ITEM(StaticText, action, HSizePosZ(4, 4).BottomPosZ(64, 20))
+	ITEM(Label, dv___7, SetLabel(t_("OpenCascade root folder :")).LeftPosZ(4, 216).TopPosZ(44, 27))
+	ITEM(EditFolder, sourceFolder, HSizePosZ(228, 4).TopPosZ(48, 19))
+END_LAYOUT
+

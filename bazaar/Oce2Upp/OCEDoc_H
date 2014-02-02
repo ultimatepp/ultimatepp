@@ -1,0 +1,39 @@
+#ifndef _OCE_OCEDoc_h_
+#define _OCE_OCEDoc_h_
+
+// OCE document class
+class OCEDoc : public Pte<OCEDoc>
+{
+	private:
+		// THE GRAPHIC DRIVER -- STATIC, COMMON TO ALL CascadeDocuments
+		static Handle(Graphic3d_GraphicDriver) graphicDriver;
+
+		// THE VIEWER
+		Handle(V3d_Viewer) viewer;
+		
+		// THE INTERACTIVE CONTEXT
+		Handle(AIS_InteractiveContext) context;
+		
+		// NUMBER OF CREATED INSTANCES
+		static int instances;
+		
+	public:
+	
+		// Constructor
+		OCEDoc();
+
+		// Destructor
+		~OCEDoc();
+
+		// Graphic driver property
+		Handle(Graphic3d_GraphicDriver) const &GetGraphicDriver() {return graphicDriver; };
+
+		// Viewer property
+		Handle(V3d_Viewer) const &GetViewer() { return viewer; };
+		
+		// Interactive context property
+		Handle(AIS_InteractiveContext) const &GetContext() { return context; };
+
+}; // END Class OCEDoc
+
+#endif

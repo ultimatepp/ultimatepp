@@ -1,0 +1,21 @@
+uses
+	CtrlLib,
+	Controls4U;
+
+options(WIN32) -DPIPPO=gigi;
+
+file
+	OCE_UPP,
+	OCE_H,
+	OCEDoc_H,
+	OCEDoc_CPP,
+	OCECtrl_H,
+	OCECtrl_CPP,
+	Oce2Upp.brc,
+	Oce2Upp.lay,
+	Oce2Upp.h,
+	Oce2Upp.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,64 @@
+#include "OCE.h"
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Static members initialization
+Handle(Graphic3d_GraphicDriver) OCEDoc::graphicDriver = 0;
+int OCEDoc::instances = 0;
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Constructor
+OCEDoc::OCEDoc()
+{
+	// CREATES THE GRAPHIC DEVICE
+	if( graphicDriver.IsNull() )
+	{
+		Handle(Aspect_DisplayConnection) conn = new Aspect_DisplayConnection;
+		graphicDriver = new OpenGl_GraphicDriver (conn);
+	}
+
+	// CREATES THE VIEWER
+	TCollection_ExtendedString a3DName("Visu3D");
+	viewer = new V3d_Viewer(
+	    graphicDriver,			// the graphic device
+		a3DName.ToExtString(),	// view name
+		"",						// domain (?)
+		1000.0,					// view size
+		V3d_XposYnegZpos,		// View projection
+		Quantity_NOC_GRAY30,
+		V3d_ZBUFFER,
+		V3d_GOURAUD,
+		V3d_WAIT,
+		Standard_True,			// Computed mode (?)
+		Standard_True,			// Default Computed mode (?)
+		V3d_TEX_NONE			// (?)
+	);
+	
+	// INITIALIZES THE VIEWER							 
+	viewer->SetDefaultLights();
+	viewer->SetLightOn();
+	
+	// CREATES THE INTERACTIVE CONTEXT
+	context = new AIS_InteractiveContext(viewer);	
+
+	// COUNTS THE INSTANCES OF CascadeCtrl
+	// THAT'S USED TO FREE GraphicDevice ON LAST CascadeCtrl DELETION
+	instances++;
+
+} // END Constructor class OCEDoc
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Destructor
+OCEDoc::~OCEDoc()
+{
+	// FREES THE CONTEXT
+	context.Nullify();
+	
+	// FREES THE VIEWER
+	viewer.Nullify();
+	
+	// DECREMENT INSTANCE COUNTER, IF NULL FREES GraphicDevice
+	//ASSERT(Instances > 0);
+	if(!--instances)
+		graphicDriver.Nullify();
+	
+} // END Destructor class OCEDoc

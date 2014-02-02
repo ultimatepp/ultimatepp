@@ -1,0 +1,68 @@
+#ifndef _OCE_OCECtrl_h_
+#define _OCE_OCECtrl_h_
+
+class OCEDoc;
+class OCECtrl : public DHCtrl
+{
+	private:
+	
+		// The associated document
+		Ptr<OCEDoc> document;
+		
+		bool opened;
+		
+	protected:
+			
+		// The view object
+		Handle(V3d_View) view;
+		
+#ifdef PLATFORM_WIN32
+		// state handler, to catch init and terminate
+		void State(int reason);
+#elif defined(flagX11)
+		// Method to choose the correct visual
+		virtual XVisualInfo *CreateVisual(void);
+		
+		// Method for attribute setting
+		virtual void SetAttributes(unsigned long &ValueMask, XSetWindowAttributes &attr);
+		
+		// These is called just after initialization
+		virtual void AfterInit(bool Error) ;
+
+		// These is called just before termination
+		virtual void BeforeTerminate(void) ;
+#elif defined(flagGTK)
+		#error "GTK platform still not supported"
+	#else
+		#error "Invalid platform"
+#endif
+		
+		// initializes view after platform-dependent init
+		void InitView(void);
+		
+		// Handle layout events and propagates to embedded window
+		virtual void Layout(void) ;
+
+		// Paint function with context
+		virtual void Paint(Draw &draw) ;
+		
+		////////////////////////////////////////////////////////////////////////////////////////////
+
+	public:
+		typedef OCECtrl CLASSNAME;
+
+		// Constructor class OCECtrl
+		OCECtrl();
+	
+		// Destructor class OCECtrl
+		~OCECtrl();
+		
+		// connects control to document
+		void SetDocument(OCEDoc *doc);
+
+		// Fit all in view
+		void FitAll();
+
+}; // END Class OCECtrl
+
+#endif

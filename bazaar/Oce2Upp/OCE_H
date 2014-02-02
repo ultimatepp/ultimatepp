@@ -1,0 +1,83 @@
+#ifndef _OCE_H
+#define _OCE_H
+#include <GLCtrl/GLCtrl.h>
+
+#undef HAVE_CONFIG_H
+#ifdef PLATFORM_POSIX
+	#define OCE_HAVE_FSTREAM
+	#define OCE_HAVE_IOSTREAM
+	#define OCE_HAVE_IOMANIP
+	#define OCE_HAVE_IOS
+	#define OCE_HAVE_LIMITS_H
+	#define HAVE_SYS_STAT_H
+	#define HAVE_STRING_H
+	#define HAVE_UNISTD_H
+	#define HAVE_SIGNAL_H
+	#define HAVE_SYS_SEM_H
+	#define HAVE_STATFS\
+	#define HAVE_SYS_VFS_H
+	#define HAVE_SYS_TIME_H
+	#define HAVE_SYS_TIMES_H
+	#define HAVE_DIRENT_H
+	#define HAVE_DLFCN_H
+	#define HAVE_PWD_H
+	#define HAVE_SYS_UTSNAME_H
+	#define HAVE_NETDB_H
+	#define HAVE_SYS_MMAN_H
+	#define OCE_LIBRARY_PREFIX "lib"
+	#define OCE_LIBRARY_DEBUG_POSTFIX ""
+	#define OCE_LIBRARY_EXTENSION ""
+#else
+	#define WNT
+	#define OCE_IS_DUPLICATE_UINT32_T
+	#ifdef __APPLE__
+		typedef void *GLhandleARB;
+	#else
+		typedef unsigned int GLhandleARB;
+	#endif
+	typedef char GLcharARB;
+	#define OCE_LIBRARY_PREFIX ""
+	#define OCE_LIBRARY_DEBUG_POSTFIX "d"
+	#define OCE_LIBRARY_EXTENSION "lib"
+#endif
+#define CSFDB
+
+#ifdef WIN32
+	#include <WNT_Window.hxx>
+#else
+	#define Time    XTime
+	#define Font    XFont
+	#define Display XDisplay
+	#define Picture XPicture
+	#define Status  int
+
+	#include <GL/glx.h>
+	#include <Xw_Window.hxx>
+
+	#undef  Status
+	#undef  Picture
+	#undef  Time
+	#undef  Font
+	#undef  Display
+#endif
+
+#include <OpenGl_GraphicDriver.hxx>
+#include <Graphic3d_GraphicDriver.hxx>
+#include <V3d_View.hxx>
+#include <V3d_Viewer.hxx>
+#include <AIS_InteractiveContext.hxx>
+
+#ifdef PLATFORM_WIN32
+#elif defined(flagX11)
+#elif defined(flagGTK)
+	#error "GTK platform still not supported"
+#else
+	#error "Invalid platform"
+#endif 
+
+using namespace Upp;
+
+#include "OCECtrl.h"
+#include "OCEDoc.h"
+
+#endif

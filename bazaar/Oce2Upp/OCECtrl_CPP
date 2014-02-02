@@ -1,0 +1,242 @@
+#include "OCE.h"
+
+INITBLOCK {
+
+#ifdef PLATFORM_POSIX
+	setenv("MMGT_OPT", "0", 1);
+	setenv("MMGT_CLEAR", "0", 1);
+#else
+	SetEnvironmentVariable("MMGT_OPT", "0");
+	SetEnvironmentVariable("MMGT_CLEAR", "0");
+
+#endif
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Constructor
+OCECtrl::OCECtrl()
+{
+	// closed on creation
+	opened = false;
+	
+	// no connected document upon creation
+	document = NULL;
+	
+	// Resets view pointer
+	view.Nullify();
+	
+} // END Constructor class CascadeView
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Destructor
+OCECtrl::~OCECtrl()
+{
+	// Resets view handle
+	view.Nullify();
+
+	document = NULL;
+	opened = false;
+	
+} // END Destructor class OCECtrl
+
+void OCECtrl::SetDocument(OCEDoc *doc)
+{
+	document = doc;
+	if(!doc || !opened)
+	{
+		view.Nullify();
+		return;
+	}
+	
+	// platform dependent part
+	#ifdef PLATFORM_WIN32
+		HWND windowHandle = GetHWND();
+	
+		// Creates the view object
+		view = document->GetViewer()->CreateView();
+		
+		// Creates the OpenCascade window handle
+		Aspect_Handle aWindowHandle = (Aspect_Handle)windowHandle;
+		Handle(WNT_Window) hWnd = new WNT_Window(windowHandle);
+	
+		// Sets window handle in view
+	    view->SetWindow(hWnd);
+	    
+	    // Maps the view if needed
+	    if ( !hWnd->IsMapped() )
+	        hWnd->Map();
+
+	#elif defined(flagX11)
+
+		// Gets the window handle
+		Window WindowHandle = GetWindow();
+	
+		// Creates the view object
+		view = document->GetViewer()->CreateView();
+		
+		Aspect_Handle aWindowHandle = (Aspect_Handle)WindowHandle;
+		Handle(Xw_Window) hWnd = new Xw_Window (document->GetGraphicDriver()->GetDisplayConnection(), aWindowHandle);
+	
+		// Sets window handle in view
+	    view->SetWindow(hWnd);
+	    
+	    // Maps the view if needed
+	    if ( !hWnd->IsMapped() )
+	        hWnd->Map();
+
+	#elif defined(flagGTK)
+		#error "GTK platform still not supported"
+	#else
+		#error "Invalid platform"
+	#endif 
+
+	// platform intependent part
+	InitView();
+}
+
+#ifdef PLATFORM_WIN32
+
+	void OCECtrl::State(int reason)
+	{
+		if (reason == CLOSE)
+			if(!view.IsNull())
+				view.Nullify();
+	
+		DHCtrl::State(reason);
+		
+		if (reason == OPEN)
+		{
+			opened = true;
+			
+			// re-sets document (if any) and forces underlying structures creation
+			SetDocument(document);
+		}
+	}
+
+#elif defined(flagX11)
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	// Method to choose the correct visual
+	XVisualInfo *OCECtrl::CreateVisual(void)
+	{
+		int visualAttr[] =
+		{
+			GLX_RGBA,
+			GLX_DEPTH_SIZE,		1,
+			GLX_RED_SIZE,		1,
+			GLX_GREEN_SIZE,		1,
+			GLX_BLUE_SIZE,		1,
+			GLX_DOUBLEBUFFER,	None
+		};
+	    XVisualInfo *pVisualInfo = ::glXChooseVisual( Xdisplay, DefaultScreen(Xdisplay), visualAttr );
+	    
+	    return pVisualInfo;
+		
+	} // END OCECtrl::CreateVisual()
+			
+	/////////////////////////////////////////////////////////////////////////////////////////
+	// Method for attribute setting
+	void OCECtrl::SetAttributes(unsigned long &ValueMask, XSetWindowAttributes &attr)
+	{
+		ValueMask |=
+				CWBackPixel
+			|	CWBorderPixel
+		;
+		attr.background_pixel = 0;
+		attr.border_pixel = 0;
+		
+	} // END OCECtrl::SetAttributes()
+			
+	
+	/////////////////////////////////////////////////////////////////////////////////////////
+	// GLInit method
+	void OCECtrl::AfterInit(bool isError)
+	{
+		if(isError)
+			return;
+		
+		opened = true;
+		
+		// re-sets document (if any) and forces underlying structures creation
+		SetDocument(document);
+
+	} // END OCECtrl::AfterInit()
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////////////
+	// These is called just before termination
+	void OCECtrl::BeforeTerminate(void)
+	{
+		if(!view.IsNull())
+			view.Nullify();
+		
+		opened = false;
+	
+	} // END OCECtrl::BeforeTerminate()
+		
+#elif defined(flagGTK)
+	#error "GTK platform still not supported"
+
+#else
+	#error "Invalid platform"
+#endif 
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// initializes view after platform-dependent init
+void OCECtrl::InitView(void)
+{
+	if(!document)
+		return;
+	
+    // Sets the background color
+    view->SetBackgroundColor(Quantity_NOC_BLACK);
+    
+    // Sets up the triedron
+    view->TriedronDisplay(Aspect_TOTP_LEFT_LOWER, Quantity_NOC_WHITE, 0.1, V3d_ZBUFFER);
+    view->TriedronEcho(Aspect_TOTE_ORIGIN); // ???
+
+    // Activate the grid
+    document->GetViewer()->ActivateGrid(Aspect_GT_Rectangular, Aspect_GDM_Lines);
+    document->GetViewer()->SetGridEcho(Standard_True);
+    
+    view->SetTransparency();
+
+    // Signals resize needed
+    view->MustBeResized();
+    
+} // END OCECtrl::InitView()
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Paint method
+void OCECtrl::Paint(Draw &draw)
+{
+	if(view.IsNull())
+		return;
+    view->MustBeResized();
+	view->Redraw();
+	
+} // END OCECtrl::Paint()
+
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Handle layout events and propagates to embedded window
+void OCECtrl::Layout(void)
+{
+	if(view.IsNull())
+		return;
+    view->MustBeResized();
+    
+} // END OCECtrl::Resize()
+
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Fit all in view
+void OCECtrl::FitAll()
+{
+	if(view.IsNull())
+		return;
+    view->FitAll();
+    view->ZFitAll();
+    view->Redraw();
+
+} // END OCECtrl::FitAll()
