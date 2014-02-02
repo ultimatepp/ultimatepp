@@ -52,7 +52,6 @@ void DrawDragRect(Ctrl& q, const DrawDragRectInfo& f)
 void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                   Color color, int type, int animation)
 {
-	DLOG("DrawDragRect");
 	Ctrl *top = q.GetTopCtrl();
 	if(top) {
 		Point off = q.GetScreenView().TopLeft();

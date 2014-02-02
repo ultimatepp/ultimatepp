@@ -258,6 +258,19 @@ void Ctrl::DoMouseButton(int event, CParser& p)
 	Point pt = ReadPoint(p);
 	int64 tm = p.ReadInt64();
 	(button == 0 ? mouseLeft : button == 2 ? mouseRight : mouseMiddle) = event == DOWN;
+	if(event == DOWN) {
+		if(ignoremouseup) {
+			KillRepeat();
+			ignoreclick = false;
+			ignoremouseup = false;
+		}
+		if(ignoreclick)
+			return;
+	}
+	if(event == UP) {
+		if(ignoreclick)
+			EndIgnore();
+	}
 	if(event == DOWN)
 		if(sDistMax(mouseDownPos, pt) < GUI_DragDistance() && tm - mouseDownTime < 800) {
 			event = DOUBLE;
@@ -272,7 +285,7 @@ void Ctrl::DoMouseButton(int event, CParser& p)
 
 bool Ctrl::ProcessEvent(const String& event)
 {
-	DLOG("Processing event " << event);
+	LLOG("Processing event " << event);
 	CParser p(event);
 	try {
 		if(p.Id("I"))

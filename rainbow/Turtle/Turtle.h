@@ -80,7 +80,6 @@ public:
 		~ImageSysData();
 	};
 
-	
 	static LRUCache<ImageSysData, int64> cache;
 
 	Point pos;

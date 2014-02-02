@@ -61,7 +61,7 @@ void Ctrl::Output()
 		Put32(HIDWORD(x));
 		String s = turtle_stream.FlushStream();
 		stat_data_send += s.GetCount();
-		DLOG("Sending " << s.GetLength());
+		LLOG("Sending " << s.GetLength());
 		websocket.SendBinary(s);
 	}
 }

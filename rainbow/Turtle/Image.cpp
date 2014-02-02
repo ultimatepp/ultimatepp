@@ -26,7 +26,7 @@ void SystemDraw::ImageSysData::Init(const Image& m)
 {
 	img = m;
 	handle = AllocImageHandle();
-	DLOG("SetImage " << handle << ", size: " << img.GetSize() << ", cache size: " << SystemDraw::cache.GetSize());
+	LLOG("SetImage " << handle << ", size: " << img.GetSize() << ", cache size: " << SystemDraw::cache.GetSize());
 	Ctrl::Put8(SETIMAGE);
 	Ctrl::Put16(handle);
 	Ctrl::Put(img.GetSize());

@@ -99,6 +99,7 @@ public:
 	static int      port;
 	static bool     debugmode;
 	static String   ip;
+	static int      connection_limit;
 	
 	static Time     stat_started;
 	static int64    stat_data_send;
@@ -110,8 +111,13 @@ public:
 	static int      stat_client_ms;
 
 	static bool     StartSession();
-	static Callback WhenDisconnect;
 	static void     EndSession();
+
+	static Callback2<int, String> WhenConnect;
+	static Callback1<int>         WhenTerminate;
+
+	static Callback               WhenDisconnect;
+
 
 	static void  SetDesktop(Ctrl& q);
 	static Ctrl *GetDesktop()                  { return desktop; }
