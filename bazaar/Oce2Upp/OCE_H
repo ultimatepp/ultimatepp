@@ -2,6 +2,8 @@
 #define _OCE_H
 #include <GLCtrl/GLCtrl.h>
 
+#undef Convex
+
 #undef HAVE_CONFIG_H
 #ifdef PLATFORM_POSIX
 	#define OCE_HAVE_FSTREAM
@@ -11,7 +13,9 @@
 	#define OCE_HAVE_LIMITS_H
 	#define HAVE_SYS_STAT_H
 	#define HAVE_STRING_H
+#ifndef HAVE_UNISTD_H
 	#define HAVE_UNISTD_H
+#endif
 	#define HAVE_SIGNAL_H
 	#define HAVE_SYS_SEM_H
 	#define HAVE_STATFS\
@@ -64,6 +68,7 @@
 #include <OpenGl_GraphicDriver.hxx>
 #include <Graphic3d_GraphicDriver.hxx>
 #include <V3d_View.hxx>
+#include <NIS_View.hxx>
 #include <V3d_Viewer.hxx>
 #include <AIS_InteractiveContext.hxx>
 

@@ -11,10 +11,8 @@ class OCECtrl : public DHCtrl
 		
 		bool opened;
 		
-	protected:
-			
 		// The view object
-		Handle(V3d_View) view;
+		Handle(NIS_View) view;
 		
 #ifdef PLATFORM_WIN32
 		// state handler, to catch init and terminate
@@ -46,8 +44,13 @@ class OCECtrl : public DHCtrl
 		// Paint function with context
 		virtual void Paint(Draw &draw) ;
 		
+	protected:
+			
 		// get document
 		OCEDoc *GetDocument(void) const { return document; }
+		
+		// get the view handle
+		Handle(NIS_View) GetViewHandle(void) const { return view; }
 		
 		////////////////////////////////////////////////////////////////////////////////////////////
 
