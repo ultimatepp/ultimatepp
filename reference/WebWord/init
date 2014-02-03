@@ -1,0 +1,8 @@
+#ifndef _WebWord_icpp_init_stub
+#define _WebWord_icpp_init_stub
+#include "Core/init"
+#include "RichEdit/init"
+#include "PdfDraw/init"
+#include "Turtle/init"
+#include "plugin/DroidFonts/init"
+#endif

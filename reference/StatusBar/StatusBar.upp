@@ -1,4 +1,4 @@
-description "Using StatusBar to provide informations at the bottom of the window";
+description "Using StatusBar to provide informations at the bottom of the window\377";
 
 uses
 	CtrlLib;
