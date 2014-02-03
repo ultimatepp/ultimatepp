@@ -12,7 +12,14 @@
 
 #ifndef GUIPLATFORM_INCLUDE
 
-	#ifdef PLATFORM_WIN32
+	#ifdef flagTURTLE
+		#define GUIPLATFORM_KEYCODES_INCLUDE <Turtle/Keys.h>
+		//need to make SDL_keysym.h known before K_ enum
+		#define GUIPLATFORM_INCLUDE          <Turtle/Turtle.h>
+		#define GUIPLATFORM_NOSCROLL
+		#define PLATFORM_TURTLE
+		#define TURTLE
+	#elif PLATFORM_WIN32
 		#define GUIPLATFORM_INCLUDE "Win32Gui.h"
 	#else
 		#ifdef flagX11
