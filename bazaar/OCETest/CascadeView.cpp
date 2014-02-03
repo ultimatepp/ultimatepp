@@ -43,12 +43,12 @@ void CascadeView::MouseMove(Point p, dword keyflags)
 	/////////////////// DISPLAY HANDLING (PAN / ROTATE VIEW  /////////////////////
 	if(isPanning)
 	{
-		view->Pan(p.x - panPrevPoint.x, panPrevPoint.y - p.y);
+		GetViewHandle()->Pan(p.x - panPrevPoint.x, panPrevPoint.y - p.y);
 		panPrevPoint = p;
 	}
 	
 	if(isRotating)
-		view->Rotation(p.x, p.y);
+		GetViewHandle()->Rotation(p.x, p.y);
 	
 	///////////////////   /////////////////////
 
@@ -67,7 +67,7 @@ void CascadeView::MiddleDrag(Point p, dword keyflags)
 	if( (keyflags & K_SHIFT) && (keyflags & K_CTRL) )
 	{
 		isRotating = true;
-		view->StartRotation(p.x, p.y, 0.4);
+		GetViewHandle()->StartRotation(p.x, p.y, 0.4);
 	}
 	else
 		isPanning = true;
@@ -79,14 +79,14 @@ void CascadeView::MiddleDrag(Point p, dword keyflags)
 // mouse wheel - zoom
 void CascadeView::MouseWheel(Point p, int zdelta, dword keyflags)
 {
-	Quantity_Factor	CurScale = view->Scale();
+	Quantity_Factor	CurScale = GetViewHandle()->Scale();
 	if(zdelta > 0)
 		CurScale *= (1.0 + zdelta / 200.0);
 	else
 		CurScale /= (1.0 - zdelta / 200.0);
-	view->SetScale(CurScale);
+	GetViewHandle()->SetScale(CurScale);
 	
-	view->Redraw();
+	GetViewHandle()->Redraw();
 	
 } // END CascadeView::MouseWheel()
 		
@@ -95,8 +95,8 @@ void CascadeView::MouseWheel(Point p, int zdelta, dword keyflags)
 // double middle click - zoom extents
 void CascadeView::MiddleDouble(Point p, dword keyflags)
 {
-  view->FitAll();	
-  view->Redraw();
+  GetViewHandle()->FitAll();	
+  GetViewHandle()->Redraw();
 	
 } // END CascadeView::MiddleDouble()
 
@@ -119,7 +119,7 @@ void   CascadeView::MouseEnter(Point p, dword keyflags)
 		if( (keyflags & K_SHIFT) && (keyflags & K_CTRL) )
 		{
 			isRotating = true;
-			view->StartRotation(p.x, p.y, 0.4);
+			GetViewHandle()->StartRotation(p.x, p.y, 0.4);
 		}
 		else
 			isPanning = true;
