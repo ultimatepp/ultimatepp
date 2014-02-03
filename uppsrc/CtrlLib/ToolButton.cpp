@@ -91,8 +91,10 @@ Bar::Item& ToolButton::Text(const char *txt)
 
 Bar::Item& ToolButton::Check(bool check)
 {
-	checked = check;
-	Refresh();
+	if(checked != check) {
+		checked = check;
+		Refresh();
+	}
 	return *this;
 }
 

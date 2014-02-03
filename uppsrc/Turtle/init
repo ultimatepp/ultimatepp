@@ -1,0 +1,5 @@
+#ifndef _Turtle_icpp_init_stub
+#define _Turtle_icpp_init_stub
+#include "Painter/init"
+#include "CtrlLib/init"
+#endif
