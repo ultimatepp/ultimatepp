@@ -46,6 +46,9 @@ class OCECtrl : public DHCtrl
 		// Paint function with context
 		virtual void Paint(Draw &draw) ;
 		
+		// get document
+		OCEDoc *GetDocument(void) const { return document; }
+		
 		////////////////////////////////////////////////////////////////////////////////////////////
 
 	public:
