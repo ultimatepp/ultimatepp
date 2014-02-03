@@ -1,0 +1,18 @@
+description "Package demonstrating TURTLE (thin JavaScript client to U++ based GUI server application)\377";
+
+uses
+	Core,
+	RichEdit,
+	PdfDraw,
+	Turtle;
+
+uses(TURTLE) plugin/DroidFonts;
+
+file
+	WebWord.h,
+	WebWord.cpp;
+
+mainconfig
+	"" = "TURTLE",
+	"" = "GUI";
+
