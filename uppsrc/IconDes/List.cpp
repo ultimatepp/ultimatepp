@@ -199,8 +199,9 @@ void IconDes::InsertFile()
 void IconDes::ExportPngs()
 {
 	String dir = SelectDirectory();
-	for(int i = 0; i < GetCount(); i++)
-		PNGEncoder().SaveFile(AppendFileName(dir, GetName(i) + ".png"), GetImage(i));
+	if(!dir.IsEmpty()) 
+		for(int i = 0; i < GetCount(); i++)
+			PNGEncoder().SaveFile(AppendFileName(dir, GetName(i) + ".png"), GetImage(i));
 }
 
 void IconDes::InsertIml()
