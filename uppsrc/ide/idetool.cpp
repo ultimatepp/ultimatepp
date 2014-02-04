@@ -148,7 +148,7 @@ String StatDate(int d)
 	return String().Cat() << d << " days";
 }
 
-void Put(const String& name, String& qtf, const FileStat& fs)
+void sPut(const String& name, String& qtf, const FileStat& fs)
 {
 	qtf << "::@W " << DeQtf(Nvl(name, ".<none>"))
 	    << ":: [> " << fs.count
@@ -161,15 +161,15 @@ void Put(const String& name, String& qtf, const FileStat& fs)
 	    << ":: " << (fs.count ? fs.days / fs.count : 0) << " days]";
 }
 
-void Put(String& qtf, ArrayMap<String, FileStat>& pfs, ArrayMap<String, FileStat>& all) {
+void sPut(String& qtf, ArrayMap<String, FileStat>& pfs, ArrayMap<String, FileStat>& all) {
 	FileStat pall;
 	for(int i = 0; i < pfs.GetCount(); i++) {
 		FileStat& fs = pfs[i];
-		Put(pfs.GetKey(i), qtf, fs);
+		sPut(pfs.GetKey(i), qtf, fs);
 		pall.Add(fs);
 		all.GetAdd(pfs.GetKey(i)).Add(fs);
 	}
-	Put("All files", qtf, pall);
+	sPut("All files", qtf, pall);
 	qtf << "}}&&";
 }
 
@@ -211,11 +211,11 @@ void Ide::Statistics()
 	String hdr = "]:: [= Files:: Lines:: - avg.:: Length:: - avg.:: Oldest:: Newest:: Avg. age]";
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		qtf << tab << DeQtf(wspc[i]) << hdr;
-		Put(qtf, stat[i], all);
+		sPut(qtf, stat[i], all);
 	}
 
 	qtf << tab << "All packages" << hdr;
-	Put(qtf, all, all);
+	sPut(qtf, all, all);
 
 	WithStatLayout<TopWindow> dlg;
 	CtrlLayoutOK(dlg, "Statistics");

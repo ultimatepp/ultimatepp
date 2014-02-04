@@ -1,4 +1,4 @@
-description "HTML5 thin client backend\377";
+description "HTML5 thin client backend\377B128,0,255";
 
 uses
 	Painter,

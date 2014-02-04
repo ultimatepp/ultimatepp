@@ -164,7 +164,7 @@ void Ctrl::DoPaint()
 			Put8(SETCURSORIMAGE);
 			Put16(0); // _TODO_ Cursor cache
 			Put(h);
-			Put8(CURSORIMAGE);
+			Put8(MOUSECURSOR);
 			Put16(0); // _TODO_ Cursor cache
 		}
 	}
