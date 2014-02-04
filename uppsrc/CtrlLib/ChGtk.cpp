@@ -68,7 +68,7 @@ void ChHostSkin()
 	///////
 	CtrlsImg::Reset();
 	ColoredOverride(CtrlsImg::Iml(), ClassicCtrlsImg::Iml());
-
+	
 	ChLookFn(GtkLookFn);
 	
 	bool KDE = Environment().Get("KDE_FULL_SESSION", String()) == "true";
@@ -478,10 +478,9 @@ void ChHostSkin()
 				GTK_WIDGET_FLAGS (w) |= GTK_HAS_FOCUS;
 			if(i == CTRL_DISABLED)
 				GTK_WIDGET_FLAGS (w) &= GTK_SENSITIVE;
-			if(i == 0) {
-				img = GetGTK(w, GTK_STATE_NORMAL, GTK_SHADOW_IN, "entry", GTK_SHADOW, 20, 20);
+			img = GetGTK(w, GTK_STATE_NORMAL, GTK_SHADOW_IN, "entry", GTK_SHADOW, 20, 20);
+			if(i == 0)	
 				efm = max(ImageMargin(img, 4, 0), 1);
-			}
 			if(!Qt)
 				img = GetGTK(w, GTK_STATE_NORMAL, GTK_SHADOW_IN,
 				             "entry", GTK_SHADOW, 2 * efm + 3, 2 * efm + 3);
@@ -594,7 +593,7 @@ void ChHostSkin()
 		if(Qt)
 			GtkCh(s.topitem[1], sw, GTK_STATE_PRELIGHT);
 		else
-			s.topitem[1] = s.topitem[2];
+			s.topitem[1] = s.topitem[0];
 		GtkCh(s.topitem[2], sw, GTK_STATE_PRELIGHT);
 		s.topitemtext[2] = ChGtkColor(2, top_item);
 		if(engine == "Redmond") {
