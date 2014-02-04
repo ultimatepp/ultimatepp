@@ -103,7 +103,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 #endif
 			p->fullrefresh = false;
 			GdkEventExpose *e = (GdkEventExpose *)event;
-			SystemDraw w(gdk_cairo_create(p->gdk()));
+			SystemDraw w(gdk_cairo_create(p->gdk()), p->gdk());
 			painting = true;
 			Rect r = RectC(e->area.x, e->area.y, e->area.width, e->area.height);
 			w.Clip(r);
