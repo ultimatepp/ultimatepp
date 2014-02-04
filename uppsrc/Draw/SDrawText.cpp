@@ -59,14 +59,22 @@ void SDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Co
 		if(font.GetHeight() > 200) {
 			int bn = font[g.chr] + font.GetLineHeight();
 			for(g.yy = 0; g.yy < bn; g.yy += 32) {
-				Image m = MakeImagePaintOnly(g);
+				Image m;
+				if(paintonly)
+					m = MakeImagePaintOnly(g);
+				else
+					m = MakeImage(g);
 				Point h = m.GetHotSpot();
 				SysDrawImageOp(x - h.x, y + g.yy - h.y, m, m.GetSize(), ink);
 			}
 		}
 		else {
 			g.yy = Null;
-			Image m = MakeImagePaintOnly(g);
+			Image m;
+			if(paintonly)
+				m = MakeImagePaintOnly(g);
+			else
+				m = MakeImage(g);
 			Point h = m.GetHotSpot();
 			SysDrawImageOp(x - h.x, y - h.y, m, m.GetSize(), ink);
 		}

@@ -24,7 +24,9 @@ struct scImageMaker : LRUCache<Image>::Maker {
 	bool  paintonly;
 
 	virtual String Key() const {
-		return m->Key();
+		String s = m->Key();
+		s.Cat(paintonly ? '1' : '0');
+		return s;
 	}
 	virtual int    Make(Image& object) const {
 		object = m->Make();

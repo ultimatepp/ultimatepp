@@ -4,7 +4,8 @@ NAMESPACE_UPP
 
 void SDraw::PutImage(Point p, const Image& img, const Rect& src, Color color)
 {
-	PutImage(p, CachedSetColorKeepAlphaPaintOnly(img, color), src);
+	PutImage(p, (paintonly ? CachedSetColorKeepAlphaPaintOnly : CachedSetColorKeepAlpha)
+	               (img, color), src);
 }
 
 void SDraw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color)
