@@ -448,7 +448,9 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 
 			if(!HasFlag("SOLARIS") && !HasFlag("OSX11") && !HasFlag("OBJC"))
 				lnk << " -Wl,--start-group ";
-			for(int pass = 0; pass < 2; pass++)
+			for(int pass = 0; pass < 2; pass++) {
+				if(pass == 1 && !HasFlag("SOLARIS") && !HasFlag("OSX11"))
+					lnk << " -Wl,--end-group";
 				for(i = 0; i < lib.GetCount(); i++) {
 					String ln = lib[i];
 					String ext = ToLower(GetFileExt(ln));
@@ -458,7 +460,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 					if(HasFlag("POSIX") && ext != ".so")
 					{
 						const char *c = ln.Last();
-						while(*--c)
+						while(--c >= ~ln)
 							if(!IsDigit(*c) && *c != '.')
 								break;
 						int pos = c - ~ln - 2;
@@ -477,8 +479,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 							else
 								lnk << " -l" << ln;
 				}
-			if(!HasFlag("SOLARIS") && !HasFlag("OSX11"))
-				lnk << " -Wl,--end-group";
+			}
 			PutConsole("Linking...");
 			bool error = false;
 			CustomStep(".pre-link", Null, error);
