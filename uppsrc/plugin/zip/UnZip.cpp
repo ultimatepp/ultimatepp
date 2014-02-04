@@ -40,7 +40,7 @@ void UnZip::ReadDir()
 
 	zip->Seek(offset);
 	for(int i = 0; i < entries; i++) {
-		int rof = zip->GetPos() - offset;
+		int64 rof = zip->GetPos() - offset;
 		if(zip->Get32le() != 0x02014b50 && zip->IsEof())
 			return;
 		File& f = file.Add();
