@@ -144,7 +144,7 @@ Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int t
 #ifdef GUI_GTK
 		GdkPixmap *pixmap = gdk_pixmap_new(gdk_get_default_root_window(), isz.cx, isz.cy, -1);
 		cairo_t *cairo = gdk_cairo_create(pixmap);
-		SystemDraw sw(cairo);
+		SystemDraw sw(cairo, NULL);
 		sw.DrawRect(isz, back);
 		cairo_destroy(cairo);
 #else

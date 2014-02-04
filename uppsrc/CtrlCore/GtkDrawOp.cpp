@@ -126,9 +126,10 @@ void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 		if(drawable) {
 			GdkGC *gc = gdk_gc_new(drawable);
 	        gdk_gc_set_function(gc, GDK_INVERT);
-	        gdk_draw_drawable(drawable, gc, drawable, x, y, x, y, cx, cy);
+	        Point o = GetOffset();
+	        gdk_draw_drawable(drawable, gc, drawable, x + o.x, y + o.y, x + o.x, y + o.y, cx, cy);
 	        gdk_gc_set_function(gc, GDK_COPY);
-	        gdk_gc_destroy(drawable);
+	        gdk_gc_destroy(gc);
 		}
 #endif
 	}
