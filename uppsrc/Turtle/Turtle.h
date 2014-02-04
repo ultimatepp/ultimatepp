@@ -89,7 +89,7 @@ public:
 	bool    CanSetSurface()                         { return false; }
 	static void Flush()                             {}
 	
-	SystemDraw()                                    { pos = Point(0, 0); }
+	SystemDraw()                                    { pos = Point(0, 0); PaintOnly(); }
 };
 
 struct BackDraw__ : public SystemDraw {

@@ -33,6 +33,8 @@ private:
 		void operator<<=(const Cloff& b)      { clip <<= b.clip; offset = b.offset; }
 	};
 	
+	bool  paintonly;
+	
 	Array<Cloff> cloff;
 	
 	Color docolor;
@@ -47,6 +49,10 @@ public:
 
 	void Init(const Rect& r);
 	void Init(const Vector<Rect>& rs, int height, Point offset = Point(0, 0));
+	
+	void PaintOnly()                                              { paintonly = true; }
+
+	SDraw()                                                       { paintonly = false; }
 };
 
 class SImageDraw1 : public SDraw {
