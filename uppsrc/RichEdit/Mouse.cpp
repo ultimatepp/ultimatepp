@@ -227,7 +227,7 @@ void RichEdit::StdBar(Bar& menu)
 				menu.Separator();
 			Size sz = GetPhysicalSize(bar_object);
 			Sizef percent = bar_object.GetSize();
-			percent = 100 * percent / Sizef(sz);
+			percent = 100.0 * percent / Sizef(sz);
 			bool b = sz.cx || sz.cy;
 			menu.Add(t_("Object position.."), THISBACK(AdjustObjectSize));
 			menu.Separator();
