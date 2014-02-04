@@ -44,9 +44,12 @@ function Log(msg)
 	   	console.log(msg); //for firebug
 }
 
+var lastCommand;
+
 function Char(p, ch)
 {
 	if(p.pos < p.data.length && (255 & p.data[p.pos]) == ch) {
+		lastCommand = ch;
 		p.pos++;
 		return true;
 	}
@@ -72,12 +75,17 @@ function Get32(p)
 	return (h << 16) | l;
 }
 
+var lastLen; // TODO: remove
+var lastString;
+
 function GetString(p)
 {
 	var n = Get32(p);
+	lastLen = n;
 	var s = "";
 	for(var i = 0; i < n; i++)
 		s += String.fromCharCode(Get8(p));
+	lastString = s;
 	return s;
 }
 
@@ -365,6 +373,10 @@ function ProcessDraw(s)
 			var l = Get16(p);
 			var anim = Get16(p);
 			DrawDragLine(x, y, 1, l, anim);
+		}
+		else {
+			alert("Unrecognized code: " + p.data[p.pos] + " after " + lastCommand + " lastLen " + lastLen + " lastString " + lastString);
+			break;
 		}
 	}
 	InvertShownCaret();

@@ -1,4 +1,4 @@
-description "FreeType based Draw FONTSYS replacement\377";
+description "FreeType based Draw FONTSYS replacement\3770,128,0";
 
 uses
 	Draw;
