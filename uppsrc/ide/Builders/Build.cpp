@@ -65,7 +65,9 @@ Index<String> MakeBuild::PackageConfig(const Workspace& wspc, int package,
 	}
 	if(target)
 		*target = Gather(pkg.target, cfg.GetKeys(), true);
-	return cfg;
+	Index<String> h;
+	h <<= cfg; // Retain deep copy (h will be picked)
+	return h;
 }
 
 String NoCr(const char *s)
@@ -420,7 +422,10 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 		}
 
 		Vector<int> build_order;
-		if(GetTargetMode().linkmode != 2) {
+		DDUMP(cfg.IsPicked());
+		DDUMP(cfg.GetCount());
+		DDUMPC(cfg);
+		if(cfg.Find("SO") < 0) {
 			for(int i = 1; i < wspc.GetCount(); i++)
 				build_order.Add(i);
 		}
