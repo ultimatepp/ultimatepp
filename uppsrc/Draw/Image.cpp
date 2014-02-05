@@ -370,7 +370,7 @@ static Image sMultiply(const Image& img, int (*op)(RGBA *t, const RGBA *s, int l
 	ImageBuffer ib(img.GetSize());
 	ib.SetHotSpot(img.GetHotSpot());
 	ib.Set2ndSpot(img.Get2ndSpot());
-	ib.SetKind(Premultiply(~ib, ~img, ib.GetLength()));
+	ib.SetKind((*op)(~ib, ~img, ib.GetLength()));
 	return ib;
 }
 
