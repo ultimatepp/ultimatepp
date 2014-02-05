@@ -12,13 +12,11 @@ CONSOLE_APP_MAIN
 
 	for(;;) {
 		WebSocket ws;
-		if(ws.Accept(server)) {
+		if(ws.WebAccept(server)) {
 			LOG("Accepted, trying to handshake");
-			if(ws.Handshake()) {
-				LOG("Handshake successfull, trying to recieve");
-				LOG(ws.Recieve());
-				ws.SendText("This is some text...");
-			}
+			LOG("Handshake successfull, trying to recieve");
+			LOG(ws.Recieve());
+			ws.SendText("This is some text...");
 		}
 		if(ws.IsError())
 			LOG("ERROR: " << ws.GetErrorDesc());
