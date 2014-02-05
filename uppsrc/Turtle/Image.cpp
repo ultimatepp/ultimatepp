@@ -30,8 +30,9 @@ void SystemDraw::ImageSysData::Init(const Image& m)
 	Ctrl::Put8(SETIMAGE);
 	Ctrl::Put16(handle);
 	Ctrl::Put(img.GetSize());
-	const RGBA *end = ~img + img.GetLength();
-	for(const RGBA *s = ~img; s < end; s++) {
+	Image um = Unmultiply(img);
+	const RGBA *end = ~um + um.GetLength();
+	for(const RGBA *s = ~um; s < end; s++) {
 		Ctrl::Put8(s->r);
 		Ctrl::Put8(s->g);
 		Ctrl::Put8(s->b);
