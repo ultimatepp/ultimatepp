@@ -19,6 +19,7 @@ void WebWord::ShowInfo()
 {
 	String s;
 	s << "Mem " << MemoryUsedKb() << " KB";
+	static int sent_prev;
 #ifdef PLATFORM_TURTLE
 	int secs = GetSysTime() - Ctrl::stat_started;
 	Time tm = Time(1, 1, 1, 0, 0, 0) + secs;
