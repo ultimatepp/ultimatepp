@@ -12,6 +12,8 @@ class WebSocket : public TcpSocket {
 	String data;
 	int64  maxlen;
 
+	bool Handshake();
+
 public:
 	enum {
 		ERROR_NOHEADER = TcpSocket::ERROR_LAST, ERROR_NOKEY, ERROR_DATA, ERROR_SEND, ERROR_LEN_LIMIT
@@ -26,7 +28,7 @@ public:
 		PONG = 0xa,
 	};
 
-	bool   Handshake();
+	bool   WebAccept(TcpSocket& server);
 
 	bool   RecieveRaw();
 	String Recieve();
