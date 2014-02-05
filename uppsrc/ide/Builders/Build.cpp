@@ -422,9 +422,6 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 		}
 
 		Vector<int> build_order;
-		DDUMP(cfg.IsPicked());
-		DDUMP(cfg.GetCount());
-		DDUMPC(cfg);
 		if(cfg.Find("SO") < 0) {
 			for(int i = 1; i < wspc.GetCount(); i++)
 				build_order.Add(i);
