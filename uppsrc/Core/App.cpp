@@ -415,6 +415,17 @@ void AppExit__()
 #endif
 }
 
+#ifdef flagTURTLE
+
+void Turtle_PutLink(const String& link);
+
+void LaunchWebBrowser(const String& url)
+{
+	Turtle_PutLink(url);
+}
+
+#else
+
 #if defined(PLATFORM_WIN32) && !defined(PLATFORM_WINCE)
 static auxthread_t auxthread__ sShellExecuteOpen(void *str)
 {
@@ -451,6 +462,8 @@ void    LaunchWebBrowser(const String& url)
 			break;
 		}
 }
+#endif
+
 #endif
 
 String GetDataFile(const char *filename)

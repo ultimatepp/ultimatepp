@@ -71,15 +71,10 @@ private:
 	static void Signal(int signal);
 	static void Broadcast(int signal);
 
+	static bool DoKeyFB(dword key, int cnt);
+
 	static TurtleStream                  turtle_stream;
 	static Stream& OutputStream()        { turtle_stream.SetDataFlag(); return turtle_stream; }
-	static void Put8(int x)              { turtle_stream.SetDataFlag(); turtle_stream.Put(x); }
-	static void Put16(int x);
-	static void Put32(int x);
-	static void Put(Point p);
-	static void Put(Size sz);
-	static void Put(const Rect& r);
-	static void Put(const String& s);
 
 	friend void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip,
 	                         int n, Color color, int type, int animation);
@@ -91,7 +86,13 @@ private:
 	friend struct ImageSysData;
 
 public:
-	static bool DoKeyFB(dword key, int cnt);
+	static void Put8(int x)              { turtle_stream.SetDataFlag(); turtle_stream.Put(x); }
+	static void Put16(int x);
+	static void Put32(int x);
+	static void Put(Point p);
+	static void Put(Size sz);
+	static void Put(const Rect& r);
+	static void Put(const String& s);
 
 	static void SyncClient();
 	

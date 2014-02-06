@@ -374,6 +374,11 @@ function ProcessDraw(s)
 			var anim = Get16(p);
 			DrawDragLine(x, y, 1, l, anim);
 		}
+		else
+		if(Char(p, 20)) { // OPENLINK,
+			var s = GetString(p);
+			window.open(s);
+		}
 		else {
 			alert("Unrecognized code: " + p.data[p.pos] + " after " + lastCommand + " lastLen " + lastLen + " lastString " + lastString);
 			break;

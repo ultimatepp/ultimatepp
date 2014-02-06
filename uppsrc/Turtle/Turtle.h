@@ -57,6 +57,8 @@ enum Command {
 	
 	HORZDRAGLINE = 18,
 	VERTDRAGLINE = 19,
+	
+	OPENLINK = 20,
 };
 
 
