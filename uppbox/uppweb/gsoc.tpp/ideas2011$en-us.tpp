@@ -429,4 +429,4 @@ code would be BSD licensed or similar.]&]
 [s0; &]
 [s0;> [^topic`:`/`/uppweb`/gsoc`/gsoc2011`$en`-us^+75 Return to GSoC 
 2011 Home page]&]
-[s0; ]
+[s0; ]]

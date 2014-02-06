@@ -150,6 +150,14 @@ TOPIC("index$zh-tw")
 #include "index$zh-tw.tppi"
 END_TOPIC
 
+TOPIC("linkDocumentation$en-us")
+#include "linkDocumentation$en-us.tppi"
+END_TOPIC
+
+TOPIC("linkExamples$en-us")
+#include "linkExamples$en-us.tppi"
+END_TOPIC
+
 TOPIC("nightly$en-us")
 #include "nightly$en-us.tppi"
 END_TOPIC

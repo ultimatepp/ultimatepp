@@ -61,8 +61,8 @@ extern Vector<SvnLogRev> svnlog;
 
 String TopicFileName(const char *dir, const char *topic);
 String TopicFileNameHtml(const char *topic);
-String GatherTopics(VectorMap<String, Topic>& map, const char *topic, String& title);
-String GatherTopics(VectorMap<String, Topic>& map, const char *topic);
+String GatherTopics(VectorMap<String, Topic>& map, Vector<String>& ttFullIds, const char *topic, String& title, String parentIds);
+String GatherTopics(VectorMap<String, Topic>& map, Vector<String>& ttFullIds, const char *topic, String parentIds);
 
 String CppAsQtf(const String& s);
 
@@ -74,6 +74,6 @@ String SvnChanges(Vector<SvnLogRev> &log, int limit, String filter, bool major =
 Vector <SvnBazaarItems> SvnBazaarList(String bazaarPath, Vector<SvnLogRev> &log);
 String BytesToString(uint64 _bytes, bool units = true);
 
-String MakeExamples(const char *dir, const char *www, int language);
+String MakeExamples(const char *dir, const char *www, int language, String parentIds);
 
 #endif
