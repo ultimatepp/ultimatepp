@@ -46,6 +46,12 @@ void Ctrl::Put(const String& s)
 	turtle_stream.Put(s);
 }
 
+void Turtle_PutLink(const String& link)
+{
+	Ctrl::Put8(OPENLINK);
+	Ctrl::Put(link);
+}
+
 void Ctrl::Output()
 {
 	socket.Timeout(20000);
