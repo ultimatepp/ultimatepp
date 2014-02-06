@@ -5,6 +5,8 @@
 StaticCriticalSection     reflink_lock;
 VectorMap<String, String> reflink;
 
+int GetMaxDocLevel();
+
 struct ScanTopicIterator : RichText::Iterator {
 	String         link;
 
@@ -116,15 +118,15 @@ String TopicFileNameHtml(const char *topic)
 	return tl.group + "$" + tl.package+ "$" + tl.topic + ".html";
 }
 
-static void sGatherTopics(VectorMap<String, Topic> *map, const char *topic)
+static void sGatherTopics(VectorMap<String, Topic> *map, Vector<String> *ttFullIds, const char *topic, String parentIds)
 {
-	GatherTopics(*map, topic);
+	GatherTopics(*map, *ttFullIds, topic, parentIds);
 }
 	
 String ChangeTopicLanguage(const String &topic, int lang);
 String GetTopicLanguage(const String &topic);
 
-String GatherTopics(VectorMap<String, Topic>& tt, const char *topic, String& title)
+String GatherTopics(VectorMap<String, Topic>& tt, Vector<String>& ttFullIds, const char *topic, String& title, String parentIds)
 {
 	static StaticCriticalSection mapl;
 	LLOG("Gather topics: " << topic);
@@ -135,6 +137,7 @@ String GatherTopics(VectorMap<String, Topic>& tt, const char *topic, String& tit
 		LLOG("GatherTopics " << topic);
 		Topic p = ReadTopic(LoadFile(TopicFileName(topic)));
 		title = p.title;
+				
 		String t = p;
 		if(IsNull(t)) {
 			String topicEng = ChangeTopicLanguage(topic, LNG_('E','N','U','S'));		
@@ -148,27 +151,34 @@ String GatherTopics(VectorMap<String, Topic>& tt, const char *topic, String& tit
 			p.text = String("{{1f1t0/50b0/50@(240.240.240) [<A2 ") + t_("This page has not been translated yet") + 
 					"]. " + "[^" + help + "^ [<A2 " + t_("Do you want to translate it?") + "]]}}&&" + p.text;
 		}
-		INTERLOCKED_(mapl)
+		String newParentIds;
+		INTERLOCKED_(mapl) 
+		{
 			tt.Add(topic) = p;
+			q = tt.GetCount() - 1;
+			newParentIds = parentIds + "/" + FormatInt(q);	
+			ttFullIds.Add(newParentIds);
+		}
 		GatherLinkIterator ti;
 		ParseQTF(t).Iterate(ti);
-#ifdef MTC
+/*#ifdef MTC
 		CoWork work;
 		for(int i = 0; i < ti.link.GetCount(); i++)
 			work & callback2(sGatherTopics, &tt, ti.link[i]);
-#else
+#else*/
 		for(int i = 0; i < ti.link.GetCount(); i++)
-			sGatherTopics(&tt, ti.link[i]);
-#endif
+			sGatherTopics(&tt, &ttFullIds, ti.link[i], newParentIds);
+//#endif
 	} else {
 		INTERLOCKED_(mapl)
 			title = tt[q].title;
+			ttFullIds.Add(parentIds + "/" + FormatInt(q));
 	}
 	return TopicFileNameHtml(topic);
 }
 
-String GatherTopics(VectorMap<String, Topic>& map, const char *topic)
+String GatherTopics(VectorMap<String, Topic>& map, Vector<String>& ttFullIds, const char *topic, String parentIds)
 {
 	String dummy;
-	return GatherTopics(map, topic, dummy);
+	return GatherTopics(map, ttFullIds, topic, dummy, parentIds);
 }

@@ -1,9 +1,9 @@
-topic "GSoC 2011. Student page";
+topic "GSoC 2014. Student page";
 [ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,2#27457433418004101424360058862402:Caption]
 [ $$2,0#03324558446220344731010354752573:]
 [{_}%EN-US 
-[s1;#b0; [R^topic`:`/`/uppweb`/gsoc`/gsoc2011`$en`-us^6 GSoC 2011][R6 . 
+[s1;#b0; [R^topic`:`/`/uppweb`/gsoc`/gsoc2014`$en`-us^6 GSoC 2014][R6 . 
 Student page]&]
 [s1;#b0; &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Introduction]]}}&]
@@ -12,15 +12,16 @@ Student page]&]
 to get a good job (and get money for it (`^`_`^)), you can propose 
 us a project! ]&]
 [s1;#b0;*2 &]
-[s1;#b0; [*2 Before beginning read ][*^http`:`/`/code`.google`.com`/p`/google`-summer`-of`-code`/wiki`/AdviceforStudents^2 A
-dvice for GSoC Students Page][*2 .]&]
+[s1;#b0; [*2 Before beginning read some references like the ][*^http`:`/`/en`.flossmanuals`.net`/GSoCStudentGuide`/^2 S
+tudent Guide][*2  or ][*^http`:`/`/www`.di`.ens`.fr`/`~baghdadi`/TXT`_blog`/5`_advices`_to`_get`_your`_proposal`_accepted`.lyx`.html^2 5
+ Tips to get your Google Summer of Code proposal accepted][*2 .]&]
 [s0;2 &]
 [s0;# [2 Please check the next points. Some of them are easy for you, 
 and others will be less easy.]&]
 [s0;#2 &]
 [s0;# [2 To apply, try to answer all these subjects and post them in 
 your proposal to our ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 . 
-following the ][^topic`:`/`/uppweb`/gsoc`/student`_application2011`$en`-us^2 Applic
+following the ][^topic`:`/`/uppweb`/gsoc`/student`_application2014`$en`-us^2 Applic
 ation Template][2 .]&]
 [s2;2 &]
 [s0;%- &]
@@ -51,13 +52,13 @@ project you will have more opportunities.]&]
 [s0; [2 Do it with care as there you show us how are you interested 
 and how you plan to focus the job.]&]
 [s0;2 &]
-[s0; [2 Follow the ][^topic`:`/`/uppweb`/gsoc`/student`_application2011`$en`-us^2 templat
+[s0; [2 Follow the ][^topic`:`/`/uppweb`/gsoc`/student`_application2014`$en`-us^2 templat
 e][2  and take your time.]&]
 [s0;2 &]
 [s0;2 &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Ideas]]}}&]
 [s0;*+117 &]
-[s2;# [2 Go to our ][^topic`:`/`/uppweb`/gsoc`/ideas2011`$en`-us^2 ideas 
+[s2;# [2 Go to our ][^topic`:`/`/uppweb`/gsoc`/ideas2014`$en`-us^2 ideas 
 page][2  and read the shown ideas. You have two possibilities:]&]
 [s0; &]
 [s2;#i150;O0; [*2 You like some idea]&]
@@ -79,7 +80,7 @@ you.]&]
 is good]&]
 [s1;#l160;b0; [*2 No problem. We are open to new proposals. Remember 
 you will have three months, so do not try to be too generic and 
-too optimistic. See our ][*^topic`:`/`/uppweb`/gsoc`/mentor2011`$en`-us^2 mentor 
+too optimistic. See our ][*^topic`:`/`/uppweb`/gsoc`/mentor2014`$en`-us^2 mentor 
 list][*2  and contact the person with skills that match better 
 with your ideas.]&]
 [s0;2 &]
@@ -89,7 +90,7 @@ with your ideas.]&]
 [s0; [2 Do not worry about the Mentor. We will provide you one. We 
 are new in GSoC, but with our ][^topic`:`/`/uppweb`/www`/tutoring`$en`-us^2 Tutorin
 g Plan][2  we have tried to help new people to enter in U`+`+ world 
-and we have trained Tutors to be in a future your ][^topic`:`/`/uppweb`/gsoc`/mentor2011`$en`-us^2 M
+and we have trained Tutors to be in a future your ][^topic`:`/`/uppweb`/gsoc`/mentor2014`$en`-us^2 M
 entor][2 .]&]
 [s0;2 &]
 [s0;2%- &]
@@ -97,9 +98,8 @@ entor][2 .]&]
 [s0;2 &]
 [s1;#b0; [*2 Here is the students list:]&]
 [s0; &]
-[s0; [*^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 Andr
-ei Natanael Cosma][2 .]&]
+[s0; [*2 Your name][2 .]&]
 [s0;2 &]
-[s0;> [^topic`:`/`/uppweb`/gsoc`/gsoc2011`$en`-us^+75 Return to GSoC 
-2011 Home page]&]
+[s0;> [^topic`:`/`/uppweb`/gsoc`/gsoc2014`$en`-us^+75 Return to GSoC 
+2014 Home page]&]
 [s0; ]]
