@@ -14,6 +14,9 @@ class WatchEdit : public LineEdit
 class Gdb_MI2 : public Debugger, public ParentCtrl
 {
 	private:
+
+		// used to post and kill timed callbacks
+		TimeCallback timeCallback;
 	
 		One<Host> host;
 		One<AProcess>  dbg;
@@ -208,7 +211,7 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 
 		// copy disassembly listing to clipboard
 		void CopyDisas(void);
-
+		
 		// lock/unlock debugger controls
 		void Lock();
 		void Unlock();

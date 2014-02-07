@@ -197,19 +197,21 @@ bool Gdb_MI2::IsFinished()
 bool Gdb_MI2::Tip(const String& exp, CodeEditor::MouseTip& mt)
 {
 	// quick exit
-	if(exp.IsEmpty() || !stopped || !started)
+	if(exp.IsEmpty() || !dbg)
+		return false;
+
+	// try to not delay other events
+/*
+	if(IsWaitingEvent())
+		return false;
+*/
+	
+	MIValue res = MICmd("data-evaluate-expression \"" + exp + "\"");
+	if(res.IsError() || res.IsEmpty())
 		return false;
 	
-	// if local vars are empty, update them
-	UpdateLocalVars();
-
-	// display tip just for local variables... it should be more than enough
-	int i = localVarExpressions.Find(exp);
-	if(i < 0)
-		return false;
-
 	mt.display = &StdDisplay();
-	mt.value = exp + "=" + localVarValues[i];
+	mt.value = exp + "=" + res["value"].ToString();
 	mt.sz = mt.display->GetStdSize(String(mt.value) + "X");
 	return true;
 }
@@ -499,53 +501,30 @@ MIValue Gdb_MI2::ParseGdb(String const &output, bool wait)
 
 MIValue Gdb_MI2::ReadGdb(bool wait)
 {
-	String output;
+	String output, s;
 	MIValue res;
-
+	
 	if(wait)
 	{
-		// this path is for locking read -- we NEED cmd output
-		int retries = 4;
-		while(dbg)
+		// blocking path
+		// waits for 3 seconds max, then return empty value
+		// some commands (in particular if they return python exceptions)
+		// have a delay between returned exception text and command result
+		// so we shall wait up to the final (gdb)
+		int retries = 3 * 50;
+		while(dbg && retries--)
 		{
-			String s;
 			dbg->Read(s);
-			
-			// we really NEED an answer
-			if(s.IsEmpty() && output.IsEmpty())
-				continue;
-			
-			// on first empty string, we check if we really
-			// got a valid answer
-			if(s.IsEmpty())
-			{
-				res = ParseGdb(output);
-				
-				// if no valid answer (or, well, an empty answer..)
-				// we retry up to 4 times
-				if(res.IsEmpty() && --retries)
-				{
-					Sleep(20);
-					continue;
-				}
-				return res;
-			}
 			output += s;
-		}
-	}
-	else
-	{
-		// this path is for NON locking read -- we just cleanup
-		// streaming output, mostly
-		while(dbg)
-		{
-			String s;
-			dbg->Read(s);
-			if(s.IsEmpty())
+			if(TrimRight(s).EndsWith("(gdb)"))
 				break;
-			output += s;
+			Sleep(20);
+			continue;
 		}
 	}
+	else if(dbg)
+		dbg->Read(output);
+
 	if(output.IsEmpty())
 		return res;
 	return ParseGdb(output);
@@ -601,6 +580,7 @@ MIValue Gdb_MI2::ReadGdb(bool wait)
 // debugger run/stop status -- all remaining asynchrnonous output is discarded
 MIValue Gdb_MI2::MICmd(const char *cmdLine)
 {
+RLOG("COMMAND : " << cmdLine);
 	LDUMP(cmdLine);
 	// sends command to debugger and get result data
 
@@ -743,22 +723,9 @@ void Gdb_MI2::SyncDisas(MIValue &fInfo, bool fr)
 // sync ide display with breakpoint position
 void Gdb_MI2::SyncIde(bool fr)
 {
-	// setup threads droplist
-	threadSelector.Clear();
-	MIValue tInfo = MICmd("thread-info");
-	int curThread = atoi(tInfo["current-thread-id"].Get());
-	MIValue &threads = tInfo["threads"];
-	for(int iThread = 0; iThread < threads.GetCount(); iThread++)
-	{
-		int id = atoi(threads[iThread]["id"].Get());
-		if(id == curThread)
-		{
-			threadSelector.Add(id, Format("#%03x(*)", id));
-			break;
-		}
-	}
-	threadSelector <<= curThread;
-
+	// kill pending update callbacks
+	timeCallback.Kill();
+	
 	// get current frame info and level
 	MIValue fInfo = MICmd("stack-info-frame")["frame"];
 	int level = atoi(fInfo["level"].Get());
@@ -777,15 +744,37 @@ void Gdb_MI2::SyncIde(bool fr)
 		}
 	}
 
+	// setup threads droplist
+	threadSelector.Clear();
+	MIValue tInfo = MICmd("thread-info");
+	if(!tInfo.IsError() && !tInfo.IsEmpty())
+	{
+		int curThread = atoi(tInfo["current-thread-id"].Get());
+		MIValue &threads = tInfo["threads"];
+		for(int iThread = 0; iThread < threads.GetCount(); iThread++)
+		{
+			int id = atoi(threads[iThread]["id"].Get());
+			if(id == curThread)
+			{
+				threadSelector.Add(id, Format("#%03x(*)", id));
+				break;
+			}
+		}
+		threadSelector <<= curThread;
+	}
+
 	// get the arguments for current frame
 	MIValue fArgs = MICmd(Format("stack-list-arguments 1 %d %d", level, level))["stack-args"][0]["args"];
+	if(!fArgs.IsError() && !fArgs.IsEmpty())
+	{
+		// setup frame droplist
+		frame.Clear();
+		frame.Add(0, FormatFrame(fInfo, fArgs));
+		frame <<= 0;
+	}
 
-	// setup frame droplist
-	frame.Clear();
-	frame.Add(0, FormatFrame(fInfo, fArgs));
-	frame <<= 0;
-	
-	SyncData();
+	// update vars and disasm only on idle times
+	timeCallback.Set(1500, THISBACK(SyncData));
 	SyncDisas(fInfo, fr);
 }
 
