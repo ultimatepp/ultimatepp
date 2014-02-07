@@ -196,6 +196,8 @@ bool Gdb_MI2::IsFinished()
 
 bool Gdb_MI2::Tip(const String& exp, CodeEditor::MouseTip& mt)
 {
+return false;
+
 	static String prevExp = "";
 	static String prevVal = "";
 	String val;
