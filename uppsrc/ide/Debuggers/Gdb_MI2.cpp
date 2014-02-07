@@ -196,22 +196,31 @@ bool Gdb_MI2::IsFinished()
 
 bool Gdb_MI2::Tip(const String& exp, CodeEditor::MouseTip& mt)
 {
+	static String prevExp = "";
+	static String prevVal = "";
+	String val;
+	
 	// quick exit
-	if(exp.IsEmpty() || !dbg)
+	if(exp.IsEmpty() || !dbg || IsWaitingEvent())
 		return false;
 
-	// try to not delay other events
-/*
-	if(IsWaitingEvent())
-		return false;
-*/
+	if(exp != prevExp)
+	{
+		MIValue res = MICmd("data-evaluate-expression \"" + exp + "\"");
+		if(res.IsError() || res.IsEmpty())
+			val = "";
+		else
+			val = res["value"].ToString();
+
+		prevExp = exp;
+		prevVal = val;
+	}
+	else
+		val = prevVal;
 	
-	MIValue res = MICmd("data-evaluate-expression \"" + exp + "\"");
-	if(res.IsError() || res.IsEmpty())
-		return false;
 	
 	mt.display = &StdDisplay();
-	mt.value = exp + "=" + res["value"].ToString();
+	mt.value = exp + "=" + val;
 	mt.sz = mt.display->GetStdSize(String(mt.value) + "X");
 	return true;
 }
@@ -580,7 +589,6 @@ MIValue Gdb_MI2::ReadGdb(bool wait)
 // debugger run/stop status -- all remaining asynchrnonous output is discarded
 MIValue Gdb_MI2::MICmd(const char *cmdLine)
 {
-RLOG("COMMAND : " << cmdLine);
 	LDUMP(cmdLine);
 	// sends command to debugger and get result data
 
