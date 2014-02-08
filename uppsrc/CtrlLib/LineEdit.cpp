@@ -88,9 +88,14 @@ void   LineEdit::Paint0(Draw& w) {
 	int fascent = font.Info().GetAscent();
 	Color showcolor = Blend(SColorLight, SColorHighlight);
 	for(int i = sc.y; i < ll; i++) {
-		WString tx = line[i];
-		if(tx.GetLength() > 100000) // Do not go out of memory for patologic cases...
-			tx.Trim(100000);
+		WString tx;
+		if(line[i].text.GetLength() > 100000) { // Do not go out of memory for patologic cases...
+			String h = line[i].text;
+			h.Trim(100000);
+			tx = h.ToWString();
+		}
+		else
+			tx = line[i];
 		int len = tx.GetLength();
 		if(w.IsPainting(0, y, sz.cx, fsz.cy)) {
 			Highlight ih;
