@@ -109,14 +109,19 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		Index<String>watchesExpressions;
 		Vector<String>watchesValues;
 		
+		// 'this' variable inspection data
+		Index<String>thisNames;
+		Vector<String>thisFullNames;
+		Vector<String>thisValues;
+		
 		// stored autos expressions, values and types
 		String autoLine;
 
 		// update local variables on demand
 		void UpdateLocalVars(void);
 		
-		// update stored watches values on demand
-		void UpdateWatches(void);
+		// update 'this' inspector data
+		void UpdateThis(void);
 		
 		// logs frame data on console
 		void LogFrame(String const &msg, MIValue &frame);
