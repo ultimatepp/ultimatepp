@@ -101,31 +101,16 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		// set breakpoint
 		MIValue InsertBreakpoint(const char *file, int line);
 		
-		// local variable names -- used to synch ide locals with internal GDB variables
+		// stored local variable expressions, and values
 		Index<String>localVarNames;
-		
-		// stored local variable expressions, values and types
-		// just changed variables gets re-updated from GDB
-		// on frame change, all values are wiped and re-read from GDB
-		Vector<String>localVarTypes;
-		Index<String>localVarExpressions;
 		Vector<String>localVarValues;
 		
-		// stored watches expressions, values and types
-		Index<String>watchesNames;
-		Vector<String>watchesTypes;
+		// stored watches expressions and values
 		Index<String>watchesExpressions;
 		Vector<String>watchesValues;
 		
 		// stored autos expressions, values and types
 		String autoLine;
-		Index<String>autosNames;
-		Vector<String>autosTypes;
-		Index<String>autosExpressions;
-		Vector<String>autosValues;
-		
-		// update variables on demand (locals, watches....)
-		void UpdateVars(void);
 
 		// update local variables on demand
 		void UpdateLocalVars(void);
@@ -133,9 +118,6 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		// update stored watches values on demand
 		void UpdateWatches(void);
 		
-		// update stored auto values on demand
-		void UpdateAutos(void);
-
 		// logs frame data on console
 		void LogFrame(String const &msg, MIValue &frame);
 
