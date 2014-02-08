@@ -196,33 +196,16 @@ bool Gdb_MI2::IsFinished()
 
 bool Gdb_MI2::Tip(const String& exp, CodeEditor::MouseTip& mt)
 {
-return false;
-
-	static String prevExp = "";
-	static String prevVal = "";
-	String val;
-	
 	// quick exit
-	if(exp.IsEmpty() || !dbg || IsWaitingEvent())
+	if(exp.IsEmpty() || !dbg)
 		return false;
 
-	if(exp != prevExp)
-	{
-		MIValue res = MICmd("data-evaluate-expression \"" + exp + "\"");
-		if(res.IsError() || res.IsEmpty())
-			val = "";
-		else
-			val = res["value"].ToString();
+	int idx = localVarNames.Find(exp);
+	if(idx < 0)
+		return false;
 
-		prevExp = exp;
-		prevVal = val;
-	}
-	else
-		val = prevVal;
-	
-	
 	mt.display = &StdDisplay();
-	mt.value = exp + "=" + val;
+	mt.value = exp + "=" + localVarValues[idx];
 	mt.sz = mt.display->GetStdSize(String(mt.value) + "X");
 	return true;
 }
@@ -784,7 +767,9 @@ void Gdb_MI2::SyncIde(bool fr)
 	}
 
 	// update vars and disasm only on idle times
-	timeCallback.Set(1500, THISBACK(SyncData));
+	timeCallback.Set(500, THISBACK(SyncData));
+//SyncData();
+
 	SyncDisas(fInfo, fr);
 }
 
@@ -1065,35 +1050,6 @@ void Gdb_MI2::showThread(void)
 	SyncIde();	
 }
 
-// update variables on demand (locals, watches....)
-void Gdb_MI2::UpdateVars(void)
-{
-	MIValue iUpdated = MICmd("var-update 2 *");
-	if(!iUpdated.IsTuple() || iUpdated.Find("changelist") < 0)
-		return;
-	MIValue &updated = iUpdated["changelist"];
-	for(int iUpd = 0; iUpd < updated.GetCount(); iUpd++)
-	{
-		if(!updated[iUpd].IsTuple() || updated[iUpd].Find("name") < 0 || updated[iUpd].Find("value") < 0)
-			return;
-		String varName = updated[iUpd]["name"];
-		String value = updated[iUpd]["value"];
-		int iVar;
-
-		// local variables
-		if( (iVar = localVarNames.Find(varName)) >= 0)
-			localVarValues[iVar] = value;
-		
-		// watches
-		if( (iVar = watchesNames.Find(varName)) >= 0)
-			watchesValues[iVar] = value;
-		
-		// autos
-		if( (iVar = autosNames.Find(varName)) >= 0)
-			autosValues[iVar] = value;
-	}
-}
-
 struct CapitalLess
 {
 	bool operator()(String const &a, String const &b) const { return ToUpper(a) < ToUpper(b); }
@@ -1102,194 +1058,50 @@ struct CapitalLess
 // update local variables on demand
 void Gdb_MI2::UpdateLocalVars(void)
 {
-	// we try to speed-up at most reading of local vars; this
-	// because we need to keep them updated at each step and
-	// re-reading as a whole is too time expensive.
-	// So, at first we build a list of local variable NAMES only
-	MIValue iLoc = MICmd("stack-list-variables 0");
+	localVarNames.Clear();
+	localVarValues.Clear();
+	
+	MIValue iLoc = MICmd("stack-list-variables 2");
 	if(!iLoc || iLoc.IsEmpty())
 		return;
 	MIValue &loc = iLoc["variables"];
 	if(!loc.IsArray())
 		return;
-	Index<String>locIdx;
+	
 	for(int iLoc = 0; iLoc < loc.GetCount(); iLoc++)
-		locIdx.Add(loc[iLoc]["name"]);
-	
-	// then we 'purge' stored local variables that are not present
-	// anymore... that can happen, for example, exiting from a loop
-	for(int iVar = localVarNames.GetCount() - 1; iVar >= 0; iVar--)
 	{
-		if(locIdx.Find(localVarExpressions[iVar]) < 0)
+		MIValue &curLoc = loc[iLoc];
+		if(curLoc["value"].IsString())
 		{
-			String varName = localVarNames.Pop();
-			MICmd("var-delete \"" + varName + "\"");
-			localVarExpressions.Pop();
-			localVarValues.Pop();
-			localVarTypes.Pop();
+			localVarNames.Add(curLoc["name"].ToString());
+			localVarValues.Add(curLoc["value"].ToString());
 		}
 	}
-	
-	// then we shall add missing variables
-	for(int iLoc = 0; iLoc < locIdx.GetCount(); iLoc++)
-	{
-		if(localVarExpressions.Find(locIdx[iLoc]) < 0)
-		{
-			MIValue var = MICmd(String("var-create - @ \"") + locIdx[iLoc] + "\"");
-			
-			// sometimes it has problem creating vars... maybe because they're
-			// still not active; we just skip them
-			if(var.IsError() || var.IsEmpty())
-				continue;
-
-			localVarNames.Add(var["name"]);
-			localVarExpressions.Add(locIdx[iLoc]);
-			localVarTypes.Add(var["type"]);
-			localVarValues.Add(var["value"]);
-		}
-	}
-	
-	// unsorted local vars are ugly and difficult to look at...
-	// so we sort them. As we've 4 structures, it's not so simple
-	Vector<String> keys;
-	keys <<= localVarExpressions.GetKeys();
-	IndexSort(keys, localVarTypes, CapitalLess());
-	keys <<= localVarExpressions.GetKeys();
-	IndexSort(keys, localVarValues, CapitalLess());
-	Vector<String> names;
-	names <<= localVarNames.GetKeys();
-	keys <<= localVarExpressions.GetKeys();
-	IndexSort(keys, names, CapitalLess());
-	localVarNames = names;
-	localVarExpressions = keys;
-	
-	// and finally, we do an update to refresh changed variables
-	UpdateVars();
 }
 
-// update stored watches values on demand
-void Gdb_MI2::UpdateWatches(void)
-{
-	// gets variable names from control
-	Index<String> exprs;
-	for(int i = 0; i < watches.GetCount(); i++)
-		exprs.Add(watches.Get(i, 0));
-	
-	// purge stored watches not available anymore
-	for(int iVar = watchesNames.GetCount() - 1; iVar >= 0;  iVar--)
-	{
-		if(exprs.Find(watchesExpressions[iVar]) < 0)
-		{
-			String varName = watchesNames.Pop();
-			MICmd("var-delete \"" + varName + "\"");
-			watchesExpressions.Pop();
-			watchesValues.Pop();
-			watchesTypes.Pop();
-		}
-	}
-
-	// then we shall add missing variables
-	for(int i = 0; i < exprs.GetCount(); i++)
-	{
-		if(watchesExpressions.Find(exprs[i]) < 0)
-		{
-			// the '@' means we create a dynamic variable
-			MIValue var = MICmd(String("var-create - @ \"") + exprs[i] + "\"");
-			
-			// sometimes it has problem creating vars... maybe because they're
-			// still not active; we just skip them
-			if(!var || var.IsEmpty() || !var.IsTuple())
-				continue;
-			watchesNames.Add(var["name"]);
-			watchesExpressions.Add(exprs[i]);
-			watchesTypes.Add(var["type"]);
-			watchesValues.Add(var["value"]);
-		}
-	}
-
-	// and finally, we do an update to refresh changed variables
-	UpdateVars();
-}
-
-// update stored auto values on demand
-void Gdb_MI2::UpdateAutos(void)
-{
-	// gets variable names from control
-	Index<String> exprs;
-	for(int i = 0; i < autos.GetCount(); i++)
-		exprs.Add(autos.Get(i, 0));
-	
-	// purge stored autos not available anymore
-	for(int iVar = autosNames.GetCount() - 1; iVar >= 0;  iVar--)
-	{
-		if(exprs.Find(autosExpressions[iVar]) < 0)
-		{
-			String varName = autosNames.Pop();
-			MICmd("var-delete \"" + varName + "\"");
-			autosExpressions.Pop();
-			autosValues.Pop();
-			autosTypes.Pop();
-		}
-	}
-
-	// then we shall add missing variables
-	for(int i = 0; i < exprs.GetCount(); i++)
-	{
-		if(autosExpressions.Find(exprs[i]) < 0)
-		{
-			// the '@' means we create a dynamic variable
-			MIValue var = MICmd(String("var-create - @ \"") + exprs[i] + "\"");
-			
-			// sometimes it has problem creating vars... maybe because they're
-			// still not active; we just skip them
-			if(!var || var.IsEmpty() || !var.IsTuple())
-				continue;
-			autosNames.Add(var["name"]);
-			autosExpressions.Add(exprs[i]);
-			autosTypes.Add(var["type"]);
-			autosValues.Add(var["value"]);
-		}
-	}
-
-	// and finally, we do an update to refresh changed variables
-	UpdateVars();
-}
-
+// sync watches treectrl
 void Gdb_MI2::SyncLocals()
 {
-	// update local vars cache, if needed
-	UpdateLocalVars();
-	
-	// reload ide control
 	VectorMap<String, String> prev = DataMap2(locals);
 	locals.Clear();
-	for(int i = 0; i < localVarNames.GetCount(); i++)
-		locals.Add(localVarExpressions[i], localVarValues[i], localVarTypes[i]);
+
+	for(int iLoc = 0; iLoc < localVarNames.GetCount(); iLoc++)
+		locals.Add(localVarNames[iLoc], localVarValues[iLoc]);
 	MarkChanged2(prev, locals);
 }
 
 // sync watches treectrl
 void Gdb_MI2::SyncWatches()
 {
-	// update local watches cache, if needed
-	UpdateWatches();
-	
 	// re-fill the control
 	VectorMap<String, String> prev = DataMap2(watches);
 	for(int i = 0; i < watches.GetCount(); i++)
 	{
-		String expr = watches.Get(i, 0);
-		int idx = watchesExpressions.Find(expr);
-		if(idx >= 0)
-		{
-			watches.Set(i, 2, watchesTypes[idx]);
-			watches.Set(i, 1, watchesValues[idx]);
-		}
+		MIValue res = MICmd("data-evaluate-expression \"" + watches.Get(i, 0).ToString() + "\"");
+		if(res.IsError() || res.IsEmpty())
+			watches.Set(i, 2, t_("<can't evaluate expression>"));
 		else
-		{
-			watches.Set(i, 2, "");
-			watches.Set(i, 1, t_("<can't evaluate expression>"));
-		}
+			watches.Set(i, 2, res["value"].ToString());
 	}
 	MarkChanged2(prev, watches);
 }
@@ -1318,47 +1130,36 @@ void Gdb_MI2::SyncAutos()
 					break;
 				exp << p.ReadId();
 			}
-			if(autos.Find(exp) < 0)
-				autos.Add(exp, "");
+			int idx = localVarNames.Find(exp);
+			if(idx >= 0)
+				autos.Add(exp, localVarValues[idx]);
 		}
 		p.SkipTerm();
 	}
 	autos.Sort();
-
-	// update autos cache, if needed
-	UpdateAutos();
-
-	for(int i = autos.GetCount() -1; i >= 0; i--)
-	{
-		String expr = autos.Get(i, 0);
-		int idx = autosExpressions.Find(expr);
-		if(idx >= 0)
-		{
-			autos.Set(i, 2, autosTypes[idx]);
-			autos.Set(i, 1, autosValues[idx]);
-		}
-		else
-			autos.Remove(i);
-	}
-
 	MarkChanged2(prev, autos);
 }
 
 // sync data tabs, depending on which tab is shown
 void Gdb_MI2::SyncData()
 {
-	switch(tab.Get()) {
-	case 0:
-		SyncAutos();
-		break;
-		
-	case 1:
-		SyncLocals();
-		break;
-		
-	case 2:
-		SyncWatches();
-		break;
+	// updates stored local variables
+	// those are needed for Autos, Locals and Tooltips
+	UpdateLocalVars();
+	
+	switch(tab.Get())
+	{
+		case 0:
+			SyncAutos();
+			break;
+			
+		case 1:
+			SyncLocals();
+			break;
+			
+		case 2:
+			SyncWatches();
+			break;
 	}
 }
 
