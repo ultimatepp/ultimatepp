@@ -1061,7 +1061,7 @@ void Gdb_MI2::UpdateLocalVars(void)
 	localVarNames.Clear();
 	localVarValues.Clear();
 	
-	MIValue iLoc = MICmd("stack-list-variables 2");
+	MIValue iLoc = MICmd("stack-list-variables 1");
 	if(!iLoc || iLoc.IsEmpty())
 		return;
 	MIValue &loc = iLoc["variables"];
@@ -1079,6 +1079,15 @@ void Gdb_MI2::UpdateLocalVars(void)
 	}
 }
 
+// update 'this' inspector data
+void Gdb_MI2::UpdateThis(void)
+{
+/*
+	MIValue thisVal = MICmd("data-evaluate-expression *this");
+	RLOG(thisVal.Dump());
+*/
+}
+		
 // sync watches treectrl
 void Gdb_MI2::SyncLocals()
 {
@@ -1146,6 +1155,10 @@ void Gdb_MI2::SyncData()
 	// updates stored local variables
 	// those are needed for Autos, Locals and Tooltips
 	UpdateLocalVars();
+	
+	// update stored 'this' member data
+	// also used for tooltips and 'this' pane page
+	UpdateThis();
 	
 	switch(tab.Get())
 	{

@@ -291,6 +291,8 @@ MIValue &MIValue::Get(const char *key)
 {
 	if(type != MITuple)
 		return ErrorMIValue("Not a Tuple value type");
+	if(tuple.Find(key) < 0)
+		return ErrorMIValue(String("key '") + key + "' not found");
 	return tuple.Get(key);
 }
 
