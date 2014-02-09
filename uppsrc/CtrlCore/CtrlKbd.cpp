@@ -158,7 +158,7 @@ void Ctrl::DoKillFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl)
 	GuiLock __;
 	if(pfocusCtrl && !pfocusCtrl->destroying) {
 		pfocusCtrl->StateH(FOCUS);
-		LLOG("LostFocus: " << Desc(pfocusCtrl));
+		LLOG("LostFocus: " << Name(pfocusCtrl));
 		pfocusCtrl->LostFocus();
 	}
 	if(pfocusCtrl && pfocusCtrl->parent && !pfocusCtrl->parent->destroying)
