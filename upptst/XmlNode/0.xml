@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE Configuration>
+<Configuration>
+	<Language id="CS-CZ"/>
+	<Dimension x="10" y="20"/>
+	<text>Some text</text>
+	<Number value="1.2345e100"/>
+	<TEST test_attr="23"/>
+</Configuration>

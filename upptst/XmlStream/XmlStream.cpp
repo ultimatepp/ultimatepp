@@ -9,6 +9,8 @@ void Check0(const String& xml0, bool full)
 	String xml = AsXML(ParseXML(xml0, pstyle), astyle);
 	String p = GetHomeDirFile("XML.xml");
 	SaveFile(p, xml);
+	XmlNode h = ParseXMLFile(p, pstyle);
+	AsXML(h);
 	String xml2 = AsXML(ParseXMLFile(p, pstyle), astyle);
 	SaveFile(GetHomeDirFile("XML2.xml"), xml2);
 	String xml1 = AsXML(ParseXML(xml, pstyle), astyle);
@@ -54,28 +56,32 @@ void GenNode(XmlNode& n)
 
 void CheckFile(const char *path)
 {
-	Cout() << path << '\n';
+	LOG("======= " << path);
 	Check(AsXML(ParseXML(LoadFile(path), 0)));
 }
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
+
+	for(FindFile ff(GetDataFile("*.xml")); ff; ff.Next())
+		CheckFile(ff.GetPath());
+
+	LOG("----- Fixed files OK");
+
 	SeedRandom();
 
 	for(int i = 0; i < 100; i++) {
-		Cout() << i << '\n';
+		LOG("* " << i);
 		XmlNode n;
 		XmlNode& nn = n.Add();
 		nn.CreateTag(GenID());
 		for(int i = 0; i < 100; i++) {
 			GenNode(nn);
 			String xml = AsXML(n);
-			LOG("============");
-			LOG(xml);
 			Check(AsXML(n));
 		}
 	}
 
-	for(FindFile ff(GetDataFile("*.xml")); ff; ff.Next())
-		CheckFile(ff.GetPath());
 }
