@@ -160,7 +160,7 @@ public:
 	XmlParser(Stream& in);
 };
 
-class XmlNode {
+class XmlNode : Moveable< XmlNode, DeepCopyOption<XmlNode> > {
 	int                              type;
 	String                           text;
 	Array<XmlNode>                   node;
@@ -215,8 +215,12 @@ public:
 	void           SetAttrsPick(pick_ VectorMap<String, String>& a);
 	
 	void           Shrink();
+	
+	bool           IsPicked() const                           { return node.IsPicked(); }
 
-	XmlNode()      { type = XML_DOC; }
+	XmlNode(const XmlNode& n, int);
+
+	XmlNode()                                 { type = XML_DOC; }
 };
 
 enum {
