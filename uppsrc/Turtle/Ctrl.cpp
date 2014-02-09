@@ -65,15 +65,7 @@ void GuiPlatformAfterMenuPopUp()
 }
 
 String Ctrl::Name() const {
-	GuiLock __;
-#ifdef CPU_64
-	String s = String(typeid(*this).name()) + " : 0x" + FormatIntHex(this);
-#else
-	String s = String(typeid(*this).name()) + " : " + Format("0x%x", (int) this);
-#endif
-	if(IsChild())
-		s << "(parent " << String(typeid(*parent).name()) << ")";
-	return s;
+	return Name0();
 }
 
 END_UPP_NAMESPACE

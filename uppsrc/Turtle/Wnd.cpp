@@ -274,8 +274,9 @@ void Ctrl::DestroyWnd()
 
 void Ctrl::WndDestroy()
 {
+	bool focus = HasFocusDeep();
 	DestroyWnd();
-	if(topctrl.GetCount())
+	if(focus && topctrl.GetCount())
 		topctrl.Top()->ActivateWnd();
 }
 
