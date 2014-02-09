@@ -18,6 +18,9 @@ structure `- each XmlNode can contain any number of child XmlNodes.
 XmlNode is mutable and U`+`+ provides function to parse XML and 
 store it to XmlNode and also to take XmlNode and create corresponding 
 XML document.&]
+[s9;%% XmlNode is [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ moveable][*/  
+]type with [*/^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ pick and 
+optional deep copy] transfer semantics&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
@@ -223,16 +226,28 @@ r]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], [@(0.0.255) int]_[*@3 val])&
 [s2;%% Replaces all attributes to [%-*@3 a] using pick operation ([%-*@3 a] 
 is destroyed in operation).&]
 [s3; &]
+[s4; &]
+[s5;:XmlNode`:`:Shrink`(`): [@(0.0.255) void]_[* Shrink]()&]
+[s2;%% Attempts to minimize memory footprint.&]
+[s3; &]
+[s4; &]
+[s5;:XmlNode`:`:IsPicked`(`)const: [@(0.0.255) bool]_[* IsPicked]()_[@(0.0.255) const]&]
+[s2;%% Returns true if picked&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
 [s3;%% &]
 [s0; [* XmlNode]()&]
 [s2;%% Construct an empty XmlNode.&]
 [s3; &]
-[s0; &]
+[s4; &]
+[s5;:XmlNode`:`:XmlNode`(const XmlNode`&`,int`): [* XmlNode]([@(0.0.255) const]_[* XmlNode][@(0.0.255) `&
+]_[*@3 n], [@(0.0.255) int])&]
+[s2;%% Deep copy constructor.&]
+[s3;%% &]
 [s0; &]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 XmlNode `- parse and output functions]]}}&]
+[s3;%% &]
 [s4;H0; &]
 [s5;:ParseXML`(XmlParser`&`,dword`): [_^XmlNode^ XmlNode]_[* ParseXML]([_^XmlParser^ XmlPar
 ser][@(0.0.255) `&]_[*@3 p], [_^dword^ dword]_[*@3 style]_`=_XML`_IGNORE`_DECLS[@(0.0.255) `|

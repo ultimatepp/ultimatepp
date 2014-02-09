@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x) // LOG(x);
+#define LLOG(x)  // LOG(x)
 
 static inline void sDeXmlChar(StringBuffer& result, char chr, byte charset, bool escapelf)
 {
@@ -208,13 +208,14 @@ inline static bool IsXmlNameChar(int c)
 }
 
 void XmlParser::LoadMore0()
-{
-	if(in) {
+{ // WARNING: Invalidates pointers to buffer
+	if(in && !in->IsEof()) {
 		int pos = int(term - begin);
 		if(len - pos < MCHARS) {
+			LLOG("LoadMore0 " << pos << ", " << len);
 			begincolumn = GetColumn0();
 			len -= pos;
-			memcpy(buffer, term, len);
+			memmove(buffer, term, len);
 			term = begin = buffer;
 			len += in->Get(~buffer + len, CHUNK);
 			buffer[len] = '\0';
@@ -223,10 +224,11 @@ void XmlParser::LoadMore0()
 }
 
 bool XmlParser::More()
-{
+{ // WARNING: Invalidates pointers to buffer
 	begincolumn = GetColumn();
-	if(!in)
+	if(!in || in->IsEof())
 		return false;
+	LLOG("More " << (int)CHUNK);
 	len = in->Get(buffer, CHUNK);
 	buffer[len] = '\0';
 	term = begin = buffer;
@@ -262,6 +264,7 @@ void XmlParser::Next()
 	if(empty_tag) {
 		empty_tag = false;
 		type = XML_END;
+		LLOG("XML_END (empty tag) " << tagtext);
 		return;
 	}
 
@@ -270,6 +273,7 @@ void XmlParser::Next()
 	for(;;) {
 		if(!HasMore()) {
 			type = XML_EOF;
+			LLOG("XML_EOF");
 			return;
 		}
 		LoadMore();
@@ -312,8 +316,10 @@ void XmlParser::Next()
 	if(cdata.GetCount() && (npreserve || preserveall))
 		type = XML_TEXT;
 	
-	if(type == XML_TEXT)
+	if(type == XML_TEXT) {
+		LLOG("XML_TEXT " << cdata);
 		return;
+	}
 	
 	term++;
 	LoadMore();
@@ -355,6 +361,7 @@ void XmlParser::Next()
 				line++;
 			tagtext.Cat(*term++);
 		}
+		LLOG("XML_DECL " << tagtext);
 	}
 	else
 	if(*term == '?') {
@@ -372,6 +379,7 @@ void XmlParser::Next()
 				line++;
 			tagtext.Cat(*term++);
 		}
+		LLOG("XML_PI " << tagtext);
 	}
 	else
 	if(*term == '/') {
@@ -381,6 +389,7 @@ void XmlParser::Next()
 		while(IsXmlNameChar(*term))
 			term++;
 		tagtext = String(t, term);
+		LLOG("XML_END " << tagtext);
 		if(*term != '>')
 			throw XmlError("Unterminated end-tag");
 		term++;
@@ -388,9 +397,10 @@ void XmlParser::Next()
 	else {
 		type = XML_TAG;
 		const char *t = term;
-		while(HasMore() && IsXmlNameChar(*term))
+		while(IsXmlNameChar(*term))
 			term++;
 		tagtext = String(t, term);
+		LLOG("XML_TAG " << tagtext);
 		for(;;) {
 			SkipWhites();
 			if(*term == '>') {
@@ -405,8 +415,9 @@ void XmlParser::Next()
 			}
 			if(!HasMore())
 				throw XmlError("Unterminated tag");
+			LoadMore();
 			const char *t = term++;
-			while(HasMore() && (byte)*term > ' ' && *term != '=' && *term != '>')
+			while((byte)*term > ' ' && *term != '=' && *term != '>')
 				term++;
 			String attr(t, term);
 			SkipWhites();
@@ -458,7 +469,7 @@ String XmlParser::ReadTag(bool next)
 {
 	if(type != XML_TAG)
 		throw XmlError("Expected tag");
-	LLOG("ReadTag " << text);
+	LLOG("ReadTag " << tagtext);
 	String h = tagtext;
 	if(next) {
 		stack.Add(Nesting(h, npreserve));
@@ -520,7 +531,7 @@ bool  XmlParser::End()
 	if(IsEof())
 		throw XmlError("Unexpected end of file");
 	if(IsEnd()) {
-		LLOG("EndTag " << text);
+		LLOG("EndTag " << tagtext);
 		if(stack.IsEmpty())
 			throw XmlError(NFormat("Unexpected end-tag: </%s>", tagtext));
 		if(stack.Top().tag != tagtext && !relaxed) {
@@ -847,6 +858,17 @@ void XmlNode::Shrink()
 	node.Shrink();
 }
 
+XmlNode::XmlNode(const XmlNode& n, int)
+{
+	type = n.type;
+	text = n.text;
+	node <<= n.node;
+	if(n.attr) {
+		attr.Create();
+		*attr <<= *n.attr;
+	}
+}
+
 bool Ignore(XmlParser& p, dword style)
 {
 	if((XML_IGNORE_DECLS & style) && p.IsDecl() ||
@@ -891,6 +913,8 @@ static XmlNode sReadXmlNode(XmlParser& p, ParseXmlFilter *filter, dword style)
 		m.CreateComment(p.ReadComment());
 		return m;
 	}
+	if(!p.IsText())
+		throw XmlError("Invalid XML.");
 	m.CreateText(p.ReadText());
 	m.Shrink();
 	return m;
@@ -971,55 +995,6 @@ bool ShouldPreserve(const String& s)
 			return true;
 	return false;
 }
-
-/*
-String AsXML(const XmlNode& node, dword style)
-{
-	StringBuffer r;
-	if(style & XML_HEADER)
-		r << XmlHeader();
-	if(style & XML_DOCTYPE)
-		for(int i = 0; i < node.GetCount(); i++) {
-			const XmlNode& m = node.Node(i);
-			if(m.GetType() == XML_TAG) {
-				r << XmlDocType(m.GetText());
-				break;
-			}
-		}
-	style &= ~(XML_HEADER|XML_DOCTYPE);
-	switch(node.GetType()) {
-	case XML_PI:
-		r << "<?" << node.GetText() << "?>\r\n";
-		break;
-	case XML_DECL:
-		r << "<!" << node.GetText() << ">\r\n";
-		break;
-	case XML_COMMENT:
-		r << "<!--" << node.GetText() << "-->\r\n";
-		break;
-	case XML_DOC:
-		for(int i = 0; i < node.GetCount(); i++)
-			r << AsXML(node.Node(i), style);
-		break;
-	case XML_TEXT:
-		r << DeXml(node.GetText());
-		break;
-	case XML_TAG:
-		XmlTag tag(node.GetText());
-		for(int i = 0; i < node.GetAttrCount(); i++)
-			tag(node.AttrId(i), node.Attr(i));
-		if(node.GetCount()) {
-			StringBuffer body;
-			for(int i = 0; i < node.GetCount(); i++)
-				body << AsXML(node.Node(i), style);
-			r << tag(~body);
-		}
-		else
-			r << tag();
-	}
-	return r;
-}
-*/
 
 static void sAsXML(Stream& out, const XmlNode& node, dword style, const String& indent)
 {
