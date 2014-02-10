@@ -2,7 +2,7 @@
 
 #ifdef COMPILER_MSC
 
-#define LLOG(x)    LOG(x)
+#define LLOG(x)  //  DLOG(x)
 
 String Pdb::Hex(adr_t a)
 {
@@ -346,13 +346,12 @@ bool Pdb::RunToException()
 				if(locked)
 					Unlock();
 				terminated = true;
+				return false;
 				CleanupOnExit();
-				/* REMOVED BECAUSE CRASHES (sometimes, perhaps because process is terminted?)
 				if(ContinueDebugEvent(event.dwProcessId, event.dwThreadId, DBG_CONTINUE))
 					LLOG("ContinueDebugEvent(EXIT_PROCESS_DEBUG_EVENT) -> OK");
 				else
 					LLOG("ContinueDebugEvent -> " << GetErrorMessage(GetLastError()));
-				*/
 				return false;
 			case LOAD_DLL_DEBUG_EVENT: {
 				LLOG("Load dll: " << event.u.LoadDll.lpBaseOfDll);

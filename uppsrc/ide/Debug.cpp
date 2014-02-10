@@ -192,7 +192,12 @@ void Ide::BuildAndDebug(bool runto)
 	else
 		debugger = GdbCreate(host, target, runarg, console);
 #endif
-	if(!debugger) return;
+	if(!debugger) {
+		IdeEndDebug();
+		SetBar();
+		editor.Enable();
+		return;
+	}
 	debuglock = 0;
 	const Workspace& wspc = IdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
