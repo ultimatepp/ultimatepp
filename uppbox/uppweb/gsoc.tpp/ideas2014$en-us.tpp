@@ -69,6 +69,204 @@ of gestures to mouse events).]&]
 [s0;i150;O0; [2 Support for Turtle to access Google Drive.]&]
 [s0;*2 &]
 [s0;%- &]
+[s0;# [* Android SDK/NDK TheIDE builder]&]
+[s0;#2 &]
+[s0;# [*2 Proposed by]&]
+[s0;# [2 Miroslav Fídler]&]
+[s0;# &]
+[s0;# [*2 Difficulty]&]
+[s0;# [2 Medium]&]
+[s0;#*2 &]
+[s0;# [*2 Required skills/knowledge]&]
+[s0;# [2 C`+`+, U`+`+, Java, debugging.]&]
+[s0;#2 &]
+[s0; [*2 Expected result]&]
+[s0;# [2 TheIDE is capable of building Android projects, from Java/C/C`+`+ 
+sources.]&]
+[s0;# &]
+[s0;# [*2 Brief Explanation]&]
+[s0;# [2 TheIDE builder is module of TheIDE development environment 
+responsible for building projects defined by U`+`+ package system 
+into executable form. Currently, TheIDE supports builders based 
+on Win32 SDK (using Microsoft C`+`+ compiler and Windows SDK) 
+and builders targeting general POSIX/X11/Gtk desktops.]&]
+[s0;# [2 The aim of this proposal is create a new builder targeting 
+Android platform.]&]
+[s0;#2 &]
+[s0;# [*2 Mentors]&]
+[s0;# [2 Miroslav Fídler]&]
+[s0;#2 &]
+[s0;# [*2 Roadmap]&]
+[s0;#i150;O0; [2 Investigate Android building techniques]&]
+[s0;#i150;O0; [2 Decide how to implement U`+`+ builder (should we use 
+provided ANT based scripts?)]&]
+[s0;#i150;O0; [2 Implement Android builder]&]
+[s0;%- &]
+[s0;%- &]
+[s0;# [* Android U`+`+ support]&]
+[s0;#2 &]
+[s0;# [*2 Proposed by]&]
+[s0;# [2 Miroslav Fídler]&]
+[s0;# &]
+[s0;# [*2 Difficulty]&]
+[s0;# [2 Hard]&]
+[s0;#*2 &]
+[s0;# [*2 Required skills/knowledge]&]
+[s0;# [2 C`+`+, U`+`+, Java, JNI, SDL, debugging.]&]
+[s0;#2 &]
+[s0; [*2 Expected result]&]
+[s0;# [2 We are capable of running existing U`+`+ applications on Android, 
+with attached mouse and keyboard (as possible intermediate step); 
+adapting U`+`+ to touch interface is another step.]&]
+[s0;# &]
+[s0;# [*2 Brief Explanation]&]
+[s0;# [2 U`+`+ provides cross`-platform GUI library that is relatively 
+easy adaptable to various platforms. The aim of this proposal 
+is to create a backend for Android platform.]&]
+[s0;#2 &]
+[s0;# [*2 Mentors]&]
+[s0;# [2 Miroslav Fídler]&]
+[s0;#2 &]
+[s0;# [*2 Roadmap]&]
+[s0;#i150;O0; [2 Investigate Android SDK]&]
+[s0;#i150;O0; [2 Decide the method of support (we could possibly use 
+SDL, or just use JNI to interface with Java API).]&]
+[s0;#i150;O0; [2 Implement Android backend]&]
+[s0;%- &]
+[s0;%- &]
+[s0;# [* TheIDE (P)NaCl builder]&]
+[s0;#2 &]
+[s0;# [*2 Proposed by]&]
+[s0;# [2 Miroslav Fídler]&]
+[s0;# &]
+[s0;# [*2 Difficulty]&]
+[s0;# [2 Medium]&]
+[s0;#*2 &]
+[s0;# [*2 Required skills/knowledge]&]
+[s0;# [2 C`+`+, U`+`+, debugging.]&]
+[s0;#2 &]
+[s0; [*2 Expected result]&]
+[s0;# [2 TheIDE is capable of building (P)NaCl projects, from C/C`+`+ 
+sources.]&]
+[s0;# &]
+[s0;# [*2 Brief Explanation]&]
+[s0;# [2 TheIDE builder is module of TheIDE development environment 
+responsible for building projects defined by U`+`+ package system 
+into executable form. Currently, TheIDE supports builders based 
+on Win32 SDK (using Microsoft C`+`+ compiler and Windows SDK) 
+and builders targeting general POSIX/X11/Gtk desktops.]&]
+[s0;# [2 The aim of this proposal is create a new builder targeting 
+(P)NaCl platform.]&]
+[s0;#2 &]
+[s0;# [*2 Mentors]&]
+[s0;# [2 Miroslav Fídler]&]
+[s0;#2 &]
+[s0;# [*2 Roadmap]&]
+[s0;#i150;O0; [2 Investigate (P)NaCl building techniques]&]
+[s0;#i150;O0; [2 Decide how to implement U`+`+ builder]&]
+[s0;#i150;O0; [2 Implement (P)NaCl builder]&]
+[s0;%- &]
+[s0;%- &]
+[s0;# [* (P)NaCl U`+`+ support]&]
+[s0;#2 &]
+[s0;# [*2 Proposed by]&]
+[s0;# [2 Miroslav Fídler]&]
+[s0;# &]
+[s0;# [*2 Difficulty]&]
+[s0;# [2 Hard]&]
+[s0;#*2 &]
+[s0;# [*2 Required skills/knowledge]&]
+[s0;# [2 C`+`+, U`+`+, JavaScript, debugging.]&]
+[s0;#2 &]
+[s0; [*2 Expected result]&]
+[s0;# [2 We are capable of running existing U`+`+ applications on (P)NaCl, 
+with attached mouse and keyboard (as possible intermediate step); 
+adapting U`+`+ to touch interface is another step.]&]
+[s0;# &]
+[s0;# [*2 Brief Explanation]&]
+[s0;# [2 U`+`+ provides cross`-platform library that is relatively 
+easy adaptable to various platforms. The aim of this proposal 
+is to create a backend for (P)NaCl platform.]&]
+[s0;#2 &]
+[s0;# [*2 Mentors]&]
+[s0;# [2 Miroslav Fídler]&]
+[s0;#2 &]
+[s0;# [*2 Roadmap]&]
+[s0;#i150;O0; [2 Investigate Pepper API]&]
+[s0;#i150;O0; [2 Decide the method of support]&]
+[s0;#i150;O0; [2 Implement backend]&]
+[s0;%- &]
+[s0;%- &]
+[s0;# [* Touch support]&]
+[s0;#2 &]
+[s0;# [*2 Proposed by]&]
+[s0;# [2 Miroslav Fídler]&]
+[s0;# &]
+[s0;# [*2 Difficulty]&]
+[s0;# [2 Medium]&]
+[s0;#*2 &]
+[s0;# [*2 Required skills/knowledge]&]
+[s0;# [2 C`+`+, U`+`+]&]
+[s0;#2 &]
+[s0; [*2 Expected result]&]
+[s0;# [2 U`+`+ widget API gains methods for dealing with touch screens. 
+Individual widgets gain support for this API.]&]
+[s0;# &]
+[s0;# [*2 Brief Explanation]&]
+[s0;# [2 U`+`+ currently only supports input using mouse and keyboard. 
+The task here is to add virtual methods to Ctrl class to support 
+touch screens and to detect and support a common list of touch 
+gestures. Default implementations of virtual methods might convert 
+these gestures to mouse events for sort of backward compatibility. 
+Once the touch API is implemented, it would be possible to add 
+relevant behaviour to U`+`+ widgets.]&]
+[s0;#2 &]
+[s0;# [*2 Mentors]&]
+[s0;# [2 Miroslav Fídler]&]
+[s0;#2 &]
+[s0;# [*2 Roadmap]&]
+[s0;#i150;O0; [2 Investigate touch based inputs, make a list of getures 
+we want to support]&]
+[s0;#i150;O0; [2 Implement core touch input API (might be based on 
+HTML5 touchstart, touchmove, touchend interfaces) for TURTLE 
+(javascript terminal to U`+`+) backend.]&]
+[s0;#i150;O0; [2 Implement getures API]&]
+[s0;#i150;O0; [2 Add support to CtrlLib widgets]&]
+[s0;%- &]
+[s0;%- &]
+[s0;# [* Web Browser Control]&]
+[s0;# &]
+[s0;# [*2 Proposed by]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan 
+Dolinár]&]
+[s0;# &]
+[s0;# [*2 Difficulty]&]
+[s0;# [2 High]&]
+[s0;#2 &]
+[s0;# [*2 Experience required]&]
+[s0;# [2 U`+`+, webkit (or any other engine), gcc compiling infrastructure.]&]
+[s0;#2 &]
+[s0;# [*2 Description]&]
+[s0;# [2 This tasks main goal is to create a GUI widget allowing to 
+integrate a web browser engine into U`+`+ applications. Webkit 
+engine is a good candidate for this task as it is fast and reliable, 
+written in C`+`+ and actively developed by large community, but 
+other engines might be used as well.]&]
+[s0;#2 &]
+[s0;# [*2 Mentors]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan 
+Dolinár]&]
+[s0;#2 &]
+[s0;# [*2 Roadmap]&]
+[s0;#i150;O0; [2 Explore possibility to use libwebkit]&]
+[s0;#i150;O0; [2 Decide how to integrate Webkit in a U`+`+ project 
+(most straightforward possibilities are direct rendering in DHCtrl 
+or rendering into buffer first)]&]
+[s0;#i150;O0; [2 Write a widget binding U`+`+ events to the rendering 
+engine]&]
+[s0;%- &]
+[s0;%- &]
+[s0;%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Project requirements]]}}&]
 [s0;# &]
 [s0;# [2 All U`+`+ community projects have to comply with certain basic 
