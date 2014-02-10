@@ -493,7 +493,7 @@ encode_mcus_gather (j_compress_ptr cinfo, JDIFFIMAGE diff_buf,
     for (sampn = 0; sampn < cinfo->data_units_in_MCU; sampn++) {
       register int temp;
       register int nbits;
-      c_derived_tbl *dctbl = entropy->cur_tbls[sampn];
+//      c_derived_tbl *dctbl = entropy->cur_tbls[sampn];
       long * counts = entropy->cur_counts[sampn];
 
       /* Encode the difference per section H.1.2.2 */

@@ -120,7 +120,7 @@ start_output_pass (j_decompress_ptr cinfo)
 {
 #ifdef BLOCK_SMOOTHING_SUPPORTED
   j_lossy_d_ptr lossyd = (j_lossy_d_ptr) cinfo->codec;
-  d_coef_ptr coef = (d_coef_ptr) lossyd->coef_private;
+//  d_coef_ptr coef = (d_coef_ptr) lossyd->coef_private;
 
   /* If multipass, check to see whether to use block smoothing on this pass */
   if (lossyd->coef_arrays != NULL) {

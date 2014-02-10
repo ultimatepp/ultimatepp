@@ -452,7 +452,7 @@ per_scan_setup (j_compress_ptr cinfo)
 METHODDEF(void)
 prepare_for_pass (j_compress_ptr cinfo)
 {
-  j_lossy_c_ptr lossyc = (j_lossy_c_ptr) cinfo->codec;
+//  j_lossy_c_ptr lossyc = (j_lossy_c_ptr) cinfo->codec;
   my_master_ptr master = (my_master_ptr) cinfo->master;
 
   switch (master->pass_type) {

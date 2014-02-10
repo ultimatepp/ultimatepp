@@ -257,7 +257,7 @@ consume_data (j_decompress_ptr cinfo)
   d_diff_ptr diff = (d_diff_ptr) losslsd->diff_private;
 //  JDIMENSION MCU_col_num;	/* index of current MCU within row */
 //  JDIMENSION MCU_count;		/* number of MCUs decoded */
-  JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
+//  JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
   int comp, ci; //, yoffset, row, prev_row;
   JSAMPARRAY buffer[MAX_COMPS_IN_SCAN];
   jpeg_component_info *compptr;

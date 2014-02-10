@@ -99,7 +99,6 @@ String  XmlTag::operator()(const char *text)
 {
 	StringBuffer r;
 	r << tag << ">";
-	int fbi = r.GetCount();
 	const char *s = text;
 	bool wastag = true;
 	bool wasslash = true;

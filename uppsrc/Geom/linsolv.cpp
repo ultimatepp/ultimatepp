@@ -83,7 +83,7 @@ Vector<double> LinearSolver::Solve()
 	{
 		Point pivot = pivots[r];
 		const double *row = Row(pivot.y);
-		int px = pivot.x;
+//		int px = pivot.x;
 		double out = row[rows]; // right side
 		for(int s = r; ++s < pivots.GetCount();)
 		{

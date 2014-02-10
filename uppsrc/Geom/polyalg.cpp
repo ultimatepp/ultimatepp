@@ -5,6 +5,7 @@ NAMESPACE_UPP
 #define POLY_TIMING(n) // RTIMING(n)
 #define POLY_LOGGING   0 // 1 = on, 0 = off
 
+/*
 static bool ContainsPoints(const Point *poly, int count, Point P)
 {
 	if(count <= 2 || IsNull(P))
@@ -52,7 +53,7 @@ static bool ContainsPoints(const Point *poly, int count, Point P)
 	}
 	return in;
 }
-
+*/
 static inline int PolyCompare(Pointf P, Pointf A, Pointf B, Size ap, Size bp)
 {
 	if(ap.cx < 0 && bp.cx < 0 || ap.cy > 0 && bp.cy > 0 || ap.cy < 0 && bp.cy < 0)

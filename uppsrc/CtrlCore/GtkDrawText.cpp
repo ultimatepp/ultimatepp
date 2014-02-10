@@ -31,7 +31,6 @@ void FontSysData::Init(Font font, int angle)
 	cairo_matrix_init_identity(ctm);
 	cairo_matrix_init_scale(font_matrix, font.GetHeight(), font.GetHeight());
 
-	FT_Face ft = FTFace(font);
 	if(font.IsItalic() && !(FTFace(font)->style_flags & FT_STYLE_FLAG_ITALIC)) {
 		cairo_matrix_t sheer[1];	
 		cairo_matrix_init_identity(sheer);

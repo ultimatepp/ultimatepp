@@ -84,7 +84,7 @@ TIFFReadDirectory(TIFF* tif)
 	size_t fix;
 	uint16 dircount;
 	uint16 previous_tag = 0;
-	int diroutoforderwarning = 0, compressionknown = 0;
+	int diroutoforderwarning = 0;//, compressionknown = 0;
 	int haveunknowntags = 0;
 
 	tif->tif_diroff = tif->tif_nextdiroff;
@@ -255,8 +255,8 @@ TIFFReadDirectory(TIFF* tif)
 				    dp->tdir_type, dp->tdir_offset);
 				if (!TIFFSetField(tif, dp->tdir_tag, (uint16)v))
 					goto bad;
-				else
-					compressionknown = 1;
+//				else
+//					compressionknown = 1;
 				break;
 			/* XXX: workaround for broken TIFFs */
 			} else if (dp->tdir_type == TIFF_LONG) {
