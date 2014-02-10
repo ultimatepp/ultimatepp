@@ -40,6 +40,8 @@ int64     Ctrl::recieved_update_serial;
 Callback2<int, String> Ctrl::WhenConnect;
 Callback1<int>         Ctrl::WhenTerminate;
 
+StaticRect& DesktopRect();
+
 bool Ctrl::StartSession()
 {
 	LLOG("Connect");
@@ -130,8 +132,6 @@ bool Ctrl::StartSession()
 	SetStdFont(ScreenSans(12)); //FIXME general handling
 #endif
 	ChStdSkin();
-
-	extern StaticRect& DesktopRect();
 
 	DesktopRect().Color(Cyan());
 	DesktopRect().SetRect(0, 0, DesktopSize.cx, DesktopSize.cy);
