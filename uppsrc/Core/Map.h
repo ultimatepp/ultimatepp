@@ -52,6 +52,7 @@ public:
 	int      UnlinkKey(const K& k)                    { return key.UnlinkKey(k); }
 	bool     IsUnlinked(int i) const                  { return key.IsUnlinked(i); }
 	void     Sweep();
+	bool     HasUnlinked() const                      { return key.HasUnlinked(); }
 
 	T&       Insert(int i, const K& k)             { key.Insert(i, k); return value.Insert(i); }
 	T&       Insert(int i, const K& k, const T& x) { key.Insert(i, k); return value.Insert(i, x); }

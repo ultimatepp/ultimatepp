@@ -357,6 +357,11 @@ operation depends on the number of elements in AIndex, not on
 the number of unlinked elements. Also restores multi`-key ordering.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:AIndex`:`:HasUnlinked`(`)const:%- [@(0.0.255) bool]_[* HasUnlinked]()_[@(0.0.255) cons
+t]&]
+[s2; Returns true of AIndex has any unlinked elements.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:AIndex`:`:Insert`(int`,const T`&`,unsigned`):%- [*@4 T][@(0.0.255) `&]_[* Insert]([@(0.0.255) i
 nt]_[*@3 i], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 k], [@(0.0.255) unsigned]_[*@3 h])&]
 [s2; Inserts an element with value [%-*@3 k] at the specified position 
