@@ -436,6 +436,7 @@ Button::Button() {
 	style = NULL;
 	type = NORMAL;
 	monoimg = false;
+	font = Null;
 }
 
 Button::~Button() {}
