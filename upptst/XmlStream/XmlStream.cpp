@@ -65,6 +65,9 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
 
+	for(FindFile ff(GetHomeDirFile("*.xml")); ff; ff.Next())
+		CheckFile(ff.GetPath());
+
 	for(FindFile ff(GetDataFile("*.xml")); ff; ff.Next())
 		CheckFile(ff.GetPath());
 
