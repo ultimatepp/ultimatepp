@@ -304,14 +304,14 @@ Pdb::~Pdb()
 			ContinueDebugEvent(event.dwProcessId, event.dwThreadId, DBG_CONTINUE);
 		TerminateProcess(hProcess, -1);
 		// TerminateProcess should take care of everything...
-/*		do {
-			if(!WaitForDebugEvent(&event, INFINITE))
+		do {
+			if(!WaitForDebugEvent(&event, 1500))
 				break;
 			if(!ContinueDebugEvent(event.dwProcessId, event.dwThreadId, DBG_CONTINUE))
 				break;
 		}
 		while(event.dwDebugEventCode != EXIT_PROCESS_DEBUG_EVENT);
-*/		CleanupOnExit();
+		CleanupOnExit();
 	}
 	StoreToGlobal(*this, CONFIGNAME);
 	IdeRemoveBottom(*this);
