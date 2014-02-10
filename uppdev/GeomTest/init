@@ -3,4 +3,5 @@
 #include "CtrlLib/init"
 #include "Geom/init"
 #include "Geom/Coords/init"
+#include "plugin/jpg/init"
 #endif

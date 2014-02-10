@@ -1,7 +1,8 @@
 uses
 	CtrlLib,
 	Geom,
-	Geom/Coords;
+	Geom/Coords,
+	plugin/jpg;
 
 file
 	GeomTest.h,
