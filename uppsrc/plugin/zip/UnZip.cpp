@@ -40,7 +40,6 @@ void UnZip::ReadDir()
 
 	zip->Seek(offset);
 	for(int i = 0; i < entries; i++) {
-		int64 rof = zip->GetPos() - offset;
 		if(zip->Get32le() != 0x02014b50 && zip->IsEof())
 			return;
 		File& f = file.Add();
@@ -99,7 +98,7 @@ bool UnZip::ReadFile(Stream& out, Gate2<int, int> progress)
 	zip->Seek(f.offset);
 	if(zip->Get32le() != 0x04034b50)
 		return false;
-	int ver = zip->Get16le();
+	zip->Get16le();
 	zip->Get16le(); // Skip header, use info from centrall dir
 	zip->Get16le();
 	zip->Get32le();
@@ -110,7 +109,7 @@ bool UnZip::ReadFile(Stream& out, Gate2<int, int> progress)
 	dword extralen = zip->Get16le();
 	zip->SeekCur(filelen + extralen);
 	dword crc;
-	int l;
+	dword l;
 	if(f.method == 0) {
 		Buffer<byte> temp(65536);
 		int loaded;

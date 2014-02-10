@@ -277,7 +277,7 @@ double GisInverse::Get(double y) const
 		else if(ymap[sec] > y && ymap[sec + 1] < y)
 		{
 			double lx = rawxmin + xstep * sec, hx = lx + xstep;
-			double ly = ymap[sec], hy = ymap[sec + 1];
+//			double ly = ymap[sec], hy = ymap[sec + 1];
 			while(hx - lx > epsilon)
 			{
 /*				double dh = hy - ly, mx, my;
@@ -290,12 +290,12 @@ double GisInverse::Get(double y) const
 				if(my > y)
 				{
 					lx = mx;
-					ly = my;
+//					ly = my;
 				}
 				else
 				{
 					hx = mx;
-					hy = my;
+//					hy = my;
 				}
 			}
 			return (lx + hx) / 2;
@@ -367,9 +367,9 @@ String GisInverseTiming(double xmin, double xmax, const GisFunction& fn, int sec
 	do
 	{
 		count++;
-		double x;
+//		double x;
 		for(int i = 0; i < 1000; i++)
-			x = inverse(yval[i]);
+			/*x = */inverse(yval[i]);
 	}
 	while((duration = msecs(start)) < 500);
 	double nsecs = duration * 1000.0 / double(count);
@@ -696,7 +696,7 @@ String GisInterpolatorTiming(double xmin, double xmax, const GisFunction& fn, in
 	String dump = interpolator.CreateDump(xmin, xmax, fn, buckets, sections, samples, check);
 	double dmax = 0;
 	double step_check = (xmax - xmin) / check;
-	double step_64K = (xmax - xmin) / 65536;
+//	double step_64K = (xmax - xmin) / 65536;
 	Buffer<double> check_table(1000);
 	for(int c = 0; c < 1000; c++)
 		check_table[c] = xmin + c / 999.0;

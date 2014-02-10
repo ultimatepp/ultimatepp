@@ -190,7 +190,7 @@ double GisCoords::Data::ProjectDeviation(Pointf lonlat1, Pointf lonlat2, int bra
 
 double GisCoords::Data::ProjectRatio(Pointf lonlat, int branch) const
 {
-	Pointf proj = Project(lonlat, branch);
+	/*Pointf proj = */Project(lonlat, branch);
 	static const double DELTA = 1e-3;
 	Sizef east = Project(lonlat + Sizef(DELTA, 0), branch);
 	Sizef north = Project(lonlat + Sizef(0, DELTA), branch);

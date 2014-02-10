@@ -45,5 +45,5 @@ public:
 	void Cy(int cy_)                          { cy = cy_; }
 	
 	DDARasterizer();
-	~DDARasterizer();
+	virtual ~DDARasterizer();
 };

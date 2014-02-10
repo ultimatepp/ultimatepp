@@ -485,7 +485,7 @@ double ConicalRadiusFunction::Get(double phi) const
 	double ang = phi / 2 + M_PI / 4;
 	double diff = M_PI / 2 - ang;
 	double out;
-	static double prev = 0;
+//	static double prev = 0;
 //	bool limit = false;
 	out = (diff <= LAMBERT_LIMDIFF ? diff * (k0 - k1 * diff) : pow(cos(ang) / sin(ang), n));
 	return out * rho_coef;
@@ -524,7 +524,7 @@ GisCoordsUTM::GisCoordsUTM(
 
 Pointf GisCoordsUTM::LonLat(Pointf xy) const
 {
-	int paspol = ffloor(xy.x / 1000000);
+//	int paspol = ffloor(xy.x / 1000000);
 	xy.x = xy.x - xmeteroffset;
 	double xyx2 = xy.x * xy.x;
 	double b1 = (xy.y - ymeteroffset) / 111134.861084 * DEGRAD, b = b1;
@@ -546,10 +546,10 @@ Pointf GisCoordsUTM::LonLat(Pointf xy) const
 Pointf GisCoordsUTM::Project(Pointf lonlat, int branch) const
 {
 	double LL = (lonlat.x - central_meridian) * DEGRAD;
-	double LL2 = LL * LL, LL3 = LL2 * LL;
+	double LL2 = LL * LL;//, LL3 = LL2 * LL;
 	lonlat *= DEGRAD;
 	double sx = sin(lonlat.y), cx = cos(lonlat.y);
-	double cx2 = cx * cx, cx3 = cx2 * cx;
+	double cx2 = cx * cx;//, cx3 = cx2 * cx;
 	double B = 111134.861084 / DEGRAD * lonlat.y - 16036.480269 * sin(2 * lonlat.y)
 		+ 16.828067 * sin(4 * lonlat.y) - 0.021975 * sin(6 * lonlat.y) + 0.000031 * sin(8 * lonlat.y);
 	double T = sx / cx, T2 = T * T;

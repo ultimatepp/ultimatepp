@@ -227,7 +227,6 @@ void QTFEncodePara(String& qtf, const RichPara& p, const RichPara::Format& style
 			String data = object.Write();
 			const char *q = data.Begin();
 			const char *slim = data.End();
-			int n = 0;
 			qtf.Reserve(8 * data.GetLength() / 7);
 			if(object.IsText()) {
 				qtf << "`";

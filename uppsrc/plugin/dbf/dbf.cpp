@@ -121,7 +121,7 @@ static int StrBool(char c)
 }
 
 DbfStream::Field::Field(const char *_name, char type, byte width, byte decimal)
-: type(type), width(width), decimal(decimal), offset(0)
+: offset(0), type(type), width(width), decimal(decimal)
 {
 	if(_name) {
 		const char *p = reinterpret_cast<const char *>(memchr(_name, 0, 11));
@@ -462,7 +462,7 @@ bool DbfStream::StreamHeader(bool full)
 			}
 		}
 		if(fpt.IsOpen() && fpt.IsLoading()) { // read FPT header
-			int nextfree = fpt.Get32be();
+			// int nextfree = fpt.Get32be();
 			fpt_block_size = fpt.Get32be();
 			if(fpt_block_size <= 0 || fpt_block_size >= 1 << 24)
 				fpt.Close(); // has_memo = false;
@@ -958,7 +958,7 @@ Value DbfStream::GetItemMemo(int i, bool binary) const
 			if(pos >= fpt.GetSize())
 				return Value();
 			fpt.Seek(pos);
-			int fieldtype = fpt.Get32be();
+			// int fieldtype = fpt.Get32be();
 			int len = fpt.Get32be();
 			if(len > 0) {
 				StringBuffer outbuf(len);

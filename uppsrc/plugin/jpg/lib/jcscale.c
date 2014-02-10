@@ -20,7 +20,7 @@ METHODDEF(void)
 simple_downscale(j_compress_ptr cinfo,
 		 JSAMPROW input_buf, JSAMPROW output_buf, JDIMENSION width)
 {
-  j_lossless_c_ptr losslsc = (j_lossless_c_ptr) cinfo->codec;
+//  j_lossless_c_ptr losslsc = (j_lossless_c_ptr) cinfo->codec;
   unsigned xindex;
 
   for (xindex = 0; xindex < width; xindex++)

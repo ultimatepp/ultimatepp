@@ -145,7 +145,7 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
   c_diff_ptr diff = (c_diff_ptr) losslsc->diff_private;
   JDIMENSION MCU_col_num;	/* index of current MCU within row */
   JDIMENSION MCU_count;		/* number of MCUs encoded */
-  JDIMENSION last_MCU_col = cinfo->MCUs_per_row - 1;
+//  JDIMENSION last_MCU_col = cinfo->MCUs_per_row - 1;
   JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
   int comp, ci, yoffset, samp_row, samp_rows, samps_across;
   jpeg_component_info *compptr;

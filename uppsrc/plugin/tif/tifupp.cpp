@@ -114,6 +114,7 @@ extern "C" void _TIFFmemset(void* p, int v, tsize_t c)           { memset(p, v, 
 extern "C" void _TIFFmemcpy(void* d, const tdata_t s, tsize_t c) { memcpy(d, s, c); }
 extern "C" int  _TIFFmemcmp(const tdata_t p1, const tdata_t p2, tsize_t c) { return memcmp(p1, p2, c); }
 
+/*
 static void Blt2to4(byte *dest, const byte *src, unsigned count)
 {
 	byte b;
@@ -162,7 +163,7 @@ static void Blt2to4(byte *dest, const byte *src, unsigned count)
 		break;
 	}
 }
-
+*/
 static void BltPack11(byte *dest, const byte *src, byte bit_shift, unsigned count)
 {
 	if(bit_shift == 0)
@@ -406,7 +407,7 @@ static void BltPack44(byte *dest, const byte *src, bool shift, unsigned count)
 			dest[c2] = (dest[c2] & 15) | (src[c2] & 0xF0);
 	}
 }
-
+/*
 static void BltPack4(byte *dest, const byte *src, unsigned count)
 {
 #define BLT_PACK_4_4(o) dest[(o)] = src[4 * (o)]; dest[(o) + 1] = src[4 * (o) + 4]; \
@@ -438,7 +439,7 @@ static void BltPack4(byte *dest, const byte *src, unsigned count)
 	if(count & 1)
 		dest[0] = src[0];
 }
-
+*/
 static tsize_t ReadStream(thandle_t fd, tdata_t buf, tsize_t size)
 {
 	Stream *stream = reinterpret_cast<Stream *>(fd);
@@ -654,7 +655,7 @@ static void putContig1(TIFFRGBAImage *img, tif_uint32 *cp,
 	tif_int32 fromskew, tif_int32 toskew, byte *pp)
 {
 	TIFRaster::Data *helper = (TIFRaster::Data *)img;
-	Size size = helper->size;
+//	Size size = helper->size;
 	int iw = toskew + w;
 	bool keep_y = (iw >= 0);
 	int x8 = x >> 3;
@@ -674,7 +675,7 @@ static void putContig2(TIFFRGBAImage *img, tif_uint32 *cp,
 	tif_int32 fromskew, tif_int32 toskew, byte *pp)
 {
 	TIFRaster::Data *helper = (TIFRaster::Data *)img;
-	Size size = helper->size;
+//	Size size = helper->size;
 	int iw = toskew + w;
 	bool keep_y = (iw >= 0);
 	int x4 = x >> 2;
@@ -694,7 +695,7 @@ static void putContig4(TIFFRGBAImage *img, tif_uint32 *cp,
 	tif_int32 fromskew, tif_int32 toskew, byte *pp)
 {
 	TIFRaster::Data *helper = (TIFRaster::Data *)img;
-	Size size = helper->size; //dest.GetSize();
+//	Size size = helper->size; //dest.GetSize();
 	int iw = toskew + w;
 	bool keep_y = (iw >= 0);
 	int x2 = x >> 1;
@@ -715,7 +716,7 @@ static void putContig8(TIFFRGBAImage *img, tif_uint32 *cp,
 	tif_int32 fromskew, tif_int32 toskew, byte *pp)
 {
 	TIFRaster::Data *helper = (TIFRaster::Data *)img;
-	Size size = helper->size;
+//	Size size = helper->size;
 	int iw = toskew + w;
 	bool keep_y = (iw >= 0);
 //	byte *dest = helper->dest.GetUpScan(y) + x;
@@ -731,7 +732,7 @@ static void putContigRGB(TIFFRGBAImage *img, tif_uint32 *cp, tif_uint32 x, tif_u
 	tif_int32 fromskew, tif_int32 toskew, byte *pp)
 {
 	TIFRaster::Data *helper = (TIFRaster::Data *)img;
-	Size size = helper->size;
+//	Size size = helper->size;
 	int iw = toskew + w;
 	int wh = w * h;
 	if(wh > helper->buffer.GetCount())
@@ -747,7 +748,7 @@ static void putSeparate(TIFFRGBAImage *img, tif_uint32 *cp,
 	tif_int32 fromskew, tif_int32 toskew, byte *r, byte *g, byte *b, byte *a)
 {
 	TIFRaster::Data *helper = (TIFRaster::Data *)img;
-	Size size = helper->size;
+//	Size size = helper->size;
 	int wh = w * h;
 	if(wh > helper->buffer.GetCount())
 		helper->buffer.SetCount(wh);
@@ -813,7 +814,7 @@ void TIFRaster::Data::Warning(const char *fn, const char *fmt, va_list ap)
 	if(!memcmp(fn, "tiff@", 5) && IsDigit(fn[5])) {
 		int addr = stou(fn + 5);
 		if(addr != -1 && addr != 0) {
-			TIFRaster::Data& wrapper = *reinterpret_cast<TIFRaster::Data *>(addr);
+//			TIFRaster::Data& wrapper = *reinterpret_cast<TIFRaster::Data *>(addr);
 			LLOG("TIF warning: " << VFormat(fmt, ap));
 //			RLOG("TiffWrapper::Warning: " << wrapper.errors);
 		}
@@ -825,7 +826,7 @@ void TIFRaster::Data::Error(const char *fn, const char *fmt, va_list ap)
 	if(!memcmp(fn, "tiff@", 5) && IsDigit(fn[5])) {
 		int addr = stou(fn + 5);
 		if(addr != -1 && addr != 0) {
-			Data& wrapper = *reinterpret_cast<Data *>(addr);
+//			Data& wrapper = *reinterpret_cast<Data *>(addr);
 			LLOG("TIF error: " << VFormat(fmt, ap));
 //			RLOG("TiffWrapper::Error: " << wrapper.errors);
 		}

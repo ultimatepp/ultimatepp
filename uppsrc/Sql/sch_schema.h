@@ -7,8 +7,18 @@
 #define ATTRIBUTE(x, d)                                     schema.Attribute(x, d);
 #define TABLE_SUFFIX(s)                                     schema.TableSuffix(s);
 
+#ifdef __GNUC__
+
+#define TYPE(x)\
+static void SCHEMA_##x(SqlSchema& schema) __attribute__((unused)); \
+static void SCHEMA_##x(SqlSchema& schema) {
+
+#else
+
 #define TYPE(x)\
 static void SCHEMA_##x(SqlSchema& schema) {
+
+#endif
 
 #define TYPE_I(x, b1)\
 static void SCHEMA_##x(SqlSchema& schema) { SCHEMA_##b1(schema);
@@ -44,6 +54,10 @@ void TABLE_##x(SqlSchema& schema) { schema.Table(#x); SCHEMA_##x(schema); schema
 #define SCHEMA(x, d)                                        schema.Object(x, d);
 #define CONFIG(x, d)                                        schema.Config(x, d);
 #define UPGRADE(x)                                          schema.Upgrade(x);
+
+#ifdef __GNUC__
+static void All_Tables(SqlSchema& schema) __attribute__((unused));
+#endif
 
 static void All_Tables(SqlSchema& schema) {
 

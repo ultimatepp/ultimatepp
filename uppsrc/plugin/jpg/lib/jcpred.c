@@ -80,7 +80,8 @@ METHODDEF(void) start_pass
 	    reset_predictor(cinfo, ci); \
 	    restart = TRUE; \
 	  } \
-	}
+	} \
+	(void)restart;
 
 
 /*
@@ -117,7 +118,8 @@ METHODDEF(void) start_pass
 	if (cinfo->restart_interval) { \
 	  if (--pred->restart_rows_to_go[ci] == 0) \
 	    reset_predictor(cinfo, ci); \
-	}
+	} \
+	(void)Rc;(void)Ra;
 
 
 /*
@@ -259,8 +261,8 @@ reset_predictor (j_compress_ptr cinfo, int ci)
 METHODDEF(void)
 start_pass (j_compress_ptr cinfo)
 {
-  j_lossless_c_ptr losslsc = (j_lossless_c_ptr) cinfo->codec;
-  c_pred_ptr pred = (c_pred_ptr) losslsc->pred_private;
+//  j_lossless_c_ptr losslsc = (j_lossless_c_ptr) cinfo->codec;
+//  c_pred_ptr pred = (c_pred_ptr) losslsc->pred_private;
   int ci;
 
   /* Check that the restart interval is an integer multiple of the number

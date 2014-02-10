@@ -85,7 +85,8 @@
 	  Rb = GETJSAMPLE(prev_row[xindex]); \
 	  Ra = (diff_buf[xindex] + PREDICTOR) & 0xFFFF; \
 	  undiff_buf[xindex] = Ra; \
-	}
+	} \
+	(void)Rc;
 
 
 /*

@@ -928,7 +928,7 @@ dword NanoStrings::Add(const String& s)
 		}
 	}
 	
-	if(over.GetCount() >= 0xc0000000)
+	if(over.GetCount() >= 0x70000000)
 		Panic("NanoStrings: Out of addressing space");
 	dword ws = 0xc0000000 | over.GetCount();
 	over.Add(s).Shrink();
