@@ -818,6 +818,23 @@ void OCI8Connection::GetColumn(int i, String& s) const {
 	}
 	const Item& c = column[i];
 	if(c.type == SQLT_BLOB || c.type == SQLT_CLOB) {
+		if (sizeof(int) < sizeof(uintptr_t)){ // CPU_64
+			int64 handle;
+			GetColumn(i, handle);
+			if(!IsNull(handle)) {
+				if(c.type == SQLT_CLOB && session->utf8_session) {
+					OracleClob clob(*session, handle);
+					s = FromUnicode(clob.Read());
+				}
+				else {
+					OracleBlob blob(*session, handle);
+					s = LoadStream(blob);
+				}
+			}
+			else
+				s = Null;
+			return;
+		}
 		int handle;
 		GetColumn(i, handle);
 		if(!IsNull(handle)) {
@@ -851,6 +868,24 @@ void OCI8Connection::GetColumn(int i, WString& ws) const {
 	}
 	const Item& c = column[i];
 	if(c.type == SQLT_BLOB || c.type == SQLT_CLOB) {
+		if (sizeof(int) < sizeof(uintptr_t)){ // CPU_64
+			int64 handle;
+			GetColumn(i, handle);
+			if(!IsNull(handle)) {
+				if(session->utf8_session && c.type == SQLT_CLOB) {
+					OracleClob clob(*session, handle);
+					ws = clob.Read();
+				}
+				else {
+					OracleBlob blob(*session, handle);
+					String s = LoadStream(blob);
+					ws = s.ToWString();
+				}
+			}
+			else
+				ws = Null;
+			return;
+		}
 		int handle;
 		GetColumn(i, handle);
 		if(!IsNull(handle)) {
