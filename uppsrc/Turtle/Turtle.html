@@ -471,10 +471,12 @@ canvas.onmouseup = function(event)
 	event.preventDefault();
 }
 
-canvas.onwheel = function(event)
+function MouseWheel(event)
 {
 	event_queue += "W " + event.deltaY + mouse_event(event);
 }
+
+canvas.addEventListener("wheel", MouseWheel); // IE9 needs addEventListener...
 
 document.onkeydown = function(event)
 {
