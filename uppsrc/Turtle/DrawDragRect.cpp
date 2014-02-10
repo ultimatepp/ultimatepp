@@ -16,7 +16,7 @@ void DrawDragLine(SystemDraw& w, bool horz, int x, int y, int len, int n, int an
 	if(len <= 0)
 		return;
 	for(int i = 0; i < n; i++) {
-		Ctrl::Put8(horz ? HORZDRAGLINE : VERTDRAGLINE);
+		Ctrl::Put8(horz ? Ctrl::HORZDRAGLINE : Ctrl::VERTDRAGLINE);
 		Ctrl::Put16(x + !horz * i);
 		Ctrl::Put16(y + horz * i);
 		Ctrl::Put16(len);

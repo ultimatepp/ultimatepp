@@ -86,6 +86,35 @@ private:
 	friend struct ImageSysData;
 
 public:
+	enum Command {
+		RECT = 0,
+		IMAGE = 1,
+		SETIMAGE = 2,
+		INVERTRECT = 3,
+		STD_CURSORIMAGE = 4,
+		SETCURSORIMAGE = 5,
+		MOUSECURSOR = 6,
+		DISABLESENDING = 7,
+		UPDATESERIAL = 8,
+	
+		IMAGEPP = 9,
+		IMAGENP = 10,
+		IMAGEPN = 11,
+		IMAGENN = 12,
+	
+		RECTPP = 13,
+		RECTNP = 14,
+		RECTPN = 15,
+		RECTNN = 16,
+	
+		SETCARET = 17,
+		
+		HORZDRAGLINE = 18,
+		VERTDRAGLINE = 19,
+		
+		OPENLINK = 20,
+	};
+
 	static void Put8(int x)              { turtle_stream.SetDataFlag(); turtle_stream.Put(x); }
 	static void Put16(int x);
 	static void Put32(int x);

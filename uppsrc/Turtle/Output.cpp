@@ -48,7 +48,7 @@ void Ctrl::Put(const String& s)
 
 void Turtle_PutLink(const String& link)
 {
-	Ctrl::Put8(OPENLINK);
+	Ctrl::Put8(Ctrl::OPENLINK);
 	Ctrl::Put(link);
 }
 

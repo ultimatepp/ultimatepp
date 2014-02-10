@@ -27,7 +27,7 @@ void SystemDraw::ImageSysData::Init(const Image& m)
 	img = m;
 	handle = AllocImageHandle();
 	LLOG("SetImage " << handle << ", size: " << img.GetSize() << ", cache size: " << SystemDraw::cache.GetSize());
-	Ctrl::Put8(SETIMAGE);
+	Ctrl::Put8(Ctrl::SETIMAGE);
 	Ctrl::Put16(handle);
 	Ctrl::Put(img.GetSize());
 	Image um = Unmultiply(img);
@@ -69,7 +69,8 @@ void SystemDraw::PutImage(Point p, const Image& img, const Rect& src)
 	if(Rect(img.GetSize()) == src) {
 		Point dp = p - pos;
 		if(abs(dp.x) < 256 && abs(dp.y) < 256) {
-			Ctrl::Put8(dp.x < 0 ? dp.y < 0 ? IMAGENN : IMAGENP : dp.y < 0 ? IMAGEPN : IMAGEPP);
+			Ctrl::Put8(dp.x < 0 ? dp.y < 0 ? Ctrl::IMAGENN : Ctrl::IMAGENP
+			                    : dp.y < 0 ? Ctrl::IMAGEPN : Ctrl::IMAGEPP);
 			Ctrl::Put8(abs(dp.x));
 			Ctrl::Put8(abs(dp.y));
 			Ctrl::Put16(sd.handle);
@@ -78,7 +79,7 @@ void SystemDraw::PutImage(Point p, const Image& img, const Rect& src)
 			return;
 		}
 	}
-	Ctrl::Put8(IMAGE);
+	Ctrl::Put8(Ctrl::IMAGE);
 	Ctrl::Put16(sd.handle);
 	Ctrl::Put(p);
 	Ctrl::Put(src);

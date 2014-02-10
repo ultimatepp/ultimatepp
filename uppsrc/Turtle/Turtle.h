@@ -32,36 +32,6 @@ public:
 	TurtleStream() { Reset(); }
 };
 
-enum Command {
-	RECT = 0,
-	IMAGE = 1,
-	SETIMAGE = 2,
-	INVERTRECT = 3,
-	STD_CURSORIMAGE = 4,
-	SETCURSORIMAGE = 5,
-	MOUSECURSOR = 6,
-	DISABLESENDING = 7,
-	UPDATESERIAL = 8,
-
-	IMAGEPP = 9,
-	IMAGENP = 10,
-	IMAGEPN = 11,
-	IMAGENN = 12,
-
-	RECTPP = 13,
-	RECTNP = 14,
-	RECTPN = 15,
-	RECTNN = 16,
-
-	SETCARET = 17,
-	
-	HORZDRAGLINE = 18,
-	VERTDRAGLINE = 19,
-	
-	OPENLINK = 20,
-};
-
-
 class SystemDraw : public SDraw {
 public:
 	virtual void  PutImage(Point p, const Image& img, const Rect& src);
