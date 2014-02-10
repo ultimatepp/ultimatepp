@@ -32,6 +32,9 @@ public:
 	template <class T> XmlIO operator()(const char *tag, T& var);
 	template <class T> XmlIO operator()(const char *tag, const char *itemtag, T& var);
 
+	template <class T> XmlIO operator()(const char *tag, T& var, const T& def);
+	template <class T> XmlIO operator()(const char *tag, const char *itemtag, T& var, const T& def);
+
 	template <class T> XmlIO Attr(const char *id, T& var) {
 		if(IsLoading())
 			XmlAttrLoad(var, node.Attr(id));
@@ -86,6 +89,25 @@ template <class T> XmlIO XmlIO::operator()(const char *tag, T& var) {
 template <class T> XmlIO XmlIO::operator()(const char *tag, const char *itemtag, T& var) {
 	XmlIO n(*this, tag);
 	Xmlize(n, itemtag, var);
+	return *this;
+}
+
+template <class T> XmlIO XmlIO::operator()(const char *tag, T& var, const T& def)
+{
+	XmlIO n(*this, tag);
+	if(IsLoading() && n.Node().GetCount() == 0 && n.Node().GetAttrCount() == 0)
+		var = def;
+	else
+		Xmlize(n, var);
+	return *this;
+}
+
+template <class T> XmlIO XmlIO::operator()(const char *tag, const char *itemtag, T& var, const T& def)
+{
+	if(IsLoading() && n.Node().GetCount() == 0 && n.Node().GetAttrCount() == 0)
+		var = def;
+	else
+		Xmlize(n, itemtag, var);
 	return *this;
 }
 
