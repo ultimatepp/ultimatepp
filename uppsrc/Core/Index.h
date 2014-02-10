@@ -41,6 +41,7 @@ public:
 	bool  IsUnlinked(int i) const           { return hash[i] & UNSIGNED_HIBIT; }
 	void  Unlink(int i);
 	Vector<int> GetUnlinked() const;
+	bool  HasUnlinked() const				{ return unlinked >= 0; }
 
 	void  Remove(int i);
 	void  Remove(int i, int count);
@@ -142,6 +143,7 @@ public:
 	bool     IsUnlinked(int i) const         { return hash.IsUnlinked(i); }
 	Vector<int> GetUnlinked() const          { return hash.GetUnlinked(); }
 	void     Sweep();
+	bool     HasUnlinked() const             { return hash.HasUnlinked(); }
 
 	T&       Insert(int i, const T& k, unsigned h);
 	T&       Insert(int i, const T& k);

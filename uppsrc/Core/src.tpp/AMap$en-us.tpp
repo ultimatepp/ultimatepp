@@ -532,6 +532,10 @@ stay in AIndex but are ignored by any Find operations.&]
 [s2; Removes all unlinked elements from the container.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:AMap`:`:HasUnlinked`(`)const:%- [@(0.0.255) bool]_[* HasUnlinked]()_[@(0.0.255) const]&]
+[s2; Returns true if AMap has any unlinked elements.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:AMap`:`:Insert`(int`,const K`&`):%- [*@4 T][@(0.0.255) `&]_[* Insert]([@(0.0.255) int]_[*@3 i
 ], [@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k])&]
 [s2; Inserts an element with the specified key and default constructed 
