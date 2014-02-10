@@ -1,0 +1,5 @@
+#ifndef _TurtleIde_icpp_init_stub
+#define _TurtleIde_icpp_init_stub
+#include "Core/init"
+#include "CursorOverride/init"
+#endif

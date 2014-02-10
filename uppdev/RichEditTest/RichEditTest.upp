@@ -13,5 +13,6 @@ mainconfig
 	"" = "GUI X11",
 	"" = "GUI NOGTK",
 	"" = "GUI MT",
-	"" = "GUI USEMALLOC";
+	"" = "GUI USEMALLOC",
+	"" = "GUI";
 
