@@ -104,6 +104,7 @@ template <class T> XmlIO XmlIO::operator()(const char *tag, T& var, const T& def
 
 template <class T> XmlIO XmlIO::operator()(const char *tag, const char *itemtag, T& var, const T& def)
 {
+	XmlIO n(*this, tag);
 	if(IsLoading() && n.Node().GetCount() == 0 && n.Node().GetAttrCount() == 0)
 		var = def;
 	else
