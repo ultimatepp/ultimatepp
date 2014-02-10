@@ -49,6 +49,35 @@ void TestV(const T& x) {
 	ASSERT(data2.val == data.val);
 }
 
+template <class T>
+struct DefData {
+	T val;
+	T def;
+	
+	void Xmlize(XmlIO xml) {
+		xml("value", val, def);
+	}
+};
+
+template <class T>
+void TestDef(const T& x, const T& def) {
+	Test(x);
+	LOG("-----");
+	DefData<T> data;
+	data.def = def;
+	LoadFromXML(data, "<empty/>");
+	DLOG("Retrieved default value: " << data.val);
+	ASSERT(data.val == def);
+	data.val = x;
+	String xml = StoreAsXML(data, "XmlizeValue");
+	LOG("Value Xml: ");
+	LOG(xml);
+	DefData<T> data2;
+	ASSERT(LoadFromXML(data2, xml));
+	LOG("Loaded: " << data2.val);
+	ASSERT(data2.val == data.val);
+}
+
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
@@ -81,6 +110,11 @@ CONSOLE_APP_MAIN
 	TestV(Rectf(23, 12, 56, 88));
 
 	TestV(Magenta());
+	
+	TestDef(Magenta(), Blue());
+//	TestDef(String("Hello"), String("Hi"));
+	TestDef(3.14, 2.78);
+	TestDef(123, 321);
 	
 	LOG("*************** OK");
 }
