@@ -71,7 +71,7 @@ String CalcTypeNameConvert::Format(const char *raw_name)
 
 Value CalcType<double>::ToValue(double t)
 {
-	if(IsNan(t))
+	if(IsNaN(t))
 		throw Exc(CalcNanError());
 	if(IsInf(t))
 		throw Exc(CalcInfError());
