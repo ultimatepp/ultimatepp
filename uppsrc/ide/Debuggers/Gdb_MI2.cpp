@@ -116,6 +116,7 @@ bool Gdb_MI2::RunTo()
 	Run();
 	if(df)
 		disas.SetFocus();
+	
 	return true;
 }
 
@@ -154,6 +155,7 @@ void Gdb_MI2::Run()
 		ReadGdb(false);
 	}
 	Unlock();
+
 	if(stopped)
 		CheckStopReason();
 		
@@ -167,6 +169,8 @@ void Gdb_MI2::AsyncBrk()
 	// send an interrupt command to all running threads
 	StopAllThreads();
 	
+	dataSynced = false;
+
 	// gdb usually returns to command prompt instantly, BEFORE
 	// giving out stop reason, which we need. So, we wait some
 	// milliseconds and re-read (non blocking) GDB output to get it
@@ -196,18 +200,33 @@ bool Gdb_MI2::IsFinished()
 
 bool Gdb_MI2::Tip(const String& exp, CodeEditor::MouseTip& mt)
 {
+/*
 	// quick exit
 	if(exp.IsEmpty() || !dbg)
 		return false;
 
 	int idx = localVarNames.Find(exp);
+	String nam, val;
 	if(idx < 0)
-		return false;
+	{
+		idx = thisNames.Find(exp);
+		if(idx < 0)
+			return false;
+		nam = thisFullNames[idx];
+		val = thisValues[idx];
+	}
+	else
+	{
+		nam = exp;
+		val = localVarValues[idx];
+	}
 
 	mt.display = &StdDisplay();
-	mt.value = exp + "=" + localVarValues[idx];
+	mt.value = nam + "=" + val;
 	mt.sz = mt.display->GetStdSize(String(mt.value) + "X");
 	return true;
+*/
+return false;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -249,7 +268,6 @@ Gdb_MI2::Gdb_MI2()
 	autos.NoHeader();
 	autos.AddColumn("", 1);
 	autos.AddColumn("", 10);
-	autos.AddColumn("", 3);
 	autos.WhenLeftDouble = THISBACK1(onExploreExpr, &autos);
 	autos.EvenRowColor();
 	autos.OddRowColor();
@@ -257,15 +275,20 @@ Gdb_MI2::Gdb_MI2()
 	locals.NoHeader();
 	locals.AddColumn("", 1);
 	locals.AddColumn("", 10);
-	locals.AddColumn("", 3);
 	locals.WhenLeftDouble = THISBACK1(onExploreExpr, &locals);
 	locals.EvenRowColor();
 	locals.OddRowColor();
 
+	members.NoHeader();
+	members.AddColumn("", 3);
+	members.AddColumn("", 10);
+	members.WhenLeftDouble = THISBACK1(onExploreExpr, &members);
+	members.EvenRowColor();
+	members.OddRowColor();
+
 	watches.NoHeader();
 	watches.AddColumn("", 1).Edit(watchedit);
 	watches.AddColumn("", 10);
-	watches.AddColumn("", 3);
 	watches.Inserting().Removing();
 	watches.WhenLeftDouble = THISBACK1(onExploreExpr, &watches);
 	watches.EvenRowColor();
@@ -293,6 +316,7 @@ Gdb_MI2::Gdb_MI2()
 	Add(tab.SizePos());
 	tab.Add(autos.SizePos(), "Autos");
 	tab.Add(locals.SizePos(), t_("Locals"));
+	tab.Add(members.SizePos(), t_("This"));
 	tab.Add(watches.SizePos(), t_("Watches"));
 	tab.Add(explorerPane.SizePos(), t_("Explorer"));
 	
@@ -323,6 +347,7 @@ Gdb_MI2::Gdb_MI2()
 	stopped = false;
 	
 	periodic.Set(-50, THISBACK(Periodic));
+	dataSynced = false;
 }
 
 Gdb_MI2::~Gdb_MI2()
@@ -816,11 +841,15 @@ void Gdb_MI2::StopAllThreads(void)
 	// reselect current thread as it was before stopping all others
 	if(current != "")
 		MICmd("thread-select " + current);
+
 }
 		
 // check for stop reason
 void Gdb_MI2::CheckStopReason(void)
 {
+	// data must be synced on stop...
+	dataSynced = false;
+
 	// we need to store stop reason BEFORE interrupting all other
 	// threads, otherwise it'll be lost
 	MIValue stReason = stopReason;
@@ -1079,42 +1108,146 @@ void Gdb_MI2::UpdateLocalVars(void)
 	}
 }
 
+// deeply explore a value
+// taking its members and skipping types
+// WARNING, it APPENDS results to given arrays
+void Gdb_MI2::ExploreValueDeep(String baseName, MIValue const &val, Vector<String> &fullNames, Vector<String> &values) const
+{
+	// if value is a string, just append baseName and value to result
+	if(val.IsString())
+	{
+		fullNames.Add(baseName);
+		values.Add(val.ToString());
+	}
+	// otherwise, if value is a tuple, recursively add all subvalues
+	else if(val.IsTuple())
+	{
+		for(int iVal = 0; iVal < val.GetCount(); iVal++)
+		{
+			String name = val.GetKey(iVal);
+			if(!name.StartsWith("<"))
+				name = baseName + '.' + name;
+			else
+				name = baseName;
+			ExploreValueDeep(name, val.Get(iVal), fullNames, values);
+		}
+	}
+}
+
 // update 'this' inspector data
 void Gdb_MI2::UpdateThis(void)
 {
 /*
-	MIValue thisVal = MICmd("data-evaluate-expression *this");
-	RLOG(thisVal.Dump());
+	thisNames.Clear();
+	thisExpressions.Clear();
+	thisValues.Clear();
+
+	VarItem v = EvalGdb("*this");
+	v.shortExpression = ".";
+
+	thisNames.Add(v.shortExpression);
+	thisExpressions.Add(v.evaluableExpression);
+	thisValues.Add(v.value);
+	
+	Vector<VarItem> vv;
+	if(v.kind == VarItem::SIMPLE)
+		vv = GetChildren(v);
+	else
+		vv = GetChildren(v, 0, 10);
+	
+	for(int iChild = 0; iChild < vv.GetCount(); iChild++)
+	{
+		VarItem &v = vv[iChild];
+		thisNames.Add(v.shortExpression);
+		thisExpressions.Add(v.evaluableExpression);
+		thisValues.Add(v.value);
+	}
 */
+
+	thisNames.Clear();
+	thisExpressions.Clear();
+	thisValues.Clear();
+
+	Vector<String>names, values;
+
+	MIValue thisVal = MICmd("data-evaluate-expression *this");
+
+	if(!thisVal.IsTuple())
+		return;
+	if(thisVal.Find("value") >= 0)
+	{
+		// weird but the value is quoted, so must be parsed again...
+		MIValue const &tup = thisVal.Get("value");
+		if(!tup.IsString())
+			return;
+		MIValue s(tup.ToString());
+		s.PackNames();
+		TypeSimplify(s);
+		ExploreValueDeep("", s, names, values);
+	}
+	else if(thisVal.Find("variables") >= 0)
+	{
+		MIValue &arr = thisVal.Get("variables");
+
+		if(!arr.IsArray())
+			return;
+		for(int iVal = 0; iVal < arr.GetCount(); iVal++)
+		{
+			MIValue &val = arr[iVal];
+			if(!val.IsTuple() || val.Find("name") < 0 || val.Find("value") < 0)
+				continue;
+			MIValue &s = val.Get("value");
+			s.PackNames();
+			TypeSimplify(s);
+			val.PackNames();
+			ExploreValueDeep("." + val.Get("name").ToString(), s, thisExpressions, thisValues);
+		}
+	}
+	
+	// build short names from full names
+	for(int iName = 0; iName < thisExpressions.GetCount(); iName++)
+	{
+		String const &nam = thisExpressions[iName];
+		String shortName;
+		int pos = nam.ReverseFind('.');
+		if(pos < 0)
+			shortName = nam;
+		else
+			shortName = nam.Mid(pos + 1);
+		thisNames.Add(shortName);
+	}
+	
+	// here the 'this' object is dumped inside the 2 vectors 'names' and 'values'
+	// we need to do some cleanup, removing empty values, class names and so on
+	// we shall also construct the 'thisNames' vector containing just the last name path
+	// used for tooltip
+	for(int iName = 0; iName < names.GetCount(); iName++)
+	{
+		String const &name = names[iName];
+		if(name.IsEmpty())
+			continue;
+		if(name == "<No data fields>")
+			continue;
+		if(name.StartsWith("_vptr."))
+			continue;
+		
+		String const &val = values[iName];
+		if(val.IsEmpty())
+			continue;
+		
+		String shortName;
+		int dotPos = name.ReverseFind('.');
+		if(dotPos < 0)
+			shortName = name;
+		else
+			shortName = name.Mid(dotPos + 1);
+		
+		thisNames.Add(shortName);
+		thisExpressions.Add(name);
+		thisValues.Add(val);
+	}
 }
 		
-// sync watches treectrl
-void Gdb_MI2::SyncLocals()
-{
-	VectorMap<String, String> prev = DataMap2(locals);
-	locals.Clear();
-
-	for(int iLoc = 0; iLoc < localVarNames.GetCount(); iLoc++)
-		locals.Add(localVarNames[iLoc], localVarValues[iLoc]);
-	MarkChanged2(prev, locals);
-}
-
-// sync watches treectrl
-void Gdb_MI2::SyncWatches()
-{
-	// re-fill the control
-	VectorMap<String, String> prev = DataMap2(watches);
-	for(int i = 0; i < watches.GetCount(); i++)
-	{
-		MIValue res = MICmd("data-evaluate-expression \"" + watches.Get(i, 0).ToString() + "\"");
-		if(res.IsError() || res.IsEmpty())
-			watches.Set(i, 2, t_("<can't evaluate expression>"));
-		else
-			watches.Set(i, 2, res["value"].ToString());
-	}
-	MarkChanged2(prev, watches);
-}
-
 // sync auto vars treectrl
 void Gdb_MI2::SyncAutos()
 {
@@ -1149,9 +1282,49 @@ void Gdb_MI2::SyncAutos()
 	MarkChanged2(prev, autos);
 }
 
+// sync watches treectrl
+void Gdb_MI2::SyncLocals()
+{
+	VectorMap<String, String> prev = DataMap2(locals);
+	locals.Clear();
+
+	for(int iLoc = 0; iLoc < localVarNames.GetCount(); iLoc++)
+		locals.Add(localVarNames[iLoc], localVarValues[iLoc]);
+	MarkChanged2(prev, locals);
+}
+
+void Gdb_MI2::SyncMembers(void)
+{
+	VectorMap<String, String> prev = DataMap2(members);
+	members.Clear();
+
+	for(int iMem = 0; iMem < thisNames.GetCount(); iMem++)
+		members.Add(thisExpressions[iMem], thisValues[iMem]);
+	MarkChanged2(prev, members);
+}
+
+// sync watches treectrl
+void Gdb_MI2::SyncWatches()
+{
+	// re-fill the control
+	VectorMap<String, String> prev = DataMap2(watches);
+	for(int i = 0; i < watches.GetCount(); i++)
+	{
+		MIValue res = MICmd("data-evaluate-expression \"" + watches.Get(i, 0).ToString() + "\"");
+		if(res.IsError() || res.IsEmpty())
+			watches.Set(i, 2, t_("<can't evaluate expression>"));
+		else
+			watches.Set(i, 2, res["value"].ToString());
+	}
+	MarkChanged2(prev, watches);
+}
+
 // sync data tabs, depending on which tab is shown
 void Gdb_MI2::SyncData()
 {
+	if(dataSynced)
+		return;
+	
 	// updates stored local variables
 	// those are needed for Autos, Locals and Tooltips
 	UpdateLocalVars();
@@ -1160,20 +1333,12 @@ void Gdb_MI2::SyncData()
 	// also used for tooltips and 'this' pane page
 	UpdateThis();
 	
-	switch(tab.Get())
-	{
-		case 0:
-			SyncAutos();
-			break;
-			
-		case 1:
-			SyncLocals();
-			break;
-			
-		case 2:
-			SyncWatches();
-			break;
-	}
+	SyncAutos();
+	SyncLocals();
+	SyncMembers();
+	SyncWatches();
+	
+	dataSynced = true;
 }
 
 // watches arrayctrl key handling
@@ -1486,7 +1651,7 @@ void Gdb_MI2::onExploreExpr(ArrayCtrl *what)
 	doExplore(expr, "", false, true);
 	
 	// activate explorer tab
-	tab.Set(3);
+	tab.Set(4);
 }
 
 void Gdb_MI2::onExplorerChild()
@@ -1590,8 +1755,8 @@ bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdli
 		MICmd("gdb-set args " + cmdline);
 	
 	// enable pretty printing
-	SendPrettyPrinters();
-	MICmd("enable-pretty-printing");
+//	SendPrettyPrinters();
+//	MICmd("enable-pretty-printing");
 
 	firstRun = true;
 

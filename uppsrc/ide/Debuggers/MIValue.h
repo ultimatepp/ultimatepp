@@ -10,10 +10,14 @@ typedef enum { MIString, MIArray, MITuple } MIValueType;
 class MIValue : public Moveable<MIValue>
 {
 	private:
+		bool expect(String const &where, char exp, int i, String const &s);
+	
 		int ParsePair(String &name, MIValue &val, String const &s, int i = 0);
 		int ParseTuple(String const &s, int i = 0);
 		int ParseArray(String const &s, int i = 0);
 		int ParseString(String const &s, int i = 0);
+		int ParseAngle(String const &s, int i = 0);
+		int ParseUnquotedString(String const &s, int i = 0);
 		int ParseValue(String const &s, int i = 0);
 		int Parse(String const &s, int i = 0);
 
@@ -45,12 +49,25 @@ class MIValue : public Moveable<MIValue>
 		// simple accessors
 		int GetCount(void) const;
 		int Find(const char *key) const;
+		
 		MIValue &Get(int i);
+		MIValue const &Get(int i) const;
+		
 		MIValue &operator[](int i) { return Get(i); }
+		MIValue const &operator[](int i) const { return Get(i); }
+		
 		MIValue &Get(const char *s);
+		MIValue const &Get(const char *s) const;
+		
 		MIValue &operator[](const char *key) { return Get(key); }
+		MIValue const &operator[](const char *key) const { return Get(key); }
+
 		String &Get(void);
 		String const &Get(void) const;
+
+		// gets key by index for tuple values
+		String GetKey(int idx) const;
+
 		operator String&() { return Get(); }
 		operator const String &() const { return Get(); }
 		String &ToString(void) { return Get(); }
@@ -59,6 +76,9 @@ class MIValue : public Moveable<MIValue>
 		// tuple string member accessor with default value if not found
 		String Get(const char *key, const char *def) const;
 		String operator()(const char *key, const char *def) const  { return Get(key, def); }
+		
+		// setter for string (operator= starts parser...)
+		void Set(String const &s);
 		
 		// some type checking
 		bool IsArray(void) const { return type == MIArray; }
@@ -73,6 +93,9 @@ class MIValue : public Moveable<MIValue>
 		
 		// finds breakpoint data given file and line
 		MIValue &FindBreakpoint(String const &file, int line);
+		
+		// packs names inside tuples -- to make type recognition easy
+		void PackNames(void);
 };
 
 #endif

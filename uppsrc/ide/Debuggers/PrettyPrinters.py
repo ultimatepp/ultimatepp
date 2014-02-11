@@ -13,6 +13,20 @@ def dump(obj):
 			newobj[attr]=dump(newobj[attr])
 	return newobj
 
+#floating pointer printer
+class FloatPrinter(object):
+	"Print a floating point number with fixed DOT separator"
+
+	def __init__(self, val):
+		self.val = val
+
+	def to_string(self):
+		return "%.15f" % self.val
+
+	def display_hint(self):
+		return 'String'
+
+
 # Upp::String printer
 class UppStringPrinter(object):
 	"Print an Upp::String"
@@ -60,24 +74,19 @@ class UppVectorPrinter(object):
 		def __init__ (self, val):
 			self.val = val
 			self.item = val['vector']
-			self.finish = self.item + val['items']
-			self.count = 0
+			self.count = val['items']
+			self.idx = -1
 
 		def __iter__(self):
 			return self
 
-		def next(self):
-			count = self.count
-			self.count = self.count + 1
-			if count == 0:
-				return ('.items', self.val['items'])
-			if count == 1:
-				return ('.alloc', self.val['alloc'])
-			if self.item == self.finish:
+		def __next__(self):
+			self.idx += 1
+			if self.idx >= self.count:
 				raise StopIteration
 			elt = self.item.dereference()
-			self.item = self.item + 1
-			return ('[%d]' % (count-2), elt)
+			self.item += 1
+			return ('[%d]' % self.idx, elt)
 
 	def __init__(self, typename, val):
 		self.typename = typename
@@ -87,11 +96,10 @@ class UppVectorPrinter(object):
 		return self._iterator(self.val)
 
 	def to_string(self):
-		start = 0
-		finish = self.val['items']
-		end = self.val['alloc']
-		return ('%s count %d alloc %d'
-			% (self.typename, int (finish - start), int (end - start)))
+		count = self.val['items']
+		alloc = self.val['alloc']
+		return ('<%s> = {<No data fields>}, count = %d, alloc = %d, elements'
+			% (self.typename, count, alloc))
 
 	def display_hint(self):
 		return 'array'
@@ -103,24 +111,19 @@ class UppArrayPrinter(object):
 		def __init__ (self, val):
 			self.val = val['vector']
 			self.item = self.val['vector']
-			self.finish = self.item + self.val['items']
-			self.count = 0
+			self.count = self.val['items']
+			self.idx = -1
 
 		def __iter__(self):
 			return self
 
-		def next(self):
-			count = self.count
-			self.count = self.count + 1
-			if count == 0:
-				return ('.items', self.val['items'])
-			if count == 1:
-				return ('.alloc', self.val['alloc'])
-			if self.item == self.finish:
+		def __next__(self):
+			self.idx += 1
+			if self.idx >= self.count:
 				raise StopIteration
 			elt = self.item.dereference().dereference()
-			self.item = self.item + 1
-			return ('[%d]' % (count-2), elt)
+			self.item += + 1
+			return ('[%d]' % self.idx, elt)
 
 	def __init__(self, typename, val):
 		self.typename = typename
@@ -130,34 +133,99 @@ class UppArrayPrinter(object):
 		return self._iterator(self.val)
 
 	def to_string(self):
-		start = 0
-		finish = self.val['vector']['items']
-		end = self.val['vector']['alloc']
-		return ('%s count %d alloc %d'
-			% (self.typename, int (finish - start), int (end - start)))
+		count = self.val['vector']['items']
+		alloc = self.val['vector']['alloc']
+		return ('<%s> = {<No data fields>}, count = %d, alloc = %d, elements'
+			% (self.typename, count, alloc))
 
 	def display_hint(self):
 		return 'array'
 
-# Upp::VectorMap and ArrayMap printer
-class UppMapPrinter(object):
-	"Print an Upp::VectorMap or ArrayMap"
+# Upp::VectorMap printer
+class UppVectorMapPrinter(object):
+	"Print an Upp::VectorMap"
+	class _iterator:
+		def __init__ (self, val):
+			self.val = val
+			self.key = val['key']['key']['vector']
+			self.value = val['value']['vector']
+			self.count = val['value']['items']
+			self.idx = -1
+
+		def __iter__(self):
+			return self
+
+		def __next__(self):
+			self.idx += 1
+			if self.idx >= self.count * 2:
+				raise StopIteration
+			if self.idx & 1:
+				aValue = self.value.dereference()
+				self.value += 1
+				return ('value', str(aValue))
+			else:
+				aKey = self.key.dereference()
+				self.key += 1
+				return ('key', str(aKey))
 
 	def __init__(self, typename, val):
 		self.typename = typename
 		self.val = val
 
 	def children(self):
-		return [('.keys', self.val['key']), ('.values', self.val['value'])].__iter__()
+		return self._iterator(self.val)
 
 	def to_string(self):
 		count = self.val['key']['key']['items']
 		alloc = self.val['key']['key']['alloc']
-		return ('%s count %d alloc %d'
+		return ('<%s> = {<No data fields>}, count = %d, alloc = %d, elements'
 			% (self.typename, count, alloc))
 
 	def display_hint(self):
-		return 'array'
+		return 'map'
+
+# Upp::ArrayMap printer
+class UppArrayMapPrinter(object):
+	"Print an Upp::ArrayMap"
+	class _iterator:
+		def __init__ (self, val):
+			self.val = val
+			self.key = val['key']['key']['vector']
+			self.value = val['value']['vector']['vector']
+			self.count = val['value']['vector']['items']
+			self.idx = -1
+
+		def __iter__(self):
+			return self
+
+		def __next__(self):
+			self.idx += 1
+			if self.idx >= self.count * 2:
+				raise StopIteration
+			if self.idx & 1:
+				aValue = self.value.dereference().dereference()
+				self.value += 1
+				return ('value', str(aValue))
+			else:
+				aKey = self.key.dereference()
+				self.key += 1
+				return ('key', str(aKey))
+
+	def __init__(self, typename, val):
+		self.typename = typename
+		self.val = val
+
+	def children(self):
+		return self._iterator(self.val)
+
+	def to_string(self):
+		count = self.val['key']['key']['items']
+		alloc = self.val['key']['key']['alloc']
+		return ('<%s> = {<No data fields>}, count = %d, alloc = %d, elements'
+			% (self.typename, count, alloc))
+
+	def display_hint(self):
+		return 'map'
 
 # Upp::Value printer
 class UppValuePrinter(object):
@@ -289,6 +357,9 @@ class UppRectPtrPrinter(object):
 def UppLookupFunction(val):
 	typeStr = str(val.type)
 	
+	if typeStr == 'double' or typeStr == 'float' or typeStr == 'long double':
+		return FloatPrinter(val)
+
 	if typeStr == 'Upp::String *':
 		return UppStringPtrPrinter(val)
 
@@ -372,11 +443,11 @@ def UppLookupFunction(val):
 
 	regex = re.compile("^Upp::VectorMap<.*>$")
 	if regex.match(lookup_tag):
-		return UppMapPrinter(lookup_tag, val)
+		return UppVectorMapPrinter(lookup_tag, val)
 
 	regex = re.compile("^Upp::ArrayMap<.*>$")
 	if regex.match(lookup_tag):
-		return UppMapPrinter(lookup_tag, val)
+		return UppArrayMapPrinter(lookup_tag, val)
 
 	regex = re.compile("^Upp::Vector<.*>$")
 	if regex.match(lookup_tag):
