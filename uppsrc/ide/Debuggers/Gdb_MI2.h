@@ -15,6 +15,64 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 {
 	private:
 
+		// item for a GDB variable
+		struct VarItem : Moveable<VarItem>
+		{
+			typedef enum { SIMPLE, ARRAY, MAP } VarKind;
+			
+			// error/empty state
+			bool error;
+			
+			// gdb internal variable name
+			String varName;
+
+			// short name
+			String shortExpression;
+			
+			// evaluable expression
+			String evaluableExpression;
+			
+			// type
+			String type;
+			
+			// kind
+			int kind;
+			
+			// value of expression for non-sequence types
+			String value;
+			
+			// children
+			int numChildren;
+			
+			// dynamic varobj--number of children must be queried
+			bool dynamic;
+			
+			// check if value contains an error
+			bool IsError(void) const;
+			bool operator!(void) const { return IsError(); }
+			operator bool() { return !IsError(); }
+
+			// constructor
+			VarItem();
+			
+			// copy (pick)
+			VarItem(VarItem pick_ &v);
+			VarItem &operator=(pick_ VarItem &v);
+		};
+		
+		// evaluate an expression usign gdb variables
+		VarItem EvalGdb(String const &expr);
+		
+		// remove GDB variable for item
+		void KillVariable(VarItem &v);
+		
+		// fetch variable children
+		Vector<VarItem> GetChildren(MIValue const &val, String const &prePath = "");
+
+		// fetch variable children
+		Vector<VarItem> GetChildren(VarItem &v, int minChild = -1, int maxChild = -1);
+		
+
 		// used to post and kill timed callbacks
 		TimeCallback timeCallback;
 	
@@ -42,12 +100,14 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		DropList frame;
 		DropList threadSelector;
 		TabCtrl tab;
-		ArrayCtrl  locals;
-		ArrayCtrl  watches;
-		ArrayCtrl  autos;
+
+		ArrayCtrl autos;
+		ArrayCtrl locals;
+		ArrayCtrl members;
+		ArrayCtrl watches;
+		ArrayCtrl explorer;
 
 		// explorer stuffs -- just starting
-		ArrayCtrl explorer;
 		EditString explorerExprEdit;
 		Button explorerBackBtn, explorerForwardBtn;
 		StaticRect explorerPane;
@@ -111,7 +171,7 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		
 		// 'this' variable inspection data
 		Index<String>thisNames;
-		Vector<String>thisFullNames;
+		Vector<String>thisExpressions;
 		Vector<String>thisValues;
 		
 		// stored autos expressions, values and types
@@ -120,7 +180,18 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		// update local variables on demand
 		void UpdateLocalVars(void);
 		
+		// deeply explore a value
+		// taking its members and skipping types
+		// WARNING, it APPENDS results to given arrays
+		void ExploreValueDeep(String baseName, MIValue const &val, Vector<String> &fullNames, Vector<String> &values) const;
+
+		// known types simplifier
+		// takes a MIValue from '-data-evaluate-expression' command and try
+		// do simplify diplay of known types
+		void TypeSimplify(MIValue &val);
+
 		// update 'this' inspector data
+		void UpdateThisDeep(VarItem &v);
 		void UpdateThis(void);
 		
 		// logs frame data on console
@@ -147,16 +218,20 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		// sync disassembler pane
 		void SyncDisas(MIValue &fInfo, bool fr);
 		
-		// sync local variables pane
-		void SyncLocals(void);
-
-		// sync watches treectrl
-		void SyncWatches();
-
 		// sync auto vars treectrl
 		void SyncAutos();
 
+		// sync local variables pane
+		void SyncLocals(void);
+
+		// sync 'this' members pane
+		void SyncMembers(void);
+		
+		// sync watches treectrl
+		void SyncWatches();
+
 		// sync data tabs, depending on which tab is shown
+		bool dataSynced;
 		void SyncData();
 
 		// sync ide display with breakpoint position

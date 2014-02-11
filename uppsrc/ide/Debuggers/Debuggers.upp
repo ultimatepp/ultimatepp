@@ -11,6 +11,8 @@ file
 	Gdb.lay,
 	MIValue.h,
 	MIValue.cpp,
+	TypeSimplify.cpp,
+	VarItem.cpp,
 	Terminal.cpp,
 	Disas.cpp,
 	Dbg.cpp,

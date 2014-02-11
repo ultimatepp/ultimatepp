@@ -13,22 +13,67 @@ static MIValue &ErrorMIValue(String const &msg)
 	return v;
 }
 
+bool MIValue::expect(String const &where, char exp, int i, String const &s)
+{
+	if(s[i] == exp)
+		return true;
+	int start = i - 30;
+	if(start < 0)
+		start = 0;
+	if(!s[i])
+		SetError(Format(where + " : Expected '%c', got end of string at pos %d around '%s'", exp, i, s.Mid(start, 60)));
+	else
+		SetError(Format(where + " : Expected '%c', got '%c' at pos %d in '%s'", exp, s[i], i, s.Mid(start, 60)));
+	return false;
+}
+
 int MIValue::ParsePair(String &name, MIValue &val, String const &s, int i)
 {
 	name.Clear();
 	val.Clear();
-	while(s[i] && (s[i] != '=') && s[i] != ']' && s[i] != '}')
-		name.Cat(s[i++]);
-	if(s[i] != '=')
+	while(s[i] && isspace(s[i]))
+		i++;
+	if(!s[i])
+	{
+		SetError("ParsePair:Unexpected end of string");
 		return i;
-	i++;
+	}
+	
+	// is starting wirh '[' or '{' take it as a value with empty name
+	if(s[i] == '{' || s[i] == '[')
+		name = "";
+	else
+	{
+		int aCount = 0;
+		while(s[i] && ((s[i] != '=' && s[i] != '}' && s[i] != ']') || aCount))
+		{
+			name.Cat(s[i]);
+			if(s[i] == '<')
+				aCount++;
+			else if(s[i] == '>')
+				aCount--;
+			i++;
+			
+			// skip blanks if not inside <>
+			if(!aCount)
+				while(s[i] && isspace(s[i]))
+					i++;
+		}
+		while(s[i] && isspace(s[i]))
+			i++;
+
+		if(s[i] != '=')
+			return i;
+		i++;
+
+		while(s[i] && isspace(s[i]))
+			i++;
+	}
 	switch(s[i])
 	{
 		case '"':
-		{
 			i = val.ParseString(s, i);
 			break;
-		}
 		break;
 		
 		case '[':
@@ -40,8 +85,10 @@ int MIValue::ParsePair(String &name, MIValue &val, String const &s, int i)
 			break;
 			
 		default:
-			NEVER();
+			i = val.ParseUnquotedString(s, i);
+			break;
 	}
+
 	return i;
 }
 
@@ -51,27 +98,26 @@ int MIValue::ParseTuple(String const &s, int i)
 	type = MITuple;
 	
 	// drop opening delimiter
-	if(s[i] != '{')
-	{
-		SetError(Format("Expected '{' at pos %d in '%s'", i, s));
+	if(!expect("ParseTuple", '{', i, s))
 		return s.GetCount();
-	}
 	i++;
 	while(s[i] && s[i] != '}')
 	{
+		while(s[i] && isspace(s[i]))
+			i++;
 		String name;
 		MIValue val;
 		i = ParsePair(name, val, s, i);
 		tuple.Add(name, val);
+		while(s[i] && isspace(s[i]))
+			i++;
 		if(s[i] == '}')
 			break;
-		if(s[i] != ',')
-		{
-			SetError(Format("Expected ',' at pos %d in '%s'", i, s));
+		if(!expect("ParseTuple", ',', i, s))
 			return s.GetCount();
-		}
 		i++;
 	}
+
 	return i + 1;
 }
 
@@ -81,14 +127,15 @@ int MIValue::ParseArray(String const &s, int i)
 	type = MIArray;
 	
 	// drop opening delimiter
-	if(s[i] != '[')
-	{
-		SetError(Format("Expected '[' at pos %d in '%s'", i, s));
+	if(!expect("ParseArray", '[', i, s))
 		return s.GetCount();
-	}
 	i++;
+	while(s[i] && isspace(s[i]))
+		i++;
 	while(s[i] && s[i] != ']')
 	{
+		while(s[i] && isspace(s[i]))
+			i++;
 		String name;
 		MIValue val;
 		if(s[i] == '[')
@@ -97,16 +144,17 @@ int MIValue::ParseArray(String const &s, int i)
 			i = val.ParseTuple(s, i);
 		else if(s[i] == '"')
 			i = val.ParseString(s, i);
+		else if(s[i] == '<')
+			i = val.ParseAngle(s, i);
 		else
 			i = ParsePair(name, val, s, i);
 		array.Add(val);
+		while(s[i] && isspace(s[i]))
+			i++;
 		if(s[i] == ']')
 			break;
-		if(s[i] != ',')
-		{
-			SetError(Format("Expected ',' at pos %d in '%s'", i, s));
+		if(!expect("ParseArray", ',', i, s))
 			return s.GetCount();
-		}
 		i++;
 	}
 	return i + 1;
@@ -118,11 +166,8 @@ int MIValue::ParseString(String const &s, int i)
 	type = MIString;
 
 	char c;
-	if(s[i] != '"')
-	{
-		SetError(Format("Expected '\"' at pos %d in '%s'", i, s));
+	if(!expect("ParseString", '"', i, s))
 		return s.GetCount();
-	}
 	i++;
 	while( (c = s[i++]) != 0)
 	{
@@ -134,11 +179,83 @@ int MIValue::ParseString(String const &s, int i)
 		else
 			string.Cat(c);
 	}
-	if(c != '"')
-	{
-		SetError(Format("Expected '\"' at pos %d in '%s'", i, s));
+	if(!expect("ParseString", '"', i-1, s))
 		return s.GetCount();
+
+	return i;
+}
+
+int MIValue::ParseAngle(String const &s, int i)
+{
+	Clear();
+	type = MIString;
+	int aCount = 0;
+
+	char c;
+	if(!expect("ParseAngle", '<', i, s))
+		return s.GetCount();
+	string = "<";
+	aCount++;
+	i++;
+	while( (c = s[i++]) != 0)
+	{
+		// verbatim if escaped
+		if(c == '\\')
+			string.Cat(s[i++]);
+		else if(c == '>' && !--aCount)
+			break;
+		else
+			string.Cat(c);
+		if(c == '<')
+			aCount++;
 	}
+	if(!expect("ParseAngle", '"', i-1, s))
+		return s.GetCount();
+	string.Cat('>');
+
+	return i;
+}
+
+// sigh
+static bool comma(String const &s, int i)
+{
+	if(s[i] != ',')
+		return false;
+	if(!i)
+		return true;
+	if(IsDigit(s[i-1]) && IsDigit(s[i+1]))
+		return false;
+	return true;
+}
+
+// we can hava a non-quoted string... so we read up
+// to terminator, which can be '}', ']' or ','
+int MIValue::ParseUnquotedString(String const &s, int i)
+{
+	String valStr;
+	int aCount = 0;
+	bool inQuote = false;
+	while(s[i] && ((s[i] != '=' && s[i] != '}' && s[i] != ']' && !comma(s, i)) || inQuote || aCount))
+	{
+		valStr.Cat(s[i]);
+		if(s[i] == '\\')
+		{
+			i++;
+			if(s[i])
+				valStr.Cat(s[i++]);
+			continue;
+		}
+		if(s[i] == '<' && !inQuote)
+			aCount++;
+		else if(s[i] == '>' && !inQuote)
+			aCount--;
+		else if(s[i] == '"' && !aCount)
+			inQuote = !inQuote;
+		i++;
+	}
+	type = MIString;
+	string = valStr;
+
 	return i;
 }
 
@@ -150,8 +267,12 @@ int MIValue::Parse(String const &s, int i)
 	// otherwise, it can be a sequence of pair name="value" which is stored like a tuple
 	// latter case is an example o bad design of MI interface....
 	Clear();
+	while(s[i] && isspace(s[i]))
+		i++;
 	if(s[i] == '"')
 		return ParseString(s, i);
+	else if(s[i] == '<')
+		return ParseAngle(s, i);
 	else if(s[i] == '[')
 		return ParseArray(s, i);
 	else if(s[i] == '{')
@@ -165,10 +286,13 @@ int MIValue::Parse(String const &s, int i)
 		{
 			i = ParsePair(name, val, s, i);
 			tuple.Add(name, val);
+			while(s[i] && isspace(s[i]))
+				i++;
 			if(s[i] != ',')
 				break;
 			i++;
 		}
+
 		return i;
 	}
 }
@@ -282,12 +406,34 @@ MIValue &MIValue::Get(int i)
 {
 	if(IsError())
 		return *this;
-	if(type != MIArray)
-		return ErrorMIValue("Not an Array value type");
-	return array[i];
+	if(type == MIArray)
+		return array[i];
+	if(type == MITuple)
+		return tuple[i];
+	return ErrorMIValue("Not an Array value type");
+}
+
+MIValue const &MIValue::Get(int i) const
+{
+	if(IsError())
+		return *this;
+	if(type == MIArray)
+		return array[i];
+	if(type == MITuple)
+		return tuple[i];
+	return ErrorMIValue("Not an Array value type");
 }
 
 MIValue &MIValue::Get(const char *key)
+{
+	if(type != MITuple)
+		return ErrorMIValue("Not a Tuple value type");
+	if(tuple.Find(key) < 0)
+		return ErrorMIValue(String("key '") + key + "' not found");
+	return tuple.Get(key);
+}
+
+MIValue const &MIValue::Get(const char *key) const
 {
 	if(type != MITuple)
 		return ErrorMIValue("Not a Tuple value type");
@@ -326,6 +472,21 @@ String MIValue::Get(const char *key, const char *def) const
 		return def;
 }
 
+// gets key by index for tuple values
+String MIValue::GetKey(int idx) const
+{
+	if(type != MITuple)
+		return  ErrorMIValue("Not a Tuple value type");
+	return tuple.GetKey(idx);
+}
+
+void MIValue::Set(String const &s)
+{
+	Clear();
+	type = MIString;
+	string = s;
+}
+
 // data dump
 String MIValue::Dump(int level) const
 {
@@ -333,11 +494,11 @@ String MIValue::Dump(int level) const
 	switch(type)
 	{
 		case MIString:
-			return spacer + string;
+			return spacer + "<STRING>" + string;
 
 		case MITuple:
 		{
-			String s = spacer + "{\n";
+			String s = spacer + "<TUPLE>" + "{\n";
 			level += 4;
 			spacer = String(' ', level);
 			for(int i = 0; i < tuple.GetCount(); i++)
@@ -364,7 +525,7 @@ String MIValue::Dump(int level) const
 
 		case MIArray:
 		{
-			String s = spacer + "[ \n";
+			String s = spacer + "<ARRAY>" + "[ \n";
 			level += 4;
 			for(int i = 0; i < array.GetCount(); i++)
 			{
@@ -400,4 +561,35 @@ MIValue &MIValue::FindBreakpoint(String const &file, int line)
 			return bp;
 	}
 	return NullMIValue();
+}
+
+static String PackName(String const &name)
+{
+	String res;
+	const char *c = ~name;
+	while(*c)
+	{
+		if(!IsSpace(*c))
+			res.Cat(*c);
+		c++;
+	}
+	return res;
+}
+
+// packs names inside tuples -- to make type recognition easy
+void MIValue::PackNames(void)
+{
+	if(type == MITuple)
+	{
+		for(int i = 0; i < tuple.GetCount(); i++)
+		{
+			tuple.SetKey(i, PackName(tuple.GetKey(i)));
+			tuple[i].PackNames();
+		}
+	}
+	else if(type == MIArray)
+	{
+		for(int i = 0; i < array.GetCount(); i++)
+			array[i].PackNames();
+	}
 }
