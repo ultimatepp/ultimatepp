@@ -13,6 +13,8 @@
 
 NAMESPACE_UPP
 
+<<<<<<< .mine
+=======
 bool IsNan(double t)
 {
 #ifdef PLATFORM_WIN32
@@ -25,6 +27,7 @@ bool IsNan(double t)
 #endif
 }
 
+>>>>>>> .r6907
 void WeakBase::Chk() const
 {
 	if(!this)
