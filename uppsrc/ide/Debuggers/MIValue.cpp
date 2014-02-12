@@ -1,5 +1,7 @@
 #include "MIValue.h"
 
+//#define MITUPLE_DUMP_MARKERS
+
 static MIValue &NullMIValue(void)
 {
 	static MIValue v;
@@ -27,6 +29,21 @@ bool MIValue::expect(String const &where, char exp, int i, String const &s)
 	return false;
 }
 
+static char backslash(String const &s, int &i)
+{
+	i++;
+	char c;
+	if(IsDigit(s[i]))
+	{
+		c = (s[i]-'0')*64 + (s[i+1]-'0')*8 + s[i+2]-'0';
+		i += 2;
+	}
+	else
+		c = s[i];
+	return c;
+}
+	
+
 int MIValue::ParsePair(String &name, MIValue &val, String const &s, int i)
 {
 	name.Clear();
@@ -41,29 +58,40 @@ int MIValue::ParsePair(String &name, MIValue &val, String const &s, int i)
 	
 	// is starting wirh '[' or '{' take it as a value with empty name
 	if(s[i] == '{' || s[i] == '[')
-		name = "";
+		name = "<UNNAMED>";
 	else
 	{
 		int aCount = 0;
 		while(s[i] && ((s[i] != '=' && s[i] != '}' && s[i] != ']') || aCount))
 		{
-			name.Cat(s[i]);
 			if(s[i] == '<')
 				aCount++;
 			else if(s[i] == '>')
 				aCount--;
+			if(s[i] == '\\')
+				name.Cat(backslash(s, i));
+			else
+				name.Cat(s[i]);
 			i++;
 			
 			// skip blanks if not inside <>
+/*
 			if(!aCount)
 				while(s[i] && isspace(s[i]))
 					i++;
+*/
 		}
 		while(s[i] && isspace(s[i]))
 			i++;
 
 		if(s[i] != '=')
+		{
+			// we take the data without = as the value part
+			// of keyless tuple...
+			val.Set(name);
+			name = "<UNNAMED>";
 			return i;
+		}
 		i++;
 
 		while(s[i] && isspace(s[i]))
@@ -165,19 +193,22 @@ int MIValue::ParseString(String const &s, int i)
 	Clear();
 	type = MIString;
 
-	char c;
 	if(!expect("ParseString", '"', i, s))
 		return s.GetCount();
 	i++;
-	while( (c = s[i++]) != 0)
+	while(s[i])
 	{
 		// verbatim if escaped
-		if(c == '\\')
-			string.Cat(s[i++]);
-		else if(c == '"')
+		if(s[i] == '\\')
+			string.Cat(backslash(s, i));
+		else if(s[i] == '"')
+		{
+			i++;
 			break;
+		}
 		else
-			string.Cat(c);
+			string.Cat(s[i]);
+		i++;
 	}
 	if(!expect("ParseString", '"', i-1, s))
 		return s.GetCount();
@@ -191,23 +222,28 @@ int MIValue::ParseAngle(String const &s, int i)
 	type = MIString;
 	int aCount = 0;
 
-	char c;
 	if(!expect("ParseAngle", '<', i, s))
 		return s.GetCount();
 	string = "<";
 	aCount++;
 	i++;
-	while( (c = s[i++]) != 0)
+	while(s[i])
 	{
 		// verbatim if escaped
-		if(c == '\\')
-			string.Cat(s[i++]);
-		else if(c == '>' && !--aCount)
+		if(s[i] == '\\')
+			string.Cat(backslash(s, i));
+		else if(s[i] == '>' && !--aCount)
+		{
+			i++;
 			break;
+		}
 		else
-			string.Cat(c);
-		if(c == '<')
-			aCount++;
+		{
+			string.Cat(s[i]);
+			if(s[i] == '<')
+				aCount++;
+		}
+		i++;
 	}
 	if(!expect("ParseAngle", '"', i-1, s))
 		return s.GetCount();
@@ -488,17 +524,26 @@ void MIValue::Set(String const &s)
 }
 
 // data dump
+#ifdef MITUPLE_DUMP_MARKERS
+	#define MARK_STRING	"<STRING>"
+	#define MARK_ARRAY	"<ARRAY>"
+	#define MARK_TUPLE	"<TUPLE>"
+#else
+	#define MARK_STRING	""
+	#define MARK_ARRAY	""
+	#define MARK_TUPLE	""
+#endif
 String MIValue::Dump(int level) const
 {
 	String spacer(' ', level);
 	switch(type)
 	{
 		case MIString:
-			return spacer + "<STRING>" + string;
+			return spacer + MARK_STRING + string;
 
 		case MITuple:
 		{
-			String s = spacer + "<TUPLE>" + "{\n";
+			String s = spacer + MARK_TUPLE + "{\n";
 			level += 4;
 			spacer = String(' ', level);
 			for(int i = 0; i < tuple.GetCount(); i++)
@@ -525,7 +570,7 @@ String MIValue::Dump(int level) const
 
 		case MIArray:
 		{
-			String s = spacer + "<ARRAY>" + "[ \n";
+			String s = spacer + MARK_ARRAY + "[ \n";
 			level += 4;
 			for(int i = 0; i < array.GetCount(); i++)
 			{
