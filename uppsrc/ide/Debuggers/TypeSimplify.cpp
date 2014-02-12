@@ -1,32 +1,47 @@
 #include "Debuggers.h"
 #include <ide/ide.h>
 
-typedef void (*TYPE_SIMPLIFIER_HANDLER)(MIValue &val);
+typedef bool (*TYPE_SIMPLIFIER_HANDLER)(MIValue &val);
 
-static void UppStringSimplify(MIValue &val)
+static bool UppStringSimplify(MIValue &val)
 {
 	// strings are "easy", in debug mode 's' and 'len' members are provided
 	// so we shall just look at them in tuple
+	// see Upp::String code for how it works....
 	try
 	{
 		MIValue &v = val[0][0][0];
-		if(!v.IsTuple())
-			return;
-		if(v.Find("s") < 0)
-			return;
-		String s = v["s"];
+		MIValue &unn = v[1];
+		if(!v.IsTuple() || !unn.IsTuple())
+			return false;
 		
-		// strip address part
-		int pos = 0;
-		while(s[pos] && s[pos] != '"')
-			pos++;
-		if(!s[pos])
-			return;
-		val.Set(s.Mid(pos)); 
+		if(unn.Find("chr") < 0)
+			return false;
+		String chr = unn["chr"];
+		bool isSmall = (chr[14] == 0);
+		String s;
+		if(isSmall)
+			s = chr;
+		else
+		{
+			if(unn.Find("ptr") < 0)
+				return false;
+			s = unn["ptr"];
+			
+			// strip address...
+			int i = s.Find('"');
+			if(i >= 0)
+			{
+				s = s.Mid(i+1);
+				s = s.Left(s.GetCount()-1);
+			}
+		}
+		val.Set(s); 
+		return true;
 	}
 	catch(...)
 	{
-		return;
+		return false;
 	}
 }
 

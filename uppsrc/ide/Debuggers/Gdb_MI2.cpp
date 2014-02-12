@@ -1182,6 +1182,7 @@ void Gdb_MI2::UpdateThis(void)
 			return;
 		MIValue s(tup.ToString());
 		s.PackNames();
+//RLOG(s.Dump());
 		TypeSimplify(s);
 		ExploreValueDeep("", s, names, values);
 	}
