@@ -30,10 +30,10 @@ public:
 	void   SetAttr(const char *id, const String& val) { node.SetAttr(id, val); }
 
 	template <class T> XmlIO operator()(const char *tag, T& var);
-	template <class T> XmlIO operator()(const char *tag, const char *itemtag, T& var);
+	template <class T> XmlIO List(const char *tag, const char *itemtag, T& var);
 
 	template <class T> XmlIO operator()(const char *tag, T& var, const T& def);
-	template <class T> XmlIO operator()(const char *tag, const char *itemtag, T& var, const T& def);
+	template <class T> XmlIO List(const char *tag, const char *itemtag, T& var, const T& def);
 
 	template <class T> XmlIO Attr(const char *id, T& var) {
 		if(IsLoading())
@@ -86,7 +86,7 @@ template <class T> XmlIO XmlIO::operator()(const char *tag, T& var) {
 	return *this;
 }
 
-template <class T> XmlIO XmlIO::operator()(const char *tag, const char *itemtag, T& var) {
+template <class T> XmlIO XmlIO::List(const char *tag, const char *itemtag, T& var) {
 	XmlIO n(*this, tag);
 	Xmlize(n, itemtag, var);
 	return *this;
@@ -102,7 +102,7 @@ template <class T> XmlIO XmlIO::operator()(const char *tag, T& var, const T& def
 	return *this;
 }
 
-template <class T> XmlIO XmlIO::operator()(const char *tag, const char *itemtag, T& var, const T& def)
+template <class T> XmlIO XmlIO::List(const char *tag, const char *itemtag, T& var, const T& def)
 {
 	XmlIO n(*this, tag);
 	if(IsLoading() && n.Node().GetCount() == 0 && n.Node().GetAttrCount() == 0)
