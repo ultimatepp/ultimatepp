@@ -81,6 +81,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	r = GetWndScreenRect().GetSize();
 	if(r.Contains(m))
 		DispatchMouse(MOUSEMOVE, m);
+	
+	RefreshLayoutDeep();
 }
 
 void Ctrl::WndDestroy()
