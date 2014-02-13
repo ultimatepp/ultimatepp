@@ -170,9 +170,9 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		Vector<String>watchesValues;
 		
 		// 'this' variable inspection data
-		Index<String>thisNames;
 		Vector<String>thisExpressions;
 		Vector<String>thisValues;
+		Vector<int>thisHints;
 		
 		// stored autos expressions, values and types
 		String autoLine;
@@ -180,18 +180,7 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		// update local variables on demand
 		void UpdateLocalVars(void);
 		
-		// deeply explore a value
-		// taking its members and skipping types
-		// WARNING, it APPENDS results to given arrays
-		void ExploreValueDeep(String baseName, MIValue const &val, Vector<String> &fullNames, Vector<String> &values) const;
-
-		// known types simplifier
-		// takes a MIValue from '-data-evaluate-expression' command and try
-		// do simplify diplay of known types
-		void TypeSimplify(MIValue &val);
-
 		// update 'this' inspector data
-		void UpdateThisDeep(VarItem &v);
 		void UpdateThis(void);
 		
 		// logs frame data on console
@@ -285,6 +274,16 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		String GetHostPath(const String& path) { return host->GetHostPath(path); }
 		String GetLocalPath(const String& path) { return host->GetLocalPath(path); }
 
+		// known types simplifier
+		// takes a MIValue from '-data-evaluate-expression' command and try
+		// do simplify diplay of known types
+		void TypeSimplify(MIValue &val);
+
+		// collects evaluated variables got with Evaluate
+		// hints are used to choose the visualizer when deep-inspecting members
+		// 0 for simple values, 1 for arrays, 2 for map
+		void CollectVariables(MIValue &val, Vector<String> &exprs, Vector<String> &vals, Vector<int> &hints);
+
 	protected:
 	
 	public :
@@ -306,6 +305,13 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 
 		Gdb_MI2();
 		virtual ~Gdb_MI2();
+
+
+		// variable inspection support
+		// returns a MIValue with inspected data and some info fields added
+		// and known types simplified and cathegorized
+		// unknown and simple types are left as they are
+		MIValue Evaluate(String expr);
 };
 
 #endif

@@ -96,6 +96,17 @@ class MIValue : public Moveable<MIValue>
 		
 		// packs names inside tuples -- to make type recognition easy
 		void PackNames(void);
+		
+		// add some data to a value
+
+		// add an item to a tuple
+		MIValue &Add(String const &key, MIValue pick_ &v);
+		MIValue &Add(String const &key, String const &data);
+		MIValue &FindAdd(String const &key, String const &data);
+		
+		// add an item to an array
+		MIValue &Add(MIValue pick_ &v);
+		MIValue &Add(String const &data);
 };
 
 #endif

@@ -1,0 +1,297 @@
+#include "TypeSimplify.h"
+
+static bool UppStringSimplify(Gdb_MI2 &gdb, MIValue &val)
+{
+
+	// strings are "easy", in debug mode 's' and 'len' members are provided
+	// so we shall just look at them in tuple
+	// see Upp::String code for how it works....
+	try
+	{
+		MIValue &v = val[SIMPLIFY_VALUE][0][0][0][0][0][SIMPLIFY_VALUE];
+		MIValue &unn = v[1][SIMPLIFY_VALUE];
+
+		if(!v.IsTuple() || !unn.IsTuple())
+			return false;
+		
+		if(unn.Find("chr") < 0)
+			return false;
+		String chr = unn["chr"][SIMPLIFY_VALUE];
+		bool isSmall = (chr[14] == 0);
+		String s;
+		if(isSmall)
+			s = chr;
+		else
+		{
+			if(unn.Find("ptr") < 0)
+				return false;
+			s = unn["ptr"][SIMPLIFY_VALUE];
+			
+			// strip address...
+			int i = s.Find('"');
+			if(i >= 0)
+			{
+				s = s.Mid(i+1);
+				s = s.Left(s.GetCount()-1);
+			}
+		}
+		val[SIMPLIFY_VALUE].Set("\"" + s + "\"");
+		val.FindAdd(SIMPLIFY_HINT, SIMPLIFY_SIMPLE);
+		return true;
+	}
+	catch(...)
+	{
+		return false;
+	}
+}
+
+static bool UppVectorSimplify(Gdb_MI2 &gdb, MIValue &val)
+{
+//RLOG(val.Dump());
+	try
+	{
+		MIValue &v = val[SIMPLIFY_VALUE];
+		String vectorExpr = v["vector"][SIMPLIFY_EXPR];
+		int items = atoi(v["items"][SIMPLIFY_VALUE].ToString());
+		
+		val.FindAdd(SIMPLIFY_HINT, SIMPLIFY_ARRAY);
+		val.FindAdd(SIMPLIFY_START, "0");
+		val.FindAdd(SIMPLIFY_COUNT, FormatInt(items));
+		
+		// display max 5 elements of array, starting from 0 and ONLY if elements evaluate to a simple type
+		// otherwise display {...} string
+		// to do this, we shall ask gdb to evaluate the undelying vector
+		int count = min(5, items);
+		String vals = "";
+		for(int i = 0; i < count; i++)
+		{
+			MIValue vi = gdb.Evaluate(vectorExpr + Format("[%d]", i));
+			if(vi.IsError())
+			{
+				vals = "can't evaluate";
+				break;
+			}
+			if(!vi.IsString())
+			{
+				vals = "{...}";
+				break;
+			}
+			vals = vals + ", " + vi.ToString();
+		}
+		if(vals.StartsWith(", "))
+			vals = vals.Mid(2);
+		vals = Format("Upp::Vector with %d elements : %s", items, vals);
+//RLOG("VALS = " << vals);
+		val[SIMPLIFY_VALUE].Set(vals);
+
+//RLOG(v.Dump());
+		return true;
+	}
+	catch(...)
+	{
+		return false;
+	}
+}
+
+static bool UppVectorMapSimplify(Gdb_MI2 &gdb, MIValue &val)
+{
+//RLOG(val.Dump());
+	try
+	{
+		MIValue &v = val[SIMPLIFY_VALUE];
+		
+		MIValue &keyPtr = v[1][0]["key"][0][1][0][0][0];
+		String keyExpr = keyPtr["vector"][SIMPLIFY_EXPR].ToString();
+		int items = atoi(keyPtr["items"][SIMPLIFY_VALUE].ToString());
+
+		MIValue &valPtr = v[1][0]["value"][SIMPLIFY_VALUE];;
+		String valExpr = valPtr["vector"][SIMPLIFY_EXPR].ToString();
+		
+		val.FindAdd(SIMPLIFY_HINT, SIMPLIFY_MAP);
+		val.FindAdd(SIMPLIFY_START, "0");
+		val.FindAdd(SIMPLIFY_COUNT, FormatInt(items));
+		
+		
+		// display max 3 elements of map, starting from 0 and ONLY if elements evaluate to a simple type
+		// otherwise display {...} string
+		// to do this, we shall ask gdb to evaluate the undelying vector
+		int count = min(3, items);
+		String vals = "";
+		bool err = false;
+		bool complex = false;
+		for(int i = 0; i < count; i++)
+		{
+			MIValue vk = gdb.Evaluate(keyExpr + Format("[%d]", i));
+			if(vk.IsError())
+			{
+				err = true;
+				break;
+			}
+			if(!vk.IsString())
+			{
+				complex = true;
+				break;
+			}
+			MIValue vv = gdb.Evaluate(valExpr + Format("[%d]", i));
+			if(vv.IsError())
+			{
+				err = true;
+				break;
+			}
+			if(!vv.IsString())
+			{
+				complex = true;
+				break;
+			}
+			vals = vals + ", (" + vk.ToString() + "," + vv.ToString() + ")";
+		}
+		
+		if(complex)
+			vals = "{...}";
+		else if(err)
+			vals = "can't evaluate";
+		if(vals.StartsWith(", "))
+			vals = vals.Mid(2);
+		vals = Format("Upp::VectorMap with %d elements : %s", items, vals);
+//RLOG("VALS = " << vals);
+		val[SIMPLIFY_VALUE].Set(vals);
+		return true;
+
+	}
+	catch(...)
+	{
+		return false;
+	}
+}
+
+
+static bool UppArraySimplify(Gdb_MI2 &gdb, MIValue &val)
+{
+//RLOG(val.Dump());
+	try
+	{
+		MIValue &v = val[SIMPLIFY_VALUE]["vector"][SIMPLIFY_VALUE];
+		
+		String vectorExpr = v["vector"][SIMPLIFY_EXPR];
+		int items = atoi(v["items"][SIMPLIFY_VALUE].ToString());
+
+		val.FindAdd(SIMPLIFY_HINT, SIMPLIFY_ARRAY);
+		val.FindAdd(SIMPLIFY_START, "0");
+		val.FindAdd(SIMPLIFY_COUNT, FormatInt(items));
+		
+		// display max 5 elements of array, starting from 0 and ONLY if elements evaluate to a simple type
+		// otherwise display {...} string
+		// to do this, we shall ask gdb to evaluate the undelying vector
+		int count = min(5, items);
+		String vals = "";
+		for(int i = 0; i < count; i++)
+		{
+			MIValue vi = gdb.Evaluate(vectorExpr + Format("[%d][0]", i));
+			if(vi.IsError())
+			{
+				vals = "can't evaluate";
+				break;
+			}
+			if(!vi.IsString())
+			{
+				vals = "{...}";
+				break;
+			}
+			vals = vals + ", " + vi.ToString();
+		}
+		if(vals.StartsWith(", "))
+			vals = vals.Mid(2);
+		vals = Format("Upp::Array with %d elements : %s", items, vals);
+//RLOG("VALS = " << vals);
+		val[SIMPLIFY_VALUE].Set(vals);
+
+//RLOG(v.Dump());
+		return true;
+	}
+	catch(...)
+	{
+		return false;
+	}
+}
+
+static bool UppArrayMapSimplify(Gdb_MI2 &gdb, MIValue &val)
+{
+//RLOG(val.Dump());
+	try
+	{
+		MIValue &v = val[SIMPLIFY_VALUE];
+		
+		MIValue &keyPtr = v[1][0]["key"][0][1][0][0][0];
+		String keyExpr = keyPtr["vector"][SIMPLIFY_EXPR].ToString();
+		int items = atoi(keyPtr["items"][SIMPLIFY_VALUE].ToString());
+
+		MIValue &valPtr = v[1][0]["value"][SIMPLIFY_VALUE];;
+		String valExpr = valPtr["vector"][SIMPLIFY_VALUE]["vector"][SIMPLIFY_EXPR].ToString();
+		
+		val.FindAdd(SIMPLIFY_HINT, SIMPLIFY_MAP);
+		val.FindAdd(SIMPLIFY_START, "0");
+		val.FindAdd(SIMPLIFY_COUNT, FormatInt(items));
+		
+		
+		// display max 3 elements of map, starting from 0 and ONLY if elements evaluate to a simple type
+		// otherwise display {...} string
+		// to do this, we shall ask gdb to evaluate the undelying vector
+		int count = min(3, items);
+		String vals = "";
+		bool err = false;
+		bool complex = false;
+		for(int i = 0; i < count; i++)
+		{
+			MIValue vk = gdb.Evaluate(keyExpr + Format("[%d]", i));
+			if(vk.IsError())
+			{
+				err = true;
+				break;
+			}
+			if(!vk.IsString())
+			{
+				complex = true;
+				break;
+			}
+			MIValue vv = gdb.Evaluate(valExpr + Format("[%d][0]", i));
+			if(vv.IsError())
+			{
+				err = true;
+				break;
+			}
+			if(!vv.IsString())
+			{
+				complex = true;
+				break;
+			}
+			vals = vals + ", (" + vk.ToString() + "," + vv.ToString() + ")";
+		}
+		
+		if(complex)
+			vals = "{...}";
+		else if(err)
+			vals = "can't evaluate";
+		if(vals.StartsWith(", "))
+			vals = vals.Mid(2);
+		vals = Format("Upp::ArrayMap with %d elements : %s", items, vals);
+//RLOG("VALS = " << vals);
+		val[SIMPLIFY_VALUE].Set(vals);
+		
+		return true;
+
+	}
+	catch(...)
+	{
+		return false;
+	}
+}
+
+
+// Register the simplifiers
+REGISTERSIMPLIFIER("<Upp::Moveable<Upp::String,Upp::AString<Upp::String0>>>"		, UppStringSimplify);
+REGISTERSIMPLIFIER("<Upp::MoveableAndDeepCopyOption<Upp::Vector<"					, UppVectorSimplify);
+REGISTERSIMPLIFIER("<Upp::MoveableAndDeepCopyOption<Upp::VectorMap<"				, UppVectorMapSimplify);
+REGISTERSIMPLIFIER("<Upp::MoveableAndDeepCopyOption<Upp::Array<"					, UppArraySimplify);
+REGISTERSIMPLIFIER("<Upp::MoveableAndDeepCopyOption<Upp::ArrayMap<"					, UppArrayMapSimplify);
+
+
