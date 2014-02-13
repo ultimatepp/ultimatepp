@@ -5,10 +5,13 @@ NAMESPACE_UPP
 namespace Ini {
 	INI_BOOL(HttpRequest_Trace, false, "Activates HTTP requests tracing")
 	INI_BOOL(HttpRequest_TraceBody, false, "Activates HTTP requests body tracing")
+	INI_BOOL(HttpRequest_TraceShort, false, "Activates HTTP requests short tracing")
 };
 
 #define LLOG(x)      LOG_(Ini::HttpRequest_Trace, x)
 #define LLOGB(x)     LOG_(Ini::HttpRequest_TraceBody, x)
+#define LLOGS(x)     LOG_( Ini::HttpRequest_Trace || Ini::HttpRequest_TraceShort, x)
+#define LLOGSS(x)    LOG_(!Ini::HttpRequest_Trace && Ini::HttpRequest_TraceShort, x)
 	
 #ifdef _DEBUG
 _DBG_
@@ -29,6 +32,11 @@ void HttpRequest::TraceHeader(bool b)
 void HttpRequest::TraceBody(bool b)
 {
 	Ini::HttpRequest_TraceBody = b;
+}
+
+void HttpRequest::TraceShort(bool b)
+{
+	Ini::HttpRequest_TraceShort = b;
 }
 
 void HttpRequest::Init()
@@ -273,7 +281,7 @@ void HttpRequest::HttpError(const char *s)
 	if(IsError())
 		return;
 	error = NFormat(t_("%s:%d: ") + String(s), host, port);
-	LLOG("HTTP ERROR: " << error);
+	LLOGS("HTTP ERROR: " << error);
 	Close();
 }
 
@@ -378,7 +386,7 @@ bool HttpRequest::Do()
 	
 	if(phase == FAILED) {
 		if(retry_count++ < max_retries) {
-			LLOG("HTTP retry on error " << GetErrorDesc());
+			LLOGS("HTTP retry on error " << GetErrorDesc());
 			start_time = msecs();
 			GlobalTimeout(timeout);
 			StartPhase(START);
@@ -558,6 +566,10 @@ void HttpRequest::StartRequest()
 		data << "Authorization: Basic " << Base64Encode(username + ":" + password) << "\r\n";
 	data << request_headers;
 	LLOG("HTTP REQUEST " << host << ":" << port);
+	if (pd.GetCount() || method == METHOD_POST || method == METHOD_PUT)
+	    LLOGSS("HTTP Request " << smethod[method] << " " << url << " data:" << ctype << "(" << pd.GetCount() << ")");
+	else
+	    LLOGSS("HTTP Request " << smethod[method] << " " << url);
 	LLOG("HTTP request:\n" << data);
 	data << "\r\n" << pd;
 	LLOGB("HTTP request body:\n" << pd);
@@ -771,6 +783,7 @@ String HttpRequest::Execute()
 	New();
 	while(Do())
 		LLOG("HTTP Execute: " << GetPhaseName());
+	LLOGSS("HTTP Reply: " << status_code << " " << reason_phrase <<" size:" << GetContent().GetCount() << " type:" << GetHeader("content-type"));
 	return IsSuccess() ? GetContent() : String::GetVoid();
 }
 
