@@ -16,35 +16,6 @@ Gdb_MI2::VarItem::VarItem()
 	kind = SIMPLE;
 }
 
-// copy (pick)
-Gdb_MI2::VarItem::VarItem(Gdb_MI2::VarItem pick_ &v)
-{
-	error = v.error;
-	dynamic = v.dynamic;
-	varName = v.varName;
-	shortExpression = v.shortExpression;
-	evaluableExpression = v.evaluableExpression;
-	type = v.type;
-	kind = v.kind;
-	value = v.value;
-	numChildren = v.numChildren;
-}
-
-Gdb_MI2::VarItem &Gdb_MI2::VarItem::operator=(pick_ Gdb_MI2::VarItem &v)
-{
-	error = v.error;
-	dynamic = v.dynamic;
-	varName = v.varName;
-	shortExpression = v.shortExpression;
-	evaluableExpression = v.evaluableExpression;
-	type = v.type;
-	kind = v.kind;
-	value = v.value;
-	numChildren = v.numChildren;
-	return *this;
-}
-
-
 // evaluate an expression usign gdb variables
 Gdb_MI2::VarItem Gdb_MI2::EvalGdb(String const &expr)
 {

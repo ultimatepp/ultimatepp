@@ -54,10 +54,6 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 
 			// constructor
 			VarItem();
-			
-			// copy (pick)
-			VarItem(VarItem pick_ &v);
-			VarItem &operator=(pick_ VarItem &v);
 		};
 		
 		// evaluate an expression usign gdb variables
