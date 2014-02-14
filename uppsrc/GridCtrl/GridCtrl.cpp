@@ -1227,6 +1227,7 @@ void GridCtrl::Paint(Draw &w)
 				{
 					cy = GD_HDR_HEIGHT;
 					y = sz.cy - cy;
+				
 					if(w.IsPainting(x, y, cx, cy))
 					{
 						Item &it = summary[hi.id];
@@ -1261,7 +1262,6 @@ void GridCtrl::Paint(Draw &w)
 						it.rcy = gd->real_size.cy;
 					}
 				}
-				
 			}
 		}
 		if(rx < sz.cx || chameleon)
@@ -1376,7 +1376,7 @@ void GridCtrl::Paint(Draw &w)
 					gd->Paint(w, x, y + 1, cx, cy - 1, GetConvertedColumn(id, it.val), style | en, fg, bg, fnt.Bold(), false, 0, 0);
 
 				}
-			}			
+			}
 		}
 
 		w.End();
@@ -6634,6 +6634,8 @@ GridCtrl& GridCtrl::ResizeRowMode(int m)
 
 void GridCtrl::UpdateSb(bool horz, bool vert)
 {
+	scrollbox.Width(ScrollBarSize());
+
 	if(horz)
 	{
 		sbx.SetTotal(resize_col_mode == 0 ? total_width - fixed_width : 0);
@@ -6645,6 +6647,8 @@ void GridCtrl::UpdateSb(bool horz, bool vert)
 		sby.SetTotal(resize_row_mode == 0 ? total_height - fixed_height + summary_height : 0);
 		sby.SetPage(GetSize().cy - fixed_height);
 	}
+
+	sbx.SetFrame(resize_row_mode == 0 && sby.GetTotal() > GetSize().cy - fixed_height ? scrollbox : NullFrame());
 }
 
 bool GridCtrl::SwitchEdit()
