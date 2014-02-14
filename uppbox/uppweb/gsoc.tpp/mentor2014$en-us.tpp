@@ -31,6 +31,8 @@ U`+`+ project and applications:]&]
 [s0; [*^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan 
 Dolinár][2 : Project building and packaging (TheIDE or external), 
 Physics, Skylark.]&]
+[s0; [*^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=3`&^2 Mirek 
+Fidler][2 : U`+`+ founder and main developer.]&]
 [s0; [*^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 Kold
 o Ramirez][2 : Engineering, Process Control, Image processing.]&]
 [s0;2 &]
