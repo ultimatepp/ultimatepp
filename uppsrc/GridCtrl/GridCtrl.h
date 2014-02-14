@@ -1053,7 +1053,8 @@ class GridCtrl : public Ctrl
 		int dx, dy;
 
 		GridPopUpHeader pophdr;
-
+		FrameRight<StaticRect> scrollbox;
+		
 		int sortCol;		
 		Vector<int> sortOrder;
 
