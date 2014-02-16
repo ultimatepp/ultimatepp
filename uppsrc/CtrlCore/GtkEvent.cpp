@@ -130,7 +130,6 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		}
 		return false;
 	case GDK_LEAVE_NOTIFY:
-		return false;
 	case GDK_MOTION_NOTIFY: {
 		GdkEventMotion *e = (GdkEventMotion *)event;
 		DoMouseEvent(e->state, Point((int)e->x_root, (int)e->y_root));
