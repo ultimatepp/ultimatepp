@@ -468,7 +468,7 @@ protected:
 public:
 	operator int64() const            { return GetSize(); }
 
-	void     Open()                   { ptr = buffer; size = 0; }
+	void     Open()                   { ptr = buffer; size = 0; ClearError(); }
 
 	SizeStream();
 };
