@@ -54,10 +54,6 @@ ToolButton::~ToolButton() {}
 
 void ToolButton::Reset()
 {
-	Tip("");
-	Help("");
-	Topic("");
-	Description("");
 	repeat = false;
 	accel = 0;
 	checked = false;
@@ -65,6 +61,10 @@ void ToolButton::Reset()
 	minsize = Size(0, 0);
 	maxiconsize = Size(INT_MAX, INT_MAX);
 	style = &StyleDefault();
+	Tip("");
+	Help("");
+	Topic("");
+	Description("");
 }
 
 void ToolButton::UpdateTip()
