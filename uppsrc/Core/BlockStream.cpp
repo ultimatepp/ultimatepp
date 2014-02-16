@@ -257,6 +257,7 @@ void BlockStream::OpenInit(dword mode, int64 _filesize) {
 	if(!buffer)
 		SetBufferSize(4096);
 	if(mode == APPEND) SeekEnd();
+	ClearError();
 }
 
 // ---------------------------- File stream -----------------------------

@@ -834,6 +834,7 @@ public:
 		void   EditWorkspace();
 		void   EditAnyFile();
 		bool   IsProjectFile(const String& f) const;
+		void   SaveEditorFile(Stream& out);
 		void   SaveFile0(bool always);
 		void   SaveFile(bool always = false);
 		void   DoSaveFile()    { SaveFile(); }

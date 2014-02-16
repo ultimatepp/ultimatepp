@@ -1089,6 +1089,7 @@ void CompareStream::Open(Stream& astream) {
 	wrlim = buffer + 128;
 	ptr = buffer;
 	equal = true;
+	ClearError();
 }
 
 bool CompareStream::IsOpen() const {

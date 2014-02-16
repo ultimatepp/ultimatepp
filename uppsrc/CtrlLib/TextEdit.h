@@ -269,6 +269,7 @@ protected:
 	bool             overwrite;
 	bool             showspaces;
 	bool             showlines;
+	bool             showreadonly;
 
 	void   Paint0(Draw& w);
 
@@ -362,6 +363,9 @@ public:
 	LineEdit& NoCutLine()                     { return WithCutLine(false); }
 	bool      IsWithCutLine() const           { return cutline; }
 	LineEdit& SetFilter(int (*f)(int c))      { filter = f; return *this; }
+	LineEdit& ShowReadOnly(bool b)            { showreadonly = b; Refresh(); return *this; }
+	LineEdit& NoShowReadOnly()                { return ShowReadOnly(false); }
+	bool      IsShowReadOnly()                { return showreadonly; }
 	
 	LineEdit& SetScrollBarStyle(const ScrollBar::Style& s)   { sb.SetStyle(s); return *this; }
 
