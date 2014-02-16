@@ -93,6 +93,8 @@ void LayDes::FindLayout(const String& name, const String& item_name)
 bool LayDes::Load(const char *file, byte _charset)
 {
 	charset = _charset;
+	if(charset == CHARSET_UTF8_BOM)
+		charset = CHARSET_UTF8;
 	layout.Clear();
 	filename = file;
 	FileIn in(file);
