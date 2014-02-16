@@ -273,6 +273,24 @@ void Ide::SaveFile(bool always)
 	issaving--;
 }
 
+void Ide::SaveEditorFile(Stream& out)
+{
+	if(GetFileExt(editfile) == ".t") {
+		for(int i = 0; i < editor.GetLineCount(); i++) {
+			if(i) out.PutCrLf();
+			out.Put(ConvertTLine(editor.GetUtf8Line(i), ASCSTRING_OCTALHI));
+		}
+	}
+	else {
+		int le = line_endings;
+		if(le == DETECT_CRLF)
+			le = Nvl(editfile_line_endings, CRLF);
+		if(le == DETECT_LF)
+			le = Nvl(editfile_line_endings, LF);
+		editor.Save(out, editor.GetCharset(), le == LF ? TextCtrl::LE_LF : TextCtrl::LE_CRLF);
+	}
+}
+
 void Ide::SaveFile0(bool always)
 {
 	if(designer) {
@@ -297,62 +315,71 @@ void Ide::SaveFile0(bool always)
 	fd.filetime = edittime;
 	if(!editor.IsDirty() && !always)
 		return;
-#ifdef PLATFORM_POSIX
-	struct stat statbuf;
-	int statcode = stat(editfile, &statbuf);
-#endif
 	TouchFile(editfile);
-	String tmpfile = editfile + ".$tmp", outfile = editfile;
-	{
-		FileOut out(tmpfile);
-		if(!out.IsOpen()) {
-			if(IsDeactivationSave())
-				return;
-			Exclamation(NFormat("Error creating temporary file [* \1%s\1].", tmpfile));
-			return;
-		}
-		if(designer)
-			designer->Save();
-		else
-			if(GetFileExt(editfile) == ".t") {
-				for(int i = 0; i < editor.GetLineCount(); i++) {
-					if(i) out.PutCrLf();
-					out.Put(ConvertTLine(editor.GetUtf8Line(i), ASCSTRING_OCTALHI));
-				}
+#ifdef PLATFORM_POSIX
+	FindFile ff(editfile);
+	if(ff && !designer && (ff.GetUid() != getuid() || ff.IsSymLink())) {
+		for(;;) {
+			FileStream out;
+			if(out.Open(editfile, FileStream::READWRITE)) {
+				SaveEditorFile(out);
+				out.SetSize(out.GetPos());
+				if(!out.IsError())
+					break;
 			}
-			else {
-				int le = line_endings;
-				if(le == DETECT_CRLF)
-					le = Nvl(editfile_line_endings, CRLF);
-				if(le == DETECT_LF)
-					le = Nvl(editfile_line_endings, LF);
-				editor.Save(out, editor.GetCharset(), le == LF ? TextCtrl::LE_LF : TextCtrl::LE_CRLF);
+			console.Flush();
+			Sleep(200);
+			int art = Prompt(Ctrl::GetAppName(), CtrlImg::exclamation(),
+				"Unable to save current file.&"
+				"Retry save, ignore it or save file to another location?",
+				"Save as...", "Retry", "Ignore");
+			if(art < 0)
+				break;
+			if(art && AnySourceFs().ExecuteSaveAs()) {
+				editfile = AnySourceFs();
+				MakeTitle();
+				PosSync();
+				break;
 			}
-		out.Close();
-		if(out.IsError()) {
-			if(IsDeactivationSave())
-				return;
-			Exclamation(NFormat("Error writing temporary file [* \1%s\1].", tmpfile));
-			return;
 		}
-	}
-
-	Progress progress;
-	int time = msecs();
-	for(;;) {
-		progress.SetTotal(10000);
-		progress.SetText(NFormat("Saving '%s'", GetFileName(outfile)));
-		if(editfile != outfile || !FileExists(tmpfile))
-			return;
-		FileDelete(outfile);
-		if(FileMove(tmpfile, outfile))
-			break;
 		if(IsDeactivationSave())
 			return;
-		console.Flush();
-		Sleep(200);
-		if(progress.SetPosCanceled(msecs(time) % progress.GetTotal()))
+	}
+	else
+#endif
+	{
+		String tmpfile = editfile + ".$tmp", outfile = editfile;
 		{
+			FileOut out(tmpfile);
+			if(!out.IsOpen()) {
+				if(IsDeactivationSave())
+					return;
+				Exclamation(NFormat("Error creating temporary file [* \1%s\1].", tmpfile));
+				return;
+			}
+			if(designer)
+				designer->Save();
+			else
+				SaveEditorFile(out);
+			out.Close();
+			if(out.IsError()) {
+				if(IsDeactivationSave())
+					return;
+				Exclamation(NFormat("Error writing temporary file [* \1%s\1].", tmpfile));
+				return;
+			}
+		}
+	
+		Progress progress;
+		for(;;) {
+			if(editfile != outfile || !FileExists(tmpfile))
+				return;
+			FileDelete(outfile);
+			if(FileMove(tmpfile, outfile))
+				break;
+			if(IsDeactivationSave())
+				return;
+			console.Flush();
 			int art = Prompt(Ctrl::GetAppName(), CtrlImg::exclamation(),
 				"Unable to save current file.&"
 				"Retry save, ignore it or save file to another location?",
@@ -365,14 +392,13 @@ void Ide::SaveFile0(bool always)
 				PosSync();
 				break;
 			}
-			progress.Reset();
 		}
+	
+	#ifdef PLATFORM_POSIX
+		if(ff)
+			chmod(editfile, ff.GetMode());
+	#endif
 	}
-
-#ifdef PLATFORM_POSIX
-	if(statcode == 0)
-		chmod(editfile, statbuf.st_mode);
-#endif
 
 	if(!designer) {
 		FindFile ff(editfile);
@@ -484,7 +510,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 		if(edittime != fd.filetime || IsNull(fd.filetime))
 			fd.undodata.Clear();
 		FileIn in(editfile);
-		if(in)
+		if(in) {
 			if(tfile && editastext.Find(editfile) < 0) {
 				String f;
 				String ln;
@@ -509,14 +535,19 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 				int le = editor.Load(in, charset);
 				editfile_line_endings = le == TextCtrl::LE_CRLF ? CRLF : le == TextCtrl::LE_LF ? LF : (int)Null;
 			}
+		}
+		else
+			Exclamation("Failed to read the file.");
 		editor.SetEditPos(fd.editpos);
 		if(!IsNull(fd.columnline) && fd.columnline.y >= 0 && fd.columnline.y < editor.GetLineCount())
 			editor.SetCursor(editor.GetColumnLinePos(fd.columnline));
 		editor.SetPickUndoData(fd.undodata);
 		editor.SetLineInfo(fd.lineinfo);
 		editor.SetLineInfoRem(fd.lineinforem);
-		if(ff.IsReadOnly() || IsNestReadOnly(editfile))
+		if(ff.IsReadOnly() || IsNestReadOnly(editfile)) {
 			editor.SetReadOnly();
+			editor.NoShowReadOnly();
+		}
 		fd.undodata.Clear();
 		PosSync();
 	}

@@ -21,6 +21,7 @@ LineEdit::LineEdit() {
 	filter = NULL;
 	showspaces = false;
 	showlines = false;
+	showreadonly = true;
 }
 
 LineEdit::~LineEdit() {}
@@ -100,7 +101,7 @@ void   LineEdit::Paint0(Draw& w) {
 		if(w.IsPainting(0, y, sz.cx, fsz.cy)) {
 			Highlight ih;
 			ih.ink = color[IsShowEnabled() ? INK_NORMAL : INK_DISABLED];
-			ih.paper = color[IsReadOnly() || !IsShowEnabled() ? PAPER_READONLY : PAPER_NORMAL];
+			ih.paper = color[IsReadOnly() && showreadonly || !IsShowEnabled() ? PAPER_READONLY : PAPER_NORMAL];
 			if(nobg)
 				ih.paper = Null;
 			ih.font = font;
@@ -221,7 +222,7 @@ void   LineEdit::Paint0(Draw& w) {
 		selh -= len + 1;
 		pos += len + 1;
 	}
-	w.DrawRect(0, y, sz.cx, sz.cy - y, color[IsReadOnly() || !IsShowEnabled() ? PAPER_READONLY : PAPER_NORMAL]);
+	w.DrawRect(0, y, sz.cx, sz.cy - y, color[IsReadOnly() && showreadonly || !IsShowEnabled() ? PAPER_READONLY : PAPER_NORMAL]);
 	DrawTiles(w, DropCaret(), CtrlImg::checkers());
 }
 

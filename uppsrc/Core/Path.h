@@ -119,6 +119,7 @@ class FindFile : NoCopy {
 	String         pattern;
 
 	struct stat &Stat() const;
+	bool CanMode(dword usr, dword grp, dword oth) const;
 
 public:
 	bool        Search(const char *name);
@@ -133,7 +134,14 @@ public:
 	FileTime    GetLastAccessTime() const { return Stat().st_atime; }
 	FileTime    GetLastWriteTime() const  { return Stat().st_mtime; }
 
-	bool        IsReadOnly() const        { return !(GetMode() & (S_IWUSR|S_IWGRP|S_IWOTH)); }
+	uid_t       GetUid()                  { return Stat().st_uid; }
+	gid_t       GetGid()                  { return Stat().st_gid; }
+
+	bool        CanRead() const           { return CanMode(S_IRUSR, S_IRGRP, S_IROTH); }
+	bool        CanWrite() const          { return CanMode(S_IWUSR, S_IWGRP, S_IWOTH); }
+	bool        CanExecute() const        { return CanMode(S_IXUSR, S_IXGRP, S_IXOTH); }
+
+	bool        IsReadOnly() const        { return CanRead() && !CanWrite(); }
 
 	bool        IsHidden() const          { return *name == '.'; }
 	bool        IsDirectory() const       { return S_ISDIR(GetMode()); }

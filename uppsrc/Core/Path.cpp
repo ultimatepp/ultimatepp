@@ -653,6 +653,17 @@ struct stat& FindFile::Stat() const {
 	return statf;
 }
 
+bool FindFile::CanMode(dword usr, dword grp, dword oth) const
+{
+	const struct stat& s = Stat();
+	dword mode = GetMode();
+	static uid_t uid = getuid();
+	static gid_t gid = getgid();
+	return (mode & oth) ||
+	       (mode & grp) && gid == s.st_gid ||
+	       (mode & usr) && uid == s.st_uid;
+}
+
 bool FindFile::IsSymLink() const
 {
 	if(file)  {
