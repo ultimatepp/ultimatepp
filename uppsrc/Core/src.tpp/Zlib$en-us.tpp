@@ -236,7 +236,7 @@ ool]_[* GZDecompressFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 dstfile],
 [s5;:GZDecompressFile`(const char`*`,Gate2`<int64`,int64`>`): [@(0.0.255) bool]_[* GZDeco
 mpressFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 srcfile], [_^Gate2^ Gate2]<[_^int64^ i
 nt64], [_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
-[s2;%% Compresses file from gzip format. If [%-*@3 dstfile] is not 
+[s2;%% Decompresses file from gzip format. If [%-*@3 dstfile] is not 
 present, the name is created by removing .gz extension to [%-*@3 srcfile]. 
 If [%-*@3 srcfile] does not have .gz extension, function returns 
 false to signal error and does nothing. Returns true on success.&]
