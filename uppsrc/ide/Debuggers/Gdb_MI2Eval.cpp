@@ -64,21 +64,22 @@ bool Gdb_MI2::TypeSimplify(MIValue &val, bool deep)
 					continue;
 				if(key.StartsWith("<"))
 				{
-					TYPE_SIMPLIFIER_HANDLER handler = GetSimplifier(v.GetKey(0));
+					TYPE_SIMPLIFIER_HANDLER handler = GetSimplifier(key);
 					if(handler)
 					{
-						needMore |= handler(*this, vRoot, deep);
+						bool nm = handler(*this, vRoot, deep);
 						if(deep)
 						{
-							if(needMore)
+							if(nm)
 							{
 								// we shall remove the temporary value now...
 								vRoot.Remove(SIMPLIFY_TEMPVAL);
-								return needMore;
+								return nm;
 							}
 						}
-						else if(needMore)
+						else if(nm)
 							vRoot.FindAdd(SIMPLIFY_TEMPVAL, "<evaluating...>");
+						needMore |= nm;
 					}
 					else
 						needMore |= TypeSimplify(v, deep);
