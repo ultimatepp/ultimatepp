@@ -77,10 +77,6 @@ int MIValue::ParsePair(String &name, MIValue &val, String const &s, int i)
 	// is starting wirh '[' or '{' take it as a value with empty name
 	if(s[i] == '{' || s[i] == '[')
 	{
-/*
-RLOG("STICAZZI....");
-RLOG("i = " << i << "  s = " << s);
-*/
 		name = "<UNNAMED>";
 		return val.ParseTuple(s, i);
 	}
