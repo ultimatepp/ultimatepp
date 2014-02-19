@@ -1257,7 +1257,7 @@ void Gdb_MI2::SyncWatches(MIValue val)
 		}
 		firstCall = true;
 	}
-RLOG(val.Dump());	
+
 	bool more = false;
 	
 	// simplify loop, returns when at least one simplify step happens
