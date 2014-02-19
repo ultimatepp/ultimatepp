@@ -279,6 +279,10 @@ SqlVal Avg(const SqlVal& a) {
 	return SqlFunc("avg", a);
 }
 
+SqlVal Abs(const SqlVal& a) {
+	return SqlFunc("abs", a);
+}
+
 SqlVal Stddev(const SqlVal& a) {
 	return SqlFunc("stddev", a);
 }

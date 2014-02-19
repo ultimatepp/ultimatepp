@@ -265,6 +265,7 @@ SqlVal SqlMin(const SqlVal& a);
 SqlVal SqlSum(const SqlVal& a);
 
 SqlVal Avg(const SqlVal& a);
+SqlVal Abs(const SqlVal& a);
 SqlVal Stddev(const SqlVal& a);
 SqlVal Variance(const SqlVal& a);
 
