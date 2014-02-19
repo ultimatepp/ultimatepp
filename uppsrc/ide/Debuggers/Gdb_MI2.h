@@ -15,60 +15,6 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 {
 	private:
 	
-		// item for a GDB variable
-		struct VarItem : Moveable<VarItem>
-		{
-			typedef enum { SIMPLE, ARRAY, MAP } VarKind;
-			
-			// error/empty state
-			bool error;
-			
-			// gdb internal variable name
-			String varName;
-
-			// short name
-			String shortExpression;
-			
-			// evaluable expression
-			String evaluableExpression;
-			
-			// type
-			String type;
-			
-			// kind
-			int kind;
-			
-			// value of expression for non-sequence types
-			String value;
-			
-			// children
-			int numChildren;
-			
-			// dynamic varobj--number of children must be queried
-			bool dynamic;
-			
-			// check if value contains an error
-			bool IsError(void) const;
-			bool operator!(void) const { return IsError(); }
-			operator bool() { return !IsError(); }
-
-			// constructor
-			VarItem();
-		};
-		
-		// evaluate an expression usign gdb variables
-		VarItem EvalGdb(String const &expr);
-		
-		// remove GDB variable for item
-		void KillVariable(VarItem &v);
-		
-		// fetch variable children
-		Vector<VarItem> GetChildren(MIValue const &val, String const &prePath = "");
-
-		// fetch variable children
-		Vector<VarItem> GetChildren(VarItem &v, int minChild = -1, int maxChild = -1);
-		
-
 		// used to post and kill timed callbacks
 		TimeCallback timeCallback;
 	
@@ -234,9 +180,6 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		// selects current thread
 		void showThread(void);
 
-		// sends pretty-prinding scripts
-		void SendPrettyPrinters(void);
-	
 		// opens quick watch dialog
 		void QuickWatch(void);
 		

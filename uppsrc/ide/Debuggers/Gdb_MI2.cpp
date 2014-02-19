@@ -2,7 +2,6 @@
 #include <ide/ide.h>
 
 #include "TypeSimplify.h"
-#include "PrettyPrinters.brc"
 
 #define LDUMP(x) // DDUMP(x)
 #define LLOG(x)  // DLOG(x)
@@ -1351,16 +1350,6 @@ bool Gdb_MI2::Key(dword key, int count)
 	return Ctrl::Key(key, count);
 }
 
-// sends pretty-printing scripts
-void Gdb_MI2::SendPrettyPrinters(void)
-{
-	String fName = GetTempFileName();
-	fName = fName.Left(fName.GetCount() - 3) + "py";
-	SaveFile(fName, (const char *)PrettyPrinters);
-	MICmd("interpreter-exec console \"source " + fName + "\"");
-	FileDelete(fName);
-}
-
 // format watch line
 String Gdb_MI2::FormatWatchLine(String exp, String const &val, int level)
 {
@@ -1770,10 +1759,6 @@ bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdli
 	if(!IsNull(cmdline))
 		MICmd("gdb-set args " + cmdline);
 	
-	// enable pretty printing
-//	SendPrettyPrinters();
-//	MICmd("enable-pretty-printing");
-
 	firstRun = true;
 
 	return true;
