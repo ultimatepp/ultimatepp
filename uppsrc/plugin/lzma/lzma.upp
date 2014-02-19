@@ -1,0 +1,16 @@
+description "\3770,128,128";
+
+file
+	lzma.h,
+	lzma.cpp,
+	src.tpp,
+	lib readonly separator,
+	lib/LzFind.c,
+	lib/LzFind.h,
+	lib/LzHash.h,
+	lib/LzmaDec.c,
+	lib/LzmaDec.h,
+	lib/LzmaEnc.c tabsize 8 highlight cpp,
+	lib/LzmaEnc.h,
+	lib/Types.h;
+
