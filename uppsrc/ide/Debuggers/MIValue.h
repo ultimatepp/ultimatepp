@@ -88,6 +88,9 @@ class MIValue : public Moveable<MIValue>
 		bool IsString(void) const { return type == MIString; }
 		void AssertString(void) const { ASSERT(type == MIString); }
 		
+		// dumps a string with special chars inside
+		static String Dump(String const &s);
+
 		// data dump
 		String Dump(int level = 0) const;
 		
@@ -96,6 +99,10 @@ class MIValue : public Moveable<MIValue>
 		
 		// packs names inside tuples -- to make type recognition easy
 		void PackNames(void);
+		
+		// fix arrays -- i.e. replace a tuple containing ALL unnamed elements
+		// with the corresponding array
+		void FixArrays(void);
 		
 		// add some data to a value
 
@@ -107,6 +114,9 @@ class MIValue : public Moveable<MIValue>
 		// add an item to an array
 		MIValue &Add(MIValue pick_ &v);
 		MIValue &Add(String const &data);
+		
+		// remove a tuple key
+		MIValue &Remove(String const &key);
 };
 
 #endif

@@ -1,6 +1,7 @@
 #include "Debuggers.h"
 #include <ide/ide.h>
 
+#include "TypeSimplify.h"
 #include "PrettyPrinters.brc"
 
 #define LDUMP(x) // DDUMP(x)
@@ -33,6 +34,24 @@ void WatchEdit::HighlightLine(int line, Vector<Highlight>& h, int pos)
 	Color cOdd = Blend(SColorInfo, White, 128);
 	for(int i = 0; i < h.GetCount(); i++)
 		h[i].paper = (line % 2 ? cOdd : cEven);
+}
+
+// fill a pane with data from a couple of arrays without erasing it first
+// (avoid re-painting and resetting scroll if not needed)
+static void FillPane(ArrayCtrl &pane, Index<String> const &nam, Vector<String> const &val)
+{
+	int oldCount = pane.GetCount();
+	int newCount = nam.GetCount();
+	if(newCount < oldCount)
+		for(int i = oldCount - 1; i >= newCount; i--)
+			pane.Remove(i);
+	for(int i = 0; i < min(oldCount, newCount); i++)
+	{
+		pane.Set(i, 0, nam[i]);
+		pane.Set(i, 1, val[i]);
+	}
+	for(int i = oldCount; i < newCount; i++)
+		pane.Add(nam[i], val[i]);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,11 +149,10 @@ void Gdb_MI2::Run()
 // non-stop mode enabled crashes X...don't know if it's a GDB bug or Theide one.
 // anyways, by now we give up with async mode and remove 'Asynchronous break' function
 		val = MICmd("exec-run");
-
 //		val = MICmd("interpreter-exec console run&");
-		
 	else
 		val = MICmd("exec-continue --all");
+	
 	int i = 50;
 	while(!started && --i)
 	{
@@ -200,33 +218,31 @@ bool Gdb_MI2::IsFinished()
 
 bool Gdb_MI2::Tip(const String& exp, CodeEditor::MouseTip& mt)
 {
-/*
 	// quick exit
 	if(exp.IsEmpty() || !dbg)
 		return false;
 
-	int idx = localVarNames.Find(exp);
-	String nam, val;
-	if(idx < 0)
-	{
-		idx = thisNames.Find(exp);
-		if(idx < 0)
-			return false;
-		nam = thisFullNames[idx];
-		val = thisValues[idx];
-	}
+	int iVal;
+	String val;
+
+	// first look into locals....
+	iVal = localExpressions.Find(exp);
+	if(iVal >= 0)
+		val = localValues[iVal];
+	// if not fount, look into 'this'
 	else
 	{
-		nam = exp;
-		val = localVarValues[idx];
+		iVal = thisShortExpressions.Find(exp);
+		if(iVal >= 0)
+			val = thisValues[iVal];
+		else
+			return false;
 	}
 
 	mt.display = &StdDisplay();
-	mt.value = nam + "=" + val;
+	mt.value = exp + "=" + val;
 	mt.sz = mt.display->GetStdSize(String(mt.value) + "X");
 	return true;
-*/
-return false;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -293,6 +309,7 @@ Gdb_MI2::Gdb_MI2()
 	watches.WhenLeftDouble = THISBACK1(onExploreExpr, &watches);
 	watches.EvenRowColor();
 	watches.OddRowColor();
+	watches.WhenUpdateRow = THISBACK1(SyncWatches, MIValue());
 
 	int c = EditField::GetStdHeight();
 	explorer.AddColumn("", 1);
@@ -530,7 +547,7 @@ MIValue Gdb_MI2::ReadGdb(bool wait)
 		// some commands (in particular if they return python exceptions)
 		// have a delay between returned exception text and command result
 		// so we shall wait up to the final (gdb)
-		int retries = 3 * 50;
+		int retries = 13 * 50;
 		while(dbg && retries--)
 		{
 			dbg->Read(s);
@@ -543,7 +560,6 @@ MIValue Gdb_MI2::ReadGdb(bool wait)
 	}
 	else if(dbg)
 		dbg->Read(output);
-
 	if(output.IsEmpty())
 		return res;
 	return ParseGdb(output);
@@ -610,8 +626,8 @@ MIValue Gdb_MI2::MICmd(const char *cmdLine)
 	// is there and gives problems to MI interface. We shall maybe
 	// parse and store it somewhere
 	ReadGdb(false);
-	dbg->Write(String("-") + cmdLine + "\n");
 
+	dbg->Write(String("-") + cmdLine + "\n");
 	return ReadGdb();
 }
 
@@ -743,7 +759,7 @@ void Gdb_MI2::SyncIde(bool fr)
 {
 	// kill pending update callbacks
 	timeCallback.Kill();
-	
+
 	// get current frame info and level
 	MIValue fInfo = MICmd("stack-info-frame")["frame"];
 	int level = atoi(fInfo["level"].Get());
@@ -763,22 +779,24 @@ void Gdb_MI2::SyncIde(bool fr)
 	}
 
 	// setup threads droplist
-	threadSelector.Clear();
-	MIValue tInfo = MICmd("thread-info");
-	if(!tInfo.IsError() && !tInfo.IsEmpty())
 	{
-		int curThread = atoi(tInfo["current-thread-id"].Get());
-		MIValue &threads = tInfo["threads"];
-		for(int iThread = 0; iThread < threads.GetCount(); iThread++)
+		threadSelector.Clear();
+		MIValue tInfo = MICmd("thread-info");
+		if(!tInfo.IsError() && !tInfo.IsEmpty())
 		{
-			int id = atoi(threads[iThread]["id"].Get());
-			if(id == curThread)
+			int curThread = atoi(tInfo["current-thread-id"].Get());
+			MIValue &threads = tInfo["threads"];
+			for(int iThread = 0; iThread < threads.GetCount(); iThread++)
 			{
-				threadSelector.Add(id, Format("#%03x(*)", id));
-				break;
+				int id = atoi(threads[iThread]["id"].Get());
+				if(id == curThread)
+				{
+					threadSelector.Add(id, Format("#%03x(*)", id));
+					break;
+				}
 			}
+			threadSelector <<= curThread;
 		}
-		threadSelector <<= curThread;
 	}
 
 	// get the arguments for current frame
@@ -791,11 +809,11 @@ void Gdb_MI2::SyncIde(bool fr)
 		frame <<= 0;
 	}
 
-	// update vars and disasm only on idle times
-	timeCallback.Set(500, THISBACK(SyncData));
-//SyncData();
-
+	// sync disassembly
 	SyncDisas(fInfo, fr);
+	
+	// update vars only on idle times
+	timeCallback.Set(500, THISBACK(SyncData));
 }
 
 // logs frame data on console
@@ -841,9 +859,8 @@ void Gdb_MI2::StopAllThreads(void)
 	// reselect current thread as it was before stopping all others
 	if(current != "")
 		MICmd("thread-select " + current);
-
 }
-		
+
 // check for stop reason
 void Gdb_MI2::CheckStopReason(void)
 {
@@ -1085,34 +1102,111 @@ struct CapitalLess
 };
 
 // update local variables on demand
-void Gdb_MI2::UpdateLocalVars(void)
+void Gdb_MI2::SyncLocals(MIValue val)
 {
-	localVarNames.Clear();
-	localVarValues.Clear();
-	
-	MIValue iLoc = MICmd("stack-list-variables 1");
-	if(!iLoc || iLoc.IsEmpty())
-		return;
-	MIValue &loc = iLoc["variables"];
-	if(!loc.IsArray())
-		return;
-	
-	for(int iLoc = 0; iLoc < loc.GetCount(); iLoc++)
+	bool firstCall = false;
+	static VectorMap<String, String> prev;
+
+	// if not done, start first evaluation step
+	if(val.IsEmpty())
 	{
-		MIValue &curLoc = loc[iLoc];
-		if(curLoc["value"].IsString())
+		prev = DataMap2(locals);
+
+		// get local vars names
+		MIValue locs = MICmd("stack-list-variables 1");
+		if(!locs.IsTuple() || locs.Find("variables") < 0)
+			return;
+		
+		// variables are returned as a tuple, named "variables"
+		// containing a array of variables
+		MIValue lLocs = locs["variables"];
+		if(!lLocs.IsArray())
+			return;
+
+		// as values are in string format we must parse them
+		// so we simply build a big string with all variables
+		// and feed into MIValue parser
+		String s = "{";
+		for(int iLoc = 0; iLoc < lLocs.GetCount(); iLoc++)
 		{
-			localVarNames.Add(curLoc["name"].ToString());
-			localVarValues.Add(curLoc["value"].ToString());
+			MIValue &lLoc = lLocs[iLoc];
+			String name = lLoc["name"];
+
+			// skip 'this', we've a page for it
+			if(name == "this")
+				continue;
+			s << name << "=" << lLoc["value"] << ",";
 		}
-	}
+		if(s.EndsWith(","))
+			s = s.Left(s.GetCount()-1);
+		s << "}";
+		val = s;
+
+		val.PackNames();
+		AddAttribs("", val);
+		val.FixArrays();
+		
+		TypeSimplify(val, false);
+		
+		firstCall = true;
+	 }
+
+	bool more = TypeSimplify(val, true);
+
+	// collect variables names and values
+	CollectVariables(val, localExpressions, localValues, localHints);
+
+	// update locals pane
+	FillPane(locals, localExpressions, localValues);
+	
+	if(more)
+		// more evaluations are needed, respawn the function with a delay
+		// big delay on first respawn to allow quick stepping without lag
+		timeCallback.Set(firstCall ? 2000 : 200, THISBACK1(SyncLocals, val));
+	else
+		// when finished, mark changed values
+		MarkChanged2(prev, locals);
 }
 
 // update 'this' inspector data
-void Gdb_MI2::UpdateThis(void)
+void Gdb_MI2::SyncThis(MIValue val)
 {
-	MIValue val = Evaluate("*this");
+	bool firstCall = false;
+	static VectorMap<String, String> prev;
+
+	// if not done, start first evaluation step
+	if(val.IsEmpty())
+	{
+		val = Evaluate("*this", false);
+		prev = DataMap2(members);
+
+		// this is the first evaluation step
+		// just simple types -- lag some seconds to full evaluation
+		// which is quite slow
+		firstCall = true;
+	}
+
+	// deep evaluation step
+	bool more = TypeSimplify(val, true);
+	
+	// collect variables names and values
 	CollectVariables(val, thisExpressions, thisValues, thisHints);
+
+	// strip the (*this) from variables names
+	thisShortExpressions.Clear();
+	for(int iExpr = 0; iExpr < thisExpressions.GetCount(); iExpr++)
+		thisShortExpressions.Add(thisExpressions[iExpr].Mid(8));
+
+	// update 'this' pane
+	FillPane(members, thisShortExpressions, thisValues);
+	
+	if(more)
+		// more evaluations are needed, respawn the function with a delay
+		// big delay on first respawn to allow quick stepping without lag
+		timeCallback.Set(firstCall ? 2000 : 200, THISBACK1(SyncThis, val));
+	else
+		// when finished, mark changed values
+		MarkChanged2(prev, members);
 }
 		
 // sync auto vars treectrl
@@ -1139,9 +1233,9 @@ void Gdb_MI2::SyncAutos()
 					break;
 				exp << p.ReadId();
 			}
-			int idx = localVarNames.Find(exp);
+			int idx = localExpressions.Find(exp);
 			if(idx >= 0)
-				autos.Add(exp, localVarValues[idx]);
+				autos.Add(exp, localValues[idx]);
 		}
 		p.SkipTerm();
 	}
@@ -1150,40 +1244,72 @@ void Gdb_MI2::SyncAutos()
 }
 
 // sync watches treectrl
-void Gdb_MI2::SyncLocals()
+void Gdb_MI2::SyncWatches(MIValue val)
 {
-	VectorMap<String, String> prev = DataMap2(locals);
-	locals.Clear();
-
-	for(int iLoc = 0; iLoc < localVarNames.GetCount(); iLoc++)
-		locals.Add(localVarNames[iLoc], localVarValues[iLoc]);
-	MarkChanged2(prev, locals);
-}
-
-void Gdb_MI2::SyncMembers(void)
-{
-	VectorMap<String, String> prev = DataMap2(members);
-	members.Clear();
-
-	for(int iMem = 0; iMem < thisExpressions.GetCount(); iMem++)
-		members.Add(thisExpressions[iMem].Mid(7), thisValues[iMem]);
-	MarkChanged2(prev, members);
-}
-
-// sync watches treectrl
-void Gdb_MI2::SyncWatches()
-{
-	// re-fill the control
-	VectorMap<String, String> prev = DataMap2(watches);
-	for(int i = 0; i < watches.GetCount(); i++)
+	static VectorMap<String, String> prev;
+	bool firstCall = false;
+	
+	// on first cycle, we fast evaluate all expressions
+	// without going deep, and put all results into an array
+	if(val.IsEmpty())
 	{
-		MIValue res = MICmd("data-evaluate-expression \"" + watches.Get(i, 0).ToString() + "\"");
-		if(res.IsError() || res.IsEmpty())
-			watches.Set(i, 2, t_("<can't evaluate expression>"));
-		else
-			watches.Set(i, 2, res["value"].ToString());
+		prev = DataMap2(watches);
+
+		for(int i = 0; i < watches.GetCount(); i++)
+		{
+			String expr = watches.Get(i,0);
+			MIValue res;
+			res.Set("<can't evaluate>");
+			MIValue valExpr = MICmd("data-evaluate-expression " + expr);
+
+			if(valExpr.IsTuple() && valExpr.Find("value") >= 0)
+			{
+				MIValue const &tup = valExpr.Get("value");
+				if(tup.IsString())
+				{
+					String s = tup.ToString();
+					res = s;
+				}
+			}
+			res.PackNames();
+			AddAttribs("", res);
+			res.FixArrays();
+
+			val.Add(res);
+		}
+		firstCall = true;
 	}
-	MarkChanged2(prev, watches);
+RLOG(val.Dump());	
+	bool more = false;
+	
+	// simplify loop, returns when at least one simplify step happens
+	for(int iVal = 0; iVal < val.GetCount(); iVal++)
+	{
+		MIValue &v = val[iVal];
+		more |= TypeSimplify(v, true);
+		if(more)
+			break;
+	}
+	// collects all results
+	watchesValues.Clear();
+	for(int iVal = 0; iVal < val.GetCount(); iVal++)
+		watchesValues << CollectVariablesShort(val[iVal]);
+
+	// fill expressions with ctrl expr contents
+	watchesExpressions.Clear();
+	for(int iVal = 0; iVal < watchesValues.GetCount(); iVal++)
+		watchesExpressions << watches.Get(iVal, 0);
+
+	// update locals pane
+	FillPane(watches, watchesExpressions, watchesValues);
+	
+	if(more)
+		// more evaluations are needed, respawn the function with a delay
+		// big delay on first respawn to allow quick stepping without lag
+		timeCallback.Set(firstCall ? 2000 : 200, THISBACK1(SyncWatches, val));
+	else
+		// when finished, mark changed values
+		MarkChanged2(prev, watches);
 }
 
 // sync data tabs, depending on which tab is shown
@@ -1192,17 +1318,15 @@ void Gdb_MI2::SyncData()
 	if(dataSynced)
 		return;
 	
-	// updates stored local variables
-	// those are needed for Autos, Locals and Tooltips
-	UpdateLocalVars();
-	
 	// update stored 'this' member data
 	// also used for tooltips and 'this' pane page
-	UpdateThis();
+	SyncThis();
 	
-	SyncAutos();
+	// updated locals variables
 	SyncLocals();
-	SyncMembers();
+
+	SyncAutos();
+
 	SyncWatches();
 	
 	dataSynced = true;
@@ -1515,7 +1639,8 @@ void Gdb_MI2::onExploreExpr(ArrayCtrl *what)
 	{
 		// otherwise, we use the expression from sending ArrayCtrl
 		int line = what->GetCursor();
-		if(line >= 0)
+		int col = what->GetClickColumn();
+		if(line >= 0 && (what != &watches || col != 0))
 			expr = what->Get(line, 0);
 	}
 	// nothing to do on empty expression
@@ -1619,6 +1744,24 @@ bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdli
 	MICmd("gdb-set width 0");
 	MICmd("gdb-set confirm off");
 	MICmd("gdb-set print asm-demangle");
+	
+	// limit array printing to 200 elements
+	MICmd("gdb-set print elements 200");
+	
+	// do NOT print repeated counts -- they confuse the parser
+	MICmd("gdb-set print repeat 0");
+
+	// we wanna addresses, we skip them in parser if useless
+//	MICmd("gdb-set print address off");
+
+	// print true objects having their pointers (if have vtbls)
+	MICmd("gdb-set print object on");
+	
+	// print symbolic addresses, if found
+	MICmd("gdb-set print symbol on");
+	
+	// do not search of symbolic address near current one
+	MICmd("gdb-set print max-symbolic-offset 1");
 	
 	// avoids debugger crash if caught inside ungrabbing function
 	// (don't solves all cases, but helps...)

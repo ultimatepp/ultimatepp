@@ -1,7 +1,26 @@
 #include "TypeSimplify.h"
 
-static bool UppStringSimplify(Gdb_MI2 &gdb, MIValue &val)
+#define EVALDEEP
+#define EVALDEEP_VECTOR		5
+#define EVALDEEP_ARRAY		5
+#define EVALDEEP_VECTORMAP	5
+#define EVALDEEP_ARRAYMAP	5
+#define EVALDEEP_INDEX		5
+
+#define SLEN 15
+#define LLEN 2
+static bool UppStringSimplify(Gdb_MI2 &gdb, MIValue &val, bool deep)
 {
+	union
+	{
+		char chr[16];
+		char  *ptr;
+		dword *wptr;
+		qword *qptr;
+		word   v[8];
+		dword  w[4];
+		qword  q[2];
+	} u;
 
 	// strings are "easy", in debug mode 's' and 'len' members are provided
 	// so we shall just look at them in tuple
@@ -13,20 +32,25 @@ static bool UppStringSimplify(Gdb_MI2 &gdb, MIValue &val)
 
 		if(!v.IsTuple() || !unn.IsTuple())
 			return false;
-		
 		if(unn.Find("chr") < 0)
 			return false;
-		String chr = unn["chr"][SIMPLIFY_VALUE];
-		bool isSmall = (chr[14] == 0);
+		String chrs = unn["chr"][SIMPLIFY_VALUE];
+		memcpy(u.chr, ~chrs, 16);
+
+		bool isSmall = (u.chr[14] == 0);
 		String s;
 		if(isSmall)
-			s = chr;
+		{
+			byte len = u.chr[SLEN];
+			s = chrs.Left(len);
+		}
 		else
 		{
 			if(unn.Find("ptr") < 0)
 				return false;
-			s = unn["ptr"][SIMPLIFY_VALUE];
-			
+			dword len = u.w[LLEN];
+			s = unn["ptr"][SIMPLIFY_VALUE].ToString();
+
 			// strip address...
 			int i = s.Find('"');
 			if(i >= 0)
@@ -34,10 +58,13 @@ static bool UppStringSimplify(Gdb_MI2 &gdb, MIValue &val)
 				s = s.Mid(i+1);
 				s = s.Left(s.GetCount()-1);
 			}
+			s = s.Left(len);
 		}
 		val[SIMPLIFY_VALUE].Set("\"" + s + "\"");
 		val.FindAdd(SIMPLIFY_HINT, SIMPLIFY_SIMPLE);
-		return true;
+		
+		// no need for further evaluation on this object
+		return false;
 	}
 	catch(...)
 	{
@@ -45,9 +72,13 @@ static bool UppStringSimplify(Gdb_MI2 &gdb, MIValue &val)
 	}
 }
 
-static bool UppVectorSimplify(Gdb_MI2 &gdb, MIValue &val)
+static bool UppVectorSimplify(Gdb_MI2 &gdb, MIValue &val, bool deep)
 {
-//RLOG(val.Dump());
+	// if we're just doing first scan phase, signal that we need further evaluation later
+#ifdef EVALDEEP
+	if(!deep)
+		return true;
+#endif
 	try
 	{
 		MIValue &v = val[SIMPLIFY_VALUE];
@@ -61,31 +92,40 @@ static bool UppVectorSimplify(Gdb_MI2 &gdb, MIValue &val)
 		// display max 5 elements of array, starting from 0 and ONLY if elements evaluate to a simple type
 		// otherwise display {...} string
 		// to do this, we shall ask gdb to evaluate the undelying vector
-		int count = min(5, items);
-		String vals = "";
-		for(int i = 0; i < count; i++)
+		String vals;
+		int count = min(EVALDEEP_VECTOR, items);
+//RLOG("COUNT : " << count);
+#ifdef EVALDEEP
+		if(count)
 		{
-			MIValue vi = gdb.Evaluate(vectorExpr + Format("[%d]", i));
-			if(vi.IsError())
+			vals = ": [ ... ]";
+			String expr = vectorExpr + Format("[0]@%d", count);
+			MIValue vi = gdb.Evaluate(expr);
+//RLOG(vi.Dump());
+			if(vi.IsArray() && vi.GetCount() && vi[0][SIMPLIFY_VALUE].IsString())
 			{
-				vals = "can't evaluate";
-				break;
+				vals = ": [ ";
+				for(int i = 0; i < vi.GetCount(); i++)
+					vals = vals + vi[i][SIMPLIFY_VALUE].ToString() + " , ";
+				if(count < items)
+					vals << "... ]";
+				else
+					vals = vals.Left(vals.GetCount() - 2) + "]";
 			}
-			if(!vi.IsString())
-			{
-				vals = "{...}";
-				break;
-			}
-			vals = vals + ", " + vi.ToString();
 		}
-		if(vals.StartsWith(", "))
-			vals = vals.Mid(2);
-		vals = Format("Upp::Vector with %d elements : %s", items, vals);
-//RLOG("VALS = " << vals);
+#else
+		if(count)
+			vals = ": [ ... ]";
+#endif
+		vals = Format("Upp::Vector with %d elements %s", items, vals);
 		val[SIMPLIFY_VALUE].Set(vals);
 
-//RLOG(v.Dump());
+		// signal we've done a deep evaluation
+#ifdef EVALDEEP
 		return true;
+#else
+		return false;
+#endif
 	}
 	catch(...)
 	{
@@ -93,9 +133,14 @@ static bool UppVectorSimplify(Gdb_MI2 &gdb, MIValue &val)
 	}
 }
 
-static bool UppVectorMapSimplify(Gdb_MI2 &gdb, MIValue &val)
+static bool UppVectorMapSimplify(Gdb_MI2 &gdb, MIValue &val, bool deep)
 {
 //RLOG(val.Dump());
+	// if we're just doing first scan phase, signal that we need further evaluation later
+#ifdef EVALDEEP
+	if(!deep)
+		return true;
+#endif
 	try
 	{
 		MIValue &v = val[SIMPLIFY_VALUE];
@@ -112,51 +157,47 @@ static bool UppVectorMapSimplify(Gdb_MI2 &gdb, MIValue &val)
 		val.FindAdd(SIMPLIFY_COUNT, FormatInt(items));
 		
 		
-		// display max 3 elements of map, starting from 0 and ONLY if elements evaluate to a simple type
+		// display max 5 elements of map, starting from 0 and ONLY if elements evaluate to a simple type
 		// otherwise display {...} string
 		// to do this, we shall ask gdb to evaluate the undelying vector
-		int count = min(3, items);
-		String vals = "";
-		bool err = false;
-		bool complex = false;
-		for(int i = 0; i < count; i++)
+		String vals;
+		int count = min(EVALDEEP_VECTORMAP, items);
+#ifdef EVALDEEP
+		if(count)
 		{
-			MIValue vk = gdb.Evaluate(keyExpr + Format("[%d]", i));
-			if(vk.IsError())
+			vals = ": { ... }";
+			String kExpr = keyExpr + Format("[0]@%d", count);
+			MIValue viKey = gdb.Evaluate(kExpr);
+			if(viKey.IsArray() && viKey[0][SIMPLIFY_VALUE].IsString())
 			{
-				err = true;
-				break;
+				String vExpr = valExpr + Format("[0]@%d", count);
+				MIValue viVal = gdb.Evaluate(vExpr);
+				if(viVal.IsArray() && viVal[0][SIMPLIFY_VALUE].IsString())
+				{
+					vals = ": { ";
+					for(int i = 0; i < viKey.GetCount(); i++)
+						vals << "( " << viKey[i][SIMPLIFY_VALUE].ToString() << " , " << viVal[i][SIMPLIFY_VALUE].ToString() << " ) , ";
+					if(count < items)
+						vals << "... }";
+					else
+						vals = vals.Left(vals.GetCount() - 2) + "}";
+				}
+//RLOG(vals);
 			}
-			if(!vk.IsString())
-			{
-				complex = true;
-				break;
-			}
-			MIValue vv = gdb.Evaluate(valExpr + Format("[%d]", i));
-			if(vv.IsError())
-			{
-				err = true;
-				break;
-			}
-			if(!vv.IsString())
-			{
-				complex = true;
-				break;
-			}
-			vals = vals + ", (" + vk.ToString() + "," + vv.ToString() + ")";
 		}
-		
-		if(complex)
-			vals = "{...}";
-		else if(err)
-			vals = "can't evaluate";
-		if(vals.StartsWith(", "))
-			vals = vals.Mid(2);
-		vals = Format("Upp::VectorMap with %d elements : %s", items, vals);
-//RLOG("VALS = " << vals);
+#else
+		if(count)
+			vals = ": { ... }";
+#endif
+		vals = Format("Upp::VectorMap with %d elements %s", items, vals);
 		val[SIMPLIFY_VALUE].Set(vals);
-		return true;
 
+		// signal we've done a deep evaluation
+#ifdef EVALDEEP
+		return true;
+#else
+		return false;
+#endif
 	}
 	catch(...)
 	{
@@ -165,9 +206,14 @@ static bool UppVectorMapSimplify(Gdb_MI2 &gdb, MIValue &val)
 }
 
 
-static bool UppArraySimplify(Gdb_MI2 &gdb, MIValue &val)
+static bool UppArraySimplify(Gdb_MI2 &gdb, MIValue &val, bool deep)
 {
 //RLOG(val.Dump());
+	// if we're just doing first scan phase, signal that we need further evaluation later
+#ifdef EVALDEEP
+	if(!deep)
+		return true;
+#endif
 	try
 	{
 		MIValue &v = val[SIMPLIFY_VALUE]["vector"][SIMPLIFY_VALUE];
@@ -182,31 +228,46 @@ static bool UppArraySimplify(Gdb_MI2 &gdb, MIValue &val)
 		// display max 5 elements of array, starting from 0 and ONLY if elements evaluate to a simple type
 		// otherwise display {...} string
 		// to do this, we shall ask gdb to evaluate the undelying vector
-		int count = min(5, items);
-		String vals = "";
-		for(int i = 0; i < count; i++)
+		String vals;
+		int count = min(EVALDEEP_ARRAY, items);
+#ifdef EVALDEEP
+		if(count)
 		{
-			MIValue vi = gdb.Evaluate(vectorExpr + Format("[%d][0]", i));
-			if(vi.IsError())
+			// pre-fetch main array variable to speedup element request
+			gdb.MICmd("gdb-set variable $thearray=" + vectorExpr);
+			
+			// get array elements
+			vals = ": [ ... ]";
+			String expr = "{";
+			for(int i = 0; i < count; i++)
+				expr << Format("$thearray[%d][0]", i) << ",";
+			expr = expr.Left(expr.GetCount()-1) + "}";
+			MIValue vi = gdb.Evaluate(expr);
+			
+			if(vi.IsArray() && vi.GetCount() && vi[0][SIMPLIFY_VALUE].IsString())
 			{
-				vals = "can't evaluate";
-				break;
+				vals = ": [ ";
+				for(int i = 0; i < vi.GetCount(); i++)
+					vals = vals + vi[i][SIMPLIFY_VALUE].ToString() + " , ";
+				if(count < items)
+					vals << "... ]";
+				else
+					vals = vals.Left(vals.GetCount() - 2) + "]";
 			}
-			if(!vi.IsString())
-			{
-				vals = "{...}";
-				break;
-			}
-			vals = vals + ", " + vi.ToString();
 		}
-		if(vals.StartsWith(", "))
-			vals = vals.Mid(2);
-		vals = Format("Upp::Array with %d elements : %s", items, vals);
-//RLOG("VALS = " << vals);
+#else
+		if(count)
+			vals = ": [ ... ]";
+#endif
+		vals = Format("Upp::Array with %d elements %s", items, vals);
 		val[SIMPLIFY_VALUE].Set(vals);
 
-//RLOG(v.Dump());
+		// signal we've done a deep evaluation
+#ifdef EVALDEEP
 		return true;
+#else
+		return false;
+#endif
 	}
 	catch(...)
 	{
@@ -214,9 +275,14 @@ static bool UppArraySimplify(Gdb_MI2 &gdb, MIValue &val)
 	}
 }
 
-static bool UppArrayMapSimplify(Gdb_MI2 &gdb, MIValue &val)
+static bool UppArrayMapSimplify(Gdb_MI2 &gdb, MIValue &val, bool deep)
 {
 //RLOG(val.Dump());
+	// if we're just doing first scan phase, signal that we need further evaluation later
+#ifdef EVALDEEP
+	if(!deep)
+		return true;
+#endif
 	try
 	{
 		MIValue &v = val[SIMPLIFY_VALUE];
@@ -236,49 +302,51 @@ static bool UppArrayMapSimplify(Gdb_MI2 &gdb, MIValue &val)
 		// display max 3 elements of map, starting from 0 and ONLY if elements evaluate to a simple type
 		// otherwise display {...} string
 		// to do this, we shall ask gdb to evaluate the undelying vector
-		int count = min(3, items);
-		String vals = "";
-		bool err = false;
-		bool complex = false;
-		for(int i = 0; i < count; i++)
+		String vals;
+		int count = min(EVALDEEP_ARRAYMAP, items);
+#ifdef EVALDEEP
+		if(count)
 		{
-			MIValue vk = gdb.Evaluate(keyExpr + Format("[%d]", i));
-			if(vk.IsError())
+			// pre-fetch main array variable to speedup element request
+			gdb.MICmd("gdb-set variable $thearray=" + valExpr);
+			
+			vals = ": { ... }";
+			String kExpr = keyExpr + Format("[0]@%d", count);
+			MIValue viKey = gdb.Evaluate(kExpr);
+			if(viKey.IsArray() && viKey[0][SIMPLIFY_VALUE].IsString())
 			{
-				err = true;
-				break;
+				String vExpr = "{";
+				for(int i = 0; i < count; i++)
+					vExpr << Format("$thearray[%d][0]", i) << ",";
+				vExpr = vExpr.Left(vExpr.GetCount()-1) + "}";
+				MIValue viVal = gdb.Evaluate(vExpr);
+	
+				if(viVal.IsArray() && viVal[0][SIMPLIFY_VALUE].IsString())
+				{
+					vals = ": { ";
+					for(int i = 0; i < viKey.GetCount(); i++)
+						vals << "( " << viKey[i][SIMPLIFY_VALUE].ToString() << " , " << viVal[i][SIMPLIFY_VALUE].ToString() << " ) , ";
+					if(count < items)
+						vals << "... }";
+					else
+						vals = vals.Left(vals.GetCount() - 2) + "}";
+				}
+//RLOG(vals);
 			}
-			if(!vk.IsString())
-			{
-				complex = true;
-				break;
-			}
-			MIValue vv = gdb.Evaluate(valExpr + Format("[%d][0]", i));
-			if(vv.IsError())
-			{
-				err = true;
-				break;
-			}
-			if(!vv.IsString())
-			{
-				complex = true;
-				break;
-			}
-			vals = vals + ", (" + vk.ToString() + "," + vv.ToString() + ")";
 		}
-		
-		if(complex)
-			vals = "{...}";
-		else if(err)
-			vals = "can't evaluate";
-		if(vals.StartsWith(", "))
-			vals = vals.Mid(2);
-		vals = Format("Upp::ArrayMap with %d elements : %s", items, vals);
-//RLOG("VALS = " << vals);
+#else
+		if(count)
+			vals = ": { ... }";
+#endif
+		vals = Format("Upp::ArrayMap with %d elements %s", items, vals);
 		val[SIMPLIFY_VALUE].Set(vals);
 		
+		// signal we've done a deep evaluation
+#ifdef EVALDEEP
 		return true;
-
+#else
+		return false;
+#endif
 	}
 	catch(...)
 	{
@@ -286,6 +354,65 @@ static bool UppArrayMapSimplify(Gdb_MI2 &gdb, MIValue &val)
 	}
 }
 
+static bool UppIndexSimplify(Gdb_MI2 &gdb, MIValue &val, bool deep)
+{
+//RLOG(val.Dump());
+	// if we're just doing first scan phase, signal that we need further evaluation later
+#ifdef EVALDEEP
+	if(!deep)
+		return true;
+#endif
+	try
+	{
+		MIValue &keyExpr = val[SIMPLIFY_VALUE][1][SIMPLIFY_VALUE]["key"][SIMPLIFY_VALUE];
+		String vectorExpr = keyExpr["vector"][SIMPLIFY_EXPR];
+		int items = atoi(keyExpr["items"][SIMPLIFY_VALUE].ToString());
+		
+		val.FindAdd(SIMPLIFY_HINT, SIMPLIFY_ARRAY);
+		val.FindAdd(SIMPLIFY_START, "0");
+		val.FindAdd(SIMPLIFY_COUNT, FormatInt(items));
+		
+		// display max 5 elements of array, starting from 0 and ONLY if elements evaluate to a simple type
+		// otherwise display {...} string
+		// to do this, we shall ask gdb to evaluate the undelying vector
+		String vals;
+		int count = min(EVALDEEP_INDEX, items);
+#ifdef EVALDEEP
+		if(count)
+		{
+			vals = ": [ ... ]";
+			String expr = vectorExpr << Format("[0]@%d", count);
+			MIValue vi = gdb.Evaluate(expr);
+			if(vi.IsArray() && vi.GetCount() && vi[0][SIMPLIFY_VALUE].IsString())
+			{
+				vals = ": [ ";
+				for(int i = 0; i < vi.GetCount(); i++)
+					vals = vals + vi[i][SIMPLIFY_VALUE].ToString() + " , ";
+				if(count < items)
+					vals << "... ]";
+				else
+					vals = vals.Left(vals.GetCount() - 2) + "]";
+			}
+		}
+#else
+		if(count)
+			vals = ": [ ... ]";
+#endif
+		vals = Format("Upp::Index with %d elements %s", items, vals);
+		val[SIMPLIFY_VALUE].Set(vals);
+
+		// signal we've done a deep evaluation
+#ifdef EVALDEEP
+		return true;
+#else
+		return false;
+#endif
+	}
+	catch(...)
+	{
+		return false;
+	}
+}
 
 // Register the simplifiers
 REGISTERSIMPLIFIER("<Upp::Moveable<Upp::String,Upp::AString<Upp::String0>>>"		, UppStringSimplify);
@@ -293,5 +420,5 @@ REGISTERSIMPLIFIER("<Upp::MoveableAndDeepCopyOption<Upp::Vector<"					, UppVecto
 REGISTERSIMPLIFIER("<Upp::MoveableAndDeepCopyOption<Upp::VectorMap<"				, UppVectorMapSimplify);
 REGISTERSIMPLIFIER("<Upp::MoveableAndDeepCopyOption<Upp::Array<"					, UppArraySimplify);
 REGISTERSIMPLIFIER("<Upp::MoveableAndDeepCopyOption<Upp::ArrayMap<"					, UppArrayMapSimplify);
-
+REGISTERSIMPLIFIER("<Upp::MoveableAndDeepCopyOption<Upp::Index<"					, UppIndexSimplify);
 
