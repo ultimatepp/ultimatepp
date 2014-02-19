@@ -119,15 +119,18 @@ int MIValue::ParsePair(String &name, MIValue &val, String const &s, int i)
 			i++;
 	}
 
-	// skip address part, if any... it's useless and confuses the parser
+	// skip address part before a tuple start, if any... it's useless and confuses the parser
 	if(s[i] == '@')
 	{
-		while(s[i] && s[i] != ':')
-			i++;
-		if(s[i] == ':')
-			i++;
-		while(s[i] && IsSpace(s[i]))
-			i++;
+		int j = i;
+		while(s[j] && s[j] != ':')
+			j++;
+		if(s[j] == ':')
+			j++;
+		while(s[j] && IsSpace(s[j]))
+			j++;
+		if(s[j] == '{')
+			i = j;
 	}
 
 	switch(s[i])
