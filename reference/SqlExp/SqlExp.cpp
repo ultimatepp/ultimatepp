@@ -80,6 +80,7 @@ GUI_APP_MAIN
 	EXP(Select(SqlMin(COL)).From(TABLE1));
 	EXP(Select(SqlSum(COL)).From(TABLE1));
 	EXP(Select(Avg(COL)).From(TABLE1));
+	EXP(Select(Abs(COL)).From(TABLE1));
 	EXP(Select(Stddev(COL)).From(TABLE1));
 	EXP(Select(Variance(COL)).From(TABLE1));
 	EXP(Select(Greatest(COLUMN1, COLUMN2)).From(TABLE1));
