@@ -58,13 +58,12 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		void onExplorerBack();
 		void onExplorerForward();
 		void ExplorerMenu(Bar& bar);
-		void doExplore(String const &expr, String var, bool isChild, bool appendHistory);
+
+		void doExplore(String const &expr, bool appendHistory);
+
 		Index<String> explorerHistoryExpressions;
-		Index<String> explorerHistoryVars;
-		Vector<bool> explorerHistoryChilds;
 		int explorerHistoryPos;
-		Vector<String> explorerChildVars;
-		String explorerParentExpr;
+		Index<String> explorerChildExpressions;
 
 		Label dlock;
 	
@@ -227,6 +226,10 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		// collect evaluated variables got with Evaluate
 		// into a single-line string for short display
 		String CollectVariablesShort(MIValue &val);
+
+		// fill a pane with data from a couple of arrays without erasing it first
+		// (avoid re-painting and resetting scroll if not needed)
+		void FillPane(ArrayCtrl &pane, Index<String> const &nam, Vector<String> const &val);
 
 	protected:
 	

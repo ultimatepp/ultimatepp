@@ -22,8 +22,6 @@ static bool UppStringSimplify(Gdb_MI2 &gdb, MIValue &val, bool deep)
 		qword  q[2];
 	} u;
 
-	// strings are "easy", in debug mode 's' and 'len' members are provided
-	// so we shall just look at them in tuple
 	// see Upp::String code for how it works....
 	try
 	{
