@@ -6,27 +6,6 @@
 #define LDUMP(x) // DDUMP(x)
 #define LLOG(x)  // DLOG(x)
 
-// we need those because we changed ArrayCtrl formats (including var types)
-static VectorMap<String, String> DataMap2(const ArrayCtrl& data)
-{
-	VectorMap<String, String> m;
-	for(int i = 0; i < data.GetCount(); i++)
-		m.Add(data.Get(i, 0), data.Get(i, 1));
-	return m;
-}
-
-static void MarkChanged2(const VectorMap<String, String>& m, ArrayCtrl& data)
-{
-	for(int i = 0; i < data.GetCount(); i++)
-	{
-		int q = m.Find(data.Get(i, 0));
-		if(q >= 0 && m[q] != data.Get(i, 1))
-			data.SetDisplay(i, 1, Single<RedDisplay>());
-		else
-			data.SetDisplay(i, 1, StdDisplay());
-	}
-}
-
 void WatchEdit::HighlightLine(int line, Vector<Highlight>& h, int pos)
 {
 	Color cEven = Blend(SColorInfo, White, 220);
@@ -1109,7 +1088,7 @@ void Gdb_MI2::SyncLocals(MIValue val)
 	// if not done, start first evaluation step
 	if(val.IsEmpty())
 	{
-		prev = DataMap2(locals);
+		prev = DataMap(locals);
 
 		// get local vars names
 		MIValue locs = MICmd("stack-list-variables 1");
@@ -1164,7 +1143,7 @@ void Gdb_MI2::SyncLocals(MIValue val)
 		timeCallback.Set(firstCall ? 2000 : 200, THISBACK1(SyncLocals, val));
 	else
 		// when finished, mark changed values
-		MarkChanged2(prev, locals);
+		MarkChanged(prev, locals);
 }
 
 // update 'this' inspector data
@@ -1177,7 +1156,7 @@ void Gdb_MI2::SyncThis(MIValue val)
 	if(val.IsEmpty())
 	{
 		val = Evaluate("*this", false);
-		prev = DataMap2(members);
+		prev = DataMap(members);
 
 		// this is the first evaluation step
 		// just simple types -- lag some seconds to full evaluation
@@ -1205,13 +1184,13 @@ void Gdb_MI2::SyncThis(MIValue val)
 		timeCallback.Set(firstCall ? 2000 : 200, THISBACK1(SyncThis, val));
 	else
 		// when finished, mark changed values
-		MarkChanged2(prev, members);
+		MarkChanged(prev, members);
 }
 		
 // sync auto vars treectrl
 void Gdb_MI2::SyncAutos()
 {
-	VectorMap<String, String> prev = DataMap2(autos);
+	VectorMap<String, String> prev = DataMap(autos);
 	autos.Clear();
 
 	// read expressions around cursor line
@@ -1239,7 +1218,7 @@ void Gdb_MI2::SyncAutos()
 		p.SkipTerm();
 	}
 	autos.Sort();
-	MarkChanged2(prev, autos);
+	MarkChanged(prev, autos);
 }
 
 // sync watches treectrl
@@ -1252,7 +1231,7 @@ void Gdb_MI2::SyncWatches(MIValue val)
 	// without going deep, and put all results into an array
 	if(val.IsEmpty())
 	{
-		prev = DataMap2(watches);
+		prev = DataMap(watches);
 
 		for(int i = 0; i < watches.GetCount(); i++)
 		{
@@ -1308,7 +1287,7 @@ RLOG(val.Dump());
 		timeCallback.Set(firstCall ? 2000 : 200, THISBACK1(SyncWatches, val));
 	else
 		// when finished, mark changed values
-		MarkChanged2(prev, watches);
+		MarkChanged(prev, watches);
 }
 
 // sync data tabs, depending on which tab is shown
