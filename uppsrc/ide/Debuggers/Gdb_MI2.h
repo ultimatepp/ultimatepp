@@ -14,7 +14,7 @@ class WatchEdit : public LineEdit
 class Gdb_MI2 : public Debugger, public ParentCtrl
 {
 	private:
-
+	
 		// item for a GDB variable
 		struct VarItem : Moveable<VarItem>
 		{
@@ -139,9 +139,6 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		MIValue ParseGdb(String const &s, bool wait = true);
 		MIValue ReadGdb(bool wait = true);
 	
-		// sends an MI command and get answer back
-		MIValue MICmd(const char *cmdLine);
-		
 		// format breakpoint line from ide file and line
 		String BreakPos(String const &file, int line);
 	
@@ -158,27 +155,24 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		MIValue InsertBreakpoint(const char *file, int line);
 		
 		// stored local variable expressions, and values
-		Index<String>localVarNames;
-		Vector<String>localVarValues;
+		Index<String>localExpressions;
+		Vector<String>localValues;
+		Vector<int>localHints;
 		
 		// stored watches expressions and values
 		Index<String>watchesExpressions;
 		Vector<String>watchesValues;
+		Vector<int>watchesHints;
 		
 		// 'this' variable inspection data
-		Vector<String>thisExpressions;
+		Index<String>thisExpressions;
 		Vector<String>thisValues;
 		Vector<int>thisHints;
+		Index<String>thisShortExpressions;
 		
 		// stored autos expressions, values and types
 		String autoLine;
 
-		// update local variables on demand
-		void UpdateLocalVars(void);
-		
-		// update 'this' inspector data
-		void UpdateThis(void);
-		
 		// logs frame data on console
 		void LogFrame(String const &msg, MIValue &frame);
 
@@ -207,13 +201,13 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		void SyncAutos();
 
 		// sync local variables pane
-		void SyncLocals(void);
+		void SyncLocals(MIValue val = MIValue());
 
-		// sync 'this' members pane
-		void SyncMembers(void);
+		// Sync 'this' inspector data
+		void SyncThis(MIValue val = MIValue());
 		
 		// sync watches treectrl
-		void SyncWatches();
+		void SyncWatches(MIValue val = MIValue());
 
 		// sync data tabs, depending on which tab is shown
 		bool dataSynced;
@@ -270,15 +264,26 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		String GetHostPath(const String& path) { return host->GetHostPath(path); }
 		String GetLocalPath(const String& path) { return host->GetLocalPath(path); }
 
-		// known types simplifier
-		// takes a MIValue from '-data-evaluate-expression' command and try
-		// do simplify diplay of known types
-		void TypeSimplify(MIValue &val);
+		// now we scan the result and add some info
+		// so, for example, if we find  tuple like this one:
+		//    data = simplevalue
+		// this will be modified as
+		//    data = { value = simplevalue, expr = evaluable_expression }
+		// and for a complex value
+		//    data = { some=complex, not_simple=val }
+		// woll be modified as
+		//    data = { <!value> = { some=complex, not_simple=val }, <!expr> = evaluable_expression }
+		// More attributes will be added by type simplifier phase
+		void AddAttribs(String const &expr, MIValue &valExpr);
 
 		// collects evaluated variables got with Evaluate
 		// hints are used to choose the visualizer when deep-inspecting members
 		// 0 for simple values, 1 for arrays, 2 for map
-		void CollectVariables(MIValue &val, Vector<String> &exprs, Vector<String> &vals, Vector<int> &hints);
+		void CollectVariables(MIValue &val, Index<String> &exprs, Vector<String> &vals, Vector<int> &hints);
+		
+		// collect evaluated variables got with Evaluate
+		// into a single-line string for short display
+		String CollectVariablesShort(MIValue &val);
 
 	protected:
 	
@@ -301,13 +306,24 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 
 		Gdb_MI2();
 		virtual ~Gdb_MI2();
-
+		
+		// sends an MI command and get answer back
+		MIValue MICmd(const char *cmdLine);
+		
+		// known types simplifier
+		// takes a MIValue from '-data-evaluate-expression' command and try
+		// do simplify diplay of known types
+		// with deep = false it does just type simplification, no deep evaluation of containers
+		// with deep = true it does ONE deep evaluation step
+		// returns true if more deep evaluation steps are needed, false otherwise
+		bool TypeSimplify(MIValue &val, bool deep);
 
 		// variable inspection support
 		// returns a MIValue with inspected data and some info fields added
 		// and known types simplified and cathegorized
 		// unknown and simple types are left as they are
-		MIValue Evaluate(String expr);
+		// deep is true if we shall have a complete sub-elements evaluation
+		MIValue Evaluate(String expr, bool deep = false);
 };
 
 #endif

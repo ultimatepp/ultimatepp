@@ -32,15 +32,33 @@ bool MIValue::expect(String const &where, char exp, int i, String const &s)
 static char backslash(String const &s, int &i)
 {
 	i++;
-	char c;
 	if(IsDigit(s[i]))
 	{
-		c = (s[i]-'0')*64 + (s[i+1]-'0')*8 + s[i+2]-'0';
+		char c = (s[i]-'0')*64 + (s[i+1]-'0')*8 + s[i+2]-'0';
 		i += 2;
+		return c;
 	}
-	else
-		c = s[i];
-	return c;
+
+	// control chars and octals
+	switch(s[i])
+	{
+		case 'a' :
+			return '\a';
+		case 'b' :
+			return '\b';
+		case 'f' :
+			return '\f';
+		case 'n' :
+			return '\n';
+		case 'r' :
+			return '\r';
+		case 't' :
+			return '\t';
+		case 'v' :
+			return '\v';
+		default:
+			return s[i];
+	}
 }
 	
 
@@ -58,11 +76,18 @@ int MIValue::ParsePair(String &name, MIValue &val, String const &s, int i)
 	
 	// is starting wirh '[' or '{' take it as a value with empty name
 	if(s[i] == '{' || s[i] == '[')
+	{
+/*
+RLOG("STICAZZI....");
+RLOG("i = " << i << "  s = " << s);
+*/
 		name = "<UNNAMED>";
+		return val.ParseTuple(s, i);
+	}
 	else
 	{
 		int aCount = 0;
-		while(s[i] && ((s[i] != '=' && s[i] != '}' && s[i] != ']') || aCount))
+		while(s[i] && ((s[i] != '=' && s[i] != '}' && s[i] != ']' && s[i] != ',') || aCount))
 		{
 			if(s[i] == '<')
 				aCount++;
@@ -97,6 +122,18 @@ int MIValue::ParsePair(String &name, MIValue &val, String const &s, int i)
 		while(s[i] && isspace(s[i]))
 			i++;
 	}
+
+	// skip address part, if any... it's useless and confuses the parser
+	if(s[i] == '@')
+	{
+		while(s[i] && s[i] != ':')
+			i++;
+		if(s[i] == ':')
+			i++;
+		while(s[i] && IsSpace(s[i]))
+			i++;
+	}
+
 	switch(s[i])
 	{
 		case '"':
@@ -271,6 +308,7 @@ int MIValue::ParseUnquotedString(String const &s, int i)
 	String valStr;
 	int aCount = 0;
 	bool inQuote = false;
+
 	while(s[i] && ((s[i] != '=' && s[i] != '}' && s[i] != ']' && !comma(s, i)) || inQuote || aCount))
 	{
 		valStr.Cat(s[i]);
@@ -533,13 +571,28 @@ void MIValue::Set(String const &s)
 	#define MARK_ARRAY	""
 	#define MARK_TUPLE	""
 #endif
+
+// dumps a string with special chars inside
+String MIValue::Dump(String const &s)
+{
+	String res;
+	for(int i = 0; i < s.GetCharCount(); i++)
+	{
+		byte c = s[i];
+		if(isprint(c))
+			res << c;
+		else
+			res += Format("\\%03o", c);
+	}
+	return res;
+}
 String MIValue::Dump(int level) const
 {
 	String spacer(' ', level);
 	switch(type)
 	{
 		case MIString:
-			return spacer + MARK_STRING + string;
+			return spacer + MARK_STRING + Dump(string);
 
 		case MITuple:
 		{
@@ -639,6 +692,35 @@ void MIValue::PackNames(void)
 	}
 }
 
+// fix arrays -- i.e. replace a tuple containing ALL unnamed elements
+// with the corresponding array
+// ( gdb evaluator array data is returned as tuple with {} instead []=
+void MIValue::FixArrays(void)
+{
+	
+	bool named = false;
+	if(IsTuple())
+	{
+		for(int iVal = 0; iVal < tuple.GetCount(); iVal++)
+			if(tuple.GetKey(iVal) != "<UNNAMED>")
+			{
+				named = true;
+				break;
+			}
+		if(!named)
+		{
+			array.Clear();
+			for(int iVal = 0; iVal < tuple.GetCount(); iVal++)
+				array.Add(tuple[iVal]);
+			tuple.Clear();
+			type = MIArray;
+		}
+	}
+	if(IsTuple() || IsArray())
+		for(int i = 0; i < GetCount(); i++)
+			Get(i).FixArrays();
+}
+
 // add an item to a tuple
 MIValue &MIValue::Add(String const &key, MIValue pick_ &v)
 {
@@ -698,4 +780,13 @@ MIValue &MIValue::Add(String const &data)
 	MIValue v;
 	v.Set(data);
 	return Add(v);
+}
+
+// remove a tuple key
+MIValue &MIValue::Remove(String const &key)
+{
+	if(type != MITuple)
+		return *this;
+	tuple.RemoveKey(key);
+	return *this;
 }

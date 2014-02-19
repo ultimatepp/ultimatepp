@@ -21,3 +21,25 @@ TYPE_SIMPLIFIER_HANDLER GetSimplifier(String const &pattern)
 	}
 	return NULL;
 }
+
+// next index when stepping through containers values
+int SIMPLIFIER_NEXT_INDEX(MIValue &val, int total)
+{
+	int step;
+	
+	int idx = val.Find(SIMPLIFY_STEP);
+	if(idx < 0)
+	{
+		step = 0;
+		val.Add(SIMPLIFY_STEP, "0");
+	}
+	else
+	{
+		step = atoi(val[SIMPLIFY_STEP].ToString()) + 1;
+		if(step >= total)
+			val.Remove(SIMPLIFY_STEP);
+		else
+			val[SIMPLIFY_STEP].Set(FormatInt(step));
+	}
+	return step;
+}
