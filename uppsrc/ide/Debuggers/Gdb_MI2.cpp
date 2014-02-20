@@ -40,8 +40,9 @@ void Gdb_MI2::DebugBar(Bar& bar)
 {
 	bar.Add("Stop debugging", DbgImg::StopDebug(), THISBACK(Stop)).Key(K_SHIFT_F5);
 	bar.Separator();
-// see note on Run() function -- crashes X on my machine, so removed by now
-//	bar.Add(!stopped, "Asynchronous break", THISBACK(AsyncBrk));
+#ifdef PLATFORM_POSIX
+	bar.Add(!stopped, "Asynchronous break", THISBACK(AsyncBrk));
+#endif
 	bool b = !IdeIsDebugLock();
 	bar.Add(b, "Step into", DbgImg::StepInto(), THISBACK1(Step, disas.HasFocus() ? "exec-step-instruction" : "exec-step")).Key(K_F11);
 	bar.Add(b, "Step over", DbgImg::StepOver(), THISBACK1(Step, disas.HasFocus() ? "exec-next-instruction" : "exec-next")).Key(K_F10);
@@ -160,27 +161,39 @@ void Gdb_MI2::Run()
 	IdeActivateBottom();
 }
 
+#ifdef PLATFORM_POSIX
+// sends a ctrl-c to debugger, returns true on success, false otherwise
+bool Gdb_MI2::InterruptDebugger(void)
+{
+	int killed = 0;
+	for(int iProc = 0; iProc < processes.GetCount(); iProc++)
+		if(kill(processes[iProc], SIGINT) == 0)
+			killed++;
+	return killed;
+}
+#endif
+
+#ifdef PLATFORM_POSIX
 void Gdb_MI2::AsyncBrk()
 {
-	// send an interrupt command to all running threads
-	StopAllThreads();
-	
+	// data must be refreshed
 	dataSynced = false;
-
-	// gdb usually returns to command prompt instantly, BEFORE
-	// giving out stop reason, which we need. So, we wait some
-	// milliseconds and re-read (non blocking) GDB output to get it
-/*
-	for(int i = 0; i < 20 && !stopped; i++)
-	{
-		Sleep(100);
-		ReadGdb(false);
-	}
-*/
 	
-	// if target is correctly stopped, 'stopped' flag should be already set
-	// so we don't care here. If not set, target can't be stopped.
+	// send interrupt command to debugger
+	if(!InterruptDebugger())
+		return;
+	
+	// if successful, wait for some time for 'stopped' flag to become true
+	for(int iMsec = 0; iMsec < 1000; iMsec += 20)
+	{
+		ReadGdb(false);
+		Sleep(20);
+		Ctrl::ProcessEvents();
+		if(stopped)
+			break;
+	}
 }
+#endif
 
 void Gdb_MI2::Stop()
 {
@@ -343,6 +356,13 @@ Gdb_MI2::Gdb_MI2()
 	
 	periodic.Set(-50, THISBACK(Periodic));
 	dataSynced = false;
+	
+#ifdef flagMT
+	// no running debug threads
+	runningThreads = 0;
+	stopThreads = false;
+#endif
+
 }
 
 Gdb_MI2::~Gdb_MI2()
@@ -458,6 +478,40 @@ MIValue Gdb_MI2::ParseGdb(String const &output, bool wait)
 			s = '{' + s.Mid(iSubstr + 9) + '}';
 			stopReason = MIValue(s);
 			continue;
+		}
+		
+		// catch process start/stop and store/remove pids
+		else if(s.StartsWith("=thread-group-started,id="))
+		{
+			String id, pid;
+			int i = s.Find("id=");
+			if(i < 0)
+				continue;
+			i += 4;
+			while(s[i] && s[i] != '"')
+				id.Cat(s[i++]);
+			i = s.Find("pid=");
+			if(i < 0)
+				continue;
+			i += 5;
+			while(s[i] && s[i] != '"')
+				pid.Cat(s[i++]);
+			
+			processes.Add(id, atoi(pid));
+		}
+		
+		else if(s.StartsWith("=thread-group-exited,id="))
+		{
+			String id;
+			int i = s.Find("id=");
+			if(i < 0)
+				continue;
+			i += 4;
+			while(s[i] && s[i] != '"')
+				id.Cat(s[i++]);
+			i = processes.Find(id);
+			if(i >= 0)
+				processes.Remove(i);
 		}
 		
 		// skip asynchronous responses
@@ -805,6 +859,7 @@ void Gdb_MI2::LogFrame(String const &msg, MIValue &frame)
 	PutConsole(Format(msg + " at %s, function '%s', file '%s', line %s", addr, function, file, line));
 }
 
+/*
 // stop all running threads and re-select previous current thread
 void Gdb_MI2::StopAllThreads(void)
 {
@@ -838,6 +893,7 @@ void Gdb_MI2::StopAllThreads(void)
 	if(current != "")
 		MICmd("thread-select " + current);
 }
+*/
 
 // check for stop reason
 void Gdb_MI2::CheckStopReason(void)
@@ -856,12 +912,14 @@ void Gdb_MI2::CheckStopReason(void)
 	else
 		reason = stReason["reason"];
 
+/*
 	// as we are in non-stop mode, to allow async break to work
 	// we shall stop ALL running threads here, otherwise we'll have
 	// problems when single stepping a gui MT app
 	// single step will be done so for a single thread, while other
 	// are idle. Maybe we could make this behaviour optional
 	StopAllThreads();
+*/
 
 	if(reason == "exited-normally")
 	{
