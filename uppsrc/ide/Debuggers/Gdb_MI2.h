@@ -15,6 +15,29 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 {
 	private:
 	
+		// list of processes (and connected thread groups)
+		// used to stop them
+		VectorMap<String, int> processes;
+	
+		// multithread support
+#ifdef flagMT
+		// numbr of running debug threads
+		int runningThreads;
+		
+		// flag to signal threads to stop
+		bool stopThreads;
+		
+		// mutex and thead object
+		Mutex mutex;
+		Thread debugThread;
+
+#endif
+
+		// debug break support -- ONLY POSIX, by now
+#ifdef PLATFORM_POSIX
+		bool InterruptDebugger(void);
+#endif
+	
 		// used to post and kill timed callbacks
 		TimeCallback timeCallback;
 	
