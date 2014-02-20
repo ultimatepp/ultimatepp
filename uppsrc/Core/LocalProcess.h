@@ -65,7 +65,11 @@ public:
 #ifdef PLATFORM_POSIX
 	int  GetPid()  const                                              { return pid; }
 #endif
-	
+
+#ifdef PLATFORM_WIN32
+	int  GetProcessHandle()  const                                    { return hProcess; }
+#endif
+		
 	LocalProcess& ConvertCharset(bool b = true)                       { convertcharset = b; return *this; }
 	LocalProcess& NoConvertCharset()                                  { return ConvertCharset(false); }
 
