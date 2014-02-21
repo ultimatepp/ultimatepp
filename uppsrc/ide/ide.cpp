@@ -326,15 +326,15 @@ Console& Ide::GetConsole()
 
 bool Ide::FindLineError(int l, Host& host) {
 	String file;
-	int lineno;
+	int lineno, linepos;
 	int error;
 	Console& c = GetConsole();
 	FindLineErrorCache cache;
-	if (FindLineError(c.GetUtf8Line(l), host, file, lineno, error, cache)) {
+	if (FindLineError(c.GetUtf8Line(l), host, file, lineno, error, cache, linepos)) {
 		file = NormalizePath(file);
 		editastext.FindAdd(file);
 		EditFile(file);
-		editor.SetCursor(editor.GetPos(editor.GetLineNo(lineno - 1)));
+		editor.SetCursor(editor.GetPos(editor.GetLineNo(lineno - 1), max(linepos - 1, 0)));
 		editor.CenterCursor();
 		editor.SetFocus();
 		Sync();
@@ -347,7 +347,7 @@ bool Ide::FindLineError(int l, Host& host) {
 }
 
 bool Ide::FindLineError(String ln, Host& host, String& file, int& lineno, int& error,
-                        FindLineErrorCache& cache) {
+                        FindLineErrorCache& cache, int& linepos) {
 	VectorMap<String, String> bm = GetMethodVars(method);
 	bool is_java = (bm.Get("BUILDER", Null) == "JDK");
 	const char *s = ln;
@@ -412,9 +412,12 @@ bool Ide::FindLineError(String ln, Host& host, String& file, int& lineno, int& e
 			if(IsFullPath(file) && FileExists(file) && IsTextFile(file)) {
 				while(*s && !IsDigit(*s))
 					s++;
-				lineno = 0;
-				if(IsDigit(*s))
-					lineno = stou(s);
+				lineno = linepos = 0;
+				CParser p(s);
+				if(p.IsInt())
+					lineno = p.ReadInt();
+				if(p.Char(':') && p.IsInt())
+					linepos = p.ReadInt();
 				Vector<String> conf = SplitFlags(mainconfigparam, true);
 				String uppout = GetVar("OUTPUT");
 				int upplen = uppout.GetLength();
@@ -462,6 +465,7 @@ bool Ide::FindLineError(String ln, Host& host, String& file, int& lineno, int& e
 							if(lineno <= file_line) {
 								file = fake_file;
 								lineno = fake_line;
+								linepos = 0;
 								break;
 							}
 							file_line++;
@@ -535,7 +539,7 @@ void Ide::SetErrorEditor()
 
 	bool refresh = false;
 	String file;
-	int lineno;
+	int lineno, linepos;
 	int error;
 	One<Host> host = CreateHost(false);
 	String    hfile;
@@ -543,7 +547,7 @@ void Ide::SetErrorEditor()
 	Vector<String> errorfiles;
 	FindLineErrorCache cache;
 	for(int i = 0; i < console.GetLineCount(); i++) {
-		if(FindLineError(console.GetUtf8Line(i), *host, file, lineno, error, cache)) {
+		if(FindLineError(console.GetUtf8Line(i), *host, file, lineno, error, cache, linepos)) {
 			file = NormalizePath(file);
 		#ifdef PLATFORM_WIN32
 			errorfiles.Add(ToLower(file));
