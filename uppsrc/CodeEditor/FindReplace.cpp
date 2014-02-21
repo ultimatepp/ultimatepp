@@ -141,7 +141,6 @@ bool CodeEditor::Find(bool back, const wchar *text, bool wholeword, bool ignorec
 	return FindFrom(pos, back, text, wholeword, ignorecase, wildcards, block);
 }
 
-
 bool CodeEditor::FindFrom(int pos, bool back, const wchar *text, bool wholeword, bool ignorecase,
                           bool wildcards, bool block) {
 	WString ft;
