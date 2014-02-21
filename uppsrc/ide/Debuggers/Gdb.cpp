@@ -54,7 +54,7 @@ void Gdb::CopyDisas()
 	disas.WriteClipboard();
 }
 
-static int CharFilterReSlash(int c)
+int CharFilterReSlash(int c)
 {
 	return c == '\\' ? '/' : c;
 }
