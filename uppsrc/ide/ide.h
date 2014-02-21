@@ -1018,7 +1018,7 @@ public:
 	};
 	
 	bool      FindLineError(String ln, Host& host, String& file, int& lineno, int& error,
-	                        FindLineErrorCache& cache);
+	                        FindLineErrorCache& cache, int& linepos);
 	void      FindError();
 	void	  ClearErrorEditor(String file);
 
