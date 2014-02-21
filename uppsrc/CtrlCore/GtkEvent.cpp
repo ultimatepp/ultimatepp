@@ -499,8 +499,6 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 				break;
 		}
 		Event& e = Events.Head();
-		DDUMP(e.type);
-		DDUMP(e.windowid);
 		CurrentTime = e.time;
 		CurrentMousePos = e.mousepos;
 		CurrentState = e.state;
