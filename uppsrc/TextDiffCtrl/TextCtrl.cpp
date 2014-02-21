@@ -43,8 +43,7 @@ void TextCompareCtrl::LeftUp(Point pt, dword keyflags)
 
 void TextCompareCtrl::MouseMove(Point pt, dword keyflags)
 {
-	if(HasCapture())
-	{
+	if(HasCapture()) {
 		LeftDown(pt, keyflags);
 	}
 }

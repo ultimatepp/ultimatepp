@@ -20,6 +20,8 @@ bool   TTYQuit();
 
 String GdbCommand(bool console);
 
+int CharFilterReSlash(int c);
+
 class DbgDisas : public Ctrl {
 public:
 	virtual void Paint(Draw& w);

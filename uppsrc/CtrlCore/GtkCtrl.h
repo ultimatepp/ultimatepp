@@ -4,10 +4,15 @@
 	static gboolean GtkProc(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 	static void     IMCommit(GtkIMContext *context, gchar *str, gpointer user_data);
 
-	static void     DoMouseEvent(int state, Point pos);
 	static int      DoButtonEvent(GdkEvent *event, bool press);
-	static void     AddEvent(gpointer user_data, int type, const Value& value);
+	static void     AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *event);
 	static void     FetchEvents(bool may_block);
+
+/*
+_DBG_
+	static void     AddEvent(gpointer user_data, int type, const Value& value);
+	static void     DoMouseEvent(int state, Point pos);
+*/
 
 	bool   DispatchMouseIn(int act, int zd);
 	void   GtkMouseEvent(int action, int act, int zd);

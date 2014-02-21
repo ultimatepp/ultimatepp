@@ -125,16 +125,13 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 			if(((GdkEventFocus *)event)->in)
 				gtk_im_context_focus_in(p->top->im_context);
 			else
-				gtk_im_context_focus_in(p->top->im_context);
-			AddEvent(user_data, EVENT_NONE, value);
+				gtk_im_context_focus_out(p->top->im_context);
+			AddEvent(user_data, EVENT_NONE, value, event);
 		}
 		return false;
 	case GDK_LEAVE_NOTIFY:
-	case GDK_MOTION_NOTIFY: {
-		GdkEventMotion *e = (GdkEventMotion *)event;
-		DoMouseEvent(e->state, Point((int)e->x_root, (int)e->y_root));
+	case GDK_MOTION_NOTIFY:
 		break;
-	}
 	case GDK_BUTTON_PRESS:
 		value = DoButtonEvent(event, true);
 		if(IsNull(value))
@@ -153,7 +150,6 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	case GDK_SCROLL: {
 		GdkEventScroll *e = (GdkEventScroll *)event;
 		value = findarg(e->direction, GDK_SCROLL_UP, GDK_SCROLL_LEFT) < 0 ? -120 : 120;
-		DoMouseEvent(e->state, Point((int)e->x_root, (int)e->y_root));
 		break;
 	}
 	case GDK_KEY_PRESS:
@@ -177,12 +173,8 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	default:
 		return false;
 	}
-	AddEvent(user_data, event->type, value);
+	AddEvent(user_data, event->type, value, event);
 	return retval;
-}
-
-void Ctrl::DoMouseEvent(int state, Point pos)
-{
 }
 
 int Ctrl::DoButtonEvent(GdkEvent *event, bool press)
@@ -196,7 +188,6 @@ int Ctrl::DoButtonEvent(GdkEvent *event, bool press)
 			state |= m;
 		else
 			state &= ~m;
-		DoMouseEvent(state, Point((int)e->x_root, (int)e->y_root));
 		return e->button;
 	}
 	return Null;
@@ -218,7 +209,7 @@ void Ctrl::Event::Free()
 void Ctrl::Event::Set(const Event& e)
 {
 	*(Event0 *)this = e;
-	event = gdk_event_copy(e.event);
+	event = e.event ? gdk_event_copy(e.event) : NULL;
 }
 
 Ctrl::Event::~Event()
@@ -239,12 +230,11 @@ void Ctrl::Event::operator=(const Event& e)
 	Set(e);
 }
 
-void Ctrl::AddEvent(gpointer user_data, int type, const Value& value)
+void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *event)
 {
 	if(Events.GetCount() > 50000)
 		return;
 	Event& e = Events.AddTail();
-	e.time = gtk_get_current_event_time();
 	e.windowid = (uint32)(uintptr_t)user_data;
 	e.type = type;
 	e.value = value;
@@ -254,13 +244,21 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value)
 	e.mousepos = Point(x, y);
 	e.state = mod;
 	e.count = 1;
-	e.event = gtk_get_current_event();
+	e.event = NULL;
+	if(event) {
+		e.time = gdk_event_get_time(event);
+		e.event = gdk_event_copy(event);
+	}
+	else {
+		e.time = gtk_get_current_event_time();
+		e.event = gtk_get_current_event();
+	}
 }
 
 void Ctrl::IMCommit(GtkIMContext *context, gchar *str, gpointer user_data)
 {
 	GuiLock __;
-	AddEvent(user_data, EVENT_TEXT, FromUtf8(str));
+	AddEvent(user_data, EVENT_TEXT, FromUtf8(str), NULL);
 }
 
 void Ctrl::FetchEvents(bool may_block)
@@ -345,7 +343,7 @@ void Ctrl::Proc()
 	ProcStop tm;
 	tm.ev = ev;
 #endif
-	if(!top)
+	if(!IsOpen())
 		return;
 	Ptr<Ctrl> _this = this;
 	bool pressed = false;
@@ -501,6 +499,8 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 				break;
 		}
 		Event& e = Events.Head();
+		DDUMP(e.type);
+		DDUMP(e.windowid);
 		CurrentTime = e.time;
 		CurrentMousePos = e.mousepos;
 		CurrentState = e.state;

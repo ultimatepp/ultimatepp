@@ -100,7 +100,7 @@ void  Ctrl::SetMouseCursor(const Image& image)
 			if(pb)
 				c = gdk_cursor_new_from_pixbuf(gdk_display_get_default(), pb, p.x, p.y);
 		}
-		if(c) {
+		if(c && topctrl->IsOpen()) {
 			gdk_window_set_cursor(topctrl->gdk(), c);
 			gdk_cursor_unref(c);
 			gdk_flush(); // Make it visible immediately
@@ -111,7 +111,7 @@ void  Ctrl::SetMouseCursor(const Image& image)
 Ctrl *Ctrl::GetOwner()
 {
 	GuiLock __;
-	return top ? top->owner : NULL;
+	return IsOpen() ? top->owner : NULL;
 }
 
 Ctrl *Ctrl::GetActiveCtrl()
@@ -187,7 +187,7 @@ void Ctrl::SyncCaret() {
 Rect Ctrl::GetWndScreenRect() const
 {
 	GuiLock __;
-	if(top) {
+	if(IsOpen()) {
 		gint x, y;
 		gdk_window_get_position(gdk(), &x, &y);
 	#if GTK_CHECK_VERSION(2, 24, 0)
@@ -206,7 +206,7 @@ void Ctrl::WndShow(bool b)
 {
 	GuiLock __;
 	LLOG("WndShow " << Name() << ", " << b);
-	if(top) {
+	if(IsOpen()) {
 		if(b)
 			gtk_widget_show_now(top->window);
 		else
@@ -317,7 +317,7 @@ int Ctrl::GetKbdSpeed()
 void Ctrl::SetWndForeground()
 {
 	GuiLock __;
-	if(top)
+	if(IsOpen())
 		gtk_window_present(gtk());
 }
 
@@ -325,19 +325,19 @@ bool Ctrl::IsWndForeground() const
 {
 	GuiLock __;
 	LLOG("IsWndForeground");
-	return top && gtk_window_is_active(gtk());
+	return IsOpen() && gtk_window_is_active(gtk());
 }
 
 bool Ctrl::HasWndFocus() const
 {
 	GuiLock __;
-	return top && gtk_window_is_active(gtk());
+	return IsOpen() && gtk_window_is_active(gtk());
 }
 
 void Ctrl::FocusSync()
 {
 	GuiLock __;
-	if(focusCtrlWnd && gtk_window_is_active(focusCtrlWnd->gtk()))
+	if(focusCtrlWnd && focusCtrlWnd->IsOpen() && gtk_window_is_active(focusCtrlWnd->gtk()))
 		return;
 	Ptr<Ctrl> focus = NULL;
 	static Ptr<Ctrl> ctrl;
@@ -409,11 +409,11 @@ void Ctrl::WndSetPos(const Rect& rect)
 {
 	LLOG("WndSetPos0 " << rect);
 	GuiLock __;
-	if(!top)
+	if(!IsOpen())
 		return;
 	Ptr<Ctrl> this_ = this;
 	SweepConfigure(false); // Remove any previous GDK_CONFIGURE for this window
-	if(!this_)
+	if(!this_ || !IsOpen())
 		return;
 //	gtk_window_move(gtk(), rect.left, rect.top);
 //	gtk_window_resize(gtk(), rect.GetWidth(), rect.GetHeight());
@@ -430,7 +430,7 @@ void Ctrl::WndSetPos(const Rect& rect)
 void Ctrl::WndEnable(bool b)
 {
 	GuiLock __;
-	if(top) {
+	if(IsOpen()) {
 		gtk_widget_set_sensitive(top->window, b);
 		StateH(ENABLE);
 	}

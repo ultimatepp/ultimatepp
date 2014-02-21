@@ -21,7 +21,7 @@ void Ctrl::StartGrabPopup()
 {
 	if(activePopup.GetCount() && !grabpopup) {
 		Ctrl *w = activePopup[0];
-		if(w) {
+		if(w && w->IsOpen()) {
 			ReleaseWndCapture0();
 			if(gdk_pointer_grab(w->gdk(), FALSE,
 							    GdkEventMask(GDK_BUTTON_RELEASE_MASK|GDK_BUTTON_PRESS_MASK|GDK_POINTER_MOTION_MASK),
@@ -36,6 +36,8 @@ bool Ctrl::SetWndCapture()
 	GuiLock __;
 	ASSERT(IsMainThread());
 	LLOG("SetWndCapture " << Name());
+	if(!IsOpen())
+		return false;
 	StopGrabPopup();
 	ReleaseWndCapture();
 	if(gdk_pointer_grab(gdk(), FALSE,
@@ -69,12 +71,12 @@ bool Ctrl::ReleaseWndCapture()
 bool Ctrl::HasWndCapture() const
 {
 	GuiLock __;
-	return this == grabwindow && gdk_pointer_is_grabbed();
+	return this == grabwindow && grabwindow->IsOpen() && gdk_pointer_is_grabbed();
 }
 
 void Ctrl::CaptureSync()
 {
-	if(grabwindow && !gdk_pointer_is_grabbed()) {
+	if(grabwindow && grabwindow->IsOpen() && !gdk_pointer_is_grabbed()) {
 		if(gdk_pointer_grab(grabwindow->gdk(), FALSE,
 		                    GdkEventMask(GDK_BUTTON_RELEASE_MASK|GDK_BUTTON_PRESS_MASK|GDK_POINTER_MOTION_MASK),
 		                    NULL, NULL, CurrentTime) != GDK_GRAB_SUCCESS) {

@@ -56,11 +56,6 @@ void Gdb_MI2::DebugBar(Bar& bar)
 	bar.Add(b, "Copy dissassembly", THISBACK(CopyDisas));
 }
 
-static int CharFilterReSlash(int c)
-{
-	return c == '\\' ? '/' : c;
-}
-
 bool Gdb_MI2::SetBreakpoint(const String& filename, int line, const String& bp)
 {
 	String file = Filter(host->GetHostPath(NormalizePath(filename)), CharFilterReSlash);

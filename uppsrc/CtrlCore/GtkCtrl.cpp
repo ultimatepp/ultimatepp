@@ -59,7 +59,7 @@ bool GuiPlatformHasSizeGrip()
 
 void GuiPlatformGripResize(TopWindow *q)
 {
-	if(q->top) {
+	if(q->IsOpen()) {
 		Point p = GetMousePos();
 		gtk_window_begin_resize_drag(q->gtk(), GDK_WINDOW_EDGE_SOUTH_EAST,
 		                             1, p.x, p.y, Ctrl::CurrentTime);
