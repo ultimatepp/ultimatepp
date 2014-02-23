@@ -32,6 +32,7 @@ public:
 	virtual void   MouseMove(Point pt, dword keyflags);
 	virtual void   LeftDown(Point pt, dword keyflags);
 	virtual void   LeftUp(Point pt, dword keyflags);
+	virtual void   RightDown(Point p, dword keyflags);
 	virtual bool   Key(dword key, int repcnt);
 
 private:
@@ -40,6 +41,9 @@ private:
 	void           UpdateWidth();
 	String         ExpandTabs(const char *line) const;
 	int            MeasureLength(const char *line) const;
+	bool           GetSelection(int& l, int& h);
+	void           DoSelection(int y, bool shift);
+	void           Copy();
 
 private:
 	struct Line {
@@ -62,6 +66,8 @@ private:
 	int            number_width;
 	int            number_yshift;
 	int            gutter_width;
+	int            cursor;
+	int            anchor;
 
 	typedef TextCompareCtrl CLASSNAME;
 
@@ -98,6 +104,9 @@ public:
 
 	int            GetSb() const { return scroll.Get().y; }
 	void           SetSb(int y)  { scroll.Set(0, y); }
+	
+	void           ClearSelection()           { cursor = Null; Refresh(); }
+	void           SetSelection(int l, int h) { cursor = l; anchor = h; }
 
 	Callback       ScrollWhen(TextCompareCtrl& pair) { return THISBACK1(PairScroll, &pair); }
 
