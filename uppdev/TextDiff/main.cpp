@@ -7,6 +7,6 @@ GUI_APP_MAIN
 	TopWindow win;
 	TextDiffCtrl ctrl;
 	win.Add(ctrl.SizePos());
-	ctrl.Set(LoadFile("u:/file1.txt"), LoadFile("u:/file2.txt"));
+	ctrl.Set(LoadFile("C:/u/upp.src/uppdev/AssistTest/main.cpp"), LoadFile("C:/u/upp.src/uppdev/ArrayCtrl/main.cpp"));
 	win.Run();
 }

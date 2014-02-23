@@ -8,6 +8,9 @@ GUI_APP_MAIN
 	FileSel fs;
 	String fn;
 	fs.Type("jpeg", "*.jpg");
+	fs.ExecuteOpen();
+	return;
+	
 	for(;0;) {
 		if(!fs.ExecuteSaveAs())
 			break;
