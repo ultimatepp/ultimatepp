@@ -168,9 +168,9 @@ bool Gdb_MI2::InterruptDebugger(void)
 }
 #endif
 
-#ifdef PLATFORM_POSIX
 void Gdb_MI2::AsyncBrk()
 {
+#ifdef PLATFORM_POSIX
 	// data must be refreshed
 	dataSynced = false;
 	
@@ -187,8 +187,8 @@ void Gdb_MI2::AsyncBrk()
 		if(stopped)
 			break;
 	}
-}
 #endif
+}
 
 void Gdb_MI2::Stop()
 {

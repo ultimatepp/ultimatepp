@@ -67,7 +67,7 @@ public:
 #endif
 
 #ifdef PLATFORM_WIN32
-	int  GetProcessHandle()  const                                    { return hProcess; }
+	HANDLE  GetProcessHandle()  const                                    { return hProcess; }
 #endif
 		
 	LocalProcess& ConvertCharset(bool b = true)                       { convertcharset = b; return *this; }

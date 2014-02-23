@@ -21,6 +21,23 @@ TextCompareCtrl::TextCompareCtrl()
 	gutter_width = 0;
 	gutter_bg = Color(151, 190, 239);
 	gutter_fg = SGreen;
+	cursor = anchor = Null;
+}
+
+void TextCompareCtrl::DoSelection(int y, bool shift)
+{
+	int ii = scroll.Get().y + y / letter.cy;
+	if(ii >= 0 && ii < lines.GetCount()) {
+		int i = lines[ii].number;
+		if(!IsNull(i)) {
+			if(shift)
+				cursor = i;
+			else
+				cursor = anchor = i;
+			Refresh();
+			scroll.ScrollIntoY(i);
+		}
+	}
 }
 
 void TextCompareCtrl::LeftDown(Point pt, dword keyflags)
@@ -33,7 +50,17 @@ void TextCompareCtrl::LeftDown(Point pt, dword keyflags)
 		int page_lines = sz.cy / letter.cy;
 		scroll.SetY(line - page_lines / 2);
 	}
+	else {
+		DoSelection(pt.y, keyflags & K_SHIFT);
+		SetCapture();
+	}
 	SetWantFocus();
+}
+
+void TextCompareCtrl::MouseMove(Point pt, dword)
+{
+	if(HasCapture())
+		DoSelection(pt.y, true);
 }
 
 void TextCompareCtrl::LeftUp(Point pt, dword keyflags)
@@ -41,13 +68,33 @@ void TextCompareCtrl::LeftUp(Point pt, dword keyflags)
 	ReleaseCapture();
 }
 
-void TextCompareCtrl::MouseMove(Point pt, dword keyflags)
+void TextCompareCtrl::Copy()
 {
-	if(HasCapture()) {
-		LeftDown(pt, keyflags);
+	int sell, selh;
+	if(GetSelection(sell, selh)) {
+		String clip;
+		for(int i = 0; i < lines.GetCount(); i++) {
+			const Line& l = lines[i];
+			if(l.number >= sell && l.number <= selh) {
+				clip << l.text;
+			#ifdef PLATFORM_WIN32
+				clip << "\r\n";
+			#else
+				clip << "\n";
+			#endif
+			}
+		}
+		ClearClipboard();
+		AppendClipboardText(clip);
 	}
 }
 
+void TextCompareCtrl::RightDown(Point p, dword keyflags)
+{
+	MenuBar b;
+	b.Add(cursor != anchor, t_("Copy"), CtrlImg::copy(), THISBACK(Copy)).Key(K_CTRL_C);
+	b.Execute();
+}
 
 bool TextCompareCtrl::Key(dword key, int repcnt)
 {
@@ -65,6 +112,9 @@ bool TextCompareCtrl::Key(dword key, int repcnt)
 		case K_END:        newpos.x = maxwidth - page.x; break;
 		case K_CTRL_HOME:  newpos.y = 0; break;
 		case K_CTRL_END:   newpos.y = lines.GetCount() - page.y; break;
+		case K_CTRL_C:
+			Copy();
+			break;
 		case K_F3: {
 			bool found = false;
 			int i = max(pos.y + 2, 0);
@@ -153,11 +203,19 @@ void TextCompareCtrl::Paint(Draw& draw)
 			draw.DrawText(0, y + number_yshift, FormatInt(l.number), number_font, l.color);
 	}
 	draw.Clip(number_width, 0, sz.cx - gutter_width - number_width, sz.cy);
+	int sell, selh;
+	GetSelection(sell, selh);
 	for(int i = first_line; i <= last_line; i++) {
 		const Line& l = lines[i];
 		int y = i * letter.cy - offset.cy;
-		draw.DrawRect(0, y, sz.cx, letter.cy, SWhite());
-		draw.DrawText(number_width - offset.cx, y, ExpandTabs(l.text), l.level == 1 ? ifont : font, l.color);
+		Color ink = l.color;
+		Color paper = SColorPaper();
+		if(!IsNull(l.number) && l.number >= sell && l.number <= selh) {
+			ink = SColorHighlightText;
+			paper = SColorHighlight;
+		}
+		draw.DrawRect(0, y, sz.cx, letter.cy, paper);
+		draw.DrawText(number_width - offset.cx, y, ExpandTabs(l.text), l.level == 1 ? ifont : font, ink);
 	}
 	int lcy = lcnt * letter.cy - offset.cy;
 	draw.DrawRect(0, lcy, sz.cx, sz.cy - lcy, SGray());
@@ -256,6 +314,17 @@ int TextCompareCtrl::MeasureLength(const char *text) const
 		else
 			pos++;
 	return pos;
+}
+
+bool TextCompareCtrl::GetSelection(int& l, int& h)
+{
+	if(IsNull(cursor)) {
+		l = h = -1;
+		return false;
+	}
+	l = min(cursor, anchor);
+	h = max(cursor, anchor);
+	return true;
 }
 
 String TextCompareCtrl::ExpandTabs(const char *text) const
