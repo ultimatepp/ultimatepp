@@ -61,7 +61,6 @@ file
 	idewin.cpp,
 	About.cpp,
 	Help.cpp,
-	Util.cpp,
 	Macro.cpp,
 	Calc.cpp,
 	FormatCode.cpp,

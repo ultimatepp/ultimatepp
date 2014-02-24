@@ -366,3 +366,40 @@ void Ide::SyncSvnDir(const String& working)
 {
 	SyncSvnDirs(Vector<String>() << working);
 }
+
+void Ide::DoDirDiff()
+{
+	Index<String> dir;
+	Vector<String> d = GetUppDirs();
+	for(int i = 0; i < d.GetCount(); i++)
+		dir.FindAdd(d[i]);
+	FindFile ff(ConfigFile("*.bm"));
+	while(ff) {
+		VectorMap<String, String> var;
+		LoadVarFile(ff.GetPath(), var);
+		Vector<String> p = Split(var.Get("UPP", String()), ';');
+		for(int i = 0; i < p.GetCount(); i++)
+			dir.FindAdd(p[i]);
+		ff.Next();
+	}
+	String n = GetFileFolder(editfile);
+	if(n.GetCount())
+		dir.FindAdd(n);
+	SortIndex(dir);
+	
+	static DirDiffDlg dlg;
+	for(int i = 0; i < dir.GetCount(); i++) {
+		dlg.Dir1AddList(dir[i]);
+		dlg.Dir2AddList(dir[i]);
+	}
+	if(d.GetCount())
+		dlg.Dir1(d[0]);
+	if(!dlg.IsOpen()) {
+		dlg.SetFont(veditorfont);
+		dlg.Maximize();
+		dlg.OpenMain();
+	}
+	else
+		dlg.SetFocus();
+}
+

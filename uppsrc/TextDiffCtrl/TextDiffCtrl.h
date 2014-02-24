@@ -5,6 +5,10 @@
 
 namespace Upp {
 
+#define IMAGECLASS DiffImg
+#define IMAGEFILE <TextDiffCtrl/Diff.iml>
+#include <Draw/iml_header.h>
+
 class TextSection
 {
 public:
@@ -68,6 +72,7 @@ private:
 	int            gutter_width;
 	int            cursor;
 	int            anchor;
+	bool           gutter_capture;
 
 	typedef TextCompareCtrl CLASSNAME;
 
@@ -79,6 +84,7 @@ public:
 	int            GetCount() const { return lines.GetCount(); }
 
 	void           SetFont(Font f, Font nf);
+	void           SetFont(Font f);
 	Font           GetFont() const { return font; }
 	Font           GetNumberFont() const { return number_font; }
 
@@ -124,6 +130,8 @@ public:
 	void InsertFrameRight(CtrlFrame& f)                    { right.InsertFrame(0, f); }
 	void AddFrameLeft(CtrlFrame& f)                        { left.AddFrame(f); }
 	void AddFrameRight(CtrlFrame& f)                       { right.AddFrame(f); }
+	void SetFont(Font f, Font nf)                          { left.SetFont(f, nf); right.SetFont(f, nf); }
+	void SetFont(Font f)                                   { left.SetFont(f); right.SetFont(f); }
 	
 	TextDiffCtrl();
 };
@@ -137,7 +145,7 @@ struct DiffDlg : public TopWindow {
 	String               extfile;
 	
 	typedef DiffDlg CLASSNAME;
-	
+
 	void Write();
 	void Execute(const String& f);
 	
@@ -167,6 +175,39 @@ struct PatchDiff : FileDiff {
 	void Copy(FileIn& in, FileIn& oin, int& l, int ln, int n);
 	void LoadDiff(const char *fn);
 };
+
+class DirDiffDlg : public TopWindow {
+	Splitter                   files_diff;
+	TextDiffCtrl               diff;
+	ParentCtrl                 files_pane;
+	FileList                   files;
+
+	SelectDirButton            seldir1;
+	WithDropChoice<EditString> dir1;
+	SelectDirButton            seldir2;
+	WithDropChoice<EditString> dir2;
+	Option                     hidden;
+	Button                     compare;
+
+	FrameTop<EditString>       lfile, rfile;
+
+	void GatherFilesDeep(Index<String>& files, const String& base, const String& path);
+	void Compare();
+	void ClearFiles();
+	void File();
+
+public:
+	typedef DirDiffDlg CLASSNAME;
+	
+	void SetFont(Font fnt)                      { diff.SetFont(fnt); }
+	void Dir1(const String& dir)                { dir1 <<= dir; }
+	void Dir2(const String& dir)                { dir2 <<= dir; }
+	void Dir1AddList(const String& dir)         { dir1.AddList(dir); }
+	void Dir2AddList(const String& dir)         { dir2.AddList(dir); }
+	
+	DirDiffDlg();
+};
+
 
 };
 

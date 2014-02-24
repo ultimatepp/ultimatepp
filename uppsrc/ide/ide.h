@@ -39,30 +39,6 @@ const char *FindTag(const char *txt, const char *tag);
 const char *FindAfter(const char *txt, const char *tag);
 int         IdeLocateLine(String old_file, int old_line, String new_file);
 
-class FileSelButton : public FileSel
-{
-public:
-	typedef FileSelButton CLASSNAME;
-	enum MODE { MODE_OPEN, MODE_SAVE, MODE_DIR };
-	FileSelButton(MODE mode = MODE_OPEN, const char *title = NULL);
-
-	void               Attach(Ctrl& parent) { parent.AddFrame(button); }
-	void               Title(String t)      { title = t; }
-	String             GetTitle() const     { return title; }
-
-private:
-	void               OnAction();
-
-private:
-	FrameRight<Button> button;
-	String             title;
-	MODE               mode;
-};
-
-struct OpenFileButton  : FileSelButton { OpenFileButton(const char *title = NULL) : FileSelButton(MODE_OPEN, title) {} };
-struct SaveFileButton  : FileSelButton { SaveFileButton(const char *title = NULL) : FileSelButton(MODE_SAVE, title) {} };
-struct SelectDirButton : FileSelButton { SelectDirButton(const char *title = NULL) : FileSelButton(MODE_DIR,  title) {} };
-
 #include "UppDlg.h"
 
 void Puts(const char *s);
@@ -975,6 +951,7 @@ public:
 		void  Qtf();
 		void  Xml();
 		void  Json();
+		void  DoDirDiff();
 
 
 	void      ConsoleMenu(Bar& menu);

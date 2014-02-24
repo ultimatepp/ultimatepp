@@ -130,3 +130,4 @@ void Ide::Xml()
 	dlg.Execute();
 	StoreToGlobal(dlg, "XMLview");
 }
+
