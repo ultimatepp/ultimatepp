@@ -112,7 +112,7 @@ DirDiffDlg::DirDiffDlg()
 	rfile.SetReadOnly();
 	diff.InsertFrameRight(rfile);
 
-	Icon(DiffImg::Diff());
+	Icon(DiffImg::DirDiff());
 }
 
 };
