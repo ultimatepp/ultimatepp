@@ -397,6 +397,7 @@ void Ide::DoDirDiff()
 	if(!dlg.IsOpen()) {
 		dlg.SetFont(veditorfont);
 		dlg.Maximize();
+		dlg.Title("Compare directories");
 		dlg.OpenMain();
 	}
 	else
