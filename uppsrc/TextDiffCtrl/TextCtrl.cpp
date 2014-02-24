@@ -22,6 +22,7 @@ TextCompareCtrl::TextCompareCtrl()
 	gutter_bg = Color(151, 190, 239);
 	gutter_fg = SGreen;
 	cursor = anchor = Null;
+	gutter_capture = false;
 }
 
 void TextCompareCtrl::DoSelection(int y, bool shift)
@@ -43,24 +44,29 @@ void TextCompareCtrl::DoSelection(int y, bool shift)
 void TextCompareCtrl::LeftDown(Point pt, dword keyflags)
 {
 	Size sz = GetSize();
-	if(pt.x > sz.cx - gutter_width || HasCapture()) {
+	if(pt.x > sz.cx - gutter_width || HasCapture() && gutter_capture) {
 		if(!HasCapture())
 			SetCapture();
 		int line = (pt.y * lines.GetCount()) / sz.cy;
 		int page_lines = sz.cy / letter.cy;
 		scroll.SetY(line - page_lines / 2);
+		gutter_capture = true;
 	}
 	else {
 		DoSelection(pt.y, keyflags & K_SHIFT);
 		SetCapture();
+		gutter_capture = false;
 	}
 	SetWantFocus();
 }
 
-void TextCompareCtrl::MouseMove(Point pt, dword)
+void TextCompareCtrl::MouseMove(Point pt, dword flags)
 {
 	if(HasCapture())
-		DoSelection(pt.y, true);
+		if(gutter_capture)
+			LeftDown(pt, flags);
+		else
+			DoSelection(pt.y, true);
 }
 
 void TextCompareCtrl::LeftUp(Point pt, dword keyflags)
@@ -92,7 +98,7 @@ void TextCompareCtrl::Copy()
 void TextCompareCtrl::RightDown(Point p, dword keyflags)
 {
 	MenuBar b;
-	b.Add(cursor != anchor, t_("Copy"), CtrlImg::copy(), THISBACK(Copy)).Key(K_CTRL_C);
+	b.Add(!IsNull(cursor), t_("Copy"), CtrlImg::copy(), THISBACK(Copy)).Key(K_CTRL_C);
 	b.Execute();
 }
 
@@ -210,7 +216,10 @@ void TextCompareCtrl::Paint(Draw& draw)
 		int y = i * letter.cy - offset.cy;
 		Color ink = l.color;
 		Color paper = SColorPaper();
-		if(!IsNull(l.number) && l.number >= sell && l.number <= selh) {
+		if(IsNull(l.number))
+			paper = SGray();
+		else
+		if(l.number >= sell && l.number <= selh) {
 			ink = SColorHighlightText;
 			paper = SColorHighlight;
 		}
@@ -241,6 +250,11 @@ void TextCompareCtrl::SetFont(Font f, Font nf)
 	number_width = 5 * ni.GetAveWidth();
 	number_yshift = (fi.GetHeight() - ni.GetHeight() + 2) >> 1;
 	Layout();
+}
+
+void TextCompareCtrl::SetFont(Font f)
+{
+	SetFont(f, GetNumberFont());
 }
 
 void TextCompareCtrl::Layout()

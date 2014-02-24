@@ -453,6 +453,31 @@ public:
 	void        Set(const ValueMap& m);
 };
 
+
+class FileSelButton : public FileSel
+{
+public:
+	typedef FileSelButton CLASSNAME;
+	enum MODE { MODE_OPEN, MODE_SAVE, MODE_DIR };
+	FileSelButton(MODE mode = MODE_OPEN, const char *title = NULL);
+
+	void               Attach(Ctrl& parent) { parent.AddFrame(button); }
+	void               Title(String t)      { title = t; }
+	String             GetTitle() const     { return title; }
+
+private:
+	void               OnAction();
+
+private:
+	FrameRight<Button> button;
+	String             title;
+	MODE               mode;
+};
+
+struct OpenFileButton  : FileSelButton { OpenFileButton(const char *title = NULL) : FileSelButton(MODE_OPEN, title) {} };
+struct SaveFileButton  : FileSelButton { SaveFileButton(const char *title = NULL) : FileSelButton(MODE_SAVE, title) {} };
+struct SelectDirButton : FileSelButton { SelectDirButton(const char *title = NULL) : FileSelButton(MODE_DIR,  title) {} };
+
 void Set(ArrayCtrl& array, int ii, IdCtrls& m);
 void Get(ArrayCtrl& array, int ii, IdCtrls& m);
 
