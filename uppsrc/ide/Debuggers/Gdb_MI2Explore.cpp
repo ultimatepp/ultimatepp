@@ -1,5 +1,154 @@
 #include "Debuggers.h"
-#include <ide/ide.h>
+
+// sync explorer pane
+#ifdef flagMT
+void Gdb_MI2::SyncExplorer()
+{
+	// re-enter if called from main thread
+	if(IsMainThread())
+	{
+		debugThread.Start(THISBACK(SyncExplorer));
+		return;
+	}
+	
+	INTERLOCKED {
+		IncThreadRunning();
+		
+		try
+		{
+	
+			VectorMap<String, String> prev = DataMap(explorer);
+		
+			// get expression from editfield
+			String expr;
+			{
+				GuiLock __;
+				expr = explorerExprEdit;
+			}
+			
+			// create a vari object and evaluate '*this' expression
+			VarItem vItem(this);
+			vItem.Evaluate(expr);
+	
+			RaiseIfStop();
+	
+			// get children if complex variable
+			Vector<VarItem> children;
+			if(vItem.kind == VarItem::COMPLEX)
+				children = vItem.GetChildren();
+			else
+				children << vItem;
+	
+			RaiseIfStop();
+	
+			// fill explorer memners expressions, short expressions and values
+			explorerExpressions.Clear();
+			explorerValues.Clear();
+			for(int iVar = 0; iVar < children.GetCount(); iVar++)
+			{
+				VarItem &v = children[iVar];
+				explorerExpressions << v.shortExpression;
+				explorerValues << v.value;
+			}
+		
+			RaiseIfStop();
+	
+			// update 'this' pane
+			FillPane(explorer, explorerExpressions, explorerValues);
+	
+			// simplify batch
+			for(int iVar = 0; iVar < children.GetCount(); iVar++)
+			{
+				RaiseIfStop();
+				while(children[iVar].Simplify())
+					RaiseIfStop();
+	
+				VarItem &v = children[iVar];
+	
+				explorerValues[iVar] = v.value;
+				{
+					GuiLock __;
+					explorer.Set(iVar, 1, v.value);
+				}
+			}
+	
+			// when finished, mark changed values
+			MarkChanged(prev, explorer);
+			
+			explorerSynced = true;
+		}
+		catch(...)
+		{
+			explorerSynced = false;
+		}
+	
+		DecThreadRunning();
+	}
+}
+#else
+void Gdb_MI2::SyncExplorer(Vector<VarItem> children)
+{
+	static VectorMap<String, String> prev;
+
+	if(children.IsEmpty())
+	{
+		prev = DataMap(explorer);
+
+		// get expression from editfield
+		String expr = explorerExprEdit;
+		if(expr.IsEmpty())
+		{
+			explorerSynced = true;
+			return;
+		}
+	
+		// create a vari object and evaluate the expression
+		VarItem vItem(this, expr);
+
+		// get children if complex variable
+		if(vItem.kind == VarItem::COMPLEX)
+			children = vItem.GetChildren();
+		else
+			children << vItem;
+
+		// fill explorer memners expressions, short expressions and values
+		explorerExpressions.Clear();
+		explorerValues.Clear();
+		for(int iVar = 0; iVar < children.GetCount(); iVar++)
+		{
+			VarItem &v = children[iVar];
+			explorerExpressions << v.shortExpression;
+			explorerValues << v.value;
+		}
+	
+		// update 'this' pane
+		FillPane(explorer, explorerExpressions, explorerValues);
+	
+		exploreCallback.Set(500, THISBACK1(SyncExplorer, children));
+		return;
+	}
+	
+	// simplify batch
+	for(int iVar = 0; iVar < children.GetCount(); iVar++)
+	{
+		if(children[iVar].Simplify())
+		{
+			VarItem &v = children[iVar];
+			explorer.Set(iVar, 1, v.value);
+			explorerValues[iVar] = v.value;
+			exploreCallback.Set(100, THISBACK1(SyncExplorer, children));
+			return;
+		}
+	}
+	
+	for(int iVar = 0; iVar < children.GetCount(); iVar++)
+		explorer.Set(iVar, 1, children[iVar].value);
+
+	// when finished, mark changed values
+	MarkChanged(prev, explorer);
+	explorerSynced = true;
+}
+#endif
 
 void Gdb_MI2::doExplore(String const &expr, bool appendHistory)
 {
@@ -20,57 +169,9 @@ void Gdb_MI2::doExplore(String const &expr, bool appendHistory)
 		explorerHistoryExpressions.Add(expr);
 	}
 	
-	// evaluate the expression, direct deep evaluation here
-	String s = "<can't evaluate>";
-	MIValue valExpr = MICmd("data-evaluate-expression " + expr);
-
-	if(valExpr.IsTuple() && valExpr.Find("value") >= 0)
-	{
-		MIValue const &tup = valExpr.Get("value");
-		if(tup.IsString())
-			s = tup.ToString();
-	}
+	explorerSynced = false;
+	SyncExplorer();
 	
-	// special behaviour for pointers and references
-	// try to de-reference them
-	if(s.StartsWith("@0x") || s.StartsWith("0x"))
-	{
-		MIValue valExpr;
-		
-		if(s.StartsWith("@0x"))
-			// reference
-			valExpr = MICmd("data-evaluate-expression *&" + expr);
-		else
-			// pointer
-			valExpr = MICmd("data-evaluate-expression *" + expr);
-		
-		if(valExpr.IsTuple() && valExpr.Find("value") >= 0)
-		{
-			MIValue const &tup = valExpr.Get("value");
-			if(tup.IsString())
-				s = tup.ToString();
-		}
-	}
-	
-	s = expr + "=" + s;
-	MIValue val(s);
-
-	val.PackNames();
-	AddAttribs("", val);
-	val.FixArrays();
-
-	bool more = TypeSimplify(val, false);
-	while(more)
-		more = TypeSimplify(val, true);
-
-	// collect results
-	Vector<String> vals;
-	Vector<int> hints;
-	CollectVariables(val, explorerChildExpressions, vals, hints);
-
-	// update locals pane
-	FillPane(explorer, explorerChildExpressions, vals);
-
 	// update history buttons visibility
 	explorerBackBtn.Enable(explorerHistoryPos > 0);
 	explorerForwardBtn.Enable(explorerHistoryPos < explorerHistoryExpressions.GetCount() - 1);
@@ -115,8 +216,8 @@ void Gdb_MI2::onExplorerChild()
 	int line = explorer.GetCursor();
 	if(line < 0)
 		return;
-	if(line < explorerChildExpressions.GetCount())
-		doExplore(explorerChildExpressions[line], true);
+	if(line < explorerExpressions.GetCount())
+		doExplore(explorerExpressions[line], true);
 }
 
 void Gdb_MI2::onExplorerBack()
