@@ -42,7 +42,6 @@ String GuiPlatformGetKeyDesc(dword key)
 		{ K_DELTA|GDKEY(comma), "[,]" },
 		{ K_DELTA|GDKEY(period), "[.]" },
 		{ K_DELTA|GDKEY(underscore), "[/]" },
-		{ 0, NULL }
 	};
 	const Tuple2<dword, const char *> *x = FindTuple(nkey, __countof(nkey), key);
 	return x ? String(x->b) : String();
