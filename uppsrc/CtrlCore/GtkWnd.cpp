@@ -294,7 +294,7 @@ Rect Ctrl::GetPrimaryWorkArea()
 	int primary = gdk_screen_get_primary_monitor(gdk_screen_get_default());
 	Array<Rect> rc;
 	GetWorkArea(rc);
-	return primary < rc.GetCount() ? rc[primary] : GetVirtualScreenArea();
+	return primary >= 0 && primary < rc.GetCount() ? rc[primary] : GetVirtualScreenArea();
 }
 
 Rect Ctrl::GetPrimaryScreenArea()
