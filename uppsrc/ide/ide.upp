@@ -89,6 +89,7 @@ file
 	Copying;
 
 mainconfig
+	"" = "GUI MT",
 	"" = "GUI",
 	"" = "GUI .USEMALLOC",
 	"" = ".NOGTK GUI",
@@ -98,6 +99,7 @@ mainconfig
 	"" = "GUI SVO_VALUE",
 	"" = "GUI GTK",
 	"" = "GUI X11",
+	"" = "GUI MT NOGTK",
 	"" = "GUI NOGTK";
 
 custom() "",
