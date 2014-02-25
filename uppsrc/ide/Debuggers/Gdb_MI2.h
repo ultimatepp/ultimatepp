@@ -54,11 +54,9 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		bool InterruptDebugger(void);
 #endif
 
-#ifdef PLATFORM_POSIX
 		// current command break support -- ONLY POSIX, by now
 		// used to speed up operations in MT mode
 		bool InterruptCommand(void);
-#endif
 	
 		// used to post and kill timed callbacks
 		TimeCallback timeCallback;
