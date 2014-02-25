@@ -2,7 +2,7 @@
 #define _ide_Debuggers_TypeSimplify_h_
 
 #include "Debuggers.h"
-#include <ide/ide.h>
+#include "VarItem.h"
 
 #define SIMPLIFY_EXPR		"<!EXPR>"
 #define SIMPLIFY_VALUE		"<!VALUE>"
@@ -20,10 +20,12 @@
 #define SIMPLIFY_MAP		"<!MAP>"
 
 // Simplifier handler
-// parameters:
-//	gdb			handler to debugger object -- used mostly to inspect deeper
-//	expRoot		gdb evaluable expression of 'val' expression root. The one used to get the 'val'.
-typedef bool (*TYPE_SIMPLIFIER_HANDLER)(Gdb_MI2 &gdb, MIValue &val, bool deep);
+// step is the simplifying step, used for arrays and maps
+// step 0 -- base simplify, no deep evaluation of containers
+// step i -- deep evaluation of element 'i' of container
+// returns number of needed steps to complete optimization
+// all this stuff is needed to allow gui to have priority on data display
+typedef int (*TYPE_SIMPLIFIER_HANDLER)(VarItem &varItem, int step);
 
 void RegisterSimplifier(const char *pattern, TYPE_SIMPLIFIER_HANDLER handler);
 

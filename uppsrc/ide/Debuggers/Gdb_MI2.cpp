@@ -18,6 +18,8 @@ void WatchEdit::HighlightLine(int line, Vector<Highlight>& h, int pos)
 // (avoid re-painting and resetting scroll if not needed)
 void Gdb_MI2::FillPane(ArrayCtrl &pane, Index<String> const &nam, Vector<String> const &val)
 {
+	GuiLock __;
+	
 	int oldCount = pane.GetCount();
 	int newCount = nam.GetCount();
 	if(newCount < oldCount)
@@ -56,9 +58,14 @@ void Gdb_MI2::DebugBar(Bar& bar)
 	bar.Add(b, "Copy dissassembly", THISBACK(CopyDisas));
 }
 
+static int CharFilterReSlash2(int c)
+{
+	return c == '\\' ? '/' : c;
+}
+
 bool Gdb_MI2::SetBreakpoint(const String& filename, int line, const String& bp)
 {
-	String file = Filter(host->GetHostPath(NormalizePath(filename)), CharFilterReSlash);
+	String file = Filter(host->GetHostPath(NormalizePath(filename)), CharFilterReSlash2);
 	
 	// gets all breakpoints
 	MIValue bps = GetBreakpoints();
@@ -116,14 +123,9 @@ bool Gdb_MI2::RunTo()
 void Gdb_MI2::Run()
 {
 	MIValue val;
+
 	if(firstRun)
-		// GDB up to 7.1 has a bug that maps -exec-run ro run, not to run&
-		// making so async mode useless; we use the console run& command instead
-// 2012-07-08 update : interrupting GDB in async mode without having
-// non-stop mode enabled crashes X...don't know if it's a GDB bug or Theide one.
-// anyways, by now we give up with async mode and remove 'Asynchronous break' function
 		val = MICmd("exec-run");
-//		val = MICmd("interpreter-exec console run&");
 	else
 		val = MICmd("exec-continue --all");
 	
@@ -157,23 +159,8 @@ void Gdb_MI2::Run()
 }
 
 #ifdef PLATFORM_POSIX
-// sends a ctrl-c to debugger, returns true on success, false otherwise
-bool Gdb_MI2::InterruptDebugger(void)
-{
-	int killed = 0;
-	for(int iProc = 0; iProc < processes.GetCount(); iProc++)
-		if(kill(processes[iProc], SIGINT) == 0)
-			killed++;
-	return killed;
-}
-#endif
-
 void Gdb_MI2::AsyncBrk()
 {
-#ifdef PLATFORM_POSIX
-	// data must be refreshed
-	dataSynced = false;
-	
 	// send interrupt command to debugger
 	if(!InterruptDebugger())
 		return;
@@ -187,12 +174,77 @@ void Gdb_MI2::AsyncBrk()
 		if(stopped)
 			break;
 	}
-#endif
 }
+#endif
+
+#ifdef flagMT
+// mutex-protected functions
+bool Gdb_MI2::IsThreadRunning(void)
+{
+	bool b;
+	INTERLOCKED_(mutex) {
+		b = threadRunning;
+	}
+	return b;
+}
+
+void Gdb_MI2::IncThreadRunning()
+{
+	INTERLOCKED_(mutex) {
+		threadRunning++;
+	}
+}
+
+void Gdb_MI2::DecThreadRunning()
+{
+	INTERLOCKED_(mutex) {
+		threadRunning--;
+	}
+}
+
+bool Gdb_MI2::IsStopThread(void)
+{
+	bool b;
+	INTERLOCKED_(mutex) {
+		b = stopThread;
+	}
+	return b;
+}
+
+void Gdb_MI2::SetStopThread(bool b)
+{
+	INTERLOCKED_(mutex) {
+		stopThread = b;
+	}
+}
+#endif
+
+#ifdef flagMT
+// quick exit from service thread when called and 'stopThread' is set
+// throws a BreakExc exception
+void Gdb_MI2::RaiseIfStop(void)
+{
+	INTERLOCKED_(mutex) {
+		if(!IsMainThread() && stopThread)
+			throw BreakExc();
+	}
+}
+#else
+void Gdb_MI2::RaiseIfStop(void)
+{
+}
+#endif
+
 
 void Gdb_MI2::Stop()
 {
 	stopped = true;
+#ifdef flagMT
+	// stop debugger threads and wait for termination
+	SetStopThread(true);
+	while(IsThreadRunning())
+		Sleep(20);
+#endif
 	if(dbg && dbg->IsRunning())
 		dbg->Kill();
 }
@@ -295,7 +347,11 @@ Gdb_MI2::Gdb_MI2()
 	watches.WhenLeftDouble = THISBACK1(onExploreExpr, &watches);
 	watches.EvenRowColor();
 	watches.OddRowColor();
-	watches.WhenUpdateRow = THISBACK1(SyncWatches, MIValue());
+#ifdef flagMT
+	watches.WhenUpdateRow = THISBACK(SyncWatches);
+#else
+	watches.WhenUpdateRow = THISBACK1(SyncWatches, Vector<VarItem>());
+#endif
 
 	int c = EditField::GetStdHeight();
 	explorer.AddColumn("", 1);
@@ -350,12 +406,16 @@ Gdb_MI2::Gdb_MI2()
 	stopped = false;
 	
 	periodic.Set(-50, THISBACK(Periodic));
-	dataSynced = false;
+	
+	localSynced = false;
+	thisSynced = false;
+	watchesSynced = false;
+	explorerSynced = false;
 	
 #ifdef flagMT
-	// no running debug threads
-	runningThreads = 0;
-	stopThreads = false;
+	// no running debug thread
+	threadRunning = false;
+	stopThread = false;
 #endif
 
 }
@@ -430,238 +490,10 @@ void Gdb_MI2::Unlock()
 	}
 }
 
-// read debugger output analyzing command responses and async output
-// things are quite tricky because debugger output seems to be
-// slow and we have almost no terminator to stop on -- (gdb) is not
-// so reliable as it can happen (strangely) in middle of nothing
-MIValue Gdb_MI2::ParseGdb(String const &output, bool wait)
-{
-	MIValue res;
-	
-	LDUMP(output);
-
-	// parse result data
-	StringStream ss(output);
-	int iSubstr;
-	while(!ss.IsEof())
-	{
-		String s = TrimBoth(ss.GetLine());
-		
-		// check 'running' and 'stopped' async output
-		if(s.StartsWith("*running"))
-		{
-			started = true;
-			stopReason.Clear();
-			continue;
-		}
-// 2012-07-08 -- In some cases, GDB output get mixed with app one
-//               so we shall look for 'stop' record in all string,
-//               not just at beginning as it was before
-// 				 not a wanderful way, as debugger could be tricked by some text...
-/*
-		else if(s.StartsWith("*stopped"))
-		{
-			stopped = true;
-			s = '{' + s.Mid(9) + '}';
-			stopReason = MIValue(s);
-			continue;
-		}
-*/
-		else if( (iSubstr = s.Find("*stopped,reason=")) >= 0)
-		{
-			stopped = true;
-			s = '{' + s.Mid(iSubstr + 9) + '}';
-			stopReason = MIValue(s);
-			continue;
-		}
-		
-		// catch process start/stop and store/remove pids
-		else if(s.StartsWith("=thread-group-started,id="))
-		{
-			String id, pid;
-			int i = s.Find("id=");
-			if(i < 0)
-				continue;
-			i += 4;
-			while(s[i] && s[i] != '"')
-				id.Cat(s[i++]);
-			i = s.Find("pid=");
-			if(i < 0)
-				continue;
-			i += 5;
-			while(s[i] && s[i] != '"')
-				pid.Cat(s[i++]);
-			
-			processes.Add(id, atoi(pid));
-		}
-		
-		else if(s.StartsWith("=thread-group-exited,id="))
-		{
-			String id;
-			int i = s.Find("id=");
-			if(i < 0)
-				continue;
-			i += 4;
-			while(s[i] && s[i] != '"')
-				id.Cat(s[i++]);
-			i = processes.Find(id);
-			if(i >= 0)
-				processes.Remove(i);
-		}
-		
-		// skip asynchronous responses
-		// in future, we could be gather/use them
-		if(s[0] == '*'|| s[0] == '=')
-			continue;
-		
-		// here handling of command responses
-		// we're not interested either, as we use MI interface
-		if(s[0] == '~')
-			continue;
-		
-		// here handling of target output
-		// well, for now discard this one too, but it should go on console output
-		if(s[0] == '~')
-			continue;
-	
-		// here handling of gdb log/debug message
-		// not interesting here
-		if(s[0] == '&')
-			continue;
-		
-		// now we SHALL have something starting with any of
-		// // "^done", "^running", "^connected", "^error" or "^exit" records
-		if(s.StartsWith("^done") || s.StartsWith("^running"))
-		{
-			// here we've got succesful command output in list form, if any
-			// shall skip the comma; following can be a serie of pairs,
-			// or directly an array of maps in form of :
-			// [{key="value",key="value",...},{key="value"...}...]
-			
-			int i = 5; // just skip shortest, ^done
-			while(s[i] && s[i] != ',')
-				i++;
-			if(!s[i])
-				continue;
-			i++;
-			if(!s[i])
-				continue;
-			res = MIValue(s.Mid(i));
-			continue;
-		}
-		else if(s.StartsWith("^error"))
-		{
-			// first array element is reserved for command result status
-			s = s.Right(12); // '^error,msg=\"'
-			s = s.Left(s.GetCount() - 1);
-			res.SetError(s);
-		}
-		else
-			continue;
-	}
-	return res;
-}
-
-MIValue Gdb_MI2::ReadGdb(bool wait)
-{
-	String output, s;
-	MIValue res;
-	
-	if(wait)
-	{
-		// blocking path
-		// waits for 3 seconds max, then return empty value
-		// some commands (in particular if they return python exceptions)
-		// have a delay between returned exception text and command result
-		// so we shall wait up to the final (gdb)
-		int retries = 13 * 50;
-		while(dbg && retries--)
-		{
-			dbg->Read(s);
-			output += s;
-			if(TrimRight(s).EndsWith("(gdb)"))
-				break;
-			Sleep(20);
-			continue;
-		}
-	}
-	else if(dbg)
-		dbg->Read(output);
-	if(output.IsEmpty())
-		return res;
-	return ParseGdb(output);
-}
-
-// new-way commands using GDB MI interface
-// on input  : MI interface command line
-// on output : an MIValue containing GDB output
-// STREAM OUTPUT
-// ~						command response
-// @						target output
-// &						gdb log/debug messages
-//
-// RESULT RECORDS
-// "^done" [ "," results ]
-// "^running"				same as "^done"
-//	"^connected"			gdb has connected to a remote target.
-//	"^error" "," c-string	The operation failed. The c-string contains the corresponding error message.
-//	"^exit"					gdb has terminate
-//
-// ASYNCHRONOUS RECORDS
-// *running,thread-id="thread"
-// *stopped,reason="reason",thread-id="id",stopped-threads="stopped",core="core"
-// =thread-group-added,id="id"
-// =thread-group-removed,id="id"
-// =thread-group-started,id="id",pid="pid"
-// =thread-group-exited,id="id"[,exit-code="code"]
-// =thread-created,id="id",group-id="gid"
-// =thread-exited,id="id",group-id="gid"
-// =thread-selected,id="id"
-// =library-loaded,...
-// =library-unloaded,...
-// =breakpoint-created,bkpt={...}
-// =breakpoint-modified,bkpt={...}
-// =breakpoint-deleted,bkpt={...}
-//
-// FRAME INFO INSIDE RESPONSES
-// level		The level of the stack frame. The innermost frame has the level of zero. This field is always present.
-// func		The name of the function corresponding to the frame. This field may be absent if gdb is unable to determine the function name.
-// addr		The code address for the frame. This field is always present.
-// file		The name of the source files that correspond to the frame's code address. This field may be absent.
-// line		The source line corresponding to the frames' code address. This field may be absent.
-// from		The name of the binary file (either executable or shared library) the corresponds to the frame's code address. This field may be absent. 
-
-// THREAD INFO INSIDE RESPONSES
-// id			The numeric id assigned to the thread by gdb. This field is always present.
-// target-id	Target-specific string identifying the thread. This field is always present.
-// details		Additional information about the thread provided by the target. It is supposed to be human-readable and not interpreted by the frontend. This field is optional.
-// state		Either `stopped' or `running', depending on whether the thread is presently running. This field is always present.
-// core		The value of this field is an integer number of the processor core the thread was last seen on. This field is optional. 
-//
-// REMARKS : by now, we just handle synchronous output and check asynchronous one just to detect
-// debugger run/stop status -- all remaining asynchrnonous output is discarded
-MIValue Gdb_MI2::MICmd(const char *cmdLine)
-{
-	LDUMP(cmdLine);
-	// sends command to debugger and get result data
-
-	// should handle dbg unexpected termination ?
-	if(!dbg || !dbg->IsRunning() /* || IdeIsDebugLock() */)
-		return MIValue();
-
-	// consume previous output from gdb... don't know why sometimes
-	// is there and gives problems to MI interface. We shall maybe
-	// parse and store it somewhere
-	ReadGdb(false);
-
-	dbg->Write(String("-") + cmdLine + "\n");
-	return ReadGdb();
-}
-
 // format breakpoint line from ide file and line
 String Gdb_MI2::BreakPos(String const &file, int line)
 {
-	return String().Cat() << Filter(host->GetHostPath(NormalizePath(file)), CharFilterReSlash) << ":" << line;
+	return String().Cat() << Filter(host->GetHostPath(NormalizePath(file)), CharFilterReSlash2) << ":" << line;
 }
 
 // set breakpoint
@@ -785,7 +617,10 @@ void Gdb_MI2::SyncDisas(MIValue &fInfo, bool fr)
 void Gdb_MI2::SyncIde(bool fr)
 {
 	// kill pending update callbacks
+#ifndef flagMT
 	timeCallback.Kill();
+	exploreCallback.Kill();
+#endif
 
 	// get current frame info and level
 	MIValue fInfo = MICmd("stack-info-frame")["frame"];
@@ -826,6 +661,7 @@ void Gdb_MI2::SyncIde(bool fr)
 		}
 	}
 
+
 	// get the arguments for current frame
 	MIValue fArgs = MICmd(Format("stack-list-arguments 1 %d %d", level, level))["stack-args"][0]["args"];
 	if(!fArgs.IsError() && !fArgs.IsEmpty())
@@ -839,8 +675,15 @@ void Gdb_MI2::SyncIde(bool fr)
 	// sync disassembly
 	SyncDisas(fInfo, fr);
 	
+
 	// update vars only on idle times
+#ifdef flagMT
+	SyncData();
+	SyncExplorer();
+#else
 	timeCallback.Set(500, THISBACK(SyncData));
+	exploreCallback.Set(480, THISBACK1(SyncExplorer, Vector<VarItem>()));
+#endif
 }
 
 // logs frame data on console
@@ -854,47 +697,14 @@ void Gdb_MI2::LogFrame(String const &msg, MIValue &frame)
 	PutConsole(Format(msg + " at %s, function '%s', file '%s', line %s", addr, function, file, line));
 }
 
-/*
-// stop all running threads and re-select previous current thread
-void Gdb_MI2::StopAllThreads(void)
-{
-	// get thread info for all threads
-	MIValue tInfo = MICmd("thread-info");
-	MIValue &threads = tInfo["threads"];
-	bool someRunning = false;
-	for(int iThread = 0; iThread < threads.GetCount(); iThread++)
-	{
-		if(threads[iThread]["state"].Get() != "stopped")
-		{
-			someRunning = true;
-			break;
-		}
-	}
-	// don't issue any stop command if no threads running
-	// (brings problems....)
-	if(!someRunning)
-		return;
-
-	// stores current thread id
-	String current = tInfo("current-thread-id", "");
-	
-	// stops all threads
-	MICmd("exec-interrupt --all");
-	
-	// just to be sure, reads out GDB output
-	ReadGdb(false);
-	
-	// reselect current thread as it was before stopping all others
-	if(current != "")
-		MICmd("thread-select " + current);
-}
-*/
-
 // check for stop reason
 void Gdb_MI2::CheckStopReason(void)
 {
 	// data must be synced on stop...
-	dataSynced = false;
+	localSynced = false;
+	thisSynced = false;
+	watchesSynced = false;
+	explorerSynced = false;
 
 	// we need to store stop reason BEFORE interrupting all other
 	// threads, otherwise it'll be lost
@@ -906,15 +716,6 @@ void Gdb_MI2::CheckStopReason(void)
 		reason = "unknown reason";
 	else
 		reason = stReason["reason"];
-
-/*
-	// as we are in non-stop mode, to allow async break to work
-	// we shall stop ALL running threads here, otherwise we'll have
-	// problems when single stepping a gui MT app
-	// single step will be done so for a single thread, while other
-	// are idle. Maybe we could make this behaviour optional
-	StopAllThreads();
-*/
 
 	if(reason == "exited-normally")
 	{
@@ -1133,234 +934,491 @@ struct CapitalLess
 };
 
 // update local variables on demand
-void Gdb_MI2::SyncLocals(MIValue val)
+#ifdef flagMT
+void Gdb_MI2::SyncLocals()
 {
-	bool firstCall = false;
-	static VectorMap<String, String> prev;
-
-	// if not done, start first evaluation step
-	if(val.IsEmpty())
+	IncThreadRunning();
+	
+	try
 	{
-		prev = DataMap(locals);
+		VectorMap<String, String> prev = DataMap(locals);
+		
+		RaiseIfStop();
 
 		// get local vars names
-		MIValue locs = MICmd("stack-list-variables 1");
+		MIValue locs = MICmd("stack-list-variables 0");
+		if(!locs.IsTuple() || locs.Find("variables") < 0)
+			throw BreakExc();
+	
+		// variables are returned as a tuple, named "variables"
+		// containing a array of variables
+		MIValue lLocs = locs["variables"];
+		if(!lLocs.IsArray())
+			throw BreakExc();
+	
+		Vector<VarItem> localVars;
+		for(int iLoc = 0; iLoc < lLocs.GetCount(); iLoc++)
+		{
+			MIValue &lLoc = lLocs[iLoc];
+			String name = lLoc["name"];
+	
+			// skip 'this', we've a page for it
+			if(name == "this")
+				continue;
+	
+			localVars.Add(VarItem(this, name));
+		}
+
+		// create a VarItem for each variable and put evaluation results
+		// inside local arrays
+		localExpressions.Clear();
+		localValues.Clear();
+	
+		for(int iLoc = 0; iLoc < localVars.GetCount(); iLoc++)
+		{
+			VarItem &vItem = localVars[iLoc];
+			localExpressions << vItem.evaluableExpression;
+			localValues << vItem.value;
+		}
+	
+		// update locals pane
+		FillPane(locals, localExpressions, localValues);
+	
+		// autos variables can come from members or locals...
+		SyncAutos();
+		
+		// simplify batch
+		for(int iLoc = 0; iLoc < localVars.GetCount(); iLoc++)
+		{
+			while(localVars[iLoc].Simplify())
+				RaiseIfStop();
+			
+			VarItem &v = localVars[iLoc];
+			localValues[iLoc] = v.value;
+			{
+				GuiLock __;
+				locals.Set(iLoc, 1, v.value);
+			}
+		}
+	
+		localSynced = true;
+	}
+	catch(...)
+	{
+		localSynced = false;
+	}
+	
+	DecThreadRunning();
+}
+#else
+void Gdb_MI2::SyncLocals(Vector<VarItem> localVars)
+{
+	static VectorMap<String, String> prev;
+	if(localVars.IsEmpty())
+	{
+		prev = DataMap(members);;
+
+		// get local vars names
+		MIValue locs = MICmd("stack-list-variables 0");
 		if(!locs.IsTuple() || locs.Find("variables") < 0)
 			return;
-		
+	
 		// variables are returned as a tuple, named "variables"
 		// containing a array of variables
 		MIValue lLocs = locs["variables"];
 		if(!lLocs.IsArray())
 			return;
-
-		// as values are in string format we must parse them
-		// so we simply build a big string with all variables
-		// and feed into MIValue parser
-		String s = "{";
+	
 		for(int iLoc = 0; iLoc < lLocs.GetCount(); iLoc++)
 		{
 			MIValue &lLoc = lLocs[iLoc];
 			String name = lLoc["name"];
-
+	
 			// skip 'this', we've a page for it
 			if(name == "this")
 				continue;
-			s << name << "=" << lLoc["value"] << ",";
-		}
-		if(s.EndsWith(","))
-			s = s.Left(s.GetCount()-1);
-		s << "}";
-		val = s;
-
-		val.PackNames();
-		AddAttribs("", val);
-		val.FixArrays();
-		
-		TypeSimplify(val, false);
-		
-		firstCall = true;
-	 }
-
-	bool more = TypeSimplify(val, true);
-
-	// collect variables names and values
-	CollectVariables(val, localExpressions, localValues, localHints);
-
-	// update locals pane
-	FillPane(locals, localExpressions, localValues);
 	
-	if(more)
-		// more evaluations are needed, respawn the function with a delay
-		// big delay on first respawn to allow quick stepping without lag
-		timeCallback.Set(firstCall ? 2000 : 200, THISBACK1(SyncLocals, val));
-	else
-		// when finished, mark changed values
-		MarkChanged(prev, locals);
+			localVars.Add(VarItem(this, name));
+		}
+
+		// create a VarItem for each variable and put evaluation results
+		// inside local arrays
+		localExpressions.Clear();
+		localValues.Clear();
+	
+		for(int iLoc = 0; iLoc < localVars.GetCount(); iLoc++)
+		{
+			VarItem &vItem = localVars[iLoc];
+			localExpressions << vItem.evaluableExpression;
+			localValues << vItem.value;
+		}
+	
+		// update locals pane
+		FillPane(locals, localExpressions, localValues);
+	
+		// autos variables can come from members or locals...
+		SyncAutos();
+	
+		timeCallback.Set(500, THISBACK1(SyncLocals, localVars));
+		return;
+	}
+	
+	// simplify batch
+	for(int iLoc = 0; iLoc < localVars.GetCount(); iLoc++)
+	{
+		if(localVars[iLoc].Simplify())
+		{
+			locals.Set(iLoc, 1, localVars[iLoc].value);
+			SyncAutos();
+			timeCallback.Set(100, THISBACK1(SyncLocals, localVars));
+			return;
+		}
+	}
+	
+	for(int iLoc = 0; iLoc < localVars.GetCount(); iLoc++)
+		locals.Set(iLoc, 1, localVars[iLoc].value);
+
+	// when finished, mark changed values
+	MarkChanged(prev, locals);
+	localSynced = true;
 }
+#endif
 
 // update 'this' inspector data
-void Gdb_MI2::SyncThis(MIValue val)
+#ifdef flagMT
+void Gdb_MI2::SyncThis()
 {
-	bool firstCall = false;
-	static VectorMap<String, String> prev;
-
-	// if not done, start first evaluation step
-	if(val.IsEmpty())
+	IncThreadRunning();
+	
+	try
 	{
-		val = Evaluate("*this", false);
-		prev = DataMap(members);
+		VectorMap<String, String> prev = DataMap(members);
+		
+		RaiseIfStop();
 
-		// this is the first evaluation step
-		// just simple types -- lag some seconds to full evaluation
-		// which is quite slow
-		firstCall = true;
-	}
+		// create a vari object and evaluate '*this' expression
+		VarItem vItem(this);
+		vItem.Evaluate("*this");
 
-	// deep evaluation step
-	bool more = TypeSimplify(val, true);
+		RaiseIfStop();
+
+		// get children
+		Vector<VarItem> children = vItem.GetChildren();
+
+		RaiseIfStop();
+
+		thisExpressions.Clear();
+		thisShortExpressions.Clear();
+		thisValues.Clear();
+		for(int iVar = 0; iVar < children.GetCount(); iVar++)
+		{
+			VarItem &v = children[iVar];
+			thisExpressions << v.evaluableExpression;
+			String exp = v.shortExpression;
+			int dot = exp.Find('.');
+			if(dot >= 0)
+				exp = exp.Mid(dot + 1);
+			thisShortExpressions << exp;
+			thisValues << v.value;
+		}
 	
-	// collect variables names and values
-	CollectVariables(val, thisExpressions, thisValues, thisHints);
+		RaiseIfStop();
 
-	// strip the (*this) from variables names
-	thisShortExpressions.Clear();
-	for(int iExpr = 0; iExpr < thisExpressions.GetCount(); iExpr++)
-		thisShortExpressions.Add(thisExpressions[iExpr].Mid(8));
+		// update 'this' pane
+		FillPane(members, thisShortExpressions, thisValues);
 
-	// update 'this' pane
-	FillPane(members, thisShortExpressions, thisValues);
+		// autos variables can come from members or locals...
+		SyncAutos();
 	
-	if(more)
-		// more evaluations are needed, respawn the function with a delay
-		// big delay on first respawn to allow quick stepping without lag
-		timeCallback.Set(firstCall ? 2000 : 200, THISBACK1(SyncThis, val));
-	else
+		// simplify batch
+		for(int iVar = 0; iVar < children.GetCount(); iVar++)
+		{
+			RaiseIfStop();
+			while(children[iVar].Simplify())
+				RaiseIfStop();
+
+			VarItem &v = children[iVar];
+
+			thisValues[iVar] = v.value;
+			{
+				GuiLock __;
+				members.Set(iVar, 1, v.value);
+			}
+			SyncAutos();
+		}
+
 		// when finished, mark changed values
 		MarkChanged(prev, members);
+		thisSynced = true;
+	}
+	catch(...)
+	{
+		thisSynced = false;
+	}
+	
+	DecThreadRunning();
 }
+#else
+void Gdb_MI2::SyncThis(Vector<VarItem> children)
+{
+	static VectorMap<String, String> prev;
+	if(children.IsEmpty())
+	{
+		prev = DataMap(members);;
+
+		// create a vari object and evaluate '*this' expression
+		VarItem vItem(this, "*this");
+
+		// get children
+		children = vItem.GetChildren();
+
+		// fill 'this' memners expressions, short expressions and values
+		thisExpressions.Clear();
+		thisShortExpressions.Clear();
+		thisValues.Clear();
+		for(int iVar = 0; iVar < children.GetCount(); iVar++)
+		{
+			VarItem &v = children[iVar];
+			thisExpressions << v.evaluableExpression;
+			String exp = v.shortExpression;
+			int dot = exp.Find('.');
+			if(dot >= 0)
+				exp = exp.Mid(dot + 1);
+			thisShortExpressions << exp;
+			thisValues << v.value;
+		}
+	
+		// update 'this' pane
+		FillPane(members, thisShortExpressions, thisValues);
+	
+		// autos variables can come from members or locals...
+		SyncAutos();
+	
+		timeCallback.Set(500, THISBACK1(SyncThis, children));
+		return;
+	}
+	
+	// simplify batch
+	for(int iVar = 0; iVar < children.GetCount(); iVar++)
+	{
+		if(children[iVar].Simplify())
+		{
+			members.Set(iVar, 1, children[iVar].value);
+			SyncAutos();
+			timeCallback.Set(100, THISBACK1(SyncThis, children));
+			return;
+		}
+	}
+	
+	for(int iVar = 0; iVar < children.GetCount(); iVar++)
+		members.Set(iVar, 1, children[iVar].value);
+
+	// when finished, mark changed values
+	MarkChanged(prev, members);
+	thisSynced = true;
+}
+#endif
 		
 // sync auto vars treectrl
 void Gdb_MI2::SyncAutos()
 {
-	VectorMap<String, String> prev = DataMap(autos);
-	autos.Clear();
-
-	// read expressions around cursor line
-	CParser p(autoLine);
-	while(!p.IsEof())
-	{
-		if(p.IsId())
+	INTERLOCKED {
+		GuiLock __;
+	
+		autos.Clear();
+	
+		// read expressions around cursor line
+		CParser p(autoLine);
+		while(!p.IsEof())
 		{
-			String exp = p.ReadId();
-			for(;;)
+			if(p.IsId())
 			{
-				if(p.Char('.') && p.IsId())
-					exp << '.';
+				String exp = p.ReadId();
+				for(;;)
+				{
+					if(p.Char('.') && p.IsId())
+						exp << '.';
+					else
+					if(p.Char2('-', '>') && p.IsId())
+						exp << "->";
+					else
+						break;
+					exp << p.ReadId();
+				}
+				int idx = localExpressions.Find(exp);
+				if(idx < 0)
+				{
+					idx = thisShortExpressions.Find(exp);
+					if(idx >= 0)
+						autos.Add(exp, thisValues[idx]);
+				}
 				else
-				if(p.Char2('-', '>') && p.IsId())
-					exp << "->";
-				else
-					break;
-				exp << p.ReadId();
+					autos.Add(exp, localValues[idx]);
 			}
-			int idx = localExpressions.Find(exp);
-			if(idx >= 0)
-				autos.Add(exp, localValues[idx]);
+			p.SkipTerm();
 		}
-		p.SkipTerm();
+		autos.Sort();
 	}
-	autos.Sort();
-	MarkChanged(prev, autos);
 }
 
 // sync watches treectrl
-void Gdb_MI2::SyncWatches(MIValue val)
+#ifdef flagMT
+void Gdb_MI2::SyncWatches()
 {
-	static VectorMap<String, String> prev;
-	bool firstCall = false;
-	
-	// on first cycle, we fast evaluate all expressions
-	// without going deep, and put all results into an array
-	if(val.IsEmpty())
+	// re-enter if called from main thread
+	if(IsMainThread())
 	{
-		prev = DataMap(watches);
-
-		for(int i = 0; i < watches.GetCount(); i++)
+		debugThread.Start(THISBACK(SyncWatches));
+		return;
+	}
+	
+	INTERLOCKED {
+		IncThreadRunning();
+		try
 		{
-			String expr = watches.Get(i,0);
-			MIValue res;
-			res.Set("<can't evaluate>");
-			MIValue valExpr = MICmd("data-evaluate-expression " + expr);
-
-			if(valExpr.IsTuple() && valExpr.Find("value") >= 0)
+			VectorMap<String, String> prev = DataMap(watches);
+	
+			// get watches expressions and create VarItems for them
+			// and put results inside watches control
+			Vector<VarItem> watchesVars;
+			watchesExpressions.Clear();
+			watchesValues.Clear();
+			for(int iWatch = 0; iWatch < watches.GetCount(); iWatch++)
 			{
-				MIValue const &tup = valExpr.Get("value");
-				if(tup.IsString())
+				String exp, val;
 				{
-					String s = tup.ToString();
-					res = s;
+					GuiLock __;
+					exp = watches.Get(iWatch, 0);
+				}
+				watchesExpressions << exp;
+				watchesVars.Add(VarItem(this, exp));
+				val = watchesVars.Top().value;
+				watchesValues.Add(val);
+				{
+					GuiLock __;
+					watches.Set(iWatch, 1, val);
 				}
 			}
-			res.PackNames();
-			AddAttribs("", res);
-			res.FixArrays();
-
-			val.Add(res);
+				
+			// simplify batch
+			for(int iWatch = 0; iWatch < watchesVars.GetCount(); iWatch++)
+			{
+				RaiseIfStop();
+				while(watchesVars[iWatch].Simplify())
+					RaiseIfStop();
+	
+				VarItem &v = watchesVars[iWatch];
+	
+				watchesValues[iWatch] = v.value;
+				{
+					GuiLock __;
+					watches.Set(iWatch, 1, v.value);
+				}
+			}
+	
+			// when finished, mark changed values
+			MarkChanged(prev, watches);
+			watchesSynced = true;
 		}
-		firstCall = true;
+		catch(...)
+		{
+			watchesSynced = false;
+		}
+		DecThreadRunning();
 	}
-
-	bool more = false;
-	
-	// simplify loop, returns when at least one simplify step happens
-	for(int iVal = 0; iVal < val.GetCount(); iVal++)
-	{
-		MIValue &v = val[iVal];
-		more |= TypeSimplify(v, true);
-		if(more)
-			break;
-	}
-	// collects all results
-	watchesValues.Clear();
-	for(int iVal = 0; iVal < val.GetCount(); iVal++)
-		watchesValues << CollectVariablesShort(val[iVal]);
-
-	// fill expressions with ctrl expr contents
-	watchesExpressions.Clear();
-	for(int iVal = 0; iVal < watchesValues.GetCount(); iVal++)
-		watchesExpressions << watches.Get(iVal, 0);
-
-	// update locals pane
-	FillPane(watches, watchesExpressions, watchesValues);
-	
-	if(more)
-		// more evaluations are needed, respawn the function with a delay
-		// big delay on first respawn to allow quick stepping without lag
-		timeCallback.Set(firstCall ? 2000 : 200, THISBACK1(SyncWatches, val));
-	else
-		// when finished, mark changed values
-		MarkChanged(prev, watches);
 }
+#else
+void Gdb_MI2::SyncWatches(Vector<VarItem> watchesVars)
+{
+	static VectorMap<String, String> prev;
+	if(watchesVars.IsEmpty())
+	{
+		prev = DataMap(watches);;
+
+		// get watches expressions and create VarItems for them
+		// and put results inside watches control
+		watchesExpressions.Clear();
+		watchesValues.Clear();
+		for(int iWatch = 0; iWatch < watches.GetCount(); iWatch++)
+		{
+			String exp = watches.Get(iWatch, 0);
+			watchesExpressions << exp;
+			watchesVars.Add(VarItem(this, exp));
+			String val = watchesVars.Top().value;
+			watchesValues.Add(val);
+			watches.Set(iWatch, 1, val);
+		}
+		
+		timeCallback.Set(500, THISBACK1(SyncWatches, watchesVars));
+		return;
+	}
+	
+	// simplify batch
+	for(int iWatch = 0; iWatch < watchesVars.GetCount(); iWatch++)
+	{
+		if(watchesVars[iWatch].Simplify())
+		{
+			watches.Set(iWatch, 1, watchesVars[iWatch].value);
+			timeCallback.Set(100, THISBACK1(SyncWatches, watchesVars));
+			return;
+		}
+	}
+	
+	for(int iWatch = 0; iWatch < watchesVars.GetCount(); iWatch++)
+		watches.Set(iWatch, 1, watchesVars[iWatch].value);
+
+	// when finished, mark changed values
+	MarkChanged(prev, watches);
+	watchesSynced = true;
+}
+#endif
 
 // sync data tabs, depending on which tab is shown
 void Gdb_MI2::SyncData()
 {
-	if(dataSynced)
-		return;
+#ifdef flagMT
 	
 	// update stored 'this' member data
 	// also used for tooltips and 'this' pane page
-	SyncThis();
+	if(IsStopThread())
+		return;
+	INTERLOCKED_(mutex) {
+		if(!thisSynced)
+			debugThread.Start(THISBACK(SyncThis));
+	}
 	
 	// updated locals variables
-	SyncLocals();
+	if(IsStopThread())
+		return;
+	INTERLOCKED_(mutex) {
+		if(!localSynced)
+			debugThread.Start(THISBACK(SyncLocals));
+	}
 
-	SyncAutos();
+	//update watches
+	if(IsStopThread())
+		return;
+	INTERLOCKED_(mutex) {
+		if(!watchesSynced)
+			debugThread.Start(THISBACK(SyncWatches));
+	}	
 
-	SyncWatches();
+#else
+
+	// update stored 'this' member data
+	// also used for tooltips and 'this' pane page
+	if(!thisSynced)
+		SyncThis();
 	
-	dataSynced = true;
+	// updated locals variables
+	if(!localSynced)
+		SyncLocals();
+
+	// update watches
+	if(!watchesSynced)
+		SyncWatches();
+	
+#endif
 }
 
 // watches arrayctrl key handling
@@ -1540,7 +1598,7 @@ void Gdb_MI2::CopyDisas()
 bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdline, bool console)
 {
 	host = _host;
-	dbg = host->StartProcess(GdbCommand(console) + GetHostPath(exefile) + " --interpreter=mi -q");
+	dbg = host->StartProcess(GdbCommand(console) + GetHostPath(exefile) + " --interpreter=mi2" /*" -q"*/);
 	if(!dbg) {
 		Exclamation(t_("Error invoking gdb !"));
 		return false;
@@ -1602,6 +1660,8 @@ bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdli
 	// avoids debugger crash if caught inside ungrabbing function
 	// (don't solves all cases, but helps...)
 	MICmd("gdb-set unwindonsignal on");
+
+//	MICmd("gdb-set interactive on");
 
 	if(!IsNull(cmdline))
 		MICmd("gdb-set args " + cmdline);

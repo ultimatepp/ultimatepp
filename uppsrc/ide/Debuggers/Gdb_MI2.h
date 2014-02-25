@@ -2,6 +2,7 @@
 #define _ide_Debuggers_Gdb_MI2_h_
 
 #include "MIValue.h"
+#include "VarItem.h"
 
 class WatchEdit : public LineEdit
 {
@@ -10,6 +11,13 @@ class WatchEdit : public LineEdit
 
 #define  LAYOUTFILE    <ide/Debuggers/Gdb_MI2.lay>
 #include <CtrlCore/lay.h>
+
+// abort command exception - used to stop non-main threads
+struct BreakExc : public Exc
+{
+	BreakExc() : Exc("break") {}
+
+};
 
 class Gdb_MI2 : public Debugger, public ParentCtrl
 {
@@ -22,24 +30,39 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		// multithread support
 #ifdef flagMT
 		// numbr of running debug threads
-		int runningThreads;
+		int threadRunning;
 		
 		// flag to signal threads to stop
-		bool stopThreads;
+		bool stopThread;
 		
 		// mutex and thead object
 		Mutex mutex;
 		Thread debugThread;
+		
+		// mutex-protected functions
+		bool IsThreadRunning(void);
+		void IncThreadRunning();
+		void DecThreadRunning();
+		
+		bool IsStopThread(void);
+		void SetStopThread(bool b);
 
 #endif
 
-		// debug break support -- ONLY POSIX, by now
 #ifdef PLATFORM_POSIX
+		// debug break support -- ONLY POSIX, by now
 		bool InterruptDebugger(void);
+#endif
+
+#ifdef PLATFORM_POSIX
+		// current command break support -- ONLY POSIX, by now
+		// used to speed up operations in MT mode
+		bool InterruptCommand(void);
 #endif
 	
 		// used to post and kill timed callbacks
 		TimeCallback timeCallback;
+		TimeCallback exploreCallback;
 	
 		One<Host> host;
 		One<AProcess>  dbg;
@@ -84,9 +107,11 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 
 		void doExplore(String const &expr, bool appendHistory);
 
+		// explorer expressions and values
+		Index<String>explorerExpressions;
+		Vector<String>explorerValues;
 		Index<String> explorerHistoryExpressions;
 		int explorerHistoryPos;
-		Index<String> explorerChildExpressions;
 
 		Label dlock;
 	
@@ -167,18 +192,38 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		
 		// sync auto vars treectrl
 		void SyncAutos();
-
+		
+#ifdef flagMT
 		// sync local variables pane
-		void SyncLocals(MIValue val = MIValue());
+		void SyncLocals(void);
 
 		// Sync 'this' inspector data
-		void SyncThis(MIValue val = MIValue());
+		void SyncThis(void);
 		
 		// sync watches treectrl
-		void SyncWatches(MIValue val = MIValue());
+		void SyncWatches(void);
+
+		// sync explorer pane
+		void SyncExplorer();
+#else
+		// sync local variables pane
+		void SyncLocals(Vector<VarItem> localVars = Vector<VarItem>());
+
+		// Sync 'this' inspector data
+		void SyncThis(Vector<VarItem> children = Vector<VarItem>());
+		
+		// sync watches treectrl
+		void SyncWatches(Vector<VarItem> children = Vector<VarItem>());
+
+		// sync explorer pane
+		void SyncExplorer(Vector<VarItem> children = Vector<VarItem>());
+#endif
 
 		// sync data tabs, depending on which tab is shown
-		bool dataSynced;
+		bool localSynced;
+		bool thisSynced;
+		bool watchesSynced;
+		bool explorerSynced;
 		void SyncData();
 
 		// sync ide display with breakpoint position
@@ -229,27 +274,6 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		String GetHostPath(const String& path) { return host->GetHostPath(path); }
 		String GetLocalPath(const String& path) { return host->GetLocalPath(path); }
 
-		// now we scan the result and add some info
-		// so, for example, if we find  tuple like this one:
-		//    data = simplevalue
-		// this will be modified as
-		//    data = { value = simplevalue, expr = evaluable_expression }
-		// and for a complex value
-		//    data = { some=complex, not_simple=val }
-		// woll be modified as
-		//    data = { <!value> = { some=complex, not_simple=val }, <!expr> = evaluable_expression }
-		// More attributes will be added by type simplifier phase
-		void AddAttribs(String const &expr, MIValue &valExpr);
-
-		// collects evaluated variables got with Evaluate
-		// hints are used to choose the visualizer when deep-inspecting members
-		// 0 for simple values, 1 for arrays, 2 for map
-		void CollectVariables(MIValue &val, Index<String> &exprs, Vector<String> &vals, Vector<int> &hints);
-		
-		// collect evaluated variables got with Evaluate
-		// into a single-line string for short display
-		String CollectVariablesShort(MIValue &val);
-
 		// fill a pane with data from a couple of arrays without erasing it first
 		// (avoid re-painting and resetting scroll if not needed)
 		void FillPane(ArrayCtrl &pane, Index<String> const &nam, Vector<String> const &val);
@@ -279,20 +303,9 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		// sends an MI command and get answer back
 		MIValue MICmd(const char *cmdLine);
 		
-		// known types simplifier
-		// takes a MIValue from '-data-evaluate-expression' command and try
-		// do simplify diplay of known types
-		// with deep = false it does just type simplification, no deep evaluation of containers
-		// with deep = true it does ONE deep evaluation step
-		// returns true if more deep evaluation steps are needed, false otherwise
-		bool TypeSimplify(MIValue &val, bool deep);
-
-		// variable inspection support
-		// returns a MIValue with inspected data and some info fields added
-		// and known types simplified and cathegorized
-		// unknown and simple types are left as they are
-		// deep is true if we shall have a complete sub-elements evaluation
-		MIValue Evaluate(String expr, bool deep = false);
+		// quick exit from service thread when called and 'stopThread' is set
+		// throws a BreakExc exception
+		void RaiseIfStop(void);
 };
 
 #endif

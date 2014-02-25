@@ -419,11 +419,26 @@ MIValue::MIValue(MIValue pick_ &v)
 MIValue::MIValue(String const &s)
 {
 	Parse(s);
+	
+	// tuple with 1 element and unnamed key is a string
+	if(IsTuple() && tuple.GetCount() == 1 && tuple.GetKey(0) == "<UNNAMED>")
+	{
+		type = MIString;
+		string = tuple[0];
+		tuple.Clear();
+	}
 }
 
 MIValue &MIValue::operator=(String const &s)
 {
 	Parse(s);
+	// tuple with 1 element and unnamed key is a string
+	if(IsTuple() && tuple.GetCount() == 1 && tuple.GetKey(0) == "<UNNAMED>")
+	{
+		type = MIString;
+		string = tuple[0];
+		tuple.Clear();
+	}
 	return *this;
 }
 

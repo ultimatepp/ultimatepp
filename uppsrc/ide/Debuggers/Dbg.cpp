@@ -51,6 +51,8 @@ void RedDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color 
 
 VectorMap<String, String> DataMap(const ArrayCtrl& data)
 {
+	GuiLock __;
+	
 	VectorMap<String, String> m;
 	for(int i = 0; i < data.GetCount(); i++)
 		m.Add(data.Get(i, 0), data.Get(i, 1));
@@ -59,6 +61,8 @@ VectorMap<String, String> DataMap(const ArrayCtrl& data)
 
 void MarkChanged(const VectorMap<String, String>& m, ArrayCtrl& data)
 {
+	GuiLock __;
+	
 	for(int i = 0; i < data.GetCount(); i++) {
 		int q = m.Find(data.Get(i, 0));
 		if(q >= 0 && m[q] != data.Get(i, 1))
