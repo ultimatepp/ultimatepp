@@ -90,7 +90,7 @@ class VarItem : Moveable<VarItem>
 		
 		// copy (pick)
 		VarItem(pick_ VarItem &v);
-		VarItem const &operator=(pick_ VarItem &v);
+		VarItem& operator=(pick_ VarItem &v);
 		
 		// get children
 		Vector<VarItem>GetChildren(void);

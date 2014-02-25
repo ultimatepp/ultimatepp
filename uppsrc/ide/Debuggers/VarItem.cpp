@@ -39,7 +39,7 @@ VarItem::~VarItem()
 	Clear();
 }
 
-VarItem const &VarItem::operator=(pick_ VarItem &v)
+VarItem& VarItem::operator=(pick_ VarItem &v)
 {
 	if(!varName.IsEmpty() && varName.Find('.') < 0)
 		debugger->MICmd("var-delete " + varName);
@@ -167,11 +167,11 @@ Vector<VarItem>  VarItem::GetChildren0(MIValue const &val, String const &prePath
 			MIValue val2 = debugger->MICmd("var-list-children 1 " + nam);
 			if(!val2.IsTuple())
 				continue;
-			res.Append(GetChildren0(val2, prePath));
+			res.AppendPick(GetChildren0(val2, prePath));
 		}
 		else
 		{
-			VarItem &v = res.Add(VarItem(debugger));
+			VarItem &v = res.AddPick(VarItem(debugger));
 			v.empty = false;
 			v.varName = nam;
 			v.shortExpression = prePath + "." + exp;
