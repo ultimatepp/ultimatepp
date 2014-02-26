@@ -469,22 +469,41 @@ static int UppOneSimplify(VarItem &varItem, int step)
 	return varItem.GetSimplifyStep();
 }
 
-/*
-const dword VOID_V    = 0;
-const dword INT_V     = 1;
-const dword DOUBLE_V  = 2;
-const dword STRING_V  = 3;
-const dword DATE_V    = 4;
-const dword TIME_V    = 5;
-const dword ERROR_V   = 6;
-const dword VALUE_V   = 7;
-const dword WSTRING_V = 8;
-const dword VALUEARRAY_V = 9;
-const dword INT64_V  = 10;
-const dword BOOL_V   = 11;
-const dword VALUEMAP_V   = 12;
-const dword UNKNOWN_V = (dword)0xffffffff;
-*/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+static String TrimChar(String const &s)
+{
+	int pos = s.Find(" ");
+	if(pos >= 0)
+		return s.Left(pos - 1);
+	else
+		return s;
+}
+
+static int UppTimeSimplify(VarItem &varItem, int step)
+{
+	MIValue val = varItem.EvaluateExpression(varItem.evaluableExpression);
+	val.PackNames();
+	int day = atoi(val[0]["day"].ToString());
+	int month = atoi(val[0]["month"].ToString());
+	int year = atoi(val[0]["year"].ToString());
+	int hour = atoi(val["hour"].ToString());
+	int minute = atoi(val["minute"].ToString());
+	int second = atoi(val["second"].ToString());
+	varItem.value = Format("Upp::Time = %02d/%02d/%04d - %02d:%02d:%02d", day, month, year, hour, minute, second);
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+static int UppDateSimplify(VarItem &varItem, int step)
+{
+	MIValue val = varItem.EvaluateExpression(varItem.evaluableExpression);
+	val.PackNames();
+	int day = atoi(val["day"].ToString());
+	int month = atoi(val["month"].ToString());
+	int year = atoi(val["year"].ToString());
+	varItem.value = Format("Upp::Date = %02d/%02d/%04d", day, month, year);
+	return 0;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static int UppValueSimplify(VarItem &varItem, int step)
@@ -509,6 +528,15 @@ static int UppValueSimplify(VarItem &varItem, int step)
 		int64 i64Data;
 		double dData;
 		bool bData;
+		struct
+		{
+			byte   day;
+			byte   month;
+			int16  year;
+			byte   hour;
+			byte   minute;
+			byte   second;
+		};
 	} u;
 	
 	// see Upp::String code for how it works....
@@ -577,13 +605,13 @@ static int UppValueSimplify(VarItem &varItem, int step)
 			
 		case DATE_V:
 		{
-			varItem.value = "<DATE_V>";
+			varItem.value = Format("Upp::Date = %02d/%02d/%04d", u.day, u.month, u.year);
 			return 0;
 		}
 			
 		case TIME_V:
 		{
-			varItem.value = "<VOID>";
+			varItem.value = Format("Upp::Time = %02d/%02d/%04d - %02d:%02d:%02d", u.day, u.month, u.year, u.hour, u.minute, u.second);
 			return 0;
 		}
 			break;
@@ -648,4 +676,6 @@ REGISTERSIMPLIFIER("Upp::Array<"				, UppArraySimplify);
 REGISTERSIMPLIFIER("Upp::ArrayMap<"				, UppArrayMapSimplify);
 REGISTERSIMPLIFIER("Upp::Index<"				, UppIndexSimplify);
 REGISTERSIMPLIFIER("Upp::One<"					, UppOneSimplify);
+REGISTERSIMPLIFIER("Upp::Time"					, UppTimeSimplify);
+REGISTERSIMPLIFIER("Upp::Date"					, UppDateSimplify);
 REGISTERSIMPLIFIER("Upp::Value"					, UppValueSimplify);
