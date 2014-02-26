@@ -678,11 +678,13 @@ void Gdb_MI2::SyncIde(bool fr)
 
 	// update vars only on idle times
 #ifdef flagMT
-	SyncData();
 	SyncExplorer();
+	SyncData();
+	CleanupVariables();
 #else
-	timeCallback.Set(500, THISBACK(SyncData));
 	exploreCallback.Set(480, THISBACK1(SyncExplorer, Vector<VarItem>()));
+	timeCallback.Set(500, THISBACK(SyncData));
+	timeCallback.Set(550, THISBACK(CleanupVariables));
 #endif
 }
 
@@ -966,7 +968,7 @@ void Gdb_MI2::SyncLocals()
 			if(name == "this")
 				continue;
 	
-			localVars.AddPick(VarItem(this, name));
+			localVars.Add(VarItem(this, name));
 		}
 
 		// create a VarItem for each variable and put evaluation results
@@ -1038,7 +1040,7 @@ void Gdb_MI2::SyncLocals(Vector<VarItem> localVars)
 			if(name == "this")
 				continue;
 	
-			localVars.AddPick(VarItem(this, name));
+			localVars.Add(VarItem(this, name));
 		}
 
 		// create a VarItem for each variable and put evaluation results
@@ -1291,7 +1293,7 @@ void Gdb_MI2::SyncWatches()
 					exp = watches.Get(iWatch, 0);
 				}
 				watchesExpressions << exp;
-				watchesVars.AddPick(VarItem(this, exp));
+				watchesVars.Add(VarItem(this, exp));
 				val = watchesVars.Top().value;
 				watchesValues.Add(val);
 				{
@@ -1343,7 +1345,7 @@ void Gdb_MI2::SyncWatches(Vector<VarItem> watchesVars)
 		{
 			String exp = watches.Get(iWatch, 0);
 			watchesExpressions << exp;
-			watchesVars.AddPick(VarItem(this, exp));
+			watchesVars.Add(VarItem(this, exp));
 			String val = watchesVars.Top().value;
 			watchesValues.Add(val);
 			watches.Set(iWatch, 1, val);

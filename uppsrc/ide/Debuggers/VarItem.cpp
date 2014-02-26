@@ -15,14 +15,13 @@ VarItem::VarItem(Gdb_MI2 *deb, String const &expr)
 }
 
 // copy
-VarItem::VarItem(pick_ VarItem &v)
+VarItem::VarItem(const VarItem &v)
 {
 	debugger = v.debugger;
 	empty = v.empty;
 	simplifyStep = v.simplifyStep;
 	
 	varName = v.varName;
-	((VarItem &)v).varName.Clear();
 	
 	shortExpression = v.shortExpression;
 	evaluableExpression = v.evaluableExpression;
@@ -39,17 +38,13 @@ VarItem::~VarItem()
 	Clear();
 }
 
-VarItem& VarItem::operator=(pick_ VarItem &v)
+VarItem const &VarItem::operator=(const VarItem &v)
 {
-	if(!varName.IsEmpty() && varName.Find('.') < 0)
-		debugger->MICmd("var-delete " + varName);
-
 	debugger = v.debugger;
 	empty = v.empty;
 	simplifyStep = v.simplifyStep;
 
 	varName = v.varName;
-	((VarItem &)v).varName.Clear();
 
 	shortExpression = v.shortExpression;
 	evaluableExpression = v.evaluableExpression;
@@ -64,10 +59,6 @@ VarItem& VarItem::operator=(pick_ VarItem &v)
 // clears contents
 void VarItem::Clear(void)
 {
-	// store variable to be deleted later
-	if(!varName.IsEmpty() && varName.Find('.') < 0)
-		PutDeleted(varName);
-
 	empty = true;
 	simplifyStep = -1;
 	varName.Clear();
@@ -124,6 +115,9 @@ bool VarItem::Evaluate(String const &expr)
 	// store its name
 	varName = var["name"];
 
+	// store variable name for later cleanup
+	debugger->StoreVariable(varName);
+
 	// store its value
 	value = var["value"];
 	
@@ -167,11 +161,11 @@ Vector<VarItem>  VarItem::GetChildren0(MIValue const &val, String const &prePath
 			MIValue val2 = debugger->MICmd("var-list-children 1 " + nam);
 			if(!val2.IsTuple())
 				continue;
-			res.AppendPick(GetChildren0(val2, prePath));
+			res.Append(GetChildren0(val2, prePath));
 		}
 		else
 		{
-			VarItem &v = res.AddPick(VarItem(debugger));
+			VarItem &v = res.Add(VarItem(debugger));
 			v.empty = false;
 			v.varName = nam;
 			v.shortExpression = prePath + "." + exp;
@@ -231,43 +225,6 @@ VectorMap<VarItem, VarItem> VarItem::GetMap(int start, int count)
 	return res;
 }
 
-// helpers for simplifiers
-		// helper for simplifiers
-/*
-void VarItem::ListChildren0(String const &varName, MIValue &res) const
-{
-	MIValue val = debugger->MICmd("var-list-children " + varName);
-	if(!val.IsTuple())
-		return;
-	MIValue const &children = val["children"];
-	if(!children.IsArray())
-		return;
-
-	for(int iChild = 0; iChild < children.GetCount(); iChild++)
-	{
-		MIValue const &child = children[iChild];
-	
-		String exp = child["exp"];
-		String typ = child.Get("type", "");
-		String nam = child.Get("name");
-		if(exp == "private" || exp == "protected" || exp == "public" || exp == typ)
-		{
-			MIValue val2 = debugger->MICmd("var-list-children 1 " + nam);
-			if(!val2.IsTuple())
-				continue;
-			ListChildren0(val2, prePath));
-		}
-		else
-		{
-	
-	
-}
-
-MIValue VarItem::ListChildren(void) const
-{
-}
-*/
-
 MIValue VarItem::EvaluateExpression(String const &exp) const
 {
 	MIValue val = debugger->MICmd("data-evaluate-expression " + exp);
@@ -279,29 +236,3 @@ MIValue VarItem::EvaluateExpression(String const &exp) const
 	String s = v.ToString();
 	return MIValue(s);
 }
-
-
-// cleanup support -- variables can't be deleted in destructor
-// as usually destructor is called when thread is hard-stopped
-// by main thread with an exception.
-// so we store all var names in a static index and delete them
-// when back to main thread
-StaticMutex VarItem::varMutex;
-Vector<String> VarItem::deletedVars;
-
-void VarItem::PutDeleted(String const &name)
-{
-	INTERLOCKED_(varMutex) {
-		deletedVars.Add(name);
-	}
-}
-
-void VarItem::CleanVariables(Gdb_MI2 *deb)
-{
-	ASSERT(IsMainThread());
-	INTERLOCKED_(varMutex) {
-		for(int i = 0; i < deletedVars.GetCount(); i++)
-			deb->MICmd("var-delete " + deletedVars[i]);
-	}
-}
-
