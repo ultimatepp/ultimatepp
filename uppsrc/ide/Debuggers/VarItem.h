@@ -51,7 +51,7 @@ class VarItem : Moveable<VarItem>
 		
 		// number of items for array and maps
 		int items;
-		
+
 		// check if value contains an error
 		bool IsEmpty(void) const { return empty; }
 		bool operator!(void) const { return IsEmpty(); }
@@ -68,6 +68,9 @@ class VarItem : Moveable<VarItem>
 	
 		// deep simplify known types
 		bool Simplify(void);
+		
+		// get next simplify step
+		int GetSimplifyStep(void) { return simplifyStep; }
 
 		// constructors
 		VarItem(Gdb_MI2 *dbg);

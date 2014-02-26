@@ -992,10 +992,11 @@ void Gdb_MI2::SyncLocals()
 		// simplify batch
 		for(int iLoc = 0; iLoc < localVars.GetCount(); iLoc++)
 		{
-			while(localVars[iLoc].Simplify())
+			VarItem &v = localVars[iLoc];
+			while(v.Simplify())
 				RaiseIfStop();
 			
-			VarItem &v = localVars[iLoc];
+			localExpressions.Set(iLoc, v.evaluableExpression);
 			localValues[iLoc] = v.value;
 			{
 				GuiLock __;
@@ -1070,7 +1071,10 @@ void Gdb_MI2::SyncLocals(Vector<VarItem> localVars)
 	{
 		if(localVars[iLoc].Simplify())
 		{
-			locals.Set(iLoc, 1, localVars[iLoc].value);
+			VarItem &v = localVars[iLoc];
+			localExpressions.Set(iLoc, v.evaluableExpression);
+			localValues[iLoc] = v.value;
+			locals.Set(iLoc, 1, v.value);
 			SyncAutos();
 			timeCallback.Set(100, THISBACK1(SyncLocals, localVars));
 			return;
@@ -1078,7 +1082,12 @@ void Gdb_MI2::SyncLocals(Vector<VarItem> localVars)
 	}
 	
 	for(int iLoc = 0; iLoc < localVars.GetCount(); iLoc++)
-		locals.Set(iLoc, 1, localVars[iLoc].value);
+	{
+		VarItem &v = localVars[iLoc];
+		localExpressions.Set(iLoc, v.evaluableExpression);
+		localValues[iLoc] = v.value;
+		locals.Set(iLoc, 1, v.value);
+	}
 
 	// when finished, mark changed values
 	MarkChanged(prev, locals);
@@ -1136,11 +1145,12 @@ void Gdb_MI2::SyncThis()
 		for(int iVar = 0; iVar < children.GetCount(); iVar++)
 		{
 			RaiseIfStop();
-			while(children[iVar].Simplify())
-				RaiseIfStop();
 
 			VarItem &v = children[iVar];
+			while(v.Simplify())
+				RaiseIfStop();
 
+			thisExpressions.Set(iVar, v.evaluableExpression);
 			thisValues[iVar] = v.value;
 			{
 				GuiLock __;
@@ -1203,9 +1213,12 @@ void Gdb_MI2::SyncThis(Vector<VarItem> children)
 	// simplify batch
 	for(int iVar = 0; iVar < children.GetCount(); iVar++)
 	{
-		if(children[iVar].Simplify())
+		VarItem &v = children[iVar];
+		if(v.Simplify())
 		{
-			members.Set(iVar, 1, children[iVar].value);
+			thisExpressions.Set(iVar, v.evaluableExpression);
+			thisValues[iVar] = v.value;
+			members.Set(iVar, 1, v.value);
 			SyncAutos();
 			timeCallback.Set(100, THISBACK1(SyncThis, children));
 			return;
@@ -1306,11 +1319,12 @@ void Gdb_MI2::SyncWatches()
 			for(int iWatch = 0; iWatch < watchesVars.GetCount(); iWatch++)
 			{
 				RaiseIfStop();
-				while(watchesVars[iWatch].Simplify())
+
+				VarItem &v = watchesVars[iWatch];
+				while(v.Simplify())
 					RaiseIfStop();
 	
-				VarItem &v = watchesVars[iWatch];
-	
+				watchesExpressions.Set(iWatch, v.evaluableExpression);
 				watchesValues[iWatch] = v.value;
 				{
 					GuiLock __;
@@ -1360,14 +1374,22 @@ void Gdb_MI2::SyncWatches(Vector<VarItem> watchesVars)
 	{
 		if(watchesVars[iWatch].Simplify())
 		{
-			watches.Set(iWatch, 1, watchesVars[iWatch].value);
+			VarItem &v = watchesVars[iWatch];
+			watchesExpressions.Set(iWatch, v.evaluableExpression);
+			watchesValues[iWatch] = v.value;
+			watches.Set(iWatch, 1, v.value);
 			timeCallback.Set(100, THISBACK1(SyncWatches, watchesVars));
 			return;
 		}
 	}
 	
 	for(int iWatch = 0; iWatch < watchesVars.GetCount(); iWatch++)
-		watches.Set(iWatch, 1, watchesVars[iWatch].value);
+	{
+		VarItem &v = watchesVars[iWatch];
+		watchesExpressions.Set(iWatch, v.evaluableExpression);
+		watchesValues[iWatch] = v.value;
+		watches.Set(iWatch, 1, v.value);
+	}
 
 	// when finished, mark changed values
 	MarkChanged(prev, watches);
