@@ -17,10 +17,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#define SLEN 15
-#define LLEN 2
 static int UppStringSimplify(VarItem &varItem, int step)
 {
+	enum { SMALL = 0, MEDIUM = 31 }; // SMALL has to be 0 because of GetSpecial and because is it ending zero
+	enum { KIND = 14, SLEN = 15, LLEN = 2, SPECIAL = 13 };
 	union
 	{
 		char chr[16];
@@ -469,6 +469,177 @@ static int UppOneSimplify(VarItem &varItem, int step)
 	return varItem.GetSimplifyStep();
 }
 
+/*
+const dword VOID_V    = 0;
+const dword INT_V     = 1;
+const dword DOUBLE_V  = 2;
+const dword STRING_V  = 3;
+const dword DATE_V    = 4;
+const dword TIME_V    = 5;
+const dword ERROR_V   = 6;
+const dword VALUE_V   = 7;
+const dword WSTRING_V = 8;
+const dword VALUEARRAY_V = 9;
+const dword INT64_V  = 10;
+const dword BOOL_V   = 11;
+const dword VALUEMAP_V   = 12;
+const dword UNKNOWN_V = (dword)0xffffffff;
+*/
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+static int UppValueSimplify(VarItem &varItem, int step)
+{
+	enum { SMALL = 0, MEDIUM = 31 }; // SMALL has to be 0 because of GetSpecial and because is it ending zero
+	enum { KIND = 14, SLEN = 15, LLEN = 2, SPECIAL = 13 };
+	enum { STRING = 0, REF = 255, VOIDV = 3 };
+
+	// get the embedded 'data' string 'chr' member
+	// it contains info about value type
+	union
+	{
+		char chr[16];
+		char  *ptr;
+		dword *wptr;
+		qword *qptr;
+		word   v[8];
+		dword  w[4];
+		qword  q[2];
+		
+		int iData;
+		int64 i64Data;
+		double dData;
+		bool bData;
+	} u;
+	
+	// see Upp::String code for how it works....
+	MIValue val = varItem.EvaluateExpression("(" + varItem.evaluableExpression + ").data.chr");
+	if(!val.IsString())
+		return 0;
+	String chrs = val.ToString();
+	memcpy(u.chr, ~chrs, 16);
+
+	// get value type, among the fixed ones
+	// we could try later to decode registered types....
+	dword type;
+	bool isSpecial = !u.v[7] && u.v[6];
+	if(!isSpecial)
+		type = STRING_V;
+	else
+	{
+		byte st = u.chr[SPECIAL];
+		if(st == REF)
+		{
+			// ptr()->GetType()
+			// by now, just mark as ref...
+			type = REF;
+		}
+		else if(st == VOIDV)
+			type = VOID_V;
+		else
+			type = st;
+	}
+	
+	// by now, treat all types beyond VALUEMAP_V as unknown
+	if(type > VALUEMAP_V)
+		type = UNKNOWN_V;
+	
+	// now, based on type, we can decode it
+	varItem.kind = VarItem::SIMPLE;
+	switch(type)
+	{
+		case VOID_V:
+		{
+			varItem.value = "<VOID>";
+			return 0;
+		}
+			
+		case INT_V:
+		{
+			varItem.value = FormatInt(u.iData);
+			return 0;
+		}
+			
+		case DOUBLE_V:
+		{
+			varItem.value = FormatDouble(u.dData);
+			return 0;
+		}
+			
+		case STRING_V:
+		{
+			// we simply replace the VarItem with the string
+			VarItem vItem(&varItem.Debugger(), "(" + varItem.evaluableExpression + ").data");
+			vItem.evaluableExpression = varItem.evaluableExpression;
+			vItem.shortExpression = varItem.shortExpression;
+			varItem = vItem;
+			return 0;
+		}
+			
+		case DATE_V:
+		{
+			varItem.value = "<DATE_V>";
+			return 0;
+		}
+			
+		case TIME_V:
+		{
+			varItem.value = "<VOID>";
+			return 0;
+		}
+			break;
+			
+		case ERROR_V:
+		{
+			varItem.value = "<ERROR_V>";
+			return 0;
+		}
+			
+		case VALUE_V:
+		{
+			varItem.value = "<VALUE_V>";
+			return 0;
+		}
+			
+		case WSTRING_V:
+		{
+			varItem.value = "<WSTRING_V>";
+			return 0;
+		}
+			
+		case VALUEARRAY_V:
+		{
+			varItem.value = "<VALUEARRAY_V>";
+			return 0;
+		}
+			
+		case INT64_V:
+		{
+			varItem.value = FormatInt64(u.i64Data);
+			return 0;
+		}
+			
+		case BOOL_V:
+		{
+			varItem.value = (u.bData ? "TRUE" : "FALSE");
+			return 0;
+		}
+			
+		case VALUEMAP_V:
+		{
+			varItem.value = "<VALUEMAP_V>";
+			return 0;
+		}
+			
+		case UNKNOWN_V:
+		default:
+		{
+			varItem.value = "<UNKNOWN_V>";
+			return 0;
+		}
+	}
+
+}
+
 // Register the simplifiers
 REGISTERSIMPLIFIER("Upp::String"				, UppStringSimplify);
 REGISTERSIMPLIFIER("Upp::Vector<"				, UppVectorSimplify);
@@ -477,3 +648,4 @@ REGISTERSIMPLIFIER("Upp::Array<"				, UppArraySimplify);
 REGISTERSIMPLIFIER("Upp::ArrayMap<"				, UppArrayMapSimplify);
 REGISTERSIMPLIFIER("Upp::Index<"				, UppIndexSimplify);
 REGISTERSIMPLIFIER("Upp::One<"					, UppOneSimplify);
+REGISTERSIMPLIFIER("Upp::Value"					, UppValueSimplify);
