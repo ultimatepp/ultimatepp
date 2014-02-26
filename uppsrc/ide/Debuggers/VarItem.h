@@ -28,18 +28,6 @@ class VarItem : Moveable<VarItem>
 		// fetch variable children
 		Vector<VarItem>  GetChildren0(MIValue const &children, String const &prePath);
 
-		// helper for simplifiers
-		void ListChildren0(String const &varName, MIValue &res) const;
-
-		// cleanup support -- variables can't be deleted in destructor
-		// as usually destructor is called when thread is hard-stopped
-		// by main thread with an exception.
-		// so we store all var names in a static index and delete them
-		// when back to main thread
-		static StaticMutex varMutex;
-		static Vector<String> deletedVars;
-		void PutDeleted(String const &name);
-
 	public:
 		typedef enum { SIMPLE, COMPLEX, ARRAY, MAP } VarKind;
 		
@@ -88,9 +76,9 @@ class VarItem : Moveable<VarItem>
 		// destructor
 		~VarItem();
 		
-		// copy (pick)
-		VarItem(pick_ VarItem &v);
-		VarItem& operator=(pick_ VarItem &v);
+		// copy
+		VarItem(const VarItem &v);
+		VarItem const &operator=(const VarItem &v);
 		
 		// get children
 		Vector<VarItem>GetChildren(void);
@@ -103,16 +91,7 @@ class VarItem : Moveable<VarItem>
 		
 		// helpers for simplifiers
 		Gdb_MI2 &Debugger() { return *debugger; }
-		MIValue ListChildren(void) const;
 		MIValue EvaluateExpression(String const &exp) const;
-		
-		// cleanup support -- variables can't be deleted in destructor
-		// as usually destructor is called when thread is hard-stopped
-		// by main thread with an exception.
-		// so we store all var names in a static index and delete them
-		// when back to main thread
-		static void CleanVariables(Gdb_MI2 *deb);
-		
 };
 
 #endif

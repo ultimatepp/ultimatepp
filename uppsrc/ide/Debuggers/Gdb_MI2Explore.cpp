@@ -37,7 +37,7 @@ void Gdb_MI2::SyncExplorer()
 			if(vItem.kind == VarItem::COMPLEX)
 				children = vItem.GetChildren();
 			else
-				children.AddPick(vItem);
+				children.Add(vItem);
 	
 			RaiseIfStop();
 	
@@ -109,7 +109,7 @@ void Gdb_MI2::SyncExplorer(Vector<VarItem> children)
 		if(vItem.kind == VarItem::COMPLEX)
 			children = vItem.GetChildren();
 		else
-			children.AddPick(vItem);
+			children.Add(vItem);
 
 		// fill explorer memners expressions, short expressions and values
 		explorerExpressions.Clear();

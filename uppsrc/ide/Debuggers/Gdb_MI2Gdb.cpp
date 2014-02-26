@@ -311,3 +311,61 @@ MIValue Gdb_MI2::MICmd(const char *cmdLine)
 #endif
 	return res;
 }
+
+// support for debugger variables cleanup
+void Gdb_MI2::StoreVariable(String const &name)
+{
+	INTERLOCKED_(varMutex) {
+		debugVariables.Add(name);
+	}
+}
+
+void Gdb_MI2::CleanupVariables(void)
+{
+#ifdef flagMT
+	// restart if called from main thread
+	if(IsMainThread())
+	{
+		INTERLOCKED_(varMutex) {
+			prevDebugVariables.Append(debugVariables);
+			debugVariables.Clear();
+		}
+		debugThread.Start(THISBACK(CleanupVariables));
+		return;
+	}
+
+	IncThreadRunning();
+
+	String name;
+	try
+	{
+		do
+		{
+			name = "";
+			INTERLOCKED_(varMutex) {
+				if(!prevDebugVariables.IsEmpty())
+				{
+					name = prevDebugVariables.Top();
+					MICmd("var-delete " + name);
+					prevDebugVariables.Pop();
+				}
+			}
+			Sleep(50);
+		}
+		while(!IsStopThread() && name != "");
+	}
+	catch(...)
+	{
+	}
+	
+	DecThreadRunning();
+	
+#else
+	if(!debugVariables.IsEmpty())
+	{
+		String name = debugVariables.Pop();
+		MICmd("var-delete " + name);
+		timeCallback.Set(50, THISBACK(CleanupVariables));
+	}
+#endif
+}

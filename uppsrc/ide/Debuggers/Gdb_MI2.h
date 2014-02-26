@@ -21,11 +21,22 @@ struct BreakExc : public Exc
 
 class Gdb_MI2 : public Debugger, public ParentCtrl
 {
+	friend class VarItem;
 	private:
 	
 		// list of processes (and connected thread groups)
 		// used to stop them
 		VectorMap<String, int> processes;
+
+		// list of debug variables created and thread-safe functions to
+		// manage them -- used to clean up
+		Vector<String>debugVariables;
+#ifdef flagMT
+		Vector<String>prevDebugVariables;
+#endif
+		Mutex varMutex;
+		void StoreVariable(String const &name);
+		void CleanupVariables(void);
 	
 		// multithread support
 #ifdef flagMT
@@ -44,7 +55,9 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		void IncThreadRunning();
 		void DecThreadRunning();
 		
+	public:
 		bool IsStopThread(void);
+	private:
 		void SetStopThread(bool b);
 
 #endif
