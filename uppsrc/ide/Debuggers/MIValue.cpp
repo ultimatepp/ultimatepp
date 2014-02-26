@@ -370,7 +370,7 @@ int MIValue::Parse(String const &s, int i)
 	}
 }
 
-MIValue const &MIValue::operator=(const MIValue &v)
+MIValue const &MIValue::operator=(MIValue &v)
 {
 	Clear();
 	type = v.type;
@@ -396,7 +396,7 @@ MIValue::MIValue()
 	Clear();
 }
 
-MIValue::MIValue(MIValue const  &v)
+MIValue::MIValue(MIValue &v)
 {
 	Clear();
 	type = v.type;
