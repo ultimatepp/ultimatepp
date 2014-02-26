@@ -347,11 +347,6 @@ Gdb_MI2::Gdb_MI2()
 	watches.WhenLeftDouble = THISBACK1(onExploreExpr, &watches);
 	watches.EvenRowColor();
 	watches.OddRowColor();
-#ifdef flagMT
-	watches.WhenUpdateRow = THISBACK(SyncWatches);
-#else
-	watches.WhenUpdateRow = THISBACK1(SyncWatches, Vector<VarItem>());
-#endif
 
 	int c = EditField::GetStdHeight();
 	explorer.AddColumn("", 1);
@@ -1260,6 +1255,8 @@ void Gdb_MI2::SyncAutos()
 						break;
 					exp << p.ReadId();
 				}
+				if(autos.Find(exp) >= 0)
+					continue;
 				int idx = localExpressions.Find(exp);
 				if(idx < 0)
 				{
@@ -1640,8 +1637,11 @@ bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdli
 	threadSelector.WhenDrop = THISBACK(dropThreads);
 	threadSelector <<= THISBACK(showThread);
 
+#ifdef flagMT
 	watches.WhenAcceptEdit = THISBACK(SyncWatches);
-
+#else
+	watches.WhenAcceptEdit = THISBACK1(SyncWatches, Vector<VarItem>());
+#endif
 	// this one will allow asynchronous break of running app
 // 2012-07-08 -- DISABLED because of GDB bugs...
 //	MICmd("gdb-set target-async 1");
