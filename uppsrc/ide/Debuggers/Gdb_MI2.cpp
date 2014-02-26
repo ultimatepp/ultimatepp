@@ -1640,8 +1640,7 @@ bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdli
 	threadSelector.WhenDrop = THISBACK(dropThreads);
 	threadSelector <<= THISBACK(showThread);
 
-	watches.WhenAcceptEdit = THISBACK(SyncData);
-	tab <<= THISBACK(SyncData);
+	watches.WhenAcceptEdit = THISBACK(SyncWatches);
 
 	// this one will allow asynchronous break of running app
 // 2012-07-08 -- DISABLED because of GDB bugs...
