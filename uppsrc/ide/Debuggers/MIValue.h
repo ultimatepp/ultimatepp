@@ -38,10 +38,10 @@ class MIValue : public Moveable<MIValue>
 		// check for emptyness
 		bool IsEmpty(void) const;
 		
-		MIValue const &operator=(const MIValue &v);
+		MIValue const &operator=(MIValue &v);
 		MIValue const &operator=(String const &s);
 		MIValue();
-		MIValue(MIValue const &v);
+		MIValue(MIValue &v);
 		MIValue(String const &s);
 		
 		void Clear(void);
