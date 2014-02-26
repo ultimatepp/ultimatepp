@@ -370,7 +370,7 @@ int MIValue::Parse(String const &s, int i)
 	}
 }
 
-MIValue const &MIValue::operator=(MIValue &v)
+MIValue &MIValue::operator=(pick_ MIValue &v)
 {
 	Clear();
 	type = v.type;
@@ -396,7 +396,7 @@ MIValue::MIValue()
 	Clear();
 }
 
-MIValue::MIValue(MIValue &v)
+MIValue::MIValue(MIValue pick_ &v)
 {
 	Clear();
 	type = v.type;
@@ -429,7 +429,7 @@ MIValue::MIValue(String const &s)
 	}
 }
 
-MIValue const &MIValue::operator=(String const &s)
+MIValue &MIValue::operator=(String const &s)
 {
 	Parse(s);
 	// tuple with 1 element and unnamed key is a string
@@ -736,7 +736,7 @@ void MIValue::FixArrays(void)
 }
 
 // add an item to a tuple
-MIValue &MIValue::Add(String const &key, MIValue const &v)
+MIValue &MIValue::Add(String const &key, MIValue pick_ &v)
 {
 	if(IsEmpty())
 	{
@@ -745,7 +745,7 @@ MIValue &MIValue::Add(String const &key, MIValue const &v)
 	}
 	if(type != MITuple)
 		return  ErrorMIValue("Not a Tuple value type");
-	tuple.Add(key, v);
+	tuple.AddPick(key, v);
 	return *this;
 }
 
@@ -771,12 +771,12 @@ MIValue &MIValue::FindAdd(String const &key, String const &data)
 	if(idx >= 0)
 		tuple[idx] = v;
 	else
-		tuple.Add(key, v);
+		tuple.AddPick(key, v);
 	return *this;
 }
 
 // add an item to an array
-MIValue &MIValue::Add(MIValue const &v)
+MIValue &MIValue::Add(MIValue pick_ &v)
 {
 	if(IsEmpty())
 	{
@@ -785,7 +785,7 @@ MIValue &MIValue::Add(MIValue const &v)
 	}
 	if(type != MIArray)
 		return  ErrorMIValue("Not a Array value type");
-	array.Add(v);
+	array.AddPick(v);
 	return *this;
 }
 
