@@ -33,7 +33,7 @@ static int UppStringSimplify(VarItem &varItem, int step)
 	} u;
 	
 	// see Upp::String code for how it works....
-	MIValue val = varItem.EvaluateExpression(varItem.evaluableExpression + "." + "chr");
+	MIValue val = varItem.EvaluateExpression("(" + varItem.evaluableExpression + ")." + "chr");
 	if(!val.IsString())
 		return 0;
 	String chrs = val.ToString();
@@ -49,7 +49,7 @@ static int UppStringSimplify(VarItem &varItem, int step)
 	else
 	{
 		dword len = u.w[LLEN];
-		MIValue val = varItem.EvaluateExpression(varItem.evaluableExpression + "." + "ptr[0]@" + FormatInt(len));
+		MIValue val = varItem.EvaluateExpression("(" + varItem.evaluableExpression + ").ptr[0]@" + FormatInt(len));
 		if(!val.IsString())
 			return 0;
 		s = val.ToString();
@@ -433,6 +433,42 @@ static int UppIndexSimplify(VarItem &varItem, int step)
 		return step + 2;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+static int UppOneSimplify(VarItem &varItem, int step)
+{
+	// setup item type
+	varItem.kind = VarItem::COMPLEX;
+	
+	// if we're just doing first scan phase, signal that we need further evaluation later
+#ifdef EVALDEEP
+	if(!step)
+		// next step is 1
+		return 1;
+#else
+	varItem.value = placeHolder;
+	return 0;
+#endif
+
+	// de-reference and forward simplify
+	MIValue val = varItem.EvaluateExpression(varItem.evaluableExpression + "." + "ptr");
+	if(val.IsError() || !val.IsString())
+	{
+		varItem.value = "Upp::One<> = <can't evaluate contents>";
+		return 0;
+	}
+	String ptr = val.ToString();
+	if(ptr == "0x0")
+	{
+		varItem.value = "Upp::One<> = <EMPTY>";
+		return 0;
+	}
+	
+	// replace variable with de-referenced one
+	VarItem vItem(&varItem.Debugger(), "*" + varItem.evaluableExpression + "." + "ptr");
+	varItem = vItem;
+	return varItem.GetSimplifyStep();
+}
+
 // Register the simplifiers
 REGISTERSIMPLIFIER("Upp::String"				, UppStringSimplify);
 REGISTERSIMPLIFIER("Upp::Vector<"				, UppVectorSimplify);
@@ -440,3 +476,4 @@ REGISTERSIMPLIFIER("Upp::VectorMap<"			, UppVectorMapSimplify);
 REGISTERSIMPLIFIER("Upp::Array<"				, UppArraySimplify);
 REGISTERSIMPLIFIER("Upp::ArrayMap<"				, UppArrayMapSimplify);
 REGISTERSIMPLIFIER("Upp::Index<"				, UppIndexSimplify);
+REGISTERSIMPLIFIER("Upp::One<"					, UppOneSimplify);
