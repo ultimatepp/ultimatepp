@@ -8,9 +8,13 @@
 
 	#define COMPILER_GCC 1
 	
-	#if __WIN32
-		#define COMPILER_MINGW
-		#define PLATFORM_WIN32
+	#if defined(__WIN32) || defined(_WIN32) || defined(WIN32)
+		#define COMPILER_MINGW 1
+		#define PLATFORM_WIN32 1
+		#undef  WINVER
+		#undef  _WIN32_WINNT
+		#define _WIN32_WINNT 0x0501
+		#define WINVER WindowsXP
 	#endif
 
 	#if __unix || __unix__ || __APPLE__
