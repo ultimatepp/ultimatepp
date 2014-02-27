@@ -491,7 +491,7 @@ void Register(const char *imageclass, Iml& list)
 
 int GetImlCount()
 {
-	int q;
+	int q = 0;
 	INTERLOCKED_(sImgMapLock)
 		q = sImgMap().GetCount();
 	return q;
