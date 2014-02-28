@@ -42,6 +42,9 @@ class XMLToolBarItem : DeepCopyOption<XMLToolBarItem>
 		// a submenu, if any
 		One<XMLToolBar> subMenu;
 		
+		// set if separator
+		bool isSeparator;
+		
 	public:
 		String const &GetId(void) const				{ return commandId; }
 		String const &GetLabel(void) const			{ return label; }
@@ -49,6 +52,7 @@ class XMLToolBarItem : DeepCopyOption<XMLToolBarItem>
 		String const &GetTooltip(void) const		{ return tooltip; }
 		XMLToolBar const &GetSubMenu(void) const	{ return *subMenu; }
 		bool IsSubMenu(void) const					{ return !subMenu.IsEmpty(); }
+		bool IsSeparator(void) const				{ return isSeparator; }
 		
 		// xml support
 		void Xmlize(XmlIO xml);
@@ -121,6 +125,9 @@ class XMLToolBar : DeepCopyOption<XMLToolBar>
 		
 		// add a submenu entry by callback
 		XMLToolBar &Add(Callback1<XMLToolBar &> bar);
+		
+		// add a separator
+		XMLToolBar &Separator(void);
 
 		// gets toolbar name
 		String const &GetName(void) const				{ return name; }

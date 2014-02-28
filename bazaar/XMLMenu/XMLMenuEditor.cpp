@@ -102,7 +102,7 @@ void XMLBarEditor::buildTree(int root, XMLToolBar const *bar)
 	for(int iItem = 0; iItem < items.GetCount(); iItem++)
 	{
 		XMLToolBarItem const &item = items[iItem];
-		TreeCtrl::Node node(item.GetIcon(), RawDeepToValue(item), item.GetLabel());
+		TreeCtrl::Node node(item.GetIcon(), RawDeepToValue(item), (item.IsSeparator() ? String(t_("<SEPARATOR>")) : item.GetLabel()));
 		int iNode = barTree.Add(root, node);
 		if(items[iItem].IsSubMenu())
 			buildTree(iNode, &items[iItem].GetSubMenu());
@@ -161,29 +161,46 @@ void XMLBarEditor::itemSelCb()
 	// otherwise allow just to edit bar name
 	if(i > 0)
 	{
-		itemPane.icon.Enable();
-		itemPane.tooltip.Enable();
-		
 		// fetch node data
 		XMLToolBarItem const &item = ValueTo<XMLToolBarItem>(barTree.Get(i));
 		
-		bool hasChilds = barTree.GetChildCount(i);
-	
-		// fill fields
-		if(hasChilds)
+		if(item.IsSeparator())
+		{
+			itemPane.icon.Disable();
+			itemPane.tooltip.Disable();
+			itemPane.label.Disable();
 			itemPane.cmdId.Clear();
+			itemPane.labelName = t_("Type :");;
+			itemPane.label	= String(t_("<SEPARATOR>"));
+			itemPane.tooltip.Clear();
+			itemPane.icon.SetImage(Null);
+			curIcon = Null;
+		}
 		else
-			itemPane.cmdId		= item.GetId();
-		itemPane.labelName = t_("Label :");
-		itemPane.label		= item.GetLabel();
-		itemPane.tooltip	= item.GetTooltip();
-		itemPane.icon.SetImage(item.GetIcon());
-		curIcon = item.GetIcon();
+		{
+			itemPane.icon.Enable();
+			itemPane.tooltip.Enable();
+			itemPane.label.Enable();
+			
+			bool hasChilds = barTree.GetChildCount(i);
+		
+			// fill fields
+			if(hasChilds)
+				itemPane.cmdId.Clear();
+			else
+				itemPane.cmdId		= item.GetId();
+			itemPane.labelName = t_("Label :");
+			itemPane.label		= item.GetLabel();
+			itemPane.tooltip	= item.GetTooltip();
+			itemPane.icon.SetImage(item.GetIcon());
+			curIcon = item.GetIcon();
+		}
 	}
 	else
 	{
 		itemPane.icon.Disable();
 		itemPane.tooltip.Disable();
+		itemPane.label.Enable();
 		itemPane.cmdId.Clear();
 		itemPane.labelName = t_("Bar name :");
 		itemPane.label		= String(barTree.GetValue(0));
@@ -269,16 +286,26 @@ void XMLBarEditor::treeContextCb(Bar &b)
 	{
 		b.Add(t_("Insert new item before current"), THISBACK1(treeContextAddCb, 1));
 		b.Add(t_("Insert new item after current"), THISBACK1(treeContextAddCb, 2));
+		b.Separator();
+		b.Add(t_("Insert new separator before current item"), THISBACK1(treeContextAddCb, 5));
+		b.Add(t_("Insert new separator after current item"), THISBACK1(treeContextAddCb, 6));
 	}
 	if(barTree.GetChildCount(i))
 	{
+		b.Separator();
 		b.Add(t_("Insert new child item at top"), THISBACK1(treeContextAddCb, 3));
 		b.Add(t_("Append new child item at bottom"), THISBACK1(treeContextAddCb, 4));
 	}
 	else
+	{
+		b.Separator();
 		b.Add(t_("Insert new child item"), THISBACK1(treeContextAddCb, 4));
+	}
 	if(i > 0)
+	{
+		b.Separator();
 		b.Add(t_("Remove item"), THISBACK(treeContextRemoveCb));
+	}
 }
 
 void XMLBarEditor::treeContextAddCb(int mode)
@@ -287,20 +314,26 @@ void XMLBarEditor::treeContextAddCb(int mode)
 	int parentId = 0;
 	int childIdx;
 	int newId = 0;
-	Value v;
-	CreateRawValue<XMLToolBarItem>(v);
+	XMLToolBarItem item;
+	if(mode > 4)
+	{
+		item.isSeparator = true;
+		mode -= 4;
+	}
+	Value v = RawToValue(item);
+	String lbl = (item.IsSeparator() ? t_("<SEPARATOR>") : "");
 	switch(mode)
 	{
 		case 1:
 			parentId = barTree.GetParent(id);
 			childIdx = barTree.GetChildIndex(parentId, id);
-			newId = barTree.Insert(parentId, childIdx, Null, v, "");
+			newId = barTree.Insert(parentId, childIdx, Null, v, lbl);
 			break;
 
 		case 2:
 			parentId = barTree.GetParent(id);
 			childIdx = barTree.GetChildIndex(parentId, id);
-			newId = barTree.Insert(parentId, childIdx + 1, Null, v, "");
+			newId = barTree.Insert(parentId, childIdx + 1, Null, v, lbl);
 			break;
 
 		case 3:

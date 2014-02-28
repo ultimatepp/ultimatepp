@@ -404,6 +404,13 @@ template<class T> void WithXMLMenu<T>::SetMenuBar0(Bar &bar, int mnIdx, Array<XM
 		// get current item
 		XMLToolBarItem const &item = (*items)[i];
 		
+		// separator handling
+		if(item.IsSeparator())
+		{
+			bar.Separator();
+			continue;
+		}
+
 		// submenu handling
 		if(item.IsSubMenu())
 		{
