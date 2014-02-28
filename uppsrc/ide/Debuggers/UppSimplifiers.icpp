@@ -470,15 +470,6 @@ static int UppOneSimplify(VarItem &varItem, int step)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-static String TrimChar(String const &s)
-{
-	int pos = s.Find(" ");
-	if(pos >= 0)
-		return s.Left(pos - 1);
-	else
-		return s;
-}
-
 static int UppTimeSimplify(VarItem &varItem, int step)
 {
 	MIValue val = varItem.EvaluateExpression(varItem.evaluableExpression);

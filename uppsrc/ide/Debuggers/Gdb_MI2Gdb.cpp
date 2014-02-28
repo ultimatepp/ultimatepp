@@ -261,30 +261,7 @@ MIValue Gdb_MI2::MICmd(const char *cmdLine)
 	// issued GDB commands (which normally can lag several seconds...)
 	// before issuing the command
 	if(IsMainThread() && IsThreadRunning())
-	{
-		// signal all other threads to stop
-		SetStopThread(true);
-		
-		// interrupt any active GDB command
-		InterruptCommand();
-		
-		// ugly hack, otherwise service thread can deadlock
-		// MUST CHECK THIS ONE....
-		int n = LeaveGuiMutexAll();
-		
-		// give some time to recover
-		do
-		{
-			Sleep(20);
-		}
-		while(IsThreadRunning());
-
-		// RE-ENTER GUI MUTEX -- SEE ABOVE...
-		EnterGuiMutex(n);
-		
-		// remove thread stopping flag
-		SetStopThread(false);
-	}
+		ShutDownThreads();
 
 	// quick exit for service thread
 	if(!IsMainThread() && IsStopThread())
