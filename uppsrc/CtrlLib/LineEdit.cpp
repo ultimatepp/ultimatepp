@@ -80,6 +80,7 @@ void   LineEdit::Paint0(Draw& w) {
 	Point sc = sb;
 	int ll = min(line.GetCount(), sz.cy / fsz.cy + sc.y + 1);
 	int  y = 0;
+	sc.y = minmax(sc.y, 0, line.GetCount() - 1);
 	cpos = GetPos(sc.y);
 	cline = sc.y;
 	sell -= cpos;

@@ -55,15 +55,15 @@ void TextCtrl::Clear()
 	line.Add();
 	InsertLines(0, 1);
 	DirtyFrom(0);
-	anchor = -1;
-	cursor = 0;
-	SelectionChanged();
-	Refresh();
 	undo.Clear();
 	redo.Clear();
 	ClearDirty();
+	anchor = -1;
+	cursor = 0;
 	SetSb();
 	PlaceCaret(0);
+	SelectionChanged();
+	Refresh();
 }
 
 void TextCtrl::DirtyFrom(int line) {}
