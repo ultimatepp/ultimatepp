@@ -217,6 +217,35 @@ void Gdb_MI2::SetStopThread(bool b)
 		stopThread = b;
 	}
 }
+
+// shut down threads and wait till done
+void Gdb_MI2::ShutDownThreads(void)
+{
+	// signal all other threads to stop
+	SetStopThread(true);
+	
+	// interrupt any active GDB command
+	InterruptCommand();
+	
+	// ugly hack, otherwise service thread can deadlock
+	// MUST CHECK THIS ONE....
+	int n = LeaveGuiMutexAll();
+	
+	// give some time to recover
+	do
+	{
+		Sleep(20);
+	}
+	while(IsThreadRunning());
+
+	// RE-ENTER GUI MUTEX -- SEE ABOVE...
+	EnterGuiMutex(n);
+	
+	// remove thread stopping flag
+	SetStopThread(false);
+}
+
+
 #endif
 
 #ifdef flagMT
@@ -876,6 +905,13 @@ void Gdb_MI2::DropFrames()
 		MIValue &fArgs = frameArgs[iFrame]["args"];
 		frame.Add(iFrame, FormatFrame(fInfo, fArgs));
 	}
+	
+	// data must be synced on frame change
+	localSynced = false;
+	thisSynced = false;
+	watchesSynced = false;
+	explorerSynced = false;
+
 	frame <<= q;
 }
 
@@ -913,6 +949,13 @@ void Gdb_MI2::dropThreads()
 		String threadStr = Format("#%03x%s", id, (id == currentId ? "(*)" : ""));
 		threadSelector.Add(id, threadStr);
 	}
+
+	// data must be resynced on threads drop
+	localSynced = false;
+	thisSynced = false;
+	watchesSynced = false;
+	explorerSynced = false;
+
 	threadSelector <<= q;
 }
 

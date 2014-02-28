@@ -59,6 +59,9 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		bool IsStopThread(void);
 	private:
 		void SetStopThread(bool b);
+		
+		// shut down threads and wait till done
+		void ShutDownThreads(void);
 
 #endif
 
@@ -236,7 +239,7 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		bool watchesSynced;
 		bool explorerSynced;
 		void SyncData();
-
+		
 		// sync ide display with breakpoint position
 		void SyncIde(bool frame = false);
 		
