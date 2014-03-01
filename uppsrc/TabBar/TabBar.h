@@ -180,7 +180,7 @@ public:
 		Array<TabItem> items;
 		int itn;
 		
-		Tab() : id(-1), stack(-1), visible(true), itn(0) { items.SetCount(5); }
+		Tab();
 		Tab(const Tab& t) { Set(t); }
 		
 		void Set(const Tab& t);
