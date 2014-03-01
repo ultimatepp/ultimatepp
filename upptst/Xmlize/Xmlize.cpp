@@ -112,7 +112,7 @@ CONSOLE_APP_MAIN
 	TestV(Magenta());
 	
 	TestDef(Magenta(), Blue());
-//	TestDef(String("Hello"), String("Hi"));
+	TestDef(String("Hello"), String("Hi"));
 	TestDef(3.14, 2.78);
 	TestDef(123, 321);
 	

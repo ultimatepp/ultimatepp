@@ -15,118 +15,6 @@ String AsString(const HT& s)
 }
 }
 
-template <class Str, class StrBuf>
-void ATest()
-{
-	Str x = "0123456789012345";
-	ASSERT(x.FindFirstOf("654") == 4);
-	ASSERT(x.FindFirstOf("46") == 4);
-	ASSERT(x.FindFirstOf("32", 10) == 12);
-	ASSERT(x.FindFirstOf("23", 10) == 12);
-	ASSERT(x.FindFirstOf(x) == 0);
-	ASSERT(x.Mid(3, 4) == Str("3456"));
-	ASSERT(x.Mid(3) == Str("3456789012345"));
-	ASSERT(x.Left(2) == Str("01"));
-	ASSERT(x.Right(2) == Str("45"));
-	ASSERT(x.Find('3') == 3);
-	ASSERT(x.ReverseFind('3') == 13);
-	ASSERT(x.GetLength() == 16);
-	ASSERT(x.Begin() + x.GetLength() == x.End());
-	ASSERT(x[0] == '0');
-	x.Insert(1, 'a');
-	ASSERT(x == Str("0a123456789012345"));
-	x.Insert(2, ~Str("bcd"), 2);
-	ASSERT(x == Str("0abc123456789012345"));
-	x.Insert(1, ~Str("_"));
-	ASSERT(x == Str("0_abc123456789012345"));
-	x.Insert(1, x);
-	ASSERT(x == Str("00_abc123456789012345_abc123456789012345"));
-	x.Remove(1, 24);
-	ASSERT(x == Str("0123456789012345"));
-	Str b = "013";
-	ASSERT(x < b);
-	ASSERT(x <= b);
-	ASSERT(x <= x);
-	ASSERT(x == x);
-	ASSERT(b > x);
-	ASSERT(b >= x);
-	ASSERT(x >= x);
-	ASSERT(x != b);
-	ASSERT(x.Compare(b) < 0);
-	ASSERT(b.Compare(x) > 0);
-	const char *s = "013";
-	ASSERT(x < s);
-	ASSERT(x <= s);
-	ASSERT(x <= x);
-	ASSERT(x == x);
-	ASSERT(s > x);
-	ASSERT(s >= x);
-	ASSERT(x >= x);
-	ASSERT(x != s);
-	ASSERT(s != x);
-	ASSERT(s == b);
-	ASSERT(b == s);
-	ASSERT(x.Compare(s) < 0);
-	ASSERT(b.Compare(s) == 0);
-	ASSERT(!b.IsEqual(x));
-	ASSERT(b.IsEqual(b));
-	ASSERT(b.IsEqual(s));
-	ASSERT(!x.IsEqual(b));
-	b.Cat("ab");
-	ASSERT(b == Str("013ab"));
-	b.Cat("ABCD", 2);
-	ASSERT(b == Str("013abAB"));
-	b.Cat('x', 3);
-	ASSERT(b == Str("013abABxxx"));
-	x.Cat(b);
-	ASSERT(x == Str("0123456789012345013abABxxx"));
-	b.Cat(x, 4);
-	ASSERT(b == Str("013abABxxx0123"));
-	b.Cat(~x, ~x + 3);
-	ASSERT(b == Str("013abABxxx0123012"));
-	b.Cat((byte *)s, 2);
-	ASSERT(b == Str("013abABxxx012301201"));
-	ASSERT((Str().Cat() << 123) == Str("123"));
-	ASSERT(b.Find(2, "ABc", 1) == 5);
-	ASSERT(b.Find(2, "ABc", 6) < 0);
-	ASSERT(b.Find("AB", 0) == 5);
-	ASSERT(b.Find("AB", 6) == -1);
-	ASSERT(b.Find(b) == 0);
-	ASSERT(b.Find(b, 1) < 0);
-	ASSERT(b.StartsWith("013"));
-	ASSERT(b.StartsWith(Str("013")));
-	ASSERT(!b.StartsWith("012"));
-	ASSERT(!b.StartsWith(Str("012")));
-	ASSERT(b.StartsWith("012", 2));
-	ASSERT(b.EndsWith("201"));
-	ASSERT(b.EndsWith(Str("201")));
-	ASSERT(!b.EndsWith("202"));
-	ASSERT(!b.EndsWith(Str("202")));
-	x = "ab";
-	b = "12";
-	ASSERT(x + b == Str("ab12"));
-	ASSERT(x + "xx" == Str("abxx"));
-	ASSERT("xx" + x == Str("xxab"));
-	ASSERT(x + 'z' == Str("abz"));
-	ASSERT('z' + x == Str("zab"));
-	ASSERT(x + (int)'z' == Str("abz"));
-	ASSERT((int)'z' + x == Str("zab"));
-	Str xx = x;
-	Str bb = b;
-	Swap(b, x);
-	ASSERT(xx == b);
-	ASSERT(bb == x);
-	StrBuf sb;
-	sb.Cat("a");
-	sb.Cat("1234", 3);
-	Str sx(sb);
-	ASSERT(sx == "a123");
-	sb = bb;
-	sb[0] = 'a';
-	bb = sb;
-	ASSERT(bb == "a2");
-}
-
 template <class tchar>
 class TStr {
 	Vector<tchar> v;
@@ -396,7 +284,6 @@ void TestBufferCat()
 
 CONSOLE_APP_MAIN
 {
-	ATest<String, StringBuffer>();
 	TestBufferCat<String, StringBuffer, char>();
 	TestBufferCat<WString, WStringBuffer, wchar>();
 //	ATest<WString, WStringBuffer>();
