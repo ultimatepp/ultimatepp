@@ -736,6 +736,11 @@ void Gdb_MI2::CheckStopReason(void)
 	// threads, otherwise it'll be lost
 	MIValue stReason = stopReason;
 	
+#ifdef PLATFORM_X11
+	// try to ungrab X11 on stop.... otherwise mouse clicks are lost
+	MICmd("data-evaluate-expression _DBG_Ungrab()");
+#endif
+	
 	// get the reason string
 	String reason;
 	if(stReason.IsEmpty())
