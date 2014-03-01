@@ -240,7 +240,7 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 	LLOG("rect = " << rect << ", overlapped = " << overlapped);
 	if(s.IsLoading()) {
 		if(mn) rect = overlapped;
-		Rect limit = GetWorkArea();
+		Rect limit = GetVirtualWorkArea();
 		Rect fm = GetFrameMargins();
 		limit.left += fm.left;
 		limit.right -= fm.right;
