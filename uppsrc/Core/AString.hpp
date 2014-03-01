@@ -83,7 +83,7 @@ int AString<B>::ReverseFind(int len, const tchar *s, int from) const
 		const tchar *p = ptr + from - len + 1;
 		len *= sizeof(tchar);
 		while(p >= ptr) {
-			if(memcmp(s, p, len) == 0)
+			if(*s == *p && memcmp(s, p, len) == 0)
 				return (int)(p - ptr);
 			p--;
 		}
@@ -125,18 +125,49 @@ template <class B>
 int AString<B>::Find(int len, const tchar *s, int from) const
 {
 	ASSERT(from >= 0 && from <= GetLength());
-	const tchar *ptr = B::Begin();
-	const tchar *p = ptr + from;
 	int l = GetLength() - len - from;
 	if(l < 0)
 		return -1;
+	if(len == 0)
+		return from;
+	const tchar *ptr = B::Begin();
+	const tchar *p = ptr + from;
 	const tchar *e = p + l;
-	len *= sizeof(tchar);
-	while(p <= e) {
-		if(memcmp(s, p, len) == 0)
-			return (int)(p - ptr);
-		p++;
+	if(len > 4) {
+		len -= 4;
+		while(p <= e) {
+			if(s[0] == p[0] && s[1] == p[1] && s[2] == p[2] && s[3] == p[3] && memcmp(s + 4, p + 4, len * sizeof(tchar)) == 0)
+				return (int)(p - ptr);
+			p++;
+		}
 	}
+	else
+	if(len == 4)
+		while(p <= e) {
+			if(s[0] == p[0] && s[1] == p[1] && s[2] == p[2] && s[3] == p[3])
+				return (int)(p - ptr);
+			p++;
+		}
+	else
+	if(len == 3)
+		while(p <= e) {
+			if(s[0] == p[0] && s[1] == p[1] && s[2] == p[2])
+				return (int)(p - ptr);
+			p++;
+		}
+	else
+	if(len == 2)
+		while(p <= e) {
+			if(s[0] == p[0] && s[1] == p[1])
+				return (int)(p - ptr);
+			p++;
+		}
+	else
+		while(p <= e) {
+			if(*s == *p)
+				return (int)(p - ptr);
+			p++;
+		}
 	return -1;
 }
 
