@@ -7,6 +7,7 @@ NAMESPACE_UPP
 
 ////////////////////////////////////////////////////////////////////////////////////
 // a single command, i.e. available entry for menu and bars
+class XMLToolBar;
 class XMLCommand
 {
 	friend class XMLCommands;
@@ -17,6 +18,9 @@ class XMLCommand
 		
 		// associated callback, if any
 		Callback callback;
+		
+		// generated menu, if any
+		Callback1<XMLToolBar &> menuCallback;
 		
 		// enabled flag
 		bool enabled;
@@ -29,14 +33,15 @@ class XMLCommand
 		String commandString;
 
 	public:
-		Ctrl *GetCtrl(void) const					{ return control;		}
-		Size const &GetCtrlSize(void) const			{ return ctrlSize;		}
-		Callback const &GetCallback(void) const		{ return callback;		}
-		bool GetIsEnabled(void) const				{ return enabled;		}
-		bool GetIsCustom(void) const				{ return custom;		}
+		Ctrl *GetCtrl(void) const									{ return control;		}
+		Size const &GetCtrlSize(void) const							{ return ctrlSize;		}
+		Callback const &GetCallback(void) const						{ return callback;		}
+		Callback1<XMLToolBar &> const &GetMenuCallback(void) const	{ return menuCallback;	}
+		bool GetIsEnabled(void) const								{ return enabled;		}
+		bool GetIsCustom(void) const								{ return custom;		}
 
-		String const &GetCommandString(void) const	{ return commandString; }
-		XMLCommand &SetCommandString(String const &s) { commandString = s; return *this; }
+		String const &GetCommandString(void) const					{ return commandString; }
+		XMLCommand &SetCommandString(String const &s)				{ commandString = s; return *this; }
 		
 		bool operator==(XMLCommand &other) const;
 		
@@ -67,6 +72,9 @@ class XMLCommands : DeepCopyOption<XMLCommands>
 		// adds a built-in command with given callback
 		XMLCommands &Add(String const &id, Callback cb);
 		
+		// adds a generated submenu "command"
+		XMLCommands &Add(String const &id, Callback1<XMLToolBar &> mc);
+		
 		// adds a control
 		XMLCommands &Add(String const &id, Ctrl &ctrl);
 		XMLCommands &Add(String const &id, Ctrl &ctrl, Size const &size);
@@ -76,6 +84,9 @@ class XMLCommands : DeepCopyOption<XMLCommands>
 		
 		// adds a built-in command with given callback, allows enable/disable item
 		XMLCommands &Add(bool enabled, String const &id, Callback cb);
+		
+		// adds a generated submenu "command", allows enable/disable item
+		XMLCommands &Add(bool enabled, String const &id, Callback1<XMLToolBar &> mc);
 		
 		// adds a control, allows enable/disable item
 		XMLCommands &Add(bool enabled, String const &id, Ctrl &ctrl);

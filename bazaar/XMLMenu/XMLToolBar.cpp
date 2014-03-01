@@ -261,6 +261,85 @@ XMLToolBar &XMLToolBar::Add(Callback1<XMLToolBar &> bar)
 	return *this;
 }
 
+// add a fixed, unnamed internal command
+// used for on-the-fly built menus
+XMLToolBar &XMLToolBar::Add(String const &label, Callback cb)
+{
+	XMLToolBarItem *item = new XMLToolBarItem;
+	item->internalCb = cb;
+	item->commandId = "";
+	item->label = label;
+	item->subMenu.Clear();
+	item->tooltip = "";
+	items.Add(item);
+	return *this;
+}
+
+XMLToolBar &XMLToolBar::Add(Image const &icon, Callback cb)
+{
+	XMLToolBarItem *item = new XMLToolBarItem;
+	item->internalCb = cb;
+	item->commandId = "";
+	item->label = "";
+	item->icon = icon;
+	item->subMenu.Clear();
+	item->tooltip = "";
+	items.Add(item);
+	return *this;
+}
+
+
+XMLToolBar &XMLToolBar::Add(String const &label, Image const &icon, Callback cb)
+{
+	XMLToolBarItem *item = new XMLToolBarItem;
+	item->internalCb = cb;
+	item->commandId = "";
+	item->label = label;
+	item->icon = icon;
+	item->subMenu.Clear();
+	item->tooltip = "";
+	items.Add(item);
+	return *this;
+}
+
+XMLToolBar &XMLToolBar::Add(String const &label, String const &tooltip, Callback cb)
+{
+	XMLToolBarItem *item = new XMLToolBarItem;
+	item->internalCb = cb;
+	item->commandId = "";
+	item->label = label;
+	item->subMenu.Clear();
+	item->tooltip = tooltip;
+	items.Add(item);
+	return *this;
+}
+
+XMLToolBar &XMLToolBar::Add(Image const &icon, String const &tooltip, Callback cb)
+{
+	XMLToolBarItem *item = new XMLToolBarItem;
+	item->internalCb = cb;
+	item->commandId = "";
+	item->label = "";
+	item->icon = icon;
+	item->subMenu.Clear();
+	item->tooltip = tooltip;
+	items.Add(item);
+	return *this;
+}
+
+XMLToolBar &XMLToolBar::Add(String const &label, Image const &icon, String const &tooltip, Callback cb)
+{
+	XMLToolBarItem *item = new XMLToolBarItem;
+	item->internalCb = cb;
+	item->commandId = "";
+	item->label = label;
+	item->icon = icon;
+	item->subMenu.Clear();
+	item->tooltip = tooltip;
+	items.Add(item);
+	return *this;
+}
+
 // add a separator
 XMLToolBar &XMLToolBar::Separator(void)
 {

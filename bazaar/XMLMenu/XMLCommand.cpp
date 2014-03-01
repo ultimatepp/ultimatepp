@@ -35,6 +35,7 @@ XMLCommands &XMLCommands::Add(String const &id, String const &cmdStr)
 	cmd->enabled = true;
 	cmd->custom = true;
 	cmd->callback.Clear();
+	cmd->menuCallback.Clear();
 	cmd->commandString = cmdStr;
 	commands.Add(id, cmd);
 	return *this;
@@ -53,6 +54,26 @@ XMLCommands &XMLCommands::Add(String const &id, Callback cb)
 	cmd->enabled = true;
 	cmd->custom = false;
 	cmd->callback = cb;
+	cmd->menuCallback.Clear();
+	if(!has)
+		commands.Add(id, cmd);
+	return *this;
+}
+
+// adds a generated submenu "command"
+XMLCommands &XMLCommands::Add(String const &id, Callback1<XMLToolBar &> mc)
+{
+	bool has = Has(id);
+	XMLCommand *cmd;
+	if(has)
+		cmd = &commands.Get(id);
+	else
+		cmd = new XMLCommand;
+	cmd->control = NULL;
+	cmd->enabled = true;
+	cmd->custom = false;
+	cmd->callback.Clear();
+	cmd->menuCallback = mc;
 	if(!has)
 		commands.Add(id, cmd);
 	return *this;
@@ -72,6 +93,7 @@ XMLCommands &XMLCommands::Add(String const &id, Ctrl &ctrl, Size const &size)
 	cmd->enabled = true;
 	cmd->custom = false;
 	cmd->callback.Clear();
+	cmd->menuCallback.Clear();
 	if(!has)
 		commands.Add(id, cmd);
 	return *this;
@@ -94,6 +116,7 @@ XMLCommands &XMLCommands::Add(bool enabled, String const &id, String const &cmdS
 	cmd->enabled = enabled;
 	cmd->custom = true;
 	cmd->callback.Clear();
+	cmd->menuCallback.Clear();
 	cmd->commandString = cmdStr;
 	if(!has)
 		commands.Add(id, cmd);
@@ -113,11 +136,31 @@ XMLCommands &XMLCommands::Add(bool enabled, String const &id, Callback cb)
 	cmd->enabled = enabled;
 	cmd->custom = false;
 	cmd->callback = cb;
+	cmd->menuCallback.Clear();
 	if(!has)
 		commands.Add(id, cmd);
 	return *this;
 }
 
+// adds a generated submenu "command", allows enable/disable item
+XMLCommands &XMLCommands::Add(bool enabled, String const &id, Callback1<XMLToolBar &> mc)
+{
+	bool has = Has(id);
+	XMLCommand *cmd;
+	if(has)
+		cmd = &commands.Get(id);
+	else
+		cmd = new XMLCommand;
+	cmd->control = NULL;
+	cmd->enabled = enabled;
+	cmd->custom = false;
+	cmd->callback.Clear();
+	cmd->menuCallback = mc;
+	if(!has)
+		commands.Add(id, cmd);
+	return *this;
+}
+		
 // adds a control, allows enable/disable item
 XMLCommands &XMLCommands::Add(bool enabled, String const &id, Ctrl &ctrl, Size const &size)
 {
@@ -132,6 +175,7 @@ XMLCommands &XMLCommands::Add(bool enabled, String const &id, Ctrl &ctrl, Size c
 	cmd->enabled = true;
 	cmd->custom = false;
 	cmd->callback.Clear();
+	cmd->menuCallback.Clear();
 	if(!has)
 		commands.Add(id, cmd);
 	return *this;

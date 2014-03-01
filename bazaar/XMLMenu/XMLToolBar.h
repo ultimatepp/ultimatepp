@@ -45,6 +45,10 @@ class XMLToolBarItem : DeepCopyOption<XMLToolBarItem>
 		// set if separator
 		bool isSeparator;
 		
+		// internal command, if any
+		// if set, the item is generated on the fly and not tied to a command
+		Callback internalCb;
+		
 	public:
 		String const &GetId(void) const				{ return commandId; }
 		String const &GetLabel(void) const			{ return label; }
@@ -53,6 +57,8 @@ class XMLToolBarItem : DeepCopyOption<XMLToolBarItem>
 		XMLToolBar const &GetSubMenu(void) const	{ return *subMenu; }
 		bool IsSubMenu(void) const					{ return !subMenu.IsEmpty(); }
 		bool IsSeparator(void) const				{ return isSeparator; }
+		bool IsInternal(void) const					{ return internalCb; }
+		Callback const &GetInternal(void) const		{ return internalCb; }
 		
 		// xml support
 		void Xmlize(XmlIO xml);
@@ -125,6 +131,15 @@ class XMLToolBar : DeepCopyOption<XMLToolBar>
 		
 		// add a submenu entry by callback
 		XMLToolBar &Add(Callback1<XMLToolBar &> bar);
+		
+		// add a fixed, unnamed internal command
+		// used for on-the-fly built menus
+		XMLToolBar &Add(String const &label, Callback cb);
+		XMLToolBar &Add(Image const &icon, Callback cb);
+		XMLToolBar &Add(String const &label, Image const &icon, Callback cb);
+		XMLToolBar &Add(String const &label, String const &tooltip, Callback cb);
+		XMLToolBar &Add(Image const &icon, String const &tooltip, Callback cb);
+		XMLToolBar &Add(String const &label, Image const &icon, String const &tooltip, Callback cb);
 		
 		// add a separator
 		XMLToolBar &Separator(void);
