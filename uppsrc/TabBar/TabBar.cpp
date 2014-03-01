@@ -425,6 +425,18 @@ void TabBar::GroupMenu(Bar &bar, int n)
 	bar.Add(t_("Close"), THISBACK1(DoCloseGroup, n));
 }
 
+TabBar::Tab::Tab()
+{
+	id = -1;
+	stack = -1;
+	visible = true;
+	itn = 0;
+	items.SetCount(5);
+
+	pos = cross_pos = tab_pos = Point(0, 0);
+	cross_size = size = tab_size = Size(0, 0);
+}
+
 void TabBar::Tab::Set(const Tab& t)
 {
 	id = t.id;
@@ -1760,7 +1772,8 @@ TabBar& TabBar::SetScrollThickness(int sz)
 void TabBar::Layout()
 {
 	if (autoscrollhide && tabs.GetCount()) 
-		SyncScrollBar(false); 
+		SyncScrollBar(false);
+	Repos();
 }
 
 int TabBar::FindValue(const Value &v) const
@@ -2482,6 +2495,8 @@ void TabBar::Serialize(Stream& s)
 	int g = GetGroup();
 	s % g;
 	group = g;
+	
+	Repos();
 }
 
 CH_STYLE(TabBar, Style, StyleDefault)
