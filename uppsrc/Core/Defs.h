@@ -716,7 +716,7 @@ template <class tchar>
 force_inline bool svo_memeq(const tchar *a, const tchar *b, int len)
 {
 	if(len > 11)
-		return memcmp(a, b, len) == 0;
+		return memcmp(a, b, len * sizeof(tchar)) == 0;
 	switch(len) {
 	case 11:
 		if(a[10] != b[10]) return false;
