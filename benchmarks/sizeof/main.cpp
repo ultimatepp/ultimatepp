@@ -38,6 +38,7 @@ CONSOLE_APP_MAIN
 	RDUMP(sizeof(Value));
 	RDUMP(sizeof(ValueArray));
 	RDUMP(sizeof(ValueMap));
+	RDUMP(sizeof(XmlNode));
 	RLOG("========================");
 	RDUMP(sizeof(Vector<int>));
 	RDUMP(sizeof(Array<int>));

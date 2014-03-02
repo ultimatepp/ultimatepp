@@ -1,0 +1,11 @@
+uses
+	Core;
+
+file
+	bm.h,
+	bm.cpp,
+	main.cpp optimize_speed;
+
+mainconfig
+	"" = "SSE2";
+
