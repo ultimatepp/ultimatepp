@@ -43,10 +43,11 @@ h]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 user], [@(0.0.255) 
 tring][@(0.0.255) `&]_[*@3 pwd])&]
 [s2; Sets username and password.&]
 [s3; &]
-[s4; &]
-[s5;:Smtp`:`:From`(const String`&`,const String`&`):%- [_^Smtp^ Smtp][@(0.0.255) `&]_[* Fro
-m]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 email], 
-[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 name]_`=_Null)&]
+[s4;%- &]
+[s5;:Smtp`:`:From`(const String`&`,const String`&`,const String`&`):%- [_^Smtp^ Smtp][@(0.0.255) `&
+]_[* From]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 email], 
+[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 name]_`=_Null, 
+[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 sender]_`=_Null)&]
 [s2; Sets the sender.&]
 [s3; &]
 [s4; &]
@@ -146,4 +147,4 @@ bodies, attachments, subject).&]
 l]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Activates logging of SMTP.&]
 [s3; &]
-[s0; ]
+[s0; ]]
