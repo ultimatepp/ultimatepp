@@ -167,8 +167,12 @@ void ATest()
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
 	ATest<String, StringBuffer, char, byte>();
 	ASSERT((String().Cat() << 123) == "123");
 
 	ATest<WString, WStringBuffer, wchar, wchar>();
+	
+	LOG("======== Everything OK");
 }
