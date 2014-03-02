@@ -62,8 +62,6 @@ static int UppStringSimplify(VarItem &varItem, int step)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static int UppVectorSimplify(VarItem &varItem, int step)
 {
-	const char *placeHolder = " = [...]";
-	
 	// setup item type
 	varItem.kind = VarItem::ARRAY;
 	
@@ -103,22 +101,23 @@ static int UppVectorSimplify(VarItem &varItem, int step)
 	// start from item 0
 	step -= 2;
 	
-	if(!step)
-		varItem.value << " = [ ]";
-	
 	// fetch elements, check on first if they're SIMPLE, so displayable
 	VarItem vItem(&varItem.Debugger(), varItem.evaluableExpression + Format(".vector[%d]", step));
 	if(!vItem)
 	{
-		varItem.value = " <can't evaluate contents>";
+		varItem.value << " <can't evaluate contents>";
 		return 0;
 	}
 	if(vItem.kind != VarItem::SIMPLE)
 	{
-		varItem.value = placeHolder;
+		varItem.value << " = [...]";
 		return 0;
 	}
 	vItem.Simplify();
+
+	if(!step)
+		varItem.value << " = [ ]";
+	
 	const char *sep = step ? " , " : "";
 	varItem.value = varItem.value.Left(varItem.value.GetCount() - 2) + sep + vItem.value + " ]";
 	if(++step >= count)
@@ -130,8 +129,6 @@ static int UppVectorSimplify(VarItem &varItem, int step)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static int UppVectorMapSimplify(VarItem &varItem, int step)
 {
-	const char *placeHolder = " = {...}";
-	
 	// setup item type
 	varItem.kind = VarItem::MAP;
 	
@@ -172,20 +169,17 @@ static int UppVectorMapSimplify(VarItem &varItem, int step)
 	// start from item 0
 	step -= 2;
 	
-	if(!step)
-		varItem.value << " = { }";
-	
 	// fetch elements, check on first if they're SIMPLE, so displayable
 	VarItem kItem(&varItem.Debugger(), varItem.evaluableExpression + Format(".key.key.vector[%d]", step));
 	if(!kItem)
 	{
-		varItem.value = " <can't evaluate contents>";
+		varItem.value << " <can't evaluate contents>";
 		return 0;
 	}
 	// for complex types, just return placeholder
 	if(kItem.kind != VarItem::SIMPLE)
 	{
-		varItem.value = placeHolder;
+		varItem.value << " = {...}";
 		return 0;
 	}
 	kItem.Simplify();
@@ -193,16 +187,19 @@ static int UppVectorMapSimplify(VarItem &varItem, int step)
 	VarItem vItem(&varItem.Debugger(), varItem.evaluableExpression + Format(".value.vector[%d]", step));
 	if(!vItem)
 	{
-		varItem.value = " <can't evaluate contents>";
+		varItem.value << " <can't evaluate contents>";
 		return 0;
 	}
 	// for complex types, just return placeholder
 	if(vItem.kind != VarItem::SIMPLE)
 	{
-		varItem.value = placeHolder;
-		return true;
+		varItem.value << " = {...}";
+		return 0;
 	}
 	vItem.Simplify();
+	
+	if(!step)
+		varItem.value << " = { }";
 	
 	const char *sep = step ? " , " : "";
 	varItem.value = varItem.value.Left(varItem.value.GetCount() - 2) + sep + "(" + kItem.value + " , " + vItem.value + ") }";
@@ -215,8 +212,6 @@ static int UppVectorMapSimplify(VarItem &varItem, int step)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static int UppArraySimplify(VarItem &varItem, int step)
 {
-	const char *placeHolder = " = [...]";
-	
 	// setup item type
 	varItem.kind = VarItem::ARRAY;
 	
@@ -238,6 +233,7 @@ static int UppArraySimplify(VarItem &varItem, int step)
 		
 		// get items count
 		MIValue val = varItem.EvaluateExpression(varItem.evaluableExpression + ".vector.items");
+
 		if(val.IsError() || !val.IsString())
 			return 0;
 		varItem.items = atoi(val.ToString());
@@ -251,29 +247,31 @@ static int UppArraySimplify(VarItem &varItem, int step)
 		return 2;
 	}
 	
-	int count = min(EVALDEEP_VECTOR, varItem.items);
+	int count = min(EVALDEEP_ARRAY, varItem.items);
 	
 	// start from item 0
 	step -= 2;
-	
-	if(!step)
-		varItem.value << " = [ ]";
 	
 	// fetch elements, check on first if they're SIMPLE, so displayable
 	VarItem vItem(&varItem.Debugger(), varItem.evaluableExpression + Format(".vector.vector[%d][0]", step));
 	if(!vItem)
 	{
-		varItem.value = " <can't evaluate contents>";
+		varItem.value << " <can't evaluate contents>";
 		return 0;
 	}
 	if(vItem.kind != VarItem::SIMPLE)
 	{
-		varItem.value = placeHolder;
+		varItem.value << " = [...]";
 		return 0;
 	}
+
+	if(!step)
+		varItem.value << " = [ ]";
+
 	vItem.Simplify();
 	const char *sep = step ? " , " : "";
 	varItem.value = varItem.value.Left(varItem.value.GetCount() - 2) + sep + vItem.value + " ]";
+
 	if(++step >= count)
 		return 0;
 	else
@@ -283,8 +281,6 @@ static int UppArraySimplify(VarItem &varItem, int step)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static int UppArrayMapSimplify(VarItem &varItem, int step)
 {
-	const char *placeHolder = " = {...}";
-	
 	// setup item type
 	varItem.kind = VarItem::MAP;
 	
@@ -325,20 +321,17 @@ static int UppArrayMapSimplify(VarItem &varItem, int step)
 	// start from item 0
 	step -= 2;
 	
-	if(!step)
-		varItem.value << " = { }";
-	
 	// fetch elements, check on first if they're SIMPLE, so displayable
 	VarItem kItem(&varItem.Debugger(), varItem.evaluableExpression + Format(".key.key.vector[%d]", step));
 	if(!kItem)
 	{
-		varItem.value = " <can't evaluate contents>";
+		varItem.value << " <can't evaluate contents>";
 		return 0;
 	}
 	// for complex types, just return placeholder
 	if(kItem.kind != VarItem::SIMPLE)
 	{
-		varItem.value = placeHolder;
+		varItem.value << " = {...}";
 		return 0;
 	}
 	kItem.Simplify();
@@ -346,16 +339,19 @@ static int UppArrayMapSimplify(VarItem &varItem, int step)
 	VarItem vItem(&varItem.Debugger(), varItem.evaluableExpression + Format(".value.vector.vector[%d][0]", step));
 	if(!vItem)
 	{
-		varItem.value = " <can't evaluate contents>";
+		varItem.value << " <can't evaluate contents>";
 		return 0;
 	}
 	// for complex types, just return placeholder
 	if(vItem.kind != VarItem::SIMPLE)
 	{
-		varItem.value = placeHolder;
-		return true;
+		varItem.value << " = {...}";
+		return 0;
 	}
 	vItem.Simplify();
+	
+	if(!step)
+		varItem.value << " = { }";
 	
 	const char *sep = step ? " , " : "";
 	varItem.value = varItem.value.Left(varItem.value.GetCount() - 2) + sep + "(" + kItem.value + " , " + vItem.value + ") }";
@@ -368,8 +364,6 @@ static int UppArrayMapSimplify(VarItem &varItem, int step)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static int UppIndexSimplify(VarItem &varItem, int step)
 {
-	const char *placeHolder = " = [...]";
-	
 	// setup item type
 	varItem.kind = VarItem::ARRAY;
 	
@@ -409,22 +403,23 @@ static int UppIndexSimplify(VarItem &varItem, int step)
 	// start from item 0
 	step -= 2;
 	
-	if(!step)
-		varItem.value << " = [ ]";
-	
 	// fetch elements, check on first if they're SIMPLE, so displayable
 	VarItem vItem(&varItem.Debugger(), varItem.evaluableExpression + Format(".key.vector[%d]", step));
 	if(!vItem)
 	{
-		varItem.value = " <can't evaluate contents>";
+		varItem.value << " <can't evaluate contents>";
 		return 0;
 	}
 	if(vItem.kind != VarItem::SIMPLE)
 	{
-		varItem.value = placeHolder;
+		varItem.value << " = [...]";
 		return 0;
 	}
 	vItem.Simplify();
+
+	if(!step)
+		varItem.value << " = [ ]";
+	
 	const char *sep = step ? " , " : "";
 	varItem.value = varItem.value.Left(varItem.value.GetCount() - 2) + sep + vItem.value + " ]";
 	if(++step >= count)
