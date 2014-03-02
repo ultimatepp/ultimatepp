@@ -1,4 +1,5 @@
 #include "XMLCommand.h"
+#include "XMLToolBar.h"
 
 NAMESPACE_UPP
 
@@ -16,12 +17,20 @@ void XMLCommand::Xmlize(XmlIO xml)
 		control = NULL;
 		ctrlSize = Size(-1, -1);
 		callback.Clear();
+		menuCallback.Clear();
 	}
 	else
 	{
 		ASSERT(custom == true);
 	}
 	xml("CommandString", commandString);
+}
+
+XMLToolBar const &XMLCommand::GetMenuTb(void)
+{
+	menuTb = new XMLToolBar;
+	menuCallback(*menuTb);
+	return *menuTb;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////

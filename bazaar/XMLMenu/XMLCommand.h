@@ -22,6 +22,10 @@ class XMLCommand
 		// generated menu, if any
 		Callback1<XMLToolBar &> menuCallback;
 		
+		// a plece to store the generated menu toolbar
+		// it MUJST be persistent, as system require it after generation
+		One<XMLToolBar> menuTb;
+		
 		// enabled flag
 		bool enabled;
 		
@@ -37,6 +41,8 @@ class XMLCommand
 		Size const &GetCtrlSize(void) const							{ return ctrlSize;		}
 		Callback const &GetCallback(void) const						{ return callback;		}
 		Callback1<XMLToolBar &> const &GetMenuCallback(void) const	{ return menuCallback;	}
+		XMLToolBar const &GetMenuTb(void);
+
 		bool GetIsEnabled(void) const								{ return enabled;		}
 		bool GetIsCustom(void) const								{ return custom;		}
 
@@ -100,6 +106,7 @@ class XMLCommands : DeepCopyOption<XMLCommands>
 		
 		// get a command for a given id
 		XMLCommand const &Get(String const &id) const { return commands.Get(id); }
+		XMLCommand &Get(String const &id) { return commands.Get(id); }
 
 		// find a command given its name
 		int Find(String const &id) const { return commands.Find(id); }

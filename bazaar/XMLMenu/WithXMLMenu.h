@@ -438,15 +438,13 @@ template<class T> void WithXMLMenu<T>::SetMenuBar0(Bar &bar, int mnIdx, Array<XM
 			continue;
 		
 		// get command from id
-		XMLCommand const &cmd = commands.Get(id);
+		XMLCommand &cmd = commands.Get(id);
 		
 		// check wether it's a generated menu "command"
 		Callback1<XMLToolBar &> menuCallback = cmd.GetMenuCallback();
 		if(menuCallback)
 		{
-			XMLToolBar tb;
-			menuCallback(tb);
-			SetMenuBar0(bar, mnIdx, &tb.GetItems());
+			SetMenuBar0(bar, mnIdx, &cmd.GetMenuTb().GetItems());
 			continue;
 		}
 		

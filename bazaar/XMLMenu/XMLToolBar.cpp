@@ -258,6 +258,9 @@ XMLToolBar XMLToolBar::SubMenu(void)
 // add a submenu entry by callback
 XMLToolBar &XMLToolBar::Add(Callback1<XMLToolBar &> bar)
 {
+	XMLToolBar tb;
+	bar(tb);
+	items.Append(tb.items);
 	return *this;
 }
 
