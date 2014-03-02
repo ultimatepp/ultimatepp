@@ -122,56 +122,6 @@ int AString<B>::ReverseFind(int chr) const
 }
 
 template <class B>
-int AString<B>::Find(int len, const tchar *s, int from) const
-{
-	ASSERT(from >= 0 && from <= GetLength());
-	int l = GetLength() - len - from;
-	if(l < 0)
-		return -1;
-	if(len == 0)
-		return from;
-	const tchar *ptr = B::Begin();
-	const tchar *p = ptr + from;
-	const tchar *e = p + l;
-	if(len > 4) {
-		len -= 4;
-		while(p <= e) {
-			if(s[0] == p[0] && s[1] == p[1] && s[2] == p[2] && s[3] == p[3] && memcmp(s + 4, p + 4, len * sizeof(tchar)) == 0)
-				return (int)(p - ptr);
-			p++;
-		}
-	}
-	else
-	if(len == 4)
-		while(p <= e) {
-			if(s[0] == p[0] && s[1] == p[1] && s[2] == p[2] && s[3] == p[3])
-				return (int)(p - ptr);
-			p++;
-		}
-	else
-	if(len == 3)
-		while(p <= e) {
-			if(s[0] == p[0] && s[1] == p[1] && s[2] == p[2])
-				return (int)(p - ptr);
-			p++;
-		}
-	else
-	if(len == 2)
-		while(p <= e) {
-			if(s[0] == p[0] && s[1] == p[1])
-				return (int)(p - ptr);
-			p++;
-		}
-	else
-		while(p <= e) {
-			if(*s == *p)
-				return (int)(p - ptr);
-			p++;
-		}
-	return -1;
-}
-
-template <class B>
 void AString<B>::Replace(const String& find, const String& replace)
 {
 	Replace(~find, find.GetCount(), ~replace, replace.GetCount());
@@ -225,12 +175,6 @@ force_inline
 bool AString<B>::EndsWith(const tchar *s) const
 {
 	return EndsWith(s, strlen__(s));
-}
-
-template <class B>
-int AString<B>::Find(const tchar *s, int from) const
-{
-	return Find(strlen__(s), s, from);
 }
 
 template <class B>
