@@ -23,6 +23,9 @@ inline int strlen__(const wchar *s)       { return s ? (int)wstrlen(s) : 0; }
 inline int cmpval__(char x)               { return (byte)x; }
 inline int cmpval__(wchar x)              { return (word)x; }
 
+int find(const char *text, int len, const char *needle, int nlen, int from);
+int find(const wchar *text, int len, const wchar *needle, int nlen, int from);
+
 class String;
 class WString;
 class StringBuffer;
@@ -85,8 +88,8 @@ public:
 	int    ReverseFind(int chr, int from) const;
 	int    ReverseFind(int chr) const;
 
-	int    Find(int len, const tchar *s, int from) const;
-	int    Find(const tchar *s, int from = 0) const;
+	int    Find(int len, const tchar *s, int from) const      { return find(B::Begin(), B::GetCount(), s, len, from); }
+	int    Find(const tchar *s, int from = 0) const           { return Find(strlen__(s), s, from); }
 	int    Find(const String& s, int from = 0) const          { return Find(s.GetCount(), ~s, from); }
 	
 	int    ReverseFind(int len, const tchar *s, int from) const;

@@ -2,6 +2,84 @@
 
 NAMESPACE_UPP
 
+template <class tchar>
+int t_find(const tchar *ptr, int plen, const tchar *s, int len, int from)
+{
+	ASSERT(from >= 0 && from <= plen);
+	int l = plen - len - from;
+	if(l < 0)
+		return -1;
+	if(len == 0)
+		return from;
+	const tchar *p = ptr + from;
+	const tchar *e = p + l;
+	if(len > 4) {
+		tchar s0 = s[0];
+		tchar s1 = s[1];
+		tchar s2 = s[2];
+		tchar sl = s[len - 1];
+		int l_1 = len - 1;
+		while(p <= e) {
+			if(s0 == p[0] && sl == p[l_1] && s1 == p[1] && s2 == p[2] &&
+			   svo_memeq(s + 4, p + 4, len - 5))
+				return (int)(p - ptr);
+			p++;
+		}
+	}
+	else
+	if(len == 4) {
+		tchar s0 = s[0];
+		tchar s1 = s[1];
+		tchar s2 = s[2];
+		tchar s3 = s[3];
+		while(p <= e) {
+			if(s0 == p[0] && s3 == p[3] && s1 == p[1] && s2 == p[2])
+				return (int)(p - ptr);
+			p++;
+		}
+	}
+	else
+	if(len == 3) {
+		tchar s0 = s[0];
+		tchar s1 = s[1];
+		tchar s2 = s[2];
+		while(p <= e) {
+			if(s0 == p[0] && s2 == p[2] && s1 == p[1])
+				return (int)(p - ptr);
+			p++;
+		}
+	}
+	else
+	if(len == 2) {
+		tchar s0 = s[0];
+		tchar s1 = s[1];
+		while(p <= e) {
+			if(s0 == p[0] && s1 == p[1])
+				return (int)(p - ptr);
+			p++;
+		}
+	}
+	else {
+		tchar s0 = s[0];
+		while(p <= e) {
+			if(s0 == *p)
+				return (int)(p - ptr);
+			p++;
+		}
+	}
+	return -1;
+}
+
+int find(const char *text, int len, const char *needle, int nlen, int from)
+{
+	return t_find(text, len, needle, nlen, from);
+}
+
+int find(const wchar *text, int len, const wchar *needle, int nlen, int from)
+{
+	return t_find(text, len, needle, nlen, from);
+}
+
 #ifdef _DEBUG
 void String0::Dsyn()
 {
