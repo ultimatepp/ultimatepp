@@ -4,7 +4,7 @@
 NAMESPACE_UPP
 
 #define LLOGBLOCK(x)  // LOGBLOCK(x)
-#define LLOG(x)       // LOG(x)
+#define LLOG(x)       // DLOG(x)
 
 static bool ftpinit = false;
 
