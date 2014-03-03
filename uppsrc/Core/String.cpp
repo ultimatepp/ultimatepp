@@ -21,7 +21,7 @@ int t_find(const tchar *ptr, int plen, const tchar *s, int len, int from)
 		int l_1 = len - 1;
 		while(p <= e) {
 			if(s0 == p[0] && sl == p[l_1] && s1 == p[1] && s2 == p[2] &&
-			   svo_memeq(s + 4, p + 4, len - 5))
+			   svo_memeq(s + 3, p + 3, len - 4))
 				return (int)(p - ptr);
 			p++;
 		}
