@@ -261,6 +261,7 @@ void TcpSocket::Init()
 
 void TcpSocket::Reset()
 {
+	LLOG("Reset");
 	is_eof = false;
 	socket = INVALID_SOCKET;
 	ipv6 = false;
@@ -270,8 +271,6 @@ void TcpSocket::Reset()
 	mode = NONE;
 	ssl.Clear();
 	sslinfo.Clear();
-	start_time = Null;
-	global_timeout = Null;
 #if defined(PLATFORM_WIN32) || defined(PLATFORM_BSD)
 	connection_start = Null;
 #endif
@@ -282,7 +281,7 @@ TcpSocket::TcpSocket()
 {
 	ClearError();
 	Reset();
-	timeout = Null;
+	timeout = global_timeout = start_time = Null;
 	waitstep = 10;
 	asn1 = false;
 }
@@ -585,6 +584,7 @@ bool TcpSocket::IsGlobalTimeout()
 
 bool TcpSocket::RawWait(dword flags, int end_time)
 { // wait till end_time
+	LLOG("RawWait end_time: " << end_time << ", current time " << msecs());
 	if((flags & WAIT_READ) && ptr != end)
 		return true;
 	if(socket == INVALID_SOCKET)
@@ -597,7 +597,7 @@ bool TcpSocket::RawWait(dword flags, int end_time)
 			to = waitstep;
 		timeval *tvalp = NULL;
 		timeval tval;
-		if(!IsNull(timeout) || WhenWait) {
+		if(end_time != INT_MAX || WhenWait) {
 			to = max(to, 0);
 			tval.tv_sec = to / 1000;
 			tval.tv_usec = 1000 * (to % 1000);
