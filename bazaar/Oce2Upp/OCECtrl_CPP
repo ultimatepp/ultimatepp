@@ -42,19 +42,21 @@ OCECtrl::~OCECtrl()
 void OCECtrl::SetDocument(OCEDoc *doc)
 {
 	document = doc;
-	if(!doc || !opened)
-	{
-		view.Nullify();
+	if(!doc)
 		return;
-	}
+	
+	// Creates the view object if still not done
+	if(view.IsNull())
+		view = new NIS_View(document->GetViewer());
+		
+	if(!opened)
+		return;
 	
 	// platform dependent part
 	#ifdef PLATFORM_WIN32
+	
 		HWND windowHandle = GetHWND();
 	
-		// Creates the view object
-		view = new NIS_View(document->GetViewer());
-		
 		// Creates the OpenCascade window handle
 		Aspect_Handle aWindowHandle = (Aspect_Handle)windowHandle;
 		Handle(WNT_Window) hWnd = new WNT_Window(windowHandle);
@@ -71,9 +73,6 @@ void OCECtrl::SetDocument(OCEDoc *doc)
 		// Gets the window handle
 		Window WindowHandle = GetWindow();
 	
-		// Creates the view object
-		view = new NIS_View(document->GetViewer());
-		
 		Aspect_Handle aWindowHandle = (Aspect_Handle)WindowHandle;
 		Handle(Xw_Window) hWnd = new Xw_Window (document->GetGraphicDriver()->GetDisplayConnection(), aWindowHandle);
 	

@@ -5,6 +5,8 @@ uses
 options(WIN32) -DPIPPO=gigi;
 
 file
+	Image_AlienPixMap_CXX,
+	Image_AlienPixMap_HXX,
 	OCE_UPP,
 	OCE_H,
 	OCEDoc_H,

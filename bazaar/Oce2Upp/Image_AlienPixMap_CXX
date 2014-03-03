@@ -1,0 +1,241 @@
+// Created on: 2010-09-16
+// Created by: KGV
+// Copyright (c) 2010-2014 OPEN CASCADE SAS
+//
+// This file is part of Open CASCADE Technology software library.
+//
+// This library is free software; you can redistribute it and / or modify it
+// under the terms of the GNU Lesser General Public version 2.1 as published
+// by the Free Software Foundation, with special exception defined in the file
+// OCCT_LGPL_EXCEPTION.txt. Consult the file LICENSE_LGPL_21.txt included in OCCT
+// distribution for complete text of the license and disclaimer of any warranty.
+//
+// Alternatively, this file may be used under the terms of Open CASCADE
+// commercial license or contractual agreement.
+
+#ifdef HAVE_CONFIG_H
+# include <oce-config.h>
+#endif
+
+#include <Image_AlienPixMap.hxx>
+#include <gp.hxx>
+#include <TCollection_AsciiString.hxx>
+#include <fstream>
+#include <stdio.h>
+
+#include <plugin/png/png.h>
+#include <plugin/bmp/bmp.h>
+#include <plugin/gif/gif.h>
+#include <plugin/jpg/jpg.h>
+#include <plugin/tif/tif.h>
+
+using namespace Upp;
+
+IMPLEMENT_STANDARD_HANDLE ( Image_AlienPixMap, Image_PixMap )
+IMPLEMENT_STANDARD_RTTIEXT ( Image_AlienPixMap, Image_PixMap )
+
+// =======================================================================
+// function : Image_AlienPixMap
+// purpose  :
+// =======================================================================
+Image_AlienPixMap::Image_AlienPixMap()
+{
+	SetTopDown ( false );
+}
+
+// =======================================================================
+// function : ~Image_AlienPixMap
+// purpose  :
+// =======================================================================
+Image_AlienPixMap::~Image_AlienPixMap()
+{
+	Clear();
+}
+
+// =======================================================================
+// function : InitWrapper
+// purpose  :
+// =======================================================================
+bool Image_AlienPixMap::InitWrapper ( ImgFormat,
+		Standard_Byte*,
+		const Standard_Size,
+		const Standard_Size,
+		const Standard_Size )
+{
+	Clear();
+	return false;
+}
+
+// =======================================================================
+// function : InitTrash
+// purpose  :
+// =======================================================================
+bool Image_AlienPixMap::InitTrash ( ImgFormat
+		thePixelFormat,
+		const Standard_Size theSizeX,
+		const Standard_Size theSizeY,
+		const Standard_Size /*theSizeRowBytes*/ )
+{
+	Clear();
+	
+	// init the imagebuffer
+	imageBuffer.Create(theSizeX, theSizeY);
+	
+	// connects the pixel buffer to PixMap class
+	Image_PixMap::InitWrapper(ImgBGRA, (byte *)imageBuffer.Begin(), theSizeX, theSizeY, 0);
+	
+	return true;
+}
+
+// =======================================================================
+// function : InitCopy
+// purpose  :
+// =======================================================================
+bool Image_AlienPixMap::InitCopy ( const Image_PixMap& theCopy )
+{
+	if ( &theCopy == this )
+	{
+		// self-copying disallowed
+		return false;
+	}
+
+	if (!InitTrash ( theCopy.Format(), theCopy.SizeX(), theCopy.SizeY(), theCopy.SizeRowBytes() ) )
+		return false;
+
+	if (myImgFormat == theCopy.Format())
+	{
+		if ( myData.mySizeRowBytes == theCopy.SizeRowBytes() && myData.myTopToDown    == theCopy.TopDownInc() )
+		{
+			// copy with one call
+			memcpy ( myData.myDataPtr, theCopy.Data(), theCopy.SizeBytes() );
+			return true;
+		}
+
+		// copy row-by-row
+		const Standard_Size aRowSizeBytes = ( myData.mySizeRowBytes > theCopy.SizeRowBytes() )
+				? theCopy.SizeRowBytes() : myData.mySizeRowBytes;
+
+		for ( Standard_Size aRow = 0; aRow < myData.mySizeY; ++aRow )
+			memcpy ( ChangeRow ( aRow ), theCopy.Row ( aRow ), aRowSizeBytes );
+
+		return true;
+	}
+
+	// pixel format conversion required
+	Clear();
+
+	return false;
+}
+
+// =======================================================================
+// function : Clear
+// purpose  :
+// =======================================================================
+void Image_AlienPixMap::Clear ( ImgFormat thePixelFormat )
+{
+	Image_PixMap::Clear ( thePixelFormat );
+//	imageBuffer.Clear();
+}
+
+// =======================================================================
+// function : Load
+// purpose  :
+// =======================================================================
+bool Image_AlienPixMap::Load ( const TCollection_AsciiString& theImagePath )
+{
+	Clear();
+
+	Image img = StreamRaster::LoadFileAny(theImagePath.ToCString());
+	if(img.IsEmpty())
+		return false;
+	
+	imageBuffer = img;
+
+	Image_PixMap::InitWrapper(ImgBGRA, (byte *)~imageBuffer, imageBuffer.GetWidth(), imageBuffer.GetHeight(), 0);
+	SetTopDown(false);
+
+	return true;
+}
+
+// =======================================================================
+// function : savePPM
+// purpose  :
+// =======================================================================
+bool Image_AlienPixMap::savePPM ( const TCollection_AsciiString& theFileName ) const
+{
+	if ( IsEmpty() )
+		return false;
+	// Open file
+	FILE* aFile = fopen ( theFileName.ToCString(), "wb" );
+	if ( aFile == NULL )
+		return false;
+
+	// Write header
+	fprintf ( aFile, "P6\n%d %d\n255\n", ( int ) SizeX(), ( int ) SizeY() );
+	fprintf ( aFile, "# Image stored by OpenCASCADE framework in linear RGB colorspace\n" );
+
+	// Write pixel data
+	Quantity_Color aColor;
+
+	Quantity_Parameter aDummy;
+
+	Standard_Byte aByte;
+
+	for ( Standard_Size aRow = 0; aRow < SizeY(); ++aRow )
+	{
+		for ( Standard_Size aCol = 0; aCol < SizeY(); ++aCol )
+		{
+			// extremely SLOW but universal (implemented for all supported pixel formats)
+			aColor = PixelColor ( ( Standard_Integer ) aCol, ( Standard_Integer ) aRow, aDummy );
+			aByte = Standard_Byte ( aColor.Red() * 255.0 );
+			fwrite ( &aByte, 1, 1, aFile );
+			aByte = Standard_Byte ( aColor.Green() * 255.0 );
+			fwrite ( &aByte, 1, 1, aFile );
+			aByte = Standard_Byte ( aColor.Blue() * 255.0 );
+			fwrite ( &aByte, 1, 1, aFile );
+		}
+	}
+
+	// Close file
+	fclose ( aFile );
+
+	return true;
+}
+
+// =======================================================================
+// function : Save
+// purpose  :
+// =======================================================================
+bool Image_AlienPixMap::Save ( const TCollection_AsciiString& theFileName )
+{
+	if(imageBuffer.IsEmpty())
+		return false;
+
+	String ext = ToLower(GetFileExt(theFileName.ToCString()));
+	One<StreamRasterEncoder> encoder;
+	if(ext == ".jpg" || ext == ".jpeg")
+		encoder = new JPGEncoder;
+	else if(ext == ".png")
+		encoder = new PNGEncoder;
+	else if(ext == ".bmp")
+		encoder = new BMPEncoder;
+	else if(ext == ".gif")
+		encoder = new GIFEncoder;
+	else if(ext == ".tif" || ext == ".tiff")
+		encoder = new TIFEncoder;
+	else
+		return false;
+	Image img = imageBuffer;
+	bool res = encoder->SaveFile(theFileName.ToCString(), img);
+	imageBuffer = img;
+	return res;
+}
+
+// =======================================================================
+// function : AdjustGamma
+// purpose  :
+// =======================================================================
+Standard_EXPORT bool Image_AlienPixMap::AdjustGamma ( const Standard_Real )
+{
+	return false;
+}
