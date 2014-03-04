@@ -27,6 +27,10 @@ bool JsonView::Key(dword key, int count)
 
 int JsonView::AddNode(int parent_id, const Value& id, const String& name, const Value& v)
 {
+	if(IsError(v)) {
+		parent_id = tree.Add(parent_id, IdeImg::Error(), "ERROR", "[@R [* " + GetErrorText(v));
+	}
+	else
 	if(v.Is<ValueMap>()) {
 		ValueMap m = v;
 		parent_id = tree.Add(parent_id, IdeImg::JsonStruct(), id, "[G1 [* " + name);
