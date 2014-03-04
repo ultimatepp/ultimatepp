@@ -313,4 +313,10 @@ void FileSelButton::OnAction()
 	}
 }
 
+void FileSelButton::Detach()
+{
+	Ctrl *p = button.GetParent();
+	if(p) p->RemoveFrame(button);
+}
+
 END_UPP_NAMESPACE

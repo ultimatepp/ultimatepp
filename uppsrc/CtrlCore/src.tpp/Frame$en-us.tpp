@@ -101,64 +101,56 @@ of Ctrls.&]
 :: [s0; No.]
 :: [s0; 
 @@image:612&237
-€ƒâ€¦€€€ƒÚÿ€€€€ø‡œíÐÁ‰€ ®€ÀÀþ­ ±ØÁ«ŒÁ—·†®ÁÖœ‹€€ïžÙŸåÒÉ¥É’Ë¥—Ê®•äÜª¹Ôò©äÎÒÉ¥’Ë¥—
-¤Ê®•Üª¹Ôöò©äÒÉ¥’†Ë¥»Ë€€š•üâõ
+(A2IAJgAAANr/AAAAAHic7dBBCQAgAMDA/g2tINhBKwzBlzcuwdYcCwAAntmf5VLJpZJLJZdKLpVcKrlUcqnkUsmlkksll0oulVwquVRyqeRSyaWSS6W7SwAAEB2VfOL1)
 ]
 :: [s0; [1 Default Frame for Ctrl.]]
 :: [s0; CtrlFrame`&_[* InsetFrame]()]
 :: [s0; No.]
 :: [s0; 
 @@image:612&237
-€ƒâ€¦€€€ƒÚÿ€€€€ø¯œíÑÁ€ ¸”ÄÁûïÀŽ´¼Ø­˜ÐƒêÚÂ†¢Ä™Í¤Ü¹ðþ¹‚œ€€Ù·õž×µÖæÊËœ»Ê¿ÛÙ©Î°•
-—’©”Ì¥äª¨¥Ó©™ÊÉÔòÊ¦Ò²•’©…”Ì¥äª¥ÓÊ©™ÊÉÔÊÖŽÙ©íá—µ×¬šýá··üÒŒ€€üÛ…û½€È½
+(A2IAJgAAANr/AAAAAHic7dHBDYAgFERB++/ADjxYkC2Y0ANawgaiRJnNXDnwfjmPAgAAj9m3dR611uZKyxy7P9tZqU4wlZKplEylZColUymZSslUSqZSMpWSqZRMpWQqJVMpmUrJVErWWant4Rc1Vxp94bc3/FIAAPzbBXs9SD0=)
 ]
 :: [s0; ]
 :: [s0; CtrlFrame`&_[* OutsetFrame]()]
 :: [s0; No.]
 :: [s0; 
 @@image:612&237
-€ƒâ€¦€€€ƒÚÿ€€€€ø¯œíÒ±ƒÀœÅÁë¿ƒ÷ŽÀà‚Ü‚’½¬àºàé »ùíšô“¯½öß¨€€¼áŒ±¬ýû®Ñ÷ûØÙé¶«•¬Ô²
-âÒÉÊ¥«•¬ŠÔ²ÒÉÊ¥««•¬Ô²ÒÉÊ¬¥«•¬Ô²ÒÛéáÊ×ù¢¦”×š‹µýË€´€Ðü»•·Ï
+(A2IAJgAAANr/AAAAAHic7dKxDYNAEEXB678Dd0DggtwCEj1gOuDpILt5mnSTrz323wEAALxhjDF9e67Rd/tY6TYrlaxUslLJSiUrlaxUslLJSiUrlaxUslLJSiUrlaxUslLp4UrX+SKmVxqLNf1LAABQ/AG7lTfP)
 ]
 :: [s0; ]
 :: [s0; CtrlFrame`&_[* ButtonFrame]()]
 :: [s0; No.]
 :: [s0; 
 @@image:612&237
-€ƒâ€¦€€€ƒÚÿ€€€€ø¯œíÑ±€°œ„Áï¿ƒºÂ   ²â¤÷Ê€”ð²…„žŸÓ¤Ÿì·óï¬€€ðšë¦ÕÔÕ÷¥ãŽíëŒ²ØéçŸÿ²
-¯•’©”Ì¥äÐª¥Ó©™ÊÉäÔÊ¦Ò²•’‹©”Ì¥äª¥”Ó©™ÊÉÔÊ”¶Øé¹ŸÄ÷“¥šìý•€€ ôƒõá³¿
+(A2IAJgAAANr/AAAAAHic7dGxDYAwEATB778DOiCgIDJiJPcAlHCyBQSe06Sf7LdzbwAA8JprplVVd6Vjjm3rMljp5x9/MpWSqZRMpWQqJVMpmUrJVEqmUjKVkqmUTKVkKiVTKZlKyVRKNljpOZ9Ed6WabH2VAAAgdAN14TM/)
 ]
 :: [s0; ]
 :: [s0; CtrlFrame`&_[* ThinInsetFrame]()]
 :: [s0; No.]
 :: [s0; 
 @@image:612&237
-€ƒâ€¦€€€ƒÚÿ€€€€ø§œíÐÁ€°È€„Áÿ’ðÀ°ƒÁØ ©‡â¢áÓ„ø°—‘ŠðÙñƒ€€¬žóìÛÿÌ¹¥—«Í¿Í¥²£•ÊÔªÓ©Ì
-¥²•ÊÔªÓµ©Ì¥²•ÊÔÔªÓ©Ì¥²•ÑÊÔªÓ©Ì¥“²µÊß¿þû¢ë•€€ º‰¶Öûå
+(A2IAJgAAANr/AAAAAHic7dBBDYAwAARB/xJwwANBWCCph2Jh0wR4MJcRcNlxnQMAAB5z7Nt/zDmXK80/TaUylcpUKlOpTKUylcpUKlOpTKUylcpUKlOpTKUylcpUKlOpTKWytUpfv357a5UAACC6AbZWe+U=)
 ]
 :: [s0; ]
 :: [s0; CtrlFrame`&_[* ThinOutsetFrame]()]
 :: [s0; No.]
 :: [s0; 
 @@image:612&237
-€ƒâ€¦€€€ƒÚÿ€€€€ø§œíÐ±€Àˆ€„Áÿ’ðÀÙ ¬¼‡ÀÊ›Ï¨þ®Ó†Þ³ãº‡€€óüæÞéÇ¾©ô¹•ÊÔªÓµ©Ì¥²•ÊÔ
-ÔªÓ©Ì¥²•ÑÊÔªÓ©Ì¥Æ²•ÊÔªÓ©ºÌ¥²•Ê¦«½Ç¥ÌÕ‚€Ë€èü°ùÅ
+(A2IAJgAAANr/AAAAAHic7dAxDYBAAARB/xJwQIEgLJC8B8ABm0+ofi7TXrPjOgcAAPzmXmnHvqn0OZXKVCpTqUylMpXKVCpTqUylMpXKVCpTqUylMpXKVCpTqUylMpXKpiu9x6XMVQIAgOgB/DB5xQ==)
 ]
 :: [s0; ]
 :: [s0; CtrlFrame`&_[* BlackFrame]()]
 :: [s0; No.]
 :: [s0; 
 @@image:612&237
-€ƒâ€¦€€€ƒÚÿ€€€€ø§œíÐÑ€°ª”ÀÀü«Ä‚É¼€…æ‹ß»ïšÓÐõÜ‹À€€þóëûÉÒ»¦—Ê®•äÜª¹Ôò©äÎÒÉ¥’Ë¥—
-¤Ê®•Üª¹Ôöò©äÒÉ¥’¤Ë¥—Ê§—Æ¡µ÷‰€€¢†Éê™£
+(A2IAJgAAANr/AAAAAHic7dBRDYAwFMBA/CvEAsk8gIVmC1/vmlPQ9dwLAAB+cw1r+9I7JpdKLpVcKrlUcqnkUsmlkksll0oulVwquVRyqeRSyaWSSyWXSieXRrV3CQAAog9J6pkj)
 ]
 :: [s0; ]
 :: [s0; CtrlFrame`&_[* FieldFrame]()]
 :: [s0; Yes.]
 :: [s0; 
 @@image:612&237
-€ƒâ€¦€€€ƒÚÿ€€€€ø§œíÐÁ€°º€ÀÀÇøÀŒ¢ú°À²ÌÂú³Âë×œ‚Žñçž€€ð›ã·¼¶²üéÝ¦É—Ê®•Üª¹ìÔò©äÒÉ¥
-É’Ë¥—Ê®•äÜª¹Ôò©äÎÒÉ¥’Ë¥— Êß®íåí’Ð€€Ä“£±Û†
+(A2IAJgAAANr/AAAAAHic7dBBDYAwAMBAx/jADHqwQDIPzEIzwmvXnIKO5x4AAPCb47y2snzp3SaXSi6VXCq5VHKp5FLJpZJLJZdKLpVcKrlUcqnkUsmlkksll0pfLm1l7RIAAEQTozHbhg==)
 ]
 :: [s0; [1 Good for borders of all Ctrls that display somthing, like EditField 
 or ArrayCtrl.]]
@@ -166,32 +158,28 @@ or ArrayCtrl.]]
 :: [s0; Yes.]
 :: [s0; 
 @@image:612&237
-€ƒâ€¦€€€ƒÚÿ€€€€ø‡œíÐÑ‰€¡ìÀÁþ‘®”Ÿ×ÃˆÂÝ„ÁŽÚÁ„áá¹ç±‰Þèß€º€€ëÞò¤òøöé¦ëìÒß¸êª®¹ä’Ë
-Ñ¸ä’Ë®ÅÓã’Ë®¹”ŒË®¹äÒ´®£Ý»„€€›–Žë¾…ˆ
+(A2IAJgAAANr/AAAAAHic7dBRCQAhEEDB/hGugR9XwwjCXQTBDlpBBGFh5zEJ3ujfAACAa97ypHJ2aSbr7NLfaiouueSSS9G45JJLLkXjkksuuRSNSy655FI0Lt27BAAAmxZrvoWI)
 ]
 :: [s0; ]
 :: [s0; CtrlFrame`&_[* BottomSeparatorFrame]()]
 :: [s0; Yes.]
 :: [s0; 
 @@image:612&237
-€ƒâ€¦€€€ƒÚÿ€€€€ø‡œíÐÑ‰€¡ìÀÁþ‘®”Ÿ×ÃˆÂÝ„ÁŽÚÁ„áá¹ç±‰Þèß€Š€€ëþÖÓñµÉ¥—ÜŠÆ¥¡—Üò©š—Ü
-ÆòÉ¥èÜòÉö¥—¢ñéÞ¥í·¼©œÝšÉ¢º»„€€›–“¸…ˆ
+(A2IAJgAAANr/AAAAAHic7dBRCQAhEEDB/hGugR9XwwjCXQTBDlpBBGFh5zEJ3ujfAACAa/5WU3HJJZdcisYll1xyKRqXXHLJpWhccskll6Jx6d6ltzypnF2ayTq7BAAAmxaTOIWI)
 ]
 :: [s0; ]
 :: [s0; CtrlFrame`&_[* LeftSeparatorFrame]()]
 :: [s0; Yes.]
 :: [s0; 
 @@image:612&237
-€ƒâ€¦€€€ƒÚÿ€€€€ø§œíÐÁ‰À°¨”…°ÿ’êàŸ‡Ú˜„Âªá„Ð¿–ö™¼˜è Š²Þçº€ÀïúÕªêËŽû–¬Ù²ç”Æ’¥Ë–Ò
-ŠØ²äÉÒšËá–¬ÙÊãÉ’£¥ü¥€€øèšƒäã„˜
+(A2IAJgAAANr/AAAAAHic7dBBCcAwFAUw/xLqYIfamITCKmFQD78Wdhk8aCAKst5nAQDAb/rVqmqO+xCWLFmylMaSJUuW0liyZMlSGkuWLFlKY8mSpfwlAAD4aAPkY4SY)
 ]
 :: [s0; ]
 :: [s0; CtrlFrame`&_[* RightSeparatorFrame]()]
 :: [s0; Yes.]
 :: [s0; 
 @@image:612&237
-€ƒâ€¦€€€ƒÚÿ€€€€ø§œíÐÑ‰€°Ì˜†Àþ‘ì°ˆ‡ë¬ÂÀ£Œ£Öáß…ß„Ïº¼¸„·æµ€š€àµ÷è¿ñ§¶£ª¬Ù²äÒ©‡¥Ë–¬¥
-Ý±äÉ’¥´–¼¬Ù²”Æ’¥àËßÙ‚€€‡š¶›Ã„˜
+(A2IAJgAAANr/AAAAAHic7dBRCYAwGAbA/hFssAdrLMJAIwzW4V8FX4RPPLgEt+a1AADgNffoP3G2o6osWbJkKYclS5YspbFkyZKlNJYsWbKUxpIlS19ZAgCAhzabQ4SY)
 ]
 :: [s0; ]}}&]
 [s3; &]
@@ -214,7 +202,11 @@ trlFrame] so that they add/remove `'this`' from parent`'s children`-list.&]
 [s0; &]
 [s0;%- [%%/ Derived from][%%  ]T, [^topic`:`/`/CtrlCore`/src`/Frame`$en`-us`#`:`:CtrlFrame`:`:class CtrlFrame^@(0.0.255) C
 trlFrame]&]
-[s3; &]
+[s0;^topic`:`/`/CtrlCore`/src`/Frame`$en`-us`#`:`:CtrlFrame`:`:class CtrlFrame^@(0.0.255)%- &]
+[s0;^topic`:`/`/CtrlCore`/src`/Frame`$en`-us`#`:`:CtrlFrame`:`:class CtrlFrame^@(0.0.255)%- &]
+[s5;:FrameCtrl`:`:GetParent`(`):%- [_^Ctrl^ Ctrl]_`*[* GetParent]()&]
+[s2; Returns a parent to which the Ctrl is attached.&]
+[s3;%- &]
 [s4; &]
 [s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][3 >]&]
 [s1;:FrameLR`:`:class:%- [@(0.0.255) class]_[* FrameLR]_:_[@(0.0.255) public]_[*@3 FrameCtrl]<
@@ -344,4 +336,4 @@ ect][@(0.0.255) `&]_[*@3 r], [_^Ctrl^ Ctrl]_`*[*@3 ctrl], [@(0.0.255) int]_[*@3 
 [s7; [%-*C@3 ctrl]-|Ctrl to be placed.&]
 [s7; [%-*C@3 cy]-|Required height.&]
 [s3; &]
-[s0; ]
+[s0; ]]
