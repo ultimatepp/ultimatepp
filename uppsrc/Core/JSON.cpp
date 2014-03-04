@@ -28,23 +28,24 @@ Value ParseJSON(CParser& p)
 		return false;
 	if(p.Char('{')) {
 		ValueMap m;
-		if(!p.IsChar('}'))
-			do {
-				String key = p.ReadString();
-				p.PassChar(':');
-				m.Add(key, ParseJSON(p));
-			}
-			while(p.Char(','));
-		p.PassChar('}');
+		while(!p.Char('}')) {
+			String key = p.ReadString();
+			p.PassChar(':');
+			m.Add(key, ParseJSON(p));
+			if(p.Char('}')) // Stray ',' at the end of list is allowed...
+				break;
+			p.PassChar(',');
+		}
 		return m;
 	}
 	if(p.Char('[')) {
 		ValueArray va;
-		if(!p.IsChar(']'))
-			do
-				va.Add(ParseJSON(p));
-			while(p.Char(','));
-		p.PassChar(']');
+		while(!p.Char(']')) {
+			va.Add(ParseJSON(p));
+			if(p.Char(']')) // Stray ',' at the end of list is allowed...
+				break;
+			p.PassChar(',');
+		}
 		return va;		
 	}
 	p.ThrowError("Unrecognized JSON element");
@@ -57,8 +58,8 @@ Value ParseJSON(const char *s)
 		CParser p(s);
 		return ParseJSON(p);
 	}
-	catch(CParser::Error) {
-		return ErrorValue();
+	catch(CParser::Error e) {
+		return ErrorValue(e);
 	}
 }
 
