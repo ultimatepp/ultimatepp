@@ -18,12 +18,12 @@ void Check(T haystack, T needle, int pos)
 template <class T>
 void Check()
 {
-	for(int l = 0; l < 25; l++) {
-		for(int r = 0; r < 25; r++) {
+	for(int l = 0; l < 30; l++) {
+		for(int r = 0; r < 30; r++) {
 			LOG(l << ":" << r);
-			for(int nl = 0; nl < 25; nl++)
-				for(int nr = 0; nr < 25; nr++)
-					for(int nc = 1; nc < 25; nc++) {
+			for(int nl = 0; nl < 30; nl++)
+				for(int nr = 0; nr < 30; nr++)
+					for(int nc = 1; nc < 30; nc++) {
 						T needle = T('a', nl) + T('x', nc) + T('a', nr);
 						Check(T('a', l) + needle + T('a', r), needle, l);
 						Check(T('b', l) + needle + T('c', r), needle, l);
@@ -35,6 +35,9 @@ void Check()
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
+
+//	WString x("ax");
+//	int pos = x.Find(WString("x"));
 
 	Check<String>();
 	Check<WString>();					
