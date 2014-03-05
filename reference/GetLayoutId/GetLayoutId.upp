@@ -1,0 +1,12 @@
+description "Demostrate how to use Layout introspection\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	MyApp.lay;
+
+mainconfig
+	"" = "GUI SSE2";
+
