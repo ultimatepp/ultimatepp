@@ -75,7 +75,7 @@ void test_find(const char *data, const char *pattern)
 void DoTest(const String& data, const String& needle)
 {
 	RLOG("------------");
-	RLOG("Needle: " << needle);
+	RLOG("Needle: " << needle << " (" << needle.GetCount() << ")");
 	{
 		TimeStop tm;
 		RLOG("U++ Brute force: " << data.Find(needle));
@@ -83,9 +83,16 @@ void DoTest(const String& data, const String& needle)
 	}
 	{
 		TimeStop tm;
+		void *t = memmem(data, data.GetLength(), needle, needle.GetLength());
+		RLOG("memmem: " << (t ? (char *)t - ~data : -1));
+		RLOG("  Time elapsed: " << tm);
+	}
+	{
+		TimeStop tm;
 		RLOG("Folly: " << ffind(data, data.GetLength(), needle, needle.GetCount()));
 		RLOG("  Time elapsed: " << tm);
 	}
+#if 0
 	{
 		TimeStop tm;
 		uint8_t* t = boyer_moore ((uint8_t *)~data, data.GetCount(),
@@ -99,6 +106,7 @@ void DoTest(const String& data, const String& needle)
 		RLOG("Boyer-Moore: " << bm.FindIn(data));
 		RLOG("  Time elapsed: " << tm);
 	}
+#endif
 }
 
 CONSOLE_APP_MAIN
@@ -129,6 +137,7 @@ CONSOLE_APP_MAIN
 	DoTest(data, "aab");
 	DoTest(data, "aaab");
 	DoTest(data, "aaaab");
+	DoTest(data, "aaaaaaaaaaaaab");
 	DoTest(data, "aaaaaaaaaaaaaaaaaab");
 	DoTest(data, String('a', 100) + "b");
 
@@ -173,6 +182,6 @@ CONSOLE_APP_MAIN
 	n.Set(60, ' ');
 	for(int i = 0; i < 1000000; i++)
 		data << n;
-	data << needle;
+	data << needle << data;
 	DoTest(data, needle);
 }
