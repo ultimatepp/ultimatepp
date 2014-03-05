@@ -1,0 +1,13 @@
+LAYOUT(MyAppLayout, 216, 140)
+	ITEM(Label, dv___0, SetLabel(t_("Name")).LeftPosZ(8, 68).TopPosZ(8, 21))
+	ITEM(EditString, name, LeftPosZ(80, 128).TopPosZ(8, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Last Name")).LeftPosZ(8, 68).TopPosZ(32, 21))
+	ITEM(EditString, lastname, LeftPosZ(80, 128).TopPosZ(32, 19))
+	ITEM(Label, dv___4, SetLabel(t_("City")).LeftPosZ(8, 68).TopPosZ(56, 21))
+	ITEM(EditString, city, LeftPosZ(80, 128).TopPosZ(56, 19))
+	ITEM(Label, dv___6, SetLabel(t_("Street")).LeftPosZ(8, 68).TopPosZ(80, 21))
+	ITEM(EditString, street, LeftPosZ(80, 128).TopPosZ(80, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, 0).BottomPosZ(8, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+END_LAYOUT
+
