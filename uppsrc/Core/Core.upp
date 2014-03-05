@@ -46,6 +46,7 @@ file
 	heapdbg.cpp optimize_speed,
 	String.h,
 	AString.hpp,
+	StringFind.cpp,
 	String.cpp optimize_speed,
 	WString.cpp optimize_speed,
 	StrUtil.cpp optimize_speed,
