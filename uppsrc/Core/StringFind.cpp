@@ -15,7 +15,7 @@ inline bool equal_back_8(const char *a, const char *b, int len)
 	return true;
 }
 #else
-inline bool equal_back_4(const char *a, const char *b, int len)
+force_inline bool equal_back_4(const char *a, const char *b, int len)
 {
 	while(len > 4) {
 		len -= 4;
