@@ -284,6 +284,11 @@ void ScrollBar::LeftRepeat(Point p, dword) {
 	Refresh();
 }
 
+void ScrollBar::MouseWheel(Point p, int zdelta, dword keyflags)
+{
+	Wheel(zdelta);
+}
+
 void ScrollBar::CancelMode() {
 	push = light = -1;
 }
