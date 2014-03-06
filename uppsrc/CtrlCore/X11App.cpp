@@ -206,6 +206,7 @@ void sPanicMessageBox(const char *title, const char *text)
 		XEvent e;
 		XNextEvent(display, &e);
 		switch(e.type) {
+		case KeyPress:
 		case ButtonPress:
 			XFreeFont(display, font_info);
 			XFreeGC(display, gc);
