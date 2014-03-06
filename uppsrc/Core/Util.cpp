@@ -135,7 +135,7 @@ void    AssertFailed(const char *file, int line, const char *cond)
 	PanicMode = true;
 	char s[2048];
 	sprintf(s, "Assertion failed in %s, line %d\n%s\n", file, line, cond);
-#if defined(PLATFORM_POSIX) && defined(COMPILER_GCC)
+#if defined(PLATFORM_POSIX) && defined(COMPILER_GCC) && defined(flagSTACKTRACE)
 	AddStackTrace(s, sizeof(s));
 #endif
 
