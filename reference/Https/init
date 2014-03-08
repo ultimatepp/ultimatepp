@@ -1,0 +1,5 @@
+#ifndef _Https_icpp_init_stub
+#define _Https_icpp_init_stub
+#include "Core/init"
+#include "Core/SSL/init"
+#endif

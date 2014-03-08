@@ -1,0 +1,12 @@
+description "Simple HTTPS server (certificates for localhost included)\377";
+
+uses
+	Core,
+	Core/SSL;
+
+file
+	Https.cpp;
+
+mainconfig
+	"" = "SSE2";
+
