@@ -180,7 +180,7 @@ public:
 		Array<TabItem> items;
 		int itn;
 		
-		Tab();
+		Tab() : id(-1), stack(-1), visible(true), itn(0) { items.SetCount(5); }
 		Tab(const Tab& t) { Set(t); }
 		
 		void Set(const Tab& t);
@@ -336,6 +336,7 @@ protected:
 	virtual void Layout();
 
 	// Mouse handling/tab positioning
+	Point AdjustMouse(Point const &p) const;
 	bool ProcessMouse(int i, const Point& p);
 	bool ProcessStackMouse(int i, const Point& p);
 	void SetHighlight(int n);
@@ -379,6 +380,8 @@ protected:
 	virtual String 		GetStackId(const Tab& a)			{ return a.group; }
 	// For sub-classes to recieve cursor changes without using WhenAction
 	virtual void CursorChanged() { }
+	// for sub-classes to receive tab closes without using WhenClose
+	virtual void TabClosed(Value key) { }
 public:
 	typedef TabBar CLASSNAME;
 

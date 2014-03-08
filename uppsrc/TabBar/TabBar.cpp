@@ -369,17 +369,22 @@ void TabBar::CloseAll(int exception)
 	else if (exception >= 0 && CancelCloseSome(Vector<Value>(vv,0))) 
 		return;
 	
+	// 2014/03/06 - FIRST the callbacks, THEN remove the tab
+	// otherwise keys in WhenCloseSome() are invalid
+	// WhenCloseSome() is called ALWAYS even if all tabs are closed
+	WhenCloseSome(vv);
+	if (exception < 0)
+		WhenCloseAll();
+
 	for(int i = tabs.GetCount() - 1; i >= 0; i--)
 		if(i != exception)
+		{
+			TabClosed(tabs[i].key);
 			tabs.Remove(i);
+		}
 
 	SetCursor(0);
 	
-	if (exception >= 0)
-		WhenCloseSome(vv);
-	else
-		WhenCloseAll();
-
 	MakeGroups();
 	Repos();
 	Refresh();
@@ -423,18 +428,6 @@ void TabBar::GroupMenu(Bar &bar, int n)
 {
 	bar.Add(t_("Set active"), THISBACK1(DoGrouping, n));
 	bar.Add(t_("Close"), THISBACK1(DoCloseGroup, n));
-}
-
-TabBar::Tab::Tab()
-{
-	id = -1;
-	stack = -1;
-	visible = true;
-	itn = 0;
-	items.SetCount(5);
-
-	pos = cross_pos = tab_pos = Point(0, 0);
-	cross_size = size = tab_size = Size(0, 0);
 }
 
 void TabBar::Tab::Set(const Tab& t)
@@ -616,10 +609,12 @@ void TabBar::MakeGroups()
 
 void TabBar::DoGrouping(int n)
 {
+	Value c = GetData();
 	group = n;
 	Repos();
 	SyncScrollBar();
-	SetCursor(-1);
+	SetData(c);
+	Refresh();
 }
 
 void TabBar::DoCloseGroup(int n)
@@ -654,6 +649,8 @@ void TabBar::DoCloseGroup(int n)
 			// we didn't cancel globally, now we check CancelClose()
 			// for each tab -- group gets removed ONLY if ALL of
 			// group tabs are closed
+			vv.Clear();
+			Vector<int>vi;
 			for(int i = tabs.GetCount() - 1; i >= 0; i--) {
 				if(groupName == tabs[i].group && tabs.GetCount() > 1) {
 					Value v = tabs[i].key;
@@ -661,20 +658,29 @@ void TabBar::DoCloseGroup(int n)
 					{
 						nTabs--;
 						WhenClose(v);
-						tabs.Remove(i);
+						// record keys and indexes of tabs to remove
+						vv << v;
+						vi << i;
 					}
 				}
-				// remove group if all of its tabs get closed
-				if(!nTabs) {
-					if(cnt == n)
-						group--;
-					if(cnt > 1)
-						groups.Remove(n);
-				}
-				MakeGroups();
-				Repos();
-				SetCursor(-1);
 			}
+			// and now do the true removal
+			WhenCloseSome(Vector<Value>(vv,0));
+			for(int i = 0; i < vv.GetCount(); i++)
+			{
+ 				TabClosed(vv[i]);
+ 				tabs.Remove(vi[i]);
+			}
+			// remove group if all of its tabs get closed
+			if(!nTabs) {
+				if(cnt == n)
+					group--;
+				if(cnt > 1)
+					groups.Remove(n);
+			}
+			MakeGroups();
+			Repos();
+			SetCursor(-1);
 		}
 		return;
 	}
@@ -686,6 +692,7 @@ void TabBar::DoCloseGroup(int n)
 			Value v = tabs[i].value; // should be key ??
 			if (!CancelClose(v)) {
 				WhenClose(v);
+				TabClosed(v);
 				tabs.Remove(i);
 			}
 		}
@@ -1076,7 +1083,11 @@ void TabBar::Paint(Draw &w)
 	IsVert() ? w.DrawRect(align == LEFT ? sz.cx - 1 : 0, 0, 1, sz.cy, Blend(SColorDkShadow, SColorShadow)):
 		w.DrawRect(0, align == TOP ? sz.cy - 1 : 0, sz.cx, 1, Blend(SColorDkShadow, SColorShadow));	
 
-	if (!tabs.GetCount()) return;
+	if (!tabs.GetCount()) {
+		if (align == BOTTOM || align == RIGHT)
+			w.End();
+		return;
+	}
 	
 	int limt = sc.GetPos() + (IsVert() ? sz.cy : sz.cx);	
 	int first = 0;
@@ -1167,12 +1178,12 @@ void TabBar::Paint(Draw &w)
 			w.DrawImage(p, mouse.y - isz.cy / 2, isz.cx, isz.cy, dragtab);
 	}
 	
+	if (align == BOTTOM || align == RIGHT)
+		w.End();	
+
 	// If not in a frame fill any spare area
 	if (!InFrame())
 		w.DrawRect(GetClientArea(), SColorFace());
-	
-	if (align == BOTTOM || align == RIGHT)
-		w.EndOp();	
 }
 
 Image TabBar::GetDragSample()
@@ -1772,8 +1783,7 @@ TabBar& TabBar::SetScrollThickness(int sz)
 void TabBar::Layout()
 {
 	if (autoscrollhide && tabs.GetCount()) 
-		SyncScrollBar(false);
-	Repos();
+		SyncScrollBar(false); 
 }
 
 int TabBar::FindValue(const Value &v) const
@@ -1917,6 +1927,7 @@ void TabBar::SetIcon(int n, Image icon)
 
 void TabBar::LeftDown(Point p, dword keyflags)
 {
+	p = AdjustMouse(p);
 	SetCapture();
 	
 	if(keyflags & K_SHIFT)
@@ -1942,9 +1953,12 @@ void TabBar::LeftDown(Point p, dword keyflags)
 			vv.Add(v);
 			int ix = cross;
 			if (!CancelClose(v) && !CancelCloseSome(Vector<Value>(vv, 0))) {
-				Close(ix);
+				// 2014/03/06 - FIRST the callbacks, THEN remove the tab
+				// otherwise keys in WhenCloseSome() are invalid
 				WhenClose(v);
 				WhenCloseSome(vv);
+				TabClosed(v);
+				Close(ix);
 			}
 			if (tempCross >= 0 && tempCross < tabs.GetCount())
 				ProcessMouse(tempCross, p);
@@ -1975,7 +1989,13 @@ void TabBar::LeftDouble(Point p, dword keysflags)
 void TabBar::RightDown(Point p, dword keyflags)
 {
 	if (contextmenu)
+	{
+		// 2014/03/07 needed on X11 otherwise may crash
+		// if focus is nowhere (probable bug somewhere else...)
+		if(!GetActiveCtrl())
+			GetParent()->SetFocus();
 		MenuBar::Execute(THISBACK(ContextMenu), GetMousePos());
+	}
 }
 
 void TabBar::MiddleDown(Point p, dword keyflags)
@@ -1987,9 +2007,12 @@ void TabBar::MiddleDown(Point p, dword keyflags)
 		vv.Add(v);
 		if (!CancelClose(v) && ! CancelCloseSome(Vector<Value>(vv, 0))) {
 			Value v = tabs[highlight].key;
-			Close(highlight);
+			// 2014/03/06 - FIRST the callbacks, THEN remove the tab
+			// otherwise keys in WhenCloseSome() are invalid
 			WhenClose(v);
 			WhenCloseSome(vv);
+			TabClosed(v);
+			Close(highlight);
 		}
 	}
 }
@@ -2033,6 +2056,17 @@ void TabBar::MouseWheel(Point p, int zdelta, dword keyflags)
 	sc.AddPos(-zdelta / 4, true);
 	Scroll();
 	MouseMove(p, 0);
+}
+
+Point TabBar::AdjustMouse(Point const &p) const
+{
+	int align = GetAlign();
+	if(align == TOP || align == LEFT)
+		return p;
+
+	Size ctrlsz = GetSize();
+	Size sz = GetBarSize(ctrlsz);
+	return Point(p.x - ctrlsz.cx + sz.cx, p.y - ctrlsz.cy + sz.cy);
 }
 
 bool TabBar::ProcessMouse(int i, const Point& p)
@@ -2082,6 +2116,7 @@ void TabBar::SetColor(int n, Color c)
 
 void TabBar::MouseMove(Point p, dword keyflags)
 {
+	p = AdjustMouse(p);
 	if(HasCapture() && (keyflags & K_SHIFT))
 	{
 		Fix(p);
@@ -2292,7 +2327,7 @@ bool TabBar::SetCursor0(int n, bool action)
 
 	if(Ctrl::HasMouse())
 	{
-		Sync();
+		Refresh();
 		MouseMove(GetMouseViewPos(), 0);
 	}
 	return true;
@@ -2341,7 +2376,7 @@ void TabBar::CloseForce(int n, bool action)
 			//TODO: That must be refactored
 			highlight = -1;
 			drag_highlight = -1;
-			Sync();
+			Refresh();
 			MouseMove(GetMouseViewPos(), 0);
 		}	
 	}
@@ -2495,8 +2530,6 @@ void TabBar::Serialize(Stream& s)
 	int g = GetGroup();
 	s % g;
 	group = g;
-	
-	Repos();
 }
 
 CH_STYLE(TabBar, Style, StyleDefault)
