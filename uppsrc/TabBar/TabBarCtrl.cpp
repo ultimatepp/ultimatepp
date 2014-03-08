@@ -75,8 +75,7 @@ void TabBarCtrl::SetCtrl(Value key)
 	int ix = ctrls.Find(key); 
 	if (ix < 0) 
 		return;
-	for (int i = 0; i < ctrls.GetCount(); i++)
-		ctrls[i]->Show(i == ix);
+	SetData(key);
 }
 
 void TabBarCtrl::SetCtrl(int ix)
@@ -87,13 +86,25 @@ void TabBarCtrl::SetCtrl(int ix)
 
 void TabBarCtrl::SetCtrl(Ctrl &ctrl)
 {
-	for (int i = 0; i < ctrls.GetCount(); ++i)
-		ctrls[i]->Show(ctrls[i] == &ctrl);
+	for(int i = 0; i < ctrls.GetCount(); i++)
+		if(ctrls[i] == &ctrl)
+		{
+			SetData(ctrls.GetKey(i));
+			return;
+		}
+	SetData(-1);
 }
 
 void TabBarCtrl::CursorChanged()
 {
-	SetCtrl(GetData());
+	Value ix = GetData();
+	for (int i = 0; i < ctrls.GetCount(); i++)
+		ctrls[i]->Show(ctrls.GetKey(i) == ix);
+}
+
+void TabBarCtrl::TabClosed(Value key)
+{
+	ctrls.RemoveKey(key);
 }
 
 END_UPP_NAMESPACE

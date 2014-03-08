@@ -2,7 +2,7 @@ class TabBarCtrl : public TabBar
 {
 private:
 	VectorMap<Value, Ctrl *> ctrls;
-	ParentCtrl pane;
+	StaticRect pane;
 	
 public:
 	TabBarCtrl()							{ Ctrl::Add(pane); }
@@ -27,4 +27,5 @@ public:
 	void 	SetCtrl(Ctrl &ctrl);
 protected:
 	virtual void CursorChanged();
+	virtual void TabClosed(Value key);
 };
