@@ -719,7 +719,7 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 
 	if (!series.IsEmpty()) {
 		for (int j = 0; j < series.GetCount(); j++) {
-			if (series[j].opacity == 0 || (!series[j].seriesPlot && !series[j].markPlot))
+			if (series[j].opacity == 0 || (!series[j].seriesPlot && !series[j].markPlot) || series[j].PointsData()->GetCount() == 0)
 				continue;
 			Vector<Point> points;
 			if (series[j].PointsData()->IsParam()) {
