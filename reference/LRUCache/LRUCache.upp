@@ -1,0 +1,11 @@
+description "Demostration of LRUCache\377";
+
+uses
+	Core;
+
+file
+	LRUCache.cpp;
+
+mainconfig
+	"" = "SSE2";
+
