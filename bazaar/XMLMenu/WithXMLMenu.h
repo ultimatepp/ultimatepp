@@ -84,10 +84,10 @@ template<class T> class WithXMLMenu : public T, public XMLMenuInterface
 		void toggleBarCb(int iBar);
 		
 		// right click context menu
-		void ContextMenu(Bar& bar);
+		void XMLContextMenu(Bar& bar);
 
 		// right click event sent from various controls
-		virtual void RightClickEvent(Point p) { MenuBar::Execute(THISBACK(ContextMenu)); }
+		virtual void RightClickEvent(Point p) { MenuBar::Execute(THISBACK(XMLContextMenu)); }
 
 		// the drag loop
 		void DragLoop(Point startP);
@@ -737,7 +737,7 @@ template<class T> void WithXMLMenu<T>::toggleBarCb(int iBar)
 }
 		
 // right click context menu
-template<class T> void WithXMLMenu<T>::ContextMenu(Bar& bar)
+template<class T> void WithXMLMenu<T>::XMLContextMenu(Bar& bar)
 {
 	// add customize command
 	bar.Add(t_("Customize"), THISBACK(runEditorCb));
