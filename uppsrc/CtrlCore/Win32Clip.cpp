@@ -227,18 +227,11 @@ String ReadClipboard(const char *format)
 
 void AppendClipboardText(const String& s)
 {
-#ifdef PLATFORM_WINCE
 	AppendClipboardUnicodeText(s.ToWString());
-#else
-	AppendClipboard("text", ToSystemCharset(s));
-#endif
 }
 
 void AppendClipboardUnicodeText(const WString& s)
 {
-#ifndef PLATFORM_WINCE
-	AppendClipboardText(s.ToString());
-#endif
 	AppendClipboard("wtext", (byte *)~s, 2 * s.GetLength());
 }
 
