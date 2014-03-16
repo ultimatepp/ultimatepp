@@ -202,7 +202,7 @@ void RichEdit::Copy()
 	ZoomClip(txt);
 	ClearClipboard();
 	AppendClipboardUnicodeText(txt.GetPlainText());
-	Value clip = RawPickToValue(txt);
+	Value clip = RawPickToValue(pick(txt));
 	AppendClipboard("text/QTF", clip, sQTF);
 	AppendClipboard(RTFS, clip, sRTF);
 	if(objectpos >= 0) {

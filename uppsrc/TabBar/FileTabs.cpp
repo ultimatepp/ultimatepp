@@ -171,7 +171,6 @@ FileTabs& FileTabs::operator<<(const FileTabs &src)
 }
 
 FileTabs::FileTabs() :
-normalicons(true), 
 stackedicons(false), 
 greyedicons(true),
 filecolor(SColorLabel),

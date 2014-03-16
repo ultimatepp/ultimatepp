@@ -268,7 +268,7 @@ GisBSPTree GisCoordsConical::GetBranchTree(const Rectf& lonlat_extent) const
 		: GisBSPTree::Node(new GisBSPTree::Split(Pointf(1, 0), pm + 180,
 			GisBSPTree::Node(1),
 			GisBSPTree::Node(2))));
-	return GisBSPTree::Node(new GisBSPTree::Split(Pointf(1, 0), pm, minus, plus));
+	return GisBSPTree::Node(new GisBSPTree::Split(Pointf(1, 0), pm, pick(minus), pick(plus)));
 }
 
 Pointf GisCoordsConical::Project(Pointf lonlat, int branch) const

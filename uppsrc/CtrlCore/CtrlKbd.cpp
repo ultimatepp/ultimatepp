@@ -322,7 +322,7 @@ void Ctrl::DefferedFocusSync()
 	GuiLock __;
 	while(defferedChildLostFocus.GetCount() || defferedSetFocus) {
 		LLOG("Ctrl::DeferredFocusSync, defferedSetFocus = " << UPP::Name(defferedSetFocus));
-		Vector< Ptr<Ctrl> > b = defferedChildLostFocus;
+		Vector< Ptr<Ctrl> > b = pick(defferedChildLostFocus);
 		defferedChildLostFocus.Clear();
 		for(int i = 0; i < b.GetCount(); i++)
 			if(b[i]) {

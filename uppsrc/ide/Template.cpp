@@ -342,7 +342,7 @@ void TemplateDlg::LoadNest(const char *path, bool main, bool recurse)
 			try {
 				PackageTemplate t = ReadTemplate(p);
 				if(main && t.main || !main && t.sub)
-					pt.Add() = t;
+					pt.Add() = pick(t);
 			}
 			catch(CParser::Error e) {
 				Exclamation("Package template [* " + DeQtf(p) + "] is invalid&[* " + e);

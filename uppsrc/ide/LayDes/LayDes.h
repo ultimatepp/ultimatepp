@@ -52,6 +52,8 @@ struct LayoutType : Moveable<LayoutType> {
 	Image                      icon[2];
 	Size                       iconsize[2];
 
+	rval_default(LayoutType);	
+
 	LayoutType()               { iconsize[0] = iconsize[1] = Null; }
 };
 
@@ -195,6 +197,8 @@ public:
 	String   SaveProperties(int y = 0) const;
 	String   Save(int i, int y) const;
 
+	rval_default(LayoutItem);
+
 	LayoutItem()                      { csize.cx = -1; hide = false; charset = CHARSET_UNICODE; }
 };
 
@@ -237,6 +241,8 @@ public:
 	void        Undo();
 	bool        IsRedo();
 	void        Redo();
+
+	rval_default(LayoutData);
 
 	LayoutData() { size = Size(400, 200); charset = CHARSET_UNICODE; }
 };

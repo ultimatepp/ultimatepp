@@ -41,7 +41,7 @@ void RichEdit::InsertTable()
 			p.format.newpage = false;
 			p.format.label.Clear();
 			h.Cat(p);
-			table.SetPick(i, j, h);
+			table.SetPick(i, j, pick(h));
 		}
 	NextUndo();
 	if(cursorp.posinpara)

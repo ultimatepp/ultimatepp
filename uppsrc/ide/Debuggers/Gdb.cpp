@@ -551,9 +551,9 @@ bool Gdb::Key(dword key, int count)
 	return Ctrl::Key(key, count);
 }
 
-bool Gdb::Create(One<Host> _host, const String& exefile, const String& cmdline, bool console)
+bool Gdb::Create(One<Host> rval_ _host, const String& exefile, const String& cmdline, bool console)
 {
-	host = _host;
+	host = pick(_host);
 	dbg = host->StartProcess(GdbCommand(console) + GetHostPath(exefile));
 	if(!dbg) {
 		Exclamation("Error invoking gdb !");
@@ -607,10 +607,10 @@ Gdb::Gdb()
 	periodic.Set(-50, THISBACK(Periodic));
 }
 
-One<Debugger> GdbCreate(One<Host> host, const String& exefile, const String& cmdline, bool console)
+One<Debugger> GdbCreate(One<Host> rval_ host, const String& exefile, const String& cmdline, bool console)
 {
 	Gdb *dbg = new Gdb;
-	if(!dbg->Create(host, exefile, cmdline, console)) {
+	if(!dbg->Create(pick(host), exefile, cmdline, console)) {
 		delete dbg;
 		return NULL;
 	}

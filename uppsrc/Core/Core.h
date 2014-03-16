@@ -332,6 +332,7 @@ class JsonIO;
 #include "Vcont.hpp"
 #include "Map.hpp"
 #include "InVector.hpp"
+#include "InMap.hpp"
 
 #if (defined(HEAPDBG) || defined(TESTLEAKS)) && defined(PLATFORM_POSIX)
 extern int sMemDiagInitCount;

@@ -541,9 +541,9 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 		editor.SetEditPos(fd.editpos);
 		if(!IsNull(fd.columnline) && fd.columnline.y >= 0 && fd.columnline.y < editor.GetLineCount())
 			editor.SetCursor(editor.GetColumnLinePos(fd.columnline));
-		editor.SetPickUndoData(fd.undodata);
+		editor.SetPickUndoData(pick(fd.undodata));
 		editor.SetLineInfo(fd.lineinfo);
-		editor.SetLineInfoRem(fd.lineinforem);
+		editor.SetLineInfoRem(pick(fd.lineinforem));
 		if(ff.IsReadOnly() || IsNestReadOnly(editfile)) {
 			editor.SetReadOnly();
 			editor.NoShowReadOnly();
@@ -599,7 +599,7 @@ void Ide::EditUsingDesigner()
 
 void Ide::AddEditFile(const String& path)
 {
-	actual.file.Add(path);
+	actual.file.AddPick(Package::File(path));
 	if(IsAux())
 		SaveLoadPackageNS(false);
 	else
@@ -858,7 +858,7 @@ void Ide::ClearEditedAll()
 		LineInfoRem lir = editor.GetLineInfoRem();
 		FileData& fd = Filedata(filedata.GetKey(i));
 		editor.SetLineInfo(fd.lineinfo);
-		editor.SetLineInfoRem(fd.lineinforem);
+		editor.SetLineInfoRem(pick(fd.lineinforem));
 		ClearEditedFile();
 		fd.lineinfo = editor.GetLineInfo();
 		fd.lineinforem = editor.GetLineInfoRem();

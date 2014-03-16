@@ -265,14 +265,14 @@ void RichTable::AddColumn(int cx)
 	format.column.Add(cx);
 }
 
-void RichTable::SetPick(int i, int j, pick_ RichTxt& text)
+void RichTable::SetPick(int i, int j, RichTxt rval_ text)
 {
-	cell.At(i).At(j).text = text;
+	cell.At(i).At(j).text = pick(text);
 }
 
 RichTxt RichTable::GetPick(int i, int j)
 {
-	return cell[i][j].text;
+	return pick(cell[i][j].text);
 }
 
 void RichTable::SetQTF(int i, int j, const char *qtf)

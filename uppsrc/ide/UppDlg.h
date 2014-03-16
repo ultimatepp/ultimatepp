@@ -39,6 +39,9 @@ struct PackageTemplate {
 	bool                main, sub;
 	Array<TemplateItem> item;
 	Array<FileTemplate> file;
+	
+	rval_default(PackageTemplate);
+	PackageTemplate() {}
 };
 
 struct AppPreview : Ctrl {

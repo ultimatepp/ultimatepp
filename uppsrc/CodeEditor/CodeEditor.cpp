@@ -213,8 +213,8 @@ void CodeEditor::CopyWord() {
 	if(iscidl(GetChar(p)) || (p > 0 && iscidl(GetChar(--p)))) {
 		int e = GetLength();
 		int f = p;
-		while(--p >= 0 && iscidl(GetChar(p)));
-			++p;
+		while(--p >= 0 && iscidl(GetChar(p))) {}
+		++p;
 		while(++f < e && iscidl(GetChar(f)));
 		WString txt = GetW(p, f - p);
 		WriteClipboardUnicodeText(txt);

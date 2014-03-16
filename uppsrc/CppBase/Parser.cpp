@@ -498,7 +498,7 @@ void Parser::ParamList(Decl& d) {
 				break;
 			}
 			else
-				d.param.Add() = Declaration().Top();
+				d.param.Add() = pick(Declaration().Top());
 			if(Key(t_elipsis)) {
 				Elipsis(d);
 				break;
@@ -640,7 +640,7 @@ Parser::Decl Parser::Type() {
 	Qualifier();
 	SimpleType(d);
 	Declarator(d, p);
-	return Finish(d, p);
+	return pick(Finish(d, p));
 }
 
 bool Parser::IsParamList(int q)
@@ -1180,7 +1180,7 @@ bool Parser::Scope(const String& tp, const String& tn) {
 		im.pname.Clear();
 		im.param.Clear();
 		if(Key(';')) {
-			context = cc;
+			context = pick(cc);
 			im.natural = Gpurify(nn);
 			SetScopeCurrent();
 			return true;
@@ -1219,7 +1219,7 @@ bool Parser::Scope(const String& tp, const String& tn) {
 		else
 			if(IsNull(im.natural))
 				im.natural = Gpurify(nn);
-		context = cc;
+		context = pick(cc);
 		CheckKey(';');
 		SetScopeCurrent();
 		return true;

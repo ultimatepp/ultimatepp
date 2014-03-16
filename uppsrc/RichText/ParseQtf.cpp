@@ -242,9 +242,9 @@ void RichQtfParser::EndPart()
 	if(istable) {
 		if(paragraph.GetCount() == 0 && text.GetCount() == 0)
 			if(table.GetCount())
-				table.Top().text.CatPick(tablepart);
+				table.Top().text.CatPick(pick(tablepart));
 			else
-				target.CatPick(tablepart);
+				target.CatPick(pick(tablepart));
 		else {
 			paragraph.part.Clear();
 			text.Clear();
@@ -458,7 +458,7 @@ void RichQtfParser::FinishCell()
 		i = b.cell / t.GetColumns();
 		j = b.cell % t.GetColumns();
 	}
-	t.SetPick(i, j, b.text);
+	t.SetPick(i, j, pick(b.text));
 	b.text.Clear();
 	t.SetFormat(i, j, b.format);
 	t.SetSpan(i, j, b.vspan, b.hspan);
@@ -475,7 +475,7 @@ void RichQtfParser::FinishCell()
 void RichQtfParser::FinishTable()
 {
 	FinishCell();
-	tablepart = Table();
+	tablepart = pick(Table());
 	istable = true;
 	table.Drop();
 }
@@ -503,7 +503,7 @@ void RichQtfParser::FinishOldTable()
 	if(h.GetCount() == 0)
 		Error("table");
 	Sort(h);
-	pos = h;
+	pos = pick(h);
 	pos.Add(10000);
 	RichTable tab;
 	tab.SetFormat(t.GetFormat());
@@ -527,9 +527,9 @@ void RichQtfParser::FinishOldTable()
 	}
 	table.Drop();
 	if(table.GetCount())
-		table.Top().text.CatPick(tab);
+		table.Top().text.CatPick(pick(tab));
 	else
-		target.CatPick(tab);
+		target.CatPick(pick(tab));
 	oldtab = false;
 }
 
@@ -1011,7 +1011,7 @@ bool ParseQTF(RichText& txt, const char *qtf, int accesskey, void *context)
 	catch(RichQtfParser::Exc) {
 		return false;
 	}
-	txt = p.target;
+	txt = pick(p.target);
 	return true;
 }
 
@@ -1022,7 +1022,7 @@ RichText ParseQTF(const char *qtf, int accesskey, void *context)
 		p.Parse(qtf, accesskey);
 	}
 	catch(RichQtfParser::Exc) {}
-	return p.target;
+	return pick(p.target);
 }
 
 String QtfRichObject::ToString() const

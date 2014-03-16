@@ -196,6 +196,7 @@ class ValueArray : public ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArra
 		virtual unsigned   GetHashValue() const;
 		virtual bool       IsEqual(const Value::Void *p);
 		virtual String     AsString() const;
+		virtual int        Compare(const Value::Void *p);
 
 		int GetRefCount() const     { return AtomicRead(refcount); }
 
@@ -215,7 +216,7 @@ class ValueArray : public ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArra
 public:
 	ValueArray()                              { Init0(); }
 	ValueArray(const ValueArray& v);
-	explicit ValueArray(pick_ Vector<Value>& values);
+	explicit ValueArray(Vector<Value> rval_ values);
 	explicit ValueArray(const Vector<Value>& values, int deep);
 	~ValueArray();
 
@@ -254,8 +255,14 @@ public:
 	void     Xmlize(XmlIO& xio);
 	String   ToString() const;
 
-	bool operator==(const ValueArray& v) const;
-	bool operator!=(const ValueArray& v) const  { return !operator==(v); }
+	bool     operator==(const ValueArray& v) const;
+	bool     operator!=(const ValueArray& v) const  { return !operator==(v); }
+	
+	int      Compare(const ValueArray& b) const;
+	bool     operator<=(const ValueArray& x) const { return Compare(x) <= 0; }
+	bool     operator>=(const ValueArray& x) const { return Compare(x) >= 0; }
+	bool     operator<(const ValueArray& x) const  { return Compare(x) < 0; }
+	bool     operator>(const ValueArray& x) const  { return Compare(x) > 0; }
 };
 
 template<>
@@ -271,6 +278,7 @@ class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 		virtual unsigned   GetHashValue() const;
 		virtual bool       IsEqual(const Value::Void *p);
 		virtual String     AsString() const;
+		virtual int        Compare(const Value::Void *p);
 
 		const Value& Get(const Value& key) const;
 
@@ -291,7 +299,7 @@ class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 public:
 	ValueMap()                                      { Init0(); }
 	ValueMap(const ValueMap& v);
-	ValueMap(pick_ Index<Value>& k, pick_ Vector<Value>& v);
+	ValueMap(Index<Value> rval_ k, Vector<Value> rval_ v);
 	ValueMap(const Index<Value>& k, const Vector<Value>& v, int deep);
 	~ValueMap();
 
@@ -364,6 +372,12 @@ public:
 
 	bool operator==(const ValueMap& v) const;
 	bool operator!=(const ValueMap& v) const        { return !operator==(v); }
+
+	int      Compare(const ValueMap& b) const;
+	bool     operator<=(const ValueMap& x) const    { return Compare(x) <= 0; }
+	bool     operator>=(const ValueMap& x) const    { return Compare(x) >= 0; }
+	bool     operator<(const ValueMap& x) const     { return Compare(x) < 0; }
+	bool     operator>(const ValueMap& x) const     { return Compare(x) > 0; }
 };
 
 class ValueGen {

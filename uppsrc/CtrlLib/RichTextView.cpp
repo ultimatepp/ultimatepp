@@ -301,20 +301,20 @@ void  RichTextView::Clear()
 	anchor = cursor = sell = selh = 0;
 }
 
-void  RichTextView::Pick(pick_ RichText& rt)
+void  RichTextView::Pick(RichText rval_ rt)
 {
 	sb = 0;
 	anchor = cursor = sell = selh = 0;
-	text = rt;
+	text = pick(rt);
 	SetSb();
 	UpdateRefresh();
 	highlight = -1;
 }
 
-void  RichTextView::Pick(pick_ RichText& txt, Zoom z) {
+void  RichTextView::Pick(RichText rval_ txt, Zoom z) {
 	if(z.m != z.d)
 		const_cast<RichText&>(txt).ApplyZoom(z);
-	Pick(txt);
+	Pick(pick(txt));
 	sb.SetLine(z * 100);
 }
 

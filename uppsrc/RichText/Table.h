@@ -110,6 +110,9 @@ private:
 		Rect              page;
 		int               page0;
 		Size              sz;
+		
+		rval_default(TabLayout);
+		TabLayout() {}
 	};
 
 	mutable TabLayout clayout;
@@ -198,7 +201,7 @@ private:
 
 public:
 	void                    AddColumn(int cx);
-	void                    SetPick(int i, int j, pick_ RichTxt& text);
+	void                    SetPick(int i, int j, RichTxt rval_ text);
 	RichTxt                 GetPick(int i, int j);
 	const RichTxt&          Get(int i, int j) const                { return cell[i][j].text; }
 	void                    SetQTF(int i, int j, const char *qtf);
@@ -215,6 +218,8 @@ public:
 	Size                    GetSize() const                        { return Size(GetColumns(), GetRows()); }
 
 	void          Normalize();
+
+	rval_default(RichTable);
 
 	RichTable(const RichTable& src, int);
 	RichTable();

@@ -162,6 +162,10 @@ struct TopicInfo : Moveable<TopicInfo> {
 	String         path;
 	String         title;
 	Vector<int>    words;
+
+	TopicInfo() {}
+
+	rval_default(TopicInfo);
 };
 
 String          GetTopicPath(const TopicLink& link);

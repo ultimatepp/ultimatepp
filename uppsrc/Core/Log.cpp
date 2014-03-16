@@ -120,7 +120,7 @@ void LogOut::Create(bool append)
 	::GetUserNameA(user, &w);
 #endif
 #else //#
-	const char *procexepath_();
+	const char *procexepath_(void);
 	strcpy(exe, procexepath_());
 	const char *uenv = getenv("USER");
 	strcpy(user, uenv ? uenv : "boot");

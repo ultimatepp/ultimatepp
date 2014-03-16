@@ -89,11 +89,6 @@ from [%-*@3 x].&]
 [s2; Removes element at [%-*@3 i] and returns the pointer to value. 
 This pointer should be deleted by client code.&]
 [s3; &]
-[s4; &]
-[s5;:SortedArrayMap`:`:PopDetach`(`):%- [*@4 T]_`*[* PopDetach]()&]
-[s2; Removes the last element and returns the pointer to value. This 
-pointer should be deleted by client code.&]
-[s3; &]
 [s4;%- &]
 [s5;:SortedArrayMap`:`:operator`(`)`(const K`&`,const T`&`):%- [_^SortedArrayMap^ Sorte
 dArrayMap][@(0.0.255) `&]_[* operator()]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], 

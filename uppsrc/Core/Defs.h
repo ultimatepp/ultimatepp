@@ -378,10 +378,36 @@ inline bool IsFin(double d)        { return !IsNaN(d) && !IsInf(d); }
 
 #define OFFSETOF(clss, mbr) ((int)(uintptr_t)&(((clss *)1)->mbr) - 1)
 
+template <typename T>
+T clone(const T& x) { T c(x, 1); return c; }
+
+#ifdef CPP_11
+
+#define pick_
+#define rval_ &&
+#define rval_default(T) T(T&&) = default; T& operator=(T&&) = default;
+
+template <typename T>
+T&& pick(T& x) { return static_cast<T&&>(x); }
+
+#else
+
+template <class T>
+T& pick(T& x) { return x; }
+
 #ifdef COMPILER_MSC
 #define pick_
+#define rval_ &
 #else
 #define pick_ const
+#define rval_ const &
+#endif
+
+#define rval_default(T)
+
+template <typename T>
+T& pick(const T& x) { return const_cast<T&>(x); }
+
 #endif
 
 #define init_
@@ -566,7 +592,7 @@ int  CPU_Cores();
 bool IsDecentMachine();
 
 template <class T>
-inline void Swap(T& a, T& b) { T tmp = a; a = b; b = tmp; }
+inline void Swap(T& a, T& b) { T tmp = pick(a); a = pick(b); b = pick(tmp); }
 
 #if defined(CPU_UNALIGNED) && defined(CPU_LE)
 inline int    Peek16le(const void *ptr)  { return *(const word *)ptr; }

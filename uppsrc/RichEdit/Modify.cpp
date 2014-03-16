@@ -256,7 +256,7 @@ RichText RichEdit::GetSelection(int maxcount) const
 	if(tablesel) {
 		RichTable tab = text.CopyTable(tablesel, cells);
 		clip.SetStyles(text.GetStyles());
-		clip.CatPick(tab);
+		clip.CatPick(pick(tab));
 	}
 	else {
 		if(begtabsel) {
@@ -264,7 +264,7 @@ RichText RichEdit::GetSelection(int maxcount) const
 			if(p.table) {
 				RichTable tab = text.CopyTable(p.table);
 				clip.SetStyles(text.GetStyles());
-				clip.CatPick(tab);
+				clip.CatPick(pick(tab));
 				clip.CatPick(text.Copy(p.tablen + 1, minmax(abs(cursor - p.tablen - 1), 0, maxcount)));
 			}
 		}

@@ -212,7 +212,7 @@ void  Ctrl::SyncScroll()
 	GuiLock __;
 	if(!top)
 		return;
-	Vector<Scroll> scroll = top->scroll;
+	Vector<Scroll> scroll = pick(top->scroll);
 	top->scroll.Clear();
 	if(IsFullRefresh())
 		return;

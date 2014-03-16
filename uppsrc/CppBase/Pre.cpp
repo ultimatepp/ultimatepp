@@ -189,7 +189,7 @@ SrcFile PreProcess(Stream& in)
 				res.commentLinesRemoved++;
 		}
 	}
-	return res;
+	return pick(res);
 }
 
 END_UPP_NAMESPACE

@@ -101,7 +101,7 @@ bool LoadVarFile(const char *name, VectorMap<String, String>& _var)
 			}
 			p.Char(';');
 		}
-		_var = var;
+		_var = pick(var);
 		return true;
 	}
 	catch(...) {
@@ -368,11 +368,12 @@ int    GetType(const Vector<String>& conf, const char *flags) {
 	Vector<String> f = SplitFlags(flags);
 	int q = FLAG_UNDEFINED;
 	for(int i = 0; i < f.GetCount(); i++)
-		if(HasFlag(conf, f[i]))
+		if(HasFlag(conf, f[i])) {
 			if(q == FLAG_UNDEFINED)
 				q = i;
 			else
 				q = FLAG_MISMATCH;
+		}
 	return q;
 }
 

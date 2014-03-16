@@ -32,7 +32,7 @@ void Renumber(LineInfo& lf)
 		}
 		l += r.count;
 	}
-	lf = tf;
+	lf = pick(tf);
 }
 
 void ClearBreakpoints(LineInfo& lf)
@@ -130,7 +130,7 @@ void EditorBar::Paint(Draw& w)
 					}
 				}
 			}
-			previf = nextif;
+			previf = pick(nextif);
 		}
 		if(editor->GetMarkLines()) {
 			int width = CodeEditorImg::Breakpoint().GetWidth() >> 1;

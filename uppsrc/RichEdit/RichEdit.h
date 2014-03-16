@@ -509,7 +509,7 @@ private:
 	void       SetPaper();
 	void       SetLanguage();
 	void       Language();
-	void       SetupLanguage(pick_ Vector<int>& lng);
+	void       SetupLanguage(Vector<int> rval_ lng);
 
 	void       SetBullet(int bullet);
 
@@ -776,7 +776,7 @@ public:
 	void            PrevPara();
 
 	void            Clear();
-	void            Pick(pick_ RichText& t);
+	void            Pick(RichText pick_ t);
 	void            SetQTF(const char *qtf)                { Pick(ParseQTF(qtf, 0, context)); }
 	const RichText& Get() const                            { return text; }
 	String          GetQTF(byte cs = CHARSET_UTF8) const   { return AsQTF(text, cs); }
@@ -822,7 +822,7 @@ public:
 	};
 
 	UndoInfo PickUndoInfo();
-	void     SetPickUndoInfo(pick_ UndoInfo& f);
+	void     SetPickUndoInfo(UndoInfo pick_ f);
 
 	PosInfo  GetPosInfo() const;
 	void     SetPosInfo(const PosInfo& pos);

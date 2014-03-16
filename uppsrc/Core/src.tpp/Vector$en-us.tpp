@@ -441,6 +441,31 @@ as part of expression like Foo((Vector<int>() << 1 << 2 << 4)).&]
 [s7; [*/ Return value]-|Reference to Vector (`*this).&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Vector`:`:ToString`(`)const:%- [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]
+[s2; Converts container into String, mostly for debugging purposes.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Vector`:`:operator`=`=`(const Vector`<T`>`&`)const:%- [@(0.0.255) bool]_[* operator`=
+`=]([@(0.0.255) const]_[_^Vector^ Vector]<[*@4 T]>`&_[*@3 b])_[@(0.0.255) const]&]
+[s5;:Vector`:`:operator`!`=`(const Vector`<T`>`&`)const:%- [@(0.0.255) bool]_[* operator!
+`=]([@(0.0.255) const]_[_^Vector^ Vector]<[*@4 T]>`&_[*@3 b])_[@(0.0.255) const]&]
+[s2; Compares two containers for (in)equality, using T`::operator`=`=.&]
+[s3; &]
+[s4;%- &]
+[s5;:Vector`:`:Compare`(const Vector`<T`>`&`)const:%- [@(0.0.255) int]_[* Compare]([@(0.0.255) c
+onst]_[_^Vector^ Vector]<[*@4 T]>`&_[*@3 b])_[@(0.0.255) const]&]
+[s5;:Vector`:`:operator`<`=`(const Vector`<T`>`&`)const:%- [@(0.0.255) bool]_[* operator<
+`=]([@(0.0.255) const]_[_^Vector^ Vector]<[*@4 T]>`&_[*@3 b])_[@(0.0.255) const]&]
+[s5;:Vector`:`:operator`>`=`(const Vector`<T`>`&`)const:%- [@(0.0.255) bool]_[* operator>
+`=]([@(0.0.255) const]_[_^Vector^ Vector]<[*@4 T]>`&_[*@3 b])_[@(0.0.255) const]&]
+[s5;:Vector`:`:operator`<`(const Vector`<T`>`&`)const:%- [@(0.0.255) bool]_[* operator<](
+[@(0.0.255) const]_[_^Vector^ Vector]<[*@4 T]>`&_[*@3 b])_[@(0.0.255) const]&]
+[s5;:Vector`:`:operator`>`(const Vector`<T`>`&`)const:%- [@(0.0.255) bool]_[* operator>](
+[@(0.0.255) const]_[_^Vector^ Vector]<[*@4 T]>`&_[*@3 b])_[@(0.0.255) const]&]
+[s2; Lexicographically compares two containers, using SgnCompare 
+for elements.&]
+[s3; &]
+[s4;%- &]
 [s5;:Vector`:`:operator`|`(pick`_ T`&`):%- [_^Vector^ Vector][@(0.0.255) `&]_[* operator`|](
 [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; Operator replacement of [* void AddPick(pick`_ T`&x)]. By returning 

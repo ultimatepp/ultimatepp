@@ -388,8 +388,6 @@ Blitz CppBuilder::BlitzStep(Vector<String>& sfile, Vector<String>& soptions,
 		Time fntime = GetFileTime(fn);
 		if((ext == ".cpp" || ext == ".cc" || ext == ".cxx")
 		   && HdependBlitzApproved(fn) && IsNull(soptions[i]) && !optimize[i]
-//		   && (fntime < blitztime || !blitzexists)
-//		   && (!FileExists(objfile) || now - fntime > 3600)) { // Causes a strage oscillation
 		   && fntime < BlitzBaseTime()) {
 			if(HdependFileTime(fn) > blitztime)
 				b.build = true;
@@ -413,9 +411,9 @@ Blitz CppBuilder::BlitzStep(Vector<String>& sfile, Vector<String>& soptions,
 	}
 	b.path = CatAnyPath(outdir, "$blitz.cpp");
 	if(b.count > 1) {
-		sfile = excluded;
-		soptions = excludedoptions;
-		optimize = excludedoptimize;
+		sfile = pick(excluded);
+		soptions = pick(excludedoptions);
+		optimize = pick(excludedoptimize);
 		if(LoadFile(b.path) != blitz) {
 			SaveFile(b.path, blitz);
 			b.build = true;

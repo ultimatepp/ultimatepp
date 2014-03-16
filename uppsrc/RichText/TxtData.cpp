@@ -159,10 +159,10 @@ void RichTxt::RemovePart(int parti)
 	Invalidate();
 }
 
-void RichTxt::SetPick(int i, pick_ RichTable& p)
+void RichTxt::SetPick(int i, RichTable rval_ p)
 {
 	const_cast<RichTable&>(p).Normalize();
-	part.At(i).Create<RichTable>() = p;
+	part.At(i).Create<RichTable>() = pick(p);
 	Invalidate();
 	SetRefresh(i);
 }

@@ -172,7 +172,7 @@ int MIValue::ParseTuple(String const &s, int i)
 		String name;
 		MIValue val;
 		i = ParsePair(name, val, s, i);
-		tuple.Add(name, val);
+		tuple.AddPick(name, pick(val));
 		while(s[i] && isspace(s[i]))
 			i++;
 		if(s[i] == '}')
@@ -212,7 +212,7 @@ int MIValue::ParseArray(String const &s, int i)
 			i = val.ParseAngle(s, i);
 		else
 			i = ParsePair(name, val, s, i);
-		array.Add(val);
+		array.Add() = pick(val);
 		while(s[i] && isspace(s[i]))
 			i++;
 		if(s[i] == ']')
@@ -358,7 +358,7 @@ int MIValue::Parse(String const &s, int i)
 		while(s[i])
 		{
 			i = ParsePair(name, val, s, i);
-			tuple.Add(name, val);
+			tuple.AddPick(name, pick(val));
 			while(s[i] && isspace(s[i]))
 				i++;
 			if(s[i] != ',')
@@ -370,20 +370,20 @@ int MIValue::Parse(String const &s, int i)
 	}
 }
 
-MIValue &MIValue::operator=(pick_ MIValue &v)
+MIValue &MIValue::operator=(MIValue rval_ v)
 {
 	Clear();
-	type = v.type;
+	type = pick(v.type);
 	switch(type)
 	{
 		case MIString:
 			string = v.string;
 			break;
 		case MIArray:
-			array = v.array;
+			array = pick(v.array);
 			break;
 		case MITuple:
-			tuple = v.tuple;
+			tuple = pick(v.tuple);
 			break;
 		default:
 			SetError("Unknown MIValue type");
@@ -396,7 +396,7 @@ MIValue::MIValue()
 	Clear();
 }
 
-MIValue::MIValue(MIValue pick_ &v)
+MIValue::MIValue(MIValue rval_ v)
 {
 	Clear();
 	type = v.type;
@@ -406,10 +406,10 @@ MIValue::MIValue(MIValue pick_ &v)
 			string = v.string;
 			break;
 		case MIArray:
-			array = v.array;
+			array = pick(v.array);
 			break;
 		case MITuple:
-			tuple = v.tuple;
+			tuple = pick(v.tuple);
 			break;
 		default:
 			SetError("Unknown MIValue type");
@@ -725,7 +725,7 @@ void MIValue::FixArrays(void)
 		{
 			array.Clear();
 			for(int iVal = 0; iVal < tuple.GetCount(); iVal++)
-				array.Add(tuple[iVal]);
+				array.Add() = pick(tuple[iVal]);
 			tuple.Clear();
 			type = MIArray;
 		}
@@ -736,7 +736,7 @@ void MIValue::FixArrays(void)
 }
 
 // add an item to a tuple
-MIValue &MIValue::Add(String const &key, MIValue pick_ &v)
+MIValue &MIValue::Add(String const &key, MIValue rval_ v)
 {
 	if(IsEmpty())
 	{
@@ -745,7 +745,7 @@ MIValue &MIValue::Add(String const &key, MIValue pick_ &v)
 	}
 	if(type != MITuple)
 		return  ErrorMIValue("Not a Tuple value type");
-	tuple.AddPick(key, v);
+	tuple.AddPick(key, pick(v));
 	return *this;
 }
 
@@ -769,14 +769,14 @@ MIValue &MIValue::FindAdd(String const &key, String const &data)
 	MIValue v;
 	v.Set(data);
 	if(idx >= 0)
-		tuple[idx] = v;
+		tuple[idx] = pick(v);
 	else
-		tuple.AddPick(key, v);
+		tuple.AddPick(key, pick(v));
 	return *this;
 }
 
 // add an item to an array
-MIValue &MIValue::Add(MIValue pick_ &v)
+MIValue &MIValue::Add(MIValue rval_ v)
 {
 	if(IsEmpty())
 	{
@@ -785,7 +785,7 @@ MIValue &MIValue::Add(MIValue pick_ &v)
 	}
 	if(type != MIArray)
 		return  ErrorMIValue("Not a Array value type");
-	array.AddPick(v);
+	array.AddPick(pick(v));
 	return *this;
 }
 

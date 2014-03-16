@@ -140,9 +140,11 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 			b->include.Add(SourcePath(wspc[i], pkg.include[j].text));
 	}	
 	b->libpath = SplitDirs(bm.Get("LIB", ""));
-	b->debug_options = bm.Get("DEBUG_OPTIONS", "");
-	b->release_options = bm.Get("RELEASE_OPTIONS", "");
-	b->release_size_options = bm.Get("RELEASE_SIZE_OPTIONS", "");
+	b->cpp_options = bm.Get("COMMON_CPP_OPTIONS", "");
+	b->c_options = bm.Get("COMMON_C_OPTIONS", "");
+	b->debug_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("DEBUG_OPTIONS", ""));
+	b->release_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("RELEASE_OPTIONS", ""));
+	b->release_size_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("RELEASE_SIZE_OPTIONS", ""));
 	b->debug_link = bm.Get("DEBUG_LINK", "");
 	b->release_link = bm.Get("RELEASE_LINK", "");
 	b->script = bm.Get("SCRIPT", "");
@@ -243,7 +245,7 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 	One<Host> host = CreateHost(false);
 	if(!IsNull(onefile)) {
 		OneFileHost *h = new OneFileHost;
-		h->host = host;
+		h->host = pick(host);
 		h->onefile = onefile;
 		host = h;
 	}
@@ -333,7 +335,7 @@ void MakeBuild::SetHdependDirs()
 			include.Add(SourcePath(wspc[i], pkg.include[j].text));
 	}
 
-	HdependSetDirs(include);
+	HdependSetDirs(pick(include));
 }
 
 Vector<String> MakeBuild::GetAllUses(const Workspace& wspc, int f,

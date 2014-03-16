@@ -70,7 +70,7 @@ void ImageBuffer::Set(Image& img)
 			hotspot = img.GetHotSpot();
 			spot2 = img.Get2ndSpot();
 			dots = img.GetDots();
-			pixels = img.data->buffer.pixels;
+			pixels = pick(img.data->buffer.pixels);
 			img.Clear();
 		}
 		else {
@@ -106,7 +106,7 @@ ImageBuffer::ImageBuffer(ImageBuffer& b)
 	kind = b.kind;
 	size = b.size;
 	dots = b.dots;
-	pixels = b.pixels;
+	pixels = pick(b.pixels);
 	hotspot = b.hotspot;
 	spot2 = b.spot2;
 }

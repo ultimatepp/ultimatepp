@@ -168,6 +168,11 @@ void Lex::Next()
 			while(iscid(*ptr))
 				x.Cat(*ptr++);
 			int q = id.FindAdd(x);
+			if(q == tk_rval_ - 256) { // simple hack for transitionary macro
+				AddCode('&');
+				AddCode('&');
+			}
+			else
 			if(q >= ignore_low && q < ignore_high)
 				while(*ptr && (byte)*ptr <= ' ') {
 					ptr++;

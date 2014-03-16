@@ -12,7 +12,7 @@ VectorMap<String, Value> Pdb::DataMap(const ArrayCtrl& a)
 	return r;
 }
 
-Value Pdb::Vis(const String& key, const VectorMap<String, Value>& prev, pick_ Visual& vis,
+Value Pdb::Vis(const String& key, const VectorMap<String, Value>& prev, Visual rval_ vis,
                bool& ch)
 {
 	int q = prev.Find(key);
@@ -30,7 +30,7 @@ Value Pdb::Vis(const String& key, const VectorMap<String, Value>& prev, pick_ Vi
 }
 
 void Pdb::Vis(ArrayCtrl& a, const String& key, const VectorMap<String, Value>& prev,
-              pick_ Visual& vis)
+              Visual rval_ vis)
 {
 	bool ch;
 	a.Add(key, Vis(key, prev, vis, ch));

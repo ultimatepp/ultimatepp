@@ -270,8 +270,8 @@ public:
 	WithDeepCopy(const T& a) : T(a, 1)             {}
 	WithDeepCopy(const WithDeepCopy& a) : T(a, 1)  {}
 	WithDeepCopy& operator=(const WithDeepCopy& a) { (T&)*this <<= a; return *this; }
-	WithDeepCopy(int, pick_ T& a) : T(a)           {}
-	WithDeepCopy& operator^=(pick_ T& a)           { (T&)*this = a; return *this; }
+	WithDeepCopy(int, T rval_ a) : T(a)            {}
+	WithDeepCopy& operator^=(T rval_ a)            { (T&)*this = pick(a); return *this; }
 	WithDeepCopy()                                 {}
 };
 
@@ -518,3 +518,57 @@ inline unsigned GetHashValue(T *ptr)                             { return GetPtr
 
 template <class T> inline const T& ntl_max(const T& a, const T& b) { return a > b ? a : b; }
 
+template <int size>
+struct Data_S_ : Moveable< Data_S_<size> >
+{
+	byte filler[size];
+};
+
+template <class C>
+bool IsEqualArray(const C& a, const C& b)
+{
+	if(a.GetCount() != b.GetCount())
+		return false;
+	for(int i = 0; i < a.GetCount(); i++)
+		if(!(a[i] == b[i]))
+			return false;
+	return true;
+}
+
+template <class C>
+int CompareArray(const C& a, const C& b)
+{
+	int n = min(a.GetCount(), b.GetCount());
+	for(int i = 0; i < n; i++) {
+		int q = SgnCompare(a[i], b[i]);
+		if(q)
+			return q;
+	}
+	return SgnCompare(a.GetCount(), b.GetCount());
+}
+
+template <class C>
+bool IsEqualMap(const C& a, const C& b)
+{
+	if(a.GetCount() != b.GetCount())
+		return false;
+	for(int i = 0; i < a.GetCount(); i++)
+		if(a.GetKey(i) != b.GetKey(i) || a[i] != b[i])
+			return false;
+	return true;
+}
+
+template <class C>
+int CompareMap(const C& a, const C& b)
+{
+	int n = min(a.GetCount(), b.GetCount());
+	for(int i = 0; i < n; i++) {
+		int q = SgnCompare(a.GetKey(i), b.GetKey(i));
+		if(q)
+			return q;
+		q = SgnCompare(a[i], b[i]);
+		if(q)
+			return q;
+	}
+	return SgnCompare(a.GetCount(), b.GetCount());
+}

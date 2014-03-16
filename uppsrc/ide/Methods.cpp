@@ -183,6 +183,10 @@ BuildMethods::BuildMethods()
 	name.SetFilter(CharFilterFileName);
 	method.AddCtrl("BUILDER", builder);
 	method.AddCtrl("COMPILER", compiler);
+	method.AddCtrl("COMMON_OPTIONS", common_options);
+	method.AddCtrl("COMMON_CPP_OPTIONS", common_cpp_options);
+	method.AddCtrl("COMMON_C_OPTIONS", common_c_options);
+	method.AddCtrl("COMMON_FLAGS", common_flags);
 	method.AddCtrl("DEBUG_INFO", debug_info);
 	method.AddCtrl("DEBUG_BLITZ", debug_blitz);
 	method.AddCtrl("DEBUG_LINKMODE", debug_linkmode);

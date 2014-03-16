@@ -79,7 +79,6 @@ private:
 	byte                  charset;
 	Size                  dot_page_size;
 	Rect                  dot_margins;
-	void                  *context;
 
 	RichPara::CharFormat  charfmt;
 	RichPara::Format      parafmt;
@@ -130,7 +129,6 @@ RTFEncoder::RTFEncoder(Stream& stream_, const RichText& richtext_, byte charset_
 , charset(charset_)
 , dot_page_size(dot_page_size_)
 , dot_margins(dot_margins_)
-, context(context_)
 {
 	for(int i = 0; i < richtext.GetStyleCount(); i++)
 		styleid.Add(richtext.GetStyleId(i));
@@ -254,9 +252,9 @@ bool RTFEncoder::PutCharFormat(const RichPara::CharFormat& cf, const RichPara::C
 	bool f;
 	int t;
 	if(cf.GetFace() != difcf.GetFace())
-		Command("pnf" + pn2, used_faces.Find(cf.GetFace()));
+		Command(("pnf") + pn2, used_faces.Find(cf.GetFace()));
 	if((t = DotPoints(2 * tabs(cf.GetHeight()))) != DotPoints(2 * tabs(difcf.GetHeight())))
-		Command("pnfs" + pn2, t);
+		Command(("pnfs") + pn2, t);
 	if(!pn && dword(t = cf.sscript) != difcf.sscript)
 		Command(t == 0 ? "nosupersub" : t == 1 ? "super" : "sub");
 	if((f = cf.IsBold())          != difcf.IsBold())          Command((f ? "pnb" : "pnb0") + pn2);
@@ -264,9 +262,9 @@ bool RTFEncoder::PutCharFormat(const RichPara::CharFormat& cf, const RichPara::C
 	if((f = cf.IsUnderline())     != difcf.IsUnderline())     Command((f ? "pnul" : "pnul0") + pn2);
 	if((f = cf.IsStrikeout())     != difcf.IsStrikeout())     Command((f ? "pnstrike" : "pnstrike0") + pn2);
 	if((f = cf.capitals)          != difcf.capitals)          Command((f ? "pncaps" : "pncaps0") + pn2);
-	if((t = used_ink.Get(cf.ink)) != used_ink.Get(difcf.ink)) Command("pncf" + pn2, t);
-	if((t = used_paper.Get(cf.paper)) != used_paper.Get(difcf.paper)) Command("pncb" + pn2, t);
-#ifdef PLATFORM_WIN32 //zapoznamkoval Fidler kdyz chtel zkompilovat pod Linuxem...
+	if((t = used_ink.Get(cf.ink)) != used_ink.Get(difcf.ink)) Command(("pncf") + pn2, t);
+	if((t = used_paper.Get(cf.paper)) != used_paper.Get(difcf.paper)) Command(("pncb") + pn2, t);
+#ifdef PLATFORM_WIN32
 	if(!pn && cf.language         != difcf.language)          Command("lang", GetLanguageLCID(cf.language));
 #endif
 	// todo: link

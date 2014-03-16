@@ -17,6 +17,9 @@ struct Tuple2 {
 	void Serialize(Stream& s)                 { s % a % b; }
 
 	String   ToString() const                 { return String().Cat() << '(' << a << ", " << b << ')'; }
+	
+	template <typename AA, typename BB>
+	operator Tuple2<AA, BB>() const           { Tuple2<AA, BB> t; t.a = (AA)a; t.b = (BB)b; return t; }
 };
 
 template<typename A, typename B>
@@ -55,6 +58,9 @@ struct Tuple3 {
 	void Serialize(Stream& s)                 { s % a % b % c; }
 	
 	String   ToString() const                 { return String().Cat() << '(' << a << ", " << b << ", " << c << ')'; }
+
+	template <typename AA, typename BB, typename CC>
+	operator Tuple3<AA, BB, CC>() const       { Tuple3<AA, BB, CC> t; t.a = (AA)a; t.b = (BB)b; t.c = (CC)c; return t; }
 };
 
 template<typename A, typename B, typename C>
@@ -96,6 +102,9 @@ struct Tuple4 {
 	void Serialize(Stream& s)                 { s % a % b % c % d; }
 
 	String   ToString() const                 { return String().Cat() << '(' << a << ", " << b << ", " << c << ", " << d << ')'; }
+
+	template <typename AA, typename BB, typename CC, typename DD>
+	operator Tuple4<AA, BB, CC, DD>() const    { Tuple4<AA, BB, CC, DD> t; t.a = (AA)a; t.b = (BB)b; t.c = (CC)c; t.d = (DD)d; return t; }
 };
 
 template<typename A, typename B, typename C, typename D>
@@ -127,3 +136,45 @@ inline T *FindTuple(T *x, int n, const U& key) {
 	}
 	return NULL;
 }
+
+template <typename A, typename B>
+struct Tie2 {
+	A& a;
+	B& b;
+	
+	void operator=(const Tuple2<A, B>& s)  { a = s.a; b = s.b; }
+
+	Tie2(A& a, B& b) : a(a), b(b) {}
+};
+
+template <typename A, typename B>
+Tie2<A, B> Tie(A& a, B& b) { return Tie2<A, B>(a, b); }
+
+template <typename A, typename B, typename C>
+struct Tie3 {
+	A& a;
+	B& b;
+	C& c;
+	
+	void operator=(const Tuple3<A, B, C>& s) { a = s.a; b = s.b; c = s.c; }
+
+	Tie3(A& a, B& b, C& c) : a(a), b(b), c(c) {}
+};
+
+template <typename A, typename B, typename C>
+Tie3<A, B, C> Tie(A& a, B& b, C& c) { return Tie3<A, B, C>(a, b, c); }
+
+template <typename A, typename B, typename C, typename D>
+struct Tie4 {
+	A& a;
+	B& b;
+	C& c;
+	D& d;
+	
+	void operator=(const Tuple4<A, B, C, D>& s) { a = s.a; b = s.b; c = s.c; d = s.d; }
+
+	Tie4(A& a, B& b, C& c, D& d) : a(a), b(b), c(c), d(d) {}
+};
+
+template <typename A, typename B, typename C, typename D>
+Tie4<A, B, C, D> Tie(A& a, B& b, C& c, D& d) { return Tie4<A, B, C, D>(a, b, c, d); }

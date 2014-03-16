@@ -1,7 +1,6 @@
 class FileTabs : public TabBar
 {
 private:
-	bool normalicons:1;		
 	bool stackedicons:1;
 	bool greyedicons:1;
 	Color filecolor;

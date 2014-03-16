@@ -232,7 +232,7 @@ bool ScriptBuilder::BuildPackage(const String& package, Vector<String>& linkfile
 	}
 
 	obj.Append(linkfile);
-	linkfile = obj;
+	linkfile = pick(obj);
 	return true;
 }
 

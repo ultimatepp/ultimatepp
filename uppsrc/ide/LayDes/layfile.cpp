@@ -52,11 +52,11 @@ void LayDes::SaveEditPos()
 	p.undo.SetCount(layout.GetCount());
 	p.redo.SetCount(layout.GetCount());
 	for(int i = 0; i < layout.GetCount(); i++) {
-		p.undo[i] = layout[i].undo;
-		p.redo[i] = layout[i].redo;
+		p.undo[i] = pick(layout[i].undo);
+		p.redo[i] = pick(layout[i].redo);
 	}
 	p.layouti = layoutlist.GetCursor();
-	p.cursor = cursor;
+	p.cursor = pick(cursor);
 }
 
 void LayDes::RestoreEditPos()
@@ -69,15 +69,15 @@ void LayDes::RestoreEditPos()
 	if(p.filetime != filetime) return;
 	if(layout.GetCount() == p.undo.GetCount()) {
 		for(int i = 0; i < layout.GetCount(); i++) {
-			layout[i].undo = p.undo[i];
-			layout[i].redo = p.redo[i];
+			layout[i].undo = pick(p.undo[i]);
+			layout[i].redo = pick(p.redo[i]);
 		}
 	}
 	if(p.layouti >= 0 && p.layouti < layoutlist.GetCount()) {
 		layoutlist.SetCursor(p.layouti);
 		LayoutCursor();
 	}
-	cursor = p.cursor;
+	cursor = pick(p.cursor);
 	SyncItems();
 }
 

@@ -38,12 +38,12 @@ void Vector<T>::GrowF()
 }
 
 template <class T>
-void Vector<T>::Pick(pick_ Vector<T>& v)
+void Vector<T>::Pick(Vector<T> rval_ v)
 {
 	vector = v.vector;
 	items = v.items;
 	alloc = v.alloc;
-	SetPicked(v);
+	SetPicked(pick(v));
 }
 
 template <class T>
@@ -99,11 +99,11 @@ T& Vector<T>::GrowAdd(const T& x) {
 }
 
 template <class T>
-T& Vector<T>::GrowAddPick(pick_ T& x) {
+T& Vector<T>::GrowAddPick(T rval_ x) {
 	T *prev = vector;
 	Grow();
 	T *q = Rdd();
-	::new(q) T(x);
+	::new(q) T(pick(x));
 	RawFree(prev);
 	return *q;
 }
@@ -200,11 +200,6 @@ void Vector<T>::Remove(int q, int count) {
 	items -= count;
 }
 
-template <int size>
-class Data_S_ {
-	byte filler[size];
-};
-
 template <class T>
 void Vector<T>::Remove(const int *sorted_list, int n)
 {
@@ -273,7 +268,7 @@ void Vector<T>::Insert(int q, const T& x, int count) {
 }
 
 template <class T>
-T& Vector<T>::InsertPick(int q, pick_ T& x)
+T& Vector<T>::InsertPick(int q, T rval_ x)
 {
 	ASSERT(&x < vector || &x > vector + items);
 	RawInsert(q, 1);
@@ -289,6 +284,17 @@ void Vector<T>::Insert(int q, const Vector& x, int offset, int count) {
 	DeepCopyConstructArray(vector + q, x.vector + offset, x.vector + offset + count);
 }
 
+#ifdef CPP_11
+template <class T>
+void Vector<T>::Insert(int i, std::initializer_list<T> init)
+{
+	RawInsert(i, init.size());
+	T *t = vector + i;
+	for(auto q : init)
+		DeepCopyConstruct(t++, q);
+}
+#endif
+
 template <class T>
 void Vector<T>::Insert(int q, const Vector& x) {
 	if(!x.GetCount()) return;
@@ -296,7 +302,7 @@ void Vector<T>::Insert(int q, const Vector& x) {
 }
 
 template <class T>
-void Vector<T>::InsertPick(int i, pick_ Vector<T>& v) {
+void Vector<T>::InsertPick(int i, Vector<T> rval_ v) {
 	Chk();
 	v.Chk();
 	ASSERT(!vector || v.vector != vector);
@@ -305,7 +311,7 @@ void Vector<T>::InsertPick(int i, pick_ Vector<T>& v) {
 		memcpy(vector + i, v.vector, sizeof(T) * v.items);
 	}
 	RawFree(v.vector);
-	SetPicked(v);
+	SetPicked(pick(v));
 }
 
 template <class T>
@@ -350,6 +356,27 @@ void Vector<T>::Jsonize(JsonIO& jio)
 {
 	JsonizeArray<Vector<T>, T>(jio, *this);
 }
+
+template <class C>
+String AsStringArray(const C& v)
+{
+	String r;
+	r << '[';
+	for(int i = 0; i < v.GetCount(); i++) {
+		if(i)
+			r << ", ";
+		r << v[i];
+	}
+	r << ']';
+	return r;
+}
+
+template <class T>
+String Vector<T>::ToString() const
+{
+	return AsStringArray(*this);
+}
+
 #endif
 
 // ------------------
@@ -477,10 +504,10 @@ void Array<T>::Insert(int i, const T& x, int count) {
 }
 
 template <class T>
-T& Array<T>::InsertPick(int i, pick_ T& x)
+T& Array<T>::InsertPick(int i, T rval_ x)
 {
 	vector.InsertN(i, 1);
-	vector[i] = new T(x);
+	vector[i] = new T(pick(x));
 	return Get(i);
 }
 
@@ -515,6 +542,13 @@ void Array<T>::Jsonize(JsonIO& jio)
 {
 	JsonizeArray<Array<T>, T>(jio, *this);
 }
+
+template <class T>
+String Array<T>::ToString() const
+{
+	return AsStringArray(*this);
+}
+
 #endif
 
 // ------------------
@@ -744,6 +778,13 @@ void BiVector<T>::Serialize(Stream& s) {
 		for(int i = 0; i < items; i++)
 			s % operator[](i);
 }
+
+template <class T>
+String BiVector<T>::ToString() const
+{
+	return AsStringArray(*this);
+}
+
 #endif
 
 // ------------------
@@ -778,4 +819,11 @@ void BiArray<T>::Serialize(Stream& s) {
 		for(int i = 0; i < bv.GetCount(); i++)
 			s % operator[](i);
 }
+
+template <class T>
+String BiArray<T>::ToString() const
+{
+	return AsStringArray(*this);
+}
+
 #endif

@@ -148,7 +148,7 @@ int IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *env
 
 int IdeConsoleExecute(One<AProcess> process, const char *cmdline, Stream *out, bool quiet)
 {
-	return the_ide ? the_ide->IdeConsoleExecute(process, cmdline, out, quiet) : -1;
+	return the_ide ? the_ide->IdeConsoleExecute(pick(process), cmdline, out, quiet) : -1;
 }
 
 int IdeConsoleAllocSlot()
@@ -161,9 +161,9 @@ bool IdeConsoleRun(const char *cmdline, Stream *out, const char *envptr, bool qu
 	return the_ide && the_ide->IdeConsoleRun(cmdline, out, envptr, quiet, slot, key, blitz_count);
 }
 
-bool IdeConsoleRun(One<AProcess> process, const char *cmdline, Stream *out, bool quiet, int slot, String key, int blitz_count)
+bool IdeConsoleRun(One<AProcess> pick_ process, const char *cmdline, Stream *out, bool quiet, int slot, String key, int blitz_count)
 {
-	return the_ide && the_ide->IdeConsoleRun(process, cmdline, out, quiet, slot, key, blitz_count);
+	return the_ide && the_ide->IdeConsoleRun(pick(process), cmdline, out, quiet, slot, key, blitz_count);
 }
 
 void IdeConsoleFlush()
@@ -534,4 +534,13 @@ void CopyFolder(const char *_dst, const char *_src, Index<String>& used, bool al
 		}
 		ff.Next();
 	}
+}
+
+String Join(const String& a, const String& b, const char *sep)
+{
+	String h = a;
+	if(a.GetCount() && b.GetCount())
+		h << sep;
+	h << b;
+	return h;
 }

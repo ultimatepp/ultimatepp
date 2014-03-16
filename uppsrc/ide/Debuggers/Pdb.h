@@ -301,9 +301,9 @@ struct Pdb : Debugger, ParentCtrl {
 // data
 	static VectorMap<String, Value> DataMap(const ArrayCtrl& a);
 	static Value Vis(const String& key, const VectorMap<String, Value>& prev,
-	                 pick_ Visual& vis, bool& ch);
+	                 Visual rval_ vis, bool& ch);
 	static void  Vis(ArrayCtrl& a, const String& key,
-	                 const VectorMap<String, Value>& prev, pick_ Visual& vis);
+	                 const VectorMap<String, Value>& prev, Visual rval_ vis);
 
 	void      DisasCursor() {}
 	void      DisasFocus() {}

@@ -212,7 +212,9 @@ struct RichPara {
 		const Line&          operator[](int i) const { return line[i]; }
 		void                 Justify(const Format& format);
 		int                  BodyHeight() const;
-		
+
+		rval_default(Lines);
+	
 		Lines();
 		~Lines();
 
@@ -288,7 +290,9 @@ struct RichPara {
 	void        ApplyZoom(Zoom z);
 	
 	void        CacheId(int64 id);
-	
+
+	rval_default(RichPara);
+
 	RichPara();
 	~RichPara();
 
@@ -315,13 +319,6 @@ private:
 
 inline bool operator==(const RichPara::Tab& a, const RichPara::Tab& b) {
 	return a.pos == b.pos && a.align == b.align && a.fillchar == b.fillchar;
-}
-
-bool operator==(const Vector<RichPara::Tab>& a, const Vector<RichPara::Tab>& b);
-
-inline
-bool operator!=(const Vector<RichPara::Tab>& a, const Vector<RichPara::Tab>& b) {
-	return !(a == b);
 }
 
 bool NumberingDiffers(const RichPara::Format& fmt1, const RichPara::Format& fmt2);

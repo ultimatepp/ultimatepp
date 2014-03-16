@@ -152,15 +152,15 @@ public:
 	{
 		Node() {}
 		Node(int branch) : branch(branch) {}
-		Node(One<Split> split) : branch(-1), split(split) {}
+		Node(One<Split> rval_ split) : branch(-1), split(pick(split)) {}
 		int        branch;
 		One<Split> split;
 	};
 
 	struct Split
 	{
-		Split(Pointf n, double c, pick_ Node& minus, pick_ Node& plus)
-			: n(n), c(c), minus(minus), plus(plus) {}
+		Split(Pointf n, double c, Node rval_ minus, Node rval_ plus)
+			: n(n), c(c), minus(pick(minus)), plus(pick(plus)) {}
 
 		Pointf     n;
 		double     c; // np = c
@@ -170,7 +170,7 @@ public:
 
 	struct Tree : GeomRefBase
 	{
-		Tree(pick_ Node& root) : root(root) {}
+		Tree(Node pick_ root) : root(pick(root)) {}
 
 		Node root;
 	};
@@ -178,7 +178,7 @@ public:
 public:
 	GisBSPTree() {}
 	GisBSPTree(int branch) : tree(new Tree(Node(branch))) {}
-	GisBSPTree(pick_ Node& root) : tree(new Tree(root)) {}
+	GisBSPTree(Node pick_ root) : tree(new Tree(pick(root))) {}
 
 	bool         IsEmpty() const   { return !tree->root.split; }
 	int          GetBranch() const { return tree->root.branch; }
