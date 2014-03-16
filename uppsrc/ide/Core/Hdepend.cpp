@@ -31,7 +31,7 @@ class Hdepend {
 	void   GetMacroIndex(Index<String>& dest, int ix);
 
 public:
-	void  SetDirs(pick_ Vector<String>& id)  { incdir = id; map.Clear(); }
+	void  SetDirs(Vector<String> pick_ id)  { incdir = pick(id); map.Clear(); }
 	void  TimeDirty();
 
 	void  ClearDependencies()  { depends.Clear(); }
@@ -253,7 +253,7 @@ void Hdepend::ScanFile(const String& path, int map_index) {
 		GetMacroIndex(new_minc, map_index);
 		if(new_minc.GetCount() <= minc.GetCount())
 			return;
-		minc = new_minc;
+		minc = pick(new_minc);
 		term = src;
 		while(*term) {
 			while(*term && (byte)*term <= ' ')
@@ -434,9 +434,9 @@ const Vector<String>& Hdepend::GetDefines(const String& path)
 	return map[d].define;
 }
 
-void HdependSetDirs(pick_ Vector<String>& id)
+void HdependSetDirs(Vector<String> pick_ id)
 {
-	Single<Hdepend>().SetDirs(id);
+	Single<Hdepend>().SetDirs(pick(id));
 }
 
 void HdependTimeDirty()

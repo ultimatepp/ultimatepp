@@ -380,7 +380,6 @@ private:
 	int          showwidth;
 	bool         up;
 	bool         open;
-	int          droplines;
 
 	void         DoClose();
 	void         OpenClose(int i);

@@ -72,7 +72,7 @@ bool MatchWhen(const String& when, const Vector<String>& flag)
 
 String ReadWhen(CParser& p) {
 	String when;
-	if(p.Char('('))
+	if(p.Char('(')) {
 		if(p.IsString())
 			when = p.ReadString();
 		else {
@@ -92,6 +92,7 @@ String ReadWhen(CParser& p) {
 			when = String(b, p.GetPtr());
 			p.Char(')');
 		}
+	}
 	return when;
 }
 
@@ -218,105 +219,108 @@ bool Package::Load(const char *path)
 				   !LoadOpt(p, "flags", flag) &&
 				   !LoadOpt(p, "target", target) &&
 				   !LoadOpt(p, "uses", uses) &&
-				   !LoadOpt(p, "include", include))
-				if(p.Id("charset"))
-					charset = CharsetByNameX(p.ReadString());
-				else
-				if(p.Id("description")) {
-					description = p.ReadString();
-					const char *q = strchr(description, 255);
-					ink = Null;
-					bold = italic = false;
-					if(q) {
-						CParser p(q + 1);
-						bold = p.Char('B');
-						italic = p.Char('I');
-						if(p.IsNumber()) {
-							RGBA c = Black();
-							c.r = p.ReadInt();
-							p.Char(',');
-							if(p.IsNumber())
-								c.g = p.ReadInt();
-							p.Char(',');
-							if(p.IsNumber())
-								c.b = p.ReadInt();
-							ink = c;
-						}
-						description = String(~description, q);
-					}
-				}
-				else
-				if(p.Id("acceptflags")) {
-					do
-						accepts.Add(ReadValue(p));
-					while(p.Char(','));
-				}
-				else
-				if(p.Id("noblitz"))
-				   noblitz = true;
-				else
-				if(p.Id("optimize_speed"))
-					optimize_speed = true;
-				else
-				if(p.Id("optimize_size"))
-					optimize_speed = false;
-				else
-				if(p.Id("file")) {
-					do {
-						file.Add(ReadValue(p));
-						while(!p.IsChar(',') && !p.IsChar(';')) {
-							if(!LoadFOpt(p, "options", file.Top().option) &&
-							   !LoadFOpt(p, "depends", file.Top().depends))
-							if(p.Id("optimize_speed"))
-								file.Top().optimize_speed = true;
-							else
-							if(p.Id("optimize_size"))
-								file.Top().optimize_speed = false;
-							else
-							if(p.Id("readonly"))
-								file.Top().readonly = true;
-							else
-							if(p.Id("separator"))
-								file.Top().separator = true;
-							else
-							if(p.Id("charset"))
-								file.Top().charset = CharsetByNameX(p.ReadString());
-							else
-							if(p.Id("tabsize"))
-								file.Top().tabsize = minmax(p.ReadInt(), 1, 20);
-							else
-							if(p.Id("font"))
-								file.Top().font = minmax(p.ReadInt(), 0, 3);
-							else
-							if(p.Id("highlight"))
-								file.Top().highlight = p.ReadId();
-							else
-								p.ThrowError("invalid keyword");
+				   !LoadOpt(p, "include", include)) {
+					if(p.Id("charset"))
+						charset = CharsetByNameX(p.ReadString());
+					else
+					if(p.Id("description")) {
+						description = p.ReadString();
+						const char *q = strchr(description, 255);
+						ink = Null;
+						bold = italic = false;
+						if(q) {
+							CParser p(q + 1);
+							bold = p.Char('B');
+							italic = p.Char('I');
+							if(p.IsNumber()) {
+								RGBA c = Black();
+								c.r = p.ReadInt();
+								p.Char(',');
+								if(p.IsNumber())
+									c.g = p.ReadInt();
+								p.Char(',');
+								if(p.IsNumber())
+									c.b = p.ReadInt();
+								ink = c;
+							}
+							description = String(~description, q);
 						}
 					}
-					while(p.Char(','));
-				}
-				else
-				if(p.Id("mainconfig")) {
-					do {
-						String c = p.ReadString();
-						p.Char('=');
-						p.Id("external"); // Backward compatibility...
-						p.Id("console");
-						p.Id("remotelinux");
-						p.Id("normal");
-						String f = p.ReadString();
-						Config& cf = config.Add();
-						cf.name = c;
-						cf.param = f;
+					else
+					if(p.Id("acceptflags")) {
+						do
+							accepts.Add(ReadValue(p));
+						while(p.Char(','));
 					}
-					while(p.Char(','));
+					else
+					if(p.Id("noblitz"))
+					   noblitz = true;
+					else
+					if(p.Id("optimize_speed"))
+						optimize_speed = true;
+					else
+					if(p.Id("optimize_size"))
+						optimize_speed = false;
+					else
+					if(p.Id("file")) {
+						do {
+							File f(ReadValue(p));
+							file.Add() = pick(f);
+							while(!p.IsChar(',') && !p.IsChar(';')) {
+								if(!LoadFOpt(p, "options", file.Top().option) &&
+								   !LoadFOpt(p, "depends", file.Top().depends)) {
+									if(p.Id("optimize_speed"))
+										file.Top().optimize_speed = true;
+									else
+									if(p.Id("optimize_size"))
+										file.Top().optimize_speed = false;
+									else
+									if(p.Id("readonly"))
+										file.Top().readonly = true;
+									else
+									if(p.Id("separator"))
+										file.Top().separator = true;
+									else
+									if(p.Id("charset"))
+										file.Top().charset = CharsetByNameX(p.ReadString());
+									else
+									if(p.Id("tabsize"))
+										file.Top().tabsize = minmax(p.ReadInt(), 1, 20);
+									else
+									if(p.Id("font"))
+										file.Top().font = minmax(p.ReadInt(), 0, 3);
+									else
+									if(p.Id("highlight"))
+										file.Top().highlight = p.ReadId();
+									else
+										p.ThrowError("invalid keyword");
+								}
+							}
+						}
+						while(p.Char(','));
+					}
+					else
+					if(p.Id("mainconfig")) {
+						do {
+							String c = p.ReadString();
+							p.Char('=');
+							p.Id("external"); // Backward compatibility...
+							p.Id("console");
+							p.Id("remotelinux");
+							p.Id("normal");
+							String f = p.ReadString();
+							Config& cf = config.Add();
+							cf.name = c;
+							cf.param = f;
+						}
+						while(p.Char(','));
+					}
+					else
+					if(p.Id("custom"))
+						custom.Add().Load(p);
+					else
+						p.ThrowError("invalid keyword");
 				}
-				else
-				if(p.Id("custom"))
-					custom.Add().Load(p);
-				else
-					p.ThrowError("invalid keyword");
 				p.Char(';');
 			}
 			return true;

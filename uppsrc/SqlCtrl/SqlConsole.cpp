@@ -190,7 +190,6 @@ void MacroSet::Serialize(Stream& s) {
 		macro.Clear();
 		for(int i = 0; i < n; i++) {
 			String key;
-			Macro  value;
 			s % key;
 			s % macro.Add(key);
 		}
@@ -198,10 +197,8 @@ void MacroSet::Serialize(Stream& s) {
 	else
 		for(int i = 0; i < n; i++) {
 			String key;
-			Macro  value;
 			key = macro.GetKey(i);
-			value = macro[i];
-			s % key % value;
+			s % key % macro[i];
 		}
 }
 

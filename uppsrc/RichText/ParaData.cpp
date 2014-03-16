@@ -29,7 +29,7 @@ RichPara::~RichPara()
 		Mutex::Lock __(cache_lock);
 		Array<RichPara>& cache = Cache();
 		incache = true;
-		cache.InsertPick(0, *this);
+		cache.InsertPick(0, pick(*this));
 		int total = 0;
 		for(int i = 1; i < cache.GetCount(); i++) {
 			total += cache[i].GetLength();
@@ -152,15 +152,6 @@ bool NumberingDiffers(const RichPara::Format& fmt1, const RichPara::Format& fmt2
 	       fmt1.after_number != fmt2.after_number ||
 	       fmt1.reset_number != fmt2.reset_number ||
 	       memcmp(fmt1.number, fmt2.number, sizeof(fmt1.number));
-}
-
-bool operator==(const Vector<RichPara::Tab>& a, const Vector<RichPara::Tab>& b)
-{
-	if(a.GetCount() != b.GetCount()) return false;
-	for(int i = 0; i < a.GetCount(); i++)
-		if(a[i].pos != b[i].pos || a[i].align != b[i].align || a[i].fillchar != b[i].fillchar)
-			return false;
-	return true;
 }
 
 RichPara::CharFormat::CharFormat()
@@ -573,7 +564,7 @@ void RichPara::Unpack(const String& data, const Array<RichObject>& obj,
 		Array<RichPara>& cache = Cache();
 		for(int i = 0; i < cache.GetCount(); i++)
 			if(cache[i].cacheid == cacheid) {
-				*this = cache[i];
+				*this = pick(cache[i]);
 				incache = false;
 				cache.Remove(i);
 				return;

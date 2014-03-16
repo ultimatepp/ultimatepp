@@ -216,8 +216,8 @@ public:
 
 	void                  ClearSpelling();
 
-	void                  SetPick(int parti, pick_ RichTable& table);
-	void                  CatPick(pick_ RichTable& table)             { SetPick(GetPartCount(), table); }
+	void                  SetPick(int parti, RichTable rval_ table);
+	void                  CatPick(RichTable rval_ table)              { SetPick(GetPartCount(), pick(table)); }
 	void                  Set(int parai, const RichPara& p, const RichStyles& s);
 	void                  Insert(int parai, const RichPara& p, const RichStyles& s);
 	void                  Cat(const RichPara& p, const RichStyles& s) { Set(GetPartCount(), p, s); }
@@ -244,6 +244,8 @@ public:
 
 	RichTxt(const RichTxt& src, int);
 	RichTxt();
+
+	rval_default(RichTxt);
 
 #ifdef _DEBUG
 	void                  Dump();

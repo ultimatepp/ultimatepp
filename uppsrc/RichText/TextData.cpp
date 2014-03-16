@@ -2,11 +2,11 @@
 
 NAMESPACE_UPP
 
-void  RichText::CatPick(pick_ RichText& p)
+void  RichText::CatPick(RichText rval_ p)
 {
 	MergeStyles(p);
 	int c = part.GetCount();
-	part.AppendPick(p.part);
+	part.AppendPick(pick(p.part));
 	for(int i = c; i < part.GetCount(); i++)
 		if(IsPara(i))
 			part[i].Get<Para>().Invalidate();
@@ -166,7 +166,7 @@ RichText RichText::Copy(int pos, int count) const
 				r.Cat(txt.Get(pi, style));
 			else {
 				RichTable tab(txt.GetTable(pi), 1);
-				r.CatPick(tab);
+				r.CatPick(pick(tab));
 			}
 			pi++;
 		}
@@ -332,8 +332,8 @@ RichText::RichText(const RichText& x, int)
 	nolinks = x.nolinks;
 }
 
-RichText::RichText(pick_ RichTxt& x, pick_ RichStyles& st)
-   : RichTxt(x), style(st)
+RichText::RichText(RichTxt rval_ x, RichStyles rval_ st)
+   : RichTxt(pick(x)), style(pick(st))
 {
 	nolinks = false;
 }

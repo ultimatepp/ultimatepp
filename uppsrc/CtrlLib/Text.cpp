@@ -198,16 +198,16 @@ void   TextCtrl::ClearDirty()
 TextCtrl::UndoData TextCtrl::PickUndoData()
 {
 	UndoData data;
-	data.undo = undo;
-	data.redo = redo;
+	data.undo = pick(undo);
+	data.redo = pick(redo);
 	data.undoserial = undoserial;
 	return data;
 }
 
-void TextCtrl::SetPickUndoData(pick_ TextCtrl::UndoData& data)
+void TextCtrl::SetPickUndoData(TextCtrl::UndoData rval_ data)
 {
-	undo = data.undo;
-	redo = data.redo;
+	undo = pick(data.undo);
+	redo = pick(data.redo);
 	undoserial = data.undoserial;
 	incundoserial = true;
 }

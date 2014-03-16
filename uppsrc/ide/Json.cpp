@@ -4,6 +4,7 @@ struct JsonView : TopWindow {
 	TreeCtrl  tree;
 	
 	virtual bool Key(dword key, int count);
+	virtual void Close();
 
 	int  AddNode(int parent_id, const Value& id, const String& name, const Value& v);
 	void Load(const char *json);
@@ -68,6 +69,7 @@ int JsonView::AddNode(int parent_id, const Value& id, const String& name, const 
 
 void JsonView::Load(const char *json)
 {
+	tree.Clear();
 	tree.Open(AddNode(0, Null, "JSON", ParseJSON(json)));
 }
 
@@ -103,11 +105,18 @@ JsonView::JsonView()
 	tree.WhenLeftDouble = THISBACK(CopyPath);
 }
 
+void JsonView::Close()
+{
+	StoreToGlobal(*this, "JSONview");
+	TopWindow::Close();
+}
+
 void Ide::Json()
 {
-	JsonView dlg;
-	LoadFromGlobal(dlg, "JSONview");
+	static JsonView dlg;
 	dlg.Load(editor.IsSelection() ? editor.GetSelection() : editor.Get());
-	dlg.Execute();
-	StoreToGlobal(dlg, "JSONview");
+	if(!dlg.IsOpen()) {
+		LoadFromGlobal(dlg, "JSONview");
+		dlg.OpenMain();
+	}
 }

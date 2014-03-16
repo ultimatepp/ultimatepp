@@ -472,7 +472,7 @@ String XmlParser::ReadTag(bool next)
 	String h = tagtext;
 	if(next) {
 		stack.Add(Nesting(h, npreserve));
-		attr = nattr;
+		attr = pick(nattr);
 		attr1 = nattr1;
 		attrval1 = nattrval1;
 		Next();
@@ -485,7 +485,7 @@ bool  XmlParser::Tag(const char *tag)
 	if(IsTag() && tagtext == tag) {
 		LLOG("Tag " << tagtext);
 		stack.Add(Nesting(tagtext, npreserve));
-		attr = nattr;
+		attr = pick(nattr);
 		attr1 = nattr1;
 		attrval1 = nattrval1;
 		Next();
@@ -499,7 +499,7 @@ bool  XmlParser::Tag(const String& tag)
 	if(IsTag() && tagtext == tag) {
 		LLOG("Tag " << tagtext);
 		stack.Add(Nesting(tagtext, npreserve));
-		attr = nattr;
+		attr = pick(nattr);
 		attr1 = nattr1;
 		attrval1 = nattrval1;
 		Next();
@@ -584,11 +584,11 @@ bool XmlParser::LoopTag(const char *tag)
 	return false;
 }
 
-VectorMap<String, String> XmlParser::PickAttrs() pick_
+VectorMap<String, String> XmlParser::PickAttrs()
 {
 	if(!IsNull(attr1))
-		const_cast<VectorMap<String, String>&>(attr).Insert(0, attr1, attrval1);
-	return attr;
+		pick(const_cast<VectorMap<String, String>&>(attr).Insert(0, attr1, attrval1));
+	return pick(attr);
 }
 
 int   XmlParser::Int(const char *id, int def) const
@@ -830,14 +830,14 @@ XmlNode& XmlNode::SetAttr(const char *id, const String& text)
 	return *this;
 }
 
-void XmlNode::SetAttrsPick(pick_ VectorMap<String, String>& a)
+void XmlNode::SetAttrsPick(VectorMap<String, String> rval_ a)
 {
 	if(a.GetCount() == 0)
 		attr.Clear();
 	else {
 		if(!attr)
 			attr.Create();
-		*attr = a;
+		*attr = pick(a);
 	}
 }
 
@@ -891,7 +891,7 @@ static XmlNode sReadXmlNode(XmlParser& p, ParseXmlFilter *filter, dword style)
 				if(!Ignore(p, style)) {
 					XmlNode n = sReadXmlNode(p, filter, style);
 					if(n.GetType() != XML_DOC) // tag was ignored
-						m.Add() = n;
+						m.Add() = pick(n);
 				}
 			if(filter)
 				filter->EndTag();

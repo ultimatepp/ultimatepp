@@ -36,7 +36,6 @@ private:
 	Color         normalized_color;
 	int           h16, s16, v16;
 	int           round_step;
-	int           wheel_style;
 	enum STYLE { S_WHEEL, S_RECT, S_HEXAGON };
 	STYLE         style;
 	Image         cache;

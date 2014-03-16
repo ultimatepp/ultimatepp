@@ -63,8 +63,8 @@ public:
 	HashBase();
 	~HashBase();
 
-	HashBase(pick_ HashBase& b);
-	void operator=(pick_ HashBase& b);
+	HashBase(HashBase rval_ b);
+	void operator=(HashBase rval_ b);
 	HashBase(const HashBase& b, int);
 	void operator<<=(const HashBase& b);
 
@@ -166,15 +166,24 @@ public:
 	void     Serialize(Stream& s);
 	void     Xmlize(XmlIO& xio, const char *itemtag = "key");
 	void     Jsonize(JsonIO& jio);
+	String   ToString() const;
+	bool     operator==(const AIndex& b) const { return IsEqualArray(*this, b); }
+	bool     operator!=(const AIndex& b) const { return !operator==(b); }
+	int      Compare(const AIndex& b) const    { return CompareArray(*this, b); }
+	bool     operator<=(const AIndex& x) const { return Compare(x) <= 0; }
+	bool     operator>=(const AIndex& x) const { return Compare(x) >= 0; }
+	bool     operator<(const AIndex& x) const  { return Compare(x) < 0; }
+	bool     operator>(const AIndex& x) const  { return Compare(x) > 0; }
 #endif
 
-	V        PickKeys() pick_                 { return key; }
+	V        PickKeys()                       { return pick(key); }
 	const V& GetKeys() const                  { return key; }
 	bool     IsPicked(void) const             { return key.IsPicked(); }
 
 // Pick assignment & copy. Picked source can only Clear(), ~AIndex(), operator=, operator<<=
 
-	AIndex& operator=(pick_ V& s);
+	AIndex& operator=(V rval_ s);
+//	AIndex& operator=(AIndex rval_ s) = default;
 	AIndex& operator<<=(const V& s);
 
 // Standard container interface
@@ -191,7 +200,7 @@ public:
 	friend int  GetCount(const AIndex& v)                 { return v.GetCount(); }
 
 protected:
-	AIndex(pick_ V& s);
+	AIndex(V rval_ s);
 	AIndex(const V& s, int);
 	AIndex() {}
 	AIndex(const AIndex& s, int);
@@ -205,12 +214,13 @@ public:
 	T        Pop()                           { T x = B::Top(); B::Drop(); return x; }
 
 	Index() {}
-	Index(pick_ Index& s) : B(s)             {}
+	Index(Index rval_ s) : B(pick(s))        {}
 	Index(const Index& s, int) : B(s, 1)     {}
-	explicit Index(pick_ Vector<T>& s) : B(s){}
+	explicit Index(Vector<T> rval_ s) : B(pick(s)) {}
 	Index(const Vector<T>& s, int) : B(s, 1) {}
 
-	Index& operator=(pick_ Vector<T>& x)     { B::operator=(x); return *this; }
+	Index& operator=(Vector<T> rval_ x)      { B::operator=(pick(x)); return *this; }
+	Index& operator=(Index<T> rval_ x)       { B::operator=(pick(x)); return *this; }
 
 	friend void Swap(Index& a, Index& b)     { a.B::Swap(b); }
 
@@ -237,14 +247,15 @@ public:
 	T       *Detach(int i)                          { B::hash.Remove(i); return B::key.Detach(i); }
 
 	ArrayIndex() {}
-	ArrayIndex(pick_ ArrayIndex& s) : B(s)          {}
-	ArrayIndex(const ArrayIndex& s, int) : B(s, 1)  {}
-	explicit ArrayIndex(pick_ Array<T>& s) : B(s)   {}
-	ArrayIndex(const Array<T>& s, int) : B(s, 1)    {}
+	ArrayIndex(ArrayIndex rval_ s) : B(pick(s))          {}
+	ArrayIndex(const ArrayIndex& s, int) : B(s, 1)       {}
+	explicit ArrayIndex(Array<T> rval_ s) : B(pick(s))   {}
+	ArrayIndex(const Array<T>& s, int) : B(s, 1)         {}
 
-	ArrayIndex& operator=(pick_ Array<T>& x)        { B::operator=(x); return *this; }
+	ArrayIndex& operator=(Array<T> rval_ x)              { B::operator=(pick(x)); return *this; }
+	ArrayIndex& operator=(ArrayIndex<T> rval_ x)         { B::operator=(pick(x)); return *this; }
 
-	friend void Swap(ArrayIndex& a, ArrayIndex& b)  { a.B::Swap(b); }
+	friend void Swap(ArrayIndex& a, ArrayIndex& b)       { a.B::Swap(b); }
 
 	typedef typename B::ConstIterator ConstIterator; // GCC bug (?)
 	STL_INDEX_COMPATIBILITY(ArrayIndex<T _cm_ HashFn>)

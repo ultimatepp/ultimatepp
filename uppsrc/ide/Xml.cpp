@@ -8,6 +8,7 @@ struct XmlView : public TopWindow {
 	ParentCtrl            data;
 
 	virtual bool Key(dword key, int count);
+	virtual void Close();
 
 	void Load(int parent, XmlParser& p);
 	void Load(const String& txt);
@@ -99,8 +100,16 @@ void XmlView::CopyPath()
 	WriteClipboardText(path);
 }
 
+void XmlView::Close()
+{
+	StoreToGlobal(*this, "XML view");
+	TopWindow::Close();
+}
+
 XmlView::XmlView()
 {
+	Title("XML view");
+
 	xml.NoRoot();
 
 	error.SetFont(Arial(20)).SetInk(Red);
@@ -124,10 +133,10 @@ XmlView::XmlView()
 
 void Ide::Xml()
 {
-	XmlView dlg;
-	LoadFromGlobal(dlg, "XMLview");
+	static XmlView dlg;
 	dlg.Load(editor.IsSelection() ? editor.GetSelection() : editor.Get());
-	dlg.Execute();
-	StoreToGlobal(dlg, "XMLview");
+	if(!dlg.IsOpen()) {
+		LoadFromGlobal(dlg, "XMLview");
+		dlg.OpenMain();
+	}
 }
-

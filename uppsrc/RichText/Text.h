@@ -39,7 +39,7 @@ public:
 
 	RichPara              Get(int i) const                     { return RichTxt::Get(i, style); }
 	void                  Cat(const RichPara& p)               { RichTxt::Cat(p, style); }
-	void                  CatPick(pick_ RichText& p);
+	void                  CatPick(RichText rval_ p);
 	using                 RichTxt::CatPick;
 
 	RichContext           Context(const Rect& page) const;
@@ -131,8 +131,8 @@ public:
 
 	static void           Register(ClipboardType& type);
 	
-	void                  PickHeader(pick_ RichText& txt);
-	void                  PickFooter(pick_ RichText& txt);
+	void                  PickHeader(RichText rval_ txt);
+	void                  PickFooter(RichText rval_ txt);
 	void                  SetHeaderQtf(const char *qtf);
 	void                  SetFooterQtf(const char *qtf);
 	void                  ClearHeader()                                       { header.Clear(); }
@@ -150,5 +150,7 @@ public:
 
 	RichText()            { Init(); }
 	RichText(const RichText& x, int);
-	RichText(pick_ RichTxt& x, pick_ RichStyles& st);
+	RichText(RichTxt rval_ x, RichStyles rval_ st);
+
+	rval_default(RichText);
 };

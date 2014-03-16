@@ -155,7 +155,7 @@ private:
 		bool           IsDisplay() const          { return !ptr.GetBit() && ptr.GetPtr(); }
 		const Display& GetDisplay() const         { ASSERT(IsDisplay()); return *(const Display *)ptr.GetPtr(); }
 
-		CellInfo(pick_ CellInfo& s);
+		CellInfo(CellInfo rval_ s);
 		CellInfo() {}
 		~CellInfo();
 	};

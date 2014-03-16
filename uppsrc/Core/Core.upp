@@ -91,6 +91,7 @@ file
 	Hash.cpp optimize_speed,
 	InVector.h,
 	InVector.hpp,
+	InMap.hpp,
 	Tuple.h,
 	Other.h,
 	Concretes readonly separator,

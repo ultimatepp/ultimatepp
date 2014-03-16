@@ -288,7 +288,7 @@ void HeaderCtrl::Distribute(const Vector<int>& sci, double delta)
 
 		if(fabs(delta) < eps)
 			break;
-		ci = nci;
+		ci = pick(nci);
 		if(ci.GetCount() == 0) {
 			double psm = 0;
 			for(int i = 0; i < sci.GetCount(); i++)

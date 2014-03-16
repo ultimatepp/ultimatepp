@@ -50,11 +50,11 @@ bool IdeQtfDes::Load(const char *_filename)
 	RichText txt;
 	if(ParseQTF(txt, LoadFile(_filename))) {
 		filename = _filename;
-		Pick(txt);
+		Pick(pick(txt));
 		IdeQtfEditPos& ep = sEP().GetAdd(filename);
 		if(ep.filetime == FileGetTime(filename)) {
 			SetPosInfo(ep.pos);
-			SetPickUndoInfo(ep.uf);
+			SetPickUndoInfo(pick(ep.uf));
 			ep.uf.Clear();
 		}
 		return true;

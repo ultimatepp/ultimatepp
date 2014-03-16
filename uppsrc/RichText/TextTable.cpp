@@ -23,7 +23,7 @@ int  RichText::SetTable(int pos, const RichTable& table)
 	int pi = txt.FindPart(pos);
 	ASSERT(pos == 0 && txt.GetPartLength(pi) == 0 && txt.IsPara(pi));
 	RichTable pt(table, 1);
-	txt.SetPick(pi, pt);
+	txt.SetPick(pi, pick(pt));
 	return GetRichPos(bpos).table;
 }
 
@@ -156,7 +156,7 @@ void  RichText::JoinCell(int table, const Rect& sel)
 				RichTxt& t = tab[i][j].text;
 				for(int pi = 0; pi < t.GetPartCount(); pi++)
 					if(t.IsTable(pi))
-						cell.text.CatPick(t.part[pi].Get<RichTable>());
+						cell.text.CatPick(pick(t.part[pi].Get<RichTable>()));
 					else
 					if(pi < t.GetPartCount() - 1 || t.GetPartLength(pi))
 						cell.text.Cat(t.Get(pi, style), style);

@@ -310,7 +310,7 @@ void InVector<T>::InsertN(int ii, int n)
 template <class T>
 void InVector<T>::Join(int blki)
 {
-	data[blki].AppendPick(data[blki + 1]);
+	data[blki].AppendPick(pick(data[blki + 1]));
 	data.Remove(blki + 1);
 }
 
@@ -434,6 +434,7 @@ InVector<T>::InVector(const InVector<T>& v, int)
 	blk_high = v.blk_high;
 	blk_low = v.blk_low;
 	serial = NewInVectorSerial();
+	slave = v.slave;
 }
 
 template <class T>
@@ -631,13 +632,14 @@ void InVector<T>::ConstIterator::PrevBlk()
 template <typename T>
 void InVector<T>::Swap(InVector& b)
 {
-	Swap(data, b.data);
-	Swap(index, b.index);
-	Swap(count, b.count);
-	Swap(hcount, b.hcount);
-	Swap(serial, b.serial);
-	Swap(blk_high, b.blk_high);
-	Swap(blk_low, b.blk_low);
+	Upp::Swap(data, b.data);
+	Upp::Swap(index, b.index);
+	Upp::Swap(count, b.count);
+	Upp::Swap(hcount, b.hcount);
+	Upp::Swap(serial, b.serial);
+	Upp::Swap(blk_high, b.blk_high);
+	Upp::Swap(blk_low, b.blk_low);
+	Upp::Swap(slave, b.slave);
 }
 
 #ifdef UPP
@@ -652,6 +654,13 @@ void InVector<T>::Jsonize(JsonIO& jio)
 {
 	JsonizeArray<InVector<T>, T>(jio, *this);
 }
+
+template <class T>
+String InVector<T>::ToString() const
+{
+	return AsStringArray(*this);
+}
+
 #endif
 
 template <class T>
@@ -785,7 +794,7 @@ InArray<T>::InArray(const InArray& v, int)
 	ConstIterator s = v.Begin();
 	IVIter it = iv.Begin();
 	while(n--)
-		*it++ = new T(*s++);
+		*it++ = DeepCopyNew(*s++);
 }
 
 #ifdef UPP
@@ -800,161 +809,13 @@ void InArray<T>::Jsonize(JsonIO& jio)
 {
 	JsonizeArray<InArray<T>, T>(jio, *this);
 }
-#endif
-
-template <class T, class Less>
-int SortedIndex<T, Less>::FindAdd(const T& key)
-{
-	int i = FindLowerBound(key);
-	if(i == GetCount() || Less()(key, iv[i]))
-		iv.Insert(i, key);
-	return i;
-}
-
-template <class T, class Less>
-int SortedIndex<T, Less>::FindNext(int i) const
-{
-	return i + 1 < iv.GetCount() && !Less()(iv[i], iv[i + 1]) ? i + 1 : -1;
-}
-
-template <class T, class Less>
-int SortedIndex<T, Less>::FindLast(const T& x) const
-{
-	int i = iv.FindUpperBound(x, Less());
-	return i > 0 && !Less()(iv[i - 1], x) ? i - 1 : -1;
-}
-
-template <class T, class Less>
-int SortedIndex<T, Less>::FindPrev(int i) const
-{
-	return i > 0 && !Less()(iv[i - 1], iv[i]) ? i - 1 : -1;
-}
-
-template <class T, class Less>
-int SortedIndex<T, Less>::RemoveKey(const T& x)
-{
-	int l = FindLowerBound(x);
-	int count = FindUpperBound(x) - l;
-	Remove(l, count);
-	return count;
-}
 
 template <class T>
-void Slaved_InVector__<T>::Insert(int blki, int pos)
+String InArray<T>::ToString() const
 {
-	if(ptr)
-		data.data[blki].Insert(pos, *ptr);
-	else
-		data.data[blki].Insert(pos);
-	ptr = &data.data[blki][pos];
+	return AsStringArray(*this);
 }
 
-template <class T>
-void Slaved_InVector__<T>::Split(int blki, int nextsize)
-{
-	Vector<T>& x = data.data.Insert(blki + 1);
-	x.InsertSplit(0, data.data[blki], nextsize);
-	data.data[blki].Shrink();
-}
-
-template <class T>
-void Slaved_InVector__<T>::AddFirst()
-{
-	if(ptr)
-		data.data.Add().Add(*ptr);
-	else
-		data.data.Add().Add();
-	ptr = &data.data[0][0];
-}
-
-template <class T>
-void Slaved_InArray__<T>::Insert(int blki, int pos)
-{
-	data.iv.data[blki].Insert(pos, mk ? new T(*ptr) : ptr ? ptr : new T);
-}
-
-template <class T>
-void Slaved_InArray__<T>::Split(int blki, int nextsize)
-{
-	Vector< typename InArray<T>::PointerType >& x = data.iv.data.Insert(blki + 1);
-	x.InsertSplit(0, data.iv.data[blki], nextsize);
-}
-
-template <class T>
-void Slaved_InArray__<T>::Remove(int blki, int pos, int n)
-{
-	Vector< typename InArray<T>::PointerType >& b = data.iv.data[blki];
-	for(int i = 0; i < n; i++)
-		if(b[i + pos])
-			delete (T *)b[i + pos];
-	b.Remove(pos, n);
-}
-
-template <class T>
-void Slaved_InArray__<T>::AddFirst()
-{
-	data.iv.data.Add().Add(mk ? new T(*ptr) : ptr ? ptr : new T);
-}
-
-#ifdef UPP
-template <class K, class T>
-void StreamSortedMap(Stream& s, T& cont)
-{
-	int n = cont.GetCount();
-	s / n;
-	if(n < 0) {
-		s.LoadError();
-		return;
-	}
-	if(s.IsLoading()) {
-		cont.Clear();
-		while(n--) {
-			K key;
-			s % key;
-			s % cont.Add(key);
-		}
-	}
-	else
-		for(int i = 0; i < cont.GetCount(); i++) {
-			K key = cont.GetKey(i);
-			s % key;
-			s % cont[i];
-		}
-}
-
-template <class K, class T, class Less>
-void SortedVectorMap<K, T, Less>::Serialize(Stream& s) {
-	StreamSortedMap<K, SortedVectorMap<K, T, Less> >(s, *this);
-}
-
-template <class K, class T, class Less>
-void SortedVectorMap<K, T, Less>::Xmlize(XmlIO& xio)
-{
-	XmlizeSortedMap<K, T, SortedVectorMap<K, T, Less> >(xio, "key", "value", *this);
-}
-
-template <class K, class T, class Less>
-void SortedVectorMap<K, T, Less>::Jsonize(JsonIO& jio)
-{
-	JsonizeSortedMap<SortedVectorMap<K, T, Less>, K, T>(jio, *this, "key", "value");
-}
-
-template <class K, class T, class Less>
-void SortedArrayMap<K, T, Less>::Serialize(Stream& s) {
-	StreamSortedMap<K, SortedArrayMap<K, T, Less> >(s, *this);
-}
-
-template <class K, class T, class Less>
-void SortedArrayMap<K, T, Less>::Xmlize(XmlIO& xio)
-{
-	XmlizeSortedMap<K, T, SortedArrayMap<K, T, Less> >(xio, "key", "value", *this);
-}
-
-template <class K, class T, class Less>
-void SortedArrayMap<K, T, Less>::Jsonize(JsonIO& jio)
-{
-	JsonizeSortedMap<SortedArrayMap<K, T, Less>, K, T>(jio, *this, "key", "value");
-}
 #endif
 
 #ifdef LLOG

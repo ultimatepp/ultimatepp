@@ -176,7 +176,7 @@ Array<Drawing> RenderPages(const RichText& txt, Size pagesize)
 	paintinfo.hyperlink = Null;
 	txt.Paint(pd, pagesize, paintinfo);
 	pd.Flush();
-	return pd.page;
+	return pick(pd.page);
 }
 
 String Pdf(const RichText& txt, Size pagesize, int margin, bool pdfa)

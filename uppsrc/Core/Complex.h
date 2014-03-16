@@ -17,6 +17,8 @@ struct Complex : std::complex<double>
 
 	bool operator==(const Complex& c) const { return (const C&)(*this) == (const C&)c; }
 	bool operator!=(const Complex& c) const { return (const C&)(*this) != (const C&)c; }
+	
+	int  Compare(const Complex& c) const    { NEVER(); return 0; }
 
 	void Serialize(Stream& s);	
 	void Xmlize(XmlIO& xio);
@@ -32,8 +34,15 @@ template<> inline dword ValueTypeNo(const Complex*) { return COMPLEX_V; }
 
 inline const Complex& Nvl(const Complex& a, const Complex& b)  { return IsNull(a) ? b : a; }
 
+template<>
 inline bool IsPolyEqual(const Complex& x, const Value& v) {
 	return IsNumber(v) && x.imag() == 0 && x.real() == (double)v;
+}
+
+template<>
+inline int  PolyCompare(const Complex& a, const Value& b)
+{
+	NEVER(); return 0;
 }
 
 VALUE_COMPARE(Complex)

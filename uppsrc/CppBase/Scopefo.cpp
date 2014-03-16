@@ -89,7 +89,7 @@ const Vector<String>& Scopefo::GetBases()
 					Bases(b[i], bb);
 				}
 			}
-			b = bb;
+			b = pick(bb);
 		}
 		for(int i = 0; i < bi.GetCount(); i++)
 			baselist.Add(base.GetKey(bi[i]) + "::");

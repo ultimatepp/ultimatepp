@@ -38,10 +38,10 @@ class MIValue : public Moveable<MIValue>
 		// check for emptyness
 		bool IsEmpty(void) const;
 		
-		MIValue &operator=(pick_ MIValue &v);
+		MIValue &operator=(MIValue rval_ v);
 		MIValue &operator=(String const &s);
 		MIValue();
-		MIValue(MIValue pick_ &v);
+		MIValue(MIValue rval_ v);
 		MIValue(String const &s);
 		
 		void Clear(void);
@@ -107,12 +107,12 @@ class MIValue : public Moveable<MIValue>
 		// add some data to a value
 
 		// add an item to a tuple
-		MIValue &Add(String const &key, MIValue pick_ &v);
+		MIValue &Add(String const &key, MIValue rval_ v);
 		MIValue &Add(String const &key, String const &data);
 		MIValue &FindAdd(String const &key, String const &data);
 		
 		// add an item to an array
-		MIValue &Add(MIValue pick_ &v);
+		MIValue &Add(MIValue rval_ v);
 		MIValue &Add(String const &data);
 		
 		// remove a tuple key

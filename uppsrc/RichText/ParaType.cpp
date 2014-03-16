@@ -218,8 +218,8 @@ RichPara::Lines::~Lines()
 		Mutex::Lock __(cache_lock);
 		Array<Lines>& cache = Cache();
 		incache = true;
-		cache.Insert(0) = *this;
-		cache.SetCount(1);
+		cache.Insert(0) = pick(*this);
+//		cache.SetCount(1);
 		int total = 0;
 		for(int i = 1; i < cache.GetCount(); i++) {
 			total += cache[i].clen;
@@ -240,7 +240,7 @@ RichPara::Lines RichPara::FormatLines(int acx) const
 		Array<Lines>& cache = Lines::Cache();
 		for(int i = 0; i < cache.GetCount(); i++)
 			if(cache[i].cacheid == cacheid && cache[i].cx == acx) {
-				lines = cache[i];
+				lines = pick(cache[i]);
 				lines.incache = false;
 				cache.Remove(i);
 				return lines;

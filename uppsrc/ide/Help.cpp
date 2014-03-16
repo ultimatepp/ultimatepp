@@ -346,7 +346,7 @@ void TopicCtrl::FinishText(RichText& text)
 	if(ss.GetCount() == 0)
 		return;
 	HighlightWords hw;
-	hw.words = ss;
+	hw.words = pick(ss);
 	text.Iterate(hw);
 	RichText::FormatInfo fi;
 	fi.charvalid = RichText::PAPER|RichText::INK;

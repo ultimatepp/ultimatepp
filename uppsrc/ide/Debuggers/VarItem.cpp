@@ -230,7 +230,7 @@ MIValue VarItem::EvaluateExpression(String const &exp) const
 	MIValue val = debugger->MICmd("data-evaluate-expression " + exp);
 	if(!val.IsTuple())
 		return MIValue();
-	MIValue v = val["value"];
+	const MIValue& v = val["value"];
 	if(v.IsError() || !v.IsString())
 		return MIValue();
 	String s = v.ToString();

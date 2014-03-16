@@ -523,7 +523,8 @@ bool SSLSocketData::Accept(Socket& socket, dword *ipaddr, bool nodelay, int time
 	One<SSLSocketData> data = new SSLSocketData(ssl_context);
 	if(!data->OpenAccept(connection, nodelay, is_blocking))
 		return false;
-	socket.Attach(-data);
+	One<Data> d(-data);
+	socket.Attach(d);
 	return true;
 }
 
@@ -559,7 +560,8 @@ bool SSLServerSocket(Socket& socket, SSLContext& ssl_context, int port, bool nod
 	One<SSLSocketData> data = new SSLSocketData(ssl_context);
 	if(!data->OpenServer(port, nodelay, listen_count, blocking))
 		return false;
-	socket.Attach(-data);
+	One<Socket::Data> d(-data);
+	socket.Attach(d);
 	return true;
 }
 
@@ -571,7 +573,8 @@ bool SSLClientSocket(Socket& socket, SSLContext& ssl_context, const char *host, 
 		return false;
 	if(!data->Secure())
 		return false;
-	socket.Attach(-data);
+	One<Socket::Data> d(-data);
+	socket.Attach(d);
 	return true;
 }
 
@@ -581,7 +584,8 @@ bool SSLClientSocketUnsecured(Socket& socket, SSLContext& ssl_context, const cha
 {
 	One<SSLSocketData> data = new SSLSocketData(ssl_context);
 	if(data->OpenClientUnsecured(host, port, nodelay, my_addr, timeout, is_blocking)) {
-		socket.Attach(-data);
+		One<Socket::Data> d(-data);
+		socket.Attach(d);
 		return true;
 	}
 	return false;

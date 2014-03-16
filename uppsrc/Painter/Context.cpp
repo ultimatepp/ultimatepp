@@ -22,7 +22,7 @@ void BufferPainter::EndOp()
 		FinishMask();
 	if(attr.onpath) {
 		attr.onpath = false;
-		onpath = onpathstack.Top();
+		onpath = pick(onpathstack.Top());
 		onpathstack.Drop();
 		pathlen = pathlenstack.Pop();
 	}

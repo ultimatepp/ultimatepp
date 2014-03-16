@@ -295,10 +295,10 @@ void WorkspaceWork::PackageCursor()
 	if(actualpackage.IsEmpty()) return;
 	if(actualpackage == METAPACKAGE) {
 		actual.file.Clear();
-		actual.file.Add(String(HELPNAME));
+		actual.file.AddPick(Package::File(String(HELPNAME)));
 		Vector<String> d = GetUppDirs();
 		for(int i = 0; i < d.GetCount(); i++)
-			actual.file.Add(AppendFileName(d[i], "$.tpp"));
+			actual.file.AddPick(Package::File(AppendFileName(d[i], "$.tpp")));
 	}
 	else {
 		String pp = PackagePathA(actualpackage);
@@ -1061,7 +1061,7 @@ void WorkspaceWork::SerializeClosed(Stream& s)
 			}
 	}
 	s % list;
-	closed = list;
+	closed = pick(list);
 }
 
 void UppList::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const

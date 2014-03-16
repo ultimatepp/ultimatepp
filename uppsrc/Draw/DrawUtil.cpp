@@ -113,10 +113,10 @@ void AddRefreshRect(Vector<Rect>& invalid, const Rect& _r)
 	for(int i = 0; i < inv.GetCount(); i++) {
 		bool ch = false;
 		Vector<Rect> rs1 = Subtract(rs, inv[i], ch);
-		if(ch) rs = rs1;
+		if(ch) rs = pick(rs1);
 	}
-	inv.AppendPick(rs);
-	invalid = inv;
+	inv.AppendPick(pick(rs));
+	invalid = pick(inv);
 }
 
 void DrawFatFrame(Draw& w, int x, int y, int cx, int cy, Color color, int n) {

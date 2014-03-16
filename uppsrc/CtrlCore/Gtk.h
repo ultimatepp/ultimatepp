@@ -71,7 +71,7 @@ public:
 	bool     CanSetSurface()         { return true; }
 	static void Flush()              {} // TODO?
 
-	SystemDraw(cairo_t *cr, GdkDrawable *dw/* = NULL*/) : cr(cr), drawable(dw) {}
+	SystemDraw(cairo_t *cr, GdkDrawable *dw/* = NULL*/) : cr(cr), drawable(dw) { (void)drawable; }
 };
 
 class ImageDraw : public SystemDraw {

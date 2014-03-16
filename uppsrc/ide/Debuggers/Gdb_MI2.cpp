@@ -75,7 +75,7 @@ bool Gdb_MI2::SetBreakpoint(const String& filename, int line, const String& bp)
 	
 	// check wether we've got already a breakpoint here
 	// and remove it
-	MIValue brk = bps.FindBreakpoint(file, line);
+	MIValue brk = pick(bps.FindBreakpoint(file, line));
 	if(!brk.IsEmpty())
 		if(!MICmd(Format("break-delete %s", brk["number"].Get())))
 		{
@@ -530,7 +530,7 @@ MIValue Gdb_MI2::InsertBreakpoint(const char *file, int line)
 MIValue Gdb_MI2::GetBreakpoints(void)
 {
 	// issue a break-list command
-	return MICmd("break-list")["BreakpointTable"];
+	return pick(MICmd("break-list")["BreakpointTable"]);
 }
 
 MIValue Gdb_MI2::GetBreakpoint(int id)
@@ -580,11 +580,11 @@ void Gdb_MI2::SyncDisas(MIValue &fInfo, bool fr)
 		{
 			String file = fInfo["file"];
 			String line = fInfo["line"];
-			code = MICmd(Format("data-disassemble -f %s -l %s -n -1 -- 0", file, line))["asm_insns"];
+			code = pick(MICmd(Format("data-disassemble -f %s -l %s -n -1 -- 0", file, line))["asm_insns"]);
 		}
 		else
 			// otherwise disassemble some -100 ... +100 bytes around address
-			code = MICmd(Format("data-disassemble -s %x -e %x -- 0", (void *)(adr - 100), (void *)(adr + 100)))["asm_insns"];
+			code = pick(MICmd(Format("data-disassemble -s %x -e %x -- 0", (void *)(adr - 100), (void *)(adr + 100)))["asm_insns"]);
 			
 		disas.Clear();
 		for(int iLine = 0; iLine < code.GetCount(); iLine++)
@@ -610,8 +610,8 @@ void Gdb_MI2::SyncDisas(MIValue &fInfo, bool fr)
 	disas.SetIp(adr, fr ? DbgImg::FrameLinePtr() : DbgImg::IpLinePtr());
 
 	// update registers
-	MIValue rNames = MICmd("data-list-register-names")["register-names"];
-	MIValue rValues = MICmd("data-list-register-values x")["register-values"];
+	MIValue rNames = pick(MICmd("data-list-register-names")["register-names"]);
+	MIValue rValues = pick(MICmd("data-list-register-values x")["register-values"]);
 	Index<String> iNames;
 	for(int i = 0; i < rNames.GetCount(); i++)
 		iNames.Add(rNames[i]);
@@ -647,7 +647,7 @@ void Gdb_MI2::SyncIde(bool fr)
 #endif
 
 	// get current frame info and level
-	MIValue fInfo = MICmd("stack-info-frame")["frame"];
+	MIValue fInfo = pick(MICmd("stack-info-frame")["frame"]);
 	int level = atoi(fInfo["level"].Get());
 	
 	// if we got file and line info, we can sync the source editor position
@@ -687,7 +687,7 @@ void Gdb_MI2::SyncIde(bool fr)
 
 
 	// get the arguments for current frame
-	MIValue fArgs = MICmd(Format("stack-list-arguments 1 %d %d", level, level))["stack-args"][0]["args"];
+	MIValue fArgs = pick(MICmd(Format("stack-list-arguments 1 %d %d", level, level))["stack-args"][0]["args"]);
 	if(!fArgs.IsError() && !fArgs.IsEmpty())
 	{
 		// setup frame droplist
@@ -734,7 +734,7 @@ void Gdb_MI2::CheckStopReason(void)
 
 	// we need to store stop reason BEFORE interrupting all other
 	// threads, otherwise it'll be lost
-	MIValue stReason = stopReason;
+	MIValue stReason = pick(stopReason);
 	
 #ifdef PLATFORM_X11
 	// try to ungrab X11 on stop.... otherwise mouse clicks are lost
@@ -838,7 +838,7 @@ void Gdb_MI2::DisasCursor()
 
 	// to get info of corresponding file/line of an address, the only way
 	// we found is to insert a breakpoint, note the position and remove it
-	MIValue b = MICmd(Format("break-insert *0x%X", (int64)disas.GetCursor()))["bkpt"];
+	MIValue b = pick(MICmd(Format("break-insert *0x%X", (int64)disas.GetCursor()))["bkpt"]);
 	if(b.Find("file") >= 0 && b.Find("line") >= 0)
 		IdeSetDebugPos(b["file"], atoi(b["line"].Get()) - 1, DbgImg::DisasPtr(), 1);
 	if(b.Find("number") >= 0)
@@ -888,7 +888,7 @@ void Gdb_MI2::DropFrames()
 	frame.Clear();
 	
 	// get a list of frames
-	MIValue frameList = MICmd("stack-list-frames")["stack"];
+	MIValue frameList = pick(MICmd("stack-list-frames")["stack"]);
 	if(frameList.IsError() || !frameList.IsArray())
 	{
 		Exclamation("Couldn't get stack frame list");
@@ -896,7 +896,7 @@ void Gdb_MI2::DropFrames()
 	}
 	
 	// get the arguments for all frames, values just for simple types
-	MIValue frameArgs = MICmd("stack-list-arguments 1")["stack-args"];
+	MIValue frameArgs = pick(MICmd("stack-list-arguments 1")["stack-args"]);
 	if(frameArgs.IsError() || !frameArgs.IsArray())
 	{
 		Exclamation("Couldn't get stack arguments list");
@@ -997,7 +997,7 @@ void Gdb_MI2::SyncLocals()
 	
 		// variables are returned as a tuple, named "variables"
 		// containing a array of variables
-		MIValue lLocs = locs["variables"];
+		MIValue lLocs = pick(locs["variables"]);
 		if(!lLocs.IsArray())
 			throw BreakExc();
 	
@@ -1537,7 +1537,7 @@ void Gdb_MI2::WatchDeep0(String parentExp, String const &var, int level, int &ma
 	MIValue &childs = childInfo["children"];
 	for(int i = 0; i < childs.GetCount() && maxRemaining > 0; i++)
 	{
-		MIValue child = childs[i];
+		MIValue child = pick(childs[i]);
 		String exp = child["exp"];
 		
 		// handle pseudo children...
@@ -1664,9 +1664,9 @@ void Gdb_MI2::CopyDisas()
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // create GDB process and initializes it
-bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdline, bool console)
+bool Gdb_MI2::Create(One<Host> rval_ _host, const String& exefile, const String& cmdline, bool console)
 {
-	host = _host;
+	host = pick(_host);
 	dbg = host->StartProcess(GdbCommand(console) + GetHostPath(exefile) + " --interpreter=mi2" /*" -q"*/);
 	if(!dbg) {
 		Exclamation(t_("Error invoking gdb !"));
@@ -1742,11 +1742,10 @@ bool Gdb_MI2::Create(One<Host> _host, const String& exefile, const String& cmdli
 	return true;
 }
 
-One<Debugger> Gdb_MI2Create(One<Host> host, const String& exefile, const String& cmdline, bool console)
+One<Debugger> Gdb_MI2Create(One<Host> rval_ host, const String& exefile, const String& cmdline, bool console)
 {
 	Gdb_MI2 *dbg = new Gdb_MI2;
-	if(!dbg->Create(host, exefile, cmdline, console))
-	{
+	if(!dbg->Create(pick(host), exefile, cmdline, console)) {
 		delete dbg;
 		return NULL;
 	}

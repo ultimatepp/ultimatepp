@@ -460,14 +460,14 @@ void  Filter(RasterEncoder& target, Raster& src, ImageFilter9& filter)
 	sLine(target, sz.cx, l, filter);
 	target.WriteLine();
 	for(int y = 1; y < sz.cy - 1; y++) {
-		l[0] = l[1];
-		l[1] = l[2];
+		l[0] = pick(l[1]);
+		l[1] = pick(l[2]);
 		l[2] = src[y + 1];
 		sLine(target, sz.cx, l, filter);
 		target.WriteLine();
 	}
-	l[0] = l[1];
-	l[1] = l[2];
+	l[0] = pick(l[1]);
+	l[1] = pick(l[2]);
 	l[2] = src[sz.cy - 1];
 	sLine(target, sz.cx, l, filter);
 	target.WriteLine();

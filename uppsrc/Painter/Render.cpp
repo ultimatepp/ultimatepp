@@ -209,7 +209,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, SpanSource *ss, con
 	}
 	current = Null;
 	if(width == ONPATH) {
-		onpath = onpathtarget.path;
+		onpath = pick(onpathtarget.path);
 		pathlen = onpathtarget.len;
 	}
 	return newclip;
@@ -229,9 +229,9 @@ void BufferPainter::ClipOp()
 {
 	Buffer<ClippingLine> newclip = RenderPath(CLIP, NULL, RGBAZero());
 	if(attr.hasclip)
-		clip.Top() = newclip;
+		clip.Top() = pick(newclip);
 	else {
-		clip.Add() = newclip;
+		clip.Add() = pick(newclip);
 		attr.hasclip = true;
 		attr.cliplevel = clip.GetCount();
 	}

@@ -136,16 +136,16 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 		if(b.build) {
 			PutConsole("BLITZ:" + b.info);
 			int slot = AllocSlot();
-			if(slot < 0 || !Run(String().Cat() << cc << ' '
+			if(slot < 0 || !Run(String().Cat() << Join(cc, cpp_options) << ' '
 			<< GetHostPathQ(b.path) << " -o " << GetHostPathQ(b.object), slot, GetHostPath(b.object), b.count))
 				error = true;
 		}
 	}
 
 	int first_ifile = sfile.GetCount();
-	sfile.AppendPick(isfile);
-	soptions.AppendPick(isoptions);
-	optimize.AppendPick(ioptimize);
+	sfile.AppendPick(pick(isfile));
+	soptions.AppendPick(pick(isoptions));
+	optimize.AppendPick(pick(ioptimize));
 
 	int ccount = 0;
 	for(i = 0; i < sfile.GetCount(); i++) {
@@ -187,13 +187,13 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 			else {
 				String exec = optimize[i] ? cc_speed : cc;
 				if(ext == ".c")
-					exec << " -x c ";
+					exec << Join(" -x c", c_options) << ' ';
 				else if(ext == ".s" || ext == ".S")
 					exec << " -x assembler-with-cpp ";
 				else if (ext == ".m" || ext == ".mm")
 					exec << fuse_cxa_atexit << " -x objective-c++ ";
 				else
-					exec << fuse_cxa_atexit << " -x c++ ";
+					exec << fuse_cxa_atexit << Join(" -x c++", cpp_options) << ' ';
 				exec << GetHostPathQ(fn)  << " " << soptions[i] << " -o " << GetHostPathQ(objfile);
 				PutVerbose(exec);
 				int slot = AllocSlot();
@@ -368,7 +368,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 
 	IdeConsoleEndGroup();
 	obj.Append(linkfile);
-	linkfile = obj;
+	linkfile = pick(obj);
 	return true;
 }
 

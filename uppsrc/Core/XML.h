@@ -148,7 +148,7 @@ public:
 	void   Skip();
 	void   SkipEnd();
 
-	VectorMap<String, String> PickAttrs() pick_;
+	VectorMap<String, String> PickAttrs();
 
 	int    GetLine() const                                    { return line; }
 	int    GetColumn() const                                  { return GetColumn0() + 1; }
@@ -212,11 +212,13 @@ public:
 	int            AttrInt(const char *id, int def = Null) const;
 	XmlNode&       SetAttr(const char *id, int val);
 
-	void           SetAttrsPick(pick_ VectorMap<String, String>& a);
+	void           SetAttrsPick(VectorMap<String, String> rval_ a);
 	
 	void           Shrink();
 	
 	bool           IsPicked() const                           { return node.IsPicked(); }
+
+	rval_default(XmlNode);
 
 	XmlNode(const XmlNode& n, int);
 

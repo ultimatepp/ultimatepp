@@ -15,8 +15,8 @@ protected:
 	T       *AddHead0()              { AssertMoveable<T>(); Add0(); return &vector[start = Ix(alloc - 1)/*(start + alloc - 1) % alloc*/]; }
 	T       *AddTail0()              { AssertMoveable<T>(); Add0(); return &vector[EI()]; }
 	void     Free();
-	void     Pick(pick_ BiVector& x) { vector = x.vector; start = x.start; items = x.items;
-	                                   alloc = x.alloc; ((BiVector&)x).items = -1; }
+	void     Pick(BiVector rval_ x) { vector = pick(x.vector); start = x.start; items = x.items;
+	                                  alloc = x.alloc; ((BiVector&)x).items = -1; }
 	void     Copy(T *dst, int start, int count) const;
 
 public:
@@ -28,8 +28,8 @@ public:
 	T&       AddTail()               { return *new(AddTail0()) T; }
 	void     AddHead(const T& x)     { new(AddHead0()) T(x); }
 	void     AddTail(const T& x)     { new(AddTail0()) T(x); }
-	void     AddHeadPick(pick_ T& x) { new(AddHead0()) T(x); }
-	void     AddTailPick(pick_ T& x) { new(AddTail0()) T(x); }
+	void     AddHeadPick(T rval_ x) { new(AddHead0()) T(x); }
+	void     AddTailPick(T rval_ x) { new(AddTail0()) T(x); }
 	T&       Head()                  { ASSERT(items > 0); return vector[start]; }
 	T&       Tail()                  { ASSERT(items > 0); return vector[EI()]; }
 	const T& Head() const            { ASSERT(items > 0); return vector[start]; }
@@ -46,13 +46,21 @@ public:
 
 #ifdef UPP
 	void     Serialize(Stream& s);
+	String   ToString() const;
+	bool     operator==(const BiVector<T>& b) const { return IsEqualArray(*this, b); }
+	bool     operator!=(const BiVector<T>& b) const { return !operator==(b); }
+	int      Compare(const BiVector<T>& b) const    { return CompareArray(*this, b); }
+	bool     operator<=(const BiVector<T>& x) const { return Compare(x) <= 0; }
+	bool     operator>=(const BiVector<T>& x) const { return Compare(x) >= 0; }
+	bool     operator<(const BiVector<T>& x) const  { return Compare(x) < 0; }
+	bool     operator>(const BiVector<T>& x) const  { return Compare(x) > 0; }
 #endif
 
 	bool     IsPicked() const                   { return items < 0; }
 
 	BiVector(const BiVector& src, int)          { DeepCopy0(src); }
-	BiVector(pick_ BiVector& src)               { Pick(src); }
-	void operator=(pick_ BiVector& src)         { Free(); Pick(src); }
+	BiVector(BiVector rval_ src)                { Pick(pick(src)); }
+	void operator=(BiVector rval_ src)          { Free(); Pick(pick(src)); }
 	BiVector()                                  { start = items = alloc = 0; vector = NULL; }
 	~BiVector()                                 { Free(); } // gcc4.0 workaround!!
 
@@ -93,8 +101,8 @@ public:
 	T&       AddTail()                     { T *q = new T; bv.AddTail(q); return *q; }
 	void     AddHead(const T& x)           { bv.AddHead(DeepCopyNew(x)); }
 	void     AddTail(const T& x)           { bv.AddTail(DeepCopyNew(x)); }
-	void     AddHeadPick(pick_ T& x)       { bv.AddHead(new T(x)); }
-	void     AddTailPick(pick_ T& x)       { bv.AddTail(new T(x)); }
+	void     AddHeadPick(T rval_ x)       { bv.AddHead(new T(x)); }
+	void     AddTailPick(T rval_ x)       { bv.AddTail(new T(x)); }
 	T&       AddHead(T *newt)              { bv.AddHead(newt); return *newt; }
 	T&       AddTail(T *newt)              { bv.AddTail(newt); return *newt; }
 	template <class TT> TT& CreateHead()   { TT *q = new TT; bv.AddHead(q); return *q; }
@@ -117,14 +125,22 @@ public:
 
 #ifdef UPP
 	void     Serialize(Stream& s);
+	String   ToString() const;
+	bool     operator==(const BiArray<T>& b) const { return IsEqualArray(*this, b); }
+	bool     operator!=(const BiArray<T>& b) const { return !operator==(b); }
+	int      Compare(const BiArray<T>& b) const    { return CompareArray(*this, b); }
+	bool     operator<=(const BiArray<T>& x) const { return Compare(x) <= 0; }
+	bool     operator>=(const BiArray<T>& x) const { return Compare(x) >= 0; }
+	bool     operator<(const BiArray<T>& x) const  { return Compare(x) < 0; }
+	bool     operator>(const BiArray<T>& x) const  { return Compare(x) > 0; }
 #endif
 
 	bool     IsPicked() const                { return bv.IsPicked(); }
 
 	BiArray(const BiArray& v, int)           { DeepCopy0(v); }
 
-	BiArray(pick_ BiArray& src) : bv(src.bv) {}
-	void operator=(pick_ BiArray& src)       { Free(); bv = src.bv; }
+	BiArray(BiArray rval_ src) : bv(pick(src.bv))  {}
+	void operator=(BiArray rval_ src)        { Free(); bv = pick(src.bv); }
 	BiArray()                                {}
 	~BiArray()                               { Free(); }
 

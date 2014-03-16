@@ -90,6 +90,39 @@ bool Value::operator==(const Value& v) const {
 	return svo[st]->IsEqual(&data, &v.data);
 }
 
+int Value::PolyCompare(const Value& v) const
+{
+	int st = data.GetSpecial();
+	if(st == REF)
+		return ptr()->PolyCompare(v);
+	if(st != VOIDV)
+		return svo[st]->PolyCompare(&data, v);
+	return 0;
+}
+
+int Value::Compare(const Value& v) const
+{
+	if(IsString() && v.IsString())
+		return SgnCompare(data, v.data);
+	bool a = IsNull();
+	bool b = v.IsNull();
+	if(a || b)
+		return SgnCompare(b, a);
+	int st = data.GetSpecial();
+	if(GetType() == v.GetType()) {
+		if(st == REF)
+			return ptr()->Compare(v.ptr());
+		if(st != VOIDV)
+			return svo[st]->Compare(&data, &v.data);
+	}
+	if(st != VOIDV) {
+		int q = PolyCompare(v);
+		if(q) return q; // Perhaps optimize this
+		return v.PolyCompare(*this);
+	}
+	return 0;
+}
+
 static bool sIsSame(const Value& a, const Value& b)
 {
 	if(a.Is<ValueMap>() && b.Is<ValueMap>()) {

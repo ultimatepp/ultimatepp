@@ -45,10 +45,10 @@ public:
 	virtual String           IdeGetOneFile() const = 0;
 	virtual int              IdeConsoleExecute(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false) = 0;
 	virtual int              IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *envptr, bool quiet) = 0;
-	virtual int              IdeConsoleExecute(One<AProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false) = 0;
+	virtual int              IdeConsoleExecute(One<AProcess> pick_ process, const char *cmdline, Stream *out = NULL, bool quiet = false) = 0;
 	virtual int              IdeConsoleAllocSlot() = 0;
 	virtual bool             IdeConsoleRun(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1) = 0;
-	virtual bool             IdeConsoleRun(One<AProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1) = 0;
+	virtual bool             IdeConsoleRun(One<AProcess> pick_ process, const char *cmdline, Stream *out = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1) = 0;
 	virtual void             IdeConsoleFlush() = 0;
 	virtual void             IdeConsoleBeginGroup(String group) = 0;
 	virtual void             IdeConsoleEndGroup() = 0;
@@ -100,7 +100,7 @@ int              IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, co
 int              IdeConsoleExecute(One<AProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false);
 int              IdeConsoleAllocSlot();
 bool             IdeConsoleRun(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
-bool             IdeConsoleRun(One<AProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
+bool             IdeConsoleRun(One<AProcess> pick_ process, const char *cmdline, Stream *out = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
 void             IdeConsoleFlush();
 void             IdeConsoleBeginGroup(String group);
 void             IdeConsoleEndGroup();
@@ -284,6 +284,7 @@ public:
 
 		File()                            { Init(); }
 		File(const String& s) : String(s) { Init(); }
+		rval_default(File);
 	};
 	struct Config {
 		String name;
@@ -367,6 +368,8 @@ enum {
 	R_SIZE
 };
 
+String Join(const String& a, const String& b, const char *sep = " ");
+
 struct Builder {
 	Host            *host;
 	Index<String>    config;
@@ -376,6 +379,8 @@ struct Builder {
 	Vector<String>   include;
 	Vector<String>   libpath;
 	String           target;
+	String           cpp_options;
+	String           c_options;
 	String           debug_options;
 	String           release_options;
 	String           release_size_options;
@@ -407,7 +412,7 @@ struct Builder {
 VectorMap<String, Builder *(*)()>& BuilderMap();
 void RegisterBuilder(const char *name, Builder *(*create)());
 
-void                  HdependSetDirs(pick_ Vector<String>& id);
+void                  HdependSetDirs(Vector<String> pick_ id);
 void                  HdependTimeDirty();
 void                  HdependClearDependencies();
 void                  HdependAddDependency(const String& file, const String& depends);

@@ -834,7 +834,8 @@ void Socket::SetSockError(SOCKET socket, const char *context)
 bool ServerSocket(Socket& socket, int port, bool nodelay, int listen_count, bool blocking, bool reuse)
 {
 	Socket::Data *data = new Socket::Data;
-	socket.Attach(data);
+	One<Socket::Data> d(data);
+	socket.Attach(d);
 	if(data->OpenServer(port, nodelay, listen_count, blocking, reuse))
 		return true;
 	socket.Clear();
@@ -844,7 +845,8 @@ bool ServerSocket(Socket& socket, int port, bool nodelay, int listen_count, bool
 bool ClientSocket(Socket& socket, const char *host, int port, bool nodelay, dword *my_addr, int timeout, bool blocking)
 {
 	Socket::Data *data = new Socket::Data;
-	socket.Attach(data);
+	One<Socket::Data> d(data);
+	socket.Attach(d);
 	if(data->OpenClient(host, port, nodelay, my_addr, timeout, blocking))
 		return true;
 	socket.Clear();

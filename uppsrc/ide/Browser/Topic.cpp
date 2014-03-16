@@ -88,7 +88,7 @@ void TopicEditor::Load(const String& fn)
 	if(q >= 0) {
 		FileInfo& fi = editstate[q];
 		if(fi.time == FileGetTime(fn)) {
-			editor.SetPickUndoInfo(fi.undo);
+			editor.SetPickUndoInfo(pick(fi.undo));
 			fi.time = Time(1, 1, 1);
 			editor.SetPosInfo(fi.pos);
 		}

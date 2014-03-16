@@ -224,7 +224,6 @@ private:
 	RGBA palette[256];
 
 	VectorMap<String, Value> metadata;
-	int                      thumboffset, thumblen;
 
 	jpeg_decompress_struct   cinfo;
 	jpeg_longjmp_error_mgr  *jerr;

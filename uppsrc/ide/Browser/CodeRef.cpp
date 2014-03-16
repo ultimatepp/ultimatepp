@@ -435,7 +435,7 @@ void   TopicEditor::FixTopic()
 					RichText h = ParseQTF(styles + ("[s7; &]" + CreateQtf(link[q], n[q].name, m, GetLang(), true)));
 					if(h.GetPartCount())
 						h.RemovePart(h.GetPartCount() - 1);
-					result.CatPick(h);
+					result.CatPick(pick(h));
 				}
 				else
 				if(!started || p.GetLength())
@@ -447,7 +447,7 @@ void   TopicEditor::FixTopic()
 		else {
 			RichTable b;
 			b <<= txt.GetTable(i);
-			result.CatPick(b);
+			result.CatPick(pick(b));
 		}
 	RichPara empty;
 	result.Cat(empty);

@@ -220,7 +220,7 @@ void JsonizeArray(JsonIO& io, T& array)
 			Jsonize(jio, array[i]);
 			jio.Put(va[i]);
 		}
-		io.Set(ValueArray(va));
+		io.Set(ValueArray(pick(va)));
 	}
 }
 
@@ -249,7 +249,7 @@ void JsonizeMap(JsonIO& io, T& map, const char *keyid, const char *valueid)
 				item.Add(valueid, StoreAsJsonValue(map[i]));
 				va[i] = item;
 			}
-		io.Set(ValueArray(va));
+		io.Set(ValueArray(pick(va)));
 	}
 }
 
@@ -276,7 +276,7 @@ void JsonizeSortedMap(JsonIO& io, T& map, const char *keyid, const char *valueid
 			item.Add(valueid, StoreAsJsonValue(map[i]));
 			va[i] = item;
 		}
-		io.Set(ValueArray(va));
+		io.Set(ValueArray(pick(va)));
 	}
 }
 
@@ -305,7 +305,7 @@ void JsonizeStringMap(JsonIO& io, T& map)
 			index.Add(StoreAsJsonValue(map.GetKey(i)));
 			values.Add(StoreAsJsonValue(map[i]));
 		}
-		ValueMap vm(index, values);
+		ValueMap vm(pick(index), pick(values));
 		io.Set(vm);
 	}
 }
@@ -339,7 +339,7 @@ void JsonizeIndex(JsonIO& io, T& index)
 		for(int i = 0; i < index.GetCount(); i++)
 			if(!index.IsUnlinked(i))
 				va.Add(StoreAsJsonValue(index[i]));
-		io.Set(ValueArray(va));
+		io.Set(ValueArray(pick(va)));
 	}
 }
 

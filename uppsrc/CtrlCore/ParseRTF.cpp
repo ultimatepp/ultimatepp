@@ -86,7 +86,6 @@ private:
 	String        ReadBinHex(char& odd) const;
 
 private:
-	const char   *rtf_begin;
 	const char   *rtf;
 
 	TOKEN         token;
@@ -200,8 +199,7 @@ RTFParser::Cell::Cell()
 }
 
 RTFParser::RTFParser(const char *rtf)
-: rtf_begin(rtf)
-, rtf(rtf)
+:	rtf(rtf)
 {
 #ifdef _DEBUG
 	SaveFile(ConfigFile("rtfparser.rtf"), rtf);
@@ -227,12 +225,12 @@ RTFParser::RTFParser(const char *rtf)
 RichText RTFParser::Run()
 {
 	if(!PassGroup() || !PassCmd("rtf") || command_arg != 1 && !IsNull(command_arg))
-		return output;
+		return pick(output);
 	while(Token() != T_EOF)
 		ReadItem();
 	Flush(false, 1);
 	FlushTable(0);
-	return output;
+	return pick(output);
 }
 
 void RTFParser::FlushTable(int level)
@@ -263,7 +261,7 @@ void RTFParser::FlushTable(int level)
 		table.SetFormat(child.tableformat);
 		for(int c = 1; c < dot_order.GetCount(); c++)
 			table.AddColumn(dot_order[c] - dot_order[c - 1]);
-		dot_index = dot_order;
+		dot_index = pick(dot_order);
 		int tbl_border = Null, tbl_grid = Null;
 		Color clr_border = Null, clr_grid = Null;
 		for(int r = 0; r < child.cells.GetCount(); r++) {
@@ -360,16 +358,16 @@ void RTFParser::FlushTable(int level)
 				}
 				table.SetFormat(r, cell.nbegin, cell.info.format);
 				cell.text.Normalize();
-				table.SetPick(r, cell.nbegin, cell.text);
+				table.SetPick(r, cell.nbegin, pick(cell.text));
 			}
 		}
 		table.Normalize();
 		table_stack.Drop();
 		if(table_stack.IsEmpty())
-			output.CatPick(table);
+			output.CatPick(pick(table));
 		else {
 			TableState& par = table_stack.Top();
-			CellAt(par, par.textcol).text.CatPick(table);
+			CellAt(par, par.textcol).text.CatPick(pick(table));
 		}
 	}
 }

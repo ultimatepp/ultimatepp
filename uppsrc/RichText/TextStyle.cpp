@@ -129,7 +129,7 @@ struct RichText::OverrideStylesOp : RichTxt::ParaOp {
 void  RichText::OverrideStyles(const RichStyles& ms, bool matchname, bool addmissing)
 {
 	Invalidate();
-	RichStyles orig = style;
+	RichStyles orig = pick(style);
 	style <<= ms;
 	OverrideStylesOp op;
 	for(int i = 0; i < orig.GetCount(); i++) {

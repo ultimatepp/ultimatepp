@@ -94,11 +94,11 @@ public:
 	bool verbosebuild;
 
 	int  Execute(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false);
-	int  Execute(One<AProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false);
+	int  Execute(One<AProcess> pick_ process, const char *cmdline, Stream *out = NULL, bool quiet = false);
 	int  GetSlotCount() const { return processes.GetCount(); }
 	int  AllocSlot();
 	bool Run(const char *cmdline, Stream *out = NULL, const char *endptr = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
-	bool Run(One<AProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
+	bool Run(One<AProcess> pick_ process, const char *cmdline, Stream *out = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
 	void BeginGroup(String group);
 	void EndGroup();
 
@@ -110,7 +110,7 @@ public:
 	void Kill(int slot);
 	void Kill();
 	void ClearError()                         { error_keys.Clear(); }
-	Vector<String> PickErrors()               { Vector<String> e = error_keys; error_keys.Clear(); return e; }
+	Vector<String> PickErrors()               { Vector<String> e = pick(error_keys); error_keys.Clear(); return pick(e); }
 	void Wait(int slot);
 	bool Wait();
 
@@ -452,11 +452,11 @@ public:
 	virtual   bool             IdeIsBuilding() const;
 	virtual   String           IdeGetOneFile() const;
 	virtual   int              IdeConsoleExecute(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false);
-	virtual   int              IdeConsoleExecute(One<AProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false);
+	virtual   int              IdeConsoleExecute(One<AProcess> pick_ process, const char *cmdline, Stream *out = NULL, bool quiet = false);
 	virtual   int              IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *envptr, bool quiet);
 	virtual   int              IdeConsoleAllocSlot();
 	virtual   bool             IdeConsoleRun(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
-	virtual   bool             IdeConsoleRun(One<AProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
+	virtual   bool             IdeConsoleRun(One<AProcess> pick_ process, const char *cmdline, Stream *out = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
 	virtual   void             IdeConsoleFlush();
 	virtual   void             IdeConsoleBeginGroup(String group);
 	virtual   void             IdeConsoleEndGroup();
@@ -873,7 +873,7 @@ public:
 
 	void      MacroMenu(Bar& menu);
 		bool  HasMacros();
-		void  EditMacroMenu(Bar& menu, const Vector<int>& items);
+		void  EditMacroMenu(Bar& menu, ValueArray items);
 		void  EditMacro(int i);
 
 	void      Project(Bar& menu);

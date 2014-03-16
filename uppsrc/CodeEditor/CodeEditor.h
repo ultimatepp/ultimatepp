@@ -70,7 +70,6 @@ private:
 	Vector<LnInfo>   li;
 	LineInfoRem      li_removed;
 
-	int              sy;
 	CodeEditor       *editor;
 	int              ptrline[2];
 	Image            ptrimg[2];
@@ -114,7 +113,7 @@ public:
 	LineInfo GetLineInfo() const;
 	void     SetLineInfo(const LineInfo& li, int total);
 	LineInfoRem & GetLineInfoRem()                   { return li_removed; }
-	void     SetLineInfoRem(pick_ LineInfoRem& li)   { li_removed = li; }
+	void     SetLineInfoRem(LineInfoRem pick_ li)    { li_removed = pick(li); }
 	
 	void     SetAnnotation(int line, const Image& img, const String& ann);
 	String   GetAnnotation(int line) const;
@@ -492,7 +491,7 @@ public:
 	LineInfo GetLineInfo() const                      { return bar.GetLineInfo(); }
 	void     SetLineInfo(const LineInfo& lf);
 	LineInfoRem GetLineInfoRem()                      { return LineInfoRem(bar.GetLineInfoRem(), 0); }
-	void     SetLineInfoRem(pick_ LineInfoRem& lf)    { bar.SetLineInfoRem(LineInfoRem(lf, 0)); }
+	void     SetLineInfoRem(LineInfoRem pick_  lf)    { bar.SetLineInfoRem(LineInfoRem(lf, 0)); }
 	double   GetStatEditTime() const                  { return stat_edit_time; }
 	void     Renumber()                               { bar.Renumber(GetLineCount()); }
 	void     ClearBreakpoints()                       { bar.ClearBreakpoints(); }

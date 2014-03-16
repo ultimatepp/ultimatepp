@@ -170,7 +170,7 @@ struct Gdb : Dbg {
 	void      CopyStack();
 	void      CopyDisas();
 
-	bool      Create(One<Host> host, const String& exefile, const String& cmdline, bool console);
+	bool      Create(One<Host> rval_ host, const String& exefile, const String& cmdline, bool console);
 
 	// Period check for killed console
 	TimeCallback periodic;

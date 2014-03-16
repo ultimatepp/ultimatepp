@@ -151,7 +151,7 @@ void RichEdit::Language()
 		for(int i = 0; i < language.GetCount(); i++)
 			h.Add(language.GetKey(i));
 		h.Add(~d.lang);
-		SetupLanguage(h);
+		SetupLanguage(pick(h));
 	}
 }
 

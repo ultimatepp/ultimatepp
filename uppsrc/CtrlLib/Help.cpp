@@ -25,7 +25,7 @@ bool HelpWindow::GoTo0(const String& link)
 		Title(FromUtf8(t.title));
 		RichText txt = ParseQTF(t.text);
 		FinishText(txt);
-		view.Pick(txt, zoom);
+		view.Pick(pick(txt), zoom);
 		view.GotoLabel(label, true);
 		current_link = link;
 		tree.FindSetCursor(topic);

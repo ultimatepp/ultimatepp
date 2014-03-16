@@ -95,9 +95,9 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 	}
 
 	int first_ifile = sfile.GetCount();
-	sfile.AppendPick(isfile);
-	soptions.AppendPick(isoptions);
-	optimize.AppendPick(ioptimize);
+	sfile.AppendPick(pick(isfile));
+	soptions.AppendPick(pick(isoptions));
+	optimize.AppendPick(pick(ioptimize));
 
 	int ccount = 0;
 
@@ -175,7 +175,7 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 	if (!HasFlag("MAIN")) {
 		if (HasFlag("BLITZ") || HasFlag("NOLIB")) {
 			obj.Append(linkfile);
-			linkfile = obj;
+			linkfile = pick(obj);
 			IdeConsoleEndGroup();
 			return true;
 		}
@@ -287,7 +287,7 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 	}
 
 	obj.Append(linkfile);
-	linkfile = obj;
+	linkfile = pick(obj);
 	return true;
 }
 

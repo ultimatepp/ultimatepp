@@ -258,27 +258,32 @@ void Ide::MacroMenu(Bar& menu)
 			for(int o = 0; o < order.GetCount(); o++) {
 				String m = submenu_map.GetKey(order[o]);
 				Vector<int>& mx = submenu_map[order[o]];
+				ValueArray va;
+				for(int i = 0; i < mx.GetCount(); i++)
+					va.Add(mx[i]);
 				if(!IsNull(m))
-					menu.Add(m, THISBACK1(EditMacroMenu, mx));
+					menu.Add(m, THISBACK1(EditMacroMenu, va));
 				else
-					EditMacroMenu(menu, mx);
+					EditMacroMenu(menu, va);
 			}
 		}
 	}
 }
 
-void Ide::EditMacroMenu(Bar& menu, const Vector<int>& mx)
+void Ide::EditMacroMenu(Bar& menu, ValueArray mx)
 {
 	const Array<IdeMacro>& mlist = UscMacros();
 	Vector<String> names;
 	Vector<int> index;
 	names.Reserve(mx.GetCount());
-	for(int i = 0; i < mx.GetCount(); i++)
-		if(mx[i] >= 0 && mx[i] < mlist.GetCount()) {
-			const IdeMacro& m = mlist[mx[i]];
+	for(int i = 0; i < mx.GetCount(); i++) {
+		int ii = mx[i];
+		if(ii >= 0 && ii < mlist.GetCount()) {
+			const IdeMacro& m = mlist[ii];
 			names.Add(Nvl(m.submenu, m.menu));
-			index.Add(mx[i]);
+			index.Add(ii);
 		}
+	}
 	IndexSort(names, index);
 	for(int i = 0; i < index.GetCount(); i++)
 		menu.Add(names[i], THISBACK1(EditMacro, index[i]))

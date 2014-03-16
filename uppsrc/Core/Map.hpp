@@ -100,8 +100,8 @@ void AIndex<T, V, HashFn>::Hash() {
 }
 
 template <class T, class V, class HashFn>
-AIndex<T, V, HashFn>& AIndex<T, V, HashFn>::operator=(pick_ V& s) {
-	key = s;
+AIndex<T, V, HashFn>& AIndex<T, V, HashFn>::operator=(V rval_ s) {
+	key = pick(s);
 	hash.Clear();
 	Hash();
 	return *this;
@@ -116,7 +116,7 @@ AIndex<T, V, HashFn>& AIndex<T, V, HashFn>::operator<<=(const V& s) {
 }
 
 template <class T, class V, class HashFn>
-AIndex<T, V, HashFn>::AIndex(pick_ V& s) : key(s) {
+AIndex<T, V, HashFn>::AIndex(V rval_ s) : key(pick(s)) {
 	Hash();
 }
 
@@ -246,6 +246,13 @@ void AIndex<T, V, HashFn>::Jsonize(JsonIO& jio)
 {
 	JsonizeIndex<AIndex<T, V, HashFn>, T>(jio, *this);
 }
+
+template <class T, class V, class HashFn>
+String AIndex<T, V, HashFn>::ToString() const
+{
+	return AsStringArray(*this);
+}
+
 #endif
 
 template <class T, class V, class HashFn>
@@ -390,7 +397,7 @@ int AMap<K, T, V, HashFn>::FindAdd(const K& k, const T& x) {
 }
 
 template <class K, class T, class V, class HashFn>
-int AMap<K, T, V, HashFn>::FindAddPick(const K& k, pick_ T& x) {
+int AMap<K, T, V, HashFn>::FindAddPick(const K& k, T rval_ x) {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
 	if(i < 0) {
@@ -415,7 +422,7 @@ int AMap<K, T, V, HashFn>::Put(const K& k, const T& x)
 }
 
 template <class K, class T, class V, class HashFn>
-int AMap<K, T, V, HashFn>::PutPick(const K& k, pick_ T& x)
+int AMap<K, T, V, HashFn>::PutPick(const K& k, T rval_ x)
 {
 	int i = key.Put(k);
 	if(i < value.GetCount())
@@ -470,7 +477,7 @@ int AMap<K, T, V, HashFn>::FindPut(const K& k, const T& init)
 }
 
 template <class K, class T, class V, class HashFn>
-int AMap<K, T, V, HashFn>::FindPutPick(const K& k, pick_ T& init)
+int AMap<K, T, V, HashFn>::FindPutPick(const K& k, T rval_ init)
 {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
@@ -502,7 +509,7 @@ T&  AMap<K, T, V, HashFn>::GetAdd(const K& k, const T& x) {
 }
 
 template <class K, class T, class V, class HashFn>
-T&  AMap<K, T, V, HashFn>::GetAddPick(const K& k, pick_ T& x) {
+T&  AMap<K, T, V, HashFn>::GetAddPick(const K& k, T rval_ x) {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
 	if(i >= 0) return value[i];
@@ -522,7 +529,7 @@ T&  AMap<K, T, V, HashFn>::GetPut(const K& k, const T& x) {
 }
 
 template <class K, class T, class V, class HashFn>
-T&  AMap<K, T, V, HashFn>::GetPutPick(const K& k, pick_ T& x) {
+T&  AMap<K, T, V, HashFn>::GetPutPick(const K& k, T rval_ x) {
 	return value[FindAddPick(k, x)];
 }
 
@@ -544,6 +551,23 @@ void AMap<K, T, V, HashFn>::Jsonize(JsonIO& jio)
 {
 	JsonizeMap<AMap<K, T, V, HashFn>, K, T>(jio, *this, "key", "value");
 }
+
+template <class K, class T, class V, class HashFn>
+String AMap<K, T, V, HashFn>::ToString() const
+{
+	String r;
+	r = "{";
+	for(int i = 0; i < GetCount(); i++) {
+		if(i)
+			r << ", ";
+		if(IsUnlinked(i))
+			r << "UNLINKED ";
+		r << GetKey(i) << ": " << (*this)[i];
+	}
+	r << '}';
+	return r;
+}
+
 #endif
 
 template <class K, class T, class V, class HashFn>
@@ -585,4 +609,19 @@ void FixedAMap<K, T, V, Less>::Jsonize(JsonIO& jio)
 {
 	JsonizeSortedMap<FixedAMap<K, T, V, Less>, K, T>(jio, *this, "key", "value");
 }
+
+template <class K, class T, class V, class Less>
+String FixedAMap<K, T, V, Less>::ToString() const
+{
+	String r;
+	r = "{";
+	for(int i = 0; i < GetCount(); i++) {
+		if(i)
+			r << ", ";
+		r << GetKey(i) << ": " << (*this)[i];
+	}
+	r << '}';
+	return r;
+}
+
 #endif

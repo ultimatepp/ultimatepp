@@ -37,6 +37,57 @@ inline bool IsPolyEqual(const WString& x, const Value& v) {
 	return v.GetType() == STRING_V && WString(v) == x;
 }
 
+template<class T>
+inline int  PolyCompare(const T& a, const Value& b)
+{
+	return a.PolyCompare(b);
+}
+
+template<>
+inline int PolyCompare(const WString& x, const Value& v) {
+	return IsString(v) && SgnCompare(x, WString(v));
+}
+
+template<>
+inline int PolyCompare(const String& x, const Value& v) {
+	return IsString(v) && SgnCompare((WString)x, (WString)v);
+}
+
+template<>
+inline int PolyCompare(const bool& x, const Value& v) {
+	return v.Is<int64>() ? SgnCompare((int64)x, (int64)v)
+	     : IsNumber(v) ? SgnCompare((double)x, (double)v)
+	     : 0;
+}
+
+template<>
+inline int PolyCompare(const int& x, const Value& v) {
+	return v.Is<int64>() ? SgnCompare((int64)x, (int64)v)
+	     : IsNumber(v) ? SgnCompare((double)x, (double)v)
+	     : 0;
+}
+
+template<>
+inline int PolyCompare(const int64& x, const Value& v) {
+	return v.Is<double>() ? SgnCompare((double)x, (double)v)
+	     : IsNumber(v) ? SgnCompare((int64)x, (int64)v)
+	     : 0;
+}
+
+inline int PolyCompare(const double& x, const Value& v) {
+	return IsNumber(v) ? SgnCompare((double)x, (double)v) : 0;
+}
+
+template<>
+inline int PolyCompare(const Date& x, const Value& v) {
+	return v.Is<Time>() && SgnCompare(ToTime(x), Time(v));
+}
+
+template<>
+inline int PolyCompare(const Time& x, const Value& v) {
+	return v.Is<Date>() && SgnCompare(ToTime(x), Time(v));
+}
+
 template<>
 inline unsigned ValueGetHashValue(const bool& x) {
 	return UPP::GetHashValue((int64)x);
@@ -78,10 +129,10 @@ public:
 	const T& Get() const                      { return v; }
 	T&       Get()                            { return v; }
 	
-	RawValueRep(const T& v) : v(v)            {}
-	RawValueRep(pick_ T& v, VPICK) : v(v)     {}
-	RawValueRep(const T& v, VDEEP) : v(v, 1)  {}
-	RawValueRep()                             {}
+	RawValueRep(const T& v) : v(v)             {}
+	RawValueRep(T rval_ v, VPICK) : v(pick(v)) {}
+	RawValueRep(const T& v, VDEEP) : v(v, 1)   {}
+	RawValueRep()                              {}
 };
 
 template <class T>
@@ -96,6 +147,9 @@ public:
 	                                                   return static_cast<const RawValueRep<T> *>(p)->Get() == this->v; }
 	virtual bool       IsPolyEqual(const Value& b)   { return UPP::IsPolyEqual(this->v, b); }
 	virtual String     AsString() const              { return UPP::AsString(this->v); }
+	virtual int        Compare(const Value::Void *p) { ASSERT(dynamic_cast<const RawValueRep<T> *>(p));
+	                                                   return SgnCompare(this->v, static_cast<const RawValueRep<T> *>(p)->Get()); }
+	virtual int        PolyCompare(const Value& b)   { return Upp::PolyCompare(this->v, b); }
 
 	RichValueRep(const T& v) : RawValueRep<T>(v)     {}
 	RichValueRep()                                   {}
@@ -113,13 +167,16 @@ struct SvoFn {
 	static bool       IsEqual(const void *p1, const void *p2)    { return *(T*)p1 == *(T*)p2; }
 	static bool       IsPolyEqual(const void *p, const Value& v) { return UPP::IsPolyEqual(*(T*)p, v); }
 	static String     AsString(const void *p)                    { return UPP::AsString(*(T*)p); }
+	static int        Compare(const void *p1, const void *p2)    { return SgnCompare(*(T*)p1, *(T*)p2); }
+	static int        PolyCompare(const void *p1, const Value& p2) { return UPP::PolyCompare(*(T*)p1, p2); }
 };
 
 #define SVO_FN(id, T) \
 	static Value::Sval id = { \
 		SvoFn<T>::IsNull, SvoFn<T>::Serialize, SvoFn<T>::Xmlize, SvoFn<T>::Jsonize, \
 		SvoFn<T>::GetHashValue, SvoFn<T>::IsEqual, \
-		SvoFn<T>::IsPolyEqual, SvoFn<T>::AsString \
+		SvoFn<T>::IsPolyEqual, SvoFn<T>::AsString, \
+		SvoFn<T>::Compare, SvoFn<T>::PolyCompare \
 	};
 
 template <class T>
@@ -276,10 +333,10 @@ inline Value RawToValue(const T& data)
 }
 
 template <class T>
-inline Value RawPickToValue(pick_ T& data)
+inline Value RawPickToValue(T rval_ data)
 {
 	typedef RawValueRep<T> R;
-	return Value(new R(data, R::PICK));
+	return Value(new R(pick(data), R::PICK));
 }
 
 template <class T>

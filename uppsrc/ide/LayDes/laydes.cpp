@@ -1030,7 +1030,7 @@ void LayDes::Duplicate()
 		d.item[i].pos = MakeLogPos(m.pos, CtrlRect(m.pos, l.size).Offseted(0, 24), l.size);
 		cursor.Add(q + i);
 	}
-	CurrentLayout().item.InsertPick(q, d.item);
+	CurrentLayout().item.InsertPick(q, pick(d.item));
 	ReloadItems();
 }
 
@@ -1060,7 +1060,7 @@ void LayDes::Matrix()
 					cursor.Add(q + i);
 				}
 				int w = d.item.GetCount();
-				CurrentLayout().item.InsertPick(q, d.item);
+				CurrentLayout().item.InsertPick(q, pick(d.item));
 				q += w;
 			}
 	ReloadItems();
@@ -1083,7 +1083,7 @@ void LayDes::Paste()
 		cursor.Clear();
 		for(int i = 0; i < l.item.GetCount(); i++)
 			cursor.Add(i + q);
-		CurrentLayout().item.InsertPick(q, l.item);
+		CurrentLayout().item.InsertPick(q, pick(l.item));
 		ReloadItems();
 	}
 	catch(CParser::Error) {}
@@ -1273,7 +1273,7 @@ void LayDes::SortItems()
 	Vector<Rect> rect;
 	for(int i = 0; i < count; ++i) {
 		rect.Add(CtrlRect(l.item[cursor[i]].pos, l.size));
-		item.Add() = l.item[cursor[i]];
+		item.Add() = pick(l.item[cursor[i]]);
 	}
 	l.item.Remove(cursor);
 
@@ -1290,7 +1290,7 @@ void LayDes::SortItems()
 	while(swap);
 	
 	int ii = cursor[0];
-	l.item.InsertPick(ii, item);
+	l.item.InsertPick(ii, pick(item));
 	
 	cursor.Clear();
 	for(int i = 0; i < count; i++)

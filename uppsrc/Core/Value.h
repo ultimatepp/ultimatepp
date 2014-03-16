@@ -62,6 +62,8 @@ public:
 	unsigned GetHashValue() const                   { return 0; }
 	bool     operator==(const T&) const             { NEVER(); return false; }
 	String   ToString() const                       { return typeid(T).name(); }
+	int      Compare(const T&) const                { NEVER(); return 0; }
+	int      PolyCompare(const Value&) const        { NEVER(); return 0; }
 	
 	operator ValueTypeRef();
 };
@@ -92,6 +94,8 @@ public:
 		virtual bool       IsEqual(const Void *p)      { return false; }
 		virtual bool       IsPolyEqual(const Value& v) { return false; }
 		virtual String     AsString() const            { return ""; }
+		virtual int        Compare(const Void *p)      { return 0; }
+		virtual int        PolyCompare(const Value& p) { return 0; }
 
 		Void()                                         { refcount = 1; }
 		virtual ~Void()                                {}
@@ -108,6 +112,8 @@ public:
 		bool       (*IsEqual)(const void *p1, const void *p2);
 		bool       (*IsPolyEqual)(const void *p, const Value& v);
 		String     (*AsString)(const void *p);
+		int        (*Compare)(const void *p1, const void *p2);
+		int        (*PolyCompare)(const void *p1, const Value& p2);
 	};
 	
 protected:
@@ -164,6 +170,8 @@ protected:
 
 	String  GetName() const;
 	
+	int     PolyCompare(const Value& v) const;
+	
 #if defined(_DEBUG) && defined(COMPILER_GCC)
 	uint32  magic[4];
 	void    Magic()               { magic[0] = 0xc436d851; magic[1] = 0x72f67c76; magic[2] = 0x3e5e10fd; magic[3] = 0xc90d370b; }
@@ -216,6 +224,12 @@ public:
 	bool operator==(const Value& v) const;
 	bool operator!=(const Value& v) const { return !operator==(v); }
 	bool IsSame(const Value& v) const;
+	
+	int  Compare(const Value& v) const;
+	bool operator<=(const Value& x) const { return Compare(x) <= 0; }
+	bool operator>=(const Value& x) const { return Compare(x) >= 0; }
+	bool operator<(const Value& x) const  { return Compare(x) < 0; }
+	bool operator>(const Value& x) const  { return Compare(x) > 0; }
 
 	String ToString() const;
 	String GetTypeName() const       { return GetName(); }
@@ -250,7 +264,7 @@ template <class T> Value SvoToValue(const T& x)            { return Value(x, Val
 template <class T> Value RichToValue(const T& data);
 
 template <class T> Value RawToValue(const T& data);
-template <class T> Value RawPickToValue(pick_ T& data);
+template <class T> Value RawPickToValue(T rval_ data);
 template <class T> Value RawDeepToValue(const T& data);
 template <class T> T&    CreateRawValue(Value& v);
 

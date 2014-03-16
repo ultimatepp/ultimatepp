@@ -132,3 +132,7 @@
 #ifdef  flagCLR
 #define flagUSEMALLOC
 #endif
+
+#if __cplusplus >= 201100
+#define CPP_11
+#endif

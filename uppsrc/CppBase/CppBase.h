@@ -152,6 +152,8 @@ public:
 
 struct SrcFile {
 	SrcFile();
+	rval_default(SrcFile);
+
 	String      text;
 	Vector<int> linepos;
 	int preprocessorLinesRemoved;
@@ -284,6 +286,9 @@ class Parser {
 		void operator<<=(const Context& t);
 
 		String  Dump() const;
+		
+		Context() {}
+		rval_default(Context);
 	};
 
 	struct Decla {
@@ -314,6 +319,9 @@ class Parser {
 
 	struct Decl : Decla {
 		Array<Decl> param;
+		
+		rval_default(Decl);
+		Decl() {}
 	};
 
 	struct RecursionCounter

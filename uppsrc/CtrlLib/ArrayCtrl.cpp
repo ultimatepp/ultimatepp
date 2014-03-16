@@ -201,7 +201,7 @@ void ArrayCtrl::CellInfo::Set(Ctrl *ctrl, bool owned, bool value)
 	ptr.Set1(cc);
 }
 
-ArrayCtrl::CellInfo::CellInfo(pick_ CellInfo& s)
+ArrayCtrl::CellInfo::CellInfo(CellInfo rval_ s)
 {
 	ptr = s.ptr;
 	const_cast<CellInfo&>(s).ptr.SetPtr(NULL);
@@ -2298,15 +2298,15 @@ void ArrayCtrl::SortB(const Vector<int>& o)
 	Vector< Vector<CellInfo> > ncellinfo;
 	for(int i = 0; i < o.GetCount(); i++) {
 		int oi = o[i];
-		narray[i] = array[oi];
+		narray[i] = pick(array[oi]);
 		if(oi < cellinfo.GetCount())
-			ncellinfo.At(i) = cellinfo[oi];
+			ncellinfo.At(i) = pick(cellinfo[oi]);
 		if(oi < ln.GetCount())
 			nln.At(i) = ln[oi];
 	}
-	array = narray;
-	cellinfo = ncellinfo;
-	ln = nln;
+	array = pick(narray);
+	cellinfo = pick(ncellinfo);
+	ln = pick(nln);
 	Reline(0, 0);
 	if(hasctrls) {
 		for(int i = 0; i < array.GetCount(); i++)

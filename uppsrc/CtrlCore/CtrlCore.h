@@ -110,7 +110,7 @@ void  PostCallback(Callback cb, void *id = NULL)                { SetTimeCallbac
 class TimeCallback
 {
 public:
-	~TimeCallback()                      { Kill(); }
+	~TimeCallback()                      { Kill(); (void)dummy; }
 
 	void Set(int delay, Callback cb)     { UPP::SetTimeCallback(delay, cb, this); }
 	void Post(Callback cb)               { UPP::PostCallback(cb, this); }

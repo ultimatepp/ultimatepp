@@ -103,12 +103,12 @@ void AssistEditor::SyncAnnotationPopup()
 						result.Cat(topic_text.Get(i++));
 					else {
 						RichTable table(topic_text.GetTable(i++), 1);
-						result.CatPick(table);
+						result.CatPick(pick(table));
 					}
 				break;
 			}
 		result.SetStyles(topic_text.GetStyles());
-		annotation_popup.Pick(result, GetRichTextStdScreenZoom());
+		annotation_popup.Pick(pick(result), GetRichTextStdScreenZoom());
 	}
 	else
 		if(SyncRefsFinished)

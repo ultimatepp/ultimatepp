@@ -376,7 +376,7 @@ void Ctrl::RemoveFrame(int i) {
 				m.Add().frame = frame[q].frame;
 			else
 				frame[q].frame->FrameRemove();
-	frame = m;
+	frame = pick(m);
 	if(frame.GetCount() == 0)
 		frame.Add().frame = &NullFrame();
 	RefreshFrame();
@@ -413,7 +413,7 @@ void Ctrl::InsertFrame(int i, CtrlFrame& fr)
 		}
 	if(i == n)
 		m.Add().frame = &fr;
-	frame = m;
+	frame = pick(m);
 	fr.FrameAdd(*this);
 	SyncLayout();
 	RefreshFrame();
