@@ -9,15 +9,15 @@ CONSOLE_APP_MAIN
 	v.Add(2);
 	DUMPC(v);
 
-	Vector<int> v1 = v;
+	Vector<int> v1 = pick(v);
 	DUMPC(v1);
 //	DUMPC(v); -> v is picked, this would crash with runtime error
 
-	v <<= v1;
+	v = clone(v1);
 	DUMPC(v1);
 	DUMPC(v);
 
-	Vector<int> v2(v, 0);
+	Vector<int> v2 = clone(v);
 	DUMPC(v2);
 	DUMPC(v);
 }

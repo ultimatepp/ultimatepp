@@ -1,0 +1,11 @@
+description "Any\377";
+
+uses
+	Core;
+
+file
+	Ntl12.cpp;
+
+mainconfig
+	"" = "SSE2";
+

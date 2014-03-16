@@ -13,7 +13,7 @@ Distribution CreateDist(int n)
 	d.text << "Test (create) " << n;
 	for(int i = 0; i < 10000; i++)
 		d.data.At(rand() % n, 0)++;
-	return d;
+	return pick(d);
 }
 
 void Dump(const Vector<Distribution>& dist)

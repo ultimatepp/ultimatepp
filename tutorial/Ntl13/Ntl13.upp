@@ -1,0 +1,11 @@
+description "InVector, InArray\377";
+
+uses
+	Core;
+
+file
+	Ntl13.cpp;
+
+mainconfig
+	"" = "SSE2";
+

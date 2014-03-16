@@ -669,8 +669,11 @@ void ExportPage(int i)
 	    .BgColor(bg)
 	    .Alink(Red).Link(Black).Vlink(Blue)
 	    / html;
-	SaveFile(AppendFileName(targetdir, links[i]), content);
-	RLOG("Exported page " << links[i]);
+	if(!SaveFile(AppendFileName(targetdir, links[i]), content)) {
+		RLOG("SaveFile failed!");
+		abort();
+	}
+	RLOG("Exported page " << AppendFileName(targetdir, links[i]));
 }
 
 String Downloads()
