@@ -1,0 +1,11 @@
+description "Tuples\377";
+
+uses
+	Core;
+
+file
+	Ntl15.cpp;
+
+mainconfig
+	"" = "SSE2";
+

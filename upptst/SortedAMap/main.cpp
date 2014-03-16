@@ -149,6 +149,10 @@ void Test(T& map)
 	}
 }
 
+struct Foo : Moveable<Foo> {
+	Vector<int> a;
+};
+
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
@@ -208,4 +212,10 @@ CONSOLE_APP_MAIN
 	RDUMP(sizeof(InArray<int>));
 	RDUMP(sizeof(SortedIndex<int>));
 	RDUMP(sizeof(SortedVectorMap<int, int>));
+	
+	{ // Test that this compiles
+		SortedVectorMap<int, Foo> mm;
+		Foo& x = mm.Add(1);
+		x.a.Add(12);
+	}	
 }

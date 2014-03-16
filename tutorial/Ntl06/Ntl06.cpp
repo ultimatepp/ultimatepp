@@ -6,20 +6,22 @@ struct Number {
 	virtual double Get() const = 0;
 
 	String ToString() const { return AsString(Get()); }
+	
+	virtual ~Number() {}
 };
 
 struct Integer : public Number {
 	int n;
 	virtual double Get() const { return n; }
 
-	Integer(int n) : n(n) {}
+	Integer() {}
 };
 
 struct Double : public Number {
 	double n;
 	virtual double Get() const { return n; }
 
-	Double(double n) : n(n) {}
+	Double() {}
 };
 
 bool operator<(const Number& a, const Number& b)
@@ -30,12 +32,8 @@ bool operator<(const Number& a, const Number& b)
 CONSOLE_APP_MAIN
 {
 	Array<Number> num;
-	num.Add(new Integer(3));
-	num.Add(new Double(15.5));
-	num.Add(new Double(2.23));
-	num.Add(new Integer(2));
-	num.Add(new Integer(20));
-	num.Add(new Double(-2.333));
+	num.Create<Double>().n = 15.5;
+	num.Create<Integer>().n = 3;
 	DUMPC(num);
 	Sort(num);
 	DUMPC(num);

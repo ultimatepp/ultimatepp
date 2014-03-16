@@ -16,6 +16,7 @@ struct MyApp : TopWindow {
 
 GUI_APP_MAIN
 {
+	StdLogSetup(LOG_FILE|LOG_COUT);
 //	ChClassicSkin();
 //	ChStdSkin();
 //	SetLanguage(LNG_('P','L','P','L'));

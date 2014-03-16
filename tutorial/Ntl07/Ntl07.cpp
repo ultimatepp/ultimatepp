@@ -6,21 +6,28 @@ struct Number {
 	virtual double Get() const = 0;
 
 	String ToString() const { return AsString(Get()); }
+	
+	virtual ~Number() {}
 };
 
 struct Integer : public Number {
 	int n;
 	virtual double Get() const { return n; }
 
-	Integer(int n) : n(n) {}
+	Integer() {}
 };
 
 struct Double : public Number {
 	double n;
 	virtual double Get() const { return n; }
 
-	Double(double n) : n(n) {}
+	Double() {}
 };
+
+bool operator<(const Number& a, const Number& b)
+{
+	return a.Get() < b.Get();
+}
 
 CONSOLE_APP_MAIN
 {
@@ -38,11 +45,9 @@ CONSOLE_APP_MAIN
 	DUMPC(n);
 
 	BiArray<Number> num;
-	num.AddHead(new Integer(3));
-	num.AddTail(new Double(15.5));
-	num.AddHead(new Double(2.23));
-	num.AddTail(new Integer(2));
-	num.AddHead(new Integer(20));
-	num.AddTail(new Double(-2.333));
+	num.CreateHead<Integer>().n = 3;
+	num.CreateTail<Double>().n = 15.5;
+	num.CreateHead<Double>().n = 2.23;
+	num.CreateTail<Integer>().n = 2;
 	DUMPC(num);
 }

@@ -1,7 +1,9 @@
-uses Core;
+uses
+	Core;
 
 file
-	"Vector.cpp";
+	Vector.cpp;
 
 mainconfig
 	"" = "CONSOLE ST";
+

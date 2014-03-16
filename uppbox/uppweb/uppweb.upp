@@ -54,5 +54,5 @@ file
 	www.t;
 
 mainconfig
-	"" = "MT SKELETON RAINBOW";
+	"" = "MT SKELETON RAINBOW NOGTK";
 

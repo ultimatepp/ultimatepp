@@ -21,21 +21,28 @@ struct Number {
 	virtual double Get() const = 0;
 
 	String ToString() const { return AsString(Get()); }
+	
+	virtual ~Number() {}
 };
 
 struct Integer : public Number {
 	int n;
 	virtual double Get() const { return n; }
 
-	Integer(int n) : n(n) {}
+	Integer() {}
 };
 
 struct Double : public Number {
 	double n;
 	virtual double Get() const { return n; }
 
-	Double(double n) : n(n) {}
+	Double() {}
 };
+
+bool operator<(const Number& a, const Number& b)
+{
+	return a.Get() < b.Get();
+}
 
 CONSOLE_APP_MAIN
 {
@@ -89,8 +96,8 @@ CONSOLE_APP_MAIN
 	DUMPC(ps);
 
 	ArrayMap<String, Number> am;
-	am.Add("A", new Integer(1));
-	am.Add("B", new Double(2.0));
+	am.Create<Integer>("A").n = 1;
+	am.Create<Double>("B").n = 2.1;
 	DUMPC(am.GetKeys());
 	DUMPC(am.GetValues());
 

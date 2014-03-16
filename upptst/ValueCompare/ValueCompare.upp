@@ -1,0 +1,11 @@
+description "Test of Value::Compare\377";
+
+uses
+	Core;
+
+file
+	ValueCompare.cpp;
+
+mainconfig
+	"" = "SSE2";
+

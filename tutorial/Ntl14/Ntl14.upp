@@ -1,0 +1,11 @@
+description "SortedIndex, SortedVectorMap, SortedArrayMap\377";
+
+uses
+	Core;
+
+file
+	Ntl14.cpp;
+
+mainconfig
+	"" = "SSE2";
+

@@ -1,0 +1,4 @@
+#ifndef _Core01_icpp_init_stub
+#define _Core01_icpp_init_stub
+#include "Core/init"
+#endif
