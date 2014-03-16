@@ -52,14 +52,11 @@ done using single global mutex (operated by EnterGuiMutex, LeaveGuiMutex
 or GuiLock scoped helper). Other threads can directly work with 
 GUI as long they do use this global mutex. There are some operations 
 (like opening/closing windows, message loops) that cannot be 
-performed by any other thread than main, however U`+`+ workarounds 
-this by invoking such operations as `"call to main thread`". 
-In other words, you can do anything in non`-main threads as long 
-as you do not forget to synchronize using global GUI mutex.&]
+performed by any other thread than main.&]
 [s0;i150;b33;O0; U`+`+ does not use OS`-native widgets. The main 
 reason for this is to achieve widget interface model optimal 
 for rapid development. The less important reason is that this 
 way it is much easier to make U`+`+ cross`-platform. On the other 
 hand, Chameleon skinning system achieves native look`&feel, so 
 there is a little perceivable difference for end user.&]
-[s0; ]
+[s0; ]]
