@@ -1,5 +1,9 @@
 // -----------------------------------------------------------
 
+#ifdef CPP_11
+#define HAS_LAMBDA 1
+#endif
+
 struct CallbackAction {
 	Atomic  count;
 
@@ -9,6 +13,15 @@ struct CallbackAction {
 	CallbackAction()          { count = 1; }
 	virtual ~CallbackAction() {}
 };
+
+#ifdef HAS_LAMBDA
+struct LambdaCallback : CallbackAction {
+	std::function<void ()> fn;
+	virtual void Execute() { fn(); }
+	
+	LambdaCallback(std::function<void ()> fn) : fn(fn) {}
+};
+#endif
 
 class Callback : Moveable< Callback > {
 	CallbackAction *action;
@@ -34,10 +47,13 @@ public:
 	explicit Callback(CallbackAction  *newaction) { action = newaction; }
 	Callback() { action = NULL; }
 	Callback(_CNULL) { action = NULL; }
+#ifdef HAS_LAMBDA
+	Callback& operator=(std::function<void ()> l) { Clear(); action = new LambdaCallback(l); return *this; }
+#endif
+
 	~Callback();
 
 	static Callback Empty() { return CNULL; }
-
 };
 
 // -----------------------------------------------------------
@@ -52,6 +68,16 @@ struct Callback1Action {
 	Callback1Action()          { count = 1; }
 	virtual ~Callback1Action() {}
 };
+
+#ifdef HAS_LAMBDA
+template <class P1>
+struct LambdaCallback1 : public Callback1Action<P1> {
+	std::function<void (P1)> fn;
+	virtual void Execute(P1 p1) { fn(p1); }
+	
+	LambdaCallback1(std::function<void (P1)> fn) : fn(fn) {}
+};
+#endif
 
 template <class P1>
 class Callback1 : Moveable< Callback1<P1> > {
@@ -79,6 +105,9 @@ public:
 	Callback1() { action = NULL; }
 	Callback1(_CNULL) { action = NULL; }
 	~Callback1();
+#ifdef HAS_LAMBDA
+	Callback1& operator=(std::function<void (P1)> l) { Clear(); action = new LambdaCallback1<P1>(l); return *this; }
+#endif
 
 	static Callback1 Empty() { return CNULL; }
 
@@ -119,6 +148,16 @@ struct Callback2Action {
 	virtual ~Callback2Action() {}
 };
 
+#ifdef HAS_LAMBDA
+template <class P1, class P2>
+struct LambdaCallback2 : public Callback2Action<P1, P2> {
+	std::function<void (P1, P2)> fn;
+	virtual void Execute(P1 p1, P2 p2) { fn(p1, p2); }
+	
+	LambdaCallback2(std::function<void (P1, P2)> fn) : fn(fn) {}
+};
+#endif
+
 template <class P1, class P2>
 class Callback2 : Moveable< Callback2<P1, P2> > {
 	Callback2Action<P1, P2> *action;
@@ -144,6 +183,9 @@ public:
 	explicit Callback2(Callback2Action <P1, P2> *newaction) { action = newaction; }
 	Callback2() { action = NULL; }
 	Callback2(_CNULL) { action = NULL; }
+#ifdef HAS_LAMBDA
+	Callback2& operator=(std::function<void (P1, P2)> l) { Clear(); action = new LambdaCallback2<P1, P2>(l); return *this; }
+#endif
 	~Callback2();
 
 	static Callback2 Empty() { return CNULL; }
@@ -185,6 +227,16 @@ struct Callback3Action {
 	virtual ~Callback3Action() {}
 };
 
+#ifdef HAS_LAMBDA
+template <class P1, class P2, class P3>
+struct LambdaCallback3 : public Callback3Action<P1, P2, P3> {
+	std::function<void (P1, P2, P3)> fn;
+	virtual void Execute(P1 p1, P2 p2, P3 p3) { fn(p1, p2, p3); }
+	
+	LambdaCallback3(std::function<void (P1, P2, P3)> fn) : fn(fn) {}
+};
+#endif
+
 template <class P1, class P2, class P3>
 class Callback3 : Moveable< Callback3<P1, P2, P3> > {
 	Callback3Action<P1, P2, P3> *action;
@@ -210,6 +262,9 @@ public:
 	explicit Callback3(Callback3Action <P1, P2, P3> *newaction) { action = newaction; }
 	Callback3() { action = NULL; }
 	Callback3(_CNULL) { action = NULL; }
+#ifdef HAS_LAMBDA
+	Callback3& operator=(std::function<void (P1, P2, P3)> l) { Clear(); action = new LambdaCallback3<P1, P2, P3>(l); return *this; }
+#endif
 	~Callback3();
 
 	static Callback3 Empty() { return CNULL; }
@@ -251,6 +306,16 @@ struct Callback4Action {
 	virtual ~Callback4Action() {}
 };
 
+#ifdef HAS_LAMBDA
+template <class P1, class P2, class P3, class P4>
+struct LambdaCallback4 : public Callback4Action<P1, P2, P3, P4> {
+	std::function<void (P1, P2, P3, P4)> fn;
+	virtual void Execute(P1 p1, P2 p2, P3 p3, P4 p4) { fn(p1, p2, p3, p4); }
+	
+	LambdaCallback4(std::function<void (P1, P2, P3, P4)> fn) : fn(fn) {}
+};
+#endif
+
 template <class P1, class P2, class P3, class P4>
 class Callback4 : Moveable< Callback4<P1, P2, P3, P4> > {
 	Callback4Action<P1, P2, P3, P4> *action;
@@ -276,6 +341,9 @@ public:
 	explicit Callback4(Callback4Action <P1, P2, P3, P4> *newaction) { action = newaction; }
 	Callback4() { action = NULL; }
 	Callback4(_CNULL) { action = NULL; }
+#ifdef HAS_LAMBDA
+	Callback4& operator=(std::function<void (P1, P2, P3, P4)> l) { Clear(); action = new LambdaCallback4<P1, P2, P3, P4>(l); return *this; }
+#endif
 	~Callback4();
 
 	static Callback4 Empty() { return CNULL; }
@@ -316,6 +384,15 @@ struct GateAction {
 	virtual ~GateAction() {}
 };
 
+#ifdef HAS_LAMBDA
+struct LambdaGate : public GateAction {
+	std::function<bool ()> fn;
+	virtual bool Execute() { return fn(); }
+	
+	LambdaGate(std::function<bool ()> fn) : fn(fn) {}
+};
+#endif
+
 class Gate : Moveable< Gate > {
 	GateAction *action;
 
@@ -346,6 +423,9 @@ public:
 	explicit Gate(GateAction  *newaction) { action = newaction; }
 	Gate() { action = NULL; }
 	Gate(_CNULL) { action = NULL; }
+#ifdef HAS_LAMBDA
+	Gate& operator=(std::function<bool ()> l) { Clear(); action = new LambdaGate(l); return *this; }
+#endif
 	~Gate();
 
 	static Gate Empty() { return CNULL; }
@@ -364,6 +444,16 @@ struct Gate1Action {
 	Gate1Action()          { count = 1; }
 	virtual ~Gate1Action() {}
 };
+
+#ifdef HAS_LAMBDA
+template <class P1>
+struct LambdaGate1 : public Gate1Action<P1> {
+	std::function<bool (P1)> fn;
+	virtual bool Execute(P1 p1) { return fn(p1); }
+	
+	LambdaGate1(std::function<bool (P1)> fn) : fn(fn) {}
+};
+#endif
 
 template <class P1>
 class Gate1 : Moveable< Gate1<P1> > {
@@ -397,6 +487,9 @@ public:
 	explicit Gate1(Gate1Action <P1> *newaction) { action = newaction; }
 	Gate1() { action = NULL; }
 	Gate1(_CNULL) { action = NULL; }
+#ifdef HAS_LAMBDA
+	Gate1& operator=(std::function<bool (P1)> l) { Clear(); action = new LambdaGate1<P1>(l); return *this; }
+#endif
 	~Gate1();
 
 	static Gate1 Empty() { return CNULL; }
@@ -438,6 +531,16 @@ struct Gate2Action {
 	virtual ~Gate2Action() {}
 };
 
+#ifdef HAS_LAMBDA
+template <class P1, class P2>
+struct LambdaGate2 : public Gate2Action<P1, P2> {
+	std::function<bool (P1, P2)> fn;
+	virtual bool Execute(P1 p1, P2 p2) { return fn(p1, p2); }
+	
+	LambdaGate2(std::function<bool (P1, P2)> fn) : fn(fn) {}
+};
+#endif
+
 template <class P1, class P2>
 class Gate2 : Moveable< Gate2<P1, P2> > {
 	Gate2Action<P1, P2> *action;
@@ -469,6 +572,9 @@ public:
 	explicit Gate2(Gate2Action <P1, P2> *newaction) { action = newaction; }
 	Gate2() { action = NULL; }
 	Gate2(_CNULL) { action = NULL; }
+#ifdef HAS_LAMBDA
+	Gate2& operator=(std::function<bool (P1, P2)> l) { Clear(); action = new LambdaGate2<P1, P2>(l); return *this; }
+#endif
 	~Gate2();
 
 	static Gate2 Empty() { return CNULL; }
@@ -510,6 +616,16 @@ struct Gate3Action {
 	virtual ~Gate3Action() {}
 };
 
+#ifdef HAS_LAMBDA
+template <class P1, class P2, class P3>
+struct LambdaGate3 : public Gate3Action<P1, P2, P3> {
+	std::function<bool (P1, P2, P3)> fn;
+	virtual bool Execute(P1 p1, P2 p2, P3 p3) { return fn(p1, p2, p3); }
+	
+	LambdaGate3(std::function<bool (P1, P2, P3)> fn) : fn(fn) {}
+};
+#endif
+
 template <class P1, class P2, class P3>
 class Gate3 : Moveable< Gate3<P1, P2, P3> > {
 	Gate3Action<P1, P2, P3> *action;
@@ -541,6 +657,9 @@ public:
 	explicit Gate3(Gate3Action <P1, P2, P3> *newaction) { action = newaction; }
 	Gate3() { action = NULL; }
 	Gate3(_CNULL) { action = NULL; }
+#ifdef HAS_LAMBDA
+	Gate3& operator=(std::function<bool (P1, P2, P3)> l) { Clear(); action = new LambdaGate3<P1, P2, P3>(l); return *this; }
+#endif
 	~Gate3();
 
 	static Gate3 Empty() { return CNULL; }
@@ -582,6 +701,16 @@ struct Gate4Action {
 	virtual ~Gate4Action() {}
 };
 
+#ifdef HAS_LAMBDA
+template <class P1, class P2, class P3, class P4>
+struct LambdaGate4 : public Gate4Action<P1, P2, P3, P4> {
+	std::function<bool (P1, P2, P3, P4)> fn;
+	virtual bool Execute(P1 p1, P2 p2, P3 p3, P4 p4) { return fn(p1, p2, p3, p4); }
+	
+	LambdaGate4(std::function<bool (P1, P2, P3, P4)> fn) : fn(fn) {}
+};
+#endif
+
 template <class P1, class P2, class P3, class P4>
 class Gate4 : Moveable< Gate4<P1, P2, P3, P4> > {
 	Gate4Action<P1, P2, P3, P4> *action;
@@ -613,6 +742,9 @@ public:
 	explicit Gate4(Gate4Action <P1, P2, P3, P4> *newaction) { action = newaction; }
 	Gate4() { action = NULL; }
 	Gate4(_CNULL) { action = NULL; }
+#ifdef HAS_LAMBDA
+	Gate4& operator=(std::function<bool (P1, P2, P3, P4)> l) { Clear(); action = new LambdaGate4<P1, P2, P3, P4>(l); return *this; }
+#endif
 	~Gate4();
 
 	static Gate4 Empty() { return CNULL; }

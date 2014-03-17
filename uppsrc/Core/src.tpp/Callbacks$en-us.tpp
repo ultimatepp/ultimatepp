@@ -15,6 +15,8 @@ topic "Callbacks";
 pointers. Each Callback represents some kind of action (usually 
 calling a certain function or a certain object method) that can 
 be invoked at any time.&]
+[s9; If you are happy enough to be able to use C`+`+11, you can also 
+assign C`+`+ lambda to Callback.&]
 [s9; There are several basic callback types, depending on number 
 of parameters passed and return value. In order to keep description 
 of callbacks short, all these types are described in a single 
@@ -83,6 +85,13 @@ Callback takes over its ownership.&]
 [s0; &]
 [s0;:Callback1`:`:Callback1`(`):%- [%%*/@(128.0.255) CallbackType]()&]
 [s2; Creates an empty callback.&]
+[s3; &]
+[s4;%- &]
+[s5;:Callback1`:`:operator`=`(function`<void`(P1`)`>`):%- [_^Callback1^ Callback1][@(0.0.255) `&
+]_[* operator`=](std`::function<[@(0.0.255) void]_([%%*/@(128.0.255) arguments])>_[*@3 lam
+bda])&]
+[s6;%- Only in C`+`+ 11&]
+[s2; Assigns C`+`+11 lambda to callback.&]
 [s3; &]
 [s4; &]
 [s0;:Callback1`:`:Callback1`(const Callback1`&`):%- [%%*/@(128.0.255) CallbackType](con
