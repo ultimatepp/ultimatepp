@@ -1,4 +1,4 @@
-description "Utility to generate (long and repetitive) callback C++ source files";
+description "Utility to generate (long and repetitive) callback C++ source files\377";
 
 uses
 	Core;
