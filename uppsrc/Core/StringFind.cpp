@@ -123,7 +123,8 @@ int find(const char *text, int len, const char *needle, int nlen, int from)
 
 int find(const wchar *text, int len, const wchar *needle, int nlen, int from)
 {
-	return t_find<2>((const char *)text, 2 * len, (const char *)needle, 2 * nlen, from) / 2;
+	int q = t_find<2>((const char *)text, 2 * len, (const char *)needle, 2 * nlen, from);
+	return q < 0 ? q : q / 2;
 }
 
 #else
