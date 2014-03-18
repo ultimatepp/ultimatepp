@@ -67,6 +67,8 @@ void AutoSetup()
 
 	CtrlList msclist, mingwlist, owclist, otherlist;
 
+	String dir = GetFileFolder(GetExeFilePath());
+
 	msclist.AddLayout(msc12)
 		.AddLayout(msc11)
 		.AddLayout(msc10)
@@ -95,7 +97,7 @@ void AutoSetup()
 		mingw.dir <<= NormalizePathNN(GetWinRegString("InstallLocation",
 						"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\TDM-GCC" ));
 	mingw.method <<= "MINGW";
-	mingw.create <<= !IsNull(mingw.dir);
+	mingw.create <<= !IsNull(mingw.dir) && !FileExists(AppendFileName(dir, "MINGW.bm"));
 
 	String owcdir = GetEnv("WATCOM");
 	if(owcdir.IsEmpty())
@@ -105,7 +107,7 @@ void AutoSetup()
 		owc.dir <<= owcdir;
 
 	owc.method <<= "OWC";
-	owc.create <<= !IsNull(owc.dir);	
+	owc.create <<= !IsNull(owc.dir)  && !FileExists(AppendFileName(dir, "OWC.bm"));	
 
 
 	String vs = GetWinRegString("ProductDir", "SOFTWARE\\Microsoft\\VisualStudio\\7.1\\Setup\\VC");
@@ -118,7 +120,7 @@ void AutoSetup()
 	            vs)
 	    );
 	msc7_1.method <<= "MSC71";
-	msc7_1.create <<= !IsNull(msc7_1.dir);
+	msc7_1.create <<= !IsNull(msc7_1.dir) && !FileExists(AppendFileName(dir, "MSC71.bm"));
 
 	String sdk8 = GetWinRegString("InstallationFolder",
 	                             "Software\\Microsoft\\Microsoft SDKs\\Windows\\v6.0",
@@ -137,8 +139,9 @@ void AutoSetup()
 		msc8.sdk <<= NormalizePathNN(GetWinRegString("Install Dir", "SOFTWARE\\Microsoft\\MicrosoftSDK\\InstalledSDKs\\8F9E5EF3-A9A5-491B-A889-C58EFFECE8B3"));
 	}
 	msc8.method <<= "MSC8";
-	msc8.create <<= !IsNull(msc8.dir);
-	if(bin8.GetLength() && FileExists(AppendFileName(bin8, "VC\\Bin\\x64\\cl.exe"))) {
+	msc8.create <<= !IsNull(msc8.dir) && !FileExists(AppendFileName(dir, "MSC8.bm"));
+	if(bin8.GetLength() && FileExists(AppendFileName(bin8, "VC\\Bin\\x64\\cl.exe"))
+	   && !FileExists(AppendFileName(dir, "MSC8x64.bm"))) {
 		msc8.create64 = true;
 	}
 	msc8.method64 <<= "MSC8x64";
@@ -162,11 +165,12 @@ void AutoSetup()
 	msc9.sdk <<= sdk9;
 	msc9.dir <<= bin9;
 	msc9.method <<= "MSC9";
-	msc9.create <<= !IsNull(msc9.dir);
+	msc9.create <<= !IsNull(msc9.dir) && !FileExists(AppendFileName(dir, "MSC9.bm"));
 	String vc9_64 = AppendFileName(bin9, "VC\\Bin\\x64");
 	if(!FileExists(AppendFileName(vc9_64, "cl.exe")))
 		vc9_64 = AppendFileName(bin9, "VC\\Bin\\amd64");
-	if(bin9.GetLength() && FileExists(AppendFileName(vc9_64, "cl.exe")))
+	if(bin9.GetLength() && FileExists(AppendFileName(vc9_64, "cl.exe"))
+	   && !FileExists(AppendFileName(dir, "MSC9x64.bm")))
 		msc9.create64 = true;
 	msc9.method64 <<= "MSC9x64";
 
@@ -187,11 +191,12 @@ void AutoSetup()
 	msc10.sdk <<= sdk10;
 	msc10.dir <<= bin10;
 	msc10.method <<= "MSC10";
-	msc10.create <<= !IsNull(msc10.dir);
+	msc10.create <<= !IsNull(msc10.dir) && !FileExists(AppendFileName(dir, "MSC10.bm"));
 	String vc10_64 = AppendFileName(bin10, "VC\\Bin\\x64");
 	if(!FileExists(AppendFileName(vc10_64, "cl.exe")))
 		vc10_64 = AppendFileName(bin10, "VC\\Bin\\amd64");
-	if(bin10.GetLength() && FileExists(AppendFileName(vc10_64, "cl.exe")))
+	if(bin10.GetLength() && FileExists(AppendFileName(vc10_64, "cl.exe"))
+	   && !FileExists(AppendFileName(dir, "MSC10x64.bm")))
 		msc10.create64 = true;
 	msc10.method64 <<= "MSC10x64";
 
@@ -208,11 +213,12 @@ void AutoSetup()
 	msc11.sdk <<= sdk11;
 	msc11.dir <<= bin11;
 	msc11.method <<= "MSC11";
-	msc11.create <<= !IsNull(msc11.dir);
+	msc11.create <<= !IsNull(msc11.dir) && !FileExists(AppendFileName(dir, "MSC11.bm"));
 	String vc11_64 = AppendFileName(bin11, "VC\\bin\\x64");
 	if(!FileExists(AppendFileName(vc11_64, "cl.exe")))
 		vc11_64 = AppendFileName(bin11, "VC\\bin\\x86_amd64");
-	if(bin11.GetLength() && FileExists(AppendFileName(vc11_64, "cl.exe")))
+	if(bin11.GetLength() && FileExists(AppendFileName(vc11_64, "cl.exe"))
+	   && !FileExists(AppendFileName(dir, "MSC11x64.bm")))
 		msc11.create64 = true;
 	msc11.method64 <<= "MSC11x64";
 
@@ -229,11 +235,12 @@ void AutoSetup()
 	msc12.sdk <<= sdk12;
 	msc12.dir <<= bin12;
 	msc12.method <<= "MSC12";
-	msc12.create <<= !IsNull(msc12.dir);
+	msc12.create <<= !IsNull(msc12.dir) && !FileExists(AppendFileName(dir, "MSC12.bm"));
 	String vc12_64 = AppendFileName(bin12, "VC\\bin\\x64");
 	if(!FileExists(AppendFileName(vc12_64, "cl.exe")))
 		vc12_64 = AppendFileName(bin12, "VC\\bin\\x86_amd64");
-	if(bin12.GetLength() && FileExists(AppendFileName(vc12_64, "cl.exe")))
+	if(bin12.GetLength() && FileExists(AppendFileName(vc12_64, "cl.exe"))
+	   && !FileExists(AppendFileName(dir, "MSC12x64.bm")))
 		msc12.create64 = true;
 	msc12.method64 <<= "MSC12x64";
 
@@ -263,8 +270,6 @@ void AutoSetup()
 	DirSel(other.mysql, bd.Add());
 	if(dlg.Run() != IDOK)
 		return;
-
-	String dir = GetFileFolder(GetExeFilePath());
 
 	String exe;
 	String include;
