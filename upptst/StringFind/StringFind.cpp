@@ -36,8 +36,8 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
-//	WString x("ax");
-//	int pos = x.Find(WString("x"));
+	String x("aaaaaxxxxxxxxx");
+	int pos = x.Find(String("aaaaxxxxxxxxx"));
 
 	Check<String>();
 	Check<WString>();					
