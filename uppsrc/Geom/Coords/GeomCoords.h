@@ -152,7 +152,7 @@ public:
 	{
 		Node() {}
 		Node(int branch) : branch(branch) {}
-		Node(One<Split> rval_ split) : branch(-1), split(pick(split)) {}
+		Node(One<Split> split) : branch(-1), split(pick(split)) {}
 		int        branch;
 		One<Split> split;
 	};
