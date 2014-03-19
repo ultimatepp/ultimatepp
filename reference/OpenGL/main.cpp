@@ -55,6 +55,10 @@ struct OpenGLExample : GLCtrl {
 			glVertex3d(0, 0, 1.67);
 		glEnd();
 	}
+	
+	virtual void GLResize(int w, int h) {
+		glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+	}
 
 	virtual void MouseMove(Point p, dword) {
 		point = p;
