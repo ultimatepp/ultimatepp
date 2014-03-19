@@ -260,7 +260,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 					if(HasFlag("GCC32"))
 						lib << " -m32";
 					Point p = ExtractVersion();
-					if(!IsNull(p.x)) {
+					if(!IsNull(p.x) && HasFlag("WIN32")) {
 						lib << " -Xlinker --major-image-version -Xlinker " << p.x;
 						if(!IsNull(p.y))
 							lib << " -Xlinker --minor-image-version -Xlinker " << p.y;
