@@ -19,7 +19,7 @@ void GLCtrl::GLPane::Init()
 	memset(&pfd, 0, sizeof(pfd));
 	pfd.nSize = sizeof(pfd);
 	pfd.nVersion = 1;
-	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | 0x00008000;
+	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_GENERIC_ACCELERATED | PFD_GENERIC_FORMAT;
 	if (ctrl->doubleBuffering) pfd.dwFlags |= PFD_DOUBLEBUFFER;
 	pfd.iPixelType = PFD_TYPE_RGBA;
 	pfd.cColorBits = 32;
@@ -44,6 +44,7 @@ void GLCtrl::GLPane::Init()
 	ActivateContext();
 	ctrl->GLInit();
 	ctrl->GLResize(GetSize().cx, GetSize().cy);
+	ctrl->GLPaint();
 }
 
 void GLCtrl::GLPane::Destroy()
@@ -86,20 +87,16 @@ void GLCtrl::GLPane::State(int reason)
 
 LRESULT GLCtrl::GLPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	if(message == WM_PAINT && hDC && hRC) 
+	if((message == WM_PAINT || message == WM_SIZE || message == WM_ERASEBKGND) && hDC && hRC) 
 	{
 		PAINTSTRUCT ps;
 		BeginPaint(GetHWND(), &ps);
 		ActivateContext();
 		ctrl->GLPaint();
-		glFlush();
-		glFinish();
-		if (ctrl->doubleBuffering) SwapBuffers(hDC);
+		ctrl->doubleBuffering ? SwapBuffers(hDC) : glFlush();
 		EndPaint(GetHWND(), &ps);
 		return 0;
 	}
-	else if(message == WM_ERASEBKGND)
-		return 1;
 	
 	return DHCtrl::WindowProc(message, wParam, lParam);
 }
