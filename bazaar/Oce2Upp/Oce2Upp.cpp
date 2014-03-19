@@ -219,6 +219,12 @@ bool Oce2Upp::MakeBuilderPackage(void)
 
 	CopyIncludes(builderFolder);
 	
+	// overwrite 'Image_AlienPixMap.hxx file with custom one
+	// and create Image_AlienPixMap.cxx file in replacement of OCC one
+	// to use Upp imaging code
+	String s = (const char *)Image_AlienPixMap_HXX;
+	SaveFile(AppendFileName(builderFolder, "include/Image_AlienPixMap.hxx"), s);
+	
 	// create upp package file and populate starting part
 	FileOut uppFile(AppendFileName(builderFolder, builderName + ".upp"));
 	if(!uppFile)
@@ -276,14 +282,14 @@ bool Oce2Upp::MakeBuilderPackage(void)
 			continue;
 			
 		// realize toolkit package path
-		String tkFolder = AppendFileName(destRoot, toolkit);
+		String tkFolder = AppendFileName(destRoot, libPrefix + toolkit);
 		RealizeDirectory(tkFolder);
 		
 		// add toolkit 'use' to main package
-		sUpp << "uses " + toolkit + ";\n";
+		sUpp << "uses " + libPrefix + toolkit + ";\n";
 		
 		// create toolkit package file
-		FileOut tkFile(AppendFileName(tkFolder, toolkit + ".upp"));
+		FileOut tkFile(AppendFileName(tkFolder, libPrefix + toolkit + ".upp"));
 		if(!tkFile)
 			return false;
 		String sTk;
@@ -332,7 +338,7 @@ bool Oce2Upp::MakeBuilderPackage(void)
 			String const &dep = deps[iDep];
 			if(!dep.StartsWith("TK") && !dep.StartsWith("PTK"))
 				continue;
-			tkUpp << "\t" << dep << ",\n"; 
+			tkUpp << "\t" << libPrefix + dep << ",\n"; 
 		}
 		
 		if(toolkit == "TKService")
@@ -375,6 +381,21 @@ bool Oce2Upp::MakeBuilderPackage(void)
 			for(int iFile = 0; iFile < files.GetCount(); iFile++)
 			{
 				String fName = files[iFile];
+				
+				// special handling for Image_AlienPixMap.cxx file
+				// it must be replaced with the one patched for Upp
+				if(fName == "Image_AlienPixMap.cxx")
+				{
+					String s = (const char *)Image_AlienPixMap_CXX;
+					String path = AppendFileName(tkFolder, "IMAGE/");
+					RealizeDirectory(path);
+					path = AppendFileName(path, fName);
+					SaveFile(path, s);
+					sTk << "	" << path << "\n";
+					sTk << "		options() -I" << srcPath << "\n";
+					sTk << "		options() -I" << drvPath << ",\n";
+					continue;
+				}
 				sTk << "	" << AppendFileName(srcPath, fName) << "\n";
 				sTk << "		options() -I" << srcPath << "\n";
 				sTk << "		options() -I" << drvPath << ",\n";
@@ -450,6 +471,12 @@ bool Oce2Upp::MakeOCEPackage(void)
 		s.Insert(pos+7, "::");
 	SaveFile(AppendFileName(includeDest, "NCollection_DefaultHasher.hxx"), s);
 	
+	// overwrite 'Image_AlienPixMap.hxx file with custom one
+	// and create Image_AlienPixMap.cxx file in replacement of OCC one
+	// to use Upp imaging code
+	s = (const char *)Image_AlienPixMap_HXX;
+	SaveFile(AppendFileName(includeDest, "Image_AlienPixMap.hxx"), s);
+	
 	// build OCE.h file
 	FileOut f(AppendFileName(pacFolder, "OCE.h"));
 	f <<
@@ -469,7 +496,44 @@ bool Oce2Upp::MakeOCEPackage(void)
 	FileOut uppFile;
 	
 	uppFile.Open(AppendFileName(pacFolder, oceName + ".upp"));
-	s = (const char *)OCE_UPP;
+	s.Clear();
+	s <<
+		"noblitz;\n"
+		"library\n"
+	;
+	s << "	\"";
+	for(int iTool = 0; iTool < toolkits.GetCount(); iTool++)
+	{
+		// get toolkit name
+		String toolkit = toolkits.GetKey(iTool);
+		
+		// skip unneeded toolkits
+		if(
+				toolkit == "TKDraw"
+			||	toolkit == "TKViewerTest"
+			||	toolkit == "TKDCAF"
+			||	toolkit == "TKQADraw"
+			||	toolkit == "TKTObjDRAW"
+			||	toolkit == "TKTopTest"
+			||	toolkit == "TKXDEDRAW"
+			||	toolkit == "TKXSDRAW"
+		)
+			continue;
+		s << libPrefix << toolkit << " ";
+	}
+	s << "\";\n";
+	s <<
+		"library(POSIX) \"GL GLU\";\n"
+		"library(WIN32) opengl32;\n"
+		"include\n"
+		"	./include;\n"
+		"file\n"
+		"	OCE.h,\n"
+		"	OCECtrl.h,\n"
+		"	OCEDoc.h,\n"
+		"	OCECtrl.cpp,\n"
+		"	OCEDoc.cpp;\n"
+	;
 	uppFile << s;
 	uppFile.Close();
 	progress.Set(++iTk);
@@ -549,6 +613,11 @@ void Oce2Upp::okCb(void)
 	srcDir = AppendFileName(oceRoot, "src");
 	drvDir = AppendFileName(oceRoot, "drv");
 	
+	if(prefixOption)
+		libPrefix = "UPP_";
+	else
+		libPrefix = "";
+	
 	progress.Show();
 	
 	// generated pakages
@@ -595,6 +664,8 @@ Oce2Upp::Oce2Upp()
 	// hide progess and empty action
 	progress.Hide();
 	action = "";
+	
+	prefixOption = 1;
 	
 	// not canceling
 	canceled = false;

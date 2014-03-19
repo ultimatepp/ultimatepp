@@ -64,6 +64,8 @@ class Oce2Upp : public WithSelectorLayout<TopWindow>
 		// callbacks
 		void okCb(void);
 		void cancelCb(void);
+		
+		String libPrefix;
 
 	protected:
 	
