@@ -133,8 +133,8 @@ protected:
 	// Called just before OpenGL termination
 	virtual void GLDone() {}
 
-	// Called on resize events
-	virtual void GLResize(int w, int h) {}
+	// Called on resize events, defaults to setting proper view-port
+	virtual void GLResize(int w, int h);
 
 	// Called on paint events
 	virtual void GLPaint() { WhenGLPaint(); }
