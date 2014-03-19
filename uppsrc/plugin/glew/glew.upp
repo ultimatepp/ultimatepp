@@ -1,0 +1,8 @@
+description "OpenGL extension wrangler library\3770,128,128";
+
+file
+	glew.c,
+	glew.h,
+	glxew.h,
+	wglew.h;
+

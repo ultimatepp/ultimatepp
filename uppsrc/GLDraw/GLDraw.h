@@ -3,10 +3,10 @@
 
 #include <Draw/Draw.h>
 
-#include "glew.h"
+#include <plugin/glew/glew.h>
 
 #ifdef PLATFORM_WIN32
-#include "wglew.h"
+#include <plugin/glew/wglew.h>
 #endif
 
 #define GL_USE_SHADERS

@@ -1,16 +1,12 @@
 uses
 	Draw,
-	Painter;
+	Painter,
+	plugin/glew;
 
 file
 	GLDraw.h,
 	Texture.cpp,
 	GLDraw.cpp,
 	GLShaders.cpp,
-	GLDrawS.cpp,
-	GLEW readonly separator,
-	glew.c,
-	glew.h,
-	glxew.h,
-	wglew.h;
+	GLDrawS.cpp;
 
