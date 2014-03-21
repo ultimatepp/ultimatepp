@@ -13,6 +13,12 @@ void Check(T haystack, T needle, int pos)
 		DUMP(haystack.Find(needle));
 		NEVER();
 	}
+	if(haystack.ReverseFind(needle) != pos) {
+		DUMP(haystack);
+		DUMP(needle);
+		DUMP(haystack.ReverseFind(needle));
+		NEVER();
+	}
 }
 
 template <class T>
