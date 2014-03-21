@@ -381,6 +381,43 @@ Vector<String> Split(const char *s, const String& delim, bool ignoreempty)
 	return Split(s, ss, ignoreempty);
 }
 
+#define E__TL(I)       typename COMBINE(T, I)
+#define E__NFIf(I)     COMBINE(p, I) = r[I - 1]
+#define E__NFValue(I)  String& COMBINE(p, I)
+#define E__PI(I)       COMBINE(p, I)
+
+#define E__NFBody(I) \
+bool SplitTo(const char *s, int delim, bool ignoreempty, __List##I(E__NFValue)) \
+{ \
+	Vector<String> r = Split(s, delim, ignoreempty); \
+	if(r.GetCount() < I) return false; \
+	__List##I(E__NFIf); \
+	return true; \
+} \
+bool SplitTo(const char *s, int delim, __List##I(E__NFValue)) \
+{ \
+	return SplitTo(s, delim, true, __List##I(E__PI)); \
+} \
+bool SplitTo(const char *s, const char *delim, bool ignoreempty, __List##I(E__NFValue)) \
+{ \
+	Vector<String> r = Split(s, delim, ignoreempty); \
+	if(r.GetCount() < I) return false; \
+	__List##I(E__NFIf); \
+	return true; \
+} \
+bool SplitTo(const char *s, const char *delim, __List##I(E__NFValue)) \
+{ \
+	return SplitTo(s, delim, true, __List##I(E__PI)); \
+} \
+
+__Expand8(E__NFBody)
+
+#define E__TL(I)
+#define E__NFIf(I)
+#define E__NFValue(I)
+#define E__PI(I)
+#define E__NFBody(I)
+
 String Join(const Vector<String>& im, const String& delim) {
 	String r;
 	for(int i = 0; i < im.GetCount(); i++) {
