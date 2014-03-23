@@ -881,26 +881,25 @@ String Gdb_MI2::FormatFrame(MIValue &fInfo, MIValue &fArgs)
 	return Format("%02d-%s%s at %s:%s", idx, func, argLine, file, line);
 }
 
-// re-fills frame's droplist when dropping it
-void Gdb_MI2::DropFrames()
+bool Gdb_MI2::FillDropFrames(int min, int max, bool val)
 {
-	int q = ~frame;
-	frame.Clear();
+	if(min > max)
+		return true;
 	
 	// get a list of frames
-	MIValue frameList = pick(MICmd("stack-list-frames")["stack"]);
+	MIValue frameList = pick(MICmd(Format("stack-list-frames %d %d", min, max))["stack"]);
 	if(frameList.IsError() || !frameList.IsArray())
 	{
 		Exclamation("Couldn't get stack frame list");
-		return;
+		return false;
 	}
 	
 	// get the arguments for all frames, values just for simple types
-	MIValue frameArgs = pick(MICmd("stack-list-arguments 1")["stack-args"]);
+	MIValue frameArgs = pick(MICmd(Format("stack-list-arguments %d %d %d", val ? 2 : 0, min, max))["stack-args"]);
 	if(frameArgs.IsError() || !frameArgs.IsArray())
 	{
 		Exclamation("Couldn't get stack arguments list");
-		return;
+		return false;
 	}
 	
 	// fill the droplist
@@ -910,12 +909,40 @@ void Gdb_MI2::DropFrames()
 		MIValue &fArgs = frameArgs[iFrame]["args"];
 		frame.Add(iFrame, FormatFrame(fInfo, fArgs));
 	}
+	return true;
+}
+
+// re-fills frame's droplist when dropping it
+void Gdb_MI2::DropFrames()
+{
+	int q = ~frame;
+	frame.Clear();
+
+	// getting frame args values is quite slow in gdb
+	// so we get them just for 3+3 frames around current
+	// frame position; for the rest we just get names
 	
-	// data must be synced on frame change
-	localSynced = false;
-	thisSynced = false;
-	watchesSynced = false;
-	explorerSynced = false;
+	// get stack depth
+	int depth = atoi(MICmd("stack-info-depth")["depth"].ToString());
+	
+	// adjust frame pointer, just in case current depth is less than former
+	if(q >= depth)
+		q = depth - 1;
+
+	int minVal = max(0, q - 3);
+	int maxVal = min(depth - 1, q + 3);
+
+	// first window without values
+	if(!FillDropFrames(0, minVal - 1, false))
+		return;
+	
+	// window with values
+	if(!FillDropFrames(minVal, maxVal, true))
+		return;
+	
+	// last window without values
+	if(!FillDropFrames(maxVal + 1, depth - 1, false))
+		return;
 
 	frame <<= q;
 }
@@ -929,6 +956,13 @@ void Gdb_MI2::ShowFrame()
 		Exclamation(Format(t_("Couldn't select frame #%d"), i));
 		return;
 	}
+
+	// data must be synced on frame change
+	localSynced = false;
+	thisSynced = false;
+	watchesSynced = false;
+	explorerSynced = false;
+
 	SyncIde(i);
 }
 
