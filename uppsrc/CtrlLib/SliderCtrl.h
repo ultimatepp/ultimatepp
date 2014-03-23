@@ -42,7 +42,7 @@ public:
 	int           GetMax() const                  { return max; }
 
 	bool          IsVert() const;
-	void		  Jump(bool v = true)			  { jump = v; }
+	SliderCtrl&   Jump(bool v = true)			  { jump = v; return *this; }
 
 	SliderCtrl&   Step(int _step, bool _r = true) { step = _step; round_step = _r; return *this; }
 	int           GetStep() const                 { return step; }

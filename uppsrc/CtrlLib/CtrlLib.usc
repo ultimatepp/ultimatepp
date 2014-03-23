@@ -1256,9 +1256,10 @@ ctrl SliderCtrl {
 
 	GetMinSize() { return Size(0, 0); }
 	GetStdSize() { return Size(64, 24); }
-
+	
 	Frame  SetFrame @1;
-
+	bool Jump = false;
+	
 	Paint(w) {
 		r = GetRect();
 		DrawCtrlFrame(w, r, .SetFrame);
