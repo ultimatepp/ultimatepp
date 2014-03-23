@@ -880,7 +880,7 @@ String Gdb_MI2::FormatFrame(MIValue &fInfo, MIValue &fArgs)
 		}
 		else if(arg.IsString())
 			// quick fix....
-			argLine << "=" << arg.ToString().Mid(1);
+			argLine << arg.ToString();
 		argLine << ',';
 	}
 	if(!argLine.IsEmpty())
