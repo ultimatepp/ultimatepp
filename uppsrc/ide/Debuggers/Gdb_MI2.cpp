@@ -871,9 +871,16 @@ String Gdb_MI2::FormatFrame(MIValue &fInfo, MIValue &fArgs)
 	String argLine;
 	for(int iArg = 0; iArg < nArgs; iArg++)
 	{
-		argLine += fArgs[iArg]["name"].Get();
-		if(fArgs[iArg].Find("value") >= 0)
-			argLine << "=" << fArgs[iArg]["value"];
+		MIValue &arg = fArgs[iArg];
+		if(arg.IsTuple())
+		{
+			argLine += arg["name"].Get();
+			if(arg.Find("value") >= 0)
+				argLine << "=" << arg["value"];
+		}
+		else if(arg.IsString())
+			// quick fix....
+			argLine << "=" << arg.ToString().Mid(1);
 		argLine << ',';
 	}
 	if(!argLine.IsEmpty())
@@ -907,7 +914,7 @@ bool Gdb_MI2::FillDropFrames(int min, int max, bool val)
 	{
 		MIValue &fInfo = frameList[iFrame];
 		MIValue &fArgs = frameArgs[iFrame]["args"];
-		frame.Add(iFrame, FormatFrame(fInfo, fArgs));
+		frame.Add(iFrame + min, FormatFrame(fInfo, fArgs));
 	}
 	return true;
 }
