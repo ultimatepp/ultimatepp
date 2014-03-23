@@ -412,11 +412,11 @@ bool SplitTo(const char *s, const char *delim, __List##I(E__NFValue)) \
 
 __Expand8(E__NFBody)
 
-#define E__TL(I)
-#define E__NFIf(I)
-#define E__NFValue(I)
-#define E__PI(I)
-#define E__NFBody(I)
+#undef E__TL
+#undef E__NFIf
+#undef E__NFValue
+#undef E__PI
+#undef E__NFBody
 
 String Join(const Vector<String>& im, const String& delim) {
 	String r;
