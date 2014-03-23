@@ -489,7 +489,6 @@ Vector<Rect> FindScreensStruts()
 Rect Ctrl::GetDefaultWindowRect()
 {
 	GuiLock __;
-
 	static int width  = 0;
 	static int height = 0;
 	static int left   = 0;
@@ -543,7 +542,7 @@ Rect Ctrl::GetWorkArea() const
 	if (rc.IsEmpty())
 		GetWorkArea(rc);
 	
-	Point pt = GetMousePos();
+	Point pt = GetScreenRect().TopLeft();
 	for (int i = 0; i < rc.GetCount(); i++)
 		if(rc[i].Contains(pt))
 			return rc[i];
@@ -564,7 +563,6 @@ Rect Ctrl::GetWorkArea(Point pt)
 Rect Ctrl::GetVirtualWorkArea()
 {
 	GuiLock __;
-	
 	static Rect r;
 	if(r.right == 0) {
 		Vector<int> x = GetPropertyInts(Xroot, XAtom("_NET_WORKAREA"));
@@ -584,12 +582,10 @@ Rect Ctrl::GetVirtualScreenArea()
 Rect Ctrl::GetPrimaryWorkArea()
 {
 	GuiLock __;
-	
 	static Rect r;
 	if(r.right == 0) {
-		static Array<Rect> rc;
-		if (rc.IsEmpty())
-			GetWorkArea(rc);
+		Array<Rect> rc;
+		GetWorkArea(rc);
 		rc.GetCount() ? r = rc[0] : r = GetVirtualScreenArea();
 	}
 	return r;
@@ -598,7 +594,6 @@ Rect Ctrl::GetPrimaryWorkArea()
 Rect Ctrl::GetPrimaryScreenArea()
 {
 	GuiLock __;
-	
 	static Rect r;
 	if(r.right == 0) {
 		Vector<Rect> screens = FindScreensResolutions();

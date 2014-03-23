@@ -228,7 +228,15 @@ void Ctrl::SetAlpha(byte alpha)
 Rect Ctrl::GetWorkArea() const
 {
 	GuiLock __;
-	return GetWorkArea(GetRect().TopLeft());
+	static Array<Rect> rc;
+	if(rc.IsEmpty()) 
+		GetWorkArea(rc);
+	
+	Point pt = GetScreenRect().TopLeft();
+	for (int i = 0; i < rc.GetCount(); i++)
+		if(rc[i].Contains(pt))
+			return rc[i];
+	return GetPrimaryWorkArea();
 }
 
 void Ctrl::GetWorkArea(Array<Rect>& rc)
@@ -261,8 +269,9 @@ void Ctrl::GetWorkArea(Array<Rect>& rc)
 
 Rect Ctrl::GetWorkArea(Point pt)
 {
-	Array<Rect> rc;
-	GetWorkArea(rc);
+	static Array<Rect> rc;
+	if(rc.IsEmpty())
+		GetWorkArea(rc);
 	for(int i = 0; i < rc.GetCount(); i++)
 		if(rc[i].Contains(pt))
 			return rc[i];
@@ -271,30 +280,46 @@ Rect Ctrl::GetWorkArea(Point pt)
 
 Rect Ctrl::GetVirtualWorkArea()
 {
-	Rect out = GetPrimaryWorkArea();
-	Array<Rect> rc;
-	GetWorkArea(rc);
-	for(int i = 0; i < rc.GetCount(); i++)
-		out |= rc[i];
-	return out;
+	GuiLock __;
+	static Rect r;
+	if(r.right == 0) {
+		r = GetPrimaryWorkArea();
+		Array<Rect> rc;
+		GetWorkArea(rc);
+		for(int i = 0; i < rc.GetCount(); i++)
+			r |= rc[i];
+	}
+	return r;
 }
 
 Rect Ctrl::GetVirtualScreenArea()
 {
 	GuiLock __;
-	gint x, y, width, height;
-	gdk_window_get_geometry(gdk_screen_get_root_window(gdk_screen_get_default()),
-	                        &x, &y, &width, &height, NULL);
-	return RectC(x, y, width, height);
+	static Rect r;
+	if(r.right == 0) {
+		gint x, y, width, height;
+		gdk_window_get_geometry(gdk_screen_get_root_window(gdk_screen_get_default()),
+	    	                    &x, &y, &width, &height, NULL);
+	    r = RectC(x, y, width, height);
+	}
+	return r;
 }
 
 Rect Ctrl::GetPrimaryWorkArea()
 {
 	GuiLock __;
-	int primary = gdk_screen_get_primary_monitor(gdk_screen_get_default());
-	Array<Rect> rc;
-	GetWorkArea(rc);
-	return primary >= 0 && primary < rc.GetCount() ? rc[primary] : GetVirtualScreenArea();
+	static Rect r;
+	if (r.right == 0) {
+		Array<Rect> rc;
+		GetWorkArea(rc);
+#if GTK_CHECK_VERSION(2, 20, 0)
+		int primary = gdk_screen_get_primary_monitor(gdk_screen_get_default());
+#else
+		int primary = 0;
+#endif
+		primary >= 0 && primary < rc.GetCount() ? r = rc[primary] : r = GetVirtualScreenArea();
+	}
+	return r;
 }
 
 Rect Ctrl::GetPrimaryScreenArea()
