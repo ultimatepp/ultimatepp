@@ -36,6 +36,8 @@ void Check()
 					}
 		}
 	}
+	
+	ASSERT(T("test").Find("x") < 0);
 }
 
 CONSOLE_APP_MAIN
