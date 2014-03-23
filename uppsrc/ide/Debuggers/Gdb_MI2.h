@@ -250,6 +250,7 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		String FormatFrame(MIValue &fInfo, MIValue &fArgs);
 
 		// re-fills frame's droplist when dropping it
+		bool FillDropFrames(int min, int max, bool val);
 		void DropFrames();
 	
 		// shows selected stack frame in editor
