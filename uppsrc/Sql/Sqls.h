@@ -454,6 +454,9 @@ class SqlMassInsert {
 		uint64         nulls;
 		Vector <Value> value;
 		SqlBool        remove;
+		
+		rval_default(Row);
+		Row() {}
 	};
 
 	Sql&            sql;

@@ -313,6 +313,11 @@ bool MySqlConnection::Execute() {
 		return false;
 	result = mysql_store_result(mysql);
 	rows = (int)mysql_affected_rows(mysql);
+
+	while(mysql_more_results (mysql)) { // Only first resultset is considered, rest is ignored
+		mysql_next_result (mysql);      // This is required to avoid synchronization error on CALL
+	}
+
 	if(result) {
 		int fields = mysql_num_fields(result);
 		info.SetCount(fields);
