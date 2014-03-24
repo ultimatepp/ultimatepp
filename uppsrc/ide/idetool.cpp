@@ -240,14 +240,14 @@ String FormatElapsedTime(double run)
 
 void Ide::AlterText(WString (*op)(const WString& in))
 {
-	if(designer)
+	if(designer || !editor.IsSelection())
 		return;
 	editor.NextUndo();
-	if(!editor.IsSelection())
-		editor.SelectAll();
 	WString w = editor.GetSelectionW();
 	editor.RemoveSelection();
+	int l = editor.GetCursor();
 	editor.Paste((*op)(w));
+	editor.SetSelection(l, editor.GetCursor());
 }
 
 void Ide::TextToUpper()
@@ -292,6 +292,52 @@ static WString sCString(const WString& s)
 void Ide::ToCString()
 {
 	AlterText(sCString);
+}
+
+static WString sComment(const WString& s) 
+{
+	return "/*" + s + "*/";
+}
+
+void Ide::ToComment()
+{
+	AlterText(sComment);
+}
+
+static WString sCommentLines(const WString& s)
+{
+	String r;
+	StringStream ss(s.ToString());
+	for(;;) {
+		String line = ss.GetLine();
+		if(ss.IsError())
+			return s;
+		else
+		if(!line.IsVoid())
+			r << "//" << line << "\n";
+		if(ss.IsEof())
+			break;
+	}
+	return r.ToWString();
+}
+
+void Ide::CommentLines()
+{
+	AlterText(sCommentLines);
+}
+
+static WString sUncomment(const WString& s) 
+{
+	WString h = s;
+	h.Replace("/*", "");
+	h.Replace("//", "");
+	h.Replace("*/", "");
+	return h;
+}
+
+void Ide::UnComment()
+{
+	AlterText(sUncomment);
 }
 
 void Ide::Times()

@@ -670,6 +670,8 @@ public:
 
 	WString0()                           { Zero(); }
 	~WString0()                          { Free(); }
+
+	WString0& operator=(const WString0& s) { Free(); Set(s); return *this; }
 };
 
 class WString : public Moveable<WString, AString<WString0> >
