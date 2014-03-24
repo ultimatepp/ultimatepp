@@ -42,18 +42,19 @@ void Pdb::DebugBar(Bar& bar)
 void Pdb::Tab()
 {
 	switch(tab.Get()) {
-	case 0: autos.SetFocus(); break;
-	case 1: locals.SetFocus(); break;
-	case 2: watches.SetFocus(); break;
-	case 3: explorer.SetFocus(); break;
-	case 4: memory.SetFocus(); break;
+	case TAB_AUTOS: autos.SetFocus(); break;
+	case TAB_LOCALS: locals.SetFocus(); break;
+	case TAB_THIS: self.SetFocus(); break;
+	case TAB_WATCHES: watches.SetFocus(); break;
+	case TAB_EXPLORER: explorer.SetFocus(); break;
+	case TAB_MEMORY: memory.SetFocus(); break;
 	}
 	Data();
 }
 
 bool Pdb::Key(dword key, int count)
 {
-	if(key >= 32 && key < 65535 && tab.Get() == 2) {
+	if(key >= 32 && key < 65535 && tab.Get() == TAB_LOCALS) {
 		watches.DoInsertAfter();
 		Ctrl* f = GetFocusCtrl();
 		if(f && watches.HasChildDeep(f))
@@ -182,6 +183,13 @@ Pdb::Pdb()
 	locals.WhenBar = THISBACK(LocalsMenu);
 	locals.WhenLeftDouble = THISBACK1(ExploreKey, &locals);
 
+	self.NoHeader();
+	self.AddColumn("", 1);
+	self.AddColumn("", 6).SetDisplay(Single<VisualDisplay>());
+	self.WhenEnterRow = THISBACK1(SetTreeA, &self);
+	self.WhenBar = THISBACK(LocalsMenu);
+	self.WhenLeftDouble = THISBACK1(ExploreKey, &self);
+
 	watches.NoHeader();
 	watches.AddColumn("", 1).Edit(watchedit);
 	watches.AddColumn("", 6).SetDisplay(Single<VisualDisplay>());
@@ -218,6 +226,7 @@ Pdb::Pdb()
 
 	tab.Add(autos.SizePos(), "Autos");
 	tab.Add(locals.SizePos(), "Locals");
+	tab.Add(self.SizePos(), "this");
 	tab.Add(watches.SizePos(), "Watches");
 	tab.Add(explorer_pane.SizePos(), "Explorer");
 	memory.cdb = this;
@@ -231,8 +240,8 @@ Pdb::Pdb()
 	framelist.Ctrl::Add(dlock.SizePos());
 
 	pane.Add(tab.SizePos());
-	pane.Add(threadlist.LeftPosZ(320, 60).TopPos(2, EditField::GetStdHeight()));
-	pane.Add(framelist.HSizePosZ(384, 0).TopPos(2, EditField::GetStdHeight()));
+	pane.Add(threadlist.LeftPosZ(340, 60).TopPos(2, EditField::GetStdHeight()));
+	pane.Add(framelist.HSizePosZ(404, 0).TopPos(2, EditField::GetStdHeight()));
 	split.Horz(pane, tree.SizePos());
 	split.SetPos(8000);
 	Add(split);
