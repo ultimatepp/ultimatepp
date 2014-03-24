@@ -106,7 +106,8 @@ void AString<B>::Replace(const tchar *find, int findlen, const tchar *replace, i
 		i = j + findlen;
 	}
 	r.Cat(p + i, B::GetCount() - i);
-	*this = r;
+	Free();
+	Set(r);
 }
 
 template <class B>

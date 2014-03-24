@@ -874,6 +874,9 @@ public:
 		void  TextInitCaps();
 		void  SwapCase();
 		void  ToCString();
+		void  ToComment();
+		void  CommentLines();
+		void  UnComment();
 
 	void      MacroMenu(Bar& menu);
 		bool  HasMacros();
