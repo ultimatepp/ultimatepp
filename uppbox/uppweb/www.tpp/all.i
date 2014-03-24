@@ -1,3 +1,7 @@
+TOPIC("20081chlog$en-us")
+#include "20081chlog$en-us.tppi"
+END_TOPIC
+
 TOPIC("FAQ$de-de")
 #include "FAQ$de-de.tppi"
 END_TOPIC
@@ -56,6 +60,10 @@ END_TOPIC
 
 TOPIC("chss$de-de")
 #include "chss$de-de.tppi"
+END_TOPIC
+
+TOPIC("community$en-us")
+#include "community$en-us.tppi"
 END_TOPIC
 
 TOPIC("comparison$de-de")
