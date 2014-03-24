@@ -17,6 +17,11 @@ public:
 	virtual String   GetDesc() const;
 	virtual void     ChildGotFocus();
 
+public:
+	struct TopStyle : ChStyle<TopStyle> {
+		Value background;
+	};
+
 protected:
 	enum {
 		TIMEID_DEFSYNCTITLE = Ctrl::TIMEID_COUNT,
@@ -72,6 +77,8 @@ private:
 	bool        urgent:1;
 	byte        state;
 	Image       icon, largeicon;
+
+	const TopStyle *st;
 	
 	void        GuiPlatformConstruct();
 	void        GuiPlatformDestruct();
@@ -160,6 +167,9 @@ public:
 	TopWindow& Icon(const Image& m);
 	TopWindow& LargeIcon(const Image& m);
 	TopWindow& Icon(const Image& smallicon, const Image& largeicon);
+
+	static const TopStyle& StyleDefault();
+	TopWindow&  SetStyle(const TopStyle& s);
 	
 	Image      GetIcon() const                        { return icon; }
 	Image      GetLargeIcon() const                   { return largeicon; }

@@ -224,7 +224,10 @@ TopWindow& TopWindow::Rejector(Ctrl& m, int ID)
 
 void TopWindow::Paint(Draw& w)
 {
-	background.Paint(w, Rect(GetSize()), SColorText, SColorShadow);
+	if(!IsNull(st->background))
+		ChPaint(w, GetSize(), st->background);
+	else
+		background.Paint(w, GetSize(), SColorText, SColorShadow);
 }
 
 TopWindow& TopWindow::Background(const PaintRect& prect)
@@ -469,11 +472,26 @@ struct DialogBackground : public Display {
 	}
 };
 
+
+CH_STYLE(TopWindow, TopStyle, StyleDefault)
+{
+	background = Null;
+}
+
+TopWindow& TopWindow::SetStyle(const TopWindow::TopStyle& s)
+{
+	st = &s;
+	RefreshLayout();
+	RefreshFrame();
+	return *this;
+}
+
 TopWindow::TopWindow()
 {
 	GuiLock __;
 	TransparentBackPaint();
 	background = PaintRect(Single<DialogBackground>(), Null);
+	SetStyle(StyleDefault());
 	center = 1;
 	minsize = Size(80, 20);
 	GuiPlatformConstruct();
