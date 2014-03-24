@@ -13,6 +13,12 @@ void Check(T haystack, T needle, int pos)
 		DUMP(haystack.Find(needle));
 		NEVER();
 	}
+	if(haystack.Find(needle + '!') >= 0) {
+		DUMP(haystack);
+		DUMP(needle + '!');
+		DUMP(haystack.Find(needle));
+		NEVER();
+	}
 	if(haystack.ReverseFind(needle) != pos) {
 		DUMP(haystack);
 		DUMP(needle);
@@ -24,6 +30,7 @@ void Check(T haystack, T needle, int pos)
 template <class T>
 void Check()
 {
+	
 	for(int l = 0; l < 30; l++) {
 		for(int r = 0; r < 30; r++) {
 			LOG(l << ":" << r);
@@ -40,12 +47,29 @@ void Check()
 	ASSERT(T("test").Find("x") < 0);
 }
 
+template <class T>
+void CheckReplace()
+{
+	T x("Just a test");
+	x.Replace(" a ", " another ");
+	DUMP(x);
+	ASSERT(x == T("Just another test"));
+	
+	x = T('_', 5) + x + T('_', 5) + x + T('_', 5);
+	DUMP(x);
+	x.Replace("test", "run");
+	DUMP(x);
+	T y("Just another run");
+	ASSERT(x == T('_', 20) + y + T('_', 20) + y + T('_', 20));
+}
+
+
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
-	String x("aaaaaxxxxxxxxx");
-	int pos = x.Find(String("aaaaxxxxxxxxx"));
+	CheckReplace<String>();
+	CheckReplace<WString>();					
 
 	Check<String>();
 	Check<WString>();					
