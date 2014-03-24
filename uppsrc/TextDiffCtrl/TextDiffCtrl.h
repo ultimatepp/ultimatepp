@@ -35,6 +35,7 @@ public:
 	virtual void   MouseWheel(Point pt, int zdelta, dword keyflags);
 	virtual void   MouseMove(Point pt, dword keyflags);
 	virtual void   LeftDown(Point pt, dword keyflags);
+	virtual void   LeftDouble(Point pt, dword keyflags);
 	virtual void   LeftUp(Point pt, dword keyflags);
 	virtual void   RightDown(Point p, dword keyflags);
 	virtual bool   Key(dword key, int repcnt);
@@ -78,6 +79,7 @@ private:
 
 public:
 	Callback       WhenScroll;
+	Callback       WhenLeftDouble;
 
 	void           SetCount(int c);
 	void           AddCount(int c);

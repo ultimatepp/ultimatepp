@@ -60,6 +60,11 @@ void TextCompareCtrl::LeftDown(Point pt, dword keyflags)
 	SetWantFocus();
 }
 
+void TextCompareCtrl::LeftDouble(Point pt, dword keyflags)
+{
+	
+}
+
 void TextCompareCtrl::MouseMove(Point pt, dword flags)
 {
 	if(HasCapture())

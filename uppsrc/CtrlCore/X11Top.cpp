@@ -251,7 +251,7 @@ void TopWindow::CenterRect(Ctrl *owner)
 			r = wr;
 		Point p = r.CenterPos(sz);
 		
-		if ((p.x + sz.cx <= wr.Width() + wr.left) && (p.y + sz.cy <= wr.Height() + wr.top)) {
+		if (GetVirtualScreenArea().Contains(p)) {
 			r = RectC(p.x, p.y, sz.cx, sz.cy);
 			wr.left += fm.left;
 			wr.right -= fm.right;
