@@ -34,8 +34,6 @@ void Pdb::Vis(ArrayCtrl& a, const String& key, const VectorMap<String, Value>& p
 {
 	bool ch;
 	a.Add(key, Vis(key, prev, vis, ch));
-//	if(ch)
-//		a.SetDisplay(a.GetCount() - 1, 0, Single<RedDisplay>());
 }
 
 void Pdb::Locals()
@@ -50,6 +48,94 @@ void Pdb::Locals()
 		for(int i = 0; i < f.local.GetCount(); i++)
 			Vis(locals, f.local.GetKey(i), prev, Visualise(f.local[i]));
 	}
+}
+
+void Pdb::AddThis(const VectorMap<String, Val>& m, adr_t address, const VectorMap<String, Value>& prev)
+{
+	for(int i = 0; i < m.GetCount() && self.GetCount() < 2000; i++) {
+		Val mv = m[i];
+		mv.address += address;
+		Visual vis;
+		try {
+			vis = Visualise(mv);
+		}
+		catch(CParser::Error e) {
+			vis.Cat(e, SColorDisabled);
+		}
+		Vis(self, m.GetKey(i), prev, vis);
+	}
+}
+
+void Pdb::AddThis(int type, adr_t address, const VectorMap<String, Value>& prev)
+{
+	const Type& t = GetType(type);
+	AddThis(t.member, address, prev);
+	AddThis(t.static_member, 0, prev);
+	for(int i = 0; i < t.base.GetCount() && self.GetCount() < 2000; i++)
+		AddThis(t.base[i].type, t.base[i].address + address, prev);
+}
+
+void Pdb::This()
+{
+	VectorMap<String, Value> prev = DataMap(locals);
+	self.Clear();
+	int q = ~framelist;
+	if(q >= 0 && q < frame.GetCount()) {
+		Frame& f = frame[q];
+		for(int i = 0; i < f.local.GetCount(); i++) {
+			if(f.local.GetKey(i) == "this") {
+				Val val = f.local[i];
+				if(val.ref > 0 || val.type < 0)
+					val = GetRVal(val);
+				AddThis(val.type, val.address, prev);
+				break;
+			}
+		}
+	}
+}
+
+void Pdb::TryAuto(const String& exp, const VectorMap<String, Value>& prev)
+{
+	if(autos.Find(exp) < 0) {
+		Visual r;
+		try {
+			CParser p(exp);
+			Val v = Exp(p);
+			Visualise(r, v, 2);
+		}
+		catch(CParser::Error) {
+			r.Clear();
+		}
+		if(r.part.GetCount())
+			Vis(autos, exp, prev, r);
+	}
+}
+
+void Pdb::Autos()
+{
+	VectorMap<String, Value> prev = DataMap(autos);
+	autos.Clear();
+	CParser p(autotext);
+	while(!p.IsEof())
+		if(p.IsId()) {
+			String exp = p.ReadId();
+			TryAuto(exp, prev);
+			for(;;) {
+				if(p.Char('.') && p.IsId())
+					exp << '.';
+				else
+				if(p.Char2('-', '>') && p.IsId())
+					exp << "->";
+				else
+					break;
+				exp << p.ReadId();
+				TryAuto(exp, prev);
+			}
+		}
+		else
+			p.SkipTerm();
+	autos.Sort();
+//	MarkChanged(prev, autos);
 }
 
 void Pdb::Watches()
@@ -147,7 +233,7 @@ void Pdb::ExplorerTree()
 
 void Pdb::DoExplorer()
 {
-	tab.Set(3);
+	tab.Set(TAB_EXPLORER);
 	expexp.SetFocus();
 	expexp.SetSelection();
 	Explorer();
@@ -174,53 +260,9 @@ void Pdb::ExFw()
 void Pdb::ExploreKey(ArrayCtrl *a)
 {
 	if(a && a->IsCursor()) {
-		tab.Set(3);
+		tab.Set(TAB_EXPLORER);
 		Explore(a->GetKey());
 	}
-}
-
-void Pdb::TryAuto(const String& exp, const VectorMap<String, Value>& prev)
-{
-	if(autos.Find(exp) < 0) {
-		Visual r;
-		try {
-			CParser p(exp);
-			Val v = Exp(p);
-			Visualise(r, v, 2);
-		}
-		catch(CParser::Error) {
-			r.Clear();
-		}
-		if(r.part.GetCount())
-			Vis(autos, exp, prev, r);
-	}
-}
-
-void Pdb::Autos()
-{
-	VectorMap<String, Value> prev = DataMap(autos);
-	autos.Clear();
-	CParser p(autotext);
-	while(!p.IsEof())
-		if(p.IsId()) {
-			String exp = p.ReadId();
-			TryAuto(exp, prev);
-			for(;;) {
-				if(p.Char('.') && p.IsId())
-					exp << '.';
-				else
-				if(p.Char2('-', '>') && p.IsId())
-					exp << "->";
-				else
-					break;
-				exp << p.ReadId();
-				TryAuto(exp, prev);
-			}
-		}
-		else
-			p.SkipTerm();
-	autos.Sort();
-//	MarkChanged(prev, autos);
 }
 
 bool Pdb::Tip(const String& exp, CodeEditor::MouseTip& mt)
@@ -248,10 +290,11 @@ bool Pdb::Tip(const String& exp, CodeEditor::MouseTip& mt)
 void Pdb::Data()
 {
 	switch(tab.Get()) {
-	case 0: Autos(); break;
-	case 1: Locals(); break;
-	case 2: Watches(); break;
-	case 3: Explorer(); break;
+	case TAB_AUTOS: Autos(); break;
+	case TAB_LOCALS: Locals(); break;
+	case TAB_THIS: This(); break;
+	case TAB_WATCHES: Watches(); break;
+	case TAB_EXPLORER: Explorer(); break;
 	}
 }
 
@@ -477,7 +520,7 @@ void Pdb::MemoryGoto(const String& exp)
 			adr = v.address;
 		memory.SetCursor(adr);
 		memory.SetSc(adr);
-		tab.Set(4);
+		tab.Set(TAB_MEMORY);
 	}
 	catch(CParser::Error e) {
 		Exclamation("Invalid expression!&" + DeQtf(e));

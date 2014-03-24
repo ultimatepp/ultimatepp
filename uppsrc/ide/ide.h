@@ -579,6 +579,10 @@ public:
 			filetime = Null; editpos.Clear(); undodata.Clear();
 			columnline = Null; lineinfo.Clear(); lineinforem.Clear();
 		}
+		void ClearP() {
+			lineinforem.Clear();
+			undodata.Clear();
+		}
 	};
 
 	String posfile[2];
