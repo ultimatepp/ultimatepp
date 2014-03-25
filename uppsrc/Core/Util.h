@@ -402,6 +402,7 @@ Vector<String> Split(const char *s, int (*filter)(int), bool ignoreempty = true)
 Vector<String> Split(const char *s, int chr, bool ignoreempty = true);
 Vector<String> Split(const char *s, const String& delim, bool ignoreempty = true);
 
+//$-
 #define E__NFValue(I)  String& COMBINE(p, I)
 
 #define E__NFBody(I) \
@@ -414,6 +415,12 @@ __Expand8(E__NFBody)
 
 #undef E__NFBody
 #undef E__NFValue
+//$+
+
+//$ bool SplitTo(const char *s, int delim, bool ignoreempty, String& p1...);
+//$ bool SplitTo(const char *s, int delim, , String& p1...);
+//$ bool SplitTo(const char *s, const char *delim, bool ignoreempty, , String& p1...);
+//$ bool SplitTo(const char *s, const char *delim, , String& p1...);
 
 String  Join(const Vector<String>& im, const String& delim);
 WString Join(const Vector<WString>& im, const WString& delim);
