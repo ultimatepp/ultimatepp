@@ -28,7 +28,7 @@ XMLToolBarItem::XMLToolBarItem(const XMLToolBarItem &item, int dummy)
 }
 
 // pick constructor
-XMLToolBarItem::XMLToolBarItem(XMLToolBarItem pick_ &item)
+XMLToolBarItem::XMLToolBarItem(XMLToolBarItem rval_ item)
 {
 	commandId	= item.commandId;
 	label		= item.label;

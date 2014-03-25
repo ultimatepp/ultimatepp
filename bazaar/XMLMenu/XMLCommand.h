@@ -8,7 +8,7 @@ NAMESPACE_UPP
 ////////////////////////////////////////////////////////////////////////////////////
 // a single command, i.e. available entry for menu and bars
 class XMLToolBar;
-class XMLCommand
+class XMLCommand : DeepCopyOption<XMLCommand>
 {
 	friend class XMLCommands;
 	private:
@@ -37,6 +37,13 @@ class XMLCommand
 		String commandString;
 
 	public:
+		// constructor
+		XMLCommand() {}
+		
+		// copy constructor
+		XMLCommand(XMLCommand rval_ c);
+		XMLCommand(XMLCommand const &c, int);
+		
 		Ctrl *GetCtrl(void) const									{ return control;		}
 		Size const &GetCtrlSize(void) const							{ return ctrlSize;		}
 		Callback const &GetCallback(void) const						{ return callback;		}
@@ -70,7 +77,7 @@ class XMLCommands : DeepCopyOption<XMLCommands>
 		XMLCommands(XMLCommands const &cmds, int dummy) : commands(cmds.commands, 0) {}
 		
 		// pick constructor
-		XMLCommands(XMLCommands pick_ &cmds) : commands(cmds.commands) {}
+		XMLCommands(XMLCommands rval_ cmds) : commands(cmds.commands) {}
 			
 		// adds a custom command
 		XMLCommands &Add(String const &id, String const &cmd);

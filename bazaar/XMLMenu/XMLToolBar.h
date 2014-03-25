@@ -70,7 +70,7 @@ class XMLToolBarItem : DeepCopyOption<XMLToolBarItem>
 		XMLToolBarItem(const XMLToolBarItem &item, int dummy);
 		
 		// pick constructor
-		XMLToolBarItem(XMLToolBarItem pick_ &item);
+		XMLToolBarItem(XMLToolBarItem rval_ item);
 
 #ifdef flagDEBUG
 		// debugging stuff -- dumps bar content

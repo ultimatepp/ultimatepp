@@ -320,8 +320,8 @@ void XMLBarEditor::treeContextAddCb(int mode)
 		item.isSeparator = true;
 		mode -= 4;
 	}
-	Value v = RawToValue(item);
 	String lbl = (item.IsSeparator() ? t_("<SEPARATOR>") : "");
+	Value v = RawPickToValue(item);
 	switch(mode)
 	{
 		case 1:

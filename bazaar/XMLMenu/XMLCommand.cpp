@@ -5,6 +5,31 @@ NAMESPACE_UPP
 
 ////////////////////////////////////////////////////////////////////////////////////
 
+// copy constructors
+XMLCommand::XMLCommand(XMLCommand const &c, int)
+{
+	control					= c.control;
+	ctrlSize				= c.ctrlSize;
+	callback				= c.callback;
+	menuCallback			= c.menuCallback;
+	menuTb					<<= c.menuTb;
+	enabled					= c.enabled;
+	custom					= c.custom;
+	commandString			= c.commandString;
+}
+
+XMLCommand::XMLCommand(XMLCommand rval_ c)
+{
+	control					= c.control;
+	ctrlSize				= c.ctrlSize;
+	callback				= c.callback;
+	menuCallback			= c.menuCallback;
+	menuTb					= c.menuTb;
+	enabled					= c.enabled;
+	custom					= c.custom;
+	commandString			= c.commandString;
+}
+
 // xml support
 void XMLCommand::Xmlize(XmlIO xml)
 {
@@ -215,12 +240,12 @@ XMLCommands &XMLCommands::Sort(void)
 	{
 		if(commands[i].GetIsCustom())
 		{
-			custom.Add(commands[i]);
+			custom.AddPick(commands[i]);
 			customIdx.Add(commands.GetKey(i));
 		}
 		else
 		{
-			builtIn.Add(commands[i]);
+			builtIn.AddPick(commands[i]);
 			builtInIdx.Add(commands.GetKey(i));
 		}
 	}
@@ -228,9 +253,9 @@ XMLCommands &XMLCommands::Sort(void)
 	IndexSort(builtInIdx, builtIn, XMLCmdLess());
 	commands.Clear();
 	for(int i = 0; i < builtIn.GetCount(); i++)
-		commands.Add(builtInIdx[i], builtIn[i]);
+		commands.AddPick(builtInIdx[i], builtIn[i]);
 	for(int i = 0; i < custom.GetCount(); i++)
-		commands.Add(customIdx[i], custom[i]);
+		commands.AddPick(customIdx[i], custom[i]);
 	
 	return *this;
 }
@@ -253,7 +278,7 @@ void XMLCommands::Xmlize(XmlIO xml)
 		
 		// appends new commands to current list
 		for(int i = 0; i < newCmds.GetCount(); i++)
-			commands.Add(newCmds.GetKey(i), newCmds[i]);
+			commands.AddPick(newCmds.GetKey(i), newCmds[i]);
 	}
 	else
 	{
@@ -261,7 +286,7 @@ void XMLCommands::Xmlize(XmlIO xml)
 		ArrayMap<String, XMLCommand> custCmds;
 		for(int i = 0; i < commands.GetCount(); i++)
 			if(commands[i].GetIsCustom())
-				custCmds.Add(commands.GetKey(i), commands[i]);
+				custCmds.Add(commands.GetKey(i), new XMLCommand(commands[i], 1));
 		
 		// stream out custom commands
 		xml("commands", custCmds);
