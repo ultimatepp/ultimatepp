@@ -1,4 +1,4 @@
-description "Using layouts for dialogs";
+description "Using layouts for dialogs\377";
 
 uses
 	CtrlLib;
@@ -9,3 +9,4 @@ file
 
 mainconfig
 	"" = "GUI";
+
