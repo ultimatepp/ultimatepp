@@ -29,7 +29,7 @@ CONSOLE_APP_MAIN
 	}
 	Cout() << "There are " << msgcount << " messages in your inbox.\n";
 	for(;;) {
-		Cout()	<< "Message number to retrieve (1.." << msgcount << ") or anything else to QUIT:";
+		Cout()	<< "Message number to retrieve (1.." << msgcount << ") or anything else to QUIT: ";
 		int i = StrInt(ReadStdIn());
 		if(i >= 1 && i <= msgcount) {
 			String message = pop3.GetMessage(i);
