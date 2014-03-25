@@ -1,0 +1,12 @@
+description "Examples of using Core/POP3 package to download gmail emails\377";
+
+uses
+	Core,
+	Core/POP3;
+
+file
+	Pop3.cpp;
+
+mainconfig
+	"" = "SSE2";
+
