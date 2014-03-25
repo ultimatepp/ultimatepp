@@ -1,0 +1,15 @@
+description "Post Office Protocol, version 3 encapsulation. Author: İsmail Yılmaz\377";
+
+uses
+	Core,
+	Core/SSL;
+
+file
+	POP3.h,
+	POP3.cpp,
+	InetMessage.cpp,
+	src.tpp;
+
+mainconfig
+	"" = "";
+
