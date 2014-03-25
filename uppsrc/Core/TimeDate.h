@@ -155,7 +155,10 @@ inline String AsString(const Time& time) { return Format(time); }
 
 bool SetSysTime(Time time); // only root/sysadmin can do this...
 
+int    GetTimeZone();
 String GetTimeZoneText();
+int    ScanTimeZoneText(const char *s);
+int    ScanTimeZone(const char *s);
 
 int   GetLeapSeconds(Date dt);
 int64 GetUTCSeconds(Time tm);

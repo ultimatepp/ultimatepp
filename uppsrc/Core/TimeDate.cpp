@@ -611,12 +611,41 @@ bool SetSysTime(Time time)
 #endif
 }
 
+int GetTimeZone()
+{
+	static int zone;
+	ONCELOCK {
+		for(;;) { // This is somewhat ugly, but unified approach to get time zone offset
+			Time t0 = GetSysTime();
+			Time gmtime = GetUtcTime();
+			Time ltime = GetSysTime();
+			if(GetSysTime() - t0 < 1) { // Make sure that there is not much time between calls
+				zone = (int)(ltime - gmtime) / 60; // Round to minutes
+				break;
+			}
+		}
+	}
+	return zone;
+}
+
+String FormatTimeZone(int n)
+{
+	return (n < 0 ? "-" : "+") + Format("%02.2d%02.2d", abs(n) / 60, abs(n) % 60);
+}
+
 String GetTimeZoneText()
 {
-	Time gmtime = GetUtcTime();
-	Time ltime = GetSysTime();
-	int d = (int)(ltime - gmtime) / 600;
-	return Format("+%02.2d%01.1d0", d / 6, d % 6);
+	return FormatTimeZone(GetTimeZone());
+}
+
+int ScanTimeZone(const char *s)
+{
+	int n = atoi(s);
+	int hour = abs(n) / 100;
+	int minutes = abs(n) % 100;
+	if(hour >= 0 && hour <= 12 && minutes >= 0 && minutes < 60)
+		return sgn(n) * (hour * 60 + minutes);
+	return 0;
 }
 
 int GetLeapSeconds(Date dt)

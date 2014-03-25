@@ -1,4 +1,6 @@
 String WwwFormat(Time tm);
+bool   ScanWwwTime(const char *s, Time& tm);
+Time   ScanWwwTime(const char *s);
 
 String MIMECharsetName(byte charset);
 
