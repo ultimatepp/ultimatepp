@@ -10,8 +10,6 @@ String WwwFormat(Time tm)
 {
 	static const char *dayofweek[] =
 	{ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-	static const char *month[] =
-	{ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 	return String().Cat()
 		<< dayofweek[DayOfWeek(tm)] << ", "
 		<< (int)tm.day << ' ' << s_www_month[tm.month - 1]
@@ -41,8 +39,11 @@ bool ScanWwwTime(const char *s, Time& tm)
 			return false;
 		tm.month = n;
 		tm.year = p.ReadInt(1, 4000);
-		if(tm.year < 100)
+		if(tm.year < 50)
 			tm.year += 2000;
+		else
+		if(tm.year < 100)
+			tm.year += 1900;
 		tm.hour = p.ReadInt(0, 23);
 		p.PassChar(':');
 		tm.minute = p.ReadInt(0, 59);
