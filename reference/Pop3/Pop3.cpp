@@ -24,7 +24,6 @@ CONSOLE_APP_MAIN
 	int msgcount = pop3.GetMessageCount();
 	if(msgcount < 0) {
 		Cout() << "\nFailed: " << pop3.GetLastError() << "\n";
-		pop3.Logout();
 		return;
 	}
 	Cout() << "There are " << msgcount << " messages in your inbox.\n";
@@ -55,5 +54,4 @@ CONSOLE_APP_MAIN
 			break;
 	}
 	Cout() << "Logging out!..\n";
-	pop3.Logout();
 }
