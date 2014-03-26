@@ -219,7 +219,8 @@ bool Pop3::Logout()
 	if(IsOnline()) 
 		PutGet("QUIT\r\n");
 	LLOG(Format(t_("Closing connection to %s:%d."), host, port));
-	Close();
+	if(IsOpen())
+		Close();
 	online = false;
 	return true;
 }
@@ -233,6 +234,5 @@ Pop3::Pop3()
 
 Pop3::~Pop3()
 {
-	if(IsOpen()) 
-		Close();
+	Logout();
 }
