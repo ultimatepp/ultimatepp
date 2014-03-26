@@ -471,7 +471,8 @@ String XmlParser::ReadTag(bool next)
 	LLOG("ReadTag " << tagtext);
 	String h = tagtext;
 	if(next) {
-		stack.Add(Nesting(h, npreserve));
+		if(!raw)
+			stack.Add(Nesting(h, npreserve));
 		attr = pick(nattr);
 		attr1 = nattr1;
 		attrval1 = nattrval1;
@@ -484,7 +485,8 @@ bool  XmlParser::Tag(const char *tag)
 {
 	if(IsTag() && tagtext == tag) {
 		LLOG("Tag " << tagtext);
-		stack.Add(Nesting(tagtext, npreserve));
+		if(!raw)
+			stack.Add(Nesting(tagtext, npreserve));
 		attr = pick(nattr);
 		attr1 = nattr1;
 		attrval1 = nattrval1;
@@ -498,7 +500,8 @@ bool  XmlParser::Tag(const String& tag)
 {
 	if(IsTag() && tagtext == tag) {
 		LLOG("Tag " << tagtext);
-		stack.Add(Nesting(tagtext, npreserve));
+		if(!raw)
+			stack.Add(Nesting(tagtext, npreserve));
 		attr = pick(nattr);
 		attr1 = nattr1;
 		attrval1 = nattrval1;
@@ -520,6 +523,16 @@ void  XmlParser::PassTag(const String& tag)
 		throw XmlError(String().Cat() << '\'' << tag << "'\' tag expected");
 }
 
+String XmlParser::ReadEnd(bool next)
+{
+	if(type != XML_END)
+		throw XmlError("Expected end-tag");
+	String x = tagtext;
+	if(next)
+		Next();
+	return x;
+}
+
 bool  XmlParser::IsEnd()
 {
 	return type == XML_END;
@@ -531,14 +544,34 @@ bool  XmlParser::End()
 		throw XmlError("Unexpected end of file");
 	if(IsEnd()) {
 		LLOG("EndTag " << tagtext);
-		if(stack.IsEmpty())
-			throw XmlError(NFormat("Unexpected end-tag: </%s>", tagtext));
-		if(stack.Top().tag != tagtext && !relaxed) {
-			LLOG("Tag/end-tag mismatch: <" << stack.Top().tag << "> </" << tagtext << ">");
-			throw XmlError(NFormat("Tag/end-tag mismatch: <%s> </%s>", stack.Top().tag, tagtext));
+		if(!raw) {
+			if(stack.IsEmpty())
+				throw XmlError(NFormat("Unexpected end-tag: </%s>", tagtext));
+			if(stack.Top().tag != tagtext && !relaxed) {
+				LLOG("Tag/end-tag mismatch: <" << stack.Top().tag << "> </" << tagtext << ">");
+				throw XmlError(NFormat("Tag/end-tag mismatch: <%s> </%s>", stack.Top().tag, tagtext));
+			}
+			stack.Drop();
 		}
-		stack.Drop();
 		npreserve = (!stack.IsEmpty() && stack.Top().preserve_blanks);
+		Next();
+		return true;
+	}
+	return false;
+}
+
+bool XmlParser::End(const char *tag)
+{
+	if(IsEnd() && tagtext == tag) {
+		Next();
+		return true;
+	}
+	return false;
+}
+
+bool XmlParser::End(const String& tag)
+{
+	if(IsEnd() && tagtext == tag) {
 		Next();
 		return true;
 	}
@@ -549,6 +582,12 @@ void  XmlParser::PassEnd()
 {
 	if(!End())
 		throw XmlError(String().Cat() << "Expected \'" << (stack.GetCount() ? stack.Top().tag : String()) << "\' end-tag");
+}
+
+void XmlParser::PassEnd(const char *tag)
+{
+	if(!End(tag))
+		throw XmlError(String().Cat() << "Expected \'" << tag << "\' end-tag");
 }
 
 bool  XmlParser::TagE(const char *tag)
@@ -693,7 +732,7 @@ void XmlParser::Skip()
 	if(cdata.GetCount() && type != XML_TEXT)
 		cdata.Clear();
 	else
-	if(IsTag()) {
+	if(IsTag() && !raw) {
 		String n = ReadTag();
 		while(!End()) {
 			if(IsEof())
@@ -737,6 +776,7 @@ void XmlParser::Init()
 	begincolumn = 0;
 	in = NULL;
 	len = 0;
+	raw = false;
 }
 
 XmlParser::XmlParser(const char *s)

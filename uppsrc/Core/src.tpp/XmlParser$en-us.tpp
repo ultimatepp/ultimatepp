@@ -230,10 +230,15 @@ the next start`-tag is processed.&]
 [s2;%% Activates the relaxed mode. In relaxed mode, XmlParser ignores 
 mismatches of start`-tag and end`-tags. This mode was introduced 
 to deal with broken XML files.&]
-[s3; &]
+[s3;%% &]
+[s4; &]
+[s5;:XmlParser`:`:Raw`(bool`): [@(0.0.255) void]_[* Raw]([@(0.0.255) bool]_[*@3 b])&]
+[s2;%% Activtes the raw mode. I raw mode, all logic about start`-tags 
+and end`-tags is completely supressed. This mode was introduced 
+to deal with HTML.&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
-[s4;H0; &]
+[s3;%% &]
 [s5;:XmlParser`:`:XmlParser`(const char`*`): [* XmlParser]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 s])&]
 [s2;%% Creates the parser for xml input text [%-*@3 s]. The pointed 

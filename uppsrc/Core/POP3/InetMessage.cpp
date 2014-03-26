@@ -133,7 +133,7 @@ bool InetMessage::Read(const String& s)
 
 	String type = header.Get("content-type");
 	if(!type.StartsWith("multipart")) {
-		part.Add().body = LoadStream(ss);
+		part.Add().body = DecodeHeaderValue(LoadStream(ss));
 		return true;
 	}
 		
@@ -175,7 +175,30 @@ bool InetMessage::Read(const String& s)
 				break;
 			if(ln == end_boundary)
 				return true;
-			p.body << ln << "\r\n";
+			p.body << DecodeHeaderValue(ln) << "\r\n";
 		}
 	}
+}
+
+String InetMessage::GetHeader(int parti, const char *id) const
+{
+	return Nvl(GetPartHeader(parti, id), header.Get(id, Null));
+}
+
+String InetMessage::GetPartBody(int i) const
+{
+	String encoding = ToLower(Nvl(GetHeader(i, "Content-Transfer-Encoding"), "quoted-printable"));
+	String body = part[i].body;
+	body = decode(encoding, "quoted-printable", QPDecode(body), "base64", Base64Decode(body), body);
+	String content_type = ToLower(GetHeader(i, "content-type"));
+	int q = content_type.Find("charset=");
+	if(q >= 0) {
+		q += strlen("charset=");
+		int qq = content_type.Find(';', q);
+		String charset = qq >= 0 ? content_type.Mid(q, qq + 1) : content_type.Mid(q);
+		int cs = CharsetByName(charset);
+		if(cs >= 0)
+			body = ToCharset(CHARSET_DEFAULT, body, cs, '?');
+	}
+	return body;
 }

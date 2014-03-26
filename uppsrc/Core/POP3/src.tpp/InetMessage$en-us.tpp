@@ -59,10 +59,21 @@ message.&]
 [s4;%% &]
 [s5;:InetMessage`:`:GetPartBody`(int`)const: [_^String^ String]_[* GetPartBody]([@(0.0.255) i
 nt]_[*@3 i])_[@(0.0.255) const]&]
-[s2;%% Returns the body of part [%-*@3 i].&]
+[s2;%% Returns the body of part [%-*@3 i]. Bodies with transfer encoding 
+base64 or quoted`-printable are decoded. Also, if `'content`-type`', 
+has `'charset`' section, body is converted to application`'s 
+default encoding (usually utf`-8).&]
 [s3;%% &]
-[s4;%% &]
-[s5;:InetMessage`:`:GetPartHeader`(int`,const char`*`): [_^String^ String]_[* GetPartHead
-er]([@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id])&]
+[s4; &]
+[s5;:InetMessage`:`:GetPartHeader`(int`,const char`*`)const: [_^String^ String]_[* GetPar
+tHeader]([@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id])_[@(0.0.255) c
+onst]&]
 [s2;%% Returns header [%-*@3 id] for part [%-*@3 i].&]
+[s3;%% &]
+[s4; &]
+[s5;:InetMessage`:`:GetHeader`(int`,const char`*`)const: [_^String^ String]_[* GetHeader](
+[@(0.0.255) int]_[*@3 parti], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id])_[@(0.0.255) co
+nst]&]
+[s2;%% Returns non`-empty header [%-*@3 id] for part [%-*@3 parti]. If 
+header is empty, returns GetHeader([%-*@3 id]) `- main header.&]
 [s3;%% ]]

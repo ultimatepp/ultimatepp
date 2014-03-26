@@ -24,12 +24,8 @@ String Pop3::GetTimeStamp()
 bool Pop3::GetListItems(ValueMap& list, dword type1, dword type2)
 {
 	StringStream s(data);
-	for(;;) {
+	while(!s.IsEof()) {
 		String line = s.GetLine();
-		if(s.IsError())
-			return false;
-		if(s.IsEof())
-			break;
 		Vector<String> s = Split(line, ' ');
 		if(s.GetCount() < 2)
 			return false;
@@ -64,8 +60,6 @@ String Pop3::GetMessageHeader(int index)
 
 bool Pop3::GetMessageList(ValueMap& list)
 {
-	VectorMap<int, unsigned int> v;
-	
 	if(!PutGet("LIST\r\n", true))
 		return false;
 	return GetListItems(list, INT_V, INT_V);
@@ -139,7 +133,7 @@ bool Pop3::PutGet(const String& s, bool multiline, bool nolog)
 		LLOG("<< " << TrimRight(line));
 		if(line.StartsWith("+OK")) {
 			if(!multiline) {
-				data << line;
+				data.Cat(line);
 				return true;
 			}
 			else 
@@ -147,13 +141,11 @@ bool Pop3::PutGet(const String& s, bool multiline, bool nolog)
 					line = GetDataLine();
 					if(line.IsEmpty())
 						break;
-					if(line.StartsWith(".."))
-						line.Remove(0);
-					data << line;
-					if(!data.EndsWith("\r\n.\r\n"))
-						continue;
-					LLOG("<< ...");
-					return true;
+					if(line == ".\r\n") {
+						LLOG("<< ...");
+						return true;
+					}
+					data.Cat(*line == '.' ? line.Mid(1) : line);
 				}
 		}
 		else

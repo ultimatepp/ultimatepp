@@ -56,6 +56,12 @@ tring][@(0.0.255) `&]_[*@3 s])&]
 IME type application/x`-www`-form`-urlencoded] (see UrlEncode).&]
 [s3;%% &]
 [s4; &]
+[s5;:QPDecode`(const char`*`): [_^String^ String]_[* QPDecode]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 s])&]
+[s2;%% Decodes string from [^http`:`/`/en`.wikipedia`.org`/wiki`/Quoted`-printable^ quo
+ted`-printable] format .&]
+[s3;%% &]
+[s4; &]
 [s5;:Base64Encode`(const char`*`,const char`*`): [_^String^ String]_[* Base64Encode]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 b], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 e])&]
 [s5;:Base64Encode`(const char`*`,int`): [_^String^ String]_[* Base64Encode]([@(0.0.255) con
