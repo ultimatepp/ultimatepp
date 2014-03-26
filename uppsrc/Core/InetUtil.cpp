@@ -169,6 +169,26 @@ String UrlDecode(const String& s)
 	return UrlDecode(~s, s.GetLength());
 }
 
+String QPDecode(const char *s)
+{
+	StringBuffer r;
+	while(*s) {
+		int c = *s++;
+		if(c == '=') {
+			int c1 = '0', c2 = '0';
+			if(*s)
+				c1 = *s++;
+			if(*s)
+				c2 = *s++;
+			if(IsXDigit(c1) && IsXDigit(c2))
+				r.Cat((ctoi(c1) << 4) | ctoi(c2));
+		}
+		else
+			r.Cat(c);
+	}
+	return r;
+}
+
 String Base64Encode(const char *b, const char *e)
 {
 	static const char encoder[] =

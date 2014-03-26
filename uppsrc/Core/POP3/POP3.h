@@ -63,10 +63,11 @@ struct InetMessage {
 
 	bool   Read(const String& msg);
 	bool   ReadHeader(const String& msg);
-	String operator[](const char *id) const             { return header.Get(id, Null); }
-	int    GetPartCount() const                         { return part.GetCount(); }
-	String GetPartBody(int i) const                     { return part[i].body; }
-	String GetPartHeader(int i, const char *id)         { return part[i].header.Get(id, Null); }
+	String operator[](const char *id) const            { return header.Get(id, Null); }
+	int    GetPartCount() const                        { return part.GetCount(); }
+	String GetPartBody(int i) const;
+	String GetPartHeader(int i, const char *id) const  { return part[i].header.Get(id, Null); }
+	String GetHeader(int parti, const char *id) const;
 
 private:
 	bool   ReadHeader(VectorMap<String, String>& hdr, StringStream& ss);

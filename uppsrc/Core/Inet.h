@@ -11,6 +11,8 @@ String UrlDecode(const char *s, const char *end);
 String UrlDecode(const char *s, int len);
 String UrlDecode(const String& s);
 
+String QPDecode(const char *s);
+
 String Base64Encode(const char *s, const char *end);
 String Base64Encode(const char *s, int len);
 String Base64Encode(const String& data);
