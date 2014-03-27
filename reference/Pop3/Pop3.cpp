@@ -40,10 +40,9 @@ CONSOLE_APP_MAIN
 					Cout() << "Subject: " << m["subject"] << "\n"
 					       << "From: " << m["from"] << "\n"
 					       << "Date: " << m["date"] << "\n";
-					for(int i = 0; i < m.GetPartCount(); i++)
-						Cout() << "========= Part " << i << ", type "
-						       << Nvl(m.GetPartHeader(i, "content-type"), m["content-type"]) << "\n"
-						       << m.GetPartBody(i);
+					for(int i = 0; i < m.GetCount(); i++)
+						Cout() << "= Part " << i << ", type " << m[i]["content-type"]
+						       << ", decoded size " << m[i].Decode().GetLength() << '\n';
 					Cout() << "-------------------------------------\n";
 				}
 				else
