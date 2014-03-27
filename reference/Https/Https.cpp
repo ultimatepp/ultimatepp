@@ -18,15 +18,28 @@ CONSOLE_APP_MAIN
 
 	for(;;) {
 		TcpSocket socket;
-		LOG("Waiting...");
+		LOG("===================================================== Waiting...");
 		if(socket.Accept(server)) {
+			LOG("Connection accepted");
 			socket.SSLCertificate(LoadFile(GetDataFile("server.crt")),
 			                      LoadFile(GetDataFile("server.key")),
 			                      false);
-			LOG("Connection accepted");
-			socket.StartSSL();
+			if(!socket.StartSSL()) {
+				LOG("Failed to start SSL: " << socket.GetErrorDesc());
+				continue;
+			}
+			while(socket.SSLHandshake());
+			if(socket.IsError()) {
+				LOG("SSL handshake failed: " << socket.GetErrorDesc());
+				continue;
+			}
+			LOG("SSL established");
 			HttpHeader http;
-			http.Read(socket);
+			if(!http.Read(socket)) {
+				LOG("Failed to obtain HTTP header");
+				continue;
+			}
+			LOG("Got HTTP header: " << http.GetMethod() << ' ' << http.GetURI());
 			String html;
 			html << "<html>"
 			     << "<b>Method:</b> " << http.GetMethod() << "<br>"
@@ -38,6 +51,7 @@ CONSOLE_APP_MAIN
 				socket.GetAll(len);
 			html << "<b><i>Current time:</i></b> " << GetSysTime() << "</html>";
 			HttpResponse(socket, http.scgi, 200, "OK", "text/html", html);
+			LOG("Request finished");
 		}
 	}
 }
