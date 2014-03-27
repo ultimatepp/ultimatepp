@@ -40,8 +40,9 @@ intended to be called from WhenWait routine&]
 [s3; &]
 [s4; &]
 [s5;:TcpSocket`:`:IsEof`(`)const: [@(0.0.255) bool]_[* IsEof]()_[@(0.0.255) const]&]
-[s2;%% Returns true if connection was closed and all peer data were 
-processed.&]
+[s2;%% Returns true if there are no more input data to process. Also 
+returns true if socket is not open, if there was an error or 
+if socket was aborted.&]
 [s3; &]
 [s4; &]
 [s5;:TcpSocket`:`:IsError`(`)const: [@(0.0.255) bool]_[* IsError]()_[@(0.0.255) const]&]

@@ -15,7 +15,7 @@ NAMESPACE_UPP
 #pragma comment(lib, "ws2_32.lib")
 #endif
 
-#define LLOG(x)  // DLOG("TCP " << x)
+#define LLOG(x)  // LOG("TCP " << x)
 
 IpAddrInfo::Entry IpAddrInfo::pool[COUNT];
 
@@ -741,6 +741,11 @@ void TcpSocket::ReadBuffer(int end_time)
 		end = buffer + Recv(buffer, BUFFERSIZE);
 }
 
+bool TcpSocket::IsEof() const
+{
+	return is_eof && ptr == end || IsAbort() || !IsOpen() || IsError();
+}
+
 int TcpSocket::Get_()
 {
 	if(!IsOpen() || IsError() || IsEof() || IsAbort())
@@ -829,10 +834,12 @@ String TcpSocket::GetAll(int len)
 
 String TcpSocket::GetLine(int maxlen)
 {
-	LLOG("GetLine " << maxlen);
+	LLOG("GetLine " << maxlen << ", iseof " << IsEof());
 	String ln;
 	int end_time = GetEndTime();
 	for(;;) {
+		if(IsEof())
+			return String::GetVoid();
 		int c = Peek(end_time);
 		if(c < 0) {
 			if(!IsError())

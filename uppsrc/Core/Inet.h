@@ -174,7 +174,7 @@ public:
 	int             GetDone() const                          { return done; }
 
 	bool            IsOpen() const                           { return socket != INVALID_SOCKET; }
-	bool            IsEof() const                            { return is_eof && ptr == end; }
+	bool            IsEof() const;
 
 	bool            IsError() const                          { return is_error; }
 	void            ClearError()                             { is_error = false; errorcode = 0; errordesc.Clear(); }
