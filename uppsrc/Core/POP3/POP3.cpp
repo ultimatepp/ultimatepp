@@ -98,23 +98,6 @@ bool Pop3::Noop()
 	return PutGet("NOOP\r\n");
 }
 
-String Pop3::GetDataLine()
-{
-	// We can't use TcpSocket::GetLine(), since it omits carriage returns we need.
-	String line;
-	for(;;) {
-		int c = Get();
-		if(c < 0) {
-			if(!IsError())
-				continue;  
-			return String::GetVoid();
-		}
-		line.Cat(c);
-		if(line.EndsWith("\r\n"))
-			return line;
-	}
-}
-
 bool Pop3::PutGet(const String& s, bool multiline, bool nolog)
 {
 	// Put() request.
@@ -128,24 +111,27 @@ bool Pop3::PutGet(const String& s, bool multiline, bool nolog)
 	}
 	// Get() respone.
 	data.Clear();
-	String line = GetDataLine();
-	if(!line.IsEmpty()) {
+	const int LINE_MAX = 20000000;
+	String line = GetLine(LINE_MAX);
+	if(!line.IsVoid()) {
 		LLOG("<< " << TrimRight(line));
 		if(line.StartsWith("+OK")) {
 			if(!multiline) {
 				data.Cat(line);
+				data.Cat("\r\n");
 				return true;
 			}
 			else 
 				for(;;) {
-					line = GetDataLine();
-					if(line.IsEmpty())
+					line = GetLine(LINE_MAX);
+					if(line.IsVoid())
 						break;
-					if(line == ".\r\n") {
+					if(line == ".") {
 						LLOG("<< ...");
 						return true;
 					}
 					data.Cat(*line == '.' ? line.Mid(1) : line);
+					data.Cat("\r\n");
 				}
 		}
 		else

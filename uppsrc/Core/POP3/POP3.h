@@ -19,7 +19,6 @@ class Pop3 : public TcpSocket
     bool         GetListItems(ValueMap& list, dword type1, dword type2);
  	String       GetTimeStamp();
 	bool         Authenticate();
-    String       GetDataLine();
  	bool         PutGet(const String& s, bool multiline = false, bool nolog = false);
      
 public:
