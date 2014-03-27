@@ -1,6 +1,6 @@
 #include "SSL.h"
 
-#define LLOG(x) //  DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 NAMESPACE_UPP
 
@@ -18,7 +18,7 @@ struct TcpSocket::SSLImp : TcpSocket::SSL {
 	SslCertificate cert;
 
 	int            GetErrorCode(int res);
-	String         GetErrorText(int code);
+	String         GetErrorText(int code) const;
 	void           SetSSLError(const char *context);
 	void           SetSSLResError(const char *context, int res);
 	bool           IsAgain(int res) const;
@@ -61,7 +61,7 @@ int TcpSocket::SSLImp::GetErrorCode(int res)
 	return SSL_get_error(ssl, res);
 }
 
-String TcpSocket::SSLImp::GetErrorText(int code)
+String TcpSocket::SSLImp::GetErrorText(int code) const
 {
 	String out;
 	switch(code) {
@@ -128,7 +128,7 @@ bool TcpSocket::SSLImp::Start()
 		SetSSLError("Start: SSL_set_fd");
 		return false;
 	}
-	return Handshake();
+	return true;
 }
 
 dword TcpSocket::SSLImp::Handshake()

@@ -12,6 +12,7 @@ static void *SslAlloc(size_t size)
 	size_t alloc = size + sizeof(int64);
 	int64 *aptr = (int64 *)MemoryAllocSz(alloc);
 	*aptr++ = (int64)alloc;
+	UPP_SSL_alloc += alloc;
 	LLOG("UPP_SSL_MALLOC(" << (int64)size << ", alloc " << alloc << ") -> " << FormatIntHex(aptr) << ", total = " << UPP_SSL_alloc);
 	return aptr;
 }
