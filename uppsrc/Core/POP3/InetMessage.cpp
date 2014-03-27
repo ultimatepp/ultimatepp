@@ -95,7 +95,7 @@ String DecodeHeaderValue(const String& s)
 	return decodedstring;
 }
 
-bool InetMessage::ReadHeader(VectorMap<String, String>& hdr, StringStream& ss)
+bool InetMessage::ReadHeader(VectorMap<String, String>& hdr, Stream& ss)
 {
 	for(;;) {
 		if(ss.IsEof())
@@ -118,35 +118,40 @@ bool InetMessage::ReadHeader(VectorMap<String, String>& hdr, StringStream& ss)
 bool InetMessage::ReadHeader(const String& s)
 {
 	part.Clear();
-	header.Clear();
 	StringStream ss(s);
-	return ReadHeader(header, ss);
+	return ReadHeader(part.Add().header, ss);
 }
 
-bool InetMessage::Read(const String& s)
+bool InetMessage::ReadPart(Stream& ss, int parent, int level)
 {
-	part.Clear();
-	header.Clear();
-	StringStream ss(s);
-	if(!ReadHeader(header, ss))
+	if(level > 5 || part.GetCount() > 200) // Sanity limit
 		return false;
 
-	String type = header.Get("content-type");
-	if(!type.StartsWith("multipart")) {
-		part.Add().body = DecodeHeaderValue(LoadStream(ss));
+	int newparent = part.GetCount();
+
+	Part& p = part.Add();
+	p.parent = parent;
+
+	if(!ReadHeader(p.header, ss))
+		return false;
+
+	String content_type = p.header.Get("content-type", String());
+	DDUMP(content_type);
+	if(!ToLower(content_type).StartsWith("multipart")) {
+		p.body = LoadStream(ss);
 		return true;
 	}
-		
+
 	String boundary;
-	int q = type.Find("boundary=");
+	int q = content_type.Find("boundary=");
 	if(q < 0)
 		return false;
 	q += strlen("boundary=");
-	int qq = type.Find(";", q);
+	int qq = content_type.Find(";", q);
 	if(qq >= 0)
-		boundary = type.Mid(q, qq);
+		boundary = content_type.Mid(q, qq);
 	else
-		boundary = type.Mid(q);
+		boundary = content_type.Mid(q);
 
 	if(*boundary == '\"')
 		boundary = boundary.Mid(1);
@@ -163,34 +168,39 @@ bool InetMessage::Read(const String& s)
 		if(ss.IsEof())
 			return false;
 	}
-	for(;;) {
-		Part& p = part.Add();
-		if(!ReadHeader(p.header, ss))
-			return false;
+	bool end = false;
+	while(!end) {
+		String body;
 		for(;;) {
 			if(ss.IsEof())
 				return false;
 			String ln = ss.GetLine();
 			if(ln == boundary)
 				break;
-			if(ln == end_boundary)
-				return true;
-			p.body << DecodeHeaderValue(ln) << "\r\n";
+			if(ln == end_boundary) {
+				end = true;
+				break;
+			}
+			body << ln << "\r\n";
 		}
+		StringStream nss(body);
+		ReadPart(nss, newparent, level + 1);
 	}
+	return true;
 }
 
-String InetMessage::GetHeader(int parti, const char *id) const
+bool InetMessage::Read(const String& s)
 {
-	return Nvl(GetPartHeader(parti, id), header.Get(id, Null));
+	part.Clear();
+	StringStream ss(s);
+	return ReadPart(ss, Null, 0);
 }
 
-String InetMessage::GetPartBody(int i) const
+String InetMessage::Part::Decode() const
 {
-	String encoding = ToLower(Nvl(GetHeader(i, "Content-Transfer-Encoding"), "quoted-printable"));
-	String body = part[i].body;
-	body = decode(encoding, "quoted-printable", QPDecode(body), "base64", Base64Decode(body), body);
-	String content_type = ToLower(GetHeader(i, "content-type"));
+	String r = decode(ToLower(header.Get("content-transfer-encoding", "quoted-printable")),
+	                  "quoted-printable", QPDecode(body), "base64", Base64Decode(body), body);
+	String content_type = ToLower(header.Get("content-type", Null));
 	int q = content_type.Find("charset=");
 	if(q >= 0) {
 		q += strlen("charset=");
@@ -198,7 +208,7 @@ String InetMessage::GetPartBody(int i) const
 		String charset = qq >= 0 ? content_type.Mid(q, qq + 1) : content_type.Mid(q);
 		int cs = CharsetByName(charset);
 		if(cs >= 0)
-			body = ToCharset(CHARSET_DEFAULT, body, cs, '?');
+			r = ToCharset(CHARSET_DEFAULT, r, cs, '?');
 	}
-	return body;
+	return r;
 }

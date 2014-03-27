@@ -48,7 +48,7 @@ String Pop3::GetMessage(int index)
 {
 	if(!PutGet(Format("RETR %d\r\n", index), true))
 		return Null;
-	return data;	
+	return data;
 }
 
 String Pop3::GetMessageHeader(int index)
