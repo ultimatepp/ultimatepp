@@ -136,7 +136,6 @@ bool InetMessage::ReadPart(Stream& ss, int parent, int level)
 		return false;
 
 	String content_type = p.header.Get("content-type", String());
-	DDUMP(content_type);
 	if(!ToLower(content_type).StartsWith("multipart")) {
 		p.body = LoadStream(ss);
 		return true;
