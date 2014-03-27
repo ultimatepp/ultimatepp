@@ -12,25 +12,58 @@ topic "struct InetMessage";
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 InetMessage]]}}&]
 [s0;i448;a25;kKO9;@(0.0.255) &]
-[s0;i448;a25;kKO9; [@(0.0.255)3 struct][3 _][*3 InetMessage]&]
+[s0;i448;a25;kKO9;:InetMessage`:`:struct: [@(0.0.255)3 struct][3 _][*3 InetMessage]&]
 [s2; This is helper class intended for parsing Pop3 (or generally, 
-RFC822) messages. It parses messages to header map and one or 
-multiple (for multipart content) parts. Header names are converted 
-to lower`-case before being stored to map.&]
+RFC822) messages. It parses messages to one or multiple (for 
+multipart content) parts. Header names are converted to lower`-case 
+before being stored to map.&]
+[s2; If parse is successful, InetMessage contains at least one part, 
+with the main body and headers of message. If the body is multipart, 
+more parts follow. Multipart part itself does not contain body. 
+The model is recursive `- parts of multipart can be multipart 
+too. Parts contain member parent which is the index of multipart 
+they belong to.&]
+[s0;i448;a25;kKO9;@(0.0.255) &]
 [s0;i448;a25;kKO9;:noref:@(0.0.255) &]
-[ {{10000F(128)G(128)@1 [s0;%% [* Public Members List]]}}&]
-[s3; &]
-[s5;:InetMessage`:`:header: [_^VectorMap^ VectorMap]<[_^String^ String], 
-[_^String^ String]>_[* header]&]
-[s2;%% Map of header fields.&]
+[ {{10000F(128)G(128)@1 [s0;%% [* InetMessage`::Part]]}}&]
+[s0;i448;a25;kKO9;@(0.0.255) &]
+[s1;:InetMessage`:`:Part`:`:struct: [@(0.0.255)3 struct][3 _][*3 Part][3 _:_][@(0.0.255)3 public
+][3 _][*@3;3 Moveable][3 <][*3 Part][3 >_]&]
+[s2;%% This structure contains information about single part of message.&]
 [s3; &]
 [s4; &]
+[s5;:InetMessage`:`:Part`:`:parent: [@(0.0.255) int]_[* parent]&]
+[s2;%% Multipart parent of this part. Part 0 has Null here indicating 
+that there is no parent.&]
+[s3; &]
+[s4; &]
+[s5;:InetMessage`:`:Part`:`:header: [_^VectorMap^ VectorMap]<[_^String^ String], 
+[_^String^ String]>_[* header]&]
+[s2;%% Headers. Note that keys are lowercased.&]
+[s3; &]
+[s4; &]
+[s5;:InetMessage`:`:Part`:`:body: [_^String^ String]_[* body]&]
+[s2;%% Undecoded body. Empty if this is multipart.&]
+[s3; &]
+[s4; &]
+[s5;:InetMessage`:`:Part`:`:operator`[`]`(const char`*`)const: [_^String^ String]_[* oper
+ator`[`]]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id])_[@(0.0.255) const]&]
+[s2;%% Returns the text value of field [%-*@3 id] or empty string if 
+missing.&]
+[s3;%% &]
+[s4; &]
+[s5;:InetMessage`:`:Part`:`:Decode`(`)const: [_^String^ String]_[* Decode]()_[@(0.0.255) co
+nst]&]
+[s2;%% Returns the body of part. Bodies with transfer encoding base64 
+or quoted`-printable are decoded. Also, if `'content`-type`', 
+has `'charset`' section, body is converted to application`'s 
+default encoding (usually utf`-8).&]
+[s0;i448;a25;kKO9;:noref:@(0.0.255) &]
+[ {{10000F(128)G(128)@1 [s0;%% [* InetMessage Public Members List]]}}&]
+[s3; &]
 [s5;:InetMessage`:`:part: [_^Vector^ Vector]<[_^InetMessage`:`:Part^ Part]>_[* part]&]
-[s2;%% Message parts. Part is defined as&]
-[s2;%% [C1 -|struct Part : Moveable<Part> `{]&]
-[s2;%% [C1 -|-|VectorMap<String, String> header;]&]
-[s2;%% [C1 -|-|String body;]&]
-[s2;%% [C1 -|`};]&]
+[s2;%% Message parts. If parsing (Read) was successful, there is 
+at least part 0 present.&]
 [s3; &]
 [s4; &]
 [s5;:InetMessage`:`:Read`(const String`&`): [@(0.0.255) bool]_[* Read]([@(0.0.255) const]_[_^String^ S
@@ -40,40 +73,22 @@ tring][@(0.0.255) `&]_[*@3 msg])&]
 [s4;%% &]
 [s5;:InetMessage`:`:ReadHeader`(const String`&`): [@(0.0.255) bool]_[* ReadHeader]([@(0.0.255) c
 onst]_[_^String^ String][@(0.0.255) `&]_[*@3 msg])&]
-[s2;%% Attempts to parse only the message header (part is left empty). 
-Returns true on success.&]
+[s2;%% Attempts to parse only the message header of the first part. 
+If succesful, there is exactly part 0 present, with empty body.&]
+[s3;%% &]
+[s4; &]
+[s5;:InetMessage`:`:GetCount`(`)const: [@(0.0.255) int]_[* GetCount]()_[@(0.0.255) const]&]
+[s2;%% Returns a number of parts present.&]
+[s3; &]
+[s4; &]
+[s5;:InetMessage`:`:operator`[`]`(int`)const: [@(0.0.255) const]_[_^InetMessage`:`:Part^ P
+art][@(0.0.255) `&]_[* operator`[`]]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
+[s2;%% Returns part`[i`].&]
 [s3;%% &]
 [s4;%% &]
 [s5;:InetMessage`:`:operator`[`]`(const char`*`)const: [_^String^ String]_[* operator`[`]
 ]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id])_[@(0.0.255) const]&]
-[s2;%% Returns the value of header field or empty String if header 
-field is not present. [%-*@3 id] should be lower`-case (as all 
-header names are converted to lower`-case by Read).&]
+[s2;%% Same as part`[0`]`[[%-*@3 id]`] `- returns the header of whole 
+email.&]
 [s3;%% &]
-[s4;%% &]
-[s5;:InetMessage`:`:GetPartCount`(`)const: [@(0.0.255) int]_[* GetPartCount]()_[@(0.0.255) c
-onst]&]
-[s2;%% Returns the number of message parts. This is 1 for non`-multipart 
-message.&]
-[s3;%% &]
-[s4;%% &]
-[s5;:InetMessage`:`:GetPartBody`(int`)const: [_^String^ String]_[* GetPartBody]([@(0.0.255) i
-nt]_[*@3 i])_[@(0.0.255) const]&]
-[s2;%% Returns the body of part [%-*@3 i]. Bodies with transfer encoding 
-base64 or quoted`-printable are decoded. Also, if `'content`-type`', 
-has `'charset`' section, body is converted to application`'s 
-default encoding (usually utf`-8).&]
-[s3;%% &]
-[s4; &]
-[s5;:InetMessage`:`:GetPartHeader`(int`,const char`*`)const: [_^String^ String]_[* GetPar
-tHeader]([@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id])_[@(0.0.255) c
-onst]&]
-[s2;%% Returns header [%-*@3 id] for part [%-*@3 i].&]
-[s3;%% &]
-[s4; &]
-[s5;:InetMessage`:`:GetHeader`(int`,const char`*`)const: [_^String^ String]_[* GetHeader](
-[@(0.0.255) int]_[*@3 parti], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id])_[@(0.0.255) co
-nst]&]
-[s2;%% Returns non`-empty header [%-*@3 id] for part [%-*@3 parti]. If 
-header is empty, returns GetHeader([%-*@3 id]) `- main header.&]
 [s3;%% ]]

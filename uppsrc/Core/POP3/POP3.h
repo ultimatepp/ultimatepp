@@ -48,28 +48,31 @@ public:
 	static void  Trace(bool b = true);
 
 	Pop3();
-   ~Pop3();
+	~Pop3();
 };
 
 struct InetMessage {
 	struct Part : Moveable<Part> {
+		int                       parent;
 		VectorMap<String, String> header;
-		String body;
+		String                    body;
+		
+		String operator[](const char *id) const   { return header.Get(id, Null); }
+		String Decode() const;
 	};
 
-	VectorMap<String, String> header;
 	Vector<Part> part;
 
 	bool   Read(const String& msg);
 	bool   ReadHeader(const String& msg);
-	String operator[](const char *id) const            { return header.Get(id, Null); }
-	int    GetPartCount() const                        { return part.GetCount(); }
-	String GetPartBody(int i) const;
-	String GetPartHeader(int i, const char *id) const  { return part[i].header.Get(id, Null); }
-	String GetHeader(int parti, const char *id) const;
+
+	int         GetCount() const                  { return part.GetCount(); }
+	const Part& operator[](int i) const           { return part[i]; }
+	String      operator[](const char *id) const  { return GetCount() ? part[0][id] : String(); }
 
 private:
-	bool   ReadHeader(VectorMap<String, String>& hdr, StringStream& ss);
+	bool   ReadHeader(VectorMap<String, String>& hdr, Stream& ss);
+	bool   ReadPart(Stream& ss, int parent, int level);
 };
 
 #endif
