@@ -111,8 +111,8 @@ bool Pop3::PutGet(const String& s, bool multiline, bool nolog)
 	}
 	// Get() respone.
 	data.Clear();
-	const int LINE_MAX = 20000000;
-	String line = GetLine(LINE_MAX);
+	const int MAXLINE = 20000000;
+	String line = GetLine(MAXLINE);
 	if(!line.IsVoid()) {
 		LLOG("<< " << TrimRight(line));
 		if(line.StartsWith("+OK")) {
@@ -123,7 +123,7 @@ bool Pop3::PutGet(const String& s, bool multiline, bool nolog)
 			}
 			else 
 				for(;;) {
-					line = GetLine(LINE_MAX);
+					line = GetLine(MAXLINE);
 					if(line.IsVoid())
 						break;
 					if(line == ".") {
