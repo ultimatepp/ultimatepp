@@ -101,7 +101,7 @@ private:
 	void	TabContext(int ix);
 	void	TabClosed0(Value v);								
 	void	TabClosed(Value v);								
-	void	TabsClosed(Vector<Value> vv);
+	void	TabsClosed(ValueArray vv);
 	// Menus/Buttons
 	void 	Float();
 	void 	Dock(int align);

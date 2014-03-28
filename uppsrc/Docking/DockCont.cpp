@@ -309,7 +309,7 @@ void DockCont::TabClosed(Value v)
 		RefreshLayout();
 }
 
-void DockCont::TabsClosed(Vector<Value> vv)
+void DockCont::TabsClosed(ValueArray vv)
 {
 	for (int i = vv.GetCount()-1; i >= 0 ; --i)
 		TabClosed0(vv[i]);
