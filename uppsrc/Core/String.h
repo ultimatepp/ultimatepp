@@ -142,8 +142,6 @@ public:
 	friend String operator+(const String& a, const String& b)  { String c(a); c += b; return c; }
 	friend String operator+(const String& a, const tchar *b)   { String c(a); c += b; return c; }
 	friend String operator+(const tchar *a, const String& b)   { String c(a); c += b; return c; }
-	friend String operator+(const String& a, int b)            { String c(a); c += b; return c; }
-	friend String operator+(int a, const String& b)            { String c(a, 1); c += b; return c; }
 	friend String operator+(const String& a, tchar b)          { String c(a); c += b; return c; }
 	friend String operator+(tchar a, const String& b)          { String c(a, 1); c += b; return c; }
 };
