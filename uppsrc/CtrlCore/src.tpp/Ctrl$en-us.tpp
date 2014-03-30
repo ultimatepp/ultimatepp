@@ -2567,6 +2567,19 @@ ryScreenArea]()&]
 in Windows is the display with start menu.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Ctrl`:`:GetWorkArea`(Point`):%- [@(0.0.255) static] [_^Rect^ Rect]_[* GetWorkArea]([_^Point^ P
+oint]_[*@3 pt])&]
+[s2; Returns the recangle of work area which contains [%-*@3 pt]. If 
+[%-*@3 pt] does not belong to any area, returns the primary work 
+area.&]
+[s3; &]
+[s4;%- &]
+[s5;:Ctrl`:`:GetMouseWorkArea`(`):%- [@(0.0.255) static] [_^Rect^ Rect]_[* GetMouseWorkArea
+]()&]
+[s2; Returns the work are which contains mouse cursor. Same as GetWorkArea(GetMousePo
+s()).&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Ctrl`:`:GetKbdDelay`(`):%- [@(0.0.255) static] [@(0.0.255) int]_[* GetKbdDelay]()&]
 [s2;b17;a17; Returns delay of keyboard before autorepeat starts when 
 key is pressed.&]

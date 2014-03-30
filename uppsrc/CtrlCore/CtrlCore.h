@@ -1210,6 +1210,7 @@ public:
 	static Rect   GetPrimaryScreenArea();
 	static void   GetWorkArea(Array<Rect>& rc);
 	static Rect   GetWorkArea(Point pt);
+	static Rect   GetMouseWorkArea()                     { return GetWorkArea(GetMousePos()); }
 	static int    GetKbdDelay();
 	static int    GetKbdSpeed();
 	static bool   IsAlphaSupported();
