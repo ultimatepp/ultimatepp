@@ -45,6 +45,7 @@ String Tokenize(const String &str, const String &token);
 /////////
 bool DirectoryExistsX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG); 
 bool DirectoryCopyX(const char *dir, const char *newPlace);
+bool DirectoryMove(const char *dir, const char *newPlace);
 bool DeleteDeepWildcardsX(const char *path, bool filefolder, EXT_FILE_FLAGS flags = NO_FLAG);
 bool DeleteDeepWildcardsX(const char *pathwc, const char *namewc, bool filefolder, EXT_FILE_FLAGS flags = NO_FLAG);
 bool DeleteFolderDeepWildcardsX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG);
@@ -77,7 +78,7 @@ int64 GetDirectoryLength(const char *directoryName);
 ///////////////////////////////
 Upp::Array<String> SearchFile(String dir, const Upp::Array<String> &condFiles, const Upp::Array<String> &condFolders, 
 								 const Upp::Array<String> &extFiles,  const Upp::Array<String> &extFolders, 
-								 const String &text, Upp::Array<String> &errorList);
+								 const String text, Upp::Array<String> &errorList);
 Upp::Array<String> SearchFile(String dir, String condFile, String text, Upp::Array<String> &errorList);//, int flags = 0);
 Upp::Array<String> SearchFile(String dir, String condFile, String text = "");//, int flags = 0);
 ///////////////////////////////

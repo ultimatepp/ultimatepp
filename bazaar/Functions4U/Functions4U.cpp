@@ -434,30 +434,44 @@ bool TrashBinClear()
 #endif
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
-bool FileToTrashBin(const char *path)
-{	
+bool DirectoryMove(const char *dir, const char *newPlace) {
+	if (strcmp(dir, newPlace) == 0)
+		return true;
+	
+	WString wDir(dir), wNewPlace(newPlace);
+    wDir.Cat() << L'\0';	
+    wNewPlace.Cat() << L'\0';	
+	
+    SHFILEOPSTRUCTW fileOp = {};
+  	fileOp.hwnd = NULL;
+    fileOp.wFunc = FO_MOVE;
+    fileOp.pFrom = ~wDir;
+    fileOp.pTo = ~wNewPlace;
+    fileOp.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION | FOF_SILENT;
+ 
+    int ret = SHFileOperationW(&fileOp);
+ 	return ret == 0;
+}
+
+bool FileToTrashBin(const char *path) {	
     if (!FileExists(path) && !DirectoryExists(path))
         return false;
 	
-    WString ws(path);
-    ws.Cat() << L'\0';	// This string must be double-null terminated.
+    WString wpath(path);
+    wpath.Cat() << L'\0';	
 		
-    SHFILEOPSTRUCTW fileOp; 
-    
+    SHFILEOPSTRUCTW fileOp = {}; 
     fileOp.hwnd = NULL;
     fileOp.wFunc = FO_DELETE;
-    fileOp.pFrom = ~ws;
+    fileOp.pFrom = ~wpath;
     fileOp.pTo = NULL;
     fileOp.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION | FOF_SILENT;
 
     int ret = SHFileOperationW(&fileOp);
-    if (0 != ret)
-        return false;
-    return true;
+ 	return ret == 0;
 }
 
-int64 TrashBinGetCount()
-{
+int64 TrashBinGetCount() {
 	SHQUERYRBINFO shqbi; 
  
  	shqbi.cbSize = sizeof(SHQUERYRBINFO);
@@ -466,8 +480,7 @@ int64 TrashBinGetCount()
 	return shqbi.i64NumItems;
 }
 
-bool TrashBinClear()
-{
+bool TrashBinClear() {
 	if (S_OK != SHEmptyRecycleBin(0, 0, SHERB_NOCONFIRMATION | SHERB_NOPROGRESSUI | SHERB_NOSOUND))
 		return false;
 	return true;
@@ -973,7 +986,7 @@ String RemoveAccents(String str) {
 		if (i == 0 || ((i > 0) && ((IsSpace(wstr[i-1]) || IsPunctuation(wstr[i-1]))))) {
 			if (schar.GetCount() > 1) {
 				if (IsUpper(schar[0]) && IsLower(wstr[1]))
-				 	schar = schar[0] + ToLower(schar.Mid(1));
+				 	schar = String(schar[0], 1) + ToLower(schar.Mid(1));
 			}
 		} 
 		ret += schar;
@@ -1409,9 +1422,10 @@ bool DirectoryCopy_Each(const char *dir, const char *newPlace, String relPath)
 	String newPath = AppendFileName(newPlace, relPath);
 	FindFile ff(AppendFileName(dirPath, "*.*"));
 	while(ff) {
-		if(ff.IsFile())
-			FileCopy(AppendFileName(dirPath, ff.GetName()), AppendFileName(newPath, ff.GetName()));
-		else if(ff.IsFolder()) {
+		if(ff.IsFile()) {
+			if (!FileCopy(AppendFileName(dirPath, ff.GetName()), AppendFileName(newPath, ff.GetName())))
+				return false;
+		} else if(ff.IsFolder()) {
 			DirectoryCreate(AppendFileName(newPath, ff.GetName()));
 			if(!DirectoryCopy_Each(dir, newPlace, AppendFileName(relPath, ff.GetName())))
 				return false;
@@ -1559,7 +1573,7 @@ void SearchFile_Each(String dir, const Array<String> &condFiles, const Array<Str
 
 Array<String> SearchFile(String dir, const Array<String> &condFiles, const Array<String> &condFolders, 
 								 const Array<String> &extFiles,  const Array<String> &extFolders, 
-								 const String &text, Array<String> &errorList) {
+								 const String text, Array<String> &errorList) {
 	Array<String> files;								     
 	//errorList.Clear();
 
