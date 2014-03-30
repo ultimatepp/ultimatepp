@@ -537,7 +537,7 @@ void DisplayPopup::Sync()
 					r.Inflate(1, 1);
 					r.Offset(ctrl->GetScreenView().TopLeft());
 
-					Rect wa = GetWorkArea();
+					Rect wa = GetWorkArea(r.BottomLeft());
 					Size sz = r.GetSize();
 					if(r.left < wa.left) {
 						r.left = wa.left;

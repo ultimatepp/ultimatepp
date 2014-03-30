@@ -487,4 +487,16 @@ Ctrl& Ctrl::VCenterPosZ(int size, int delta) {
 	return VCenterPos(VertLayoutZoom(size), VertLayoutZoom(delta));
 }
 
+Rect Ctrl::GetWorkArea(Point pt)
+{
+	GuiLock __;
+	static Array<Rect> rc;
+	if (rc.IsEmpty())
+		GetWorkArea(rc);
+	for(int i = 0; i < rc.GetCount(); i++)
+		if(rc[i].Contains(pt))
+			return rc[i];
+	return GetPrimaryWorkArea();
+}
+
 END_UPP_NAMESPACE
