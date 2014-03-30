@@ -1,98 +1,82 @@
 #include "POP3.h"
 
+String QDecode(const String& s) 
+{
+	String r, begin, end, chs, enc, txt;
+	// q-encoded text format (RFC 2047):
+	// =?(charset)?(encoding)?(encoded text)?=
+	if(!SplitTo(s, '?', begin, chs, enc, txt, end))
+		return s;
+	if(begin != "=" || end != "=")
+		return s;
+	if(ToUpper(enc) == "B")
+		r = Base64Decode(txt);	
+	else
+	if(ToUpper(enc) == "Q") {
+		txt.Replace(" ", "_");		
+		r = QPDecode(txt);
+		r.Replace("_", " ");
+	}
+	else
+		return s;
+	int charset = CharsetByName(chs);
+	return charset >= 0 ? ToCharset(CHARSET_DEFAULT, r, charset, '?') : r;
+}
+
 String DecodeHeaderValue(const String& s)
 {
-	String decodedstring;
-	
-	for(int begin = 0, end = 0, pos = 0; pos <= s.GetCharCount(); pos++) {
-		pos = s.Find("=?", begin);
-		if(pos < begin || pos > begin) {
-			if(pos == -1) {
-				if(begin >= 0)
-					pos  = s.GetCharCount();
-				else
-					break;
-			}
-			end = pos;
-			for(int c = begin; c < end; c++) {
-				if(!IsSpace(s[c])) {
-					decodedstring << s.Mid(begin, end - begin);
+	String r, p, q;
+	int pos = 0, part = 0, length = s.GetLength();
+	bool isq = false;
+	while(pos < length) {
+		if(s[pos] == '=' && s[pos + 1] == '?') {
+			// Process q-encoded text.
+			q.Cat(s.Mid(pos, 2));
+			pos += 2;	
+			while(pos < length) {
+				if(s[pos] == '?' && s[pos + 1] == '=' && part == 2) {
+					q.Cat(s.Mid(pos, 2));
+					r.Cat(QDecode(q));
+					q.Clear();
+					pos++;
+					isq = true;
+					part = 0;
 					break;
 				}
-			}
-			begin = end;
-		}
-		else
-		if(begin == pos) {
-			String decodebuffer;
-			 begin = pos += 2;
-			 for(int n = 0; pos <= s.GetCharCount(); pos++) {
-			     // Quoted-Printable Word Format:
-			     // (Character set) ? (Encoding) ? (Word)
-			     if(n < 2) {
-			         if(s[pos] == '?') {
-			             decodebuffer.Cat(" ", 1);
-			             n++;
-			         }
-			         else
-			             decodebuffer.Cat(s[pos], 1);
-			     }
-			     else {
-			         // Find ending token.
-			         if((end = s.Find("?=", pos)) == -1) 
-			             return decodedstring = t_("<Parser Error: Cannot Find ending token.>");
-			         else {
-							// Check for spaces within the qp word. Some older mail clients do 
-							// not encode ' ' spaces to '_'. This behaviour is against the rules.
-							// We have to fix their fault.
-							for(pos; pos < end; pos++) {
-								if(IsSpace(s[pos]))
-									decodebuffer.Cat("_");
-								else
-									decodebuffer.Cat(s[pos], 1);
-							}
-							pos = end += 2;
-							begin = pos;
-							Buffer<char> chs(32), enc(2), txt;
-							txt.Alloc(decodebuffer.GetLength());
-							sscanf(decodebuffer, "%s %s %s",
-						       &chs[0],
-						       &enc[0],
-						       &txt[0]);
-							int charset = CharsetByName(chs);
-							// Now we are ready to decode the quoted-printable text.
-							// QP text should be either base64 or "Q" encoded.
-							if(String(enc) == "B") {
-								decodedstring << ToUnicode(Base64Decode(String(txt)), charset);
-								break;
-							}
-							else if(String(enc) == "Q") {
-								String qtext(txt);
-								for(int i = 0; i < qtext.GetCharCount(); i++) {
-									if(qtext[i] == '=') {
-										String ascii;
-										unsigned int chr1 = ctoi(qtext[++i]);
-										unsigned int chr2 = ctoi(qtext[++i]); 
-										ascii.Cat(16 * chr1 + chr2);
-										decodedstring << ToUnicode(ascii, charset);																		
-									}
-									else
-									if(qtext[i] == '_') {
-										decodedstring.Cat(" ");
-									}
-									else
-										decodedstring.Cat(qtext[i], 1);		
-								}
-									
-							}
-						break;								
-			        }
-			    }			     
+				else
+				if(s[pos] == '?' && part < 2)
+					part++;
+				q.Cat(s[pos]);
+				pos++;
+				if(pos == length && !q.IsEmpty())
+					r.Cat(q);
 			}
 		}
+		else {
+			// Process plain text
+			while(pos < length) {
+				if(s[pos] == '=' && s[pos + 1] == '?') {
+					pos--;
+					break;
+				}
+				p.Cat(s[pos], 1);
+				pos++;				
+				if(pos == length) 
+					isq = false;
+			}
+			bool haschar = false;
+			for(int i = 0; i < p.GetLength(); i++) 
+				if(!IsSpace(p[i])) {
+				   haschar = true;
+				   break;
+				}
+			if((isq && haschar) || !isq)
+				r.Cat(p);
+			p.Clear();
+		}
+		pos++;
 	}
-	
-	return decodedstring;
+	return r;	
 }
 
 bool InetMessage::ReadHeader(VectorMap<String, String>& hdr, Stream& ss)
