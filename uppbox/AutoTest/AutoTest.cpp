@@ -29,7 +29,7 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 		        txt << "-R ";
 		    txt << ' ' << h << ' ';
 			String c;
-			c << "~/bin/umk " << nest << ' ' << name << ' ' << bm << " -" << flags;
+			c << GetHomeDirFile("/bin/umk") << " " << nest << ' ' << name << ' ' << bm << " -" << flags;
 			if(first)
 				c << 'a';
 		#ifdef PLATFORM_POSIX
