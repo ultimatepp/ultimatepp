@@ -29,7 +29,7 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 		        txt << "-R ";
 		    txt << ' ' << h << ' ';
 			String c;
-			c << "umk " << nest << ' ' << name << ' ' << bm << " -" << flags;
+			c << "~/bin/umk " << nest << ' ' << name << ' ' << bm << " -" << flags;
 			if(first)
 				c << 'a';
 		#ifdef PLATFORM_POSIX
