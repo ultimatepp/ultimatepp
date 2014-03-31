@@ -1,0 +1,11 @@
+uses
+	Core,
+	Core/SMTP,
+	Core/SSL;
+
+file
+	AutoTest.cpp;
+
+mainconfig
+	"" = "SSE2";
+
