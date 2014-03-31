@@ -1,0 +1,11 @@
+description "This takes 20 second, which would result in timeout, if not ##WAIT: 1\377";
+
+uses
+	Core;
+
+file
+	Long.cpp;
+
+mainconfig
+	"" = "SSE2";
+
