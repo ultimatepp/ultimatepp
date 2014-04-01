@@ -340,6 +340,22 @@ public:
 	iterator              begin()                { return B::Begin(); } \
 	iterator              end()                  { return B::End(); } \
 
+#define STL_SORTED_MAP_COMPATIBILITY(C) \
+	typedef T             value_type; \
+	typedef ConstIterator const_iterator; \
+	typedef const T&      const_reference; \
+	typedef int           size_type; \
+	typedef int           difference_type; \
+	const_iterator        begin() const          { return Begin(); } \
+	const_iterator        end() const            { return End(); } \
+	void                  clear()                { B::Clear(); } \
+	size_type             size() const           { return B::GetCount(); } \
+	typedef Iterator      iterator; \
+	typedef T&            reference; \
+	bool                  empty() const          { return B::GetCount() == 0; } \
+	iterator              begin()                { return Begin(); } \
+	iterator              end()                  { return End(); } \
+
 #define STL_VECTOR_COMPATIBILITY(C) \
 	typedef T             value_type; \
 	typedef ConstIterator const_iterator; \
