@@ -333,6 +333,18 @@ ScatterDraw &ScatterDraw::SetXYMin(double xmin, double ymin, double ymin2) {
 }
 
 void ScatterDraw::FitToData(bool vertical) {
+	if (linkedMaster) {
+		linkedMaster->FitToData(vertical);
+		return;
+	}
+	DoFitToData(vertical);
+	if (!linkedCtrls.IsEmpty()) {
+		for (int i = 0; i < linkedCtrls.GetCount(); ++i)
+	    	linkedCtrls[i]->DoFitToData(vertical);
+	}
+}
+
+void ScatterDraw::DoFitToData(bool vertical) {
 	double minx, maxx, miny, miny2, maxy, maxy2;
 	minx = miny = miny2 = -DOUBLE_NULL;
 	maxx = maxy = maxy2 = DOUBLE_NULL;
@@ -981,6 +993,18 @@ double ScatterDraw::GetYPointByValue(double y) {
 }
 
 void ScatterDraw::Zoom(double scale, bool mouseX, bool mouseY) {
+	if (linkedMaster) {
+		linkedMaster->Zoom(scale, mouseX, mouseY);
+		return;
+	}
+	DoZoom(scale, mouseX, mouseY);
+	if (!linkedCtrls.IsEmpty()) {
+		for (int i = 0; i < linkedCtrls.GetCount(); ++i)
+	    	linkedCtrls[i]->DoZoom(scale, mouseX, mouseY);
+	}
+}
+
+void ScatterDraw::DoZoom(double scale, bool mouseX, bool mouseY) {
 	if (scale == 1)
 		return;
 	lastRefresh_sign = (scale >= 0) ? 1 : -1;
@@ -1106,6 +1130,18 @@ void ScatterDraw::Zoom(double scale, bool mouseX, bool mouseY) {
 }
 
 void ScatterDraw::Scroll(double factorX, double factorY) {
+	if (linkedMaster) {
+		linkedMaster->Scroll(factorX, factorY);
+		return;
+	}
+	DoScroll(factorX, factorY);
+	if (!linkedCtrls.IsEmpty()) {
+		for (int i = 0; i < linkedCtrls.GetCount(); ++i)
+	    	linkedCtrls[i]->DoScroll(factorX, factorY);
+	}
+}
+
+void ScatterDraw::DoScroll(double factorX, double factorY) {
 	if (factorX != 0) {
 		double deltaX = factorX*xRange;
 		if (!IsNull(minXmin) && factorX > 0) {
@@ -1259,6 +1295,19 @@ Size GetTextSizeMultiline(Array <Size> &sizes) {
 	}
 	return ret;
 }
+
+ScatterDraw &ScatterDraw::LinkedWith(ScatterDraw &ctrl) {
+	ScatterDraw *master;
+	if (ctrl.linkedMaster) 
+		master = ctrl.linkedMaster;
+	else
+		master = &ctrl;
+	
+	master->linkedCtrls.FindAdd(this);
+	linkedMaster = master;
+
+	return *this;
+}
 	
 ScatterDraw::ScatterDraw() {
 	mode = MD_ANTIALIASED;
@@ -1298,6 +1347,7 @@ ScatterDraw::ScatterDraw() {
 	legendFillColor = White();
 	legendBorderColor = Black();
 	legendRowSpacing = 5;
+	linkedMaster = 0;
 }
 
 void DrawLine(Draw &w, double x0, double y0, double x1, double y1, double width, const Color &color) {
