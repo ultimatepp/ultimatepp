@@ -1,0 +1,4 @@
+#ifndef _leaks_icpp_init_stub
+#define _leaks_icpp_init_stub
+#include "Core/init"
+#endif
