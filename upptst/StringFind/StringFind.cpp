@@ -60,7 +60,7 @@ void CheckReplace()
 	x.Replace("test", "run");
 	DUMP(x);
 	T y("Just another run");
-	ASSERT(x == T('_', 20) + y + T('_', 20) + y + T('_', 20));
+	ASSERT(x == T('_', 5) + y + T('_', 5) + y + T('_', 5));
 }
 
 

@@ -96,8 +96,6 @@ void ATest()
 	ASSERT("xx" + x == Str("xxab"));
 	ASSERT(x + 'z' == Str("abz"));
 	ASSERT('z' + x == Str("zab"));
-	ASSERT(x + (int)'z' == Str("abz"));
-	ASSERT((int)'z' + x == Str("zab"));
 	Str xx = x;
 	Str bb = b;
 	Swap(b, x);
