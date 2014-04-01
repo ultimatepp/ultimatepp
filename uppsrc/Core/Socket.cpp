@@ -268,6 +268,7 @@ void TcpSocket::Reset()
 	ptr = end = buffer;
 	is_error = false;
 	is_abort = false;
+	is_timeout = false;
 	mode = NONE;
 	ssl.Clear();
 	sslinfo.Clear();
@@ -493,6 +494,23 @@ bool TcpSocket::Connect(const char *host, int port)
 	return Connect(info);
 }
 
+bool TcpSocket::WaitConnect()
+{
+	if(WaitWrite()) {
+		int optval = 0;
+		socklen_t optlen = sizeof(optval);
+		if (getsockopt(GetSOCKET(), SOL_SOCKET, SO_ERROR, (char*)&optval, &optlen) == 0) {
+			if (optval == 0)
+				return true;
+			else {
+				SetSockError("wait connect", -1, Nvl(String(TcpSocketErrorDesc(optval)), "failed"));
+				return false;
+			}
+		}
+	}
+	return false;
+}
+
 void TcpSocket::RawClose()
 {
 	LLOG("close " << (int)socket);
@@ -584,6 +602,7 @@ bool TcpSocket::IsGlobalTimeout()
 bool TcpSocket::RawWait(dword flags, int end_time)
 { // wait till end_time
 	LLOG("RawWait end_time: " << end_time << ", current time " << msecs());
+	is_timeout = false;
 	if((flags & WAIT_READ) && ptr != end)
 		return true;
 	if(socket == INVALID_SOCKET)
@@ -623,13 +642,15 @@ bool TcpSocket::RawWait(dword flags, int end_time)
 		#endif
 			return true;
 		}
-		if(IsGlobalTimeout())
+		if(IsGlobalTimeout() || to <= 0 && timeout) {
+			is_timeout = true;
 			return false;
-		if(to <= 0 && timeout)
-			return false;
+		}
 		WhenWait();
-		if(timeout == 0)
+		if(timeout == 0) {
+			is_timeout = true;
 			return false;
+		}
 	}
 }
 
