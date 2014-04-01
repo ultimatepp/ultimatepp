@@ -100,12 +100,19 @@ non`-blocking state.&]
 [s5;:TcpSocket`:`:Connect`(const char`*`,int`): [@(0.0.255) bool]_[* Connect]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 host], [@(0.0.255) int]_[*@3 port])&]
 [s2;%% Connects socket to server at [%-*@3 host]:[%-*@3 port]. This operation 
-is blocking.&]
-[s3;%% &]
+is blocking with respect to resolving host name. Returns true 
+when connection process is successfully started.&]
+[s3; &]
 [s4;%% &]
 [s5;:TcpSocket`:`:Connect`(IpAddrInfo`&`): [@(0.0.255) bool]_[* Connect]([_^IpAddrInfo^ IpA
 ddrInfo][@(0.0.255) `&]_[*@3 info])&]
 [s2;%% Connects socket to server found at [%-*@3 info]. Non`-blocking.&]
+[s3;%% &]
+[s4; &]
+[s5;:TcpSocket`:`:WaitConnect`(`): [@(0.0.255) bool]_[* WaitConnect]()&]
+[s2;%% After Connect returns true, WaitConnect waits for connection 
+to be established. Note that it is only necessary to use WaitConnect 
+if you want to intercept errors before sending/recieving data.&]
 [s3;%% &]
 [s4; &]
 [s5;:TcpSocket`:`:Listen`(int`,int`,bool`,bool`,void`*`): [@(0.0.255) bool]_[* Listen]([@(0.0.255) i
