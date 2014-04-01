@@ -179,20 +179,13 @@ void MemoryDumpLeaks()
 	if(!leaks)
 		return;
 #ifdef PLATFORM_WIN32
-#ifdef PLATFORM_WINCE
-	MessageBox(::GetActiveWindow(),
-	           L"Heap leaks detected !",
-	           L"Warning",
-	           MB_ICONSTOP|MB_OK|MB_APPLMODAL);
-#else
 	MessageBox(::GetActiveWindow(),
 	           "Heap leaks detected !",
 	           "Warning",
 	           MB_ICONSTOP|MB_OK|MB_APPLMODAL);
-#endif
 #else
 	if(!IsPanicMode())
-		PanicMessageBox("Warning", "Heap leaks detected!");
+		Panic("Heap leaks detected!");
 #endif
 	Heap::AuxFinalCheck();
 }
