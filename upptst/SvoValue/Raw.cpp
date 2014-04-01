@@ -13,7 +13,7 @@ void CheckRawPickValue()
 {
 	Vector<int> x;
 	x.Add(123);
-	Value v = RawPickToValue(x);
+	Value v = RawPickToValue(pick(x));
 	ASSERT(v.Is< Vector<int> >());
 	const Vector<int>& xx = v.To< Vector<int> >();
 	ASSERT(xx.GetCount() == 1);
