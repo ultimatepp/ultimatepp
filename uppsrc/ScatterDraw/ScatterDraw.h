@@ -139,13 +139,13 @@ public:
 	
 	ScatterDraw& ShowLegend(bool show = true) 		{showLegend = show;		return *this;}
 	bool GetShowLegend()							{return showLegend;}
-	ScatterDraw& SetLegendPos(const Point &pos) 	{legendPos = pos;		return *this;}
-	ScatterDraw& SetLegendPosX(int x) 				{legendPos.x = x;		return *this;}
-	ScatterDraw& SetLegendPosY(int y) 				{legendPos.y = y;		return *this;}
+	ScatterDraw& SetLegendPos(const Point &pos) 	{legendPos = pos;	showLegend = true;	return *this;}
+	ScatterDraw& SetLegendPosX(int x) 				{legendPos.x = x;	showLegend = true;	return *this;}
+	ScatterDraw& SetLegendPosY(int y) 				{legendPos.y = y;	showLegend = true;	return *this;}
 	Point& GetLegendPos() 							{return legendPos;}
-	ScatterDraw& SetLegendNumCols(int num) 			{legendNumCols = num;	return *this;}
+	ScatterDraw& SetLegendNumCols(int num) 			{legendNumCols = num;		showLegend = true;	return *this;}
 	int GetLegendNumCols() 							{return legendNumCols;}
-	ScatterDraw& SetLegendRowSpacing(int num) 		{legendRowSpacing = num;	return *this;}
+	ScatterDraw& SetLegendRowSpacing(int num) 		{legendRowSpacing = num;	showLegend = true;	return *this;}
 	int GetLegendRowSpacing() 						{return legendRowSpacing;}
 	enum LEGEND_POS {
 		LEGEND_TOP,
@@ -408,6 +408,8 @@ public:
 	int GetCount() 	{return series.GetCount();}
 	bool IsEmpty()	{return series.IsEmpty();}
 	
+	ScatterDraw& LinkedWith(ScatterDraw& ctrl);
+	
 protected:
 	ScatterDraw &_AddSeries(DataSource *data);
 	virtual void Refresh() {};
@@ -495,8 +497,16 @@ private:
 	Size size;		// Size to be used for all but screen painting
 	static void ParseTextMultiline(const String &text, Font fnt, 
 								   Upp::Array <String> &texts, Upp::Array <Size> &sizes);
+	
+	void DoFitToData(bool Y);
+	void DoZoom(double scale, bool hor, bool ver); 
+	void DoScroll(double factorX, double factorY);
+	
 	int plotW, plotH;
 	bool labelsChanged;
+	
+	Index<ScatterDraw *> linkedCtrls;
+	ScatterDraw *linkedMaster;
 };
 
 template <class T>
@@ -662,6 +672,9 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 template <class T>
 void ScatterDraw::Plot(T& w, const Size &size, int scale)
 {
+	if (plotW < 0 || plotH < 0)
+		return;
+	
 	w.Offset(Point(scale*hPlotLeft, scale*vPlotTop + titleHeight));
 	Clip(w, 0, 0, plotW, plotH);
 		
@@ -719,7 +732,8 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 
 	if (!series.IsEmpty()) {
 		for (int j = 0; j < series.GetCount(); j++) {
-			if (series[j].opacity == 0 || (!series[j].seriesPlot && !series[j].markPlot) || series[j].PointsData()->GetCount() == 0)
+			if (series[j].opacity == 0 || (!series[j].seriesPlot && !series[j].markPlot) || 
+				(!series[j].PointsData()->IsExplicit() && series[j].PointsData()->GetCount() == 0))
 				continue;
 			Vector<Point> points;
 			if (series[j].PointsData()->IsParam()) {
