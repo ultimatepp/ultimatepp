@@ -82,9 +82,10 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 									errors << txt << ": FAILED\n";
 									Cout() << "*** FAILED\n";
 								}
-								else
+								else {
 									infolog << ", OK";
 									Cout() << "OK\n";
+								}
 								break;
 							}
 							Sleep(10);
