@@ -652,7 +652,7 @@ public:
 	ConstIterator    End() const                    { return B::value.data.End(); }
 	ConstIterator    GetIter(int pos) const         { return B::value.data.GetIter(pos); }
 
-	STL_MAP_COMPATIBILITY(SortedVectorMap<K _cm_ T _cm_ Less>)
+	STL_SORTED_MAP_COMPATIBILITY(SortedVectorMap<K _cm_ T _cm_ Less>)
 };
 
 template <class T>
@@ -729,6 +729,6 @@ public:
 	ConstIterator    End() const                    { return B::value.data.End(); }
 	ConstIterator    GetIter(int pos) const         { return B::value.data.GetIter(pos); }
 
-	STL_MAP_COMPATIBILITY(SortedArrayMap<K _cm_ T _cm_ HashFn>)
+	STL_SORTED_MAP_COMPATIBILITY(SortedArrayMap<K _cm_ T _cm_ HashFn>)
 };
 
