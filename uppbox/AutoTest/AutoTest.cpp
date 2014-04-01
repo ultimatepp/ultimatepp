@@ -29,7 +29,7 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 		        txt << "-R ";
 		    txt << ' ' << h << ' ';
 			String c;
-			c << GetHomeDirFile("/bin/umk") << " " << nest << ' ' << name << ' ' << bm << " -" << flags;
+			c << GetHomeDirFile("bin/umk") << " " << nest << ' ' << name << ' ' << bm << " -" << flags;
 			if(first)
 				c << 'a';
 		#ifdef PLATFORM_POSIX
@@ -110,20 +110,21 @@ CONSOLE_APP_MAIN
 	Vector<String> bm = Split((String)ini["build_method"], ';');
 	exclude = Split((String)ini["exclude"], ';');
 	
+	Vector<bool> release;
+	for(int i = 0; i < bm.GetCount(); i++) {
+		bool r = bm[i].EndsWith("-R");
+		if(r)
+			bm[i].Trim(bm[i].GetCount() - 3);
+		release.Add(r);
+	}		
+	
 	infolog << "Started " << GetSysTime() << "\n";
 	
-	bm.Add("GCC");
-	bm.Add("GCC11");
-	
 	for(int i = 0; i < bm.GetCount(); i++) {
-		for(int j = 0; j < test.GetCount(); j++) {
-			Do(test[j], bm[i], false, true);
-			Do(test[j], bm[i], true, false);
-		}
-		for(int j = 0; j < build.GetCount(); j++) {
-			Do(build[j], bm[i], false, false);
-			Do(build[j], bm[i], true, false);
-		}
+		for(int j = 0; j < test.GetCount(); j++)
+			Do(test[j], bm[i], release[i], true);
+		for(int j = 0; j < build.GetCount(); j++)
+			Do(build[j], bm[i], release[i], false);
 	}
 	
 
