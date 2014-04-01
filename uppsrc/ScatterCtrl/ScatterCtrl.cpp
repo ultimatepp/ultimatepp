@@ -438,7 +438,7 @@ ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1)
 	lastRefresh_ms = Null;
 	maxRefresh_ms = 500;
 	highlighting = false;
-ShowInfo().ShowContextMenu().ShowPropertiesDlg();
+	ShowInfo().ShowContextMenu().ShowPropertiesDlg();
 }
 
 END_UPP_NAMESPACE

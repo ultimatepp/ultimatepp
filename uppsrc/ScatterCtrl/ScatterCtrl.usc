@@ -62,7 +62,11 @@ ctrl ScatterCtrl {
 		textsize = GetTextSize(.SetTitle, .SetTitleFont); 
 		if(.SetTitle == "") 
 			textsize.cy = 0;
-		w.DrawRect(.SetPlotAreaLeftMargin-1, .SetPlotAreaTopMargin - 1 + textsize.cy, sz.cx - (.SetPlotAreaLeftMargin + .SetPlotAreaRightMargin) + 2, - (.SetPlotAreaTopMargin  + .SetPlotAreaBottomMargin) + 2 - textsize.cy + sz.cy, :Gray);
+		w.DrawRect(.SetPlotAreaLeftMargin - 1, 
+				   .SetPlotAreaTopMargin - 1 + textsize.cy, 
+				   sz.cx - (.SetPlotAreaLeftMargin + .SetPlotAreaRightMargin) + 2, 
+				   - (.SetPlotAreaTopMargin  + .SetPlotAreaBottomMargin) + 2 - textsize.cy + sz.cy, 
+				   :Gray);
 		aw = 6;
 		if(.SetAxisWidth >= 6) 
 			aw = .SetAxisWidth;
@@ -73,9 +77,9 @@ ctrl ScatterCtrl {
 					.SetAxisColor);
 					
 		gx0 = .SetPlotAreaLeftMargin;
-		gy0 = .SetPlotAreaTopMargin + textsize.cy;					
+		gy0 = .SetPlotAreaTopMargin + textsize.cy + 1;					
 		gwidth = sz.cx - (.SetPlotAreaLeftMargin + .SetPlotAreaRightMargin);
-		gheight = sz.cy - (.SetPlotAreaTopMargin + .SetPlotAreaBottomMargin) - textsize.cy;
+		gheight = sz.cy - (.SetPlotAreaTopMargin + .SetPlotAreaBottomMargin) - textsize.cy - 1;
 		
 		w.DrawRect(gx0, gy0, gwidth, gheight, .SetPlotAreaColor);
 		w.DrawLine(gx0, 			  gy0 + gheight,      gx0 + gwidth*0.25, gy0 + gheight*0.5, 2, :SLtRed);
