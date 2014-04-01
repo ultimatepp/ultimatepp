@@ -70,8 +70,14 @@ LAYOUT(Tab11, 504, 468)
 	ITEM(Label, dv___2, SetLabel(t_("Trend Lines Details:")).LeftPosZ(8, 100).BottomPosZ(83, 21))
 END_LAYOUT
 
-LAYOUT(Tab12, 400, 260)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Polar Plot")).SetTitleFont(SansSerifZ(14).Bold()).SetPlotAreaTopMargin(20).SetPlotAreaColor(LtGray).SetLabelsFont(StdFontZ(11)).HSizePosZ(4, 4).VSizePosZ(4, 4))
+LAYOUT(Tab12, 456, 464)
+	ITEM(ScatterCtrl, scatter1, SetTitle(t_("All plots are linked together")).SetTitleFont(SansSerifZ(14).Bold()).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetLegendAnchor(1).HSizePosZ(4, 4).TopPosZ(4, 152))
+	ITEM(ScatterCtrl, scatter2, SetTitleFont(SansSerifZ(14).Bold()).SetPlotAreaTopMargin(0).SetLabelsFont(StdFontZ(11)).SetLegendAnchor(1).HSizePosZ(4, 4).TopPosZ(152, 152))
+	ITEM(ScatterCtrl, scatter3, SetTitleFont(SansSerifZ(14).Bold()).SetPlotAreaTopMargin(0).SetLabelsFont(StdFontZ(11)).SetLegendAnchor(1).HSizePosZ(4, 4).VSizePosZ(300, 4))
+END_LAYOUT
+
+LAYOUT(Tab13, 420, 236)
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Polar Plot")).SetTitleFont(SansSerifZ(14).Bold()).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).HSizePosZ(4, 4).VSizePosZ(4, 4))
 END_LAYOUT
 
 LAYOUT(TabPie, 536, 440)

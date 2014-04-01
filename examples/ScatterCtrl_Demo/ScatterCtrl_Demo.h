@@ -177,10 +177,10 @@ public:
 	typedef Tab12 CLASSNAME;
 	
 	virtual void Init();
-	virtual ScatterCtrl &Scatter()	{return scatter;};
+	virtual ScatterCtrl &Scatter()	{return scatter1;};
 
 private:
-	Vector<Pointf> s1;
+	Vector<Pointf> s1, s2, s3;
 };
 
 class TabPie : public WithTabPie<StaticRect> {
