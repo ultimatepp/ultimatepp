@@ -22,6 +22,7 @@ file
 	tab9.cpp,
 	tab10.cpp,
 	tab11.cpp,
+	tab12.cpp,
 	tabPie.cpp,
 	symbol.iml;
 
