@@ -29,6 +29,8 @@ struct DispatchNode : Moveable<DispatchNode> { // Single node in url hierarchy t
 	int (*progress)(int, Http&, int);
 	
 	enum { GET, POST };
+	
+	rval_default(DispatchNode);
 
 	DispatchNode() { argpos = Null; method = GET; post_raw = false; progress = NULL;}
 };
