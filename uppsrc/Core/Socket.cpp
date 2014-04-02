@@ -601,7 +601,7 @@ bool TcpSocket::IsGlobalTimeout()
 
 bool TcpSocket::RawWait(dword flags, int end_time)
 { // wait till end_time
-	LLOG("RawWait end_time: " << end_time << ", current time " << msecs());
+	LLOG("RawWait end_time: " << end_time << ", current time " << msecs() << ", to wait: " << end_time - msecs());
 	is_timeout = false;
 	if((flags & WAIT_READ) && ptr != end)
 		return true;
@@ -620,6 +620,7 @@ bool TcpSocket::RawWait(dword flags, int end_time)
 			tval.tv_sec = to / 1000;
 			tval.tv_usec = 1000 * (to % 1000);
 			tvalp = &tval;
+			LLOG("RawWait timeout: " << to);
 		}
 		fd_set fdsetr[1], fdsetw[1], fdsetx[1];;
 		FD_ZERO(fdsetr);
