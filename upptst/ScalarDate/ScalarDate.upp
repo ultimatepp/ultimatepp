@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	ScalarDate.cpp;
-
-mainconfig
-	"" = "SSE2";
-

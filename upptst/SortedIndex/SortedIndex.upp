@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	SortedIndex.cpp;
-
-mainconfig
-	"" = "SSE2 IVTEST";
-

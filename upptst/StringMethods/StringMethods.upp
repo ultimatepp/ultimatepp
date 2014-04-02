@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	StringMethods.cpp;
-
-mainconfig
-	"" = "SSE2";
-

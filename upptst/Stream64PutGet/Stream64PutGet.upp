@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	Stream64PutGet.cpp;
-
-mainconfig
-	"" = "SSE2";
-
