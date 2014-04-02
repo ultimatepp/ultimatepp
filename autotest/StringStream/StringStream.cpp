@@ -2,6 +2,12 @@
 
 using namespace Upp;
 
+#ifdef flagAUTOTEST
+#define N 1000000
+#else
+#define N 100000000
+#endif
+
 String RandomString(int n)
 {
 	String h;
@@ -32,4 +38,6 @@ CONSOLE_APP_MAIN
 		}
 //		LOGHEXDUMP(es, es.GetCount());
 	}
+	
+	LOG("========= OK");
 }

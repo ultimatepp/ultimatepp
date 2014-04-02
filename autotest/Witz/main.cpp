@@ -31,11 +31,8 @@ struct MyApp : SkylarkApp {
 
 CONSOLE_APP_MAIN
 {
-#ifdef _DEBUG
 	StdLogSetup(LOG_FILE|LOG_COUT);
 	Ini::skylark_log = true;
-#endif
-
 
 	MyApp app;
 
@@ -58,5 +55,7 @@ CONSOLE_APP_MAIN
 	LOG("------------");
 	LOG(result);
 	LOG("------------");
-//	app.Run();	
+//	SaveFile(GetDataFile("etalon"), result);
+	ASSERT(result == LoadFile(GetDataFile("etalon")));
+	LOG("========== OK");
 }
