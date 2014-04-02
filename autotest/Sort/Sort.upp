@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Sort.cpp;
+
+mainconfig
+	"" = "SSE2";
+
