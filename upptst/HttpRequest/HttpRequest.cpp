@@ -21,12 +21,12 @@ CONSOLE_APP_MAIN
 		{ "http://wattsupwiththat.com/", "</html>" },
 		{ "http://www.rcalbum.com", "</html>" },
 	};
-//	for(int nd = 0; nd < 1; nd++)
+	for(int nd = 0; nd < 1; nd++)
 		for(int i = 0; i < __countof(x); i++) {
 			LLOG("=============================================");
 			LLOG("URL: " << x[i].a);
 			HttpRequest h(x[i].a);
-//			if(nd)
+			if(nd)
 				h.Timeout(0);
 			if(IsNull(h.Execute())) {
 				DUMP(~h);
