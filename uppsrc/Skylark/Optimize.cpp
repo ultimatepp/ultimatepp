@@ -17,7 +17,7 @@ void Compiler::OptimizeConst(One<Exe>& exe)
 	ExeContext x(stack);
 	oxe.Create<ExeConst>().value = exe->Eval(x);
 	LLOG("OPTIMIZED constant: " << exe->Eval(stack, out));
-	exe = oxe;
+	exe = pick(oxe);
 	optimized = true;
 }
 
@@ -102,7 +102,7 @@ void Compiler::Optimize(One<Exe>& exe)
 				ExeVarField& vf = oxe.Create<ExeVarField>();
 				vf.id = e->id;
 				vf.var_index = e1->var_index;
-				exe = oxe;
+				exe = pick(oxe);
 				optimized = true;
 				LLOG("OPTIMIZED ExeVarField");
 			}
@@ -115,7 +115,7 @@ void Compiler::Optimize(One<Exe>& exe)
 				o.id = e1->id;
 				o.var_index = e1->var_index;
 				o.part = e->part;
-				exe = oxe;
+				exe = pick(oxe);
 				optimized = true;
 				LLOG("OPTIMIZED ExeLinkVarField1");
 			}
@@ -131,7 +131,7 @@ void Compiler::Optimize(One<Exe>& exe)
 					t.text = ValueTo<RawHtmlText>(e1->value).text + ValueTo<RawHtmlText>(e2->value).text;
 					One<Exe> oxe;
 					oxe.Create<ExeConst>().value = RawToValue(t);
-					m[i] = oxe;
+					m[i] = pick(oxe);
 					m.Remove(i + 1);
 					optimized = true;
 					LLOG("OPTIMIZED ExeBlock constant folding");

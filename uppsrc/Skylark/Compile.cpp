@@ -50,9 +50,9 @@ void Compiler::DoExeField(One<Exe>& result)
 {
 	One<Exe> r;
 	ExeField& f = r.Create<ExeField>();
-	f.value = result;
+	f.value = pick(result);
 	f.id = p.ReadId();
-	result = r;
+	result = pick(r);
 }
 
 void Compiler::DoIndicies(One<Exe>& result)
@@ -64,9 +64,9 @@ void Compiler::DoIndicies(One<Exe>& result)
 		if(p.Char('[')) {
 			One<Exe> r;
 			ExeBracket& f = r.Create<ExeBracket>();
-			f.value = result;
+			f.value = pick(result);
 			f.index = Exp();
-			result = r;
+			result = pick(r);
 			p.PassChar(']');
 		}
 		else
@@ -209,13 +209,13 @@ One<Exe> Compiler::Mul()
 	One<Exe> result = Prim();
 	for(;;)
 		if(p.Char('*'))
-			result = Create<ExeMul>(result, Prim());
+			result = Create<ExeMul>(pick(result), Prim());
 		else
 		if(p.Char('/'))
-			result = Create<ExeDiv>(result, Prim());
+			result = Create<ExeDiv>(pick(result), Prim());
 		else
 		if(p.Char('%'))
-			result = Create<ExeMod>(result, Prim());
+			result = Create<ExeMod>(pick(result), Prim());
 		else
 			return result;
 }
@@ -225,10 +225,10 @@ One<Exe> Compiler::Add()
 	One<Exe> result = Mul();
 	for(;;)
 		if(p.Char('+'))
-			result = Create<ExeAdd>(result, Mul());
+			result = Create<ExeAdd>(pick(result), Mul());
 		else
 		if(p.Char('-'))
-			result = Create<ExeSub>(result, Mul());
+			result = Create<ExeSub>(pick(result), Mul());
 		else
 			return result;
 }
@@ -238,13 +238,13 @@ One<Exe> Compiler::Shift()
 	One<Exe> result = Add();
 	for(;;)
 		if(p.Char3('>', '>', '>'))
-			result = Create<ExeSrl>(result, Add());
+			result = Create<ExeSrl>(pick(result), Add());
 		else
 		if(p.Char2('>', '>'))
-			result = Create<ExeSra>(result, Add());
+			result = Create<ExeSra>(pick(result), Add());
 		else
 		if(p.Char2('<', '<'))
-			result = Create<ExeSll>(result, Add());
+			result = Create<ExeSll>(pick(result), Add());
 		else
 			return result;
 }
@@ -254,16 +254,16 @@ One<Exe> Compiler::Rel()
 	One<Exe> result = Shift();
 	for(;;)
 		if(p.Char2('<', '='))
-			result = Create<ExeLte>(result, Shift());
+			result = Create<ExeLte>(pick(result), Shift());
 		else
 		if(p.Char2('>', '='))
-			result = Create<ExeLte>(Shift(), result);
+			result = Create<ExeLte>(Shift(), pick(result));
 		else
 		if(p.Char('<'))
-			result = Create<ExeLt>(result, Shift());
+			result = Create<ExeLt>(pick(result), Shift());
 		else
 		if(p.Char('>'))
-			result = Create<ExeLt>(Shift(), result);
+			result = Create<ExeLt>(Shift(), pick(result));
 		else
 			return result;
 }
@@ -273,10 +273,10 @@ One<Exe> Compiler::Eq()
 	One<Exe> result = Rel();
 	for(;;)
 		if(p.Char2('=', '='))
-			result = Create<ExeEq>(result, Rel());
+			result = Create<ExeEq>(pick(result), Rel());
 		else
 		if(p.Char2('!', '='))
-			result = Create<ExeNeq>(Rel(), result);
+			result = Create<ExeNeq>(Rel(), pick(result));
 		else
 			return result;
 }
@@ -285,7 +285,7 @@ One<Exe> Compiler::And()
 {
 	One<Exe> result = Eq();
 	while(!p.IsChar2('&', '&') && p.Char('&'))
-		result = Create<ExeAnd>(result, Eq());
+		result = Create<ExeAnd>(pick(result), Eq());
 	return result;
 }
 
@@ -293,7 +293,7 @@ One<Exe> Compiler::Xor()
 {
 	One<Exe> result = And();
 	while(p.Char('^'))
-		result = Create<ExeXor>(result, And());
+		result = Create<ExeXor>(pick(result), And());
 	return result;
 }
 
@@ -301,7 +301,7 @@ One<Exe> Compiler::Or()
 {
 	One<Exe> result = Xor();
 	while(!p.IsChar2('|', '|') && p.Char('|'))
-		result = Create<ExeOr>(result, Xor());
+		result = Create<ExeOr>(pick(result), Xor());
 	return result;
 }
 
@@ -309,7 +309,7 @@ One<Exe> Compiler::LogAnd()
 {
 	One<Exe> result = Or();
 	while(p.Char2('&', '&'))
-		result = Create<ExeAnl>(result, Or());
+		result = Create<ExeAnl>(pick(result), Or());
 	return result;
 }
 
@@ -317,7 +317,7 @@ One<Exe> Compiler::LogOr()
 {
 	One<Exe> result = LogAnd();
 	while(p.Char2('|', '|'))
-		result = Create<ExeOrl>(result, LogAnd());
+		result = Create<ExeOrl>(pick(result), LogAnd());
 	return result;
 }
 
@@ -327,11 +327,11 @@ One<Exe> Compiler::Conditional()
 	if(p.Char('?')) {
 		One<Exe> r;
 		ExeCond& c = r.Create<ExeCond>();
-		c.cond = result;
+		c.cond = pick(result);
 		c.ontrue = LogOr();
 		p.PassChar(':');
 		c.onfalse = LogOr();
-		result = r;
+		result = pick(r);
 	}
 	return result;
 }

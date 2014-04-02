@@ -34,7 +34,7 @@ struct Compiler {
 	static One<Exe> Create(One<Exe> a) {
 		One<Exe> rr;
 		T& m = rr.Create<T>();
-		m.a = a;
+		m.a = pick(a);
 		return rr;
 	}
 
@@ -47,8 +47,8 @@ struct Compiler {
 	static One<Exe> Create(One<Exe> a, One<Exe> b) {
 		One<Exe> rr;
 		T& m = rr.Create<T>();
-		m.a = a;
-		m.b = b;
+		m.a = pick(a);
+		m.b = pick(b);
 		return rr;
 	}
 
