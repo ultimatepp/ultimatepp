@@ -370,7 +370,7 @@ bool HttpRequest::Do()
 		NEVER();
 	}
 
-	if(phase != FAILED)
+	if(phase != FAILED) {
 		if(IsSocketError() || IsError())
 			phase = FAILED;
 		else
@@ -383,6 +383,7 @@ bool HttpRequest::Do()
 			HttpError("connection was aborted");
 			phase = FAILED;
 		}
+	}
 	
 	if(phase == FAILED) {
 		if(retry_count++ < max_retries) {
