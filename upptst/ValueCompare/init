@@ -1,4 +1,0 @@
-#ifndef _ValueCompare_icpp_init_stub
-#define _ValueCompare_icpp_init_stub
-#include "Core/init"
-#endif

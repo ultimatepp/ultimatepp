@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	STL.cpp;
-
-mainconfig
-	"" = "SSE2";
-

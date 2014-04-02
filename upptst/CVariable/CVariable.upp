@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	CVariable.cpp;
-
-mainconfig
-	"" = "MT";
-

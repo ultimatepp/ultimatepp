@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	StringCompare.cpp;
-
-mainconfig
-	"" = "";
-
