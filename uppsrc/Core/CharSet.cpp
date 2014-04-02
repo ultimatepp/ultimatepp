@@ -1995,7 +1995,7 @@ void CharSetData::Gen()
 		line[0][c] = c;
 	for(c = 0; c < 128; c++) {
 		int q = table[c];
-		if(q >= 128)
+		if(q >= 128) {
 			if(q < 16 * 128) {
 				int i = q >> 7;
 				if(!line[i]) {
@@ -2007,6 +2007,7 @@ void CharSetData::Gen()
 			else
 			if((q & 0xFF00) != 0xEE00)
 				map.Add(q, c + 128);
+		}
 	}
 	for(c = 0; c < 16; c++)
 		if(!line[c])
