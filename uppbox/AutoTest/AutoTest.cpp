@@ -29,7 +29,7 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 		        txt << "-R ";
 		    txt << ' ' << h << ' ';
 			String c;
-			c << GetHomeDirFile("bin/umk") << " " << nest << ' ' << name << ' ' << bm << " -" << flags;
+			c << GetHomeDirFile("bin/umk") << " " << nest << ' ' << name << ' ' << bm << " +AUTOTEST -" << flags;
 			if(first)
 				c << 'a';
 		#ifdef PLATFORM_POSIX
@@ -41,9 +41,9 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 			infolog << txt;
 			String out;
 			if(Sys(c, out)) {
-				Cout() << " *** FAILED TO COMPILE\n";
-				infolog << ": FAILED TO COMPILE\n";
-				errors << txt << ": FAILED TO COMPILE\n";
+				Cout() << " *** ERROR\n";
+				infolog << ": ERROR\n";
+				errors << txt << ": ERROR\n";
 			}
 			else {
 				infolog << ": BUILD OK";
