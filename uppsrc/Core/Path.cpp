@@ -741,12 +741,13 @@ String NormalizePath(const char *path, const char *currdir) {
 	}
 	for(; i < si.GetCount(); i++) {
 		String s = si[i];
-		if(s != "." && !s.IsEmpty())
+		if(s != "." && !s.IsEmpty()) {
 			if(s[0] == '.' && s[1] == '.') {
 				if(!p.IsEmpty()) p.Drop();
 			}
 			else
 				p.Add(s);
+		}
 	}
 	out.Cat(Join(p, DIR_SEPS));
 	return out;
