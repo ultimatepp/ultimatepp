@@ -1,0 +1,11 @@
+description "Various inet based encoding/decoding schemes\377";
+
+uses
+	Core;
+
+file
+	InetCode.cpp;
+
+mainconfig
+	"" = "SSE2";
+
