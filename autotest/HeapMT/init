@@ -1,0 +1,4 @@
+#ifndef _HeapMT_icpp_init_stub
+#define _HeapMT_icpp_init_stub
+#include "Core/init"
+#endif

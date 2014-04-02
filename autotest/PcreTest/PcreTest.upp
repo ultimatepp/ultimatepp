@@ -1,0 +1,10 @@
+uses
+	Core,
+	plugin\pcre;
+
+file
+	PcreTest.cpp charset "UTF-8";
+
+mainconfig
+	"" = "CONSOLE";
+

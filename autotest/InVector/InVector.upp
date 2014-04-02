@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	InVector.cpp;
+
+mainconfig
+	"" = "SSE2 IVTEST";
+

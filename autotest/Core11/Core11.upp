@@ -1,0 +1,11 @@
+description "Core tests for C+11\377";
+
+uses
+	Core;
+
+file
+	Core11.cpp;
+
+mainconfig
+	"" = "SSE2";
+

@@ -1,0 +1,4 @@
+#ifndef _ScalarDate_icpp_init_stub
+#define _ScalarDate_icpp_init_stub
+#include "Core/init"
+#endif

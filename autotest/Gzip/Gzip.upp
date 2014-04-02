@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Gzip.cpp;
+
+mainconfig
+	"" = "SSE2";
+

@@ -1,0 +1,11 @@
+description "Comparison for containers\377";
+
+uses
+	Core;
+
+file
+	CompareContainer.cpp;
+
+mainconfig
+	"" = "SSE2";
+

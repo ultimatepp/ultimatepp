@@ -1,0 +1,4 @@
+#ifndef _FileStream_icpp_init_stub
+#define _FileStream_icpp_init_stub
+#include "Core/init"
+#endif

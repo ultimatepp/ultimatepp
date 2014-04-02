@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	fail_assert.cpp;
-
-mainconfig
-	"" = "SSE2";
-

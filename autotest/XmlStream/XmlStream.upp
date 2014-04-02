@@ -1,0 +1,12 @@
+uses
+	Core;
+
+file
+	XmlStream.cpp,
+	0.xml,
+	1.xml,
+	2.xml;
+
+mainconfig
+	"" = "SSE2 TEST_XML";
+
