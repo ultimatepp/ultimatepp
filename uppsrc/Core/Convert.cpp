@@ -139,9 +139,13 @@ double ScanDoubleT(const T *p, const T **endptr, bool accept_comma)
 			exp++;
 	int raise = exp;
 	if(*p == '.' || accept_comma && *p == ',') // decimal part
-		while((byte)((c = *++p) - '0') < 10)
+		while((byte)((c = *++p) - '0') < 10) {
 			if(c != '0') {
-				if(raise) { mantissa *= ipow10(raise); exp -= raise; raise = 0; }
+				if(raise) {
+					mantissa *= ipow10(raise);
+					exp -= raise;
+					raise = 0;
+				}
 				exp--;
 				mantissa = 10 * mantissa + c - '0';
 				if(!IsFin(mantissa))
@@ -149,6 +153,7 @@ double ScanDoubleT(const T *p, const T **endptr, bool accept_comma)
 			}
 			else
 				raise++;
+		}
 	if(*p == 'E' || *p == 'e') { // exponent
 		int vexp = ScanInt(p + 1, endptr);
 		if(IsNull(vexp))
@@ -325,11 +330,12 @@ Value ConvertInt::Scan(const Value& text) const {
 	if(IsError(v)) return v;
 	if(IsNull(v)) return notnull ? NotNullError() : v;
 	int64 m = v;
-	if(m >= minval && m <= maxval)
+	if(m >= minval && m <= maxval) {
 		if(m >= INT_MIN && m <= INT_MAX)
 			return (int)m;
 		else
 			return v;
+	}
 	return ErrorValue(UPP::Format(t_("Number must be between %d and %d."), minval, maxval));
 }
 
