@@ -18,7 +18,7 @@ wchar *WString0::Alloc(int& count)
 
 void WString0::Free()
 {
-	if(alloc > 0)
+	if(alloc > 0) {
 		if(IsRc()) {
 			Atomic& rc = Rc();
 			if(AtomicDec(rc) == 0)
@@ -26,6 +26,7 @@ void WString0::Free()
 		}
 		else
 			MemoryFree48(ptr);
+	}
 }
 
 #ifdef _DEBUG

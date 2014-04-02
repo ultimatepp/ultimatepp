@@ -889,11 +889,12 @@ XmlNode& XmlNode::SetAttr(const char *id, int i)
 
 void XmlNode::Shrink()
 {
-	if(attr)
+	if(attr) {
 		if(attr->GetCount() == 0)
 			attr.Clear();
 		else
 			attr->Shrink();
+	}
 	node.Shrink();
 }
 
