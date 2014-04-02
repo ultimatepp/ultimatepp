@@ -57,11 +57,7 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 					}
 					else {
 						Cout() << "RUN\n";
-					#ifdef _DEBUG
-						int timeout = 10000;
-					#else
-						int timeout = 60000;
-					#endif
+						int timeout = 60000*10;
 						String h = LoadFile(upp);
 						int q = h.Find("#WAIT:");
 						if(q >= 0) {
