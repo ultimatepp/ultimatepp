@@ -149,10 +149,9 @@ void Slaved_InArray__<T>::Remove(int blki, int pos, int n)
 template <class T>
 void Slaved_InArray__<T>::AddFirst()
 {
-	if(res)
-		data.iv.data.Add().Add(res);
-	else
-		data.iv.data.Add().Add();
+	if(!res)
+		res = new T;
+	data.iv.data.Add().Add(res);
 }
 
 template <class K, class T, class Less>
