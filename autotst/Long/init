@@ -1,0 +1,4 @@
+#ifndef _Long_icpp_init_stub
+#define _Long_icpp_init_stub
+#include "Core/init"
+#endif
