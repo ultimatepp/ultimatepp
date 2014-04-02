@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	NaNInf.cpp;
+
+mainconfig
+	"" = "SSE2";
+

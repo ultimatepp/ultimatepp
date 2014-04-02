@@ -1,0 +1,4 @@
+#ifndef _XmlStream_icpp_init_stub
+#define _XmlStream_icpp_init_stub
+#include "Core/init"
+#endif

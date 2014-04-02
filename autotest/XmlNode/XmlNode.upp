@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	XmlNode.cpp,
+	0.xml;
+
+mainconfig
+	"" = "SSE2";
+

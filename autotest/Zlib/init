@@ -1,0 +1,4 @@
+#ifndef _Zlib_icpp_init_stub
+#define _Zlib_icpp_init_stub
+#include "Core/init"
+#endif

@@ -1,0 +1,5 @@
+#ifndef _Witz_icpp_init_stub
+#define _Witz_icpp_init_stub
+#include "Core/init"
+#include "Skylark/init"
+#endif

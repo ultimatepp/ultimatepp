@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	ok.cpp;
-
-mainconfig
-	"" = "SSE2";
-

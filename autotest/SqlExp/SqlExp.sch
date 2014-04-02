@@ -1,0 +1,20 @@
+TABLE_(TABLE1)
+   INT_     (ID)
+   STRING_  (NAME, 200)  PRIMARY_KEY
+   STRING_  (LASTNAME, 200)
+   INT_     (COLUMN1)
+   INT_     (COL)
+   INT_     (SEQ)
+   INT_     (BDATE)
+   INT_     (A)
+END_TABLE
+
+TABLE_(TABLE2)
+   INT      (ID) PRIMARY_KEY
+   INT_     (TABLE1_ID) REFERENCES(TABLE1)
+   STRING   (NAME, 200)
+   STRING   (LASTNAME, 200)
+   INT      (BDATE)
+   INT_     (COLUMN2)
+   INT      (SEQ)
+END_TABLE

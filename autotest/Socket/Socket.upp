@@ -1,0 +1,10 @@
+uses
+	Core,
+	Core/SSL;
+
+file
+	Socket.cpp;
+
+mainconfig
+	"" = "SSE2";
+

@@ -1,0 +1,10 @@
+uses
+	Core,
+	Core\SSL;
+
+file
+	HttpRequest.cpp;
+
+mainconfig
+	"" = "SSE2";
+

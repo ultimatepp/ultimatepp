@@ -1,0 +1,11 @@
+description "Resolving abs overloading (avoiding fabs)\377";
+
+uses
+	Core;
+
+file
+	abs.cpp;
+
+mainconfig
+	"" = "SSE2";
+

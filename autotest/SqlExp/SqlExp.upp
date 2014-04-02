@@ -1,0 +1,15 @@
+description "SqlExp unit testing\377";
+
+uses
+	Core,
+	Sql;
+
+file
+	SqlExp.sch,
+	Test.i,
+	SqlExp.cpp;
+
+mainconfig
+	"" = "",
+	"" = "NOSTOP";
+

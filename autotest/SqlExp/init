@@ -1,0 +1,5 @@
+#ifndef _SqlExp_icpp_init_stub
+#define _SqlExp_icpp_init_stub
+#include "Core/init"
+#include "Sql/init"
+#endif

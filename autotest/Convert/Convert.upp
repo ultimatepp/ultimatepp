@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Convert.cpp;
+
+mainconfig
+	"" = "SSE2";
+

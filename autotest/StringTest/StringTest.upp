@@ -1,0 +1,11 @@
+description "String unit test\377";
+
+uses
+	Core;
+
+file
+	StringTest.cpp;
+
+mainconfig
+	"" = "SSE2";
+

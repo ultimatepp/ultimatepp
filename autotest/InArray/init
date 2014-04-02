@@ -1,0 +1,4 @@
+#ifndef _InArray_icpp_init_stub
+#define _InArray_icpp_init_stub
+#include "Core/init"
+#endif

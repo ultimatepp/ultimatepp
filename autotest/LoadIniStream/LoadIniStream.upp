@@ -1,0 +1,11 @@
+uses
+	Core;
+
+file
+	test2.ini,
+	test.ini,
+	LoadIniStream.cpp;
+
+mainconfig
+	"" = "SSE2";
+

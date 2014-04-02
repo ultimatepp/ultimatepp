@@ -1,0 +1,4 @@
+#ifndef _InetCode_icpp_init_stub
+#define _InetCode_icpp_init_stub
+#include "Core/init"
+#endif

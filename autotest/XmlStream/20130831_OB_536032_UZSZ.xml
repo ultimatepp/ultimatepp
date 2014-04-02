@@ -1,0 +1,1310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vf:VymennyFormat xmlns:gml="http://www.opengis.net/gml/3.2"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:ami="urn:cz:isvs:ruian:schemas:AdrMistoIntTypy:v1"
+                  xmlns:base="urn:cz:isvs:ruian:schemas:BaseTypy:v1"
+                  xmlns:coi="urn:cz:isvs:ruian:schemas:CastObceIntTypy:v1"
+                  xmlns:com="urn:cz:isvs:ruian:schemas:CommonTypy:v1"
+                  xmlns:kui="urn:cz:isvs:ruian:schemas:KatUzIntTypy:v1"
+                  xmlns:kri="urn:cz:isvs:ruian:schemas:KrajIntTypy:v1"
+                  xmlns:mci="urn:cz:isvs:ruian:schemas:MomcIntTypy:v1"
+                  xmlns:mpi="urn:cz:isvs:ruian:schemas:MopIntTypy:v1"
+                  xmlns:obi="urn:cz:isvs:ruian:schemas:ObecIntTypy:v1"
+                  xmlns:oki="urn:cz:isvs:ruian:schemas:OkresIntTypy:v1"
+                  xmlns:opi="urn:cz:isvs:ruian:schemas:OrpIntTypy:v1"
+                  xmlns:pai="urn:cz:isvs:ruian:schemas:ParcelaIntTypy:v1"
+                  xmlns:pui="urn:cz:isvs:ruian:schemas:PouIntTypy:v1"
+                  xmlns:rsi="urn:cz:isvs:ruian:schemas:RegSouIntiTypy:v1"
+                  xmlns:spi="urn:cz:isvs:ruian:schemas:SpravObvIntTypy:v1"
+                  xmlns:sti="urn:cz:isvs:ruian:schemas:StatIntTypy:v1"
+                  xmlns:soi="urn:cz:isvs:ruian:schemas:StavObjIntTypy:v1"
+                  xmlns:uli="urn:cz:isvs:ruian:schemas:UliceIntTypy:v1"
+                  xmlns:vci="urn:cz:isvs:ruian:schemas:VuscIntTypy:v1"
+                  xmlns:vf="urn:cz:isvs:ruian:schemas:VymennyFormatTypy:v1"
+                  xmlns:zji="urn:cz:isvs:ruian:schemas:ZsjIntTypy:v1"
+                  xsi:schemaLocation="urn:cz:isvs:ruian:schemas:VymennyFormatTypy:v1 ../ruian/xsd/vymenny_format/VymennyFormatTypy.xsd"><!--
+  v 1.0 - základní verze
+v 1.1
+- doplnění verzování
+- doplnění dat platnosti (přidání elementu PlatnostDatK)
+- změna EPSG
+- doplnění hranice pro parcely OMP-V (OriginalniHraniceOmpv)
+--><vf:Hlavicka>
+      <vf:VerzeVFR>1.1</vf:VerzeVFR>
+      <vf:TypZaznamu>Platne</vf:TypZaznamu>
+      <vf:TypDavky>Plna</vf:TypDavky>
+      <vf:TypSouboru>OB_UZSZ</vf:TypSouboru>
+      <vf:Datum>2013-09-01T05:17:12</vf:Datum>
+      <vf:TrasakceOd>
+         <com:Id>0</com:Id>
+         <com:Zapsano>2012-06-29T01:36:44</com:Zapsano>
+      </vf:TrasakceOd>
+      <vf:TransakceDo>
+         <com:Id>321295</com:Id>
+         <com:Zapsano>2013-08-31T23:58:32</com:Zapsano>
+      </vf:TransakceDo>
+      <vf:Metadata xlink:type="simple"
+                   xlink:href="http://cuzk.cz/ruian/metadata/20130831_OB_536032_UZSZ.xml"/>
+      <vf:PlatnostDatK>
+         <com:ISUI>2013-08-30T11:28:44</com:ISUI>
+         <com:ISKN>2013-08-31T23:58:32</com:ISKN>
+      </vf:PlatnostDatK>
+   </vf:Hlavicka>
+   <vf:Data>
+      <vf:Obce>
+         <vf:Obec gml:id="OB.536032">
+            <obi:Kod>536032</obi:Kod>
+            <obi:Nazev>Strýčice</obi:Nazev>
+            <obi:StatusKod>2</obi:StatusKod>
+            <obi:Okres>
+               <oki:Kod>3301</oki:Kod>
+            </obi:Okres>
+            <obi:Pou>
+               <pui:Kod>647</pui:Kod>
+            </obi:Pou>
+            <obi:PlatiOd>2011-07-02T00:00:00</obi:PlatiOd>
+            <obi:IdTransakce>4217</obi:IdTransakce>
+            <obi:GlobalniIdNavrhuZmeny>125581</obi:GlobalniIdNavrhuZmeny>
+            <obi:MluvnickeCharakteristiky>
+               <com:Pad2>Strýčic</com:Pad2>
+               <com:Pad3>Strýčicím</com:Pad3>
+               <com:Pad4>Strýčice</com:Pad4>
+               <com:Pad6>Strýčicích</com:Pad6>
+               <com:Pad7>Strýčicemi</com:Pad7>
+            </obi:MluvnickeCharakteristiky>
+            <obi:NutsLau>CZ0311536032</obi:NutsLau>
+            <obi:Geometrie>
+               <obi:DefinicniBod>
+                  <gml:MultiPoint gml:id="DOB.536032"
+                                  srsName="urn:ogc:def:crs:EPSG::5514"
+                                  srsDimension="2">
+                     <gml:pointMembers>
+                        <gml:Point gml:id="DOB.536032.1">
+                           <gml:pos>-770353.00 -1159910.00</gml:pos>
+                        </gml:Point>
+                     </gml:pointMembers>
+                  </gml:MultiPoint>
+               </obi:DefinicniBod>
+            </obi:Geometrie>
+         </vf:Obec>
+      </vf:Obce>
+      <vf:CastiObci>
+         <vf:CastObce gml:id="CO.138568">
+            <coi:Kod>138568</coi:Kod>
+            <coi:Nazev>Strýčice</coi:Nazev>
+            <coi:Obec>
+               <obi:Kod>536032</obi:Kod>
+            </coi:Obec>
+            <coi:PlatiOd>2011-07-01T00:00:00</coi:PlatiOd>
+            <coi:IdTransakce>0</coi:IdTransakce>
+            <coi:GlobalniIdNavrhuZmeny>0</coi:GlobalniIdNavrhuZmeny>
+            <coi:Geometrie>
+               <coi:DefinicniBod>
+                  <gml:Point gml:id="DCO.138568"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770353.00 -1159910.00</gml:pos>
+                  </gml:Point>
+               </coi:DefinicniBod>
+            </coi:Geometrie>
+         </vf:CastObce>
+      </vf:CastiObci>
+      <vf:StavebniObjekty>
+         <vf:StavebniObjekt gml:id="SO.11723220">
+            <soi:Kod>11723220</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>1</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313044301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735110301</soi:IsknBudovaId>
+            <soi:PocetBytu>1</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>8</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>8</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>9</soi:PripojeniVodovodKod>
+            <soi:ZpusobVytapeniKod>9</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723220"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770364.45 -1159962.83</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723238">
+            <soi:Kod>11723238</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>2</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313057301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735061301</soi:IsknBudovaId>
+            <soi:PocetBytu>1</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>1</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>3</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>1</soi:PripojeniVodovodKod>
+            <soi:VybaveniVytahemKod>2</soi:VybaveniVytahemKod>
+            <soi:ZpusobVytapeniKod>4</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723238"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770461.89 -1159993.08</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723246">
+            <soi:Kod>11723246</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>3</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313047301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735038301</soi:IsknBudovaId>
+            <soi:PocetBytu>1</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>8</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>8</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>9</soi:PripojeniVodovodKod>
+            <soi:ZpusobVytapeniKod>9</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723246"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770445.89 -1159903.27</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723254">
+            <soi:Kod>11723254</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>4</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313048301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735033301</soi:IsknBudovaId>
+            <soi:PocetBytu>1</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>3</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>3</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>1</soi:PripojeniVodovodKod>
+            <soi:VybaveniVytahemKod>2</soi:VybaveniVytahemKod>
+            <soi:ZpusobVytapeniKod>4</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723254"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770478.26 -1159861.18</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723262">
+            <soi:Kod>11723262</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>5</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313049301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735052301</soi:IsknBudovaId>
+            <soi:PocetBytu>1</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>3</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>3</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>1</soi:PripojeniVodovodKod>
+            <soi:VybaveniVytahemKod>2</soi:VybaveniVytahemKod>
+            <soi:ZpusobVytapeniKod>4</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723262"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770416.89 -1159899.13</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723271">
+            <soi:Kod>11723271</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>6</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313050301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735074301</soi:IsknBudovaId>
+            <soi:PocetBytu>1</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>8</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>8</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>9</soi:PripojeniVodovodKod>
+            <soi:ZpusobVytapeniKod>9</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723271"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770404.62 -1159905.69</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723289">
+            <soi:Kod>11723289</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>7</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313053301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735031301</soi:IsknBudovaId>
+            <soi:PocetBytu>1</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>1</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>3</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>1</soi:PripojeniVodovodKod>
+            <soi:VybaveniVytahemKod>2</soi:VybaveniVytahemKod>
+            <soi:ZpusobVytapeniKod>1</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723289"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770372.90 -1159896.65</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723297">
+            <soi:Kod>11723297</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>8</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313054301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>15</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735103301</soi:IsknBudovaId>
+            <soi:PocetBytu>2</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>3</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>3</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>1</soi:PripojeniVodovodKod>
+            <soi:VybaveniVytahemKod>2</soi:VybaveniVytahemKod>
+            <soi:ZpusobVytapeniKod>1</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723297"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770352.97 -1159918.38</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723301">
+            <soi:Kod>11723301</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>9</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313051301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735039301</soi:IsknBudovaId>
+            <soi:PocetBytu>2</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>3</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>3</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>1</soi:PripojeniVodovodKod>
+            <soi:VybaveniVytahemKod>2</soi:VybaveniVytahemKod>
+            <soi:ZpusobVytapeniKod>1</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723301"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770388.11 -1159905.60</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723319">
+            <soi:Kod>11723319</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>10</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313055301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735104301</soi:IsknBudovaId>
+            <soi:PocetBytu>5</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>1</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>3</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>1</soi:PripojeniVodovodKod>
+            <soi:VybaveniVytahemKod>2</soi:VybaveniVytahemKod>
+            <soi:ZpusobVytapeniKod>4</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723319"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770405.42 -1159990.62</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723327">
+            <soi:Kod>11723327</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>11</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:PocetBytu>1</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>8</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>8</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>9</soi:PripojeniVodovodKod>
+            <soi:ZpusobVytapeniKod>9</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723327"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770355.74 -1159942.43</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723335">
+            <soi:Kod>11723335</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>12</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313046301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735069301</soi:IsknBudovaId>
+            <soi:PocetBytu>1</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>3</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>3</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>1</soi:PripojeniVodovodKod>
+            <soi:VybaveniVytahemKod>2</soi:VybaveniVytahemKod>
+            <soi:ZpusobVytapeniKod>1</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723335"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770433.29 -1159926.94</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723343">
+            <soi:Kod>11723343</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>13</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313058301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>15</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735105301</soi:IsknBudovaId>
+            <soi:PocetBytu>1</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>1</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>3</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>1</soi:PripojeniVodovodKod>
+            <soi:VybaveniVytahemKod>2</soi:VybaveniVytahemKod>
+            <soi:ZpusobVytapeniKod>1</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723343"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770428.02 -1160143.53</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723351">
+            <soi:Kod>11723351</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>14</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313059301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735065301</soi:IsknBudovaId>
+            <soi:PocetBytu>3</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>3</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>3</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>1</soi:PripojeniVodovodKod>
+            <soi:VybaveniVytahemKod>2</soi:VybaveniVytahemKod>
+            <soi:ZpusobVytapeniKod>1</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723351"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770381.18 -1160016.99</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723360">
+            <soi:Kod>11723360</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>15</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313060301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735068301</soi:IsknBudovaId>
+            <soi:PocetBytu>1</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>1</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>3</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>1</soi:PripojeniVodovodKod>
+            <soi:VybaveniVytahemKod>2</soi:VybaveniVytahemKod>
+            <soi:ZpusobVytapeniKod>4</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723360"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770354.26 -1160027.07</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723378">
+            <soi:Kod>11723378</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>16</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313061301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735030301</soi:IsknBudovaId>
+            <soi:PocetBytu>2</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>3</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>3</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>1</soi:PripojeniVodovodKod>
+            <soi:VybaveniVytahemKod>2</soi:VybaveniVytahemKod>
+            <soi:ZpusobVytapeniKod>1</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723378"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770515.05 -1159927.94</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723386">
+            <soi:Kod>11723386</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>17</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313056301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735079301</soi:IsknBudovaId>
+            <soi:PocetBytu>2</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>1</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>3</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>1</soi:PripojeniVodovodKod>
+            <soi:VybaveniVytahemKod>2</soi:VybaveniVytahemKod>
+            <soi:ZpusobVytapeniKod>1</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723386"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770412.50 -1160027.35</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723394">
+            <soi:Kod>11723394</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>18</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313066301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735082301</soi:IsknBudovaId>
+            <soi:PocetBytu>1</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>1</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>3</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>1</soi:PripojeniVodovodKod>
+            <soi:VybaveniVytahemKod>2</soi:VybaveniVytahemKod>
+            <soi:ZpusobVytapeniKod>1</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723394"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770419.17 -1160201.67</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723408">
+            <soi:Kod>11723408</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>19</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313067301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735083301</soi:IsknBudovaId>
+            <soi:DruhKonstrukceKod>4</soi:DruhKonstrukceKod>
+            <soi:PocetBytu>1</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>1</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>3</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>1</soi:PripojeniVodovodKod>
+            <soi:VybaveniVytahemKod>2</soi:VybaveniVytahemKod>
+            <soi:ZpusobVytapeniKod>1</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723408"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770418.25 -1160207.94</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723416">
+            <soi:Kod>11723416</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>20</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313068301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735080301</soi:IsknBudovaId>
+            <soi:PocetBytu>1</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>8</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>8</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>9</soi:PripojeniVodovodKod>
+            <soi:ZpusobVytapeniKod>9</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723416"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770418.17 -1160220.33</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723424">
+            <soi:Kod>11723424</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>21</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:IdentifikacniParcela>
+               <pai:Id>5313069301</pai:Id>
+            </soi:IdentifikacniParcela>
+            <soi:TypStavebnihoObjektuKod>1</soi:TypStavebnihoObjektuKod>
+            <soi:ZpusobVyuzitiKod>7</soi:ZpusobVyuzitiKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:IsknBudovaId>735081301</soi:IsknBudovaId>
+            <soi:DruhKonstrukceKod>7</soi:DruhKonstrukceKod>
+            <soi:PocetBytu>1</soi:PocetBytu>
+            <soi:PripojeniKanalizaceKod>1</soi:PripojeniKanalizaceKod>
+            <soi:PripojeniPlynKod>3</soi:PripojeniPlynKod>
+            <soi:PripojeniVodovodKod>1</soi:PripojeniVodovodKod>
+            <soi:VybaveniVytahemKod>2</soi:VybaveniVytahemKod>
+            <soi:ZpusobVytapeniKod>4</soi:ZpusobVytapeniKod>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723424"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-770417.08 -1160226.23</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+         <vf:StavebniObjekt gml:id="SO.11723432">
+            <soi:Kod>11723432</soi:Kod>
+            <soi:CislaDomovni>
+               <com:CisloDomovni>1</com:CisloDomovni>
+            </soi:CislaDomovni>
+            <soi:TypStavebnihoObjektuKod>2</soi:TypStavebnihoObjektuKod>
+            <soi:CastObce>
+               <coi:Kod>138568</coi:Kod>
+            </soi:CastObce>
+            <soi:PlatiOd>2011-07-01T00:00:00</soi:PlatiOd>
+            <soi:GlobalniIdNavrhuZmeny>0</soi:GlobalniIdNavrhuZmeny>
+            <soi:IdTransakce>0</soi:IdTransakce>
+            <soi:PocetBytu>0</soi:PocetBytu>
+            <soi:Geometrie>
+               <soi:DefinicniBod>
+                  <gml:Point gml:id="DSO.11723432"
+                             srsName="urn:ogc:def:crs:EPSG::5514"
+                             srsDimension="2">
+                     <gml:pos>-771516.11 -1160898.63</gml:pos>
+                  </gml:Point>
+               </soi:DefinicniBod>
+            </soi:Geometrie>
+         </vf:StavebniObjekt>
+      </vf:StavebniObjekty>
+      <vf:AdresniMista>
+         <vf:AdresniMisto gml:id="AD.11790903">
+            <ami:Kod>11790903</ami:Kod>
+            <ami:CisloDomovni>1</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723220</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11790903.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770364.45 -1159962.83</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11790911">
+            <ami:Kod>11790911</ami:Kod>
+            <ami:CisloDomovni>2</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723238</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11790911.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770461.89 -1159993.08</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11790920">
+            <ami:Kod>11790920</ami:Kod>
+            <ami:CisloDomovni>3</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723246</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11790920.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770445.89 -1159903.27</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11790938">
+            <ami:Kod>11790938</ami:Kod>
+            <ami:CisloDomovni>4</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723254</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11790938.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770478.26 -1159861.18</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11790946">
+            <ami:Kod>11790946</ami:Kod>
+            <ami:CisloDomovni>5</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723262</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11790946.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770416.89 -1159899.13</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11790954">
+            <ami:Kod>11790954</ami:Kod>
+            <ami:CisloDomovni>6</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723271</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11790954.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770404.62 -1159905.69</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11790962">
+            <ami:Kod>11790962</ami:Kod>
+            <ami:CisloDomovni>7</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723289</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11790962.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770372.90 -1159896.65</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11790971">
+            <ami:Kod>11790971</ami:Kod>
+            <ami:CisloDomovni>8</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723297</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11790971.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770352.97 -1159918.38</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11790989">
+            <ami:Kod>11790989</ami:Kod>
+            <ami:CisloDomovni>9</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723301</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11790989.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770388.11 -1159905.60</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11790997">
+            <ami:Kod>11790997</ami:Kod>
+            <ami:CisloDomovni>10</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723319</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11790997.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770405.42 -1159990.62</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11791004">
+            <ami:Kod>11791004</ami:Kod>
+            <ami:CisloDomovni>11</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723327</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11791004.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770355.74 -1159942.43</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11791012">
+            <ami:Kod>11791012</ami:Kod>
+            <ami:CisloDomovni>12</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723335</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11791012.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770433.29 -1159926.94</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11791021">
+            <ami:Kod>11791021</ami:Kod>
+            <ami:CisloDomovni>13</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723343</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11791021.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770428.02 -1160143.53</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11791039">
+            <ami:Kod>11791039</ami:Kod>
+            <ami:CisloDomovni>14</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723351</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11791039.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770381.18 -1160016.99</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11791047">
+            <ami:Kod>11791047</ami:Kod>
+            <ami:CisloDomovni>15</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723360</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11791047.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770354.26 -1160027.07</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11791055">
+            <ami:Kod>11791055</ami:Kod>
+            <ami:CisloDomovni>16</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723378</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11791055.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770515.05 -1159927.94</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11791063">
+            <ami:Kod>11791063</ami:Kod>
+            <ami:CisloDomovni>17</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723386</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11791063.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770412.50 -1160027.35</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11791071">
+            <ami:Kod>11791071</ami:Kod>
+            <ami:CisloDomovni>18</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723394</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11791071.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770419.17 -1160201.67</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11791080">
+            <ami:Kod>11791080</ami:Kod>
+            <ami:CisloDomovni>19</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723408</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11791080.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770418.25 -1160207.94</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11791098">
+            <ami:Kod>11791098</ami:Kod>
+            <ami:CisloDomovni>20</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723416</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11791098.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770418.17 -1160220.33</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11791101">
+            <ami:Kod>11791101</ami:Kod>
+            <ami:CisloDomovni>21</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723424</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11791101.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-770417.08 -1160226.23</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+         <vf:AdresniMisto gml:id="AD.11791110">
+            <ami:Kod>11791110</ami:Kod>
+            <ami:CisloDomovni>1</ami:CisloDomovni>
+            <ami:Psc>37341</ami:Psc>
+            <ami:StavebniObjekt>
+               <soi:Kod>11723432</soi:Kod>
+            </ami:StavebniObjekt>
+            <ami:PlatiOd>2011-07-01T00:00:00</ami:PlatiOd>
+            <ami:IdTransakce>0</ami:IdTransakce>
+            <ami:GlobalniIdNavrhuZmeny>0</ami:GlobalniIdNavrhuZmeny>
+            <ami:Geometrie>
+               <ami:DefinicniBod>
+                  <ami:AdresniBod>
+                     <gml:Point gml:id="DAM.11791110.1"
+                                srsName="urn:ogc:def:crs:EPSG::5514"
+                                srsDimension="2">
+                        <gml:pos>-771516.11 -1160898.63</gml:pos>
+                     </gml:Point>
+                  </ami:AdresniBod>
+               </ami:DefinicniBod>
+            </ami:Geometrie>
+         </vf:AdresniMisto>
+      </vf:AdresniMista>
+   </vf:Data>
+</vf:VymennyFormat>

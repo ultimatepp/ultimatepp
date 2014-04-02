@@ -1,0 +1,4 @@
+#ifndef _XmlTag_icpp_init_stub
+#define _XmlTag_icpp_init_stub
+#include "Core/init"
+#endif

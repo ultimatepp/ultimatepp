@@ -1,0 +1,19 @@
+description "Value unit testing\377";
+
+optimize_speed;
+
+uses
+	Core,
+	Painter,
+	Painter;
+
+file
+	SvoValue.h,
+	SvoValue2.cpp,
+	Checks.cpp,
+	Raw.cpp,
+	SvoValue.cpp optimize_speed;
+
+mainconfig
+	"" = "SSE2";
+

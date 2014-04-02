@@ -1,0 +1,4 @@
+#ifndef _ConsoleExit_icpp_init_stub
+#define _ConsoleExit_icpp_init_stub
+#include "Core/init"
+#endif

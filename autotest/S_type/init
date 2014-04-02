@@ -1,0 +1,5 @@
+#ifndef _S_type_icpp_init_stub
+#define _S_type_icpp_init_stub
+#include "Sql/init"
+#include "plugin/sqlite3/init"
+#endif

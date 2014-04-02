@@ -1,0 +1,13 @@
+description "Demonstrates a possible bug in Sqlite 3 interface\377";
+
+uses
+	Sql,
+	plugin/sqlite3;
+
+file
+	S_type.sch,
+	S_type.cpp;
+
+mainconfig
+	"" = "";
+

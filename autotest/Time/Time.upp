@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Time.cpp;
+
+mainconfig
+	"" = "SSE2";
+

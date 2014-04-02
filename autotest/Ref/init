@@ -1,0 +1,6 @@
+#ifndef _Ref_icpp_init_stub
+#define _Ref_icpp_init_stub
+#include "Core/init"
+#include "Draw/init"
+#include "Painter/init"
+#endif

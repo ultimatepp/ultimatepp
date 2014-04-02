@@ -1,0 +1,5 @@
+#ifndef _SvoValue_icpp_init_stub
+#define _SvoValue_icpp_init_stub
+#include "Core/init"
+#include "Painter/init"
+#endif

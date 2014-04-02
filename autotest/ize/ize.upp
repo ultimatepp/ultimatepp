@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	ize.cpp;
+
+mainconfig
+	"" = "SSE2";
+

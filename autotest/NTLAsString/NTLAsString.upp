@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	NTLAsString.cpp;
+
+mainconfig
+	"" = "SSE2";
+

@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	JSON.cpp;
+
+mainconfig
+	"" = "SSE2";
+
