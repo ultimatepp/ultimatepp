@@ -78,7 +78,7 @@ struct SSLInfo {
 
 enum { WAIT_READ = 1, WAIT_WRITE = 2, WAIT_IS_EXCEPTION, WAIT_ALL = 7 };
 
-class TcpSocket {
+class TcpSocket : NoCopy {
 	enum { BUFFERSIZE = 512 };
 	enum { NONE, CONNECT, ACCEPT, SSL_CONNECTED };
 	SOCKET                  socket;
