@@ -5,7 +5,7 @@ topic "U++ development cycle guide";
 [s0; [*6 U`+`+ usage and development cycle guide]&]
 [s0; &]
 [s1; Forum&]
-[s0; After you have installed U`+`+ and tried some examplas, you 
+[s0; After you have installed U`+`+ and tried some examples, you 
 might have came to conclusion that you are going to give it a 
 try. Now first thing that you should do at this moment is to 
 register in the [^http`:`/`/www`.ultimatepp`.org`/forum^ Forum], 
@@ -30,16 +30,16 @@ be highly appreciated:&]
 [s0; &]
 [s0;i150;O2; specify the version of U`+`+ (also, you might want to 
 try svn trunk or latest nightly build to find out whether the 
-issue was alredy fixed)&]
+issue was already fixed)&]
 [s0;i150;O2; specify your host platform (OS and its version, compiler 
-and itspossibly also something about HW).&]
+and possibly also something about HW).&]
 [s0;i150;O2; post a [/ testcase] that can be easily compiled. Testcase 
 should be the minimal source code required to reproduce the problem. 
 Usually, it takes a form of package, compressed as .zip and posted 
-as attachement in the forum. Ideally, the name of package should 
+as attachment in the forum. Ideally, the name of package should 
 start with your name, followed by `'`_`' and something that makes 
-its name unque, like `'mirek`_bug25`'. The reason for this naming 
-convention is so that it does not nameclash with other testcases.&]
+its name unique, like `'mirek`_bug25`'. The reason for this naming 
+convention is so that it does not name`-clash with other testcases.&]
 [s0;i150;O2; describe a way how to reproduce a problem&]
 [s0; &]
 [s0; After posting a bug report, please let us time to process it. 
