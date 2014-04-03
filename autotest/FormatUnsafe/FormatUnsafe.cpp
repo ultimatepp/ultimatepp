@@ -2,10 +2,10 @@
 
 using namespace Upp;
 
-#ifdef flagAUTOTEST
-#define N 1000
-#else
+#ifdef flagLONG
 #define N 100000000
+#else
+#define N 1000
 #endif
 
 CONSOLE_APP_MAIN

@@ -2,7 +2,7 @@
 
 using namespace Upp;
 
-#ifdef flagAUTOTEST
+#ifdef flagLONG
 #define N 100000000
 #else
 #define N 5000000
