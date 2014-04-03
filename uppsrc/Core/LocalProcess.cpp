@@ -441,7 +441,7 @@ void LocalProcess::Write(String s)
 	if (rpipe[1] >= 0) {
 		int ret=1;
 		for (int wn=0; (ret>0 || errno==EINTR) && wn<s.GetLength(); wn+=ret) {
-			ret = write(rpipe[1], s + wn, s.GetLength() - wn);
+			ret = write(rpipe[1], ~s + wn, s.GetLength() - wn);
 		}
 	}
 #endif
