@@ -2,19 +2,19 @@
 #define _ide_Builders_icpp_init_stub
 #include "coff\binobj/init"
 #include "ide\Core/init"
-#define BLITZ_INDEX__ Fe88d4241691b2ace9390e0f69164d181
+#define BLITZ_INDEX__ F774b8a1ae84f2d8f255be80983d999ac
 #include "GccBuilder.icpp"
 #undef BLITZ_INDEX__
-#define BLITZ_INDEX__ F1d6ab59cb8303fabe742f0bdd97fb439
+#define BLITZ_INDEX__ F0059f6d7377da3c3eb3cac2ae785c40f
 #include "MscBuilder.icpp"
 #undef BLITZ_INDEX__
-#define BLITZ_INDEX__ Fc874dfd308e5615d301ccf8b2652e70c
+#define BLITZ_INDEX__ F6d37e82e414afc35c42d6c74d0c5b4ed
 #include "OwcBuilder.icpp"
 #undef BLITZ_INDEX__
-#define BLITZ_INDEX__ F266ea208d2eb267914094a29e66b5afc
+#define BLITZ_INDEX__ Ffe78d94eb9485fbb8fec961febd10712
 #include "JavaBuilder.icpp"
 #undef BLITZ_INDEX__
-#define BLITZ_INDEX__ F8c3c407c6c733c60e20f0a2d67ae304b
+#define BLITZ_INDEX__ Fdc76aa28fa51a1f2aee853343af491ef
 #include "ScriptBuilder.icpp"
 #undef BLITZ_INDEX__
 #endif
