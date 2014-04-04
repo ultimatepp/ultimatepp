@@ -693,7 +693,7 @@ void EndianSwap(int *v, int count);
 void EndianSwap(int64 *v, int count);
 void EndianSwap(uint64 *v, int count);
 
-class Fail__ { ~Fail__(); }; // Used as return value for function that are not to be called
+class Fail__ {}; // Used as return value for function that are not to be called
 
 #define SVO_MEMCPY(tgt, src, len) \
 do { \
