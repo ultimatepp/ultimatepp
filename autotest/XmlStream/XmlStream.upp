@@ -5,7 +5,8 @@ file
 	XmlStream.cpp,
 	0.xml,
 	1.xml,
-	2.xml;
+	2.xml,
+	3.xml;
 
 mainconfig
 	"" = "SSE2 TEST_XML";

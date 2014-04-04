@@ -30,8 +30,10 @@ CONSOLE_APP_MAIN
 				ns.ZeroTerminated(sz);
 			
 				SeedRandom();
-				for(int i = 0; i < 140000000; i++) {
-					if(i % 10000000 == 0)
+				int i = 0;
+				int time0 = msecs();
+				while(msecs(time0) < 20000) {
+					if(++i % 10000000 == 0)
 						RLOG("Created " << i);
 					String s = pass ? "x" : RandomString(Random(4) ? 5 : 50);
 					ws.Add(ns.Add(s));

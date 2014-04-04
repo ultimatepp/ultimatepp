@@ -2,12 +2,6 @@
 
 using namespace Upp;
 
-#ifdef flagLONG
-#define N 100000000
-#else
-#define N 1000000
-#endif
-
 String RandomString(int n)
 {
 	String h;
@@ -20,8 +14,10 @@ CONSOLE_APP_MAIN
 {
 	StringStream ss;
 	String es;
-	for(int i = 0; i < 100000000; i++) {
-		if(i % 10000 == 0)
+	int time0 = msecs();
+	int i = 0;
+	while(msecs(time0) < 150000) {
+		if(++i % 10000 == 0)
 			Cout() << i << "\r\n";
 		int p = Random(1000);
 		String h = RandomString(p);

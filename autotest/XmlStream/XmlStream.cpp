@@ -73,9 +73,12 @@ CONSOLE_APP_MAIN
 
 	LOG("----- Fixed files OK");
 
+	return;
 	SeedRandom();
 
-	for(int i = 0; i < 100; i++) {
+	int time0 = msecs();
+	
+	while(msecs(time0) < 150000) {
 		LOG("* " << i);
 		XmlNode n;
 		XmlNode& nn = n.Add();

@@ -30,18 +30,18 @@ void Check(T haystack, T needle, int pos)
 template <class T>
 void Check()
 {
-	
-	for(int l = 0; l < 30; l++) {
-		for(int r = 0; r < 30; r++) {
-			LOG(l << ":" << r);
-			for(int nl = 0; nl < 30; nl++)
-				for(int nr = 0; nr < 30; nr++)
-					for(int nc = 1; nc < 30; nc++) {
-						T needle = T('a', nl) + T('x', nc) + T('a', nr);
-						Check(T('a', l) + needle + T('a', r), needle, l);
-						Check(T('b', l) + needle + T('c', r), needle, l);
-					}
-		}
+	int time0 = msecs();
+	while(msecs(time0) < 60000) {
+		int l = Random(40);
+		int r = Random(40);
+		LOG(l << ":" << r);
+		for(int nl = 0; nl < 30; nl++)
+			for(int nr = 0; nr < 30; nr++)
+				for(int nc = 1; nc < 30; nc++) {
+					T needle = T('a', nl) + T('x', nc) + T('a', nr);
+					Check(T('a', l) + needle + T('a', r), needle, l);
+					Check(T('b', l) + needle + T('c', r), needle, l);
+				}
 	}
 	
 	ASSERT(T("test").Find("x") < 0);

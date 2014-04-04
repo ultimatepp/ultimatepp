@@ -17,6 +17,7 @@ CONSOLE_APP_MAIN
 		out.Put64(big, sz);
 		LOG("Saved");
 	}
+	ASSERT(GetFileLength(path) == sz);
 	{
 		FileIn in(path);
 		for(int64 i = 0; i < sz; i++)
@@ -31,5 +32,6 @@ CONSOLE_APP_MAIN
 		for(int64 i = 0; i < sz; i++)
 		    ASSERT(big[i] == i % 123);
 	}
+	DeleteFile(path);
 	LOG("Test passed OK");
 }
