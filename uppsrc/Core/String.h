@@ -146,10 +146,10 @@ public:
 	friend String operator+(tchar a, const String& b)          { String c(a, 1); c += b; return c; }
 
 // Avoid common error of adding offset to String (NoCopy to produce compiler error)
-	friend NoCopy operator+(int, const String&) {}
-	friend NoCopy operator+(const String&, int) {}
-	friend NoCopy operator+(size_t, const String&) {}
-	friend NoCopy operator+(const String&, size_t) {}
+	friend Fail__ operator+(int, const String&) { return Fail__(); }
+	friend Fail__ operator+(const String&, int) { return Fail__();}
+	friend Fail__ operator+(size_t, const String&) { return Fail__(); }
+	friend Fail__ operator+(const String&, size_t) { return Fail__(); }
 };
 
 class String0 : Moveable<String0> {
