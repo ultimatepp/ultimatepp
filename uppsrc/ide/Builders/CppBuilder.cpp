@@ -357,6 +357,7 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 	return out;
 }
 
+/*
 static Time s_bb = Null;
 
 Time BlitzBaseTime()
@@ -364,6 +365,12 @@ Time BlitzBaseTime()
 	if(IsNull(s_bb))
 		s_bb = GetSysTime();
 	return max(GetSysTime() - 3600, s_bb);
+}
+*/
+
+Time BlitzBaseTime()
+{
+	return GetSysTime() - 3600;
 }
 
 Blitz CppBuilder::BlitzStep(Vector<String>& sfile, Vector<String>& soptions,
