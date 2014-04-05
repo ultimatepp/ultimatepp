@@ -72,7 +72,7 @@ class GridDisplay
 
 		void SetDefault();
 
-		~GridDisplay() {};
+		virtual ~GridDisplay() {};
 
 		void SetLeftImage(const Image &img)			    { leftImg = img;               }
 		void SetRightImage(const Image &img)		    { rightImg = img;              }

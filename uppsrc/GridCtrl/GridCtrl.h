@@ -231,6 +231,9 @@ class CtrlsHolder : public Ctrl
 class GridClipboard : Moveable<GridClipboard>
 {
 	public:
+		rval_default(GridClipboard);
+		GridClipboard() {}
+
 		struct ClipboardData : Moveable<ClipboardData>
 		{
 			int col, row;
@@ -1860,7 +1863,6 @@ class GridText : Ctrl
 		const Id* column;
 		Color fg, bg;
 		Font fnt;
-		int align;
 
 	public:
 
