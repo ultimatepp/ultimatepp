@@ -77,6 +77,8 @@ CONSOLE_APP_MAIN
 
 void CompileCheck()
 {
+	int time0 = msecs();
+
 	Vector<String> x;
 	IndexSort(x, x);
 	IndexSort2(x, x, x);
@@ -87,4 +89,6 @@ void CompileCheck()
 	StableIndexSortCmp(x, x);
 	StableIndexSort2Cmp(x, x, x);
 	StableIndexSort3Cmp(x, x, x, x);
+	
+	Cout() << "=========== OK " << msecs(time0) / 1000 << " s" << "\n";
 }

@@ -105,7 +105,8 @@ void StreamTest() {
 	StringStream ss(LoadFile(InFile()));
 	int nn = 0;
 	dword style = 0;
-	while(nn < 100000000) {
+	int time0 = msecs();
+	while(msecs(time0) < 150000) {
 		if(++nn % 1000 == 0)
 			Cout() << "ops: " << nn << ", len: " << ss.GetSize()
 			       << ", buffersize: " << out.GetBufferSize() << "\n";
@@ -171,6 +172,8 @@ void StreamTest() {
 CONSOLE_APP_MAIN
 {
 //	DataBase::FullTest();
+	int time0 = msecs();
 	PosOverrunTest();
 	StreamTest();
+	LOG("============= OK " << msecs(time0) << " s");
 }
