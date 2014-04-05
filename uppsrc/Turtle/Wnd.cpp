@@ -219,11 +219,6 @@ Rect Ctrl::GetVirtualWorkArea()
 	return GetVirtualScreenArea();
 }
 
-Rect Ctrl::GetWorkArea(Point pt)
-{
-	return GetVirtualScreenArea();
-}
-
 Rect Ctrl::GetVirtualScreenArea()
 {
 	GuiLock __;
