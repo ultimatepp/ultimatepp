@@ -12,6 +12,8 @@ NAMESPACE_UPP
 class Report : public DrawingDraw, public PageDraw {
 public:
 	virtual Draw& Page(int i);
+	virtual Size  GetPageSize() const    { return DrawingDraw::GetPageSize(); } // avoid CLANG warning
+	virtual void  StartPage()            { DrawingDraw::StartPage(); } // avoid CLANG warning
 
 private:
 	Array<Drawing>      page;
