@@ -2,7 +2,7 @@
 #define _Report_icpp_init_stub
 #include "CtrlLib/init"
 #include "RichText/init"
-#define BLITZ_INDEX__ Fcae78d106d26dc372cd742d77f7d5d07
+#define BLITZ_INDEX__ F9f283417161d586f7a2e89950d2529de
 #include "ReportI.icpp"
 #undef BLITZ_INDEX__
 #endif
