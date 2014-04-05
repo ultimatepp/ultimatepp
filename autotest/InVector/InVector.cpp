@@ -241,6 +241,9 @@ TestType ToType(int i)
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
+	
+	int time0 = msecs();
+	
 	SeedRandom();
 
 	SetTest<int>();
@@ -263,4 +266,6 @@ CONSOLE_APP_MAIN
 	RemoveTest<TestType>();
 	InsertNTest<TestType>();
 	InVectorTest<TestType>();
+	
+	LOG("========= OK " << msecs(time0) / 1000);
 }

@@ -46,7 +46,7 @@ public:
 		vv.InsertN(pos, count);
 		while(count--)
 			vv[pos++] = *s++;
-		v = vv;
+		v = pick(vv);
 		isvoid = false;
 	}
 
@@ -284,9 +284,13 @@ void TestBufferCat()
 
 CONSOLE_APP_MAIN
 {
+	int time0 = msecs();
+
 	TestBufferCat<String, StringBuffer, char>();
 	TestBufferCat<WString, WStringBuffer, wchar>();
 //	ATest<WString, WStringBuffer>();
 	UnitTest<String, StringBuffer, char>();
 	UnitTest<WString, WStringBuffer, wchar>();
+	
+	LOG("============= OK " << msecs(time0) / 1000 << " s");
 }
