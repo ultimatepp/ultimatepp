@@ -913,7 +913,7 @@ CONSOLE_APP_MAIN
 		bi << BarLink(Www("FAQ", lang), t_("FAQ"));
 		bi << BarLink(Www("About", lang, "topic://ide/app/"), t_("Authors & License"));
 	
-		bi << BarLink("http://www.ultimatepp.org/forum", t_("Forums"));
+		bi << BarLink("http://www.ultimatepp.org/forums", t_("Forums"));
 	//	bcom << BarLink(Www("mailing"), "Mailing lists");
 	//	bi << BarLink("http://www.ultimatepp.org/wiki/index.php", "Wiki");
 		bi << BarLink(Www("Funding", lang), t_("Funding Ultimate++"));
