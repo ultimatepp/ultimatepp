@@ -1826,8 +1826,6 @@ void GridCtrl::RemoveColumn(int n, int count)
 		r.Add(hitems[n + i].id);
 	}
 		
-	int id = hitems[n].id;
-	
 	hitems.Remove(n, count);
 	rowbkp.Remove(r);
 	summary.Remove(r);

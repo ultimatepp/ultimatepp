@@ -114,7 +114,13 @@ define interface contract using&]
 [s7; -|struct Distribution : [* Moveable]<Distribution> `{&]
 [s7; -|-|String      text;&]
 [s7; -|-|Vector<int> data;&]
+[s7; &]
+[s7; -|-|rval`_default(Distribution);&]
+[s7; -|-|Distribution() `{`}&]
 [s7; -|`};&]
+[s5; Note that rval`_default macro is helper to restore default deleted 
+r`-value constructor in C`+`+11 and default constructor is also 
+default deleted in C`+`+11.&]
 [s5; Now to add Distribution elements you cannot use Add with parameter, 
 because it requires elements to have default deep`-copy constructor 
 `- and Distribution does not have one, as Vector<int> has default 
@@ -667,7 +673,7 @@ and operators <, <`=, >, >`=:&]
 [s7; -|&]
 [s7; -|y.b `= `"a`";&]
 [s7; -|&]
-[s7; -|DUMP(SgnCompare(y));&]
+[s7; -|DUMP(SgnCompare(x, y));&]
 [s7; -|DUMP(x < y);&]
 [s7; -|&]
 [s7; &]
