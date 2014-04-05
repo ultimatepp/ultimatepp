@@ -3,10 +3,12 @@ uses
 
 file
 	XmlStream.cpp,
+	20130831_OB_536032_UZSZ.xml,
+	20131102_ST_ZZSZ.xml,
+	20131110_ST_ZZSZ.xml,
 	0.xml,
 	1.xml,
-	2.xml,
-	3.xml;
+	2.xml;
 
 mainconfig
 	"" = "SSE2 TEST_XML";

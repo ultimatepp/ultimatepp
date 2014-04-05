@@ -64,22 +64,19 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
-
-	for(FindFile ff(GetHomeDirFile("*.xml")); ff; ff.Next())
-		CheckFile(ff.GetPath());
+	int time0 = msecs();
 
 	for(FindFile ff(GetDataFile("*.xml")); ff; ff.Next())
 		CheckFile(ff.GetPath());
 
 	LOG("----- Fixed files OK");
 
-	return;
 	SeedRandom();
 
-	int time0 = msecs();
-	
-	while(msecs(time0) < 150000) {
-		LOG("* " << i);
+	int i = 0;
+	while(msecs(time0) < 150000)
+	{
+		LOG("* " << i++);
 		XmlNode n;
 		XmlNode& nn = n.Add();
 		nn.CreateTag(GenID());
@@ -89,5 +86,4 @@ CONSOLE_APP_MAIN
 			Check(AsXML(n));
 		}
 	}
-
 }
