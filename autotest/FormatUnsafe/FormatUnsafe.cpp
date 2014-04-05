@@ -2,12 +2,6 @@
 
 using namespace Upp;
 
-#ifdef flagLONG
-#define N 100000000
-#else
-#define N 1000
-#endif
-
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
@@ -20,7 +14,8 @@ CONSOLE_APP_MAIN
 		if(IsAlpha(i) || IsDigit(i))
 			rndset.Cat(i);
 	SeedRandom();
-	for(int i = 0; i < N; i++) {
+	int time0 = msecs();
+	while(msecs(time0) < 150000) {
 		String fmtstr;
 		while(Random(20))
 			fmtstr << (char)rndset[Random(rndset.GetCount())];
@@ -42,7 +37,7 @@ CONSOLE_APP_MAIN
 			}
 		}
 		DUMP(fmtstr);
-		DUMPC(v);
+		DUMP(v);
 		DUMP(NFormat(fmtstr, v));
 	}
 	
