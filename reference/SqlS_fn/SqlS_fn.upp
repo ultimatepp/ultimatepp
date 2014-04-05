@@ -2,10 +2,7 @@ description "Demonstrates utility functions of S_ structures\377";
 
 uses
 	Core,
-	Sql,
-	RichText,
-	CtrlLib,
-	RichEdit;
+	Sql;
 
 file
 	Schema.sch,
