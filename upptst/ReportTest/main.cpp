@@ -16,7 +16,7 @@ void Background(Report *r)
 GUI_APP_MAIN
 {
 	Report r;
-	r.WhenPage = callback1(Background, &r);
+	r.OnPage(callback1(Background, &r));
 	r.Header("[A2< Header Page $$P");
 	r.Footer("[A2> Footer Page $$P");
 	r << "This is some [* QTF text&something else";
