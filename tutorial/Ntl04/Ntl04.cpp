@@ -5,6 +5,9 @@ using namespace Upp;
 struct Distribution : Moveable<Distribution> {
 	String      text;
 	Vector<int> data;
+	
+	rval_default(Distribution);
+	Distribution() {}
 };
 
 Distribution CreateDist(int n)

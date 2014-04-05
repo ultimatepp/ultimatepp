@@ -21,7 +21,7 @@ CONSOLE_APP_MAIN
 	
 	y.b = "a";
 	
-	DUMP(SgnCompare(y));
+	DUMP(SgnCompare(x, y));
 	DUMP(x < y);
 	
 	static Tuple2<int, const char *> map[] = {

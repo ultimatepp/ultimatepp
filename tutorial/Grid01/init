@@ -1,0 +1,5 @@
+#ifndef _Grid01_icpp_init_stub
+#define _Grid01_icpp_init_stub
+#include "CtrlLib/init"
+#include "GridCtrl/init"
+#endif
