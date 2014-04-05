@@ -105,8 +105,8 @@ CONSOLE_APP_MAIN
 	ASSERT("xx" + x == String("xxab"));
 	ASSERT(x + 'z' == String("abz"));
 	ASSERT('z' + x == String("zab"));
-	ASSERT(x + (int)'z' == String("abz"));
-	ASSERT((int)'z' + x == String("zab"));
+//	ASSERT(x + (int)'z' == String("abz")); Removed because of ambiguity
+//	ASSERT((int)'z' + x == String("zab")); Removed because of ambiguity
 	String xx = x;
 	String bb = b;
 	Swap(b, x);
