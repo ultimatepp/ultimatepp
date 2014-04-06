@@ -19,7 +19,7 @@ CONSOLE_APP_MAIN
 		Smtp mail;
 		mail.Host("smtp.gmail.com")
 		    .Port(465)
-		    .SSL();
+		    .SSL()
 			.Auth(user, pwd)
 			.To(to)
 		    .Subject("Test message")
