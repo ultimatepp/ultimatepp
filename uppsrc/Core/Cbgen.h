@@ -47,9 +47,6 @@ public:
 	explicit Callback(CallbackAction  *newaction) { action = newaction; }
 	Callback() { action = NULL; }
 	Callback(_CNULL) { action = NULL; }
-#ifdef HAS_LAMBDA
-	Callback& operator=(std::function<void ()> l) { Clear(); action = new LambdaCallback(l); return *this; }
-#endif
 
 	~Callback();
 
@@ -105,12 +102,8 @@ public:
 	Callback1() { action = NULL; }
 	Callback1(_CNULL) { action = NULL; }
 	~Callback1();
-#ifdef HAS_LAMBDA
-	Callback1& operator=(std::function<void (P1)> l) { Clear(); action = new LambdaCallback1<P1>(l); return *this; }
-#endif
 
 	static Callback1 Empty() { return CNULL; }
-
 };
 
 template <class P1>
@@ -183,9 +176,6 @@ public:
 	explicit Callback2(Callback2Action <P1, P2> *newaction) { action = newaction; }
 	Callback2() { action = NULL; }
 	Callback2(_CNULL) { action = NULL; }
-#ifdef HAS_LAMBDA
-	Callback2& operator=(std::function<void (P1, P2)> l) { Clear(); action = new LambdaCallback2<P1, P2>(l); return *this; }
-#endif
 	~Callback2();
 
 	static Callback2 Empty() { return CNULL; }
@@ -262,9 +252,6 @@ public:
 	explicit Callback3(Callback3Action <P1, P2, P3> *newaction) { action = newaction; }
 	Callback3() { action = NULL; }
 	Callback3(_CNULL) { action = NULL; }
-#ifdef HAS_LAMBDA
-	Callback3& operator=(std::function<void (P1, P2, P3)> l) { Clear(); action = new LambdaCallback3<P1, P2, P3>(l); return *this; }
-#endif
 	~Callback3();
 
 	static Callback3 Empty() { return CNULL; }
@@ -341,9 +328,6 @@ public:
 	explicit Callback4(Callback4Action <P1, P2, P3, P4> *newaction) { action = newaction; }
 	Callback4() { action = NULL; }
 	Callback4(_CNULL) { action = NULL; }
-#ifdef HAS_LAMBDA
-	Callback4& operator=(std::function<void (P1, P2, P3, P4)> l) { Clear(); action = new LambdaCallback4<P1, P2, P3, P4>(l); return *this; }
-#endif
 	~Callback4();
 
 	static Callback4 Empty() { return CNULL; }
@@ -423,9 +407,6 @@ public:
 	explicit Gate(GateAction  *newaction) { action = newaction; }
 	Gate() { action = NULL; }
 	Gate(_CNULL) { action = NULL; }
-#ifdef HAS_LAMBDA
-	Gate& operator=(std::function<bool ()> l) { Clear(); action = new LambdaGate(l); return *this; }
-#endif
 	~Gate();
 
 	static Gate Empty() { return CNULL; }
@@ -487,9 +468,6 @@ public:
 	explicit Gate1(Gate1Action <P1> *newaction) { action = newaction; }
 	Gate1() { action = NULL; }
 	Gate1(_CNULL) { action = NULL; }
-#ifdef HAS_LAMBDA
-	Gate1& operator=(std::function<bool (P1)> l) { Clear(); action = new LambdaGate1<P1>(l); return *this; }
-#endif
 	~Gate1();
 
 	static Gate1 Empty() { return CNULL; }
@@ -572,9 +550,6 @@ public:
 	explicit Gate2(Gate2Action <P1, P2> *newaction) { action = newaction; }
 	Gate2() { action = NULL; }
 	Gate2(_CNULL) { action = NULL; }
-#ifdef HAS_LAMBDA
-	Gate2& operator=(std::function<bool (P1, P2)> l) { Clear(); action = new LambdaGate2<P1, P2>(l); return *this; }
-#endif
 	~Gate2();
 
 	static Gate2 Empty() { return CNULL; }
@@ -657,9 +632,6 @@ public:
 	explicit Gate3(Gate3Action <P1, P2, P3> *newaction) { action = newaction; }
 	Gate3() { action = NULL; }
 	Gate3(_CNULL) { action = NULL; }
-#ifdef HAS_LAMBDA
-	Gate3& operator=(std::function<bool (P1, P2, P3)> l) { Clear(); action = new LambdaGate3<P1, P2, P3>(l); return *this; }
-#endif
 	~Gate3();
 
 	static Gate3 Empty() { return CNULL; }
@@ -742,9 +714,6 @@ public:
 	explicit Gate4(Gate4Action <P1, P2, P3, P4> *newaction) { action = newaction; }
 	Gate4() { action = NULL; }
 	Gate4(_CNULL) { action = NULL; }
-#ifdef HAS_LAMBDA
-	Gate4& operator=(std::function<bool (P1, P2, P3, P4)> l) { Clear(); action = new LambdaGate4<P1, P2, P3, P4>(l); return *this; }
-#endif
 	~Gate4();
 
 	static Gate4 Empty() { return CNULL; }
