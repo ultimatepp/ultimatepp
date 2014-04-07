@@ -1,0 +1,11 @@
+uses
+	Core,
+	Core/POP3;
+
+file
+	msg1.txt,
+	InetMessage.cpp;
+
+mainconfig
+	"" = "SSE2";
+

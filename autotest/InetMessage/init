@@ -1,0 +1,5 @@
+#ifndef _InetMessage_icpp_init_stub
+#define _InetMessage_icpp_init_stub
+#include "Core/init"
+#include "Core/POP3/init"
+#endif
