@@ -1,0 +1,10 @@
+uses
+	Core,
+	Core/POP3;
+
+file
+	MimeHeader.cpp;
+
+mainconfig
+	"" = "SSE2";
+

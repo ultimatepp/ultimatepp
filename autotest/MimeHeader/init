@@ -1,0 +1,5 @@
+#ifndef _MimeHeader_icpp_init_stub
+#define _MimeHeader_icpp_init_stub
+#include "Core/init"
+#include "Core/POP3/init"
+#endif
