@@ -183,16 +183,9 @@ String InetMessage::Part::Decode() const
 {
 	String r = decode(ToLower(header.Get("content-transfer-encoding", "quoted-printable")),
 	                  "quoted-printable", QPDecode(body), "base64", Base64Decode(body), body);
-	String content_type = ToLower(header.Get("content-type", Null));
-	int q = content_type.Find("charset=");
-	if(q >= 0) {
-		q += strlen("charset=");
-		int qq = content_type.Find(';', q);
-		String charset = qq >= 0 ? content_type.Mid(q, qq + 1) : content_type.Mid(q);
-		int cs = CharsetByName(charset);
-		if(cs >= 0)
-			r = ToCharset(CHARSET_DEFAULT, r, cs, '?');
-	}
+	int cs = CharsetByName(MIMEHeader(ToLower(header.Get("content-type", Null)))["charset"]);
+	if(cs >= 0)
+		r = ToCharset(CHARSET_DEFAULT, r, cs, '?');
 	return r;
 }
 
@@ -212,7 +205,7 @@ bool MIMEHeader::Parse(const char *s)
 				const char *b = p.GetPtr();
 				while(!p.IsEof() && !p.IsChar(';') && !p.IsChar('='))
 					p.SkipTerm();
-				String id = TrimBoth(String(b, p.GetPtr()));
+				String id = ToLower(TrimBoth(String(b, p.GetPtr())));
 				String val;
 				if(p.Char('='))
 					if(p.IsString())
