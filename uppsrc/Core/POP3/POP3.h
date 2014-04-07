@@ -84,6 +84,9 @@ struct MIMEHeader {
 	
 	bool   Parse(const char *s);
 	String ToString() const;
+	
+	MIMEHeader(const char *s)               { Parse(s); }
+	MIMEHeader()                            {}
 };
 
 #endif
