@@ -75,4 +75,15 @@ private:
 	bool   ReadPart(Stream& ss, int parent, int level);
 };
 
+struct MIMEHeader {
+	String value;
+	VectorMap<String, String> param;
+	
+	String operator[](const char *id) const { return param.Get(id, Null); }
+	String operator~() const                { return value; }
+	
+	bool   Parse(const char *s);
+	String ToString() const;
+};
+
 #endif

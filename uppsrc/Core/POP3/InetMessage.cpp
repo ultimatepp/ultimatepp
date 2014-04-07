@@ -195,3 +195,48 @@ String InetMessage::Part::Decode() const
 	}
 	return r;
 }
+
+bool MIMEHeader::Parse(const char *s)
+{
+	value.Clear();
+	param.Clear();
+	CParser p(s);
+	try {
+		CParser p(s);
+		const char *b = p.GetPtr();
+		while(!p.IsEof() && !p.IsChar(';'))
+			p.SkipTerm();
+		value = TrimBoth(String(b, p.GetPtr()));
+		while(!p.IsEof()) {
+			if(p.Char(';') && p.IsId()) {
+				const char *b = p.GetPtr();
+				while(!p.IsEof() && !p.IsChar(';') && !p.IsChar('='))
+					p.SkipTerm();
+				String id = TrimBoth(String(b, p.GetPtr()));
+				String val;
+				if(p.Char('='))
+					if(p.IsString())
+						val = p.ReadString();
+					else {
+						const char *b = p.GetPtr();
+						while(!p.IsEof() && !p.IsChar(';'))
+							p.SkipTerm();
+						val = TrimBoth(String(b, p.GetPtr()));
+					}
+				param.Add(id, val);
+			}
+			else
+				p.SkipTerm();
+		}
+	}
+	catch(CParser::Error) {}
+	return value.GetCount();
+}
+
+String MIMEHeader::ToString() const
+{
+	String r = value;
+	for(int i = 0; i < param.GetCount(); i++)
+		r << "; " << param.GetKey(i) << '=' << AsCString(param[i]);
+	return r;
+}

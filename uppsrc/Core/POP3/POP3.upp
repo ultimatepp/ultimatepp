@@ -1,8 +1,7 @@
 description "Post Office Protocol, version 3 encapsulation. Author: İsmail Yılmaz\377";
 
 uses
-	Core,
-	Core/SSL;
+	Core;
 
 file
 	POP3.h,
