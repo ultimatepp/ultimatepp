@@ -4,6 +4,7 @@ uses
 
 file
 	msg1.txt,
+	msg2.txt,
 	InetMessage.cpp;
 
 mainconfig
