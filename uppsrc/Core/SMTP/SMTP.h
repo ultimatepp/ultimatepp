@@ -42,9 +42,10 @@ class Smtp : public TcpSocket {
 	String         error;
 
 	void   CheckFail();
-	void   Send(const String &s);
+	void   SendData(const String &s);
 	String SendRecv(const String& s);
 	void   SendRecvOK(const String& s);
+	String GetMessage(bool chunks);
 
 public:
 	enum AS { TO, CC, BCC };
@@ -72,7 +73,10 @@ public:
 
 	Smtp&      New();
 
-	bool       Send();
+	String     GetMessage()                                       { return GetMessage(false); }
+	bool       Send(const String& message);
+	
+	bool       Send()                                             { return Send(Null); }
 	
 	String     GetError() const                                   { return error; }
 
