@@ -180,7 +180,7 @@ void   LineEdit::Paint0(Draw& w) {
 							LLOG("Highlight -> paper[" << q << "] = " << h.paper);
 							int x = gp * fsz.cx - scx;
 							int xx = x + (gp + ll) * fsz.cx;
-							if(max(x, 0) < min(xx, sz.cx))
+							if(max(x, 0) < min(xx, sz.cx)) {
 								if(pass == 0) {
 									w.DrawRect(x, y, fsz.cx * ll, fsz.cy, h.paper);
 									if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + ll)
@@ -195,6 +195,7 @@ void   LineEdit::Paint0(Draw& w) {
 									           y + fascent - h.font.GetAscent(),
 									           ~txt + q, h.font, h.ink, l, cjk ? dx2 : dx);
 								}
+							}
 							q = p;
 							gp += ll;
 							if(x > sz.cx)

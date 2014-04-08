@@ -511,11 +511,12 @@ void MultiButton::LeftUp(Point p, dword flags)
 	push = false;
 	Refresh();
 	Sync();
-	if(!IsNull(hl))
+	if(!IsNull(hl)) {
 		if(hl >= 0)
 			button[hl].WhenClick();
 		else
 			WhenClick();
+	}
 }
 
 void MultiButton::MouseLeave()

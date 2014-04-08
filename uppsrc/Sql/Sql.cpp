@@ -218,12 +218,13 @@ bool Sql::Fetch() {
 		session.SetStatus(SqlSession::END_FETCHING_MANY);
 	}
 	Stream *s = session.GetTrace();
-	if(s)
+	if(s) {
 		if((int)total > session.traceslow)
 			*s << "SLOW SQL: " << total << " ms: " << cn->statement << UPP::EOL;
 		else
 		if((int)fetch > session.traceslow)
 			*s << "SLOW SQL: " << fetch << " ms further fetch: " << cn->statement << UPP::EOL;
+	}
 	cn->starttime = INT_MAX;
 	return b;
 }

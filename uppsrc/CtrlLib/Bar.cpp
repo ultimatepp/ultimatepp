@@ -96,11 +96,12 @@ Size BarPane::Repos(bool _horz, int maxsize)
 				break;
 			}
 			VeHo(psz) = max(VeHo(psz), VeHo(sz));
-			if(q->ctrl)
+			if(q->ctrl) {
 				if(horz)
 					q->ctrl->LeftPos(psz.cx + hmargin, sz.cx);
 				else
 					q->ctrl->TopPos(psz.cy + vmargin, sz.cy);
+			}
 			HoVe(psz) += HoVe(sz);
 			q++;
 		}
@@ -110,11 +111,12 @@ Size BarPane::Repos(bool _horz, int maxsize)
 			bp += 2 + 2 * bmargin;
 		}
 		while(f != q) {
-			if(f->ctrl)
+			if(f->ctrl) {
 				if(horz)
 					f->ctrl->TopPos(bp, psz.cy);
 				else
 					f->ctrl->LeftPos(bp, psz.cx);
+			}
 			f++;
 		}
 		bp += VeHo(psz);
@@ -479,16 +481,18 @@ void BarCtrl::AddCtrl(Ctrl *ctrl, Size sz)
 {
 	SizeCtrl& m = sizer.DoIndex(zii++);
 	LogPos p = ctrl->GetPos();
-	if(p.x.IsEmpty())
+	if(p.x.IsEmpty()) {
 		if(sz.cx == INT_MAX)
 			ctrl->HSizePos();
 		else
 			ctrl->HCenterPos(sz.cx ? sz.cx : MINSIZE);
-	if(p.y.IsEmpty())
+	}
+	if(p.y.IsEmpty()) {
 		if(sz.cy == INT_MAX)
 			ctrl->VSizePos();
 		else
 			ctrl->VCenterPos(sz.cy ? sz.cy : MINSIZE);
+	}
 	LLOG("AddCtrl Ctrl::GetSize: " << ctrl->GetSize());
 	m.SetSize(sz);
 	m.AddChild(ctrl);
