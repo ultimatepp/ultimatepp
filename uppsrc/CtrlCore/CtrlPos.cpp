@@ -371,11 +371,12 @@ void Ctrl::RemoveFrame(int i) {
 	int n = frame.GetCount();
 	Mitor<Frame> m;
 	if(n > 1)
-		for(int q = 0; q < n; q++)
+		for(int q = 0; q < n; q++) {
 			if(q != i)
 				m.Add().frame = frame[q].frame;
 			else
 				frame[q].frame->FrameRemove();
+		}
 	frame = pick(m);
 	if(frame.GetCount() == 0)
 		frame.Add().frame = &NullFrame();

@@ -226,11 +226,12 @@ void ColorPopUp::Paint(Draw& w)
 					DrawFilledFrame(w, r, SColorText, color);
 
 					r.Inflate(1);
-					if(colori == 999)
+					if(colori == 999) {
 						if(GetMouseLeft())
 							DrawFrame(w, r, SColorShadow, SColorLight);
 						else
 							DrawFrame(w, r, GUI_GlobalStyle() >= GUISTYLE_XP ? SColorText : SColorHighlight);
+					}
 				}
 				return;
 			}
@@ -239,11 +240,12 @@ void ColorPopUp::Paint(Draw& w)
 			if(i < 18 && scolors)
 				DrawFrame(w, x + 2, y + 1, 12, 12, Blend(SColorLight, SColorHighlight));
 
-			if(i == colori)
+			if(i == colori) {
 				if(GetMouseLeft())
 					DrawFrame(w, x, y - 1, 16, 16, SColorShadow, SColorLight);
 				else
 					DrawFrame(w, x, y - 1, 16, 16, GUI_GlobalStyle() >= GUISTYLE_XP ? SColorText : SColorHighlight);
+			}
 			i++;
 		}
 		y += 16;

@@ -329,13 +329,14 @@ Image Ctrl::MEvent0(int e, Point p, int zd)
 		mouseinview = inview;
 		MouseEventH(inview ? MOUSEENTER : MOUSELEAVE, p, zd, GetMouseFlags() | mm);
 	}
-	if(_this)
+	if(_this) {
 		if(view.Contains(p) || HasCapture()) {
 			p -= view.TopLeft();
 			return MouseEventH(e, p, zd, GetMouseFlags() | mm);
 		}
 		else
 			return FrameMouseEventH(e, p, zd, GetMouseFlags() | mm);
+	}
 	return Image::Arrow();
 }
 

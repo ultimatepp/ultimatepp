@@ -747,11 +747,12 @@ void ArrayCtrl::ChildGotFocus()
 		RefreshRow(cursor);
 	if(!acceptingrow) {
 		Point p = FindCellCtrl(GetFocusCtrl());
-		if(!IsNull(p))
+		if(!IsNull(p)) {
 			if(nocursor)
 				ScrollInto(p.y);
 			else
 				SetCursor(p.y);
+		}
 	}
 	Ctrl::ChildGotFocus();
 }
@@ -834,7 +835,7 @@ Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 					Color fg, bg;
 					Value q;
 					const Display& d = GetCellInfo(i, jj, hasfocus0, q, fg, bg, st);
-					if(sample || w.IsPainting(r))
+					if(sample || w.IsPainting(r)) {
 						if(cw < 2 * cm || editmode && i == cursor && column[jj].edit)
 							d.PaintBackground(w, r, q, fg, bg, st);
 						else {
@@ -846,6 +847,7 @@ Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 							GetDisplay(i, jj).Paint(w, r, q, fg, bg, st);
 							w.End();
 						}
+					}
 					x += cw;
 					if(vertgrid)
 						w.DrawRect(x - 1, r.top, 1, r.Height(), gridcolor);

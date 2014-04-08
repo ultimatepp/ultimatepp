@@ -13,7 +13,7 @@ void RichTable::InvalidateRefresh(int i, int j)
 	if(i < format.header)
 		r_row = -1;
 	else
-	if(r_row != i || r_column != j)
+	if(r_row != i || r_column != j) {
 		if(r_row == -2 && clayout.sz == GetSize()) {
 			r_row = i;
 			r_column = j;
@@ -23,6 +23,7 @@ void RichTable::InvalidateRefresh(int i, int j)
 		}
 		else
 			r_row = -1;
+	}
 	Invalidate();
 }
 

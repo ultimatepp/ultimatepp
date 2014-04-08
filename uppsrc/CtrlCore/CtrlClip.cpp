@@ -224,7 +224,7 @@ void Ctrl::DnD(Point p, PasteClip& clip)
 	Ptr<Ctrl> ctrl = this;
 	while(ctrl && ctrl->IsEnabled()) {
 		Rect view = ctrl->GetScreenView();
-		if(ctrl->IsMouseActive())
+		if(ctrl->IsMouseActive()) {
 			if(view.Contains(p)) {
 				dndpos = p - view.TopLeft();
 				dndframe = false;
@@ -239,6 +239,7 @@ void Ctrl::DnD(Point p, PasteClip& clip)
 				if(clip.IsAccepted())
 					break;
 			}
+		}
 		ctrl = ctrl->ChildFromPoint(hp);
 	}
 	if(ctrl != dndctrl) {

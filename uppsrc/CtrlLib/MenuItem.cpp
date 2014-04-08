@@ -282,11 +282,12 @@ void MenuItem::Paint(Draw& w)
 	bool hl = state != NORMAL;
 	Size sz = GetSize();
 
-	if(hl)
+	if(hl) {
 		if(GUI_GlobalStyle() >= GUISTYLE_XP)
 			ChPaint(w, 0, 0, sz.cx, sz.cy, style->item);
 		else
 			w.DrawRect(sz, SColorHighlight);
+	}
 	UPP::Image li = licon;
 	if(li.IsEmpty()) {
 		switch(type) {

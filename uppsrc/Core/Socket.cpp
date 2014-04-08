@@ -798,7 +798,7 @@ int TcpSocket::Get(void *buffer, int count)
 	
 	int l = (int)(end - ptr);
 	done = 0;
-	if(l > 0)
+	if(l > 0) {
 		if(l < count) {
 			memcpy(buffer, ptr, l);
 			done += l;
@@ -809,6 +809,7 @@ int TcpSocket::Get(void *buffer, int count)
 			ptr += count;
 			return count;
 		}
+	}
 	int end_time = GetEndTime();
 	while(done < count && !IsError() && !IsEof()) {
 		if(!Wait(WAIT_READ, end_time))
@@ -864,11 +865,12 @@ String TcpSocket::GetLine(int maxlen)
 			return String::GetVoid();
 		int c = Peek(end_time);
 		if(c < 0) {
-			if(!IsError())
+			if(!IsError()) {
 				if(msecs() > end_time)
 					SetSockError("GetLine", -1, "timeout");
 				else
 					continue;
+			}
 			return String::GetVoid();
 		}
 		Get();

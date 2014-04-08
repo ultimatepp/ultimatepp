@@ -362,7 +362,7 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	bool hasviewctrls = false;
 	bool viewexcluded = false;
 	for(q = firstchild; q; q = q->next)
-		if(q->IsShown())
+		if(q->IsShown()) {
 			if(q->InFrame()) {
 				if(!viewexcluded && IsTransparent() && q->GetRect().Intersects(view)) {
 					w.Begin();
@@ -377,6 +377,7 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 			}
 			else
 				hasviewctrls = true;
+		}
 	if(viewexcluded)
 		w.End();
 	DOLEVELCHECK;

@@ -1081,9 +1081,8 @@ String RTFParser::ReadBinHex(char& odd) const
 			: *s >= 'A' && *s <= 'F' ? *s - 'A' + 10
 			: *s >= 'a' && *s <= 'f' ? *s - 'a' + 10
 			: 255);
-		if(w < 16)
-			if(v >= 16)
-			{
+		if(w < 16) {
+			if(v >= 16) {
 				t = *s;
 				v = w;
 			}
@@ -1092,6 +1091,7 @@ String RTFParser::ReadBinHex(char& odd) const
 				out.Cat(16 * v + w);
 				v = 255;
 			}
+		}
 	}
 	odd = (v < 16 ? t : 0);
 	return out;

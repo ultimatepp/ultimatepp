@@ -253,7 +253,7 @@ void Font::Serialize(Stream& s) {
 			name = GetFaceName();
 			s % name;
 		}
-		if(s.IsLoading())
+		if(s.IsLoading()) {
 			if(f >= 0)
 				Face(f);
 			else {
@@ -261,6 +261,7 @@ void Font::Serialize(Stream& s) {
 				if(IsNull(name))
 					SetNull();
 			}
+		}
 	}
 	else {
 		String name = GetFaceName();
