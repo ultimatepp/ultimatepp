@@ -1,5 +1,7 @@
 #include "POP3.h"
 
+#define LLOG(x) // DLOG(x)
+
 String QDecode(const String& s) 
 {
 	String r, begin, end, chs, enc, txt;
@@ -101,6 +103,7 @@ bool InetMessage::ReadHeader(VectorMap<String, String>& hdr, Stream& ss)
 
 bool InetMessage::ReadHeader(const String& s)
 {
+	LLOG("ReadHeader " << s.GetCount());
 	part.Clear();
 	StringStream ss(s);
 	return ReadHeader(part.Add().header, ss);
@@ -108,6 +111,8 @@ bool InetMessage::ReadHeader(const String& s)
 
 bool InetMessage::ReadPart(Stream& ss, int parent, int level)
 {
+	LLOG("ReadPart parent: " << parent << ", level: " << level);
+
 	if(level > 5 || part.GetCount() > 200) // Sanity limit
 		return false;
 
@@ -119,30 +124,17 @@ bool InetMessage::ReadPart(Stream& ss, int parent, int level)
 	if(!ReadHeader(p.header, ss))
 		return false;
 
-	String content_type = p.header.Get("content-type", String());
-	if(!ToLower(content_type).StartsWith("multipart")) {
+	MIMEHeader h(p.header.Get("content-type", String()));
+	LLOG("content-type: " << h);
+	if(!(~h).StartsWith("multipart")) {
 		p.body = LoadStream(ss);
 		return true;
 	}
 
-	String boundary;
-	int q = content_type.Find("boundary=");
-	if(q < 0)
-		return false;
-	q += strlen("boundary=");
-	int qq = content_type.Find(";", q);
-	if(qq >= 0)
-		boundary = content_type.Mid(q, qq);
-	else
-		boundary = content_type.Mid(q);
-
-	if(*boundary == '\"')
-		boundary = boundary.Mid(1);
-	if(*boundary.Last() == '\"')
-		boundary.Trim(boundary.GetCount() - 1);
-
-	boundary = "--" + boundary;
+	String boundary = "--" + h["boundary"];
 	String end_boundary = boundary + "--";
+
+	LLOG("boundary " << boundary);
 	
 	for(;;) {
 		String ln = ss.GetLine();
@@ -181,8 +173,10 @@ bool InetMessage::Read(const String& s)
 
 String InetMessage::Part::Decode() const
 {
-	String r = decode(ToLower(header.Get("content-transfer-encoding", "quoted-printable")),
-	                  "quoted-printable", QPDecode(body), "base64", Base64Decode(body), body);
+	String r = decode(ToLower(header.Get("content-transfer-encoding", "")),
+	                  "quoted-printable", QPDecode(body),
+	                  "base64", Base64Decode(body),
+	                  body);
 	int cs = CharsetByName(MIMEHeader(ToLower(header.Get("content-type", Null)))["charset"]);
 	if(cs >= 0)
 		r = ToCharset(CHARSET_DEFAULT, r, cs, '?');
