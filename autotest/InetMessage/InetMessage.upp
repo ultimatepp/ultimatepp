@@ -1,6 +1,7 @@
 uses
 	Core,
-	Core/POP3;
+	Core/POP3,
+	Core/SMTP;
 
 file
 	msg1.txt,

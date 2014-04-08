@@ -1,0 +1,11 @@
+uses
+	Core,
+	RichText;
+
+file
+	test.qtf,
+	Qtf.cpp;
+
+mainconfig
+	"" = "SSE2";
+
