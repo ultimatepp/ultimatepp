@@ -1458,13 +1458,14 @@ bool TreeCtrl::DnDInserti(int ii, PasteClip& d, bool bottom)
 		int parent = GetParent(itemi);
 		int childi = GetChildIndex(parent, itemi);
 		int ins = -1;
-		if(bottom)
+		if(bottom) {
 			if(childi != GetChildCount(parent) - 1 && ii + 1 < line.GetCount())
 				return DnDInserti(ii + 1, d, false);
 			else {
 				childi++;
 				ins = 1;
 			}
+		}
 		WhenDropInsert(parent, childi, d);
 		if(d.IsAccepted()) {
 			DnD(itemi, ins);

@@ -192,7 +192,7 @@ RichCaret RichTxt::GetCaret(int pos, RichContext rc) const
 		pos = GetLength();
 	while(parti < part.GetCount()) {
 		int l = GetPartLength(parti) + 1;
-		if(pos < l)
+		if(pos < l) {
 			if(IsTable(parti))
 				return GetTable(parti).GetCaret(pos, rc);
 			else {
@@ -210,6 +210,7 @@ RichCaret RichTxt::GetCaret(int pos, RichContext rc) const
 				tp.textpage = rc.page;
 				return tp;
 			}
+		}
 		pos -= l;
 		rc.py = GetNextPageY(parti++, rc);
 	}
@@ -338,11 +339,12 @@ void RichTxt::GatherValPos(Vector<RichValPos>& f, RichContext rc, int pos, int t
 				nbefore = pp.before + pp.ruler;
 				nline = pp.linecy[0];
 			}
-			if(p.haspos)
+			if(p.haspos) {
 				if(type == LABELS)
 					Get(parti, rc.styles, true).GatherLabels(f, rc.page, rc.py, pos, nbefore, nline);
 				else
 					Get(parti, rc.styles, true).GatherIndexes(f, rc.page, rc.py, pos, nbefore, nline);
+			}
 		}
 		pos += GetPartLength(parti) + 1;
 		rc.py = GetNextPageY(parti++, rc);

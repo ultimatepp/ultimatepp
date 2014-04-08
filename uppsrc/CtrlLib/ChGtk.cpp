@@ -123,7 +123,7 @@ void ChHostSkin()
 				face = String(~face, q);
 			}
 			fontname = Font::FindFaceNameIndex(face);
-			if(fontname == 0)
+			if(fontname == 0) {
 				if(ToUpper(face[0]) == 'M')
 					fontname = Font::COURIER;
 				else
@@ -131,6 +131,7 @@ void ChHostSkin()
 					fontname = Font::ROMAN;
 				else
 					fontname = Font::ARIAL;
+			}
 		}
 	}
 

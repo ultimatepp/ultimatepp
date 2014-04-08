@@ -24,7 +24,7 @@ String QtfFormat(Color c)
 
 void LngFmt(String& fmt, dword l, dword lang)
 {
-	if(lang != (dword)l)
+	if(lang != (dword)l) {
 		if(l == 0)
 			fmt << "%-";
 		else
@@ -32,6 +32,7 @@ void LngFmt(String& fmt, dword l, dword lang)
 			fmt << "%%";
 		else
 			fmt << "%" << LNGAsText(l);
+	}
 }
 
 void CharFmt(String& fmt, const RichPara::CharFormat& a, const RichPara::CharFormat& b)

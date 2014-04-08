@@ -14,20 +14,22 @@ DDARasterizer::DDARasterizer()
 
 void DDARasterizer::AHorz(int x, int y, int cx)
 {
-	if(cx)
+	if(cx) {
 		if(cx < 0)
 			PutHorz(x + cx + 1, y, -cx);
 		else
 			PutHorz(x, y, cx);
+	}
 }
 
 void DDARasterizer::AVert(int x, int y, int cy)
 {
-	if(cy)
+	if(cy) {
 		if(cy < 0)
 			PutVert(x, y + cy + 1, -cy);
 		else
 			PutVert(x, y, cy);
+	}
 }
 
 void DDARasterizer::DoLine(Point p1, Point p2, bool last)

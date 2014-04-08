@@ -855,11 +855,12 @@ void FileSel::SearchLoad()
 		if(!IsEmpty(basedir) && String(~dir).IsEmpty())
 			dirup.Disable();
 	olddir = ~dir;
-	if(olddir.GetCount() || basedir.GetCount())
+	if(olddir.GetCount() || basedir.GetCount()) {
 		if(sortext && mode != SELECTDIR)
 			SortByExt(list);
 		else
 			SortByName(list);
+	}
 	Update();
 #ifdef GUI_WIN
 	lazyicons.Start(list, d, WhenIcon);
@@ -968,7 +969,7 @@ void FileSel::Finish() {
 			Exclamation(p + t_(" is directory."));
 			return;
 		}
-		if(asking)
+		if(asking) {
 			if(mode == SAVEAS) {
 				if(!ff.IsEmpty() && !PromptOKCancel(p + t_(" already exists.&Do you want to continue ?")))
 					return;
@@ -979,6 +980,7 @@ void FileSel::Finish() {
 				nonexist << p;
 				ne++;
 			}
+		}
 	}
 	if(ne) {
 		nonexist << (ne == 1 ? t_(" does not exist.") : t_("&do not exist."));
@@ -1196,14 +1198,14 @@ void FileSel::DirUp() {
 void FileSel::MkDir() {
 	if(String(~dir).IsEmpty() && basedir.IsEmpty()) return;
 	String name, error;
-	if(EditText(name, t_("New directory"), t_("Name")) && !name.IsEmpty())
-		if(filesystem->CreateFolder(FilePath(name), error))
-		{
+	if(EditText(name, t_("New directory"), t_("Name")) && !name.IsEmpty()) {
+		if(filesystem->CreateFolder(FilePath(name), error)) {
 			Load();
 			list.FindSetCursor(name);
 		}
 		else
 			Exclamation(t_("[A3* Creating directory failed !&&]") + error);
+	}
 }
 
 void FileSel::PlusMinus(const char *title, bool sel) {
