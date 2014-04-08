@@ -63,13 +63,13 @@ GUI_APP_MAIN
 				RichPara::CharFormat fmt;
 				para.Cat(AsString(i) + ':' + AsString(j), fmt);
 				celltext.Cat(para);
-				table.SetPick(i, j, celltext);
+				table.SetPick(i, j, pick(celltext));
 			}
-		txt.CatPick(table);
+		txt.CatPick(pick(table));
 	}
 	
 	RichTextView view;
-	view.Pick(txt);
+	view.Pick(pick(txt));
 	TopWindow win;
 	win.Add(view.SizePos());
 	win.Run();
