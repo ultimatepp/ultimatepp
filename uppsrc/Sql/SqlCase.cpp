@@ -45,11 +45,12 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 				*r << '.';
 			break;
 		case SQLC_AS:
-			if(r)
+			if(r) {
 				if(dialect & (MSSQL | PGSQL))
 					*r << " as ";
 				else
 					*r << ' ';
+			}
 			break;
 		case SQLC_COMMA:
 			if(r)

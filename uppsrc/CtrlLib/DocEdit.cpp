@@ -52,7 +52,7 @@ DocEdit::Fmt DocEdit::Format(const WString& text) const
 			*s = ' ';
 		}
 		x += cw;
-		if(x > cx)
+		if(x > cx) {
 			if(space && space <= s) {
 				space++;
 				fmt.line.Add(int(space - fmt.text));
@@ -63,6 +63,7 @@ DocEdit::Fmt DocEdit::Format(const WString& text) const
 				fmt.line.Add(int(s - fmt.text));
 				x = cw;
 			}
+		}
 	}
 	fmt.fi = fi;
 	return fmt;
@@ -223,11 +224,12 @@ int  DocEdit::GetCursorPos(Point p) {
 void DocEdit::PlaceCaret(bool scroll) {
 	Point cr = GetCaret(cursor);
 	int fy = font.Info().GetLineHeight();
-	if(scroll)
+	if(scroll) {
 		if(cursor == total)
 			sb.End();
 		else
 			sb.ScrollInto(cr.y, fy + 2);
+	}
 	SetCaret(cr.x + 1, cr.y - sb, 1, fy);
 	WhenSel();
 }

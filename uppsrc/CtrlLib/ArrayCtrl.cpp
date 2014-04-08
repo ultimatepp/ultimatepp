@@ -1801,11 +1801,12 @@ bool ArrayCtrl::Key(dword key, int) {
 		if(IsCursor()) {
 			int d = GetEditColumn();
 			int i = FindEnabled(cursor - 1,  -1);
-			if(i >= 0 && SetCursor0(i))
+			if(i >= 0 && SetCursor0(i)) {
 				if(d >= 0)
 					StartEdit(d);
 				else
 					KeyMultiSelect(aanchor, key);
+			}
 		}
 		else
 		if((IsInserting() || IsAppending()) && IsAppendLine())

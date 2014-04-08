@@ -225,11 +225,12 @@ DropList& DropList::ValueDisplay(const Display& d)
 void  DropList::Adjust()
 {
 	int i = FindKey(value);
-	if(i < 0)
+	if(i < 0) {
 		if(GetCount())
 			SetIndex(0);
 		else
 			SetData(Null);
+	}
 }
 
 void DropList::Adjust(const Value& k)
