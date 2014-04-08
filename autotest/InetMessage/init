@@ -2,4 +2,5 @@
 #define _InetMessage_icpp_init_stub
 #include "Core/init"
 #include "Core/POP3/init"
+#include "Core/SMTP/init"
 #endif
