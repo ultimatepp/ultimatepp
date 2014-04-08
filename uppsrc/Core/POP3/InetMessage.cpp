@@ -1,6 +1,6 @@
 #include "POP3.h"
 
-#define LLOG(x) // DLOG(x)
+#define LLOG(x) DLOG(x)
 
 String QDecode(const String& s) 
 {
@@ -126,7 +126,7 @@ bool InetMessage::ReadPart(Stream& ss, int parent, int level)
 
 	MIMEHeader h(p.header.Get("content-type", String()));
 	LLOG("content-type: " << h);
-	if(!(~h).StartsWith("multipart")) {
+	if(!ToLower(~h).StartsWith("multipart")) {
 		p.body = LoadStream(ss);
 		return true;
 	}

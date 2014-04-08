@@ -53,7 +53,7 @@ void Smtp::CheckFail()
 		throw Exc("Connection error: " + GetErrorDesc());
 }
 
-void Smtp::Send(const String &s)
+void Smtp::SendData(const String &s)
 {
 	LLOG("SMTP send: " << s);
 	const char *p = s.Begin(), *e = s.End();
@@ -66,7 +66,7 @@ void Smtp::Send(const String &s)
 
 String Smtp::SendRecv(const String& s)
 {
-	Send(s);
+	SendData(s);
 	String reply;
 	for(;;) {
 		CheckFail();
@@ -163,7 +163,148 @@ String Smtp::FormatAddr(const String& addr, const String& name)
 	return r;
 }
 
-bool Smtp::Send()
+String Smtp::GetMessage(bool chunks)
+{
+	String delimiter = "?";
+	for(int i = 0; i < body.GetCount(); i++)
+		delimiter = GetDelimiter(body[i], delimiter);
+	bool alter = body.GetCount() > 1;
+	bool multi = !attachments.IsEmpty();
+
+	String msg;
+	if(!no_header) { // generate message header
+		if (sender != from) msg << "Sender: " << sender << "\r\n";
+		msg << "From: " << FormatAddr(from, from_name) << "\r\n";
+		static const AS as_list[] = { TO, CC, BCC };
+		static const char *as_name[] = { "To", "CC", "BCC" };
+		for(int a = 0; a < __countof(as_list); a++)
+		{
+			int pos = 0;
+			for(int i = 0; i < as.GetCount(); i++)
+				if(as[i] == as_list[a])
+				{
+					if(pos && pos + to[i].GetLength() >= 70)
+					{
+						msg << "\r\n     ";
+						pos = 5;
+					}
+					else if(pos)
+					{
+						msg << ", ";
+						pos += 2;
+					}
+					else
+					{
+						msg << as_name[a] << ": ";
+						pos = (int)strlen(as_name[a]) + 2;
+					}
+					msg << FormatAddr(to[i], to_name[i]);
+				}
+			if(pos)
+				msg << "\r\n";
+		}
+		if(!IsNull(subject))
+			msg << "Subject: " << Encode(subject) << "\r\n";
+		if(!IsNull(reply_to))
+			msg << "Reply-To: " << FormatAddr(reply_to, reply_to_name) << "\r\n";
+		if(!IsNull(time_sent)) {
+			static const char *dayofweek[] =
+			{ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+			static const char *month[] =
+			{ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+			msg << "Date: "
+				<< dayofweek[DayOfWeek(time_sent)] << ", "
+				<< (int)time_sent.day << ' ' << month[time_sent.month - 1] << ' ' << (int)time_sent.year
+				<< ' ' << Sprintf("%2d:%02d:%02d " + GetTimeZoneText(),
+				                  time_sent.hour, time_sent.minute, time_sent.second)
+				<< "\r\n";
+		}
+		if(multi || alter)
+			msg << "Content-Type: multipart/" << (alter ? "alternative" : "mixed")
+				<< "; boundary=\"" << delimiter << "\"\r\n"
+				"\r\n";
+		msg << add_header;
+	}
+
+	for(int i = 0; i < body.GetCount(); i++) {
+		String t = body[i], m = mime[i];
+		if(!no_header) {
+			if(multi || alter)
+				msg << "--" << delimiter << "\r\n";
+			if(IsNull(m))
+				m << "text/plain; charset=\"" << MIMECharsetName(CHARSET_DEFAULT) << "\"";
+			msg << "Content-Type: " << m << "\r\n"
+			"Content-Transfer-Encoding: quoted-printable\r\n";
+		}
+		if(!no_header_sep)
+			msg << "\r\n";
+		bool begin = true;
+		for(const char *p = t.Begin(), *e = t.End(); p != e; p++)
+			if(*p >= 33 && *p <= 126 && *p != '=' && (*p != '.' || !begin)) {
+				msg.Cat(*p);
+				begin = false;
+			}
+			else if(*p == '.' && begin) {
+				msg.Cat("..");
+				begin = false;
+			}
+			else if(*p == ' ' && p + 1 != e && p[1] != '\r' && p[1] != '\n') {
+				msg.Cat(' ');
+				begin = false;
+			}
+			else if(*p == '\r')
+				;
+			else if(*p == '\n') {
+				msg.Cat("\r\n");
+				begin = true;
+			}
+			else {
+				static const char hex[] = "0123456789ABCDEF";
+				msg.Cat('=');
+				msg.Cat(hex[(*p >> 4) & 15]);
+				msg.Cat(hex[*p & 15]);
+			}
+
+		if(!begin)
+			msg.Cat("\r\n");
+	}
+	for(int i = 0; i < attachments.GetCount(); i++) {
+		const Attachment& a = attachments[i];
+		One<Stream> source;
+		if(a.file.GetCount()) {
+			FileIn& in = source.Create<FileIn>();
+			if(!in.Open(a.file))
+				throw Exc("Unable to open attachment file " + a.file);
+		}
+		else
+			source.Create<StringStream>().Open(a.data);
+		msg << "--" << delimiter << "\r\n"
+			"Content-Type: " << a.mime << "; name=\"" << a.name << "\"\r\n"
+			"Content-Transfer-Encoding: base64\r\n"
+			"Content-Disposition: attachment; filename=\"" << a.name << "\"\r\n"
+			"\r\n";
+
+		char buffer[54];
+		for(int c; (c = source -> Get(buffer, sizeof(buffer))) != 0;)
+		{
+			msg.Cat(Base64Encode(buffer, buffer + c));
+			msg.Cat('\r');
+			msg.Cat('\n');
+			if(msg.GetLength() >= 65536 && chunks) {
+				SendData(msg);
+				msg = Null;
+			}
+		}
+	}
+	if(multi || alter)
+		msg << "--" << delimiter << "--\r\n";
+	LLOG("Msg:");
+	LLOG(msg);
+
+	return msg;
+}
+
+bool Smtp::Send(const String& msg_)
 {
 	start_time = msecs();
 
@@ -222,145 +363,11 @@ bool Smtp::Send()
 		if(memcmp(ans, "354", 3))
 			throw Exc(ans);
 
-		String delimiter = "?";
-		for(int i = 0; i < body.GetCount(); i++)
-			delimiter = GetDelimiter(body[i], delimiter);
-		bool alter = body.GetCount() > 1;
-		bool multi = !attachments.IsEmpty();
+		String msg = msg_;
+		if(msg.GetCount() == 0)
+			msg = GetMessage(true);
 
-		{ // format message
-			String msg;
-			if(!no_header) { // generate message header
-				if (sender != from) msg << "Sender: " << sender << "\r\n";
-				msg << "From: " << FormatAddr(from, from_name) << "\r\n";
-				static const AS as_list[] = { TO, CC, BCC };
-				static const char *as_name[] = { "To", "CC", "BCC" };
-				for(int a = 0; a < __countof(as_list); a++)
-				{
-					int pos = 0;
-					for(int i = 0; i < as.GetCount(); i++)
-						if(as[i] == as_list[a])
-						{
-							if(pos && pos + to[i].GetLength() >= 70)
-							{
-								msg << "\r\n     ";
-								pos = 5;
-							}
-							else if(pos)
-							{
-								msg << ", ";
-								pos += 2;
-							}
-							else
-							{
-								msg << as_name[a] << ": ";
-								pos = (int)strlen(as_name[a]) + 2;
-							}
-							msg << FormatAddr(to[i], to_name[i]);
-						}
-					if(pos)
-						msg << "\r\n";
-				}
-				if(!IsNull(subject))
-					msg << "Subject: " << Encode(subject) << "\r\n";
-				if(!IsNull(reply_to))
-					msg << "Reply-To: " << FormatAddr(reply_to, reply_to_name) << "\r\n";
-				if(!IsNull(time_sent)) {
-					static const char *dayofweek[] =
-					{ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-					static const char *month[] =
-					{ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-					msg << "Date: "
-						<< dayofweek[DayOfWeek(time_sent)] << ", "
-						<< (int)time_sent.day << ' ' << month[time_sent.month - 1] << ' ' << (int)time_sent.year
-						<< ' ' << Sprintf("%2d:%02d:%02d " + GetTimeZoneText(),
-						                  time_sent.hour, time_sent.minute, time_sent.second)
-						<< "\r\n";
-				}
-				if(multi || alter)
-					msg << "Content-Type: Multipart/" << (alter ? "alternative" : "mixed")
-						<< "; boundary=\"" << delimiter << "\"\r\n"
-						"\r\n";
-				msg << add_header;
-			}
-
-			for(int i = 0; i < body.GetCount(); i++) {
-				String t = body[i], m = mime[i];
-				if(!no_header) {
-					if(multi || alter)
-						msg << "--" << delimiter << "\r\n";
-					if(IsNull(m))
-						m << "text/plain; charset=\"" << MIMECharsetName(CHARSET_DEFAULT) << "\"";
-					msg << "Content-Type: " << m << "\r\n"
-					"Content-Transfer-Encoding: quoted-printable\r\n";
-				}
-				if(!no_header_sep)
-					msg << "\r\n";
-				bool begin = true;
-				for(const char *p = t.Begin(), *e = t.End(); p != e; p++)
-					if(*p >= 33 && *p <= 126 && *p != '=' && (*p != '.' || !begin)) {
-						msg.Cat(*p);
-						begin = false;
-					}
-					else if(*p == '.' && begin) {
-						msg.Cat("..");
-						begin = false;
-					}
-					else if(*p == ' ' && p + 1 != e && p[1] != '\r' && p[1] != '\n') {
-						msg.Cat(' ');
-						begin = false;
-					}
-					else if(*p == '\r')
-						;
-					else if(*p == '\n') {
-						msg.Cat("\r\n");
-						begin = true;
-					}
-					else {
-						static const char hex[] = "0123456789ABCDEF";
-						msg.Cat('=');
-						msg.Cat(hex[(*p >> 4) & 15]);
-						msg.Cat(hex[*p & 15]);
-					}
-
-				if(!begin)
-					msg.Cat("\r\n");
-			}
-			for(int i = 0; i < attachments.GetCount(); i++) {
-				const Attachment& a = attachments[i];
-				One<Stream> source;
-				if(a.file.GetCount()) {
-					FileIn& in = source.Create<FileIn>();
-					if(!in.Open(a.file))
-						throw Exc("Unable to open attachment file " + a.file);
-				}
-				else
-					source.Create<StringStream>().Open(a.data);
-				msg << "--" << delimiter << "\r\n"
-					"Content-Type: " << a.mime << "; name=\"" << a.name << "\"\r\n"
-					"Content-Transfer-Encoding: base64\r\n"
-					"Content-Disposition: attachment; filename=\"" << a.name << "\"\r\n"
-					"\r\n";
-
-				char buffer[54];
-				for(int c; (c = source -> Get(buffer, sizeof(buffer))) != 0;)
-				{
-					msg.Cat(Base64Encode(buffer, buffer + c));
-					msg.Cat('\r');
-					msg.Cat('\n');
-					if(msg.GetLength() >= 65536) {
-						Send(msg);
-						msg = Null;
-					}
-				}
-			}
-			if(multi || alter)
-				msg << "--" << delimiter << "--\r\n";
-			msg.Cat(".\r\n");
-			LLOG("Msg:");
-			LLOG(msg);
-			SendRecvOK(msg);
-		}
+		SendRecvOK(msg + ".\r\n");
 
 		SendRecv("QUIT\r\n");
 		return true;

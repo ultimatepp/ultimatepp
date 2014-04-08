@@ -1,4 +1,4 @@
-description "\3770,128,128";
+description "Simple Mail Transfer Protocol\3770,128,128";
 
 uses
 	Core;
