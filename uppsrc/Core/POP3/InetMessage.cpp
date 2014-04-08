@@ -1,6 +1,6 @@
 #include "POP3.h"
 
-#define LLOG(x) DLOG(x)
+#define LLOG(x) // DLOG(x)
 
 String QDecode(const String& s) 
 {
@@ -146,6 +146,7 @@ bool InetMessage::ReadPart(Stream& ss, int parent, int level)
 	bool end = false;
 	while(!end) {
 		String body;
+		bool next = false;
 		for(;;) {
 			if(ss.IsEof())
 				return false;
@@ -156,7 +157,10 @@ bool InetMessage::ReadPart(Stream& ss, int parent, int level)
 				end = true;
 				break;
 			}
-			body << ln << "\r\n";
+			if(next)
+				body << "\r\n";
+			body << ln;
+			next = true;
 		}
 		StringStream nss(body);
 		ReadPart(nss, newparent, level + 1);
