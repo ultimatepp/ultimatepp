@@ -250,8 +250,6 @@ CONSOLE_APP_MAIN
 
 	TimeStop tm;
 
-	StdLogSetup(LOG_FILE|LOG_COUT);
-	
 	int time0 = msecs();
 	
 	SeedRandom();

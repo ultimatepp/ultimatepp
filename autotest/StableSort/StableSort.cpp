@@ -18,18 +18,18 @@ void Benchmark();
 
 void Check(int N, int M)
 {
-	Cout() << "LESS\n";
+	LOG("LESS");
 	for(int pass = 0; pass < 2; pass++) {
 		int i;
 		Vector<String> k;
 		Vector<int> v;
 		StableSort(k);
-		Cout() << "Testing " << N << ' ' << M << EOL;
+		LOG("Testing " << N << ' ' << M);
 		for(i = 0; i < N; i++) {
 			k.Add(AsString(rand() % M));
 			v.Add(i);
 		}
-		Cout() << " GetStableSortOrder..." << EOL;
+		LOG(" GetStableSortOrder...");
 		Vector<int> o = pass ? GetStableSortOrderCmp(k) : GetStableSortOrder(k);
 		i = 0;
 		while(i < o.GetCount()) {
@@ -41,12 +41,12 @@ void Check(int N, int M)
 				ASSERT(o[j] > o[j - 1]);
 			i = j;
 		}
-		Cout() << " StableIndexSort..." << EOL;
+		LOG(" StableIndexSort...");
 		if(pass)
 			StableIndexSortCmp(k, v);
 		else
 			StableIndexSort(k, v);
-		Cout() << " Testing..." << EOL;
+		LOG(" Testing...");
 		for(i = 0; i < k.GetCount(); i++)
 			LLOG(k[i] << ' ' << v[i]);
 		LLOG("----------");
@@ -61,24 +61,27 @@ void Check(int N, int M)
 			i = j;
 		}
 		if(pass == 0)
-			Cout() << "CMP\n";
+			LOG("CMP");
 	}
 }
 
 CONSOLE_APP_MAIN
 {
+	TimeStop tm;
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
 	Check(1000, 100);
 	Check(1000000, 100);
 	Check(1000000, 10000);
 	Check(1000000, 1);
 	for(int i = 1; i < 30000; i += i)
 		Check(2000000, i);
+	
+	LOG("=========== OK " << tm << " s");
 }
 
 void CompileCheck()
 {
-	int time0 = msecs();
-
 	Vector<String> x;
 	IndexSort(x, x);
 	IndexSort2(x, x, x);
@@ -89,6 +92,4 @@ void CompileCheck()
 	StableIndexSortCmp(x, x);
 	StableIndexSort2Cmp(x, x, x);
 	StableIndexSort3Cmp(x, x, x, x);
-	
-	Cout() << "=========== OK " << msecs(time0) / 1000 << " s" << "\n";
 }

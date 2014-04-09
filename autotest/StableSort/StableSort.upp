@@ -1,3 +1,5 @@
+description "#WAIT: 15\377";
+
 uses
 	Core;
 
