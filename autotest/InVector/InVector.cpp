@@ -2,6 +2,12 @@
 
 using namespace Upp;
 
+#ifdef flagLONG
+#define N 100
+#else
+#define N 8
+#endif
+
 template <class C1, class C2>
 void Compare(C1& a, C2& b)
 {
@@ -31,7 +37,7 @@ T ToType(int);
 template <>
 String ToType(int i)
 {
-	return AsString(i);
+	return Format("%010d", i);
 }
 
 template <>
@@ -51,7 +57,7 @@ void InVectorTest()
 	q.Insert(0) = 0;
 	iv.Insert(1) = ToType<T>(-1);
 	q.Insert(1) = ToType<T>(-1);
-	for(int j = 0; j < 10000; j++) {
+	for(int j = 0; j < 100 * N; j++) {
 		if(j % 1000 == 0)
 			LOG(j);
 		int i = Random(iv.GetCount());
@@ -60,7 +66,7 @@ void InVectorTest()
 		Compare(q, iv);
 	}
 
-	for(int i = 0; i < 100; i++) {
+	for(int i = 0; i < N; i++) {
 		int n = Random(100) + 20;
 		typename InVector<T>::Iterator it2, it = iv.Begin();
 		it += n;
@@ -87,7 +93,7 @@ void TestUpperBound()
 {
 	{
 		InVector<T> v;
-		for(int i = 0; i < 3000; i++) {
+		for(int i = 0; i < 30 * N; i++) {
 			if(i % 1000 == 0)
 				LOG(i);
 			v.Insert(i) = ToType<T>(i);
@@ -99,7 +105,7 @@ void TestUpperBound()
 	}
 	{
 		InVector<T> v;
-		for(int i = 0; i < 3000; i++) {
+		for(int i = 0; i < 30 * N; i++) {
 			if(i % 1000 == 0)
 				LOG(i);
 			for(int j = 0; j < 7; j++)
@@ -117,7 +123,7 @@ void TestLowerBound()
 {
 	{
 		InVector<T> v;
-		for(int i = 0; i < 3000; i++) {
+		for(int i = 0; i < 30 * N; i++) {
 			if(i % 1000 == 0)
 				LOG(i);
 			v.Insert(i) = ToType<T>(i);
@@ -129,7 +135,7 @@ void TestLowerBound()
 	}
 	{
 		InVector<T> v;
-		for(int i = 0; i < 3000; i++) {
+		for(int i = 0; i < 30 * N; i++) {
 			if(i % 1000 == 0)
 				LOG(i);
 			for(int j = 0; j < 7; j++)
@@ -149,7 +155,7 @@ void SetTest()
 		LOG(j);
 		Vector<T> va;
 		InVector<T> ia;
-		for(int i = 0; i < 1000; i++) {
+		for(int i = 0; i < 10 * N; i++) {
 			int q = Random(100);
 			int ii = FindUpperBound(va, ToType<T>(q));
 			T val = ToType<T>(q);
@@ -176,7 +182,7 @@ void RemoveTest()
 	q.Insert(0) = 0;
 	iv.Insert(1) = ToType<T>(-1);
 	q.Insert(1) = ToType<T>(-1);
-	for(int j = 0; j < 10000000; j++) {
+	for(int j = 0; j < 100000 * N; j++) {
 		if(j % 1000 == 0)
 			LOG(j);
 		if(iv.GetCount() > 200 && Random(4) == 1) {
@@ -201,7 +207,7 @@ void InsertNTest()
 	SeedRandom();
 	Vector<T> av;
 	InVector<T> iv;
-	for(int i = 0; i < 100000; i++) {
+	for(int i = 0; i < 1000 * N; i++) {
 		if(i % 1000 == 0)
 			LOG(i);
 		if(av.GetCount() > 2000) {
@@ -240,6 +246,8 @@ TestType ToType(int i)
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_FILE|LOG_COUT);
+
 	TimeStop tm;
 
 	StdLogSetup(LOG_FILE|LOG_COUT);
