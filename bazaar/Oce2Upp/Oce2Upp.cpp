@@ -499,6 +499,14 @@ bool Oce2Upp::MakeOCEPackage(void)
 	s.Clear();
 	s <<
 		"noblitz;\n"
+		"uses\n"
+		"	CtrlCore,\n"
+		"	plugin/bmp,\n"
+		"	plugin/gif,\n"
+		"	plugin/jpg,\n"
+		"	plugin/pcx,\n"
+		"	plugin/png,\n"
+		"	plugin/tif;\n"
 		"library\n"
 	;
 	s << "	\"";
@@ -532,7 +540,8 @@ bool Oce2Upp::MakeOCEPackage(void)
 		"	OCECtrl.h,\n"
 		"	OCEDoc.h,\n"
 		"	OCECtrl.cpp,\n"
-		"	OCEDoc.cpp;\n"
+		"	OCEDoc.cpp,\n"
+		"	OCE_AlienPixMap.icpp;\n"
 	;
 	uppFile << s;
 	uppFile.Close();
@@ -569,6 +578,13 @@ bool Oce2Upp::MakeOCEPackage(void)
 	
 	uppFile.Open(AppendFileName(pacFolder, "OCECtrl.cpp"));
 	s = (const char *)OCECtrl_CPP;
+	uppFile << s;
+	uppFile.Close();
+	progress.Set(++iTk);
+	Ctrl::ProcessEvents();
+
+	uppFile.Open(AppendFileName(pacFolder, "OCE_AlienPixMap.icpp"));
+	s = (const char *)OCE_AlienPixMap_ICPP;
 	uppFile << s;
 	uppFile.Close();
 	progress.Set(++iTk);

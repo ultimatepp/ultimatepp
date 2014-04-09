@@ -13,6 +13,9 @@
 // Alternatively, this file may be used under the terms of Open CASCADE
 // commercial license or contractual agreement.
 
+// MODIFICATIONS TO USE Upp IMAGE CODE
+// USING A FUNCTABLE TO CALL INTO MAIN EXECUTABLE CODE
+
 #ifndef _Image_AlienPixMap_H__
 #define _Image_AlienPixMap_H__
 
@@ -20,8 +23,28 @@
 
 class TCollection_AsciiString;
 
-#undef Complex
-#include <Draw/Draw.h>
+// backlink to Upp image code
+namespace Upp
+{
+	class ImageBuffer;
+}
+struct ALIENPIXMAP_UPP_FUNCTABLE
+{
+	Upp::ImageBuffer *(*Construct)(void);
+	void (*Destroy)(Upp::ImageBuffer *);
+	
+	void (*CreateImage)(Upp::ImageBuffer *buf, Standard_Size sx, Standard_Size sy);
+	unsigned char * (*GetRGBA)(Upp::ImageBuffer *buf);
+	
+	bool (*Load)(Upp::ImageBuffer *buf, const TCollection_AsciiString& theImagePath);
+	bool (*Save)(Upp::ImageBuffer *buf, const TCollection_AsciiString& theImagePath);
+	
+	Standard_Size (*GetWidth)(Upp::ImageBuffer *buf);
+	Standard_Size (*GetHeight)(Upp::ImageBuffer *buf);
+	
+};
+
+Standard_EXPORT ALIENPIXMAP_UPP_FUNCTABLE *ALIENPIXMAP_GET_FUNCTABLE(void);
 
 //! Image class that support file reading/writing operations using auxiliary image library.
 //! Supported image formats:
@@ -73,9 +96,7 @@ class Image_AlienPixMap : public Image_PixMap
 
 	private:
 
-		Upp::ImageBuffer imageBuffer;
-
-	private:
+		Upp::ImageBuffer *imageBuffer;
 
 		//! Copying allowed only within Handles
 		Image_AlienPixMap ( const Image_AlienPixMap& );

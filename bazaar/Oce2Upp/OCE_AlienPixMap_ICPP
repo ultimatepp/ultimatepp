@@ -1,0 +1,103 @@
+#include "OCE.h"
+
+// Setup a backlink to upp image code into TKService package
+// (on windows it's impossible to call back exported exe functions
+// from DLL code in a portable way)
+#undef HAVE_STRING_H
+
+#include <CtrlCore/CtrlCore.h>
+#include <plugin/png/png.h>
+#include <plugin/bmp/bmp.h>
+#include <plugin/gif/gif.h>
+#include <plugin/jpg/jpg.h>
+#include <plugin/tif/tif.h>
+
+using namespace Upp;
+
+#include <OCE/include/Image_AlienPixMap.hxx>
+
+static ImageBuffer *Construct(void)
+{
+	return new ImageBuffer;
+}
+
+static void Destroy(ImageBuffer *buf)
+{
+	delete buf;
+}
+
+static void CreateImage(ImageBuffer *buf, Standard_Size sx, Standard_Size sy)
+{
+	buf->Create(sx, sy);
+}
+
+static unsigned char *GetRGBA(ImageBuffer *buf)
+{
+	return (unsigned char *)buf->Begin();
+}
+
+static bool Load(ImageBuffer *buf, const TCollection_AsciiString& theImagePath)
+{
+	Image img = StreamRaster::LoadFileAny(theImagePath.ToCString());
+	if(img.IsEmpty())
+		return false;
+	
+	*buf = img;
+	return true;
+}
+
+static bool Save(ImageBuffer *buf, const TCollection_AsciiString& theImagePath)
+{
+	if(buf->IsEmpty())
+		return false;
+
+	String ext = ToLower(GetFileExt(theImagePath.ToCString()));
+	One<StreamRasterEncoder> encoder;
+	if(ext == ".jpg" || ext == ".jpeg")
+		encoder = new JPGEncoder;
+	else if(ext == ".png")
+		encoder = new PNGEncoder;
+	else if(ext == ".bmp")
+		encoder = new BMPEncoder;
+	else if(ext == ".gif")
+		encoder = new GIFEncoder;
+	else if(ext == ".tif" || ext == ".tiff")
+		encoder = new TIFEncoder;
+	else
+		return false;
+	Image img = *buf;
+	bool res = encoder->SaveFile(theImagePath.ToCString(), img);
+	*buf = img;
+	return res;
+}
+
+static Standard_Size GetWidth(ImageBuffer *buf)
+{
+	return buf->GetWidth();
+}
+
+static Standard_Size GetHeight(ImageBuffer *buf)
+{
+	return buf->GetHeight();
+}
+
+static void LinkAlien(void)
+{
+	ALIENPIXMAP_UPP_FUNCTABLE *funcTable = ALIENPIXMAP_GET_FUNCTABLE();
+
+	funcTable->Construct	= &Construct;
+	funcTable->Destroy		= &Destroy;
+	
+	funcTable->CreateImage	= &CreateImage;
+	funcTable->GetRGBA		= &GetRGBA;
+	
+	funcTable->Load			= &Load;
+	funcTable->Save			= &Save;
+	
+	funcTable->GetWidth		= &GetWidth;
+	funcTable->GetHeight	= &GetHeight;
+}
+
+INITBLOCK {
+	LinkAlien();
+}

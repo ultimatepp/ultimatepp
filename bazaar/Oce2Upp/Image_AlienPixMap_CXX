@@ -23,16 +23,17 @@
 #include <fstream>
 #include <stdio.h>
 
-#include <plugin/png/png.h>
-#include <plugin/bmp/bmp.h>
-#include <plugin/gif/gif.h>
-#include <plugin/jpg/jpg.h>
-#include <plugin/tif/tif.h>
-
-using namespace Upp;
-
 IMPLEMENT_STANDARD_HANDLE ( Image_AlienPixMap, Image_PixMap )
 IMPLEMENT_STANDARD_RTTIEXT ( Image_AlienPixMap, Image_PixMap )
+
+// function table to call Upp imaging code inside linking executable
+ALIENPIXMAP_UPP_FUNCTABLE funcTable;
+
+Standard_EXPORT ALIENPIXMAP_UPP_FUNCTABLE *ALIENPIXMAP_GET_FUNCTABLE(void)
+{
+	return &funcTable;
+}
+
 
 // =======================================================================
 // function : Image_AlienPixMap
@@ -40,7 +41,10 @@ IMPLEMENT_STANDARD_RTTIEXT ( Image_AlienPixMap, Image_PixMap )
 // =======================================================================
 Image_AlienPixMap::Image_AlienPixMap()
 {
+	imageBuffer = NULL;
 	SetTopDown ( false );
+	if(funcTable.Construct)
+		imageBuffer = funcTable.Construct();
 }
 
 // =======================================================================
@@ -79,10 +83,12 @@ bool Image_AlienPixMap::InitTrash ( ImgFormat
 	Clear();
 	
 	// init the imagebuffer
-	imageBuffer.Create(theSizeX, theSizeY);
+	if(!funcTable.CreateImage)
+		return false;
+	funcTable.CreateImage(imageBuffer, theSizeX, theSizeY);
 	
 	// connects the pixel buffer to PixMap class
-	Image_PixMap::InitWrapper(ImgBGRA, (byte *)imageBuffer.Begin(), theSizeX, theSizeY, 0);
+	Image_PixMap::InitWrapper(ImgBGRA, funcTable.GetRGBA(imageBuffer), theSizeX, theSizeY, 0);
 	
 	return true;
 }
@@ -145,13 +151,12 @@ bool Image_AlienPixMap::Load ( const TCollection_AsciiString& theImagePath )
 {
 	Clear();
 
-	Image img = StreamRaster::LoadFileAny(theImagePath.ToCString());
-	if(img.IsEmpty())
+	if(!funcTable.Load)
 		return false;
-	
-	imageBuffer = img;
+	if(!funcTable.Load(imageBuffer, theImagePath))
+		return false;
 
-	Image_PixMap::InitWrapper(ImgBGRA, (byte *)~imageBuffer, imageBuffer.GetWidth(), imageBuffer.GetHeight(), 0);
+	Image_PixMap::InitWrapper(ImgBGRA, funcTable.GetRGBA(imageBuffer), funcTable.GetWidth(imageBuffer), funcTable.GetHeight(imageBuffer), 0);
 	SetTopDown(false);
 
 	return true;
@@ -208,27 +213,9 @@ bool Image_AlienPixMap::savePPM ( const TCollection_AsciiString& theFileName ) c
 // =======================================================================
 bool Image_AlienPixMap::Save ( const TCollection_AsciiString& theFileName )
 {
-	if(imageBuffer.IsEmpty())
+	if(!funcTable.Save)
 		return false;
-
-	String ext = ToLower(GetFileExt(theFileName.ToCString()));
-	One<StreamRasterEncoder> encoder;
-	if(ext == ".jpg" || ext == ".jpeg")
-		encoder = new JPGEncoder;
-	else if(ext == ".png")
-		encoder = new PNGEncoder;
-	else if(ext == ".bmp")
-		encoder = new BMPEncoder;
-	else if(ext == ".gif")
-		encoder = new GIFEncoder;
-	else if(ext == ".tif" || ext == ".tiff")
-		encoder = new TIFEncoder;
-	else
-		return false;
-	Image img = imageBuffer;
-	bool res = encoder->SaveFile(theFileName.ToCString(), img);
-	imageBuffer = img;
-	return res;
+	return funcTable.Save(imageBuffer, theFileName);
 }
 
 // =======================================================================

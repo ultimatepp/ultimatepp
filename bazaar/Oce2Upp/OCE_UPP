@@ -1,7 +1,16 @@
 noblitz;
 
+uses
+	CtrlCore,
+	plugin/bmp,
+	plugin/gif,
+	plugin/jpg,
+	plugin/pcx,
+	plugin/png,
+	plugin/tif;
+
 library
-	"TKAdvTools TKMath TKernel TKBRep TKG2d TKG3d TKGeomBase TKBO TKBool TKFeat TKFillet TKGeomAlgo TKHLR TKMesh  TKOffset TKPrim TKShHealing TKTopAlgo TKXMesh TKMeshVS TKNIS TKOpenGl TKService TKV3d TKVoxel FWOSPlugin PTKernel  TKBin TKBinL TKBinTObj TKCAF TKCDF TKLCAF TKPCAF TKPLCAF TKPShape TKShapeSchema TKStdLSchema TKStdSchema TKTObj  TKXml TKXmlL TKXmlTObj TKBinXCAF TKIGES TKSTEP TKSTEP209 TKSTEPAttr TKSTEPBase TKSTL TKVRML TKXCAF TKXCAFSchema TKXDEIGES  TKXDESTEP TKXSBase TKXmlXCAF ";
+	"UPP_TKAdvTools UPP_TKMath UPP_TKernel UPP_TKBRep UPP_TKG2d UPP_TKG3d UPP_TKGeomBase UPP_TKBO UPP_TKBool UPP_TKFeat UPP_TKFillet UPP_TKGeomAlgo UPP_TKHLR UPP_TKMesh UPP_TKOffset UPP_TKPrim UPP_TKShHealing UPP_TKTopAlgo UPP_TKXMesh UPP_TKMeshVS UPP_TKNIS UPP_TKOpenGl UPP_TKService UPP_TKV3d UPP_TKVoxel UPP_FWOSPlugin UPP_PTKernel UPP_TKBin UPP_TKBinL UPP_TKBinTObj UPP_TKCAF UPP_TKCDF UPP_TKLCAF UPP_TKPCAF UPP_TKPLCAF UPP_TKPShape UPP_TKShapeSchema UPP_TKStdLSchema UPP_TKStdSchema UPP_TKTObj UPP_TKXml UPP_TKXmlL UPP_TKXmlTObj UPP_TKBinXCAF UPP_TKIGES UPP_TKSTEP UPP_TKSTEP209 UPP_TKSTEPAttr UPP_TKSTEPBase UPP_TKSTL UPP_TKVRML UPP_TKXCAF UPP_TKXCAFSchema UPP_TKXDEIGES UPP_TKXDESTEP UPP_TKXSBase UPP_TKXmlXCAF ";
 
 library(POSIX) "GL GLU";
 
@@ -9,11 +18,11 @@ library(WIN32) opengl32;
 
 include
 	./include;
-	
+
 file
 	OCE.h,
 	OCECtrl.h,
 	OCEDoc.h,
 	OCECtrl.cpp,
-	OCEDoc.cpp;
-
+	OCEDoc.cpp,
+	OCE_AlienPixMap.icpp;
