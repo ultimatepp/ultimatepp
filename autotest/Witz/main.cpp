@@ -26,6 +26,7 @@ struct MyApp : SkylarkApp {
 		prefork = 0;
 		use_caching = false;
 	#endif
+		path = GetFileFolder(GetFileFolder(GetDataFile("x")));
 	}
 };
 
@@ -33,7 +34,7 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
 	Ini::skylark_log = true;
-
+	                                  
 	MyApp app;
 
 	Renderer http;
