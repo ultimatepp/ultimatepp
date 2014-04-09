@@ -240,6 +240,8 @@ TestType ToType(int i)
 
 CONSOLE_APP_MAIN
 {
+	TimeStop tm;
+
 	StdLogSetup(LOG_FILE|LOG_COUT);
 	
 	int time0 = msecs();
@@ -267,5 +269,5 @@ CONSOLE_APP_MAIN
 	InsertNTest<TestType>();
 	InVectorTest<TestType>();
 	
-	LOG("========= OK " << msecs(time0) / 1000);
+	LOG("========= OK " << tm);
 }
