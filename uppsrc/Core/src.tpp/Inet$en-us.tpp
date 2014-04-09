@@ -88,6 +88,21 @@ r]_`*[*@3 s])&]
 < 31 as html entities and escapes character 31 as `"`&nbsp;`".&]
 [s3;%% &]
 [s4; &]
+[s5;:GetMIMETypes`(`): [@(0.0.255) const]_[_^Index^ Index]<[_^String^ String]>`&_[* GetMIMETy
+pes]()&]
+[s2;%% Returns a list of MIME types (known to U`+`+).&]
+[s3; &]
+[s4; &]
+[s5;:FileExtToMIME`(const String`&`): [_^String^ String]_[* FileExtToMIME]([@(0.0.255) cons
+t]_[_^String^ String][@(0.0.255) `&]_[*@3 ext])&]
+[s2;%% Converts the file extension to MIME type.&]
+[s3;%% &]
+[s4; &]
+[s5;:MIMEToFileExt`(const String`&`): [_^String^ String]_[* MIMEToFileExt]([@(0.0.255) cons
+t]_[_^String^ String][@(0.0.255) `&]_[*@3 mime])&]
+[s2;%% Converts the MIME type to the most likely file extension.&]
+[s3;%% &]
+[s4; &]
 [s5;:HttpResponse`(TcpSocket`&`,bool`,int`,const char`*`,const char`*`,const String`&`,const char`*`,bool`): [@(0.0.255) b
 ool]_[* HttpResponse]([_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[*@3 socket], 
 [@(0.0.255) bool]_[*@3 scgi], [@(0.0.255) int]_[*@3 code], [@(0.0.255) const]_[@(0.0.255) cha

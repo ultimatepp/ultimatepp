@@ -154,6 +154,7 @@ file
 	Web readonly separator,
 	Inet.h,
 	InetUtil.cpp,
+	MIME.cpp,
 	Socket.cpp,
 	Http.cpp,
 	WebSocket.cpp,

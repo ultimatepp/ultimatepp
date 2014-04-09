@@ -22,6 +22,10 @@ String Base64Decode(const String& data);
 
 String DeHtml(const char *s);
 
+const Index<String>& GetMIMETypes();
+String FileExtToMIME(const String& ext);
+String MIMEToFileExt(const String& mime);
+
 class IpAddrInfo {
 	enum { COUNT = 32 };
 	struct Entry {
