@@ -7,7 +7,7 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
 	XmlNode a = ParseXMLFile(GetDataFile("0.xml"));
-	XmlNode b = a; // pick copy
+	XmlNode b = pick(a); // pick copy
 	ASSERT(a.IsPicked());
 	ASSERT(!b.IsPicked());
 	
