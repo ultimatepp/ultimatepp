@@ -36,6 +36,9 @@ CONSOLE_APP_MAIN
 	Ini::skylark_log = true;
 	                                  
 	MyApp app;
+	
+	LOG("PATH: " << app.Config().path);
+	LOG("--------------------------------------------");
 
 	Renderer http;
 	ValueArray va;
