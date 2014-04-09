@@ -116,8 +116,10 @@ public:
 //			    << ", " << typeid(T).name()); //TODO remove
 		Free();
 		return; // Constraints:
+#ifndef CPP_11
 		T t(pick(*vector));        // T must have transfer constructor (also GCC 4.0 bug workaround)
-		AssertMoveable(&t);  // T must be moveable
+#endif
+		AssertMoveable((T *)0);  // T must be moveable
 	}
 
 // Pick assignment & copy. Picked source can only do Clear(), ~Vector(), operator=, operator <<=
