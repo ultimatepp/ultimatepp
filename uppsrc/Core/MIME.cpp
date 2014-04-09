@@ -9,6 +9,7 @@ static Tuple2<const char *, const char *> sEXT_MIME[] = {
 	{ "eml", "message/rfc822" },
 	{ "tiff", "image/tiff" },
 	{ "xls", "application/vnd.ms-excel" },
+	{ "csv", "text/csv" },
 
 	{ "323", "text/h323" },
 	{ "acx", "application/internet-property-stream" },
@@ -228,7 +229,10 @@ const Index<String>& GetMIMETypes() {
 
 String FileExtToMIME(const String& ext)
 {
-	int q = sEXT().Find(ToLower(ext));
+	String h = ToLower(ext);
+	if(*h == '.')
+		h = h.Mid(1);
+	int q = sEXT().Find(h);
 	return q >= 0 ? sMIME()[q] : "application/octet-stream";
 }
 

@@ -95,12 +95,14 @@ pes]()&]
 [s4; &]
 [s5;:FileExtToMIME`(const String`&`): [_^String^ String]_[* FileExtToMIME]([@(0.0.255) cons
 t]_[_^String^ String][@(0.0.255) `&]_[*@3 ext])&]
-[s2;%% Converts the file extension to MIME type.&]
+[s2;%% Converts the file extension to MIME type. [%-*@3 ext] can, but 
+does not need to start with `'.`' (it is removed before searching).&]
 [s3;%% &]
 [s4; &]
 [s5;:MIMEToFileExt`(const String`&`): [_^String^ String]_[* MIMEToFileExt]([@(0.0.255) cons
 t]_[_^String^ String][@(0.0.255) `&]_[*@3 mime])&]
-[s2;%% Converts the MIME type to the most likely file extension.&]
+[s2;%% Converts the MIME type to the most likely file extension (without 
+`'.`' at begin).&]
 [s3;%% &]
 [s4; &]
 [s5;:HttpResponse`(TcpSocket`&`,bool`,int`,const char`*`,const char`*`,const String`&`,const char`*`,bool`): [@(0.0.255) b
