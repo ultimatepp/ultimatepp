@@ -3,7 +3,7 @@ options(GCC) "-include \"UppFreetype.h\"";
 options(MSC) "-FI \"UppFreetype.h\"";
 
 include
-	./;
+	../FreeType;
 
 file
 	UppFreetype.h,
