@@ -49,7 +49,8 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 				infolog << ": BUILD OK";
 				if(test) {
 					LocalProcess p;
-					setenv("UPP_MAIN__", ff.GetPath(), 1);					
+					setenv("UPP_MAIN__", ff.GetPath(), 1);
+					setenv("UPP_ASSEMBLY__", GetFileFolder(ff.GetPath()), 1);
 					if(!p.Start(exe)) {
 						Cout() << "FAILED TO RUN\n";
 						infolog << ", FAILED TO RUN";
