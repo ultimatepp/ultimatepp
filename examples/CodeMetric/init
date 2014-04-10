@@ -1,0 +1,5 @@
+#ifndef _CodeMetric_icpp_init_stub
+#define _CodeMetric_icpp_init_stub
+#include "CtrlLib/init"
+#include "CppBase/init"
+#endif

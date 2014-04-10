@@ -1,4 +1,4 @@
-description "Investigating C++ cyclometric complexity";
+description "Investigating C++ cyclometric complexity\377";
 
 uses
 	CtrlLib,
