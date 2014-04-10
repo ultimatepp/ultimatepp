@@ -16,6 +16,7 @@ class TimeStop : Moveable<TimeStop> {
 
 public:
 	dword  Elapsed() const           { return GetTickCount() - starttime; }
+	double Seconds() const           { return (double)Elapsed() / 1000; }
 	String ToString() const;
 	void   Reset();
 
