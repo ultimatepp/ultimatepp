@@ -81,22 +81,22 @@ void CodeMetric::StoreError(int line, const String &msg)
 
 int CodeMetric::LogicalLinesOfCode(const LexSymbolStat &symbolStat)
 {
-	static Vector<int> oneLiners(
+	static Vector<int> oneLiners(pick(
 	  Vector<int>() << tk_if << tk_else << tk_switch << tk_case
 	                << tk_for << tk_do << tk_while << tk_try << tk_catch
 	                << tk_struct << tk_class << tk_namespace
 	                << tk_public << tk_private << tk_protected
-	                << ';');
+	                << ';'));
 	return symbolStat.SumStat( oneLiners );
 }
 
 void CodeMetric::StoreMetric(const Parser::FunctionStat & functionStat)
 {
-	static Vector<int> cc1_symbols(
-	  Vector<int>() << tk_if << tk_case << tk_for << tk_while << tk_catch);
+	static Vector<int> cc1_symbols(pick(
+	  Vector<int>() << tk_if << tk_case << tk_for << tk_while << tk_catch));
 
-	static Vector<int> cc2_symbols(
-	  Vector<int>() << t_and << t_or << '?');
+	static Vector<int> cc2_symbols(pick(
+	  Vector<int>() << t_and << t_or << '?'));
 
 	if(!functionStat.cppItem.impl)
 		return;
