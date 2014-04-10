@@ -163,6 +163,12 @@ String Smtp::FormatAddr(const String& addr, const String& name)
 	return r;
 }
 
+String Smtp::GetMessageID()
+{
+	int q = sender.Find('@');
+	return message_id + (q >= 0 ? sender.Mid(q) : "@unknown_host.org");
+}
+
 String Smtp::GetMessage(bool chunks)
 {
 	String delimiter = "?";
@@ -207,6 +213,7 @@ String Smtp::GetMessage(bool chunks)
 			msg << "Subject: " << Encode(subject) << "\r\n";
 		if(!IsNull(reply_to))
 			msg << "Reply-To: " << FormatAddr(reply_to, reply_to_name) << "\r\n";
+		msg << "Message-ID: <" << GetMessageID() << ">\r\n";
 		if(!IsNull(time_sent)) {
 			static const char *dayofweek[] =
 			{ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
@@ -386,6 +393,9 @@ Smtp& Smtp::New() {
 	mime.Clear();
 	error.Clear();
 	add_header.Clear();
+	from.Clear();
+	sender.Clear();
+	message_id = AsString(Uuid::Create());
 	return *this;
 }
 
@@ -395,6 +405,7 @@ Smtp::Smtp()
 	no_header = no_header_sep = false;
 	time_sent = GetSysTime();
 	request_timeout = 120000;
+	New();
 }
 
 END_UPP_NAMESPACE

@@ -40,6 +40,7 @@ class Smtp : public TcpSocket {
 
 	int            start_time;
 	String         error;
+	String         message_id;
 
 	void   CheckFail();
 	void   SendData(const String &s);
@@ -74,6 +75,7 @@ public:
 	Smtp&      New();
 
 	String     GetMessage()                                       { return GetMessage(false); }
+	String     GetMessageID();
 	bool       Send(const String& message);
 	
 	bool       Send()                                             { return Send(Null); }
