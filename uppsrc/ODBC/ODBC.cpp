@@ -361,7 +361,7 @@ bool ODBCConnection::Execute()
 	if(!IsOk(SQLPrepare(session->hstmt, (SQLCHAR *)~statement, statement.GetCount())))
 		return false;
 	parse = false;
-	bparam = param;
+	bparam = pick(param);
 	param.Clear();
 	for(int i = 0; i < bparam.GetCount(); i++) {
 		Param& p = bparam[i];
