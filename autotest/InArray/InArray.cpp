@@ -2,6 +2,12 @@
 
 using namespace Upp;
 
+#ifdef flagLONG
+#define N 100
+#else
+#define N 20
+#endif
+
 template <class C1, class C2>
 void Compare(C1& a, C2& b)
 {
@@ -29,7 +35,7 @@ void InArrayTest()
 	q.Insert(0) = 0;
 	iv.Insert(1) = -1;
 	q.Insert(1) = -1;
-	for(int j = 0; j < 10000; j++) {
+	for(int j = 0; j < 100 * N; j++) {
 		if(j % 1000 == 0)
 			LOG(j);
 		int i = Random(iv.GetCount());
@@ -39,7 +45,7 @@ void InArrayTest()
 		ASSERT(iv.End() - iv.Begin() == iv.GetCount());
 	}
 
-	for(int i = 0; i < 100; i++) {
+	for(int i = 0; i < N; i++) {
 		int n = Random(100) + 20;
 		InArray<int>::Iterator it2, it = iv.Begin();
 		it += n;
@@ -65,7 +71,7 @@ void TestUpperBound()
 {
 	{
 		InArray<int> v;
-		for(int i = 0; i < 3000; i++) {
+		for(int i = 0; i < 30 * N; i++) {
 			if(i % 1000 == 0)
 				LOG(i);
 			v.Insert(i) = i;
@@ -76,7 +82,7 @@ void TestUpperBound()
 	}
 	{
 		InArray<int> v;
-		for(int i = 0; i < 3000; i++) {
+		for(int i = 0; i < 30 * N; i++) {
 			if(i % 1000 == 0)
 				LOG(i);
 			for(int j = 0; j < 7; j++)
@@ -92,7 +98,7 @@ void TestLowerBound()
 {
 	{
 		InArray<int> v;
-		for(int i = 0; i < 3000; i++) {
+		for(int i = 0; i < 30 * N; i++) {
 			if(i % 1000 == 0)
 				LOG(i);
 			v.Insert(i) = i;
@@ -103,7 +109,7 @@ void TestLowerBound()
 	}
 	{
 		InArray<int> v;
-		for(int i = 0; i < 3000; i++) {
+		for(int i = 0; i < 30 * N; i++) {
 			if(i % 1000 == 0)
 				LOG(i);
 			for(int j = 0; j < 7; j++)
@@ -121,7 +127,7 @@ void SetTest()
 		LOG(j);
 		Vector<int> va;
 		InArray<int> ia;
-		for(int i = 0; i < 1000; i++) {
+		for(int i = 0; i < 10 * N; i++) {
 			int q = Random(100);
 			int ii = FindUpperBound(va, q);
 			va.Insert(ii) = q;
@@ -145,7 +151,7 @@ void RemoveTest()
 	q.Insert(0) = 0;
 	iv.Insert(1) = -1;
 	q.Insert(1) = -1;
-	for(int j = 0; j < 10000000; j++) {
+	for(int j = 0; j < 100000 * N; j++) {
 		if(j % 1000 == 0)
 			LOG(j);
 		if(iv.GetCount() > 200 && Random(4) == 1) {
@@ -169,7 +175,7 @@ void InsertNTest()
 	SeedRandom();
 	Vector<int> av;
 	InArray<int> iv;
-	for(int i = 0; i < 100000; i++) {
+	for(int i = 0; i < 1000 * N; i++) {
 		if(i % 1000 == 0)
 			LOG(i);
 		if(av.GetCount() > 2000) {
@@ -192,6 +198,7 @@ void InsertNTest()
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
+	TimeStop tm;
 	SeedRandom();
 
 	RemoveTest();
@@ -200,4 +207,6 @@ CONSOLE_APP_MAIN
 	TestLowerBound();
 	TestUpperBound();
 	InArrayTest();
+	
+	LOG("============== OK " << tm);
 }

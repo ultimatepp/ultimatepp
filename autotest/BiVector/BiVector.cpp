@@ -5,11 +5,15 @@ using namespace Upp;
 #ifdef flagLONG
 #define N 100000000
 #else
-#define N 5000000
+#define N 3000000
 #endif
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
+	TimeStop tm;
+
 	Vector<int> x;
 	BiVector<int> y;
 	for(int i = 0; i < N; i++) {
@@ -47,5 +51,6 @@ CONSOLE_APP_MAIN
 			y.Clear();
 		}
 	}
-	LOG("========== OK");
+
+	LOG("========== OK " << tm);
 }

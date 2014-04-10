@@ -79,7 +79,7 @@ void Test2(int n, int fixed, int rndmask)
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
-
+	TimeStop tm;
 	String gzf = LoadFile(GetHomeDirFile("mbox.gz"));
 	Zlib z;
 	z.GZip().Decompress();
@@ -99,6 +99,5 @@ CONSOLE_APP_MAIN
 		Test(x, 0xffffffff, 100000, 2047);
 		Test(x, 0xffffffff, 0, 2047);
 	}
-	LOG("*************************************");
-	LOG("EVERYTHING IS OK");
+	LOG("===================== OK " << tm);
 }

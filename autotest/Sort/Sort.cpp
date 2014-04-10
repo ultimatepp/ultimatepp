@@ -35,7 +35,8 @@ void CheckSorted(C& data)
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
-	for(;;) {
+	TimeStop tm;
+	while(tm.Seconds() < 150) {
 		Vector<int> data = GetIntData();
 		LOG("int " << data.GetCount());
 		Sort(data);
@@ -55,4 +56,5 @@ CONSOLE_APP_MAIN
 			CheckSorted(sdata);
 		}
 	}
+	LOG("============ OK " << tm);
 }

@@ -133,6 +133,8 @@ void HeapTest(int cnt, int N, bool chk)
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
+	TimeStop tm;
+
 	LOG("Allocator test:");
 	HeapTest(256, 100000, true);
 	LOG("Checked allocator test Passed");
@@ -140,4 +142,6 @@ CONSOLE_APP_MAIN
 	LOG("Quick allocator test Passed");
 	HeapTest(8192, 100 * 1000000, false);
 	LOG("Allocator test Passed");
+	
+	LOG("============== OK " << tm);
 }
