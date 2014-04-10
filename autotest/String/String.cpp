@@ -4,7 +4,13 @@
 
 using namespace Upp;
 
-#define STEPS 40000000
+#ifdef flagLONG
+#define N 100
+#else
+#define N 5
+#endif
+
+#define STEPS 400000 * N
 
 namespace Upp {
 typedef wchar *HT;
@@ -284,13 +290,17 @@ void TestBufferCat()
 
 CONSOLE_APP_MAIN
 {
-	int time0 = msecs();
+	StdLogSetup(LOG_FILE|LOG_COUT);
+
+	TimeStop tm;
 
 	TestBufferCat<String, StringBuffer, char>();
 	TestBufferCat<WString, WStringBuffer, wchar>();
+	LOG("--- BUFFER CAT finished");
+
 //	ATest<WString, WStringBuffer>();
 	UnitTest<String, StringBuffer, char>();
 	UnitTest<WString, WStringBuffer, wchar>();
 	
-	LOG("============= OK " << msecs(time0) / 1000 << " s");
+	LOG("============= OK " << tm << " s");
 }
