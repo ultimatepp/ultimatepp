@@ -59,6 +59,40 @@ rights to some directories are very restricted and to change
 the code there you need to post a patch (for code review). To 
 obtain commit rights, please send forum PM message to user `'mirek`'.&]
 [s0; &]
+[s0; The SVN contains following subdirectories (U`+`+ nests):&]
+[s0; &]
+[ {{1995:8005^ [s0; uppsrc]
+::= [s0; This contains `"canonical`" U`+`+ library packages, albeit not 
+all packages of this nest are exported to U`+`+ releases at this 
+time (sort of flaw).]
+::^ [s0; reference]
+::= [s0; Reference examples. These examples are meant as sort of `"documentation 
+by example`". This gets exported into U`+`+ releases.]
+::^ [s0; examples]
+::= [s0; Demonstration examples. This gets exported into U`+`+ releases.]
+::^ [s0; tutorial]
+::= [s0; Companion examples for tutorials. This gets exported into U`+`+ 
+releases.]
+::^ [s0; bazaar]
+::= [s0; Community contributed packages. This gets exported into U`+`+ 
+releases.]
+::^ [s0; upptst]
+::= [s0; Manual tests.]
+::^ [s0; autotest]
+::= [s0; Automated tests.]
+::^ [s0; benchmarks]
+::= [s0; Benchmarking code.]
+::^ [s0; autotst]
+::= [s0; Special packages to test the autotest system.]
+::^ [s0; rainbow]
+::= [s0; Testing area for developing new GUI backends.]
+::^ [s0; uppsrc2]
+::= [s0; Obsoleted packages.]
+::^ [s0; archive]
+::= [s0; Archived abandoned code.]
+::^ [s0; uppdev]
+::= [s0; This is testing area, total mess. Best ignored.]}}&]
+[s0; &]
 [s0; &]
 [s1; REDMINE&]
 [s0; All longer term U`+`+ issues should be tracked. We are using 
