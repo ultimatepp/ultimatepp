@@ -14,10 +14,10 @@ topic "OutFilterStream";
 [s0;i448;a25;kKO9;@(0.0.255) &]
 [s1;:OutFilterStream`:`:class: [@(0.0.255)3 class][3 _][*3 OutFilterStream][3 _:_][@(0.0.255)3 p
 ublic][3 _][*@3;3 Stream]&]
-[s2;%% Adapter Stream that glues an input stream with some filtering 
+[s2;%% Adapter Stream that glues an output stream with some filtering 
 object, typically of compression/decompression class.&]
 [s3; &]
-[ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
 [s3; &]
 [s5;:OutFilterStream`:`:Close`(`): [@(0.0.255) virtual] [@(0.0.255) void]_[* Close]()&]
 [s2;%% Finalizes operations and closes the output stream. Repeated 
