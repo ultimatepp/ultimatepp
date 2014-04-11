@@ -47,4 +47,4 @@ which are quite specific stuff. Anyway, if you feel like we have
 harmed you favorite platform, nothing prevents you to implement 
 those applications in more optimal way or suggest improvements 
 `- we will be glad to use your version here.&]
-[s0; ]
+[s0; ]]

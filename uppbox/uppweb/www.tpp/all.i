@@ -78,6 +78,10 @@ TOPIC("comparison$de-de")
 #include "comparison$de-de.tppi"
 END_TOPIC
 
+TOPIC("comparison$en-us")
+#include "comparison$en-us.tppi"
+END_TOPIC
+
 TOPIC("cookie$en-us")
 #include "cookie$en-us.tppi"
 END_TOPIC
