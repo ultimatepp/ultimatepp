@@ -40,11 +40,7 @@ protected:
 	static int numDigits, maxFitFunctionEvaluations;
 	
 	void SetNumCoeff(int num);
-	void SetCoeff(Array<double> c) {
-		coeff.SetCount(c.GetCount());
-		for (int i = 0; i < c.GetCount(); ++i)
-			coeff[i] = c[i];
-	}
+	void SetCoeff(const Array<double>& c)           {coeff = clone(c);}
 	void SetCoeff(double c0, double c1, double c2)	{coeff.Clear();	coeff << c0 << c1 << c2;}
 	void SetCoeff(double c0, double c1) 			{coeff.Clear();	coeff << c0 << c1;}
 	void SetCoeff(double c0) 						{coeff.Clear();	coeff << c0;}
@@ -65,24 +61,24 @@ public:
 
 class PolynomialEquation : public ExplicitEquation {
 public:
-	PolynomialEquation() 				{}
-	PolynomialEquation(Array<double> c) {SetCoeff(c);}
+	PolynomialEquation() 				       {}
+	PolynomialEquation(const Array<double>& c) {SetCoeff(c);}
 	double f(double x);
-	virtual String GetName() 			{return t_("Polynomial");}
-	virtual String GetFullName() 		{return t_("Polynomial") + String(" n = ") + FormatInt(degree);}
+	virtual String GetName() 			       {return t_("Polynomial");}
+	virtual String GetFullName() 		       {return t_("Polynomial") + String(" n = ") + FormatInt(degree);}
 	virtual String GetEquation();
-	void SetDegree(int num)				{degree = num;	SetNumCoeff(num + 1);}
+	void SetDegree(int num)				       {degree = num;	SetNumCoeff(num + 1);}
 };
 
 class FourierEquation : public ExplicitEquation {
 public:
-	FourierEquation() 					{}
-	FourierEquation(Array<double> c) 	{SetCoeff(c);}
+	FourierEquation() 					        {}
+	FourierEquation(const Array<double>& c) 	{SetCoeff(c);}
 	double f(double x);
-	virtual String GetName() 			{return t_("Fourier");}
-	virtual String GetFullName() 		{return t_("Fourier") + String(" n = ") + FormatInt(degree);}
+	virtual String GetName() 			        {return t_("Fourier");}
+	virtual String GetFullName() 		        {return t_("Fourier") + String(" n = ") + FormatInt(degree);}
 	virtual String GetEquation();
-	void SetDegree(int num)				{degree = num;	SetNumCoeff(2*num + 2);}
+	void SetDegree(int num)				        {degree = num;	SetNumCoeff(2*num + 2);}
 };
 
 END_UPP_NAMESPACE

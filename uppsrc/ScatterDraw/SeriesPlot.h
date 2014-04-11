@@ -29,7 +29,7 @@ public:
 	static int            TypeIndex(const String& name) {return classMap().Find(name);}
 	static int            GetCount()                    {return classMap().GetCount();}
 	static SeriesPlot*	  Create(int i)                 {return classMap()[i]();}
-	static Vector<String> GetTypes()                    {return VectorMap<String,String>(typeMap(), 1).GetValues();}
+	static Vector<String> GetTypes()                    {return clone(typeMap()).PickValues();}
 	int GetType()const {return typeMap().Find(typeid(*this).name());}
 	SeriesPlot* Copy()const;
 	       	
