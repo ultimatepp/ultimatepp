@@ -16,7 +16,6 @@ void NoClippingExample(Painter& sw)
 {
 	Font fnt = Roman(150).Bold();
 	String txt = "CLIPPED!";
-	Size tsz = GetTextSize(txt, fnt);
 	sw.Text(0, 0, txt, fnt).Fill(Green());
 	sw.Text(0, 0, txt, fnt).Stroke(0.5, Black());
 }

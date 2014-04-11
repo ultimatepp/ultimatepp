@@ -153,7 +153,6 @@ struct ColorPolygon : Moveable<ColorPolygon> {
 
 Vector<ColorPolygon> Lion()
 {
-	const char* ptr = g_lion;
 	Vector<ColorPolygon> data;
 	Color color;
 	CParser p(g_lion);
