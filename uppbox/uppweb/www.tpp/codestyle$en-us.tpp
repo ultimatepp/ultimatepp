@@ -293,4 +293,4 @@ GetCtrlRef();]&]
 [s0;i150;O0; Usually put static variable instantiation, CH`_STYLE 
 and other housekeeping stuff at the bottom. &]
 [s0; &]
-[s0; ]
+[s0; ]]
