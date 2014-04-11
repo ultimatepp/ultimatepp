@@ -58,8 +58,16 @@ TOPIC("bazaar_support$en-us")
 #include "bazaar_support$en-us.tppi"
 END_TOPIC
 
+TOPIC("bugreports$en-us")
+#include "bugreports$en-us.tppi"
+END_TOPIC
+
 TOPIC("chss$de-de")
 #include "chss$de-de.tppi"
+END_TOPIC
+
+TOPIC("codestyle$en-us")
+#include "codestyle$en-us.tppi"
 END_TOPIC
 
 TOPIC("community$en-us")
