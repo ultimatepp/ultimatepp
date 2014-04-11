@@ -373,6 +373,7 @@ void SelectPackageDlg::SyncList()
 		clist.SetCursor(0);
 	alist.ScrollTo(asc);
 	clist.SetSbPos(csc);
+	alist.HeaderTab(0).SetText("Package (" + AsString(alist.GetCount()) + ")");
 }
 
 void SelectPackageDlg::ScanFolder(const String& path, ArrayMap<String, PkData>& nd,
