@@ -281,29 +281,29 @@ Same as [* IsChar](`'`\`"`');&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:ReadOneString`(bool`)throw`(CParser`:`:Error`): [_^String^ String]_[* Rea
-dOneString]([@(0.0.255) bool]_[*@3 chkend]_`=_[@(0.0.255) false])_[@(0.0.255) throw](Erro
-r)&]
+dOneString]([@(0.0.255) bool]_[*@3 chkend]_`=_[@(0.0.255) true])_[@(0.0.255) throw](Error
+)&]
 [s2;%% Reads C`-like string literal from current position (follow 
 C lexical rules, including escape codes). Literals on different 
-lines are not concatenated (unlike C). When [%-*C@3 chkend] [* false], 
-[* ReadOneString ]is more permissive as it allows unterminated 
+lines are not concatenated (unlike C). When [%-*C@3 chkend] is 
+[* false], [* ReadOneString ]is more permissive as it allows unterminated 
 string literals `- string is then also delimited by end of line 
 or text.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:ReadString`(bool`)throw`(CParser`:`:Error`): [_^String^ String]_[* ReadSt
-ring]([@(0.0.255) bool]_[*@3 chkend]_`=_[@(0.0.255) false])_[@(0.0.255) throw](Error)&]
+ring]([@(0.0.255) bool]_[*@3 chkend]_`=_[@(0.0.255) true])_[@(0.0.255) throw](Error)&]
 [s2;%% Reads C`-like string literal from current position (follow 
 C lexical rules, including escape codes). Literals on different 
-lines are concatenated (as in C). When [%-*C@3 chkend] [* false], 
+lines are concatenated (as in C). When [%-*C@3 chkend] is [* false], 
 [* ReadOneString ]is more permissive as it allows unterminated 
 string literals `- string is then also delimited by end of line 
 or text.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:ReadOneString`(int`,bool`)throw`(CParser`:`:Error`): [_^String^ String]_
-[* ReadOneString]([@(0.0.255) int]_[*@3 delim], [@(0.0.255) bool]_[*@3 chkend]_`=_[@(0.0.255) f
-alse])_[@(0.0.255) throw](Error)&]
+[* ReadOneString]([@(0.0.255) int]_[*@3 delim], [@(0.0.255) bool]_[*@3 chkend]_`=_[@(0.0.255) t
+rue])_[@(0.0.255) throw](Error)&]
 [s2;%% Reads C`-like string literal from current position (follow 
 C lexical rules, including escape codes) with different delimiter 
 [%-*C@3 delim] than `'`\`"`'. Literals on different lines are not 
@@ -313,8 +313,8 @@ concatenated (unlike C). When [%-*C@3 chkend] is false, [* ReadOneString
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:ReadString`(int`,bool`)throw`(CParser`:`:Error`): [_^String^ String]_[* R
-eadString]([@(0.0.255) int]_[*@3 delim], [@(0.0.255) bool]_[*@3 chkend]_`=_[@(0.0.255) fals
-e])_[@(0.0.255) throw](Error)&]
+eadString]([@(0.0.255) int]_[*@3 delim], [@(0.0.255) bool]_[*@3 chkend]_`=_[@(0.0.255) true
+])_[@(0.0.255) throw](Error)&]
 [s2;%% Reads C`-like string literal from current position (follow 
 C lexical rules, including escape codes). with different delimiter 
 [%-*C@3 delim] than `'`\`"`'. Literals on different lines are concatenated 

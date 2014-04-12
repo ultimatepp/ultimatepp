@@ -59,10 +59,10 @@ public:
 	bool   IsDouble() const                   { return IsInt(); }
 	double ReadDouble() throw(Error);
 	bool   IsString() const                   { return IsChar('\"'); };
-	String ReadOneString(bool chkend = false) throw(Error);
-	String ReadString(bool chkend = false) throw(Error);
-	String ReadOneString(int delim, bool chkend = false) throw(Error);
-	String ReadString(int delim, bool chkend = false) throw(Error);
+	String ReadOneString(bool chkend = true) throw(Error);
+	String ReadString(bool chkend = true) throw(Error);
+	String ReadOneString(int delim, bool chkend = true) throw(Error);
+	String ReadString(int delim, bool chkend = true) throw(Error);
 
 	void   SkipTerm();
 
