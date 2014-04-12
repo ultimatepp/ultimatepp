@@ -542,6 +542,17 @@ onst]&]
 position, or `-1 if [%-*@3 s] is not found.&]
 [s3; &]
 [s4;%- &]
+[s5;:AString`:`:FindAfter`(const AString`:`:tchar`*`,int`)const:%- [@(0.0.255) int]_[* Fi
+ndAfter]([@(0.0.255) const]_[_^AString`:`:tchar^ tchar]_`*[*@3 s], 
+[@(0.0.255) int]_[*@3 from]_`=_[@3 0])_[@(0.0.255) const]&]
+[s5;:AString`:`:FindAfter`(const AString`:`:String`&`,int`)const:%- [@(0.0.255) int]_[* F
+indAfter]([@(0.0.255) const]_[_^AString`:`:String^ String][@(0.0.255) `&]_[*@3 s], 
+[@(0.0.255) int]_[*@3 from]_`=_[@3 0])_[@(0.0.255) const]&]
+[s2; Similiar to Find, but if found, returns position [*/ after] the 
+substring found. In other words, if not found returns `-1, if 
+found, returns Find([%-*@3 s][%- , ][%-*@3 from]) `+ strlen([%-*@3 s]).&]
+[s3; &]
+[s4;%- &]
 [s5;:AString`:`:Replace`(const AString`:`:String`&`,const AString`:`:String`&`):%- [@(0.0.255) v
 oid]_[* Replace]([@(0.0.255) const]_[_^AString`:`:String^ String][@(0.0.255) `&]_[*@3 find],
  [@(0.0.255) const]_[_^AString`:`:String^ String][@(0.0.255) `&]_[*@3 replace])&]
