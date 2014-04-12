@@ -9,6 +9,14 @@ String input;
 
 Vector<String> exclude;
 
+int Packages;
+int Error;
+int Tested;
+int NoRun;
+int Passed;
+int Failed;
+int Timeout;
+
 void Do(const char *nest, const char *bm, bool release, bool test)
 {
 	String flags = release ? "r" : "b";
@@ -23,6 +31,7 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 		String upp = AppendFileName(ff.GetPath(), name + ".upp");
 	    String h = String(nest) + "/" + name;
 		if(ff.IsFolder() && !ff.IsHidden() && FindIndex(exclude, h) < 0) {
+			Packages++;
 		    String txt;
 		    txt << bm;
 		    if(release)
@@ -40,14 +49,17 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 			Cout() << c << '\n';
 			infolog << txt;
 			String out;
+			Tested += test;
 			if(Sys(c, out)) {
 				Cout() << " *** ERROR\n";
 				infolog << ": ERROR\n";
 				errors << txt << ": ERROR\n";
+				Error++;
 			}
 			else {
 				infolog << ": BUILD OK";
 				if(test) {
+					Tested++;
 					LocalProcess p;
 					setenv("UPP_MAIN__", ff.GetPath(), 1);
 					setenv("UPP_ASSEMBLY__", GetFileFolder(ff.GetPath()), 1);
@@ -55,12 +67,13 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 						Cout() << "FAILED TO RUN\n";
 						infolog << ", FAILED TO RUN";
 						errors << txt << ": FAILED TO RUN\n";
+						Failed++;
 					}
 					else {
 						Cout() << "RUN\n";
 						int timeout = 60000*3;
 						String h = LoadFile(upp);
-						int q = h.Find("#WAIT:");
+						int q = h.FindAfter("#WAIT:");
 						if(q >= 0) {
 							timeout = max(60 * 1000 * atoi(~h + q + strlen("#WAIT:")), timeout);
 						}
@@ -71,6 +84,7 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 									infolog << ", TIMEOUT";
 									errors << txt << ": TIMEOUT\n";
 									Cout() << "*** TIMEOUT\n";
+									Timeout++;
 									break;
 								}
 							}
@@ -79,15 +93,18 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 									infolog << ", FAILED";
 									errors << txt << ": FAILED\n";
 									Cout() << "*** FAILED\n";
+									Failed++;
 								}
 								else {
 									infolog << ", OK";
 									Cout() << "OK\n";
+									Passed++;
 								}
 								break;
 							}
 							Sleep(10);
 						}
+						infolog << ", " << msecs(msecs0) / 1000.0 << " s";
 					}
 				}
 				infolog << "\n";
@@ -101,8 +118,25 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 
 CONSOLE_APP_MAIN
 {
-	Value ini = ParseJSON(LoadFile(GetHomeDirFile("autotest.ini")));
+	const Vector<String>& h = CommandLine();
 
+	if(h.GetCount() != 2) {
+		Cout() << "Usage: AutoTest test_file smtp_account\n";
+		Exit(1);
+	}
+	Value ini = ParseJSON(LoadFile(h[0]));
+	Value email = ParseJSON(LoadFile(h[1]));
+	
+	if(IsError(ini)) {
+		Cout() << "Invalid test_file\n";
+		Exit(1);
+	}
+		
+	if(IsError(email)) {
+		Cout() << "Invalid smtp_account\n";
+		Exit(1);
+	}
+	
 	input = ini["upp_sources"];
 	Vector<String> test = Split((String)ini["auto_test"], ';');
 	Vector<String> build = Split((String)ini["build_test"], ';');
@@ -117,6 +151,7 @@ CONSOLE_APP_MAIN
 		release.Add(r);
 	}		
 	
+	TimeStop tm;
 	infolog << "Started " << GetSysTime() << "\n";
 	
 	for(int i = 0; i < bm.GetCount(); i++) {
@@ -128,25 +163,41 @@ CONSOLE_APP_MAIN
 	
 
 	infolog << "Finished " << GetSysTime() << "\n";
-
+	
 	String body;
+	int tm0 = (int)(tm.Seconds() / 60);
+	body << Packages << " packages to build\n"
+	     << Tested << " packages to run\n"
+	     << Error << " failed to compile (ERROR)\n";
+	if(NoRun)
+	     body << NoRun << " failed to run\n";
+	body
+	     << Timeout << " timeouts (TIMEOUT)\n"
+	     << Failed << " crashed (FAILED)\n"
+	     << Passed << " OK\n"
+	     << "Total time to run tests: " << tm0 / 60 << ":" << Format("%02d", tm0 % 60) << "\n\n";
+	
 	if(errors.GetCount()) {
 		body << "FAILED TESTS:\n" << errors << "\n---------------------------\n\n";
 		SetExitCode(1);
 	}
 	body << "TEST LOG:\n" << infolog;
+	
+	if(IsNull(email["smtp_server"]))
+		return;
 
 	Smtp smtp;
 	smtp.Trace();
-	smtp.Host(ini["smtp_server"])
-	    .Port(Nvl((int)ini["smtp_port"], 465))
+	smtp.Host(email["smtp_server"])
+	    .Port(Nvl((int)email["smtp_port"], 465))
 	    .SSL()
-		.Auth(ini["smtp_user"], ini["smtp_password"])
+		.Auth(email["smtp_user"], email["smtp_password"])
+		.From("autotest@ultimatepp.org")
 	    .Subject(String().Cat() << "U++ autotest: " << (errors.GetCount() ? "** FAILED **" : "OK"))
 	    .Body(body)
 	;
 
-	Vector<String> s = Split((String)ini["emails"], ';');
+	Vector<String> s = Split((String)email["emails"], ';');
 	for(int i = 0; i < s.GetCount(); i++)
 		smtp.To(s[i]);
 	smtp.Send();
