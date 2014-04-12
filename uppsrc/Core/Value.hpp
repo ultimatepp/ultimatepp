@@ -192,13 +192,21 @@ void Value::InitSmall(const T& init)
 }
 
 template <class T>
+inline T& Value::GetSmallRaw() const
+{
+	return *(T*)&data; // Silence compiler warning
+}
+
+template <class T>
 T& Value::GetSmall() const
 {
-#ifdef _DEBUG
 	dword t = GetValueTypeNo<T>();
-	ASSERT(t < 255 && (t == STRING_V ? IsString() : Is((byte)t)));
-#endif
-	return *(T*)&data;
+	if(t < 255 && (t == STRING_V ? IsString() : Is((byte)t)))
+		return GetSmallRaw<T>();
+	ThrowValueTypeError(String().Cat() << "Invalid value conversion: "
+	                    << GetName() << " -> " << typeid(T).name(),
+	                    *this, t);
+	return *(T*)&data; // Silence compiler warning
 }
 
 template <class T>
@@ -230,21 +238,19 @@ inline const T& Value::To() const
 		ASSERT(IsString());
 		return *reinterpret_cast<const T*>(&data); // Only active when T is String
 	}
-	if(t == INT_V || t == INT64_V || t == DOUBLE_V || t == BOOL_V ||
-	   t == DATE_V || t == TIME_V || !IsRef()) {
-#ifdef _DEBUG
-		dword t = GetValueTypeNo<T>();
-		ASSERT_(t < 255 && (t == STRING_V ? IsString() : Is((byte)t)),
-		        String().Cat() << "Invalid value conversion: "
-		                       << GetName() << " -> " << typeid(T).name());
-#endif
-		return *(T*)&data;
+	if(IsRef()) {
+		const RawValueRep<T> *x = dynamic_cast<const RawValueRep<T>*>(ptr());
+		if(x)
+			return x->Get();
 	}
-	const RawValueRep<T> *x = dynamic_cast<const RawValueRep<T>*>(ptr());
-	ASSERT_(x,
-	        String().Cat() << "Invalid value conversion: "
-	                       << GetName() << " -> " << typeid(T).name());
-	return x->Get();
+	else {
+		if(t < 255 && (t == STRING_V ? IsString() : Is((byte)t)))
+			return GetSmallRaw<T>();
+	}
+	ThrowValueTypeError(String().Cat() << "Invalid value conversion: "
+	                    << GetName() << " -> " << typeid(T).name(),
+	                    *this, t);
+	return *(T*)&data; // Silence compiler warning
 }
 
 template <class T>

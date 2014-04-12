@@ -74,6 +74,14 @@ class AssignValueTypeNo : public ValueType<T, type, B> {};
 template <class T>
 dword GetValueTypeNo() { return ValueTypeNo((T*)NULL); }
 
+class Exc : public String {
+public:
+	Exc() {}
+	Exc(const String& desc) : String(desc) {}
+};
+
+void ThrowValueTypeError(const String& text, const Value& src, int target);
+
 class Value : Moveable_<Value> {
 public:
 	class Void {
@@ -148,6 +156,8 @@ protected:
 	template <class T>
 	void     InitSmall(const T& init);
 	template <class T>
+	T&       GetSmallRaw() const;
+	template <class T>
 	T&       GetSmall() const;
 	
 	int      GetOtherInt() const;
@@ -203,12 +213,12 @@ public:
 
 	operator String() const          { return IsString() ? data : GetOtherString(); }
 	operator WString() const;
-	operator Date() const            { return Is(DATE_V) ? GetSmall<Date>() : GetOtherDate(); }
-	operator Time() const            { return Is(TIME_V) ? GetSmall<Time>() : GetOtherTime(); }
-	operator double() const          { return Is(DOUBLE_V) ? GetSmall<double>() : GetOtherDouble(); }
-	operator int() const             { return Is(INT_V) ? GetSmall<int>() : GetOtherInt(); }
-	operator int64() const           { return Is(INT64_V) ? GetSmall<int64>() : GetOtherInt64(); }
-	operator bool() const            { return Is(BOOL_V) ? GetSmall<bool>() : GetOtherBool(); }
+	operator Date() const            { return Is(DATE_V) ? GetSmallRaw<Date>() : GetOtherDate(); }
+	operator Time() const            { return Is(TIME_V) ? GetSmallRaw<Time>() : GetOtherTime(); }
+	operator double() const          { return Is(DOUBLE_V) ? GetSmallRaw<double>() : GetOtherDouble(); }
+	operator int() const             { return Is(INT_V) ? GetSmallRaw<int>() : GetOtherInt(); }
+	operator int64() const           { return Is(INT64_V) ? GetSmallRaw<int64>() : GetOtherInt64(); }
+	operator bool() const            { return Is(BOOL_V) ? GetSmallRaw<bool>() : GetOtherBool(); }
 
 	Value(const String& s) : data(s) { Magic(); }
 	Value(const WString& s);
@@ -256,6 +266,11 @@ public:
 	const Void *GetVoidPtr() const        { ASSERT(IsRef()); return ptr(); }
 
 	friend void Swap(Value& a, Value& b)  { Swap(a.data, b.data); }
+};
+
+struct ValueTypeError : Exc {
+	Value src;
+	int   target;
 };
 
 template <class T> bool  FitsSvoValue()                    { return sizeof(T) <= 8; }

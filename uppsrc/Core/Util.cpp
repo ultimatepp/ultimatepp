@@ -801,21 +801,6 @@ void  SerializeGlobalConfigs(Stream& s)
 	}
 }
 
-Exc::Exc() : String(GetLastErrorMessage()) {}
-/*
-#ifdef PLATFORM_WIN32
-void Exc::Show() const {
-	if(IsEmpty()) return;
-	MessageBox(GetActiveWindow(), *this, "Chyba", MB_OK);
-}
-#endif
-
-#ifdef PLATFORM_POSIX
-void Exc::Show() const {
-	printf(*this);
-}
-#endif
-*/
 AbortExc::AbortExc() :
 	Exc(t_("Aborted by user.")) {}
 
