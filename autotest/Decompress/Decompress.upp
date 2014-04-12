@@ -1,0 +1,12 @@
+uses
+	Core,
+	plugin/zip,
+	plugin/lzma,
+	plugin/bz2;
+
+file
+	Decompress.cpp;
+
+mainconfig
+	"" = "SSE2";
+
