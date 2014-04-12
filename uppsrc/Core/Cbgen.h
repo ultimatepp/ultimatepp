@@ -15,6 +15,24 @@ struct CallbackAction {
 };
 
 #ifdef HAS_LAMBDA
+
+template <class T>
+struct AnyLambda {
+	T l;
+	
+	AnyLambda(T l) : l(l) {}
+};
+
+template <class T>
+AnyLambda<T> lambda(T x) { return AnyLambda<T>(x); }
+
+enum MakeItLambda___ { MakeItLambdaVal___ };
+
+template <class T>
+AnyLambda<T> operator*(MakeItLambda___, T l) { return lambda(l); }
+
+#define LAMBDA MakeItLambdaVal___ * [&]
+
 struct LambdaCallback : CallbackAction {
 	std::function<void ()> fn;
 	virtual void Execute() { fn(); }
@@ -47,6 +65,9 @@ public:
 	explicit Callback(CallbackAction  *newaction) { action = newaction; }
 	Callback() { action = NULL; }
 	Callback(_CNULL) { action = NULL; }
+	
+	template <class T>
+	Callback(AnyLambda<T> l) { action = new LambdaCallback(l.l); }
 
 	~Callback();
 
@@ -102,6 +123,11 @@ public:
 	Callback1() { action = NULL; }
 	Callback1(_CNULL) { action = NULL; }
 	~Callback1();
+
+#ifdef CPP_11
+	template <class T>
+	Callback1(AnyLambda<T> l) { action = new LambdaCallback1<P1>(l.l); }
+#endif
 
 	static Callback1 Empty() { return CNULL; }
 };
@@ -177,6 +203,11 @@ public:
 	Callback2() { action = NULL; }
 	Callback2(_CNULL) { action = NULL; }
 	~Callback2();
+
+#ifdef CPP_11
+	template <class T>
+	Callback2(AnyLambda<T> l) { action = new LambdaCallback2<P1, P2>(l.l); }
+#endif
 
 	static Callback2 Empty() { return CNULL; }
 
@@ -254,6 +285,11 @@ public:
 	Callback3(_CNULL) { action = NULL; }
 	~Callback3();
 
+#ifdef CPP_11
+	template <class T>
+	Callback3(AnyLambda<T> l) { action = new LambdaCallback3<P1, P2, P3>(l.l); }
+#endif
+
 	static Callback3 Empty() { return CNULL; }
 
 };
@@ -330,8 +366,12 @@ public:
 	Callback4(_CNULL) { action = NULL; }
 	~Callback4();
 
-	static Callback4 Empty() { return CNULL; }
+#ifdef CPP_11
+	template <class T>
+	Callback4(AnyLambda<T> l) { action = new LambdaCallback4<P1, P2, P3, P4>(l.l); }
+#endif
 
+	static Callback4 Empty() { return CNULL; }
 };
 
 template <class P1, class P2, class P3, class P4>
@@ -409,8 +449,12 @@ public:
 	Gate(_CNULL) { action = NULL; }
 	~Gate();
 
-	static Gate Empty() { return CNULL; }
+#ifdef CPP_11
+	template <class T>
+	Gate(AnyLambda<T> l)         { action = new LambdaGate(l.l); }
+#endif
 
+	static Gate Empty() { return CNULL; }
 };
 
 // -----------------------------------------------------------
@@ -469,6 +513,11 @@ public:
 	Gate1() { action = NULL; }
 	Gate1(_CNULL) { action = NULL; }
 	~Gate1();
+
+#ifdef CPP_11
+	template <class T>
+	Gate1(AnyLambda<T> l)        { action = new LambdaGate1<P1>(l.l); }
+#endif
 
 	static Gate1 Empty() { return CNULL; }
 
@@ -552,6 +601,11 @@ public:
 	Gate2(_CNULL) { action = NULL; }
 	~Gate2();
 
+#ifdef CPP_11
+	template <class T>
+	Gate2(AnyLambda<T> l)         { action = new LambdaGate2<P1, P2>(l.l); }
+#endif
+
 	static Gate2 Empty() { return CNULL; }
 
 };
@@ -634,8 +688,12 @@ public:
 	Gate3(_CNULL) { action = NULL; }
 	~Gate3();
 
-	static Gate3 Empty() { return CNULL; }
+#ifdef CPP_11
+	template <class T>
+	Gate3(AnyLambda<T> l)         { action = new LambdaGate3<P1, P2, P3>(l.l); }
+#endif
 
+	static Gate3 Empty() { return CNULL; }
 };
 
 template <class P1, class P2, class P3>
@@ -716,8 +774,12 @@ public:
 	Gate4(_CNULL) { action = NULL; }
 	~Gate4();
 
-	static Gate4 Empty() { return CNULL; }
+#ifdef CPP_11
+	template <class T>
+	Gate4(AnyLambda<T> l)        { action = new LambdaGate4<P1, P2, P3, P4>(l.l); }
+#endif
 
+	static Gate4 Empty() { return CNULL; }
 };
 
 template <class P1, class P2, class P3, class P4>
