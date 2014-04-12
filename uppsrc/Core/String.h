@@ -91,6 +91,9 @@ public:
 	int    Find(int len, const tchar *s, int from) const      { return find(B::Begin(), B::GetCount(), s, len, from); }
 	int    Find(const tchar *s, int from = 0) const           { return Find(strlen__(s), s, from); }
 	int    Find(const String& s, int from = 0) const          { return Find(s.GetCount(), ~s, from); }
+
+	int    FindAfter(const tchar *s, int from = 0) const      { int n = strlen__(s); int q = Find(n, s, from); return q < 0 ? -1 : q + n; }
+	int    FindAfter(const String& s, int from = 0) const     { int n = s.GetCount(); int q = Find(n, ~s, from); return q < 0 ? -1 : q + n; }
 	
 	int    ReverseFind(int len, const tchar *s, int from) const;
 	int    ReverseFind(const tchar *s, int from) const;
