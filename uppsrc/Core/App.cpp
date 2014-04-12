@@ -466,10 +466,24 @@ void    LaunchWebBrowser(const String& url)
 
 #endif
 
+String sDataPath;
+
+void SetDataPath(const char *path)
+{
+	sDataPath = path;
+}
+
 String GetDataFile(const char *filename)
 {
+	if(sDataPath.GetCount())
+		return AppendFileName(sDataPath, filename);
 	String s = GetEnv("UPP_MAIN__");
 	return s.GetCount() ? AppendFileName(s, filename) : GetExeDirFile(filename);
+}
+
+String LoadDataFile(const char *filename)
+{
+	return LoadFile(GetDataFile(filename));
 }
 
 String GetComputerName()
