@@ -48,19 +48,3 @@ public:
 
 	CallbackArgTarget()                 { result = Null; }
 };
-
-/*
-inline Callback lambda(std::function<void ()> fn) { return Callback(new LambdaCallback(fn)); }
-
-template <typename P1>
-inline Callback lambda(void (P1) fn) { return Callback(new LambdaCallback1<P1>(std::function<void (PI)>(fn))); }
-
-template <class P1, class P2>
-inline Callback lambda(std::function<void (P1, P2)> fn) { return Callback(new LambdaCallback2<P1, P2>(fn)); }
-
-template <class P1, class P2, class P3>
-inline Callback lambda(std::function<void (P1, P2, P3)> fn) { return Callback(new LambdaCallback3<P1, P2, P3>(fn)); }
-
-template <class P1, class P2, class P3, class P4>
-inline Callback lambda(std::function<void (P1, P2, P3, P4)> fn) { return Callback(new LambdaCallback4<P1, P2, P3, P4>(fn)); }
-*/
