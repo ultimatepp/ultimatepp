@@ -8,6 +8,15 @@ const Nuller Null;
 
 #define LTIMING(x) // RTIMING(x)
 
+void ThrowValueTypeError(const String& text, const Value& src, int target)
+{
+	ValueTypeError err;
+	(String&)err = text;
+	err.src = text;
+	err.target = target;
+	throw err;
+}
+
 unsigned Value::GetOtherHashValue() const {
 	if(IsNull())
 		return 0;

@@ -354,14 +354,6 @@ public:
 	BitAndPtr()           { bap = 0; }
 };
 
-class Exc : public String {
-public:
-	Exc(); // throw exception according to GetLastError()
-	Exc(const String& desc) : String(desc) {}
-
-//	void Show() const;
-};
-
 class AbortExc : public Exc {
 public:
 	AbortExc();
