@@ -1,0 +1,7 @@
+#ifndef _Decompress_icpp_init_stub
+#define _Decompress_icpp_init_stub
+#include "Core/init"
+#include "plugin/zip/init"
+#include "plugin/lzma/init"
+#include "plugin/bz2/init"
+#endif
