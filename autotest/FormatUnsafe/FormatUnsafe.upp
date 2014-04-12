@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	FormatUnsafe.cpp;
-
-mainconfig
-	"" = "SSE2";
-
