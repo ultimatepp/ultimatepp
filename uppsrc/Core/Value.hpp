@@ -201,7 +201,8 @@ template <class T>
 T& Value::GetSmall() const
 {
 	dword t = GetValueTypeNo<T>();
-	if(t < 255 && (t == STRING_V ? IsString() : Is((byte)t)))
+	ASSERT(t < 255);
+	if(Is((byte)t))
 		return GetSmallRaw<T>();
 	ThrowValueTypeError(String().Cat() << "Invalid value conversion: "
 	                    << GetName() << " -> " << typeid(T).name(),
@@ -244,7 +245,8 @@ inline const T& Value::To() const
 			return x->Get();
 	}
 	else {
-		if(t < 255 && (t == STRING_V ? IsString() : Is((byte)t)))
+		ASSERT(t < 255);
+		if(Is((byte)t))
 			return GetSmallRaw<T>();
 	}
 	ThrowValueTypeError(String().Cat() << "Invalid value conversion: "
