@@ -65,9 +65,11 @@ public:
 	explicit Callback(CallbackAction  *newaction) { action = newaction; }
 	Callback() { action = NULL; }
 	Callback(_CNULL) { action = NULL; }
-	
+
+#ifdef CPP_11
 	template <class T>
 	Callback(AnyLambda<T> l) { action = new LambdaCallback(l.l); }
+#endif
 
 	~Callback();
 
