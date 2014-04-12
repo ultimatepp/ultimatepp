@@ -14,10 +14,24 @@ CONSOLE_APP_MAIN
 		cb();
 		ASSERT(a == 1);
 	}
-	
+
+	{
+		Callback cb;
+		cb = LAMBDA { a = 1; LOG("Callback"); };
+		cb();
+		ASSERT(a == 1);
+	}
+
 	{
 		Callback1<int> cb;
 		cb = lambda([&](int b) { a = b; LOG("Callback1"); });
+		cb(123);
+		ASSERT(a == 123);
+	}
+
+	{
+		Callback1<int> cb;
+		cb = LAMBDA(int b) { a = b; LOG("Callback1"); };
 		cb(123);
 		ASSERT(a == 123);
 	}
