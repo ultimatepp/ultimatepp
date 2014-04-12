@@ -76,6 +76,8 @@ void ConsoleMainFn_()
 #endif
 
 String  GetDataFile(const char *filename);
+String  LoadDataFile(const char *filename);
+void    SetDataPath(const char *path);
 
 void    LaunchWebBrowser(const String& url);
 

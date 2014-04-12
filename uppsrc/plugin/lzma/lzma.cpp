@@ -221,6 +221,20 @@ int64 LZMADecompress(Stream& out, Stream& in, Gate2<int64, int64> progress)
 	return Decode(&lout.s, &lin.s, progress) == SZ_OK && !in.IsError() && !out.IsError() ? lout.len : -1;
 }
 
+String LZMADecompress(const void *data, int64 len, Gate2<int64, int64> progress)
+{
+	StringStream  out;
+	MemReadStream in(data, len);
+	if(LZMADecompress(out, in, progress) >= 0)
+		return out;
+	return String::GetVoid();
+}
+
+String LZMADecompress(const String& s, Gate2<int64, int64> progress)
+{
+	return LZMADecompress(~s, s.GetLength(), progress);
+}
+
 bool LZMACompressFile(const char *dstfile, const char *srcfile, Gate2<int64, int64> progress, int lvl)
 {
 	FileIn in(srcfile);

@@ -106,8 +106,19 @@ application was started from `'theide`' `- in that case theide
 passes a reference to main package directory through environment 
 variable `"UPP`_MAIN`_`_`" and the resulting file is in this 
 directory. When started standalone, the function is equivalent 
-to GetExeDirFile.&]
+to GetExeDirFile. Alternatively, application can call SetDataPath 
+to define the directory.&]
 [s3; &]
+[s4; &]
+[s5;:LoadDataFile`(const char`*`): [_^String^ String]_[* LoadDataFile]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 filename])&]
+[s2;%% Same as LoadFile(GetDataFile([%-*@3 filename])).&]
+[s3;%% &]
+[s4; &]
+[s5;:SetDataPath`(const char`*`): [@(0.0.255) void]_[* SetDataPath]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 path])&]
+[s2;%% Defines explicit directory to be used with GetDataFile.&]
+[s3;%% &]
 [s4; &]
 [s5;:GetComputerName`(`): [_^String^ String]_[* GetComputerName]()&]
 [s2;%% Returns the name of computer.&]
