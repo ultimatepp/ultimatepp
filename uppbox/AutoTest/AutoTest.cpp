@@ -75,7 +75,7 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 						String h = LoadFile(upp);
 						int q = h.FindAfter("#WAIT:");
 						if(q >= 0) {
-							timeout = max(60 * 1000 * atoi(~h + q + strlen("#WAIT:")), timeout);
+							timeout = max(60 * 1000 * atoi(~h + q), timeout);
 						}
 						int msecs0 = msecs();
 						for(;;) {
