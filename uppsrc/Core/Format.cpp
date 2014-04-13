@@ -720,6 +720,8 @@ String FloatFormatter(const Formatting& f)
 		sprintf(ah, fmt, d);
 		return String(ah, n);
 	}
+	if(n < 0)
+		return String();
 	return String(h, n);
 }
 
