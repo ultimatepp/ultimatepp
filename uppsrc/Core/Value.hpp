@@ -204,9 +204,9 @@ T& Value::GetSmall() const
 	ASSERT(t < 255);
 	if(Is((byte)t))
 		return GetSmallRaw<T>();
-	ThrowValueTypeError(String().Cat() << "Invalid value conversion: "
-	                    << GetName() << " -> " << typeid(T).name(),
-	                    *this, t);
+	throw ValueTypeError(String().Cat() << "Invalid value conversion: "
+	                     << GetName() << " -> " << typeid(T).name(),
+	                     *this, t);
 	return *(T*)&data; // Silence compiler warning
 }
 
@@ -249,10 +249,9 @@ inline const T& Value::To() const
 		if(Is((byte)t))
 			return GetSmallRaw<T>();
 	}
-	ThrowValueTypeError(String().Cat() << "Invalid value conversion: "
-	                    << GetName() << " -> " << typeid(T).name(),
-	                    *this, t);
-	return *(T*)&data; // Silence compiler warning
+	throw ValueTypeError(String().Cat() << "Invalid value conversion: "
+	                     << GetName() << " -> " << typeid(T).name(),
+	                     *this, t);
 }
 
 template <class T>
