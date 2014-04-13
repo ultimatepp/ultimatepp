@@ -327,7 +327,7 @@ String CParser::ReadOneString(int delim, bool chkend) throw(Error) {
 			}
 		}
 		else {
-			if(*term < ' ') {
+			if((byte)*term < ' ') {
 				if(chkend) {
 					ThrowError("Unterminated string");
 					return result;
