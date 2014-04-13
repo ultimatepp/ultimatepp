@@ -356,7 +356,7 @@ One<Exe> Compiler::Block()
 	ExeBlock& blk = result.Create<ExeBlock>();
 	const char *s = p.GetSpacePtr();
 	const char *b = s;
-	int line = 1;
+	int line = p.GetLine();
 	while(*s) {
 		if(*s == '$') {
 			if(s[1] == '$') {

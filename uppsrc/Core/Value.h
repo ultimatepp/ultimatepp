@@ -74,14 +74,6 @@ class AssignValueTypeNo : public ValueType<T, type, B> {};
 template <class T>
 dword GetValueTypeNo() { return ValueTypeNo((T*)NULL); }
 
-class Exc : public String {
-public:
-	Exc() {}
-	Exc(const String& desc) : String(desc) {}
-};
-
-void ThrowValueTypeError(const String& text, const Value& src, int target);
-
 class Value : Moveable_<Value> {
 public:
 	class Void {
@@ -271,6 +263,8 @@ public:
 struct ValueTypeError : Exc {
 	Value src;
 	int   target;
+
+	ValueTypeError(const String& text, const Value& src, int target);
 };
 
 template <class T> bool  FitsSvoValue()                    { return sizeof(T) <= 8; }

@@ -790,3 +790,9 @@ inline void __LOGF__(const char *format, ...);
 
 template <class T>
 void IGNORE_RESULT(const T&) {}
+
+class Exc : public String {
+public:
+	Exc() {}
+	Exc(const String& desc) : String(desc) {}
+};
