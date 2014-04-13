@@ -27,6 +27,21 @@ CONSOLE_APP_MAIN
 		CParser p(txt);
 		ASSERT(p.ReadString() == s + s);
 	}
+	
+	try {
+		CParser p("\"terminated string\"");
+		ASSERT(p.ReadString() == "terminated string");
+		CParser p2("\"unterminated string\n");
+		p2.ReadString();
+		NEVER();
+	}
+	catch(CParser::Error) {
+	}
+	
+	{
+		CParser p2("\"unterminated string\n");
+		ASSERT(p2.ReadString(false) == "unterminated string\n");
+	}
 
 	CParser p("i if while 12345 alfa");
 	ASSERT(p.Id("i"));
