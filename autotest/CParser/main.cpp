@@ -20,6 +20,13 @@ using namespace Upp;
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
+	
+	{
+		String s = "UTF8 ěščřžýá";
+		String txt = AsCString(s) + "\n" + AsCString(s);
+		CParser p(txt);
+		ASSERT(p.ReadString() == s + s);
+	}
 
 	CParser p("i if while 12345 alfa");
 	ASSERT(p.Id("i"));
