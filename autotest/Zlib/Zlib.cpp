@@ -36,6 +36,10 @@ CONSOLE_APP_MAIN
 	Check(RandomString(20000));
 	Check(RandomString(2000000));
 	
+	String data = "Hello!";
+	StringStream in(data);
+	StringStream out;
+	ASSERT(ZCompress(out, in) == out.GetResult().GetCount());	
 
 	LOG("============= OK");
 }
