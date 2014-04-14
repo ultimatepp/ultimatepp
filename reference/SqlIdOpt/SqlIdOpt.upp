@@ -1,0 +1,12 @@
+description "Demonstrates SqlId::UseQuotes, SqlId::ToLowerCase\377";
+
+uses
+	Core,
+	Sql;
+
+file
+	SqlIdOpt.cpp;
+
+mainconfig
+	"" = "SSE2";
+
