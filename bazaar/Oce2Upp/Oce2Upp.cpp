@@ -555,7 +555,8 @@ bool Oce2Upp::MakeOCEPackage(void)
 		"	OCEDoc.h,\n"
 		"	OCECtrl.cpp,\n"
 		"	OCEDoc.cpp,\n"
-		"	OCE_AlienPixMap.icpp;\n"
+		"	OCE_AlienPixMap.icpp,\n"
+		"	OCE_MemoryMgr.icpp;\n"
 	;
 	uppFile << s;
 	uppFile.Close();
