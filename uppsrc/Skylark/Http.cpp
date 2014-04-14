@@ -297,7 +297,7 @@ void Http::ReadMultiPart(const String& buffer)
 
 static const char hex_digits[] = "0123456789ABCDEF";
 
-void UrlEncode(StringBuffer& out, const String& s)
+static void sUrlEncode(StringBuffer& out, const String& s)
 {
 	static bool ok[256];
 	ONCELOCK {
@@ -332,10 +332,10 @@ void MakeLink(StringBuffer& out, const Vector<String>& part, const Vector<Value>
 		int q = (byte)*p;
 		if(q < 32) {
 			if(q >= 0 && q < arg.GetCount())
-				UrlEncode(out, AsString(arg[q]));
+				sUrlEncode(out, AsString(arg[q]));
 		}
 		else
-			UrlEncode(out, p);
+			sUrlEncode(out, p);
 	}
 	bool get = false;
 	for(int i = 0; i < arg.GetCount(); i++)
@@ -349,9 +349,9 @@ void MakeLink(StringBuffer& out, const Vector<String>& part, const Vector<Value>
 			for(int i = 0; i < m.GetCount(); i++) {
 				if(i)
 					out << '&';
-				UrlEncode(out, AsString(m.GetKeys()[i]));
+				sUrlEncode(out, AsString(m.GetKeys()[i]));
 				out << '=';
-				UrlEncode(out, AsString(m.GetValues()[i]));
+				sUrlEncode(out, AsString(m.GetValues()[i]));
 			}
 		}
 }
