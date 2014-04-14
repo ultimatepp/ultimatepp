@@ -102,7 +102,9 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 								}
 								break;
 							}
-							Sleep(10);
+							String h;
+							p.Read(h); // Empty the pipe to avoid blocking
+							Sleep(1);
 						}
 						infolog << ", " << msecs(msecs0) / 1000.0 << " s";
 					}
