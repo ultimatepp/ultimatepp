@@ -12,6 +12,7 @@ file
 	Eigen.h,
 	ToStringPlugin.h,
 	srcdoc.tpp,
+	Copying,
 	Eigen readonly separator,
 	Eigen/Array highlight cpp,
 	Eigen/Core highlight cpp,
