@@ -5,6 +5,7 @@ uses
 	Skylark;
 
 file
+	test2.witz,
 	index.witz,
 	etalon,
 	main.cpp;

@@ -30,6 +30,14 @@ struct MyApp : SkylarkApp {
 	}
 };
 
+Value WitzUrlEncode(const Vector<Value>& arg, const Renderer *) {
+	return arg.GetCount() == 1 && IsString(arg[0]) ? UrlEncode(arg[0]) : String();
+}
+
+INITBLOCK {
+	Compiler::Register("url_encode", WitzUrlEncode);
+}
+
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
@@ -61,5 +69,13 @@ CONSOLE_APP_MAIN
 	LOG("------------");
 //	SaveFile(GetDataFile("etalon"), result);
 	ASSERT(result == LoadFile(GetDataFile("etalon")));
+	
+	m.Add("name", "What is that?");
+	http("res", m);
+	
+	result = http.RenderString("Witz/test2.witz");
+	ASSERT(result == "What+is+that%3F\r\n");
+	LOG(result);
+	
 	LOG("========== OK");
 }
