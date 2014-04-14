@@ -94,7 +94,7 @@ void *SysAllocRaw(size_t size, size_t reqsize)
 	}
 	if(!ptr)
 		OutOfMemoryPanic(size/*reqsize*/);
-	sKB += rsz;
+	sKB += (int)rsz;
 	DoPeakProfile();
 	return ptr;
 }
