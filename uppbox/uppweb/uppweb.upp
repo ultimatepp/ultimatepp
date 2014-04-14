@@ -53,7 +53,8 @@ file
 	forum.txt,
 	spam.txt,
 	2008.txt,
-	www.t;
+	www.t,
+	forum-header.txt;
 
 mainconfig
 	"" = "MT SKELETON RAINBOW NOGTK";
