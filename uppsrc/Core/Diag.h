@@ -1,3 +1,8 @@
+class Exc : public String {
+public:
+	Exc() {}
+	Exc(const String& desc) : String(desc) {}
+};
 
 const char LOG_BEGIN = '\x1e';
 const char LOG_END = '\x1f';
