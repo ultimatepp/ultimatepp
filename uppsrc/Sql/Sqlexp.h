@@ -112,6 +112,8 @@ private:
 
 public:
 	static void   UseQuotes(bool b = true);
+	static void   ToLowerCase(bool b = true);
+	static void   ToUpperCase(bool b = true);
 
 	bool          IsEqual(const SqlId& b) const  { return id == b.id; }
 	bool          IsEqual(const Id& b) const     { return id == b; }

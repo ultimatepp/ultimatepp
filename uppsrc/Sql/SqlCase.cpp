@@ -21,15 +21,29 @@ T ReadSqlValue(T& x, const char *&s) {
 }
 
 static bool sSqlIdQuoted;
+static bool sToUpperCase;
+static bool sToLowerCase;
 
 void SqlId::UseQuotes(bool b)
 {
 	sSqlIdQuoted = b;
 }
 
+void SqlId::ToLowerCase(bool b)
+{
+	sToUpperCase = sToUpperCase && !b;
+	sToLowerCase = b;
+}
+
+void SqlId::ToUpperCase(bool b)
+{
+	sToLowerCase = sToLowerCase && !b;
+	sToUpperCase = b;
+}
+
 String SqlId::Quoted() const
 {
-	if(sSqlIdQuoted && !id.IsNull())
+	if(!id.IsNull())
 		return String().Cat() << '\t' << id << '\t';
 	return id.ToString();
 }
@@ -66,7 +80,13 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 					if(r) {
 						if(do_quote)
 							*r << quote;
-						r->Cat(b, s);
+						if(sToUpperCase)
+							r->Cat(ToUpper(String(b, s)));
+						else
+						if(sToLowerCase)
+							r->Cat(ToLower(String(b, s)));
+						else
+							r->Cat(b, s);
 						if(do_quote)
 							*r << quote;
 						if(c == SQLC_AS) {
