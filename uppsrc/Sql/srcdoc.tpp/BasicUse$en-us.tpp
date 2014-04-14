@@ -34,13 +34,6 @@ for using MySQL and SQLite as well.&]
 [s23; The Schema description file (.sch file)&]
 [s24; In each schema description file, you describe the table and 
 column layout of your database. &]
-[s24; Note: In U`+`+, we tend to use uppercase for all database/table/column 
-names. Also, some databases, like PostgreSQL, have case`-sensitive 
-database, table, and column names. Writing queries can be a pain 
-when you have names that have a mix of upper and lower`-case 
-letters. By default, unless you use quotes, all names in the 
-macros will result in lower`-case names for all tables/columns 
-created.&]
 [s25; Postgresql Example (`"person`_db.sch`"):&]
 [s7; TABLE`_ (PERSON)&]
 [s7; -|SERIAL`_ (PERSON`_ID) PRIMARY`_KEY&]
