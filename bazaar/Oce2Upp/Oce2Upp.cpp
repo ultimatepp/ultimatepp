@@ -396,6 +396,20 @@ bool Oce2Upp::MakeBuilderPackage(void)
 					sTk << "		options() -I" << drvPath << ",\n";
 					continue;
 				}
+				// special handling for Standard.cxx file
+				// it must be replaced with the one patched for Upp
+				else if(fName == "Standard.cxx")
+				{
+					String s = (const char *)Standard_CXX;
+					String path = AppendFileName(tkFolder, "STANDARD/");
+					RealizeDirectory(path);
+					path = AppendFileName(path, fName);
+					SaveFile(path, s);
+					sTk << "	" << path << "\n";
+					sTk << "		options() -I" << srcPath << "\n";
+					sTk << "		options() -I" << drvPath << ",\n";
+					continue;
+				}
 				sTk << "	" << AppendFileName(srcPath, fName) << "\n";
 				sTk << "		options() -I" << srcPath << "\n";
 				sTk << "		options() -I" << drvPath << ",\n";
@@ -585,6 +599,13 @@ bool Oce2Upp::MakeOCEPackage(void)
 
 	uppFile.Open(AppendFileName(pacFolder, "OCE_AlienPixMap.icpp"));
 	s = (const char *)OCE_AlienPixMap_ICPP;
+	uppFile << s;
+	uppFile.Close();
+	progress.Set(++iTk);
+	Ctrl::ProcessEvents();
+
+	uppFile.Open(AppendFileName(pacFolder, "OCE_MemoryMgr.icpp"));
+	s = (const char *)OCE_MemoryMgr_ICPP;
 	uppFile << s;
 	uppFile.Close();
 	progress.Set(++iTk);
