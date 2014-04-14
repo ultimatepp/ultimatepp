@@ -94,6 +94,8 @@ void Test(int dialect, const char *dialectn, SqlStatement s, const char *q)
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
 	SqlId::UseQuotes();
 
 	Date date = Date(2011, 12, 31);
@@ -227,5 +229,5 @@ CONSOLE_APP_MAIN
 	LOG("\n\n\n=========================================================================");
 	#include "Test.i"
 	
-	LOG("OK");
+	LOG("================== OK");
 }

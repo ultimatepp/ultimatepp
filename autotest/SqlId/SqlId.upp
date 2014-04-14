@@ -1,0 +1,10 @@
+uses
+	Core,
+	Sql;
+
+file
+	SqlId.cpp;
+
+mainconfig
+	"" = "SSE2";
+
