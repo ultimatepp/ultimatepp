@@ -73,12 +73,12 @@ public:
 	~Zlib();
 };
 
-int64  ZCompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress = false);
+int64  ZCompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress = false, bool hdr = true);
 int64  ZCompress(Stream& out, Stream& in, Gate2<int64, int64> progress = false);
 String ZCompress(const void *data, int64 len, Gate2<int64, int64> progress = false);
 String ZCompress(const String& s, Gate2<int64, int64> progress = false);
 
-int64  ZDecompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress = false);
+int64  ZDecompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress = false, bool hdr = true);
 int64  ZDecompress(Stream& out, Stream& in, Gate2<int64, int64> progress = false);
 String ZDecompress(const void *data, int64 len, Gate2<int64, int64> progress = false);
 String ZDecompress(const String& s, Gate2<int64, int64> progress = false);

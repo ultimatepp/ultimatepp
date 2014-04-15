@@ -346,14 +346,14 @@ int64 zPress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, 
 	return r;
 }
 
-int64 ZCompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress)
+int64 ZCompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool hdr)
 {
-	return zPress(out, in, size, progress, false, true);
+	return zPress(out, in, size, progress, false, true, NULL, hdr);
 }
 
-int64 ZDecompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress)
+int64 ZDecompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool hdr)
 {
-	return zPress(out, in, size, progress, false, false);
+	return zPress(out, in, size, progress, false, false, NULL, hdr);
 }
 
 int64 ZCompress(Stream& out, Stream& in, Gate2<int64, int64> progress)
