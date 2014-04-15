@@ -225,6 +225,10 @@ bool Oce2Upp::MakeBuilderPackage(void)
 	String s = (const char *)Image_AlienPixMap_HXX;
 	SaveFile(AppendFileName(builderFolder, "include/Image_AlienPixMap.hxx"), s);
 	
+	// overwrite Standard_MMgrRoot.hxx file with custom one
+	s = (const char *)Standard_MMgrRoot_HXX;
+	SaveFile(AppendFileName(builderFolder, "include/Standard_MMgrRoot.hxx"), s);
+	
 	// create upp package file and populate starting part
 	FileOut uppFile(AppendFileName(builderFolder, builderName + ".upp"));
 	if(!uppFile)
@@ -396,20 +400,6 @@ bool Oce2Upp::MakeBuilderPackage(void)
 					sTk << "		options() -I" << drvPath << ",\n";
 					continue;
 				}
-				// special handling for Standard.cxx file
-				// it must be replaced with the one patched for Upp
-				else if(fName == "Standard.cxx")
-				{
-					String s = (const char *)Standard_CXX;
-					String path = AppendFileName(tkFolder, "STANDARD/");
-					RealizeDirectory(path);
-					path = AppendFileName(path, fName);
-					SaveFile(path, s);
-					sTk << "	" << path << "\n";
-					sTk << "		options() -I" << srcPath << "\n";
-					sTk << "		options() -I" << drvPath << ",\n";
-					continue;
-				}
 				sTk << "	" << AppendFileName(srcPath, fName) << "\n";
 				sTk << "		options() -I" << srcPath << "\n";
 				sTk << "		options() -I" << drvPath << ",\n";
@@ -491,6 +481,10 @@ bool Oce2Upp::MakeOCEPackage(void)
 	s = (const char *)Image_AlienPixMap_HXX;
 	SaveFile(AppendFileName(includeDest, "Image_AlienPixMap.hxx"), s);
 	
+	// overwrite Standard_MMgrRoot.hxx file with custom one
+	s = (const char *)Standard_MMgrRoot_HXX;
+	SaveFile(AppendFileName(includeDest, "Standard_MMgrRoot.hxx"), s);
+	
 	// build OCE.h file
 	FileOut f(AppendFileName(pacFolder, "OCE.h"));
 	f <<
@@ -555,8 +549,7 @@ bool Oce2Upp::MakeOCEPackage(void)
 		"	OCEDoc.h,\n"
 		"	OCECtrl.cpp,\n"
 		"	OCEDoc.cpp,\n"
-		"	OCE_AlienPixMap.icpp,\n"
-		"	OCE_MemoryMgr.icpp;\n"
+		"	OCE_AlienPixMap.icpp;\n"
 	;
 	uppFile << s;
 	uppFile.Close();
@@ -600,13 +593,6 @@ bool Oce2Upp::MakeOCEPackage(void)
 
 	uppFile.Open(AppendFileName(pacFolder, "OCE_AlienPixMap.icpp"));
 	s = (const char *)OCE_AlienPixMap_ICPP;
-	uppFile << s;
-	uppFile.Close();
-	progress.Set(++iTk);
-	Ctrl::ProcessEvents();
-
-	uppFile.Open(AppendFileName(pacFolder, "OCE_MemoryMgr.icpp"));
-	s = (const char *)OCE_MemoryMgr_ICPP;
 	uppFile << s;
 	uppFile.Close();
 	progress.Set(++iTk);

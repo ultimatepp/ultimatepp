@@ -5,9 +5,9 @@ uses
 options(WIN32) -DPIPPO=gigi;
 
 file
+	Standard_MMgrRoot_HXX,
 	Image_AlienPixMap_CXX,
 	Image_AlienPixMap_HXX,
-	Standard_CXX,
 	OCE_UPP,
 	OCE_H,
 	OCEDoc_H,
@@ -15,7 +15,6 @@ file
 	OCECtrl_H,
 	OCECtrl_CPP,
 	OCE_AlienPixMap_ICPP,
-	OCE_MemoryMgr_ICPP,
 	Oce2Upp.brc,
 	Oce2Upp.lay,
 	Oce2Upp.h,

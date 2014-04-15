@@ -85,4 +85,25 @@ using namespace Upp;
 #include "OCECtrl.h"
 #include "OCEDoc.h"
 
+// upp memory allocator is NOT usable, we must use the OCC one
+#ifdef UPP_HEAP
+#pragma error OCE MUST BE COMPILED WITH 'USEMALLOC' FLAG
+#endif
+
+#include <new>
+
+// Use OCC allocators
+inline void *operator new(size_t size) throw(std::bad_alloc) { void *ptr = Standard::Allocate(size); return ptr; }
+inline void operator  delete(void *ptr) throw()              { Standard::Free(ptr); }
+
+inline void *operator new[](size_t size) throw(std::bad_alloc) { void *ptr = Standard::Allocate(size); return ptr; }
+inline void operator  delete[](void *ptr) throw()              { Standard::Free(ptr); }
+
+inline void *operator new(size_t size, const std::nothrow_t&) throw() { void *ptr = Standard::Allocate(size); return ptr; }
+inline void operator  delete(void *ptr, const std::nothrow_t&) throw() { Standard::Free(ptr); }
+
+inline void *operator new[](size_t size, const std::nothrow_t&) throw() {void *ptr = Standard::Allocate(size); return ptr; }
+inline void operator  delete[](void *ptr, const std::nothrow_t&) throw() { Standard::Free(ptr); }
+
+
 #endif
