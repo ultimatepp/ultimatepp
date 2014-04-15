@@ -231,3 +231,32 @@ String MIMEHeader::ToString() const
 		r << "; " << param.GetKey(i) << '=' << AsCString(param[i]);
 	return r;
 }
+
+Index<String> ParseMessageIDs(const String& s)
+{
+	Index<String> ref;
+	int q = 0;
+	for(;;) {
+		q = s.Find('<', q);
+		if(q < 0)
+			break;
+		int w = s.Find('>', q);
+		if(w < 0)
+			break;
+		ref.FindAdd(s.Mid(q + 1, w - q - 1));
+		q = w;
+	}
+	return ref;
+}
+
+String FormatMessageIDs(const Index<String>& id)
+{
+	String r;
+	for(int i = 0; i < id.GetCount(); i++)
+		if(id[i].GetCount()) {
+			if(r.GetCount())
+				r << ' ';
+			r << '<' << id[i] << '>';
+		}
+	return r;
+}

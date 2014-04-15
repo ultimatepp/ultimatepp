@@ -416,6 +416,7 @@ void HttpRequest::Start()
 	if(!p)
 		p = ssl ? DEFAULT_HTTPS_PORT : DEFAULT_HTTP_PORT;
 	String h = use_proxy ? ssl ? ssl_proxy_host : proxy_host : host;
+	LLOG("Using " << (use_proxy ? "proxy " : "") << h << ":" << p);
 
 	StartPhase(DNS);
 	if(IsNull(GetTimeout())) {

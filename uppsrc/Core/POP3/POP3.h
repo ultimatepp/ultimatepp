@@ -89,4 +89,7 @@ struct MIMEHeader {
 	MIMEHeader()                            {}
 };
 
+Index<String> ParseMessageIDs(const String& s);
+String        FormatMessageIDs(const Index<String>& id);
+
 #endif

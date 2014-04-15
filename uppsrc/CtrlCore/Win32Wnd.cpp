@@ -695,8 +695,8 @@ LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 		}
 		catch(Exc e)
 		{
-			LOG("Ctrl::WindowProc -> Exc: " << e);
-			NEVER();
+			LOG("Uncaught exception in WindowProc: " << e);
+			Panic("Uncaught exception in WindowProc: " + (String)e);
 		}
 	}
 	else
