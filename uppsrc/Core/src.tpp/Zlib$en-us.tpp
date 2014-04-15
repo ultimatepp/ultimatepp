@@ -128,10 +128,11 @@ in single zlib call.&]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Compression / decompression functions]]}}&]
 [s3; &]
-[s5;:ZCompress`(Stream`&`,Stream`&`,int64`,Gate2`<int64`,int64`>`): [_^int64^ int64]_[* Z
-Compress]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 i
-n], [_^int64^ int64]_[*@3 size], [_^Gate2^ Gate2]<[_^int64^ int64], [_^int64^ int64]>_[*@3 pr
-ogress]_`=_[@(0.0.255) false])&]
+[s5;:ZCompress`(Stream`&`,Stream`&`,int64`,Gate2`<int64`,int64`>`,bool`): [_^int64^ int
+64]_[* ZCompress]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&
+]_[*@3 in], [_^int64^ int64]_[*@3 size], [_^Gate2^ Gate2]<[_^int64^ int64], 
+[_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false], [@(0.0.255) bool]_[*@3 hdr]_`=_[@(0.0.255) t
+rue])&]
 [s5;:ZCompress`(Stream`&`,Stream`&`,Gate2`<int64`,int64`>`): [_^int64^ int64]_[* ZCompres
 s]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 in], 
 [_^Gate2^ Gate2]<[_^int64^ int64], [_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
@@ -146,9 +147,16 @@ memory [%-*@3 data][%- , ][%-*@3 len] or input string [%-*@3 s] to output
 stream [%-*@3 out] (in this case returns a number of bytes written 
 or negative integer to signal error) or into String return value 
 (returns IsVoid String on error). [%-*@3 progress] can be used 
-to track progress of operation, returning true cancels operation.&]
+to track progress of operation, returning true cancels operation. 
+Parameter [%-*@3 hdr] can be used to switch`-off zlib header (see 
+zlib documentation for details).&]
 [s3;%% &]
-[s4;%% &]
+[s4; &]
+[s5;:ZDecompress`(Stream`&`,Stream`&`,int64`,Gate2`<int64`,int64`>`,bool`): [_^int64^ i
+nt64]_[* ZDecompress]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&
+]_[*@3 in], [_^int64^ int64]_[*@3 size], [_^Gate2^ Gate2]<[_^int64^ int64], 
+[_^int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false], [@(0.0.255) bool]_[*@3 hdr]_`=_[@(0.0.255) t
+rue])&]
 [s5;:ZDecompress`(Stream`&`,Stream`&`,int64`,Gate2`<int64`,int64`>`): [_^int64^ int64]_
 [* ZDecompress]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Stream^ Stream][@(0.0.255) `&
 ]_[*@3 in], [_^int64^ int64]_[*@3 size], [_^Gate2^ Gate2]<[_^int64^ int64], 
@@ -168,7 +176,9 @@ memory [%-*@3 data][%- , ][%-*@3 len] or input string [%-*@3 s] to output
 stream [%-*@3 out] (in this case returns a number of bytes written 
 or negative integer to signal error) or into String return value 
 (returns IsVoid String on error). [%-*@3 progress] can be used 
-to track progress of operation, returning true cancels operation.&]
+to track progress of operation, returning true cancels operation. 
+Parameter [%-*@3 hdr] can be used to switch`-off zlib header (see 
+zlib documentation for details).&]
 [s3;%% &]
 [s4;%% &]
 [s5;:GZCompress`(Stream`&`,Stream`&`,int64`,Gate2`<int64`,int64`>`): [_^int64^ int64]_[* G
