@@ -1,0 +1,6 @@
+file
+	ppm.h,
+	ppmref.icpp,
+	ppm.cpp,
+	ppmenc.cpp;
+

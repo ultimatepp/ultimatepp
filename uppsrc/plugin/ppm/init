@@ -1,0 +1,6 @@
+#ifndef _plugin_ppm_icpp_init_stub
+#define _plugin_ppm_icpp_init_stub
+#define BLITZ_INDEX__ Fdf120578bb798e5c9b5d622a2a6f7bf4
+#include "ppmref.icpp"
+#undef BLITZ_INDEX__
+#endif
