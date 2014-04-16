@@ -1,6 +1,7 @@
 uses
 	Core,
-	RichText;
+	RichText,
+	PdfDraw;
 
 file
 	test.qtf,
