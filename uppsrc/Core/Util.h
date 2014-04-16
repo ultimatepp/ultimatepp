@@ -411,9 +411,9 @@ __Expand8(E__NFBody)
 //$+
 
 //$ bool SplitTo(const char *s, int delim, bool ignoreempty, String& p1...);
-//$ bool SplitTo(const char *s, int delim, , String& p1...);
-//$ bool SplitTo(const char *s, const char *delim, bool ignoreempty, , String& p1...);
-//$ bool SplitTo(const char *s, const char *delim, , String& p1...);
+//$ bool SplitTo(const char *s, int delim, String& p1...);
+//$ bool SplitTo(const char *s, const char *delim, bool ignoreempty, String& p1...);
+//$ bool SplitTo(const char *s, const char *delim, String& p1...);
 
 String  Join(const Vector<String>& im, const String& delim);
 WString Join(const Vector<WString>& im, const WString& delim);
