@@ -1606,6 +1606,13 @@ bool Load(Callback1<Stream&> serialize, Stream& stream, int version) {
 		ASSERT(!backup.IsError());
 		return false;
 	}
+	catch(ValueTypeError) {
+		backup.Seek(0);
+		backup.SetLoading();
+		serialize(backup);
+		ASSERT(!backup.IsError());
+		return false;
+	}
 	return true;
 }
 
