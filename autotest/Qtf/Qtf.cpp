@@ -11,6 +11,19 @@ CONSOLE_APP_MAIN
 	String outdir = GetHomeDirFile("autotest.qtf");
 	DeleteFolderDeep(outdir);
 	RealizeDirectory(outdir);
+	
+	// to properly test PDF on various hosts, we need the same fonts to be installed/used
+	Index<String> face;
+	for(int i = 0; i < Font::GetFaceCount(); i++)
+		face.Add(Font::GetFaceName(i));
+//	DDUMPC(face);
+	ASSERT(face.Find("Droid Sans") >= 0);
+	ASSERT(face.Find("Droid Sans Mono") >= 0);
+	ASSERT(face.Find("Droid Serif") >= 0);
+	
+	Font::SetFace(Font::SERIF, "Droid Serif");
+	Font::SetFace(Font::SANSSERIF, "Droid Sans");
+	Font::SetFace(Font::MONOSPACE, "Droid Sans Mono");
 
 	for(FindFile ff(GetDataFile("*.qtf")); ff; ff.Next()) {
 		String qtf = LoadFile(ff.GetPath());
