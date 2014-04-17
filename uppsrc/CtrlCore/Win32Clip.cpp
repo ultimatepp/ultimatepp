@@ -490,7 +490,7 @@ Vector<String> GetFiles(PasteClip& clip)
 {
 	GuiLock __;
 	Vector<String> f;
-	return GetClipFiles(clip);
+	return GetClipFiles(clip.Get("files"));
 }
 
 bool   Has(UDropTarget *dt, const char *fmt);
