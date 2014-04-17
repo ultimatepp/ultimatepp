@@ -80,6 +80,7 @@ public:
 	static int    FindFaceNameIndex(const String& name);
 	static dword  GetFaceInfo(int index);
 	static void   SetFace(int index, const String& name, dword info);
+	static void   SetFace(int index, const String& name);
 
 	static void   SetDefaultFont(Font font);
 	static void   SetStdFont(Font font);
