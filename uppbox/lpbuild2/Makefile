@@ -12,14 +12,14 @@ OPTS:=CC="cc -g" CXX="c++ -g" CFLAGS="-g" CXXFLAGS="-g" LDFLAGS="-Wl,--gc-sectio
 
 ide:
 	sed -i -e 's/IDE_VERSION[ \t]*"\([0-9]*\)[^"]*"/IDE_VERSION    "\1-'$(SERIES)-$(ARCH)'"/' $(CURDIR)/uppsrc/ide/version.h
-	$(MAKE) -f mkfile JOBS=$(JOBS) PKG=ide "NESTS=uppsrc" $(OPTS) "FLAGS=GUI GCC DEBUG DEBUG_FULL" TARGET=`pwd`/$@
+	export CCACHE_DISABLE=1; $(MAKE) -f mkfile JOBS=$(JOBS) PKG=ide "NESTS=uppsrc" $(OPTS) "FLAGS=GUI GCC DEBUG DEBUG_FULL STACKTRACE" TARGET=`pwd`/$@
 
 ide-nogtk:
 	sed -i -e 's/IDE_VERSION[ \t]*"\([0-9]*\)[^"]*"/IDE_VERSION    "\1-'$(SERIES)-$(ARCH)'-nogtk"/' $(CURDIR)/uppsrc/ide/version.h
-	$(MAKE) -f mkfile JOBS=$(JOBS) PKG=ide "NESTS=uppsrc" $(OPTS) "FLAGS=GUI NOGTK GCC" TARGET=`pwd`/$@
+	export CCACHE_DISABLE=1; $(MAKE) -f mkfile JOBS=$(JOBS) PKG=ide "NESTS=uppsrc" $(OPTS) "FLAGS=GUI NOGTK GCC DEBUG DEBUG_FULL STACKTRACE" TARGET=`pwd`/$@
 
 umk:
-	$(MAKE) -f mkfile JOBS=$(JOBS) PKG=umk "NESTS=uppsrc" $(OPTS) "FLAGS=GCC" TARGET=`pwd`/$@
+	export CCACHE_DISABLE=1; $(MAKE) -f mkfile JOBS=$(JOBS) PKG=umk "NESTS=uppsrc" $(OPTS) "FLAGS=GCC DEBUG DEBUG_FULL STACKTRACE" TARGET=`pwd`/$@
 
 install:
 	# this is just a trick to rename files
@@ -29,3 +29,5 @@ install:
 
 clean:
 	rm -f ide ide-nogtk umk
+
+distclean: clean
