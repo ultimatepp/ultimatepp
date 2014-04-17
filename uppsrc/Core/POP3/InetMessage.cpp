@@ -198,6 +198,9 @@ bool MIMEHeader::Parse(const char *s)
 		while(!p.IsEof() && !p.IsChar(';'))
 			p.SkipTerm();
 		value = TrimBoth(String(b, p.GetPtr()));
+		if(*value == '\'' && *value.Last() == '\'' || // mime type can be quoted...
+		   *value == '\"' && *value.Last() == '\"')
+			value = TrimBoth(value.Mid(1, value.GetCount() - 2));
 		while(!p.IsEof()) {
 			if(p.Char(';') && p.IsId()) {
 				const char *b = p.GetPtr();
@@ -206,6 +209,9 @@ bool MIMEHeader::Parse(const char *s)
 				String id = ToLower(TrimBoth(String(b, p.GetPtr())));
 				String val;
 				if(p.Char('='))
+					if(p.IsChar('\''))
+						val = p.ReadString('\'');
+					else
 					if(p.IsString())
 						val = p.ReadString();
 					else {
