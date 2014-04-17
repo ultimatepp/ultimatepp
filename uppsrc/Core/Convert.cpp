@@ -155,13 +155,17 @@ double ScanDoubleT(const T *p, const T **endptr, bool accept_comma)
 				raise++;
 		}
 	if(*p == 'E' || *p == 'e') { // exponent
-		int vexp = ScanInt(p + 1, endptr);
+		int vexp = ScanInt(p + 1, &p);
 		if(IsNull(vexp))
 			return Null;
 		exp += vexp;
 	}
-	else
-		if(endptr) *endptr = p;
+	while(*p) {
+		if((byte)*p > ' ')
+			return Null;
+		p++;
+	}
+	if(endptr) *endptr = p;
 	if(exp) {
 		double e = ipow10(tabs(exp));
 		mantissa = (exp > 0 ? mantissa * e : mantissa / e);
