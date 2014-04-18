@@ -4,17 +4,17 @@ using namespace Upp;
 
 SKYLARK(HomePage, "")
 {
-	http << "<html><body>Hello world!</body></html>";
+	http << "<!DOCTYPE html><html><body>Hello world!</body></html>";
 }
 
 SKYLARK(Param, "*/param")
 {
-	http << "<html><body>Parameter: " << http[0] << "</html></body>";
+	http << "<!DOCTYPE html><html><body>Parameter: " << http[0] << "</html></body>";
 }
 
 SKYLARK(Params, "params/**")
 {
-	http << "<html><body>Parameters: ";
+	http << "<!DOCTYPE html><html><body>Parameters: ";
 	for(int i = 0; i < http.GetParamCount(); i++)
 		http << http[i] << " ";
 	http << "</html></body>";
