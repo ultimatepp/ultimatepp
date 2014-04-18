@@ -267,13 +267,12 @@ public:
 template <class T>
 class WithDeepCopy : public T {
 public:
-	WithDeepCopy(const T& a) : T(clone(a))           {}
-	WithDeepCopy(const WithDeepCopy& a) : T(clone(a)){}
-	WithDeepCopy& operator=(const WithDeepCopy& a)   { (T&)*this = clone(a); return *this; }
-	WithDeepCopy& operator=(const T& a)              { (T&)*this = clone(a); return *this; }
-//	WithDeepCopy(int, T rval_ a) : T(a)              {}
-//	WithDeepCopy& operator^=(T rval_ a)              { (T&)*this = pick(a); return *this; }
-	WithDeepCopy()                                   {}
+	WithDeepCopy(const T& a) : T(a, 1)             {}
+	WithDeepCopy(const WithDeepCopy& a) : T(a, 1)  {}
+	WithDeepCopy& operator=(const WithDeepCopy& a) { (T&)*this <<= a; return *this; }
+	WithDeepCopy(int, T rval_ a) : T(a)            {}
+	WithDeepCopy& operator^=(T rval_ a)            { (T&)*this = pick(a); return *this; }
+	WithDeepCopy()                                 {}
 };
 
 template <class T>
@@ -292,7 +291,7 @@ public:
 };
 
 template <class T>
-WithPick<T> AsPick(T rval src)
+WithPick<T> AsPick(T rval_ src)
 {
 	return WithPick<T>(src);
 }
