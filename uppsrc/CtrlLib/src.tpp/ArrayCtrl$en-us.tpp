@@ -1881,6 +1881,17 @@ moving it up.&]
 it down.&]
 [s3; &]
 [s4;%- &]
+[s5;:ArrayCtrl`:`:Sort`(Gate2`<int`,int`>`):%- [@(0.0.255) void]_[* Sort]([_^Gate2^ Gate2]<
+[@(0.0.255) int], [@(0.0.255) int]>_[*@3 order])&]
+[s5;:ArrayCtrl`:`:Sort`(int`,int`,Gate2`<int`,int`>`):%- [@(0.0.255) void]_[* Sort]([@(0.0.255) i
+nt]_[*@3 from], [@(0.0.255) int]_[*@3 count], [_^Gate2^ Gate2]<[@(0.0.255) int], 
+[@(0.0.255) int]>_[*@3 order])&]
+[s2; Sorts the array rows according to a given ordering predicate. 
+The [%-*@3 order] object defines the ordering predicate; two parameters 
+are indicies of ArrayCtrl lines; it should returns true if they 
+are in required ordering.&]
+[s3; &]
+[s4;%- &]
 [s5;:ArrayCtrl`:`:Sort`(const ArrayCtrl`:`:Order`&`):%- [@(0.0.255) void]_[* Sort]([@(0.0.255) c
 onst]_[_^ArrayCtrl`:`:Order^ ArrayCtrl`::Order][@(0.0.255) `&]_[*@3 order])&]
 [s2; Sorts the array rows according to a given ordering predicate. 
@@ -1888,7 +1899,7 @@ The [* ArrayCtrl`::Order] object defines the ordering predicate;
 its [* operator ()] should return [* true] whenever its first parameter 
 (a vector containing the values of all source indices in a row) 
 is less than its second parameter.&]
-[s7; [%-*C@3 order]-|&]
+[s7; &]
 [s3; &]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:Sort`(int`,int`,const ArrayCtrl`:`:Order`&`):%- [@(0.0.255) void]_[* So
@@ -1953,6 +1964,14 @@ ordering .&]
 for the first source index. This is equivalent to calling [* Sort(0)].&]
 [s3; &]
 [s4;%- &]
+[s5;:ArrayCtrl`:`:ColumnSort`(int`,Gate2`<int`,int`>`):%- [@(0.0.255) void]_[* ColumnSort
+]([@(0.0.255) int]_[*@3 column], [_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 or
+der])&]
+[s2; Sorts by the column using ordering based on line indicies. This 
+is almost the same as the plain Sort, except that it respects 
+ColumnSortSecondary and ColumnSortFindKey flags.&]
+[s3; &]
+[s4;%- &]
 [s5;:ArrayCtrl`:`:ColumnSort`(int`,const ValueOrder`&`):%- [@(0.0.255) void]_[* ColumnSor
 t]([@(0.0.255) int]_[*@3 column], [@(0.0.255) const]_[_^ValueOrder^ ValueOrder][@(0.0.255) `&
 ]_[*@3 order])&]
@@ -1978,6 +1997,17 @@ to false (indicating ascending sort).&]
 [s2; Sorts the array by sorting column and indicates it by setting 
 an image in the header.&]
 [s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:GetSortColumn`(`)const:%- [@(0.0.255) int]_[* GetSortColumn]()_[@(0.0.255) c
+onst]&]
+[s2; Returns the column that is sorting the ArrayCtrl (user clicked 
+on it and it has up or down arrow displayed).&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:IsSortDescending`(`)const:%- [@(0.0.255) bool]_[* IsSortDescending]()_[@(0.0.255) c
+onst]&]
+[s2; Returns true if current column`-sort is descending.&]
+[s3;%- &]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:ClearCache`(`):%- [@(0.0.255) void]_[* ClearCache]()&]
 [s2; Invalidates the whole [/ convert cache]. The convert cache keeps 
@@ -2751,6 +2781,17 @@ olumn][@(0.0.255) `&]_[* Sorting]([@(0.0.255) int]_(`*[*@3 c])([@(0.0.255) const
 [s2; Activates sorting of ArrayCtrl column by clicking on its header 
 tab. Parameterless version uses default Value ordering using 
 StdValueCompare.&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:Column`:`:Sorting`(Gate2`<int`,int`>`):%- [_^ArrayCtrl`:`:Column^ Col
+umn][@(0.0.255) `&]_[* Sorting]([_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 ord
+er])&]
+[s2; Activates sorting of ArrayCtrl column by clicking on its header 
+tab. This variant uses a Gate2 predicate that is supposed to 
+compare two lines (it has indicies as parameters). Note that 
+this variant ignores ascending/descending order, it has to be 
+implemented in predicated, using ArrayCtrl`::IsSortDescending 
+to determine the order.&]
 [s3; &]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:Column`:`:SortDefault`(`):%- [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&
