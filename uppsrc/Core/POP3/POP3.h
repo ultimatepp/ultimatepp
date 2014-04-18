@@ -65,6 +65,8 @@ struct InetMessage {
 
 	bool   Read(const String& msg);
 	bool   ReadHeader(const String& msg);
+	
+	void   Clear()                                { part.Clear(); }
 
 	int         GetCount() const                  { return part.GetCount(); }
 	const Part& operator[](int i) const           { return part[i]; }
