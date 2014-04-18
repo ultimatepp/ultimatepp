@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <body>
 <FORM action=$ACTION method="post" accept-charset="utf-8" enctype="multipart/form-data">
