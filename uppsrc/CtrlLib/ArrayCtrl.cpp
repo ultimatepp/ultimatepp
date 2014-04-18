@@ -96,6 +96,7 @@ ArrayCtrl::Column& ArrayCtrl::Column::Sorting(const ValueOrder& o)
 {
 	cmp = NULL;
 	order = &o;
+	line_order.Clear();
 	Sorts();
 	return *this;
 }
@@ -104,6 +105,16 @@ ArrayCtrl::Column& ArrayCtrl::Column::Sorting(int (*c)(const Value& a, const Val
 {
 	order = NULL;
 	cmp = c;
+	line_order.Clear();
+	Sorts();
+	return *this;
+}
+
+ArrayCtrl::Column& ArrayCtrl::Column::Sorting(Gate2<int, int> aorder)
+{
+	order = NULL;
+	cmp = NULL;
+	line_order = aorder;
 	Sorts();
 	return *this;
 }
@@ -2331,7 +2342,6 @@ void ArrayCtrl::Sort(const ArrayCtrl::Order& order) {
 	sp.order = &order;
 	if(ln.GetCount() || cellinfo.GetCount()) {
 		SortA();
-		Vector<int> o = GetStableSortOrder(array, sp);
 		SortB(GetStableSortOrder(array, sp));
 	}
 	else
@@ -2340,32 +2350,54 @@ void ArrayCtrl::Sort(const ArrayCtrl::Order& order) {
 	SyncInfo();
 }
 
-// Fixme: Use SortB to sort CellInfo too.
-
-void ArrayCtrl::Sort(int from, int count, const ArrayCtrl::Order& order) {
+void ArrayCtrl::Sort(int from, int count, Gate2<int, int> order)
+{
 	CHECK(KillCursor());
 	ClearCache();
-	SortPredicate sp;
-	sp.order = &order;
-	StableSort(array.GetIter(from), array.GetIter(from + count), sp);
+	Vector<int> h;
+	for(int i = 0; i < array.GetCount(); i++)
+		h.Add(i);
+	SortA();
+	StableSort(h.GetIter(from), h.GetIter(from + count), order);
+	SortB(h);
+	Refresh();
+	SyncInfo();
 }
 
-void ArrayCtrl::ColumnSort(int column, const ValueOrder& order)
+void ArrayCtrl::Sort(Gate2<int, int> order)
+{
+	Sort(0, array.GetCount(), order);
+}
+
+bool ArrayCtrl::OrderPred(int i1, int i2, const ArrayCtrl::Order *o)
+{
+	return (*o)(array[i1].line, array[i2].line);
+}
+
+void ArrayCtrl::Sort(int from, int count, const ArrayCtrl::Order& order)
+{
+	Sort(from, count, THISBACK1(OrderPred, &order));
+}
+
+bool ArrayCtrl::ColumnSortPred(int i1, int i2, int column, const ValueOrder *o)
+{
+	return (*o)(GetConvertedColumn(i1, column), GetConvertedColumn(i2, column));
+}
+
+void ArrayCtrl::ColumnSort(int column, Gate2<int, int> order)
 {
 	Value key = GetKey();
 	CHECK(KillCursor());
 	if(columnsortsecondary)
 		Sort(*columnsortsecondary);
-	ClearCache();
-	Vector<Value> hv;
-	for(int i = 0; i < GetCount(); i++)
-		hv.Add(GetConvertedColumn(i, column));
-	SortA();
-	SortB(GetStableSortOrder(hv, order));
-	Refresh();
-	SyncInfo();
+	Sort(order);
 	if(columnsortfindkey)
 		FindSetCursor(key);
+}
+
+void ArrayCtrl::ColumnSort(int column, const ValueOrder& order)
+{
+	ColumnSort(column, THISBACK2(ColumnSortPred, column, &order));
 }
 
 void ArrayCtrl::SetSortColumn(int ii, bool desc)
@@ -2417,12 +2449,16 @@ void ArrayCtrl::DoColumnSort()
 	if(sortcolumn >= 0 && sortcolumn < column.GetCount()) {
 		sAC_ColumnSort cs;
 		const Column& c = column[sortcolumn];
-		cs.descending = sortcolumndescending;
-		cs.order = c.order;
-		cs.cmp = c.cmp;
-		if(!cs.order && !cs.cmp)
-			cs.cmp = StdValueCompare;
-		ColumnSort(sortcolumn, cs);
+		if(c.line_order)
+			ColumnSort(sortcolumn, c.line_order);
+		else {
+			cs.descending = sortcolumndescending;
+			cs.order = c.order;
+			cs.cmp = c.cmp;
+			if(!cs.order && !cs.cmp)
+				cs.cmp = StdValueCompare;
+			ColumnSort(sortcolumn, cs);
+		}
 	}
 }
 
