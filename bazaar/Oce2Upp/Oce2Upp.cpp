@@ -400,6 +400,40 @@ bool Oce2Upp::MakeBuilderPackage(void)
 					sTk << "		options() -I" << drvPath << ",\n";
 					continue;
 				}
+				
+				// special handling for AIS_InteractiveContext.cxx
+				// must be patched to correctly update AIS_MultipleConnectedInteractive
+				// objects if they contains shapes
+				else if(fName == "AIS_InteractiveContext.cxx")
+				{
+					String pattern = "anObj->IsKind(STANDARD_TYPE(AIS_MultipleConnectedShape)) );";
+					String rPattern = "anObj->IsKind(STANDARD_TYPE(AIS_MultipleConnectedShape)) ||";
+					String aPattern = "                                  anObj->IsKind(\"AIS_MultiInteractive\") );";
+					String sourcePath = AppendFileName(srcPath, fName);
+					String destPath = AppendFileName(tkFolder, "AIS/");
+					RealizeDirectory(destPath);
+					destPath = AppendFileName(destPath, fName);
+					FileIn sFile(sourcePath);
+					FileOut dFile(destPath);
+					while(!sFile.IsEof())
+					{
+						String s = sFile.GetLine();
+						int pos = s.Find(pattern);
+						if(pos >= 0)
+						{
+							s.Replace(pattern, rPattern);
+							dFile.PutLine(s);
+							s = aPattern;
+						}
+						dFile.PutLine(s);
+					}
+					sFile.Close();
+					dFile.Close();
+					sTk << "	" << destPath << "\n";
+					sTk << "		options() -I" << srcPath << "\n";
+					sTk << "		options() -I" << drvPath << ",\n";
+					continue;
+				}
 				sTk << "	" << AppendFileName(srcPath, fName) << "\n";
 				sTk << "		options() -I" << srcPath << "\n";
 				sTk << "		options() -I" << drvPath << ",\n";
