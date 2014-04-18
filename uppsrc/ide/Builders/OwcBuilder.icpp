@@ -307,12 +307,13 @@ bool OwcBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			if (HasFlag("DEBUG"))
 			    link << " debug all option incremental";
 
-			if (HasFlag("WIN32"))
+			if (HasFlag("WIN32")) {
 				if (HasFlag("GUI"))
 					link << " system nt_win";
 				else if (HasFlag("DLL"))
 					link << " system nt_dll";
 				else link << " system nt";
+			}
 
 			if (createmap)
 				link << " option map";

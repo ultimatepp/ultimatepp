@@ -109,17 +109,17 @@ void Hdepend::Include(const char *s, Hdepend::Info& info, const String& filedir,
 }
 
 static const char *SkipComment(const char *s) {
-	if(*s == '/')
+	if(*s == '/') {
 		if(s[1] == '/')
 			for(s += 2; *s && *s != '\n';)
 				s++;
-		else if(s[1] == '*')
-		{
+		else if(s[1] == '*') {
 			for(s += 2; *s && (*s != '*' || s[1] != '/'); s++)
 				;
 			if(*s)
 				s += 2;
 		}
+	}
 	return s;
 }
 

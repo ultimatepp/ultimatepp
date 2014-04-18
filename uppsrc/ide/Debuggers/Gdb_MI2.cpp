@@ -706,7 +706,7 @@ void Gdb_MI2::SyncIde(bool fr)
 	SyncData();
 	CleanupVariables();
 #else
-	exploreCallback.Set(480, THISBACK1(SyncExplorer, Vector<VarItem>()));
+	exploreCallback.Set(480, THISBACK1(SyncExplorer, DeepClone(Vector<VarItem>())));
 	timeCallback.Set(500, THISBACK(SyncData));
 	timeCallback.Set(550, THISBACK(CleanupVariables));
 #endif
@@ -1098,9 +1098,10 @@ void Gdb_MI2::SyncLocals()
 	DecThreadRunning();
 }
 #else
-void Gdb_MI2::SyncLocals(Vector<VarItem> localVars)
+void Gdb_MI2::SyncLocals(const Vector<VarItem>& localVars_)
 {
 	static VectorMap<String, String> prev;
+	Vector<VarItem> localVars = clone(localVars_);
 	if(localVars.IsEmpty())
 	{
 		prev = DataMap(members);;
@@ -1112,7 +1113,7 @@ void Gdb_MI2::SyncLocals(Vector<VarItem> localVars)
 	
 		// variables are returned as a tuple, named "variables"
 		// containing a array of variables
-		MIValue lLocs = locs["variables"];
+		MIValue lLocs = pick(locs["variables"]);
 		if(!lLocs.IsArray())
 			return;
 	
@@ -1146,7 +1147,7 @@ void Gdb_MI2::SyncLocals(Vector<VarItem> localVars)
 		// autos variables can come from members or locals...
 		SyncAutos();
 	
-		timeCallback.Set(500, THISBACK1(SyncLocals, localVars));
+		timeCallback.Set(500, THISBACK1(SyncLocals, DeepClone(localVars)));
 		return;
 	}
 	
@@ -1160,7 +1161,7 @@ void Gdb_MI2::SyncLocals(Vector<VarItem> localVars)
 			localValues[iLoc] = v.value;
 			locals.Set(iLoc, 1, v.value);
 			SyncAutos();
-			timeCallback.Set(100, THISBACK1(SyncLocals, localVars));
+			timeCallback.Set(100, THISBACK1(SyncLocals, DeepClone(localVars)));
 			return;
 		}
 	}
@@ -1255,9 +1256,10 @@ void Gdb_MI2::SyncThis()
 	DecThreadRunning();
 }
 #else
-void Gdb_MI2::SyncThis(Vector<VarItem> children)
+void Gdb_MI2::SyncThis(const Vector<VarItem>& children_)
 {
 	static VectorMap<String, String> prev;
+	Vector<VarItem> children = clone(children_);
 	if(children.IsEmpty())
 	{
 		prev = DataMap(members);;
@@ -1290,7 +1292,7 @@ void Gdb_MI2::SyncThis(Vector<VarItem> children)
 		// autos variables can come from members or locals...
 		SyncAutos();
 	
-		timeCallback.Set(500, THISBACK1(SyncThis, children));
+		timeCallback.Set(500, THISBACK1(SyncThis, DeepClone(children)));
 		return;
 	}
 	
@@ -1304,7 +1306,7 @@ void Gdb_MI2::SyncThis(Vector<VarItem> children)
 			thisValues[iVar] = v.value;
 			members.Set(iVar, 1, v.value);
 			SyncAutos();
-			timeCallback.Set(100, THISBACK1(SyncThis, children));
+			timeCallback.Set(100, THISBACK1(SyncThis, DeepClone(children)));
 			return;
 		}
 	}
@@ -1430,9 +1432,10 @@ void Gdb_MI2::SyncWatches()
 	}
 }
 #else
-void Gdb_MI2::SyncWatches(Vector<VarItem> watchesVars)
+void Gdb_MI2::SyncWatches(const Vector<VarItem>& watchesVars_)
 {
 	static VectorMap<String, String> prev;
+	Vector<VarItem> watchesVars = clone(watchesVars_);
 	if(watchesVars.IsEmpty())
 	{
 		prev = DataMap(watches);;
@@ -1451,7 +1454,7 @@ void Gdb_MI2::SyncWatches(Vector<VarItem> watchesVars)
 			watches.Set(iWatch, 1, val);
 		}
 		
-		timeCallback.Set(500, THISBACK1(SyncWatches, watchesVars));
+		timeCallback.Set(500, THISBACK1(SyncWatches, DeepClone(watchesVars_)));
 		return;
 	}
 	
@@ -1464,7 +1467,7 @@ void Gdb_MI2::SyncWatches(Vector<VarItem> watchesVars)
 			watchesExpressions.Set(iWatch, v.evaluableExpression);
 			watchesValues[iWatch] = v.value;
 			watches.Set(iWatch, 1, v.value);
-			timeCallback.Set(100, THISBACK1(SyncWatches, watchesVars));
+			timeCallback.Set(100, THISBACK1(SyncWatches, DeepClone(watchesVars)));
 			return;
 		}
 	}
@@ -1729,7 +1732,7 @@ bool Gdb_MI2::Create(One<Host> rval_ _host, const String& exefile, const String&
 #ifdef flagMT
 	watches.WhenAcceptEdit = THISBACK(SyncWatches);
 #else
-	watches.WhenAcceptEdit = THISBACK1(SyncWatches, Vector<VarItem>());
+	watches.WhenAcceptEdit = THISBACK1(SyncWatches, DeepClone(Vector<VarItem>()));
 #endif
 	// this one will allow asynchronous break of running app
 // 2012-07-08 -- DISABLED because of GDB bugs...

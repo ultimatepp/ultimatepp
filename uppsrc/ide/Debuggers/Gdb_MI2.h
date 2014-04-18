@@ -221,16 +221,16 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		void SyncExplorer();
 #else
 		// sync local variables pane
-		void SyncLocals(Vector<VarItem> localVars = Vector<VarItem>());
+		void SyncLocals(const Vector<VarItem>& localVars = Vector<VarItem>());
 
 		// Sync 'this' inspector data
-		void SyncThis(Vector<VarItem> children = Vector<VarItem>());
+		void SyncThis(const Vector<VarItem>& children = Vector<VarItem>());
 		
 		// sync watches treectrl
-		void SyncWatches(Vector<VarItem> children = Vector<VarItem>());
+		void SyncWatches(const Vector<VarItem>& children = Vector<VarItem>());
 
 		// sync explorer pane
-		void SyncExplorer(Vector<VarItem> children = Vector<VarItem>());
+		void SyncExplorer(const Vector<VarItem>& children = Vector<VarItem>());
 #endif
 
 		// sync data tabs, depending on which tab is shown

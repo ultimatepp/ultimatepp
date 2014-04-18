@@ -275,6 +275,12 @@ public:
 	WithDeepCopy()                                 {}
 };
 
+template <class T>
+WithDeepCopy<T> DeepClone(const T& src)
+{
+	return WithDeepCopy<T>(src);
+}
+
 // STL compatibility hacks
 
 #define STL_ITERATOR_COMPATIBILITY \
