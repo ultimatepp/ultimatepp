@@ -86,10 +86,10 @@ void Gdb_MI2::SyncExplorer()
 	}
 }
 #else
-void Gdb_MI2::SyncExplorer(Vector<VarItem> children)
+void Gdb_MI2::SyncExplorer(const Vector<VarItem>& children_)
 {
 	static VectorMap<String, String> prev;
-
+	Vector<VarItem> children = clone(children_);
 	if(children.IsEmpty())
 	{
 		prev = DataMap(explorer);
@@ -107,7 +107,7 @@ void Gdb_MI2::SyncExplorer(Vector<VarItem> children)
 
 		// get children if complex variable
 		if(vItem.kind == VarItem::COMPLEX)
-			children = vItem.GetChildren();
+			children = clone(vItem.GetChildren());
 		else
 			children.Add(vItem);
 
@@ -124,7 +124,7 @@ void Gdb_MI2::SyncExplorer(Vector<VarItem> children)
 		// update 'this' pane
 		FillPane(explorer, explorerExpressions, explorerValues);
 	
-		exploreCallback.Set(500, THISBACK1(SyncExplorer, children));
+		exploreCallback.Set(500, THISBACK1(SyncExplorer, DeepClone(children)));
 		return;
 	}
 	
@@ -136,7 +136,7 @@ void Gdb_MI2::SyncExplorer(Vector<VarItem> children)
 			VarItem &v = children[iVar];
 			explorer.Set(iVar, 1, v.value);
 			explorerValues[iVar] = v.value;
-			exploreCallback.Set(100, THISBACK1(SyncExplorer, children));
+			exploreCallback.Set(100, THISBACK1(SyncExplorer, DeepClone(children)));
 			return;
 		}
 	}
