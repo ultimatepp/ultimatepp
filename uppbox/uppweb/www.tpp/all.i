@@ -122,6 +122,10 @@ TOPIC("examples$en-us")
 #include "examples$en-us.tppi"
 END_TOPIC
 
+TOPIC("extlinks$en-us")
+#include "extlinks$en-us.tppi"
+END_TOPIC
+
 TOPIC("idess$de-de")
 #include "idess$de-de.tppi"
 END_TOPIC
