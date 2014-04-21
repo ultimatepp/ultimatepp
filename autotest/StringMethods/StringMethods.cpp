@@ -161,6 +161,13 @@ void ATest()
 	ASSERT(x.ReverseFind(~Str("."), 37) == -1);
 	ASSERT(x.ReverseFind(~Str("needle")) == 24);
 	ASSERT(x.ReverseFind(~Str("needle"), 20) == 13);
+	
+	x.Replace(~Str("needle"), ~Str("<x>"));
+	ASSERT(x == ~Str("beginneednene<x>nenee<x>theend."));
+	x.Replace("begin", "<b>");
+	ASSERT(x == ~Str("<b>neednene<x>nenee<x>theend."));
+	x.Replace("end.", "<e>");
+	ASSERT(x == ~Str("<b>neednene<x>nenee<x>the<e>"));
 }
 
 CONSOLE_APP_MAIN
