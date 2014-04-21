@@ -43,15 +43,8 @@ String FollowCygwinSymlink(const String& file) {
 	}
 }
 
-const char *SemiTextTest::Accept(const char *s) const {
-	if(*s != ';') return NULL;
-	s++;
-	while(*s == ' ') s++;
-	return s;
-};
-
 Vector<String> SplitDirs(const char *s) {
-	return Split(s, Single<SemiTextTest>());
+	return Split(s, ';');
 }
 
 static String varsname = "default";
@@ -307,7 +300,7 @@ void SplitHostName(const char *hostname, String& host, int& port) {
 }
 
 Vector<String> SplitFlags0(const char *flags) {
-	return Split(flags, CharFilterTextTest(CharFilterWhitespace));
+	return Split(flags, CharFilterWhitespace);
 }
 
 Vector<String> SplitFlags(const char *flags, bool main, const Vector<String>& accepts)

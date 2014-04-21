@@ -255,9 +255,19 @@ void String0::Reserve(int r)
 	Trim(l);
 }
 
-void String0::Set(const char *s, int len)
+void String0::SetL(const char *s, int len)
 {
-	w[0] = w[1] = w[2] = w[3] = 0;
+	char *p = Alloc(len, chr[KIND]);
+	memcpy(p, s, len);
+	p[len] = 0;
+	ptr = p;
+	LLen() = len;
+	SLen() = 15;
+}
+
+void String0::Set0(const char *s, int len)
+{
+	Zero();
 	switch(len) {
 	#define MOV(x) case x: chr[x - 1] = s[x - 1];
 		MOV(14) MOV(13) MOV(12) MOV(11) MOV(10) MOV(9) MOV(8)
@@ -266,12 +276,7 @@ void String0::Set(const char *s, int len)
 		SLen() = len;
 		break;
 	default:
-		char *p = Alloc(len, chr[KIND]);
-		memcpy(p, s, len);
-		p[len] = 0;
-		ptr = p;
-		LLen() = len;
-		SLen() = 15;
+		SetL(s, len);
 	};
 	Dsyn();
 }
@@ -284,7 +289,7 @@ void String::AssignLen(const char *s, int slen)
 		*this = String(s, slen);
 	else {
 		String0::Free();
-		String0::Set(s, slen);
+		String0::Set0(s, slen);
 	}
 }
 
@@ -316,7 +321,7 @@ int String::GetCharCount() const
 String::String(StringBuffer& b)
 {
 	if(b.begin == b.buffer) {
-		String0::Set(b.begin, (int)(uintptr_t)(b.end - b.begin));
+		String0::Set0(b.begin, (int)(uintptr_t)(b.end - b.begin));
 		return;
 	}
 	int l = b.GetLength();

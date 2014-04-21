@@ -376,48 +376,6 @@ va_list va_ptr(const T& obj)
 int  InScListIndex(const char *s, const char *list);
 bool InScList(const char *s, const char *list);
 
-struct TextTest {
-	virtual const char *Accept(const char *s) const = 0;
-	virtual ~TextTest() {}
-};
-
-class CharFilterTextTest : public TextTest {
-	int (*filter)(int);
-
-public:
-	virtual const char *Accept(const char *s) const;
-	CharFilterTextTest(int (*filter)(int));
-	virtual ~CharFilterTextTest();
-};
-
-Vector<String> Split(const char *s, const TextTest& delim, bool ignoreempty = true);
-Vector<String> Split(const char *s, int (*filter)(int), bool ignoreempty = true);
-Vector<String> Split(const char *s, int chr, bool ignoreempty = true);
-Vector<String> Split(const char *s, const String& delim, bool ignoreempty = true);
-
-//$-
-#define E__NFValue(I)  String& COMBINE(p, I)
-
-#define E__NFBody(I) \
-bool SplitTo(const char *s, int delim, bool ignoreempty, __List##I(E__NFValue)); \
-bool SplitTo(const char *s, int delim, __List##I(E__NFValue)); \
-bool SplitTo(const char *s, const char *delim, bool ignoreempty, __List##I(E__NFValue)); \
-bool SplitTo(const char *s, const char *delim, __List##I(E__NFValue)); \
-
-__Expand8(E__NFBody)
-
-#undef E__NFBody
-#undef E__NFValue
-//$+
-
-//$ bool SplitTo(const char *s, int delim, bool ignoreempty, String& p1...);
-//$ bool SplitTo(const char *s, int delim, String& p1...);
-//$ bool SplitTo(const char *s, const char *delim, bool ignoreempty, String& p1...);
-//$ bool SplitTo(const char *s, const char *delim, String& p1...);
-
-String  Join(const Vector<String>& im, const String& delim);
-WString Join(const Vector<WString>& im, const WString& delim);
-
 class StringC {
 	BitAndPtr bap;
 

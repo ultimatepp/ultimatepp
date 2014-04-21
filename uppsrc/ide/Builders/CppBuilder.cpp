@@ -248,7 +248,7 @@ Vector<String> Cuprep(const String& m, const VectorMap<String, String>& mac,
 		}
 		else
 			r.Cat(*s++);
-	return Split(r, CharFilterTextTest(CharFilterEol));
+	return Split(r, CharFilterEol);
 }
 
 bool CppBuilder::Cd(const String& cmd) {
