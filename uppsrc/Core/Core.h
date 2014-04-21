@@ -289,6 +289,8 @@ class JsonIO;
 #include "FixedMap.h"
 #include "InVector.h"
 
+#include "SplitMerge.h"
+
 #include "Value.h"
 #include "ValueUtil.h"
 

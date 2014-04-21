@@ -107,7 +107,7 @@ void AString<B>::Replace(const tchar *find, int findlen, const tchar *replace, i
 	}
 	r.Cat(p + i, B::GetCount() - i);
 	B::Free();
-	B::Set(r);
+	B::Set0(r);
 }
 
 template <class B>
@@ -277,6 +277,20 @@ inline int String0::Compare(const String0& s) const
 }
 
 force_inline
+void String0::Set(const char *s, int len)
+{
+	Clear();
+	if(len < 14) {
+		SVO_MEMCPY(chr, s, len);
+		SLen() = len;
+		Dsyn();
+		return;
+	}
+	SetL(s, len);
+	Dsyn();
+}
+
+force_inline
 String& String::operator=(const char *s)
 {
 	AssignLen(s, strlen__(s));
@@ -286,7 +300,7 @@ String& String::operator=(const char *s)
 force_inline
 String::String(const char *s)
 {
-	String0::Set(s, strlen__(s));
+	String0::Set0(s, strlen__(s));
 }
 
 force_inline

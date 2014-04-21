@@ -154,10 +154,6 @@ void ParseUscFile(const char *filename) throw(CParser::Error);
 Point ReadNums(CParser& p);
 Point ReadPoint(CParser& p);
 
-struct SemiTextTest : public TextTest {
-	virtual const char *Accept(const char *s) const;
-};
-
 Vector<String> SplitDirs(const char *s);
 
 class Nest {

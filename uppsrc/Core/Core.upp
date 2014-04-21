@@ -50,6 +50,8 @@ file
 	String.cpp optimize_speed,
 	WString.cpp optimize_speed,
 	StrUtil.cpp optimize_speed,
+	SplitMerge.h,
+	SplitMerge.cpp optimize_speed,
 	CharSet.i,
 	CharSet.h,
 	CharSet.cpp optimize_speed,

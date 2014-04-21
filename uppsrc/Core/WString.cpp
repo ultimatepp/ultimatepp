@@ -70,7 +70,7 @@ wchar *WString0::Insert(int pos, int count, const wchar *s)
 	return ptr + pos;
 }
 
-void WString0::Set(const WString0& src)
+void WString0::Set0(const WString0& src)
 {
 	if(src.alloc <= 0) {
 		static wchar h[2];
@@ -115,12 +115,18 @@ void WString0::Cat(const wchar *s, int l)
 	Dsyn();
 }
 
+void WString0::Set(const wchar *s, int length)
+{
+	Free();
+	Set0(s, length);
+}
+
 void WString0::LCat(int c)
 {
 	*Insert(length, 1, NULL) = c;
 }
 
-void WString0::Set(const wchar *s, int l)
+void WString0::Set0(const wchar *s, int l)
 {
 	alloc = length = l;
 	memcpy(ptr = Alloc(alloc), s, l * sizeof(wchar));
@@ -194,7 +200,7 @@ WString& WString::operator=(const wchar *s)
 	if(s >= str && s <= str + len)
 		return *this = WString(s, strlen__(s));
 	WString0::Free();
-	WString0::Set(s, strlen__(s));
+	WString0::Set0(s, strlen__(s));
 	return *this;
 }
 
@@ -241,7 +247,7 @@ WString WString::GetVoid()
 WString::WString(const std::wstring& s)
 {
 	if(sizeof(std::wstring::value_type) == sizeof(wchar)) {
-		WString0::Set((wchar *)s.c_str(), (int)s.length());
+		WString0::Set0((wchar *)s.c_str(), (int)s.length());
 	}
 	else {
 		WString0::Zero();

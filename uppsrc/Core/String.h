@@ -235,7 +235,7 @@ protected:
 	void Zero()                     { q[0] = q[1] = 0; Dsyn(); }
 	void Free()                     { if(IsLarge()) LFree(); }
 	void SetSmall(const String0& s) { q[0] = s.q[0]; q[1] = s.q[1]; }
-	void Set(const String0& s) {
+	void Set0(const String0& s) {
 		if(s.IsSmall()) SetSmall(s); else LSet(s);
 		Dsyn();
 	}
@@ -251,7 +251,8 @@ protected:
 			}
 		Dsyn();
 	}
-	void  Set(const char *s, int len);
+	void  Set0(const char *s, int len);
+	void  SetL(const char *s, int len);
 	char *Insert(int pos, int count, const char *str);
 
 public: // should be protected, bug in gcc 3.4
@@ -286,6 +287,7 @@ public:
 	}
 
 	void Cat(const char *s, int len);
+	void Set(const char *s, int len);
 
 	void Set(int i, int chr);
 	void Trim(int pos);
@@ -307,7 +309,7 @@ public:
 
 	void Reserve(int r);
 
-	String0& operator=(const String0& s) { Free(); Set(s); return *this; }
+	String0& operator=(const String0& s) { Free(); Set0(s); return *this; }
 
 	String0()                   {}
 	~String0()                  { Free(); }
@@ -345,19 +347,19 @@ public:
 	String& operator=(const char *s);
 	String& operator=(const String& s)                     { String0::Assign(s); return *this; }
 	String& operator=(StringBuffer& b)                     { *this = String(b); return *this; }
-	String& operator<<=(const String& s)                   { if(this != &s) { String0::Free(); String0::Set(s, s.GetCount()); } return *this; }
+	String& operator<<=(const String& s)                   { if(this != &s) { String0::Free(); String0::Set0(s, s.GetCount()); } return *this; }
 
 	void   Shrink()                                        { *this = String(Begin(), GetLength()); }
 	int    GetCharCount() const;
 
 	String()                                               { Zero(); }
 	String(const Nuller&)                                  { Zero(); }
-	String(const String& s)                                { String0::Set(s); }
+	String(const String& s)                                { String0::Set0(s); }
 	String(const char *s);
-	String(const String& s, int n)                         { ASSERT(n >= 0 && n <= s.GetLength()); String0::Set(~s, n); }
-	String(const char *s, int n)                           { String0::Set(s, n); }
-	String(const byte *s, int n)                           { String0::Set((const char *)s, n); }
-	String(const char *s, const char *lim)                 { String0::Set(s, (int)(lim - s)); }
+	String(const String& s, int n)                         { ASSERT(n >= 0 && n <= s.GetLength()); String0::Set0(~s, n); }
+	String(const char *s, int n)                           { String0::Set0(s, n); }
+	String(const byte *s, int n)                           { String0::Set0((const char *)s, n); }
+	String(const char *s, const char *lim)                 { String0::Set0(s, (int)(lim - s)); }
 	String(int chr, int count)                             { String0::Zero(); Cat(chr, count); }
 	String(StringBuffer& b);
 
@@ -369,7 +371,7 @@ public:
 
 	friend void Swap(String& a, String& b)                 { a.Swap(b); }
 
-	String(const std::string& s)                           { String0::Set(s.c_str(), (int)s.length()); }
+	String(const std::string& s)                           { String0::Set0(s.c_str(), (int)s.length()); }
 	operator std::string() const                           { return std::string(Begin(), End()); }
 };
 
@@ -643,8 +645,8 @@ public: // should be protected, bug in GCC 3.4
 
 protected:
 	void    Zero()                       { static wchar e[2]; length = alloc = 0; ptr = e; Dsyn(); ASSERT(*ptr == 0); }
-	void    Set(const wchar *s, int length);
-	void    Set(const WString0& s);
+	void    Set0(const wchar *s, int length);
+	void    Set0(const WString0& s);
 	void    Free();
 	void    Swap(WString0& b)            { Upp::Swap(ptr, b.ptr); Upp::Swap(length, b.length); Upp::Swap(alloc, b.alloc); Dsyn(); b.Dsyn(); }
 	wchar  *Insert(int pos, int count, const wchar *data);
@@ -659,6 +661,7 @@ public:
 
 	void Cat(int c)                      { if(!IsRc() && length < alloc) { ptr[length++] = c; ptr[length] = 0; } else LCat(c); Dsyn(); }
 	void Cat(const wchar *s, int length);
+	void Set(const wchar *s, int length);
 
 	int  GetCount() const                { return length; }
 	int  GetLength() const               { return length; }
@@ -678,7 +681,7 @@ public:
 	WString0()                           { Zero(); }
 	~WString0()                          { Free(); }
 
-	WString0& operator=(const WString0& s) { Free(); Set(s); return *this; }
+	WString0& operator=(const WString0& s) { Free(); Set0(s); return *this; }
 };
 
 class WString : public Moveable<WString, AString<WString0> >
@@ -703,19 +706,19 @@ public:
 	WString& operator<<(const wchar *s)                     { Cat(s); return *this; }
 
 	WString& operator=(const wchar *s);
-	WString& operator=(const WString& s)                    { if(this != &s) { WString0::Free(); WString0::Set(s); } return *this; }
+	WString& operator=(const WString& s)                    { if(this != &s) { WString0::Free(); WString0::Set0(s); } return *this; }
 	WString& operator=(WStringBuffer& b)                    { *this = WString(b); return *this; }
-	WString& operator<<=(const WString& s)                  { if(this != &s) { WString0::Free(); WString0::Set(s, s.GetCount()); } return *this; }
+	WString& operator<<=(const WString& s)                  { if(this != &s) { WString0::Free(); WString0::Set0(s, s.GetCount()); } return *this; }
 
 	void   Shrink()                                         { *this = WString(Begin(), GetLength()); }
 
 	WString()                                               {}
 	WString(const Nuller&)                                  {}
-	WString(const WString& s)                               { WString0::Set(s); }
-	WString(const wchar *s)                                 { WString0::Set(s, strlen__(s)); }
-	WString(const WString& s, int n)                        { ASSERT(n >= 0 && n <= s.GetLength()); WString0::Set(~s, n); }
-	WString(const wchar *s, int n)                          { WString0::Set(s, n); }
-	WString(const wchar *s, const wchar *lim)               { WString0::Set(s, (int)(lim - s)); }
+	WString(const WString& s)                               { WString0::Set0(s); }
+	WString(const wchar *s)                                 { WString0::Set0(s, strlen__(s)); }
+	WString(const WString& s, int n)                        { ASSERT(n >= 0 && n <= s.GetLength()); WString0::Set0(~s, n); }
+	WString(const wchar *s, int n)                          { WString0::Set0(s, n); }
+	WString(const wchar *s, const wchar *lim)               { WString0::Set0(s, (int)(lim - s)); }
 	WString(int chr, int count)                             { WString0::Zero(); Cat(chr, count); }
 	WString(WStringBuffer& b);
 
