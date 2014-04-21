@@ -22,7 +22,6 @@ CONSOLE_APP_MAIN
 		LOG(in.GetLine());
 	}
 
-
 	{
 		HttpRequest http("www.ultimatepp.org");
 		InFilterStream in;

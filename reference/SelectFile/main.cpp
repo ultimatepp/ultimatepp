@@ -6,7 +6,7 @@ GUI_APP_MAIN
 {
 	PromptOK(DeQtf(SelectFileOpen("Text files\t*.txt\nAll files\t*.*")));
 
-	PromptOK(DeQtf(SelectFileSaveAs("Text files\t*.txt\nAll files\t*.*")));
+	PromptOK(DeQtf(SelectFileSaveAs("Image files\t*.png *.jpg\nAll files\t*.*")));
 	
 	SelectFileIn in("Text files\t*.txt");
 	if(in) {

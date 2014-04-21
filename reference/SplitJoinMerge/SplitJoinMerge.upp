@@ -1,0 +1,11 @@
+description "Demostrates Split, SplitTo, Join, Merge, MergeWith functions\377";
+
+uses
+	Core;
+
+file
+	JoinMerge.cpp;
+
+mainconfig
+	"" = "SSE2";
+

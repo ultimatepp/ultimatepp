@@ -1,0 +1,4 @@
+#ifndef _SplitJoinMerge_icpp_init_stub
+#define _SplitJoinMerge_icpp_init_stub
+#include "Core/init"
+#endif
