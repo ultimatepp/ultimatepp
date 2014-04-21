@@ -607,11 +607,7 @@ void ExportPage(int i)
 					  HtmlImg("http://sourceforge.net/sflogo.php?group_id=93970&type=2",
 					          "SourceForge.net Logo").Border(0).Width(125).Height(37) +
 			       	"<br><br>" +
-			       	HtmlLink("http://www.sdjournal.org/en/") /
-						HtmlImg(GetImageSrc(WWW::Sdj)).Border(0) +
-			       	"<br><br>" +
-			       	(links[i] == "index.html" ? lastUpdate : Htmls()) +
-			       	HtmlImg("http://www.vol.cz/cgi-bin/wc/upp").Width(1).Height(1)
+			       	(links[i] == "index.html" ? lastUpdate : Htmls())
 				) +
 				HtmlTCell().BgColor(bg) / BoxWidth(6) / "" +
 				HtmlTCell().Width(-100).BgColor(bg) / (
@@ -1135,7 +1131,6 @@ CONSOLE_APP_MAIN
 	
 	//	SaveFile(AppendFileName(targetdir, "favicon.ico"), LoadFile(AppendFileName(uppsrc, "ide/ide.ico")));
 		SaveFile(AppendFileName(targetdir, "stats.html"),
-		         HtmlImg("http://www.vol.cz/cgi-bin/wc/upp") + "<br>" +
 		         HtmlLink("http://www.mygooglepagerank.com", "_blank") /
 			         "<img src=\"http://www.mygooglepagerank.com/PRimage.php?url=http://upp.sf.net\" "
 			         "border=\"0\" width=\"66\" height=\"13\" "
