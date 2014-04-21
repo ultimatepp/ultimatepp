@@ -1,4 +1,4 @@
-description "Demostration of simple web-socket server\377";
+description "Demonstration of simple web-socket server\377";
 
 uses
 	Core;

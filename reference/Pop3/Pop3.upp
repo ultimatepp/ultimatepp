@@ -2,7 +2,8 @@ description "Examples of using Core/POP3 package to download gmail emails\377";
 
 uses
 	Core,
-	Core/POP3;
+	Core/POP3,
+	Core/SSL;
 
 file
 	Pop3.cpp;
