@@ -81,6 +81,10 @@ CONSOLE_APP_MAIN
 	Vector<String> w = Split(s, ',', false);
 	TEST(Join(w, ";"), "alfa;beta;;gamma;delta");
 	TEST(Join(w, ".", true), "alfa.beta.gamma.delta");
+	
+	Vector<String> v = Split(";;;hello;;", false);
+	TEST(Join(v, ";"), ";;;hello;;");
+	TEST(Join(v, ";", true), "hello");
 
 	Vector<WString> ww = Split(ws, ',', false);
 	TEST(Join(ww, ";"), "alfa;beta;;gamma;delta");
