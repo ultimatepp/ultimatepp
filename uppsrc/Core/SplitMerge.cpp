@@ -28,33 +28,39 @@ Vector<String> Split(int maxcount, const char *s, const char * (*text_filter)(co
 	return SplitGeneric<String>(maxcount, text_filter, s, ignoreempty);
 }
 
+struct SplitDelimFilter__ {
+	int (*filter)(int);
+	const char *operator()(const char *s) const { return (*filter)((byte)*s) ? s + 1 : NULL; }
+};
+
 Vector<String> Split(int maxcount, const char *s, int (*filter)(int), bool ignoreempty)
 {
-	struct {
-		int (*filter)(int);
-		const char *operator()(const char *s) const { return (*filter)((byte)*s) ? s + 1 : NULL; }
-	} delim;
+	SplitDelimFilter__ delim;
 	delim.filter = filter;
 	return SplitGeneric<String>(maxcount, delim, s, ignoreempty);
 }
 
+struct SplitDelimChar__ {
+	int chr;
+	const char *operator()(const char *s) const { return *s == chr ? s + 1 : NULL; }
+};
+
 Vector<String> Split(int maxcount, const char *s, int chr, bool ignoreempty)
 {
-	struct {
-		int chr;
-		const char *operator()(const char *s) const { return *s == chr ? s + 1 : NULL; }
-	} delim;
+	SplitDelimChar__ delim;
 	delim.chr = chr;
 	return SplitGeneric<String>(maxcount, delim, s, ignoreempty);
 }
 
+struct SplitDelimText__ {
+	const char *ds;
+	int l;
+	const char *operator()(const char *s) const { return strncmp(s, ds, l) == 0 ? s + l : NULL; }
+};
+
 Vector<String> Split(int maxcount, const char *s, const char *text, bool ignoreempty)
 {
-	struct {
-		const char *ds;
-		int l;
-		const char *operator()(const char *s) const { return strncmp(s, ds, l) == 0 ? s + l : NULL; }
-	} delim;
+	SplitDelimText__ delim;
 	delim.ds = text;
 	delim.l = strlen(text);
 	return delim.l ? SplitGeneric<String>(maxcount, delim, s, ignoreempty) : Vector<String>();
@@ -85,22 +91,26 @@ Vector<WString> Split(int maxcount, const wchar *s, const wchar * (*text_filter)
 	return SplitGeneric<WString>(maxcount, text_filter, s, ignoreempty);
 }
 
+struct SplitDelimWFilter__ {
+	int (*filter)(int);
+	const wchar *operator()(const wchar *s) const { return (*filter)((byte)*s) ? s + 1 : NULL; }
+};
+
 Vector<WString> Split(int maxcount, const wchar *s, int (*filter)(int), bool ignoreempty)
 {
-	struct {
-		int (*filter)(int);
-		const wchar *operator()(const wchar *s) const { return (*filter)((byte)*s) ? s + 1 : NULL; }
-	} delim;
+	SplitDelimWFilter__ delim;
 	delim.filter = filter;
 	return SplitGeneric<WString>(maxcount, delim, s, ignoreempty);
 }
 
+struct SplitDelimWChar__ {
+	int chr;
+	const wchar *operator()(const wchar *s) const { return *s == chr ? s + 1 : NULL; }
+};
+
 Vector<WString> Split(int maxcount, const wchar *s, int chr, bool ignoreempty)
 {
-	struct {
-		int chr;
-		const wchar *operator()(const wchar *s) const { return *s == chr ? s + 1 : NULL; }
-	} delim;
+	SplitDelimWChar__ delim;
 	delim.chr = chr;
 	return SplitGeneric<WString>(maxcount, delim, s, ignoreempty);
 }
@@ -118,13 +128,15 @@ int w_strncmp(const wchar *s, const wchar *t, int n)
 	return 0;
 }
 
+struct SplitDelimWText {
+	const wchar *ds;
+	int l;
+	const wchar *operator()(const wchar *s) const { return w_strncmp(s, ds, l) == 0 ? s + l : NULL; }
+};
+
 Vector<WString> Split(int maxcount, const wchar *s, const wchar *text, bool ignoreempty)
 {
-	struct {
-		const wchar *ds;
-		int l;
-		const wchar *operator()(const wchar *s) const { return w_strncmp(s, ds, l) == 0 ? s + l : NULL; }
-	} delim;
+	SplitDelimWText delim;
 	delim.ds = text;
 	delim.l = wstrlen(text);
 	return delim.l ? SplitGeneric<WString>(maxcount, delim, s, ignoreempty) : Vector<WString>();
