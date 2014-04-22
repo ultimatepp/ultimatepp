@@ -671,8 +671,6 @@ LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 #endif
 	LRESULT l = 0;
 	if(w) {
-		try
-		{
 #if defined(_DEBUG) && LOGTIMING
 			int ticks = msecs();
 			String wname = w->Name();
@@ -692,12 +690,6 @@ LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 				msgname = NFormat("0x%04x", (int)message);
 			LLOG(NFormat("T+%d %s 0x%08x 0x%08x -> %s", msecs(ticks), msgname, (int)wParam, (int)lParam, wname));
 #endif
-		}
-//		catch(Exc e)
-//		{
-//			LOG("Uncaught exception in WindowProc: " << e);
-//			Panic("Uncaught exception in WindowProc: " + (String)e);
-//		}
 	}
 	else
 		l = DefWindowProc(hWnd, message, wParam, lParam);
