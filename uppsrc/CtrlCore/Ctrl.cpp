@@ -413,9 +413,7 @@ Ctrl& Ctrl::LayoutId(const char *txt)
 
 String Ctrl::GetInfoPart(int i) const
 {
-	DDUMPHEX(info);
 	Vector<String> f = Split(info, '\x7f', false);
-	DUMP(f);
 	return i < f.GetCount() ? f[i] : String();
 }
 
