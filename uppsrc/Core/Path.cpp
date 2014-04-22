@@ -724,7 +724,7 @@ FindFile::FindFile(const char *fn) {
 }
 
 String NormalizePath(const char *path, const char *currdir) {
-	Vector<String> si = Split(path, CharFilterTextTest(sDirSep));
+	Vector<String> si = Split(path, sDirSep);
 	Vector<String> p;
 	int i = 0;
 	String out;
@@ -737,7 +737,7 @@ String NormalizePath(const char *path, const char *currdir) {
 		out = (sDirSep(path[1]) ? "//" : "/");
 	else {
 		out = (sDirSep(currdir[0]) && sDirSep(currdir[1]) ? "//" : "/");
-		p = Split(currdir, CharFilterTextTest(sDirSep));
+		p = Split(currdir, sDirSep);
 	}
 	for(; i < si.GetCount(); i++) {
 		String s = si[i];

@@ -238,6 +238,7 @@ __Expand8(E__NFBody)
 #undef E__TL
 #undef E__NFIf
 #undef E__NFValue
+#undef E__NFSValue
 #undef E__PI
 #undef E__NFBody
 
@@ -307,6 +308,7 @@ __Expand8(E__NFBody)
 #undef E__TL
 #undef E__NFIf
 #undef E__NFValue
+#undef E__NFSValue
 #undef E__PI
 #undef E__NFBody
 
