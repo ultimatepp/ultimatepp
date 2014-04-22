@@ -324,9 +324,6 @@ void AppExecute__(void (*app)())
 	catch(ExitExc) {
 		return;
 	}
-	catch(Exc e) {
-		Panic(e);
-	}
 }
 
 #ifdef PLATFORM_POSIX
