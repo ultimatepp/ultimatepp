@@ -452,8 +452,8 @@ bool IsAvailableFiles(PasteClip& clip)
 
 struct sDROPFILES {
     DWORD offset;
-    POINT dummy;
-    BOOL  dummy2;
+    POINT pt;
+    BOOL  nc;
     BOOL  unicode;
 };
 
@@ -491,6 +491,22 @@ Vector<String> GetFiles(PasteClip& clip)
 	GuiLock __;
 	Vector<String> f;
 	return GetClipFiles(clip.Get("files"));
+}
+
+void AppendFiles(VectorMap<String, ClipData>& clip, const Vector<String>& files)
+{
+	WString wfiles;
+	for(int i = 0; i < files.GetCount(); i++)
+		wfiles << files[i].ToWString() << "\0";
+	sDROPFILES h;
+	h.unicode = true;
+	h.offset = sizeof(h);
+    GetCursorPos(&h.pt);
+    h.nc = TRUE;
+    String data;
+	data.Cat((byte *)&h, sizeof(h));
+	data.Cat((byte *)~wfiles, 2 * (wfiles.GetCount() + 1));
+	clip.GetAdd("files") = ClipData(data);
 }
 
 bool   Has(UDropTarget *dt, const char *fmt);

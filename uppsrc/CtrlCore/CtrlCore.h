@@ -299,6 +299,7 @@ bool            IsAvailableFiles(PasteClip& clip);
 bool            AcceptFiles(PasteClip& clip);
 Vector<String>  GetClipFiles(const String& data);
 Vector<String>  GetFiles(PasteClip& clip);
+void            AppendFiles(VectorMap<String, ClipData>& data, const Vector<String>& files);
 
 template <class T>
 String ClipFmt()

@@ -373,9 +373,12 @@ void Ctrl::KillCaret()
 
 void Ctrl::SetInfoPart(int i, const char *txt)
 {
+	DUMP(i);
+	DUMP(txt);
 	Vector<String> f = Split(info, '\x7f', false);
 	f.At(i) = txt;
 	info = Join(f, "\x7f");
+	DUMPHEX(info);
 }
 
 Ctrl& Ctrl::Tip(const char *txt)
@@ -410,13 +413,15 @@ Ctrl& Ctrl::LayoutId(const char *txt)
 
 String Ctrl::GetInfoPart(int i) const
 {
+	DDUMPHEX(info);
 	Vector<String> f = Split(info, '\x7f', false);
+	DUMP(f);
 	return i < f.GetCount() ? f[i] : String();
 }
 
 String Ctrl::GetTip() const
 {
-	return GetInfoPart(0);;
+	return GetInfoPart(0);
 }
 
 String Ctrl::GetHelpLine() const
