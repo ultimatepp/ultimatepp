@@ -164,22 +164,26 @@ Vector<WString> Split(const wchar *s, const wchar * (*text_filter)(const wchar *
 
 String Join(const Vector<String>& im, const String& delim, bool ignoreempty) {
 	StringBuffer r;
+	bool next = false;
 	for(int i = 0; i < im.GetCount(); i++)
 		if(!ignoreempty || im[i].GetCount()) {
-			if(r.GetCount())
+			if(next)
 				r.Cat(delim);
 			r.Cat(im[i]);
+			next = true;
 		}
 	return r;
 }
 
 WString Join(const Vector<WString>& im, const WString& delim, bool ignoreempty) {
 	WStringBuffer r;
+	bool next = false;
 	for(int i = 0; i < im.GetCount(); i++)
 		if(!ignoreempty || im[i].GetCount()) {
-			if(r.GetCount())
+			if(next)
 				r.Cat(delim);
 			r.Cat(im[i]);
+			next = true;
 		}
 	return r;
 }
