@@ -162,8 +162,9 @@ Vector<WString> Split(const wchar *s, const wchar * (*text_filter)(const wchar *
 	return SplitGeneric<WString>(INT_MAX, text_filter, s, ignoreempty);
 }
 
-String Join(const Vector<String>& im, const String& delim, bool ignoreempty) {
-	StringBuffer r;
+template <class B, class T>
+T Join_(const Vector<T>& im, const T& delim, bool ignoreempty) {
+	B r;
 	bool next = false;
 	for(int i = 0; i < im.GetCount(); i++)
 		if(!ignoreempty || im[i].GetCount()) {
@@ -175,17 +176,12 @@ String Join(const Vector<String>& im, const String& delim, bool ignoreempty) {
 	return r;
 }
 
+String Join(const Vector<String>& im, const String& delim, bool ignoreempty) {
+	return Join_<StringBuffer, String>(im, delim, ignoreempty);
+}
+
 WString Join(const Vector<WString>& im, const WString& delim, bool ignoreempty) {
-	WStringBuffer r;
-	bool next = false;
-	for(int i = 0; i < im.GetCount(); i++)
-		if(!ignoreempty || im[i].GetCount()) {
-			if(next)
-				r.Cat(delim);
-			r.Cat(im[i]);
-			next = true;
-		}
-	return r;
+	return Join_<WStringBuffer, WString>(im, delim, ignoreempty);
 }
 
 static void sMergeWith(String& dest, const char *delim, const String& s)
