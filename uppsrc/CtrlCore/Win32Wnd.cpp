@@ -693,11 +693,11 @@ LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 			LLOG(NFormat("T+%d %s 0x%08x 0x%08x -> %s", msecs(ticks), msgname, (int)wParam, (int)lParam, wname));
 #endif
 		}
-		catch(Exc e)
-		{
-			LOG("Uncaught exception in WindowProc: " << e);
-			Panic("Uncaught exception in WindowProc: " + (String)e);
-		}
+//		catch(Exc e)
+//		{
+//			LOG("Uncaught exception in WindowProc: " << e);
+//			Panic("Uncaught exception in WindowProc: " + (String)e);
+//		}
 	}
 	else
 		l = DefWindowProc(hWnd, message, wParam, lParam);

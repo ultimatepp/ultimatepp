@@ -24,9 +24,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR lpCmdLine, int nCmdS
 	try { \
 		GuiMainFn_(); \
 	} \
-	catch(Exc e) { \
-		Panic(e); \
-	} \
 	UPP::Ctrl::ExitWin32(); \
 	UPP::AppExit__(); \
 	return UPP::GetExitCode(); \
