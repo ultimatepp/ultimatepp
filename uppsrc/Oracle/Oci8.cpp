@@ -395,7 +395,7 @@ void  OCI8Connection::SetParam(int i, const Value& q) {
 			case TIME_V:
 				SetParam(i, (Time)q);
 				break;
-			case UNKNOWN_V:
+			default:
 				if(IsTypeRaw<Sql *>(q)) {
 					SetParam(i, *ValueTo<Sql *>(q));
 					break;
@@ -404,7 +404,6 @@ void  OCI8Connection::SetParam(int i, const Value& q) {
 					SetParam(i, OracleRef(q));
 					break;
 				}
-			default:
 				NEVER();
 		}
 }
