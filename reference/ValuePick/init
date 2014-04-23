@@ -1,0 +1,4 @@
+#ifndef _ValuePick_icpp_init_stub
+#define _ValuePick_icpp_init_stub
+#include "Core/init"
+#endif
