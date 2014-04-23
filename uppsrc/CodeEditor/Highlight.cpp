@@ -375,6 +375,32 @@ void CodeEditor::InitKeywords()
 		"stress", "table-layout", "text-align", "text-decoration", "text-indent", "text-transform", "top",
 		"unicode-bidi", "vertical-align", "visibility", "voice-family", "volume", "white-space", "widows", "width",
 		"word-spacing", "z-index",
+		// CSS3
+		"opacity",
+		"background-clip", "background-origin", "background-size", "border-bottom-left-radius", "border-bottom-right-radius",
+		"border-image", "border-image-outset", "border-image-repeat", "border-image-slice", "border-image-source",
+		"border-image-width", "border-radius", "border-top-left-radius", "border-top-right-radius", "box-decoration-break", 
+		"box-shadow",
+		"overflow-x", "overflow-y",
+		"align-content", "align-items", "align-self", "flex", "flex-basis", "flex-direction", "flex-flow", "flex-grow",
+		"flex-shrink", "flex-wrap", "justify-content", "order",
+		"hanging-punctuation", "hyphens", "line-break", "overflow-wrap", "tab-size", "text-align-last", "text-justify",
+		"word-break", "word-wrap",
+		"text-decoration-color", "text-decoration-line", "text-decoration-style", "text-shadow", "text-underline-position",
+		"animation", "animation-delay", "animation-direction", "animation-duration", "animation-fill-mode",
+		"animation-iteration-count", "animation-name", "animation-timing-function", "animation-play-state",
+		"backface-visibility", "perspective", "perspective-origin", "transform", "transform-origin", "transform-style",
+		"transition", "transition-property", "transition-duration", "transition-timing-function", "transition-delay",
+		"box-sizing", "nav-down", "nav-index", "nav-left", "nav-right", "nav-up", "outline-offset", "resize", "text-overflow",
+		"break-after", "break-before", "break-inside", "column-count", "column-fill", "column-gap", "column-rule",
+		"column-rule-color", "column-rule-style", "column-rule-width", "column-span", "column-width", "columns",
+		"marks",
+		"filter",
+		"image-orientation", "image-rendering", "image-resolution", "object-fit", "object-position",
+		"mask", "mask-type",
+		"mark", "mark-after", "mark-before", "phonemes", "rest", "rest-after", "rest-before", "voice-balance",
+		"voice-duration", "voice-pitch", "voice-pitch-range", "voice-rate", "voice-stress", "voice-volume",
+		"marquee-direction", "marquee-play-count", "marquee-speed", "marquee-style",
 		NULL
 	};
 	static const char *cssn[] = {
@@ -399,7 +425,7 @@ void CodeEditor::InitKeywords()
 		"continuous", "code", "spell-out", "x-slow", "slow", "fast", "x-fast", "faster", "slower", "justify",
 		"underline", "overline", "line-through", "blink", "capitalize", "uppercase", "lowercase", "embed",
 		"bidi-override", "baseline", "sub", "super", "text-top", "middle", "text-bottom", "silent", "x-soft", "soft",
-		"loud", "x-loud", "pre", "nowrap", "pre-wrap", "pre-line", 
+		"loud", "x-loud", "pre", "nowrap", "pre-wrap", "pre-line", "solid",
 		NULL
 	};
 	static const char *upp_macros[] = {
