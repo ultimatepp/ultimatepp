@@ -275,6 +275,14 @@ Value ValueArray::GetAndClear(int i)
 	return v;
 }
 
+Vector<Value> ValueArray::Pick()
+{
+	Vector<Value>& x = Clone();
+	Vector<Value> r = pick(x);
+	x.Clear();
+	return r;
+}
+
 template<>
 String AsString(const ValueArray& v) {
 	return sAsString(v.Get());
@@ -431,12 +439,33 @@ ValueMap::ValueMap(Index<Value> rval_ k, Vector<Value> rval_ v)
 	d.value = ValueArray(pick(v));
 }
 
+ValueMap::ValueMap(VectorMap<Value, Value> rval_ m)
+{
+	Data& d = Create();
+	d.key = m.PickKeys();
+	d.value = ValueArray(m.PickValues());
+}
+
 ValueMap::ValueMap(const Index<Value>& k, const Vector<Value>& v, int deep)
 {
 	Data& d = Create();
 	d.key <<= k;
-	Vector<Value> _v(v, 0);
-	d.value = ValueArray(pick(_v));
+	d.value = ValueArray(v, 0);
+}
+
+ValueMap::ValueMap(const VectorMap<Value, Value>& m, int deep)
+{
+	Data& d = Create();
+	d.key = clone(m.GetKeys());
+	d.value = ValueArray(m.GetValues(), 0);
+}
+
+VectorMap<Value, Value> ValueMap::Pick()
+{
+	Data& d = Clone();
+	VectorMap<Value, Value> m(d.key.PickKeys(), d.value.Pick());
+	d.key.Clear();
+	return m;
 }
 
 ValueMap::operator Value() const {
