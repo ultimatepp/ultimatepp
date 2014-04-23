@@ -216,6 +216,12 @@ void EditorBar::RightDown(Point p, dword flags)
 		WhenAnnotationRightClick();
 }
 
+void EditorBar::MouseWheel(Point p, int zdelta, dword keyflags)
+{
+     if(editor)
+         editor->MouseWheel(p, zdelta, keyflags);
+}
+
 void EditorBar::InsertLines(int i, int count)
 {
 	li.InsertN(minmax(i + 1, 0, li.GetCount()), max(count, 0));
