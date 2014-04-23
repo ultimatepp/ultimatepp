@@ -673,7 +673,7 @@ void ChHostSkin()
 	if(engine != "Redmond")
 		DropEdge_Write(ViewEdge());
 
-	SwapOKCancel_Write(true);
+	SwapOKCancel_Write(!Qt);
 
 	GUI_GlobalStyle_Write(GUISTYLE_XP);
 	GUI_DragFullWindow_Write(1);
