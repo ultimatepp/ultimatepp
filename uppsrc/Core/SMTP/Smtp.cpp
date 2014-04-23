@@ -405,6 +405,7 @@ Smtp::Smtp()
 	no_header = no_header_sep = false;
 	time_sent = GetSysTime();
 	request_timeout = 120000;
+	ssl = false;
 	New();
 }
 
