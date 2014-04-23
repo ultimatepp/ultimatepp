@@ -848,7 +848,7 @@ public:
 		void  InsertIml(const String& fn, String classname);
 		void  InsertText(const String& text);
 		void  InsertCString();
-		void  InsertFilePath();
+		void  InsertFilePath(bool c);
 		void  InsertMenu(Bar& bar);
 		void  InsertAdvanced(Bar& bar);
 		void  EditorMenu(Bar& bar);
