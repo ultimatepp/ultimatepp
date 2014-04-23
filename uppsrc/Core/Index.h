@@ -176,9 +176,9 @@ public:
 	bool     operator>(const AIndex& x) const  { return Compare(x) > 0; }
 #endif
 
-	V        PickKeys()                       { return pick(key); }
-	const V& GetKeys() const                  { return key; }
-	bool     IsPicked(void) const             { return key.IsPicked(); }
+	V        PickKeys() pick_                  { return pick(key); }
+	const V& GetKeys() const                   { return key; }
+	bool     IsPicked(void) const              { return key.IsPicked(); }
 
 // Pick assignment & copy. Picked source can only Clear(), ~AIndex(), operator=, operator<<=
 

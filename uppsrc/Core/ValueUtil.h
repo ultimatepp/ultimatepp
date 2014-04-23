@@ -216,12 +216,12 @@ class ValueArray : public ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArra
 public:
 	ValueArray()                              { Init0(); }
 	ValueArray(const ValueArray& v);
-	explicit ValueArray(Vector<Value> rval_ values);
+	ValueArray(Vector<Value> rval_ values);
 	explicit ValueArray(const Vector<Value>& values, int deep);
 	~ValueArray();
 
 	ValueArray& operator=(const ValueArray& v);
-	ValueArray& operator=(Vector<Value> rval_ values) { *this = ValueArray(values); return *this; }
+	ValueArray& operator=(Vector<Value> rval_ values) { *this = ValueArray(pick(values)); return *this; }
 
 	operator Value() const;
 	ValueArray(const Value& src);
@@ -308,7 +308,7 @@ public:
 	~ValueMap();
 
 	ValueMap& operator=(const ValueMap& v);
-	ValueMap& operator=(VectorMap<Value, Value> rval_ m) { *this = ValueMap(m); return *this; }
+	ValueMap& operator=(VectorMap<Value, Value> rval_ m) { *this = ValueMap(pick(m)); return *this; }
 
 	operator Value() const;
 	ValueMap(const Value& src);
