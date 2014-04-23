@@ -38,9 +38,9 @@ alueArray][@(0.0.255) `&]_[*@3 v])&]
 [s2;%% Copy constructor.&]
 [s3;%% &]
 [s4; &]
-[s5;:ValueArray`:`:ValueArray`(pick`_ Vector`<Value`>`&`): [@(0.0.255) explicit]_[* Value
-Array]([@(0.128.128) pick`_]_[_^Vector^ Vector]<[_^Value^ Value]>`&_[*@3 values])&]
-[s2;%% Creates ValueArray by [%-*@3 values].&]
+[s5;:ValueArray`:`:ValueArray`(Vector`<Value`>rval`_`): [@(0.0.255) explicit]_[* ValueArr
+ay]([_^Vector^ Vector]<[_^Value^ Value]>_[@(0.0.255) rval`_]_[*@3 values])&]
+[s2;%% Creates ValueArray by picking [%-*@3 values] `- source is destroyed.&]
 [s3;%% &]
 [s4; &]
 [s5;:ValueArray`:`:ValueArray`(const Vector`<Value`>`&`,int`): [@(0.0.255) explicit]_[* V
@@ -58,6 +58,11 @@ version).&]
 [s5;:ValueArray`:`:operator`=`(const ValueArray`&`): [_^ValueArray^ ValueArray][@(0.0.255) `&
 ]_[* operator`=]([@(0.0.255) const]_[_^ValueArray^ ValueArray][@(0.0.255) `&]_[*@3 v])&]
 [s2;%% Assignment operator.&]
+[s3;%% &]
+[s4; &]
+[s5;:ValueArray`:`:operator`=`(Vector`<Value`>rval`_`): [_^ValueArray^ ValueArray][@(0.0.255) `&
+]_[* operator`=]([_^Vector^ Vector]<[_^Value^ Value]>_[@(0.0.255) rval`_]_[*@3 values])&]
+[s2;%% Pick assignment `- source is destroyed.&]
 [s3;%% &]
 [s4; &]
 [s5;:ValueArray`:`:operator Value`(`)const: [* operator_Value]()_[@(0.0.255) const]&]
@@ -138,6 +143,10 @@ required.&]
 [s2;%% Returns constant reference to (internal) Vector<Value>.&]
 [s3; &]
 [s4; &]
+[s5;:ValueArray`:`:Pick`(`): [_^Vector^ Vector]<[_^Value^ Value]>_[* Pick]()&]
+[s2;%% Picks the content, ValueArray is cleared.&]
+[s3; &]
+[s4; &]
 [s5;:ValueArray`:`:Remove`(int`,int`): [@(0.0.255) void]_[* Remove]([@(0.0.255) int]_[*@3 i],
  [@(0.0.255) int]_[*@3 count]_`=_[@3 1])&]
 [s2;%% Removes [%-*@3 count] elements at [%-*@3 i].&]
@@ -193,4 +202,19 @@ t]&]
 [s2;%% (In)Equality comparison. Two ValueArrays are equal if they 
 have the same number of elements and all elements at the same 
 position are equal.&]
-[s0;%% ]]
+[s3;%% &]
+[s4; &]
+[s5;:ValueArray`:`:Compare`(const ValueArray`&`)const: [@(0.0.255) int]_[* Compare]([@(0.0.255) c
+onst]_[_^ValueArray^ ValueArray][@(0.0.255) `&]_[*@3 b])_[@(0.0.255) const]&]
+[s5;:ValueArray`:`:operator`<`=`(const ValueArray`&`)const: [@(0.0.255) bool]_[* operator
+<`=]([@(0.0.255) const]_[_^ValueArray^ ValueArray][@(0.0.255) `&]_[*@3 x])_[@(0.0.255) cons
+t]&]
+[s5;:ValueArray`:`:operator`>`=`(const ValueArray`&`)const: [@(0.0.255) bool]_[* operator
+>`=]([@(0.0.255) const]_[_^ValueArray^ ValueArray][@(0.0.255) `&]_[*@3 x])_[@(0.0.255) cons
+t]&]
+[s5;:ValueArray`:`:operator`<`(const ValueArray`&`)const: [@(0.0.255) bool]_[* operator<](
+[@(0.0.255) const]_[_^ValueArray^ ValueArray][@(0.0.255) `&]_[*@3 x])_[@(0.0.255) const]&]
+[s5;:ValueArray`:`:operator`>`(const ValueArray`&`)const: [@(0.0.255) bool]_[* operator>](
+[@(0.0.255) const]_[_^ValueArray^ ValueArray][@(0.0.255) `&]_[*@3 x])_[@(0.0.255) const]&]
+[s2;%% Compares two ValueArrays using lexicographical comparison.&]
+[s3;%% ]]

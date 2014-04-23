@@ -221,6 +221,7 @@ public:
 	~ValueArray();
 
 	ValueArray& operator=(const ValueArray& v);
+	ValueArray& operator=(Vector<Value> rval_ values) { *this = ValueArray(values); return *this; }
 
 	operator Value() const;
 	ValueArray(const Value& src);
@@ -242,6 +243,7 @@ public:
 	const Value& Get(int i) const;
 	Value GetAndClear(int i);
 	const Vector<Value>& Get() const          { return data->data; }
+	Vector<Value> Pick();
 
 	void Remove(int i, int count = 1);
 	void Insert(int i, const ValueArray& va);
@@ -300,10 +302,13 @@ public:
 	ValueMap()                                      { Init0(); }
 	ValueMap(const ValueMap& v);
 	ValueMap(Index<Value> rval_ k, Vector<Value> rval_ v);
+	ValueMap(VectorMap<Value, Value> rval_ m);
 	ValueMap(const Index<Value>& k, const Vector<Value>& v, int deep);
+	ValueMap(const VectorMap<Value, Value>& m, int deep);
 	~ValueMap();
 
 	ValueMap& operator=(const ValueMap& v);
+	ValueMap& operator=(VectorMap<Value, Value> rval_ m) { *this = ValueMap(m); return *this; }
 
 	operator Value() const;
 	ValueMap(const Value& src);
@@ -355,6 +360,8 @@ public:
 	ValueArray GetValues() const                    { return data->value; }
 
 	operator ValueArray() const                     { return GetValues(); }
+	
+	VectorMap<Value, Value> Pick();
 
 	const Value& operator[](const Value& key) const;
 	const Value& operator[](const String& key) const { return operator[](Value(key)); }

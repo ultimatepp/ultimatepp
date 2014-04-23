@@ -46,11 +46,17 @@ p][@(0.0.255) `&]_[*@3 v])&]
 [s2; Copy constructor.&]
 [s3; &]
 [s4;%- &]
-[s5;:ValueMap`:`:ValueMap`(pick`_ Index`<Value`>`&`,pick`_ Vector`<Value`>`&`):%- [* Va
-lueMap]([@(0.128.128) pick`_]_[_^Index^ Index]<[_^Value^ Value]>`&_[*@3 k], 
-[@(0.128.128) pick`_]_[_^Vector^ Vector]<[_^Value^ Value]>`&_[*@3 v])&]
+[s5;:ValueMap`:`:ValueMap`(Index`<Value`>rval`_`,Vector`<Value`>rval`_`):%- [* ValueMap
+]([_^Index^ Index]<[_^Value^ Value]>_[@(0.0.255) rval`_]_[*@3 k], [_^Vector^ Vector]<[_^Value^ V
+alue]>_[@(0.0.255) rval`_]_[*@3 v])&]
 [s2; Creates ValueMap by picking Index a Vector of Values (efficient 
 but sources are destroyed).&]
+[s3; &]
+[s4;%- &]
+[s5;:ValueMap`:`:ValueMap`(VectorMap`<Value`,Value`>rval`_`):%- [* ValueMap]([_^VectorMap^ V
+ectorMap]<[_^Value^ Value], [_^Value^ Value]>_[@(0.0.255) rval`_]_[*@3 m])&]
+[s2; Creates ValueMap by picking VectorMap (efficient but source 
+is destroyed).&]
 [s3; &]
 [s4;%- &]
 [s5;:ValueMap`:`:ValueMap`(const Index`<Value`>`&`,const Vector`<Value`>`&`,int`):%- [* V
@@ -60,6 +66,12 @@ alueMap]([@(0.0.255) const]_[_^Index^ Index]<[_^Value^ Value]>`&_[*@3 k],
 [s2; Creates ValueMap by deep copying Index a Vector of Values.&]
 [s3; &]
 [s4;%- &]
+[s5;:ValueMap`:`:ValueMap`(const VectorMap`<Value`,Value`>`&`,int`):%- [* ValueMap]([@(0.0.255) c
+onst]_[_^VectorMap^ VectorMap]<[_^Value^ Value], [_^Value^ Value]>`&_[*@3 m], 
+[@(0.0.255) int]_[*@3 deep])&]
+[s2; Creates ValueMap by deep copying VectorMap.&]
+[s3; &]
+[s4;%- &]
 [s5;:ValueMap`:`:`~ValueMap`(`):%- [@(0.0.255) `~][* ValueMap]()&]
 [s2; Destructor.&]
 [s3;%- &]
@@ -67,6 +79,12 @@ alueMap]([@(0.0.255) const]_[_^Index^ Index]<[_^Value^ Value]>`&_[*@3 k],
 [s5;:ValueMap`:`:operator`=`(const ValueMap`&`):%- [_^ValueMap^ ValueMap][@(0.0.255) `&]_
 [* operator`=]([@(0.0.255) const]_[_^ValueMap^ ValueMap][@(0.0.255) `&]_[*@3 v])&]
 [s2; Assignment.&]
+[s3; &]
+[s4;%- &]
+[s5;:ValueMap`:`:operator`=`(VectorMap`<Value`,Value`>rval`_`):%- [_^ValueMap^ ValueMap
+][@(0.0.255) `&]_[* operator`=]([_^VectorMap^ VectorMap]<[_^Value^ Value], 
+[_^Value^ Value]>_[@(0.0.255) rval`_]_[*@3 m])&]
+[s2; Pick assignment `- efficient, destroying the source.&]
 [s3; &]
 [s4;%- &]
 [s5;:ValueMap`:`:operator Value`(`)const:%- [* operator_Value]()_[@(0.0.255) const]&]
@@ -127,6 +145,24 @@ ey], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 value])&]
 [s2;%- Adds a new key`-value pair to ValueMap. ValueMap can contain 
 multiple same keys. Note: multiple overloads are required to make 
 Id and SqlId work with ValueMap.&]
+[s3; &]
+[s4;%- &]
+[s5;:ValueMap`:`:operator`(`)`(const Value`&`,const Value`&`):%- [_^ValueMap^ ValueMap][@(0.0.255) `&
+]_[* operator()]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 key], 
+[@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 value])&]
+[s5;:ValueMap`:`:operator`(`)`(const String`&`,const Value`&`):%- [_^ValueMap^ ValueMap
+][@(0.0.255) `&]_[* operator()]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 key
+], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 value])&]
+[s5;:ValueMap`:`:operator`(`)`(const char`*`,const Value`&`):%- [_^ValueMap^ ValueMap][@(0.0.255) `&
+]_[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [@(0.0.255) const]_[_^Value^ V
+alue][@(0.0.255) `&]_[*@3 value])&]
+[s5;:ValueMap`:`:operator`(`)`(int`,const Value`&`):%- [_^ValueMap^ ValueMap][@(0.0.255) `&
+]_[* operator()]([@(0.0.255) int]_[*@3 key], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
+]_[*@3 value])&]
+[s5;:ValueMap`:`:operator`(`)`(Id`,const Value`&`):%- [_^ValueMap^ ValueMap][@(0.0.255) `&
+]_[* operator()]([_^Id^ Id]_[*@3 key], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v
+alue])&]
+[s2;%- [%% Same as Add(][*@3 key], [*@3 value]).&]
 [s3; &]
 [s4;%- &]
 [s5;:ValueMap`:`:Set`(const Value`&`,const Value`&`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) c
@@ -199,6 +235,11 @@ nst]&]
 [s2; Same as GetValues.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:ValueMap`:`:Pick`(`):%- [_^VectorMap^ VectorMap]<[_^Value^ Value], 
+[_^Value^ Value]>_[* Pick]()&]
+[s2; Picks the content `- fast, ValueMap is cleared.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:ValueMap`:`:operator`[`]`(const Value`&`)const:%- [@(0.0.255) const]_[_^Value^ Value
 ][@(0.0.255) `&]_[* operator`[`]]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 key
 ])_[@(0.0.255) const]&]
@@ -260,5 +301,19 @@ same key`-value pairs [*/ in the same order].&]
 [s5;:ValueMap`:`:operator`!`=`(const ValueMap`&`)const:%- [@(0.0.255) bool]_[* operator!`=
 ]([@(0.0.255) const]_[_^ValueMap^ ValueMap][@(0.0.255) `&]_[*@3 v])_[@(0.0.255) const]&]
 [s2; Same as !operator`=`=(v).&]
+[s3; &]
+[s4;%- &]
+[s5;:ValueMap`:`:Compare`(const ValueMap`&`)const:%- [@(0.0.255) int]_[* Compare]([@(0.0.255) c
+onst]_[_^ValueMap^ ValueMap][@(0.0.255) `&]_[*@3 b])_[@(0.0.255) const]&]
+[s5;:ValueMap`:`:operator`<`=`(const ValueMap`&`)const:%- [@(0.0.255) bool]_[* operator<`=
+]([@(0.0.255) const]_[_^ValueMap^ ValueMap][@(0.0.255) `&]_[*@3 x])_[@(0.0.255) const]&]
+[s5;:ValueMap`:`:operator`>`=`(const ValueMap`&`)const:%- [@(0.0.255) bool]_[* operator>`=
+]([@(0.0.255) const]_[_^ValueMap^ ValueMap][@(0.0.255) `&]_[*@3 x])_[@(0.0.255) const]&]
+[s5;:ValueMap`:`:operator`<`(const ValueMap`&`)const:%- [@(0.0.255) bool]_[* operator<]([@(0.0.255) c
+onst]_[_^ValueMap^ ValueMap][@(0.0.255) `&]_[*@3 x])_[@(0.0.255) const]&]
+[s5;:ValueMap`:`:operator`>`(const ValueMap`&`)const:%- [@(0.0.255) bool]_[* operator>]([@(0.0.255) c
+onst]_[_^ValueMap^ ValueMap][@(0.0.255) `&]_[*@3 x])_[@(0.0.255) const]&]
+[s2; Compares two ValueMaps. Performs ordered (as ValueMap has order 
+of key`-value pairs) comparison of key`-value pairs.&]
 [s3; &]
 [s0; ]]
