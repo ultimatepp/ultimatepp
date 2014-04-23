@@ -14,7 +14,6 @@
 		#undef  WINVER
 		#undef  _WIN32_WINNT
 		#define _WIN32_WINNT 0x0501
-		#define WINVER WindowsXP
 	#endif
 
 	#if __unix || __unix__ || __APPLE__
