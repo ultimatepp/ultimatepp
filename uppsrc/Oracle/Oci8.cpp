@@ -99,8 +99,8 @@ protected:
 			byte           buffer[8];
 		};
 
-		byte *Data()                 { return total_len > sizeof(buffer) ? ptr : buffer; }
-		const byte *Data() const     { return total_len > sizeof(buffer) ? ptr : buffer; }
+		byte *Data()                 { return total_len > (int)sizeof(buffer) ? ptr : buffer; }
+		const byte *Data() const     { return total_len > (int)sizeof(buffer) ? ptr : buffer; }
 		bool  IsNull() const         { return ind[0] < 0; }
 		bool  Alloc(int count, OCIEnv *envhp, int type, int len, int res = 0);
 		void  Clear();
@@ -182,7 +182,7 @@ void OCI8Connection::Item::Clear() {
 	if(type == SQLT_BLOB || type == SQLT_CLOB)
 		oci8.OCIDescriptorFree((dvoid *)lob, OCI_DTYPE_LOB);
 	else
-	if(total_len > sizeof(buffer))
+	if(total_len > (int)sizeof(buffer))
 		delete[] ptr;
 	total_len = 0;
 	lob = NULL;
@@ -216,7 +216,7 @@ bool OCI8Connection::Item::Alloc(int _count, OCIEnv *envhp, int _type, int _len,
 	array_count = _count;
 	if(type == SQLT_BLOB || type == SQLT_CLOB)
 		oci8.OCIDescriptorAlloc(envhp, (dvoid **) &lob, OCI_DTYPE_LOB, 0, NULL);
-	if(total_len > sizeof(buffer))
+	if(total_len > (int)sizeof(buffer))
 		ptr = new byte[total_len];
 	ind.Alloc(_count);
 	ind[0] = -1;
@@ -521,7 +521,7 @@ bool OCI8Connection::BulkExecute(const char *stmt, const Vector< Vector<Value> >
 
 		switch(sql_type) {
 			case SQLT_INT: {
-				ASSERT(sum_len >= nrows * sizeof(max_row_len));
+				ASSERT(sum_len >= nrows * (int)sizeof(max_row_len));
 				if(max_row_len == sizeof(int)) {
 					int *datp = (int *)p.Data();
 					for(int r = 0; r < nrows; r++) {
@@ -543,7 +543,7 @@ bool OCI8Connection::BulkExecute(const char *stmt, const Vector< Vector<Value> >
 				break;
 			}
 			case SQLT_FLT: {
-				ASSERT(sum_len >= nrows * sizeof(double));
+				ASSERT(sum_len >= nrows * (int)sizeof(double));
 				double *datp = (double *)p.Data();
 				for(int r = 0; r < nrows; r++) {
 					double d = (param_rows[r].GetCount() > a ? (double)param_rows[r][a] : (double)Null);
