@@ -17,7 +17,7 @@ CONSOLE_APP_MAIN
 	{
 		Vector<Value> v;
 		v << 5 << 1 << 3;
-		ValueArray va(v);
+		ValueArray va = pick(v);
 		ASSERT(v.IsPicked());
 		TEST(va, "[5, 1, 3]");
 		Vector<Value> v2 = va.Pick();
@@ -48,4 +48,6 @@ CONSOLE_APP_MAIN
 	
 		TEST(m, "{ 2: ahoj, 1: kamarade }");
 	}
+	
+	LOG("============== OK");
 }

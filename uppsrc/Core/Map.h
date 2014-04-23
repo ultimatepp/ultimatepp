@@ -103,11 +103,11 @@ public:
 	Index<K, HashFn>         PickIndex()           { return pick(key); }
 
 	const Vector<K>& GetKeys() const               { return key.GetKeys(); }
-	Vector<K>        PickKeys()                    { return key.PickKeys(); }
+	Vector<K>        PickKeys() pick_              { return key.PickKeys(); }
 
 	const V&         GetValues() const             { return value; }
 	V&               GetValues()                   { return value; }
-	V                PickValues()                  { return pick(value); }
+	V                PickValues() pick_            { return pick(value); }
 	
 	bool             IsPicked() const              { return value.IsPicked() || key.IsPicked(); }
 
