@@ -53,6 +53,7 @@ public:
 	virtual void LeftDown(Point p, dword flags);
 	virtual void LeftDouble(Point p, dword flags);
 	virtual void RightDown(Point p, dword flags);
+	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 
 private:
 	struct LnInfo : Moveable<LnInfo> {
