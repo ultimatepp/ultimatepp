@@ -1,0 +1,11 @@
+description "Using ValueMap::Pick, ValueArray::Pick (e.g. to sort the content)\377";
+
+uses
+	Core;
+
+file
+	ValuePick.cpp;
+
+mainconfig
+	"" = "SSE2";
+
