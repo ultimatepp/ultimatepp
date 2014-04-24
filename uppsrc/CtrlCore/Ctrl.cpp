@@ -373,12 +373,9 @@ void Ctrl::KillCaret()
 
 void Ctrl::SetInfoPart(int i, const char *txt)
 {
-	DUMP(i);
-	DUMP(txt);
 	Vector<String> f = Split(info, '\x7f', false);
 	f.At(i) = txt;
 	info = Join(f, "\x7f");
-	DUMPHEX(info);
 }
 
 Ctrl& Ctrl::Tip(const char *txt)
