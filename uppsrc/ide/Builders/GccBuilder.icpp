@@ -76,7 +76,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 		cc << " -arch i386";
 	}
 
-	if(HasFlag("SSE2"))
+	if(HasFlag("SSE2") || !HasFlag("CLANG"))
 		cc << " -msse2 -mfpmath=sse";
 
 	String cc_speed = cc;
@@ -523,6 +523,7 @@ Builder *CreateGccBuilder()
 INITBLOCK
 {
 	RegisterBuilder("GCC", CreateGccBuilder);
+	RegisterBuilder("CLANG", CreateGccBuilder);
 	RegisterBuilder("GCC32", CreateGccBuilder);
 	RegisterBuilder("GCC_ARM", CreateGccBuilder);
 }

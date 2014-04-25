@@ -697,7 +697,9 @@ void AppMain___()
 	#endif
 	}
 
+#ifndef _DEBUG
 	try {
+#endif
 		void RegisterLayDes(); RegisterLayDes();
 		void RegisterIconDes(); RegisterIconDes();
 
@@ -927,6 +929,7 @@ void AppMain___()
 		SaveCodeBase();
 		DelTemps();
 		ReduceCache();
+#ifndef _DEBUG
 	}
 	catch(const CParser::Error& e) {
 		Exclamation("Parser error " + e);
@@ -941,5 +944,6 @@ void AppMain___()
 		Exclamation("Unknown exception !");
 		LOG("!!!!! Unknown exception");
 	}
+#endif
 #endif
 }

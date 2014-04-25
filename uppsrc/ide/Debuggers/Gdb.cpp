@@ -80,6 +80,7 @@ bool Gdb::SetBreakpoint(const String& filename, int line, const String& bp)
 		FastCmd("b " + bi + " if " + bp);
 	return true;
 }
+
 void Gdb::SetDisas(const String& text)
 {
 	disas.Clear();
@@ -87,77 +88,80 @@ void Gdb::SetDisas(const String& text)
 	while(!ss.IsEof()) {
 		String ln = ss.GetLine();
 		CParser p(ln);
-		if(p.Char2('0', 'x')) {
-			dword adr = p.IsNumber(16) ? p.ReadNumber(16) : 0;
-			String code;
-			String args;
-			int level = 0;
-			while(!p.IsEof()) {
-				if(p.Char(':') && level == 0)
-					break;
-				else
-				if(p.Char('<'))
-					level++;
-				else
-				if(p.Char('>'))
-					level--;
-				else
-					p.GetChar();
-			}
-			p.Spaces();
-			if(p.IsId()) {
-				code = p.ReadId();
-				for(;;) {
-					if(p.Spaces())
-						args.Cat(' ');
-					if(p.IsEof())
+		try {
+			if(p.Char2('0', 'x')) {
+				adr_t adr = p.IsNumber(16) ? p.ReadNumber64(16) : 0;
+				String code;
+				String args;
+				int level = 0;
+				while(!p.IsEof()) {
+					if(p.Char(':') && level == 0)
 						break;
-					if(p.Char2('0', 'x')) {
-						dword adr = 0;
-						if(p.IsNumber(16))
-							adr = p.ReadNumber(16);
-						String fname;
-						bool   usefname = false;
-						if(p.Char('<')) {
-							const char *b = p.GetPtr();
-							int level = 1;
-							usefname = true;
-							while(!p.IsEof()) {
-								if(p.Char('>') && --level == 0) {
-									fname = String(b, p.GetPtr() - 1);
-									break;
-								}
-								if(p.Char('<'))
-									level++;
-								if(p.Char('+'))
-									usefname = false;
-								else {
-									p.GetChar();
-									p.Spaces();
+					else
+					if(p.Char('<'))
+						level++;
+					else
+					if(p.Char('>'))
+						level--;
+					else
+						p.GetChar();
+				}
+				p.Spaces();
+				if(p.IsId()) {
+					code = p.ReadId();
+					for(;;) {
+						if(p.Spaces())
+							args.Cat(' ');
+						if(p.IsEof())
+							break;
+						if(p.Char2('0', 'x')) {
+							dword adr = 0;
+							if(p.IsNumber(16))
+								adr = p.ReadNumber64(16);
+							String fname;
+							bool   usefname = false;
+							if(p.Char('<')) {
+								const char *b = p.GetPtr();
+								int level = 1;
+								usefname = true;
+								while(!p.IsEof()) {
+									if(p.Char('>') && --level == 0) {
+										fname = String(b, p.GetPtr() - 1);
+										break;
+									}
+									if(p.Char('<'))
+										level++;
+									if(p.Char('+'))
+										usefname = false;
+									else {
+										p.GetChar();
+										p.Spaces();
+									}
 								}
 							}
+							args << (usefname ? fname : Sprintf("0x%X", adr));
+							disas.AddT(adr);
 						}
-						args << (usefname ? fname : Sprintf("0x%X", adr));
-						disas.AddT(adr);
+						else
+						if(p.Id("DWORD"))
+							args.Cat("dword ");
+						else
+						if(p.Id("WORD"))
+							args.Cat("word ");
+						else
+						if(p.Id("BYTE"))
+							args.Cat("byte ");
+						else
+						if(p.Id("PTR"))
+							args.Cat("ptr ");
+						else
+							args.Cat(p.GetChar());
 					}
-					else
-					if(p.Id("DWORD"))
-						args.Cat("dword ");
-					else
-					if(p.Id("WORD"))
-						args.Cat("word ");
-					else
-					if(p.Id("BYTE"))
-						args.Cat("byte ");
-					else
-					if(p.Id("PTR"))
-						args.Cat("ptr ");
-					else
-						args.Cat(p.GetChar());
 				}
+				disas.Add(adr, code, args);
 			}
-			disas.Add(adr, code, args);
 		}
+		catch(CParser::Error) {}
 	}
 }
 
@@ -176,21 +180,24 @@ void Gdb::SyncDisas(bool fr)
 	while(!ss.IsEof()) {
 		String ln = ss.GetLine();
 		CParser p(ln);
-		String name;
-		if(p.IsId()) {
-			name = p.ReadId();
-			if(p.Char2('0', 'x')) {
-				String n = Sprintf("%08X", p.ReadNumber(16));
-				for(int i = 0; i < reglbl.GetCount(); i++) {
-					if(regname[i] == name) {
-						if(reglbl[i]->GetText() != n) {
-							reglbl[i]->SetLabel(n);
-							reglbl[i]->SetInk(LtRed);
+		try {
+			String name;
+			if(p.IsId()) {
+				name = p.ReadId();
+				if(p.Char2('0', 'x')) {
+					String n = Sprintf("%08X", p.ReadNumber64(16));
+					for(int i = 0; i < reglbl.GetCount(); i++) {
+						if(regname[i] == name) {
+							if(reglbl[i]->GetText() != n) {
+								reglbl[i]->SetLabel(n);
+								reglbl[i]->SetInk(LtRed);
+							}
 						}
 					}
 				}
 			}
 		}
+		catch(CParser::Error) {}
 	}
 }
 
@@ -235,9 +242,12 @@ bool ParsePos(const String& s, String& fn, int& line, adr_t & adr)
 	fn = String(q, q + 2) + p[0];
 	line = atoi(p[1]);
 	CParser pa(p[4]);
-	pa.Char2('0', 'x');
-	if(pa.IsNumber(16))
-		adr = pa.ReadNumber(16);
+	try {
+		pa.Char2('0', 'x');
+		if(pa.IsNumber(16))
+			adr = pa.ReadNumber64(16);
+	}
+	catch(CParser::Error) {}
 	return true;
 }
 
@@ -274,9 +284,12 @@ String Gdb::Cmdp(const char *cmdline, bool fr)
 	else {
 		file = Null;
 		CParser pa(s);
-		pa.Char2('0', 'x');
-		if(pa.IsNumber(16))
-			addr = pa.ReadNumber(16);
+		try {
+			pa.Char2('0', 'x');
+			if(pa.IsNumber(16))
+				addr = pa.ReadNumber64(16);
+		}
+		catch(CParser::Error) {}
 		SyncDisas(fr);
 	}
 	frame.Clear();
@@ -428,7 +441,11 @@ String DataClean(CParser& p)
 String DataClean(const char *s)
 {
 	CParser p(s);
-	return DataClean(p);
+	try {
+		return DataClean(p);
+	}
+	catch(CParser::Error) {}
+	return Null;
 }
 
 void Gdb::Locals()
@@ -482,27 +499,30 @@ void Gdb::Autos()
 	VectorMap<String, String> prev = DataMap(autos);
 	autos.Clear();
 	CParser p(autoline);
-	while(!p.IsEof()) {
-		if(p.IsId()) {
-			String exp = p.ReadId();
-			for(;;) {
-				if(p.Char('.') && p.IsId())
-					exp << '.';
-				else
-				if(p.Char2('-', '>') && p.IsId())
-					exp << "->";
-				else
-					break;
-				exp << p.ReadId();
+	try {
+		while(!p.IsEof()) {
+			if(p.IsId()) {
+				String exp = p.ReadId();
+				for(;;) {
+					if(p.Char('.') && p.IsId())
+						exp << '.';
+					else
+					if(p.Char2('-', '>') && p.IsId())
+						exp << "->";
+					else
+						break;
+					exp << p.ReadId();
+				}
+				if(autos.Find(exp) < 0) {
+					String val = Print(exp);
+					if(!IsNull(val) && val.Find('(') < 0)
+						autos.Add(exp, val);
+				}
 			}
-			if(autos.Find(exp) < 0) {
-				String val = Print(exp);
-				if(!IsNull(val) && val.Find('(') < 0)
-					autos.Add(exp, val);
-			}
+			p.SkipTerm();
 		}
-		p.SkipTerm();
 	}
+	catch(CParser::Error) {}
 	autos.Sort();
 	MarkChanged(prev, autos);
 }

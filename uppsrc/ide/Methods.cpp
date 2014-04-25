@@ -288,26 +288,30 @@ void BuildMethods::NewBuilder()
 {
 	String b = ~builder;
 	bool gcc = b == "GCC" || b == "GCC32" || b == "GCC_ARM";
-	if(IsNull(speed_options))
+	if(IsNull(speed_options)) {
 		if(gcc)
 			speed_options <<= "-O3 -ffunction-sections -fdata-sections";
 		else
 			speed_options <<= "-O2";
-	if(IsNull(size_options))
+	}
+	if(IsNull(size_options)) {
 		if(gcc)
 			size_options <<= "-Os -finline-limit=20 -ffunction-sections -fdata-sections";
 		else
 			size_options <<= "-O1";
-	if(IsNull(debug_options))
+	}
+	if(IsNull(debug_options)) {
 		if(gcc)
 			debug_options <<= "-O0";
 		else
 			debug_options <<= "-Od";
-	if(IsNull(debugger))
+	}
+	if(IsNull(debugger)) {
 		if(gcc)
 			debugger <<= "gdb";
 		else
 			debugger <<= "msdev";
+	}
 	if(IsNull(release_link) && gcc)
 		release_link <<= "-Wl,--gc-sections";
 	ChangeMethod();
