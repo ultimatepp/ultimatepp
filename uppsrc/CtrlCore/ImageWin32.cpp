@@ -340,7 +340,7 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src,
 	static LRUCache<ImageSysData, int64> cache;
 	LLOG("SysImage cache pixels " << cache.GetSize() << ", count " << cache.GetCount());
 	Size sz = Ctrl::GetPrimaryScreenArea().GetSize();
-	m.img = img;
+	m.img = IsPrinter() && GetDeviceCaps(GetHandle(), NUMCOLORS) == 2 ? Dither(img, 360) : img; // If printer does not support color, dither
 	cache.Get(m).Paint(*this, x, y, src, color);
 	cache.Shrink(4 * sz.cx * sz.cy, IsWinNT() ? 1000 : 100);
 }
