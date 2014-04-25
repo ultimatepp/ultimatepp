@@ -792,7 +792,6 @@ Image Rotate(const Image& m, int angle)
 
 Image Dither(const Image& m, int dival)
 {
-	DTIMING("Dither");
 	static byte dither[8][8]= {
 		1, 49, 13, 61, 4, 52, 16, 64, 
         33, 17, 45, 29, 36, 20, 48, 32, 
