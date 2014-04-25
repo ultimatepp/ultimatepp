@@ -390,12 +390,21 @@ based on [%-*@3 img].&]
 [s4; &]
 [s5;:Sharpen`(const Image`&`,int`): [_^Image^ Image]_[* Sharpen]([@(0.0.255) const]_[_^Image^ I
 mage][@(0.0.255) `&]_[*@3 img], [@(0.0.255) int]_[*@3 amount]_`=_[@3 100])&]
-[s2;%%  [%-*@3 img] [%-*@3 amount].&]
+[s2;%% Sharpens image using primitive convolution filter.&]
+[s3;%% &]
+[s4; &]
+[s5;:Dither`(const Image`&`,int`): [_^Image^ Image]_[* Dither]([@(0.0.255) const]_[_^Image^ I
+mage][@(0.0.255) `&]_[*@3 m], [@(0.0.255) int]_[*@3 dival]_`=_[@3 394])&]
+[s2;%% Provides primitive dithering with 8x8 matrix into black/white 
+picture. Dival is sort of gamma control of output, lowering it 
+from default value (to e.g. 350) can produce better results when 
+dithering is using for printing on purely monochromatic (without 
+half`-toning support) printers.&]
 [s3;%% &]
 [s4; &]
 [s5;:Etched`(const Image`&`): [_^Image^ Image]_[* Etched]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&
 ]_[*@3 img])&]
-[s2;%%  [%-*@3 img].&]
+[s2;%% `"Etching`" effect.&]
 [s3;%% &]
 [s4; &]
 [s5;:SetColorKeepAlpha`(const Image`&`,Color`): [_^Image^ Image]_[* SetColorKeepAlpha]([@(0.0.255) c
