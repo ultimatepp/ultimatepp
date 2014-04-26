@@ -69,6 +69,14 @@ CONSOLE_APP_MAIN
 	LOG("------------");
 //	SaveFile(GetDataFile("etalon"), result);
 	ASSERT(result == LoadFile(GetDataFile("etalon")));
+
+	result = http.RenderString("Witz/index2");
+
+	LOG("------------");
+	LOG(result);
+	LOG("------------");
+//	SaveFile(GetDataFile("etalon"), result);
+	ASSERT(result == LoadFile(GetDataFile("etalon2")));
 	
 	m.Add("name", "What is that?");
 	http("res", m);
