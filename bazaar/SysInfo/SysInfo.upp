@@ -4,7 +4,7 @@ uses
 	Core,
 	Functions4U;
 
-library(WIN32) "psapi gdi32 vfw32 oleaut32 wbemuuid iphlpapi PowrProf netapi32";
+library(WIN32) "psapi gdi32 vfw32 oleaut32 iphlpapi PowrProf netapi32 wbemuuid";
 
 library(POSIX | LINUX | FREEBSD) "Xtst X11";
 
@@ -23,5 +23,5 @@ file
 	srcimp.tpp,
 	src.tpp,
 	SysInfo.t,
-	License.txt;
+	Copying;
 

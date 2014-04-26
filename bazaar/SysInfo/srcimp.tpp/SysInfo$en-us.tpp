@@ -57,6 +57,12 @@ so in case of problems in Ubuntu go to terminal and run this:&]
 [s0; [C sudo apt`-get install acpi ]or&]
 [s0; [C sudo apt`-get install lm`-sensors]&]
 [s0;C &]
+[s0;C &]
+[s0; [*@6 IMPORTANT][* :] To compile it in Windows using MinGW you will 
+probably need to get files rpcsal.h, wbemcli.h, wbemprov.h and 
+wbemuuid.lib. Maybe you will need to delete existing file libwbemuuid.a, 
+as it possibly does not contain CLSID`_WbemAdministrativeLocator.&]
+[s0; &]
 [s0; &]
 [s0; [*+92 3. OS and Desktop implementation]&]
 [s0; &]

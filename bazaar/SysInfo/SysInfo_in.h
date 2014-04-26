@@ -9,11 +9,11 @@
 	#include <psapi.h>
 	#include <Winioctl.h>
 	#define CY tagCY
-	// To compile in MinGW copy files Rpcsal.h, DispEx.h, WbemCli.h, WbemDisp.h, Wbemidl.h, 
-	// WbemProv.h and WbemTran.h from /SysInfo/plugin to MinGW/include and 
-	// wbemuuid.lib from /SysInfo/plugin to MinGW/lib
+	// To compile in MinGW you will probably need to get files Rpcsal.h, WbemCli.h, WbemProv.h 
+	// and for sure you will need wbemuuid.lib, even deleting libwbemuuid.a, as it is uncomplete
 	#include <rpcsal.h>	
-	#include <Wbemidl.h>
+	#include <wbemcli.h>
+	#include <wbemprov.h>
 	#include <winnls.h> 
 	#include <vfw.h>
 	typedef ACCESS_MASK REGSAM;
