@@ -83,6 +83,7 @@ void TopWindow::Open(Ctrl *owner)
 	PopUp(frame, false, true);
 	popup = false;
 	SetRect(frame->GetClient());
+	StateH(OPEN);
 	SyncCaption();
 	PlaceFocus();
 	if(state == MAXIMIZED)
