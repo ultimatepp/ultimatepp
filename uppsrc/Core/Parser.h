@@ -14,6 +14,7 @@ protected:
 	int         line;
 	String      fn;
 	bool        skipspaces;
+	bool        skipcomments;
 	bool        uescape;
 
 	bool        Spaces0();
@@ -101,6 +102,8 @@ public:
 	CParser& SkipSpaces(bool b = true)        { skipspaces = true; return *this; }
 	CParser& NoSkipSpaces()                   { skipspaces = false; return *this; }
 	CParser& UnicodeEscape(bool b = true)     { uescape = b; return *this; }
+	CParser& SkipComments(bool b = true);
+	CParser& NoSkipComments()                 { return SkipComments(false); }
 
 	CParser(const char *ptr);
 	CParser(const char *ptr, const char *fn, int line = 1);

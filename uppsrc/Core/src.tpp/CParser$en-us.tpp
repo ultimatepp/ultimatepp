@@ -81,6 +81,18 @@ paces][*  ]method. Default is true.&]
 `\u unicode escape sequences in String.&]
 [s3; &]
 [s4; &]
+[s5;:CParser`:`:SkipComments`(bool`): [_^CParser^ CParser][@(0.0.255) `&]_[* SkipComments](
+[@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% Sets the behaviour of comments. If active, comments are treated 
+as whitespaces (basically, they are ignored). This is [*/ default]. 
+Note that SkipComments has to be called before any parsing happens.&]
+[s3;%% &]
+[s4; &]
+[s5;:CParser`:`:NoSkipComments`(`): [_^CParser^ CParser][@(0.0.255) `&]_[* NoSkipComments](
+)&]
+[s2;%% Same as SkipComments(false).&]
+[s3; &]
+[s4; &]
 [s5;:CParser`:`:Spaces`(`): [@(0.0.255) bool]_[* Spaces]()&]
 [s2;%% Skips white`-spaces. Returns [* true] if there were white`-space 
 to skip, [* false] otherwise. Stores the position before advancing 
