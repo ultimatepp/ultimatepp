@@ -76,7 +76,7 @@ CONSOLE_APP_MAIN
 //	Ctrl::WhenDisconnect = callback(FinishApp); // Use this to gracefully exit (save data?)
 
 #ifndef _DEBUG
-	Ctrl::host = "eventcraft.eu";
+	Ctrl::host = "myserverhost.org";
 #endif
 
 	if(Ctrl::StartSession()) {
