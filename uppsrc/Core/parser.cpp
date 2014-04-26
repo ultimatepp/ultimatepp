@@ -2,12 +2,12 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)    // LOG(x)
+#define LLOG(x)    // DLOG(x)
 #define LTIMING(x) // RTIMING(x)
 
 void CParser::ThrowError(const char *s) {
 	LLOG("CParser::Error: " << s);
-	LLOG(~String(term, min(strlen((const char *)term), 512U)));
+	LLOG(~String(term, min((int)strlen((const char *)term), 512)));
 	Pos pos = GetPos();
 	Error err(fn + Format("(%d,%d): ", line, pos.GetColumn()) + s);
 //	err.term = (const char *)term;
@@ -21,6 +21,30 @@ bool CParser::Spaces0() {
 	   !(term[0] == '/' && term[1] == '*'))
 		return false;
 	for(;;) {
+		if(*term == LINEINFO_ESC) {
+			term++;
+			fn.Clear();
+			while(*term) {
+				if(*term == LINEINFO_ESC) {
+					++term;
+					break;
+				}
+				if(*term == '\3') {
+					line = atoi(++term);
+					while(*term) {
+						if(*term == LINEINFO_ESC) {
+							++term;
+							break;
+						}
+						term++;
+					}
+					break;
+				}
+				fn.Cat(*term++);
+			}
+			continue;
+		}
+		else
 		if(term[0] == '/' && term[1] == '/') {
 			term += 2;
 			while(*term && *term != '\n')
@@ -46,6 +70,17 @@ bool CParser::Spaces0() {
 		term++;
 	}
 	return true;
+}
+
+String CParser::LineInfoComment(const String& file, int line, int column)
+{
+	return String().Cat() << (char)LINEINFO_ESC << file << '\3'
+	                      << line << '\3' << column << (char)LINEINFO_ESC;
+}
+
+String CParser::GetLineInfoComment(int tabsize) const
+{
+	return LineInfoComment(GetFileName(), GetLine(), GetColumn(tabsize));
 }
 
 const char *CParser::IsId0(const char *s) const {
@@ -409,6 +444,13 @@ int CParser::Pos::GetColumn(int tabsize) const
 {
 	int pos = 1;
 	for(const char *s = lineptr; s < ptr; s++) {
+		if(*s == CParser::LINEINFO_ESC) {
+			s++;
+			while(s < ptr && *s != CParser::LINEINFO_ESC)
+				if(*s++ == '\3')
+					pos = atoi(s);
+		}
+		else
 		if(*s == '\t')
 			pos = (pos + tabsize - 1) / tabsize * tabsize + 1;
 		else
@@ -417,8 +459,14 @@ int CParser::Pos::GetColumn(int tabsize) const
 	return pos;
 }
 
+int CParser::GetColumn(int tabsize) const
+{
+	return GetPos().GetColumn(tabsize);
+}
+
 void CParser::SetPos(const CParser::Pos& p)
 {
+	LLOG("SetPos " << p.fn << ":" << p.line);
 	line = p.line;
 	fn = p.fn;
 	term = p.ptr;
@@ -459,6 +507,7 @@ void CParser::Set(const char *_ptr, const char *_fn, int _line)
 	line = _line;
 	skipspaces = true;
 	Spaces();
+	LLOG("Set " << fn << ":" << line);
 }
 
 void CParser::Set(const char *_ptr)

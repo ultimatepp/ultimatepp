@@ -88,7 +88,12 @@ public:
 	operator bool() const                     { return *term; }
 
 	int    GetLine() const                    { return line; }
+	int    GetColumn(int tabsize) const;
 	String GetFileName() const                { return fn; }
+
+	static String LineInfoComment(const String& filename, int line = 1, int column = 1);
+	String GetLineInfoComment(int tabsize = 4) const;
+	enum { LINEINFO_ESC = '\2' };
 	
 	void   Set(const char *ptr, const char *fn, int line = 1);
 	void   Set(const char *ptr);

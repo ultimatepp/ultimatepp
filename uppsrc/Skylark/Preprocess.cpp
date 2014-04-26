@@ -28,8 +28,10 @@ String LoadTemplate(const char *file, const String& search_path, int lang)
 	SKYLARKLOG("Loading template file " << path);
 	FileIn in(path);
 	String r;
+	int lineno = 0;
 	while(in && !in.IsEof()) {
 		String line = in.GetLine();
+		lineno++;
 		CParser p(line);
 		if(p.Char('#') && p.Id("include")) {
 			String file = p.GetPtr();
@@ -41,7 +43,7 @@ String LoadTemplate(const char *file, const String& search_path, int lang)
 			r << LoadTemplate(file, GetFileFolder(path) + ';' + search_path, lang);
 		}
 		else
-			r << line;
+			r << CParser::LineInfoComment(path, lineno) << line;
 		r << "\n";
 	}
 	return r;
@@ -62,7 +64,7 @@ VectorMap<String, String> GetTemplateDefs(const char *file, int lang)
 				id = p.ReadId();
 			ti = def.FindAdd(id);
 			def[ti].Clear();
-			def[ti] << p.GetPtr();
+			def[ti] << p.GetLineInfoComment() << p.GetPtr();
 		}
 		else
 			def[ti] << line << "\n";

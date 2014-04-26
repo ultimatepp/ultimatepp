@@ -1,10 +1,10 @@
 #ifndef _Skylark_icpp_init_stub
 #define _Skylark_icpp_init_stub
 #include "Sql/init"
-#define BLITZ_INDEX__ Fdc34a156e19f70e79e3af4bc5aee3879
+#define BLITZ_INDEX__ F99b1b565e5194ee2f9bb1998be2e6f71
 #include "StdLib.icpp"
 #undef BLITZ_INDEX__
-#define BLITZ_INDEX__ F4f56e545eab9f60b3cd674a218cc0915
+#define BLITZ_INDEX__ Fadc563b9c69ab7173de2094508da8708
 #include "Static.icpp"
 #undef BLITZ_INDEX__
 #endif

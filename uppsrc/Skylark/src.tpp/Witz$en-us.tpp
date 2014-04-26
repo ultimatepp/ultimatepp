@@ -40,7 +40,7 @@ specific version of template first, then defaults to common version.&]
 [s0; [@5 #define] [/ id]&]
 [s0; &]
 [s0; This starts a new template subblock which ends with another 
-subblock. First subblock (the one befure first #define is encountered) 
+subblock. First subblock (the one before first #define is encountered) 
 has [/ id] `"MAIN`". The value of `"MAIN`" subblock represents 
 the template at the end of preprocessing process.&]
 [s0; &]

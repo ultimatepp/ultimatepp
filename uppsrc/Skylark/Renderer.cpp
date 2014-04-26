@@ -61,33 +61,32 @@ ArrayMap<String, One<Exe> > template_cache;
 
 const One<Exe>& Renderer::GetTemplate(const char *template_name)
 {
+	LTIMING("GetTemplate");
+	StringBuffer s;
+	{
+		LTIMING("MakeSignature");
+		for(int i = 0; i < var.GetCount(); i++)
+			s << var.GetKey(i) << ';';
+		s << ':' << template_name;
+	}
+	if(!SkylarkApp::Config().use_caching) // Templates get overwritten is not cached, MT hazard
+		s << ';' << Thread::GetCurrentId();	
+	String sgn = s;
+	LLOG("Trying to retrieve " << sgn << " from cache");
+	Mutex::Lock __(template_cache_lock);
+	int q = template_cache.Find(sgn);
+	if(q >= 0 && SkylarkApp::Config().use_caching)
+		return template_cache[q];
+	One<Exe>& exe = q >= 0 ? template_cache[q] : template_cache.Add(sgn);
 	try {
-		LTIMING("GetTemplate");
-		StringBuffer s;
-		{
-			LTIMING("MakeSignature");
-			for(int i = 0; i < var.GetCount(); i++)
-				s << var.GetKey(i) << ';';
-			s << ':' << template_name;
-		}
-		if(!SkylarkApp::Config().use_caching) // Templates get overwritten is not cached, MT hazard
-			s << ';' << Thread::GetCurrentId();	
-		String sgn = s;
-		LLOG("Trying to retrieve " << sgn << " from cache");
-		Mutex::Lock __(template_cache_lock);
-		int q = template_cache.Find(sgn);
-		if(q >= 0 && SkylarkApp::Config().use_caching)
-			return template_cache[q];
 		LLOG("About to compile: " << sgn);
 		LTIMING("Compile");
-		One<Exe>& exe = q >= 0 ? template_cache[q] : template_cache.Add(sgn);
 		exe = Compile(GetPreprocessedTemplate(template_name, lang), var.GetIndex());
-		return exe;
 	}
-	catch(CParser::Error e)
-	{
-		throw TemplateExc(e);
+	catch(CParser::Error e) {
+		exe = Compile(String().Cat() << "<html><body>Error in template: " << e << "</body></html>", var.GetIndex());
 	}
+	return exe;
 	NEVER();
 	return template_cache[0];
 }
