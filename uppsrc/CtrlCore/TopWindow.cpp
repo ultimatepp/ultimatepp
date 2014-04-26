@@ -489,12 +489,12 @@ TopWindow& TopWindow::SetStyle(const TopWindow::TopStyle& s)
 TopWindow::TopWindow()
 {
 	GuiLock __;
+	GuiPlatformConstruct();
 	TransparentBackPaint();
 	background = PaintRect(Single<DialogBackground>(), Null);
 	SetStyle(StyleDefault());
 	center = 1;
 	minsize = Size(80, 20);
-	GuiPlatformConstruct();
 	maximizebox = minimizebox = sizeable = tool = noclosebox = false;
 	state = OVERLAPPED;
 	WhenClose = THISBACK(Close);
