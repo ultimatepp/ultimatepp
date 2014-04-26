@@ -366,10 +366,35 @@ a different [* CParser].&]
 [s2; Returns the current line number.&]
 [s3; &]
 [s4; &]
+[s5;:CParser`:`:GetColumn`(int`)const: [@(0.0.255) int]_[* GetColumn]([@(0.0.255) int]_[*@3 t
+absize])_[@(0.0.255) const]&]
+[s2;%% Returns the current column, with given [%-*@3 tabsize].&]
+[s3;%% &]
+[s4; &]
 [s5;:CParser`:`:GetFileName`(`)const: [_^String^ String]_[* GetFileName]()_[@(0.0.255) cons
 t]&]
 [s2; Returns the actual filename.&]
 [s3;%% &]
+[s3; &]
+[s4; &]
+[s5;:CParser`:`:LineInfoComment`(const String`&`,int`,int`): [@(0.0.255) static] 
+[_^String^ String]_[* LineInfoComment]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_
+[*@3 filename], [@(0.0.255) int]_[*@3 line]_`=_[@3 1], [@(0.0.255) int]_[*@3 column]_`=_[@3 1])
+&]
+[s2;%% This function creates a special comment that when parsed by 
+CParser, switches filename and line number. This is supposed 
+to help in situations when parsed text is actually a result of 
+e.g. include operations of some original files, to improve error 
+reporting. Not that such comment is lexically treated as comment. 
+Comment is created using LINEINFO`_ESC characters begin/end delimiter 
+(current value is `'`\2`').&]
+[s3;%% &]
+[s4; &]
+[s5;:CParser`:`:GetLineInfoComment`(int`)const: [_^String^ String]_[* GetLineInfoComment](
+[@(0.0.255) int]_[*@3 tabsize]_`=_[@3 4])_[@(0.0.255) const]&]
+[s2;%% Calls LineInfoComment(GetFileName(), GetLine(), GetColumn([%-*@3 tabsize])) 
+`- creates a comment to identify current file position in further 
+processing.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:Set`(const char`*`,const char`*`,int`): [@(0.0.255) void]_[* Set]([@(0.0.255) c
@@ -478,10 +503,9 @@ at the beginning of the line when the line length is exceeded.&]
 [s0;~~~1408;%% -|ASCSTRING`_SMART-|breaks string into lines when too 
 long&]
 [s0;~~~1408;%% -|ASCSTRING`_OCTALHI-|escapes characters >128&]
-[s0;~~~1408;%% -|ASCSTRING`_JSON-|uses JSON notation for escapes (`\u0001 
--|                                          instead of `\001)&]
+[s0;~~~1408;%% -|ASCSTRING`_JSON-|uses JSON notation for escapes &]
+[s0;~~~1408;%% -|(`\u0001 instead of `\001)&]
 [s0;~~~1408;%% &]
-[s0;%% &]
 [s7;%% [*/ Return value]-|C`-like literal.&]
 [s3;%% &]
 [s4; &]

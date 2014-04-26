@@ -36,7 +36,7 @@ void Http::ParseRequest(const char *p)
 		last = p;
 		while(*p && *p != '&')
 			p++;
-		if(*key != '.' && *key != '@')
+		if(*key != '.' && *key != '@') {
 			if(key.EndsWith("[]")) {
 				Value &v = var.GetAdd(key);
 				if(v.IsNull())
@@ -45,6 +45,7 @@ void Http::ParseRequest(const char *p)
 			}
 			else
 				var.GetAdd(key) = UrlDecode(last, p);
+		}
 		if(*p)
 			p++;
 	}

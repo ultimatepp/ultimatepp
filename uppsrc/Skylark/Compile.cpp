@@ -345,7 +345,14 @@ void Compiler::ExeBlock::AddText(const char *b, const char *s)
 {
 	if(s > b) {
 		RawHtmlText t;
-		t.text = String(b, s);
+		while(b < s) {
+			if(*b == CParser::LINEINFO_ESC) {
+				b++;
+				while(b < s && *b++ != CParser::LINEINFO_ESC);
+			}
+			else
+				t.text.Cat(*b++);
+		}
 		item.Add().Create<ExeConst>().value = RawToValue(t);
 	}
 }
@@ -354,65 +361,66 @@ One<Exe> Compiler::Block()
 {
 	One<Exe> result;
 	ExeBlock& blk = result.Create<ExeBlock>();
-	const char *s = p.GetSpacePtr();
-	const char *b = s;
-	int line = p.GetLine();
-	while(*s) {
-		if(*s == '$') {
-			if(s[1] == '$') {
-				blk.AddText(b, s + 1);
-				p.Set(s + 2, NULL, line);
-				b = s = p.GetSpacePtr();
-			}
-			else {
-				blk.AddText(b, s);
-				p.Set(s + 1, NULL, line);
-				if(p.Id("if")) {
-					ExeCond& c = blk.item.Add().Create<ExeCond>();
-					p.PassChar('(');
-					c.cond = Exp();
-					p.PassChar(')');
-					c.ontrue = Block();
-					if(p.Id("else"))
-						c.onfalse = Block();
-					if(!p.Char('/'))
-						p.PassId("endif");
-				}
-				else
-				if(p.Id("for")) {
-					ExeFor& c = blk.item.Add().Create<ExeFor>();
-					p.PassChar('(');
-					int q = var.GetCount();
-					var.Add(p.ReadId());
-					var.Add(Null); // LoopInfo placeholder
-					forvar.Add(true);
-					forvar.Add(true);
-					p.PassId("in");
-					c.value = Exp();
-					p.PassChar(')');
-					c.body = Block();
-					var.Trim(q);
-					forvar.SetCount(q);
-					if(p.Id("else"))
-						c.onempty = Block();
-					if(!p.Char('/'))
-						p.PassId("endfor");
-				}
-				else
-				if(p.IsId("else") || p.IsId("endif") || p.IsId("endfor") || p.IsChar('/'))
-					return result;
-				else
-					blk.item.AddPick(Prim());
-				b = s = p.GetSpacePtr();
-				line = p.GetLine();
-			}
+	const char *b = p.GetSpacePtr();
+	while(!p.IsEof()) {
+		const char *s = p.GetPtr();
+		if(p.Char2('$', '$')) {
+			blk.AddText(b, s + 1);
+			b = p.GetSpacePtr();
 		}
 		else
-		if(*s++ == '\n')
-			line++;
+		if(p.Char('$')) {
+			blk.AddText(b, s);
+			if(p.Id("if")) {
+				ExeCond& c = blk.item.Add().Create<ExeCond>();
+				p.PassChar('(');
+				c.cond = Exp();
+				p.PassChar(')');
+				c.ontrue = Block();
+				if(p.Id("else"))
+					c.onfalse = Block();
+				if(!p.Char('/'))
+					p.PassId("endif");
+			}
+			else
+			if(p.Id("for")) {
+				ExeFor& c = blk.item.Add().Create<ExeFor>();
+				p.PassChar('(');
+				int q = var.GetCount();
+				var.Add(p.ReadId());
+				var.Add(Null); // LoopInfo placeholder
+				forvar.Add(true);
+				forvar.Add(true);
+				p.PassId("in");
+				c.value = Exp();
+				p.PassChar(')');
+				c.body = Block();
+				var.Trim(q);
+				forvar.SetCount(q);
+				if(p.Id("else"))
+					c.onempty = Block();
+				if(!p.Char('/'))
+					p.PassId("endfor");
+			}
+			else
+			if(p.IsId("else") || p.IsId("endif") || p.IsId("endfor") || p.IsChar('/'))
+				return result;
+			else
+				blk.item.AddPick(Prim());
+			b = p.GetSpacePtr();
+		}
+		else {
+			// We need to advance CParser, but SkipTerm is not good, because '$' can be in quoites - "$x"
+			// We also need CParser to process whitespaces to allow for correct lineinfo processing
+			CParser::Pos pos = p.GetPos();
+			pos.ptr++;
+			const char *s = p.GetPtr();
+			while((byte)*s > ' ' && *s != '$')
+				s++;
+			p.SetPos(pos);
+		}
 	}
-	blk.AddText(b, s);
-	p.Set(s, NULL, line);
+	blk.AddText(b, p.GetPtr());
 	return result;
 }
 

@@ -418,18 +418,17 @@ void Http::Dispatch(TcpSocket& socket)
 				socket.WhenWait = callback2(this, &Http::WaitHandler, bd.progress, rsocket);
 			}
 			content = socket.GetAll(len);
-			if(bd.progress)
-			{
+			if(bd.progress) {
 				socket.WhenWait.Clear();
 				(*bd.progress)(PROGRESS_END, *this, len);
 			}
-			if(post)
+			if(post) {
 				if(rc.StartsWith("application/x-www-form-urlencoded"))
 					ParseRequest(content);
 				else
 				if(rc.StartsWith("multipart/"))
 					ReadMultiPart(content);
-	
+			}
 			response.Clear();
 			if(bd.handler) {
 				if(post && !bd.post_raw) {
