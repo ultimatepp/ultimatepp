@@ -14,7 +14,7 @@ $MyArray["hello"]
 <h1>#TITLE</h1>
 some text
 #NESTED
-#aafe45
+#aafe45 $(x+)
 
 #define TITLE Skylark test
 #define NESTED [ #TITLE #TITLE #NESTED ]
