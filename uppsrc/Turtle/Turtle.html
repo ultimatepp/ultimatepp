@@ -482,7 +482,7 @@ document.onkeydown = function(event)
 {
 	event_queue += "K " + event.keyCode + " " + event.which + key_flags(event);
 	ScheduleSend();
-	if(event.ctrlKey || event.altKey) {
+	if(event.ctrlKey || event.altKey || event.keyCode === 8) {
 		event.stopPropagation();
     	event.preventDefault();
     }
