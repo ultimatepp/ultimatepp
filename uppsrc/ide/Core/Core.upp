@@ -2,7 +2,6 @@ description "TheIDE - common library\377B";
 
 uses
 	Esc,
-	coff/binobj,
 	plugin/bz2;
 
 file

@@ -3,7 +3,6 @@ description "TheIDE - builders - routines to compile programs\377B";
 noblitz;
 
 uses
-	coff\binobj,
 	ide\Core;
 
 file
