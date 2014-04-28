@@ -110,8 +110,8 @@ inline void LOGF(const char *format, ...) {}
 #define NEVER()          LOG_NOP
 #define NEVER_(msg)      LOG_NOP
 #define XNEVER(d)        LOG_NOP
-#define CHECK(c)         (c)
-#define XCHECK(c, d)     (c)
+#define CHECK(c)         (void)(c)
+#define XCHECK(c, d)     (void)(c)
 
 #define TIMING(x)           LOG_NOP
 #define HITCOUNT(x)         LOG_NOP

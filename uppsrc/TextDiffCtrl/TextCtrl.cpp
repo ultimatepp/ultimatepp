@@ -67,11 +67,12 @@ void TextCompareCtrl::LeftDouble(Point pt, dword keyflags)
 
 void TextCompareCtrl::MouseMove(Point pt, dword flags)
 {
-	if(HasCapture())
+	if(HasCapture()) {
 		if(gutter_capture)
 			LeftDown(pt, flags);
 		else
 			DoSelection(pt.y, true);
+	}
 }
 
 void TextCompareCtrl::LeftUp(Point pt, dword keyflags)

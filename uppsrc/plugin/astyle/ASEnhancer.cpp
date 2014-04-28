@@ -217,7 +217,7 @@ void ASEnhancer::enhance(WString &line)
 		}
 
 		// handle quotes (such as 'x' and "Hello Dolly")
-		if (!(isInComment) && (ch == '"' || ch == '\''))
+		if (!(isInComment) && (ch == '"' || ch == '\'')) {
 			if (!isInQuote)
 			{
 				quoteChar = ch;
@@ -228,6 +228,7 @@ void ASEnhancer::enhance(WString &line)
 				isInQuote = false;
 				continue;
 			}
+		}
 
 		if (isInQuote)
 			continue;
@@ -335,11 +336,12 @@ void ASEnhancer::enhance(WString &line)
 			}
 			for (; i < lineLength; i++)                     // bypass colon
 			{
-				if (line[i] == ':')
+				if (line[i] == ':') {
 					if ((i + 1 < lineLength) && (line[i + 1] == ':'))
 						i++;								// bypass scope resolution operator
 					else
 						break;
+				}
 			}
 			i++;
 			for (; i < lineLength; i++)                     // bypass whitespace

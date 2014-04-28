@@ -255,11 +255,12 @@ void WorkspaceWork::LoadActualPackage()
 				}
 			}
 			Image m = IdeFileImage(f, f.optimize_speed);
-			if(GetFileExt(p) == ".tpp" && IsFolder(p))
+			if(GetFileExt(p) == ".tpp" && IsFolder(p)) {
 				if(FileExists(AppendFileName(p, "all.i")))
 					m = TopicImg::IGroup();
 				else
 					m = TopicImg::Group();
+			}
 		#ifdef PLATFORM_WIN32
 			p = ToLower(p);
 		#endif

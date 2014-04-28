@@ -59,7 +59,7 @@ private:
 	void        SyncTitle();
 	void        SyncCaption();
 
-	void        SetupRect();
+	void        SetupRect(Ctrl *owner);
 	
 	void        FixIcons();
 

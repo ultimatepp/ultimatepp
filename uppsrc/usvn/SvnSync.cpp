@@ -237,11 +237,12 @@ void MoveSvn(const String& path, const String& tp)
 		String nm = ff.GetName();
 		String s = AppendFileName(path, nm);
 		String t = AppendFileName(tp, nm);
-		if(ff.IsFolder())
+		if(ff.IsFolder()) {
 			if(nm == ".svn")
 				FileMove(s, t);
 			else
 				MoveSvn(s, t);
+		}
 		ff.Next();
 	}
 }

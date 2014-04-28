@@ -323,11 +323,12 @@ void CodeEditor::IndentEnter(int count) {
 		const wchar *s = pl;
 		while(*s == '\t' || *s == ' ')
 			InsertChar(*s++, 1);
-		if(st.stmtline == cl || st.blk.GetCount() && st.blk.Top() == cl)
+		if(st.stmtline == cl || st.blk.GetCount() && st.blk.Top() == cl) {
 			if(indent_spaces || (s > pl && s[-1] == ' '))
 				InsertChar(' ', indent_amount);
 			else
 				InsertChar('\t', 1);
+		}
 	}
 }
 
@@ -512,7 +513,7 @@ void CodeEditor::MoveNextBrk(bool sel) {
 void CodeEditor::MovePrevBrk(bool sel) {
 	int p = GetCursor();
 	if(p < 2) return;
-	if(!isrbrkt(GetChar(p - 1)))
+	if(!isrbrkt(GetChar(p - 1))) {
 		if(p < GetLength() - 1 && isrbrkt(GetChar(p)))
 			p++;
 		else {
@@ -520,6 +521,7 @@ void CodeEditor::MovePrevBrk(bool sel) {
 			PlaceCaret(p, sel);
 			return;
 		}
+	}
 	int lvl = 1;
 	p -= 2;
 	for(;;) {

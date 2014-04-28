@@ -58,7 +58,7 @@ void TopWindow::SyncCaption()
 void TopWindow::CenterRect(Ctrl *owner)
 {
 	GuiLock __;
-	SetupRect();
+	SetupRect(owner);
 	if(owner && center == 1 || center == 2) {
 		Size sz = GetRect().Size();
 		Rect r, wr;

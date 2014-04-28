@@ -61,11 +61,12 @@ void Ide::EndBuilding(bool ok)
 	PutConsole("");
 	PutConsole((ok ? "OK. " : "There were errors. ") + GetPrintTime(build_time));
 	SetIdeState(EDITING);
-	if(GetTopWindow()->IsOpen())
+	if(GetTopWindow()->IsOpen()) {
 		if(ok)
 			BeepMuteInformation();
 		else
 			BeepMuteExclamation();
+	}
 	ShowConsole();
 }
 

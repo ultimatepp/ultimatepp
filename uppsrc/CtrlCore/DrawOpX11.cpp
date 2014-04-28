@@ -13,7 +13,7 @@ void SystemDraw::BeginOp()
 	Vector<Rect> newclip;
 	newclip <<= clip.Top();
 	f.clipi = clip.GetCount();
-	clip.Add() = newclip;
+	clip.Add() = pick(newclip);
 	cloff.Add(f);
 }
 
@@ -35,7 +35,7 @@ bool SystemDraw::ClipOp(const Rect& r)
 	Vector<Rect> newclip = Intersect(clip.Top(), r + actual_offset, ch);
 	if(ch) {
 		f.clipi = clip.GetCount();
-		clip.Add() = newclip;
+		clip.Add() = pick(newclip);
 	}
 	cloff.Add(f);
 	if(ch)
@@ -51,7 +51,7 @@ bool SystemDraw::ClipoffOp(const Rect& r)
 	Vector<Rect> newclip = Intersect(clip.Top(), r + actual_offset, ch);
 	if(ch) {
 		f.clipi = clip.GetCount();
-		clip.Add() = newclip;
+		clip.Add() = pick(newclip);
 	}
 	f.offseti = offset.GetCount();
 	actual_offset += r.TopLeft();
@@ -80,7 +80,7 @@ bool SystemDraw::ExcludeClipOp(const Rect& r)
 	bool ch = false;
 	Vector<Rect> ncl = Subtract(cl, r + actual_offset, ch);
 	if(ch) {
-		cl = ncl;
+		cl = pick(ncl);
 		SetClip();
 	}
 	return clip.Top().GetCount();
@@ -93,7 +93,7 @@ bool SystemDraw::IntersectClipOp(const Rect& r)
 	bool ch = false;
 	Vector<Rect> ncl = Intersect(cl, r + actual_offset, ch);
 	if(ch) {
-		cl = ncl;
+		cl = pick(ncl);
 		SetClip();
 	}
 	return clip.Top().GetCount();

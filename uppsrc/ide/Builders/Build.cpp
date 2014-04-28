@@ -633,11 +633,11 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 		<< "\tif [ -d $(UPPOUT) ]; then rm -rf $(UPPOUT); fi;\n";
 
 	bool sv = ::SaveFile(fn, makefile);
-	if(!exporting)
+	if(!exporting) {
 		if(sv)
 			PutConsole(NFormat("%s(1): makefile generation complete", fn));
 		else
 			PutConsole(NFormat("%s: error writing makefile", fn));
-
+	}
 	EndBuilding(true);
 }

@@ -738,12 +738,13 @@ void Ide::SetIcon()
 		return;
 	}
 	else
-	if((GetTimeClick() / 800) & 1)
+	if((GetTimeClick() / 800) & 1) {
 		if(debugger)
 			new_state_icon = 2;
 		else
 		if(idestate == BUILDING)
 			new_state_icon = 3;
+	}
 	if(state_icon == new_state_icon)
 		return;
 	state_icon = new_state_icon;

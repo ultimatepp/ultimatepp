@@ -473,11 +473,12 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 							lnk << ' ' << GetHostPathQ(FindInDirs(libpath, lib[i]));
 					}
 					else
-						if(ext != ".a")
+						if(ext != ".a") {
 							if(ext == ".so" || ext == ".dll" || ext == ".lib")
 								lnk << ' ' << GetHostPathQ(FindInDirs(libpath, lib[i]));
 							else
 								lnk << " -l" << ln;
+						}
 				}
 			}
 			PutConsole("Linking...");

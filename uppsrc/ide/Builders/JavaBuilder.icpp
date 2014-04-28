@@ -149,11 +149,12 @@ bool JavaBuilder::BuildPackage(const String& package, Vector<String>& linkfile, 
 		String linkcmd;
 		linkcmd << "javac";
 		linkcmd << (HasFlag("DEBUG") ? " -g" : " -g:none");
-		if(!HasFlag("DEBUG"))
+		if(!HasFlag("DEBUG")) {
 			if(!IsNull(release_options))
 				linkcmd << ' ' << release_options;
 			else
 				linkcmd << " -O";
+		}
 		linkcmd << " -deprecation" << linkoptions << " -sourcepath ";
 		bool win32 = HasFlag("WIN32");
 		for(i = 0; i < linkfile.GetCount(); i++) {

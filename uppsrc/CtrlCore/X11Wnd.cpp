@@ -328,7 +328,7 @@ void Ctrl::TimerAndPaint() {
 			if(xw.ctrl) {
 				LLOG("..and paint " << UPP::Name(xw.ctrl));
 				xw.ctrl->SyncScroll();
-				Vector<Rect> x = xw.invalid;
+				Vector<Rect> x = pick(xw.invalid);
 				xw.invalid.Clear();
 				xw.ctrl->DoPaint(x);
 			}

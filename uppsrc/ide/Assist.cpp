@@ -383,7 +383,7 @@ bool AssistEditor::IncludeAssist()
 		FindFile ff(AppendFileName(AppendFileName(include[i], include_path), "*.*"));
 		while(ff) {
 			String fn = ff.GetName();
-			if(!ff.IsHidden())
+			if(!ff.IsHidden()) {
 				if(ff.IsFolder()) {
 					folder.Add(fn);
 					upper_folder.Add(ToUpper(fn));
@@ -396,6 +396,7 @@ bool AssistEditor::IncludeAssist()
 						upper_file.Add(ToUpper(fn));
 					}
 				}
+			}
 			ff.Next();
 		}
 	}
@@ -577,7 +578,7 @@ void AssistEditor::Complete2()
 	Vector<String> id = GetFileIds();
 	for(int i = 0; i < id.GetCount(); i++) {
 		String s = id[i];
-		if(s.StartsWith(q))
+		if(s.StartsWith(q)) {
 			if(IsNull(h))
 				h = s;
 			else {
@@ -588,6 +589,7 @@ void AssistEditor::Complete2()
 						break;
 					}
 			}
+		}
 	}
 	if(h.GetCount() > q.GetCount())
 		Paste(h.Mid(q.GetCount()).ToWString());
@@ -742,20 +744,22 @@ bool AssistEditor::Key(dword key, int count)
 	if(popup.IsOpen()) {
 		int k = key & ~K_CTRL;
 		ArrayCtrl& kt = key & K_CTRL ? type : assist;
-		if(k == K_UP || k == K_PAGEUP || k == K_CTRL_PAGEUP || k == K_CTRL_END)
+		if(k == K_UP || k == K_PAGEUP || k == K_CTRL_PAGEUP || k == K_CTRL_END) {
 			if(kt.IsCursor())
 				return kt.Key(k, count);
 			else {
 				kt.SetCursor(kt.GetCount() - 1);
 				return true;
 			}
-		if(k == K_DOWN || k == K_PAGEDOWN || k == K_CTRL_PAGEDOWN || k == K_CTRL_HOME)
+		}
+		if(k == K_DOWN || k == K_PAGEDOWN || k == K_CTRL_PAGEDOWN || k == K_CTRL_HOME) {
 			if(kt.IsCursor())
 				return kt.Key(k, count);
 			else {
 				kt.SetCursor(0);
 				return true;
 			}
+		}
 		if(key == K_ENTER && assist.IsCursor()) {
 			AssistInsert();
 			return true;
@@ -950,7 +954,7 @@ void AssistEditor::DCopy()
 				decl = false;
 		for(int j = 0; j < n.GetCount(); j++) {
 			const CppItem& m = n[j];
-			if(m.IsCode())
+			if(m.IsCode()) {
 				if(decl)
 					r << MakeDefinition(cls, m.natural) << "\n{\n}\n\n";
 				else {
@@ -958,6 +962,7 @@ void AssistEditor::DCopy()
 					   r << String('\t', Split(cpp.GetKey(i), ':').GetCount());
 					r << m.natural << ";\n";
 				}
+			}
 			if(m.IsData()) {
 				if(cls.GetCount()) {
 					const char *s = m.natural;

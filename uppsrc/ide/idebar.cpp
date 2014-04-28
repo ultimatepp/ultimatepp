@@ -252,11 +252,12 @@ void Ide::MacroMenu(Bar& menu)
 		VectorMap< String, Vector<int> > submenu_map;
 		for(int i = 0; i < mlist.GetCount(); i++) {
 			const IdeMacro& m = mlist[i];
-			if(!IsNull(m.menu))
+			if(!IsNull(m.menu)) {
 				if(IsNull(m.submenu))
 					submenu_map.GetAdd(Null).Add(i);
 				else
 					submenu_map.GetAdd(m.menu).Add(i);
+			}
 		}
 		if(!submenu_map.IsEmpty()) {
 			Vector<int> order = GetSortOrder(submenu_map.GetKeys());
@@ -331,13 +332,14 @@ void Ide::Setup(Bar& menu) {
 	menu.Add("Source managment..", THISBACK(AutoSetup))
 	    .Help("Source code updater settings..");
 	menu.Separator();
-	if(UpdaterCfg().method%2==0) //local copy or svn
+	if(UpdaterCfg().method%2==0) { //local copy or svn
 		if(UpdaterCfg().available)
 			menu.Add("Install updates..", IdeImg::install_updates(), THISBACK(CheckUpdatesManual))
 			    .Help("Install newer version of source codes..");
 		else
 			menu.Add("Check for updates..", IdeImg::check_updates(), THISBACK(CheckUpdatesManual))
 			    .Help("Check for availability of newer source codes..");
+	}
 #endif
 }
 
@@ -378,11 +380,12 @@ void Ide::Project(Bar& menu) {
 	if(OldLang())
 		menu.Add("Convert s_ -> t_", THISBACK(ConvertST));
 	FilePropertiesMenu(menu);
-	if(SvnDirs(true).GetCount())
+	if(SvnDirs(true).GetCount()) {
 		if(menu.IsMenuBar())
 			menu.Add("SVN", THISBACK(ProjectSvn));
 		else
 			menu.Add("SVN Synchronize everything..", IdeImg::svn(), THISBACK(SyncSvn));
+	}
 }
 
 void Ide::FilePropertiesMenu(Bar& menu)
