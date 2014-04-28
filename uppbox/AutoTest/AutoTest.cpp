@@ -142,19 +142,19 @@ CONSOLE_APP_MAIN
 	
 	input = ini["upp_sources"];
 	Vector<String> test = Split((String)ini["auto_test"], ';');
-       Vector<String> build = Split((String)ini["build_test"], ';');
-       Vector<String> bm = Split((String)ini["build_method"], ';');
-       exclude = Split((String)ini["exclude"], ';');
-       String mode = ini["output_mode"];
-       umk = ini["umk_path"];
-       if (IsNull(umk))
-			umk = GetHomeDirFile("bin/umk");
-       exe = ini["exe_path"];
-       if (IsNull(exe))
-			exe = GetHomeDirFile("autotest.tst");
-
-       Vector<bool> release;
-       for(int i = 0; i < bm.GetCount(); i++) {
+	Vector<String> build = Split((String)ini["build_test"], ';');
+	Vector<String> bm = Split((String)ini["build_method"], ';');
+	exclude = Split((String)ini["exclude"], ';');
+	String mode = ini["output_mode"];
+	umk = ini["umk_path"];
+	if (IsNull(umk))
+		umk = GetHomeDirFile("bin/umk");
+	exe = ini["exe_path"];
+	if (IsNull(exe))
+		exe = GetHomeDirFile("autotest.tst");
+	
+	Vector<bool> release;
+	for(int i = 0; i < bm.GetCount(); i++) {
 		bool r = bm[i].EndsWith("-R");
 		if(r)
 			bm[i].Trim(bm[i].GetCount() - 3);
