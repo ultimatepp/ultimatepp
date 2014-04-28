@@ -9,6 +9,3 @@ file
 	InetMessage.cpp,
 	src.tpp;
 
-mainconfig
-	"" = "";
-
