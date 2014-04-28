@@ -91,15 +91,13 @@ void ScanIML(CParser& parser, Array<ImlImage>& out_images,
 			}
 			AlphaImageInfo image;
 			bool accepted = false;
-			if(parser.Char('(') && parser.ReadId() == name && parser.Char(','))
+			if(parser.Char('(') && parser.ReadId() == name && parser.Char(',')) {
 				if(id == "IMAGE_END"
 				&& (image.size.cx = parser.ReadInt()) > 0 && parser.Char(',')
-				&& (image.size.cy = parser.ReadInt()) > 0 && parser.Char(')'))
-				{
+				&& (image.size.cy = parser.ReadInt()) > 0 && parser.Char(')')) {
 					accepted = true;
 				}
-				else if(id == "IMAGE_PACKED" && parser.IsChar('\"'))
-				{
+				else if(id == "IMAGE_PACKED" && parser.IsChar('\"')) {
 					String d = parser.ReadOneString();
 					if(parser.Char(')'))
 					{
@@ -109,12 +107,11 @@ void ScanIML(CParser& parser, Array<ImlImage>& out_images,
 							accepted = true;
 					}
 				}
-
+			}
 			if(name.GetLength() >= 6 && !memcmp(name, "_java_", 6))
 				accepted = false;
 
-			if(accepted)
-			{
+			if(accepted) {
 				if(name.GetLength() >= 4 && !memcmp(name, "im__", 4))
 					name = Null;
 
