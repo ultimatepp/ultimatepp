@@ -267,11 +267,11 @@ void RichEdit::SplitCell()
 		return;
 	WithSplitCellLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, t_("Split cell"));
-	dlg.cx.MinMax(1, 20);
+	dlg.cx.MinMax(1, 20).NotNull();
 	dlg.cx <<= 1;
-	dlg.cy.MinMax(1, 20);
+	dlg.cy.MinMax(1, 20).NotNull();
 	dlg.cy <<= 1;
-	if(dlg.Run() != IDOK)
+	if(dlg.Execute() != IDOK)
 		return;
 	NextUndo();
 	SaveTable(cursorp.table);
