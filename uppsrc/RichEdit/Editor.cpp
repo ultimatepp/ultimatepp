@@ -123,7 +123,7 @@ void RichEdit::Paint(Draw& w)
 		pi.showlabels = !IsNull(showcodes) && viewborder >= 16;
 		if(spellcheck)
 			pi.spellingchecker = SpellParagraph;
-		if(IsSelection())
+		if(IsSelection()) {
 			if(tablesel) {
 				pi.tablesel = tablesel;
 				pi.cells = cells;
@@ -132,6 +132,7 @@ void RichEdit::Paint(Draw& w)
 				pi.sell = begtabsel ? -1 : min(cursor, anchor);
 				pi.selh = max(cursor, anchor);
 			}
+		}
 		text.Paint(pw, pagesz, pi);
 	}
 	w.DrawRect(tr.left, GetPosY(py) - sb, 20, 3, showcodes);
