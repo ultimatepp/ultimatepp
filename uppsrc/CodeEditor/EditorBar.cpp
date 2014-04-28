@@ -218,8 +218,12 @@ void EditorBar::RightDown(Point p, dword flags)
 
 void EditorBar::MouseWheel(Point p, int zdelta, dword keyflags)
 {
-     if(editor)
-         editor->MouseWheel(p, zdelta, keyflags);
+	if(editor) {
+		int i = editor->GetScrollPos().y;
+		editor->MouseWheel(p, zdelta, keyflags);
+		if(i != editor->GetScrollPos().y)
+			MouseMove(p, keyflags);
+	}
 }
 
 void EditorBar::InsertLines(int i, int count)
