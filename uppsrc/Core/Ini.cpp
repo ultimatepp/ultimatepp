@@ -2,27 +2,6 @@
 
 namespace Upp {
 
-String ReplaceEnvVars(CParser& p) {
-	const VectorMap<String, String>& vars = Environment();
-	String r;
-	const char* s = p.GetPtr();
-	while (!p.IsEof()) {
-		if(p.Char2('$', '$')) {
-			r.Cat('$');
-		} else if(p.Char('$') && p.IsId()) {
-			String id = p.ReadId();
-			int q = vars.Find(id);
-			if(q >= 0)
-				r.Cat(vars[q]);
-		} else {
-			p.SkipTerm();
-			r.Cat(s, p.GetPtr());
-		}
-		s = p.GetPtr();
-	}
-	return r;
-}
-
 static void LoadIniStream(Stream &sin, VectorMap<String, String>& ret, const char *sfile);
 
 static void LoadIniFile(const char *filename, VectorMap<String, String>& ret)
@@ -39,8 +18,35 @@ static void LoadIniStream(Stream& in, VectorMap<String, String>& key, const char
 		CParser p(line);
 		if(p.IsId()) {
 			String k = p.ReadId();
-			if(p.Char('='))
-				key.Add(k, env ? ReplaceEnvVars(p) : (String)p.GetPtr());
+			if(p.Char('=')) {
+				String h = TrimBoth((String)p.GetSpacePtr());
+				if(env) {
+					String hh;
+					const char *s = ~h;
+					while(*s) {
+						if(*s == '$') {
+							s++;
+							if(*s == '$') {
+								hh.Cat('$');
+								s++;
+							}
+							else {
+								while(*s == ' ')
+									s++;
+								String id;
+								while(iscid(*s))
+									id.Cat(*s++);
+								hh.Cat(GetEnv(id));
+							}
+						}
+						else
+							hh.Cat(*s++);
+					}
+					key.Add(k, hh);
+				}
+				else
+					key.Add(k, h);
+			}
 		}
 		else
 		if(p.Char('@')) {
