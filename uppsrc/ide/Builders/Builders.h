@@ -2,7 +2,7 @@
 #define BUILDERS_H
 
 #include <ide/Core/Core.h>
-#include <coff/binobj/binobj.h>
+//#include <coff/binobj/binobj.h>
 #include <plugin/bz2/bz2.h>
 
 #include "Build.h"
