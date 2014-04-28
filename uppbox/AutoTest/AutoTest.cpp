@@ -6,6 +6,8 @@ String infolog;
 String errors;
 
 String input;
+String umk;
+String exe;
 
 Vector<String> exclude;
 
@@ -35,19 +37,18 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 		    String txt;
 		    txt << bm;
 		    if(release)
-		        txt << "-R ";
-		    txt << ' ' << h << ' ';
-			String c;
-			c << GetHomeDirFile("bin/umk") << " " << nest << ' ' << name << ' ' << bm << " -" << flags;
-			if(first)
-				c << 'a';
-		#ifdef PLATFORM_POSIX
-			c << 's';
-		#endif
-			String exe = GetHomeDirFile("autotest.tst");
-			c << ' ' << exe;
-			Cout() << c << '\n';
-			infolog << txt;
+                       txt << "-R ";
+                   txt << ' ' << h << ' ';
+                       String c;
+                       c << umk << " " << nest << ' ' << name << ' ' << bm << " -" << flags;
+                       if(first)
+                               c << 'a';
+               #ifdef PLATFORM_POSIX
+                       c << 's';
+               #endif
+                       c << ' ' << exe;
+                       Cout() << c << '\n';
+                       infolog << txt;
 			String out;
 			Tested += test;
 			if(Sys(c, out)) {
@@ -141,12 +142,19 @@ CONSOLE_APP_MAIN
 	
 	input = ini["upp_sources"];
 	Vector<String> test = Split((String)ini["auto_test"], ';');
-	Vector<String> build = Split((String)ini["build_test"], ';');
-	Vector<String> bm = Split((String)ini["build_method"], ';');
-	exclude = Split((String)ini["exclude"], ';');
-	
-	Vector<bool> release;
-	for(int i = 0; i < bm.GetCount(); i++) {
+       Vector<String> build = Split((String)ini["build_test"], ';');
+       Vector<String> bm = Split((String)ini["build_method"], ';');
+       exclude = Split((String)ini["exclude"], ';');
+       String mode = ini["output_mode"];
+       umk = ini["umk_path"];
+       if (IsNull(umk))
+			umk = GetHomeDirFile("bin/umk");
+       exe = ini["exe_path"];
+       if (IsNull(exe))
+			exe = GetHomeDirFile("autotest.tst");
+
+       Vector<bool> release;
+       for(int i = 0; i < bm.GetCount(); i++) {
 		bool r = bm[i].EndsWith("-R");
 		if(r)
 			bm[i].Trim(bm[i].GetCount() - 3);
@@ -181,12 +189,21 @@ CONSOLE_APP_MAIN
 	
 	if(errors.GetCount()) {
 		body << "FAILED TESTS:\n" << errors << "\n---------------------------\n\n";
-		SetExitCode(1);
-	}
-	body << "TEST LOG:\n" << infolog;
-	
-	if(IsNull(email["smtp_server"]))
-		return;
+               SetExitCode(1);
+       }
+       body << "TEST LOG:\n" << infolog;
+
+       if (mode == "watchdog") {
+               Cout() << body
+                      << "\n@ok=" << Passed 
+                      << "\n@errors=" << (Error + Timeout)
+                      << "\n@failures=" << (Failed + NoRun)
+                      << "\n@skipped=" << exclude.GetCount() << "\n";
+               return;
+       }
+
+       if(IsNull(email["smtp_server"]))
+               return;
 
 	Smtp smtp;
 	smtp.Trace();
