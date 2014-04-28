@@ -76,6 +76,7 @@ CONSOLE_APP_MAIN
 	LOG(result);
 	LOG("------------");
 //	SaveFile(GetDataFile("etalon"), result);
+	result.Replace("/home/upp", "/home/cxl");
 	ASSERT(result == LoadFile(GetDataFile("etalon2")));
 	
 	m.Add("name", "What is that?");
