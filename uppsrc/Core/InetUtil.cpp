@@ -168,7 +168,50 @@ String UrlDecode(const String& s)
 {
 	return UrlDecode(~s, s.GetLength());
 }
-
+          
+String QPEncode(const char* s)
+{
+	StringBuffer r;
+	int len = 0;
+	const int  limit  = 70;
+	while(*s) {
+		if(s[0] >= 33 && s[0] <= 126 && s[0] != '=') {
+			r.Cat(s[0]);
+			len++;
+		}
+		else 
+		if(s[0] == '\r')
+			;
+		else
+		if(s[0] == '\n') {
+			r.Cat("\r\n");
+			len = 0;
+		}
+		else // Encode HT or SP only if they are at the end of line (before CRLF or EOF)
+		if((s[0] == ' ' || s[0] == '\t') 	&&
+		   (s[1] && s[1] != '\n') 		&&
+		   (s[1] != '\r' || (s[1] == '\r' && s[2] && s[2] != '\n'))) {
+			r.Cat(s[0]);
+			len++;
+		}
+		else {
+			static const char hex[] = "0123456789ABCDEF";
+			r.Cat('=');
+			r.Cat(hex[(s[0] >> 4) & 15]);
+			r.Cat(hex[s[0] & 15]);
+			len += 3;
+		}
+		if(len > limit) {
+			// Soft-break.
+			r.Cat('=');
+			r.Cat("\r\n");
+			len = 0;
+		}
+		s++;
+	}
+	return r;
+}
+    
 String QPDecode(const char *s)
 {
 	StringBuffer r;
