@@ -157,10 +157,10 @@ void TopWindow::SyncCaption()
 #endif
 }
 
-void TopWindow::CenterRect(HWND hwnd, int center, Ctrl *owner)
+void TopWindow::CenterRect(HWND hwnd, int center)
 {
 	GuiLock __;
-	SetupRect(owner);
+	SetupRect(CtrlFromHWND(hwnd));
 	if(hwnd && center == 1 || center == 2) {
 		Size sz = GetRect().Size();
 		Rect frmrc(sz);

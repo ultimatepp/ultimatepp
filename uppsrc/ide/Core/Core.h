@@ -3,7 +3,7 @@
 
 #include <Esc/Esc.h>
 // #include <Web/Web.h>
-#include <coff/binobj/binobj.h>
+//#include <coff/binobj/binobj.h>
 #include <plugin/bz2/bz2.h>
 
 using namespace Upp;
@@ -418,5 +418,39 @@ String                FindIncludeFile(const char *s, const String& filedir);
 bool                  HdependBlitzApproved(const String& path);
 const Vector<String>& HdependGetDefines(const String& path);
 const Vector<String>& HdependGetAllFiles();
+
+class BinObjInfo {
+public:
+	BinObjInfo();
+
+	void Parse(CParser& binscript, String base_dir);
+
+	struct Block {
+		Block() : index(-1), length(0), scriptline(-1), encoding(ENC_PLAIN), flags(0), offset(-1), len_meta_offset(-1) {}
+
+		String ident;
+		int    index;
+		String file;
+		int    length;
+		int    scriptline;
+		int    encoding;
+		enum {
+			ENC_PLAIN,
+			ENC_ZIP,
+			ENC_BZ2,
+		};
+		int    flags;
+		enum {
+			FLG_ARRAY = 0x01,
+			FLG_MASK  = 0x02,
+		};
+
+		int    offset;
+		int    off_meta_offset;
+		int    len_meta_offset;
+	};
+
+	VectorMap< String, ArrayMap<int, Block> > blocks;
+};
 
 #endif

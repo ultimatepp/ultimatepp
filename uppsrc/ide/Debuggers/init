@@ -3,7 +3,7 @@
 #include "ide\Common/init"
 #include "plugin\ndisasm/init"
 #include "HexView/init"
-#define BLITZ_INDEX__ F2300ec0d3d2de4bde7af30102b728c5d
+#define BLITZ_INDEX__ Fa2117e771964dad617cdd6a1792596ea
 #include "UppSimplifiers.icpp"
 #undef BLITZ_INDEX__
 #endif

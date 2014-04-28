@@ -2,7 +2,6 @@ AllForI18n
 BuildAll
 CbGen
 CodeEditor
-coff
 Core
 CppBase
 CtrlCore

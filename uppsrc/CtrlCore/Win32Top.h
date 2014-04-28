@@ -8,7 +8,7 @@ private:
 	HICON       ico, lico;
 
 	void        DeleteIco();
-	void        CenterRect(HWND owner, int center, Ctrl *owner);
+	void        CenterRect(HWND owner, int center);
 
 public:
 	void       Open(HWND ownerhwnd);

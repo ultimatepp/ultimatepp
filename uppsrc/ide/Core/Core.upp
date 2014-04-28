@@ -13,6 +13,7 @@ file
 	usc.cpp,
 	Host.h,
 	Host.cpp,
+	BinObj.cpp,
 	Info readonly separator,
 	Copying;
 

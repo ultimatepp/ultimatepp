@@ -1,6 +1,24 @@
 #include "Builders.h"
 
-#include <coff/binobj/binobj.h>
+#include "coff.h"
+
+String MaxLenString(const byte *b, int maxlen)
+{
+	const byte *e = b + maxlen;
+	while(e > b && e[-1] == 0)
+		e--;
+	return String(b, int(e - b));
+}
+
+String COFFSymbolName(const COFF_IMAGE_SYMBOL& sym, const char *strtbl)
+{
+	String name;
+	if(sym.N.Name.Short)
+		name = MaxLenString(sym.N.ShortName, 8);
+	else
+		name = strtbl + sym.N.Name.Long;
+	return name;
+}
 
 #ifdef PLATFORM_WIN32
 static bool HasTail(String s, const char *tail)

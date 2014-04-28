@@ -1,7 +1,5 @@
 #include "Builders.h"
 
-#include <coff/binobj/binobj.h>
-
 void OwcBuilder::AddFlags(Index<String>& cfg)
 {
 
@@ -129,8 +127,8 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 					String brcdata = LoadFile(hfn);
 					if(brcdata.IsVoid())
 						throw Exc(NFormat("error reading file '%s'", hfn));
-					CParser parser(brcdata, hfn);
-					BinaryToObject(GetHostPath(objfile), parser, GetFileDirectory(hfn), THISBACK(BinObjConsole));
+//					CParser parser(brcdata, hfn);
+//					BinaryToObject(GetHostPath(objfile), parser, GetFileDirectory(hfn), THISBACK(BinObjConsole));
 				}
 				catch (Exc e) {
 					PutConsole(e);
