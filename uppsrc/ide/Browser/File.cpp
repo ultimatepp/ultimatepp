@@ -146,11 +146,12 @@ void SaveGroupInc(const String& grouppath)
 		gh << "END_TOPIC\r\n\r\n";
 	}
 	String fn = AppendFileName(AppendFileName(packagedir, group + ".tpp"), "all.i");
-	if(LoadFile(fn) != gh)
+	if(LoadFile(fn) != gh) {
 		if(IsNull(gh))
 			DeleteFile(fn);
 		else
 			SaveFile(fn, gh);
+	}
 }
 
 void SetTopicGroupIncludeable(const char *path, bool set)

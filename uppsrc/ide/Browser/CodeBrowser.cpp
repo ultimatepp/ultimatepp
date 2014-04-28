@@ -52,7 +52,7 @@ struct ScopeLess {
 String CodeBrowser::GetPm()
 {
 	String pm;
-	if(TheIde() && range)
+	if(TheIde() && range) {
 		if(range == 1)
 			pm = TheIde()->IdeGetNestFolder();
 		else {
@@ -60,6 +60,7 @@ String CodeBrowser::GetPm()
 			if(range == 2)
 				pm = GetFileFolder(pm);
 		}
+	}
 	return pm;
 }
 

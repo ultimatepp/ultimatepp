@@ -121,12 +121,13 @@ void TopicEditor::SaveTopic()
 			WString t;
 			for(int i = 0; i < para.GetCount(); i++)
 				if(para[i].IsText())
-					for(const wchar *s = para[i].text; *s; s++)
+					for(const wchar *s = para[i].text; *s; s++) {
 						if(*s == '\t' || *s == 160)
 							t.Cat(' ');
 						else
 						if(*s >= ' ')
 							t.Cat(*s);
+					}
 			if(!IsNull(t))
 				title <<= t;
 		}

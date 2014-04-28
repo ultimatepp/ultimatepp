@@ -146,7 +146,7 @@ void LayoutItem::ReadProperties(CParser& p, bool addunknown)
 		else {
 			String name = p.ReadId();
 			int q = FindProperty(name);
-			if(q < 0)
+			if(q < 0) {
 				if(addunknown) {
 					q = property.GetCount();
 					ItemProperty& new_prop = property.Add(new RawProperty);
@@ -158,6 +158,7 @@ void LayoutItem::ReadProperties(CParser& p, bool addunknown)
 					ReadPropertyParam(p);
 					p.PassChar(')');
 				}
+			}
 			if(q >= 0) {
 				ItemProperty& ip = property[q];
 				ip.SetCharset(charset);

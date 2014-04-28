@@ -85,11 +85,12 @@ bool LngParseTFile(const String& fn, VectorMap<String, LngEntry>& lng)
 	CParser p(data, fn);
 	try {
 		if(p.Char('#'))
-			while(!p.IsEof())
+			while(!p.IsEof()) {
 				if(p.IsChar2('T', '_'))
 					break;
 				else
 					p.SkipTerm();
+			}
 		String id;
 		while(!p.IsEof()) {
 			if(p.Id("T_")) {

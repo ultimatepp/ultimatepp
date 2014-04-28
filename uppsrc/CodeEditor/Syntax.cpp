@@ -161,8 +161,8 @@ void CodeEditor::SyntaxState::ScanSyntax(const wchar *ln, const wchar *e, int ta
 			break;
 
 		case 4:
-			if(id[0] == 'e' && id[1] == 'l')
-				if(id[2] == 'i' && id[3] == 'f')
+			if(id[0] == 'e' && id[1] == 'l') {
+				if(id[2] == 'i' && id[3] == 'f') {
 					if(ifstack.GetCount() == 0) {
 						IfState& ifstate = ifstack.Add();
 						ifstate.ifline = 0;
@@ -177,8 +177,9 @@ void CodeEditor::SyntaxState::ScanSyntax(const wchar *ln, const wchar *e, int ta
 						else
 							ifstate.state = IfState::ELSE_ERROR;
 					}
+				}
 				else
-				if(id[2] == 's' && id[3] == 'e')
+				if(id[2] == 's' && id[3] == 'e') {
 					if(ifstack.GetCount() == 0) {
 						IfState& ifstate = ifstack.Add();
 						ifstate.ifline = 0;
@@ -193,6 +194,8 @@ void CodeEditor::SyntaxState::ScanSyntax(const wchar *ln, const wchar *e, int ta
 						else
 							ifstate.state = IfState::ELSE_ERROR;
 					}
+				}
+			}
 			break;
 
 		case 5:

@@ -991,7 +991,7 @@ WString ASBeautifier::beautify(const WString &originalLine)
 		}
 
 		// handle quotes (such as 'x' and "Hello Dolly")
-		if (!(isInComment || isInLineComment) && (ch == '"' || ch == '\''))
+		if (!(isInComment || isInLineComment) && (ch == '"' || ch == '\'')) {
 			if (!isInQuote)
 			{
 				quoteChar = ch;
@@ -1003,6 +1003,7 @@ WString ASBeautifier::beautify(const WString &originalLine)
 				isInStatement = true;
 				continue;
 			}
+		}
 		if (isInQuote)
 			continue;
 
@@ -1621,11 +1622,12 @@ WString ASBeautifier::beautify(const WString &originalLine)
 		// that both an assignment op and a non-assignment op where found,
 		// e.g. '>>' and '>>='. If this is the case, treat the LONGER one as the
 		// found operator.
-		if (foundAssignmentOp != NULL && foundNonAssignmentOp != NULL)
+		if (foundAssignmentOp != NULL && foundNonAssignmentOp != NULL) {
 			if (foundAssignmentOp->GetCount() < foundNonAssignmentOp->GetCount())
 				foundAssignmentOp = NULL;
 			else
 				foundNonAssignmentOp = NULL;
+		}
 
 		if (foundNonAssignmentOp != NULL)
 		{

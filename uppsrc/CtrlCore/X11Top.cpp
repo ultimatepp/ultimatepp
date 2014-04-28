@@ -237,8 +237,8 @@ Buffer<unsigned long> TopWindow::PreperIcon(const Image& icon, int& len) {
 void TopWindow::CenterRect(Ctrl *owner)
 {
 	GuiLock __;
-	SetupRect();
-	if((owner&& center == 1) || center == 2) {
+	SetupRect(owner);
+	if((owner && center == 1) || center == 2) {
 		Rect r, wr;
 		wr = Ctrl::GetWorkArea();
 		Size sz = GetRect().Size();

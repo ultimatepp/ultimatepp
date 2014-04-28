@@ -160,7 +160,7 @@ bool CodeEditor::FindFrom(int pos, bool back, const wchar *text, bool wholeword,
 				ft.Cat(c);
 		}
 		else
-		if(c >= ' ')
+		if(c >= ' ') {
 			if(wildcards)
 				ft.Cat(c == '*' ? WILDANY :
 					   c == '?' ? WILDONE :
@@ -171,6 +171,7 @@ bool CodeEditor::FindFrom(int pos, bool back, const wchar *text, bool wholeword,
 				);
 			else
 				ft.Cat(c);
+		}
 	}
 	bool wb = wholeword ? iscidl(*ft) : false;
 	bool we = wholeword ? iscidl(*ft.Last()) : false;

@@ -509,11 +509,12 @@ void SelectPackageDlg::SyncBase(String initvars)
 	Sort(varlist, &PackageLess);
 	base.Clear();
 	Append(base, varlist);
-	if(!base.FindSetCursor(initvars))
+	if(!base.FindSetCursor(initvars)) {
 		if(base.GetCount() > 0)
 			base.SetCursor(0);
 		else
 			OnBase();
+	}
 }
 
 bool SelectPackageDlg::Pless(const SelectPackageDlg::PkInfo& a, const SelectPackageDlg::PkInfo& b)

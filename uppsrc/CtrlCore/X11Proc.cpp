@@ -97,12 +97,12 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 			if(top) {
 				Window DestW = (parent ? GetParentWindow() : Xroot);
 				XTranslateCoordinates(Xdisplay, top->window, DestW, 0, 0, &x, &y, &dummy);
+				Rect rect = RectC(x, y, e.width, e.height);
+				LLOG("CongigureNotify " << rect);
+				if(GetRect() != rect)
+					SetWndRect(rect);
+				// Synchronizes native windows (NOT the main one)
 			}
-			Rect rect = RectC(x, y, e.width, e.height);
-			LLOG("CongigureNotify " << rect);
-			if(GetRect() != rect)
-				SetWndRect(rect);
-			// Synchronizes native windows (NOT the main one)
 			SyncNativeWindows();
 // 01/12/2007 - END
 
