@@ -10,6 +10,7 @@ file
 	CppBuilder.cpp,
 	MakeFile.cpp,
 	GccBuilder.icpp,
+	coff.h,
 	MscBuilder.icpp,
 	OwcBuilder.icpp,
 	JavaBuilder.icpp,

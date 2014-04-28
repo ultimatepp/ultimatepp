@@ -743,6 +743,7 @@ __attribute__((packed))
 #define __define_stab(NAME, CODE, STRING) NAME=CODE,
 #define __define_stab_duplicate(NAME, CODE, STRING) NAME=CODE,
 
+/*
 enum STAB_DEBUG_CODE
 {
 #include "stab.def"
@@ -750,6 +751,7 @@ LAST_UNUSED_STAB_CODE
 };
 
 #undef __define_stab
+*/
 
 /* Definitions of "desc" field for N_SO stabs in Solaris2.  */
 

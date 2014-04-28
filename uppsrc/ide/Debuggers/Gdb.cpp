@@ -90,7 +90,7 @@ void Gdb::SetDisas(const String& text)
 		CParser p(ln);
 		try {
 			if(p.Char2('0', 'x')) {
-				adr_t adr = p.IsNumber(16) ? p.ReadNumber64(16) : 0;
+				adr_t adr = p.IsNumber(16) ? (adr_t)p.ReadNumber64(16) : 0;
 				String code;
 				String args;
 				int level = 0;
@@ -115,9 +115,9 @@ void Gdb::SetDisas(const String& text)
 						if(p.IsEof())
 							break;
 						if(p.Char2('0', 'x')) {
-							dword adr = 0;
+							adr_t adr = 0;
 							if(p.IsNumber(16))
-								adr = p.ReadNumber64(16);
+								adr = (adr_t)p.ReadNumber64(16);
 							String fname;
 							bool   usefname = false;
 							if(p.Char('<')) {
@@ -245,7 +245,7 @@ bool ParsePos(const String& s, String& fn, int& line, adr_t & adr)
 	try {
 		pa.Char2('0', 'x');
 		if(pa.IsNumber(16))
-			adr = pa.ReadNumber64(16);
+			adr = (adr_t)pa.ReadNumber64(16);
 	}
 	catch(CParser::Error) {}
 	return true;
@@ -287,7 +287,7 @@ String Gdb::Cmdp(const char *cmdline, bool fr)
 		try {
 			pa.Char2('0', 'x');
 			if(pa.IsNumber(16))
-				addr = pa.ReadNumber64(16);
+				addr = (adr_t)pa.ReadNumber64(16);
 		}
 		catch(CParser::Error) {}
 		SyncDisas(fr);
