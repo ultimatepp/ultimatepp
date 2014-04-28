@@ -381,12 +381,17 @@ void RichTable::InsertColumn(int column, const RichStyles& style)
 void  RichTable::SplitCell(Point cl, Size sz, const RichStyles& style)
 {
 	const RichCell& sc = cell[cl.y][cl.x];
-	int ext = sz.cy - cell[cl.y][cl.x].vspan - 1;
-	if(ext > 0) {
-		cell.InsertN(cl.y + 1, ext);
+	int exty = sz.cy - cell[cl.y][cl.x].vspan - 1;
+	int extx = sz.cx - cell[cl.y][cl.x].hspan - 1;
+	int ny = cell.GetCount() + exty;
+	int nx = format.column.GetCount() + extx;
+	if(ny < 0 || ny > 20000 || nx < 0 || nx > 200)
+		return;
+	if(exty > 0) {
+		cell.InsertN(cl.y + 1, exty);
 		if(cl.y < format.header)
-			format.header += ext;
-		for(int i = 0; i < ext; i++) {
+			format.header += exty;
+		for(int i = 0; i < exty; i++) {
 			cell[cl.y + 1 + i].SetCount(GetColumns());
 			for(int j = 0; j < GetColumns(); j++) {
 				RichCell& c = cell[cl.y + 1 + i][j];
@@ -399,16 +404,16 @@ void  RichTable::SplitCell(Point cl, Size sz, const RichStyles& style)
 		for(int i = 0; i < GetColumns(); i++) {
 			CellInfo& cf = ci[cl.y][i];
 			if(cf.valid)
-				cell[cl.y][i].vspan += ext;
+				cell[cl.y][i].vspan += exty;
 			else
 			if(cf.master.x == i)
-				cell[cf.master.y][cf.master.x].vspan += ext;
+				cell[cf.master.y][cf.master.x].vspan += exty;
 		}
 	}
 
 	cell[cl.y][cl.x].vspan = 0;
-	if(ext < 0)
-		cell[cl.y + sz.cy - 1][cl.x].vspan = -ext;
+	if(exty < 0)
+		cell[cl.y + sz.cy - 1][cl.x].vspan = -exty;
 	for(int i = 1; i < sz.cy; i++) {
 		RichCell& c = cell[cl.y + i][cl.x];
 		c.format = sc.format;
@@ -417,19 +422,19 @@ void  RichTable::SplitCell(Point cl, Size sz, const RichStyles& style)
 	}
 
 	Normalize0();
-	ext = sz.cx - cell[cl.y][cl.x].hspan - 1;
-	if(ext > 0) {
+	// ext = sz.cx - cell[cl.y][cl.x].hspan - 1;
+	if(extx > 0) {
 		int clx = 0;
 		for(int i = 0; i <= cell[cl.y][cl.x].hspan; i++)
 			clx += format.column[cl.x + i];
-		format.column.InsertN(cl.x, ext);
+		format.column.InsertN(cl.x, extx);
 		int q = clx / sz.cx;
 		for(int i = 1; i < sz.cx; i++)
 			format.column[cl.x + i] = q;
 		format.column[cl.x] = clx - (sz.cx - 1) * q;
 		for(int i = 0; i < cell.GetCount(); i++) {
-			cell[i].InsertN(cl.x + 1, ext);
-			for(int q = 0; q < ext; q++) {
+			cell[i].InsertN(cl.x + 1, extx);
+			for(int q = 0; q < extx; q++) {
 				RichCell& c = cell[i][cl.x + 1 + q];
 				const RichCell& sc = cell[i][cl.x];
 				c.format = sc.format;
@@ -438,10 +443,10 @@ void  RichTable::SplitCell(Point cl, Size sz, const RichStyles& style)
 			}
 			CellInfo& cf = ci[i][cl.x];
 			if(cf.valid)
-				cell[i][cl.x].hspan += ext;
+				cell[i][cl.x].hspan += extx;
 			else
 			if(cf.master.y == i)
-				cell[cf.master.y][cf.master.x].hspan += ext;
+				cell[cf.master.y][cf.master.x].hspan += extx;
 		}
 	}
 	for(int i = 0; i < sz.cy; i++)
