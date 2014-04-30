@@ -205,9 +205,9 @@ void RichTextView::LeftDouble(Point p, dword keyflags)
 		while(anchor > 0 && IsLeNum(text[anchor - 1]))
 			anchor--;
 		cursor = pos;
-		while(cursor + 1 < text.GetLength() && IsLeNum(text[cursor]))
+		while(cursor < text.GetLength() && IsLeNum(text[cursor]))
 			cursor++;
-		while(cursor + 1 < text.GetLength() && text[cursor] == ' ')
+		while(cursor < text.GetLength() && text[cursor] == ' ')
 			cursor++;
 		RefreshSel();
 		SetFocus();
