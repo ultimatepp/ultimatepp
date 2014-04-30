@@ -308,6 +308,11 @@ String SqlCompile(byte dialect, const String& s)
 	return b;
 }
 
+String SqlCompile(const String& s)
+{
+	return SqlCompile(SQL.GetDialect(), s);
+}
+
 String SqlFormat(int x)
 {
 	if(IsNull(x)) return "NULL";
