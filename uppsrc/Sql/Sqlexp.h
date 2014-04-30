@@ -89,6 +89,7 @@ public:
 };
 
 String SqlCompile(byte dialect, const String& s);
+String SqlCompile(const String& s);
 
 String SqlFormat(int x);
 String SqlFormat(double x);
