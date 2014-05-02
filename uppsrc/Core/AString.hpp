@@ -94,6 +94,8 @@ int AString<B>::ReverseFind(int len, const tchar *s, int from) const
 template <class B>
 void AString<B>::Replace(const tchar *find, int findlen, const tchar *replace, int replacelen)
 {
+	if(findlen == 0)
+		return;
 	String r;
 	int i = 0;
 	const tchar *p = B::Begin();
