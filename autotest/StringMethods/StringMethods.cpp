@@ -168,11 +168,15 @@ void ATest()
 	ASSERT(x == ~Str("<b>neednene<x>nenee<x>theend."));
 	x.Replace("end.", "<e>");
 	ASSERT(x == ~Str("<b>neednene<x>nenee<x>the<e>"));
+	
+	x.Replace("", "x");
 }
 
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
+	
+	MemoryLimitKb(1024*1024);
 
 	ATest<String, StringBuffer, char, byte>();
 	ASSERT((String().Cat() << 123) == "123");
