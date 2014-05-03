@@ -170,6 +170,8 @@ void ATest()
 	ASSERT(x == ~Str("<b>neednene<x>nenee<x>the<e>"));
 	
 	x.Replace("", "x");
+	
+	ASSERT(x.Find("", 10) == 10);
 }
 
 CONSOLE_APP_MAIN
