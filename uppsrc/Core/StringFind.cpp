@@ -84,7 +84,7 @@ int t_find(const char *ptr, int slen, const char *p, int len, int from)
 			}
 		}
 		else
-			return 0;
+			return from;
 	}
 	else {
 #ifdef CPU_64	
