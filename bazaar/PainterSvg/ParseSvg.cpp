@@ -503,7 +503,9 @@ void SvgPaint_Text(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle s
 	int factor = 20;			// Factor to get better resolution text
 	
 	Font f(Font::ARIAL, 12);
-	StringBuffer stext = xp.ReadText();
+	String str = xp.ReadText();
+	StringBuffer stext;
+	stext = str;
 	
 	int i, j;
 	for (i = j = 0; i < stext.GetCount(); ++i, ++j) {
