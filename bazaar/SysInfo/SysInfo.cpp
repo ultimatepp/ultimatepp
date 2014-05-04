@@ -934,6 +934,7 @@ void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &
 	DWORD dwThreadId, dwProcessId;
 	HINSTANCE hInstance;
 	WCHAR str[MAX_PATH];
+	int count;
 	
 	EnumWindows(EnumGetWindowsList, (LPARAM)&hWnd);	
 	for (int i = 0; i < hWnd.GetCount(); ++i) {
@@ -942,7 +943,6 @@ void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &
 		dwThreadId = GetWindowThreadProcessId(reinterpret_cast<HWND>(hWnd[i]), &dwProcessId);
 		processId.Add(dwProcessId);
 		hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, dwProcessId);
-		int count;
 		if (count = GetModuleFileNameExW(hProcess, hInstance, str, sizeof(str)/sizeof(WCHAR))) {
 			sstr = WString(str, count).ToString();
 			fileName << sstr;
@@ -958,7 +958,7 @@ void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &
 		if (sstr == "TPClnt.dll")		// VMWare Thinprint crashes SendMessageW()
 			caption << "";	
 		else if (IsWindowVisible(reinterpret_cast<HWND>(hWnd[i]))) {
-			int count = int(SendMessageW(reinterpret_cast<HWND>(hWnd[i]), WM_GETTEXT, sizeof(str)/sizeof(WCHAR), (LPARAM)str));
+			count = int(SendMessageW(reinterpret_cast<HWND>(hWnd[i]), WM_GETTEXT, sizeof(str)/sizeof(WCHAR), (LPARAM)str));
 			caption << WString(str, count).ToString();	
 		} else
 			caption << "";	
@@ -1189,7 +1189,7 @@ void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &
             	if((ret == Success || ret > 0) && list != NULL) {
                 	String sret;
               		for(i = 0; i < count; i++)
-              			sret << list[i]; // << " ";
+              			sret << list[i]; 
               		XFreeStringList(list);
               		caption.Add(FromSystemCharset(sret));
           		} else 
@@ -1666,13 +1666,31 @@ bool TakeWindowPlacement(HWND hwnd, RECT &rcNormalPosition, POINT &ptMinPosition
     
     place.length = sizeof(place);
     bool ret = GetWindowPlacement(hwnd, &place);
+    if (!ret)
+        return false;
     ptMinPosition = place.ptMinPosition;
     ptMaxPosition = place.ptMaxPosition;
     rcNormalPosition = place.rcNormalPosition;
     showcmd = place.showCmd;     //SW_SHOWMAXIMIZED, SW_SHOWMINIMIZED, SW_SHOWNORMAL
-    //flags = place.flags;        // Always 0
     
     return ret;
+}
+
+int Window_GetStatus(int64 windowId) 
+{
+    WINDOWPLACEMENT place;
+    
+    place.length = sizeof(place);
+    bool ret = GetWindowPlacement((HWND)windowId, &place);
+    if (!ret)
+        return Null;
+
+	switch(place.showCmd) {
+	case SW_SHOWMAXIMIZED:	return WINDOW_MAXIMIZED;
+	case SW_SHOWMINIMIZED:	return WINDOW_MINIMIZED;
+	case SW_SHOWNORMAL:		return WINDOW_NORMAL;
+	}
+    return Null;
 }
 
 bool Window_GetRect(int64 windowId, long &left, long &top, long &right, long &bottom)

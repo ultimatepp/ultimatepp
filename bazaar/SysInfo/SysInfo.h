@@ -57,6 +57,16 @@ void GetWindowsList(Upp::Array<int64> &wid, Upp::Array<int64> &pid, Upp::Array<S
 					Upp::Array<String> &fileName, Upp::Array<String> &title);
 Upp::Array<int64> GetWindowsList();
 
+bool Window_GetRect(int64 windowId, long &left, long &top, long &right, long &bottom);
+bool Window_SetRect(int64 windowId, long left, long top, long right, long bottom);
+void Window_Bottom(int64 windowId);
+void Window_Top(int64 windowId);
+void Window_TopMost(int64 windowId);
+
+enum WINDOW_STATUS {
+	WINDOW_MAXIMIZED, WINDOW_MINIMIZED, WINDOW_NORMAL};
+int Window_GetStatus(int64 windowId);
+
 /////////////////////////////////////////////////////////////////////
 // Process list
 bool GetProcessList(Upp::Array<int64> &pid, Upp::Array<String> &pNames);
@@ -109,13 +119,6 @@ bool CloseCDTray(String drive);
 
 /////////////////////////////////////////////////////////////////////
 // Key and mouse keys
-bool Window_GetRect(int64 windowId, long &left, long &top, long &right, long &bottom);
-bool Window_SetRect(int64 windowId, long left, long top, long right, long bottom);
-void Window_Bottom(int64 windowId);
-void Window_Top(int64 windowId);
-void Window_TopMost(int64 windowId);
-
-
 bool Mouse_GetPos(long &x, long &y);
 bool Mouse_SetPos(long x, long y, int64 windowId);
 
@@ -135,10 +138,14 @@ void Mouse_RightDblClick();
 void Keyb_SendKeys(String text, long finalDelay = 100, long delayBetweenKeys = 50);
 
 bool Window_SaveCapture(int64 windowId, String fileName, int left = -1, int top = -1, int width = -1, int height = -1);
+Image Window_SaveCapture(int64 windowId, int left = -1, int top = -1, int width = -1, int height = -1);
 
 bool Snap_Desktop(String fileName);
 bool Snap_DesktopRectangle(String fileName, int left, int top, int width, int height);
 bool Snap_Window(String fileName, int64 handle);
+Image Snap_Desktop();
+Image Snap_DesktopRectangle(int left, int top, int width, int height);
+Image Snap_Window(int64 handle);
 
 bool GetKeyLockStatus(bool &caps, bool &num, bool &scroll);
 bool SetKeyLockStatus(bool caps, bool num, bool scroll);
@@ -152,7 +159,6 @@ bool Record_Window(String fileName, int duration, int64 handle, double secsFrame
 #endif
 
 void SetDesktopWallPaper(const char *path);
-
 
 struct SystemSignature : DeepCopyOption<SystemSignature> {
 	String manufacturer, productName, version, mbSerial;

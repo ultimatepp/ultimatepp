@@ -348,18 +348,33 @@ om])&]
 [s2; Giving this function the [%-*@3 windowId], it returns the window 
 location in the screen in [%-*@3 left], [%-*@3 top], [%-*@3 right] 
 and [%-*@3 bottom].&]
-[s0; -|Returns true if the values got are valid.&]
+[s2; Returns true if the values got are valid.&]
 [s3; &]
-[s4; &]
-[s5;:Window`_SetRect`(long`,long`,long`,long`,long`):%- [@(0.0.255) void]_[* Window`_SetR
-ect]([@(0.0.255) int64]_[*@3 windowId], [@(0.0.255) long]_[*@3 left], 
+[s4;%- &]
+[s5;:Window`_SetRect`(int64`,long`,long`,long`,long`):%- [@(0.0.255) bool]_[* Window`_Set
+Rect]([_^int64^ int64]_[*@3 windowId], [@(0.0.255) long]_[*@3 left], 
 [@(0.0.255) long]_[*@3 top], [@(0.0.255) long]_[*@3 right], [@(0.0.255) long]_[*@3 bottom])&]
 [s2; Giving this function the [%-*@3 windowId], it sets the window 
 location in the screen in [%-*@3 left], [%-*@3 top], [%-*@3 right] 
 and [%-*@3 bottom].&]
-[s2; -|Returns true if the window is relocated correctly..&]
-[s0; &]
+[s2; Returns true if the values got are valid.&]
 [s3; &]
+[s4;%- &]
+[s5;:Window`_Bottom`(int64`):%- [@(0.0.255) void]_[* Window`_Bottom]([_^int64^ int64]_[*@3 wi
+ndowId])&]
+[s2; Moves [%-*@3 windowId] to the bottom of all windows.&]
+[s3; &]
+[s4;%- &]
+[s5;:Window`_Top`(int64`):%- [@(0.0.255) void]_[* Window`_Top]([_^int64^ int64]_[*@3 windowId
+])&]
+[s2; Moves [%-*@3 windowId] to the top of the windows.&]
+[s3; &]
+[s4;%- &]
+[s5;:Window`_TopMost`(int64`):%- [@(0.0.255) void]_[* Window`_TopMost]([_^int64^ int64]_[*@3 w
+indowId])&]
+[s2; Moves [%-*@3 windowId] as the topmost window.&]
+[s3; &]
+[s0; &]
 [ {{10000@1 [s0; [* Mouse and keyboard handling]]}}&]
 [s3; &]
 [s5;:Mouse`_GetPos`(long`&`,long`&`):%- [@(0.0.255) bool]_[* Mouse`_GetPos]([@(0.0.255) lon
@@ -368,7 +383,7 @@ g]_`&[*@3 x], [@(0.0.255) long]_`&[*@3 y])&]
 left corner is (0, 0).&]
 [s2; Returns true if the operation has been done successfully.&]
 [s3; &]
-[s4;%- &]
+[s4; &]
 [s5;:Mouse`_SetPos`(long`,long`,int64`):%- [@(0.0.255) bool]_[* Mouse`_SetPos]([@(0.0.255) l
 ong]_[*@3 x], [@(0.0.255) long]_[*@3 y], [@(0.0.255) int64]_[*@3 windowId])&]
 [s2; Sets the mouse position to [%-*@3 x] [%-*@3 y] referenced to the 
@@ -473,7 +488,7 @@ ileName])&]
 [s2; Saves the desktop in [%-*@3 fileName].as an image file.&]
 [s2; Allowed formats are:&]
 [s2;i150;O0; Posix:-|xwd&]
-[s2;i150;O0; Windows:-|bmp&]
+[s2;i150;O0; Windows:-|bmp, png, jpg&]
 [s3; &]
 [s4;%- &]
 [s5;:Snap`_DesktopRectangle`(String`,int`,int`,int`,int`):%- [@(0.0.255) bool]_[* Snap`_D
@@ -483,7 +498,7 @@ esktopRectangle]([_^String^ String]_[*@3 fileName], [@(0.0.255) int]_[*@3 left],
 [%-*@3 width ]and [%-*@3 height].in [%-*@3 fileName] as an image file.&]
 [s2; Allowed formats are:&]
 [s2;i150;O0; Posix:-|xwd&]
-[s2;i150;O0; Windows:-|bmp&]
+[s2;i150;O0; Windows:-|bmp, png, jpg&]
 [s3; &]
 [s4;%- &]
 [s5;:Snap`_Window`(String`,int64`):%- [@(0.0.255) bool]_[* Snap`_Window]([_^String^ String]_
@@ -492,7 +507,23 @@ esktopRectangle]([_^String^ String]_[*@3 fileName], [@(0.0.255) int]_[*@3 left],
 as an image file.&]
 [s2; Allowed formats are:&]
 [s2;i150;O0; Posix:-|xwd&]
-[s2;i150;O0; Windows:-|bmp&]
+[s2;i150;O0; Windows:-|bmp, png, jpg&]
+[s3; &]
+[s4;%- &]
+[s5;:Snap`_Desktop`(`):%- [_^Image^ Image]_[* Snap`_Desktop]()&]
+[s2; Returns the desktop image.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Snap`_DesktopRectangle`(int`,int`,int`,int`):%- [_^Image^ Image]_[* Snap`_DesktopRec
+tangle]([@(0.0.255) int]_[*@3 left], [@(0.0.255) int]_[*@3 top], [@(0.0.255) int]_[*@3 width],
+ [@(0.0.255) int]_[*@3 height])&]
+[s2; Returns the image of a desktop rectangle defined by [%-*@3 left], 
+[%-*@3 top], [%-*@3 width ]and [%-*@3 height].&]
+[s3; &]
+[s4;%- &]
+[s5;:Snap`_Window`(int64`):%- [_^Image^ Image]_[* Snap`_Window]([_^int64^ int64]_[*@3 handle])
+&]
+[s2; Returns a window image defined by its [%-*@3 handle].&]
 [s3; &]
 [s4;%- &]
 [s5;:Record`_Desktop`(String`,int`,int`,bool`):%- [@(0.0.255) bool]_[* Record`_Desktop]([_^String^ S

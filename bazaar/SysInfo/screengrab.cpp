@@ -1,6 +1,30 @@
 #include "SysInfo_in.h"
 
+#include <plugin/png/png.h>
+#include <plugin/jpg/jpg.h>
+#include <plugin/bmp/bmp.h>
+
 NAMESPACE_UPP
+
+
+bool Window_SaveCapture(int64 windowId, String fileName, int left, int top, int width, int height)
+{
+	Image img = Window_SaveCapture(windowId, left, top, width, height);
+	if (IsNull(img))
+		return false;
+	
+	if (GetFileExt(fileName) == ".png") {
+		PNGEncoder encoder;
+		return encoder.SaveFile(fileName, img);
+	} else if (GetFileExt(fileName) == ".jpg") {	
+		JPGEncoder encoder(90);
+		return encoder.SaveFile(fileName, img);		
+	} else if (GetFileExt(fileName) == ".bmp") {
+		BMPEncoder encoder;
+		return encoder.SaveFile(fileName, img);
+	} else
+		return false;
+}
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
@@ -10,65 +34,66 @@ NAMESPACE_UPP
 	#define labs(x)	abs(x)
 #endif
 
-bool Window_SaveCapture(int64 windowId, String fileName, int left, int top, int width, int height)
+Image Window_SaveCapture(int64 windowId, int left, int top, int width, int height)
 {
-	HWND windowIdH = reinterpret_cast<HWND>(windowId);
-	if (windowIdH == 0)
-		windowIdH = GetDesktopWindow();
-
-	if (GetFileExt(fileName) != ".bmp")
-		fileName += ".bmp";
+	HWND wH = reinterpret_cast<HWND>(windowId);
+	if (wH == 0)
+		wH = GetDesktopWindow();
 	 
 	RECT rc;
-	GetWindowRect (windowIdH, &rc); 
+	if (!GetWindowRect(wH, &rc))
+		return Null;
 
 	if (left == -1)
 		left = rc.left;
 	if (top == -1)
 		top = rc.top;
 	if (width == -1)
-		width	= rc.right-rc.left;
+		width	= rc.right - rc.left;
 	if (height == -1)
-		height	= rc.bottom-rc.top;
+		height	= rc.bottom - rc.top;
 
-	HDC hDC = GetDC(0);
-	HDC memDC = CreateCompatibleDC (hDC);
-	HBITMAP hb = CreateCompatibleBitmap (hDC, width, height);
-	HBITMAP OldBM = (HBITMAP)SelectObject(memDC, hb);
-	BitBlt(memDC, 0, 0, width, height , hDC, left, top , SRCCOPY);
-
-    FILE *file = NULL;
+	HDC hDC = NULL;
+	HDC memDC = NULL;
+	HBITMAP hb = NULL;
+	HBITMAP oldBM = NULL;
+	Image img = Null;
+	ImageBuffer b;
+	
+	if ((hDC = GetDC(0)) == NULL)
+		goto end;
+	if ((memDC = CreateCompatibleDC(hDC)) == NULL) 
+		goto end;
+	if ((hb = CreateCompatibleBitmap(hDC, width, height)) == NULL) 
+		goto end;	
+	if ((oldBM = (HBITMAP)SelectObject(memDC, hb)) == NULL)
+		goto end;			
+	if (!BitBlt(memDC, 0, 0, width, height , hDC, left, top, SRCCOPY))
+		goto end;			
+	
   	BITMAPINFO bmpInfo;
-    BITMAPFILEHEADER bmpFileHeader;
     ZeroMemory(&bmpInfo, sizeof(BITMAPINFO));
     bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-    GetDIBits(hDC, hb, 0, 0, NULL, &bmpInfo, DIB_RGB_COLORS);
+    if (!GetDIBits(hDC, hb, 0, 0, NULL, &bmpInfo, DIB_RGB_COLORS))
+        goto end;
    	if(bmpInfo.bmiHeader.biSizeImage <= 0)
      	bmpInfo.bmiHeader.biSizeImage = bmpInfo.bmiHeader.biWidth*labs(bmpInfo.bmiHeader.biHeight)*(bmpInfo.bmiHeader.biBitCount+7)/8;
-   	char *cbuf = new char[bmpInfo.bmiHeader.biSizeImage];
-   	LPVOID buf = cbuf;
 	bmpInfo.bmiHeader.biCompression = BI_RGB;
-	GetDIBits(hDC, hb, 0, bmpInfo.bmiHeader.biHeight, buf, &bmpInfo, DIB_RGB_COLORS);
-	if((file = _wfopen(fileName.ToWString(),L"wb")) == NULL)
-  		return false;
-	bmpFileHeader.bfReserved1 = 0;
-	bmpFileHeader.bfReserved2 = 0;
-	bmpFileHeader.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER)+bmpInfo.bmiHeader.biSizeImage;
-	bmpFileHeader.bfType = 19778;
-	bmpFileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
-	fwrite(&bmpFileHeader, sizeof(BITMAPFILEHEADER), 1, file);
-	fwrite(&bmpInfo.bmiHeader,sizeof(BITMAPINFOHEADER), 1, file);
-	fwrite(buf,bmpInfo.bmiHeader.biSizeImage, 1, file);
-	
-	delete[] cbuf;
-	fclose(file);
+	bmpInfo.bmiHeader.biHeight = -height;
 
-	SelectObject(hDC, OldBM);
+	b.Create(width, height);
+	if (!GetDIBits(hDC, hb, 0, height, ~b, (BITMAPINFO *)&bmpInfo.bmiHeader, DIB_RGB_COLORS))
+		goto end;
+	
+	img = b;
+	
+end:
+	SelectObject(hDC, oldBM);
 	DeleteObject(hb);
 	DeleteDC(memDC);
 	ReleaseDC(0, hDC);
 	
-	return true;
+	return img;
 }
 
 class ScreenGrab {
@@ -425,19 +450,87 @@ bool ScreenGrab::GrabSnapshot()
 
 #ifdef PLATFORM_POSIX
 
-bool Window_SaveCapture(int64 windowId, String fileName, int left, int top, int width, int height)
+Window GetToplevelParent(_XDisplay *display, Window window) {
+	Window parent;
+	Window root;
+	Window *children;
+	unsigned int numChildren;
+	
+	while (true) {
+		if (0 == XQueryTree(display, window, &root, &parent, &children, &numChildren)) 
+		 	return -1;
+		if (children)  
+		 	XFree(children);
+
+		if (window == root || parent == root) 
+		 	return window;
+		else 
+		 	window = parent;
+	}
+}
+
+Image Window_SaveCapture(int64 windowId, int left, int top, int width, int height)
 {
-	if (GetFileExt(fileName) != ".xwd")
-		fileName += ".xwd";
+	SetSysInfoX11ErrorHandler();
 	
-	String command;
+	_XDisplay *dpy = XOpenDisplay (NULL);
+	if (!dpy) {
+		SetX11ErrorHandler();
+		return Null;
+	}
+	int screen = DefaultScreen(dpy);
 	if (windowId == 0)
-		command = "xwd -root -silent -out \"" + fileName + "\"";
-	else
-		command = "xwd -id " + FormatLong(windowId) + " -silent -out \"" + fileName + "\"";
+		windowId = RootWindow(dpy, screen);
+	else {
+		windowId = GetToplevelParent(dpy, windowId);
+		if (windowId < 0)
+			return Null;
+	}
 	
-	String strret;
-	return Sys(command, strret) >= 0;
+	XWindowAttributes rc;
+  	if (!XGetWindowAttributes(dpy, windowId, &rc)) {
+	  	XCloseDisplay(dpy);
+		SetX11ErrorHandler();
+		return Null;	
+  	}
+  	
+  	if (left == -1)
+		left = rc.x;
+	if (top == -1)
+		top = rc.y;
+	if (width == -1)
+		width	= rc.width;
+	if (height == -1)
+		height	= rc.height;
+	
+	XImage *image = XGetImage(dpy, windowId, 0, 0, width, height, XAllPlanes(), ZPixmap);
+	if (image == NULL)
+		return Null;
+	
+	ImageBuffer ib(width, height);
+	
+	unsigned long red_mask = image->red_mask;
+	unsigned long green_mask = image->green_mask;
+	unsigned long blue_mask = image->blue_mask;
+	
+	for (int y = 0; y < height; y++) {
+		RGBA *row = ib[y];
+		for (int x = 0; x < width ; x++) {
+		 	unsigned long pixel = XGetPixel(image, x, y);	
+			unsigned char blue  = pixel & blue_mask;
+			unsigned char green = (pixel & green_mask) >> 8;
+			unsigned char red   = (pixel & red_mask) >> 16;
+			(row + x)->r = red;
+			(row + x)->g = green;
+			(row + x)->b = blue;
+		}
+	}
+	XCloseDisplay(dpy);
+	SetX11ErrorHandler();
+	
+	Image img;
+	img = ib;
+	return img;
 }
 
 #endif
@@ -455,6 +548,21 @@ bool Snap_DesktopRectangle(String fileName, int left, int top, int width, int he
 bool Snap_Window(String fileName, int64 handle)
 {
 	return Window_SaveCapture(handle, fileName);
+}
+
+Image Snap_Desktop()
+{
+	return Window_SaveCapture(0);
+}
+
+Image Snap_DesktopRectangle(int left, int top, int width, int height)
+{
+	return Window_SaveCapture(0, left, top, width, height);
+}
+
+Image Snap_Window(int64 handle)
+{
+	return Window_SaveCapture(handle);
 }
 
 END_UPP_NAMESPACE
