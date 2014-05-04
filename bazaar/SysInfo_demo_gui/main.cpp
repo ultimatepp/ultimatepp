@@ -276,43 +276,26 @@ void ScreenGrabTab::Fill() {
 	OpGrabMouse <<= true;
 	SwGrabMode.Add("Desktop");
 	SwGrabMode.Add("Window");
-#if defined(PLATFORM_WIN32) 
 	SwGrabMode.Add("Rectangle");
-#endif
 	SwGrabMode.MinCaseHeight(20);
 	SwGrabMode.SetData(0);
 	SwGrabMode.WhenAction = THISBACK(SwGrabMode_Action);
 	SwGrabMode_Action();
-#if defined(PLATFORM_WIN32) 	
 	ButGrab.WhenPush = THISBACK(ButGrab_Push);
-#else
+
 	ButGrab.Enable(false);
 	EditFileNameGrab.Enable(false);
 	EditTime.Enable(false);
 	EditFrameRate.Enable(false);
 	OpGrabMouse.Enable(false);
-	EditLeft.Hide();
-	EditTop.Hide();
-	EditWidth.Hide();
-	EditHeight.Hide();
-	Left.Hide();
-	Top.Hide();
-	Width.Hide();
-	Height.Hide();
-#endif
 	
-	String extension;
-#if defined(PLATFORM_WIN32) 
-	extension = "bmp";
-#else
-	extension = "xwd";
-#endif
+	String extension = "jpg";
 	EditFileNameSnap <<= AppendFileName(GetDesktopFolder(), "ScreenSnap." + extension);
 	ButSnap.WhenPush = THISBACK(ButSnap_Push);
 }
 
 void ScreenGrabTab::SwGrabMode_Action() {
-	switch((int)SwGrabMode.GetData()) {
+	switch(int(~SwGrabMode)) {
 	case 0:
 		EditLeft.Enable(false);
 		EditTop.Enable(false);
@@ -342,11 +325,11 @@ void ScreenGrabTab::ButGrab_Push() {
 	FileDelete(EditFileNameGrab.GetData().ToString());
 	
 	bool ret;
-	if (SwGrabMode.GetData() == 0) 
+	if (~SwGrabMode == 0) 
 		ret = Record_Desktop(EditFileNameGrab, EditTime, EditFrameRate, OpGrabMouse);
-	else if (SwGrabMode.GetData() == 1) 
+	else if (~SwGrabMode == 1) 
 		ret = Record_Window(EditFileNameGrab, EditTime, GetWindowIdFromCaption(EditWindowTitle, false), EditFrameRate, OpGrabMouse);
-	else if (SwGrabMode.GetData() == 2) 
+	else if (~SwGrabMode == 2) 
 		ret = Record_DesktopRectangle(EditFileNameGrab, EditTime, EditLeft, EditTop, EditWidth, EditHeight, EditFrameRate, OpGrabMouse);
 	else
 		throw Exc("Unexpected value");
@@ -449,12 +432,16 @@ void ScreenGrabTab::ButSnap_Push()
 {
 	FileDelete(EditFileNameSnap.GetData().ToString());
 
-	if (SwGrabMode.GetData() == 0) 
-		Snap_Desktop(EditFileNameSnap);
-	else if (SwGrabMode.GetData() == 1) 
-		Snap_Window(EditFileNameSnap, GetWindowIdFromCaption(EditWindowTitle, false));
-	else if (SwGrabMode.GetData() == 2) 
-		Snap_DesktopRectangle(EditFileNameSnap, EditLeft, EditTop, EditWidth, EditHeight);
+	if (~SwGrabMode == 0) 
+		Snap_Desktop(~EditFileNameSnap);
+	else if (~SwGrabMode == 1) {
+		int64 wId = GetWindowIdFromCaption(~EditWindowTitle, true);
+		if (wId == -1)
+			Exclamation("No window found named " + String(~EditWindowTitle));
+		else 
+			Snap_Window(~EditFileNameSnap, wId);
+	} else if (~SwGrabMode == 2) 
+		Snap_DesktopRectangle(~EditFileNameSnap, ~EditLeft, ~EditTop, ~EditWidth, ~EditHeight);
 	else
 		throw Exc("Unexpected value");
 }
