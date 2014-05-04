@@ -33,6 +33,7 @@ Controls4U_Demo::Controls4U_Demo() {
 	tab.Add(staticCtrlsTest_Demo.SizePos(), "Static Controls Test");
 	//tab.Add(painterCanvas_Demo.SizePos(), "PainterCanvas (experimental)");
 	tab.Add(functions4U_Demo.SizePos(), "Functions4U samples");
+	tab.Add(aboutDlg.SizePos(), "About U++");
 
 	tab.Set(tab.Find(jbcontrols_Demo));	// Select the last
 	//tab.Set(tab.Find(painterCanvas_Demo));	// Select the last

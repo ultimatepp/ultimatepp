@@ -87,6 +87,7 @@ public:
 	Functions4U_Demo functions4U_Demo;
 	PainterCanvas_Demo painterCanvas_Demo;
 	StaticImageSet_Demo staticImageSet_Demo;
+	AboutUpp aboutDlg;
 #if defined(PLATFORM_WIN32) 
 	Firefox_Demo firefox_Demo;
 	IExplorer_Demo iexplorer_Demo;

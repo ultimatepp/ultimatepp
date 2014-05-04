@@ -7,8 +7,8 @@ uses
 	plugin\jpg;
 
 file
-	main_win.cpp,
 	main.cpp,
+	main_win.cpp,
 	Controls4U_Demo.h,
 	Controls4U_Demo_win.h,
 	Controls4U_Demo.lay,
