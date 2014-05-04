@@ -234,26 +234,6 @@ template<class T>
 inline T pow3(T a) {return a*a*a;}
 template<class T>
 inline T pow4(T a) {return pow2(pow2(a));}
-/*
-template <class T> 
-inline const T& min(const T& a, const T& b, const T& c) { 
-	return a < b ? (a < c ? a : c) : ((b < c) ? b : c); }
-template <class T> 
-inline const T& min(const T& a, const T& b, const T& c, const T& d) { 
-	T ab = min(a, b);
-	T cd = min(c, d);
-	return ab < cd ? ab : cd;
-}
-template <class T> 
-inline const T& max(const T& a, const T& b, const T& c)  { 
-	return a > b ? (a > c ? a : c) : ((b > c) ? b : c); }
-template <class T> 
-inline const T& max(const T& a, const T& b, const T& c, const T& d) { 
-	T ab = max(a, b);
-	T cd = max(c, d);
-	return ab > cd ? ab : cd;
-}
-*/
 template <class T> 
 inline bool Between(const T& val, const T& min, const T& max) { 
 	return val >= min && val <= max;

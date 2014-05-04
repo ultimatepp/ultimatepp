@@ -233,24 +233,59 @@ String TopicFileNameHtml(const char *topic)
 	return tl.group + "$" + tl.package+ "$" + tl.topic + ".html";
 }
 
+String ChangeTopicLanguage(const String &topic, int lang) {
+	int pos = topic.ReverseFind('$');
+	if (pos < 0)
+		return "";			
+	String langtxt = ToLower(LNGAsText(lang));		
+	return topic.Left(pos+1) + langtxt + topic.Mid(pos+1+langtxt.GetCount()); 
+}
+
+String GetTopicLanguage(const String &topic) {
+	int pos = topic.ReverseFind('$');
+	if (pos < 0)
+		return "";			
+	return topic.Mid(pos+1, 5); 
+}
+
 String GatherTpp::GatherTopics(const char *topic, String& title)
 {
-	int q = tt.Find(topic);
+	static StaticCriticalSection mapl;
+	int q;
+	INTERLOCKED_(mapl)
+		q = tt.Find(topic);
 	if(q < 0) {
 		Topic p = ReadTopic(LoadFile(TopicFileName(topic)));
 		title = p.title;
 		String t = p;
-		if(IsNull(t)) 
-			return "index.html";
-		tt.Add(topic) = p;
-		GatherLinkIterator ti(&(reflink));
-		ParseQTF(t).Iterate(ti);
-		for(int i = 0; i < ti.link.GetCount(); i++) {
-			String dummy;
-			GatherTopics(ti.link[i], dummy);
+		if(IsNull(t)) {
+			String topicEng = ChangeTopicLanguage(topic, LNG_('E','N','U','S'));		
+			p = ReadTopic(LoadFile(TopicFileName(topicEng)));
+			String tt = p;
+			if(IsNull(tt)) 
+				return "index.html";
+			title = p.title;
+			p.title += " (translated)";			
+			String help = "topic://uppweb/www/contribweb$" + GetTopicLanguage(topic);
+			p.text = String("{{1f1t0/50b0/50@(240.240.240) [<A2 ") + t_("This page has not been translated yet") + 
+					"]. " + "[^" + help + "^ [<A2 " + t_("Do you want to translate it?") + "]]}}&&" + p.text;
 		}
-	} else 
-		title = tt[q].title;
+		INTERLOCKED_(mapl)
+			tt.Add(topic) = p;
+		GatherLinkIterator ti(&reflink);
+		ParseQTF(t).Iterate(ti);
+#ifdef MTC
+		CoWork work;
+		for(int i = 0; i < ti.link.GetCount(); i++)
+			work & callback2(sGatherTopics, &tt, ti.link[i]);
+#else
+		for(int i = 0; i < ti.link.GetCount(); i++)
+			GatherTopics(ti.link[i]);
+#endif
+	} else {
+		INTERLOCKED_(mapl)
+			title = tt[q].title;
+	}
 	return TopicFileNameHtml(topic);
 }
 
@@ -314,7 +349,7 @@ bool GatherTpp::MakeHtml(const char *folder, Gate2<int, int> progress) {
 bool GatherTpp::MakePdf(const char *filename, Gate2<int, int> progress) {
 	PdfDraw pdf;
 	for(int i = 0; i < tt.GetCount(); i++) {
-		if (progress(i+1, tt.GetCount()))
+		if (progress(int(0.6*(i+1)), tt.GetCount()))
 			return false;
 		bool dopdf = true;
 		for (int j = 0; j < i; ++j) {
@@ -326,7 +361,8 @@ bool GatherTpp::MakePdf(const char *filename, Gate2<int, int> progress) {
 		if (dopdf)
 			QtfAsPdf(pdf, tt[i]);
 	}
-	SaveFile(filename, pdf.Finish());
+	String rawPdf = pdf.Finish();		progress(9, 10);
+	SaveFile(filename, rawPdf);			progress(10, 10);
 	return true;	
 }
 
@@ -340,6 +376,14 @@ Topic &GatherTpp::GetTopic(int id) {
 
 Topic &GatherTpp::AddTopic(const String name) {
 	return tt.Add(name);
+}
+
+String GatherTpp::Www(const char *topic, int lang, String topicLocation) {
+	String strLang = ToLower(LNGAsText(lang));
+	String www = GatherTopics(String().Cat() << topicLocation << topic << "$" << strLang);
+	if (www != "index.html")
+		return www;
+	return GatherTopics(String().Cat() << topicLocation << topic << "$" << "en-us");
 }
 
 END_UPP_NAMESPACE
