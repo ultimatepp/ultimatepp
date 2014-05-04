@@ -1,4 +1,4 @@
-description "Svg Painter demo";
+description "Svg Painter demo\377";
 
 uses
 	CtrlLib,

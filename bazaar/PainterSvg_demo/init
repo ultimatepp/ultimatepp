@@ -2,5 +2,4 @@
 #define _PainterSvg_demo_icpp_init_stub
 #include "CtrlLib/init"
 #include "PainterSvg/init"
-#include "plugin\jpg/init"
 #endif

@@ -1,0 +1,778 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="370"
+   height="370"
+   id="svg2495"
+   sodipodi:version="0.32"
+   inkscape:version="0.45+devel+devel"
+   version="1.0"
+   sodipodi:docname="basket.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs2497">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3274">
+      <stop
+         style="stop-color:#f57936;stop-opacity:1;"
+         offset="0"
+         id="stop3276" />
+      <stop
+         style="stop-color:#f57936;stop-opacity:0;"
+         offset="1"
+         id="stop3278" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3274"
+       id="linearGradient3280"
+       x1="266.01282"
+       y1="365.79919"
+       x2="346.30606"
+       y2="357.97513"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3284">
+      <stop
+         style="stop-color:#f3813b;stop-opacity:1;"
+         offset="0"
+         id="stop3286" />
+      <stop
+         style="stop-color:#f3813b;stop-opacity:0;"
+         offset="1"
+         id="stop3288" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3284"
+       id="linearGradient3290"
+       x1="274.48773"
+       y1="342.50412"
+       x2="282.29791"
+       y2="305.03104"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3294">
+      <stop
+         style="stop-color:#f9a465;stop-opacity:1;"
+         offset="0"
+         id="stop3296" />
+      <stop
+         style="stop-color:#f9a465;stop-opacity:0;"
+         offset="1"
+         id="stop3298" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3294"
+       id="linearGradient3300"
+       x1="245.70688"
+       y1="377.6875"
+       x2="250.35771"
+       y2="321.8403"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3304">
+      <stop
+         style="stop-color:#faa668;stop-opacity:1;"
+         offset="0"
+         id="stop3306" />
+      <stop
+         style="stop-color:#faa668;stop-opacity:0;"
+         offset="1"
+         id="stop3308" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3304"
+       id="linearGradient3310"
+       x1="225.98799"
+       y1="400.07053"
+       x2="165.65804"
+       y2="383.21875"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3314">
+      <stop
+         style="stop-color:#f17e39;stop-opacity:1;"
+         offset="0"
+         id="stop3316" />
+      <stop
+         style="stop-color:#f17e39;stop-opacity:0;"
+         offset="1"
+         id="stop3318" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3314"
+       id="linearGradient3320"
+       x1="199.30406"
+       y1="420.02234"
+       x2="161.35805"
+       y2="447.10556"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3324">
+      <stop
+         style="stop-color:#f67a34;stop-opacity:1;"
+         offset="0"
+         id="stop3326" />
+      <stop
+         style="stop-color:#f67a34;stop-opacity:0;"
+         offset="1"
+         id="stop3328" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3324"
+       id="linearGradient3330"
+       x1="218.13963"
+       y1="429.6875"
+       x2="213.34874"
+       y2="481.31964"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3334">
+      <stop
+         style="stop-color:#fc9f59;stop-opacity:1;"
+         offset="0"
+         id="stop3336" />
+      <stop
+         style="stop-color:#fc9f59;stop-opacity:0;"
+         offset="1"
+         id="stop3338" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3334"
+       id="linearGradient3340"
+       x1="235.32054"
+       y1="407.04382"
+       x2="277.46704"
+       y2="450.97882"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3344">
+      <stop
+         style="stop-color:#fc9f59;stop-opacity:1;"
+         offset="0"
+         id="stop3346" />
+      <stop
+         style="stop-color:#fc9f59;stop-opacity:0;"
+         offset="1"
+         id="stop3348" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3344"
+       id="linearGradient3350"
+       x1="264.8194"
+       y1="375.79376"
+       x2="314.26685"
+       y2="407.69177"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3354">
+      <stop
+         style="stop-color:#9f410d;stop-opacity:1;"
+         offset="0"
+         id="stop3356" />
+      <stop
+         style="stop-color:#9f410d;stop-opacity:0;"
+         offset="1"
+         id="stop3358" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3354"
+       id="linearGradient3360"
+       x1="465.71432"
+       y1="527.25024"
+       x2="318.10092"
+       y2="408.09015"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3364">
+      <stop
+         style="stop-color:#a1420e;stop-opacity:1;"
+         offset="0"
+         id="stop3366" />
+      <stop
+         style="stop-color:#a1420e;stop-opacity:0;"
+         offset="1"
+         id="stop3368" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3364"
+       id="linearGradient3370"
+       x1="442.48425"
+       y1="360.50354"
+       x2="334.06131"
+       y2="358.80124"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3374">
+      <stop
+         style="stop-color:#a1420e;stop-opacity:1;"
+         offset="0"
+         id="stop3376" />
+      <stop
+         style="stop-color:#a1420e;stop-opacity:0;"
+         offset="1"
+         id="stop3378" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3374"
+       id="linearGradient3380"
+       x1="325.33707"
+       y1="277.1875"
+       x2="302.92023"
+       y2="309.84579"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3384">
+      <stop
+         style="stop-color:#a1420e;stop-opacity:1;"
+         offset="0"
+         id="stop3386" />
+      <stop
+         style="stop-color:#a1420e;stop-opacity:0;"
+         offset="1"
+         id="stop3388" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3384"
+       id="linearGradient3390"
+       x1="202.07127"
+       y1="285.65417"
+       x2="221.25"
+       y2="314.59305"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3394">
+      <stop
+         style="stop-color:#a1420e;stop-opacity:1;"
+         offset="0"
+         id="stop3396" />
+      <stop
+         style="stop-color:#a1420e;stop-opacity:0;"
+         offset="1"
+         id="stop3398" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3394"
+       id="linearGradient3400"
+       x1="128.57393"
+       y1="365.34473"
+       x2="167.58862"
+       y2="383.21875"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3404">
+      <stop
+         style="stop-color:#a1420d;stop-opacity:1;"
+         offset="0"
+         id="stop3406" />
+      <stop
+         style="stop-color:#a1420d;stop-opacity:0;"
+         offset="1"
+         id="stop3408" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3404"
+       id="linearGradient3410"
+       x1="362.31201"
+       y1="608.79602"
+       x2="265.11166"
+       y2="446.22757"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3414">
+      <stop
+         style="stop-color:#a1420d;stop-opacity:1;"
+         offset="0"
+         id="stop3416" />
+      <stop
+         style="stop-color:#a1420d;stop-opacity:0;"
+         offset="1"
+         id="stop3418" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3414"
+       id="linearGradient3420"
+       x1="224.30112"
+       y1="615.28705"
+       x2="216.95554"
+       y2="488.46667"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3424">
+      <stop
+         style="stop-color:#a3430e;stop-opacity:1;"
+         offset="0"
+         id="stop3426" />
+      <stop
+         style="stop-color:#a3430e;stop-opacity:0;"
+         offset="1"
+         id="stop3428" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3424"
+       id="linearGradient3430"
+       x1="118.65625"
+       y1="489.23502"
+       x2="161.35805"
+       y2="450.93356"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)" />
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="-50 : 600 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="700 : 600 : 1"
+       inkscape:persp3d-origin="300 : 400 : 1"
+       id="perspective2503" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3274"
+       id="linearGradient2641"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)"
+       x1="266.01282"
+       y1="365.79919"
+       x2="346.30606"
+       y2="357.97513" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3284"
+       id="linearGradient2643"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)"
+       x1="274.48773"
+       y1="342.50412"
+       x2="282.29791"
+       y2="305.03104" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3294"
+       id="linearGradient2645"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)"
+       x1="245.70688"
+       y1="377.6875"
+       x2="250.35771"
+       y2="321.8403" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3304"
+       id="linearGradient2647"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)"
+       x1="225.98799"
+       y1="400.07053"
+       x2="165.65804"
+       y2="383.21875" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3314"
+       id="linearGradient2649"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)"
+       x1="199.30406"
+       y1="420.02234"
+       x2="161.35805"
+       y2="447.10556" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3324"
+       id="linearGradient2651"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)"
+       x1="218.13963"
+       y1="429.6875"
+       x2="213.34874"
+       y2="481.31964" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3334"
+       id="linearGradient2653"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)"
+       x1="235.32054"
+       y1="407.04382"
+       x2="277.46704"
+       y2="450.97882" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3344"
+       id="linearGradient2655"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)"
+       x1="264.8194"
+       y1="375.79376"
+       x2="314.26685"
+       y2="407.69177" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3354"
+       id="linearGradient2657"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)"
+       x1="465.71432"
+       y1="527.25024"
+       x2="318.10092"
+       y2="408.09015" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3364"
+       id="linearGradient2659"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)"
+       x1="442.48425"
+       y1="360.50354"
+       x2="334.06131"
+       y2="358.80124" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3374"
+       id="linearGradient2661"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)"
+       x1="325.33707"
+       y1="277.1875"
+       x2="302.92023"
+       y2="309.84579" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3384"
+       id="linearGradient2663"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)"
+       x1="202.07127"
+       y1="285.65417"
+       x2="221.25"
+       y2="314.59305" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3394"
+       id="linearGradient2665"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)"
+       x1="128.57393"
+       y1="365.34473"
+       x2="167.58862"
+       y2="383.21875" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3404"
+       id="linearGradient2667"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)"
+       x1="362.31201"
+       y1="608.79602"
+       x2="265.11166"
+       y2="446.22757" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3414"
+       id="linearGradient2669"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)"
+       x1="224.30112"
+       y1="615.28705"
+       x2="216.95554"
+       y2="488.46667" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3424"
+       id="linearGradient2671"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-112.52292,-271.00489)"
+       x1="118.65625"
+       y1="489.23502"
+       x2="161.35805"
+       y2="450.93356" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.1887931"
+     inkscape:cx="331.83466"
+     inkscape:cy="215.71429"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1280"
+     inkscape:window-height="964"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4" />
+  <metadata
+     id="metadata2500">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Livello 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g2614"
+       transform="matrix(-1,0,0,1,369.17331,0)">
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         transform="matrix(1.0458554,0,0,1.0458554,-141.14744,-305.74575)"
+         d="M 482.08138,468.86917 A 170.62431,170.62431 0 1 1 140.83275,468.86917 A 170.62431,170.62431 0 1 1 482.08138,468.86917 z"
+         sodipodi:ry="170.62431"
+         sodipodi:rx="170.62431"
+         sodipodi:cy="468.86917"
+         sodipodi:cx="311.45706"
+         id="path2474"
+         style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.42440951;stroke-linecap:round;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         id="path2458"
+         d="M 129.41458,119.30762 L 105.94584,148.21387 C 163.14391,190.11026 138.80995,335.84041 202.22708,362.21387 C 247.10004,357.80357 287.12099,336.74356 316.00833,305.30762 C 258.17759,235.8422 198.3675,169.70642 129.41458,119.30762 z"
+         style="opacity:1;fill:#d65a1e;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         sodipodi:nodetypes="ccccscc"
+         id="path2460"
+         d="M 163.13333,86.807612 L 137.85208,112.08887 C 221.61466,183.09651 274.60938,242.58476 320.19583,299.27637 L 320.94583,299.71387 C 347.21068,268.63607 363.03958,228.46544 363.03958,184.62012 C 363.03958,181.07487 362.93133,177.55193 362.72708,174.05762 C 331.01154,110.05995 211.85987,131.03762 163.13333,86.807612 z"
+         style="opacity:1;fill:#d65a1e;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         sodipodi:nodetypes="cccccc"
+         id="path2462"
+         d="M 268.66458,37.745112 C 228.85034,38.142982 178.26841,63.756862 173.35093,78.401362 C 174.9692,115.16162 343.95495,104.38983 361.72708,165.05762 L 361.97708,165.08887 C 356.39125,113.8934 329.1364,69.179902 289.57083,40.338862 C 283.10961,38.461952 276.02306,37.671582 268.66458,37.745112 z"
+         style="opacity:1;fill:#d65a1e;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         sodipodi:nodetypes="ccccc"
+         id="path2464"
+         d="M 184.60208,6.1826113 C 175.64775,6.1826113 166.82858,6.8449813 158.22708,8.1201113 C 131.68245,36.854712 145.84748,62.669162 160.10208,70.557612 C 172.26823,79.221432 203.64509,24.976832 282.32083,35.338862 C 254.24128,16.912502 220.67335,6.1826113 184.60208,6.1826113 z"
+         style="opacity:1;fill:#d65a1e;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         sodipodi:nodetypes="cccsscc"
+         id="path2466"
+         d="M 103.25834,158.68262 C 101.63175,158.71418 99.927467,159.04136 98.133337,159.65137 C 74.876217,177.9005 32.332167,265.7214 57.195837,309.49512 C 57.201097,309.50048 57.190577,309.52101 57.195837,309.52637 C 89.587837,342.5564 134.72036,363.05763 184.60208,363.05762 C 185.97368,363.05762 187.33159,363.05721 188.69583,363.02637 C 134.95997,324.19127 146.65796,169.34567 103.25834,158.68262 z"
+         style="opacity:1;fill:#d65a1e;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         sodipodi:nodetypes="cccsccc"
+         id="path2468"
+         d="M 60.320837,136.15137 C 40.784757,136.77144 17.986357,147.01067 7.258337,169.27637 L 6.695837,170.62012 C 6.336427,175.24212 6.133337,179.90639 6.133337,184.62012 C 6.133337,228.76558 22.201487,269.17389 48.789587,300.33887 C 24.181217,223.0899 99.056467,155.17024 90.914587,147.62012 C 85.532957,139.82002 73.687627,135.72711 60.320837,136.15137 z"
+         style="opacity:1;fill:#d65a1e;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         sodipodi:nodetypes="ccccc"
+         id="path2470"
+         d="M 54.664587,62.370112 C 29.452247,89.154042 12.384727,123.70728 7.539587,162.05762 C 26.506907,130.3366 54.801067,118.82406 100.53959,142.80762 L 124.00833,113.30762 C 108.68457,99.481402 76.367627,75.607912 54.664587,62.370112 z"
+         style="opacity:1;fill:#d65a1e;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         id="path2472"
+         d="M 150.50833,9.4326113 C 115.55132,16.200722 84.225317,33.189962 59.758337,57.151362 L 60.195837,57.932612 C 85.933477,69.651542 107.9465,88.862082 130.63333,106.68262 L 157.69583,81.401362 C 140.06297,63.616782 126.45809,44.199192 150.50833,9.4326113 z"
+         style="opacity:1;fill:#d65a1e;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         style="opacity:1;fill:url(#linearGradient2641);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         d="M 268.66458,37.745112 C 228.85034,38.142982 178.26841,63.756862 173.35093,78.401362 C 174.9692,115.16162 343.95495,104.38983 361.72708,165.05762 L 361.97708,165.08887 C 356.39125,113.8934 329.1364,69.179902 289.57083,40.338862 C 283.10961,38.461952 276.02306,37.671582 268.66458,37.745112 z"
+         id="path3272"
+         sodipodi:nodetypes="cccccc" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         style="opacity:1;fill:url(#linearGradient2643);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         d="M 184.60208,6.1826113 C 175.64775,6.1826113 166.82858,6.8449813 158.22708,8.1201113 C 131.68245,36.854712 145.84748,62.669162 160.10208,70.557612 C 172.26823,79.221432 203.64509,24.976832 282.32083,35.338862 C 254.24128,16.912502 220.67335,6.1826113 184.60208,6.1826113 z"
+         id="path3282"
+         sodipodi:nodetypes="ccccc" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         style="opacity:1;fill:url(#linearGradient2645);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         d="M 150.50833,9.4326113 C 115.55132,16.200722 84.225317,33.189962 59.758337,57.151362 L 60.195837,57.932612 C 85.933477,69.651542 107.9465,88.862082 130.63333,106.68262 L 157.69583,81.401362 C 140.06297,63.616782 126.45809,44.199192 150.50833,9.4326113 z"
+         id="path3292" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         style="opacity:1;fill:url(#linearGradient2647);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         d="M 54.664587,62.370112 C 29.452247,89.154042 12.384727,123.70728 7.539587,162.05762 C 26.506907,130.3366 54.801067,118.82406 100.53959,142.80762 L 124.00833,113.30762 C 108.68457,99.481402 76.367627,75.607912 54.664587,62.370112 z"
+         id="path3302"
+         sodipodi:nodetypes="ccccc" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         style="opacity:1;fill:url(#linearGradient2649);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         d="M 60.320837,136.15137 C 40.784757,136.77144 17.986357,147.01067 7.258337,169.27637 L 6.695837,170.62012 C 6.336427,175.24212 6.133337,179.90639 6.133337,184.62012 C 6.133337,228.76558 22.201487,269.17389 48.789587,300.33887 C 24.181217,223.0899 99.056467,155.17024 90.914587,147.62012 C 85.532957,139.82002 73.687627,135.72711 60.320837,136.15137 z"
+         id="path3312"
+         sodipodi:nodetypes="cccsccc" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         style="opacity:1;fill:url(#linearGradient2651);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         d="M 103.25834,158.68262 C 101.63175,158.71418 99.927467,159.04136 98.133337,159.65137 C 74.876217,177.9005 32.332167,265.7214 57.195837,309.49512 C 57.201097,309.50048 57.190577,309.52101 57.195837,309.52637 C 89.587837,342.5564 134.72036,363.05763 184.60208,363.05762 C 185.97368,363.05762 187.33159,363.05721 188.69583,363.02637 C 134.95997,324.19127 146.65796,169.34567 103.25834,158.68262 z"
+         id="path3322"
+         sodipodi:nodetypes="cccsscc" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         style="opacity:1;fill:url(#linearGradient2653);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         d="M 129.41458,119.30762 L 105.94584,148.21387 C 163.14391,190.11026 138.80995,335.84041 202.22708,362.21387 C 247.10004,357.80357 287.12099,336.74356 316.00833,305.30762 C 258.17759,235.8422 198.3675,169.70642 129.41458,119.30762 z"
+         id="path3332" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         style="opacity:1;fill:url(#linearGradient2655);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         d="M 163.13333,86.807612 L 137.85208,112.08887 C 221.61466,183.09651 274.60938,242.58476 320.19583,299.27637 L 320.94583,299.71387 C 347.21068,268.63607 363.03958,228.46544 363.03958,184.62012 C 363.03958,181.07487 362.93133,177.55193 362.72708,174.05762 C 331.01154,110.05995 211.85987,131.03762 163.13333,86.807612 z"
+         id="path3342"
+         sodipodi:nodetypes="ccccscc" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         sodipodi:nodetypes="ccccscc"
+         id="path3352"
+         d="M 163.13333,86.807612 L 137.85208,112.08887 C 221.61466,183.09651 274.60938,242.58476 320.19583,299.27637 L 320.94583,299.71387 C 347.21068,268.63607 363.03958,228.46544 363.03958,184.62012 C 363.03958,181.07487 362.93133,177.55193 362.72708,174.05762 C 331.01154,110.05995 211.85987,131.03762 163.13333,86.807612 z"
+         style="opacity:1;fill:url(#linearGradient2657);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         sodipodi:nodetypes="cccccc"
+         id="path3362"
+         d="M 268.66458,37.745112 C 228.85034,38.142982 178.26841,63.756862 173.35093,78.401362 C 174.9692,115.16162 343.95495,104.38983 361.72708,165.05762 L 361.97708,165.08887 C 356.39125,113.8934 329.1364,69.179902 289.57083,40.338862 C 283.10961,38.461952 276.02306,37.671582 268.66458,37.745112 z"
+         style="opacity:1;fill:url(#linearGradient2659);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         sodipodi:nodetypes="ccccc"
+         id="path3372"
+         d="M 184.60208,6.1826113 C 175.64775,6.1826113 166.82858,6.8449813 158.22708,8.1201113 C 131.68245,36.854712 145.84748,62.669162 160.10208,70.557612 C 172.26823,79.221432 203.64509,24.976832 282.32083,35.338862 C 254.24128,16.912502 220.67335,6.1826113 184.60208,6.1826113 z"
+         style="opacity:1;fill:url(#linearGradient2661);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         id="path3382"
+         d="M 150.50833,9.4326113 C 115.55132,16.200722 84.225317,33.189962 59.758337,57.151362 L 60.195837,57.932612 C 85.933477,69.651542 107.9465,88.862082 130.63333,106.68262 L 157.69583,81.401362 C 140.06297,63.616782 126.45809,44.199192 150.50833,9.4326113 z"
+         style="opacity:1;fill:url(#linearGradient2663);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         sodipodi:nodetypes="ccccc"
+         id="path3392"
+         d="M 54.664587,62.370112 C 29.452247,89.154042 12.384727,123.70728 7.539587,162.05762 C 26.506907,130.3366 54.801067,118.82406 100.53959,142.80762 L 124.00833,113.30762 C 108.68457,99.481402 76.367627,75.607912 54.664587,62.370112 z"
+         style="opacity:1;fill:url(#linearGradient2665);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         id="path3402"
+         d="M 129.41458,119.30762 L 105.94584,148.21387 C 163.14391,190.11026 138.80995,335.84041 202.22708,362.21387 C 247.10004,357.80357 287.12099,336.74356 316.00833,305.30762 C 258.17759,235.8422 198.3675,169.70642 129.41458,119.30762 z"
+         style="opacity:1;fill:url(#linearGradient2667);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         sodipodi:nodetypes="cccsscc"
+         id="path3412"
+         d="M 103.25834,158.68262 C 101.63175,158.71418 99.927467,159.04136 98.133337,159.65137 C 74.876217,177.9005 32.332167,265.7214 57.195837,309.49512 C 57.201097,309.50048 57.190577,309.52101 57.195837,309.52637 C 89.587837,342.5564 134.72036,363.05763 184.60208,363.05762 C 185.97368,363.05762 187.33159,363.05721 188.69583,363.02637 C 134.95997,324.19127 146.65796,169.34567 103.25834,158.68262 z"
+         style="opacity:1;fill:url(#linearGradient2669);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="300"
+         inkscape:export-xdpi="300"
+         inkscape:export-filename="C:\Documents and Settings\Paola\Desktop\sis\basket.png"
+         sodipodi:nodetypes="cccsccc"
+         id="path3422"
+         d="M 60.320837,136.15137 C 40.784757,136.77144 17.986357,147.01067 7.258337,169.27637 L 6.695837,170.62012 C 6.336427,175.24212 6.133337,179.90639 6.133337,184.62012 C 6.133337,228.76558 22.201487,269.17389 48.789587,300.33887 C 24.181217,223.0899 99.056467,155.17024 90.914587,147.62012 C 85.532957,139.82002 73.687627,135.72711 60.320837,136.15137 z"
+         style="opacity:1;fill:url(#linearGradient2671);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    </g>
+  </g>
+</svg>
