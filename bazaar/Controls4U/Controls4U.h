@@ -625,6 +625,14 @@ public:
 	Callback WhenSelected;
 };
 
+struct AboutUpp : StaticRect {
+	RichTextView about;
+
+	typedef AboutUpp CLASSNAME;
+
+	AboutUpp();
+};
+
 END_UPP_NAMESPACE
 
 #endif

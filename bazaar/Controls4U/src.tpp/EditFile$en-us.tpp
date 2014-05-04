@@ -17,37 +17,14 @@ ditFileFolder]&]
 [s0;2 &]
 [s3; 
 @@image:1525&131
-‚ƒô€•€€€€€€€€€€ø·œíÚÑ®‚°ÐÀÑ¶è¢Üü‰¿î‹¥¸“àÊÂÒõæŠöÒŠ”ûÂ‡Ñ­†—“ËØñÍ–“Ð­‘èËˆò¡¶½€½˜“
-¸–í¿³Í‹ƒóÐ«Î³íœ»¿²¬Þù­€øßÜñ¦ÚÎÙ£œÓ¶šóÅÉñÛ¸‘çíþð¨îûÙ³Þöž¸¼øŒø€Üì§âœÃÞŽ¯â¶Í¼ÅÛ©
-ÿ´ŠÌ¹­óÎöµ­óÞïÛÏœÛŸƒÝ¬Öâ¯é‚ñèÅ—èž¹áÖùû©Û–ù›û’èäåó’ù¡äŸ·‡ýÏõ¤¾ŒûŠ¼›ÏíÔÈÀµ—‡ëî—œ
-¦™Ùãîë«ÿ¥ í”²áÌŸ¸¾ êûí´öÁÛ¡±¯¶–—çÜøÉ¹³ÄºÓ÷¾ÉŠ÷û·ÑÞÝûÛ´ïÿ±ý÷ÉÌäÿ ¤í´æŠÖÓ·íòôûÅ
-çµ¸â”íÿœÿöÀ‰Ä¶¾þ¨úŽ½¸€âÝ½€®Î˜”
+(A/QAFQAAAAAAAAAAAHic7dpRroIwEEBRNugi3Ak/7ouluJNKQlJ1ZoqdUoqUe8KH0YYXk8tY8U0T0K0R6EsIIbY9AL2YkxZtP7PNiwPQkCtOs+2cv7Is3vmtAF9ccabaztmc0zYac8VJ2zgRHeft/ihue1mz3vY4vI/4jHgAbCfinMNejuK2zbxF2ym0jYrMua3zdrWt815v25zbn4NdLNYv6Q8CcejF6J65YdZ5e9sWeZt7kmhlc5J5IeSfh/3PdaS+DIq8G8/t1Mg1FwdrbhecGZ3ZY27rK6Wg7ZSy4cy4vqDq+20ddkHbIbGvNhfn3HjJOTM6U/c+SQr3t9Fe3fvbtI3/sf13ycx/IKRtNOaKU7ftcvR7xbW44hRt/5z2wInEto++KIH6jr24gF29AC5OmJQ=)
 &]
 [s0;2 &]
 [s0; [2 As seen in program:]&]
 [s0;2 &]
 [s0;l288; [2 
 @@image:1525&131
-‚ƒô€•€€€€€€€€€€ø§œí›ëÒã¸ŽÇ¹àžâÏ§²Ÿö˜ûƒ†÷ˆä  „‰àÇŽ‰ŒƒìµÛ»³µÅ‡¢¼ñ«ñ‹²ÿ¦Û³ÆãÛŠã
-ÇÂ£ÀÝÝ©¹ÝÝêµäŸÔ²§’Ø¶½’ˆá¾˜äËíííðÖ¸„ÅñœÞ¯¦çÛöø¼†¯—ðÁ­þ¿®»ÜàƒÛ–å·ÁÇõ…åÁà½€ÏÆØýý½
-úŠÎ§Ûíšƒ¦‰²œìßð¤—–ÄÁõÄŒ‘â£ î¡ŒŸ—ØáÏó›Ì¦ú°Ââçùçùº‹òÇÀßþ¨Çæšë›ÓàÖÉÂ¤—ÜÞ™€é¾ø‡ì
-Îÿï±“¯îµâ½ÚïºåÍÙØé¸¥ÅÞºµöŠÇžîÔíµëª½ÚµÖŽÌÏëïã—Í¾—é÷£™°„ÒØëð‚· Âå÷¿¬ý·Ó¿²¹ÆµÓ®ØÉ¥
-Á«ÿæÇíöØ»¢ƒ–í±ÝƒíèÔ¼±Þï¬«¹¼³É€¸¥ç›Û’€íæÌö¿Ìÿ‹Í©×ìô‹»öô£ÔÏé¯ÉÊ–ºÛÕÐýêÛ°’ÊÛ§¹Û
-•¹¼“äÀ’ÈÙãý“ïªÛæûº£ýåÊµ†ßý‚–––êçç„©ÑÒÙ¶³Â¶ÂÚš…íëÄ™ÿ‡ß™¼™†¾ÎÍ»¼êõªóŸÁ²¼öÁ¿üú»œ
-¤Ë —ÉÃ°î‚¶±“Ñ¯±—·ñæÅÍç›ˆÒ¹£Ôªª„«Ýô¿¡ñ¶—üÂ¢é¬ÄíÙõä©šÎìµ¼Ã§‘áùüú¢àœ¢Ž‘·ùå¾£Ó˜ËãŽà
-ö‰°¹Ê°äï»’áó’’âàŸÍç›™ú…‹×²âÕ‹¾îúîšÙ“È³Ÿû¤Ãü¤¼ƒÛé×š˜ûÐ¼Î¶ˆŸŸ¹‚å˜ï‚‘–Àú´š¿‡Ã€íâ‰ý
-»ü™Áë¾†§šªïøÊÃíÇ…ØžéÝ’¨äüö‡­‰à¨ü×Ôñ’´šôÈ¯ÓÇ‘™àÅã¢é·ÞÙ§”ÍÅ¯“Ç¶¤²ô’ÔÓŽÒº¤”¨”Á“
-´Ç ˆ–Õó¸Öé½àˆ¥ÝžÇá³À×Â±…ÉáÍâóï¥´è®¨õúà«¿ð††¹ÏÉ’ŸãÔñ´Îœ¢Ä‹ÜÁ·òàÒÛä’­µÎÔêÄÕ³õ
- Ä”§ÞÈÃöóšñ—½ÓÄ¦ªçêÈä²‚åÙÅ»˜¡²žÅ’»Œ¥ß·™ã¶Ûëõë¨Í£ÐÃ¶¡‚Ïÿÿ÷ŒŠš§…†›·ÊëŠÛ¸‡žÎö“õöª
-¥Ûá™š¼²úôÄš©Ž¼ïÀé’Ë¿¦ñÀÜÄñâ…”ìÇ¬ÇÉ’¼¨æÜÓØŽà‰Ý­ÃÛ‰Ø‚é¬Ú¯“ÐùöÊÕ¾Žè³Ãÿ•ÍÔÇÚ¬ÜâÛÍÚ
-åÔé½Áëª§Ç«Š»Ö³Å™Š¤Êó²­êÚ—î“¾Å‰¥ÑÝÒ§–­¹ðò‹á‚ˆÈ´ìÇÞ¢Ë“—§‘¯„µ«Û‘¬ÑþéØï‹°„Ò¦øé’ÑÀöÒ‘
-ÐÝéùõ¹‚ìÎýŸíÍ³ÚÓÞé¥áé²ÊËãŠ»’â»±§Ñ‰ÝÈïœ‹ÛÈ©Ç²±‹ÏÊöÔÖçíî¦ï¨Ò³²™”ØéäûÜ“˜–¼à‹±ä¿§
-ãÁ¶¤àûñÀÌ®·Ùþ™Á÷„¼åÞ·¾­Âë¦­é´Üµ ¥•¾žº«¿ÕŸØžü¼Ð©ÈÇ©â–©®±²¤®Á¢‚¨³ˆÏâ»¢žªÉâÈº£éÑ
-¢¸ÈÊ©›“ µ½‘þüÖºâ¶Ó“—÷«óÜ–üüÒÄÌã‰°åØò¶Ú­ËŠØþÐ±¤÷´†Ýú¹É©»ºùßãêÔ¤êÒ¡É›ºŸÀ„‘”Ú¼õ—
-ÅæþÞ²¾¤é¹ä–Éà¾’âñžãš™°äîìóß¸òËŸÇûÖ¶Ê»šíŠêîÎƒ¾Áµ×ÚÖ½ˆëš­º¶Ü¥ÅÅìØÄ¼ñ—Žïß°ó³ïÖ’×À¸
-×Ï³å£‘¹¦‘Ëþ†˜¾çß¾ú¶ªÔ†÷›õÛâÝàŠšò¡æ¬Ö¬¨„¶³ËÕƒÓƒ¼‘®¿ÙóÊ¼—Üä’Ëþè†˜Þ·óÉåðíˆ¿ƒäûí
-àÜóýãêš¦õã¸àœŸØœž˜†Ñï÷ïî´îÐ†‘Ÿ½Þ¼¾°ÃØéôç°‡áÇ«ƒÁÂ€—ðÀÅØî§îîà·Ì”ÉÜ¥¢þ§»ø‰ÃåÃ—Øð
-¿·ÛíòßÃº°¹Šÿ÷ä…´‡Ï„äÿ‹¤ƒ›Ï–Þò÷ì‹¬ðçµïòüóüÅùÿ‡÷Ñðµ
+(A/QAFQAAAAAAAAAAAHic7ZtrUuM4EMe54B5iT7Kf9hh7gx2GdwhkIBAgCWDHDgkMAzVbu7M1xYc88StxC7J/W7PGY1uKY8KjwF1dKbndarXkn1Sykti2PRKIYRjky+3t7XA4hMVxnF6vZ9v2eDyGHZfwwa1+vw873OCDW5Zlwcf1BeXBYIBPxtj9/T0KnU6n2+2apokyHGxfcBcWxEF1xAziIyBuoQwf2OHPc5tMJjDCYuf55/kL8kfA3/4o5prrG1Ngj0mBwiSXXN6QAGm++Adsf++xky9utT3abzplzdlpOCXF3jq1CseebtTttaq9WrVWjszr7+OXTT6X9yMZsATS2JDwArcgwuW/rP0307+yxjVTrtjJJat/ZkdtdtiigxbtnbFdne1oVDwxXqyrubwzyYAlZxvbkoBtTI32P0z/i6lX7PQLO/YjVM9pr8nKOtvVUJ19arCSStunOdu5PJNkwBJI430T76oB23u6o31lyrVf/YIWFhZq54SpUVLZtsK2QlqahW3EmX+HX5m8hj5OzYE7PHWqc48fwbJ2Qb/8+rscSyCNF0nDMAK2sZNRr7G38eZFzWcbUjkj1CoqBN30P6FxthdCIumsxO3Z5CmaTuy1vKeRYXl8eqIcIg4RN/nlI9OYy+OOYAmwuUqw5O+S4XOSkuJgzeebmfoFC7Li1Qu+bvoa2ZPIM5/7Q3ykPAPbaZqY+1C8TrYfHzmCZRhvEZZAejQaDYfDgO3iiX38mUHrvoYnHapv+MpDbYXYnmldEo1kfHaHLYkPKHxXVHGStHTIL9PHERlFYyJpN97ZlM3FLxPHNjJ0klRTjlIklCiNlMETRyCQCJbVc1ZpPeCdiCWQHo/H4TPAwrGFSeFNjXPvJTRorqj6YKs/8IaGz0kSn+PUcU4cokSL3EHy4NJb5JItzlTqRNWzdUQUJ15Iw3aa8Rc908SmZ+pI5DKCZcU7GKGyHsU7jCVftxljAdvrdeuoTdDDNiECz3/3jIqap4WGj7dK64pbOJ7O9hN1dirbYZkaPLJ6RBqdKY6872kSSz8mccBEceKFlGzHR0mSvCjmXNiOYAndD63biVgCaSzak9D59krVPmizw/8VTVTarNxiW03a1Gm9QWuqp6uKu1YzRZkkynOyLWpa7pO+RYklUdInlq25cPLhggjINGxHIsuTl6cRrzUr2xEsUX7YbwuwBNKmaRJRwPbSkV1peXW5Aux9n+3NM1rTaaXh6bJKy4q7EmI7saeJXUhvnAvbKUcysQtPyvZUVmdtbiao0rOdMpmUaWR73JMYlg9gi7HkvyfBtiRge/HALjfZ/hlB9zxl3jc+LUKQjSatabTcoCWVPp66K9Wf2J78vFDIRyniFqkusiQuQaKCKI2IT2K7oh5J4ki6I+lROI1ISimbEzU9EQ9+/FZitlOTl/cr3JZ8fNLEj2MJsOVYcrYtywrY/lCxdzSGXXq5Sbs6ed9j6lRqUqFJG7ofBBEUWjx1l49m/l4yPqS5ZBbJYL6ScZ5jGhmw5Gzz37hyy5/71rZKOxrtau5Ogz5BNdrWvQjrGq023CXFxexYPHGXDm9fsLPvVhLXwLjPs+UjkTmmkQFLfgYYPt+++jYq1Iab9dti3eCKcqFmrNYsKDYzy1UDUwMRLr/Z88o8l1zkkgFLfgYYXrdzyeVtCD8D5PvtXHN9Y2qapuM44Byf2JwYhtHv929ublCGEZ+9Xg8+sMPY6XSwh+FHK4PBAJdwQEVY7u7u4A83zBTcJSL+Jzv4wwFlwxdYcLfb7fLfjUMwuRCK//cNBTSHTwTk/6SDG88QFl537Ass8Oe18vzz/EX5/wd3UXC1)
 ]&]
 [s0;2 &]
 [s4; EditFile is a field to introduce a file path.&]
@@ -67,4 +44,4 @@ the setup of a FileSel.&]
 [s1;%- &]
 [s0; [2 They are inherited from ][^topic`:`/`/Controls4U`/src`/EditFileFolder`$en`-us`#EditFileFolder`:`:class^2 E
 ditFileFolder]&]
-[s0; ]
+[s0; ]]

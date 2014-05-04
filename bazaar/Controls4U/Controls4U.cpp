@@ -9,6 +9,9 @@
 #define IMAGEFILE <Controls4U/Controls4U.iml>
 #include <Draw/iml.h>
 
+#define TOPICFILE <Controls4U/src.tpp/all.i>
+#include <Core/topic_group.h>
+
 NAMESPACE_UPP
 
 void PaintCenterText(Painter &w, double x, double y, String text, Font fnt, Color color) {
@@ -2091,4 +2094,15 @@ String FileBrowser::GetFolder() {
 	return ~folders;
 }
 
+
+AboutUpp::AboutUpp() {
+	about.SetQTF(GetTopic("topic://Controls4U/src/About$en-us"), Zoom(130, 1024));
+	about.SetZoom(Zoom(1, 1));
+	about.RightPos(0, 0).VSizePos();
+	about.HMargins(4);
+	about.SetFrame(NullFrame());
+	about.NoLazy();
+	Add(about.SizePos());
+}
+	
 END_UPP_NAMESPACE
