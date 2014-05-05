@@ -4,11 +4,7 @@ uses
 	CtrlLib;
 
 file
-	app.tpp,
-	ArrayCtrl.h,
-	main.cpp optimize_speed,
-	src.tpp,
-	srcimp.tpp;
+	main.cpp optimize_speed;
 
 mainconfig
 	"" = "GUI";

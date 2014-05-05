@@ -1,3 +1,4 @@
+
 - Velke hodnoty grid apod... (collapsed mode)
 - keep with next nechodi
 - Equalize columns

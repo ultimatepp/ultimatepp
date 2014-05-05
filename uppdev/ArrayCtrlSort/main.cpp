@@ -4,6 +4,11 @@ class ArrayCtrlSort : public TopWindow {
 	ArrayCtrl  a;
 	EditDouble ed1, ed2;
 
+	bool SortTest(int i1, int i2)
+	{
+		return a.Get(i1, 0) > a.Get(i2, 0);
+	}
+
 public:
 	typedef ArrayCtrlSort CLASSNAME;
 	ArrayCtrlSort();
@@ -27,7 +32,9 @@ ArrayCtrlSort::ArrayCtrlSort()
 	for(int i = 0; i < 100; i++)
 		a.Add(rand() % 20, rand() % 10);
 	Add(a.SizePos());
-	a.ColumnSort(3, StdValueOrder());
+//	a.ColumnSort(3, StdValueOrder());
+	
+	a.Sort(10, 40, THISBACK(SortTest));
 }
 
 GUI_APP_MAIN
