@@ -3,78 +3,26 @@
 using namespace Upp;
 
 struct App : TopWindow {
-	ArrayCtrl a, b;
-	Splitter  s;
-
-	StatusBar status;
-
-	void DnD(PasteClip& d)
-	{
-		if(AcceptText(d))
-			a.Add(GetString(d), GetString(d));
+	ArrayCtrl a;
+	
+	bool Order(int i1, int i2) {
+		DDUMP(a.Get(i1, 0));
+		DDUMP(a.Get(i2, 0));
+		return a.Get(i1, 0) < a.Get(i2, 0);
 	}
 	
-	void DnDInsert(int line, PasteClip& d)
-	{
-		if(AcceptInternal<ArrayCtrl>(d, "array"))
-			a.InsertDrop(line, d);
-		if(AcceptText(d)) {
-			a.Insert(line);
-			a.Set(line, 0, GetString(d));
-			a.SetCursor(line);
-		}
-	}
-
-	void DnDInsertB(int line, PasteClip& d)
-	{
-	}
-
-	void Drag()
-	{
-	}
-
-	void DragB()
-	{
-	}
-	
-	void A()
-	{
-		Exclamation("LeftDouble");
-		Exit();
-	}
-	
-	void B()
-	{
-		Exclamation("LeftClick");
-	}
-
 	typedef App CLASSNAME;
 
 	App() {
-		a.AddColumn("\1Text alsdfjla fdlajd flajd falsjkd fla fals fj").HeaderTab().WhenLeftDouble = THISBACK(A);
-		a.AddColumn("asdf").HeaderTab().WhenLeftClick = THISBACK(B);
-		a.MultiSelect();
-		a.NoGrid();
-		a.WhenDropInsert = THISBACK(DnDInsert);
-		a.WhenDrop = THISBACK(DnD);
-		a.WhenDrag = THISBACK(Drag);
-		a.WhenLeftDouble = THISBACK(A);
-		a.Removing();
-		
-		b.AddColumn("Text");
-		b.MultiSelect();
-		b.WhenDropInsert = THISBACK(DnDInsertB);
-		b.WhenDrag = THISBACK(DragB);
+		Add(a.SizePos());
+		Sizeable().Zoomable();
 
-		Add(s.Horz(a, b));
+		a.AddColumn("Test");
 		for(int i = 0; i < 200; i++) {
-			a.Add(i);
-			b.Add(FormatIntRoman(i, true));
-			if((i & 3) == 0)
-				a.AddSeparator();
+			a.Add((int)Random(10000));
 		}
-		Sizeable();
-		AddFrame(status);
+	//	a.Sort(THISBACK(Order));
+		a.Sort();
 	}
 };
 
@@ -83,20 +31,3 @@ GUI_APP_MAIN
 	DUMP("Test");
 	App().Run();
 }
-
-
-String HttpResponse(int code, const char *phrase, const String& data, const char *content_type)
-{
-	String r;
-	r <<
-		"HTTP/1.0 " << code << ' ' << phrase << "\r\n"
-		"Date: " <<  WwwFormat(GetUtcTime()) << "\r\n"
-		"Server: Centrum-Nos SaleCrm\r\n"
-		"Content-Length: " << data.GetCount() << "\r\n"
-		"Connection: close\r\n";
-	if(content_type)
-		r << "Content-Type: text/xml\r\n";
-	r << "\r\n" << data;
-	return r;
-}
-
