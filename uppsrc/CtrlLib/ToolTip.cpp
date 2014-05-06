@@ -76,7 +76,7 @@ void ShowToolTip()
 			Rect r = Ctrl::GetMouseWorkArea();
 			Point p = GetMousePos() + Size(0, 22);
 			if(p.y + sz.cy > r.bottom)
-				p = GetMousePos() - Size(0, 22);
+				p = GetMousePos() - Size(0, 6) - sz.cy;
 			q.PopUp(top, p, !showmode);
 			showmode = true;
 			KillTimeCallback((void *)EndShowMode);
