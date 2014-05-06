@@ -2407,6 +2407,20 @@ exported, [%-*@3 hdr] controls whether header is exported.&]
 cell.&]
 [s3; &]
 [s4;%- &]
+[s5;:ArrayCtrl`:`:WhenMouseMove:%- [_^Callback1^ Callback1]<[_^Point^ Point]>_[* WhenMouseM
+ove]&]
+[s2; Called when mouse moves over the ArrayCtrl or moves out of ArrayCtrl. 
+The Point`::y is the line number, Point`::x column index. If mouse 
+moves out of ArrayCtrl, parameter is Null.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:WhenEnterKey:%- [_^Callback^ Callback]_[* WhenEnterKey]&]
+[s2; Called when user presses Enter key while focus is in ArrayCtrl, 
+some line of ArrayCtrl has cursor and Enter key is not `'eaten`' 
+by another action like accepting the input. When this Callback 
+is not empty, Enter key is never passed to parent.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:ArrayCtrl`:`:WhenBar:%- [_^Callback1^ Callback1]<Bar[@(0.0.255) `&]>_[* WhenBar]&]
 [s2; This callback is called whenever the local array menu has to 
 be regenerated. By setting this callback to a different function 
