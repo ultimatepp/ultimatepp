@@ -185,6 +185,8 @@ private:
 	int           GetVertMove(int pos, int gx, RichContext rc, int dir) const;
 	RichHotPos    GetHotPos(int x, PageY y, int tolerance, RichContext rc) const;
 	void          AdjustSel(Rect& sel) const;
+	
+	int           GetWidth(const RichStyles& st) const;
 
 	void          GatherValPos(Vector<RichValPos>& f, RichContext rc, int pos, int type) const;
 	void          ClearSpelling();
@@ -206,7 +208,7 @@ public:
 	const RichTxt&          Get(int i, int j) const                { return cell[i][j].text; }
 	void                    SetQTF(int i, int j, const char *qtf);
 	void                    SetFormat(int i, int j, const RichCell::Format& fmt);
-	const RichCell::Format& GetFormat(int i, int j)                { return cell[i][j].format; }
+	const RichCell::Format& GetFormat(int i, int j) const          { return cell[i][j].format; }
 	bool                    operator()(int i, int j) const         { return ci[i][j].valid; }
 	void                    SetSpan(int i, int j, int vspan, int hspan);
 	Size                    GetSpan(int i, int j) const;
