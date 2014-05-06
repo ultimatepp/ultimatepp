@@ -172,6 +172,29 @@ void RichTable::Paint(PageDraw& pw, RichContext rc, const PaintInfo& _pi) const
 		pw.tracer->EndTable(rc.py);
 }
 
+int RichTable::GetWidth(const RichStyles& st) const
+{
+	Size sz = GetSize();
+	Buffer<int> col(sz.cx, 0);
+	
+	for(int x = 0; x < sz.cx; x++)
+		for(int y = 0; y < sz.cy; y++) {
+			const RichCell::Format& fmt = GetFormat(y, x);
+			col[x] = max(col[x], Get(y, x).GetWidth(st)
+			         + fmt.border.left + fmt.border.right + fmt.margin.left + fmt.margin.right);
+		}
+	
+	int sum = 0;
+	for(int i = 0; i < sz.cx; i++)
+		sum += format.column[i];
+
+	int maxcx = 0;
+	for(int i = 0; i < sz.cx; i++)
+		maxcx = max(maxcx, (col[i] * sum + format.column[i] - 1) / format.column[i]);
+	
+	return maxcx + (sz.cx + 1) * format.grid + format.lm + format.rm;
+}
+
 PageY RichTable::GetHeight(RichContext rc) const
 {
 	PageY pyy = Realize(rc).pyy;
