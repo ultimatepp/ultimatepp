@@ -145,14 +145,14 @@ String RichTextView::GetLink(int pos, Point p) const
 
 void RichTextView::RefreshRange(int a, int b)
 {
-	int l = min(a, b);
-	int h = max(a, b);
+	int l = max(min(a, b) - 1, 0); // Extend the range to cover 'weird' cases (line break)
+	int h = min(max(a, b) + 1, GetLength());
 	if(l == h)
 		return;
 	Rect r1 = text.GetCaret(l, GetPage());
 	Rect r2 = text.GetCaret(h, GetPage());
 	Zoom zoom = GetZoom();
-	Refresh(0, zoom * (r1.top - sb), GetSize().cx, zoom * (r2.bottom - sb + zoom.d - 1));
+	Refresh(Rect(0, zoom * (r1.top - sb), GetSize().cx, zoom * (r2.bottom - sb + zoom.d - 1)));
 }
 
 void  RichTextView::RefreshSel()
