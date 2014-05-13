@@ -21,6 +21,8 @@ void IconDraw::PutVert(int x, int y, int cy)
 	int b = minmax(y + cy, 0, image.GetHeight());
 	y = minmax(y, 0, image.GetHeight());
 	cy = b - y;
+	if(cy <= 0)
+		return;
 	RGBA *t = image[y] + x;
 	while(cy-- > 0) {
 		*t = docolor;
