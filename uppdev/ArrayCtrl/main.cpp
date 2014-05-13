@@ -11,6 +11,14 @@ struct App : TopWindow {
 		return a.Get(i1, 0) < a.Get(i2, 0);
 	}
 	
+	void DoTip(Point p)
+	{
+		if(p.y & 1)
+			a.Tip("Hello!");
+		else
+			a.Tip("");
+	}
+	
 	typedef App CLASSNAME;
 
 	App() {
@@ -23,6 +31,8 @@ struct App : TopWindow {
 		}
 	//	a.Sort(THISBACK(Order));
 		a.Sort();
+		
+		a.WhenMouseMove = THISBACK(DoTip);
 	}
 };
 
