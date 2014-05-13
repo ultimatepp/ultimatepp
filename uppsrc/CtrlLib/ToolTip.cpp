@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  // DLOG(x)
+#define LLOG(x)  DLOG(x)
 
 ToolTip::ToolTip()
 {
@@ -68,10 +68,10 @@ void ShowToolTip()
 		String text = tipctrl->GetTip();
 		LLOG("-> showing tip: " << text << " tipctrl: " << UPP::Name(tipctrl));
 		Ctrl *top = tipctrl->GetTopCtrl();
-		if(!text.IsEmpty() && top && (top->IsForeground() || top->IsPopUp())) {
+		ToolTip& q = AppToolTip();
+		q.Set(text);
+		if(text.GetCount() && top && (top->IsForeground() || top->IsPopUp())) {
 			LLOG("-> foreground");
-			ToolTip& q = AppToolTip();
-			q.Set(text);
 			Size sz = q.GetMinSize();
 			Rect r = Ctrl::GetMouseWorkArea();
 			Point p = GetMousePos() + Size(0, 22);
@@ -84,7 +84,7 @@ void ShowToolTip()
 		}
 		LLOG("-> background / empty text, top = " << UPP::Name(top));
 	}
-	SetTimeCallback(200, callback(EndShowMode), (void *)EndShowMode);
+	SetTimeCallback(500, callback(EndShowMode), (void *)EndShowMode);
 }
 
 void SyncToolTip(Ctrl *ctrl)
