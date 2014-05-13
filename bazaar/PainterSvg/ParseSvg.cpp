@@ -305,13 +305,27 @@ Array<double> GetTransformArgs(String str, const char *command) {
 		d = atof(str.Mid(pos, endpos-pos));
 		pos = endpos+1;
 	} 
-	if (!args.IsEmpty()) {
+	if (args.GetCount() < 2) {
 		if ((endpos = str.Find(')', pos)) >= 0) {
 			double &d = args.Add();
 			d = atof(str.Mid(pos, endpos-pos));
 		}
 	}
 	return args;
+}
+
+void ApplyTransf(Svg2DTransform &transf, XmlParser &xp, int id) {
+	Array<double> args;
+	args = GetTransformArgs(xp[id], "translate");
+	if (args.GetCount() == 1) 
+		transf.Translate(args[0], args[0]);
+	else if (args.GetCount() == 2) 
+		transf.Translate(args[0], args[1]);
+	args = GetTransformArgs(xp[id], "scale");
+	if (args.GetCount() == 1) 
+		transf.Scale(args[0], args[0]);			
+	else if (args.GetCount() == 2) 
+		transf.Scale(args[0], args[1]);						
 }
 
 void SvgPaint_Rect(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle style) {
@@ -329,15 +343,8 @@ void SvgPaint_Rect(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle s
 			height = atoi(xp[i]);
 		else if (attr == "style") 
 			style.Get(xp[i]);
-		else if (attr == "transform") {
-			Array<double> args;
-			args = GetTransformArgs(xp[i], "translate");
-			if (!args.IsEmpty()) 
-				transf.Translate(args[0], args[1]);
-			args = GetTransformArgs(xp[i], "scale");
-			if (!args.IsEmpty()) 
-				transf.Scale(args[0], args[1]);			
-		}
+		else if (attr == "transform") 
+			ApplyTransf(transf, xp, i);
 	}				
 	transf.Apply(sw);
 	sw.Rectangle(x, y, width, height);	
@@ -363,20 +370,23 @@ void SvgPaint_Image(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle 
 			fileName = xp[i];
 		else if (attr == "style") 
 			style.Get(xp[i]);
-		else if (attr == "transform") {
-			Array<double> args;
-			args = GetTransformArgs(xp[i], "translate");
-			if (!args.IsEmpty()) 
-				transf.Translate(args[0], args[1]);
-			args = GetTransformArgs(xp[i], "scale");
-			if (!args.IsEmpty()) 
-				transf.Scale(args[0], args[1]);			
-		}
+		else if (attr == "transform") 
+			ApplyTransf(transf, xp, i);		
 	}				
 	if (!FileExists(fileName))
 		fileName = AppendFileName(svgFolder, fileName);
 	transf.Apply(sw);
-	sw.Rectangle(x, y, width, height).Fill(StreamRaster::LoadFileAny(fileName), x, y, width, 0).Stroke(0, Black());
+	Image img = StreamRaster::LoadFileAny(fileName);
+	if (!IsNull(img))
+		sw.Rectangle(x, y, width, height).Fill(StreamRaster::LoadFileAny(fileName), x, y, width, 0).Stroke(0, Black());
+	else {
+		sw.Rectangle(x, y, width, height).Fill(White()).Stroke(1, Black());
+		int wh = 20;
+		sw.Move(x+5, y+5).Line(x+5+wh, y+5).Line(x+5+wh, y+5+wh).Line(x+5, y+5+wh).Line(x+5, y+5).Stroke(1, Black());
+		sw.Move(x+5+5, y+5+5).Line(x+5+wh-5, y+5+wh-5).Stroke(3, Red());
+		sw.Move(x+5+wh-5, y+5+5).Line(x+5+5, y+5+wh-5).Stroke(3, Red());
+		sw.Move(x, y);
+	}
 	style.Apply(sw);
 }
 
@@ -395,15 +405,8 @@ void SvgPaint_Ellipse(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyl
 			height = atoi(xp[i]);
 		else if (attr == "style") 
 			style.Get(xp[i]);
-		else if (attr == "transform") {
-			Array<double> args;
-			args = GetTransformArgs(xp[i], "translate");
-			if (!args.IsEmpty()) 
-				transf.Translate(args[0], args[1]);
-			args = GetTransformArgs(xp[i], "scale");
-			if (!args.IsEmpty()) 
-				transf.Scale(args[0], args[1]);			
-		}
+		else if (attr == "transform") 
+			ApplyTransf(transf, xp, i);		
 	}							
 	transf.Apply(sw);
 	sw.Ellipse(x, y, width, height);	
@@ -425,15 +428,8 @@ void SvgPaint_Line(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle s
 			y2 = atoi(xp[i]);
 		else if (attr == "style") 
 			style.Get(xp[i]);
-		else if (attr == "transform") {
-			Array<double> args;
-			args = GetTransformArgs(xp[i], "translate");
-			if (!args.IsEmpty()) 
-				transf.Translate(args[0], args[1]);
-			args = GetTransformArgs(xp[i], "scale");
-			if (!args.IsEmpty()) 
-				transf.Scale(args[0], args[1]);			
-		}
+		else if (attr == "transform") 
+			ApplyTransf(transf, xp, i);
 	}				
 	transf.Apply(sw);	
 	sw.Move(x1, y1);
@@ -480,15 +476,8 @@ void SvgPaint_Polygon(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyl
 			points = GetPolygonPointsXml(strpoints);
 		} else if (attr == "style") 
 			style.Get(xp[i]);
-		else if (attr == "transform") {
-			Array<double> args;
-			args = GetTransformArgs(xp[i], "translate");
-			if (!args.IsEmpty()) 
-				transf.Translate(args[0], args[1]);
-			args = GetTransformArgs(xp[i], "scale");
-			if (!args.IsEmpty()) 
-				transf.Scale(args[0], args[1]);			
-		}
+		else if (attr == "transform") 
+			ApplyTransf(transf, xp, i);		
 	}			
 	transf.Apply(sw);
 	sw.Move(points[0].x, points[0].y);
@@ -566,15 +555,8 @@ void SvgPaint_Path(Painter& sw, XmlParser &xp, Svg2DTransform transf, SvgStyle &
 			path = xp[i];
 		else if (attr == "style") 
 			style.Get(xp[i]);
-		else if (attr == "transform") {
-			Array<double> args;
-			args = GetTransformArgs(xp[i], "translate");
-			if (!args.IsEmpty()) 
-				transf.Translate(args[0], args[1]);
-			args = GetTransformArgs(xp[i], "scale");
-			if (!args.IsEmpty()) 
-				transf.Scale(args[0], args[1]);			
-		}
+		else if (attr == "transform") 
+			ApplyTransf(transf, xp, i);		
 	}		
 	transf.Apply(sw);	
 	if (!path.IsEmpty())
@@ -587,15 +569,8 @@ void SvgPaint_G(Painter& sw, XmlParser &xp, Svg2DTransform &transf, SvgStyle &st
 		String attr = xp.GetAttr(i);
 		if (attr == "style") 
 			style.Get(xp[i]);
-		else if (attr == "transform") {
-			Array<double> args;
-			args = GetTransformArgs(xp[i], "translate");
-			if (!args.IsEmpty()) 
-				transf.Translate(args[0], args[1]);
-			args = GetTransformArgs(xp[i], "scale");
-			if (!args.IsEmpty()) 
-				transf.Scale(args[0], args[1]);
-		}
+		else if (attr == "transform") 
+			ApplyTransf(transf, xp, i);
 	}		
 }
 
