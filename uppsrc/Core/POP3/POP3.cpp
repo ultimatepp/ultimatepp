@@ -8,6 +8,13 @@ void Pop3::Trace(bool b)
 	sPop3Trace = b;
 }
 
+Pop3& Pop3::Proxy(const char *p)
+{
+	proxy_port = 8080;
+	ParseProxyUrl(p, proxy_host, proxy_port);
+	return *this;
+}
+
 String Pop3::GetTimeStamp()
 {
 	int begin = data.Find('<');
@@ -169,6 +176,37 @@ bool Pop3::Login()
 			throw Exc(t_("Username is not specified."));
 		if(pass.IsEmpty())
 			throw Exc(t_("Password is nor specified."));
+		if(proxy_host.GetCount()) {
+			String host_port = host;
+			host_port << ':' << Nvl(port, ssl ? 995 : 110);
+			String data;
+			data << "CONNECT " << host_port << " HTTP/1.1\r\n"
+			     << "Host: " << host_port << "\r\n";
+			if(!IsNull(proxy_username))
+				data << "Proxy-Authorization: Basic "
+				     << Base64Encode(proxy_username + ':' + proxy_password) << "\r\n";
+			data << "\r\n";
+			LLOG("Trying to connect proxy " << proxy_host << ":" << proxy_port);
+			if(!Connect(proxy_host, proxy_port))
+				throw Exc("Unable to connect the proxy");
+			LLOG("About to send proxy request:\n" << data);
+			if(!PutAll(data))
+				throw Exc("Unable to send request to the proxy");
+			String response;
+			for(;;) {
+				String l = GetLine();
+				if(l.GetCount() == 0)
+					break;
+				LLOG("< " << l);
+				if(response.GetCount() == 0)
+					response = l;
+			}
+			LLOG("Proxy response: " << response);
+			if(!response.StartsWith("HTTP") || response.Find(" 2") < 0)
+				throw Exc("Invalid proxy reply: " + response);
+			LLOG("Connected via proxy");
+		}
+		else
 		if(!Connect(host, Nvl(port, ssl ? 995 : 110)))
 			throw Exc(GetErrorDesc());
 		LLOG(Format(t_("Opening connection to %s:%d."), host, port));
