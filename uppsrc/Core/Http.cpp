@@ -106,8 +106,7 @@ HttpRequest& HttpRequest::Url(const char *u)
 	return *this;
 }
 
-static
-void sParseProxyUrl(const char *p, String& proxy_host, int& proxy_port)
+void ParseProxyUrl(const char *p, String& proxy_host, int& proxy_port)
 {
 	const char *t = p;
 	while(*p && *p != ':')
@@ -120,14 +119,14 @@ void sParseProxyUrl(const char *p, String& proxy_host, int& proxy_port)
 HttpRequest& HttpRequest::Proxy(const char *url)
 {
 	proxy_port = 80;
-	sParseProxyUrl(url, proxy_host, proxy_port);
+	ParseProxyUrl(url, proxy_host, proxy_port);
 	return *this;
 }
 
 HttpRequest& HttpRequest::SSLProxy(const char *url)
 {
 	ssl_proxy_port = 8080;
-	sParseProxyUrl(url, ssl_proxy_host, ssl_proxy_port);
+	ParseProxyUrl(url, ssl_proxy_host, ssl_proxy_port);
 	return *this;
 }
 

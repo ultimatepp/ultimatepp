@@ -47,6 +47,23 @@ rue])&]
 Returns `*this for method chaining.&]
 [s3;%% &]
 [s4; &]
+[s5;:Pop3`:`:Proxy`(const String`&`,int`): [_^Pop3^ Pop3][@(0.0.255) `&]_[* Proxy]([@(0.0.255) c
+onst]_[_^String^ String][@(0.0.255) `&]_[*@3 host], [@(0.0.255) int]_[*@3 port])&]
+[s2;%% Sets HTTP CONNECT proxy for connection.&]
+[s3;%% &]
+[s4; &]
+[s5;:Pop3`:`:Proxy`(const char`*`): [_^Pop3^ Pop3][@(0.0.255) `&]_[* Proxy]([@(0.0.255) const
+]_[@(0.0.255) char]_`*[*@3 p])&]
+[s2;%% Sets HTTP CONNECT proxy for connection, parameter contains 
+host and port separated by `':`'.&]
+[s3;%% &]
+[s4; &]
+[s5;:Pop3`:`:ProxyAuth`(const String`&`,const String`&`): [_^Pop3^ Pop3][@(0.0.255) `&]_[* P
+roxyAuth]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 u], 
+[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 p])&]
+[s2;%% Sets the username and password for proxy..&]
+[s3;%% &]
+[s4; &]
 [s5;:Pop3`:`:GetMessageCount`(`): [@(0.0.255) int]_[* GetMessageCount]()&]
 [s2;%% Returns the number of currently available messages in the 
 POP3 mailbox. Returns `-1 on failure.&]

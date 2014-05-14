@@ -472,11 +472,11 @@ public:
 	HttpRequest&  ContentType(const String& a)            { contenttype = a; return *this; }
 	HttpRequest&  KeepAlive(bool ka = true)               { keep_alive = ka; return *this;}
 
-	HttpRequest&  Proxy(const String& host, int port)     { proxy_host = host; proxy_port = port; return *this; }
+	HttpRequest&  Proxy(const String& host, int port)            { proxy_host = host; proxy_port = port; return *this; }
 	HttpRequest&  Proxy(const char *p);
-	HttpRequest&  ProxyAuth(const String& u, const String& p) {  proxy_username = u; proxy_password = p; return *this; }
+	HttpRequest&  ProxyAuth(const String& u, const String& p)    {  proxy_username = u; proxy_password = p; return *this; }
 
-	HttpRequest&  SSLProxy(const String& host, int port)     { ssl_proxy_host = host; ssl_proxy_port = port; return *this; }
+	HttpRequest&  SSLProxy(const String& host, int port)         { ssl_proxy_host = host; ssl_proxy_port = port; return *this; }
 	HttpRequest&  SSLProxy(const char *p);
 	HttpRequest&  SSLProxyAuth(const String& u, const String& p) {  ssl_proxy_username = u; ssl_proxy_password = p; return *this; }
 
@@ -595,3 +595,5 @@ public:
 	
 	WebSocket()                                                     { Reset(); }
 };
+
+void ParseProxyUrl(const char *p, String& proxy_host, int& proxy_port);
