@@ -1,0 +1,11 @@
+description "Demostrates SuggestCtrl, string editor giving suggestions\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI SSE2";
+
