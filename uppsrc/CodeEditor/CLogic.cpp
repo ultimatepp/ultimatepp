@@ -64,10 +64,10 @@ void CSyntax::IndentInsert(CodeEditor& e, int chr, int count)
 	int len = l.GetLength();
 	WString tl;
 	int pos = e.GetPos(cl);
-	if(chr == '{' && cl > 0 && stmtline == cl - 1 && e.GetHighlight() >= 0) // TODO: Remove GetHighight
+	if(chr == '{' && cl > 0 && stmtline == cl - 1)
 		tl = e.GetWLine(cl - 1);
 	else
-	if(chr == '}' && blk.GetCount() && e.GetHighlight() >= 0) // TODO: Remove HetHighlight
+	if(chr == '}' && blk.GetCount())
 		tl = e.GetWLine(blk.Top());
 	else {
 		e.InsertChar(chr, 1);
