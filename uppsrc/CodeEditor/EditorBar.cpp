@@ -67,12 +67,11 @@ void EditorBar::Paint(Draw& w)
 	int y = 0;
 	int i = editor->GetScrollPos().y;
 	int cy = GetSize().cy;
-	bool hi_if = (hilite_if_endif && (editor->highlight == CodeEditor::HIGHLIGHT_CPP
-		|| editor->highlight == CodeEditor::HIGHLIGHT_CS
-		|| editor->highlight == CodeEditor::HIGHLIGHT_JAVA));
-	Vector<CodeEditor::IfState> previf;
+	String hl = editor->GetHighlight();
+	bool hi_if = (hilite_if_endif && findarg(hl, "cpp", "cs", "java") >= 0);
+	Vector<IfState> previf;
 	if(hi_if)
-		previf <<= editor->ScanSyntax(i).ifstack;
+		previf <<= editor->GetIfStack(i);
 	int ptri[2];
 	for(int q = 0; q < 2; q++)
 		ptri[q] = ptrline[q] >= 0 ? GetLineNo(ptrline[q]) : -1;
@@ -103,9 +102,9 @@ void EditorBar::Paint(Draw& w)
 			}
 		}
 		if(hi_if) {
-			Vector<CodeEditor::IfState> nextif;
+			Vector<IfState> nextif;
 			if(i < li.GetCount())
-				nextif <<= editor->ScanSyntax(i + 1).ifstack;
+				nextif <<= editor->GetIfStack(i + 1);
 			int pifl = previf.GetCount(), nifl = nextif.GetCount();
 			int dif = max(pifl, nifl);
 			if(--dif >= 0) {
@@ -113,20 +112,20 @@ void EditorBar::Paint(Draw& w)
 				char n = (dif < nifl ? nextif[dif].state : 0);
 				int wd = min(2 * (dif + 1), sz.cx);
 				int x = sz.cx - wd;
-				Color cn = CodeEditor::SyntaxState::IfColor(n);
+				Color cn = EditorSyntax::IfColor(n);
 				if(p == n)
 					w.DrawRect(x, y, 1, fy, cn);
 				else {
-					Color cp = CodeEditor::SyntaxState::IfColor(p);
+					Color cp = EditorSyntax::IfColor(p);
 					w.DrawRect(x, y, 1, hy, cp);
 					w.DrawRect(x, y + hy, wd, 1, Nvl(cn, cp));
 					w.DrawRect(x, y + hy, 1, fy - hy, cn);
 					if(--dif >= 0) {
 						x = sz.cx - min(2 * (dif + 1), sz.cx);
 						if(!p)
-							w.DrawRect(x, y, 1, hy, CodeEditor::SyntaxState::IfColor(dif < pifl ? previf[dif].state : 0));
+							w.DrawRect(x, y, 1, hy, EditorSyntax::IfColor(dif < pifl ? previf[dif].state : 0));
 						if(!n)
-							w.DrawRect(x, y + hy, 1, fy - hy, CodeEditor::SyntaxState::IfColor(dif < nifl ? nextif[dif].state : 0));
+							w.DrawRect(x, y + hy, 1, fy - hy, EditorSyntax::IfColor(dif < nifl ? nextif[dif].state : 0));
 					}
 				}
 			}

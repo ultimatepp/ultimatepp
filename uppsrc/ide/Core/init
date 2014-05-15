@@ -2,5 +2,4 @@
 #define _ide_Core_icpp_init_stub
 #include "Esc/init"
 #include "plugin/bz2/init"
-#include "coff/binobj/init"
 #endif

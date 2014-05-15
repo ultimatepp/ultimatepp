@@ -2,7 +2,7 @@
 
 IdeCalc::IdeCalc()
 {
-	Highlight(HIGHLIGHT_CALC);
+	Highlight("calc");
 	NoHorzScrollbar();
 	HideBar();
 }
