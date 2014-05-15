@@ -555,6 +555,17 @@ ctrl EditString {
 	}
 }
 
+ctrl SuggestCtrl {
+	>EditString;
+
+	PaintData(w) {
+		text = (.NotNull ? "!" : "") + "SuggestCtrl";
+		if(.MaxLen != "")
+			text << "(" << .MaxLen << ")";
+		PaintText(w, text);
+	}
+}
+
 fn IntStr(x)
 {
 	return x == :IntNull || x < :DblNullLim ? "" : to_string(x);
