@@ -44,6 +44,7 @@ class Bar;
 #include <CtrlLib/SliderCtrl.h>
 #include <CtrlLib/ColumnList.h>
 #include <CtrlLib/DateTimeCtrl.h>
+#include <CtrlLib/SuggestCtrl.h>
 
 #define  LAYOUTFILE <CtrlLib/Ctrl.lay>
 #include <CtrlCore/lay.h>

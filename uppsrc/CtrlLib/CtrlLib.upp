@@ -55,6 +55,8 @@ file
 	Help.cpp,
 	DateTimeCtrl.h,
 	DateTimeCtrl.cpp,
+	SuggestCtrl.h,
+	SuggestCtrl.cpp,
 	Bar readonly separator,
 	Bar.h,
 	Bar.cpp,
