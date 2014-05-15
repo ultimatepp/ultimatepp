@@ -188,7 +188,7 @@ void Ide::ReadHlStyles(ArrayCtrl& hlstyle)
 {
 	hlstyle.Clear();
 	for(int i = 0; i < CodeEditor::HL_COUNT; i++) {
-		const CodeEditor::HlStyle& s = editor.GetHlStyle(i);
+		const HlStyle& s = editor.GetHlStyle(i);
 		hlstyle.Add(editor.GetHlName(i), s.color, s.bold, s.italic, s.underline);
 	}
 }

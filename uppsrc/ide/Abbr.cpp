@@ -71,7 +71,7 @@ AbbreviationsDlg::AbbreviationsDlg()
 	add <<= THISBACK(Add);
 	remove <<= THISBACK(Remove);
 	edit <<= THISBACK(Edit);
-	code.Highlight(CodeEditor::HIGHLIGHT_CPP);
+	code.Highlight("cpp");
 	code.ShowTabs();
 	Sync();
 }

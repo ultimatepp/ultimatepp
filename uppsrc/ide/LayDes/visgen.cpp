@@ -163,7 +163,7 @@ VisGenDlg::VisGenDlg(LayoutData& layout, const Vector<int>& cursor)
 	quotes2 <<=
 	name2 <<= THISBACK(Refresh);
 	Refresh();
-	view.Highlight(CodeEditor::HIGHLIGHT_CPP);
+	view.Highlight("cpp");
 	view.HideBar();
 	view.SetFont(Courier(12));
 	if(cursor.GetCount())

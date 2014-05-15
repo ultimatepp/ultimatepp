@@ -2,50 +2,19 @@
 
 void Ide::SetupEditor(int f, String hl, String fn)
 {
-	String ext = ToLower(GetFileExt(fn));
+	if(IsNull(hl)) {
+		hl = EditorSyntax::GetSyntaxForFilename(fn);
+		if(IsNull(hl))		
+			hl = EditorSyntax::GetSyntaxForFilename(ToLower(fn));
+	}
 	switch(f) {
 	case 1:  editor.SetFont(font1); break;
 	case 2:  editor.SetFont(font2); break;
 	case 3:  editor.SetFont(consolefont); break;
 	default: editor.SetFont(editorsplit.GetZoom() < 0 && editorsplit.IsHorz() ? veditorfont :
-	                        ext == ".t" ? tfont : editorfont); break;
+	                        hl == "t" ? tfont : editorfont); break;
 	}
-	if(IsNull(hl) && *ext == '.')
-		hl = ext.Mid(1);
-	if(findarg(hl, "c", "cpp", "cc", "cxx", "h", "hpp", "hh", "hxx", "m", "mm", "icpp", "conf") >= 0)
-		editor.Highlight(CodeEditor::HIGHLIGHT_CPP);
-	else
-	if(hl == "cs")
-		editor.Highlight(CodeEditor::HIGHLIGHT_CS);
-	else
-	if(hl == "usc")
-		editor.Highlight(CodeEditor::HIGHLIGHT_USC);
-	else
-	if(hl == "java")
-		editor.Highlight(CodeEditor::HIGHLIGHT_JAVA);
-	else
-	if(hl == "js")
-		editor.Highlight(CodeEditor::HIGHLIGHT_JAVASCRIPT);
-	else
-	if(hl == "css")
-		editor.Highlight(CodeEditor::HIGHLIGHT_CSS);
-	else
-	if(hl == "json")
-		editor.Highlight(CodeEditor::HIGHLIGHT_JSON);
-	else
-	if(hl == "t" || hl == "jt")
-		editor.Highlight(CodeEditor::HIGHLIGHT_T);
-	else
-	if(hl == "lay")
-		editor.Highlight(CodeEditor::HIGHLIGHT_LAY);
-	else
-	if(hl == "sch")
-		editor.Highlight(CodeEditor::HIGHLIGHT_SCH);
-	else
-	if(hl == "sql" || hl == "ddl")
-		editor.Highlight(CodeEditor::HIGHLIGHT_SQL);
-	else
-		editor.Highlight(CodeEditor::HIGHLIGHT_NONE);
+	editor.Highlight(hl);
 }
 
 void Ide::SetupEditor()
@@ -127,15 +96,11 @@ void Ide::FileProperties()
 	d.font.Add(2, "Special");
 	d.font.Add(3, "Console");
 	d.highlight.Add(Null, "Default");
-	d.highlight.Add("cpp", "C++");
-	d.highlight.Add("cs", "C#");
-	d.highlight.Add("java", "Java");
-	d.highlight.Add("js", "JavaScript");
-	d.highlight.Add("css", "CSS");
-	d.highlight.Add("sql", "SQL");
-	d.highlight.Add("usc", "Esc");
-	d.highlight.Add("sch", "DB schema");
-	d.highlight.Add("lay", "Layout");
+	for(int i = 0; i < EditorSyntax::GetSyntaxCount(); i++) {
+		String desc = EditorSyntax::GetSyntaxDescription(i);
+		if(desc.GetCount())
+			d.highlight.Add(EditorSyntax::GetSyntax(i), desc);
+	}
 	d.tabsize <<= f.tabsize > 0 ? f.tabsize : Null;
 	d.tabsize <<= d.Breaker(111);
 	d.tabsize.MinMax(1, 100);
