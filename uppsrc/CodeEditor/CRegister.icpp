@@ -1,0 +1,33 @@
+#include "CodeEditor.h"
+
+NAMESPACE_UPP
+
+void CreateCSyntax(One<EditorSyntax>& e, int kind)
+{
+	CSyntax& s = e.Create<CSyntax>();
+	s.SetHighlight(kind);
+}
+
+void RegisterCSyntax(const char *id, int kind,
+                     const char *exts, const char *description) {
+	EditorSyntax::Register(id, callback1(CreateCSyntax, kind), exts, description);
+}
+
+INITBLOCK {
+	RegisterCSyntax("cpp", CSyntax::HIGHLIGHT_CPP,
+	                "*.c *.cpp *.cc *.cxx *.h *.hpp *.hh *.hxx *.m *.mm *.icpp *.conf",
+	                "C/C++");
+	RegisterCSyntax("java", CSyntax::HIGHLIGHT_JAVA, "*.java", "Java");
+	RegisterCSyntax("js", CSyntax::HIGHLIGHT_JAVASCRIPT, "*.js", "JavaScript");
+	RegisterCSyntax("cs", CSyntax::HIGHLIGHT_CS, "*.cs", "C#");
+	RegisterCSyntax("json", CSyntax::HIGHLIGHT_JSON, "*.json", "JSON");
+	RegisterCSyntax("css", CSyntax::HIGHLIGHT_CSS, "*.css", "Cascading Style Sheet");
+	RegisterCSyntax("sql", CSyntax::HIGHLIGHT_SQL, "*.sql", "SQL script");
+	RegisterCSyntax("lay", CSyntax::HIGHLIGHT_LAY, "*.lay", "U++ layout (.lay)");
+	RegisterCSyntax("sch", CSyntax::HIGHLIGHT_SCH, "*.sch", "U++ SQL schema (.sch)");
+	RegisterCSyntax("t", CSyntax::HIGHLIGHT_T, "*.t *.jt", "U++ translation (.t)");
+	RegisterCSyntax("usc", CSyntax::HIGHLIGHT_USC, "*.usc", "U++ widget definitions (.usc)");
+	RegisterCSyntax("calc", CSyntax::HIGHLIGHT_CALC, "", "");
+}
+
+END_UPP_NAMESPACE
