@@ -1,0 +1,4 @@
+#ifndef _ceditor_icpp_init_stub
+#define _ceditor_icpp_init_stub
+#include "CodeEditor/init"
+#endif
