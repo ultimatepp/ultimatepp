@@ -49,7 +49,7 @@ GUI_APP_MAIN
 	};
 
 	for(int i = 0; i < __countof(cpp); i++)
-		ctrl.Add(cpp[i]);
+		ctrl.AddList(cpp[i]);
 	ctrl.Delimiter(Sep);
 	ctrl.CompareFilter(CharFilterToUpperAscii);
 	win.Add(ctrl.HSizePos().TopPos(0));
