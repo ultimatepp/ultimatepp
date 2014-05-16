@@ -48,8 +48,15 @@ void TopWindow::SyncCaption()
 	GuiLock __;
 	SyncTitle();
 	if(top) {
+		GList *icons = NULL;
 		if(gdk_icon.Set(icon))
-			gtk_window_set_icon(gtk(), gdk_icon);
+			icons = g_list_append(icons, gdk_icon);
+		if(gdk_largeicon.Set(largeicon))
+			icons = g_list_append(icons, gdk_largeicon);
+		if(icons != NULL) {
+			gtk_window_set_icon_list(gtk(), icons);
+			g_list_free(icons);
+		}
 		gtk_window_set_decorated(gtk(), !frameless);
 		gtk_window_set_urgency_hint(gtk(), urgent);
 	}

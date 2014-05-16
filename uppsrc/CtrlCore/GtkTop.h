@@ -1,5 +1,6 @@
 //$ class TopWindow : Ctrl {
 	ImageGdk gdk_icon;
+	ImageGdk gdk_largeicon;
 	bool     topmost;
 	
 	enum { FULLSCREEN = 99 };
