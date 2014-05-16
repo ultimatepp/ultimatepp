@@ -50,22 +50,25 @@ void LngParseCFile(const String& fn, VectorMap<String, LngEntry>& lng)
 {
 	String data = LoadFile(fn);
 	CParser p(data, fn);
-	while(!p.IsEof()) {
-		if((p.Id("t_") || p.Id("tt_")) && p.Char('('))
-			if(p.IsString()) {
-				String tid = p.ReadString();
-				LngEntry& le = lng.GetAdd(tid);
-				le.text.GetAdd(LNG_enUS) = GetENUS(tid);
-				le.AddFileLine(p);
-				le.added = true;
-				if(!p.Char(')'))
+	try {
+		while(!p.IsEof()) {
+			if((p.Id("t_") || p.Id("tt_")) && p.Char('('))
+				if(p.IsString()) {
+					String tid = p.ReadString();
+					LngEntry& le = lng.GetAdd(tid);
+					le.text.GetAdd(LNG_enUS) = GetENUS(tid);
+					le.AddFileLine(p);
+					le.added = true;
+					if(!p.Char(')'))
+						t_error(p);
+				}
+				else
 					t_error(p);
-			}
 			else
-				t_error(p);
-		else
-			p.SkipTerm();
+				p.SkipTerm();
+		}
 	}
+	catch(CParser::Error) {}
 }
 
 const Index<int>& LngIndex()
