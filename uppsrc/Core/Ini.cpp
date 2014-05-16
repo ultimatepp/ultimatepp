@@ -31,11 +31,15 @@ static void LoadIniStream(Stream& in, VectorMap<String, String>& key, const char
 								s++;
 							}
 							else {
-								while(*s == ' ')
-									s++;
 								String id;
-								while(iscid(*s))
-									id.Cat(*s++);
+								if (*s == '{') {
+									while(*++s != '}')
+										id.Cat(*s);
+									s++;
+								} else {
+									while(iscid(*s))
+										id.Cat(*s++);
+								}
 								hh.Cat(GetEnv(id));
 							}
 						}
