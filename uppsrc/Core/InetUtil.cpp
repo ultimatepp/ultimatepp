@@ -49,7 +49,7 @@ bool ScanWwwTime(const char *s, Time& tm)
 		tm.minute = p.ReadInt(0, 59);
 		if(p.Char(':'))
 		   tm.second = p.ReadInt(0, 59);
-		tm += 60 * (ScanTimeZone(p.GetPtr()) - GetTimeZone());
+		tm += 60 * (GetTimeZone() - ScanTimeZone(p.GetPtr()));
 	}
 	catch(CParser::Error) {
 		return false;
