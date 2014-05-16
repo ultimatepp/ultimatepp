@@ -29,10 +29,12 @@ topic "";
 [s2;%% Clears the suggestions list.&]
 [s3; &]
 [s4; &]
-[s5;:SuggestCtrl`:`:Add`(const WString`&`): [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[_^WString^ W
-String][@(0.0.255) `&]_[*@3 s])&]
-[s5;:SuggestCtrl`:`:Add`(const String`&`): [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[_^String^ S
-tring][@(0.0.255) `&]_[*@3 s])&]
+[s5;:SuggestCtrl`:`:AddList`(const WString`&`): [@(0.0.255) void]_[* AddList]([@(0.0.255) c
+onst]_[_^WString^ WString][@(0.0.255) `&]_[*@3 s])&]
+[s5;:SuggestCtrl`:`:AddList`(const String`&`): [@(0.0.255) void]_[* AddList]([@(0.0.255) co
+nst]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
+[s5;:SuggestCtrl`:`:AddList`(const char`*`): [@(0.0.255) void]_[* AddList]([@(0.0.255) cons
+t]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2;%% Adds [%-*@3 s] to suggestions list.&]
 [s3;%% &]
 [s4;%% &]

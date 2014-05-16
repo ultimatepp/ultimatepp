@@ -57,20 +57,22 @@ void SuggestCtrl::Select()
 bool SuggestCtrl::Key(dword key, int count)
 {
 	if(list.IsOpen()) {
-		if(key == K_UP || key == K_PAGEUP || key == K_CTRL_PAGEDOWN)
+		if(key == K_UP || key == K_PAGEUP || key == K_CTRL_PAGEDOWN) {
 			if(list.IsCursor())
 				return list.Key(key, count);
 			else {
 				list.GoEnd();
 				return true;
 			}
-		if(key == K_DOWN || key == K_PAGEDOWN || key == K_CTRL_PAGEUP)
+		}
+		if(key == K_DOWN || key == K_PAGEDOWN || key == K_CTRL_PAGEUP) {
 			if(list.IsCursor())
 				return list.Key(key, count);
 			else {
 				list.GoBegin();
 				return true;
 			}
+		}
 	}
 	if(key == K_ENTER && list.IsOpen() && list.IsCursor()) {
 		Select();
