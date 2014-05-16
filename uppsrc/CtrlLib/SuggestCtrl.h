@@ -22,8 +22,9 @@ private:
 
 public:
 	void ClearList()                                  { data.Clear(); }
-	void Add(const WString& s)                        { data.Add(s); }
-	void Add(const String& s)                         { data.Add(s.ToWString()); }
+	void AddList(const WString& s)                    { data.Add(s); }
+	void AddList(const String& s)                     { data.Add(s.ToWString()); }
+	void AddList(const char *s)                       { data.Add(s); }
 
 	void Pick(Vector<WString> rval_ list)             { data = pick(list); }
 	
