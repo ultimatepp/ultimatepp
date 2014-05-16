@@ -536,7 +536,6 @@ void Ctrl::GetWorkArea(Array<Rect>& out)
 Rect Ctrl::GetWorkArea() const
 {
 	GuiLock __;
-	SyncMousePos();
 	
 	static Array<Rect> rc;
 	if (rc.IsEmpty())
