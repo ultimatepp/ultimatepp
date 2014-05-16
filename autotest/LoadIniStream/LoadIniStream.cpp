@@ -19,6 +19,7 @@ CONSOLE_APP_MAIN
 		{ "included", "included_value" },
 		{ "delta", "delta_value" },
 		{ "etest", GetEnv("UPP_MAIN__") },
+		{ "braces", GetEnv("UPP_MAIN__")+"123" },
 		{ "var", "file://" + GetEnv("UPP_MAIN__") },
 	};
 	ASSERT(map.GetCount() == __countof(et));
