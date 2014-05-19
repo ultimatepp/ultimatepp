@@ -98,7 +98,7 @@ public:
 	virtual void            ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size);
 	virtual void            Serialize(Stream& s);
 	virtual void            IndentInsert(CodeEditor& editor, int chr, int count);
-	virtual bool            CheckBrackets(CodeEditor& e, int& bpos0, int& bpos);
+	virtual bool            CheckBrackets(CodeEditor& e, int& bpos0, int& bpos); // TODO: Replace with generic mechanism
 	virtual bool            CanAssist() const;
 	virtual void            Highlight(CodeEditor& editor, int line, Vector<LineEdit::Highlight>& hl, int pos);
 	virtual Vector<IfState> PickIfStack();
