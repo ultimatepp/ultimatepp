@@ -75,32 +75,32 @@ inline bool RBR(int c) {
 	return isbrkt(c);
 }
 
-void CodeEditor::CheckBraces(const WString& text)
+void CodeEditor::CheckSyntaxRefresh(int pos, const WString& text)
 {
-	for(const wchar *s = text; *s; s++)
-		if(*s == '{' || *s == '(' || *s == '[' || *s == '/' || *s == '*' ||
-		   *s == '}' || *s == ')' || *s == ']' || *s == '\\') {
-			Refresh();
-			break;
-		}
+	GetSyntax(GetLine(pos))->CheckSyntaxRefresh(*this, pos, text);
 }
 
 void CodeEditor::PostInsert(int pos, const WString& text) {
 	if(check_edited)
 		bar.SetEdited(GetLine(pos));
 	if(IsFullRefresh()) return;
-	if(text.GetCount() > 200)
+	if(text.GetCount() > 200 || text.Find('\n') >= 0)
 		Refresh();
 	else
-		CheckBraces(text);
+		CheckSyntaxRefresh(pos, text);
 }
 
 void CodeEditor::PreRemove(int pos, int size) {
 	if(IsFullRefresh()) return;
 	if(size > 200)
 		Refresh();
-	else
-		CheckBraces(GetW(pos, size));
+	else {
+		WString text = GetW(pos, size);
+		if(text.Find('\n') >= 0)
+			Refresh();
+		else
+			CheckSyntaxRefresh(pos, text);
+	}
 }
 
 void CodeEditor::PostRemove(int pos, int size) {

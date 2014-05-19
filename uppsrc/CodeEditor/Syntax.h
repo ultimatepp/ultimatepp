@@ -101,6 +101,7 @@ public:
 	virtual void            Serialize(Stream& s);
 	virtual void            IndentInsert(CodeEditor& editor, int chr, int count);
 	virtual bool            CheckBrackets(CodeEditor& e, int& bpos0, int& bpos); // TODO: Replace with generic mechanism
+	virtual void            CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text);
 	virtual bool            CanAssist() const;
 	virtual void            Highlight(const wchar *s, const wchar *end, HighlightOutput& hls,
 	                                  CodeEditor *editor, int line, int pos);

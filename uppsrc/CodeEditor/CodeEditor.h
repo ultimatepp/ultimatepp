@@ -169,7 +169,7 @@ struct FindReplaceDlg : WithIDEFindReplaceLayout<TopWindow> {
 
 #include "Syntax.h"
 #include "CSyntax.h"
-#include "XmlSyntax.h"
+#include "TagSyntax.h"
 
 class CodeEditor : public LineEdit,
 public HighlightSetup //TODO:SYNTAX
@@ -280,7 +280,7 @@ protected:
 	void   FindWildcard();
 	void   ReplaceWildcard();
 	void   InsertWildcard(int c);
-	void   CheckBraces(const WString& text);
+	void   CheckSyntaxRefresh(int pos, const WString& text);
 
 	void   SetFound(int fi, int type, const WString& text);
 

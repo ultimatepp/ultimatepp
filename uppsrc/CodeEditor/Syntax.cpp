@@ -50,6 +50,10 @@ Color EditorSyntax::IfColor(char c)
 	}
 }
 
+void EditorSyntax::CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text)
+{
+}
+
 EditorSyntax::~EditorSyntax() {}
 
 END_UPP_NAMESPACE
