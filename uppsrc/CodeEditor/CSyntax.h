@@ -8,6 +8,7 @@ public:
 	virtual bool            CanAssist() const;
 	virtual void            Highlight(const wchar *s, const wchar *end, HighlightOutput& hls,
 	                                  CodeEditor *editor, int line, int pos);
+	virtual void            CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text);
 	virtual Vector<IfState> PickIfStack(); // TODO: Refactor?
 
 private:
