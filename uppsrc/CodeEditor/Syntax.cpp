@@ -29,7 +29,7 @@ bool EditorSyntax::CanAssist() const
 	return false;
 }
 
-void EditorSyntax::Highlight(CodeEditor& editor, int line, Vector<LineEdit::Highlight>& hl, int pos)
+void EditorSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int pos)
 {
 }
 

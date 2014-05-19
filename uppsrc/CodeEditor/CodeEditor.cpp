@@ -874,7 +874,9 @@ void CodeEditor::SetLineInfo(const LineInfo& lf)
 void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int pos)
 {
 	CTIMING("HighlightLine");
-	GetSyntax(line)->Highlight(*this, line, hl, pos);
+	HighlightOutput hls(hl);
+	WString l = GetWLine(line);
+	GetSyntax(line)->Highlight(l.Begin(), l.End(), hls, this, line, pos);
 }
 
 void CodeEditor::PutI(WithDropChoice<EditString>& edit)

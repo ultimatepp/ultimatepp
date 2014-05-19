@@ -67,6 +67,13 @@ void HighlightOutput::SetInk(int pos, int count, Color ink)
 		v[pos++].ink = ink;
 }
 
+void HighlightOutput::Put(int count, const HlStyle& ink, const HlStyle& paper)
+{
+	Set(pos, count, ink);
+	SetPaper(pos, count, paper.color);
+	pos += count;
+}
+
 const wchar *HighlightOutput::CString(const wchar *p)
 {
 	Put(hl_style[INK_CONST_STRING]);

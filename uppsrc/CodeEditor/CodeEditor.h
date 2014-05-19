@@ -168,6 +168,8 @@ struct FindReplaceDlg : WithIDEFindReplaceLayout<TopWindow> {
 };
 
 #include "Syntax.h"
+#include "CSyntax.h"
+#include "XmlSyntax.h"
 
 class CodeEditor : public LineEdit,
 public HighlightSetup //TODO:SYNTAX

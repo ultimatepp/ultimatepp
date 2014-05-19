@@ -35,64 +35,64 @@ Color CSyntax::BlockColor(int level)
 	return GetHlStyle(PAPER_NORMAL).color;
 }
 
-void CSyntax::Bracket(int pos, HighlightOutput& hls, CodeEditor& editor) // TODO:SYNTAX: Cleanup passing bracket info
+void CSyntax::Bracket(int pos, HighlightOutput& hls, CodeEditor *editor) // TODO:SYNTAX: Cleanup passing bracket info
 {
-	if(editor.IsCursorBracket(pos)) {
+	if(!editor)
+		return;
+	if(editor->IsCursorBracket(pos)) {
 		HlStyle& h = hl_style[PAPER_BRACKET0];
 		hls.SetPaper(hls.pos, 1, h.color);
 		hls.SetFont(hls.pos, 1, h);
 	}
-	if(editor.IsMatchingBracket(pos)) {
+	if(editor->IsMatchingBracket(pos)) {
 		HlStyle& h = hl_style[PAPER_BRACKET];
 		hls.SetPaper(hls.pos, 1, h.color);
 		hls.SetFont(hls.pos, 1, h);
 	}
 }
 
-void CSyntax::Highlight(CodeEditor& editor, int line, Vector<LineEdit::Highlight>& hl, int pos)
+void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls, CodeEditor *editor, int line, int pos)
 {
 	ONCELOCK {
 		InitKeywords();
 	}
 	
+	int tabsize = editor ? editor->GetTabSize() : 4;
+	
 	LTIMING("HighlightLine");
 	if(highlight < 0 || highlight >= keyword.GetCount())
 		return;
-	WString text = editor.GetWLine(line);
-	One<EditorSyntax> ess = editor.GetSyntax(line);
-	CSyntax *ss = dynamic_cast<CSyntax *>(~ess);
-	
 	CSyntax next;
-	next.Set(ss->Get());
-	next.ScanSyntax(~text, text.End(), line + 1, editor.GetTabSize());
+	next.Set(Get());
+	next.ScanSyntax(ltext, e, line + 1, tabsize);
 	bool macro = next.macro != MACRO_OFF;
 	
-	ss->Grounding(text.Begin(), text.End());
-	HighlightOutput hls(hl);
-	const wchar *p = text;
-	const wchar *e = text.End();
+	int linelen = e - ltext;
+	const wchar *p = ltext;
+	
+	Grounding(p, e);
 	if(highlight == HIGHLIGHT_CALC) {
-		if(line == editor.GetLineCount() - 1 || *p == '$')
-			hls.SetPaper(0, text.GetLength() + 1, hl_style[PAPER_BLOCK1].color);
+		if(editor && line == editor->GetLineCount() - 1 || *p == '$')
+			hls.SetPaper(0, linelen + 1, hl_style[PAPER_BLOCK1].color);
 	}
 	else
-		hls.SetPaper(0, text.GetLength() + 1,
+		hls.SetPaper(0, linelen + 1,
 		             macro ? hl_style[PAPER_MACRO].color : hl_style[PAPER_NORMAL].color);
-	int block_level = ss->bid.GetCount() - 1;
+	int block_level = bid.GetCount() - 1;
 	String cppid;
-	if(!ss->comment && highlight != HIGHLIGHT_CALC) {
+	if(!comment && highlight != HIGHLIGHT_CALC) {
 		if(!macro) {
-			int i = 0, bid = 0, pos = 0, tabsz = editor.GetTabSize();
-			while(bid < ss->bid.GetCount() - 1
-			&& (i >= text.GetLength() || text[i] == ' ' || text[i] == '\t')) {
+			int i = 0, bid = 0, pos = 0;
+			while(bid < this->bid.GetCount() - 1
+			&& (i >= linelen || p[i] == ' ' || p[i] == '\t')) {
 				hls.SetPaper(i, 1, BlockColor(bid));
-				if(i < text.GetLength() && text[i] == '\t' || ++pos >= tabsz) {
+				if(i < linelen && p[i] == '\t' || ++pos >= tabsize) {
 					pos = 0;
 					bid++;
 				}
 				i++;
 			}
-			hls.SetPaper(i, 1 + max(0, text.GetLength() - i), BlockColor(ss->bid.GetCount() - 1));
+			hls.SetPaper(i, 1 + max(0, linelen - i), BlockColor(this->bid.GetCount() - 1));
 		}
 		while(*p == ' ' || *p == '\t') {
 			p++;
@@ -120,80 +120,80 @@ void CSyntax::Highlight(CodeEditor& editor, int line, Vector<LineEdit::Highlight
 			p = q;
 		}
 	}
-	int lindent = int(p - ~text);
+	int lindent = int(p - ltext);
 	int lbrace = -1;
 	int lbclose = -1;
 	Color lbcolor = Null;
 	bool is_comment = false;
 	while(p < e) {
 		int pair = MAKELONG(p[0], p[1]);
-		if(ss->linecomment && ss->linecont || pair == MAKELONG('/', '/') && highlight != HIGHLIGHT_CSS && highlight != HIGHLIGHT_JSON) {
-			hls.Put(text.GetLength() + 1 - hls.pos, hl_style[INK_COMMENT]);
+		if(linecomment && linecont || pair == MAKELONG('/', '/') && highlight != HIGHLIGHT_CSS && highlight != HIGHLIGHT_JSON) {
+			hls.Put(linelen + 1 - hls.pos, hl_style[INK_COMMENT]);
 			is_comment = true;
 			break;
 		}
 		else
-		if(ss->comment && highlight != HIGHLIGHT_JSON)
+		if(comment && highlight != HIGHLIGHT_JSON)
 			if(pair == MAKELONG('*', '/')) {
 				hls.Put(2, hl_style[INK_COMMENT]);
 				p += 2;
-				ss->comment = false;
+				comment = false;
 			}
 			else {
 				hls.Put(hl_style[INK_COMMENT]);
 				p++;
 			}
 		else
-		if((*p == '\"' || *p == '\'') || ss->linecont && ss->string)
+		if((*p == '\"' || *p == '\'') || linecont && string)
 			p = hls.CString(p);
 		else
 		if(pair == MAKELONG('/', '*') && highlight != HIGHLIGHT_JSON) {
 			hls.Put(2, hl_style[INK_COMMENT]);
 			p += 2;
-			ss->comment = true;
+			comment = true;
 			is_comment = true;
 		}
 		else
 		if(*p == '(') {
-			ss->brk.Add(')');
-			Bracket(int(p - text) + pos, hls, editor);
-			hls.Put(hl_style[INK_PAR0 + max(ss->pl++, 0) % 4]);
+			brk.Add(')');
+			Bracket(int(p - ltext) + pos, hls, editor);
+			hls.Put(hl_style[INK_PAR0 + max(pl++, 0) % 4]);
 			p++;
 		}
 		else
 		if(*p == '{') {
-			ss->brk.Add(ss->was_namespace ? 0 : '}');
-			Bracket(int(p - text) + pos, hls, editor);
-			hls.Put(hl_style[INK_PAR0 + max(ss->cl, 0) % 4]);
-			if(ss->was_namespace)
-				ss->was_namespace = false;
+			brk.Add(was_namespace ? 0 : '}');
+			Bracket(int(p - ltext) + pos, hls, editor);
+			hls.Put(hl_style[INK_PAR0 + max(cl, 0) % 4]);
+			if(was_namespace)
+				was_namespace = false;
 			else {
 				++block_level;
-				++ss->cl;
+				++cl;
 			}
-			if(hls.pos < text.GetCount())
-				hls.SetPaper(hls.pos, text.GetCount() - hls.pos + 1, BlockColor(block_level));
+			if(hls.pos < linelen)
+				hls.SetPaper(hls.pos, linelen - hls.pos + 1, BlockColor(block_level));
 			p++;
 		}
 		else
 		if(*p == '[') {
-			ss->brk.Add(']');
-			Bracket(int(p - text) + pos, hls, editor);
-			hls.Put(hl_style[INK_PAR0 + max(ss->bl++, 0) % 4]);
+			brk.Add(']');
+			Bracket(int(p - ltext) + pos, hls, editor);
+			hls.Put(hl_style[INK_PAR0 + max(bl++, 0) % 4]);
 			p++;
 		}
 		else
 		if(*p == ')' || *p == '}' || *p == ']') {
-			int bl = ss->brk.GetCount();
-			int bc = bl ? ss->brk.Pop() : 0;
+			int bl = brk.GetCount();
+			int bc = bl ? brk.Pop() : 0;
 			if(*p == '}' && hilite_scope && block_level > 0 && bc)
-				hls.SetPaper(hls.pos, text.GetLength() + 1 - hls.pos, BlockColor(--block_level));
-			Bracket(int(p - text) + pos, hls, editor);
-			int& l = *p == ')' ? ss->pl : *p == '}' ? ss->cl : ss->bl;
+				hls.SetPaper(hls.pos, linelen + 1 - hls.pos, BlockColor(--block_level));
+			Bracket(int(p - ltext) + pos, hls, editor);
+			int& l = *p == ')' ? pl : *p == '}' ? cl : bl;
 			if(bc && (bc != *p || l <= 0) || bc == 0 && *p != '}') {
-				hls.Put(p == ~text ? hl_style[INK_PAR0] : hl_style[INK_ERROR]);
-				ss->brk.Clear();
-				ss->cl = ss->bl = ss->pl = 0;
+				hls.Put(p == ltext ? hl_style[INK_PAR0] : hl_style[INK_ERROR]);
+				brk.Clear();
+				cl = bl = pl = 0;
 			}
 			else {
 				if(bc) --l;
@@ -239,10 +239,6 @@ void CSyntax::Highlight(CodeEditor& editor, int line, Vector<LineEdit::Highlight
 				        c == INK_CONST_OCT || (fixdigits < 4 && n - fixdigits < 5) || i == fixdigits || !thousands_separator ? 0 :
 				        i < fixdigits ? decode((fixdigits - i) % 3, 1, LineEdit::SHIFT_L, 0, LineEdit::SHIFT_R, 0) :
 				                        decode((i - fixdigits) % 3, 1, LineEdit::SHIFT_R, 0, LineEdit::SHIFT_L, 0));
-
-//				hls.Put(q > 0 && ((q / 3) & 1) == 1 && c != INK_CONST_OCT ?
-//				        hl_style[c == INK_CONST_INT ? INK_CONST_INT_3 : INK_CONST_FLOAT_3]
-//				        : hl_style[c]);
 		}
 		else
 		if(pair == MAKELONG('t', '_') && p[2] == '(' && p[3] == '\"') {
@@ -288,37 +284,37 @@ void CSyntax::Highlight(CodeEditor& editor, int line, Vector<LineEdit::Highlight
 			                    hl_style[INK_NORMAL]);
 			p = q;
 			if(nq == 0)
-				ss->was_namespace = true;
+				was_namespace = true;
 		}
 		else {
 			if(*p == ';')
-				ss->was_namespace = false;
+				was_namespace = false;
 			hls.Put(strchr("!+-*^/%~&|=[]:?<>.", *p) ? hl_style[INK_OPERATOR] : hl_style[INK_NORMAL]);
 			p++;
 		}
 	}
 	if(hilite_ifdef && !IsNull(cppid) && !is_comment) {
-		if((cppid == "else" || cppid == "elif" || cppid == "endif") && !ss->ifstack.IsEmpty()) {
+		if((cppid == "else" || cppid == "elif" || cppid == "endif") && !ifstack.IsEmpty()) {
 			WStringBuffer ifln;
 			ifln.Cat(" // ");
-			ifln.Cat(ss->ifstack.Top().iftext);
-			if(ss->ifstack.Top().ifline && hilite_ifdef == 2) {
+			ifln.Cat(ifstack.Top().iftext);
+			if(ifstack.Top().ifline && hilite_ifdef == 2) {
 				ifln.Cat(", line ");
-				ifln.Cat(FormatInt(ss->ifstack.Top().ifline));
+				ifln.Cat(FormatInt(ifstack.Top().ifline));
 			}
 			ifln.Cat('\t');
-			int start = text.GetLength();
+			int start = linelen;
 			WString ifs(ifln);
 			hls.Set(start, ifs.GetLength(), hl_style[INK_IFDEF]);
 			for(int i = 0; i < ifs.GetCount(); i++)
-				hl[start + i].chr = ifs[i];
+				hls.SetChar(start + i, ifs[i]);
 		}
 	}
 	if(hilite_scope) {
 		if(lbrace >= 0 && lbclose < 0 && lbrace > lindent)
 			hls.SetPaper(lindent, lbrace - lindent, lbcolor);
 		if(lbrace < 0 && lbclose >= 0)
-			hls.SetPaper(lbclose, text.GetLength() + 1 - lbclose, lbcolor);
+			hls.SetPaper(lbclose, linelen + 1 - lbclose, lbcolor);
 	}
 	if(!IsNull(cppid) && (cppid == "else" || cppid == "elif" || cppid == "endif" || cppid == "if"
 	                      || cppid == "ifdef" || cppid == "ifndef"))

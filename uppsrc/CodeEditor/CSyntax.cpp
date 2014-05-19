@@ -343,6 +343,8 @@ void CSyntax::Serialize(Stream& s)
 	s % endstmtline;
 	s % seline;
 	s % spar;
+	
+	s % highlight;
 };
 
 END_UPP_NAMESPACE
