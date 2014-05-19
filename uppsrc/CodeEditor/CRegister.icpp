@@ -13,6 +13,11 @@ void RegisterCSyntax(const char *id, int kind,
 	EditorSyntax::Register(id, callback1(CreateCSyntax, kind), exts, description);
 }
 
+void CreateTagSyntax(One<EditorSyntax>& e)
+{
+	e.Create<XmlSyntax>();
+}
+
 INITBLOCK {
 	RegisterCSyntax("cpp", CSyntax::HIGHLIGHT_CPP,
 	                "*.c *.cpp *.cc *.cxx *.h *.hpp *.hh *.hxx *.m *.mm *.icpp *.conf",
@@ -28,6 +33,9 @@ INITBLOCK {
 	RegisterCSyntax("t", CSyntax::HIGHLIGHT_T, "*.t *.jt", "U++ translation (.t)");
 	RegisterCSyntax("usc", CSyntax::HIGHLIGHT_USC, "*.usc", "U++ widget definitions (.usc)");
 	RegisterCSyntax("calc", CSyntax::HIGHLIGHT_CALC, "", "");
+	
+	EditorSyntax::Register("xml", callback(CreateTagSyntax), "*.xml", "XML (.xml)");
+	EditorSyntax::Register("html", callback(CreateTagSyntax), "*.html *.htm", "HTML (.html)");
 }
 
 END_UPP_NAMESPACE
