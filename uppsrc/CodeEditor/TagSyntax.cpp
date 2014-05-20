@@ -28,12 +28,12 @@ const wchar *TagSyntax::Spaces(const wchar *s, const wchar *e)
 	return s;
 }
 
-void TagSyntax::DoScript(const wchar *s, const wchar *e)
+void TagSyntax::DoScript(const wchar *s, const wchar *e, CodeEditor *editor, int line, int tabsize)
 {
 	if(hout)
-		script.Highlight(s, e, *hout, NULL, 0, 0);
+		script.Highlight(s, e, *hout, editor, line, tabsize);
 	else
-		script.ScanSyntax(s, e, 0, 0);
+		script.ScanSyntax(s, e, line, tabsize);
 }
 
 inline
@@ -90,19 +90,19 @@ const wchar *IsScriptEnd(const wchar *s, const wchar *e, bool script)
 	return NULL;
 }
 
-void TagSyntax::Do(const wchar *s, const wchar *e)
+void TagSyntax::Do(const wchar *s, const wchar *e, CodeEditor *editor, int line, int tabsize)
 {
 doscript:
 	if(status == SCRIPT) { // TODO: Improve ending detection...
 		const wchar *q = IsScriptEnd(s, e, script_type == JS);
 		if(q) {
-			DoScript(s, q);
+			DoScript(s, q, editor, line, tabsize);
 			s = q;
 			status = TEXT;
 			Set(INK_NORMAL);
 		}
 		else {
-			DoScript(s, e);
+			DoScript(s, e, editor, line, tabsize);
 			return;
 		}
 	}
@@ -255,16 +255,24 @@ void TagSyntax::CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text)
 		e.Refresh();
 }
 
-void TagSyntax::ScanSyntax(const wchar *s, const wchar *e, int, int)
+void TagSyntax::ScanSyntax(const wchar *s, const wchar *e, int line, int tabsize)
 {
-	Do(s, e);
+	Do(s, e, NULL, line, tabsize);
 }
 
 void TagSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int pos)
 {
 	hout = &hls;
-	Do(s, end);
+	Do(s, end, editor, line, editor ? editor->GetTabSize() : 4);
 	hout = NULL;
+}
+
+void TagSyntax::IndentInsert(CodeEditor& editor, int chr, int count)
+{
+	if(status == SCRIPT)
+		script.IndentInsert(editor, chr, count);
+	else
+		editor.InsertChar(chr, count);
 }
 
 void TagSyntax::Serialize(Stream& s)

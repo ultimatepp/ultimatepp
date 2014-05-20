@@ -6,6 +6,7 @@ public:
 	virtual void            Highlight(const wchar *s, const wchar *end, HighlightOutput& hls,
 	                                  CodeEditor *editor, int line, int pos);
 	virtual void            CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text);
+	virtual void            IndentInsert(CodeEditor& editor, int chr, int count);
 
 private:
 
@@ -24,8 +25,8 @@ private:
 	HighlightOutput *hout;
 
 	const wchar *Spaces(const wchar *s, const wchar *e);
-	void DoScript(const wchar *s, const wchar *e);
-	void Do(const wchar *ln, const wchar *e);
+	void DoScript(const wchar *s, const wchar *e, CodeEditor *editor, int line, int tabsize);
+	void Do(const wchar *ln, const wchar *e, CodeEditor *editor, int line, int tabsize);
 	void Put0(int ink, int n = 1, int paper = PAPER_NORMAL);
 
 	void Set(int ink, int paper = PAPER_NORMAL)                 { hl_ink = ink; hl_paper = paper; }
@@ -33,7 +34,8 @@ private:
 	void SetPut(int ink, int n = 1, int paper = PAPER_NORMAL)   { Set(ink, paper); Put(n); }
 
 public:
-	void Html(bool b)                                           { html = b; }
+	void     Html(bool b)                                       { html = b; }
+	CSyntax *GetScript()                                        { return status == SCRIPT ? &script : NULL; }
 
 	TagSyntax()                                                 { Clear(); hout = NULL; html = true; }
 };

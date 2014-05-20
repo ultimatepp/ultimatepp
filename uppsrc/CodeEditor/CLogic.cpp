@@ -17,6 +17,11 @@ void CSyntax::IndentInsert(CodeEditor& e, int chr, int count)
 			if(e.GetLineLength(l) == p) { // At the last char of line
 				esyntax = e.GetSyntax(e.GetCursorLine());
 				syntax = dynamic_cast<CSyntax *>(~esyntax);
+				if(!syntax) {
+					TagSyntax *h = dynamic_cast<TagSyntax *>(~esyntax);
+					if(h)
+						syntax = h->GetScript();
+				}
 			}
 			if(syntax && syntax->par.GetCount() && syntax->par.Top().line == cl && no_parenthesis_indent) {
 				for(int i = 0; i < syntax->par.Top().pos && i < pl.GetLength(); i++) // Indent e.g. next line of if(
