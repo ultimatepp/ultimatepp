@@ -184,8 +184,7 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 		}
 		else
 		if(*p == ')' || *p == '}' || *p == ']') {
-			int bl = brk.GetCount();
-			int bc = bl ? brk.Pop() : 0;
+			int bc = brk.GetCount() ? brk.Pop() : 0;
 			if(*p == '}' && hilite_scope && block_level > 0 && bc)
 				hls.SetPaper(hls.pos, linelen + 1 - hls.pos, BlockColor(--block_level));
 			Bracket(int(p - ltext) + pos, hls, editor);
