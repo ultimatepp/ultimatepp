@@ -275,6 +275,11 @@ void TagSyntax::IndentInsert(CodeEditor& editor, int chr, int count)
 		editor.InsertChar(chr, count);
 }
 
+bool TagSyntax::CheckBrackets(CodeEditor& e, int& bpos0, int& bpos)
+{
+	return status == SCRIPT && script.CheckBrackets(e, bpos0, bpos);
+}
+
 void TagSyntax::Serialize(Stream& s)
 {
 	s % hl_ink
