@@ -7,6 +7,7 @@ public:
 	                                  CodeEditor *editor, int line, int pos);
 	virtual void            CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text);
 	virtual void            IndentInsert(CodeEditor& editor, int chr, int count);
+	virtual bool            CheckBrackets(CodeEditor& e, int& bpos0, int& bpos);
 
 private:
 
