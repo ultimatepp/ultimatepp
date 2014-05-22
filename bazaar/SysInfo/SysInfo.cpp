@@ -610,8 +610,10 @@ Array<NetAdapter> GetAdapterInfo()
 		String MAC;
 		
 #ifdef SIOCGIFHWADDR
-		if(ioctl(sck, SIOCGIFHWADDR, iface) < 0) 
+		if(ioctl(sck, SIOCGIFHWADDR, iface) < 0) {
+			iface++;
 			continue;
+		}
 		
 		MAC = Format("%02x:%02x:%02x:%02x:%02x:%02x",
 						(byte)iface->ifr_hwaddr.sa_data[0],
@@ -704,9 +706,11 @@ Array<NetAdapter> GetAdapterInfo()
 		
 		adapter.description = adapter.fullname;
 		
-		if (!ioctl(sck, SIOCGIFADDR, iface))
+		if (ioctl(sck, SIOCGIFADDR, iface) < 0) {
+			iface++;
 			continue;
-        
+		}
+		
         adapter.ip4 = inet_ntoa(((struct sockaddr_in *)&(iface->ifr_addr))->sin_addr);  
 		
 		iface++;
@@ -1807,6 +1811,7 @@ void SetDesktopWallPaper(const char *path)
 			mode = "stretched";
 		Sys("gconftool-2 -t str -s /desktop/gnome/background/picture_options \"" + mode + "\"");	
 	} else if (desktopManager == "kde") {
+			// mode values
 			// 1: disabled, only background color
 			// 2: tiled with first image in top left corner
 			// 3: tiled with first image centered
