@@ -28,10 +28,10 @@ const wchar *TagSyntax::Spaces(const wchar *s, const wchar *e)
 	return s;
 }
 
-void TagSyntax::DoScript(const wchar *s, const wchar *e, CodeEditor *editor, int line, int tabsize)
+void TagSyntax::DoScript(const wchar *s, const wchar *e, CodeEditor *editor, int line, int tabsize, int pos)
 {
 	if(hout)
-		script.Highlight(s, e, *hout, editor, line, tabsize);
+		script.Highlight(s, e, *hout, editor, line, pos);
 	else
 		script.ScanSyntax(s, e, line, tabsize);
 }
@@ -90,19 +90,19 @@ const wchar *IsScriptEnd(const wchar *s, const wchar *e, bool script)
 	return NULL;
 }
 
-void TagSyntax::Do(const wchar *s, const wchar *e, CodeEditor *editor, int line, int tabsize)
+void TagSyntax::Do(const wchar *s, const wchar *e, CodeEditor *editor, int line, int tabsize, int pos)
 {
 doscript:
-	if(status == SCRIPT) { // TODO: Improve ending detection...
+	if(status == SCRIPT) {
 		const wchar *q = IsScriptEnd(s, e, script_type == JS);
 		if(q) {
-			DoScript(s, q, editor, line, tabsize);
+			DoScript(s, q, editor, line, tabsize, pos);
 			s = q;
 			status = TEXT;
 			Set(INK_NORMAL);
 		}
 		else {
-			DoScript(s, e, editor, line, tabsize);
+			DoScript(s, e, editor, line, tabsize, pos);
 			return;
 		}
 	}
@@ -257,13 +257,13 @@ void TagSyntax::CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text)
 
 void TagSyntax::ScanSyntax(const wchar *s, const wchar *e, int line, int tabsize)
 {
-	Do(s, e, NULL, line, tabsize);
+	Do(s, e, NULL, line, tabsize, 0);
 }
 
 void TagSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int pos)
 {
 	hout = &hls;
-	Do(s, end, editor, line, editor ? editor->GetTabSize() : 4);
+	Do(s, end, editor, line, editor ? editor->GetTabSize() : 4, pos);
 	hout = NULL;
 }
 
@@ -277,7 +277,9 @@ void TagSyntax::IndentInsert(CodeEditor& editor, int chr, int count)
 
 bool TagSyntax::CheckBrackets(CodeEditor& e, int& bpos0, int& bpos)
 {
-	return status == SCRIPT && script.CheckBrackets(e, bpos0, bpos);
+	if(status == SCRIPT)
+		return script.CheckBrackets(e, bpos0, bpos);
+	return false;
 }
 
 void TagSyntax::Serialize(Stream& s)

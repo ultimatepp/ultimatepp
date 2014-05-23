@@ -26,8 +26,8 @@ private:
 	HighlightOutput *hout;
 
 	const wchar *Spaces(const wchar *s, const wchar *e);
-	void DoScript(const wchar *s, const wchar *e, CodeEditor *editor, int line, int tabsize);
-	void Do(const wchar *ln, const wchar *e, CodeEditor *editor, int line, int tabsize);
+	void DoScript(const wchar *s, const wchar *e, CodeEditor *editor, int line, int tabsize, int pos);
+	void Do(const wchar *ln, const wchar *e, CodeEditor *editor, int line, int tabsize, int pos);
 	void Put0(int ink, int n = 1, int paper = PAPER_NORMAL);
 
 	void Set(int ink, int paper = PAPER_NORMAL)                 { hl_ink = ink; hl_paper = paper; }
