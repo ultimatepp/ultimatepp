@@ -664,10 +664,10 @@ void TextCtrl::Paste() {
 void TextCtrl::StdBar(Bar& menu) {
 	NextUndo();
 	if(undosteps) {
-		menu.Add(undo.GetCount() && IsEditable(), t_("Undo"), THISBACK(Undo))
+		menu.Add(undo.GetCount() && IsEditable(), t_("Undo"), CtrlImg::undo(), THISBACK(Undo))
 			.Key(K_ALT_BACKSPACE)
 			.Key(K_CTRL_Z);
-		menu.Add(redo.GetCount() && IsEditable(), t_("Redo"), THISBACK(Redo))
+		menu.Add(redo.GetCount() && IsEditable(), t_("Redo"), CtrlImg::redo(), THISBACK(Redo))
 			.Key(K_SHIFT|K_ALT_BACKSPACE)
 			.Key(K_SHIFT_CTRL_Z);
 		menu.Separator();
