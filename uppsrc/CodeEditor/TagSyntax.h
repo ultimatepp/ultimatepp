@@ -38,5 +38,5 @@ public:
 	void     Html(bool b)                                       { html = b; }
 	CSyntax *GetScript()                                        { return status == SCRIPT ? &script : NULL; }
 
-	TagSyntax()                                                 { Clear(); hout = NULL; html = true; }
+	TagSyntax();
 };
