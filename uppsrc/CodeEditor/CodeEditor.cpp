@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x) // RLOG(x)
+#define LLOG(x)    // DLOG(x)
 #define LTIMING(x) // RTIMING(x)
 
 #define IMAGEVECTOR Vector
