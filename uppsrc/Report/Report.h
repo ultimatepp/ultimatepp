@@ -49,6 +49,7 @@ public:
 	int                   GetY() const                { return y; }
 
 	void                  NewPage()                   { Page(pagei + 1); }
+	void                  RemoveLastPage()            { if(page.GetCount()) page.Drop(); pagei = -1; }
 
 	void                  Put(const RichText& txt, void *context = NULL);
 	void                  Put(const char *qtf);
