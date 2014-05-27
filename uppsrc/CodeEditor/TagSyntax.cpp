@@ -2,10 +2,18 @@
 
 NAMESPACE_UPP
 
+TagSyntax::TagSyntax()
+{
+	Clear();
+	hout = NULL;
+	html = true;
+}
+
 void TagSyntax::Clear()
 {
 	hl_ink = INK_NORMAL;
 	hl_paper = PAPER_NORMAL;
+	status = TEXT;
 }
 
 void TagSyntax::Put0(int ink, int n, int paper)
