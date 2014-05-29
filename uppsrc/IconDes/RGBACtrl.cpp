@@ -156,6 +156,16 @@ RGBA RGBACtrl::Get() const
 	return c;
 }
 
+Color RGBACtrl::GetColor() const
+{
+	return color;
+}
+
+int RGBACtrl::GetAlpha() const
+{
+	return alpha.Get();
+}
+
 void RGBACtrl::Mask(bool b)
 {
 	alpha.Mask(b);

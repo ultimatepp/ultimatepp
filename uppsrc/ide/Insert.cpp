@@ -25,10 +25,12 @@ void InsertColorDlg::Select(int i)
 
 void InsertColorDlg::Sync()
 {
+	RGBA c0 = rgbactrl.GetColor();
 	RGBA c = rgbactrl.Get();
-	r[0] = Format("RGBA(%d, %d, %d, %d)", c.a, c.r, c.g, c.b);
+	r[0] = Format("%d, %d, %d, %d", c.a, c.r, c.g, c.b);
 	rgba.SetLabel(r[0]);
-	r[1] = Format("Color(%d, %d, %d)", c.r, c.g, c.b);
+	r[1] = c.a == 255 ? Format("Color(%d, %d, %d)", c.r, c.g, c.b)
+	                  : Format("%d * Color(%d, %d, %d)", c.a, c0.r, c0.g, c0.b);
 	color.SetLabel(r[1]);
 	r[2] = Format("%02x%02x%02x%02x", c.a, c.r, c.g, c.b);
 	ahex.SetLabel(r[2]);
