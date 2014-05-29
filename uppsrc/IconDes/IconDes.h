@@ -76,6 +76,9 @@ public:
 	void Set(RGBA c);
 	void MaskSet(int a);
 	RGBA Get() const;
+	
+	Color GetColor() const;
+	int   GetAlpha() const;
 
 	void Mask(bool b);
 
