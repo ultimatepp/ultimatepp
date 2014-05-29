@@ -250,7 +250,7 @@ bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
 			Rect lr = GetLineScreenRect(GetLine(GetCursor()));
 			Size fsz = findreplace.GetAdjustedSize();
 			Rect r = GetTopCtrl()->GetRect();
-			int y = r.bottom - fsz.cy;
+			int y = r.bottom - fsz.cy - 2 * GetStdFontCy(); // Subtracting 2 * Get..Cy() to fix broken LXDE WM
 			if(lr.bottom > y) y = r.top;
 			Rect wa = Ctrl::GetWorkArea();
 			findreplace.SetRect(RectC(wa.left + (wa.Width() - fsz.cx) / 2, y, fsz.cx, fsz.cy));
