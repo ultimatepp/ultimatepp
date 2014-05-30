@@ -86,6 +86,7 @@ bool IpAddrInfo::Execute(const String& host, int port, int family)
 	entry = exe;
 	addrinfo *result;
 	entry->addr = sGetAddrInfo(~host, ~AsString(port), family, &result) == 0 ? result : NULL;
+	entry->status = entry->addr ? RESOLVED : FAILED;
 	return entry->addr;
 }
 
