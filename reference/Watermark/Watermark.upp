@@ -1,0 +1,13 @@
+description "Demostrates how to add watermark image to Report\377";
+
+uses
+	CtrlLib,
+	Report;
+
+file
+	Watermark.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI SSE2";
+
