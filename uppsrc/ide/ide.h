@@ -891,6 +891,7 @@ public:
 		void  SyncSvnDirs(const Vector<String>& working);
 		void  SyncSvnDir(const String& working);
 		void  SyncSvn();
+	    void FilePropertiesMenu0(Bar& menu);
 
 	void      BuildMenu(Bar& menu);
 		void BuildPackageMenu(Bar& menu);
@@ -975,6 +976,8 @@ public:
 	void      SerializeLastMain(Stream& s);
 	void      SaveLastMain();
 	void      LoadLastMain();
+	void      EditorMode();
+	bool      IsEditorMode() const;
 
 //	void      PrintTime(dword time);
 	void      SetIdeState(int newstate);

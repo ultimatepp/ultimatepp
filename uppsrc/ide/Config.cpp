@@ -104,9 +104,21 @@ void Ide::SerializeLastMain(Stream& s)
 		LoadVars(varsname);
 }
 
+void Ide::EditorMode()
+{
+	main = Null;
+	pocfg = Null;
+}
+
+bool Ide::IsEditorMode() const
+{
+	return IsNull(main);
+}
+
 void Ide::SaveLastMain()
 {
-	StoreToFile(THISBACK(SerializeLastMain), ConfigFile("lastmain.cfg"));
+	if(main.GetCount())
+		StoreToFile(THISBACK(SerializeLastMain), ConfigFile("lastmain.cfg"));
 }
 
 void Ide::LoadLastMain()

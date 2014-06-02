@@ -103,7 +103,8 @@ void WorkspaceWork::SyncErrorPackages()
 
 void WorkspaceWork::ScanWorkspace() {
 	Workspace wspc;
-	wspc.Scan(main);
+	if(main.GetCount())
+		wspc.Scan(main);
 	actualpackage.Clear();
 	actualfileindex = -1;
 	filelist.Clear();
@@ -132,10 +133,14 @@ void WorkspaceWork::ScanWorkspace() {
 		package.Add(pk, Null, fnt, Nvl(pi.ink, SColorText()), false, 0, Null, SColorMark);
 	}
 	if(!organizer) {
-		package.Add(prjaux, IdeImg::PrjAux(), ListFont(), Magenta);
-		package.Add(ideaux, IdeImg::IdeAux(), ListFont(), Magenta);
-		package.Add(tempaux, IdeImg::TempAux(), ListFont(), Magenta);
-		package.Add(METAPACKAGE, IdeImg::Meta(), ListFont(), Red);
+		if(main.GetCount()) {
+			package.Add(prjaux, IdeImg::PrjAux(), ListFont(), Magenta);
+			package.Add(METAPACKAGE, IdeImg::Meta(), ListFont(), Red);
+		}
+		else {
+			package.Add(tempaux, IdeImg::TempAux(), ListFont(), Magenta);
+			package.Add(ideaux, IdeImg::IdeAux(), ListFont(), Magenta);
+		}
 	}
 	package.SetCursor(0);
 	
