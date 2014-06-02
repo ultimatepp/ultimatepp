@@ -602,6 +602,20 @@ void ReduceCache()
 	}
 }
 
+bool IsAssembly(const String& s)
+{
+	Vector<String> varlist;
+	for(FindFile ff(ConfigFile("*.var")); ff; ff.Next())
+		if(ff.IsFile())
+			if(GetFileTitle(ff.GetName()) == s)
+				return true;
+	Vector<String> l = Split(s, ',');
+	for(int i = 0; i < l.GetCount(); i++)
+		if(FindFile(NormalizePath(l[i])).IsFolder())
+			return true;
+	return false;
+}
+
 #ifdef flagMAIN
 GUI_APP_MAIN
 #else
@@ -708,7 +722,15 @@ void AppMain___()
 		Ide ide;
 		ide.Maximize();
 		bool clset = false;
-		if(arg.GetCount() >= 2 && IsAlpha(arg[0][0]) && IsAlpha(arg[1][0])) {
+		if(arg.GetCount() && findarg(arg[0], "?", "--help", "-?", "/?") >= 0) {
+			Cout() << "Usage: theide assembly package\n"
+			          "       theide assembly package build_method [-[a][b][e][r][s][S][v][1][2][m][d][M][l][x][X][Hn]] [+FLAG[,FLAG]...] [out]\n"
+			          "       theide -f [file..]\n"
+			          "       theide [file..] // autodetection mode\n"
+			;
+			return;
+		}
+		if(arg.GetCount() >= 2 && IsAlpha(arg[0][0]) && IsAlpha(arg[1][0]) && IsAssembly(arg[0]) && arg[0] != "-f") {
 			bool build = arg.GetCount() >= 3 && IsAlpha(arg[2][0]);
 		#ifdef PLATFORM_WIN32
 			if(build) {
@@ -873,9 +895,10 @@ void AppMain___()
 				return;
 			}
 		}
-
+		
 		ide.LoadConfig();
-		if(arg.GetCount()==2){
+
+		if(arg.GetCount() == 2 && IsAssembly(arg[0])) {
 			LoadVars(arg[0]);
 			ide.SetMain(arg[1]);
 			clset=true;
@@ -885,7 +908,19 @@ void AppMain___()
 		ide.SyncCh();
 
 		DelTemps();
-		if(splash_screen) {
+
+		if(arg.GetCount() && !clset) {
+			for(int i = 0; i < arg.GetCount(); i++)
+				if(arg[i] != "-f") {
+					DLOG("Loading " << NormalizePath(arg[i]));
+					ide.EditFile(NormalizePath(arg[i]));
+					ide.FileSelected();
+				}
+			clset = true;
+			ide.EditorMode();
+		}
+
+		if(splash_screen && !ide.IsEditorMode()) {
 			ShowSplash();
 			Ctrl::ProcessEvents();
 		}
@@ -909,12 +944,15 @@ void AppMain___()
 	#endif
 			Ini::user_log = true;
 		}
-		ide.LoadLastMain();
+		
+		if(!ide.IsEditorMode())
+			ide.LoadLastMain();
 		if(clset || ide.OpenMainPackage()) {
 			ide.SaveLastMain();
 			ide.isscanning++;
 			ide.MakeTitle();
-			SyncRefs();
+			if(!ide.IsEditorMode())
+				SyncRefs();
 			ide.FileSelected();
 			ide.isscanning--;
 			ide.MakeTitle();

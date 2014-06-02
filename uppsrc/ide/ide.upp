@@ -32,7 +32,6 @@ file
 	SelectPkg.cpp,
 	UppWspc.cpp,
 	UppDlg.cpp,
-	Package.cpp,
 	Template.cpp,
 	ide.key,
 	Console.cpp,

@@ -6,7 +6,7 @@ void AssistEditor::SyncNavigator()
 		browser.Load();
 		SyncCursor();
 	}
-	navigatorframe.Show(navigator);
+	navigatorframe.Show(navigator && theide && !theide->IsEditorMode());
 }
 
 void AssistEditor::SyncCursor()
@@ -76,7 +76,7 @@ void AssistEditor::GotoBrowserScope()
 void AssistEditor::Navigator(bool nav)
 {
 	navigator = nav;
-	navigatorframe.Show(navigator);
+	navigatorframe.Show(navigator && theide && !theide->IsEditorMode());
 	if(IsNavigator()) {
 		scope_item.Show();
 		browser.ClearSearch();

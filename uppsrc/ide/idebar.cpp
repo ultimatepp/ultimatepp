@@ -352,7 +352,7 @@ void Ide::ProjectSvn(Bar& menu)
 }
 
 void Ide::Project(Bar& menu) {
-	if(menu.IsToolBar() && !debugger)
+	if(menu.IsToolBar() && !debugger && !IsEditorMode())
 	{
 		mainconfiglist.Enable(idestate == EDITING);
 		buildmode.Enable(idestate == EDITING);
@@ -361,36 +361,39 @@ void Ide::Project(Bar& menu) {
 		menu.Add(buildmode, 180);
 		menu.Separator();
 	}
-	WorkspaceWork::PackageMenu(menu);
-	menu.MenuSeparator();
-	menu.Add(AK_ORGANIZER, IdeImg::package_organizer(), THISBACK(EditWorkspace))
-		.Help("Package dependencies, compiler & linker options, output path override");
-	menu.Add(AK_CUSTOM, THISBACK(CustomSteps))
-		.Help("Building intermediate files using custom commands / applications");
-	if(menu.IsMenuBar())
-		menu.Add(AK_MAINCONFIG, IdeImg::main_package(), THISBACK(MainConfig))
-			.Help("Configuring compiler, operating system, output application parameters, custom flags");
-	menu.Separator();
-	menu.Add(AK_SYNCT, IdeImg::Language(), THISBACK1(SyncT, 0))
-	    .Help("Synchronize all language translation files of current workspace");
-	menu.AddMenu(AK_TRIMPORT, IdeImg::Language(), THISBACK1(SyncT, 1))
-	    .Help("Import runtime translation file");
-	menu.AddMenu(AK_TREXPORT, IdeImg::Language(), THISBACK1(SyncT, 2))
-	    .Help("Export runtime translation file");
-	if(OldLang())
-		menu.Add("Convert s_ -> t_", THISBACK(ConvertST));
-	FilePropertiesMenu(menu);
-	if(SvnDirs(true).GetCount()) {
+	if(!IsEditorMode()) {
+		WorkspaceWork::PackageMenu(menu);
+		menu.MenuSeparator();
+		menu.Add(AK_ORGANIZER, IdeImg::package_organizer(), THISBACK(EditWorkspace))
+			.Help("Package dependencies, compiler & linker options, output path override");
+		menu.Add(AK_CUSTOM, THISBACK(CustomSteps))
+			.Help("Building intermediate files using custom commands / applications");
 		if(menu.IsMenuBar())
-			menu.Add("SVN", THISBACK(ProjectSvn));
-		else
-			menu.Add("SVN Synchronize everything..", IdeImg::svn(), THISBACK(SyncSvn));
+			menu.Add(AK_MAINCONFIG, IdeImg::main_package(), THISBACK(MainConfig))
+				.Help("Configuring compiler, operating system, output application parameters, custom flags");
+		menu.Separator();
+		menu.Add(AK_SYNCT, IdeImg::Language(), THISBACK1(SyncT, 0))
+		    .Help("Synchronize all language translation files of current workspace");
+		menu.AddMenu(AK_TRIMPORT, IdeImg::Language(), THISBACK1(SyncT, 1))
+		    .Help("Import runtime translation file");
+		menu.AddMenu(AK_TREXPORT, IdeImg::Language(), THISBACK1(SyncT, 2))
+		    .Help("Export runtime translation file");
+		if(OldLang())
+			menu.Add("Convert s_ -> t_", THISBACK(ConvertST));
+	}
+	FilePropertiesMenu0(menu);
+	if(!IsEditorMode()) {
+		if(SvnDirs(true).GetCount()) {
+			if(menu.IsMenuBar())
+				menu.Add("SVN", THISBACK(ProjectSvn));
+			else
+				menu.Add("SVN Synchronize everything..", IdeImg::svn(), THISBACK(SyncSvn));
+		}
 	}
 }
 
-void Ide::FilePropertiesMenu(Bar& menu)
+void Ide::FilePropertiesMenu0(Bar& menu)
 {
-	menu.MenuSeparator();
 	menu.Add(IsActiveFile(), AK_FILEPROPERTIES, THISBACK(FileProperties))
 		.Help("File properties stored in package");
 	menu.Add(IsActiveFile() && !designer, AK_SAVEENCODING, THISBACK(ChangeCharset))
@@ -402,6 +405,12 @@ void Ide::FilePropertiesMenu(Bar& menu)
 	if(IsSvnDir(GetFileFolder(editfile)))
 		menu.AddMenu(IsActiveFile() && !IsFolder(editfile) && !designer, AK_SVNDIFF, IdeImg::SvnDiff(), THISBACK(SvnHistory))
 		    .Help("Show svn history of file");
+}
+
+void Ide::FilePropertiesMenu(Bar& menu)
+{
+	FilePropertiesMenu0(menu);
+	menu.MenuSeparator();
 }
 
 void Ide::BuildFileMenu(Bar& menu)
@@ -531,24 +540,26 @@ void Ide::DebugMenu(Bar& menu)
 
 void Ide::BrowseMenu(Bar& menu) {
 	if (menu.IsMenuBar()) {
-		menu.AddMenu(AK_NAVIGATOR, IdeImg::Navigator(), THISBACK(ToggleNavigator))
-	    	 .Check(editor.IsNavigator());
-		menu.Add(AK_SEARCHCODE, THISBACK(SearchCode));
-		menu.Add(!designer, AK_GOTO, THISBACK(Goto));
-		menu.Add(AK_GOTOGLOBAL, THISBACK(GotoGlobal));
-		menu.Add(!designer, AK_JUMPS, THISBACK(ContextGoto));
-		menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
-		menu.Add(!designer, AK_ASSIST, callback(&editor, &AssistEditor::Assist));
-		menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
-		menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
-		menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Thisbacks));
-		menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
-		menu.Add(!designer, AK_COMPLETE2, callback(&editor, &AssistEditor::Complete2));
-		menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
-		menu.Add(!designer, "Insert", THISBACK(InsertMenu));
-		menu.MenuSeparator();
-		menu.Add("Rescan code", THISBACK(RescanCode));
-		menu.MenuSeparator();
+		if(!IsEditorMode()) {
+			menu.AddMenu(AK_NAVIGATOR, IdeImg::Navigator(), THISBACK(ToggleNavigator))
+		    	 .Check(editor.IsNavigator());
+			menu.Add(AK_SEARCHCODE, THISBACK(SearchCode));
+			menu.Add(!designer, AK_GOTO, THISBACK(Goto));
+			menu.Add(AK_GOTOGLOBAL, THISBACK(GotoGlobal));
+			menu.Add(!designer, AK_JUMPS, THISBACK(ContextGoto));
+			menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
+			menu.Add(!designer, AK_ASSIST, callback(&editor, &AssistEditor::Assist));
+			menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
+			menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
+			menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Thisbacks));
+			menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
+			menu.Add(!designer, AK_COMPLETE2, callback(&editor, &AssistEditor::Complete2));
+			menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
+			menu.Add(!designer, "Insert", THISBACK(InsertMenu));
+			menu.MenuSeparator();
+			menu.Add("Rescan code", THISBACK(RescanCode));
+			menu.MenuSeparator();
+		}
 		menu.AddMenu(AK_CALC, IdeImg::calc(), THISBACK1(ToggleBottom, BCALC))
 	     .Check(IsBottomShown() && btabs.GetCursor() == BCALC);
 		menu.AddMenu(AK_QTF, IdeCommonImg::Qtf(), THISBACK(Qtf));
@@ -572,10 +583,12 @@ void Ide::MainMenu(Bar& menu) {
 			.Help("Editor & IDE macros");
 	menu.Add("Project", THISBACK(Project))
 		.Help("Package organizer, custom steps, configuration manager");
-	menu.Add("Build", THISBACK(BuildMenu))
-		.Help("Building & debugging, minor build options, showing errors");
-	menu.Add("Debug", THISBACK(DebugMenu))
-		.Help("Debugger commands (currently supports gdb-connection only)");
+	if(!IsEditorMode()) {
+		menu.Add("Build", THISBACK(BuildMenu))
+			.Help("Building & debugging, minor build options, showing errors");
+		menu.Add("Debug", THISBACK(DebugMenu))
+			.Help("Debugger commands (currently supports gdb-connection only)");
+	}
 	menu.Add("Assist", THISBACK(BrowseMenu))
 		.Help("Informations, code browsing and assistance");
 	menu.Add("Setup", THISBACK(Setup))
