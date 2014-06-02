@@ -175,7 +175,7 @@ VisGenDlg::VisGenDlg(LayoutData& layout, const Vector<int>& cursor)
 
 void LayDes::VisGen()
 {
-	if(currentlayout < 0)
+	if(IsNull(currentlayout))
 		return;
 	VisGenDlg dlg(CurrentLayout(), cursor);
 	if(dlg.Run() == IDOK)

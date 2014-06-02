@@ -11,8 +11,8 @@ IconDes::Slot::Slot()
 
 IconDes::Slot& IconDes::Current()
 {
-	if(list.IsCursor())
-		return slot[list.GetCursor()];
+	if(ilist.IsCursor())
+		return slot[ilist.GetKey()];
 	NEVER();
 	return dummy;
 }
@@ -49,7 +49,7 @@ void IconDes::SyncShow()
 				image = IconDesImg::LargeImage();
 		}
 		iconshow.image = image;
-		list.Set(1, image);
+		ilist.Set(2, image);
 	}
 	iconshow.Refresh();
 }
@@ -583,7 +583,7 @@ void IconDes::ResizeDown()
 void IconDes::SingleMode()
 {
 	single_mode = true;
-	list.Ctrl::Remove();
+	ilist.Ctrl::Remove();
 	rgbactrl.SubCtrl(&single);
 	Size fsz = GetTextSize("Resize", StdFont());
 	single.Add(info.HSizePos().TopPos(0, fsz.cy));

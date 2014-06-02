@@ -55,7 +55,7 @@ void LayDes::SaveEditPos()
 		p.undo[i] = pick(layout[i].undo);
 		p.redo[i] = pick(layout[i].redo);
 	}
-	p.layouti = layoutlist.GetCursor();
+	p.layouti = list.GetKey();
 	p.cursor = pick(cursor);
 }
 
@@ -73,8 +73,8 @@ void LayDes::RestoreEditPos()
 			layout[i].redo = pick(p.redo[i]);
 		}
 	}
-	if(p.layouti >= 0 && p.layouti < layoutlist.GetCount()) {
-		layoutlist.SetCursor(p.layouti);
+	if(p.layouti >= 0 && p.layouti < layout.GetCount()) {
+		GoTo(p.layouti);
 		LayoutCursor();
 	}
 	cursor = pick(p.cursor);
@@ -83,11 +83,15 @@ void LayDes::RestoreEditPos()
 
 void LayDes::FindLayout(const String& name, const String& item_name)
 {
-	if(layoutlist.FindSetCursor(name) && !IsNull(item_name)) {
-		int q = item.Find(item_name, 1);
-		if(q >= 0)
-			SelectOne(q, 0);
-	}
+	for(int i = 0; i < layout.GetCount(); i++)
+		if(layout[i].name == name) {
+			GoTo(i);
+			if(!IsNull(item_name)) {
+				int q = item.Find(item_name, 1);
+				if(q >= 0)
+					SelectOne(q, 0);
+			}
+		}
 }
 
 bool LayDes::Load(const char *file, byte _charset)
@@ -126,9 +130,10 @@ bool LayDes::Load(const char *file, byte _charset)
 		newfile = true;
 		filetime = Null;
 	}
+	search <<= Null;
 	SyncLayoutList();
-	if(layout.GetCount()) {
-		layoutlist.SetCursor(0);
+	if(list.GetCount()) {
+		list.SetCursor(0);
 		LayoutCursor();
 	}
 	RestoreEditPos();

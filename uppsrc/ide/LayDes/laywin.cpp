@@ -11,7 +11,7 @@ using namespace LayoutKeys;
 
 void LayDes::EditBar(Bar& bar)
 {
-	bool islayout = currentlayout >= 0;
+	bool islayout = !IsNull(currentlayout);
 	bool iscursor = islayout && cursor.GetCount();
 	bar.Add(iscursor, "Cut", CtrlImg::cut(), THISBACK(Cut))
 	   .Key(K_SHIFT_DELETE)
@@ -45,7 +45,7 @@ void LayDes::EditBar(Bar& bar)
 
 void LayDes::MoveBar(Bar& bar)
 {
-	bool iscursor = currentlayout >= 0 && cursor.GetCount();
+	bool iscursor = !IsNull(currentlayout) && cursor.GetCount();
 	bar.Add(iscursor, AK_MOVEUP, LayImg::MoveUp(), THISBACK(MoveUp));
 	bar.Add(iscursor, AK_MOVEDOWN, LayImg::MoveDown(), THISBACK(MoveDown));
 	bar.Add(cursor.GetCount() >= 2, AK_SORTITEMS, LayImg::SortItems(), THISBACK(SortItems));
@@ -53,7 +53,7 @@ void LayDes::MoveBar(Bar& bar)
 
 void LayDes::AlignBar(Bar& bar)
 {
-	bool islayout = currentlayout >= 0;
+	bool islayout = !IsNull(currentlayout);
 	bool iscursor = islayout && cursor.GetCount();
 	bool group = islayout && cursor.GetCount() > 1;
 	bar.Add(iscursor, AK_HCENTERLAY, LayImg::HorzCenter(), THISBACK1(Align, A_HORZCENTER));
@@ -71,7 +71,7 @@ void LayDes::AlignBar(Bar& bar)
 
 void LayDes::SizeBar(Bar& bar)
 {
-	bool islayout = currentlayout >= 0;
+	bool islayout = !IsNull(currentlayout);
 	bool iscursor = islayout && cursor.GetCount();
 	bool group = islayout && cursor.GetCount() > 1;
 	bar.Add(group, AK_SAMEWIDTH, LayImg::SameWidth(), THISBACK1(Align, A_SAMEWIDTH));
@@ -84,11 +84,11 @@ void LayDes::SizeBar(Bar& bar)
 
 void LayDes::SpringBar(Bar& bar)
 {
-	bool islayout = currentlayout >= 0;
+	bool islayout = !IsNull(currentlayout);
 	bool iscursor = islayout && cursor.GetCount();
 	int va = -1;
 	int ha = -1;
-	if(currentlayout >= 0 && cursor.GetCount()) {
+	if(!IsNull(currentlayout) && cursor.GetCount()) {
 		LayoutData& l = CurrentLayout();
 		Ctrl::LogPos p = l.item[cursor.Top()].pos;
 		ha = p.x.GetAlign();
@@ -248,7 +248,7 @@ int VariableFilter(int c)
 
 bool LayDes::HotKey(dword key)
 {
-	return MenuBar::Scan(layoutlist.WhenBar, key) ||
+	return MenuBar::Scan(list.WhenBar, key) ||
 	       MenuBar::Scan(item.WhenBar, key) ||
 	       StaticRect::HotKey(key);
 }
@@ -257,7 +257,7 @@ LayDes::LayDes()
 {
 	charset = CHARSET_UTF8;
 
-	currentlayout = -1;
+	currentlayout = Null;
 	draghandle = -1;
 
 	usegrid = true;
@@ -272,7 +272,10 @@ LayDes::LayDes()
 	km.d = this;
 	km.Add(lsplit.SizePos());
 	lsplit.Horz(rsplit, *this).SetPos(2000);
-	rsplit.Vert(layoutlist, isplit);
+	rsplit.Vert(layouts, isplit);
+	int cy = EditString::GetStdHeight();
+	layouts.Add(search.HSizePos().TopPos(0, cy));
+	layouts.Add(list.HSizePos().VSizePos(cy, 0));
 	rsplit.SetPos(1000);
 	isplit.Vert(item, property);
 	twsplit.Height(EditField::GetStdHeight() + 4);
@@ -300,12 +303,17 @@ LayDes::LayDes()
 
 	sb.WhenScroll = THISBACK(Scroll);
 
-	layoutlist.NoHeader().NoGrid();
-	layoutlist.AddColumn();
-	layoutlist.WhenCursor = THISBACK(LayoutCursor);
-	layoutlist.WhenBar = THISBACK(LayoutMenu);
-	layoutlist.WhenLeftDouble = THISBACK(RenameLayout);
-	layoutlist.NoWantFocus();
+	list.NoHeader().NoGrid();
+	list.AddKey();
+	list.AddColumn();
+	list.WhenCursor = THISBACK(LayoutCursor);
+	list.WhenBar = THISBACK(LayoutMenu);
+	list.WhenLeftDouble = THISBACK(RenameLayout);
+	list.NoWantFocus();
+	
+	search.NullText("Search");
+	search <<= THISBACK(Search);
+	search.SetFilter(CharFilterToUpper);
 
 	NoWantFocus();
 	item.NoWantFocus();

@@ -169,7 +169,11 @@ private:
 
 	SplitterFrame  leftpane;
 	SplitterFrame  bottompane;
-	ArrayCtrl      list;
+
+	ParentCtrl     imgs;
+	ArrayCtrl      ilist;
+	EditString     search;
+
 	RGBACtrl       rgbactrl;
 	IconShow       iconshow;
 	Image          cursor_image;
@@ -211,7 +215,7 @@ private:
 	void  PasteText();
 	void  CloseText();
 
-	bool         IsCurrent()            { return list.IsCursor(); }
+	bool         IsCurrent()            { return !IsNull(ilist.GetKey()); }
 	Slot&        Current();
 
 	Image&       CurrentImage();
@@ -310,6 +314,8 @@ private:
 	void  Colors();
 	void  Smoothen();
 
+	void  Search();
+	void  GoTo(int q);
 	void  SyncList();
 	void  ListCursor();
 	void  PrepareImageDlg(WithImageLayout<TopWindow>& dlg);
