@@ -14,17 +14,32 @@ static String sFormatImageName(const String& name, const Image& img, bool exp)
 
 void IconDes::SyncList()
 {
-	int a = list.GetCursorSc();
-	int ii = list.GetCursor();
-	list.Clear();
+	int sc = ilist.GetScroll();
+	int q = ilist.GetKey();
+	ilist.Clear();
+	String s = ToUpper((String)~search);
 	for(int i = 0; i < slot.GetCount(); i++) {
 		Slot& c = slot[i];
-		list.Add(sFormatImageName(c.name, c.image, c.exp), c.image);
+		if(ToUpper(c.name).Find(s) >= 0)
+			ilist.Add(i, sFormatImageName(c.name, c.image, c.exp), c.image);
 	}
-	if(ii >= 0) {
-		list.SetCursor(ii);
-		list.ScCursor(a);
-	}
+	ilist.ScrollTo(sc);
+	ilist.FindSetCursor(q);
+}
+
+void IconDes::Search()
+{
+	SyncList();
+}
+
+void IconDes::GoTo(int q)
+{
+	ilist.FindSetCursor(q);
+	if(ilist.IsCursor())
+		return;
+	search <<= Null;
+	SyncList();
+	ilist.FindSetCursor(q);
 }
 
 static int sCharFilterCid(int c)
@@ -34,7 +49,7 @@ static int sCharFilterCid(int c)
 
 void IconDes::PlaceDlg(TopWindow& dlg)
 {
-	Rect r = list.GetScreenRect();
+	Rect r = ilist.GetScreenRect();
 	Size sz = dlg.GetSize();
 	dlg.NoCenter().SetRect(max(0, r.left + (r.Width() - sz.cx) / 2), r.bottom + 32, sz.cx, sz.cy);
 }
@@ -76,25 +91,25 @@ bool CheckName(WithImageLayout<TopWindow>& dlg)
 void IconDes::InsertRemoved(int q)
 {
 	if(q >= 0 && q < removed.GetCount()) {
-		int ii = list.IsCursor() ? list.GetCursor() : 0;
+		int ii = ilist.IsCursor() ? (int)ilist.GetKey() : 0;
 		slot.Insert(ii) = removed[q];
 		removed.Remove(q);
 		SyncList();
-		list.SetCursor(ii);
+		GoTo(ii);
 	}
 }
 
 void IconDes::ImageInsert(const String& name, const Image& m, bool exp)
 {
-	int ii = list.IsCursor() ? list.GetCursor() : 0;
-	if(ii == list.GetCount() - 1)
-		ii = list.GetCount();
+	int ii = ilist.IsCursor() ? (int)ilist.GetKey() : 0;
+	if(ii == slot.GetCount() - 1)
+		ii = slot.GetCount();
 	Slot& c = slot.Insert(ii);
 	c.name = name;
 	c.image = m;
 	c.exp = exp;
 	SyncList();
-	list.SetCursor(ii);
+	GoTo(ii);
 }
 
 void IconDes::InsertImage()
@@ -211,7 +226,7 @@ void IconDes::InsertIml()
 	if(LoadIml(SelectLoadFile("Iml files\t*.iml"), m, f))
 		for(int i = 0; i < m.GetCount(); i++) {
 			ImageInsert(m[i].name, m[i].image, m[i].exp);
-			list.SetCursor(list.GetCursor() + 1);
+			GoTo((int)ilist.GetKey() + 1);
 		}
 }
 
@@ -274,8 +289,11 @@ void IconDes::EditImage()
 			if(!CheckName(dlg)) break;
 			c.name = ~dlg.name;
 			c.exp = ~dlg.exp;
-			list.Set(0, sFormatImageName(c.name, c.image, c.exp));
+			ilist.Set(1, sFormatImageName(c.name, c.image, c.exp));
+			int q = ilist.GetKey();
 			Reset();
+			SyncList();
+			GoTo(q);
 			return;
 		}
 		c.image = CreateImage(Size(minmax((int)~dlg.cx, 1, 8192), minmax((int)~dlg.cy, 1, 8192)), Null);
@@ -288,7 +306,7 @@ void IconDes::RemoveImage()
 {
 	if(!IsCurrent() || !PromptYesNo("Remove current image?"))
 		return;
-	int ii = list.GetCursor();
+	int ii = ilist.GetKey();
 	while(removed.GetCount() > 12)
 		removed.Remove(0);
 	Slot& r = removed.Add();
@@ -298,24 +316,25 @@ void IconDes::RemoveImage()
 	else
 		r.base_image = IconDesImg::LargeImage();
 	slot.Remove(ii);
-	list.KillCursor();
+	ilist.KillCursor();
 	SyncList();
 	if(ii < slot.GetCount())
-		list.SetCursor(ii);
+		GoTo(ii);
 	else
-		list.GoEnd();
+		ilist.GoEnd();
 }
 
 void IconDes::MoveSlot(int d)
 {
 	if(!IsCurrent())
 		return;
-	int c = list.GetCursor();
+	int c = ilist.GetKey();
 	d = c + d;
 	if(d >= 0 && d < slot.GetCount()) {
 		slot.Swap(c, d);
+		search <<= Null;
 		SyncList();
-		list.SetCursor(d);
+		GoTo(d);
 	}
 }
 
@@ -323,10 +342,10 @@ void IconDes::ChangeSlot(int d)
 {
 	if(!IsCurrent())
 		return;
-	int c = list.GetCursor();
+	int c = ilist.GetCursor();
 	d = c + d;
-	if(d >= 0 && d < slot.GetCount())
-		list.SetCursor(d);
+	if(d >= 0 && d < ilist.GetCount())
+		ilist.SetCursor(d);
 }
 
 void IconDes::ListMenu(Bar& bar)
@@ -344,9 +363,10 @@ void IconDes::ListMenu(Bar& bar)
 		bar.Add(AK_INSERT_IML, IconDesImg::InsertIml(), THISBACK(InsertIml));
 		bar.Add(AK_EXPORT_PNGS, IconDesImg::ExportPngs(), THISBACK(ExportPngs));
 		bar.Separator();
-		bar.Add(IsCurrent() && list.GetCursor() > 0, AK_MOVE_UP, IconDesImg::MoveUp(),
+		int q = ilist.GetKey();
+		bar.Add(IsCurrent() && q > 0, AK_MOVE_UP, IconDesImg::MoveUp(),
 		        THISBACK1(MoveSlot, -1));
-		bar.Add(IsCurrent() && list.GetCursor() < slot.GetCount() - 1, AK_MOVE_DOWN, IconDesImg::MoveDown(),
+		bar.Add(IsCurrent() && q < slot.GetCount() - 1, AK_MOVE_DOWN, IconDesImg::MoveDown(),
 		        THISBACK1(MoveSlot, 1));
 		if(removed.GetCount()) {
 			bar.Separator();
@@ -367,19 +387,20 @@ void IconDes::ListMenuEx(Bar& bar) {}
 
 void IconDes::Clear()
 {
-	list.Clear();
+	ilist.Clear();
 	slot.Clear();
 	Reset();
 }
 
 void IconDes::AddImage(const String& name, const Image& image, bool exp)
 {
+	int q = slot.GetCount();
 	Slot& c = slot.Add();
 	c.name = name;
 	c.image = image;
 	c.exp = exp;
-	list.Add(sFormatImageName(c.name, c.image, c.exp), c.image);
-	list.GoBegin();
+	ilist.Add(q, sFormatImageName(c.name, c.image, c.exp), c.image);
+	ilist.GoBegin();
 }
 
 int IconDes::GetCount() const
@@ -401,8 +422,8 @@ String IconDes::GetName(int ii) const
 
 String IconDes::GetCurrentName() const
 {
-	if(list.IsCursor())
-		return slot[list.GetCursor()].name;
+	if(ilist.IsCursor())
+		return GetName(ilist.GetKey());
 	return String();
 }
 

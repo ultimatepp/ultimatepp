@@ -16,8 +16,8 @@ bool IsSelection(const Image& m) {
 IconDes::EditPos IconDes::GetEditPos()
 {
 	EditPos e;
-	e.cursor = list.GetCursor();
-	e.sc = list.GetScroll();
+	e.cursor = ilist.GetKey();
+	e.sc = ilist.GetScroll();
 	e.slot.Clear();
 	e.slot.SetCount(slot.GetCount());
 	for(int i = 0; i < slot.GetCount(); i++) {
@@ -51,9 +51,9 @@ void IconDes::SetEditPos(const EditPos& e)
 			c.undo = es.undo;
 			c.redo = es.redo;
 		}
-		if(e.cursor >= 0 && e.cursor < list.GetCount()) {
-			list.SetCursor(e.cursor);
-			list.ScrollTo(e.sc);
+		if(e.cursor >= 0 && e.cursor < slot.GetCount()) {
+			ilist.ScrollTo(e.sc);
+			GoTo(e.cursor);
 		}
 	}
 	SyncImage();

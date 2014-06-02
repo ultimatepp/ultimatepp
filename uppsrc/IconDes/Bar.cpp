@@ -270,16 +270,29 @@ IconDes::IconDes()
 	AddFrame(ViewFrame());
 
 	leftpane.Left(rgbactrl, 256);
-	rgbactrl.SubCtrl(&list);
+	rgbactrl.SubCtrl(&imgs);
+
 	rgbactrl <<= THISBACK(ColorChanged);
 
-	list.AddColumn("", 4);
-	list.AddColumn("").SetDisplay(Single<CachedIconImage>());
-	list.NoHeader().NoVertGrid();
-	list.WhenBar = THISBACK(ListMenu);
-	list.WhenCursor = THISBACK(ListCursor);
-	list.WhenLeftDouble = THISBACK(EditImage);
-	list.NoWantFocus();
+	search.NullText("Search");
+	search <<= THISBACK(Search);
+	search.SetFilter(CharFilterToUpper);
+
+	int cy = EditString::GetStdHeight();
+	imgs.Add(search.HSizePos().TopPos(0, cy));
+	imgs.Add(ilist.HSizePos().VSizePos(cy, 0));
+
+	ilist.AddKey();
+	ilist.AddColumn("", 4);
+	ilist.AddColumn("").SetDisplay(Single<CachedIconImage>());
+	ilist.NoHeader().NoVertGrid();
+	ilist.WhenBar = THISBACK(ListMenu);
+	ilist.WhenCursor = THISBACK(ListCursor);
+	ilist.WhenLeftDouble = THISBACK(EditImage);
+	ilist.NoWantFocus();
+
+	search <<= THISBACK(Search);
+	search.SetFilter(CharFilterToUpper);
 
 	bottompane.Bottom(iconshow, 64);
 

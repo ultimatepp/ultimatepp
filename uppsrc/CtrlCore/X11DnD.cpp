@@ -57,6 +57,7 @@ struct DnDLoop : LocalLoop {
 
 	void Request(XSelectionRequestEvent *se);
 	void Sync();
+	Value  GetData() const { return LocalLoop::GetData(); } // Silence CLANG warning
 	String GetData(const String& f);
 	void Leave();
 	virtual void  LeftUp(Point, dword);

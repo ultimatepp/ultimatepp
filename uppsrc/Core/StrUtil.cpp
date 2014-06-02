@@ -68,6 +68,16 @@ int CharFilterAlpha(int c)
 	return IsAlpha(c) ? c : 0;
 }
 
+int CharFilterToUpper(int c)
+{
+	return ToUpper(c);
+}
+
+int CharFilterToLower(int c)
+{
+	return ToLower(c);
+}
+
 int CharFilterAlphaToUpper(int c)
 {
 	return IsAlpha(c) ? IsUpper(c) ? c : ToUpper(c) : 0;

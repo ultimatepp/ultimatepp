@@ -294,7 +294,11 @@ private:
 	LayDesigner       *frame;
 	ToolBar            toolbar;
 	MenuBar            menubar;
-	ArrayCtrl          layoutlist;
+	
+	ParentCtrl         layouts;
+	ArrayCtrl          list;
+	EditString         search;
+
 	ArrayCtrl          item;
 	PropertyPane       property;
 
@@ -352,6 +356,7 @@ private:
 	void   SyncItem(int item, int style);
 	void   SyncProperties(bool sync);
 	void   SyncLayoutList();
+	void   Search();
 	void   CreateCtrl(const String& type);
 	void   Group(Bar& bar, const String& group);
 	void   Templates(Bar& bar);
@@ -414,7 +419,8 @@ private:
 	void        SetSprings(dword s);
 	void        ShowSelection(bool s);
 
-	void        AddLayout();
+	void        GoTo(int key);
+	void        AddLayout(bool insert);
 	void        DuplicateLayout();
 	void        RenameLayout();
 	void        RemoveLayout();

@@ -49,6 +49,13 @@ LAYOUT(ParaLayout, 488, 352)
 	UNTYPED(n[7], LeftPosZ(408, 54).TopPosZ(320, 19))
 END_LAYOUT
 
+LAYOUT(SetStyleLayout, 216, 280)
+	ITEM(ArrayCtrl, style, AutoHideSb(true).LeftPosZ(8, 200).TopPosZ(8, 232))
+	ITEM(Button, newstyle, SetLabel(t_("New")).LeftPosZ(8, 64).TopPosZ(248, 24))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(76, 64).TopPosZ(248, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(144, 64).TopPosZ(248, 24))
+END_LAYOUT
+
 LAYOUT(UnitLayout, 244, 140)
 	ITEM(LabelBox, dv___0, SetLabel(t_("Units")).LeftPosZ(8, 228).TopPosZ(4, 40))
 	ITEM(Switch, unit, SetLabel(t_("dot\npoint\ninch\nmm\ncm")).LeftPosZ(16, 216).TopPosZ(20, 16))
@@ -59,13 +66,6 @@ LAYOUT(UnitLayout, 244, 140)
 	ITEM(Button, accels, SetLabel(t_("Style keys")).LeftPosZ(8, 76).TopPosZ(108, 24))
 	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(104, 64).TopPosZ(108, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(172, 64).TopPosZ(108, 24))
-END_LAYOUT
-
-LAYOUT(SetStyleLayout, 216, 280)
-	ITEM(ArrayCtrl, style, AutoHideSb(true).LeftPosZ(8, 200).TopPosZ(8, 232))
-	ITEM(Button, newstyle, SetLabel(t_("New")).LeftPosZ(8, 64).TopPosZ(248, 24))
-	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(76, 64).TopPosZ(248, 24))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(144, 64).TopPosZ(248, 24))
 END_LAYOUT
 
 LAYOUT(ObjectSizeLayout, 290, 102)

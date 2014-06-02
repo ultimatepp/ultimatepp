@@ -833,6 +833,8 @@ int CharFilterDigit(int c);
 int CharFilterWhitespace(int c);
 int CharFilterNotWhitespace(int c);
 int CharFilterAlpha(int c);
+int CharFilterToUpper(int c);
+int CharFilterToLower(int c);
 int CharFilterAlphaToUpper(int c);
 int CharFilterAlphaToLower(int c);
 int CharFilterInt(int c);
