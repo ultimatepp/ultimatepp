@@ -273,11 +273,16 @@ public:
 
 private:
 	bool   DoKey(dword key, int count);
+	bool   DoHotKey(dword key);
 
 	struct KeyMaster : public ParentCtrl {
 		LayDes *d;
 
-		virtual bool   Key(dword key, int count) {
+		virtual bool HotKey(dword key) {
+			return d->DoHotKey(key);
+		}
+
+		virtual bool Key(dword key, int count) {
 			return d->DoKey(key, count);
 		}
 	};

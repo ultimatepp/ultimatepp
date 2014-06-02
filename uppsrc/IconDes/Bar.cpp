@@ -22,6 +22,7 @@ bool IconDes::Key(dword key, int count)
 	case K_SHIFT_DOWN:  KeyMove(0, 1); return true;
 	case K_PAGEUP:      ChangeSlot(-1); return true;
 	case K_PAGEDOWN:    ChangeSlot(1); return true;
+	case K_CTRL_F:      search.SetFocus(); return true;
 	}
 	return false;
 }
@@ -274,7 +275,7 @@ IconDes::IconDes()
 
 	rgbactrl <<= THISBACK(ColorChanged);
 
-	search.NullText("Search");
+	search.NullText("Search (Ctrl+F)");
 	search <<= THISBACK(Search);
 	search.SetFilter(CharFilterToUpper);
 

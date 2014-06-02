@@ -311,7 +311,7 @@ LayDes::LayDes()
 	list.WhenLeftDouble = THISBACK(RenameLayout);
 	list.NoWantFocus();
 	
-	search.NullText("Search");
+	search.NullText("Search (Ctrl+F)");
 	search <<= THISBACK(Search);
 	search.SetFilter(CharFilterToUpper);
 

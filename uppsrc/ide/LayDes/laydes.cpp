@@ -1596,6 +1596,15 @@ static int RoundStep(int org, int d, int g)
 	return d ? itimesfloor(org + d * g + (d > 0 ? 0 : g - 1), g) - org : 0;
 }
 
+bool LayDes::DoHotKey(dword key)
+{
+	if(key == K_CTRL_F) {
+		search.SetFocus();
+		return true;
+	}
+	return false;
+}
+
 bool LayDes::DoKey(dword key, int count)
 {
 	SaveState();
