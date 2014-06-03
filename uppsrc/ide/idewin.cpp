@@ -912,7 +912,6 @@ void AppMain___()
 		if(arg.GetCount() && !clset) {
 			for(int i = 0; i < arg.GetCount(); i++)
 				if(arg[i] != "-f") {
-					DLOG("Loading " << NormalizePath(arg[i]));
 					ide.EditFile(NormalizePath(arg[i]));
 					ide.FileSelected();
 				}
