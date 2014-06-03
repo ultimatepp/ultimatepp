@@ -11,7 +11,7 @@ public:
 	virtual void            CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text);
 	virtual Vector<IfState> PickIfStack(); // TODO: Refactor?
 
-private:
+protected:
 	bool        comment;       // we are in /* */ block comment
 	bool        linecomment;   // we are in // line comment (because it can be continued by '\')
 	bool        string;        // we are in string (becase it can be continued by '\')
