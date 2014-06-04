@@ -137,10 +137,8 @@ void WorkspaceWork::ScanWorkspace() {
 			package.Add(prjaux, IdeImg::PrjAux(), ListFont(), Magenta);
 			package.Add(METAPACKAGE, IdeImg::Meta(), ListFont(), Red);
 		}
-		else {
-			package.Add(tempaux, IdeImg::TempAux(), ListFont(), Magenta);
-			package.Add(ideaux, IdeImg::IdeAux(), ListFont(), Magenta);
-		}
+		package.Add(tempaux, IdeImg::TempAux(), ListFont(), Magenta);
+		package.Add(ideaux, IdeImg::IdeAux(), ListFont(), Magenta);
 	}
 	package.SetCursor(0);
 	
