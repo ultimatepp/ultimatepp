@@ -117,13 +117,15 @@ bool Ide::IsEditorMode() const
 
 void Ide::SaveLastMain()
 {
-	if(main.GetCount())
-		StoreToFile(THISBACK(SerializeLastMain), ConfigFile("lastmain.cfg"));
+	StoreToFile(THISBACK(SerializeLastMain), ConfigFile("lastmain.cfg"));
 }
 
 void Ide::LoadLastMain()
 {
+	bool editor = IsEditorMode();
 	LoadFromFile(THISBACK(SerializeLastMain), ConfigFile("lastmain.cfg"));
+	if(editor)
+		main <<= Null;
 }
 
 void Sentinel(Stream& s, const char *txt)

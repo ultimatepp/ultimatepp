@@ -944,8 +944,7 @@ void AppMain___()
 			Ini::user_log = true;
 		}
 		
-		if(!ide.IsEditorMode())
-			ide.LoadLastMain();
+		ide.LoadLastMain();
 		if(clset || ide.OpenMainPackage()) {
 			ide.SaveLastMain();
 			ide.isscanning++;
