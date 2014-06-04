@@ -133,12 +133,12 @@ void WorkspaceWork::ScanWorkspace() {
 		package.Add(pk, Null, fnt, Nvl(pi.ink, SColorText()), false, 0, Null, SColorMark);
 	}
 	if(!organizer) {
-		if(main.GetCount()) {
+		if(main.GetCount())
 			package.Add(prjaux, IdeImg::PrjAux(), ListFont(), Magenta);
-			package.Add(METAPACKAGE, IdeImg::Meta(), ListFont(), Red);
-		}
-		package.Add(tempaux, IdeImg::TempAux(), ListFont(), Magenta);
 		package.Add(ideaux, IdeImg::IdeAux(), ListFont(), Magenta);
+		package.Add(tempaux, IdeImg::TempAux(), ListFont(), Magenta);
+		if(main.GetCount())
+			package.Add(METAPACKAGE, IdeImg::Meta(), ListFont(), Red);
 	}
 	package.SetCursor(0);
 	
