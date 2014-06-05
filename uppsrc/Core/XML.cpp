@@ -135,7 +135,9 @@ String  XmlTag::operator()(const char *text)
 			s++;
 		r.Cat(b, s);
 	}
-	r << "\r\n" << end;
+	if(!first)
+		r << "\r\n";
+	r << end;
 	return r;
 }
 
