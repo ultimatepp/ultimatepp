@@ -78,7 +78,13 @@ public:
 	LabelBase&  SetInk(Color color)                          { return SetInk(color, color); }
 	LabelBase&  SetRightImage(const Image& bmp2, int spc = 0, bool never_hide = false);
 	LabelBase&  SetAlign(int align);
+	LabelBase&  AlignLeft()                                  { return SetAlign(ALIGN_CENTER); }
+	LabelBase&  AlignCenter()                                { return SetAlign(ALIGN_CENTER); }
+	LabelBase&  AlignRight()                                 { return SetAlign(ALIGN_RIGHT); }
 	LabelBase&  SetVAlign(int align);
+	LabelBase&  AlignTop()                                   { return SetAlign(ALIGN_TOP); }
+	LabelBase&  AlignVCenter()                               { return SetAlign(ALIGN_CENTER); }
+	LabelBase&  AlignBottom()                                { return SetAlign(ALIGN_BOTTOM); }
 	LabelBase&  SetImage(const Image& bmp, int spc = 0, bool never_hide = false)
 	{ SetLeftImage(bmp, spc, never_hide); return *this; }
 

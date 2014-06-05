@@ -114,7 +114,8 @@ void OutFilterStream::Close()
 		FlushOut();
 		End();
 		buffer.Clear();
-		out->Close();
+		if(out)
+			out->Close();
 	}
 }
 
