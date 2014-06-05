@@ -2,6 +2,18 @@
 
 using namespace Upp;
 
+String data;
+
+void AnythingPut(const void *ptr, int count)
+{
+	data.Cat((const char *)ptr, count);	
+}
+
+void AnythingEnd()
+{
+	LOG("----- STREAM CLOSED");
+}
+
 CONSOLE_APP_MAIN
 {
 	String path = GetHomeDirFile("test.gz");
@@ -22,7 +34,7 @@ CONSOLE_APP_MAIN
 		LOG(in.GetLine());
 	}
 
-	{
+	{ // In this case we are using InFilterStream without input stream to represent HttpRequest as input stream
 		HttpRequest http("www.ultimatepp.org");
 		InFilterStream in;
 		http.WhenContent = callback(&in, &InFilterStream::Out);
@@ -31,4 +43,12 @@ CONSOLE_APP_MAIN
 		while(!in.IsEof())
 			LOG(in.GetLine());
 	}
+
+	{ // In this case we are using OutFilterStream without out stream to represent anything with Put as stream
+		OutFilterStream out;
+		out.Filter = callback(AnythingPut);
+		out.End = callback(AnythingEnd);
+		out << "Hello world!";
+	}
+	LOG(data);
 }
