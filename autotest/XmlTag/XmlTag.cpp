@@ -56,6 +56,7 @@ CONSOLE_APP_MAIN
 	XML(XmlTag("params")(XmlTag("param")(XmlTag("int")("123"))));
 	XML(XmlTag("params")(XmlTag("param")(XmlTag("nil")())));
 	XML(XmlTag("tag2")(XmlTag("tag")("attrib","bad\n<value").Text("text")));
+	XML(XmlTag("yyy")(XmlTag("xxx")("")));
 
 	LOG("----------------------------------------------------");
 	
