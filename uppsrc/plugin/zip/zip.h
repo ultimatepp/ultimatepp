@@ -5,8 +5,6 @@
 
 NAMESPACE_UPP
 
-#ifndef OLD_UNZIP
-
 class UnZip {
 	struct File : Moveable<File> {
 		word   bit;
@@ -26,7 +24,7 @@ class UnZip {
 
 	void   ReadDir();
 
-	static Time   GetTime(dword time);
+	static Time   GetZipTime(dword time);
 
 public:
 	bool   IsEof() const          { return current >= file.GetCount(); }
@@ -39,6 +37,7 @@ public:
 	String GetPath(int i) const   { return file[i].path; }
 	bool   IsFolder(int i) const  { return *file[i].path.Last() == '/'; }
 	int    GetLength(int i) const { return file[i].usize; }
+	Time   GetTime(int i) const   { return GetZipTime(file[i].time); }
 
 	void   Seek(int i)            { ASSERT(i >= 0 && i < file.GetCount()); current = i; }
 
@@ -60,52 +59,6 @@ public:
 	UnZip();
 	virtual ~UnZip();
 };
-
-#else
-
-class UnZip {
-	Stream *zip;
-	
-	bool   error;
-	bool   eof;
-	String path;
-	word   bit;
-	word   method;
-	Time   time;
-	dword  crc32;
-	dword  csize;
-	dword  usize;
-	dword  done;
-
-	void   Init();
-	void   ReadHeader();
-	void   SetError()           { error = true; }
-
-public:
-	bool   IsEof() const;
-	operator bool() const       { return !IsEof(); }
-	
-	bool   IsError() const      { return error; }
-
-	bool   IsFolder() const;
-	String GetPath() const      { return path; }
-	int    GetLength() const    { return usize; }
-	Time   GetTime() const      { return time; }
-
-	void   SkipFile();
-	bool   ReadFile(Stream& out, Gate2<int, int> progress = false);
-	String ReadFile(Gate2<int, int> progress = false);
-	
-	dword  GetPos()             { return done; }
-
-	void   Create(Stream& in);
-
-	UnZip(Stream& in);
-	UnZip();
-	virtual ~UnZip();
-};
-
-#endif
 
 class FileUnZip : public UnZip {
 	FileIn zip;
@@ -135,11 +88,15 @@ public:
 };
 
 class Zip {
+	typedef Zip CLASSNAME;
+
 	Stream *zip;
 
 	struct File {
 		String path;
 		dword  time;
+		int    version;
+		int    gpflag;
 		int    method;
 		dword  crc;
 		dword  csize;
@@ -149,9 +106,25 @@ class Zip {
 
 	dword   done;
 
+	One<Zlib> pipeZLib;
+
 	void WriteFile0(const void *ptr, int size, const char *path, Gate2<int, int> progress, Time tm, int method);
 
+	void FileHeader(const char *path, Time tm);
+
+	void PutCompressed(const void *data, int size);
+	
+	typedef Zip CLASSNAME;
+
 public:
+	Callback WhenError;
+
+	void BeginFile(const char *path, Time tm = GetSysTime());
+	void BeginFile(OutFilterStream& oz, const char *path, Time tm = GetSysTime());
+	void Put(const void *data, int size);
+	void EndFile();
+	bool IsFileOpened() const                 { return pipeZLib; }
+
 	void WriteFolder(const char *path, Time tm);
 	void WriteFile(const void *ptr, int size, const char *path, Gate2<int, int> progress = false, Time tm = GetSysTime());
 	void WriteFile(const String& s, const char *path, Gate2<int, int> progress = false, Time tm = GetSysTime());
