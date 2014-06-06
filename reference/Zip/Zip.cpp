@@ -5,7 +5,7 @@ using namespace Upp;
 CONSOLE_APP_MAIN {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
-	String zipfile = ConfigFile("test.zip");
+	String zipfile = GetHomeDirFile("test.zip");
 
 	// Compression
 	FileZip zip(zipfile);
@@ -16,6 +16,16 @@ CONSOLE_APP_MAIN {
 	zip.WriteFile(somedata, strlen(somedata), "somedata.txt");
 
 	zip.WriteFile(String("other data"), "test/otherdata.txt");
+	
+	zip.BeginFile("file1.txt");
+	zip.Put(somedata, strlen(somedata));
+	zip.EndFile();
+	
+	{
+		OutFilterStream oz;
+		zip.BeginFile(oz, "file2.txt");
+		oz << "some content";
+	} //OutFilterStream destructor calls EndFile
 
 	if(zip.Finish())
 		LOG(zipfile << " created succesfully");
