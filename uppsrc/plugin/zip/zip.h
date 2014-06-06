@@ -88,8 +88,6 @@ public:
 };
 
 class Zip {
-	typedef Zip CLASSNAME;
-
 	Stream *zip;
 
 	struct File {
