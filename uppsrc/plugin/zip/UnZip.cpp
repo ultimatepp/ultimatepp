@@ -1,7 +1,5 @@
 #include "zip.h"
 
-#ifndef OLD_UNZIP
-
 NAMESPACE_UPP
 
 void UnZip::ReadDir()
@@ -68,7 +66,7 @@ void UnZip::ReadDir()
 	error = false;
 }
 
-Time UnZip::GetTime(dword dt)
+Time UnZip::GetZipTime(dword dt)
 {
 	Time time;
 	time.year = int16(((dt >> 25) & 0x7f) + 1980);
@@ -163,5 +161,3 @@ UnZip::UnZip()
 UnZip::~UnZip() {}
 
 END_UPP_NAMESPACE
-
-#endif

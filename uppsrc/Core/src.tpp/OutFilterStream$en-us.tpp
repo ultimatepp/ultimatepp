@@ -15,7 +15,9 @@ topic "OutFilterStream";
 [s1;:OutFilterStream`:`:class: [@(0.0.255)3 class][3 _][*3 OutFilterStream][3 _:_][@(0.0.255)3 p
 ublic][3 _][*@3;3 Stream]&]
 [s2;%% Adapter Stream that glues an output stream with some filtering 
-object, typically of compression/decompression class.&]
+object, typically of compression/decompression class. Output 
+stream can also be omitted, in that case OutFilterStream is useful 
+to convert anything capable of consuming data into Stream.&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
 [s3; &]
@@ -26,21 +28,23 @@ call does nothing.&]
 [s3; &]
 [s4; &]
 [s5;:OutFilterStream`:`:out: [_^Stream^ Stream]_`*[* out]&]
-[s2;%% Pointer to the output stream.&]
+[s2;%% Pointer to the output stream. Can be NULL.&]
 [s3; &]
 [s4; &]
 [s5;:OutFilterStream`:`:Filter: [_^Callback2^ Callback2]<[@(0.0.255) const]_[@(0.0.255) voi
 d]_`*, [@(0.0.255) int]>_[* Filter]&]
-[s2;%% Callback to filter input function.&]
+[s2;%% Callback to filter input function. This is called when OutFilterStream 
+needs to output a chunk of buffered data.&]
 [s3; &]
 [s4; &]
 [s5;:OutFilterStream`:`:End: [_^Callback^ Callback]_[* End]&]
-[s2;%% Callback to filter finalization.&]
+[s2;%% Callback to filter finalization. Called on closing the stream.&]
 [s3; &]
 [s4; &]
 [s5;:OutFilterStream`:`:Out`(const void`*`,int`): [@(0.0.255) void]_[* Out]([@(0.0.255) con
 st]_[@(0.0.255) void]_`*[*@3 ptr], [@(0.0.255) int]_[*@3 size])&]
-[s2;%% Method serving as filter output.&]
+[s2;%% Method serving as filter output. Basically performs out`->Put(ptr, 
+size), also keeps track of output bytes written (see GetCount).&]
 [s3;%% &]
 [s4; &]
 [s5;:OutFilterStream`:`:GetCount`(`)const: [@(0.0.255) int64]_[* GetCount]()_[@(0.0.255) co

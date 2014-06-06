@@ -13,37 +13,112 @@ void Zip::WriteFolder(const char *path, Time tm)
 int64 zPress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool gzip,
              bool compress, dword *crc, bool hdr);
 
-void Zip::WriteFile(const void *ptr, int size, const char *path, Gate2<int, int> progress, Time tm)
+
+void Zip::FileHeader(const char *path, Time tm)
 {
-	File& f = file.Add();
+	File& f = file.Top();
 	f.path = UnixPath(path);
-	StringStream ss;
-	MemReadStream ms(ptr, size);
-	dword crc;
-	zPress(ss, ms, size, AsGate64(progress), false, true, &crc, false);
-	String data = ss.GetResult();
-	const void *r = ~data;
-	int   csize = data.GetLength();
 	zip->Put32le(0x04034b50);
-	zip->Put16le(20);
-	zip->Put16le(0);
-	if(data.GetLength() >= size) {
-		r = ptr;
-		csize = size;
-		zip->Put16le(f.method = 0);
-	}
-	else
-		zip->Put16le(f.method = 8);
+	zip->Put16le(f.version);
+	zip->Put16le(f.gpflag);
+	zip->Put16le(f.method);
 	zip->Put32le(f.time = (tm.day << 16) | (tm.month << 21) | ((tm.year - 1980) << 25) |
 	                      (tm.hour << 11) | (tm.minute << 5) | (tm.second >> 1));
-	zip->Put32le(f.crc = crc);
-	zip->Put32le(f.csize = csize);
-	zip->Put32le(f.usize = size);
+	ASSERT((f.gpflag & 0x8) == 0 || f.crc == 0);
+	zip->Put32le(f.crc);
+	ASSERT((f.gpflag & 0x8) == 0 || f.csize == 0);
+	zip->Put32le(f.csize);
+	ASSERT((f.gpflag & 0x8) == 0 || f.usize == 0);
+	zip->Put32le(f.usize);
 	zip->Put16le(strlen(f.path));
 	zip->Put16le(0);
 	zip->Put(f.path);
-	zip->Put(r, csize);
-	done += 5 * 2 + 5 * 4 + csize + f.path.GetCount();
+	done += 5*2 + 5*4 + f.path.GetCount();
+}
+
+void Zip::BeginFile(const char *path, Time tm)
+{
+	ASSERT(!IsFileOpened());
+	pipeZLib.Create();
+	pipeZLib->WhenOut = THISBACK(PutCompressed);
+	pipeZLib->GZip(false).CRC().NoHeader().Compress();
+	File& f = file.Add();
+	f.version = 21;
+	f.gpflag = 0x8;
+	f.method = 8;
+	f.crc = 0;
+	f.csize = 0;
+	f.usize = 0;
+	FileHeader(path, tm);
+	if (zip->IsError()) WhenError(); 
+}
+
+void Zip::BeginFile(OutFilterStream& oz, const char *path, Time tm)
+{
+	BeginFile(path, tm);
+	oz.Filter = THISBACK(Put);
+	oz.End = THISBACK(EndFile);
+}
+
+void Zip::Put(const void *ptr, int size)
+{
+	ASSERT(IsFileOpened());
+	File& f = file.Top();
+	pipeZLib->Put(ptr, size);
+	f.usize += size;
+}
+
+void Zip::EndFile()
+{
+	if(!IsFileOpened())
+		return;
+	File& f = file.Top();
+	ASSERT(f.gpflag & 0x8);
+	pipeZLib->End();
+	zip->Put32le(f.crc = pipeZLib->GetCRC());
+	zip->Put32le(f.csize);
+	zip->Put32le(f.usize);
+	done += 3*4;
+	pipeZLib.Clear();
+	if (zip->IsError()) WhenError(); 
+}
+
+void Zip::PutCompressed(const void *ptr, int size)
+{
+	ASSERT(IsFileOpened());
+	zip->Put(ptr, size);
+	if (zip->IsError()) WhenError(); 
+	done += size;
+	file.Top().csize += size;
+}
+
+void Zip::WriteFile(const void *ptr, int size, const char *path, Gate2<int, int> progress, Time tm)
+{
+	ASSERT(!IsFileOpened());
+	File& f = file.Add();
+	StringStream ss;
+	MemReadStream ms(ptr, size);
+
+	f.usize = size;
+	zPress(ss, ms, size, AsGate64(progress), false, true, &f.crc, false);
+
+	String data = ss.GetResult();
+	const void *r = ~data;
+	f.csize = data.GetLength();
+
+	f.version = 20;
+	f.gpflag = 0;
+	if(data.GetLength() >= size) {
+		r = ptr;
+		f.csize = size;
+		f.method = 0;
+	}
+	else
+		f.method = 8;
+	FileHeader(path, tm);
+	zip->Put(r, f.csize);
+	done += f.csize;
+	if (zip->IsError()) WhenError(); 
 }
 
 void Zip::WriteFile(const String& s, const char *path, Gate2<int, int> progress, Time tm)
@@ -68,8 +143,8 @@ void Zip::Finish()
 		File& f = file[i];
 		zip->Put32le(0x02014b50);
 		zip->Put16le(20);
-		zip->Put16le(20);
-		zip->Put16le(0);  // general purpose bit flag
+		zip->Put16le(f.version);
+		zip->Put16le(f.gpflag);  // general purpose bit flag
 		zip->Put16le(f.method);
 		zip->Put32le(f.time);
 		zip->Put32le(f.crc);
@@ -82,7 +157,7 @@ void Zip::Finish()
 		zip->Put16le(0); // internal file attributes        2 bytes
 		zip->Put32le(0); // external file attributes        4 bytes
 		zip->Put32le(rof); // relative offset of local header 4 bytes
-		rof+=5 * 2 + 5 * 4 + f.csize + f.path.GetCount();
+		rof+=5 * 2 + 5 * 4 + f.csize + f.path.GetCount() + (f.gpflag & 0x8 ? 3*4 : 0);
 		zip->Put(f.path);
 		done += 7 * 4 + 9 * 2 + f.path.GetCount();
 	}
@@ -94,6 +169,7 @@ void Zip::Finish()
 	zip->Put32le(done - off); // size of the central directory
 	zip->Put32le(off); //offset of start of central directory with respect to the starting disk number
 	zip->Put16le(0);
+	if (zip->IsError()) WhenError(); 
 	zip = NULL;
 }
 

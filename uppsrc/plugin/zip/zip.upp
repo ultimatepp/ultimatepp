@@ -4,6 +4,5 @@ file
 	zip.h,
 	Zip.cpp,
 	UnZip.cpp,
-	UnZipUtil.cpp,
-	UnZipOld.cpp;
+	UnZipUtil.cpp;
 
