@@ -38,7 +38,10 @@ void  RichTextView::Paint(Draw& w)
 	Color c = SColorPaper();
 	if(Grayscale(c) < 100)
 		pi.coloroverride = true;
-	text.Paint(pw, GetPage(), pi);
+	Rect pg = GetPage();
+	if(vcenter && sb.GetTotal() < sb.GetPage())
+		pg.top = (sb.GetPage() - sb.GetTotal()) / 2;
+	text.Paint(pw, pg, pi);
 	w.End();
 	w.End();
 }
