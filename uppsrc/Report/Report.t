@@ -42,7 +42,7 @@ nlNL("PDF bestand")
 plPL("")
 ptBR("Arquivo PDF")
 ruRU("PDF \321\204\320\260\320\271\320\273")
-skSK("")
+skSK("PDF s\303\272bor")
 zhTW("")
 
 T_("Output PDF file")
@@ -56,7 +56,7 @@ plPL("")
 ptBR("Arquivo PDF de sa\303\255da")
 ruRU("\320\241\320\276\321\205\321\200\320\260\320\275\320\265\320\275\320\275\321\213\320\271 "
      "PDF \321\204\320\260\320\271\320\273")
-skSK("")
+skSK("V\303\275stup do PDF s\303\272boru")
 zhTW("")
 
 
