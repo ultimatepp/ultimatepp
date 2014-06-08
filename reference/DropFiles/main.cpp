@@ -6,6 +6,8 @@ struct DndTest : public TopWindow {
 	virtual void Paint(Draw &w);
 	virtual void DragAndDrop(Point p, PasteClip& d);
 	virtual bool Key(dword key, int count);
+	virtual void LeftDrag(Point p, dword keyflags);
+
 	Vector<String> files;
 
 	DndTest();
@@ -23,7 +25,9 @@ void DndTest::Paint(Draw &w)
 
 void DndTest::DragAndDrop(Point p, PasteClip& d)
 {
-	if (AcceptFiles(d)) {
+	if(IsDragAndDropSource())
+		return;
+	if(AcceptFiles(d)) {
 		files = GetFiles(d);
 		Refresh();
 	}
@@ -37,6 +41,15 @@ bool DndTest::Key(dword key, int count)
 		return true;
 	}
 	return false;
+}
+
+void DndTest::LeftDrag(Point p, dword keyflags)
+{
+	if(files.GetCount()) {
+		VectorMap<String, ClipData> data;
+		AppendFiles(data, files);
+		DoDragAndDrop(data, Null, DND_COPY);
+	}
 }
 
 DndTest::DndTest()
