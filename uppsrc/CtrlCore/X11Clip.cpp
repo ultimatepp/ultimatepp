@@ -377,6 +377,17 @@ Vector<String> GetFiles(PasteClip& clip) {
 	return r;
 }
 
+void AppendFiles(VectorMap<String, ClipData>& data, const Vector<String>& files)
+{
+	GuiLock __;
+	if(files.GetCount() == 0)
+		return;
+	String h;
+	for(int i = 0; i < files.GetCount(); i++)
+		h << "file://" << files[i] << '\n';
+	data.GetAdd("text/uri-list") = h;
+}
+
 bool PasteClip::IsAvailable(const char *fmt) const
 {
 	return Ctrl::ClipHas(type, fmt);
