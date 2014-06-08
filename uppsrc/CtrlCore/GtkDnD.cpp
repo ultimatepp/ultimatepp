@@ -86,7 +86,8 @@ Image MakeDragImage(const Image& arrow, const Image& arrow98, Image sample)
 int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
                         const VectorMap<String, ClipData>& data)
 {
-	LLOG("DoDragAndDrop");
+	LLOG("------------------------------");
+	LLOG("DoDragAndDrop " << fmts);
 	TopWindow *w = GetTopWindow();
 	if(!w || !w->top)
 		return DND_NONE;
@@ -96,8 +97,10 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	if(actions & DND_COPY)
 		gdk_actions |= GDK_ACTION_COPY;
 	GtkTargetList *list = CreateTargetList(data);
-	Vector<String> f = Split(fmts, ';');
 	dnd_fmts.Clear();
+	for(int i = 0; i < data.GetCount(); i++)
+		AddFmt(list, data.GetKey(i), i);
+	Vector<String> f = Split(fmts, ';');
 	for(int i = 0; i < f.GetCount(); i++) {
 		AddFmt(list, f[i], data.GetCount() + i);
 		dnd_fmts.Add(f[i]);
@@ -127,7 +130,7 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 		ProcessEvents();
 	dnd_source_data = NULL;
 	gtk_target_list_unref (list);
-	LLOG("--DoDragAndDrop");
+	LLOG("-------- DoDragAndDrop");
 	return dnd_result;
 }
 

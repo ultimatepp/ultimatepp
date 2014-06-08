@@ -9,6 +9,19 @@ NAMESPACE_UPP
 
 void Ctrl::GtkSelectionDataSet(GtkSelectionData *selection_data, const String& fmt, const String& data)
 {
+	if(fmt == "files")  {
+		Vector<String> h = Split(data, '\n');
+		Buffer<gchar *> uris(h.GetCount() + 1, NULL);
+		for(int i = 0; i < h.GetCount(); i++) {
+			int l = h[i].GetCount() + 1;
+			uris[i] = new gchar[l];
+			memcpy(uris[i], ~h[i], l);
+		}
+		gtk_selection_data_set_uris(selection_data, ~uris);
+		for(int i = 0; i < h.GetCount(); i++)
+			delete uris[i];
+	}
+	else
 	if(fmt == "text")
 		gtk_selection_data_set_text(selection_data, (const gchar*)~data, data.GetCount());
 	else
@@ -42,6 +55,9 @@ Ctrl::Gclipboard::Gclipboard(GdkAtom type)
 
 void Ctrl::AddFmt(GtkTargetList *list, const String& fmt, int info)
 {
+	if(fmt == "files")
+		gtk_target_list_add_uri_targets(list, info);
+	else
 	if(fmt == "text")
 		gtk_target_list_add_text_targets(list, info);
 	else
@@ -354,6 +370,17 @@ Vector<String> GetFiles(PasteClip& clip)
 {
 	GuiLock __;
 	return GetClipFiles(clip.Get("files"));
+}
+
+void AppendFiles(VectorMap<String, ClipData>& data, const Vector<String>& files)
+{
+	GuiLock __;
+	if(files.GetCount() == 0)
+		return;
+	String h;
+	for(int i = 0; i < files.GetCount(); i++)
+		h << "file://" << files[i] << '\n';
+	data.GetAdd("files") = h;
 }
 
 Ptr<Ctrl> Ctrl::sel_ctrl;
