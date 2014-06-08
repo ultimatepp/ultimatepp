@@ -14,7 +14,7 @@ nlNL("Sluit")
 plPL("Zamknij")
 ptBR("Fechar")
 ruRU("\320\227\320\260\320\272\321\200\321\213\321\202\321\214")
-skSK("Zatvori\305\245")
+skSK("Zavrie\305\245")
 zhTW("\351\227\234\351\226\211")
 
 T_("Search")
