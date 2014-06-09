@@ -44,3 +44,5 @@ HL_COLOR(INK_SQLFUNC, "Sql functions", 1)
 HL_COLOR(INK_SQLBOOL, "Sql boolean expressions", 1)
 HL_COLOR(INK_UPPMACROS, "U++ macros", 0)
 HL_COLOR(INK_UPPLOGS, "U++ log macros", 0)
+
+HL_COLOR(PAPER_SELWORD, "Selected word through file", 0)

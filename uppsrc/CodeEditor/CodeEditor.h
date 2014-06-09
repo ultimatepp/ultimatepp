@@ -253,6 +253,8 @@ protected:
 	bool   found, notfoundfw, notfoundbk;
 	int    foundpos, foundsize;
 
+	WString selword;
+
 	int    iwc;
 
 	String highlight;

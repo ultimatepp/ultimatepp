@@ -213,6 +213,10 @@ void CodeEditor::Periodic()
 
 void CodeEditor::SelectionChanged()
 {
+	if(selword.GetCount()) {
+		Refresh();
+		selword.Clear();
+	}
 	if(!foundsel) {
 		CloseFindReplace();
 		found = false;
@@ -508,8 +512,13 @@ String CodeEditor::GetWord()
 void CodeEditor::LeftDouble(Point p, dword keyflags) {
 	int l, h;
 	int pos = GetMousePos(p);
-	if(GetWordPos(pos, l, h))
+	if(GetWordPos(pos, l, h)) {
 		SetSelection(l, h);
+		if(h - l < 50) {
+			selword = GetW(l, h - l);
+			Refresh();
+		}
+	}
 	else
 		SetSelection(pos, pos + 1);
 }
@@ -643,7 +652,6 @@ void CodeEditor::ToggleLineComments(bool usestars)
 	bool is_commented = true;
 
 	if(usestars) {
-
 		is_commented &= GetChar(GetPos(start_line) + 0) == '/' &&
 						GetChar(GetPos(start_line) + 1) == '*';
 
@@ -877,6 +885,21 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 	HighlightOutput hls(hl);
 	WString l = GetWLine(line);
 	GetSyntax(line)->Highlight(l.Begin(), l.End(), hls, this, line, pos);
+	if(selword.GetCount()) {
+		int q = 0;
+		for(;;) {
+			q = l.Find(selword, q);
+			if(q < 0)
+				break;
+			for(int i = 0; i < selword.GetCount() && i + q < hl.GetCount(); i++) {
+				const HlStyle& st = hl_style[PAPER_SELWORD];
+				hl[i + q].paper = st.color;
+				if(st.bold)
+					hl[i + q].font.Bold();
+			}
+			q += selword.GetCount();
+		}
+	}
 }
 
 void CodeEditor::PutI(WithDropChoice<EditString>& edit)
