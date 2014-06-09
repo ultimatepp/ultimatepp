@@ -32,6 +32,8 @@ void Gdb_MI2::FillPane(ArrayCtrl &pane, Index<String> const &nam, Vector<String>
 	}
 	for(int i = oldCount; i < newCount; i++)
 		pane.Add(nam[i], val[i]);
+	
+	SyncWidth(pane);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -322,6 +324,27 @@ void Gdb_MI2::Periodic()
 		Stop();
 }
 
+void Gdb_MI2::Setup(ArrayCtrl& a, int x)
+{
+	a.NoHeader();
+	a.AddColumn("", GetStdFontCy() * x * 3);
+	a.AddColumn("", 10000);
+	a.EvenRowColor();
+	a.OddRowColor();
+	a.HeaderObject().Absolute();
+}
+
+void Gdb_MI2::SyncWidth(ArrayCtrl& a)
+{
+	GuiLock __;
+	int mx = a.GetSize().cx - a.HeaderObject().GetTabWidth(0);
+	for(int i = 0; i < a.GetCount(); i++) {
+		String h = a.GetConvertedColumn(i, 1);
+		mx = max(mx, a.GetDisplay(i, 1).GetStdSize(a.GetConvertedColumn(i, 1)).cx + a.HeaderTab(0).GetMargin() * 2);
+	}
+	a.HeaderObject().SetTabWidth(1, mx);
+}
+
 Gdb_MI2::Gdb_MI2()
 {
 	CtrlLayout(regs);
@@ -348,34 +371,23 @@ Gdb_MI2::Gdb_MI2()
 	regs.AddFrame(TopSeparatorFrame());
 	regs.AddFrame(RightSeparatorFrame());
 
-	autos.NoHeader();
-	autos.AddColumn("", 1);
-	autos.AddColumn("", 10);
+	Setup(autos);
 	autos.WhenLeftDouble = THISBACK1(onExploreExpr, &autos);
-	autos.EvenRowColor();
-	autos.OddRowColor();
 
-	locals.NoHeader();
-	locals.AddColumn("", 1);
-	locals.AddColumn("", 10);
+	Setup(locals);
 	locals.WhenLeftDouble = THISBACK1(onExploreExpr, &locals);
-	locals.EvenRowColor();
-	locals.OddRowColor();
 
-	members.NoHeader();
-	members.AddColumn("", 3);
-	members.AddColumn("", 10);
+	Setup(members);
 	members.WhenLeftDouble = THISBACK1(onExploreExpr, &members);
-	members.EvenRowColor();
-	members.OddRowColor();
 
 	watches.NoHeader();
 	watches.AddColumn("", 1).Edit(watchedit);
 	watches.AddColumn("", 10);
-	watches.Inserting().Removing();
-	watches.WhenLeftDouble = THISBACK1(onExploreExpr, &watches);
 	watches.EvenRowColor();
 	watches.OddRowColor();
+	watches.HeaderObject().Absolute();
+	watches.Inserting().Removing();
+	watches.WhenLeftDouble = THISBACK1(onExploreExpr, &watches);
 
 	int c = EditField::GetStdHeight();
 	explorer.AddColumn("", 1);
@@ -1361,6 +1373,7 @@ void Gdb_MI2::SyncAutos()
 			p.SkipTerm();
 		}
 		autos.Sort();
+		SyncWidth(autos);
 	}
 }
 
@@ -1419,6 +1432,8 @@ void Gdb_MI2::SyncWatches()
 					watches.Set(iWatch, 1, v.value);
 				}
 			}
+			
+			SyncWidth(watches);
 	
 			// when finished, mark changed values
 			MarkChanged(prev, watches);
