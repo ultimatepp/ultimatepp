@@ -293,6 +293,9 @@ class Gdb_MI2 : public Debugger, public ParentCtrl
 		// (avoid re-painting and resetting scroll if not needed)
 		void FillPane(ArrayCtrl &pane, Index<String> const &nam, Vector<String> const &val);
 
+		void Setup(ArrayCtrl& a, int x = 1);
+		void SyncWidth(ArrayCtrl& a);
+
 	protected:
 	
 	public :
