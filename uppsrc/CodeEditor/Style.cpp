@@ -152,6 +152,8 @@ void HighlightSetup::DefaultHlStyles()
 	SetHlStyle(PAPER_NORMAL, SColorPaper);
 	SetHlStyle(PAPER_READONLY, SColorFace);
 	SetHlStyle(PAPER_SELECTED, SColorHighlight);
+	
+	SetHlStyle(PAPER_SELWORD, SColorInfo);
 }
 
 END_UPP_NAMESPACE

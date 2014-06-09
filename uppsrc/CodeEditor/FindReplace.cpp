@@ -195,6 +195,16 @@ bool CodeEditor::FindFrom(int pos, bool back, const wchar *text, bool wholeword,
 							SetSelection(pos, pos + n);
 							foundsel = false;
 							CenterCursor();
+							if(!ignorecase) {
+								int n = 0;
+								for(const wchar *s = text; *s; s++) {
+									if(!iscid(*s) || ++n > 60)
+										goto no;
+								}
+								selword = text;
+								Refresh();
+							}
+						no:;
 						}
 						foundpos = pos;
 						foundsize = n;
@@ -261,6 +271,10 @@ bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
 	}
 	else {
 		CloseFindReplace();
+		if(selword.GetCount()) {
+			selword.Clear();
+			Refresh();
+		}
 		return false;
 	}
 }
