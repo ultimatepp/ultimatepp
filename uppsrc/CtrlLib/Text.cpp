@@ -564,6 +564,7 @@ void TextCtrl::Redo() {
 void  TextCtrl::ClearSelection() {
 	anchor = -1;
 	Refresh();
+	SelectionChanged();
 	WhenSel();
 }
 
