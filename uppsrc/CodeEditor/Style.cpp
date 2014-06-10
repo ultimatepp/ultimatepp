@@ -153,7 +153,7 @@ void HighlightSetup::DefaultHlStyles()
 	SetHlStyle(PAPER_READONLY, SColorFace);
 	SetHlStyle(PAPER_SELECTED, SColorHighlight);
 	
-	SetHlStyle(PAPER_SELWORD, Blend(SColorHighlight(), White(), 215));
+	SetHlStyle(PAPER_SELWORD, Yellow);s
 }
 
 END_UPP_NAMESPACE
