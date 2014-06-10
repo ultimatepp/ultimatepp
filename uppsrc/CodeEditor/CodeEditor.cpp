@@ -213,10 +213,25 @@ void CodeEditor::Periodic()
 
 void CodeEditor::SelectionChanged()
 {
-	if(selword.GetCount()) {
-		Refresh();
-		selword.Clear();
+	int l, h;
+	WString nselword;
+	if(GetSelection(l, h) && h - l < 128 &&
+	   (l == 0 || !iscid(GetChar(l - 1))) &&
+	   (h >= GetLength() || !iscid(GetChar(h)))) {
+		for(int i = l; i < h; i++) {
+			int c = GetChar(i);
+			if(!iscid(c)) {
+				nselword.Clear();
+				break;
+			}
+			nselword.Cat(c);
+		}
 	}
+	if(selword != nselword) {
+		selword = nselword;
+		Refresh();
+	}
+	DDUMP(foundsel);
 	if(!foundsel) {
 		CloseFindReplace();
 		found = false;
@@ -512,13 +527,8 @@ String CodeEditor::GetWord()
 void CodeEditor::LeftDouble(Point p, dword keyflags) {
 	int l, h;
 	int pos = GetMousePos(p);
-	if(GetWordPos(pos, l, h)) {
+	if(GetWordPos(pos, l, h))
 		SetSelection(l, h);
-		if(h - l < 50) {
-			selword = GetW(l, h - l);
-			Refresh();
-		}
-	}
 	else
 		SetSelection(pos, pos + 1);
 }
@@ -885,19 +895,22 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 	HighlightOutput hls(hl);
 	WString l = GetWLine(line);
 	GetSyntax(line)->Highlight(l.Begin(), l.End(), hls, this, line, pos);
+	DLOG("HL " << selword);
 	if(selword.GetCount()) {
 		int q = 0;
 		for(;;) {
 			q = l.Find(selword, q);
 			if(q < 0)
 				break;
-			for(int i = 0; i < selword.GetCount() && i + q < hl.GetCount(); i++) {
-				const HlStyle& st = hl_style[PAPER_SELWORD];
-				hl[i + q].paper = st.color;
-				if(st.bold)
-					hl[i + q].font.Bold();
-			}
-			q += selword.GetCount();
+			int h = q + selword.GetCount();
+			if((q == 0 || !iscid(l[q - 1])) && (h >= l.GetCount() || !iscid(l[h])))
+				for(int i = 0; i < selword.GetCount() && i + q < hl.GetCount(); i++) {
+					const HlStyle& st = hl_style[PAPER_SELWORD];
+					hl[i + q].paper = st.color;
+					if(st.bold)
+						hl[i + q].font.Bold();
+				}
+			q = h;
 		}
 	}
 }

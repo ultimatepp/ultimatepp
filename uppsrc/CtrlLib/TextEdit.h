@@ -147,7 +147,7 @@ public:
 	WString GetSelectionW() const;
 	void    ClearSelection();
 	bool    RemoveSelection();
-	void    SetCursor(int cursor)             { PlaceCaret(cursor); }
+	void    SetCursor(int cursor)                { PlaceCaret(cursor); }
 	int     Paste(const WString& text);
 
 	int     Insert(int pos, const WString& txt)  { return Insert(pos, txt, false); }
