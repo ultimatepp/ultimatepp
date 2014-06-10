@@ -231,7 +231,6 @@ void CodeEditor::SelectionChanged()
 		selword = nselword;
 		Refresh();
 	}
-	DDUMP(foundsel);
 	if(!foundsel) {
 		CloseFindReplace();
 		found = false;
@@ -895,7 +894,6 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 	HighlightOutput hls(hl);
 	WString l = GetWLine(line);
 	GetSyntax(line)->Highlight(l.Begin(), l.End(), hls, this, line, pos);
-	DLOG("HL " << selword);
 	if(selword.GetCount()) {
 		int q = 0;
 		for(;;) {
