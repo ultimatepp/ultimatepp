@@ -367,6 +367,8 @@ bool MySqlConnection::Execute() {
 			f.name = "LAST_INSERT_ID";
 			rows = 1;
 		}
+		else // CHECK: Is this really necessarry?
+			rows = (int)mysql_affected_rows(mysql);
 	}
 	return true;
 }
