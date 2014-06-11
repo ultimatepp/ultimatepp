@@ -70,6 +70,13 @@
 
 #define INNODB                     TABLE_SUFFIX(" type=InnoDB")
 
+#define DUAL_PRIMARY_KEY(k1, k2)   INLINE_ATTRIBUTE("primary key (" #k1 ", " #k2 ")")
+
+#define INDEX_LIST(u, l)           ATTRIBUTE("create index IDXL_@t$" #u " on @t  "\
+                                             "(" l ");",\
+                                             "drop index IDXL_@t$" #u ";")
+
+
 #include <Sql/sch_model.h>
 
 #undef INT
@@ -116,6 +123,9 @@
 #undef SQLDEFAULT
 
 #undef INDEX
+
+#undef DUAL_PRIMARY_KEY
+#undef INDEX_LIST
 
 #undef UNIQUE
 #undef DUAL_UNIQUE
