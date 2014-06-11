@@ -221,11 +221,11 @@ bool CodeEditor::FindFrom(int pos, bool back, const wchar *text, bool wholeword,
 			l = s = ln;
 		}
 	}
+	ClearSelection();
 	if(back)
 		notfoundbk = true;
 	else
 		notfoundfw = true;
-	ClearSelection();
 	return false;
 }
 
