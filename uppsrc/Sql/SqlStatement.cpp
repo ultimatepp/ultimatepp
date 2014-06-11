@@ -93,10 +93,10 @@ SqlSelect& SqlSelect::OrderBy(const SqlSet& set) {
 }
 
 SqlSelect& SqlSelect::ForUpdate() {
-	text << " for update";
-	return *this;
+	text << SqlCase(SQLITE3, "")(" for update");
+ 	return *this;
 }
-
+ 
 SqlSelect& SqlSelect::NoWait() {
 	text << " nowait";
 	return *this;
