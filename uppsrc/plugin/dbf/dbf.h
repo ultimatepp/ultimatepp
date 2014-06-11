@@ -144,6 +144,7 @@ protected:
 	bool            dirty;
 	bool            dirty_header;
 	bool            has_memo;
+	byte            version;
 };
 
 END_UPP_NAMESPACE
