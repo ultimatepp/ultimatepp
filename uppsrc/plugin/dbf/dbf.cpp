@@ -233,8 +233,9 @@ String DbfStream::Field::Format(Value value, byte charset) const
 
 		case 'L': {
 			int cond = value;
-			return cond && !IsNull(cond) ? "A" : "N";
-			}
+			if(IsNull(cond)) return "?";
+			return cond ? "T" : "F";
+		}
 
 		default:  {
 			NEVER();
