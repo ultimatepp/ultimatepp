@@ -304,10 +304,12 @@ void DbfStream::Field::Serialize(Stream& stream)
 
 DbfStream::DbfStream()
 {
+	version = 0x03;
 }
 
 DbfStream::DbfStream(const char *_file, bool write, byte _charset, bool _delete_share)
 {
+	version = 0x03;
 	Open(_file, write, _charset, _delete_share);
 }
 
@@ -362,14 +364,17 @@ bool DbfStream::StreamHeader(bool full)
 	data_offset = 32 + fields.GetCount() * 32 + 1;
 	if(dbf.IsStoring()) {
 		ASSERT(!IsReadOnly());
-		dbf.Put(0x03); // #0: version number - 03 without a DBT file
+		dbf.Put(version); // #0: version number - 03 without a DBT file
 		Date date = GetSysDate();
 		dbf.Put(date.year - 1900); // #1 - 3: date of last update
 		dbf.Put(date.month);
 		dbf.Put(date.day);
 	}
-	else
-		dbf.Get32le();
+	else {
+		version = dbf.Get8();
+		dbf.Get8();
+		dbf.Get16();
+	}
 	sStreamIL(dbf, rows);
 	if(!full)
 		return true;
