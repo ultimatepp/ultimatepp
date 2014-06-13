@@ -85,6 +85,21 @@ euES("")
 frFR("")
 
 
+// GatherTpp.cpp
+
+T_("This page has not been translated yet")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Do you want to translate it?")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+
 // bsdiff.cpp
 
 T_("File %s does not exist")

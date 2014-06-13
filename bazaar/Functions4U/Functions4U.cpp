@@ -1084,29 +1084,43 @@ String GetLine(const String &str, int &pos) {
 }
 
 Value GetField(const String &str, int &pos, char separator) {
+	ASSERT(separator != '\"');	
 	String sret;
 	int npos = str.Find(separator, pos);
-	if (npos <= -1) {
-		sret = str.Mid(pos);
-		pos = -1;
+	int spos = str.Find('\"', pos);
+	if (spos < 0 || spos > npos) {
+		if (npos <= -1) {
+			sret = str.Mid(pos);
+			pos = -1;
+		} else {
+			sret = str.Mid(pos, npos - pos);
+			pos = npos + 1;
+		}
 	} else {
-		sret = str.Mid(pos, npos - pos);
-		pos = npos + 1;
-	}
-	sret = TrimBoth(sret);
-	if (!sret.IsEmpty() && sret[0] == '\"')
-		sret = sret.Mid(1);
-	if (!sret.IsEmpty() && sret[sret.GetLength()-1] == '\"')
-		sret = sret.Left(sret.GetLength()-1);
-	
+		int lspos = str.Find('\"', spos + 1);
+		if (lspos < 0) {
+			sret = str.Mid(spos);
+			pos = -1;
+		} else {
+			sret = str.Mid(spos + 1, lspos - spos - 1);
+			npos = str.Find(separator, lspos);
+			pos = npos + 1;
+		}
+	}	
 	if (sret.IsEmpty())
 		return Null;
 	
 	double dbl = ScanDouble(sret);
 		
-	if (IsNull(dbl)) 
-		return sret;
-	else {
+	if (IsNull(dbl)) {
+		Time t = ScanTime(sret);
+		if (IsNull(t))
+			return sret;
+		else if (t.hour == t.minute == t.second == 0)
+			return Date(t);
+		else
+			return t;
+	} else {
 		int it = int(dbl);
 		if (dbl - double(it) != 0)
 			return dbl;				
@@ -1115,45 +1129,105 @@ Value GetField(const String &str, int &pos, char separator) {
 	}
 }
 
-Vector<Vector <Value> > ReadCSV(const String strFile, char separator, bool removeRepeated) {
+Vector<Vector <Value> > ReadCSV(const String strFile, char separator, bool bycols, bool removeRepeated) {
 	Vector<Vector<Value> > result;
 
 	String line;
 	int posLine = 0;
-	line = GetLine(strFile, posLine);
 	int pos = 0;
-	while (pos >= 0) {
-		Value name = GetField(line, pos, separator);
-		if (!IsNull(name)) {
-			Vector<Value> &data = result.Add();
-			data.Add(name);
-		} else
-			break;
-	}
-	while (posLine >= 0) {
-		pos = 0;
+	if (bycols) {
 		line = GetLine(strFile, posLine);
-		if (!line.IsEmpty()) {
+		while (pos >= 0) {
+			Value name = GetField(line, pos, separator);
+			//if (!IsNull(name)) {
+				Vector<Value> &data = result.Add();
+				data.Add(name);
+			//} else
+			//	break;
+		}
+		while (posLine >= 0) {
+			pos = 0;
+			line = GetLine(strFile, posLine);
+			if (!line.IsEmpty()) {
+				bool repeated = removeRepeated;
+				int row = result[0].GetCount() - 1;
+				for (int col = 0; col < result.GetCount(); col++) {
+					if (pos >= 0) {
+						Value data = GetField(line, pos, separator);
+						result[col].Add(data);
+						if (row > 0 && result[col][row] != data)
+							repeated = false;
+					} else
+						result[col].Add();
+				}
+				if (row > 0 && repeated) {
+					for (int col = 0; col < result.GetCount(); col++) 
+						result[col].Remove(row+1);
+				}
+			} else
+				break;
+		}
+	} else {
+		int row = 0;
+		while (posLine >= 0) {
+			pos = 0;
+			line = GetLine(strFile, posLine);
 			bool repeated = removeRepeated;
-			int row = result[0].GetCount() - 1;
-			for (int col = 0; col < result.GetCount(); col++) {
-				if (pos >= 0) {
+			if (!line.IsEmpty()) {
+				Vector <Value> &linedata = result.Add();
+				int col = 0;
+				while (pos >= 0) {
 					Value data = GetField(line, pos, separator);
-					result[col].Add(data);
-					if (row > 0 && result[col][row] != data)
+					linedata << data;
+					if (row > 0 && (result[row - 1].GetCount() <= col || result[row - 1][col] != data))
 						repeated = false;
-				} else
-					result[col].Add();
-			}
-			if (row > 0 && repeated) {
-				for (int col = 0; col < result.GetCount(); col++) 
-					result[col].Remove(row+1);
-			}
-		} else
-			break;
+					col++;
+				}
+			} else
+				break;
+			if (row > 0 && repeated) 
+				result.Remove(row);
+			else
+				row++;
+		}
 	}
 	return result;
-};
+}
+
+String WriteCSV(Vector<Vector <Value> > &data, char separator, bool bycols) {
+	String ret;
+	
+	if (bycols) {
+		for (int r = 0; r < data[0].GetCount(); ++r) {
+			if (r > 0)
+				ret << "\n";
+			for (int c = 0; c < data.GetCount(); ++c) {
+				if (c > 0)
+					ret << separator;
+				String str = data[c][r].ToString();
+				if (str.Find(separator) >= 0)
+					ret << '\"' << str << '\"';
+				else
+					ret << str;
+			}
+		}		
+	} else {
+		for (int r = 0; r < data.GetCount(); ++r) {
+			if (r > 0)
+				ret << "\n";
+			for (int c = 0; c < data[r].GetCount(); ++c) {
+				if (c > 0)
+					ret << separator;
+				String str = data[r][c].ToString();
+				if (str.Find(separator) >= 0)
+					ret << '\"' << str << '\"';
+				else
+					ret << str;
+			}
+		}
+	}
+	return ret;
+}
 
 
 #ifdef PLATFORM_POSIX
