@@ -481,7 +481,7 @@ void  DocEdit::RefreshStyle()
 
 void DocEdit::RightDown(Point p, dword w)
 {
-	SetFocus();
+	SetWantFocus();
 	int c = GetMousePos(p);
 	int l, h;
 	if(!GetSelection(l, h) || c < l || c >= h)
