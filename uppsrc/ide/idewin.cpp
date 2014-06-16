@@ -908,8 +908,11 @@ void AppMain___()
 		ide.SyncCh();
 
 		DelTemps();
-
+		
 		if(arg.GetCount() && !clset) {
+			Vector<String> dir = Split(LoadFile(GetHomeDirFile("usc.path")), ';');
+			for(int i = 0; i < dir.GetCount(); i++)
+				ide.UscProcessDirDeep(dir[i]);
 			for(int i = 0; i < arg.GetCount(); i++)
 				if(arg[i] != "-f") {
 					ide.EditFile(NormalizePath(arg[i]));

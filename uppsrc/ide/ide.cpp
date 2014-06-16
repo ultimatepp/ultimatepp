@@ -268,6 +268,14 @@ void Ide::UscProcessDir(const String& dir)
 		UscFile(AppendFileName(dir, ff.GetName()));
 }
 
+void Ide::UscProcessDirDeep(const String& dir)
+{
+	UscProcessDir(dir);
+	for(FindFile ff(AppendFileName(dir, "*")); ff; ff.Next())
+		if(ff.IsFolder())
+			UscProcessDirDeep(ff.GetPath());
+}
+
 void Ide::SyncUsc()
 {
 	CleanUsc();

@@ -525,6 +525,8 @@ LAYOUT(SetupIdeLayout, 512, 264)
 	ITEM(Option, output_per_assembly, SetLabel(t_("Use unique output directory per assembly (append assembly name to output directory)")).HSizePosZ(4, 4).TopPosZ(224, 16))
 	ITEM(Switch, gdbSelector, SetLabel(t_("Legacy\nGDB_MI2 (new)")).LeftPosZ(344, 176).TopPosZ(28, 20))
 	ITEM(Label, dv___20, SetLabel(t_("GDB Debugger interface")).LeftPosZ(212, 188).TopPosZ(28, 20))
+	ITEM(Label, dv___21, SetLabel(t_("In editor mode, path for .usc files")).LeftPosZ(4, 192).TopPosZ(244, 20))
+	ITEM(EditString, uscpath, LeftPosZ(172, 336).TopPosZ(244, 19))
 END_LAYOUT
 
 LAYOUT(SetupAstyleLayout, 544, 288)
