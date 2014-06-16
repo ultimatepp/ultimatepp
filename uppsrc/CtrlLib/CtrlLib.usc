@@ -415,13 +415,17 @@ ctrl Switch {
 		setlabel = .SetLabel;
 		for(i = 0; i < count(cs); i++) {
 			textsize = GetSmartTextSize(cs[i], .SetFont);
-			w.DrawImage(x, y, "ClassicCtrlsImg::S0");
-			w.DrawSmartText(x + imagesize.cx + 4, y + (imagesize.cy - tcy) / 2,
-			                cs[i], .SetFont);
-			if(linecy * count(cs) > sz.cy)
+			if(linecy * count(cs) > sz.cy) {
+				w.DrawImage(x, (sz.cy - imagesize.cy) / 2, "ClassicCtrlsImg::S0");
+				w.DrawSmartText(x + imagesize.cx + 4, (sz.cy - tcy) / 2, cs[i], .SetFont);
 				x += imagesize.cx + 4 + textsize.cx + max(imagesize.cy, tcy) / 2;
-			else
+			}
+			else {
+				w.DrawImage(x, y, "ClassicCtrlsImg::S0");
+				w.DrawSmartText(x + imagesize.cx + 4, y + (imagesize.cy - tcy) / 2,
+				                cs[i], .SetFont);
 				y += linecy;
+			}
 		}
 	}
 };

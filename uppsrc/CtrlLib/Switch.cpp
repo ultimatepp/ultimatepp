@@ -158,12 +158,14 @@ void Switch::Paint(Draw& w) {
 	linecy = max(mincy, max(16, tcy + 2));
 	int y = 0;
 	int x = 0;
-	int ty = (linecy - tcy) / 2;
 	bool horz = linecy * cs.GetCount() > sz.cy;
-	if(horz)
+	if(horz) {
 		posx.SetCount(cs.GetCount());
+		linecy = sz.cy;
+	}
 	else
 		posx.Clear();
+	int ty = (linecy - tcy) / 2;
 	bool ds = !IsShowEnabled();
 	int i;
 	light = -1;
