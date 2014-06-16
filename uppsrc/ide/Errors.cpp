@@ -27,8 +27,8 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 			f.file = TrimLeft(f.file);
 			String upp = GetUppDir();
 		#ifdef PLATFORM_WIN32
-			if(file[0] == '\\' || file[0] == '/')
-				file = String(upp[0], 1) + ':' + file;
+			if(f.file[0] == '\\' || f.file[0] == '/')
+				f.file = String(upp[0], 1) + ':' + f.file;
 		#endif
 			if(!IsFullPath(f.file) && *f.file != '\\' && *f.file != '/') {
 				if(cache.wspc_paths.IsEmpty()) {
@@ -257,6 +257,7 @@ void Ide::SetErrorEditor()
 
 void Ide::ConsoleLine(const String& line)
 {
+	DDUMP(line);
 	ErrorInfo f;
 	if(FindLineError(line, error_cache, f)) {
 		int cnt = error.GetCount();
