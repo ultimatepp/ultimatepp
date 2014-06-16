@@ -257,7 +257,6 @@ void Ide::SetErrorEditor()
 
 void Ide::ConsoleLine(const String& line)
 {
-	DDUMP(line);
 	ErrorInfo f;
 	if(FindLineError(line, error_cache, f)) {
 		int cnt = error.GetCount();
