@@ -46,3 +46,6 @@ HL_COLOR(INK_UPPMACROS, "U++ macros", 0)
 HL_COLOR(INK_UPPLOGS, "U++ log macros", 0)
 
 HL_COLOR(PAPER_SELWORD, "Selected word through file", 0)
+
+HL_COLOR(PAPER_ERROR, "Error in compiler messages", 0)
+HL_COLOR(PAPER_WARNING, "Warning in compiler messages", 0)

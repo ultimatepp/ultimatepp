@@ -27,6 +27,7 @@ void AttrText::Init()
 {
 	ink = Null;
 	normalink = Null;
+	normalpaper = Null;
 	paper = Null;
 	font = StdFont();
 	align = Null;
@@ -73,6 +74,8 @@ void Display::PaintBackground(Draw& w, const Rect& r, const Value& q,
 		const AttrText& t = ValueTo<AttrText>(q);
 		if(!IsNull(t.paper))
 			paper = t.paper;
+		if(!IsNull(t.normalpaper) && !(style & (CURSOR|SELECT|READONLY)))
+			paper = t.normalpaper;
 	}
 	w.DrawRect(r, paper);
 }
@@ -111,6 +114,8 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 			ink = t.ink;
 		if(!IsNull(t.normalink) && !(s & (CURSOR|SELECT|READONLY)))
 			ink = t.normalink;
+		if(!IsNull(t.normalpaper) && !(s & (CURSOR|SELECT|READONLY)))
+			paper = t.normalpaper;
 		if(!IsNull(t.align))
 			a = t.align;
 		if(!IsNull(t.img)) {

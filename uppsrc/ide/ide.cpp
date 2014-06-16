@@ -329,259 +329,32 @@ bool IsTextFile(const String& file) {
 Console& Ide::GetConsole()
 {
 	int q = btabs.GetCursor();
-	return q == BCONSOLE2 ? console2 : console;
+	return q == BFINDINFILES ? console2 : console;
 }
 
-bool Ide::FindLineError(int l, Host& host) {
-	String file;
-	int lineno, linepos;
-	int error;
+void Ide::GoToError(const ErrorInfo& f)
+{
+	String file = NormalizePath(f.file);
+	editastext.FindAdd(file);
+	EditFile(file);
+	editor.SetCursor(editor.GetPos(editor.GetLineNo(f.lineno - 1), max(f.linepos - 1, 0)));
+	editor.CenterCursor();
+	editor.SetFocus();
+	Sync();
+}
+
+bool Ide::FindLineError(int l) {
+	ErrorInfo f;
 	Console& c = GetConsole();
 	FindLineErrorCache cache;
-	if (FindLineError(c.GetUtf8Line(l), host, file, lineno, error, cache, linepos)) {
-		file = NormalizePath(file);
-		editastext.FindAdd(file);
-		EditFile(file);
-		editor.SetCursor(editor.GetPos(editor.GetLineNo(lineno - 1), max(linepos - 1, 0)));
-		editor.CenterCursor();
-		editor.SetFocus();
-		Sync();
+	if(FindLineError(c.GetUtf8Line(l), cache, f)) {
+		GoToError(f);
 		c.SetSelection(c.GetPos(l), c.GetPos(l + 1));
-		if(btabs.GetCursor() != BCONSOLE && btabs.GetCursor() != BCONSOLE2)
+		if(btabs.GetCursor() != BCONSOLE && btabs.GetCursor() != BFINDINFILES)
 			ShowConsole();
 		return true;
 	}
 	return false;
-}
-
-bool Ide::FindLineError(String ln, Host& host, String& file, int& lineno, int& error,
-                        FindLineErrorCache& cache, int& linepos) {
-	VectorMap<String, String> bm = GetMethodVars(method);
-	bool is_java = (bm.Get("BUILDER", Null) == "JDK");
-	const char *s = ln;
-	error = ln.Find("error", 0) > 0 ? 1 : (ln.Find("warning", 0) > 0 ? 2 : 3);
-	while(*s == ' ' || *s == '\t')
-		s++;
-	for(; s < ln.End(); s++) {
-		if(*s != '\"' && (byte)*s >= 32 && *s != '(' && (file.GetLength() < 3 || *s != ':'))
-			file.Cat(*s);
-		else {
-			if(*s == '\"') {
-				file = Null;
-				s++;
-				while(*s && *s != '\"')
-					file.Cat(*s++);
-				if(*s)
-					s++;
-			}
-			int e = file.GetLength();
-			while(e > 0 && file[e - 1] == ' ')
-				e--;
-			file.Trim(e);
-			file = TrimLeft(file);
-			String upp = GetUppDir();
-			file = host.GetLocalPath(file);
-		#ifdef PLATFORM_WIN32
-			if(file[0] == '\\' || file[0] == '/')
-				file = String(upp[0], 1) + ':' + file;
-		#endif
-			if(!IsFullPath(file) && *file != '\\' && *file != '/') {
-				if(cache.wspc_paths.IsEmpty()) {
-					::Workspace  wspc;
-					wspc.Scan(main);
-					for(int i = 0; i < wspc.GetCount(); i++)
-						cache.wspc_paths.Add(GetFileDirectory(PackagePath(wspc[i])));
-				}
-				for(int i = 0; i < cache.wspc_paths.GetCount(); i++) {
-					String path = AppendFileName(cache.wspc_paths[i], file);
-					int q = cache.ff.Find(path);
-					if(q >= 0) {
-						if(cache.ff[q]) {
-							file = path;
-							break;
-						}
-					}
-					else {
-						bool b = false;
-						String ext = ToLower(GetFileExt(path));
-						if(findarg(ext, ".obj", ".lib", ".o", ".so", ".a", ".", "") < 0) {
-							FindFile ff;
-							b = ff.Search(path) && ff.IsFile();
-						}
-						cache.ff.Add(path, b);
-						if(b) {
-							file = path;
-							break;
-						}
-					}
-				}
-			}
-			file = FollowCygwinSymlink(file);
-			if(IsFullPath(file) && FileExists(file) && IsTextFile(file)) {
-				while(*s && !IsDigit(*s))
-					s++;
-				lineno = linepos = 0;
-				CParser p(s);
-				if(p.IsInt())
-					lineno = p.ReadInt();
-				if(p.Char(':') && p.IsInt())
-					linepos = p.ReadInt();
-				Vector<String> conf = SplitFlags(mainconfigparam, true);
-				String uppout = GetVar("OUTPUT");
-				int upplen = uppout.GetLength();
-				if(is_java && file.GetLength() > upplen
-				&& !MemICmp(file, uppout, upplen) && file[upplen] == DIR_SEP) { // check for preprocessed file
-					FileIn fi(file);
-					if(fi.IsOpen())
-					{
-						String fake_file = file;
-						int fake_line = 1;
-						int file_line = 1;
-						while(!fi.IsEof())
-						{
-							String line = fi.GetLine();
-							const char *p = line;
-							if(p[0] == '/' && p[1] == '/' && p[2] == '#')
-							{
-								p += 3;
-								if(p[0] == 'l' && p[1] == 'i' && p[2] == 'n' && p[3] == 'e')
-									p += 4;
-								while(*p == ' ' || *p == '\t')
-									p++;
-								if(IsDigit(*p))
-								{
-									fake_line = stou(p, &p);
-									while(*p == ' ' || *p == '\t')
-										p++;
-									if(*p == '\"')
-										p++;
-									fake_file.Clear();
-									while(*p && *p != '\"')
-										if(*p == '/')
-										{
-											fake_file.Cat('/');
-											if(p[1] == '/')
-												p++;
-											p++;
-										}
-										else
-											fake_file.Cat(*p++);
-								}
-								file_line++;
-								continue;
-							}
-							if(lineno <= file_line) {
-								file = fake_file;
-								lineno = fake_line;
-								linepos = 0;
-								break;
-							}
-							file_line++;
-							fake_line++;
-						}
-					}
-				}
-				if(lineno > 0)
-					return true;
-			}
-			file.Clear();
-		}
-	}
-	return false;
-}
-
-void Ide::FindError() {
-	int l = GetConsole().GetLine(GetConsole().GetCursor());
-	One<Host> host = CreateHost(false);
-	FindLineError(l, *host);
-}
-
-void Ide::FindNextError() {
-	int ln = GetConsole().GetLine(GetConsole().GetCursor());
-	int l = ln;
-	One<Host> host = CreateHost(false);
-	for(l = ln; l < GetConsole().GetLineCount(); l++)
-		if(FindLineError(l, *host)) return;
-	for(l = 0; l < ln; l++)
-		if(FindLineError(l, *host)) return;
-}
-
-void Ide::FindPrevError() {
-	int ln = GetConsole().GetLine(GetConsole().GetCursor());
-	int l = ln;
-	One<Host> host = CreateHost(false);
-	for(l = ln - 2; l >= 0; l--)
-		if(FindLineError(l, *host)) return;
-	for(l = GetConsole().GetLineCount() - 1; l > ln; l--)
-		if(FindLineError(l, *host)) return;
-}
-
-void Ide::ClearErrorEditor()
-{
-	if(!mark_lines)
-		return;
-
-	for(int i = 0; i < filedata.GetCount(); i++) {
-		ClearErrorEditor(filedata.GetKey(i));
-	}
-	
-	SetErrorFiles(Vector<String>());
-}
-
-void Ide::ClearErrorEditor(String file)
-{
-	if(!mark_lines)
-		return;
-	if(file == editfile)
-		editor.ClearErrors();
-	else {
-		FileData& fd = Filedata(file);
-		ClearErrors(fd.lineinfo);
-	}
-}
-
-void Ide::SetErrorEditor()
-{
-	if(!mark_lines)
-		return;
-
-	bool refresh = false;
-	String file;
-	int lineno, linepos;
-	int error;
-	One<Host> host = CreateHost(false);
-	String    hfile;
-	EditorBar hbar;
-	Vector<String> errorfiles;
-	FindLineErrorCache cache;
-	for(int i = 0; i < console.GetLineCount(); i++) {
-		if(FindLineError(console.GetUtf8Line(i), *host, file, lineno, error, cache, linepos)) {
-			file = NormalizePath(file);
-		#ifdef PLATFORM_WIN32
-			errorfiles.Add(ToLower(file));
-		#else
-			errorfiles.Add(file);
-		#endif
-			if(editfile == file) {
-				editor.SetError(lineno - 1, error);
-				refresh = true;
-			}
-			else {
-				if(hfile != file) {
-					if(hfile.GetCount())
-						Filedata(hfile).lineinfo = hbar.GetLineInfo();
-					hbar.SetLineInfo(Filedata(file).lineinfo, -1);
-					hfile = file;
-				}
-				hbar.SetError(lineno - 1, error);
-			}
-		}
-	}
-	if(hfile.GetCount())
-		Filedata(hfile).lineinfo = hbar.GetLineInfo();
-	if(refresh)
-		editor.RefreshFrame();
-	SetErrorFiles(errorfiles);
 }
 
 void Ide::Renumber() {

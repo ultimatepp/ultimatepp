@@ -180,6 +180,12 @@ lor]_[@3 c])&]
 [s7; [*/ Return value]-|`*this.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:AttrText`:`:NormalPaper`(Color`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* NormalPap
+er]([_^Color^ Color]_[*@3 c])&]
+[s2; Sets the background color to be used if the item is not in selected 
+nor focused nor read`-only state.&]
+[s3; &]
+[s4;%- &]
 [s5;:AttrText`:`:SetFont`(Font`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_SetFont([_^Font^ F
 ont]_[@3 f])&]
 [s2; Sets the font.&]

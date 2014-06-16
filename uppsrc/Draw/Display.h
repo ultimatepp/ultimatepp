@@ -25,6 +25,7 @@ struct AttrText {
 	Color   ink;
 	Color   normalink;
 	Color   paper;
+	Color   normalpaper;
 	int     align;
 	Image   img;
 	int     imgspc;
@@ -39,6 +40,7 @@ struct AttrText {
 	AttrText& Ink(Color c)                          { ink = c; return *this; }
 	AttrText& NormalInk(Color c)                    { normalink = c; return *this; }
 	AttrText& Paper(Color c)                        { paper = c; return *this; }
+	AttrText& NormalPaper(Color c)                  { normalpaper = c; return *this; }
 	AttrText& SetFont(Font f)                       { font = f; return *this; }
 
 	AttrText& Bold(bool b = true)                   { font.Bold(b); return *this; }

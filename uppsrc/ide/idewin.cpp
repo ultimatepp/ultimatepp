@@ -303,6 +303,16 @@ void Ide::SetupBars()
 	SetBar();
 }
 
+void SetupError(ArrayCtrl& error, const char *s)
+{
+	error.AddColumn("File");
+	error.AddColumn("Line");
+	error.AddColumn(s);
+	error.AddIndex("INFO");
+	error.ColumnWidths("150 119 800");
+	error.NoWantFocus();
+}
+
 Ide::Ide()
 {
 	editor.theide = this;
@@ -347,15 +357,25 @@ Ide::Ide()
 	editorsplit.Zoom(0);
 	SyncEditorSplit();
 
-	right_split.Horz(editpane, right);
-	right_split.SetPos(7000);
+	right_split.Vert(editpane, right);
 	right_split.Zoom(0);
+	
+	SetupError(error, "Message");
+	error.AddIndex("NOTES");
+
+	SetupError(notes, "Note");
+
+	errors.Horz(error, notes);
+	error.WhenSel = THISBACK(ShowError);
+	notes.WhenSel = THISBACK(ShowNote);
+	console.WhenLine = THISBACK(ConsoleLine);
 
 	editor_bottom.Vert(right_split, bottom);
 	console2.WhenBar = console.WhenBar = THISBACK(ConsoleMenu);
 	editor_bottom.SetPos(8000);
 	bottom.SetFrame(btabs);
 	bottom.Add(console.SizePos().SetFrame(NullFrame()));
+	bottom.Add(errors.SizePos().SetFrame(NullFrame()));
 	bottom.Add(console2.SizePos().SetFrame(NullFrame()));
 	bottom.Add(calc.SizePos().SetFrame(NullFrame()));
 	btabs <<= THISBACK(SyncBottom);

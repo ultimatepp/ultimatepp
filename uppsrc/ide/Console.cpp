@@ -56,6 +56,7 @@ void Console::Append(const String& s) {
 	SetEditable();
 	MoveTextEnd();
 	WString t = Filter(FromSystemCharset(s), sAppf).ToWString();
+	int l0 = GetLineCount();
 	int mg = sb.GetReducedViewSize().cx / GetFont().Info().GetAveWidth();
 	if(wrap_text && mg > 4) {
 		int x = GetColumnLine(GetCursor()).x;
@@ -81,6 +82,8 @@ void Console::Append(const String& s) {
 		SetEditPos(p);
 		SetSelection(l, h);
 	}
+	while(l0 < GetLineCount())
+		WhenLine(GetUtf8Line(l0++));
 }
 
 bool Console::Key(dword key, int count) {

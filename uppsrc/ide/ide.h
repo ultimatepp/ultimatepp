@@ -41,6 +41,8 @@ int         IdeLocateLine(String old_file, int old_line, String new_file);
 
 #include "UppDlg.h"
 
+bool IsTextFile(const String& file);
+
 void Puts(const char *s);
 
 class Console : public LineEdit {
@@ -90,6 +92,7 @@ protected:
 public:
 	Callback WhenSelect;
 	Callback1<Bar&> WhenBar;
+	Callback1<const String&> WhenLine;
 	bool console;
 	bool verbosebuild;
 
@@ -535,10 +538,15 @@ public:
 	StaticRect  bottom;
 	Splitter    editor_bottom;
 	Console     console, console2;
+
+	Splitter    errors;
+	ArrayCtrl   error;
+	ArrayCtrl   notes;
+	
 	IdeCalc     calc;
 	Ptr<Ctrl>   bottomctrl;
 
-	enum Bottoms { BCLOSE, BCONSOLE, BCONSOLE2, BCALC, BDEBUG };
+	enum Bottoms { BCLOSE, BCONSOLE, BERRORS, BFINDINFILES, BCALC, BDEBUG };
 
 	FileOut    stdout_fout;
 
@@ -999,15 +1007,32 @@ public:
 
 	Console&  GetConsole();
 
-	bool      FindLineError(int l, Host& host);
-	
 	struct FindLineErrorCache {
 		VectorMap<String, bool> ff;
 		Vector<String>          wspc_paths;
+		
+		void Clear()            { ff.Clear(); wspc_paths.Clear(); }
+	};
+
+	FindLineErrorCache error_cache;
+	void      ConsoleLine(const String& line);
+	void      ShowNote();
+	void      ShowError();
+	
+	struct ErrorInfo {
+		String file;
+		int    lineno;
+		int    linepos;
+		int    kind;
+		String message;
+		
+		ErrorInfo() { lineno = linepos = kind = 0; }
 	};
 	
-	bool      FindLineError(String ln, Host& host, String& file, int& lineno, int& error,
-	                        FindLineErrorCache& cache, int& linepos);
+	bool      FindLineError(int l);
+	void      GoToError(const ErrorInfo& f);
+	
+	bool      FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& f);
 	void      FindError();
 	void	  ClearErrorEditor(String file);
 

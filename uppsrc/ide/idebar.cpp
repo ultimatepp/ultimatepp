@@ -481,10 +481,10 @@ void Ide::BuildMenu(Bar& menu) {
 	menu.MenuSeparator();
 
 	menu.Add(GetConsole().GetLineCount(), AK_FINDNEXTERROR, THISBACK(FindNextError))
-		.Help("Find next " + String(btabs.GetCursor() == BCONSOLE2 ? "position" : "error line")
+		.Help("Find next " + String(btabs.GetCursor() == BFINDINFILES ? "position" : "error line")
 	           + "according to console pane");
 	menu.Add(GetConsole().GetLineCount(), AK_FINDPREVERROR, THISBACK(FindPrevError))
-		.Help("Find previous " + String(btabs.GetCursor() == BCONSOLE2 ? "position" : "error line")
+		.Help("Find previous " + String(btabs.GetCursor() == BFINDINFILES ? "position" : "error line")
 	          + "according to console pane");
 #if defined(PLATFORM_WIN32) || defined(PLATFORM_POSIX)
 	menu.MenuSeparator();
