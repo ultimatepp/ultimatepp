@@ -27,7 +27,7 @@ void Ide::RunArgs() {
 
 	dlg.runmode <<= runmode;
 	dlg.external = runexternal;
-	dlg.forceconsole = forceconsole;
+	dlg.consolemode = consolemode;
 	dlg.runmode <<= dlg.Breaker(222);
 
 	for(;;) {
@@ -39,7 +39,7 @@ void Ide::RunArgs() {
 			runarg  = ~dlg.arg;
 			runmode = ~dlg.runmode;
 			runexternal = dlg.external;
-			forceconsole = dlg.forceconsole;
+			consolemode = dlg.consolemode;
 			stdout_file = ~dlg.stdout_file;
 			dlg.arg.AddHistory();
 			{
@@ -70,6 +70,12 @@ One<Host> Ide::CreateHostRunDir()
 	return h;
 }
 
+bool Ide::ShouldHaveConsole()
+{
+	return decode(consolemode, 0, FindIndex(SplitFlags(mainconfigparam, true), "GUI") < 0,
+	                           1, true, false);
+}
+
 void Ide::BuildAndExecute()
 {
 	if(Build()) {
@@ -84,7 +90,7 @@ void Ide::BuildAndExecute()
 		switch(runmode) {
 		case RUN_WINDOW:
 			HideBottom();
-			h->Launch(cmdline, FindIndex(SplitFlags(mainconfigparam, true), "GUI") < 0 || forceconsole);
+			h->Launch(cmdline, ShouldHaveConsole());
 			break;
 		case RUN_CONSOLE:
 			ShowConsole();
@@ -176,8 +182,7 @@ void Ide::BuildAndDebug(bool runto)
 	HideBottom();
 	editor.Disable();
 
-	bool console = FindIndex(SplitFlags(mainconfigparam, true), "GUI") < 0 || forceconsole;
-
+	bool console = ShouldHaveConsole();
 #ifdef COMPILER_MSC
 	if(builder == "GCC")
 		if(gdbSelector)
