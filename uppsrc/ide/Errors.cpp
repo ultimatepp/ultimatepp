@@ -147,7 +147,7 @@ void Ide::FindError()
 
 void Ide::FindNextError()
 {
-	if(btabs.GetCursor() != BCONSOLE) {
+	if(findarg(btabs.GetCursor(), BCONSOLE, BFINDINFILES) < 0) {
 		int c = error.GetCursor();
 		if(c >= 0 && c < error.GetCount() - 1)
 			error.SetCursor(c + 1);
@@ -165,7 +165,7 @@ void Ide::FindNextError()
 }
 
 void Ide::FindPrevError() {
-	if(btabs.GetCursor() != BCONSOLE) {
+	if(findarg(btabs.GetCursor(), BCONSOLE, BFINDINFILES) < 0) {
 		int c = error.GetCursor();
 		if(c > 0)
 			error.SetCursor(c - 1);
@@ -219,7 +219,6 @@ void Ide::SetErrorEditor()
 		return;
 
 	bool refresh = false;
-	One<Host> host = CreateHost(false);
 	String    hfile;
 	EditorBar hbar;
 	Vector<String> errorfiles;

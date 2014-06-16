@@ -768,7 +768,7 @@ public:
 	void      ToggleBottom(int i);
 	void      ShowBottom(int i);
 	void      ShowConsole()                      { ShowBottom(1); }
-	void      ShowConsole2()                     { ShowBottom(2); }
+	void      ShowConsole2()                     { ShowBottom(BFINDINFILES); }
 	void      ToggleConsole()                    { ToggleBottom(1); }
 	void      SwapBottom();
 	bool      IsBottomShown() const;

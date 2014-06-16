@@ -195,7 +195,7 @@ void  RichTextView::LeftDown(Point p, dword keyflags)
 		if(!(keyflags & K_SHIFT))
 			anchor = pos;
 		RefreshSel();
-		SetFocus();
+		SetWantFocus();
 		SetCapture();
 	}
 }
@@ -213,7 +213,7 @@ void RichTextView::LeftDouble(Point p, dword keyflags)
 		while(cursor < text.GetLength() && text[cursor] == ' ')
 			cursor++;
 		RefreshSel();
-		SetFocus();
+		SetWantFocus();
 	}
 }
 
@@ -224,7 +224,7 @@ void RichTextView::LeftTriple(Point p, dword keyflags)
 	anchor = pos - rp.posinpara;
 	cursor = anchor + rp.paralen + 1;
     RefreshSel();
-    SetFocus();
+    SetWantFocus();
 }
 
 void RichTextView::MouseMove(Point p, dword keyflags)

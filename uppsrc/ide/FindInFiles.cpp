@@ -289,7 +289,6 @@ void Ide::FindInFiles(bool replace) {
 				console2 << Format("%d matching file(s) have been found.\n", n);
 		}
 	}
-	SetErrorEditor();
 }
 
 void Ide::FindString(bool back)
