@@ -303,6 +303,19 @@ void SetConsole(EditString *e, const char *text)
 	*e <<= text;
 }
 
+void AddPath(EditString *es)
+{
+	String s = SelectDirectory();
+	if(IsNull(s))
+		return;
+	String h = ~*es;
+	if(h.GetCount() && *h.Last() != ';')
+		h << ';';
+	h << s;
+	*es <<= h;
+	es->SetWantFocus();
+}
+
 void Ide::SetupFormat() {
 	FormatDlg dlg;
 	dlg.Title("Format setup");
@@ -463,8 +476,16 @@ void Ide::SetupFormat() {
 	ide.chstyle.Add(2, "Classic");
 	ide.chstyle.Add(3, "Host platform, blue bars");
 	ide.chstyle.Add(4, "Standard, blue bars");
+
+	FrameRight<Button> browse;
+	browse.SetImage(CtrlImg::right_arrow());
+	browse <<= callback1(AddPath, &ide.uscpath);
+	ide.uscpath.AddFrame(browse);
+	ide.uscpath <<= LoadFile(GetHomeDirFile("usc.path"));
+
 	for(;;) {
 		int c = dlg.Run();
+		Upp::SaveFile(GetHomeDirFile("usc.path"), ~ide.uscpath);
 		editorfont = ed.Get();
 		tfont = tf.Get();
 		veditorfont = vf.Get();
@@ -477,8 +498,7 @@ void Ide::SetupFormat() {
 		hilite_scope = hs;
 		if(indent_spaces)
 			indent_amount = ~edt.indent_amount;
-		else
-		{
+		else {
 			indent_amount = editortabsize;
 			edt.indent_amount <<= editortabsize;
 		}

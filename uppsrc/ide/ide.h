@@ -789,6 +789,7 @@ public:
 
 	void      UscFile(const String& file);
 	void      UscProcessDir(const String& dir);
+	void      UscProcessDirDeep(const String& dir);
 	void      SyncUsc();
 
 	void      RefreshBrowser();
