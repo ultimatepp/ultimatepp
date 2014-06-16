@@ -61,6 +61,7 @@ file
 	About.cpp,
 	Help.cpp,
 	Macro.cpp,
+	Errors.cpp,
 	Calc.cpp,
 	FormatCode.cpp,
 	Abbr.cpp,

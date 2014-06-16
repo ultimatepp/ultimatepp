@@ -151,6 +151,7 @@ void Ide::BTabs()
 	btabs.Clear();
 	btabs.Add(IdeImg::close, "Close");
 	btabs.Add(IdeImg::console, "Console");
+	btabs.Add(IdeImg::errors, "Errors");
 	btabs.Add(IdeImg::console2, "Find in files");
 	btabs.Add(IdeImg::calc, "Calc");
 	if(bottomctrl)
@@ -167,7 +168,8 @@ void Ide::SyncBottom()
 	if(editor_bottom.GetZoom() >= 0)
 		editor_bottom.NoZoom();
 	console.Show(q == BCONSOLE);
-	console2.Show(q == BCONSOLE2);
+	errors.Show(q == BERRORS);
+	console2.Show(q == BFINDINFILES);
 	calc.Show(q == BCALC);
 	if(bottomctrl)
 		bottomctrl->Show(q == BDEBUG);

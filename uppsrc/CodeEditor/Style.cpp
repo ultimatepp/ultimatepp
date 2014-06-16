@@ -154,6 +154,9 @@ void HighlightSetup::DefaultHlStyles()
 	SetHlStyle(PAPER_SELECTED, SColorHighlight);
 	
 	SetHlStyle(PAPER_SELWORD, Yellow);
+
+	SetHlStyle(PAPER_ERROR, Blend(White(), LtRed(), 50));
+	SetHlStyle(PAPER_WARNING, Blend(White(), Yellow(), 50));
 }
 
 END_UPP_NAMESPACE

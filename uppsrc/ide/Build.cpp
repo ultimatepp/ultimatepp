@@ -43,6 +43,9 @@ void Ide::BeginBuilding(bool sync_files, bool clear_console)
 	SetIdeState(BUILDING);
 	console.Kill();
 	console.ClearError();
+	error_cache.Clear();
+	error.Clear();
+	notes.Clear();
 	if(clear_console)
 		console.Clear();
 	build_time = GetTickCount();
