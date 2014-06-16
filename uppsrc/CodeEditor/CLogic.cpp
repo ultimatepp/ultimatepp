@@ -94,7 +94,6 @@ bool NotEscape(int pos, const WString& s)
 bool CSyntax::CheckBracket(CodeEditor& e, int li, int pos, int ppos, int pos0, WString ln, int d, int limit,
                                int& bpos0, int& bpos)
 {
-	int li0 = li;
 	int lvl = 1;
 	pos += d;
 	ppos += d;
@@ -163,7 +162,6 @@ bool CSyntax::CheckRightBracket(CodeEditor& e, int pos, int& bpos0, int& bpos)
 	int ppos = pos;
 	int li = e.GetLinePos(pos);
 	WString ln = e.GetWLine(li);
-	int c = ln[pos];
 	return isrbrkt(ln[pos]) &&
 	       CheckBracket(e, li, pos, ppos, ppos, ln, -1, max(li - 3000, 0), bpos0, bpos);
 }

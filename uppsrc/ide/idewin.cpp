@@ -480,7 +480,7 @@ Ide::Ide()
 
 	runmode = RUN_WINDOW;
 	runexternal = false;
-	forceconsole = false;
+	consolemode = 0;
 
 	browser_closeesc = true;
 

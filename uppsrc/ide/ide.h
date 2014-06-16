@@ -614,7 +614,7 @@ public:
 	enum      { RUN_WINDOW, RUN_CONSOLE, RUN_FILE, RUN_FILE_CONSOLE };
 	int       runmode;
 	bool      runexternal;
-	bool      forceconsole;
+	int       consolemode;
 	String    stdout_file;
 	String    recent_stdout_file;
 
@@ -911,6 +911,7 @@ public:
 
 	void      DebugMenu(Bar& menu);
 		void  RunArgs();
+		bool ShouldHaveConsole();
 		void  BuildAndExecute();
 		void  BuildAndDebug0(const String& srcfile);
 		void  BuildAndDebug(bool runto);
