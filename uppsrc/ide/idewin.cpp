@@ -357,7 +357,7 @@ Ide::Ide()
 	editorsplit.Zoom(0);
 	SyncEditorSplit();
 
-	right_split.Vert(editpane, right);
+	right_split.Horz(editpane, right);
 	right_split.Zoom(0);
 	
 	SetupError(error, "Message");
