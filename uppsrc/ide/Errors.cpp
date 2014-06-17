@@ -5,7 +5,7 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 	VectorMap<String, String> bm = GetMethodVars(method);
 	bool is_java = (bm.Get("BUILDER", Null) == "JDK");
 	const char *s = ln;
-	f.kind = ln.Find("error:", 0) > 0 ? 1 : (ln.Find("warning:", 0) > 0 ? 2 : ln.Find("note:") > 0 ? 3 : 4);
+	f.kind = ln.Find("error", 0) > 0 ? 1 : (ln.Find("warning", 0) > 0 ? 2 : ln.Find("note") > 0 ? 3 : 4);
 	while(*s == ' ' || *s == '\t')
 		s++;
 	for(; s < ln.End(); s++) {
@@ -260,17 +260,17 @@ void Ide::ConsoleLine(const String& line)
 	if(FindLineError(line, error_cache, f)) {
 		int cnt = error.GetCount();
 		Value rf = RawToValue(f);
-		if(f.kind == 3 && cnt) {
-			ValueArray n = error.Get(cnt - 1, "NOTES");
-			n.Add(rf);
-			error.Set(cnt - 1, "NOTES", n);
-		}
-		else
+		if(findarg(f.kind, 1, 2) >= 0 || cnt == 0)
 			error.Add(GetFileName(f.file), f.lineno,
 			          AttrText(f.message)
 			          .NormalPaper(HighlightSetup::GetHlStyle(f.kind == 1 ? HighlightSetup::PAPER_ERROR
 			                                                              : HighlightSetup::PAPER_WARNING).color),
 			          rf);
+		else {
+			ValueArray n = error.Get(cnt - 1, "NOTES");
+			n.Add(rf);
+			error.Set(cnt - 1, "NOTES", n);
+		}
 	}
 }
 

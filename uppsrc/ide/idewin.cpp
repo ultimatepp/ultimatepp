@@ -309,7 +309,7 @@ void SetupError(ArrayCtrl& error, const char *s)
 	error.AddColumn("Line");
 	error.AddColumn(s);
 	error.AddIndex("INFO");
-	error.ColumnWidths("150 119 800");
+	error.ColumnWidths("200 119 800");
 	error.NoWantFocus();
 }
 
