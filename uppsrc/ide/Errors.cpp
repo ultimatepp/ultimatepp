@@ -5,7 +5,6 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 	VectorMap<String, String> bm = GetMethodVars(method);
 	bool is_java = (bm.Get("BUILDER", Null) == "JDK");
 	const char *s = ln;
-	f.kind = ln.Find("error", 0) > 0 ? 1 : (ln.Find("warning", 0) > 0 ? 2 : ln.Find("note") > 0 ? 3 : 4);
 	while(*s == ' ' || *s == '\t')
 		s++;
 	for(; s < ln.End(); s++) {
@@ -72,6 +71,10 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 				if(p.Char(':') && p.IsInt()) 
 					f.linepos = p.ReadInt();
 				const char *ms = p.GetPtr();
+				int pos = ms - ~ln;
+				f.kind = ln.Find("error", pos) > 0 ? 1 :
+				         ln.Find("warning", pos) > 0 ? 2 :
+				         ln.Find("note", pos) > 0 ? 3 : 4;
 				const char *hs = ms;
 				while(!IsLetter(*hs) && *hs)
 					hs++;

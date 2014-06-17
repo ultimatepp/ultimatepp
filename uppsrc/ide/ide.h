@@ -85,6 +85,7 @@ protected:
 	int console_lock;
 	bool wrap_text;
 	FrameBottom<EditString> input;
+	WString line;
 
 	void CheckEndGroup();
 	void FlushConsole();
@@ -112,7 +113,7 @@ public:
 	int  Flush();
 	void Kill(int slot);
 	void Kill();
-	void ClearError()                         { error_keys.Clear(); }
+	void ClearError()                         { error_keys.Clear(); line.Clear(); }
 	Vector<String> PickErrors()               { Vector<String> e = pick(error_keys); error_keys.Clear(); return pick(e); }
 	void Wait(int slot);
 	bool Wait();
