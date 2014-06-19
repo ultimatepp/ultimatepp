@@ -214,8 +214,8 @@ void Ide::SetErrorEditor()
 {
 	if(error.GetCount()) {
 		SetBottom(BERRORS);
-		if(!error.IsCursor())
-			error.GoBegin();
+//		if(!error.IsCursor())
+//			error.GoBegin();
 	}
 
 	if(!mark_lines)
@@ -257,24 +257,54 @@ void Ide::SetErrorEditor()
 	SetErrorFiles(errorfiles);
 }
 
+void Ide::GoToError(const ErrorInfo& f)
+{
+	if(IsNull(f.file))
+		return;
+	String file = NormalizePath(f.file);
+	editastext.FindAdd(file);
+	EditFile(file);
+	editor.SetCursor(editor.GetPos(editor.GetLineNo(f.lineno - 1), max(f.linepos - 1, 0)));
+	editor.CenterCursor();
+	editor.SetFocus();
+	Sync();
+}
+
+bool Ide::FindLineError(int l) {
+	ErrorInfo f;
+	Console& c = GetConsole();
+	FindLineErrorCache cache;
+	if(FindLineError(c.GetUtf8Line(l), cache, f)) {
+		GoToError(f);
+		c.SetSelection(c.GetPos(l), c.GetPos(l + 1));
+		if(btabs.GetCursor() != BCONSOLE && btabs.GetCursor() != BFINDINFILES)
+			ShowConsole();
+		return true;
+	}
+	return false;
+}
+
 void Ide::ConsoleLine(const String& line)
 {
 	ErrorInfo f;
 	if(FindLineError(line, error_cache, f)) {
-		int cnt = error.GetCount();
-		Value rf = RawToValue(f);
-		if(findarg(f.kind, 1, 2) >= 0 || cnt == 0)
+		if(findarg(f.kind, 1, 2) >= 0 || error.GetCount() == 0)
 			error.Add(GetFileName(f.file), f.lineno,
 			          AttrText(f.message)
 			          .NormalPaper(HighlightSetup::GetHlStyle(f.kind == 1 ? HighlightSetup::PAPER_ERROR
 			                                                              : HighlightSetup::PAPER_WARNING).color),
-			          rf);
-		else {
-			ValueArray n = error.Get(cnt - 1, "NOTES");
-			n.Add(rf);
-			error.Set(cnt - 1, "NOTES", n);
-		}
+			          RawToValue(f));
+		else
+			AddNote(f);
 	}
+}
+
+void Ide::AddNote(const ErrorInfo& f)
+{
+	int cnt = error.GetCount();
+	ValueArray n = error.Get(cnt - 1, "NOTES");
+	n.Add(RawToValue(f));
+	error.Set(cnt - 1, "NOTES", n);
 }
 
 void Ide::ShowNote()

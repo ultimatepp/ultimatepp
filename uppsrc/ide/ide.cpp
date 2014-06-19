@@ -332,31 +332,6 @@ Console& Ide::GetConsole()
 	return q == BFINDINFILES ? console2 : console;
 }
 
-void Ide::GoToError(const ErrorInfo& f)
-{
-	String file = NormalizePath(f.file);
-	editastext.FindAdd(file);
-	EditFile(file);
-	editor.SetCursor(editor.GetPos(editor.GetLineNo(f.lineno - 1), max(f.linepos - 1, 0)));
-	editor.CenterCursor();
-	editor.SetFocus();
-	Sync();
-}
-
-bool Ide::FindLineError(int l) {
-	ErrorInfo f;
-	Console& c = GetConsole();
-	FindLineErrorCache cache;
-	if(FindLineError(c.GetUtf8Line(l), cache, f)) {
-		GoToError(f);
-		c.SetSelection(c.GetPos(l), c.GetPos(l + 1));
-		if(btabs.GetCursor() != BCONSOLE && btabs.GetCursor() != BFINDINFILES)
-			ShowConsole();
-		return true;
-	}
-	return false;
-}
-
 void Ide::Renumber() {
 	for(int i = 0; i < filedata.GetCount(); i++)
 		::Renumber(filedata[i].lineinfo);

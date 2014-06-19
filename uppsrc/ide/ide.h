@@ -1015,11 +1015,6 @@ public:
 		void Clear()            { ff.Clear(); wspc_paths.Clear(); }
 	};
 
-	FindLineErrorCache error_cache;
-	void      ConsoleLine(const String& line);
-	void      ShowNote();
-	void      ShowError();
-	
 	struct ErrorInfo {
 		String file;
 		int    lineno;
@@ -1029,6 +1024,12 @@ public:
 		
 		ErrorInfo() { lineno = linepos = kind = 0; }
 	};
+	
+	FindLineErrorCache error_cache;
+	void      ConsoleLine(const String& line);
+	void      AddNote(const ErrorInfo& f);
+	void      ShowNote();
+	void      ShowError();
 	
 	bool      FindLineError(int l);
 	void      GoToError(const ErrorInfo& f);
