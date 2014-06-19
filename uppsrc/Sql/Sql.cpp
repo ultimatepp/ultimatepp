@@ -354,7 +354,7 @@ Value Sql::operator[](SqlId id) const {
 				return operator[](i);
 		s = ToUpper(s);
 	}
-	NEVER();
+	NEVER_(String().Cat() << "SQL [" << ~id << "] not found");
 	return Value();
 }
 
