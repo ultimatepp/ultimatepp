@@ -79,6 +79,7 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 				while(!IsLetter(*hs) && *hs)
 					hs++;
 				f.message = *hs ? hs : ms;
+				f.message = TrimLeft(f.message);
 				Vector<String> conf = SplitFlags(mainconfigparam, true);
 				String uppout = GetVar("OUTPUT");
 				int upplen = uppout.GetLength();
@@ -288,20 +289,28 @@ void Ide::ConsoleLine(const String& line)
 {
 	ErrorInfo f;
 	if(FindLineError(line, error_cache, f)) {
-		if(findarg(f.kind, 1, 2) >= 0 || error.GetCount() == 0)
+		if(findarg(f.kind, 1, 2) >= 0 || error.GetCount() == 0) {
 			error.Add(GetFileName(f.file), f.lineno,
 			          AttrText(f.message)
 			          .NormalPaper(HighlightSetup::GetHlStyle(f.kind == 1 ? HighlightSetup::PAPER_ERROR
 			                                                              : HighlightSetup::PAPER_WARNING).color),
 			          RawToValue(f));
-		else
-			AddNote(f);
+			return;
+		}
 	}
+	else {
+		f.lineno = Null;
+		f.file = Null;
+		f.message = TrimLeft(line);
+	}
+	AddNote(f);
 }
 
 void Ide::AddNote(const ErrorInfo& f)
 {
 	int cnt = error.GetCount();
+	if(cnt == 0)
+		return;
 	ValueArray n = error.Get(cnt - 1, "NOTES");
 	n.Add(RawToValue(f));
 	error.Set(cnt - 1, "NOTES", n);
