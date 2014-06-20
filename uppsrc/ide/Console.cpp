@@ -56,16 +56,6 @@ void Console::Append(const String& s) {
 	SetEditable();
 	MoveTextEnd();
 	WString t = Filter(FromSystemCharset(s), sAppf).ToWString();
-	if(IsRunning())
-		for(const wchar *q = t; *q; q++) {
-			if(*q == '\n') {
-				WhenLine(line.ToString());
-				line.Clear();
-			}
-			else
-			if((byte)*q >= ' ')
-				line.Cat(*q);
-		}
 	int mg = sb.GetReducedViewSize().cx / GetFont().Info().GetAveWidth();
 	if(wrap_text && mg > 4) {
 		int x = GetColumnLine(GetCursor()).x;
@@ -111,6 +101,20 @@ bool Console::Key(dword key, int count) {
 	return LineEdit::Key(key, count);
 }
 
+void Console::AppendOutput(const String& s)
+{
+	Append(s);
+	for(const char *q = s; *q; q++) {
+		if(*q == '\n') {
+			WhenLine(line);
+			line.Clear();
+		}
+		else
+		if((byte)*q >= ' ')
+			line.Cat(*q);
+	}
+}
+
 int Console::Flush()
 {
 	bool done_output = false;
@@ -144,7 +148,7 @@ int Console::Flush()
 			if(!slot.quiet) {
 				if(console_lock < 0 || console_lock == i) {
 					console_lock = i;
-					Append(s);
+					AppendOutput(s);
 				}
 				else
 					slot.output.Cat(s);
@@ -249,7 +253,7 @@ bool Console::Run(One<AProcess> pick_ process, const char *cmdline, Stream *out,
 void Console::FlushConsole()
 {
 	if(console_lock < 0) {
-		Append(spooled_output);
+		AppendOutput(spooled_output);
 		spooled_output = Null;
 	}
 }
@@ -363,7 +367,7 @@ void Console::CheckEndGroup()
 					msg << '\n';
 					spooled_output.Cat(msg);
 					if(console_lock < 0) {
-						Append(spooled_output);
+						AppendOutput(spooled_output);
 						spooled_output = Null;
 					}
 				}

@@ -85,7 +85,7 @@ protected:
 	int console_lock;
 	bool wrap_text;
 	FrameBottom<EditString> input;
-	WString line;
+	String line;
 
 	void CheckEndGroup();
 	void FlushConsole();
@@ -108,6 +108,7 @@ public:
 
 	Console& operator<<(const String& s)      { Append(s); return *this; }
 
+	void AppendOutput(const String& s);
 	bool IsRunning();
 	bool IsRunning(int slot);
 	int  Flush();
