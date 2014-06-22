@@ -94,6 +94,9 @@ class EditorSyntax : public HighlightSetup { // Inheriting to make static member
 	};
 	
 	static ArrayMap<String, SyntaxDef>& defs();
+
+protected:
+	bool                    ignore_errors;
 	
 public:
 	virtual void            Clear();
@@ -112,8 +115,10 @@ public:
 
 	void    Set(const String& s)           { CTIMING("Set"); if(s.GetCount() == 0) Clear(); else LoadFromString(*this, s); }
 	String  Get()                          { CTIMING("Get"); return StoreAsString(*this); }
+	
+	void    IgnoreErrors()                 { ignore_errors = true; }
 
-	EditorSyntax()                         { Clear(); }
+	EditorSyntax()                         { Clear(); ignore_errors = false; }
 
 	static void Register(const char *id, Callback1<One<EditorSyntax>&> factory,
 	                     const char *exts, const char *description);

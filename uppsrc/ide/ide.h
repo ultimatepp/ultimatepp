@@ -539,7 +539,9 @@ public:
 	RightTabs   btabs;
 	StaticRect  bottom;
 	Splitter    editor_bottom;
-	Console     console, console2;
+	Console     console;
+	
+	ArrayCtrl   ffound;
 
 	Splitter    errors;
 	ArrayCtrl   error;
@@ -871,6 +873,7 @@ public:
 		void  EditFindNext()            { editor.Find(false); }
 		void  EditFindPrevious()        { editor.Find(true); }
 		void  EditPaste()               { editor.Paste(); }
+		bool  Next(int tab, ArrayCtrl& ctrl, int d);
 		void  FindNextError();
 		void  FindPrevError();
 	
@@ -1007,7 +1010,7 @@ public:
 
 	void      Renumber();
 
-	Console&  GetConsole();
+//	Console&  GetConsole();
 
 	struct FindLineErrorCache {
 		VectorMap<String, bool> ff;
@@ -1031,6 +1034,11 @@ public:
 	void      AddNote(const ErrorInfo& f);
 	void      ShowNote();
 	void      ShowError();
+	void      ShowFound();
+	
+	struct FoundDisplay : Display {
+		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+	};
 	
 	bool      FindLineError(int l);
 	void      GoToError(const ErrorInfo& f);

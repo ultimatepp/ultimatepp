@@ -141,8 +141,6 @@ void Ide::UpdateFormat() {
 	UpdateFormat(editor2);
 	console.SetFont(consolefont);
 	console.WrapText(wrap_console_text);
-	console2.SetFont(consolefont);
-	console2.WrapText(wrap_console_text);
 	statusbar.Show(show_status_bar);
 	SetupBars();
 	

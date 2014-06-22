@@ -60,12 +60,12 @@ void Ide::SwapPackagesFiles()
 
 void Ide::ConsoleClear()
 {
-	GetConsole() <<= Null;
+	console <<= Null;
 }
 
 void Ide::ConsoleCopy()
 {
-	GetConsole().Copy();
+	console.Copy();
 }
 
 void Ide::ConsolePaste()
@@ -74,8 +74,8 @@ void Ide::ConsolePaste()
 	if(!IsNull(s)) {
 		s.Insert(0, '\n');
 		int len = console.GetLength();
-		GetConsole().Insert(len, s.ToWString());
-		GetConsole().SetCursor(len + 1);
+		console.Insert(len, s.ToWString());
+		console.SetCursor(len + 1);
 	}
 }
 
@@ -364,19 +364,24 @@ Ide::Ide()
 	error.AddIndex("NOTES");
 
 	SetupError(notes, "Note");
+	
+	SetupError(ffound, "Source");
+	ffound.ColumnWidths("176 65 1333");
+	ffound.ColumnAt(2).SetDisplay(Single<FoundDisplay>());
 
 	errors.Horz(error, notes);
 	error.WhenSel = THISBACK(ShowError);
 	notes.WhenSel = THISBACK(ShowNote);
+	ffound.WhenSel = THISBACK(ShowFound);
 	console.WhenLine = THISBACK(ConsoleLine);
 
 	editor_bottom.Vert(right_split, bottom);
-	console2.WhenBar = console.WhenBar = THISBACK(ConsoleMenu);
+	console.WhenBar = THISBACK(ConsoleMenu);
 	editor_bottom.SetPos(8000);
 	bottom.SetFrame(btabs);
 	bottom.Add(console.SizePos().SetFrame(NullFrame()));
 	bottom.Add(errors.SizePos().SetFrame(NullFrame()));
-	bottom.Add(console2.SizePos().SetFrame(NullFrame()));
+	bottom.Add(ffound.SizePos().SetFrame(NullFrame()));
 	bottom.Add(calc.SizePos().SetFrame(NullFrame()));
 	btabs <<= THISBACK(SyncBottom);
 	BTabs();
@@ -480,8 +485,6 @@ Ide::Ide()
 
 	console.WhenSelect = THISBACK(FindError);
 	console.SetSlots(hydra1_threads);
-
-	console2.WhenSelect = THISBACK(FindError);
 
 	editor.WhenSelection = THISBACK(Display);
 	stoponerrors = true;

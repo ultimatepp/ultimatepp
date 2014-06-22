@@ -169,7 +169,7 @@ void Ide::SyncBottom()
 		editor_bottom.NoZoom();
 	console.Show(q == BCONSOLE);
 	errors.Show(q == BERRORS);
-	console2.Show(q == BFINDINFILES);
+	ffound.Show(q == BFINDINFILES);
 	calc.Show(q == BCALC);
 	if(bottomctrl)
 		bottomctrl->Show(q == BDEBUG);

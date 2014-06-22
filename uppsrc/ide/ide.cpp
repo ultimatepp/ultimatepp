@@ -326,12 +326,13 @@ bool IsTextFile(const String& file) {
 	return true;
 }
 
+/*
 Console& Ide::GetConsole()
 {
 	int q = btabs.GetCursor();
 	return q == BFINDINFILES ? console2 : console;
 }
-
+*/
 void Ide::Renumber() {
 	for(int i = 0; i < filedata.GetCount(); i++)
 		::Renumber(filedata[i].lineinfo);
