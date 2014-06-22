@@ -262,7 +262,7 @@ int DocEdit::GetMousePos(Point p)
 }
 
 void DocEdit::LeftDown(Point p, dword flags) {
-	SetWantFocus();
+	SetFocus();
 	int c = GetMousePos(p);
 	int l, h;
 	if(GetSelection(l, h) && c >= l && c < h) {
@@ -278,7 +278,7 @@ void DocEdit::LeftUp(Point p, dword flags)
 	if(!HasCapture() && selclick) {
 		int c = GetMousePos(p);
 		PlaceCaret(c, flags & K_SHIFT);
-		SetWantFocus();
+		SetFocus();
 	}
 	selclick = false;
 }
@@ -481,7 +481,7 @@ void  DocEdit::RefreshStyle()
 
 void DocEdit::RightDown(Point p, dword w)
 {
-	SetWantFocus();
+	SetFocus();
 	int c = GetMousePos(p);
 	int l, h;
 	if(!GetSelection(l, h) || c < l || c >= h)

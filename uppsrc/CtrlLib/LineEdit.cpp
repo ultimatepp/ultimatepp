@@ -449,7 +449,7 @@ void LineEdit::LeftDown(Point p, dword flags) {
 		return;
 	}
 	PlaceCaret(mpos, flags & K_SHIFT);
-	SetWantFocus();
+	SetFocus();
 	SetCapture();
 }
 
@@ -458,7 +458,7 @@ void LineEdit::LeftUp(Point p, dword flags)
 	if(!HasCapture() && selclick) {
 		mpos = GetMousePos(p);
 		PlaceCaret(mpos, flags & K_SHIFT);
-		SetWantFocus();
+		SetFocus();
 	}
 	selclick = false;
 }
@@ -466,7 +466,7 @@ void LineEdit::LeftUp(Point p, dword flags)
 void LineEdit::RightDown(Point p, dword flags)
 {
 	mpos = GetMousePos(p);
-	SetWantFocus();
+	SetFocus();
 	int l, h;
 	if(!GetSelection(l, h) || mpos < l || mpos >= h)
 		PlaceCaret(mpos, false);

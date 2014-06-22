@@ -483,7 +483,7 @@ void EditField::LeftDown(Point p, dword flags)
 {
 	int c = GetCursor(p.x + sc);
 	if(!HasFocus()) {
-		SetWantFocus();
+		SetFocus();
 		if(clickselect) {
 			SetSelection();
 			Finish();
@@ -864,7 +864,7 @@ void EditField::RightDown(Point p, dword keyflags)
 	Ptr<EditField> self = this;
 	MenuBar::Execute(WhenBar);
 	if(self) { // protect from destruction when in menu modal loop
-		SetWantFocus();
+		SetFocus();
 		keep_selection = false;
 	}
 }

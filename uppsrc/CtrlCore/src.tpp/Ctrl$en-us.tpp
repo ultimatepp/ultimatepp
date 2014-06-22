@@ -1863,8 +1863,8 @@ has focus or is equal to GetOwnerCtrl of any active popup.&]
 [s5;:Ctrl`:`:WantFocus`(bool`):%- [_^`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[* WantFocus]([@(0.0.255) b
 ool]_[*@3 ft]_`=_[@(0.0.255) true])&]
 [s2;b17;a17; Indicates whether Ctrl wants focus to be passed to it 
-by U`+`+, e.g. when navigating through the dialog using Tab (or 
-Shift`+Tab) key.&]
+by U`+`+, when navigating through the dialog using Tab (or Shift`+Tab) 
+key.&]
 [s7;i1120;a17; [%-*C@3 ft]-|true to indicate that Ctrl wants focus.&]
 [s7;i1120;a17; [*/ Return value]-|Same Ctrl for method chaining.&]
 [s3;%- &]
