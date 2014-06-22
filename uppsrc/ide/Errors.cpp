@@ -146,45 +146,48 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 
 void Ide::FindError()
 {
-	FindLineError(GetConsole().GetLine(GetConsole().GetCursor()));
+	FindLineError(console.GetLine(console.GetCursor()));
+}
+
+bool Ide::Next(int tab, ArrayCtrl& a, int d)
+{
+	if(btabs.GetCursor() == tab) {
+		int c = a.GetCursor() + d;
+		if(c >= 0 && c < a.GetCount())
+			a.SetCursor(c);
+		else {
+			if(d > 0)
+				a.GoBegin();
+			else
+				a.GoEnd();
+		}
+		return true;
+	}
+	return false;
 }
 
 void Ide::FindNextError()
 {
-	if(findarg(btabs.GetCursor(), BCONSOLE, BFINDINFILES) < 0) {
-		int c = error.GetCursor();
-		if(c >= 0 && c < error.GetCount() - 1)
-			error.SetCursor(c + 1);
-		else
-			error.GoBegin();
-	}
-	else {
-		int ln = GetConsole().GetLine(GetConsole().GetCursor());
-		int l = ln;
-		for(l = ln; l < GetConsole().GetLineCount(); l++)
-			if(FindLineError(l)) return;
-		for(l = 0; l < ln; l++)
-			if(FindLineError(l)) return;
-	}
+	if(Next(BCONSOLE, error, 1) || Next(BFINDINFILES, ffound, 1))
+		return;
+	int ln = console.GetLine(console.GetCursor());
+	int l = ln;
+	for(l = ln; l < console.GetLineCount(); l++)
+		if(FindLineError(l)) return;
+	for(l = 0; l < ln; l++)
+		if(FindLineError(l)) return;
 }
 
 void Ide::FindPrevError() {
-	if(findarg(btabs.GetCursor(), BCONSOLE, BFINDINFILES) < 0) {
-		int c = error.GetCursor();
-		if(c > 0)
-			error.SetCursor(c - 1);
-		else
-			error.GoEnd();
-	}
-	else {
-		int ln = GetConsole().GetLine(GetConsole().GetCursor());
-		int l = ln;
-		One<Host> host = CreateHost(false);
-		for(l = ln - 2; l >= 0; l--)
-			if(FindLineError(l)) return;
-		for(l = GetConsole().GetLineCount() - 1; l > ln; l--)
-			if(FindLineError(l)) return;
-	}
+	if(Next(BCONSOLE, error, -1) || Next(BFINDINFILES, ffound, -1))
+		return;
+	int ln = console.GetLine(console.GetCursor());
+	int l = ln;
+	One<Host> host = CreateHost(false);
+	for(l = ln - 2; l >= 0; l--)
+		if(FindLineError(l)) return;
+	for(l = console.GetLineCount() - 1; l > ln; l--)
+		if(FindLineError(l)) return;
 }
 
 void Ide::ClearErrorEditor()
@@ -273,11 +276,10 @@ void Ide::GoToError(const ErrorInfo& f)
 
 bool Ide::FindLineError(int l) {
 	ErrorInfo f;
-	Console& c = GetConsole();
 	FindLineErrorCache cache;
-	if(FindLineError(c.GetUtf8Line(l), cache, f)) {
+	if(FindLineError(console.GetUtf8Line(l), cache, f)) {
 		GoToError(f);
-		c.SetSelection(c.GetPos(l), c.GetPos(l + 1));
+		console.SetSelection(console.GetPos(l), console.GetPos(l + 1));
 		if(btabs.GetCursor() != BCONSOLE && btabs.GetCursor() != BFINDINFILES)
 			ShowConsole();
 		return true;
@@ -322,6 +324,12 @@ void Ide::ShowNote()
 		GoToError(ValueTo<ErrorInfo>(notes.Get("INFO")));
 }
 
+void Ide::ShowFound()
+{
+	if(ffound.IsCursor())
+		GoToError(ValueTo<ErrorInfo>(ffound.Get("INFO")));
+}
+
 void Ide::ShowError()
 {
 	notes.Clear();
@@ -333,4 +341,51 @@ void Ide::ShowError()
 		}
 		GoToError(ValueTo<ErrorInfo>(error.Get("INFO")));
 	}	
+}
+
+void Ide::FoundDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+{
+	String s = q;
+	if(*s == '\1') {
+		Vector<String> h = Split(s, '\1');
+		if(h.GetCount() < 4)
+			return;
+		One<EditorSyntax> es = EditorSyntax::Create(h[0]);
+		es->IgnoreErrors();
+		WString ln = h[3].ToWString();
+		Vector<LineEdit::Highlight> hln;
+		hln.SetCount(ln.GetCount() + 1);
+		for(int i = 0; i < ln.GetCount(); i++) {
+			LineEdit::Highlight& h = hln[i];
+			h.paper = paper;
+			h.ink = SColorText();
+			h.chr = ln[i];
+			h.font = StdFont();
+		}
+		HighlightOutput hl(hln);
+		es->Highlight(ln.Begin(), ln.End(), hl, NULL, 0, 0);
+		int fcy = GetStdFontCy();
+		int y = r.top + (r.GetHeight() - fcy) / 2;
+		int x = r.left;
+		w.DrawRect(r, paper);
+		int sl = utf8len(~h[3], atoi(h[1]));
+		int sh = utf8len(~h[3] + sl, atoi(h[2])) + sl;
+		for(int i = 0; i < hln.GetCount(); i++) {
+			Font fnt = StdFont();
+			LineEdit::Highlight& h = hln[i];
+			fnt.Bold(h.font.IsBold());
+			fnt.Italic(h.font.IsItalic());
+			fnt.Underline(h.font.IsUnderline());
+			int cw = fnt[h.chr];
+			if(h.chr == '\t')
+				cw = 4 * fnt[' '];
+			if(i >= sl && i < sh && !(style & (CURSOR|SELECT|READONLY)))
+				w.DrawRect(x, y, cw, fcy, HighlightSetup::GetHlStyle(HighlightSetup::PAPER_SELWORD).color);
+			if(h.chr != '\t')
+				w.DrawText(x, y, &h.chr, fnt, h.ink, 1);
+			x += cw;
+		}
+	}
+	else
+		StdDisplay().Paint(w, r, q, ink, paper, style);
 }

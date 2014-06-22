@@ -190,7 +190,7 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			Bracket(int(p - ltext) + pos, hls, editor);
 			int& l = *p == ')' ? pl : *p == '}' ? cl : bl;
 			if(bc && (bc != *p || l <= 0) || bc == 0 && *p != '}') {
-				hls.Put(p == ltext ? hl_style[INK_PAR0] : hl_style[INK_ERROR]);
+				hls.Put(p == ltext || ignore_errors ? hl_style[INK_PAR0] : hl_style[INK_ERROR]);
 				brk.Clear();
 				cl = bl = pl = 0;
 			}

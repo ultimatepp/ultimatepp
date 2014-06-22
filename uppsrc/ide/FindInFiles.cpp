@@ -69,13 +69,16 @@ enum {
 	WILDID,
 };
 
-bool Match(const char *f, const char *s, bool we, bool ignorecase) {
+bool Match(const char *f, const char *s, bool we, bool ignorecase, int& count) {
+	const char *b = s;
 	while(*f) {
 		if(*f == WILDANY) {
 			f++;
 			for(;;) {
-				if(Match(f, s, we, ignorecase))
+				if(Match(f, s, we, ignorecase, count)) {
+					count += s - b;
 					return true;
+				}
 				if(!*s++) break;
 			}
 			return false;
@@ -110,6 +113,7 @@ bool Match(const char *f, const char *s, bool we, bool ignorecase) {
 		}
 		f++;
 	}
+	count = s - b;
 	return we && iscid(*s) ? false : true;
 }
 
@@ -124,10 +128,18 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 	while(!in.IsEof()) {
 		String line = in.GetLine();
 		bool bw = true;
+		int  count;
 		for(const char *s = line; *s; s++) {
-			if(bw && Match(pattern, s, we, ignorecase)) {
-				console2 << fn << Format("(%d):", ln) << line << "\n";
-				console2.Sync();
+			if(bw && Match(pattern, s, we, ignorecase, count)) {
+				ErrorInfo f;
+				f.file = fn;
+				f.lineno = ln;
+				f.linepos = 0;
+				f.kind = 0;
+				f.message = "\1" + EditorSyntax::GetSyntaxForFilename(fn) + "\1" +
+				            AsString(s - line) + "\1" + AsString(count) + "\1" + line;
+				ffound.Add(GetFileName(fn), ln, f.message, RawToValue(f));
+				ffound.Sync();
 				infile++;
 				n++;
 				break;
@@ -159,8 +171,8 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 			editor.SelectAll();
 			editor.BlockReplace();
 			SaveFile();
-			console2 << NFormat("%s: %d replacements made\n", fn, infile);
-			console2.Sync();
+			ffound.Add(fn, Null, AsString(infile) + " replacements made");
+			ffound.Sync();
 		}
 	}
 
@@ -267,7 +279,7 @@ void Ide::FindInFiles(bool replace) {
 				pattern = ~ff.find;
 			pi.SetTotal(files.GetCount());
 			ShowConsole2();
-			console2.Clear();
+			ffound.Clear();
 			pi.SetPos(0);
 			int n = 0;
 			for(int i = 0; i < files.GetCount(); i++) {
@@ -278,15 +290,21 @@ void Ide::FindInFiles(bool replace) {
 						break;
 				}
 				else {
-					console2 << files[i] << "(1)\n";
-					console2.Sync();
+					ErrorInfo f;
+					f.file = files[i];
+					f.lineno = 1;
+					f.linepos = 0;
+					f.kind = 0;
+					f.message = files[i];
+					ffound.Add(GetFileName(f.file), 1, f.message, RawToValue(f));
+					ffound.Sync();
 					n++;
 				}
 			}
 			if(!IsNull(pattern))
-				console2 << Format("%d occurrence(s) have been found.\n", n);
+				ffound.Add(Null, Null, AsString(n) + " occurrence(s) have been found.");
 			else
-				console2 << Format("%d matching file(s) have been found.\n", n);
+				ffound.Add(Null, Null, AsString(n) + "  matching file(s) have been found.");
 		}
 	}
 }

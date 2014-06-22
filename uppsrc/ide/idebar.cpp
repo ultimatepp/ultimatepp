@@ -480,12 +480,13 @@ void Ide::BuildMenu(Bar& menu) {
 
 	menu.MenuSeparator();
 
-	menu.Add(GetConsole().GetLineCount(), AK_FINDNEXTERROR, THISBACK(FindNextError))
-		.Help("Find next " + String(btabs.GetCursor() == BFINDINFILES ? "position" : "error line")
-	           + "according to console pane");
-	menu.Add(GetConsole().GetLineCount(), AK_FINDPREVERROR, THISBACK(FindPrevError))
-		.Help("Find previous " + String(btabs.GetCursor() == BFINDINFILES ? "position" : "error line")
-	          + "according to console pane");
+	bool ff = btabs.GetCursor() == BFINDINFILES;
+	String hh = ff ? "position" : "error line";
+	bool ffb = ff ? ffound.GetCount() : errors.GetCount();
+	menu.Add(ffb, AK_FINDNEXTERROR, THISBACK(FindNextError))
+		.Help("Find next " + hh + "according to console pane");
+	menu.Add(ffb, AK_FINDPREVERROR, THISBACK(FindPrevError))
+		.Help("Find previous " + hh + "according to console pane");
 #if defined(PLATFORM_WIN32) || defined(PLATFORM_POSIX)
 	menu.MenuSeparator();
 	menu.Add(!IsNull(target), AK_OPENOUTDIR, THISBACK(OpenOutputFolder));
@@ -618,8 +619,7 @@ void Ide::MainTool(Bar& bar)
 
 void Ide::ConsoleMenu(Bar& menu)
 {
-	String selection = GetConsole().GetSelection();
-	
+	String selection = console.GetSelection();
 	menu.Add("Copy", CtrlImg::copy(), THISBACK(ConsoleCopy))
 		.Key(K_CTRL_C)
 		.Enable(!selection.IsEmpty())
