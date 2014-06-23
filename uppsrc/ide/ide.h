@@ -732,6 +732,7 @@ public:
 
 	int           doc_serial;
 	TopicCtrl     doc;
+	TopicCtrl     windoc;
 
 	int           state_icon;
 	
@@ -1100,6 +1101,7 @@ public:
 	void      JumpToDefinition(const Array<CppItem>& n, int q, const String& scope);
 	void      SearchTopics();
 	void      ShowTopics();
+	void      ShowTopicsWin();
 
 	void      TopicBack();
 
