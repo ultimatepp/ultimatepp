@@ -625,6 +625,17 @@ void Ide::ShowTopics()
 	EditFile(HELPNAME);
 }
 
+void Ide::ShowTopicsWin()
+{
+	if(windoc.IsOpen())
+		windoc.SetForeground();
+	else {
+		windoc.SyncDocTree();
+		windoc.GoTo(sTopicHome);
+		windoc.OpenMain();
+	}
+}
+
 void Ide::SearchTopics()
 {
 	String s = editor.GetWord();
