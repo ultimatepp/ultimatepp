@@ -465,7 +465,7 @@ void Ide::BookKey(int key) {
 	Key(key, 1);
 }
 
-void Ide::Display() {
+void Ide::DoDisplay() {
 	Point p = editor.GetColumnLine(editor.GetCursor());
 	display.SetLabel(Format("Ln %d, Col %d", p.y + 1, p.x + 1));
 }
