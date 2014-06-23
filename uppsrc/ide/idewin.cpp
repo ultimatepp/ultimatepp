@@ -486,7 +486,7 @@ Ide::Ide()
 	console.WhenSelect = THISBACK(FindError);
 	console.SetSlots(hydra1_threads);
 
-	editor.WhenSelection = THISBACK(Display);
+	editor.WhenSelection = THISBACK(DoDisplay);
 	stoponerrors = true;
 	hilite_scope = 1;
 	hilite_bracket = 1;

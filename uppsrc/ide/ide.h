@@ -1063,7 +1063,7 @@ public:
 	void      SetupEditor(int font, String highlight, String fn);
 	void      SetupEditor();
 
-	void      Display();
+	void      DoDisplay();
 
 	void      SetIcon();
 	bool      IsCppBaseFile();
