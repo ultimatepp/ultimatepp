@@ -168,7 +168,7 @@ bool Ide::Next(int tab, ArrayCtrl& a, int d)
 
 void Ide::FindNextError()
 {
-	if(Next(BCONSOLE, error, 1) || Next(BFINDINFILES, ffound, 1))
+	if(Next(BERRORS, error, 1) || Next(BFINDINFILES, ffound, 1))
 		return;
 	int ln = console.GetLine(console.GetCursor());
 	int l = ln;
@@ -179,7 +179,7 @@ void Ide::FindNextError()
 }
 
 void Ide::FindPrevError() {
-	if(Next(BCONSOLE, error, -1) || Next(BFINDINFILES, ffound, -1))
+	if(Next(BERRORS, error, -1) || Next(BFINDINFILES, ffound, -1))
 		return;
 	int ln = console.GetLine(console.GetCursor());
 	int l = ln;
@@ -274,6 +274,13 @@ void Ide::GoToError(const ErrorInfo& f)
 	Sync();
 }
 
+void Ide::GoToError(ArrayCtrl& a)
+{
+	Value v = a.Get("INFO");
+	if(v.Is<ErrorInfo>())
+		GoToError(ValueTo<ErrorInfo>(v));
+}
+
 bool Ide::FindLineError(int l) {
 	ErrorInfo f;
 	FindLineErrorCache cache;
@@ -321,13 +328,13 @@ void Ide::AddNote(const ErrorInfo& f)
 void Ide::ShowNote()
 {
 	if(notes.IsCursor())
-		GoToError(ValueTo<ErrorInfo>(notes.Get("INFO")));
+		GoToError(notes);
 }
 
 void Ide::ShowFound()
 {
 	if(ffound.IsCursor())
-		GoToError(ValueTo<ErrorInfo>(ffound.Get("INFO")));
+		GoToError(ffound);
 }
 
 void Ide::ShowError()
@@ -339,7 +346,7 @@ void Ide::ShowError()
 			const ErrorInfo& f = ValueTo<ErrorInfo>(n[i]);
 			notes.Add(GetFileName(f.file), f.lineno, f.message, n[i]);
 		}
-		GoToError(ValueTo<ErrorInfo>(error.Get("INFO")));
+		GoToError(error);
 	}	
 }
 

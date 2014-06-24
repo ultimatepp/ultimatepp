@@ -1043,6 +1043,7 @@ public:
 	
 	bool      FindLineError(int l);
 	void      GoToError(const ErrorInfo& f);
+	void      GoToError(ArrayCtrl& a);
 	
 	bool      FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& f);
 	void      FindError();
