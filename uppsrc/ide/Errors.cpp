@@ -354,7 +354,7 @@ void Ide::FoundDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink,
 {
 	String s = q;
 	if(*s == '\1') {
-		Vector<String> h = Split(s, '\1');
+		Vector<String> h = Split(~s + 1, '\1', false);
 		if(h.GetCount() < 4)
 			return;
 		One<EditorSyntax> es = EditorSyntax::Create(h[0]);
