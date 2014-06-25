@@ -571,7 +571,7 @@ void Ide::BrowseMenu(Bar& menu) {
 	menu.Separator();
 	menu.Add(AK_BROWSETOPICS, IdeImg::help(), THISBACK(ShowTopics));
 	menu.Add(AK_SEARCHTOPICS, THISBACK(SearchTopics));
-	menu.Add(AK_BROWSETOPICS_WIN, CtrlImg::help(), THISBACK(ShowTopicsWin));
+	menu.Add(AK_BROWSETOPICS_WIN, IdeImg::help_win(), THISBACK(ShowTopicsWin));
 	menu.Add("About..", THISBACK(About));
 }
 

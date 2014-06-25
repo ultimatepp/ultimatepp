@@ -627,6 +627,7 @@ void Ide::ShowTopics()
 
 void Ide::ShowTopicsWin()
 {
+	windoc.Icon(IdeImg::help_win(), IdeImg::help_win_large());
 	if(windoc.IsOpen())
 		windoc.SetForeground();
 	else {
