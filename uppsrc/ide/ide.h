@@ -449,6 +449,7 @@ public:
 	virtual   bool   FileRemove();
 	virtual   void   DragAndDrop(Point p, PasteClip& d);
 	virtual   void   Deactivate();
+	virtual   void   Layout();
 
 	virtual   void      PutConsole(const char *s);
 	virtual   void      PutVerbose(const char *s);
