@@ -40,10 +40,6 @@ bool Ctrl::GuiPlatformSetFullRefreshSpecial()
 	return isdhctrl;
 }
 
-void Ctrl::PaintCaret(SystemDraw& w)
-{
-}
-
 String GuiPlatformGetKeyDesc(dword key)
 {
 	static struct {
@@ -98,6 +94,7 @@ void GuiPlatformAfterMenuPopUp()
 {
 }
 
+#if WINCARET
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
 {
 	GuiLock __;
@@ -133,6 +130,7 @@ void Ctrl::SyncCaret() {
 		caretRect = cr;
 	}
 }
+#endif
 
 String Ctrl::Name() const {
 	GuiLock __;

@@ -195,6 +195,7 @@ LRESULT CALLBACK Ctrl::UtilityProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 	switch(message) {
 	case WM_TIMER:
 		TimerProc(GetTickCount());
+		AnimateCaret();
 		break;
 	case WM_RENDERFORMAT:
 		RenderFormat((dword)wParam);
@@ -871,16 +872,17 @@ void Ctrl::GuiSleep(int ms)
 	EnterGuiMutex(level);
 }
 
+#if 0
 void Ctrl::WndDestroyCaret()
 {
-	LLOG("Ctrl::WndDestroyCaret()");
+	DLOG("Ctrl::WndDestroyCaret()");
 	::DestroyCaret();
 }
 
 void Ctrl::WndCreateCaret(const Rect& cr)
 {
 	GuiLock __;
-	LLOG("Ctrl::WndCreateCaret(" << cr << ") in " << UPP::Name(this));
+	DLOG("Ctrl::WndCreateCaret(" << cr << ") in " << UPP::Name(this));
 	HWND hwnd = GetHWND();
 	if(!hwnd) return;
 	Rect r;
@@ -891,6 +893,57 @@ void Ctrl::WndCreateCaret(const Rect& cr)
 	::SetCaretPos(cr.left - p.x, cr.top - p.y);
 	::ShowCaret(hwnd);
 }
+#else
+
+int  Ctrl::WndCaretTime;
+bool Ctrl::WndCaretVisible;
+
+void  Ctrl::AnimateCaret()
+{
+	GuiLock __;
+	bool v = !(((GetTickCount() - WndCaretTime) / GetCaretBlinkTime()) & 1);
+	if(v != WndCaretVisible) {
+		WndCaretVisible = v;
+		RefreshCaret();
+	}
+}
+
+void Ctrl::PaintCaret(SystemDraw& w)
+{
+	GuiLock __;
+	LLOG("PaintCaret " << Name() << ", caretCtrl: " << caretCtrl << ", WndCaretVisible: " << WndCaretVisible);
+	if(this == caretCtrl && WndCaretVisible)
+		w.DrawRect(caretx, carety, caretcx, caretcy, InvertColor);
+}
+
+void Ctrl::SetCaret(int x, int y, int cx, int cy)
+{
+	GuiLock __;
+	LLOG("SetCaret " << Name());
+	if(this == caretCtrl)
+		RefreshCaret();
+	caretx = x;
+	carety = y;
+	caretcx = cx;
+	caretcy = cy;
+	if(this == caretCtrl) {
+		WndCaretTime = GetTickCount();
+		RefreshCaret();
+		AnimateCaret();
+	}
+}
+
+void Ctrl::SyncCaret() {
+	GuiLock __;
+	if(focusCtrl != caretCtrl) {
+		LLOG("SyncCaret DO " << Upp::Name(caretCtrl) << " -> " << Upp::Name(focusCtrl));
+		RefreshCaret();
+		caretCtrl = focusCtrl;
+		RefreshCaret();
+	}
+}
+#endif
+
 
 Rect Ctrl::GetWndScreenRect() const
 {
@@ -1189,7 +1242,11 @@ void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 	GuiLock __;
 	LLOG("WndScrollView " << UPP::Name(this));
 	if(caretCtrl && caretCtrl->GetTopCtrl() == this) {
+#if WINCARET
 		WndDestroyCaret();
+#else
+		RefreshCaret();
+#endif
 		caretRect.Clear();
 	}
 #ifdef PLATFORM_WINCE
