@@ -391,9 +391,11 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			LLOG("WM_MOVE / WM_SIZE: screen client = " << rect);
 			if(GetRect() != rect)
 				SetWndRect(rect);
+		#if WINCARET
 			WndDestroyCaret();
 			caretCtrl = NULL;
 			SyncCaret();
+		#endif
 		}
 		return 0L;
 	case WM_HELP:
