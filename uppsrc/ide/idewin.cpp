@@ -313,6 +313,11 @@ void SetupError(ArrayCtrl& error, const char *s)
 	error.NoWantFocus();
 }
 
+void Ide::Layout()
+{
+	display.Show(menubar.GetSize().cx + display.GetSize().cx < GetSize().cx);
+}
+
 Ide::Ide()
 {
 	editor.theide = this;
