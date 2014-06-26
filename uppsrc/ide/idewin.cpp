@@ -375,9 +375,9 @@ Ide::Ide()
 	ffound.ColumnAt(2).SetDisplay(Single<FoundDisplay>());
 
 	errors.Horz(error, notes);
-	error.WhenSel = THISBACK(ShowError);
-	notes.WhenSel = THISBACK(ShowNote);
-	ffound.WhenSel = THISBACK(ShowFound);
+	error.WhenSel = error.WhenLeftClick = THISBACK(ShowError);
+	notes.WhenSel = notes.WhenLeftClick = THISBACK(ShowNote);
+	ffound.WhenSel = ffound.WhenLeftClick = THISBACK(ShowFound);
 	console.WhenLine = THISBACK(ConsoleLine);
 
 	editor_bottom.Vert(right_split, bottom);
