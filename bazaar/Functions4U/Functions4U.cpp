@@ -1083,7 +1083,7 @@ String GetLine(const String &str, int &pos) {
 	return TrimBoth(ret);
 }
 
-Value GetField(const String &str, int &pos, char separator) {
+Value GetField(const String &str, int &pos, char separator, char decimalSign, bool onlyStrings) {
 	ASSERT(separator != '\"');	
 	String sret;
 	int npos = str.Find(separator, pos);
@@ -1107,10 +1107,13 @@ Value GetField(const String &str, int &pos, char separator) {
 			pos = npos + 1;
 		}
 	}	
+	if (onlyStrings)
+		return sret;
+	
 	if (sret.IsEmpty())
 		return Null;
-	
-	double dbl = ScanDouble(sret);
+		
+	double dbl = ScanDouble(sret, NULL, decimalSign == ',');
 		
 	if (IsNull(dbl)) {
 		Time t = ScanTime(sret);
@@ -1129,7 +1132,7 @@ Value GetField(const String &str, int &pos, char separator) {
 	}
 }
 
-Vector<Vector <Value> > ReadCSV(const String strFile, char separator, bool bycols, bool removeRepeated) {
+Vector<Vector <Value> > ReadCSV(const String strFile, char separator, bool bycols, bool removeRepeated, char decimalSign, bool onlyStrings) {
 	Vector<Vector<Value> > result;
 
 	String line;
@@ -1138,7 +1141,7 @@ Vector<Vector <Value> > ReadCSV(const String strFile, char separator, bool bycol
 	if (bycols) {
 		line = GetLine(strFile, posLine);
 		while (pos >= 0) {
-			Value name = GetField(line, pos, separator);
+			Value name = GetField(line, pos, separator, decimalSign, onlyStrings);
 			//if (!IsNull(name)) {
 				Vector<Value> &data = result.Add();
 				data.Add(name);
@@ -1153,7 +1156,7 @@ Vector<Vector <Value> > ReadCSV(const String strFile, char separator, bool bycol
 				int row = result[0].GetCount() - 1;
 				for (int col = 0; col < result.GetCount(); col++) {
 					if (pos >= 0) {
-						Value data = GetField(line, pos, separator);
+						Value data = GetField(line, pos, separator, decimalSign, onlyStrings);
 						result[col].Add(data);
 						if (row > 0 && result[col][row] != data)
 							repeated = false;
@@ -1177,9 +1180,12 @@ Vector<Vector <Value> > ReadCSV(const String strFile, char separator, bool bycol
 				Vector <Value> &linedata = result.Add();
 				int col = 0;
 				while (pos >= 0) {
-					Value data = GetField(line, pos, separator);
-					linedata << data;
-					if (row > 0 && (result[row - 1].GetCount() <= col || result[row - 1][col] != data))
+					Value val = GetField(line, pos, separator, decimalSign, onlyStrings);
+					if (val.IsNull())
+						linedata << "";
+					else
+						linedata << val;
+					if (row > 0 && (result[row - 1].GetCount() <= col || result[row - 1][col] != val))
 						repeated = false;
 					col++;
 				}
@@ -1194,8 +1200,52 @@ Vector<Vector <Value> > ReadCSV(const String strFile, char separator, bool bycol
 	return result;
 }
 
-String WriteCSV(Vector<Vector <Value> > &data, char separator, bool bycols) {
+Vector<Vector <Value> > ReadCSVFile(const String fileName, char separator, bool bycols, bool removeRepeated, char decimalSign, bool onlyStrings) {
+	return ReadCSV(LoadFile(fileName), separator, bycols, removeRepeated,  decimalSign, onlyStrings);
+}
+
+bool ReadCSVFileByLine(const String fileName, Gate2<int, Vector<Value>&> WhenRow, char separator, char decimalSign, bool onlyStrings) {
+	Vector<Value> result;
+
+	FindFile ff(fileName);
+	if(!ff || !ff.IsFile()) 
+		return false;
+	
+	FileIn in(fileName);
+	in.ClearError();
+	
+	for (int row = 0; true; row++) {
+		String line = in.GetLine();
+		if (line.IsVoid()) {
+			WhenRow(Null, result);
+			return true;
+		}
+		int pos = 0;
+		while (pos >= 0) {
+			Value val = GetField(line, pos, separator, decimalSign, onlyStrings);
+			if (val.IsNull())
+				result << "";
+			else
+				result << val;
+		}
+		if (!WhenRow(row, result))
+			return true;
+		result.Clear();
+	}
+	return false;
+}
+	
+String ToStringDecimalSign(Value &val, const String &decimalSign) {
+	String ret = val.ToString();
+	if (val.Is<double>() && decimalSign != ".") 
+		ret.Replace(".", decimalSign);
+	return ret;
+}
+
+String WriteCSV(Vector<Vector <Value> > &data, char separator, bool bycols, char decimalSign) {
 	String ret;
+	
+	String _decimalSign(decimalSign, 1);
 	
 	if (bycols) {
 		for (int r = 0; r < data[0].GetCount(); ++r) {
@@ -1204,7 +1254,7 @@ String WriteCSV(Vector<Vector <Value> > &data, char separator, bool bycols) {
 			for (int c = 0; c < data.GetCount(); ++c) {
 				if (c > 0)
 					ret << separator;
-				String str = data[c][r].ToString();
+				String str = ToStringDecimalSign(data[c][r], _decimalSign);
 				if (str.Find(separator) >= 0)
 					ret << '\"' << str << '\"';
 				else
@@ -1218,7 +1268,7 @@ String WriteCSV(Vector<Vector <Value> > &data, char separator, bool bycols) {
 			for (int c = 0; c < data[r].GetCount(); ++c) {
 				if (c > 0)
 					ret << separator;
-				String str = data[r][c].ToString();
+				String str = ToStringDecimalSign(data[r][c], _decimalSign);
 				if (str.Find(separator) >= 0)
 					ret << '\"' << str << '\"';
 				else
@@ -1227,6 +1277,11 @@ String WriteCSV(Vector<Vector <Value> > &data, char separator, bool bycols) {
 		}
 	}
 	return ret;
+}
+
+bool WriteCSVFile(const String fileName, Vector<Vector <Value> > &data, char separator, bool bycols, char decimalSign) {
+	String str = WriteCSV(data, separator, bycols, decimalSign);
+	return SaveFile(fileName, str);
 }
 
 

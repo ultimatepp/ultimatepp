@@ -7,5 +7,6 @@
 #include "plugin\gif/init"
 #include "plugin\png/init"
 #include "plugin/tif/init"
+#include "plugin/bmp/init"
 #include "ide/Browser/init"
 #endif

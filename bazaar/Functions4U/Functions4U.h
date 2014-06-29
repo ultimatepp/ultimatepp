@@ -272,8 +272,12 @@ inline const double Angle(const Point_<T>& p1, const Point_<T>& p2)  {
 }
 
 
-Vector<Vector <Value> > ReadCSV(const String strFile, char separator = ',', bool bycols = true, bool removeRepeated = true);
-String WriteCSV(Vector<Vector <Value> > &data, char separator = ',', bool bycols = true);
+Vector<Vector <Value> > ReadCSV(const String strFile, char separator = ',', bool bycols = true, bool removeRepeated = true, char decimalSign = '.', bool onlyStrings = false);
+Vector<Vector <Value> > ReadCSVFile(const String fileName, char separator = ',', bool bycols = true, bool removeRepeated = true, char decimalSign = '.', bool onlyStrings = false);
+bool ReadCSVFileByLine(const String fileName, Gate2<int, Vector<Value>&> WhenRow, char separator = ',', char decimalSign = '.', bool onlyStrings = false);
+String WriteCSV(Vector<Vector <Value> > &data, char separator = ',', bool bycols = true, char decimalSign = '.');
+bool WriteCSVFile(const String fileName, Vector<Vector <Value> > &data, char separator = ',', bool bycols = true, char decimalSign = '.');
+
 	
 // A String based class to parse into
 class StringParse :  public String {
