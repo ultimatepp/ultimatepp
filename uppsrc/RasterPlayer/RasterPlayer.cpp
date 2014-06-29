@@ -55,6 +55,8 @@ void RasterPlayer::Paint(Draw& w) {
 static StaticCriticalSection mutex;
 
 bool RasterPlayer::LoadBuffer(const String &buffer) {
+	if (buffer.IsEmpty())
+		return false;
 	StringStream str(buffer);
 	One<StreamRaster> raster = StreamRaster::OpenAny(str);
 	if(!raster) 
