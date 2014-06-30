@@ -271,23 +271,17 @@ void CodeEditor::FindReplaceAddHistory()
 
 bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
 {
-	DLOG("============FIND");
-	DDUMP(findreplace.IsOpen());
 	FindReplaceAddHistory();
 	findreplace.find.Error(false);
-	DDUMP(findreplace.IsOpen());
 	if(Find(back, (WString)~findreplace.find, findreplace.wholeword,
 		    findreplace.ignorecase, findreplace.wildcards, blockreplace)) {
-		DDUMP(findreplace.IsOpen());
 		if(!blockreplace) {
-			DDUMP(findreplace.IsOpen());
 			if(!findreplace.IsOpen())
 				OpenNormalFindReplace(replace);
 			findreplace.amend.Enable();
 			if(!findreplace.incremental)
 				SetFocus();
 		}
-		DLOG("----------------");
 		return true;
 	}
 	else {
@@ -468,7 +462,6 @@ void CodeEditor::OpenNormalFindReplace(bool replace)
 	findreplace.close <<= THISBACK(CloseFindReplace);
 	if(!findreplace.IsOpen())
 		AddFrame(findreplace);
-	DLOG("OpenNormal " << findreplace.IsOpen());
 }
 
 void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
@@ -634,17 +627,14 @@ void CodeEditor::ReplaceWildcard()
 
 void CodeEditor::CloseFindReplace()
 {
-	DLOG("============= CLOSE FIND REPLACE");
 	if(findreplace.IsOpen())
 		RemoveFrame(findreplace);
 }
 
 void CodeEditor::IncrementalFind()
 {
-	DLOG("Incremental find");
 	if(!findreplace.incremental)
 		return;
-	DLOG("Incremental find 2");
 	int l, h;
 	GetSelection(l, h);
 	ClearSelection();
