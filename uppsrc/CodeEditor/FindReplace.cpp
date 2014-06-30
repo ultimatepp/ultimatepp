@@ -2,11 +2,31 @@
 
 NAMESPACE_UPP
 
+void CodeEditor::InitFindReplace()
+{
+	findreplace.find.AddButton().SetMonoImage(CtrlImg::smallright()).Tip("Wildcard")
+		<<= THISBACK(FindWildcard);
+	findreplace.replace.AddButton().SetMonoImage(CtrlImg::smallright()).Tip("Wildcard")
+		<<= THISBACK(ReplaceWildcard);
+	PutI(findreplace.find);
+	PutI(findreplace.replace);
+	findreplace.amend <<= THISBACK(Replace);
+	findreplace.prev <<= THISBACK(DoFindBack);
+	findreplace.replacing = false;
+	found = notfoundfw = notfoundbk = foundsel = false;
+	persistent_find_replace =  false;
+}
+
 FindReplaceDlg::FindReplaceDlg()
 {
 	ignorecase <<= THISBACK(Sync);
 	samecase <<= true;
 	Sync();
+	close.Cancel();
+	prev.SetImage(CtrlImg::SmallUp());
+	prev.Tip("Find prev");
+	amend.SetImage(CodeEditorImg::Replace());
+	amend.Tip("Replace");
 }
 
 void FindReplaceDlg::Sync()
@@ -25,30 +45,40 @@ bool FindReplaceDlg::Key(dword key, int cnt) {
 			return true;
 		}
 	}
+	if(key == K_ENTER) {
+		next.WhenAction();
+		return true;
+	}
+	if(findarg(key, K_TAB, K_SHIFT_TAB, K_UP, K_DOWN) >= 0 && replace.IsShown()) {
+		if(find.HasFocus())
+			replace.SetFocus();
+		else
+			find.SetFocus();
+		return true;
+	}
+	if(key == K_ESCAPE) {
+		close.WhenAction();
+		return true;
+	}
 	return TopWindow::Key(key, cnt);
-}
-
-Size FindReplaceDlg::GetAdjustedSize()
-{
-	Size sz = GetLayoutSize();
-	if(!replacing)
-		sz.cy -= replace.GetRect().bottom - find.GetRect().bottom;
-	return sz;
 }
 
 void FindReplaceDlg::Setup(bool doreplace)
 {
+	CtrlLayout(*this);
+	close.SetImage(CodeEditorImg::Cancel());
+	close.Tip("Close (Esc)");
+	close.Normal();
+	close.SetLabel("");
+	next.SetImage(CtrlImg::SmallDown());
+	next.Tip("Find next");
+	next.Normal();
+	next.SetLabel("");
 	replacing = doreplace;
-	replace_lbl.Show(replacing);
 	replace.Show(replacing);
 	amend.Show(replacing);
-//	amendall.Show(false); // not yet implemented
-	Rect r = GetRect();
-	Size sz = GetAdjustedSize();
-	SetMinSize(sz);
-	r.SetSize(sz);
-	SetRect(r);
-	ActiveFocus(find);
+	Height(doreplace ? GetLayoutSize().cy : replace.GetRect().top);
+	SetFrame(TopSeparatorFrame());
 	Sync();
 }
 
@@ -221,7 +251,6 @@ bool CodeEditor::FindFrom(int pos, bool back, const wchar *text, bool wholeword,
 			l = s = ln;
 		}
 	}
-	ClearSelection();
 	if(back)
 		notfoundbk = true;
 	else
@@ -240,27 +269,20 @@ void CodeEditor::FindReplaceAddHistory()
 bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
 {
 	FindReplaceAddHistory();
+	findreplace.find.Error(false);
 	if(Find(back, (WString)~findreplace.find, findreplace.wholeword,
 		    findreplace.ignorecase, findreplace.wildcards, blockreplace)) {
 		if(!blockreplace) {
-			if(!findreplace.IsOpen()) {
-				findreplace.NoCenter();
+			if(!findreplace.IsOpen())
 				OpenNormalFindReplace(replace);
-			}
-			Rect lr = GetLineScreenRect(GetLine(GetCursor()));
-			Size fsz = findreplace.GetAdjustedSize();
-			Rect r = GetTopCtrl()->GetRect();
-			int y = r.bottom - fsz.cy - 2 * GetStdFontCy(); // Subtracting 2 * Get..Cy() to fix broken LXDE WM
-			if(lr.bottom > y) y = r.top;
-			Rect wa = Ctrl::GetWorkArea();
-			findreplace.SetRect(RectC(wa.left + (wa.Width() - fsz.cx) / 2, y, fsz.cx, fsz.cy));
 			findreplace.amend.Enable();
 			SetFocus();
 		}
 		return true;
 	}
 	else {
-		CloseFindReplace();
+		findreplace.find.Error();
+		SetFocus();
 		return false;
 	}
 }
@@ -422,33 +444,19 @@ void CodeEditor::BlockReplace()
 {
 	BlockReplace(~findreplace.find, ~findreplace.replace, findreplace.wholeword,
 		         findreplace.ignorecase, findreplace.wildcards, findreplace.samecase);
-/*
-	NextUndo();
-	int l, h;
-	if(!GetSelection(l, h)) return;
-	PlaceCaret(l);
-	for(;;) {
-		if(!Find(false, true) || cursor >= h) break;
-		Refresh();
-		int hh, ll;
-		GetSelection(ll, hh);
-		CachePos(ll);
-		h = h - (hh - ll) + Paste(GetReplaceText());
-	}
-	SetSelection(l, h);
-*/
 }
 
 void CodeEditor::OpenNormalFindReplace(bool replace)
 {
 	findreplace.Setup(replace);
+	findreplace.find.Error(false);
+	findreplace.find.SetFocus();
 	findreplace.itext = GetI();
-	findreplace.Title(replace ? "Find and Replace" : "Find");
-	findreplace.findback.Show();
-	findreplace.ok.SetLabel("Find Next");
-	findreplace.ok <<= THISBACK(DoFind);
-	findreplace.cancel <<= findreplace.WhenClose = callback(&findreplace, &TopWindow::Close);
-	findreplace.Open();
+	findreplace.prev.Show();
+	findreplace.next <<= THISBACK(DoFind);
+	findreplace.close <<= THISBACK(CloseFindReplace);
+	if(!findreplace.IsOpen())
+		AddFrame(findreplace);
 }
 
 void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
@@ -457,7 +465,6 @@ void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 		findreplace.Close();
 
 	replacei = 0;
-	findreplace.CenterOwner();
 	WString find_text;
 	int find_pos = -1;
 	
@@ -486,12 +493,17 @@ void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 	}
 	if(IsSelection() && replace) {
 		findreplace.itext = GetI();
+		SetLayout_BlockReplaceLayout(findreplace);
+		findreplace.SetRect(WithBlockReplaceLayout<EmptyClass>::GetLayoutSize());
 		findreplace.Title("Replace in selection");
 		findreplace.amend.Hide();
-		findreplace.findback.Hide();
-		findreplace.ok.SetLabel("Replace");
-		findreplace.ok <<= findreplace.Breaker(IDOK);
-		findreplace.cancel <<= findreplace.Breaker(IDCANCEL);
+		findreplace.prev.Hide();
+		findreplace.next.Ok() <<= findreplace.Breaker(IDOK);
+		findreplace.close.Cancel() <<= findreplace.Breaker(IDCANCEL);
+		findreplace.close.SetImage(Null);
+		findreplace.close.Tip("");
+		findreplace.next.SetImage(Null);
+		findreplace.next.Tip("");
 		if(findreplace.Execute() == IDOK)
 			BlockReplace();
 	}
@@ -611,7 +623,7 @@ void CodeEditor::ReplaceWildcard()
 void CodeEditor::CloseFindReplace()
 {
 	if(!persistent_find_replace && findreplace.IsOpen())
-		findreplace.Close();
+		RemoveFrame(findreplace);
 }
 
 void CodeEditor::DoFind()

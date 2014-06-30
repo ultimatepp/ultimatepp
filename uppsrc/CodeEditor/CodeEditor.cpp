@@ -925,26 +925,11 @@ CodeEditor::CodeEditor() {
 	bracket_start = 0;
 	stat_edit_time = 0;
 	last_key_time = Null;
-	CtrlLayout(findreplace);
 	AddFrame(bar);
 	bar.SetEditor(this);
 	UndoSteps(10000);
 	SetFont(Courier(16));
-
-	findreplace.find.AddButton().SetMonoImage(CtrlImg::smallright()).Tip("Wildcard")
-		<<= THISBACK(FindWildcard);
-	findreplace.replace.AddButton().SetMonoImage(CtrlImg::smallright()).Tip("Wildcard")
-		<<= THISBACK(ReplaceWildcard);
-	PutI(findreplace.find);
-	PutI(findreplace.replace);
-	findreplace.amend <<= THISBACK(Replace);
-	findreplace.cancel.Cancel();
-	findreplace.ok.Ok();
-	findreplace.findback <<= THISBACK(DoFindBack);
-	findreplace.ToolWindow();
-	findreplace.replacing = false;
-	found = notfoundfw = notfoundbk = foundsel = false;
-
+	InitFindReplace();
 	bar.WhenBreakpoint = THISBACK(ForwardWhenBreakpoint);
 	bar.WhenAnnotationMove = Proxy(WhenAnnotationMove);
 	bar.WhenAnnotationClick = Proxy(WhenAnnotationClick);
@@ -964,7 +949,6 @@ CodeEditor::CodeEditor() {
 	mark_lines = true;
 	check_edited = false;
 	tippos = -1;
-	persistent_find_replace =  false;
 }
 
 CodeEditor::~CodeEditor() {}

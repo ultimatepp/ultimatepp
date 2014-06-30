@@ -363,4 +363,9 @@ void RestoreKeys(const String& data)
 	catch(CParser::Error) {}
 }
 
+String GetDesc(const KeyInfo& f, bool parenthesis)
+{
+	return f.key[0] ? parenthesis ? "(" + GetKeyDesc(f.key[0]) + ")" : GetKeyDesc(f.key[0]) : String();
+}
+
 END_UPP_NAMESPACE
