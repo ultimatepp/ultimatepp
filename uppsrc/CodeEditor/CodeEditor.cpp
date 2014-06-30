@@ -232,7 +232,8 @@ void CodeEditor::SelectionChanged()
 		Refresh();
 	}
 	if(!foundsel) {
-		CloseFindReplace();
+		if(!persistent_find_replace && !findreplace.incremental)
+			CloseFindReplace();
 		found = false;
 		notfoundfw = notfoundbk = false;
 		findreplace.amend.Disable();

@@ -282,6 +282,7 @@ protected:
 	void   FindWildcard();
 	void   ReplaceWildcard();
 	void   InsertWildcard(int c);
+	void   IncrementalFind();
 	void   CheckSyntaxRefresh(int pos, const WString& text);
 
 	void   SetFound(int fi, int type, const WString& text);
