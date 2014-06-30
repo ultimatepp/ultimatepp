@@ -633,7 +633,7 @@ void CodeEditor::CloseFindReplace()
 
 void CodeEditor::IncrementalFind()
 {
-	if(!findreplace.incremental)
+	if(!findreplace.incremental && findreplace.GetTopCtrl() != &findreplace)
 		return;
 	int l, h;
 	GetSelection(l, h);
