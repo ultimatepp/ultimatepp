@@ -14,19 +14,22 @@ void CodeEditor::InitFindReplace()
 	findreplace.prev <<= THISBACK(DoFindBack);
 	findreplace.replacing = false;
 	found = notfoundfw = notfoundbk = foundsel = false;
-	persistent_find_replace =  false;
+	persistent_find_replace = false;
+	findreplace.find <<= findreplace.wholeword <<= findreplace.wildcards
+	                 <<= findreplace.ignorecase <<= THISBACK(IncrementalFind);
 }
 
 FindReplaceDlg::FindReplaceDlg()
 {
 	ignorecase <<= THISBACK(Sync);
 	samecase <<= true;
-	Sync();
 	close.Cancel();
 	prev.SetImage(CtrlImg::SmallUp());
 	prev.Tip("Find prev");
 	amend.SetImage(CodeEditorImg::Replace());
 	amend.Tip("Replace");
+	incremental <<= true;
+	Sync();
 }
 
 void FindReplaceDlg::Sync()
@@ -268,21 +271,29 @@ void CodeEditor::FindReplaceAddHistory()
 
 bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
 {
+	DLOG("============FIND");
+	DDUMP(findreplace.IsOpen());
 	FindReplaceAddHistory();
 	findreplace.find.Error(false);
+	DDUMP(findreplace.IsOpen());
 	if(Find(back, (WString)~findreplace.find, findreplace.wholeword,
 		    findreplace.ignorecase, findreplace.wildcards, blockreplace)) {
+		DDUMP(findreplace.IsOpen());
 		if(!blockreplace) {
+			DDUMP(findreplace.IsOpen());
 			if(!findreplace.IsOpen())
 				OpenNormalFindReplace(replace);
 			findreplace.amend.Enable();
-			SetFocus();
+			if(!findreplace.incremental)
+				SetFocus();
 		}
+		DLOG("----------------");
 		return true;
 	}
 	else {
 		findreplace.find.Error();
-		SetFocus();
+		if(!findreplace.incremental)
+			SetFocus();
 		return false;
 	}
 }
@@ -457,12 +468,13 @@ void CodeEditor::OpenNormalFindReplace(bool replace)
 	findreplace.close <<= THISBACK(CloseFindReplace);
 	if(!findreplace.IsOpen())
 		AddFrame(findreplace);
+	DLOG("OpenNormal " << findreplace.IsOpen());
 }
 
 void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 {
 	if(findreplace.IsOpen())
-		findreplace.Close();
+		CloseFindReplace();
 
 	replacei = 0;
 	WString find_text;
@@ -511,7 +523,7 @@ void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 		if(find_pos >= 0)
 			SetCursor(find_pos);
 		OpenNormalFindReplace(replace);
-		findreplace.find.SetWantFocus();
+		findreplace.find.SetFocus();
 	}
 }
 
@@ -622,8 +634,22 @@ void CodeEditor::ReplaceWildcard()
 
 void CodeEditor::CloseFindReplace()
 {
-	if(!persistent_find_replace && findreplace.IsOpen())
+	DLOG("============= CLOSE FIND REPLACE");
+	if(findreplace.IsOpen())
 		RemoveFrame(findreplace);
+}
+
+void CodeEditor::IncrementalFind()
+{
+	DLOG("Incremental find");
+	if(!findreplace.incremental)
+		return;
+	DLOG("Incremental find 2");
+	int l, h;
+	GetSelection(l, h);
+	ClearSelection();
+	SetCursor(min(l, h));
+	Find();
 }
 
 void CodeEditor::DoFind()
