@@ -153,11 +153,10 @@ inline bool islbrkt(int c)           { return c == '{' || c == '[' || c == '('; 
 inline bool isrbrkt(int c)           { return c == '}' || c == ']' || c == ')'; }
 inline bool isbrkt(int c)            { return islbrkt(c) || isrbrkt(c); }
 
-struct FindReplaceDlg : WithIDEFindReplaceLayout<TopWindow> {
+struct FindReplaceDlg : FrameBottom< WithIDEFindReplaceLayout<TopWindow> > {
 	WString itext;
 	bool    replacing;
 
-	Size    GetAdjustedSize();
 	virtual bool Key(dword key, int count);
 	void Setup(bool doreplace);
 	void Sync();
@@ -275,6 +274,7 @@ protected:
 
 	struct HlSt;
 	
+	void   InitFindReplace();
 	void   CancelBracketHighlight(int& pos);
 	void   CheckBrackets();
 	void   OpenNormalFindReplace(bool replace);
