@@ -674,4 +674,26 @@ void CodeEditor::SerializeFind(Stream& s)
 	findreplace.replace.SerializeList(s);
 }
 
+CodeEditor::FindReplaceData CodeEditor::GetFindReplaceData() const
+{
+	FindReplaceData r;
+	r.find = ~findreplace.find;
+	r.replace = ~findreplace.replace;
+	r.wholeword = ~findreplace.wholeword;
+	r.ignorecase = ~findreplace.ignorecase;
+	r.wildcards = ~findreplace.wildcards;
+	r.samecase = ~findreplace.samecase;
+	return r;
+}
+
+void CodeEditor::SetFindReplaceData(const FindReplaceData& r)
+{
+	findreplace.find <<= r.find;
+	findreplace.replace <<= r.replace;
+	findreplace.wholeword <<= r.wholeword;
+	findreplace.ignorecase <<= r.ignorecase;
+	findreplace.wildcards <<= r.wildcards;
+	findreplace.samecase <<= r.samecase;
+}
+
 END_UPP_NAMESPACE
