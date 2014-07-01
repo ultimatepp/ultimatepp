@@ -449,7 +449,6 @@ public:
 	void     SyncTip();
 	void     CloseTip()                               { if(tip.IsOpen()) tip.Close(); tip.d = NULL;  }
 
-// HL NEW:
 	One<EditorSyntax> GetSyntax(int line);
 	bool IsCursorBracket(int pos) const;
 	bool IsMatchingBracket(int pos) const;
@@ -457,7 +456,13 @@ public:
 // TODO: Do we really need this ?
 	Vector<IfState> GetIfStack(int line)              { return GetSyntax(line)->PickIfStack(); }
 
-// ------
+	struct FindReplaceData {
+		String find, replace;
+		bool   wholeword, wildcards, ignorecase, samecase;
+	};
+	
+	FindReplaceData GetFindReplaceData() const;
+	void            SetFindReplaceData(const FindReplaceData& d);
 
 	typedef CodeEditor CLASSNAME;
 

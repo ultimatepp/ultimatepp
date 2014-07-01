@@ -1,5 +1,6 @@
 #include "ide.h"
 
+/*
 void Ide::SerializeFf(Stream& s) { // Used to move data from regular Find dialog, has to be same as FindAndReplace::Serialize
 	int version = 1;
 	s / version;
@@ -10,11 +11,11 @@ void Ide::SerializeFf(Stream& s) { // Used to move data from regular Find dialog
 		s % ff.samecase;
 	s % ff.replace;
 	if(version >= 1) {
-		Option dummy;
-		s % dummy;
+		s % incremental;
 	}
 	ff.replace.SerializeList(s);
 }
+*/
 
 FileSel& sSD()
 {
@@ -232,10 +233,15 @@ void Ide::FindFileName() {
 }
 
 void Ide::FindInFiles(bool replace) {
-	StringStream ss;
-	editor.SerializeFind(ss);
-	ss.Open(ss.GetResult());
-	SerializeFf(ss);
+	CodeEditor::FindReplaceData d = editor.GetFindReplaceData();
+	CtrlRetriever rf;
+	rf(ff.find, d.find)
+	  (ff.replace, d.replace)
+	  (ff.ignorecase, d.ignorecase)
+	  (ff.samecase, d.samecase)
+	  (ff.wholeword, d.wholeword)
+	  (ff.wildcards, d.wildcards)
+	;
 	if(String(ff.folder).IsEmpty())
 		ff.folder <<= GetUppDir();
 	ff.style <<= STYLE_NO_REPLACE;
@@ -244,10 +250,10 @@ void Ide::FindInFiles(bool replace) {
 	ff.Setup(replace);	
 	
 	int c = ff.Execute();
-	ss.Create();
-	SerializeFf(ss);
-	ss.Open(ss.GetResult());
-	editor.SerializeFind(ss);
+
+	rf.Retrieve();
+	editor.SetFindReplaceData(d);
+
 	if(c == IDOK) {
 		Renumber();
 		ff.find.AddHistory();

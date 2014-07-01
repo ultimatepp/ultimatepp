@@ -1058,7 +1058,6 @@ public:
 	void      FindSetStdDir(String n);
 	void      FindStdDir();
 	void      InsertWildcard(int c);
-	void      SerializeFf(Stream& s);
 	bool      SearchInFile(const String& fn, const String& pattern,
 		                   bool wholeword, bool ignorecase, int& n);
 	void      SyncFindInFiles();
