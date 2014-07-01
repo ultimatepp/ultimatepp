@@ -14,6 +14,8 @@ TextDiffCtrl::TextDiffCtrl()
 	left.WhenScroll = right.ScrollWhen(left);
 	right.WhenScroll = left.ScrollWhen(right);
 	right.HideSb();
+	left.WhenLeftDouble = Proxy(WhenLeftLine);
+	right.WhenLeftDouble = Proxy(WhenRightLine);
 }
 
 static bool SmallDiff(const char *s1, const char *s2)

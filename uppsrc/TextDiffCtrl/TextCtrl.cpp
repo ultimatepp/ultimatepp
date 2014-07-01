@@ -25,19 +25,22 @@ TextCompareCtrl::TextCompareCtrl()
 	gutter_capture = false;
 }
 
-void TextCompareCtrl::DoSelection(int y, bool shift)
+int TextCompareCtrl::GetLineNo(int y)
 {
 	int ii = scroll.Get().y + y / letter.cy;
-	if(ii >= 0 && ii < lines.GetCount()) {
-		int i = lines[ii].number;
-		if(!IsNull(i)) {
-			if(shift)
-				cursor = i;
-			else
-				cursor = anchor = i;
-			Refresh();
-			scroll.ScrollIntoY(i);
-		}
+	return ii >= 0 && ii < lines.GetCount() ? lines[ii].number : Null;	
+}
+
+void TextCompareCtrl::DoSelection(int y, bool shift)
+{
+	int i = GetLineNo(y);
+	if(!IsNull(i)) {
+		if(shift)
+			cursor = i;
+		else
+			cursor = anchor = i;
+		Refresh();
+		scroll.ScrollIntoY(i);
 	}
 }
 
@@ -62,7 +65,9 @@ void TextCompareCtrl::LeftDown(Point pt, dword keyflags)
 
 void TextCompareCtrl::LeftDouble(Point pt, dword keyflags)
 {
-	
+	int i = GetLineNo(pt.y);
+	if(!IsNull(i))
+		WhenLeftDouble(i - 1);
 }
 
 void TextCompareCtrl::MouseMove(Point pt, dword flags)
