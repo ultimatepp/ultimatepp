@@ -845,6 +845,8 @@ public:
 		void   GoOpposite();
 		void   Print();
 		void   Diff();
+		void   GotoDiffLeft(int line, DiffDlg *df);
+		void GotoDiffRight(int line, FileDiff *df);
 		void   Patch();
 		void   SvnHistory();
 

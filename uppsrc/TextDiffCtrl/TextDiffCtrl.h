@@ -49,6 +49,7 @@ private:
 	bool           GetSelection(int& l, int& h);
 	void           DoSelection(int y, bool shift);
 	void           Copy();
+	int            GetLineNo(int y);
 
 private:
 	struct Line {
@@ -79,7 +80,7 @@ private:
 
 public:
 	Callback       WhenScroll;
-	Callback       WhenLeftDouble;
+	Callback1<int> WhenLeftDouble;
 
 	void           SetCount(int c);
 	void           AddCount(int c);
@@ -135,6 +136,9 @@ public:
 	void SetFont(Font f, Font nf)                          { left.SetFont(f, nf); right.SetFont(f, nf); }
 	void SetFont(Font f)                                   { left.SetFont(f); right.SetFont(f); }
 	
+	Callback1<int> WhenLeftLine;
+	Callback1<int> WhenRightLine;
+	
 	TextDiffCtrl();
 };
 
@@ -164,6 +168,8 @@ struct FileDiff : DiffDlg {
 	
 	typedef FileDiff CLASSNAME;
 	
+	String GetExtPath() const { return ~r; }
+
 	FileDiff(FileSel& fs);
 	
 	FileSel& fs;

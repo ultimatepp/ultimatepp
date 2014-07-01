@@ -548,12 +548,26 @@ int Ide::GetPackageIndex()
 	return -1;
 }
 
+void Ide::GotoDiffLeft(int line, DiffDlg *df)
+{
+	EditFile(df->editfile);
+	editor.SetCursor(editor.GetPos(line));
+}
+
+void Ide::GotoDiffRight(int line, FileDiff *df)
+{
+	EditFile(df->GetExtPath());
+	editor.SetCursor(editor.GetPos(line));
+	editor.SetFocus();
+}
 
 void Ide::Diff()
 {
 	if(IsNull(editfile))
 		return;
 	FileDiff diffdlg(AnySourceFs());
+	diffdlg.diff.WhenLeftLine = THISBACK1(GotoDiffLeft, &diffdlg);
+	diffdlg.diff.WhenRightLine = THISBACK1(GotoDiffRight, &diffdlg);
 	diffdlg.Execute(editfile);
 }
 
