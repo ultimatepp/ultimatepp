@@ -540,6 +540,7 @@ void CodeEditor::LeftDown(Point p, dword keyflags) {
 	}
 	LineEdit::LeftDown(p, keyflags);
 	WhenLeftDown();
+	CloseFindReplace();
 }
 
 void CodeEditor::Tip::Paint(Draw& w)
@@ -745,6 +746,10 @@ bool CodeEditor::Key(dword code, int count) {
 	last_key_time = key_time;
 
 	NextUndo();
+	if(code == replace_key) {
+		Replace();
+		return true;
+	}
 	switch(code) {
 	case K_CTRL_DELETE:
 		DeleteWord();

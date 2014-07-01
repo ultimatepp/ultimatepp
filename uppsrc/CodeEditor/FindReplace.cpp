@@ -25,9 +25,7 @@ FindReplaceDlg::FindReplaceDlg()
 	samecase <<= true;
 	close.Cancel();
 	prev.SetImage(CtrlImg::SmallUp());
-	prev.Tip("Find prev");
 	amend.SetImage(CodeEditorImg::Replace());
-	amend.Tip("Replace");
 	incremental <<= true;
 	Sync();
 }
@@ -36,6 +34,10 @@ void FindReplaceDlg::Sync()
 {
 	samecase.Enable(ignorecase);
 }
+
+dword CodeEditor::find_next_key = K_F3;
+dword CodeEditor::find_prev_key = K_SHIFT_F3;
+dword CodeEditor::replace_key = K_CTRL_R;
 
 bool FindReplaceDlg::Key(dword key, int cnt) {
 	if(key == K_CTRL_I) {
@@ -74,9 +76,12 @@ void FindReplaceDlg::Setup(bool doreplace)
 	close.Normal();
 	close.SetLabel("");
 	next.SetImage(CtrlImg::SmallDown());
-	next.Tip("Find next");
+	next.Tip("Find next (" + GetKeyDesc(CodeEditor::find_next_key) + ")");
 	next.Normal();
 	next.SetLabel("");
+	prev.Tip("Find prev (" + GetKeyDesc(CodeEditor::find_prev_key) + ")");
+	amend.Tip("Replace (" + GetKeyDesc(CodeEditor::replace_key) + ")");
+	info.SetLabel("&Find");
 	replacing = doreplace;
 	replace.Show(replacing);
 	amend.Show(replacing);
@@ -273,6 +278,7 @@ bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
 {
 	FindReplaceAddHistory();
 	findreplace.find.Error(false);
+	findreplace.info.SetLabel("&Find");
 	if(Find(back, (WString)~findreplace.find, findreplace.wholeword,
 		    findreplace.ignorecase, findreplace.wildcards, blockreplace)) {
 		if(!blockreplace) {
@@ -286,6 +292,7 @@ bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
 	}
 	else {
 		findreplace.find.Error();
+		findreplace.info.SetLabel("Not &found");
 		if(!findreplace.incremental)
 			SetFocus();
 		return false;
@@ -654,7 +661,7 @@ void CodeEditor::DoFindBack()
 
 void CodeEditor::SerializeFind(Stream& s)
 {
-	int version = 0;
+	int version = 1;
 	s / version;
 	s % findreplace.find;
 	findreplace.find.SerializeList(s);
@@ -662,6 +669,8 @@ void CodeEditor::SerializeFind(Stream& s)
 	if(version >= 0)
 		s % findreplace.samecase;
 	s % findreplace.replace;
+	if(version >= 1)
+		s % findreplace.incremental;
 	findreplace.replace.SerializeList(s);
 }
 

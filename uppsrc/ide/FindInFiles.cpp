@@ -1,7 +1,7 @@
 #include "ide.h"
 
-void Ide::SerializeFf(Stream& s) {
-	int version = 0;
+void Ide::SerializeFf(Stream& s) { // Used to move data from regular Find dialog, has to be same as FindAndReplace::Serialize
+	int version = 1;
 	s / version;
 	s % ff.find;
 	ff.find.SerializeList(s);
@@ -9,7 +9,10 @@ void Ide::SerializeFf(Stream& s) {
 	if(version >= 0)
 		s % ff.samecase;
 	s % ff.replace;
-	s % ff.readonly;
+	if(version >= 1) {
+		Option dummy;
+		s % dummy;
+	}
 	ff.replace.SerializeList(s);
 }
 

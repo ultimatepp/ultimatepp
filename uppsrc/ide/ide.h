@@ -799,6 +799,9 @@ public:
 	void      ToggleReadOnly();
 	void      PosSync();
 
+	void      DoEditKeys();
+	void      AKEditor();
+
 	void      PackageMenu(Bar& menu);
 
 	void      UscFile(const String& file);

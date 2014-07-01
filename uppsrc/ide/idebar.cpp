@@ -7,6 +7,19 @@
 
 using namespace IdeKeys;
 
+void Ide::DoEditKeys()
+{
+	EditKeys();
+	AKEditor();
+}
+
+void Ide::AKEditor()
+{
+	CodeEditor::find_next_key = AK_FINDNEXT().key[0];
+	CodeEditor::find_prev_key = AK_FINDPREV().key[0];
+	CodeEditor::replace_key = AK_DOREPLACE().key[0];
+}
+
 void Ide::PackageMenu(Bar& menu) {
 	Project(menu);
 }
@@ -320,7 +333,7 @@ void Ide::Setup(Bar& menu) {
 		.Help("Fonts, tabs, indentation, status bar");
 	menu.Add("Abbreviations..", THISBACK(Abbreviations))
 		.Help("Edit abbreviation keywords and code");
-	menu.Add("Keyboard shortcuts..", callback(EditKeys))
+	menu.Add("Keyboard shortcuts..", THISBACK(DoEditKeys))
 		.Help("Edit key bindings");
 	menu.Add("Build methods..", THISBACK(SetupBuildMethods))
 	    .Help("Setup build methods");

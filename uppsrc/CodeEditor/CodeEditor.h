@@ -332,6 +332,10 @@ public:
 	FrameTop<Button>    topsbbutton;
 	FrameTop<Button>    topsbbutton1;
 
+	static dword find_next_key;
+	static dword find_prev_key;
+	static dword replace_key;
+
 	void   Clear()                    { LineEdit::Clear(); found = notfoundfw = notfoundbk = false; }
 
 	void   Highlight(const String& h);
