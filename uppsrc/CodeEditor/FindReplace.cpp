@@ -276,7 +276,6 @@ void CodeEditor::FindReplaceAddHistory()
 
 bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
 {
-	FindReplaceAddHistory();
 	findreplace.find.Error(false);
 	findreplace.info.SetLabel("&Find");
 	if(Find(back, (WString)~findreplace.find, findreplace.wholeword,
@@ -634,8 +633,10 @@ void CodeEditor::ReplaceWildcard()
 
 void CodeEditor::CloseFindReplace()
 {
-	if(findreplace.IsOpen())
+	if(findreplace.IsOpen()) {
+		FindReplaceAddHistory();
 		RemoveFrame(findreplace);
+	}
 }
 
 void CodeEditor::IncrementalFind()
