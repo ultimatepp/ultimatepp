@@ -160,6 +160,7 @@ protected:
 	bool               appending;
 	bool               dropfocus;
 	bool               always_drop;
+	bool               updownkeys;
 
 	void        Select();
 	void        Drop();
@@ -203,7 +204,7 @@ public:
 
 	DropChoice& DropWidth(int w)                      { dropwidth = w; return *this; }
 	DropChoice& DropWidthZ(int w)                     { dropwidth = HorzLayoutZoom(w); return *this; }
-
+	DropChoice& UpDownKeys(bool b = true)             { updownkeys = b; return *this; }
 
 	DropChoice& SetScrollBarStyle(const ScrollBar::Style& s) { list.SetScrollBarStyle(s); return *this; }
 
@@ -265,9 +266,10 @@ public:
 	WithDropChoice& AlwaysDrop(bool b = true)             { select.AlwaysDrop(b); return *this; }
 	WithDropChoice& WithWheel(bool b = true)              { withwheel = b; return *this; }
 	WithDropChoice& NoWithWheel()                         { return WithWheel(false); }
-
 	WithDropChoice& DropWidth(int w)                      { select.DropWidth(w); return *this; }
 	WithDropChoice& DropWidthZ(int w)                     { select.DropWidthZ(w); return *this; }
+	WithDropChoice& UpDownKeys(bool b = true)             { select.UpDownKeys(b); return *this; }
+	WithDropChoice& NoUpDownKeys()                        { return UpDownKeys(false); }
 
 	WithDropChoice();
 };

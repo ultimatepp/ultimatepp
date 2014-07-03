@@ -21,7 +21,7 @@ void CodeEditor::InitFindReplace()
 
 FindReplaceDlg::FindReplaceDlg()
 {
-	ignorecase <<= THISBACK(Sync);
+	find.NoUpDownKeys();
 	samecase <<= true;
 	close.Cancel();
 	prev.SetImage(CtrlImg::SmallUp());
@@ -54,7 +54,7 @@ bool FindReplaceDlg::Key(dword key, int cnt) {
 		next.WhenAction();
 		return true;
 	}
-	if(findarg(key, K_TAB, K_SHIFT_TAB, K_UP, K_DOWN) >= 0 && replace.IsShown()) {
+	if(findarg(key, K_TAB, K_SHIFT_TAB) >= 0 && replace.IsShown()) {
 		if(find.HasFocus())
 			replace.SetFocus();
 		else
@@ -641,6 +641,7 @@ void CodeEditor::CloseFindReplace()
 
 void CodeEditor::IncrementalFind()
 {
+	findreplace.Sync();
 	if(!findreplace.incremental || findreplace.GetTopCtrl() == &findreplace) // || we are block replace
 		return;
 	int l, h;

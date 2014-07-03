@@ -12,6 +12,7 @@ DropChoice::DropChoice() {
 	EnableDrop(false);
 	dropwidth = 0;
 	appending = false;
+	updownkeys = true;
 }
 
 void DropChoice::EnableDrop(bool b)
@@ -83,6 +84,8 @@ bool DropChoice::DoKey(dword key) {
 			PseudoPush();
 			return true;
 		case K_DOWN:
+			if(!updownkeys)
+				return false;
 			if(appending)
 				PseudoPush();
 			else {
@@ -91,6 +94,8 @@ bool DropChoice::DoKey(dword key) {
 			}
 			return true;
 		case K_UP:
+			if(!updownkeys)
+				return false;
 			if(appending)
 				PseudoPush();
 			else {
