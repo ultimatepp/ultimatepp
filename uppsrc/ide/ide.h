@@ -912,7 +912,6 @@ public:
 		void  SyncSvnDirs(const Vector<String>& working);
 		void  SyncSvnDir(const String& working);
 		void  SyncSvn();
-	    void FilePropertiesMenu0(Bar& menu);
 
 	void      BuildMenu(Bar& menu);
 		void BuildPackageMenu(Bar& menu);

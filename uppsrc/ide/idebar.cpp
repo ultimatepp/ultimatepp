@@ -394,7 +394,7 @@ void Ide::Project(Bar& menu) {
 		if(OldLang())
 			menu.Add("Convert s_ -> t_", THISBACK(ConvertST));
 	}
-	FilePropertiesMenu0(menu);
+	FilePropertiesMenu(menu);
 	if(!IsEditorMode()) {
 		if(SvnDirs(true).GetCount()) {
 			if(menu.IsMenuBar())
@@ -405,7 +405,7 @@ void Ide::Project(Bar& menu) {
 	}
 }
 
-void Ide::FilePropertiesMenu0(Bar& menu)
+void Ide::FilePropertiesMenu(Bar& menu)
 {
 	menu.Add(IsActiveFile(), AK_FILEPROPERTIES, THISBACK(FileProperties))
 		.Help("File properties stored in package");
@@ -418,12 +418,6 @@ void Ide::FilePropertiesMenu0(Bar& menu)
 	if(IsSvnDir(GetFileFolder(editfile)))
 		menu.AddMenu(IsActiveFile() && !IsFolder(editfile) && !designer, AK_SVNDIFF, IdeImg::SvnDiff(), THISBACK(SvnHistory))
 		    .Help("Show svn history of file");
-}
-
-void Ide::FilePropertiesMenu(Bar& menu)
-{
-	FilePropertiesMenu0(menu);
-	menu.MenuSeparator();
 }
 
 void Ide::BuildFileMenu(Bar& menu)
