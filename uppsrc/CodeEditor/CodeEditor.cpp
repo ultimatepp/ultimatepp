@@ -215,7 +215,8 @@ void CodeEditor::SelectionChanged()
 {
 	int l, h;
 	WString nselword;
-	if(GetSelection(l, h) && h - l < 128 &&
+	bool sel = GetSelection(l, h);
+	if(sel && h - l < 128 &&
 	   (l == 0 || !iscid(GetChar(l - 1))) &&
 	   (h >= GetLength() || !iscid(GetChar(h)))) {
 		for(int i = l; i < h; i++) {
