@@ -239,7 +239,7 @@ bool FolderDeleteX(const char *path, EXT_FILE_FLAGS flags) {
 
 bool DirectoryExistsX(const char *path, EXT_FILE_FLAGS flags) {
 	if (!(flags & BROWSE_LINKS))
-		return DirectoryExists(path);
+		return  DirectoryExists(path);
 	if (DirectoryExists(path))
 		return true;
 	if (!IsSymLink(path))
@@ -1286,8 +1286,8 @@ bool WriteCSVFile(const String fileName, Vector<Vector <Value> > &data, char sep
 
 
 #ifdef PLATFORM_POSIX
-String FileRealName(const char *fileName) {
-	fileName = GetFullPath(fileName);
+String FileRealName(const char *_fileName) {
+	String fileName = GetFullPath(_fileName);
 	FindFile ff(fileName);
 	if (!ff)
 		return String(""); 
