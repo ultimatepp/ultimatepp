@@ -63,6 +63,7 @@ public:
 	EditFileFolder &UseUp(bool use);
 	EditFileFolder &UseBrowse(bool use);
 	virtual void SetData(const Value& data);
+	//virtual void LostFocus()						{DoGo(true);}
 	
 	Callback WhenChange;
 };
