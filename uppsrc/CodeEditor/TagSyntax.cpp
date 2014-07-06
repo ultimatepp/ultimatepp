@@ -213,7 +213,7 @@ doscript:
 		if(status == ATTR) {
 			if(*s == '=') {
 				s++;
-				Put();
+				Put0(INK_UPP);
 			}
 			s = Spaces(s, e);
 			int c = *s;

@@ -72,8 +72,8 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 					f.linepos = p.ReadInt();
 				const char *ms = p.GetPtr();
 				int pos = ms - ~ln;
-				f.kind = ln.Find("error", pos) > 0 ? 1 :
-				         ln.Find("warning", pos) > 0 ? 2 :
+				f.kind = ln.Find("warning", pos) > 0 ? 2 :
+				         ln.Find("error", pos) > 0 ? 1 :				         
 				         ln.Find("note", pos) > 0 ? 3 : 4;
 				const char *hs = ms;
 				while(!IsLetter(*hs) && *hs)
