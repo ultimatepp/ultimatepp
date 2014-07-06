@@ -21,6 +21,7 @@ TextCtrl::TextCtrl()
 	processtab = true;
 	processenter = true;
 	nobg = false;
+	rectsel = false;
 }
 
 TextCtrl::~TextCtrl() {}
@@ -79,6 +80,10 @@ void TextCtrl::RefreshLine(int i) {}
 void TextCtrl::InvalidateLine(int i) {}
 void TextCtrl::SetSb() {}
 void TextCtrl::PlaceCaret(int newcursor, bool sel) {}
+
+int TextCtrl::RemoveRectSelection() { return 0; }
+WString TextCtrl::CopyRectSelection() { return Null; }
+int TextCtrl::PasteRectSelection(const WString& s) { return 0; }
 
 void   TextCtrl::CachePos(int pos) {
 	int p = pos;
@@ -585,7 +590,7 @@ bool   TextCtrl::GetSelection(int& l, int& h) const {
 	else {
 		l = min(anchor, cursor);
 		h = max(anchor, cursor);
-		return true;
+		return !rectsel;
 	}
 }
 
@@ -606,8 +611,12 @@ WString TextCtrl::GetSelectionW() const {
 bool   TextCtrl::RemoveSelection() {
 	int l, h;
 	if(anchor < 0) return false;
-	GetSelection(l, h);
-	Remove(l, h - l);
+	if(IsRectSelection())
+		l = RemoveRectSelection();
+	else {
+		GetSelection(l, h);
+		Remove(l, h - l);
+	}
 	anchor = -1;
 	Refresh();
 	PlaceCaret(l);
@@ -635,7 +644,11 @@ void TextCtrl::Copy() {
 		l = GetPos(i);
 		h = l + line[i].GetLength() + 1;
 	}
-	WString txt = GetW(l, h - l);
+	WString txt;
+	if(IsRectSelection())
+		txt = CopyRectSelection();
+	else
+		txt = GetW(l, h - l);
 	ClearClipboard();
 	AppendClipboardUnicodeText(txt);
 	AppendClipboardText(txt.ToString());
@@ -647,9 +660,14 @@ void TextCtrl::SelectAll() {
 
 int  TextCtrl::Paste(const WString& text) {
 	if(IsReadOnly()) return 0;
-	RemoveSelection();
-	int n = Insert(cursor, text);
-	PlaceCaret(cursor + n);
+	int n;
+	if(IsRectSelection())
+		n = PasteRectSelection(text);
+	else {
+		RemoveSelection();
+		n = Insert(cursor, text);
+		PlaceCaret(cursor + n);
+	}
 	Refresh();
 	return n;
 }
