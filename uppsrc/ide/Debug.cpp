@@ -3,6 +3,11 @@
 void Ide::RunArgs() {
 	WithRunLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Run options");
+	
+#ifndef PLATFORM_POSIX
+	dlg.consolemode.Hide();
+	dlg.console_lable.Hide();
+#endif
 
 	SelectDirButton dir_browse("Run in folder");
 	dir_browse.Attach(dlg.dir);
