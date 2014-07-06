@@ -1,4 +1,4 @@
-enum {
+enum CtrlCoreKeys {
 #ifdef GUIPLATFORM_KEYCODES_INCLUDE
 	#include GUIPLATFORM_KEYCODES_INCLUDE
 #else
