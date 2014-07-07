@@ -277,6 +277,14 @@ bool MenuKeyHook(Ctrl *ctrl, dword key, int count)
 	return false;
 }
 
+bool MenuMouseHook(Ctrl *ctrl, bool inframe, int event, Point p,
+	               int zdelta, dword keyflags)
+{
+	if(event & (Ctrl::MOUSEWHEEL, Ctrl::DOWN, Ctrl::UP))
+		s_doaltkey = false;
+	return false;
+}
+
 bool MenuStateHook(Ctrl *ctrl, int reason)
 {
 	if(reason == Ctrl::ACTIVATE)
@@ -288,6 +296,7 @@ INITBLOCK
 {
 	Ctrl::InstallKeyHook(MenuKeyHook);
 	Ctrl::InstallStateHook(MenuStateHook);
+	Ctrl::InstallMouseHook(MenuMouseHook);
 }
 
 bool MenuBar::Key(dword key, int count)

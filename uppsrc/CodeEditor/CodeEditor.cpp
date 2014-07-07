@@ -759,7 +759,7 @@ bool CodeEditor::Key(dword code, int count) {
 		DeleteWordBack();
 		return true;
 	case K_BACKSPACE:
-		if(!IsReadOnly() && !IsSelection() && indent_spaces) {
+		if(!IsReadOnly() && !IsAnySelection() && indent_spaces) {
 			int c = GetCursor();
 			Point ixln = GetIndexLine(c);
 			WString ln = GetWLine(ixln.y);

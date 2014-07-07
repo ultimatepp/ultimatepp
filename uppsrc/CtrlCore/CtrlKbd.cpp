@@ -374,9 +374,10 @@ String GetKeyDesc(dword key)
 	if(key & K_CTRL)  desc << t_("key\vCtrl+");
 	if(key & K_ALT)   desc << t_("key\vAlt+");
 	if(key & K_SHIFT) desc << t_("key\vShift+");
+	if(key & K_KEYUP) desc << t_("key\vUP ");
 
 
-	key &= ~(K_CTRL | K_ALT | K_SHIFT);
+	key &= ~(K_CTRL | K_ALT | K_SHIFT | K_KEYUP);
 	if(key < K_DELTA && key > 32 && key != K_DELETE)
 		return desc + String(key, 1);
 	if(key >= K_NUMPAD0 && key <= K_NUMPAD9)

@@ -631,7 +631,7 @@ void TextCtrl::RefreshLines(int l1, int l2) {
 }
 
 void TextCtrl::Cut() {
-	if(!IsReadOnly() && IsSelection()) {
+	if(!IsReadOnly() && IsAnySelection()) {
 		Copy();
 		RemoveSelection();
 	}
@@ -639,7 +639,7 @@ void TextCtrl::Cut() {
 
 void TextCtrl::Copy() {
 	int l, h;
-	if(!GetSelection(l, h)) {
+	if(!GetSelection(l, h) && !IsAnySelection()) {
 		int i = GetLine(cursor);
 		l = GetPos(i);
 		h = l + line[i].GetLength() + 1;
@@ -691,11 +691,11 @@ void TextCtrl::StdBar(Bar& menu) {
 			.Key(K_SHIFT_CTRL_Z);
 		menu.Separator();
 	}
-	menu.Add(IsEditable() && IsSelection(),
+	menu.Add(IsEditable() && IsAnySelection(),
 			t_("Cut"), CtrlImg::cut(), THISBACK(Cut))
 		.Key(K_SHIFT_DELETE)
 		.Key(K_CTRL_X);
-	menu.Add(IsSelection(),
+	menu.Add(IsAnySelection(),
 			t_("Copy"), CtrlImg::copy(), THISBACK(Copy))
 		.Key(K_CTRL_INSERT)
 		.Key(K_CTRL_C);
@@ -703,7 +703,7 @@ void TextCtrl::StdBar(Bar& menu) {
 			t_("Paste"), CtrlImg::paste(), THISBACK(DoPaste))
 		.Key(K_SHIFT_INSERT)
 		.Key(K_CTRL_V);
-	menu.Add(IsEditable() && IsSelection(),
+	menu.Add(IsEditable() && IsAnySelection(),
 			t_("Erase"), CtrlImg::remove(), THISBACK(DoRemoveSelection))
 		.Key(K_DELETE);
 	menu.Separator();
