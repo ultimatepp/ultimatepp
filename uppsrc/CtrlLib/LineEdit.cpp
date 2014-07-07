@@ -132,11 +132,11 @@ int LineEdit::PasteRectSelection(const WString& s)
 	int n = 0;
 	for(int i = 0; i < cl.GetCount() && rect.top + i <= rect.bottom; i++) { 
 		int l, h;
-		GetRectSelection(rect, i, l, h);
+		GetRectSelection(rect, i + rect.top, l, h);
 		Remove(l, h - l);
 		int nn = Insert(l, cl[i]);
 		n += nn;
-		pos = l + n;
+		pos = l + nn;
 	}
 	PlaceCaret(cursor + n);
 	return n;
@@ -573,7 +573,8 @@ void LineEdit::RightDown(Point p, dword flags)
 	mpos = GetMousePos(p);
 	SetFocus();
 	int l, h;
-	if(!GetSelection(l, h) || mpos < l || mpos >= h)
+	GetSelection(l, h);
+	if(!IsAnySelection() || !(mpos >= l && mpos < h))
 		PlaceCaret(mpos, false);
 	MenuBar::Execute(WhenBar);
 }
@@ -819,7 +820,10 @@ bool LineEdit::Key(dword key, int count) {
 	}
 	bool sel = key & K_SHIFT;
 	dorectsel = key & K_ALT;
-	switch(key & ~(K_SHIFT|K_ALT)) {
+	dword k = key & ~K_SHIFT;
+	if((key & (K_SHIFT|K_ALT)) == (K_SHIFT|K_ALT))
+		k &= ~K_ALT;
+	switch(k) {
 	case K_CTRL_LEFT:
 		{
 			PlaceCaret(GetPrevWord(cursor), sel);

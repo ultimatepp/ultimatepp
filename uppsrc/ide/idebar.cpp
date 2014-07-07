@@ -183,7 +183,7 @@ void Ide::Edit(Bar& menu) {
 			designer->EditMenu(menu);
 	}
 	else {
-		String selection = editor.GetSelection();
+		bool selection = editor.IsAnySelection();
 		
 		if(GetFileExt(editfile) == ".t") {
 			if(editastext.Find(editfile) >= 0)
@@ -214,11 +214,11 @@ void Ide::Edit(Bar& menu) {
 			menu.Separator();
 		(menu.*add)("Cut", CtrlImg::cut(), callback(&editor, &LineEdit::Cut))
 			.Key(K_CTRL_X)
-			.Enable(!selection.IsEmpty())
+			.Enable(selection)
 			.Help("Cut selection and place it on the system clipboard");
 		(menu.*add)("Copy", CtrlImg::copy(), callback(&editor, &LineEdit::Copy))
 			.Key(K_CTRL_C)
-			.Enable(!selection.IsEmpty())
+			.Enable(selection)
 			.Help("Copy current selection on the system clipboard");
 		(menu.*add)("Paste", CtrlImg::paste(), THISBACK(EditPaste))
 			.Key(K_CTRL_V)
@@ -627,10 +627,10 @@ void Ide::MainTool(Bar& bar)
 
 void Ide::ConsoleMenu(Bar& menu)
 {
-	String selection = console.GetSelection();
+	bool selection = console.IsAnySelection();
 	menu.Add("Copy", CtrlImg::copy(), THISBACK(ConsoleCopy))
 		.Key(K_CTRL_C)
-		.Enable(!selection.IsEmpty())
+		.Enable(selection)
 		.Help("Copy selection on system clipboard");
 	menu.Add("Paste", CtrlImg::paste(), THISBACK(ConsolePaste))
 		.Key(K_CTRL_V)
