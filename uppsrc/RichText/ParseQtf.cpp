@@ -800,6 +800,7 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 			while(Key(':'))
 				Table().AddColumn(ReadNumber());
 			TableFormat();
+			SetFormat();
 		}
 		else
 		if(Key2('}')) {
