@@ -166,7 +166,7 @@ int CodeEditor::Match(const wchar *f, const wchar *s, int line, bool we, bool ig
 }
 
 bool CodeEditor::Find(bool back, const wchar *text, bool wholeword, bool ignorecase,
-                      bool wildcards, bool block)
+                      bool wildcards, bool block, bool incremental)
 {
 	if(notfoundfw) MoveTextBegin();
 	if(notfoundbk) MoveTextEnd();
@@ -176,6 +176,8 @@ bool CodeEditor::Find(bool back, const wchar *text, bool wholeword, bool ignorec
 	else
 		GetSelection(cursor, pos);
 	pos = cursor;
+	if(incremental)
+		pos = 0;
 	return FindFrom(pos, back, text, wholeword, ignorecase, wildcards, block);
 }
 
@@ -274,12 +276,17 @@ void CodeEditor::FindReplaceAddHistory()
 		findreplace.replace.AddHistory();
 }
 
-bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
+void CodeEditor::NoFindError()
 {
 	findreplace.find.Error(false);
 	findreplace.info.SetLabel("&Find");
+}
+
+bool CodeEditor::Find(bool back, bool blockreplace, bool replace, bool incremental)
+{
+	NoFindError();
 	if(Find(back, (WString)~findreplace.find, findreplace.wholeword,
-		    findreplace.ignorecase, findreplace.wildcards, blockreplace)) {
+		    findreplace.ignorecase, findreplace.wildcards, blockreplace, incremental)) {
 		if(!blockreplace) {
 			if(!findreplace.IsOpen())
 				OpenNormalFindReplace(replace);
@@ -468,6 +475,8 @@ void CodeEditor::OpenNormalFindReplace(bool replace)
 	findreplace.close <<= THISBACK(CloseFindReplace);
 	if(!findreplace.IsOpen())
 		AddFrame(findreplace);
+	WhenOpenFindReplace();
+	IncrementalFind();
 }
 
 void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
@@ -641,14 +650,11 @@ void CodeEditor::CloseFindReplace()
 
 void CodeEditor::IncrementalFind()
 {
+	NoFindError();
 	findreplace.Sync();
 	if(!findreplace.incremental || findreplace.GetTopCtrl() == &findreplace) // || we are block replace
 		return;
-	int l, h;
-	GetSelection(l, h);
-	ClearSelection();
-	SetCursor(min(l, h));
-	Find();
+	Find(false, false, false, true);
 }
 
 void CodeEditor::DoFind()

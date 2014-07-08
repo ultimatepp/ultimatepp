@@ -195,7 +195,7 @@ void Ide::MacroFind(EscEscape& e)
 	bool whole_word = (n > 2 && e.Int(2) > 0);
 	bool ignore_case = (n > 3 && e.Int(3) > 0);
 	bool wildcards = (n > 4 && e.Int(4) > 0);
-	e = editor.Find(!down, text, whole_word, ignore_case, wildcards, false);
+	e = editor.Find(!down, text, whole_word, ignore_case, wildcards, false, false);
 }
 
 void Ide::MacroReplace(EscEscape& e)
