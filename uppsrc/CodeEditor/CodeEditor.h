@@ -283,6 +283,7 @@ protected:
 	void   ReplaceWildcard();
 	void   InsertWildcard(int c);
 	void   IncrementalFind();
+	void   NoFindError();
 	void   CheckSyntaxRefresh(int pos, const WString& text);
 
 	void   SetFound(int fi, int type, const WString& text);
@@ -328,6 +329,7 @@ public:
 	Callback         WhenAnnotationMove;
 	Callback         WhenAnnotationClick;
 	Callback         WhenAnnotationRightClick;
+	Callback         WhenOpenFindReplace;
 
 	FrameTop<Button>    topsbbutton;
 	FrameTop<Button>    topsbbutton1;
@@ -345,8 +347,8 @@ public:
 	void   FindReplace(bool pick_selection, bool pick_text, bool replace);
 	bool   FindFrom(int pos, bool back, const wchar *text, bool wholeword, bool ignorecase, bool wildcards, bool block);
 	bool   Find(bool back, const wchar *text, bool wholeword, bool ignorecase, bool wildcards,
-	            bool block);
-	bool   Find(bool back = false, bool blockreplace = false, bool replace = false);
+	            bool block, bool incremental);
+	bool   Find(bool back = false, bool blockreplace = false, bool replace = false, bool incremental = false);
 	bool   GetStringRange(int cursor, int& b, int &e) const;
 	bool   GetStringRange(int& b, int &e) const { return GetStringRange(GetCursor(), b, e); }
 	bool   FindString(bool back);

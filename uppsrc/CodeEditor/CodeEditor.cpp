@@ -233,7 +233,7 @@ void CodeEditor::SelectionChanged()
 		Refresh();
 	}
 	if(!foundsel) {
-		if(!persistent_find_replace && !findreplace.incremental)
+		if(!persistent_find_replace)
 			CloseFindReplace();
 		found = false;
 		notfoundfw = notfoundbk = false;
@@ -618,7 +618,7 @@ void CodeEditor::FindWord(bool back)
 {
 	WString I = GetI();
 	if(!IsNull(I))
-		Find(back, I, true, false, false, false);
+		Find(back, I, true, false, false, false, false);
 }
 
 void CodeEditor::SetI(Ctrl *edit)
