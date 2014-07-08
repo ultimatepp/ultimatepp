@@ -168,8 +168,10 @@ int CodeEditor::Match(const wchar *f, const wchar *s, int line, bool we, bool ig
 bool CodeEditor::Find(bool back, const wchar *text, bool wholeword, bool ignorecase,
                       bool wildcards, bool block, bool incremental)
 {
-	if(notfoundfw) MoveTextBegin();
-	if(notfoundbk) MoveTextEnd();
+	if(!incremental) {
+		if(notfoundfw) MoveTextBegin();
+		if(notfoundbk) MoveTextEnd();
+	}
 	int cursor, pos;
 	if(found)
 		GetSelection(pos, cursor);
