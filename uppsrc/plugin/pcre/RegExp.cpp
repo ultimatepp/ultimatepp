@@ -162,6 +162,27 @@ void RegExp::GetMatchPos(int i, int& iPosStart, int& iPosAfterEnd)
 	iPosAfterEnd = pos[i + 1];
 }
 
+int RegExp::GetOffset() const
+{
+	return rc > 0 ? pos[0] : -1;
+}
+
+int RegExp::GetLength() const
+{
+	return rc > 0 ? pos[1] - pos[0] : -1;
+}
+
+int RegExp::GetSubOffset(int i) const
+{
+	ASSERT(i < rc - 1);
+	return pos[2 * i + 2];
+}
+
+int RegExp::GetSubLength(int i) const
+{
+	return pos[2 * i + 3] - pos[2 * i + 2];
+}
+
 bool RegExp::ReplacePos(String& t, int p, int q, const String& r)
 {
 	if(p>=0 && q<=t.GetLength() && q>p){		

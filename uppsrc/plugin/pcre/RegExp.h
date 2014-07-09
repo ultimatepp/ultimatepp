@@ -90,6 +90,11 @@ public:
 	int            GetCount();
 	String         GetString(int i);
 	void           GetMatchPos(int i, int& iPosStart, int& iPosAfterEnd);
+	
+	int            GetOffset() const;
+	int            GetLength() const;
+	int            GetSubOffset(int i) const;
+	int            GetSubLength(int i) const;
 
 	int            Replace(String& t, const Vector<String>& rv, bool backref=false);
 	int            Replace(String& t, const String& r, bool backref=false);
