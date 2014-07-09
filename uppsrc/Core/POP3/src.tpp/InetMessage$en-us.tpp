@@ -95,4 +95,9 @@ art][@(0.0.255) `&]_[* operator`[`]]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const
 [s2;%% Same as part`[0`]`[[%-*@3 id]`] `- returns the header of whole 
 email.&]
 [s3;%% &]
+[s4; &]
+[s5;:InetMessage`:`:GetMessage`(`)const: [_^String^ String]_[* GetMessage]()_[@(0.0.255) co
+nst]&]
+[s2;%% Returns InetMessage formatted according to RFC822.&]
+[s3; &]
 [s3;%% ]]

@@ -1,6 +1,6 @@
 #include "POP3.h"
 
-#define LLOG(x) // DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 String QDecode(const String& s) 
 {
@@ -81,24 +81,104 @@ String DecodeHeaderValue(const String& s)
 	return r;	
 }
 
+String sEncode(const String& text)
+{
+	for(const char *q = text; *q; q++)
+		if((byte)*q < ' ' || (byte)*q > 127) {
+			String txt = ToCharset(CHARSET_UTF8, text);
+			String r = "=?Utf-8?q?";
+			for(const char *s = txt; *s; s++) {
+				if((byte)*s < ' ' || (byte)*s > 127 || findarg(*s, '=', '?', ' ', ',') >= 0)
+					r << '=' << FormatIntHexUpper((byte)*s, 2);
+				else
+					r.Cat(*s);
+			}
+			r << "?=";
+			return r;
+		}
+	return text;
+}
+
+void FormatMessageHeader(String& r, const VectorMap<String, String>& hdr)
+{
+	for(int i = 0; i < hdr.GetCount(); i++) {
+		String line;
+		line << InitCaps(hdr.GetKey(i)) << ": ";
+		String h = sEncode(hdr[i]);
+		for(const char *s = h; *s; s++) {
+			if(line.GetCount() >= 80) {
+				r << line << "\r\n";
+				line = "\t";
+			}
+			line.Cat(*s);
+		}
+		r << line << "\r\n";
+	}
+}
+
+static void sLn(String& r)
+{
+	if(r.GetCount() == 0)
+		return;
+	if(r.GetCount() > 1) {
+		const char *s = r.Last();
+		if(s[-1] == '\r' && s[0] == '\n')
+			return;
+	}
+	r.Cat("\r\n");
+}
+
+void InetMessage::PutBody(int pi, String& r, int level) const
+{
+	if(level > 20) return; // Cycle protection
+	FormatMessageHeader(r, part[pi].header);
+	String boundary;
+	String end_boundary;
+	r << "\r\n";
+	if(part[pi].IsMultipart(boundary, end_boundary)) {
+		for(int i = 0; i < part.GetCount(); i++)
+			if(part[i].parent == pi) {
+				sLn(r);
+				r << boundary << "\r\n";
+				PutBody(i, r, level + 1);
+			}
+		sLn(r);
+		r << end_boundary << "\r\n" ;
+	}
+	else
+		r << part[pi].body << "\r\n";
+}
+
+String InetMessage::GetMessage() const
+{
+	String r;
+	if(part.GetCount())
+		PutBody(0, r, 0);
+	return r;
+}
+
 bool InetMessage::ReadHeader(VectorMap<String, String>& hdr, Stream& ss)
 {
+	hdr.Clear();
 	for(;;) {
 		if(ss.IsEof())
 			return false;
 		String s = ss.GetLine();
 		if(s.IsEmpty())
-			return true;
+			break;
 		if(s[0] == ' ' || s[0] == '\t') {
 			if(hdr.GetCount())
-				hdr.Top().Cat(DecodeHeaderValue(TrimLeft(s.Mid(1))));
+				hdr.Top().Cat(s.Mid(1));
 		}
 		else {
 			int q = s.Find(':');
 			if(q >= 0)
-				hdr.Add(ToLower(s.Mid(0, q)), DecodeHeaderValue(TrimLeft(s.Mid(q + 1))));
+				hdr.Add(ToLower(s.Mid(0, q)), TrimLeft(s.Mid(q + 1)));
 		}
 	}
+	for(int i = 0; i < hdr.GetCount(); i++)
+		hdr[i] = DecodeHeaderValue(hdr[i]);
+	return true;
 }
 
 bool InetMessage::ReadHeader(const String& s)
@@ -107,6 +187,18 @@ bool InetMessage::ReadHeader(const String& s)
 	part.Clear();
 	StringStream ss(s);
 	return ReadHeader(part.Add().header, ss);
+}
+
+bool InetMessage::Part::IsMultipart(String& boundary, String& end_boundary) const
+{
+	MIMEHeader h(header.Get("content-type", String()));
+	LLOG("content-type: " << h);
+	if(ToLower(~h).StartsWith("multipart")) {
+		boundary = "--" + h["boundary"];
+		end_boundary = boundary + "--";
+		return true;
+	}
+	return false;
 }
 
 bool InetMessage::ReadPart(Stream& ss, int parent, int level)
@@ -124,18 +216,12 @@ bool InetMessage::ReadPart(Stream& ss, int parent, int level)
 	if(!ReadHeader(p.header, ss))
 		return false;
 
-	MIMEHeader h(p.header.Get("content-type", String()));
-	LLOG("content-type: " << h);
-	if(!ToLower(~h).StartsWith("multipart")) {
+	String boundary, end_boundary;
+	if(!p.IsMultipart(boundary, end_boundary)) {
 		p.body = LoadStream(ss);
 		return true;
 	}
 
-	String boundary = "--" + h["boundary"];
-	String end_boundary = boundary + "--";
-
-	LLOG("boundary " << boundary);
-	
 	for(;;) {
 		String ln = ss.GetLine();
 		if(ln == boundary)
