@@ -51,9 +51,9 @@ public:
 	bool         Login();
 	bool         Logout(); 	
 	
-	bool         IsOnline() const                       { return online; }
+	bool         IsOnline() const                         { return online; }
 
-	String       GetLastError()                         { return IsError() ? GetErrorDesc() : error; }
+	String       GetLastError()                           { return IsError() ? GetErrorDesc() : error; }
 	static void  Trace(bool b = true);
 
 	Pop3();
@@ -66,8 +66,11 @@ struct InetMessage {
 		VectorMap<String, String> header;
 		String                    body;
 		
-		String operator[](const char *id) const   { return header.Get(id, Null); }
+		String operator[](const char *id) const          { return header.Get(id, Null); }
+		void   Set(const char *id, const String& value)  { header.GetAdd(id) = value; }
 		String Decode() const;
+		
+		bool   IsMultipart(String& boundary, String& end_boundary) const;
 	};
 
 	Vector<Part> part;
@@ -75,15 +78,19 @@ struct InetMessage {
 	bool   Read(const String& msg);
 	bool   ReadHeader(const String& msg);
 	
-	void   Clear()                                { part.Clear(); }
+	void   Clear()                                       { part.Clear(); }
 
-	int         GetCount() const                  { return part.GetCount(); }
-	const Part& operator[](int i) const           { return part[i]; }
-	String      operator[](const char *id) const  { return GetCount() ? part[0][id] : String(); }
+	int         GetCount() const                         { return part.GetCount(); }
+	const Part& operator[](int i) const                  { return part[i]; }
+	String      operator[](const char *id) const         { return GetCount() ? part[0][id] : String(); }
+	void        Set(const char *id, const String& value) { return part.At(0).Set(id, value); }
+	
+	String GetMessage() const;
 
 private:
 	bool   ReadHeader(VectorMap<String, String>& hdr, Stream& ss);
 	bool   ReadPart(Stream& ss, int parent, int level);
+	void   PutBody(int pi, String& r, int level) const;
 };
 
 struct MIMEHeader {

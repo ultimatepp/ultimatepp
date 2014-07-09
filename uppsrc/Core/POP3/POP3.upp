@@ -1,4 +1,4 @@
-description "Post Office Protocol, version 3 encapsulation. Author: İsmail Yılmaz\377";
+description "Post Office Protocol, version 3 encapsulation. Author: İsmail Yılmaz\3770,128,128";
 
 uses
 	Core;
