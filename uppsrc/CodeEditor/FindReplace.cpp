@@ -469,7 +469,6 @@ void CodeEditor::BlockReplace()
 void CodeEditor::OpenNormalFindReplace(bool replace)
 {
 	findreplace.Setup(replace);
-	findreplace.find.Error(false);
 	findreplace.find.SetFocus();
 	findreplace.itext = GetI();
 	findreplace.prev.Show();

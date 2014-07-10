@@ -94,6 +94,7 @@ public:
 	Callback WhenSelect;
 	Callback1<Bar&> WhenBar;
 	Callback1<const String&> WhenLine;
+	Callback        WhenRunEnd;
 	bool console;
 	bool verbosebuild;
 
@@ -108,13 +109,14 @@ public:
 
 	Console& operator<<(const String& s)      { Append(s); return *this; }
 
+	void ToErrors(const String& s);
 	void AppendOutput(const String& s);
 	bool IsRunning();
 	bool IsRunning(int slot);
 	int  Flush();
 	void Kill(int slot);
 	void Kill();
-	void ClearError()                         { error_keys.Clear(); line.Clear(); }
+	void ClearError()                         { error_keys.Clear(); line.Clear(); WhenRunEnd(); }
 	Vector<String> PickErrors()               { Vector<String> e = pick(error_keys); error_keys.Clear(); return pick(e); }
 	void Wait(int slot);
 	bool Wait();
@@ -547,6 +549,7 @@ public:
 	Splitter    errors;
 	ArrayCtrl   error;
 	ArrayCtrl   notes;
+	bool        addnotes;
 	
 	IdeCalc     calc;
 	Ptr<Ctrl>   bottomctrl;
@@ -1037,6 +1040,7 @@ public:
 	
 	FindLineErrorCache error_cache;
 	void      ConsoleLine(const String& line);
+	void      ConsoleRunEnd();
 	void      AddNote(const ErrorInfo& f);
 	void      ShowNote();
 	void      ShowError();
