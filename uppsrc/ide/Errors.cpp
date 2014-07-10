@@ -304,6 +304,7 @@ void Ide::ConsoleLine(const String& line)
 			          .NormalPaper(HighlightSetup::GetHlStyle(f.kind == 1 ? HighlightSetup::PAPER_ERROR
 			                                                              : HighlightSetup::PAPER_WARNING).color),
 			          RawToValue(f));
+			addnotes = true;
 			return;
 		}
 	}
@@ -312,7 +313,13 @@ void Ide::ConsoleLine(const String& line)
 		f.file = Null;
 		f.message = TrimLeft(line);
 	}
-	AddNote(f);
+	if(addnotes)
+		AddNote(f);
+}
+
+void Ide::ConsoleRunEnd()
+{
+	addnotes = false;
 }
 
 void Ide::AddNote(const ErrorInfo& f)

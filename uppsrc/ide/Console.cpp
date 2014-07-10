@@ -101,9 +101,8 @@ bool Console::Key(dword key, int count) {
 	return LineEdit::Key(key, count);
 }
 
-void Console::AppendOutput(const String& s)
+void Console::ToErrors(const String& s)
 {
-	Append(s);
 	for(const char *q = s; *q; q++) {
 		if(*q == '\n') {
 			WhenLine(line);
@@ -113,6 +112,12 @@ void Console::AppendOutput(const String& s)
 		if((byte)*q >= ' ')
 			line.Cat(*q);
 	}
+}
+
+void Console::AppendOutput(const String& s)
+{
+	Append(s);
+	ToErrors(s);
 }
 
 int Console::Flush()
@@ -253,7 +258,7 @@ bool Console::Run(One<AProcess> pick_ process, const char *cmdline, Stream *out,
 void Console::FlushConsole()
 {
 	if(console_lock < 0) {
-		AppendOutput(spooled_output);
+		Append(spooled_output);
 		spooled_output = Null;
 	}
 }
@@ -332,6 +337,8 @@ void Console::Kill(int islot)
 		if(slot.exitcode != 0 && !IsNull(slot.key))
 			error_keys.Add(slot.key);
 		slot.process.Clear();
+		ToErrors(slot.output);
+		WhenRunEnd();
 		spooled_output.Cat(slot.output);
 		if(console_lock == islot)
 			console_lock = -1;
@@ -367,7 +374,7 @@ void Console::CheckEndGroup()
 					msg << '\n';
 					spooled_output.Cat(msg);
 					if(console_lock < 0) {
-						AppendOutput(spooled_output);
+						Append(spooled_output);
 						spooled_output = Null;
 					}
 				}

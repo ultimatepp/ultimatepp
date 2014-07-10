@@ -252,6 +252,7 @@ struct WorkspaceWork {
 	String    actualpackage;
 	int       actualfileindex;
 	Package   actual;
+	bool      editormode;
 
 	struct Sepfo : Moveable<Sepfo> {
 		String package;

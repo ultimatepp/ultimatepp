@@ -323,6 +323,8 @@ Ide::Ide()
 	editor.theide = this;
 	editor.WhenSel = THISBACK(SetToolBar);
 	
+	editormode = false;
+	
 	start_time = GetSysTime();
 	stat_build_time = 0;
 	build_start_time = Null;
@@ -379,6 +381,9 @@ Ide::Ide()
 	notes.WhenSel = notes.WhenLeftClick = THISBACK(ShowNote);
 	ffound.WhenSel = ffound.WhenLeftClick = THISBACK(ShowFound);
 	console.WhenLine = THISBACK(ConsoleLine);
+	console.WhenRunEnd = THISBACK(ConsoleRunEnd);
+	
+	addnotes = false;
 
 	editor_bottom.Vert(right_split, bottom);
 	console.WhenBar = THISBACK(ConsoleMenu);

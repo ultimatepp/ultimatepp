@@ -110,13 +110,14 @@ void Ide::SerializeLastMain(Stream& s)
 
 void Ide::EditorMode()
 {
+	editormode = true;
 	main = Null;
 	pocfg = Null;
 }
 
 bool Ide::IsEditorMode() const
 {
-	return IsNull(main);
+	return editormode;
 }
 
 void Ide::SaveLastMain()
