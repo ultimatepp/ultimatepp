@@ -96,7 +96,7 @@ static const char default_mime[] = "application/octet-stream";
 String Smtp::Encode(const String& text)
 {
 	String txt = ToCharset(CHARSET_UTF8, text);
-	String r = "=?Utf-8?q?";
+	String r = "=?UTF-8?Q?";
 	for(const char *s = txt; *s; s++) {
 		if((byte)*s < ' ' || (byte)*s > 127 || *s == '=' || *s == '?' || *s == ' ')
 			r << '=' << FormatIntHexUpper((byte)*s, 2);

@@ -86,7 +86,7 @@ String sEncode(const String& text)
 	for(const char *q = text; *q; q++)
 		if((byte)*q < ' ' || (byte)*q > 127) {
 			String txt = ToCharset(CHARSET_UTF8, text);
-			String r = "=?Utf-8?q?";
+			String r = "=?UTF-8?Q?";
 			for(const char *s = txt; *s; s++) {
 				if((byte)*s < ' ' || (byte)*s > 127 || findarg(*s, '=', '?', ' ', ',') >= 0)
 					r << '=' << FormatIntHexUpper((byte)*s, 2);
