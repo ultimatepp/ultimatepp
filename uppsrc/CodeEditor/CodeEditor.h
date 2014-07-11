@@ -202,6 +202,8 @@ protected:
 
 	virtual void NewScrollPos();
 
+	virtual String  GetPasteText();
+
 	EditorBar   bar;
 	Vector<int> line2;
 
@@ -322,14 +324,15 @@ public:
 		Size           sz;
 	};
 
-	Callback         WhenSelection;
-	Gate1<MouseTip&> WhenTip;
-	Callback         WhenLeftDown;
-	Callback1<int>   WhenCtrlClick;
-	Callback         WhenAnnotationMove;
-	Callback         WhenAnnotationClick;
-	Callback         WhenAnnotationRightClick;
-	Callback         WhenOpenFindReplace;
+	Callback           WhenSelection;
+	Gate1<MouseTip&>   WhenTip;
+	Callback           WhenLeftDown;
+	Callback1<int>     WhenCtrlClick;
+	Callback           WhenAnnotationMove;
+	Callback           WhenAnnotationClick;
+	Callback           WhenAnnotationRightClick;
+	Callback           WhenOpenFindReplace;
+	Callback1<String&> WhenPaste;
 
 	FrameTop<Button>    topsbbutton;
 	FrameTop<Button>    topsbbutton1;

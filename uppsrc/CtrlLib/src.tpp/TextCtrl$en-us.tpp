@@ -103,6 +103,10 @@ to the StdBar method.  &]
 from not`-modified to modified (`"dirty`") or back.&]
 [s3;%% &]
 [s4; &]
+[s5;:TextCtrl`:`:WhenSel: [_^Callback^ Callback]_[* WhenSel]&]
+[s2;%% Called when cursor or selection changes.&]
+[s3; &]
+[s4; &]
 [s5;:TextCtrl`:`:CachePos`(int`): [@(0.0.255) void]_[* CachePos]([@(0.0.255) int]_[*@3 pos])&]
 [s2;%% This is specific optimization hint to the widget saying that 
 following operations will be performed near after [%-*@3 pos]. 
@@ -260,8 +264,18 @@ the position of cursor.&]
 [s4; &]
 [s5;:TextCtrl`:`:IsSelection`(`)const: [@(0.0.255) bool]_[* IsSelection]()_[@(0.0.255) cons
 t]&]
-[s2;%% Tests whether there is non`-empty selection.&]
+[s2;%% Tests whether there is non`-empty normal selection.&]
 [s3;%% &]
+[s4; &]
+[s5;:TextCtrl`:`:IsRectSelection`(`)const: [@(0.0.255) bool]_[* IsRectSelection]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns true if there is rectangular selection.&]
+[s3; &]
+[s4; &]
+[s5;:TextCtrl`:`:IsAnySelection`(`)const: [@(0.0.255) bool]_[* IsAnySelection]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns true if there is either rectangular or normal selection.&]
+[s3; &]
 [s4; &]
 [s5;:TextCtrl`:`:GetSelection`(int`&`,int`&`)const: [@(0.0.255) bool]_[* GetSelection]([@(0.0.255) i
 nt`&]_[*@3 l], [@(0.0.255) int`&]_[*@3 h])_[@(0.0.255) const]&]

@@ -766,6 +766,8 @@ public:
 	void      HistoryFw();
 	void      HistoryBk();
 	bool      IsHistDiff(int i);
+	
+	void      IdePaste(String& s);
 
 	bool      HasFileData(const String& file);
 	FileData& Filedata(const String& file);

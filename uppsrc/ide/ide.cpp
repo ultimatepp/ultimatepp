@@ -431,6 +431,20 @@ bool Ide::IsHistDiff(int i)
 	return b.file != editfile || abs(editor.GetCursor() - b.pos.cursor) > 200;
 }
 
+void Ide::IdePaste(String& data)
+{
+	data.Clear();
+	if(AcceptFiles(Clipboard())) {
+		Vector<String> s = GetFiles(Clipboard());
+		for(int i = 0; i < s.GetCount(); i++)
+			if(FileExists(s[i]) && IsTextFile(s[i])) {
+				int len = GetFileLength(s[i]);
+				if(data.GetLength() + len < 5000000)
+					data.Cat(LoadFile(s[i]));
+			}
+	}
+}
+
 void Ide::AddHistory()
 {
 	if(history.GetCount() && histi - 1 >= 0 && histi <= history.GetCount()) {

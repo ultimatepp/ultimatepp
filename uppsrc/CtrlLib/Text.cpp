@@ -672,10 +672,17 @@ int  TextCtrl::Paste(const WString& text) {
 	return n;
 }
 
+String TextCtrl::GetPasteText()
+{
+	return Null;
+}
+
 void TextCtrl::Paste() {
 	WString w = ReadClipboardUnicodeText();
 	if(w.IsEmpty())
 		w = ReadClipboardText().ToWString();
+	if(w.IsEmpty())
+		w = GetPasteText().ToWString();
 	Paste(w);
 	Action();
 }
