@@ -16,6 +16,7 @@ void CodeEditor::InitFindReplace()
 	found = notfoundfw = notfoundbk = foundsel = false;
 	persistent_find_replace = false;
 	findreplace.find <<= findreplace.wholeword <<= findreplace.wildcards
+	                 <<= findreplace.incremental <<= findreplace.regexp
 	                 <<= findreplace.ignorecase <<= THISBACK(IncrementalFind);
 }
 
@@ -33,6 +34,11 @@ FindReplaceDlg::FindReplaceDlg()
 void FindReplaceDlg::Sync()
 {
 	samecase.Enable(ignorecase);
+	bool b = !regexp;
+	wildcards.Enable(b);
+	prev.Enable(b);
+	ignorecase.Enable(b);
+	wholeword.Enable(b);
 }
 
 dword CodeEditor::find_next_key = K_F3;
@@ -183,8 +189,43 @@ bool CodeEditor::Find(bool back, const wchar *text, bool wholeword, bool ignorec
 	return FindFrom(pos, back, text, wholeword, ignorecase, wildcards, block);
 }
 
+bool CodeEditor::RegExpFind(int pos, const wchar *text, bool block)
+{
+	RegExp regex(ToUtf8(text));
+	
+	int line = GetLinePos(pos);
+	int linecount = GetLineCount();
+	String ln = ToUtf8(GetWLine(line).Mid(pos));
+	for(;;) {
+		if(regex.Match(ln)) {
+			for(int i = 0; i < regex.GetCount(); i++)
+				SetFound(i, WILDANY, regex.GetString(i).ToWString());
+			int off = regex.GetOffset();
+			int len = utf8len(~ln + off, regex.GetLength());
+			pos = GetPos(line, utf8len(~ln, off) + pos);
+			foundtext = GetW(pos, len);
+			if(!block) {
+				foundsel = true;
+				SetSelection(pos, pos + len);
+				foundsel = false;
+				CenterCursor();
+			}
+			foundpos = pos;
+			foundsize = len;
+			found = true;
+			return true;
+		}
+		if(++line >= linecount)
+			return false;
+		ln = GetUtf8Line(line);
+		pos = 0;
+	}
+}
+
 bool CodeEditor::FindFrom(int pos, bool back, const wchar *text, bool wholeword, bool ignorecase,
                           bool wildcards, bool block) {
+	if(findreplace.regexp)
+		return RegExpFind(pos, text, block);
 	WString ft;
 	const wchar *s = text;
 	while(*s) {
@@ -536,23 +577,36 @@ void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 	}
 }
 
-void CodeEditor::InsertWildcard(int c)
+void CodeEditor::InsertWildcard(const char *s)
 {
-	iwc = c;
+	iwc = s;
 }
 
-void FindWildcardMenu(Callback1<int> cb, Point p, bool tablf, Ctrl *owner)
+void FindWildcardMenu(Callback1<const char *> cb, Point p, bool tablf, Ctrl *owner, bool regexp)
 {
 	MenuBar menu;
-	menu.Add("One or more spaces", callback1(cb, '%'));
-	menu.Add("One or more any characters", callback1(cb, '*'));
-	menu.Add("C++ identifier", callback1(cb, '$'));
-	menu.Add("Number", callback1(cb, '#'));
-	menu.Add("Any character", callback1(cb, '?'));
-	if(tablf) {
-		menu.Separator();
-		menu.Add("Tab", callback1(cb, '\t'));
-		menu.Add("Line feed", callback1(cb, '\n'));
+	if(regexp) {
+		menu.Add("One or more spaces", callback1(cb, " +"));
+		menu.Add("One or more any characters", callback1(cb, ".+"));
+		menu.Add("Word", callback1(cb, "\\w+"));
+		menu.Add("Number", callback1(cb, "\\d+"));
+		menu.Add("Any character", callback1(cb, "."));
+		if(tablf) {
+			menu.Separator();
+			menu.Add("Tab", callback1(cb, "\\t"));
+		}
+	}
+	else {
+		menu.Add("One or more spaces", callback1(cb, "%"));
+		menu.Add("One or more any characters", callback1(cb, "*"));
+		menu.Add("C++ identifier", callback1(cb, "$"));
+		menu.Add("Number", callback1(cb, "#"));
+		menu.Add("Any character", callback1(cb, "?"));
+		if(tablf) {
+			menu.Separator();
+			menu.Add("Tab", callback1(cb, "\\t"));
+			menu.Add("Line feed", callback1(cb, "\\n"));
+		}
 	}
 	menu.Execute(owner, p);
 }
@@ -561,83 +615,56 @@ void CodeEditor::FindWildcard()
 {
 	int l, h;
 	findreplace.find.GetSelection(l, h);
-	iwc = 0;
+	iwc.Clear();
 	FindWildcardMenu(THISBACK(InsertWildcard), findreplace.find.GetPushScreenRect().TopRight(), true,
-	                 &findreplace);
-	if(iwc) {
-		findreplace.wildcards = true;
+	                 &findreplace, findreplace.regexp);
+	if(iwc.GetCount()) {
+		if(!findreplace.regexp)
+			findreplace.wildcards = true;
 		findreplace.find.SetFocus();
 		findreplace.find.SetSelection(l, h);
 		findreplace.find.RemoveSelection();
-		if(iwc == '\t') {
-			findreplace.find.Insert('\\');
-			findreplace.find.Insert('t');
-		}
-		else
-		if(iwc == '\n') {
-			findreplace.find.Insert('\\');
-			findreplace.find.Insert('n');
-		}
-		else
-			findreplace.find.Insert(iwc);
+		findreplace.find.Insert(iwc);
 	}
 }
 
 void CodeEditor::ReplaceWildcard()
 {
 	MenuBar menu;
-	menu.Add("Matched spaces", THISBACK1(InsertWildcard, '%'));
-	menu.Add("Matched one or more any characters", THISBACK1(InsertWildcard, '*'));
-	menu.Add("Matched C++ identifier", THISBACK1(InsertWildcard, '$'));
-	menu.Add("Matched number", THISBACK1(InsertWildcard, '#'));
-	menu.Add("Matched any character", THISBACK1(InsertWildcard, '?'));
-	menu.Add("0-based replace index", THISBACK1(InsertWildcard, '0'));
-	menu.Add("1-based replace index", THISBACK1(InsertWildcard, '1'));
+	String ptxt;
+	if(findreplace.regexp) {
+		ptxt = "Matched subpattern %d";
+	}
+	else {
+		menu.Add("Matched spaces", THISBACK1(InsertWildcard, "%"));
+		menu.Add("Matched one or more any characters", THISBACK1(InsertWildcard, "*"));
+		menu.Add("Matched C++ identifier", THISBACK1(InsertWildcard, "$"));
+		menu.Add("Matched number", THISBACK1(InsertWildcard, "#"));
+		menu.Add("Matched any character", THISBACK1(InsertWildcard, "?"));
+	}
+	menu.Add("0-based replace index", THISBACK1(InsertWildcard, "0"));
+	menu.Add("1-based replace index", THISBACK1(InsertWildcard, "1"));
 	menu.Separator();
 	for(int i = 1; i <= 9; i++)
-		menu.Add(Format("Matched wildcard %d", i), THISBACK1(InsertWildcard, i));
+		menu.Add(Format(ptxt, i), THISBACK1(InsertWildcard, "@"+AsString(i)));
 	menu.Separator();
-	menu.Add("To upper", THISBACK1(InsertWildcard, '+'));
-	menu.Add("To lower", THISBACK1(InsertWildcard, '-'));
-	menu.Add("InitCaps", THISBACK1(InsertWildcard, '!'));
+	menu.Add("To upper", THISBACK1(InsertWildcard, "+"));
+	menu.Add("To lower", THISBACK1(InsertWildcard, "-"));
+	menu.Add("InitCaps", THISBACK1(InsertWildcard, "!"));
 	menu.Separator();
-	menu.Add("Tab", THISBACK1(InsertWildcard, 20));
-	menu.Add("Line feed", THISBACK1(InsertWildcard, 21));
+	menu.Add("Tab", THISBACK1(InsertWildcard, "\\t"));
+	menu.Add("Line feed", THISBACK1(InsertWildcard, "\\n"));
 	int l, h;
 	findreplace.replace.GetSelection(l, h);
-	iwc = 0;
+	iwc.Clear();
 	menu.Execute(&findreplace, findreplace.replace.GetPushScreenRect().TopRight());
-	if(iwc) {
-		findreplace.wildcards = true;
+	if(iwc.GetCount()) {
+		if(!findreplace.regexp)
+			findreplace.wildcards = true;
 		findreplace.replace.SetFocus();
 		findreplace.replace.SetSelection(l, h);
 		findreplace.replace.RemoveSelection();
-		if(iwc == 20) {
-			findreplace.replace.Insert('\\');
-			findreplace.replace.Insert('t');
-		}
-		else
-		if(iwc == 21) {
-			findreplace.replace.Insert('\\');
-			findreplace.replace.Insert('n');
-		}
-		else
-		if(iwc == '0') {
-			findreplace.replace.Insert('@');
-			findreplace.replace.Insert('@');
-		}
-		else
-		if(iwc == '1') {
-			findreplace.replace.Insert('@');
-			findreplace.replace.Insert('#');
-		}
-		else
-		if(iwc >= 1 && iwc <= 9) {
-			findreplace.replace.Insert('@');
-			findreplace.replace.Insert(iwc + '0');
-		}
-		else
-			findreplace.replace.Insert(iwc);
+		findreplace.replace.Insert(iwc);
 	}
 }
 
@@ -670,7 +697,7 @@ void CodeEditor::DoFindBack()
 
 void CodeEditor::SerializeFind(Stream& s)
 {
-	int version = 1;
+	int version = 2;
 	s / version;
 	s % findreplace.find;
 	findreplace.find.SerializeList(s);
@@ -680,6 +707,8 @@ void CodeEditor::SerializeFind(Stream& s)
 	s % findreplace.replace;
 	if(version >= 1)
 		s % findreplace.incremental;
+	if(version >= 2)
+		s % findreplace.regexp;
 	findreplace.replace.SerializeList(s);
 }
 
@@ -692,6 +721,7 @@ CodeEditor::FindReplaceData CodeEditor::GetFindReplaceData() const
 	r.ignorecase = ~findreplace.ignorecase;
 	r.wildcards = ~findreplace.wildcards;
 	r.samecase = ~findreplace.samecase;
+	r.regexp = ~findreplace.regexp;
 	return r;
 }
 
@@ -703,6 +733,7 @@ void CodeEditor::SetFindReplaceData(const FindReplaceData& r)
 	findreplace.ignorecase <<= r.ignorecase;
 	findreplace.wildcards <<= r.wildcards;
 	findreplace.samecase <<= r.samecase;
+	findreplace.regexp <<= r.regexp;
 }
 
 END_UPP_NAMESPACE

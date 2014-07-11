@@ -29,7 +29,7 @@ FileSel& sSD()
 }
 
 void Ide::SerializeFindInFiles(Stream& s) {
-	int version = 4;
+	int version = 5;
 	s / version;
 	s % ff.files;
 	ff.files.SerializeList(s);
@@ -47,6 +47,8 @@ void Ide::SerializeFindInFiles(Stream& s) {
 		s % ff.readonly;
 	if(version >= 4)
 		s % ff.samecase;
+	if(version >= 5)
+		s % ff.regexp;
 }
 
 void SearchForFiles(Vector<String>& files, String dir, String mask, int readonly, Progress& pi) {
@@ -121,8 +123,21 @@ bool Match(const char *f, const char *s, bool we, bool ignorecase, int& count) {
 	return we && iscid(*s) ? false : true;
 }
 
+void Ide::AddFoundFile(const String& fn, int ln, const String& line, int pos, int count)
+{
+	ErrorInfo f;
+	f.file = fn;
+	f.lineno = ln;
+	f.linepos = 0;
+	f.kind = 0;
+	f.message = "\1" + EditorSyntax::GetSyntaxForFilename(fn) + "\1" +
+	            AsString(pos) + "\1" + AsString(count) + "\1" + line;
+	ffound.Add(GetFileName(fn), ln, f.message, RawToValue(f));
+	ffound.Sync();
+}
+
 bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, bool ignorecase,
-                       int& n) {
+                       int& n, RegExp *regexp) {
 	FileIn in(fn);
 	if(!in) return true;
 	int ln = 1;
@@ -133,23 +148,20 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 		String line = in.GetLine();
 		bool bw = true;
 		int  count;
-		for(const char *s = line; *s; s++) {
-			if(bw && Match(pattern, s, we, ignorecase, count)) {
-				ErrorInfo f;
-				f.file = fn;
-				f.lineno = ln;
-				f.linepos = 0;
-				f.kind = 0;
-				f.message = "\1" + EditorSyntax::GetSyntaxForFilename(fn) + "\1" +
-				            AsString(s - line) + "\1" + AsString(count) + "\1" + line;
-				ffound.Add(GetFileName(fn), ln, f.message, RawToValue(f));
-				ffound.Sync();
-				infile++;
-				n++;
-				break;
-			}
-			if(wb) bw = !iscid(*s);
+		if(regexp) {
+			if(regexp->Match(line))
+				AddFoundFile(fn, ln, line, regexp->GetOffset(), regexp->GetLength());
 		}
+		else
+			for(const char *s = line; *s; s++) {
+				if(bw && Match(pattern, s, we, ignorecase, count)) {
+					AddFoundFile(fn, ln, line, s - line, count);
+					infile++;
+					n++;
+					break;
+				}
+				if(wb) bw = !iscid(*s);
+			}
 		ln++;
 	}
 
@@ -241,7 +253,9 @@ void Ide::FindInFiles(bool replace) {
 	  (ff.samecase, d.samecase)
 	  (ff.wholeword, d.wholeword)
 	  (ff.wildcards, d.wildcards)
+	  (ff.regexp, d.regexp)
 	;
+	ff.Sync();
 	if(String(ff.folder).IsEmpty())
 		ff.folder <<= GetUppDir();
 	ff.style <<= STYLE_NO_REPLACE;
@@ -253,6 +267,7 @@ void Ide::FindInFiles(bool replace) {
 
 	rf.Retrieve();
 	editor.SetFindReplaceData(d);
+	
 
 	if(c == IDOK) {
 		Renumber();
@@ -266,6 +281,13 @@ void Ide::FindInFiles(bool replace) {
 			~ff.files, ~ff.readonly, pi);
 		if(!pi.Canceled()) {
 			String pattern;
+			RegExp rx, *regexp = NULL;
+			if(ff.regexp) {
+				rx.SetPattern(~ff.find);
+				regexp = &rx;
+				pattern = "dummy";
+			}
+			else
 			if(ff.wildcards) {
 				String q = ~ff.find;
 				for(const char *s = q; *s; s++)
@@ -295,7 +317,7 @@ void Ide::FindInFiles(bool replace) {
 				pi.SetText(files[i]);
 				if(pi.StepCanceled()) break;
 				if(!IsNull(pattern)) {
-					if(!SearchInFile(files[i], pattern, ff.wholeword, ff.ignorecase, n))
+					if(!SearchInFile(files[i], pattern, ff.wholeword, ff.ignorecase, n, regexp))
 						break;
 				}
 				else {
@@ -335,16 +357,16 @@ void Ide::TranslateString()
 	}
 }
 
-void Ide::InsertWildcard(int c) {
-	iwc = c;
+void Ide::InsertWildcard(const char *s) {
+	iwc = s;
 }
 
 void Ide::FindWildcard() {
 	int l, h;
 	ff.find.GetSelection(l, h);
 	iwc = 0;
-	FindWildcardMenu(THISBACK(InsertWildcard), ff.find.GetPushScreenRect().TopRight(), false);
-	if(iwc) {
+	FindWildcardMenu(THISBACK(InsertWildcard), ff.find.GetPushScreenRect().TopRight(), false, NULL, ff.regexp);
+	if(iwc.GetCount()) {
 		ff.wildcards = true;
 		ff.find.SetFocus();
 		ff.find.SetSelection(l, h);
@@ -401,11 +423,15 @@ void Ide::ConstructFindInFiles() {
 void FindInFilesDlg::Sync()
 {
 	replace.Enable((int)~style);
+	bool b = !regexp;
+	wildcards.Enable(b);
+	ignorecase.Enable(b);
+	wholeword.Enable(b);
 }
 
 FindInFilesDlg::FindInFilesDlg()
 {
-	style <<= THISBACK(Sync);
+	regexp <<= style <<= THISBACK(Sync);
 	readonly <<= Null;
 }
 

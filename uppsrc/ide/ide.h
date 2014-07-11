@@ -732,7 +732,7 @@ public:
 	String			find_file_search_string;
 
 	FindInFilesDlg ff;
-	int            iwc;
+	String         iwc;
 
 	int           doc_serial;
 	TopicCtrl     doc;
@@ -1062,9 +1062,10 @@ public:
 	void      FindFolder();
 	void      FindSetStdDir(String n);
 	void      FindStdDir();
-	void      InsertWildcard(int c);
+	void      InsertWildcard(const char *s);
+	void      AddFoundFile(const String& fn, int ln, const String& line, int pos, int count);
 	bool      SearchInFile(const String& fn, const String& pattern,
-		                   bool wholeword, bool ignorecase, int& n);
+		                   bool wholeword, bool ignorecase, int& n, RegExp *regexp);
 	void      SyncFindInFiles();
 	void      ConstructFindInFiles();
 	void      SerializeFindInFiles(Stream& s);
