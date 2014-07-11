@@ -65,7 +65,7 @@ template <class T0,class T1,class T2,class T3,class T4,class T5,class T6,class T
 
 template <class T0,class T1,class T2,class T3,class T4,class T5,class T6,class T7,class T8,class T9>\
 Wizard<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9>::Wizard():step(0),count(0){
-	SetRect(0,0,600,400);
+	SetRect(0,0, HorzLayoutZoom(600),VertLayoutZoom(400));
 	*this << cancel.SetLabel(t_("Cancel")).RightPosZ(244, 72).BottomPosZ(4, 24)
 	      << prev.SetLabel(String("< ")+t_("Previous")).RightPosZ(164, 72).BottomPosZ(4, 24)
 	      << next.SetLabel(t_("Next")+String(" >")).RightPosZ(84, 72).BottomPosZ(4, 24)

@@ -4,7 +4,7 @@ END_LAYOUT
 
 LAYOUT(AssembliesLayout, 492, 280)
 	ITEM(RichTextCtrl, text, HSizePosZ(4, 4).TopPosZ(4, 104))
-	ITEM(ArrayCtrl, asmbls, HorzGrid(false).VertGrid(false).AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(112, 52))
+	ITEM(ArrayCtrl, asmbls, AutoHideSb(true).VertGrid(false).HorzGrid(false).HSizePosZ(4, 4).VSizePosZ(112, 52))
 	ITEM(Label, dv___2, SetLabel(t_("Sources Folder:")).LeftPosZ(16, 80).BottomPosZ(27, 17))
 	ITEM(Label, dv___3, SetLabel(t_("$(SRC) = ")).SetAlign(ALIGN_RIGHT).LeftPosZ(96, 48).BottomPosZ(27, 17))
 	ITEM(EditField, srcpath, HSizePosZ(144, 140).BottomPosZ(27, 17))
