@@ -96,7 +96,6 @@ bool LineEdit::GetRectSelection(const Rect& rect, int line, int& l, int &h)
 	return false;
 }
 
-
 int LineEdit::RemoveRectSelection()
 {
 	Rect rect = GetRectSelection();
@@ -138,8 +137,37 @@ int LineEdit::PasteRectSelection(const WString& s)
 		n += nn;
 		pos = l + nn;
 	}
-	PlaceCaret(cursor + n);
+	PlaceCaret(pos);
 	return n;
+}
+
+void LineEdit::PasteColumn(const WString& text)
+{
+	RemoveSelection();
+	Point p = GetColumnLine(cursor);
+	int pos = cursor;
+	Vector<WString> cl = Split(text, '\n', false);
+	for(int i = 0; i < cl.GetCount(); i++) { 
+		int li = p.y + i;
+		if(li < line.GetCount()) {
+			int l = GetGPos(i + p.y, min(GetLineLength(li), p.x));
+			pos = l + Insert(l, cl[i]);
+		}
+		else {
+			Insert(GetLength(), cl[i] + "\n");
+			pos = GetLength();
+		}
+	}
+	PlaceCaret(pos);
+}
+
+void LineEdit::PasteColumn()
+{
+	WString w = ReadClipboardUnicodeText();
+	if(w.IsEmpty())
+		w = ReadClipboardText().ToWString();
+	PasteColumn(w);
+	Action();
 }
 
 void   LineEdit::Paint0(Draw& w) {

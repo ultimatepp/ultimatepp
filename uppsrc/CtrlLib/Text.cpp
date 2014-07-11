@@ -699,10 +699,16 @@ void TextCtrl::StdBar(Bar& menu) {
 			t_("Copy"), CtrlImg::copy(), THISBACK(Copy))
 		.Key(K_CTRL_INSERT)
 		.Key(K_CTRL_C);
-	menu.Add(IsEditable() && IsClipboardAvailableText(),
+	bool canpaste = IsEditable() && IsClipboardAvailableText();
+	menu.Add(canpaste,
 			t_("Paste"), CtrlImg::paste(), THISBACK(DoPaste))
 		.Key(K_SHIFT_INSERT)
 		.Key(K_CTRL_V);
+	LineEdit *e = dynamic_cast<LineEdit *>(this);
+	if(e)
+		menu.Add(canpaste,
+				 t_("Paste in column"), CtrlImg::paste_vert(), callback(e, &LineEdit::DoPasteColumn))
+			.Key(K_CTRL_V|K_ALT);
 	menu.Add(IsEditable() && IsAnySelection(),
 			t_("Erase"), CtrlImg::remove(), THISBACK(DoRemoveSelection))
 		.Key(K_DELETE);
