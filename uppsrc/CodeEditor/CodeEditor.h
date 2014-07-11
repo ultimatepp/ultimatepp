@@ -3,7 +3,7 @@
 
 //#include <ide/Common/Common.h>
 #include <CtrlLib/CtrlLib.h>
-
+#include <plugin/pcre/Pcre.h>
 
 NAMESPACE_UPP
 
@@ -15,7 +15,7 @@ NAMESPACE_UPP
 #define IMAGEFILE   <CodeEditor/CodeEditor.iml>
 #include <Draw/iml_header.h>
 
-void FindWildcardMenu(Callback1<int> cb, Point p, bool tablf, Ctrl *owner = NULL);
+void FindWildcardMenu(Callback1<const char *> cb, Point p, bool tablf, Ctrl *owner, bool regexp);
 
 struct LineInfoRecord {
 	int    lineno;
@@ -254,7 +254,7 @@ protected:
 
 	WString selword;
 
-	int    iwc;
+	String  iwc;
 
 	String highlight;
 	
@@ -281,7 +281,7 @@ protected:
 	void   FindReplaceAddHistory();
 	void   FindWildcard();
 	void   ReplaceWildcard();
-	void   InsertWildcard(int c);
+	void   InsertWildcard(const char *s);
 	void   IncrementalFind();
 	void   NoFindError();
 	void   CheckSyntaxRefresh(int pos, const WString& text);
@@ -346,6 +346,7 @@ public:
 	void   CloseFindReplace();
 	void   FindReplace(bool pick_selection, bool pick_text, bool replace);
 	bool   FindFrom(int pos, bool back, const wchar *text, bool wholeword, bool ignorecase, bool wildcards, bool block);
+	bool   RegExpFind(int pos, const wchar *text, bool block);
 	bool   Find(bool back, const wchar *text, bool wholeword, bool ignorecase, bool wildcards,
 	            bool block, bool incremental);
 	bool   Find(bool back = false, bool blockreplace = false, bool replace = false, bool incremental = false);
@@ -460,7 +461,7 @@ public:
 
 	struct FindReplaceData {
 		String find, replace;
-		bool   wholeword, wildcards, ignorecase, samecase;
+		bool   wholeword, wildcards, ignorecase, samecase, regexp;
 	};
 	
 	FindReplaceData GetFindReplaceData() const;
