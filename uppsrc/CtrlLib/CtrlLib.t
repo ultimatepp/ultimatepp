@@ -169,6 +169,26 @@ trTR("Yinele")
 zhCN("\351\207\215\345\201\232")
 zhTW("\351\207\215\345\201\232")
 
+T_("Paste in column")
+caES("")
+csCZ("Vlo\305\276it sloupec")
+deDE("")
+esES("")
+fiFI("")
+frFR("")
+huHU("")
+itIT("")
+nlNL("")
+plPL("")
+ptBR("")
+roRO("")
+ruRU("")
+skSK("")
+srSP("")
+trTR("")
+zhCN("")
+zhTW("")
+
 
 // ArrayCtrl.cpp
 

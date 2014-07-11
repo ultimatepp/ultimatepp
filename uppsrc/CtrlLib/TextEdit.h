@@ -294,8 +294,10 @@ protected:
 	void   SetHBar();
 	Rect   DropCaret();
 	void   RefreshDropCaret();
+	void   DoPasteColumn() { PasteColumn(); }
 
 	struct RefreshDraw;
+	friend class TextCtrl;
 
 public:
 	Size   GetFontSize() const;
@@ -339,6 +341,9 @@ public:
 	void   Backspace();
 	void   DeleteLine();
 	void   CutLine();
+
+	void   PasteColumn(const WString& text);
+	void   PasteColumn();
 
 	Point   GetScrollPos() const              { return sb; }
 	Size    GetPageSize()                     { return sb.GetPage(); }
