@@ -681,7 +681,7 @@ Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
 			break;
 	}
 	Qualifier();
-	if(l0)
+	if(l0) {
 		if(lex == tk_SKYLARK && lex[1] == '(' && lex.IsId(2)) {
 			++lex;
 			++lex;
@@ -715,6 +715,7 @@ Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
 			Key(')');
 			return r;
 		}
+	}
 	bool isdestructor = Key('~');
 	if(l0 && context.typenames.Find(lex) >= 0 && lex[1] == '(' && lex.IsId()) {
 		Decl& a = r.Add();
