@@ -49,6 +49,7 @@ protected:
 	virtual int     RemoveRectSelection();
 	virtual WString CopyRectSelection();
 	virtual int     PasteRectSelection(const WString& s);
+	virtual String  GetPasteText();
 
 	struct Ln : Moveable<Ln> {
 		int    len;

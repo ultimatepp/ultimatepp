@@ -37,6 +37,7 @@ Packages and Assemblies]&]
 [s0;l224; [^topic`:`/`/ide`/app`/PackageTemplates`$en`-us^ Ultimate`+`+ 
 Project Templates]&]
 [s0;l224; [^topic`:`/`/ide`/app`/IconDes`$en`-us^ Iml designer]&]
+[s0;l224; [^topic`:`/`/ide`/app`/IconDes`$en`-us^ Special features]&]
 [s0;l224;^topic`:`/`/ide`/app`/IconDes`$en`-us^ &]
 [s0;l224; [^topic`:`/`/ide`/app`/umk`$en`-us^ umk commandline builder]&]
 [s0;l224; [^topic`:`/`/ide`/app`/upp`$en`-us^ .upp file format description]&]

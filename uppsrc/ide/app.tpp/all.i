@@ -110,6 +110,10 @@ TOPIC("macros$en-us")
 #include "macros$en-us.tppi"
 END_TOPIC
 
+TOPIC("special$en-us")
+#include "special$en-us.tppi"
+END_TOPIC
+
 TOPIC("umk$en-us")
 #include "umk$en-us.tppi"
 END_TOPIC

@@ -140,6 +140,14 @@ void CodeEditor::NewScrollPos() {
 	bar.Scroll();
 }
 
+String CodeEditor::GetPasteText()
+{
+	String h;
+	WhenPaste(h);
+	return h;
+}
+
+
 bool CodeEditor::IsCursorBracket(int pos) const
 {
 	return pos == highlight_bracket_pos0 && hilite_bracket;

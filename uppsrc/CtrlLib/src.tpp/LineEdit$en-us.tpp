@@ -85,6 +85,19 @@ oint]_[*@3 pos])_[@(0.0.255) const]&]
 Does not account for tabulators.&]
 [s3; &]
 [s4; &]
+[s5;:LineEdit`:`:GetRectSelection`(`)const: [_^Rect^ Rect]_[* GetRectSelection]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns rectangular selection (as `"graphical`").&]
+[s3; &]
+[s4; &]
+[s5;:LineEdit`:`:GetRectSelection`(const Rect`&`,int`,int`&`,int`&`): [@(0.0.255) bool]_
+[* GetRectSelection]([@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 rect], 
+[@(0.0.255) int]_[*@3 line], [@(0.0.255) int`&]_[*@3 l], [@(0.0.255) int]_`&[*@3 h])&]
+[s2;%% Returns lower and upper limits [%-*@3 l] [%-*@3 h] of characters 
+of [%-*@3 line] that are in rectangular selection [%-*@3 rect]. Returns 
+false when line is not in selection.&]
+[s3;%% &]
+[s4; &]
 [s5;:LineEdit`:`:ScrollUp`(`): [@(0.0.255) void]_[* ScrollUp]()&]
 [s2;%% Scrolls the text single line up.&]
 [s3; &]
@@ -184,6 +197,16 @@ the text).&]
 [s4; &]
 [s5;:LineEdit`:`:CutLine`(`): [@(0.0.255) void]_[* CutLine]()&]
 [s2;%% Stores a line to clipboard and calls DeleteLine.&]
+[s3; &]
+[s4; &]
+[s5;:LineEdit`:`:PasteColumn`(const WString`&`): [@(0.0.255) void]_[* PasteColumn]([@(0.0.255) c
+onst]_[_^WString^ WString][@(0.0.255) `&]_[*@3 text])&]
+[s2;%% Pastes lines of [%-*@3 text] into actual graphical column of 
+text.&]
+[s3;%% &]
+[s4; &]
+[s5;:LineEdit`:`:PasteColumn`(`): [@(0.0.255) void]_[* PasteColumn]()&]
+[s2;%% PasteColumn with clipboard text.&]
 [s3; &]
 [s4; &]
 [s5;:LineEdit`:`:GetScrollPos`(`)const: [_^Point^ Point]_[* GetScrollPos]()_[@(0.0.255) con
@@ -363,4 +386,4 @@ ool]_[* operator`=`=]([@(0.0.255) const]_[_^LineEdit`:`:Highlight^ Highlight][@(
 ]_[*@3 h])_[@(0.0.255) const]&]
 [s2;%% Equality comparison.&]
 [s3; &]
-[s0; ]
+[s0; ]]

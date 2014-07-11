@@ -414,6 +414,7 @@ Ide::Ide()
 	editor.WhenBar = THISBACK(EditorMenu);
 	editor.WhenFontScroll = THISBACK(EditorFontScroll);
 	editor.WhenOpenFindReplace = THISBACK(AddHistory);
+	editor.WhenPaste = THISBACK(IdePaste);
 
 	macro_api = MacroEditor();
 
