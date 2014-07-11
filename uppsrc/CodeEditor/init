@@ -1,7 +1,7 @@
 #ifndef _CodeEditor_icpp_init_stub
 #define _CodeEditor_icpp_init_stub
 #include "CtrlLib/init"
-#define BLITZ_INDEX__ Fa19bf999ba2b201492446aa335bd578e
+#define BLITZ_INDEX__ Fd579c6629af5990c016d4bd1dc2b4c20
 #include "CRegister.icpp"
 #undef BLITZ_INDEX__
 #endif

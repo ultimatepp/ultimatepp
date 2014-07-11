@@ -475,7 +475,7 @@ void CodeEditor::OpenNormalFindReplace(bool replace)
 	findreplace.next <<= THISBACK(DoFind);
 	findreplace.close <<= THISBACK(CloseFindReplace);
 	if(!findreplace.IsOpen())
-		AddFrame(findreplace);
+		InsertFrame(FindFrame(sb), findreplace);
 	WhenOpenFindReplace();
 	IncrementalFind();
 }
