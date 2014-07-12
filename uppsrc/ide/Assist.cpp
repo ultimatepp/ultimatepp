@@ -964,8 +964,11 @@ void AssistEditor::DCopy()
 				}
 			}
 			if(m.IsData()) {
+				String nat = m.natural;
 				if(cls.GetCount()) {
-					const char *s = m.natural;
+					nat.Replace("static", "");
+					nat = TrimLeft(nat);
+					const char *s = nat;
 					while(*s) {
 						if(iscib(*s)) {
 							const char *b = s;
@@ -984,8 +987,28 @@ void AssistEditor::DCopy()
 							r << *s++;
 					}
 				}
-				else
-					r << "extern " << m.natural;
+				else {
+					int q = nat.ReverseFind("::");
+					if(q >= 0) { // Foo Class2 :: Class::variable; -> static Foo variable;
+						int e = q + 2;
+						for(;;) {
+							while(q >= 0 && nat[q - 1] == ' ')
+								q--;
+							if(q == 0 || !iscid(nat[q - 1]))
+								break;
+							while(q >= 0 && iscid(nat[q - 1]))
+								q--;
+							int w = nat.ReverseFind("::", q);
+							if(w < 0)
+								break;
+							q = w;
+						}
+						nat.Remove(q, e - q);
+						r << "static " << nat;
+					}
+					else
+						r << "extern " << nat;
+				}
 				r << ";\n";
 			}
 		}
