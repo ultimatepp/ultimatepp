@@ -218,7 +218,7 @@ public:
 	void    Clear();
 	void    Reset();
 	
-	void    Error(bool error = true)         { errorbg = error; }
+	void    Error(bool error = true)         { errorbg = error; Refresh(); }
 	
 	EditField& Password(bool pwd = true)     { password = pwd; Finish(); return *this; }
 	bool       IsPassword() const            { return password; }

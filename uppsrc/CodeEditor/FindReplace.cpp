@@ -175,18 +175,16 @@ int CodeEditor::Match(const wchar *f, const wchar *s, int line, bool we, bool ig
 
 bool CodeEditor::Find(bool back, bool block)
 {
-	if(!findreplace.incremental) {
-		if(notfoundfw) MoveTextBegin();
-		if(notfoundbk) MoveTextEnd();
-	}
+	foundsel = true;
+	if(notfoundfw) MoveTextBegin();
+	if(notfoundbk) MoveTextEnd();
+	foundsel = false;
 	int cursor, pos;
 	if(found)
 		GetSelection(pos, cursor);
 	else
 		GetSelection(cursor, pos);
 	pos = cursor;
-	if(findreplace.incremental && !findreplace.incremental_from_cursor)
-		pos = 0;
 	return FindFrom(pos, back, block);
 }
 
@@ -225,8 +223,16 @@ bool CodeEditor::RegExpFind(int pos, bool block)
 
 bool CodeEditor::FindFrom(int pos, bool back, bool block)
 {
-	if(findreplace.regexp)
-		return RegExpFind(pos, block);
+	notfoundbk = notfoundfw = false;
+	if(findreplace.regexp) {
+		if(RegExpFind(pos, block))
+			return true;
+		if(back)
+			notfoundbk = true;
+		else
+			notfoundfw = true;
+		return false;
+	}
 	WString text = ~findreplace.find;
 	WString ft;
 	const wchar *s = text;
@@ -328,6 +334,14 @@ void CodeEditor::NoFindError()
 	findreplace.info.SetLabel("&Find");
 }
 
+void CodeEditor::NotFound()
+{
+	findreplace.find.Error();
+	findreplace.info.SetLabel("Not &found");
+	if(!findreplace.incremental)
+		SetFocus();
+}
+
 bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
 {
 	NoFindError();
@@ -342,10 +356,7 @@ bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
 		return true;
 	}
 	else {
-		findreplace.find.Error();
-		findreplace.info.SetLabel("Not &found");
-		if(!findreplace.incremental)
-			SetFocus();
+		NotFound();
 		return false;
 	}
 }
@@ -501,7 +512,7 @@ int CodeEditor::BlockReplace()
 	return count;
 }
 
-void CodeEditor::OpenNormalFindReplace(bool replace)
+void CodeEditor::OpenNormalFindReplace0(bool replace)
 {
 	findreplace.Setup(replace);
 	findreplace.find.SetFocus();
@@ -512,6 +523,12 @@ void CodeEditor::OpenNormalFindReplace(bool replace)
 	if(!findreplace.IsOpen())
 		InsertFrame(FindFrame(sb), findreplace);
 	WhenOpenFindReplace();
+}
+
+
+void CodeEditor::OpenNormalFindReplace(bool replace)
+{
+	OpenNormalFindReplace0(replace);
 	if(!findreplace.incremental_from_cursor)
 		IncrementalFind();
 }
@@ -688,7 +705,14 @@ void CodeEditor::IncrementalFind()
 	findreplace.Sync();
 	if(!findreplace.incremental || findreplace.GetTopCtrl() == &findreplace) // || we are block replace
 		return;
-	Find(false, false);
+	int pos = 0;
+	if(findreplace.incremental_from_cursor) {
+		int l, h;
+		if(GetSelection(l, h))
+			pos = l;
+	}
+	if(!FindFrom(pos, false, false))
+		NotFound();
 }
 
 void CodeEditor::DoFind()
@@ -740,6 +764,26 @@ void CodeEditor::SetFindReplaceData(const FindReplaceData& r)
 	findreplace.wildcards <<= r.wildcards;
 	findreplace.samecase <<= r.samecase;
 	findreplace.regexp <<= r.regexp;
+}
+
+void CodeEditor::FindPrevNext(bool prev)
+{
+	if(!findreplace.IsOpen())
+		OpenNormalFindReplace0(false);
+	if(Find(false, false))
+		NoFindError();
+	else
+		NotFound();
+}
+
+void CodeEditor::FindNext()
+{
+	FindPrevNext(false);
+}
+
+void CodeEditor::FindPrev()
+{
+	FindPrevNext(true);
 }
 
 END_UPP_NAMESPACE
