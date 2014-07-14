@@ -453,8 +453,10 @@ public:
 	virtual   void   Deactivate();
 	virtual   void   Layout();
 
-	virtual   void      PutConsole(const char *s);
-	virtual   void      PutVerbose(const char *s);
+	virtual   void   PutConsole(const char *s);
+	virtual   void   PutVerbose(const char *s);
+	virtual   void   PutLinking();
+	virtual   void   PutLinkingEnd(bool ok); 
 
 	virtual   const Workspace& IdeWorkspace() const;
 	virtual   bool             IdeIsBuilding() const;
@@ -550,7 +552,9 @@ public:
 	ArrayCtrl   error;
 	ArrayCtrl   notes;
 	bool        addnotes;
-	
+	bool        linking;
+	Vector<String> linking_line;
+
 	IdeCalc     calc;
 	Ptr<Ctrl>   bottomctrl;
 

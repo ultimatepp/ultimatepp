@@ -470,11 +470,13 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 			}
 		}
 		if(ok || !stoponerrors) {
+			PutLinking();
 			ok = BuildPackage(wspc, 0, build_order.GetCount(), build_order.GetCount() + 1,
 			                  mainparam, outfile, linkfile, linkopt, ok) && ok;
 			// Set the time of target to start-time, so that if any file changes during
 			// compilation, it is recompiled during next build
 			SetFileTime(target, start_time); 
+			PutLinkingEnd(ok);
 		}
 	}
 	EndBuilding(ok);
