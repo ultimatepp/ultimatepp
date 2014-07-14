@@ -232,6 +232,9 @@ protected:
 	bool    mark_lines;
 	bool    check_edited;
 	bool    persistent_find_replace;
+	bool    do_ff_restore_pos;
+
+	int     ff_restore_pos;
 
 	FindReplaceDlg findreplace;
 	
@@ -346,6 +349,7 @@ public:
 	void   Highlight(const String& h);
 	String GetHighlight() const       { return highlight; }
 
+	void   EscapeFindReplace();
 	void   CloseFindReplace();
 	void   FindReplace(bool pick_selection, bool pick_text, bool replace);
 	bool   FindFrom(int pos, bool back, const wchar *text, bool wholeword, bool ignorecase, bool wildcards, bool block);
@@ -444,6 +448,9 @@ public:
 	
 	void     PersistentFindReplace(bool b = true)     { persistent_find_replace = b; }
 	bool     IsPersistentFindReplace() const          { return persistent_find_replace; }
+
+	void     FindReplaceRestorePos(bool b = true)     { do_ff_restore_pos = b; }
+	bool     IsFindReplaceRestorePos() const          { return do_ff_restore_pos; }
 	
 	void     Annotations(int width)                   { bar.Annotations(width); }
 	void     SetAnnotation(int i, const Image& icon, const String& a) { bar.SetAnnotation(i, icon, a); }

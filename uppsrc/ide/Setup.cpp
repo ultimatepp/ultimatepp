@@ -132,6 +132,7 @@ void Ide::UpdateFormat(CodeEditor& editor)
 	editor.MarkLines(mark_lines);
 	editor.BorderColumn(bordercolumn, bordercolor);
 	editor.PersistentFindReplace(persistent_find_replace);
+	editor.FindReplaceRestorePos(find_replace_restore_pos);
 	editor.Refresh();
 }
 
@@ -408,6 +409,7 @@ void Ide::SetupFormat() {
 		(edt.tabs_stacking, tabs_stacking)
 		(edt.tabs_serialize, tabs_serialize)
 		(edt.persistent_find_replace, persistent_find_replace)
+		(edt.find_replace_restore_pos, find_replace_restore_pos)
 
 		(assist.barline, barline)
 		(assist.auto_enclose, auto_enclose)
