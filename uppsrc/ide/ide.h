@@ -679,6 +679,7 @@ public:
 	int       bordercolumn;
 	Color     bordercolor;
 	bool      persistent_find_replace;
+	bool      find_replace_restore_pos;
 
 	/*
 		astyle code formatter control vars

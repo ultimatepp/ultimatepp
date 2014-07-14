@@ -144,7 +144,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 3;
+	int version = 4;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -171,6 +171,9 @@ void Ide::Serialize(Stream& s)
 	s % filetabs;
 	s % auto_enclose;
 	s % persistent_find_replace;
+	if(version >= 4) {
+		s % find_replace_restore_pos;
+	}
 	s % show_tabs;
 	s % tabs_icons;
 	s % tabs_crosses;
