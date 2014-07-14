@@ -40,6 +40,7 @@ void FindReplaceDlg::Sync()
 	prev.Enable(b);
 	ignorecase.Enable(b);
 	wholeword.Enable(b);
+	incremental_from_cursor.Enable(incremental);
 }
 
 dword CodeEditor::find_next_key = K_F3;
