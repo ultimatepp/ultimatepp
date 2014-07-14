@@ -622,12 +622,12 @@ WString CodeEditor::GetI()
 	return ft;
 }
 
-void CodeEditor::FindWord(bool back)
-{
-	WString I = GetI();
-	if(!IsNull(I))
-		Find(back, I, true, false, false, false, false);
-}
+//void CodeEditor::FindWord(bool back)
+//{
+//	WString I = GetI();
+//	if(!IsNull(I))
+//		Find(back, I, true, false, false, false, false);
+//}
 
 void CodeEditor::SetI(Ctrl *edit)
 {
@@ -803,11 +803,11 @@ bool CodeEditor::Key(dword code, int count) {
 	bool sel = code & K_SHIFT;
 	switch(code & ~K_SHIFT) {
 	case K_F3:
-		Find(sel);
+		Find(sel, false);
 		return true;
-	case K_CTRL_F3:
-		FindWord(sel);
-		return true;
+//	case K_CTRL_F3:
+//		FindWord(sel);
+//		return true;
 	case K_CTRL_RIGHT:
 		MoveNextWord(sel);
 		return true;

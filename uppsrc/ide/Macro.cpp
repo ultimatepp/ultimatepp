@@ -190,12 +190,14 @@ void Ide::MacroFind(EscEscape& e)
 	int n = e.GetCount();
 	if(n < 1 || n > 6)
 		e.ThrowError("wrong number of arguments in call to Find (1 to 5 expected)");
-	WString text = e[0];
+	CodeEditor::FindReplaceData d = editor.GetFindReplaceData();
 	bool down = (n <= 1 || e.Int(1) > 0);
-	bool whole_word = (n > 2 && e.Int(2) > 0);
-	bool ignore_case = (n > 3 && e.Int(3) > 0);
-	bool wildcards = (n > 4 && e.Int(4) > 0);
-	e = editor.Find(!down, text, whole_word, ignore_case, wildcards, false, false);
+	d.wholeword = (n > 2 && e.Int(2) > 0);
+	d.ignorecase = (n > 3 && e.Int(3) > 0);
+	d.wildcards = (n > 4 && e.Int(4) > 0);
+	d.find = e[0];
+	editor.SetFindReplaceData(d);
+	e = editor.Find(!down, false);
 }
 
 void Ide::MacroReplace(EscEscape& e)
@@ -203,13 +205,15 @@ void Ide::MacroReplace(EscEscape& e)
 	int n = e.GetCount();
 	if(n < 2 || n > 5)
 		e.ThrowError("wrong number of arguments in call to Find (2 to 6 expected)");
-	WString find = e[0];
-	WString replace = e[1];
-	bool whole_word = (n > 2 && e.Int(2) > 0);
-	bool ignore_case = (n > 3 && e.Int(3) > 0);
-	bool wildcards = (n > 4 && e.Int(4) > 0);
-	bool samecase = (n > 5 && e.Int(5) > 0);
-	e = editor.BlockReplace(find, replace, whole_word, ignore_case, wildcards, samecase);
+	CodeEditor::FindReplaceData d = editor.GetFindReplaceData();
+	d.find = e[0];
+	d.replace = e[1];
+	d.wholeword = (n > 2 && e.Int(2) > 0);
+	d.ignorecase = (n > 3 && e.Int(3) > 0);
+	d.wildcards = (n > 4 && e.Int(4) > 0);
+	d.samecase = (n > 5 && e.Int(5) > 0);
+	editor.SetFindReplaceData(d);
+	e = editor.BlockReplace();
 }
 
 void Ide::MacroFindMatchingBrace(EscEscape& e)

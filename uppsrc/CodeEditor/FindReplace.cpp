@@ -172,10 +172,9 @@ int CodeEditor::Match(const wchar *f, const wchar *s, int line, bool we, bool ig
 	return we && iscidl(*s) ? -1 : int(s - b) + n;
 }
 
-bool CodeEditor::Find(bool back, const wchar *text, bool wholeword, bool ignorecase,
-                      bool wildcards, bool block, bool incremental)
+bool CodeEditor::Find(bool back, bool block)
 {
-	if(!incremental) {
+	if(!findreplace.incremental) {
 		if(notfoundfw) MoveTextBegin();
 		if(notfoundbk) MoveTextEnd();
 	}
@@ -185,14 +184,14 @@ bool CodeEditor::Find(bool back, const wchar *text, bool wholeword, bool ignorec
 	else
 		GetSelection(cursor, pos);
 	pos = cursor;
-	if(incremental)
+	if(findreplace.incremental && !findreplace.incremental_from_cursor)
 		pos = 0;
-	return FindFrom(pos, back, text, wholeword, ignorecase, wildcards, block);
+	return FindFrom(pos, back, block);
 }
 
-bool CodeEditor::RegExpFind(int pos, const wchar *text, bool block)
+bool CodeEditor::RegExpFind(int pos, bool block)
 {
-	RegExp regex(ToUtf8(text));
+	RegExp regex((String)~findreplace.find);
 	
 	int line = GetLinePos(pos);
 	int linecount = GetLineCount();
@@ -223,10 +222,11 @@ bool CodeEditor::RegExpFind(int pos, const wchar *text, bool block)
 	}
 }
 
-bool CodeEditor::FindFrom(int pos, bool back, const wchar *text, bool wholeword, bool ignorecase,
-                          bool wildcards, bool block) {
+bool CodeEditor::FindFrom(int pos, bool back, bool block)
+{
 	if(findreplace.regexp)
-		return RegExpFind(pos, text, block);
+		return RegExpFind(pos, block);
+	WString text = ~findreplace.find;
 	WString ft;
 	const wchar *s = text;
 	while(*s) {
@@ -245,7 +245,7 @@ bool CodeEditor::FindFrom(int pos, bool back, const wchar *text, bool wholeword,
 		}
 		else
 		if(c >= ' ') {
-			if(wildcards)
+			if(findreplace.wildcards)
 				ft.Cat(c == '*' ? WILDANY :
 					   c == '?' ? WILDONE :
 					   c == '%' ? WILDSPACE :
@@ -257,8 +257,8 @@ bool CodeEditor::FindFrom(int pos, bool back, const wchar *text, bool wholeword,
 				ft.Cat(c);
 		}
 	}
-	bool wb = wholeword ? iscidl(*ft) : false;
-	bool we = wholeword ? iscidl(*ft.Last()) : false;
+	bool wb = findreplace.wholeword ? iscidl(*ft) : false;
+	bool we = findreplace.wholeword ? iscidl(*ft.Last()) : false;
 	if(ft.IsEmpty()) return false;
 	foundwild.Clear();
 	int line = GetLinePos(pos);
@@ -266,6 +266,7 @@ bool CodeEditor::FindFrom(int pos, bool back, const wchar *text, bool wholeword,
 	WString ln = GetWLine(line);
 	const wchar *l = ln;
 	s = l + pos;
+	bool ignorecase = findreplace.ignorecase;
 	for(;;) {
 		for(;;) {
 			if(!wb || (s == l || !iscidl(s[-1]))) {
@@ -326,11 +327,10 @@ void CodeEditor::NoFindError()
 	findreplace.info.SetLabel("&Find");
 }
 
-bool CodeEditor::Find(bool back, bool blockreplace, bool replace, bool incremental)
+bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
 {
 	NoFindError();
-	if(Find(back, (WString)~findreplace.find, findreplace.wholeword,
-		    findreplace.ignorecase, findreplace.wildcards, blockreplace, incremental)) {
+	if(Find(back, blockreplace)) {
 		if(!blockreplace) {
 			if(!findreplace.IsOpen())
 				OpenNormalFindReplace(replace);
@@ -360,12 +360,10 @@ WString CodeEditor::GetWild(int type, int& i)
 
 WString CodeEditor::GetReplaceText()
 {
-	return GetReplaceText(~findreplace.replace, findreplace.wildcards,
-	                      findreplace.wildcards && findreplace.samecase);
-}
+	WString rs = ~findreplace.replace;
+	bool wildcards = findreplace.wildcards;
+	bool samecase = findreplace.ignorecase && findreplace.samecase;
 
-WString CodeEditor::GetReplaceText(WString rs, bool wildcards, bool samecase)
-{
 	int anyi = 0, onei = 0, spacei = 0, numberi = 0, idi = 0;
 	WString rt;
 	const wchar *s = rs;
@@ -480,7 +478,7 @@ void CodeEditor::Replace()
 	}
 }
 
-int CodeEditor::BlockReplace(WString find, WString replace, bool wholeword, bool ignorecase, bool wildcards, bool samecase)
+int CodeEditor::BlockReplace()
 {
 	NextUndo();
 	Refresh(); // Setting full-refresh here avoids Pre/Post Remove/Insert costs
@@ -489,10 +487,10 @@ int CodeEditor::BlockReplace(WString find, WString replace, bool wholeword, bool
 	PlaceCaret(l);
 	int count = 0;
 	foundpos = l;
-	while(FindFrom(foundpos, false, find, wholeword, ignorecase, wildcards, true) && foundpos + foundsize <= h) {
+	while(FindFrom(foundpos, false, true) && foundpos + foundsize <= h) {
 		CachePos(foundpos);
 		Remove(foundpos, foundsize);
-		WString rt = GetReplaceText(replace, wildcards, ignorecase && samecase);
+		WString rt = GetReplaceText();
 		Insert(foundpos, rt);
 		foundpos += rt.GetCount();
 		h = h - foundsize + rt.GetCount();
@@ -500,12 +498,6 @@ int CodeEditor::BlockReplace(WString find, WString replace, bool wholeword, bool
 	}
 	SetSelection(l, h);
 	return count;
-}
-
-void CodeEditor::BlockReplace()
-{
-	BlockReplace(~findreplace.find, ~findreplace.replace, findreplace.wholeword,
-		         findreplace.ignorecase, findreplace.wildcards, findreplace.samecase);
 }
 
 void CodeEditor::OpenNormalFindReplace(bool replace)
@@ -519,7 +511,8 @@ void CodeEditor::OpenNormalFindReplace(bool replace)
 	if(!findreplace.IsOpen())
 		InsertFrame(FindFrame(sb), findreplace);
 	WhenOpenFindReplace();
-	IncrementalFind();
+	if(!findreplace.incremental_from_cursor)
+		IncrementalFind();
 }
 
 void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
@@ -694,17 +687,17 @@ void CodeEditor::IncrementalFind()
 	findreplace.Sync();
 	if(!findreplace.incremental || findreplace.GetTopCtrl() == &findreplace) // || we are block replace
 		return;
-	Find(false, false, false, true);
+	Find(false, false);
 }
 
 void CodeEditor::DoFind()
 {
-	Find();
+	Find(false, false);
 }
 
 void CodeEditor::DoFindBack()
 {
-	Find(true);
+	Find(true, false);
 }
 
 void CodeEditor::SerializeFind(Stream& s)
