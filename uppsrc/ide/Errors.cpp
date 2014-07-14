@@ -212,6 +212,8 @@ void Ide::ClearErrorEditor(String file)
 		FileData& fd = Filedata(file);
 		ClearErrors(fd.lineinfo);
 	}
+	
+	linking = false;
 }
 
 void Ide::SetErrorEditor()
@@ -294,8 +296,40 @@ bool Ide::FindLineError(int l) {
 	return false;
 }
 
+void Ide::PutLinking()
+{
+	linking = true;
+	linking_line.Clear();
+}
+
+void Ide::PutLinkingEnd(bool ok)
+{
+	if(!ok) {
+		addnotes = true;
+		error.Add(Null, Null, AttrText("Linker errors").Bold()
+			                  .NormalPaper(HighlightSetup::GetHlStyle(HighlightSetup::PAPER_ERROR).color));
+		for(int i = 0; i < linking_line.GetCount(); i++) {
+			ErrorInfo f;
+			if(!FindLineError(linking_line[i], error_cache, f)) {
+				f.file = Null;
+				f.lineno = Null;
+				f.message = TrimLeft(linking_line[i]);
+			}
+			error.Add(GetFileName(f.file), f.lineno,
+			          AttrText(f.message)
+			          .NormalPaper(HighlightSetup::GetHlStyle(HighlightSetup::PAPER_ERROR).color),
+			          RawToValue(f));
+		}
+	}
+	linking = false;
+}
+
 void Ide::ConsoleLine(const String& line)
 {
+	if(linking) {
+		linking_line.Add(line);
+		return;
+	}
 	ErrorInfo f;
 	if(FindLineError(line, error_cache, f)) {
 		if(findarg(f.kind, 1, 2) >= 0 || error.GetCount() == 0) {
