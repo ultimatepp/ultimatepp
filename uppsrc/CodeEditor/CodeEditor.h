@@ -296,7 +296,6 @@ protected:
 	int     Match(const wchar *f, const wchar *s, int line, bool we, bool icase, int fi = 0);
 	WString GetWild(int type, int& i);
 	WString GetReplaceText();
-	WString GetReplaceText(WString replace, bool wildcards, bool samecase);
 
 	bool   InsertRS(int chr, int count = 1);
 
@@ -352,20 +351,17 @@ public:
 	void   EscapeFindReplace();
 	void   CloseFindReplace();
 	void   FindReplace(bool pick_selection, bool pick_text, bool replace);
-	bool   FindFrom(int pos, bool back, const wchar *text, bool wholeword, bool ignorecase, bool wildcards, bool block);
-	bool   RegExpFind(int pos, const wchar *text, bool block);
-	bool   Find(bool back, const wchar *text, bool wholeword, bool ignorecase, bool wildcards,
-	            bool block, bool incremental);
-	bool   Find(bool back = false, bool blockreplace = false, bool replace = false, bool incremental = false);
+	bool   FindFrom(int pos, bool back, bool block);
+	bool   RegExpFind(int pos, bool block);
+	bool   Find(bool back, bool block);
+	bool   Find(bool back, bool blockreplace, bool replace);
 	bool   GetStringRange(int cursor, int& b, int &e) const;
 	bool   GetStringRange(int& b, int &e) const { return GetStringRange(GetCursor(), b, e); }
 	bool   FindString(bool back);
 	bool   FindLangString(bool back);
 	void   Replace();
-	void   BlockReplace();
-	int    BlockReplace(WString find, WString replace, bool wholeword, bool ignorecase,
-	                    bool wildcards, bool samecase);
-	
+	int    BlockReplace();
+
 	void   MakeTabsOrSpaces(bool tabs);
 	void   MakeLineEnds();
 
@@ -381,7 +377,7 @@ public:
 	void   DoFind();
 	void   DoFindBack();
 
-	void    FindWord(bool back);
+//	void    FindWord(bool back);
 	WString GetI();
 	void    SetI(Ctrl *edit);
 	void    PutI(WithDropChoice<EditString>& edit);

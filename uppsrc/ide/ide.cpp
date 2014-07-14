@@ -438,8 +438,8 @@ void Ide::IdePaste(String& data)
 		Vector<String> s = GetFiles(Clipboard());
 		for(int i = 0; i < s.GetCount(); i++)
 			if(FileExists(s[i]) && IsTextFile(s[i])) {
-				int len = GetFileLength(s[i]);
-				if(data.GetLength() + len < 5000000)
+				int64 len = GetFileLength(s[i]);
+				if(len > 5000000 || data.GetLength() + len < 5000000)
 					data.Cat(LoadFile(s[i]));
 			}
 	}

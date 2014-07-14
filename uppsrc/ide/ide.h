@@ -883,8 +883,8 @@ public:
 		void  EditFind()                { editor.FindReplace(find_pick_sel, find_pick_text, false); }
 		void  EditReplace()             { editor.FindReplace(find_pick_sel, find_pick_text, true); }
 		void  EditFindReplacePickText() { editor.FindReplace(true, true, false); }
-		void  EditFindNext()            { editor.Find(false); }
-		void  EditFindPrevious()        { editor.Find(true); }
+		void  EditFindNext()            { editor.Find(false, false); }
+		void  EditFindPrevious()        { editor.Find(true, false); }
 		void  EditPaste()               { editor.Paste(); }
 		bool  Next(int tab, ArrayCtrl& ctrl, int d);
 		void  FindNextError();
