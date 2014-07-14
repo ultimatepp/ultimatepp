@@ -803,7 +803,10 @@ bool CodeEditor::Key(dword code, int count) {
 	bool sel = code & K_SHIFT;
 	switch(code & ~K_SHIFT) {
 	case K_F3:
-		Find(sel, false);
+		if(sel)
+			FindPrev();
+		else
+			FindNext();
 		return true;
 //	case K_CTRL_F3:
 //		FindWord(sel);

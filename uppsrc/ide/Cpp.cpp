@@ -168,7 +168,7 @@ void AssistEditor::ExpressionType(const String& ttype, const Vector<String>& xp,
 		LLOG("id as: " << id);
 	}
 	Index< Tuple2<String, bool> > mtype;
-	for(int i = 0; i < n.GetCount(); i = FindNext(n, i)) {
+	for(int i = 0; i < n.GetCount(); i = ::FindNext(n, i)) {
 		const CppItem& m = n[i];
 		if(m.name == id) {
 			LLOG("Member " << m.qtype << "'" << m.name << "'");
@@ -273,7 +273,7 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 				String n = CodeBase().GetKey(i);
 				if(n.GetLength() > ntp.GetLength() && memcmp(~ntp, ~n, ntp.GetLength()) == 0) {
 					Array<CppItem>& n = CodeBase()[i];
-					for(int i = 0; i < n.GetCount(); i = FindNext(n, i)) {
+					for(int i = 0; i < n.GetCount(); i = ::FindNext(n, i)) {
 						const CppItem& m = n[i];
 						if(m.IsType()) {
 							CppItemInfo& f = assist_item.Add(m.name);
@@ -289,10 +289,10 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 		String base;
 		int typei = assist_type.FindAdd(ntp);
 		bool op = only_public;
-		for(int i = 0; i < n.GetCount(); i = FindNext(n, i))
+		for(int i = 0; i < n.GetCount(); i = ::FindNext(n, i))
 			if(n[i].kind == FRIENDCLASS)
 				op = false;
-		for(int i = 0; i < n.GetCount(); i = FindNext(n, i)) {
+		for(int i = 0; i < n.GetCount(); i = ::FindNext(n, i)) {
 			const CppItem& im = n[i];
 			if(im.kind == STRUCT || im.kind == STRUCTTEMPLATE)
 				base = im.qptype;

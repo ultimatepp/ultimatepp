@@ -281,13 +281,16 @@ protected:
 	
 	void   InitFindReplace();
 	void   CancelBracketHighlight(int& pos);
+	void   FindPrevNext(bool prev);
 	void   CheckBrackets();
+	void   OpenNormalFindReplace0(bool replace);
 	void   OpenNormalFindReplace(bool replace);
 	void   FindReplaceAddHistory();
 	void   FindWildcard();
 	void   ReplaceWildcard();
 	void   InsertWildcard(const char *s);
 	void   IncrementalFind();
+	void   NotFound();
 	void   NoFindError();
 	void   CheckSyntaxRefresh(int pos, const WString& text);
 
@@ -355,6 +358,8 @@ public:
 	bool   RegExpFind(int pos, bool block);
 	bool   Find(bool back, bool block);
 	bool   Find(bool back, bool blockreplace, bool replace);
+	void   FindNext();
+	void   FindPrev();
 	bool   GetStringRange(int cursor, int& b, int &e) const;
 	bool   GetStringRange(int& b, int &e) const { return GetStringRange(GetCursor(), b, e); }
 	bool   FindString(bool back);
