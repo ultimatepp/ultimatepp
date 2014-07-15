@@ -380,6 +380,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 {
 	if(!Wait())
 		return false;
+	PutLinking();
 	int time = GetTickCount();
 	for(int i = 0; i < linkfile.GetCount(); i++)
 		if(GetFileTime(linkfile[i]) >= targettime) {

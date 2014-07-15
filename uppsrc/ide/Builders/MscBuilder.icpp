@@ -541,6 +541,7 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 	int time = GetTickCount();
 	if(!Wait())
 		return false;
+	PutLinking();
 	bool isgemsc10 = HasFlag("MSC10") || HasFlag("MSC10X64") || HasFlag("MSC11")
 		|| HasFlag("MSC11X64") || HasFlag("MSC12X64");
 	for(int i = 0; i < linkfile.GetCount(); i++)
