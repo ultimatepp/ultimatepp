@@ -295,6 +295,7 @@ bool OwcBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 	if (!Wait())
 		return false;
 
+	PutLinking();
 	const int linkfileCount = linkfile.GetCount();
 
 	for (int i = 0; i < linkfileCount; i++)

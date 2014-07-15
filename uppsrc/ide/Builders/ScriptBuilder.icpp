@@ -238,6 +238,7 @@ bool ScriptBuilder::BuildPackage(const String& package, Vector<String>& linkfile
 
 bool ScriptBuilder::Link(const Vector<String>& linkfile, const String& linkoptions, bool)
 {
+	PutLinking();
 	int time = GetTickCount();
 	for(int i = 0; i < linkfile.GetCount(); i++)
 		if(GetFileTime(linkfile[i]) >= targettime) {

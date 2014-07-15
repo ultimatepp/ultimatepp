@@ -204,6 +204,8 @@ void Ide::ClearErrorEditor()
 
 void Ide::ClearErrorEditor(String file)
 {
+	linking = false;
+
 	if(!mark_lines)
 		return;
 	if(file == editfile)
@@ -212,8 +214,6 @@ void Ide::ClearErrorEditor(String file)
 		FileData& fd = Filedata(file);
 		ClearErrors(fd.lineinfo);
 	}
-	
-	linking = false;
 }
 
 void Ide::SetErrorEditor()
@@ -304,9 +304,9 @@ void Ide::PutLinking()
 
 void Ide::PutLinkingEnd(bool ok)
 {
-	if(!ok) {
+	if(!ok && linking) {
 		addnotes = true;
-		error.Add(Null, Null, AttrText("Linker errors").Bold()
+		error.Add(Null, Null, AttrText("Linking has failed").Bold()
 			                  .NormalPaper(HighlightSetup::GetHlStyle(HighlightSetup::PAPER_ERROR).color));
 		for(int i = 0; i < linking_line.GetCount(); i++) {
 			ErrorInfo f;
