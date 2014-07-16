@@ -39,9 +39,9 @@ void Test()
 	Puts(Format("System:           %s", GetSystemFolder()));
 	
 	Puts("\nNetwork info");
-	String nname, domain;
-	if (GetNetworkInfo(nname, domain))
-		Puts(Format("Name '%s', Domain '%s'", nname, domain));
+	String nname, domain, ip4, ip6;
+	if (GetNetworkInfo(nname, domain, ip4, ip6))
+		Puts(Format("Name '%s', Domain '%s', IP4 '%s', IP6 '%s'", nname, domain, ip4, ip6));
 	else
 		Puts("Problem reading newtwork data");
 	
