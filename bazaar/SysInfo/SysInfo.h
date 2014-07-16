@@ -31,7 +31,7 @@ struct NetAdapter : DeepCopyOption<NetAdapter> {
 
 Upp::Array <NetAdapter> GetAdapterInfo();
 
-bool GetNetworkInfo(String &name, String &domain);
+bool GetNetworkInfo(String &name, String &domain, String &ip4, String &ip6);
 
 #if defined(PLATFORM_WIN32) 
 bool GetVideoInfo(Upp::Array <Value> &name, Upp::Array <Value> &description, Upp::Array <Value> &videoProcessor, 
@@ -120,7 +120,7 @@ bool CloseCDTray(String drive);
 /////////////////////////////////////////////////////////////////////
 // Key and mouse keys
 bool Mouse_GetPos(long &x, long &y);
-bool Mouse_SetPos(long x, long y, int64 windowId);
+bool Mouse_SetPos(long x, long y, int64 windowId = 0);
 
 void Mouse_LeftClick();
 void Mouse_LeftDown();

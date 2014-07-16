@@ -16,13 +16,15 @@ NAMESPACE_UPP
 #define TFILE <SysInfo/SysInfo.t>
 #include <Core/t.h>
 
+#ifdef PLATFORM_WIN32
+#pragma comment(lib, "ws2_32.lib")
+#endif
 
 /////////////////////////////////////////////////////////////////////
 // Hardware Info
 #if defined(PLATFORM_WIN32) 
 		
-bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[], String nameSpace = "root\\cimv2")
-{
+bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[], String nameSpace = "root\\cimv2") {
 	HRESULT hRes;
 	
 	hRes = CoInitialize(NULL);
@@ -104,6 +106,7 @@ bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[], Strin
 	    }
 		for (int col = 0; col < data.GetCount(); ++col) {
 			VARIANT vProp;
+			VariantInit(&vProp);
 			BSTR strClassProp = SysAllocString(data[col].ToWString());
 	        hRes = pClassObject->Get(strClassProp, 0, &vProp, 0, 0);
 	        if(hRes != S_OK){
@@ -116,6 +119,7 @@ bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[], Strin
 		    }
 			SysFreeString(strClassProp);        
 			ret[col]->Add(GetVARIANT(vProp));
+			VariantClear(&vProp);
 			rt = true;
 		}
 		row++;
@@ -213,7 +217,6 @@ String GetMacAddressWMI() {
 	return Null;
 }
 */
-#include <winsock2.h>
 #include <iphlpapi.h>
 
 Array <NetAdapter> GetAdapterInfo() {
@@ -249,17 +252,27 @@ Array <NetAdapter> GetAdapterInfo() {
     	if (pUnicast != NULL) {
           	for (int i = 0; pUnicast != NULL; i++) {
            		if (pUnicast->Address.lpSockaddr->sa_family == AF_INET) {
-					sockaddr_in *sa_in = (sockaddr_in *)pUnicast->Address.lpSockaddr;
+           			sockaddr_in *sa_in = (sockaddr_in *)pUnicast->Address.lpSockaddr;
+#ifdef COMPILER_MINGW
 					adapter.ip4 = inet_ntoa(sa_in->sin_addr);
-               	} /*else if (pUnicast->Address.lpSockaddr->sa_family == AF_INET6) {
-               		char buff[100];
-    				DWORD bufflen = 100;
-					sockaddr_in6 *sa_in6 = (sockaddr_in6 *)pUnicast->Address.lpSockaddr;
-					adapter.ip6 = inet_ntop(AF_INET6, &(sa_in6->sin6_addr), buff, bufflen);
-               	} */
+#else
+					Buffer<char> str(INET_ADDRSTRLEN);
+					inet_ntop(AF_INET, &(sa_in->sin_addr), str, INET_ADDRSTRLEN);
+					adapter.ip4 = str;
+#endif
+               	} else if (pUnicast->Address.lpSockaddr->sa_family == AF_INET6) {
+               		sockaddr_in6 *sa_in6 = (sockaddr_in6 *)pUnicast->Address.lpSockaddr;
+#ifdef COMPILER_MINGW
+					adapter.ip6 = "";
+#else
+               		Buffer<char> str(INET6_ADDRSTRLEN);
+					inet_ntop(AF_INET6, &(sa_in6->sin6_addr), str, INET6_ADDRSTRLEN);
+					adapter.ip6 = str;
+#endif
+               	} 
             	pUnicast = pUnicast->Next;
          	}
-      	} 
+      	}       	
 		switch (pAdd->IfType) {
 		case IF_TYPE_ETHERNET_CSMACD: 		adapter.type = "ETHERNET";	break;
 		case IF_TYPE_ISO88025_TOKENRING: 	adapter.type = "TOKENRING";	break;
@@ -277,7 +290,7 @@ Array <NetAdapter> GetAdapterInfo() {
 	return ret;
 }
 
-bool GetNetworkInfo(String &name, String &domain)
+/*bool GetNetworkInfo(String &name, String &domain)
 {
    	LPWKSTA_INFO_100 pBuf = NULL;
 
@@ -304,7 +317,7 @@ bool GetNetworkInfo(String &name, String &domain)
     	ret = true;
 	}
    	return ret;
-}
+}*/
 
 String GetHDSerial() {
 	Value vmbSerial;
@@ -407,6 +420,45 @@ void NetAdapter::Jsonize(JsonIO &json) {
 void NetAdapter::Serialize(Stream &stream) {
 	stream % description % fullname % mac % type;
 }
+
+bool GetNetworkInfo(String &name, String &domain, String &ip4, String &ip6) {
+	Buffer<char> sname(255);
+	
+	bool close = false;
+	if (0 != gethostname(sname, 255)) {
+#ifdef _WIN32
+		WSADATA wsa;
+		if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) 
+			return false;
+		if (0 != gethostname(sname, 255))
+			return false;	
+		close = true;
+#else
+		return false;
+#endif
+	}
+	name = sname;
+	
+	struct hostent *host = gethostbyname(sname);
+	domain = host->h_name;
+	
+#ifdef COMPILER_MINGW
+	ip4 = inet_ntoa(*(struct in_addr *)*host->h_addr_list);
+	ip6.Clear();
+#else
+	Buffer<char> str(max(INET_ADDRSTRLEN, INET6_ADDRSTRLEN));
+	inet_ntop(AF_INET, (void *)(struct in_addr *)*host->h_addr_list, str, INET_ADDRSTRLEN);
+	ip4 = str;
+	inet_ntop(AF_INET6, (void *)(struct in_addr *)*host->h_addr_list, str, INET6_ADDRSTRLEN);
+	ip6 = str;
+#endif
+	
+#ifdef _WIN32
+	if (close)
+		WSACleanup();
+#endif
+	return true;	
+}	
 
 
 #if defined (PLATFORM_POSIX)
@@ -571,8 +623,6 @@ Array <NetAdapter> GetAdapterInfo() {
 }
 */
 
-#include <arpa/inet.h>
-
 Array<NetAdapter> GetAdapterInfo()
 {
 	Array<NetAdapter> res;
@@ -704,15 +754,19 @@ Array<NetAdapter> GetAdapterInfo()
 		else
 			adapter.type = "OTHER";
 		
-		adapter.description = adapter.fullname;
+		adapter.description = adapter.fullname;		
+		
+		struct sock_addr *addr = (struct sock_addr *)&(iface->ifr_addr);
+		Buffer<char> str(max(INET_ADDRSTRLEN, INET6_ADDRSTRLEN));
+		inet_ntop(AF_INET, &(((struct sockaddr_in *)addr)->sin_addr), str, INET_ADDRSTRLEN);
+		adapter.ip4 = str;
+		inet_ntop(AF_INET6, &(((struct sockaddr_in *)addr)->sin_addr), str, INET6_ADDRSTRLEN);
+		adapter.ip6 = str;
 		
 		if (ioctl(sck, SIOCGIFADDR, iface) < 0) {
 			iface++;
 			continue;
 		}
-		
-        adapter.ip4 = inet_ntoa(((struct sockaddr_in *)&(iface->ifr_addr))->sin_addr);  
-		
 		iface++;
 	}
 	close(sck);
@@ -720,21 +774,6 @@ Array<NetAdapter> GetAdapterInfo()
 	return res;
 }
 
-bool GetNetworkInfo(String &name, String &domain)
-{
-	Buffer<char> sname(255), sdomain(255);
-	
-	bool ret = true;
-	if (0 == gethostname(sname, 255))
-		name = sname;
-	else 
-		ret = false;
-	if (0 == getdomainname(sdomain, 255))
-		domain = sdomain;
-	else 
-		ret = false;
-	return ret;
-}
 
 // Not implemented yet in Linux
 String GetHDSerial() {
@@ -1572,8 +1611,7 @@ bool Shutdown(String action) {
 #endif
 
 #ifdef PLATFORM_POSIX
-bool Shutdown(String action)
-{
+bool Shutdown(String action) {
 	if (action == "logoff") {
 		kill(1, SIGTSTP);
 		sync();
@@ -1587,17 +1625,25 @@ bool Shutdown(String action)
 		sync();
 		sleep(1);
 	} else if (action == "shutdown") {
+		sync();
+		sleep(1);
 #if __GNU_LIBRARY__ > 5
 		reboot(0xCDEF0123);
 #else
 		reboot(0xfee1dead, 672274793, 0xCDEF0123);
 #endif
+		sync();
+		sleep(1);
 	} else if (action == "reboot") {		// LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2
+		sync();
+		sleep(1);
 #if __GNU_LIBRARY__ > 5
 		reboot(0x01234567);
 #else
 		reboot(0xfee1dead, 672274793, 0x01234567);
 #endif
+		sync();
+		sleep(1);
 	} 
 	exit(0);
 	return true; 

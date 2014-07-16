@@ -89,6 +89,13 @@ Array_<Value>_`&[*@3 state])&]
 [s6; It does not work in all computers.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:GetNetworkInfo`(String`&`,String`&`,String`&`,String`&`):%- [@(0.0.255) bool]_[* Get
+NetworkInfo]([_^String^ String]_`&[*@3 name], [_^String^ String]_`&[*@3 domain], 
+[_^String^ String]_`&[*@3 ip4], [_^String^ String]_`&[*@3 ip6])&]
+[s2; Returns the local computer network [%-*@3 name], [%-*@3 domain], 
+[%-*@3 ip4] and [%-*@3 ip6].&]
+[s3; &]
+[s4;%- &]
 [s5;:GetMacAddress`(`):%- [@(0.0.255) String]_[* GetMacAddress]()&]
 [s2; Returns the [%-@3 MAC ]address in uppercase hexadecimal formated 
 like `"0A:0B:0C:0C:0D:0E`" or Null.&]

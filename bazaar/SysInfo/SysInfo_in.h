@@ -19,6 +19,8 @@
 	typedef ACCESS_MASK REGSAM;
 	#include <PowrProf.h>
 	#include <lm.h>
+	#include <winsock2.h>
+	#include <Ws2tcpip.h>
 	#ifndef PROCESS_QUERY_LIMITED_INFORMATION
 	#define PROCESS_QUERY_LIMITED_INFORMATION 0x1000
 	#endif	
@@ -48,6 +50,8 @@
 	#include <X11/Xatom.h>
 	#include <X11/extensions/XTest.h>
 	#include <X11/XKBlib.h>
+	
+	#include <arpa/inet.h>
 	#ifdef flagGUI
 		#define SetX11ErrorHandler();
 		#define SetSysInfoX11ErrorHandler();
