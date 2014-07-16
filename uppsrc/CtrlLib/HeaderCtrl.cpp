@@ -567,9 +567,10 @@ void HeaderCtrl::LeftDown(Point p, dword keyflags) {
 
 void HeaderCtrl::LeftDouble(Point p, dword keyflags)
 {
-	int q = -1 - GetSplit(p.x);
-	if(q >= 0)
-		col[q].WhenLeftDouble();
+	int q = GetSplit(p.x);
+	if(q >= 0 || IsNull(q))
+		return;
+	col[-1 - q].WhenLeftDouble();
 }
 
 void HeaderCtrl::RightDown(Point p, dword)
