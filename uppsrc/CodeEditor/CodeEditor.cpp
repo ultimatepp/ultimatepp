@@ -10,6 +10,9 @@ NAMESPACE_UPP
 #define IMAGEFILE   <CodeEditor/CodeEditor.iml>
 #include <Draw/iml_source.h>
 
+#define  TFILE <CodeEditor/CodeEditor.t>
+#include <Core/t.h>
+
 One<EditorSyntax> CodeEditor::GetSyntax(int line)
 {
 	CTIMING("GetSyntax");
@@ -636,7 +639,7 @@ void CodeEditor::SetI(Ctrl *edit)
 
 void CodeEditor::Goto() {
 	String line = AsString(GetCursorLine());
-	if(EditText(line, "Go to", "Line:"))
+	if(EditText(line, t_("Go to"), t_("Line:")))
 		SetCursor(GetPos(atoi(line) - 1));
 }
 
@@ -933,7 +936,7 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 
 void CodeEditor::PutI(WithDropChoice<EditString>& edit)
 {
-	edit.AddButton().SetMonoImage(CodeEditorImg::I()).Tip("Set word/selection (Ctrl+I)")
+	edit.AddButton().SetMonoImage(CodeEditorImg::I()).Tip(t_("Set word/selection (Ctrl+I)"))
 	    <<= THISBACK1(SetI, &edit);
 }
 

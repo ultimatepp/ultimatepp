@@ -280,7 +280,7 @@ protected:
 	bool             showspaces;
 	bool             showlines;
 	bool             showreadonly;
-	bool             dorectsel;
+	bool             dorectsel; // TODO: Refactor this ugly hack!
 
 	void   Paint0(Draw& w);
 
