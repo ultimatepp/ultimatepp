@@ -109,10 +109,12 @@ void SystemInfo::Fill() {
 		TextDeskVersion = deskVersion;
 	}
 
-	String nname, domain;
-	if (GetNetworkInfo(nname, domain)) {
+	String nname, domain, ip4, ip6;
+	if (GetNetworkInfo(nname, domain, ip4, ip6)) {
 		Textnname = nname;
 		TextDomain = domain;
+		TextIp4 = ip4;
+		TextIp6 = ip6;
 	}
 	
 	int memoryLoad;
@@ -217,10 +219,12 @@ void SystemInfo::Fill() {
 	Adapters.AddColumn("Description", 20);
 	Adapters.AddColumn("Fullname", 20);
 	Adapters.AddColumn("MAC", 10);
+	Adapters.AddColumn("IP4", 10);
+	Adapters.AddColumn("IP6", 10);
 	Array <NetAdapter> adapters = GetAdapterInfo();	
 	for (int i = 0; i < adapters.GetCount(); ++i) 
 		Adapters.Add(adapters[i].type, adapters[i].description, adapters[i].fullname, 
-				   adapters[i].mac);
+				   adapters[i].mac, adapters[i].ip4, adapters[i].ip6);
 	ButUpdate.WhenPush = THISBACK(ButUpdate_Push);
 }
 
