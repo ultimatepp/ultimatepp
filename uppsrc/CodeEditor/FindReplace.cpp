@@ -571,7 +571,7 @@ void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 		findreplace.itext = GetI();
 		SetLayout_BlockReplaceLayout(findreplace);
 		findreplace.SetRect(WithBlockReplaceLayout<EmptyClass>::GetLayoutSize());
-		findreplace.Title("Replace in selection");
+		findreplace.Title(t_("Replace in selection"));
 		findreplace.amend.Hide();
 		findreplace.prev.Hide();
 		findreplace.next.Ok() <<= findreplace.Breaker(IDOK);
@@ -600,26 +600,26 @@ void FindWildcardMenu(Callback1<const char *> cb, Point p, bool tablf, Ctrl *own
 {
 	MenuBar menu;
 	if(regexp) {
-		menu.Add("One or more spaces", callback1(cb, " +"));
-		menu.Add("One or more any characters", callback1(cb, ".+"));
-		menu.Add("Word", callback1(cb, "\\w+"));
-		menu.Add("Number", callback1(cb, "\\d+"));
-		menu.Add("Any character", callback1(cb, "."));
+		menu.Add(t_("One or more spaces"), callback1(cb, " +"));
+		menu.Add(t_("One or more any characters"), callback1(cb, ".+"));
+		menu.Add(t_("Word"), callback1(cb, "\\w+"));
+		menu.Add(t_("Number"), callback1(cb, "\\d+"));
+		menu.Add(t_("Any character"), callback1(cb, "."));
 		if(tablf) {
 			menu.Separator();
-			menu.Add("Tab", callback1(cb, "\\t"));
+			menu.Add(t_("Tab"), callback1(cb, "\\t"));
 		}
 	}
 	else {
-		menu.Add("One or more spaces", callback1(cb, "%"));
-		menu.Add("One or more any characters", callback1(cb, "*"));
-		menu.Add("C++ identifier", callback1(cb, "$"));
-		menu.Add("Number", callback1(cb, "#"));
-		menu.Add("Any character", callback1(cb, "?"));
+		menu.Add(t_("One or more spaces"), callback1(cb, "%"));
+		menu.Add(t_("One or more any characters"), callback1(cb, "*"));
+		menu.Add(t_("C++ identifier"), callback1(cb, "$"));
+		menu.Add(t_("Number"), callback1(cb, "#"));
+		menu.Add(t_("Any character"), callback1(cb, "?"));
 		if(tablf) {
 			menu.Separator();
-			menu.Add("Tab", callback1(cb, "\\t"));
-			menu.Add("Line feed", callback1(cb, "\\n"));
+			menu.Add(t_("Tab"), callback1(cb, "\\t"));
+			menu.Add(t_("Line feed"), callback1(cb, "\\n"));
 		}
 	}
 	menu.Execute(owner, p);
@@ -647,27 +647,27 @@ void CodeEditor::ReplaceWildcard()
 	MenuBar menu;
 	String ptxt;
 	if(findreplace.regexp) {
-		ptxt = "Matched subpattern %d";
+		ptxt = t_("Matched subpattern %d");
 	}
 	else {
-		menu.Add("Matched spaces", THISBACK1(InsertWildcard, "%"));
-		menu.Add("Matched one or more any characters", THISBACK1(InsertWildcard, "*"));
-		menu.Add("Matched C++ identifier", THISBACK1(InsertWildcard, "$"));
-		menu.Add("Matched number", THISBACK1(InsertWildcard, "#"));
-		menu.Add("Matched any character", THISBACK1(InsertWildcard, "?"));
+		menu.Add(t_("Matched spaces"), THISBACK1(InsertWildcard, "%"));
+		menu.Add(t_("Matched one or more any characters"), THISBACK1(InsertWildcard, "*"));
+		menu.Add(t_("Matched C++ identifier"), THISBACK1(InsertWildcard, "$"));
+		menu.Add(t_("Matched number"), THISBACK1(InsertWildcard, "#"));
+		menu.Add(t_("Matched any character"), THISBACK1(InsertWildcard, "?"));
 	}
-	menu.Add("0-based replace index", THISBACK1(InsertWildcard, "0"));
-	menu.Add("1-based replace index", THISBACK1(InsertWildcard, "1"));
+	menu.Add(t_("0-based replace index"), THISBACK1(InsertWildcard, "0"));
+	menu.Add(t_("1-based replace index"), THISBACK1(InsertWildcard, "1"));
 	menu.Separator();
 	for(int i = 1; i <= 9; i++)
 		menu.Add(Format(ptxt, i), THISBACK1(InsertWildcard, "@"+AsString(i)));
 	menu.Separator();
-	menu.Add("To upper", THISBACK1(InsertWildcard, "+"));
-	menu.Add("To lower", THISBACK1(InsertWildcard, "-"));
-	menu.Add("InitCaps", THISBACK1(InsertWildcard, "!"));
+	menu.Add(t_("To upper"), THISBACK1(InsertWildcard, "+"));
+	menu.Add(t_("To lower"), THISBACK1(InsertWildcard, "-"));
+	menu.Add(t_("InitCaps"), THISBACK1(InsertWildcard, "!"));
 	menu.Separator();
-	menu.Add("Tab", THISBACK1(InsertWildcard, "\\t"));
-	menu.Add("Line feed", THISBACK1(InsertWildcard, "\\n"));
+	menu.Add(t_("Tab"), THISBACK1(InsertWildcard, "\\t"));
+	menu.Add(t_("Line feed"), THISBACK1(InsertWildcard, "\\n"));
 	int l, h;
 	findreplace.replace.GetSelection(l, h);
 	iwc.Clear();

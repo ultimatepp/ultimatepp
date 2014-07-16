@@ -15,6 +15,7 @@ NAMESPACE_UPP
 #define IMAGEFILE   <CodeEditor/CodeEditor.iml>
 #include <Draw/iml_header.h>
 
+
 void FindWildcardMenu(Callback1<const char *> cb, Point p, bool tablf, Ctrl *owner, bool regexp);
 
 struct LineInfoRecord {

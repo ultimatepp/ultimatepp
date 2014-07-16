@@ -582,6 +582,7 @@ void LineEdit::LeftDown(Point p, dword flags) {
 	}
 	dorectsel = flags & K_ALT;
 	PlaceCaret(mpos, (flags & K_SHIFT) || dorectsel);
+	dorectsel = false;
 	SetFocus();
 	SetCapture();
 }
@@ -902,6 +903,7 @@ bool LineEdit::Key(dword key, int count) {
 		SelectAll();
 		break;
 	default:
+		dorectsel = false;
 		if(IsReadOnly())
 			return MenuBar::Scan(WhenBar, key);
 		switch(key) {
@@ -928,6 +930,7 @@ bool LineEdit::Key(dword key, int count) {
 		}
 		return true;
 	}
+	dorectsel = false;
 	Sync();
 	return true;
 }
