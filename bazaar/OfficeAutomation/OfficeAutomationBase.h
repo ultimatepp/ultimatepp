@@ -1,6 +1,8 @@
 #ifndef _OfficeAutomationBase_h
 #define _OfficeAutomationBase_h
 
+#include <Ole/Ole.h>
+
 using namespace Upp;
 
 #include "OfficeAutomationMethods.h"
@@ -21,15 +23,15 @@ public:
     void Optional();
     void ObjectOle(::ObjectOle var);
     void Time(Upp::Time t);
-    void ArrayDim(int sizeX);
-    void ArrayDim(int sizeX, int sizeY);
-    void ArraySetValue(int x, ::Value value);
-    void ArraySetVariant(int x, VariantOle &value);
-    void ArraySetValue(int x, int y, ::Value value);
-    void ArraySetVariant(int x, int y, VariantOle &value);
+    bool ArrayDim(int sizeX);
+    bool ArrayDim(int sizeX, int sizeY);
+    bool ArrayDestroy();
+    bool ArraySetValue(int x, ::Value value);
+    bool ArraySetVariant(int x, VariantOle &value);
+    bool ArraySetValue(int x, int y, ::Value value);
+    bool ArraySetVariant(int x, int y, VariantOle &value);
     void Value(::Value value);
 
-public:    
     VARIANT var;
 };
 	

@@ -22,6 +22,8 @@ VariantOle::VariantOle() {
 VariantOle::~VariantOle() {
     if (var.vt == VT_BSTR)
         SysFreeString(var.bstrVal);
+    else if ((var.vt == (VT_ARRAY | VT_VARIANT)) && (var.parray != 0))
+        SafeArrayDestroy(var.parray);
 }
 
 void VariantOle::Bool(bool val) {
@@ -79,43 +81,51 @@ void VariantOle::Time(Upp::Time t) {
     SystemTimeToVariantTime(&stime, &(var.date));
 }
 
-void VariantOle::ArrayDim(int sizeX) {
+bool VariantOle::ArrayDim(int sizeX) {
     var.vt = VT_ARRAY | VT_VARIANT;
     SAFEARRAYBOUND sab[1];		// 1 dimension
 	sab[0].lLbound = 1; sab[0].cElements = sizeX;
 	var.parray = SafeArrayCreate(VT_VARIANT, 1, sab);
+	return var.parray != 0;
 }
 
-void VariantOle::ArrayDim(int sizeX, int sizeY) {
+bool VariantOle::ArrayDim(int sizeX, int sizeY) {
     var.vt = VT_ARRAY | VT_VARIANT;
     SAFEARRAYBOUND sab[2];		// 2 dimension
 	sab[0].lLbound = 1; sab[0].cElements = sizeY;
 	sab[1].lLbound = 1; sab[1].cElements = sizeX;
 	var.parray = SafeArrayCreate(VT_VARIANT, 2, sab);
+	return var.parray != 0;
 }
 
-void VariantOle::ArraySetValue(int x, ::Value value) {
+bool VariantOle::ArrayDestroy() { 
+	bool ret = SafeArrayDestroy(var.parray) == S_OK;
+	var.parray = 0;
+	return ret;
+}
+
+bool VariantOle::ArraySetValue(int x, ::Value value) {
 	VariantOle tmp;
 	tmp.Value(value);
 	long indices[] = {x};
-	SafeArrayPutElement(var.parray, indices, (void *)&tmp);
+	return S_OK == SafeArrayPutElement(var.parray, indices, (void *)&tmp);
 }
 
-void VariantOle::ArraySetVariant(int x, VariantOle &value) {
+bool VariantOle::ArraySetVariant(int x, VariantOle &value) {
 	long indices[] = {x};
-	SafeArrayPutElement(var.parray, indices, (void *)&value);
+	return S_OK == SafeArrayPutElement(var.parray, indices, (void *)&value);
 }
 
-void VariantOle::ArraySetValue(int x, int y, ::Value value) {
+bool VariantOle::ArraySetValue(int x, int y, ::Value value) {
 	VariantOle tmp;
 	tmp.Value(value);
 	long indices[] = {y, x};
-	SafeArrayPutElement(var.parray, indices, (void *)&tmp);
+	return S_OK == SafeArrayPutElement(var.parray, indices, (void *)&tmp);
 }
 
-void VariantOle::ArraySetVariant(int x, int y, VariantOle &value) {
+bool VariantOle::ArraySetVariant(int x, int y, VariantOle &value) {
 	long indices[] = {y, x};
-	SafeArrayPutElement(var.parray, indices, (void *)&value);
+	return S_OK == SafeArrayPutElement(var.parray, indices, (void *)&value);
 }
 
 void VariantOle::Value(::Value value) {
@@ -171,7 +181,7 @@ bool Ole::Close() {	// Uninitialize COM for this thread
 }
 
 // Invoke() - Automation helper function
-bool Ole::Invoke(int autoType, VARIANT *pvResult, IDispatch *pDisp, String name, int cArgs ...) {
+bool Ole::Invoke(int autoType, VARIANT *pvResult, IDispatch *pDisp, String name, int cArgs, ...) {
     // Begin variable-argument lis
     va_list marker;
     va_start(marker, cArgs);
@@ -542,21 +552,46 @@ bool MSSheet::EnableCommandVars(bool enable) {
 	return Ole::SetValue(App, "Enabled", vEnabled);
 }
 
-void MSSheet::DefMatrix(int width, int height) {
-	Matrix.ArrayDim(width, height);
+bool MSSheet::MatrixAllocate(int width, int height) {
+	return Matrix.ArrayDim(width, height);
 }
 
-void MSSheet::SetMatrixValue(int x, int y, ::Value value) {
-	Matrix.ArraySetValue(x, y, value);
+bool MSSheet::MatrixDelete() {
+	return Matrix.ArrayDestroy();
 }
 
-bool MSSheet::FillSelectionMatrix() {
+bool MSSheet::MatrixSetValue(int x, int y, ::Value value) {
+	return Matrix.ArraySetValue(x, y, value);
+}
+
+bool MSSheet::MatrixFillSelection() {
 	if (!Range)
 		return false;
 
-	bool ret = Ole::Invoke(DISPATCH_PROPERTYPUT, NULL, Range, "Value", 1, Matrix.var);
+	bool ret = Ole::Invoke(DISPATCH_PROPERTYPUT, NULL, Range, "Value", 1, VARIANT(Matrix.var));
 
 	return ret;
+}
+
+bool MSSheet::MatrixFill(int fromX, int fromY, Vector<Vector<Value> > &data) {
+	if (data.IsEmpty())
+		return false;
+	int height = data.GetCount();
+	int width = data[0].GetCount();
+	int toX = fromX + width - 1;	
+	int toY = fromY + height - 1;
+	if (!Select(fromX, fromY, toX, toY)) return false;
+	if (!MatrixAllocate(width, height)) return false;
+	try {
+		for (int row = 0; row < height; ++row)
+			for (int col = 0; col < width; ++col)
+				if (!MatrixSetValue(col + 1, row + 1, data[row][col]))  throw;
+		if (!MatrixFillSelection()) throw;
+	} catch (...) {
+		MatrixDelete();
+		return false;
+	}
+	return MatrixDelete();
 }
 
 // cell in textual format like "B14" 
@@ -1769,16 +1804,31 @@ bool OPENSheet::Select() {
 	return true;
 }
 
-void OPENSheet::DefMatrix(int width, int height) {
-	return;
-}
-
-void OPENSheet::SetMatrixValue(int x, int y, ::Value value) {
-	return;
-}
-
-bool OPENSheet::FillSelectionMatrix() {
+bool OPENSheet::MatrixAllocate(int width, int height) {
 	return false;
+}
+
+bool OPENSheet::MatrixDelete() {
+	return false;
+}
+
+bool OPENSheet::MatrixSetValue(int x, int y, ::Value value) {
+	return false;
+}
+
+bool OPENSheet::MatrixFillSelection() {
+	return false;
+}
+
+bool OPENSheet::MatrixFill(int fromX, int fromY, Vector<Vector<Value> > &data) {
+	if (data.IsEmpty())
+		return false;
+	int height = data.GetCount();
+	int width = data[0].GetCount();
+	for (int row = 0; row < height; ++row)
+		for (int col = 0; col < width; ++col)
+			SetValue(col + fromX, row + fromY, data[row][col]);	
+	return true;
 }
 
 bool OPENSheet::Replace(Value search, Value replace) {

@@ -21,6 +21,7 @@ typedef struct tagCOGETSERVERPID_OBJREFHDR
 } COGETSERVERPID_OBJREFHDR;
 #pragma pack(pop)
 
+
 HRESULT CoGetServerPID(IUnknown* punk, DWORD* pdwPID)
 {
   HRESULT hr;

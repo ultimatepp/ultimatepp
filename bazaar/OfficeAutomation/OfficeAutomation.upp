@@ -7,7 +7,7 @@ uses
 	Functions4U,
 	SysInfo;
 
-library(WIN32) Oleaut32;
+library(WIN32) "uuid oleaut32 ";
 
 file
 	OfficeSheet.cpp,
@@ -16,6 +16,7 @@ file
 	OfficeAutomation.cpp,
 	OfficeAutomationMethods.h,
 	OfficeAutomationBase.h,
+	cogetserverpid\uuid.c,
 	cogetserverpid\cogetserverpid.cpp,
 	cogetserverpid\LICENSE,
 	srcdoc.tpp,

@@ -53,7 +53,6 @@ String OfficeSheet::ColRowToCell(const int col, const int row) {
 	StringBuffer bCell(len);
 	if (len == 2) {
 		bCell[0] = 'A' + firstLetter - 1;
-		bCell[1] = 'A' + secondLetter - 1;
 	} else if (len == 1)
 		bCell[0] = 'A' + secondLetter - 1;
 	else
@@ -241,14 +240,20 @@ bool OfficeSheet::Select(int fromX, int fromY, int toX, int toY) {return (static
 bool SheetPlugin::EnableCommandVars(bool) {return false;}
 bool OfficeSheet::EnableCommandVars(bool enable) {return (static_cast<DocPlugin *>(GetData()))->EnableCommandVars(enable);}
 	
-void SheetPlugin::DefMatrix(int width, int height) {}
-void OfficeSheet::DefMatrix(int width, int height) {(static_cast<SheetPlugin *>(GetData()))->DefMatrix(width, height);}
+bool SheetPlugin::MatrixAllocate(int width, int height) {return false;}
+bool OfficeSheet::MatrixAllocate(int width, int height) {return (static_cast<SheetPlugin *>(GetData()))->MatrixAllocate(width, height);}
 
-bool SheetPlugin::FillSelectionMatrix() {return false;}
-bool OfficeSheet::FillSelectionMatrix() {return (static_cast<SheetPlugin *>(GetData()))->FillSelectionMatrix();}
+bool SheetPlugin::MatrixDelete() {return false;}
+bool OfficeSheet::MatrixDelete() {return (static_cast<SheetPlugin *>(GetData()))->MatrixDelete();}
 
-void SheetPlugin::SetMatrixValue(int i, int j, ::Value value) {}
-void OfficeSheet::SetMatrixValue(int i, int j, ::Value value) {(static_cast<SheetPlugin *>(GetData()))->SetMatrixValue(i, j, value);}
+bool SheetPlugin::MatrixFillSelection() {return false;}
+bool OfficeSheet::MatrixFillSelection() {return (static_cast<SheetPlugin *>(GetData()))->MatrixFillSelection();}
+
+bool SheetPlugin::MatrixFill(int fromX, int fromY, Vector<Vector<Value> > &data) {return false;}
+bool OfficeSheet::MatrixFill(int fromX, int fromY, Vector<Vector<Value> > &data) {return (static_cast<SheetPlugin *>(GetData()))->MatrixFill(fromX, fromY, data);}
+
+bool SheetPlugin::MatrixSetValue(int i, int j, ::Value value) {return false;}
+bool OfficeSheet::MatrixSetValue(int i, int j, ::Value value) {return (static_cast<SheetPlugin *>(GetData()))->MatrixSetValue(i, j, value);}
 
 bool SheetPlugin::SaveAs(String fileName, String _type) {return false;}
 bool OfficeSheet::SaveAs(String fileName, String _type) {return (static_cast<SheetPlugin *>(GetData()))->SaveAs(fileName, _type);}
