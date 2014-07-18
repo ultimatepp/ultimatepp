@@ -1,5 +1,7 @@
 #include <CtrlLib/CtrlLib.h>
 
+#define LTIMING(x)  // RTIMING(x)
+
 NAMESPACE_UPP
 
 TextCtrl::TextCtrl()
@@ -91,34 +93,135 @@ void   TextCtrl::CachePos(int pos) {
 	cpos = pos - p;
 }
 
-int   TextCtrl::Load(Stream& s, byte charset) {
+int   TextCtrl::Load(Stream& in, byte charset) {
 	Clear();
 	line.Clear();
 	ClearLines();
 	StringBuffer ln;
 	total = 0;
 	SetCharset(charset);
-	if(charset == CHARSET_UTF8_BOM && s.GetLeft() >= 3) {
-		int64 pos = s.GetPos();
+	charset = ResolveCharset(charset);
+	if(charset == CHARSET_UTF8_BOM && in.GetLeft() >= 3) {
+		int64 pos = in.GetPos();
 		byte h[3];
-		if(!(s.Get(h, 3) == 3 && h[0] == 0xEF && h[1] == 0xBB && h[2] == 0xBF))
-			s.Seek(pos);
+		if(!(in.Get(h, 3) == 3 && h[0] == 0xEF && h[1] == 0xBB && h[2] == 0xBF))
+			in.Seek(pos);
 		charset = CHARSET_UTF8;
 	}
 	bool cr = false;
 	byte b8 = 0;
-	while(!s.IsEof()) {
-		int c = s.Get();
+#if 1
+	if(charset == CHARSET_UTF8)
+		for(;;) {
+			byte h[200];
+			int size;
+			const byte *s = in.GetSzPtr(size);
+			if(size == 0)  {
+				size = in.Get(h, 200);
+				s = h;
+				if(size == 0)
+					break;
+			}
+			const byte *e = s + size;
+			while(s < e) {
+				const byte *b = s;
+				{
+					LTIMING("ChkLoop UTF8");
+					while(s < e && (*s >= ' ' || *s == '\t')) {
+						s++;
+						while(s < e && *s >= ' ')
+							s++;
+					}
+				}
+				if(b < s) {
+					LTIMING("ln.Cat");
+					ln.Cat((const char *)b, (const char *)s);
+				}
+				if(*s == '\r')
+					cr = true;
+				if(*s == '\n') {
+					LTIMING("ADD");
+					total += ln.GetCount() + 1;
+					Ln& l = line.Add();
+					l.len = ln.GetCount();
+					l.text = ln;
+					ln.Clear();
+					b8 = 0;
+					b = s;
+				}
+				s++;
+			}
+		}
+	else
+		for(;;) {
+			byte h[200];
+			int size;
+			const byte *s = in.GetSzPtr(size);
+			if(size == 0)  {
+				size = in.Get(h, 200);
+				s = h;
+				if(size == 0)
+					break;
+			}
+			const byte *e = s + size;
+			while(s < e) {
+				const byte *b = s;
+				{
+					LTIMING("ChkLoop");
+					while(s < e && (*s >= ' ' || *s == '\t')) {
+						b8 |= *s++;
+						while(s < e && *s >= ' ' && *s < 128) // Interestingly, this speeds things up
+							s++;
+						while(s < e && *s >= ' ')
+							b8 |= *s++;
+					}
+				}
+				if(b < s) {
+					LTIMING("ln.Cat");
+					ln.Cat((const char *)b, (const char *)s);
+				}
+				if(*s == '\r')
+					cr = true;
+				if(*s == '\n') {
+					if(b8 & 128) {
+						LTIMING("ToUnicode");
+						WString w = ToUnicode(~ln, ln.GetCount(), charset);
+						line.Add(w);
+						total += w.GetLength() + 1;
+					}
+					else {
+						LTIMING("ADD");
+						total += ln.GetCount() + 1;
+						Ln& l = line.Add();
+						l.len = ln.GetCount();
+						l.text = ln;
+					}
+					ln.Clear();
+					b8 = 0;
+					b = s;
+				}
+				s++;
+			}
+		}
+#else
+	while(!in.IsEof()) {
+		int c;
+		{
+			LTIMING("Get");
+			c = in.Get();
+		}
 		if(c == '\r')
 			cr = true;
 		if(c == '\n') {
-			if(charset != CHARSET_UTF8 || (b8 & 128)) {
+			if(charset != CHARSET_UTF8 && (b8 & 128)) {
+				LTIMING("ToUnicode");
 				WString w = ToUnicode(~ln, ln.GetCount(), charset);
 				line.Add(w);
 				total += w.GetLength() + 1;
 			}
 			else {
 				total += ln.GetCount() + 1;
+				LTIMING("ADD");
 				Ln& l = line.Add();
 				l.len = ln.GetCount();
 				l.text = ln;
@@ -127,10 +230,12 @@ int   TextCtrl::Load(Stream& s, byte charset) {
 			b8 = 0;
 		}
 		if(c >= ' ' || c == '\t') {
+			LTIMING("Cat");
 			b8 |= c;
 			ln.Cat(c);
 		}
 	}
+#endif
 	WString w = ToUnicode(~ln, ln.GetCount(), charset);
 	line.Add(w);
 	total += w.GetLength();
@@ -158,11 +263,14 @@ void   TextCtrl::Save(Stream& s, byte charset, int line_endings) const {
 	for(int i = 0; i < line.GetCount(); i++) {
 		if(i)
 			s.Put(le);
-		String txt = charset == CHARSET_UTF8 ? line[i].text
-		                                     : FromUnicode(line[i], charset);
-		const char *e = txt.End();
-		for(const char *w = txt; w != e; w++)
-			s.Put(*w == DEFAULTCHAR ? '?' : *w);
+		if(charset == CHARSET_UTF8)
+			s.Put(line[i].text);
+		else {
+			String txt = FromUnicode(line[i], charset);
+			const char *e = txt.End();
+			for(const char *w = txt; w != e; w++)
+				s.Put(*w == DEFAULTCHAR ? '?' : *w);
+		}
 	}
 }
 

@@ -404,6 +404,15 @@ but it is allowed to return NULL `- in that case you need to
 output data using Put. Advances stream by [%-*@3 size].&]
 [s3; &]
 [s4;%- &]
+[s5;:Stream`:`:GetSzPtr`(int`&`):%- [@(0.0.255) const]_[_^byte^ byte]_`*[* GetSzPtr]([@(0.0.255) i
+nt`&]_[*@3 size])&]
+[s2; This is a special optimization method, it returns a pointer 
+to data at current position of stream, sets [%-*@3 size] to the 
+maximal possible amount of bytes that can be read from this pointer 
+and advances stream by this size. [%-*@3 size] can be set to zero, 
+in that case stream has to be read by another means (e.g. Get).&]
+[s3; &]
+[s4;%- &]
 [s5;:Stream`:`:Put`(const void`*`,int`):%- [@(0.0.255) void]_[* Put]([@(0.0.255) const]_[@(0.0.255) v
 oid]_`*[*@3 data], [@(0.0.255) int]_[*@3 size])&]
 [s2; Writes a block of raw binary data to the output stream.&]
