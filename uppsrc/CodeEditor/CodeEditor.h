@@ -235,7 +235,7 @@ protected:
 	bool    persistent_find_replace;
 	bool    do_ff_restore_pos;
 
-	int     ff_restore_pos;
+	int     ff_start_pos;
 
 	FindReplaceDlg findreplace;
 	

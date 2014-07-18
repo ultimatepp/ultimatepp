@@ -23,6 +23,16 @@ public:
 	TimeStop();
 };
 
+struct TimeStopper {
+	const char *name;
+	TimeStop tm;
+	
+	TimeStopper(const char *name) : name(name) {}
+	~TimeStopper() { RLOG(name << " " << tm); }
+};
+
+#define RTIMESTOP(name) TimeStopper COMBINE(sTmStop, __LINE__)(name);
+
 void   SetAssertFailedHook(void (*h)(const char *));
 
 void   ReloadIniFile();

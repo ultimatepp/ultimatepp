@@ -27,7 +27,7 @@ INITBLOCK {
 	RegisterCSyntax("cs", CSyntax::HIGHLIGHT_CS, "*.cs", "C#");
 	RegisterCSyntax("json", CSyntax::HIGHLIGHT_JSON, "*.json", "JSON");
 	RegisterCSyntax("css", CSyntax::HIGHLIGHT_CSS, "*.css", "Cascading Style Sheet");
-	RegisterCSyntax("sql", CSyntax::HIGHLIGHT_SQL, "*.sql", "SQL script");
+	RegisterCSyntax("sql", CSyntax::HIGHLIGHT_SQL, "*.sql *.ddl", "SQL script");
 	RegisterCSyntax("lay", CSyntax::HIGHLIGHT_LAY, "*.lay", "U++ layout (.lay)");
 	RegisterCSyntax("sch", CSyntax::HIGHLIGHT_SCH, "*.sch", "U++ SQL schema (.sch)");
 	RegisterCSyntax("t", CSyntax::HIGHLIGHT_T, "*.t *.jt", "U++ translation (.t)");
