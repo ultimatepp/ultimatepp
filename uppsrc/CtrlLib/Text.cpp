@@ -110,7 +110,6 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 	}
 	bool cr = false;
 	byte b8 = 0;
-#if 1
 	if(charset == CHARSET_UTF8)
 		for(;;) {
 			byte h[200];
@@ -203,39 +202,7 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 				s++;
 			}
 		}
-#else
-	while(!in.IsEof()) {
-		int c;
-		{
-			LTIMING("Get");
-			c = in.Get();
-		}
-		if(c == '\r')
-			cr = true;
-		if(c == '\n') {
-			if(charset != CHARSET_UTF8 && (b8 & 128)) {
-				LTIMING("ToUnicode");
-				WString w = ToUnicode(~ln, ln.GetCount(), charset);
-				line.Add(w);
-				total += w.GetLength() + 1;
-			}
-			else {
-				total += ln.GetCount() + 1;
-				LTIMING("ADD");
-				Ln& l = line.Add();
-				l.len = ln.GetCount();
-				l.text = ln;
-			}
-			ln.Clear();
-			b8 = 0;
-		}
-		if(c >= ' ' || c == '\t') {
-			LTIMING("Cat");
-			b8 |= c;
-			ln.Cat(c);
-		}
-	}
-#endif
+
 	WString w = ToUnicode(~ln, ln.GetCount(), charset);
 	line.Add(w);
 	total += w.GetLength();
