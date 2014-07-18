@@ -127,9 +127,11 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 				{
 					LTIMING("ChkLoop UTF8");
 					while(s < e && (*s >= ' ' || *s == '\t')) {
-						s++;
-						while(s < e && *s >= ' ')
+						b8 |= *s++;
+						while(s < e && *s >= ' ' && *s < 128) // Interestingly, this speeds things up
 							s++;
+						while(s < e && *s >= ' ')
+							b8 |= *s++;
 					}
 				}
 				if(b < s) {
@@ -140,9 +142,10 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 					cr = true;
 				if(*s == '\n') {
 					LTIMING("ADD");
-					total += ln.GetCount() + 1;
+					int len = (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
+					total += len + 1;
 					Ln& l = line.Add();
-					l.len = ln.GetCount();
+					l.len = len;
 					l.text = ln;
 					ln.Clear();
 					b8 = 0;
