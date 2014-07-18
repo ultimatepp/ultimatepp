@@ -69,6 +69,7 @@ void __LOGF__(const char *format, ...);
 #define HITCOUNT(x)      RHITCOUNT(x)
 #define ACTIVATE_TIMING()    UPP::TimingInspector::Activate(true);
 #define DEACTIVATE_TIMING()  UPP::TimingInspector::Activate(false);
+#define TIMESTOP(x)      RTIMESTOP(x)
 
 #define DLOG(x)          LOG(x)
 #define DDUMP(x)         DUMP(x)
