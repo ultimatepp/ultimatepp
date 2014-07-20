@@ -1157,6 +1157,7 @@ void Ide::ContextGoto0(int pos)
 		ci++;
 	}
 	editor.Context(parser, ci);
+
 	if(xp.GetCount() == 0 && IsNull(tp))
 		type.Add(parser.current_scope);
 	else {
@@ -1167,8 +1168,19 @@ void Ide::ContextGoto0(int pos)
 	String id = editor.GetWord(pos);
 	if(id.GetCount() == 0)
 		return;
+
+	if(xp.GetCount() == 0) {
+		q = parser.local.Find(id);
+		if(q >= 0) {
+			AddHistory();
+			editor.SetCursor(editor.GetPos(parser.local[q].line - 1));
+			return;
+		}
+	}
+
 	Vector<String> scope;
 	bool istype = false;
+
 	if(xp.GetCount() == 0) { // 'String'
 		String t = Qualify(CodeBase(), parser.current_scope, id);
 		if(CodeBase().Find(t) >= 0) {
@@ -1191,15 +1203,13 @@ void Ide::ContextGoto0(int pos)
 			if(GetIdScope(r, type[i], id, done))
 				scope.Add(r);
 		}
+
 	if(scope.GetCount() == 0) {
 		Index<String> done;
 		String r;
 		if(GetIdScope(r, "", id, done)) // global
 			scope.Add(r);
 	}
-
-	if(scope.GetCount() == 0)
-		return;
 
 	for(int j = 0; j < scope.GetCount(); j++) {
 		q = CodeBase().Find(scope[j]);

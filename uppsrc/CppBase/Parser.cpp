@@ -785,11 +785,13 @@ Array<Parser::Decl> Parser::Declaration(bool l0, bool more)
 
 void Parser::Locals(const String& type)
 {
+	Line();
 	Array<Parser::Decl> d = Declaration(true, true);
 	for(int i = 0; i < d.GetCount(); i++) {
 		Local& l = local.Add(d[i].name);
 		l.type = type;
 		l.isptr = d[i].isptr;
+		l.line = line + 1;
 	}
 }
 
@@ -829,6 +831,7 @@ bool Parser::TryDecl()
 	if(t == tk_int || t == tk_bool || t == tk_float || t == tk_double || t == tk_void ||
 	   t == tk_long || t == tk_signed || t == tk_unsigned || t == tk_short ||
 	   t == tk_char || t == tk___int8 || t == tk___int16 || t == tk___int32 || t == tk___int64) {
+	    q++;
 		while(lex[q] == '*' || lex[q] == '&')
 			q++;
 		if(!lex.IsId(q))
@@ -1246,6 +1249,7 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body,
 			Local& l = local.Add(p.name);
 			l.type = p.type;
 			l.isptr = p.isptr;
+			l.line = line + 1;
 		}
 		ScAdd(param, p.natural);
 		if(i)

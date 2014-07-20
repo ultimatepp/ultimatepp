@@ -436,6 +436,7 @@ public:
 	struct Local : Moveable<Local> {
 		String type;
 		bool   isptr;
+		int    line;
 	};
 
 	VectorMap<String, Local>  local;
