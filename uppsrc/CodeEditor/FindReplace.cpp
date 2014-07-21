@@ -514,6 +514,8 @@ int CodeEditor::BlockReplace()
 
 void CodeEditor::OpenNormalFindReplace0(bool replace)
 {
+	if(GetLength() > 1000000)
+		findreplace.incremental <<= false;
 	findreplace.Setup(replace);
 	findreplace.find.SetFocus();
 	findreplace.itext = GetI();
