@@ -984,6 +984,7 @@ public:
 		void  ScanFile();
 		bool  SwapSIf(const char *cref);
 		void  SwapS();
+		void  FindId(const String& id);
 		void  ContextGoto0(int pos);
 		void  ContextGoto();
 		void  CtrlClick(int pos);

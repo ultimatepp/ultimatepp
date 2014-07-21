@@ -1067,6 +1067,30 @@ bool IsPendif(const String& l)
 	return l.Find("#endif") >= 0;
 }
 
+void Ide::FindId(const String& id)
+{
+	int pos = editor.GetCursor();
+	int h = min(editor.GetLength(), pos + 4000);
+	for(;;) {
+		if(pos >= h || findarg(editor[pos], ';', '{', '}') >= 0)
+			break;
+		if(iscib(editor[pos])) {
+			int p0 = pos;
+			String tid;
+			while(pos < h && iscid(editor[pos])) {
+				tid.Cat(editor[pos]);
+				pos++;
+			}
+			if(tid == id) {
+				editor.SetCursor(p0);
+				return;
+			}
+		}
+		else
+			pos++;
+	}	
+}
+
 void Ide::ContextGoto0(int pos)
 {
 	if(designer)
@@ -1174,6 +1198,7 @@ void Ide::ContextGoto0(int pos)
 		if(q >= 0) {
 			AddHistory();
 			editor.SetCursor(editor.GetPos(parser.local[q].line - 1));
+			FindId(id);
 			return;
 		}
 	}
@@ -1218,6 +1243,7 @@ void Ide::ContextGoto0(int pos)
 			for(int i = 0; i < n.GetCount(); i++) {
 				if(n[i].IsType() == istype && n[i].name == id) {
 					JumpToDefinition(n, i, scope[j]);
+					FindId(id);
 					return;
 				}
 			}
