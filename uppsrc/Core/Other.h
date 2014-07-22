@@ -48,6 +48,9 @@ public:
 	TT&         Create()                   { TT *q = new TT; Attach(q); return *q; }
 	T&          Create()                   { T *q = new T; Attach(q); return *q; }
 
+	template <class TT>
+	bool        Is() const                 { return dynamic_cast<const TT *>(ptr); }
+
 	bool        IsPicked() const           { return ptr == (T*)1; }
 	bool        IsEmpty() const            { Chk(); return !ptr; }
 
