@@ -280,7 +280,7 @@ bool MenuKeyHook(Ctrl *ctrl, dword key, int count)
 bool MenuMouseHook(Ctrl *ctrl, bool inframe, int event, Point p,
 	               int zdelta, dword keyflags)
 {
-	if(event & (Ctrl::MOUSEWHEEL|Ctrl::DOWN|Ctrl::UP))
+	if(findarg(event & Ctrl::ACTION, Ctrl::MOUSEWHEEL, Ctrl::DOWN, Ctrl::UP) >= 0)
 		s_doaltkey = false;
 	return false;
 }
