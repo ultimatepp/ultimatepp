@@ -88,6 +88,8 @@ struct Ide : public IdeContext, public MakeBuild {
 
 	virtual void             PutConsole(const char *s);
 	virtual void             PutVerbose(const char *s);
+	virtual void             PutLinking() {}
+	virtual void             PutLinkingEnd(bool ok) {}
 
 	virtual const Workspace& IdeWorkspace() const ;
 	virtual bool             IdeIsBuilding() const ;
