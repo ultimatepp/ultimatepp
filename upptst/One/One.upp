@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	One.cpp;
+
+mainconfig
+	"" = "SSE2";
+
