@@ -5,8 +5,8 @@ using namespace Upp;
 
 void Test(const InetMessage& msg, int ii, int count, const char *txt = NULL, const char *mime = NULL)
 {
-	LOG("Testing part " << ii);
 	String body = msg[ii].Decode();
+	LOG("Testing part " << ii << ' ' << body.GetCount());
 	ASSERT(body.GetCount() == count);
 	ASSERT(body.Find(txt) >= 0);
 	if(mime) {
@@ -34,6 +34,19 @@ CONSOLE_APP_MAIN
 	Test(msg, 1, 119, "Tato zpráva neobsahuje viry ani jiný škodlivý kód - avast! Antivirus je aktivní.");
 	Test(msg, 3, 909, "Tato zpráva neobsahuje viry ani jiný škodlivý kód -<a href=");
 	Test(msg, 4, 309891);
+	
+	DLOG("=========================================================");
+
+	String m1 = msg.GetMessage();
+	SaveFile(GetHomeDirFile("msg1.txt"), m1);
+	InetMessage msg2;
+	ASSERT(msg2.Read(m1));
+	String m2 = msg2.GetMessage();
+	SaveFile(GetHomeDirFile("msg2.txt"), m2);
+	ASSERT(m1 == m2);
+
+	DeleteFile(GetHomeDirFile("msg1.txt"));
+	DeleteFile(GetHomeDirFile("msg2.txt"));
 
 	DLOG("=========================================================");
 	ASSERT(msg.Read(LoadFile(GetDataFile("msg2.txt"))));
