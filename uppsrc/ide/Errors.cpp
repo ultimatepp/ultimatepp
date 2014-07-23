@@ -324,6 +324,11 @@ void Ide::PutLinkingEnd(bool ok)
 	linking = false;
 }
 
+bool IsDarkMismatch()
+{
+	return IsDark(SColorPaper()) != IsDark(HighlightSetup::GetHlStyle(HighlightSetup::PAPER_NORMAL).color);
+}
+
 void Ide::ConsoleLine(const String& line)
 {
 	if(linking) {
@@ -333,10 +338,12 @@ void Ide::ConsoleLine(const String& line)
 	ErrorInfo f;
 	if(FindLineError(line, error_cache, f)) {
 		if(findarg(f.kind, 1, 2) >= 0 || error.GetCount() == 0) {
+			Color paper = HighlightSetup::GetHlStyle(f.kind == 1 ? HighlightSetup::PAPER_ERROR
+			                                                     : HighlightSetup::PAPER_WARNING).color;
+			if(IsDarkMismatch())
+				paper = SColorPaper();
 			error.Add(GetFileName(f.file), f.lineno,
-			          AttrText(f.message)
-			          .NormalPaper(HighlightSetup::GetHlStyle(f.kind == 1 ? HighlightSetup::PAPER_ERROR
-			                                                              : HighlightSetup::PAPER_WARNING).color),
+			          AttrText(f.message).NormalPaper(paper),
 			          RawToValue(f));
 			addnotes = true;
 			return;
@@ -427,10 +434,16 @@ void Ide::FoundDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink,
 			int cw = fnt[h.chr];
 			if(h.chr == '\t')
 				cw = 4 * fnt[' '];
+			Color hpaper = HighlightSetup::GetHlStyle(HighlightSetup::PAPER_SELWORD).color;
+			Color hink = h.ink;
+			if(IsDarkMismatch()) {
+				hpaper = paper;
+				hink = ink;
+			}
 			if(i >= sl && i < sh && !(style & (CURSOR|SELECT|READONLY)))
-				w.DrawRect(x, y, cw, fcy, HighlightSetup::GetHlStyle(HighlightSetup::PAPER_SELWORD).color);
+				w.DrawRect(x, y, cw, fcy, hpaper);
 			if(h.chr != '\t')
-				w.DrawText(x, y, &h.chr, fnt, h.ink, 1);
+				w.DrawText(x, y, &h.chr, fnt, hink, 1);
 			x += cw;
 		}
 	}

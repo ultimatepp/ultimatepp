@@ -343,7 +343,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 					linkF = AppendFileName(folder, GetSoLinkName(hproduct));
 				}
 #endif
-				if(!res == 0) {
+				if(res) {
 					DeleteFile(hproduct);
 #ifdef PLATFORM_POSIX
 					if(HasFlag("SO")) {
