@@ -141,6 +141,7 @@ protected:
 	bool       errorbg:1;
 	bool       showspaces:1;
 	bool       no_internal_margin:1;
+	bool       autoselection:1;
 
 	bool    FrameIsEdge();
 	void    SetEdge(int i);

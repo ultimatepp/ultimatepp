@@ -13,6 +13,7 @@ public:
 	virtual void  LeftDouble(Point p, dword keyflags);
 	virtual void  LeftTriple(Point p, dword keyflags);
 	virtual void  RightDown(Point p, dword keyflags);
+	virtual String GetSelectionData(const String& fmt) const;
 
 private:
 	Rect          margin;
@@ -39,6 +40,7 @@ private:
 	String        GetLink(int pos, Point p) const;
 	void          RefreshSel();
 	void          RefreshRange(int a, int b);
+	WString       GetSelText() const;
 
 protected:
 	enum {
