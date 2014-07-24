@@ -247,7 +247,7 @@ struct CppItem {
 	int            file;
 	int            line;
 
-	byte           qualify_type, qualify_param;
+	bool           qualify_type, qualify_param;
 	int            serial;
 
 	bool           IsType() const      { return IsCppType(kind); }
@@ -257,6 +257,8 @@ struct CppItem {
 	bool           IsTemplate() const  { return IsCppTemplate(kind); }
 	
 	void           Serialize(Stream& s);
+	
+	void           Dump(Stream& s) const;
 
 	CppItem()      { at = decla = virt = false; qualify_type = qualify_param = true; serial = -1; isptr = false; }
 };
