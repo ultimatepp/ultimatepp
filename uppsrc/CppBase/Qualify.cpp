@@ -104,7 +104,7 @@ static String s_struct("struct");
 static String s_class("class");
 static String s_unsigned("unsigned");
 
-inline void Qualify(String& r, Scopefo& nf, const char *b, const char *s, byte& qual)
+inline void Qualify(String& r, Scopefo& nf, const char *b, const char *s)
 {
 	String type(b, s);
 	if(type.GetCount() == 0 || type == s_const ||
@@ -117,7 +117,7 @@ inline void Qualify(String& r, Scopefo& nf, const char *b, const char *s, byte& 
 	r << DoQualify(nf, type);
 }
 
-String QualifyIds(Scopefo& nf, const String& k, bool all, byte& qual)
+String QualifyIds(Scopefo& nf, const String& k, bool all)
 {
 	LTIMING("QualifyIds");
 	String r;
@@ -132,7 +132,7 @@ String QualifyIds(Scopefo& nf, const String& k, bool all, byte& qual)
 				if(iscid(*r.Last()))
 					r << ' ';
 				Scopefo nnf(nf.GetScope(), nf.base);
-				Qualify(r, nnf, b, s, qual);
+				Qualify(r, nnf, b, s);
 			}
 			else
 				r.Cat(b, s);
@@ -159,7 +159,7 @@ String QualifyIds(Scopefo& nf, const String& k, bool all, byte& qual)
 				const char *b = s++;
 				while(*s == ':' || iscid(*s)) s++;
 				if(all)
-					Qualify(r, nf, b, s, qual);
+					Qualify(r, nf, b, s);
 				else
 					r.Cat(b, s);
 			}
@@ -179,21 +179,21 @@ String Qualify(const CppBase& base, const String& scope, const String& type)
 {
 	Scopefo nf(base, scope);
 	byte dummy = 2;
-	return QualifyIds(nf, type, true, dummy);
+	return QualifyIds(nf, type, true);
 }
 
 String QualifyKey(const CppBase& base, const String& scope, const String& type)
 {
 	Scopefo nf(base, scope);
 	byte dummy = 2;
-	return QualifyIds(nf, type, false, dummy);
+	return QualifyIds(nf, type, false);
 }
 
 void QualifyTypes(CppBase& base, const String& scope, CppItem& m)
 {
 	Scopefo nf(base, scope);
-	m.qtype = QualifyIds(nf, m.type, true, m.qualify_type);
-	m.qptype = QualifyIds(nf, m.ptype, true, m.qualify_param);
+	m.qtype = QualifyIds(nf, m.type, true);
+	m.qptype = QualifyIds(nf, m.ptype, true);
 }
 
 void QualifyPass1(CppBase& base)
@@ -208,11 +208,11 @@ void QualifyPass1(CppBase& base)
 				m.serial = base.serial;
 				if(m.qualify_type) {
 					m.qualify_type = false;
-					m.qtype = QualifyIds(nf, m.type, true, m.qualify_type);
+					m.qtype = QualifyIds(nf, m.type, true);
 				}
 				if(m.qualify_param) {
 					m.qualify_param = false;
-					m.qptype = QualifyIds(nf, m.ptype, true, m.qualify_param);
+					m.qptype = QualifyIds(nf, m.ptype, true);
 				}
 				m.qitem = m.item;
 			}
@@ -256,12 +256,12 @@ void QualifyPass2(CppBase& base)
 				m.serial = base.serial;
 				if(m.qualify_type) {
 					m.qualify_type = false;
-					m.qtype = QualifyIds(nf, m.type, true, m.qualify_type);
+					m.qtype = QualifyIds(nf, m.type, true);
 				}
 				if(m.qualify_param) {
 					m.qualify_param = false;
-					m.qptype = QualifyIds(nf, m.ptype, true, m.qualify_param);
-					m.qitem = m.IsCode() ? QualifyIds(nf, m.item, false, m.qualify_param)
+					m.qptype = QualifyIds(nf, m.ptype, true);
+					m.qitem = m.IsCode() ? QualifyIds(nf, m.item, false)
 					                     : m.item;
 				}
 			}

@@ -14,6 +14,7 @@ file
 	Base.cpp,
 	Scopefo.cpp,
 	Qualify.cpp,
+	CppItem.cpp,
 	Info readonly separator,
 	Copying;
 
