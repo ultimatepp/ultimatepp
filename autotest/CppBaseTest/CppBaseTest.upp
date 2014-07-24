@@ -1,0 +1,12 @@
+uses
+	Core,
+	CppBase;
+
+file
+	CppBaseTest.cpp,
+	Test.tc highlight cpp,
+	Test.r;
+
+mainconfig
+	"" = "SSE2";
+
