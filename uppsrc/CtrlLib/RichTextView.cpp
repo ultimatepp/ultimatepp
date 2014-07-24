@@ -94,12 +94,11 @@ Image RichTextView::CursorImage(Point p, dword keyflags)
 	return Image::Arrow();
 }
 
-void RichTextView::Copy()
+WString RichTextView::GetSelText() const
 {
 	if(anchor == cursor)
-		WriteClipboardUnicodeText(text.GetPlainText());
+		return text.GetPlainText();
 	else {
-		RefreshSel();
 		WString h = text.GetPlainText(false).Mid(sell, selh - sell);
 		WString r;
 		for(const wchar *s = ~h; s < h.End(); s++) {
@@ -107,8 +106,19 @@ void RichTextView::Copy()
 				r.Cat('\r');
 			r.Cat(*s);
 		}
-		WriteClipboardUnicodeText(r);
+		return r;
 	}
+}
+
+void RichTextView::Copy()
+{
+	RefreshSel();
+	WriteClipboardUnicodeText(GetSelText());
+}
+
+String RichTextView::GetSelectionData(const String& fmt) const
+{
+	return GetTextClip(GetSelText(), fmt);
 }
 
 void RichTextView::RightDown(Point p, dword keyflags)
@@ -178,6 +188,8 @@ void  RichTextView::RefreshSel()
 	}
 	sell = l;
 	selh = h;
+	if(IsSelection())
+		SetSelectionSource(ClipFmtsText());
 }
 
 void  RichTextView::LeftDown(Point p, dword keyflags)

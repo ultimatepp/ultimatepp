@@ -453,10 +453,14 @@ void EditField::GotFocus()
 			if(s != text) text = s;
 		}
 	}
-	if(!keep_selection) {
+	if(!keep_selection && !IsSelection()) {
 		anchor = 0;
 		cursor = text.GetLength();
+		autoselection = true;
 	}
+	else
+	if(IsSelection())
+		SetSelectionSource(ClipFmtsText());
 	Finish();
 	SyncEdge();
 }
@@ -471,7 +475,7 @@ void EditField::LostFocus()
 			if(s != text) text = s;
 		}
 	}
-	if(!keep_selection) {
+	if(!keep_selection && autoselection) {
 		anchor = -1;
 		cursor = sc = 0;
 	}
@@ -568,6 +572,7 @@ void EditField::Move(int newpos, bool select)
 	Finish(refresh);
 	if(select)
 		SetSelectionSource(ClipFmtsText());
+	autoselection = false;
 }
 
 void EditField::SetSelection(int l, int h)
@@ -580,6 +585,7 @@ void EditField::SetSelection(int l, int h)
 		cursor = l;
 		anchor = -1;
 	}
+	autoselection = false;
 	Finish();
 }
 
@@ -592,6 +598,7 @@ void EditField::CancelSelection()
 		sc = 0;
 		Finish();
 	}
+	autoselection = false;
 }
 
 bool EditField::RemoveSelection()
@@ -1032,6 +1039,7 @@ void EditField::Reset()
 	font = StdFont();
 	showspaces = false;
 	no_internal_margin = false;
+	autoselection = false;
 }
 
 EditField& EditField::SetFont(Font _font)
