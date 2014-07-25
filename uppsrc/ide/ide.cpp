@@ -400,6 +400,9 @@ bool Ide::Key(dword key, int count) {
 	case K_CTRL_TAB:
 		CycleFiles();
 		return true;
+	case K_ALT_C|K_SHIFT:
+		CodeBrowser();
+		return true;
 	case K_ALT_RIGHT:
 	default:
 		if(key >= K_SHIFT_CTRL_0 && key <= K_SHIFT_CTRL_9) {
