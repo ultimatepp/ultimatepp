@@ -1190,6 +1190,10 @@ public:
 
 	Ide();
 	~Ide();
+
+
+// THIS IS SANDBOX FOR DEVELOPING NEW NAVIGATOR
+	void CodeBrowser();
 };
 
 #endif

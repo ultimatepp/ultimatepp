@@ -69,16 +69,21 @@ inline bool sOperator(byte c)
 	return sOperatorTab[c];
 }
 
-Vector<ItemTextPart> ParseItemNatural(const String& name, const CppItem& m, const char *s)
+Vector<ItemTextPart> ParseItemNatural(const String& name,
+                                      const String& natural,
+                                      const String& ptype, const String& pname,
+                                      const String& type, const String& tname,
+                                      const String& ctname,
+                                      const char *s)
 {
-	LLOG("ParseItemNatural " << m.natural << ", pname: " << m.pname
-	                         << ", tname: " << m.tname << ", m.ctname: " << m.ctname);
+	LLOG("ParseItemNatural " << natural << ", pname: " << pname
+	                         << ", tname: " << tname << ", ctname: " << ctname);
 	Vector<ItemTextPart> part;
 	int len = name.GetLength();
 	if(len == 0) {
 		ItemTextPart& p = part.Add();
 		p.pos = 0;
-		p.len = m.natural.GetLength();
+		p.len = natural.GetLength();
 		p.type = ITEM_TEXT;
 		p.pari = -1;
  		return part;
@@ -88,7 +93,7 @@ Vector<ItemTextPart> ParseItemNatural(const String& name, const CppItem& m, cons
 	int par = 0;
 	while(*s) {
 		ItemTextPart& p = part.Add();
-		p.pos = (int)(s - ~m.natural);
+		p.pos = (int)(s - ~natural);
 		p.type = ITEM_TEXT;
 		p.pari = pari;
 		int n = 1;
@@ -115,23 +120,23 @@ Vector<ItemTextPart> ParseItemNatural(const String& name, const CppItem& m, cons
 				if(IsCppKeyword(id))
 					p.type = ITEM_CPP;
 				else
-				if(InScList(id, m.pname))
+				if(InScList(id, pname))
 					p.type = ITEM_PNAME;
 				else
 				if(id == s_pick_) {
 					p.type = ITEM_UPP;
 				}
 				else
-				if(InScList(id, m.tname) || InScList(id, m.ctname))
+				if(InScList(id, tname) || InScList(id, ctname))
 					p.type = ITEM_TNAME;
 				else
 				if(param) {
-					int ii = InScListIndext(id, m.ptype);
+					int ii = InScListIndext(id, ptype);
 					if(ii >= 0)
 						p.type = ITEM_PTYPE + ii;
 				}
 				else {
-					int ii = InScListIndext(id, m.type);
+					int ii = InScListIndext(id, type);
 					if(ii >= 0)
 						p.type = ITEM_TYPE + ii;
 				}
@@ -174,6 +179,11 @@ Vector<ItemTextPart> ParseItemNatural(const String& name, const CppItem& m, cons
 		s += n;
 	}
 	return part;
+}
+
+Vector<ItemTextPart> ParseItemNatural(const String& name, const CppItem& m, const char *s)
+{
+	return ParseItemNatural(name, m.natural, m.ptype, m.pname, m.type, m.tname, m.ctname, s);
 }
 
 Vector<ItemTextPart> ParseItemNatural(const CppItemInfo& m, const char *s)

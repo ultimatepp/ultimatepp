@@ -37,30 +37,18 @@ void PaintText(Draw& w, int& x, int y, const CppItemInfo& m, const Vector<ItemTe
 	}
 }
 
-int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
-	                            Color _ink, Color paper, dword style) const
+void PaintCppItemImage(Draw& w, int& x, int ry, int access, int kind, bool focuscursor)
 {
-	const CppItemInfo& m = ValueTo<CppItemInfo>(q);
-	w.DrawRect(r, paper);
-	bool focuscursor = (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT);
-	if(IsNull(q)) return 0;
-	int x = r.left;
-	int ry = r.top + r.GetHeight() / 2;
-	Image img;
-	if(m.access == PROTECTED)
-		img = BrowserImg::mprotected();
-	else
-	if(m.access == PRIVATE)
-		img = BrowserImg::mprivate();
-	else
-	if(m.access == WITHBODY)
-		img = BrowserImg::impl();
+	Image img = decode(access, PROTECTED, BrowserImg::mprotected(),
+	                           PRIVATE, BrowserImg::mprivate(),
+	                           WITHBODY, BrowserImg::impl(),
+	                           Image());
 	if(!IsNull(img))
 		w.DrawImage(x, ry - img.GetHeight() / 2, img);
 	x += 4;
 	img = BrowserImg::unknown();
 	Image bk;
-	switch(m.kind) {
+	switch(kind) {
 	case FUNCTIONTEMPLATE:
 		bk = BrowserImg::template_function();
 	case FUNCTION:
@@ -133,6 +121,20 @@ int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 		w.DrawImage(x, by, bk);
 		w.DrawImage(x, iy, img);
 	}
+}
+
+int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
+	                            Color _ink, Color paper, dword style) const
+{
+	const CppItemInfo& m = ValueTo<CppItemInfo>(q);
+	w.DrawRect(r, paper);
+	bool focuscursor = (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT);
+	if(IsNull(q)) return 0;
+	int x = r.left;
+	int ry = r.top + r.GetHeight() / 2;
+	
+	PaintCppItemImage(w, x, ry, m.access, m.kind, focuscursor);	
+
 	if(m.inherited) {
 		w.DrawImage(x + 10, r.top, BrowserImg::inherited());
 		for(int i = 1; i < min(m.inherited, 5); i++)
