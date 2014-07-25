@@ -1,7 +1,7 @@
 #ifndef _CodeEditor_Highlight_h_
 #define _CodeEditor_Highlight_h_
 
-#define CTIMING(x) RTIMING(x)
+#define CTIMING(x) // RTIMING(x)
 
 struct HlStyle {
 	Color color;
