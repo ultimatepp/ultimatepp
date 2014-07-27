@@ -36,29 +36,6 @@ void AssistEditor::SelectionChanged()
 	SyncParamInfo();
 }
 
-void AssistEditor::BrowserGotoNF()
-{
-/* NAVI
-	Value scope = browser.scope.GetKey(); // do not scroll browser.item erratically
-	int scopesc = browser.scope.GetScroll();
-	String item = browser.item.GetKey();
-	int itemsc = browser.item.GetScroll();
-
-	String cref = browser.GetCodeRef();
-	if(theide && !theide->SwapSIf(cref))
-		theide->IdeGotoCodeRef(cref);
-
-	if(scope == browser.scope.GetKey()) {
-		browser.scope.ScrollTo(scopesc);
-		browser.scope.ScrollIntoCursor();
-		if(item == browser.item.GetKey()) {
-			browser.item.ScrollTo(itemsc);
-			browser.item.ScrollIntoCursor();
-		}
-	}
-*/
-}
-
 void AssistEditor::Navigate()
 {
 	if(navigating)
