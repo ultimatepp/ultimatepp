@@ -291,15 +291,57 @@ struct AssistEditor : CodeEditor {
 		Color  ink;
 		int    line;
 	};
-	byte              navigator;
+	bool              navigator;
 	SplitterFrame     navigatorframe;
 	StaticRect        navigatorpane;
+	ArrayCtrl         list;
+	EditString        search;
 
+	struct NavItem {
+		String         nest;
+		String         qitem;
+		String         name;
+		String         uname;
+		String         natural;
+		String         type;
+		String         pname;
+		String         ptype;
+		String         tname;
+		String         ctname;
+		byte           access;
+		byte           kind;
+		int16          at;
+		int            line;
+		int            file;
+		bool           impl;
+		
+		void Set(const CppItem& m);
+	};
+	
+	enum { KIND_LINE = 123 };
+	
+	struct NavigatorDisplay : Display {
+		const Array<NavItem>& item;
+	
+		int DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+		virtual Size GetStdSize(const Value& q) const;
+	
+		NavigatorDisplay(const Array<NavItem>& item) : item(item) {}
+	};
+
+	Array<NavItem>   item;
+	NavigatorDisplay navidisplay;
+	bool             navigating;
+	
+	void Search();
+
+/*
 	CodeBrowser       browser;
 	ParentCtrl        scopepane;
 	ParentCtrl        itempane;
 	Splitter          scope_item;
-
+*/
 	Splitter       popup;
 	ArrayCtrl      assist;
 	ArrayCtrl      type;
@@ -387,6 +429,9 @@ struct AssistEditor : CodeEditor {
 	void           SwapSContext(Parser& p);
 	
 	void           SyncCursor();
+	
+	void           Navigate();
+	void           NavigatorEnter();
 
 	void           SyncNavigator();
 	void           GotoBrowserScope();
@@ -1193,7 +1238,7 @@ public:
 
 
 // THIS IS SANDBOX FOR DEVELOPING NEW NAVIGATOR
-	void CodeBrowser();
+//	void CodeBrowser();
 };
 
 #endif

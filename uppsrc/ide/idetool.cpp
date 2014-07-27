@@ -43,13 +43,16 @@ void Ide::ResolveUvsConflict() {
 void Ide::GotoPos(String path, int line)
 {
 	LLOG("GotoPos " << path << ':' << line);
-	AddHistory();
-	editastext.FindAdd(path);
-	EditFile(path);
+	if(path.GetCount()) {
+		AddHistory();
+		editastext.FindAdd(path);
+		EditFile(path);
+	}
 	editor.SetCursor(editor.GetPos(line - 1));
 	editor.TopCursor(4);
 	editor.SetFocus();
-	AddHistory();
+	if(path.GetCount())
+		AddHistory();
 }
 
 void Ide::GotoCpp(const CppItem& pos)

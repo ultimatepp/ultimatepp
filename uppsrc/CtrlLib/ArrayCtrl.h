@@ -381,7 +381,7 @@ public:
 	Column&    AddColumn(const Id& id, const char *text, int w = 0);
 	Column&    AddColumnAt(int ii, const char *text, int w = 0);
 	Column&    AddColumnAt(const Id& id, const char *text, int w = 0);
-	Column&    AddRowNumColumn(const char *text, int w = 0);
+	Column&    AddRowNumColumn(const char *text = NULL, int w = 0);
 
 	int                       GetColumnCount() const   { return column.GetCount(); }
 	int                       FindColumnWithPos(int pos) const;
