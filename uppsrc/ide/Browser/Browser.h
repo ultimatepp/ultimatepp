@@ -85,6 +85,9 @@ struct ItemTextPart : Moveable<ItemTextPart> {
 	int pari;
 };
 
+Vector<ItemTextPart> ParseItemNatural(const String& name, const String& natural, const String& ptype,
+                                      const String& pname, const String& type, const String& tname,
+                                      const String& ctname, const char *s);
 Vector<ItemTextPart> ParseItemNatural(const String& name, const CppItem& m, const char *natural);
 Vector<ItemTextPart> ParseItemNatural(const CppItemInfo& m);
 Vector<ItemTextPart> ParseItemNatural(const CppItemInfo& m);
@@ -106,6 +109,11 @@ enum AdditionalKinds {
 	KIND_INCLUDEFILE_ANY,
 	KIND_INCLUDEFOLDER,
 };
+
+void PaintText(Draw& w, int& x, int y, const char *text,
+               const Vector<ItemTextPart>& n, int starti, int count, bool focuscursor,
+               Color _ink, bool italic);
+void PaintCppItemImage(Draw& w, int& x, int ry, int access, int kind, bool focuscursor);
 
 struct CppItemInfoDisplay : public Display
 {

@@ -245,7 +245,7 @@ void MergeWith(String& dest, const char *delim, __List##I(E__NFSValue)) \
 	__List##I(E__Merge); \
 } \
 
-__Expand8(E__NFBody)
+__Expand12(E__NFBody)
 
 #undef E__TL
 #undef E__NFIf
@@ -315,7 +315,7 @@ void MergeWith(WString& dest, const wchar *delim, __List##I(E__NFSValue)) \
 	__List##I(E__Merge); \
 } \
 
-__Expand8(E__NFBody)
+__Expand12(E__NFBody)
 
 #undef E__TL
 #undef E__NFIf
