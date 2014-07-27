@@ -1,7 +1,7 @@
 #include "Browser.h"
 
-void PaintText(Draw& w, int& x, int y, const CppItemInfo& m, const Vector<ItemTextPart>& n,
-           int starti, int count, bool focuscursor, Color _ink)
+void PaintText(Draw& w, int& x, int y, const char *text, const Vector<ItemTextPart>& n,
+           int starti, int count, bool focuscursor, Color _ink, bool italic)
 {
 	for(int i = starti; i < count; i++) {
 		const ItemTextPart& p = n[i];
@@ -23,18 +23,22 @@ void PaintText(Draw& w, int& x, int y, const CppItemInfo& m, const Vector<ItemTe
 			break;
 		case ITEM_CPP_TYPE:
 		case ITEM_CPP:
+		case ITEM_SIGN:
 			ink = LtBlue;
 			break;
-		case ITEM_SIGN:
-			ink = Magenta;
-			break;
 		}
-		if(m.overed)
+		if(italic)
 			f.Italic();
-		Size fsz = GetTextSize(~m.natural + p.pos, f, p.len);
-		w.DrawText(x, y, ~m.natural + p.pos, f, focuscursor ? _ink : ink, p.len);
+		Size fsz = GetTextSize(text + p.pos, f, p.len);
+		w.DrawText(x, y, text + p.pos, f, focuscursor ? _ink : ink, p.len);
 		x += fsz.cx;
 	}
+}
+
+void PaintText(Draw& w, int& x, int y, const CppItemInfo& m, const Vector<ItemTextPart>& n,
+           int starti, int count, bool focuscursor, Color _ink)
+{
+	PaintText(w, x, y, ~m.natural, n, starti, count, focuscursor, _ink, m.overed);
 }
 
 void PaintCppItemImage(Draw& w, int& x, int ry, int access, int kind, bool focuscursor)

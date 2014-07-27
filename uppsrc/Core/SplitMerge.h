@@ -33,7 +33,7 @@ bool SplitTo(const char *s, const char *delim, __List##I(E__NFValue)); \
 String Merge(const char *delim, __List##I(E__NFSValue)); \
 void MergeWith(String& dest, const char *delim, __List##I(E__NFSValue)); \
 
-__Expand8(E__NFBody)
+__Expand12(E__NFBody)
 
 #undef E__NFBody
 #undef E__NFValue
@@ -52,7 +52,7 @@ bool SplitTo(const wchar *s, const char *delim, __List##I(E__NFValue)); \
 WString Merge(const wchar *delim, __List##I(E__NFSValue)); \
 void MergeWith(WString& dest, const wchar *delim, __List##I(E__NFSValue)); \
 
-__Expand8(E__NFBody)
+__Expand12(E__NFBody)
 
 #undef E__NFBody
 #undef E__NFValue
