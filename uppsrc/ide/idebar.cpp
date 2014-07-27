@@ -551,9 +551,9 @@ void Ide::BrowseMenu(Bar& menu) {
 		if(!IsEditorMode()) {
 			menu.AddMenu(AK_NAVIGATOR, IdeImg::Navigator(), THISBACK(ToggleNavigator))
 		    	 .Check(editor.IsNavigator());
-			menu.Add(AK_SEARCHCODE, THISBACK(SearchCode));
-			menu.Add(!designer, AK_GOTO, THISBACK(Goto));
-			menu.Add(AK_GOTOGLOBAL, THISBACK(GotoGlobal));
+			menu.Add(AK_GOTO, THISBACK(SearchCode));
+//			menu.Add(!designer, AK_GOTO, THISBACK(Goto));
+//			menu.Add(AK_GOTOGLOBAL, THISBACK(GotoGlobal));
 			menu.Add(!designer, AK_JUMPS, THISBACK(ContextGoto));
 			menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
 			menu.Add(!designer, AK_ASSIST, callback(&editor, &AssistEditor::Assist));

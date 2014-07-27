@@ -18,7 +18,13 @@ class IndexSeparatorFrameCls : public CtrlFrame {
 	virtual void FrameAddSize(Size& sz) { sz.cx += 2; }
 };
 
+int CharFilterNavigator(int c)
+{
+	return c == '.' ? ':' : IsAlNum(c) || c == '_' || c == ':' ? ToUpper(c) : 0;
+}
+
 AssistEditor::AssistEditor()
+:	navidisplay(item)
 {
 	assist.NoHeader();
 	assist.NoGrid();
@@ -37,7 +43,9 @@ AssistEditor::AssistEditor()
 
 	InsertFrame(1, navigatorframe);
 	navigatorframe.Left(navigatorpane, HorzLayoutZoom(140));
+	navigating = false;
 
+/*
 	int cy = EditField::GetStdHeight();
 
 	int c2 = cy + 2;
@@ -59,7 +67,20 @@ AssistEditor::AssistEditor()
 	browser.WhenKeyItem = THISBACK(BrowserGotoNF);
 	browser.WhenClear = THISBACK(SyncCursor);
 	browser.NameStart();
-		
+*/
+	int cy = search.GetMinSize().cy;
+	navigatorpane.Add(search.TopPos(0, cy).HSizePos());
+	navigatorpane.Add(list.VSizePos(cy, 0).HSizePos());
+	list.NoHeader();
+	list.AddRowNumColumn().SetDisplay(navidisplay);
+	list.SetLineCy(2 * GetStdFontCy());
+	list.NoWantFocus();
+	list.WhenSel = THISBACK(Navigate);
+	
+	search <<= THISBACK(Search);
+	search.SetFilter(CharFilterNavigator);
+	search.WhenEnter = THISBACK(NavigatorEnter);
+	
 	navigator = true;
 
 	WhenAnnotationMove = THISBACK(SyncAnnotationPopup);
@@ -725,22 +746,6 @@ bool AssistEditor::InCode()
 
 bool AssistEditor::Key(dword key, int count)
 {
-	if(browser.Key(key, count))
-		return true;
-	if(browser.search.HasFocus()) {
-		if(key == K_ENTER) {
-			browser.search.Clear();
-			GotoBrowserScope();
-			return true;
-		}
-		if(key == K_ESCAPE) {
-			browser.search.Clear();
-			SetFocus();
-			SyncCursor();
-			return true;
-		}
-	}
-	
 	if(popup.IsOpen()) {
 		int k = key & ~K_CTRL;
 		ArrayCtrl& kt = key & K_CTRL ? type : assist;
@@ -774,6 +779,8 @@ bool AssistEditor::Key(dword key, int count)
 	int cc = GetChar(c);
 	int bcc = c > 0 ? GetChar(c - 1) : 0;
 	bool b = CodeEditor::Key(key, count);
+	if(b && search.HasFocus())
+		SetFocus();
 	if(assist.IsOpen()) {
 		bool (*test)(int c) = include_assist ? isincludefnchar : iscid;
 		if(!(*test)(key) &&
