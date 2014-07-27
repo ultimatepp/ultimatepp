@@ -436,7 +436,6 @@ struct AssistEditor : CodeEditor {
 	void           SyncNavigator();
 	void           GotoBrowserScope();
 	void           BrowserGoto();
-	void           BrowserGotoNF();
 
 	bool           IsNavigator() const                             { return navigator; }
 	void           Navigator(bool navigator);
