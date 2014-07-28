@@ -378,6 +378,10 @@ class HttpRequest : public TcpSocket {
 	bool         gzip;	
 	Zlib         z;
 
+	Stream      *poststream;
+	int64        postlen;
+		
+
 	void         Init();
 
 	void         StartPhase(int s);
@@ -388,6 +392,7 @@ class HttpRequest : public TcpSocket {
 	void         AfterConnect();
 	void         StartRequest();
 	bool         SendingData();
+
 	bool         ReadingHeader();
 	void         StartBody();
 	bool         ReadingBody();
@@ -447,13 +452,16 @@ public:
 	HttpRequest&  Url(const char *url);
 	HttpRequest&  UrlVar(const char *id, const String& data);
 	HttpRequest&  operator()(const char *id, const String& data) { return UrlVar(id, data); }
-	HttpRequest&  PostData(const String& pd)              { postdata = pd; return *this; }
+	HttpRequest&  PostData(const String& pd)              { postdata = pd; poststream = NULL; return *this; }
+	HttpRequest&  PostStream(Stream& s, int64 len = Null);
+	
 	HttpRequest&  PostUData(const String& pd)             { return PostData(UrlEncode(pd)); }
 	HttpRequest&  Post(const String& data)                { POST(); return PostData(data); }
 	HttpRequest&  Post(const char *id, const String& data);
 	HttpRequest&  Part(const char *id, const String& data,
 	                   const char *content_type = NULL, const char *filename = NULL);
-	HttpRequest&  ClearPost()                             { PostData(Null); multipart.Clear(); GET(); return *this; }
+
+	HttpRequest&  ClearPost()                             { PostData(Null); poststream = NULL; ; multipart.Clear(); GET(); return *this; }
 
 	HttpRequest&  Headers(const String& h)                { request_headers = h; return *this; }
 	HttpRequest&  ClearHeaders()                          { return Headers(Null); }
