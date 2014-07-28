@@ -64,39 +64,12 @@ void AssistEditor::NavigatorEnter()
 	}
 }
 
-void AssistEditor::BrowserGoto()
-{
-	BrowserGotoNF();
-	SetFocus();
-}
-
-void AssistEditor::GotoBrowserScope()
-{
-/* NAVI
-	if(browser.scope.IsCursor()) {
-		Value x = browser.scope.Get(2);
-		if(IsNumber(x)) {
-			int file = (int)x;
-			theide->EditFile(GetCppFile(file));
-			return;
-		}
-	}
-	if(browser.item.GetCount()) {
-		browser.item.GoBegin();
-		BrowserGoto();
-	}
-*/
-}
-
 void AssistEditor::Navigator(bool nav)
 {
 	navigator = nav;
 	navigatorframe.Show(navigator && theide && !theide->IsEditorMode());
-	if(IsNavigator()) {
-//		scope_item.Show(); NAVI
-//		browser.ClearSearch();
+	if(IsNavigator())
 		SetFocus();
-	}
 	SyncNavigator();
 	SyncCursor();
 }

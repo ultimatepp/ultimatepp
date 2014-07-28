@@ -45,29 +45,6 @@ AssistEditor::AssistEditor()
 	navigatorframe.Left(navigatorpane, HorzLayoutZoom(140));
 	navigating = false;
 
-/*
-	int cy = EditField::GetStdHeight();
-
-	int c2 = cy + 2;
-	int cx = 18;
-
-	scopepane.Add(browser.search.HSizePos(0, 4 * cx + 2).TopPos(0, cy));
-	for(int i = 0; i < 3; i++)
-		scopepane.Add(browser.rangebutton[i].RightPos((3 - i) * cx, cx).TopPos(0, cy));
-	scopepane.Add(browser.sort.RightPos(0, cx).TopPos(0, cy));
-	scopepane.Add(browser.scope.HSizePos().VSizePos(c2, 0));
-	itempane.Add(browser.item.SizePos());
-	scope_item.Vert(scopepane, itempane);
-	scope_item.SetPos(3000);
-	navigatorpane.Add(scope_item);
-	browser.scope.NoWantFocus();
-	browser.scope.WhenLeftDouble = THISBACK(GotoBrowserScope);
-	browser.item.NoWantFocus();
-	browser.item.WhenLeftClick = browser.item.WhenLeftDouble = THISBACK(BrowserGoto);
-	browser.WhenKeyItem = THISBACK(BrowserGotoNF);
-	browser.WhenClear = THISBACK(SyncCursor);
-	browser.NameStart();
-*/
 	int cy = search.GetMinSize().cy;
 	navigatorpane.Add(search.TopPos(0, cy).HSizePos());
 	navigatorpane.Add(list.VSizePos(cy, 0).HSizePos());
