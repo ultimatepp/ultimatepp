@@ -183,6 +183,14 @@ forms with `"GET`" method. Returns `*this.&]
 ]_[* PostData]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 pd])&]
 [s2;%% Sets data to be posted with request. Returns `*this.&]
 [s3;%% &]
+[s4; &]
+[s5;:HttpRequest`:`:PostStream`(Stream`&`,int64`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&
+]_[* PostStream]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 s], [_^int64^ int64]_[*@3 len]_`=_Nul
+l)&]
+[s2;%% Sets stream of data to be posted with request. [%-*@3 len] is 
+number of bytes to be sent from the stream, if Null, all remaining 
+data from the stream are sent. Returns `*this.&]
+[s3;%% &]
 [s4;%% &]
 [s5;:HttpRequest`:`:PostUData`(const String`&`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&
 ]_[* PostUData]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 pd])&]

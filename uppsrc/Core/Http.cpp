@@ -61,6 +61,8 @@ void HttpRequest::Init()
 	chunk = 4096;
 	timeout = 120000;
 	ssl = false;
+	poststream = NULL;
+	postlen = Null;
 }
 
 HttpRequest::HttpRequest()
@@ -127,6 +129,15 @@ HttpRequest& HttpRequest::SSLProxy(const char *url)
 {
 	ssl_proxy_port = 8080;
 	ParseProxyUrl(url, ssl_proxy_host, ssl_proxy_port);
+	return *this;
+}
+
+HttpRequest& HttpRequest::PostStream(Stream& s, int64 len)
+{
+	POST();
+	poststream = &s;
+	postlen = Nvl(len, s.GetLeft());
+	postdata.Clear();
 	return *this;
 }
 
@@ -523,10 +534,13 @@ void HttpRequest::StartRequest()
 	}
 	data << " HTTP/1.1\r\n";
 	String pd = postdata;
+
 	if(!IsNull(multipart))
 		pd << "--" << multipart << "--\r\n";
-	if(method == METHOD_GET || method == METHOD_HEAD)
+	if(method == METHOD_GET || method == METHOD_HEAD) {
 		pd.Clear();
+		poststream = NULL;
+	}
 	if(std_headers) {
 		data << "URL: " << url << "\r\n"
 		     << "Host: " << host_port << "\r\n"
@@ -534,8 +548,9 @@ void HttpRequest::StartRequest()
 		     << "Accept: " << Nvl(accept, "*/*") << "\r\n"
 		     << "Accept-Encoding: gzip\r\n"
 		     << "User-Agent: " << Nvl(agent, "U++ HTTP request") << "\r\n";
-		if(pd.GetCount() || method == METHOD_POST || method == METHOD_PUT)
-			data << "Content-Length: " << pd.GetCount() << "\r\n";
+		int64 len = poststream ? postlen : pd.GetCount();
+		if(len > 0 || method == METHOD_POST || method == METHOD_PUT)
+			data << "Content-Length: " << len << "\r\n";
 		if(ctype.GetCount())
 			data << "Content-Type: " << ctype << "\r\n";
 	}
@@ -578,14 +593,34 @@ void HttpRequest::StartRequest()
 
 bool HttpRequest::SendingData()
 {
+	if(count < data.GetLength())
+		for(;;) {
+			int n = min(2048, data.GetLength() - (int)count);
+			n = TcpSocket::Put(~data + count, n);
+			if(n == 0) {
+				if(count < data.GetLength())
+					return true;
+				if(poststream)
+					break;
+				return false;
+			}
+			count += n;
+		}
 	for(;;) {
-		int n = min(2048, data.GetLength() - (int)count);
-		n = TcpSocket::Put(~data + count, n);
+		Buffer<byte> buffer(2048);
+		int n = poststream->Get(buffer, min((int64)2048, postlen + data.GetLength() - (int)count));
+		if(n < 0) {
+			HttpError("error reading input stream");
+			return false;
+		}
+		if(n == 0)
+			break;
+		n = TcpSocket::Put(buffer, n);
 		if(n == 0)
 			break;
 		count += n;
 	}
-	return count < data.GetLength();
+	return count < data.GetLength() + postlen;
 }
 
 bool HttpRequest::ReadingHeader()
