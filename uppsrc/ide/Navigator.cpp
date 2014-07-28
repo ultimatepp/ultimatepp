@@ -183,8 +183,8 @@ int AssistEditor::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value&
 			h << ' ';
 		h << m.nest;
 		h.Cat("::");
-		w.DrawText(x, y, h, StdFont().Bold(), Magenta());
-		x += GetTextSize(h, StdFont()).cx;
+		w.DrawText(x, y, h, BrowserFont().Bold(), Magenta());
+		x += GetTextSize(h, BrowserFont()).cx;
 	}
 	int x1 = r.left;
 	PaintText(w, x1, y + fcy, ~m.natural, n, starti, n.GetCount(), focuscursor, ink, false);

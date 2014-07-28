@@ -767,7 +767,7 @@ void CodeEditor::FindPrevNext(bool prev)
 {
 	if(!findreplace.IsOpen())
 		OpenNormalFindReplace0(false);
-	if(Find(false, false))
+	if(Find(prev, false))
 		NoFindError();
 	else
 		NotFound();

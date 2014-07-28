@@ -46,7 +46,6 @@ file
 	Assist.cpp,
 	ParamInfo.cpp,
 	Navigator.cpp,
-	CodeBrowser.cpp,
 	Annotations.cpp,
 	Virtuals.cpp,
 	Thisbacks.cpp,
