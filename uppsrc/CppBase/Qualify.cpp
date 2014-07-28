@@ -178,14 +178,12 @@ String QualifyIds(Scopefo& nf, const String& k, bool all)
 String Qualify(const CppBase& base, const String& scope, const String& type)
 {
 	Scopefo nf(base, scope);
-	byte dummy = 2;
 	return QualifyIds(nf, type, true);
 }
 
 String QualifyKey(const CppBase& base, const String& scope, const String& type)
 {
 	Scopefo nf(base, scope);
-	byte dummy = 2;
 	return QualifyIds(nf, type, false);
 }
 

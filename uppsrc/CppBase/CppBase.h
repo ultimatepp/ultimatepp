@@ -205,13 +205,13 @@ inline bool IsCppTemplate(int i) {
 	return i == STRUCTTEMPLATE || i >= FUNCTIONTEMPLATE && i <= CLASSFUNCTIONTEMPLATE;
 }
 
-enum {
+enum AccessEnum {
 	PUBLIC,
 	PROTECTED,
 	PRIVATE,
 };
 
-enum {
+enum FileTypeEnum {
 	FILE_H,
 	FILE_HPP,
 	FILE_CPP,

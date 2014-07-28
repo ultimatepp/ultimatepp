@@ -198,8 +198,8 @@ void AssistEditor::NavigatorDisplay::Paint(Draw& w, const Rect& r, const Value& 
 
 Size AssistEditor::NavigatorDisplay::GetStdSize(const Value& q) const
 {
-	return Size(DoPaint(NilDraw(), Size(999999, 999999), q, White(), White(), 0),
-	            2 * Draw::GetStdFontCy());
+	NilDraw w;
+	return Size(DoPaint(w, Size(999999, 999999), q, White(), White(), 0), 2 * Draw::GetStdFontCy());
 }
 
 void AssistEditor::Search()
