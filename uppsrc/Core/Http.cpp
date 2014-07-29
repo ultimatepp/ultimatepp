@@ -608,7 +608,7 @@ bool HttpRequest::SendingData()
 		}
 	for(;;) {
 		Buffer<byte> buffer(2048);
-		int n = poststream->Get(buffer, min((int64)2048, postlen + data.GetLength() - (int)count));
+		int n = poststream->Get(buffer, (int)min((int64)2048, postlen + data.GetLength() - count));
 		if(n < 0) {
 			HttpError("error reading input stream");
 			return false;
