@@ -247,7 +247,7 @@ Array <NetAdapter> GetAdapterInfo() {
 			adapter.mac = ToUpper(HexString(pAdd->PhysicalAddress, len, 1, ':'));
 		adapter.description = Trim(WideToString(pAdd->Description));
 		adapter.fullname = Trim(WideToString(pAdd->FriendlyName));
-    
+   
 		PIP_ADAPTER_UNICAST_ADDRESS pUnicast = pAdd->FirstUnicastAddress;
     	if (pUnicast != NULL) {
           	for (int i = 0; pUnicast != NULL; i++) {
@@ -623,117 +623,64 @@ Array <NetAdapter> GetAdapterInfo() {
 }
 */
 
-Array<NetAdapter> GetAdapterInfo()
-{
+Array<NetAdapter> GetAdapterInfo() {
 	Array<NetAdapter> res;
-	Index<String> macs;
 	
-	int sck = socket(PF_INET, SOCK_DGRAM, 0);
-	if(sck < 0)
+	char buf[8192] = {0};
+	struct ifconf ifc = {0};
+	struct ifreq *ifr = NULL;
+	int sck = 0;
+	int nInterfaces = 0;
+	int i = 0;
+	char ip[INET6_ADDRSTRLEN] = {0};
+	struct ifreq *item;
+	struct sockaddr *addr;
+	socklen_t salen;
+	char hostname[NI_MAXHOST];
+
+	sck = socket(PF_INET, SOCK_DGRAM, 0);
+	if(sck < 0) 
 		return res;
-	
-	int bufSize = 4096;
-	struct ifconf ifc =	{ 0	};
-	byte buf[bufSize];
-	for(int iTry = 0; iTry < 4; iTry++) {
-		ifc.ifc_len = bufSize;
-		ifc.ifc_buf = (__caddr_t)buf;
  
-		if (ioctl(sck, SIOCGIFCONF, &ifc) < 0) {
-			close(sck);
-			return res;
-		}
-		
-		if(ifc.ifc_len != bufSize)
-			break;
+	ifc.ifc_len = sizeof(buf);
+	ifc.ifc_buf = buf;
+	if(ioctl(sck, SIOCGIFCONF, &ifc) < 0) 
+		return res;
 
-		bufSize *= 2;
-		if(iTry >= 3) {
-			close(sck);
-			return res;
-		}
-	}
-		
-	int nIfaces = ifc.ifc_len / sizeof(struct ifreq);
-	struct ifreq *iface = ifc.ifc_req;
-	for(int iIface = 0; iIface < nIfaces; iIface++) {
+	ifr = ifc.ifc_req;
+	nInterfaces = ifc.ifc_len / sizeof(struct ifreq);
+	for(i = 0; i < nInterfaces; i++) {
 		String MAC;
+      
+		bzero(hostname, NI_MAXHOST);
+		item = &ifr[i];
 		
-#ifdef SIOCGIFHWADDR
-		if(ioctl(sck, SIOCGIFHWADDR, iface) < 0) {
-			iface++;
-			continue;
+		addr = &(item->ifr_addr);
+		
+		switch(addr->sa_family) {
+		case AF_INET:	salen = sizeof(struct sockaddr_in);		break;
+    	case AF_INET6:	salen = sizeof(struct sockaddr_in6);	break;
+    	default:		salen = 0;
+    	}
+   
+   		getnameinfo(addr, salen, hostname, sizeof(hostname), NULL, 0, NI_NAMEREQD);
+
+    	if(ioctl(sck, SIOCGIFADDR, item) < 0) 
+      		continue;
+    
+    	NetAdapter &adapter = res.Add();
+    	adapter.description = hostname;
+    	
+		switch(addr->sa_family) {
+		case AF_INET:	inet_ntop(AF_INET, &(((struct sockaddr_in *)addr)->sin_addr), ip, INET6_ADDRSTRLEN);	
+						adapter.ip4 = ip;
+						break;
+		case AF_INET6:	inet_ntop(AF_INET6, &(((struct sockaddr_in6 *)addr)->sin6_addr), ip, INET6_ADDRSTRLEN);	
+						adapter.ip6 = ip;
+						break;
 		}
+		adapter.fullname = item->ifr_name;
 		
-		MAC = Format("%02x:%02x:%02x:%02x:%02x:%02x",
-						(byte)iface->ifr_hwaddr.sa_data[0],
-						(byte)iface->ifr_hwaddr.sa_data[1],
-						(byte)iface->ifr_hwaddr.sa_data[2],
-						(byte)iface->ifr_hwaddr.sa_data[3],
-						(byte)iface->ifr_hwaddr.sa_data[4],
-						(byte)iface->ifr_hwaddr.sa_data[5]
-		);
-
-#elif SIOCGENADDR
-		if (ioctl(sck, SIOCGENADDR, iface) < 0) 
-			continue;
-		
-		MAC = Format("%02x:%02x:%02x:%02x:%02x:%02x",
-						(byte)iface->ifr_enaddr[0],
-						(byte)iface->ifr_enaddr[1],
-						(byte)iface->ifr_enaddr[2],
-						(byte)iface->ifr_enaddr[3],
-						(byte)iface->ifr_enaddr[4],
-						(byte)iface->ifr_enaddr[5]
-		);
-
-#elif __MACH__ || __NetBSD__ || __OpenBSD__ || __FreeBSD__
-		int mib[6];
-		mib[0] = CTL_NET;
-		mib[1] = AF_ROUTE;
-		mib[2] = 0;
-		mib[3] = AF_LINK;
-		mib[4] = NET_RT_IFLIST;
-		mib[5] = if_nametoindex(iface->ifr_name);
-		if (mib[5] == 0)	// nameless interface ? skip
-			continue;
-
-		int len = 0;
-		if (sysctl(mib, 6, NULL, (size_t*)&len, NULL, 0) != 0) 
-			continue;	// sysctl error, just leave MAC empty
-
-		char macbuf[len];
-		if (!macbuf) 	// can't allocat buffer, skip this MAC
-			continue;
-		
-		if (sysctl(mib, 6, macbuf, (size_t*)&len, NULL, 0) != 0) 
-			continue;
-
-		struct if_msghdr *ifm = (struct if_msghdr *)macbuf;
-		struct sockaddr_dl *sdl = (struct sockaddr_dl *)(ifm + 1);
-		byte ptr[] = (byte **)LLADDR(sdl);
-
-		MAC = Format("%02x:%02x:%02x:%02x:%02x:%02x", 
-					ptr[0], ptr[1], ptr[2], ptr[3], ptr[4], ptr[5]);
-
-#else
-#error OS Distribution Not Recognized
-#endif
-
-		if(MAC == "00:00:00:00:00:00")
-			MAC.Clear();
-
-		if(!MAC.IsEmpty() && macs.Find(MAC) >= 0)
-			continue;
-		macs.Add(MAC);
-
-		NetAdapter &adapter = res.Add();
-		
-		adapter.mac = MAC;
-		
-		adapter.fullname = iface->ifr_name;
-		
-		// set interface type from name
 		if(adapter.fullname.StartsWith("eth"))
 			adapter.type = "ETHERNET";
 		else if(adapter.fullname.StartsWith("lo"))
@@ -752,25 +699,71 @@ Array<NetAdapter> GetAdapterInfo()
 		else if(adapter.fullname.StartsWith("vmnet"))			
 			adapter.type = "VMWARE";
 		else
-			adapter.type = "OTHER";
-		
-		adapter.description = adapter.fullname;		
-		
-		struct sock_addr *addr = (struct sock_addr *)&(iface->ifr_addr);
-		Buffer<char> str(max(INET_ADDRSTRLEN, INET6_ADDRSTRLEN));
-		inet_ntop(AF_INET, &(((struct sockaddr_in *)addr)->sin_addr), str, INET_ADDRSTRLEN);
-		adapter.ip4 = str;
-		inet_ntop(AF_INET6, &(((struct sockaddr_in *)addr)->sin_addr), str, INET6_ADDRSTRLEN);
-		adapter.ip6 = str;
-		
-		if (ioctl(sck, SIOCGIFADDR, iface) < 0) {
-			iface++;
-			continue;
-		}
-		iface++;
-	}
-	close(sck);
+			adapter.type = "OTHER";	
+			
+#ifdef SIOCGIFHWADDR
+    	if(ioctl(sck, SIOCGIFHWADDR, item) < 0) 
+      		continue;
+    
+    	MAC = Format("%02x:%02x:%02x:%02x:%02x:%02x",
+					(unsigned char)item->ifr_hwaddr.sa_data[0],
+					(unsigned char)item->ifr_hwaddr.sa_data[1],
+					(unsigned char)item->ifr_hwaddr.sa_data[2],
+					(unsigned char)item->ifr_hwaddr.sa_data[3],
+					(unsigned char)item->ifr_hwaddr.sa_data[4],
+					(unsigned char)item->ifr_hwaddr.sa_data[5]);
+#elif SIOCGENADDR
+    	if(ioctl(sck, SIOCGENADDR, item) < 0) 
+      		continue;
 
+    	MAC = Format("%02x:%02x:%02x:%02x:%02x:%02x",
+					(unsigned char)item->ifr_enaddr[0],
+					(unsigned char)item->ifr_enaddr[1],
+					(unsigned char)item->ifr_enaddr[2],
+					(unsigned char)item->ifr_enaddr[3],
+					(unsigned char)item->ifr_enaddr[4],
+					(unsigned char)item->ifr_enaddr[5]);
+#elif __MACH__ || __NetBSD__ || __OpenBSD__ || __FreeBSD__
+		int mib[6] = {0};
+		int len = 0;
+		char *macbuf;
+		struct if_msghdr *ifm;
+		struct sockaddr_dl *sdl;
+		unsigned char ptr[];
+      
+		mib[0] = CTL_NET;
+		mib[1] = AF_ROUTE;
+		mib[2] = 0;
+		mib[3] = AF_LINK;
+		mib[4] = NET_RT_IFLIST;
+		mib[5] = if_nametoindex(item->ifr_name);
+		if(mib[5] == 0)
+      		continue;
+
+  		if(sysctl(mib, 6, NULL, (size_t*)&len, NULL, 0) != 0) 
+      		continue;
+
+ 		macbuf = (char *) malloc(len);
+    	if(macbuf == NULL) 
+     		continue;
+
+    	if(sysctl(mib, 6, macbuf, (size_t*)&len, NULL, 0) != 0) 
+      		continue;
+
+		ifm = (struct if_msghdr *)macbuf;
+		sdl = (struct sockaddr_dl *)(ifm + 1);
+		ptr = (unsigned char *)LLADDR(sdl);
+
+    	MAC = Format("%02x:%02x:%02x:%02x:%02x:%02x",
+						ptr[0], ptr[1], ptr[2],
+						ptr[3], ptr[4], ptr[5]);
+
+    	free(macbuf);
+#else
+#error OS Distribution Not Recognized
+#endif
+		adapter.mac = MAC;
+  	}	
 	return res;
 }
 
@@ -1581,8 +1574,7 @@ bool Shutdown(String action) {
    	TOKEN_PRIVILEGES tkp; 
  
    	// Get a token for this process. 
-   	if (!OpenProcessToken(GetCurrentProcess(), 
-     	TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken)) 
+   	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken)) 
  		return false; 
  
    	// Get the LUID for the shutdown privilege. 
@@ -1645,7 +1637,7 @@ bool Shutdown(String action) {
 		sync();
 		sleep(1);
 	} 
-	exit(0);
+	Exit(0);
 	return true; 
 }
 #endif

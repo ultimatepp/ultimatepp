@@ -34,8 +34,19 @@ bool Window_SaveCapture(int64 windowId, String fileName, int left, int top, int 
 	#define labs(x)	abs(x)
 #endif
 
-Image Window_SaveCapture(int64 windowId, int left, int top, int width, int height)
-{
+
+Rect GetDesktopRect() {
+	HWND wH = GetDesktopWindow();
+	 
+	RECT rc;
+	if (!GetWindowRect(wH, &rc))
+		return Null;
+
+	Rect ret(rc.left, rc.top, rc.right, rc.bottom);
+	return ret;
+}
+
+Image Window_SaveCapture(int64 windowId, int left, int top, int width, int height) {
 	HWND wH = reinterpret_cast<HWND>(windowId);
 	if (wH == 0)
 		wH = GetDesktopWindow();
@@ -467,6 +478,31 @@ Window GetToplevelParent(_XDisplay *display, Window window) {
 		else 
 		 	window = parent;
 	}
+}
+
+Rect GetDesktopRect() {
+	SetSysInfoX11ErrorHandler();
+	
+	_XDisplay *dpy = XOpenDisplay (NULL);
+	if (!dpy) {
+		SetX11ErrorHandler();
+		return Null;
+	}
+	int screen = DefaultScreen(dpy);
+	int64 windowId = RootWindow(dpy, screen);
+	
+	XWindowAttributes rc;
+  	if (!XGetWindowAttributes(dpy, windowId, &rc)) {
+	  	XCloseDisplay(dpy);
+		SetX11ErrorHandler();
+		return Null;	
+  	}
+  	Rect ret(rc.x, rc.y, rc.x + rc.width, rc.y + rc.height);
+	
+	XCloseDisplay(dpy);
+	SetX11ErrorHandler();
+	
+	return ret;
 }
 
 Image Window_SaveCapture(int64 windowId, int left, int top, int width, int height)
