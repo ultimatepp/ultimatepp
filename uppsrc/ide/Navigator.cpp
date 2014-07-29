@@ -102,20 +102,6 @@ void Ide::SearchCode()
 	}
 	else
 		editor.search.SetFocus();
-/* NAVI
-	if(editor.browser.search.HasFocus() && editor.browser.IsSearch())
-		editor.browser.ClearSearch();
-	else {
-		String id = editor.GetI().ToString();
-		if(!IsNull(id)) {
-			editor.browser.search <<= Filter(id, SearchItemFilter);
-			editor.browser.search.SetSelection();
-			editor.browser.Load();
-			editor.browser.scope.GoBegin();
-		}
-		editor.browser.search.SetFocus();
-	}
-*/
 }
 
 void Ide::SwitchHeader() {
@@ -178,11 +164,7 @@ int AssistEditor::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value&
 		}
 	PaintText(w, x, y, ~m.natural, n, 0, starti, focuscursor, ink, false);
 	if(m.nest.GetCount()) {
-		String h;
-		if(x > r.left)
-			h << ' ';
-		h << m.nest;
-		h.Cat("::");
+		String h =  m.nest + "::";
 		w.DrawText(x, y, h, BrowserFont().Bold(), Magenta());
 		x += GetTextSize(h, BrowserFont()).cx;
 	}
