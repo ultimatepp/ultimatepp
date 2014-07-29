@@ -364,10 +364,15 @@ bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
 WString CodeEditor::GetWild(int type, int& i)
 {
 	for(;;) {
-		if(i >= foundwild.GetCount()) return WString();
+		if(i >= foundwild.GetCount()) break;
 		Found& f = foundwild[i++];
 		if(f.type == type) return f.text;
 	}
+	for(int j = 0; j < foundwild.GetCount(); j++) {
+		Found& f = foundwild[j++];
+		if(f.type == type) return f.text;
+	}
+	return WString();
 }
 
 WString CodeEditor::GetReplaceText()
