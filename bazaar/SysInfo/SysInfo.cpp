@@ -626,37 +626,28 @@ Array <NetAdapter> GetAdapterInfo() {
 Array<NetAdapter> GetAdapterInfo() {
 	Array<NetAdapter> res;
 	
-	char buf[8192] = {0};
-	struct ifconf ifc = {0};
-	struct ifreq *ifr = NULL;
-	int sck = 0;
-	int nInterfaces = 0;
-	int i = 0;
-	char ip[INET6_ADDRSTRLEN] = {0};
-	struct ifreq *item;
-	struct sockaddr *addr;
-	socklen_t salen;
-	char hostname[NI_MAXHOST];
-
-	sck = socket(PF_INET, SOCK_DGRAM, 0);
+	int sck = socket(PF_INET, SOCK_DGRAM, 0);
 	if(sck < 0) 
 		return res;
  
+ 	char buf[8192] = {0};
+ 	struct ifconf ifc = {0};
 	ifc.ifc_len = sizeof(buf);
 	ifc.ifc_buf = buf;
 	if(ioctl(sck, SIOCGIFCONF, &ifc) < 0) 
 		return res;
 
-	ifr = ifc.ifc_req;
-	nInterfaces = ifc.ifc_len / sizeof(struct ifreq);
-	for(i = 0; i < nInterfaces; i++) {
+	struct ifreq *ifr = ifc.ifc_req;
+	int nInterfaces = ifc.ifc_len / sizeof(struct ifreq);
+	for(int i = 0; i < nInterfaces; i++) {
 		String MAC;
       
+      	char hostname[NI_MAXHOST];
 		bzero(hostname, NI_MAXHOST);
-		item = &ifr[i];
+		struct ifreq *item = &ifr[i];
 		
-		addr = &(item->ifr_addr);
-		
+		struct sockaddr *addr = &(item->ifr_addr);
+		socklen_t salen;
 		switch(addr->sa_family) {
 		case AF_INET:	salen = sizeof(struct sockaddr_in);		break;
     	case AF_INET6:	salen = sizeof(struct sockaddr_in6);	break;
@@ -671,6 +662,7 @@ Array<NetAdapter> GetAdapterInfo() {
     	NetAdapter &adapter = res.Add();
     	adapter.description = hostname;
     	
+    	char ip[INET6_ADDRSTRLEN] = {0};
 		switch(addr->sa_family) {
 		case AF_INET:	inet_ntop(AF_INET, &(((struct sockaddr_in *)addr)->sin_addr), ip, INET6_ADDRSTRLEN);	
 						adapter.ip4 = ip;

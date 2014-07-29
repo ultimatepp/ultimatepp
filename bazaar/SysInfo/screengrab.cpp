@@ -519,8 +519,10 @@ Image Window_SaveCapture(int64 windowId, int left, int top, int width, int heigh
 		windowId = RootWindow(dpy, screen);
 	else {
 		windowId = GetToplevelParent(dpy, windowId);
-		if (windowId < 0)
+		if (windowId < 0) {
+			SetX11ErrorHandler();
 			return Null;
+		}
 	}
 	
 	XWindowAttributes rc;
@@ -539,9 +541,12 @@ Image Window_SaveCapture(int64 windowId, int left, int top, int width, int heigh
 	if (height == -1)
 		height	= rc.height;
 	
-	XImage *image = XGetImage(dpy, windowId, 0, 0, width, height, XAllPlanes(), ZPixmap);
-	if (image == NULL)
+	XImage *image = XGetImage(dpy, windowId, left, top, width, height, XAllPlanes(), ZPixmap);
+	if (image == NULL) {
+		XCloseDisplay(dpy);
+		SetX11ErrorHandler();
 		return Null;
+	}
 	
 	ImageBuffer ib(width, height);
 	

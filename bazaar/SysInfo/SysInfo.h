@@ -57,6 +57,8 @@ void GetWindowsList(Upp::Array<int64> &wid, Upp::Array<int64> &pid, Upp::Array<S
 					Upp::Array<String> &fileName, Upp::Array<String> &title);
 Upp::Array<int64> GetWindowsList();
 
+Rect GetDesktopRect();
+	
 bool Window_GetRect(int64 windowId, long &left, long &top, long &right, long &bottom);
 bool Window_SetRect(int64 windowId, long left, long top, long right, long bottom);
 void Window_Bottom(int64 windowId);
