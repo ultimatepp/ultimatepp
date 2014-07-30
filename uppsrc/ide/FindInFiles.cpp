@@ -1,22 +1,5 @@
 #include "ide.h"
 
-/*
-void Ide::SerializeFf(Stream& s) { // Used to move data from regular Find dialog, has to be same as FindAndReplace::Serialize
-	int version = 1;
-	s / version;
-	s % ff.find;
-	ff.find.SerializeList(s);
-	s % ff.wholeword % ff.ignorecase % ff.wildcards;
-	if(version >= 0)
-		s % ff.samecase;
-	s % ff.replace;
-	if(version >= 1) {
-		s % incremental;
-	}
-	ff.replace.SerializeList(s);
-}
-*/
-
 FileSel& sSD()
 {
 	static bool b;
