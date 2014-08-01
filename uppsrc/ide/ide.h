@@ -315,6 +315,8 @@ struct AssistEditor : CodeEditor {
 		int            file;
 		bool           impl;
 		
+		bool operator<(const NavItem& b) const  { return CombineCompare(file, b.file)(line, b.line) < 0; }
+		
 		void Set(const CppItem& m);
 	};
 	
