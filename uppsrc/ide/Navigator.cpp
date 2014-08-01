@@ -189,6 +189,12 @@ void AssistEditor::Search()
 	list.Clear();
 	item.Clear();
 	String s = ~search;
+	Vector<String> h = Split((String)~search, ':');
+	String search_name, search_nest;
+	if(h.GetCount())
+		search_name = h.Pop();
+	if(h.GetCount())
+		search_nest = Join(h, "::");
 	s = Join(Split(s, ':'), "::") + (s.EndsWith(":") ? "::" : "");
 	int lineno = StrInt(s);
 	if(!IsNull(lineno)) {
@@ -221,32 +227,32 @@ void AssistEditor::Search()
 		ArrayMap<String, NavItem> imap;
 		for(int i = 0; i < b.GetCount(); i++) {
 			String nest = b.GetKey(i);
-			String unest = ToUpper(nest);
-			const Array<CppItem>& ci = b[i];
-			for(int j = 0; j < ci.GetCount(); j++) {
-				const CppItem& m = ci[j];
-				String h = unest;
-				h << "::" << m.uname;
-				if(h.Find(s) >= 0) {
-					String key = nest + '\1' + m.qitem;
-					int q = imap.Find(key);
-					if(q < 0) {
-						NavItem& ni = imap.Add(key);
-						ni.Set(m);
-						ni.nest = nest;
-					}
-					else {
-						NavItem& mm = imap[q];
-						String n = mm.natural;
-						if(m.natural.GetCount() > mm.natural.GetCount())
-							mm.natural = m.natural;
-						if(CombineCompare(mm.impl, m.impl)(m.file, mm.file)(m.line, mm.line) < 0)
-							mm.Set(m);
+			if(ToUpper(nest).Find(search_nest) >= 0) {
+				const Array<CppItem>& ci = b[i];
+				for(int j = 0; j < ci.GetCount(); j++) {
+					const CppItem& m = ci[j];
+					if(m.uname.Find(search_name) >= 0) {
+						String key = nest + '\1' + m.qitem;
+						int q = imap.Find(key);
+						if(q < 0) {
+							NavItem& ni = imap.Add(key);
+							ni.Set(m);
+							ni.nest = nest;
+						}
+						else {
+							NavItem& mm = imap[q];
+							String n = mm.natural;
+							if(m.natural.GetCount() > mm.natural.GetCount())
+								mm.natural = m.natural;
+							if(CombineCompare(mm.impl, m.impl)(m.file, mm.file)(m.line, mm.line) < 0)
+								mm.Set(m);
+						}
 					}
 				}
 			}
 		}
 		item = imap.PickValues();
 	}
+	Sort(item);
 	list.SetVirtualCount(item.GetCount());
 }
