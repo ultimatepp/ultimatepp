@@ -31,7 +31,7 @@ Vector<String> GetLineMap(Stream& stream)
 				while(emp-- > 0)
 					out.Add(Null);
 				if(e != f)
-					s.Trim(e - p);
+					s.Trim(int(e - p));
 				out.Add(s);
 				emp = 0;
 			}

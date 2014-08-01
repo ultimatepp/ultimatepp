@@ -67,7 +67,7 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 	next.ScanSyntax(ltext, e, line + 1, tabsize);
 	bool macro = next.macro != MACRO_OFF;
 	
-	int linelen = e - ltext;
+	int linelen = int(e - ltext);
 	const wchar *p = ltext;
 	
 	Grounding(p, e);
@@ -216,7 +216,7 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			bool isDot, isFloat = false;
 			if(*p == '0') c = INK_CONST_OCT;
 			while(IsDigit(*p)) p++;
-			int fixdigits = p - t;
+			int fixdigits = int(p - t);
 			if(*p == '.' || (*p == 'e' || *p == 'E') && highlight != HIGHLIGHT_CSS) {
 				if(*p == '.')
 					isDot = true;

@@ -65,7 +65,7 @@ bool Match(const char *f, const char *s, bool we, bool ignorecase, int& count) {
 			f++;
 			for(;;) {
 				if(Match(f, s, we, ignorecase, count)) {
-					count += s - b;
+					count += int(s - b);
 					return true;
 				}
 				if(!*s++) break;
@@ -102,7 +102,7 @@ bool Match(const char *f, const char *s, bool we, bool ignorecase, int& count) {
 		}
 		f++;
 	}
-	count = s - b;
+	count = int(s - b);
 	return we && iscid(*s) ? false : true;
 }
 
@@ -138,7 +138,7 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 		else
 			for(const char *s = line; *s; s++) {
 				if(bw && Match(pattern, s, we, ignorecase, count)) {
-					AddFoundFile(fn, ln, line, s - line, count);
+					AddFoundFile(fn, ln, line, int(s - line), count);
 					infile++;
 					n++;
 					break;

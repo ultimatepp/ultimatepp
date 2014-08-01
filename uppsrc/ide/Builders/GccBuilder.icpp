@@ -467,7 +467,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 						while(--c >= ~ln)
 							if(!IsDigit(*c) && *c != '.')
 								break;
-						int pos = c - ~ln - 2;
+						int pos = int(c - ~ln - 2);
 						if(pos >= 0 && ToLower(ln.Mid(pos, 3)) == ".so")
 							ext = ".so";
 					}

@@ -12,14 +12,14 @@ Vector<S> SplitGeneric(int maxcount, const F& delim, const Char *s, bool ignoree
 		const Char *q = delim(t);
 		if(q) {
 			if(!ignoreempty || t > s)
-				r.Add().Set(s, t - s); // This is faster than r.Add(String(s, t))...
+				r.Add().Set(s, int(t - s)); // This is faster than r.Add(String(s, t))...
 			t = s = q;
 		}
 		else
 			t++;
 	}
 	if((!ignoreempty || t > s) && r.GetCount() < maxcount)
-		r.Add().Set(s, t - s);
+		r.Add().Set(s, int(t - s));
 	return r;
 }
 
@@ -62,7 +62,7 @@ Vector<String> Split(int maxcount, const char *s, const char *text, bool ignoree
 {
 	SplitDelimText__ delim;
 	delim.ds = text;
-	delim.l = strlen(text);
+	delim.l = (int)strlen(text);
 	return delim.l ? SplitGeneric<String>(maxcount, delim, s, ignoreempty) : Vector<String>();
 }
 
