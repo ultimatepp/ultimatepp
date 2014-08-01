@@ -337,7 +337,7 @@ bool MySqlConnection::Execute() {
 			case FIELD_TYPE_DECIMAL:
 			case FIELD_TYPE_FLOAT:
 			case FIELD_TYPE_DOUBLE:
-			case FIELD_TYPE_NEW_DECIMAL:
+			case FIELD_TYPE_NEWDECIMAL:
 				f.type = DOUBLE_V;
 				break;
 			case FIELD_TYPE_DATE:
