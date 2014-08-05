@@ -121,6 +121,8 @@ double ScanDoubleT(const T *p, const T **endptr, bool accept_comma)
 	while(*p && (byte)*p <= ' ')
 		p++;
 	bool neg = false;
+	if(endptr)
+		*endptr = p;
 	if(*p == '+' || *p == '-')
 		neg = (*p++ == '-');
 	if((byte)(*p - '0') >= 10 && !((*p == '.' || accept_comma && *p == ',') && (byte)(p[1] - '0') < 10)) {
@@ -160,11 +162,6 @@ double ScanDoubleT(const T *p, const T **endptr, bool accept_comma)
 			return Null;
 		exp += vexp;
 	}
-	while(*p) {
-		if((byte)*p > ' ')
-			return Null;
-		p++;
-	}
 	if(endptr) *endptr = p;
 	if(exp) {
 		double e = ipow10(tabs(exp));
@@ -188,7 +185,14 @@ double ScanDouble(const wchar *p, const wchar **endptr, bool accept_comma)
 Value StrIntValue(const char *s)
 {
 	if(s && *s) {
+		const char *p;
 		int64 q = ScanInt64(s);
+		if(!IsNull(q))
+			while(*p) {
+				if((byte)*p > ' ')
+					return ErrorValue(t_("Invalid number !"));
+				p++;
+			}
 		return IsNull(q) ? ErrorValue(t_("Invalid number !")) : Value(q);
 	}
 	return (int)Null;
@@ -197,7 +201,14 @@ Value StrIntValue(const char *s)
 Value StrDblValue(const char *s)
 {
 	if(s && *s) {
-		double q = ScanDouble(s);
+		const char *p;
+		double q = ScanDouble(s, &p);
+		if(!IsNull(q))
+			while(*p) {
+				if((byte)*p > ' ')
+					return ErrorValue(t_("Invalid number !"));
+				p++;
+			}
 		return IsNull(q) ? ErrorValue(t_("Invalid number !")) : Value(q);
 	}
 	return (double)Null;
