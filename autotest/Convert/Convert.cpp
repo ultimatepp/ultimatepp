@@ -84,4 +84,22 @@ CONSOLE_APP_MAIN
 	Test(d, "1.1E-10", 1.1E-10);
 	Test(d, "+1.1E-10", 1.1E-10);
 	Test(d, "-1.1E-10", -1.1E-10);
+	
+	ConvertInt x;
+	Test(x, "12-12", ErrorValue());
+	Test(x, "12+12", ErrorValue());
+	Test(x, "12.-12", ErrorValue());
+	Test(x, "12.+12", ErrorValue());
+	Test(x, "a", ErrorValue());
+	Test(x, " ", ErrorValue());
+
+	ConvertInt64 xx;
+	Test(xx, "12-12", ErrorValue());
+	Test(xx, "12+12", ErrorValue());
+	Test(xx, "12.-12", ErrorValue());
+	Test(xx, "12.+12", ErrorValue());
+	Test(xx, "a", ErrorValue());
+	Test(xx, " ", ErrorValue());
+	
+	ASSERT(StrDbl("123xxx") == 123);
 }
