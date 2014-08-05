@@ -89,13 +89,13 @@ int FindMin(const C& c)
 }
 
 template <class C>
-const C::ValueType& Min(const C& c)
+const typename C::ValueType& Min(const C& c)
 {
 	return c[FindMin(c)];
 }
 
 template <class C>
-const C::ValueType& Min(const C& c, const typename C::ValueType& def)
+const typename C::ValueType& Min(const C& c, const typename C::ValueType& def)
 {
 	int q = FindMin(c);
 	return q < 0 ? def : c[q];
@@ -114,13 +114,13 @@ int FindMax(const C& c)
 }
 
 template <class C>
-const C::ValueType& Max(const C& c)
+const typename C::ValueType& Max(const C& c)
 {
 	return c[FindMax(c)];
 }
 
 template <class C>
-const C::ValueType& Max(const C& c, const typename C::ValueType& def)
+const typename C::ValueType& Max(const C& c, const typename C::ValueType& def)
 {
 	int q = FindMax(c);
 	return q < 0 ? def : c[q];
