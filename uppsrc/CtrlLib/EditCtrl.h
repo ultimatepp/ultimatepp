@@ -89,6 +89,7 @@ public:
 		Color invalid;
 		Color text, textdisabled;
 		Color selected, selectedtext;
+		Color selected0, selectedtext0; // If does not have focus...
 		Value edge[4];
 		bool  activeedge;
 		int   vfm;
