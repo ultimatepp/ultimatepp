@@ -186,7 +186,7 @@ Value StrIntValue(const char *s)
 {
 	if(s && *s) {
 		const char *p;
-		int64 q = ScanInt64(s);
+		int64 q = ScanInt64(s, &p);
 		if(!IsNull(q))
 			while(*p) {
 				if((byte)*p > ' ')
