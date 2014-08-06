@@ -68,13 +68,18 @@ void TopWindow::CenterRect(Ctrl *owner)
 	SetupRect(owner);
 	if(owner && center == 1 || center == 2) {
 		Size sz = GetRect().Size();
+		DDUMP(sz);
+		DDUMP(center);
 		Rect r, wr;
 		wr = Ctrl::GetWorkArea();
 		Rect fm = GetFrameMargins();
+		DDUMP(wr);
+		DDUMP(fm);
 		if(center == 1)
 			r = owner->GetRect();
 		else
 			r = wr;
+		DDUMP(r);
 		Point p = r.CenterPos(sz);
 		r = RectC(p.x, p.y, sz.cx, sz.cy);
 		wr.left += fm.left;

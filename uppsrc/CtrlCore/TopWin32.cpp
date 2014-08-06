@@ -95,6 +95,58 @@ void TopWindow::DeleteIco()
 	ico = lico = NULL;
 }
 
+String WindowStyleAsString(dword style, dword exstyle)
+{
+	String r1;
+#define DO(x) if(style & x) { if(r1.GetCount()) r1 << "|"; r1 << #x; }
+	DO(WS_OVERLAPPED)
+	DO(WS_POPUP)
+	DO(WS_CHILD)
+	DO(WS_MINIMIZE)
+	DO(WS_VISIBLE)
+	DO(WS_DISABLED)
+	DO(WS_CLIPSIBLINGS)
+	DO(WS_CLIPCHILDREN)
+	DO(WS_MAXIMIZE)
+	DO(WS_CAPTION)
+	DO(WS_BORDER)
+	DO(WS_DLGFRAME)
+	DO(WS_VSCROLL)
+	DO(WS_HSCROLL)
+	DO(WS_SYSMENU)
+	DO(WS_THICKFRAME)
+	DO(WS_GROUP)
+	DO(WS_TABSTOP)
+	DO(WS_MINIMIZEBOX)
+	DO(WS_MAXIMIZEBOX)
+#undef DO
+
+	String r2;
+#define DO(x) if(exstyle & x) { if(r2.GetCount()) r2 << "|"; r2 << #x; }
+	DO(WS_EX_DLGMODALFRAME)
+	DO(WS_EX_NOPARENTNOTIFY)
+	DO(WS_EX_TOPMOST)
+	DO(WS_EX_ACCEPTFILES)
+	DO(WS_EX_TRANSPARENT)
+	DO(WS_EX_MDICHILD)
+	DO(WS_EX_TOOLWINDOW)
+	DO(WS_EX_WINDOWEDGE)
+	DO(WS_EX_CLIENTEDGE)
+	DO(WS_EX_CONTEXTHELP)
+	DO(WS_EX_RIGHT)
+	DO(WS_EX_LEFT)
+	DO(WS_EX_RTLREADING)
+	DO(WS_EX_LTRREADING)
+	DO(WS_EX_LEFTSCROLLBAR)
+	DO(WS_EX_RIGHTSCROLLBAR)
+	DO(WS_EX_CONTROLPARENT)
+	DO(WS_EX_STATICEDGE)
+	DO(WS_EX_APPWINDOW)
+#undef DO
+
+	return r1 + ' ' + r2;
+}
+
 void TopWindow::SyncCaption()
 {
 	GuiLock __;
@@ -106,6 +158,7 @@ void TopWindow::SyncCaption()
 		style = ::GetWindowLong(hwnd, GWL_STYLE);
 		exstyle = ::GetWindowLong(hwnd, GWL_EXSTYLE);
 	}
+	else style = exstyle = 0;
 	style &= ~(WS_THICKFRAME|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_SYSMENU|WS_POPUP|WS_DLGFRAME);
 	exstyle &= ~(WS_EX_TOOLWINDOW|WS_EX_DLGMODALFRAME);
 	style |= WS_CAPTION;
@@ -117,18 +170,16 @@ void TopWindow::SyncCaption()
 		style |= WS_MAXIMIZEBOX;
 	if(sizeable)
 		style |= WS_THICKFRAME;
-#ifndef PLATFORM_WINCE
 	if(frameless)
 		style = (style & ~WS_CAPTION) | WS_POPUP;
 	else
-	if(IsNull(icon) && !maximizebox && !minimizebox || noclosebox) {
+	if(/*IsNull(icon) && */!maximizebox && !minimizebox || noclosebox) { // icon ignored because of FixIcons
 		style |= WS_POPUPWINDOW|WS_DLGFRAME;
 		exstyle |= WS_EX_DLGMODALFRAME;
 		if(noclosebox)
 			style &= ~WS_SYSMENU;
 	}
 	else
-#endif
 		style |= WS_SYSMENU;
 	if(tool)
 		exstyle |= WS_EX_TOOLWINDOW;
@@ -206,6 +257,7 @@ void TopWindow::Open(HWND hwnd)
 	LLOG("TopWindow::Open, owner HWND = " << FormatIntHex((int)hwnd, 8) << ", Active = " << FormatIntHex((int)::GetActiveWindow(), 8));
 	IgnoreMouseUp();
 	SyncCaption();
+	LLOG("WindowStyles: " << WindowStyleAsString(style, exstyle));
 #ifdef PLATFORM_WINCE
 	if(!GetRect().IsEmpty())
 #endif
