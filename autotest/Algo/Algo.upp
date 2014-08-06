@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Algo.cpp;
+
+mainconfig
+	"" = "SSE2";
+

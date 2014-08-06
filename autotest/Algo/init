@@ -1,0 +1,4 @@
+#ifndef _Algo_icpp_init_stub
+#define _Algo_icpp_init_stub
+#include "Core/init"
+#endif
