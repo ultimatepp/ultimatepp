@@ -4,8 +4,8 @@ using namespace Upp;
 
 void Test(Convert& cv, const char *s, Value res)
 {
-	DDUMP(cv.Scan(s));
 	Value v = cv.Scan(s);
+	LOG(s << ": " << v);
 	if(IsError(res))
 		ASSERT(IsError(v));
 	else
