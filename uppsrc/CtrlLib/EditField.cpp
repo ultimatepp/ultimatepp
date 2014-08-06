@@ -141,6 +141,8 @@ CH_STYLE(EditField, Style, StyleDefault)
 	textdisabled = SColorDisabled();
 	selected = SColorHighlight();
 	selectedtext = SColorHighlightText();
+	selected0 = SColorDkShadow();
+	selectedtext0 = SColorHighlightText();
 	for(int i = 0; i < 4; i++)
 		edge[i] = CtrlsImg::EFE();
 	activeedge = false;
@@ -351,8 +353,8 @@ void EditField::Paint(Draw& w)
 		if(GetSelection(l, h)) {
 			h = min(h, len);
 			for(int i = l; i < h; i++) {
-				hl[i].ink = enabled ? style->selectedtext : paper;
-				hl[i].paper = enabled ? style->selected : ink;
+				hl[i].ink = enabled ? HasFocus() ? style->selectedtext : style->selectedtext0 : paper;
+				hl[i].paper = enabled ? HasFocus() ? style->selected : style->selected0 : ink;
 			}
 		}
 		int b = 0;
@@ -475,7 +477,7 @@ void EditField::LostFocus()
 			if(s != text) text = s;
 		}
 	}
-	if(!keep_selection && autoselection) {
+	if(!keep_selection/* && autoselection*/) {
 		anchor = -1;
 		cursor = sc = 0;
 	}

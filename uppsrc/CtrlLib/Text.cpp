@@ -138,20 +138,22 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 					LTIMING("ln.Cat");
 					ln.Cat((const char *)b, (const char *)s);
 				}
-				if(*s == '\r')
-					cr = true;
-				if(*s == '\n') {
-					LTIMING("ADD");
-					int len = (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
-					total += len + 1;
-					Ln& l = line.Add();
-					l.len = len;
-					l.text = ln;
-					ln.Clear();
-					b8 = 0;
-					b = s;
+				if(s < e) {
+					if(*s == '\r')
+						cr = true;
+					if(*s == '\n') {
+						LTIMING("ADD");
+						int len = (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
+						total += len + 1;
+						Ln& l = line.Add();
+						l.len = len;
+						l.text = ln;
+						ln.Clear();
+						b8 = 0;
+						b = s;
+					}
+					s++;
 				}
-				s++;
 			}
 		}
 	else
@@ -182,27 +184,29 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 					LTIMING("ln.Cat");
 					ln.Cat((const char *)b, (const char *)s);
 				}
-				if(*s == '\r')
-					cr = true;
-				if(*s == '\n') {
-					if(b8 & 128) {
-						LTIMING("ToUnicode");
-						WString w = ToUnicode(~ln, ln.GetCount(), charset);
-						line.Add(w);
-						total += w.GetLength() + 1;
+				if(s < e) {
+					if(*s == '\r')
+						cr = true;
+					if(*s == '\n') {
+						if(b8 & 128) {
+							LTIMING("ToUnicode");
+							WString w = ToUnicode(~ln, ln.GetCount(), charset);
+							line.Add(w);
+							total += w.GetLength() + 1;
+						}
+						else {
+							LTIMING("ADD");
+							total += ln.GetCount() + 1;
+							Ln& l = line.Add();
+							l.len = ln.GetCount();
+							l.text = ln;
+						}
+						ln.Clear();
+						b8 = 0;
+						b = s;
 					}
-					else {
-						LTIMING("ADD");
-						total += ln.GetCount() + 1;
-						Ln& l = line.Add();
-						l.len = ln.GetCount();
-						l.text = ln;
-					}
-					ln.Clear();
-					b8 = 0;
-					b = s;
+					s++;
 				}
-				s++;
 			}
 		}
 
