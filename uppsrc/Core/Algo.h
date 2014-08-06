@@ -66,13 +66,15 @@ int FindBest(const C& c, int pos, int count, const Pred& pred)
 {
 	if(count == 0)
 		return -1;
-	typename C::ValueType m = c[pos];
+	const typename C::ValueType *m = &c[pos];
 	int mi = pos;
-	for(int i = 1; i < c.GetCount(); i++)
-		if(pred(c[i], m)) {
-			m = c[i];
-			mi = i;
+	for(int i = 1; i < count; i++) {
+		int p = i + pos;
+		if(pred(c[p], *m)) {
+			m = &c[p];
+			mi = p;
 		}
+	}
 	return mi;
 }
 
