@@ -486,6 +486,8 @@ Ctrl *Ctrl::GetActiveCtrl()
 
 UDropTarget *NewUDropTarget(Ctrl *);
 
+String WindowStyleAsString(dword style, dword exstyle);
+
 void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int show, bool dropshadow)
 {
 	GuiLock __;
@@ -529,7 +531,6 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	inloop = false;
 
 	ASSERT(top->hwnd);
-
 	::MoveWindow(top->hwnd, r.left, r.top, r.Width(), r.Height(), false); // To avoid "black corners" artifact effect
 	::ShowWindow(top->hwnd, visible ? show : SW_HIDE);
 //	::UpdateWindow(hwnd);
