@@ -86,6 +86,8 @@ CONSOLE_APP_MAIN
 	Test(d, "-1.1E-10", -1.1E-10);
 	
 	ConvertInt x;
+	Test(x, "12", 12);
+	Test(x, "-12", -12);
 	Test(x, "12-12", ErrorValue());
 	Test(x, "12+12", ErrorValue());
 	Test(x, "12.-12", ErrorValue());
@@ -94,6 +96,8 @@ CONSOLE_APP_MAIN
 	Test(x, " ", ErrorValue());
 
 	ConvertInt64 xx;
+	Test(xx, "12", 12);
+	Test(xx, "-12", -12);
 	Test(xx, "12-12", ErrorValue());
 	Test(xx, "12+12", ErrorValue());
 	Test(xx, "12.-12", ErrorValue());
@@ -102,4 +106,5 @@ CONSOLE_APP_MAIN
 	Test(xx, " ", ErrorValue());
 	
 	ASSERT(StrDbl("123xxx") == 123);
+	ASSERT(StrInt("123xxx") == 123);
 }
