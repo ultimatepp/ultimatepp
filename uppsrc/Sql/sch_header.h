@@ -24,6 +24,8 @@ public: \
 	\
 	static int                  GetCount()                            { return GetInfo().GetCount(); } \
 	static SqlId                GetId(int i)                          { return GetInfo().GetId(i); } \
+	static int                  GetIndex(const String& id)            { return GetInfo().GetIndex(id); } \
+	static int                  GetIndex(const SqlId& id)             { return GetInfo().GetIndex(id); } \
 	static int                  GetWidth(int i)                       { return GetInfo().GetWidth(i); } \
 	static int                  GetWidth(const SqlId& id)             { return GetInfo().GetWidth(id); } \
 	\
