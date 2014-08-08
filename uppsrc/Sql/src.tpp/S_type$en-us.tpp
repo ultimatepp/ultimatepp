@@ -95,6 +95,14 @@ t]_[*@3 i])&]
 [s2; Returns a column ID for column at [%-*@3 i].&]
 [s3; &]
 [s4;%- &]
+[s5;:S`_type`:`:GetIndex`(const String`&`):%- [@(0.0.255) static] [@(0.0.255) int]_[* GetIn
+dex]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 id])&]
+[s5;:S`_type`:`:GetIndex`(const SqlId`&`):%- [@(0.0.255) static] [@(0.0.255) int]_[* GetInd
+ex]([@(0.0.255) const]_[_^SqlId^ SqlId][@(0.0.255) `&]_[*@3 id])&]
+[s2;~~~1792; Returns the index of column [%-*@3 id] or negative number 
+if not found.&]
+[s3; &]
+[s4;%- &]
 [s5;:S`_type`:`:GetWidth`(int`):%- [@(0.0.255) static] [@(0.0.255) int]_[* GetWidth]([@(0.0.255) i
 nt]_[*@3 i])&]
 [s2; Returns the width of column (usually text) as defined in the 

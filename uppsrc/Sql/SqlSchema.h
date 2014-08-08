@@ -144,6 +144,8 @@ struct S_info {
 	int      GetCount() const                               { return column.GetCount(); }
 
 	SqlId    GetId(int i) const                             { return column.GetKey(i); }
+	int      GetIndex(const String& id) const               { return column.Find(id); }
+	int      GetIndex(const SqlId& id) const                { return column.Find(~id); }
 	
 	int      GetWidth(int i) const                          { return column[i].width; }
 	int      GetWidth(const SqlId& id) const;
@@ -194,6 +196,8 @@ struct S_type {
 
 	static int                  GetCount();
 	static SqlId                GetId(int i);
+	static int                  GetIndex(const String& id);
+	static int                  GetIndex(const SqlId& id);
 	static int                  GetWidth(int i);
 	static int                  GetWidth(const SqlId& id);
 
