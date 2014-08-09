@@ -127,6 +127,7 @@ public:
 	static int               GetSyntaxCount()             { return defs().GetCount(); }
 	static String            GetSyntax(int i)             { return defs().GetKey(i); }
 	static String            GetSyntaxDescription(int i)  { return defs()[i].description; }
+	static String            GetSyntaxPatterns(int i)     { return defs()[i].patterns; }
 };
 
 #endif
