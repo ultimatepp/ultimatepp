@@ -463,6 +463,7 @@ void HttpRequest::StartConnect()
 	LLOG("HTTP StartConnect");
 	if(!Connect(addrinfo))
 		return;
+	addrinfo.Clear();
 	if(ssl && ssl_proxy_host.GetCount()) {
 		StartPhase(SSLPROXYREQUEST);
 		String host_port = host;

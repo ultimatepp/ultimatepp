@@ -22,7 +22,9 @@ some maximum number (currently 32) of slots used to resolve hosts
 similtaneously, however when this number is exceeded, it only 
 means that InProgress tries to put the request to the slot (and 
 returns true if non available or if request is not resolved yet), 
-so from the client view, this limit has little impact.&]
+so from the client view, this limit has little impact. It also 
+means that client should release the slot as soon as possible, 
+using Clear method or by destructing IpAddrInfo.&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
@@ -47,13 +49,14 @@ was found. [%-*@3 family] can be used to narrow the scan to particular
 IP protocol (FAMILY`_IPV4, FAMILY`_IPV6).&]
 [s3;%% &]
 [s4; &]
-[s5;:IpAddrInfo`:`:GetResult`(`): addrinfo_`*[* GetResult]()_[@(0.0.255) const]&]
+[s5;:IpAddrInfo`:`:GetResult`(`)const: addrinfo_`*[* GetResult]()_[@(0.0.255) const]&]
 [s2;%% Returns resulting [^http`:`/`/en`.wikipedia`.org`/wiki`/Getaddrinfo^ addrinfo] 
 if address resolving was finished and successfull, NULL otherwise.&]
 [s3; &]
 [s4; &]
 [s5;:IpAddrInfo`:`:Clear`(`): [@(0.0.255) void]_[* Clear]()&]
-[s2;%% Resets IpAddrInfo to initial state.&]
+[s2;%% Resets IpAddrInfo to initial state. Not that this also releases 
+the slot used for resolving the request.&]
 [s3; &]
 [s4; &]
 [s5;:IpAddrInfo`:`:IpAddrInfo`(`): [* IpAddrInfo]()&]
