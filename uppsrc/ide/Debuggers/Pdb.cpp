@@ -104,7 +104,7 @@ bool Pdb::Create(One<Host> local, const String& exefile, const String& cmdline)
 	Buffer<char> env(local->GetEnvironment().GetCount() + 1);
 	memcpy(env, ~local->GetEnvironment(), local->GetEnvironment().GetCount() + 1);
 	bool h = CreateProcess(exefile, cmd, NULL, NULL, TRUE,
-	                       NORMAL_PRIORITY_CLASS|CREATE_NEW_CONSOLE|DEBUG_ONLY_THIS_PROCESS|DEBUG_PROCESS,
+	                       /*NORMAL_PRIORITY_CLASS|CREATE_NEW_CONSOLE|*/DEBUG_ONLY_THIS_PROCESS/*|DEBUG_PROCESS*/,
 	                       ~env, NULL, &si, &pi);
 	if(!h) {
 		Exclamation("Error creating process&[* " + DeQtf(exefile) + "]&" +
@@ -112,6 +112,15 @@ bool Pdb::Create(One<Host> local, const String& exefile, const String& cmdline)
 		return false;
 	}
 	hProcess = pi.hProcess;
+	mainThread = pi.hThread;
+
+#ifdef CPU_64
+	BOOL _64;
+	win64 = IsWow64Process(hProcess, &_64) && !_64;
+	LLOG("Win64 app: " << win64);
+	disas.Mode64(win64);
+#endif
+	
 	CloseHandle(pi.hThread);
 
 	IdeSetBottom(*this);
@@ -131,9 +140,10 @@ bool Pdb::Create(One<Host> local, const String& exefile, const String& cmdline)
 	terminated = false;
 
 	running = true;
+	
+	break_running = false;
 
 	RunToException();
-//	Sync();
 
 	return !terminated;
 }
@@ -158,23 +168,26 @@ void Pdb::SerializeSession(Stream& s)
 	}
 }
 
+struct CpuRegisterDisplay : Display {
+	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+	{
+		w.DrawRect(r, paper);
+		static int cx1 = GetTextSize("EFLAGS12", StdFont().Bold()).cx +
+		                 GetTextSize("0x0000000000000000", StdFont()).cx;
+		String name;
+		String value;
+		SplitTo((String)q, '|', name, value);
+		Size tsz = GetTextSize(value, StdFont());
+		int tt = r.top + max((r.Height() - tsz.cy) / 2, 0);
+		w.DrawText(r.left, tt, name, StdFont().Bold(), ink);
+		w.DrawText(r.left + cx1 - tsz.cx, tt, value, StdFont(), ink);
+	}
+};
+
 Pdb::Pdb()
 {
+	hWnd = NULL;
 	hProcess = INVALID_HANDLE_VALUE;
-
-	CtrlLayout(regs);
-	regs.Height(regs.GetLayoutSize().cy);
-	AddReg("eax", &regs.eax);
-	AddReg("ebx", &regs.ebx);
-	AddReg("ecx", &regs.ecx);
-	AddReg("edx", &regs.edx);
-	AddReg("esi", &regs.esi);
-	AddReg("edi", &regs.edi);
-	AddReg("ebp", &regs.ebp);
-	AddReg("esp", &regs.esp);
-	regs.Color(SColorLtFace);
-	regs.AddFrame(TopSeparatorFrame());
-	regs.AddFrame(RightSeparatorFrame());
 
 	locals.NoHeader();
 	locals.AddColumn("", 1);
@@ -229,8 +242,13 @@ Pdb::Pdb()
 	tab.Add(self.SizePos(), "this");
 	tab.Add(watches.SizePos(), "Watches");
 	tab.Add(explorer_pane.SizePos(), "Explorer");
-	memory.cdb = this;
+	tab.Add(cpu.SizePos(), "CPU");
 	tab.Add(memory.SizePos(), "Memory");
+	
+	cpu.Columns(4);
+	cpu.SetDisplay(Single<CpuRegisterDisplay>());
+
+	memory.cdb = this;
 
 	dlock = "  Running..";
 	dlock.SetFrame(BlackFrame());
@@ -240,13 +258,12 @@ Pdb::Pdb()
 	framelist.Ctrl::Add(dlock.SizePos());
 
 	pane.Add(tab.SizePos());
-	pane.Add(threadlist.LeftPosZ(340, 60).TopPos(2, EditField::GetStdHeight()));
-	pane.Add(framelist.HSizePosZ(404, 0).TopPos(2, EditField::GetStdHeight()));
+	pane.Add(threadlist.LeftPosZ(380, 60).TopPos(2, EditField::GetStdHeight()));
+	pane.Add(framelist.HSizePosZ(444, 0).TopPos(2, EditField::GetStdHeight()));
 	split.Horz(pane, tree.SizePos());
 	split.SetPos(8000);
 	Add(split);
 
-	disas.AddFrame(regs);
 	disas.WhenCursor = THISBACK(DisasCursor);
 	disas.WhenFocus = THISBACK(DisasFocus);
 

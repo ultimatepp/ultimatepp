@@ -310,6 +310,9 @@ void Pdb::TreeExpand(int node)
 {
 	if(tree.GetChildCount(node))
 		return;
+	Value v = tree.Get(node);
+	if(!v.Is<NamedVal>())
+		return;
 	const NamedVal& nv = ValueTo<NamedVal>(tree.Get(node));
 	Val val = nv.val;
 	if(nv.val.ref > 0) {

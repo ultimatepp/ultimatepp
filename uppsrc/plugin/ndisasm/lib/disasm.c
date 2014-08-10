@@ -1001,7 +1001,7 @@ static const char * const condition_name[16] = {
 };
 
 int32_t disasm(uint8_t *data, char *output, int outbufsize, int segsize,
-            int32_t offset, int autosync, uint32_t prefer)
+               uint64_t offset, int autosync, uint32_t prefer)
 {
     const struct itemplate * const *p, * const *best_p;
     const struct disasm_index *ix;
