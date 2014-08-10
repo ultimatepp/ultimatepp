@@ -43,6 +43,17 @@ struct Pdb : Debugger, ParentCtrl {
 		FilePos(const String& p, int l) : path(p), line(l) {}
 	};
 
+	enum CpuRegisterKind {
+		REG_L, REG_H, REG_X, REG_E, REG_R
+	};
+	
+	struct CpuRegister : Moveable<CpuRegister> {
+		int         sym;    // DbgHelp register symbol
+		const char *name;   // NULL: Do not list (e.g. al, as it is printed as EAX or RAX
+		int         kind;   // CpuRegisterKind
+		dword       flags;  // Unused
+	};
+	
 	struct MemPg : Moveable<MemPg> {
 		char data[1024];
 	};
@@ -109,7 +120,7 @@ struct Pdb : Debugger, ParentCtrl {
 	};
 
 	struct Frame : Moveable<Frame> {
-		adr_t               reip, rebp;
+		adr_t                  pc, frame, stack;
 		FnInfo                 fn;
 		VectorMap<String, Val> param;
 		VectorMap<String, Val> local;
@@ -138,17 +149,28 @@ struct Pdb : Debugger, ParentCtrl {
 		virtual void Paint(Draw& w, const Rect& r, const Value& q,
 	                       Color ink, Color paper, dword style) const;
 	};
+	
+	struct Context {
+	#ifdef CPU_64
+		union {
+			CONTEXT context64;
+			WOW64_CONTEXT context32;
+		};
+	#else
+		CONTEXT context32;
+	#endif
+	};
 
-	struct Thread {
+	struct Thread : Context {
 		HANDLE  hThread;
 		adr_t   sp;
-		CONTEXT context;
 	};
 
 	int                      	lock;
 	bool                     	running;
 	bool                     	stop;
 	HANDLE                   	hProcess;
+	HANDLE                      mainThread;
 	DWORD                    	processid;
 	ArrayMap<dword, Thread>     threads;
 	bool                     	terminated;
@@ -156,13 +178,17 @@ struct Pdb : Debugger, ParentCtrl {
 	Vector<ModuleInfo>       	module;
 	DEBUG_EVENT              	event;
 	HWND                     	hWnd;
-	VectorMap<adr_t, byte>      bp_set;
-	CONTEXT                  	context;
+	VectorMap<adr_t, byte>      bp_set; // breakpoints active for single RunToException
+
+#ifdef CPU_64
+	bool                        win64; // debugee is 64-bit
+#endif
+	Context                     context;
 
 	Index<adr_t>            	invalidpage;
 	VectorMap<adr_t, MemPg> 	mempage;
 
-	Index<adr_t>                 breakpoint;
+	Index<adr_t>                breakpoint;
 
 	ArrayMap<int, Type>     	type;
 
@@ -172,17 +198,12 @@ struct Pdb : Debugger, ParentCtrl {
 	String                  	autotext;
 
 
-	FrameBottom<WithRegistersLayout<StaticRect> > regs;
-
-	Vector<String>     regname;
-	Vector<Label *>    reglbl;
-
 	DbgDisas           disas;
 
 	EditString         watchedit;
 	
 	enum { // Order in this enum has to be same as order of tab.Add
-		TAB_AUTOS, TAB_LOCALS, TAB_THIS, TAB_WATCHES, TAB_EXPLORER, TAB_MEMORY
+		TAB_AUTOS, TAB_LOCALS, TAB_THIS, TAB_WATCHES, TAB_EXPLORER, TAB_CPU, TAB_MEMORY
 	};
 
 	TabCtrl            tab;
@@ -194,6 +215,7 @@ struct Pdb : Debugger, ParentCtrl {
 	ArrayCtrl          watches;
 	ArrayCtrl          autos;
 	ArrayCtrl          explorer;
+	ColumnList         cpu;
 	EditString         expexp;
 	Button             exback, exfw;
 	StaticRect         explorer_pane;
@@ -207,12 +229,23 @@ struct Pdb : Debugger, ParentCtrl {
 
 	Index<String>          noglobal;
 	VectorMap<String, Val> global;
+	
+	bool       break_running; // Needed for Wow64 BreakRunning to avoid ignoring breakpoint
 
-	void       Error();
+	void       Error(const char *s = NULL);
 	
 	String     Hex(adr_t);
 
+// CPU registers
+	uint32 GetRegister32(const Context& ctx, int sym);
+	uint64 GetRegister64(const Context& ctx, int sym);
+
+	const VectorMap<int, CpuRegister>& GetRegisterList();
+	uint64     GetCpuRegister(const Context& ctx, int sym);
+
 // debug
+	Context    ReadContext(HANDLE hThread);
+	void       WriteContext(HANDLE hThread, Context& context);
 	void       LoadModuleInfo();
 	int        FindModuleIndex(adr_t base);
 	void       UnloadModuleSymbols();
@@ -221,6 +254,7 @@ struct Pdb : Debugger, ParentCtrl {
 	void       RemoveThread(dword dwThreadId);
 	void       Lock();
 	void       Unlock();
+	void       ToForeground();
 	bool       RunToException();
 	bool       AddBp(adr_t address);
 	bool       RemoveBp(adr_t address);
@@ -233,8 +267,9 @@ struct Pdb : Debugger, ParentCtrl {
 	void       SaveForeground();
 	void       RestoreForeground();
 
-	const CONTEXT& CurrentContext();
-	void           WriteContext(dword cf = CONTEXT_CONTROL);
+	adr_t      GetIP();
+
+	void       WriteContext();
 
 // mem
 	int        Byte(adr_t addr);
@@ -257,8 +292,8 @@ struct Pdb : Debugger, ParentCtrl {
 	adr_t                 GetAddress(FilePos p);
 	FilePos               GetFilePos(adr_t address);
 	FnInfo                GetFnInfo(adr_t address);
-//	FnInfo                GetFnInfo(String name);
-	void                  GetLocals(adr_t reip, adr_t rebp, VectorMap<String, Pdb::Val>& param,
+	void                  GetLocals(Frame& frame, Context& context,
+	                                VectorMap<String, Pdb::Val>& param,
 	                                VectorMap<String, Pdb::Val>& local);
 	String                TypeAsString(int ti, bool deep = true);
 
@@ -287,8 +322,8 @@ struct Pdb : Debugger, ParentCtrl {
 	Visual     Visualise(const String& rexp);
 
 // code
+	Thread&    Current();
 	int        Disassemble(adr_t ip);
-	void       Reg(Label& reg, adr_t val);
 	bool       IsValidFrame(adr_t eip);
 	void       Sync0();
 	void       Sync();
@@ -356,8 +391,6 @@ struct Pdb : Debugger, ParentCtrl {
 	void      ExplorerMenu(Bar& bar);
 
 	void      Tab();
-
-	void      AddReg(const char *reg, Label *lbl) { regname.Add(reg); reglbl.Add(lbl); }
 
 	bool      Create(One<Host> host, const String& exefile, const String& cmdline);
 

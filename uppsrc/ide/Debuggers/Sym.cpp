@@ -2,7 +2,7 @@
 
 #ifdef COMPILER_MSC
 
-#define LLOG(x) // LOG(x)
+#define LLOG(x)   // DLOG(x)
 
 #ifdef _DEBUG
 char * SymTagAsString( DWORD symTag )
@@ -61,7 +61,7 @@ adr_t Pdb::GetAddress(FilePos p)
 	char h[MAX_PATH];
 	strcpy(h, p.path);
 	if(SymGetLineFromName(hProcess, NULL, h, p.line + 1, &dummy, &ln)) {
-		LLOG("GetAddress " << p.path << "(" << p.line << "): " << FormatIntHex(ln.Address));
+		LLOG("GetAddress " << p.path << "(" << p.line << "): " << Hex(ln.Address));
 		return ln.Address;
 	}
 	LLOG("GetAddress " << p.path << "(" << p.line << "): ??");
@@ -75,12 +75,12 @@ Pdb::FilePos Pdb::GetFilePos(adr_t address)
 	IMAGEHLP_LINE ln;
 	ln.SizeOfStruct = sizeof(ln);
 	fp.address = address;
-	if(SymGetLineFromAddr(hProcess, address, &dummy, &ln) && FileExists(ln.FileName)) {
+	if(SymGetLineFromAddr(hProcess, (uintptr_t)address, &dummy, &ln) && FileExists(ln.FileName)) {
 		fp.line = ln.LineNumber - 1;
 		fp.path = ln.FileName;
 		fp.address = ln.Address;
 	}
-	LLOG("GetFilePos(" << FormatIntHex(address) << "): " << fp.path << ": " << fp.line);
+	LLOG("GetFilePos(" << Hex(address) << "): " << fp.path << ": " << fp.line);
 	return fp;
 }
 
@@ -104,11 +104,11 @@ Pdb::FnInfo Pdb::GetFnInfo(adr_t address)
 		LLOG("GetFnInfo " << f->Name
 		     << ", type index: " << f->TypeIndex
 		     << ", Flags: " << FormatIntHex(f->Flags)
-		     << ", Address: " << FormatIntHex((dword)f->Address)
+		     << ", Address: " << Hex((dword)f->Address)
 		     << ", Size: " << FormatIntHex((dword)f->Size)
 		     << ", Tag: " << SymTagAsString(f->Tag));
 		fn.name = f->Name;
-		fn.address = (dword)f->Address;
+		fn.address = (adr_t)f->Address;
 		fn.size = f->Size;
 		fn.pdbtype = f->TypeIndex;
 	}
@@ -146,7 +146,7 @@ void Pdb::TypeVal(Pdb::Val& v, int typeId, adr_t modbase)
 		tag = GetSymInfo(modbase, typeId, TI_GET_SYMTAG);
 		if(tag == SymTagPointerType) {
 			v.ref++;
-			const Type& tptr = GetTypeId(modbase, typeId);
+			const Type& tptr = GetTypeId(modbase, typeId); // What is this?
 		}
 		else
 		if(tag == SymTagArrayType)
@@ -188,10 +188,11 @@ void Pdb::TypeVal(Pdb::Val& v, int typeId, adr_t modbase)
 }
 
 struct Pdb::LocalsCtx {
-	adr_t                       ebp;
+	adr_t                       frame;
 	VectorMap<String, Pdb::Val> param;
 	VectorMap<String, Pdb::Val> local;
 	Pdb                        *pdb;
+	Context                    *context;
 };
 
 BOOL CALLBACK Pdb::EnumLocals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserContext)
@@ -201,26 +202,39 @@ BOOL CALLBACK Pdb::EnumLocals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCon
 	if(pSym->Tag == SymTagFunction)
 		return TRUE;
 
-	if(pSym->Flags & IMAGEHLP_SYMBOL_INFO_REGISTER)
-		return TRUE;
-
 	Val& v = (pSym->Flags & IMAGEHLP_SYMBOL_INFO_PARAMETER ? c.param : c.local).GetAdd(pSym->Name);
 	v.address = (adr_t)pSym->Address;
-	if(pSym->Flags & IMAGEHLP_SYMBOL_INFO_REGRELATIVE)
-		v.address += c.ebp;
+	if(pSym->Flags & IMAGEHLP_SYMBOL_INFO_REGRELATIVE) {
+		if(pSym->Register == CV_ALLREG_VFRAME) {
+		#ifdef CPU_64
+			if(c.pdb->win64)
+				v.address += c.pdb->GetCpuRegister(*c.context, CV_AMD64_RBP);
+			else
+		#endif
+				v.address += (adr_t)c.pdb->GetCpuRegister(*c.context, CV_REG_EBP);
+		}
+		else
+			v.address += (adr_t)c.pdb->GetCpuRegister(*c.context, pSym->Register);
+	}
+	if(pSym->Flags & IMAGEHLP_SYMBOL_INFO_FRAMERELATIVE)
+		v.address += c.frame;
+	if(pSym->Flags & IMAGEHLP_SYMBOL_INFO_REGISTER)
+		v.address = pSym->Register;
 	c.pdb->TypeVal(v, pSym->TypeIndex, (adr_t)pSym->ModBase);
+	LLOG("LOCAL " << pSym->Name << ": " << Format64Hex(v.address));
 	return TRUE;
 }
 
-void Pdb::GetLocals(adr_t eip, adr_t ebp, VectorMap<String, Pdb::Val>& param,
+void Pdb::GetLocals(Frame& frame, Context& context, VectorMap<String, Pdb::Val>& param,
                     VectorMap<String, Pdb::Val>& local)
 {
 	static IMAGEHLP_STACK_FRAME f;
-	f.InstructionOffset = eip;
+	f.InstructionOffset = frame.pc;
 	SymSetContext(hProcess, &f, 0);
 	LocalsCtx c;
-	c.ebp = ebp;
+	c.frame = frame.frame;
 	c.pdb = this;
+	c.context = &context;
 	SymEnumSymbols(hProcess, 0, 0, &EnumLocals, &c);
 	param = c.param;
 	local = c.local;

@@ -14,7 +14,7 @@ extern "C" {
 
 NAMESPACE_UPP
 
-int NDisassemble(char *output, const byte *data, long offset, bool x64)// returns instruction length
+int NDisassemble(char *output, const byte *data, uint64 offset, bool x64)// returns instruction length
 {
 	int len = disasm(const_cast<unsigned char *>(data), output, 256, x64 ? 64 : 32, offset, false, 0);
 	if(len <= 0) {

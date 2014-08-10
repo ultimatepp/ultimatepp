@@ -56,7 +56,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen)
 	if(val.ref > 0 || val.type < 0)
 		val = GetRVal(val);
 	if(val.ref > 0) {
-		result.Cat(FormatIntHex(val.address, 0), LtMagenta);
+		result.Cat(Hex(val.address), LtMagenta);
 		if(val.type == UINT1 || val.type == SINT1) {
 			if(Byte(val.address) < 0)
 				result.Cat("??", SColorDisabled);
@@ -94,7 +94,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen)
 		case FLT:
 			result.Cat(FormatDouble(val.fval, 20), Red); break;
 		case PFUNC: {
-			result.Cat(FormatIntHex(val.address), Red);
+			result.Cat(Hex(val.address), Red);
 			FnInfo fi = GetFnInfo(val.address);
 			if(!IsNull(fi.name)) {
 				result.Cat("->", SColorMark);
