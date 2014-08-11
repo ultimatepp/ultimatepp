@@ -59,11 +59,11 @@
 #define LONGRAW(x)                 COLUMN("bytea", String, x, 0, 0)
 #define LONGRAW_(x)                COLUMN_("bytea", String, x, 0, 0)
 
-#define BLOB(x)                    COLUMN("bytea", String, x, 0, 0)
-#define BLOB_(x)                   COLUMN_("bytea", String, x, 0, 0)
+#define BLOB(x)                    COLUMN("bytea", String, x, INT_MAX/2, 0)
+#define BLOB_(x)                   COLUMN_("bytea", String, x, INT_MAX/2, 0)
 
-#define CLOB(x)                    COLUMN("text", String, x, 0, 0)
-#define CLOB_(x)                   COLUMN_("text", String, x, 0, 0)
+#define CLOB(x)                    COLUMN("text", String, x, INT_MAX/2, 0)
+#define CLOB_(x)                   COLUMN_("text", String, x, INT_MAX/2, 0)
 
 #define SEQUENCE(x)                SCHEMA("create sequence " #x " start with 1;",\
                                           "drop sequence " #x ";") \

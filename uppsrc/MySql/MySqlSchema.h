@@ -33,11 +33,11 @@
 #define STRING_(x, n)              COLUMN_(MySqlTextType(n), String, x, n, 0)
 #define STRING_ARRAY_(x, n, items) COLUMN_ARRAY_(MySqlTextType(n), String, x, n, 0, items)
 
-#define BLOB(x)                    COLUMN("longblob", String, x, 0, 0)
-#define BLOB_(x)                   COLUMN_("longblob", String, x, 0, 0)
+#define BLOB(x)                    COLUMN("longblob", String, x, INT_MAX/2, 0)
+#define BLOB_(x)                   COLUMN_("longblob", String, x, INT_MAX/2, 0)
 
-#define CLOB(x)                    COLUMN("text", String, x, 0, 0)
-#define CLOB_(x)                   COLUMN_("text", String, x, 0, 0)
+#define CLOB(x)                    COLUMN("text", String, x, INT_MAX/2, 0)
+#define CLOB_(x)                   COLUMN_("text", String, x, INT_MAX/2, 0)
 
 #ifndef PRIMARY_KEY
 #define PRIMARY_KEY                INLINE_ATTRIBUTE("primary key")

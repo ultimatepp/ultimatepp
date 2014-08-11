@@ -39,11 +39,11 @@
 #define LONGRAW(x)                 COLUMN("long raw", String, x, 0, 0)
 #define LONGRAW_(x)                COLUMN_("long raw", String, x, 0, 0)
 
-#define BLOB(x)                    COLUMN("blob", String, x, 0, 0)
-#define BLOB_(x)                   COLUMN_("blob", String, x, 0, 0)
+#define BLOB(x)                    COLUMN("blob", String, x, INT_MAX/2, 0)
+#define BLOB_(x)                   COLUMN_("blob", String, x, INT_MAX/2, 0)
 
-#define CLOB(x)                    COLUMN("clob", String, x, 0, 0)
-#define CLOB_(x)                   COLUMN_("clob", String, x, 0, 0)
+#define CLOB(x)                    COLUMN("clob", String, x, INT_MAX/2, 0)
+#define CLOB_(x)                   COLUMN_("clob", String, x, INT_MAX/2, 0)
 
 #define SEQUENCE(x)                SCHEMA("create sequence " #x " start with 1;",\
                                           "drop sequence " #x ";") \
