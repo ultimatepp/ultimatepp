@@ -33,11 +33,11 @@
 #define BOOL_(x)                   COLUMN_("text", bool, x, 0, 0)
 #define BOOL_ARRAY_(x, items)      COLUMN_ARRAY_("text", bool, x, 0, 0, items)
 
-#define BLOB(x)                    COLUMN("blob", String, x, 0, 0)
-#define BLOB_(x)                   COLUMN_("blob", String, x, 0, 0)
+#define BLOB(x)                    COLUMN("blob", String, x, INT_MAX/2, 0)
+#define BLOB_(x)                   COLUMN_("blob", String, x, INT_MAX/2, 0)
 
-#define LONGRAW(x)                 COLUMN("blob", String, x, 0, 0)
-#define LONGRAW_(x)                COLUMN_("blob", String, x, 0, 0)
+#define LONGRAW(x)                 COLUMN("blob", String, x, INT_MAX/2, 0)
+#define LONGRAW_(x)                COLUMN_("blob", String, x, INT_MAX/2, 0)
 
 #ifndef PRIMARY_KEY
 #define PRIMARY_KEY                INLINE_ATTRIBUTE("primary key")
