@@ -127,6 +127,7 @@ protected:
 	int             maxlen;
 	int             autosize;
 	byte            charset;
+	int             fsell, fselh; // used to hold selection after LostFocus for X11 middle mouse copy
 
 	int        dropcursor;
 	Rect       dropcaret;
@@ -142,7 +143,6 @@ protected:
 	bool       errorbg:1;
 	bool       showspaces:1;
 	bool       no_internal_margin:1;
-	bool       autoselection:1;
 
 	bool    FrameIsEdge();
 	void    SetEdge(int i);
@@ -161,6 +161,7 @@ protected:
 	void    DoAutoFormat();
 	int     GetTy() const;
 	void    StdPasteFilter(WString&);
+	void    SelSource();
 
 protected:
 	virtual void  HighlightText(Vector<Highlight>& hl);
