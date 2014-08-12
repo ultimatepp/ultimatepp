@@ -1,0 +1,5 @@
+#ifndef _plugin_geotiff_libgeotiff_icpp_init_stub
+#define _plugin_geotiff_libgeotiff_icpp_init_stub
+#include "plugin\z/init"
+#include "plugin\tif/init"
+#endif

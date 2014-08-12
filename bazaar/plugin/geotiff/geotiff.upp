@@ -1,0 +1,16 @@
+noblitz;
+
+uses
+	plugin\geotiff\libgeotiff,
+	Geom;
+
+file
+	geotiff.h,
+	geotiff.cpp,
+	geotiffgdal.cpp,
+	gt_overview.h,
+	gt_overview.cpp,
+	gt_wkt_srs.cpp,
+	tif_float.c,
+	tifvsi.cpp;
+

@@ -1,0 +1,264 @@
+<html>
+<head>
+<title>OGR Vector Formats</title>
+</head>
+
+<body bgcolor="#ffffff">
+
+<h1>OGR Vector Formats</h1>
+
+<table border>
+
+<tr>
+<th>Format Name</th>
+<th>Code</th>
+<th>Creation</th>
+<th>Georeferencing</th>
+<th>Compiled by default</th>
+</tr>
+
+<tr><td> <a href="drv_avcbin.html">Arc/Info Binary Coverage</a>
+</td><td> AVCBin
+</td><td> No
+</td><td> Yes
+</td><td> Yes
+</td></tr>
+
+<tr><td> <a href="drv_avce00.html">Arc/Info .E00 (ASCII) Coverage</a>
+</td><td> AVCE00
+</td><td> No
+</td><td> Yes
+</td><td> Yes
+</td></tr>
+
+<tr><td> <a href="drv_bna.html">Atlas BNA</a>
+</td><td> BNA
+</td><td> Yes
+</td><td> No
+</td><td> Yes
+</td></tr>
+
+<tr><td> <a href="drv_csv.html">Comma Separated Value (.csv)</a>
+</td><td> CSV
+</td><td> Yes
+</td><td> No
+</td><td> Yes
+</td></tr>
+
+<tr><td> <a href="drv_dods.html">DODS/OPeNDAP</a>
+</td><td> DODS
+</td><td> No
+</td><td> Yes
+</td><td> No, needs libdap
+</td></tr>
+
+<tr><td> <a href="drv_pgeo.html">ESRI Personal GeoDatabase</a>
+</td><td> PGeo
+</td><td> No
+</td><td> Yes
+</td><td> No, needs ODBC library
+</td></tr>
+
+<tr><td> <a href="drv_sde.html">ESRI ArcSDE</a>
+</td><td> SDE
+</td><td> No
+</td><td> Yes
+</td><td> No, needs ESRI SDE
+</td></tr>
+
+<tr><td> <a href="drv_shapefile.html">ESRI Shapefile</a>
+</td><td> ESRI Shapefile
+</td><td> Yes
+</td><td> Yes
+</td><td> Yes
+</td></tr>
+
+<tr><td> <a href="drv_fme.html">FMEObjects Gateway</a>
+</td><td> FMEObjects Gateway
+</td><td> No
+</td><td> Yes
+</td><td> No, needs FME
+</td></tr>
+
+<tr><td> <a href="drv_geojson.html">GeoJSON</a>
+</td><td> GeoJSON
+</td><td> No
+</td><td> Yes
+</td><td> Yes
+</td></tr>
+
+<tr><td> <a href="drv_geoconcept.html">G&eacute;oconcept Export</a>
+</td><td> Geoconcept
+</td><td> Yes
+</td><td> Yes
+</td><td> Yes
+</td></tr>
+
+<tr><td> <a href="drv_gml.html">GML</a>
+</td><td> GML
+</td><td> Yes
+</td><td> Yes
+</td><td> Yes (read support needs Xerces)
+</td></tr>
+
+<tr><td> <a href="drv_gmt.html">GMT</a>
+</td><td> GMT
+</td><td> Yes
+</td><td> Yes
+</td><td> Yes
+</td></tr>
+
+<tr><td> <a href="drv_gpx.html">GPX</a>
+</td><td> GPX
+</td><td> Yes
+</td><td> Yes
+</td><td> Yes (read support needs libexpat)
+</td></tr>
+
+<tr><td> <a href="drv_grass.html">GRASS</a>
+</td><td> GRASS
+</td><td> No
+</td><td> Yes
+</td><td> No, needs libgrass
+</td></tr>
+
+<tr><td> <a href="drv_idb.html">Informix DataBlade</a>
+</td><td> IDB
+</td><td> Yes
+</td><td> Yes
+</td><td> No, needs Informix DataBlade 
+</td></tr>
+
+
+<tr><td> <a href="drv_ili.html">INTERLIS</a>
+</td><td> "Interlis 1" and "Interlis 2"
+</td><td> Yes
+</td><td> Yes
+</td><td> Yes (INTERLIS model reading needs ili2c.jar)
+</td></tr>
+
+<tr><td> <a href="drv_ingres.html">INGRES</a>
+</td><td> INGRES
+</td><td> Yes
+</td><td> No
+</td><td> No, needs INGRESS
+</td></tr>
+
+<tr><td> <a href="drv_kml.html">KML</a>
+</td><td> KML
+</td><td> Yes
+</td><td> No
+</td><td> Yes (read support needs libexpat)
+</td></tr>
+
+<tr><td> <a href="drv_mitab.html">Mapinfo File</a>
+</td><td> MapInfo File
+</td><td> Yes
+</td><td> Yes
+</td><td> Yes
+</td></tr>
+
+<tr><td> <a href="drv_dgn.html">Microstation DGN</a>
+</td><td> DGN
+</td><td> Yes
+</td><td> No
+</td><td> Yes
+</td></tr>
+
+<tr><td> <a href="drv_memory.html">Memory</a>
+</td><td> Memory
+</td><td> Yes
+</td><td> Yes
+</td><td> Yes
+</td></tr>
+
+<tr><td> <a href="drv_mysql.html">MySQL</a>
+</td><td> MySQL
+</td><td> No
+</td><td> No
+</td><td> No, needs MySQL library
+</td></tr>
+
+<tr><td> <a href="drv_oci.html">Oracle Spatial</a>
+</td><td> OCI
+</td><td> Yes
+</td><td> Yes
+</td><td> No, needs OCI library
+</td></tr>
+
+<tr><td> <a href="drv_odbc.html">ODBC</a>
+</td><td> ODBC
+</td><td> No
+</td><td> Yes
+</td><td> No, needs ODBC library
+</td></tr>
+
+<tr><td> <a href="drv_ogdi.html">OGDI Vectors</a>
+</td><td> OGDI
+</td><td> No
+</td><td> Yes
+</td><td> No, needs OGDI library
+</td></tr>
+
+<tr><td> <a href="drv_pg.html">PostgreSQL</a>
+</td><td> PostgreSQL
+</td><td> Yes
+</td><td> Yes
+</td><td> No, needs PostgreSQL library
+</td></tr>
+
+<tr><td> <a href="drv_s57.html">S-57 (ENC)</a>
+</td><td> S57
+</td><td> No
+</td><td> Yes
+</td><td> Yes
+</td></tr>
+
+<tr><td> <a href="drv_sdts.html">SDTS</a>
+</td><td> SDTS
+</td><td> No
+</td><td> Yes
+</td><td> Yes
+</td></tr>
+
+<tr><td> <a href="drv_sqlite.html">SQLite</a>
+</td><td> SQLite
+</td><td> Yes
+</td><td> No
+</td><td> No, needs libsqlite3
+</td></tr>
+
+<tr><td> <a href="drv_ntf.html">UK .NTF</a>
+</td><td> UK. NTF
+</td><td> No
+</td><td> Yes
+</td><td> Yes
+</td></tr>
+
+<tr><td> <a href="drv_tiger.html">U.S. Census TIGER/Line</a>
+</td><td> TIGER
+</td><td> No
+</td><td> Yes
+</td><td> Yes
+</td></tr>
+
+<tr><td> <a href="drv_vrt.html">VRT - Virtual Datasource</a>
+</td><td> VRT
+</td><td> No
+</td><td> Yes
+</td><td> Yes
+</td></tr>
+
+<tr><td> <a href="drv_xplane.html">X-Plane/Flighgear aeronautical data</a>
+</td><td> XPLANE
+</td><td> No
+</td><td> Yes
+</td><td> Yes
+</td></tr>
+
+</table>
+
+</body>
+</html>
+
+
