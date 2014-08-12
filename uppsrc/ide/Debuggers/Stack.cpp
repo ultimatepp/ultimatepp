@@ -1,5 +1,7 @@
 #include "Debuggers.h"
 
+#ifdef COMPILER_MSC
+
 #define LLOG(x) // DLOG(x)
 
 Pdb::Thread& Pdb::Current()
@@ -88,3 +90,5 @@ void Pdb::Sync0()
 	}
 	framelist <<= max(fc, 0);
 }
+
+#endif
