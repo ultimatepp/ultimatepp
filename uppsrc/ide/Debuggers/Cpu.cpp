@@ -1,5 +1,6 @@
 #include "Debuggers.h"
 
+#ifdef COMPILER_MSC
 
 #define CPU_REG(sym, context_var, kind, name, flags) { sym, kind, name, flags },
 
@@ -69,3 +70,5 @@ uint64 Pdb::GetCpuRegister(const Context& ctx, int sym)
 	}
 	return val;
 }
+
+#endif
