@@ -446,6 +446,14 @@ void EditField::Layout()
 	Finish();
 }
 
+void EditField::SelSource()
+{
+	if(GetSelection(fsell, fselh))
+		SetSelectionSource(ClipFmtsText());
+	else
+		fsell = fselh = -1;
+}
+
 void EditField::GotFocus()
 {
 	if(autoformat && IsEditable() && !IsNull(text) && inactive_convert) {
@@ -458,11 +466,8 @@ void EditField::GotFocus()
 	if(!keep_selection && !IsSelection()) {
 		anchor = 0;
 		cursor = text.GetLength();
-		autoselection = true;
 	}
-	else
-	if(IsSelection())
-		SetSelectionSource(ClipFmtsText());
+	SelSource();
 	Finish();
 	SyncEdge();
 }
@@ -477,7 +482,7 @@ void EditField::LostFocus()
 			if(s != text) text = s;
 		}
 	}
-	if(!keep_selection/* && autoselection*/) {
+	if(!keep_selection) {
 		anchor = -1;
 		cursor = sc = 0;
 	}
@@ -572,9 +577,7 @@ void EditField::Move(int newpos, bool select)
 		anchor = -1;
 	cursor = newpos;
 	Finish(refresh);
-	if(select)
-		SetSelectionSource(ClipFmtsText());
-	autoselection = false;
+	SelSource();
 }
 
 void EditField::SetSelection(int l, int h)
@@ -587,7 +590,7 @@ void EditField::SetSelection(int l, int h)
 		cursor = l;
 		anchor = -1;
 	}
-	autoselection = false;
+	SelSource();
 	Finish();
 }
 
@@ -597,10 +600,10 @@ void EditField::CancelSelection()
 	if(GetSelection(l, h)) {
 		cursor = l;
 		anchor = -1;
+		fsell = fselh = -1;
 		sc = 0;
 		Finish();
 	}
-	autoselection = false;
 }
 
 bool EditField::RemoveSelection()
@@ -787,9 +790,8 @@ void EditField::LeftDrag(Point p, dword flags)
 
 String EditField::GetSelectionData(const String& fmt) const
 {
-	int sell, selh;
-	if(GetSelection(sell, selh))
-		return GetTextClip(text.Mid(sell, selh - sell), fmt);
+	if(fsell >= 0 && fselh >= 0 && fsell <= text.GetCount() && fselh <= text.GetCount())
+		return GetTextClip(text.Mid(fsell, fselh - fsell), fmt);
 	return String();
 }
 
@@ -1041,7 +1043,7 @@ void EditField::Reset()
 	font = StdFont();
 	showspaces = false;
 	no_internal_margin = false;
-	autoselection = false;
+	fsell = fselh = -1;
 }
 
 EditField& EditField::SetFont(Font _font)

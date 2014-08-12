@@ -205,7 +205,7 @@ inline bool IsCppTemplate(int i) {
 	return i == STRUCTTEMPLATE || i >= FUNCTIONTEMPLATE && i <= CLASSFUNCTIONTEMPLATE;
 }
 
-enum AccessEnum {
+enum CppAccess {
 	PUBLIC,
 	PROTECTED,
 	PRIVATE,
