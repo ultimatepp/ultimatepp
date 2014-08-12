@@ -217,21 +217,21 @@ void Pdb::WriteContext(HANDLE hThread, Context& context)
 	if(win64) {
 		CONTEXT ctx;
 		memcpy(&ctx, &context.context64, sizeof(CONTEXT));
-		ctx.ContextFlags = CONTEXT_FULL;
+		ctx.ContextFlags = CONTEXT_CONTROL;
 		if(!SetThreadContext(hThread, &ctx))
 			Error("SetThreadContext failed");
 	}
 	else {
 		WOW64_CONTEXT ctx;
 		memcpy(&ctx, &context.context32, sizeof(WOW64_CONTEXT));
-		ctx.ContextFlags = CONTEXT_FULL;
+		ctx.ContextFlags = CONTEXT_CONTROL;
 		if(!Wow64SetThreadContext(hThread, &ctx))
 			Error("Wow64SetThreadContext failed");
 	}
 #else
 	CONTEXT ctx;
 	memcpy(&ctx, &context.context32, sizeof(WOW64_CONTEXT));
-	ctx.ContextFlags = CONTEXT_FULL;
+	ctx.ContextFlags = CONTEXT_CONTROL;
 	if(!SetThreadContext(hThread, &ctx))
 		Error("SetThreadContext failed");
 #endif
