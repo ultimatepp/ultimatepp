@@ -188,13 +188,22 @@ void AssistEditor::Search()
 {
 	list.Clear();
 	item.Clear();
-	String s = ~search;
-	Vector<String> h = Split((String)~search, ':');
+	String s = TrimBoth(~search);
 	String search_name, search_nest;
-	if(h.GetCount())
-		search_name = h.Pop();
-	if(h.GetCount())
-		search_nest = Join(h, "::");
+	bool wholeclass = false;
+	if(s.Find(':') >= 0) {
+		Vector<String> h = Split((String)~search, ':');
+		if(*s.Last() == ':')
+			search_nest = Join(h, "::");
+		else {
+			search_name = h.Pop();
+			if(h.GetCount())
+				search_nest = Join(h, "::");
+		}
+		wholeclass = *s == ':';
+	}
+	else
+		search_name = search_nest = ~search;
 	s = Join(Split(s, ':'), "::") + (s.EndsWith(":") ? "::" : "");
 	int lineno = StrInt(s);
 	if(!IsNull(lineno)) {
@@ -227,7 +236,7 @@ void AssistEditor::Search()
 		ArrayMap<String, NavItem> imap;
 		for(int i = 0; i < b.GetCount(); i++) {
 			String nest = b.GetKey(i);
-			if(ToUpper(nest).Find(search_nest) >= 0) {
+			if(wholeclass ? ToUpper(nest) == search_nest : ToUpper(nest).Find(search_nest) >= 0) {
 				const Array<CppItem>& ci = b[i];
 				for(int j = 0; j < ci.GetCount(); j++) {
 					const CppItem& m = ci[j];
