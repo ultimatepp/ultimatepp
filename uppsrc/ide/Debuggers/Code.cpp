@@ -61,11 +61,11 @@ void Pdb::Sync()
 	for(int i = 0; i < threads.GetCount(); i++) {
 		int thid = threads.GetKey(i);
 		AttrText x(Format("0x%x", thid));
-		if(thid == event.dwThreadId)
+		if(thid == debug_threadid)
 			x.font = StdFont().Bold();
 		threadlist.Add(thid, x);
 	}
-	threadlist <<= (int)event.dwThreadId;
+	threadlist <<= (int)debug_threadid;
 	Sync0();
 	SetFrame();
 	IdeActivateBottom();

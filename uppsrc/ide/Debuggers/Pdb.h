@@ -172,11 +172,13 @@ struct Pdb : Debugger, ParentCtrl {
 	HANDLE                   	hProcess;
 	HANDLE                      mainThread;
 	DWORD                    	processid;
+	DWORD                       mainThreadId;
 	ArrayMap<dword, Thread>     threads;
 	bool                     	terminated;
 	bool                     	refreshmodules;
 	Vector<ModuleInfo>       	module;
 	DEBUG_EVENT              	event;
+	DWORD                       debug_threadid;
 	HWND                     	hWnd;
 	VectorMap<adr_t, byte>      bp_set; // breakpoints active for single RunToException
 
