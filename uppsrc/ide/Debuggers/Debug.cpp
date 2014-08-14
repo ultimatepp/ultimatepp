@@ -340,6 +340,7 @@ bool Pdb::RunToException()
 		}
 		opn++;
 		if(WaitForDebugEvent(&event, 0)) {
+			debug_threadid = event.dwThreadId;
 			opn = 0;
 			running = false;
 			switch(event.dwDebugEventCode) {
@@ -373,6 +374,8 @@ bool Pdb::RunToException()
 				if(!win64 && x.ExceptionCode == EXCEPTION_BREAKPOINT && !break_running) // Ignore x64 breakpoint in wow64
 					break;
 #endif
+				if(break_running)
+					debug_threadid = mainThreadId;
 				break_running = false;
 				ToForeground();
 				if(disasfocus)

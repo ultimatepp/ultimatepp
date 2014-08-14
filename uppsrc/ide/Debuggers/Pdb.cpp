@@ -113,6 +113,7 @@ bool Pdb::Create(One<Host> local, const String& exefile, const String& cmdline)
 	}
 	hProcess = pi.hProcess;
 	mainThread = pi.hThread;
+	mainThreadId = GetThreadId(mainThread);
 
 #ifdef CPU_64
 	BOOL _64;
