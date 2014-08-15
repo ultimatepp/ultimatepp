@@ -402,4 +402,7 @@ struct Pdb : Debugger, ParentCtrl {
 
 	Pdb();
 	virtual ~Pdb();
+
+
+	void LoadGlobals(DWORD64 base);
 };

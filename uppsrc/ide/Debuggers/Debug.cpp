@@ -46,16 +46,6 @@ int  Pdb::FindModuleIndex(adr_t base)
 	return -1;
 }
 
-static Vector<String> test;
-
-BOOL CALLBACK Pdb::EnumGlobals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserContext)
-{
-//	LocalsCtx& c = *(GlobalsCtx *)UserContext;
-	if(pSym->Tag == SymTagData)
-		test.Add(pSym->Name);
-	return TRUE;
-}
-
 void Pdb::LoadModuleInfo()
 {
 	ModuleInfo f;
@@ -95,10 +85,7 @@ void Pdb::LoadModuleInfo()
 						if(w) {
 							LLOG("Loading symbols " << Hex(f.base) << '/' << hProcess << " returned base " << Hex(w));
 							f.symbols = true;
-						#if 0
-							TimeStop t;
-						    SymEnumSymbols(hProcess, w, 0, &EnumGlobals, 0);
-						#endif
+							LoadGlobals(w);
 						}
 					}
 				}
