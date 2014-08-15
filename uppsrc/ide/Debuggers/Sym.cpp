@@ -240,6 +240,41 @@ void Pdb::GetLocals(Frame& frame, Context& context, VectorMap<String, Pdb::Val>&
 	local = c.local;
 }
 
+#ifdef _DEBUG
+
+BOOL CALLBACK Pdb::EnumGlobals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserContext)
+{
+	LocalsCtx& c = *(LocalsCtx *)UserContext;
+
+	if(pSym->Tag != SymTagData)
+		return TRUE;
+	DLOG(pSym->Name << " " << Format64Hex(pSym->Address));
+	DDUMP(pSym->Scope);
+	
+//	FilePos pos = c.pdb->GetFilePos(pSym->Address);
+//	DDUMP(pos.line);
+//	DDUMP(pos.path);
+//	LLOG("LOCAL " << pSym->Name << ": " << Format64Hex(v.address));*/
+	return TRUE;
+}
+
+#endif
+
+void Pdb::LoadGlobals(DWORD64 base)
+{
+#ifdef _DEBUG
+	TimeStop tm;
+	static IMAGEHLP_STACK_FRAME f;
+	LocalsCtx c;
+	c.pdb = this;
+	c.context = &context;
+//	SymSetOptions(SYMOPT_LOAD_LINES|SYMOPT_UNDNAME|SYMOPT_NO_UNQUALIFIED_LOADS|SYMOPT_NO_PUBLICS);
+	SymEnumSymbols(hProcess, base, NULL, &EnumGlobals, &c);
+//	SymSetOptions(SYMOPT_LOAD_LINES|SYMOPT_UNDNAME|SYMOPT_NO_UNQUALIFIED_LOADS);
+	DUMP(tm);
+#endif
+}
+
 Pdb::Val Pdb::GetGlobal(const char *fn, const String& name)
 {
 	return Val();
