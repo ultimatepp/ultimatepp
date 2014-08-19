@@ -116,6 +116,7 @@ void Pdb::Autos()
 	VectorMap<String, Value> prev = DataMap(autos);
 	autos.Clear();
 	CParser p(autotext);
+	TryAuto("this", prev);
 	while(!p.IsEof())
 		if(p.IsId()) {
 			String exp = p.ReadId();
@@ -127,6 +128,9 @@ void Pdb::Autos()
 				if(p.Char2('-', '>') && p.IsId())
 					exp << "->";
 				else
+				if(p.Char2(':', ':') && p.IsId())
+					exp << "::";
+				else
 					break;
 				exp << p.ReadId();
 				TryAuto(exp, prev);
@@ -135,7 +139,6 @@ void Pdb::Autos()
 		else
 			p.SkipTerm();
 	autos.Sort();
-//	MarkChanged(prev, autos);
 }
 
 void Pdb::Watches()
