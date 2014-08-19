@@ -9,23 +9,18 @@ Pdb::Thread& Pdb::Current()
 	return threads.Get((int)~threadlist);
 }
 
-void Pdb::Sync0()
+void Pdb::Sync0(Thread& ctx, Frame *single_frame)
 {
-	Thread& ctx = Current();
-	const VectorMap<int, CpuRegister>& reg = Pdb::GetRegisterList();
-	cpu.Clear();
-	for(int i = 0; i < reg.GetCount(); i++) {
-		const CpuRegister& r = reg[i];
-		if(r.name)
-			cpu.Add(String().Cat() << r.name << "|0x" << Hex(GetCpuRegister(ctx, r.sym)));
+	if(!single_frame) {
+		stop = false;
+	
+		framelist.Clear();
+		frame.Clear();
+		current_frame = NULL;
 	}
 
-	stop = false;
-
-	framelist.Clear();
-	frame.Clear();
-
 	STACKFRAME64 stackFrame = {0};
+	
 	stackFrame.AddrPC.Mode = stackFrame.AddrFrame.Mode = stackFrame.AddrStack.Mode = AddrModeFlat;
 	DWORD machineType = IMAGE_FILE_MACHINE_I386;
 	void *c;
@@ -57,13 +52,15 @@ void Pdb::Sync0()
 	    }
 		lastFrame = stackFrame.AddrFrame.Offset;
 		LLOG("PC: " << Hex(stackFrame.AddrPC.Offset));
-		Frame& f = frame.Add();
+		Frame& f = single_frame ? *single_frame : frame.Add();
 		f.pc = stackFrame.AddrPC.Offset;
 		f.frame = stackFrame.AddrFrame.Offset;
 		f.stack = stackFrame.AddrStack.Offset;
 		f.fn = GetFnInfo(f.pc);
 		String r;
 		if(IsNull(f.fn.name)) {
+			if(single_frame)
+				return;
 			r = Hex(f.pc);
 			for(int i = 0; i < module.GetCount(); i++) {
 				const ModuleInfo& m = module[i];
@@ -75,6 +72,8 @@ void Pdb::Sync0()
 		}
 		else {
 			GetLocals(f, ctx, f.param, f.local);
+			if(single_frame)
+				return;
 			r = f.fn.name;
 			r << '(';
 			for(int i = 0; i < f.param.GetCount(); i++) {

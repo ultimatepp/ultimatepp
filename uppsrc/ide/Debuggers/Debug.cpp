@@ -48,6 +48,8 @@ int  Pdb::FindModuleIndex(adr_t base)
 
 void Pdb::LoadModuleInfo()
 {
+	fninfo_cache.Clear();
+
 	ModuleInfo f;
 	dword cb = 1;
 	HMODULE  h;

@@ -43,8 +43,7 @@ int Pdb::SizeOfType(int ti)
 	return 0;
 }
 
-#define READINT(q, type) \
-case q: { \
+#define READINT0(type) { \
 	type x; \
 	if(v.address < 10000) \
 		x = (type)GetCpuRegister(Current(), (int)v.address); \
@@ -54,6 +53,9 @@ case q: { \
 	v.ival = x; \
 	break; \
 } \
+
+#define READINT(q, type) \
+case q: READINT0(type)
 
 #define READFLT(q, type) \
 case q: { \
@@ -75,13 +77,13 @@ Pdb::Val Pdb::GetRVal(Pdb::Val v)
 	}
 	else
 	if(v.ref) {
-		if(!Copy(v.address, &v.address, 4))
+		if(!Copy(v.address, &v.address, win64 ? 8 : 4))
 			ThrowError("??");
 	}
 	else
 	if(v.bitcnt) {
 		dword w;
-		if(!Copy(v.address, &w, 4))
+		if(!Copy(v.address, &w, win64 ? 8 : 4))
 			ThrowError("??");
 		w = (w >> v.bitpos) & (0xffffffff >> (32 - v.bitcnt));
 		if(v.type == SINT1 || v.type == SINT2 || v.type == SINT4 || v.type == SINT8) {
@@ -105,7 +107,14 @@ Pdb::Val Pdb::GetRVal(Pdb::Val v)
 		READINT(SINT8, int64);
 		READFLT(FLT, float);
 		READFLT(DBL, double);
-		READINT(PFUNC, uint32);
+		case PFUNC:
+			if(win64) {
+				READINT0(uint64);
+			}
+			else {
+				READINT0(uint32)
+			}
+			break;
 		case UNKNOWN:
 			break;
 		default:
@@ -148,6 +157,12 @@ double Pdb::GetFlt(Pdb::Val v)
 	return (double)GetInt(v);
 }
 
+void Pdb::ZeroDiv(double x)
+{
+	if(x == 0)
+		ThrowError("Divide by zero");
+}
+
 Pdb::Val Pdb::Compute(Pdb::Val v1, Pdb::Val v2, int oper)
 {
 	LLOG("Compute " << char(oper));
@@ -182,7 +197,7 @@ Pdb::Val Pdb::Compute(Pdb::Val v1, Pdb::Val v2, int oper)
 		case '+': res.fval = a + b; break;
 		case '-': res.fval = a - b; break;
 		case '*': res.fval = a * b; break;
-		case '/': res.fval = a / b; break;
+		case '/': ZeroDiv(b); res.fval = a / b; break;
 		default: ThrowError("Invalid operands for operation");
 		}
 	}
@@ -193,22 +208,23 @@ Pdb::Val Pdb::Compute(Pdb::Val v1, Pdb::Val v2, int oper)
 		case '+': res.ival = a + b; break;
 		case '-': res.ival = a - b; break;
 		case '*': res.ival = a * b; break;
-		case '/': res.ival = a / b; break;
-		case '%': res.ival = a % b; break;
+		case '/': ZeroDiv((double)b); res.ival = a / b; break;
+		case '%': ZeroDiv((double)b); res.ival = a % b; break;
 		default: ThrowError("Invalid operands for operation");
 		}
 	}
 	return res;
 }
 
-Pdb::Val Pdb::RValue(int i)
+Pdb::Val Pdb::RValue(int64 i)
 {
 	Val v;
 	v.rvalue = true;
 	v.ival = i;
 	v.type = i >= -128 && i <= 127 ? SINT1 :
 	         i >= -32768 && i <= 32767 ? SINT2 :
-	         SINT4;
+	         i >= INT_MIN && i <= INT_MAX ? SINT4 :
+	         SINT8;
 	return v;
 }
 
@@ -274,7 +290,7 @@ Pdb::Val Pdb::Field(Pdb::Val v, const String& field)
 Pdb::Val Pdb::Term(CParser& p)
 {
 	if(p.Char2('0', 'x') || p.Char2('0', 'X'))
-		return RValue(p.ReadNumber(16));
+		return RValue(p.ReadNumber64(16));
 	if(p.IsChar2('0', '.')) {
 		Val v;
 		v.type = DBL;
@@ -283,7 +299,7 @@ Pdb::Val Pdb::Term(CParser& p)
 		return v;
 	}
 	if(p.Char('0'))
-		return RValue(p.IsNumber() ? p.ReadNumber(8) : 0);
+		return RValue(p.IsNumber() ? p.ReadNumber64(8) : 0);
 	if(p.IsNumber()) {
 		double d = p.ReadDouble();
 		if(d >= INT_MIN && d <= INT_MAX && (int)d == d) {
@@ -313,10 +329,9 @@ Pdb::Val Pdb::Term(CParser& p)
 	String id = p.ReadId();
 	while(p.Char2(':', ':') && p.IsId())
 		id << "::" << p.ReadId();
-	int q = ~framelist;
-	if(q >= 0 && q < frame.GetCount()) {
-		Frame& f = frame[q];
-		q = f.local.Find(id);
+	if(current_frame) {
+		Frame& f = *current_frame;
+		int q = f.local.Find(id);
 		if(q >= 0)
 			return f.local[q];
 		q = f.param.Find(id);
@@ -409,6 +424,13 @@ Pdb::Val Pdb::Unary(CParser& p)
 		return DeRef(Unary(p));
 	if(p.Char('&'))
 		return Ref(Unary(p));
+	if(p.Char('!')) {
+		Val v = GetRVal(Unary(p));
+		if(v.type == FLT || v.type == DBL)
+			return RValue(!GetFlt(v));
+		else
+			return RValue(!GetInt(v));
+	}
 	return Post(p);
 }
 
@@ -445,17 +467,98 @@ Pdb::Val Pdb::Additive(CParser& p)
 	return v;
 }
 
+Pdb::Val Pdb::Compare(Val v1, CParser& p, int r1, int r2)
+{
+	int q;
+	Val v2 = Additive(p);
+	if(findarg(max(v1.type, v2.type), DBL, FLT) >= 0)
+		q = SgnCompare(GetFlt(v1), GetFlt(v2));
+	else
+		q = SgnCompare(GetInt(v1), GetInt(v2));
+	q = sgn(q);
+	return RValue(q == r1 || q == r2);
+}
+
+Pdb::Val Pdb::Comparison(CParser& p)
+{
+	Val v = Additive(p);
+	for(;;) {
+		if(p.Char2('=', '='))
+			v = Compare(v, p, 0, 0);
+		else
+		if(p.Char2('!', '='))
+			v = Compare(v, p, -1, 1);
+		else
+		if(p.Char2('<', '='))
+			v = Compare(v, p, -1, 0);
+		else
+		if(p.Char2('>', '='))
+			v = Compare(v, p, 1, 0);
+		else
+		if(p.Char('<'))
+			v = Compare(v, p, -1, -1);
+		else
+		if(p.Char('>'))
+			v = Compare(v, p, 1, 1);
+		else
+			break;
+	}
+	return v;
+}
+
+void Pdb::GetBools(Val v1, Val v2, bool& a, bool& b)
+{
+	if(findarg(max(v1.type, v2.type), DBL, FLT) >= 0) {
+		a = (bool)GetFlt(v1);
+		b = (bool)GetFlt(v2);
+	}
+	else {
+		a = (bool)GetInt(v1);
+		b = (bool)GetInt(v2);
+	}
+}
+
+Pdb::Val Pdb::LogAnd(CParser& p)
+{
+	Val v = Comparison(p);
+	for(;;) {
+		if(p.Char2('&', '&')) {
+			bool a, b;
+			GetBools(v, Comparison(p), a, b);
+			v = RValue(a && b);
+		}
+		else
+			break;
+	}
+	return v;
+}
+
+Pdb::Val Pdb::LogOr(CParser& p)
+{
+	Val v = LogAnd(p);
+	for(;;) {
+		if(p.Char2('|', '|')) {
+			bool a, b;
+			GetBools(v, LogAnd(p), a, b);
+			v = RValue(a || b);
+		}
+		else
+			break;
+	}
+	return v;
+}
+
 Pdb::Val Pdb::Exp0(CParser& p)
 {
 	LLOG("Evaluating Expression: " << p.GetPtr());
-	return Additive(p);
+	return LogOr(p);
 }
 
 Pdb::Val Pdb::Exp(CParser& p)
 {
 	Pdb::Val v = Exp0(p);
 	if(!p.IsEof())
-		ThrowError("Extra tokens");
+		ThrowError("Invalid expression");
 	return v;
 }
 
