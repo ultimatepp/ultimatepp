@@ -66,14 +66,22 @@ void Pdb::Sync()
 		threadlist.Add(thid, x);
 	}
 	threadlist <<= (int)debug_threadid;
-	Sync0();
+	Thread& ctx = Current();
+	Sync0(ctx, NULL);
+	const VectorMap<int, CpuRegister>& reg = Pdb::GetRegisterList();
+	cpu.Clear();
+	for(int i = 0; i < reg.GetCount(); i++) {
+		const CpuRegister& r = reg[i];
+		if(r.name)
+			cpu.Add(String().Cat() << r.name << "|0x" << Hex(GetCpuRegister(ctx, r.sym)));
+	}
 	SetFrame();
 	IdeActivateBottom();
 }
 
 void Pdb::SetThread()
 {
-	Sync0();
+	Sync0(Current(), NULL);
 	SetFrame();
 	IdeActivateBottom();
 }
@@ -83,6 +91,7 @@ void Pdb::SetFrame()
 	int fi = ~framelist;
 	if(fi >= 0 && fi < frame.GetCount()) {
 		Frame& f = frame[fi];
+		current_frame = &f;
 		bool df = disas.HasFocus();
 		FilePos fp = GetFilePos(f.pc);
 		IdeHidePtr();
@@ -130,6 +139,7 @@ bool Pdb::SetBreakpoint(const String& filename, int line, const String& bp)
 			if(!RemoveBp(a))
 				return false;
 			breakpoint.Remove(q);
+			breakpoint_cond.Remove(q);
 		}
 	}
 	else {
@@ -137,7 +147,10 @@ bool Pdb::SetBreakpoint(const String& filename, int line, const String& bp)
 			if(!AddBp(a))
 				return false;
 			breakpoint.Add(a);
+			breakpoint_cond.Add(bp);
 		}
+		else
+			breakpoint_cond[q] = bp;
 	}
 	return true;
 }
@@ -150,35 +163,73 @@ adr_t Pdb::CursorAdr()
 	return a;
 }
 
+bool Pdb::ConditionalPass()
+{ // resolve conditional breakpoints
+	String err;
+	int q = breakpoint.Find(GetIP());
+	if(q >= 0) {
+		String exp = breakpoint_cond[q];
+		if(exp != "1" && exp != "\xe") {
+			try {
+				q = threads.Find((int)debug_threadid);
+				if(q >= 0) {
+					Frame frame;
+					Sync0(threads[q], &frame);
+					current_frame = &frame;
+					CParser p(exp);
+					if(!GetInt(Exp(p))) {
+						current_frame = NULL;
+						return true;
+					}
+				}
+			}
+			catch(CParser::Error e) {
+				err = e;
+			}
+		}
+	}
+	current_frame = NULL;
+	Sync();
+	if(err.GetCount())
+		Exclamation("Error in condition&\1" + err);
+	return false;
+}
+
 bool Pdb::RunTo()
 {
 	LLOG("== RunTo");
 	adr_t a = CursorAdr();
 	if(!a)
 		return false;
-	if(!SingleStep())
-		return false;
-	if(GetIP() != a) {
+	do {
+		if(!SingleStep())
+			return false;
+		if(GetIP() == a) {
+			Sync();
+			break;
+		}
 		SetBreakpoints();
 		AddBp(a);
 		if(!Continue())
 			return false;
 	}
-	Sync();
+	while(ConditionalPass());		
 	return true;
 }
 
 void Pdb::Run()
 {
 	LLOG("== Run");
-	SingleStep();
-	SetBreakpoints();
-	if(!Continue()) {
-		LLOG("Run: !Continue");
-		return;
+	do {
+		SingleStep();
+		SetBreakpoints();
+		if(!Continue()) {
+			LLOG("Run: !Continue");
+			return;
+		}
+		LLOG("Run: Sync");
 	}
-	LLOG("Run: Sync");
-	Sync();
+	while(ConditionalPass());
 }
 
 void Pdb::SetIp()
@@ -235,11 +286,7 @@ bool Pdb::Step(bool over)
 					Unlock();
 					return false;
 				}
-				SetBreakpoints(); // Note: Do we really want to do this? (activates breakpoints)
-				if(breakpoint.Find(bp0) < 0)
-					AddBp(bp0);
-				else
-					bp0 = 0;
+				AddBp(bp0); // Add breakpoint at CALL to detect recursion
 				AddBp(bp);
 				if(!Continue()) {
 					Unlock();
@@ -314,12 +361,13 @@ void Pdb::Trace(bool over)
 
 void Pdb::StepOut()
 {
+	// TODO: Consider using stack frame info to optimize this
 	LLOG("== StepOut");
 	Lock();
 	TimeStop ts;
 	for(;;) {
 		adr_t ip = GetIP();
-		if(Byte(ip) == 0xc2 || Byte(ip) == 0xc3) {
+		if(Byte(ip) == 0xc2 || Byte(ip) == 0xc3) { // RET instruction variants
 			if(!SingleStep())
 				break;
 			Sync();

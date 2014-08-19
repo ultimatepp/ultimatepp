@@ -86,7 +86,7 @@ Pdb::FilePos Pdb::GetFilePos(adr_t address)
 
 #define MAX_SYM_NAME 1024
 
-Pdb::FnInfo Pdb::GetFnInfo(adr_t address)
+Pdb::FnInfo Pdb::GetFnInfo0(adr_t address)
 {
 	DWORD64 h;
 
@@ -110,6 +110,18 @@ Pdb::FnInfo Pdb::GetFnInfo(adr_t address)
 		fn.pdbtype = f->TypeIndex;
 	}
 	return fn;
+}
+
+Pdb::FnInfo Pdb::GetFnInfo(adr_t address)
+{
+	int q = fninfo_cache.Find(address);
+	if(q >= 0)
+		return fninfo_cache[q];
+	if(fninfo_cache.GetCount() > 100)
+		fninfo_cache.Clear();
+	FnInfo f = GetFnInfo0(address);
+	fninfo_cache.Add(address, f);
+	return f;
 }
 
 void Pdb::TypeVal(Pdb::Val& v, int typeId, adr_t modbase)

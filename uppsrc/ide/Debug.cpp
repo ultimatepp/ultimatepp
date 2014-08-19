@@ -287,6 +287,8 @@ void Ide::ConditionalBreak()
 		return;
 	int ln = editor.GetCursorLine();
 	String brk = editor.GetBreakpoint(ln);
+	if(brk == "\xe")
+		brk = "1";
 	if(EditText(brk, "Conditional breakpoint", "Condition"))
 		editor.SetBreakpoint(ln, brk);
 	editor.RefreshFrame();

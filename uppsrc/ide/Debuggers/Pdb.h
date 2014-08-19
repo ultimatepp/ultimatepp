@@ -67,7 +67,7 @@ struct Pdb : Debugger, ParentCtrl {
 	}
 	memory;
 
-	struct FnInfo {
+	struct FnInfo : Moveable<FnInfo> {
 		String name;
 		adr_t  address;
 		dword  size;
@@ -191,13 +191,17 @@ struct Pdb : Debugger, ParentCtrl {
 	VectorMap<adr_t, MemPg> 	mempage;
 
 	Index<adr_t>                breakpoint;
+	Vector<String>              breakpoint_cond;
 
 	ArrayMap<int, Type>     	type;
 
 	String                  	disas_name;
 
 	Array<Frame>            	frame;
+	Frame                      *current_frame;
 	String                  	autotext;
+	
+	VectorMap<adr_t, FnInfo>    fninfo_cache;
 
 
 	DbgDisas           disas;
@@ -265,6 +269,7 @@ struct Pdb : Debugger, ParentCtrl {
 	bool       Continue();
 	bool       SingleStep();
 	void       BreakRunning();
+	bool       ConditionalPass();
 	void       SetBreakpoints();
 	void       SaveForeground();
 	void       RestoreForeground();
@@ -293,6 +298,7 @@ struct Pdb : Debugger, ParentCtrl {
 
 	adr_t                 GetAddress(FilePos p);
 	FilePos               GetFilePos(adr_t address);
+	FnInfo                GetFnInfo0(adr_t address);
 	FnInfo                GetFnInfo(adr_t address);
 	void                  GetLocals(Frame& frame, Context& context,
 	                                VectorMap<String, Pdb::Val>& param,
@@ -307,8 +313,9 @@ struct Pdb : Debugger, ParentCtrl {
 	Val        Ref(Val v);
 	int64      GetInt(Val v);
 	double     GetFlt(Val v);
+	void       ZeroDiv(double x);
 	Val        Compute(Val v1, Val v2, int oper);
-	Val        RValue(int v);
+	Val        RValue(int64 v);
 	Val        Field0(Pdb::Val v, const String& field);
 	Val        Field(Pdb::Val v, const String& field);
 	Val        Term(CParser& p);
@@ -316,6 +323,11 @@ struct Pdb : Debugger, ParentCtrl {
 	Val        Unary(CParser& p);
 	Val        Additive(CParser& p);
 	Val        Multiplicative(CParser& p);
+	Val        Compare(Val v, CParser& p, int r1, int r2);
+	void       GetBools(Val v1, Val v2, bool& a, bool& b);
+	Val        LogAnd(CParser& p);
+	Val        LogOr(CParser& p);
+	Val        Comparison(CParser& p);
 	Val        Exp0(CParser& p);
 	Val        Exp(CParser& p);
 	void       Visualise(Visual& result, Pdb::Val val, int expandptr, int slen);
@@ -327,7 +339,7 @@ struct Pdb : Debugger, ParentCtrl {
 	Thread&    Current();
 	int        Disassemble(adr_t ip);
 	bool       IsValidFrame(adr_t eip);
-	void       Sync0();
+	void       Sync0(Thread& ctx, Frame *single_frame);
 	void       Sync();
 	void       SetThread();
 	void       SetFrame();
