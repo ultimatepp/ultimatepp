@@ -73,7 +73,9 @@ void Pdb::Sync()
 	for(int i = 0; i < reg.GetCount(); i++) {
 		const CpuRegister& r = reg[i];
 		if(r.name)
-			cpu.Add(String().Cat() << r.name << "|0x" << Hex(GetCpuRegister(ctx, r.sym)));
+			cpu.Add(String().Cat() << " " << r.name << "|"
+			                       << Hex(GetCpuRegister(ctx, r.sym)) << "|"
+			                       << int(i & 1));
 	}
 	SetFrame();
 	IdeActivateBottom();

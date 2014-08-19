@@ -293,7 +293,6 @@ struct Pdb : Debugger, ParentCtrl {
 	dword                 GetSymInfo(adr_t modbase, dword typeindex, IMAGEHLP_SYMBOL_TYPE_INFO info);
 	const Type&           GetType(int ti);
 	int                   GetTypeIndex(adr_t modbase, dword typeindex);
-	const Type&           GetTypeId(adr_t modbase, dword typeindex) { return GetType(GetTypeIndex(modbase, typeindex)); }
 	Val                   GetGlobal(const String& name);
 
 	adr_t                 GetAddress(FilePos p);

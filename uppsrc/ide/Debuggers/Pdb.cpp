@@ -172,16 +172,23 @@ void Pdb::SerializeSession(Stream& s)
 struct CpuRegisterDisplay : Display {
 	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 	{
-		w.DrawRect(r, paper);
-		static int cx1 = GetTextSize("EFLAGS12", StdFont().Bold()).cx +
-		                 GetTextSize("0x0000000000000000", StdFont()).cx;
+		Font fnt = Courier(Ctrl::HorzLayoutZoom(12));
+		static int cx1 = GetTextSize("EFLAGS12", fnt().Bold()).cx +
+		                 GetTextSize("0000 0000 0000 0000", fnt).cx;
 		String name;
 		String value;
-		SplitTo((String)q, '|', name, value);
-		Size tsz = GetTextSize(value, StdFont());
+		String odd;
+		SplitTo((String)q, '|', name, value, odd);
+		w.DrawRect(r, odd != "1" || (style & CURSOR) ? paper : Blend(SColorMark, SColorPaper, 220));
+		int i = value.GetLength() - 4;
+		while(i > 0) {
+			value.Insert(i, ' ');
+			i -= 4;
+		}
+		Size tsz = GetTextSize(value, fnt);
 		int tt = r.top + max((r.Height() - tsz.cy) / 2, 0);
-		w.DrawText(r.left, tt, name, StdFont().Bold(), ink);
-		w.DrawText(r.left + cx1 - tsz.cx, tt, value, StdFont(), ink);
+		w.DrawText(r.left, tt, name, fnt().Bold(), ink);
+		w.DrawText(r.left + cx1 - tsz.cx, tt, value, fnt, ink);
 	}
 };
 
@@ -247,6 +254,7 @@ Pdb::Pdb()
 	tab.Add(memory.SizePos(), "Memory");
 	
 	cpu.Columns(4);
+	cpu.ItemHeight(Courier(Ctrl::HorzLayoutZoom(12)).GetCy());
 	cpu.SetDisplay(Single<CpuRegisterDisplay>());
 
 	memory.cdb = this;

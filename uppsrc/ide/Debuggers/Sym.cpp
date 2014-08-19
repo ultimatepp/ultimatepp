@@ -131,7 +131,6 @@ void Pdb::TypeVal(Pdb::Val& v, int typeId, adr_t modbase)
 		tag = GetSymInfo(modbase, typeId, TI_GET_SYMTAG);
 		if(tag == SymTagPointerType) {
 			v.ref++;
-			const Type& tptr = GetTypeId(modbase, typeId); // What is this?
 		}
 		else
 		if(tag == SymTagArrayType)
