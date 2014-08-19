@@ -37,10 +37,10 @@ struct Pdb : Debugger, ParentCtrl {
 		int    line;
 		adr_t  address;
 
-		operator bool() const                   { return !IsNull(path); }
+		operator bool() const                              { return !IsNull(path); }
 
-		FilePos() {}
-		FilePos(const String& p, int l) : path(p), line(l) {}
+		FilePos()                                          { line = 0; address = 0; }
+		FilePos(const String& p, int l) : path(p), line(l) { address = 0; }
 	};
 
 	enum CpuRegisterKind {
@@ -76,6 +76,8 @@ struct Pdb : Debugger, ParentCtrl {
 		FnInfo() { address = size = pdbtype = 0; }
 	};
 
+	enum { UNKNOWN = -99, BOOL1, SINT1, UINT1, SINT2, UINT2, SINT4, UINT4, SINT8, UINT8, FLT, DBL, PFUNC };
+
 	struct Val : Moveable<Val> {
 		int    type;
 		int    ref;
@@ -93,15 +95,13 @@ struct Pdb : Debugger, ParentCtrl {
 		String ToString() const;
 #endif
 
-		Val() { rvalue = false; ref = 0; array = false; bitcnt = 0; address = 0; }
+		Val() { type = UNKNOWN; rvalue = false; ref = 0; array = false; bitcnt = 0; address = 0; }
 	};
 
 	struct NamedVal : Moveable<NamedVal> {
 		String name;
 		Val    val;
 	};
-
-	enum { UNKNOWN = -99, BOOL1, SINT1, UINT1, SINT2, UINT2, SINT4, UINT4, SINT8, UINT8, FLT, DBL, PFUNC };
 
 	struct Type : Moveable<Type> {
 		Type() : size(-1), vtbl_typeindex(-1) {}
@@ -289,7 +289,7 @@ struct Pdb : Debugger, ParentCtrl {
 	const Type&           GetType(int ti);
 	int                   GetTypeIndex(adr_t modbase, dword typeindex);
 	const Type&           GetTypeId(adr_t modbase, dword typeindex) { return GetType(GetTypeIndex(modbase, typeindex)); }
-	Val                   GetGlobal(const char *fn, const String& name);
+	Val                   GetGlobal(const String& name);
 
 	adr_t                 GetAddress(FilePos p);
 	FilePos               GetFilePos(adr_t address);

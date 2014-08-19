@@ -101,7 +101,6 @@ void Pdb::LoadModuleInfo()
 bool Pdb::AddBp(adr_t address)
 {
 	LLOG("AddBp: " << Hex(address));
-	LLOG("AddBp: " << Hex((adr_t)(LPVOID) address));
 	if(bp_set.Find(address) >= 0)
 		return true;
 	byte prev;

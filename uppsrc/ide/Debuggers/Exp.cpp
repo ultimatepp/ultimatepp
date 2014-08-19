@@ -323,11 +323,26 @@ Pdb::Val Pdb::Term(CParser& p)
 		if(q >= 0)
 			return f.param[q];
 		q = f.local.Find("this");
-		if(q >= 0)
-			return Field(DeRef(f.local[q]), id);
-		Val v = GetGlobal(f.fn.name, id);
-		if(v.address)
-			return v;
+		if(q >= 0) {
+			Val v = Field0(DeRef(f.local[q]), id);
+			if(!IsNull(v.type))
+				return v;
+		}
+		String scope = f.fn.name;
+		do {
+			String n = id;
+			int q = scope.ReverseFind("::");
+			if(q >= 0) {
+				scope.Trim(q);
+				n = scope + "::" + id;
+			}
+			else
+				scope.Clear();
+			Val v = GetGlobal(n);
+			if(v.address)
+				return v;
+		}
+		while(scope.GetCount());
 	}
 	ThrowError("\'" + id + "\' undefined");
 	return Val();
