@@ -294,7 +294,9 @@ struct AssistEditor : CodeEditor {
 	bool              navigator;
 	SplitterFrame     navigatorframe;
 	StaticRect        navigatorpane;
+	ArrayCtrl         scope;
 	ArrayCtrl         list;
+	Splitter          navigator_splitter;
 	EditString        search;
 
 	struct NavItem {
@@ -314,36 +316,51 @@ struct AssistEditor : CodeEditor {
 		int            line;
 		int            file;
 		bool           impl;
+		int            decl_line; // header position
+		int            decl_file;
+		bool           decl;
+		Vector<Tuple2<int, int> > linefo;
 		
-		bool operator<(const NavItem& b) const  { return CombineCompare(file, b.file)(line, b.line) < 0; }
-		
+		bool operator<(const NavItem& b) const;
 		void Set(const CppItem& m);
 	};
 	
-	enum { KIND_LINE = 123 };
+	enum { KIND_LINE = 123, KIND_NEST, KIND_FILE };
 	
-	struct NavigatorDisplay : Display {
-		const Array<NavItem>& item;
-	
+	struct ScopeDisplay : Display {
 		int DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 		virtual Size GetStdSize(const Value& q) const;
-	
-		NavigatorDisplay(const Array<NavItem>& item) : item(item) {}
 	};
 
-	Array<NavItem>   item;
+	struct NavigatorDisplay : Display {
+		const Vector<NavItem *>& item;
+	
+		int DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+		virtual void PaintBackground(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+		virtual Size GetStdSize(const Value& q) const;
+	
+		NavigatorDisplay(const Vector<NavItem *>& item) : item(item) {}
+	};
+
+	static int PaintFileName(Draw& w, const Rect& r, String h, Color ink);
+
+	Array<NavItem>                             nitem;
+	VectorMap<String, Vector<NavItem *> >      gitem;
+	Vector<NavItem *>                          litem;
+	Array<NavItem>                             nest_item;
+	VectorMap<int, SortedVectorMap<int, int> > linefo;
 	NavigatorDisplay navidisplay;
 	bool             navigating;
-	
-	void Search();
+	TimeCallback     search_trigger;
+	bool             navigator_global;
 
-/*
-	CodeBrowser       browser;
-	ParentCtrl        scopepane;
-	ParentCtrl        itempane;
-	Splitter          scope_item;
-*/
+	void TriggerSearch();
+	void Search();
+	void Scope();
+	void ListLineEnabled(int i, bool& b);
+
 	Splitter       popup;
 	ArrayCtrl      assist;
 	ArrayCtrl      type;

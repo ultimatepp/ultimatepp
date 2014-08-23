@@ -353,6 +353,8 @@ public:
 	Callback          WhenScroll;
 	Callback          WhenHeaderLayout;
 
+	Callback2<int, bool&> WhenLineEnabled;
+
 	Callback                        WhenDrag;
 	Callback3<int, int, PasteClip&> WhenDropCell;
 	Callback2<int, PasteClip&>      WhenDropInsert;
@@ -442,7 +444,7 @@ public:
 	void       EnableLine(int i, bool e);
 	void       DisableLine(int i)                               { EnableLine(i, false); }
 	bool       IsLineEnabled(int i) const;
-	bool       IsLineDisabled(int i) const                      { return IsLineEnabled(i); }
+	bool       IsLineDisabled(int i) const                      { return !IsLineEnabled(i); }
 
 	Vector<Value> ReadRow(int i) const; // deprecated name
 	Vector<Value> GetLine(int i) const                          { return ReadRow(i); }

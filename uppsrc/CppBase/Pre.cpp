@@ -26,6 +26,15 @@ const String& GetCppFile(int i)
 	static String x;
 	return x;
 }
+
+Vector<String> GetCppFiles()
+{
+	INTERLOCKED_(cpp_file_mutex) {
+		return clone(cpp_file.GetKeys());
+	}
+	return Vector<String>();
+}
+
 /*
 void  CppPos::Serialize(Stream& s)
 {

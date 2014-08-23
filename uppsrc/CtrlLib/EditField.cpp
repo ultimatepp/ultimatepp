@@ -790,6 +790,7 @@ void EditField::LeftDrag(Point p, dword flags)
 
 String EditField::GetSelectionData(const String& fmt) const
 {
+	if(password) return String();
 	if(fsell >= 0 && fselh >= 0 && fsell <= text.GetCount() && fselh <= text.GetCount())
 		return GetTextClip(text.Mid(fsell, fselh - fsell), fmt);
 	return String();
