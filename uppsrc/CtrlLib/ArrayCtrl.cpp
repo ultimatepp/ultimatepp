@@ -1328,7 +1328,7 @@ void ArrayCtrl::SetCursorEditFocus()
 }
 
 bool ArrayCtrl::SetCursor0(int i, bool dosel) {
-	if(nocursor || GetCount() == 0 || i >= 0 && i < array.GetCount() && !array[i].enabled)
+	if(nocursor || GetCount() == 0 || !IsLineEnabled(i))
 		return false;
 	i = minmax(i, 0, GetCount() - 1);
 	bool sel = false;
@@ -1436,7 +1436,9 @@ void ArrayCtrl::EnableLine(int i, bool en)
 
 bool ArrayCtrl::IsLineEnabled(int i) const
 {
-	return i < 0 ? false : i < array.GetCount() ? array[i].enabled : true;
+	bool b = i < 0 ? false : i < array.GetCount() ? array[i].enabled : true;
+	WhenLineEnabled(i, b);
+	return b;
 }
 
 void ArrayCtrl::Select(int i, int count, bool sel)

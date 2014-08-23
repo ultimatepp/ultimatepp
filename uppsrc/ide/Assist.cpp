@@ -20,11 +20,11 @@ class IndexSeparatorFrameCls : public CtrlFrame {
 
 int CharFilterNavigator(int c)
 {
-	return c == '.' ? ':' : IsAlNum(c) || c == '_' || c == ':' ? ToUpper(c) : 0;
+	return c == ':' ? '.' : IsAlNum(c) || c == '_' || c == '.' ? ToUpper(c) : 0;
 }
 
 AssistEditor::AssistEditor()
-:	navidisplay(item)
+:	navidisplay(litem)
 {
 	assist.NoHeader();
 	assist.NoGrid();
@@ -47,14 +47,22 @@ AssistEditor::AssistEditor()
 
 	int cy = search.GetMinSize().cy;
 	navigatorpane.Add(search.TopPos(0, cy).HSizePos());
-	navigatorpane.Add(list.VSizePos(cy, 0).HSizePos());
+	navigatorpane.Add(navigator_splitter.VSizePos(cy, 0).HSizePos());
+	scope.NoHeader();
+	scope.AddColumn().SetDisplay(Single<ScopeDisplay>());
+	scope.NoWantFocus();
+	scope.WhenSel = THISBACK(Scope);
+	navigator_splitter.Vert(scope, list);
+	navigator_splitter.SetPos(2000);
+
 	list.NoHeader();
 	list.AddRowNumColumn().SetDisplay(navidisplay);
-	list.SetLineCy(2 * GetStdFontCy());
+	list.SetLineCy(max(16, GetStdFontCy()));
 	list.NoWantFocus();
 	list.WhenSel = THISBACK(Navigate);
+	list.WhenLineEnabled = THISBACK(ListLineEnabled);
 	
-	search <<= THISBACK(Search);
+	search <<= THISBACK(TriggerSearch);
 	search.SetFilter(CharFilterNavigator);
 	search.WhenEnter = THISBACK(NavigatorEnter);
 	

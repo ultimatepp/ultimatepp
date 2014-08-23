@@ -2506,6 +2506,14 @@ in the cell editors and react to specific situations accordingly.&]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:WhenHeaderLayout:%- [_^Callback^ Callback]_[* WhenHeaderLayout]&]
 [s2; Called when header changes.&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:WhenLineEnabled:%- [_^Callback2^ Callback2]<[@(0.0.255) int], 
+[@(0.0.255) bool`&]>_[* WhenLineEnabled]&]
+[s2; Provides additional means to enable/disable lines in addition 
+to `"EnableLine`" interface. This is especially useful when using 
+SetVirtualCount. First parameter is the line number, second is 
+reference to enable status.&]
 [s0; &]
 [s0;%- &]
 [ {{10000t/25b/25@3 [s0;%- [*@(229)4 ArrayCtrl`::IdInfo]]}}&]
@@ -2528,7 +2536,7 @@ added to the array programmatically (e.g. using [* Add] or [* Insert]),
 these default values are not used.&]
 [s7; [%-*C@3 v]-|default source index value&]
 [s7; [*/ Return value]-|[* `*this]&]
-[s3; &]
+[s3;%- &]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:IdInfo`:`:InsertValue`(ValueGen`&`):%- [_^ArrayCtrl`:`:IdInfo^ IdInfo
 ][@(0.0.255) `&]_[* InsertValue]([_^ValueGen^ ValueGen][@(0.0.255) `&]_[*@3 g])&]
