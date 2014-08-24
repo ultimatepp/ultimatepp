@@ -299,27 +299,39 @@ struct AssistEditor : CodeEditor {
 	Splitter          navigator_splitter;
 	EditString        search;
 
-	struct NavItem {
-		String         nest;
-		String         qitem;
-		String         name;
-		String         uname;
-		String         natural;
-		String         type;
-		String         pname;
-		String         ptype;
-		String         tname;
-		String         ctname;
-		byte           access;
-		byte           kind;
-		int16          at;
+	struct NavLine : Moveable<NavLine> {
+		bool           impl:1;
+		int            file:31;
 		int            line;
-		int            file;
-		bool           impl;
-		int            decl_line; // header position
-		int            decl_file;
-		bool           decl;
-		Vector<Tuple2<int, int> > linefo;
+		
+		bool operator <(const NavLine& b) const {
+			return CombineCompare(!impl, !b.impl)
+			                     (GetFileName(GetCppFile(file)), GetFileName(GetCppFile(b.file)))
+			                     (line, b.line);
+		}
+	};
+	
+	struct NavItem {
+		String          nest;
+		String          qitem;
+		String          name;
+		String          uname;
+		String          natural;
+		String          type;
+		String          pname;
+		String          ptype;
+		String          tname;
+		String          ctname;
+		byte            access;
+		byte            kind;
+		int16           at;
+		int             line;
+		int             file;
+		bool            impl;
+		int             decl_line; // header position
+		int             decl_file;
+		bool            decl;
+		Vector<NavLine> linefo;
 		
 		bool operator<(const NavItem& b) const;
 		void Set(const CppItem& m);
@@ -451,6 +463,7 @@ struct AssistEditor : CodeEditor {
 	void           SyncCursor();
 	
 	void           Navigate();
+	void           NavigatorClick();
 	void           NavigatorEnter();
 	void           SyncNavigator();
 	bool           IsNavigator() const                             { return navigator; }

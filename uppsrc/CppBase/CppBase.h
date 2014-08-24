@@ -5,8 +5,9 @@
 
 NAMESPACE_UPP
 
-int           GetCppFileIndex(const String& path);
-const String& GetCppFile(int i);
+int            GetCppFileIndex(const String& path);
+const String&  GetCppFile(int i);
+Vector<String> GetCppFiles();
 
 enum {
 	Tmarker_before_first = 255,

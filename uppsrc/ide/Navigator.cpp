@@ -47,13 +47,48 @@ void AssistEditor::Navigate()
 	navigating = true;
 	int ii = list.GetCursor();
 	if(theide && ii >= 0 && ii < litem.GetCount()) {
+		int ln = GetLine(GetCursor()) + 1;
 		const NavItem& m = *litem[ii];
-		if(m.kind == KIND_LINE || IsNull(search))
+		if(m.kind == KIND_LINE || IsNull(search) && m.line != ln) {
 			theide->GotoPos(Null, m.line);
-		else
-			theide->IdeGotoCodeRef(MakeCodeRef(m.nest, m.qitem));
+			navigating = false;
+			return;
+		}
+		int q = CodeBase().Find(m.nest);
+		if(q < 0) {
+			navigating = false;
+			return;
+		}
+		const Array<CppItem>& a = CodeBase()[q];
+		Vector<NavLine> l;
+		for(int i = 0; i < a.GetCount(); i++) {
+			const CppItem& mm = a[i];
+			if(mm.qitem == m.qitem) {
+				NavLine& nl = l.Add();
+				nl.impl = mm.impl;
+				nl.file = mm.file;
+				nl.line = mm.line;
+			}
+		}
+		Sort(l);
+		q = 0;
+		for(int i = 0; i < l.GetCount(); i++) {
+			if(GetCppFile(l[i].file) == theide->editfile && l[i].line == ln) {
+				q = (i + 1) % l.GetCount();
+				break;
+			}
+		}
+		if(q >= 0 && q < l.GetCount())
+			theide->GotoPos(GetCppFile(l[q].file), l[q].line);
 	}
 	navigating = false;
+}
+
+void AssistEditor::NavigatorClick()
+{
+	int q = list.GetClickPos().y;
+	if(q >= 0 && q < list.GetCount())
+		Navigate();
 }
 
 void AssistEditor::NavigatorEnter()
@@ -295,7 +330,10 @@ void AssistEditor::Search()
 					n.decl_line = m.line;
 					n.decl_file = m.file;
 					n.decl = !m.impl;
-					n.linefo.Add(MakeTuple(m.file, m.line));
+					NavLine& l = n.linefo.Add();
+					l.impl = m.impl;
+					l.file = m.file;
+					l.line = m.line;
 				}
 			}
 		}
@@ -324,7 +362,10 @@ void AssistEditor::Search()
 							ni.decl_line = ni.line;
 							ni.decl_file = ni.file;
 							ni.decl = !ni.impl;
-							ni.linefo.Add(MakeTuple(ni.file, ni.line));
+							NavLine& l = ni.linefo.Add();
+							l.impl = m.impl;
+							l.file = m.file;
+							l.line = m.line;
 						}
 						else {
 							NavItem& mm = imap[q];
@@ -338,7 +379,10 @@ void AssistEditor::Search()
 									mm.decl_line = m.line;
 									mm.decl_file = m.file;
 							}
-							mm.linefo.Add(MakeTuple(m.file, m.line));
+							NavLine& l = mm.linefo.Add();
+							l.impl = m.impl;
+							l.file = m.file;
+							l.line = m.line;
 						}
 					}
 				}
@@ -430,7 +474,7 @@ void AssistEditor::Scope()
 		for(int i = 0; i < ia.GetCount(); i++) {
 			NavItem *m = ia[i];
 			for(int j = 0; j < m->linefo.GetCount(); j++)
-				linefo.GetAdd(m->linefo[j].a).Add(m->linefo[j].b, litem.GetCount());
+				linefo.GetAdd(m->linefo[j].file).Add(m->linefo[j].line, litem.GetCount());
 			litem.Add(m);
 		}
 	}

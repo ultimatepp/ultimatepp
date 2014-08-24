@@ -59,7 +59,7 @@ AssistEditor::AssistEditor()
 	list.AddRowNumColumn().SetDisplay(navidisplay);
 	list.SetLineCy(max(16, GetStdFontCy()));
 	list.NoWantFocus();
-	list.WhenSel = THISBACK(Navigate);
+	list.WhenLeftClick = THISBACK(NavigatorClick);
 	list.WhenLineEnabled = THISBACK(ListLineEnabled);
 	
 	search <<= THISBACK(TriggerSearch);
