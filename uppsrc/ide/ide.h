@@ -357,6 +357,7 @@ struct AssistEditor : CodeEditor {
 	bool             navigator_global;
 
 	void TriggerSearch();
+	void NavGroup(bool local);
 	void Search();
 	void Scope();
 	void ListLineEnabled(int i, bool& b);
