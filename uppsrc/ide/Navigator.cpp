@@ -225,6 +225,25 @@ void AssistEditor::TriggerSearch()
 	search_trigger.KillSet(100, THISBACK(Search));
 }
 
+void AssistEditor::NavGroup(bool local)
+{
+	for(int i = 0; i < nitem.GetCount(); i++) {
+		NavItem& m = nitem[i];
+		String g = m.nest;
+		if(m.kind == TYPEDEF)
+			g.Trim(max(g.ReverseFind("::"), 0));
+		if(IsNull(g))
+			g = "\xff" + GetCppFile(m.decl_file);
+		if(local)
+			if(gitem.GetCount() && gitem.TopKey() == g)
+				gitem.Top().Add(&m);
+			else
+				gitem.Add(g).Add(&m);
+		else
+			gitem.GetAdd(g).Add(&m);
+	}
+}
+
 void AssistEditor::Search()
 {
 	int sc = scope.GetScroll();
@@ -281,9 +300,7 @@ void AssistEditor::Search()
 			}
 		}
 		Sort(nitem, FieldRelation(&NavItem::line, StdLess<int>()));
-		Vector<NavItem *>& d = gitem.Add(Null);
-		for(int i = 0; i < nitem.GetCount(); i++)
-			d.Add(&nitem[i]);
+		NavGroup(true);
 	}
 	else {
 		navigator_global = true;
@@ -328,34 +345,17 @@ void AssistEditor::Search()
 			}
 		}
 		nitem = imap.PickValues();
-		{ LTIMING("Group");
-		for(int i = 0; i < nitem.GetCount(); i++) {
-			NavItem& m = nitem[i];
-			String g = m.nest;
-			if(m.kind == TYPEDEF)
-				g.Trim(max(g.ReverseFind("::"), 0));
-			if(IsNull(g))
-				g = "\xff" + GetCppFile(m.decl_file);
-			gitem.GetAdd(g).Add(&m);
-		}
-		}
-		{ LTIMING("Sort groups");
+		NavGroup(false);
 		SortByKey(gitem);
-		}
-		{ LTIMING("Sort lines");
 		for(int i = 0; i < gitem.GetCount(); i++) {
 			scope.Add(gitem.GetKey(i));
 			Sort(gitem[i]);
 		}
-		}
 	}
 	scope.Clear();
 	scope.Add(Null);
-	{
-		LTIMING("scope.Add");
-		for(int i = 0; i < gitem.GetCount(); i++)
-			scope.Add(gitem.GetKey(i));
-	}
+	for(int i = 0; i < gitem.GetCount(); i++)
+		scope.Add(gitem.GetKey(i));
 	scope.ScrollTo(sc);
 	if(!navigator_global || !scope.FindSetCursor(key))
 		scope.GoBegin();
@@ -417,17 +417,15 @@ void AssistEditor::Scope()
 		int    kind = KIND_NEST;
 		if(*grp == '\xff')
 			kind = KIND_FILE;
-		if(navigator_global) {
-			if(all) {
-				NavItem& m = nest_item.Add();
-				m.kind = kind;
-				m.type = grp;
-				litem.Add(&m);
-			}
-			else
-			if(grp != sc)
-				continue;
+		if(all) {
+			NavItem& m = nest_item.Add();
+			m.kind = kind;
+			m.type = grp;
+			litem.Add(&m);
 		}
+		else
+		if(grp != sc)
+			continue;
 		const Vector<NavItem *>& ia = gitem[i];
 		for(int i = 0; i < ia.GetCount(); i++) {
 			NavItem *m = ia[i];
