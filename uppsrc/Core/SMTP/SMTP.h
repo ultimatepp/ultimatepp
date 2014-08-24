@@ -43,9 +43,9 @@ class Smtp : public TcpSocket {
 	String         message_id;
 
 	void   CheckFail();
-	void   SendData(const String &s);
-	String SendRecv(const String& s);
-	void   SendRecvOK(const String& s);
+	void   SendData(const String &s, bool trace_bytes_only = false);
+	String SendRecv(const String& s, bool trace_bytes_only = false);
+	void   SendRecvOK(const String& s, bool trace_bytes_only = false);
 	String GetMessage(bool chunks);
 
 public:
@@ -85,6 +85,7 @@ public:
 	Smtp();
 
 	static void    Trace(bool b = true);
+	static void    TraceBody(bool b = true);
 
 	static String  Encode(const String& text);
 	static String  FormatAddr(const String& addr, const String& name);
