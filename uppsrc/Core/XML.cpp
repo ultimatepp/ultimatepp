@@ -516,13 +516,13 @@ bool  XmlParser::Tag(const String& tag)
 void  XmlParser::PassTag(const char *tag)
 {
 	if(!Tag(tag))
-		throw XmlError(String().Cat() << '\'' << tag << "'\' tag expected");
+		throw XmlError(String().Cat() << '\'' << tag << "\' tag expected");
 }
 
 void  XmlParser::PassTag(const String& tag)
 {
 	if(!Tag(tag))
-		throw XmlError(String().Cat() << '\'' << tag << "'\' tag expected");
+		throw XmlError(String().Cat() << '\'' << tag << "\' tag expected");
 }
 
 String XmlParser::ReadEnd(bool next)
