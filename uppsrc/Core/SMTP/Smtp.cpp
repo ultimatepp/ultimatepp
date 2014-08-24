@@ -2,13 +2,22 @@
 
 NAMESPACE_UPP
 
-static bool sSmtpTrace;
+namespace Ini {
+	INI_BOOL(Smtp_Trace, false, "Activates HTTP requests tracing")
+	INI_BOOL(Smtp_TraceBody, false, "Activates HTTP requests body tracing")
+};
 
-#define LLOG(x)      do { if(sSmtpTrace) RLOG(x); } while(0)
+#define LLOG(x)      do { if(Ini::Smtp_Trace) RLOG(x); } while(0)
+#define LLOGB(x)      do { if(Ini::Smtp_TraceBody) RLOG(x); } while(0)
 
 void Smtp::Trace(bool b)
 {
-	sSmtpTrace = b;
+    Ini::Smtp_Trace = b;
+}
+
+void Smtp::TraceBody(bool b)
+{
+    Ini::Smtp_TraceBody = b;
 }
 
 static String GetDelimiter(const char *b, const char *e, String init)
@@ -53,9 +62,12 @@ void Smtp::CheckFail()
 		throw Exc("Connection error: " + GetErrorDesc());
 }
 
-void Smtp::SendData(const String &s)
+void Smtp::SendData(const String &s, bool trace_bytes_only)
 {
-	LLOG("SMTP send: " << s);
+	if (trace_bytes_only)
+	    LLOG("SMTP send body: " << s.GetCount() << " bytes");
+	else
+	    LLOG("SMTP send: " << s);
 	const char *p = s.Begin(), *e = s.End();
 	while(p != e) {
 		CheckFail();
@@ -64,9 +76,9 @@ void Smtp::SendData(const String &s)
 	}
 }
 
-String Smtp::SendRecv(const String& s)
+String Smtp::SendRecv(const String& s, bool trace_bytes_only)
 {
-	SendData(s);
+	SendData(s, trace_bytes_only);
 	String reply;
 	for(;;) {
 		CheckFail();
@@ -81,9 +93,9 @@ String Smtp::SendRecv(const String& s)
 	}
 }
 
-void Smtp::SendRecvOK(const String& s)
+void Smtp::SendRecvOK(const String& s, bool trace_bytes_only)
 {
-	String ans = SendRecv(s);
+	String ans = SendRecv(s, trace_bytes_only);
 	if(ans[0] != '2' || ans[1] != '5' || ans[2] != '0')
 		throw Exc(ans);
 }
@@ -305,8 +317,8 @@ String Smtp::GetMessage(bool chunks)
 	}
 	if(multi || alter)
 		msg << "--" << delimiter << "--\r\n";
-	LLOG("Msg:");
-	LLOG(msg);
+	LLOGB("Msg:");
+	LLOGB(msg);
 
 	return msg;
 }
@@ -374,7 +386,7 @@ bool Smtp::Send(const String& msg_)
 		if(msg.GetCount() == 0)
 			msg = GetMessage(true);
 
-		SendRecvOK(msg + ".\r\n");
+		SendRecvOK(msg + ".\r\n", true);
 
 		SendRecv("QUIT\r\n");
 		return true;
