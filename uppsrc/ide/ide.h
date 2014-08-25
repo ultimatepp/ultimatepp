@@ -296,6 +296,7 @@ struct AssistEditor : CodeEditor {
 	StaticRect        navigatorpane;
 	ArrayCtrl         scope;
 	ArrayCtrl         list;
+	ArrayCtrl         navlines;
 	Splitter          navigator_splitter;
 	EditString        search;
 
@@ -304,11 +305,7 @@ struct AssistEditor : CodeEditor {
 		int            file:31;
 		int            line;
 		
-		bool operator <(const NavLine& b) const {
-			return CombineCompare(!impl, !b.impl)
-			                     (GetFileName(GetCppFile(file)), GetFileName(GetCppFile(b.file)))
-			                     (line, b.line);
-		}
+		bool operator<(const NavLine& b) const;
 	};
 	
 	struct NavItem {
@@ -333,13 +330,18 @@ struct AssistEditor : CodeEditor {
 		bool            decl;
 		Vector<NavLine> linefo;
 		
-		bool operator<(const NavItem& b) const;
 		void Set(const CppItem& m);
 	};
 	
 	enum { KIND_LINE = 123, KIND_NEST, KIND_FILE };
 	
 	struct ScopeDisplay : Display {
+		int DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+		virtual Size GetStdSize(const Value& q) const;
+	};
+	
+	struct LineDisplay : Display {
 		int DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 		virtual Size GetStdSize(const Value& q) const;
@@ -367,12 +369,18 @@ struct AssistEditor : CodeEditor {
 	bool             navigating;
 	TimeCallback     search_trigger;
 	bool             navigator_global;
+	ToolButton       sortitems;
+	bool             sorting;
 
 	void TriggerSearch();
 	void NavGroup(bool local);
 	void Search();
 	void Scope();
 	void ListLineEnabled(int i, bool& b);
+	void NaviSort();
+
+	static bool SortByLines(const NavItem *a, const NavItem *b);
+	static bool SortByNames(const NavItem *a, const NavItem *b);
 
 	Splitter       popup;
 	ArrayCtrl      assist;
@@ -462,10 +470,15 @@ struct AssistEditor : CodeEditor {
 	
 	void           SyncCursor();
 	
+	Vector<NavLine> GetNavLines(const NavItem& m);
+
 	void           Navigate();
 	void           NavigatorClick();
 	void           NavigatorEnter();
 	void           SyncNavigator();
+	void           SyncLines();
+	void           SyncNavLines();
+	void           GoToNavLine();
 	bool           IsNavigator() const                             { return navigator; }
 	void           Navigator(bool navigator);
 

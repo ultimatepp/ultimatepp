@@ -46,25 +46,37 @@ AssistEditor::AssistEditor()
 	navigating = false;
 
 	int cy = search.GetMinSize().cy;
-	navigatorpane.Add(search.TopPos(0, cy).HSizePos());
+	navigatorpane.Add(search.TopPos(0, cy).HSizePos(0, cy + 4));
+	navigatorpane.Add(sortitems.TopPos(0, cy).RightPos(0, cy));
 	navigatorpane.Add(navigator_splitter.VSizePos(cy, 0).HSizePos());
 	scope.NoHeader();
 	scope.AddColumn().SetDisplay(Single<ScopeDisplay>());
 	scope.NoWantFocus();
 	scope.WhenSel = THISBACK(Scope);
-	navigator_splitter.Vert(scope, list);
-	navigator_splitter.SetPos(2000);
+	navigator_splitter.Vert() << scope << list << navlines;
+	navigator_splitter.SetPos(1500, 0);
+	navigator_splitter.SetPos(8000, 1);
+	navigator_splitter.SetPos(500, 2);
 
 	list.NoHeader();
 	list.AddRowNumColumn().SetDisplay(navidisplay);
 	list.SetLineCy(max(16, GetStdFontCy()));
 	list.NoWantFocus();
 	list.WhenLeftClick = THISBACK(NavigatorClick);
+	list.WhenSel = THISBACK(SyncNavLines);
 	list.WhenLineEnabled = THISBACK(ListLineEnabled);
 	
+	navlines.NoHeader().NoWantFocus();
+	navlines.WhenLeftClick = THISBACK(GoToNavLine);
+	navlines.AddColumn().SetDisplay(Single<LineDisplay>());
+
 	search <<= THISBACK(TriggerSearch);
 	search.SetFilter(CharFilterNavigator);
 	search.WhenEnter = THISBACK(NavigatorEnter);
+	
+	sortitems.Image(BrowserImg::Sort());
+	sortitems <<= THISBACK(NaviSort);
+	sorting = false;
 	
 	navigator = true;
 
