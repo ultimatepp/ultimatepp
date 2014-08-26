@@ -1,4 +1,4 @@
-description "PCRE regular expressions";
+description "PCRE regular expressions\377";
 
 uses
 	Core,
@@ -9,3 +9,4 @@ file
 
 mainconfig
 	"" = "CONSOLE";
+

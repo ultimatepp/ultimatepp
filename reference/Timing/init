@@ -1,0 +1,4 @@
+#ifndef _Timing_icpp_init_stub
+#define _Timing_icpp_init_stub
+#include "Core/init"
+#endif

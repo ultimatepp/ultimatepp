@@ -9,6 +9,7 @@ CONSOLE_APP_MAIN
 	{
 		for(int i = 0; i < r0.GetCount(); i++)
 		    Cout() << r0[i] << '\n';
+		Cout() << "---\n";
     } else if(r0.IsError())
 	    Cout() << r0.GetError() << '\n';
 
