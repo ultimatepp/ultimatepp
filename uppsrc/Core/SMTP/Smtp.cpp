@@ -282,6 +282,7 @@ String Smtp::GetMessage(bool chunks)
 				msg.Cat('=');
 				msg.Cat(hex[(*p >> 4) & 15]);
 				msg.Cat(hex[*p & 15]);
+				begin = false;
 			}
 
 		if(!begin)
