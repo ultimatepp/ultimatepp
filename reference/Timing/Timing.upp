@@ -1,4 +1,4 @@
-description "Timer events";
+description "Profiling helpers\377";
 
 uses
 	Core;

@@ -6,6 +6,7 @@ CONSOLE_APP_MAIN
 {
 	Index<String> index;
 	TimeStop tm;
+	RTIMESTOP("Total runtime");
 	for(int i = 0; i < 1000000; i++) {
 		int x;
 		String q;
