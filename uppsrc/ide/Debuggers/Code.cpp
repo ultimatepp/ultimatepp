@@ -16,11 +16,7 @@ int Pdb::Disassemble(adr_t ip)
 			break;
 		code[i] = q;
 	}
-#ifdef CPU_64
 	int sz = NDisassemble(out, code, ip, win64);
-#else
-	int sz = NDisassemble(out, code, ip);
-#endif
 	if(sz > i)
 		return -1;
 	disas.Add(ip, out, Null, String(code, sz));
@@ -273,11 +269,7 @@ bool Pdb::Step(bool over)
 						break;
 					code[i] = q;
 				}
-#ifdef CPU_64
 				l = NDisassemble(out, code, GetIP(), win64);
-#else
-				l = NDisassemble(out, code, GetIP());
-#endif
 			}
 			adr_t bp0 = GetIP();
 			adr_t bp = bp0 + l;

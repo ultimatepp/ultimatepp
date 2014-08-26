@@ -113,13 +113,15 @@ bool Pdb::Create(One<Host> local, const String& exefile, const String& cmdline)
 	}
 	hProcess = pi.hProcess;
 	mainThread = pi.hThread;
-	mainThreadId = GetThreadId(mainThread);
+	mainThreadId = pi.dwThreadId;
 
 #ifdef CPU_64
 	BOOL _64;
 	win64 = IsWow64Process(hProcess, &_64) && !_64;
 	LLOG("Win64 app: " << win64);
 	disas.Mode64(win64);
+#else
+	win64 = false;
 #endif
 	
 	CloseHandle(pi.hThread);

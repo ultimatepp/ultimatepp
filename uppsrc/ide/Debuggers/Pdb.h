@@ -182,9 +182,8 @@ struct Pdb : Debugger, ParentCtrl {
 	HWND                     	hWnd;
 	VectorMap<adr_t, byte>      bp_set; // breakpoints active for single RunToException
 
-#ifdef CPU_64
-	bool                        win64; // debugee is 64-bit
-#endif
+	bool                        win64; // debugee is 64-bit, always false in 32-bit exe
+
 	Context                     context;
 
 	Index<adr_t>            	invalidpage;
