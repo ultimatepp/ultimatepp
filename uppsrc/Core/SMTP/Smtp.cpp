@@ -339,6 +339,8 @@ bool Smtp::Send(const String& msg_)
 		if(!Connect(host, Nvl(port, ssl ? 465 : 25)))
 			throw Exc(Format("Cannot open socket %s:%d: %s", host, port, GetErrorDesc()));
 
+		GlobalTimeout(request_timeout);
+
 		String ans;
 		
 		if(ssl)
