@@ -639,15 +639,17 @@ int EditField::Insert(int pos, const WString& itext)
 	const wchar *s = itext;
 	for(;;) {
 		wchar chr = *s++;
-		if(chr == '\t')
-			ins.Cat(WString(' ', 4));
-		else
+		int count = 1;
+		if(chr == '\t') {
+			count = 4;
+			chr = ' ';
+		}
 		if(chr >= ' ') {
 			chr = (*filter)(chr);
 			if(chr) {
 				chr = convert->Filter(chr);
 				if(chr && (charset == CHARSET_UNICODE || FromUnicode(chr, charset, 0)))
-					ins.Cat(chr);
+					ins.Cat(chr, count);
 			}
 		}
 		else

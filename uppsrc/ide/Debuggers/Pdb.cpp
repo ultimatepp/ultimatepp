@@ -196,6 +196,7 @@ Pdb::Pdb()
 {
 	hWnd = NULL;
 	hProcess = INVALID_HANDLE_VALUE;
+	current_frame = NULL;
 
 	locals.NoHeader();
 	locals.AddColumn("", 1);
