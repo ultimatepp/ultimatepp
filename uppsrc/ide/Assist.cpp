@@ -127,15 +127,21 @@ bool isincludefnchar(int c)
 	       c != ' ' && c != '\"' && c != '/' && c != '\\' && c >= 32 && c < 65536;
 }
 
-String AssistEditor::ReadIdBack(int q, bool include)
+String AssistEditor::ReadIdBackPos(int& pos, bool include)
 {
 	String id;
 	bool (*test)(int c) = include ? isincludefnchar : iscid;
-	while(q > 0 && (*test)(GetChar(q - 1)))
-		q--;
+	while(pos > 0 && (*test)(GetChar(pos - 1)))
+		pos--;
+	int q = pos;
 	while(q < GetLength() && (*test)(GetChar(q)))
 		id << (char)GetChar(q++);
 	return id;
+}
+
+String AssistEditor::ReadIdBack(int q, bool include)
+{
+	return ReadIdBackPos(q, include );
 }
 
 void AssistEditor::DirtyFrom(int line)

@@ -424,6 +424,7 @@ struct AssistEditor : CodeEditor {
 	void           CloseAssist();
 	void           Assist();
 	bool           IncludeAssist();
+	String         ReadIdBackPos(int& pos, bool include);
 	String         ReadIdBack(int q, bool include = false);
 	void           SyncAssist();
 	void           AssistInsert();
