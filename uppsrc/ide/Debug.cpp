@@ -323,5 +323,33 @@ void Ide::OpenLog()
 
 bool Ide::EditorTip(CodeEditor::MouseTip& mt)
 {
-	return debugger && debugger->Tip(editor.ReadIdBack(mt.pos), mt);
+	if(!debugger)
+		return false;
+	int pos = mt.pos;
+	String e;
+	String sep;
+	while(pos >= 0) {
+		String b = editor.ReadIdBackPos(pos, false);
+		if(b.GetCount() == 0)
+			break;
+		e = b + sep + e;
+		sep = ".";
+		while(pos > 0 && editor.GetChar(pos - 1) == ' ')
+			pos++;
+		if(pos > 0 && editor.GetChar(pos - 1) == '.')
+			--pos;
+		else
+		if(pos >= 2 && editor.GetChar(pos - 1) == ':' && editor.GetChar(pos - 2) == ':') {
+			pos -= 2;
+			sep = "::";
+		}
+		else
+		if(pos >= 2 && editor.GetChar(pos - 1) == '>' && editor.GetChar(pos - 2) == '-')
+			pos -= 2;
+		else
+			break;
+		while(pos > 0 && editor.GetChar(pos - 1) == ' ')
+			pos++;
+	}
+	return debugger->Tip(e, mt);
 }
