@@ -302,18 +302,6 @@ Pdb::Pdb()
 	Load(callback(this, &Pdb::SerializeSession), ss);
 }
 
-void Pdb::CleanupOnExit()
-{
-	if(hProcess != INVALID_HANDLE_VALUE) {
-		while(threads.GetCount())
-			RemoveThread(threads.GetKey(0));
-		UnloadModuleSymbols();
-		SymCleanup(hProcess);
-		CloseHandle(hProcess);
-		hProcess = INVALID_HANDLE_VALUE;
-	}
-}
-
 void Pdb::CopyStack()
 {
 	String s;
@@ -340,7 +328,11 @@ Pdb::~Pdb()
 	if(hProcess != INVALID_HANDLE_VALUE) {
 		DebugActiveProcessStop(processid);
 		TerminateProcess(hProcess, 0);
-		CleanupOnExit();
+		while(threads.GetCount())
+			RemoveThread(threads.GetKey(0)); // To CloseHandle
+		UnloadModuleSymbols();
+		SymCleanup(hProcess);
+		CloseHandle(hProcess);
 	}
 	StoreToGlobal(*this, CONFIGNAME);
 	IdeRemoveBottom(*this);
