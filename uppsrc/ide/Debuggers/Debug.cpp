@@ -419,12 +419,6 @@ bool Pdb::RunToException()
 					Unlock();
 				terminated = true;
 				return false;
-				CleanupOnExit();
-				if(ContinueDebugEvent(event.dwProcessId, event.dwThreadId, DBG_CONTINUE))
-					LLOG("ContinueDebugEvent(EXIT_PROCESS_DEBUG_EVENT) -> OK");
-				else
-					LLOG("ContinueDebugEvent -> " << GetErrorMessage(GetLastError()));
-				return false;
 			case LOAD_DLL_DEBUG_EVENT: {
 				LLOG("Load dll: " << event.u.LoadDll.lpBaseOfDll);
 				CloseHandle(event.u.LoadDll.hFile);

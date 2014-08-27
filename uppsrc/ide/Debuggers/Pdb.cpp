@@ -338,22 +338,8 @@ Pdb::~Pdb()
 	Store(callback(this, &Pdb::SerializeSession), ss);
 	WorkspaceConfigData("pdb-debugger") = ss;
 	if(hProcess != INVALID_HANDLE_VALUE) {
-		if(!running)
-			ContinueDebugEvent(event.dwProcessId, event.dwThreadId, DBG_TERMINATE_PROCESS);
+		DebugActiveProcessStop(processid);
 		TerminateProcess(hProcess, 0);
-/*
-		// TerminateProcess should take care of everything...
-		do {
-			if(!WaitForDebugEvent(&event, 1500) ||
-			   !ContinueDebugEvent(event.dwProcessId, event.dwThreadId, DBG_CONTINUE)
-				TerminateProcess(hProcess, -1);
-				break;
-			}
-			if()
-				break;
-		}
-		while(event.dwDebugEventCode != EXIT_PROCESS_DEBUG_EVENT);
-*/
 		CleanupOnExit();
 	}
 	StoreToGlobal(*this, CONFIGNAME);
