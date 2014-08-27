@@ -254,7 +254,6 @@ struct Pdb : Debugger, ParentCtrl {
 	void       LoadModuleInfo();
 	int        FindModuleIndex(adr_t base);
 	void       UnloadModuleSymbols();
-	void       CleanupOnExit();
 	void       AddThread(dword dwThreadId, HANDLE hThread);
 	void       RemoveThread(dword dwThreadId);
 	void       Lock();
