@@ -129,7 +129,7 @@ Vector<AssistEditor::NavLine> AssistEditor::GetNavLines(const NavItem& m)
 {
 	Vector<NavLine> l;
 	int q = CodeBase().Find(m.nest);
-	if(q < 0)
+	if(q < 0 || IsNull(m.qitem))
 		return l;
 	const Array<CppItem>& a = CodeBase()[q];
 	for(int i = 0; i < a.GetCount(); i++) {
@@ -203,11 +203,15 @@ void AssistEditor::Navigator(bool nav)
 
 void AssistEditor::SerializeNavigator(Stream& s)
 {
-	int version = 3;
+	int version = 4;
 	s / version;
 	s % navigatorframe;
 	s % navigator;
-	if(version >= 1 && version < 2 || version >= 3)
+	if(version == 1 || version == 3) {
+		Splitter dummy;
+		s % dummy;
+	}
+	if(version >= 4)
 		s % navigator_splitter;
 	Navigator(navigator);
 }

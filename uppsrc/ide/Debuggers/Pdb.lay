@@ -1,0 +1,8 @@
+LAYOUT(EditPDBExpressionLayout, 604, 336)
+	ITEM(Label, lbl, SetLabel(t_("Expression")).LeftPosZ(4, 64).TopPosZ(8, 19))
+	ITEM(EditString, text, HSizePosZ(72, 8).TopPosZ(8, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, 190).BottomPosZ(6, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(6, 22))
+	ITEM(RichTextCtrl, help, LeftPosZ(4, 592).TopPosZ(32, 268))
+END_LAYOUT
+

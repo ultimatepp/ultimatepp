@@ -55,8 +55,7 @@ AssistEditor::AssistEditor()
 	scope.WhenSel = THISBACK(Scope);
 	navigator_splitter.Vert() << scope << list << navlines;
 	navigator_splitter.SetPos(1500, 0);
-	navigator_splitter.SetPos(8000, 1);
-	navigator_splitter.SetPos(500, 2);
+	navigator_splitter.SetPos(9500, 1);
 
 	list.NoHeader();
 	list.AddRowNumColumn().SetDisplay(navidisplay);

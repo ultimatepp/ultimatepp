@@ -41,8 +41,9 @@ file
 	Stack.cpp,
 	Code.cpp,
 	Pdb.cpp,
+	Pdb.lay,
 	Pdb.key,
 	Info readonly separator,
 	Copying,
-	srcimp.tpp;
+	app.tpp;
 
