@@ -172,6 +172,8 @@ One<Debugger> CdbCreate(One<Host> rval_ host, const String& exefile, const Strin
 One<Debugger> PdbCreate(One<Host> rval_ host, const String& exefile, const String& cmdline);
 #endif
 
+bool EditPDBExpression(const char *title, String& brk);
+
 void Ide::BuildAndDebug(bool runto)
 {
 	VectorMap<String, String> bm = GetMethodVars(method);
@@ -289,6 +291,15 @@ void Ide::ConditionalBreak()
 	String brk = editor.GetBreakpoint(ln);
 	if(brk == "\xe")
 		brk = "1";
+
+	Index<String> cfg = PackageConfig(IdeWorkspace(), 0, GetMethodVars(method), mainconfigparam,
+	                                  *CreateHost(true), *CreateBuilder(~CreateHostRunDir()));
+	DUMP(cfg);
+	if(cfg.Find("MSC") >= 0) {
+		if(EditPDBExpression("Conditional breakpoint", brk))
+			editor.SetBreakpoint(ln, brk);
+	}
+	else
 	if(EditText(brk, "Conditional breakpoint", "Condition"))
 		editor.SetBreakpoint(ln, brk);
 	editor.RefreshFrame();

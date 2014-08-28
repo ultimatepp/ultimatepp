@@ -347,4 +347,24 @@ One<Debugger> PdbCreate(One<Host> rval_ host, const String& exefile, const Strin
 	return dbg;
 }
 
+#define LAYOUTFILE <ide/Debuggers/Pdb.lay>
+#include <CtrlCore/lay.h>
+
+#define TOPICFILE <ide/Debuggers/app.tpp/all.i>
+#include <Core/topic_group.h>
+
+bool EditPDBExpression(const char *title, String& brk)
+{
+	WithEditPDBExpressionLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, title);
+	dlg.help.SetQTF(GetTopic("ide/Debuggers/app/PDBExpressions$en-us"));
+	dlg.help.Background(White());
+	dlg.help.SetFrame(ViewFrame());
+	dlg.text <<= brk;
+	if(dlg.Execute() != IDOK)
+		return false;
+	brk = ~dlg.text;
+	return true;
+}
+
 #endif

@@ -530,7 +530,8 @@ void DisplayPopup::Sync()
 		if(top && top->HasFocusDeep()) {
 			Size sz = display->GetStdSize(value);
 			if(sz.cx + 2 * margin > item.GetWidth() || sz.cy > item.GetHeight()) {
-				slim = item + ctrl->GetScreenView().TopLeft();
+				Rect vw = ctrl->GetScreenView();
+				slim = (item + vw.TopLeft()) & vw;
 				if(slim.Contains(GetMousePos())) {
 					Rect r = item;
 					r.right = max(r.right, r.left + sz.cx + 2 * margin);
