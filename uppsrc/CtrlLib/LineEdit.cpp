@@ -193,11 +193,13 @@ void   LineEdit::Paint0(Draw& w) {
 	Vector<int> dx, dx2;
 	int fascent = font.Info().GetAscent();
 	Color showcolor = Blend(SColorLight, SColorHighlight);
+	bool trimmed = false;
 	for(int i = sc.y; i < ll; i++) {
 		WString tx;
 		if(line[i].text.GetLength() > 100000) { // Do not go out of memory for patologic cases...
 			String h = line[i].text;
 			h.Trim(100000);
+			trimmed = true;
 			tx = h.ToWString();
 		}
 		else
@@ -215,7 +217,8 @@ void   LineEdit::Paint0(Draw& w) {
 			hl.SetCount(len + 1, ih);
 			for(int q = 0; q < tx.GetCount(); q++)
 				hl[q].chr = tx[q];
-			HighlightLine(i, hl, pos);
+			if(!trimmed)
+				HighlightLine(i, hl, pos);
 			int ln = hl.GetCount() - 1;
 			Buffer<wchar> txt(ln);
 			for(int j = 0; j < ln; j++)
