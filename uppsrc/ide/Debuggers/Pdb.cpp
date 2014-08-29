@@ -29,11 +29,13 @@ void Pdb::DebugBar(Bar& bar)
 	bar.MenuSeparator();
 	bar.Add(b, AK_AUTOS, THISBACK1(SetTab, 0));
 	bar.Add(b, AK_LOCALS, THISBACK1(SetTab, 1));
-	bar.Add(b, AK_WATCHES, THISBACK1(SetTab, 2));
+	bar.Add(b, AK_THISS, THISBACK1(SetTab, 2));
+	bar.Add(b, AK_WATCHES, THISBACK1(SetTab, 3));
 	bar.Add(b, AK_CLEARWATCHES, THISBACK(ClearWatches));
 	bar.Add(b, AK_ADDWATCH, THISBACK(AddWatch));
 	bar.Add(b, AK_EXPLORER, THISBACK(DoExplorer));
-	bar.Add(b, AK_MEMORY, THISBACK1(SetTab, 4));
+	bar.Add(b, AK_CPU, THISBACK1(SetTab, 5));
+	bar.Add(b, AK_MEMORY, THISBACK1(SetTab, 6));
 	bar.MenuSeparator();
 	bar.Add(b, "Copy backtrace", THISBACK(CopyStack));
 	bar.Add(b, "Copy dissassembly", THISBACK(CopyDisas));
@@ -217,10 +219,12 @@ Pdb::Pdb()
 	watches.NoHeader();
 	watches.AddColumn("", 1).Edit(watchedit);
 	watches.AddColumn("", 6).SetDisplay(Single<VisualDisplay>());
-	watches.Inserting().Removing();
+	watches.Moving();
 	watches.WhenEnterRow = THISBACK1(SetTreeA, &watches);
 	watches.WhenBar = THISBACK(WatchesMenu);
 	watches.WhenLeftDouble = THISBACK1(ExploreKey, &watches);
+	watches.WhenAcceptEdit = THISBACK(Data);
+	watches.WhenDrop = THISBACK(DropWatch);
 
 	autos.NoHeader();
 	autos.AddColumn("", 1);
@@ -285,10 +289,6 @@ Pdb::Pdb()
 
 	framelist <<= THISBACK(SetFrame);
 	threadlist <<= THISBACK(SetThread);
-
-	watches.WhenAcceptEdit = THISBACK(Data);
-	watches.WhenDrop = THISBACK(DropWatch);
-	tab <<= THISBACK(Data);
 
 	tree.WhenOpen = THISBACK(TreeExpand);
 

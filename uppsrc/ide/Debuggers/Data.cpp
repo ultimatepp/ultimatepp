@@ -582,12 +582,43 @@ void Pdb::LocalsMenu(Bar& bar)
 	DataMenu(locals, bar, locals.GetKey());
 }
 
+void Pdb::AddWatch()
+{
+	String s;
+	if(EditPDBExpression("Add watch", s)) {
+		SetTab(3);
+		watches.Add(s);
+		Data();
+	}
+}
+
+void Pdb::EditWatch()
+{
+	String s = watches.GetKey();
+	if(EditPDBExpression("Edit watch", s)) {
+		SetTab(2);
+		watches.Set(0, s);
+		Data();
+	}
+}
+
+void Pdb::RemoveWatch()
+{
+	watches.DoRemove();
+	Data();
+}
+
 void Pdb::WatchesMenu(Bar& bar)
 {
 	String exp = watches.GetKey();
 	if(!IsNull(exp))
 		exp = "(" + exp + ")";
 	DataMenu(watches, bar, exp);
+	bar.Separator();
+	bar.Add(AK_ADDWATCH, THISBACK(AddWatch));
+	bool b = watches.IsCursor();
+	bar.Add(b, "Edit watch..", THISBACK(EditWatch));
+	bar.Add(b, "Remove watch..", THISBACK(RemoveWatch));
 	bar.Separator();
 	watches.StdBar(bar);
 }
@@ -607,12 +638,6 @@ void Pdb::SetTab(int i)
 void Pdb::ClearWatches()
 {
 	watches.Clear();
-}
-
-void Pdb::AddWatch()
-{
-	SetTab(2);
-	watches.DoAppend();
 }
 
 void Pdb::DropWatch(PasteClip& clip)

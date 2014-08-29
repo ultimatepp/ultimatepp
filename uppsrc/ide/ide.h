@@ -11,6 +11,7 @@
 #include <usvn/usvn.h>
 #include <ide/IconDes/IconDes.h>
 #include <ide/LayDes/LayDes.h>
+#include <ide/Debuggers/Debuggers.h>
 #include <TextDiffCtrl/TextDiffCtrl.h>   
 
 #define LAYOUTFILE <ide/ide.lay>
