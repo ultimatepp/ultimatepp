@@ -23,10 +23,10 @@ of ValueMap. Assigning ValueArray to ValueMap creates map where
 keys are number 0, 1, ... GetCount() `- 1 and values contain 
 elements with corresponding indices.&]
 [s2;%% &]
-[s2;%% Not that Value also provides methods (GetCount() and operator`[`]) 
+[s2;%% Note that Value also provides methods (GetCount() and operator`[`]) 
 to directly access ValueArray elements contained in Value (if 
 Value does not contain ValueArray, GetCount() returns 0).&]
-[s0;i448;a25;kKO9;@(0.0.255) &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:ValueArray`:`:ValueArray`(`): [* ValueArray]()&]
