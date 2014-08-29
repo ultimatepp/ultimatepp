@@ -568,6 +568,9 @@ Ide::Ide()
 	isscanning = 0;
 	
 	linking = false;
+	
+	error_count = 0;
+	warning_count = 0;
 }
 
 Ide::~Ide()

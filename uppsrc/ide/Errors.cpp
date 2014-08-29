@@ -306,6 +306,7 @@ void Ide::PutLinkingEnd(bool ok)
 {
 	if(!ok && linking) {
 		addnotes = true;
+		error_count++;
 		error.Add(Null, Null, AttrText("Linking has failed").Bold()
 			                  .NormalPaper(HighlightSetup::GetHlStyle(HighlightSetup::PAPER_ERROR).color));
 		for(int i = 0; i < linking_line.GetCount(); i++) {
@@ -321,6 +322,7 @@ void Ide::PutLinkingEnd(bool ok)
 			          RawToValue(f));
 		}
 	}
+	SyncErrorsMessage();
 	linking = false;
 }
 
@@ -340,11 +342,16 @@ void Ide::ConsoleLine(const String& line)
 		if(findarg(f.kind, 1, 2) >= 0 || error.GetCount() == 0) {
 			Color paper = HighlightSetup::GetHlStyle(f.kind == 1 ? HighlightSetup::PAPER_ERROR
 			                                                     : HighlightSetup::PAPER_WARNING).color;
+			if(f.kind == 1)
+				error_count++;
+			else
+				warning_count++;
 			if(IsDarkMismatch())
 				paper = SColorPaper();
 			error.Add(GetFileName(f.file), f.lineno,
 			          AttrText(f.message).NormalPaper(paper),
 			          RawToValue(f));
+			SyncErrorsMessage();
 			addnotes = true;
 			return;
 		}
@@ -356,6 +363,35 @@ void Ide::ConsoleLine(const String& line)
 	}
 	if(addnotes)
 		AddNote(f);
+}
+
+void Ide::SyncErrorsMessage()
+{
+	String h;
+	String cnt;
+	if(IsDarkMismatch()) {
+		h = "Message";
+		if(error_count)
+			cnt << error_count << " error(s)";
+		if(warning_count) {
+			if(error_count)
+				cnt << ", ";
+			cnt << warning_count << " warning(s)";
+		}
+	}
+	else  {
+		h = "\1[g Message";
+		if(error_count)
+			cnt << "[*@r " << error_count << " error" << (error_count > 1 ? "s]" : "]");
+		if(warning_count) {
+			if(error_count)
+				cnt << ", ";
+			cnt << "[@o " << warning_count << " warning" << (warning_count > 1 ? "s]" : "]");
+		}
+	}
+	if(cnt.GetCount())
+		h << " (" << cnt << ")";
+	error.HeaderTab(2).SetText(h);
 }
 
 void Ide::ConsoleRunEnd()
