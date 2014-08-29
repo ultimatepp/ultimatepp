@@ -376,9 +376,12 @@ struct Pdb : Debugger, ParentCtrl {
 	String    GetExpExp();
 	void      ExplorerTree();
 	void      Data();
-	void      AddWatch();
 	void      ClearWatches();
 	void      DropWatch(PasteClip& clip);
+	void      AddWatch();
+	void      EditWatch();
+	void      RemoveWatch();
+
 	void      SetTab(int i);
 
 	void      SetTree(const String& exp);
@@ -393,7 +396,7 @@ struct Pdb : Debugger, ParentCtrl {
 	void      CopyDisas();
 
 	void      MemoryGoto(const String& exp);
-
+	
 	void      MemMenu(ArrayCtrl& array, Bar& bar, const String& exp);
 	void      DataMenu(ArrayCtrl& array, Bar& bar, const String& exp);
 	void      AutosMenu(Bar& bar);
@@ -415,3 +418,5 @@ struct Pdb : Debugger, ParentCtrl {
 
 	void LoadGlobals(DWORD64 base);
 };
+
+bool EditPDBExpression(const char *title, String& brk);
