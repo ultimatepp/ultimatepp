@@ -46,6 +46,8 @@ struct DrawLabel {
 	int       rspc;
 
 	int       align, valign;
+	
+	bool      nowrap;
 
 	int       accesskey;
 	int       accesspos;
@@ -87,6 +89,7 @@ public:
 	LabelBase&  AlignBottom()                                { return SetAlign(ALIGN_BOTTOM); }
 	LabelBase&  SetImage(const Image& bmp, int spc = 0, bool never_hide = false)
 	{ SetLeftImage(bmp, spc, never_hide); return *this; }
+	LabelBase&  NoWrap(bool b = true);
 
 	int         GetAlign() const                             { return lbl.align; }
 	int         GetVAlign() const                            { return lbl.valign; }
