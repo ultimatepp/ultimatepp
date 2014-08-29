@@ -13,6 +13,7 @@ HeaderCtrl::Column::Column()
 	SetAlign(ALIGN_LEFT);
 	paper = Null;
 	index = Null;
+	NoWrap();
 }
 
 HeaderCtrl::Column&  HeaderCtrl::Column::SetMargin(int m)

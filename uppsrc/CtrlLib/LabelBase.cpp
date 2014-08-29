@@ -123,6 +123,7 @@ DrawLabel::DrawLabel()
 	accesskey = 0;
 	accesspos = -1;
 	font = StdFont();
+	nowrap = false;
 }
 
 Size DrawLabel::GetSize(int txtcx) const
@@ -133,7 +134,8 @@ Size DrawLabel::GetSize(int txtcx) const
 Size DrawLabel::GetSize(int txtcx, Size sz1, int lspc, Size sz2, int rspc) const
 {
 	Size isz(0, 0);
-	Size txtsz = *text ? GetSmartTextSize(text, font, txtcx) : paintrect.GetStdSize();
+	Size txtsz = *text ? GetSmartTextSize(text, font, nowrap ? INT_MAX/2 : txtcx)
+	                   : paintrect.GetStdSize();
 
 	if(!IsNull(lspc)) {
 		isz.cx = lspc;
@@ -195,7 +197,7 @@ Size DrawLabel::Paint(Ctrl *ctrl, Draw& w, const Rect& r, bool visibleaccesskey)
 	Size sz1 = limg.GetSize();
 	Size sz2 = rimg.GetSize();
 	int txtcx = r.GetWidth() - sz1.cx - Nvl(lspc, 0) - sz2.cx - Nvl(rspc, 0);
-	Size txtsz = *text ? GetSmartTextSize(text, font, txtcx) : paintrect.GetStdSize();
+	Size txtsz = *text ? GetSmartTextSize(text, font, nowrap ? INT_MAX/2 : txtcx) : paintrect.GetStdSize();
 	if(txtsz.cx) {
 		if(!rimg_never_hide && txtsz.cx + sz1.cx + sz2.cx + Nvl(lspc, 0) + Nvl(rspc, 0) > r.GetWidth()) {
 			sz2.cx = 0;
@@ -256,7 +258,7 @@ Size DrawLabel::Paint(Ctrl *ctrl, Draw& w, const Rect& r, bool visibleaccesskey)
 		if(disabled)
 			DrawSmartText(w, p.x + push + 1, p.y + push + (isz.cy - txtsz.cy) / 2 + 1,
 			              txtsz.cx, text, font, SColorPaper);
-		DrawSmartText(w, p.x + push, p.y + push, txtcx,
+		DrawSmartText(w, p.x + push, p.y + push, nowrap ? INT_MAX/2 : txtcx,
 		              text, font, color, visibleaccesskey ? accesskey : 0);
 		if(focus)
 			DrawFocus(w, p.x - 2, p.y, txtsz.cx + 5, isz.cy);
@@ -314,6 +316,15 @@ LabelBase& LabelBase::SetText(const char *text) {
 LabelBase& LabelBase::SetFont(Font font) {
 	if(lbl.font != font) {
 		lbl.font = font;
+		LabelUpdate();
+	}
+	return *this;
+}
+
+LabelBase& LabelBase::NoWrap(bool b)
+{
+	if(lbl.nowrap != b) {
+		lbl.nowrap = b;
 		LabelUpdate();
 	}
 	return *this;
