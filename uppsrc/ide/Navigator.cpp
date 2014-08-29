@@ -406,6 +406,7 @@ void AssistEditor::Search()
 	int lineno = StrInt(s);
 	gitem.Clear();
 	nitem.Clear();
+	int fileii = GetCppFileIndex(theide->editfile);
 	if(!IsNull(lineno)) {
 		NavItem& m = nitem.Add();
 		m.type = "Go to line " + AsString(lineno);
@@ -414,8 +415,7 @@ void AssistEditor::Search()
 		gitem.Add(Null).Add(&m);
 	}
 	else
-	if(IsNull(s)) {
-		int fileii = GetCppFileIndex(theide->editfile);
+	if(IsNull(s) && !sorting) {
 		const CppBase& b = CodeBase();
 		for(int i = 0; i < b.GetCount(); i++) {
 			String nest = b.GetKey(i);
@@ -443,15 +443,16 @@ void AssistEditor::Search()
 		navigator_global = true;
 		const CppBase& b = CodeBase();
 		ArrayMap<String, NavItem> imap;
+		bool local = sorting && IsNull(s);
 		for(int i = 0; i < b.GetCount(); i++) {
 			String nest = b.GetKey(i);
 			bool foundnest = wholeclass ? ToUpper(nest) == search_nest
 			                            : ToUpper(nest).Find(search_nest) >= 0;
-			if(foundnest || both) {
+			if(local || foundnest || both) {
 				const Array<CppItem>& ci = b[i];
 				for(int j = 0; j < ci.GetCount(); j++) {
 					const CppItem& m = ci[j];
-					if(m.uname.Find(search_name) >= 0 || both && foundnest) {
+					if(local ? m.file == fileii : m.uname.Find(search_name) >= 0 || both && foundnest) {
 						String key = nest + '\1' + m.qitem;
 						int q = imap.Find(key);
 						if(q < 0) {
@@ -492,7 +493,7 @@ void AssistEditor::Search()
 		SortByKey(gitem);
 		Index<String> sc;
 		for(int i = 0; i < gitem.GetCount(); i++)
-			Sort(gitem[i], sorting ? SortByLines : SortByNames);
+			Sort(gitem[i], sorting ? SortByNames : SortByLines);
 	}
 	scope.Clear();
 	scope.Add(Null);
