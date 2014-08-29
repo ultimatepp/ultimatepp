@@ -638,6 +638,8 @@ public:
 
 	Splitter    errors;
 	ArrayCtrl   error;
+	int         error_count;
+	int         warning_count;
 	ArrayCtrl   notes;
 	bool        addnotes;
 	bool        linking;
@@ -1138,6 +1140,7 @@ public:
 	void      ConsoleLine(const String& line);
 	void      ConsoleRunEnd();
 	void      AddNote(const ErrorInfo& f);
+	void      SyncErrorsMessage();
 	void      ShowNote();
 	void      ShowError();
 	void      ShowFound();
