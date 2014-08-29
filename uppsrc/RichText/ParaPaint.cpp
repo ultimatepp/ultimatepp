@@ -50,6 +50,8 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 			draw.DrawRect(zx0, z * y, width, z * (y + linecy) - z * y,
 			              pi.coloroverride ? SColorPaper() : f.paper);
 		Font fnt = f;
+		DDUMP(fnt.GetFaceName());
+		DDUMP(fnt.GetCy());
 		int zht = z * tabs(f.GetHeight());
 		int ssa = 0;
 		int ssd = 0;
