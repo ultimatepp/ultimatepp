@@ -6,6 +6,8 @@
 
 int    Pdb::Byte(adr_t addr)
 {
+	if(!win64)
+		addr &= 0xffffffff;
 	int page = (int) (addr >> 10);
 	if(invalidpage.Find(page) >= 0)
 		return -1;
