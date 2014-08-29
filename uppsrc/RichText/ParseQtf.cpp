@@ -550,6 +550,22 @@ void RichQtfParser::Cat(int chr)
 
 extern bool s_nodeqtf[128];
 
+int GetRichTextScreenStdFontHeight()
+{
+	static int gh = 67;
+	ONCELOCK {
+		for(int i = 0; i < 1000; i++) {
+			int h = GetRichTextStdScreenZoom() * i;
+			LOG(i << ' ' << StdFont(h).GetCy());
+			if(h > 0 && StdFont(h).GetCy() == StdFont().GetCy()) {
+				gh = i;
+				break;
+			}
+		}
+	}
+	return gh;
+}
+
 void RichQtfParser::Parse(const char *qtf, int _accesskey)
 {
 	accesskey = _accesskey;
@@ -661,6 +677,10 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 						}
 						break;
 					}
+				case 'g':
+					format.Face(Font::STDFONT);
+					format.Height(GetRichTextScreenStdFontHeight());
+					break;
 				default:
 					if(c >= '0' && c <= '9') {
 						format.Height(QTFFontHeight[c - '0']);
