@@ -28,7 +28,7 @@ on actual context).]]
 :: [s0; [*@(0.0.255)1 `* / %]]
 :: [s0; [1 Binary operators.]]
 :: [s0; [*@(0.0.255)1 `+ `-]]
-:: [s0;1 ]
+:: [s0; [1 Binary operators.]]
 :: [s0; [*@(0.0.255)1 `=`= !`= < > <`= >`=]]
 :: [s0; [1 Note that all of these have the same priority. It is possible 
 to directly compare pointer with integer.]]

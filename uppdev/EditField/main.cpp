@@ -9,9 +9,10 @@ void EditFieldApp::Set()
 EditFieldApp::EditFieldApp()
 {
 	CtrlLayoutOKCancel(*this, "Test");
-	set <<= THISBACK(Set);
-	ef1.NullText("(default)");
-	ef2.AutoSize();
+//	set <<= THISBACK(Set);
+//	ef1.NullText("(default)");
+//	ef2.AutoSize();
+	ef1 <<= "Something to copy";
 }
 
 GUI_APP_MAIN

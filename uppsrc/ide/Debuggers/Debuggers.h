@@ -192,4 +192,6 @@ struct Gdb : Dbg {
 #include "Pdb.h"
 #endif
 
+bool EditPDBExpression(const char *title, String& brk);
+
 #endif
