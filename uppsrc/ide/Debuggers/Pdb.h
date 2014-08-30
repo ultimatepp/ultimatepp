@@ -418,5 +418,3 @@ struct Pdb : Debugger, ParentCtrl {
 
 	void LoadGlobals(DWORD64 base);
 };
-
-bool EditPDBExpression(const char *title, String& brk);
