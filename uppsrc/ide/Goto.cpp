@@ -193,6 +193,7 @@ void Ide::Goto()
 	}
 }
 
+/*
 void Ide::GotoGlobal()
 {
 	SaveFile();
@@ -208,7 +209,7 @@ void Ide::GotoGlobal()
 		GotoPos(file, l);
 	}
 }
-
+*/
 void AssistEditor::SwapSContext(Parser& p)
 {
 	int i = GetCursor();

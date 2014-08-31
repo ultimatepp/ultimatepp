@@ -2,18 +2,43 @@
 
 #define LTIMING(x) // RTIMING(x)
 
-void AssistEditor::SyncNavigator()
+int CharFilterNavigator(int c)
 {
-	if(navigating)
-		return;
-	if(IsNavigator()) {
-		Search();
-		SyncCursor();
-	}
-	navigatorframe.Show(navigator && theide && !theide->IsEditorMode());
+	return c == ':' ? '.' : IsAlNum(c) || c == '_' || c == '.' ? ToUpper(c) : 0;
 }
 
-void AssistEditor::SyncCursor()
+Navigator::Navigator()
+:	navidisplay(litem)
+{
+	scope.NoHeader();
+	scope.AddColumn().SetDisplay(Single<ScopeDisplay>());
+	scope.NoWantFocus();
+	scope.WhenSel = THISBACK(Scope);
+
+	list.NoHeader();
+	list.AddRowNumColumn().SetDisplay(navidisplay);
+	list.SetLineCy(max(16, GetStdFontCy()));
+	list.NoWantFocus();
+	list.WhenLeftClick = THISBACK(NavigatorClick);
+	list.WhenSel = THISBACK(SyncNavLines);
+	list.WhenLineEnabled = THISBACK(ListLineEnabled);
+	
+	navlines.NoHeader().NoWantFocus();
+	navlines.WhenLeftClick = THISBACK(GoToNavLine);
+	navlines.AddColumn().SetDisplay(Single<LineDisplay>());
+
+	search <<= THISBACK(TriggerSearch);
+	search.SetFilter(CharFilterNavigator);
+	search.WhenEnter = THISBACK(NavigatorEnter);
+	
+	sortitems.Image(BrowserImg::Sort());
+	sortitems <<= THISBACK(NaviSort);
+	sorting = false;
+	
+	dlgmode = false;
+}
+
+void Navigator::SyncCursor()
 {
 	String k = "(" + GetKeyDesc(IdeKeys::AK_GOTO().key[0]) + ") ";
 	search.NullText("Symbol/lineno " + k);
@@ -26,7 +51,7 @@ void AssistEditor::SyncCursor()
 			return;
 		navigating = true;
 		SortedVectorMap<int, int>& m = linefo[q];
-		q = m.FindUpperBound(GetLine(GetCursor()) + 1) - 1;
+		q = m.FindUpperBound(GetCurrentLine() + 1) - 1;
 		if(q >= 0 && q < m.GetCount())
 			list.SetCursor(m[q]);
 		navigating = false;
@@ -34,9 +59,9 @@ void AssistEditor::SyncCursor()
 	SyncLines();
 }
 
-void AssistEditor::SyncLines()
+void Navigator::SyncLines()
 {
-	int ln = GetLine(GetCursor()) + 1;
+	int ln = GetCurrentLine() + 1;
 	int fi = GetCppFileIndex(theide->editfile);
 	int q = -1;
 	for(int i = 0; i < navlines.GetCount(); i++) {
@@ -44,17 +69,20 @@ void AssistEditor::SyncLines()
 		if(l.file == fi && l.line <= ln && i < navlines.GetCount())
 			q = i;
 	}
+	if(dlgmode)
+		navlines.GoBegin();
+	else
 	if(q >= 0)
 		navlines.SetCursor(q);
 }
 
-void AssistEditor::SyncNavLines()
+void Navigator::SyncNavLines()
 {
 	int sc = navlines.GetScroll();
 	navlines.Clear();
 	int ii = list.GetCursor();
 	if(ii >= 0 && ii < litem.GetCount()) {
-		int ln = GetLine(GetCursor()) + 1;
+		int ln = GetCurrentLine() + 1;
 		Vector<NavLine> l = GetNavLines(*litem[ii]);
 		for(int i = 0; i < l.GetCount(); i++) {
 			String p = GetCppFile(l[i].file);
@@ -72,7 +100,7 @@ void PaintTeXt(Draw& w, int& x, int y, const String& text, Font font, Color ink)
 	x += sz.cx;
 }
 
-int AssistEditor::LineDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+int Navigator::LineDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 {
 	w.DrawRect(r, paper);
 	const NavLine& l = q.To<NavLine>();
@@ -87,19 +115,21 @@ int AssistEditor::LineDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, C
 	return x;
 }
 
-void AssistEditor::LineDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+void Navigator::LineDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 {
 	DoPaint(w, r, q, ink, paper, style);
 }
 
-Size AssistEditor::LineDisplay::GetStdSize(const Value& q) const
+Size Navigator::LineDisplay::GetStdSize(const Value& q) const
 {
 	NilDraw w;
 	return Size(DoPaint(w, Size(999999, 999999), q, White(), White(), 0), StdFont().Bold().GetCy());
 }
 
-void AssistEditor::GoToNavLine()
+void Navigator::GoToNavLine()
 {
+	if(dlgmode)
+		return;
 	int ii = navlines.GetClickPos().y;
 	if(ii >= 0 && ii < navlines.GetCount() && theide) {
 		const NavLine& l = navlines.Get(ii, 0).To<NavLine>();
@@ -107,14 +137,7 @@ void AssistEditor::GoToNavLine()
 	}
 }
 
-void AssistEditor::SelectionChanged()
-{
-	CodeEditor::SelectionChanged();
-	SyncCursor();
-	SyncParamInfo();
-}
-
-bool AssistEditor::NavLine::operator<(const NavLine& b) const
+bool Navigator::NavLine::operator<(const NavLine& b) const
 {
 	String p1 = GetCppFile(file);
 	String p2 = GetCppFile(b.file);
@@ -125,7 +148,7 @@ bool AssistEditor::NavLine::operator<(const NavLine& b) const
 	                     (line, b.line) < 0;
 }
 
-Vector<AssistEditor::NavLine> AssistEditor::GetNavLines(const NavItem& m)
+Vector<Navigator::NavLine> Navigator::GetNavLines(const NavItem& m)
 {
 	Vector<NavLine> l;
 	int q = CodeBase().Find(m.nest);
@@ -145,26 +168,25 @@ Vector<AssistEditor::NavLine> AssistEditor::GetNavLines(const NavItem& m)
 	return l;
 }
 
-void AssistEditor::Navigate()
+void Navigator::Navigate()
 {
 	if(navigating)
 		return;
 	navigating = true;
 	int ii = list.GetCursor();
 	if(theide && ii >= 0 && ii < litem.GetCount()) {
-		int ln = GetLine(GetCursor()) + 1;
+		int ln = GetCurrentLine() + 1;
 		const NavItem& m = *litem[ii];
 		if(m.kind == KIND_LINE || IsNull(search))
 			theide->GotoPos(Null, m.line);
 		else {
 			Vector<NavLine> l = GetNavLines(m);
 			int q = l.GetCount() - 1;
-			for(int i = q; i >= 0; i--) {
+			for(int i = q; i >= 0; i--)
 				if(GetCppFile(l[i].file) == theide->editfile && l[i].line == ln) {
 					q = (i + l.GetCount() - 1) % l.GetCount();
 					break;
 				}
-			}
 			if(q >= 0 && q < l.GetCount())
 				theide->GotoPos(GetCppFile(l[q].file), l[q].line);
 		}
@@ -172,14 +194,16 @@ void AssistEditor::Navigate()
 	navigating = false;
 }
 
-void AssistEditor::NavigatorClick()
+void Navigator::NavigatorClick()
 {
+	if(dlgmode)
+		return;
 	int q = list.GetClickPos().y;
 	if(q >= 0 && q < list.GetCount())
 		Navigate();
 }
 
-void AssistEditor::NavigatorEnter()
+void Navigator::NavigatorEnter()
 {
 	if(list.GetCount()) {
 		list.GoBegin();
@@ -189,31 +213,6 @@ void AssistEditor::NavigatorEnter()
 			Search();
 		}
 	}
-}
-
-void AssistEditor::Navigator(bool nav)
-{
-	navigator = nav;
-	navigatorframe.Show(navigator && theide && !theide->IsEditorMode());
-	if(IsNavigator())
-		SetFocus();
-	SyncNavigator();
-	SyncCursor();
-}
-
-void AssistEditor::SerializeNavigator(Stream& s)
-{
-	int version = 4;
-	s / version;
-	s % navigatorframe;
-	s % navigator;
-	if(version == 1 || version == 3) {
-		Splitter dummy;
-		s % dummy;
-	}
-	if(version >= 4)
-		s % navigator_splitter;
-	Navigator(navigator);
 }
 
 void Ide::ToggleNavigator()
@@ -247,7 +246,7 @@ void Ide::SwitchHeader() {
 	}
 }
 
-void AssistEditor::NavItem::Set(const CppItem& m)
+void Navigator::NavItem::Set(const CppItem& m)
 {
 	qitem = m.qitem;
 	name = m.name;
@@ -266,7 +265,7 @@ void AssistEditor::NavItem::Set(const CppItem& m)
 	impl = m.impl;
 }
 
-void AssistEditor::NavigatorDisplay::PaintBackground(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+void Navigator::NavigatorDisplay::PaintBackground(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 {
 	int ii = q;
 	if(ii < 0 || ii >= item.GetCount())
@@ -281,7 +280,7 @@ void AssistEditor::NavigatorDisplay::PaintBackground(Draw& w, const Rect& r, con
 }
 
 
-int AssistEditor::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+int Navigator::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 {
 	int ii = q;
 	if(ii < 0 || ii >= item.GetCount())
@@ -330,23 +329,23 @@ int AssistEditor::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value&
 	return x;
 }
 
-void AssistEditor::NavigatorDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+void Navigator::NavigatorDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 {
 	DoPaint(w, r, q, ink, paper, style);
 }
 
-Size AssistEditor::NavigatorDisplay::GetStdSize(const Value& q) const
+Size Navigator::NavigatorDisplay::GetStdSize(const Value& q) const
 {
 	NilDraw w;
 	return Size(DoPaint(w, Size(999999, 999999), q, White(), White(), 0), Draw::GetStdFontCy());
 }
 
-void AssistEditor::TriggerSearch()
+void Navigator::TriggerSearch()
 {
 	search_trigger.KillSet(100, THISBACK(Search));
 }
 
-void AssistEditor::NavGroup(bool local)
+void Navigator::NavGroup(bool local)
 {
 	for(int i = 0; i < nitem.GetCount(); i++) {
 		NavItem& m = nitem[i];
@@ -366,18 +365,18 @@ void AssistEditor::NavGroup(bool local)
 }
 
 force_inline
-bool AssistEditor::SortByLines(const NavItem *a, const NavItem *b)
+bool Navigator::SortByLines(const NavItem *a, const NavItem *b)
 {
 	return CombineCompare(a->decl_file, b->decl_file)(a->decl_line, b->decl_line) < 0;
 }
 
 force_inline
-bool AssistEditor::SortByNames(const NavItem *a, const NavItem *b)
+bool Navigator::SortByNames(const NavItem *a, const NavItem *b)
 {
 	return CombineCompare(a->name, b->name)(a->qitem, b->qitem) < 0;
 }
 
-void AssistEditor::Search()
+void Navigator::Search()
 {
 	sortitems.Check(sorting);
 	int sc = scope.GetScroll();
@@ -510,7 +509,7 @@ void AssistEditor::Search()
 		scope.GoBegin();
 }
 
-int AssistEditor::PaintFileName(Draw& w, const Rect& r, String h, Color ink)
+int Navigator::PaintFileName(Draw& w, const Rect& r, String h, Color ink)
 {
 	h.Remove(0, 1);
 	int x = 0;
@@ -522,13 +521,13 @@ int AssistEditor::PaintFileName(Draw& w, const Rect& r, String h, Color ink)
 	return x + GetTextSize(s, StdFont().Bold()).cx;
 }
 
-int AssistEditor::ScopeDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+int Navigator::ScopeDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 {
 	w.DrawRect(r, paper);
 	if(IsNull(q)) {
 		const char *txt = "All";
 		w.DrawText(r.left, r.top, txt, StdFont().Bold().Italic(),
-		           style & CURSOR ? ink : HighlightSetup::GetHlStyle(INK_KEYWORD).color);
+		           style & CURSOR ? ink : HighlightSetup::GetHlStyle(HighlightSetup::INK_KEYWORD).color);
 		return GetTextSize(txt, StdFont().Bold().Italic()).cx;
 	}
 	String h = q;
@@ -538,18 +537,18 @@ int AssistEditor::ScopeDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, 
 	return GetTextSize(h, StdFont().Bold()).cx;
 }
 
-void AssistEditor::ScopeDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+void Navigator::ScopeDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 {
 	DoPaint(w, r, q, ink, paper, style);
 }
 
-Size AssistEditor::ScopeDisplay::GetStdSize(const Value& q) const
+Size Navigator::ScopeDisplay::GetStdSize(const Value& q) const
 {
 	NilDraw w;
 	return Size(DoPaint(w, Size(999999, 999999), q, White(), White(), 0), StdFont().Bold().GetCy());
 }
 
-void AssistEditor::Scope()
+void Navigator::Scope()
 {
 	LTIMING("FINALIZE");
 	litem.Clear();
@@ -582,7 +581,7 @@ void AssistEditor::Scope()
 	list.SetVirtualCount(litem.GetCount());
 }
 
-void AssistEditor::ListLineEnabled(int i, bool& b)
+void Navigator::ListLineEnabled(int i, bool& b)
 {
 	if(i >= 0 && i < litem.GetCount()) {
 		int kind = litem[i]->kind;
@@ -591,7 +590,7 @@ void AssistEditor::ListLineEnabled(int i, bool& b)
 	}
 }
 
-void AssistEditor::NaviSort()
+void Navigator::NaviSort()
 {
 	sorting = !sorting;
 	Search();

@@ -18,13 +18,7 @@ class IndexSeparatorFrameCls : public CtrlFrame {
 	virtual void FrameAddSize(Size& sz) { sz.cx += 2; }
 };
 
-int CharFilterNavigator(int c)
-{
-	return c == ':' ? '.' : IsAlNum(c) || c == '_' || c == '.' ? ToUpper(c) : 0;
-}
-
 AssistEditor::AssistEditor()
-:	navidisplay(litem)
 {
 	assist.NoHeader();
 	assist.NoGrid();
@@ -49,34 +43,10 @@ AssistEditor::AssistEditor()
 	navigatorpane.Add(search.TopPos(0, cy).HSizePos(0, cy + 4));
 	navigatorpane.Add(sortitems.TopPos(0, cy).RightPos(0, cy));
 	navigatorpane.Add(navigator_splitter.VSizePos(cy, 0).HSizePos());
-	scope.NoHeader();
-	scope.AddColumn().SetDisplay(Single<ScopeDisplay>());
-	scope.NoWantFocus();
-	scope.WhenSel = THISBACK(Scope);
 	navigator_splitter.Vert() << scope << list << navlines;
 	navigator_splitter.SetPos(1500, 0);
 	navigator_splitter.SetPos(9500, 1);
 
-	list.NoHeader();
-	list.AddRowNumColumn().SetDisplay(navidisplay);
-	list.SetLineCy(max(16, GetStdFontCy()));
-	list.NoWantFocus();
-	list.WhenLeftClick = THISBACK(NavigatorClick);
-	list.WhenSel = THISBACK(SyncNavLines);
-	list.WhenLineEnabled = THISBACK(ListLineEnabled);
-	
-	navlines.NoHeader().NoWantFocus();
-	navlines.WhenLeftClick = THISBACK(GoToNavLine);
-	navlines.AddColumn().SetDisplay(Single<LineDisplay>());
-
-	search <<= THISBACK(TriggerSearch);
-	search.SetFilter(CharFilterNavigator);
-	search.WhenEnter = THISBACK(NavigatorEnter);
-	
-	sortitems.Image(BrowserImg::Sort());
-	sortitems <<= THISBACK(NaviSort);
-	sorting = false;
-	
 	navigator = true;
 
 	WhenAnnotationMove = THISBACK(SyncAnnotationPopup);
@@ -1347,4 +1317,48 @@ bool AssistEditor::Esc()
 		r = true;
 	}
 	return r;
+}
+
+
+void AssistEditor::Navigator(bool nav)
+{
+	navigator = nav;
+	navigatorframe.Show(navigator && theide && !theide->IsEditorMode());
+	if(IsNavigator())
+		SetFocus();
+	SyncNavigator();
+	SyncCursor();
+}
+
+void AssistEditor::SyncNavigator()
+{
+	if(navigating)
+		return;
+	if(IsNavigator()) {
+		Search();
+		SyncCursor();
+	}
+	navigatorframe.Show(navigator && theide && !theide->IsEditorMode());
+}
+
+void AssistEditor::SelectionChanged()
+{
+	CodeEditor::SelectionChanged();
+	SyncCursor();
+	SyncParamInfo();
+}
+
+void AssistEditor::SerializeNavigator(Stream& s)
+{
+	int version = 4;
+	s / version;
+	s % navigatorframe;
+	s % navigator;
+	if(version == 1 || version == 3) {
+		Splitter dummy;
+		s % dummy;
+	}
+	if(version >= 4)
+		s % navigator_splitter;
+	Navigator(navigator);
 }
