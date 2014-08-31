@@ -373,7 +373,8 @@ Ide::Ide()
 	SetupError(notes, "Note");
 	
 	SetupError(ffound, "Source");
-	ffound.ColumnWidths("176 65 1333");
+	ffound.ColumnWidths("200 65 1333");
+	ffound.ColumnAt(0).SetDisplay(Single<FoundFileDisplay>());
 	ffound.ColumnAt(2).SetDisplay(Single<FoundDisplay>());
 
 	errors.Horz(error, notes);
