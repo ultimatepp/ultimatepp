@@ -2,6 +2,8 @@
 
 #define LLOG(x)  // DLOG(x)
 
+#if 0 // TODO: Remove later...
+
 struct GotoDlg : public WithGotoLayout<TopWindow> {
 	bool               global;
 	Array<CppItemInfo> item;
@@ -193,7 +195,6 @@ void Ide::Goto()
 	}
 }
 
-/*
 void Ide::GotoGlobal()
 {
 	SaveFile();
@@ -209,7 +210,9 @@ void Ide::GotoGlobal()
 		GotoPos(file, l);
 	}
 }
-*/
+
+#endif
+
 void AssistEditor::SwapSContext(Parser& p)
 {
 	int i = GetCursor();
