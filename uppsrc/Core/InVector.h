@@ -1,5 +1,7 @@
 template <class T> struct Slaved_InVector__;
 template <class T> struct Slaved_InArray__;
+template <class K, class TT, class Lss, class Data> class SortedAMap;
+template <class K, class TT, class Less> class SortedVectorMap;
 
 struct InVectorSlave__ {
 	virtual void Clear() = 0;
