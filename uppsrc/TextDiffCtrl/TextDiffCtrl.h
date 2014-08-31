@@ -49,7 +49,7 @@ private:
 	bool           GetSelection(int& l, int& h);
 	void           DoSelection(int y, bool shift);
 	void           Copy();
-	int            GetLineNo(int y);
+	int            GetLineNo(int y, int& yy);
 
 private:
 	struct Line {
