@@ -50,6 +50,7 @@ file
 	Virtuals.cpp,
 	Thisbacks.cpp,
 	Goto.cpp,
+	Jump.cpp,
 	Setup.cpp,
 	Custom.cpp,
 	Print.cpp,

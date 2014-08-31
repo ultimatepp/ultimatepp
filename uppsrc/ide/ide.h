@@ -278,28 +278,8 @@ int    CharFilterFileName(int c);
 
 bool isincludefnchar(int c);
 
-struct AssistEditor : CodeEditor {
-	virtual bool Key(dword key, int count);
-	virtual void LostFocus();
-	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
-	virtual void LeftDown(Point p, dword keyflags);
-	virtual void SelectionChanged();
-	virtual void DirtyFrom(int line);
-	virtual void State(int reason);
-
-	struct IndexItem : Moveable<IndexItem> {
-		String text;
-		Color  ink;
-		int    line;
-	};
-	bool              navigator;
-	SplitterFrame     navigatorframe;
-	StaticRect        navigatorpane;
-	ArrayCtrl         scope;
-	ArrayCtrl         list;
-	ArrayCtrl         navlines;
-	Splitter          navigator_splitter;
-	EditString        search;
+struct Navigator {
+	virtual int GetCurrentLine() = 0;
 
 	struct NavLine : Moveable<NavLine> {
 		bool           impl:1;
@@ -360,6 +340,8 @@ struct AssistEditor : CodeEditor {
 	};
 
 	static int PaintFileName(Draw& w, const Rect& r, String h, Color ink);
+	
+	Ide             *theide;
 
 	Array<NavItem>                             nitem;
 	VectorMap<String, Vector<NavItem *> >      gitem;
@@ -372,7 +354,13 @@ struct AssistEditor : CodeEditor {
 	bool             navigator_global;
 	ToolButton       sortitems;
 	bool             sorting;
+	bool             dlgmode;
 
+	ArrayCtrl         scope;
+	ArrayCtrl         list;
+	ArrayCtrl         navlines;
+	EditString        search;
+	
 	void TriggerSearch();
 	void NavGroup(bool local);
 	void Search();
@@ -380,9 +368,45 @@ struct AssistEditor : CodeEditor {
 	void ListLineEnabled(int i, bool& b);
 	void NaviSort();
 
+	Vector<NavLine> GetNavLines(const NavItem& m);
+
+	void           Navigate();
+	void           NavigatorClick();
+	void           NavigatorEnter();
+	void           SyncLines();
+	void           SyncNavLines();
+	void           GoToNavLine();
+	void           SyncCursor();
+
 	static bool SortByLines(const NavItem *a, const NavItem *b);
 	static bool SortByNames(const NavItem *a, const NavItem *b);
+	
+	typedef Navigator CLASSNAME;
 
+	Navigator();
+};
+
+struct AssistEditor : CodeEditor, Navigator {
+	virtual bool Key(dword key, int count);
+	virtual void LostFocus();
+	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
+	virtual void LeftDown(Point p, dword keyflags);
+	virtual void SelectionChanged();
+	virtual void DirtyFrom(int line);
+	virtual void State(int reason);
+
+	virtual int  GetCurrentLine();
+
+	struct IndexItem : Moveable<IndexItem> {
+		String text;
+		Color  ink;
+		int    line;
+	};
+	bool           navigator;
+	SplitterFrame  navigatorframe;
+	StaticRect     navigatorpane;
+	Splitter       navigator_splitter;
+	
 	Splitter       popup;
 	ArrayCtrl      assist;
 	ArrayCtrl      type;
@@ -397,7 +421,6 @@ struct AssistEditor : CodeEditor {
 	bool           inbody;
 	bool           thisback, thisbackn;
 	bool           include_assist;
-	Ide           *theide;
 	WString        cachedline;
 	int            cachedpos;
 	int            cachedln;
@@ -470,20 +493,6 @@ struct AssistEditor : CodeEditor {
 
 	void           SwapSContext(Parser& p);
 	
-	void           SyncCursor();
-	
-	Vector<NavLine> GetNavLines(const NavItem& m);
-
-	void           Navigate();
-	void           NavigatorClick();
-	void           NavigatorEnter();
-	void           SyncNavigator();
-	void           SyncLines();
-	void           SyncNavLines();
-	void           GoToNavLine();
-	bool           IsNavigator() const                             { return navigator; }
-	void           Navigator(bool navigator);
-
 	bool           GetAnnotationRefs(Vector<String>& tl, String& coderef, int q = -1);
 	bool           GetAnnotationRef(String& t, String& coderef, int q = -1);
 	void           SyncAnnotationPopup();
@@ -494,6 +503,9 @@ struct AssistEditor : CodeEditor {
 	
 	bool           Esc();
 	
+	bool           IsNavigator() const                             { return navigator; }
+	void           Navigator(bool navigator);
+	void           SyncNavigator();
 	void           SerializeNavigator(Stream& s);
 	
 	Callback1<int> WhenFontScroll;

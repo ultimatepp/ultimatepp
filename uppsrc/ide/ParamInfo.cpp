@@ -86,3 +86,8 @@ void AssistEditor::State(int reason)
 		SyncParamInfo();
 	CodeEditor::State(reason);
 }
+
+int AssistEditor::GetCurrentLine()
+{
+	return GetLine(GetCursor());
+}

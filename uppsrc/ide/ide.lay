@@ -686,3 +686,13 @@ LAYOUT(QtfLayout, 356, 236)
 	ITEM(Button, copy, SetLabel(t_("Copy and close")).RightPosZ(120, 100).TopPosZ(0, 20))
 END_LAYOUT
 
+LAYOUT(JumpLayout, 692, 496)
+	ITEM(Label, dv___0, SetLabel(t_("Search")).LeftPosZ(4, 40).TopPosZ(4, 19))
+	UNTYPED(search, LeftPosZ(48, 180).TopPosZ(4, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).TopPosZ(4, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).TopPosZ(4, 24))
+	UNTYPED(scope, LeftPosZ(4, 176).VSizePosZ(32, 104))
+	UNTYPED(navlines, LeftPosZ(4, 176).BottomPosZ(4, 96))
+	UNTYPED(list, HSizePosZ(184, 8).VSizePosZ(32, 4))
+END_LAYOUT
+
