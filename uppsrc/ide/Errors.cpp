@@ -486,3 +486,20 @@ void Ide::FoundDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink,
 	else
 		StdDisplay().Paint(w, r, q, ink, paper, style);
 }
+
+int Ide::FoundFileDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+{
+	w.DrawRect(r, paper);
+	return DrawFileName(w, r, q, ink);
+}
+
+void Ide::FoundFileDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+{
+	DoPaint(w, r, q, ink, paper, style);
+}
+
+Size Ide::FoundFileDisplay::GetStdSize(const Value& q) const
+{
+	NilDraw w;
+	return Size(DoPaint(w, Size(999999, 999999), q, White(), White(), 0), StdFont().Bold().GetCy());
+}

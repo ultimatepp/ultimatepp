@@ -7,6 +7,33 @@ int CharFilterNavigator(int c)
 	return c == ':' ? '.' : IsAlNum(c) || c == '_' || c == '.' ? ToUpper(c) : 0;
 }
 
+void PaintTeXt(Draw& w, int& x, int y, const String& text, Font font, Color ink)
+{
+	Size sz = GetTextSize(text, font);
+	w.DrawText(x, y, text, font, ink);
+	x += sz.cx;
+}
+
+int DrawFileName(Draw& w, const Rect& r, const String& h, Color ink)
+{
+	if(h.GetCount() == 0)
+		return 0;
+	int x = 0;
+	String s = GetFileName(GetFileFolder(h)) + "/";
+	w.DrawText(r.left, r.top, s, StdFont(), ink);
+	x += GetTextSize(s, StdFont()).cx;
+	s = GetFileName(h);
+	w.DrawText(r.left + x, r.top, s, StdFont().Bold(), ink);
+	return x + GetTextSize(s, StdFont().Bold()).cx;
+}
+
+int PaintFileName(Draw& w, const Rect& r, String h, Color ink)
+{
+	if(h.GetCount())
+		h.Remove(0, 1);
+	return DrawFileName(w, r, h, ink);
+}
+
 Navigator::Navigator()
 :	navidisplay(litem)
 {
@@ -91,13 +118,6 @@ void Navigator::SyncNavLines()
 		navlines.ScrollTo(sc);
 		SyncLines();
 	}
-}
-
-void PaintTeXt(Draw& w, int& x, int y, const String& text, Font font, Color ink)
-{
-	Size sz = GetTextSize(text, font);
-	w.DrawText(x, y, text, font, ink);
-	x += sz.cx;
 }
 
 int Navigator::LineDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
@@ -507,18 +527,6 @@ void Navigator::Search()
 	scope.ScrollTo(sc);
 	if(!navigator_global || !scope.FindSetCursor(key))
 		scope.GoBegin();
-}
-
-int Navigator::PaintFileName(Draw& w, const Rect& r, String h, Color ink)
-{
-	h.Remove(0, 1);
-	int x = 0;
-	String s = GetFileName(GetFileFolder(h)) + "/";
-	w.DrawText(r.left, r.top, s, StdFont(), ink);
-	x += GetTextSize(s, StdFont()).cx;
-	s = GetFileName(h);
-	w.DrawText(r.left + x, r.top, s, StdFont().Bold(), ink);
-	return x + GetTextSize(s, StdFont().Bold()).cx;
 }
 
 int Navigator::ScopeDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const

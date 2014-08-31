@@ -115,7 +115,7 @@ void Ide::AddFoundFile(const String& fn, int ln, const String& line, int pos, in
 	f.kind = 0;
 	f.message = "\1" + EditorSyntax::GetSyntaxForFilename(fn) + "\1" +
 	            AsString(pos) + "\1" + AsString(count) + "\1" + line;
-	ffound.Add(GetFileName(fn), ln, f.message, RawToValue(f));
+	ffound.Add(fn, ln, f.message, RawToValue(f));
 	ffound.Sync();
 }
 
@@ -253,6 +253,7 @@ void Ide::FindInFiles(bool replace) {
 	
 
 	if(c == IDOK) {
+		ffound.HeaderTab(2).SetText("Source line");
 		Renumber();
 		ff.find.AddHistory();
 		ff.files.AddHistory();
@@ -319,6 +320,7 @@ void Ide::FindInFiles(bool replace) {
 				ffound.Add(Null, Null, AsString(n) + " occurrence(s) have been found.");
 			else
 				ffound.Add(Null, Null, AsString(n) + "  matching file(s) have been found.");
+			ffound.HeaderTab(2).SetText(Format("Source line (%d)", ffound.GetCount()));
 		}
 	}
 }

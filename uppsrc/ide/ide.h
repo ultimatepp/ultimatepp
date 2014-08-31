@@ -276,7 +276,9 @@ String Qualify(const String& scope, const String& type);
 int    CharFilterMacro(int c);
 int    CharFilterFileName(int c);
 
-bool isincludefnchar(int c);
+bool   isincludefnchar(int c);
+
+int    DrawFileName(Draw& w, const Rect& r, const String& h, Color ink);
 
 struct Navigator {
 	virtual int GetCurrentLine() = 0;
@@ -339,8 +341,6 @@ struct Navigator {
 		NavigatorDisplay(const Vector<NavItem *>& item) : item(item) {}
 	};
 
-	static int PaintFileName(Draw& w, const Rect& r, String h, Color ink);
-	
 	Ide             *theide;
 
 	Array<NavItem>                             nitem;
@@ -1159,6 +1159,12 @@ public:
 	
 	struct FoundDisplay : Display {
 		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+	};
+
+	struct FoundFileDisplay : Display {
+		int DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+		virtual Size GetStdSize(const Value& q) const;
 	};
 	
 	bool      FindLineError(int l);
