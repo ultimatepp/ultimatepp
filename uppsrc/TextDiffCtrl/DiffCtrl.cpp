@@ -57,23 +57,22 @@ void TextDiffCtrl::Set(Stream& l, Stream& r)
 		bool diff = !sec.same;
 		if(firstdiff < 0 && diff)
 			firstdiff = outln;
-		Color c1 = (diff ? LtBlue() : SBlack()), c2 = (diff ? LtBlue() : SBlack());
 		int maxcount = max(sec.count1, sec.count2);
 		left.AddCount(maxcount);
 		int l;
 		for(l = 0; l < sec.count1; l++) {
 			int level = (diff ? l < sec.count2 && SmallDiff(ll[sec.start1 + l], rl[sec.start2 + l]) ? 1 : 2 : 0);
-			left.Set(outln + l, ll[sec.start1 + l], c1, sec.start1 + l + 1, level);
+			left.Set(outln + l, ll[sec.start1 + l], diff, sec.start1 + l + 1, level);
 		}
 		for(; l < maxcount; l++)
-			left.Set(outln + l, Null, c1, Null, 2);
+			left.Set(outln + l, Null, diff, Null, 2);
 		right.AddCount(maxcount);
 		for(l = 0; l < sec.count2; l++) {
 			int level = (diff ? l < sec.count1 && SmallDiff(rl[sec.start2 + l], ll[sec.start1 + l]) ? 1 : 2 : 0);
-			right.Set(outln + l, rl[sec.start2 + l], c2, sec.start2 + l + 1, level);
+			right.Set(outln + l, rl[sec.start2 + l], diff, sec.start2 + l + 1, level);
 		}
 		for(; l < maxcount; l++)
-			right.Set(outln + l, Null, c2, Null, 2);
+			right.Set(outln + l, Null, diff, Null, 2);
 		outln += maxcount;
 	}
 	if(firstdiff >= 0)
@@ -121,6 +120,13 @@ void DiffDlg::Write()
 	}
 }
 
+Callback3<const String&, Vector<LineEdit::Highlight>&, const WString&> DiffDlg::WhenHighlight;
+
+static void sDoHighlight(Vector<LineEdit::Highlight>& hl, const WString& ln, const String *path)
+{
+	DiffDlg::WhenHighlight(*path, hl, ln);
+}
+
 DiffDlg::DiffDlg()
 {
 	Add(diff.SizePos());
@@ -133,6 +139,8 @@ DiffDlg::DiffDlg()
 	write <<= THISBACK(Write);
 	write.SetLabel("Overwrite <-");
 	l.SetReadOnly();
+	diff.left.WhenHighlight = callback1(sDoHighlight, &editfile);
+	diff.right.WhenHighlight = callback1(sDoHighlight, &editfile);
 }
 
 void FileDiff::Open()

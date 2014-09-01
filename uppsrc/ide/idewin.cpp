@@ -318,8 +318,18 @@ void Ide::Layout()
 	display.Show(menubar.GetSize().cx + display.GetSize().cx < GetSize().cx);
 }
 
+static void sHighlightLine(const String& path, Vector<LineEdit::Highlight>& hln, const WString& ln)
+{
+	One<EditorSyntax> es = EditorSyntax::Create(EditorSyntax::GetSyntaxForFilename(GetFileName(path)));
+	es->IgnoreErrors();
+	HighlightOutput hl(hln);
+	es->Highlight(ln.Begin(), ln.End(), hl, NULL, 0, 0);
+}
+
 Ide::Ide()
 {
+	DiffDlg::WhenHighlight = callback(sHighlightLine);
+
 	editor.theide = this;
 	editor.WhenSel = THISBACK(SetToolBar);
 	
