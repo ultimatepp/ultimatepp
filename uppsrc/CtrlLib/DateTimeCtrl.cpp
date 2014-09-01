@@ -59,6 +59,8 @@ Calendar::Calendar()
 	bs = 5;
 	SetStyle(StyleDefault());
 	Reset();
+	
+	ComputeSize();
 }
 
 void Calendar::Reset()
@@ -1269,6 +1271,8 @@ Clock::Clock()
 
 	SetFrame(BlackFrame());
 	BackPaint();
+	
+	ComputeSize();
 }
 
 // CalendarClock
