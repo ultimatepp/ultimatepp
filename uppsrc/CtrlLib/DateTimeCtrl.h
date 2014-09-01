@@ -350,7 +350,6 @@ private:
 	void Timer();
 
 public:
-
 	virtual bool Key(dword key, int count);
 	virtual void Paint(Draw& w);
 	virtual void State(int reason);

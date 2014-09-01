@@ -219,7 +219,7 @@ void TextCompareCtrl::Paint(Draw& draw)
 		int y = i * letter.cy - offset.cy;
 		draw.DrawRect(0, y, number_width, letter.cy, number_bg);
 		if(!IsNull(l.number))
-			draw.DrawText(0, y + number_yshift, FormatInt(l.number), number_font, l.color);
+			draw.DrawText(0, y + number_yshift, FormatInt(l.number), number_font, l.diff ? LtBlue() : SColorText());
 	}
 	draw.Clip(number_width, 0, sz.cx - gutter_width - number_width, sz.cy);
 	int sell, selh;
@@ -227,17 +227,39 @@ void TextCompareCtrl::Paint(Draw& draw)
 	for(int i = first_line; i <= last_line; i++) {
 		const Line& l = lines[i];
 		int y = i * letter.cy - offset.cy;
-		Color ink = l.color;
-		Color paper = SColorPaper();
-		if(IsNull(l.number))
-			paper = SGray();
-		else
-		if(l.number >= sell && l.number <= selh) {
+		Color ink = SColorText();
+		Color paper = IsNull(l.number) ? SGray() : l.diff ? SColorInfo() : SColorPaper();
+		bool sel = l.number >= sell && l.number <= selh;
+		if(sel) {
 			ink = SColorHighlightText;
 			paper = SColorHighlight;
 		}
 		draw.DrawRect(0, y, sz.cx, letter.cy, paper);
-		draw.DrawText(number_width - offset.cx, y, ExpandTabs(l.text), l.level == 1 ? ifont : font, ink);
+		WString ln = l.text;
+		if(ln.GetCount() > 20000)
+			ln.Trim(20000);
+		ln = ExpandTabs(ln);
+		Vector<LineEdit::Highlight> hln;
+		hln.SetCount(ln.GetCount() + 1);
+		for(int i = 0; i < ln.GetCount(); i++) {
+			LineEdit::Highlight& h = hln[i];
+			h.paper = paper;
+			h.ink = ink;
+			h.chr = ln[i];
+			h.font = StdFont();
+		}
+		if(!sel)
+			WhenHighlight(hln, ln);
+		int x = 0;
+		for(int i = 0; i < hln.GetCount(); i++) {
+			Font fnt = font;
+			LineEdit::Highlight& h = hln[i];
+			fnt.Bold(h.font.IsBold());
+			fnt.Italic(h.font.IsItalic());
+			fnt.Underline(h.font.IsUnderline());
+			draw.DrawText(number_width - offset.cx + x, y, &h.chr, fnt, h.ink, 1);
+			x += font[h.chr];
+		}
 	}
 	int lcy = lcnt * letter.cy - offset.cy;
 	draw.DrawRect(0, lcy, sz.cx, sz.cy - lcy, SGray());
@@ -296,15 +318,15 @@ void TextCompareCtrl::AddCount(int c)
 	Layout();
 }
 
-void TextCompareCtrl::Set(int line, String text, Color color, int number, int level)
+void TextCompareCtrl::Set(int line, String text, bool diff, int number, int level)
 {
 	Line& l = lines.At(line);
-	int tl = MeasureLength(text);
-	int lt = MeasureLength(l.text);
+	int tl = MeasureLength(text.ToWString());
+	int lt = MeasureLength(l.text.ToWString());
 	bool rl = (tl < lt && lt == maxwidth);
 	l.number = number;
 	l.text = text;
-	l.color = color;
+	l.diff = diff;
 	l.level = level;
 	if(rl)
 		UpdateWidth();
@@ -329,10 +351,10 @@ void TextCompareCtrl::UpdateWidth()
 {
 	maxwidth = 0;
 	for(int i = 0; i < lines.GetCount(); i++)
-		maxwidth = max(maxwidth, MeasureLength(lines[i].text));
+		maxwidth = max(maxwidth, MeasureLength(lines[i].text.ToWString()));
 }
 
-int TextCompareCtrl::MeasureLength(const char *text) const
+int TextCompareCtrl::MeasureLength(const wchar *text) const
 {
 	int pos = 0;
 	while(*text)
@@ -354,10 +376,10 @@ bool TextCompareCtrl::GetSelection(int& l, int& h)
 	return true;
 }
 
-String TextCompareCtrl::ExpandTabs(const char *text) const
+WString TextCompareCtrl::ExpandTabs(const wchar *text) const
 {
-	String out;
-	for(char c; (c = *text++);)
+	WString out;
+	for(wchar c; (c = *text++);)
 		if(c == '\t')
 			out.Cat(' ', tabsize - out.GetLength() % tabsize);
 		else

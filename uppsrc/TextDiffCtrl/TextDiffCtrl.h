@@ -44,8 +44,8 @@ private:
 	void           SelfScroll();
 	void           PairScroll(TextCompareCtrl *ctrl);
 	void           UpdateWidth();
-	String         ExpandTabs(const char *line) const;
-	int            MeasureLength(const char *line) const;
+	WString        ExpandTabs(const wchar *line) const;
+	int            MeasureLength(const wchar *line) const;
 	bool           GetSelection(int& l, int& h);
 	void           DoSelection(int y, bool shift);
 	void           Copy();
@@ -55,7 +55,7 @@ private:
 	struct Line {
 		Line() : number(Null), level(0) {}
 		int    number;
-		Color  color;
+		bool   diff;
 		String text;
 		int    level;
 	};
@@ -81,6 +81,7 @@ private:
 public:
 	Callback       WhenScroll;
 	Callback1<int> WhenLeftDouble;
+	Callback2<Vector<LineEdit::Highlight>&, const WString&> WhenHighlight;
 
 	void           SetCount(int c);
 	void           AddCount(int c);
@@ -103,9 +104,9 @@ public:
 	void           TabSize(int t);
 	int            GetTabSize() const { return tabsize; }
 
-	void           Set(int line, String text, Color color, int number, int level);
+	void           Set(int line, String text, bool diff, int number, int level);
 	String         GetText(int line) const { return lines[line].text; }
-	Color          GetColor(int line) const { return lines[line].color; }
+	bool           GetDiff(int line) const { return lines[line].diff; }
 	int            GetNumber(int line) const { return lines[line].number; }
 
 	Point          GetPos() const;
@@ -122,11 +123,10 @@ public:
 	TextCompareCtrl();
 };
 
-class TextDiffCtrl : public Splitter {
+struct TextDiffCtrl : public Splitter {
 	TextCompareCtrl left;
 	TextCompareCtrl right;
 
-public:
 	void Set(Stream& l, Stream& r);
 	void Set(const String& l, const String& r);
 	void InsertFrameLeft(CtrlFrame& f)                     { left.InsertFrame(0, f); }
@@ -154,6 +154,8 @@ struct DiffDlg : public TopWindow {
 
 	void Write();
 	void Execute(const String& f);
+	
+	static Callback3<const String&, Vector<LineEdit::Highlight>&, const WString&> WhenHighlight;
 	
 	DiffDlg();
 };
