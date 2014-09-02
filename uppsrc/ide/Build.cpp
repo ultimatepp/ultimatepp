@@ -45,6 +45,7 @@ void Ide::BeginBuilding(bool sync_files, bool clear_console)
 	console.ClearError();
 	error_cache.Clear();
 	error.Clear();
+	SyncErrorsMessage();
 	error_count = 0;
 	warning_count = 0;
 	notes.Clear();
