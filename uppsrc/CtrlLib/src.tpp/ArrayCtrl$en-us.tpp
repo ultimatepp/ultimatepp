@@ -1276,6 +1276,12 @@ added index is assigned an [* Id] identifier at the same time.&]
 the newly added index&]
 [s3; &]
 [s4;%- &]
+[s5;:ArrayCtrl`:`:AddIdCtrl`(Ctrl`&`):%- [_^ArrayCtrl`:`:IdInfo^ IdInfo][@(0.0.255) `&]_[* A
+ddIdCtrl]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl])&]
+[s2; Same as AddCtrl(ctrl.GetLayoutId(), ctrl). Helpful when adding 
+dialog widgets whose id is the same as widget`'s variable id.&]
+[s3; &]
+[s4;%- &]
 [s5;:ArrayCtrl`:`:AddCtrlAt`(int`,Ctrl`&`):%- [@(0.0.255) void]_[* AddCtrlAt]([@(0.0.255) i
 nt]_[*@3 ii], [_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl])&]
 [s2; Adds a new control to the table and binds it to the index with 

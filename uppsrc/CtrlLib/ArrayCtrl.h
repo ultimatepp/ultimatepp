@@ -405,6 +405,7 @@ public:
 
 	IdInfo&    AddCtrl(Ctrl& ctrl);
 	IdInfo&    AddCtrl(const Id& id, Ctrl& ctrl);
+	IdInfo&    AddIdCtrl(Ctrl& ctrl)         { return AddCtrl(ctrl.GetLayoutId(), ctrl); }
 	void       AddCtrlAt(int ii, Ctrl& ctrl);
 	void       AddCtrlAt(const Id& id, Ctrl& ctrl);
 	void       AddRowNumCtrl(Ctrl& ctrl);

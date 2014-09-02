@@ -181,37 +181,4 @@ dword GetTimeClick()
 	return sTClick;
 }
 
-void   Ctrl::EndLoop()
-{
-	GuiLock __;
-	inloop = false;
-	SysEndLoop();
-}
-
-void   Ctrl::EndLoop(int code)
-{
-	GuiLock __;
-	ASSERT(!parent);
-	exitcode = code;
-	EndLoop();
-}
-
-bool   Ctrl::InLoop() const
-{
-	GuiLock __;
-	return inloop;
-}
-
-bool   Ctrl::InCurrentLoop() const
-{
-	GuiLock __;
-	return GetLoopCtrl() == this;
-}
-
-int    Ctrl::GetExitCode() const
-{
-	GuiLock __;
-	return exitcode;
-}
-
 END_UPP_NAMESPACE
