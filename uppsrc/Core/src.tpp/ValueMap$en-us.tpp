@@ -260,12 +260,13 @@ ValueMap.&]
 [s4;%- &]
 [s5;:ValueMap`:`:GetAndClear`(const Value`&`):%- [_^Value^ Value]_[* GetAndClear]([@(0.0.255) c
 onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 key])&]
-[s2; If [%-*@3 key] is not present, returns void Value, otherwise returns 
-value for [%-*@3 key] and sets it to void Value. The purpose of 
-this processing is to optimize copying in situation when complex 
-value (e.g. ValueArray) is about to be changed after retrieval, 
-without clearing it in ValueMap the deep copy of complex structure 
-would have to be performed when changing it.&]
+[s2; If [%-*@3 key] is not present, returns ErrorValue (which is Void 
+and Null), otherwise returns value for [%-*@3 key] and sets it 
+to void Value. The purpose of this processing is to optimize 
+copying in situation when complex value (e.g. ValueArray) is 
+about to be changed after retrieval, without clearing it in ValueMap 
+the deep copy of complex structure would have to be performed 
+when changing it.&]
 [s3; &]
 [s4;%- &]
 [s5;:ValueMap`:`:GetHashValue`(`)const:%- [@(0.0.255) unsigned]_[* GetHashValue]()_[@(0.0.255) c
