@@ -305,11 +305,11 @@ void Ide::SetupBars()
 
 void SetupError(ArrayCtrl& error, const char *s)
 {
-	error.AddColumn("File");
+	error.AddColumn("File").SetDisplay(Single<Ide::FoundFileDisplay>());
 	error.AddColumn("Line");
 	error.AddColumn(s);
 	error.AddIndex("INFO");
-	error.ColumnWidths("200 119 800");
+	error.ColumnWidths("184 44 298");
 	error.NoWantFocus();
 }
 
@@ -383,7 +383,7 @@ Ide::Ide()
 	SetupError(notes, "Note");
 	
 	SetupError(ffound, "Source");
-	ffound.ColumnWidths("200 65 1333");
+	ffound.ColumnWidths("207 41 834");
 	ffound.ColumnAt(0).SetDisplay(Single<FoundFileDisplay>());
 	ffound.ColumnAt(2).SetDisplay(Single<FoundDisplay>());
 

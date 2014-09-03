@@ -311,7 +311,7 @@ void Ide::FindInFiles(bool replace) {
 					f.linepos = 0;
 					f.kind = 0;
 					f.message = files[i];
-					ffound.Add(GetFileName(f.file), 1, f.message, RawToValue(f));
+					ffound.Add(f.file, 1, f.message, RawToValue(f));
 					ffound.Sync();
 					n++;
 				}

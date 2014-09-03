@@ -278,7 +278,8 @@ int    CharFilterFileName(int c);
 
 bool   isincludefnchar(int c);
 
-int    DrawFileName(Draw& w, const Rect& r, const String& h, Color ink);
+Size   GetDrawFileNameSize(const String& h);
+void   DrawFileName(Draw& w, const Rect& r, const String& h, Color ink);
 
 struct Navigator {
 	virtual int GetCurrentLine() = 0;
@@ -1162,7 +1163,6 @@ public:
 	};
 
 	struct FoundFileDisplay : Display {
-		int DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 		virtual Size GetStdSize(const Value& q) const;
 	};

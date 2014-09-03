@@ -316,7 +316,7 @@ void Ide::PutLinkingEnd(bool ok)
 				f.lineno = Null;
 				f.message = TrimLeft(linking_line[i]);
 			}
-			error.Add(GetFileName(f.file), f.lineno,
+			error.Add(f.file, f.lineno,
 			          AttrText(f.message)
 			          .NormalPaper(HighlightSetup::GetHlStyle(HighlightSetup::PAPER_ERROR).color),
 			          RawToValue(f));
@@ -348,7 +348,7 @@ void Ide::ConsoleLine(const String& line)
 				warning_count++;
 			if(IsDarkMismatch())
 				paper = SColorPaper();
-			error.Add(GetFileName(f.file), f.lineno,
+			error.Add(f.file, f.lineno,
 			          AttrText(f.message).NormalPaper(paper),
 			          RawToValue(f));
 			SyncErrorsMessage();
@@ -428,7 +428,7 @@ void Ide::ShowError()
 		ValueArray n = error.Get("NOTES");
 		for(int i = 0; i < n.GetCount(); i++) {
 			const ErrorInfo& f = ValueTo<ErrorInfo>(n[i]);
-			notes.Add(GetFileName(f.file), f.lineno, f.message, n[i]);
+			notes.Add(f.file, f.lineno, f.message, n[i]);
 		}
 		GoToError(error);
 	}	
@@ -487,19 +487,13 @@ void Ide::FoundDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink,
 		StdDisplay().Paint(w, r, q, ink, paper, style);
 }
 
-int Ide::FoundFileDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
-{
-	w.DrawRect(r, paper);
-	return DrawFileName(w, r, q, ink);
-}
-
 void Ide::FoundFileDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 {
-	DoPaint(w, r, q, ink, paper, style);
+	w.DrawRect(r, paper);
+	DrawFileName(w, r, q, ink);
 }
 
 Size Ide::FoundFileDisplay::GetStdSize(const Value& q) const
 {
-	NilDraw w;
-	return Size(DoPaint(w, Size(999999, 999999), q, White(), White(), 0), StdFont().Bold().GetCy());
+	return GetDrawFileNameSize(q);
 }
