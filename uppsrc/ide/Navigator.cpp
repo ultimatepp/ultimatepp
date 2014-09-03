@@ -14,24 +14,34 @@ void PaintTeXt(Draw& w, int& x, int y, const String& text, Font font, Color ink)
 	x += sz.cx;
 }
 
-int DrawFileName(Draw& w, const Rect& r, const String& h, Color ink)
+int DrawFileName0(Draw& w, const Rect& r, const String& h, Color ink, int x)
 {
 	if(h.GetCount() == 0)
 		return 0;
-	int x = 0;
 	String s = GetFileName(GetFileFolder(h)) + "/";
-	w.DrawText(r.left, r.top, s, StdFont(), ink);
+	w.DrawText(r.left + x, r.top, s, StdFont(), ink);
 	x += GetTextSize(s, StdFont()).cx;
 	s = GetFileName(h);
 	w.DrawText(r.left + x, r.top, s, StdFont().Bold(), ink);
 	return x + GetTextSize(s, StdFont().Bold()).cx;
 }
 
+Size GetDrawFileNameSize(const String& h)
+{
+	NilDraw w;
+	return Size(DrawFileName0(w, Size(999999, 999999), h, Null, 0), StdFont().Bold().GetCy());
+}
+
+void DrawFileName(Draw& w, const Rect& r, const String& h, Color ink)
+{
+	DrawFileName0(w, r, h, ink, min(r.GetWidth() - GetDrawFileNameSize(h).cx, 0));
+}
+
 int PaintFileName(Draw& w, const Rect& r, String h, Color ink)
 {
 	if(h.GetCount())
 		h.Remove(0, 1);
-	return DrawFileName(w, r, h, ink);
+	return DrawFileName0(w, r, h, ink, 0);
 }
 
 Navigator::Navigator()
