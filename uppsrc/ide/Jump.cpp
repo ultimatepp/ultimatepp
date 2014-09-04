@@ -7,18 +7,16 @@ struct JumpDlg : WithJumpLayout<TopWindow>, Navigator {
 
 	virtual int GetCurrentLine();
 	
-	void Ok();
-	void Cancel();
+	void GoTo();
 
 	JumpDlg();
 };
 
 JumpDlg::JumpDlg()
 {
-	CtrlLayout(*this, "Navigator");
-	ok <<= THISBACK(Ok);
-	cancel <<= THISBACK(Cancel);
+	CtrlLayoutOKCancel(*this, "Navigator");
 	dlgmode = true;
+	search.WhenEnter.Clear();
 }
 
 bool JumpDlg::Key(dword key, int count)
@@ -28,22 +26,17 @@ bool JumpDlg::Key(dword key, int count)
 			return list.Key(key, count);
 		else
 			list.GoBegin();
+		return true;
 	}
 	return TopWindow::Key(key, count);
 }
 
-void JumpDlg::Ok()
+void JumpDlg::GoTo()
 {
 	if(navlines.IsCursor()) {
 		const NavLine& l = navlines.Get(0).To<NavLine>();
 		theide->GotoPos(GetCppFile(l.file), l.line);
 	}
-	Close();
-}
-
-void JumpDlg::Cancel()
-{
-	Close();
 }
 
 int JumpDlg::GetCurrentLine()
@@ -53,11 +46,9 @@ int JumpDlg::GetCurrentLine()
 
 void Ide::GotoGlobal()
 {
-	static JumpDlg dlg;
+	JumpDlg dlg;
 	dlg.theide = this;
-	if(dlg.IsOpen())
-		dlg.SetForeground();
-	else 
-		dlg.Open();
 	dlg.Search();
+	dlg.Execute();
+	dlg.GoTo();
 }
