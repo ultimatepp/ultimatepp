@@ -251,13 +251,14 @@ void TextCompareCtrl::Paint(Draw& draw)
 		if(!sel)
 			WhenHighlight(hln, ln);
 		int x = 0;
+		int a = StdFont().GetAscent();
 		for(int i = 0; i < hln.GetCount(); i++) {
 			Font fnt = font;
 			LineEdit::Highlight& h = hln[i];
 			fnt.Bold(h.font.IsBold());
 			fnt.Italic(h.font.IsItalic());
 			fnt.Underline(h.font.IsUnderline());
-			draw.DrawText(number_width - offset.cx + x, y, &h.chr, fnt, h.ink, 1);
+			draw.DrawText(number_width - offset.cx + x, y + a - fnt.GetAscent(), &h.chr, fnt, h.ink, 1);
 			x += font[h.chr];
 		}
 	}
