@@ -453,7 +453,6 @@ public:
 	void        Set(const ValueMap& m);
 };
 
-
 class FileSelButton : public FileSel
 {
 public:
