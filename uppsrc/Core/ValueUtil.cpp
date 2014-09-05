@@ -251,6 +251,11 @@ void ValueArray::Remove(int i, int count)
 	Clone().Remove(i, count);
 }
 
+void ValueArray::Remove(const Vector<int>& ii)
+{
+	Clone().Remove(ii);
+}
+
 void ValueArray::Insert(int i, const ValueArray& va)
 {
 	if(va.data == data) {
@@ -571,12 +576,12 @@ int ValueMap::RemoveKey(const Value& key)
 		rk.Add(q);
 		q = d.key.FindNext(q);
 	}
-	int count = rk.GetCount();
-	if(count) {
+	if(rk.GetCount()) {
+		Sort(rk);
 		d.key.Remove(rk);
-		d.value.data->data.Remove(rk);
+		d.value.Remove(rk);
 	}
-	return count;
+	return rk.GetCount();
 }
 
 void ValueMap::Remove(int i)
