@@ -246,6 +246,7 @@ public:
 	Vector<Value> Pick();
 
 	void Remove(int i, int count = 1);
+	void Remove(const Vector<int>& ii);
 	void Insert(int i, const ValueArray& va);
 	void Append(const ValueArray& va)         { Insert(GetCount(), va); }
 

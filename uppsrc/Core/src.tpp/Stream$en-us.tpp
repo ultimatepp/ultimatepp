@@ -1220,7 +1220,10 @@ mode`_t_[*@3 acm]_`=_[@3 0644])&]
 and specific POSIX access rights. [%-*@3 mode] can be one of READ, 
 CREATE, APPEND, READWRITE possibly combined (using `'`|`') with 
 flag NOWRITESHARE. This flag uses flock system call to enforce 
-exclusive write access to the file.&]
+exclusive write access to the file. In READ, if file does not 
+exist, function fails. In CREATE mode, files is always created 
+empty. In APPEND and READWRITE modes, file is created if it does 
+not already exist.&]
 [s7; [%-*C@3 filename]-|The name of the file.&]
 [s7; [%-*C@3 mode]-|Open mode.&]
 [s7; [%-*C@3 acm]-|Access rights.&]

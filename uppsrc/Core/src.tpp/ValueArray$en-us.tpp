@@ -152,6 +152,11 @@ required.&]
 [s2;%% Removes [%-*@3 count] elements at [%-*@3 i].&]
 [s3;%% &]
 [s4; &]
+[s5;:ValueArray`:`:Remove`(const Vector`<int`>`&`): [@(0.0.255) void]_[* Remove]([@(0.0.255) c
+onst]_[_^Vector^ Vector]<[@(0.0.255) int]>`&_[*@3 ii])&]
+[s2;%% Removes the sorted set of indicies.&]
+[s3;%% &]
+[s4; &]
 [s5;:ValueArray`:`:Insert`(int`,const ValueArray`&`): [@(0.0.255) void]_[* Insert]([@(0.0.255) i
 nt]_[*@3 i], [@(0.0.255) const]_[_^ValueArray^ ValueArray][@(0.0.255) `&]_[*@3 va])&]
 [s2;%% Inserts another ValueArra [%-*@3 va] at [%-*@3 i].&]
