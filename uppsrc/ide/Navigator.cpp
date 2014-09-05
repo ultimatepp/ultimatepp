@@ -19,11 +19,12 @@ int DrawFileName0(Draw& w, const Rect& r, const String& h, Color ink, int x)
 	if(h.GetCount() == 0)
 		return 0;
 	String s = GetFileName(GetFileFolder(h)) + "/";
-	w.DrawText(r.left + x, r.top, s, StdFont(), ink);
-	x += GetTextSize(s, StdFont()).cx;
+	x += r.left;
+	int y = r.top + (r.GetHeight() - GetStdFontCy()) / 2;
+	PaintTeXt(w, x, r.top, s, StdFont(), ink);
 	s = GetFileName(h);
-	w.DrawText(r.left + x, r.top, s, StdFont().Bold(), ink);
-	return x + GetTextSize(s, StdFont().Bold()).cx;
+	PaintTeXt(w, x, r.top, s, StdFont().Bold(), ink);
+	return x - r.left;
 }
 
 Size GetDrawFileNameSize(const String& h)
@@ -130,11 +131,11 @@ void Navigator::SyncNavLines()
 	}
 }
 
-int Navigator::LineDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+int Navigator::LineDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style, int x) const
 {
 	w.DrawRect(r, paper);
 	const NavLine& l = q.To<NavLine>();
-	int x = r.left;
+	x += r.left;
 	String p = GetCppFile(l.file);
 	int y = r.top + (r.GetHeight() - StdFont().GetCy()) / 2;
 	PaintTeXt(w, x, y, GetFileName(GetFileFolder(p)) + "/", StdFont(), ink);
@@ -142,18 +143,18 @@ int Navigator::LineDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Colo
 	PaintTeXt(w, x, y, " (", StdFont(), ink);
 	PaintTeXt(w, x, y, AsString(l.line), StdFont().Bold(), ink);
 	PaintTeXt(w, x, y, ")", StdFont(), ink);
-	return x;
+	return x - r.left;
 }
 
 void Navigator::LineDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 {
-	DoPaint(w, r, q, ink, paper, style);
+	DoPaint(w, r, q, ink, paper, style, min(r.GetWidth() - GetStdSize(q).cx, 0));
 }
 
 Size Navigator::LineDisplay::GetStdSize(const Value& q) const
 {
 	NilDraw w;
-	return Size(DoPaint(w, Size(999999, 999999), q, White(), White(), 0), StdFont().Bold().GetCy());
+	return Size(DoPaint(w, Size(999999, 999999), q, White(), White(), 0, 0), StdFont().Bold().GetCy());
 }
 
 void Navigator::GoToNavLine()
