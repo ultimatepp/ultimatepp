@@ -235,7 +235,7 @@ void TextCompareCtrl::Paint(Draw& draw)
 			paper = SColorHighlight;
 		}
 		draw.DrawRect(0, y, sz.cx, letter.cy, paper);
-		WString ln = l.text;
+		WString ln = l.text.ToWString();
 		if(ln.GetCount() > 20000)
 			ln.Trim(20000);
 		ln = ExpandTabs(ln);
