@@ -36,6 +36,7 @@ private:
 	void          SetSb();
 	void          Scroll();
 	int           GetPageCx(bool reduced = false) const;
+	Point         GetTextPoint(Point p) const;
 	int           GetPointPos(Point p) const;
 	String        GetLink(int pos, Point p) const;
 	void          RefreshSel();
