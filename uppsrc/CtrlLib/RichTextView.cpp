@@ -128,15 +128,21 @@ void RichTextView::RightDown(Point p, dword keyflags)
 	b.Execute();
 }
 
+Point RichTextView::GetTextPoint(Point p) const
+{
+	p -= margin.TopLeft();
+	Zoom zoom = GetZoom();
+	p.y += sb * zoom;
+	return Point(p.x / zoom, p.y / zoom);
+}
+
 int  RichTextView::GetPointPos(Point p) const
 {
 	Size sz = GetSize();
 	sz.cx -= margin.left + margin.right;
 	sz.cy -= margin.top + margin.bottom;
-	p -= margin.TopLeft();
-	Zoom zoom = GetZoom();
-	p.y += sb * zoom;
-	return text.GetPos(p.x / zoom, PageY(0, p.y / zoom), GetPage());
+	p = GetTextPoint(p);
+	return text.GetPos(p.x, PageY(0, p.y), GetPage());
 }
 
 String RichTextView::GetLink(int pos, Point p) const
@@ -145,12 +151,17 @@ String RichTextView::GetLink(int pos, Point p) const
 	RichObject object = text.GetRichPos(pos).object;
 	if(object) {
 		Rect rc = text.GetCaret(pos, GetPage());
+		//TODO: Perhaps use GetTextPoint here?
 		link = object.GetLink(p - rc.TopLeft(), rc.Size());
 	}
 
 	if(IsNull(link)) {
 		RichPos richpos = text.GetRichPos(pos);
-		if(richpos.chr != '\n')
+		Rect rc = text.GetCaret(pos, GetPage());
+		DDUMP(rc);
+		DDUMP(p);
+		DDUMP(GetTextPoint(p));
+		if(richpos.chr != '\n' && rc.Contains(GetTextPoint(p)))
 			link = Nvl(richpos.fieldformat.link, richpos.format.link);
 	}
 	return link;
