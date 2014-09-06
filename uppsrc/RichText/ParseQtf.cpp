@@ -475,6 +475,8 @@ void RichQtfParser::FinishCell()
 void RichQtfParser::FinishTable()
 {
 	FinishCell();
+	while(table.Top().cell % Table().GetColumns())
+		FinishCell();
 	tablepart = pick(Table());
 	istable = true;
 	table.Drop();
