@@ -629,15 +629,20 @@ void LineEdit::LeftTriple(Point, dword)
 void LineEdit::MouseMove(Point p, dword flags) {
 	if((flags & K_MOUSELEFT) && HasFocus() && HasCapture()) {
 		int c = GetMousePos(p);
+		dorectsel = flags & K_ALT;
 		PlaceCaret(c, mpos != c || HasCapture());
+		dorectsel = false;
 	}
 }
 
 void LineEdit::LeftRepeat(Point p, dword flags) {
 	if(HasCapture()) {
 		int c = GetMousePos(p);
-		if(mpos != c)
+		if(mpos != c) {
+			dorectsel = flags & K_ALT;
 			PlaceCaret(c, true);
+			dorectsel = false;
+		}
 	}
 }
 
