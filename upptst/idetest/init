@@ -1,0 +1,5 @@
+#ifndef _idetest_icpp_init_stub
+#define _idetest_icpp_init_stub
+#include "CtrlLib/init"
+#include "ide/init"
+#endif
