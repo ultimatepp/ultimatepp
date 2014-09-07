@@ -158,9 +158,6 @@ String RichTextView::GetLink(int pos, Point p) const
 	if(IsNull(link)) {
 		RichPos richpos = text.GetRichPos(pos);
 		Rect rc = text.GetCaret(pos, GetPage());
-		DDUMP(rc);
-		DDUMP(p);
-		DDUMP(GetTextPoint(p));
 		if(richpos.chr != '\n' && rc.Contains(GetTextPoint(p)))
 			link = Nvl(richpos.fieldformat.link, richpos.format.link);
 	}

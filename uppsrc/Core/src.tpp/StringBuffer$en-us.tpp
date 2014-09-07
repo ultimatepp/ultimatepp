@@ -71,6 +71,11 @@ tring][@(0.0.255) `&]_[*@3 s])&]
 [s2;%% Appends the first [%-*@3 l] characters of [%-*@3 s].&]
 [s3;%% &]
 [s4; &]
+[s5;:StringBuffer`:`:Cat`(const char`*`,const char`*`): [@(0.0.255) void]_[* Cat]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 s], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 e])&]
+[s2;%% Same as Cat(s, e `- s).&]
+[s3;%% &]
+[s4; &]
 [s5;:StringBuffer`:`:GetLength`(`)const: [@(0.0.255) int]_[* GetLength]()_[@(0.0.255) const
 ]&]
 [s5;:StringBuffer`:`:GetCount`(`)const: [@(0.0.255) int]_[* GetCount]()_[@(0.0.255) const]&]
