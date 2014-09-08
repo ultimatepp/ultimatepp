@@ -45,6 +45,12 @@ HL_COLOR(INK_SQLBOOL, t_("Sql boolean expressions"), 1)
 HL_COLOR(INK_UPPMACROS, t_("U++ macros"), 0)
 HL_COLOR(INK_UPPLOGS, t_("U++ log macros"), 0)
 
+HL_COLOR(INK_DIFF_FILE_INFO, t_("Diff file information"), 1)
+HL_COLOR(INK_DIFF_HEADER, t_("Diff header line"), 0)
+HL_COLOR(INK_DIFF_ADDED, t_("Diff added line"), 0)
+HL_COLOR(INK_DIFF_REMOVED, t_("Diff removed line"), 0)
+HL_COLOR(INK_DIFF_COMMENT, t_("Diff comment"), 0)
+
 HL_COLOR(PAPER_SELWORD, t_("Selected word through file"), 0)
 
 HL_COLOR(PAPER_ERROR, t_("Error in compiler messages"), 0)

@@ -132,6 +132,12 @@ void HighlightSetup::DefaultHlStyles()
 	SetHlStyle(INK_SQLBOOL, Black);
 	SetHlStyle(INK_UPPMACROS, Cyan);
 	SetHlStyle(INK_UPPLOGS, Green);
+	
+	SetHlStyle(INK_DIFF_FILE_INFO, Black, true);
+	SetHlStyle(INK_DIFF_HEADER, Color(28, 127, 200));
+	SetHlStyle(INK_DIFF_ADDED, Color(28, 42, 255));
+	SetHlStyle(INK_DIFF_REMOVED, Color(255, 0, 0));
+	SetHlStyle(INK_DIFF_COMMENT, Green);
 
 	SetHlStyle(PAPER_BLOCK1, Blend(LtBlue, White, 240));
 	SetHlStyle(PAPER_BLOCK2, Blend(LtGreen, White, 240));

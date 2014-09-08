@@ -169,6 +169,7 @@ struct FindReplaceDlg : FrameBottom< WithIDEFindReplaceLayout<TopWindow> > {
 
 #include "Syntax.h"
 #include "CSyntax.h"
+#include "DiffSyntax.h"
 #include "TagSyntax.h"
 
 class CodeEditor : public LineEdit,
