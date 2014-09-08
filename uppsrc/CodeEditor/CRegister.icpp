@@ -18,7 +18,13 @@ void CreateTagSyntax(One<EditorSyntax>& e, bool html)
 	e.Create<TagSyntax>().Html(html);
 }
 
-INITBLOCK {
+void CreateDiffSyntax(One<EditorSyntax>& e)
+{
+	e.Create<DiffSyntax>();
+}
+
+INITBLOCK
+{
 	RegisterCSyntax("cpp", CSyntax::HIGHLIGHT_CPP,
 	                "*.c *.cpp *.cc *.cxx *.h *.hpp *.hh *.hxx *.m *.mm *.icpp *.conf",
 	                "C/C++");
@@ -36,6 +42,8 @@ INITBLOCK {
 	
 	EditorSyntax::Register("xml", callback1(CreateTagSyntax, false), "*.xml *.xsd", "XML (.xml)");
 	EditorSyntax::Register("html", callback1(CreateTagSyntax, true), "*.html *.htm", "HTML (.html)");
+	
+	EditorSyntax::Register("diff", callback(CreateDiffSyntax), "*.diff *.patch", "Diff");
 }
 
 END_UPP_NAMESPACE
