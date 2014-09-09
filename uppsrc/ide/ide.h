@@ -317,7 +317,7 @@ struct Navigator {
 		void Set(const CppItem& m);
 	};
 	
-	enum { KIND_LINE = 123, KIND_NEST, KIND_FILE };
+	enum KindEnum { KIND_LINE = 123, KIND_NEST, KIND_FILE };
 	
 	struct ScopeDisplay : Display {
 		int DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
