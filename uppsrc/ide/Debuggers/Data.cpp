@@ -86,7 +86,10 @@ void Pdb::This()
 			if(f.local.GetKey(i) == "this") {
 				Val val = f.local[i];
 				if(val.ref > 0 || val.type < 0)
-					val = GetRVal(val);
+					try {
+						val = GetRVal(val);
+					}
+					catch(CParser::Error) {}
 				AddThis(val.type, val.address, prev);
 				break;
 			}
