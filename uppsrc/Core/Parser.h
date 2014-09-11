@@ -99,7 +99,7 @@ public:
 	void   Set(const char *ptr, const char *fn, int line = 1);
 	void   Set(const char *ptr);
 
-	CParser& SkipSpaces(bool b = true)        { skipspaces = true; return *this; }
+	CParser& SkipSpaces(bool b = true)        { skipspaces = b; return *this; }
 	CParser& NoSkipSpaces()                   { skipspaces = false; return *this; }
 	CParser& UnicodeEscape(bool b = true)     { uescape = b; return *this; }
 	CParser& SkipComments(bool b = true);
