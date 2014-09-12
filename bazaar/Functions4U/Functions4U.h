@@ -71,6 +71,7 @@ bool SetReadOnly(const char *path, bool usr, bool grp, bool oth);
 bool IsReadOnly(const char *path, bool &usr, bool &grp, bool &oth);
 
 String LoadFile_Safe(const String fileName);
+String LoadFile(const char *fileName, off_t from, size_t len = 0);
 
 int64 GetLength(const char *fileDirName);
 int64 GetDirectoryLength(const char *directoryName);

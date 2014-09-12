@@ -34,18 +34,24 @@ QtfRichObject QtfEquation(const String &str);
 
 Image NativePathIconX(const char *path, bool folder, int flags = 0);
 
+class CParserPlus : public CParser {
+public:
+	CParserPlus(const char *ptr) : CParser(ptr) {}
+	String ReadIdPlus() throw(Error);
+};
+
 class EquationDraw {
 public:
 	EquationDraw();
-	Drawing Exp(CParser& p);
+	Drawing Exp(CParserPlus& p);
 	
 	static Drawing Text(String text, bool italic = true, int offsetX=0, int offsetY=0, double betw = 1);
 	
 private:
 	String ReplaceSymbols(String var);
-	Drawing Term(CParser& p, bool noBracket = false);	
-	String TermTrig(CParser& p);
-	Drawing Mul(CParser& p);
+	Drawing Term(CParserPlus& p, bool noBracket = false);	
+	String TermTrig(CParserPlus& p);
+	Drawing Mul(CParserPlus& p);
 	
 private:
 	static Drawing Bracket(Drawing &data);

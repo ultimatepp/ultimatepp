@@ -7,8 +7,24 @@
 
 NAMESPACE_UPP
 
-Drawing EquationDraw::Text(String text, bool italic, int offsetX, int offsetY, double betw)
-{
+inline bool iscidplus(int c) {
+	return iscib(c) || c == '.' || c >= '0' && c <= '9';
+}
+
+String CParserPlus::ReadIdPlus() throw(Error) {
+	if(!IsId())
+		ThrowError("missing id");
+	String result;
+	const char *b = term;
+	const char *p = b;
+	while(iscidplus(*p))
+		p++;
+	term = p;
+	DoSpaces();
+	return String(b, (int)(uintptr_t)(p - b));
+}
+
+Drawing EquationDraw::Text(String text, bool italic, int offsetX, int offsetY, double betw) {
 	Font fnt;
 	
 	int _pos1, _pos2;
@@ -40,8 +56,7 @@ Drawing EquationDraw::Text(String text, bool italic, int offsetX, int offsetY, d
 	return dw;
 }
 
-Drawing EquationDraw::SubSup(Drawing &drwText, Drawing &drwSub, Drawing &drwSup)
-{
+Drawing EquationDraw::SubSup(Drawing &drwText, Drawing &drwSub, Drawing &drwSup) {
 	Size szText = drwText.GetSize();
 	Size szSub  = (2/3.)*drwSub.GetSize();
 	Size szSup  = (2/3.)*drwSup.GetSize();
@@ -58,8 +73,7 @@ Drawing EquationDraw::SubSup(Drawing &drwText, Drawing &drwSub, Drawing &drwSup)
 	return dw;
 }
 
-Drawing EquationDraw::SubSup(String text, String sub, String sup)
-{
+Drawing EquationDraw::SubSup(String text, String sub, String sup) {
 	Drawing textdraw = Text(text, true);
 	Drawing subdraw  = Text(sub, true);
 	Drawing supdraw  = Text(sup, true);
@@ -67,8 +81,7 @@ Drawing EquationDraw::SubSup(String text, String sub, String sup)
 	return SubSup(textdraw, subdraw, supdraw);
 }
 
-Drawing EquationDraw::SubSup(Drawing &drwText, String sub, String sup)
-{
+Drawing EquationDraw::SubSup(Drawing &drwText, String sub, String sup) {
 	Drawing subdraw  = Text(sub, true);
 	Drawing supdraw  = Text(sup, true);
 	
@@ -95,8 +108,7 @@ Drawing EquationDraw::SubSupInv(Drawing &drwText, Drawing &drwSub, Drawing &drwS
 	return dw;
 }
 
-Drawing EquationDraw::SubSupInv(String text, String sub, String sup)
-{
+Drawing EquationDraw::SubSupInv(String text, String sub, String sup) {
 	Drawing textdraw = Text(text, true);
 	Drawing subdraw  = Text(sub, true);
 	Drawing supdraw  = Text(sup, true);
@@ -104,16 +116,14 @@ Drawing EquationDraw::SubSupInv(String text, String sub, String sup)
 	return SubSupInv(textdraw, subdraw, supdraw);
 }
 
-Drawing EquationDraw::SubSupInv(Drawing &drwText, String sub, String sup)
-{
+Drawing EquationDraw::SubSupInv(Drawing &drwText, String sub, String sup) {
 	Drawing subdraw  = Text(sub, true);
 	Drawing supdraw  = Text(sup, true);
 	
 	return SubSupInv(drwText, subdraw, supdraw);
 }
 
-Drawing EquationDraw::JoinCenter(Drawing &left, Drawing &right)
-{
+Drawing EquationDraw::JoinCenter(Drawing &left, Drawing &right) {
 	Size szLeft = left.GetSize();
 	Size szRight = right.GetSize();
 	
@@ -128,8 +138,7 @@ Drawing EquationDraw::JoinCenter(Drawing &left, Drawing &right)
 	return dw;
 }
 
-Drawing EquationDraw::JoinFlex(Drawing &left, double betw1, Drawing &right, double betw2)
-{
+Drawing EquationDraw::JoinFlex(Drawing &left, double betw1, Drawing &right, double betw2) {
 	Size szLeft = left.GetSize();
 	Size szRight = right.GetSize();
 	
@@ -144,8 +153,7 @@ Drawing EquationDraw::JoinFlex(Drawing &left, double betw1, Drawing &right, doub
 	return dw;
 }
 
-Drawing EquationDraw::NumDenom(Drawing &num, Drawing &denom)
-{
+Drawing EquationDraw::NumDenom(Drawing &num, Drawing &denom) {
 	Size szNum = num.GetSize();
 	Size szDenom = denom.GetSize();
 	
@@ -161,8 +169,7 @@ Drawing EquationDraw::NumDenom(Drawing &num, Drawing &denom)
 	return dw;
 }
 
-Drawing EquationDraw::Bracket(Drawing &data)
-{
+Drawing EquationDraw::Bracket(Drawing &data) {
 	Drawing pizq = Text("(", true, 0, 0, 1.3);
 	Drawing pder = Text(")");
 	Drawing parizq = JoinFlex(pizq, 1, data, 1);
@@ -170,8 +177,7 @@ Drawing EquationDraw::Bracket(Drawing &data)
 	return JoinFlex(parizq, 1, pder, 1);
 }
 
-Drawing EquationDraw::Sqrt(Drawing &right)
-{
+Drawing EquationDraw::Sqrt(Drawing &right) {
 	Drawing left = Text("√");
 	
 	Size szLeft = left.GetSize();
@@ -189,20 +195,17 @@ Drawing EquationDraw::Sqrt(Drawing &right)
 	return dw;	
 }
 
-Drawing EquationDraw::Exponent(Drawing &right)
-{
+Drawing EquationDraw::Exponent(Drawing &right) {
 	Drawing left = Text("e");
 	
 	return EquationDraw::Exp(left, right);
 }
 
-Drawing EquationDraw::Der(Drawing &data)
-{
+Drawing EquationDraw::Der(Drawing &data) {
 	return EquationDraw::Function("d", data);
 }
 
-Drawing EquationDraw::Abs(Drawing &data)
-{
+Drawing EquationDraw::Abs(Drawing &data) {
 	Drawing pizq = Text("|", true, 0, 0, 1.3);
 	Drawing pder = Text("|");
 	Drawing parizq = JoinFlex(pizq, 1, data, 1);
@@ -210,8 +213,7 @@ Drawing EquationDraw::Abs(Drawing &data)
 	return JoinFlex(parizq, 1, pder, 1);
 }
 
-Drawing EquationDraw::Integral(Drawing &data, Drawing &sub, Drawing &sup)
-{
+Drawing EquationDraw::Integral(Drawing &data, Drawing &sub, Drawing &sup) {
 	Drawing left = Text("∫");
 	Drawing right = SubSupInv(data, sub, sup);
 	
@@ -230,8 +232,7 @@ Drawing EquationDraw::Integral(Drawing &data, Drawing &sub, Drawing &sup)
 	return dw;	
 }
 
-Drawing EquationDraw::Summat(Drawing &data, Drawing &sub, Drawing &sup)
-{
+Drawing EquationDraw::Summat(Drawing &data, Drawing &sub, Drawing &sup) {
 	Drawing left = Text("∑", true, 0, -20);
 	Drawing right = SubSupInv(data, sub, sup);
 	
@@ -249,31 +250,27 @@ Drawing EquationDraw::Summat(Drawing &data, Drawing &sub, Drawing &sup)
 	
 	return dw;
 }
-Drawing EquationDraw::Exp(Drawing &data, Drawing &exp)
-{
+Drawing EquationDraw::Exp(Drawing &data, Drawing &exp) {
 	Drawing foo = Text("");
 	
 	return SubSup(data, foo, exp);
 }
 
-Drawing EquationDraw::Function(String function, Drawing &content)
-{
+Drawing EquationDraw::Function(String function, Drawing &content) {
 	Drawing fundraw = Text(function);
 	Drawing pardraw = Bracket(content);
 	
 	return JoinCenter(fundraw, pardraw);
 }
 
-Drawing EquationDraw::Equal(Drawing &left, Drawing &right)
-{
+Drawing EquationDraw::Equal(Drawing &left, Drawing &right) {
 	Drawing equal = Text(" = ");
 	Drawing leftdraw = JoinCenter(left, equal);
 	
 	return JoinCenter(leftdraw, right);
 }
 
-String EquationDraw::ReplaceSymbols(String var)
-{
+String EquationDraw::ReplaceSymbols(String var) {
 	for (int i = 0; i < symbols.GetCount(); ++i) {
 		String letter = ToLower(symbols.GetKey(i));
 		if (var.Find(letter) >= 0)
@@ -285,7 +282,7 @@ String EquationDraw::ReplaceSymbols(String var)
 	return var;	    
 }
 
-String EquationDraw::TermTrig(CParser& p) {
+String EquationDraw::TermTrig(CParserPlus& p) {
 	if (p.Id("sin"))	return "sin";
 	if (p.Id("cos"))	return "cos";
 	if (p.Id("tan"))	return "tan";
@@ -298,8 +295,7 @@ String EquationDraw::TermTrig(CParser& p) {
 	return Null;
 }
 
-Drawing EquationDraw::Term(CParser& p, bool noBracket)
-{
+Drawing EquationDraw::Term(CParserPlus& p, bool noBracket) {
 	if(p.Id("integral")) {
 		p.PassChar('(');
 		Drawing data = Exp(p);
@@ -369,8 +365,7 @@ Drawing EquationDraw::Term(CParser& p, bool noBracket)
 	return EquationDraw::Text(FormatDouble(p.ReadDouble()));
 }
 	
-Drawing EquationDraw::Mul(CParser& p)
-{
+Drawing EquationDraw::Mul(CParserPlus& p) {
 	Drawing x = Term(p);
 	for(;;) {	
 		if(p.Char('*')) {
@@ -389,8 +384,7 @@ Drawing EquationDraw::Mul(CParser& p)
 	}
 }
 	
-Drawing EquationDraw::Exp(CParser& p)
-{
+Drawing EquationDraw::Exp(CParserPlus& p) {
 	Drawing x = Mul(p);
 	for(;;) {
 		if(p.Char('+')) {
@@ -411,8 +405,7 @@ Drawing EquationDraw::Exp(CParser& p)
 	}
 }
 
-EquationDraw::EquationDraw()
-{
+EquationDraw::EquationDraw() {
 	symbols.GetAdd("alpha") = "Αα"; 	
 	symbols.GetAdd("nu")    = "Νν";
 	symbols.GetAdd("beta")  = "Ββ"; 	
@@ -439,11 +432,10 @@ EquationDraw::EquationDraw()
 	symbols.GetAdd("omega") = "Ωω";
 }
 
-Drawing DrawEquation(const String &str)
-{
+Drawing DrawEquation(const String &str) {
 	EquationDraw equation;
 	
-	CParser p(str);
+	CParserPlus p(str);
 	try {
 		if(p.IsId()) {
 			String id;
@@ -461,8 +453,7 @@ Drawing DrawEquation(const String &str)
 	}
 }
 
-QtfRichObject QtfEquation(const String &str)
-{
+QtfRichObject QtfEquation(const String &str) {
 	Drawing drw = DrawEquation(str);
 	
 	Size sz = drw.GetSize();

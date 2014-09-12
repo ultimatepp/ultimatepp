@@ -492,7 +492,6 @@ bool TrashBinClear() {
 #include <sys/stat.h>
 #include <fcntl.h>
 
-// This system files are like pipes: it is not possible to get the length to size the buffer
 String LoadFile_Safe(const String fileName)
 {
 #ifdef PLATFORM_POSIX
@@ -501,7 +500,7 @@ String LoadFile_Safe(const String fileName)
 	int fid = _wopen(fileName.ToWString(), O_RDONLY|O_BINARY);
 #endif
 	if (fid < 0) 
-		return String("");
+		return String();
 	const int size = 1024;
 	int nsize;
 	StringBuffer s;
@@ -509,6 +508,35 @@ String LoadFile_Safe(const String fileName)
 	while((nsize = read(fid, buf, size)) == size) 
 		s.Cat(buf, size);
 	if (nsize > 1)
+		s.Cat(buf, nsize-1);
+	close(fid);
+	return s;
+}
+
+String LoadFile(const char *fileName, off_t from, size_t len)
+{
+#ifdef PLATFORM_POSIX
+	int fid = open(fileName, O_RDONLY);
+#else
+	int fid = _wopen(String(fileName).ToWString(), O_RDONLY|O_BINARY);
+#endif
+	if (fid < 0) 
+		return String();
+	if (0 > lseek(fid, from, SEEK_SET))
+		return String();
+	size_t size = 1024;
+	if (len != 0 && size > len)
+		size = len;
+	int nsize;
+	StringBuffer s;
+	Buffer<char> buf(size);
+	size_t loaded;
+	for (loaded = 0; (nsize = read(fid, buf, size)) == size && (len == 0 || loaded < len); loaded += nsize) {
+		if (len != 0 && loaded + size > len)
+			size = len - loaded;
+		s.Cat(buf, size);
+	}
+	if (nsize > 1 && (len == 0 || loaded < len))
 		s.Cat(buf, nsize-1);
 	close(fid);
 	return s;
