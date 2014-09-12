@@ -1,9 +1,21 @@
 #ifndef _ScatterCtrl_Properties_h_
 #define _ScatterCtrl_Properties_h_
 
-class GeneralTab : public WithGeneral<StaticRect> {
+class MeasuresTab : public WithMeasures<StaticRect> {
 public:
-	typedef GeneralTab CLASSNAME;
+	typedef MeasuresTab CLASSNAME;
+	
+	void Init(ScatterCtrl &scatter);
+
+private:
+	ScatterCtrl *pscatter;
+	
+	void Change();
+};
+
+class TextsTab : public WithTexts<StaticRect> {
+public:
+	typedef TextsTab CLASSNAME;
 	
 	void Init(ScatterCtrl &scatter);
 
@@ -79,7 +91,8 @@ public:
 		
 private:
 	ScatterCtrl& scatter;
-	GeneralTab general;
+	MeasuresTab measures;
+	TextsTab texts;
 	LegendTab legend;
 	SeriesTab series;
 	DataTab data;

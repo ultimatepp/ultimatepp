@@ -15,7 +15,36 @@ void ScatterCtrl::DoShowEditDlg() {
 	PropertiesDlg(*this).Run(true);
 }
 
-void GeneralTab::Init(ScatterCtrl& scatter) {
+void MeasuresTab::Init(ScatterCtrl& scatter) {
+	CtrlLayout(*this);
+	SizePos();
+	
+	pscatter = &scatter;
+	
+	xMin <<= scatter.GetXMin();
+	xMax <<= scatter.GetXRange() + scatter.GetXMin();
+	yMin <<= scatter.GetYMin();
+	yMax <<= scatter.GetYRange() + scatter.GetYMin();
+	yMin2 <<= scatter.GetYMin2();
+	yMax2 <<= scatter.GetY2Range() + scatter.GetYMin2();
+	
+	butUpdate.WhenAction = THISBACK(Change);
+	
+	Change();
+}
+	
+void MeasuresTab::Change() {
+	ScatterCtrl &scatter = *pscatter;
+	
+    scatter.SetXYMin(xMin, yMin, yMin2);
+    scatter.SetMinUnits(xMin, yMin);
+	scatter.SetRange(xMax - xMin, yMax - yMin, yMax2 - yMin2);
+
+	scatter.SetModify();
+	scatter.Refresh();
+}
+
+void TextsTab::Init(ScatterCtrl& scatter) {
 	CtrlLayout(*this);
 	SizePos();
 	
@@ -38,15 +67,22 @@ void GeneralTab::Init(ScatterCtrl& scatter) {
 	bottomMargin <<= scatter.GetPlotAreaBottomMargin();
 	bottomMargin <<= THISBACK(Change);
 	
+	mouseHandlingX <<= scatter.GetMouseHandlingX();
+	mouseHandlingX <<= THISBACK(Change);
+	mouseHandlingY <<= scatter.GetMouseHandlingY();
+	mouseHandlingY <<= THISBACK(Change);
+	
 	Change();
 }
 	
-void GeneralTab::Change() {
+void TextsTab::Change() {
 	ScatterCtrl &scatter = *pscatter;
 	
 	scatter.SetTitle(title);
     scatter.SetLabels(xLabel, yLabel, yLabel2);
 	scatter.SetPlotAreaMargin(~leftMargin, ~rightMargin, ~topMargin, ~bottomMargin);
+
+	scatter.SetMouseHandling(mouseHandlingX, mouseHandlingY);
 
 	scatter.SetModify();
 	scatter.Refresh();
@@ -136,7 +172,7 @@ void LegendTab::Change() {
 	scatter.SetLegendFillColor(fillColor.GetData()).SetLegendBorderColor(borderColor.GetData());
 	scatter.SetLegendPosX(tableHoriz).SetLegendPosY(tableVert);
 	scatter.SetLegendNumCols(numCols);
-              
+    
 	scatter.SetModify();
 	scatter.Refresh();
 }
@@ -316,7 +352,8 @@ PropertiesDlg::PropertiesDlg(ScatterCtrl& scatter) : scatter(scatter)
 	
 	Title(t_("Scatter properties"));
 	
-	tab.Add(general, t_("General"));
+	tab.Add(measures, t_("Measures"));
+	tab.Add(texts, t_("Texts"));
 	tab.Add(legend, t_("Legend"));
 	tab.Add(series, t_("Series"));
 	tab.Add(data, t_("Data"));
@@ -328,8 +365,10 @@ PropertiesDlg::PropertiesDlg(ScatterCtrl& scatter) : scatter(scatter)
 
 void PropertiesDlg::OnTab() 
 {
-	if (tab.IsAt(general))
-		general.Init(scatter);
+	if (tab.IsAt(measures))
+		measures.Init(scatter);
+	else if (tab.IsAt(texts))
+		texts.Init(scatter);
 	else if (tab.IsAt(legend))
 		legend.Init(scatter);
 	else if (tab.IsAt(series))

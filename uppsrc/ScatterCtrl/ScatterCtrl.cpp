@@ -422,6 +422,17 @@ void ScatterCtrl::InsertSeries(int id, ArrayCtrl &data, bool useCols, int idX, i
 	InsertSeries<ArrayCtrlSource>(id, data, useCols, idX, idY, beginData, numData);
 }
 
+ScatterCtrl &ScatterCtrl::AddSeries(GridCtrl &data, bool useCols, int idX, int idY, int idZ, int beginData, int numData)
+{
+	AddSeries<GridCtrlSource>(data, useCols, idX, idY, beginData, numData);
+	return *this;
+}
+
+void ScatterCtrl::InsertSeries(int id, GridCtrl &data, bool useCols, int idX, int idY, int idZ, int beginData, int numData)
+{
+	InsertSeries<GridCtrlSource>(id, data, useCols, idX, idY, beginData, numData);
+}
+
 ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1)
 {
 	paintInfo = mouseHandlingX = mouseHandlingY = isScrolling = isLabelPopUp = false;
