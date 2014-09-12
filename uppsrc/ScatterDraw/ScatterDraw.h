@@ -72,7 +72,7 @@ protected:
 	public:
 		ScatterSeries()	{pD = 0;}
 		void SetDataSource(DataSource *pointsData, bool ownsData = true) {pD = pointsData; owns = ownsData;}
-		inline DataSource *PointsData()	{return pD;}
+		inline DataSource *PointsData()	{ASSERT_(!pD->IsDeleted(), "DataSource in ScatterCtrl/Draw has been deleted.\nIt has been probably declared in a function.");	return pD;}
 		~ScatterSeries()	{if(pD && owns) delete pD;}
 	private:
 		DataSource *pD;
@@ -139,13 +139,13 @@ public:
 	
 	ScatterDraw& ShowLegend(bool show = true) 		{showLegend = show;		return *this;}
 	bool GetShowLegend()							{return showLegend;}
-	ScatterDraw& SetLegendPos(const Point &pos) 	{legendPos = pos;	showLegend = true;	return *this;}
-	ScatterDraw& SetLegendPosX(int x) 				{legendPos.x = x;	showLegend = true;	return *this;}
-	ScatterDraw& SetLegendPosY(int y) 				{legendPos.y = y;	showLegend = true;	return *this;}
+	ScatterDraw& SetLegendPos(const Point &pos) 	{legendPos = pos;		return *this;}
+	ScatterDraw& SetLegendPosX(int x) 				{legendPos.x = x;		return *this;}
+	ScatterDraw& SetLegendPosY(int y) 				{legendPos.y = y;		return *this;}
 	Point& GetLegendPos() 							{return legendPos;}
-	ScatterDraw& SetLegendNumCols(int num) 			{legendNumCols = num;		showLegend = true;	return *this;}
+	ScatterDraw& SetLegendNumCols(int num) 			{legendNumCols = num;	return *this;}
 	int GetLegendNumCols() 							{return legendNumCols;}
-	ScatterDraw& SetLegendRowSpacing(int num) 		{legendRowSpacing = num;	showLegend = true;	return *this;}
+	ScatterDraw& SetLegendRowSpacing(int num) 		{legendRowSpacing = num;return *this;}
 	int GetLegendRowSpacing() 						{return legendRowSpacing;}
 	enum LEGEND_POS {
 		LEGEND_TOP,
@@ -156,8 +156,8 @@ public:
 	};
 	ScatterDraw& SetLegendAnchor(int anchor) 		{legendAnchor = anchor;	return *this;}
 	int GetLegendAnchor() 							{return legendAnchor;}
-	ScatterDraw& SetLegendFillColor(const Color &color) {legendFillColor = color;	return *this;}
-	ScatterDraw& SetLegendBorderColor(const Color &color) {legendBorderColor = color;	return *this;}	
+	ScatterDraw& SetLegendFillColor(const Color &color) 	{legendFillColor = color;	return *this;}
+	ScatterDraw& SetLegendBorderColor(const Color &color) 	{legendBorderColor = color;	return *this;}	
 	Color& GetLegendFillColor() 					{return legendFillColor;}
 	Color& GetLegendBorderColor() 					{return legendBorderColor;}
 	
@@ -196,7 +196,7 @@ public:
 	
 	ScatterDraw &SetPolar(bool polar = true)			{isPolar = polar; 	return *this;};
 	
-	ScatterDraw &AddSeries(double *yData, int numData, double x0 = 0, double deltaX = 1)
+	ScatterDraw &AddSeries(double *yData, int numData, double x0, double deltaX)
 														{return AddSeries<CArray>(yData, numData, x0, deltaX);}
 	ScatterDraw &AddSeries(double *xData, double *yData, int numData)
 														{return AddSeries<CArray>(yData, xData, numData);}
@@ -239,55 +239,55 @@ public:
 								{return _AddSeries(new C(arg1, arg2, arg3, arg4, arg5, arg6));}
 		
 	template <class Y>
-	ScatterDraw &AddSeries(Vector<Y> &yData)		{return _AddSeries(new VectorY<Y>(yData));}
+	ScatterDraw &AddSeries(Vector<Y> &yData, double x0, double deltaX)		{return _AddSeries(new VectorY<Y>(yData, x0, deltaX));}
 	template <class Y>
-	ScatterDraw &AddSeries(Upp::Array<Y> &yData)	{return _AddSeries(new ArrayY<Y>(yData));}
+	ScatterDraw &AddSeries(Upp::Array<Y> &yData, double x0, double deltaX)	{return _AddSeries(new ArrayY<Y>(yData, x0, deltaX));}
 	template <class X, class Y>
 	ScatterDraw &AddSeries(VectorMap<X, Y> &data)	{return _AddSeries(new VectorMapXY<X, Y>(data));}
 	template <class X, class Y>
 	ScatterDraw &AddSeries(ArrayMap<X, Y> &data)	{return _AddSeries(new ArrayMapXY<X, Y>(data));}
 	
-	void InsertSeries(int index, double *yData, int numData, double x0 = 0, double deltaX = 1);
-	void InsertSeries(int index, double *xData, double *yData, int numData);
-	void InsertSeries(int index, Vector<double> &xData, Vector<double> &yData);
-	void InsertSeries(int index, Upp::Array<double> &xData, Upp::Array<double> &yData);
-	void InsertSeries(int index, Vector<Pointf> &points);
-	void InsertSeries(int index, Upp::Array<Pointf> &points);
-	void InsertSeries(int index, double (*function)(double));
-	void InsertSeries(int index, Pointf (*function)(double), int np, double from = 0, double to = 1);
-	void InsertSeries(int index, PlotExplicFunc &function);
-	void InsertSeries(int index, PlotParamFunc function, int np, double from = 0, double to = 1);
-	void _InsertSeries(int index, DataSource *data);
+	ScatterDraw &InsertSeries(int index, double *yData, int numData, double x0 = 0, double deltaX = 1);
+	ScatterDraw &InsertSeries(int index, double *xData, double *yData, int numData);
+	ScatterDraw &InsertSeries(int index, Vector<double> &xData, Vector<double> &yData);
+	ScatterDraw &InsertSeries(int index, Upp::Array<double> &xData, Upp::Array<double> &yData);
+	ScatterDraw &InsertSeries(int index, Vector<Pointf> &points);
+	ScatterDraw &InsertSeries(int index, Upp::Array<Pointf> &points);
+	ScatterDraw &InsertSeries(int index, double (*function)(double));
+	ScatterDraw &InsertSeries(int index, Pointf (*function)(double), int np, double from = 0, double to = 1);
+	ScatterDraw &InsertSeries(int index, PlotExplicFunc &function);
+	ScatterDraw &InsertSeries(int index, PlotParamFunc function, int np, double from = 0, double to = 1);
+	ScatterDraw &_InsertSeries(int index, DataSource *data);
 	
 	template <class C>
-	void InsertSeries(int index) 		{_InsertSeries(index, new C());}	
+	ScatterDraw &InsertSeries(int index) 	{return _InsertSeries(index, new C());}	
 	template <class C, class T1>
-	void InsertSeries(int index, T1 &arg1) 				
-									{_InsertSeries(index, new C(arg1));}
+	ScatterDraw &InsertSeries(int index, T1 &arg1) 				
+									{return _InsertSeries(index, new C(arg1));}
 	template <class C, class T1, class T2>
-	void InsertSeries(int index, T1 &arg1, T2 &arg2) 		
-									{_InsertSeries(index, new C(arg1, arg2));}
+	ScatterDraw &InsertSeries(int index, T1 &arg1, T2 &arg2) 		
+									{return _InsertSeries(index, new C(arg1, arg2));}
 	template <class C, class T1, class T2, class T3>
-	void InsertSeries(int index, T1 &arg1, T2 &arg2, T3 &arg3) 								
-									{_InsertSeries(index, new C(arg1, arg2, arg3));}
+	ScatterDraw &InsertSeries(int index, T1 &arg1, T2 &arg2, T3 &arg3) 								
+									{return _InsertSeries(index, new C(arg1, arg2, arg3));}
 	template <class C, class T1, class T2, class T3, class T4>
-	void InsertSeries(int index, T1 &arg1, T2 &arg2, T3 &arg3, T4 &arg4)						
-									{_InsertSeries(index, new C(arg1, arg2, arg3, arg4));}
+	ScatterDraw &InsertSeries(int index, T1 &arg1, T2 &arg2, T3 &arg3, T4 &arg4)						
+									{return _InsertSeries(index, new C(arg1, arg2, arg3, arg4));}
 	template <class C, class T1, class T2, class T3, class T4, class T5>
-	void InsertSeries(int index, T1 &arg1, T2 &arg2, T3 &arg3, T4 &arg4, T5 &arg5)				
-									{_InsertSeries(index, new C(arg1, arg2, arg3, arg4, arg5));}
+	ScatterDraw &InsertSeries(int index, T1 &arg1, T2 &arg2, T3 &arg3, T4 &arg4, T5 &arg5)				
+									{return _InsertSeries(index, new C(arg1, arg2, arg3, arg4, arg5));}
 	template <class C, class T1, class T2, class T3, class T4, class T5, class T6>
-	void InsertSeries(int index, T1 &arg1, T2 &arg2, T3 &arg3, T4 &arg4, T5 &arg5, T6 &arg6)	
-									{_InsertSeries(index, new C(arg1, arg2, arg3, arg4, arg5, arg6));}
-			
+	ScatterDraw &InsertSeries(int index, T1 &arg1, T2 &arg2, T3 &arg3, T4 &arg4, T5 &arg5, T6 &arg6)	
+									{return _InsertSeries(index, new C(arg1, arg2, arg3, arg4, arg5, arg6));}
+
 	template <class Y>
-	void InsertSeries(int index, Vector<Y> &yData)		{_InsertSeries(index, new VectorY<Y>(yData));}
+	ScatterDraw &InsertSeries(int index, Vector<Y> &yData, double x0, double deltaX)		{return _InsertSeries(index, new VectorY<Y>(yData, x0, deltaX));}
 	template <class Y>
-	void InsertSeries(int index, Upp::Array<Y> &yData)	{_InsertSeries(index, new ArrayY<Y>(yData));}
+	ScatterDraw &InsertSeries(int index, Upp::Array<Y> &yData, double x0, double deltaX)	{return _InsertSeries(index, new ArrayY<Y>(yData, x0, deltaX));}
 	template <class X, class Y>
-	void InsertSeries(int index, VectorMap<X, Y> &data){_InsertSeries(index, new VectorMapXY<X, Y>(data));}
+	ScatterDraw &InsertSeries(int index, VectorMap<X, Y> &data)	{return _InsertSeries(index, new VectorMapXY<X, Y>(data));}
 	template <class X, class Y>
-	void InsertSeries(int index, ArrayMap<X, Y> &data)	{_InsertSeries(index, new ArrayMapXY<X, Y>(data));}
+	ScatterDraw &InsertSeries(int index, ArrayMap<X, Y> &data)	{return _InsertSeries(index, new ArrayMapXY<X, Y>(data));}
 	
 	int64 GetCount(int index);
 	void GetValues(int index, int64 idata, double &x, double &y);
@@ -589,7 +589,7 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 	Size ly  = GetTextSize(yLabel, 	fontLabel);
 	Size ly2 = GetTextSize(yLabel2, italicLabel);
 	DrawText(w, (plotW - lx.cx)/2., plotH + scale*(vPlotBottom - 2) - lx.cy, 0, xLabel, fontLabel, labelsColor);
-	DrawText(w, scale*(2 - hPlotLeft), 			   (plotH + ly.cx)/2.,  900, yLabel,  fontLabel, labelsColor);
+	DrawText(w, scale*(2 - hPlotLeft), (plotH + ly.cx)/2.,  900, yLabel,  fontLabel, labelsColor);
 	DrawText(w, scale*(size.cx - 2) - ly2.cy - hPlotLeft, (plotH + ly2.cx)/2., 900, yLabel2, italicLabel, labelsColor);
 
 	drawXReticle &=  (xRange != 0 && xMajorUnit != 0);
@@ -731,100 +731,121 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 	}
 
 	if (!series.IsEmpty()) {
-		for (int j = 0; j < series.GetCount(); j++) {
-			if (series[j].opacity == 0 || (!series[j].seriesPlot && !series[j].markPlot) || 
-				(!series[j].PointsData()->IsExplicit() && series[j].PointsData()->GetCount() == 0))
-				continue;
-			Vector<Point> points;
-			if (series[j].PointsData()->IsParam()) {
-				double xmin = 0;
-				double xmax = double(series[j].PointsData()->GetCount());
-				for (double x = xmin; x <= xmax; x++) {
-					double xx = series[j].PointsData()->x(x);
-					double yy = series[j].PointsData()->y(x);
-					int ix = fround(plotW*(xx - xMin)/xRange);
-					int iy;
-					if (series[j].primaryY)
-						iy = fround(plotH*(yy - yMin)/yRange);
-					else
-						iy = fround(plotH*(yy - yMin2)/yRange2);
-					points << Point(ix, plotH - iy);
-				}
-			} else if (series[j].PointsData()->IsExplicit()) {
-				double xmin = xMin - 1;
-				double xmax = xMin + xRange + 1; 	
-				double dx = double(xmax - xmin)/plotW;		
-				for (double xx = xmin; xx < xmax; xx += dx) {
-					double yy = series[j].PointsData()->f(xx);
-					int ix = fround(plotW*(xx - xMin)/xRange);
-					int iy;
-					if (series[j].primaryY)
-						iy = fround(plotH*(yy - yMin)/yRange);
-					else
-						iy = fround(plotH*(yy - yMin2)/yRange2);
-					points << Point(ix, plotH - iy);
-				}
-			} else {
-				int64 imin, imax;
-				if (series[j].sequential) {
-					imin = imax = Null;
-					for (int64 i = 1; i < series[j].PointsData()->GetCount() - 1; ++i) {
-						if (IsNull(imin)) {
-							if (series[j].PointsData()->x(i) >= xMin)
-								imin = i - 1;
-						} else if (IsNull(imax)) {
-							if (series[j].PointsData()->x(i) >= xMin + xRange) 
-								imax = i + 1;
-						}
+		try {
+			for (int j = 0; j < series.GetCount(); j++) {
+				if (series[j].opacity == 0 || (!series[j].seriesPlot && !series[j].markPlot) || 
+					(!series[j].PointsData()->IsExplicit() && series[j].PointsData()->GetCount() == 0))
+					continue;
+				Vector<Point> points;
+				if (series[j].PointsData()->IsParam()) {
+					double xmin = 0;
+					double xmax = double(series[j].PointsData()->GetCount());
+					for (double x = xmin; x <= xmax; x++) {
+						double xx = series[j].PointsData()->x(x);
+						double yy = series[j].PointsData()->y(x);
+						if (IsNull(xx) || IsNull(yy))
+							continue;
+						int ix = fround(plotW*(xx - xMin)/xRange);
+						int iy;
+						if (series[j].primaryY)
+							iy = fround(plotH*(yy - yMin)/yRange);
+						else
+							iy = fround(plotH*(yy - yMin2)/yRange2);
+						points << Point(ix, plotH - iy);
 					}
-					if (IsNull(imin))
-					    imin = 0;
-					if (IsNull(imax))
-					    imax = series[j].PointsData()->GetCount() - 1;
+				} else if (series[j].PointsData()->IsExplicit()) {
+					double xmin = xMin - 1;
+					double xmax = xMin + xRange + 1; 	
+					double dx = double(xmax - xmin)/plotW;		
+					for (double xx = xmin; xx < xmax; xx += dx) {
+						double yy = series[j].PointsData()->f(xx);
+						if (IsNull(yy))
+							continue;
+						int ix = fround(plotW*(xx - xMin)/xRange);
+						int iy;
+						if (series[j].primaryY)
+							iy = fround(plotH*(yy - yMin)/yRange);
+						else
+							iy = fround(plotH*(yy - yMin2)/yRange2);
+						points << Point(ix, plotH - iy);
+					}
 				} else {
-					imin = 0;
-					imax = series[j].PointsData()->GetCount();
-				}
-				double dxpix;
-				if (fastViewX) 
-					dxpix = (series[j].PointsData()->x(imax) - series[j].PointsData()->x(imin))/plotW;			
-				int npix = 1;
-				for (int64 i = imin; i < imax; ) {
-					double xx, yy;
-					if (fastViewX) {					
-						yy = series[j].PointsData()->y(i);
-						int64 ii;
-						double maxv = dxpix*npix;
-						for (ii = 1; series[j].PointsData()->x(i + ii) < maxv && i + ii < imax; ++ii) 
-							yy += series[j].PointsData()->y(i + ii);
-						yy /= double(ii);
-						xx = series[j].PointsData()->x(i);
-						i += ii;
-						npix++;
+					int64 imin, imax;
+					if (series[j].sequential) {
+						imin = imax = Null;
+						for (int64 i = 1; i < series[j].PointsData()->GetCount() - 1; ++i) {
+							double xx = series[j].PointsData()->x(i);
+							if (IsNull(xx))
+								continue;
+							if (IsNull(imin)) {
+								if (xx >= xMin)
+									imin = i - 1;
+							} else if (IsNull(imax)) {
+								if (xx >= xMin + xRange) 
+									imax = i + 1;
+							}
+						}
+						if (IsNull(imin))
+						    imin = 0;
+						if (IsNull(imax))
+						    imax = series[j].PointsData()->GetCount() - 1;
 					} else {
-						xx = series[j].PointsData()->x(i);
-						yy = series[j].PointsData()->y(i);
-						++i;
+						imin = 0;
+						imax = series[j].PointsData()->GetCount();
 					}
-					int ix = fround(plotW*(xx - xMin)/xRange);
-					int iy;
-					if (series[j].primaryY)
-						iy = fround(plotH*(yy - yMin)/yRange);
-					else
-						iy = fround(plotH*(yy - yMin2)/yRange2);
-					points << Point(ix, plotH - iy);
+					double dxpix;
+					if (fastViewX) 
+						dxpix = (series[j].PointsData()->x(imax) - series[j].PointsData()->x(imin))/plotW;			
+					int npix = 1;
+					for (int64 i = imin; i < imax; ) {
+						double xx, yy;
+						if (fastViewX) {					
+							yy = series[j].PointsData()->y(i);
+							if (IsNull(yy))
+								continue;
+							int64 ii;
+							double maxv = dxpix*npix;
+							for (ii = 1; series[j].PointsData()->x(i + ii) < maxv && i + ii < imax; ++ii) {
+								double dd = series[j].PointsData()->y(i + ii);
+								if (IsNull(dd))
+									continue;
+								yy += dd;
+							}
+							yy /= double(ii);
+							xx = series[j].PointsData()->x(i);
+							if (IsNull(xx))
+								continue;
+							i += ii;
+							npix++;
+						} else {
+							xx = series[j].PointsData()->x(i);
+							yy = series[j].PointsData()->y(i);
+							++i;
+							if (IsNull(xx) || IsNull(yy))
+								continue;
+						}
+						int ix = fround(plotW*(xx - xMin)/xRange);
+						int iy;
+						if (series[j].primaryY)
+							iy = fround(plotH*(yy - yMin)/yRange);
+						else
+							iy = fround(plotH*(yy - yMin2)/yRange2);
+						points << Point(ix, plotH - iy);
+					}
+				}
+				if (!points.IsEmpty() && series[j].seriesPlot) 
+					series[j].seriesPlot->Paint(w, points, scale, series[j].opacity, 
+												fround(series[j].thickness), series[j].color, 
+												series[j].dash, plotAreaColor, series[j].fillColor, plotW/xRange, plotH/yRange, 
+												int(plotH*(1 + yMin/yRange)));
+			
+				if (series[j].markWidth >= 1 && series[j].markPlot) {
+					for (int i = 0; i < points.GetCount(); i++) 
+						series[j].markPlot->Paint(w, scale, points[i], series[j].markWidth, series[j].markColor);              
 				}	
 			}
-			if (!points.IsEmpty() && series[j].seriesPlot) 
-				series[j].seriesPlot->Paint(w, points, scale, series[j].opacity, 
-											fround(series[j].thickness), series[j].color, 
-											series[j].dash, plotAreaColor, series[j].fillColor, plotW/xRange, plotH/yRange, 
-											int(plotH*(1 + yMin/yRange)));
-		
-			if (series[j].markWidth >= 1 && series[j].markPlot) {
-				for (int i = 0; i < points.GetCount(); i++) 
-					series[j].markPlot->Paint(w, scale, points[i], series[j].markWidth, series[j].markColor);              
-			}	
+		} catch(ValueTypeError error) {
+			ASSERT_(true, error);
 		}
 	}
 	ClipEnd(w);
