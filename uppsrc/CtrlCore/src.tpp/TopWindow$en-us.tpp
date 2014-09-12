@@ -42,7 +42,7 @@ defined, performs RejectBreak(IDCANCEL). Otherwise, if there
 is Breaker with IDYES (as assigned to exit Ctrl by CtrlLayoutExit), 
 performs AcceptBreak(IDYES). If none if that is true, AcceptBreak(IDOK) 
 is performed.&]
-[s2; If ToWindow does not run modal loop, it is closed `- in this 
+[s2; If TopWindow does not run modal loop, it is closed `- in this 
 case, any state backup created by Backup method is scratched.&]
 [s3; &]
 [s4;%- &]
