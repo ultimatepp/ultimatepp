@@ -24,6 +24,12 @@ esES("Polinomio")
 euES("Polinomio")
 frFR("Polyn\303\264me")
 
+T_("Sinusoidal")
+caES("")
+esES("")
+euES("")
+frFR("")
+
 T_("Fourier")
 caES("")
 esES("")

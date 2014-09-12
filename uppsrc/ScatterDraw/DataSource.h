@@ -7,8 +7,8 @@ class DataSource {
 public:
 	typedef double (DataSource::*Getdatafun)(int64 id);
 
-	DataSource() : isParam(false), isExplicit(false) {}
-	virtual ~DataSource() {}	
+	DataSource() : isParam(false), isExplicit(false), key(111111) {}
+	virtual ~DataSource() 				{key = 0;}	
 	virtual double y(int64 id)			{return xn(0, id);}
 	virtual double x(int64 id)			{return xn(1, id);}
 	virtual double xn(int n, int64 id)	{NEVER();	return Null;}
@@ -20,6 +20,7 @@ public:
 	virtual int64 GetCount()			{NEVER();	return Null;}
 	bool IsParam()						{return isParam;}
 	bool IsExplicit()					{return isExplicit;}
+	bool IsDeleted()					{return key != 111111;}
 
 	virtual double MinY() 		{return Min(&DataSource::y);}	
 	virtual double MinX() 		{return Min(&DataSource::x);}	
@@ -36,6 +37,9 @@ protected:
 	virtual double Min(Getdatafun getdata);
 	virtual double Max(Getdatafun getdata);
 	virtual double Avg(Getdatafun getdata);
+
+private:
+	int key;
 };
 
 class CArray : public DataSource {
@@ -62,9 +66,12 @@ private:
 
 public:
 	VectorY(Vector<Y> &yData, double x0, double deltaX) : yData(&yData), x0(x0), deltaX(deltaX) {}
-	virtual inline double y(int64 id)	{return (*yData)[id];}
+	virtual inline double y(int64 id)	{return (*yData)[ptrdiff_t(id)];}
 	virtual inline double x(int64 id) 	{return id*deltaX + x0;}
 	virtual inline int64 GetCount()		{return yData->GetCount();}
+	virtual double MinX() 				{return x0;}	
+	virtual double MaxX() 				{return x0 + (yData->GetCount() - 1)*deltaX;}	
+	virtual double AvgX() 				{return x0 + ((yData->GetCount() - 1)*deltaX)/2.;}
 };	
 
 template <class Y>
@@ -75,9 +82,12 @@ private:
 
 public:
 	ArrayY(Upp::Array<Y> &yData, double x0, double deltaX) : yData(&yData), x0(x0), deltaX(deltaX) {}
-	virtual inline double y(int64 id)	{return (*yData)[id];}
+	virtual inline double y(int64 id)	{return (*yData)[ptrdiff_t(id)];}
 	virtual inline double x(int64 id) 	{return id*deltaX + x0;}
 	virtual inline int64 GetCount()		{return yData->GetCount();}
+	virtual double MinX() 				{return x0;}	
+	virtual double MaxX() 				{return x0 + yData->GetCount()*deltaX;}	
+	virtual double AvgX() 				{return (x0 + yData->GetCount()*deltaX)/2.;}
 };
 
 template <class Y>
@@ -138,7 +148,7 @@ public:
 	VectorDouble(const Vector<double> &yData, Vector<double> &xData) : xData(&xData), yData(&yData) {}
 	virtual inline double y(int64 id)	{return (*yData)[int(id)];}
 	virtual inline double x(int64 id) 	{return (*xData)[int(id)];}
-	virtual inline int64 GetCount()		{return xData->GetCount();}
+	virtual inline int64 GetCount()		{return min(xData->GetCount(), yData->GetCount());}
 };
 
 class ArrayDouble : public DataSource {
@@ -149,7 +159,7 @@ public:
 	ArrayDouble(const Upp::Array<double> &yData, Upp::Array<double> &xData) : xData(&xData), yData(&yData) {}
 	virtual inline double y(int64 id)	{return (*yData)[int(id)];}
 	virtual inline double x(int64 id) 	{return (*xData)[int(id)];}
-	virtual inline int64 GetCount()		{return xData->GetCount();}
+	virtual inline int64 GetCount()		{return min(xData->GetCount(), yData->GetCount());}
 };
 
 class VectorPointf : public DataSource {

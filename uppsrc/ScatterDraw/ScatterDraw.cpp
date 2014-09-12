@@ -343,73 +343,84 @@ void ScatterDraw::FitToData(bool vertical) {
 	    	linkedCtrls[i]->DoFitToData(vertical);
 	}
 }
-
+	
 void ScatterDraw::DoFitToData(bool vertical) {
 	double minx, maxx, miny, miny2, maxy, maxy2;
 	minx = miny = miny2 = -DOUBLE_NULL;
 	maxx = maxy = maxy2 = DOUBLE_NULL;
 	
-	for (int j = 0; j < series.GetCount(); j++) {
-		if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
-			continue;
-		minx = min(minx, series[j].PointsData()->MinX());
-		maxx = max(maxx, series[j].PointsData()->MaxX());
-	}
-	if (vertical) {
+	try {
 		for (int j = 0; j < series.GetCount(); j++) {
 			if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
 				continue;
-			for (int64 i = 0; i < series[j].PointsData()->GetCount(); i++) {
-				if (series[j].primaryY) {
-					if (series[j].PointsData()->y(i) < miny)
-						miny = series[j].PointsData()->y(i);
-					if (series[j].PointsData()->y(i) > maxy)
-						maxy = series[j].PointsData()->y(i);
-				} else {
-					if (series[j].PointsData()->y(i) < miny2)
-						miny2 = series[j].PointsData()->y(i);
-					if (series[j].PointsData()->y(i) > maxy2)
-						maxy2 = series[j].PointsData()->y(i);
+			minx = min(minx, series[j].PointsData()->MinX());
+			maxx = max(maxx, series[j].PointsData()->MaxX());
+		}
+		if (vertical) {
+			for (int j = 0; j < series.GetCount(); j++) {
+				if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
+					continue;
+				for (int64 i = 0; i < series[j].PointsData()->GetCount(); i++) {
+					double py = series[j].PointsData()->y(i);
+					if (IsNull(py))
+						continue;
+					if (series[j].primaryY) {
+						if (py < miny)
+							miny = py;
+						if (py > maxy)
+							maxy = py;
+					} else {
+						if (py < miny2)
+							miny2 = py;
+						if (py > maxy2)
+							maxy2 = py;
+					}
 				}
-			}
-		}		
-	}
-	if (minx != -DOUBLE_NULL) {
- 		double deltaX = xMin - minx;
-		xMin -= deltaX;
-		xMinUnit += deltaX;
-		AdjustMinUnitX();
-		if (maxx == minx) {
-			if (maxx == 0) {
-				xRange = 2;
-				xMin = -1;
+			}		
+		}
+		if (minx != -DOUBLE_NULL) {
+			if (maxx == minx) {
+				if (maxx == 0) {
+					xRange = 2;
+					xMin = -1;
+				} else	
+					xRange = 2*maxx;
 			} else	
-				xRange = 2*maxx;
-		} else	
-			xRange = maxx - minx;
+				xRange = maxx - minx;
+			double deltaX = xMin - minx;
+			xMin -= deltaX;
+			xMinUnit += deltaX;
+			xMajorUnit = xRange/10;
+			AdjustMinUnitX();
+		}
+		if (vertical) {
+			if (miny != -DOUBLE_NULL) {
+				if (maxy == miny) 
+					yRange2 = maxy > 0 ? 2*maxy : 1;
+				else	
+					yRange = maxy - miny;
+				double deltaY = yMin - miny;
+				yMin -= deltaY;
+				yMinUnit += deltaY;
+				yMajorUnit = yRange/10; 
+				AdjustMinUnitY();
+			}
+			if (miny2 != -DOUBLE_NULL) {	
+				if (maxy2 == miny2) 
+					yRange2 = maxy2 > 0 ? 2*maxy2 : 1;
+				else	
+					yRange2 = maxy2 - miny2;
+				double deltaY2 = yMin2 - miny2;
+				yMin2 -= deltaY2;
+				yMinUnit2 += deltaY2;
+				yMajorUnit2 = yRange2/10; 
+				AdjustMinUnitY2();
+			}
+		}	
+	} catch (ValueTypeError err) {
+		ASSERT_(true, err);
+		return;
 	}
-	if (vertical) {
-		if (miny != -DOUBLE_NULL) {
-			double deltaY = yMin - miny;
-			yMin -= deltaY;
-			yMinUnit += deltaY;
-			AdjustMinUnitY();
-			if (maxy == miny) 
-				yRange2 = maxy > 0 ? 2*maxy : 1;
-			else	
-				yRange = maxy - miny;
-		}
-		if (miny2 != -DOUBLE_NULL) {	
-			double deltaY2 = yMin2 - miny2;
-			yMin2 -= deltaY2;
-			yMinUnit2 += deltaY2;
-			AdjustMinUnitY2();
-			if (maxy2 == miny2) 
-				yRange2 = maxy2 > 0 ? 2*maxy2 : 1;
-			else	
-				yRange2 = maxy2 - miny2;
-		}
-	}	
 	WhenSetRange();
 	WhenSetXYMin();
 	Refresh();
@@ -453,9 +464,9 @@ String ScatterDraw::VariableFormat(double range, double d) {
 	else if (0.1   <= range && range < 1) 	   return FormatDouble(d, 3);
 	else if (1	   <= range && range < 10) 	   return FormatDouble(d, 2);
 	else if (10	   <= range && range < 100)    return FormatDouble(d, 1);
-	else if (100   <= range && range < 100000) {
-						if (d < 1 && d > -1)   return "0";	// Never -0
-						else				   return FormatDouble(d, 0);
+	else if (100   <= range && range < 10000000) {
+						/*if (d < 1 && d > -1)   return "0";	// Never -0
+						else*/				   return FormatDouble(d, 0);
 	} else return FormatDoubleExp(d, 2);
 }
 
@@ -571,52 +582,53 @@ ScatterDraw &ScatterDraw::_AddSeries(DataSource *data) {
 	return *this;	
 }
 
-void ScatterDraw::InsertSeries(int index, double *yData, int numData, double x0, double deltaX) {
-	InsertSeries<CArray>(index, yData, numData, x0, deltaX);
+ScatterDraw &ScatterDraw::InsertSeries(int index, double *yData, int numData, double x0, double deltaX) {
+	return InsertSeries<CArray>(index, yData, numData, x0, deltaX);
 }
 	
-void ScatterDraw::InsertSeries(int index, double *xData, double *yData, int numData) {
-	InsertSeries<CArray>(index, xData, yData, numData);
+ScatterDraw &ScatterDraw::InsertSeries(int index, double *xData, double *yData, int numData) {
+	return InsertSeries<CArray>(index, xData, yData, numData);
 }
 
-void ScatterDraw::InsertSeries(int index, Vector<double> &xData, Vector<double> &yData) {
-	InsertSeries<VectorDouble>(index, xData, yData);
+ScatterDraw &ScatterDraw::InsertSeries(int index, Vector<double> &xData, Vector<double> &yData) {
+	return InsertSeries<VectorDouble>(index, xData, yData);
 }
 
-void ScatterDraw::InsertSeries(int index, Array<double> &xData, Array<double> &yData) {
-	InsertSeries<ArrayDouble>(index, xData, yData);
+ScatterDraw &ScatterDraw::InsertSeries(int index, Array<double> &xData, Array<double> &yData) {
+	return InsertSeries<ArrayDouble>(index, xData, yData);
 }
 		
-void ScatterDraw::InsertSeries(int index, Vector<Pointf> &points) {
-	InsertSeries<VectorPointf>(index, points);
+ScatterDraw &ScatterDraw::InsertSeries(int index, Vector<Pointf> &points) {
+	return InsertSeries<VectorPointf>(index, points);
 }
 
-void ScatterDraw::InsertSeries(int index, Array<Pointf> &points) {
-	InsertSeries<ArrayPointf>(index, points);
+ScatterDraw &ScatterDraw::InsertSeries(int index, Array<Pointf> &points) {
+	return InsertSeries<ArrayPointf>(index, points);
 }
 
-void ScatterDraw::InsertSeries(int index, double (*function)(double))	 {
-	InsertSeries<FuncSource>(index, function);
+ScatterDraw &ScatterDraw::InsertSeries(int index, double (*function)(double))	 {
+	return InsertSeries<FuncSource>(index, function);
 }
 
-void ScatterDraw::InsertSeries(int index, Pointf (*function)(double), int np, double from, double to)	 {
-	InsertSeries<FuncSourcePara>(index, function, np, from, to);
+ScatterDraw &ScatterDraw::InsertSeries(int index, Pointf (*function)(double), int np, double from, double to)	 {
+	return InsertSeries<FuncSourcePara>(index, function, np, from, to);
 }
 
-void ScatterDraw::InsertSeries(int index, PlotExplicFunc &function)	 {									
-	InsertSeries<PlotExplicFuncSource>(index, function);
+ScatterDraw &ScatterDraw::InsertSeries(int index, PlotExplicFunc &function)	 {									
+	return InsertSeries<PlotExplicFuncSource>(index, function);
 }
 
-void ScatterDraw::InsertSeries(int index, PlotParamFunc function, int np, double from, double to)	 {
-	InsertSeries<PlotParamFuncSource>(index, function, np, from, to);
+ScatterDraw &ScatterDraw::InsertSeries(int index, PlotParamFunc function, int np, double from, double to)	 {
+	return InsertSeries<PlotParamFuncSource>(index, function, np, from, to);
 }
 
-void ScatterDraw::_InsertSeries(int index, DataSource *data) {
+ScatterDraw &ScatterDraw::_InsertSeries(int index, DataSource *data) {
 	ASSERT(IsValid(index));
 	ScatterSeries &s = series.Insert(index);
 	s.Init(index);
 	s.SetDataSource(data);
 	Refresh();	
+	return *this;
 }
 
 int64 ScatterDraw::GetCount(int index) {
@@ -631,20 +643,35 @@ int64 ScatterDraw::GetCount(int index) {
 void ScatterDraw::GetValues(int index, int64 idata, double &x, double &y) {
 	ASSERT(IsValid(index) && !IsNull(GetCount(index)));
 	ASSERT(idata >= 0 && idata < series[index].PointsData()->GetCount());
-	x = series[index].PointsData()->x(idata);
-	y = series[index].PointsData()->y(idata);
+	try {
+		x = series[index].PointsData()->x(idata);
+		y = series[index].PointsData()->y(idata);
+	} catch(ValueTypeError error) {
+		ASSERT_(true, error);
+		x = y = Null;
+	}
 }
 
 double ScatterDraw::GetValueX(int index, int64 idata) {
 	ASSERT(IsValid(index) && !IsNull(GetCount(index)));
 	ASSERT(idata >= 0 && idata < series[index].PointsData()->GetCount());
-	return series[index].PointsData()->x(idata);
+	try {
+		return series[index].PointsData()->x(idata);
+	} catch(ValueTypeError error) {
+		ASSERT_(true, error);
+		return Null;
+	}
 }
 
 double ScatterDraw::GetValueY(int index, int64 idata) {
 	ASSERT(IsValid(index) && !IsNull(GetCount(index)));
 	ASSERT(idata >= 0 && idata < series[index].PointsData()->GetCount());
-	return series[index].PointsData()->y(idata);
+	try {
+		return series[index].PointsData()->y(idata);
+	} catch(ValueTypeError error) {
+		ASSERT_(true, error);
+		return Null;
+	}
 }
 	
 ScatterDraw &ScatterDraw::PlotStyle(SeriesPlot *data) {
@@ -1098,7 +1125,7 @@ void ScatterDraw::DoZoom(double scale, bool mouseX, bool mouseY) {
 				return;
 			}
 			double oldYMin = yMin;
-			yMin += yRange*(1-scale)/2.;
+			yMin += yRange*(1 - scale)/2.;
 			yMinUnit = oldYMin + yMinUnit - yMin;
 			AdjustMinUnitY();
 			double oldYMin2 = yMin2;
@@ -1576,7 +1603,7 @@ void FillPolylineOpa(Painter& w, const Vector<Point> &p, int scale, double opaci
 }
 
 void debug_h() {
-	;			// Do nothing. Just to set a breakpoint in templated functions
+	;			// It does nothing. Just to set a breakpoint in templated functions
 }
 
 INITBLOCK{

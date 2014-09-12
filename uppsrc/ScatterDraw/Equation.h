@@ -61,13 +61,26 @@ public:
 
 class PolynomialEquation : public ExplicitEquation {
 public:
-	PolynomialEquation() 				       {}
-	PolynomialEquation(const Array<double>& c) {SetCoeff(c);}
+	PolynomialEquation() 				       	{}
+	PolynomialEquation(const Array<double>& c) 	{SetCoeff(c);}
 	double f(double x);
-	virtual String GetName() 			       {return t_("Polynomial");}
-	virtual String GetFullName() 		       {return t_("Polynomial") + String(" n = ") + FormatInt(degree);}
+	virtual String GetName() 			       	{return t_("Polynomial");}
+	virtual String GetFullName() 		       	{return t_("Polynomial") + String(" n = ") + FormatInt(degree);}
 	virtual String GetEquation();
-	void SetDegree(int num)				       {degree = num;	SetNumCoeff(num + 1);}
+	void SetDegree(int num)				       	{degree = num;	SetNumCoeff(num + 1);}
+};	
+
+class SinEquation : public ExplicitEquation {
+public:
+	SinEquation() 					{coeff.Clear();	coeff << 0. << 0.1 << 0.1 << 0.1;}
+	SinEquation(double offset, double A, double w, double phi) 	{coeff.Clear();	coeff << offset << A << w << phi;}
+	double f(double x)				{return coeff[0] + coeff[1]*sin(coeff[2]*x + coeff[3]);}
+	virtual String GetName() 		{return t_("Sinusoidal");}
+	virtual String GetEquation()	{return FormatDoubleFix(coeff[0], numDigits) + " + " + 
+											FormatDoubleFix(coeff[1], numDigits) + "*sin(" +
+											FormatDoubleFix(coeff[2], numDigits) + "*t + " +
+											FormatDoubleFix(coeff[3], numDigits) + ")";}
+	void SetDegree(int num)			{NEVER();}
 };
 
 class FourierEquation : public ExplicitEquation {
@@ -80,6 +93,30 @@ public:
 	virtual String GetEquation();
 	void SetDegree(int num)				        {degree = num;	SetNumCoeff(2*num + 2);}
 };
+
+class ExponentialEquation : public ExplicitEquation {
+public:
+	ExponentialEquation() 						{SetCoeff(1, 0);}
+	ExponentialEquation(double c0, double c1)	{SetCoeff(c0, c1);}
+	double f(double x) 					{return coeff[0]*exp(-x) + coeff[1];}
+	virtual String GetName() 			{return t_("Exponential");}
+	virtual String GetEquation() 		{return FormatDoubleFix(fabs(coeff[0]), numDigits) + "*e^-x " +
+												(coeff[1] >= 0 ? "+" : "-") + " " + FormatDoubleFix(coeff[1], numDigits);}
+	void SetDegree(int num)				{NEVER();}
+};
+
+class Rational1Equation : public ExplicitEquation {
+public:
+	Rational1Equation() 				{SetCoeff(1, 0, 0);}
+	Rational1Equation(double c0, double c1, double c2)	{SetCoeff(c0, c1, c2);}
+	double f(double x) 					{return coeff[0]/(x + coeff[1]) + coeff[2];}
+	virtual String GetName() 			{return t_("Rational_1");}
+	virtual String GetEquation() 		{return FormatDoubleFix(fabs(coeff[0]), numDigits) + "/(x " + (coeff[1] >= 0 ? "+" : "-") + " " + 
+												FormatDoubleFix(fabs(coeff[1]), numDigits) + ") " + (coeff[2] >= 0 ? "+" : "-") + " " + 
+												FormatDoubleFix(fabs(coeff[2]), numDigits);}
+	void SetDegree(int num)				{NEVER();}
+};
+
 
 END_UPP_NAMESPACE
 
