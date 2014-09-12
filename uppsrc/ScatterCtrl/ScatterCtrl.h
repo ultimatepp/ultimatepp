@@ -39,7 +39,7 @@ public:
 		}
 	}
 	void Init(ArrayCtrl &_data, int idY, int idX, bool _useCols = true, int _beginData = 0, int _numData = Null) {
-		Vector<int> ids;
+		//Vector<int> ids;
 		ids << idY << idX;
 		Init(_data, ids, _useCols, _beginData, _numData);
 	}
@@ -64,6 +64,11 @@ private:
 
 public:
 	GridCtrlSource() : data(0), useCols(true), beginData(0), numData(Null)  {ids << 0 << 1;}
+	GridCtrlSource(GridCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int beginData = 0, int numData = Null) : 
+		data(&data), useCols(useCols), beginData(beginData), numData(numData) {
+		ids << idY << idX;
+		Init(data, ids, useCols, beginData, numData);
+	}
 	GridCtrlSource(GridCtrl &data, Vector<int> &_ids, bool useCols = true, int beginData = 0, int numData = Null) : 
 		data(&data), useCols(useCols), beginData(beginData), numData(numData) {
 		Init(data, ids, useCols, beginData, numData);
@@ -89,13 +94,27 @@ public:
 		ids << idY << idX;
 		Init(_data, ids, _useCols, _beginData, _numData);
 	}	
-	virtual inline double y(int64 id)	{return useCols ? data->Get(beginData + int(id), ids[0]) : data->Get(ids[0], beginData + int(id));};
-	virtual inline double x(int64 id) {
-		if (IsNull(ids[1]))
+	double GetVal(int64 id, int idx) {
+		if (IsNull(ids[idx]))
 			return double(id);
-		else
-			return useCols ? data->Get(beginData + int(id), ids[1]) : data->Get(ids[1], beginData + int(id));
+		else {
+			int r, c;
+			if (useCols) {
+				r = beginData + int(id);
+				c = ids[idx];
+			} else {
+				r = ids[idx];
+				c = beginData + int(id);
+			}
+			const Value &val = data->Get(r, c);
+			if (val.Is<double>())
+				return double(val);
+			else
+				return ScanDouble(val.ToString());
+		}	
 	}
+	virtual inline double y(int64 id) {return GetVal(id, 0);}
+	virtual inline double x(int64 id) {return GetVal(id, 1);}
 	virtual inline double xn(int n, int64 id)	{return useCols ? data->Get(beginData + int(id), ids[n]) : data->Get(ids[n], beginData + int(id));}
 	virtual inline int64 GetCount()	{return numData;};
 };
@@ -126,6 +145,8 @@ public:
 	ScatterCtrl& SetPopText(const String x, const String y1, const String y2) 	
 															{popTextX = x; popTextY = y1; popTextY2 = y2; return *this;}
 	ScatterCtrl& SetMouseHandling(bool valx = true, bool valy = false);
+	bool GetMouseHandlingX()								{return mouseHandlingX;}
+	bool GetMouseHandlingY()								{return mouseHandlingY;}
 	ScatterCtrl& ShowInfo(bool show = true)					{paintInfo = show;		 return *this;}
 	
 #ifdef PLATFORM_WIN32
@@ -181,8 +202,10 @@ public:
 
 	using ScatterDraw::AddSeries; 
 	ScatterCtrl &AddSeries(ArrayCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int numData = Null);
+	ScatterCtrl &AddSeries(GridCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int numData = Null);
 	using ScatterDraw::InsertSeries; 
 	void InsertSeries(int id, ArrayCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int numData = Null);	
+	void InsertSeries(int id, GridCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int numData = Null);	
 	
 	ScatterCtrl& SetCopyRatio(int ratio)				{copyRatio = ratio; return *this;}
 	int GetCopyRatio()									{return copyRatio;}

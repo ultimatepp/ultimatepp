@@ -3,7 +3,8 @@ description "Scatter control to plot in GUI applications based on ScatterDraw\37
 uses
 	CtrlLib,
 	plugin\jpg,
-	ScatterDraw;
+	ScatterDraw,
+	GridCtrl;
 
 file
 	ScatterCtrl.cpp,
