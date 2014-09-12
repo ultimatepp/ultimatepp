@@ -22,34 +22,15 @@ Array <String> GetWinRegSubkeys(const String& key, HKEY base) {
 	return subkeys;
 }
 
-void Mouse_LeftDown()
-{
-    mouse_event (MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-}
-void Mouse_LeftUp()
-{
-    mouse_event (MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
-}
-void Mouse_MiddleDown()
-{
-    mouse_event (MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, 0);
-}
-void Mouse_MiddleUp()
-{
-    mouse_event (MOUSEEVENTF_MIDDLEUP, 0, 0, 0, 0);
-}
-void Mouse_RightDown()
-{
-    mouse_event (MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);
-}
-void Mouse_RightUp()
-{
-    mouse_event (MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
-}
+void Mouse_LeftDown() 	{mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);}
+void Mouse_LeftUp()		{mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);}
+void Mouse_MiddleDown()	{mouse_event(MOUSEEVENTF_MIDDLEDOWN, 0, 0, 0, 0);}
+void Mouse_MiddleUp()	{mouse_event(MOUSEEVENTF_MIDDLEUP, 0, 0, 0, 0);}
+void Mouse_RightDown()	{mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);}
+void Mouse_RightUp()	{mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);}
 
 
-bool Mouse_SetPos(long xMove, long yMove, int64 windowId)
-{
+bool Mouse_SetPos(long xMove, long yMove, int64 windowId) {
     long left, top, right, bottom;
     
     if (windowId != 0) {
@@ -62,8 +43,7 @@ bool Mouse_SetPos(long xMove, long yMove, int64 windowId)
     return true;
 }
 
-bool Mouse_GetPos(long &x, long &y)
-{
+bool Mouse_GetPos(long &x, long &y) {
     POINT p;
     
     GetCursorPos (&p);
@@ -108,8 +88,7 @@ KeyCodes keyCodes[60] = {
 	""
 };
 
-void PressKeyVK(int keyVK, bool hold = false, bool release = false, bool compatible = false)
-{    
+void PressKeyVK(int keyVK, bool hold = false, bool release = false, bool compatible = false) {    
     long nScan, nExtended;
         
     nScan = MapVirtualKey(keyVK, 2);
@@ -122,10 +101,10 @@ void PressKeyVK(int keyVK, bool hold = false, bool release = false, bool compati
         nExtended = 0;
     
     if (!release)
-        keybd_event ((BYTE)keyVK, (BYTE)nScan, nExtended, 0);
+        keybd_event((BYTE)keyVK, (BYTE)nScan, nExtended, 0);
     
     if (!hold)
-        keybd_event ((BYTE)keyVK, (BYTE)nScan, KEYEVENTF_KEYUP | nExtended, 0);
+        keybd_event((BYTE)keyVK, (BYTE)nScan, KEYEVENTF_KEYUP | nExtended, 0);
 }
 
 #if defined(__MINGW32__)
@@ -137,8 +116,7 @@ void PressKeyVK(int keyVK, bool hold = false, bool release = false, bool compati
 #define	MAPVK_VK_TO_VSC_EX 	4
 
 // This is less nice but more compatible for Notepad and MSWord for example
-void PressKey(wchar key, bool hold = false, bool release = false)
-{
+void PressKey(wchar key, bool hold = false, bool release = false) {
 	if ((key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') || (key >= '0' && key <= '9')) {
 		char buff[120];
 		::GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_ILANGUAGE, buff, sizeof(buff));
@@ -222,15 +200,14 @@ void PressKey(wchar key, bool hold = false, bool release = false)
 }
 */
 
-bool GetKeyLockStatus(bool &caps, bool &num, bool &scroll)
-{
+bool GetKeyLockStatus(bool &caps, bool &num, bool &scroll) {
     caps = GetKeyState(VK_CAPITAL);
     num = GetKeyState(VK_NUMLOCK);
     scroll = GetKeyState(VK_SCROLL);
     return true;
 }
-bool SetKeyLockStatus(bool caps, bool num, bool scroll)
-{
+
+bool SetKeyLockStatus(bool caps, bool num, bool scroll) {
 	bool capsnow, numnow, scrollnow;
 	
 	GetKeyLockStatus(capsnow, numnow, scrollnow);
@@ -247,8 +224,7 @@ bool SetKeyLockStatus(bool caps, bool num, bool scroll)
 
 #ifdef PLATFORM_POSIX
 
-bool Mouse_GetPos(long &x, long &y)
-{
+bool Mouse_GetPos(long &x, long &y) {
 	SetSysInfoX11ErrorHandler();
 	_XDisplay *dpy = XOpenDisplay (NULL);
 	if (!dpy) {
@@ -274,8 +250,7 @@ bool Mouse_GetPos(long &x, long &y)
 	return ret;
 }
 
-bool Mouse_SetPos(long x, long y, int64 windowId)
-{
+bool Mouse_SetPos(long x, long y, int64 windowId) {
 	SetSysInfoX11ErrorHandler();
 	_XDisplay *dpy = XOpenDisplay (NULL);
 	if (!dpy) {
@@ -304,24 +279,12 @@ void Mouse_FakeClick(int button, int press) {
 	XCloseDisplay(dpy);
 }
 
-void Mouse_LeftDown() {
-	Mouse_FakeClick(1, True);
-}
-void Mouse_LeftUp() {
-	Mouse_FakeClick(1, False);
-}
-void Mouse_MiddleDown() {
-	Mouse_FakeClick(2, True);
-}
-void Mouse_MiddleUp() {
-	Mouse_FakeClick(2, False);
-}
-void Mouse_RightDown() {
-	Mouse_FakeClick(3, True);
-}
-void Mouse_RightUp() {
-	Mouse_FakeClick(3, False);
-}
+void Mouse_LeftDown() 	{Mouse_FakeClick(1, True);}
+void Mouse_LeftUp() 	{Mouse_FakeClick(1, False);}
+void Mouse_MiddleDown() {Mouse_FakeClick(2, True);}
+void Mouse_MiddleUp() 	{Mouse_FakeClick(2, False);}
+void Mouse_RightDown() 	{Mouse_FakeClick(3, True);}
+void Mouse_RightUp() 	{Mouse_FakeClick(3, False);}
 
 void PressKeyVK(int key, _XDisplay *dpy = NULL) {
 	bool local = false;

@@ -920,10 +920,9 @@ ULONGLONG SubtractFILETIME(FILETIME &hasta, FILETIME &desde) {
 int GetProcessCPUUsage(int64 pid)
 {
 	HANDLE hp = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, 0, DWORD(pid));
-	if (hp == NULL){
-	    CloseHandle(hp);
+	if (hp == NULL)
 	    return Null;
-	}
+	
 	FILETIME iddleTime, kernelTimeS, userTimeS, kernelTimeS_0, userTimeS_0;
 	FILETIME creationTime, exitTime, kernelTimeP, userTimeP, kernelTimeP_0, userTimeP_0;
     GetSystemTimes(&iddleTime, &kernelTimeS_0, &userTimeS_0);
@@ -1003,32 +1002,26 @@ Array<int64> GetWindowsList()
 BOOL CALLBACK TerminateAppEnum(HWND hwnd, LPARAM lParam)
 {
 	DWORD dwID ;
-  	GetWindowThreadProcessId(hwnd, &dwID) ;
+  	GetWindowThreadProcessId(hwnd, &dwID);
   	if(dwID == (DWORD)lParam)
-     	PostMessage(hwnd, WM_CLOSE, 0, 0) ;
-  	return TRUE ;
+     	PostMessage(hwnd, WM_CLOSE, 0, 0);
+  	return TRUE;
 }
 
-// pid	 	Process ID of the process to shut down.
-// timeout 	Wait time in milliseconds before shutting down the process.
 bool ProcessTerminate(int64 processId, int timeout)
 {
-  	// If we can't open the process with PROCESS_TERMINATE rights, then we give up immediately.
   	HANDLE hProc = ::OpenProcess(SYNCHRONIZE|PROCESS_TERMINATE, FALSE, DWORD(processId));
   	if(hProc == NULL)
-    	return false ;
-   	// TerminateAppEnum() posts WM_CLOSE to all windows whose PID matches your process's.
+    	return false;
   	::EnumWindows((WNDENUMPROC)TerminateAppEnum, (LPARAM)processId) ;
 
 	int ret;
-  	// Wait on the handle. If it signals, great. If it times out,
-  	// then you kill it.
   	int state = ::WaitForSingleObject(hProc, timeout);
   	if ((state == WAIT_TIMEOUT) || (state == WAIT_FAILED))
      	ret = ::TerminateProcess(hProc, 0);
 	else
 		ret = true;
-	CloseHandle(hProc) ;
+	CloseHandle(hProc);
 	return ret;
 }
 
