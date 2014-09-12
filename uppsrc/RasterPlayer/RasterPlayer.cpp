@@ -103,35 +103,42 @@ bool RasterPlayer::Load(const String &fileName) {
 	return LoadBuffer(LoadStream(in));
 }
 
+bool RasterPlayer::IsKilled() {
+	bool ret;
+	INTERLOCKED_(mutex) {ret = kill;}
+	return ret;	
+}
+
 #ifdef _MULTITHREADED
 void RasterPlayerThread(RasterPlayer *animatedClip) {
 	TimeStop t;
 	dword tFrame = 0;
-	while (!animatedClip->kill) {
+	while (!animatedClip->IsKilled()) {
 		INTERLOCKED_(mutex) {
-			int ind = animatedClip->ind+1;
-			if (ind > animatedClip->GetPageCount()-1)
+			int ind = animatedClip->ind + 1;
+			if (ind > animatedClip->GetPageCount() - 1)
 				ind = 0;
 			tFrame += dword(animatedClip->delays[ind]/animatedClip->speed);
 		}
-		while (t.Elapsed() < tFrame && !animatedClip->kill)
+		while (t.Elapsed() < tFrame && !animatedClip->IsKilled())
 			Sleep(10);
 		PostCallback(callback(animatedClip, &RasterPlayer::NextFrame));
 	}
-	INTERLOCKED_(mutex) {
-		animatedClip->running = false;
-	}
+INTERLOCKED_(mutex) {
+	animatedClip->running = false;
+}
 }
 #endif
 
 void RasterPlayer::TimerFun() {
+INTERLOCKED_(mutex) {
 	if (kill || !running)
 		return;
-
+}
 	if (tTime.Elapsed() < tFrame)
 		return;	 
-	int iFrame = ind+1;
-	if (iFrame > GetPageCount()-1)
+	int iFrame = ind + 1;
+	if (iFrame > GetPageCount() - 1)
 		iFrame = 0;
 	tFrame += dword(delays[iFrame]/speed);
 	NextFrame();
@@ -140,10 +147,10 @@ void RasterPlayer::TimerFun() {
 void RasterPlayer::Play() {
 	if (images.GetCount() <= 1)
 		return;
-	INTERLOCKED_(mutex) {
-		running = true;
-		kill = false;
-	}
+INTERLOCKED_(mutex) {
+	running  = true;
+	kill = false;
+}
 #ifdef _MULTITHREADED
 	if (mt)
 		Thread().Run(callback1(RasterPlayerThread, this));
@@ -157,9 +164,7 @@ void RasterPlayer::Play() {
 }
 
 void RasterPlayer::Stop() {
-	INTERLOCKED_(mutex) {
-        kill = true;
-    }
+INTERLOCKED_(mutex) {kill = true;}
 #ifdef _MULTITHREADED
 	if (mt) {
 		while (running)
@@ -168,7 +173,7 @@ void RasterPlayer::Stop() {
 #endif
 	{
 		KillTimeCallback(1);
-		running = false;
+		INTERLOCKED_(mutex) {running = false;}
 	}
 }
 
