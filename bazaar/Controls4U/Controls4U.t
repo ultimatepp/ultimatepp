@@ -115,7 +115,7 @@ euES("")
 frFR("")
 
 
-// DrawingCanvas.cpp
+// PainterCanvas.cpp
 
 T_("Pos: %d:%d. Real pos: %.2f:%.2f")
 caES("")

@@ -1,5 +1,4 @@
 #include "Controls4U.h"
-#include "DrawingCanvas.h"
 #include <plugin/jpg/jpg.h>
 
 #define TFILE <Controls4U/Controls4U.t>
@@ -577,6 +576,8 @@ void DrawingCanvas::LeftUp(Point p, dword keyflags) {
 
 PainterCanvas::PainterCanvas() {
 	rotate = 0;
+	mouseHandling = true;
+	NoTransparent();
 	/*translateX = translateY = 0;
 	scale = 1;*/
 	
@@ -666,51 +667,44 @@ void PainterCanvas::Paint(Draw& w) {
 		w.DrawText(0, 0, legendText, legendFont, Black());
 	}
 	
-	if (!showWindow || canvasSize.cx <= 0 || canvasSize.cy <= 0) 
-		return;
-	
-	int twidth = 100;
-	int theight = int(twidth*double(canvasSize.cy)/canvasSize.cx); 
-	Size sz = GetSize();
-	int tx = sz.cx-twidth-20;
-	int ty = sz.cy-theight-20;	
-
-	ImageBuffer tib(twidth, theight);
-	BufferPainter tsw(tib, mode);
-	
-	tsw.Scale(double(twidth)/canvasSize.cx);
-
-	if (IsNull(backImage) || colorUnderBackgroundImage) 
-		tsw.Clear(backColor);
-	 
-	if (!IsNull(backImage)) 
-		tsw.Rectangle(0, 0, canvasSize.cx, canvasSize.cy).Fill(backImage, 0, 0, canvasSize.cx, 0, FILL_FAST).Stroke(0, Black());
-	
-	if (canvasSize.cx > 0 && canvasSize.cy > 0) 
-		WhenPaint(tsw);
-	
-	w.DrawImage(tx, ty, twidth, theight, tib);
-	DrawRectLine(w, tx-1, ty-1, twidth+1, theight+1, 1, Black());
-	
-	double rateRep = double(twidth)/(canvasSize.cy*scale);
-	DrawRectLine(w, int(tx-translateX*rateRep-1), int(ty-translateY*rateRep-1), 
-				1+int(twidth*sz.cx/((canvasSize.cx - translateX*rateRep)*scale)), 
-				1+int(theight*sz.cy/((canvasSize.cy - translateY*rateRep)*scale)), 1, Black());	
+	if (showWindow && canvasSize.cx > 0 && canvasSize.cy > 0) {
+		int twidth = 100;
+		int theight = int(twidth*double(canvasSize.cy)/canvasSize.cx); 
+		Size sz = GetSize();
+		int tx = sz.cx-twidth-20;
+		int ty = sz.cy-theight-20;	
+		
+		ImageBuffer tib(twidth, theight);
+		BufferPainter tsw(tib, mode);
+		
+		tsw.Scale(double(twidth)/canvasSize.cx);
+		
+		if (IsNull(backImage) || colorUnderBackgroundImage) 
+			tsw.Clear(backColor);
+		 
+		if (!IsNull(backImage)) 
+			tsw.Rectangle(0, 0, canvasSize.cx, canvasSize.cy).Fill(backImage, 0, 0, canvasSize.cx, 0, FILL_FAST).Stroke(0, Black());
+		
+		if (canvasSize.cx > 0 && canvasSize.cy > 0) 
+			WhenPaint(tsw);
+		
+		w.DrawImage(tx, ty, twidth, theight, tib);
+		DrawRectLine(w, tx-1, ty-1, twidth+1, theight+1, 1, Black());
+		
+		double rateRep = double(twidth)/(canvasSize.cy*scale);
+		DrawRectLine(w, int(tx-translateX*rateRep-1), int(ty-translateY*rateRep-1), 
+					1+int(twidth*sz.cx/((canvasSize.cx - translateX*rateRep)*scale)), 
+					1+int(theight*sz.cy/((canvasSize.cy - translateY*rateRep)*scale)), 1, Black());	
+	}
+	if (HasFocus()) {
+		Size sz = GetSize();
+		DrawFocus(w, Rect(sz).Deflated(2));
+	}
 }
 
 void PainterCanvas::Layout() {
 	if (alwaysFitInCanvas) 
 		FitInCanvas();	
-}
-
-void PainterCanvas::MouseWheel(Point p, int zdelta, dword keyflags) {
-	double factor;
-	if(zdelta > 0)
-		factor = scaleFactor;
-	else
-		factor = 1/scaleFactor;
-	
-	Zoom(factor);
 }
 
 void PainterCanvas::Scroll(double factorX, double factorY)
@@ -745,21 +739,13 @@ void PainterCanvas::FitInCanvas() {
 	Refresh();
 }	
 
-void PainterCanvas::MiddleDown(Point p, dword keyflags) {
-	focusMove.lastFocusPoint = p;
-    focusMove.focusMoving = true;
-}
-
-void PainterCanvas::MiddleUp(Point p, dword keyflags) {
-    focusMove.focusMoving = false;
-}
-
 void PainterCanvas::MouseLeave() {
     focusMove.focusMoving = false;
+    WhenMouseLeave();
 }
 
 void PainterCanvas::MouseMove(Point p, dword keyflags) {
-    if (focusMove.focusMoving) {
+    if (mouseHandling && focusMove.focusMoving) {
      	translateX -= focusMove.lastFocusPoint.x - p.x;
       	translateY -= focusMove.lastFocusPoint.y - p.y;
       	focusMove.lastFocusPoint = p;
@@ -781,22 +767,110 @@ void PainterCanvas::MouseMove(Point p, dword keyflags) {
     }
     if(WhenMouseMove) {
         if (pf.x >= 0 && pf.x < canvasSize.cx && pf.y >= 0 && pf.y < canvasSize.cy)
-    		WhenMouseMove(p, pf);
+    		WhenMouseMove(p, pf, keyflags);
     }
 }
 
-void PainterCanvas::LeftDown(Point p, dword keyflags) {
-	if (WhenMouseLeft) {
-        Pointf pf;
-       	pf.x = p.x - translateX;
-        pf.y = p.y - translateY;
-        pf.x = pf.x / scale;
-        pf.y = pf.y / scale;
-        if (pf.x >= 0 && pf.x < canvasSize.cx && pf.y >= 0 && pf.y < canvasSize.cy)
-    		WhenMouseLeft(p, pf);
+Pointf PainterCanvas::GetPf(Point &p) {
+    Pointf pf;
+   	pf.x = p.x - translateX;
+    pf.y = p.y - translateY;
+    pf.x = pf.x / scale;
+    pf.y = pf.y / scale;
+    if (pf.x >= 0 && pf.x < canvasSize.cx && pf.y >= 0 && pf.y < canvasSize.cy)	
+        return pf;
+    return Null;
+}
+
+void PainterCanvas::MouseWheel(Point p, int zdelta, dword keyflags) {
+	if (mouseHandling) {
+		double factor;
+		if(zdelta > 0)
+			factor = scaleFactor;
+		else
+			factor = 1/scaleFactor;
+		
+		Zoom(factor);
+	}
+	if (WhenMouseLeftDown) {
+        Pointf pf = GetPf(p);
+        if (!IsNull(pf))
+    		WhenMouseWheel(p, pf, zdelta, keyflags);
 	}
 }
 
+void PainterCanvas::LeftDown(Point p, dword keyflags) {
+	SetWantFocus();
+	if (WhenMouseLeftDown) {
+        Pointf pf = GetPf(p);
+        if (!IsNull(pf))
+    		WhenMouseLeftDown(p, pf, keyflags);
+	}
+}
+
+void PainterCanvas::LeftUp(Point p, dword keyflags) {
+	if (WhenMouseLeftUp) {
+        Pointf pf = GetPf(p);
+        if (!IsNull(pf))
+    		WhenMouseLeftUp(p, pf, keyflags);
+	}
+}
+
+void PainterCanvas::MiddleDown(Point p, dword keyflags) {
+	if (mouseHandling) {
+		focusMove.lastFocusPoint = p;
+	    focusMove.focusMoving = true;
+	}
+	if (WhenMouseMiddleDown) {
+        Pointf pf = GetPf(p);
+        if (!IsNull(pf))
+    		WhenMouseMiddleDown(p, pf, keyflags);
+	}
+}
+
+void PainterCanvas::MiddleUp(Point p, dword keyflags) {
+	if (mouseHandling) 
+		 focusMove.focusMoving = false;
+		 
+	if (WhenMouseMiddleUp) {
+        Pointf pf = GetPf(p);
+        if (!IsNull(pf))
+    		WhenMouseMiddleUp(p, pf, keyflags);
+	}
+}
+
+void PainterCanvas::RightDown(Point p, dword keyflags) {
+	if (mouseHandling) 
+		MenuBar::Execute(THISBACK(ContextMenu));
+	
+	if (WhenMouseRightDown) {
+        Pointf pf = GetPf(p);
+        if (!IsNull(pf))
+    		WhenMouseRightDown(p, pf, keyflags);
+	}
+}
+
+void PainterCanvas::RightUp(Point p, dword keyflags) {
+	if (WhenMouseRightDown) {
+        Pointf pf = GetPf(p);
+        if (!IsNull(pf))
+    		WhenMouseRightUp(p, pf, keyflags);
+	}
+}
+
+bool PainterCanvas::Key(dword key, int repeat) {
+	WhenKey(key, repeat);
+	return false;
+}
+
+void PainterCanvas::GotFocus() {
+	Refresh();
+}
+
+void PainterCanvas::LostFocus() {
+	Refresh();
+}
+	
 PainterCanvas &PainterCanvas::SetBackground(const Image image)	{
 	backImage = image; 
 	if (backImage.GetSize() != canvasSize) {
@@ -810,10 +884,6 @@ PainterCanvas &PainterCanvas::SetBackground(const Image image)	{
 PainterCanvas &PainterCanvas::SetBackground(const String &imageFilename)	{
 	return SetBackground(StreamRaster::LoadFileAny(~imageFilename));
 }                      
-
-void PainterCanvas::RightDown(Point p, dword keyflags) {
-	MenuBar::Execute(THISBACK(ContextMenu));
-}
            
 void PainterCanvas::ContextMenu(Bar& bar) {	
 	bar.Add(t_("Fit to size"), 	Controls4UImgC::ShapeHandles(), THISBACK(FitInCanvas));

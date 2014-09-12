@@ -10,8 +10,8 @@ uses(!NOPAINTER) Painter;
 file
 	Controls4U.cpp,
 	Controls4U.h,
-	DrawingCanvas.cpp,
-	DrawingCanvas.h,
+	PainterCanvas.cpp,
+	PainterCanvas.h,
 	Controls4U.usc,
 	Controls4U.lay,
 	Controls4U.iml,

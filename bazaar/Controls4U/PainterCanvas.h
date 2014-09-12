@@ -1,5 +1,5 @@
-#ifndef _Controls4U_DrawingCanvas_h_
-#define _Controls4U_DrawingCanvas_h_
+#ifndef _Controls4U_PainterCanvas_h_
+#define _Controls4U_PainterCanvas_h_
 
 class Svg2DTransform {
 public:
@@ -538,22 +538,31 @@ public:
 	PainterCanvas &SetBackground(const String &imageFilename);
 	Image GetBackground()								{return backImage;}
 	PainterCanvas &SetColorUnderBackgroundImage(bool set) {colorUnderBackgroundImage = set; return *this;};
-	PainterCanvas &SetScale(double factor)				{scale *= factor; Refresh(); return *this;};
-	PainterCanvas &SetAlwaysFitInCanvas(bool fit = true){alwaysFitInCanvas = fit; Refresh(); return *this;}
-	PainterCanvas &SetMode(int md = MODE_ANTIALIASED)	{mode = md; return *this;}
-	PainterCanvas &SetShowWindow(bool sw = true)		{showWindow = sw; return *this;};
-	PainterCanvas &SetCursorImage(const Image &img)		{cursorImage = img; return *this;};
+	PainterCanvas &SetScale(double factor)				{scale *= factor; Refresh(); 		return *this;};
+	PainterCanvas &SetAlwaysFitInCanvas(bool fit = true){alwaysFitInCanvas = fit; Refresh();return *this;}
+	PainterCanvas &SetMode(int md = MODE_ANTIALIASED)	{mode = md; 				return *this;}
+	PainterCanvas &SetShowWindow(bool sw = true)		{showWindow = sw; 			return *this;};
+	PainterCanvas &SetCursorImage(const Image &img)		{cursorImage = img; 		return *this;};
 	
 	PainterCanvas &SetLegend(bool _legendShowXY = true, Font _legendFont = StdFont());
+	PainterCanvas &SetMouseHandling(bool mouse)			{mouseHandling = mouse;		return *this;}
 	
 	GraphElemList elemList;
 	
 	double GetScale()	{return scale;};
 	
 	Callback1 <Painter &> WhenPaint;
-	Callback2 <Point, Pointf> WhenMouseMove;
-	Callback2 <Point, Pointf> WhenMouseLeft;
-	
+	Callback3 <Point, Pointf, dword> WhenMouseMove;
+	Callback4 <Point, Pointf, int, dword> WhenMouseWheel;
+	Callback3 <Point, Pointf, dword> WhenMouseLeftDown;
+	Callback3 <Point, Pointf, dword> WhenMouseLeftUp;
+	Callback3 <Point, Pointf, dword> WhenMouseMiddleDown;
+	Callback3 <Point, Pointf, dword> WhenMouseMiddleUp;
+	Callback3 <Point, Pointf, dword> WhenMouseRightDown;
+	Callback3 <Point, Pointf, dword> WhenMouseRightUp;
+	Callback WhenMouseLeave;
+	Callback2 <dword, int> WhenKey;
+		
 	void Xmlize(XmlIO &xml)	{xml ("elemList", elemList)("translateX", translateX)
 			("translateY", translateY)("rotate", rotate)("scale", scale)("opacity", opacity)
 			("linejoin", linejoin)("linecap", linecap)("mode", mode)("scaleFactor", scaleFactor)
@@ -579,16 +588,25 @@ private:
 	bool colorUnderBackgroundImage;
 	bool alwaysFitInCanvas;
 	bool showWindow;
+	bool mouseHandling;
 	
 	virtual void MouseMove(Point p, dword keyflags);
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void MiddleDown(Point p, dword keyflags);
 	virtual void MiddleUp(Point p, dword keyflags);
 	virtual void RightDown(Point p, dword keyflags);
+	virtual void RightUp(Point p, dword keyflags);
 	virtual void LeftDown(Point p, dword keyflags);
+	virtual void LeftUp(Point p, dword keyflags);
 	virtual void MouseLeave();
+	virtual bool Key(dword key, int count);
+	virtual void GotFocus();
+	virtual void LostFocus();
+	
 	virtual Image CursorImage(Point p, dword keyflags);
 
+	Pointf GetPf(Point &p);
+	
 	struct FocusMove {
 		bool focusMoving;
 		Point lastFocusPoint;
