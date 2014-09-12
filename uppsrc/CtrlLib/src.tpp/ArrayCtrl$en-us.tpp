@@ -2520,7 +2520,7 @@ in the cell editors and react to specific situations accordingly.&]
 to `"EnableLine`" interface. This is especially useful when using 
 SetVirtualCount. First parameter is the line number, second is 
 reference to enable status.&]
-[s0; &]
+[s3; &]
 [s0;%- &]
 [ {{10000t/25b/25@3 [s0;%- [*@(229)4 ArrayCtrl`::IdInfo]]}}&]
 [s3; &]
