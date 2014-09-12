@@ -74,8 +74,12 @@ EditFileFolder_Demo::EditFileFolder_Demo() {
 	back.Set(Images::paper());
 }
 void EditFileFolder_Demo::OnNewFile() {
-	if (!clipImage.Set(~FileName))
-		Exclamation("File not found");
+	if (!clipImage.Set(~FileName)) {
+		if (FileExists(~FileName))
+			Exclamation("File not found");
+		else	
+			Exclamation("File format is not supported");
+	}
 }
 void EditFileFolder_Demo::ChangeProperties() {
 	clipImage.SetAngle(~angleList);
