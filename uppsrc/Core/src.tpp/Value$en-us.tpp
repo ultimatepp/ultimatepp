@@ -161,6 +161,35 @@ through any contained ValueMaps and ValueArrays too, for other
 Value types it uses the normal operator`=`=.&]
 [s3; &]
 [s4;%- &]
+[s5;:Value`:`:Compare`(const Value`&`)const:%- [@(0.0.255) int]_[* Compare]([@(0.0.255) con
+st]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v])_[@(0.0.255) const]&]
+[s2; Compares value with another value [%-*@3 v]. Types of values must 
+be comparable (e.g. it is possible to compare texts with texts, 
+numbers with numbers etc...). If types are not comparable, returns 
+0. If values are equal, returns 0, `-1 if Value is lesser than 
+[%-*@3 v], 1 if Value if it is greater.&]
+[s3; &]
+[s4;%- &]
+[s5;:Value`:`:operator`<`=`(const Value`&`)const:%- [@(0.0.255) bool]_[* operator<`=]([@(0.0.255) c
+onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 x])_[@(0.0.255) const]&]
+[s2;%- [%% Same as Compare(][*@3 x]) <`= 0.&]
+[s3; &]
+[s4;%- &]
+[s5;:Value`:`:operator`>`=`(const Value`&`)const:%- [@(0.0.255) bool]_[* operator>`=]([@(0.0.255) c
+onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 x])_[@(0.0.255) const]&]
+[s2;%- [%% Same as Compare(][*@3 x]) >`= 0.&]
+[s3; &]
+[s4;%- &]
+[s5;:Value`:`:operator`<`(const Value`&`)const:%- [@(0.0.255) bool]_[* operator<]([@(0.0.255) c
+onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 x])_[@(0.0.255) const]&]
+[s2;%- [%% Same as Compare(][*@3 x]) < 0.&]
+[s3; &]
+[s4;%- &]
+[s5;:Value`:`:operator`>`(const Value`&`)const:%- [@(0.0.255) bool]_[* operator>]([@(0.0.255) c
+onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 x])_[@(0.0.255) const]&]
+[s2;%- [%% Same as Compare(][*@3 x]) > 0.&]
+[s3; &]
+[s4;%- &]
 [s5;:Value`:`:ToString`(`)const:%- [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]
 [s2; Conversion to text for supporting rich types.&]
 [s3;%- &]
@@ -213,6 +242,64 @@ onst]&]
 [%-*@3 key], returns its value. If not, returns void Value.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Value`:`:At`(int`):%- [_^Value^ Value][@(0.0.255) `&]_[* At]([@(0.0.255) int]_[*@3 i])&]
+[s2; If Value is Null, sets it to ValueArray. If Value is ValueArray 
+or was Null, returns a reference of element at [%-*@3 i] , if there 
+is none, adds as much Void Values to array as necessarry to have 
+it. If Value is ValueMap, returns a reference to map value at 
+[%-*@3 i] , if there is none, behaviour is undefined (ASSERT in 
+debug mode fails). [^topic`:`/`/Core`/srcdoc`/ValueReference`$en`-us^ The 
+reference returned is invalidated by any further use of originating 
+Value]. If Value is neither ValueArray, Null or ValueMap, behaviour 
+is undefined (ASSERT in debug mode fails).&]
+[s3; &]
+[s4;%- &]
+[s5;:Value`:`:operator`(`)`(int`):%- [_^Value^ Value][@(0.0.255) `&]_[* operator()]([@(0.0.255) i
+nt]_[*@3 i])&]
+[s2; Same as At([%-*@3 i]).&]
+[s3; &]
+[s4;%- &]
+[s5;:Value`:`:Add`(const Value`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[_^Value^ V
+alue][@(0.0.255) `&]_[*@3 src])&]
+[s2; If Value is Null, sets it to ValueArray. If Value is ValueArray 
+or was Null, appends [%-*@3 src] at the end of ArrayValue. If Value 
+is neither ValueArray or Null, behaviour is undefined (ASSERT 
+in debug mode fails).&]
+[s3; &]
+[s4;%- &]
+[s5;:Value`:`:operator`<`<`(const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) typename]_[*@4 T
+]>_[_^Value^ Value][@(0.0.255) `&]_[* operator<<]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 s
+rc])&]
+[s2; Same as Add([%-*@3 src]).&]
+[s3; &]
+[s4;%- &]
+[s5;:Value`:`:GetAdd`(const Value`&`):%- [_^Value^ Value][@(0.0.255) `&]_[* GetAdd]([@(0.0.255) c
+onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 key])&]
+[s2; If Value is Null, sets it to ValueMap. If Value is ValueArray, 
+sets it to standard conversion of ValueMap to ValueArray (indicies 
+become keys). If Value is ValueMap or was Null, returns a reference 
+of element at key [%-*@3 key], if there is none, it is created 
+as Void Value. [^topic`:`/`/Core`/srcdoc`/ValueReference`$en`-us^ The 
+reference returned is invalidated by any further use of originating 
+Value]. If Value is neither ValueArray, Null or ValueMap, behaviour 
+is undefined (ASSERT in debug mode fails).&]
+[s3; &]
+[s4;%- &]
+[s5;:Value`:`:operator`(`)`(const String`&`):%- [_^Value^ Value][@(0.0.255) `&]_[* operator
+()]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 key])&]
+[s2; Same as GetAdd([%-*@3 key]).&]
+[s3; &]
+[s4;%- &]
+[s5;:Value`:`:operator`(`)`(const char`*`):%- [_^Value^ Value][@(0.0.255) `&]_[* operator()
+]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key])&]
+[s2; Save as GetAdd([%-*@3 key]).&]
+[s3; &]
+[s4;%- &]
+[s5;:Value`:`:operator`(`)`(const Id`&`):%- [_^Value^ Value][@(0.0.255) `&]_[* operator()](
+[@(0.0.255) const]_[_^Id^ Id][@(0.0.255) `&]_[*@3 key])&]
+[s2; Save as GetAdd([%-*@3 key]).&]
+[s3; &]
+[s4;%- &]
 [s5;:Value`:`:operator`=`(const Value`&`):%- [_^Value^ Value][@(0.0.255) `&]_[* operator`=](
 [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v])&]
 [s2; Assignment.&]
@@ -221,7 +308,6 @@ onst]&]
 [s5;:Value`:`:Value`(const Value`&`):%- [* Value]([@(0.0.255) const]_[* Value][@(0.0.255) `&]_
 [*@3 v])&]
 [s2; Copy constructor.&]
-[s3; &]
 [s3; &]
 [s4;%- &]
 [s5;:Value`:`:Value`(`):%- [* Value]()&]
@@ -288,6 +374,17 @@ onst]_[*@4 T][@(0.0.255) `&])_[@(0.0.255) const]&]
 [s4;%- &]
 [s5;:ValueType`:`:ToString`(`)const:%- [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]
 [s2; Conversion to text. ValueType returns empty String.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ValueType`:`:Compare`(const T`&`)const:%- [@(0.0.255) int]_[* Compare]([@(0.0.255) con
+st]_[*@4 T][@(0.0.255) `&])_[@(0.0.255) const]&]
+[s2; Comparison with another value of the same type. Returns should 
+return `-1, 0, 1.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ValueType`:`:PolyCompare`(const Value`&`)const:%- [@(0.0.255) int]_[* PolyCompare]([@(0.0.255) c
+onst]_[_^Value^ Value][@(0.0.255) `&])_[@(0.0.255) const]&]
+[s2; Polymorphic comparison with different type.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:ValueType`:`:operator Ref`(`):%- [* operator_Ref]()&]

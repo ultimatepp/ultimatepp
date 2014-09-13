@@ -255,10 +255,10 @@ public:
 	const Value& operator[](const Id& key) const;
 	
 	Value& At(int i);
+	Value& operator()(int i)              { return At(i); }
 	void   Add(const Value& src);
 	template <typename T>
 	Value& operator<<(const T& src)       { Add(src); return *this; }
-	Value& operator()(int i)              { return At(i); }
 
 	Value& GetAdd(const Value& key);
 	Value& operator()(const String& key);
