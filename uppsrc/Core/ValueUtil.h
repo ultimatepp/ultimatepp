@@ -373,12 +373,12 @@ public:
 	const Value& operator[](const Id& key) const     { return operator[](Value(key.ToString())); }
 
 	Value& GetAdd(const Value& key);
-	Value& At(int i);
 	Value& operator()(const Value& key)              { return GetAdd(key); }
 	Value& operator()(const String& key)             { return operator()(Value(key)); }
 	Value& operator()(const char *key)               { return operator()(Value(key)); }
 	Value& operator()(const int key)                 { return operator()(Value(key)); }
 	Value& operator()(const Id& key)                 { return operator()(Value(key.ToString())); }
+	Value& At(int i);
 	
 	Value GetAndClear(const Value& key);
 

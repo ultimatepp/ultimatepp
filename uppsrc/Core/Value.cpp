@@ -651,7 +651,11 @@ Value& Value::GetAdd(const Value& key)
 {
 	if(IsNull())
 		*this = ValueMap();
-	ASSERT(IsRef() && ptr()->GetType() == VALUEMAP_V);
+	if(GetType() == VALUEARRAY_V) {
+		ValueMap m = *this;
+		*this = m;
+	}
+	ASSERT(GetType() == VALUEMAP_V);
 	return ValueMap::Clone((ValueMap::Data*&)ptr()).GetAdd(key);
 }
 

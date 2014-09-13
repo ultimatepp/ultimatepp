@@ -258,6 +258,33 @@ multiple overloads are required to make Id and SqlId work with
 ValueMap.&]
 [s3; &]
 [s4;%- &]
+[s5;:ValueMap`:`:GetAdd`(const Value`&`):%- [_^Value^ Value][@(0.0.255) `&]_[* GetAdd]([@(0.0.255) c
+onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 key])&]
+[s2; Returns a reference of element at key [%-*@3 key], if there is 
+none, it is created as Void Value. [^topic`:`/`/Core`/srcdoc`/ValueReference`$en`-us^ T
+he reference returned is invalidated by any further use of originating 
+Value].&]
+[s3; &]
+[s4;%- &]
+[s5;:ValueMap`:`:operator`(`)`(const Value`&`):%- [_^Value^ Value][@(0.0.255) `&]_[* operat
+or()]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 key])&]
+[s5;:ValueMap`:`:operator`(`)`(const String`&`):%- [_^Value^ Value][@(0.0.255) `&]_[* opera
+tor()]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 key])&]
+[s5;:ValueMap`:`:operator`(`)`(const char`*`):%- [_^Value^ Value][@(0.0.255) `&]_[* operato
+r()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key])&]
+[s5;:ValueMap`:`:operator`(`)`(const int`):%- [_^Value^ Value][@(0.0.255) `&]_[* operator()
+]([@(0.0.255) const]_[@(0.0.255) int]_[*@3 key])&]
+[s5;:ValueMap`:`:operator`(`)`(const Id`&`):%- [_^Value^ Value][@(0.0.255) `&]_[* operator(
+)]([@(0.0.255) const]_[_^Id^ Id][@(0.0.255) `&]_[*@3 key])&]
+[s2; Same as GetAdd([%-*@3 key]).&]
+[s3; &]
+[s4;%- &]
+[s5;:ValueMap`:`:At`(int`):%- [_^Value^ Value][@(0.0.255) `&]_[* At]([@(0.0.255) int]_[*@3 i])&]
+[s2; Returns a reference of value at index [%-*@3 i]. [^topic`:`/`/Core`/srcdoc`/ValueReference`$en`-us^ T
+he reference returned is invalidated by any further use of originating 
+Value].&]
+[s3; &]
+[s4;%- &]
 [s5;:ValueMap`:`:GetAndClear`(const Value`&`):%- [_^Value^ Value]_[* GetAndClear]([@(0.0.255) c
 onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 key])&]
 [s2; If [%-*@3 key] is not present, returns ErrorValue (which is Void 

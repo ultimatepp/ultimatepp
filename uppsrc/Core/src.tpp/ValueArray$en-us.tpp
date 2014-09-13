@@ -172,6 +172,13 @@ onst]_[_^ValueArray^ ValueArray][@(0.0.255) `&]_[*@3 va])&]
 [s2;%% Returns element at [%-*@3 i].&]
 [s3;%% &]
 [s4; &]
+[s5;:ValueArray`:`:At`(int`): [_^Value^ Value][@(0.0.255) `&]_[* At]([@(0.0.255) int]_[*@3 i])&]
+[s2;%% Returns a reference of element at [%-*@3 i] , if there is none, 
+adds as much Void Values to array as necessarry to have it. [^topic`:`/`/Core`/srcdoc`/ValueReference`$en`-us^ T
+he reference returned is invalidated by any further use of originating 
+Value]. &]
+[s3;%% &]
+[s4; &]
 [s5;:ValueArray`:`:GetHashValue`(`)const: [@(0.0.255) unsigned]_[* GetHashValue]()_[@(0.0.255) c
 onst]&]
 [s2;%% Returns hashing value.&]
