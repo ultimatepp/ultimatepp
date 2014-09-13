@@ -1,0 +1,11 @@
+description "Demonstrates Value referencing/mutating operations\377";
+
+uses
+	Core;
+
+file
+	ValueRef.cpp;
+
+mainconfig
+	"" = "SSE2";
+
