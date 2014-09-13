@@ -327,6 +327,7 @@ struct Pdb : Debugger, ParentCtrl {
 	Val        Comparison(CParser& p);
 	Val        Exp0(CParser& p);
 	Val        Exp(CParser& p);
+	void       CatInt(Visual& result, int64 val);
 	void       Visualise(Visual& result, Pdb::Val val, int expandptr, int slen);
 	void       Visualise(Visual& result, Pdb::Val val, int expandptr);
 	Visual     Visualise(Val v);

@@ -48,6 +48,11 @@ bool IsOk(const String& q)
 	return true;
 }
 
+void Pdb::CatInt(Visual& result, int64 val)
+{
+	result.Cat(IntFormat(val), Red);
+}
+
 void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen)
 {
 	const int maxlen = 300;
@@ -79,7 +84,8 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen)
 		return;
 	}
 	if(val.type < 0) {
-		#define RESULTINT(x, type) case x: result.Cat(IntFormat((type)val.ival), Red); break;
+		#define RESULTINT(x, type) case x: CatInt(result, (type)val.ival); break;
+		#define RESULTINTN(x, type, t2) case x:  if(IsNull((t2)val.ival)) result.Cat("Null ", Magenta); CatInt(result, (type)val.ival); break;
 		switch(val.type) {
 		RESULTINT(BOOL1, bool)
 		RESULTINT(UINT1, byte)
@@ -87,12 +93,16 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen)
 		RESULTINT(UINT2, uint16)
 		RESULTINT(SINT2, int16)
 		RESULTINT(UINT4, uint32)
-		RESULTINT(SINT4, int32)
 		RESULTINT(UINT8, uint64)
-		RESULTINT(SINT8, int64)
+		RESULTINTN(SINT4, int32, int)
+		RESULTINTN(SINT8, int64, int64)
 		case DBL:
 		case FLT:
-			result.Cat(FormatDouble(val.fval, 20), Red); break;
+			if(IsNull(val.fval))
+				result.Cat("Null", Magenta);
+			else
+				result.Cat(FormatDouble(val.fval, 20), Red);
+			break;
 		case PFUNC: {
 			result.Cat(Hex(val.address), Red);
 			FnInfo fi = GetFnInfo(val.address);
