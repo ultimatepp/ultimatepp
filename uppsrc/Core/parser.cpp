@@ -480,7 +480,8 @@ void CParser::SetPos(const CParser::Pos& p)
 	term = p.ptr;
 	wspc = p.wspc;
 	lineptr = p.lineptr;
-	DoSpaces();
+	if(skipspaces)
+		DoSpaces();
 }
 
 CParser::CParser(const char *ptr)
@@ -513,8 +514,8 @@ void CParser::Set(const char *_ptr, const char *_fn, int _line)
 	term = lineptr = wspc = _ptr;
 	fn = _fn;
 	line = _line;
-	skipspaces = true;
-	Spaces();
+	if(skipspaces)
+		Spaces();
 	LLOG("Set " << fn << ":" << line);
 }
 
@@ -522,7 +523,6 @@ void CParser::Set(const char *_ptr)
 {
 	Set(_ptr, "", 1);
 }
-
 
 inline void NextCStringLine(String& t, const char *linepfx, int& pl)
 {

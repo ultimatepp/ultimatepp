@@ -418,8 +418,7 @@ onst]_[@(0.0.255) char]_`*[*@3 ptr], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3
 [s5;:CParser`:`:Set`(const char`*`): [@(0.0.255) void]_[* Set]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 ptr])&]
 [s2;%% Sets the new input string.&]
-[s0;%% &]
-[s0;%% &]
+[s3;%% &]
 [s0;%% &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 CParser`::Error]]}}&]
 [s3; &]
