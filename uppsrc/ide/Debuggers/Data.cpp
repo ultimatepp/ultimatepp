@@ -296,7 +296,6 @@ bool Pdb::Tip(const String& exp, CodeEditor::MouseTip& mt)
 
 void Pdb::Data()
 {
-DLOG("Data");
 	switch(tab.Get()) {
 	case TAB_AUTOS: Autos(); break;
 	case TAB_LOCALS: Locals(); break;
