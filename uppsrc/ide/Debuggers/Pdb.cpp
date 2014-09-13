@@ -233,8 +233,6 @@ Pdb::Pdb()
 	autos.WhenBar = THISBACK(AutosMenu);
 	autos.WhenLeftDouble = THISBACK1(ExploreKey, &autos);
 
-DLOG("TEST");
-
 	int c = EditField::GetStdHeight();
 	explorer.AddColumn("", 1);
 	explorer.AddColumn("", 6).SetDisplay(Single<VisualDisplay>());
