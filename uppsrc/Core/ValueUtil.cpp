@@ -246,6 +246,11 @@ void ValueArray::Set(int i, const Value& v) {
 #endif
 }
 
+Value& ValueArray::At(int i)
+{
+	return Clone().At(i);
+}
+
 void ValueArray::Remove(int i, int count)
 {
 	Clone().Remove(i, count);
@@ -414,15 +419,20 @@ const Value& ValueMap::Data::Get(const Value& k) const
 	return q >= 0 ? value[q] : ErrorValue();
 }
 
-ValueMap::Data& ValueMap::Clone() {
-	if(data->GetRefCount() != 1) {
+ValueMap::Data& ValueMap::Clone(Data *&ptr)
+{
+	if(ptr->GetRefCount() != 1) {
 		Data *d = new Data;
-		d->key <<= data->key;
-		d->value = data->value;
-		data->Release();
-		data = d;
+		d->key <<= ptr->key;
+		d->value = ptr->value;
+		ptr->Release();
+		ptr = d;
 	}
-	return *data;
+	return *ptr;
+}
+
+ValueMap::Data& ValueMap::Clone() {
+	return Clone(data);
 }
 
 void ValueMap::Init0()
@@ -476,6 +486,32 @@ VectorMap<Value, Value> ValueMap::Pick()
 ValueMap::operator Value() const {
 	data->Retain();
 	return Value(data);
+}
+
+Value& ValueMap::Data::GetAdd(const Value& k)
+{
+	int i = key.Find(k);
+	if(i < 0) {
+		i = value.GetCount();
+		key.Add(k);
+	}
+	return value.At(i);
+}
+
+Value& ValueMap::Data::At(int i)
+{
+	ASSERT(i < value.GetCount());
+	return value.At(i);
+}
+
+Value& ValueMap::GetAdd(const Value& key)
+{
+	return Clone().GetAdd(key);
+}
+
+Value& ValueMap::At(int i)
+{
+	return Clone().At(i);
 }
 
 ValueMap::ValueMap(const Value& src)

@@ -188,17 +188,18 @@ ValueType<T, type, B>::operator ValueTypeRef()
 
 class ValueArray : public ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArray> > {
 	struct Data : Value::Void {
-		virtual dword      GetType() const             { return VALUEARRAY_V; }
-		virtual bool       IsNull() const;
-		virtual void       Serialize(Stream& s);
-		virtual void       Xmlize(XmlIO& xio);
-		virtual void       Jsonize(JsonIO& jio);
-		virtual unsigned   GetHashValue() const;
-		virtual bool       IsEqual(const Value::Void *p);
-		virtual String     AsString() const;
-		virtual int        Compare(const Value::Void *p);
+		virtual dword        GetType() const             { return VALUEARRAY_V; }
+		virtual bool         IsNull() const;
+		virtual void         Serialize(Stream& s);
+		virtual void         Xmlize(XmlIO& xio);
+		virtual void         Jsonize(JsonIO& jio);
+		virtual unsigned     GetHashValue() const;
+		virtual bool         IsEqual(const Value::Void *p);
+		virtual String       AsString() const;
+		virtual int          Compare(const Value::Void *p);
 
 		int GetRefCount() const     { return AtomicRead(refcount); }
+		Vector<Value>& Clone();
 
 		Vector<Value> data;
 	};
@@ -208,7 +209,7 @@ class ValueArray : public ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArra
 	Vector<Value>& Create();
 	Vector<Value>& Clone();
 	void  Init0();
-	
+
 	friend Value::Void *ValueArrayDataCreate();
 	friend class Value;
 	friend class ValueMap;
@@ -229,8 +230,6 @@ public:
 	ValueArray(const Nuller&)                 { Init0(); }
 	bool IsNullInstance() const               { return IsEmpty(); }
 	
-//	operator Ref()                            { return AsRef(*this); }
-
 	void Clear();
 	void SetCount(int n);
 	void SetCount(int n, const Value& v);
@@ -251,6 +250,8 @@ public:
 	void Append(const ValueArray& va)         { Insert(GetCount(), va); }
 
 	const Value& operator[](int i) const      { return Get(i); }
+	
+	Value& At(int i);
 
 	unsigned GetHashValue() const             { return data->GetHashValue(); }
 	void     Serialize(Stream& s);
@@ -284,6 +285,8 @@ class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 		virtual int        Compare(const Value::Void *p);
 
 		const Value& Get(const Value& key) const;
+		Value& GetAdd(const Value& key);
+		Value& At(int i);
 
 		Index<Value> key;
 		ValueArray   value;
@@ -293,6 +296,7 @@ class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 	Data *data;
 
 	Data& Create();
+	static Data& Clone(Data *&ptr);
 	Data& Clone();
 	void  Init0();
 
@@ -316,8 +320,6 @@ public:
 
 	ValueMap(const Nuller&)                         { Init0(); }
 	bool IsNullInstance() const                     { return IsEmpty(); }
-
-//	operator Ref()                                  { return AsRef(*this); }
 
 	void Clear();
 	int  GetCount() const                           { return data->value.GetCount(); }
@@ -369,6 +371,14 @@ public:
 	const Value& operator[](const char *key) const   { return operator[](Value(key)); }
 	const Value& operator[](const int key) const     { return operator[](Value(key)); }
 	const Value& operator[](const Id& key) const     { return operator[](Value(key.ToString())); }
+
+	Value& GetAdd(const Value& key);
+	Value& At(int i);
+	Value& operator()(const Value& key)              { return GetAdd(key); }
+	Value& operator()(const String& key)             { return operator()(Value(key)); }
+	Value& operator()(const char *key)               { return operator()(Value(key)); }
+	Value& operator()(const int key)                 { return operator()(Value(key)); }
+	Value& operator()(const Id& key)                 { return operator()(Value(key.ToString())); }
 	
 	Value GetAndClear(const Value& key);
 

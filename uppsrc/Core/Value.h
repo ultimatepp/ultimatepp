@@ -135,6 +135,7 @@ protected:
 	Void    *&ptr()                  { ASSERT(IsRef()); return *(Void **)&data; }
 	Void     *ptr() const            { ASSERT(IsRef()); return *(Void **)&data; }
 	
+
 	bool     IsString() const        { return !data.IsSpecial(); }
 	bool     Is(byte v) const        { return data.IsSpecial(v); }
 	bool     IsRef() const           { return Is(REF); }
@@ -173,6 +174,8 @@ protected:
 	String  GetName() const;
 	
 	int     PolyCompare(const Value& v) const;
+
+	Vector<Value>&  CloneArray();
 	
 #if defined(_DEBUG) && defined(COMPILER_GCC)
 	uint32  magic[4];
@@ -250,6 +253,17 @@ public:
 	const Value& operator[](const String& key) const;
 	const Value& operator[](const char *key) const;
 	const Value& operator[](const Id& key) const;
+	
+	Value& At(int i);
+	void   Add(const Value& src);
+	template <typename T>
+	Value& operator<<(const T& src)       { Add(src); return *this; }
+	Value& operator()(int i)              { return At(i); }
+
+	Value& GetAdd(const Value& key);
+	Value& operator()(const String& key);
+	Value& operator()(const char *key);
+	Value& operator()(const Id& key);
 
 	Value()                               : data((int)Null, VOIDV, String::SPECIAL) { Magic(); }
 	~Value()                              { ClearMagic(); if(IsRef()) RefRelease(); }

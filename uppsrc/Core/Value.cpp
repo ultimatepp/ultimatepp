@@ -604,11 +604,70 @@ const Value& Value::operator[](int i) const
 	return ErrorValue();
 }
 
+Vector<Value>& Value::CloneArray()
+{
+	ValueArray::Data *data = (ValueArray::Data *)ptr();
+	if(data->GetRefCount() != 1) {
+		ValueArray::Data *d = new ValueArray::Data;
+		d->data <<= data->data;
+		data->Release();
+		ptr() = d;
+		data = d;
+	}
+	return data->data;
+}
+
+Value& Value::At(int i)
+{
+	if(IsNull())
+		*this = ValueArray();
+	ASSERT(i >= 0 && IsRef());
+	dword t = ptr()->GetType();
+	if(t == VALUEMAP_V) {
+		ValueArray& va = ValueMap::Clone((ValueMap::Data*&)ptr()).value;
+		ASSERT(i < va.GetCount());
+		return va.At(i);
+	}
+	ASSERT(t == VALUEARRAY_V);
+	return CloneArray().At(i);
+}
+
+void Value::Add(const Value& s)
+{
+	if(IsNull())
+		*this = ValueArray();
+	ASSERT(IsRef() && ptr()->GetType() == VALUEARRAY_V);
+	CloneArray().Add(s);
+}
+
 const Value& Value::operator[](const String& key) const
 {
 	if(IsRef() && ptr()->GetType() == VALUEMAP_V)
 		return ((ValueMap::Data *)ptr())->Get(key);
 	return ErrorValue();	
+}
+
+Value& Value::GetAdd(const Value& key)
+{
+	if(IsNull())
+		*this = ValueMap();
+	ASSERT(IsRef() && ptr()->GetType() == VALUEMAP_V);
+	return ValueMap::Clone((ValueMap::Data*&)ptr()).GetAdd(key);
+}
+
+Value& Value::operator()(const String& key)
+{
+	return GetAdd(key);
+}
+
+Value& Value::operator()(const char *key)
+{
+	return GetAdd(key);
+}
+
+Value& Value::operator()(const Id& key)
+{
+	return GetAdd(~key);
 }
 
 String Value::GetName() const
