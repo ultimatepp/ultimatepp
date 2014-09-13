@@ -75,6 +75,7 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 				ink = pi.hyperlink;
 		}
 		x = zx0;
+		Vector< Tuple2<int, int> > bak;
 		for(int i = 0; i < len; i++) {
 			int w = wd[pos + i];
 			Image img;
@@ -95,6 +96,7 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 					}
 				}
 				img = RichTextImg::TabChar();
+				bak.Add(MakeTuple(pos + i, c));
 				c = ' ';
 			}
 			if(img && !IsNull(pi.showcodes)) {
@@ -109,6 +111,8 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 		              f.sscript == 2 ? zy0 + ssd - fi.GetHeight()
 		                             : zy0 - fi.GetAscent(),
 		              text + pos, fnt, ink, len, wd + pos);
+		for(int i = 0; i < bak.GetCount(); i++)
+			text[bak[i].a] = bak[i].b;
 	}
 }
 
