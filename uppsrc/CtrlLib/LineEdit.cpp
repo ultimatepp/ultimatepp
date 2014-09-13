@@ -150,7 +150,7 @@ void LineEdit::PasteColumn(const WString& text)
 	for(int i = 0; i < cl.GetCount(); i++) { 
 		int li = p.y + i;
 		if(li < line.GetCount()) {
-			int l = GetGPos(i + p.y, min(GetLineLength(li), p.x));
+			int l = GetGPos(i + p.y, p.x);
 			pos = l + Insert(l, cl[i]);
 		}
 		else {
