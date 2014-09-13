@@ -118,6 +118,7 @@ void Pdb::Autos()
 {
 	VectorMap<String, Value> prev = DataMap(autos);
 	autos.Clear();
+	autotext.Replace("//", "");
 	CParser p(autotext);
 	TryAuto("this", prev);
 	while(!p.IsEof())
@@ -295,6 +296,7 @@ bool Pdb::Tip(const String& exp, CodeEditor::MouseTip& mt)
 
 void Pdb::Data()
 {
+DLOG("Data");
 	switch(tab.Get()) {
 	case TAB_AUTOS: Autos(); break;
 	case TAB_LOCALS: Locals(); break;
