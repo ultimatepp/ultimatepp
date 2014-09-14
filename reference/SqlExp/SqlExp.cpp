@@ -117,6 +117,7 @@ GUI_APP_MAIN
 	EXP(Select(COL).From(TABLE1).Where(COL == 0).GroupBy(COL).Having(COL == 0).OrderBy(Descending(COL)));
 	EXP(Select(COL, Count(Select(SqlAll()).From(TABLE1))).From(TABLE1).Where(COL == 0).GroupBy(COL)
 	    .Having(COL == 0).OrderBy(Descending(COL)));
+	EXP(Select(ID, Avg(COL)).From(TABLE1).GroupBy(ID).Having(SqlBoolFunc("bool_and", COLUMN1 > 0)));
 	EXP(Select(COL).From(TABLE1).Limit(100));
 	EXP(Select(COL).From(TABLE1).Limit(100, 10));
 	EXP(Select(COL).From(TABLE1).Offset(20));
@@ -148,7 +149,7 @@ GUI_APP_MAIN
 	
 	EXP(Select(TABLE1(SqlAll())).From(TABLE1));
 	EXP(Select(SqlAll().Of(TABLE1)).From(TABLE1));
-
+	
 	Vector<int> m;
 	for(int i = 0; i < 10; i++)
 		m.Add(i);
