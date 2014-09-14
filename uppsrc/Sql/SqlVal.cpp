@@ -218,6 +218,22 @@ SqlVal SqlFunc(const char *name, const SqlSet& set) {
 	return SqlVal(name + set(), SqlS::FN);
 }
 
+SqlBool SqlBoolFunc(const char *name, const SqlBool& a) {
+	return SqlBool(String().Cat() << name << '(' << ~a << ')', SqlS::FN);
+}
+
+SqlBool SqlBoolFunc(const char *n, const SqlBool& a, const SqlBool& b) {
+	return SqlBool(String(n).Cat() << '(' + ~a << ", " << ~b << ')', SqlS::FN);
+}
+
+SqlBool SqlBoolFunc(const char *n, const SqlBool& a, const SqlBool& b, const SqlBool& c) {
+	return SqlBool(String(n).Cat() << '(' << ~a << ", " << ~b << ", " << ~c << ')', SqlS::FN);
+}
+
+SqlBool SqlBoolFunc(const char *n, const SqlBool& a, const SqlBool& b, const SqlBool& c, const SqlBool& d) {
+	return SqlBool(String(n).Cat() << '(' << ~a << ", " << ~b << ", " << ~c << ", " << ~d << ')', SqlS::FN);
+}
+
 SqlVal Decode(const SqlVal& exp, const SqlSet& variants) {
 	ASSERT(!variants.IsEmpty());
 	return SqlVal("decode("  + ~exp  + ", " + ~variants + ')', SqlS::FN);

@@ -249,8 +249,13 @@ SqlVal& operator|=(SqlVal& a, const SqlVal& b);
 SqlVal SqlFunc(const char* name, const SqlVal& a);
 SqlVal SqlFunc(const char* name, const SqlVal& a, const SqlVal& b);
 SqlVal SqlFunc(const char* name, const SqlVal& a, const SqlVal& b, const SqlVal& c);
-SqlVal SqlFunc(const char* nm, const SqlVal& a, const SqlVal& b, const SqlVal& c, const SqlVal& d);
+SqlVal SqlFunc(const char* name, const SqlVal& a, const SqlVal& b, const SqlVal& c, const SqlVal& d);
 SqlVal SqlFunc(const char* name, const SqlSet& set);
+
+SqlBool SqlBoolFunc(const char* name, const SqlBool& a);
+SqlBool SqlBoolFunc(const char* name, const SqlBool& a, const SqlBool& b);
+SqlBool SqlBoolFunc(const char* name, const SqlBool& a, const SqlBool& b, const SqlBool& c);
+SqlBool SqlBoolFunc(const char* name, const SqlBool& a, const SqlBool& b, const SqlBool& c, const SqlBool& d);
 
 SqlVal Decode(const SqlVal& exp, const SqlSet& variants);
 SqlVal Distinct(const SqlVal& exp);
