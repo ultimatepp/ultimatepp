@@ -1,0 +1,11 @@
+uses
+	Core,
+	Esc;
+
+file
+	script.esc,
+	EscTest.cpp;
+
+mainconfig
+	"" = "SSE2";
+
