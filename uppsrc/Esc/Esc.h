@@ -6,7 +6,7 @@
 
 NAMESPACE_UPP
 
-enum { ESC_VOID, ESC_NUMBER, ESC_ARRAY, ESC_MAP, ESC_LAMBDA };
+enum { ESC_VOID, ESC_DOUBLE, ESC_ARRAY, ESC_MAP, ESC_LAMBDA, ESC_INT64 };
 
 String EscTypeName(int sv_type);
 
@@ -29,6 +29,7 @@ class EscValue : Moveable<EscValue> {
 
 	union {
 		double         number;
+		int64          i64;
 		EscArray      *array;
 		EscMap        *map;
 		EscLambda     *lambda;
@@ -53,11 +54,15 @@ public:
 	bool IsVoid() const                          { return type == ESC_VOID; }
 	EscValue();
 
-	bool                   IsNumber() const      { return type == ESC_NUMBER; }
-	double                 GetNumber() const     { return IsNumber() ? number : 0; }
+	bool                   IsNumber() const      { return findarg(type, ESC_DOUBLE, ESC_INT64) >= 0; }
+	double                 GetNumber() const;
+	bool                   IsInt64() const       { return type == ESC_INT64; }
+	int64                  GetInt64() const;
 	bool                   IsInt() const;
 	int                    GetInt() const;
 	EscValue(double n);
+	EscValue(int64 n);
+	EscValue(int n);
 
 	bool                    IsArray() const      { return type == ESC_ARRAY; }
 	const Vector<EscValue>& GetArray() const;
@@ -184,6 +189,9 @@ struct Esc : public CParser {
 		SRVal()                    { lval = NULL; }
 		SRVal(const EscValue& v)   { lval = NULL; rval = v; }
 		SRVal(double n)            { lval = NULL; rval = n; }
+		SRVal(int64 n)             { lval = NULL; rval = n; }
+		SRVal(uint64 n)            { lval = NULL; rval = (int64)n; }
+		SRVal(bool n)              { lval = NULL; rval = (int64)n; }
 	};
 
 	ArrayMap<String, EscValue>& global;
@@ -215,9 +223,9 @@ struct Esc : public CParser {
 	EscValue   GetExp();
 
 	double Number(const EscValue& a, const char *oper);
-	int    Int(const EscValue& a, const char *oper);
+	int64  Int(const EscValue& a, const char *oper);
 	double Number(const SRVal& a, const char *oper);
-	int    Int(const SRVal& a, const char *oper);
+	int64  Int(const SRVal& a, const char *oper);
 
 	EscValue   MulArray(EscValue array, EscValue times);
 

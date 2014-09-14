@@ -10,7 +10,8 @@ String EscTypeName(int sv_type)
 	switch(sv_type)
 	{
 	case ESC_VOID:   return "void";
-	case ESC_NUMBER: return "number";
+	case ESC_DOUBLE: return "double";
+	case ESC_INT64:  return "int64";
 	case ESC_ARRAY:  return "array";
 	case ESC_MAP:    return "map";
 	case ESC_LAMBDA: return "lambda";
@@ -59,8 +60,11 @@ void EscValue::Assign(const EscValue& s)
 		lambda = s.lambda;
 		lambda->Retain();
 		break;
-	case ESC_NUMBER:
+	case ESC_DOUBLE:
 		number = s.number;
+		break;
+	case ESC_INT64:
+		i64 = s.i64;
 		break;
 	}
 }
@@ -116,8 +120,11 @@ unsigned EscValue::GetHashValue() const
 		case ESC_VOID:
 			hash = 1;
 			break;
-		case ESC_NUMBER:
+		case ESC_DOUBLE:
 			hash = UPP::GetHashValue(number) | 0x80000;
+			break;
+		case ESC_INT64:
+			hash = UPP::GetHashValue(i64) | 0x80000;
 			break;
 		case ESC_ARRAY:
 			for(int i = 0; i < array->array.GetCount(); i++)
@@ -156,8 +163,11 @@ bool EscValue::operator==(const EscValue& a) const
 	switch(type) {
 	case ESC_VOID:
 		return a.type == ESC_VOID;
-	case ESC_NUMBER:
-		return a.type == ESC_NUMBER && number == a.number;
+	case ESC_INT64:
+		if(a.type == ESC_INT64)
+			return i64 == a.i64;
+	case ESC_DOUBLE:
+		return a.IsNumber() && GetNumber() == a.GetNumber();
 	case ESC_ARRAY:
 		if(a.type != ESC_ARRAY) return false;
 		if(array->array.GetCount() != a.array->array.GetCount())
@@ -195,7 +205,7 @@ String EscValue::ToString(int maxlen, int indent_step, bool hex, int indent) con
 	String s;
 	int i;
 	switch(type) {
-	case ESC_NUMBER:
+	case ESC_DOUBLE:
 		{
 			s = ind;
 			if((int64)number == number)
@@ -206,6 +216,16 @@ String EscValue::ToString(int maxlen, int indent_step, bool hex, int indent) con
 				s << " 0x" << Format64Hex((int64)number);
 			if(hex && number >= 0 && number < 65536 && (int)number == number)
 				s << ' ' << AsCString(ToUtf8(WString((int)number, 1)));
+			return s;
+		}
+	case ESC_INT64:
+		{
+			s = ind;
+			s << FormatInt64(i64);
+			if(hex)
+				s << " 0x" << Format64Hex(i64);
+			if(hex && i64 >= 0 && i64 < 65536)
+				s << ' ' << AsCString(ToUtf8(WString((int)i64, 1)));
 			return s;
 		}
 	case ESC_ARRAY:
@@ -298,14 +318,36 @@ String EscValue::ToString(int maxlen, int indent_step, bool hex, int indent) con
 	return "void";
 }
 
-bool EscValue::IsInt() const
+double EscValue::GetNumber() const
 {
-	return IsNumber() && number >= (double)INT_MIN && number <= (double)INT_MAX;
+	if(type == ESC_INT64)
+		return (double)i64;
+	if(type == ESC_DOUBLE)
+		return number;
+	return 0;
 }
 
-int  EscValue::GetInt() const
+int64 EscValue::GetInt64() const
 {
-	return (int)minmax(GetNumber(), (double)INT_MIN, (double)INT_MAX);
+	if(type == ESC_INT64)
+		return i64;
+	if(type == ESC_DOUBLE && number >= (double)INT64_MIN && number <= (double)INT64_MAX)
+		return (int64)number;
+	return 0;
+}
+
+bool EscValue::IsInt() const
+{
+	if(IsInt64()) {
+		int64 n = GetInt64();
+		return n >= INT_MIN && n <= INT_MAX;
+	}
+	return false;
+}
+
+int EscValue::GetInt() const
+{
+	return IsInt() ? (int)GetInt64() : 0;
 }
 
 bool IsTrue(const EscValue& a)
