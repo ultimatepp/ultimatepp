@@ -117,7 +117,7 @@ void EscValue::InitString(const WString& s)
 	Vector<EscValue>& a = array->array;
 	a.SetCount(s.GetCount());
 	for(int i = 0; i < s.GetCount(); i++)
-		a[i] = s[i];
+		a[i] = (int64)s[i];
 	total++;
 }
 
@@ -144,7 +144,23 @@ EscValue::EscValue()
 EscValue::EscValue(double n)
 {
 	number = n;
-	type = ESC_NUMBER;
+	type = ESC_DOUBLE;
+	hash = 0;
+	total++;
+}
+
+EscValue::EscValue(int64 n)
+{
+	i64 = n;
+	type = ESC_INT64;
+	hash = 0;
+	total++;
+}
+
+EscValue::EscValue(int n)
+{
+	i64 = n;
+	type = ESC_INT64;
 	hash = 0;
 	total++;
 }

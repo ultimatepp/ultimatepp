@@ -100,7 +100,7 @@ int EscEscape::Int(int i)
 {
 	if(i >= arg.GetCount())
 		ThrowError("too little parameters" + InCall());
-	return esc.Int(arg[i], "parameter" + InCall());
+	return (int)esc.Int(arg[i], "parameter" + InCall());
 }
 
 void  EscEscape::CheckArray(int i)

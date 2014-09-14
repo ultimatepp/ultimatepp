@@ -28,7 +28,7 @@ EscValue Esc::Get(const SRVal& val)
 {
 	LTIMING("Get");
 	if(skipexp)
-		return 1;
+		return (int64)1;
 	EscValue v = val.lval ? *val.lval : val.rval;
 	if(val.sbs.IsArray()) {
 		const Vector<EscValue>& sbs = val.sbs.GetArray();
@@ -42,7 +42,7 @@ EscValue Esc::Get(const SRVal& val)
 				if(ss.IsArray() && ss.GetArray().GetCount() >= 2) {
 					EscValue v1 = ss.ArrayGet(0);
 					EscValue v2 = ss.ArrayGet(1);
-					int i = v1.IsInt() ? v1.GetInt() : 0;
+					int i = v1.GetInt();
 					int n = count - i;
 					if(ss.GetCount() == 2)
 						n = v2.IsInt() ? v2.GetInt() : n;
@@ -60,11 +60,11 @@ EscValue Esc::Get(const SRVal& val)
 						ThrowError("slice out of range");
 				}
 				else {
-					int i = Int(ss, "index");
+					int64 i = Int(ss, "index");
 					if(i < 0)
 						i += count;
 					if(i >= 0 && i < count)
-						v = v.ArrayGet(i);
+						v = v.ArrayGet((int)i);
 					else
 						ThrowError("index out of range");
 				}
@@ -99,12 +99,12 @@ void Esc::Assign(EscValue& val, const Vector<EscValue>& sbs, int si, const EscVa
 		if(si < sbs.GetCount()) {
 			if(ss.IsArray())
 				ThrowError("slice must be last subscript");
-			int i = Int(ss, "index");
+			int64 i = Int(ss, "index");
 			if(i >= 0 && i < val.GetCount()) {
-				EscValue x = val.ArrayGet(i);
-				val.ArraySet(i, 0.0);
+				EscValue x = val.ArrayGet((int)i);
+				val.ArraySet((int)i, 0.0);
 				Assign(x, sbs, si, src);
-				if(!val.ArraySet(i, x))
+				if(!val.ArraySet((int)i, x))
 					OutOfMemory();
 				return;
 			}
@@ -136,11 +136,11 @@ void Esc::Assign(EscValue& val, const Vector<EscValue>& sbs, int si, const EscVa
 					ThrowError("slice out of range");
 			}
 			else {
-				int i = ss.IsVoid() ? val.GetCount() : Int(ss, "index");
+				int64 i = ss.IsVoid() ? val.GetCount() : Int(ss, "index");
 				if(i < 0)
 					i = count + i;
-				if(i >= 0) {
-					if(!val.ArraySet(i, src))
+				if(i >= 0 && i < INT_MAX) {
+					if(!val.ArraySet((int)i, src))
 						ThrowError("out of memory");
 					return;
 				}
@@ -300,11 +300,11 @@ void Esc::Term(SRVal& r)
 	op_limit--;
 	TestLimit();
 	if(Char2('0', 'x') || Char2('0', 'X')) {
-		r = ReadNumber(16);
+		r = ReadNumber64(16);
 		return;
 	}
 	if(Char2('0', 'b') || Char2('0', 'B')) {
-		r = ReadNumber(2);
+		r = ReadNumber64(2);
 		return;
 	}
 	if(IsChar2('0', '.')) {
@@ -312,10 +312,11 @@ void Esc::Term(SRVal& r)
 		return;
 	}
 	if(Char('0')) {
-		r = IsNumber() ? ReadNumber(8) : 0;
+		r = IsNumber() ? ReadNumber64(8) : 0;
 		return;
 	}
 	if(IsNumber()) {
+		// TODO: int64 !
 		r = ReadDouble();
 		return;
 	}
@@ -327,7 +328,7 @@ void Esc::Term(SRVal& r)
 		WString s = FromUtf8(ReadString('\''));
 		if(s.GetLength() != 1)
 			ThrowError("invalid character literal");
-		r = s[0];
+		r = (int64)s[0];
 		return;
 	}
 	if(Char('@')) {
@@ -444,11 +445,11 @@ double Esc::Number(const EscValue& a, const char *oper)
 	return a.GetNumber();
 }
 
-int Esc::Int(const EscValue& a, const char *oper)
+int64 Esc::Int(const EscValue& a, const char *oper)
 {
-	if(!a.IsInt())
+	if(!a.IsInt64())
 		ThrowError(String().Cat() << "integer expected for '" << oper << "', encountered " << Lims(a.ToString()));
-	return a.GetInt();
+	return a.GetInt64();
 }
 
 double Esc::Number(const Esc::SRVal& a, const char *oper)
@@ -456,7 +457,7 @@ double Esc::Number(const Esc::SRVal& a, const char *oper)
 	return Number(Get(a), oper);
 }
 
-int Esc::Int(const Esc::SRVal& a, const char *oper)
+int64 Esc::Int(const Esc::SRVal& a, const char *oper)
 {
 	return Int(Get(a), oper);
 }
@@ -465,27 +466,43 @@ void Esc::Unary(Esc::SRVal& r)
 {
 	if(Char2('+', '+')) {
 		Unary(r);
-		Assign(r, Number(r, "++") + 1);
+		EscValue v = Get(r);
+		if(v.IsInt64())
+			Assign(r, Int(v, "++") + 1);
+		else
+			Assign(r, Number(v, "++") + 1);
 	}
 	else
 	if(Char2('-', '-')) {
 		Unary(r);
-		Assign(r, Number(r, "++") - 1);
+		EscValue v = Get(r);
+		if(v.IsInt64())
+			Assign(r, Int(v, "--") - 1);
+		else
+			Assign(r, Number(v, "--") - 1);
 	}
 	else
 	if(Char('-')) {
 		Unary(r);
-		r = -Number(r, "-");
+		EscValue v = Get(r);
+		if(v.IsInt64())
+			r = -Int(v, "-");
+		else
+			r = -Number(v, "-");
 	}
 	else
 	if(Char('+')) {
 		Unary(r);
-		r = Number(r, "+");
+		EscValue v = Get(r);
+		if(v.IsInt64())
+			r = Int(v, "+");
+		else
+			r = Number(v, "+");
 	}
 	else
 	if(Char('!')) {
 		Unary(r);
-		r = !IsTrue(Get(r));
+		r = (int64)!IsTrue(Get(r));
 	}
 	else
 	if(Char('~')) {
@@ -497,12 +514,18 @@ void Esc::Unary(Esc::SRVal& r)
 
 	if(Char2('+', '+')) {
 		EscValue v = Get(r);
-		Assign(r, Number(v, "++") + 1);
+		if(v.IsInt64())
+			Assign(r, Int(v, "++") + 1);
+		else
+			Assign(r, Number(v, "++") + 1);
 		r = v;
 	}
 	if(Char2('-', '-')) {
 		EscValue v = Get(r);
-		Assign(r, Number(v, "--") - 1);
+		if(v.IsInt64())
+			Assign(r, Int(v, "--") - 1);
+		else
+			Assign(r, Number(v, "--") - 1);
 		r = v;
 	}
 }
@@ -537,22 +560,27 @@ void Esc::Mul(Esc::SRVal& r)
 			if(y.IsArray() && x.IsInt())
 				r = MulArray(y, x);
 			else
+			if(x.IsInt64() && y.IsInt64())
+				r = Int(x, "*") * Int(y, "*");
+			else
 				r = Number(x, "*") * Number(y, "*");
 		}
 		else
 		if(!IsChar2('/', '=') && Char('/')) {
 			SRVal w;
 			Unary(w);
-			double b = Number(w, "/");
+			EscValue x = Get(r);
+			EscValue y = Get(w);
+			double b = Number(y, "/");
 			if(b == 0)
 				ThrowError("divide by zero");
-			r = Number(r, "/") / b;
+			r = Number(x, "/") / b;
 		}
 		else
 		if(!IsChar2('%', '=') && Char('%')) {
 			SRVal w;
 			Unary(w);
-			int b = Int(w, "%");
+			int64 b = Int(w, "%");
 			if(b == 0)
 				ThrowError("divide by zero");
 			r = Int(r, "%") % b;
@@ -576,14 +604,23 @@ void Esc::Add(Esc::SRVal& r)
 				r = v;
 			}
 			else
-			if(!(v.IsArray() && b.IsVoid()))
-				r = Number(v, "+") + Number(b, "+");
+			if(!(v.IsArray() && b.IsVoid())) {
+				if(v.IsInt64() && b.IsInt64())
+					r = Int(v, "+") + Int(b, "+");
+				else 
+					r = Number(v, "+") + Number(b, "+");
+			}
 		}
 		else
 		if(!IsChar2('-', '=') && Char('-')) {
 			SRVal w;
 			Mul(w);
-			r = Number(r, "-") - Number(w, "-");
+			EscValue v = Get(r);
+			EscValue b = Get(w);
+			if(v.IsInt64() && b.IsInt64())
+				r = Int(v, "-") - Int(b, "-");
+			else
+				r = Number(v, "-") - Number(b, "-");
 		}
 		else
 			return;
@@ -620,8 +657,10 @@ void Esc::Shift(Esc::SRVal& r)
 double Esc::DoCompare(const EscValue& a, const EscValue& b, const char *op)
 {
 	LTIMING("DoCompare");
+	if(a.IsInt64() && b.IsInt64())
+		return SgnCompare(a.GetInt64(), b.GetInt64());
 	if(a.IsNumber() && b.IsNumber())
-		return a.GetNumber() - b.GetNumber();
+		return SgnCompare(a.GetNumber(), b.GetNumber());
 	if(a.IsArray() && b.IsArray()) {
 		const Vector<EscValue>& x = a.GetArray();
 		const Vector<EscValue>& y = b.GetArray();
@@ -807,37 +846,53 @@ void Esc::Assign(Esc::SRVal& r)
 		}
 		else
 		if(!(v.IsArray() && b.IsVoid()))
-			Assign(r, Number(v, "+=") + Number(b, "+="));
+			if(v.IsInt64() && b.IsInt64())
+				Assign(r, Int(v, "+=") + Int(b, "+="));
+			else
+				Assign(r, Number(v, "+=") + Number(b, "+="));
 	}
 	else
 	if(Char2('-', '=')) {
 		SRVal w;
 		Cond(w);
-		Assign(r, Number(r, "-=") - Number(w, "-="));
+		EscValue v = Get(r);
+		EscValue b = Get(w);
+		if(v.IsInt64() && b.IsInt64())
+			Assign(r, Int(v, "-=") - Int(b, "-="));
+		else
+			Assign(r, Number(v, "-=") - Number(b, "-="));
 	}
 	else
 	if(Char2('*', '=')) {
 		SRVal w;
 		Cond(w);
-		Assign(r, Number(r, "*=") * Number(w, "*="));
+		EscValue x = Get(r);
+		EscValue y = Get(w);
+		if(x.IsInt64() && y.IsInt64())
+			Assign(r, Int(x, "*=") * Int(y, "*="));
+		else
+			Assign(r, Number(x, "*=") * Number(y, "*="));
 	}
 	else
 	if(Char2('/', '=')) {
 		SRVal w;
 		Cond(w);
-		double b = Number(w, "/=");
-		if(b == 0)
+		EscValue v = Get(r);
+		EscValue b = Get(w);
+		double q = Number(v, "/=");
+		if(q == 0)
 			ThrowError("divide by zero");
-		Assign(r, Number(r, "/=") / b);
+		Assign(r, Number(b, "/=") / q);
 	}
 	else
 	if(Char2('%', '=')) {
 		SRVal w;
 		Cond(w);
-		double b = Number(w, "%=");
+		int64 a = Int(r, "%=");
+		int64 b = Int(w, "%=");
 		if(b == 0)
 			ThrowError("divide by zero");
-		Assign(r, Number(r, "%=") / b);
+		Assign(r, a % b);
 	}
 }
 
@@ -1042,7 +1097,7 @@ void  Esc::DoStatement()
 				if(range.IsArray()) {
 					if(i >= range.GetCount())
 						break;
-					Assign(var, i);
+					Assign(var, (int64)i);
 				}
 				else
 				if(range.IsMap()) {
