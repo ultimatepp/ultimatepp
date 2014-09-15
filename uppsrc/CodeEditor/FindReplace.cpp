@@ -29,6 +29,8 @@ FindReplaceDlg::FindReplaceDlg()
 	prev.SetImage(CtrlImg::SmallUp());
 	amend.SetImage(CodeEditorImg::Replace());
 	incremental <<= true;
+	mode <<= THISBACK(Sync);
+	mode.Hide();
 	Sync();
 }
 
@@ -41,6 +43,9 @@ void FindReplaceDlg::Sync()
 	ignorecase.Enable(b);
 	wholeword.Enable(b);
 	incremental_from_cursor.Enable(incremental);
+	b = !mode.IsVisible() || ~mode == 0;
+	replace.Enable(b);
+	replace_txt.Enable(b);
 }
 
 dword CodeEditor::find_next_key = K_F3;
@@ -504,16 +509,43 @@ int CodeEditor::BlockReplace()
 	PlaceCaret(l);
 	int count = 0;
 	foundpos = l;
+	Index<int> ln;
 	while(FindFrom(foundpos, false, true) && foundpos + foundsize <= h) {
 		CachePos(foundpos);
-		Remove(foundpos, foundsize);
-		WString rt = GetReplaceText();
-		Insert(foundpos, rt);
-		foundpos += rt.GetCount();
-		h = h - foundsize + rt.GetCount();
-		count++;
+		if(~findreplace.mode == 0) {
+			Remove(foundpos, foundsize);
+			WString rt = GetReplaceText();
+			Insert(foundpos, rt);
+			foundpos += rt.GetCount();
+			h = h - foundsize + rt.GetCount();
+			count++;
+		}
+		else {
+			ln.FindAdd(GetLine(foundpos));
+			foundpos += foundsize;
+		}
 	}
-	SetSelection(l, h);
+	if(~findreplace.mode != 0) {
+		ClearSelection();
+		int ll = GetLine(l);
+		int lh = GetLine(h);
+		if(GetPos(lh) == h)
+			lh--;
+		bool mm = ~findreplace.mode == 1;
+		for(int i = lh; i >= ll; i--) {
+			if((ln.Find(i) >= 0) != mm) {
+				int pos = GetPos(i);
+				int l = GetLineLength(i);
+				CachePos(pos);
+				Remove(pos, min(l + 1, GetLength() - pos));
+				count++;
+			}
+		}
+		SetSelection(GetPos(ll), lh - count + 1 < GetLineCount() ? GetPos(lh - count + 1)
+		                                                         : GetLength());
+	}
+	else
+		SetSelection(l, h);
 	return count;
 }
 
@@ -587,8 +619,12 @@ void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 		findreplace.close.Tip("");
 		findreplace.next.SetImage(Null);
 		findreplace.next.Tip("");
+		findreplace.mode.Show();
+		findreplace.mode <<= 0;
+		findreplace.Sync();
 		if(findreplace.Execute() == IDOK)
 			BlockReplace();
+		findreplace.mode.Hide();
 	}
 	else {
 		if(find_pos >= 0)
