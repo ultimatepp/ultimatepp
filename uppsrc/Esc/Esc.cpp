@@ -447,7 +447,7 @@ double Esc::Number(const EscValue& a, const char *oper)
 
 int64 Esc::Int(const EscValue& a, const char *oper)
 {
-	if(!a.IsInt64())
+	if(!a.IsNumber())
 		ThrowError(String().Cat() << "integer expected for '" << oper << "', encountered " << Lims(a.ToString()));
 	return a.GetInt64();
 }
@@ -1038,6 +1038,12 @@ void Esc::FinishSwitch()
 
 void  Esc::DoStatement()
 {
+	{
+		String h = GetPtr();
+		if(h.GetCount() > 100)
+			h.Trim(99);
+	}
+
 	op_limit--;
 	TestLimit();
 	if(Id("if"))
