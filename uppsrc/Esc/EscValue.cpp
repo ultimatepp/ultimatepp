@@ -342,6 +342,10 @@ bool EscValue::IsInt() const
 		int64 n = GetInt64();
 		return n >= INT_MIN && n <= INT_MAX;
 	}
+	if(IsNumber()) {
+		double n = GetNumber();
+		return n >= INT_MIN && n <= INT_MAX;
+	}
 	return false;
 }
 

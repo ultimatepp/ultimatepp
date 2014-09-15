@@ -1038,12 +1038,6 @@ void Esc::FinishSwitch()
 
 void  Esc::DoStatement()
 {
-	{
-		String h = GetPtr();
-		if(h.GetCount() > 100)
-			h.Trim(99);
-	}
-
 	op_limit--;
 	TestLimit();
 	if(Id("if"))
