@@ -372,7 +372,7 @@ bool LocalProcess::Read(String& res) {
 		return false;
 	res = String(buffer, n);
 	if(convertcharset)
-		res = FromSystemCharset(res);
+		res = FromOEMCharset(res);
 	return true;
 #endif
 }

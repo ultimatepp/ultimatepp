@@ -171,7 +171,9 @@ inline String ScanHexString(const String& s)        { return ScanHexString(~s, s
 WString ToSystemCharset(const String& src);
 String  FromSystemCharset(const WString& src);
 #else
+String  ToSystemCharset(const String& src, int cp);
 String  ToSystemCharset(const String& src);
+String  FromWin32Charset(const String& src, int cp);
 String  FromSystemCharset(const String& src);
 WString ToSystemCharsetW(const char *src);
 String  FromSystemCharsetW(const wchar *src);

@@ -1223,13 +1223,18 @@ Stream& NilStream()
 
 #ifndef PLATFORM_WINCE
 class CoutStream : public Stream {
+	String buffer;
+
 	void Put0(int w) {
 #ifdef PLATFORM_WIN32
-		static HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-		char s[1];
-		s[0] = w;
-		dword dummy;
-		WriteFile(h, s, 1, &dummy, NULL);
+		buffer.Cat(w);
+		if(CheckUtf8(buffer)) { // TODO: Use W api
+			String ws = ToSystemCharset(buffer, GetConsoleOutputCP());
+			static HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+			dword dummy;
+			WriteFile(h, ~ws, ws.GetCount(), &dummy, NULL);
+			buffer.Clear();
+		}
 #else
 		putchar(w);
 #endif
