@@ -296,7 +296,8 @@ EscValue LayoutItem::ExecuteMethod(const char *method, Vector<EscValue>& arg) co
 EscValue LayoutItem::ExecuteMethod(const char *method) const
 {
 	Vector<EscValue> arg;
-	return ExecuteMethod(method, arg);
+	EscValue h = ExecuteMethod(method, arg);
+	return h;
 }
 
 Size LayoutItem::GetMinSize()
