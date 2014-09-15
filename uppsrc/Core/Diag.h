@@ -81,6 +81,7 @@ void __LOGF__(const char *format, ...);
 #define DTIMING(x)       TIMING(x)
 #define DLOGHEX(x)       LOGHEX(x)
 #define DDUMPHEX(x)      DUMPHEX(x)
+#define DTIMESTOP(x)     TIMESTOP(x)
 
 #else
 
@@ -91,6 +92,7 @@ void __LOGF__(const char *format, ...);
 #define DTIMING(x)       @
 #define DLOGHEX(x)       @
 #define DDUMPHEX(nx)     @
+#define DTIMESTOP(x)     @
 
 #define DEBUGCODE(x)     LOG_NOP
 

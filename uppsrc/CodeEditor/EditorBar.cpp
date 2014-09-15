@@ -358,12 +358,21 @@ String EditorBar::GetBreakpoint(int ln)
 	return ln < li.GetCount() ? li[ln].breakpoint : Null;
 }
 
+void EditorBar::ClearAnnotations()
+{
+	for(int i = 0; i < li.GetCount(); i++) {
+		li[i].icon.Clear();
+		li[i].annotation.Clear();
+	}
+}
+
 void EditorBar::SetAnnotation(int line, const Image& img, const String& ann)
 {
 	if(line >= 0 && line < li.GetCount()) {
 		li[line].icon = img;
 		li[line].annotation = ann;
 	}
+	Refresh();
 }
 
 String EditorBar::GetAnnotation(int line) const

@@ -582,6 +582,8 @@ Ide::Ide()
 	
 	error_count = 0;
 	warning_count = 0;
+	
+	editor.WhenUpdate = THISBACK(TriggerAssistSync);
 }
 
 Ide::~Ide()
