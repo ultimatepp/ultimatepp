@@ -36,6 +36,9 @@ void Ide::RunArgs() {
 	dlg.runmode <<= dlg.Breaker(222);
 
 	for(;;) {
+		bool b = ~dlg.runmode == RUN_FILE;
+		dlg.stdout_file_lbl.Enable(b);
+		dlg.stdout_file.Enable(b);
 		int rm = ~dlg.runmode;
 		dlg.stdout_file.Enable(rm == RUN_FILE || rm == RUN_FILE_CONSOLE);
 		switch(dlg.Run()) {

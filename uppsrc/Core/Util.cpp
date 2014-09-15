@@ -554,16 +554,21 @@ String FromSystemCharset(const WString& src)
 #else
 
 #ifdef PLATFORM_WIN32
-String ToSystemCharset(const String& src)
+String ToSystemCharset(const String& src, int cp)
 {
 	WString s = src.ToWString();
 	int l = s.GetLength() * 5;
 	StringBuffer b(l);
-	int q = WideCharToMultiByte(CP_ACP, 0, (const WCHAR *)~s, s.GetLength(), b, l, NULL, NULL);
+	int q = WideCharToMultiByte(cp, 0, (const WCHAR *)~s, s.GetLength(), b, l, NULL, NULL);
 	if(q <= 0)
 		return src;
 	b.SetCount(q);
 	return b;
+}
+
+String ToSystemCharset(const String& src)
+{
+	return ToSystemCharset(src, CP_ACP);
 }
 
 String FromWin32Charset(const String& src, int cp)

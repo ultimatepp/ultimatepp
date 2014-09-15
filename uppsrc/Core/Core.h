@@ -158,6 +158,7 @@
 			#include <winbase.h>
 			#include <wingdi.h>
 			#include <winuser.h>
+			#include <Wincon.h>
 			#include <float.h>
 		#define byte win32_byte_ // RpcNdr defines byte -> class with Upp::byte
 		#define CY win32_CY_
