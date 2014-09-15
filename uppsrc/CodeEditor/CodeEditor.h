@@ -117,6 +117,7 @@ public:
 	LineInfoRem & GetLineInfoRem()                   { return li_removed; }
 	void     SetLineInfoRem(LineInfoRem pick_ li)    { li_removed = pick(li); }
 	
+	void     ClearAnnotations();
 	void     SetAnnotation(int line, const Image& img, const String& ann);
 	String   GetAnnotation(int line) const;
 
@@ -340,6 +341,7 @@ public:
 	Callback           WhenAnnotationRightClick;
 	Callback           WhenOpenFindReplace;
 	Callback1<String&> WhenPaste;
+	Callback           WhenUpdate;
 
 	FrameTop<Button>    topsbbutton;
 	FrameTop<Button>    topsbbutton1;
@@ -456,6 +458,7 @@ public:
 	bool     IsFindReplaceRestorePos() const          { return do_ff_restore_pos; }
 	
 	void     Annotations(int width)                   { bar.Annotations(width); }
+	void     ClearAnnotations()                       { bar.ClearAnnotations(); }
 	void     SetAnnotation(int i, const Image& icon, const String& a) { bar.SetAnnotation(i, icon, a); }
 	String   GetAnnotation(int i) const               { return bar.GetAnnotation(i); }
 	int      GetActiveAnnotationLine() const          { return bar.GetActiveAnnotationLine(); }

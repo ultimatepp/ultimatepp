@@ -911,6 +911,10 @@ public:
 	bool      CanToggleReadOnly();
 	void      ToggleReadOnly();
 	void      PosSync();
+	void      EditFileAssistSync();
+	
+	TimeCallback text_updated;
+	void      TriggerAssistSync();
 
 	void      DoEditKeys();
 	void      AKEditor();

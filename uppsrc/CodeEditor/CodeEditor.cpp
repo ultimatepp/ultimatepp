@@ -91,6 +91,7 @@ void CodeEditor::PostInsert(int pos, const WString& text) {
 		Refresh();
 	else
 		CheckSyntaxRefresh(pos, text);
+	WhenUpdate();
 }
 
 void CodeEditor::PreRemove(int pos, int size) {
@@ -109,6 +110,7 @@ void CodeEditor::PreRemove(int pos, int size) {
 void CodeEditor::PostRemove(int pos, int size) {
 	if(check_edited)
 		bar.SetEdited(GetLine(pos));
+	WhenUpdate();
 }
 
 void CodeEditor::ClearLines() {

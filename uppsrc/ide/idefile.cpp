@@ -435,6 +435,8 @@ bool Ide::FileRemove()
 }
 
 void Ide::EditFile0(const String& path, byte charset, bool astext, const String& headername) {
+	text_updated.Kill();
+
 	AKEditor();
 	editor.CheckEdited(false);
 	editor.CloseAssist();
@@ -543,6 +545,19 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	editor.CheckEdited(true);
 	editor.Annotate(editfile);
 	editor.SyncNavigator();
+}
+
+void Ide::EditFileAssistSync()
+{
+	ScanFile();
+	editor.Annotate(editfile);
+	editor.SyncNavigator();
+}
+
+void Ide::TriggerAssistSync()
+{
+	if(editor.GetLength() < 500000) // Sanity
+		text_updated.KillSet(1000, THISBACK(EditFileAssistSync));
 }
 
 void Ide::EditAsText()
