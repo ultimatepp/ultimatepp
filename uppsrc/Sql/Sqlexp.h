@@ -342,6 +342,10 @@ public:
 	bool     IsFalse() const                { return priority == FALSEVAL; }
 	bool     IsBool()  const                { return IsTrue() || IsFalse(); }
 	bool     AsBool()  const                { ASSERT(IsBool()); return IsTrue(); }
+	
+	SqlVal   AsValue() const                { return SqlVal(text, LOW); }
+	SqlVal   As(const char *as) const       { return AsValue().As(as); }
+	SqlVal   As(const SqlId& id) const      { return AsValue().As(id); }
 
 	SqlBool(const String& s, int pr)        : SqlS(s, pr) {}
 	SqlBool(const SqlS& a, const char *o, const SqlS& b, int pa, int pb)
