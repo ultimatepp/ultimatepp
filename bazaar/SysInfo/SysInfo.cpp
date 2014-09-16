@@ -219,6 +219,13 @@ String GetMacAddressWMI() {
 */
 #include <iphlpapi.h>
 
+bool IsWinXP_orLess() {
+	OSVERSIONINFO of;
+	of.dwOSVersionInfoSize = sizeof(of);
+	GetVersionEx(&of);
+	return of.dwMajorVersion <= 5;
+}
+
 Array <NetAdapter> GetAdapterInfo() {
 	PIP_ADAPTER_ADDRESSES pAddresses = NULL;
 	ULONG family = AF_UNSPEC;
@@ -256,18 +263,26 @@ Array <NetAdapter> GetAdapterInfo() {
 #ifdef COMPILER_MINGW
 					adapter.ip4 = inet_ntoa(sa_in->sin_addr);
 #else
-					Buffer<char> str(INET_ADDRSTRLEN);
-					inet_ntop(AF_INET, &(sa_in->sin_addr), str, INET_ADDRSTRLEN);
-					adapter.ip4 = str;
+					if (IsWinXP_orLess()) 
+						adapter.ip4 = inet_ntoa(sa_in->sin_addr);
+					else {
+						Buffer<char> str(INET_ADDRSTRLEN);
+						inet_ntop(AF_INET, &(sa_in->sin_addr), str, INET_ADDRSTRLEN);
+						adapter.ip4 = str;
+					}
 #endif
                	} else if (pUnicast->Address.lpSockaddr->sa_family == AF_INET6) {
                		sockaddr_in6 *sa_in6 = (sockaddr_in6 *)pUnicast->Address.lpSockaddr;
 #ifdef COMPILER_MINGW
 					adapter.ip6 = "";
 #else
-               		Buffer<char> str(INET6_ADDRSTRLEN);
-					inet_ntop(AF_INET6, &(sa_in6->sin6_addr), str, INET6_ADDRSTRLEN);
-					adapter.ip6 = str;
+					if (IsWinXP_orLess()) 
+						adapter.ip6 = "";
+					else {
+	               		Buffer<char> str(INET6_ADDRSTRLEN);
+						inet_ntop(AF_INET6, &(sa_in6->sin6_addr), str, INET6_ADDRSTRLEN);
+						adapter.ip6 = str;
+					}
 #endif
                	} 
             	pUnicast = pUnicast->Next;
@@ -446,11 +461,16 @@ bool GetNetworkInfo(String &name, String &domain, String &ip4, String &ip6) {
 	ip4 = inet_ntoa(*(struct in_addr *)*host->h_addr_list);
 	ip6.Clear();
 #else
-	Buffer<char> str(max(INET_ADDRSTRLEN, INET6_ADDRSTRLEN));
-	inet_ntop(AF_INET, (void *)(struct in_addr *)*host->h_addr_list, str, INET_ADDRSTRLEN);
-	ip4 = str;
-	inet_ntop(AF_INET6, (void *)(struct in_addr *)*host->h_addr_list, str, INET6_ADDRSTRLEN);
-	ip6 = str;
+	if (IsWinXP_orLess()) {
+		ip4 = inet_ntoa(*(struct in_addr *)*host->h_addr_list);
+		ip6.Clear();
+	} else {
+		Buffer<char> str(max(INET_ADDRSTRLEN, INET6_ADDRSTRLEN));
+		inet_ntop(AF_INET, (void *)(struct in_addr *)*host->h_addr_list, str, INET_ADDRSTRLEN);
+		ip4 = str;
+		inet_ntop(AF_INET6, (void *)(struct in_addr *)*host->h_addr_list, str, INET6_ADDRSTRLEN);
+		ip6 = str;
+	}
 #endif
 	
 #ifdef _WIN32
