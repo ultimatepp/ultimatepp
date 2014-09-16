@@ -95,6 +95,8 @@ GUI_APP_MAIN
 	EXP(Select(CurrVal(SEQ)).Get());
 	EXP(Select(SqlArg()).From(TABLE1));
 	EXP(Select(Case(COL == 1, "one")(COL == 2, "two")("?")).From(TABLE1));
+	EXP(Select((COL > 10).AsValue()).From(TABLE2));
+	EXP(Select((COL > 10).As("GT10")).From(TABLE2));
 
 	EXP(Select(COL).From(TABLE1).Where(COL / 2 > 1 && COLUMN1 == "A" || COLUMN2 == Date(2006, 1, 1)));
 	EXP(Select(COL).From(TABLE1).Where(!(COL == 1)));
