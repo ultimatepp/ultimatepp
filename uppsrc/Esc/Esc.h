@@ -6,7 +6,7 @@
 
 NAMESPACE_UPP
 
-enum { ESC_VOID, ESC_DOUBLE, ESC_ARRAY, ESC_MAP, ESC_LAMBDA, ESC_INT64 };
+enum EscTypeKind { ESC_VOID, ESC_DOUBLE, ESC_ARRAY, ESC_MAP, ESC_LAMBDA, ESC_INT64 };
 
 String EscTypeName(int sv_type);
 
