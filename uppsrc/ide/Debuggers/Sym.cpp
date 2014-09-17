@@ -188,6 +188,9 @@ BOOL CALLBACK Pdb::EnumLocals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCon
 
 	Val& v = (pSym->Flags & IMAGEHLP_SYMBOL_INFO_PARAMETER ? c.param : c.local).GetAdd(pSym->Name);
 	v.address = (adr_t)pSym->Address;
+	if(pSym->Flags & IMAGEHLP_SYMBOL_INFO_REGISTER)
+		v.address = pSym->Register;
+	else
 	if(pSym->Flags & IMAGEHLP_SYMBOL_INFO_REGRELATIVE) {
 		if(pSym->Register == CV_ALLREG_VFRAME) {
 		#ifdef CPU_64
@@ -200,10 +203,9 @@ BOOL CALLBACK Pdb::EnumLocals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCon
 		else
 			v.address += (adr_t)c.pdb->GetCpuRegister(*c.context, pSym->Register);
 	}
+	else
 	if(pSym->Flags & IMAGEHLP_SYMBOL_INFO_FRAMERELATIVE)
 		v.address += c.frame;
-	if(pSym->Flags & IMAGEHLP_SYMBOL_INFO_REGISTER)
-		v.address = pSym->Register;
 	c.pdb->TypeVal(v, pSym->TypeIndex, (adr_t)pSym->ModBase);
 	LLOG("LOCAL " << pSym->Name << ": " << Format64Hex(v.address));
 	return TRUE;
