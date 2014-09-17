@@ -76,7 +76,13 @@ String SelectLoadFile(const char *types)
 bool SelectSaveFile(const char *types, const String& data)
 {
 	String p = SelectFileSaveAs(types);
-	return p.GetCount() && SaveFile(p, data);
+	if(p.GetCount() == 0)
+		return false;
+	if(!SaveFile(p, data)) {
+		Exclamation(t_("Error saving the file!"));
+		return false;
+	}
+	return true;
 }
 
 END_UPP_NAMESPACE
