@@ -554,7 +554,6 @@ void CodeEditor::OpenNormalFindReplace0(bool replace)
 	if(GetLength() > 1000000)
 		findreplace.incremental <<= false;
 	findreplace.Setup(replace);
-	findreplace.find.SetFocus();
 	findreplace.itext = GetI();
 	findreplace.prev.Show();
 	findreplace.next <<= THISBACK(DoFind);
@@ -562,8 +561,8 @@ void CodeEditor::OpenNormalFindReplace0(bool replace)
 	if(!findreplace.IsOpen())
 		InsertFrame(FindFrame(sb), findreplace);
 	WhenOpenFindReplace();
+	findreplace.find.SetFocus();
 }
-
 
 void CodeEditor::OpenNormalFindReplace(bool replace)
 {

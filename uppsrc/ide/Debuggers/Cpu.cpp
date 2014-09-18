@@ -2,8 +2,6 @@
 
 #ifdef COMPILER_MSC
 
-#define CPU_REG(sym, context_var, kind, name, flags) { sym, kind, name, flags },
-
 uint32 Pdb::GetRegister32(const Context& ctx, int sym)
 {
 	switch(sym) {
@@ -30,14 +28,14 @@ const VectorMap<int, Pdb::CpuRegister>& Pdb::GetRegisterList()
 {
 	static VectorMap<int, CpuRegister> r32;
 	ONCELOCK {
-#define CPU_REG(sym_, context_var, kind, name_, flags_) { CpuRegister& r = r32.Add(sym_); r.sym = sym_; r.name = name_; r.flags = flags_; }
+#define CPU_REG(sym_, context_var, kind_, name_, flags_) { CpuRegister& r = r32.Add(sym_); r.sym = sym_; r.kind = kind_; r.name = name_; r.flags = flags_; }
 		#include "i386.cpu"
 #undef CPU_REG
 	}
 #ifdef CPU_64
 	static VectorMap<int, CpuRegister> r64;
 	ONCELOCK {
-#define CPU_REG(sym_, context_var, kind, name_, flags_) { CpuRegister& r = r64.Add(sym_); r.sym = sym_; r.name = name_; r.flags = flags_; }
+#define CPU_REG(sym_, context_var, kind_, name_, flags_) { CpuRegister& r = r64.Add(sym_); r.sym = sym_; r.kind = kind_; r.name = name_; r.flags = flags_; }
 		#include "amd64.cpu"
 #undef CPU_REG
 	}
