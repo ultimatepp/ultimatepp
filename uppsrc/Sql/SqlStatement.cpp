@@ -34,6 +34,11 @@ SqlSelect& SqlSelect::operator|=(const SqlSelect& s2) {
 	return SetOp(s2, " union ");
 }
 
+SqlSelect& SqlSelect::operator+=(const SqlSelect& s2)
+{
+	return SetOp(s2, " union all ");
+}
+
 SqlSelect& SqlSelect::operator&=(const SqlSelect& s2) {
 	return SetOp(s2, " intersect ");
 }
@@ -57,6 +62,13 @@ SqlSelect operator&(const SqlSelect& s1, const SqlSelect& s2) {
 SqlSelect operator-(const SqlSelect& s1, const SqlSelect& s2) {
 	SqlSelect s = s1;
 	s -= s2;
+	return s;
+}
+
+SqlSelect operator+(const SqlSelect& s1, const SqlSelect& s2)
+{
+	SqlSelect s = s1;
+	s += s2;
 	return s;
 }
 
