@@ -113,9 +113,10 @@ GUI_APP_MAIN
 	EXP(Select(COL).From(TABLE1).Where(Exists(Select(COL).From(TABLE1))));
 	EXP(Select(COL).From(TABLE1).Where(NotExists(Select(COL).From(TABLE1))));
 
-	EXP(Select(COL).From(TABLE1).Where(COL == (Select(COLUMN1).From(TABLE1) | Select(COLUMN2).From(TABLE2))));
-	EXP(Select(COL).From(TABLE1).Where(COL == (Select(COLUMN1).From(TABLE1) & Select(COLUMN2).From(TABLE2))));
-	EXP(Select(COL).From(TABLE1).Where(COL == (Select(COLUMN1).From(TABLE1) - Select(COLUMN2).From(TABLE2))));
+	EXP(Select(COLUMN1).From(TABLE1) | Select(COLUMN2).From(TABLE2));
+	EXP(Select(COLUMN1).From(TABLE1) + Select(COLUMN2).From(TABLE2));
+	EXP(Select(COLUMN1).From(TABLE1) & Select(COLUMN2).From(TABLE2));
+	EXP(Select(COLUMN1).From(TABLE1) - Select(COLUMN2).From(TABLE2));
 	EXP(Select(COL).From(TABLE1).Where(COL == 0).GroupBy(COL).Having(COL == 0).OrderBy(Descending(COL)));
 	EXP(Select(COL, Count(Select(SqlAll()).From(TABLE1))).From(TABLE1).Where(COL == 0).GroupBy(COL)
 	    .Having(COL == 0).OrderBy(Descending(COL)));
