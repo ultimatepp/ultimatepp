@@ -291,6 +291,44 @@ SqlSelect Select(__List##I(E__SqlVal)) { \
 }
 __Expand(E__QSelectF);
 
+// -------------------------------
+
+SqlWith& SqlWith::With(SqlId table)
+{
+	text << (text.GetCount() ? ", " : "with ") << table.Quoted();
+	args = false;
+	return *this;
+}
+
+SqlWith& SqlWith::WithRecursive(SqlId table)
+{
+	text << (text.GetCount() ? ", " : "with ") << "recursive " << table.Quoted();
+	args = false;
+	return *this;
+}
+
+SqlWith& SqlWith::Arg(SqlId arg)
+{
+	text << (args ? ", " : "(") << arg.Quoted();
+	args = true;
+	return *this;
+}
+
+SqlWith& SqlWith::As(const SqlSelect& select)
+{
+	if(args)
+		text << ')';
+	text << " as (" + SqlStatement(select).GetText() + ")";
+	args = false;
+	return *this;
+}
+
+SqlSelect SqlWith::operator()(const SqlSelect& select)
+{
+	SqlSet set;
+	set.SetRaw(text + " " + SqlStatement(select).GetText());
+	return set;
+}
 
 // -------------------------------
 
