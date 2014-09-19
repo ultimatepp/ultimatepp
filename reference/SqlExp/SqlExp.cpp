@@ -159,6 +159,24 @@ GUI_APP_MAIN
 	
 	EXP(Select(ID).From(TABLE1).Where(ID == SqlSetFrom(m)));
 
+	SqlId TN("TN");
+	SqlId TNSIZE("TNSIZE");
+	
+	EXP(
+		WithRecursive(TN)(ID, NAME, PARENT_ID)
+			.As(Select(ID, NAME, PARENT_ID).From(TREENODE).Where(IsNull(PARENT_ID))
+			    +
+			    Select(TREENODE(ID, NAME, PARENT_ID)).From(TREENODE, TN)
+			    .Where(TREENODE(PARENT_ID) == TN(ID)))
+		.With(TNSIZE)
+		    .As(Select(PARENT_ID,
+		               Select(NAME).From(TREENODE).Where(ID == TN(PARENT_ID)).AsValue(),
+		               SqlCountRows())
+		        .From(TN)
+		        .GroupBy(PARENT_ID))
+		(SelectAll().From(TNSIZE))
+	);
+
 #ifdef GENERATE_QTF
 	qtf << "}}";
 
