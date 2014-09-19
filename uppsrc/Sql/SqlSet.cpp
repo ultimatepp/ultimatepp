@@ -8,6 +8,13 @@ SqlSet operator|(const SqlSet& s1, const SqlSet& s2) {
 	return SqlSet(s1(SqlSet::SET, ~SQLITE3) + " union " + s2(SqlSet::SET, ~SQLITE3), SqlSet::SETOP);
 }
 
+SqlSet operator+(const SqlSet& s1, const SqlSet& s2)
+{
+	if(s1.IsEmpty()) return s2;
+	if(s2.IsEmpty()) return s1;
+	return SqlSet(s1(SqlSet::SET, ~SQLITE3) + " union all " + s2(SqlSet::SET, ~SQLITE3), SqlSet::SETOP);
+}
+
 SqlSet operator&(const SqlSet& s1, const SqlSet& s2) {
 	if(s1.IsEmpty()) return s2;
 	if(s2.IsEmpty()) return s1;

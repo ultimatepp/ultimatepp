@@ -433,6 +433,7 @@ class Sql;
 #define E__SqlVal(I)      const SqlVal& p##I
 
 SqlSet operator|(const SqlSet& s1, const SqlSet& s2); // union
+SqlSet operator+(const SqlSet& s1, const SqlSet& s2); // union all
 SqlSet operator&(const SqlSet& s1, const SqlSet& s2); // intersection
 SqlSet operator-(const SqlSet& s1, const SqlSet& s2); // difference
 
@@ -462,6 +463,7 @@ public:
 	SqlSet&          operator<<(const SqlVal& val)  { return Cat(val); }
 
 	SqlSet&          operator|=(const SqlSet& set)  { return *this = *this | set; }
+	SqlSet&          operator+=(const SqlSet& set)  { return *this = *this + set; }
 	SqlSet&          operator&=(const SqlSet& set)  { return *this = *this & set; }
 	SqlSet&          operator-=(const SqlSet& set)  { return *this = *this - set; }
 
@@ -604,9 +606,10 @@ __Expand(E__QSelect);
 
 	bool IsEmpty()                                    { return text.IsEmpty(); }
 
-	SqlSelect& operator|=(const SqlSelect& s2);
-	SqlSelect& operator&=(const SqlSelect& s2);
-	SqlSelect& operator-=(const SqlSelect& s2);
+	SqlSelect& operator|=(const SqlSelect& s2); // union
+	SqlSelect& operator&=(const SqlSelect& s2); // intersect
+	SqlSelect& operator-=(const SqlSelect& s2); // except
+	SqlSelect& operator+=(const SqlSelect& s2); // union all
 
 //Deprecated!!!
 	bool  Execute(Sql& sql) const                     { return SqlStatement(*this).Execute(sql); }
@@ -617,9 +620,10 @@ __Expand(E__QSelect);
 	Value Fetch() const                               { return SqlStatement(*this).Fetch(); }
 };
 
-SqlSelect operator|(const SqlSelect& s1, const SqlSelect& s2);
-SqlSelect operator&(const SqlSelect& s1, const SqlSelect& s2);
-SqlSelect operator-(const SqlSelect& s1, const SqlSelect& s2);
+SqlSelect operator|(const SqlSelect& s1, const SqlSelect& s2); // union
+SqlSelect operator&(const SqlSelect& s1, const SqlSelect& s2); // intersect
+SqlSelect operator-(const SqlSelect& s1, const SqlSelect& s2); // except
+SqlSelect operator+(const SqlSelect& s1, const SqlSelect& s2); // union all
 
 inline SqlSelect SelectAll()                { return SqlSelect(SqlAll()); }
 inline SqlSelect Select(const SqlSet& set)  { return SqlSelect(set); }
