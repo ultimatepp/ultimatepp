@@ -1,0 +1,5 @@
+#ifndef _EscApp_icpp_init_stub
+#define _EscApp_icpp_init_stub
+#include "Core/init"
+#include "Esc/init"
+#endif
