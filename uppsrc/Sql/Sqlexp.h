@@ -630,32 +630,6 @@ inline SqlSelect SelectAll()                { return SqlSelect(SqlAll()); }
 inline SqlSelect Select(const SqlSet& set)  { return SqlSelect(set); }
 inline SqlSelect Select(Fields f)           { return SqlSelect(f); }
 
-struct SqlWith {
-	String text;
-	bool   args;
-
-	SqlWith& With(SqlId table);
-	SqlWith& WithRecursive(SqlId table);
-	SqlWith& Arg(SqlId arg);
-#define E__SqlId(I)     const SqlId& p##I
-#define E__Arg(I)       Arg(p##I)
-#define E__Args(I) \
-	SqlWith& operator()(__List##I(E__SqlId)) { __List##I(E__Arg); return *this; }
-	__Expand(E__Args);
-#undef E__Args
-#undef E__Arg
-#undef E__SqlId
-
-	SqlWith& As(const SqlSelect& select);
-	
-	SqlSelect operator()(const SqlSelect& select);
-	
-	SqlWith() { args = false; }
-};
-
-inline SqlWith With(SqlId id)          { SqlWith w; w.With(id); return w; }
-inline SqlWith WithRecursive(SqlId id) { SqlWith w; w.WithRecursive(id); return w; }
-
 #define E__QSelect(I)   SqlSelect Select(__List##I(E__SqlVal));
 __Expand(E__QSelect);
 #undef  E__QSelect
@@ -766,3 +740,32 @@ public:
 
 inline SqlUpdate Update(const SqlId& table)           { return SqlUpdate(table); }
 inline SqlUpdate Update(Fields f)                     { return SqlUpdate(f); }
+
+struct SqlWith {
+	String text;
+	bool   args;
+
+	SqlWith& With(SqlId table);
+	SqlWith& WithRecursive(SqlId table);
+	SqlWith& Arg(SqlId arg);
+#define E__SqlId(I)     const SqlId& p##I
+#define E__Arg(I)       Arg(p##I)
+#define E__Args(I) \
+	SqlWith& operator()(__List##I(E__SqlId)) { __List##I(E__Arg); return *this; }
+	__Expand(E__Args);
+#undef E__Args
+#undef E__Arg
+#undef E__SqlId
+
+	SqlWith& As(const SqlSelect& select);
+	
+	SqlSelect    operator()(const SqlSelect& select);
+	SqlStatement operator()(const SqlInsert& insert);
+	SqlStatement operator()(const SqlUpdate& update);
+	SqlStatement operator()(const SqlDelete& deletes);
+	
+	SqlWith() { args = false; }
+};
+
+inline SqlWith With(SqlId id)          { SqlWith w; w.With(id); return w; }
+inline SqlWith WithRecursive(SqlId id) { SqlWith w; w.WithRecursive(id); return w; }
