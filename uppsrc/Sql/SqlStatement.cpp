@@ -330,6 +330,21 @@ SqlSelect SqlWith::operator()(const SqlSelect& select)
 	return set;
 }
 
+SqlStatement SqlWith::operator()(const SqlInsert& insert)
+{
+	return SqlStatement(text + " " + SqlStatement(insert).GetText());
+}
+
+SqlStatement SqlWith::operator()(const SqlUpdate& update)
+{
+	return SqlStatement(text + " " + SqlStatement(update).GetText());
+}
+
+SqlStatement SqlWith::operator()(const SqlDelete& deletes)
+{
+	return SqlStatement(text + " " + SqlStatement(deletes).GetText());
+}
+
 // -------------------------------
 
 SqlDelete::SqlDelete(SqlVal table) {
