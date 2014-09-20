@@ -177,6 +177,49 @@ GUI_APP_MAIN
 		(SelectAll().From(TNSIZE))
 	);
 
+	SqlId COUNT("COUNT");
+	EXP(
+		WithRecursive(TN)(ID, NAME, PARENT_ID)
+			.As(Select(ID, NAME, PARENT_ID).From(TREENODE).Where(IsNull(PARENT_ID))
+			    +
+			    Select(TREENODE(ID, NAME, PARENT_ID)).From(TREENODE, TN)
+			    .Where(TREENODE(PARENT_ID) == TN(ID)))
+		.With(TNSIZE)(NAME, COUNT)
+		    .As(Select(Select(NAME).From(TREENODE).Where(ID == TN(PARENT_ID)).AsValue(),
+		               SqlCountRows())
+		        .From(TN)
+		        .GroupBy(PARENT_ID))
+		(Insert(TABLE1)(NAME, NAME)(COL, COUNT).From(TNSIZE))
+	);
+	
+	EXP(
+		WithRecursive(TN)(ID, NAME, PARENT_ID)
+			.As(Select(ID, NAME, PARENT_ID).From(TREENODE).Where(IsNull(PARENT_ID))
+			    +
+			    Select(TREENODE(ID, NAME, PARENT_ID)).From(TREENODE, TN)
+			    .Where(TREENODE(PARENT_ID) == TN(ID)))
+		.With(TNSIZE)(ID, COUNT)
+		    .As(Select(ID,
+		               SqlCountRows())
+		        .From(TN)
+		        .GroupBy(PARENT_ID))
+		(Delete(TREENODE).Where(ID == Select(ID).From(TNSIZE).Where(COUNT == 0)))
+	);
+
+	EXP(
+		WithRecursive(TN)(ID, NAME, PARENT_ID)
+			.As(Select(ID, NAME, PARENT_ID).From(TREENODE).Where(IsNull(PARENT_ID))
+			    +
+			    Select(TREENODE(ID, NAME, PARENT_ID)).From(TREENODE, TN)
+			    .Where(TREENODE(PARENT_ID) == TN(ID)))
+		.With(TNSIZE)(ID, COUNT)
+		    .As(Select(ID,
+		               SqlCountRows())
+		        .From(TN)
+		        .GroupBy(PARENT_ID))
+		(Update(TABLE1)(COL, Select(COUNT).From(TNSIZE).Where(TNSIZE(ID) == TABLE1(ID)).AsValue()))
+	);
+
 #ifdef GENERATE_QTF
 	qtf << "}}";
 
