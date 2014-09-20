@@ -1,4 +1,4 @@
-description "Using Esc scripting language in U++ application";
+description "Using Esc scripting language in U++ application\377";
 
 uses
 	Core,
