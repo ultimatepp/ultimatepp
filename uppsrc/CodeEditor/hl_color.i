@@ -34,7 +34,7 @@ HL_COLOR(PAPER_BLOCK3, t_("Block level 3"), 0)
 HL_COLOR(PAPER_BLOCK4, t_("Block level 4"), 0)
 
 HL_COLOR(INK_MACRO, t_("#preprocesor text"), 1)
-HL_COLOR(PAPER_MACRO, t_("#define background"), 0)
+HL_COLOR(PAPER_MACRO, t_("#define/#undef/#pragma background"), 0)
 HL_COLOR(PAPER_IFDEF, t_("#if/#else/#endif background"), 0)
 HL_COLOR(INK_IFDEF, t_("#if/#else/#endif comment"), 1)
 
