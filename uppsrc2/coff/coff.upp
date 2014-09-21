@@ -1,0 +1,19 @@
+description "Library for handling with COFF object file format (used by GCC toolchain)\377";
+
+optimize_speed;
+
+uses
+	Core;
+
+file
+	coff.h,
+	defs.h,
+	defs.cpp,
+	stab.def,
+	util.h,
+	util.cpp,
+	lib.h,
+	lib.cpp,
+	Info readonly separator,
+	Copying;
+

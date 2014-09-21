@@ -1,0 +1,128 @@
+-------- linkjob.cpp
+[B] linkjob.err(117): 1 lines inserted
+	+verbose = false;
+[B] linkjob.err(266): 1 lines inserted
+	+"-verbose .. display additional link information\n"
+[B] linkjob.err(487): 2 lines inserted
+	+else if(lcmd == "verbose")
+	+verbose = true;
+[B] linkjob.err(682): 2 lines inserted
+	+if(verbose)
+	+PutConsole(NFormat("%s: loading object file", file));
+[B] linkjob.err(697): 2 lines inserted
+	+if(verbose)
+	+PutConsole(NFormat("%s: loading static library", file));
+[B] linkjob.err(886): 2 lines inserted
+	+if(verbose)
+	+PutConsole(NFormat("%s: loading shared library", file));
+[B] linkjob.err(1998): 2 lines inserted
+	+else if(sec_atom == rsrc_atom)
+	+sx = GRP_RSRC;
+[A] linkjob.cpp(2072): 7 lines deleted
+	-int last = groups[i + 1].first_section - 1;
+	-const Section& lastsec = section_map[last];
+	-//		const ObjectFile::Section& oflast = GetSection(lastsec.obj_sec);
+	-while(last >= first && section_map[last].obj_sec.section == 0)
+	-last--;
+	-const Section *rawsec = (last >= first ? &section_map[last] : NULL);
+	-//		const ObjectFile::Section& ofsec = GetSection(sec.obj_sec);
+[A] linkjob.cpp(2081): 1 lines replaced
+	-groups[i].raw_size = rawsec ? rawsec->rva + GetSection(rawsec->obj_sec).size - sec.rva : 0;
+[B] linkjob.err(2086): 22 replacement lines
+	+int last = groups[i + 1].first_section - 1;
+	+if(last >= first)
+	+{
+	+const Section& lastsec = section_map[last];
+	+//			if(i != GRP_UDATA)
+	+{
+	+//		const ObjectFile::Section& oflast = GetSection(lastsec.obj_sec);
+	+/*
+	+while(last >= first)
+	+{
+	+const ObjectFile::Section& ofsec = GetSection(section_map[last].obj_sec);
+	+if(ofsec.offset)
+	+break;
+	+last--;
+	+}
+	+const Section *rawsec = (last >= first ? &section_map[last] : NULL);
+	+*/
+	+//		const ObjectFile::Section& ofsec = GetSection(sec.obj_sec);
+	+//			groups[i].raw_size = rawsec ? rawsec->rva + GetSection(rawsec->obj_sec).size - sec.rva : 0;
+	+groups[i].raw_size = lastsec.rva + GetSection(lastsec.obj_sec).size - sec.rva;
+	+rfa = (rfa + groups[i].raw_size + file_align - 1) & -file_align;
+	+}
+[A] linkjob.cpp(2083): 1 lines replaced
+	-rfa = (rfa + groups[i].raw_size + file_align - 1) & -file_align;
+[B] linkjob.err(2109): 1 replacement lines
+	+}
+[A] linkjob.cpp(2492): 1 lines replaced
+	-sechdr.SizeOfRawData = 0;
+[B] linkjob.err(2518): 3 replacement lines
+	+//		sechdr.SizeOfRawData = (first.group == GRP_UDATA ? 0 : (sechdr.Misc.VirtualSize + file_align - 1) & -file_align);
+	+sechdr.SizeOfRawData = (sechdr.Misc.VirtualSize + file_align - 1) & -file_align;
+	+/*
+[A] linkjob.cpp(2496): 1 lines replaced
+	-if(chk.obj_sec.section != 0)
+[B] linkjob.err(2524): 2 replacement lines
+	+const ObjectFile::Section& ofsec = GetSection(chk.obj_sec);
+	+if(ofsec.offset)
+[A] linkjob.cpp(2498): 1 lines deleted
+	-const ObjectFile::Section& ofsec = GetSection(chk.obj_sec);
+[B] linkjob.err(2531): 2 lines inserted
+	+sechdr.SizeOfRawData = (sechdr.SizeOfRawData + file_align - 1) & -file_align;
+	+*/
+[A] linkjob.cpp(2527): 1 lines replaced
+	-stab.Misc.VirtualSize = stab.SizeOfRawData = output_stab_info.GetCount();
+[B] linkjob.err(2557): 2 replacement lines
+	+stab.Misc.VirtualSize = output_stab_info.GetCount();
+	+stab.SizeOfRawData = (stab.Misc.VirtualSize + file_align - 1) & -file_align;
+[A] linkjob.cpp(2540): 1 lines replaced
+	-stabstr.Misc.VirtualSize = stabstr.SizeOfRawData = output_stab_strings.GetCount();
+[B] linkjob.err(2571): 2 replacement lines
+	+stabstr.Misc.VirtualSize = output_stab_strings.GetCount();
+	+stabstr.SizeOfRawData = (stabstr.Misc.VirtualSize + file_align - 1) & -file_align;
+[A] linkjob.cpp(2554): 1 lines replaced
+	-sym.Misc.VirtualSize = sym.SizeOfRawData = coff_output_symbols.GetCount() * sizeof(COFF_IMAGE_SYMBOL)
+[B] linkjob.err(2586): 1 replacement lines
+	+sym.Misc.VirtualSize = coff_output_symbols.GetCount() * sizeof(COFF_IMAGE_SYMBOL)
+[B] linkjob.err(2588): 1 lines inserted
+	+sym.SizeOfRawData = (sym.Misc.VirtualSize + file_align - 1) & -file_align;
+[A] linkjob.cpp(2570): 1 lines replaced
+	-reloc.Misc.VirtualSize = reloc.SizeOfRawData = output_fixups.GetCount();
+[B] linkjob.err(2603): 2 replacement lines
+	+reloc.Misc.VirtualSize = output_fixups.GetCount();
+	+reloc.SizeOfRawData = (reloc.Misc.VirtualSize + file_align - 1) & -file_align;
+[B] linkjob.err(2722): 1 lines inserted
+	+if(verbose)
+[B] linkjob.err(3087): 5 lines inserted
+	+const ObjectFile::Section& ofsec = GetSection(sec.obj_sec);
+	+//		if(/*ofsec.type == ObjectFile::SEC_INULL ||*/ sec.group == GRP_UDATA)
+	+//			continue;
+	+if(ofsec.type == ObjectFile::SEC_ANON_COMDAT)
+	+continue;
+[A] linkjob.cpp(3053): 3 lines deleted
+	-const ObjectFile::Section& ofsec = GetSection(sec.obj_sec);
+	-if(/*ofsec.type == ObjectFile::SEC_INULL ||*/ ofsec.type == ObjectFile::SEC_ANON_COMDAT)
+	-continue;
+[A] linkjob.cpp(3058): 1 lines deleted
+	-if(ofsec.offset)
+[A] linkjob.cpp(3393): 7 lines replaced
+	-case GRP_CODE:  return "CODE";
+	-case GRP_RDATA: return "RDATA";
+	-case GRP_EDATA: return "EDATA";
+	-case GRP_IDATA: return "IDATA";
+	-case GRP_DATA:  return "DATA";
+	-case GRP_UDATA: return "BSS";
+	-case GRP_DEBUG: return "DEBUG";
+[B] linkjob.err(3429): 11 replacement lines
+	+case GRP_CODE:    return "CODE";
+	+case GRP_RDATA:   return "RDATA";
+	+case GRP_EDATA:   return "EDATA";
+	+case GRP_IDATA:   return "IDATA";
+	+case GRP_DATA:    return "DATA";
+	+case GRP_UDATA:   return "BSS";
+	+case GRP_DEBUG:   return "DEBUG";
+	+case GRP_RSRC:    return "RSRC";
+	+case GRP_STAB:    return "STAB";
+	+case GRP_STABSTR: return "STABSTR";
+	+case GRP_SYMBOLS: return "SYMBOLS";
