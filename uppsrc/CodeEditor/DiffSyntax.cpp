@@ -55,10 +55,10 @@ void DiffSyntax::Do(const wchar *ln, const wchar *end, CodeEditor *editor, int l
 	if(*ln == '-' || *ln == '<' || *ln == '!')
 		Put(INK_DIFF_REMOVED, lineLength);
 	else
-	if(*ln == '\\')
-		Put(INK_DIFF_COMMENT, lineLength);
-	else
+	if(*ln == ' ')
 		Put(INK_NORMAL, lineLength);
+	else
+		Put(INK_DIFF_COMMENT, lineLength);
 }
 
 int DiffSyntax::FindTheNumberOfCharsToLineEnd(const wchar *current, const wchar *end) const
