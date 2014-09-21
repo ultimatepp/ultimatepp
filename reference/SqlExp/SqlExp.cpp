@@ -219,6 +219,8 @@ GUI_APP_MAIN
 		        .GroupBy(PARENT_ID))
 		(Update(TABLE1)(COL, Select(COUNT).From(TNSIZE).Where(TNSIZE(ID) == TABLE1(ID)).AsValue()))
 	);
+	
+	EXP(Temporary("TT").As(Select(NAME, LASTNAME).From(TABLE1).Where(COLUMN1 == 12)));
 
 #ifdef GENERATE_QTF
 	qtf << "}}";
