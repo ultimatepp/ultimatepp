@@ -1,0 +1,16 @@
+padani inicializace
+
+* ? zarovnat raw data size u segmentu text / data / bss (v hlavicce je vetsi nez v section headeru)
+
+* ? relokacni informace je cca 1.5 x delsi u ULD
+
+* ? export section je o 8 bytu delsi u ULD
+
+* ? reloc section je u ULD DISCARDABLE + READ, u LD je READ + WRITE
+  navic u LD je pred STABy, u ULD za STABy
+
+* ? importy u LD jsou serazene podle ordinalu
+
+* ? exporty u LD jsou serazene podle abecedy
+
+spojovat templaty

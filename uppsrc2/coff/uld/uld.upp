@@ -1,0 +1,30 @@
+description "Ultimate++ COFF linker (GNU binutils compatible, faster)";
+
+uses
+	coff;
+
+target(TEST) ld-test.exe;
+
+target(!TEST) ld.exe;
+
+link(GCC) "-v ";
+
+file
+	Main readonly separator,
+	version.h,
+	notes.txt,
+	solved.txt,
+	uld.h,
+	dump.cpp,
+	obj.h,
+	object.cpp,
+	linkjob.cpp,
+	diff,
+	main.cpp,
+	Info readonly separator,
+	Copying;
+
+mainconfig
+	"" = "",
+	"" = ".TEST";
+

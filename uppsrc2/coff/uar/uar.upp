@@ -1,0 +1,22 @@
+description "Ultimate++ COFF archiver (GNU binutils compatible, faster)";
+
+uses
+	coff;
+
+target(!DEBUG !TEST) ar.exe;
+
+link(GCC) "-Xlinker -dumpcommand";
+
+file
+	uar.h,
+	version.h,
+	lib.h,
+	lib.cpp,
+	main.cpp,
+	Info readonly separator,
+	Copying;
+
+mainconfig
+	"" = "",
+	"" = ".TEST";
+
