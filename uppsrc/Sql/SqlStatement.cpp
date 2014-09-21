@@ -347,6 +347,18 @@ SqlStatement SqlWith::operator()(const SqlDelete& deletes)
 
 // -------------------------------
 
+SqlStatement SqlCreateTable::As(const SqlSelect& select)
+{
+	String text = "create ";
+	if(!permanent)
+		text << "temporary ";
+	text << "table " << table.Quoted()
+	     << " as (" + SqlStatement(select).GetText() + ")";
+	return SqlStatement(text);
+}
+
+// -------------------------------
+
 SqlDelete::SqlDelete(SqlVal table) {
 	text = "delete from " + ~table;
 }

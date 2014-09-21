@@ -741,10 +741,11 @@ public:
 inline SqlUpdate Update(const SqlId& table)           { return SqlUpdate(table); }
 inline SqlUpdate Update(Fields f)                     { return SqlUpdate(f); }
 
-struct SqlWith {
+class SqlWith {
 	String text;
 	bool   args;
 
+public:
 	SqlWith& With(SqlId table);
 	SqlWith& WithRecursive(SqlId table);
 	SqlWith& Arg(SqlId arg);
@@ -769,3 +770,20 @@ struct SqlWith {
 
 inline SqlWith With(SqlId id)          { SqlWith w; w.With(id); return w; }
 inline SqlWith WithRecursive(SqlId id) { SqlWith w; w.WithRecursive(id); return w; }
+
+struct SqlCreateTable {
+	SqlId  table;
+	bool   permanent;
+	
+	enum { TRANSACTION, SESSION, PERMANENT };
+
+public:
+	SqlCreateTable& Permanent()  { permanent = true; return *this; }
+
+	SqlStatement As(const SqlSelect& select);
+	
+	SqlCreateTable(SqlId table) : table(table) { permanent = false; }
+};
+
+inline SqlCreateTable Temporary(SqlId table)          { return SqlCreateTable(table); }
+inline SqlCreateTable CreateTable(SqlId table)        { SqlCreateTable w(table); w.Permanent(); return w; }
