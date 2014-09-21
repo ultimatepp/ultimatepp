@@ -70,6 +70,12 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 	int linelen = int(e - ltext);
 	const wchar *p = ltext;
 	
+	for(const wchar *ms = p; ms < e; ms++)
+		if(*ms != ' ' && *ms != '\t') {
+			macro = macro || *ms == '#';
+			break;
+		}
+	
 	Grounding(p, e);
 	if(highlight == HIGHLIGHT_CALC) {
 		if(editor && line == editor->GetLineCount() - 1 || *p == '$')
@@ -315,8 +321,7 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 		if(lbrace < 0 && lbclose >= 0)
 			hls.SetPaper(lbclose, linelen + 1 - lbclose, lbcolor);
 	}
-	if(!IsNull(cppid) && (cppid == "else" || cppid == "elif" || cppid == "endif" || cppid == "if"
-	                      || cppid == "ifdef" || cppid == "ifndef"))
+	if(findarg(cppid, "else", "elif", "endif", "if", "ifdef", "ifndef") >= 0)
 	   hls.SetPaper(0, hls.v.GetCount(), hl_style[PAPER_IFDEF].color);
 }
 
