@@ -376,6 +376,7 @@ public:
 
 	void   CopyWord();
 	void   SwapChars();
+	void   DuplicateLine();
 
 	void   SerializeFind(Stream& s);
 	bool   IsFindOpen() const                       { return findreplace.IsOpen(); }

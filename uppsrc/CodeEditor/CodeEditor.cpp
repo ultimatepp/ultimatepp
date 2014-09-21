@@ -191,6 +191,15 @@ void CodeEditor::CopyWord() {
 	}
 }
 
+void CodeEditor::DuplicateLine()
+{
+	int p = GetCursor();
+	int i = GetLine(cursor);
+	int pos = GetPos(i);
+	int len = GetLineLength(i);
+	Insert(pos + len, "\n" + GetW(pos, len));
+}
+
 void CodeEditor::SwapChars() {
 	if(IsReadOnly()) return;
 	int i = GetLine(cursor);

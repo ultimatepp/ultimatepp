@@ -1005,6 +1005,7 @@ public:
 		void  TranslateString();
 		void  SwapChars()               { editor.SwapChars(); }
 		void  CopyWord()                { editor.CopyWord(); }
+		void  DuplicateLine()           { editor.DuplicateLine(); }
 		void  AlterText(WString (*op)(const WString& in));
 		void  TextToUpper();
 		void  TextToLower();

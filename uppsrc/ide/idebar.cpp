@@ -120,6 +120,8 @@ void Ide::EditSpecial(Bar& menu)
 	    .Help("Transpose characters");
 	menu.Add(AK_COPYWORD, THISBACK(CopyWord))
 	    .Help("Copy the current identifier to the clipboard");
+	menu.Add(AK_DUPLICATELINE, THISBACK(DuplicateLine))
+	    .Help("Duplice the current line");
 	menu.Add(AK_FORMATCODE, THISBACK(FormatCode))
 	    .Help("Reformat code in editor");
 	menu.Add(editor.IsSelection(), AK_TOUPPER, THISBACK(TextToUpper))
