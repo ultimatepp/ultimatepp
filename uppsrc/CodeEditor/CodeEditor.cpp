@@ -86,11 +86,12 @@ void CodeEditor::CheckSyntaxRefresh(int pos, const WString& text)
 void CodeEditor::PostInsert(int pos, const WString& text) {
 	if(check_edited)
 		bar.SetEdited(GetLine(pos));
-	if(IsFullRefresh()) return;
-	if(text.GetCount() > 200 || text.Find('\n') >= 0)
-		Refresh();
-	else
-		CheckSyntaxRefresh(pos, text);
+	if(!IsFullRefresh()) {
+		if(text.GetCount() > 200 || text.Find('\n') >= 0)
+			Refresh();
+		else
+			CheckSyntaxRefresh(pos, text);
+	}
 	WhenUpdate();
 }
 
