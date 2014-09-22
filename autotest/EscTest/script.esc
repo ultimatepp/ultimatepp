@@ -1,17 +1,17 @@
-check(a, b)
-{
-//	Print("// ========================");
-//	Print("// a: " + to_string(a) ", b: " + to_string(b));
-	Check("a", a, "");
-	Check("b", b, "");
-	Check("a + b", a + b, "");
-	Check("a - b", a - b, "");
-	Check("a * b", a * b, "");
-	Check("a / b", a / b, "");
-}
-
 main() {
-	check(0, 1);
-	check(1.1, 1.2);
-	check(0xfffffffffffffff0, 1);
+	Print("Hello world!");
+	x = {};
+	x.a = 123;
+	x.b = "Hello!";
+
+	:out = x;
+
+	x.foo = @(x) { .a = x; };
+
+	x.foo("test");
+	:out2 = x.a;
+
+	:out3 = [];
+	for(i = 0; i < 10; i++)
+		:out3[] = i;
 }
