@@ -24,6 +24,15 @@ void TestTrimRight(String what, String s, String r)
 	}
 }
 
+void TestMultiReplace()
+{
+	VectorMap<String, String> r;
+	r("hell", "hello")("hello", "hell");
+	String h = Replace(String("TEXT: hell hello!"), r);
+	DDUMP(h);
+	ASSERT(h == "TEXT: hello hell!");
+}
+
 CONSOLE_APP_MAIN
 {
 	String h = "http://www.website.org";
@@ -34,4 +43,6 @@ CONSOLE_APP_MAIN
 
 	TestTrimLeft("http://", "http://www.website.org", "www.website.org");
 	TestTrimRight(".org", "www.website.org", "www.website");
+	
+	TestMultiReplace();
 }
