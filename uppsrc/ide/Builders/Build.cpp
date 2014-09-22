@@ -209,8 +209,8 @@ struct OneFileHost : Host {
 	virtual void   SaveFile(const String& path, const String& data) { host->SaveFile(path, data); }
 	virtual String LoadFile(const String& path) { return host->LoadFile(path); }
 	virtual int    Execute(const char *c) { return host->Execute(c); }
-	virtual int    ExecuteWithInput(const char *c) { return host->ExecuteWithInput(c); }
-	virtual int    Execute(const char *c, Stream& o) { return host->Execute(c, o); }
+	virtual int    ExecuteWithInput(const char *c, bool noconvert) { return host->ExecuteWithInput(c, noconvert); }
+	virtual int    Execute(const char *c, Stream& o, bool noconvert) { return host->Execute(c, o, noconvert); }
 	virtual int    AllocSlot() { return host->AllocSlot(); }
 	virtual bool   Run(const char *cmdline, int slot, String key, int blitz_count) { return host->Run(cmdline, slot, key, blitz_count); }
 	virtual bool   Run(const char *cmdline, Stream& out, int slot, String key, int blitz_count) { return host->Run(cmdline, out, slot, key, blitz_count); }

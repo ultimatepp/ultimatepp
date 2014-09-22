@@ -138,14 +138,14 @@ String IdeGetOneFile()
 	return the_ide ? the_ide->IdeGetOneFile() : String(Null);
 }
 
-int IdeConsoleExecute(const char *cmdline, Stream *out, const char *envptr, bool quiet)
+int IdeConsoleExecute(const char *cmdline, Stream *out, const char *envptr, bool quiet, bool noconvert)
 {
-	return the_ide ? the_ide->IdeConsoleExecute(cmdline, out, envptr, quiet) : -1;
+	return the_ide ? the_ide->IdeConsoleExecute(cmdline, out, envptr, quiet, noconvert) : -1;
 }
 
-int IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *envptr, bool quiet)
+int IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *envptr, bool quiet, bool noconvert)
 {
-	return the_ide ? the_ide->IdeConsoleExecuteWithInput(cmdline, out, envptr, quiet) : -1;
+	return the_ide ? the_ide->IdeConsoleExecuteWithInput(cmdline, out, envptr, quiet, noconvert) : -1;
 }
 
 int IdeConsoleExecute(One<AProcess> process, const char *cmdline, Stream *out, bool quiet)

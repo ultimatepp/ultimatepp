@@ -78,7 +78,7 @@ int Console::Execute(One<AProcess> p, const char *command, Stream *out, bool q)
 	return processes[0].exitcode;
 }
 
-int Console::Execute(const char *command, Stream *out, const char *envptr, bool q)
+int Console::Execute(const char *command, Stream *out, const char *envptr, bool q, bool)
 {
 	try {
 		Wait();

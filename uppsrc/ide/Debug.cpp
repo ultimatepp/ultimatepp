@@ -33,7 +33,9 @@ void Ide::RunArgs() {
 	dlg.runmode <<= runmode;
 	dlg.external = runexternal;
 	dlg.consolemode = consolemode;
+	dlg.utf8 <<= console_utf8;
 	dlg.runmode <<= dlg.Breaker(222);
+	
 
 	for(;;) {
 		bool b = ~dlg.runmode == RUN_FILE;
@@ -41,6 +43,7 @@ void Ide::RunArgs() {
 		dlg.stdout_file.Enable(b);
 		int rm = ~dlg.runmode;
 		dlg.stdout_file.Enable(rm == RUN_FILE || rm == RUN_FILE_CONSOLE);
+		dlg.utf8.Enable(rm != RUN_WINDOW);
 		switch(dlg.Run()) {
 		case IDOK:
 			rundir  = dlg.dir;
@@ -48,6 +51,7 @@ void Ide::RunArgs() {
 			runmode = ~dlg.runmode;
 			runexternal = dlg.external;
 			consolemode = dlg.consolemode;
+			console_utf8 = ~dlg.utf8;
 			stdout_file = ~dlg.stdout_file;
 			dlg.arg.AddHistory();
 			{
@@ -104,7 +108,7 @@ void Ide::BuildAndExecute()
 			ShowConsole();
 			PutConsole(String().Cat() << "Executing: " << cmdline);
 			console.Sync();
-			exitcode = h->ExecuteWithInput(cmdline);
+			exitcode = h->ExecuteWithInput(cmdline, console_utf8);
 			PutConsole("Finished in " + GetPrintTime(time) + ", exit code: " + AsString(exitcode));
 			break;
 		case RUN_FILE: {
@@ -119,7 +123,7 @@ void Ide::BuildAndExecute()
 					PromptOK("Unable to open output file [* " + DeQtf(stdout_file) + "] !");
 					return;
 				}
-				if(h->Execute(cmdline, out) >= 0) {
+				if(h->Execute(cmdline, out, console_utf8) >= 0) {
 					out.Close();
 					EditFile(fn);
 				}

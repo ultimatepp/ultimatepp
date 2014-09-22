@@ -31,12 +31,12 @@ String Ide::IdeGetOneFile() const
 	return onefile;
 }
 
-int Ide::IdeConsoleExecute(const char *cmdline, Stream *out, const char *envptr, bool quiet)
+int Ide::IdeConsoleExecute(const char *cmdline, Stream *out, const char *envptr, bool quiet, bool)
 {
 	return console.Execute(cmdline, out, envptr, quiet);
 }
 
-int Ide::IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *envptr, bool quiet)
+int Ide::IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *envptr, bool quiet, bool noconvert)
 {
 	return 0;
 }

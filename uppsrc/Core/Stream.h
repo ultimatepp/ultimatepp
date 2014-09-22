@@ -599,6 +599,7 @@ int64        CopyStream(Stream& dest, Stream& src, int64 count);
 inline int64 CopyStream(Stream& dest, Stream& src) { return CopyStream(dest, src, src.GetLeft()); }
 
 #ifndef PLATFORM_WINCE
+void    CoutUTF8();
 Stream& Cout();
 Stream& Cerr();
 String  ReadStdIn();

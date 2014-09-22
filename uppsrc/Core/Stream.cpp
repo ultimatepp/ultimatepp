@@ -1221,6 +1221,18 @@ Stream& NilStream()
 	return Single<NilStreamClass>();
 }
 
+#ifdef PLATFORM_WIN32
+bool IsCoutUTF8;
+#endif
+
+void CoutUTF8()
+{
+#ifdef PLATFORM_WIN32
+	IsCoutUTF8 = true;
+	SetConsoleOutputCP(65001);
+#endif
+}
+
 #ifndef PLATFORM_WINCE
 class CoutStream : public Stream {
 	String buffer;
