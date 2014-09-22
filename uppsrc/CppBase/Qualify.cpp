@@ -45,6 +45,10 @@ bool Qualify0(Scopefo& nf, const String& type, String& qt)
 					}
 				}
 			}
+			if(nf.base.Find(qs) >= 0) {
+				qt = qs;
+				return true;
+			}
 			qt = type.Mid(q + 1);
 			return true;
 		}

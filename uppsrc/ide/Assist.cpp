@@ -1070,6 +1070,22 @@ void Ide::FindId(const String& id)
 	}	
 }
 
+String RemoveTemplateParams(const String& s)
+{
+	String r;
+	int lvl = 0;
+	for(int i = 0; i < s.GetCount(); i++)
+		if(s[i] == '<')
+			lvl++;
+		else
+		if(s[i] == '>')
+			lvl--;
+		else
+		if(lvl == 0)
+			r.Cat(s[i]);
+	return r;
+}
+
 void Ide::ContextGoto0(int pos)
 {
 	if(designer)
@@ -1145,7 +1161,7 @@ void Ide::ContextGoto0(int pos)
 	while(iscid(editor.Ch(q - 1)))
 		q--;
 	String tp;
-	Vector<String> xp = editor.ReadBack(q);
+	Vector<String> xp = editor.ReadBack(q); // try to load expression lien "x[i]." or "ptr->"
 	Index<String> type;
 	Parser parser;
 	int ci = pos;
@@ -1160,72 +1176,105 @@ void Ide::ContextGoto0(int pos)
 		ci++;
 	}
 	editor.Context(parser, ci);
-
-	if(xp.GetCount() == 0 && IsNull(tp))
-		type.Add(parser.current_scope);
-	else {
+	
+	if(xp.GetCount()) {
 		type = editor.EvaluateExpressionType(parser, xp);
 		if(type.GetCount() == 0)
 			return;
 	}
+	
 	String id = editor.GetWord(pos);
 	if(id.GetCount() == 0)
 		return;
+	
+	String qual; // Try to load type qualification like Foo::Bar, Vector<String>::Iterator
+	while(editor.Ch(q - 1) == ' ')
+		q--;
+	if(editor.Ch(q - 1) == ':' && editor.Ch(q - 2) == ':') {
+		q -= 3;
+		while(q >= 0) {
+			int c = editor.Ch(q);
+			if(iscid(c) || findarg(c, '<', '>', ':', ',', ' ') >= 0) {
+				if(c != ' ')
+					qual = (char)c + qual;
+				q--;
+			}
+			else
+				break;
+		}
+	}
+		
+	Vector<String> scope;
+	Vector<bool> istype; // prefer type (e.g. struct Foo) over constructor (Foo::Foo())
 
-	if(xp.GetCount() == 0) {
+	for(int i = 0; i < type.GetCount(); i++) { // 'x.attr'
+		Index<String> done;
+		String r;
+		if(GetIdScope(r, type[i], id, done)) {
+			scope.Add(r);
+			istype.Add(false);
+		}
+	}
+
+	if(qual.GetCount()) { // Ctrl::MOUSELEFT, Vector<String>::Iterator
+		Vector<String> todo;
+		todo.Add(RemoveTemplateParams(Qualify(CodeBase(), parser.current_scope, qual + "::" + id)));
+		while(scope.GetCount() < 100 && todo.GetCount()) {
+			String t = todo[0];
+			if(t.EndsWith("::"))
+				t.Trim(t.GetCount() - 2);
+			todo.Remove(0);
+			if(CodeBase().Find(t) >= 0) { // Ctrl::MOUSELEFT
+				scope.Add(t);
+				istype.Add(true);
+			}
+			String tt = t;
+			tt << "::" << id;
+			if(CodeBase().Find(tt) >= 0) { // Vector<String>::Iterator
+				scope.Add(tt);
+				istype.Add(true);
+			}
+			Scopefo f(CodeBase(), t); // Try base classes too!
+			todo.Append(f.GetBases());
+		}
+	}
+	else {
+		scope.Add(parser.current_scope);
+		istype.Add(false);
 		q = parser.local.Find(id);
-		if(q >= 0) {
+		if(q >= 0) { // Try locals
 			AddHistory();
 			editor.SetCursor(editor.GetPos(parser.local[q].line - 1));
 			FindId(id);
 			return;
 		}
-	}
-
-	Vector<String> scope;
-	bool istype = false;
-
-	if(xp.GetCount() == 0) { // 'String'
-		String t = Qualify(CodeBase(), parser.current_scope, id);
+		// Can be unqualified type name like 'String'
+		String t = RemoveTemplateParams(Qualify(CodeBase(), parser.current_scope, id));
 		if(CodeBase().Find(t) >= 0) {
 			scope.Add(t);
-			istype = true;
-		}
-	}
-	if(xp.GetCount() == 1 && iscib(*xp[0])) { // 'Vector<String>::Iterator'
-		String t = Qualify(CodeBase(), parser.current_scope, xp[0] + "::" + id);
-		if(CodeBase().Find(t) >= 0) {
-			scope.Add(t);
-			istype = true;
+			istype.Add(true);
 		}
 	}
 	
-	if(scope.GetCount() == 0)
-		for(int i = 0; i < type.GetCount(); i++) { // 'x.attr'
-			Index<String> done;
-			String r;
-			if(GetIdScope(r, type[i], id, done))
-				scope.Add(r);
-		}
-
-	if(scope.GetCount() == 0) {
-		Index<String> done;
-		String r;
-		if(GetIdScope(r, "", id, done)) // global
-			scope.Add(r);
+	Index<String> done;
+	String r;
+	if(GetIdScope(r, "", id, done)) { // global
+		scope.Add(r);
+		istype.Add(false);
 	}
 
 	for(int j = 0; j < scope.GetCount(); j++) {
 		q = CodeBase().Find(scope[j]);
 		if(q >= 0) {
 			const Array<CppItem>& n = CodeBase()[q];
-			for(int i = 0; i < n.GetCount(); i++) {
-				if(n[i].IsType() == istype && n[i].name == id) {
-					JumpToDefinition(n, i, scope[j]);
-					FindId(id);
-					return;
+			for(int pass = 0; pass < 2; pass++)
+				for(int i = 0; i < n.GetCount(); i++) {
+					if((pass || !istype[j] || n[i].IsType()) && n[i].name == id) {
+						JumpToDefinition(n, i, scope[j]);
+						FindId(id);
+						return;
+					}
 				}
-			}
 		}
 	}
 }
