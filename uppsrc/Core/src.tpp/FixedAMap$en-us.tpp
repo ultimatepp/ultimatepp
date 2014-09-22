@@ -31,8 +31,8 @@ is much better.&]
 [s3;%- &]
 [s5;:FixedAMap`:`:Add`(const K`&`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) c
 onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
-[s5;:FixedAMap`:`:AddPick`(const K`&`,pick`_ T`&`):%- [*@4 T][@(0.0.255) `&]_[* AddPick]([@(0.0.255) c
-onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:FixedAMap`:`:AddPick`(const K`&`,T rval`_`):%- [*@4 T][@(0.0.255) `&]_[* AddPick]([@(0.0.255) c
+onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [*@4 T]_[@(0.0.255) rval`_]_[*@3 x])&]
 [s5;:FixedAMap`:`:Add`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
 ]_[*@3 k])&]
 [s2; Adds new key`-value pair to the map, returns a reference to 

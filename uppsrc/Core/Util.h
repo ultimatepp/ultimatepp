@@ -541,3 +541,7 @@ public:
 	void DumpProfile();
 };
 
+String  Replace(const String& s, const Vector<String>& find, const Vector<String>& replace);
+String  Replace(const String& s, const VectorMap<String, String>& fr);
+WString Replace(const WString& s, const Vector<WString>& find, const Vector<WString>& replace);
+WString Replace(const WString& s, const VectorMap<WString, WString>& fr);

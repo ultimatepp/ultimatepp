@@ -166,17 +166,17 @@ T Find(T ptr, T end, const V& value)
 }
 
 template <class T, class V, class C>
-int FindIndex(const T& cont, const V& value, const C& equal)
+int FindIndex(const T& cont, const V& value, const C& equal, int from = 0)
 {
-	for(int i = 0; i < cont.GetCount(); i++)
+	for(int i = from; i < cont.GetCount(); i++)
 		if(equal(cont[i], value)) return i;
 	return -1;
 }
 
 template <class T, class V>
-int FindIndex(const T& cont, const V& value)
+int FindIndex(const T& cont, const V& value, int from = 0)
 {
-	for(int i = 0; i < cont.GetCount(); i++)
+	for(int i = from; i < cont.GetCount(); i++)
 		if(cont[i] == value) return i;
 	return -1;
 }

@@ -6,7 +6,7 @@ protected:
 
 public:
 	T&       Add(const K& k, const T& x)       { key.Add(k); return value.Add(x); }
-	T&       AddPick(const K& k, T rval_ x)   { key.Add(k); return value.AddPick(x); }
+	T&       AddPick(const K& k, T rval_ x)    { key.Add(k); return value.AddPick(x); }
 	T&       Add(const K& k)                   { key.Add(k); return value.Add(); }
 	
 	void     Finish()                          { IndexSort(key, value, Less()); Shrink(); }

@@ -905,4 +905,56 @@ void NanoStrings::DumpProfile()
 	}
 }
 
+template <class CHR, class T>
+T Replace__(const T& s, const Vector<T>& find, const Vector<T>& replace)
+{
+	ASSERT(find.GetCount() == replace.GetCount());
+
+	T r;
+	int i = 0;
+	while(i < s.GetCount()) {
+		int best = -1;
+		int bestlen = 0;
+		int len = s.GetCount() - i;
+		const CHR *q = ~s + i;
+		for(int j = 0; j < replace.GetCount(); j++) {
+			const T& m = find[j];
+			int l = m.GetCount();
+			if(l <= len && l > bestlen && memcmp(~m, q, l * sizeof(CHR)) == 0) {
+				bestlen = l;
+				best = j;
+			}
+		}
+		if(best >= 0) {
+			i += bestlen;
+			r.Cat(replace[best]);
+		}
+		else {
+			r.Cat(*q);
+			i++;
+		}
+	}
+	return r;
+}
+
+String Replace(const String& s, const Vector<String>& find, const Vector<String>& replace)
+{
+	return Replace__<char>(s, find, replace);
+}
+
+String Replace(const String& s, const VectorMap<String, String>& fr)
+{
+	return Replace__<char>(s, fr.GetKeys(), fr.GetValues());
+}
+
+WString Replace(const WString& s, const Vector<WString>& find, const Vector<WString>& replace)
+{
+	return Replace__<wchar>(s, find, replace);
+}
+
+WString Replace(const WString& s, const VectorMap<WString, WString>& fr)
+{
+	return Replace__<wchar>(s, fr.GetKeys(), fr.GetValues());
+}
+
 END_UPP_NAMESPACE
