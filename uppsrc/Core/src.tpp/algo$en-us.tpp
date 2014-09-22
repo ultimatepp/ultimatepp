@@ -129,20 +129,23 @@ f])&]
 returns [%-*@3 def].&]
 [s3; &]
 [s4;%- &]
-[s5;:FindIndex`(const T`&`,const V`&`,const C`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+[s5;:FindIndex`(const T`&`,const V`&`,const C`&`,int`):%- [@(0.0.255) template]_<[@(0.0.255) c
 lass]_[*@4 T], [@(0.0.255) class]_[*@4 V], [@(0.0.255) class]_[*@4 C]>_[@(0.0.255) int]_[* Find
 Index]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 cont], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&
-]_[*@3 value], [@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 equal])&]
+]_[*@3 value], [@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 equal], [@(0.0.255) int]_[*@3 fro
+m]_`=_[@3 0])&]
 [s2; Performs a linear search of [%-*@3 cont] to find an index of element 
-with [%-*@3 value]. using predicate [%-*@3 equal] to perform comparisons. 
-If not found, returns `-1.&]
+with [%-*@3 value]. using predicate [%-*@3 equal] to perform comparisons, 
+starting with element at [%-*@3 from]. If not found, returns `-1.&]
 [s3; &]
 [s4;%- &]
-[s5;:FindIndex`(const T`&`,const V`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T],
- [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindIndex]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
-]_[*@3 cont], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 value])&]
+[s5;:FindIndex`(const T`&`,const V`&`,int`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
+[*@4 T], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindIndex]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 cont], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 value], [@(0.0.255) int]_[*@3 from
+]_`=_[@3 0])&]
 [s2; Performs a linear search of [%-*@3 cont] to find an index of element 
-with [%-*@3 value]. If not found, returns `-1.&]
+with [%-*@3 value], starting with element at [%-*@3 from]. If not 
+found, returns `-1.&]
 [s3; &]
 [s4; &]
 [s5;:FindLowerBound`(const C`&`,int`,int`,const T`&`,const L`&`):%- [@(0.0.255) templat
