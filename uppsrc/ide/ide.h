@@ -99,7 +99,7 @@ public:
 	bool console;
 	bool verbosebuild;
 
-	int  Execute(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false);
+	int  Execute(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false, bool noconvert = false);
 	int  Execute(One<AProcess> pick_ process, const char *cmdline, Stream *out = NULL, bool quiet = false);
 	int  GetSlotCount() const { return processes.GetCount(); }
 	int  AllocSlot();
@@ -562,9 +562,9 @@ public:
 	virtual   const Workspace& IdeWorkspace() const;
 	virtual   bool             IdeIsBuilding() const;
 	virtual   String           IdeGetOneFile() const;
-	virtual   int              IdeConsoleExecute(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false);
+	virtual   int              IdeConsoleExecute(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false, bool noconvert = false);
 	virtual   int              IdeConsoleExecute(One<AProcess> pick_ process, const char *cmdline, Stream *out = NULL, bool quiet = false);
-	virtual   int              IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *envptr, bool quiet);
+	virtual   int              IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *envptr, bool quiet, bool noconvert);
 	virtual   int              IdeConsoleAllocSlot();
 	virtual   bool             IdeConsoleRun(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
 	virtual   bool             IdeConsoleRun(One<AProcess> pick_ process, const char *cmdline, Stream *out = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
@@ -737,6 +737,7 @@ public:
 	enum      { RUN_WINDOW, RUN_CONSOLE, RUN_FILE, RUN_FILE_CONSOLE };
 	int       runmode;
 	bool      runexternal;
+	bool      console_utf8;
 	int       consolemode;
 	String    stdout_file;
 	String    recent_stdout_file;

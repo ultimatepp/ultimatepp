@@ -183,12 +183,12 @@ int Console::Execute(One<AProcess> pick_ p, const char *command, Stream *out, bo
 	return processes[0].exitcode;
 }
 
-int Console::Execute(const char *command, Stream *out, const char *envptr, bool q)
+int Console::Execute(const char *command, Stream *out, const char *envptr, bool q, bool noconvert)
 {
 	try {
 		Wait();
 		One<AProcess> p;
-		if(p.Create<LocalProcess>().Start(command, envptr))
+		if(p.Create<LocalProcess>().ConvertCharset(!noconvert).Start(command, envptr))
 			return Execute(pick(p), command, out, q);
 	}
 	catch(Exc e) {

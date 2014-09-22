@@ -102,16 +102,16 @@ String Ide::IdeGetOneFile() const
 	return onefile;
 }
 
-int Ide::IdeConsoleExecute(const char *cmdline, Stream *out, const char *envptr, bool quiet)
+int Ide::IdeConsoleExecute(const char *cmdline, Stream *out, const char *envptr, bool quiet, bool noconvert)
 {
-	return console.Execute(cmdline, out, envptr, quiet);
+	return console.Execute(cmdline, out, envptr, quiet, noconvert);
 }
 
-int Ide::IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *envptr, bool quiet)
+int Ide::IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *envptr, bool quiet, bool noconvert)
 {
 	ShowConsole();
 	console.Input(true);
-	int r = console.Execute(cmdline, out, envptr, quiet);
+	int r = console.Execute(cmdline, out, envptr, quiet, noconvert);
 	console.Input(false);
 	return r;
 }
@@ -527,6 +527,7 @@ Ide::Ide()
 	runmode = RUN_WINDOW;
 	runexternal = false;
 	consolemode = 0;
+	console_utf8 = false;
 
 	browser_closeesc = true;
 

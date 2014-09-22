@@ -103,20 +103,20 @@ int LocalHost::Execute(const char *cmdline)
 	return q;
 }
 
-int LocalHost::ExecuteWithInput(const char *cmdline)
+int LocalHost::ExecuteWithInput(const char *cmdline, bool noconvert)
 {
 	if(cmdout)
 		*cmdout << cmdline << '\n';
 	PutVerbose(cmdline);
-	int q = IdeConsoleExecuteWithInput(FindCommand(exedirs, cmdline), NULL, environment, false);
+	int q = IdeConsoleExecuteWithInput(FindCommand(exedirs, cmdline), NULL, environment, false, noconvert);
 	PutVerbose(Format("Exitcode: %d", q));
 	return q;
 }
 
-int LocalHost::Execute(const char *cmdline, Stream& out)
+int LocalHost::Execute(const char *cmdline, Stream& out, bool noconvert)
 {
 	PutVerbose(cmdline);
-	int q = IdeConsoleExecute(FindCommand(exedirs, cmdline), &out, environment, true);
+	int q = IdeConsoleExecute(FindCommand(exedirs, cmdline), &out, environment, true, noconvert);
 	PutVerbose(Format("Exitcode: %d", q));
 	return q;
 }

@@ -18,8 +18,8 @@ struct Host {
 	virtual void               SaveFile(const String& path, const String& data) = 0;
 	virtual String             LoadFile(const String& path) = 0;
 	virtual int                Execute(const char *cmdline) = 0;
-	virtual int                ExecuteWithInput(const char *cmdline) = 0;
-	virtual int                Execute(const char *cmdline, Stream& out) = 0;
+	virtual int                ExecuteWithInput(const char *cmdline, bool noconvert) = 0;
+	virtual int                Execute(const char *cmdline, Stream& out, bool noconvert = false) = 0;
 	virtual int                AllocSlot() = 0;
 	virtual bool               Run(const char *cmdline, int slot, String key, int blitz_count) = 0;
 	virtual bool               Run(const char *cmdline, Stream& out, int slot, String key, int blitz_count) = 0;
@@ -50,8 +50,8 @@ struct LocalHost : Host {
 	virtual void               SaveFile(const String& path, const String& data);
 	virtual String             LoadFile(const String& path);
 	virtual int                Execute(const char *cmdline);
-	virtual int                ExecuteWithInput(const char *cmdline);
-	virtual int                Execute(const char *cmdline, Stream& out);
+	virtual int                ExecuteWithInput(const char *cmdline, bool noconvert);
+	virtual int                Execute(const char *cmdline, Stream& out, bool noconvert = false);
 	virtual int                AllocSlot();
 	virtual bool               Run(const char *cmdline, int slot, String key, int blitz_count);
 	virtual bool               Run(const char *cmdline, Stream& out, int slot, String key, int blitz_count);

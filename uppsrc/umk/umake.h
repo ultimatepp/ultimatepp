@@ -49,7 +49,7 @@ public:
 	bool console;
 	bool verbosebuild;
 
-	int  Execute(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false);
+	int  Execute(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false, bool noconvert = false);
 	int  Execute(One<AProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false);
 	int  GetSlotCount() const { return processes.GetCount(); }
 	int  AllocSlot();
@@ -94,8 +94,8 @@ struct Ide : public IdeContext, public MakeBuild {
 	virtual const Workspace& IdeWorkspace() const ;
 	virtual bool             IdeIsBuilding() const ;
 	virtual String           IdeGetOneFile() const ;
-	virtual int              IdeConsoleExecute(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false);
-	virtual int              IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *envptr, bool quiet);
+	virtual int              IdeConsoleExecute(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false, bool = false);
+	virtual int              IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *envptr, bool quiet, bool = false);
 	virtual int              IdeConsoleExecute(One<AProcess> process, const char *cmdline, Stream *out = NULL, bool quiet = false);
 	virtual int              IdeConsoleAllocSlot();
 	virtual bool             IdeConsoleRun(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
