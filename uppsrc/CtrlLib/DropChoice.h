@@ -253,7 +253,7 @@ public:
 	const MultiButton::Style& StyleDefault()              { return select.StyleFrame(); }
 	WithDropChoice& SetStyle(const MultiButton::Style& s) { select.SetStyle(s); return *this; }
 
-	WithDropChoice& Dropping(bool b = true)               { select.Show(b); return *this; }
+	WithDropChoice& Dropping(bool b = true)               { select.MainButton().Show(b); return *this; }
 	WithDropChoice& NoDropping()                          { return Dropping(false); }
 	WithDropChoice& NoDropFocus()                         { select.NoDropFocus(); return *this; }
 	WithDropChoice& Appending(const String& s = ", ")     { appends = s; select.Appending(); return *this; }

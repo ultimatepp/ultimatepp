@@ -53,6 +53,7 @@ public:
 		bool         left;
 		bool         monoimg;
 		bool         enabled;
+		bool         visible;
 
 		String       label;
 
@@ -69,6 +70,7 @@ public:
 		SubButton& Left(bool b = true);
 		SubButton& Width(int w);
 		SubButton& Enable(bool b);
+		SubButton& Show(bool b);
 		SubButton& Tip(const char *s)                     { tip = s; return *this; }
 		SubButton& Main(bool b = true);
 
