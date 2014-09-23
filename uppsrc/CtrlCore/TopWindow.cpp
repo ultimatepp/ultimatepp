@@ -68,9 +68,6 @@ bool TopWindow::IsShowEnabled() const
 
 void TopWindow::DefaultBreak()
 {
-	if(FindAction(IDCANCEL))
-		RejectBreak(IDCANCEL);
-	else
 	if(FindAction(IDNO))
 		RejectBreak(IDNO);
 	else
@@ -80,7 +77,10 @@ void TopWindow::DefaultBreak()
 	if(FindAction(IDYES))
 		AcceptBreak(IDYES);
 	else
+	if(FindAction(IDCANCEL))
 		AcceptBreak(IDOK);
+	else
+		RejectBreak(IDCANCEL);
 }
 
 void TopWindow::Close()

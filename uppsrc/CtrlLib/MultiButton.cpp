@@ -38,6 +38,7 @@ MultiButton::SubButton::SubButton()
 	monoimg = false;
 	enabled = true;
 	main = false;
+	visible = true;
 }
 
 void MultiButton::SubButton::Refresh()
@@ -95,6 +96,13 @@ MultiButton::SubButton& MultiButton::SubButton::Width(int w)
 MultiButton::SubButton& MultiButton::SubButton::Enable(bool b)
 {
 	enabled = b;
+	Refresh();
+	return *this;
+}
+
+MultiButton::SubButton& MultiButton::SubButton::Show(bool b)
+{
+	visible = b;
 	Refresh();
 	return *this;
 }
@@ -222,9 +230,13 @@ int MultiButton::FindButton(int px)
 bool MultiButton::GetPos(SubButton& b, int& lx, int& rx, int& x, int& cx, int px)
 {
 	Size tsz = GetTextSize(b.label, StdFont());
-	cx = Nvl(b.cx, style->stdwidth + tsz.cx);
-	if(IsNull(b.cx) && tsz.cx > 0 && !IsNull(b.img))
-		cx += LB_IMAGE + LB_MARGIN;
+	if(b.visible) {
+		cx = Nvl(b.cx, style->stdwidth + tsz.cx);
+		if(IsNull(b.cx) && tsz.cx > 0 && !IsNull(b.img))
+			cx += LB_IMAGE + LB_MARGIN;
+	}
+	else
+		cx = 0;
 	if(b.left) {
 		x = lx;
 		lx += cx;
