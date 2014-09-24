@@ -558,7 +558,6 @@ int GetRichTextScreenStdFontHeight()
 	ONCELOCK {
 		for(int i = 0; i < 1000; i++) {
 			int h = GetRichTextStdScreenZoom() * i;
-			LOG(i << ' ' << StdFont(h).GetCy());
 			if(h > 0 && StdFont(h).GetCy() == StdFont().GetCy()) {
 				gh = i;
 				break;
