@@ -41,7 +41,7 @@ const char *examples[] = {
 
 GUI_APP_MAIN
 {
-	SetLanguage(LNGFromText("RU-RU"));
+	SetLanguage("ru-ru");
 
 	String qtf = "&";
 	for(int i = 0; examples[i]; i++)
