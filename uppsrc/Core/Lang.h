@@ -21,6 +21,9 @@ int     SetLNGCharset(int lng, byte chrset);
 void                      SetLanguage(int lang);
 int                       GetCurrentLanguage();
 
+void                      SetLanguage(const char *s);
+String                    GetCurrentLanguageString();
+
 int                       GetSystemLNG();
 
 VectorMap<String, String> GetLanguage(int lang);//rename...

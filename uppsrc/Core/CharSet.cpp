@@ -2128,9 +2128,12 @@ int CharsetByName(const char *name)
 	String nm = Filter(name, cs_filter);
 	if(nm == "utf8" || nm == "utf-8")
 		return CHARSET_UTF8;
-	for(int i = 1; i < CharsetCount(); i++)
-		if(nm == Filter(CharsetName(i), cs_filter))
-			return i;
+	for(int pass = 0; pass < 2; pass++) {
+		for(int i = 1; i < CharsetCount(); i++)
+			if(nm == Filter(CharsetName(i), cs_filter))
+				return i;
+		nm.Replace("win", "windows");
+	}
 	return 0;
 }
 

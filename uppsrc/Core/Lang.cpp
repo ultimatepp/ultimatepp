@@ -154,6 +154,16 @@ void SetLanguage(int lang) {
 	SetCurrentLanguage(lang);
 }
 
+void SetLanguage(const char *s)
+{
+	SetLanguage(LNGFromText(s));
+}
+
+String GetCurrentLanguageString()
+{
+	return LNGAsText(GetCurrentLanguage());
+}
+
 String GetLangName(int language)
 {
 	return GetLanguageInfo(language).english_name;
