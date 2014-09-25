@@ -1,0 +1,11 @@
+description "Prompt redirection\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI SSE2";
+
