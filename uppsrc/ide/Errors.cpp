@@ -19,17 +19,18 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 				if(*s)
 					s++;
 			}
-			int e = f.file.GetLength();
-			while(e > 0 && f.file[e - 1] == ' ')
+			String file = f.file;
+			int e = file.GetLength();
+			while(e > 0 && file[e - 1] == ' ')
 				e--;
-			f.file.Trim(e);
-			f.file = TrimLeft(f.file);
+			file.Trim(e);
+			file = TrimLeft(file);
 			String upp = GetUppDir();
 		#ifdef PLATFORM_WIN32
-			if(f.file[0] == '\\' || f.file[0] == '/')
-				f.file = String(upp[0], 1) + ':' + f.file;
+			if(file[0] == '\\' || file[0] == '/')
+				file = String(upp[0], 1) + ':' + file;
 		#endif
-			if(!IsFullPath(f.file) && *f.file != '\\' && *f.file != '/') {
+			if(!IsFullPath(file) && *file != '\\' && *file != '/') {
 				if(cache.wspc_paths.IsEmpty()) {
 					::Workspace  wspc;
 					wspc.Scan(main);
@@ -37,11 +38,11 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 						cache.wspc_paths.Add(GetFileDirectory(PackagePath(wspc[i])));
 				}
 				for(int i = 0; i < cache.wspc_paths.GetCount(); i++) {
-					String path = AppendFileName(cache.wspc_paths[i], f.file);
+					String path = AppendFileName(cache.wspc_paths[i], file);
 					int q = cache.ff.Find(path);
 					if(q >= 0) {
 						if(cache.ff[q]) {
-							f.file = path;
+							file = path;
 							break;
 						}
 					}
@@ -54,14 +55,15 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 						}
 						cache.ff.Add(path, b);
 						if(b) {
-							f.file = path;
+							file = path;
 							break;
 						}
 					}
 				}
 			}
-			f.file = FollowCygwinSymlink(f.file);
-			if(IsFullPath(f.file) && FileExists(f.file) && IsTextFile(f.file)) {
+			file = FollowCygwinSymlink(file);
+			if(IsFullPath(file) && FileExists(f.file) && IsTextFile(f.file)) {
+				f.file = file;
 				while(*s && !IsDigit(*s))
 					s++;
 				f.lineno = f.linepos = 0;
@@ -72,9 +74,14 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 					f.linepos = p.ReadInt();
 				const char *ms = p.GetPtr();
 				int pos = int(ms - ~ln);
-				f.kind = ln.Find("warning", pos) > 0 ? 2 :
-				         ln.Find("error", pos) > 0 ? 1 :				         
-				         ln.Find("note", pos) > 0 ? 3 : 4;
+				f.kind = 3;
+				if(ln.Find("warning") >= 0)
+					f.kind = 2;
+				else {
+					int q = ln.Find("error");
+					if(q >= 0 && (q == 0 || !IsAlpha(ln[q - 1])) && (q + 5 >= ln.GetCount() || !IsAlpha(ln[q - 1])))
+						f.kind = 1;
+				}
 				const char *hs = ms;
 				while(!IsLetter(*hs) && *hs)
 					hs++;
@@ -135,10 +142,10 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 						}
 					}
 				}
-				if(f.lineno > 0)
-					return true;
+				return f.lineno > 0;
 			}
-			f.file.Clear();
+			else
+				f.file.Cat(*s); // File is not complete, e.g.: C:\Program Files (x86)\Microsoft Visual Studio 10.0\Vc\Include\string.h(186)
 		}
 	}
 	return false;
