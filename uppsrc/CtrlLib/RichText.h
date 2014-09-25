@@ -123,6 +123,7 @@ public:
 	RichTextCtrl();
 };
 
+
 int Prompt(Callback1<const String&> WhenLink,
            const char *title, const Image& icon, const char *qtf, bool okcancel,
            const char *button1, const char *button2 = NULL, const char *button3 = NULL,
@@ -161,6 +162,15 @@ void YesButtonImage_Write(Image m);
 void NoButtonImage_Write(Image m);
 void AbortButtonImage_Write(Image m);
 void RetryButtonImage_Write(Image m);
+
+
+typedef
+int (*RedirectPromptFn)(Callback1<const String&> WhenLink,
+                        const char *title, const Image& iconbmp, const char *qtf, bool okcancel,
+                        const char *button1, const char *button2, const char *button3,
+                        int cx, Image im1, Image im2, Image im3);
+
+void RedirectPrompts(RedirectPromptFn r);
 
 void ShowExc(const Exc& exc);
 

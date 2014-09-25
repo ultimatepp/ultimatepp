@@ -40,6 +40,14 @@ void sExecutePrompt(PromptDlgWnd__ *dlg, int *result)
 		}
 	}
 	*result = dlg->RunAppModal();
+	dlg->Close();
+}
+                        
+RedirectPromptFn RedirectPrompt;
+
+void RedirectPrompts(RedirectPromptFn r)
+{
+	RedirectPrompt = r;
 }
 
 int Prompt(Callback1<const String&> WhenLink,
@@ -48,6 +56,10 @@ int Prompt(Callback1<const String&> WhenLink,
 		   int cx,
 		   Image im1, Image im2, Image im3)
 {
+	if(RedirectPrompt)
+		return (*RedirectPrompt)(WhenLink, title, iconbmp, qtf, okcancel,
+                                 button1, button2, button3,
+                                 cx, im1, im2, im3);
 	int fcy = Draw::GetStdFontCy();
 	PromptDlgWnd__ dlg;
 	RichTextCtrl qtfctrl;
