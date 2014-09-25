@@ -106,14 +106,21 @@ String CppBuilder::GetHostPathShort(const String& path) const
 	return path;
 }
 
+String TrimSlash(String s)
+{
+	while(findarg(*s.Last(), '/', '\\') >= 0)
+		s.Trim(s.GetCount() - 1);
+	return s;
+}
+
 String CppBuilder::GetHostPathQ(const String& path) const
 {
-	return '\"' + GetHostPath(path) + '\"';
+	return '\"' + TrimSlash(GetHostPath(path)) + '\"';
 }
 
 String CppBuilder::GetHostPathShortQ(const String& path) const
 {
-	return '\"' + GetHostPathShort(path) + '\"';
+	return '\"' + TrimSlash(GetHostPathShort(path)) + '\"';
 }
 
 String CppBuilder::GetLocalPath(const String& path) const
