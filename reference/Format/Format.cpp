@@ -75,6 +75,6 @@ CONSOLE_APP_MAIN
 	DUMP(Format("%`", GetSysTime()));
 	DUMP(Format("%`", "text"));
 
-	SetLanguage(LNG_('C', 'S', 'C', 'Z'));
+	SetLanguage("cs-cz");
 	DUMP(Format("%`", GetSysDate()));
 }

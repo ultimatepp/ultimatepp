@@ -1,4 +1,4 @@
-description "QTF - default text representation of RichText";
+description "QTF - default text representation of RichText\377";
 
 uses
 	CtrlLib,

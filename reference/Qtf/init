@@ -1,0 +1,5 @@
+#ifndef _Qtf_icpp_init_stub
+#define _Qtf_icpp_init_stub
+#include "CtrlLib/init"
+#include "RichEdit/init"
+#endif
