@@ -1011,11 +1011,11 @@ bool GetIdScope(String& os, const String& scope, const String& id, Index<String>
 		os = n;
 		return true;
 	}
-	for(int i = 0; i < m.GetCount(); i = FindNext(m, i)) {
+	for(int i = 0; i < m.GetCount(); i++) {
 		const CppItem& im = m[i];
 		if(im.IsType()) {
 			Vector<String> b = Split(im.qptype, ';');
-				ResolveTParam(b, tparam);
+			ResolveTParam(b, tparam);
 			for(int i = 0; i < b.GetCount(); i++) {
 				if(GetIdScope(os, b[i], id, done))
 					return true;
@@ -1072,18 +1072,8 @@ void Ide::FindId(const String& id)
 
 String RemoveTemplateParams(const String& s)
 {
-	String r;
-	int lvl = 0;
-	for(int i = 0; i < s.GetCount(); i++)
-		if(s[i] == '<')
-			lvl++;
-		else
-		if(s[i] == '>')
-			lvl--;
-		else
-		if(lvl == 0)
-			r.Cat(s[i]);
-	return r;
+	Vector<String> dummy;
+	return ParseTemplatedType(s, dummy);
 }
 
 void Ide::ContextGoto0(int pos)
@@ -1211,8 +1201,18 @@ void Ide::ContextGoto0(int pos)
 		Index<String> done;
 		String r;
 		if(GetIdScope(r, type[i], id, done)) {
-			scope.Add(r);
-			istype.Add(false);
+			Vector<String> todo;
+			todo.Add(r);
+			while(scope.GetCount() < 100 && todo.GetCount()) { // Add base classes
+				String t = todo[0];
+				todo.Remove(0);
+				if(t.EndsWith("::"))
+					t.Trim(t.GetCount() - 2);
+				scope.Add(t);
+				istype.Add(false);
+				Scopefo f(CodeBase(), t); // Try base classes too!
+				todo.Append(f.GetBases());
+			}
 		}
 	}
 
@@ -1239,8 +1239,18 @@ void Ide::ContextGoto0(int pos)
 		}
 	}
 	else {
-		scope.Add(parser.current_scope);
-		istype.Add(false);
+		Vector<String> todo;
+		todo.Add(parser.current_scope);
+		while(scope.GetCount() < 100 && todo.GetCount()) { // Add base classes
+			String t = todo[0];
+			todo.Remove(0);
+			if(t.EndsWith("::"))
+				t.Trim(t.GetCount() - 2);
+			scope.Add(t);
+			istype.Add(false);
+			Scopefo f(CodeBase(), t); // Try base classes too!
+			todo.Append(f.GetBases());
+		}
 		q = parser.local.Find(id);
 		if(q >= 0) { // Try locals
 			AddHistory();
