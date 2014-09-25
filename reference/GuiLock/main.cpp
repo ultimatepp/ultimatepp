@@ -30,7 +30,8 @@ void App::Work()
 			break;
 		if(list.GetCount() > 100) {
 			bool quit;
-			Call(PTEBACK1(AskQuit, &quit));
+			Call(PTEBACK1(AskQuit, &quit)); // This is the generic way for any GUI (dlg)
+			// quit = PromptYesNo("Quit?"); // But Prompt has this ability already implemented
 			if(quit) {
 				Break();
 				return;
