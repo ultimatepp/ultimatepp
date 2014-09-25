@@ -40,6 +40,7 @@ public:
 		Rect  margin;
 		int   overpaint;
 		int   loff, roff;
+		Color error;
 	};
 
 	class SubButton {
@@ -91,6 +92,7 @@ private:
 	const Display   *display;
 	const Convert   *convert;
 	Value            value;
+	Value            error;
 	int              valuecy;
 	bool             push;
 	bool             nobg;
@@ -143,6 +145,8 @@ public:
 	const Display& GetDisplay() const                { return *display; }
 	const Convert& GetConvert() const                { return *convert; }
 	const Value&   Get() const                       { return value; }
+	
+	void  Error(const Value v)                       { error = v; Refresh(); }
 
 	MultiButton& SetDisplay(const Display& d);
 	MultiButton& NoDisplay();
