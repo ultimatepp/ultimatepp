@@ -137,12 +137,13 @@ void sSyncLabel(Label *lbl, const char *label, EditString *text)
 	lbl->SetLabel(String().Cat() << label << " (" << text->GetLength() << "/" << text->GetMaxLength() << ")");
 }
 
-bool EditText(String& s, const char *title, const char *label, int (*f)(int), int maxlen)
+bool EditText(String& s, const char *title, const char *label, int (*f)(int), int maxlen, bool notnull)
 {
 	WithEditStringLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, title);
 	dlg.lbl = label;
 	dlg.text = s.ToWString();
+	dlg.text.NotNull(notnull);
 	dlg.text.SetFilter(f);
 	if(maxlen) {
 		dlg.text.MaxLen(maxlen);
@@ -156,29 +157,54 @@ bool EditText(String& s, const char *title, const char *label, int (*f)(int), in
 	return false;
 }
 
-bool EditText(String& s, const char *title, const char *label, int maxlen)
+bool EditText(String& s, const char *title, const char *label, int (*filter)(int), int maxlen)
 {
-	return EditText(s, title, label, CharFilterUnicode, maxlen);
+	return EditText(s, title, label, filter, maxlen, false);
 }
 
-bool EditText(WString& s, const char *title, const char *label, int (*f)(int), int maxlen)
+bool EditText(String& s, const char *title, const char *label, int maxlen)
 {
-	WithEditStringLayout<TopWindow> dlg;
-	CtrlLayoutOKCancel(dlg, title);
-	dlg.lbl = label;
-	dlg.text = s;
-	dlg.text.SetFilter(f);
-	if(maxlen) dlg.text.MaxLen(maxlen);
-	if(dlg.Execute() == IDOK) {
-		s = dlg.text.GetText();
+	return EditText(s, title, label, CharFilterUnicode, maxlen, false);
+}
+
+bool EditTextNotNull(String& s, const char *title, const char *label, int (*filter)(int), int maxlen)
+{
+	return EditText(s, title, label, filter, maxlen, true);
+}
+
+bool EditTextNotNull(String& s, const char *title, const char *label, int maxlen)
+{
+	return EditText(s, title, label, CharFilterUnicode, maxlen, true);
+}
+
+bool EditText(WString& s, const char *title, const char *label, int (*f)(int), int maxlen, bool notnull)
+{
+	String ss = s.ToString();
+	if(EditText(ss, title, label, f, maxlen, notnull)) {
+		s = ss.ToWString();
 		return true;
 	}
 	return false;
 }
 
+bool EditText(WString& s, const char *title, const char *label, int (*filter)(int), int maxlen)
+{
+	return EditText(s, title, label, filter, maxlen, false);
+}
+
 bool EditText(WString& s, const char *title, const char *label, int maxlen)
 {
-	return EditText(s, title, label, CharFilterUnicode, maxlen);
+	return EditText(s, title, label, CharFilterUnicode, maxlen, false);
+}
+
+bool EditTextNotNull(WString& s, const char *title, const char *label, int (*filter)(int), int maxlen)
+{
+	return EditText(s, title, label, filter, maxlen, true);
+}
+
+bool EditTextNotNull(WString& s, const char *title, const char *label, int maxlen)
+{
+	return EditText(s, title, label, CharFilterUnicode, maxlen, true);
 }
 
 bool EditNumber(int& n, const char *title, const char *label, int min, int max, bool notnull)

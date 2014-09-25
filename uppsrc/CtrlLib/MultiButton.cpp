@@ -24,6 +24,7 @@ CH_STYLE(MultiButton, Style, StyleDefault)
 	margin = Rect(2, 2, 2, 2);
 	usetrivial = false;
 	overpaint = loff = roff = 0;
+	error = Blend(LtRed(), Red());
 }
 
 CH_STYLE(MultiButton, Style, StyleFrame)
@@ -470,6 +471,10 @@ void MultiButton::Paint(Draw& w)
 	bool f = HasFocus() && !push && frm;
 	if(cr.left < cr.right && display) {
 		w.Clip(clr);
+		if(!IsNull(error)) {
+			v = error;
+			text = style->error;
+		}
 		display->Paint(w, cr, v,
 		               IsShowEnabled() ? text : SColorDisabled,
 		               paper, f ? Display::CURSOR : Display::FOCUS|Display::CURSOR);
