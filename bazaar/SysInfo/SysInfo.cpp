@@ -23,7 +23,7 @@ NAMESPACE_UPP
 /////////////////////////////////////////////////////////////////////
 // Hardware Info
 #if defined(PLATFORM_WIN32) 
-		
+
 bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[], String nameSpace = "root\\cimv2") {
 	HRESULT hRes;
 	
@@ -219,11 +219,67 @@ String GetMacAddressWMI() {
 */
 #include <iphlpapi.h>
 
-bool IsWinXP_orLess() {
-	OSVERSIONINFO of;
-	of.dwOSVersionInfoSize = sizeof(of);
-	GetVersionEx(&of);
-	return of.dwMajorVersion <= 5;
+/* This is from the BIND 4.9.4 release, modified to compile by itself */
+
+#define	IN6ADDRSZ	16
+#define	INT16SZ		 2
+
+#include <stdint.h>
+
+String inet_ntop4(const unsigned char *src) {
+	return Format("%d.%d.%d.%d", src[0], src[1], src[2], src[3]);
+}
+
+String inet_ntop6(const unsigned char *src) {
+	struct {int base, len;} best, cur;
+	uint16_t words[IN6ADDRSZ / INT16SZ];
+
+	memset(words, 0, sizeof words);
+	for (int i = 0; i < IN6ADDRSZ; i++) 
+		words[int(i / INT16SZ)] |= ((uint8_t)src[i] << ((1 - (i % INT16SZ)) << 3));
+	
+	best.base = -1;
+	cur.base = -1;
+	for (int i = 0; i < (IN6ADDRSZ / INT16SZ); i++) {
+		if (words[i] == 0) {
+			if (cur.base == -1)
+				cur.base = i, cur.len = 1;
+			else
+				cur.len++;
+		} else {
+			if (cur.base != -1) {
+				if (best.base == -1 || cur.len > best.len)
+					best = cur;
+				cur.base = -1;
+			}
+		}
+	}
+	if (cur.base != -1) {
+		if (best.base == -1 || cur.len > best.len)
+			best = cur;
+	}
+	if (best.base != -1 && best.len < 2)
+		best.base = -1;
+
+	String ret;
+	for (int i = 0; i < (IN6ADDRSZ / INT16SZ); i++) {
+		if (best.base != -1 && i >= best.base && i < (best.base + best.len)) {
+			if (i == best.base)
+				ret.Cat(':');
+			continue;
+		}
+		if (i != 0)
+			ret.Cat(':');
+		if (i == 6 && best.base == 0 && (best.len == 6 || (best.len == 5 && words[5] == 0xffff))) {
+			ret.Cat(inet_ntop4(src + 12));
+			break;
+		}
+		ret.Cat(Format("%x", words[i]));
+	}
+	if (best.base != -1 && (best.base + best.len) == (IN6ADDRSZ / INT16SZ))
+		ret.Cat(':');
+
+	return ret;
 }
 
 Array <NetAdapter> GetAdapterInfo() {
@@ -260,30 +316,10 @@ Array <NetAdapter> GetAdapterInfo() {
           	for (int i = 0; pUnicast != NULL; i++) {
            		if (pUnicast->Address.lpSockaddr->sa_family == AF_INET) {
            			sockaddr_in *sa_in = (sockaddr_in *)pUnicast->Address.lpSockaddr;
-#ifdef COMPILER_MINGW
-					adapter.ip4 = inet_ntoa(sa_in->sin_addr);
-#else
-					if (IsWinXP_orLess()) 
-						adapter.ip4 = inet_ntoa(sa_in->sin_addr);
-					else {
-						Buffer<char> str(INET_ADDRSTRLEN);
-						inet_ntop(AF_INET, &(sa_in->sin_addr), str, INET_ADDRSTRLEN);
-						adapter.ip4 = str;
-					}
-#endif
+					adapter.ip4 = inet_ntop4((const unsigned char *)&(sa_in->sin_addr));
                	} else if (pUnicast->Address.lpSockaddr->sa_family == AF_INET6) {
-               		sockaddr_in6 *sa_in6 = (sockaddr_in6 *)pUnicast->Address.lpSockaddr;
-#ifdef COMPILER_MINGW
-					adapter.ip6 = "";
-#else
-					if (IsWinXP_orLess()) 
-						adapter.ip6 = "";
-					else {
-	               		Buffer<char> str(INET6_ADDRSTRLEN);
-						inet_ntop(AF_INET6, &(sa_in6->sin6_addr), str, INET6_ADDRSTRLEN);
-						adapter.ip6 = str;
-					}
-#endif
+					sockaddr_in6 *sa_in6 = (sockaddr_in6 *)pUnicast->Address.lpSockaddr;
+					adapter.ip6 = inet_ntop6((const unsigned char *)&(sa_in6->sin6_addr));
                	} 
             	pUnicast = pUnicast->Next;
          	}
@@ -457,20 +493,15 @@ bool GetNetworkInfo(String &name, String &domain, String &ip4, String &ip6) {
 	struct hostent *host = gethostbyname(sname);
 	domain = host->h_name;
 	
-#ifdef COMPILER_MINGW
-	ip4 = inet_ntoa(*(struct in_addr *)*host->h_addr_list);
-	ip6.Clear();
+#ifdef _WIN32
+	ip4 = inet_ntop4((const unsigned char *)((struct in_addr *)*host->h_addr_list));
+	ip6 = inet_ntop6((const unsigned char *)((struct in_addr *)*host->h_addr_list));
 #else
-	if (IsWinXP_orLess()) {
-		ip4 = inet_ntoa(*(struct in_addr *)*host->h_addr_list);
-		ip6.Clear();
-	} else {
-		Buffer<char> str(max(INET_ADDRSTRLEN, INET6_ADDRSTRLEN));
-		inet_ntop(AF_INET, (void *)(struct in_addr *)*host->h_addr_list, str, INET_ADDRSTRLEN);
-		ip4 = str;
-		inet_ntop(AF_INET6, (void *)(struct in_addr *)*host->h_addr_list, str, INET6_ADDRSTRLEN);
-		ip6 = str;
-	}
+	Buffer<char> str(max(INET_ADDRSTRLEN, INET6_ADDRSTRLEN) + 1);
+	inet_ntop(AF_INET, (void *)(struct in_addr *)*host->h_addr_list, ~str, INET_ADDRSTRLEN);
+	ip4 = str;
+	inet_ntop(AF_INET6, (void *)(struct in_addr *)*host->h_addr_list, ~str, INET6_ADDRSTRLEN);
+	ip6 = str;
 #endif
 	
 #ifdef _WIN32
