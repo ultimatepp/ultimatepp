@@ -146,7 +146,7 @@ public:
 	const Convert& GetConvert() const                { return *convert; }
 	const Value&   Get() const                       { return value; }
 	
-	void  Error(const Value v)                       { error = v; Refresh(); }
+	void  Error(const Value& v)                      { error = v; Refresh(); }
 
 	MultiButton& SetDisplay(const Display& d);
 	MultiButton& NoDisplay();
