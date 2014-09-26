@@ -366,6 +366,7 @@ public:
 	Image  GetImage(int ii) const;
 	String GetName(int ii) const;
 	bool   GetExport(int ii) const;
+	bool   FindName(const String& name);
 
 	String GetCurrentName() const;
 

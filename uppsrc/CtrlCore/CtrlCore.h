@@ -201,7 +201,7 @@ Point GetMousePos();
 dword GetMouseFlags();
 
 #define IMAGECLASS CtrlCoreImg
-#define IMAGEFILE <CtrlCore/Ctrl.iml>
+#define IMAGEFILE <CtrlCore/CtrlCore.iml>
 #include <Draw/iml_header.h>
 
 class TopWindow;

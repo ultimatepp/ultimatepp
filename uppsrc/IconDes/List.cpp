@@ -420,6 +420,16 @@ String IconDes::GetName(int ii) const
 	return slot[ii].name;
 }
 
+bool IconDes::FindName(const String& name)
+{
+	for(int i = 0; i < slot.GetCount(); i++)
+		if(slot[i].name == name) {
+			GoTo(i);
+			return true;
+		}
+	return false;
+}
+
 String IconDes::GetCurrentName() const
 {
 	if(ilist.IsCursor())

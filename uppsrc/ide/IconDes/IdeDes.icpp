@@ -95,6 +95,11 @@ void IdeIconDes::CopyId(const String& n)
 	AppendClipboardText(n);
 }
 
+void IdeIconDes::FindId(const String& id)
+{
+	FindName(id);
+}
+
 void IdeIconDes::ListMenuEx(Bar& bar)
 {
 	if(IsSingleMode())
