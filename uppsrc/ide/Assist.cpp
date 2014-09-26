@@ -1328,6 +1328,7 @@ void Ide::JumpToDefinition(const Array<CppItem>& n, int q, const String& scope)
 	}
 	const CppItem& pos = n[qimpl >= 0 ? qimpl : qcpp >= 0 ? qcpp : q];
 	String path = GetCppFile(pos.file);
+	editastext.RemoveKey(path);
 	if(ToLower(GetFileExt(path)) == ".lay") {
 		AddHistory();
 		EditFile(path);
@@ -1341,6 +1342,17 @@ void Ide::JumpToDefinition(const Array<CppItem>& n, int q, const String& scope)
 			editor.TopCursor(4);
 			editor.SetFocus();
 		}
+		AddHistory();
+	}
+	else
+	if(ToLower(GetFileExt(path)) == ".iml") {
+		AddHistory();
+		EditFile(path);
+		IdeIconDes *l = dynamic_cast<IdeIconDes *>(~designer);
+		if(l)
+			l->FindId(pos.name);
+		else
+			editor.SetFocus();
 		AddHistory();
 	}
 	else

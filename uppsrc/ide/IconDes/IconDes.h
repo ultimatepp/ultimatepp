@@ -24,6 +24,7 @@ struct IdeIconDes : IdeDesigner, IconDes {
 	bool   Load(const char *filename);
 	void   FileProperties();
 	void   CopyId(const String& n);
+	void   FindId(const String& id);
 
 	typedef IdeIconDes CLASSNAME;
 

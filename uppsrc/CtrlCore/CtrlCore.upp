@@ -53,7 +53,7 @@ file
 	TopWindow.cpp,
 	lay.h,
 	llay.h,
-	Ctrl.iml,
+	CtrlCore.iml,
 	CtrlCore.t,
 	Win32 readonly separator,
 	Win32Gui.h,

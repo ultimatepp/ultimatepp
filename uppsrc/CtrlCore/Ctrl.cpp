@@ -5,7 +5,7 @@ NAMESPACE_UPP
 #define LLOG(x)   // DLOG(x)
 
 #define IMAGECLASS CtrlCoreImg
-#define IMAGEFILE <CtrlCore/Ctrl.iml>
+#define IMAGEFILE <CtrlCore/CtrlCore.iml>
 #include <Draw/iml_source.h>
 
 static bool StdDisplayErrorFn(const Value& e)
