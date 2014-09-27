@@ -134,6 +134,7 @@ void ColumnList::LeftUp(Point p, dword flags)
 		Refresh();
 		SyncInfo();
 	}
+	ReleaseCapture();
 }
 
 void ColumnList::LeftDrag(Point p, dword keyflags)

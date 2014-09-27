@@ -977,9 +977,9 @@ void LayDes::Delete()
 	ReloadItems();
 }
 
-String LayDes::SaveSelection()
+String LayDes::SaveSelection(bool scrolled)
 {
-	return CurrentLayout().Save(cursor, ZPoint(sb).y) + "\r\n";
+	return CurrentLayout().Save(cursor, scrolled * ZPoint(sb).y) + "\r\n";
 }
 
 LayoutData LayDes::LoadLayoutData(const String& s)
@@ -1023,7 +1023,7 @@ void LayDes::Duplicate()
 		return;
 	SaveState();
 	LayoutData& l = CurrentLayout();
-	LayoutData d = LoadLayoutData(SaveSelection());
+	LayoutData d = LoadLayoutData(SaveSelection(false));
 	int q = Max(cursor) + 1;
 	cursor.Clear();
 	for(int i = 0; i < d.item.GetCount(); i++) {

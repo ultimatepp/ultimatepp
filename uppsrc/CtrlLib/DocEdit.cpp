@@ -281,6 +281,7 @@ void DocEdit::LeftUp(Point p, dword flags)
 		SetFocus();
 	}
 	selclick = false;
+	ReleaseCapture();
 }
 
 void DocEdit::MouseMove(Point p, dword flags) {

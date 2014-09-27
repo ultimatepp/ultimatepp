@@ -128,6 +128,7 @@ int Splitter::FindIndex(Point client) const {
 void   Splitter::LeftUp(Point p, dword keyflags) {
 	if(HasCapture())
 		WhenSplitFinish();
+	ReleaseCapture();
 	Refresh();
 }
 

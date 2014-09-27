@@ -388,7 +388,7 @@ private:
 	LayoutItem& CurrentItem();
 	void        ItemClick();
 
-	String      SaveSelection();
+	String      SaveSelection(bool scrolled = false);
 	LayoutData  LoadLayoutData(const String& s);
 
 	void        Undo();
