@@ -234,6 +234,11 @@ void PackageEditor::SetOpt(ArrayCtrl& opt, int type, OptItem& m, const String& w
 	FindOpt(opt, type, when, text);
 }
 
+int FlagFilterR(int c)
+{
+	return c == '-' ? c : FlagFilter(c);
+}
+
 void PackageEditor::AddOption(int type)
 {
 	if(IsNull(actualpackage))
@@ -249,6 +254,10 @@ void PackageEditor::AddOption(int type)
 	CtrlLayoutOKCancel(dlg, opt_name[type]);
 	dlg.when.SetFilter(CondFilter);
 	dlg.when.Enable(type != INCLUDE);
+	if(type == FLAG) {
+		dlg.text.SetFilter(FlagFilterR);
+		dlg.info.SetLabel("Use '-' prefix to remove the flag");
+	}
 	if(dlg.Run() != IDOK)
 		return;
 	SetOpt(option, type, opt[type]->Add(), ~dlg.when, ~dlg.text);
