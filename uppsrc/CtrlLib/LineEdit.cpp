@@ -598,6 +598,7 @@ void LineEdit::LeftUp(Point p, dword flags)
 		SetFocus();
 	}
 	selclick = false;
+	ReleaseCapture();
 }
 
 void LineEdit::RightDown(Point p, dword flags)
