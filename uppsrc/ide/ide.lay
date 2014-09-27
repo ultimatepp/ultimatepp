@@ -591,6 +591,7 @@ LAYOUT(UppOptDlg, 520, 68)
 	ITEM(EditString, text, LeftPosZ(184, 328).TopPosZ(8, 19))
 	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(380, 64).TopPosZ(36, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(448, 64).TopPosZ(36, 24))
+	ITEM(Label, info, LeftPosZ(4, 368).TopPosZ(36, 21))
 END_LAYOUT
 
 LAYOUT(UppOptPushDlg, 340, 68)

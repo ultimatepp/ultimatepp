@@ -60,8 +60,14 @@ Index<String> MakeBuild::PackageConfig(const Workspace& wspc, int package,
 	host.AddFlags(cfg);
 	b.AddFlags(cfg);
 	for(int i = 0; i < pkg.flag.GetCount(); i++) {
-		if(MatchWhen(pkg.flag[i].when, cfg.GetKeys()))
-			cfg.Add(pkg.flag[i].text);
+		if(MatchWhen(pkg.flag[i].when, cfg.GetKeys())) {
+			Vector<String> h = Split(pkg.flag[i].text, ' ');
+			for(int i = 0; i < h.GetCount(); i++)
+				if(*h[i] == '-')
+					cfg.RemoveKey(h[i].Mid(1));
+				else
+					cfg.FindAdd(h[i]);
+		}
 	}
 	if(target)
 		*target = Gather(pkg.target, cfg.GetKeys(), true);
