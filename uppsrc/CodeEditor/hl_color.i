@@ -55,3 +55,4 @@ HL_COLOR(PAPER_SELWORD, t_("Selected word through file"), 0)
 
 HL_COLOR(PAPER_ERROR, t_("Error in compiler messages"), 0)
 HL_COLOR(PAPER_WARNING, t_("Warning in compiler messages"), 0)
+HL_COLOR(SHOW_LINE, t_("Current line highlight"), 0)

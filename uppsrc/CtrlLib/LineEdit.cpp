@@ -23,6 +23,7 @@ LineEdit::LineEdit() {
 	showlines = false;
 	showreadonly = true;
 	dorectsel = false;
+	hline = Null;
 }
 
 LineEdit::~LineEdit() {}
@@ -194,6 +195,7 @@ void   LineEdit::Paint0(Draw& w) {
 	int fascent = font.Info().GetAscent();
 	Color showcolor = Blend(SColorLight, SColorHighlight);
 	bool trimmed = false;
+	int cursorline = GetLine(cursor);
 	for(int i = sc.y; i < ll; i++) {
 		WString tx;
 		if(line[i].text.GetLength() > 100000) { // Do not go out of memory for patologic cases...
@@ -342,6 +344,10 @@ void   LineEdit::Paint0(Draw& w) {
 		            if(fsz.cx > 2)
 			            w.DrawRect(x + 1, y + yy - 1, 1, 3, showcolor);
 		            w.DrawRect(x + fsz.cx / 2, y + yy / 2, 1, yy - yy / 2, showcolor);
+				}
+				if(pass == 0 && !IsNull(hline) && !IsAnySelection() && i == cursorline) {
+					w.DrawRect(0, y, sz.cx, 1, hline);
+					w.DrawRect(0, y + fsz.cy - 1, sz.cx, 1, hline);
 				}
 			}
 		}
@@ -537,6 +543,13 @@ int LineEdit::PlaceCaretNoG(int newcursor, bool sel) {
 			anchor = -1;
 		}
 		rectsel = false;
+	}
+	if(!IsNull(hline)) {
+		Point op = GetColumnLine(cursor);
+		if(op.y != p.y) {
+			RefreshLine(op.y);
+			RefreshLine(p.y);
+		}
 	}
 	cursor = newcursor;
 	ScrollIntoCursor();

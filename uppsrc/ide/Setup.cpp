@@ -127,6 +127,7 @@ void Ide::UpdateFormat(CodeEditor& editor)
 	editor.BarLine(barline);
 	editor.HiliteIfEndif(hilite_if_endif);
 	editor.ThousandsSeparator(thousands_separator);
+	editor.ShowCurrentLine(hline ? HighlightSetup::GetHlStyle(HighlightSetup::SHOW_LINE).color : (Color)Null);
 	editor.LineNumbers(line_numbers);
 	editor.AutoEnclose(auto_enclose);
 	editor.MarkLines(mark_lines);
@@ -390,6 +391,7 @@ void Ide::SetupFormat() {
 		(hlt.hilite_ifdef, hilite_ifdef)
 		(hlt.hilite_if_endif, hilite_if_endif)
 		(hlt.thousands_separator, thousands_separator)
+		(hlt.hline, hline)
 
 		(edt.indent_spaces, indent_spaces)
 		(edt.no_parenthesis_indent, no_parenthesis_indent)

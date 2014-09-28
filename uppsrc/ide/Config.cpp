@@ -146,7 +146,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 4;
+	int version = 5;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -193,6 +193,8 @@ void Ide::Serialize(Stream& s)
 	s % hilite_ifdef;
 	if(version >= 3)
 		s % thousands_separator;
+	if(version >= 5)
+		s % hline;
 	s % barline;
 	s % qtfsel;
 	s % wrap_console_text;
