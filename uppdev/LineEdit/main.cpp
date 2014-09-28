@@ -12,6 +12,8 @@ GUI_APP_MAIN
 	win.Sizeable();
 	win.Add(edit.HSizePos(20, 20).VSizePos(20, 20));
 	win.Open();
+	edit.ShowLineEndings();
+	edit.ShowCurrentLine(LtCyan());
 	Ctrl::EventLoop();
 	SaveFile(ConfigFile("data.txt"), ~edit);
 }
