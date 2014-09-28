@@ -458,8 +458,9 @@ LAYOUT(SetupHlLayout, 544, 288)
 	ITEM(Switch, hilite_bracket, SetLabel(t_("None\nNormal\nFlashing")).LeftPosZ(380, 160).TopPosZ(92, 50))
 	ITEM(Label, dv___5, SetLabel(t_("#else/#elif/#endif info")).LeftPosZ(380, 160).TopPosZ(148, 16))
 	ITEM(Switch, hilite_ifdef, SetLabel(t_("None\nNormal\nWith line number")).LeftPosZ(380, 160).TopPosZ(164, 50))
-	ITEM(Option, hilite_if_endif, SetLabel(t_("#if/#endif tracing")).LeftPosZ(380, 160).TopPosZ(216, 18))
-	ITEM(Option, thousands_separator, SetLabel(t_("Thousands separator")).LeftPosZ(380, 160).TopPosZ(236, 18))
+	ITEM(Option, hilite_if_endif, SetLabel(t_("#if/#endif tracing")).LeftPosZ(380, 160).TopPosZ(212, 18))
+	ITEM(Option, thousands_separator, SetLabel(t_("Thousands separator")).LeftPosZ(380, 160).TopPosZ(232, 18))
+	ITEM(Option, hline, SetLabel(t_("Current line")).LeftPosZ(380, 160).TopPosZ(252, 18))
 	ITEM(Button, hl_restore, SetLabel(t_("Restore default colors")).LeftPosZ(380, 160).TopPosZ(268, 16))
 END_LAYOUT
 
