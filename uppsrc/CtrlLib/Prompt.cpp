@@ -61,6 +61,7 @@ int Prompt(Callback1<const String&> WhenLink,
                                  button1, button2, button3,
                                  cx, im1, im2, im3);
 	int fcy = Draw::GetStdFontCy();
+	EnterGuiMutex(); // Ctrl derived classes can only be initialized with GuiLock
 	PromptDlgWnd__ dlg;
 	RichTextCtrl qtfctrl;
 	Icon         icon;
@@ -133,6 +134,7 @@ int Prompt(Callback1<const String&> WhenLink,
 	}
 	dlg.WhenClose = dlg.Breaker(button3 ? -1 : 0);
 	dlg.Title(title);
+	LeaveGuiMutex();
 	int result;
 	Ctrl::Call(callback2(sExecutePrompt, &dlg, &result));
 	return result;
