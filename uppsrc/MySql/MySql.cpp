@@ -334,6 +334,8 @@ bool MySqlConnection::Execute() {
 				f.type = INT_V;
 				break;
 			case FIELD_TYPE_LONGLONG:
+				f.type = INT64_V;
+				break;
 			case FIELD_TYPE_DECIMAL:
 			case FIELD_TYPE_FLOAT:
 			case FIELD_TYPE_DOUBLE:
@@ -417,6 +419,9 @@ void MySqlConnection::GetColumn(int i, Ref f) const {
 		switch(info[i].type) {
 		case INT_V:
 			f = atoi(s);
+			break;
+		case INT64_V:
+			f = ScanInt64(s);
 			break;
 		case DOUBLE_V:
 			f = ScanDouble(s, NULL, true);
