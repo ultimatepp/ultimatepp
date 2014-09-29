@@ -9,18 +9,21 @@
 //When idraw = 1 it will create image at actual size based on radius values
 //Else image created to screen window diaplay size
 template <class T>
-void DrawCanvas::DoPaint0 ( T& sw, int idraw ) {
+void DrawCanvas::DoPaint0 ( T& sw, int idraw )
+{
 	double x1, y1;
 	int cnt1, cnt2;
 	int RunTo ;
 
 	Size sz;
 
-	if ( idraw == 1 ) {
+	if ( idraw == 1 )
+	{
 		sz = Size ( 2 * Radius1 + 20, 2 * Radius1 + 20 );
 	}
 
-	else {
+	else
+	{
 		sz = GetSize();
 	}
 
@@ -30,19 +33,24 @@ void DrawCanvas::DoPaint0 ( T& sw, int idraw ) {
 	y1 = sz.cy / 2 ;
 
 // Show color fill. Draw bacground circle with color
-	if ( ColorFill ) {
-		if ( ShowGradient ) {
+
+	if ( ColorFill )
+	{
+		if ( ShowGradient )
+		{
 			sw.Ellipse ( x1, y1, Radius1, Radius1 ).Fill ( x1, y1, fcolorB1, Radius1, fcolorB2 );
 		}
 
-		else {
+		else
+		{
 			sw.Ellipse ( x1, y1, Radius1, Radius1 ).Fill ( fcolorB1 );
 		}
 	}
 
 	cnt1 = data.GetCount();
 
-	for ( int i = 0; i < data.GetCount(); i++ ) {
+	for ( int i = 0; i < data.GetCount(); i++ )
+	{
 		Vector<Pointf>& p = data[i].point;
 		sw.Move ( x1 + p[0].x, y1 + p[0].y );
 
@@ -50,8 +58,15 @@ void DrawCanvas::DoPaint0 ( T& sw, int idraw ) {
 
 		// If animation flag set do incremental display of curve
 		// elase show all curve points.
-		if ( ShowAnimation ) { RunTo = ShowTo ; }
-		else { RunTo = cnt2 ;}
+
+		if ( ShowAnimation )
+		{
+			RunTo = ShowTo ;
+		}
+		else
+		{
+			RunTo = cnt2 ;
+		}
 
 
 		if ( RunTo > cnt2 ) RunTo = cnt2 ;
@@ -60,19 +75,25 @@ void DrawCanvas::DoPaint0 ( T& sw, int idraw ) {
 			sw.Line ( x1 + p[j].x, y1 + p[j].y );
 
 		sw.Stroke ( data[i].penwidth, data[i].lcolor );
+
 		sw.EvenOdd ( true );
-		if ( ColorFill ) {
-			if ( ShowGradient ) {
+
+		if ( ColorFill )
+		{
+			if ( ShowGradient )
+			{
 				sw.Fill ( x1, y1, data[i].fcolorM1, Radius1, data[i].fcolorM2, GRADIENT_REFLECT );
 			}
 
-			else {
+			else
+			{
 				sw.Fill ( data[i].fcolorM1 );
 			}
 		}
 
-	// Show if option animation set 
-		if ( ShowAnimation ) {
+		// Show if option animation set
+		if ( ShowAnimation )
+		{
 			sw.BeginOnPath ( 1.0 );
 			sw.DrawImage ( 0, -GFImg::Bee().GetHeight() / 2, GFImg::Bee() );
 			sw.End();
@@ -90,15 +111,18 @@ void DrawCanvas::DoPaint0 ( T& sw, int idraw ) {
 	}
 }
 
-DrawCanvas::DrawCanvas() {
+DrawCanvas::DrawCanvas()
+{
 
 }
 
 // at present this function is redundant but kept here to improve printing in future
-void DrawCanvas::DoPaint ( Painter& sw ) {
+void DrawCanvas::DoPaint ( Painter& sw )
+{
 	bool painting = false ;
 
-	if ( painting ) {
+	if ( painting )
+	{
 		PaintingPainter h ( 4000, 4000 );
 		DoPaint0 ( h, 0 );
 		sw.Paint ( h );
@@ -110,7 +134,8 @@ void DrawCanvas::DoPaint ( Painter& sw ) {
 }
 
 
-void DrawCanvas::Paint ( Draw& drw ) {
+void DrawCanvas::Paint ( Draw& drw )
+{
 	Size sz = GetSize();
 	ImageBuffer ib ( sz );
 	BufferPainter sw ( ib );
@@ -122,7 +147,8 @@ void DrawCanvas::Paint ( Draw& drw ) {
 }
 
 
-Image GeoFun::GetImage() {
+Image GeoFun::GetImage()
+{
 	Size sz = Size ( dc1.Radius1 * 2 + 20, dc1.Radius1 * 2 + 20 );
 	ImageBuffer ib ( sz );
 	BufferPainter bp ( ib, MODE_ANTIALIASED );
@@ -131,16 +157,19 @@ Image GeoFun::GetImage() {
 	return ib;
 }
 
-void GeoFun::SaveToImageFile ( String fileName ) {
+void GeoFun::SaveToImageFile ( String fileName )
+{
 	GuiLock __;
 
-	if ( IsNull ( fileName ) ) {
+	if ( IsNull ( fileName ) )
+	{
 		FileSel fs;
 
 		fs.Type ( "PNG file", "*.png" );
 		fs.Type ( "JPEG file", "*.jpg" );
 
-		if ( !fs.ExecuteSaveAs ( t_ ( "Saving plot to PNG or JPEG file" ) ) ) {
+		if ( !fs.ExecuteSaveAs ( t_ ( "Saving plot to PNG or JPEG file" ) ) )
+		{
 			Exclamation ( t_ ( "Plot has not been saved" ) );
 			return;
 		}
@@ -148,13 +177,15 @@ void GeoFun::SaveToImageFile ( String fileName ) {
 		fileName = fs;
 	}
 
-	if ( GetFileExt ( fileName ) == ".png" ) {
+	if ( GetFileExt ( fileName ) == ".png" )
+	{
 		PNGEncoder encoder;
 		encoder.SaveFile ( fileName, GetImage() );
 	}
 
 	else
-		if ( GetFileExt ( fileName ) == ".jpg" ) {
+		if ( GetFileExt ( fileName ) == ".jpg" )
+		{
 			JPGEncoder encoder ( 90 );
 			encoder.SaveFile ( fileName, GetImage() );
 		}
@@ -163,33 +194,41 @@ void GeoFun::SaveToImageFile ( String fileName ) {
 			Exclamation ( Format ( t_ ( "File format \"%s\" not found" ), GetFileExt ( fileName ) ) );
 }
 
-void GeoFun::SaveToAutoCadScript ( String fileName ) {
-	if ( IsNull ( fileName ) ) {
+void GeoFun::SaveToAutoCadScript ( String fileName )
+{
+	if ( IsNull ( fileName ) )
+	{
 		FileSel fs;
 
 		fs.Type ( "SCR file", "*.scr" );
 
-		if ( !fs.ExecuteSaveAs ( t_ ( "Saving plot to Polyline -- AutoCAD Script " ) ) ) {
+		if ( !fs.ExecuteSaveAs ( t_ ( "Saving plot to Polyline -- AutoCAD Script " ) ) )
+		{
 			Exclamation ( t_ ( "Plot has not been saved" ) );
 			return;
 		}
 
 		fileName = fs;
 	}
-	if ( GetFileExt ( fileName ) == ".scr" ) {
+
+	if ( GetFileExt ( fileName ) == ".scr" )
+	{
 
 		String sScr ;
 
-		for ( int i = 0; i < dc1.data.GetCount(); i++ ) {
+		for ( int i = 0; i < dc1.data.GetCount(); i++ )
+		{
 			sScr << "PLINE\n" ;
 			Vector<Pointf>& p = dc1.data[i].point;
 
 			for ( int j = 0; j < p.GetCount(); j++ )
 				sScr << p[j].x << "," << p[j].y << "\n";
-			sScr << "\n";
+
+			sScr << "\nZ\nE\n";
 		}
 
 		FileOut fo ;
+
 		fo.Open ( fileName );
 		fo.Put ( sScr );
 		fo.Close();
@@ -197,7 +236,59 @@ void GeoFun::SaveToAutoCadScript ( String fileName ) {
 
 }
 
-void GeoFun::Print() {
+
+void GeoFun::SaveToSVG ( String fileName )
+{
+	if ( IsNull ( fileName ) )
+	{
+		FileSel fs;
+
+		fs.Type ( "SVG file", "*.svg" );
+
+		if ( !fs.ExecuteSaveAs ( t_ ( "Saving as SVG file " ) ) )
+		{
+			Exclamation ( t_ ( "SVG has not been saved" ) );
+			return;
+		}
+
+		fileName = fs;
+	}
+
+	if ( GetFileExt ( fileName ) == ".svg" )
+	{
+		String sXML ;
+
+		sXML.Clear();
+
+		sXML << "<?xml version=\"1.0\" standalone=\"no\"?>" ;
+		sXML <<  "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" " ;
+		sXML <<  "\"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">" ;
+		sXML <<  "<svg width=\"100%\" height=\"100%\" version=\"1.1\" " ;
+		sXML <<  "xmlns=\"http://www.w3.org/2000/svg\"> \n  \n" ;
+
+		for ( int i = 0; i < dc1.data.GetCount(); i++ )
+		{
+			sXML << "\n<polygon points=\" ";
+			Vector<Pointf>& p = dc1.data[i].point;
+
+			for ( int j = 0; j < p.GetCount(); j++ )
+				sXML << Format ( "%0.4f", p[j].x ) << "," << Format ( "%0.4f",  p[j].y ) << " ";
+
+			sXML << "\" style=\"fill:none;stroke:#00C000;stroke-width:0.4\" />\n" ;
+		}
+
+		sXML << "</svg>\n";
+
+		FileOut fo ;
+		fo.Open ( fileName );
+		fo.Put ( sXML );
+		fo.Close();
+	}
+
+}
+
+void GeoFun::Print()
+{
 	Report r;
 	String sQtf;
 
@@ -218,7 +309,8 @@ void GeoFun::Print() {
 
 
 // This function calculates curve data points for display
-void GeoFun::PrepareData0() {
+void GeoFun::PrepareData0()
+{
 	int p, q, pw;
 
 	double a, b, h ;
@@ -230,27 +322,36 @@ void GeoFun::PrepareData0() {
 
 	int q1 = InputPane.edValP ;
 
-	if ( q1 > 0 ) {
+	if ( q1 > 0 )
+	{
 		p = InputPane.edValP ;
-	} else {
+	}
+	else
+	{
 		p = 1 ;
 		InputPane.edValP.SetData ( p ) ;
 	}
 
 	q1 = InputPane.edValQ ;
 
-	if ( q1 > 0 ) {
+	if ( q1 > 0 )
+	{
 		q = InputPane.edValQ ;
-	} else {
+	}
+	else
+	{
 		q = 1 ;
 		InputPane.edValQ.SetData ( q ) ;
 	}
 
 	q1 = InputPane.edPenWidth ;
 
-	if ( q1 > 0 ) {
+	if ( q1 > 0 )
+	{
 		pw = InputPane.edPenWidth ;
-	} else {
+	}
+	else
+	{
 		pw = 1 ;
 		InputPane.edPenWidth.SetData ( pw ) ;
 	}
@@ -259,15 +360,20 @@ void GeoFun::PrepareData0() {
 
 	int iCrv = ~InputPane.CurveType;
 
-	if ( ( iCrv == 1 ) || ( iCrv == 3 ) ) {
+	if ( ( iCrv == 1 ) || ( iCrv == 3 ) )
+	{
 		p = -p ;
 	}
 
 	double tmp = InputPane.edBaseCircleRad;
-	if ( tmp < 10 ) {
+
+	if ( tmp < 10 )
+	{
 		a = 10 ;
 		InputPane.edBaseCircleRad.SetData ( a );
-	} else {
+	}
+	else
+	{
 		a = InputPane.edBaseCircleRad;
 	}
 
@@ -276,14 +382,21 @@ void GeoFun::PrepareData0() {
 	dc1.BaseR = a ;
 	dc1.RollR = fabs ( b );
 
-	if ( iCrv < 2 ) {
+	if ( iCrv < 2 )
+	{
 		h = fabs ( b );
-	} else {
+	}
+	else
+	{
 		tmp = InputPane.edArmLength ;
-		if ( tmp < 0 ) {
+
+		if ( tmp < 0 )
+		{
 			h = 0 ;
 			InputPane.edArmLength.SetData ( h ) ;
-		} else {
+		}
+		else
+		{
 			h = InputPane.edArmLength ;
 		}
 	}
@@ -295,7 +408,9 @@ void GeoFun::PrepareData0() {
 //	ShowAnimation = ~InputPane.optAnimate ;
 
 	dc1.Zoomed = InputPane.optZoom.GetData();
-	if ( dc1.Zoomed ) {
+
+	if ( dc1.Zoomed )
+	{
 		Size sz = dc1.GetSize();
 		double dmax = sz.cx ;
 
@@ -313,6 +428,7 @@ void GeoFun::PrepareData0() {
 		b = b * zScale;
 
 		dc1.BaseR = a ;
+
 		dc1.RollR = fabs ( b );
 
 		dc1.Radius1 = fabs ( a + b ) + h ;
@@ -336,7 +452,8 @@ void GeoFun::PrepareData0() {
 
 	int NumSteps = abs ( ( int ) ( 2.0 * ( double ) p * 180.0 / step ) ) + 1 ;
 
-	for ( int i = 0; i < NumSteps; i++ ) {
+	for ( int i = 0; i < NumSteps; i++ )
+	{
 		t = ( double ) i / ( double ) NumSteps * Period ;
 		x = ( a + b ) * cos ( t ) + h * cos ( ( ( a + b ) / b ) * t ) ;
 		y = ( a + b ) * sin ( t ) + h * sin ( ( ( a + b ) / b ) * t );
@@ -365,30 +482,38 @@ void GeoFun::PrepareData0() {
 	prepd++;
 }
 
-void GeoFun::PrepareData() {
+void GeoFun::PrepareData()
+{
 	PrepareData0();
 	dc1.Refresh();
 }
 
-void GeoFun::ShowAnimated() {
+void GeoFun::ShowAnimated()
+{
 	int MaxCnt = dc1.data[0].point.GetCount();
 //	static dword LastTickCount = GetTickCount() ;
 
-	if ( dc1.ShowAnimation ) {
-		if ( dc1.ShowTo < MaxCnt ) {
+	if ( dc1.ShowAnimation )
+	{
+		if ( dc1.ShowTo < MaxCnt )
+		{
 			dc1.Refresh();
 			dc1.ShowTo += dc1.AnimSpeed ;
-		} else {
+		}
+		else
+		{
 			dc1.ShowAnimation = false ;
 			dc1.ColorFill = ~InputPane.optColorFill ;
 			dc1.Refresh();
 		}
 	}
+
 //	RLOG("TickCount - " <<( GetTickCount() - LastTickCount));
 //	LastTickCount = GetTickCount();
 }
 
-void GeoFun::SetAnimation() {
+void GeoFun::SetAnimation()
+{
 	dc1.AnimSpeed = InputPane.edAnimSpeed.GetData();
 	dc1.ShowTo = 5 ;
 	dc1.ShowAnimation = true ;
@@ -396,14 +521,16 @@ void GeoFun::SetAnimation() {
 
 }
 
-void GeoFun::FirstDraw() {
+void GeoFun::FirstDraw()
+{
 	First = false ;
 	PrepareData();
 	SetTimeCallback ( -30, THISBACK ( ShowAnimated ), 50 );
 }
 
 
-void GeoFun::Serialize ( Stream& s ) {
+void GeoFun::Serialize ( Stream& s )
+{
 	s
 	% InputPane.edArmLength
 	% InputPane.edBaseCircleRad
@@ -431,24 +558,30 @@ void GeoFun::Serialize ( Stream& s ) {
 }
 
 // Using layout to redraw on windows resize
-void GeoFun::Layout() {
-	if ( !First ) {
+void GeoFun::Layout()
+{
+	if ( !First )
+	{
 		PrepareData0();
 	}
+
 	TopWindow::Layout();
 }
 
-void GeoFun::About() {
+void GeoFun::About()
+{
 
 	WithAboutLayout<TopWindow> dlg;
 	dlg.AboutText = GetTopic ( "topic://GeoFun/app/About$en-us" ).text;
 	CtrlLayoutOK ( dlg, "About" );
 	dlg.CenterScreen();
 	dlg.Run();
+
 }
 
 
-void GeoFun::Help() {
+void GeoFun::Help()
+{
 
 	HelpWindow helpme;
 	helpme.GoTo ( "topic://GeoFun/app/Help$en-us" );
@@ -457,47 +590,77 @@ void GeoFun::Help() {
 }
 
 
-void GeoFun::Exit() {
+void GeoFun::Exit()
+{
 	Close();
 }
 
-void GeoFun::SetAnimationSpeed() {
+void GeoFun::SetAnimationSpeed()
+{
 	dc1.AnimSpeed = InputPane.edAnimSpeed.GetData();
+
 	if ( dc1.AnimSpeed < 1 ) dc1.AnimSpeed = 1;
+
 	if ( dc1.AnimSpeed > 20 ) dc1.AnimSpeed = 20;
+
 	InputPane.edAnimSpeed.SetData ( dc1.AnimSpeed );
 }
 
 
-void GeoFun::OptionColorFill() {
+void GeoFun::OptionColorFill()
+{
 	int i = InputPane.optColorFill.Get();
 	i = i ? 0 : 1;
 	InputPane.optColorFill.Set ( i )	;
 	PrepareData();
 }
 
-void GeoFun::OptionGradient() {
+void GeoFun::OptionGradient()
+{
 	int i = InputPane.optGradient.Get();
 	i = i ? 0 : 1;
 	InputPane.optGradient.Set ( i )	;
 	PrepareData();
 }
 
-void GeoFun::OptionZoom() {
+void GeoFun::OptionZoom()
+{
 	int i = InputPane.optZoom.Get();
 	i = i ? 0 : 1;
 	InputPane.optZoom.Set ( i )	;
 	PrepareData();
 }
 
-void GeoFun::SetCurveType ( int CrvType ) {
+void GeoFun::SetCurveType ( int CrvType )
+{
 	InputPane.CurveType.SetData ( CrvType );
+	SetCurveTypeMenu ( CrvType );
+}
+
+void GeoFun::SetCurveTypeMenu1 ( )
+{
+	int CrvType = InputPane.CurveType.GetData();
+	SetCurveTypeMenu ( CrvType );
+}
+
+void GeoFun::SetCurveTypeMenu ( int CrvType )
+{
+	EpiCyclo = HypoCyclo = EpiTroch = HypoTroch = false ;
+	switch ( CrvType ) 
+	{
+		case 1 : HypoCyclo = true ; break ;
+		case 2 : EpiTroch = true ; break ;
+		case 3 : HypoTroch = true ; break ;
+		default : EpiCyclo = true ;
+	}
 	PrepareData();
 }
 
+
 // Menu Functions
 
-void GeoFun::SettingsMenu ( Bar& bar ) {
+void GeoFun::SettingsMenu ( Bar& bar )
+{
 	bar.Add ( t_ ( "Color Fill" ), THISBACK ( OptionColorFill ) ).Check ( dc1.ColorFill )
 	.Help ( t_ ( "Change settings" ) );
 	bar.Add ( t_ ( "Gradient Fill" ), THISBACK ( OptionGradient ) ).Check ( dc1.ShowGradient )
@@ -506,11 +669,14 @@ void GeoFun::SettingsMenu ( Bar& bar ) {
 	.Help ( t_ ( "Zoom fit to window area" ) );
 }
 
-void GeoFun::FileMenu ( Bar& bar ) {
+void GeoFun::FileMenu ( Bar& bar )
+{
 	bar.Add ( t_ ( "Save Image" ), CtrlImg::save_as(), THISBACK1 ( SaveToImageFile, "" ) )
 	.Help ( t_ ( "Save Image as PNG or JPG" ) );
 	bar.Add ( t_ ( "Save AutoCAD Script" ), CtrlImg::save(), THISBACK1 ( SaveToAutoCadScript, "" ) )
 	.Help ( t_ ( "Save as AutoCAD Script (.scr) file" ) );
+	bar.Add ( t_ ( "Save as SVG" ), CtrlImg::save(), THISBACK1 ( SaveToSVG, "" ) )
+	.Help ( t_ ( "Save as Scalable vector graphics (.svg) file" ) );
 	bar.Separator();
 	bar.Add ( t_ ( "Print" ), CtrlImg::print() , THISBACK ( Print ) )
 	.Help ( t_ ( "Print the image , will fit to A4 page" ) );
@@ -519,28 +685,31 @@ void GeoFun::FileMenu ( Bar& bar ) {
 	.Help ( t_ ( "Exit the application" ) );
 }
 
-void GeoFun::CurvesMenu ( Bar& bar ) {
+void GeoFun::CurvesMenu ( Bar& bar )
+{
 	bar.Add ( t_ ( "Epicycloid" ), THISBACK1 ( SetCurveType, 0 ) )
-	.Help ( t_ ( "Plot Epicycloid curve" ) );
+	.Help ( t_ ( "Plot Epicycloid curve" ) ).Check(EpiCyclo);
 	bar.Add ( t_ ( "Hypocycloid" ), THISBACK1 ( SetCurveType, 1 ) )
-	.Help ( t_ ( "Plot Hypocycloid curve" ) );
+	.Help ( t_ ( "Plot Hypocycloid curve" ) ).Check(HypoCyclo);
 	bar.Add ( t_ ( "Epitrochoid" ), THISBACK1 ( SetCurveType, 2 ) )
-	.Help ( t_ ( "Plot Epitrochoid curve" ) );
+	.Help ( t_ ( "Plot Epitrochoid curve" ) ).Check(EpiTroch);
 	bar.Add ( t_ ( "Hypotrochoid" ), THISBACK1 ( SetCurveType, 3 ) )
-	.Help ( t_ ( "Plot Hypotrochoid curve" ) );
+	.Help ( t_ ( "Plot Hypotrochoid curve" ) ).Check(HypoTroch);
 	bar.Separator();
 	bar.Add ( t_ ( "Animated Plot" ), THISBACK ( SetAnimation ) )
-	.Help ( t_ ( "Show animation of the curve drawing" ) );
+	.Help ( t_ ( "Show animation of the curve drawing" ) ).Check(AnimMn);
 }
 
-void GeoFun::MainMenu ( Bar& bar ) {
+void GeoFun::MainMenu ( Bar& bar )
+{
 	bar.Add ( t_ ( "File" ), THISBACK ( FileMenu ) );
 	bar.Add ( t_ ( "Curves" ), THISBACK ( CurvesMenu ) );
 	bar.Add ( t_ ( "Options" ), THISBACK ( SettingsMenu ) );
 	bar.Add ( t_ ( "Assist" ), THISBACK ( HelpMenu ) );
 }
 
-void GeoFun::HelpMenu ( Bar& bar ) {
+void GeoFun::HelpMenu ( Bar& bar )
+{
 	bar.Add ( t_ ( "About" ), CtrlImg::information(), THISBACK ( About ) )
 	.Help ( t_ ( "About GeoFun" ) );
 	bar.Separator();
@@ -550,10 +719,11 @@ void GeoFun::HelpMenu ( Bar& bar ) {
 
 
 
-GeoFun::GeoFun() {
+GeoFun::GeoFun()
+{
 	CtrlLayout ( *this, "GeoFun : Enjoy Geometric Curves" );
 
-	Icon ( GFImg::icon() );
+	Icon ( GFImg::gficon() );
 
 	CtrlLayout ( InputPane );
 
@@ -570,7 +740,9 @@ GeoFun::GeoFun() {
 	dc1.data.Clear();
 
 	// Check config file available else set default data
-	if ( !cfgAvailable ) {
+
+	if ( !cfgAvailable )
+	{
 		InputPane.edArmLength.SetData ( 112 ) ;
 		InputPane.edBaseCircleRad.SetData ( 145 );
 		InputPane.edPenWidth.SetData ( 3 );
@@ -589,7 +761,8 @@ GeoFun::GeoFun() {
 		InputPane.CurveType.SetData ( 2 );
 	}
 
-	InputPane.CurveType.WhenAction << THISBACK ( PrepareData );
+	InputPane.CurveType.WhenAction << THISBACK (SetCurveTypeMenu1);
+
 	InputPane.optGradient.WhenAction << THISBACK ( PrepareData );
 	InputPane.optColorFill.WhenAction << THISBACK ( PrepareData );
 
@@ -607,7 +780,7 @@ GeoFun::GeoFun() {
 	InputPane.edAnimSpeed.WhenAction << THISBACK ( SetAnimationSpeed );
 	InputPane.optZoom.WhenAction << THISBACK ( PrepareData );
 
-	// Set timercallback to do first painting with calculations 
+	// Set timercallback to do first painting with calculations
 	// You can not call this directly from constructor
 	SetTimeCallback ( 200, THISBACK ( FirstDraw ) );
 
@@ -615,20 +788,31 @@ GeoFun::GeoFun() {
 	menu.Set ( THISBACK ( MainMenu ) );
 }
 
-GUI_APP_MAIN {
+GUI_APP_MAIN
+{
 	GeoFun gf ;
 	gf.First = true ;
 	String cfgfile = ConfigFile();
 
-	if ( FileExists ( cfgfile ) ) {
+
+	if ( FileExists ( cfgfile ) )
+	{
 		cfgAvailable = true ;
-		if ( !LoadFromFile ( gf, cfgfile ) ) {
+
+		if ( !LoadFromFile ( gf, cfgfile ) )
+		{
 			cfgAvailable = false ;
 			Exclamation ( "Error loading configuration file!" );
 		}
-	} else {
+	}
+	else
+	{
 		cfgAvailable = false ;
 	}
+
+//	gf.Icon(Image::(5555, true), Image::ICON(5555, false));
+
 	gf.Run();
+
 	StoreToFile ( gf );
 }

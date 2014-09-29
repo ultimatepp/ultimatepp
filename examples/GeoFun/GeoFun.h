@@ -70,6 +70,7 @@ class GeoFun : public WithGeoFunLayout<TopWindow> {
 		Color PenC, M1C, M2C, B1C, B2C;
 
 		bool First ;
+		bool EpiCyclo , HypoCyclo, EpiTroch, HypoTroch, AnimMn;
 
 // Functions
 		void About();
@@ -94,9 +95,12 @@ class GeoFun : public WithGeoFunLayout<TopWindow> {
 
 		void SaveToImageFile ( String fileName );
 		void SaveToAutoCadScript ( String fileName );
+		void SaveToSVG ( String fileName );
 		void SetAnimation();
 		void SetAnimationSpeed();
 		void SetCurveType ( int CrvType );
+		void SetCurveTypeMenu1 ( );
+		void SetCurveTypeMenu ( int CrvType );
 		void Serialize ( Stream& s );
 		void ShowAnimated();
 
