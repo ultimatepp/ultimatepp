@@ -52,7 +52,12 @@ void Scopefo::Bases(int i, Vector<int>& g)
 				for(;;) {
 					if(*q == ';' || *q == '\0') {
 						if(b < q) {
-							int nq = base.Find(String(b, q));
+							String h = String(b, q);
+							int q = h.Find('<');
+							if(q >= 0)
+								h.Trim(q);
+							h = TrimBoth(h);
+							int nq = base.Find(h);
 							if(nq >= 0)
 								g.Add(nq);
 						}
