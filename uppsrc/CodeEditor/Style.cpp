@@ -164,7 +164,7 @@ void HighlightSetup::DefaultHlStyles()
 	SetHlStyle(PAPER_ERROR, Blend(White(), LtRed(), 50));
 	SetHlStyle(PAPER_WARNING, Blend(White(), Yellow(), 50));
 
-	SetHlStyle(SHOW_LINE, WhiteGray());
+	SetHlStyle(SHOW_LINE, Color(199, 247, 198));
 }
 
 END_UPP_NAMESPACE
