@@ -345,7 +345,7 @@ void   LineEdit::Paint0(Draw& w) {
 			            w.DrawRect(x + 1, y + yy - 1, 1, 3, showcolor);
 		            w.DrawRect(x + fsz.cx / 2, y + yy / 2, 1, yy - yy / 2, showcolor);
 				}
-				if(pass == 0 && !IsNull(hline) && !IsAnySelection() && i == cursorline) {
+				if(pass == 0 && !IsNull(hline) && sell == selh && i == cursorline) {
 					w.DrawRect(0, y, sz.cx, 1, hline);
 					w.DrawRect(0, y + fsz.cy - 1, sz.cx, 1, hline);
 				}
