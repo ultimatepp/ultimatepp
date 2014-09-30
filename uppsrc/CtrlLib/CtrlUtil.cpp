@@ -4,7 +4,7 @@ NAMESPACE_UPP
 
 #define LLOG(x) // RLOG(x)
 
-// #define SLOWANIMATION
+#define SLOWANIMATION
 
 #define IMAGECLASS CtrlImg
 #define IMAGEFILE  <CtrlLib/Ctrl.iml>
@@ -36,10 +36,12 @@ void Animate(Ctrl& c, const Rect& target, int type)
 				if(r.bottom < target.bottom)
 				   r.bottom += ((target.bottom - r.bottom) * t) / anitime;
 				if(r.GetWidth() > target.GetWidth())
-				   r.right = (r.left + ((r.GetWidth() - target.GetWidth()) * t) / anitime);
+				   r.right = r.left + target.GetWidth();
 				if(r.GetHeight() > target.GetHeight())
-				   r.bottom = (r.top + ((r.GetHeight() - target.GetHeight()) * t) / anitime);
+				   r.bottom = r.top + target.GetHeight();
 				c.SetRect(r);
+				if(r == target)
+					break;
 			}
 			else
 			if(type == GUIEFFECT_FADE)
