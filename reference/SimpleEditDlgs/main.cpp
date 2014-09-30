@@ -8,8 +8,12 @@ GUI_APP_MAIN
 	if(EditText(text, "Please edit a text", "Text"))
 		PromptOK(text);
 
+	String text2;
+	if(EditTextNotNull(text2, "Please enter non-empty text", "Text"))
+		PromptOK(text2);
+
 	int number = 10;
-	if(EditNumber(number, "Please enter a number between 1 and 100", "Number", 1, 100, true))
+	if(EditNumber(number, "Please enter a number 1..100", "Number", 1, 100, true))
 		PromptOK(AsString(number));
 	
 	Date dt = GetSysDate();
