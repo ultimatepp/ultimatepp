@@ -906,6 +906,7 @@ Ctrls. &]
 [s5;:Ctrl`:`:AddChild`(Ctrl`*`,Ctrl`*`):%- [@(0.0.255) void]_[* AddChild]([_^`:`:Ctrl^ Ctrl
 ]_`*[*@3 child], [_^`:`:Ctrl^ Ctrl]_`*[*@3 insafter])&]
 [s2;b17;a17; Inserts child Ctrl after another Ctrl that is already 
+child. If [%-*@3 insafter] is NULL, child is inserted as the first 
 child.&]
 [s7;i1120;a17; [%-*C@3 child]-|Pointer to child Ctrl.&]
 [s7;i1120;a17; [%-*C@3 insafter]-|Ctrl that will be before inserted 
@@ -915,7 +916,7 @@ Ctrl.&]
 [s5;:Ctrl`:`:AddChildBefore`(Ctrl`*`,Ctrl`*`):%- [@(0.0.255) void]_[* AddChildBefore]([_^`:`:Ctrl^ C
 trl]_`*[*@3 child], [_^`:`:Ctrl^ Ctrl]_`*[*@3 insbefore])&]
 [s2;b17;a17; Inserts child Ctrl before another Ctrl that is already 
-child.&]
+child. If [%-*@3 insbefore], child is inserted as last child.&]
 [s7;i1120;a17; [%-*C@3 child]-|Pointer to child Ctrl.&]
 [s7;i1120;a17; [%-*C@3 insbefore]-|Ctrl that will be after inserted 
 Ctrl.&]
