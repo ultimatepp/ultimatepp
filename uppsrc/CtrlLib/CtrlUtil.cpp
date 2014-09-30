@@ -4,7 +4,7 @@ NAMESPACE_UPP
 
 #define LLOG(x) // RLOG(x)
 
-#define SLOWANIMATION
+// #define SLOWANIMATION
 
 #define IMAGECLASS CtrlImg
 #define IMAGEFILE  <CtrlLib/Ctrl.iml>
