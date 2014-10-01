@@ -579,7 +579,24 @@ int PostgreSQLConnection::GetRowsProcessed() const
 
 Value PostgreSQLConnection::GetInsertedId() const
 {
-	Sql sql("select currval('" + last_insert_table + "_id_seq')", session);
+	String pk = session.pkache.Get(last_insert_table, Null);
+	if(IsNull(pk)) {
+		String sqlc_expr; 
+		sqlc_expr <<
+		"SELECT " <<
+		  "pg_attribute.attname " <<
+		"FROM pg_index, pg_class, pg_attribute " <<
+		"WHERE " <<
+		  "pg_class.oid = '" << last_insert_table << "'::regclass AND "
+		  "indrelid = pg_class.oid AND "
+		  "pg_attribute.attrelid = pg_class.oid AND "
+		  "pg_attribute.attnum = any(pg_index.indkey) "
+		  "AND indisprimary";
+		Sql sqlc( sqlc_expr );
+		pk = sqlc.Execute() && sqlc.Fetch() ? sqlc[0] : "ID";
+		session.pkache.Add(last_insert_table, pk);
+	}
+	Sql sql("select currval('" + last_insert_table + "_" + pk +"_seq')", session);
 	if(sql.Execute() && sql.Fetch())
 		return sql[0];
 	else

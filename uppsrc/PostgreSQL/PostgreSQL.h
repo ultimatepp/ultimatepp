@@ -57,6 +57,8 @@ private:
 	String                conns;
 	bool                  keepalive;
 	bool                  hex_blobs;
+	
+	VectorMap<String, String> pkache;
 
 	void                  ExecTrans(const char * statement);
 	Vector<String>        EnumData(char type, const char *schema = NULL);
