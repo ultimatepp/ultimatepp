@@ -1,7 +1,7 @@
 #define INT(x)                     COLUMN("integer", int, x, 0, 0)
 #define INT_ARRAY(x, items)        COLUMN_ARRAY("integer", int, x, 0, 0, items)
 #define INT_(x)                    COLUMN_("integer", int, x, 0, 0)
-#define INT_ARRAY_(x, items)       COLUMN_ARRAY("integer", int, x, 0, 0, items)
+#define INT_ARRAY_(x, items)       COLUMN_ARRAY_("integer", int, x, 0, 0, items)
 
 #define INT64(x)                   COLUMN("bigint", int64, x, 0, 0)
 #define INT64_ARRAY(x, items)      COLUMN_ARRAY("bigint", int64, x, 0, 0, items)
