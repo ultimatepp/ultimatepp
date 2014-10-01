@@ -194,6 +194,9 @@ void CSyntax::CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text)
 			break;
 		}
 	}
+	String s = TrimLeft(e.GetUtf8Line(e.GetLine(pos)));
+	if(s.StartsWith("#if") || s.StartsWith("#e"))
+		e.Refresh();
 }
 
 END_UPP_NAMESPACE
