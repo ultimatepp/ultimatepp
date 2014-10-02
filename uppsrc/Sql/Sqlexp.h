@@ -563,10 +563,10 @@ public:
 	SqlSelect& RightJoin(const SqlId& table)          { return RightJoin0(table.Quoted()); }
 	SqlSelect& FullJoin(const SqlId& table)           { return FullJoin0(table.Quoted()); }
 
-	SqlSelect& InnerJoin(const SqlSet& set)           { return InnerJoin0(~set(SqlSet::SET)); }
-	SqlSelect& LeftJoin(const SqlSet& set)            { return LeftJoin0(~set(SqlSet::SET)); }
-	SqlSelect& RightJoin(const SqlSet& set)           { return RightJoin0(~set(SqlSet::SET)); }
-	SqlSelect& FullJoin(const SqlSet& set)            { return FullJoin0(~set(SqlSet::SET)); }
+	SqlSelect& InnerJoin(const SqlSet& set)           { return InnerJoin0(set(SqlSet::SET)); }
+	SqlSelect& LeftJoin(const SqlSet& set)            { return LeftJoin0(set(SqlSet::SET)); }
+	SqlSelect& RightJoin(const SqlSet& set)           { return RightJoin0(set(SqlSet::SET)); }
+	SqlSelect& FullJoin(const SqlSet& set)            { return FullJoin0(set(SqlSet::SET)); }
 
 	SqlSelect& InnerJoinRef(const SqlId& table);
 	SqlSelect& LeftJoinRef(const SqlId& table);

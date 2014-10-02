@@ -16,6 +16,7 @@ String MakeSqlValue(int code, T& value)
 template <class T>
 T ReadSqlValue(T& x, const char *&s) {
 	memcpy(&x, s, sizeof(T));
+	DUMPHEX(String(s, sizeof(T)));
 	s += sizeof(T);
 	return x;
 }
@@ -372,6 +373,7 @@ String SqlFormat(Date x)
 
 String SqlFormat(Time x)
 {
+	DUMPHEX(MakeSqlValue(SQLC_TIME, x));
 	return MakeSqlValue(SQLC_TIME, x);
 }
 
