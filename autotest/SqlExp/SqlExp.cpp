@@ -225,6 +225,10 @@ CONSOLE_APP_MAIN
 		m.Add(i, AsString(i));
 	
 	EXP(Select(ID).From(TABLE1).Where(ID == SqlSetFrom(m)));
+	
+	EXP(SelectAll().From(ID).InnerJoin(
+		SelectAll().From(ID).Where(ID >= Time(2014, 1, 1, 0, 0, 0)).GroupBy(ID).AsTable(ID)));
+
 
 	LOG("\n\n\n=========================================================================");
 	#include "Test.i"

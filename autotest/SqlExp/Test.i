@@ -2066,3 +2066,25 @@
 		Select(ID).From(TABLE1).Where(ID == SqlSetFrom(m)),
 		"select \"ID\" from \"TABLE1\" where \"ID\" in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')"); // select "ID" from "TABLE1" where "ID" in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
 // ---------------------------------
+	TEST(MY_SQL,
+		SelectAll().From(ID).InnerJoin( SelectAll().From(ID).Where(ID >= Time(2014, 1, 1, 0, 0, 0)).GroupBy(ID).AsTable(ID)),
+		"select * from `ID` inner join ((select * from `ID` where `ID` >= '2014-01-01 00:00:00' group by `ID`) as `ID`)"); // select * from `ID` inner join ((select * from `ID` where `ID` >= '2014-01-01 00:00:00' group by `ID`) as `ID`)
+	TEST(SQLITE3,
+		SelectAll().From(ID).InnerJoin( SelectAll().From(ID).Where(ID >= Time(2014, 1, 1, 0, 0, 0)).GroupBy(ID).AsTable(ID)),
+		"select * from \"ID\" inner join ((select * from \"ID\" where \"ID\" >= '2014-01-01 00:00:00' group by \"ID\") as \"ID\")"); // select * from "ID" inner join ((select * from "ID" where "ID" >= '2014-01-01 00:00:00' group by "ID") as "ID")
+	TEST(ORACLE,
+		SelectAll().From(ID).InnerJoin( SelectAll().From(ID).Where(ID >= Time(2014, 1, 1, 0, 0, 0)).GroupBy(ID).AsTable(ID)),
+		"select * from \"ID\" inner join ((select * from \"ID\" where \"ID\" >= to_date('2014/1/1/0', 'SYYYY/MM/DD/SSSSS') group by \"ID\") as \"ID\")"); // select * from "ID" inner join ((select * from "ID" where "ID" >= to_date('2014/1/1/0', 'SYYYY/MM/DD/SSSSS') group by "ID") as "ID")
+	TEST(MSSQL,
+		SelectAll().From(ID).InnerJoin( SelectAll().From(ID).Where(ID >= Time(2014, 1, 1, 0, 0, 0)).GroupBy(ID).AsTable(ID)),
+		"select * from \"ID\" inner join (select * from \"ID\" where \"ID\" >= convert(datetime, '2014/1/1', 120) group by \"ID\") as \"ID\""); // select * from "ID" inner join (select * from "ID" where "ID" >= convert(datetime, '2014/1/1', 120) group by "ID") as "ID"
+	TEST(PGSQL,
+		SelectAll().From(ID).InnerJoin( SelectAll().From(ID).Where(ID >= Time(2014, 1, 1, 0, 0, 0)).GroupBy(ID).AsTable(ID)),
+		"select * from \"ID\" inner join (select * from \"ID\" where \"ID\" >= timestamp '2014-01-01 00:00:00' group by \"ID\") as \"ID\""); // select * from "ID" inner join (select * from "ID" where "ID" >= timestamp '2014-01-01 00:00:00' group by "ID") as "ID"
+	TEST(FIREBIRD,
+		SelectAll().From(ID).InnerJoin( SelectAll().From(ID).Where(ID >= Time(2014, 1, 1, 0, 0, 0)).GroupBy(ID).AsTable(ID)),
+		"select * from \"ID\" inner join ((select * from \"ID\" where \"ID\" >= '2014-01-01 00:00:00' group by \"ID\") as \"ID\")"); // select * from "ID" inner join ((select * from "ID" where "ID" >= '2014-01-01 00:00:00' group by "ID") as "ID")
+	TEST(DB2,
+		SelectAll().From(ID).InnerJoin( SelectAll().From(ID).Where(ID >= Time(2014, 1, 1, 0, 0, 0)).GroupBy(ID).AsTable(ID)),
+		"select * from \"ID\" inner join ((select * from \"ID\" where \"ID\" >= '2014-01-01 00:00:00' group by \"ID\") as \"ID\")"); // select * from "ID" inner join ((select * from "ID" where "ID" >= '2014-01-01 00:00:00' group by "ID") as "ID")
+// ---------------------------------
