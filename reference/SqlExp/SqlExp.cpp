@@ -138,6 +138,14 @@ GUI_APP_MAIN
 	EXP(Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1).Having(COLUMN2 > 10));
 
 	EXP(Update(TABLE1)(COLUMN1, 13)(COLUMN2, "world").Where(COL > Date(2007, 1, 1)));
+	
+	{
+	ValueMap m;
+	m(COLUMN1, 1)(COLUMN2, "hello");
+	EXP(Insert(TABLE1)(m));
+	EXP(Update(TABLE2)(m).Where(ID == 123));
+	}
+	
 	EXP(Delete(TABLE1).Where(COL < 0));
 
 	EXP(Select(COL).From(Select(COL).From(TABLE1)));
@@ -152,6 +160,7 @@ GUI_APP_MAIN
 	
 	EXP(Select(TABLE1(SqlAll())).From(TABLE1));
 	EXP(Select(SqlAll().Of(TABLE1)).From(TABLE1));
+	EXP(Select(TABLE1(S_TABLE2())).From(TABLE1));
 	
 	Vector<int> m;
 	for(int i = 0; i < 10; i++)
