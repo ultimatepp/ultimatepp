@@ -39,6 +39,17 @@ SqlId SqlId::operator&(const SqlId& s) const
 	return ToString() + "$" + s.ToString();
 }
 
+SqlId SqlId::operator()(const S_info& table) const
+{
+	String x;
+	for(int i = 0; i < table.GetCount(); i++)
+		if(x.IsEmpty())
+			PutOf0(x, table.GetId(i));
+		else
+			PutOf(x, table.GetId(i));
+	return x;
+}
+
 String SqlS::operator()() const
 {
 	return String().Cat() << '(' << text << ')';
