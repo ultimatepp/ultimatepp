@@ -43,10 +43,10 @@ SqlId SqlId::operator()(const S_info& table) const
 {
 	String x;
 	for(int i = 0; i < table.GetCount(); i++)
-		if(x.IsEmpty())
-			PutOf0(x, table.GetId(i));
-		else
+		if(i)
 			PutOf(x, table.GetId(i));
+		else
+			PutOf0(x, table.GetId(i));
 	return x;
 }
 
