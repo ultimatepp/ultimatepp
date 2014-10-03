@@ -37,6 +37,9 @@ public: \
 	void                        Set(int i, const Value& v)            { return info->Set(this, i, v); } \
 	void                        Set(const SqlId& id, const Value& v)  { return info->Set(this, id, v); } \
 	void                        Set(const ValueMap& m)                { return info->Set(this, m); } \
+	\
+	operator                    const S_info&() const                 { return *info; } \
+	\
 	S_##Table(); \
 	S_##Table(const ValueMap& m);
 

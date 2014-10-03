@@ -14,6 +14,8 @@ class SqlSet;
 class SqlSelect;
 class Case;
 
+struct S_info;
+
 // ----------
 
 struct FieldOperator {
@@ -134,6 +136,7 @@ public:
 	SqlId         operator[](const SqlId& id) const; // deprecated
 
 	SqlId         operator()(SqlId p) const;
+	SqlId         operator()(const S_info& table) const;
 
 //$	SqlId     operator()(SqlId p, SqlId p1, ...);
 #define E__PutSqlId(I)      PutOf(x, p##I)
