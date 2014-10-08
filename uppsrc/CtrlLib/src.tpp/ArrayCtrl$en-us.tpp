@@ -1832,6 +1832,12 @@ that are not found are ignored, those found are assigned correspoding
 map values.&]
 [s3; &]
 [s4;%- &]
+[s5;:ArrayCtrl`:`:GetMap`(int`)const:%- [_^ValueMap^ ValueMap]_[* GetMap]([@(0.0.255) int]_
+[*@3 i])_[@(0.0.255) const]&]
+[s2; Returns row as map of row Ids to row values. Only non`-empty 
+row Ids are added.&]
+[s3; &]
+[s4;%- &]
 [s5;:ArrayCtrl`:`:Add`(const Value`&`[`,const Value`&`]`.`.`.`):%- [@(0.0.255) void]_[* A
 dd]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_`[, [@(0.0.255) const]_[_^Value^ Val
 ue][@(0.0.255) `&]_`]...)&]

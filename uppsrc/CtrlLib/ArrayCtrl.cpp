@@ -1952,6 +1952,17 @@ void ArrayCtrl::AddMap(const ValueMap& m)
 	SetMap(array.GetCount(), m);
 }
 
+ValueMap ArrayCtrl::GetMap(int i) const
+{
+	ValueMap m;
+	for(int j = 0; j < GetIndexCount(); j++) {
+		String id = ~GetId(j);
+		if(id.GetCount())
+			m(id, Get(i, j));
+	}
+	return m;
+}
+
 void ArrayCtrl::SetArray(int i, const ValueArray& va)
 {
 	Set(i, va.Get());
