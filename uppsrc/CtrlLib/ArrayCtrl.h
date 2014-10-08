@@ -467,6 +467,7 @@ public:
 
 	void       SetMap(int i, const ValueMap& m);
 	void       AddMap(const ValueMap& m);
+	ValueMap   GetMap(int i) const;
 
 	void       SetArray(int i, const ValueArray& va);
 	void       AddArray(const ValueArray& va);

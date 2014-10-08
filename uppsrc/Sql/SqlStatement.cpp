@@ -145,6 +145,7 @@ SqlSelect& SqlSelect::Hint(const char *hint)
 
 SqlSelect& SqlSelect::Get() {
 	text = "select " + text + SqlCase(ORACLE, " from DUAL")("");
+	valid = true;
 	return *this;
 }
 
@@ -153,6 +154,7 @@ SqlSelect& SqlSelect::From(const SqlSet& table) {
 		return Get();
 	String ts = table(SqlSet::SETOP + 1);
 	text = "select " + text + " from " + ts;
+	valid = true;
 	tables << ',' << Filter(ts, CharFilterNotWhitespace);
 	on = false;
 	return *this;
@@ -161,6 +163,7 @@ SqlSelect& SqlSelect::From(const SqlSet& table) {
 SqlSelect& SqlSelect::From(const SqlId& table) {
 	const String& t1 = table.ToString();
 	text = String().Cat() << "select " << text << " from \t" << t1 << '\t';
+	valid = true;
 	tables << ',' << t1;
 	on = false;
 	return *this;
@@ -170,6 +173,7 @@ SqlSelect& SqlSelect::From(const SqlId& table1, const SqlId& table2) {
 	const String& t1 = table1.ToString();
 	const String& t2 = table2.ToString();
 	text = String().Cat() << "select " << text << " from \t" << t1 << "\t, \t" << t2 << '\t';
+	valid = true;
 	tables << ',' << t1 << ',' << t2;
 	on = false;
 	return *this;
@@ -180,6 +184,7 @@ SqlSelect& SqlSelect::From(const SqlId& table1, const SqlId& table2, const SqlId
 	const String& t2 = table2.ToString();
 	const String& t3 = table3.ToString();
 	text = String().Cat() << "select " << text << " from \t" << t1 << "\t, \t" << t2 << "\t, \t" << t3 << '\t';
+	valid = true;
 	tables << ',' << t1 << ',' << t2 << ',' << t3;
 	on = false;
 	return *this;
@@ -267,7 +272,7 @@ SqlSet SqlSelect::AsTable(const SqlId& tab) const
 
 SqlSelect::SqlSelect(Fields f)
 {
-	on = false;
+	valid = on = false;
 	SqlSet set(f);
 	text = ~set;
 }
@@ -276,7 +281,7 @@ SqlSelect::SqlSelect(Fields f)
 
 #define E__QSqlSelectF(I) \
 SqlSelect::SqlSelect(__List##I(E__SqlVal)) { \
-	on = false; \
+	valid = on = false; \
 	SqlSet set; \
 	__List##I(E__SCat); \
 	text = ~set; \
@@ -367,6 +372,8 @@ SqlDelete& SqlDelete::Where(const SqlBool& b) {
 	text << " where " << ~b;
 	return *this;
 }
+
+// -------------------------------
 
 void SqlInsert::Column(const SqlId& column, SqlVal val) {
 	set1.Cat(column);

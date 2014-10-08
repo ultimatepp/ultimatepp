@@ -538,7 +538,7 @@ public:
 class SqlSelect {
 	String  text;
 	String  tables;
-	bool    on;
+	bool    on, valid;
 
 	SqlSelect& InnerJoin0(const String& table);
 	SqlSelect& LeftJoin0(const String& table);
@@ -600,10 +600,13 @@ public:
 	operator  SqlStatement() const                     { return SqlStatement(text); }
 	SqlVal    AsValue() const;
 	SqlSet    AsTable(const SqlId& tab) const;
+	
+	void      Set(const SqlSet& s)                    { text = ~s; on = valid = false; }
+	bool      IsValid() const                         { return valid; }
 
 	SqlSelect(Fields f);
-	SqlSelect(const SqlSet& s)                        { text = ~s; on = false; }
-	SqlSelect()                                       { on = false; }
+	SqlSelect(const SqlSet& s)                        { Set(s); }
+	SqlSelect()                                       { on = valid = false; }
 #define E__QSelect(I)   SqlSelect(__List##I(E__SqlVal));
 __Expand(E__QSelect);
 #undef  E__QSelect
