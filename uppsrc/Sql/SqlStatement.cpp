@@ -473,8 +473,6 @@ SqlUpdate& SqlUpdate::operator()(const ValueMap& data)
 	return *this;
 }
 
-// ------------------------------------
-
 SqlUpdate::operator SqlStatement() const {
 	StringBuffer stmt;
 	stmt << "update " << table.Quoted() << " set " << ~set;
