@@ -230,6 +230,20 @@ that this is not as simple as adding year attribute of Date because
 of leap years.&]
 [s3;%% &]
 [s4; &]
+[s5;:GetWeekDate`(int`,int`): [_^Date^ Date]_[* GetWeekDate]([@(0.0.255) int]_[*@3 year], 
+[@(0.0.255) int]_[*@3 week])&]
+[s2;%% Returns the date of Monday for given [%-*@3 year] and [%-*@3 week] 
+according to ISO`-8601. (First week of year is 1).&]
+[s3;%% &]
+[s4; &]
+[s5;:GetWeek`(Date`,int`&`): [@(0.0.255) int]_[* GetWeek]([_^Date^ Date]_[*@3 d], 
+[@(0.0.255) int`&]_[*@3 year])&]
+[s2;%% Returns the week for given date according to ISO`-8601. In 
+[%-*@3 year] the corresponding year is returned, as some days at 
+the beginning or end of the year can be part of week of another 
+week.&]
+[s3;%% &]
+[s4; &]
 [s5;:EasterDay`(int`): [_^Date^ Date]_[* EasterDay]([@(0.0.255) int]_[*@3 year])&]
 [s2;%% Returns the Easter day for given [%-*@3 year].&]
 [s3;%% &]

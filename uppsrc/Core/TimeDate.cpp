@@ -369,6 +369,31 @@ Date AddYears(Date date, int years) {
 	return date;
 }
 
+Date GetWeekDate(int year, int week)
+{
+	int jan1 = Date(year, 1, 1).Get();
+	int start = (jan1 - 584390) / 7 * 7 + 584390; // 584390 = 03.01.1600 Monday
+	if(jan1 - start > 3)
+		start += 7;
+	Date d;
+	d.Set(start + 7 * (week - 1));
+	return d;
+}
+
+int GetWeek(Date d, int& year)
+{
+	year = d.year;
+	Date d0 = GetWeekDate(year + 1, 1);
+	if(d >= d0)
+		year++;
+	else {
+		d0 = GetWeekDate(year, 1);
+		if(d < d0)
+			d0 = GetWeekDate(--year, 1);
+	}
+	return (d - d0) / 7 + 1;
+}
+
 Date EasterDay(int year)
 {
     int a = year % 19;
