@@ -60,6 +60,9 @@ Date AddMonths(Date date, int months);
 int  GetMonths(Date since, Date till);
 Date AddYears(Date date, int years);
 
+Date GetWeekDate(int year, int week);
+int  GetWeek(Date d, int& year);
+
 Date EasterDay(int year);
 
 Date GetSysDate();
