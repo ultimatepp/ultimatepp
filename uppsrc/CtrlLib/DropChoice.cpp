@@ -13,6 +13,7 @@ DropChoice::DropChoice() {
 	dropwidth = 0;
 	appending = false;
 	updownkeys = true;
+	rodrop = false;
 }
 
 void DropChoice::EnableDrop(bool b)
@@ -26,7 +27,7 @@ void DropChoice::PseudoPush()
 }
 
 void DropChoice::Drop() {
-	if(!owner || owner->IsReadOnly() || list.GetCount() == 0 && !WhenDrop) return;
+	if(!owner || owner->IsReadOnly() && !rodrop || list.GetCount() == 0 && !WhenDrop) return;
 	WhenDrop();
 	if(dropfocus)
 		owner->SetWantFocus();
@@ -36,12 +37,12 @@ void DropChoice::Drop() {
 }
 
 void DropChoice::Select() {
-	if(!owner || owner->IsReadOnly()) return;
+	if(!owner || owner->IsReadOnly() && !rodrop) return;
 	WhenSelect();
 }
 
 Value DropChoice::Get() const {
-	if(!owner || owner->IsReadOnly()) return Value();
+	if(!owner || owner->IsReadOnly() && !rodrop) return Value();
 	int c = list.GetCursor();
 	if(c < 0) return Value();
 	return list.Get(c, 0);
@@ -49,7 +50,7 @@ Value DropChoice::Get() const {
 
 int DropChoice::GetIndex() const
 {
-	if(!owner || owner->IsReadOnly()) return -1;
+	if(!owner || owner->IsReadOnly() && !rodrop) return -1;
 	return list.GetCursor();
 }
 

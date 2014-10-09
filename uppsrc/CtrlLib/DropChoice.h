@@ -161,6 +161,7 @@ protected:
 	bool               dropfocus;
 	bool               always_drop;
 	bool               updownkeys;
+	bool               rodrop;
 
 	void        Select();
 	void        Drop();
@@ -200,6 +201,7 @@ public:
 	DropChoice& SetDropLines(int n)                   { list.SetDropLines(n); return *this; }
 	DropChoice& Appending()                           { appending = true; return *this; }
 	DropChoice& AlwaysDrop(bool e = true);
+	DropChoice& RdOnlyDrop(bool e = true)             { rodrop = e; return *this; }
 	DropChoice& NoDropFocus()                         { dropfocus = false; return *this; }
 
 	DropChoice& DropWidth(int w)                      { dropwidth = w; return *this; }
@@ -264,6 +266,7 @@ public:
 	WithDropChoice& SetDisplay(const Display& d, int lcy) { select.SetDisplay(d, lcy); return *this; }
 	WithDropChoice& SetConvert(const Convert& d)          { select.SetConvert(d); return *this; }
 	WithDropChoice& AlwaysDrop(bool b = true)             { select.AlwaysDrop(b); return *this; }
+	WithDropChoice& RdOnlyDrop(bool b = true)             { select.RdOnlyDrop(b); return *this; }
 	WithDropChoice& WithWheel(bool b = true)              { withwheel = b; return *this; }
 	WithDropChoice& NoWithWheel()                         { return WithWheel(false); }
 	WithDropChoice& DropWidth(int w)                      { select.DropWidth(w); return *this; }

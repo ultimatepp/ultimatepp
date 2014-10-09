@@ -127,6 +127,11 @@ hoice][@(0.0.255) `&]_[* SetDisplay]([@(0.0.255) const]_[_^Display^ Display][@(0
 (client code can fill it using WhenDrop callback).&]
 [s3; &]
 [s4; &]
+[s5;:WithDropChoice`:`:RdOnlyDrop`(bool`): [_^WithDropChoice^ WithDropChoice][@(0.0.255) `&
+]_[* RdOnlyDrop]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% If active, allows changing value even by drop even if ReadOnly.&]
+[s3;%% &]
+[s4; &]
 [s5;:WithDropChoice`:`:WithWheel`(bool`): [_^WithDropChoice^ WithDropChoice][@(0.0.255) `&
 ]_[* WithWheel]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Widget reacts to mousewheel. This is active by default.&]
