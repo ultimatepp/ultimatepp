@@ -6,11 +6,10 @@ public:
 	typedef MeasuresTab CLASSNAME;
 	
 	void Init(ScatterCtrl &scatter);
+	void Change();
 
 private:
 	ScatterCtrl *pscatter;
-	
-	void Change();
 };
 
 class TextsTab : public WithTexts<StaticRect> {

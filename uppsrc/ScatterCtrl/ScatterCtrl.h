@@ -124,8 +124,9 @@ public:
 	typedef ScatterCtrl CLASSNAME;
 	ScatterCtrl();
 	
-	enum MouseAction {NO_ACTION = 0, SCROLL, ZOOM_H_ENL, ZOOM_H_RED, ZOOM_V_ENL, ZOOM_V_RED, SHOW_INFO, CONTEXT_MENU};
-
+	enum MouseAction {NO_ACTION = 0, SCROLL, ZOOM_H_ENL, ZOOM_H_RED, ZOOM_V_ENL, ZOOM_V_RED, SHOW_COORDINATES, CONTEXT_MENU, ZOOM_WINDOW};
+	#define SHOW_INFO SHOW_COORDINATES
+	
 	struct MouseBehaviour {
 		bool ctrl;
 		bool alt;
@@ -147,7 +148,7 @@ public:
 	ScatterCtrl& SetMouseHandling(bool valx = true, bool valy = false);
 	bool GetMouseHandlingX()								{return mouseHandlingX;}
 	bool GetMouseHandlingY()								{return mouseHandlingY;}
-	ScatterCtrl& ShowInfo(bool show = true)					{paintInfo = show;		 return *this;}
+	ScatterCtrl& ShowInfo(bool show = true)					{showInfo = show;		 return *this;}
 	
 #ifdef PLATFORM_WIN32
 	void SaveAsMetafile(const char* file);
@@ -214,14 +215,16 @@ public:
 	int GetMaxRefreshTime() 							{return maxRefresh_ms;}
 	
 private:
-	bool paintInfo;
+	bool showInfo;
 	Point clickPoint;
 	PopUpInfo popText;
 	String popTextX, popTextY, popTextY2;
 	Point popLT, popRB;
+	bool isZoomWindow;
 	const Point offset;
 	int copyRatio;
-
+	bool isLeftDown;
+	
 	int butDownX, butDownY;
 	bool isScrolling, isLabelPopUp;
 	
@@ -255,6 +258,7 @@ private:
 	void LabelPopUp(bool down, Point &pt); 
 	void Scrolling(bool down, Point &pt, bool isOut = false);
 	void MouseZoom(int zdelta, bool hor, bool ver);
+	void ZoomWindow(bool down, Point &pt); 
 	
 	void ContextMenu(Bar& bar);
 	void DoShowEditDlg();
@@ -272,11 +276,19 @@ template <class T>
 void ScatterCtrl::SetDrawing(T& w, const Size &size, int scale) {
 	ScatterDraw::SetDrawing(w, size, scale, true);
 	if (!IsNull(popLT) && popLT != popRB) {
-		DrawVArrow(w, popLT.x, popLT.y, popLT.x, popRB.y, 1, 4, 15, SColorHighlight());
-		DrawHArrow(w, popLT.x, popRB.y, popRB.x, popRB.y, 1, 4, 15, SColorHighlight());
-		Ctrl::Refresh(min(popLT.x-4, popRB.x-4), min(popLT.y-4, popRB.y-4), 
-					  abs(popRB.x-popLT.x) + 9, abs(popRB.y-popLT.y) + 9);
-	}
+		if (isZoomWindow) {
+			DrawLine(w, popLT.x, popLT.y, popLT.x, popRB.y, 1, SColorHighlight());
+			DrawLine(w, popRB.x, popLT.y, popRB.x, popRB.y, 1, SColorHighlight());
+			DrawLine(w, popLT.x, popLT.y, popRB.x, popLT.y, 1, SColorHighlight());
+			DrawLine(w, popLT.x, popRB.y, popRB.x, popRB.y, 1, SColorHighlight());
+			Ctrl::Refresh();	
+		} else {
+			DrawVArrow(w, popLT.x, popLT.y, popLT.x, popRB.y, 1, 4, 15, SColorHighlight());
+			DrawHArrow(w, popLT.x, popRB.y, popRB.x, popRB.y, 1, 4, 15, SColorHighlight());
+			Ctrl::Refresh(min(popLT.x-4, popRB.x-4), min(popLT.y-4, popRB.y-4), 
+						  abs(popRB.x-popLT.x) + 9, abs(popRB.y-popLT.y) + 9);
+		}
+	} 
 }
 
 END_UPP_NAMESPACE
