@@ -144,19 +144,33 @@ int LineEdit::PasteRectSelection(const WString& s)
 
 void LineEdit::PasteColumn(const WString& text)
 {
-	RemoveSelection();
-	Point p = GetColumnLine(cursor);
-	int pos = cursor;
 	Vector<WString> cl = Split(text, '\n', false);
-	for(int i = 0; i < cl.GetCount(); i++) { 
-		int li = p.y + i;
-		if(li < line.GetCount()) {
+	int pos;
+	if(IsRectSelection()) {
+		Rect t = GetRectSelection();
+		RemoveSelection();
+		Point p = t.TopLeft();
+		pos = cursor;
+		for(int i = 0; i < t.bottom - t.top + 1; i++) { 
+			int li = p.y + i;
 			int l = GetGPos(i + p.y, p.x);
-			pos = l + Insert(l, cl[i]);
+			pos = l + Insert(l, i < cl.GetCount() ? cl[i] : cl.GetCount() ? cl.Top() : WString());
 		}
-		else {
-			Insert(GetLength(), cl[i] + "\n");
-			pos = GetLength();
+	}
+	else {
+		RemoveSelection();
+		Point p = GetColumnLine(cursor);
+		pos = cursor;
+		for(int i = 0; i < cl.GetCount(); i++) { 
+			int li = p.y + i;
+			if(li < line.GetCount()) {
+				int l = GetGPos(i + p.y, p.x);
+				pos = l + Insert(l, cl[i]);
+			}
+			else {
+				Insert(GetLength(), cl[i] + "\n");
+				pos = GetLength();
+			}
 		}
 	}
 	PlaceCaret(pos);
@@ -191,89 +205,81 @@ void   LineEdit::Paint0(Draw& w) {
 	sell -= cpos;
 	selh -= cpos;
 	int pos = cpos;
-	Vector<int> dx, dx2;
 	int fascent = font.Info().GetAscent();
 	Color showcolor = Blend(SColorLight, SColorHighlight);
 	bool trimmed = false;
 	int cursorline = GetLine(cursor);
+	int dx[] = { fsz.cx };
+	int dx2[] = { 2 * fsz.cx };
+	Highlight ih;
+	ih.ink = color[IsShowEnabled() ? INK_NORMAL : INK_DISABLED];
+	ih.paper = color[IsReadOnly() && showreadonly || !IsShowEnabled() ? PAPER_READONLY : PAPER_NORMAL];
+	if(nobg)
+		ih.paper = Null;
+	ih.font = font;
+	ih.chr = 0;
 	for(int i = sc.y; i < ll; i++) {
-		WString tx;
-		if(line[i].text.GetLength() > 100000) { // Do not go out of memory for patologic cases...
-			String h = line[i].text;
-			h.Trim(100000);
-			trimmed = true;
-			tx = h.ToWString();
-		}
-		else
-			tx = line[i];
+		WString tx = line[i];
+		bool do_highlight = tx.GetCount() < 100000;
 		int len = tx.GetLength();
 		if(w.IsPainting(0, y, sz.cx, fsz.cy)) {
-			Highlight ih;
-			ih.ink = color[IsShowEnabled() ? INK_NORMAL : INK_DISABLED];
-			ih.paper = color[IsReadOnly() && showreadonly || !IsShowEnabled() ? PAPER_READONLY : PAPER_NORMAL];
-			if(nobg)
-				ih.paper = Null;
-			ih.font = font;
-			ih.chr = 0;
 			Vector<Highlight> hl;
-			hl.SetCount(len + 1, ih);
-			for(int q = 0; q < tx.GetCount(); q++)
-				hl[q].chr = tx[q];
-			if(!trimmed)
+			int ln;
+			if(do_highlight) {
+				hl.SetCount(len + 1, ih);
+				for(int q = 0; q < tx.GetCount(); q++)
+					hl[q].chr = tx[q];
 				HighlightLine(i, hl, pos);
-			int ln = hl.GetCount() - 1;
-			Buffer<wchar> txt(ln);
-			for(int j = 0; j < ln; j++)
-				txt[j] = hl[j].chr;
-			if(rectsel) {
-				int gx = 0;
-				if(i >= rect.top && i <= rect.bottom)
-					for(int i = 0; i < ln; i++) {
-						if(gx >= rect.left && gx < rect.right) {
-							hl[i].paper = color[PAPER_SELECTED];
-							hl[i].ink = color[INK_SELECTED];
-						}
-						if(IsCJKIdeograph(txt[i]))
-							gx += 2;
-						else
-						if(txt[i] == '\t')
-							gx = (gx + tabsize) / tabsize * tabsize;
-						else
-							gx++;
-					}
+				ln = hl.GetCount() - 1;
 			}
-			else {
-				int l = max(sell, 0);
-				int h = selh > len ? len : selh;
-				if(l < h)
-					for(int i = l; i < h; i++) {
-						hl[i].paper = color[PAPER_SELECTED];
-						hl[i].ink = color[INK_SELECTED];
-					}
-				if(sell <= len && selh > len)
-					for(int i = len; i < hl.GetCount(); i++) {
-						hl[i].paper = color[PAPER_SELECTED];
-						hl[i].ink = color[INK_SELECTED];
-					}
-			}
+			else
+				ln = tx.GetCount();
 			for(int pass = 0; pass < 2; pass++) {
 				int gp = 0;
 				int scx = fsz.cx * sc.x;
 				if(ln >= 0) {
 					int q = 0;
+					int x = 0;
+					int scx2 = scx - max(2, tabsize) * fsz.cx;
+					while(q < ln && x < scx2) { // Skip part before left border
+						wchar chr = do_highlight ? hl[q++].chr : tx[q++];
+						if(chr == '\t') {
+							gp = (gp + tabsize) / tabsize * tabsize;
+							x = fsz.cx * gp;
+						}
+						else
+						if(IsCJKIdeograph(chr)) {
+							x += 2 * fsz.cx;
+							gp += 2;
+						}
+						else {
+							x += fsz.cx;
+							gp++;
+						}
+					}
 					while(q < ln) {
-						Highlight& h = hl[q];
-						if(txt[q] == '\t') {
+						Highlight h;
+						if(do_highlight)
+							h = hl[q];
+						else {
+							h = ih;
+							h.chr = tx[q];
+						}
+						if(rectsel ? i >= rect.top && i <= rect.bottom && gp >= rect.left && gp < rect.right
+						           : q >= sell && q < selh) {
+							h.paper = color[PAPER_SELECTED];
+							h.ink = color[INK_SELECTED];
+						}
+						int x = gp * fsz.cx - scx;
+						if(h.chr == '\t') {
 							int ngp = (gp + tabsize) / tabsize * tabsize;
 							int l = ngp - gp;
 							LLOG("Highlight -> tab[" << q << "] paper = " << h.paper);
-							if(pass == 0) {
-								w.DrawRect(gp * fsz.cx - scx, y, fsz.cx * l, fsz.cy, h.paper);
+							if(pass == 0 && x >= -fsz.cy * tabsize) {
+								w.DrawRect(x, y, fsz.cx * l, fsz.cy, h.paper);
 								if(showtabs && h.paper != SColorHighlight && q < tx.GetLength()) {
-									w.DrawRect(gp * fsz.cx - scx + 2, y + fsz.cy / 2,
-									           l * fsz.cx - 4, 1, showcolor);
-									w.DrawRect(ngp * fsz.cx - scx - 3, y + 3,
-									           1, fsz.cy - 6, showcolor);
+									w.DrawRect(x + 2, y + fsz.cy / 2, l * fsz.cx - 4, 1, showcolor);
+									w.DrawRect(ngp * fsz.cx - scx - 3, y + 3, 1, fsz.cy - 6, showcolor);
 								}
 								if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + l)
 									w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
@@ -282,14 +288,12 @@ void   LineEdit::Paint0(Draw& w) {
 							gp = ngp;
 						}
 						else
-						if(txt[q] == ' ') {
+						if(h.chr == ' ') {
 						    LLOG("Highlight -> space[" << q << "] paper = " << h.paper);
-						    if(pass == 0) {
-						        w.DrawRect(gp * fsz.cx - scx, y, fsz.cx, fsz.cy, h.paper);
-						        if(showspaces && h.paper != SColorHighlight && q < tx.GetLength()) {
-						            w.DrawRect(gp * fsz.cx - scx + fsz.cx / 2, y + fsz.cy / 2,
-						                       2, 2, showcolor);
-						        }
+						    if(pass == 0 && x >= -fsz.cy) {
+						        w.DrawRect(x, y, fsz.cx, fsz.cy, h.paper);
+						        if(showspaces && h.paper != SColorHighlight && q < tx.GetLength())
+						            w.DrawRect(x + fsz.cx / 2, y + fsz.cy / 2, 2, 2, showcolor);
 						        if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + 1)
 						            w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
 						    }
@@ -297,35 +301,22 @@ void   LineEdit::Paint0(Draw& w) {
 						    gp++;
 						}
 						else {
-							bool cjk = IsCJKIdeograph(txt[q]);
-							int p = q + 1;
-							if(!hl[q].flags)
-								while(p < len && h == hl[p] && !hl[p].flags && txt[p] != '\t'
-								      && txt[p] != ' ' && IsCJKIdeograph(txt[p]) == cjk && p - q < 128)
-									p++;
-							int l = p - q;
-							int ll = cjk ? 2 * l : l;
+							bool cjk = IsCJKIdeograph(h.chr);
 							LLOG("Highlight -> paper[" << q << "] = " << h.paper);
-							int x = gp * fsz.cx - scx;
-							int xx = x + (gp + ll) * fsz.cx;
-							if(max(x, 0) < min(xx, sz.cx)) {
+							int xx = x + (gp + 1 + cjk) * fsz.cx;
+							if(max(x, 0) < min(xx, sz.cx) && fsz.cx >= -fsz.cy) {
 								if(pass == 0) {
 									w.DrawRect(x, y, fsz.cx * ll, fsz.cy, h.paper);
-									if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + ll)
+									if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + 1 + cjk)
 										w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
 								}
-								else {
-									if(cjk)
-										dx2.At(l, 2 * fsz.cx);
-									else
-										dx.At(l, fsz.cx);
+								else
 									w.DrawText(x + (h.flags & SHIFT_L ? -fsz.cx / 6 : h.flags & SHIFT_R ? fsz.cx / 6 : 0),
 									           y + fascent - h.font.GetAscent(),
-									           ~txt + q, h.font, h.ink, l, cjk ? dx2 : dx);
-								}
+									           &h.chr, h.font, h.ink, 1, cjk ? dx2 : dx);
 							}
-							q = p;
-							gp += ll;
+							q++;
+							gp += 1 + cjk;
 							if(x > sz.cx)
 								break;
 						}
@@ -333,7 +324,9 @@ void   LineEdit::Paint0(Draw& w) {
 				}
 				if(pass == 0) {
 					int gpx = gp * fsz.cx - scx;
-					w.DrawRect(gpx, y, sz.cx - gpx, fsz.cy, hl.Top().paper);
+					w.DrawRect(gpx, y, sz.cx - gpx, fsz.cy,
+					           !rectsel && sell <= len && len < selh ? color[PAPER_SELECTED]
+                               : (do_highlight ? hl.Top() : ih).paper);
 					if(bordercolumn > 0 && bordercolumn >= gp)
 						w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
 				}
@@ -349,6 +342,8 @@ void   LineEdit::Paint0(Draw& w) {
 					w.DrawRect(0, y, sz.cx, 1, hline);
 					w.DrawRect(0, y + fsz.cy - 1, sz.cx, 1, hline);
 				}
+				if(pass == 0 && rectsel && rect.left == rect.right && i >= rect.top && i <= rect.bottom)
+					w.DrawRect(rect.left * fsz.cx - scx, y, 2, fsz.cy, Blend(color[PAPER_SELECTED], color[PAPER_NORMAL]));
 			}
 		}
 		y += fsz.cy;
