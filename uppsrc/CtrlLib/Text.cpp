@@ -797,7 +797,7 @@ void TextCtrl::StdBar(Bar& menu) {
 	if(e)
 		menu.Add(canpaste,
 				 t_("Paste in column"), CtrlImg::paste_vert(), callback(e, &LineEdit::DoPasteColumn))
-			.Key(K_CTRL_V|K_ALT);
+			.Key(K_ALT_V|K_SHIFT);
 	menu.Add(IsEditable() && IsAnySelection(),
 			t_("Erase"), CtrlImg::remove(), THISBACK(DoRemoveSelection))
 		.Key(K_DELETE);
