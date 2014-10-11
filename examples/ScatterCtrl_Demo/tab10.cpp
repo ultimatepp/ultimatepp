@@ -56,7 +56,7 @@ public:
 void Tab10::Init()
 {
 	CtrlLayout(*this);	
-	HSizePos().VSizePos();
+	SizePos();
 	
 	sy[0] = 18; sy[1] = 29; sy[2] = 23; sy[3] = 25; sy[4] = 20;
 	sx[0] = 10; sx[1] = 20; sx[2] = 30; sx[3] = 40; sx[4] = 50;

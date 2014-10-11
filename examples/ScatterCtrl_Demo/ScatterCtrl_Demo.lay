@@ -65,9 +65,11 @@ LAYOUT(Tab10, 380, 292)
 END_LAYOUT
 
 LAYOUT(Tab11, 504, 468)
-	ITEM(ScatterCtrl, scatter, SetAxisWidth(12).SetTitle(t_("Trend Line demo")).SetTitleFont(SansSerifZ(14).Bold()).SetPlotAreaTopMargin(20).SetPlotAreaColor(Color(229, 229, 229)).SetLegendAnchor(4).HSizePosZ(8, 8).VSizePosZ(8, 108))
+	ITEM(ScatterCtrl, scatter, SetAxisWidth(12).SetTitle(t_("Trend Line demo")).SetTitleFont(SansSerifZ(14).Bold()).SetPlotAreaLeftMargin(35).SetPlotAreaTopMargin(20).SetPlotAreaColor(Color(229, 229, 229)).SetLegendAnchor(4).HSizePosZ(8, 8).VSizePosZ(8, 108))
 	ITEM(ArrayCtrl, grid, HSizePosZ(112, 8).BottomPosZ(4, 100))
-	ITEM(Label, dv___2, SetLabel(t_("Trend Lines Details:")).LeftPosZ(8, 100).BottomPosZ(83, 21))
+	ITEM(Label, dv___2, SetLabel(t_("Data series:")).LeftPosZ(8, 64).BottomPosZ(55, 21))
+	ITEM(Label, dv___3, SetLabel(t_("Trend Lines Details:")).LeftPosZ(8, 100).BottomPosZ(83, 21))
+	ITEM(DropList, seriesList, LeftPosZ(8, 100).BottomPosZ(37, 19))
 END_LAYOUT
 
 LAYOUT(Tab12, 456, 464)

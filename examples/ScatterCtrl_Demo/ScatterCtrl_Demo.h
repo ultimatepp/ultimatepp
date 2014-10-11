@@ -163,13 +163,17 @@ public:
 
 	Tab11() {};	
 	void Init();
+	void OnSeries();
 	virtual ScatterCtrl &Scatter()	{return scatter;};
 
 private:
-	Vector<double> sx, sy;
+	Vector<double> s1x, s1y;
+	Vector<double> s2;
 	LinearEquation linear;
 	PolynomialEquation poly2, poly4;
 	FourierEquation fourier;
+	ExponentialEquation exponential;
+	Rational1Equation rational1;
 };
 
 class Tab12 : public WithTab12<ScatterDemo> {

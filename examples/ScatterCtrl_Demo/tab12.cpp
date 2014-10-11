@@ -4,7 +4,8 @@
 void Tab12::Init()
 {
 	CtrlLayout(*this);	
-	HSizePos().VSizePos();
+	SizePos();
+	
 	scatter1.SetRange(1000, 40).SetXYMin(0, -20);
 	scatter1.SetMouseHandling(true).SetMaxRange(5000).SetMinRange(2);
 	scatter2.SetRange(1000, 40).SetXYMin(0, -20);

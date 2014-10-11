@@ -15,7 +15,8 @@ void para3p(Pointf& xy, double t, double a) 			{xy = Pointf(a+(0.5+t)*cos(6*M_PI
 void Tab3::Init()
 {
 	CtrlLayout(*this);	
-	HSizePos().VSizePos();
+	SizePos();
+	
 	scatter.SetRange(7, 4);
 	scatter.SetMajorUnits(0.5, 0.5);
 	scatter.SetXYMin(-2, -2);
