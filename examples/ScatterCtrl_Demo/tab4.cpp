@@ -4,7 +4,8 @@
 void Tab4::Init()
 {
 	CtrlLayout(*this);	
-	HSizePos().VSizePos();
+	SizePos();
+	
 	scatter.SetRange(13, 50)
 		   .SetMajorUnits(1, 10)
 		   .SetXYMin(0, -20);

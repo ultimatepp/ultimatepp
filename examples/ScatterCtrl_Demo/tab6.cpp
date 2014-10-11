@@ -4,7 +4,8 @@
 void Tab6::Init()
 {
 	CtrlLayout(*this);	
-	HSizePos().VSizePos();
+	SizePos();
+	
 	scatter.SetRange(6,100);
 	scatter.SetMajorUnits(1,20);
 	scatter.ShowInfo();

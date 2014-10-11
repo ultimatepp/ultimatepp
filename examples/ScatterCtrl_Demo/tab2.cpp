@@ -12,7 +12,8 @@ void   vfunct3(double& y, double x) {y = -x*x;}
 void Tab2::Init()
 {
 	CtrlLayout(*this);	
-	HSizePos().VSizePos();
+	SizePos();
+	
 	scatter.SetRange(12, 60).SetXYMin(-6, -30).SetMajorUnits(2, 10);
 	scatter.SetMouseHandling(true);
 

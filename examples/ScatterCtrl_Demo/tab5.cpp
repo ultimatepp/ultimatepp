@@ -4,7 +4,8 @@
 void Tab5::Init()
 {
 	CtrlLayout(*this);	
-	HSizePos().VSizePos();
+	SizePos();
+	
 	scatter.SetRange(10, 100);
 	scatter.AddSeries(s1).Legend("U-t").Units("V", "s").NoMark();
 	scatter.AddSeries(s2).Legend("I-t").Units("A", "s").NoMark();

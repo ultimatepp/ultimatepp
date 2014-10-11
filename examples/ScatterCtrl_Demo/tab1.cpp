@@ -7,7 +7,7 @@ enum {
 void Tab1::Init()
 {
 	CtrlLayout(*this);	
-	HSizePos().VSizePos();
+	SizePos();
 	
 	s1 << Pointf(10, 26) << Pointf(20, 37) << Pointf(30, 31) << Pointf(40, 33) << Pointf(50, 28);
 	scatter.AddSeries(s1).Legend("Series 1").Opacity(0.3).Fill();
