@@ -9,8 +9,10 @@ NAMESPACE_UPP
 #define TFILE <ScatterCtrl/ScatterCtrl.t>
 #include <Core/t.h>
 
+//   ctrl   alt	   shift  left   middle middleWheel right action
 ScatterCtrl::MouseBehaviour defaultMouse[] = {
-	{false, false, false, true , false, 0, false, ScatterCtrl::SHOW_INFO}, 
+	{false, false, false, true , false, 0, false, ScatterCtrl::SHOW_COORDINATES}, 
+	{true,  false, false, true , false, 0, false, ScatterCtrl::ZOOM_WINDOW}, 
 	{false, false, false, false, false, 0, true , ScatterCtrl::CONTEXT_MENU},
 	{false, false, false, false, true , 0, false, ScatterCtrl::SCROLL},
 	{false, false, false, false, false, 1, false, ScatterCtrl::ZOOM_H_RED},
@@ -69,15 +71,17 @@ void ScatterCtrl::Paint(Draw& w)
 	}
 	TimeStop t;
 	lastRefresh0_ms = GetTickCount();
-	if (mode == MD_DRAW) {
-		ScatterCtrl::SetDrawing(w, GetSize(), 1);
-		PlotTexts(w, GetSize(), 1);
-	} else {
-		ImageBuffer ib(GetSize());
-		BufferPainter bp(ib, mode);
-		ScatterCtrl::SetDrawing(bp, GetSize(), 1);
-		w.DrawImage(0, 0, ib);
-		PlotTexts(w, GetSize(), 1);
+	if (IsEnabled()) {
+		if (mode == MD_DRAW) {
+			ScatterCtrl::SetDrawing(w, GetSize(), 1);
+			PlotTexts(w, GetSize(), 1);
+		} else {
+			ImageBuffer ib(GetSize());
+			BufferPainter bp(ib, mode);
+			ScatterCtrl::SetDrawing(bp, GetSize(), 1);
+			w.DrawImage(0, 0, ib);
+			PlotTexts(w, GetSize(), 1);
+		}
 	}
 	lastRefresh_ms = t.Elapsed();
 }
@@ -163,6 +167,11 @@ void ScatterCtrl::ProcessPopUp(const Point & pt)
 
 void ScatterCtrl::DoMouseAction(bool down, Point pt, MouseAction action, int value)
 {
+	if (!down) {
+		Scrolling(false, pt);
+		LabelPopUp(false, pt);
+		ZoomWindow(false, pt);
+	}
 	switch (action) {
 	case SCROLL: 		Scrolling(down, pt);
 						break;
@@ -172,8 +181,10 @@ void ScatterCtrl::DoMouseAction(bool down, Point pt, MouseAction action, int val
 	case ZOOM_V_ENL:
 	case ZOOM_V_RED:	MouseZoom(value, false, true); 
 						break;
-	case SHOW_INFO:		LabelPopUp(down, pt);
-						break;
+	case SHOW_COORDINATES:	LabelPopUp(down, pt);
+							break;
+	case ZOOM_WINDOW:	ZoomWindow(down, pt);
+						break;						
 	case CONTEXT_MENU:	if(showContextMenu)
 							MenuBar::Execute(THISBACK(ContextMenu));
 						break;
@@ -207,7 +218,7 @@ void ScatterCtrl::ProcessMouse(bool down, Point &pt, bool ctrl, bool alt, bool s
 void ScatterCtrl::LabelPopUp(bool down, Point &pt) 
 {
 	if (down) {
-		if(paintInfo && hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
+		if(showInfo && hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
 		  				(vPlotTop + titleHeight) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
 			popText.AppearOnly(this);
 			
@@ -224,13 +235,46 @@ void ScatterCtrl::LabelPopUp(bool down, Point &pt)
 			ProcessPopUp(pt);		
 		}	
 	} else {
-		if(paintInfo && isLabelPopUp) {
+		if(showInfo && isLabelPopUp) {
 			popText.Close();
-			isLabelPopUp = false;
+			isLabelPopUp = isZoomWindow = false;
 			popLT = popRB = Null;
 			Refresh();
 		}		
 	}
+}
+
+void ScatterCtrl::ZoomWindow(bool down, Point &pt) 
+{
+	if (down) {
+		if (hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
+		  				(vPlotTop + titleHeight) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
+			isZoomWindow = true;
+			if (IsNull(popLT))
+				popLT = pt;
+			popRB = pt;
+		}
+	} else {
+		if(isZoomWindow) {
+			isLabelPopUp = isZoomWindow = false;
+			
+			if (popLT.x > popRB.x)
+				Swap(popLT, popRB);
+			double LTx, LTy, LTy2, RBx, RBy, RBy2;
+			LTx = (popLT.x - hPlotLeft)*xRange/(GetSize().cx - (hPlotLeft + hPlotRight)-1) + xMin;		
+			LTy = -(popLT.y - vPlotTop - titleHeight)*yRange/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin + yRange;		
+			LTy2 = -(popLT.y - vPlotTop - titleHeight)*yRange2/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin2 + yRange2;		
+			RBx = (popRB.x - hPlotLeft)*xRange/(GetSize().cx - (hPlotLeft + hPlotRight)-1) + xMin;		
+			RBy = -(popRB.y - vPlotTop - titleHeight)*yRange/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin + yRange;		
+			RBy2 = -(popRB.y - vPlotTop - titleHeight)*yRange2/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin2 + yRange2;		
+			
+			SetXYMinLinked(LTx, RBy, RBy2);
+			SetRangeLinked(RBx - LTx, LTy - RBy, LTy2 - RBy2);
+
+			popLT = popRB = Null;
+			Refresh();
+		}		
+	}	
 }
 
 #ifdef PLATFORM_LINUX
@@ -256,17 +300,19 @@ void ScatterCtrl::Scrolling(bool down, Point &pt, bool isOut)
 				MouseMove(pt, 0);
 			isScrolling = false;
 			Ctrl::OverrideCursor(mouseImg);
-		}
+		} 
 	}
 }
 
 void ScatterCtrl::LeftDown(Point pt, dword keyFlags) 
 {
+	isLeftDown = true;
 	ProcessMouse(true, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, true, false, 0, false);
 }
 
 void ScatterCtrl::LeftUp(Point pt, dword keyFlags)
 {
+	isLeftDown = false;
 	ProcessMouse(false, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, true, false, 0, false); 
 }
 
@@ -313,7 +359,7 @@ void ScatterCtrl::MouseMove(Point pt, dword)
 			ScatterDraw::Scroll(factorX, -factorY);
 	} 
 	if(isLabelPopUp) {
-		if (paintInfo && hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
+		if (showInfo && hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
 						(vPlotTop + titleHeight) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
 			if (IsNull(popLT))
 				popLT = pt;
@@ -323,13 +369,28 @@ void ScatterCtrl::MouseMove(Point pt, dword)
 			ProcessPopUp(pt);
 			Refresh();
 		}
-	}	
+	} else if (isZoomWindow) {
+		if (hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
+						(vPlotTop + titleHeight) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
+			if (IsNull(popLT))
+				popLT = pt;
+			popRB = pt;
+			Refresh();
+		}
+	}
 }
 
 void ScatterCtrl::MouseLeave()
 {
 	Point p = Null;
 	Scrolling(false, p, true);
+	isLeftDown = false;
+	if (isLabelPopUp || isZoomWindow) {
+		popText.Close();
+		isLabelPopUp = isZoomWindow = false;
+		popLT = popRB = Null;
+		Refresh();
+	}
 }
 
 void ScatterCtrl::MouseZoom(int zdelta, bool hor, bool ver) 
@@ -350,7 +411,9 @@ void ScatterCtrl::MouseZoom(int zdelta, bool hor, bool ver)
 
 Image ScatterCtrl::CursorImage(Point p, dword keyflags)
 {
-	if (paintInfo)
+	if (isZoomWindow)
+		return ScatterImg::ZoomPlus();
+	else if (isLeftDown)
 		return ScatterImg::cursor1();
 	return Image::Arrow();
 }
@@ -433,9 +496,9 @@ void ScatterCtrl::InsertSeries(int id, GridCtrl &data, bool useCols, int idX, in
 	InsertSeries<GridCtrlSource>(id, data, useCols, idX, idY, beginData, numData);
 }
 
-ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1)
+ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1), isLeftDown(false)
 {
-	paintInfo = mouseHandlingX = mouseHandlingY = isScrolling = isLabelPopUp = false;
+	showInfo = mouseHandlingX = mouseHandlingY = isScrolling = isLabelPopUp = isZoomWindow = false;
 	popTextX = "x";
 	popTextY = "y1";
 	popTextY2 = "y2";

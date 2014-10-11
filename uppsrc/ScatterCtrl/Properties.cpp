@@ -378,6 +378,8 @@ void PropertiesDlg::OnTab()
 }
 
 void PropertiesDlg::OnClose() {
+	measures.Change();
+	
 	RejectBreak(IDOK);
 	Close();	Close();
 }
