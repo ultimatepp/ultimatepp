@@ -173,6 +173,7 @@ public:
 	ScatterDraw &SetZoomStyleY(ZoomStyle style = TO_CENTER) {zoomStyleY = style; return *this;}
 
 	ScatterDraw& SetRange(double rx, double ry, double ry2 = 100);
+	ScatterDraw& SetRangeLinked(double rx, double ry, double ry2 = 100);
 	double GetXRange()const {return xRange;}
 	double GetYRange()const {return yRange;}
 	double GetY2Range()const {return yRange2;}
@@ -186,6 +187,7 @@ public:
 	double GetYMinUnit () const {return yMinUnit;}	
 	
 	ScatterDraw& SetXYMin(double xmin,double ymin,double ymin2 = 0);
+	ScatterDraw& SetXYMinLinked(double xmin,double ymin,double ymin2 = 0);
 	double GetXMin () const {return xMin;}
 	double GetYMin () const {return yMin;}	
 	double GetYMin2 () const {return yMin2;}

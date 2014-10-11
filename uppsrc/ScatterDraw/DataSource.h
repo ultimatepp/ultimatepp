@@ -66,7 +66,7 @@ private:
 
 public:
 	VectorY(Vector<Y> &yData, double x0, double deltaX) : yData(&yData), x0(x0), deltaX(deltaX) {}
-	virtual inline double y(int64 id)	{return (*yData)[ptrdiff_t(id)];}
+	virtual inline double y(int64 id)	{return (*yData)[int(id)];}
 	virtual inline double x(int64 id) 	{return id*deltaX + x0;}
 	virtual inline int64 GetCount()		{return yData->GetCount();}
 	virtual double MinX() 				{return x0;}	

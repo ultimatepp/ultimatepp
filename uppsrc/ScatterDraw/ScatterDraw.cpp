@@ -1019,6 +1019,39 @@ double ScatterDraw::GetYPointByValue(double y) {
 	return (GetSize().cy - vPlotTop - 1) - (y - GetYMin())/GetYRange()*(GetSize().cy - (vPlotTop + vPlotBottom) - GetTitleFont().GetHeight() - 1);
 }
 
+
+ScatterDraw &ScatterDraw::SetRangeLinked(double rx, double ry, double ry2) {
+	if (linkedMaster) {
+		linkedMaster->SetRangeLinked(rx, ry, ry2);
+		linkedMaster->Refresh();
+		return *this;
+	}
+	SetRange(rx, ry, ry2);
+	if (!linkedCtrls.IsEmpty()) {
+		for (int i = 0; i < linkedCtrls.GetCount(); ++i) {
+	    	linkedCtrls[i]->SetRange(rx, ry, ry2);
+	    	linkedCtrls[i]->Refresh();
+		}
+	}
+	return *this;
+}
+
+ScatterDraw &ScatterDraw::SetXYMinLinked(double xmin, double ymin, double ymin2) {
+	if (linkedMaster) {
+		linkedMaster->SetXYMinLinked(xmin, ymin, ymin2);
+		linkedMaster->Refresh();
+		return *this;
+	}
+	SetXYMin(xmin, ymin, ymin2);
+	if (!linkedCtrls.IsEmpty()) {
+		for (int i = 0; i < linkedCtrls.GetCount(); ++i) {
+	    	linkedCtrls[i]->SetXYMin(xmin, ymin, ymin2);
+	    	linkedCtrls[i]->Refresh();
+		}
+	}
+	return *this;
+}
+
 void ScatterDraw::Zoom(double scale, bool mouseX, bool mouseY) {
 	if (linkedMaster) {
 		linkedMaster->Zoom(scale, mouseX, mouseY);
@@ -1026,7 +1059,7 @@ void ScatterDraw::Zoom(double scale, bool mouseX, bool mouseY) {
 	}
 	DoZoom(scale, mouseX, mouseY);
 	if (!linkedCtrls.IsEmpty()) {
-		for (int i = 0; i < linkedCtrls.GetCount(); ++i)
+		for (int i = 0; i < linkedCtrls.GetCount(); ++i) 
 	    	linkedCtrls[i]->DoZoom(scale, mouseX, mouseY);
 	}
 }
