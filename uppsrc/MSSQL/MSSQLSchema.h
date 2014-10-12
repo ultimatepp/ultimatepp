@@ -18,15 +18,15 @@
 #define INT_(x)                    COLUMN_("integer", int, x, 0, 0)
 #define INT_ARRAY_(x, items)       COLUMN_ARRAY_("integer", int, x, 0, 0, items)
 
-#define DOUBLE(x)                  COLUMN("double precision", double, x, 0, 0)
-#define DOUBLE_ARRAY(x, items)     COLUMN_ARRAY("double precision", double, x, 0, 0, items)
-#define DOUBLE_(x)                 COLUMN_("double precision", double, x, 0, 0)
-#define DOUBLE_ARRAY_(x, items)    COLUMN_ARRAY_("double precision", double, x, 0, 0, items)
+#define DOUBLE(x)                  COLUMN("float", double, x, 0, 0)
+#define DOUBLE_ARRAY(x, items)     COLUMN_ARRAY("float", double, x, 0, 0, items)
+#define DOUBLE_(x)                 COLUMN_("float", double, x, 0, 0)
+#define DOUBLE_ARRAY_(x, items)    COLUMN_ARRAY_("float", double, x, 0, 0, items)
 
-#define DATE(x)                    COLUMN("datetime", Date, x, 0, 0)
-#define DATE_ARRAY(x, items)       COLUMN_ARRAY("datetime", Date, x, 0, 0, items)
-#define DATE_(x)                   COLUMN_("datetime", Date, x, 0, 0)
-#define DATE_ARRAY_(x, items)      COLUMN_ARRAY_("datetime", Date, x, 0, 0, items)
+#define DATE(x)                    COLUMN("date", Date, x, 0, 0)
+#define DATE_ARRAY(x, items)       COLUMN_ARRAY("date", Date, x, 0, 0, items)
+#define DATE_(x)                   COLUMN_("date", Date, x, 0, 0)
+#define DATE_ARRAY_(x, items)      COLUMN_ARRAY_("date", Date, x, 0, 0, items)
 
 #define TIME(x)                    COLUMN("datetime", Time, x, 0, 0)
 #define TIME_ARRAY(x, items)       COLUMN_ARRAY("datetime", Time, x, 0, 0, items)

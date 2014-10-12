@@ -38,7 +38,7 @@ SqlMassInsert& SqlMassInsert::EndRow(SqlBool remove)
 	cache.Top().remove = remove;
 	if(pos == 0)
 		return *this;
-	if(cache.GetCount() && cache[0].value.GetCount() * cache.GetCount() > 5000)
+	if(cache.GetCount() && cache[0].value.GetCount() * cache.GetCount() > 5000 || cache.GetCount() > 990) // MSSQL maximum is 1000
 		Flush();
 	ASSERT(column.GetCount() == pos);
 	pos = 0;
@@ -65,7 +65,7 @@ void SqlMassInsert::Flush()
 		sql * Delete(table).Where(remove);
 	String insert;
 	int dialect = sql.GetDialect();
-	if(dialect == MY_SQL || dialect == PGSQL) {
+	if(findarg(dialect, MY_SQL, PGSQL, MSSQL) >= 0) {
 		insert << "insert into " + ~table + '(';
 		for(int i = 0; i < column.GetCount(); i++) {
 			if(i)
