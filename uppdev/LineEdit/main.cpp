@@ -6,7 +6,7 @@ GUI_APP_MAIN
 {
 	LineEdit edit;
 	edit.ShowSpaces();
-	edit <<= LoadFile(ConfigFile("data.txt"));
+	edit <<= LoadFile("C:/Users/cxl/Downloads/Nos.log");
 	TopWindow win;
 //	win.SetRect(100, 100, 100, 100);
 	win.Sizeable();
@@ -15,7 +15,7 @@ GUI_APP_MAIN
 	edit.ShowLineEndings();
 	edit.ShowCurrentLine(LtCyan());
 	Ctrl::EventLoop();
-	SaveFile(ConfigFile("data.txt"), ~edit);
+//	SaveFile(ConfigFile("data.txt"), ~edit);
 }
 
 // 156 0x9c ""
