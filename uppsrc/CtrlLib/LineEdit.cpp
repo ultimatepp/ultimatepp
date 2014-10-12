@@ -295,8 +295,9 @@ void   LineEdit::Paint0(Draw& w) {
 							h = ih;
 							h.chr = tx[q];
 						}
+						int pos = min(q, len); // Highligting can add chars at the end of line
 						if(rectsel ? i >= rect.top && i <= rect.bottom && gp >= rect.left && gp < rect.right
-						           : q >= sell && q < selh) {
+						           : pos >= sell && pos < selh) {
 							h.paper = color[PAPER_SELECTED];
 							h.ink = color[INK_SELECTED];
 						}

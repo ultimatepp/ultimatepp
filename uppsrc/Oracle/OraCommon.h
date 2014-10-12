@@ -84,4 +84,4 @@ protected:
 
 END_UPP_NAMESPACE
 
-#endif//ORACOMMON_H
+#endif
