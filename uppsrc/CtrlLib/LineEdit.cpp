@@ -145,6 +145,10 @@ int LineEdit::PasteRectSelection(const WString& s)
 void LineEdit::PasteColumn(const WString& text)
 {
 	Vector<WString> cl = Split(text, '\n', false);
+	if(cl.GetCount() && cl.Top().IsEmpty())
+		cl.Drop();
+	if(cl.GetCount() == 0)
+		return;
 	int pos;
 	if(IsRectSelection()) {
 		Rect t = GetRectSelection();
@@ -154,7 +158,7 @@ void LineEdit::PasteColumn(const WString& text)
 		for(int i = 0; i < t.bottom - t.top + 1; i++) { 
 			int li = p.y + i;
 			int l = GetGPos(i + p.y, p.x);
-			pos = l + Insert(l, i < cl.GetCount() ? cl[i] : cl.GetCount() ? cl.Top() : WString());
+			pos = l + Insert(l, cl[i % cl.GetCount()]);
 		}
 	}
 	else {
@@ -183,6 +187,32 @@ void LineEdit::PasteColumn()
 		w = ReadClipboardText().ToWString();
 	PasteColumn(w);
 	Action();
+}
+
+bool sSortLineOrder(const WString& l1, const WString& l2)
+{
+	return ToUpper(l1) < ToUpper(l2);
+}
+
+void LineEdit::Sort()
+{
+	if(!IsRectSelection())
+		return;
+	CopyRectSelection();
+	Rect rect = GetRectSelection();
+	Vector<WString> key;
+	Vector<WString> ln;
+	for(int i = rect.top; i <= rect.bottom; i++) {
+		int l, h;
+		GetRectSelection(rect, i, l, h);
+		key.Add(GetW(l, h - l));
+		ln.Add(line[i]);
+	}
+	int sell = GetPos(rect.top);
+	int selh = rect.bottom + 1 < line.GetCount() ? GetPos(rect.bottom + 1) : GetLength();
+	IndexSort(key, ln, sSortLineOrder);
+	Remove(sell, selh - sell);
+	Insert(sell, Join(ln, "\n"));
 }
 
 void   LineEdit::Paint0(Draw& w) {

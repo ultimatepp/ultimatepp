@@ -7,7 +7,7 @@ NAMESPACE_UPP
 TextCtrl::TextCtrl()
 {
 	Unicode();
-	undosteps = 10;
+	undosteps = 1000;
 	Clear();
 	undoserial = 0;
 	incundoserial = false;
@@ -794,10 +794,13 @@ void TextCtrl::StdBar(Bar& menu) {
 		.Key(K_SHIFT_INSERT)
 		.Key(K_CTRL_V);
 	LineEdit *e = dynamic_cast<LineEdit *>(this);
-	if(e)
+	if(e) {
 		menu.Add(canpaste,
 				 t_("Paste in column"), CtrlImg::paste_vert(), callback(e, &LineEdit::DoPasteColumn))
 			.Key(K_ALT_V|K_SHIFT);
+		menu.Add(e->IsRectSelection(),
+				 t_("Sort"), CtrlImg::sort(), callback(e, &LineEdit::Sort));
+	}
 	menu.Add(IsEditable() && IsAnySelection(),
 			t_("Erase"), CtrlImg::remove(), THISBACK(DoRemoveSelection))
 		.Key(K_DELETE);

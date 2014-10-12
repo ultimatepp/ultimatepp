@@ -346,6 +346,8 @@ public:
 
 	void   PasteColumn(const WString& text);
 	void   PasteColumn();
+	
+	void   Sort();
 
 	Point   GetScrollPos() const              { return sb; }
 	Size    GetPageSize()                     { return sb.GetPage(); }

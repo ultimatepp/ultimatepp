@@ -215,6 +215,7 @@ typedef int SOCKET;
 #include <zlib.h>
 #endif
 
+#include <functional>
 #include <algorithm>
 #include <string>
 #include <complex>
