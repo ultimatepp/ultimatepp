@@ -302,6 +302,10 @@ bool ODBCConnection::IsOk(SQLRETURN ret) const
 void ODBCConnection::SetParam(int i, const Value& r)
 {
 	Param& p = param.At(i);
+	if(IsNull(r)) {
+		p.li = SQL_NULL_DATA;
+		return;
+	}
 	if(IsNumber(r)) {
 		if(r.Is<int64>()) {
 			int64 x = r;
@@ -312,10 +316,19 @@ void ODBCConnection::SetParam(int i, const Value& r)
 		}
 		else {
 			double x = r;
-			p.ctype = SQL_C_DOUBLE;
-			p.sqltype = SQL_DOUBLE;
-			p.data = String((char *)&x, sizeof(x));
-			p.li = sizeof(x);
+			if(x >= INT_MIN && x < INT_MAX && (int)x == x) {
+				long int h = (int)x;
+				p.ctype = SQL_C_SLONG;
+				p.sqltype = SQL_INTEGER;
+				p.data = String((char *)&h, sizeof(h));
+				p.li = sizeof(h);
+			}
+			else {
+				p.ctype = SQL_C_DOUBLE;
+				p.sqltype = SQL_DOUBLE;
+				p.data = String((char *)&x, sizeof(x));
+				p.li = sizeof(x);
+			}
 		}
 	}
 	if(IsString(r)) {
@@ -339,8 +352,6 @@ void ODBCConnection::SetParam(int i, const Value& r)
 		p.data = String((char *)&tm, sizeof(tm));
 		p.li = sizeof(tm);
 	}
-	if(IsNull(r))
-		p.li = SQL_NULL_DATA;
 }
 
 bool ODBCConnection::Execute()

@@ -307,7 +307,9 @@ SqlWith& SqlWith::With(SqlId table)
 
 SqlWith& SqlWith::WithRecursive(SqlId table)
 {
-	text << (text.GetCount() ? ", " : "with ") << "recursive " << table.Quoted();
+	text << (text.GetCount() ? ", " : "with ")
+	     << SqlCase(MSSQL, "")("recursive ")
+	     << table.Quoted();
 	args = false;
 	return *this;
 }
