@@ -23,6 +23,11 @@ void CreateDiffSyntax(One<EditorSyntax>& e)
 	e.Create<DiffSyntax>();
 }
 
+void CreateLogSyntax(One<EditorSyntax>& e)
+{
+	e.Create<LogSyntax>();
+}
+
 INITBLOCK
 {
 	RegisterCSyntax("cpp", CSyntax::HIGHLIGHT_CPP,
@@ -44,6 +49,8 @@ INITBLOCK
 	EditorSyntax::Register("html", callback1(CreateTagSyntax, true), "*.html *.htm", "HTML (.html)");
 	
 	EditorSyntax::Register("diff", callback(CreateDiffSyntax), "*.diff *.patch", "Diff");
+
+	EditorSyntax::Register("log", callback(CreateLogSyntax), "*.log", "Log (*.log)");
 }
 
 END_UPP_NAMESPACE
