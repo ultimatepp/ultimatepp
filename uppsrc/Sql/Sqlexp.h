@@ -115,6 +115,7 @@ private:
 
 public:
 	static void   UseQuotes(bool b = true);
+	static bool   IsUseQuotes();
 	static void   ToLowerCase(bool b = true);
 	static void   ToUpperCase(bool b = true);
 
@@ -706,7 +707,7 @@ public:
 	SqlInsert& RightJoinRef(const SqlId& table)      { sel.RightJoinRef(table); return *this; }
 	SqlInsert& FullJoinRef(const SqlId& table)       { sel.FullJoinRef(table); return *this; }
 
-	SqlInsert& Where(const SqlBool& exp)             { sel.Where(exp); return *this; }
+	SqlInsert& Where(const SqlBool& exp);
 	SqlInsert& On(const SqlBool& exp)                { sel.On(exp); return *this; }
 	SqlInsert& StartWith(const SqlBool& exp)         { sel.StartWith(exp); return *this; }
 	SqlInsert& ConnectBy(const SqlBool& exp)         { sel.ConnectBy(exp); return *this; }
@@ -761,6 +762,8 @@ public:
 	SqlInsert& operator()(const SqlId& column)             { Column(column, column); return *this; }
 	SqlInsert& operator()(Fields f, bool nokey = false);
 	SqlInsert& operator()(const ValueMap& data);
+	SqlUpdate& Get()                                 { sel.Get(); return *this; }
+	SqlUpdate& From()                                { return Get(); }
 	SqlInsert& From(const SqlId& from);
 	SqlInsert& From(SqlSet _from)                    { from = _from; return *this; }
 	SqlInsert& From(SqlVal from)                     { return From(SqlSet(from)); }
@@ -839,22 +842,6 @@ public:
 
 	SqlUpdate& Where(SqlBool w);
 
-/*	SqlUpdate& StartWith(const SqlBool& exp)         { sel.StartWith(exp); return *this; }
-	SqlUpdate& ConnectBy(const SqlBool& exp)         { sel.ConnectBy(exp); return *this; }
-	SqlUpdate& GroupBy(const SqlSet& columnset)      { sel.GroupBy(columnset); return *this; }
-	SqlUpdate& Having(const SqlBool& exp)            { sel.Having(exp); return *this; }
-	SqlUpdate& OrderBy(const SqlSet& columnset)      { sel.OrderBy(columnset); return *this; }
-
-	SqlUpdate& GroupBy(SqlVal a)                     { sel.GroupBy(SqlSet(a)); return *this; }
-	SqlUpdate& GroupBy(SqlVal a, SqlVal b)           { sel.GroupBy(SqlSet(a, b)); return *this; }
-	SqlUpdate& GroupBy(SqlVal a, SqlVal b, SqlVal c) { sel.GroupBy(SqlSet(a, b, c)); return *this; }
-	SqlUpdate& OrderBy(SqlVal a)                     { sel.OrderBy(SqlSet(a)); return *this; }
-	SqlUpdate& OrderBy(SqlVal a, SqlVal b)           { sel.OrderBy(SqlSet(a, b)); return *this; }
-	SqlUpdate& OrderBy(SqlVal a, SqlVal b, SqlVal c) { sel.OrderBy(SqlSet(a, b, c)); return *this; }
-	SqlUpdate& Limit(int limit)                      { sel.Limit(limit); return *this; }
-	SqlUpdate& Limit(int64 offset, int limit)        { sel.Limit(offset, limit); return *this; }
-	SqlUpdate& Offset(int64 offset)                  { sel.Offset(offset); return *this; }
-*/
 	operator SqlStatement() const;
 
 	operator bool() const                            { return !set.IsEmpty(); }

@@ -429,6 +429,14 @@ SqlInsert& SqlInsert::operator()(Fields f, bool nokey)
 	return *this;
 }
 
+SqlInsert& SqlInsert::Where(const SqlBool& w)
+{
+	if(!sel.IsValid())
+		From();
+	sel.Where(w);
+	return *this;
+}
+
 SqlInsert& SqlInsert::operator()(const ValueMap& data)
 {
 	for(int i = 0; i < data.GetCount(); i++)
@@ -562,7 +570,7 @@ SqlUpdate::operator SqlStatement() const {
 	StringBuffer stmt;
 	stmt << "update " << table.Quoted() << " set " << ~set;
 	if(sel.IsValid())
-		stmt << SqlStatement(sel).GetText().Mid(9);
+		stmt << SqlStatement(sel).GetText().Mid(9 + 2 * SqlId::IsUseQuotes());
 	else
 	if(!where.IsEmpty())
 		stmt << " where " << ~where;

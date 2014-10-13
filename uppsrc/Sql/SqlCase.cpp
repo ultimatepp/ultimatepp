@@ -24,6 +24,11 @@ static bool sSqlIdQuoted;
 static bool sToUpperCase;
 static bool sToLowerCase;
 
+bool SqlId::IsUseQuotes()
+{
+	return sSqlIdQuoted;
+}
+
 void SqlId::UseQuotes(bool b)
 {
 	sSqlIdQuoted = b;
