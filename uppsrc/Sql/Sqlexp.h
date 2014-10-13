@@ -661,6 +661,88 @@ public:
 
 inline SqlDelete Delete(SqlVal table) { return SqlDelete(table); }
 
+#define NEWINSERTUPDATE
+
+#ifdef NEWINSERTUPDATE
+
+class SqlInsert {
+	SqlId     table;
+	SqlId     keycolumn;
+	SqlVal    keyvalue;
+	SqlSet    set1;
+	SqlSet    set2;
+	SqlSelect sel;
+
+public:
+	void Column(const SqlId& column, SqlVal val);
+	void Column(const SqlId& column)                       { Column(column, column); }
+	SqlInsert& operator()(const SqlId& column, SqlVal val) { Column(column, val); return *this; }
+	SqlInsert& operator()(const SqlId& column)             { Column(column, column); return *this; }
+	SqlInsert& operator()(Fields f, bool nokey = false);
+	SqlInsert& operator()(const ValueMap& data);
+
+	SqlId    GetTable() const                        { return table; }
+	SqlId    GetKeyColumn() const                    { return keycolumn; }
+	SqlVal   GetKeyValue() const                     { return keyvalue; }
+
+	SqlInsert& Get()                                 { sel.Get(); return *this; }
+	SqlInsert& From()                                { return Get(); }
+	SqlInsert& From(const SqlSet& set)               { sel.From(set); return *this; }
+	SqlInsert& From(const SqlId& table)              { sel.From(table); return *this; }
+	SqlInsert& From(const SqlVal& a)                 { sel.From(SqlSet(a)); return *this; }
+
+	SqlInsert& InnerJoin(const SqlId& table)         { sel.InnerJoin(table); return *this; }
+	SqlInsert& LeftJoin(const SqlId& table)          { sel.LeftJoin(table); return *this; }
+	SqlInsert& RightJoin(const SqlId& table)         { sel.RightJoin(table); return *this; }
+	SqlInsert& FullJoin(const SqlId& table)          { sel.FullJoin(table); return *this; }
+
+	SqlInsert& InnerJoin(const SqlSet& set)          { sel.InnerJoin(set); return *this; }
+	SqlInsert& LeftJoin(const SqlSet& set)           { sel.LeftJoin(set); return *this; }
+	SqlInsert& RightJoin(const SqlSet& set)          { sel.RightJoin(set); return *this; }
+	SqlInsert& FullJoin(const SqlSet& set)           { sel.FullJoin(set); return *this; }
+
+	SqlInsert& InnerJoinRef(const SqlId& table)      { sel.InnerJoinRef(table); return *this; }
+	SqlInsert& LeftJoinRef(const SqlId& table)       { sel.LeftJoinRef(table); return *this; }
+	SqlInsert& RightJoinRef(const SqlId& table)      { sel.RightJoinRef(table); return *this; }
+	SqlInsert& FullJoinRef(const SqlId& table)       { sel.FullJoinRef(table); return *this; }
+
+	SqlInsert& Where(const SqlBool& exp)             { sel.Where(exp); return *this; }
+	SqlInsert& On(const SqlBool& exp)                { sel.On(exp); return *this; }
+	SqlInsert& StartWith(const SqlBool& exp)         { sel.StartWith(exp); return *this; }
+	SqlInsert& ConnectBy(const SqlBool& exp)         { sel.ConnectBy(exp); return *this; }
+	SqlInsert& GroupBy(const SqlSet& columnset)      { sel.GroupBy(columnset); return *this; }
+	SqlInsert& Having(const SqlBool& exp)            { sel.Having(exp); return *this; }
+	SqlInsert& OrderBy(const SqlSet& columnset)      { sel.OrderBy(columnset); return *this; }
+
+	SqlInsert& GroupBy(SqlVal a)                     { sel.GroupBy(SqlSet(a)); return *this; }
+	SqlInsert& GroupBy(SqlVal a, SqlVal b)           { sel.GroupBy(SqlSet(a, b)); return *this; }
+	SqlInsert& GroupBy(SqlVal a, SqlVal b, SqlVal c) { sel.GroupBy(SqlSet(a, b, c)); return *this; }
+	SqlInsert& OrderBy(SqlVal a)                     { sel.OrderBy(SqlSet(a)); return *this; }
+	SqlInsert& OrderBy(SqlVal a, SqlVal b)           { sel.OrderBy(SqlSet(a, b)); return *this; }
+	SqlInsert& OrderBy(SqlVal a, SqlVal b, SqlVal c) { sel.OrderBy(SqlSet(a, b, c)); return *this; }
+	SqlInsert& Limit(int limit)                      { sel.Limit(limit); return *this; }
+	SqlInsert& Limit(int64 offset, int limit)        { sel.Limit(offset, limit); return *this; }
+	SqlInsert& Offset(int64 offset)                  { sel.Offset(offset); return *this; }
+
+	operator SqlStatement() const;
+	operator bool() const                            { return !set1.IsEmpty(); }
+
+	SqlInsert(const SqlId& table) : table(table) {}
+	SqlInsert(const SqlId& table, const SqlSet& set1, const SqlSet& set2)
+		: table(table), set1(set1), set2(set2) {}
+	SqlInsert(Fields f, bool nokey = false);
+
+//Deprecated!!!
+	bool  Execute(Sql& sql) const                     { return SqlStatement(*this).Execute(sql); }
+	void  Force(Sql& sql) const                       { return SqlStatement(*this).Force(sql); }
+	Value Fetch(Sql& sql) const                       { return SqlStatement(*this).Fetch(sql); }
+	bool  Execute() const                             { return SqlStatement(*this).Execute(); }
+	void  Force() const                               { return SqlStatement(*this).Force(); }
+	Value Fetch() const                               { return SqlStatement(*this).Fetch(); }
+};
+
+#else
+
 class SqlInsert {
 	SqlId   table;
 	SqlId   keycolumn;
@@ -710,9 +792,86 @@ public:
 	Value Fetch() const                               { return SqlStatement(*this).Fetch(); }
 };
 
+#endif
+
 inline SqlInsert Insert(const SqlId& table)           { return SqlInsert(table); }
 inline SqlInsert Insert(Fields f)                     { return SqlInsert(f); }
 inline SqlInsert InsertNoKey(Fields f)                { return SqlInsert(f, true); }
+
+#ifdef NEWINSERTUPDATE
+
+class SqlUpdate {
+	SqlId     table;
+	SqlSet    set;
+	SqlBool   where;
+	SqlSelect sel;
+
+public:
+	void Column(const SqlId& column, SqlVal val);
+	void Column(const SqlSet& cols, const SqlSet& val);
+	SqlUpdate& operator()(const SqlId& column, SqlVal val)       { Column(column, val); return *this; }
+	SqlUpdate& operator()(const SqlSet& cols, const SqlSet& val) { Column(cols, val); return *this; }
+	SqlUpdate& operator()(Fields f);
+	SqlUpdate& operator()(const ValueMap& data);
+
+	SqlUpdate& Get()                                 { sel.Get(); return *this; }
+	SqlUpdate& From()                                { return Get(); }
+	SqlUpdate& From(const SqlSet& set)               { sel.From(set); return *this; }
+	SqlUpdate& From(const SqlId& table)              { sel.From(table); return *this; }
+	SqlUpdate& From(const SqlVal& a)                 { sel.From(SqlSet(a)); return *this; }
+
+	SqlUpdate& InnerJoin(const SqlId& table)         { sel.InnerJoin(table); return *this; }
+	SqlUpdate& LeftJoin(const SqlId& table)          { sel.LeftJoin(table); return *this; }
+	SqlUpdate& RightJoin(const SqlId& table)         { sel.RightJoin(table); return *this; }
+	SqlUpdate& FullJoin(const SqlId& table)          { sel.FullJoin(table); return *this; }
+
+	SqlUpdate& InnerJoin(const SqlSet& set)          { sel.InnerJoin(set); return *this; }
+	SqlUpdate& LeftJoin(const SqlSet& set)           { sel.LeftJoin(set); return *this; }
+	SqlUpdate& RightJoin(const SqlSet& set)          { sel.RightJoin(set); return *this; }
+	SqlUpdate& FullJoin(const SqlSet& set)           { sel.FullJoin(set); return *this; }
+
+	SqlUpdate& InnerJoinRef(const SqlId& table)      { sel.InnerJoinRef(table); return *this; }
+	SqlUpdate& LeftJoinRef(const SqlId& table)       { sel.LeftJoinRef(table); return *this; }
+	SqlUpdate& RightJoinRef(const SqlId& table)      { sel.RightJoinRef(table); return *this; }
+	SqlUpdate& FullJoinRef(const SqlId& table)       { sel.FullJoinRef(table); return *this; }
+
+	SqlUpdate& On(const SqlBool& exp)                { sel.On(exp); return *this; }
+
+	SqlUpdate& Where(SqlBool w);
+
+/*	SqlUpdate& StartWith(const SqlBool& exp)         { sel.StartWith(exp); return *this; }
+	SqlUpdate& ConnectBy(const SqlBool& exp)         { sel.ConnectBy(exp); return *this; }
+	SqlUpdate& GroupBy(const SqlSet& columnset)      { sel.GroupBy(columnset); return *this; }
+	SqlUpdate& Having(const SqlBool& exp)            { sel.Having(exp); return *this; }
+	SqlUpdate& OrderBy(const SqlSet& columnset)      { sel.OrderBy(columnset); return *this; }
+
+	SqlUpdate& GroupBy(SqlVal a)                     { sel.GroupBy(SqlSet(a)); return *this; }
+	SqlUpdate& GroupBy(SqlVal a, SqlVal b)           { sel.GroupBy(SqlSet(a, b)); return *this; }
+	SqlUpdate& GroupBy(SqlVal a, SqlVal b, SqlVal c) { sel.GroupBy(SqlSet(a, b, c)); return *this; }
+	SqlUpdate& OrderBy(SqlVal a)                     { sel.OrderBy(SqlSet(a)); return *this; }
+	SqlUpdate& OrderBy(SqlVal a, SqlVal b)           { sel.OrderBy(SqlSet(a, b)); return *this; }
+	SqlUpdate& OrderBy(SqlVal a, SqlVal b, SqlVal c) { sel.OrderBy(SqlSet(a, b, c)); return *this; }
+	SqlUpdate& Limit(int limit)                      { sel.Limit(limit); return *this; }
+	SqlUpdate& Limit(int64 offset, int limit)        { sel.Limit(offset, limit); return *this; }
+	SqlUpdate& Offset(int64 offset)                  { sel.Offset(offset); return *this; }
+*/
+	operator SqlStatement() const;
+
+	operator bool() const                            { return !set.IsEmpty(); }
+
+	SqlUpdate(const SqlId& table);
+	SqlUpdate(Fields f);
+
+//Deprecated!!!
+	bool  Execute(Sql& sql) const                     { return SqlStatement(*this).Execute(sql); }
+	void  Force(Sql& sql) const                       { return SqlStatement(*this).Force(sql); }
+	Value Fetch(Sql& sql) const                       { return SqlStatement(*this).Fetch(sql); }
+	bool  Execute() const                             { return SqlStatement(*this).Execute(); }
+	void  Force() const                               { return SqlStatement(*this).Force(); }
+	Value Fetch() const                               { return SqlStatement(*this).Fetch(); }
+};
+
+#else
 
 class SqlUpdate {
 	SqlId   table;
@@ -743,6 +902,8 @@ public:
 	void  Force() const                               { return SqlStatement(*this).Force(); }
 	Value Fetch() const                               { return SqlStatement(*this).Fetch(); }
 };
+
+#endif
 
 inline SqlUpdate Update(const SqlId& table)           { return SqlUpdate(table); }
 inline SqlUpdate Update(Fields f)                     { return SqlUpdate(f); }

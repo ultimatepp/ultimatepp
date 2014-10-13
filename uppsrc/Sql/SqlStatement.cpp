@@ -376,6 +376,67 @@ SqlDelete& SqlDelete::Where(const SqlBool& b) {
 }
 
 // -------------------------------
+#ifdef NEWINSERTUPDATE
+
+void SqlInsert::Column(const SqlId& column, SqlVal val) {
+	set1.Cat(column);
+	set2.Cat(val);
+	if(keycolumn.IsNull()) keycolumn = column;
+	if(keyvalue.IsEmpty()) keyvalue =val;
+	sel.Set(set2);
+}
+
+SqlInsert::operator SqlStatement() const {
+	String s = "insert into " + table.Quoted();
+	if(!set1.IsEmpty()) {
+		s << set1();
+		if(sel.IsValid()) 
+			s << ' ' << SqlStatement(sel).GetText();
+		else
+		if(!set2.IsEmpty())
+			s << " values " << set2();
+	}
+	return SqlStatement(s);
+}
+
+struct InsertFieldOperator : public FieldOperator {
+	SqlInsert *insert;
+	bool       nokey;
+
+	virtual void Field(const char *name, Ref f)	{
+		if(!nokey)
+			insert->Column(name, (Value)f);
+		nokey = false;
+	}
+	
+	InsertFieldOperator() { nokey = false; }
+};
+
+SqlInsert::SqlInsert(Fields f, bool nokey) {
+	InsertFieldOperator ifo;
+	ifo.insert = this;
+	ifo.nokey = nokey;
+	f(ifo);
+	table = ifo.table;
+}
+
+SqlInsert& SqlInsert::operator()(Fields f, bool nokey)
+{
+	InsertFieldOperator ifo;
+	ifo.insert = this;
+	ifo.nokey = nokey;
+	f(ifo);
+	return *this;
+}
+
+SqlInsert& SqlInsert::operator()(const ValueMap& data)
+{
+	for(int i = 0; i < data.GetCount(); i++)
+		operator()((String)data.GetKey(i), data.GetValue(i));
+	return *this;
+}
+
+#else
 
 void SqlInsert::Column(const SqlId& column, SqlVal val) {
 	set1.Cat(column);
@@ -446,6 +507,78 @@ SqlInsert& SqlInsert::operator()(const ValueMap& data)
 	return *this;
 }
 
+#endif
+
+/////////////////////////////////
+
+#ifdef NEWINSERTUPDATE
+
+struct UpdateFieldOperator : public FieldOperator {
+	SqlUpdate *update;
+
+	virtual void Field(const char *name, Ref f)	{
+		update->Column(name, (Value)f);
+	}
+};
+
+SqlUpdate::SqlUpdate(Fields f) {
+	UpdateFieldOperator ufo;
+	ufo.update = this;
+	f(ufo);
+	table = ufo.table;
+	sel.Set(SqlSet(SqlId("X")));
+}
+
+SqlUpdate::SqlUpdate(const SqlId& table)
+:	table(table)
+{
+	sel.Set(SqlSet(SqlId("X")));
+}
+
+SqlUpdate& SqlUpdate::operator()(Fields f) {
+	UpdateFieldOperator ufo;
+	ufo.update = this;
+	f(ufo);
+	return *this;
+}
+
+SqlUpdate& SqlUpdate::operator()(const ValueMap& data)
+{
+	for(int i = 0; i < data.GetCount(); i++)
+		operator()((String)data.GetKey(i), data.GetValue(i));
+	return *this;
+}
+
+SqlUpdate& SqlUpdate::Where(SqlBool w)
+{
+	if(sel.IsValid())
+		sel.Where(w);
+	else
+		where = w;
+	return *this;
+}
+
+SqlUpdate::operator SqlStatement() const {
+	StringBuffer stmt;
+	stmt << "update " << table.Quoted() << " set " << ~set;
+	if(sel.IsValid())
+		stmt << SqlStatement(sel).GetText().Mid(9);
+	else
+	if(!where.IsEmpty())
+		stmt << " where " << ~where;
+	return SqlStatement(stmt);
+}
+
+void SqlUpdate::Column(const SqlId& column, SqlVal val) {
+	set.Cat(SqlVal(SqlVal(column), " = ", val, SqlS::COMP));
+}
+
+void SqlUpdate::Column(const SqlSet& cols, const SqlSet& val)
+{
+	set.Cat(SqlVal(SqlS(cols(), SqlS::HIGH), " = ", SqlS(val(), SqlS::HIGH), SqlS::COMP));
+}
+
+#else
 struct UpdateFieldOperator : public FieldOperator {
 	SqlUpdate *update;
 
@@ -491,7 +624,7 @@ void SqlUpdate::Column(const SqlSet& cols, const SqlSet& val)
 {
 	set.Cat(SqlVal(SqlS(cols(), SqlS::HIGH), " = ", SqlS(val(), SqlS::HIGH), SqlS::COMP));
 }
-
+#endif
 // ------------------------------------
 // deprecated
 
