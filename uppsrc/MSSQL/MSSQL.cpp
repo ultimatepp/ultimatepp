@@ -20,4 +20,18 @@ void IdentityInsert(const SqlInsert& ins)
 	IdentityInsert(SQL, ins);
 }
 
+Value MsSqlSequence::Get()
+{
+#ifndef NOAPPSQL
+	Sql sql(session ? *session : SQL.GetSession());
+#else
+	ASSERT(session);
+	Sql sql(*session);
+#endif
+	if(!sql.Execute("select next value for " + ~seq) || !sql.Fetch())
+		return ErrorValue();
+	return sql[0];
+}
+
+
 };
