@@ -29,6 +29,11 @@ SQLID(B)
 SQLID(C)
 SQLID(OBEXPBI)
 
+SQLID(TN)
+SQLID(TNSIZE)
+SQLID(PARENT_ID)
+SQLID(TREENODE)
+
 void Exp0(int dialect, const char *dialectn, const char *sqlexp, SqlStatement x)
 {
 	LOG("\tTEST(" << dialectn << ",\n\t\t" << sqlexp << ",\n\t\t"
@@ -229,6 +234,67 @@ CONSOLE_APP_MAIN
 	EXP(SelectAll().From(ID).InnerJoin(
 		SelectAll().From(ID).Where(ID >= Time(2014, 1, 1, 0, 0, 0)).GroupBy(ID).AsTable(ID)));
 
+	EXP(
+		WithRecursive(TN)(ID, NAME, PARENT_ID)
+			.As(Select(ID, NAME, PARENT_ID).From(TREENODE).Where(IsNull(PARENT_ID))
+			    +
+			    Select(TREENODE(ID, NAME, PARENT_ID)).From(TREENODE, TN)
+			    .Where(TREENODE(PARENT_ID) == TN(ID)))
+		.With(TNSIZE)
+		    .As(Select(PARENT_ID,
+		               Select(NAME).From(TREENODE).Where(ID == TN(PARENT_ID)).AsValue(),
+		               SqlCountRows())
+		        .From(TN)
+		        .GroupBy(PARENT_ID))
+		(SelectAll().From(TNSIZE))
+	);
+
+	SqlId COUNT("COUNT");
+	EXP(
+		WithRecursive(TN)(ID, NAME, PARENT_ID)
+			.As(Select(ID, NAME, PARENT_ID).From(TREENODE).Where(IsNull(PARENT_ID))
+			    +
+			    Select(TREENODE(ID, NAME, PARENT_ID)).From(TREENODE, TN)
+			    .Where(TREENODE(PARENT_ID) == TN(ID)))
+		.With(TNSIZE)(NAME, COUNT)
+		    .As(Select(Select(NAME).From(TREENODE).Where(ID == TN(PARENT_ID)).AsValue(),
+		               SqlCountRows())
+		        .From(TN)
+		        .GroupBy(PARENT_ID))
+		(Insert(TABLE1)(NAME, NAME)(COL, COUNT).From(TNSIZE))
+	);
+	
+	EXP(
+		WithRecursive(TN)(ID, NAME, PARENT_ID)
+			.As(Select(ID, NAME, PARENT_ID).From(TREENODE).Where(IsNull(PARENT_ID))
+			    +
+			    Select(TREENODE(ID, NAME, PARENT_ID)).From(TREENODE, TN)
+			    .Where(TREENODE(PARENT_ID) == TN(ID)))
+		.With(TNSIZE)(ID, COUNT)
+		    .As(Select(ID,
+		               SqlCountRows())
+		        .From(TN)
+		        .GroupBy(PARENT_ID))
+		(Delete(TREENODE).Where(ID == Select(ID).From(TNSIZE).Where(COUNT == 0)))
+	);
+
+	EXP(
+		WithRecursive(TN)(ID, NAME, PARENT_ID)
+			.As(Select(ID, NAME, PARENT_ID).From(TREENODE).Where(IsNull(PARENT_ID))
+			    +
+			    Select(TREENODE(ID, NAME, PARENT_ID)).From(TREENODE, TN)
+			    .Where(TREENODE(PARENT_ID) == TN(ID)))
+		.With(TNSIZE)(ID, COUNT)
+		    .As(Select(ID,
+		               SqlCountRows())
+		        .From(TN)
+		        .GroupBy(PARENT_ID))
+		(Update(TABLE1)(COL, Select(COUNT).From(TNSIZE).Where(TNSIZE(ID) == TABLE1(ID)).AsValue()))
+	);
+	
+	EXP(Temporary("TT").As(Select(NAME, LASTNAME).From(TABLE1).Where(COLUMN1 == 12)));
+
+	EXP(Update(TABLE1)(COLUMN1, TABLE2(COLUMN2)).From(TABLE2).On(TABLE1(ID) == TABLE2(TABLE1_ID)));
 
 	LOG("\n\n\n=========================================================================");
 	#include "Test.i"
