@@ -79,6 +79,7 @@ public:
 	void Put(int count, const HlStyle& ink, const HlStyle& paper);
 	void Put(const HlStyle& ink)                      { Put(1, ink); }
 	void Put(const HlStyle& ink, word flags)          { Put(1, ink); v[pos - 1].flags = flags; }
+	int  GetCount() const                             { return v.GetCount(); }
 
 	const wchar *CString(const wchar *p);
 	

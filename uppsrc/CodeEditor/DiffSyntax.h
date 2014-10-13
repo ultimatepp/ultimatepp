@@ -14,5 +14,4 @@ protected:
 	
 private:
 	HighlightOutput *hout;
-	
 };
