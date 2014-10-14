@@ -17,7 +17,8 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 				fp = fp || *s == '.' || *s == 'e';
 				s++;
 			}
-			hls.Put(int(s - s0), hl_style[fp ? INK_CONST_FLOAT : INK_CONST_INT]);
+			hls.Put(int(s - s0), hl_style[(IsAlpha(*s) || *s == '_') && (IsAlNum(s[1]) || s[1] == '_') ? INK_NORMAL // More likely a hexdump or something
+			                              : fp ? INK_CONST_FLOAT : INK_CONST_INT]);
 		}
 		else
 		if(IsAlpha(*s) || *s == '_') {
