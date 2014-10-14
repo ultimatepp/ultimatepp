@@ -73,6 +73,7 @@ RpcGet RpcRequest::Execute()
 		return RpcGet();
 	shouldExecute = false;
 	String request;
+	DDUMP(data.out);
 	if(json) {
 		ContentType("application/json");
 		static Atomic id;
@@ -116,8 +117,6 @@ RpcGet RpcRequest::Execute()
 		RLOG("XmlRpc call request:\n" << request);
 	String response;
 	New();
-	data.out.Clear();
-	data.out_map.Clear();
 	if(shorted)	
 		response = RpcExecute(request, "", "127.0.0.1");
 	else
