@@ -20,14 +20,14 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 			hls.Put(int(s - s0), hl_style[fp ? INK_CONST_FLOAT : INK_CONST_INT]);
 		}
 		else
-		if(IsAlpha(*s)) {
+		if(IsAlpha(*s) || *s == '_') {
 			static Index<String> rws;
 			ONCELOCK {
 				rws << "error" << "errors" << "warning" << "warnings" << "failed" << "exit" << "fatal"
 				    << "failure" << "rejected";
 			}
 			String w;
-			while(IsAlNum(*s))
+			while(IsAlNum(*s) || *s == '_')
 				w.Cat(ToLower(*s++));
 			bool hl = rws.Find(w) >= 0;
 			hls.Put(w.GetCount(), hl ? err : ink);
