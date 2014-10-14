@@ -10,10 +10,11 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 	err.bold = true;
 	bool hl_line = false;
 	while(s < end) {
-		if(IsDigit(*s)) {
-			const wchar *s0 = s;
+		int c = *s;
+		const wchar *s0 = s;
+		if(IsDigit(c)) {
 			bool fp = false;
-			while(IsDigit(*s) || *s == '.' || *s == 'e') {
+			while(s < end && IsDigit(*s) || *s == '.' || *s == 'e') {
 				fp = fp || *s == '.' || *s == 'e';
 				s++;
 			}
@@ -21,21 +22,38 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 			                              : fp ? INK_CONST_FLOAT : INK_CONST_INT]);
 		}
 		else
-		if(IsAlpha(*s) || *s == '_') {
+		if(c == '\'' || c == '\"') {
+			s++;
+			for(;;) {
+				if(s >= end) {
+					hls.Put(1, ink);
+					s = s0 + 1;
+					break;
+				}
+				if(*s == c) {
+					s++;
+					hls.Put((int)(s - s0), hl_style[INK_CONST_STRING]);
+					break;
+				}
+				s += 1 + (s[0] == '\\' && s[1] == c);
+			}
+		}
+		else
+		if(IsAlpha(c) || c == '_') {
 			static Index<String> rws;
 			ONCELOCK {
 				rws << "error" << "errors" << "warning" << "warnings" << "failed" << "exit" << "fatal"
 				    << "failure" << "rejected";
 			}
 			String w;
-			while(IsAlNum(*s) || *s == '_')
+			while(s < end && IsAlNum(*s) || *s == '_')
 				w.Cat(ToLower(*s++));
 			bool hl = rws.Find(w) >= 0;
 			hls.Put(w.GetCount(), hl ? err : ink);
 			hl_line = hl_line || hl;
 		}
 		else {
-			bool hl = findarg(*s, '[', ']', '(', ')', ':', '-', '=', '{', '}', '/', '<', '>', '*', '#', '@') >= 0;
+			bool hl = findarg(c, '[', ']', '(', ')', ':', '-', '=', '{', '}', '/', '<', '>', '*', '#', '@') >= 0;
 			hls.Put(1, hl ? hl_style[INK_OPERATOR] : ink);
 			s++;
 		}
