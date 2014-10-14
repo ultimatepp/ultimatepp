@@ -13,6 +13,8 @@ void InFilterStream::Init()
 	ptr = rdlim = h;
 	in = NULL;
 	eof = false;
+	style = STRM_READ|STRM_LOADING;
+	SetLoading();
 }
 
 dword InFilterStream::Avail()
@@ -100,7 +102,8 @@ void OutFilterStream::Init()
 	wrlim = ~buffer + 4096;
 	ptr = ~buffer;
 	out = NULL;
-	count = 0;
+	count = in_count = 0;
+	style = STRM_WRITE;
 }
 
 OutFilterStream::~OutFilterStream()
@@ -122,9 +125,16 @@ void OutFilterStream::Close()
 void OutFilterStream::FlushOut()
 {
 	if(ptr != ~buffer) {
-		Filter(~buffer, (int)(ptr - ~buffer));
+		int sz = (int)(ptr - ~buffer);
+		in_count += sz;
+		Filter(~buffer, sz);
 		ptr = ~buffer;
 	}
+}
+
+int64 OutFilterStream::GetInCount() const
+{
+	return buffer ? in_count + (int)(ptr - ~buffer) : in_count;
 }
 
 void OutFilterStream::_Put(int w)

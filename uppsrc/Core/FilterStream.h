@@ -8,7 +8,7 @@ protected:
 	virtual   dword _Get(void *data, dword size);
 
 	Vector<byte> buffer;
-	bool eof;
+	bool         eof;
 
 	void   Init();
 	void   Fetch(int size);
@@ -44,6 +44,7 @@ protected:
 
 	Buffer<byte> buffer;
 	int64        count;
+	int64        in_count;
 
 	void   FlushOut();
 	dword  Avail()               { return dword(4096 - (ptr - ~buffer)); }
@@ -56,6 +57,7 @@ public:
 	void                         Out(const void *ptr, int size);
 	
 	int64                        GetCount() const             { return count; }
+	int64                        GetInCount() const;
 
 	template <class F>
 	void Set(Stream& out_, F& filter) {
