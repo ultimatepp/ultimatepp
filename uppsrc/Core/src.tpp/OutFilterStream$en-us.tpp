@@ -54,12 +54,6 @@ OutFilterStream is used for compression, this is the compressed
 size). Note that this number is `'complete`' only after the OutFilterStream 
 is closed, because of buffering of data chunks.&]
 [s3; &]
-[s4; &]
-[s5;:OutFilterStream`:`:GetInCount`(`)const: [@(0.0.255) int64]_[* GetInCount]()_[@(0.0.255) c
-onst]&]
-[s2;%% Returns a number of bytes written to OutFilterStream (if OutFilterStream 
-is used for compression, this is the uncompressed size).&]
-[s3; &]
 [s4;%% &]
 [s5;:OutFilterStream`:`:Set`(Stream`&`,F`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 F
 ]>_[@(0.0.255) void]_[* Set]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 out`_], 

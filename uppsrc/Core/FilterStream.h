@@ -23,6 +23,7 @@ public:
 	
 	template <class F>
 	void Set(Stream& in_, F& filter) {
+		Init();
 		in = &in_;
 		filter.WhenOut = callback(this, &InFilterStream::Out);
 		Filter = callback<F, F, const void *, int>(&filter, &F::Put);
@@ -30,7 +31,7 @@ public:
 	}
 	
 	InFilterStream();
-	template <class F> InFilterStream(Stream& in, F& filter) { Init(); Set(in, filter); }
+	template <class F> InFilterStream(Stream& in, F& filter) { Set(in, filter); }
 };
 
 class OutFilterStream : public Stream {
@@ -44,7 +45,6 @@ protected:
 
 	Buffer<byte> buffer;
 	int64        count;
-	int64        in_count;
 
 	void   FlushOut();
 	dword  Avail()               { return dword(4096 - (ptr - ~buffer)); }
@@ -57,10 +57,10 @@ public:
 	void                         Out(const void *ptr, int size);
 	
 	int64                        GetCount() const             { return count; }
-	int64                        GetInCount() const;
 
 	template <class F>
 	void Set(Stream& out_, F& filter) {
+		Init();
 		out = &out_;
 		filter.WhenOut = callback(this, &OutFilterStream::Out);
 		Filter = callback<F, F, const void *, int>(&filter, &F::Put);
@@ -69,6 +69,6 @@ public:
 	}
 	
 	OutFilterStream();
-	template <class F> OutFilterStream(Stream& in, F& filter) { Init(); Set(in, filter); }
+	template <class F> OutFilterStream(Stream& in, F& filter) { Set(in, filter); }
 	~OutFilterStream();
 };
