@@ -113,8 +113,9 @@ bool TcpSocket::SSLImp::Start()
 #endif
 
 	ERR_clear_error();
-	if(!context.Create(socket.mode == CONNECT ? const_cast<SSL_METHOD *>(SSLv3_client_method())
-	                                          : const_cast<SSL_METHOD *>(SSLv3_server_method()))) {
+
+	if(!context.Create(socket.mode == CONNECT ? const_cast<SSL_METHOD *>(SSLv23_client_method())
+	                                          : const_cast<SSL_METHOD *>(SSLv23_server_method()))) {
 		SetSSLError("Start: SSL context.");
 		return false;
 	}
