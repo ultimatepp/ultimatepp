@@ -57,6 +57,41 @@ CONSOLE_APP_MAIN
 		ASSERT(in.Get() < 0);
 		ASSERT(in.IsEof());	
 	}
+
+	{	
+		String data;
+		for(int i = 0; i < 100000; i++)
+			data << AsString(i) << ": " << AsString(Uuid::Create()) << '\n';
+	
+		String path = GetHomeDirFile("test.z");
+		{
+			FileOut fout(path);
+			Zlib zlib;
+			OutFilterStream out(fout, zlib);
+			zlib.Compress();
+			for(int i = 0; i < data.GetCount(); i++) {
+				ASSERT(i == out.GetPos());
+				out.Put(data[i]);
+			}
+			out.Close();
+		}
+	
+		String data2;
+		{
+			FileIn fin(path);
+			Zlib zlib;
+			InFilterStream in(fin, zlib);
+			zlib.Decompress();
+			int i = 0;
+			while(!in.IsEof()) {
+				ASSERT(i == in.GetPos());
+				data2.Cat(in.Get());
+				i++;
+			}
+		}
+		
+		ASSERT(data == data2);
+	}
 	
 	LOG("=========== OK");
 }
