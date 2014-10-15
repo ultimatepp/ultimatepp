@@ -11,10 +11,12 @@ void InFilterStream::Init()
 {
 	static byte h[1];
 	ptr = rdlim = h;
+	pos = 0;
 	in = NULL;
 	eof = false;
 	style = STRM_READ|STRM_LOADING;
 	SetLoading();
+	buffer.Clear();
 }
 
 dword InFilterStream::Avail()
@@ -67,6 +69,7 @@ void InFilterStream::Out(const void *ptr, int size)
 
 void InFilterStream::Fetch(int size)
 {
+	pos += buffer.GetCount();
 	buffer.Clear();
 	if(eof) {
 		static byte h[1];
@@ -87,6 +90,7 @@ void InFilterStream::Fetch(int size)
 			Filter(~b, n);
 		}
 	}
+	Stream::buffer = buffer;
 	ptr = buffer.Begin();
 	rdlim = buffer.End();
 }
@@ -102,8 +106,10 @@ void OutFilterStream::Init()
 	wrlim = ~buffer + 4096;
 	ptr = ~buffer;
 	out = NULL;
-	count = in_count = 0;
+	count = pos = 0;
 	style = STRM_WRITE;
+	pos = 0;
+	Stream::buffer = ~buffer;
 }
 
 OutFilterStream::~OutFilterStream()
@@ -126,15 +132,10 @@ void OutFilterStream::FlushOut()
 {
 	if(ptr != ~buffer) {
 		int sz = (int)(ptr - ~buffer);
-		in_count += sz;
+		pos += sz;
 		Filter(~buffer, sz);
 		ptr = ~buffer;
 	}
-}
-
-int64 OutFilterStream::GetInCount() const
-{
-	return buffer ? in_count + (int)(ptr - ~buffer) : in_count;
 }
 
 void OutFilterStream::_Put(int w)
