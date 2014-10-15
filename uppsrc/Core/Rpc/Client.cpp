@@ -73,7 +73,6 @@ RpcGet RpcRequest::Execute()
 		return RpcGet();
 	shouldExecute = false;
 	String request;
-	DDUMP(data.out);
 	if(json) {
 		ContentType("application/json");
 		static Atomic id;
