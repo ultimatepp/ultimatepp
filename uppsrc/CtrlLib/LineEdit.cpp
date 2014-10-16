@@ -90,8 +90,8 @@ bool LineEdit::GetRectSelection(const Rect& rect, int line, int& l, int &h)
 {
 	if(line >= rect.top && line <= rect.bottom) {
 		int len = GetLineLength(line);
-		l = GetGPos(line, min(len, rect.left));
-		h = GetGPos(line, min(len, rect.right));
+		l = GetGPos(line, rect.left);
+		h = GetGPos(line, rect.right);
 		return true;
 	}
 	return false;
