@@ -93,5 +93,40 @@ CONSOLE_APP_MAIN
 		ASSERT(data == data2);
 	}
 	
+	{
+		String data;
+		for(int i = 0; i < 10000; i++)
+			data << AsString(i) << ": " << AsString(Uuid::Create()) << '\n';
+	
+		String path = GetHomeDirFile("test.z");
+		{
+			FileOut fout(path);
+			DDUMP(data.GetLength());
+			int64 sz_pos = fout.GetPos();
+			fout.Put64(0);
+			Zlib zlib;
+			OutFilterStream out(fout, zlib);
+			zlib.Compress();
+			out % data;
+			int64 sz = out.GetPos();
+			out.Close();
+			fout.Seek(sz_pos);
+			fout.Put64(sz);
+		}
+	
+		String data2;
+		{
+			FileIn fin(path);
+			int64 sz = fin.Get64();
+			Zlib zlib;
+			InFilterStream in(fin, zlib);
+			zlib.Decompress();
+			in.SetSize(sz);
+			in % data2;
+		}
+		
+		ASSERT(data == data2);
+	}
+	
 	LOG("=========== OK");
 }
