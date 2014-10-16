@@ -50,6 +50,14 @@ t]_[@(0.0.255) void]_`*[*@3 ptr], [@(0.0.255) int]_[*@3 size])&]
 callback which is connected to Out method and Put and End methods 
 that are connected to Filter and End callbacks.&]
 [s3;%% &]
+[s4; &]
+[s5;:InFilterStream`:`:SetSize`(int64`): [@(0.0.255) void]_[* SetSize]([_^int64^ int64]_[*@3 s
+ize])&]
+[s2;%% Sets the [%-*@3 size] of Stream that then reported by GetSize 
+method. This is important in situations where code requires to 
+know the size if input stream (e.g. serialization) but it is 
+not known because filter does not provide such information.&]
+[s3;%% &]
 [s4;%% &]
 [s5;:InFilterStream`:`:InFilterStream`(`): [* InFilterStream]()&]
 [s2;%% Default constructor.&]

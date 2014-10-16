@@ -1,6 +1,7 @@
 class InFilterStream : public Stream {
 public:
 	virtual   bool  IsOpen() const;
+	virtual   int64 GetSize() const;
 
 protected:
 	virtual   int   _Term();
@@ -9,6 +10,7 @@ protected:
 
 	Vector<byte> buffer;
 	bool         eof;
+	int64        size;
 
 	void   Init();
 	void   Fetch(int size);
@@ -29,6 +31,8 @@ public:
 		Filter = callback<F, F, const void *, int>(&filter, &F::Put);
 		End = callback(&filter, &F::End);
 	}
+	
+	void SetSize(int64 size_)    { size = size_; }
 	
 	InFilterStream();
 	template <class F> InFilterStream(Stream& in, F& filter) { Set(in, filter); }
