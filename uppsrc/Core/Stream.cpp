@@ -737,6 +737,9 @@ Stream& Stream::operator%(String& s) {
 				Get(); // reserved for future use... or removal
 			}
 		}
+		DDUMP(len);
+		DDUMP(GetPos());
+		DDUMP(GetSize());
 		if(IsError() || len + GetPos() > GetSize())
 			LoadError();
 		else {

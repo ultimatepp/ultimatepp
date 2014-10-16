@@ -24,6 +24,11 @@ dword InFilterStream::Avail()
 	return dword(rdlim - ptr);
 }
 
+int64 InFilterStream::GetSize() const
+{
+	return size;
+}
+
 bool InFilterStream::IsOpen() const
 {
 	return in->IsOpen();
@@ -123,8 +128,6 @@ void OutFilterStream::Close()
 		FlushOut();
 		End();
 		buffer.Clear();
-		if(out)
-			out->Close();
 	}
 }
 

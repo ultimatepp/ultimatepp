@@ -22,8 +22,8 @@ to convert anything capable of consuming data into Stream.&]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
 [s3; &]
 [s5;:OutFilterStream`:`:Close`(`): [@(0.0.255) virtual] [@(0.0.255) void]_[* Close]()&]
-[s2;%% Finalizes operations and closes the output stream. Repeated 
-call does nothing.&]
+[s2;%% Finalizes operations. Does [*/ not] closes the output stream. 
+Repeated call does nothing.&]
 [s3; &]
 [s3; &]
 [s4; &]
