@@ -1,4 +1,4 @@
-enum {
+enum Sql_Dialect_Enum {
 	ORACLE    = 1,
 	SQLITE3   = 2,
 	MY_SQL    = 4,
