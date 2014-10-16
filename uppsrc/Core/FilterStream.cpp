@@ -10,13 +10,13 @@ InFilterStream::InFilterStream()
 void InFilterStream::Init()
 {
 	static byte h[1];
-	ptr = rdlim = h;
 	pos = 0;
 	in = NULL;
 	eof = false;
 	style = STRM_READ|STRM_LOADING;
 	SetLoading();
 	buffer.Clear();
+	ptr = rdlim = Stream::buffer = NULL;
 }
 
 dword InFilterStream::Avail()
