@@ -396,6 +396,7 @@ bool HttpRequest::Do()
 	}
 	
 	if(phase == FAILED) {
+		DDUMP(max_retries);
 		if(retry_count++ < max_retries) {
 			LLOGS("HTTP retry on error " << GetErrorDesc());
 			start_time = msecs();

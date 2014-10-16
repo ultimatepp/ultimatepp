@@ -53,7 +53,8 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 			hl_line = hl_line || hl;
 		}
 		else {
-			bool hl = findarg(c, '[', ']', '(', ')', ':', '-', '=', '{', '}', '/', '<', '>', '*', '#', '@') >= 0;
+			bool hl = findarg(c, '[', ']', '(', ')', ':', '-', '=', '{', '}', '/', '<', '>', '*',
+			                     '#', '@', '\\', '.') >= 0
 			hls.Put(1, hl ? hl_style[INK_OPERATOR] : ink);
 			s++;
 		}
