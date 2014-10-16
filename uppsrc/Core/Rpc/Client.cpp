@@ -35,6 +35,7 @@ void RpcRequest::Init()
 {
 	ContentType("text/xml");
 	RequestTimeout(30000);
+	MaxRetries(0);
 	json = false;
 }
 
