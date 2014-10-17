@@ -18,7 +18,7 @@ e][3 <][*3 Bits][3 >_]&]
 array of bools, implemented using binary arrays, packing 8 bits 
 per byte of allocated space (plus some allocation reserve). It 
 is moveable type with pick transfer sematics.&]
-[s0;i448;a25;kKO9;:noref:@(0.0.255) &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:Bits`:`:Clear`(`): [@(0.0.255) void]_[* Clear]()&]

@@ -26,7 +26,7 @@ the last counter reset. GetNewSize says how much data had to
 be added since the last counter reset. GetSize() `- GetFoundSize() 
 `- GetNewSize() is amount of data that has not been used since 
 the last counter reset.&]
-[s0; &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Maker subclass]]}}&]
 [s3; &]
 [s5; [@(0.0.255) struct]_[* Maker]&]
