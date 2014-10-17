@@ -52,6 +52,8 @@ void Test()
 						netAdapters[i].mac, netAdapters[i].fullname, 
 						netAdapters[i].description, netAdapters[i].ip4, netAdapters[i].ip6));
 	
+	Puts(Format("\nFirst free available socket port from 49152 is %d", GetAvailableSocketPort(49152)));
+	
 	Puts("\nSystem info:");		
 	String manufacturer, productName, version, mbSerial;
 	Date releaseDate;
