@@ -127,6 +127,12 @@ tring]_`&[*@3 name], [_^String^ String]_`&[*@3 domain])&]
 [s2; Returns the local computer network [%-*@3 name] and [%-*@3 domain].&]
 [s3; &]
 [s4;%- &]
+[s5;:GetAvailableSocketPort`(int`):%- [@(0.0.255) int]_[* GetAvailableSocketPort]([@(0.0.255) i
+nt]_[*@3 from]_`=_[@3 49152])&]
+[s2; Returns the first available socket port from [%-*@3 from] or Null 
+if there is an error.&]
+[s3; &]
+[s4;%- &]
 [s5;:GetHDSerial`(`):%- [@(0.0.255) String]_[* GetHDSerial]()&]
 [s2; Returns the hard disk physical [%-*@3 serial ]number or Null. 
 This code is not affected by disk formatting.&]
@@ -590,4 +596,4 @@ v3 and Windows desktops.&]
 [s0;l288; &]
 [s0;l288; If [%-*@3 path].is empty, the desktop wallpaper is removed. 
 &]
-[s0; ]]
+[s3; ]]

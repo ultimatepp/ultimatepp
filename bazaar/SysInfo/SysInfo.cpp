@@ -2028,4 +2028,53 @@ void SystemOverview::Serialize(Stream& stream) {
 		 % compilerName % compilerVersion % compilerTime % compilerMode;
 }
 
+#ifdef PLATFORM_POSIX
+static void GetPorts(SortedIndex<int> &ports, const char *file) {
+	StringParse text;
+	text = LoadFile_Safe(String("/proc/net/") + file);	
+	text.GetLine();
+	while (true) {
+		StringParse line = text.GetLine();
+		if (line.IsEmpty())
+			break;
+		line.GoAfter(":");
+		line.GoAfter(":");
+		String sport = line.GetText();
+		unsigned int port;
+		sscanf(~sport, "%x", &port);
+		ports.FindAdd(port);
+	}
+}
+#endif
+
+int GetAvailableSocketPort(int from) {
+	SortedIndex<int> ports;	
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
+	DWORD size = sizeof(MIB_TCPTABLE);
+	Buffer<char> table(size);
+	MIB_TCPTABLE *pTable = (MIB_TCPTABLE *)~table;
+	DWORD ret;
+	if ((ret = GetTcpTable(pTable, &size, TRUE)) == ERROR_INSUFFICIENT_BUFFER) 
+		table.Alloc(size);
+	pTable = (MIB_TCPTABLE *)~table;	
+    if ((ret = GetTcpTable(pTable, &size, TRUE)) != NO_ERROR)
+    	return Null;
+
+  	for (int i = 0; i < (int) pTable->dwNumEntries; i++) 
+  		ports.FindAdd(ntohs((u_short)pTable->table[i].dwLocalPort));
+#else
+	GetPorts(ports, "tcp");
+	GetPorts(ports, "raw");
+	GetPorts(ports, "udp");
+#endif
+  	int i;
+  	for (i = 0; i < ports.GetCount() && ports[i] < from; ++i)
+  		;
+  	if (i == ports.GetCount())
+  		return from;
+  	for (; ports[i] == from; ++i, ++from)
+  		;
+  	return from;
+}
+
 END_UPP_NAMESPACE

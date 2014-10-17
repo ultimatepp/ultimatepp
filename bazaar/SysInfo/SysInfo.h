@@ -33,6 +33,8 @@ Upp::Array <NetAdapter> GetAdapterInfo();
 
 bool GetNetworkInfo(String &name, String &domain, String &ip4, String &ip6);
 
+int GetAvailableSocketPort(int from = 49152);
+
 #if defined(PLATFORM_WIN32) 
 bool GetVideoInfo(Upp::Array <Value> &name, Upp::Array <Value> &description, Upp::Array <Value> &videoProcessor, 
 				  Upp::Array <Value> &ram, Upp::Array <Value> &videoMode);
