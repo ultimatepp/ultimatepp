@@ -237,6 +237,38 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 	Vector<String> sobjfile;
 	bool           error = false;
 
+	String pch;
+
+	if(allow_pch && pkg.GetCount() && IsMsc86()) {
+		String hdr_path = SourcePath(package, pkg[0]);
+		if(IsCHeaderFile(hdr_path) && HdependBlitzApproved(hdr_path)) {
+		// add check: .c in package should prohibit precompiled header
+		// add check: Only simple file name
+		// add check: Some file in package #includes it
+			int time = GetTickCount();
+			int slot = AllocSlot();
+			String pchfile = CatAnyPath(outdir, GetFileTitle(hdr_path) + ".pch");
+			String cppfile = ForceExt(hdr_path, ".$pch$.cpp");
+			SaveFile(cppfile, "#include \"" + pkg[0] + "\"\r\n");
+			if(slot < 0 ||
+			   !Run(Join(cc, cpp_options) + PdbPch(package, slot, false)
+			        + " -Tp " + GetHostPathQ(hdr_path) + " -Fp" + GetHostPathQ(cppfile)
+			        + " -Yc" + pkg[0],
+			        slot, GetHostPath(pchfile), 1))
+				error = true;
+			if(!Wait(slot))
+				error = true;
+			PutVerbose("precompiled header " + pchfile + " compiled in " + GetPrintTime(time));
+			if(error) {
+				IdeConsoleEndGroup();
+				return false;
+			}
+			DeleteFile(pchfile);
+			pch << " -Yu" << GetHostPathQ(GetFileTitle(hdr_path))
+			    << " -Fp" << GetHostPathQ(pchfile);
+		}
+	}
+
 	for(i = 0; i < pkg.GetCount(); i++) {
 		if(!IdeIsBuilding())
 			return false;
@@ -274,8 +306,10 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 		if(b.build) {
 			PutConsole("BLITZ:" + b.info);
 			int slot = AllocSlot();
-			if(slot < 0 || ! Run(Join(cc, cpp_options) + PdbPch(package, slot, false)
-			+ " -Tp " + GetHostPathQ(b.path) + " -Fo" + GetHostPathQ(b.object), slot, GetHostPath(b.object), b.count))
+			if(slot < 0 ||
+			   !Run(Join(cc, cpp_options) + PdbPch(package, slot, false)
+			        + " -Tp " + GetHostPathQ(b.path) + " -Fo" + GetHostPathQ(b.object),
+			        slot, GetHostPath(b.object), b.count))
 				error = true;
 		}
 	}
@@ -340,7 +374,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 				int slot = AllocSlot();
 				if(slot < 0 || !Run(c + PdbPch(package, slot, !sContainsPchOptions(cc) && !sContainsPchOptions(soptions[i]))
 				                    + " " + soptions[i] + (ext == ".c" ? Join(" -Tc", c_options) : Join(" -Tp", cpp_options)) + ' '
-				                    + GetHostPathQ(fn) + " -Fo" + GetHostPathQ(objfile), slot, GetHostPath(objfile), 1))
+				                    + GetHostPathQ(fn) + " -Fo" + GetHostPathQ(objfile) + pch, slot, GetHostPath(objfile), 1))
 					execerr = true;
 			}
 			if(execerr)

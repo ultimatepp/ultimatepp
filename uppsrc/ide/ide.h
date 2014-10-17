@@ -572,6 +572,7 @@ public:
 	virtual   void             IdeConsoleBeginGroup(String group);
 	virtual   void             IdeConsoleEndGroup();
 	virtual   bool             IdeConsoleWait();
+	virtual   bool             IdeConsoleWait(int slot);
 
 	virtual   bool      IdeIsDebug() const;
 	virtual   void      IdeEndDebug();

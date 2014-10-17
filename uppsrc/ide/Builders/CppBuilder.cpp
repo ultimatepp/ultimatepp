@@ -183,6 +183,11 @@ bool CppBuilder::Wait()
 	return host->Wait();
 }
 
+bool CppBuilder::Wait(int slot)
+{
+	return host->Wait(slot);
+}
+
 void CppBuilder::ChDir(const String& path)
 {
 	host->ChDir(path);
