@@ -46,6 +46,7 @@ struct CppBuilder : Builder {
 	bool                   Run(const char *cmdline, int slot, String key, int blitz_count);
 	bool                   Run(const char *cmdline, Stream& out, int slot, String key, int blitz_count);
 	bool                   Wait();
+	bool                   Wait(int slot);
 	bool                   HasFlag(const char *f) const        { return config.Find(f) >= 0; }
 	bool                   Cp(const String& cmd, const String& package, bool& error);
 	bool                   Cd(const String& cmd);

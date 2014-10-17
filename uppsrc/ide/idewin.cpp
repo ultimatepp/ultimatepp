@@ -156,6 +156,12 @@ bool Ide::IdeConsoleWait()
 	return console.Wait();
 }
 
+bool Ide::IdeConsoleWait(int slot)
+{
+	console.Wait(slot);
+	return true;
+}
+
 void Ide::IdeSetRight(Ctrl& ctrl)
 {
 	right.Add(ctrl.SizePos());

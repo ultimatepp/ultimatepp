@@ -188,6 +188,11 @@ bool IdeConsoleWait()
 	return the_ide && the_ide->IdeConsoleWait();
 }
 
+bool IdeConsoleWait(int slot)
+{
+	return the_ide && the_ide->IdeConsoleWait(slot);
+}
+
 void IdeGotoCodeRef(String s)
 {
 	if(the_ide) the_ide->IdeGotoCodeRef(s);

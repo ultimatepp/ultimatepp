@@ -145,6 +145,7 @@ struct BuildMethods : public WithBuildMethodsLayout<TopWindow>
 	TextOption release_blitz;
 	TextSwitch release_linkmode;
 	TextOption linkmode_lock;
+	TextOption allow_pch;
 	DirTable   path;
 	DirTable   include;
 	DirTable   lib;
@@ -219,6 +220,10 @@ BuildMethods::BuildMethods()
 #endif
 	method.AddCtrl("SCRIPT", scriptfile);
 	method.AddCtrl("LINKMODE_LOCK", linkmode_lock);
+	
+	allow_pch.SetLabel("Allow precompiled headers");
+	method.AddCtrl("ALLOW_PRECOMPILED_HEADERS", allow_pch);
+	
 	open_script.Attach(scriptfile);
 	open_script.Type("Build scripts (*.bsc)", "*.bsc")
 		.AllFilesType();

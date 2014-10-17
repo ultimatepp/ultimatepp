@@ -415,8 +415,6 @@ bool Hdepend::BlitzApproved(const String& path)
 		return false;
 	if(info.guarded)
 		return true;
-	if(info.guarded)
-		return true;
 	for(int i = 0; i < info.depend.GetCount(); i++)
 		if(!info.bydefine[i] && !map[info.depend[i]].CanBlitz()) {
 			PutVerbose(String().Cat() << map.GetKey(info.depend[i])
