@@ -115,7 +115,10 @@ SqlSelect& SqlSelect::NoWait() {
 }
 
 SqlSelect& SqlSelect::Limit(int limit) {
-	text << " limit " << limit;
+	ASSERT(text.StartsWith("select "));
+	String s = AsString(limit);
+	text.Insert(6, SqlCase(MSSQL, " top " + s)());
+	text << SqlCase(MSSQL, "")(" limit " + s);
 	return *this;
 }
 
