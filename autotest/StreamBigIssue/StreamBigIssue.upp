@@ -1,0 +1,10 @@
+uses
+	Core,
+	Draw;
+
+file
+	StreamBigIssue.cpp;
+
+mainconfig
+	"" = "SSE2";
+

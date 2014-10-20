@@ -1,0 +1,5 @@
+#ifndef _StreamBigIssue_icpp_init_stub
+#define _StreamBigIssue_icpp_init_stub
+#include "Core/init"
+#include "Draw/init"
+#endif
