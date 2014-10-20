@@ -1,0 +1,10 @@
+uses
+	Core,
+	plugin/lz4;
+
+file
+	lz4test.cpp;
+
+mainconfig
+	"" = "SSE2";
+
