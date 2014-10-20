@@ -3,12 +3,11 @@ uses
 
 file
 	lz4.h,
-	lz4upp.cpp,
+	lz4upp.cpp optimize_speed,
 	util.cpp,
 	lib\lz4.c optimize_speed,
 	lib\lz4.h,
-	lib\LICENSE,
-	result.txt;
+	lib\LICENSE;
 
 mainconfig
 	"" = "SSE2";

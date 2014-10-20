@@ -278,9 +278,21 @@ public:
 
 #ifdef PLATFORM_POSIX
 
+#if !(defined(PLATFORM_BSD) && defined(__clang__))
 typedef _Atomic_word Atomic;
+#else
+typedef int Atomic;
+#endif
 
-inline int  AtomicXAdd(volatile Atomic& t, int incr)  { using namespace __gnu_cxx; return __exchange_and_add(&t, incr); }
+inline int  AtomicXAdd(volatile Atomic& t, int incr)
+{
+#if !(defined(PLATFORM_BSD) && defined(__clang__))
+	using namespace __gnu_cxx;
+	return __exchange_and_add(&t, incr);
+#else
+	return __sync_fetch_and_add(&t, incr);
+#endif
+}
 
 inline int  AtomicInc(volatile Atomic& t)             { return AtomicXAdd(t, +1) + 1; }
 inline int  AtomicDec(volatile Atomic& t)             { return AtomicXAdd(t, -1) - 1; }

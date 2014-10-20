@@ -1,3 +1,0 @@
-Compress 2.422
-Decompress 1.672
--------------
