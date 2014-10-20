@@ -22,6 +22,7 @@ class Zlib {
 	int           mode;
 	dword         crc;
 	int           total;
+	int           compression_level;
 	bool          docrc;
 	bool          hdr;
 	bool          error;
@@ -68,10 +69,13 @@ public:
 	Zlib& CRC(bool b = true)               { docrc = b; return *this; }
 	Zlib& NoCRC()                          { return CRC(false); }
 	Zlib& ChunkSize(int n);
+	Zlib& Level(int compression_lvl)       { compression_level = compression_lvl; return *this; }
 
 	Zlib();
 	~Zlib();
 };
+
+int64  CopyStream(Stream& dest, Stream& src, int64 count, Gate2<int64, int64> progress);
 
 int64  ZCompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress = false, bool hdr = true);
 int64  ZCompress(Stream& out, Stream& in, Gate2<int64, int64> progress = false);

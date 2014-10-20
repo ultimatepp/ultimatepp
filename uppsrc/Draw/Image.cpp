@@ -209,6 +209,10 @@ void Image::Serialize(Stream& s)
 	int64 len = (int64)sz.cx * (int64)sz.cy * (int64)sizeof(RGBA);
 	if(s.IsLoading())
 		if(len) {
+			if(s.GetPos() + len > s.GetSize()) {
+				s.SetError();
+				return;
+			}
 			ImageBuffer b(sz);
 			
 			int64 offset = 0;

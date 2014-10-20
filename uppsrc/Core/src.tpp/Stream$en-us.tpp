@@ -429,6 +429,16 @@ Returns the number of bytes actually read.&]
 result as String.&]
 [s3; &]
 [s4;%- &]
+[s5;:Stream`:`:GetAll`(int`):%- [_^String^ String]_[* GetAll]([@(0.0.255) int]_[*@3 size])&]
+[s2; Reads exactly [%-*@3 size] bytes from the input stream and returns 
+result as String. If there is not enough bytes left, returns 
+String`::GetVoid(). Note that is [%-*@3 size] is large (currently 
+> 4MB), function reads result in chunks in order to avoid problems 
+with corrupted streams, e.g. situation where the [%-*@3 size] is 
+obtained from the stream, is corrupted and too big and allocating 
+that much memory would cause out`-of`-memory situation.&]
+[s3; &]
+[s4;%- &]
 [s5;:Stream`:`:GetAll`(void`*`,int`):%- [@(0.0.255) bool]_[* GetAll]([@(0.0.255) void]_`*[*@3 d
 ata], [@(0.0.255) int]_[*@3 size])&]
 [s2; Reads [%-*@3 size] bytes from the stream to memory at [%-*@3 data]. 

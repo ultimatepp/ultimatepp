@@ -118,6 +118,12 @@ data that can be at the end obtained by GetCRC method.&]
 in single zlib call.&]
 [s3;%% &]
 [s4; &]
+[s5;:Zlib`:`:Level`(int`): [_^Zlib^ Zlib][@(0.0.255) `&]_[* Level]([@(0.0.255) int]_[*@3 compre
+ssion`_lvl])&]
+[s2;%% Sets the compresison level. Must be 1..9. Default level is 
+6.&]
+[s3;%% &]
+[s4; &]
 [s5;:Zlib`:`:Zlib`(`): [* Zlib]()&]
 [s2;%% Constructor.&]
 [s3; &]
