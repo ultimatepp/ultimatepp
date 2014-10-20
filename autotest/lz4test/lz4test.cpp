@@ -170,11 +170,13 @@ CONSOLE_APP_MAIN
 		
 		        fclose(outFp);
 		        fclose(inpFp);
+		        RDUMP(GetFileLength(file));
+		        RDUMP(GetFileLength(lz4));
 		    }
 		
 		    // decompress
 		    {
-		        RTIMESTOP("Decompress");
+		        { RTIMESTOP("Decompress");
 		        FILE* inpFp = fopen(lz4, "rb");
 		        FILE* outFp = fopen(dec, "wb");
 		
@@ -183,7 +185,7 @@ CONSOLE_APP_MAIN
 		
 		        fclose(outFp);
 		        fclose(inpFp);
-		        
+		        }
 		        ASSERT(FilesEqual(file, dec));
 		    }
 
