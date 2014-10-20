@@ -1461,7 +1461,7 @@
 		"select \"COL\" from \"TABLE1\" limit 100"); // select "COL" from "TABLE1" limit 100
 	TEST(MSSQL,
 		Select(COL).From(TABLE1).Limit(100),
-		"select \"COL\" from \"TABLE1\" limit 100"); // select "COL" from "TABLE1" limit 100
+		"select top 100 \"COL\" from \"TABLE1\""); // select top 100 "COL" from "TABLE1"
 	TEST(PGSQL,
 		Select(COL).From(TABLE1).Limit(100),
 		"select \"COL\" from \"TABLE1\" limit 100"); // select "COL" from "TABLE1" limit 100
