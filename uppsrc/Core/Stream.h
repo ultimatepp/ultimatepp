@@ -93,6 +93,7 @@ public:
 
 	void      Put(const String& s)   { Put((const char *) s, s.GetLength()); }
 	String    Get(int size);
+	String GetAll(int size);
 
 	void      LoadThrowing()         { style |= STRM_THROW; }
 	void      LoadError();
@@ -195,6 +196,7 @@ public:
 	void      SerializeRaw(dword *data, int count);
 	void      SerializeRaw(uint64 *data, int count);
 
+	String    GetAllRLE(int size);
 	void      SerializeRLE(byte *data, int count);
 
 	Stream&   operator%(bool& d);

@@ -79,7 +79,7 @@ void Zlib::Begin()
 void Zlib::Compress()
 {
 	Begin();
-	if(deflateInit2(&z, Z_DEFAULT_COMPRESSION, Z_DEFLATED,
+	if(deflateInit2(&z, compression_level, Z_DEFLATED,
 	                hdr && !gzip ? MAX_WBITS : -MAX_WBITS, DEF_MEM_LEVEL,
 	                Z_DEFAULT_STRATEGY) != Z_OK)
 		Panic("deflateInit2 failed");
@@ -299,27 +299,12 @@ Zlib::Zlib()
 	hdr = true;
 	chunk = 4096;
 	WhenOut = callback(this, &Zlib::PutOut);
+	compression_level = Z_DEFAULT_COMPRESSION;
 }
 
 Zlib::~Zlib()
 {
 	Free();
-}
-
-int64 CopyStream(Stream& dest, Stream& src, int64 count, Gate2<int64, int64> progress) {
-	int block = (int)min<int64>(count, 65536);
-	Buffer<byte> temp(block);
-	int loaded;
-	int64 done = 0;
-	int64 total = count;
-	while(count > 0 && (loaded = src.Get(~temp, (int)min<int64>(count, block))) > 0) {
-		if(progress(done, total))
-			return -1;
-		dest.Put(~temp, loaded);
-		count -= loaded;
-		done += loaded;
-	}
-	return done;
 }
 
 int64 zPress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool gzip, bool compress,

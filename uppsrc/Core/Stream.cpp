@@ -133,6 +133,20 @@ String Stream::Get(int size)
 	return s;
 }
 
+String Stream::GetAll(int size)
+{
+	String result;
+	while(size > 0) { // read in chunks to avoid out-of-memory in case of invalid size info in the stream
+		int n = min(size, 4 * 1024 * 1024);
+		String h = Get(n);
+		if(h.GetCount() != n)
+			return String::GetVoid();
+		size -= n;
+		result.Cat(h);
+	}
+	return result;
+}
+
 int  Stream::_Get8()
 {
 	int c = Get();
@@ -460,6 +474,23 @@ void  Stream::Put(Stream& s, int64 size, dword click) {
 	}
 }
 
+String Stream::GetAllRLE(int size)
+{
+	String result;
+	while(result.GetCount() < size) {
+		int c = Get();
+		if(c < 0)
+			break;
+		if(c == 0xcb) {
+			c = Get();
+			result.Cat(c, Get());
+		}
+		else
+			result.Cat(c);
+	}
+	return result.GetCount() == size ? result : String::GetVoid();
+}
+
 void Stream::SerializeRLE(byte *data, int size)
 {
 	ASSERT(size >= 0);
@@ -740,9 +771,9 @@ Stream& Stream::operator%(String& s) {
 		if(IsError() || len + GetPos() > GetSize())
 			LoadError();
 		else {
-			StringBuffer sb(len);
-			SerializeRaw((byte*)~sb, len);
-			s = sb;
+			s = GetAll(len);
+			if(s.IsVoid())
+				LoadError();
 		}
 	}
 	else {
@@ -763,9 +794,9 @@ Stream& Stream::operator/(String& s) {
 	dword len = s.GetLength();
 	Pack(len);
 	if(IsLoading()) {
-		StringBuffer b(len);
-		SerializeRLE((byte *)~b, len);
-		s = b;
+		s = GetAllRLE(len);
+		if(s.IsVoid())
+			LoadError();
 	}
 	else
 		SerializeRLE((byte *)~s, len);
@@ -781,7 +812,14 @@ Stream& Stream::operator%(WString& s) {
 			LoadError();
 		else {
 			WStringBuffer sb(len);
-			SerializeRaw((byte*)~sb, len * sizeof(wchar));
+			if(len < 2 * 1024 * 1024)
+				SerializeRaw((byte*)~sb, len * sizeof(wchar));
+			else {
+				String h = GetAll(len * sizeof(wchar));
+				if(h.IsVoid())
+					LoadError();
+				memcpy(~sb, ~h, len * sizeof(wchar));
+			}
 			s = sb;
 		}
 	}
@@ -1588,6 +1626,22 @@ int64 CopyStream(Stream& dest, Stream& src, int64 count) {
 	int64 done = 0;
 	while(count > 0 && (loaded = src.Get(temp, (int)min<int64>(count, block))) > 0) {
 		dest.Put(temp.operator const byte *(), loaded);
+		count -= loaded;
+		done += loaded;
+	}
+	return done;
+}
+
+int64 CopyStream(Stream& dest, Stream& src, int64 count, Gate2<int64, int64> progress) {
+	int block = (int)min<int64>(count, 65536);
+	Buffer<byte> temp(block);
+	int loaded;
+	int64 done = 0;
+	int64 total = count;
+	while(count > 0 && (loaded = src.Get(~temp, (int)min<int64>(count, block))) > 0) {
+		if(progress(done, total))
+			return -1;
+		dest.Put(~temp, loaded);
 		count -= loaded;
 		done += loaded;
 	}

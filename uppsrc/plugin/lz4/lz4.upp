@@ -1,0 +1,15 @@
+uses
+	Core;
+
+file
+	lz4.h,
+	lz4upp.cpp,
+	util.cpp,
+	lib\lz4.c optimize_speed,
+	lib\lz4.h,
+	lib\LICENSE,
+	result.txt;
+
+mainconfig
+	"" = "SSE2";
+
