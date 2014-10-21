@@ -454,6 +454,15 @@ its child windows before opening. This method disables this behaviour.&]
 [s7; [*/ Return value]-|`*this.&]
 [s3; &]
 [s4;%- &]
+[s5;:TopWindow`:`:CloseBoxRejects`(bool`):%- [_^TopWindow^ TopWindow][@(0.0.255) `&]_[* Clo
+seBoxRejects]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; When active, pressing window title close button always rejects 
+the dialog. When not active, the action depends on Acceptors/Rejectors 
+present, performing first of IDCANCEL `-> reject, IDNO `-> reject, 
+IDEXIT `-> accept, IDYES `-> Accept, and IDOK `-> Accept as default 
+action if nothing else is present.&]
+[s3; &]
+[s4;%- &]
 [s5;:TopWindow`:`:Icon`(const Image`&`):%- [_^TopWindow^ TopWindow][@(0.0.255) `&]_[* Icon](
 [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m])&]
 [s2; Defines icon for TopWindow that is usually displayed in window 

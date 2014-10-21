@@ -75,6 +75,7 @@ private:
 	bool        tool:1;
 	bool        frameless:1;
 	bool        urgent:1;
+	bool        close_rejects:1;
 	byte        state;
 	Image       icon, largeicon;
 
@@ -163,6 +164,7 @@ public:
 	bool       IsUrgent() const                       { return urgent; }
 	TopWindow& NoAccessKeysDistribution()             { dokeys = false; return *this; }
 	TopWindow& NoCloseBox(bool b = true)              { noclosebox = b; return *this; }
+	TopWindow& CloseBoxRejects(bool b = true)         { close_rejects = b; return *this; }
 
 	TopWindow& Icon(const Image& m);
 	TopWindow& LargeIcon(const Image& m);

@@ -68,7 +68,7 @@ bool TopWindow::IsShowEnabled() const
 
 void TopWindow::DefaultBreak()
 {
-	if(FindAction(IDCANCEL))
+	if(FindAction(IDCANCEL) || close_rejects)
 		RejectBreak(IDCANCEL);
 	else
 	if(FindAction(IDNO))
@@ -80,10 +80,7 @@ void TopWindow::DefaultBreak()
 	if(FindAction(IDYES))
 		AcceptBreak(IDYES);
 	else
-	if(FindAction(IDOK))
 		AcceptBreak(IDOK);
-	else
-		RejectBreak(IDCANCEL);
 }
 
 void TopWindow::Close()
@@ -504,6 +501,7 @@ TopWindow::TopWindow()
 	overlapped.Clear();
 	dokeys = true;
 	fullscreen = frameless = urgent = false;
+	close_rejects = false;
 }
 
 TopWindow::~TopWindow()
