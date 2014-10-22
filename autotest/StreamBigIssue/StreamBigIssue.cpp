@@ -29,7 +29,8 @@ CONSOLE_APP_MAIN
 		{
 			StringStream ss;
 			ss % data;
-			ss % data.ToWString();
+			WString hh = data.ToWString();
+			ss % hh;
 			
 			ss.SetLoading();
 			ss.Seek(0);
