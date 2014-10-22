@@ -9,7 +9,6 @@ InFilterStream::InFilterStream()
 
 void InFilterStream::Init()
 {
-	static byte h[1];
 	pos = 0;
 	in = NULL;
 	eof = false;
