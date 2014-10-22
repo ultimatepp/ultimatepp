@@ -2,6 +2,11 @@
 
 NAMESPACE_UPP
 
+inline bool Is3(const wchar *s, int c)
+{
+	return s[0] == c && s[1] == c && s[2] == c;
+}
+
 void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int pos)
 {
 	const HlStyle& ink = hl_style[INK_NORMAL];
@@ -9,9 +14,13 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 	HlStyle err = hl_style[INK_ERROR];
 	err.bold = true;
 	bool hl_line = false;
+	bool sep_line = false;
 	while(s < end) {
 		int c = *s;
 		const wchar *s0 = s;
+		if(s + 3 <= end && (Is3(s, '-') || Is3(s, '*') || Is3(s, '=') || Is3(s, '+') ||
+		                    Is3(s, '#') || Is3(s, ':') || Is3(s, '%') || Is3(s, '$')))
+			sep_line = true;
 		if(IsDigit(c)) {
 			bool fp = false;
 			while(s < end && IsDigit(*s) || *s == '.' || *s == 'e') {
@@ -62,6 +71,9 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 	}
 	if(hl_line)
 		hls.SetPaper(0, hls.GetCount(), hl_style[PAPER_WARNING].color);
+	else
+	if(sep_line)
+		hls.SetPaper(0, hls.GetCount(), hl_style[PAPER_IFDEF].color);
 }
 
 END_UPP_NAMESPACE
