@@ -81,6 +81,12 @@ bool Ide::IdeConsoleWait()
 	return console.Wait();
 }
 
+bool Ide::IdeConsoleWait(int slot)
+{
+	console.Wait(0);
+	return true;
+}
+
 bool Ide::IdeIsDebug() const
 {
 	return false;
