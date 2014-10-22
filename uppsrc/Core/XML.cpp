@@ -200,6 +200,8 @@ void XmlParser::Ent(StringBuffer& out)
 			return;
 		}
 	}
+	if(!relaxed)
+		throw XmlError("Unknown entity");
 	out.Cat('&');
 }
 
