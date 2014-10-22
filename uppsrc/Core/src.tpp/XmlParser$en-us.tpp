@@ -228,8 +228,9 @@ the next start`-tag is processed.&]
 [s4;%% &]
 [s5;:XmlParser`:`:Relaxed`(bool`): [@(0.0.255) void]_[* Relaxed]([@(0.0.255) bool]_[*@3 b])&]
 [s2;%% Activates the relaxed mode. In relaxed mode, XmlParser ignores 
-mismatches of start`-tag and end`-tags. This mode was introduced 
-to deal with broken XML files.&]
+mismatches of start`-tag and end`-tags. Unknown entities are 
+replace with character `'`&`'. This mode was introduced to deal 
+with broken XML files.&]
 [s3;%% &]
 [s4; &]
 [s5;:XmlParser`:`:Raw`(bool`): [@(0.0.255) void]_[* Raw]([@(0.0.255) bool]_[*@3 b])&]
