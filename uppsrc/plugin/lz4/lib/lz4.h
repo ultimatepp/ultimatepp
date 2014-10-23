@@ -327,6 +327,7 @@ extern int matchLengthStat[1024];
 extern int matchLengthBig;
 extern int litLengthStat[1024];
 extern int litLengthStatBig;
+extern int literals;
 #endif
 
 #if defined (__cplusplus)
