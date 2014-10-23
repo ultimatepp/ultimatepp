@@ -1,17 +1,18 @@
 #include "Entropy.h"
 
-#ifndef COMPRESS2
-
+#ifdef COMPRESS2
 
 struct Recode {
-	byte m;
-	byte h1, h2, h3;
-	byte l1, h1l2, h2l3;
-	byte filler;
+	dword data[2];
+	byte  len;
+	byte  filler[7];
 };
 
 String Compress(const char *data, const char *end)
 {
+	DUMP(sizeof(Recode));
+	ASSERT(sizeof(Recode) == 16);
+	
 	int stat[256] = { 0 };
 	{
 		RTIMESTOP("Stat");
@@ -83,81 +84,61 @@ String Compress(const char *data, const char *end)
 		if(i < 12 + 48) {
 			*t++ = c;
 			if(i < 12) {
-				r.m = 1;
-				r.h1 = i << 4;
-				r.h2 = 0;
-				r.h3 = 0;
-				r.l1 = i;
-//				r.l2 = 0;
-//				r.l3 = 0;
+				r.len = 1;
+				r.data[0] = i;
 			}
 			else {
-				int q = i + 0xc0;
-				r.m = 2;
-				r.h1 = q & 0xf0;
-				r.h2 = (q << 4) & 0xf0;
-				r.h3 = 0;
-				r.l1 = (q >> 4) & 0x0f;
-				r.h1l2 = r.h1 | (q & 0x0f);
-//				r.l3 = 0;
+				r.len = 2;
+				r.data[0] = (i / 16 + 12) | (i << 4);
 			}
 		}
 		else {
-			r.m = 3;
-			r.h1 = 0xf0;
-			r.h2 = 0xf0 & i;
-			r.h3 = 0xf0 & (i << 4);
-			r.l1 = 0x0f;
-//			r.l2 = 0x0f & (i >> 4);
-			r.h2l3 = r.h2 | (0x0f & i);
+			r.len = 3;
+			r.data[0] = 0xf | (i << 4);
 		}
+		r.data[1] = r.data[0] << 4;
 	}
 	
 	NibblePtr p;
 
 	p.Set(t);
-	
+
+	int pos = 0;
 	{
 		RTIMESTOP("Compress");
 		const char *s = data;
-		byte g = 0;
-		for(;;) {
-		nibble0:
-			{
-				if(s >= end) break;
-				Recode& r = recode[(byte)*s++];
-				if(r.m == 1) {
-					g = r.h1;
-					goto nibble1;
-				}
-				if(r.m == 2) {
-					*t++ = r.h1l2;
-					goto nibble0;
-				}
-				*t++ = r.h1l2;
-				g = r.h3;
-				goto nibble1;
-			}
-		nibble1:
-			{
-				if(s >= end) break;
-				Recode& r = recode[(byte)*s++];
-				if(r.m == 1) {
-					*t++ = g | r.l1;
-					goto nibble0;
-				}
-				if(r.m == 2) {
-					*t++ = g | r.l1;
-					g = r.h2;
-					goto nibble1;
-				}
-				*t++ = g | r.l1;
-				*t++ = r.h2l3;
-				goto nibble0;
-			}
+		while(s < end - 4) {
+			Recode *r;
+			byte   *t0;
+
+			r = &recode[(byte)*s++];
+			t0 = t + (pos >> 1);
+			Poke32le(t0, Peek32le(t0) | r->data[pos & 1]);
+			pos += r->len;
+
+			r = &recode[(byte)*s++];
+			t0 = t + (pos >> 1);
+			Poke32le(t0, Peek32le(t0) | r->data[pos & 1]);
+			pos += r->len;
+
+			r = &recode[(byte)*s++];
+			t0 = t + (pos >> 1);
+			Poke32le(t0, Peek32le(t0) | r->data[pos & 1]);
+			pos += r->len;
+
+			r = &recode[(byte)*s++];
+			t0 = t + (pos >> 1);
+			Poke32le(t0, Peek32le(t0) | r->data[pos & 1]);
+			pos += r->len;
+		}
+		while(s < end) {
+			Recode& r = recode[(byte)*s++];
+			byte *t0 = t + (pos >> 1);
+			Poke32le(t0, Peek32le(t0) | r.data[pos & 1]);
+			pos += r.len;
 		}
 	}
-	return String(~output, t - ~output + 1);
+	return String(~output, (pos + 1) / 2);
 }
 
 #endif

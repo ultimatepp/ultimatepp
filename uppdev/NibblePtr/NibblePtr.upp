@@ -4,12 +4,15 @@ uses
 
 file
 	Entropy.h,
+	lzf.cpp,
+	lzv.cpp,
 	Util.cpp,
 	Decompress.cpp,
 	help.txt,
 	Compress.cpp optimize_speed,
+	Compress2.cpp optimize_speed,
 	NibblePtr.cpp optimize_speed;
 
 mainconfig
-	"" = "SSE2";
+	"" = "SSE2 LZ4STATS";
 
