@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	LZF.cpp;
+
+mainconfig
+	"" = "SSE2";
+

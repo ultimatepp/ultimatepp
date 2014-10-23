@@ -34,6 +34,14 @@ struct NibblePtr {
 
 String FChar(int c);
 
+#define COMPRESS2
+
 String Compress(const char *data, const char *end);
+
+
+int LZVCompress(byte * in, byte * out, byte * heap, int len, int out_len);
+int LZVDecompress (byte const *const in, byte * const out, int ilen, int len);
+
+String LZFCompress(const char *s, int length);
 
 #endif
