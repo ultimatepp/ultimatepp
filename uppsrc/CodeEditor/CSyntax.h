@@ -73,3 +73,5 @@ public:
 
 	CSyntax()                             { Clear(); }
 };
+
+const wchar *HighlightNumber(HighlightOutput& hls, const wchar *p, bool ts, bool octal, bool css);

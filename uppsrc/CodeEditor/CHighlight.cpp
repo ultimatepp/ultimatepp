@@ -51,6 +51,41 @@ void CSyntax::Bracket(int pos, HighlightOutput& hls, CodeEditor *editor) // TODO
 	}
 }
 
+const wchar *HighlightNumber(HighlightOutput& hls, const wchar *p, bool ts, bool octal, bool css)
+{
+	int c = octal ? HighlightSetup::INK_CONST_OCT : HighlightSetup::INK_CONST_INT;
+	const wchar *t = p;
+	bool isDot, isFloat = false;
+	while(IsDigit(*p)) p++;
+	int fixdigits = int(p - t);
+	if(*p == '.' || (*p == 'e' || *p == 'E') && !css) {
+		if(*p == '.')
+			isDot = true;
+		c = HighlightSetup::INK_CONST_FLOAT;
+		p++;
+		if(*p == '-')
+			p++;
+	}
+	while((IsDigit(*p) || *p == 'e' || *p == '-' || (isDot && *p == 'f')) && (isFloat == false)) {
+		if(*p == 'f')
+			isFloat = true;
+		p++;
+	}
+	if(c == HighlightSetup::INK_CONST_OCT && p - t == 1)
+		c = HighlightSetup::INK_CONST_INT;
+	int n = int(p - t);
+	for(int i = 0; i < n; i++) {
+		if(t[i] == 'e')
+			ts = false;
+		hls.Put(HighlightSetup::hl_style[c],
+		        c == HighlightSetup::INK_CONST_OCT || (fixdigits < 4 && n - fixdigits < 5)
+		             || i == fixdigits || !ts ? 0 :
+		        i < fixdigits ? decode((fixdigits - i) % 3, 1, LineEdit::SHIFT_L, 0, LineEdit::SHIFT_R, 0) :
+		                        decode((i - fixdigits) % 3, 1, LineEdit::SHIFT_R, 0, LineEdit::SHIFT_L, 0));
+	}
+	return p;
+}
+
 void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls, CodeEditor *editor, int line, int pos)
 {
 	ONCELOCK {
@@ -208,43 +243,21 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 		}
 		else
 		if(highlight == HIGHLIGHT_CSS ? *p == '#' : pair == MAKELONG('0', 'x') || pair == MAKELONG('0', 'X')) {
-			hls.Put(2, hl_style[INK_CONST_HEX]);
-			p += 2;
+			int pn = 1 + (highlight != HIGHLIGHT_CSS);
+			hls.Put(pn, hl_style[INK_CONST_HEX]);
+			p += pn;
 			const wchar *t = p;
 			while(IsXDigit(*p))
 				p++;
-			hls.Put(int(p - t), hl_style[INK_CONST_HEX]);
+			int n = int(p - t);
+			for(int i = 0; i < n; i++) {
+				hls.Put(hl_style[INK_CONST_HEX],
+				        thousands_separator ? i & 1 ? LineEdit::SHIFT_L : 0 : 0);
+			}
 		}
 		else
-		if(IsDigit(*p)) {
-			const wchar *t = p;
-			int c = INK_CONST_INT;
-			bool isDot, isFloat = false;
-			if(*p == '0') c = INK_CONST_OCT;
-			while(IsDigit(*p)) p++;
-			int fixdigits = int(p - t);
-			if(*p == '.' || (*p == 'e' || *p == 'E') && highlight != HIGHLIGHT_CSS) {
-				if(*p == '.')
-					isDot = true;
-				c = INK_CONST_FLOAT;
-				p++;
-				if(*p == '-')
-					p++;
-			}
-			while((IsDigit(*p) || (isDot && *p == 'f')) && (isFloat == false)) {
-				if(*p == 'f')
-					isFloat = true;
-				p++;
-			}
-			if(c == INK_CONST_OCT && p - t == 1)
-				c = INK_CONST_INT;
-			int n = int(p - t);
-			for(int i = 0; i < n; i++)
-				hls.Put(hl_style[c],
-				        c == INK_CONST_OCT || (fixdigits < 4 && n - fixdigits < 5) || i == fixdigits || !thousands_separator ? 0 :
-				        i < fixdigits ? decode((fixdigits - i) % 3, 1, LineEdit::SHIFT_L, 0, LineEdit::SHIFT_R, 0) :
-				                        decode((i - fixdigits) % 3, 1, LineEdit::SHIFT_R, 0, LineEdit::SHIFT_L, 0));
-		}
+		if(IsDigit(*p))
+			p = HighlightNumber(hls, p, thousands_separator, *p == '0', highlight == HIGHLIGHT_CSS);
 		else
 		if(pair == MAKELONG('t', '_') && p[2] == '(' && p[3] == '\"') {
 			int pos0 = hls.pos;
