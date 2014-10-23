@@ -1,0 +1,4 @@
+#ifndef _ZSerialize_icpp_init_stub
+#define _ZSerialize_icpp_init_stub
+#include "Core/init"
+#endif
