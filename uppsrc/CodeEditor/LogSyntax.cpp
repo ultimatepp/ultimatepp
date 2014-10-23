@@ -21,15 +21,8 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 		if(s + 3 <= end && (Is3(s, '-') || Is3(s, '*') || Is3(s, '=') || Is3(s, '+') ||
 		                    Is3(s, '#') || Is3(s, ':') || Is3(s, '%') || Is3(s, '$')))
 			sep_line = true;
-		if(IsDigit(c)) {
-			bool fp = false;
-			while(s < end && IsDigit(*s) || *s == '.' || *s == 'e') {
-				fp = fp || *s == '.' || *s == 'e';
-				s++;
-			}
-			hls.Put(int(s - s0), hl_style[(IsAlpha(*s) || *s == '_') && (IsAlNum(s[1]) || s[1] == '_') ? INK_NORMAL // More likely a hexdump or something
-			                              : fp ? INK_CONST_FLOAT : INK_CONST_INT]);
-		}
+		if(IsDigit(c))
+			s = HighlightNumber(hls, s, thousands_separator, false, false);
 		else
 		if(c == '\'' || c == '\"') {
 			s++;
