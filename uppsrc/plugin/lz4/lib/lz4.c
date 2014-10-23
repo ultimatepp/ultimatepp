@@ -434,6 +434,7 @@ int matchLengthStat[1024];
 int matchLengthBig;
 int litLengthStat[1024];
 int	litLengthStatBig;
+int literals;
 #endif
 
 static int LZ4_compress_generic(
@@ -546,6 +547,7 @@ static int LZ4_compress_generic(
 				litLengthStat[litLength]++;
 			else
 				litLengthStatBig++;
+			literals += litLength;
 #endif
             token = op++;
             if ((outputLimited) && (unlikely(op + litLength + (2 + 1 + LASTLITERALS) + (litLength/255) > olimit)))
@@ -642,7 +644,7 @@ _next_match:
         if ( ((dictIssue==dictSmall) ? (ref>=lowRefLimit) : 1)
             && (ref+MAX_DISTANCE>=ip)
             && (A32(ref+refDelta)==A32(ip)) )
-        { token=op++; *token=0; goto _next_match; }
+        { token=op++; *token=0; litLengthStat[0]++; goto _next_match; }
 
         /* Prepare next loop */
         forwardH = LZ4_hashPosition(++ip, tableType);
