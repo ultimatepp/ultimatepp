@@ -4,8 +4,8 @@
 
 CONSOLE_APP_MAIN
 {
-//	String data = LoadFile("C:/u/upp.src/uppsrc/CtrlLib/ArrayCtrl.cpp");
-	String data = LoadFile("C:/xxx/enwik8.txt");
+	String data = LoadFile("C:/u/upp.src/uppsrc/CtrlLib/ArrayCtrl.cpp");
+//	String data = LoadFile("C:/xxx/enwik8.txt");
 //	String data = LoadFile("D:/20131117_ST_ZZSZ.xml");
 //	String data = LoadFile("C:/u/client/Nos.exe");
 //	String data = LoadFile("C:/u/Nos.version/90/Nos.exe");
