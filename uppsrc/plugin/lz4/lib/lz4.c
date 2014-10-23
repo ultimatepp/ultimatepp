@@ -41,8 +41,6 @@
  */
 #define HEAPMODE 0
 
-// #define STATS
-
 /**************************************
    CPU Feature Detection
 **************************************/
@@ -430,10 +428,12 @@ static unsigned LZ4_count(const BYTE* pIn, const BYTE* pRef, const BYTE* pInLimi
     return (unsigned)(pIn - pStart);
 }
 
-#ifdef STATS
+#ifdef LZ4_STATS
 int matchOffsetStat[256];
-int matchLengthStat[256];
+int matchLengthStat[1024];
 int matchLengthBig;
+int litLengthStat[1024];
+int	litLengthStatBig;
 #endif
 
 static int LZ4_compress_generic(
@@ -541,6 +541,12 @@ static int LZ4_compress_generic(
         {
             /* Encode Literal length */
             unsigned litLength = (unsigned)(ip - anchor);
+#ifdef LZ4_STATS
+			if(litLength < 1024)
+				litLengthStat[litLength]++;
+			else
+				litLengthStatBig++;
+#endif
             token = op++;
             if ((outputLimited) && (unlikely(op + litLength + (2 + 1 + LASTLITERALS) + (litLength/255) > olimit)))
                 return 0;   /* Check output limit */
@@ -561,7 +567,7 @@ _next_match:
         /* Encode Offset */
         LZ4_WRITE_LITTLEENDIAN_16(op, (U16)(ip-ref));
 
-#ifdef STATS        
+#ifdef LZ4_STATS        
         matchOffsetStat[(U16)(ip-ref) >> 8]++;
 #endif
         /* Encode MatchLength */
@@ -589,11 +595,11 @@ _next_match:
                 ip += MINMATCH + matchLength;
             }
 
-#ifdef STATS            
-            if(matchLength < 256)
-                matchLengthStat[matchLength]++;
+#ifdef LZ4_STATS            
+            if(matchLength + 4 < 1024)
+                matchLengthStat[matchLength + 4]++;
             else
-                matchLengthBig += matchLength + 4;
+                matchLengthBig++;
 #endif
 
             if (matchLength>=ML_MASK)
