@@ -317,6 +317,17 @@ char* LZ4_slideInputBuffer (void* state);
 int LZ4_decompress_safe_withPrefix64k (const char* source, char* dest, int compressedSize, int maxOutputSize);
 int LZ4_decompress_fast_withPrefix64k (const char* source, char* dest, int originalSize);
 
+#ifdef flagLZ4STATS
+#define LZ4_STATS
+#endif
+
+#ifdef LZ4_STATS
+extern int matchOffsetStat[256];
+extern int matchLengthStat[1024];
+extern int matchLengthBig;
+extern int litLengthStat[1024];
+extern int litLengthStatBig;
+#endif
 
 #if defined (__cplusplus)
 }
