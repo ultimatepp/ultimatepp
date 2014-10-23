@@ -29,6 +29,7 @@ bool ZStore(Callback1<Stream&> serialize, Stream& stream, int version = Null)
 	int64 sz = out.GetPos();
 	stream.Seek(sz_pos);
 	stream.Put64(sz);
+	return !stream.IsError();
 }
 
 template <class T>
@@ -70,7 +71,9 @@ CONSOLE_APP_MAIN
 	String data;
 	for(int i = 0; i < 10000; i++)
 		data << AsString(i) << ": " << AsString(Uuid::Create()) << '\n';
-
+	
+	
+// ---------------------------------------------------------------
 	String path = GetHomeDirFile("test.z");
 	{
 		FileOut fout(path);
@@ -107,6 +110,8 @@ CONSOLE_APP_MAIN
 	DDUMP(ZCompress(data).GetCount());
 	DDUMP(h.GetCount());
 	ZLoadFromString(data2, h);
+	
+	
 	
 	ASSERT(data == data2);
 }
