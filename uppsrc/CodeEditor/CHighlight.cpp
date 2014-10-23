@@ -252,7 +252,7 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			int n = int(p - t);
 			for(int i = 0; i < n; i++) {
 				hls.Put(hl_style[INK_CONST_HEX],
-				        thousands_separator ? i & 1 ? LineEdit::SHIFT_L : 0 : 0);
+				        thousands_separator && ((n - i) & 1) ? LineEdit::SHIFT_L : 0);
 			}
 		}
 		else
