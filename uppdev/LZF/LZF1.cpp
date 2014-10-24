@@ -8,7 +8,7 @@ using namespace Upp;
 
 // Test/Test FoooFooo
 
-#define LLOG(x) LOG(x)
+#define LLOG(x)
 
 int Hash(const char *s)
 {
@@ -24,19 +24,6 @@ int Matches;
 int BigMatches;
 int BigLiterals;
 int FarOffsets;
-
-void OutLen(String& out, int len, int maxn, int& stat)
-{
-	if(len >= maxn) {
-		len -= maxn;
-		do {
-			out.Cat(min(len, 255));
-			len -= 255;
-			stat++;
-		}
-		while(len > 0);
-	}
-}
 
 String LZFCompress(const char *s, int length, String& literals)
 {
@@ -62,7 +49,7 @@ String LZFCompress(const char *s, int length, String& literals)
 			
 			hptr = hash_table[hash];
 
-//			LLOG(AsCString(hptr, hptr + 4) << ' ' << AsCString(s, s + 4) << ' ' << hash);
+			LLOG(AsCString(hptr, hptr + 4) << ' ' << AsCString(s, s + 4) << ' ' << hash);
 	
 			if(s - hptr < 0xffff && Peek32le(hash_table[hash]) == Peek32le(s))
 				break;
@@ -95,31 +82,49 @@ String LZFCompress(const char *s, int length, String& literals)
 		
 		int offset = s - hptr;
 		
-		if(literal_len) {
-			Literals++;
-			LiteralsLen += literal_len;
-			out.Cat(0xf0 | max(literal_len, 15));
-			OutLen(out, literal_len, 15, BigLiterals);
-			out.Cat(literal_ptr, literal_len);
-		}
-		
 		Matches++;
 		
 		int ml = match_len - 4;
 
 		// 54321098 76543210
 		// LLMMMOOO OOOOOOOO L-literal len, O-offset, M-match len
-		word ctrl = (offset >= 0xf00 ? 0xf00 | (byte)offset : offset)
-		            | (min(ml, 14) << 12);
+		word ctrl = (offset >= 0x700 ? 0x700 | LOBYTE(offset) : offset)
+		            | (min(ml, 7) << 11)
+		            | (min(literal_len, 3) << 14);
 
 		out.Cat((char *)&ctrl, 2); // Poke16le
 
-		OutLen(out, ml, 14, BigMatches);
-
-		if(offset >= 0xeff) {
+		if(offset >= 0x700) {
 			FarOffsets++;
 			out.Cat(HIBYTE(offset));
 		}
+		
+		int l = ml;
+		if(l >= 7) {
+			l -= 7;
+			do {
+				BigMatches++;
+				out.Cat(min(l, 255));
+				l -= 255;
+			}
+			while(l > 0);
+		}
+		
+		int lln = literal_len;
+		if(lln >= 3) {
+			lln -= 3;
+			do {
+				BigLiterals++;
+				out.Cat(min(lln, 255));
+				lln -= 255;
+			}
+			while(lln > 0);
+		}
+		
+		LiteralsLen += literal_len;
+		Literals += !!literal_len;
+		
+		out.Cat(literal_ptr, literal_len);
 		
 		literals.Cat(literal_ptr, literal_len);
 		

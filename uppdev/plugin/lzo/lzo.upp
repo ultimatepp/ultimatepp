@@ -1,0 +1,8 @@
+file
+	lzo.h,
+	lzo.cpp,
+	lib\minilzo.c,
+	lib\minilzo.h,
+	lib\README.LZO,
+	lib\COPYING;
+
