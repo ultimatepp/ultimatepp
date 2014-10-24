@@ -1,9 +1,18 @@
 uses
-	Core;
+	Core,
+	plugin/lz4,
+	plugin\lzo;
 
 file
-	LZF.cpp;
+	LZF1.cpp,
+	DEE.cpp,
+	LZF.cpp,
+	LZF3.cpp optimize_speed,
+	LZP.cpp,
+	main.cpp,
+	info.txt;
 
 mainconfig
+	"" = "SSE2 LZ4STATS",
 	"" = "SSE2";
 
