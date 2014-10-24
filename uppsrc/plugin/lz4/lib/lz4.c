@@ -429,12 +429,18 @@ static unsigned LZ4_count(const BYTE* pIn, const BYTE* pRef, const BYTE* pInLimi
 }
 
 #ifdef LZ4_STATS
-int matchOffsetStat[256];
-int matchLengthStat[1024];
-int matchLengthBig;
-int litLengthStat[1024];
-int	litLengthStatBig;
-int literals;
+
+int lz4stat_LiteralLen;
+int lz4stat_Matches;
+int lz4stat_BigMatch;
+int lz4stat_BigLiteral;
+
+#define STATCODE(x) x
+
+#else
+
+#define STATCODE(x)
+
 #endif
 
 static int LZ4_compress_generic(
@@ -542,13 +548,7 @@ static int LZ4_compress_generic(
         {
             /* Encode Literal length */
             unsigned litLength = (unsigned)(ip - anchor);
-#ifdef LZ4_STATS
-			if(litLength < 1024)
-				litLengthStat[litLength]++;
-			else
-				litLengthStatBig++;
-			literals += litLength;
-#endif
+            STATCODE(lz4stat_LiteralLen += litLength;)
             token = op++;
             if ((outputLimited) && (unlikely(op + litLength + (2 + 1 + LASTLITERALS) + (litLength/255) > olimit)))
                 return 0;   /* Check output limit */
@@ -556,8 +556,12 @@ static int LZ4_compress_generic(
             {
                 int len = (int)litLength-RUN_MASK;
                 *token=(RUN_MASK<<ML_BITS);
-                for(; len >= 255 ; len-=255) *op++ = 255;
+                for(; len >= 255 ; len-=255) {
+                	*op++ = 255;
+                	STATCODE(lz4stat_BigLiteral++);
+                }
                 *op++ = (BYTE)len;
+                STATCODE(lz4stat_BigLiteral++);
             }
             else *token = (BYTE)(litLength<<ML_BITS);
 
@@ -568,10 +572,9 @@ static int LZ4_compress_generic(
 _next_match:
         /* Encode Offset */
         LZ4_WRITE_LITTLEENDIAN_16(op, (U16)(ip-ref));
+        
+        STATCODE(lz4stat_Matches++);
 
-#ifdef LZ4_STATS        
-        matchOffsetStat[(U16)(ip-ref) >> 8]++;
-#endif
         /* Encode MatchLength */
         {
             unsigned matchLength;
@@ -597,22 +600,16 @@ _next_match:
                 ip += MINMATCH + matchLength;
             }
 
-#ifdef LZ4_STATS            
-            if(matchLength + 4 < 1024)
-                matchLengthStat[matchLength + 4]++;
-            else
-                matchLengthBig++;
-#endif
-
             if (matchLength>=ML_MASK)
             {
                 if ((outputLimited) && (unlikely(op + (1 + LASTLITERALS) + (matchLength>>8) > olimit)))
                     return 0;    /* Check output limit */
                 *token += ML_MASK;
                 matchLength -= ML_MASK;
-                for (; matchLength >= 510 ; matchLength-=510) { *op++ = 255; *op++ = 255; }
-                if (matchLength >= 255) { matchLength-=255; *op++ = 255; }
+                for (; matchLength >= 510 ; matchLength-=510) { *op++ = 255; *op++ = 255; STATCODE(lz4stat_BigMatch+=2); }
+                if (matchLength >= 255) { matchLength-=255; *op++ = 255; STATCODE(lz4stat_BigMatch++); }
                 *op++ = (BYTE)matchLength;
+                STATCODE(lz4stat_BigMatch++);
             }
             else *token += (BYTE)(matchLength);
         }
@@ -644,7 +641,8 @@ _next_match:
         if ( ((dictIssue==dictSmall) ? (ref>=lowRefLimit) : 1)
             && (ref+MAX_DISTANCE>=ip)
             && (A32(ref+refDelta)==A32(ip)) )
-        { token=op++; *token=0; litLengthStat[0]++; goto _next_match; }
+        { token=op++; *token=0; 
+        	goto _next_match; }
 
         /* Prepare next loop */
         forwardH = LZ4_hashPosition(++ip, tableType);

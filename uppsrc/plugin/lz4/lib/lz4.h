@@ -322,12 +322,10 @@ int LZ4_decompress_fast_withPrefix64k (const char* source, char* dest, int origi
 #endif
 
 #ifdef LZ4_STATS
-extern int matchOffsetStat[256];
-extern int matchLengthStat[1024];
-extern int matchLengthBig;
-extern int litLengthStat[1024];
-extern int litLengthStatBig;
-extern int literals;
+extern int lz4stat_LiteralLen;
+extern int lz4stat_Matches;
+extern int lz4stat_BigMatch;
+extern int lz4stat_BigLiteral;
 #endif
 
 #if defined (__cplusplus)
