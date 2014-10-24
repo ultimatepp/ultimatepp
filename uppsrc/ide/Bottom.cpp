@@ -168,7 +168,7 @@ void Ide::SyncBottom()
 	if(editor_bottom.GetZoom() >= 0)
 		editor_bottom.NoZoom();
 	console.Show(q == BCONSOLE);
-	errors.Show(q == BERRORS);
+	error.Show(q == BERRORS);
 	ffound.Show(q == BFINDINFILES);
 	calc.Show(q == BCALC);
 	if(bottomctrl)

@@ -650,14 +650,13 @@ public:
 	
 	ArrayCtrl   ffound;
 
-	Splitter    errors;
 	ArrayCtrl   error;
 	int         error_count;
 	int         warning_count;
-	ArrayCtrl   notes;
 	bool        addnotes;
 	bool        linking;
 	Vector<String> linking_line;
+	bool        removing_notes;
 
 	IdeCalc     calc;
 	Ptr<Ctrl>   bottomctrl;
@@ -1162,9 +1161,9 @@ public:
 	void      ConsoleRunEnd();
 	void      AddNote(const ErrorInfo& f);
 	void      SyncErrorsMessage();
-	void      ShowNote();
 	void      ShowError();
 	void      ShowFound();
+	void      SelError();
 	
 	struct FoundDisplay : Display {
 		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;

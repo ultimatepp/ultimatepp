@@ -385,29 +385,28 @@ Ide::Ide()
 	
 	SetupError(error, "Message");
 	error.AddIndex("NOTES");
+	error.ColumnWidths("207 41 834");
 
-	SetupError(notes, "Note");
-	
 	SetupError(ffound, "Source");
 	ffound.ColumnWidths("207 41 834");
 	ffound.ColumnAt(0).SetDisplay(Single<FoundFileDisplay>());
 	ffound.ColumnAt(2).SetDisplay(Single<FoundDisplay>());
 
-	errors.Horz(error, notes);
-	error.WhenSel = error.WhenLeftClick = THISBACK(ShowError);
-	notes.WhenSel = notes.WhenLeftClick = THISBACK(ShowNote);
+	error.WhenSel = THISBACK(SelError);
+	error.WhenLeftClick = THISBACK(ShowError);
 	ffound.WhenSel = ffound.WhenLeftClick = THISBACK(ShowFound);
 	console.WhenLine = THISBACK(ConsoleLine);
 	console.WhenRunEnd = THISBACK(ConsoleRunEnd);
 	
 	addnotes = false;
+	removing_notes = false;
 
 	editor_bottom.Vert(right_split, bottom);
 	console.WhenBar = THISBACK(ConsoleMenu);
 	editor_bottom.SetPos(8000);
 	bottom.SetFrame(btabs);
 	bottom.Add(console.SizePos().SetFrame(NullFrame()));
-	bottom.Add(errors.SizePos().SetFrame(NullFrame()));
+	bottom.Add(error.SizePos().SetFrame(NullFrame()));
 	bottom.Add(ffound.SizePos().SetFrame(NullFrame()));
 	bottom.Add(calc.SizePos().SetFrame(NullFrame()));
 	btabs <<= THISBACK(SyncBottom);
