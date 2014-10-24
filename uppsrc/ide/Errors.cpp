@@ -416,29 +416,47 @@ void Ide::AddNote(const ErrorInfo& f)
 	error.Set(cnt - 1, "NOTES", n);
 }
 
-void Ide::ShowNote()
-{
-	if(notes.IsCursor())
-		GoToError(notes);
-}
-
 void Ide::ShowFound()
 {
 	if(ffound.IsCursor())
 		GoToError(ffound);
 }
 
-void Ide::ShowError()
+void Ide::SelError()
 {
-	notes.Clear();
+	if(removing_notes)
+		return;
 	if(error.IsCursor()) {
-		ValueArray n = error.Get("NOTES");
-		for(int i = 0; i < n.GetCount(); i++) {
-			const ErrorInfo& f = ValueTo<ErrorInfo>(n[i]);
-			notes.Add(f.file, f.lineno, f.message, n[i]);
+		Value v = error.Get("NOTES");
+		if(v != "0") {
+			int sc = error.GetScroll();
+			removing_notes = true;
+			for(int i = error.GetCount() - 1; i >= 0; i--)
+				if(error.Get(i, "NOTES") == "0") 
+					error.Remove(i);
+			removing_notes = false;
+			error.ScrollTo(sc);
+			error.ScrollIntoCursor();
+			ValueArray n = v;
+			int ii = error.GetCursor();
+			for(int i = 0; i < n.GetCount(); i++) {
+				const ErrorInfo& f = ValueTo<ErrorInfo>(n[i]);
+				error.Insert(++ii);
+				error.Set(ii, 0, f.file);
+				error.Set(ii, 1, f.lineno);
+				error.Set(ii, 2, f.message);
+				error.Set(ii, "INFO", n[i]);
+				error.Set(ii, "NOTES", "0");
+			}
 		}
 		GoToError(error);
 	}	
+}
+
+void Ide::ShowError()
+{
+	if(error.IsCursor())
+		GoToError(error);
 }
 
 void Ide::FoundDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
