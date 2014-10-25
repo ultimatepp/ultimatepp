@@ -73,6 +73,11 @@
 
 #define COMMENT(txt)               SCHEMA("-- " #txt "\n", NULL)
 
+#define SEQUENCE(x)                SCHEMA("create sequence " #x " start with 1;",\
+                                          "drop sequence " #x ";") \
+                                   UPGRADE("create sequence " #x " start with 1;")
+#define SEQUENCE_(x)               DOID(x) SEQUENCE(x)
+
 #include <Sql/sch_model.h>
 
 #undef BIT
@@ -122,5 +127,10 @@
 
 #undef UNIQUE
 
+#undef REFERENCES
+
 #undef TIMESTAMP
 #undef COMMENT
+
+#undef SEQUENCE
+#undef SEQUENCE_

@@ -322,6 +322,7 @@ int LZ4_decompress_fast_withPrefix64k (const char* source, char* dest, int origi
 #endif
 
 #ifdef LZ4_STATS
+extern int lz4stat_Literals;
 extern int lz4stat_LiteralLen;
 extern int lz4stat_Matches;
 extern int lz4stat_BigMatch;
