@@ -431,6 +431,7 @@ static unsigned LZ4_count(const BYTE* pIn, const BYTE* pRef, const BYTE* pInLimi
 #ifdef LZ4_STATS
 
 int lz4stat_LiteralLen;
+int lz4stat_Literals;
 int lz4stat_Matches;
 int lz4stat_BigMatch;
 int lz4stat_BigLiteral;
@@ -549,6 +550,7 @@ static int LZ4_compress_generic(
             /* Encode Literal length */
             unsigned litLength = (unsigned)(ip - anchor);
             STATCODE(lz4stat_LiteralLen += litLength;)
+            STATCODE(lz4stat_Literals += litLength > 0);
             token = op++;
             if ((outputLimited) && (unlikely(op + litLength + (2 + 1 + LASTLITERALS) + (litLength/255) > olimit)))
                 return 0;   /* Check output limit */
