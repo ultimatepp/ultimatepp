@@ -19,7 +19,7 @@ public:
 	virtual void            GetColumn(int i, Ref r) const;
 	virtual void            Cancel();
 	virtual SqlSession&     GetSession() const { ASSERT(session); return *session; }
-	virtual String          GetUser() const    { ASSERT(session); return session->user; }
+	virtual String          GetUser() const { ASSERT(session); return session->user; }
 	virtual String          ToString() const;
 	virtual Value           GetInsertedId() const;
 
@@ -83,12 +83,20 @@ bool ODBCSession::Connect(const char *cs)
 	if(henv && IsOk(SQLAllocHandle(SQL_HANDLE_DBC, henv, &hdbc))) {
 		if(IsOk(SQLDriverConnect(hdbc, NULL, (SQLCHAR *)cs, SQL_NTS, NULL, 0, NULL, SQL_DRIVER_NOPROMPT))) {
 			SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
+			SQLSetConnectAttr(hdbc, SQL_ATTR_AUTOCOMMIT, (SQLPOINTER)SQL_AUTOCOMMIT_ON, SQL_NTS);
+			SQLSetConnectAttr(hdbc, SQL_ATTR_TXN_ISOLATION, (SQLPOINTER)SQL_TRANSACTION_SERIALIZABLE, SQL_NTS);
+
+			Sql sql("select current_user", *this);
+			if(sql.Execute() && sql.Fetch())
+				user = sql[0];
+			else {
+				DDUMP(GetErrorStatement());
+				DDUMP(GetLastError());
+			}
 			return true;
 		}
 		SQLFreeHandle(SQL_HANDLE_DBC, hdbc);
 		hdbc = SQL_NULL_HANDLE;
-		SQLSetConnectAttr(hdbc, SQL_ATTR_AUTOCOMMIT, (SQLPOINTER)SQL_AUTOCOMMIT_ON, SQL_NTS);
-		SQLSetConnectAttr(hdbc, SQL_ATTR_TXN_ISOLATION, (SQLPOINTER)SQL_TRANSACTION_SERIALIZABLE, SQL_NTS);
 	}
 	return false;
 }
@@ -304,6 +312,9 @@ void ODBCConnection::SetParam(int i, const Value& r)
 	Param& p = param.At(i);
 	if(IsNull(r)) {
 		p.li = SQL_NULL_DATA;
+		p.ctype = SQL_C_CHAR;
+		p.sqltype = SQL_LONGVARCHAR;
+		p.data = NULL;
 		return;
 	}
 	if(IsNumber(r)) {

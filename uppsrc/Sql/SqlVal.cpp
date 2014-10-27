@@ -337,8 +337,9 @@ SqlVal ConvertCharset(const SqlVal& exp, const SqlVal& charset) { //TODO Dialect
 	return exp.IsEmpty() ? exp : SqlFunc("convert", exp, charset);
 }
 
-SqlVal ConvertAscii(const SqlVal& exp) { //TODO Dialect!
-	return ConvertCharset(exp, "US7ASCII");
+SqlVal ConvertAscii(const SqlVal& exp) {
+	return SqlVal(SqlCase(MSSQL, String().Cat() << "((" << ~exp << ") collate SQL_Latin1_General_Cp1251_CS_AS)")
+			             (~ConvertCharset(exp, "US7ASCII")), SqlS::FN); // This is Oracle really, TODO: Add other dialects
 }
 
 SqlVal Upper(const SqlVal& exp) {
