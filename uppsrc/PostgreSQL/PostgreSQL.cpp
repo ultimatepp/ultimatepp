@@ -88,7 +88,6 @@ private:
 	Vector<Oid>     oid;
 	int             rows;
 	int             fetched_row; //-1, if not fetched yet
-	String          last_insert_table;
 
 	void            FreeResult();
 	String          ErrorMessage();
@@ -111,7 +110,7 @@ const char *PostgreSQLReadString(const char *s, String& stmt)
 		if(*s == '\0') break;
 		else
 		if(*s == '\'' && s[1] == '\'') {
-			stmt.Cat('\'');
+			stmt.Cat("\'\'");
 			s += 2;
 		}
 		else
@@ -502,9 +501,6 @@ bool PostgreSQLConnection::Execute()
 	}
 
 	CParser p(statement);
-	if((p.Id("insert") || p.Id("INSERT")) && (p.Id("into") || p.Id("INTO")) && p.IsId())
-		last_insert_table = p.ReadId();
-
 	String query;
 	int pi = 0;
 	const char *s = statement;

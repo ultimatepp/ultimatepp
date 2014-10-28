@@ -22,13 +22,14 @@ void IdentityInsert(const SqlInsert& ins)
 
 Value MsSqlSequence::Get()
 {
+	ASSERT(seq);
 #ifndef NOAPPSQL
 	Sql sql(session ? *session : SQL.GetSession());
 #else
 	ASSERT(session);
 	Sql sql(*session);
 #endif
-	if(!sql.Execute("select next value for " + ~seq) || !sql.Fetch())
+	if(!sql.Execute("select next value for " + ~*seq) || !sql.Fetch())
 		return ErrorValue();
 	return sql[0];
 }

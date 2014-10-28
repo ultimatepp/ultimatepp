@@ -398,6 +398,8 @@ String SqlFormat(const Value& x)
 		return SqlFormat(Date(x));
 	case TIME_V:
 		return SqlFormat(Time(x));
+	case SQLRAW_V:
+		return SqlFormatBinary(SqlRaw(x));
 	}
 	NEVER();
 	return "NULL";

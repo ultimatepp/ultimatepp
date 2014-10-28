@@ -514,7 +514,7 @@ const char *Sqlite3ReadString(const char *s, String& stmt) {
 		if(*s == '\0') break;
 		else
 		if(*s == '\'' && s[1] == '\'') {
-			stmt.Cat('\'');
+			stmt.Cat("\'\'");
 			s += 2;
 		}
 		else

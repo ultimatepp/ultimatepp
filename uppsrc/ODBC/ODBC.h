@@ -42,6 +42,7 @@ private:
 	HSTMT                 hstmt;
 	String                user;
 	int                   tlevel;
+	int                   tmode;
 	ODBCConnection       *current;
 
 	void   FlushConnections();
@@ -52,6 +53,13 @@ public:
 
 	bool Connect(const char *cs);
 	void Close();
+	
+	enum TransactionMode {
+		NORMAL,              // autocommit at level 0, no Commit or Rollback allowed at level 0 (default)
+		IMPLICIT             // Oracle-style Commit and Rollback at level 0
+	};
+
+	void    SetTransactionMode(int mode);
 
 	ODBCSession();
 	~ODBCSession();

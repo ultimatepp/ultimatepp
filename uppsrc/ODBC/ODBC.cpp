@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x) // LOG(x)
+#define LLOG(x) // DLOG(x)
 
 class ODBCConnection : public SqlConnection
 {
@@ -28,8 +28,10 @@ private:
 
 	ODBCSession           *session;
 	struct Param {
+		Value  orig;
 		int    ctype;
 		int    sqltype;
+		int    width;
 		String data;
 		SQLLEN li;
 	};
@@ -83,16 +85,13 @@ bool ODBCSession::Connect(const char *cs)
 	if(henv && IsOk(SQLAllocHandle(SQL_HANDLE_DBC, henv, &hdbc))) {
 		if(IsOk(SQLDriverConnect(hdbc, NULL, (SQLCHAR *)cs, SQL_NTS, NULL, 0, NULL, SQL_DRIVER_NOPROMPT))) {
 			SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
-			SQLSetConnectAttr(hdbc, SQL_ATTR_AUTOCOMMIT, (SQLPOINTER)SQL_AUTOCOMMIT_ON, SQL_NTS);
+			if(tmode == NORMAL)
+				SQLSetConnectAttr(hdbc, SQL_ATTR_AUTOCOMMIT, (SQLPOINTER)SQL_AUTOCOMMIT_ON, SQL_NTS);
 			SQLSetConnectAttr(hdbc, SQL_ATTR_TXN_ISOLATION, (SQLPOINTER)SQL_TRANSACTION_SERIALIZABLE, SQL_NTS);
 
 			Sql sql("select current_user", *this);
 			if(sql.Execute() && sql.Fetch())
 				user = sql[0];
-			else {
-				DDUMP(GetErrorStatement());
-				DDUMP(GetLastError());
-			}
 			return true;
 		}
 		SQLFreeHandle(SQL_HANDLE_DBC, hdbc);
@@ -159,6 +158,7 @@ ODBCSession::ODBCSession()
 	tlevel = 0;
 	Dialect(MSSQL);
 	current = NULL;
+	tmode = NORMAL;
 }
 
 ODBCSession::~ODBCSession()
@@ -167,8 +167,21 @@ ODBCSession::~ODBCSession()
 		SQLFreeHandle(SQL_HANDLE_ENV, henv);
 }
 
+void ODBCSession::SetTransactionMode(int mode)
+{
+	tmode = mode;
+	SQLSetConnectAttr(hdbc, SQL_ATTR_AUTOCOMMIT,
+	                  mode == IMPLICIT ? (SQLPOINTER)SQL_AUTOCOMMIT_OFF
+	                                   : (SQLPOINTER)SQL_AUTOCOMMIT_ON, SQL_NTS);
+}
+
 void ODBCSession::Begin()
 {
+	if(tmode == IMPLICIT) {
+		SQLEndTran(SQL_HANDLE_DBC, hdbc, SQL_COMMIT);
+		tlevel = 0;
+		return;
+	}
 	if(tlevel == 0)
 		SQLSetConnectAttr(hdbc, SQL_ATTR_AUTOCOMMIT, (SQLPOINTER)SQL_AUTOCOMMIT_OFF, SQL_NTS);
 	tlevel++;
@@ -176,6 +189,11 @@ void ODBCSession::Begin()
 
 void ODBCSession::Commit()
 {
+	if(tmode == IMPLICIT) {
+		SQLEndTran(SQL_HANDLE_DBC, hdbc, SQL_COMMIT);
+		tlevel = 0;
+		return;
+	}
 	tlevel--;
 	ASSERT(tlevel >= 0);
 	if(tlevel == 0) {
@@ -186,6 +204,11 @@ void ODBCSession::Commit()
 
 void ODBCSession::Rollback()
 {
+	if(tmode == IMPLICIT) {
+		SQLEndTran(SQL_HANDLE_DBC, hdbc, SQL_ROLLBACK);
+		tlevel = 0;
+		return;
+	}
 	tlevel--;
 	ASSERT(tlevel >= 0);
 	if(tlevel == 0) {
@@ -310,10 +333,12 @@ bool ODBCConnection::IsOk(SQLRETURN ret) const
 void ODBCConnection::SetParam(int i, const Value& r)
 {
 	Param& p = param.At(i);
+	p.orig = r;
+	p.width = 0;
 	if(IsNull(r)) {
 		p.li = SQL_NULL_DATA;
 		p.ctype = SQL_C_CHAR;
-		p.sqltype = SQL_LONGVARCHAR;
+		p.sqltype = SQL_VARCHAR;
 		p.data = NULL;
 		return;
 	}
@@ -344,7 +369,7 @@ void ODBCConnection::SetParam(int i, const Value& r)
 	}
 	if(IsString(r)) {
 		p.ctype = SQL_C_CHAR;
-		p.sqltype = SQL_LONGVARCHAR;
+		p.sqltype = SQL_VARCHAR;
 		p.data = r;
 		p.li = p.data.GetLength();
 	}
@@ -363,6 +388,42 @@ void ODBCConnection::SetParam(int i, const Value& r)
 		p.data = String((char *)&tm, sizeof(tm));
 		p.li = sizeof(tm);
 	}
+	if(r.GetType() == 34) {
+		p.data = SqlRaw(r);
+		p.ctype = SQL_C_BINARY;
+		p.sqltype = SQL_LONGVARBINARY;
+		p.width = p.li = p.data.GetLength();
+	}
+}
+
+const char *ODBCReadString(const char *s, String& stmt)
+{
+	//TODO: to clear this, currently this is based on sqlite
+	stmt.Cat(*s);
+	int c = *s++;
+	for(;;) {
+		if(*s == '\0') break;
+		else
+		if(*s == '\'' && s[1] == '\'') {
+			stmt.Cat("\'\'");
+			s += 2;
+		}
+		else
+		if(*s == c) {
+			stmt.Cat(c);
+			s++;
+			break;
+		}
+		else
+		if(*s == '\\') {
+			stmt.Cat('\\');
+			if(*++s)
+				stmt.Cat(*s++);
+		}
+		else
+			stmt.Cat(*s++);
+	}
+	return s;
 }
 
 bool ODBCConnection::Execute()
@@ -380,23 +441,43 @@ bool ODBCConnection::Execute()
 	CParser p(statement);
 	if((p.Id("insert") || p.Id("INSERT")) && (p.Id("into") || p.Id("INTO")) && p.IsId())
 		last_insert_table = p.ReadId();
-	if(!IsOk(SQLPrepare(session->hstmt, (SQLCHAR *)~statement, statement.GetCount())))
-		return false;
-	parse = false;
-	bparam = pick(param);
-	param.Clear();
-	for(int i = 0; i < bparam.GetCount(); i++) {
-		Param& p = bparam[i];
-		SQLSMALLINT     DataType;
-		SQLULEN         ParameterSize;
-		SQLSMALLINT     DecimalDigits;
-		SQLSMALLINT     Nullable;
-		if(!IsOk(SQLDescribeParam(session->hstmt, i + 1, &DataType, &ParameterSize, &DecimalDigits, &Nullable)))
+
+	if(0) { // 'dumb' path withou using SQLBindParameter
+		CParser p(statement);
+		String query;
+		int pi = 0;
+		const char *s = statement;
+		while(s < statement.End())
+			if(*s == '\'' || *s == '\"')
+				s = ODBCReadString(s, query);
+			else {
+				if(*s == '?') {
+					Value v = param[pi++].orig;
+					if(v.GetType() == 34)
+						query.Cat(SqlCompile(MSSQL, ~SqlBinary(SqlRaw(v))));
+					else
+						query.Cat(SqlCompile(MSSQL, ~SqlVal(v)));
+				}
+				else
+					query.Cat(*s);
+				s++;
+			}
+		param.Clear();
+		if(!IsOk(SQLPrepare(session->hstmt, (SQLCHAR *)~query, query.GetCount())))
 			return false;
-		if(!IsOk(SQLBindParameter(session->hstmt, i + 1, SQL_PARAM_INPUT, p.ctype, DataType,
-		                          ParameterSize, DecimalDigits, (SQLPOINTER)~p.data, p.data.GetLength(),
-		                          &p.li)))
+	}
+	else {
+		if(!IsOk(SQLPrepare(session->hstmt, (SQLCHAR *)~statement, statement.GetCount())))
 			return false;
+		parse = false;
+		bparam = pick(param);
+		param.Clear();
+		for(int i = 0; i < bparam.GetCount(); i++) {
+			Param& p = bparam[i];
+			if(!IsOk(SQLBindParameter(session->hstmt, i + 1, SQL_PARAM_INPUT, p.ctype, p.sqltype,
+			                          p.width, 0, (SQLPOINTER)~p.data, p.data.GetLength(), &p.li)))
+				return false;
+		}
 	}
 	SQLSMALLINT ncol;
 	if(!IsOk(SQLExecute(session->hstmt)) || !IsOk(SQLNumResultCols(session->hstmt, &ncol))) {
@@ -440,6 +521,8 @@ bool ODBCConnection::Execute()
 			f.type = INT64_V;
 			break;
 		case SQL_TYPE_DATE:
+			f.type = DATE_V;
+			break;
 		case SQL_TYPE_TIMESTAMP:
 			f.type = TIME_V;
 			break;
@@ -479,7 +562,8 @@ bool ODBCConnection::Fetch0()
 	SQLLEN li;
 	for(int i = 0; i < info.GetCount(); i++) {
 		Value v = Null;
-		switch(info[i].type) {
+		int type = info[i].type;
+		switch(type) {
 		case DOUBLE_V:
 			if(!IsOk(SQLGetData(session->hstmt, i + 1, SQL_C_DOUBLE, &dbl, sizeof(dbl), &li)))
 			   break;
@@ -493,6 +577,7 @@ bool ODBCConnection::Fetch0()
 				v = n64;
 			break;
 		case TIME_V:
+		case DATE_V:
 			if(!IsOk(SQLGetData(session->hstmt, i + 1, SQL_C_TYPE_TIMESTAMP, &tm, sizeof(tm), &li)))
 			   break;
 			if(li != SQL_NULL_DATA) {
@@ -503,7 +588,10 @@ bool ODBCConnection::Fetch0()
 				m.hour = (byte)tm.hour;
 				m.minute = (byte)tm.minute;
 				m.second = (byte)tm.second;
-				v = m;
+				if(type == DATE_V)
+					v = (Date)m;
+				else
+					v = m;
 			}
 			break;
 		default:
