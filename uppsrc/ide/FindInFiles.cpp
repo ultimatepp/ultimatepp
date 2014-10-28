@@ -12,7 +12,7 @@ FileSel& sSD()
 }
 
 void Ide::SerializeFindInFiles(Stream& s) {
-	int version = 5;
+	int version = 6;
 	s / version;
 	s % ff.files;
 	ff.files.SerializeList(s);
@@ -32,6 +32,8 @@ void Ide::SerializeFindInFiles(Stream& s) {
 		s % ff.samecase;
 	if(version >= 5)
 		s % ff.regexp;
+	if(version >= 6)
+		s % ff.workspace;
 }
 
 void SearchForFiles(Vector<String>& files, String dir, String mask, int readonly, Progress& pi) {
@@ -261,8 +263,15 @@ void Ide::FindInFiles(bool replace) {
 		ff.replace.AddHistory();
 		Progress pi("Found %d files to search.");
 		Vector<String> files;
-		SearchForFiles(files, NormalizePath((String)ff.folder, GetUppDir()),
-			~ff.files, ~ff.readonly, pi);
+		if(ff.workspace) {
+			const Workspace& wspc = GetIdeWorkspace();
+			for(int i = 0; i < wspc.GetCount(); i++)
+				SearchForFiles(files, GetFileFolder(PackagePath(wspc[i])),
+					           ~ff.files, ~ff.readonly, pi);
+		}
+		else
+			SearchForFiles(files, NormalizePath((String)ff.folder, GetUppDir()),
+				           ~ff.files, ~ff.readonly, pi);
 		if(!pi.Canceled()) {
 			String pattern;
 			RegExp rx, *regexp = NULL;
@@ -412,12 +421,14 @@ void FindInFilesDlg::Sync()
 	wildcards.Enable(b);
 	ignorecase.Enable(b);
 	wholeword.Enable(b);
+	folder.Enable(!workspace);
 }
 
 FindInFilesDlg::FindInFilesDlg()
 {
 	regexp <<= style <<= THISBACK(Sync);
 	readonly <<= Null;
+	workspace <<= THISBACK(Sync);
 }
 
 void FindInFilesDlg::Setup(bool replacing)

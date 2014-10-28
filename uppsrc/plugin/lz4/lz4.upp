@@ -11,6 +11,3 @@ file
 	lib\lz4.h,
 	lib\LICENSE;
 
-mainconfig
-	"" = "SSE2";
-
