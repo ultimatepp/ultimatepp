@@ -20,24 +20,24 @@ void IdentityInsert(Sql& sql, const SqlInsert& ins);
 void IdentityInsert(const SqlInsert& ins);
 
 class MsSqlSequence : public ValueGen {
-	SqlId       seq;
-	SqlSession *session;
+	const SqlId  *seq;
+	SqlSession   *session;
 
 public:
 	virtual Value  Get();
 
 	Value operator++()                                                  { return Get(); }
 
-	void Set(SqlId id, SqlSession& s)                                   { seq = id; session = &s; }
+	void Set(const SqlId& id, SqlSession& s)                            { seq = &id; session = &s; }
 
 #ifndef NOAPPSQL
-	void Set(SqlId id)                                                  { seq = id; session = NULL; }
+	void Set(const SqlId& id)                                           { seq = &id; session = NULL; }
 
-	MsSqlSequence(SqlId  seq)                                           { Set(seq); }
+	MsSqlSequence(const SqlId& seq)                                     { Set(seq); }
 #endif
-	MsSqlSequence(SqlId seq, SqlSession& s)                             { Set(seq, s); }
+	MsSqlSequence(const SqlId& seq, SqlSession& s)                      { Set(seq, s); }
 
-	MsSqlSequence()                                                     { session = NULL; }
+	MsSqlSequence()                                                     { seq = NULL; session = NULL; }
 };
 
 };
