@@ -378,7 +378,7 @@ public:
 	LineEdit& ShowTabs(bool st = true)        { showtabs = st; Refresh(); return *this; }
 	bool      IsShowTabs() const              { return showtabs; }
 	LineEdit& ShowSpaces(bool ss = true)      { showspaces = ss; Refresh(); return *this; }
-	bool      IsShowSpacess() const           { return showspaces; }
+	bool      IsShowSpaces() const            { return showspaces; }
 	LineEdit& ShowLineEndings(bool sl = true) { showlines = sl; Refresh(); return *this; }
 	bool      IsShowLineEndings() const       { return showlines; }
 	LineEdit& WithCutLine(bool b)             { cutline = b; return *this; }
