@@ -9,7 +9,7 @@ CONSOLE_APP_MAIN
 {
 	MSSQLSession mssql;
 	for(;;) {
-		String cs = "Driver={SQL Server Native Client 10.0};";
+		String cs = "Driver={SQL Server Native Client 11.0};";
 		Cout() << "Server:";
 		cs << "Server=" << ReadStdIn() << ';';
 		Cout() << "User (empty for trusted connection):";

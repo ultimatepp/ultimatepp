@@ -1,4 +1,4 @@
-description "Drag&Drop with ArrayCtrl as target";
+description "Drag&Drop with ArrayCtrl as target\377";
 
 uses
 	CtrlLib;
