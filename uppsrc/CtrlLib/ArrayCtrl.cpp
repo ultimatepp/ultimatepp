@@ -2807,13 +2807,17 @@ void ArrayCtrl::InsertDrop(int line, const Vector< Vector<Value> >& data, PasteC
 	if(data.GetCount() == 0)
 		return;
 	if(d.GetAction() == DND_MOVE && self) {
-		for(int i = GetCount() - 1; i >= 0; i--) {
-			if(IsSel(i)) {
-				Remove(i); // Optimize!
-				if(i < line)
-					line--;
+		if(IsMultiSelect())
+			for(int i = GetCount() - 1; i >= 0; i--) {
+				if(IsSel(i)) {
+					Remove(i); // Optimize!
+					if(i < line)
+						line--;
+				}
 			}
-		}
+		else
+		if(IsCursor())
+			Remove(GetCursor());
 		KillCursor();
 		d.SetAction(DND_COPY);
 	}
