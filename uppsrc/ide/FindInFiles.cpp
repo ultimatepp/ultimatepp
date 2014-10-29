@@ -422,6 +422,7 @@ void FindInFilesDlg::Sync()
 	ignorecase.Enable(b);
 	wholeword.Enable(b);
 	folder.Enable(!workspace);
+	folder_lbl.Enable(!workspace);
 }
 
 FindInFilesDlg::FindInFilesDlg()
