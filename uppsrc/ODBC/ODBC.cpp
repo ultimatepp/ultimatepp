@@ -39,12 +39,18 @@ private:
 	String                   last_insert_table;
 
 	int                      rowsprocessed;
-	Vector< Vector<double> > number;
-	Vector< Vector<int64> >  num64;
-	Vector< Vector<String> > text;
-	Vector< Vector<Time> >   time;
+	Vector<double>           number;
+	Vector<int64>            num64;
+	Vector<String>           text;
+	Vector<Time>             time;
+	Vector<Date>             date;
 	int                      rowcount;
 	int                      rowi;
+	int                      number_i;
+	int                      num64_i;
+	int                      text_i;
+	int                      time_i;
+	int                      date_i;
 	Vector<Value>            fetchrow;
 	Vector<bool>             binary;
 	
@@ -127,6 +133,7 @@ void ODBCSession::FlushConnections()
 		current = NULL;
 	}
 	SQLFreeStmt(hstmt, SQL_CLOSE);
+	LLOG("-FlushConnections");
 }
 
 bool ODBCSession::IsOk(SQLRETURN ret)
@@ -302,6 +309,11 @@ ODBCConnection::ODBCConnection(ODBCSession *session_)
 {
 	LLOG("ODBCConnection " << (void *)this << " " << (void *)session);
 	rowcount = rowi = 0;
+	number_i = 0;
+	num64_i = 0;
+	text_i = 0;
+	time_i = 0;
+	date_i = 0;
 }
 
 ODBCConnection::~ODBCConnection()
@@ -428,7 +440,7 @@ const char *ODBCReadString(const char *s, String& stmt)
 
 bool ODBCConnection::Execute()
 {
-	LLOG("Execute " << (void *)this << " " << (void *)session);
+	LLOG("Execute " << (void *)this << " " << (void *)session << " " << statement);
 	if(session->hstmt == SQL_NULL_HANDLE)
 		return false;
 	if(IsCurrent())
@@ -442,7 +454,7 @@ bool ODBCConnection::Execute()
 	if((p.Id("insert") || p.Id("INSERT")) && (p.Id("into") || p.Id("INTO")) && p.IsId())
 		last_insert_table = p.ReadId();
 
-	if(0) { // 'dumb' path withou using SQLBindParameter
+	if(0) { // 'dumb' path without using SQLBindParameter
 		CParser p(statement);
 		String query;
 		int pi = 0;
@@ -623,17 +635,22 @@ bool ODBCConnection::Fetch()
 		Value v;
 		switch(info[i].type) {
 		case DOUBLE_V:
-			v = number[i][rowi];
+			v = number[number_i++];
 			break;
 		case INT64_V:
-			v = num64[i][rowi];
+			v = num64[num64_i++];
 			break;
 		case TIME_V:
-			v = time[i][rowi];
+			v = time[time_i++];
+			break;
+		case DATE_V:
+			v = date[date_i++];
+			break;
+		case STRING_V:
+			v = text[text_i++];
 			break;
 		default:
-			v = text[i][rowi];
-			break;
+			NEVER();
 		}
 		fetchrow.Add(v);
 	}
@@ -653,39 +670,57 @@ void ODBCConnection::Flush()
 	rowcount = 0;
 	rowi = 0;
 	number.Clear();
-	number.SetCount(info.GetCount());
+	num64.Clear();
 	text.Clear();
-	text.SetCount(info.GetCount());
 	time.Clear();
-	time.SetCount(info.GetCount());
+	date.Clear();
+	number_i = 0;
+	num64_i = 0;
+	text_i = 0;
+	time_i = 0;
+	date_i = 0;
 	while(info.GetCount() && Fetch0()) {
 		rowcount++;
 		for(int i = 0; i < info.GetCount(); i++)
 			switch(info[i].type) {
 			case DOUBLE_V:
-				number[i].Add(fetchrow[i]);
+				number.Add(fetchrow[i]);
 				break;
 			case INT64_V:
-				num64[i].Add(fetchrow[i]);
+				num64.Add(fetchrow[i]);
 				break;
 			case STRING_V:
-				text[i].Add(fetchrow[i]);
+				text.Add(fetchrow[i]);
 				break;
 			case TIME_V:
-				time[i].Add(fetchrow[i]);
+				time.Add(fetchrow[i]);
 				break;
+			case DATE_V:
+				date.Add(fetchrow[i]);
+				break;
+			default:
+				NEVER();
 			}
 	}
-	LLOG("Flush fetched " << rowcount);
+	LLOG("Flush fetched " << rowcount << " info count: " << info.GetCount());
 }
 
 void ODBCConnection::Cancel()
 {
 	param.Clear();
 	bparam.Clear();
+
 	number.Clear();
+	num64.Clear();
 	text.Clear();
 	time.Clear();
+	date.Clear();
+
+	number_i = 0;
+	num64_i = 0;
+	text_i = 0;
+	time_i = 0;
+	date_i = 0;
 }
 
 String ODBCConnection::ToString() const
