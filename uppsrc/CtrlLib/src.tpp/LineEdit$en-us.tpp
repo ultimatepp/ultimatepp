@@ -336,8 +336,8 @@ ool]_[*@3 ss]_`=_[@(0.0.255) true])&]
 is off..&]
 [s3;%% &]
 [s4; &]
-[s5;:LineEdit`:`:IsShowSpacess`(`)const: [@(0.0.255) bool]_[* IsShowSpacess]()_[@(0.0.255) c
-onst]&]
+[s5;:LineEdit`:`:IsShowSpaces`(`)const: [@(0.0.255) bool]_[* IsShowSpaces]()_[@(0.0.255) co
+nst]&]
 [s2;%% Returns status of ShowSpaces.&]
 [s3; &]
 [s4; &]

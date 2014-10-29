@@ -365,7 +365,13 @@ Value ConvertDouble::Format(const Value& q) const
 	return UPP::NFormat(pattern, (double)q);
 }
 
-Value ConvertDouble::Scan(const Value& text) const {
+Value ConvertDouble::Scan(const Value& txt) const {
+	String text = txt;
+	if(pattern.GetCount()) { // Fix text with patterns like "%2.!n EUR" (e.g. 1.2 EUR)
+		text = UPP::Filter(text, CharFilterDouble);
+		while(ToUpper(*text.Last()) == 'E')
+			text.Trim(text.GetCount() - 1);
+	}
 	Value v = UPP::Scan(DOUBLE_V, text);
 	if(IsError(v)) return v;
 	if(IsNull(v)) return notnull ? NotNullError() : v;
