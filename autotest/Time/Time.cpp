@@ -11,7 +11,7 @@ CONSOLE_APP_MAIN
 	DUMP(GetTimeZone());	
 	Date d = GetSysDate();
 	if(d < Date(d.year, 3, 20) && d > Date(d.year - 1, 10, 30)) {
-		LOG("Normaln CZ time");
+		LOG("Normal CZ time");
 		ASSERT(GetTimeZone() == 60);
 		ASSERT(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 +1200") == Time(2014, 3, 25, 23, 1, 15));
 		ASSERT(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 +1000") == Time(2014, 3, 25, 21, 1, 15));
@@ -21,7 +21,7 @@ CONSOLE_APP_MAIN
 		ASSERT(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 -1000") == Time(2014, 3, 25,  1, 1, 15));
 		ASSERT(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 -1200") == Time(2014, 3, 24, 23, 1, 15));
 	}
-	if(d > Date(d.year, 3, 30) && d > Date(d.year, 10, 20)) {
+	if(d > Date(d.year, 3, 30) && d < Date(d.year, 10, 20)) {
 		LOG("Daylight saving CZ time");
 		ASSERT(GetTimeZone() == 120);
 		ASSERT(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 +1200") == Time(2014, 3, 25, 22, 1, 15));
