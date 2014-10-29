@@ -452,6 +452,7 @@ SqlVal Prior(const SqlId& a) {
 SqlVal NextVal(const SqlId& a) {
 	return SqlVal(SqlCase
 	                 (PGSQL, "nextval('" + a.ToString() + "')")
+	                 (MSSQL, "next value for " + a.Quoted())
 	                 (a.Quoted() + ".NEXTVAL")
 	              , SqlS::HIGH);
 }
