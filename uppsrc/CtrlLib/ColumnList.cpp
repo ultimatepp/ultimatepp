@@ -936,9 +936,10 @@ void ColumnList::DragLeave()
 
 void ColumnList::RemoveSelection()
 {
+	KillCursor();
 	for(int i = GetCount() - 1; i >= 0; i--)
 		if(IsSel(i))
-			Remove(i); // Optimize!
+			Remove(i);
 }
 
 int ColumnList::Find(const Value &key) const
