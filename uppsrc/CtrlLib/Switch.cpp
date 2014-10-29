@@ -159,6 +159,10 @@ void Switch::Paint(Draw& w) {
 	int y = 0;
 	int x = 0;
 	bool horz = linecy * cs.GetCount() > sz.cy;
+	
+	if (direction == 1) horz = true;
+	else if (direction == -1) horz = false;
+	
 	if(horz) {
 		posx.SetCount(cs.GetCount());
 		linecy = sz.cy;
@@ -308,6 +312,7 @@ void Switch::CancelMode() {
 }
 
 Switch::Switch() {
+	direction = 0;
 	linecy = 16;
 	mincy = 0;
 	Transparent();

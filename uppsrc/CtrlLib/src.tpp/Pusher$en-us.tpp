@@ -146,6 +146,11 @@ lickFocus]([@(0.0.255) bool]_[*@3 cf]_`=_[@(0.0.255) true])&]
 lickFocus](false).&]
 [s3; &]
 [s4; &]
+[s5;:Pusher`:`:IsClickFocus`(`)const: [@(0.0.255) bool]_[* IsClickFocus]()_[@(0.0.255) cons
+t]&]
+[s2;%% Retrieves the value of ClickFocus.&]
+[s3; &]
+[s4; &]
 [s5;:Pusher`:`:GetFont`(`)const: [_^Font^ Font]_[* GetFont]()_[@(0.0.255) const]&]
 [s2;%% Returns the font that should be used in painting the concrete 
 derived Pusher class. Pusher itself does not use this font anywhere, 
@@ -166,4 +171,4 @@ onst]&]
 [s7;%% CTRL`_PRESSED-|pusher is enabled and pressed&]
 [s7;%% CTRL`_DISABLED-|pusher is disabled&]
 [s3; &]
-[s0; ]
+[s0; ]]

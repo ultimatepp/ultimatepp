@@ -18,34 +18,11 @@ rl]&]
 [s0; &]
 [s2; 
 @@image:1287&131
-‚ƒÎ€•€€€ƒëÿ€€€€øœí—ÍëšÁÆ˜Æýÿòˆäª”¢¤‡Ü¼„Ï¹¦‡àÔ¼ †±ž¤¤ÐÀ¹èÉè°…¶ÐÀÂòÉ‘Œâ°‹ùÂÃš–¥´
-·ÁÔØÁˆå¼‘Á¼÷Á…åÇÙÙçÇ£¦ä†‡àæ¿þÿû¾ÏÌ»¯Ò€®©ÒÒÒÒÒ ÒÒÒÒÓ¥ÔÿêûúúÛÅÅÿÀÜÜ›¥¥àãÆÆÞºýùª
-¦€¦šó²©Èíî¦¼žà¼…žÌ¥ò××·ßéôÅööÇ·–»°µõðÊ€“¦šó²©Ì¹²ý¾È¾ÿ£Ü¬®×«ÕÚ­Öë¯×›Æ¡ðî›ó±˜‰­Ë
-•åâ¹³ãéœî€êÍµ±É–²å´âæø—ç¾èñ½Ë»„ãÚìºØŽš¥çÃå¡ÛÌ¾Ø¾½¶›ÍÖ«Øõ÷×ÂÑÌæšƒ’‘Ê€ÐÒŸŒáØßœ
-Û–ãá¤Ï˜ÒÅôœ†¯†æ¨îØõÕÎä¬åòõÛêè¢Õä½öžÝžµÛíÅÑöö¾µ…ÂûœŒÎÓƒ¨êŽÆÄû°œ€¸Œï´¨¸…»ê
-¡ØÐˆñš¾¡ŽÑÜÕÝŒ¶»êéž¤þ¤¢÷ßÑù¯ó­ÿ­žÎ§“ËÝ¬¯Á‡Ù µÂûÀÍ¯ðú€Ã Á†…°å°€¹¿Íˆ“Ü†ý†ÚÊ‡–Å
-¸å…Ã‚‘©¤…ÿåôžÚ•üÆÃ¢¸ç‹ÙìîæªÍÖþ­ÍÚžÏ–ëÅî·äÛ¬–––ü¶‰¦é™±´€è­Ðê¬¨îàà°‚Ø±®é³…–Ëéð’
-ÉÕ“í…ÒÙ²ºž´ÓõâÉë´ôÄèÕÀ¬Ùýª¢èª¶×óæ½³Ÿç”¿ŽÒëõÎÏÿ²ì©äÈ™±Ø´€ý”´À±’ƒÐ™Ì£Ä¹äùÄœ”—±Ì
-Çˆ¢²õšý’‰Ïéþÿžºâ•´ªà¼¼½ÄóÑÄî†›ÞÿŸ‚³ßïïîÜþ‰‡ß±¸µåÅè€†õ¸ú”€­•­ÿÇ…À©ÜéœÔô›ŸÐÝçÄéØ
-€‘î÷€±ÚØ•ð¾·Ÿ‹õß‚º›³Òù£‹£ççù±¹©¥€àèƒÅˆÇÀ‘¸áóª–Ó Ó¸¨¨¾Ã±ªÇôì–››©ŠÆßûü‘ÒôÄèÕð©
-¹çÜÙ‰ÄãŸýÈËÈÒ£Ÿ´‚Ê¥À€ƒƒ¹€Éáà–˜¨µÛ¬ë±èÀâñÓçºÃºŽô˜ûæÉÅâ‡€žÏ±Ú•ìüÃ¢¸ã×Å®ò°Ê²ð½¸
-³À‹óŽ›²‰‰ž‡ö¦ó®Šíãë‘­Šßþ¢¸“µÀ»¹éžæÐÎ€œÄ±ŒÓô‡ööÎÏÍÅýÄ‚±‡ÝÊÊÊÊàÊÊÊÊÊˆþŠƒ¦õ®½
-
+(A84AFQAAAOv/AAAAAHic7ZfNaxpBGMb9f3II5BSiJIdcvATPuaaHYFQ8BjEeJCTQQOhJaLCFtlBCckkRDGKw+cJDmhYlNMGP1FjBiGURQbz3wYVl2dmdHWdHo2SGh2Bmv377vs/Mu6/SLilSUlJSUlJSUlJTpVTq+/r628XFwNzcm6Wl4MbGXjp9+aoApppzMqlIbW4mPJ5gPJ5MpXJXVzfp9MX29ke3O7C1dfBKAKaaczKpTDl9vkg+/6NcLler1VqtVq/XG41GofAb87GYCa3L5WK5M+NpHADqzbUxyYEy5bRi5ngXvujxPUu7hONa7LpYDhrnQ+UhW8w+Pj02m81Wq3V3V8LRTOaaA5KRygBQH4xhAdhfnNuW4+EkTxhF9BwGjS+GKO7YdVXO5GVy9dtq6CLkPfYe3R61221FUXZ2PoVC+xyQjE7TA6iBag5GezCcADgM7yg4hTuNj2rYUAhxGr4hUdzV3Qw2O2meJP4kovfR+a/zrX+tTqeTy90sL4dZIA01QvtNL3B6AEOghgUwZTAAkL9ND42Ik1x9htpKBxZFZQVDgpGpJP9l9B5aFXxDorhnC1nsZqrN1n6tzR7PFuvFbrdbLJYWFvy2iSZpGTE0AC1QaqwQqO5gMAJYMZCuswUWy2nwktUTbYEFUtk6jR400/Vi6zR0xGhVwFl9qqJoqjbz5r0zn2eUjtLr9c7Pf7JsKWRIGTE0AH2UtECxA9AZTKNEOXlEnBQXscyIorJ1Gn2Sz2l+/x46YrQq4Dy8PUTRxG4Gm53en4Kz3+/v7n4Jh9+xOI3lRegAhvU4FIAtla3/x8Ap3GkcVHSf0F3nxGlYEW53AB0xWhVwPrefC/WCupuBs1L5i6NnZ3mxOaUAYOgDxQjAkbhhcyqQU6DTOKgoPrGqR3RsFpupikbf+3wRdMRoVfANqedcWYnE4x/IS8jSo5+0SqVAAAMDOUlhYAEWGCjbLOsx6MBi02c6Q7qO9Bh7ZknFYgceTxAdMVoVfEOiuGPXxXKwyrJwvTjAi3MOm7IJiR4HdiZzHQrt4+sRrQr+oriTtUC7ueme5lBOAEQxjIHTdAd2zs9Nxf3EMYddSkpKSkpKSkpKiP4DpnWuPQ==)
 &]
 [s2; 
 @@image:406&312
-€ƒÁ€²€€€ƒÎÿ€€€€ø‹œíÙÏË›Á®˜ÍÿãÁð¤Üªúð’‹øöê’µä¨’ˆ½„Ñ¨Ð¼…¢ÚÒÂÛ¨¢—ØË ¢‘ÔßäÄàíÙÅÔÌÖ
-ÆíàÝ¬Ë¨žî­¬Ýã–ý±Îæ§Ù·…Îðˆ›ÍîûòÞ·ß÷í¼Œùû—©ãþ”‹Ÿææžá¯Œ½›˜®ØœŸß¬•Îø¢çÅ¥¥ü
-ƒØØâ®×¨–þ«§§ç¥ÒñÿÚÚ›ÑÑ…•µ•×‘ó£ä¿ê½½Ü­þ®Õ†êŠ¢´šÕÎÕ›Í¦¤ÝáŸüêªŠÄ¢„ÁøÛç ÿÎÿ›¿Ú÷÷
-ž÷š¦éºþùâù‹ÏŽÎ¼þ’œ´£•€üêÇþ¸ùëÝñõØ†á¬¯¿ÊÍ§ßÄÙ‚êª—ùþ·õ›Ü—ÿý‡Þêµ¾ª•óÉÉŒ××‚“¹ËŽÓ 
-Üý¥ášÀÿºÁýÚù¯ýî–ÿŸÝ¡Ë·à££©Ê‰Þ©·ñ•Ã÷úÐ¿ÍÑÿœñ‡ù›¦ÿ»Ý¾ºú’€´‹ÏÎ‡Á”«Ç‰È¥¶Ñ¿­Ñÿ¼ñ‡ÿÎ
-ï§³±ñ¾“Ù–Š’à›ç§¥ÒðÉŸ›˜‚ôªÿôÏôŸ«„ÿœüëõïøôïð°ú¤ð’×“Í¾ÄÿÇÿªÄÿÁýºùÏôÍ­çò¯½·ºž‹¾åìº
-µæÛÎ–ðüÂÕÿÇÿÄÿÁý¶¢ÿ‘¿ˆ¿¯«ÿØ‚Ï¯ôÿäÔ®úÞ‘ÿ›ÞüñÅûá”ŠˆÄÂ¯ÄëÎ¿×¿à†ëíüÛ—Ë¯à½Ú–Ë´þ¡
-ÔŒŸ¾’œþ¡¬ðÒ˜ù¸“¾ˆÎ§÷“»—»Š„¿’ß‰ªÎ¿€þûÚÞÑþÛ¾ûþÄ°Ìð‹ä¾Þàœ‹ÚõøÏûºž“áû…²ÔšÆü­þ³ßç
-À‡÷‡åÕŽò¼‹äþ®ã ³É„«ý—ØÁ°‹ý‚ò¯ ÿ¬óþÉêòàÝ€íÑ²‚ü‚áûÕéÅñÚÄºý×ÂöÅ¶ò‡ñ®‡ÿýëý‚ß¢ ü„¯‰ôª
-œÜþááñÁÒÌ¥«þ”þ¡òÈÄ²Ùý‚áÖš¦œÝ·Ðæÿ’ùÿù…žÏðŒÈ•ŠˆÚ¡üÂäü™öÒ—Â´™¾ý‰øùÿ¡Ìò•ÇÀ¼¿Ÿ‰Ì
-åû‹„¬Š³Àñð½¦£Ìþ‚ÜïÈû¿ÌãÛøß ä…ïª¯ì×‰”ä­°í’¯ôÁ‚½Š®õû‹Ñ¦’ÉäÌ—ÌâÿÈáÊáÙõ‹å®™Â˜¯ð‚ó³ÞÀ
-±€ÿ€ü‚æŸ
+(A0EAMgAAAM7/AAAAAHic7VnPSxtBGM3/40HwJCp68JKLePZqDxI15CgSPQRRqFA8BVrSQlsoohdLICKR1F/kYG3ZRVRM1sZtYF0sSygNge6tjyxdlv0xTman2YXO8AibzW7y3jff9+28jPn7lykQYxSLn+bmno+PLwwNPZuYWJyf3yyVTiJnRY+lpfzY2GIuVygWK6en56XS8dram9HRhZWVV5Fzo+Q/Pb1crX6u1WqKojQaDVVVm82mJF3h/Oqqj4pEIkF422cgfxB/m7/aHXf3d5qm6bp+eXmLTw8OzrwSnLSjlYD8R/44+Wvd8dgdhmGsr79Np1/EWQLqF/kP/jf1Gxd//YfearUqlfPJyYxXgpO5S45ToH0l4ZqQQP9B/Vr5r/0dFv+f3SHLtyMjKUoJ3qnxlcN3+tA/0X+c8Qd5m3+73T46+hI0C09OB0EUx4lIpTbRP9F/vPEH/06ns7HxPpPZCpLgG+cnJXDJHxuYAvR/9E/0H6sEnPzr9e/49PCw+o8k8JKTzb5E/0f/RP9B/Tr5T00t53KvvbcQngu+5ew65lvOFvD8Qv9H/0T/Qf0i/5E/iL8v/9gCzy/0f1Qu+g9ekf/e/HHFkHthCgjEAcIvRM6/V79ghuvtfNuXyy9gvVqWyzR+IQwfvhKcfqFwUpj5OJM+Tid3kzsXOwS/EJIPXwlOvwD+e9pe/ls+e50d/jBM8AtkPt4cC1p1eM/7HpNh+4WyVEb8Lf6zX2cHdwdlVQ7yC2T+ruOgM4QrfZdYQbD9gnKvIH8s/slqcuDdgNEygvwC4fvpRfFaxDr9wvbFNvIH8Qf//et9gl8g/AQvCfQqXH7h4fFBUiUr/pR+IfJEMln9AmGNGqacXbdQ5pL5//mFnpDwjMiVCgiQIfxC5PwZ9hfCNBm+fYl5fyHMj/KVwLy/EB8JzPsLhCwKs8DwPSYjzP6Cb0j7v8xj218gZIXvqq9XCZTkLbDtL/RBAr0KLvsL0SaSyeQXTOL/SGHK2XULZS6Zwi9wAvOzXkCAAX8A/IJmnw==)
 &]
 [s9; Options can be visually aligned horizontally or vertically `- 
 U`+`+ choses alignment based on size of options and Ctrl rectangle. 
@@ -203,7 +180,21 @@ onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v])&]
 [s7; [%-*C@3 f]-|Font to be used.&]
 [s7; [*/ Return value]-|`*this for chaining.&]
 [s3; &]
-[s0; &]
+[s4;%- &]
+[s5;:Switch`:`:SetAutoDirection`(`):%- [_^Switch^ Switch][@(0.0.255) `&]_[* SetAutoDirectio
+n]()&]
+[s2; Sets Switch layout to automatic mode, where items are layed 
+out depending on the available area for switch (vertically is 
+the are is high enough, horizontally otherwise).&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Switch`:`:SetHorizontal`(`):%- [_^Switch^ Switch][@(0.0.255) `&]_[* SetHorizontal]()&]
+[s2; Forces horizontal layout.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Switch`:`:SetVertical`(`):%- [_^Switch^ Switch][@(0.0.255) `&]_[* SetVertical]()&]
+[s2; Forces vertical layout.&]
+[s3; &]
 [s0; &]
 [s0;%- &]
 [ {{10000@3 [s0; [*@(229)4 Switch`::Case]]}}&]
@@ -218,7 +209,7 @@ witch`::GetCases] method.&]
 [s3;%- &]
 [s5;:Switch`:`:Case`:`:label:%- [_^String^ String]_[* label]&]
 [s2; Text of the case.&]
-[s3; &]
+[s3;%- &]
 [s4;%- &]
 [s5;:Switch`:`:Case`:`:value:%- [_^Value^ Value]_[* value]&]
 [s2; Value of the case.&]
@@ -231,4 +222,4 @@ witch`::GetCases] method.&]
 [s5;:Switch`:`:Case`:`:enabled:%- [@(0.0.255) bool]_[* enabled]&]
 [s2; Enable flag.&]
 [s3; &]
-[s0; ]
+[s0; ]]

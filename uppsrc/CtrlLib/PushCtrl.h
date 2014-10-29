@@ -42,7 +42,7 @@ public:
 	Pusher&  SetLabel(const char *text);
 	Pusher&  ClickFocus(bool cf = true);
 	Pusher&  NoClickFocus()                                 { return ClickFocus(false); }
-	bool     IsClickFocus() const { return clickfocus; }
+	bool     IsClickFocus() const                           { return clickfocus; }
 	
 	Font     GetFont() const                                { return font; }
 	String   GetLabel() const                               { return label; }
@@ -295,6 +295,7 @@ private:
 	int          linecy;
 	int          light;
 	int          mincy;
+	int          direction;
 
 	int   GetIndex() const;
 	int   GetIndex(Point p);
@@ -331,6 +332,9 @@ public:
 	Switch& SetFont(Font f)                                     { font = f; Refresh(); return *this; }
 	Font    GetFont() const                                     { return font; }
 	Switch& MinCaseHeight(int cy)                               { mincy = cy; Refresh(); return *this; }
+	Switch& SetAutoDirection()                                  { direction = 0; return *this; }
+	Switch& SetHorizontal()                                     { direction = 1; return *this; }
+	Switch& SetVertical()                                       { direction = -1; return *this; }
 
 	Switch();
 	virtual ~Switch();

@@ -245,13 +245,13 @@ ctrl StaticText {
 
 	Paint(w) {
 		sz = ViewSize(w);
-		textsize = GetTextSize(.SetText, .SetFont);
+		textsize = GetSmartTextSize(.SetText, .SetFont);
 		px = 0;
 		if(.SetAlign == "ALIGN_CENTER")
 			px = (sz.cx - textsize.cx) / 2;
 		if(.SetAlign == "ALIGN_RIGHT")
 			px = sz.cx - textsize.cx;
-		w.DrawText(px, (sz.cy - textsize.cy) / 2, .SetText, .SetFont, .SetInk);
+		w.DrawSmartText(px, (sz.cy - textsize.cy) / 2, .SetText, .SetFont, .SetInk);
 	}
 	Sample() {
 		.SetText = "Text";
