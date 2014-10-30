@@ -445,6 +445,10 @@ SqlVal Coalesce(const SqlVal& exp1, const SqlVal& exp2, const SqlVal& exp3, cons
 	return SqlFunc("coalesce", exp1, exp2, exp3, exp4);
 }
 
+SqlVal Coalesce(const SqlSet& exps) {
+	return SqlFunc("coalesce", exps);
+}
+
 SqlVal Prior(const SqlId& a) {
 	return SqlVal("prior " + a.Quoted(), SqlS::UNARY);
 }

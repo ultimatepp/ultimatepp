@@ -105,7 +105,7 @@ void ScriptBuilder::CheckParse()
 	}
 }
 
-bool ScriptBuilder::BuildPackage(const String& package, Vector<String>& linkfile, String& linkoptions,
+bool ScriptBuilder::BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>&, String& linkoptions,
 	const Vector<String>& all_uses, const Vector<String>& all_libraries, int)
 {
 	int i;

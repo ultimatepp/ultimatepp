@@ -5,7 +5,7 @@ void OwcBuilder::AddFlags(Index<String>& cfg)
 
 }
 
-bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, String& linkoptions, const Vector<String>& all_uses, const Vector<String>& all_libraries, int opt)
+bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>& immfile, String& linkoptions, const Vector<String>& all_uses, const Vector<String>& all_libraries, int opt)
 {
 	String packagepath = PackagePath(package);
 	Package pkg;
@@ -82,7 +82,7 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 	}
 
 	if (HasFlag("BLITZ")) {
-		Blitz b = BlitzStep(sfile, soptions, obj, ".obj", optimize);
+		Blitz b = BlitzStep(sfile, soptions, obj, immfile, ".obj", optimize);
 		if (b.build) {
 			PutConsole("BLITZ:" + b.info);
 			int slot = AllocSlot();

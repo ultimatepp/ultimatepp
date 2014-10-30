@@ -170,8 +170,8 @@ String MscBuilder::PdbPch(String package, int slot, bool do_pch) const
 	return cc;
 }
 
-bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, String& linkoptions,
-	const Vector<String>& all_uses, const Vector<String>& all_libraries, int opt)
+bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>& immfile,
+    String& linkoptions, const Vector<String>& all_uses, const Vector<String>& all_libraries, int opt)
 {
 	int i;
 	String packagepath = PackagePath(package);
@@ -302,7 +302,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 	}
 
 	if(HasFlag("BLITZ")) {
-		Blitz b = BlitzStep(sfile, soptions, obj, ".obj", optimize);
+		Blitz b = BlitzStep(sfile, soptions, obj, immfile, ".obj", optimize);
 		if(b.build) {
 			PutConsole("BLITZ:" + b.info);
 			int slot = AllocSlot();
@@ -387,6 +387,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 			linkfile.Add(objfile);
 		else
 			obj.Add(objfile);
+		immfile.Add(objfile);
 	}
 	if(error) {
 		IdeConsoleEndGroup();
@@ -423,8 +424,11 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 		else
 			product = CatAnyPath(outdir, GetAnyFileName(package) + ".lib");
 		Time producttime = GetFileTime(product);
-		if(obj.GetCount())
-			linkfile.Add(ForceExt(product, ".lib"));
+		if(obj.GetCount()) {
+			String h = ForceExt(product, ".lib");
+			linkfile.Add(h);
+			immfile.Add(h);
+		}
 		if(!Wait()) {
 			IdeConsoleEndGroup();
 			return false;
@@ -579,7 +583,7 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 	bool isgemsc10 = HasFlag("MSC10") || HasFlag("MSC10X64") || HasFlag("MSC11")
 		|| HasFlag("MSC11X64") || HasFlag("MSC12X64");
 	for(int i = 0; i < linkfile.GetCount(); i++)
-		if(GetFileTime(linkfile[i]) >= targettime) {
+		if(GetFileTime(linkfile[i]) > targettime) {
 			String link, lib;
 			link << LinkerName() << " -nologo -machine:" << MachineName()
 			<< " -pdb:" << GetHostPathQ(ForceExt(target, ".pdb"))

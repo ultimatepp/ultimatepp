@@ -33,7 +33,7 @@ void GccBuilder::BinaryToObject(String objfile, CParser& binscript, String based
 		throw Exc(NFormat("Error compiling binary object '%s'.", objfile));
 }
 
-bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
+bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>& immfile,
 	String& linkoptions, const Vector<String>& all_uses, const Vector<String>& all_libraries,
 	int opt)
 {
@@ -135,7 +135,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 	}
 
 	if(HasFlag("BLITZ")) {
-		Blitz b = BlitzStep(sfile, soptions, obj, ".o", optimize);
+		Blitz b = BlitzStep(sfile, soptions, obj, immfile, ".o", optimize);
 		if(b.build) {
 			PutConsole("BLITZ:" + b.info);
 			int slot = AllocSlot();
@@ -208,6 +208,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 			PutVerbose("compiled in " + GetPrintTime(time));
 			ccount++;
 		}
+		immfile.Add(objfile);
 		if(init)
 			linkfile.Add(objfile);
 		else
@@ -248,8 +249,10 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 		String hproduct = GetHostPath(product);
 		Time producttime = GetFileTime(hproduct);
 //		LOG("hproduct = " << hproduct << ", time = " << producttime);
-		if(obj.GetCount())
+		if(obj.GetCount()) {
 			linkfile.Add(GetHostPath(product));
+			immfile.Add(GetHostPath(product));
+		}
 		for(int i = 0; i < obj.GetCount(); i++)
 			if(GetFileTime(obj[i]) > producttime) {
 				String lib;
@@ -383,7 +386,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 	PutLinking();
 	int time = GetTickCount();
 	for(int i = 0; i < linkfile.GetCount(); i++)
-		if(GetFileTime(linkfile[i]) >= targettime) {
+		if(GetFileTime(linkfile[i]) > targettime) {
 			Vector<String> lib;
 			String lnk = CompilerName();
 			if(HasFlag("GCC32"))
@@ -444,11 +447,12 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				PutConsole( linklistM );
 			}
 			else
-				for(i = 0; i < linkfile.GetCount(); i++)
+				for(i = 0; i < linkfile.GetCount(); i++) {
 					if(ToLower(GetFileExt(linkfile[i])) == ".o")
 						lnk  << ' ' << GetHostPathQ(linkfile[i]);
 					else
 						lib.Add(linkfile[i]);
+				}
 
 			if(!HasFlag("SOLARIS") && !HasFlag("OSX11") && !HasFlag("OBJC"))
 				lnk << " -Wl,--start-group ";

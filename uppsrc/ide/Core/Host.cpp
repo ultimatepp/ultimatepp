@@ -32,9 +32,6 @@ Vector<Host::FileInfo> LocalHost::GetFileInfo(const Vector<String>& path)
 		FileInfo& f = fi.Add();
 		if(ff) {
 			(Time&)f = ff.GetLastWriteTime();
-#ifdef PLATFORM_WIN32
-			f.second = f.second & ~1; // FAT vs NTFS accuracy fix
-#endif
 			f.length = ff.IsFile() ? (int)ff.GetLength() : -1;
 		}
 		else {
