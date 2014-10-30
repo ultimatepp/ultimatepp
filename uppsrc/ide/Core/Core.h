@@ -394,9 +394,10 @@ struct Builder {
 	bool             doall;
 	bool             main_conf;
 	bool             allow_pch;
+	FileTime         start_time;
 
-	virtual bool BuildPackage(const String& package, Vector<String>& linkfile, String& linkoptions,
-		const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize)
+	virtual bool BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>& immfile,
+	    String& linkoptions, const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize)
 	{ return false; }
 	virtual bool Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap)
 	{ return false; }

@@ -65,7 +65,7 @@ String JavaBuilder::JarLine()
 
 enum { MAINCLASS, MAINDIR, MANIFEST, ITEMCOUNT };
 
-bool JavaBuilder::BuildPackage(const String& package, Vector<String>& linkfile, String& linkoptions,
+bool JavaBuilder::BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>&, String& linkoptions,
 	const Vector<String>& all_uses, const Vector<String>& all_libraries, int)
 {
 	int time = msecs();

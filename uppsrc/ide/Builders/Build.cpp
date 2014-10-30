@@ -156,6 +156,7 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 	b->script = bm.Get("SCRIPT", "");
 	b->main_conf = !!main_conf.GetCount();
 	b->allow_pch = bm.Get("ALLOW_PRECOMPILED_HEADERS", "") == "1";
+	b->start_time = start_time;
 	return b;
 }
 
@@ -239,7 +240,8 @@ struct OneFileHost : Host {
 };
 
 bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, int pkcount,
-	String mainparam, String outfile, Vector<String>& linkfile, String& linkopt, bool link)
+	String mainparam, String outfile, Vector<String>& linkfile, Vector<String>& immfile,
+	String& linkopt, bool link)
 {
 	String package = wspc[pkindex];
 	String mainpackage = wspc[0];
@@ -307,7 +309,7 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 	}
 	else
 		b->config.FindAdd("NOLIB");
-	bool ok = b->BuildPackage(package, linkfile, linkopt,
+	bool ok = b->BuildPackage(package, linkfile, immfile, linkopt,
 		                      GetAllUses(wspc, pkindex, bm, mainparam, *host, *b),
 		                      GetAllLibraries(wspc, pkindex, bm, mainparam, *host, *b),
 		                      targetmode - 1);
@@ -398,7 +400,7 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 {
 	String hfile = outfile + ".xxx";
 	SaveFile(hfile, "");
-	FileTime start_time = GetFileTime(hfile); // Defensive way to get correct filetime of start
+	start_time = GetFileTime(hfile); // Defensive way to get correct filetime of start
 	DeleteFile(hfile);
 	
 	ClearErrorEditor();
@@ -463,7 +465,7 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 		}
 
 		String mainpackage = wspc[0];
-		Vector<String> linkfile;
+		Vector<String> linkfile, immfile;
 		String linkopt = GetMethodVars(method).Get(targetmode ? "RELEASE_LINK" : "DEBUG_LINK", Null);
 		if(linkopt.GetCount())
 			linkopt << ' ';
@@ -472,7 +474,7 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 		for(int i = 0; i < build_order.GetCount() && (ok || !stoponerrors); i++) {
 			int px = build_order[i];
 			ok = BuildPackage(wspc, px, i, build_order.GetCount() + 1,
-				              mainparam, Null, linkfile, linkopt) && ok;
+				              mainparam, Null, linkfile, immfile, linkopt) && ok;
 			if(msecs() - ms >= 200) {
 				DoProcessEvents();
 				ms = msecs();
@@ -480,10 +482,12 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 		}
 		if(ok || !stoponerrors) {
 			ok = BuildPackage(wspc, 0, build_order.GetCount(), build_order.GetCount() + 1,
-			                  mainparam, outfile, linkfile, linkopt, ok) && ok;
-			// Set the time of target to start-time, so that if any file changes during
-			// compilation, it is recompiled during next build
-			SetFileTime(target, start_time); 
+			                  mainparam, outfile, linkfile, immfile, linkopt, ok) && ok;
+			// Set the time of target and intermediates to start-time, so that if any file
+			// changes during compilation, it is recompiled during next build
+			SetFileTime(target, start_time);
+			for(int i = 0; i < immfile.GetCount(); i++)
+				SetFileTime(immfile[i], start_time); 
 		}
 	}
 	EndBuilding(ok);

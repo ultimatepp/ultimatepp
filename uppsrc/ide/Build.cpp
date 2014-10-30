@@ -86,9 +86,9 @@ void Ide::PackageBuild()
 	const Workspace& wspc = IdeWorkspace();
 	int pi = GetPackageIndex();
 	if(pi >= 0 && pi <= wspc.GetCount()) {
-		Vector<String> linkfile;
+		Vector<String> linkfile, immfile;
 		String linkopt;
-		bool ok = BuildPackage(wspc, pi, 0, 1, mainconfigparam, Null, linkfile, linkopt);
+		bool ok = BuildPackage(wspc, pi, 0, 1, mainconfigparam, Null, linkfile, immfile, linkopt);
 		EndBuilding(ok);
 	}
 }
@@ -145,10 +145,10 @@ void Ide::FileCompile()
 	bool ok = true;
 	onefile = editfile;
 	if(wspc.GetCount()) {
-		Vector<String> linkfile;
+		Vector<String> linkfile, immfile;
 		String linkopt;
 		for(int i = 0; i < wspc.GetCount(); i++)
-			BuildPackage(wspc, i, 1, wspc.GetCount(), mainconfigparam, Null, linkfile, linkopt, false);
+			BuildPackage(wspc, i, 1, wspc.GetCount(), mainconfigparam, Null, linkfile, immfile, linkopt, false);
 	}
 	onefile.Clear();
 	EndBuilding(ok);

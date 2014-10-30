@@ -73,7 +73,8 @@ struct CppBuilder : Builder {
 	void                   ShowTime(int count, int start_time);
 
 	Blitz BlitzStep(Vector<String>& sfile, Vector<String>& soptions,
-	                Vector<String>& obj, const char *objext, Vector<bool>& optimize);
+	                Vector<String>& obj, Vector<String>& immfile,
+	                const char *objext, Vector<bool>& optimize);
 
 	virtual void           AddMakeFile(MakeFile& makefile, String package,
 		const Vector<String>& all_uses, const Vector<String>& all_libraries,
@@ -84,8 +85,8 @@ struct CppBuilder : Builder {
 
 struct GccBuilder : CppBuilder {
 	virtual void   AddFlags(Index<String>& cfg);
-	virtual bool   BuildPackage(const String& package, Vector<String>& linkfile, String& linkoptions,
-		const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize);
+	virtual bool   BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>& immfile,
+	    String& linkoptions, const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize);
 	virtual bool   Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap);
 	virtual bool   Preprocess(const String& package, const String& file, const String& target, bool asmout);
 
@@ -98,8 +99,8 @@ struct OwcBuilder : CppBuilder {
 	typedef OwcBuilder CLASSNAME;
 
 	virtual void   AddFlags(Index<String>& cfg);
-	virtual bool   BuildPackage(const String& package, Vector<String>& linkfile, String& linkoptions,
-		const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize);
+	virtual bool   BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>& immfile,
+	    String& linkoptions, const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize);
 	virtual bool   Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap);
 	virtual bool   Preprocess(const String& package, const String& file, const String& target, bool asmout);
 	
@@ -115,8 +116,8 @@ struct MscBuilder : CppBuilder {
 	typedef MscBuilder CLASSNAME;
 
 	virtual void   AddFlags(Index<String>& cfg);
-	virtual bool   BuildPackage(const String& package, Vector<String>& linkfile, String& linkoptions,
-		const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize);
+	virtual bool   BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>& immfile,
+	    String& linkoptions, const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize);
 	virtual bool   Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap);
 	virtual bool   Preprocess(const String& package, const String& file, const String& target, bool asmout);
 
@@ -135,7 +136,7 @@ struct MscBuilder : CppBuilder {
 };
 
 struct JavaBuilder : CppBuilder {
-	virtual bool   BuildPackage(const String& package, Vector<String>& linkfile, String& linkoptions,
+	virtual bool   BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>&, String& linkoptions,
 		const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize);
 	virtual bool   Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap);
 	virtual bool   Preprocess(const String& package, const String& file, const String& target, bool asmout);
@@ -152,7 +153,7 @@ public:
 	typedef ScriptBuilder CLASSNAME;
 	ScriptBuilder() : is_parsed(false), script_error(false) {}
 
-	virtual bool   BuildPackage(const String& package, Vector<String>& linkfile, String& linkoptions,
+	virtual bool   BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>&, String& linkoptions,
 		const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize);
 	virtual bool   Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap);
 	virtual bool   Preprocess(const String& package, const String& file, const String& target, bool asmout);

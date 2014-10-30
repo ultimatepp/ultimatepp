@@ -386,8 +386,8 @@ Time BlitzBaseTime()
 }
 
 Blitz CppBuilder::BlitzStep(Vector<String>& sfile, Vector<String>& soptions,
-                            Vector<String>& obj, const char *objext,
-                            Vector<bool>& optimize)
+                            Vector<String>& obj, Vector<String>& immfile,
+                            const char *objext, Vector<bool>& optimize)
 {
 	Blitz b;
 	Vector<String> excluded;
@@ -438,6 +438,7 @@ Blitz CppBuilder::BlitzStep(Vector<String>& sfile, Vector<String>& soptions,
 			b.build = true;
 		}
 		obj.Add(b.object);
+		immfile.Add(b.object);
 	}
 	else {
 		DeleteFile(b.path);
