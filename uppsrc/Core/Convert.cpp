@@ -367,7 +367,7 @@ Value ConvertDouble::Format(const Value& q) const
 
 Value ConvertDouble::Scan(const Value& txt) const {
 	String text = txt;
-	if(pattern.GetCount()) { // Fix text with patterns like "%2.!n EUR" (e.g. 1.2 EUR)
+	if(pattern.GetCount() && pattern != "%.10g") { // Fix text with patterns like "%2.!n EUR" (e.g. 1.2 EUR)
 		text = UPP::Filter(text, CharFilterDouble);
 		while(ToUpper(*text.Last()) == 'E')
 			text.Trim(text.GetCount() - 1);
