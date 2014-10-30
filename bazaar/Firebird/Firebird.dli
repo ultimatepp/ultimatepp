@@ -1,0 +1,994 @@
+/***************************/
+/* OSRI database functions */
+/***************************/
+
+FN(ISC_STATUS , \
+isc_attach_database, (ISC_STATUS*, \
+                                short, \
+                                const ISC_SCHAR*, \
+                                isc_db_handle*, \
+                                short, \
+                                const ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_array_gen_sdl, (ISC_STATUS*, \
+                            const ISC_ARRAY_DESC*, \
+                            ISC_SHORT*, \
+                            ISC_UCHAR*, \
+                            ISC_SHORT*))
+
+FN(ISC_STATUS , \
+isc_array_get_slice, (ISC_STATUS*, \
+                                isc_db_handle*, \
+                                isc_tr_handle*, \
+                                ISC_QUAD*, \
+                                const ISC_ARRAY_DESC*, \
+                                void*, \
+                                ISC_LONG*))
+
+FN(ISC_STATUS , \
+isc_array_lookup_bounds, (ISC_STATUS*, \
+                                        isc_db_handle*, \
+                                        isc_tr_handle*, \
+                                        const ISC_SCHAR*, \
+                                        const ISC_SCHAR*, \
+                                        ISC_ARRAY_DESC*))
+
+FN(ISC_STATUS , \
+isc_array_lookup_desc, (ISC_STATUS*, \
+                                    isc_db_handle*, \
+                                    isc_tr_handle*, \
+                                    const ISC_SCHAR*, \
+                                    const ISC_SCHAR*, \
+                                    ISC_ARRAY_DESC*))
+
+FN(ISC_STATUS , \
+isc_array_set_desc, (ISC_STATUS*, \
+                                const ISC_SCHAR*, \
+                                const ISC_SCHAR*, \
+                                const short*, \
+                                const short*, \
+                                const short*, \
+                                ISC_ARRAY_DESC*))
+
+FN(ISC_STATUS , \
+isc_array_put_slice, (ISC_STATUS*, \
+                                isc_db_handle*, \
+                                isc_tr_handle*, \
+                                ISC_QUAD*, \
+                                const ISC_ARRAY_DESC*, \
+                                void*, \
+                                ISC_LONG *))
+
+FN(void, \
+isc_blob_default_desc, (ISC_BLOB_DESC*, \
+                        const ISC_UCHAR*, \
+                        const ISC_UCHAR*))
+
+FN(ISC_STATUS , \
+isc_blob_gen_bpb, (ISC_STATUS*, \
+                        const ISC_BLOB_DESC*, \
+                        const ISC_BLOB_DESC*, \
+                        unsigned short, \
+                        ISC_UCHAR*, \
+                        unsigned short*))
+
+FN(ISC_STATUS , \
+isc_blob_info, (ISC_STATUS*, \
+                    isc_blob_handle*, \
+                    short, \
+                    const ISC_SCHAR*, \
+                    short, \
+                    ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_blob_lookup_desc, (ISC_STATUS*, \
+                                isc_db_handle*, \
+                                isc_tr_handle*, \
+                                const ISC_UCHAR*, \
+                                const ISC_UCHAR*, \
+                                ISC_BLOB_DESC*, \
+                                ISC_UCHAR*))
+
+FN(ISC_STATUS , \
+isc_blob_set_desc, (ISC_STATUS*, \
+                            const ISC_UCHAR*, \
+                            const ISC_UCHAR*, \
+                            short, \
+                            short, \
+                            short, \
+                            ISC_BLOB_DESC*))
+
+FN(ISC_STATUS , \
+isc_cancel_blob, (ISC_STATUS *, \
+                        isc_blob_handle *))
+
+FN(ISC_STATUS , \
+isc_cancel_events, (ISC_STATUS *, \
+                            isc_db_handle *, \
+                            ISC_LONG *))
+
+FN(ISC_STATUS , \
+isc_close_blob, (ISC_STATUS *, \
+                        isc_blob_handle *))
+
+FN(ISC_STATUS , \
+isc_commit_retaining, (ISC_STATUS *, \
+                            isc_tr_handle *))
+
+FN(ISC_STATUS , \
+isc_commit_transaction, (ISC_STATUS *, \
+                            isc_tr_handle *))
+
+FN(ISC_STATUS , \
+isc_create_blob, (ISC_STATUS*, \
+                        isc_db_handle*, \
+                        isc_tr_handle*, \
+                        isc_blob_handle*, \
+                        ISC_QUAD*))
+
+FN(ISC_STATUS , \
+isc_create_blob2, (ISC_STATUS*, \
+                        isc_db_handle*, \
+                        isc_tr_handle*, \
+                        isc_blob_handle*, \
+                        ISC_QUAD*, \
+                        short, \
+                        const ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_create_database, (ISC_STATUS*, \
+                                short, \
+                                const ISC_SCHAR*, \
+                                isc_db_handle*, \
+                                short, \
+                                const ISC_SCHAR*, \
+                                short))
+
+FN(ISC_STATUS , \
+isc_database_info, (ISC_STATUS*, \
+                            isc_db_handle*, \
+                            short, \
+                            const ISC_SCHAR*, \
+                            short, \
+                            ISC_SCHAR*))
+
+FN(void, \
+isc_decode_date, (const ISC_QUAD*, \
+            void*))
+
+FN(void, \
+isc_decode_sql_date, (const ISC_DATE*, \
+                    void*))
+
+FN(void, \
+isc_decode_sql_time, (const ISC_TIME*, \
+                    void*))
+
+FN(void, \
+isc_decode_timestamp, (const ISC_TIMESTAMP*, \
+                        void*))
+
+FN(ISC_STATUS , \
+isc_detach_database, (ISC_STATUS *, \
+                                isc_db_handle *))
+
+FN(ISC_STATUS , \
+isc_drop_database, (ISC_STATUS *, \
+                            isc_db_handle *))
+
+FN(ISC_STATUS , \
+isc_dsql_allocate_statement, (ISC_STATUS *, \
+                                                isc_db_handle *, \
+                                                isc_stmt_handle *))
+
+FN(ISC_STATUS , \
+isc_dsql_alloc_statement2, (ISC_STATUS *, \
+                                            isc_db_handle *, \
+                                            isc_stmt_handle *))
+
+FN(ISC_STATUS , \
+isc_dsql_describe, (ISC_STATUS *, \
+                            isc_stmt_handle *, \
+                            unsigned short, \
+                            XSQLDA *))
+
+FN(ISC_STATUS , \
+isc_dsql_describe_bind, (ISC_STATUS *, \
+                                        isc_stmt_handle *, \
+                                        unsigned short, \
+                                        XSQLDA *))
+
+FN(ISC_STATUS , \
+isc_dsql_exec_immed2, (ISC_STATUS*, \
+                                isc_db_handle*, \
+                                isc_tr_handle*, \
+                                unsigned short, \
+                                const ISC_SCHAR*, \
+                                unsigned short, \
+                                XSQLDA*, \
+                                XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_dsql_execute, (ISC_STATUS*, \
+                        isc_tr_handle*, \
+                        isc_stmt_handle*, \
+                        unsigned short, \
+                        XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_dsql_execute2, (ISC_STATUS*, \
+                            isc_tr_handle*, \
+                            isc_stmt_handle*, \
+                            unsigned short, \
+                            XSQLDA*, \
+                            XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_dsql_execute_immediate, (ISC_STATUS*, \
+                                                isc_db_handle*, \
+                                                isc_tr_handle*, \
+                                                unsigned short, \
+                                                const ISC_SCHAR*, \
+                                                unsigned short, \
+                                                XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_dsql_fetch, (ISC_STATUS *, \
+                        isc_stmt_handle *, \
+                        unsigned short, \
+                        XSQLDA *))
+
+FN(ISC_STATUS , \
+isc_dsql_finish, (isc_db_handle *))
+
+FN(ISC_STATUS , \
+isc_dsql_free_statement, (ISC_STATUS *, \
+                                        isc_stmt_handle *, \
+                                        unsigned short))
+
+FN(ISC_STATUS , \
+isc_dsql_insert, (ISC_STATUS*, \
+                        isc_stmt_handle*, \
+                        unsigned short, \
+                        XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_dsql_prepare, (ISC_STATUS*, \
+                        isc_tr_handle*, \
+                        isc_stmt_handle*, \
+                        unsigned short, \
+                        const ISC_SCHAR*, \
+                        unsigned short, \
+                        XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_dsql_set_cursor_name, (ISC_STATUS*, \
+                                        isc_stmt_handle*, \
+                                        const ISC_SCHAR*, \
+                                        unsigned short))
+
+FN(ISC_STATUS , \
+isc_dsql_sql_info, (ISC_STATUS*, \
+                            isc_stmt_handle*, \
+                            short, \
+                            const ISC_SCHAR*, \
+                            short, \
+                            ISC_SCHAR*))
+
+FN(void, \
+isc_encode_date, (const void*, \
+            ISC_QUAD*))
+
+FN(void, \
+isc_encode_sql_date, (const void*, \
+                    ISC_DATE*))
+
+FN(void, \
+isc_encode_sql_time, (const void*, \
+                    ISC_TIME*))
+
+FN(void, \
+isc_encode_timestamp, (const void*, \
+                        ISC_TIMESTAMP*))
+
+FN(ISC_LONG, \
+isc_event_block, (ISC_UCHAR**, \
+                                ISC_UCHAR**, \
+                                ISC_USHORT, ...))
+
+FN(ISC_USHORT, \
+isc_event_block_a, (ISC_SCHAR**, \
+                            ISC_SCHAR**, \
+                            ISC_USHORT, 
+                            ISC_SCHAR**))
+
+FN(void, \
+isc_event_block_s, (ISC_SCHAR**, \
+                ISC_SCHAR**, \
+                ISC_USHORT, \
+                ISC_SCHAR**, \
+                ISC_USHORT*))
+
+FN(void, \
+isc_event_counts, (ISC_ULONG*, \
+                short, \
+                ISC_UCHAR*, \
+                const ISC_UCHAR *))
+
+FN(int, \
+isc_modify_dpb, (ISC_SCHAR**, \
+        short*, \
+        unsigned short, \
+        const ISC_SCHAR*, \
+        short))
+
+FN(ISC_LONG, \
+isc_free, (ISC_SCHAR *))
+
+FN(ISC_STATUS , \
+isc_get_segment, (ISC_STATUS *, \
+                        isc_blob_handle *, \
+                        unsigned short *, \
+                        unsigned short, \
+                        ISC_SCHAR *))
+
+FN(ISC_STATUS , \
+isc_get_slice, (ISC_STATUS*, \
+                    isc_db_handle*, \
+                    isc_tr_handle*, \
+                    ISC_QUAD*, \
+                    short, \
+                    const ISC_SCHAR*, \
+                    short, \
+                    const ISC_LONG*, \
+                    ISC_LONG, \
+                    void*, \
+                    ISC_LONG*))
+
+/* CVC: This non-const signature is needed for compatibility, see gds.cpp. */
+FN(ISC_LONG, \
+isc_interprete, (ISC_SCHAR*, \
+                        ISC_STATUS**))
+
+/* This const params version used in the engine and other places. */
+FN(ISC_LONG, \
+fb_interpret, (ISC_SCHAR*, \
+                unsigned int, \
+                const ISC_STATUS**))
+
+FN(ISC_STATUS , \
+isc_open_blob, (ISC_STATUS*, \
+                    isc_db_handle*, \
+                    isc_tr_handle*, \
+                    isc_blob_handle*, \
+                    ISC_QUAD*))
+
+FN(ISC_STATUS , \
+isc_open_blob2, (ISC_STATUS*, \
+                        isc_db_handle*, \
+                        isc_tr_handle*, \
+                        isc_blob_handle*, \
+                        ISC_QUAD*, \
+                        ISC_USHORT, \
+                        const ISC_UCHAR*))
+
+FN(ISC_STATUS , \
+isc_prepare_transaction2, (ISC_STATUS*, \
+                            isc_tr_handle*, \
+                            ISC_USHORT, \
+                            const ISC_UCHAR*))
+
+FN(void, \
+isc_print_sqlerror, (ISC_SHORT, \
+                const ISC_STATUS*))
+
+FN(ISC_STATUS , \
+isc_print_status, (const ISC_STATUS*))
+
+FN(ISC_STATUS , \
+isc_put_segment, (ISC_STATUS*, \
+                        isc_blob_handle*, \
+                        unsigned short, \
+                        const ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_put_slice, (ISC_STATUS*, \
+                    isc_db_handle*, \
+                    isc_tr_handle*, \
+                    ISC_QUAD*, \
+                    short, \
+                    const ISC_SCHAR*, \
+                    short, \
+                    const ISC_LONG*, \
+                    ISC_LONG, \
+                    void*))
+
+FN(ISC_STATUS , \
+isc_que_events, (ISC_STATUS*, \
+                        isc_db_handle*, \
+                        ISC_LONG*, \
+                        short, \
+                        const ISC_UCHAR*, \
+                        ISC_EVENT_CALLBACK, \
+                        void*))
+
+FN(ISC_STATUS , \
+isc_rollback_retaining, (ISC_STATUS *, \
+                                        isc_tr_handle *))
+
+FN(ISC_STATUS , \
+isc_rollback_transaction, (ISC_STATUS *, \
+                                        isc_tr_handle *))
+
+FN(ISC_STATUS , \
+isc_start_multiple, (ISC_STATUS *, \
+                                isc_tr_handle *, \
+                                short, \
+                                void *))
+
+FN(ISC_STATUS , \
+isc_start_transaction, (ISC_STATUS *, \
+                                                isc_tr_handle *, \
+                                                short, ...))
+
+FN(ISC_LONG, \
+isc_sqlcode, (const ISC_STATUS*))
+
+FN(void, \
+isc_sqlcode_s, (const ISC_STATUS*, \
+        ISC_ULONG*))
+
+FN(void, \
+isc_sql_interprete, (short, \
+                ISC_SCHAR*, \
+                short))
+
+FN(ISC_STATUS , \
+isc_transaction_info, (ISC_STATUS*, \
+                                isc_tr_handle*, \
+                                short, \
+                                const ISC_SCHAR*, \
+                                short, \
+                                ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_transact_request, (ISC_STATUS*, \
+                                isc_db_handle*, \
+                                isc_tr_handle*, \
+                                unsigned short, \
+                                const ISC_SCHAR*, \
+                                unsigned short, \
+                                ISC_SCHAR*, \
+                                unsigned short, \
+                                ISC_SCHAR*))
+
+FN(ISC_LONG, \
+isc_vax_integer, (const ISC_SCHAR*, \
+                    short))
+
+FN(ISC_INT64, \
+isc_portable_integer, (const ISC_UCHAR*, \
+                                short))
+
+/*************************************/
+/* Security Functions and structures */
+/*************************************/
+
+FN(ISC_STATUS , \
+isc_add_user, (ISC_STATUS*, const USER_SEC_DATA*))
+
+FN(ISC_STATUS , \
+isc_delete_user, (ISC_STATUS*, const USER_SEC_DATA*))
+
+FN(ISC_STATUS , \
+isc_modify_user, (ISC_STATUS*, const USER_SEC_DATA*))
+
+/**********************************/
+/*  Other OSRI functions          */
+/**********************************/
+
+FN(ISC_STATUS , \
+isc_compile_request, (ISC_STATUS*, \
+                                isc_db_handle*, \
+                                isc_req_handle*, \
+                                short, \
+                                const ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_compile_request2, (ISC_STATUS*, \
+                                isc_db_handle*, \
+                                isc_req_handle*, \
+                                short, \
+                                const ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_ddl, (ISC_STATUS*, \
+        isc_db_handle*, \
+        isc_tr_handle*, \
+        short, \
+        const ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_prepare_transaction, (ISC_STATUS*, \
+                                        isc_tr_handle*))
+
+
+FN(ISC_STATUS , \
+isc_receive, (ISC_STATUS*, \
+                isc_req_handle*, \
+                short, \
+                short, \
+                void*, \
+                short))
+
+FN(ISC_STATUS , \
+isc_reconnect_transaction, (ISC_STATUS*, \
+                                            isc_db_handle*, \
+                                            isc_tr_handle*, \
+                                            short, \
+                                            const ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_release_request, (ISC_STATUS*, \
+                                isc_req_handle*))
+
+FN(ISC_STATUS , \
+isc_request_info, (ISC_STATUS*, \
+                        isc_req_handle*, \
+                        short, \
+                        short, \
+                        const ISC_SCHAR*, \
+                        short, \
+                        ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_seek_blob, (ISC_STATUS*, \
+                    isc_blob_handle*, \
+                    short, \
+                    ISC_LONG, \
+                    ISC_LONG*))
+
+FN(ISC_STATUS , \
+isc_send, (ISC_STATUS*, \
+        isc_req_handle*, \
+        short, \
+        short, \
+        const void*, \
+        short))
+
+FN(ISC_STATUS , \
+isc_start_and_send, (ISC_STATUS*, \
+                                isc_req_handle*, \
+                                isc_tr_handle*, \
+                                short, \
+                                short, \
+                                const void*, \
+                                short))
+
+FN(ISC_STATUS , \
+isc_start_request, (ISC_STATUS *, \
+                            isc_req_handle *, \
+                            isc_tr_handle *, \
+                            short))
+
+FN(ISC_STATUS , \
+isc_unwind_request, (ISC_STATUS *, \
+                                isc_tr_handle *, \
+                                short))
+
+FN(ISC_STATUS , \
+isc_wait_for_event, (ISC_STATUS*, \
+                                isc_db_handle*, \
+                                short, \
+                                const ISC_UCHAR*, \
+                                ISC_UCHAR*))
+
+
+/*****************************/
+/* Other Sql functions       */
+/*****************************/
+
+FN(ISC_STATUS , \
+isc_close, (ISC_STATUS*, \
+            const ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_declare, (ISC_STATUS*, \
+                const ISC_SCHAR*, \
+                const ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_describe, (ISC_STATUS*, \
+                const ISC_SCHAR*, \
+                XSQLDA *))
+
+FN(ISC_STATUS , \
+isc_describe_bind, (ISC_STATUS*, \
+                            const ISC_SCHAR*, \
+                            XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_execute, (ISC_STATUS*, \
+                isc_tr_handle*, \
+                const ISC_SCHAR*, \
+                XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_execute_immediate, (ISC_STATUS*, \
+                                    isc_db_handle*, \
+                                    isc_tr_handle*, \
+                                    short*, \
+                                    const ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_fetch, (ISC_STATUS*, \
+            const ISC_SCHAR*, \
+            XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_open, (ISC_STATUS*, \
+        isc_tr_handle*, \
+        const ISC_SCHAR*, \
+        XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_prepare, (ISC_STATUS*, \
+                isc_db_handle*, \
+                isc_tr_handle*, \
+                const ISC_SCHAR*, \
+                short*, \
+                const ISC_SCHAR*, \
+                XSQLDA*))
+
+
+/*************************************/
+/* Other Dynamic sql functions       */
+/*************************************/
+
+FN(ISC_STATUS , \
+isc_dsql_execute_m, (ISC_STATUS*, \
+                                isc_tr_handle*, \
+                                isc_stmt_handle*, \
+                                unsigned short, \
+                                const ISC_SCHAR*, \
+                                unsigned short, \
+                                unsigned short, \
+                                ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_dsql_execute2_m, (ISC_STATUS*, \
+                                isc_tr_handle*, \
+                                isc_stmt_handle*, \
+                                unsigned short, \
+                                const ISC_SCHAR*, \
+                                unsigned short, \
+                                unsigned short, \
+                                const ISC_SCHAR*, \
+                                unsigned short, \
+                                ISC_SCHAR*, \
+                                unsigned short, \
+                                unsigned short, \
+                                ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_dsql_execute_immediate_m, (ISC_STATUS*, \
+                                                isc_db_handle*, \
+                                                isc_tr_handle*, \
+                                                unsigned short, \
+                                                const ISC_SCHAR*, \
+                                                unsigned short, \
+                                                unsigned short, \
+                                                const ISC_SCHAR*, \
+                                                unsigned short, \
+                                                unsigned short, \
+                                                ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_dsql_exec_immed3_m, (ISC_STATUS*, \
+                                        isc_db_handle*, \
+                                        isc_tr_handle*, \
+                                        unsigned short, \
+                                        const ISC_SCHAR*, \
+                                        unsigned short, \
+                                        unsigned short, \
+                                        const ISC_SCHAR*, \
+                                        unsigned short, \
+                                        unsigned short, \
+                                        ISC_SCHAR*, \
+                                        unsigned short, \
+                                        ISC_SCHAR*, \
+                                        unsigned short, \
+                                        unsigned short, \
+                                        ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_dsql_fetch_m, (ISC_STATUS*, \
+                        isc_stmt_handle*, \
+                        unsigned short, \
+                        const ISC_SCHAR*, \
+                        unsigned short, \
+                        unsigned short, \
+                        ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_dsql_insert_m, (ISC_STATUS*, \
+                            isc_stmt_handle*, \
+                            unsigned short, \
+                            const ISC_SCHAR*, \
+                            unsigned short, \
+                            unsigned short, \
+                            const ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_dsql_prepare_m, (ISC_STATUS*, \
+                                isc_tr_handle*, \
+                                isc_stmt_handle*, \
+                                unsigned short, \
+                                const ISC_SCHAR*, \
+                                unsigned short, \
+                                unsigned short, \
+                                const ISC_SCHAR*, \
+                                unsigned short, \
+                                ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_dsql_release, (ISC_STATUS*, \
+                        const ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_embed_dsql_close, (ISC_STATUS*, \
+                                const ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_embed_dsql_declare, (ISC_STATUS*, \
+                                        const ISC_SCHAR*, \
+                                        const ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_embed_dsql_describe, (ISC_STATUS*, \
+                                        const ISC_SCHAR*, \
+                                        unsigned short, \
+                                        XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_embed_dsql_describe_bind, (ISC_STATUS*, \
+                                                const ISC_SCHAR*, \
+                                                unsigned short, \
+                                                XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_embed_dsql_execute, (ISC_STATUS*, \
+                                        isc_tr_handle*, \
+                                        const ISC_SCHAR*, \
+                                        unsigned short, \
+                                        XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_embed_dsql_execute2, (ISC_STATUS*, \
+                                        isc_tr_handle*, \
+                                        const ISC_SCHAR*, \
+                                        unsigned short, \
+                                        XSQLDA*, \
+                                        XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_embed_dsql_execute_immed, (ISC_STATUS*, \
+                                                isc_db_handle*, \
+                                                isc_tr_handle*, \
+                                                unsigned short, \
+                                                const ISC_SCHAR*, \
+                                                unsigned short, \
+                                                XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_embed_dsql_fetch, (ISC_STATUS*, \
+                                const ISC_SCHAR*, \
+                                unsigned short, \
+                                XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_embed_dsql_fetch_a, (ISC_STATUS*, \
+                                        int*, \
+                                        const ISC_SCHAR*, \
+                                        ISC_USHORT, \
+                                        XSQLDA*))
+
+FN(void, \
+isc_embed_dsql_length, (const ISC_UCHAR*, \
+                        ISC_USHORT*))
+
+FN(ISC_STATUS , \
+isc_embed_dsql_open, (ISC_STATUS*, \
+                                isc_tr_handle*, \
+                                const ISC_SCHAR*, \
+                                unsigned short, \
+                                XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_embed_dsql_open2, (ISC_STATUS*, \
+                                isc_tr_handle*, \
+                                const ISC_SCHAR*, \
+                                unsigned short, \
+                                XSQLDA*, \
+                                XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_embed_dsql_insert, (ISC_STATUS*, \
+                                    const ISC_SCHAR*, \
+                                    unsigned short, \
+                                    XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_embed_dsql_prepare, (ISC_STATUS*, \
+                                        isc_db_handle*, \
+                                        isc_tr_handle*, \
+                                        const ISC_SCHAR*, \
+                                        unsigned short, \
+                                        const ISC_SCHAR*, \
+                                        unsigned short, \
+                                        XSQLDA*))
+
+FN(ISC_STATUS , \
+isc_embed_dsql_release, (ISC_STATUS*, \
+                                        const ISC_SCHAR*))
+
+
+/******************************/
+/* Other Blob functions       */
+/******************************/
+
+FN(BSTREAM*, \
+BLOB_open, (isc_blob_handle, \
+                        ISC_SCHAR*, \
+                        int))
+
+FN(int, \
+BLOB_put, (ISC_SCHAR, \
+BSTREAM*))
+
+FN(int, \
+BLOB_close, (BSTREAM*))
+
+FN(int, \
+BLOB_get, (BSTREAM*))
+
+FN(int, \
+BLOB_display, (ISC_QUAD*, \
+    isc_db_handle, \
+    isc_tr_handle, \
+    const ISC_SCHAR*))
+
+FN(int, \
+BLOB_dump, (ISC_QUAD*, \
+isc_db_handle, \
+isc_tr_handle, \
+const ISC_SCHAR*))
+
+FN(int, \
+BLOB_edit, (ISC_QUAD*, \
+isc_db_handle, \
+isc_tr_handle, \
+const ISC_SCHAR*))
+
+FN(int, \
+BLOB_load, (ISC_QUAD*, \
+isc_db_handle, \
+isc_tr_handle, \
+const ISC_SCHAR*))
+
+FN(int, \
+BLOB_text_dump, (ISC_QUAD*, \
+        isc_db_handle, \
+        isc_tr_handle, \
+        const ISC_SCHAR*))
+
+FN(int, \
+BLOB_text_load, (ISC_QUAD*, \
+        isc_db_handle, \
+        isc_tr_handle, \
+        const ISC_SCHAR*))
+
+FN(BSTREAM*, \
+Bopen, (ISC_QUAD*, \
+                isc_db_handle, \
+                isc_tr_handle, \
+                const ISC_SCHAR*))
+
+
+/******************************/
+/* Other Misc functions       */
+/******************************/
+
+FN(ISC_LONG, \
+isc_ftof, (const ISC_SCHAR*, \
+        const unsigned short, \
+        ISC_SCHAR*, \
+        const unsigned short))
+
+FN(ISC_STATUS , \
+isc_print_blr, (const ISC_SCHAR*, \
+                    ISC_PRINT_CALLBACK, \
+                    void*, \
+                    short))
+
+FN(void, \
+isc_set_debug, (int))
+
+FN(void, \
+isc_qtoq, (const ISC_QUAD*, \
+ISC_QUAD*))
+
+FN(void, \
+isc_vtof, (const ISC_SCHAR*, \
+ISC_SCHAR*, \
+unsigned short))
+
+FN(void, \
+isc_vtov, (const ISC_SCHAR*, \
+ISC_SCHAR*, \
+short))
+
+FN(int, \
+isc_version, (isc_db_handle*, \
+ISC_VERSION_CALLBACK, \
+void*))
+
+FN(ISC_LONG, \
+isc_reset_fpe, (ISC_USHORT))
+
+FN(uintptr_t, \
+isc_baddress, (ISC_SCHAR*))
+
+FN(void, \
+isc_baddress_s, (const ISC_SCHAR*, \
+                uintptr_t*))
+
+/*****************************************/
+/* Service manager functions             */
+/*****************************************/
+
+FN(ISC_STATUS , \
+isc_service_attach, (ISC_STATUS*, \
+                                unsigned short, \
+                                const ISC_SCHAR*, \
+                                isc_svc_handle*, \
+                                unsigned short, \
+                                const ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_service_detach, (ISC_STATUS *, \
+                                isc_svc_handle *))
+
+FN(ISC_STATUS , \
+isc_service_query, (ISC_STATUS*, \
+                            isc_svc_handle*, \
+                            isc_resv_handle*, \
+                            unsigned short, \
+                            const ISC_SCHAR*, \
+                            unsigned short, \
+                            const ISC_SCHAR*, \
+                            unsigned short, \
+                            ISC_SCHAR*))
+
+FN(ISC_STATUS , \
+isc_service_start, (ISC_STATUS*, \
+                            isc_svc_handle*, \
+                            isc_resv_handle*, \
+                            unsigned short, \
+                            const ISC_SCHAR*))
+
+
+/********************************/
+/* Client information functions */
+/********************************/
+
+FN(void, \
+isc_get_client_version, ( ISC_SCHAR  *))
+
+FN(int, \
+isc_get_client_major_version, ())
+
+FN(int, \
+isc_get_client_minor_version, ())
+
