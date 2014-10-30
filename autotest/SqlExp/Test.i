@@ -119,7 +119,7 @@
 		"insert into \"PLAT_DTM\"(\"PLAT_DTM_SEQ\", \"PRIPAD_SEQ\", \"DATUM\", \"CASTKA\", \"TXT\") select \"SEQ_POPLATEK\".NEXTVAL, 1111, \"DATUM\", \"CASTKA\", \"TXT\" from \"PLAT_DTM\" where \"PRIPAD_SEQ\" = 2222"); // insert into "PLAT_DTM"("PLAT_DTM_SEQ", "PRIPAD_SEQ", "DATUM", "CASTKA", "TXT") select "SEQ_POPLATEK".NEXTVAL, 1111, "DATUM", "CASTKA", "TXT" from "PLAT_DTM" where "PRIPAD_SEQ" = 2222
 	TEST(MSSQL,
 		Insert(PLAT_DTM) (PLAT_DTM_SEQ, NextVal(SEQ_POPLATEK)) (PRIPAD_SEQ, 1111) (DATUM) (CASTKA) (TXT) .From(PLAT_DTM).Where(PRIPAD_SEQ == 2222),
-		"insert into \"PLAT_DTM\"(\"PLAT_DTM_SEQ\", \"PRIPAD_SEQ\", \"DATUM\", \"CASTKA\", \"TXT\") select \"SEQ_POPLATEK\".NEXTVAL, 1111, \"DATUM\", \"CASTKA\", \"TXT\" from \"PLAT_DTM\" where \"PRIPAD_SEQ\" = 2222"); // insert into "PLAT_DTM"("PLAT_DTM_SEQ", "PRIPAD_SEQ", "DATUM", "CASTKA", "TXT") select "SEQ_POPLATEK".NEXTVAL, 1111, "DATUM", "CASTKA", "TXT" from "PLAT_DTM" where "PRIPAD_SEQ" = 2222
+		"insert into \"PLAT_DTM\"(\"PLAT_DTM_SEQ\", \"PRIPAD_SEQ\", \"DATUM\", \"CASTKA\", \"TXT\") select next value for \"SEQ_POPLATEK\", 1111, \"DATUM\", \"CASTKA\", \"TXT\" from \"PLAT_DTM\" where \"PRIPAD_SEQ\" = 2222"); // insert into "PLAT_DTM"("PLAT_DTM_SEQ", "PRIPAD_SEQ", "DATUM", "CASTKA", "TXT") select next value for "SEQ_POPLATEK", 1111, "DATUM", "CASTKA", "TXT" from "PLAT_DTM" where "PRIPAD_SEQ" = 2222
 	TEST(PGSQL,
 		Insert(PLAT_DTM) (PLAT_DTM_SEQ, NextVal(SEQ_POPLATEK)) (PRIPAD_SEQ, 1111) (DATUM) (CASTKA) (TXT) .From(PLAT_DTM).Where(PRIPAD_SEQ == 2222),
 		"insert into \"PLAT_DTM\"(\"PLAT_DTM_SEQ\", \"PRIPAD_SEQ\", \"DATUM\", \"CASTKA\", \"TXT\") select nextval('SEQ_POPLATEK'), 1111, \"DATUM\", \"CASTKA\", \"TXT\" from \"PLAT_DTM\" where \"PRIPAD_SEQ\" = 2222"); // insert into "PLAT_DTM"("PLAT_DTM_SEQ", "PRIPAD_SEQ", "DATUM", "CASTKA", "TXT") select nextval('SEQ_POPLATEK'), 1111, "DATUM", "CASTKA", "TXT" from "PLAT_DTM" where "PRIPAD_SEQ" = 2222
@@ -911,7 +911,7 @@
 		"select \"SEQ\".NEXTVAL from DUAL"); // select "SEQ".NEXTVAL from DUAL
 	TEST(MSSQL,
 		Select(NextVal(SEQ)).Get(),
-		"select \"SEQ\".NEXTVAL"); // select "SEQ".NEXTVAL
+		"select next value for \"SEQ\""); // select next value for "SEQ"
 	TEST(PGSQL,
 		Select(NextVal(SEQ)).Get(),
 		"select nextval('SEQ')"); // select nextval('SEQ')

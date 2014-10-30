@@ -107,4 +107,10 @@ CONSOLE_APP_MAIN
 	
 	ASSERT(StrDbl("123xxx") == 123);
 	ASSERT(StrInt("123xxx") == 123);
+	
+	ConvertDouble dd;
+	dd.Pattern("%2.!n EUR");
+	Test(dd, "123 EUR", 123);
+	
+	LOG("=========== OK");
 }
