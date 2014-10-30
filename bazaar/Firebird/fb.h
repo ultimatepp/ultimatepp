@@ -17,7 +17,7 @@
 	#define DLLFILENAME "fbclient.so"
 #endif
 #define DLIMODULE   FB
-#define DLIHEADER   <firebird/firebird.dli>
+#define DLIHEADER   <Firebird/Firebird.dli>
 #include <Core/dli_header.h> 
 
 namespace ibpp
