@@ -1,8 +1,24 @@
+// vi: noexpandtab:tabstop=4
 #ifndef _firebird_fb_h_
 #define _firebird_fb_h_
 
+/*
+	Author: Sergey Sikorskiy (www.sikorskiy.net)
+	License: BSD
+*/
+ 
 #include <Sql/Sql.h>
-#include <ibase.h>
+#include "lib/ibase.h"
+
+#ifdef PLATFORM_WIN32
+	#define DLLFILENAME "fbclient.dll"
+	#define DLLCALL     __stdcall
+#else
+	#define DLLFILENAME "fbclient.so"
+#endif
+#define DLIMODULE   FB
+#define DLIHEADER   <firebird/firebird.dli>
+#include <Core/dli_header.h> 
 
 namespace ibpp
 {
@@ -31,6 +47,8 @@ namespace ibpp
 	class Error
 	{
 	public:
+		Error(T_FB& dll) : dll(dll) {}
+		
 		ISC_STATUS* getErrorVector()
 		{
 			return status_vector_;
@@ -45,14 +63,21 @@ namespace ibpp
 		{
 			return status_vector_[1];
 		}
+		
+		void check(ISC_STATUS rc)
+		{
+			if (rc)
+				check();
+		}
 
+	protected:
+		T_FB&       dll;
+	
 	private:
-		ISC_STATUS  status_vector_[20];
 		long        sqlCode_;
+		ISC_STATUS  status_vector_[20];
 		char        msg_[1024];
 	};
-
-	extern Error ib_error;
 
 	class dpb
 	{
@@ -129,7 +154,7 @@ namespace ibpp
 	class DataBase
 	{
 	public:
-		DataBase();
+		DataBase(T_FB& dll, Error& ib_error);
 
 	public:
 		isc_db_handle* getHandleP() const
@@ -281,6 +306,8 @@ namespace ibpp
 	private:
 		mutable isc_db_handle	handle_;
 		DBParamBuff     		paramBuff_;
+		T_FB& dll;
+		Error& ib_error;
 
 	public:
 		// Because I cannot make a friend function ...
@@ -291,7 +318,7 @@ namespace ibpp
 	class Transaction
 	{
 	public:
-		Transaction();
+		Transaction(T_FB& dll, Error& ib_error);
 
 	public:
 		isc_tr_handle* getHandleP() const
@@ -436,6 +463,8 @@ namespace ibpp
 	private:
 		mutable isc_tr_handle	handle_;
 		dpb       				paramBuff_;
+		T_FB&                   dll;
+		Error&                  ib_error;
 	};
 
 	class SQLDataArray
@@ -479,7 +508,7 @@ namespace ibpp
 	class DynamicSQL
 	{
 	public:
-		DynamicSQL(const DataBase& db, const Transaction& tr);
+		DynamicSQL(const DataBase& db, const Transaction& tr, T_FB& dll, Error& ib_error);
 		~DynamicSQL();
 
 	public:
@@ -552,6 +581,9 @@ namespace ibpp
 		isc_db_handle*  pDBHandle_;
 		isc_tr_handle*  pTRHandle_;
 
+		T_FB&           dll;
+		Error&          ib_error;
+
 		isc_stmt_handle handle_;        // It is a pointer, actualy.
 
 		SQLDataArray    inDataArray_;
@@ -572,6 +604,8 @@ namespace ibpp
 	class BlobDescr
 	{
 	public:
+	    BlobDescr(T_FB& dll, Error& ib_error) : dll(dll), ib_error(ib_error) {}
+	    
 		// Determines the subtype, character set, and segment size of a SegmentBlob, given a table name
 		// and SegmentBlob column name.
 		void get(
@@ -588,6 +622,8 @@ namespace ibpp
 	protected:
 	private:
 		ISC_BLOB_DESC blobDescr_;
+		T_FB&         dll;
+		Error&        ib_error;
 	};
 
 	class SegmentBlob
@@ -624,7 +660,7 @@ namespace ibpp
 		};
 
 	public:
-		SegmentBlob(const DataBase& db, const Transaction& tr);
+		SegmentBlob(const DataBase& db, const Transaction& tr, T_FB& dll, Error& ib_error);
 		~SegmentBlob();
 
 	public:
@@ -677,6 +713,9 @@ namespace ibpp
 		isc_db_handle*  pDBHandle_;
 		isc_tr_handle*  pTRHandle_;
 		isc_blob_handle handle_;        // It is a pointer, actualy.
+
+		T_FB&           dll;
+		Error&          ib_error;
 
 		GDS_QUAD        id_;    // SegmentBlob ID put into out_sqlda by isc_dsql_fetch()
 		int             stat_;
@@ -741,6 +780,8 @@ namespace ibpp
 	class Service
 	{
 	public:
+		Service(T_FB& dll, Error& ib_error) : dll(dll), ib_error(ib_error) {}
+		
 		void attach(
 			const char* host = NULL,
 			const char* user = NULL,
@@ -754,8 +795,13 @@ namespace ibpp
 
 		void query(const spb& request, const spb& result);
 
+		T_FB& get_dll() { return dll; }
+		Error& get_ib_error() { return ib_error; }
+
 	private:
 		isc_svc_handle      handle_;
+		T_FB& dll;
+		Error& ib_error;
 	};
 
 	class user_info : Moveable<user_info>

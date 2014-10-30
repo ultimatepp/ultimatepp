@@ -1,4 +1,20 @@
+// vi: noexpandtab:tabstop=4
+/*
+	Author: Sergey Sikorskiy (www.sikorskiy.net)
+	License: BSD
+*/
+
 #include "fb.h"
+
+#ifdef PLATFORM_WIN32
+	#define DLLFILENAME "fbclient.dll"
+	#define DLLCALL     __stdcall
+#else
+	#define DLLFILENAME "fbclient.so"
+#endif
+#define DLIMODULE   FB
+#define DLIHEADER   <firebird/firebird.dli>
+#include <Core/dli_source.h>
 
 // Development-time comments ...
 
@@ -189,24 +205,11 @@
 namespace ibpp
 {
 	///////////////////////////////////////////////////////////////////////////
-	Error ib_error;
-
-	inline
-	void
-	check(ISC_STATUS rc)
-	{
-		if (rc)
-		{
-			ib_error.check();
-		}
-	}
-	
-
 	///////////////////////////////////////////////////////////////////////////
 	long
 	Error::getSQLCode()
 	{
-		sqlCode_ = isc_sqlcode(status_vector_);
+		sqlCode_ = dll.isc_sqlcode(status_vector_);
 		if (sqlCode_ == 999)
 		{
 			sqlCode_ = 0;
@@ -224,18 +227,18 @@ namespace ibpp
 
 #if 0
 		ISC_STATUS* pVector = status_vector_;
-		isc_interprete(msg_, &pVector);
+		dll.isc_interprete(msg_, &pVector);
 		errStr += msg_;
-		while (isc_interprete(msg_, &pVector))
+		while (dll.isc_interprete(msg_, &pVector))
 		{
 			errStr += "; ";
 			errStr += msg_;
 		}
 #else
 		const ISC_STATUS* pVector = status_vector_;
-		fb_interpret(msg_, sizeof(msg_), &pVector);
+		dll.fb_interpret(msg_, sizeof(msg_), &pVector);
 		errStr += msg_;
-		while (fb_interpret(msg_, sizeof(msg_), &pVector))
+		while (dll.fb_interpret(msg_, sizeof(msg_), &pVector))
 		{
 			errStr += "; ";
 			errStr += msg_;
@@ -338,8 +341,10 @@ namespace ibpp
 	}
 
 	///////////////////////////////////////////////////////////////////////////
-	DataBase::DataBase() :
-			handle_(NULL)
+	DataBase::DataBase(T_FB& dll, Error& ib_error)
+	: handle_(NULL)
+	, dll(dll)
+	, ib_error(ib_error)
 	{
 	}
 
@@ -347,7 +352,7 @@ namespace ibpp
 	DataBase::attach(const char* name)
 	{
 		handle_ = NULL;
-		check(isc_attach_database(
+		ib_error.check(dll.isc_attach_database(
 				  ib_error.getErrorVector(),
 				  strlen(name),
 				  const_cast<char*>(name),
@@ -362,7 +367,7 @@ namespace ibpp
 	{
 		if (handle_ != 0)
 		{
-			check(isc_detach_database(
+			ib_error.check(dll.isc_detach_database(
 					  ib_error.getErrorVector(),
 					  //const_cast<void**>(&handle_)
 					  &handle_
@@ -373,7 +378,7 @@ namespace ibpp
 	void
 	DataBase::drop()
 	{
-		check(isc_drop_database(
+		ib_error.check(dll.isc_drop_database(
 				  ib_error.getErrorVector(),
 				  //const_cast<void**>(&handle_)
 				  &handle_
@@ -387,7 +392,7 @@ namespace ibpp
 		ASSERT(handle_ == 0);
 		isc_tr_handle tr_handle = NULL;
 
-		check(isc_dsql_execute_immediate(
+		ib_error.check(dll.isc_dsql_execute_immediate(
 				  ib_error.getErrorVector(),
 				  &handle_,
 				  &tr_handle,
@@ -397,7 +402,7 @@ namespace ibpp
 				  NULL // inDataArray_.getBuffer()
 			  ));
 			  
-		check(isc_detach_database(
+		ib_error.check(dll.isc_detach_database(
 				  ib_error.getErrorVector(),
 				  //static_cast<void**>(&handle_)
 				  &handle_
@@ -468,7 +473,7 @@ namespace ibpp
 		typedef ISC_VERSION_CALLBACK cb_type;
 #endif
 
-		check(isc_version(
+		ib_error.check(dll.isc_version(
 				  &handle_,
 				  (cb_type)version_callback,
 				  this
@@ -476,8 +481,10 @@ namespace ibpp
 	}
 
 	///////////////////////////////////////////////////////////////////////////
-	Transaction::Transaction() :
-			handle_(0L)
+	Transaction::Transaction(T_FB& dll, Error& ib_error)
+	: handle_(0L)
+	, dll(dll)
+	, ib_error(ib_error)
 	{
 	}
 
@@ -490,7 +497,7 @@ namespace ibpp
 		// isc_start_transaction () in its place. A default set of attributes is automatically assigned to
 		// such transactions.
 
-		check(isc_start_transaction(
+		ib_error.check(dll.isc_start_transaction(
 				  ib_error.getErrorVector(),
 				  &handle_,
 				  1, // Number of database handles passed in this call
@@ -513,7 +520,7 @@ namespace ibpp
 	void
 	Transaction::commit()
 	{
-		check(isc_commit_transaction(
+		ib_error.check(dll.isc_commit_transaction(
 				  ib_error.getErrorVector(),
 				  &handle_
 			  ));
@@ -522,7 +529,7 @@ namespace ibpp
 	void
 	Transaction::commit_retaining()
 	{
-		check(isc_commit_retaining(
+		ib_error.check(dll.isc_commit_retaining(
 				  ib_error.getErrorVector(),
 				  &handle_
 			  ));
@@ -531,7 +538,7 @@ namespace ibpp
 	void
 	Transaction::rollback()
 	{
-		check(isc_rollback_transaction(
+		ib_error.check(dll.isc_rollback_transaction(
 				  ib_error.getErrorVector(),
 				  &handle_
 			  ));
@@ -543,7 +550,7 @@ namespace ibpp
 		// isc_rollback_retaining () should be used with caution because the error
 		// that caused the rollback may be in the transactions context. In this case, until the context
 		// is released the error will continue.
-		check(isc_rollback_retaining(
+		ib_error.check(dll.isc_rollback_retaining(
 				  ib_error.getErrorVector(),
 				  &handle_
 			  ));
@@ -552,7 +559,7 @@ namespace ibpp
 	void
 	Transaction::prepare()
 	{
-		check(isc_prepare_transaction(
+		ib_error.check(dll.isc_prepare_transaction(
 				  ib_error.getErrorVector(),
 				  &handle_
 			  ));
@@ -648,12 +655,14 @@ namespace ibpp
 	}
 
 	///////////////////////////////////////////////////////////////////////////
-	DynamicSQL::DynamicSQL(const DataBase& db, const Transaction& tr)
-			: dialect_(3)
-			, pDBHandle_(db.getHandleP())
-			, pTRHandle_(tr.getHandleP())
-			, handle_(NULL)
-			, all_data_fetched_(false)
+	DynamicSQL::DynamicSQL(const DataBase& db, const Transaction& tr, T_FB& dll, Error& ib_error)
+	: dialect_(3)
+	, pDBHandle_(db.getHandleP())
+	, pTRHandle_(tr.getHandleP())
+	, dll(dll)
+	, ib_error(ib_error)
+	, handle_(NULL)
+	, all_data_fetched_(false)
 	{
 		allocate_stmt2();
 	}
@@ -673,7 +682,7 @@ namespace ibpp
 	void
 	DynamicSQL::execute_immediate(const String& stmt)
 	{
-		check(isc_dsql_execute_immediate(
+		ib_error.check(dll.isc_dsql_execute_immediate(
 				  ib_error.getErrorVector(),
 				  pDBHandle_,
 				  pTRHandle_,
@@ -689,7 +698,7 @@ namespace ibpp
 	void
 	DynamicSQL::execute_immediate_data(const String& stmt)
 	{
-		check(isc_dsql_exec_immed2(
+		ib_error.check(dll.isc_dsql_exec_immed2(
 				  ib_error.getErrorVector(),
 				  pDBHandle_,
 				  pTRHandle_,
@@ -708,7 +717,7 @@ namespace ibpp
 		ASSERT(*pDBHandle_ == 0);
 		ASSERT(*pTRHandle_ == 0);
 
-		check(isc_dsql_execute_immediate(
+		ib_error.check(dll.isc_dsql_execute_immediate(
 				  ib_error.getErrorVector(),
 				  pDBHandle_,
 				  pTRHandle_,
@@ -724,7 +733,7 @@ namespace ibpp
 	void
 	DynamicSQL::prepare(const String& stmt, const SQLDataArray& define_da)
 	{
-		check(isc_dsql_prepare(
+		ib_error.check(dll.isc_dsql_prepare(
 				  ib_error.getErrorVector(),
 				  pTRHandle_,
 				  &handle_,
@@ -738,7 +747,7 @@ namespace ibpp
 	void
 	DynamicSQL::execute()
 	{
-		check(isc_dsql_execute(
+		ib_error.check(dll.isc_dsql_execute(
 				  ib_error.getErrorVector(),
 				  pTRHandle_,
 				  &handle_,
@@ -753,7 +762,7 @@ namespace ibpp
 	void
 	DynamicSQL::execute2()
 	{
-		check(isc_dsql_execute2(
+		ib_error.check(dll.isc_dsql_execute2(
 				  ib_error.getErrorVector(),
 				  pTRHandle_,
 				  &handle_,
@@ -769,7 +778,7 @@ namespace ibpp
 	void
 	DynamicSQL::describe_bind(const SQLDataArray& da)
 	{
-		check(isc_dsql_describe_bind(
+		ib_error.check(dll.isc_dsql_describe_bind(
 				  ib_error.getErrorVector(),
 				  &handle_,
 				  // Indicates the version of the extended SQL descriptor area (XSQLDA)
@@ -782,7 +791,7 @@ namespace ibpp
 	void
 	DynamicSQL::describe_define(const SQLDataArray& da)
 	{
-		check(isc_dsql_describe(
+		ib_error.check(dll.isc_dsql_describe(
 				  ib_error.getErrorVector(),
 				  &handle_,
 				  // Indicates the version of the extended SQL descriptor area (XSQLDA)
@@ -795,7 +804,7 @@ namespace ibpp
 	void
 	DynamicSQL::setCursorName(const char* name)
 	{
-		check(isc_dsql_set_cursor_name(
+		ib_error.check(dll.isc_dsql_set_cursor_name(
 				  ib_error.getErrorVector(),
 				  &handle_,
 				  const_cast<char*>(name),
@@ -808,7 +817,7 @@ namespace ibpp
 	{
 		if (!all_data_fetched_)
 		{
-			int fetch_stat = isc_dsql_fetch(
+			int fetch_stat = dll.isc_dsql_fetch(
 								 ib_error.getErrorVector(),
 								 &handle_,
 								 // Indicates the version of the extended SQL descriptor area (XSQLDA)
@@ -842,7 +851,7 @@ namespace ibpp
 		char res_buffer[8];
 		int  st_type = 0;
 
-		check(isc_dsql_sql_info(
+		ib_error.check(dll.isc_dsql_sql_info(
 				  ib_error.getErrorVector(),
 				  &handle_,
 				  sizeof(type_item),
@@ -854,8 +863,8 @@ namespace ibpp
 		if (res_buffer[0] == isc_info_sql_stmt_type)
 		{
 			short length;
-			length = static_cast<short>(isc_portable_integer(reinterpret_cast<unsigned char*>(res_buffer + 1), 2));
-			st_type = static_cast<int>(isc_portable_integer(reinterpret_cast<unsigned char*>(res_buffer + 3), length));
+			length = static_cast<short>(dll.isc_portable_integer(reinterpret_cast<unsigned char*>(res_buffer + 1), 2));
+			st_type = static_cast<int>(dll.isc_portable_integer(reinterpret_cast<unsigned char*>(res_buffer + 3), length));
 		}
 		
 		return st_type;
@@ -871,7 +880,7 @@ namespace ibpp
 
 		if (handle_ == 0)
 		{
-			check(isc_dsql_allocate_statement(
+			ib_error.check(dll.isc_dsql_allocate_statement(
 					  ib_error.getErrorVector(),
 					  pDBHandle_,
 					  &handle_
@@ -893,7 +902,7 @@ namespace ibpp
 
 		if (handle_ == 0)
 		{
-			check(isc_dsql_alloc_statement2(
+			ib_error.check(dll.isc_dsql_alloc_statement2(
 					  ib_error.getErrorVector(),
 					  pDBHandle_,
 					  &handle_
@@ -908,7 +917,7 @@ namespace ibpp
 	void
 	DynamicSQL::close_cursor()
 	{
-		check(isc_dsql_free_statement(
+		ib_error.check(dll.isc_dsql_free_statement(
 				  ib_error.getErrorVector(),
 				  &handle_,
 				  DSQL_close
@@ -919,7 +928,7 @@ namespace ibpp
 	void
 	DynamicSQL::drop_statement()
 	{
-		check(isc_dsql_free_statement(
+		ib_error.check(dll.isc_dsql_free_statement(
 				  ib_error.getErrorVector(),
 				  &handle_,
 				  DSQL_drop
@@ -1147,7 +1156,7 @@ namespace ibpp
 	{
 		char clm_global_name[256];
 
-		check(isc_blob_lookup_desc(
+		ib_error.check(dll.isc_blob_lookup_desc(
 				  ib_error.getErrorVector(),
 				  blob.pDBHandle_,
 				  blob.pTRHandle_,
@@ -1197,11 +1206,13 @@ namespace ibpp
 	{
 	}
 
-	SegmentBlob::SegmentBlob(const DataBase& db, const Transaction& tr) :
-			pDBHandle_(db.getHandleP()),
-			pTRHandle_(tr.getHandleP()),
-			isOpen_(false),
-			hasInfo_(false)
+	SegmentBlob::SegmentBlob(const DataBase& db, const Transaction& tr, T_FB& dll, Error& ib_error) :
+		pDBHandle_(db.getHandleP()),
+		pTRHandle_(tr.getHandleP()),
+		dll(dll),
+		ib_error(ib_error),
+		isOpen_(false),
+		hasInfo_(false)
 	{
 		handle_ = NULL;
 
@@ -1223,7 +1234,7 @@ namespace ibpp
 	{
 		handle_ = NULL;
 
-		check(isc_open_blob(
+		ib_error.check(dll.isc_open_blob(
 				  ib_error.getErrorVector(),
 				  pDBHandle_,
 				  pTRHandle_,
@@ -1237,7 +1248,7 @@ namespace ibpp
 	{
 		handle_ = NULL;
 
-		check(isc_open_blob2(
+		ib_error.check(dll.isc_open_blob2(
 				  ib_error.getErrorVector(),
 				  pDBHandle_,
 				  pTRHandle_,
@@ -1288,7 +1299,7 @@ namespace ibpp
 		id_.gds_quad_low = 0;
 		id_.gds_quad_high = 0;
 
-		check(isc_create_blob(
+		ib_error.check(dll.isc_create_blob(
 				  ib_error.getErrorVector(),
 				  pDBHandle_,
 				  pTRHandle_,
@@ -1304,7 +1315,7 @@ namespace ibpp
 		id_.gds_quad_low = 0;
 		id_.gds_quad_high = 0;
 
-		check(isc_create_blob2(
+		ib_error.check(dll.isc_create_blob2(
 				  ib_error.getErrorVector(),
 				  pDBHandle_,
 				  pTRHandle_,
@@ -1329,7 +1340,7 @@ namespace ibpp
 		if (isOpen_)
 		{
 			ASSERT(handle_);
-			check(isc_close_blob(
+			ib_error.check(dll.isc_close_blob(
 					  ib_error.getErrorVector(),
 					  &handle_
 				  ));
@@ -1351,7 +1362,7 @@ namespace ibpp
 			open();
 		
 		ASSERT(handle_);
-		stat_ = isc_get_segment(
+		stat_ = dll.isc_get_segment(
 					ib_error.getErrorVector(),
 					&handle_,
 					&actualSegLen,
@@ -1377,7 +1388,7 @@ namespace ibpp
 			open();
 
 		ASSERT(handle_);
-		check(isc_put_segment(
+		ib_error.check(dll.isc_put_segment(
 				  ib_error.getErrorVector(),
 				  &handle_,
 				  seg_length,
@@ -1409,7 +1420,7 @@ namespace ibpp
 	SegmentBlob::cancel()
 	{
 		ASSERT(handle_);
-		check(isc_cancel_blob(
+		ib_error.check(dll.isc_cancel_blob(
 				  ib_error.getErrorVector(),
 				  &handle_
 			  ));
@@ -1434,7 +1445,7 @@ namespace ibpp
 				open();
 
 			ASSERT(handle_);
-			check(isc_blob_info(
+			ib_error.check(dll.isc_blob_info(
 					  ib_error.getErrorVector(),
 					  &handle_,
 					  sizeof(blob_items),/* Length of item-list buffer. */
@@ -1449,23 +1460,23 @@ namespace ibpp
 
 				char item = *p++;
 
-				short length = (short)isc_vax_integer(p, 2);
+				short length = (short)dll.isc_vax_integer(p, 2);
 
 				p += 2;
 
 				switch (item)
 				{
 				case isc_info_blob_total_length:
-					info_.lenght_ = isc_vax_integer(p, length);
+					info_.lenght_ = dll.isc_vax_integer(p, length);
 					break;
 				case isc_info_blob_max_segment:
-					info_.maxSegments_ = isc_vax_integer(p, length);
+					info_.maxSegments_ = dll.isc_vax_integer(p, length);
 					break;
 				case isc_info_blob_num_segments:
-					info_.numSegments_ = isc_vax_integer(p, length);
+					info_.numSegments_ = dll.isc_vax_integer(p, length);
 					break;
 				case isc_info_blob_type:
-					info_.type_segmented = (isc_vax_integer(p, length) == 0);
+					info_.type_segmented = (dll.isc_vax_integer(p, length) == 0);
 					break;
 				case isc_info_truncated:
 					// handle error
@@ -1666,7 +1677,7 @@ namespace ibpp
 		paramBuff.addCluster(isc_spb_password, pswd);
 
 		handle_ = 0L;
-		check(isc_service_attach(
+		ib_error.check(dll.isc_service_attach(
 				  ib_error.getErrorVector(),
 				  service_host.GetCount(),
 				  service_host,
@@ -1679,7 +1690,7 @@ namespace ibpp
 	void
 	Service::detach()
 	{
-		check(isc_service_detach(
+		ib_error.check(dll.isc_service_detach(
 				  ib_error.getErrorVector(),
 				  &handle_
 			  ));
@@ -1688,7 +1699,7 @@ namespace ibpp
 	void
 	Service::executeCommand(const spb& pb)
 	{
-		check(isc_service_start(
+		ib_error.check(dll.isc_service_start(
 				  ib_error.getErrorVector(),
 				  &handle_,
 				  NULL,
@@ -1706,7 +1717,7 @@ namespace ibpp
 		flags_buff.addParam(isc_spb_current_version);
 		flags_buff.addCluster(isc_info_svc_timeout, 60);
 
-		check(isc_service_query(
+		ib_error.check(dll.isc_service_query(
 				  ib_error.getErrorVector(),
 				  &handle_,
 				  NULL,
@@ -1813,7 +1824,7 @@ namespace ibpp
 			unsigned long result;
 
 			// p += sizeof(unsigned short);
-			result = (unsigned long)isc_portable_integer((unsigned char*)p, sizeof(result));
+			result = (unsigned long)svc_ptr_->get_dll().isc_portable_integer((unsigned char*)p, sizeof(result));
 			p += sizeof(unsigned long);
 			return result;
 		}
@@ -1824,7 +1835,7 @@ namespace ibpp
 			unsigned short result;
 
 			// p += sizeof(unsigned short);
-			result = (unsigned short)isc_portable_integer((unsigned char*)p, sizeof(result));
+			result = (unsigned short)svc_ptr_->get_dll().isc_portable_integer((unsigned char*)p, sizeof(result));
 			p += sizeof(unsigned short);
 			return result;
 		}
@@ -1835,7 +1846,7 @@ namespace ibpp
 			String result;
 			size_t str_length;
 
-			str_length = (unsigned short)isc_portable_integer((unsigned char*)p, sizeof(unsigned short));
+			str_length = (unsigned short)svc_ptr_->get_dll().isc_portable_integer((unsigned char*)p, sizeof(unsigned short));
 			p += sizeof(unsigned short);
 			result = String(p, str_length);
 			p += str_length;

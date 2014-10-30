@@ -1,4 +1,4 @@
-#include "Firebird/Firebird.h"
+#include "firebird/firebird.h"
 
 using namespace Upp;
 
@@ -1032,14 +1032,15 @@ public:
 CONSOLE_APP_MAIN
 {
 	const Vector<String>& cmd_line = CommandLine();
-	if (cmd_line.GetCount() > 0 && FileExists(cmd_line[0]))
+	if (cmd_line.GetCount() > 1 && FileExists(cmd_line[0]) && FileExists(cmd_line[1]))
 	{
 		FBSession s;
 		s.Connect(
-			cmd_line[0],
+			cmd_line[1],
 			NULL,
 			"SYSDBA",
-			"masterkey"
+			"masterkey",
+			cmd_line[0]
 			);
 
 #if 0

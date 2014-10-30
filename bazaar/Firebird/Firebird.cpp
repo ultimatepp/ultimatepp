@@ -1,4 +1,4 @@
-#include "Firebird.h"
+#include "firebird.h"
 #include <time.h>
 
 NAMESPACE_UPP
@@ -498,13 +498,15 @@ void FBVarying::SetValue(const Value& v)
 struct FBTimeStamp : public FBValue {
 	ISC_TIMESTAMP	value;
 
-	FBTimeStamp(XSQLVAR& v);
+	FBTimeStamp(XSQLVAR& v, T_FB& dll);
 
 	virtual void GetValue(Ref r) const;
 	virtual void SetValue(const Value& v);
+	
+	T_FB& dll;
 };
 
-FBTimeStamp::FBTimeStamp(XSQLVAR& v) : FBValue(v)
+FBTimeStamp::FBTimeStamp(XSQLVAR& v, T_FB& dll) : FBValue(v), dll(dll)
 {
 	v.sqltype = SQL_TIMESTAMP + (v.sqltype & 1);
 	v.sqldata = reinterpret_cast<ISC_SCHAR*>(&value);
@@ -518,7 +520,7 @@ void FBTimeStamp::GetValue(Ref r) const
 	else {
 		const LanguageInfo& li = GetLanguageInfo();
 		struct tm	time;
-		isc_decode_timestamp(&value, &time);
+		dll.isc_decode_timestamp(&value, &time);
 		
 		const Time t(time.tm_year + 1900, time.tm_mon + 1, time.tm_mday, 
 			time.tm_hour, time.tm_min, time.tm_sec);
@@ -605,19 +607,21 @@ void FBTimeStamp::SetValue(const Value& v)
 	time.tm_sec = t.second;
 	time.tm_isdst = -1;
 
-	isc_encode_timestamp(&time, &value);
+	dll.isc_encode_timestamp(&time, &value);
 }
 
 struct FBDate : public FBValue {
 	ISC_DATE	value;
 
-	FBDate(XSQLVAR& v);
+	FBDate(XSQLVAR& v, T_FB& dll);
 
 	virtual void GetValue(Ref r) const;
 	virtual void SetValue(const Value& v);
+	
+	T_FB& dll;
 };
 
-FBDate::FBDate(XSQLVAR& v) : FBValue(v)
+FBDate::FBDate(XSQLVAR& v, T_FB& dll) : FBValue(v), dll(dll)
 {
 	v.sqltype = SQL_DATE + (v.sqltype & 1);
 	v.sqldata = reinterpret_cast<ISC_SCHAR*>(&value);
@@ -631,7 +635,7 @@ void FBDate::GetValue(Ref r) const
 	else {
 		const LanguageInfo& li = GetLanguageInfo();
 		struct tm	time;
-		isc_decode_sql_date(&value, &time);
+		dll.isc_decode_sql_date(&value, &time);
 		
 		const Date d(time.tm_year + 1900, time.tm_mon + 1, time.tm_mday);
 		
@@ -716,13 +720,13 @@ void FBDate::SetValue(const Value& v)
 	time.tm_sec = 0;
 	time.tm_isdst = -1;
 
-	isc_encode_sql_date(&time, &value);
+	dll.isc_encode_sql_date(&time, &value);
 }
 
 struct FBBlob : public FBValue {
 	mutable ibpp::SegmentBlob	value;
 
-	FBBlob(const FBSession& s, XSQLVAR& v);
+	FBBlob(FBSession& s, XSQLVAR& v);
 
 	long GetLength() const
 	{
@@ -736,9 +740,9 @@ struct FBBlob : public FBValue {
 	virtual void SetValue(const Value& v);
 };
 
-FBBlob::FBBlob(const FBSession& s, XSQLVAR& v)
+FBBlob::FBBlob(FBSession& s, XSQLVAR& v)
 : FBValue(v)
-, value(s.db, s.tr)
+, value(s.db, s.tr, s.dll, s.ib_error)
 {
 	v.sqltype = SQL_BLOB + (v.sqltype & 1);
 	v.sqldata = reinterpret_cast<ISC_SCHAR*>(&value.getID());
@@ -1027,7 +1031,7 @@ FBConnection::FBConnection(FBSession& s)
 : executed_(false)
 , st(stNone)
 , session(s)
-, dSQL_(s.db, s.tr)
+, dSQL_(s.db, s.tr, s.dll, s.ib_error)
 {
 }
 
@@ -1087,10 +1091,10 @@ void FBConnection::SetupConverters(ibpp::SQLDataArray& from, Array<FBValue>& to)
 			break;
 		case SQL_DATE:
 		case SQL_TYPE_TIME:
-			to.Add(new FBTimeStamp(var));
+			to.Add(new FBTimeStamp(var, session.dll));
 			break;
 		case SQL_TYPE_DATE:
-			to.Add(new FBDate(var));
+			to.Add(new FBDate(var, session.dll));
 			break;
 		case SQL_BLOB:
 			to.Add(new FBBlob(session, var));
@@ -1274,14 +1278,21 @@ SqlSession& FBConnection::GetSession() const
 	return session;
 }
 
-FBSession::FBSession()
+FBSession::FBSession(const String& dllName)
 : SvcConnected(false)
 , DbConnected(false)
 , TrStarted(false)
 , CursIsClosed(true)
 , TrExplicit(false)
 , tmpDataArray(1)
+, dll(FB())
+, ib_error(dll)
+, svc(dll, ib_error)
+, db(dll, ib_error)
+, tr(dll, ib_error)
 {
+	if (!dllName.IsEmpty())
+		dll.SetLibName(dllName);
 }
 
 FBSession::~FBSession()
@@ -1303,9 +1314,15 @@ void FBSession::Connect(
 	const char* host,
 	const char* user,
 	const char* pswd,
+	const String& dllName,
 	ibpp::network_protocol_t protocol
 	)
 {
+	if (!dllName.IsEmpty())
+		dll.SetLibName(dllName);
+	if (!dll.Load())
+		throw ibpp::DbExc(dll.GetLibName() + " wasn't found.");
+
 	// Service
 	svc.attach(host, user, pswd, protocol);
 	SvcConnected = true;
@@ -1315,7 +1332,7 @@ void FBSession::Connect(
 	db.setPassword(pswd);
 	db.attach(dbname);
 	DbConnected = true;
-	dbName = dbname;
+	DbName = dbname;
 	
 	// Transaction
 	tr.setVersion3();
@@ -1391,7 +1408,7 @@ Vector<SqlColumnInfo> FBSession::EnumColumns(String /*database*/, String table)
 Vector<String> FBSession::EnumDatabases()
 {
 	Vector<String> result;
-	result.Add(dbName);
+	result.Add(DbName);
 	return result;
 }
 
@@ -1805,7 +1822,7 @@ void FBSession::Rollback()
 
 void FBSession::CommitRetaining()
 {
-	if (IsTransStarted())
+	if (TrStarted)
 	{
 		tr.commit_retaining();
 		SetCursorIsClosed(); // By transaction.
@@ -1814,7 +1831,7 @@ void FBSession::CommitRetaining()
 
 void FBSession::RollbackRetaining()
 {
-	if (IsTransStarted())
+	if (TrStarted)
 	{
 		tr.rollback_retaining();
 		SetCursorIsClosed(); // By transaction.
@@ -1823,7 +1840,7 @@ void FBSession::RollbackRetaining()
 
 void FBSession::BeginInternal()
 {
-	if (!IsTransStarted())
+	if (!TrStarted)
 	{
 		tr.start(db);
 		TrStarted = true;
@@ -1832,7 +1849,7 @@ void FBSession::BeginInternal()
 
 void FBSession::CommitInternal()
 {
-	if (IsTransStarted())
+	if (TrStarted)
 	{
 		tr.commit();
 		TrStarted = false;
@@ -1842,7 +1859,7 @@ void FBSession::CommitInternal()
 
 void FBSession::RollbackInternal()
 {
-	if (IsTransStarted())
+	if (TrStarted)
 	{
 		tr.rollback();
 		TrStarted = false;

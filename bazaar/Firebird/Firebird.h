@@ -60,7 +60,7 @@ public:
 	virtual String Savepoint();
 
 public:
-	FBSession();
+	FBSession(const String& dllName = Null);
 	virtual ~FBSession();
 	
 public:
@@ -69,6 +69,7 @@ public:
 		const char* host = NULL,
 		const char* user = NULL,
 		const char* pswd = NULL,
+		const String& dllName = Null, // In case of empty value default dll will be used.
 		ibpp::network_protocol_t protocol = ibpp::np_local
 	);
 
@@ -87,7 +88,7 @@ protected:
 	void RollbackInternal();
 
 	//	Commit a transaction, and start a new one using the original
-	//	transaction's context
+	//	transaction’s context
 	void CommitRetaining();
 	void RollbackRetaining();
 
@@ -101,7 +102,9 @@ private:
 	bool CursIsClosed:1;
 	bool TrExplicit:1;
 
-	String				dbName;		
+	String				DbName;
+	T_FB&               dll;
+	ibpp::Error         ib_error;
 	ibpp::Service		svc; 
 	ibpp::DataBase		db;
 	ibpp::Transaction	tr;
