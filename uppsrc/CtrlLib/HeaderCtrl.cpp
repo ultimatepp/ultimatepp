@@ -741,23 +741,26 @@ void HeaderCtrl::Serialize(Stream& s) {
 	if(version >= 0x04) {
 		int n = col.GetCount();
 		s / n;
+		Array<Column> col2 = clone(col);
 		if(s.IsLoading())
-			col.InsertN(0, n);
+			col2.InsertN(0, n);
 		for(int i = 0; i < n; i++) {
-			int ndx = col[i].index;
+			int ndx = col2[i].index;
 			s % ndx;
 			if(s.IsLoading())
-				for(int j = n; j < col.GetCount(); j++)
-					if(col[j].index == ndx) {
-						col.Swap(i, j);
+				for(int j = n; j < col2.GetCount(); j++)
+					if(col2[j].index == ndx) {
+						col2.Swap(i, j);
 						break;
 					}
-			col[i].index = ndx;
-			s % col[i].ratio;
-			s % col[i].visible;			
+			col2[i].index = ndx;
+			s % col2[i].ratio;
+			s % col2[i].visible;			
 		}
-		if(s.IsLoading())
-			col.Trim(n);
+		if(s.IsLoading() && n == col.GetCount()) {
+			col2.Trim(n);
+			col = pick(col2);
+		}
 	}
 	else
 	if(version < 0x01) {
