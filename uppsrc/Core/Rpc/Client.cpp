@@ -5,10 +5,16 @@ NAMESPACE_UPP
 #define LLOG(x)  // LOG(x)
 
 static bool sLogRpcCalls;
+static bool sLogRpcCallsCompress = true;
 
 void LogRpcRequests(bool b)
 {
 	sLogRpcCalls = b;
+}
+
+void LogRpcRequestsCompress(bool b)
+{
+	sLogRpcCallsCompress = b;
 }
 
 RpcRequest& RpcRequest::Url(const char *url)
@@ -114,7 +120,10 @@ RpcGet RpcRequest::Execute()
 		request << XmlTag("methodCall")(XmlTag("methodName")(method) + FormatXmlRpcParams(data.out));
 	}
 	if(sLogRpcCalls)
-		RLOG("XmlRpc call request:\n" << request);
+		if(sLogRpcCallsCompress)
+			RLOG("XmlRpc call request:\n" << CompressLog(request));
+		else
+			RLOG("XmlRpc call request:\n" << request);
 	String response;
 	New();
 	if(shorted)	
@@ -122,7 +131,10 @@ RpcGet RpcRequest::Execute()
 	else
 		response = Post(request).Execute();
 	if(sLogRpcCalls)
-		RLOG("XmlRpc call response:\n" << response);
+		if(sLogRpcCallsCompress)
+			RLOG("XmlRpc call response:\n" << CompressLog(response));
+		else
+			RLOG("XmlRpc call response:\n" << response);
 	RpcGet h;
 	if(IsNull(response)) {
 		faultCode = RPC_CLIENT_HTTP_ERROR;

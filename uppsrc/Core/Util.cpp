@@ -552,6 +552,8 @@ String CompressLog(const char *s)
 		if(s - b > 200) {
 			result.Cat(b, 20);
 			result.Cat("....", 4);
+			result << "[" << int(s - b) << " bytes]";
+			result.Cat("....", 4);
 			result.Cat(s - 20, 20);
 		}
 		else
