@@ -121,8 +121,11 @@ bool Sql::Execute() {
 		if(this == &AppCursorR())
 			*s << "SQLR* ";
 #endif
+		String st = cn->statement;
+		if(session.IsTraceCompression())
+			st = CompressLog(st);
 		int i = 0;
-		for(const char *q = cn->statement; *q; q++)
+		for(const char *q = st; *q; q++)
 			if(*q == '?' && i < param.GetCount()) {
 				Value v = param[i++];
 				if(IsString(v))
