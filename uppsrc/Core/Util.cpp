@@ -536,6 +536,30 @@ Vector<String> GetCsvLine(Stream& s, int separator, byte charset)
 	}
 }
 
+String CompressLog(const char *s)
+{
+	StringBuffer result;
+	while(*s) {
+		const char *b = s;
+		while(IsSpace(*s))
+			s++;
+		result.Cat(b, s);
+		if(!*s)
+			break;
+		b = s;
+		while(*s && !IsSpace(*s))
+			s++;
+		if(s - b > 200) {
+			result.Cat(b, 20);
+			result.Cat("....", 4);
+			result.Cat(s - 20, 20);
+		}
+		else
+			result.Cat(b, s);
+	}
+	return result;
+}
+
 int ChNoInvalid(int c)
 {
 	return c == DEFAULTCHAR ? '_' : c;

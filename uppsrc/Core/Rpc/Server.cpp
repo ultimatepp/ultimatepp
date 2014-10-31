@@ -48,11 +48,17 @@ void ThrowRpcError(const char *s)
 
 static Stream *rpc_trace, *suppressed_rpc_trace;
 static int rpc_trace_level;
+static bool rpc_trace_compress = true;
 
 void SetRpcServerTrace(Stream& s, int level)
 {
 	rpc_trace = &s;
 	rpc_trace_level = level;
+}
+
+void SetRpcServerTraceCompress(bool compress)
+{
+	rpc_trace_compress = compress;
 }
 
 void StopRpcServerTrace()
@@ -71,8 +77,14 @@ bool CallRpcMethod(RpcData& data, const char *group, String methodname, const St
 	LLOG("method name: " << methodname);
 	if(sRpcMethodFilter)
 		methodname = (*sRpcMethodFilter)(methodname);
-	if(rpc_trace)
-		*rpc_trace << "RPC Request:\n" << request << '\n';
+	if(rpc_trace) {
+		*rpc_trace << "RPC Request:\n";
+		if(rpc_trace_compress)
+			*rpc_trace << CompressLog(request);
+		else
+			*rpc_trace << request;
+		*rpc_trace << '\n';
+	}
 	void (*fn)(RpcData&) = RpcMapGet(group, methodname);
 	if(!fn)
 		return false;
