@@ -346,6 +346,7 @@ struct JsonRpcRequestNamed : RpcRequest {
 void LogRpcRequests(bool b = true);
 
 void SetRpcServerTrace(Stream& s, int level = 1);
+void SetRpcServerTraceCompress(bool compress);
 void StopRpcServerTrace();
 void SuppressRpcServerTraceForMethodCall();
 

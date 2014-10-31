@@ -234,6 +234,8 @@ String NormalizeSpaces(const char *begin, const char *end);
 String         CsvString(const String& text);
 Vector<String> GetCsvLine(Stream& s, int separator, byte charset);
 
+String         CompressLog(const char *s);
+
 #ifndef PLATFORM_WIN32
 void Sleep(int msec);
 #endif
