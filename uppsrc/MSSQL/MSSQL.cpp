@@ -34,5 +34,12 @@ Value MsSqlSequence::Get()
 	return sql[0];
 }
 
+MsSqlSequence::MsSqlSequence(const char *seq_name)
+{
+	INTERLOCKED {
+		static ArrayMap<String, SqlId> ids;
+		seq = &ids.GetAdd(seq_name, SqlId(seq_name));
+	};
+}
 
 };

@@ -34,6 +34,7 @@ public:
 	void Set(const SqlId& id)                                           { seq = &id; session = NULL; }
 
 	MsSqlSequence(const SqlId& seq)                                     { Set(seq); }
+	MsSqlSequence(const char *seq);
 #endif
 	MsSqlSequence(const SqlId& seq, SqlSession& s)                      { Set(seq, s); }
 
