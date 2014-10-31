@@ -18,6 +18,7 @@ SqlSession::SqlSession()
 	error_handler = NULL;
 	throwonerror = false;
 	error_log = NULL;
+	trace_compression = true;
 }
 
 SqlSession::~SqlSession()

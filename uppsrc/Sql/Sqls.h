@@ -318,6 +318,7 @@ protected:
 
 	Stream                       *trace, *error_log;
 	bool                          tracetime;
+	bool                          trace_compression;
 	int                           traceslow;
 	int                           dialect;
 	int                           exectime;
@@ -372,6 +373,8 @@ public:
 	void                          SetTrace(Stream& s = VppLog())          { trace = &s; }
 	Stream                       *GetTrace() const                        { return trace; }
 	void                          KillTrace()                             { trace = NULL; }
+	bool                          IsTraceCompression() const              { return trace_compression; }
+	void                          SetTraceCompression(bool b)             { trace_compression = b; }
 
 	void                          LogErrors(Stream& s = VppLog())         { error_log = &s; }
 	void                          LogErrors(bool b)                       { error_log = b ? &VppLog() : NULL; }
