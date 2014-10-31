@@ -241,8 +241,12 @@ String RpcExecute(const String& request, const char *group, const char *peeraddr
 	if(rpc_trace)
 		if(rpc_trace_level == 0)
 			*rpc_trace << "Rpc finished OK\n";
-		else
-			*rpc_trace << "Server response:\n" << r << '\n';
+		else {
+			if(rpc_trace_compress)
+				*rpc_trace << "Server response:\n" << CompressLog(r) << '\n';
+			else
+				*rpc_trace << "Server response:\n" << r << '\n';
+		}
 	if(suppressed_rpc_trace) {
 		if(!rpc_trace)
 			rpc_trace = suppressed_rpc_trace;
