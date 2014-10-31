@@ -39,7 +39,7 @@ void DbgDisas::Paint(Draw& w)
 		                                            : i & 1 ? Blend(SColorMark, SColorPaper, 220) : SColorPaper());
 		if(sz.cx > bcx * 15) {
 			bool lbl = taddr.Find(addr[i]) >= 0;
-			if(lbl)
+			if(lbl && i != cursor)
 				w.DrawRect(0, y, box.cx, box.cy, lblpaper);
 			w.DrawText(0, y, mode64 ? Sprintf("%16llX", (uint64)addr[i]) : Sprintf("%08X", (uint32)addr[i]),
 			           hexfont,
