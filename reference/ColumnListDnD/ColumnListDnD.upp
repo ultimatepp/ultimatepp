@@ -1,4 +1,4 @@
-description "Drag&Drop with ColumnList";
+description "Drag&Drop with ColumnList\377";
 
 uses
 	CtrlLib;
@@ -8,3 +8,4 @@ file
 
 mainconfig
 	"" = "GUI";
+
