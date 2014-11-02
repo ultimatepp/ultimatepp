@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x) // DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 class ODBCConnection : public SqlConnection
 {
@@ -55,9 +55,8 @@ private:
 	Vector<bool>             binary;
 	
 	bool                   IsOk(SQLRETURN ret) const;
-	void                   Flush();
+	void                   FetchAll();
 	bool                   Fetch0();
-	bool                   IsCurrent() const   { return session->current == this; }
 };
 
 Array< Tuple2<String, String> > ODBCSession::EnumDSN()
@@ -95,7 +94,7 @@ bool ODBCSession::Connect(const char *cs)
 				SQLSetConnectAttr(hdbc, SQL_ATTR_AUTOCOMMIT, (SQLPOINTER)SQL_AUTOCOMMIT_ON, SQL_NTS);
 			SQLSetConnectAttr(hdbc, SQL_ATTR_TXN_ISOLATION, (SQLPOINTER)SQL_TRANSACTION_SERIALIZABLE, SQL_NTS);
 
-			Sql sql("select current_user", *this);
+			Sql sql("select cast(current_user as text)", *this);
 			if(sql.Execute() && sql.Fetch())
 				user = sql[0];
 			return true;
@@ -115,23 +114,17 @@ void ODBCSession::Close()
 {
 	SessionClose();
 	if(hdbc != SQL_NULL_HANDLE) {
-		current = NULL;
 		FlushConnections();
 		SQLFreeHandle(SQL_HANDLE_DBC, hdbc);
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
 		hdbc = SQL_NULL_HANDLE;
 		hstmt = SQL_NULL_HANDLE;
-		current = NULL;
 	}
 }
 
 void ODBCSession::FlushConnections()
 {
 	LLOG("FlushConnections");
-	if(current) {
-		current->Flush();
-		current = NULL;
-	}
 	SQLFreeStmt(hstmt, SQL_CLOSE);
 	LLOG("-FlushConnections");
 }
@@ -164,7 +157,6 @@ ODBCSession::ODBCSession()
 		SQLSetEnvAttr(henv, SQL_ATTR_ODBC_VERSION, (void *) SQL_OV_ODBC3, 0);
 	tlevel = 0;
 	Dialect(MSSQL);
-	current = NULL;
 	tmode = NORMAL;
 }
 
@@ -318,8 +310,6 @@ ODBCConnection::ODBCConnection(ODBCSession *session_)
 
 ODBCConnection::~ODBCConnection()
 {
-	if(IsCurrent())
-		session->current = NULL;
 	LLOG("~ODBCConnection " << (void *)this << " " << (void *)session);
 }
 
@@ -443,8 +433,6 @@ bool ODBCConnection::Execute()
 	LLOG("Execute " << (void *)this << " " << (void *)session << " " << statement);
 	if(session->hstmt == SQL_NULL_HANDLE)
 		return false;
-	if(IsCurrent())
-		session->current = NULL;
 	session->FlushConnections();
 	last_insert_table.Clear();
 	number.Clear();
@@ -496,7 +484,6 @@ bool ODBCConnection::Execute()
 		SQLFreeStmt(session->hstmt, SQL_CLOSE);
 		return false;
 	}
-	session->current = this;
 	info.Clear();
 	binary.Clear();
 	for(int i = 1; i <= ncol; i++) {
@@ -553,6 +540,7 @@ bool ODBCConnection::Execute()
 	SQLLEN rc;
 	SQLRowCount(session->hstmt, &rc);
 	rowsprocessed = rc;
+	FetchAll();
 	return true;
 }
 
@@ -626,8 +614,6 @@ bool ODBCConnection::Fetch0()
 
 bool ODBCConnection::Fetch()
 {
-	if(IsCurrent())
-		return Fetch0();
 	if(rowi >= rowcount)
 		return false;
 	fetchrow.Clear();
@@ -664,9 +650,9 @@ void ODBCConnection::GetColumn(int i, Ref r) const
 	r.SetValue(fetchrow[i]);
 }
 
-void ODBCConnection::Flush()
+void ODBCConnection::FetchAll()
 {
-	LLOG("Flush " << (void *)this);
+	LLOG("FetchAll " << (void *)this);
 	rowcount = 0;
 	rowi = 0;
 	number.Clear();
