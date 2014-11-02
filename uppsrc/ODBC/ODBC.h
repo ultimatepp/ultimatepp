@@ -43,7 +43,6 @@ private:
 	String                user;
 	int                   tlevel;
 	int                   tmode;
-	ODBCConnection       *current;
 
 	void   FlushConnections();
 	bool   IsOk(SQLRETURN ret);
