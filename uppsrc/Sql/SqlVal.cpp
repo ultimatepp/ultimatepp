@@ -247,7 +247,14 @@ SqlBool SqlBoolFunc(const char *n, const SqlBool& a, const SqlBool& b, const Sql
 
 SqlVal Decode(const SqlVal& exp, const SqlSet& variants) {
 	ASSERT(!variants.IsEmpty());
-	return SqlVal("decode("  + ~exp  + ", " + ~variants + ')', SqlS::FN);
+	Vector<SqlVal> v = variants.Split();
+	ASSERT(v.GetCount() > 2);
+	Case cs(exp == v[0], v[1]);
+	for(int i = 2; i + 1 < v.GetCount(); i += 2)
+		cs(exp == v[i], v[i + 1]);
+	cs(v.Top());
+	return SqlVal(SqlCase(ORACLE, "decode("  + ~exp  + ", " + ~variants + ')')('(' + ~cs + ')'),
+	              SqlS::FN);
 }
 
 SqlVal Distinct(const SqlVal& exp) {
