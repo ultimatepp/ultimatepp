@@ -474,7 +474,9 @@ public:
 	SqlSet&          operator&=(const SqlSet& set)  { return *this = *this & set; }
 	SqlSet&          operator-=(const SqlSet& set)  { return *this = *this - set; }
 
-	void             Clear()                                { text.Clear(); }
+	void             Clear()                        { text.Clear(); }
+	
+	Vector<SqlVal>   Split() const                  { return SplitSqlSet(*this); }
 
 	SqlSet() {}
 	explicit SqlSet(const SqlVal& p0);
