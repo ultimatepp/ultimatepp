@@ -93,6 +93,8 @@ public:
 String SqlCompile(byte dialect, const String& s);
 String SqlCompile(const String& s);
 
+Vector<SqlVal> SplitSqlSet(const SqlSet& set);
+
 String SqlFormat(int x);
 String SqlFormat(double x);
 String SqlFormat(int64 x);

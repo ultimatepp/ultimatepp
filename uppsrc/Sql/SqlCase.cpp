@@ -53,9 +53,11 @@ String SqlId::Quoted() const
 	return id.ToString();
 }
 
-void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
+void SqlCompile(const char *&s, StringBuffer *r, byte dialect, Vector<SqlVal> *split)
 {
 	char quote = dialect == MY_SQL ? '`' : '\"';
+	const char *b = s;
+	int lvl = 0;
 	for(;;) {
 		int c = *s++;
 		switch(c) {
@@ -121,16 +123,16 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 			for(;;) {
 				c = *s++;
 				if(c & dialect) {
-					SqlCompile(s, er, dialect);
+					SqlCompile(s, er, dialect, NULL);
 					er = NULL;
 				}
 				else
-					SqlCompile(s, NULL, dialect);
+					SqlCompile(s, NULL, dialect, NULL);
 				if(*s == '\0')
 					return;
 				c = *s++;
 				if(c == SQLC_ELSE) {
-					SqlCompile(s, er, dialect);
+					SqlCompile(s, er, dialect, NULL);
 					ASSERT(*s == SQLC_ENDIF);
 					s++;
 					break;
@@ -139,8 +141,8 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 					break;
 				ASSERT(c == SQLC_ELSEIF);
 			}
+			break;
 		}
-		break;
 		case SQLC_DATE: {
 			LTIMING("SqlCompile DATE");
 			Date x;
@@ -234,6 +236,8 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 						break;
 					}
 			}
+			else
+				s += l;
 			break;
 		}
 		case SQLC_STRING: {
@@ -289,7 +293,20 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 			break;
 		}
 		default:
-			if(c >= 0 && c < 32) {
+			bool end = c >= 0 && c < 32;
+			if(split) {
+				if(c == '(')
+					lvl++;
+				if(c == ')')
+					lvl--;
+				if((c == ',' && lvl == 0 || end) && s - 1 > b) {
+					while(*b == ' ')
+						b++;
+					split->Add(SqlVal(String(b, s - 1), SqlS::HIGH));
+					b = s;
+				}
+			}
+			if(end) {
 				s--;
 				return;
 			}
@@ -309,13 +326,21 @@ String SqlCompile(byte dialect, const String& s)
 	StringBuffer b;
 	b.Reserve(s.GetLength() + 100);
 	const char *q = s;
-	SqlCompile(q, &b, dialect);
+	SqlCompile(q, &b, dialect, NULL);
 	return b;
 }
 
 String SqlCompile(const String& s)
 {
 	return SqlCompile(SQL.GetDialect(), s);
+}
+
+Vector<SqlVal> SplitSqlSet(const SqlSet& set)
+{
+	const char *s = ~set;
+	Vector<SqlVal> r;
+	SqlCompile(s, NULL, ORACLE, &r);
+	return r;
 }
 
 String SqlFormat(int x)
