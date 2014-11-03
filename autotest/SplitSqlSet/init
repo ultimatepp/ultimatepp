@@ -1,0 +1,5 @@
+#ifndef _SplitSqlSet_icpp_init_stub
+#define _SplitSqlSet_icpp_init_stub
+#include "Core/init"
+#include "Sql/init"
+#endif

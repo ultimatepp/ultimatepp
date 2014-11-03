@@ -1,0 +1,10 @@
+uses
+	Core,
+	Sql;
+
+file
+	SplitSqlSet.cpp;
+
+mainconfig
+	"" = "SSE2";
+
