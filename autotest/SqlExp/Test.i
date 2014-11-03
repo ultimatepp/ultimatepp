@@ -1033,6 +1033,28 @@
 		"select coalesce(\"COLUMN1\", '_') \"COLUMN2\" from \"TABLE1\""); // select coalesce("COLUMN1", '_') "COLUMN2" from "TABLE1"
 // ---------------------------------
 	TEST(MY_SQL,
+		Select(Decode(COL, SqlSet("1", 2, 3))).From(TABLE1),
+		"select (case when `COL` = '1' then 2 else 3 end) from `TABLE1`"); // select (case when `COL` = '1' then 2 else 3 end) from `TABLE1`
+	TEST(SQLITE3,
+		Select(Decode(COL, SqlSet("1", 2, 3))).From(TABLE1),
+		"select (case when \"COL\" = '1' then 2 else 3 end) from \"TABLE1\""); // select (case when "COL" = '1' then 2 else 3 end) from "TABLE1"
+	TEST(ORACLE,
+		Select(Decode(COL, SqlSet("1", 2, 3))).From(TABLE1),
+		"select decode(\"COL\", '1', 2, 3) from \"TABLE1\""); // select decode("COL", '1', 2, 3) from "TABLE1"
+	TEST(MSSQL,
+		Select(Decode(COL, SqlSet("1", 2, 3))).From(TABLE1),
+		"select (case when \"COL\" = '1' then 2 else 3 end) from \"TABLE1\""); // select (case when "COL" = '1' then 2 else 3 end) from "TABLE1"
+	TEST(PGSQL,
+		Select(Decode(COL, SqlSet("1", 2, 3))).From(TABLE1),
+		"select (case when \"COL\" = E'1' then 2 else 3 end) from \"TABLE1\""); // select (case when "COL" = E'1' then 2 else 3 end) from "TABLE1"
+	TEST(FIREBIRD,
+		Select(Decode(COL, SqlSet("1", 2, 3))).From(TABLE1),
+		"select (case when \"COL\" = '1' then 2 else 3 end) from \"TABLE1\""); // select (case when "COL" = '1' then 2 else 3 end) from "TABLE1"
+	TEST(DB2,
+		Select(Decode(COL, SqlSet("1", 2, 3))).From(TABLE1),
+		"select (case when \"COL\" = '1' then 2 else 3 end) from \"TABLE1\""); // select (case when "COL" = '1' then 2 else 3 end) from "TABLE1"
+// ---------------------------------
+	TEST(MY_SQL,
 		Select(COL).From(TABLE1).Where(COL / 2 > 1 && COLUMN1 == "A" || COLUMN2 == Date(2006, 1, 1)),
 		"select `COL` from `TABLE1` where `COL` / 2 > 1 and `COLUMN1` = 'A' or `COLUMN2` = '2006-01-01'"); // select `COL` from `TABLE1` where `COL` / 2 > 1 and `COLUMN1` = 'A' or `COLUMN2` = '2006-01-01'
 	TEST(SQLITE3,

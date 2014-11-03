@@ -163,6 +163,7 @@ CONSOLE_APP_MAIN
 	EXP(Select(Coalesce(COLUMN1, "_")).From(TABLE1));
 	EXP(Select(Coalesce(COLUMN1, "_").As("H")).From(TABLE1));
 	EXP(Select(Coalesce(COLUMN1, "_").As(COLUMN2)).From(TABLE1));
+	EXP(Select(Decode(COL, SqlSet("1", 2, 3))).From(TABLE1));
 
 	EXP(Select(COL).From(TABLE1).Where(COL / 2 > 1 && COLUMN1 == "A" || COLUMN2 == Date(2006, 1, 1)));
 	EXP(Select(COL).From(TABLE1).Where(!(COL == 1)));
