@@ -538,16 +538,22 @@ Vector<String> GetCsvLine(Stream& s, int separator, byte charset)
 
 String CompressLog(const char *s)
 {
+	static bool breaker[256];
+	ONCELOCK {
+		for(int i = 0; i < 256; i++)
+		breaker[i] = IsSpace(i) || findarg(i, '<', '>', '\"', '\'', ',', '.', '[', ']', '{', '}', '(', ')') >= 0;
+	}
+
 	StringBuffer result;
 	while(*s) {
 		const char *b = s;
-		while(IsSpace(*s))
+		while(breaker[(byte)*s])
 			s++;
 		result.Cat(b, s);
 		if(!*s)
 			break;
 		b = s;
-		while(*s && !IsSpace(*s))
+		while(*s && !breaker[(byte)*s])
 			s++;
 		if(s - b > 200) {
 			result.Cat(b, 20);
