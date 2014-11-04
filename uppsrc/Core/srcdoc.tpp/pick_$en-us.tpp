@@ -39,13 +39,13 @@ state&]
 [s3; C`+`+03 compatibility&]
 [s5; In ideal world, we would be now using only C`+`+11. In real 
 world, we will need to support C`+`+03 for forseeable future.&]
-[s5; pick constructor/operator`=`= in C`+`+11 can obviously use&]
+[s5; pick constructor/operator`= in C`+`+11 can obviously use&]
 [s7; T(T`&`&);&]
-[s7; T`& operator(T`&`&);&]
+[s7; T`& operator`=(T`&`&);&]
 [s5; forms. However, to support C`+`+03, we need to implement them 
 using quite ugly trick as&]
 [s7; T(T const`&);&]
-[s7; T`& operator(T const`&);&]
+[s7; T`& operator`=(T const`&);&]
 [s5; because not doing so would break returning values from functions, 
 as temporaries in C`+`+11 can only be bind to constant references. 
 To hide this difference, we&]
@@ -54,7 +54,7 @@ To hide this difference, we&]
 [s7; #define rval`_ const`&&]
 [s5; in C`+`+03 to get unified the form&]
 [s7; T(T rval`_);&]
-[s7; T`& operator(T rval`_);&]
+[s7; T`& operator`=(T rval`_);&]
 [s5; (parameter then also has to be const`_casted, but that is not 
 a problem in C`+`+11). Note also that semantics of `'pick`', 
 for this reason, is not tested very well in C`+`+03.&]
