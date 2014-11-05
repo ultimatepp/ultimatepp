@@ -4,8 +4,8 @@ using namespace Upp;
 
 #ifndef COMPRESS2
 
-#define LLOG(x)
-#define LDUMP(x)
+#define LLOG(x)  // LOG(x)
+#define LDUMP(x) // DUMP(x)
 
 String FChar(int c)
 {
