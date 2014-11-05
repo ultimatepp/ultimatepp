@@ -967,10 +967,10 @@ CodeEditor::CodeEditor() {
 	bar.WhenAnnotationMove = Proxy(WhenAnnotationMove);
 	bar.WhenAnnotationClick = Proxy(WhenAnnotationClick);
 	bar.WhenAnnotationRightClick = Proxy(WhenAnnotationRightClick);
-	Highlight(Null);
 	barline = true;
 	sb.WithSizeGrip();
 	DefaultHlStyles();
+	Highlight(Null);
 	sb.y.NoAutoHide();
 	sb.y.AddFrame(topsbbutton);
 	sb.y.AddFrame(topsbbutton1);
