@@ -511,6 +511,9 @@ SqlSet SqlSetFrom(const T& cont, int pos, int count)
 	return set;
 }
 
+SqlSet SqlSetFrom(const ValueArray& va, int pos, int count);
+SqlSet SqlSetFrom(const ValueArray& va);
+
 class SqlSetC : public SqlSet {
 public:
 	SqlSetC(const String& s)      { text = s; priority = SET; }

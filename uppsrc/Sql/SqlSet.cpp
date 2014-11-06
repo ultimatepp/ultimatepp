@@ -71,6 +71,19 @@ SqlSet::SqlSet(const SqlVal& p0) {
 	priority = SET;
 }
 
+SqlSet SqlSetFrom(const ValueArray& va, int pos, int count)
+{
+	SqlSet set;
+	for(int i = 0; i < count; i++)
+		set << va[pos + i];
+	return set;
+}
+
+SqlSet SqlSetFrom(const ValueArray& va)
+{
+	return SqlSetFrom(va, 0, va.GetCount());
+}
+
 static inline void sCat(SqlSet& s, SqlVal v) { s.Cat(v); }
 
 #define E__Cat(I)       sCat(*this, p##I)
