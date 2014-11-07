@@ -312,7 +312,7 @@ void Ide::SetupBars()
 void SetupError(ArrayCtrl& error, const char *s)
 {
 	error.AddColumn("File").SetDisplay(Single<Ide::FoundFileDisplay>());
-	error.AddColumn("Line");
+	error.AddColumn("Line").SetDisplay(Single<Ide::TopAlignedDisplay>());
 	error.AddColumn(s);
 	error.AddIndex("INFO");
 	error.ColumnWidths("184 44 298");

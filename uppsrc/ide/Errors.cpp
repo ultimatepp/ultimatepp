@@ -323,10 +323,12 @@ void Ide::PutLinkingEnd(bool ok)
 				f.lineno = Null;
 				f.message = TrimLeft(linking_line[i]);
 			}
+			int linecy;
 			error.Add(f.file, f.lineno,
-			          AttrText(f.message)
+			          AttrText(FormatErrorLine(f.message, linecy))
 			          .NormalPaper(HighlightSetup::GetHlStyle(HighlightSetup::PAPER_ERROR).color),
 			          RawToValue(f));
+			error.SetLineCy(error.GetCount() - 1, linecy);
 		}
 	}
 	SyncErrorsMessage();
@@ -336,6 +338,33 @@ void Ide::PutLinkingEnd(bool ok)
 bool IsDarkMismatch()
 {
 	return IsDark(SColorPaper()) != IsDark(HighlightSetup::GetHlStyle(HighlightSetup::PAPER_NORMAL).color);
+}
+
+void Ide::TopAlignedDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+{
+	w.DrawRect(r, paper);
+	w.DrawText(r.left, r.top, AsString(q));
+}
+
+WString Ide::FormatErrorLine(const String& text, int& linecy)
+{
+	WString txt;
+	int cx = error.HeaderObject().GetTabWidth(2) - error.HeaderTab(2).GetMargin() * 2;
+	int x = 0;
+	Font fnt = StdFont();
+	WString h = text.ToWString();
+	linecy = fnt.GetCy();
+	for(const wchar *s = h; *s; s++) {
+		int chcx = fnt[*s];
+		if(x + chcx > cx) {
+			txt.Cat('\n');
+			x = 0;
+			linecy += fnt.GetCy();
+		}
+		txt.Cat(*s);
+		x += chcx;
+	}
+	return txt;
 }
 
 void Ide::ConsoleLine(const String& line)
@@ -355,9 +384,11 @@ void Ide::ConsoleLine(const String& line)
 				warning_count++;
 			if(IsDarkMismatch())
 				paper = SColorPaper();
+			int linecy;
 			error.Add(f.file, f.lineno,
-			          AttrText(f.message).NormalPaper(paper),
+			          AttrText(FormatErrorLine(f.message, linecy)).NormalPaper(paper),
 			          RawToValue(f));
+			error.SetLineCy(error.GetCount() - 1, linecy);
 			SyncErrorsMessage();
 			addnotes = true;
 			return;
@@ -444,9 +475,11 @@ void Ide::SelError()
 				error.Insert(++ii);
 				error.Set(ii, 0, f.file);
 				error.Set(ii, 1, f.lineno);
-				error.Set(ii, 2, f.message);
+				int linecy;
+				error.Set(ii, 2, FormatErrorLine(f.message, linecy));
 				error.Set(ii, "INFO", n[i]);
 				error.Set(ii, "NOTES", "0");
+				error.SetLineCy(ii, linecy);
 			}
 		}
 		GoToError(error);

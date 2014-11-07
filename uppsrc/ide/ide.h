@@ -1164,8 +1164,13 @@ public:
 	void      ShowError();
 	void      ShowFound();
 	void      SelError();
+	WString   FormatErrorLine(const String& text, int& linecy);
 	
 	struct FoundDisplay : Display {
+		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+	};
+
+	struct TopAlignedDisplay : Display {
 		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 	};
 
