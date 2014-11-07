@@ -62,8 +62,9 @@ void XmlView::Load(int parent, XmlParser& p)
 
 void XmlView::Load(const String& txt)
 {
-	XmlParser p(txt);
 	xml.Clear();
+	XmlParser p(txt);
+	p.Relaxed();
 	try {
 		while(!p.IsEof())
 			Load(0, p);
@@ -71,12 +72,14 @@ void XmlView::Load(const String& txt)
 	catch(XmlError e) {
 		error = "XML parsing error: " + e;
 		view.Show();
+		xml.Hide();
 		view <<= txt;
 		view.SetCursor(view.GetPos(p.GetLine() - 1, p.GetColumn() - 1));
 		view.SetFocus();
 		return;
 	}
 	xml.Show();
+	view.Hide();
 	xml.SetFocus();
 }
 
