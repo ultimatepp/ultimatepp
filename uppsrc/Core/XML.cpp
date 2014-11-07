@@ -788,7 +788,13 @@ XmlParser::XmlParser(const char *s)
 	Init();
 	begin = term = s;
 	len = INT_MAX;
-	Next();
+	try { // Need to catch first error as construction is usually outside try-catch client block
+		Next();
+	}
+	catch(XmlError) {
+		begin = term = s;
+		len = INT_MAX;
+	}
 }
 
 XmlParser::XmlParser(Stream& in_)
@@ -797,7 +803,12 @@ XmlParser::XmlParser(Stream& in_)
 	buffer.Alloc(CHUNK + MCHARS + 1);
 	begin = term = "";
 	in = &in_;
-	Next();
+	try {
+		Next();
+	}
+	catch(XmlError) {
+		begin = term = "";
+	}
 }
 
 int XmlNode::FindTag(const char *_tag) const
