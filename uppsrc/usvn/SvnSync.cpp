@@ -371,6 +371,8 @@ String SvnSync::GetMsgs()
 
 bool IsSvnDir(const String& p)
 {
+	if(IsNull(p))
+		return false;
 	if(DirectoryExists(AppendFileName(p, ".svn")) || DirectoryExists(AppendFileName(p, "_svn")))
 		return true;
 	String path = p;
