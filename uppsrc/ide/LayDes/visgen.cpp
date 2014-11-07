@@ -55,9 +55,26 @@ void VisGenDlg::Refresh()
 	String n = ~name;
 	if(IsNull(n))
 		n = GetName();
+	
+	String b1, b2, b3;
+	if(buttons) {
+		for(int i = 0; i < layout.item.GetCount(); i++) {
+			String bn = layout.item[i].variable;
+			if(layout.item[i].type == "Button" && findarg(bn, "cancel", "ok", "exit") < 0) {
+				String mn = InitCaps(bn);
+				if(b1.GetCount() == 0)
+					b1 = b2 = "\n";
+				b1 << '\t' << "void " << mn << "();\n";
+				b2 << '\t' << bn << " <<= THISBACK(" << mn << ");\n";
+				b3 << '\n' << "void " << n << "::" << mn << "()\n{\n}\n";	
+			}
+		}
+	}
+
 	if(q == 0) {
 		s << "class " << n << " : public With" << layout.name << "<TopWindow> {\n"
 		  << "\ttypedef " << n << " CLASSNAME;\n"
+		  << b1
 		  << "\n"
 		  << "public:\n"
 		  << "\t" << n << "();\n"
@@ -65,22 +82,25 @@ void VisGenDlg::Refresh()
 		  << "\n"
 		  << n << "::" << n << "()\n"
 		  << "{\n"
-		  << oce;
-		s << "(*this, \"\");\n";
-		s << "}\n";
+		  << oce << "(*this, \"\");\n"
+		  << b2
+		  << "}\n"
+		  << b3;
 	}
 	else
 	if(q == 1) {
 		s << "struct " << n << " : With" << layout.name << "<TopWindow> {\n"
 		  << "\ttypedef " << n << " CLASSNAME;\n"
+		  << b1
 		  << "\t" << n << "();\n"
 		  << "};\n"
 		  << "\n"
 		  << n << "::" << n << "()\n"
 		  << "{\n"
-		  << oce;
-		s << "(*this, \"\");\n";
-		s << "}\n";
+		  << oce << "(*this, \"\");\n"
+		  << b2
+		  << "}\n"
+		  << b3;
 	}
 	else
 	if(q == 2) {
@@ -134,10 +154,12 @@ void VisGenDlg::Refresh()
 void VisGenDlg::Type()
 {
 	String n = GetName();
+	buttons.Disable();
 	switch((int)~type) {
 	case 0:
 	case 1:
 		name <<= GetName();
+		buttons.Enable();
 		break;
 	case 2:
 		name <<= "dlg";
@@ -161,7 +183,8 @@ VisGenDlg::VisGenDlg(LayoutData& layout, const Vector<int>& cursor)
 	name1 <<=
 	toupper2 <<=
 	quotes2 <<=
-	name2 <<= THISBACK(Refresh);
+	name2 <<= 
+	buttons <<= THISBACK(Refresh);
 	Refresh();
 	view.Highlight("cpp");
 	view.HideBar();
