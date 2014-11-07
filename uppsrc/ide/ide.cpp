@@ -279,6 +279,8 @@ void Ide::UscProcessDirDeep(const String& dir)
 void Ide::SyncUsc()
 {
 	CleanUsc();
+	if(IsNull(main))
+		return;
 	::Workspace wspc;
 	wspc.Scan(main);
 	int i;

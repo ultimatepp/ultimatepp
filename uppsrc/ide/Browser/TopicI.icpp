@@ -2,7 +2,7 @@
 
 bool IsTopicGroup(const char *path)
 {
-	return ToLower(GetFileExt(path)) == ".tpp" && !FileExists(path);
+	return ToLower(GetFileExt(path)) == ".tpp" && (!IsFullPath(path) || !FileExists(path));
 }
 
 struct TopicModule : public IdeModule {
