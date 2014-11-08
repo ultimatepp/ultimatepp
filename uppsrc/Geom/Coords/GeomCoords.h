@@ -778,6 +778,7 @@ public:
 	One<Node> split;
 	
 	rval_default(LinearSegmentTree);
+	LinearSegmentTree() {}
 };
 
 LinearSegmentTree CreateLinearTree(Point s1, Point s2, const SegmentTreeInfo& info);
@@ -793,6 +794,7 @@ public:
 		One<Split> split;
 		
 		rval_default(Node);
+		Node() {}
 	};
 
 	struct Split
@@ -807,6 +809,7 @@ public:
 	Node root;
 	
 	rval_default(PlanarSegmentTree);
+	PlanarSegmentTree() {}
 };
 
 PlanarSegmentTree CreatePlanarTree(const LinearSegmentTree& left, const LinearSegmentTree& top,

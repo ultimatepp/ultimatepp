@@ -52,7 +52,7 @@ private:
 	int                      time_i;
 	int                      date_i;
 	Vector<Value>            fetchrow;
-	Vector<bool>             binary;
+	Vector<int>              string_type;
 	
 	bool                   IsOk(SQLRETURN ret) const;
 	void                   FetchAll();
@@ -485,7 +485,7 @@ bool ODBCConnection::Execute()
 		return false;
 	}
 	info.Clear();
-	binary.Clear();
+	string_type.Clear();
 	for(int i = 1; i <= ncol; i++) {
 		SQLCHAR      ColumnName[256];
 		SQLSMALLINT  NameLength;
@@ -496,7 +496,7 @@ bool ODBCConnection::Execute()
 		if(!IsOk(SQLDescribeCol(session->hstmt, i, ColumnName, 255, &NameLength, &DataType,
 		                        &ColumnSize, &DecimalDigits, &Nullable)))
 			return false;
-		binary.Add(false);
+		string_type.Add(SQL_C_CHAR);
 		SqlColumnInfo& f = info.Add();
 		f.nullable = Nullable != SQL_NO_NULLS;
 		f.binary = false;
@@ -530,7 +530,14 @@ bool ODBCConnection::Execute()
 		case SQL_LONGVARBINARY:
 			f.type = STRING_V;
 			f.binary = true;
-			binary.Top() = true;
+			string_type.Top() = SQL_C_BINARY;
+			break;
+		case SQL_WCHAR:
+		case SQL_WVARCHAR:
+		case SQL_WLONGVARCHAR:
+			f.type = STRING_V;
+			f.binary = true;
+			string_type.Top() = SQL_C_WCHAR;
 			break;
 		default:
 			f.type = STRING_V;
@@ -595,16 +602,24 @@ bool ODBCConnection::Fetch0()
 			}
 			break;
 		default:
-			int ct = binary[i] ? SQL_C_BINARY : SQL_C_CHAR;
+			int ct = string_type[i];
 			if(!IsOk(SQLGetData(session->hstmt, i + 1, ct, &tm, 0, &li)))
 			   break;
-			if(li != SQL_NULL_DATA && li >= 0) {
-				StringBuffer sb;
-				sb.SetLength(li);
-				if(!IsOk(SQLGetData(session->hstmt, i + 1, ct, ~sb, li + 1, &li)))
-				   break;
-				v = String(sb);
-			}
+			if(li != SQL_NULL_DATA && li >= 0)
+				if(ct == SQL_C_WCHAR) {
+					WStringBuffer sb;
+					sb.SetLength(li / 2);
+					if(!IsOk(SQLGetData(session->hstmt, i + 1, ct, ~sb, li + 2, &li)))
+					   break;
+					v = WString(sb);
+				}
+				else {
+					StringBuffer sb;
+					sb.SetLength(li);
+					if(!IsOk(SQLGetData(session->hstmt, i + 1, ct, ~sb, li + 1, &li)))
+					   break;
+					v = String(sb);
+				}
 			break;
 		}
 		fetchrow.Add(v);
