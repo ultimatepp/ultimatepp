@@ -358,7 +358,7 @@ SqlVal Lower(const SqlVal& exp) {
 }
 
 SqlVal Length(const SqlVal& exp) {
-	return exp.IsEmpty() ? exp : SqlFunc("length", exp);
+	return exp.IsEmpty() ? exp : SqlFunc(SqlCase(MSSQL, "len")("length"), exp);
 }
 
 SqlVal UpperAscii(const SqlVal& exp) {
