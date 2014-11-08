@@ -337,9 +337,10 @@ String SqlCompile(const String& s)
 
 Vector<SqlVal> SplitSqlSet(const SqlSet& set)
 {
-	const char *s = ~set;
+	String h = ~set;
+	const char *q = h;
 	Vector<SqlVal> r;
-	SqlCompile(s, NULL, ORACLE, &r);
+	SqlCompile(q, NULL, ORACLE, &r);
 	return r;
 }
 
