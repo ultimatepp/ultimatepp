@@ -493,7 +493,7 @@ bool IsNotEmpty(const SqlSelect& select, Sql& cursor)
 
 bool IsNotEmpty(const SqlVal& table, const SqlBool& cond, Sql& cursor)
 {
-	return IsNotEmpty(Select(ROWNUM).From(table).Where(cond), cursor);
+	return IsNotEmpty(Select(1).From(table).Where(cond), cursor);
 }
 
 bool IsNotEmpty(const SqlVal& table, SqlId column, const Value& value, Sql& cursor)
@@ -503,7 +503,7 @@ bool IsNotEmpty(const SqlVal& table, SqlId column, const Value& value, Sql& curs
 
 bool IsNotSchemaEmpty(const SqlId& table, const SqlBool& cond, Sql& cursor)
 {
-	return IsNotEmpty(Select(ROWNUM).FromSchema(table).Where(cond), cursor);
+	return IsNotEmpty(Select(1).FromSchema(table).Where(cond), cursor);
 }
 
 bool IsNotSchemaEmpty(const SqlId& table, SqlId column, const Value& value, Sql& cursor)
@@ -630,7 +630,7 @@ SqlId SchemaId(const SqlId& table_id)
 VectorMap<String, SqlColumnInfo> Describe(const SqlVal& table, Sql& cursor)
 {
 	VectorMap<String, SqlColumnInfo> map;
-	if(cursor * Select(ALL()).From(table).Where(ROWNUM == 0))
+	if(cursor * SelectAll().From(table).Where(SqlBool::False()))
 		for(int i = 0, n = cursor.GetColumns(); i < n; i++)
 		{
 			const SqlColumnInfo& sci = cursor.GetColumnInfo(i);
