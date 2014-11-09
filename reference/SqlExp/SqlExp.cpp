@@ -87,7 +87,7 @@ GUI_APP_MAIN
 	EXP(Select(Least(COLUMN1, COLUMN2)).From(TABLE1));
 	EXP(Select(Upper(COL)).From(TABLE1));
 	EXP(Select(Lower(COL)).From(TABLE1));
-	EXP(Select(Substr(COL, 1)).From(TABLE1));
+	EXP(Select(Length(COL)).From(TABLE1));
 	EXP(Select(Substr(COL, 2, 1)).From(TABLE1));
 	EXP(Select(Instr(COL, "hello")).From(TABLE1));
 	EXP(Select(SqlNvl(COLUMN1, COLUMN2)).From(TABLE1));
