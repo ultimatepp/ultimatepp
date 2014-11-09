@@ -371,7 +371,7 @@ SqlVal Substr(const SqlVal& a, const SqlVal& b) {
 
 SqlVal Substr(const SqlVal& a, const SqlVal& b, const SqlVal& c)
 {
-	return SqlFunc("SUBSTR", a, b, c);
+	return SqlFunc(SqlCase(MSSQL, "substring")("substr"), a, b, c);
 }
 
 SqlVal Instr(const SqlVal& a, const SqlVal& b) {

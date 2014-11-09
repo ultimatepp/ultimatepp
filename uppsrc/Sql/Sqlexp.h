@@ -292,7 +292,7 @@ SqlVal Upper(const SqlVal& exp);
 SqlVal Lower(const SqlVal& exp);
 SqlVal Length(const SqlVal& exp);
 SqlVal UpperAscii(const SqlVal& exp);
-SqlVal Substr(const SqlVal& a, const SqlVal& b);
+SqlVal Substr(const SqlVal& a, const SqlVal& b); // Deprecated, use 3 args variant bellow
 SqlVal Substr(const SqlVal& a, const SqlVal& b, const SqlVal& c);
 SqlVal Instr(const SqlVal& a, const SqlVal& b);
 SqlVal Wild(const char* s);
