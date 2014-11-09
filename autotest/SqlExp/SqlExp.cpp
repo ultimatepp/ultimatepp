@@ -153,8 +153,6 @@ CONSOLE_APP_MAIN
 	EXP(Select(Least(COLUMN1, COLUMN2)).From(TABLE1));
 	EXP(Select(Upper(COL)).From(TABLE1));
 	EXP(Select(Lower(COL)).From(TABLE1));
-	EXP(Select(Substr(COL, 1)).From(TABLE1));
-	EXP(Select(Substr(COL, 2, 1)).From(TABLE1));
 	EXP(Select(Instr(COL, "hello")).From(TABLE1));
 	EXP(Select(SqlNvl(COLUMN1, COLUMN2)).From(TABLE1));
 	EXP(Select(NextVal(SEQ)).Get());
@@ -164,6 +162,8 @@ CONSOLE_APP_MAIN
 	EXP(Select(Coalesce(COLUMN1, "_").As("H")).From(TABLE1));
 	EXP(Select(Coalesce(COLUMN1, "_").As(COLUMN2)).From(TABLE1));
 	EXP(Select(Decode(COL, SqlSet("1", 2, 3))).From(TABLE1));
+	EXP(Select(Length(COL)).From(TABLE1));
+	EXP(Select(Substr(COL, 2, 3)).From(TABLE1));
 
 	EXP(Select(COL).From(TABLE1).Where(COL / 2 > 1 && COLUMN1 == "A" || COLUMN2 == Date(2006, 1, 1)));
 	EXP(Select(COL).From(TABLE1).Where(!(COL == 1)));

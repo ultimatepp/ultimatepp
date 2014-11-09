@@ -813,50 +813,6 @@
 		"select lower(\"COL\") from \"TABLE1\""); // select lower("COL") from "TABLE1"
 // ---------------------------------
 	TEST(MY_SQL,
-		Select(Substr(COL, 1)).From(TABLE1),
-		"select SUBSTR(`COL`, 1) from `TABLE1`"); // select SUBSTR(`COL`, 1) from `TABLE1`
-	TEST(SQLITE3,
-		Select(Substr(COL, 1)).From(TABLE1),
-		"select SUBSTR(\"COL\", 1) from \"TABLE1\""); // select SUBSTR("COL", 1) from "TABLE1"
-	TEST(ORACLE,
-		Select(Substr(COL, 1)).From(TABLE1),
-		"select SUBSTR(\"COL\", 1) from \"TABLE1\""); // select SUBSTR("COL", 1) from "TABLE1"
-	TEST(MSSQL,
-		Select(Substr(COL, 1)).From(TABLE1),
-		"select SUBSTR(\"COL\", 1) from \"TABLE1\""); // select SUBSTR("COL", 1) from "TABLE1"
-	TEST(PGSQL,
-		Select(Substr(COL, 1)).From(TABLE1),
-		"select SUBSTR(\"COL\", 1) from \"TABLE1\""); // select SUBSTR("COL", 1) from "TABLE1"
-	TEST(FIREBIRD,
-		Select(Substr(COL, 1)).From(TABLE1),
-		"select SUBSTR(\"COL\", 1) from \"TABLE1\""); // select SUBSTR("COL", 1) from "TABLE1"
-	TEST(DB2,
-		Select(Substr(COL, 1)).From(TABLE1),
-		"select SUBSTR(\"COL\", 1) from \"TABLE1\""); // select SUBSTR("COL", 1) from "TABLE1"
-// ---------------------------------
-	TEST(MY_SQL,
-		Select(Substr(COL, 2, 1)).From(TABLE1),
-		"select SUBSTR(`COL`, 2, 1) from `TABLE1`"); // select SUBSTR(`COL`, 2, 1) from `TABLE1`
-	TEST(SQLITE3,
-		Select(Substr(COL, 2, 1)).From(TABLE1),
-		"select SUBSTR(\"COL\", 2, 1) from \"TABLE1\""); // select SUBSTR("COL", 2, 1) from "TABLE1"
-	TEST(ORACLE,
-		Select(Substr(COL, 2, 1)).From(TABLE1),
-		"select SUBSTR(\"COL\", 2, 1) from \"TABLE1\""); // select SUBSTR("COL", 2, 1) from "TABLE1"
-	TEST(MSSQL,
-		Select(Substr(COL, 2, 1)).From(TABLE1),
-		"select SUBSTR(\"COL\", 2, 1) from \"TABLE1\""); // select SUBSTR("COL", 2, 1) from "TABLE1"
-	TEST(PGSQL,
-		Select(Substr(COL, 2, 1)).From(TABLE1),
-		"select SUBSTR(\"COL\", 2, 1) from \"TABLE1\""); // select SUBSTR("COL", 2, 1) from "TABLE1"
-	TEST(FIREBIRD,
-		Select(Substr(COL, 2, 1)).From(TABLE1),
-		"select SUBSTR(\"COL\", 2, 1) from \"TABLE1\""); // select SUBSTR("COL", 2, 1) from "TABLE1"
-	TEST(DB2,
-		Select(Substr(COL, 2, 1)).From(TABLE1),
-		"select SUBSTR(\"COL\", 2, 1) from \"TABLE1\""); // select SUBSTR("COL", 2, 1) from "TABLE1"
-// ---------------------------------
-	TEST(MY_SQL,
 		Select(Instr(COL, "hello")).From(TABLE1),
 		"select INSTR(`COL`, 'hello') from `TABLE1`"); // select INSTR(`COL`, 'hello') from `TABLE1`
 	TEST(SQLITE3,
@@ -1053,6 +1009,50 @@
 	TEST(DB2,
 		Select(Decode(COL, SqlSet("1", 2, 3))).From(TABLE1),
 		"select (case when \"COL\" = '1' then 2 else 3 end) from \"TABLE1\""); // select (case when "COL" = '1' then 2 else 3 end) from "TABLE1"
+// ---------------------------------
+	TEST(MY_SQL,
+		Select(Length(COL)).From(TABLE1),
+		"select length(`COL`) from `TABLE1`"); // select length(`COL`) from `TABLE1`
+	TEST(SQLITE3,
+		Select(Length(COL)).From(TABLE1),
+		"select length(\"COL\") from \"TABLE1\""); // select length("COL") from "TABLE1"
+	TEST(ORACLE,
+		Select(Length(COL)).From(TABLE1),
+		"select length(\"COL\") from \"TABLE1\""); // select length("COL") from "TABLE1"
+	TEST(MSSQL,
+		Select(Length(COL)).From(TABLE1),
+		"select len(\"COL\") from \"TABLE1\""); // select len("COL") from "TABLE1"
+	TEST(PGSQL,
+		Select(Length(COL)).From(TABLE1),
+		"select length(\"COL\") from \"TABLE1\""); // select length("COL") from "TABLE1"
+	TEST(FIREBIRD,
+		Select(Length(COL)).From(TABLE1),
+		"select length(\"COL\") from \"TABLE1\""); // select length("COL") from "TABLE1"
+	TEST(DB2,
+		Select(Length(COL)).From(TABLE1),
+		"select length(\"COL\") from \"TABLE1\""); // select length("COL") from "TABLE1"
+// ---------------------------------
+	TEST(MY_SQL,
+		Select(Substr(COL, 2, 3)).From(TABLE1),
+		"select substr(`COL`, 2, 3) from `TABLE1`"); // select substr(`COL`, 2, 3) from `TABLE1`
+	TEST(SQLITE3,
+		Select(Substr(COL, 2, 3)).From(TABLE1),
+		"select substr(\"COL\", 2, 3) from \"TABLE1\""); // select substr("COL", 2, 3) from "TABLE1"
+	TEST(ORACLE,
+		Select(Substr(COL, 2, 3)).From(TABLE1),
+		"select substr(\"COL\", 2, 3) from \"TABLE1\""); // select substr("COL", 2, 3) from "TABLE1"
+	TEST(MSSQL,
+		Select(Substr(COL, 2, 3)).From(TABLE1),
+		"select substring(\"COL\", 2, 3) from \"TABLE1\""); // select substring("COL", 2, 3) from "TABLE1"
+	TEST(PGSQL,
+		Select(Substr(COL, 2, 3)).From(TABLE1),
+		"select substr(\"COL\", 2, 3) from \"TABLE1\""); // select substr("COL", 2, 3) from "TABLE1"
+	TEST(FIREBIRD,
+		Select(Substr(COL, 2, 3)).From(TABLE1),
+		"select substr(\"COL\", 2, 3) from \"TABLE1\""); // select substr("COL", 2, 3) from "TABLE1"
+	TEST(DB2,
+		Select(Substr(COL, 2, 3)).From(TABLE1),
+		"select substr(\"COL\", 2, 3) from \"TABLE1\""); // select substr("COL", 2, 3) from "TABLE1"
 // ---------------------------------
 	TEST(MY_SQL,
 		Select(COL).From(TABLE1).Where(COL / 2 > 1 && COLUMN1 == "A" || COLUMN2 == Date(2006, 1, 1)),
