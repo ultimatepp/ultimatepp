@@ -771,7 +771,9 @@ SqlBool GetTimeRange(Time min, Time max, const SqlVal& exp, bool force_range)
 
 SqlVal GetYearDayIndex(const SqlVal& date)
 {
-	return SqlFunc("to_char", date, "MM/DD");
+	SqlVal mssql("substring(convert(varchar(max), " + ~date + ", 1), 1, 5)", SqlS::FN);
+	SqlVal oracle(SqlFunc("to_char", date, "MM/DD"));
+	return SqlVal(SqlCase(MSSQL, ~mssql)(~oracle), SqlS::FN);
 }
 
 String GetYearDayIndex(Date date)
