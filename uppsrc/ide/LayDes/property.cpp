@@ -81,16 +81,19 @@ String RawProperty::Save() const
 {
 	String s = ~editor;
 	CParser p(s);
-	int level = 0;
-	while(!p.IsEof()) {
-		if(p.Char('('))
-			level++;
-		else
-		if(p.Char(')'))
-			level--;
-		else
-			p.SkipTerm();
+	try {
+		int level = 0;
+		while(!p.IsEof()) {
+			if(p.Char('('))
+				level++;
+			else
+			if(p.Char(')'))
+				level--;
+			else
+				p.SkipTerm();
+		}
 	}
+	catch(CParser::Error) {}
 	if(level < 0)
 		s = String('(', -level) + s;
 	else
