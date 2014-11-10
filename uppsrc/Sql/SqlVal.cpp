@@ -330,17 +330,15 @@ SqlVal Variance(const SqlVal& a) {
 }
 
 SqlVal Greatest(const SqlVal& a, const SqlVal& b) {
-	return SqlFunc(SqlCase
-						(SQLITE3, "max")
-						("greatest"),
-					a, b);
+	return SqlVal(SqlCase(MSSQL, '(' + ~Case(a < b, b)(a) + ')')
+	                     (~SqlFunc(SqlCase(SQLITE3, "max")("greatest"), a, b)),
+	              SqlS::FN);
 }
 
 SqlVal Least(const SqlVal& a, const SqlVal& b) {
-	return SqlFunc(SqlCase
-						(SQLITE3, "min")
-						("least"),
-					a, b);
+	return SqlVal(SqlCase(MSSQL, '(' + ~Case(a > b, b)(a) + ')')
+	                     (~SqlFunc(SqlCase(SQLITE3, "min")("least"), a, b)),
+	              SqlS::FN);
 }
 
 SqlVal ConvertCharset(const SqlVal& exp, const SqlVal& charset) { //TODO Dialect!
@@ -397,8 +395,12 @@ SqlVal Wild(const char* s) {
 	return result;
 }
 
-SqlVal SqlDate(const SqlVal& year, const SqlVal& month, const SqlVal& day) {//TODO Dialect!
-	return SqlFunc("to_date", year|"."|month|"."|day, "SYYYY.MM.DD");
+SqlVal SqlDate(const SqlVal& year, const SqlVal& month, const SqlVal& day) {
+	return SqlVal(SqlCase(ORACLE, ~SqlFunc("to_date", year|"."|month|"."|day, "SYYYY.MM.DD")) // Similiar to common, but keep proved version to be sure...
+	                     (MSSQL, ~SqlFunc("datefromparts", year, month, day))
+	                     ("to_date(to_char(" + ~day + ", '00') || to_char(" + ~month +
+	                               ", '00') || to_char(" + ~year + ",'9999'), 'DDMMYYYY')"),
+	SqlS::FN);
 }
 
 SqlVal AddMonths(const SqlVal& date, const SqlVal& months) {//TODO Dialect!
