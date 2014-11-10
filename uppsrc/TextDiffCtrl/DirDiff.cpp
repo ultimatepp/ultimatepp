@@ -39,6 +39,9 @@ void DirDiffDlg::Compare()
 	Index<String> fs;
 	GatherFilesDeep(fs, ~dir1, Null);
 	GatherFilesDeep(fs, ~dir2, Null);
+
+	copyleft.Disable();
+	copyright.Disable();
 	
 	files.Clear();
 	Vector<String> f = fs.PickKeys();
@@ -71,6 +74,23 @@ void DirDiffDlg::File()
 		diff.Set(LoadFile(p1), LoadFile(p2));
 	lfile <<= p1;
 	rfile <<= p2;
+	copyleft.Enable();
+	copyright.Enable();
+}
+
+void DirDiffDlg::Copy(bool left)
+{
+	String src = ~lfile;
+	String dst = ~rfile;
+	if(left)
+		Swap(src, dst);
+	if(PromptYesNo("Copy [* \1" + src + "\1]&to [* \1" + dst + "\1] ?")) {
+		FileIn  in(src);
+		FileOut out(dst);
+		CopyStream(out, in);
+		out.Close();
+		File();
+	}
 }
 
 DirDiffDlg::DirDiffDlg()
@@ -104,13 +124,29 @@ DirDiffDlg::DirDiffDlg()
 	
 	files.WhenSel = THISBACK(File);
 
-	lfile.Height(EditField::GetStdHeight());
-	lfile.SetReadOnly();
-	diff.InsertFrameLeft(lfile);
+	diff.InsertFrameLeft(left);
+	diff.InsertFrameRight(right);
 
-	rfile.Height(EditField::GetStdHeight());
+	bcx = GetTextSize(t_("Copy"), StdFont()).cx + HorzLayoutZoom(40);
+
+	left.Height(EditField::GetStdHeight());
+	lfile.SetReadOnly();
+	left.Add(lfile.VSizePos().HSizePos(0, bcx));
+	left.Add(copyright.VSizePos().RightPos(0, bcx));
+	copyright.SetImage(DiffImg::CopyRight());
+	copyright.SetLabel("Copy");
+	copyright <<= THISBACK1(Copy, false);
+
+	right.Height(EditField::GetStdHeight());
 	rfile.SetReadOnly();
-	diff.InsertFrameRight(rfile);
+	right.Add(rfile.VSizePos().HSizePos(bcx, 0));
+	right.Add(copyleft.VSizePos().LeftPos(0, bcx));
+	copyleft.SetImage(DiffImg::CopyLeft());
+	copyleft.SetLabel("Copy");
+	copyleft <<= THISBACK1(Copy, true);
+	
+	copyleft.Disable();
+	copyright.Disable();
 
 	Icon(DiffImg::DirDiff());
 }
