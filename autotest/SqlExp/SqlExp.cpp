@@ -164,6 +164,7 @@ CONSOLE_APP_MAIN
 	EXP(Select(Decode(COL, SqlSet("1", 2, 3))).From(TABLE1));
 	EXP(Select(Length(COL)).From(TABLE1));
 	EXP(Select(Substr(COL, 2, 3)).From(TABLE1));
+	EXP(Select(SqlDate(COL, SEQ, A)).From(TABLE1));
 
 	EXP(Select(COL).From(TABLE1).Where(COL / 2 > 1 && COLUMN1 == "A" || COLUMN2 == Date(2006, 1, 1)));
 	EXP(Select(COL).From(TABLE1).Where(!(COL == 1)));

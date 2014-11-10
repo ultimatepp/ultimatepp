@@ -399,16 +399,16 @@
 		"select `COLUMN1` + `COLUMN2` from `TABLE1`"); // select `COLUMN1` + `COLUMN2` from `TABLE1`
 	TEST(SQLITE3,
 		Select(COLUMN1 | COLUMN2).From(TABLE1),
-		"select \"COLUMN1\" || \"COLUMN2\" from \"TABLE1\""); // select "COLUMN1" || "COLUMN2" from "TABLE1"
+		"select \"COLUMN1\"||\"COLUMN2\" from \"TABLE1\""); // select "COLUMN1"||"COLUMN2" from "TABLE1"
 	TEST(ORACLE,
 		Select(COLUMN1 | COLUMN2).From(TABLE1),
-		"select \"COLUMN1\" || \"COLUMN2\" from \"TABLE1\""); // select "COLUMN1" || "COLUMN2" from "TABLE1"
+		"select \"COLUMN1\"||\"COLUMN2\" from \"TABLE1\""); // select "COLUMN1"||"COLUMN2" from "TABLE1"
 	TEST(MSSQL,
 		Select(COLUMN1 | COLUMN2).From(TABLE1),
 		"select \"COLUMN1\" + \"COLUMN2\" from \"TABLE1\""); // select "COLUMN1" + "COLUMN2" from "TABLE1"
 	TEST(PGSQL,
 		Select(COLUMN1 | COLUMN2).From(TABLE1),
-		"select \"COLUMN1\" || \"COLUMN2\" from \"TABLE1\""); // select "COLUMN1" || "COLUMN2" from "TABLE1"
+		"select \"COLUMN1\"||\"COLUMN2\" from \"TABLE1\""); // select "COLUMN1"||"COLUMN2" from "TABLE1"
 	TEST(FIREBIRD,
 		Select(COLUMN1 | COLUMN2).From(TABLE1),
 		"select \"COLUMN1\" + \"COLUMN2\" from \"TABLE1\""); // select "COLUMN1" + "COLUMN2" from "TABLE1"
@@ -735,7 +735,7 @@
 		"select greatest(\"COLUMN1\", \"COLUMN2\") from \"TABLE1\""); // select greatest("COLUMN1", "COLUMN2") from "TABLE1"
 	TEST(MSSQL,
 		Select(Greatest(COLUMN1, COLUMN2)).From(TABLE1),
-		"select greatest(\"COLUMN1\", \"COLUMN2\") from \"TABLE1\""); // select greatest("COLUMN1", "COLUMN2") from "TABLE1"
+		"select (case when \"COLUMN1\" < \"COLUMN2\" then \"COLUMN2\" else \"COLUMN1\" end) from \"TABLE1\""); // select (case when "COLUMN1" < "COLUMN2" then "COLUMN2" else "COLUMN1" end) from "TABLE1"
 	TEST(PGSQL,
 		Select(Greatest(COLUMN1, COLUMN2)).From(TABLE1),
 		"select greatest(\"COLUMN1\", \"COLUMN2\") from \"TABLE1\""); // select greatest("COLUMN1", "COLUMN2") from "TABLE1"
@@ -757,7 +757,7 @@
 		"select least(\"COLUMN1\", \"COLUMN2\") from \"TABLE1\""); // select least("COLUMN1", "COLUMN2") from "TABLE1"
 	TEST(MSSQL,
 		Select(Least(COLUMN1, COLUMN2)).From(TABLE1),
-		"select least(\"COLUMN1\", \"COLUMN2\") from \"TABLE1\""); // select least("COLUMN1", "COLUMN2") from "TABLE1"
+		"select (case when \"COLUMN1\" > \"COLUMN2\" then \"COLUMN2\" else \"COLUMN1\" end) from \"TABLE1\""); // select (case when "COLUMN1" > "COLUMN2" then "COLUMN2" else "COLUMN1" end) from "TABLE1"
 	TEST(PGSQL,
 		Select(Least(COLUMN1, COLUMN2)).From(TABLE1),
 		"select least(\"COLUMN1\", \"COLUMN2\") from \"TABLE1\""); // select least("COLUMN1", "COLUMN2") from "TABLE1"
@@ -1053,6 +1053,28 @@
 	TEST(DB2,
 		Select(Substr(COL, 2, 3)).From(TABLE1),
 		"select substr(\"COL\", 2, 3) from \"TABLE1\""); // select substr("COL", 2, 3) from "TABLE1"
+// ---------------------------------
+	TEST(MY_SQL,
+		Select(SqlDate(COL, SEQ, A)).From(TABLE1),
+		"select to_date(to_char(`A`, '00') || to_char(`SEQ`, '00') || to_char(`COL`,'9999'), 'DDMMYYYY') from `TABLE1`"); // select to_date(to_char(`A`, '00') || to_char(`SEQ`, '00') || to_char(`COL`,'9999'), 'DDMMYYYY') from `TABLE1`
+	TEST(SQLITE3,
+		Select(SqlDate(COL, SEQ, A)).From(TABLE1),
+		"select to_date(to_char(\"A\", '00') || to_char(\"SEQ\", '00') || to_char(\"COL\",'9999'), 'DDMMYYYY') from \"TABLE1\""); // select to_date(to_char("A", '00') || to_char("SEQ", '00') || to_char("COL",'9999'), 'DDMMYYYY') from "TABLE1"
+	TEST(ORACLE,
+		Select(SqlDate(COL, SEQ, A)).From(TABLE1),
+		"select to_date(\"COL\"||'.'||\"SEQ\"||'.'||\"A\", 'SYYYY.MM.DD') from \"TABLE1\""); // select to_date("COL"||'.'||"SEQ"||'.'||"A", 'SYYYY.MM.DD') from "TABLE1"
+	TEST(MSSQL,
+		Select(SqlDate(COL, SEQ, A)).From(TABLE1),
+		"select datefromparts(\"COL\", \"SEQ\", \"A\") from \"TABLE1\""); // select datefromparts("COL", "SEQ", "A") from "TABLE1"
+	TEST(PGSQL,
+		Select(SqlDate(COL, SEQ, A)).From(TABLE1),
+		"select to_date(to_char(\"A\", '00') || to_char(\"SEQ\", '00') || to_char(\"COL\",'9999'), 'DDMMYYYY') from \"TABLE1\""); // select to_date(to_char("A", '00') || to_char("SEQ", '00') || to_char("COL",'9999'), 'DDMMYYYY') from "TABLE1"
+	TEST(FIREBIRD,
+		Select(SqlDate(COL, SEQ, A)).From(TABLE1),
+		"select to_date(to_char(\"A\", '00') || to_char(\"SEQ\", '00') || to_char(\"COL\",'9999'), 'DDMMYYYY') from \"TABLE1\""); // select to_date(to_char("A", '00') || to_char("SEQ", '00') || to_char("COL",'9999'), 'DDMMYYYY') from "TABLE1"
+	TEST(DB2,
+		Select(SqlDate(COL, SEQ, A)).From(TABLE1),
+		"select to_date(to_char(\"A\", '00') || to_char(\"SEQ\", '00') || to_char(\"COL\",'9999'), 'DDMMYYYY') from \"TABLE1\""); // select to_date(to_char("A", '00') || to_char("SEQ", '00') || to_char("COL",'9999'), 'DDMMYYYY') from "TABLE1"
 // ---------------------------------
 	TEST(MY_SQL,
 		Select(COL).From(TABLE1).Where(COL / 2 > 1 && COLUMN1 == "A" || COLUMN2 == Date(2006, 1, 1)),
@@ -1737,6 +1759,50 @@
 		"insert into \"TABLE1\"(\"COLUMN1\", \"COLUMN2\", \"COL\") select 12, \"COLUMN2\", \"COL\" from \"TABLE1\" where \"COL\" >= 0"); // insert into "TABLE1"("COLUMN1", "COLUMN2", "COL") select 12, "COLUMN2", "COL" from "TABLE1" where "COL" >= 0
 // ---------------------------------
 	TEST(MY_SQL,
+		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1),
+		"insert into `TABLE1`(`COLUMN1`, `COL`) select `COLUMN1`, sum(`COLUMN2`) from `TABLE1` where `COL` >= 0 group by `COLUMN1`"); // insert into `TABLE1`(`COLUMN1`, `COL`) select `COLUMN1`, sum(`COLUMN2`) from `TABLE1` where `COL` >= 0 group by `COLUMN1`
+	TEST(SQLITE3,
+		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1),
+		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\""); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1"
+	TEST(ORACLE,
+		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1),
+		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\""); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1"
+	TEST(MSSQL,
+		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1),
+		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\""); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1"
+	TEST(PGSQL,
+		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1),
+		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\""); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1"
+	TEST(FIREBIRD,
+		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1),
+		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\""); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1"
+	TEST(DB2,
+		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1),
+		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\""); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1"
+// ---------------------------------
+	TEST(MY_SQL,
+		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1).Having(COLUMN2 > 10),
+		"insert into `TABLE1`(`COLUMN1`, `COL`) select `COLUMN1`, sum(`COLUMN2`) from `TABLE1` where `COL` >= 0 group by `COLUMN1` having `COLUMN2` > 10"); // insert into `TABLE1`(`COLUMN1`, `COL`) select `COLUMN1`, sum(`COLUMN2`) from `TABLE1` where `COL` >= 0 group by `COLUMN1` having `COLUMN2` > 10
+	TEST(SQLITE3,
+		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1).Having(COLUMN2 > 10),
+		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\" having \"COLUMN2\" > 10"); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1" having "COLUMN2" > 10
+	TEST(ORACLE,
+		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1).Having(COLUMN2 > 10),
+		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\" having \"COLUMN2\" > 10"); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1" having "COLUMN2" > 10
+	TEST(MSSQL,
+		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1).Having(COLUMN2 > 10),
+		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\" having \"COLUMN2\" > 10"); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1" having "COLUMN2" > 10
+	TEST(PGSQL,
+		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1).Having(COLUMN2 > 10),
+		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\" having \"COLUMN2\" > 10"); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1" having "COLUMN2" > 10
+	TEST(FIREBIRD,
+		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1).Having(COLUMN2 > 10),
+		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\" having \"COLUMN2\" > 10"); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1" having "COLUMN2" > 10
+	TEST(DB2,
+		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1).Having(COLUMN2 > 10),
+		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\" having \"COLUMN2\" > 10"); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1" having "COLUMN2" > 10
+// ---------------------------------
+	TEST(MY_SQL,
 		Insert(TABLE1)(COLUMN1, 1).Where(NotExists(Select(ID).From(TABLE1).Where(COLUMN1 == 1))),
 		"insert into `TABLE1`(`COLUMN1`) select 1 where not exists (select `ID` from `TABLE1` where `COLUMN1` = 1)"); // insert into `TABLE1`(`COLUMN1`) select 1 where not exists (select `ID` from `TABLE1` where `COLUMN1` = 1)
 	TEST(SQLITE3,
@@ -1801,50 +1867,6 @@
 	TEST(DB2,
 		Insert(TABLE1)(COL, Select(COLUMN1).From(TABLE1).Where(COLUMN2 == 21).AsValue()),
 		"insert into \"TABLE1\"(\"COL\") values ((select \"COLUMN1\" from \"TABLE1\" where \"COLUMN2\" = 21))"); // insert into "TABLE1"("COL") values ((select "COLUMN1" from "TABLE1" where "COLUMN2" = 21))
-// ---------------------------------
-	TEST(MY_SQL,
-		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1),
-		"insert into `TABLE1`(`COLUMN1`, `COL`) select `COLUMN1`, sum(`COLUMN2`) from `TABLE1` where `COL` >= 0 group by `COLUMN1`"); // insert into `TABLE1`(`COLUMN1`, `COL`) select `COLUMN1`, sum(`COLUMN2`) from `TABLE1` where `COL` >= 0 group by `COLUMN1`
-	TEST(SQLITE3,
-		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1),
-		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\""); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1"
-	TEST(ORACLE,
-		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1),
-		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\""); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1"
-	TEST(MSSQL,
-		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1),
-		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\""); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1"
-	TEST(PGSQL,
-		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1),
-		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\""); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1"
-	TEST(FIREBIRD,
-		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1),
-		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\""); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1"
-	TEST(DB2,
-		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1),
-		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\""); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1"
-// ---------------------------------
-	TEST(MY_SQL,
-		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1).Having(COLUMN2 > 10),
-		"insert into `TABLE1`(`COLUMN1`, `COL`) select `COLUMN1`, sum(`COLUMN2`) from `TABLE1` where `COL` >= 0 group by `COLUMN1` having `COLUMN2` > 10"); // insert into `TABLE1`(`COLUMN1`, `COL`) select `COLUMN1`, sum(`COLUMN2`) from `TABLE1` where `COL` >= 0 group by `COLUMN1` having `COLUMN2` > 10
-	TEST(SQLITE3,
-		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1).Having(COLUMN2 > 10),
-		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\" having \"COLUMN2\" > 10"); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1" having "COLUMN2" > 10
-	TEST(ORACLE,
-		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1).Having(COLUMN2 > 10),
-		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\" having \"COLUMN2\" > 10"); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1" having "COLUMN2" > 10
-	TEST(MSSQL,
-		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1).Having(COLUMN2 > 10),
-		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\" having \"COLUMN2\" > 10"); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1" having "COLUMN2" > 10
-	TEST(PGSQL,
-		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1).Having(COLUMN2 > 10),
-		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\" having \"COLUMN2\" > 10"); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1" having "COLUMN2" > 10
-	TEST(FIREBIRD,
-		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1).Having(COLUMN2 > 10),
-		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\" having \"COLUMN2\" > 10"); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1" having "COLUMN2" > 10
-	TEST(DB2,
-		Insert(TABLE1)(COLUMN1)(COL, SqlSum(COLUMN2)).From(TABLE1).Where(COL >= 0).GroupBy(COLUMN1).Having(COLUMN2 > 10),
-		"insert into \"TABLE1\"(\"COLUMN1\", \"COL\") select \"COLUMN1\", sum(\"COLUMN2\") from \"TABLE1\" where \"COL\" >= 0 group by \"COLUMN1\" having \"COLUMN2\" > 10"); // insert into "TABLE1"("COLUMN1", "COL") select "COLUMN1", sum("COLUMN2") from "TABLE1" where "COL" >= 0 group by "COLUMN1" having "COLUMN2" > 10
 // ---------------------------------
 	TEST(MY_SQL,
 		Select(COL).From(Select(COL).From(TABLE1)),
