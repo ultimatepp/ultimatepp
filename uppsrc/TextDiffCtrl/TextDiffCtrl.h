@@ -199,12 +199,15 @@ class DirDiffDlg : public TopWindow {
 	Option                     hidden;
 	Button                     compare;
 
-	FrameTop<EditString>       lfile, rfile;
+	FrameTop<ParentCtrl>       left, right;
+	EditString                 lfile, rfile;
+	Button                     copyleft, copyright;
 
 	void GatherFilesDeep(Index<String>& files, const String& base, const String& path);
 	void Compare();
 	void ClearFiles();
 	void File();
+	void Copy(bool left);
 
 public:
 	typedef DirDiffDlg CLASSNAME;
