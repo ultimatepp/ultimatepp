@@ -381,7 +381,7 @@ public:
 		Logc()                         { data = 0xffffffff; }
 	};
 
-	struct LogPos {
+	struct LogPos : Moveable<LogPos> {
 		Logc x, y;
 
 		bool operator==(LogPos b) const   { return x == b.x && y == b.y; }

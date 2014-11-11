@@ -524,6 +524,8 @@ void SqlLoadColumn(T& t, SqlSelect select)
 		t.Add(sql[0], sql[1]);
 }
 
+void operator*=(ValueMap& map, SqlSelect select);
+
 template<class K, class V>
 void operator*=(VectorMap<K, V>& map, SqlSelect select)
 {

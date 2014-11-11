@@ -704,4 +704,13 @@ SqlR::SqlR(const SqlStatement& s)
 
 #endif
 
+void operator*=(ValueMap& map, SqlSelect select)
+{
+	map.Clear();
+	Sql sql;
+	sql * select;
+	while(sql.Fetch())
+		map.Add(sql[0], sql[1]);
+}
+
 END_UPP_NAMESPACE
