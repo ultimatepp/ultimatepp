@@ -23,4 +23,5 @@ GUI_APP_MAIN
 	RDUMP(sizeof(RichTextView));
 	RDUMP(sizeof(ColumnList));
 	RDUMP(sizeof(RichEdit));
+	RDUMP(sizeof(Ctrl::LogPos));
 }
