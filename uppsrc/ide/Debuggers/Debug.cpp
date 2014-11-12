@@ -173,6 +173,7 @@ void Pdb::Unlock()
 
 Pdb::Context Pdb::ReadContext(HANDLE hThread)
 {
+	DR_LOG("ReadContext");
 	Context r;
 #ifdef CPU_64
 	if(win64) {
@@ -201,6 +202,7 @@ Pdb::Context Pdb::ReadContext(HANDLE hThread)
 
 void Pdb::WriteContext(HANDLE hThread, Context& context)
 {
+	DR_LOG("WriteContext");
 #ifdef CPU_64
 	if(win64) {
 		CONTEXT ctx;
@@ -229,6 +231,7 @@ void Pdb::AddThread(dword dwThreadId, HANDLE hThread)
 {
 	if(threads.Find(dwThreadId) >= 0)
 		return;
+	DR_LOG("AddThread");
 	Thread& f = threads.GetAdd(dwThreadId);
 	// Retrive "base-level" stack-pointer, to have limit for stackwalks:
 	Context c = ReadContext(hThread);
@@ -312,6 +315,7 @@ void Pdb::ToForeground()
 
 bool Pdb::RunToException()
 {
+	DR_LOG("RunToException");
 	LLOG("RUN TO EXCEPTION");
 	TimeStop ts;
 	bool disasfocus = disas.HasFocus();
@@ -327,12 +331,15 @@ bool Pdb::RunToException()
 			return false;
 		}
 		opn++;
+		DR_LOG("WaitForDebugEvent");
 		if(WaitForDebugEvent(&event, 0)) {
+			DR_LOG("WaitForDebugEvent ended");
 			debug_threadid = event.dwThreadId;
 			opn = 0;
 			running = false;
 			switch(event.dwDebugEventCode) {
 			case EXCEPTION_DEBUG_EVENT: {
+				DR_LOG("EXCEPTION_DEBUG_EVENT");
 				LLOG("Exception: " << FormatIntHex(event.u.Exception.ExceptionRecord.ExceptionCode) <<
 				     " at: " << FormatIntHex(event.u.Exception.ExceptionRecord.ExceptionAddress) <<
 				     " first: " << event.u.Exception.dwFirstChance);
@@ -399,14 +406,17 @@ bool Pdb::RunToException()
 				return true;
 			}
 			case CREATE_THREAD_DEBUG_EVENT:
+				DR_LOG("CREATE_THREAD_DEBUG_EVENT");
 				LLOG("Create thread: " << event.dwThreadId);
 				AddThread(event.dwThreadId, event.u.CreateThread.hThread);
 				break;
 			case EXIT_THREAD_DEBUG_EVENT:
+				DR_LOG("EXIT_THREAD_DEBUG_EVENT");
 				LLOG("Exit thread: " << event.dwThreadId);
 				RemoveThread(event.dwThreadId);
 				break;
 			case CREATE_PROCESS_DEBUG_EVENT:
+				DR_LOG("CREATE_PROCESS_DEBUG_EVENT");
 				LLOG("Create process: " << event.dwProcessId);
 				processid = event.dwProcessId;
 				AddThread(event.dwThreadId, event.u.CreateProcessInfo.hThread);
@@ -414,22 +424,26 @@ bool Pdb::RunToException()
 				CloseHandle(event.u.CreateProcessInfo.hProcess);
 				break;
 			case EXIT_PROCESS_DEBUG_EVENT:
+				DR_LOG("EXIT_PROCESS_DEBUG_EVENT");
 				LLOG("Exit process: " << event.dwProcessId);
 				if(locked)
 					Unlock();
 				terminated = true;
 				return false;
 			case LOAD_DLL_DEBUG_EVENT: {
+				DR_LOG("LOAD_DLL_DEBUG_EVENT");
 				LLOG("Load dll: " << event.u.LoadDll.lpBaseOfDll);
 				CloseHandle(event.u.LoadDll.hFile);
 				refreshmodules = true;
 				break;
 			}
 			case UNLOAD_DLL_DEBUG_EVENT:
+				DR_LOG("UNLOAD_DLL_DEBUG_EVENT");
 				LLOG("UnLoad dll: " << event.u.UnloadDll.lpBaseOfDll);
 				refreshmodules = true;
 				break;
 			case RIP_EVENT:
+				DR_LOG("RIP_EVENT");
 				LLOG("RIP!");
 				Exclamation("Process being debugged died unexpectedly!");
 				terminated = true;
@@ -437,10 +451,12 @@ bool Pdb::RunToException()
 					Unlock();
 				return false;
 			}
+			DR_LOG("ContinueDebugEvent");
 			ContinueDebugEvent(event.dwProcessId, event.dwThreadId, DBG_EXCEPTION_NOT_HANDLED);
 			running = true;
 		}
 		if(ts.Elapsed() > 200) {
+			DR_LOG("ts.Elpsed() > 200");
 			if(!lock) {
 				Lock();
 				locked = true;
@@ -451,11 +467,14 @@ bool Pdb::RunToException()
 			}
 		}
 		if(lock) {
+			DR_LOG("GuiSleep");
 			GuiSleep(opn < 1000 ? 0 : 100);
 			Ctrl::ProcessEvents();
 		}
-		else
+		else {
+			DR_LOG("Sleep");
 			Sleep(opn < 1000 ? 0 : 100);
+		}
 	}
 }
 

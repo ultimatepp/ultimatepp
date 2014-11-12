@@ -550,6 +550,7 @@ Pdb::Val Pdb::LogOr(CParser& p)
 
 Pdb::Val Pdb::Exp0(CParser& p)
 {
+	DR_LOG("Evaluating Expression: " << p.GetPtr());
 	LLOG("Evaluating Expression: " << p.GetPtr());
 	return LogOr(p);
 }

@@ -55,6 +55,7 @@ void Pdb::CatInt(Visual& result, int64 val)
 
 void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen)
 {
+	DR_LOG("Visualise");
 	const int maxlen = 300;
 	if(result.length > maxlen)
 		return;
