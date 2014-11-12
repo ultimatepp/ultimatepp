@@ -801,6 +801,7 @@ void CodeEditor::SetFindReplaceData(const FindReplaceData& r)
 	findreplace.wildcards <<= r.wildcards;
 	findreplace.samecase <<= r.samecase;
 	findreplace.regexp <<= r.regexp;
+	findreplace.mode <<= 0;
 }
 
 void CodeEditor::FindPrevNext(bool prev)
