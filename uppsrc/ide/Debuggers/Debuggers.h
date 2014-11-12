@@ -1,6 +1,8 @@
 #ifndef __Debuggers__
 #define __Debuggers__
 
+#define DR_LOG(x) // RLOG(x)
+
 #include <ide/Common/Common.h>
 
 #include <HexView/HexView.h>

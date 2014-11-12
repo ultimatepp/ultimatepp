@@ -340,6 +340,7 @@ bool Ide::EditorTip(CodeEditor::MouseTip& mt)
 {
 	if(!debugger)
 		return false;
+	DR_LOG("EditorTip");
 	int pos = mt.pos;
 	String e;
 	String sep;
@@ -350,7 +351,7 @@ bool Ide::EditorTip(CodeEditor::MouseTip& mt)
 		e = b + sep + e;
 		sep = ".";
 		while(pos > 0 && editor.GetChar(pos - 1) == ' ')
-			pos++;
+			pos--;
 		if(pos > 0 && editor.GetChar(pos - 1) == '.')
 			--pos;
 		else
@@ -364,7 +365,8 @@ bool Ide::EditorTip(CodeEditor::MouseTip& mt)
 		else
 			break;
 		while(pos > 0 && editor.GetChar(pos - 1) == ' ')
-			pos++;
+			pos--;
 	}
+	DR_LOG("debugger->Tip");
 	return debugger->Tip(e, mt);
 }

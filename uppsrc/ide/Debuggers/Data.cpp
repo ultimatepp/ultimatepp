@@ -278,6 +278,7 @@ bool Pdb::Tip(const String& exp, CodeEditor::MouseTip& mt)
 	mt.value = exp;
 	mt.sz = Size(100, 20);
 	return true;*/
+	DR_LOG("Pdb::Tip");
 	Visual r;
 	try {
 		CParser p(exp);
@@ -287,10 +288,12 @@ bool Pdb::Tip(const String& exp, CodeEditor::MouseTip& mt)
 			mt.sz = r.GetSize() + Size(4, 4);
 			mt.value = RawPickToValue(r);
 			mt.display = &Single<VisualDisplay>();
+			DR_LOG("Pdb::Tip true");
 			return true;
 		}
 	}
 	catch(CParser::Error) {}
+	DR_LOG("Pdb::Tip false");
 	return false;
 }
 
