@@ -15,7 +15,7 @@ CONSOLE_APP_MAIN
 	Tuple2<int, String> y = Tuple<int, String>(13, "hello");
 	
 	DUMP(x == y);
-	y.a = 13;
+	y = x;
 	DUMP(x == y);
 	
 	int i; String s;
