@@ -12,7 +12,7 @@ namespace Upp {
 
 String GetThreadName()
 {
-	return FormatIntBase(Thread::GetCurrentId() % 33, 35);
+	return FormatIntBase((int64)(Thread::GetCurrentId()) % 33, 35);
 }
 	
 namespace Ini {
