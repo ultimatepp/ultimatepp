@@ -636,10 +636,10 @@ equivalents to VectorMap/ArrayMap `- maps that keep keys sorted:&]
 [s5; U`+`+ has template classes Tuple2, Tuple3 and Tuple4 for combining 
 2`-4 values with different types. These are quite similiar to 
 std`::tuple class, with some advantages.&]
-[s5; To create a Tuple value, you can use MakeTuple function. If 
+[s5; To create a Tuple value, you can use the Tuple function. If 
 correct types canot be deduced from parameters, you can specify 
 them explicitly:&]
-[s7; -|Tuple3<int, String, String> x `= [* MakeTuple]<int, String, String>(12, 
+[s7; -|Tuple3<int, String, String> x `= [* Tuple]<int, String, String>(12, 
 `"hello`", `"world`");&]
 [s7; &]
 [s5; Individual values are accessible as members a .. d:&]
