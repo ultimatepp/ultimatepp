@@ -30,12 +30,18 @@ inline void AssertMoveable0(Tuple2<A, B> *)
 }
 
 template <typename A, typename B>
-inline Tuple2<A, B> MakeTuple(const A& a, const B& b)
+inline Tuple2<A, B> Tuple(const A& a, const B& b)
 {
 	Tuple2<A, B> r;
 	r.a = a;
 	r.b = b;
 	return r;
+}
+
+template <typename A, typename B>
+inline Tuple2<A, B> MakeTuple(const A& a, const B& b) // Old name
+{
+	return Tuple(a, b);
 }
 
 template <typename A, typename B, typename C>
@@ -72,13 +78,19 @@ inline void AssertMoveable0(Tuple3<A, B, C> *)
 }
 
 template <typename A, typename B, typename C>
-inline Tuple3<A, B, C> MakeTuple(const A& a, const B& b, const C& c)
+inline Tuple3<A, B, C> Tuple(const A& a, const B& b, const C& c)
 {
 	Tuple3<A, B, C> r;
 	r.a = a;
 	r.b = b;
 	r.c = c;
 	return r;
+}
+
+template <typename A, typename B, typename C>
+inline Tuple3<A, B, C> MakeTuple(const A& a, const B& b, const C& c)
+{
+	return Tuple(a, b, c);
 }
 
 template <typename A, typename B, typename C, typename D>
@@ -117,7 +129,7 @@ inline void AssertMoveable0(Tuple4<A, B, C, D> *)
 }
 
 template <typename A, typename B, typename C, typename D>
-inline Tuple4<A, B, C, D> MakeTuple(const A& a, const B& b, const C& c, const D& d)
+inline Tuple4<A, B, C, D> Tuple(const A& a, const B& b, const C& c, const D& d)
 {
 	Tuple4<A, B, C, D> r;
 	r.a = a;
@@ -125,6 +137,12 @@ inline Tuple4<A, B, C, D> MakeTuple(const A& a, const B& b, const C& c, const D&
 	r.c = c;
 	r.d = d;
 	return r;
+}
+
+template <typename A, typename B, typename C, typename D>
+inline Tuple4<A, B, C, D> MakeTuple(const A& a, const B& b, const C& c, const D& d)
+{
+	return Tuple(a, b, c, d);
 }
 
 template <typename T, typename U>
