@@ -27,9 +27,11 @@ library(LINUX !XLFD !SHARED  !RAINBOW GUI) "fontconfig Xrender freetype";
 
 library(OSX11) "X11 Xft fontconfig Xrender freetype expat";
 
-library(FREEBSD) xcb;
+library(FREEBSD | DRAGONFLY) xcb;
 
 library(POSIX !NOGTK !RAINBOW GUI) notify;
+
+library(DRAGONFLY) "Xext Xinerama";
 
 file
 	Core readonly separator,

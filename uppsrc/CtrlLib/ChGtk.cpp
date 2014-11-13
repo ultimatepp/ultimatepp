@@ -1,8 +1,9 @@
 #include "CtrlLib.h"
-#include "ChGtk.h"
 
 #ifdef PLATFORM_X11
 #ifndef flagNOGTK
+
+#include "ChGtk.h"
 
 #define LLOG(x)  // DLOG(x)
 #define LDUMP(x) // DDUMP(x)

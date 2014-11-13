@@ -338,6 +338,10 @@ void LocalHost::AddFlags(Index<String>& cfg)
 	cfg.Add("NETBSD");
 #endif
 
+#ifdef PLATFORM_DRAGONFLY
+	cfg.Add("DRAGONFLY");
+#endif
+
 #ifdef PLATFORM_SOLARIS
 	cfg.Add("SOLARIS");
 #endif

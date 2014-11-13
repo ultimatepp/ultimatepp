@@ -31,7 +31,7 @@
 		#else
 			// zvzv mod
 			// was: #if __FreeBSD__ || __OpenBSD__ || __NetBSD__ || __APPLE__
-			#if __FreeBSD__ || __OpenBSD__ || __NetBSD__
+			#if __FreeBSD__ || __OpenBSD__ || __NetBSD__ || __DragonFly__
 				#define PLATFORM_BSD 1
 				#if __FreeBSD__
 					#define PLATFORM_FREEBSD 1
@@ -41,6 +41,9 @@
 				#endif
 				#if __NetBSD__
 					#define PLATFORM_NETBSD 1
+				#endif
+				#if __DragonFly__
+					#define PLATFORM_DRAGONFLY 1
 				#endif
 			#elif __sun
 				#define PLATFORM_SOLARIS 1
