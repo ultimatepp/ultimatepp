@@ -4,7 +4,6 @@ option "Create header" header;
 option "Initialize video" video;
 option "Double buffering" doublebuff;
 option "Full screen" fullscreen;
-option "Event loop" loop;
 option "Use SSE2" sse2 = 1;
 
 @@<:PACKAGE:>.h
@@ -28,12 +27,12 @@ SDL_Surface * OpenScreen(const int width, const int height, const int bpp, const
 	}
 	return screen;
 }
-<:.:><:(loop && video ? "
+
 void Paint(SDL_Surface * surface)
 {
 	/* Put your painting code here */
 }
-" : ""):>
+<:.:>
 int main(int argc, char **argv)
 {
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -43,7 +42,7 @@ int main(int argc, char **argv)
 	SDL_Surface * screen = OpenScreen(1024, 768, 32, videoflags);
 	if(!screen) 
 		return 1;
-<:.:><:?loop:>
+<:.:>
 	SDL_Event event;
 	bool done = false;
 	
@@ -56,14 +55,14 @@ int main(int argc, char **argv)
 				case SDL_KEYDOWN:
 					if(event.key.keysym.sym == SDLK_LALT || event.key.keysym.sym == SDLK_TAB)
 						break;
-					<:(video ? "if(event.key.keysym.sym == SDLK_RETURN)
+					<:?video:>if(event.key.keysym.sym == SDLK_RETURN)
 					{
 						videoflags ^= SDL_FULLSCREEN;
 						screen = OpenScreen(screen->w, screen->h, screen->format->BitsPerPixel, videoflags);
 						if(!screen) 
 							done = true;
 						break;
-					}" : ""):>
+					}<:.:>
 				case SDL_QUIT:
 					done = true;
 					break;
@@ -71,12 +70,12 @@ int main(int argc, char **argv)
 					break;
 			}
 		}
-		<:(video ? "else
+		<:video:>else
 		{
 			Paint(screen);
 			SDL_Flip(screen);
-		}" : ""):>
-	}<:.:><:?video:>
+		}<:.:>
+	}<:?video:>
 	SDL_FreeSurface(screen);<:.:>
 	SDL_Quit();
 	return 0;
