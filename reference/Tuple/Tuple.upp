@@ -1,0 +1,11 @@
+description "Demonstrates Tuple and Tie\377";
+
+uses
+	Core;
+
+file
+	Tuple.cpp;
+
+mainconfig
+	"" = "SSE2";
+
