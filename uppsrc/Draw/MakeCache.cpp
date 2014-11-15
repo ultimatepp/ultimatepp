@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)    // DLOG(x)
+#define LLOG(x)    DLOG(x)
 
 static StaticCriticalSection sMakeImage;
 
@@ -31,7 +31,7 @@ struct scImageMaker : LRUCache<Image>::Maker {
 	virtual int    Make(Image& object) const {
 		object = m->Make();
 		LLOG("ImageMaker " << object.GetSerialId() << ", size " << object.GetSize() << ", paintonly: " << paintonly);
-		if(paintonly && !IsNull(object))
+		if(paintonly && !IsNull(object) && object.data->refcount == 1)
 			SetPaintOnly__(object);
 		return object.GetLength() + 100;
 	}
@@ -52,7 +52,7 @@ void SysImageRealized(const Image& img)
 		return;
 	LLOG("SysImageRealized " << img.GetSize());
 	if(img.data && img.data->paintonly) {
-		LLOG("Dropping PAINTONLY image " << img.GetSerialId() << " pixels, cache size: " << sImageCache().GetSize() << ", img " << img.GetLength());
+		LLOG("Dropping PAINTONLY pixels of image #" << img.GetSerialId() << ", cache size: " << sImageCache().GetSize() << ", img " << img.GetLength());
 		DropPixels___(img.data->buffer);
 		sImageCache().AdjustSize(ImageSizeAdjuster);
 		LLOG("After drop, cache size: " << sImageCache().GetSize());
@@ -81,7 +81,7 @@ void SysImageReleased(const Image& img)
 		ir.serial_id = img.GetSerialId();
 		LLOG("SysImageReleased " << img.GetSerialId() << ", cache size: " << sImageCache().GetSize() << ", count " << sImageCache().GetCount());
 		int n = sImageCache().RemoveOne(ir);
-		IGNORE_RESULT(n); // suppress warning about unused 'n'
+		IGNORE_RESULT(n); // suppress warning about unused 'n' without LLOGs
 		LLOG("SysImageReleased count: " << n);
 		LLOG("SysImageReleased done cache size: " << sImageCache().GetSize() << ", count " << sImageCache().GetCount());
 	}
@@ -245,7 +245,6 @@ struct sColorize : public ImageMaker
 	virtual Image Make() const {
 		return SetColorKeepAlpha(img, color);
 	}
-
 };
 
 Image CachedSetColorKeepAlpha(const Image& img, Color color)

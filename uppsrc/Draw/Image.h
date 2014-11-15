@@ -148,11 +148,12 @@ private:
 
 	void Set(ImageBuffer& b);
 
-	friend class ImageBuffer;
+	friend class  ImageBuffer;
 	friend struct Data;
-	friend class SystemDraw;
-	friend void  SetPaintOnly__(Image& img)   { img.data->paintonly = img.data->refcount == 1; }
-	friend void  SysImageRealized(const Image& img);
+	friend class  SystemDraw;
+	friend void   SetPaintOnly__(Image& img)   { img.data->paintonly = img.data->refcount == 1; }
+	friend void   SysImageRealized(const Image& img);
+	friend struct scImageMaker;
 
 	void         SetAuxData(uint64 data);
 
