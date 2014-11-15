@@ -157,9 +157,25 @@ void Ide::InsertMenu(Bar& bar)
 	bar.Add("Insert file path as C string..", THISBACK1(InsertFilePath, true));
 }
 
+void Ide::InsertInclude(Bar& bar)
+{
+	const Workspace& w = GetIdeWorkspace();
+	String all;
+	for(int i = 0; i < w.GetCount(); i++) {
+		const Package& p = w.GetPackage(i);
+		if(p.GetCount() && findarg(ToLower(GetFileExt(p[0])), ".h", ".hpp") >= 0) {
+			String h; h << "#include <" << w[i] << "/" << p[0] << '>';
+			bar.Add(h, THISBACK1(InsertText, h + '\n'));
+			all << h << '\n';
+		}
+	}
+	bar.Add("All #includes", THISBACK1(InsertText, all));
+}
+
 void Ide::InsertAdvanced(Bar& bar)
 {
 	bar.Add("Insert", THISBACK(InsertMenu));
+	bar.Add("Insert #include", THISBACK(InsertInclude));
 	bar.Add("Advanced", THISBACK(EditSpecial));
 }
 
