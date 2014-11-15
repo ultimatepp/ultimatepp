@@ -866,6 +866,7 @@ public:
 	void      SaveConfigOnTime();
 
 	int       GetPackageIndex();
+	void      AddPackage(const String& p);
 
 	void      BeepMuteExclamation() { if(!mute_sounds) BeepExclamation(); }
 	void      BeepMuteInformation() { if(!mute_sounds) BeepInformation(); }
