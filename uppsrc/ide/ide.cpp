@@ -558,6 +558,20 @@ const Workspace& Ide::IdeWorkspace() const
 	return wspc;
 }
 
+void Ide::AddPackage(const String& p)
+{
+	const Workspace& wspc = IdeWorkspace();
+	for(int i = 0; i < wspc.GetCount(); i++){
+		if(wspc[i] == p)
+			return;
+	}
+	if(!PromptOKCancel("Package [* " + p + "] is not yet in the workspace.&Do you want to add it?"))
+		return;
+	OptItem& m = actual.uses.Add();
+	m.text = p;
+	SaveLoadPackage();
+}
+
 int Ide::GetPackageIndex()
 {
 	const Workspace& wspc = IdeWorkspace();
