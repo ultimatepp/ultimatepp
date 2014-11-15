@@ -305,8 +305,13 @@ Pdb::Pdb()
 void Pdb::CopyStack()
 {
 	String s;
-	for(int i = 0; i < framelist.GetCount(); i++)
-		s << framelist.GetValue(i) << "\n";
+	for(int i = 0; i < framelist.GetCount(); i++) {
+		s << framelist.GetValue(i);
+		FilePos fp = GetFilePos(frame[i].pc);
+		if(fp)
+			s << " at " << fp.path << " " << fp.line + 1;
+		s << "\n";
+	}
 	WriteClipboardText(s);
 }
 
