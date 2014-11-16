@@ -94,7 +94,7 @@ void EditorBar::Paint(Draw& w)
 		if(line_numbers && i < editor->GetLineCount()) {
 			String n = AsString(i + 1);
 			for(int q = 0; q < 4 && q < n.GetLength(); q++) {
-				w.DrawImage(sz.cx - 8 - q * 6,
+				w.DrawImage(sz.cx - 8 - q * 6 - 12,
 					y + (fy - CodeEditorImg::N0().GetSize().cy) / 2,
 					numeri[n[n.GetLength() - 1 - q] - '0'],
 					// CodeEditorImg::Vector[n[n.GetLength() - 1 - q] - '0' + CodeEditorImg::I_N0],
@@ -484,7 +484,7 @@ void EditorBar::HidePtr()
 
 void EditorBar::SyncWidth()
 {
-	Width((line_numbers ? 27 : 12) + annotations);
+	Width((line_numbers ? 27 + 12 : 12) + annotations);
 	Refresh();
 }
 
