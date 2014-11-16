@@ -416,6 +416,20 @@ void Ide::SyncSvnDir(const String& working)
 	SyncSvnDirs(Vector<String>() << working);
 }
 
+void Ide::GotoDirDiffLeft(int line, DirDiffDlg *df)
+{
+	EditFile(df->GetLeftFile());
+	editor.SetCursor(editor.GetPos(line));
+	editor.SetFocus();
+}
+
+void Ide::GotoDirDiffRight(int line, DirDiffDlg *df)
+{
+	EditFile(df->GetRightFile());
+	editor.SetCursor(editor.GetPos(line));
+	editor.SetFocus();
+}
+
 void Ide::DoDirDiff()
 {
 	Index<String> dir;
@@ -437,6 +451,8 @@ void Ide::DoDirDiff()
 	SortIndex(dir);
 	
 	static DirDiffDlg dlg;
+	dlg.diff.WhenLeftLine = THISBACK1(GotoDirDiffLeft, &dlg);
+	dlg.diff.WhenRightLine = THISBACK1(GotoDirDiffRight, &dlg);
 	for(int i = 0; i < dir.GetCount(); i++) {
 		dlg.Dir1AddList(dir[i]);
 		dlg.Dir2AddList(dir[i]);

@@ -1103,6 +1103,8 @@ public:
 		void  Qtf();
 		void  Xml();
 		void  Json();
+		void  GotoDirDiffLeft(int line, DirDiffDlg *df);
+		void  GotoDirDiffRight(int line, DirDiffDlg *df);
 		void  DoDirDiff();
 
 

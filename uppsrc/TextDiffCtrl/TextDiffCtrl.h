@@ -188,7 +188,6 @@ struct PatchDiff : FileDiff {
 
 class DirDiffDlg : public TopWindow {
 	Splitter                   files_diff;
-	TextDiffCtrl               diff;
 	ParentCtrl                 files_pane;
 	FileList                   files;
 
@@ -210,6 +209,8 @@ class DirDiffDlg : public TopWindow {
 	void Copy(bool left);
 
 public:
+	TextDiffCtrl               diff;
+
 	typedef DirDiffDlg CLASSNAME;
 	
 	void SetFont(Font fnt)                      { diff.SetFont(fnt); }
@@ -217,6 +218,9 @@ public:
 	void Dir2(const String& dir)                { dir2 <<= dir; }
 	void Dir1AddList(const String& dir)         { dir1.AddList(dir); }
 	void Dir2AddList(const String& dir)         { dir2.AddList(dir); }
+	
+	String GetLeftFile() const                  { return ~lfile; }
+	String GetRightFile() const                 { return ~rfile; }
 	
 	DirDiffDlg();
 };
