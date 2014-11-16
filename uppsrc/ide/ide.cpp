@@ -585,6 +585,7 @@ void Ide::GotoDiffLeft(int line, DiffDlg *df)
 {
 	EditFile(df->editfile);
 	editor.SetCursor(editor.GetPos(line));
+	editor.SetFocus();
 }
 
 void Ide::GotoDiffRight(int line, FileDiff *df)
