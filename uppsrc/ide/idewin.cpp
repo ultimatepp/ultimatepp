@@ -722,6 +722,9 @@ void AppMain___()
 	}
 #endif
 
+	if(!FileExists(BlitzBaseFile()))
+		ResetBlitz();
+
 	for(int i = 0; i < arg.GetCount(); i++) {
 		if(arg[i] == "-uninstall") {
 			Uninstall();

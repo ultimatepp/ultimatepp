@@ -248,6 +248,7 @@ OutMode::OutMode(Ide& ide)
 	export_all <<= THISBACK1(Export, 1);
 	export_used <<= THISBACK1(Export, 0);
 	export_makefile <<= THISBACK1(Export, 2);
+	reset_blitz <<= callback(ResetBlitz);
 }
 
 void Ide::SetupOutputMode()

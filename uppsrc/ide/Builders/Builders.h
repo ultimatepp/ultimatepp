@@ -17,6 +17,9 @@ struct Blitz {
 	String info;
 };
 
+String BlitzBaseFile();
+void   ResetBlitz();
+
 String BrcToC(CParser& binscript, String basedir);
 
 struct CppBuilder : Builder {
