@@ -49,7 +49,8 @@ void IdeIconDes::Save()
 			Size sz = c.image.GetSize();
 			exp.GetAdd(sz) = c.image;
 			PNGEncoder png;
-			png.SaveFile(AppendFileName(folder, String().Cat() << "icon" << sz.cx << 'x' << sz.cy << ".png"), c.image);
+			SaveChangedFile(AppendFileName(folder, String().Cat() << "icon" << sz.cx << 'x' << sz.cy << ".png"),
+			                png.SaveString(c.image));
 		}
 	}
 	String d = SaveIml(m, format);
@@ -57,7 +58,7 @@ void IdeIconDes::Save()
 		return;
 	filetime = FileGetTime(filename);
 	if(exp.GetCount())
-		SaveFile(AppendFileName(folder, "icon.ico"), WriteIcon(exp.GetValues()));
+		SaveChangedFile(AppendFileName(folder, "icon.ico"), WriteIcon(exp.GetValues()));
 }
 
 void IdeIconDes::ToolEx(Bar& bar)
