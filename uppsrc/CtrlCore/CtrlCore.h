@@ -1259,7 +1259,6 @@ public:
 
 inline Size GetScreenSize()  { return Ctrl::GetVirtualScreenArea().GetSize(); } // Deprecated
 
-String GuiPlatformGetKeyDesc(dword key);
 bool   GuiPlatformHasSizeGrip();
 void   GuiPlatformGripResize(TopWindow *q);
 Color  GuiPlatformGetScreenPixel(int x, int y);

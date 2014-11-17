@@ -40,24 +40,6 @@ bool Ctrl::GuiPlatformSetFullRefreshSpecial()
 	return isdhctrl;
 }
 
-String GuiPlatformGetKeyDesc(dword key)
-{
-	static struct {
-		dword key;
-		const char *name;
-	} nkey[] = {
-		{ 0x100c0, "[`]" }, { 0x100bd, "[-]" }, { 0x100bb, "[=]" }, { 0x100dc, "[\\]" },
-		{ 0x100db, "[[]" }, { 0x100dd, "[]]" },
-		{ 0x100ba, "[;]" }, { 0x100de, "[']" },
-		{ 0x100bc, "[,]" }, { 0x100be, "[.]" }, { 0x100bf, "[/]" },
-		{ 0, NULL }
-	};
-	for(int i = 0; nkey[i].key; i++)
-		if(nkey[i].key == key)
-			return nkey[i].name;
-	return Null;
-}
-
 void Ctrl::GuiPlatformSelection(PasteClip&)
 {
 }

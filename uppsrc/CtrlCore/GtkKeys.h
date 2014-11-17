@@ -1,3 +1,4 @@
+
 K_BACK       = 8,
 K_BACKSPACE  = 8,
 
@@ -45,6 +46,18 @@ K_DECIMAL    = GDKEY(KP_Decimal)|K_DELTA,
 K_DIVIDE     = GDKEY(KP_Divide)|K_DELTA,
 
 K_SCROLL     = GDKEY(Scroll_Lock)|K_DELTA,
+
+K_PLUS       = GDKEY(plus)|K_DELTA,
+K_MINUS      = GDKEY(minus)|K_DELTA,
+K_COMMA      = GDKEY(comma)|K_DELTA,
+K_PERIOD     = GDKEY(period)|K_DELTA,
+K_SEMICOLON  = GDKEY(semicolon)|K_DELTA,	
+K_SLASH      = GDKEY(slash)|K_DELTA,
+K_GRAVE      = GDKEY(grave)|K_DELTA,
+K_LBRACKET   = GDKEY(bracketleft)|K_DELTA,
+K_BACKSLASH  = GDKEY(backslash)|K_DELTA,
+K_RBRACKET   = GDKEY(bracketright)|K_DELTA,
+K_QUOTEDBL   = GDKEY(quotedbl)|K_DELTA,
 
 K_F1 = GDKEY(F1)|K_DELTA,
 K_F2 = GDKEY(F2)|K_DELTA,
