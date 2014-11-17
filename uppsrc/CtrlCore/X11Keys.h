@@ -47,6 +47,18 @@ K_DIVIDE     = XK_KP_Divide + K_DELTA,
 
 K_SCROLL     = XK_Scroll_Lock + K_DELTA,
 
+K_PLUS       = XK_plus|K_DELTA,
+K_MINUS      = XK_minus|K_DELTA,
+K_COMMA      = 0x2c|K_DELTA,
+K_PERIOD     = XK_period|K_DELTA,
+K_SEMICOLON  = XK_semicolon|K_DELTA,	
+K_SLASH      = 0x5f|K_DELTA,
+K_GRAVE      = XK_grave|K_DELTA,
+K_LBRACKET   = XK_bracketleft|K_DELTA,
+K_BACKSLASH  = 0x5c|K_DELTA,
+K_RBRACKET   = XK_bracketright|K_DELTA,
+K_QUOTEDBL   = XK_quotedbl|K_DELTA,
+
 K_F1         = XK_F1 + K_DELTA,
 K_F2         = XK_F2 + K_DELTA,
 K_F3         = XK_F3 + K_DELTA,

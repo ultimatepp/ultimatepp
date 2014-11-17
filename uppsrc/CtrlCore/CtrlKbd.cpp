@@ -379,7 +379,7 @@ String GetKeyDesc(dword key)
 
 	key &= ~(K_CTRL | K_ALT | K_SHIFT | K_KEYUP);
 	if(key < K_DELTA && key > 32 && key != K_DELETE)
-		return desc + String(key, 1);
+		return desc + ToUtf8((wchar)key);
 	if(key >= K_NUMPAD0 && key <= K_NUMPAD9)
 		desc << "Num " << (char)(key - K_NUMPAD0 + '0');
 	else if(key >= K_0 && key <= K_9)
@@ -403,6 +403,9 @@ String GetKeyDesc(dword key)
 			{ K_INSERT, tt_("key\vInsert") }, { K_DELETE, tt_("key\vDelete") },{ K_BREAK, tt_("key\vBreak") },
 			{ K_MULTIPLY, tt_("key\vNum[*]") }, { K_ADD, tt_("key\vNum[+]") }, { K_SUBTRACT, tt_("key\vNum[-]") }, { K_DIVIDE, tt_("key\vNum[/]") },
 			{ K_ALT_KEY, tt_("key\vAlt") }, { K_SHIFT_KEY, tt_("key\vShift") }, { K_CTRL_KEY, tt_("key\vCtrl") },
+			{ K_PLUS, tt_("key\v[+]") }, { K_MINUS, tt_("key\v[-]") }, { K_COMMA, tt_("key\v[,]") }, { K_PERIOD, tt_("key\v[.]") },
+			{ K_SEMICOLON, tt_("key\v[;]") }, { K_SLASH, tt_("key\v[/]") }, { K_GRAVE, tt_("key\v[`]") }, { K_LBRACKET, tt_("key\v[[]") },
+			{ K_BACKSLASH, tt_("key\v[\\]") }, { K_RBRACKET, tt_("key\v[]]") }, { K_QUOTEDBL, tt_("key\v[']") },
 			{ 0, NULL }
 		};
 		for(int i = 0; nkey[i].key; i++)
@@ -410,11 +413,6 @@ String GetKeyDesc(dword key)
 				desc << GetLngString(nkey[i].name);
 				return desc;
 			}
-		String g = GuiPlatformGetKeyDesc(key);
-		if(g.GetCount()) {
-			desc << g;
-			return desc;
-		}
 		desc << Format("%04x", (int)key);
 	}
 	return desc;

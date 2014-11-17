@@ -39,24 +39,6 @@ bool Ctrl::GuiPlatformSetFullRefreshSpecial()
 	return false;
 }
 
-String GuiPlatformGetKeyDesc(dword key)
-{
-	static struct {
-		dword key;
-		const char *name;
-	} nkey[] = {
-		{ 0x10060, "[`]" }, { 0x1002d, "[-]" }, { 0x1003d, "[=]" }, { 0x1005c, "[\\]" },
-		{ 0x1005b, "[[]" }, { 0x1005d, "[]]" },
-		{ 0x1003b, "[;]" }, { 0x10027, "[']" },
-		{ 0x1002c, "[,]" }, { 0x1002e, "[.]" }, { 0x1005f, "[/]" },
-		{ 0, NULL }
-	};
-	for(int i = 0; nkey[i].key; i++)
-		if(nkey[i].key == key)
-			return nkey[i].name;
-	return Null;
-}
-
 void Ctrl::GuiPlatformSelection(PasteClip& d)
 {
 	d.fmt.Clear();
