@@ -27,6 +27,7 @@ private:
 	friend class ODBCSession;
 
 	ODBCSession           *session;
+/*
 	struct Param {
 		Value  orig;
 		int    ctype;
@@ -35,7 +36,8 @@ private:
 		String data;
 		SQLLEN li;
 	};
-	Array<Param>             param, bparam;
+*/
+	Vector<Value>            param;
 	String                   last_insert_table;
 
 	int                      rowsprocessed;
@@ -334,6 +336,8 @@ bool ODBCConnection::IsOk(SQLRETURN ret) const
 
 void ODBCConnection::SetParam(int i, const Value& r)
 {
+	param.At(i) = r;
+/*
 	Param& p = param.At(i);
 	p.orig = r;
 	p.width = 0;
@@ -396,6 +400,7 @@ void ODBCConnection::SetParam(int i, const Value& r)
 		p.sqltype = SQL_LONGVARBINARY;
 		p.width = p.li = p.data.GetLength();
 	}
+*/
 }
 
 const char *ODBCReadString(const char *s, String& stmt)
@@ -442,29 +447,33 @@ bool ODBCConnection::Execute()
 	if((p.Id("insert") || p.Id("INSERT")) && (p.Id("into") || p.Id("INTO")) && p.IsId())
 		last_insert_table = p.ReadId();
 
-	if(0) { // 'dumb' path without using SQLBindParameter
-		CParser p(statement);
-		String query;
-		int pi = 0;
-		const char *s = statement;
-		while(s < statement.End())
-			if(*s == '\'' || *s == '\"')
-				s = ODBCReadString(s, query);
-			else {
-				if(*s == '?') {
-					Value v = param[pi++].orig;
-					if(v.GetType() == 34)
-						query.Cat(SqlCompile(MSSQL, ~SqlBinary(SqlRaw(v))));
-					else
-						query.Cat(SqlCompile(MSSQL, ~SqlVal(v)));
+	String query;
+	int pi = 0;
+	const char *s = statement;
+	while(s < statement.End())
+		if(*s == '\'' || *s == '\"')
+			s = ODBCReadString(s, query);
+		else {
+			if(*s == '?') {
+				if(pi >= param.GetCount()) {
+					session->SetError("Invalid number of parameters", statement);
+					return false;
 				}
+				Value v = param[pi++];
+				if(v.GetType() == 34)
+					query.Cat(SqlCompile(MSSQL, ~SqlBinary(SqlRaw(v))));
 				else
-					query.Cat(*s);
-				s++;
+					query.Cat(SqlCompile(MSSQL, ~SqlVal(v)));
 			}
-		param.Clear();
-		if(!IsOk(SQLPrepare(session->hstmt, (SQLCHAR *)~query, query.GetCount())))
-			return false;
+			else
+				query.Cat(*s);
+			s++;
+		}
+	param.Clear();
+	if(!IsOk(SQLPrepare(session->hstmt, (SQLCHAR *)~query, query.GetCount())))
+		return false;
+
+/*
 	}
 	else {
 		if(!IsOk(SQLPrepare(session->hstmt, (SQLCHAR *)~statement, statement.GetCount())))
@@ -479,6 +488,7 @@ bool ODBCConnection::Execute()
 				return false;
 		}
 	}
+*/
 	SQLSMALLINT ncol;
 	if(!IsOk(SQLExecute(session->hstmt)) || !IsOk(SQLNumResultCols(session->hstmt, &ncol))) {
 		SQLFreeStmt(session->hstmt, SQL_CLOSE);
@@ -709,7 +719,6 @@ void ODBCConnection::FetchAll()
 void ODBCConnection::Cancel()
 {
 	param.Clear();
-	bparam.Clear();
 
 	number.Clear();
 	num64.Clear();
