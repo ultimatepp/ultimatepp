@@ -512,6 +512,10 @@ bool PostgreSQLConnection::Execute()
 		if(*s == '\'' || *s == '\"')
 			s = PostgreSQLReadString(s, query);
 		else {
+			if(pi >= param.GetCount()) {
+				session->SetError("Invalid number of parameters", statement);
+				return false;
+			}
 			if(*s == '?')
 				query.Cat(param[pi++]);
 			else
