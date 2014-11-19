@@ -33,8 +33,9 @@ void Value::RefRetain()
 
 Value& Value::operator=(const Value& v) {
 	if(this == &v) return *this;
-	FreeRef();
-	data = v.data;
+	Value h = v; // Make copy a 'v' can be reference to ValueMap/Array contained element
+	FreeRef();   // e.g. json = json["foo"]
+	data = h.data;
 	if(IsRef())
 		ptr()->Retain();
 	return *this;

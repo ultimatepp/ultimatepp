@@ -19,21 +19,7 @@ paragraphs (wraps them).&]
 [s0; &]
 [s2; 
 @@image:875&475
-‚ƒŒ€Ì€€€ƒ´ÿ€€€€ø³œíİÛÛ°ŒÌ‰÷½ÂÎïĞ¢×ôìş˜Šæ¡Ê–ŒíîÃ‘¤’ˆ¹¢¹’’ëÇï×¿ßõ¥Ó¿¶Ââ”Æù
-¤ÑšåÇé”ŸõÆ¯÷ìÖ—¶Äû¿–ı¤ó†„®£Ì°ÿÍã‘Î÷ÅÌØ³ˆ°•îÆ³™µ¢»ŞßÛˆî´—Û„ñëİ¿úËÊ‘¨¶êÊˆ†è
-Õ‰ŸıØ¦¦ŠéÁç—ÔˆÃ ÏÙ¡êÅ³ã©¨¬•§áó³®ªâèÇšÖäîÈ‹¾³û¯§¿ÉÂ“úò¶äÁºÙğªš¹ªÊƒÑ¯¾ªîÃ¬á¬ŠÖò­
-¸Æ¦ëÕÛµŸ¸ÛÇ‘¶¶÷¢¹Ô˜Øû”ÆÃõíÙâá‡Ôçé„Í‰è¨ ¢šåŞÇí”ñ¥é§öşÑÔ”·—Ê¹Ë¬æ’Œ¿Ñ‹´É¨Ñ¤»ºçÈ
-ãÒ¨¿Ê£üÆ¨òÃéÄ¿—•Şæƒø¡½ÃÅ²äÎµÃÅÀóïîÍ¾„æ÷Ì”ï™±òŒ±Ü„åšçôõ†Á›Šá¢Ğ¿ŸíÿÍêîÂ£»
-í©º˜ûŠ¯¤µ¤ñ¤‰‚ùĞ’ÇÔÑáø˜æáˆ‘‚»Ğ˜‰Š–º±ªâ¾›ƒÑÈµÅé¢Â¯ÈŞ«‡‰¬ÑÈ…äÊœ—ë´¤†ì½¥Â´¥£“Á
-äå·¥‘åÀ®óÒÈ¬£‘ŠÃä˜ÆæÅ¶‚‹Õ²ôŒêô ÿŒşİÌÅ°›ÜëŒÉÖ¬ØÍŒğØ¥ÚŞïÂĞœİŠ™âÀ•¢á¹Œ•šîªƒÔ¹Ã£ Ú
-Ú¨”Æ ´ú¹ÏĞšåÇ’³±Õ¥ĞßÜ…«ÇÎëÙ†Éîå”¯ÉÔ©’ÍŒå°êÌ•ïîµöí›³íÑöôòã©Ø¢îÇŒ‡ºë¢òß±öÌ
-à•íŒ‰æçëÈÀ‰½ù°šÓÎÔØØŠáİü–ê„Ì´Œ¶—ÚĞ©„ İ’¾Áî¬¯Ñ¼¸Ô¤ÔÆÁ€©Š­¾ª¬½ÓÕ¼áß¤ÑÁëäôæ¬ƒ¤´ı
-šººÎˆ×ÜŠèÕèê–ÙÇ‚ÓîñãÕŠÃ¹«š•–œ©š¯›È›ÎÑ­»¹Ê°Ü¤°ËÍÇ„ ŒÕ†«¾ô½ÅÓçŒ“ÃÀŠ»ê¬¨ì¿Ê£ü¨ò
-Š£•Æõ¥ÅÑÒšåÇé”Ÿæ¬¹§ØØş¤İİÈàŒÕÍˆ½ëïøä¨ó†¿Íê½†Èƒİ¿ÇŒéÍæ‡£¹¢‘®ÖÆôÙ´Ş•ã÷Ç´Ğ£ÓòñÖ
-Øšµ¨òãêÚ·Ãğûš²¦ç¾­ñÖÊıƒğÙÇ§±¤ªúÒ‡±Ö£ºŒçñ™±¾‡©îÈá‹”¥ÑşÔÙóÔàæ„ÿ¹çõŞŒÒ¨Â¿ÒêÄ÷¿ú
-ì“®Ò«îÁæÁ…„¿ é¢šíÂ†ã¬¶ßÿàÏ×óøäşùª”Íûš¥Ší¦æ»œ±ªè¬‚»‚÷¿ÜÏÕ¥ÜÍêúêÈº´±İú§±Çµ¸ÿ
-Æùª‘¹üÀ£¡àÄÚëÌƒßı‡Ÿ§Š–ÊÌëÖèÒèûÏıÈ”Ğ÷¢¥Ê“’Ğ—³Çõ™öñãê«Šòö…¾é¹ÃÂšÂŒ©îØ©Ÿ©©‘İ†—õ
-ê­Æ¿ÿı¬Æ«Õ…š•ò¢´ÊÒ¨¿Ê»£ü¨ò£´¿Ê¯§ÿÅó–İ‘ë¯Àåã€Ÿ
+(A4wATAAAALT/AAAAAHic7V1bjtswDMyJ9x49Qm/Qj6JXdIF+GIrmIcqWbW7DgREkEjkiOZISawHv148/X3Wlv7ZCYpRG+VEa5UdplB+dRq937I2dF7bEe78dlqRzhoSuo44wf83jER7OxczYM4iwlUazjpk1ortf24jutBfbcWvdP3pLSqg2akqIBmiJH/1YpiaKwWcX1AjDoNmhjepFM+OoLBWnYfMzKuLoxxrWZEiLvrN7na+/ycITevI2QTrZcCqauUqDUa8+qm6s4SwKVnKtRiZr1du1H1tHEba29yKNVBjY+5RGw3Xt2eJhB2dphE2JaKgiGmVeR+0UpWkOJ/b+0RQBtxfKOctmEoy/UYs0qFEkuzpnyI/SKD9Ko/wojfJDaUS/lxVeDWYDeL1DRTJkzhDDRcBz7+5NBOb3zJTvGfIMMVyE5Rqd9PUGQY2eiuEi0L8fbc3q7sKju4GpD7qYe4qOpLWk8SSJAXnQEkdUUWEYZh3hiJGC0JgNiYqWOqpiPhuD0UjFaaJCr8heh4ks0UiFZByXa7QkBuylQrSlo5NBZTelEWXArtLILA2jkYrkmEZmHUW2C9UydAxqdH8Mfl1MxTDc6wzJ1ixYjHDYpVpe71CcXQoZYsCiYbkMlRpuA9Q5wyOgWiiURo+gNPrPUBrlx5Iz1SVQX9yFK87rjlkGSe6UL8lUKY2SjGWw6kwV7zX2j+0bs4/RdvTyY6nYIu7HjIcBD2uict+x9kwVbQwJZufrQAk9+TAems7UWFiKYd0WaoTMtIydF9rQKYSgXT7BbiyvUTxUJFTGwYApLb4qrD1TVWFfpNGQwWt0ZqwDJLT9Oo06zohXXGjVaOoWWUdT7nFjVQpDqxoVlpypGpvIm85RrTvKMFyknrBLxwSgjFUdhr70PcVT5wzDwAo76iwoP0qj/CiN8iOVRvUlRVEa5UdplB/mOSfY2H6kXchgjNXNCL3v+GSoc4aNzeq9hsiDXceM6c3mhyOiES6N1sZ0nTReleN3x1Aj03Kd8VYaNSiN8mPqN8Nw+5oypr6t8VZK/YNZRycxpKr6B7FWI7oMjfGZsT4Hqe5hCxSlUX7U81QP4OYE/49ndd6M0ig/0mpEdz/6Ey7Sq27BkEGFhD8g6Z0a7UIGY6w2/+DP1/N45HmqlM37mqVtpgHmOxwxaKwCuwL3P09VpdzNavpqSDoetDFdJ40xx7W4/3mqkTl8QKPgRFprTINfjgefp4qWymtW6NJoe8/IFND3oqXKnZJQF7NHdfZxY+qrCnIFvuk5w8KaDKluWCken6kRXYYXjXUerUa/f/2sK9WFGhVyojTKj9IoP0qj/CiN8qM0yo+vp//Fc12R6y/AZWMf)
 &]
 [s0; &]
 [s0; [/ Derived from] [^topic`:`/`/CtrlLib`/src`/TextCtrl`$en`-us`#TextCtrl`:`:class^ Tex
@@ -45,6 +31,12 @@ tCtrl]&]
 [s5;:DocEdit`:`:SetFont`(Font`):%- [_^DocEdit^ DocEdit][@(0.0.255) `&]_[* SetFont]([_^Font^ F
 ont]_[*@3 f])&]
 [s2; Sets the font to be used by widget to [%-*@3 f].&]
+[s3; &]
+[s4;%- &]
+[s5;:DocEdit`:`:After`(int`):%- [_^DocEdit^ DocEdit][@(0.0.255) `&]_[* After]([@(0.0.255) int
+]_[*@3 a])&]
+[s2; The height of empty block after the paragraph in pixels. Default 
+is 0.&]
 [s3; &]
 [s4;%- &]
 [s5;:DocEdit`:`:SetFilter`(int`(`*`)`(int c`)`):%- [_^DocEdit^ DocEdit][@(0.0.255) `&]_[* S
@@ -60,6 +52,11 @@ ool]_[*@3 b]_`=_[@(0.0.255) true])&]
 (text height is bigger than the height of the window). This mode 
 is active by default.&]
 [s3; &]
+[s4;%- &]
+[s5;:DocEdit`:`:IsAutoHideSb`(`)const:%- [@(0.0.255) bool]_[* IsAutoHideSb]()_[@(0.0.255) c
+onst]&]
+[s2; Returns true if AutoHideSb is active.&]
+[s3;%- &]
 [s4;%- &]
 [s5;:DocEdit`:`:UpDownLeave`(bool`):%- [_^DocEdit^ DocEdit][@(0.0.255) `&]_[* UpDownLeave](
 [@(0.0.255) bool]_[*@3 u]_`=_[@(0.0.255) true])&]
@@ -78,4 +75,24 @@ the focus to previous / next Ctrl that IsWantFocus.&]
 onst]&]
 [s2; Tests UpDownLeave mode.&]
 [s3; &]
-[s0; ]
+[s4;%- &]
+[s5;:DocEdit`:`:SetScrollBarStyle`(const ScrollBar`:`:Style`&`):%- [_^DocEdit^ DocEdit][@(0.0.255) `&
+]_[* SetScrollBarStyle]([@(0.0.255) const]_[_^ScrollBar`:`:Style^ ScrollBar`::Style][@(0.0.255) `&
+]_[*@3 s])&]
+[s2; Sets the chameleon style of scrollbar.&]
+[s3; &]
+[s4;%- &]
+[s5;:DocEdit`:`:EofLine`(bool`):%- [_^DocEdit^ DocEdit][@(0.0.255) `&]_[* EofLine]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; If active, paints faint line at the end of text. Default is 
+active.&]
+[s3; &]
+[s4;%- &]
+[s5;:DocEdit`:`:NoEofLine`(`):%- [_^DocEdit^ DocEdit][@(0.0.255) `&]_[* NoEofLine]()&]
+[s2; Same as EofFile(false).&]
+[s3;%- &]
+[s4;%- &]
+[s5;:DocEdit`:`:IsEofLine`(`)const:%- [@(0.0.255) bool]_[* IsEofLine]()_[@(0.0.255) const]&]
+[s2; Returns true if EofLine is active.&]
+[s3;%- &]
+[s0; ]]
