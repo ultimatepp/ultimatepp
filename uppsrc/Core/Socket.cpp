@@ -273,6 +273,7 @@ void TcpSocket::Reset()
 	mode = NONE;
 	ssl.Clear();
 	sslinfo.Clear();
+	cert = pkey = Null;
 #if defined(PLATFORM_WIN32) || defined(PLATFORM_BSD)
 	connection_start = Null;
 #endif
@@ -958,6 +959,14 @@ void TcpSocket::SSLCertificate(const String& cert_, const String& pkey_, bool as
 	cert = cert_;
 	pkey = pkey_;
 	asn1 = asn1_;
+}
+
+void TcpSocket::Clear()
+{
+	ClearError();
+	if(IsOpen())
+		Close();
+	Reset();
 }
 
 int SocketWaitEvent::Wait(int timeout)
