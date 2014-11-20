@@ -95,8 +95,7 @@ HttpRequest& HttpRequest::Url(const char *u)
 	t = u;
 	while(*u && *u != ':' && *u != '/' && *u != '?')
 		u++;
-	if(*u == '?' && u[1])
-		hasurlvar = true;
+	hasurlvar = *u == '?' && u[1];
 	host = String(t, u);
 	port = 0;
 	if(*u == ':')
@@ -307,6 +306,18 @@ void HttpRequest::New()
 	ClearError();
 	ClearAbort();
 	phase = BEGIN;
+}
+
+void HttpRequest::Clear()
+{
+	TcpSocket::Clear();
+	New();
+	Init();
+	host = proxy_host = proxy_username = proxy_password = ssl_proxy_host =
+	ssl_proxy_username = ssl_proxy_password = path =
+	custom_method = accept = agent = contenttype = username = password =
+	digest = request_headers = postdata = multipart = Null;
+	cookies.Clear();
 }
 
 bool HttpRequest::Do()

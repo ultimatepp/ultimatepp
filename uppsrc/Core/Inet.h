@@ -235,6 +235,8 @@ public:
 	bool            SSLHandshake();
 	void            SSLCertificate(const String& cert, const String& pkey, bool asn1);
 	const SSLInfo  *GetSSLInfo() const                       { return ~sslinfo; }
+	
+	void            Clear();
 
 	TcpSocket&      Timeout(int ms)                          { timeout = ms; return *this; }
 	int             GetTimeout() const                       { return timeout; }
@@ -472,6 +474,7 @@ public:
 	HttpRequest&  Cookie(const String& id, const String& value,
 	                     const String& domain = Null, const String& path = Null);
 	HttpRequest&  CopyCookies(const HttpRequest& r);
+	HttpRequest&  ClearCookies();
 
 	HttpRequest&  StdHeaders(bool sh)                     { std_headers = sh; return *this; }
 	HttpRequest&  NoStdHeaders()                          { return StdHeaders(false); }
@@ -482,7 +485,7 @@ public:
 
 	HttpRequest&  Proxy(const String& host, int port)            { proxy_host = host; proxy_port = port; return *this; }
 	HttpRequest&  Proxy(const char *p);
-	HttpRequest&  ProxyAuth(const String& u, const String& p)    {  proxy_username = u; proxy_password = p; return *this; }
+	HttpRequest&  ProxyAuth(const String& u, const String& p)    { proxy_username = u; proxy_password = p; return *this; }
 
 	HttpRequest&  SSLProxy(const String& host, int port)         { ssl_proxy_host = host; ssl_proxy_port = port; return *this; }
 	HttpRequest&  SSLProxy(const char *p);
@@ -531,7 +534,9 @@ public:
 	String  Execute();
 
 	void    New();
-	
+
+	void    Clear();
+
 	HttpRequest();
 	HttpRequest(const char *url);
 	
