@@ -1,0 +1,4 @@
+#ifndef _CheckBak_icpp_init_stub
+#define _CheckBak_icpp_init_stub
+#include "Core/init"
+#endif
