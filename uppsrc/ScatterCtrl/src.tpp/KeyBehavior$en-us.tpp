@@ -1,0 +1,62 @@
+topic "struct KeyBehavior";
+[ $$0,0#00000000000000000000000000000000:Default]
+[i448;a25;kKO9; $$1,0#37138531426314131252341829483380:structitem]
+[l288;2 $$2,0#27521748481378242620020725143825:desc]
+[0 $$3,0#96390100711032703541132217272105:end]
+[b42;2 $$4,4#13035079074754324216151401829390:normal]
+[i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:item]
+[H6;0 $$6,0#05600065144404261032431302351956:begin]
+[{_} 
+[s3; &]
+[ {{10000@3 [s0;%% [*@(229)4 ScatterCtrl`::KeyBehavior]]}}&]
+[s3;%% &]
+[s1;:ScatterCtrl`:`:KeyBehavior`:`:struct: [@(0.0.255) struct]_[* KeyBehavior]&]
+[s4;%% This structure is used to describe the behavior of the keys 
+when used in ScatterCtrl. It includes the keyboard conditions 
+that, when complied, will launch the indicated action.&]
+[s3;%% &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
+[s3;%% &]
+[s5;:ScatterCtrl`:`:KeyBehaviour`:`:ctrl: [@(0.0.255) bool]_[* ctrl]&]
+[s2;%% Set to true if Ctrl has to be pressed.&]
+[s3;%% &]
+[s6; &]
+[s5;:ScatterCtrl`:`:KeyBehaviour`:`:alt: [@(0.0.255) bool]_[* alt]&]
+[s2;%% Set to true if Alt has to be pressed.&]
+[s3; &]
+[s6; &]
+[s5;:ScatterCtrl`:`:KeyBehaviour`:`:shift: [@(0.0.255) bool]_[* shift]&]
+[s2;%% Set to true if Shift has to be pressed.&]
+[s3; &]
+[s6; &]
+[s5;:ScatterCtrl`:`:KeyBehaviour`:`:key: [@(0.0.255) int]_[* key]&]
+[s2;%% Set the char or virtual key that activates the action..&]
+[s3; &]
+[s6; &]
+[s5;:ScatterCtrl`:`:KeyBehaviour`:`:isVirtualKey: [@(0.0.255) bool]_[* isVirtualKey]&]
+[s2;%% Set to true if the key is a K`_... virtual key. If false, 
+key is a real char like `'e`' or `'`+`'.&]
+[s3; &]
+[s6; &]
+[s5;:ScatterCtrl`:`:MouseBehaviour`:`:action: ScatterAction_[* action]&]
+[s2;%% Is the action to be launched if the previous conditions are 
+complied. It can be:&]
+[s2;i150;O0;~~~1248;%% NO`_ACTION-|No action.&]
+[s2;i150;O0;~~~1248;%% SCROLL-|Scrolls the graphs.&]
+[s2;i150;O0;~~~1248;%% ZOOM`_H`_ENL-|Zooms horizontally enlarging 
+the graphs. &]
+[s2;i150;O0;~~~1248;%% ZOOM`_H`_RED-|Zooms horizontally reducing the 
+graphs.&]
+[s2;i150;O0;~~~1248;%% ZOOM`_V`_ENL-|Zooms vertically enlarging the 
+graphs.&]
+[s2;i150;O0;~~~1248;%% ZOOM`_V`_RED-|Zooms horizontally reducing the 
+graphs.&]
+[s2;i150;O0;%% SHOW`_INFO-|Shows an info label including mouse real 
+X and Y coordinates.&]
+[s2;i150;O0;%% ZOOM`_WINDOW-|Zoom in the window selected by the mouse.&]
+[s2;i150;O0;%% SCROLL`_LEFT-|Scrolls left the graph.&]
+[s2;i150;O0;%% SCROLL`_RIGHT-|Scrolls right the graph.&]
+[s2;i150;O0;%% SCROLL`_UP-|Scrolls up the graph.&]
+[s2;i150;O0;%% SCROLL`_DOWN-|Scrolls down the graph.&]
+[s0;%% ]]

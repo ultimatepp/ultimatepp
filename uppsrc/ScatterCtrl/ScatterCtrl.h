@@ -119,15 +119,18 @@ public:
 	virtual inline int64 GetCount()	{return numData;};
 };
 
-class ScatterCtrl : public StaticRect, public ScatterDraw {
+class ScatterCtrl : public Ctrl, public ScatterDraw {
 public:
 	typedef ScatterCtrl CLASSNAME;
 	ScatterCtrl();
 	
-	enum MouseAction {NO_ACTION = 0, SCROLL, ZOOM_H_ENL, ZOOM_H_RED, ZOOM_V_ENL, ZOOM_V_RED, SHOW_COORDINATES, CONTEXT_MENU, ZOOM_WINDOW};
+	enum ScatterAction {NO_ACTION = 0, SCROLL, ZOOM_H_ENL, ZOOM_H_RED, ZOOM_V_ENL, ZOOM_V_RED, SHOW_COORDINATES, CONTEXT_MENU, ZOOM_WINDOW, 
+					  SCROLL_LEFT, SCROLL_RIGHT, SCROLL_UP, SCROLL_DOWN};
 	#define SHOW_INFO SHOW_COORDINATES
 	
-	struct MouseBehaviour {
+	struct MouseBehavior {
+		MouseBehavior(bool ctrl, bool alt, bool shift, bool left, bool middle, int middleWheel, bool right, ScatterAction action) : 
+			ctrl(ctrl), alt(alt), shift(shift), left(left), middle(middle), middleWheel(middleWheel), right(right), action(action) {}
 		bool ctrl;
 		bool alt;
 		bool shift;
@@ -135,12 +138,24 @@ public:
 		bool middle;
 		int middleWheel;
 		bool right;
-		MouseAction action;
+		ScatterAction action;
 	};
+	Array<MouseBehavior> mouseBehavior; 
+	void AddMouseBehavior(bool ctrl, bool alt, bool shift, bool left, bool middle, int middlewheel, bool right, ScatterAction action);
 	
-	#define MAX_MOUSEBEHAVIOR 20
-	
-	bool SetMouseBehavior(MouseBehaviour *_mouseBehavior);
+	struct KeyBehavior {		
+		KeyBehavior(bool ctrl, bool alt, bool shift, int key, bool isVirtualKey, ScatterAction action) : 
+			ctrl(ctrl), alt(alt), shift(shift), key(key), isVirtualKey(isVirtualKey), action(action) {}
+		bool ctrl;
+		bool alt;
+		bool shift;
+		int key;
+		bool isVirtualKey;
+		ScatterAction action;
+	};
+	Array<KeyBehavior> keyBehavior;
+	void AddKeyBehavior(bool ctrl, bool alt, bool shift, int key, bool isVirtualKey, ScatterAction action); 
+		
 	ScatterCtrl& ShowContextMenu(bool show = true) 			{showContextMenu = show; return *this;}
 	ScatterCtrl& ShowPropertiesDlg(bool show = true)		{showPropDlg = show; 	 return *this;}
 	ScatterCtrl& SetPopText(const String x, const String y1, const String y2) 	
@@ -238,8 +253,6 @@ private:
 	
 	bool highlighting;
 	
-	MouseBehaviour *mouseBehavior;
-	
 	void ProcessPopUp(const Point & pt);
 
 	virtual void Paint(Draw& w);
@@ -252,9 +265,14 @@ private:
 	virtual void RightUp(Point, dword);
 	virtual void MouseLeave();
 	virtual void MouseWheel(Point, int zdelta, dword);
+	virtual bool Key(dword key, int count);
+	virtual void GotFocus();
+	virtual void LostFocus();
 	
-	void DoMouseAction(bool down, Point pt, MouseAction action, int value);
+	void DoMouseAction(bool down, Point pt, ScatterAction action, int value);
+	void DoKeyAction(ScatterAction action);
 	void ProcessMouse(bool down, Point &pt, bool ctrl, bool alt, bool shift, bool left, bool middle, int middleWheel, bool right); 
+	void ProcessKey(int key); 
 	void LabelPopUp(bool down, Point &pt); 
 	void Scrolling(bool down, Point &pt, bool isOut = false);
 	void MouseZoom(int zdelta, bool hor, bool ver);
