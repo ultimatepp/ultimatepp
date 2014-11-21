@@ -37,6 +37,31 @@ speed or printing quality.]&]
 [s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [*2 Public Member List]]}}&]
 [s6;%- &]
+[s5;:ScatterCtrl`:`:AddMouseBehavior`(bool`,bool`,bool`,bool`,bool`,int`,bool`,ScatterAction`):%- [@(0.0.255) v
+oid]_[* AddMouseBehavior]([@(0.0.255) bool]_[*@3 ctrl], [@(0.0.255) bool]_[*@3 alt], 
+[@(0.0.255) bool]_[*@3 shift], [@(0.0.255) bool]_[*@3 left], [@(0.0.255) bool]_[*@3 middle], 
+[@(0.0.255) int]_[*@3 middlewheel], [@(0.0.255) bool]_[*@3 right], ScatterAction_[*@3 actio
+n])&]
+[s3; Add a new [%-*@3 action] to be launched when the combination of 
+keys and mouse actions set by [%-*@3 ctrl] .[%-*@3 alt] .[%-*@3 shift] 
+.[%-*@3 left] .[%-*@3 middle] .[%-*@3 middlewheel] and [%-*@3 right] 
+are complied.&]
+[s3; Data is added to Array<[^topic`:`/`/ScatterCtrl`/src`/MouseBehavior`$en`-us^ Mouse
+Behavior]> mouseBehavior.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:AddKeyBehavior`(bool`,bool`,bool`,int`,bool`,ScatterAction`):%- [@(0.0.255) v
+oid]_[* AddKeyBehavior]([@(0.0.255) bool]_[*@3 ctrl], [@(0.0.255) bool]_[*@3 alt], 
+[@(0.0.255) bool]_[*@3 shift], [@(0.0.255) int]_[*@3 key], [@(0.0.255) bool]_[*@3 isVirtualKe
+y], ScatterAction_[*@3 action])&]
+[s3; Add a new [%-*@3 action] to be launched when the combination of 
+keys set by [%-*@3 ctrl] .[%-*@3 alt] .[%-*@3 shift] and [%-*@3 key] 
+are complied. [%-*@3 isVirtualKey ]indicates if the key is a K`_... 
+virtual key or if it is a real char like `'e`' or `'`+`'.&]
+[s3; Data is added to Array<[^topic`:`/`/ScatterCtrl`/src`/KeyBehavior`$en`-us^ KeyBeha
+vior]> keyBehavior.&]
+[s1; &]
+[s6;%- &]
 [s5;:ScatterCtrl`:`:SetMouseBehavior`(ScatterCtrl`:`:MouseBehaviour`*`):%- [@(0.0.255) b
 ool]_[* SetMouseBehavior]([_^ScatterCtrl`:`:MouseBehaviour^ MouseBehaviour]_`*[*@3 mous
 eBehavior])&]

@@ -9,19 +9,6 @@ NAMESPACE_UPP
 #define TFILE <ScatterCtrl/ScatterCtrl.t>
 #include <Core/t.h>
 
-//   ctrl   alt	   shift  left   middle middleWheel right action
-ScatterCtrl::MouseBehaviour defaultMouse[] = {
-	{false, false, false, true , false, 0, false, ScatterCtrl::SHOW_COORDINATES}, 
-	{true,  false, false, true , false, 0, false, ScatterCtrl::ZOOM_WINDOW}, 
-	{false, false, false, false, false, 0, true , ScatterCtrl::CONTEXT_MENU},
-	{false, false, false, false, true , 0, false, ScatterCtrl::SCROLL},
-	{false, false, false, false, false, 1, false, ScatterCtrl::ZOOM_H_RED},
-	{false, false, false, false, false, 1, false, ScatterCtrl::ZOOM_V_RED},
-	{false, false, false, false, false,-1, false, ScatterCtrl::ZOOM_H_ENL},
-	{false, false, false, false, false,-1, false, ScatterCtrl::ZOOM_V_ENL},
-	{false, false, false, false, false, 0, false, ScatterCtrl::NO_ACTION}};
-	
-
 #ifdef PLATFORM_WIN32
 
 void ScatterCtrl::SaveAsMetafile(const char* file)
@@ -81,6 +68,12 @@ void ScatterCtrl::Paint(Draw& w)
 			ScatterCtrl::SetDrawing(bp, GetSize(), 1);
 			w.DrawImage(0, 0, ib);
 			PlotTexts(w, GetSize(), 1);
+		}
+		if (HasFocus()) {
+			w.DrawLine(0, 0, GetSize().cx, 0, 4, LtGray());
+			w.DrawLine(GetSize().cx, 0, GetSize().cx, GetSize().cy, 4, LtGray());
+			w.DrawLine(GetSize().cx, GetSize().cy, 0, GetSize().cy, 4, LtGray());
+			w.DrawLine(0, 0, 0, GetSize().cy, 4, LtGray());
 		}
 	}
 	lastRefresh_ms = t.Elapsed();
@@ -165,7 +158,7 @@ void ScatterCtrl::ProcessPopUp(const Point & pt)
 	popText.SetText(str).Move(this, p2.x, p2.y);
 }
 
-void ScatterCtrl::DoMouseAction(bool down, Point pt, MouseAction action, int value)
+void ScatterCtrl::DoMouseAction(bool down, Point pt, ScatterAction action, int value)
 {
 	if (!down) {
 		Scrolling(false, pt);
@@ -192,26 +185,72 @@ void ScatterCtrl::DoMouseAction(bool down, Point pt, MouseAction action, int val
 	}
 }
 
-bool ScatterCtrl::SetMouseBehavior(MouseBehaviour *_mouseBehavior) 
+void ScatterCtrl::DoKeyAction(ScatterAction action)
 {
-	if (!_mouseBehavior)
-		return false;
-	int i;
-	for (i = 0; _mouseBehavior[i].action != NO_ACTION && i < MAX_MOUSEBEHAVIOR; ++i) ;
-	if (i == MAX_MOUSEBEHAVIOR)
-		return false;
-	mouseBehavior = _mouseBehavior;
-	return true;
+	switch (action) {
+	case ZOOM_H_ENL:	MouseZoom(-120, true, false);		break;
+	case ZOOM_H_RED:	MouseZoom(120, true, false); 		break;
+	case ZOOM_V_ENL:	MouseZoom(-120, false, true); 		break;
+	case ZOOM_V_RED:	MouseZoom(120, false, true); 		break;
+	case SCROLL_LEFT:	ScatterDraw::Scroll(0.2, 0); 		break;
+	case SCROLL_RIGHT:	ScatterDraw::Scroll(-0.2, 0); 		break;
+	case SCROLL_UP:		ScatterDraw::Scroll(0, -0.2); 		break;
+	case SCROLL_DOWN:	ScatterDraw::Scroll(0, 0.2); 		break;
+	case NO_ACTION:;
+	}	
+}
+
+void ScatterCtrl::AddMouseBehavior(bool ctrl, bool alt, bool shift, bool left, bool middle, int middlewheel, bool right, ScatterAction action)
+{
+	mouseBehavior << MouseBehavior(ctrl, alt, shift, left, middle, middlewheel, right, action);
+}
+
+void ScatterCtrl::AddKeyBehavior(bool ctrl, bool alt, bool shift, int key, bool isVirtualKey, ScatterAction action) 
+{
+	if (!isVirtualKey) {
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
+		HKL hKeyboardLayout = ::GetKeyboardLayout(0);
+		key = VkKeyScanExW(key, hKeyboardLayout) + K_DELTA;
+	}
+#else
+		XDisplay dpy;
+		if (!(dpy = XOpenDisplay(NULL)))
+			return;
+	
+		if (key > 0x00ff)
+	    	key = key | 0x01000000;
+	 	
+		key = XKeysymToKeycode(dpy, key) + K_DELTA;
+		
+		XFlush(dpy);
+	 	XCloseDisplay(dpy);
+	}
+#endif
+	keyBehavior << KeyBehavior(ctrl, alt, shift, key, isVirtualKey, action);
 }
 
 void ScatterCtrl::ProcessMouse(bool down, Point &pt, bool ctrl, bool alt, bool shift, bool left, bool middle, int middleWheel, bool right) 
 {
-	for (int i = 0; mouseBehavior[i].action != NO_ACTION && i < MAX_MOUSEBEHAVIOR; ++i) {
+	for (int i = 0; i < mouseBehavior.GetCount(); ++i) {
 		if (mouseBehavior[i].ctrl   == ctrl   && mouseBehavior[i].alt   == alt   &&
 		    mouseBehavior[i].shift  == shift  && mouseBehavior[i].left  == left  &&
 		    mouseBehavior[i].middle == middle && mouseBehavior[i].right == right &&
 		    ((mouseBehavior[i].middleWheel == 0) || mouseBehavior[i].middleWheel == ((middleWheel > 0) - (middleWheel < 0))))
 		    DoMouseAction(down, pt, mouseBehavior[i].action, middleWheel);
+	}	
+}
+
+void ScatterCtrl::ProcessKey(int key) 
+{
+	if (key & K_KEYUP)
+		return;
+	bool ctrl = key & K_CTRL;
+	bool alt = key & K_ALT;
+	bool shift = key & K_SHIFT;
+	key &= ~(K_CTRL | K_ALT | K_SHIFT | K_KEYUP); 
+	for (int i = 0; i < keyBehavior.GetCount(); ++i) {
+		if (keyBehavior[i].ctrl  == ctrl  && keyBehavior[i].alt == alt && keyBehavior[i].shift == shift && keyBehavior[i].key == key)
+		    DoKeyAction(keyBehavior[i].action);
 	}	
 }
 
@@ -273,6 +312,7 @@ void ScatterCtrl::ZoomWindow(bool down, Point &pt)
 
 			popLT = popRB = Null;
 			Refresh();
+			Refresh();
 		}		
 	}	
 }
@@ -304,8 +344,26 @@ void ScatterCtrl::Scrolling(bool down, Point &pt, bool isOut)
 	}
 }
 
+bool ScatterCtrl::Key(dword key, int count)
+{
+	ProcessKey(key);
+	return false;
+}
+
+void ScatterCtrl::GotFocus()
+{
+	Refresh();
+}
+
+void ScatterCtrl::LostFocus()
+{
+	Refresh();	
+}
+
 void ScatterCtrl::LeftDown(Point pt, dword keyFlags) 
 {
+	if(!HasFocus()) 
+		SetFocus();
 	isLeftDown = true;
 	ProcessMouse(true, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, true, false, 0, false);
 }
@@ -318,6 +376,8 @@ void ScatterCtrl::LeftUp(Point pt, dword keyFlags)
 
 void ScatterCtrl::MiddleDown(Point pt, dword keyFlags)
 {
+	if(!HasFocus()) 
+		SetFocus();
 	ProcessMouse(true, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, false, true, 0, false);
 }
 
@@ -328,6 +388,8 @@ void ScatterCtrl::MiddleUp(Point pt, dword keyFlags)
 
 void ScatterCtrl::RightDown(Point pt, dword keyFlags) 
 {
+	if(!HasFocus()) 
+		SetFocus();
 	ProcessMouse(true, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, false, false, 0, true);
 }
 
@@ -340,6 +402,8 @@ void ScatterCtrl::MouseWheel(Point pt, int zdelta, dword keyFlags)
 {
 	if (zdelta == 0)
 		return;
+	if(!HasFocus()) 
+		SetFocus();
 	ProcessMouse(true, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, false, false, zdelta, false);
 }
 
@@ -447,7 +511,7 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 		bar.Separator();
 	}
 	bar.Add(t_("Copy"), ScatterImg::Copy(), 		THISBACK1(SaveToClipboard, false)).Key(K_CTRL_C);
-	bar.Add(t_("Save to file"), ScatterImg::Save(), THISBACK1(SaveToFile, Null));
+	bar.Add(t_("Save to file"), ScatterImg::Save(), THISBACK1(SaveToFile, Null)).Key(K_CTRL_S);
 }
 
 void ScatterCtrl::SaveToFile(String fileName)
@@ -499,6 +563,7 @@ void ScatterCtrl::InsertSeries(int id, GridCtrl &data, bool useCols, int idX, in
 ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1), isLeftDown(false)
 {
 	showInfo = mouseHandlingX = mouseHandlingY = isScrolling = isLabelPopUp = isZoomWindow = false;
+	WantFocus();
 	popTextX = "x";
 	popTextY = "y1";
 	popTextY2 = "y2";
@@ -508,11 +573,34 @@ ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1), isLeftDown(false)
 	Color(graphColor);	
 	BackPaint();
 	popText.SetColor(SColorFace);        
-	SetMouseBehavior(defaultMouse);
+
 	lastRefresh_ms = Null;
 	maxRefresh_ms = 500;
 	highlighting = false;
 	ShowInfo().ShowContextMenu().ShowPropertiesDlg();
+	
+	AddMouseBehavior(false, false, false, true , false, 0, false, ScatterCtrl::SHOW_COORDINATES); 
+	AddMouseBehavior(true,  false, false, true , false, 0, false, ScatterCtrl::ZOOM_WINDOW);
+	AddMouseBehavior(false, false, false, false, false, 0, true , ScatterCtrl::CONTEXT_MENU);
+	AddMouseBehavior(false, false, false, false, true , 0, false, ScatterCtrl::SCROLL);
+	AddMouseBehavior(false, false, false, false, false, 1, false, ScatterCtrl::ZOOM_H_RED);
+	AddMouseBehavior(false, false, false, false, false, 1, false, ScatterCtrl::ZOOM_V_RED);
+	AddMouseBehavior(false, false, false, false, false,-1, false, ScatterCtrl::ZOOM_H_ENL);
+	AddMouseBehavior(false, false, false, false, false,-1, false, ScatterCtrl::ZOOM_V_ENL);
+	AddMouseBehavior(false, false, false, false, false, 0, false, ScatterCtrl::NO_ACTION);
+
+	AddKeyBehavior(true,  false, false, '+',		false, 	ScatterCtrl::ZOOM_H_ENL); 
+	AddKeyBehavior(true,  false, false, K_ADD, 		true,	ScatterCtrl::ZOOM_H_ENL);
+	AddKeyBehavior(true,  false, false, '+',		false, 	ScatterCtrl::ZOOM_V_ENL);
+	AddKeyBehavior(true,  false, false, K_ADD, 		true, 	ScatterCtrl::ZOOM_V_ENL);
+	AddKeyBehavior(true,  false, false, '-', 		false,  ScatterCtrl::ZOOM_H_RED); 
+	AddKeyBehavior(true,  false, false, K_SUBTRACT, true, 	ScatterCtrl::ZOOM_H_RED); 
+	AddKeyBehavior(true,  false, false, '-', 	 	false, 	ScatterCtrl::ZOOM_V_RED);
+	AddKeyBehavior(true,  false, false, K_SUBTRACT,	true, 	ScatterCtrl::ZOOM_V_RED);
+	AddKeyBehavior(true,  false, false, K_LEFT, 	true, 	ScatterCtrl::SCROLL_LEFT);
+	AddKeyBehavior(true,  false, false, K_RIGHT, 	true, 	ScatterCtrl::SCROLL_RIGHT);
+	AddKeyBehavior(true,  false, false, K_UP,   	true, 	ScatterCtrl::SCROLL_UP);
+	AddKeyBehavior(true,  false, false, K_DOWN, 	true, 	ScatterCtrl::SCROLL_DOWN);
 }
 
 END_UPP_NAMESPACE

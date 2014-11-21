@@ -10,15 +10,10 @@ topic "1.1 MouseBehaviour";
 [s1; &]
 [ {{10000@3 [s0;%% [*@(229)4 ScatterCtrl`::MouseBehavior]]}}&]
 [s1;%% &]
-[s2;:ScatterCtrl`:`:MouseBehaviour`:`:struct: [@(0.0.255)3 struct][3 _][*3 MouseBehavior]&]
+[s2;:ScatterCtrl`:`:MouseBehavior`:`:struct: [@(0.0.255)3 struct][3 _][*3 MouseBehavior]&]
 [s3;%% This structure is used to describe the behavior of the mouse 
 when used in ScatterCtrl. It includes the keyboard and mouse 
 conditions that, when complied, will launch the indicated action.&]
-[s3;%% It is used by SetMouseBehavior(MouseBehaviour `*`_mouseBehavior) 
-function to set an array of MouseBehavior items that will be 
-used to launch actions as zooming or scrolling when mouse is 
-used.&]
-[s3;%% The default array is in ScatterCtrl`::MouseBehaviour defaultMouse.&]
 [s1;%% &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
@@ -51,11 +46,10 @@ used.&]
 [s5;%% Set to true if mouse right button has to be pressed.&]
 [s1; &]
 [s6; &]
-[s4;:ScatterCtrl`:`:MouseBehaviour`:`:action: MouseAction_[* action]&]
+[s4;:ScatterCtrl`:`:MouseBehaviour`:`:action: ScatterAction_[* action]&]
 [s5;%% Is the action to be launched if the previous conditions are 
 complied. It can be:&]
-[s5;i150;O0;~~~1248;%% NO`_ACTION-|No action. It serves to mark the 
-end of MouseBehavior array.&]
+[s5;i150;O0;~~~1248;%% NO`_ACTION-|No action.&]
 [s5;i150;O0;~~~1248;%% SCROLL-|Scrolls the graphs.&]
 [s5;i150;O0;~~~1248;%% ZOOM`_H`_ENL-|Zooms horizontally enlarging 
 the graphs. &]
@@ -65,7 +59,11 @@ graphs.&]
 graphs.&]
 [s5;i150;O0;~~~1248;%% ZOOM`_V`_RED-|Zooms horizontally reducing the 
 graphs.&]
-[s5;i150;O0;~~~1248;%% SHOW`_INFO-|Shows an info label including mouse 
-real X and Y coordinates.&]
-[s1;%% &]
-[s0;%% ]]
+[s5;i150;O0;%% SHOW`_INFO-|Shows an info label including mouse real 
+X and Y coordinates.&]
+[s5;i150;O0;%% ZOOM`_WINDOW-|Zoom in the window selected by the mouse.&]
+[s5;i150;O0;%% SCROLL`_LEFT-|Scrolls left the graph.&]
+[s5;i150;O0;%% SCROLL`_RIGHT-|Scrolls right the graph.&]
+[s5;i150;O0;%% SCROLL`_UP-|Scrolls up the graph.&]
+[s5;i150;O0;%% SCROLL`_DOWN-|Scrolls down the graph.&]
+[s1;%% ]]
