@@ -89,7 +89,6 @@ Rect LineEdit::GetRectSelection() const
 bool LineEdit::GetRectSelection(const Rect& rect, int line, int& l, int &h)
 {
 	if(line >= rect.top && line <= rect.bottom) {
-		int len = GetLineLength(line);
 		l = GetGPos(line, rect.left);
 		h = GetGPos(line, rect.right);
 		return true;
@@ -156,7 +155,6 @@ void LineEdit::PasteColumn(const WString& text)
 		Point p = t.TopLeft();
 		pos = cursor;
 		for(int i = 0; i < t.bottom - t.top + 1; i++) { 
-			int li = p.y + i;
 			int l = GetGPos(i + p.y, p.x);
 			pos = l + Insert(l, cl[i % cl.GetCount()]);
 		}
@@ -237,7 +235,6 @@ void   LineEdit::Paint0(Draw& w) {
 	int pos = cpos;
 	int fascent = font.Info().GetAscent();
 	Color showcolor = Blend(SColorLight, SColorHighlight);
-	bool trimmed = false;
 	int cursorline = GetLine(cursor);
 	int dx[] = { fsz.cx };
 	int dx2[] = { 2 * fsz.cx };
