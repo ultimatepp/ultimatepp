@@ -12,7 +12,6 @@ static const int *sGetKernel(double (*kfn)(double x), int a, int shift)
 		Buffer<int> *k = kache.FindPtr(key);
 		if(k)
 			return *k;
-		RTIMING("GenKernel");
 		Buffer<int>& ktab = kache.GetAdd(key);
 		ktab.Alloc(((2 * a) << shift) + 1);
 		for(int i = 0; i < ((2 * a) << shift) + 1; i++)

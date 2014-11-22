@@ -11,6 +11,7 @@ NAMESPACE_UPP
 
 void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point poff)
 {
+	w.FlushText();
 	Size dsz = dest.GetSize();
 	cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, dsz.cx, dsz.cy);
 	cairo_surface_flush(surface);
@@ -75,6 +76,7 @@ struct ImageSysDataMaker : LRUCache<ImageSysData, int64>::Maker {
 void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 {
 	GuiLock __;
+	FlushText();
 	if(img.GetLength() == 0)
 		return;
 	LLOG("SysDrawImageOp " << img.GetSerialId() << ' ' << x << ", " << y << ", "<< img.GetSize());

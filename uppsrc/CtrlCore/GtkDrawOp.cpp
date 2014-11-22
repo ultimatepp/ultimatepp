@@ -6,6 +6,11 @@ NAMESPACE_UPP
 
 #define LLOG(x)
 
+SystemDraw::~SystemDraw()
+{
+	FlushText();
+}
+
 void SystemDraw::SetColor(Color c)
 {
 	cairo_set_source_rgb(cr, c.GetR() / 255.0, c.GetG() / 255.0, c.GetB() / 255.0);
@@ -44,16 +49,19 @@ void SystemDraw::Pop()
 
 void SystemDraw::BeginOp()
 {
+	FlushText();
 	Push();
 }
 
 void SystemDraw::EndOp()
 {
+	FlushText();
 	Pop();
 }
 
 void SystemDraw::OffsetOp(Point p)
 {
+	FlushText();
 	Push();
 	offset.Top() += p;
 	cairo_translate(cr, p.x, p.y);
@@ -66,6 +74,7 @@ void SystemDraw::RectPath(const Rect& r)
 
 bool SystemDraw::ClipOp(const Rect& r)
 {
+	FlushText();
 	Push();
 	clip.Top() &= r.Offseted(GetOffset());
 	RectPath(r);
@@ -75,6 +84,7 @@ bool SystemDraw::ClipOp(const Rect& r)
 
 bool SystemDraw::ClipoffOp(const Rect& r)
 {
+	FlushText();
 	Push();
 	clip.Top() &= r.Offseted(GetOffset());
 	offset.Top() += r.TopLeft();
@@ -86,6 +96,7 @@ bool SystemDraw::ClipoffOp(const Rect& r)
 
 bool SystemDraw::ExcludeClipOp(const Rect& r)
 {
+	FlushText();
 	RectPath(Rect(-99999, -99999, 99999, r.top));
 	RectPath(Rect(-99999, r.top, r.left, 99999));
 	RectPath(Rect(r.right, r.top, 99999, 99999));
@@ -96,6 +107,7 @@ bool SystemDraw::ExcludeClipOp(const Rect& r)
 
 bool SystemDraw::IntersectClipOp(const Rect& r)
 {
+	FlushText();
 	RectPath(r);
 	cairo_clip(cr);
 	return true;
@@ -115,6 +127,7 @@ void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 {
 	if(IsNull(color))
 		return;
+	FlushText();
 	cairo_rectangle(cr, x, y, cx, cy);
 	if(color == InvertColor()) {
 #if GTK_CHECK_VERSION(2,24,0)
@@ -161,6 +174,7 @@ static void sDrawLineStroke(cairo_t *cr, int width)
 
 void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
+	FlushText();
 	SetColor(color);
 	if(width == PEN_SOLID)
 		width = 1;
@@ -192,6 +206,7 @@ void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color col
 void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts,
                                     int count_count, int width, Color color, Color doxor)
 {
+	FlushText();
 	while(--count_count >= 0) {
 		const Point *pp = vertices;
 		vertices += *counts++;
@@ -209,6 +224,7 @@ void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
                                   const int *subpolygon_counts, int scc, const int *disjunct_polygon_counts,
                                   int dpcc, Color color, int width, Color outline, uint64 pattern, Color doxor)
 {
+	FlushText();
 	Image fill_img;
 	if(pattern && !IsNull(color)) {
 		ImageBuffer ibuf(8, 8);
@@ -255,6 +271,7 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 {
 	if(rc.Width() <= 0 || rc.Height() <= 0)
 		return;
+	FlushText();
 	Sizef radius = Sizef(rc.Size()) / 2.0;
 	Pointf center = Pointf(rc.TopLeft()) + radius;
 	double ang1 = Bearing((Pointf(start) - center) / radius);
@@ -273,6 +290,7 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 
 void SystemDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 {
+	FlushText();
 	cairo_save(cr);
 	Sizef h = Sizef(r.GetSize()) / 2.0;
 	cairo_translate (cr, r.left + h.cx, r.top + h.cy);

@@ -60,37 +60,58 @@ int    gtk_hinting = -1;
 String gtk_hintstyle;
 String gtk_rgba;
 
+void SystemDraw::FlushText()
+{
+	if(textcache.GetCount() == 0)
+		return;
+	Buffer<cairo_glyph_t> gs(textcache.GetCount());
+	for(int i = 0; i < textcache.GetCount(); i++) {
+		cairo_glyph_t& g = gs[i];
+		g.index = textcache[i].index;
+		g.x = textcache[i].x;
+		g.y = textcache[i].y;
+	}
+
+	static LRUCache<FontSysData, Tuple2<Font, int> > cache;
+	FontDataSysMaker m;
+	m.font = textfont;
+	m.angle = textangle;
+	FontSysData& sf = cache.Get(m);
+
+	cairo_set_scaled_font(cr, sf.scaled_font);
+
+	SetColor(textink);
+ 	cairo_show_glyphs(cr, gs, textcache.GetCount());
+ 	
+ 	cache.Shrink(64);
+
+	textcache.Clear();
+}
+
 void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx)
 {
 	GuiLock __;
+	
+	if(textcache.GetCount() && (font != textfont || ink != textink || angle != textangle))
+		FlushText();
+	
+	textfont = font;
+	textink = ink;
+	textangle = angle;
 	
 	int ascent = font.GetAscent();
 	double sina = 0;
 	double cosa = 1;
 	if(angle)
 		Draw::SinCos(angle, sina, cosa);
-	int xpos = 0;	
-	Buffer<cairo_glyph_t> gs(n);
+	int xpos = 0;
 	for(int i = 0; i < n; i++) {
-		cairo_glyph_t& g = gs[i];
+		TextGlyph& g = textcache.Add();
 		g.index = GetGlyphInfo(font, text[i]).glyphi;
 		g.x = int(x + cosa * xpos + sina * ascent);
 		g.y = int(y + cosa * ascent - sina * xpos);
 		xpos += dx ? dx[i] : font[text[i]];
-	}
-
-	static LRUCache<FontSysData, Tuple2<Font, int> > cache;
-	FontDataSysMaker m;
-	m.font = font;
-	m.angle = angle;
-	FontSysData& sf = cache.Get(m);
-	
-	cairo_set_scaled_font(cr, sf.scaled_font);
-
-	SetColor(ink);
- 	cairo_show_glyphs(cr, gs, n);
- 	
- 	cache.Shrink(64);
+	}	
 }
 
 END_UPP_NAMESPACE
