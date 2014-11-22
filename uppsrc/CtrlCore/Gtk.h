@@ -55,6 +55,17 @@ private:
 	cairo_t      *cr;
 	GdkDrawable  *drawable;
 	
+	struct TextGlyph : Moveable<TextGlyph> {
+		int x;
+		int y;
+		int index;
+	};
+
+	Font              textfont;
+	Color             textink;
+	int               textangle;
+	Vector<TextGlyph> textcache;
+	
 	SystemDraw() {}
 	
 	friend class ImageDraw;
@@ -62,6 +73,9 @@ private:
 	friend class ViewDraw;
 
 	Rect     GetClip() const;
+	void     FlushText();
+	
+	friend void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point poff);
 
 public:
 	void  SetColor(Color c);
@@ -72,6 +86,7 @@ public:
 	static void Flush()              {} // TODO?
 
 	SystemDraw(cairo_t *cr, GdkDrawable *dw/* = NULL*/) : cr(cr), drawable(dw) { (void)drawable; }
+	~SystemDraw();
 };
 
 class ImageDraw : public SystemDraw {
