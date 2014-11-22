@@ -11,11 +11,7 @@ CONSOLE_APP_MAIN
 	DUMP(GetTimeZone());	
 	Date d = GetSysDate();
 	if(d < Date(d.year, 3, 20) && d > Date(d.year - 1, 10, 30)) {
-<<<<<<< .mine
 		LOG("Normalni CZ time");
-=======
-		LOG("Normal CZ time");
->>>>>>> .r7914
 		ASSERT(GetTimeZone() == 60);
 		ASSERT(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 +1200") == Time(2014, 3, 25, 23, 1, 15));
 		ASSERT(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 +1000") == Time(2014, 3, 25, 21, 1, 15));
