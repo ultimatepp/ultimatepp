@@ -46,9 +46,9 @@ struct MyAppWindow : TopWindow {
 		AddFrame(status);
 		AddFrame(InsetFrame());
 		menu.Set(THISBACK(MainMenu));
-		menu.WhenHelp = status;
-		tool.Set(THISBACK(SubBar));
-		tool.WhenHelp = status;
+		menu.WhenHelp = status; // callback cast to fix it for older CLANG version in C++11
+		tool.Set(THISBACK(SubBar)); 
+		tool.WhenHelp = status; // callback cast to fix it for older CLANG version in C++11
 	}
 };
 
