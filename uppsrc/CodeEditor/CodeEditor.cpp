@@ -958,10 +958,10 @@ CodeEditor::CodeEditor() {
 	bracket_start = 0;
 	stat_edit_time = 0;
 	last_key_time = Null;
+	SetFont(Courier(16));
 	AddFrame(bar);
 	bar.SetEditor(this);
 	UndoSteps(10000);
-	SetFont(Courier(16));
 	InitFindReplace();
 	bar.WhenBreakpoint = THISBACK(ForwardWhenBreakpoint);
 	bar.WhenAnnotationMove = Proxy(WhenAnnotationMove);

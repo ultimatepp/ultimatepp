@@ -55,10 +55,6 @@ void EditorBar::sPaintImage(Draw& w, int y, int fy, const Image& img)
 
 void EditorBar::Paint(Draw& w)
 {
-	static Image (*numeri[])() = {
-		CodeEditorImg::N0, CodeEditorImg::N1, CodeEditorImg::N2, CodeEditorImg::N3, CodeEditorImg::N4,
-		CodeEditorImg::N5, CodeEditorImg::N6, CodeEditorImg::N7, CodeEditorImg::N8, CodeEditorImg::N9,
-	};
 	Size sz = GetSize();
 	w.DrawRect(0, 0, sz.cx, sz.cy, SColorLtFace);
 	if(!editor) return;
@@ -92,14 +88,10 @@ void EditorBar::Paint(Draw& w)
 		if(editor->GetCaret().top == y && editor->barline)
 			w.DrawRect(0, y, sz.cx, fy, Blend(SColorHighlight(), SColorLtFace(), 200));
 		if(line_numbers && i < editor->GetLineCount()) {
-			String n = AsString(i + 1);
-			for(int q = 0; q < 4 && q < n.GetLength(); q++) {
-				w.DrawImage(sz.cx - 8 - q * 6 - 12,
-					y + (fy - CodeEditorImg::N0().GetSize().cy) / 2,
-					numeri[n[n.GetLength() - 1 - q] - '0'],
-					// CodeEditorImg::Vector[n[n.GetLength() - 1 - q] - '0' + CodeEditorImg::I_N0],
-					Brown);
-			}
+			String n = AsString((i + 1) % 10000);
+			Font fnt = editor->GetFont();
+			Size tsz = GetTextSize(n, fnt);
+			w.DrawText(sz.cx - 8 - 12 - tsz.cx, y + (fy - tsz.cy) / 2, n, fnt, Brown);
 		}
 		if(hi_if) {
 			Vector<IfState> nextif;
@@ -484,7 +476,7 @@ void EditorBar::HidePtr()
 
 void EditorBar::SyncWidth()
 {
-	Width((line_numbers ? 27 + 12 : 12) + annotations);
+	Width((line_numbers && editor ? editor->GetFont()['0'] * 4 + 12 : 12) + annotations);
 	Refresh();
 }
 
