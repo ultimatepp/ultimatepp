@@ -173,6 +173,7 @@ void Ide::EditorFontScroll(int d)
 	while(editorfont.GetCy() == h && (d < 0 ? editorfont.GetCy() > 5 : editorfont.GetCy() < 40))
 		editorfont.Height(q += d);
 	editor.SetFont(editorfont);
+	editor.EditorBarLayout();
 }
 
 struct FormatDlg : TabDlg {

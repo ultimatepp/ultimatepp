@@ -85,7 +85,6 @@ private:
 
 	String& PointBreak(int& y);
 	void    sPaintImage(Draw& w, int y, int fy, const Image& img);
-	void    SyncWidth();
 
 public:
 	Callback1<int> WhenBreakpoint;
@@ -98,6 +97,8 @@ public:
 	void ClearLines();
 
 	void Scroll()                          { Refresh(); }
+
+	void SyncWidth();
 
 	void Renumber(int linecount);
 	void ClearBreakpoints();
@@ -187,9 +188,6 @@ public:
 	virtual Image CursorImage(Point p, dword keyflags);
 	virtual void  Serialize(Stream& s);
 	virtual void  MouseLeave();
-
-	void         CheckEdited(bool e = true) { check_edited = e; }
-	bool         GetCheckEdited()           { return check_edited; }
 
 protected:
 	virtual void HighlightLine(int line, Vector<LineEdit::Highlight>& h, int pos);
@@ -411,6 +409,12 @@ public:
 	void   TabLeft();
 
 	Callback1<int> WhenBreakpoint;
+
+
+	void    CheckEdited(bool e = true)                { check_edited = e; }
+	bool    GetCheckEdited()                          { return check_edited; }
+
+	void    EditorBarLayout()                         { bar.SyncWidth(); }
 
 	LineInfo GetLineInfo() const                      { return bar.GetLineInfo(); }
 	void     SetLineInfo(const LineInfo& lf);
