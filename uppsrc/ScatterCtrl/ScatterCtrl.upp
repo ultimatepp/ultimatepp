@@ -7,6 +7,7 @@ uses
 	GridCtrl;
 
 file
+	ScatterCtrlX.cpp,
 	ScatterCtrl.cpp,
 	ScatterCtrl.h,
 	Properties.cpp,
