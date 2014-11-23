@@ -37,6 +37,7 @@ public:
 	Callback WhenGLPaint;
 
 	virtual void GLPaint();
+	virtual void GLResize(int w, int h);
 
 	void StdView();
 };
