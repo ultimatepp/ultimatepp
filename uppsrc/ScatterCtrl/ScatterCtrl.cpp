@@ -205,6 +205,18 @@ void ScatterCtrl::AddMouseBehavior(bool ctrl, bool alt, bool shift, bool left, b
 	mouseBehavior << MouseBehavior(ctrl, alt, shift, left, middle, middlewheel, right, action);
 }
 
+void ScatterCtrl::RemoveMouseBehavior(ScatterAction action)	
+{
+	for (int i = mouseBehavior.GetCount() - 1; i >= 0 ; --i)
+		if (mouseBehavior[i].action == action) 
+			mouseBehavior.Remove(i);
+}
+
+void ScatterCtrl::ClearMouseBehavior()
+{
+	mouseBehavior.Clear();
+}	
+
 #ifdef PLATFORM_POSIX
 int GetKeyCodeX(int key);
 #endif
@@ -221,6 +233,18 @@ void ScatterCtrl::AddKeyBehavior(bool ctrl, bool alt, bool shift, int key, bool 
 	}
 #endif
 	keyBehavior << KeyBehavior(ctrl, alt, shift, key, isVirtualKey, action);
+}
+
+void ScatterCtrl::RemoveKeyBehavior(ScatterAction action) 
+{
+	for (int i = keyBehavior.GetCount() - 1; i >= 0 ; --i)
+		if (keyBehavior[i].action == action) 
+			keyBehavior.Remove(i);
+}
+
+void ScatterCtrl::ClearKeyBehavior() 
+{
+	keyBehavior.Clear();
 }
 
 void ScatterCtrl::ProcessMouse(bool down, Point &pt, bool ctrl, bool alt, bool shift, bool left, bool middle, int middleWheel, bool right) 

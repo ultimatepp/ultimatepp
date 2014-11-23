@@ -140,9 +140,10 @@ public:
 		bool right;
 		ScatterAction action;
 	};
-	Array<MouseBehavior> mouseBehavior; 
 	void AddMouseBehavior(bool ctrl, bool alt, bool shift, bool left, bool middle, int middlewheel, bool right, ScatterAction action);
-	
+	void RemoveMouseBehavior(ScatterAction action);	
+	void ClearMouseBehavior();
+		
 	struct KeyBehavior {		
 		KeyBehavior(bool ctrl, bool alt, bool shift, int key, bool isVirtualKey, ScatterAction action) : 
 			ctrl(ctrl), alt(alt), shift(shift), key(key), isVirtualKey(isVirtualKey), action(action) {}
@@ -153,9 +154,10 @@ public:
 		bool isVirtualKey;
 		ScatterAction action;
 	};
-	Array<KeyBehavior> keyBehavior;
 	void AddKeyBehavior(bool ctrl, bool alt, bool shift, int key, bool isVirtualKey, ScatterAction action); 
-		
+	void RemoveKeyBehavior(ScatterAction action);	
+	void ClearKeyBehavior();
+	
 	ScatterCtrl& ShowContextMenu(bool show = true) 			{showContextMenu = show; return *this;}
 	ScatterCtrl& ShowPropertiesDlg(bool show = true)		{showPropDlg = show; 	 return *this;}
 	ScatterCtrl& SetPopText(const String x, const String y1, const String y2) 	
@@ -252,6 +254,9 @@ private:
 	int maxRefresh_ms;
 	
 	bool highlighting;
+	
+	Array<MouseBehavior> mouseBehavior; 
+	Array<KeyBehavior> keyBehavior;
 	
 	void ProcessPopUp(const Point & pt);
 
