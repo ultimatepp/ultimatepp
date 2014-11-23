@@ -53,6 +53,7 @@ void CodeEditor::Highlight(const String& h)
 	SetColor(LineEdit::PAPER_READONLY, hl_style[HighlightSetup::PAPER_READONLY].color);
 	SetColor(LineEdit::PAPER_SELECTED, hl_style[HighlightSetup::PAPER_SELECTED].color);
 	Refresh();
+	EditorBarLayout();
 }
 
 void CodeEditor::DirtyFrom(int line) {
