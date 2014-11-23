@@ -49,6 +49,6 @@ void Ide::GotoGlobal()
 	JumpDlg dlg;
 	dlg.theide = this;
 	dlg.Search();
-	dlg.Execute();
-	dlg.GoTo();
+	if(dlg.ExecuteOK())
+		dlg.GoTo();
 }
