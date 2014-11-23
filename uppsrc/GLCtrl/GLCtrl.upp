@@ -3,11 +3,9 @@ uses
 
 library(WIN32 GCC) "glaux glu32 opengl32";
 
-library(LINUX) "GL GLU";
+library(LINUX | BSD) "GL GLU";
 
-library(BSD) "GL GLU";
-
-library(GTK) "gdkglext-x11-1.0 gtkglext-x11-1.0";
+library((LINUX | FREEBSD) & (!X11 | !NOGTK)) "gdkglext-x11-1.0 gtkglext-x11-1.0";
 
 file
 	GLCtrl.h,
