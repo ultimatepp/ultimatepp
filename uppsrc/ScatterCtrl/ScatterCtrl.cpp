@@ -205,6 +205,10 @@ void ScatterCtrl::AddMouseBehavior(bool ctrl, bool alt, bool shift, bool left, b
 	mouseBehavior << MouseBehavior(ctrl, alt, shift, left, middle, middlewheel, right, action);
 }
 
+#ifdef PLATFORM_POSIX
+int GetKeyCodeX(int key);
+#endif
+
 void ScatterCtrl::AddKeyBehavior(bool ctrl, bool alt, bool shift, int key, bool isVirtualKey, ScatterAction action) 
 {
 	if (!isVirtualKey) {
@@ -213,17 +217,7 @@ void ScatterCtrl::AddKeyBehavior(bool ctrl, bool alt, bool shift, int key, bool 
 		key = VkKeyScanExW(key, hKeyboardLayout) + K_DELTA;
 	}
 #else
-		XDisplay dpy;
-		if (!(dpy = XOpenDisplay(NULL)))
-			return;
-	
-		if (key > 0x00ff)
-	    	key = key | 0x01000000;
-	 	
-		key = XKeysymToKeycode(dpy, key) + K_DELTA;
-		
-		XFlush(dpy);
-	 	XCloseDisplay(dpy);
+		key = GetKeyCodeX(key);
 	}
 #endif
 	keyBehavior << KeyBehavior(ctrl, alt, shift, key, isVirtualKey, action);
