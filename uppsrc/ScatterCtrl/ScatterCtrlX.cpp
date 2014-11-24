@@ -18,7 +18,8 @@ int GetKeyCodeX(int key) {
 	if (key > 0x00ff)
     	key = key | 0x01000000;
  	
-	key = XKeysymToKeycode(dpy, key) + K_DELTA;
+	key = XKeysymToKeycode(dpy, key);
+	key += K_DELTA;
 	
 	XFlush(dpy);
  	XCloseDisplay(dpy);

@@ -70,10 +70,14 @@ void ScatterCtrl::Paint(Draw& w)
 			PlotTexts(w, GetSize(), 1);
 		}
 		if (HasFocus()) {
-			w.DrawLine(0, 0, GetSize().cx, 0, 4, LtGray());
-			w.DrawLine(GetSize().cx, 0, GetSize().cx, GetSize().cy, 4, LtGray());
-			w.DrawLine(GetSize().cx, GetSize().cy, 0, GetSize().cy, 4, LtGray());
-			w.DrawLine(0, 0, 0, GetSize().cy, 4, LtGray());
+			w.DrawLine(0, 0, GetSize().cx, 0, 2, LtGray());
+			w.DrawLine(0, 0, 0, GetSize().cy, 2, LtGray());
+			int delta = -2;
+#ifdef PLATFORM_WIN32
+			delta = 0;
+#endif
+			w.DrawLine(GetSize().cx+delta, 0, GetSize().cx+delta, GetSize().cy, 2, LtGray());
+			w.DrawLine(0, GetSize().cy+delta, GetSize().cx, GetSize().cy+delta, 2, LtGray());
 		}
 	}
 	lastRefresh_ms = t.Elapsed();
@@ -229,7 +233,7 @@ void ScatterCtrl::AddKeyBehavior(bool ctrl, bool alt, bool shift, int key, bool 
 		key = VkKeyScanExW(key, hKeyboardLayout) + K_DELTA;
 	}
 #else
-		key = GetKeyCodeX(key);
+		key = key + K_DELTA;//GetKeyCodeX(key);
 	}
 #endif
 	keyBehavior << KeyBehavior(ctrl, alt, shift, key, isVirtualKey, action);
@@ -276,7 +280,7 @@ void ScatterCtrl::LabelPopUp(bool down, Point &pt)
 {
 	if (down) {
 		if(showInfo && hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
-		  				(vPlotTop + titleHeight) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
+		  			   (vPlotTop + titleHeight) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
 			popText.AppearOnly(this);
 			
 			isLabelPopUp = true;
@@ -290,7 +294,7 @@ void ScatterCtrl::LabelPopUp(bool down, Point &pt)
 			if (wa.bottom - (rc.top + pt.y) < 200)
 				pt.y -= 200;
 			ProcessPopUp(pt);		
-		}	
+		} 
 	} else {
 		if(showInfo && isLabelPopUp) {
 			popText.Close();
@@ -324,6 +328,9 @@ void ScatterCtrl::ZoomWindow(bool down, Point &pt)
 			RBx = (popRB.x - hPlotLeft)*xRange/(GetSize().cx - (hPlotLeft + hPlotRight)-1) + xMin;		
 			RBy = -(popRB.y - vPlotTop - titleHeight)*yRange/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin + yRange;		
 			RBy2 = -(popRB.y - vPlotTop - titleHeight)*yRange2/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin2 + yRange2;		
+			
+			if ((RBx - LTx) <= 0 || (LTy - RBy) <= 0 || (LTy2 - RBy2) <= 0)
+				return;
 			
 			SetXYMinLinked(LTx, RBy, RBy2);
 			SetRangeLinked(RBx - LTx, LTy - RBy, LTy2 - RBy2);
@@ -446,9 +453,8 @@ void ScatterCtrl::MouseMove(Point pt, dword)
 			if (IsNull(popLT))
 				popLT = pt;
 			popRB = pt;
-			popText.AppearOnlyOpen(this);
-			
 			ProcessPopUp(pt);
+			popText.AppearOnlyOpen(this);
 			Refresh();
 		}
 	} else if (isZoomWindow) {
@@ -529,7 +535,8 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 		bar.Separator();
 	}
 	bar.Add(t_("Copy"), ScatterImg::Copy(), 		THISBACK1(SaveToClipboard, false)).Key(K_CTRL_C);
-	bar.Add(t_("Save to file"), ScatterImg::Save(), THISBACK1(SaveToFile, Null)).Key(K_CTRL_S);
+	bar.Add(t_("Save to file"), ScatterImg::Save(),
+ THISBACK1(SaveToFile, Null)).Key(K_CTRL_S);
 }
 
 void ScatterCtrl::SaveToFile(String fileName)
