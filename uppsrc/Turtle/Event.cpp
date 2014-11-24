@@ -99,6 +99,11 @@ void Ctrl::GuiSleep(int ms)
 	EnterGuiMutex(level);
 }
 
+void WakeUpGuiThread()
+{
+	// TODO: Implement correctly
+}
+
 dword lastbdowntime[8] = {0};
 dword isdblclick[8] = {0};
 
