@@ -1,9 +1,5 @@
-TOPIC("KeyBehavior$en-us")
-#include "KeyBehavior$en-us.tppi"
-END_TOPIC
-
-TOPIC("ScatterAction$en-us")
-#include "ScatterAction$en-us.tppi"
+TOPIC("MouseBehavior$en-us")
+#include "MouseBehavior$en-us.tppi"
 END_TOPIC
 
 TOPIC("ScatterCtrl$en-us")

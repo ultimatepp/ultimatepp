@@ -304,12 +304,16 @@ void ScatterCtrl::SetDrawing(T& w, const Size &size, int scale) {
 			DrawLine(w, popRB.x, popLT.y, popRB.x, popRB.y, 1, SColorHighlight());
 			DrawLine(w, popLT.x, popLT.y, popRB.x, popLT.y, 1, SColorHighlight());
 			DrawLine(w, popLT.x, popRB.y, popRB.x, popRB.y, 1, SColorHighlight());
+#ifdef PLATFORM_WIN32			
 			Ctrl::Refresh();	
+#endif
 		} else {
 			DrawVArrow(w, popLT.x, popLT.y, popLT.x, popRB.y, 1, 4, 15, SColorHighlight());
 			DrawHArrow(w, popLT.x, popRB.y, popRB.x, popRB.y, 1, 4, 15, SColorHighlight());
+#ifdef PLATFORM_WIN32			
 			Ctrl::Refresh(min(popLT.x-4, popRB.x-4), min(popLT.y-4, popRB.y-4), 
 						  abs(popRB.x-popLT.x) + 9, abs(popRB.y-popLT.y) + 9);
+#endif
 		}
 	} 
 }
