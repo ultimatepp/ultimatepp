@@ -240,7 +240,7 @@ String RpcExecute(const String& request, const char *group, const char *peeraddr
 	else
 	    r = DoXmlRpc(request, group, peeraddr, mn);
 	if(rpc_trace) {
-		mn << "(" << tm.Elapsed() << " ms)";
+		mn << " (" << tm.Elapsed() << " ms)";
 		if(rpc_trace_level == 0)
 			*rpc_trace << "Rpc " << mn << " finished OK \n";
 		else {
