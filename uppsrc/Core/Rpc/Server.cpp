@@ -92,12 +92,11 @@ bool CallRpcMethod(RpcData& data, const char *group, String methodname, const St
 	return true;
 }
 
-String DoXmlRpc(const String& request, const char *group, const char *peeraddr)
+String DoXmlRpc(const String& request, const char *group, const char *peeraddr, String& methodname)
 {
 	XmlParser p(request);
 	RpcData data;
 	try {
-		String methodname;
 		String r = XmlHeader();
 		r << "<methodResponse>\r\n";
 		p.ReadPI();
@@ -159,11 +158,11 @@ String JsonRpcError(int code, const char *text, const Value& id)
 	return m;
 }
 
-String ProcessJsonRpc(const Value& v, const char *group, const char *peeraddr, const String& request)
+String ProcessJsonRpc(const Value& v, const char *group, const char *peeraddr, const String& request, String& methodname)
 {
 	LLOG("Parsed JSON request: " << v);
 	Value id = v["id"];
-	Value methodname = v["method"];
+	methodname = AsString(v["method"]);
 	Value param = v["params"];
 	RpcData data;
 	data.peeraddr = peeraddr;
@@ -212,16 +211,16 @@ String ProcessJsonRpc(const Value& v, const char *group, const char *peeraddr, c
 	}
 }
 
-String DoJsonRpc(const String& request, const char *group, const char *peeraddr)
+String DoJsonRpc(const String& request, const char *group, const char *peeraddr, String& methodname)
 {
 	try {
 		Value v = ParseJSON(request);
 		if(v.Is<ValueMap>())
-			return ProcessJsonRpc(v, group, peeraddr, request);
+			return ProcessJsonRpc(v, group, peeraddr, request, methodname);
 		if(v.Is<ValueArray>()) {
 			JsonArray a;
 			for(int i = 0; i < v.GetCount(); i++)
-				a.CatRaw(ProcessJsonRpc(v[i], group, peeraddr, request));
+				a.CatRaw(ProcessJsonRpc(v[i], group, peeraddr, request, methodname));
 			return v.GetCount() ? ~a : String();
 		}
 	}
@@ -234,19 +233,23 @@ String RpcExecute(const String& request, const char *group, const char *peeraddr
 	CParser p(request);
 	String r;
 	json = p.Char('{') || p.Char('[');
+	String mn;
+	TimeStop tm;
 	if(json)
-		r = DoJsonRpc(request, group, peeraddr);
+		r = DoJsonRpc(request, group, peeraddr, mn);
 	else
-	    r = DoXmlRpc(request, group, peeraddr);
-	if(rpc_trace)
+	    r = DoXmlRpc(request, group, peeraddr, mn);
+	if(rpc_trace) {
+		mn << "(" << tm.Elapsed() << " ms)";
 		if(rpc_trace_level == 0)
-			*rpc_trace << "Rpc finished OK\n";
+			*rpc_trace << "Rpc " << mn << " finished OK \n";
 		else {
 			if(rpc_trace_compress)
-				*rpc_trace << "Server response:\n" << CompressLog(r) << '\n';
+				*rpc_trace << "Rpc " << mn << " response:\n" << CompressLog(r) << '\n';
 			else
-				*rpc_trace << "Server response:\n" << r << '\n';
+				*rpc_trace << "Rpc " << mn << " response:\n" << r << '\n';
 		}
+	}
 	if(suppressed_rpc_trace) {
 		if(!rpc_trace)
 			rpc_trace = suppressed_rpc_trace;
