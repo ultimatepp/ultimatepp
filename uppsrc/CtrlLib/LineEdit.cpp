@@ -213,6 +213,49 @@ void LineEdit::Sort()
 	Insert(sell, Join(ln, "\n"));
 }
 
+class sOptimizedTextRenderer {
+	Draw&       w;
+	int         x, y;
+	int         xpos;
+	Vector<int> dx;
+	WString     text;
+	Font        font;
+	Color       color;
+
+public:
+	void DrawChar(int x, int y, int chr, int width, Font afont, Color acolor);
+	void Flush();
+
+	sOptimizedTextRenderer(Draw& w) : w(w) { y = Null; }	
+	~sOptimizedTextRenderer()              { Flush(); }
+};
+
+void sOptimizedTextRenderer::Flush()
+{
+	if(text.GetCount() == 0)
+		return;
+	w.DrawText(x, y, text, font, color, dx);
+	y = Null;
+	text.Clear();
+	dx.Clear();
+}
+
+void sOptimizedTextRenderer::DrawChar(int _x, int _y, int chr, int width, Font _font, Color _color)
+{
+	if(y == _y && font == _font && color == _color && dx.GetCount() && _x >= xpos - dx.Top())
+		dx.Top() += _x - xpos;
+	else {
+		Flush();
+		x = _x;
+		y = _y;
+		font = _font;
+		color = _color;
+	}
+	dx.Add(width);
+	text.Cat(chr);
+	xpos = _x + width;
+}
+
 void   LineEdit::Paint0(Draw& w) {
 	int sell, selh;
 	GetSelection(sell, selh);
@@ -236,8 +279,8 @@ void   LineEdit::Paint0(Draw& w) {
 	int fascent = font.Info().GetAscent();
 	Color showcolor = Blend(SColorLight, SColorHighlight);
 	int cursorline = GetLine(cursor);
-	int dx[] = { fsz.cx };
-	int dx2[] = { 2 * fsz.cx };
+//	int dx[] = { fsz.cx };
+//	int dx2[] = { 2 * fsz.cx };
 	Highlight ih;
 	ih.ink = color[IsShowEnabled() ? INK_NORMAL : INK_DISABLED];
 	ih.paper = color[IsReadOnly() && showreadonly || !IsShowEnabled() ? PAPER_READONLY : PAPER_NORMAL];
@@ -284,6 +327,7 @@ void   LineEdit::Paint0(Draw& w) {
 							gp++;
 						}
 					}
+					sOptimizedTextRenderer tw(w);
 					while(q < ln) {
 						Highlight h;
 						if(do_highlight)
@@ -339,9 +383,9 @@ void   LineEdit::Paint0(Draw& w) {
 										w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
 								}
 								else
-									w.DrawText(x + (h.flags & SHIFT_L ? -fsz.cx / 6 : h.flags & SHIFT_R ? fsz.cx / 6 : 0),
-									           y + fascent - h.font.GetAscent(),
-									           &h.chr, h.font, h.ink, 1, cjk ? dx2 : dx);
+									tw.DrawChar(x + (h.flags & SHIFT_L ? -fsz.cx / 6 : h.flags & SHIFT_R ? fsz.cx / 6 : 0),
+									            y + fascent - h.font.GetAscent(),
+									            h.chr, (cjk + 1) * fsz.cx, h.font, h.ink);
 							}
 							q++;
 							gp += 1 + cjk;
