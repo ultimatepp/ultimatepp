@@ -1,5 +1,19 @@
 #include <RichEdit/RichEdit.h>
 
+#define Time    XTime
+#define Font    XFont
+#define Display XDisplay
+#define Picture XPicture
+
+#include <limits.h>
+#include <gtk/gtk.h>
+#include <gdk/gdkx.h>
+
+#undef Picture
+#undef Time
+#undef Font
+#undef Display
+
 using namespace Upp;
 
 String FileName()
@@ -25,7 +39,13 @@ GUI_APP_MAIN
 	DUMP(GetStdFontCy());
 	DUMP(GUI_PopUpEffect());
 	
+//	String htxt;
+//	if(!EditText(htxt, "xxx", "xxxx"))
+//		return;
+	
 //	PromptOK("[H20L1 &&&");
+
+	DUMPM(Environment());
 	
 	RichEditWithToolBar e;
 //	e.SetPage(Size(6074, 3968));

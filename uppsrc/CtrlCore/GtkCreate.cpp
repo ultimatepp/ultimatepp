@@ -100,8 +100,8 @@ void Ctrl::WndDestroy()
 		if(HasFocusDeep())
 			activeCtrl = owner;
 	}
-	gtk_widget_destroy(top->window);
 	g_object_unref(top->im_context);
+	gtk_widget_destroy(top->window);
 	isopen = false;
 	popup = false;
 	delete top;

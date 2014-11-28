@@ -261,8 +261,103 @@ void ChHostSkin()
 		for(int i = 0; i < 6; i++)
 			CtrlsImg::Set(CtrlsImg::I_DA + i, CtrlsImg::Get(CtrlsImg::I_kDA + i));
 
-		if(Qt) {
-			LLOG("Qt path");
+		if((Environment().Get("GTK_MODULES", "").Find("overlay-scrollbar") < 0 ||
+		    Environment().Get("LIBOVERLAY_SCROLLBAR", "1") == "0") &&
+		    findarg(engine, "Glider", "Human", "DarkRoom", "Crux") >= 0) {
+			GtkChScrollBar(s.up.look, s.up2.look, s.vlower, s.vthumb, s.vupper, s.down2.look, s.down.look,
+			               CtrlsImg::I_UA, CtrlsImg::I_DA, false);
+
+			if(IsEmptyImage(GetGTK(ChGtkLast(), 2, 2, "vscrollbar", GTK_BOX|GTK_TOP|GTK_RANGEA, 16, 16))) {
+				static GtkWidget *btn = gtk_button_new();
+				ChGtkNew(btn, "button", GTK_BOX);
+
+				GtkChButton(Button::StyleScroll().Write().look);
+				GtkChButton(Button::StyleEdge().Write().look);
+				GtkChButton(Button::StyleLeftEdge().Write().look);
+
+				{
+					DropList::Style& s = DropList::StyleFrame().Write();
+					GtkChButtonWith(s.look, CtrlsImg::DA());
+					GtkChButtonWith(s.trivial, CtrlsImg::DA());
+				}
+				{
+					SpinButtons::Style& s = SpinButtons::StyleDefault().Write();
+					GtkChButtonWith(s.inc.look, CtrlImg::spinup2());
+					GtkChButtonWith(s.dec.look, CtrlImg::spindown2());
+				}
+			}
+			else {
+				ChGtkNew("vscrollbar", GTK_BOX|GTK_VCENTER|GTK_RANGEB);
+				GtkCh(Button::StyleScroll().Write().look, "02142222");
+
+				int q = !classiq;
+
+				GtkChImgWith(Button::StyleEdge().Write().look, Null, 1 * q);
+				GtkChImgWith(Button::StyleLeftEdge().Write().look, Null, 2 * q);
+
+				{
+					DropList::Style& s = DropList::StyleFrame().Write();
+					GtkChImgWith(s.look, CtrlsImg::DA(), 1 * q, po);
+					GtkChImgWith(s.trivial, CtrlsImg::DA(), 1 * q, po);
+					GtkChImgWith(s.left, CtrlsImg::DA(), 2 * q, po);
+					GtkChImgWith(s.right, CtrlsImg::DA(), 1 * q, po);
+					s.pressoffset = po;
+				}
+				{
+					SpinButtons::Style& s = SpinButtons::StyleDefault().Write();
+					GtkChImgWith(s.inc.look, q ? CtrlImg::spinup2() : CtrlImg::spinup3(), (1|GTK_BOTTOMLINE) * q, po);
+					GtkChImgWith(s.dec.look, q ? CtrlImg::spindown2() : CtrlImg::spindown3(), 1 * q, po);
+				}
+			}
+
+			static GtkWidget *hscrollbar = gtk_hscrollbar_new(GTK_ADJUSTMENT(adj));
+			ChGtkNew(hscrollbar, "slider", GTK_SLIDER);
+			GtkChScrollBar(s.left.look, s.left2.look, s.hlower, s.hthumb, s.hupper, s.right2.look, s.right.look,
+			               CtrlsImg::I_LA, CtrlsImg::I_RA, true);
+			
+			int d = Diff(fc, SColorPaper());
+			Image m = GtkGetLastImage();
+			for(int x = 0; x < 4; x++)
+				for(int y = 0; y < 4; y++) {
+					RGBA c = m[x][y];
+					if(c.a == 255) {
+						int dd = Diff(c, SColorPaper());
+						if(dd > d) {
+							fc = c;
+							d = dd;
+						}
+					}
+				}
+			FieldFrameColor_Write(fc);
+
+			gtk_object_sink(adj);
+
+			adj = gtk_adjustment_new(0, 0, 1000, 1, 1, 500);
+			
+			w = gtk_vscrollbar_new(NULL);
+			Setup(w);
+			s.overthumb = m != GetGTK(w, 0, 0, "slider", GTK_SLIDER|GTK_VAL1, 16, 32) && !Qt;
+			gtk_widget_destroy(w);
+			gtk_object_sink(adj);
+			
+			w = gtk_hscale_new_with_range(0.0, 100.0, 1.0);
+			Setup(w);
+			int cx = GtkInt(w, "slider-length");
+			int cy = 15;
+			if(engine == "Glider")
+				cy += cx-3;
+			if(engine == "Human" || engine == "DarkRoom" || engine == "Crux")
+				cy = 13;
+			CtrlImg::Set("hthumb",GetGTK(w, 0, 0, "hscale", GTK_SLIDER, cx, cy));
+			CtrlImg::Set("hthumb1",GetGTK(w, 2, 0, "hscale", GTK_SLIDER, cx, cy));
+			gtk_widget_destroy(w);
+			w = gtk_hscale_new_with_range(0.0, 100.0, 1.0);
+			Setup(w);
+			CtrlImg::Set("vthumb",GetGTK(w, 0, 0, "vscale", GTK_SLIDER|GTK_VAL1, cy, cx));
+			CtrlImg::Set("vthumb1",GetGTK(w, 2, 0, "vscale", GTK_SLIDER|GTK_VAL1, cy, cx));
+			gtk_widget_destroy(w);
+		}
+		else {
 			int r = Null;
 			for(int i = 0; i < 4; i++) {
 				ImageDraw iw(64, 64);
@@ -334,100 +429,6 @@ void ChHostSkin()
 			GtkChSlider(s.hthumb);
 			s.overthumb = false;
 		}
-		else {
-			GtkChScrollBar(s.up.look, s.up2.look, s.vlower, s.vthumb, s.vupper, s.down2.look, s.down.look,
-			               CtrlsImg::I_UA, CtrlsImg::I_DA, false);
-
-			if(IsEmptyImage(GetGTK(ChGtkLast(), 2, 2, "vscrollbar", GTK_BOX|GTK_TOP|GTK_RANGEA, 16, 16))) {
-				static GtkWidget *btn = gtk_button_new();
-				ChGtkNew(btn, "button", GTK_BOX);
-
-				GtkChButton(Button::StyleScroll().Write().look);
-				GtkChButton(Button::StyleEdge().Write().look);
-				GtkChButton(Button::StyleLeftEdge().Write().look);
-
-				{
-					DropList::Style& s = DropList::StyleFrame().Write();
-					GtkChButtonWith(s.look, CtrlsImg::DA());
-					GtkChButtonWith(s.trivial, CtrlsImg::DA());
-				}
-				{
-					SpinButtons::Style& s = SpinButtons::StyleDefault().Write();
-					GtkChButtonWith(s.inc.look, CtrlImg::spinup2());
-					GtkChButtonWith(s.dec.look, CtrlImg::spindown2());
-				}
-			}
-			else {
-				ChGtkNew("vscrollbar", GTK_BOX|GTK_VCENTER|GTK_RANGEB);
-				GtkCh(Button::StyleScroll().Write().look, "02142222");
-
-				int q = !classiq;
-
-				GtkChImgWith(Button::StyleEdge().Write().look, Null, 1 * q);
-				GtkChImgWith(Button::StyleLeftEdge().Write().look, Null, 2 * q);
-
-				{
-					DropList::Style& s = DropList::StyleFrame().Write();
-					GtkChImgWith(s.look, CtrlsImg::DA(), 1 * q, po);
-					GtkChImgWith(s.trivial, CtrlsImg::DA(), 1 * q, po);
-					GtkChImgWith(s.left, CtrlsImg::DA(), 2 * q, po);
-					GtkChImgWith(s.right, CtrlsImg::DA(), 1 * q, po);
-					s.pressoffset = po;
-				}
-				{
-					SpinButtons::Style& s = SpinButtons::StyleDefault().Write();
-					GtkChImgWith(s.inc.look, q ? CtrlImg::spinup2() : CtrlImg::spinup3(), (1|GTK_BOTTOMLINE) * q, po);
-					GtkChImgWith(s.dec.look, q ? CtrlImg::spindown2() : CtrlImg::spindown3(), 1 * q, po);
-				}
-			}
-
-			static GtkWidget *hscrollbar = gtk_hscrollbar_new(GTK_ADJUSTMENT(adj));
-			ChGtkNew(hscrollbar, "slider", GTK_SLIDER);
-			GtkChScrollBar(s.left.look, s.left2.look, s.hlower, s.hthumb, s.hupper, s.right2.look, s.right.look,
-			               CtrlsImg::I_LA, CtrlsImg::I_RA, true);
-			
-			int d = Diff(fc, SColorPaper());
-			Image m = GtkGetLastImage();
-			for(int x = 0; x < 4; x++)
-				for(int y = 0; y < 4; y++) {
-					RGBA c = m[x][y];
-					if(c.a == 255) {
-						int dd = Diff(c, SColorPaper());
-						if(dd > d) {
-							fc = c;
-							d = dd;
-						}
-					}
-				}
-			FieldFrameColor_Write(fc);
-
-			gtk_object_sink(adj);
-
-			adj = gtk_adjustment_new(0, 0, 1000, 1, 1, 500);
-			w = gtk_vscrollbar_new(NULL);
-			Setup(w);
-			s.overthumb = m != GetGTK(w, 0, 0, "slider", GTK_SLIDER|GTK_VAL1, 16, 32) && !Qt;
-			gtk_widget_destroy(w);
-			gtk_object_sink(adj);
-			
-			w = gtk_hscale_new_with_range(0.0, 100.0, 1.0);
-			Setup(w);
-			int cx = GtkInt(w, "slider-length");
-			int cy = 15;
-			if(engine == "Glider")
-				cy += cx-3;
-			if(engine == "Human" || engine == "DarkRoom" || engine == "Crux")
-				cy = 13;
-			CtrlImg::Set("hthumb",GetGTK(w, 0, 0, "hscale", GTK_SLIDER, cx, cy));
-			CtrlImg::Set("hthumb1",GetGTK(w, 2, 0, "hscale", GTK_SLIDER, cx, cy));
-			gtk_widget_destroy(w);
-			w = gtk_hscale_new_with_range(0.0, 100.0, 1.0);
-			Setup(w);
-			CtrlImg::Set("vthumb",GetGTK(w, 0, 0, "vscale", GTK_SLIDER|GTK_VAL1, cy, cx));
-			CtrlImg::Set("vthumb1",GetGTK(w, 2, 0, "vscale", GTK_SLIDER|GTK_VAL1, cy, cx));
-			gtk_widget_destroy(w);
-		}
-
 	}
 
 	if(!Qt)
