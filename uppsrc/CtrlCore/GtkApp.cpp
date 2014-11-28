@@ -2,9 +2,21 @@
 
 #ifdef GUI_GTK
 
+#define CATCH_ERRORS 0
+
 NAMESPACE_UPP
 
 #define LLOG(x) // DLOG(x)
+
+#if CATCH_ERRORS
+void CatchError(const gchar *log_domain,
+             GLogLevelFlags log_level,
+             const gchar *message,
+             gpointer user_data)
+{
+	__BREAK__;
+}
+#endif
 
 void _DBG_Ungrab(void)
 {   // This is a special nasty hack to make possible to ungrab mouse by debugger (see ide/Debuggers/PrettyPrinters.py)
@@ -40,6 +52,9 @@ void InitGtkApp(int argc, char **argv, const char **envptr)
 	g_timeout_add(20, (GSourceFunc) Ctrl::TimeHandler, NULL);
 	InstallPanicMessageBox(Ctrl::PanicMsgBox);
 	gdk_window_add_filter(NULL, Ctrl::RootKeyFilter, NULL);
+#if CATCH_ERRORS
+	g_log_set_default_handler (CatchError, 0);
+#endif
 }
 
 void ExitGtkApp()

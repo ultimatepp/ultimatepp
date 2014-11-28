@@ -1,29 +1,29 @@
-LAYOUT(EditStringLayout, 392, 62)
+LAYOUT(EditStringLayout, 396, 68)
 	ITEM(Label, lbl, SetLabel(t_("Test")).LeftPosZ(4, 128).TopPosZ(8, 19))
-	ITEM(EditString, text, HSizePosZ(136, 4).TopPosZ(8, 19))
-	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, 92).BottomPosZ(6, 20))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(6, 20))
+	ITEM(EditString, text, HSizePosZ(136, 8).TopPosZ(8, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, 90).BottomPosZ(8, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
 LAYOUT(EditIntLayout, 236, 62)
 	ITEM(Label, lbl, SetLabel(t_("Test")).LeftPosZ(4, 68).TopPosZ(4, 19))
 	ITEM(EditInt, number, HSizePosZ(68, 4).TopPosZ(4, 19))
-	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(80, -10).BottomPosZ(4, 22))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, 14).BottomPosZ(6, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(6, 24))
 END_LAYOUT
 
 LAYOUT(EditDoubleLayout, 236, 62)
 	ITEM(Label, lbl, SetLabel(t_("Test")).LeftPosZ(4, 68).TopPosZ(4, 19))
 	ITEM(EditDouble, number, HSizePosZ(68, 4).TopPosZ(4, 19))
-	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(80, -10).BottomPosZ(4, 22))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, 14).BottomPosZ(6, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(6, 24))
 END_LAYOUT
 
 LAYOUT(EditDateLayout, 236, 62)
 	ITEM(Label, lbl, SetLabel(t_("Test")).LeftPosZ(4, 120).TopPosZ(4, 19))
 	ITEM(DropDate, date, HSizePosZ(128, 8).TopPosZ(4, 19))
-	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(80, -14).BottomPosZ(8, 22))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 80).BottomPosZ(8, 22))
+	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, 10).BottomPosZ(6, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(6, 24))
 END_LAYOUT
 
 LAYOUT(ProgressLayout, 320, 72)
