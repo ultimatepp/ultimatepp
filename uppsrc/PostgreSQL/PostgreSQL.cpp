@@ -597,7 +597,7 @@ Value PostgreSQLConnection::GetInsertedId() const
 		  "pg_attribute.attrelid = pg_class.oid AND "
 		  "pg_attribute.attnum = any(pg_index.indkey) "
 		  "AND indisprimary";
-		Sql sqlc( sqlc_expr );
+		Sql sqlc(sqlc_expr, session);
 		pk = sqlc.Execute() && sqlc.Fetch() ? sqlc[0] : "ID";
 		session.pkache.Add(last_insert_table, pk);
 	}
