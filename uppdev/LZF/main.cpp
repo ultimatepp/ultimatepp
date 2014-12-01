@@ -18,6 +18,8 @@ extern int Match32;
 extern int Match16;
 extern int Match8;
 extern int Match4;
+extern int LiteralLen[256];
+extern int MatchLen[256];
 
 int    LZFCompress(char *out, const char *s, int length);
 
@@ -30,10 +32,10 @@ CONSOLE_APP_MAIN
 //	String data = LoadFile("C:/u/aws.data/c12_OCOE_env.blb");
 //	String data = LoadFile("D:/enwik8");
 //	String data = LoadFile("D:/canterbury_last.tar");
-	String data = LoadFile("C:/u/upp.src/uppsrc/CtrlLib/ArrayCtrl.cpp");
+//	String data = LoadFile("C:/u/upp.src/uppsrc/CtrlLib/ArrayCtrl.cpp");
 //	String data = LoadFile(GetDataFile("LZF.cpp"));
 //	String data = LoadFile("C:/u/client/nos74.exe");
-//	String data = LoadFile("C:/upp/theide.exe");
+	String data = LoadFile("C:/upp/theide.exe");
 	
 	String l;
 	Buffer<char> out(2 * data.GetLength());
@@ -59,7 +61,22 @@ CONSOLE_APP_MAIN
 	RDUMP(BigMatches);
 	RDUMP(BigLiterals);
 	RDUMP(Literals.GetCount());
-	
+	int n = 0;
+	for(int i = 0; i < 256; i++)
+		if(LiteralLen[i]) {
+			n += LiteralLen[i];
+			LOG("LiteralLen" << i << ' ' << LiteralLen[i] << " / " << n);
+		}
+
+	RLOG("========");
+	n = 0;
+	for(int i = 0; i < 256; i++) {
+		if(MatchLen[i]) {
+			n += MatchLen[i];
+			LOG("MatchLen" << i << ' ' << MatchLen[i] << " / " << n);
+		}
+	}
+
 //	RDUMP(Literals + BigLiterals + LiteralsLen + 2 * Matches + Extended);
 
 

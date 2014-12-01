@@ -1,0 +1,4 @@
+#ifndef _CompressedSerialize_icpp_init_stub
+#define _CompressedSerialize_icpp_init_stub
+#include "Core/init"
+#endif
