@@ -296,6 +296,7 @@ void WorkspaceWork::PackageCursor()
 	InvalidatePackageCache();
 	filelist.WhenBar.Clear();
 	actualpackage = GetActivePackage();
+	svn_dirs = false;
 	if(actualpackage.IsEmpty()) return;
 	if(actualpackage == METAPACKAGE) {
 		actual.file.Clear();
@@ -313,6 +314,19 @@ void WorkspaceWork::PackageCursor()
 	filelist.Enable();
 	if(actualpackage != METAPACKAGE)
 		filelist.WhenBar = THISBACK(FileMenu);
+	svn_dirs = SvnDirs(true).GetCount();
+}
+
+Vector<String> WorkspaceWork::SvnDirs(bool actual)
+{
+	Vector<String> d = GetUppDirs();
+	if (actual && !IsAux())
+		d.Insert(0, GetFileFolder(PackagePath(actualpackage)));
+	Vector<String> r;
+	for(int i = 0; i < d.GetCount(); i++)
+		if(IsSvnDir(d[i]))
+			r.Add(d[i]);
+	return r;
 }
 
 void WorkspaceWork::FileCursor()
@@ -1051,6 +1065,7 @@ WorkspaceWork::WorkspaceWork()
 	filelist.BackPaintHint();
 	showtime = false;
 	sort = true;
+	svn_dirs = false;
 }
 
 void WorkspaceWork::SerializeClosed(Stream& s)

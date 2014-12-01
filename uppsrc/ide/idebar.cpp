@@ -398,7 +398,7 @@ void Ide::Project(Bar& menu) {
 	}
 	FilePropertiesMenu(menu);
 	if(!IsEditorMode()) {
-		if(SvnDirs(true).GetCount()) {
+		if(svn_dirs) {
 			if(menu.IsMenuBar())
 				menu.Add("SVN", THISBACK(ProjectSvn));
 			else
@@ -413,12 +413,12 @@ void Ide::FilePropertiesMenu(Bar& menu)
 		.Help("File properties stored in package");
 	menu.Add(IsActiveFile() && !designer, AK_SAVEENCODING, THISBACK(ChangeCharset))
 	    .Help("Convert actual file to different encoding");
-	menu.AddMenu(IsActiveFile() && !IsFolder(editfile) && !designer, AK_DIFF, IdeImg::Diff(), THISBACK(Diff))
+	menu.AddMenu(IsActiveFile() && !editfile_isfolder && !designer, AK_DIFF, IdeImg::Diff(), THISBACK(Diff))
 	    .Help("Show differences between the project and arbitrary files");
-	menu.AddMenu(IsActiveFile() && !IsFolder(editfile) && !designer, AK_PATCH, IdeImg::Patch(), THISBACK(Patch))
+	menu.AddMenu(IsActiveFile() && !editfile_isfolder && !designer, AK_PATCH, IdeImg::Patch(), THISBACK(Patch))
 	    .Help("Show differences with patch file applied");
-	if(IsSvnDir(GetFileFolder(editfile)))
-		menu.AddMenu(IsActiveFile() && !IsFolder(editfile) && !designer, AK_SVNDIFF, IdeImg::SvnDiff(), THISBACK(SvnHistory))
+	if(editfile_svn)
+		menu.AddMenu(IsActiveFile() && !editfile_isfolder && !designer, AK_SVNDIFF, IdeImg::SvnDiff(), THISBACK(SvnHistory))
 		    .Help("Show svn history of file");
 }
 
@@ -431,7 +431,7 @@ void Ide::BuildFileMenu(Bar& menu)
 	menu.Add(b, "Preprocess " + GetFileName(editfile), IdeImg::Header(), THISBACK1(Preprocess, false))
 		.Key(AK_PREPROCESSFILE)
 		.Help("Preprocess current file into temporary file & open in editor");
-	if(GetMethodVars(method).Get("BUILDER", "") == "GCC")
+	if(findarg(current_builder, "GCC", "CLANG") >= 0)
 		menu.Add(b, "Show assembler code for " + GetFileName(editfile), THISBACK1(Preprocess, true))
 			.Key(AK_ASSEMBLERCODE)
 			.Help("Compile the file into assembler code");

@@ -407,7 +407,7 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 		s.Pack(mn, mx, fs);		// 12-05-23 Tom changed from: s.Pack(mn, mx);
 	else
 		s.Pack(mn, mx);
-	LLOG("TopWindow::SerializePlacement / " << (s.IsStoring() ? "write" : "read"));
+	LLOG(Name(this) << "::SerializePlacement / " << (s.IsStoring() ? "write" : "read"));
 	LLOG("minimized = " << mn << ", maximized = " << mx << ", fullscreen = " << fs); // 12-05-23 Tom extended with fullscreen
 	LLOG("rect = " << rect << ", overlapped = " << overlapped);
 	if(s.IsLoading()) {

@@ -675,6 +675,8 @@ public:
 	String    editfile;
 	FileTime  edittime;
 	int       editfile_line_endings;
+	bool      editfile_svn;
+	bool      editfile_isfolder;
 
 	String    editfile2;
 
@@ -855,6 +857,8 @@ public:
 	
 	int           issaving;
 	int           isscanning;
+	
+	String        current_builder;
 
 // ------------------------------------
 
@@ -935,6 +939,7 @@ public:
 	void      SyncBuildMode();
 	void      SetupBuildMethods();
 	void      DropMethodList();
+	void      SetMethod(const String& m);
 	void      SelectMethod();
 	void      DropModeList();
 	void      SelectMode();
@@ -945,8 +950,6 @@ public:
 	
 	void      LoadAbbr();
 	void      SaveAbbr();
-
-	Vector<String> SvnDirs(bool actual = false);
 
 	void      File(Bar& menu);
 		void   EditWorkspace();

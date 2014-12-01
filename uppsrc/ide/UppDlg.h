@@ -253,6 +253,7 @@ struct WorkspaceWork {
 	int       actualfileindex;
 	Package   actual;
 	bool      editormode;
+	bool      svn_dirs;
 
 	struct Sepfo : Moveable<Sepfo> {
 		String package;
@@ -298,6 +299,8 @@ struct WorkspaceWork {
 	void   SavePackage();
 	void   RestoreBackup();
 	void   SyncErrorPackages();
+
+	Vector<String> SvnDirs(bool actual = false);
 
 	void SerializeFileSetup(Stream& s)                { s % filelist % package; }
 

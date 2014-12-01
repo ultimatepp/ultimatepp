@@ -158,7 +158,7 @@ void OutMode::Load()
 
 void OutMode::Save()
 {
-	ide.method = ~method;
+	ide.SetMethod(~method);
 	ide.targetmode = ~mode;
 	ide.export_dir = ~export_dir;
 	debug.Save(ide.debug);
@@ -291,9 +291,15 @@ void Ide::DropMethodList()
 		methodlist.SetCursor(i);
 }
 
+void Ide::SetMethod(const String& m)
+{
+	method = m;
+	current_builder = GetMethodVars(method).Get("BUILDER", "");
+}
+
 void Ide::SelectMethod()
 {
-	method = methodlist.GetKey();
+	SetMethod(methodlist.GetKey());
 	int q = recent_buildmode.Find(~method);
 	if(q >= 0) {
 		StringStream ss(recent_buildmode[q]);
@@ -318,12 +324,12 @@ void Ide::SelectMode()
 void Ide::SetupDefaultMethod()
 {
 	if(IsNull(method)) {
-		method = GetDefaultMethod();
+		SetMethod(GetDefaultMethod());
 		if(IsNull(method)) {
 			FindFile ff(ConfigFile("*.bm"));
 			if(!ff)
 				return;
-			method = GetFileTitle(ff.GetName());
+			SetMethod(GetFileTitle(ff.GetName()));
 		}
 		VectorMap<String, String> map = GetMethodVars(method);
 		debug.linkmode = atoi(map.Get("DEBUG_LINKMODE", "0"));
