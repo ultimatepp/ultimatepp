@@ -395,6 +395,8 @@ void Ide::FlushFile() {
 	if(!editfile.IsEmpty())
 		Filedata(editfile).undodata = editor.PickUndoData();
 	editfile.Clear();
+	editfile_svn = editfile_isfolder = false;
+	svn_dirs = SvnDirs(true).GetCount(); // Perhaps not the best place, but should be ok
 	editor.Clear();
 	editor.Disable();
 	editorsplit.Ctrl::Remove();
@@ -446,6 +448,9 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	editfile = path;
 	editor.SetCharset(charset);
 	AddLru();
+
+	editfile_isfolder = IsFolder(editfile);
+	svn_dirs = SvnDirs(true).GetCount(); // Perhaps not the best place, but should be ok
 	
 	if(!astext && !(debugger && (PathIsEqual(path, posfile[0]) || PathIsEqual(path, posfile[0])))
 	   && editastext.Find(path) < 0 && !IsNestReadOnly(editfile)) {
@@ -545,6 +550,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	editor.CheckEdited(true);
 	editor.Annotate(editfile);
 	editor.SyncNavigator();
+	editfile_svn = IsSvnDir(GetFileFolder(editfile));
 }
 
 void Ide::EditFileAssistSync()

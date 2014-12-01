@@ -591,6 +591,8 @@ Ide::Ide()
 	warning_count = 0;
 	
 	editor.WhenUpdate = THISBACK(TriggerAssistSync);
+
+	editfile_isfolder = editfile_svn = false;
 }
 
 Ide::~Ide()

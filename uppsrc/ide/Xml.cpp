@@ -142,4 +142,6 @@ void Ide::Xml()
 		LoadFromGlobal(dlg, "XMLview");
 		dlg.OpenMain();
 	}
+	else
+		dlg.SetForeground();
 }

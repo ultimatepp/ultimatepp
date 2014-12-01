@@ -119,4 +119,6 @@ void Ide::Json()
 		LoadFromGlobal(dlg, "JSONview");
 		dlg.OpenMain();
 	}
+	else
+		dlg.SetForeground();
 }

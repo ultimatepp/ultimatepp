@@ -360,18 +360,6 @@ void Ide::Times()
 	while(statdlg.Run() == IDRETRY);
 }
 
-Vector<String> Ide::SvnDirs(bool actual)
-{
-	Vector<String> d = GetUppDirs();
-	if (actual && !IsAux())
-		d.Insert(0, GetFileFolder(PackagePath(actualpackage)));
-	Vector<String> r;
-	for(int i = 0; i < d.GetCount(); i++)
-		if(IsSvnDir(d[i]))
-			r.Add(d[i]);
-	return r;
-}
-
 INITBLOCK {
 	RegisterGlobalConfig("svn-msgs");
 }
