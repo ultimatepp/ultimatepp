@@ -11,8 +11,8 @@ using namespace Upp;
 #define LLOG(x)     // LOG(x)
 #define LTIMING(x)  // RTIMING(x)
 
-//#define HASH4
-//#define HASH8
+#define HASH4
+#define HASH8
 
 const int HASH_MASK = 128 * 1024 - 1;
 
@@ -84,6 +84,8 @@ int FarOffsets;
 int HugeOffsets;
 int Extended;
 int LargeMatch;
+int LiteralLen[256];
+int MatchLen[256];
 int Simple;
 
 force_inline char *OutLen(char *out, int len, int maxn, int& stat)
@@ -224,6 +226,7 @@ int LZFCompress(char *out, const char *s, int length)
 
 		LiteralsCount += literal_len > 0;
 
+		MatchLen[min(match_len, 255)]++;
 		if(literal_len == 0 && offset <= 0xfff && ml < 8) {
 			LTIMING("Simple match");
 			*out++ = (ml << 4) & HIBYTE(offset);
@@ -231,6 +234,7 @@ int LZFCompress(char *out, const char *s, int length)
 			Simple++;
 		}
 		else {
+			LiteralLen[min(literal_len, 255)]++;
 			LTIMING("Extended match");
 			*out++ = 0x80 | (max(literal_len, 7) << 4) | max(ml, 15);
 			offset -= 0xfff;
