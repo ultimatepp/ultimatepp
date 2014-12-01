@@ -331,6 +331,15 @@ SeparatorCtrl& SeparatorCtrl::SetSize(int w)
 	return *this;
 }
 
+SeparatorCtrl& SeparatorCtrl::SetStyle(const Style& s)
+{
+	if(&s != style) {
+		style = &s;
+		Refresh();
+	}
+	return *this;
+}
+
 SeparatorCtrl::SeparatorCtrl()
 {
 	NoWantFocus();

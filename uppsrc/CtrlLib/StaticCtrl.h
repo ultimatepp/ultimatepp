@@ -162,7 +162,7 @@ public:
 	SeparatorCtrl& Margin(int l, int r);
 	SeparatorCtrl& Margin(int w)                { return Margin(w, w); }
 	SeparatorCtrl& SetSize(int w);
-	SeparatorCtrl& SetStyle(const Style& s)     { style = &s; Refresh(); return *this; }
+	SeparatorCtrl& SetStyle(const Style& s);
 
 	SeparatorCtrl();
 };

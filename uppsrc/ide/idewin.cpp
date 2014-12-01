@@ -707,7 +707,7 @@ void AppMain___()
 #endif
 
 #ifdef _DEBUG
-//	Ctrl::ShowRepaint(50);
+	Ctrl::ShowRepaint(50);
 #endif
 
 #ifdef PLATFORM_WIN32
