@@ -52,7 +52,7 @@ ToolButton::ToolButton()
 
 ToolButton::~ToolButton() {}
 
-void ToolButton::Reset()
+void ToolButton::ResetKeepStyle()
 {
 	repeat = false;
 	accel = 0;
@@ -60,11 +60,16 @@ void ToolButton::Reset()
 	NoWantFocus();
 	minsize = Size(0, 0);
 	maxiconsize = Size(INT_MAX, INT_MAX);
-	style = &StyleDefault();
 	Tip("");
 	Help("");
 	Topic("");
 	Description("");
+}
+
+void ToolButton::Reset()
+{
+	ResetKeepStyle();
+	style = &StyleDefault();
 }
 
 void ToolButton::UpdateTip()
@@ -83,9 +88,22 @@ void ToolButton::UpdateTip()
 
 Bar::Item& ToolButton::Text(const char *txt)
 {
-	ExtractAccessKey(txt, text);
-	UpdateTip();
-	Refresh();
+	String newtext;
+	ExtractAccessKey(txt, newtext);
+	if(newtext != text) {
+		text = newtext;
+		UpdateTip();
+		Refresh();
+	}
+	return *this;
+}
+
+ToolButton& ToolButton::SetStyle(const Style& s)
+{
+	if(style != &s) {
+		style = &s;
+		Refresh();
+	}
 	return *this;
 }
 
@@ -131,6 +149,13 @@ ToolButton& ToolButton::Label(const char *text, int _kind)
 ToolButton& ToolButton::Label(const char *text)
 {
 	Label(text, kind == NOLABEL ? RIGHTLABEL : kind);
+	return *this;
+}
+
+ToolButton& ToolButton::Kind(int _kind)
+{
+	if(kind != _kind)
+		Refresh();
 	return *this;
 }
 

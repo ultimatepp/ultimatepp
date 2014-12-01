@@ -426,6 +426,7 @@ private:
 public:
 	enum Kind { NOLABEL, RIGHTLABEL, BOTTOMLABEL };
 
+	void  ResetKeepStyle();
 	void  Reset();
 
 	static const Style& StyleDefault();
@@ -434,10 +435,10 @@ public:
 	bool		IsChecked()				 { return checked; }
 	UPP::Image  GetImage() const;
 
-	ToolButton& SetStyle(const Style& s) { style = &s; Refresh(); return *this; }
+	ToolButton& SetStyle(const Style& s);
 	ToolButton& MinSize(Size sz)         { minsize = sz; return *this; }
 	ToolButton& MaxIconSize(Size sz)     { maxiconsize = sz; return *this; }
-	ToolButton& Kind(int _kind)          { kind = _kind; Refresh(); return *this; }
+	ToolButton& Kind(int _kind);
 	ToolButton& Label(const char *text, int kind);
 	ToolButton& Label(const char *text);
 	ToolButton& NoDarkAdjust(bool b = true) { nodarkadjust = b; return *this; }

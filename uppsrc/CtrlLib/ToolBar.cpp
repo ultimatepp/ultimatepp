@@ -55,7 +55,7 @@ void ToolBar::Paint(Draw& w)
 Bar::Item& ToolBar::AddItem(Callback cb)
 {
 	ToolButton& m = item.DoIndex(ii++);
-	m.Reset();
+	m.ResetKeepStyle();
 	m.WhenAction = cb;
 	m.MinSize(IsNull(buttonminsize) ? style->buttonminsize : buttonminsize);
 	m.MaxIconSize(IsNull(maxiconsize) ? style->maxiconsize : maxiconsize);

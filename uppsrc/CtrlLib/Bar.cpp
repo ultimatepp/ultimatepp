@@ -289,7 +289,7 @@ Bar::Item&  Bar::Add(bool enable, KeyInfo& (*key)(), const UPP::Image& image, Ca
 
 Bar::Item&  Bar::Add(const char *text, const UPP::Image& image, Callback callback)
 {
-	return Add(true, text, image, callback);
+	return AddItem(callback).Text(text).Image(image);
 }
 
 Bar::Item& Bar::Add(const String& text, const UPP::Image& image, Callback callback)
@@ -299,7 +299,10 @@ Bar::Item& Bar::Add(const String& text, const UPP::Image& image, Callback callba
 
 Bar::Item&  Bar::Add(KeyInfo& (*key)(), const UPP::Image& image, Callback callback)
 {
-	return Add(true, key, image, callback);
+	const char *text = (*key)().name;
+	if(*text == '\3')
+		text = t_GetLngString(text + 1);
+	return Add(text, image, callback).Key(key);
 }
 
 Bar::Item&  Bar::Add(bool enable, const char *text, Callback callback)
