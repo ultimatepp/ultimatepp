@@ -178,8 +178,10 @@ void EditorBar::LeftDown(Point p, dword flags)
 	if(p.x > GetSize().cx - annotations)
 		WhenAnnotationClick();
 	else
-	if(editor)
+	if(editor) {
 		editor->LeftDown(Point(0, p.y), flags);
+		ReleaseCtrlCapture();
+	}
 }
 
 String& EditorBar::PointBreak(int& y)
