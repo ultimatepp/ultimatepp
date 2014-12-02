@@ -94,6 +94,7 @@ void FindReplaceDlg::Setup(bool doreplace)
 	next.SetLabel("");
 	prev.Tip("Find prev (" + GetKeyDesc(CodeEditor::find_prev_key) + ")");
 	amend.Tip("Replace (" + GetKeyDesc(CodeEditor::replace_key) + ")");
+	amend.Disable();
 	info.SetLabel("&Find");
 	replacing = doreplace;
 	replace.Show(replacing);
@@ -190,7 +191,9 @@ bool CodeEditor::Find(bool back, bool block)
 	else
 		GetSelection(cursor, pos);
 	pos = cursor;
-	return FindFrom(pos, back, block);
+	bool b = FindFrom(pos, back, block);
+	findreplace.amend.Enable(b);
+	return b;
 }
 
 bool CodeEditor::RegExpFind(int pos, bool block)
@@ -345,6 +348,7 @@ void CodeEditor::NotFound()
 	findreplace.info.SetLabel("Not &found");
 	if(!findreplace.incremental)
 		SetFocus();
+	findreplace.amend.Disable();
 }
 
 bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
@@ -354,7 +358,6 @@ bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
 		if(!blockreplace) {
 			if(!findreplace.IsOpen())
 				OpenNormalFindReplace(replace);
-			findreplace.amend.Enable();
 			if(!findreplace.incremental)
 				SetFocus();
 		}
@@ -747,8 +750,10 @@ void CodeEditor::IncrementalFind()
 	findreplace.Sync();
 	if(!findreplace.incremental || findreplace.GetTopCtrl() == &findreplace) // || we are block replace
 		return;
-	if(!FindFrom(ff_start_pos >= 0 && ff_start_pos < GetLength()
-	             && findreplace.incremental_from_cursor ? ff_start_pos : 0, false, false))
+	bool b = FindFrom(ff_start_pos >= 0 && ff_start_pos < GetLength()
+	             && findreplace.incremental_from_cursor ? ff_start_pos : 0, false, false);
+	findreplace.amend.Enable(b);
+	if(!b)
 		NotFound();
 }
 
