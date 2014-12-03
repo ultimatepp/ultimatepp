@@ -163,6 +163,7 @@ struct FindReplaceDlg : FrameBottom< WithIDEFindReplaceLayout<TopWindow> > {
 	virtual bool Key(dword key, int count);
 	void Setup(bool doreplace);
 	void Sync();
+	bool IsIncremental() const              { return incremental.IsEnabled() && incremental; }
 	
 	typedef FindReplaceDlg CLASSNAME;
 
@@ -368,6 +369,7 @@ public:
 	bool   FindString(bool back);
 	bool   FindLangString(bool back);
 	void   Replace();
+	void   ReplaceAll(bool rest);
 	int    BlockReplace();
 
 	void   MakeTabsOrSpaces(bool tabs);

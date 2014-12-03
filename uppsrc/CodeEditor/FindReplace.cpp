@@ -11,6 +11,8 @@ void CodeEditor::InitFindReplace()
 	PutI(findreplace.find);
 	PutI(findreplace.replace);
 	findreplace.amend <<= THISBACK(Replace);
+	findreplace.amend_all <<= THISBACK1(ReplaceAll, false);
+	findreplace.amend_rest <<= THISBACK1(ReplaceAll, true);
 	findreplace.prev <<= THISBACK(DoFindBack);
 	findreplace.replacing = false;
 	found = notfoundfw = notfoundbk = foundsel = false;
@@ -28,6 +30,8 @@ FindReplaceDlg::FindReplaceDlg()
 	close.Cancel();
 	prev.SetImage(CtrlImg::SmallUp());
 	amend.SetImage(CodeEditorImg::Replace());
+	amend_all.SetImage(CodeEditorImg::ReplaceAll());
+	amend_rest.SetImage(CodeEditorImg::ReplaceRest());
 	incremental <<= true;
 	mode <<= THISBACK(Sync);
 	mode.Hide();
@@ -42,7 +46,7 @@ void FindReplaceDlg::Sync()
 	prev.Enable(b);
 	ignorecase.Enable(b);
 	wholeword.Enable(b);
-	incremental_from_cursor.Enable(incremental);
+	incremental_from_cursor.Enable(IsIncremental());
 	b = !mode.IsVisible() || ~mode == 0;
 	replace.Enable(b);
 	replace_txt.Enable(b);
@@ -99,6 +103,8 @@ void FindReplaceDlg::Setup(bool doreplace)
 	replacing = doreplace;
 	replace.Show(replacing);
 	amend.Show(replacing);
+	amend_all.Show(replacing);
+	amend_rest.Show(replacing);
 	Height(doreplace ? GetLayoutSize().cy : replace.GetRect().top);
 	SetFrame(TopSeparatorFrame());
 	Sync();
@@ -346,7 +352,7 @@ void CodeEditor::NotFound()
 {
 	findreplace.find.Error();
 	findreplace.info.SetLabel("Not &found");
-	if(!findreplace.incremental)
+	if(!findreplace.IsIncremental())
 		SetFocus();
 	findreplace.amend.Disable();
 }
@@ -358,7 +364,7 @@ bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
 		if(!blockreplace) {
 			if(!findreplace.IsOpen())
 				OpenNormalFindReplace(replace);
-			if(!findreplace.incremental)
+			if(!findreplace.IsIncremental())
 				SetFocus();
 		}
 		return true;
@@ -554,8 +560,7 @@ int CodeEditor::BlockReplace()
 
 void CodeEditor::OpenNormalFindReplace0(bool replace)
 {
-	if(GetLength() > 1000000)
-		findreplace.incremental <<= false;
+	findreplace.incremental.Enable(GetLength() < 2000000);
 	findreplace.Setup(replace);
 	findreplace.itext = GetI();
 	findreplace.prev.Show();
@@ -614,6 +619,8 @@ void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 		findreplace.SetRect(WithBlockReplaceLayout<EmptyClass>::GetLayoutSize());
 		findreplace.Title(t_("Replace in selection"));
 		findreplace.amend.Hide();
+		findreplace.amend_all.Hide();
+		findreplace.amend_rest.Hide();
 		findreplace.prev.Hide();
 		findreplace.next.Ok() <<= findreplace.Breaker(IDOK);
 		findreplace.close.Cancel() <<= findreplace.Breaker(IDCANCEL);
@@ -634,6 +641,17 @@ void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 		OpenNormalFindReplace(replace);
 		findreplace.find.SetFocus();
 	}
+}
+
+void CodeEditor::ReplaceAll(bool rest)
+{
+	int l, h;
+	GetSelection(l, h);
+	int c = min(l, h);
+	findreplace.mode <<= 0;
+	SetSelection(rest * c, GetLength());
+	BlockReplace();
+	SetCursor(c);
 }
 
 void CodeEditor::InsertWildcard(const char *s)
@@ -738,7 +756,7 @@ void CodeEditor::CloseFindReplace()
 void CodeEditor::EscapeFindReplace()
 {
 	CloseFindReplace();
-	if(ff_start_pos >= 0 && ff_start_pos < GetLength() && findreplace.incremental && do_ff_restore_pos) {
+	if(ff_start_pos >= 0 && ff_start_pos < GetLength() && findreplace.IsIncremental() && do_ff_restore_pos) {
 		SetCursor(ff_start_pos);
 		ff_start_pos = -1;
 	}
@@ -748,7 +766,7 @@ void CodeEditor::IncrementalFind()
 {
 	NoFindError();
 	findreplace.Sync();
-	if(!findreplace.incremental || findreplace.GetTopCtrl() == &findreplace) // || we are block replace
+	if(!findreplace.IsIncremental() || findreplace.GetTopCtrl() == &findreplace) // || we are block replace
 		return;
 	bool b = FindFrom(ff_start_pos >= 0 && ff_start_pos < GetLength()
 	             && findreplace.incremental_from_cursor ? ff_start_pos : 0, false, false);
