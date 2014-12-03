@@ -262,6 +262,7 @@ void Ide::FindInFiles(bool replace) {
 		ff.folder.AddHistory();
 		ff.replace.AddHistory();
 		Progress pi("Found %d files to search.");
+		pi.AlignText(ALIGN_LEFT);
 		Vector<String> files;
 		if(ff.workspace) {
 			const Workspace& wspc = GetIdeWorkspace();

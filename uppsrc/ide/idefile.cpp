@@ -335,7 +335,6 @@ void Ide::SaveFile0(bool always)
 			}
 		}
 	
-		Progress progress;
 		for(;;) {
 			if(editfile != outfile || !FileExists(tmpfile))
 				return;
