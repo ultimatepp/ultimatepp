@@ -5,10 +5,11 @@ NAMESPACE_UPP
 namespace Ini {
 	INI_BOOL(Smtp_Trace, false, "Activates HTTP requests tracing")
 	INI_BOOL(Smtp_TraceBody, false, "Activates HTTP requests body tracing")
+	INI_BOOL(Smtp_CompressLog, false, "Activates log compression (removes long hex/encode64-like data)")
 };
 
-#define LLOG(x)      do { if(Ini::Smtp_Trace) RLOG(x); } while(0)
-#define LLOGB(x)      do { if(Ini::Smtp_TraceBody) RLOG(x); } while(0)
+#define LLOG(x)      do { if(Ini::Smtp_Trace) if(Ini::Smtp_CompressLog) RLOG(CompressLog(String().Cat() << x)); else RLOG(x); } while(0)
+#define LLOGB(x)      do { if(Ini::Smtp_TraceBody) if(Ini::Smtp_CompressLog) RLOG(CompressLog(String().Cat() << x)); else RLOG(x); } while(0)
 
 void Smtp::Trace(bool b)
 {

@@ -43,6 +43,8 @@ public:
 	void   Finish(byte *hash20);
 	String FinishString();
 	String FinishStringS();
+
+	void   New();
 	
 	Sha1Stream(); 
 	~Sha1Stream();
