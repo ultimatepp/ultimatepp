@@ -254,7 +254,7 @@ public:
 
 	bool   WasError() const; // deprecated, use SqlSession::WasError
 
-	Sql(SqlSource& src); // internal use only
+	Sql(SqlSource& src);
 #ifndef NOAPPSQL
 	Sql();
 	Sql(const char *stmt);

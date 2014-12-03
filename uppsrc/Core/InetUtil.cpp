@@ -366,6 +366,52 @@ String DeHtml(const char *s)
 	return result;
 }
 
+void HMAC_SHA1(const byte *text, int text_len, const byte *key, int key_len, byte *digest)
+{
+	unsigned char k_ipad[65];
+	unsigned char k_opad[65];
+	unsigned char tk[20];
+	int i;
+	
+	if(key_len > 64) {
+		SHA1(tk, key, key_len);
+		key = tk;
+		key_len = 20;
+	}
+
+	memset( k_ipad, 0, sizeof(k_ipad));
+	memset( k_opad, 0, sizeof(k_opad));
+	memcpy( k_ipad, key, key_len);
+	memcpy( k_opad, key, key_len);
+	
+	for(i = 0; i < 64; i++) {
+		k_ipad[i] ^= 0x36;
+		k_opad[i] ^= 0x5c;
+	}
+	
+	Sha1Stream sha1;
+	sha1.Put(k_ipad, 64);
+	sha1.Put(text, text_len);
+	sha1.Finish(digest);
+	
+	sha1.New();
+	sha1.Put(k_opad, 64);
+	sha1.Put(digest, 20);
+	sha1.Finish(digest);
+}
+
+String HMAC_SHA1(const String& text, const String& key)
+{
+	byte digest[20];
+	HMAC_SHA1(text, text.GetCount(), key, key.GetCount(), digest);
+	return String(digest, 20);
+}
+
+String HMAC_SHA1_Hex(const String& text, const String& key)
+{
+	return HexString(HMAC_SHA1(text, key));
+}
+
 void HttpCookie::Clear()
 {
 	id.Clear();

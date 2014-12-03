@@ -1,7 +1,7 @@
 #include "POP3.h"
 
 static bool sPop3Trace;
-#define LLOG(x) do { if(sPop3Trace) RLOG(x); } while(0)
+#define LLOG(x) do { if(sPop3Trace) RLOG(CompressLog(String().Cat() << x)); } while(0)
 
 void Pop3::Trace(bool b)
 {

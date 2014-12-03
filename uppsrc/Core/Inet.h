@@ -23,6 +23,10 @@ String Base64Decode(const String& data);
 
 String DeHtml(const char *s);
 
+void   HMAC_SHA1(const byte *text, int text_len, const byte *key, int key_len, byte *digest);
+String HMAC_SHA1(const String& text, const String& key);
+String HMAC_SHA1_Hex(const String& text, const String& key);
+
 const Index<String>& GetMIMETypes();
 String FileExtToMIME(const String& ext);
 String MIMEToFileExt(const String& mime);
@@ -541,9 +545,9 @@ public:
 	HttpRequest(const char *url);
 	
 	static void  Trace(bool b = true);
-	static void  TraceHeader(bool b);
-	static void  TraceBody(bool b);
-	static void  TraceShort(bool b);
+	static void  TraceHeader(bool b = true);
+	static void  TraceBody(bool b = true);
+	static void  TraceShort(bool b = true);
 };
 
 bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,

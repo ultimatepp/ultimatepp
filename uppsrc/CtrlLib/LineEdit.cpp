@@ -378,7 +378,7 @@ void   LineEdit::Paint0(Draw& w) {
 							int xx = x + (gp + 1 + cjk) * fsz.cx;
 							if(max(x, 0) < min(xx, sz.cx) && fsz.cx >= -fsz.cy) {
 								if(pass == 0) {
-									w.DrawRect(x, y, fsz.cx, fsz.cy, h.paper);
+									w.DrawRect(x, y, (cjk + 1) * fsz.cx, fsz.cy, h.paper);
 									if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + 1 + cjk)
 										w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
 								}
