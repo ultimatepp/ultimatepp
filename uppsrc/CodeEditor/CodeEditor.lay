@@ -13,7 +13,9 @@ LAYOUT(IDEFindReplaceLayout, 756, 52)
 	ITEM(Option, incremental_from_cursor, SetLabel(t_("from cursor")).LeftPosZ(648, 92).TopPosZ(4, 19))
 	ITEM(Button, close, RightPosZ(4, 20).TopPosZ(4, 19))
 	ITEM(Button, amend, LeftPosZ(212, 20).TopPosZ(28, 19))
-	ITEM(Option, samecase, SetLabel(t_("Mimic case")).LeftPosZ(256, 108).TopPosZ(28, 19))
+	ITEM(Button, amend_all, SetLabel(t_("All")).LeftPosZ(236, 44).TopPosZ(28, 19))
+	ITEM(Button, amend_rest, SetLabel(t_("Rest")).LeftPosZ(284, 52).TopPosZ(28, 19))
+	ITEM(Option, samecase, SetLabel(t_("Mimic case")).LeftPosZ(424, 108).TopPosZ(28, 19))
 	ITEM(Switch, mode, SetLabel(t_("Replace\nRemove lines without pattern\nRemove line with pattern")).LeftPosZ(0, 408).TopPosZ(64, 16))
 END_LAYOUT
 
