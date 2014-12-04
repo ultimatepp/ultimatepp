@@ -302,7 +302,7 @@ void Ide::SyncWorkspace()
 	SyncCodeBase();
 }
 
-bool IsTextFile(const String& file) {
+bool IsTextFile(const String& file, int maxline) {
 	byte buffer[16384];
 	FileIn fi(file);
 	if(!fi.IsOpen())
@@ -316,7 +316,7 @@ bool IsTextFile(const String& file) {
 		if(*q < 32) {
 			int c = *q;
 			if(c == '\n') {
-				if(q - x > 2000) return false;
+				if(q - x > maxline) return false;
 				x = q;
 			}
 			else
@@ -442,7 +442,7 @@ void Ide::IdePaste(String& data)
 	if(AcceptFiles(Clipboard())) {
 		Vector<String> s = GetFiles(Clipboard());
 		for(int i = 0; i < s.GetCount(); i++)
-			if(FileExists(s[i]) && IsTextFile(s[i])) {
+			if(FileExists(s[i]) && IsTextFile(s[i], 10000)) {
 				int64 len = GetFileLength(s[i]);
 				if(len > 5000000 || data.GetLength() + len < 5000000)
 					data.Cat(LoadFile(s[i]));
