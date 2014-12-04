@@ -81,8 +81,8 @@ String RawProperty::Save() const
 {
 	String s = ~editor;
 	CParser p(s);
+	int level = 0;
 	try {
-		int level = 0;
 		while(!p.IsEof()) {
 			if(p.Char('('))
 				level++;

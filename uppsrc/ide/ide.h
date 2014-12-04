@@ -42,7 +42,7 @@ int         IdeLocateLine(String old_file, int old_line, String new_file);
 
 #include "UppDlg.h"
 
-bool IsTextFile(const String& file);
+bool IsTextFile(const String& file, int maxline = INT_MAX);
 
 void Puts(const char *s);
 
