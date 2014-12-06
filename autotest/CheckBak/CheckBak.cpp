@@ -34,4 +34,14 @@ CONSOLE_APP_MAIN
 	LOG("mnt/nas/bak last date: " << d);
 
 	ASSERT(d >= GetSysDate() - 1);
+	
+	s = HttpRequest("http://www.ultimatepp.org/df.info").Execute();
+	LOG(s);
+	q = s.Find("%");
+	ASSERT(q >= 0);
+	q = s.Find("%", q + 1);
+	ASSERT(q >= 4);
+	int n = atoi(~s + q - 3);
+	LOG("Filesystem uses " << n << "%");
+	ASSERT(n > 10 && n < 85);
 }
