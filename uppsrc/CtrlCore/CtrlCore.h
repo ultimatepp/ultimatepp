@@ -661,6 +661,7 @@ private:
 
 	friend void  InitRichTextZoom();
 	friend void  AvoidPaintingCheck__();
+	friend dword GetKeyStateSafe(dword what);
 	friend void  CtrlSetDefaultSkin(void (*fn1)(), void (*fn2)());
 	friend class DHCtrl;
 	friend class ViewDraw;
