@@ -34,49 +34,28 @@ class NilDrawFull : public NilDraw {
 	virtual bool IsPaintingOp(const Rect& r) const { return true; }
 };
 
-#ifdef PLATFORM_WINCE
-
-
-bool GetShift() { return false; }
-bool GetCtrl() { return false; }
-bool GetAlt() { return false; }
-bool GetCapsLock() { return false; }
-
-bool wince_mouseleft;
-bool wince_mouseright;
-
-bool GetMouseLeft() { return wince_mouseleft; }
-bool GetMouseRight() { return wince_mouseright; }
-bool GetMouseMiddle() { return false; }
-
-Point wince_mousepos = Null;
-
-Point GetMousePos() {
-	return wince_mousepos;
-}
-
-void  SetWinceMouse(HWND hwnd, LPARAM lparam)
-{
-	Point p(lparam);
-	ClientToScreen(hwnd, p);
-	wince_mousepos = p;
-}
-#else
-void  SetWinceMouse(HWND hwnd, LPARAM lparam) {}
-
-bool GetShift()       { return !!(GetKeyState(VK_SHIFT) & 0x8000); }
-bool GetCtrl()        { return !!(GetKeyState(VK_CONTROL) & 0x8000); }
-bool GetAlt()         { return !!(GetKeyState(VK_MENU) & 0x8000); }
-bool GetCapsLock()    { return !!(GetKeyState(VK_CAPITAL) & 1); }
-bool GetMouseLeft()   { return !!(GetKeyState(VK_LBUTTON) & 0x8000); }
-bool GetMouseRight()  { return !!(GetKeyState(VK_RBUTTON) & 0x8000); }
-bool GetMouseMiddle() { return !!(GetKeyState(VK_MBUTTON) & 0x8000); }
-#endif
-
 void AvoidPaintingCheck__()
 {
 	Ctrl::painting = false;
 }
+
+void  SetWinceMouse(HWND hwnd, LPARAM lparam) {}
+
+dword GetKeyStateSafe(dword what) {
+	bool h = Ctrl::painting;
+	Ctrl::painting = false;
+	dword r = GetKeyState(what);
+	Ctrl::painting = h;
+	return r;
+}
+
+bool GetShift()       { return !!(GetKeyStateSafe(VK_SHIFT) & 0x8000); }
+bool GetCtrl()        { return !!(GetKeyStateSafe(VK_CONTROL) & 0x8000); }
+bool GetAlt()         { return !!(GetKeyStateSafe(VK_MENU) & 0x8000); }
+bool GetCapsLock()    { return !!(GetKeyStateSafe(VK_CAPITAL) & 1); }
+bool GetMouseLeft()   { return !!(GetKeyStateSafe(VK_LBUTTON) & 0x8000); }
+bool GetMouseRight()  { return !!(GetKeyStateSafe(VK_RBUTTON) & 0x8000); }
+bool GetMouseMiddle() { return !!(GetKeyStateSafe(VK_MBUTTON) & 0x8000); }
 
 bool PassWindowsKey(int wParam);
 
