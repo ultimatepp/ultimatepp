@@ -495,11 +495,12 @@ Rect Ctrl::GetVirtualWorkArea()
 	return framebuffer.GetSize();
 }
 
+/*
 Rect Ctrl::GetWorkArea(Point pt)
 {
 	return framebuffer.GetSize();
 }
-
+*/
 Rect Ctrl::GetVirtualScreenArea()
 {
 	GuiLock __;
