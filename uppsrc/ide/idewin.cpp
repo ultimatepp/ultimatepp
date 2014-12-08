@@ -963,10 +963,26 @@ void AppMain___()
 		
 		ide.LoadConfig();
 
-		if(arg.GetCount() == 2 && IsAssembly(arg[0])) {
-			LoadVars(arg[0]);
-			ide.SetMain(arg[1]);
-			clset=true;
+		if(arg.GetCount() == 1) {
+			if(arg[0].EndsWith(".upp")) {
+				Vector<String> names = Split(arg[0], DIR_SEP);
+				for(int i = 0, count = names.GetCount(); i < count; ++i) {
+					if (IsAssembly(names[i])) {
+						String package = names[count - 1];
+						package.Remove(package.GetCount() - 4, 4);
+						LoadVars(names[i]);
+						ide.SetMain(package);
+						clset = true;
+						break;
+					}
+				}
+			}
+		} else {
+			if(arg.GetCount() == 2 && IsAssembly(arg[0])) {
+				LoadVars(arg[0]);
+				ide.SetMain(arg[1]);
+				clset=true;
+			}
 		}
 		ide.LoadAbbr();
 
