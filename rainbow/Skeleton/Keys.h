@@ -107,3 +107,15 @@ K_CTRL_EQUAL,
 K_CTRL_APOSTROPHE,
 
 K_BREAK,
+
+K_PLUS       = 0, // not yet defined
+K_MINUS      = 0, // not yet defined
+K_COMMA      = 0, // not yet defined
+K_PERIOD     = 0, // not yet defined
+K_SEMICOLON  = 0, // not yet defined
+K_SLASH      = 0, // not yet defined
+K_GRAVE      = 0, // not yet defined
+K_LBRACKET   = 0, // not yet defined
+K_BACKSLASH  = 0, // not yet defined
+K_RBRACKET   = 0, // not yet defined
+K_QUOTEDBL   = 0, // not yet defined

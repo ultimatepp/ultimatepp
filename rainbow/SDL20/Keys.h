@@ -108,3 +108,15 @@ K_CTRL_EQUAL     = K_CTRL|0xbb|K_DELTA,
 K_CTRL_APOSTROPHE= K_CTRL|0xde|K_DELTA,
 
 K_BREAK      = SDLK_PAUSE + K_DELTA, // Is it really?
+
+K_PLUS       = 0, // not yet defined
+K_MINUS      = 0, // not yet defined
+K_COMMA      = 0, // not yet defined
+K_PERIOD     = 0, // not yet defined
+K_SEMICOLON  = 0, // not yet defined
+K_SLASH      = 0, // not yet defined
+K_GRAVE      = 0, // not yet defined
+K_LBRACKET   = 0, // not yet defined
+K_BACKSLASH  = 0, // not yet defined
+K_RBRACKET   = 0, // not yet defined
+K_QUOTEDBL   = 0, // not yet defined
