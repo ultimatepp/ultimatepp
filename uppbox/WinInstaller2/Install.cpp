@@ -44,6 +44,13 @@ BOOL CALLBACK Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			outdir = h;
 			LZMAExtract((const char *)LockResource(LoadResource(NULL, hrsrc)), SizeofResource(NULL, hrsrc),
 			            h, pi);
+			if (BST_CHECKED == SendDlgItemMessage(hwnd, 10 /*IDC_ASSOC*/, BM_GETCHECK, 0, 0)) {
+				SetWinRegString(exe, "", "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\theide.exe\\");
+				SetWinRegString(h, "Path", "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\theide.exe\\");
+				SetWinRegString("TheIDE.upp", "", ".upp\\", HKEY_CLASSES_ROOT);
+				SetWinRegString("open", "", "TheIDE.upp\\shell\\", HKEY_CLASSES_ROOT);
+				SetWinRegString("\"" + exe + "\" \"%1\"", "", "TheIDE.upp\\shell\\open\\command\\", HKEY_CLASSES_ROOT);
+			}
 			pi.Destroy();
 			EndDialog(hwnd, 0);
 			WinExec(exe, SW_SHOWNORMAL);
