@@ -2,11 +2,12 @@
 
 #define IDOK                1
 #define IDCANCEL            2
+#define IDC_ASSOC           10
 #define WS_TABSTOP          0x00010000L
 #define BS_AUTOCHECKBOX     0x00000003L
 #define ES_AUTOHSCROLL      0x0080L
 
-99 DIALOG DISCARDABLE  0, 0, 231, 55
+99 DIALOG DISCARDABLE  0, 0, 231, 80
 STYLE 0
 EXSTYLE 0
 CAPTION "Ultimate++"
@@ -15,6 +16,7 @@ BEGIN
     LTEXT           "Install path",100,7,16,41,8
     EDITTEXT        101,51,14,120,12,ES_AUTOHSCROLL
 	PUSHBUTTON      "Browse..",999,174,14,50,14
-    DEFPUSHBUTTON   "Install !",IDOK,7,35,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,174,35,50,14
+    CONTROL         "Associate with *.upp files",IDC_ASSOC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,35,165,14
+    DEFPUSHBUTTON   "Install !",IDOK,7,60,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,174,60,50,14
 END
