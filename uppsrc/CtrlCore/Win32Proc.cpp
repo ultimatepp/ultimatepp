@@ -62,7 +62,6 @@ bool PassWindowsKey(int wParam);
 LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	GuiLock __;
 	eventid++;
-	ASSERT_(!painting || IsPanicMode(), "WindowProc invoked for " + Name() + " while in Paint routine");
 //	LLOG("Ctrl::WindowProc(" << message << ") in " << ::Name(this) << ", focus " << (void *)::GetFocus());
 	Ptr<Ctrl> _this = this;
 	HWND hwnd = GetHWND();
@@ -86,6 +85,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		}
 #endif
 	case WM_PAINT:
+		ASSERT_(!painting || IsPanicMode(), "WM_PAINT invoked for " + Name() + " while in Paint routine");
 		ASSERT(hwnd);
 		if(hwnd) {
 			PAINTSTRUCT ps;

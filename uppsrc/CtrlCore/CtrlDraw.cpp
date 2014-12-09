@@ -242,6 +242,7 @@ Rect Ctrl::GetVoidRect() const
 
 
 #ifdef _DEBUG
+
 struct sDrawLevelCheck {
 	Draw&        w;
 	int          lvl;
@@ -252,7 +253,7 @@ struct sDrawLevelCheck {
 	}
 
 	sDrawLevelCheck(Draw& w, const Ctrl *q) : w(w), lvl(w.GetCloffLevel()), q(q) {}
-	~sDrawLevelCheck() { Check(); }
+	// NOTE: Checking level in destructor is a bad idea because of exceptions
 };
 
 #define LEVELCHECK(w, q)    sDrawLevelCheck _x_(w, q)
@@ -341,6 +342,7 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	ApplyTransform(TS_AFTER_CTRL_PAINT);
 	//glPopMatrix();
 	w.PopContext();
+	DOLEVELCHECK;
 }
 #else
 void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
@@ -417,6 +419,7 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 			}
 		w.End();
 	}
+	DOLEVELCHECK;
 }
 #endif
 
@@ -471,6 +474,7 @@ bool Ctrl::PaintOpaqueAreas(SystemDraw& w, const Rect& r, const Rect& clip, bool
 			LEVELCHECK(bw, this);
 			Paint(bw);
 			PaintCaret(bw);
+			DOLEVELCHECK;
 		}
 		bw.Put(w, opaque.TopLeft());
 	}
@@ -482,6 +486,7 @@ bool Ctrl::PaintOpaqueAreas(SystemDraw& w, const Rect& r, const Rect& clip, bool
 			LEVELCHECK(w, this);
 			Paint(w);
 			PaintCaret(w);
+			DOLEVELCHECK;
 		}
 		w.End();
 		w.End();
