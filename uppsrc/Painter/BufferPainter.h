@@ -323,7 +323,6 @@ private:
 
 	Path         path;
 	Pointf       current, ccontrol, qcontrol, move;
-	Rectf        pathrect;
 	bool         ischar;
 	
 	Rasterizer   rasterizer;

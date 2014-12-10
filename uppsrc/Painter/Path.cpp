@@ -20,15 +20,7 @@ Pointf BufferPainter::PathPoint(const Pointf& p, bool rel)
 	r.y = IsNull(p.y) ? current.y : rel ? p.y + current.y : p.y;
 	if(IsNull(current)) {
 		ClearPath();
-		pathrect.left = pathrect.right = r.x;
-		pathrect.top = pathrect.bottom = r.y;
 		pathattr = attr;
-	}
-	else {
-		pathrect.left = min(pathrect.left, r.x);
-		pathrect.top = min(pathrect.top, r.y);
-		pathrect.right = max(pathrect.right, r.x);
-		pathrect.bottom = max(pathrect.bottom, r.y);
 	}
 	return r;
 }
