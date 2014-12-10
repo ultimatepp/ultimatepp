@@ -48,7 +48,7 @@ void BufferPainter::FillOp(const Pointf& p1, const RGBA& color1, const Pointf& p
 {
 	Gradient(color1, color2, p1, p2);
 	Fill(gradient, p1, p2,
-	     FILL_VPAD | FILL_FAST | 
+	     FILL_VPAD | FILL_FAST  |
 	     (style == GRADIENT_PAD ? FILL_HPAD : style == GRADIENT_REPEAT
 	                            ? FILL_HREPEAT : FILL_HREFLECT));
 }
