@@ -36,6 +36,8 @@ struct WindowsList_ : WithWindowsList<StaticRect> {
 	}
 	void Fill();
 	void ButUpdate_Push();
+	void MenuCallback(Bar &bar);
+	void CbCopy();
 };
 struct ProcessList : WithProcessList<StaticRect> {
 

@@ -2,6 +2,7 @@
 
 #include "SysInfo/SysInfo.h"
 #include "SysInfo_demo_gui.h"
+#include <DropGrid/DropGrid.h>
 
 #define IMAGEFILE <SysInfo_demo_gui/SysInfo_demo_gui.iml>
 #define IMAGECLASS Images
@@ -232,19 +233,150 @@ void SystemInfo::ButUpdate_Push() {
 	Fill();
 }
 
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
+
+#define SetBit(uIntFlagBuff, Bit)  		(uIntFlagBuff |= (Bit))
+#define ClearBit(uIntFlagBuff, BitNum) 	(uIntFlagBuff  = ((uIntFlagBuff) | (BitNum)) ^ (BitNum) )
+static const char   *styles[] 	 = {"WS_CAPTION","WS_BORDER","WS_TABSTOP","WS_CHILD","WS_THICKFRAME","WS_VISIBLE","WS_VSCROLL","WS_HSCROLL","WS_SYSMENU","WS_SIZEBOX","WS_POPUP","WS_MINIMIZE","WS_MAXIMIZE","WS_MINIMIZEBOX","WS_MAXIMIZEBOX","WS_GROUP","WS_DLGFRAME","WS_CLIPSIBLINGS","WS_CLIPCHILDREN","WS_CHILDWINDOW","WS_DISABLED"};
+static const uint64 stylesbits[] = {WS_CAPTION,WS_BORDER,WS_TABSTOP,WS_CHILD,WS_THICKFRAME,WS_VISIBLE,WS_VSCROLL,WS_HSCROLL,WS_SYSMENU,WS_SIZEBOX,WS_POPUP,WS_MINIMIZE,WS_MAXIMIZE,WS_MINIMIZEBOX,WS_MAXIMIZEBOX,WS_GROUP,WS_DLGFRAME,WS_CLIPSIBLINGS,WS_CLIPCHILDREN,WS_CHILDWINDOW,WS_DISABLED};
+static const char   *exstyles[]  = {"WS_EX_ACCEPTFILES","WS_EX_APPWINDOW","WS_EX_CLIENTEDGE","WS_EX_COMPOSITED","WS_EX_CONTROLPARENT","WS_EX_DLGMODALFRAME","WS_EX_LAYERED","WS_EX_LAYOUTRTL","WS_EX_LEFTSCROLLBAR","WS_EX_MDICHILD","WS_EX_NOACTIVATE","WS_EX_NOINHERITLAYOUT","WS_EX_NOPARENTNOTIFY"/*,"WS_EX_NOREDIRECTIONBITMAP"*/,"WS_EX_RIGHT","WS_EX_PALETTEWINDOW(WS_EX_WINDOWEDGE|WS_EX_TOOLWINDOW|WS_EX_TOPMOST)","WS_EX_STATICEDGE","WS_EX_TOOLWINDOW","WS_EX_TOPMOST","WS_EX_TRANSPARENT","WS_EX_WINDOWEDGE"};
+static const uint64 exstylesbits[] = {WS_EX_ACCEPTFILES,WS_EX_APPWINDOW,WS_EX_CLIENTEDGE,WS_EX_COMPOSITED,WS_EX_CONTROLPARENT,WS_EX_DLGMODALFRAME,WS_EX_LAYERED,WS_EX_LAYOUTRTL,WS_EX_LEFTSCROLLBAR,WS_EX_MDICHILD,WS_EX_NOACTIVATE,WS_EX_NOINHERITLAYOUT,WS_EX_NOPARENTNOTIFY/*,WS_EX_NOREDIRECTIONBITMAP*/,WS_EX_RIGHT,WS_EX_PALETTEWINDOW,WS_EX_STATICEDGE,WS_EX_TOOLWINDOW,WS_EX_TOPMOST,WS_EX_TRANSPARENT,WS_EX_WINDOWEDGE};
+
+struct SOptDropGrid: public DropGrid {
+	int64 hwnd;
+	ArrayOption option;
+	typedef SOptDropGrid CLASSNAME;
+	
+	SOptDropGrid() {
+		hwnd = 0;
+		ClearButton();
+		//AddPlus(THISBACK(action));
+		AddColumn("Style", 60).Ctrls<Option>();
+		AddColumn("Hexbit");
+		AddColumn("Bit", 0).Hidden();
+		Width(280);
+	}
+	void Init(int64 wnd) {
+		hwnd = wnd;
+		int row = 0;
+		//SetData("-- Regular styles --");
+		Ready(false);
+		StaticText *st;
+		Add(0, 0, 0); 
+		st = new StaticText; 
+		*st= "-- click me --"; 
+		*st <<= THISBACK(Action); 
+		GetList().SetCtrl(0, 0, st); 
+		++row;
+		Add(0, 0, 0); 
+		st = new StaticText; 
+		*st = "-- Regular styles --"; 
+		GetList().SetCtrl(1, 0, st); 
+		++row;
+		Option *po;
+		for(int i = 0; i < sizeof(styles)/sizeof(styles[0]); ++i, row++) {
+			po = new Option; 
+			po->Set((stylesbits[i]&GetWindowLong((HWND)hwnd, GWL_STYLE) ? true : false)); 
+			po->SetLabel(styles[i]); 
+			*po <<= THISBACK(Action);
+			Add(po->Get(), ::Format("0x%08x", (int64)stylesbits[i]), *(int64*)&stylesbits[i]);
+			GetList().SetCtrl(row, 0, po);
+		}
+		Add(0, 0); 
+		st = new StaticText; 
+		*st = "** Extendes styles **"; 
+		GetList().SetCtrl(row, 0, st); 
+		++row;
+		for(int i = 0; i < sizeof(exstyles)/sizeof(exstyles[0]); row++, ++i){
+			po = new Option; 
+			po->Set((stylesbits[i]&GetWindowLong((HWND)hwnd,GWL_EXSTYLE)) ? true : false); 
+			po->SetLabel(exstyles[i]);  
+			*po <<= THISBACK(Action); 
+			Add(po->Get(), ::Format("0x%08x", (int64)exstylesbits[i]), *(int64*)&exstylesbits[i]); 
+			GetList().SetCtrl(row, 0, po);
+		}
+		Ready(true);
+		/*GetList().SetCursor(0);
+		SetIndex(0);
+		SetData("-- click me --");*/
+	}
+	void Action() {
+		int rowind = GetCurrentRow();
+		uint64 bit = (int64)Get(2);
+		if(bit == 0) {
+			TopWindow tw; 
+			tw.Title("~~~~~"); 
+			Image img = Images::hat;
+			ImageCtrl ic;
+			ic.SetImage(img).SetRect(0, 0, img.GetWidth(), img.GetHeight()); 
+			tw.Add(ic); 
+			tw.SetRect(::GetMousePos().x - 20, GetMousePos().y - 20, img.GetWidth(), img.GetHeight()); 
+			tw.RunAppModal(); 
+			return;
+		}
+		bool on = ((Option*)GetList().GetCtrl(0))->Get() == 1;
+		uint64 bits = GetWindowLong((HWND)hwnd, (rowind>3+sizeof(stylesbits)/sizeof(stylesbits[0])) ? GWL_EXSTYLE : GWL_STYLE);
+		if(on)
+			SetBit(bits, bit);
+		else  
+			ClearBit(bits, bit);
+		SetWindowLong((HWND)hwnd, (rowind > 3 + sizeof(stylesbits)/sizeof(stylesbits[0])) ? GWL_EXSTYLE : GWL_STYLE, (LONG)bits);
+		RedrawWindow(GetDesktopWindow(), 0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN|RDW_FRAME|RDW_ERASE);
+		RedrawWindow((HWND)hwnd, 0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN|RDW_FRAME|RDW_ERASE);
+	}
+};
+
+#endif
+
 void WindowsList_::Fill() {
 	Windows.Reset();
 	Windows.AddColumn("Title", 30);
-	Windows.AddColumn("Window handle", 6);
-	Windows.AddColumn("Process Id", 6);
+	Windows.AddColumn("Window handle", 8);
+	Windows.AddColumn("Process Id", 8);
 	Windows.AddColumn("Name", 20);
 	Windows.AddColumn("File name", 30);
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
+	Windows.AddColumn("Window styles", 23).Ctrls<SOptDropGrid>();
+	Windows.AddColumn("Window class", 23);
+#endif
 	Array<int64> widL, pidL;
 	Array<String> name, fileName, caption;
 	GetWindowsList(widL, pidL, name, fileName, caption);
-	for (int i = 0; i < widL.GetCount(); ++i) 
+	for (int i = 0; i < widL.GetCount(); ++i) {
+#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
+		char classname[64];
+		GetClassName(reinterpret_cast<HWND>(widL[i]), classname, 64);
+		Windows.Add(caption[i], Format64(widL[i]), Format64(pidL[i]), name[i], fileName[i], "Text", classname);
+		SOptDropGrid *dg = (SOptDropGrid*)Windows.GetCtrl(i, 5);
+		dg->Init(widL[i]);
+#else
 		Windows.Add(caption[i], Format64(widL[i]), Format64(pidL[i]), name[i], fileName[i]);
+#endif
+	}
+	Windows.SetEditable();
 	ButUpdate.WhenPush = THISBACK(ButUpdate_Push);
+	static MenuBar bar;
+	//GetList().StdToolBar(bar); //bar(2).Remove();bar(1).Remove();
+	//GetList().WhenToolBar=THISBACK(cb);
+	Windows.WhenBar = THISBACK(MenuCallback);
+}
+
+void WindowsList_::CbCopy() {
+	String text;
+	HeaderCtrl& header = Windows.HeaderObject();
+	for(int i = 0; i < header.GetCount(); i++) {
+		if(!header.IsTabVisible(i))
+			continue;
+		if(!text.IsEmpty())
+			text << " | ";
+		text << Windows.Get(i);
+	}
+	WriteClipboardText(text);
+}
+
+void WindowsList_::MenuCallback(Bar &bar){
+	//Windows.SetClipboard(true,false);
+	bar.AddMenu(true, "Copy", CtrlImg::copy(), THISBACK(CbCopy));
 }
 
 void WindowsList_::ButUpdate_Push() {
@@ -271,8 +403,8 @@ void ProcessList::Fill() {
 }
 void ProcessList::ButUpdate_Push() {
 	Fill();
-}	
-	
+}
+
 void ScreenGrabTab::Fill() {
 	EditFileNameGrab <<= AppendFileName(GetDesktopFolder(), "ScreenGrab.avi");
 	EditTime <<= 5;
@@ -287,11 +419,11 @@ void ScreenGrabTab::Fill() {
 	SwGrabMode_Action();
 	ButGrab.WhenPush = THISBACK(ButGrab_Push);
 
-	ButGrab.Enable(false);
-	EditFileNameGrab.Enable(false);
-	EditTime.Enable(false);
-	EditFrameRate.Enable(false);
-	OpGrabMouse.Enable(false);
+	//ButGrab.Enable(false);
+	//EditFileNameGrab.Enable(false);
+	//EditTime.Enable(false);
+	//EditFrameRate.Enable(false);
+	//OpGrabMouse.Enable(false);
 	
 	String extension = "jpg";
 	EditFileNameSnap <<= AppendFileName(GetDesktopFolder(), "ScreenSnap." + extension);

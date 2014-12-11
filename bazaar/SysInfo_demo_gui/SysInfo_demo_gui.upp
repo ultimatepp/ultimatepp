@@ -5,7 +5,8 @@ uses
 	plugin\png,
 	plugin\bmp,
 	SysInfo,
-	RichText;
+	RichText,
+	DropGrid;
 
 file
 	main.cpp,
@@ -16,5 +17,5 @@ file
 	Readme;
 
 mainconfig
-	"" = "GUI";
+	"" = "GUI .NOGTK";
 

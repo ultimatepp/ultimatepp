@@ -5,4 +5,5 @@
 #include "plugin\bmp/init"
 #include "SysInfo/init"
 #include "RichText/init"
+#include "DropGrid/init"
 #endif
