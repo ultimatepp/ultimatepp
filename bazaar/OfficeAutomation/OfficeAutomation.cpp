@@ -1577,7 +1577,7 @@ OPENSheet::~OPENSheet() {
 	if (Document)
 		Document->Release();
 	if (Desktop) {
-		Quit();
+		//Quit();				Commented 12/2014
 		Desktop->Release();
 	}
 	if (CoreReflection)
@@ -2336,7 +2336,7 @@ OPENDoc::~OPENDoc() {
 	if (Document)
 		Document->Release();
 	if (Desktop) {
-		Quit();
+		//Quit();				Commented 12/2014
 		Desktop->Release();
 	}
 	if (CoreReflection)
