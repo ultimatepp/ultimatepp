@@ -2052,15 +2052,14 @@ int GetAvailableSocketPort(int from) {
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 	DWORD size = sizeof(MIB_TCPTABLE);
 	Buffer<char> table(size);
-	MIB_TCPTABLE *pTable = (MIB_TCPTABLE *)~table;
-	DWORD ret;
-	if ((ret = GetTcpTable(pTable, &size, TRUE)) == ERROR_INSUFFICIENT_BUFFER) 
+	MIB_TCPTABLE *pTable = (MIB_TCPTABLE*)~table;
+	if (GetTcpTable(pTable, &size, TRUE) == ERROR_INSUFFICIENT_BUFFER) 
 		table.Alloc(size);
-	pTable = (MIB_TCPTABLE *)~table;	
-    if ((ret = GetTcpTable(pTable, &size, TRUE)) != NO_ERROR)
+	pTable = (MIB_TCPTABLE*)~table;	
+    if (GetTcpTable(pTable, &size, TRUE) != NO_ERROR)
     	return Null;
 
-  	for (int i = 0; i < (int) pTable->dwNumEntries; i++) 
+  	for (int i = 0; i < (int)pTable->dwNumEntries; i++) 
   		ports.FindAdd(ntohs((u_short)pTable->table[i].dwLocalPort));
 #else
 	GetPorts(ports, "tcp");

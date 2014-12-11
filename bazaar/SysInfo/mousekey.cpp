@@ -118,9 +118,7 @@ void PressKeyVK(int keyVK, bool hold = false, bool release = false, bool compati
 // This is less nice but more compatible for Notepad and MSWord for example
 void PressKey(wchar key, bool hold = false, bool release = false) {
 	if ((key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') || (key >= '0' && key <= '9')) {
-		char buff[120];
-		::GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_ILANGUAGE, buff, sizeof(buff));
-		HKL hKeyboardLayout = ::LoadKeyboardLayout(buff, KLF_ACTIVATE);  
+		HKL hKeyboardLayout = ::GetKeyboardLayout(0);
     	SHORT nVK = VkKeyScanExW(key, hKeyboardLayout);
     	UINT nScan = MapVirtualKeyExW(nVK, MAPVK_VK_TO_CHAR, hKeyboardLayout);
 		if (!release) 
@@ -147,11 +145,8 @@ void PressKey(wchar key, bool hold = false, bool release = false)
     	if (caps) 
     		SetKeyLockStatus(false, num, scroll);	
     }
- 	char buff[120];
-	GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_ILANGUAGE, buff, sizeof(buff));
-	HKL hKeyboardLayout = ::LoadKeyboardLayout(buff, KLF_ACTIVATE);  
-    SHORT nVK = VkKeyScanExW(key, hKeyboardLayout);
-	if (nVK == -1) {	// Last resource !!
+	HKL hKeyboardLayout = ::GetKeyboardLayout(0);
+	if (hKeyboardLayout) {		// Last resource !!
 		String numStr = FormatIntDec(key, 4, '0');
 		PressKeyVK(VK_LMENU, true);
 		PressKeyVK(VK_NUMPAD0 + numStr[0] - '0');
@@ -326,8 +321,8 @@ void PressKey(wchar key, _XDisplay *dpy = NULL) {
 		int keysymsPerKeycode;
 		
 		XDisplayKeycodes(dpy, &firstKeycode, &maxKeycode);
-		KeySym *keysyms = XGetKeyboardMapping(dpy, firstKeycode, maxKeycode-firstKeycode+1, &keysymsPerKeycode);
-      	int indx = (maxKeycode-firstKeycode-1)*keysymsPerKeycode;
+		KeySym *keysyms = XGetKeyboardMapping(dpy, firstKeycode, maxKeycode - firstKeycode + 1, &keysymsPerKeycode);
+      	int indx = (maxKeycode - firstKeycode - 1)*keysymsPerKeycode;
 		keysyms[indx] = key;
       	XChangeKeyboardMapping(dpy, firstKeycode, keysymsPerKeycode, keysyms, maxKeycode-firstKeycode);
       	XSync(dpy, False);
