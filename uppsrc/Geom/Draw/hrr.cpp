@@ -454,8 +454,8 @@ static dword CeilPack64(int64 i)
 {
 	if(i < 0x7fffffff)
 		return (dword)i;
-	if(i < INT64(0x3fffffff00))
-		return (dword)((i + INT64(0x80000000ff)) >> 8);
+	if(i < I64(0x3fffffff00))
+		return (dword)((i + I64(0x80000000ff)) >> 8);
 	return 0xffffffff;
 }
 
