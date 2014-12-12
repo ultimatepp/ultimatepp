@@ -109,6 +109,7 @@ void TestSheetDetail(OfficeSheet &sheet)
 	sheet.SaveAs(test2, "xls");
 	sheet.Quit();  	
 }
+
 void TestSheet()
 {
 	OfficeSheet sheet;
