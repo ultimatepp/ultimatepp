@@ -657,8 +657,8 @@ void ExportPage(int i)
 			"wxwidgets, qt, rapid, application, development, rad, mfc, linux, gui, sdl, directx, desktop"
 			"\">"
 	        "<META name=\"robots\" content=\"index,follow\">\n"
-            "<LINK rel=\"alternate\" type=\"application/rss+xml\" title=\"SVN changes\" href=\"svnchanges.xml\">"
-//				"<link rel=\"shortcut icon\" href=\"/favicon.ico\" />"
+            "<LINK rel=\"alternate\" type=\"application/rss+xml\" title=\"SVN changes\" href=\"svnchanges.xml\">\n"
+            "<LINK rel=\"shortcut icon\" type=\"image/png\" href=\"favicon.png\" />\n"
 		)
 
 
@@ -739,6 +739,7 @@ CONSOLE_APP_MAIN
 	ProgramData data;
 	
 	String configFile = GetHomeDirFile("uppweb.xml");
+	Cout() << "ConfigFile: " << configFile << "\n";
 	bool cfgloaded = false;
 	if (FileExists(configFile)) {
 		if (LoadFromXMLFile(data, configFile)) {
@@ -1129,7 +1130,8 @@ CONSOLE_APP_MAIN
 	
 		LLOG("I: " << MemoryUsedKb());
 	
-	//	SaveFile(AppendFileName(targetdir, "favicon.ico"), LoadFile(AppendFileName(uppsrc, "ide/ide.ico")));
+		FileCopy(AppendFileName(uppbox, "uppweb/favicon.png"), AppendFileName(targetdir, "favicon.png"));
+		//	SaveFile(AppendFileName(targetdir, "favicon.ico"), LoadFile(AppendFileName(uppsrc, "ide/ide.ico")));
 		SaveFile(AppendFileName(targetdir, "stats.html"),
 		         HtmlLink("http://www.mygooglepagerank.com", "_blank") /
 			         "<img src=\"http://www.mygooglepagerank.com/PRimage.php?url=http://upp.sf.net\" "
