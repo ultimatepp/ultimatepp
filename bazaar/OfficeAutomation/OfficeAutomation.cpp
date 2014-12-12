@@ -180,14 +180,14 @@ bool Ole::Close() {	// Uninitialize COM for this thread
 		return true;
 }
 
-// Invoke() - Automation helper function
+// Automation helper function
 bool Ole::Invoke(int autoType, VARIANT *pvResult, IDispatch *pDisp, String name, int cArgs, ...) {
-    // Begin variable-argument lis
+    // Begin variable-argument list
     va_list marker;
     va_start(marker, cArgs);
 
     if(!pDisp) {
-        LOG("OfficeAutomation internal error. ObjectOle included is null");
+        LOG("Ole::Invoke() error. ObjectOle included is null");
         return false;
     }
     // Variables used
@@ -206,7 +206,7 @@ bool Ole::Invoke(int autoType, VARIANT *pvResult, IDispatch *pDisp, String name,
     // Get DISPID for name passed
     hr = pDisp->GetIDsOfNames(IID_NULL, (LPOLESTR *)&ptName, 1, LOCALE_USER_DEFAULT, &dispID);
     if(FAILED(hr)) {
-        sprintf(buf, "OfficeAutomation internal error. Command \"%s\" not found for object or problem when running it", szName);
+        sprintf(buf, "Ole::Invoke(\"%s\") not found for object or problem when running it", szName);
         LOG(buf);
         return false;
     }
@@ -229,7 +229,7 @@ bool Ole::Invoke(int autoType, VARIANT *pvResult, IDispatch *pDisp, String name,
     delete [] pArgs;
 
     if(FAILED(hr)) {
-        sprintf(buf, "IDispatch::Invoke(\"%s\"=%08lx) failed w/err 0x%08lx", szName, dispID, hr);
+        sprintf(buf, "Ole::Invoke(\"%s\"=%08lx) failed w/err 0x%08lx", szName, dispID, hr);
 		LOG(buf);
         return false;
     }
@@ -1577,7 +1577,7 @@ OPENSheet::~OPENSheet() {
 	if (Document)
 		Document->Release();
 	if (Desktop) {
-		//Quit();				Commented 12/2014
+		Quit();											
 		Desktop->Release();
 	}
 	if (CoreReflection)
@@ -1606,7 +1606,7 @@ bool OPENSheet::Quit() {
 	if (!quit) {
 		quit = true;
 		if (Desktop) {
-			Ole::Method(Desktop, "Dispose");
+			//Ole::Method(Desktop, "Dispose");				Commented 12/2014
 			return Ole::Method(Desktop, "Terminate");
 		}
 	}
