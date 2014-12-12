@@ -280,7 +280,7 @@ double CParser::ReadDouble() throw(Error)
 {
 	LTIMING("ReadDouble");
 	int sign = Sgn();
-	if(!IsDigit(*term))
+	if(!IsDigit(*term) && *term != '.')
 		ThrowError("missing number");
 	double n = 0;
 	while(IsDigit(*term))
