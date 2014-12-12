@@ -99,8 +99,11 @@ Painter& Painter::Path(CParser& p)
 
 Painter& Painter::Path(const char *path)
 {
-	CParser p(path);
-	Path(p);
+	try {
+		CParser p(path);
+		Path(p);
+	}
+	catch(CParser::Error) {}
 	return *this;
 }
 
