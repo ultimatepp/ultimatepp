@@ -536,7 +536,7 @@ void PathEditorCtrl::Paint(Draw& draw)
 		}
 		else
 		{
-			area.Set(plotter, Nvl(trace.color, Black), INT64(0xaa55aa55aa55aa55), Null, outline, 3);
+			area.Set(plotter, Nvl(trace.color, Black), I64(0xaa55aa55aa55aa55), Null, outline, 3);
 			if(area.SetExtent(trace.GetExtent()))
 				trace.Paint(area, false, outline);
 		}
