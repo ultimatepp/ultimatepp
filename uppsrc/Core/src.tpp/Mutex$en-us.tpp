@@ -19,7 +19,8 @@ serialize access to shared data or other shared resources. Only
 single thread can execute the code between calls to Enter and 
 Leave. If any other thread attempts to Enter the protected section 
 while other thread is performing it, it is blocked until performing 
-thread indicates leaving the section by invoking Leave.&]
+thread indicates leaving the section by invoking Leave. Mutex 
+is reentrant (same thread can Enter the Mutex multiple times).&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
@@ -85,4 +86,4 @@ as well.&]
 [s5;:Mutex`:`:Lock`:`:`~Lock`(`): [@(0.0.255) `~][* Lock]()&]
 [s2; [%% Performs ][*@3 s].Enter() where [*@3 s] is the constructor parameter.&]
 [s3; &]
-[s0; ]
+[s0; ]]

@@ -16,7 +16,8 @@ topic "RWMutex";
 oCopy]&]
 [s9;%% This class mediates reader`-writer sharing of global data. 
 Only single thread can EnterWrite, but any number of threads 
-can EnterRead.&]
+can EnterRead. RWMutex is NOT reentrant (same thread can Enter 
+the Mutex multiple times).&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
@@ -109,4 +110,4 @@ StaticRWMutex as well.&]
 [s5;:RWMutex`:`:WriteLock`:`:`~WriteLock`(`): [@(0.0.255) `~][* WriteLock]()&]
 [s2;%% Calls [*@3 s].LeaveWrite() where [*@3 s] is the constructor parameter.&]
 [s3; &]
-[s0; ]
+[s0; ]]
