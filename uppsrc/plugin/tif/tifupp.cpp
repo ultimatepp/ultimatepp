@@ -856,6 +856,11 @@ TIFRaster::Data::~Data()
 
 bool TIFRaster::Data::Create()
 {
+	TIFFSetErrorHandler(NULL);
+	TIFFSetErrorHandlerExt(NULL);
+	TIFFSetWarningHandler(NULL);
+	TIFFSetWarningHandlerExt(NULL);
+
 	tiff = TIFFStreamOpen("tiff@" + Format64((intptr_t)this), "r", &stream);
 	if(!tiff)
 		return false;
