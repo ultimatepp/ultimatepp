@@ -1,0 +1,14 @@
+uses
+	Core,
+	Draw,
+	plugin/gif,
+	plugin/tif,
+	plugin/png,
+	plugin/bmp;
+
+file
+	Image.cpp;
+
+mainconfig
+	"" = "SSE2";
+
