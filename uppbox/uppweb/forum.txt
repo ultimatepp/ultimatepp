@@ -7,6 +7,7 @@
 <BASE HREF="{FULL_ROOT}">
 <script language="javascript" src="lib.js" type="text/javascript"></script>
 <link rel="StyleSheet" href="{THEME_ROOT}/forum.css" type="text/css" media="screen" title="Default FUDforum Theme">
+<LINK rel="shortcut icon" type="image/png" href="favicon.png" />
 </head>
 <body BGCOLOR="#D2D9D2" ALINK="#800000" LINK="#000000" VLINK="#000080">
 
