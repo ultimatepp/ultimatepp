@@ -1,0 +1,9 @@
+#ifndef _Image_icpp_init_stub
+#define _Image_icpp_init_stub
+#include "Core/init"
+#include "Draw/init"
+#include "plugin/gif/init"
+#include "plugin/tif/init"
+#include "plugin/png/init"
+#include "plugin/bmp/init"
+#endif
