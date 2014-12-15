@@ -78,6 +78,20 @@
                                    UPGRADE("create sequence " #x " start with 1;")
 #define SEQUENCE_(x)               DOID(x) SEQUENCE(x)
 
+#define DUAL_PRIMARY_KEY(k1, k2)   INLINE_ATTRIBUTE(", primary key (" #k1 ", " #k2 ")")
+
+#define DUAL_UNIQUE(k1, k2)        ATTRIBUTE("alter table @t add constraint DQ_@t unique "\
+                                             "(" #k1 ", " #k2 ");",\
+                                             "alter table @t drop constraint DQ_@t;")
+
+#define UNIQUE_LIST(u, l)          ATTRIBUTE("alter table @t add constraint UQ_@t$" #u " unique "\
+                                             "(" l ");",\
+                                             "alter table @t drop constraint UQ_@t$" #u ";")
+
+#define SQLCHECK(n, ct)            ATTRIBUTE("alter table @t add constraint CHK_@t$" #n " check "\
+                                             "(" ct ");",\
+                                             "alter table @t drop constraint CHK_@t$" #n ";")
+
 #include <Sql/sch_model.h>
 
 #undef BIT
@@ -134,3 +148,8 @@
 
 #undef SEQUENCE
 #undef SEQUENCE_
+
+#undef DUAL_PRIMARY_KEY
+#undef DUAL_UNIQUE
+#undef UNIQUE_LIST
+#undef SQLCHECK
