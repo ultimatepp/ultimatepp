@@ -411,6 +411,18 @@ void WriteMemoryBarrier() {
 }
 #endif
 
+#else
+
+void ReadMemoryBarrier()
+{
+	static Atomic x;
+	AtomicInc(x); // Atomic increment provides full memory barrier on most CPUs
+}
+
+void WriteMemoryBarrier() {
+	ReadMemoryBarrier();
+}
+
 #endif
 
 #ifdef flagPROFILEMT
