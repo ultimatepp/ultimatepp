@@ -362,6 +362,12 @@ Painter& Painter::Fill(double x1, double y1, const RGBA& color1, double x2, doub
 	return Fill(Pointf(x1, y1), color1, Pointf(x2, y2), color2, style);
 }
 
+Painter& Painter::Fill(const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, dword flags)
+{
+	FillOp(color1, color2, transsrc, flags);
+	return *this;
+}
+
 Painter& Painter::Fill(double fx, double fy, const RGBA& color1, double cx, double cy, double r, const RGBA& color2, int style)
 {
 	return Fill(Pointf(fx, fy), color1, Pointf(cx, cy), r, color2, style);
@@ -401,6 +407,12 @@ Painter& Painter::Stroke(double width, const Image& image, double x1, double y1,
 Painter& Painter::Stroke(double width, double x1, double y1, const RGBA& color1, double x2, double y2, const RGBA& color2, int style)
 {
 	return Stroke(width, Pointf(x1, y1), color1, Pointf(x2, y2), color2, style);
+}
+
+Painter& Painter::Stroke(double width, const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, dword flags)
+{
+	StrokeOp(width, color1, color2, transsrc, flags);
+	return *this;
 }
 
 Painter& Painter::Stroke(double width, double fx, double fy, const RGBA& color1, double cx, double cy, double r, const RGBA& color2, int style)
@@ -555,10 +567,12 @@ void NilPainter::CloseOp() {}
 void NilPainter::DivOp() {}
 void NilPainter::FillOp(const RGBA& color) {}
 void NilPainter::FillOp(const Image& image, const Xform2D& transsrc, dword flags) {}
+void NilPainter::FillOp(const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, int style) {}
 void NilPainter::FillOp(const Pointf& p1, const RGBA& color1, const Pointf& p2, const RGBA& color2, int style) {}
 void NilPainter::FillOp(const Pointf& f, const RGBA& color1, const Pointf& c, double r, const RGBA& color2, int style) {}
 void NilPainter::StrokeOp(double width, const RGBA& rgba) {}
 void NilPainter::StrokeOp(double width, const Image& image, const Xform2D& transsrc, dword flags) {}
+void NilPainter::StrokeOp(double width, const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, int style) {}
 void NilPainter::StrokeOp(double width, const Pointf& p1, const RGBA& color1, const Pointf& p2, const RGBA& color2, int style) {}
 void NilPainter::StrokeOp(double width, const Pointf& f, const RGBA& color1, const Pointf& c, double r, const RGBA& color2, int style) {}
 void NilPainter::ClipOp() {}

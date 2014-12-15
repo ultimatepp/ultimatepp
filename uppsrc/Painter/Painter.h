@@ -107,6 +107,8 @@ protected:
 	virtual void   FillOp(const Pointf& f, const RGBA& color1, 
 	                      const Pointf& c, double r, const RGBA& color2,
 	                      int style) = 0;
+	virtual void   FillOp(const RGBA& color1, const RGBA& color2, const Xform2D& transsrc,
+	                      int style) = 0;
 
 	virtual void   StrokeOp(double width, const RGBA& rgba) = 0;
 	virtual void   StrokeOp(double width, const Image& image, const Xform2D& transsrc,
@@ -114,6 +116,8 @@ protected:
 	virtual void   StrokeOp(double width, const Pointf& p1, const RGBA& color1,
 	                        const Pointf& p2, const RGBA& color2,
 	                        int style) = 0;
+	virtual void   StrokeOp(double width, const RGBA& color1, const RGBA& color2,
+	                        const Xform2D& transsrc, int style) = 0;
 	virtual void   StrokeOp(double width, const Pointf& f, const RGBA& color1, 
 	                        const Pointf& c, double r, const RGBA& color2,
 	                        int style) = 0;
@@ -237,6 +241,8 @@ public:
 	              const Pointf& p2, const RGBA& color2, int style = GRADIENT_PAD);
 	Painter& Fill(double x1, double y1, const RGBA& color1,
 	              double x2, double y2, const RGBA& color2, int style = GRADIENT_PAD);
+	Painter& Fill(const RGBA& color1, const RGBA& color2, const Xform2D& transsrc,
+	              dword flags = 0);
 	Painter& Fill(const Pointf& f, const RGBA& color1,
 	              const Pointf& c, double r, const RGBA& color2, int style = GRADIENT_PAD);
 	Painter& Fill(double fx, double fy, const RGBA& color1,
@@ -256,6 +262,8 @@ public:
 	                const Pointf& p2, const RGBA& color2, int style = GRADIENT_PAD);
 	Painter& Stroke(double width, double x1, double y1, const RGBA& color1,
 	                double x2, double y2, const RGBA& color2, int style = GRADIENT_PAD);
+	Painter& Stroke(double width, const RGBA& color1, const RGBA& color2, const Xform2D& transsrc,
+	                dword flags = 0);
 	Painter& Stroke(double width, const Pointf& f, const RGBA& color1,
 	                const Pointf& c, double r, const RGBA& color2, int style = GRADIENT_PAD);
 	Painter& Stroke(double width, double fx, double fy, const RGBA& color1,
@@ -365,6 +373,8 @@ protected:
 	virtual void   FillOp(const Pointf& p1, const RGBA& color1,
 	                      const Pointf& p2, const RGBA& color2,
 	                      int style);
+	virtual void   FillOp(const RGBA& color1, const RGBA& color2, const Xform2D& transsrc,
+	                      int style);
 	virtual void   FillOp(const Pointf& f, const RGBA& color1, 
 	                      const Pointf& c, double r, const RGBA& color2,
 	                      int style);
@@ -374,6 +384,9 @@ protected:
 	                        dword flags);
 	virtual void   StrokeOp(double width, const Pointf& p1, const RGBA& color1,
 	                        const Pointf& p2, const RGBA& color2,
+	                        int style);
+	virtual void   StrokeOp(double width, const RGBA& color1, const RGBA& color2,
+	                        const Xform2D& transsrc,	
 	                        int style);
 	virtual void   StrokeOp(double width, const Pointf& f, const RGBA& color1, 
 	                        const Pointf& c, double r, const RGBA& color2,

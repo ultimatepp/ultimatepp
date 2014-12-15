@@ -31,8 +31,8 @@ int LinearInterpolator::Dda2::Get()
 
 void LinearInterpolator::Begin(int x, int y, int len)
 {
-	Pointf p1 = xform.Transform(Pointf(x, y)/* + 0.5*/);
-	Pointf p2 = xform.Transform(Pointf(x + len, y)/* + 0.5*/);
+	Pointf p1 = xform.Transform(Pointf(x, y));
+	Pointf p2 = xform.Transform(Pointf(x + len, y));
 	ddax.Set(Q8(p1.x), Q8(p2.x), len);
 	dday.Set(Q8(p1.y), Q8(p2.y), len);
 }
