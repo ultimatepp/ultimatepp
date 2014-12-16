@@ -102,6 +102,15 @@ void PaintingPainter::FillOp(const Pointf& p1, const RGBA& color1, const Pointf&
 	Put(style);
 }
 
+void PaintingPainter::FillOp(const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, int style)
+{
+	Put(PAINTING_FILL_GRADIENT_X);
+	Put(color1);
+	Put(color2);
+	Putf(transsrc);
+	Put(style);
+}
+
 void PaintingPainter::FillOp(const Pointf& f, const RGBA& color1,
                              const Pointf& p, double r, const RGBA& color2, int style)
 {
@@ -140,6 +149,17 @@ void PaintingPainter::StrokeOp(double width, const Pointf& p1, const RGBA& color
 	Put(color1);
 	Putf(p2);
 	Put(color2);
+	Put(style);
+}
+
+void PaintingPainter::StrokeOp(double width, const RGBA& color1, const RGBA& color2,
+                               const Xform2D& transsrc, int style)
+{
+	Put(PAINTING_STROKE_GRADIENT_X);
+	Putf(width);
+	Put(color1);
+	Put(color2);
+	Putf(transsrc);
 	Put(style);
 }
 
