@@ -28,15 +28,18 @@ class TPdfFrontend : public WithMainWindowLayout<TopWindow>
 		// close handler
 		// button handlers
 		void onCreate(void);
-		void onSIGHUP(void);
 		void onCancel(void);
 		
 		void Close(void);
 
 	public:
 		typedef TPdfFrontend CLASSNAME;
+		
 		TPdfFrontend();
 		~TPdfFrontend();
+		
+		// handle other running instances
+		void handleInstance(Vector<String> const &v);
 		
 		// adds a document
 		void AddDocument(String const &FileName, String const &Title);

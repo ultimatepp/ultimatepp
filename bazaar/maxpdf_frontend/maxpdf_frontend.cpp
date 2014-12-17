@@ -1,5 +1,6 @@
 #include <SysExec/SysExec.h>
-#include <Signals/Signals.h>
+
+#include <Uniq/Uniq.h>
 
 #include <cups/cups.h>
 
@@ -25,32 +26,17 @@ void TPdfFrontend::Close()
 
 /////////////////////////////////////////////////////////////////////////////////////
 // reloads document list from data folder
-void TPdfFrontend::onSIGHUP(void)
+void TPdfFrontend::handleInstance(Vector<String> const &v)
 {
-	// clears old document lists
-	DocumentList.Clear();
-	Documents.Clear();
-	
-	String DataPath = GetPdfDataPath();
-	FindFile ff(DataPath + "*-*");
-	while(ff)
-	{
-		if(ff.GetName() != "seqf")
-			Documents.Add(DataPath + ff.GetName());
-		ff.Next();
-	}
-	Sort(Documents);
-	for(int i = 0; i < Documents.GetCount(); i++)
-	{
-		// inside list puts just the document name, skipping
-		// the sequence number (4 digits)
-		// nnnn-s-name
-		DocumentList.Add(GetFileName(Documents[i]).Mid(5));
-	}
-	
-	// brings main dialog on top
-	Hide();Show(); // sigh... any other way to bring window on top ???
-	
+	AddDocument(v[5], v[2]);
+
+	// @@@ WORKAROUND TO DETACH BACKEND AND FREE CUPS QUEUE
+	// cancels current job
+	cupsCancelJob2(CUPS_HTTP_DEFAULT, v[6], atoi(v[0]), 1);
+
+	Hide();
+	Show();
+
 } // END TPdfFrontendCtrl::onSIGHUP()
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -138,27 +124,6 @@ TPdfFrontend::TPdfFrontend()
 	CreateButton	<<= THISBACK(onCreate);
 	CancelButton	<<= THISBACK(onCancel);
 	
-	// install the SIGHUP handler
-	Signals().Handle(SIGHUP, THISBACK(onSIGHUP));
-
-	// restores fax documents left from previous run, if any
-	String DataPath = GetPdfDataPath();
-	FindFile ff(DataPath + "*-*");
-	while(ff)
-	{
-		if(ff.GetName() != "seqf")
-			Documents.Add(DataPath + ff.GetName());
-		ff.Next();
-	}
-	Sort(Documents);
-	for(int i = 0; i < Documents.GetCount(); i++)
-	{
-		// inside list puts just the document name, skipping
-		// the sequence number (4 digits)
-		// nnnn-s-name
-		DocumentList.Add(GetFileName(Documents[i]).Mid(5));
-	}
-
 	CtrlLayout(*this, "MaxPdf");
 }
 
@@ -175,34 +140,9 @@ void TPdfFrontend::AddDocument(String const &name, String const &Title)
 {
 	if(FileExists(name))
 	{
-		// create the dest path, if needed
-		RealizeDirectory(GetPdfDataPath());
-		
-		// opens sequence file, if any end read sequence number
-		int Seq;
-		String SeqPath = GetPdfDataPath() + "seqf";
-		if(FileExists(SeqPath))
-		{
-			FileIn SeqFile(SeqPath);
-			Seq = atoi(SeqFile.GetLine());
-		}
-		else
-			Seq = 1;
-		
-		// creates destination file name
-		String DestName = GetPdfDataPath() + FormatIntDec(Seq, 4, '0') + "-" + Title;
-		
-		// copies the file to data folder
-		FileCopy(name, DestName);
-		
 		// adds to document lists
 		DocumentList.Add(Title);
-		Documents.Add(DestName);
-		
-		// stores the next sequence number
-		Seq++;
-		FileOut SeqFile(SeqPath);
-		SeqFile.PutLine(FormatInt(Seq));
+		Documents.Add(name);
 	}
 	
 } // END TPdfFrontend::AddDocument()
@@ -216,6 +156,7 @@ bool TPdfFrontend::RemoveDocument(int index)
 	FileDelete(Documents[index]);
 	DocumentList.Remove(index);
 	Documents.Remove(index);
+	return true;
 	
 } // END TPdfFrontend::RemoveDocument()
 
@@ -227,13 +168,26 @@ void TPdfFrontend::ClearDocuments(void)
 		FileDelete(Documents[i]);		
 	DocumentList.Clear();
 	Documents.Clear();
-	FileDelete(GetPdfDataPath()+"seqf");
 	
 } // END TPdfFrontend::ClearDocuments()
 
 
 GUI_APP_MAIN
 {
+	// create Uniq object
+	Uniq uniq;
+
+	// if not inside first instance, send commandline
+	// to first instance and leave
+	if(!uniq)
+		return;
+	
+	// creates FaxFrontend object
+	TPdfFrontend PdfFrontend;
+	
+	// setup callback handling other app's instances
+	uniq.WhenInstance = callback(&PdfFrontend, &TPdfFrontend::handleInstance);
+		
 	// if wrong number of parameters, print error and exit
 	if(CommandLine().GetCount() < 7)
 	{
@@ -245,29 +199,12 @@ GUI_APP_MAIN
 	// sets up exit code
 	SetExitCode(0);
 	
-	// creates FaxFrontend object
-	TPdfFrontend PdfFrontend;
-	
-	// add the provided document and removes the temp file
+	// add the provided document
 	PdfFrontend.AddDocument(CommandLine()[5], CommandLine()[2]);
-	FileDelete(CommandLine()[5]);
-	
+
 	// @@@ WORKAROUND TO DETACH BACKEND AND FREE CUPS QUEUE
 	// cancels current job
-	cupsCancelJob(CommandLine()[6], atoi(CommandLine()[1]));
-
-	// checks whether another instance is running
-	if(Signals().IsOtherInstanceRunning())
-	{
-		// yep, just send it a SIGHUP signal to running app and terminate
-		// this tells to running app to update document list
-		Signals().Send(SIGHUP);
-		
-		return;
-	}
-	
-	// here we are in child app, we must store the instance
-	Signals().StoreInstance();
+	cupsCancelJob2(CUPS_HTTP_DEFAULT, CommandLine()[6], atoi(CommandLine()[0]), 1);
 	
 	// executes main window
 	PdfFrontend.Run();

@@ -1,9 +1,9 @@
-description "Pdf printer frontend";
+description "Pdf printer frontend\377";
 
 uses
 	CtrlLib,
 	SysExec,
-	Signals;
+	Uniq;
 
 library
 	cups;
