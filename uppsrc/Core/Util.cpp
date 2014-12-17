@@ -782,23 +782,19 @@ String GetLastErrorMessage() {
 #endif
 
 #ifdef PLATFORM_POSIX
-static void LinuxBeep(const char *fn)
+
+String GtkStyleString(const char *name);
+
+static void LinuxBeep(const char *name)
 {
-	return;
-	// This is not the right way to do that... (causes zombies, ignores Gnome settings)
-	char h[100];
-	strcpy(h, "aplay /usr/share/sounds/");
-	strcat(h, fn);
-#ifdef CPU_BLACKFIN
-	if(vfork()) return;
-#else
-	if(fork()) return;
-#endif
-	IGNORE_RESULT(
-		system(h)
-	);
-	_exit(EXIT_SUCCESS);
+	String fn = "/usr/share/sounds/" + GtkStyleString("gtk-sound-theme-name") + "/stereo/dialog-" + name;
+	system("play -q  " + fn + (FileExists(fn + ".ogg") ? ".ogg" :
+                               FileExists(fn + ".oga") ? ".oga" :
+                               FileExists(fn + ".wav") ? ".wav" :
+                               ".*")
+	       + " 2>/dev/null&");
 }
+
 #endif
 
 void BeepInformation()
@@ -806,7 +802,7 @@ void BeepInformation()
 #ifdef PLATFORM_WIN32
 	MessageBeep(MB_ICONINFORMATION);
 #else
-	LinuxBeep("info.wav");
+	LinuxBeep("information");
 #endif
 }
 
@@ -815,7 +811,7 @@ void BeepExclamation()
 #ifdef PLATFORM_WIN32
 	MessageBeep(MB_ICONEXCLAMATION);
 #else
-	LinuxBeep("warning.wav");
+	LinuxBeep("warning");
 #endif
 }
 
@@ -824,7 +820,7 @@ void BeepError()
 #ifdef PLATFORM_WIN32
 	MessageBeep(MB_ICONERROR);
 #else
-	LinuxBeep("error.wav");
+	LinuxBeep("error");
 #endif
 }
 
@@ -833,8 +829,7 @@ void BeepQuestion()
 #ifdef PLATFORM_WIN32
 	MessageBeep(MB_ICONQUESTION);
 #else
-	LinuxBeep("question.wav");
-//	write(1, "\a", 1); //??
+	LinuxBeep("question");
 #endif
 }
 
