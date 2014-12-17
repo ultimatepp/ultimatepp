@@ -41,6 +41,8 @@ void SetDefTrough(ScrollBar::Style& s)
 
 extern void (*chgtkspy__)(const char *name, int state, int shadow, const char *detail, int type, int cx, int cy, const Value& look);
 
+extern String CurrentSoundTheme;
+
 void ChHostSkin()
 {
 	MemoryIgnoreLeaksBlock __;
@@ -685,6 +687,8 @@ void ChHostSkin()
 	GUI_AKD_Conservative_Write(0);
 	
 	ClearFtFaceCache();
+	
+	CurrentSoundTheme = GtkStyleString("gtk-sound-theme-name");
 }
 
 END_UPP_NAMESPACE

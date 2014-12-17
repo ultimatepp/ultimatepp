@@ -783,16 +783,16 @@ String GetLastErrorMessage() {
 
 #ifdef PLATFORM_POSIX
 
-String GtkStyleString(const char *name);
+String CurrentSoundTheme = "freedesktop";
 
 static void LinuxBeep(const char *name)
 {
-	String fn = "/usr/share/sounds/" + GtkStyleString("gtk-sound-theme-name") + "/stereo/dialog-" + name;
+	String fn = "/usr/share/sounds/" + CurrentSoundTheme + "/stereo/dialog-" + name;
 	system("play -q  " + fn + (FileExists(fn + ".ogg") ? ".ogg" :
                                FileExists(fn + ".oga") ? ".oga" :
                                FileExists(fn + ".wav") ? ".wav" :
                                ".*")
-	       + " 2>/dev/null&");
+	       + " >/dev/null 2>/dev/null&");
 }
 
 #endif
