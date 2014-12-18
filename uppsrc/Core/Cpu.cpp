@@ -100,10 +100,21 @@ int CPU_Cores()
 	return n;
 }
 #else
-inline int CPU_Cores()
+
+#ifdef PLATFORM_LINUX
+#include <sys/sysinfo.h>
+
+int CPU_Cores()
 {
-	return 1;	
+	return minmax(get_nprocs(), 1, 256);
 }
+#else
+int CPU_Cores()
+{
+	return 1;
+}
+#endif
+
 #endif
 
 #ifdef PLATFORM_WIN32
