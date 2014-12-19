@@ -722,6 +722,9 @@ Size        GetRatioSize(Size stdsize, int cx, int cy);
 Size        GetFitSize(Size objsize, int cx, int cy);
 inline Size GetFitSize(Size objsize, Size intosize) { return GetFitSize(objsize, intosize.cx, intosize.cy); }
 
+Sizef GetFitSize(Sizef sz, double cx, double cy);
+inline Sizef GetFitSize(Sizef objsize, Sizef intosize) { return GetFitSize(objsize, intosize.cx, intosize.cy); }
+
 Pointf Mid(const Pointf& a, const Pointf& b);
 Pointf Orthogonal(const Pointf& p);
 double Squared(const Pointf& p);
