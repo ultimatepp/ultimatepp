@@ -101,6 +101,16 @@ Size  GetFitSize(Size sz, int cx, int cy)
 		return iscale(sz, cx, sz.cx);
 }
 
+Sizef GetFitSize(Sizef sz, double cx, double cy)
+{
+	if(cx <= 0 || cy <= 0 || sz.cx <= 0 || sz.cy <= 0)
+		return Size(0, 0);
+	if(cx * sz.cy >= cy * sz.cx) // too high
+		return sz * cy / sz.cy;
+	else
+		return sz * cx / sz.cx;
+}
+
 double SquareDist(const Pointf& p1, const Pointf& p2)
 {
 	return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
