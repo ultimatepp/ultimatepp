@@ -54,6 +54,9 @@ enum {
 
 	PAINTING_FILL_GRADIENT_X,
 	PAINTING_STROKE_GRADIENT_X,
+
+	PAINTING_FILL_RADIAL_X,
+	PAINTING_STROKE_RADIAL_X,
 };
 
 class PaintingPainter : public Painter {
@@ -94,6 +97,8 @@ protected:
 	virtual void   FillOp(const Pointf& f, const RGBA& color1, 
 	                      const Pointf& c, double r, const RGBA& color2,
 	                      int style);
+	virtual void   FillOp(const Pointf& f, const RGBA& color1, const RGBA& color2,
+	                      const Xform2D& transsrc, int style);
 
 	virtual void   StrokeOp(double width, const RGBA& rgba);
 	virtual void   StrokeOp(double width, const Image& image, const Xform2D& transsrc,
@@ -106,6 +111,9 @@ protected:
 	virtual void   StrokeOp(double width, const Pointf& f, const RGBA& color1, 
 	                        const Pointf& c, double r, const RGBA& color2,
 	                        int style);
+	virtual void   StrokeOp(double width, const Pointf& f,
+	                        const RGBA& color1, const RGBA& color2,
+	                        const Xform2D& transsrc, int style);
 
 	virtual void   ClipOp();
 

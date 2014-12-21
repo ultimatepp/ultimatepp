@@ -111,6 +111,29 @@ void PaintingPainter::FillOp(const RGBA& color1, const RGBA& color2, const Xform
 	Put(style);
 }
 
+void PaintingPainter::FillOp(const Pointf& f, const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, int style)
+{
+	Put(PAINTING_FILL_RADIAL_X);
+	Putf(f);
+	Put(color1);
+	Put(color2);
+	Putf(transsrc);
+	Put(style);
+}
+
+void PaintingPainter::StrokeOp(double width, const Pointf& f, const RGBA& color1,
+                               const RGBA& color2, const Xform2D& transsrc, int style)
+{
+	Put(PAINTING_FILL_RADIAL_X);
+	Putf(width);
+	Putf(f);
+	Put(color1);
+	Put(color2);
+	Putf(transsrc);
+	Put(style);
+}
+
+
 void PaintingPainter::FillOp(const Pointf& f, const RGBA& color1,
                              const Pointf& p, double r, const RGBA& color2, int style)
 {

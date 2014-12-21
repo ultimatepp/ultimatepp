@@ -123,6 +123,14 @@ void Painter::Paint(const Painting& pic)
 			f = ss.Get();
 			FillOp(c, c1, m, f);
 			break;
+		case PAINTING_FILL_RADIAL_X:
+			sGet(p1, ss);
+			sGet(c, ss);
+			sGet(c1, ss);
+			sGet(m, ss);
+			f = ss.Get();
+			FillOp(p1, c, c1, m, f);
+			break;		
 		case PAINTING_FILL_RADIAL:
 			sGet(p, ss);
 			sGet(c, ss);
@@ -165,6 +173,16 @@ void Painter::Paint(const Painting& pic)
 			f = ss.Get();
 			FillOp(c, c1, m, f);
 			StrokeOp(w, c, c1, m, f);
+			break;
+		case PAINTING_STROKE_RADIAL_X:
+			sGet(w, ss);
+			sGet(p1, ss);
+			sGet(c, ss);
+			sGet(c1, ss);
+			sGet(m, ss);
+			f = ss.Get();
+			FillOp(c, c1, m, f);
+			StrokeOp(w, p1, c, c1, m, f);
 			break;
 		case PAINTING_STROKE_RADIAL:
 			sGet(w, ss);

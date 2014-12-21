@@ -51,7 +51,6 @@ Xform2D operator*(const Xform2D& a, const Xform2D& b)
 Xform2D Xform2D::Translation(double x, double y)
 {
 	Xform2D m;
-	m.x.x = m.y.y = 1;
 	m.t = Pointf(x, y);
 	return m;
 }

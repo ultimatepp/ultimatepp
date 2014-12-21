@@ -383,6 +383,18 @@ Painter& Painter::Fill(double x, double y, const RGBA& color1, double r, const R
 	return Fill(Pointf(x, y), color1, r, color2, style);
 }
 
+Painter& Painter::Fill(const Pointf& f, const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, int style)
+{
+	FillOp(f, color1, color2, transsrc, style);
+	return *this;
+}
+
+Painter& Painter::Stroke(double width, const Pointf& f, const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, int style)
+{
+	StrokeOp(width, f, color1, color2, transsrc, style);
+	return *this;
+}
+
 Painter& Painter::Translate(double x, double y)
 {
 	Transform(Xform2D::Translation(x, y));
@@ -534,13 +546,18 @@ Painter& Painter::Rectangle(double x, double y, double cx, double cy)
 
 Painter& Painter::RoundedRectangle(double x, double y, double cx, double cy, double r)
 {
-	ASSERT(r >= 0);
+	return RoundedRectangle(x, y, cx, cy, r, r);
+}
+
+Painter& Painter::RoundedRectangle(double x, double y, double cx, double cy, double rx, double ry)
+{
+	ASSERT(rx >= 0 && ry >= 0);
 	if (cx < 0) { x += cx; cx = -cx;}
 	if (cy < 0) { y += cy; cy = -cy;}
-	Move(x + r, y).Arc(x + r, y + r, r, r, -M_PI / 2, -M_PI / 2)
-	.Line(x, y + cy - r).Arc(x + r, y + cy - r, r, r, M_PI, -M_PI / 2)
-	.Line(x + cx - r, y + cy).Arc(x + cx - r, y + cy - r, r, r, M_PI / 2, -M_PI / 2)
-	.Line(x + cx, y + r).Arc(x + cx - r, y + r, r, r, 0, -M_PI / 2).Line(x + r, y);
+	Move(x + rx, y).Arc(x + rx, y + ry, rx, ry, -M_PI / 2, -M_PI / 2)
+	.Line(x, y + cy - ry).Arc(x + rx, y + cy - ry, rx, ry, M_PI, -M_PI / 2)
+	.Line(x + cx - rx, y + cy).Arc(x + cx - rx, y + cy - ry, rx, ry, M_PI / 2, -M_PI / 2)
+	.Line(x + cx, y + ry).Arc(x + cx - rx, y + ry, rx, ry, 0, -M_PI / 2).Line(x + rx, y);
 	return *this;
 }
 
@@ -570,11 +587,13 @@ void NilPainter::FillOp(const Image& image, const Xform2D& transsrc, dword flags
 void NilPainter::FillOp(const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, int style) {}
 void NilPainter::FillOp(const Pointf& p1, const RGBA& color1, const Pointf& p2, const RGBA& color2, int style) {}
 void NilPainter::FillOp(const Pointf& f, const RGBA& color1, const Pointf& c, double r, const RGBA& color2, int style) {}
+void NilPainter::FillOp(const Pointf& f, const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, int style) {}
 void NilPainter::StrokeOp(double width, const RGBA& rgba) {}
 void NilPainter::StrokeOp(double width, const Image& image, const Xform2D& transsrc, dword flags) {}
 void NilPainter::StrokeOp(double width, const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, int style) {}
 void NilPainter::StrokeOp(double width, const Pointf& p1, const RGBA& color1, const Pointf& p2, const RGBA& color2, int style) {}
 void NilPainter::StrokeOp(double width, const Pointf& f, const RGBA& color1, const Pointf& c, double r, const RGBA& color2, int style) {}
+void NilPainter::StrokeOp(double width, const Pointf& f, const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, int style) {}
 void NilPainter::ClipOp() {}
 void NilPainter::CharacterOp(const Pointf& p, int ch, Font fnt) {}
 void NilPainter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, double *dx) {}

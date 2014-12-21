@@ -48,7 +48,7 @@ void BufferPainter::FillOp(const Pointf& p1, const RGBA& color1, const Pointf& p
 {
 	Gradient(color1, color2, p1, p2);
 	Fill(gradient, p1, p2,
-	     FILL_VPAD |
+	     FILL_VPAD | (style & FILL_FAST) |
 	     (style == GRADIENT_PAD ? FILL_HPAD : style == GRADIENT_REPEAT
 	                            ? FILL_HREPEAT : FILL_HREFLECT));
 }
@@ -56,8 +56,8 @@ void BufferPainter::FillOp(const Pointf& p1, const RGBA& color1, const Pointf& p
 void BufferPainter::FillOp(const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, int style)
 {
 	MakeGradient(color1, color2, 500);
-	Fill(gradient, transsrc * Xform2D::Scale(1.0 / 500),
-	     FILL_VPAD |
+	Fill(gradient, Xform2D::Scale(1.0 / 500) * transsrc,
+	     FILL_VPAD | (style & FILL_FAST) |
 	     (style == GRADIENT_PAD ? FILL_HPAD : style == GRADIENT_REPEAT
 	                            ? FILL_HREPEAT : FILL_HREFLECT));
 }
@@ -66,7 +66,7 @@ void BufferPainter::StrokeOp(double width, const Pointf& p1, const RGBA& color1,
 {
 	Gradient(color1, color2, p1, p2);
 	Stroke(width, gradient, p1, p2,
-	       FILL_VPAD |
+	       FILL_VPAD | (style & FILL_FAST) |
 	       (style == GRADIENT_PAD ? FILL_HPAD : style == GRADIENT_REPEAT
 	                              ? FILL_HREPEAT : FILL_HREFLECT));
 }
@@ -74,8 +74,8 @@ void BufferPainter::StrokeOp(double width, const Pointf& p1, const RGBA& color1,
 void BufferPainter::StrokeOp(double width, const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, int style)
 {
 	MakeGradient(color1, color2, 500);
-	Stroke(width, gradient, transsrc * Xform2D::Scale(1.0 / 500),
-	       FILL_VPAD |
+	Stroke(width, gradient, Xform2D::Scale(1.0 / 500) * transsrc,
+	       FILL_VPAD | (style & FILL_FAST) |
 	       (style == GRADIENT_PAD ? FILL_HPAD : style == GRADIENT_REPEAT
 	                              ? FILL_HREPEAT : FILL_HREFLECT));
 }
