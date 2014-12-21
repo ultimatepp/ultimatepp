@@ -109,6 +109,8 @@ protected:
 	                      int style) = 0;
 	virtual void   FillOp(const RGBA& color1, const RGBA& color2, const Xform2D& transsrc,
 	                      int style) = 0;
+	virtual void   FillOp(const Pointf& f, const RGBA& color1, const RGBA& color2,
+	                      const Xform2D& transsrc, int style) = 0;
 
 	virtual void   StrokeOp(double width, const RGBA& rgba) = 0;
 	virtual void   StrokeOp(double width, const Image& image, const Xform2D& transsrc,
@@ -121,6 +123,9 @@ protected:
 	virtual void   StrokeOp(double width, const Pointf& f, const RGBA& color1, 
 	                        const Pointf& c, double r, const RGBA& color2,
 	                        int style) = 0;
+	virtual void   StrokeOp(double width, const Pointf& f,
+	                        const RGBA& color1, const RGBA& color2,
+	                        const Xform2D& transsrc, int style) = 0;
 
 	virtual void   ClipOp() = 0;
 
@@ -251,6 +256,8 @@ public:
 	              double r, const RGBA& color2, int style = GRADIENT_PAD);
 	Painter& Fill(double x, double y, const RGBA& color1,
 	              double r, const RGBA& color2, int style = GRADIENT_PAD);
+	Painter& Fill(const Pointf& f, const RGBA& color1, const RGBA& color2,
+	              const Xform2D& transsrc, int style = GRADIENT_PAD);
 
 	Painter& Stroke(double width, const RGBA& color);
 	Painter& Stroke(double width, const Image& image, const Xform2D& transsrc, dword flags = 0);
@@ -272,6 +279,9 @@ public:
 	                double r, const RGBA& color2, int style = GRADIENT_PAD);
 	Painter& Stroke(double width, double x, double y, const RGBA& color1,
 	                double r, const RGBA& color2, int style = GRADIENT_PAD);
+	Painter& Stroke(double width, const Pointf& f,
+	                const RGBA& color1, const RGBA& color2,
+	                const Xform2D& transsrc, int style = GRADIENT_PAD);
 
 	Painter& Clip();
 
@@ -314,6 +324,7 @@ public:
 
 	Painter& Rectangle(double x, double y, double cx, double cy);
 	Painter& RoundedRectangle(double x, double y, double cx, double cy, double r);
+	Painter& RoundedRectangle(double x, double y, double cx, double cy, double r1, double r2);
 	Painter& Ellipse(double x, double y, double rx, double ry);
 	Painter& Circle(double x, double y, double r);
 	
@@ -378,6 +389,8 @@ protected:
 	virtual void   FillOp(const Pointf& f, const RGBA& color1, 
 	                      const Pointf& c, double r, const RGBA& color2,
 	                      int style);
+	virtual void   FillOp(const Pointf& f, const RGBA& color1, const RGBA& color2,
+	                      const Xform2D& transsrc, int style);
 
 	virtual void   StrokeOp(double width, const RGBA& rgba);
 	virtual void   StrokeOp(double width, const Image& image, const Xform2D& transsrc,
@@ -391,6 +404,9 @@ protected:
 	virtual void   StrokeOp(double width, const Pointf& f, const RGBA& color1, 
 	                        const Pointf& c, double r, const RGBA& color2,
 	                        int style);
+	virtual void   StrokeOp(double width, const Pointf& f,
+	                        const RGBA& color1, const RGBA& color2,
+	                        const Xform2D& transsrc, int style);
 
 	virtual void   ClipOp();
 

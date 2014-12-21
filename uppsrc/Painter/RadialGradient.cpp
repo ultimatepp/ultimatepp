@@ -55,10 +55,10 @@ struct PainterRadialSpan : SpanSource {
 };
 
 void BufferPainter::RenderRadial(double width, const Pointf& f, const RGBA& color1,
-                                 const Pointf& c, double r, const RGBA& color2, int style)
+                                 const Pointf& c, double r, const RGBA& color2,
+                                 const Xform2D& m, int style)
 {
 	PainterRadialSpan sg;
-	Xform2D m = pathattr.mtx;
 	sg.interpolator.Set(Inverse(m));
 	sg.style = style;
 	sg.Set(c.x, c.y, r, f.x, f.y);
@@ -69,12 +69,28 @@ void BufferPainter::RenderRadial(double width, const Pointf& f, const RGBA& colo
 
 void BufferPainter::FillOp(const Pointf& f, const RGBA& color1, const Pointf& c, double r, const RGBA& color2, int style)
 {
-	RenderRadial(-1, f, color1, c, r, color2, style);
+	RenderRadial(-1, f, color1, c, r, color2, pathattr.mtx, style);
 }
 
 void BufferPainter::StrokeOp(double width, const Pointf& f, const RGBA& color1, const Pointf& c, double r, const RGBA& color2, int style)
 {
-	RenderRadial(width, f, color1, c, r, color2, style);
+	RenderRadial(width, f, color1, c, r, color2, pathattr.mtx, style);
+}
+
+void BufferPainter::RenderRadial(double width, const Pointf& f, const RGBA& color1,
+                                 const RGBA& color2, const Xform2D& transsrc, int style)
+{
+	RenderRadial(width, f, color1, Pointf(0, 0), 1, color2, transsrc * pathattr.mtx, style);
+}
+
+void BufferPainter::FillOp(const Pointf& f, const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, int style)
+{
+	RenderRadial(-1, f, color1, color2, transsrc, style);
+}
+
+void BufferPainter::StrokeOp(double width, const Pointf& f, const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, int style)
+{
+	RenderRadial(width, f, color1, color2, transsrc, style);
 }
 
 END_UPP_NAMESPACE

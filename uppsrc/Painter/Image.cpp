@@ -34,14 +34,15 @@ Image DownScale(const Image& img, int nx, int ny)
 	ASSERT(nx > 0 && ny > 0);
 	Size ssz = img.GetSize();
 	Size tsz = Size((ssz.cx + nx - 1) / nx, (ssz.cy + ny - 1) / ny);
-	int div = nx * ny;
 	Buffer<RGBAV> b(tsz.cx);
 	ImageBuffer ib(tsz);
 	RGBA *it = ~ib;
 	int scx0 = ssz.cx / nx * nx;
+	Buffer<int> div(tsz.cx);
 	for(int yy = 0; yy < ssz.cy; yy += ny) {
 		for(int i = 0; i < tsz.cx; i++)
 			b[i].Clear();
+		memset(div, 0, tsz.cx * sizeof(int));
 		for(int yi = 0; yi < ny; yi++) {
 			int y = yy + yi;
 			if(y < ssz.cy) {
@@ -49,18 +50,25 @@ Image DownScale(const Image& img, int nx, int ny)
 				const RGBA *e = s + scx0;
 				const RGBA *e2 = s + ssz.cx;
 				RGBAV *t = ~b;
+				int *dv = div;
 				while(s < e) {
-					for(int n = nx; n--;)
+					for(int n = nx; n--;) {
 						t->Put(*s++);
+						(*dv)++;
+					}
 					t++;
+					dv++;
 				}
-				while(s < e2)
+				while(s < e2) {
 					t->Put(*s++);
+					(*dv)++;
+				}
 			}
 		}
 		const RGBAV *s = ~b;
+		const int *dv = div;
 		for(int x = 0; x < tsz.cx; x++)
-			*it++ = (s++)->Get(div);
+			*it++ = (s++)->Get(*dv++);
 	}
 	return ib;
 }
