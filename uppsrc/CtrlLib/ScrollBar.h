@@ -93,7 +93,7 @@ public:
 	void    Begin();
 	void    End();
 
-	void    Wheel(int zdelta, int lines = 3);
+	void    Wheel(int zdelta);
 
 	Size    GetViewSize() const;
 	Size    GetReducedViewSize() const;
@@ -221,8 +221,8 @@ public:
 	void    HorzBegin()                              { x.Begin(); }
 	void    HorzEnd()                                { x.End(); }
 
-	void    WheelX(int zdelta, int lines = 3)        { x.Wheel(zdelta, lines); }
-	void    WheelY(int zdelta, int lines = 3)        { y.Wheel(zdelta, lines); }
+	void    WheelX(int zdelta)                       { x.Wheel(zdelta); }
+	void    WheelY(int zdelta)                       { y.Wheel(zdelta); }
 
 	Size    GetViewSize() const;
 	Size    GetReducedViewSize() const;
