@@ -79,6 +79,7 @@ private:
 	bool        lateinsert;
 	bool        goendpostquery;
 	bool        autoinsertid;
+	bool        updatekey;
 
 	SqlBool     GetWhere();
 #ifndef NOAPPSQL
@@ -128,6 +129,7 @@ public:
 	SqlArray& GoEndPostQuery(bool b = true)                { goendpostquery = b; return *this; }
 	SqlArray& AutoInsertId(bool b = true)                  { autoinsertid = b; return *this; }
 	SqlArray& AppendingAuto()                              { Appending(); return AutoInsertId(); }
+	SqlArray& UpdateKey(bool b =  true)                    { updatekey = b; return *this; }
 
 	void      Clear();
 	void      Reset();

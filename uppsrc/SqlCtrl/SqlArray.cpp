@@ -69,7 +69,7 @@ bool SqlArray::UpdateRow() {
 	else {
 		SqlUpdate update(table);
 		for(int i = 0; i < GetIndexCount(); i++)
-			if(!GetId(i).IsNull() && IsModified(i) && (i || lateinsert))
+			if(!GetId(i).IsNull() && IsModified(i) && (i || lateinsert || updatekey))
 				update(GetId(i), Get(i));
 		if(update) {
 			Session().ClearError();
@@ -235,6 +235,7 @@ SqlArray::SqlArray() {
 	offset = 0;
 	count = Null;
 	WhenFilter = true;
+	updatekey = false;
 }
 
 END_UPP_NAMESPACE
