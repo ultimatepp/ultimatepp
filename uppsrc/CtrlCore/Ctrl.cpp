@@ -964,6 +964,7 @@ CH_INT(GUI_AltAccessKeys, 1);
 CH_INT(GUI_AKD_Conservative, 0);
 CH_INT(GUI_DragDistance, 4);
 CH_INT(GUI_DblClickTime, 500);
+CH_INT(GUI_WheelScrollLines, 3);
 
 String Ctrl::Name0() const {
 	GuiLock __;

@@ -607,6 +607,10 @@ void ChSysInit()
 	GUI_DragDistance_Write(GetSystemMetrics(SM_CXDRAG));
 	GUI_DblClickTime_Write(GetDoubleClickTime());
 
+	int slines;
+	SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &slines, 0);
+	GUI_WheelScrollLines_Write(slines);
+
 	CtrlImg::Set(CtrlImg::I_information, Win32Icon(IDI_INFORMATION));
 	CtrlImg::Set(CtrlImg::I_question, Win32Icon(IDI_QUESTION));
 	CtrlImg::Set(CtrlImg::I_exclamation, Win32Icon(IDI_EXCLAMATION));

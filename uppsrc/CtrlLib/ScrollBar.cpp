@@ -394,8 +394,8 @@ void ScrollBar::NextPage() {
 	Uset(pagepos + max(pagesize - linesize, 1));
 }
 
-void ScrollBar::Wheel(int zdelta, int lines) {
-	Uset(pagepos - lines * linesize * zdelta / 120);
+void ScrollBar::Wheel(int zdelta) {
+	Uset(pagepos - GUI_WheelScrollLines() * linesize * zdelta / 120);
 }
 
 bool ScrollBar::VertKey(dword key, bool homeend) {
