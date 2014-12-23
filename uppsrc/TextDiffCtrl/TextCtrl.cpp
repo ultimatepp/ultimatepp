@@ -213,7 +213,6 @@ void TextCompareCtrl::Paint(Draw& draw)
 		draw.DrawRect(gx + gutter_width - 2, ty, 2, by - ty, Black);
 	}
 
-	Font ifont = Font(font).Italic();
 	for(int i = first_line; i <= last_line; i++) {
 		const Line& l = lines[i];
 		int y = i * letter.cy - offset.cy;

@@ -10,7 +10,6 @@ inline bool Is3(const wchar *s, int c)
 void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int pos)
 {
 	const HlStyle& ink = hl_style[INK_NORMAL];
-	const HlStyle& paper = hl_style[PAPER_NORMAL];
 	HlStyle err = hl_style[INK_ERROR];
 	err.bold = true;
 	bool hl_line = false;

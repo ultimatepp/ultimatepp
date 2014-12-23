@@ -73,7 +73,6 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 				if(p.Char(':') && p.IsInt()) 
 					f.linepos = p.ReadInt();
 				const char *ms = p.GetPtr();
-				int pos = int(ms - ~ln);
 				f.kind = 3;
 				if(ln.Find("warning") >= 0)
 					f.kind = 2;

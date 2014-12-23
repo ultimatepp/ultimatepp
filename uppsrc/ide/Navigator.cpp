@@ -20,7 +20,6 @@ int DrawFileName0(Draw& w, const Rect& r, const String& h, Color ink, int x)
 		return 0;
 	String s = GetFileName(GetFileFolder(h)) + "/";
 	x += r.left;
-	int y = r.top + (r.GetHeight() - GetStdFontCy()) / 2;
 	PaintTeXt(w, x, r.top, s, StdFont(), ink);
 	s = GetFileName(h);
 	PaintTeXt(w, x, r.top, s, StdFont().Bold(), ink);
@@ -120,7 +119,6 @@ void Navigator::SyncNavLines()
 	navlines.Clear();
 	int ii = list.GetCursor();
 	if(ii >= 0 && ii < litem.GetCount()) {
-		int ln = GetCurrentLine() + 1;
 		Vector<NavLine> l = GetNavLines(*litem[ii]);
 		for(int i = 0; i < l.GetCount(); i++) {
 			String p = GetCppFile(l[i].file);
@@ -341,7 +339,6 @@ int Navigator::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	PaintCppItemImage(w, x, ry, m.access, m.kind, focuscursor);	
 
 	x += 15;
-	int x0 = x;
 	Vector<ItemTextPart> n = ParseItemNatural(m.name, m.natural, m.ptype, m.pname, m.type,
 	                                          m.tname, m.ctname, ~m.natural + m.at);
 	int starti = 0;

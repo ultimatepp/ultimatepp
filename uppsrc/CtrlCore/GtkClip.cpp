@@ -362,7 +362,7 @@ Vector<String> GetClipFiles(const String& data)
 	Vector<String> f = Split(data, '\n');
 	for(int i = 0; i < f.GetCount(); i++)
 		if(f[i].StartsWith("file://"))
-			r.Add(f[i].Mid(7));
+			r.Add(UrlDecode(f[i].Mid(7)));
 	return r;
 }
 
@@ -379,7 +379,7 @@ void AppendFiles(VectorMap<String, ClipData>& data, const Vector<String>& files)
 		return;
 	String h;
 	for(int i = 0; i < files.GetCount(); i++)
-		h << "file://" << files[i] << '\n';
+		h << "file://" << UrlEncode(files[i]) << '\n';
 	data.GetAdd("files") = h;
 }
 
