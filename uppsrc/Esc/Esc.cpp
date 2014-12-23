@@ -845,11 +845,12 @@ void Esc::Assign(Esc::SRVal& r)
 			Assign(r, v);
 		}
 		else
-		if(!(v.IsArray() && b.IsVoid()))
+		if(!(v.IsArray() && b.IsVoid())) {
 			if(v.IsInt64() && b.IsInt64())
 				Assign(r, Int(v, "+=") + Int(b, "+="));
 			else
 				Assign(r, Number(v, "+=") + Number(b, "+="));
+		}
 	}
 	else
 	if(Char2('-', '=')) {

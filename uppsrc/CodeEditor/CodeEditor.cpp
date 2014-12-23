@@ -195,7 +195,6 @@ void CodeEditor::CopyWord() {
 
 void CodeEditor::DuplicateLine()
 {
-	int p = GetCursor();
 	int i = GetLine(cursor);
 	int pos = GetPos(i);
 	int len = GetLineLength(i);
