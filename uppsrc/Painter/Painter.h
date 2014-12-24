@@ -155,7 +155,7 @@ protected:
 protected:
 	static bool   ReadBool(CParser& p);
 	static double ReadDouble(CParser& p);
-	static Pointf ReadPoint(CParser& p);
+	static Pointf ReadPoint(CParser& p, Pointf& current, bool rel);
 	void   DoArc0(double theta, double th_sweep, const Xform2D& m);
 	void   DoArc(const Pointf& c, const Pointf& r, double angle, double sweep, double xangle);
 	void   DoSvgArc(const Pointf& rr, double xangle, int large, int sweep,
@@ -433,6 +433,15 @@ protected:
 	virtual void   BeginMaskOp();
 	virtual void   BeginOnPathOp(double q, bool abs);
 };
+
+bool  RenderSVG(Painter& p, const char *svg,
+                Callback2<String, String&>& resloader = Callback2<String, String&>());
+
+void  GetSVGDimensions(const char *svg, Sizef& sz, Rectf& viewbox);
+Rectf GetSVGBoundingBox(const char *svg);
+
+Image RenderSVGImage(Size sz, const char *svg,
+                     Callback2<String, String&>& resloader = Callback2<String, String&>());
 
 END_UPP_NAMESPACE
 

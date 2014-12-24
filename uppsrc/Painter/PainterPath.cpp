@@ -13,19 +13,22 @@ bool Painter::ReadBool(CParser& p)
 double Painter::ReadDouble(CParser& p)
 {
 	while(p.Char(','));
-	return p.IsDouble() ? p.ReadDouble() : 0;
+	return p.IsDouble2() ? p.ReadDouble() : 0;
 }
 
-Pointf Painter::ReadPoint(CParser& p)
+Pointf Painter::ReadPoint(CParser& p, Pointf& current, bool rel)
 {
 	Pointf t;
 	t.x = ReadDouble(p);
 	t.y = ReadDouble(p);
+	if(rel)
+		t += current;
 	return t;
 }
 
 Painter& Painter::Path(CParser& p)
 {
+	Pointf current(0, 0);
 	while(!p.IsEof()) {
 		int c = p.GetChar();
 		p.Spaces();
@@ -33,61 +36,65 @@ Painter& Painter::Path(CParser& p)
 		Pointf t, t1, t2;
 		switch(ToUpper(c)) {
 		case 'M':
-			t = ReadPoint(p);
-			Move(t, rel);
+			current = ReadPoint(p, current, rel);
+			Move(current);
 		case 'L':
-			while(p.IsDouble()) {
-				t = ReadPoint(p);
-				Line(t, rel);
+			while(p.IsDouble2()) {
+				current = ReadPoint(p, current, rel);
+				Line(current);
 			}
 			break;
 		case 'Z':
 			Close();
 			break;
 		case 'H':
-			while(p.IsDouble())
-				Line(p.ReadDouble(), Null, rel);
+			while(p.IsDouble2()) {
+				current.x = p.ReadDouble() + rel * current.x;
+				Line(current);
+			}
 			break;
 		case 'V':
-			while(p.IsDouble())
-				Line(Null, p.ReadDouble(), rel);
+			while(p.IsDouble2()) {
+				current.y = p.ReadDouble() + rel * current.y;
+				Line(current);
+			}
 			break;
 		case 'C':
-			while(p.IsDouble()) {
-				t1 = ReadPoint(p);
-				t2 = ReadPoint(p);
-				t = ReadPoint(p);
-				Cubic(t1, t2, t, rel);
+			while(p.IsDouble2()) {
+				t1 = ReadPoint(p, current, rel);
+				t2 = ReadPoint(p, current, rel);
+				current = ReadPoint(p, current, rel);
+				Cubic(t1, t2, current);
 			}
 			break;
 		case 'S':
-			while(p.IsDouble()) {
-				t2 = ReadPoint(p);
-				t = ReadPoint(p);
-				Cubic(t2, t, rel);
+			while(p.IsDouble2()) {
+				t2 = ReadPoint(p, current, rel);
+				current = ReadPoint(p, current, rel);
+				Cubic(t2, current);
 			}
 			break;
 		case 'Q':
-			while(p.IsDouble()) {
-				t1 = ReadPoint(p);
-				t = ReadPoint(p);
-				Quadratic(t1, t, rel);
+			while(p.IsDouble2()) {
+				t1 = ReadPoint(p, current, rel);
+				current = ReadPoint(p, current, rel);
+				Quadratic(t1, current);
 			}
 			break;
 		case 'T':
-			while(p.IsDouble()) {
-				t = ReadPoint(p);
-				Quadratic(t, rel);
+			while(p.IsDouble2()) {
+				current = ReadPoint(p, current, rel);
+				Quadratic(current);
 			}
 			break;
 		case 'A':
-			while(p.IsDouble()) {
-				t1 = ReadPoint(p);
+			while(p.IsDouble2()) {
+				t1 = ReadPoint(p, Pointf(0, 0), false);
 				double xangle = ReadDouble(p);
 				bool large = ReadBool(p);
 				bool sweep = ReadBool(p);
-				t = ReadPoint(p);
-				SvgArc(t1, xangle * M_PI / 180.0, large, sweep, t, rel);
+				current = ReadPoint(p, current, rel);
+				SvgArc(t1, xangle * M_PI / 180.0, large, sweep, current);
 			}
 			break;
 		default:

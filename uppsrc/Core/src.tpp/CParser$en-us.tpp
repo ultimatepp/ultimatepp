@@ -249,7 +249,7 @@ eadInt64]([_^int64^ int64]_[*@3 min], [_^int64^ int64]_[*@3 max])_[@(0.0.255) th
 [s2;%% Performs ReadInt64 and then checks the result to be in [%-*@3 min] 
 <`= result <`= [%-*@3 max]. If not, throws a [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Error`:`:struct^ C
 Parser`::Error], otherwise returns it.&]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:CParser`:`:IsNumber`(`)const: [@(0.0.255) bool]_[* IsNumber]()_[@(0.0.255) const]&]
 [s2;%% Tests for sign`-less number at current position `- there must 
@@ -280,11 +280,18 @@ umber64]([@(0.0.255) int]_[*@3 base]_`=_[@3 10])_[@(0.0.255) throw](Error)&]
 [s2;%% Test for floating point number at current position `- there 
 either must be digit, or `'`+`' or `'`-`' sign followed by any 
 number of spaces and digit.&]
+[s3;%% &]
+[s4; &]
+[s5;:CParser`:`:IsDouble2`(`)const: [@(0.0.255) bool]_[* IsDouble2]()_[@(0.0.255) const]&]
+[s2;%% Similar to IsDouble, but also allows double number to start 
+with decimal point, like `'.21`'.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:ReadDouble`(`)throw`(CParser`:`:Error`): [@(0.0.255) double]_[* ReadDoubl
 e]()_[@(0.0.255) throw](Error)&]
-[s2;%% Reads a floating point number with C based lexical rules.&]
+[s2;%% Reads a floating point number with C based lexical rules. 
+As an exception to C lexical rules, ReadDouble also recognizes 
+form starting with decimal point, like `".21`".&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:IsString`(`)const: [@(0.0.255) bool]_[* IsString]()_[@(0.0.255) const]&]

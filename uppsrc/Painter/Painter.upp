@@ -1,4 +1,4 @@
-description "2D software rendering with PDF/SVG strength\377";
+description "2D software rendering with PDF/SVG strength\377B85,85,150";
 
 uses
 	Draw;
@@ -33,6 +33,12 @@ file
 	Gradient.cpp optimize_speed,
 	RadialGradient.cpp optimize_speed,
 	OnPath.cpp,
+	SVG readonly separator,
+	SvgInternal.h,
+	SvgUtil.cpp,
+	SvgBounds.cpp,
+	SvgStyle.cpp,
+	SvgParser.cpp,
 	srcimp.tpp,
 	Info readonly separator,
 	Copying;
