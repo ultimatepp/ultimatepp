@@ -460,6 +460,11 @@ bool RenderSVG(Painter& p, const char *svg, Callback2<String, String&>& resloade
 	return ParseSVG(p, svg, resloader, NULL);
 }
 
+bool RenderSVG(Painter& p, const char *svg)
+{
+	return RenderSVG(p, svg, Callback2<String, String&>());
+}
+
 void GetSVGDimensions(const char *svg, Sizef& sz, Rectf& viewbox)
 {
 	viewbox = Null;
@@ -499,6 +504,11 @@ Image RenderSVGImage(Size sz, const char *svg, Callback2<String, String&>& reslo
 	sw.Translate(-f.left, -f.top);
 	RenderSVG(sw, svg, resloader);
 	return ib;
+}
+
+Image RenderSVGImage(Size sz, const char *svg)
+{
+	return RenderSVGImage(sz, svg, Callback2<String, String&>());
 }
 
 END_UPP_NAMESPACE
