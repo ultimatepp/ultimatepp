@@ -29,7 +29,7 @@ struct Xform2D {
 Xform2D operator*(const Xform2D& a, const Xform2D& b);
 Xform2D Inverse(const Xform2D& m);
 
-enum {
+enum PainterOptions {
 	LINECAP_BUTT,
 	LINECAP_SQUARE,
 	LINECAP_ROUND,
@@ -155,7 +155,7 @@ protected:
 protected:
 	static bool   ReadBool(CParser& p);
 	static double ReadDouble(CParser& p);
-	static Pointf ReadPoint(CParser& p, Pointf& current, bool rel);
+	static Pointf ReadPoint(CParser& p, Pointf current, bool rel);
 	void   DoArc0(double theta, double th_sweep, const Xform2D& m);
 	void   DoArc(const Pointf& c, const Pointf& r, double angle, double sweep, double xangle);
 	void   DoSvgArc(const Pointf& rr, double xangle, int large, int sweep,
@@ -434,13 +434,13 @@ protected:
 	virtual void   BeginOnPathOp(double q, bool abs);
 };
 
-bool  RenderSVG(Painter& p, const char *svg, Callback2<String, String&>& resloader);
+bool  RenderSVG(Painter& p, const char *svg, Callback2<String, String&> resloader);
 bool  RenderSVG(Painter& p, const char *svg);
 
 void  GetSVGDimensions(const char *svg, Sizef& sz, Rectf& viewbox);
 Rectf GetSVGBoundingBox(const char *svg);
 
-Image RenderSVGImage(Size sz, const char *svg, Callback2<String, String&>& resloader);
+Image RenderSVGImage(Size sz, const char *svg, Callback2<String, String&> resloader);
 Image RenderSVGImage(Size sz, const char *svg);
 
 END_UPP_NAMESPACE
