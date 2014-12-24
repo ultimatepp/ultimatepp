@@ -1,0 +1,36 @@
+description "Simple SVG viewer (PainterSvg demo)\377";
+
+uses
+	CtrlLib,
+	plugin\tif,
+	plugin\jpg,
+	plugin\gif,
+	Painter;
+
+file
+	main.cpp,
+	SVG readonly separator,
+	svg\altum_angelfish_01.svg,
+	svg\bored_dog_01.svg,
+	svg\brown_fish_01.svg,
+	svg\filltest.svg,
+	svg\gradient2.svg,
+	svg\gradient-alignment.svg,
+	svg\matrix.svg,
+	svg\polys.svg,
+	svg\anne.svg,
+	svg\transparency.svg,
+	svg\tux.svg,
+	svg\radialgradient1.svg,
+	svg\rg1024_Presentation_with_girl.svg,
+	svg\dashtest.svg,
+	svg\radialgradient2.svg,
+	svg\shapes-polygon-01-t.svg,
+	svg\twitter2.svg,
+	svg\twitter.svg,
+	svg\yinyang.svg,
+	svg\batik70.svg;
+
+mainconfig
+	"" = "GUI";
+
