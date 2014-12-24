@@ -81,10 +81,7 @@ void EyeCare::Wash()
 
 void EyeCare::Sync()
 {
-#ifdef PLATFORM_WIN32
-	ExStyle(config.topmost ? GetExStyle() | WS_EX_TOPMOST
-	                       : GetExStyle() & ~WS_EX_TOPMOST);
-#endif
+	TopMost(config.topmost);
 	trayicon.Icon(ignore ? EyeCareImg::off() : EyeCareImg::icon());
 	if(config.hideicon)
 		ignore = false;
