@@ -58,6 +58,7 @@ public:
 	uint32 ReadNumber(int base = 10) throw(Error);
 	uint64 ReadNumber64(int base = 10) throw(Error);
 	bool   IsDouble() const                   { return IsInt(); }
+	bool   IsDouble2() const                  { return IsInt() || IsChar('.'); }
 	double ReadDouble() throw(Error);
 	bool   IsString() const                   { return IsChar('\"'); };
 	String ReadOneString(bool chkend = true) throw(Error);
