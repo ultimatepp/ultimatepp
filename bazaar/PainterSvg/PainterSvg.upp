@@ -1,9 +1,0 @@
-uses
-	Painter,
-	plugin\jpg;
-
-file
-	PainterSvg.h,
-	ParseSvg.cpp,
-	License.txt;
-
