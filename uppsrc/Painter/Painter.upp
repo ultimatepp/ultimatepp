@@ -41,5 +41,6 @@ file
 	SvgParser.cpp,
 	srcimp.tpp,
 	Info readonly separator,
-	Copying;
+	Copying,
+	src.tpp;
 
