@@ -16,7 +16,7 @@ double Painter::ReadDouble(CParser& p)
 	return p.IsDouble2() ? p.ReadDouble() : 0;
 }
 
-Pointf Painter::ReadPoint(CParser& p, Pointf& current, bool rel)
+Pointf Painter::ReadPoint(CParser& p, Pointf current, bool rel)
 {
 	Pointf t;
 	t.x = ReadDouble(p);

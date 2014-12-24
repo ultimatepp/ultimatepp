@@ -443,7 +443,7 @@ SvgParser::SvgParser(const char *svg, Painter& sw)
 	Reset();
 }
 
-bool ParseSVG(Painter& p, const char *svg, Callback2<String, String&>& resloader, Rectf *boundingbox)
+bool ParseSVG(Painter& p, const char *svg, Callback2<String, String&> resloader, Rectf *boundingbox)
 {
 	SvgParser sp(svg, p);
 	sp.bp.compute_svg_boundingbox = boundingbox;
@@ -455,7 +455,7 @@ bool ParseSVG(Painter& p, const char *svg, Callback2<String, String&>& resloader
 	return true;
 }
 
-bool RenderSVG(Painter& p, const char *svg, Callback2<String, String&>& resloader)
+bool RenderSVG(Painter& p, const char *svg, Callback2<String, String&> resloader)
 {
 	return ParseSVG(p, svg, resloader, NULL);
 }
@@ -490,7 +490,7 @@ Rectf GetSVGBoundingBox(const char *svg)
 	return bb;
 }
 
-Image RenderSVGImage(Size sz, const char *svg, Callback2<String, String&>& resloader)
+Image RenderSVGImage(Size sz, const char *svg, Callback2<String, String&> resloader)
 {
 	Rectf f = GetSVGBoundingBox(svg);
 	Sizef iszf = GetFitSize(f.GetSize(), Sizef(sz.cx, sz.cy) - 10.0);
