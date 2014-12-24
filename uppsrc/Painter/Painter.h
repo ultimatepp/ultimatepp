@@ -434,14 +434,14 @@ protected:
 	virtual void   BeginOnPathOp(double q, bool abs);
 };
 
-bool  RenderSVG(Painter& p, const char *svg,
-                Callback2<String, String&>& resloader = Callback2<String, String&>());
+bool  RenderSVG(Painter& p, const char *svg, Callback2<String, String&>& resloader);
+bool  RenderSVG(Painter& p, const char *svg);
 
 void  GetSVGDimensions(const char *svg, Sizef& sz, Rectf& viewbox);
 Rectf GetSVGBoundingBox(const char *svg);
 
-Image RenderSVGImage(Size sz, const char *svg,
-                     Callback2<String, String&>& resloader = Callback2<String, String&>());
+Image RenderSVGImage(Size sz, const char *svg, Callback2<String, String&>& resloader);
+Image RenderSVGImage(Size sz, const char *svg);
 
 END_UPP_NAMESPACE
 
