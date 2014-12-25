@@ -798,11 +798,12 @@ static void LinuxBeep(const char *name)
 	}
 
 	String fn = "/usr/share/sounds/" + CurrentSoundTheme + "/stereo/dialog-" + name;
-	system(player + " -q " + fn + (FileExists(fn + ".ogg") ? ".ogg" :
-                                   FileExists(fn + ".oga") ? ".oga" :
-                                   FileExists(fn + ".wav") ? ".wav" :
-                                   ".*")
-	       + " >/dev/null 2>/dev/null&");
+	IGNORE_RESULT(system(player + " -q " + fn +
+	              (FileExists(fn + ".ogg") ? ".ogg" :
+	               FileExists(fn + ".oga") ? ".oga" :
+                   FileExists(fn + ".wav") ? ".wav" :
+                   ".*")
+	              + " >/dev/null 2>/dev/null&"));
 }
 
 #endif

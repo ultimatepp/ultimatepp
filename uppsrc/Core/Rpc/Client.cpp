@@ -119,22 +119,24 @@ RpcGet RpcRequest::Execute()
 		request = XmlHeader();
 		request << XmlTag("methodCall")(XmlTag("methodName")(method) + FormatXmlRpcParams(data.out));
 	}
-	if(sLogRpcCalls)
+	if(sLogRpcCalls) {
 		if(sLogRpcCallsCompress)
 			RLOG("XmlRpc call request:\n" << CompressLog(request));
 		else
 			RLOG("XmlRpc call request:\n" << request);
+	}
 	String response;
 	New();
 	if(shorted)	
 		response = RpcExecute(request, "", "127.0.0.1");
 	else
 		response = Post(request).Execute();
-	if(sLogRpcCalls)
+	if(sLogRpcCalls) {
 		if(sLogRpcCallsCompress)
 			RLOG("XmlRpc call response:\n" << CompressLog(response));
 		else
 			RLOG("XmlRpc call response:\n" << response);
+	}
 	RpcGet h;
 	if(IsNull(response)) {
 		faultCode = RPC_CLIENT_HTTP_ERROR;
