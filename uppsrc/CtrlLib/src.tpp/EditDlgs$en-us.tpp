@@ -35,9 +35,9 @@ _[@3 0])&]
 [s4; &]
 [s5;:EditTextNotNull`(WString`&`,const char`*`,const char`*`,int`(`*`)`(int`)`,int`): [@(0.0.255) b
 ool]_[* EditTextNotNull]([_^WString^ WString][@(0.0.255) `&]_[*@3 s], 
-[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 title], [@(0.0.255) const]_[@(0.0.255) char]_`*
-[*@3 label], [@(0.0.255) int]_(`*[*@3 filter])([@(0.0.255) int]), [@(0.0.255) int]_[*@3 maxle
-n]_`=_[@3 0])&]
+[@(0.0.255) const]_Core:[@(0.0.255) char]_`*[*@3 title], [@(0.0.255) const]_[@(0.0.255) char
+]_`*[*@3 label], [@(0.0.255) int]_(`*[*@3 filter])([@(0.0.255) int]), 
+[@(0.0.255) int]_[*@3 maxlen]_`=_[@3 0])&]
 [s5;:EditTextNotNull`(WString`&`,const char`*`,const char`*`,int`): [@(0.0.255) bool]_[* E
 ditTextNotNull]([_^WString^ WString][@(0.0.255) `&]_[*@3 s], [@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 title], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 label], 
