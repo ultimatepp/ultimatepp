@@ -307,7 +307,7 @@ Pointf GetSvgPos(XmlParser& xml)
 
 void SvgParser::ParseG() {
 #ifdef _DEBUG
-	if(IsTag()) LLOG("====== TAG " << PeekTag());
+	LLOG("====== TAG " << (IsTag() ? PeekTag() : String()));
 #endif
 	if(Tag("defs")) {
 		while(!End())
