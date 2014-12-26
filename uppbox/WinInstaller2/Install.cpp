@@ -7,6 +7,24 @@ void FileError()
 
 char *outdir;
 
+bool IsWow64()
+{
+	BOOL bIsWow64 = FALSE;
+	
+	typedef BOOL (APIENTRY *LPFN_ISWOW64PROCESS)(HANDLE, PBOOL);
+	
+	LPFN_ISWOW64PROCESS fnIsWow64Process;
+	
+	HMODULE module = GetModuleHandle("kernel32");
+	const char funcName[] = "IsWow64Process";
+	fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(module, funcName);
+	
+	if(fnIsWow64Process && !fnIsWow64Process(GetCurrentProcess(), &bIsWow64))
+		return false;
+
+	return bIsWow64;
+}
+
 BOOL CALLBACK Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch(msg) {
@@ -52,6 +70,7 @@ BOOL CALLBACK Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				SetWinRegString("\"" + exe + "\" \"%1\"", "", "TheIDE.upp\\shell\\open\\command\\", HKEY_CLASSES_ROOT);
 			}
 			pi.Destroy();
+			FileMove(AppendFileName(h, IsWow64() ? "theide64.exe" : "theide32.exe"), exe);
 			EndDialog(hwnd, 0);
 			WinExec(exe, SW_SHOWNORMAL);
 			break;
