@@ -70,7 +70,6 @@ BOOL CALLBACK Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				SetWinRegString("\"" + exe + "\" \"%1\"", "", "TheIDE.upp\\shell\\open\\command\\", HKEY_CLASSES_ROOT);
 			}
 			pi.Destroy();
-			RDUMP(AppendFileName(h, IsWow64() ? "theide64.exe" : "theide32.exe"));
 			FileMove(AppendFileName(h, IsWow64() ? "theide64.exe" : "theide32.exe"), exe);
 			EndDialog(hwnd, 0);
 			WinExec(exe, SW_SHOWNORMAL);
