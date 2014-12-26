@@ -77,9 +77,9 @@ void CopyIdeFile(const String& fn)
 int NoDigit(int c) { return IsDigit(c) ? 0 : c; }
 int FilterVersion(int c) { return c == ':' ? '_' : c; }
 
-void Make(String pkg, String exe)
+void Make(String pkg, String exe, String method = "MSC9")
 {
-	Syx("umk " + ass + " " + pkg + " c:/theide/MSC9.bm -ar " + upptmp + "/" + exe);
+	Syx("c:/theide/umk " + ass + " " + pkg + " c:/theide/" + method + ".bm -ar " + upptmp + "/" + exe);
 }
 
 CONSOLE_APP_MAIN
@@ -93,13 +93,16 @@ CONSOLE_APP_MAIN
 	DeleteFolderDeep(tmp);
 	RealizeDirectory(tmp);
 	
+	RealizeDirectory("u:/upload");
+	
 	CopyFolders(uppsrc, ass, uppsrc + "/packages");
 	CopyFolders(uppsrc, ass, uppsrc + "/packages1", false);
 	CopyFolders(upp, upptmp, uppsrc + "/assemblies");
 	SaveFile(upptmp + "/uppsrc/guiplatform.h", "");
 	SaveFile(upptmp + "/uppsrc/uppconfig.h", LoadFile(uppsrc + "/uppconfig.h"));
 	SaveFile(upptmp + "/uppsrc/ide/version.h", "#define IDE_VERSION \"" + version + "\"\r\n");
-	Make("ide", "theide.exe");
+	Make("ide", "theide32.exe");
+	Make("ide", "theide64.exe", "MSC9X64");
 	Make("umk", "umk.exe");
 
 	CopyIdeFile("c:/theide/dbghelp.dll");
@@ -113,7 +116,7 @@ CONSOLE_APP_MAIN
 
 	Syx("7z a " + tmp + "/upp.7z * -r -mx -m0fb=255 -mf=off");
 	SetCurrentDirectory(tmp);
-	Syx("umk " + upp + "/uppbox," + upp +
-	    "/uppsrc WinInstaller2 c:/theide/MSC9 -ar u:/upload/upp-win32-" +
+	Syx("c:/theide/umk " + upp + "/uppbox," + upp +
+	    "/uppsrc WinInstaller2 c:/theide/MSC9.bm -ar u:/upload/upp-win32-" +
 	    Filter(version, FilterVersion) + ".exe");
 }
