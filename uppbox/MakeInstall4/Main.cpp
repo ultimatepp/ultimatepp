@@ -80,6 +80,7 @@ int FilterVersion(int c) { return c == ':' ? '_' : c; }
 void Make(String pkg, String exe, String method = "MSC9")
 {
 	Syx("c:/theide/umk " + ass + " " + pkg + " c:/theide/" + method + ".bm -ar " + upptmp + "/" + exe);
+	FileDelete(upptmp + "/" + exe + ".map");
 }
 
 CONSOLE_APP_MAIN
