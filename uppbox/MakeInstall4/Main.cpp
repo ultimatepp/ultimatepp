@@ -79,11 +79,12 @@ int FilterVersion(int c) { return c == ':' ? '_' : c; }
 
 void Make(String pkg, String exe, String method = "MSC9")
 {
-	Syx("c:/theide/umk " + ass + " " + pkg + " c:/theide/" + method + ".bm -ar " + upptmp + "/" + exe);
+	Syx("c:/theide/umk " + ass + " " + pkg + " c:/theide/" + method + ".bm -arv " + upptmp + "/" + exe);
 	FileDelete(upptmp + "/" + ForceExt(exe, ".map"));
 }
 
 CONSOLE_APP_MAIN
+{
 	Vector<String> s = Split(Syx("svnversion " + upp), NoDigit);
 	if(s.GetCount() == 0)
 		Error("Invalid version");
