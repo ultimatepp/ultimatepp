@@ -79,7 +79,7 @@ int FilterVersion(int c) { return c == ':' ? '_' : c; }
 
 void Make(String pkg, String exe, String method = "MSC9")
 {
-	Syx("c:/theide/umk " + ass + " " + pkg + " c:/theide/" + method + ".bm -arv " + upptmp + "/" + exe);
+	Syx("c:/theide/umk " + ass + " " + pkg + " c:/theide/" + method + ".bm -ar " + upptmp + "/" + exe);
 	FileDelete(upptmp + "/" + ForceExt(exe, ".map"));
 }
 
@@ -117,6 +117,6 @@ CONSOLE_APP_MAIN
 	Syx("7z a " + tmp + "/upp.7z * -r -mx -m0fb=255 -mf=off");
 	SetCurrentDirectory(tmp);
 	Syx("c:/theide/umk " + upp + "/uppbox," + upp +
-	    "/uppsrc WinInstaller2 c:/theide/MSC9.bm -arv u:/upload/upp-win32-" +
+	    "/uppsrc WinInstaller2 c:/theide/MSC9.bm -ar u:/upload/upp-win32-" +
 	    Filter(version, FilterVersion) + ".exe");
 }
