@@ -6,6 +6,7 @@ uses
 file
 	msg1.txt,
 	msg2.txt,
+	msg3.txt,
 	InetMessage.cpp;
 
 mainconfig

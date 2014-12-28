@@ -34,7 +34,20 @@ CONSOLE_APP_MAIN
 	Test(msg, 1, 119, "Tato zpráva neobsahuje viry ani jiný škodlivý kód - avast! Antivirus je aktivní.");
 	Test(msg, 3, 909, "Tato zpráva neobsahuje viry ani jiný škodlivý kód -<a href=");
 	Test(msg, 4, 309891);
+
+	DLOG("=========================================================");
+	DLOG("----- MSG3.TXT");
+
+	msg.Read(LoadDataFile("msg3.txt"));
+	for(int i = 0; i < msg.GetCount(); i++) {
+		LOG("== " << i << " ========== " << msg[i]["content-type"]);
+		String body = msg[i].Decode();
+		DUMP(body.GetCount());
+		if(body.GetCount() < 2000)
+			DUMP(body);
+	}
 	
+
 	DLOG("=========================================================");
 
 	String m1 = msg.GetMessage();
