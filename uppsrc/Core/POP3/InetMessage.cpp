@@ -11,14 +11,12 @@ String QDecode(const String& s)
 		return s;
 	if(begin != "=" || end != "=")
 		return s;
-	if(ToUpper(enc) == "B")
+	enc = ToUpper(enc);
+	if(enc == "B")
 		r = Base64Decode(txt);	
 	else
-	if(ToUpper(enc) == "Q") {
-		txt.Replace(" ", "_");		
-		r = QPDecode(txt);
-		r.Replace("_", " ");
-	}
+	if(enc == "Q")
+		r = QPDecode(txt, true);
 	else
 		return s;
 	int charset = CharsetByName(chs);
@@ -88,7 +86,7 @@ String sEncode(const String& text)
 			String txt = ToCharset(CHARSET_UTF8, text);
 			String r = "=?UTF-8?Q?";
 			for(const char *s = txt; *s; s++) {
-				if((byte)*s < ' ' || (byte)*s > 127 || findarg(*s, '=', '?', ' ', ',') >= 0)
+				if((byte)*s < ' ' || (byte)*s > 127 || findarg(*s, '=', '?', ' ', ',', '_') >= 0)
 					r << '=' << FormatIntHexUpper((byte)*s, 2);
 				else
 					r.Cat(*s);

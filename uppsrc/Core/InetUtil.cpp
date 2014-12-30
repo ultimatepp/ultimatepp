@@ -175,7 +175,7 @@ String QPEncode(const char* s)
 	int len = 0;
 	const int  limit  = 70;
 	while(*s) {
-		if(s[0] >= 33 && s[0] <= 126 && s[0] != '=') {
+		if(s[0] >= 33 && s[0] <= 126 && s[0] != '=' && s[0] != '_') {
 			r.Cat(s[0]);
 			len++;
 		}
@@ -188,8 +188,8 @@ String QPEncode(const char* s)
 			len = 0;
 		}
 		else // Encode HT or SP only if they are at the end of line (before CRLF or EOF)
-		if((s[0] == ' ' || s[0] == '\t') 	&&
-		   (s[1] && s[1] != '\n') 		&&
+		if((s[0] == ' ' || s[0] == '\t') &&
+		   (s[1] && s[1] != '\n') &&
 		   (s[1] != '\r' || (s[1] == '\r' && s[2] && s[2] != '\n'))) {
 			r.Cat(s[0]);
 			len++;
@@ -212,7 +212,7 @@ String QPEncode(const char* s)
 	return r;
 }
     
-String QPDecode(const char *s)
+String QPDecode(const char *s, bool underscore_to_space)
 {
 	StringBuffer r;
 	while(*s) {
@@ -226,6 +226,9 @@ String QPDecode(const char *s)
 			if(IsXDigit(c1) && IsXDigit(c2))
 				r.Cat((ctoi(c1) << 4) | ctoi(c2));
 		}
+		else
+		if(underscore_to_space && c == '_')
+			r.Cat(' ');
 		else
 			r.Cat(c);
 	}
