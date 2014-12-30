@@ -12,7 +12,7 @@ String UrlDecode(const char *s, int len);
 String UrlDecode(const String& s);
 
 String QPEncode(const char* s);
-String QPDecode(const char *s);
+String QPDecode(const char *s, bool undescore_to_space = false);
 
 String Base64Encode(const char *s, const char *end);
 String Base64Encode(const char *s, int len);

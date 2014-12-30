@@ -59,13 +59,15 @@ IME type application/x`-www`-form`-urlencoded] (see UrlEncode).&]
 [s5;:QPEncode`(const char`*`): [_^String^ String]_[* QPEncode]([@(0.0.255) const]_[@(0.0.255) c
 har`*]_[*@3 s])&]
 [s2;%% Encodes string to [^http`:`/`/en`.wikipedia`.org`/wiki`/Quoted`-printable^ quote
-d`-printable] format .&]
+d`-printable] format.&]
 [s3;%% &]
 [s4; &]
-[s5;:QPDecode`(const char`*`): [_^String^ String]_[* QPDecode]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 s])&]
+[s5;:QPDecode`(const char`*`,bool`): [_^String^ String]_[* QPDecode]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 s], [@(0.0.255) bool]_[*@3 underscore`_to`_space]_`=_[@(0.0.255) false])&]
 [s2;%% Decodes string from [^http`:`/`/en`.wikipedia`.org`/wiki`/Quoted`-printable^ quo
-ted`-printable] format .&]
+ted`-printable] format. If [%-*@3 s] [%-*@3 underscore`_to`_space] 
+is true, function replaces `'`_`' with space `' `' (as required 
+by [^http`:`/`/en`.wikipedia`.org`/wiki`/MIME`#Encoded`-Word^ encoded`-word]).&]
 [s3;%% &]
 [s4; &]
 [s5;:Base64Encode`(const char`*`,const char`*`): [_^String^ String]_[* Base64Encode]([@(0.0.255) c
