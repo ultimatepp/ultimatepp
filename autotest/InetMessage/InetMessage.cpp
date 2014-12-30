@@ -51,6 +51,7 @@ CONSOLE_APP_MAIN
 	DLOG("=========================================================");
 
 	String m1 = msg.GetMessage();
+	DDUMP(msg["to"]);
 	SaveFile(GetHomeDirFile("msg1.txt"), m1);
 	InetMessage msg2;
 	ASSERT(msg2.Read(m1));
@@ -58,8 +59,8 @@ CONSOLE_APP_MAIN
 	SaveFile(GetHomeDirFile("msg2.txt"), m2);
 	ASSERT(m1 == m2);
 
-	DeleteFile(GetHomeDirFile("msg1.txt"));
-	DeleteFile(GetHomeDirFile("msg2.txt"));
+//	DeleteFile(GetHomeDirFile("msg1.txt"));
+//	DeleteFile(GetHomeDirFile("msg2.txt"));
 
 	DLOG("=========================================================");
 	ASSERT(msg.Read(LoadFile(GetDataFile("msg2.txt"))));
