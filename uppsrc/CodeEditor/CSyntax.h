@@ -42,6 +42,7 @@ protected:
 	static int  LoadSyntax(const char *keywords[], const char *names[]);
 	static int  InitUpp(const char **q);
 	static void InitKeywords();
+	static const wchar *DoComment(HighlightOutput& hls, const wchar *p, const wchar *e);
 
 	static Vector< Index<String> > keyword;
 	static Vector< Index<String> > name;

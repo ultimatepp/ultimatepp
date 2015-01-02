@@ -90,7 +90,8 @@ void SplitterFrame::MouseMove(Point p, dword keyflags)
 
 void SplitterFrame::LeftUp(Point p, dword keyflags)
 {
-	Refresh();
+    Refresh();
+    ReleaseCapture();
 }
 
 Image SplitterFrame::CursorImage(Point p, dword keyflags)

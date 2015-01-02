@@ -8,6 +8,8 @@ HL_COLOR(INK_DISABLED, t_("Disabled text"), 1)
 HL_COLOR(PAPER_READONLY, t_("Read only background"), 0)
 
 HL_COLOR(INK_COMMENT, t_("Comment text"), 1)
+HL_COLOR(INK_COMMENT_WORD, t_("FIXME/TODO text in comment"), 0)
+HL_COLOR(PAPER_COMMENT_WORD, t_("FIXME/TODO paper in comment"), 0)
 HL_COLOR(INK_CONST_STRING, t_("String constant text"), 1)
 HL_COLOR(INK_OPERATOR, t_("Operator text"), 1)
 HL_COLOR(INK_KEYWORD, t_("Keyword text"), 1)
