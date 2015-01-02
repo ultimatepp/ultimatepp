@@ -108,6 +108,8 @@ String HighlightSetup::StoreHlStyles()
 void HighlightSetup::DefaultHlStyles()
 {
 	SetHlStyle(INK_COMMENT, Green, false, true);
+	SetHlStyle(PAPER_COMMENT_WORD, Yellow, false, false);
+	SetHlStyle(INK_COMMENT_WORD, Blue, true, true);
 	SetHlStyle(INK_CONST_STRING, Red);
 
 	SetHlStyle(INK_CONST_STRINGOP, LtBlue);

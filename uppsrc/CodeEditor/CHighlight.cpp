@@ -86,6 +86,21 @@ const wchar *HighlightNumber(HighlightOutput& hls, const wchar *p, bool ts, bool
 	return p;
 }
 
+const wchar *CSyntax::DoComment(HighlightOutput& hls, const wchar *p, const wchar *e)
+{
+	String w;
+	for(const wchar *s = p; s < e && IsAlpha(*s) && w.GetCount() < 5; s++)
+		w.Cat(ToUpper(*s));
+	int n = w.GetCount();
+	if(findarg(w, "TODO", "FIXME") >= 0)
+		hls.Put(n, hl_style[INK_COMMENT_WORD], hl_style[PAPER_COMMENT_WORD]);
+	else {
+		n = max(n, 1);
+		hls.Put(n, hl_style[INK_COMMENT]);
+	}
+	return p + n;
+}
+
 void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls, CodeEditor *editor, int line, int pos)
 {
 	ONCELOCK {
@@ -168,22 +183,23 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 	bool is_comment = false;
 	while(p < e) {
 		int pair = MAKELONG(p[0], p[1]);
-		if(linecomment && linecont || pair == MAKELONG('/', '/') && highlight != HIGHLIGHT_CSS && highlight != HIGHLIGHT_JSON) {
-			hls.Put(linelen + 1 - hls.pos, hl_style[INK_COMMENT]);
+		if(linecomment && linecont || pair == MAKELONG('/', '/') &&
+		   highlight != HIGHLIGHT_CSS && highlight != HIGHLIGHT_JSON) {
+			while(p < e)
+				p = DoComment(hls, p, e);
 			is_comment = true;
 			break;
 		}
 		else
-		if(comment && highlight != HIGHLIGHT_JSON)
+		if(comment && highlight != HIGHLIGHT_JSON) {
 			if(pair == MAKELONG('*', '/')) {
 				hls.Put(2, hl_style[INK_COMMENT]);
 				p += 2;
 				comment = false;
 			}
-			else {
-				hls.Put(hl_style[INK_COMMENT]);
-				p++;
-			}
+			else
+				p = DoComment(hls, p, e);
+		}
 		else
 		if((*p == '\"' || *p == '\'') || linecont && string)
 			p = hls.CString(p);
