@@ -93,6 +93,7 @@ public:
 	void    Begin();
 	void    End();
 
+	void    Wheel(int zdelta, int lines);
 	void    Wheel(int zdelta);
 
 	Size    GetViewSize() const;
