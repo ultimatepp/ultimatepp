@@ -94,6 +94,7 @@ void CodeEditor::PostInsert(int pos, const WString& text) {
 			CheckSyntaxRefresh(pos, text);
 	}
 	WhenUpdate();
+	EditorBarLayout();
 }
 
 void CodeEditor::PreRemove(int pos, int size) {
@@ -113,6 +114,7 @@ void CodeEditor::PostRemove(int pos, int size) {
 	if(check_edited)
 		bar.SetEdited(GetLine(pos));
 	WhenUpdate();
+	EditorBarLayout();
 }
 
 void CodeEditor::ClearLines() {
@@ -123,12 +125,14 @@ void CodeEditor::InsertLines(int line, int count) {
 	bar.InsertLines(line, count);
 	if(line <= line2.GetCount())
 		line2.Insert(line, GetLine2(line), count);
+	EditorBarLayout();
 }
 
 void CodeEditor::RemoveLines(int line, int count) {
 	bar.RemoveLines(line, count);
 	if(line + count <= line2.GetCount())
 		line2.Remove(line, count);
+	EditorBarLayout();
 }
 
 void CodeEditor::Renumber2()
