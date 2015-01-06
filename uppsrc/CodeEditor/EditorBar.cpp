@@ -478,8 +478,17 @@ void EditorBar::HidePtr()
 
 void EditorBar::SyncWidth()
 {
-	Width((line_numbers && editor ? editor->GetFont()['0'] * 4 + 12 : 12) + annotations);
-	Refresh();
+	int n = editor ? editor->GetLineCount() : 0;
+	int i = 0;
+	while(n) {
+		i++;
+		n /= 10;
+	}
+	int w = (line_numbers && editor ? editor->GetFont()['0'] * i + 14 : 12) + annotations;
+	if(w != GetWidth()) {
+		Width(w);
+		Refresh();
+	}
 }
 
 void EditorBar::LineNumbers(bool b)
