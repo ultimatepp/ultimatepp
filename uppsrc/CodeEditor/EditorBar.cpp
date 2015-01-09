@@ -88,10 +88,10 @@ void EditorBar::Paint(Draw& w)
 		if(editor->GetCaret().top == y && editor->barline)
 			w.DrawRect(0, y, sz.cx, fy, Blend(SColorHighlight(), SColorLtFace(), 200));
 		if(line_numbers && i < editor->GetLineCount()) {
-			String n = AsString((i + 1) % 10000);
+			String n = AsString((i + 1) % 1000000);
 			Font fnt = editor->GetFont();
 			Size tsz = GetTextSize(n, fnt);
-			w.DrawText(sz.cx - 8 - 12 - tsz.cx, y + (fy - tsz.cy) / 2, n, fnt, Brown);
+			w.DrawText(sz.cx - 4 - 12 - tsz.cx, y + (fy - tsz.cy) / 2, n, fnt, Brown);
 		}
 		if(hi_if) {
 			Vector<IfState> nextif;
@@ -484,7 +484,7 @@ void EditorBar::SyncWidth()
 		i++;
 		n /= 10;
 	}
-	int w = (line_numbers && editor ? editor->GetFont()['0'] * i + 14 : 12) + annotations;
+	int w = (line_numbers && editor ? editor->GetFont()['0'] * i : 0) + 12 + 4 + annotations;
 	if(w != GetWidth()) {
 		Width(w);
 		Refresh();
