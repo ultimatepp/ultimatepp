@@ -59,7 +59,7 @@ LRESULT TopWindow::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 			if(IsWindowVisible(hwnd))
 				overlapped = GetScreenClient(hwnd);
 		}
-		DLOG("TopWindow::WindowProc::WM_WINDOWPOSCHANGED: overlapped = " << overlapped);
+		LLOG("TopWindow::WindowProc::WM_WINDOWPOSCHANGED: overlapped = " << overlapped);
 		Layout();
 		break;
 	}
@@ -402,9 +402,9 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 		s.Pack(mn, mx, fs);
 	else
 		s.Pack(mn, mx);
-	DLOG(Name(this) << "::SerializePlacement / " << (s.IsStoring() ? "write" : "read"));
-	DLOG("minimized = " << mn << ", maximized = " << mx << ", fullscreen = " << fs);
-	DLOG("rect = " << rect << ", overlapped = " << overlapped);
+	LLOG(Name(this) << "::SerializePlacement / " << (s.IsStoring() ? "write" : "read"));
+	LLOG("minimized = " << mn << ", maximized = " << mx << ", fullscreen = " << fs);
+	LLOG("rect = " << rect << ", overlapped = " << overlapped);
 	if(s.IsLoading()) {
 		rect = overlapped;
 		Rect limit = GetVirtualWorkArea();
@@ -415,7 +415,6 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 		limit.right  += rect.right  - outer.right;
 		limit.bottom += rect.bottom - outer.bottom;
 		Size sz = min(rect.Size(), limit.Size());
-		DDUMP(sz);
 		rect = RectC(
 			minmax(rect.left, limit.left, limit.right - sz.cx),
 			minmax(rect.top,  limit.top,  limit.bottom - sz.cy),
