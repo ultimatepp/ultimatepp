@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x) // DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 #if defined(COMPILER_MINGW) && !defined(FLASHW_ALL)
 	// MINGW headers don't include this in (some versions of) windows
@@ -36,12 +36,10 @@ LRESULT TopWindow::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	bool inloop;
 #endif
 	switch(message) {
-#ifndef PLATFORM_WINCE
 	case WM_QUERYENDSESSION:
 		inloop = InLoop();
 		WhenClose();
 		return inloop ? !InLoop() : !IsOpen();
-#endif
 	case WM_CLOSE:
 		if(IsEnabled()) {
 			IgnoreMouseUp();
@@ -51,19 +49,17 @@ LRESULT TopWindow::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_WINDOWPOSCHANGED:
 		if(!isopen)
 			break;
-#ifndef PLATFORM_WINCE
 		if(IsIconic(hwnd))
 			state = MINIMIZED;
 		else
 		if(IsZoomed(hwnd))
 			state = MAXIMIZED;
-		else
-#endif
-		{
+		else {
 			state = OVERLAPPED;
-			if(IsWindowVisible(hwnd)) overlapped = GetScreenClient(hwnd); // 12-05-23 Tom added 'if(IsWindowVisible(hwnd))' to get only proper rectangles
+			if(IsWindowVisible(hwnd))
+				overlapped = GetScreenClient(hwnd);
 		}
-		LLOG("TopWindow::WindowProc::WM_WINDOWPOSCHANGED: overlapped = " << overlapped);
+		DLOG("TopWindow::WindowProc::WM_WINDOWPOSCHANGED: overlapped = " << overlapped);
 		Layout();
 		break;
 	}
@@ -395,21 +391,20 @@ void TopWindow::GuiPlatformDestruct()
 void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 {
 	GuiLock __;
-#ifndef PLATFORM_WINCE
 	int version = 1;
 	s / version;
 	Rect rect = GetRect();
 	s % overlapped % rect;
 	bool mn = state == MINIMIZED;
 	bool mx = state == MAXIMIZED;
-	bool fs = fullscreen;	// 12-05-23 Tom added fullscreen serialization
+	bool fs = fullscreen;
 	if(version >= 1)
-		s.Pack(mn, mx, fs);		// 12-05-23 Tom changed from: s.Pack(mn, mx);
+		s.Pack(mn, mx, fs);
 	else
 		s.Pack(mn, mx);
-	LLOG(Name(this) << "::SerializePlacement / " << (s.IsStoring() ? "write" : "read"));
-	LLOG("minimized = " << mn << ", maximized = " << mx << ", fullscreen = " << fs); // 12-05-23 Tom extended with fullscreen
-	LLOG("rect = " << rect << ", overlapped = " << overlapped);
+	DLOG(Name(this) << "::SerializePlacement / " << (s.IsStoring() ? "write" : "read"));
+	DLOG("minimized = " << mn << ", maximized = " << mx << ", fullscreen = " << fs);
+	DLOG("rect = " << rect << ", overlapped = " << overlapped);
 	if(s.IsLoading()) {
 		rect = overlapped;
 		Rect limit = GetVirtualWorkArea();
@@ -420,6 +415,7 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 		limit.right  += rect.right  - outer.right;
 		limit.bottom += rect.bottom - outer.bottom;
 		Size sz = min(rect.Size(), limit.Size());
+		DDUMP(sz);
 		rect = RectC(
 			minmax(rect.left, limit.left, limit.right - sz.cx),
 			minmax(rect.top,  limit.top,  limit.bottom - sz.cy),
@@ -428,42 +424,29 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 		Overlap();
 		SetRect(rect);
 		
-		if(mn && reminimize){
+		if(mn && reminimize)
 			state = MINIMIZED;
-			//Minimize(); // 12-05-23 Tom removed
-		}
-		if(mx){
+		if(mx)
 			state = MAXIMIZED;
-			//Maximize(); // 12-05-23 Tom removed
-		}
+		if(min(sz.cx, sz.cy) < 50 && mn && !reminimize)
+			state = MAXIMIZED; // Minimized tends to have invalid size, somewhat ugly patch here
 		if(IsOpen()) {
 			switch(state) {
-				case MINIMIZED:
-					Minimize();
-					break;
-				case MAXIMIZED:
-					Maximize();
-					break;
+			case MINIMIZED:
+				Minimize();
+				break;
+			case MAXIMIZED:
+				Maximize();
+				break;
 			}
-/*			WINDOWPLACEMENT wp;
-			memset(&wp,0,sizeof(WINDOWPLACEMENT));
-			wp.length=sizeof(WINDOWPLACEMENT);
-			wp.showCmd = state==MINIMIZED ? SW_MINIMIZE : state==MAXIMIZED ? SW_MAXIMIZE : SW_RESTORE;
-			wp.rcNormalPosition.left=rect.left;
-			wp.rcNormalPosition.top=rect.top;
-			wp.rcNormalPosition.right=rect.right;
-			wp.rcNormalPosition.bottom=rect.bottom;
-			::SetWindowPlacement(GetHWND(),&wp);
-*/
 			if(fs) {
 				Overlap(); // Needed to restore normal position before fullscreen mode
-				FullScreen(fs); // 12-05-23 Tom added for fullscreen serialization
+				FullScreen();
 			}
 		}
-		else // 12-05-23 Tom added for fullscreen serialization
-			fullscreen=fs; // 12-05-23 Tom added for fullscreen serialization
+		else
+			fullscreen = fs;
 	}
-#endif
 }
 
 END_UPP_NAMESPACE
