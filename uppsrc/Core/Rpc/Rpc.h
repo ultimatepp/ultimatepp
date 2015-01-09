@@ -214,7 +214,7 @@ struct RpcData {
 
 	int      GetRemainingCount() const  { return in.GetCount() - ii; }
 
-	Value Get()                         { if(ii >= in.GetCount()) throw ValueTypeMismatch(); return in[ii++]; }
+	Value Get()                         { if(ii >= in.GetCount()) return Value(); return in[ii++]; }
 	
 	template <class T>
 	RpcData& operator>>(T& x)           { ValueGet(x, Get()); return *this; }
