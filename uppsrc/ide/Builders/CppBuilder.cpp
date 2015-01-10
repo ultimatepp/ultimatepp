@@ -451,6 +451,7 @@ String CppBuilder::Includes(const char *sep, const String& package, const Packag
 	String cc;
 	for(int i = 0; i < include.GetCount(); i++)
 		cc << sep << GetHostPathQ(include[i]);
+	cc << sep << GetHostPathQ(outdir);
 	return cc;
 }
 
@@ -459,6 +460,7 @@ String CppBuilder::IncludesShort(const char *sep, const String& package, const P
 	String cc;
 	for(int i = 0; i < include.GetCount(); i++)
 		cc << sep << GetHostPathShortQ(include[i]);
+	cc << sep << GetHostPathShortQ(outdir);
 	return cc;
 }
 
@@ -467,16 +469,22 @@ String CppBuilder::DefinesTargetTime(const char *sep, const String& package, con
 	String cc;
 	for(int i = 0; i < config.GetCount(); i++)
 		cc << sep << "flag" << config[i];
-	Time t = GetSysTime();
-	cc << sep << "bmYEAR=" << (int)t.year;
-	cc << sep << "bmMONTH=" << (int)t.month;
-	cc << sep << "bmDAY=" << (int)t.day;
-	cc << sep << "bmHOUR=" << (int)t.hour;
-	cc << sep << "bmMINUTE=" << (int)t.minute;
-	cc << sep << "bmSECOND=" << (int)t.second;
 	if(main_conf)
 		cc << sep << "MAIN_CONF";
 	targettime = GetFileTime(target);
+
+	FileOut info(AppendFileName(outdir, "build_info.h"));
+	Time t = GetSysTime();
+	info << "#define bmYEAR   " << (int)t.year << "\r\n";
+	info << "#define bmMONTH  " << (int)t.month << "\r\n";
+	info << "#define bmDAY    " << (int)t.day << "\r\n";
+	info << "#define bmHOUR   " << (int)t.hour << "\r\n";
+	info << "#define bmMINUTE " << (int)t.minute << "\r\n";
+	info << "#define bmSECOND " << (int)t.second << "\r\n";
+	info << Format("#define bmTIME   Time(%d, %d, %d, %d, %d, %d)\r\n",
+	        (int)t.year, (int)t.month, (int)t.day, (int)t.hour, (int)t.minute, (int)t.second);
+	info << "#define bmMACHINE " << AsCString(GetComputerName()) << "\r\n";
+	info << "#define bmUSER    " << AsCString(GetUserName()) << "\r\n";
 	return cc;
 }
 
