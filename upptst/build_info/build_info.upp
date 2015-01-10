@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	build_info.cpp;
+
+mainconfig
+	"" = "SSE2";
+
