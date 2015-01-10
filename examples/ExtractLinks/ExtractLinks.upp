@@ -1,0 +1,12 @@
+description "Loading links from page, inspired by http://isocpp.org/blog/2014/12/myths-3 6.1\377";
+
+uses
+	Core,
+	plugin/pcre;
+
+file
+	ExtractLinks.cpp;
+
+mainconfig
+	"" = "SSE2";
+
