@@ -1,0 +1,11 @@
+description "Using build_info.h to display compilation time\377";
+
+uses
+	Core;
+
+file
+	BuildInfo.cpp;
+
+mainconfig
+	"" = "SSE2";
+
