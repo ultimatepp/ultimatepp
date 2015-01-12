@@ -5,7 +5,7 @@ uses
 	Draw;
 
 file
-	RichText.h,
+	RichText.h options PCH,
 	Object.cpp,
 	RichImage.icpp,
 	Para.h,

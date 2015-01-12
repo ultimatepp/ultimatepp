@@ -7,7 +7,7 @@ uses
 	RichEdit;
 
 file
-	Browser.h,
+	Browser.h options PCH,
 	Browser readonly separator,
 	Lay.cpp,
 	Iml.cpp,

@@ -55,7 +55,7 @@ public:
 
 protected:
 	struct Slot {
-		Slot() : outfile(NULL), quiet(true), exitcode(Null) {}
+		Slot() : outfile(NULL), quiet(true), exitcode(Null) { serial = INT_MAX; }
 
 		One<AProcess>     process;
 		String            cmdline;
@@ -66,6 +66,7 @@ protected:
 		bool              quiet;
 		int               exitcode;
 		int               last_msecs;
+		int               serial;
 	};
 
 	struct Group {
@@ -77,9 +78,15 @@ protected:
 		int               msecs;
 		int               raw_msecs;
 	};
+	
+	struct Finisher {
+		int               serial;
+		Callback          cb;
+	};
 
 	Array<Slot> processes;
 	ArrayMap<String, Group> groups;
+	Array<Finisher> finisher;
 	Vector<String> error_keys;
 	String current_group;
 	String spooled_output;
@@ -87,6 +94,7 @@ protected:
 	bool wrap_text;
 	FrameBottom<EditString> input;
 	String line;
+	int    serial;
 
 	void CheckEndGroup();
 	void FlushConsole();
@@ -121,6 +129,8 @@ public:
 	Vector<String> PickErrors()               { Vector<String> e = pick(error_keys); error_keys.Clear(); return pick(e); }
 	void Wait(int slot);
 	bool Wait();
+	
+	void OnFinish(Callback cb);
 
 	void WrapText(bool w)                     { wrap_text = w; }
 
@@ -573,6 +583,7 @@ public:
 	virtual   void             IdeConsoleEndGroup();
 	virtual   bool             IdeConsoleWait();
 	virtual   bool             IdeConsoleWait(int slot);
+	virtual   void             IdeConsoleOnFinish(Callback cb);
 
 	virtual   bool      IdeIsDebug() const;
 	virtual   void      IdeEndDebug();

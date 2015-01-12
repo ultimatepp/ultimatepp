@@ -6,7 +6,7 @@ uses
 	HexView;
 
 file
-	Debuggers.h,
+	Debuggers.h options PCH,
 	Debuggers.iml,
 	Gdb.lay,
 	Terminal.cpp,

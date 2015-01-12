@@ -35,7 +35,7 @@ library(DRAGONFLY) "Xext Xinerama";
 
 file
 	Core readonly separator,
-	CtrlCore.h,
+	CtrlCore.h options PCH,
 	MKeys.h,
 	stdids.h,
 	SystemDraw.cpp,

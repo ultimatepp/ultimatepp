@@ -5,7 +5,7 @@ uses
 	CtrlLib;
 
 file
-	Common.h,
+	Common.h options PCH,
 	ComDlg.cpp,
 	Module.cpp,
 	Util.cpp,

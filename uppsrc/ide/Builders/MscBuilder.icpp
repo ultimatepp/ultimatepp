@@ -159,15 +159,18 @@ bool MscBuilder::HasAnyDebug() const
 	return HasFlag("DEBUG") || HasFlag("DEBUG_MINIMAL") || HasFlag("DEBUG_FULL");
 }
 
-String MscBuilder::PdbPch(String package, int slot, bool do_pch) const
+String MscBuilder::Pdb(String package, int slot, bool separate_pdb) const
 {
-	String pkg_slot = NFormat("%s-%d", GetAnyFileName(package), slot + 1);
-	String pdb = GetHostPathQ(CatAnyPath(outdir, pkg_slot + ".pdb"));
-	String cc;
-	cc << " -Gy -Fd" << pdb << ' ';
-	if(do_pch && !IsMsc89()) // MSC8/9 does not support automatic precompiled headers...
-		cc << "-YX -Fp" << GetHostPathQ(CatAnyPath(outdir, pkg_slot + ".pch")) << ' ';
-	return cc;
+	String pdb_name = GetAnyFileName(package);
+	if(separate_pdb)
+		pdb_name << '-' << (slot + 1);
+	return " -Gy -Fd" + GetHostPathQ(CatAnyPath(outdir, pdb_name + ".pdb"));
+}
+
+void DeletePCHFile(const String& pch_file)
+{
+	DeleteFile(pch_file);
+	PutVerbose("Deleting PCH: " + pch_file);
 }
 
 bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>& immfile,
@@ -239,6 +242,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 
 	String pch;
 
+/*
 	if(allow_pch && pkg.GetCount() && IsMsc86()) {
 		String hdr_path = SourcePath(package, pkg[0]);
 		if(IsCHeaderFile(hdr_path) && HdependBlitzApproved(hdr_path)) {
@@ -268,6 +272,13 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			    << " -Fp" << GetHostPathQ(pchfile);
 		}
 	}
+*/
+
+	String pch_header;
+	
+	Index<String> nopch, noblitz;
+
+	bool blitz = HasFlag("BLITZ");
 
 	for(i = 0; i < pkg.GetCount(); i++) {
 		if(!IdeIsBuilding())
@@ -277,19 +288,20 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			Vector<String> srcfile = CustomStep(pkg[i], package, error);
 			if(srcfile.GetCount() == 0)
 				error = true;
+			bool speed = release && pkg[i].optimize_speed && opt == R_OPTIMAL;
 			for(int j = 0; j < srcfile.GetCount(); j++) {
 				String fn = srcfile[j];
 				String ext = ToLower(GetFileExt(fn));
 				if(ext == ".c" || ext == ".cpp" || ext == ".cc" || ext == ".cxx" || ext == ".rc" || ext == ".brc") {
 					sfile.Add(fn);
 					soptions.Add(gop);
-					optimize.Add(release && pkg[i].optimize_speed && opt == R_OPTIMAL);
+					optimize.Add(speed);
 				}
 				else
 				if(ext == ".icpp") {
 					isfile.Add(fn);
 					isoptions.Add(gop);
-					ioptimize.Add(release && pkg[i].optimize_speed && opt == R_OPTIMAL);
+					ioptimize.Add(speed);
 				}
 				else
 				if(ext == ".obj")
@@ -297,21 +309,73 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				else
 				if(ext == ".lib")
 					linkfile.Add(fn);
+				else
+				if(findarg(ext, ".h", ".hpp", ".hh", ".hxx") >= 0 && pkg[i].pch && allow_pch && IsMsc89() && release && !HasAnyDebug() && !blitz) {
+					if(pch_header.GetCount())
+						PutConsole(GetFileName(fn) + ": multiple PCH is not allowed. Check your package configuration");
+					else
+						pch_header = fn;
+				}
+				if(pkg[i].nopch) {
+					nopch.Add(fn);
+					if(allow_pch && release)
+						noblitz.Add(fn);
+				}
+				if(pkg[i].noblitz)
+					noblitz.Add(fn);
 			}
 		}
 	}
+	
+	int recompile = 0;
+	Blitz b;
+	if(blitz) {
+		b = BlitzStep(sfile, soptions, obj, immfile, ".obj", optimize, noblitz);
+		recompile = b.build;
+	}
 
-	if(HasFlag("BLITZ")) {
-		Blitz b = BlitzStep(sfile, soptions, obj, immfile, ".obj", optimize);
-		if(b.build) {
-			PutConsole("BLITZ:" + b.info);
-			int slot = AllocSlot();
-			if(slot < 0 ||
-			   !Run(Join(cc, cpp_options) + PdbPch(package, slot, false)
-			        + " -Tp " + GetHostPathQ(b.path) + " -Fo" + GetHostPathQ(b.object),
-			        slot, GetHostPath(b.object), b.count))
+	for(i = 0; i < sfile.GetCount(); i++) {
+		String fn = sfile[i];
+		String ext = ToLower(GetFileExt(fn));
+		if(findarg(ext, ".rc", ".brc") < 0 && HdependFileTime(sfile[i]) > GetFileTime(CatAnyPath(outdir, GetFileTitle(fn) + ".obj")))
+			recompile++;
+	}
+
+	String pch_use;
+	String pch_file;
+	
+	if(recompile > 1 && pch_header.GetCount()) {
+		String pch_obj = CatAnyPath(outdir, GetFileTitle(pch_header) + "$pch.obj");
+		pch_file = CatAnyPath(outdir, GetFileTitle(pch_header) + ".pch");
+		String pch_common = GetHostPathQ(pch_header) + " -Fp" + GetHostPathQ(pch_file) + " -FI" + GetHostPathQ(pch_header);
+		
+		if(blitz) // enable MK__s macros
+			pch_common.Cat(" -DBLITZ_INDEX__=FPCH");
+
+		if(HdependFileTime(pch_header) > GetFileTime(pch_obj)) { // check if PCH is up-to-date
+			int pch_slot = AllocSlot();
+			StringBuffer sb;
+			sb << Join(cc, cpp_options) << Pdb(package, pch_slot, false) << " -Yc" << pch_common
+			   << " -Tp " << GetHostPathQ(pch_header) << " -Fo" + GetHostPathQ(pch_obj);
+			PutConsole("PCH: " + GetFileName(pch_header));
+			if(pch_slot < 0 || !Run(~sb, pch_slot, GetHostPath(pch_obj), 1))
 				error = true;
+			Wait();
 		}
+		pch_use = " -Yu" + pch_common;
+		obj.Add(pch_obj);
+	}
+
+	if(blitz && b.build) {
+		PutConsole("BLITZ:" + b.info);
+		int slot = AllocSlot();
+		String c = Join(cc, cpp_options);
+		if(HasAnyDebug())
+			c << Pdb(package, slot, false);
+		if(slot < 0 ||
+		   !Run(c + " -Tp " + GetHostPathQ(b.path) + " -Fo" + GetHostPathQ(b.object) + pch_use,
+		        slot, GetHostPath(b.object), b.count))
+			error = true;
 	}
 
 	int first_ifile = sfile.GetCount();
@@ -320,9 +384,6 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	optimize.AppendPick(pick(ioptimize));
 
 	int ccount = 0;
-
-//	if(sContainsPchOptions(cc))
-//		pch = Null;
 
 	for(i = 0; i < sfile.GetCount(); i++) {
 		if(!IdeIsBuilding())
@@ -357,8 +418,8 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 					SaveFile(tmpfile, fo);
 					int slot = AllocSlot();
 					StringBuffer cmdline;
-					cmdline << cc << PdbPch(package, slot, false)
-					<< " -Tc " << GetHostPathQ(tmpfile) << " -Fo" << GetHostPathQ(objfile);
+					cmdline << cc << Pdb(package, slot, false)
+					        << " -Tc " << GetHostPathQ(tmpfile) << " -Fo" << GetHostPathQ(objfile);
 					if(slot < 0 || !Run(String(cmdline), slot, GetHostPath(objfile), 1))
 						throw Exc(NFormat("Error compiling binary object '%s'.", objfile));
 				}
@@ -372,9 +433,13 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				if(optimize[i])
 					c = cc_speed;
 				int slot = AllocSlot();
-				if(slot < 0 || !Run(c + PdbPch(package, slot, !sContainsPchOptions(cc) && !sContainsPchOptions(soptions[i]))
-				                    + " " + soptions[i] + (ext == ".c" ? Join(" -Tc", c_options) : Join(" -Tp", cpp_options)) + ' '
-				                    + GetHostPathQ(fn) + " -Fo" + GetHostPathQ(objfile) + pch, slot, GetHostPath(objfile), 1))
+				if(HasAnyDebug())
+					c << Pdb(package, slot, !sContainsPchOptions(cc) && !sContainsPchOptions(soptions[i]));
+				c << " " + soptions[i] + (ext == ".c" ? Join(" -Tc", c_options) : Join(" -Tp", cpp_options)) + ' '
+				     + GetHostPathQ(fn) + " -Fo" + GetHostPathQ(objfile);
+				if(nopch.Find(fn) < 0)
+					c << pch_use;
+				if(slot < 0 || !Run(c, slot, GetHostPath(objfile), 1))
 					execerr = true;
 			}
 			if(execerr)
@@ -409,6 +474,9 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		linkfile.Add(libfile);
 	}
 	linkoptions << ' ' << Gather(pkg.link, config.GetKeys());
+	
+	if(pch_file.GetCount())
+		OnFinish(callback1(DeletePCHFile, pch_file));
 
 	int linktime = GetTickCount();
 	if(!HasFlag("MAIN")) {

@@ -99,6 +99,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	Vector<String> soptions, isoptions;
 	Vector<bool>   optimize, ioptimize;
 	bool           error = false;
+	Index<String>  nopch, noblitz;
 
 	for(i = 0; i < pkg.GetCount(); i++) {
 		if(!IdeIsBuilding())
@@ -135,7 +136,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	}
 
 	if(HasFlag("BLITZ")) {
-		Blitz b = BlitzStep(sfile, soptions, obj, immfile, ".o", optimize);
+		Blitz b = BlitzStep(sfile, soptions, obj, immfile, ".o", optimize, noblitz);
 		if(b.build) {
 			PutConsole("BLITZ:" + b.info);
 			int slot = AllocSlot();

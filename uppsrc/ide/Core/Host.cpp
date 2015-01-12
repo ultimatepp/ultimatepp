@@ -143,6 +143,11 @@ bool LocalHost::Wait(int slot)
 	return IdeConsoleWait(slot);
 }
 
+void LocalHost::OnFinish(Callback cb)
+{
+	IdeConsoleOnFinish(cb);
+}
+
 One<AProcess> LocalHost::StartProcess(const char *cmdline)
 {
 	try {

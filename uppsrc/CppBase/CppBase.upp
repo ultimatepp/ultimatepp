@@ -6,7 +6,7 @@ uses
 	Core;
 
 file
-	CppBase.h,
+	CppBase.h options PCH,
 	keyword.i,
 	Pre.cpp,
 	cpplex.cpp,

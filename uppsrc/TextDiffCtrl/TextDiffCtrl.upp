@@ -2,7 +2,7 @@ uses
 	CtrlLib;
 
 file
-	TextDiffCtrl.h,
+	TextDiffCtrl.h options PCH,
 	TextDiff.cpp,
 	TextCtrl.cpp,
 	DiffCtrl.cpp,

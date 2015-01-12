@@ -224,6 +224,7 @@ struct OneFileHost : Host {
 	virtual bool   Run(const char *cmdline, Stream& out, int slot, String key, int blitz_count) { return host->Run(cmdline, out, slot, key, blitz_count); }
 	virtual bool   Wait() { return host->Wait(); }
 	virtual bool   Wait(int slot) { return host->Wait(slot); }
+	virtual void   OnFinish(Callback cb) { return host->OnFinish(cb); }
 	virtual One<AProcess> StartProcess(const char *c) { return host->StartProcess(c); }
 	virtual void   Launch(const char *cmdline, bool) { host->Launch(cmdline); }
 	virtual void   AddFlags(Index<String>& cfg) { host->AddFlags(cfg); }

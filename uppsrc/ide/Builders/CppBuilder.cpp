@@ -188,6 +188,11 @@ bool CppBuilder::Wait(int slot)
 	return host->Wait(slot);
 }
 
+void CppBuilder::OnFinish(Callback cb)
+{
+	host->OnFinish(cb);
+}
+
 void CppBuilder::ChDir(const String& path)
 {
 	host->ChDir(path);
@@ -386,7 +391,8 @@ Time BlitzBaseTime()
 
 Blitz CppBuilder::BlitzStep(Vector<String>& sfile, Vector<String>& soptions,
                             Vector<String>& obj, Vector<String>& immfile,
-                            const char *objext, Vector<bool>& optimize)
+                            const char *objext, Vector<bool>& optimize,
+                            const Index<String>& noblitz)
 {
 	Blitz b;
 	Vector<String> excluded;
@@ -406,7 +412,8 @@ Blitz CppBuilder::BlitzStep(Vector<String>& sfile, Vector<String>& soptions,
 		Time fntime = GetFileTime(fn);
 		if((ext == ".cpp" || ext == ".cc" || ext == ".cxx")
 		   && HdependBlitzApproved(fn) && IsNull(soptions[i]) && !optimize[i]
-		   && fntime < BlitzBaseTime()) {
+		   && fntime < BlitzBaseTime()
+		   && noblitz.Find(fn) < 0) {
 			if(HdependFileTime(fn) > blitztime)
 				b.build = true;
 			blitz << "\r\n"

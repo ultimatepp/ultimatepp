@@ -257,7 +257,7 @@ void WorkspaceWork::LoadActualPackage()
 					}
 				}
 			}
-			Image m = IdeFileImage(f, f.optimize_speed);
+			Image m = IdeFileImage(f, f.optimize_speed, false, f.pch);
 			if(GetFileExt(p) == ".tpp" && IsFolder(p)) {
 				if(FileExists(AppendFileName(p, "all.i")))
 					m = TopicImg::IGroup();

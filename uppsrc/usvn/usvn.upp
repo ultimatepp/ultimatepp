@@ -4,7 +4,7 @@ uses
 	TextDiffCtrl;
 
 file
-	usvn.h,
+	usvn.h options PCH,
 	Console.cpp,
 	SvnFs.cpp,
 	SvnWorks.cpp,

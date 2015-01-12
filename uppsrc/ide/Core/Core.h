@@ -56,6 +56,7 @@ public:
 	virtual void             IdeConsoleEndGroup() = 0;
 	virtual bool             IdeConsoleWait() = 0;
 	virtual bool             IdeConsoleWait(int slot) = 0;
+	virtual void             IdeConsoleOnFinish(Callback cb) = 0;
 
 	virtual bool      IdeIsDebug() const = 0;
 	virtual void      IdeEndDebug() = 0;
@@ -111,6 +112,7 @@ void             IdeConsoleBeginGroup(String group);
 void             IdeConsoleEndGroup();
 bool             IdeConsoleWait();
 bool             IdeConsoleWait(int slot);
+void             IdeConsoleOnFinish(Callback cb);
 void             IdeGotoCodeRef(String s);
 
 String GetDefaultMethod();
@@ -267,6 +269,7 @@ enum { CHARSET_UTF8_BOM = 250 }; // Same as TextCtrl::CHARSET_UTF8_BOM
 
 class Package {
 	void Reset();
+	void Option(bool& option, const char *name);
 
 public:
 	struct File : public String {
@@ -279,10 +282,11 @@ public:
 		int            font;
 		String         highlight;
 		int            optimize_speed;
+		bool           pch, nopch, noblitz;
 
 		void operator=(const String& s)   { String::operator=(s); readonly = separator = false; }
 		void Init()  { readonly = separator = false; tabsize = Null; charset = 0; font = 0;
-		               optimize_speed = false; }
+		               optimize_speed = false; pch = nopch = noblitz = false; }
 
 		File()                            { Init(); }
 		File(const String& s) : String(s) { Init(); }

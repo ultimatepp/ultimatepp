@@ -34,7 +34,7 @@ struct DependsDisplay : Display {
 		WString txt = q;
 		w.DrawRect(r, paper);
 		w.Clipoff(r.left + 10, r.top, r.Width() - 20, r.Height());
-		Image img = IdeFileImage(q);
+		Image img = IdeFileImage(q, false, false, false);
 		Size isz = img.GetSize();
 		w.DrawImage(0, (r.Height() - isz.cy) / 2, img);
 		int tcy = GetTLTextHeight(txt, StdFont());
@@ -93,8 +93,13 @@ void PackageEditor::SaveOptions() {
 		actual.accepts = Split(accepts.GetText().ToString(), ' ');
 		actual.optimize_speed = optimize_speed;
 		actual.noblitz = noblitz;
-		if(IsActiveFile())
-			ActiveFile().optimize_speed = optimize_speed_file;
+		if(IsActiveFile()) {
+			Package::File& f = ActiveFile();
+			f.optimize_speed = optimize_speed_file;
+			f.pch = pch_file;
+			f.nopch = nopch_file;
+			f.noblitz = noblitz_file;
+		}
 		SavePackage();
 	}
 }
@@ -130,8 +135,12 @@ void PackageEditor::FileEmpty()
 	fileoption.Disable();
 	optimize_speed_file = false;
 	optimize_speed_file.Disable();
-	include_path_file = false;
-	include_path_file.Disable();
+	pch_file = false;
+	pch_file.Disable();
+	nopch_file = false;
+	nopch_file.Disable();
+	noblitz_file = false;
+	noblitz_file.Disable();
 	includeable_file = false;
 	includeable_file.Disable();
 }
@@ -362,9 +371,17 @@ void PackageEditor::FileCursor()
 		Package::File& f = ActiveFile();
 		if(!f.separator) {
 			String p = GetActiveFilePath();
-			bool tpp = GetFileExt(p) == ".tpp" && IsFolder(p);
+			String ext = ToLower(GetFileExt(p));
+			bool tpp = ext == ".tpp" && IsFolder(p);
+			bool hdr = findarg(ext, ".h", ".hpp", ".hh", ".hxx") >= 0 && !tpp;
 			optimize_speed_file.Enable(!tpp);
-			optimize_speed_file <<= actual.file[actualfileindex].optimize_speed;
+			optimize_speed_file <<= f.optimize_speed;
+			pch_file.Enable(hdr);
+			pch_file <<= f.pch;
+			nopch_file.Enable(!hdr);
+			nopch_file <<= f.nopch;
+			noblitz_file.Enable(!tpp);
+			noblitz_file <<= f.noblitz;
 			includeable_file.Enable(tpp);
 			includeable_file <<= FileExists(AppendFileName(p, "all.i"));
 			fileoption.Enable();
@@ -577,7 +594,9 @@ PackageEditor::PackageEditor()
 	noblitz <<=
 	optimize_speed <<=
 	optimize_speed_file <<=
-	include_path_file <<= THISBACK(SaveOptionsLoad);
+	pch_file <<=
+	nopch_file <<=
+	noblitz_file <<= THISBACK(SaveOptionsLoad);
 	
 	includeable_file <<= THISBACK(ToggleIncludeable);
 
@@ -603,6 +622,8 @@ PackageEditor::PackageEditor()
 	ink <<=
 	bold <<=
 	italic <<= THISBACK(SaveOptionsLoad);
+
+	FileCursor();
 }
 
 void EditPackages(const char *main, const char *startwith, String& cfg) {

@@ -6,7 +6,7 @@ uses
 	ide\Core;
 
 file
-	Builders.h,
+	Builders.h options PCH,
 	CppBuilder.cpp,
 	MakeFile.cpp,
 	GccBuilder.icpp,

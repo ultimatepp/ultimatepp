@@ -5,7 +5,7 @@ uses
 	plugin/bz2;
 
 file
-	Core.h,
+	Core.h options PCH,
 	Core.cpp,
 	Hdepend.cpp optimize_speed,
 	Package.cpp,
