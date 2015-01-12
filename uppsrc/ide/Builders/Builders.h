@@ -50,6 +50,7 @@ struct CppBuilder : Builder {
 	bool                   Run(const char *cmdline, Stream& out, int slot, String key, int blitz_count);
 	bool                   Wait();
 	bool                   Wait(int slot);
+	void                   OnFinish(Callback cb);
 	bool                   HasFlag(const char *f) const        { return config.Find(f) >= 0; }
 	bool                   Cp(const String& cmd, const String& package, bool& error);
 	bool                   Cd(const String& cmd);
@@ -77,7 +78,8 @@ struct CppBuilder : Builder {
 
 	Blitz BlitzStep(Vector<String>& sfile, Vector<String>& soptions,
 	                Vector<String>& obj, Vector<String>& immfile,
-	                const char *objext, Vector<bool>& optimize);
+	                const char *objext, Vector<bool>& optimize,
+	                const Index<String>& noblitz);
 
 	virtual void           AddMakeFile(MakeFile& makefile, String package,
 		const Vector<String>& all_uses, const Vector<String>& all_libraries,
@@ -127,7 +129,7 @@ struct MscBuilder : CppBuilder {
 	String CmdLine(const String& package, const Package& pkg);
 	String MachineName() const;
 	String LinkerName() const;
-	String PdbPch(String package, int slot, bool do_pch) const;
+	String Pdb(String package, int slot, bool separate_pdb) const;
 	bool   HasAnyDebug() const;
 	void   BinObjConsole(String c) { PutConsole(c); }
 	bool   IsMsc89() const;

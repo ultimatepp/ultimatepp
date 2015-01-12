@@ -29,7 +29,7 @@ FileSel&  OutputFs();
 
 void      ShellOpenFolder(const String& dir);
 
-Image     IdeFileImage(const String& filename, bool fast = false, bool include_path = false);
+Image     IdeFileImage(const String& filename, bool fast, bool include_path, bool pch);
 
 bool FinishSave(String tmpfile, String outfile);
 void DeactivationSave(bool b);

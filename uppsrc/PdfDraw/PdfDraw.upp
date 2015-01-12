@@ -4,7 +4,7 @@ uses
 	Draw;
 
 file
-	PdfDraw.h,
+	PdfDraw.h options PCH,
 	TTFStream.cpp,
 	TTFStruct.cpp,
 	TTFReader.cpp,

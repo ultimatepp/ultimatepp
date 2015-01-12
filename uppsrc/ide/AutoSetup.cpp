@@ -312,6 +312,7 @@ void AutoSetup()
 			"PATH = " + AsCString(AppendFileName(mingwdir, "bin") + exe) + ";\n"
 			"INCLUDE = " + AsCString(AppendFileName(mingwdir, "include") + include) + ";\n"
 			"LIB = " + AsCString(AppendFileName(mingwdir, "lib") + lib + mlib) + ";\n"
+			"ALLOW_PRECOMPILED_HEADERS = \"1\";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
@@ -345,6 +346,7 @@ void AutoSetup()
 			"LIB = " + AsCString(AppendFileName(owcdir, "lib386") + ';' +
 				AppendFileName(owcdir, "lib386\\nt") +
 				lib + mlib) + ";\n"
+			"ALLOW_PRECOMPILED_HEADERS = \"1\";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
@@ -397,6 +399,7 @@ void AutoSetup()
 							AppendFileName(sdk, "Lib\\winv6.3\\um\\x64") +
 							lib
 			           ) + ";\n"
+			"ALLOW_PRECOMPILED_HEADERS = \"1\";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
@@ -441,6 +444,7 @@ void AutoSetup()
 							AppendFileName(sdk, "Lib\\winv6.3\\um\\x86") +
 							lib
 			           ) + ";\n"
+			"ALLOW_PRECOMPILED_HEADERS = \"1\";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
@@ -489,6 +493,7 @@ void AutoSetup()
 							AppendFileName(sdk, "Lib\\win8\\um\\x64") +
 							lib
 			           ) + ";\n"
+			"ALLOW_PRECOMPILED_HEADERS = \"1\";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
@@ -533,6 +538,7 @@ void AutoSetup()
 							AppendFileName(sdk, "Lib\\win8\\um\\x86") +
 							lib
 			           ) + ";\n"
+			"ALLOW_PRECOMPILED_HEADERS = \"1\";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
@@ -579,6 +585,7 @@ void AutoSetup()
 							AppendFileName(sdk, "Lib\\x64") +
 							lib
 			           ) + ";\n"
+			"ALLOW_PRECOMPILED_HEADERS = \"1\";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
@@ -621,6 +628,7 @@ void AutoSetup()
 							AppendFileName(sdk, "Lib") +
 							lib
 			           ) + ";\n"
+			"ALLOW_PRECOMPILED_HEADERS = \"1\";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
@@ -667,6 +675,7 @@ void AutoSetup()
 							AppendFileName(sdk, "Lib\\x64") +
 							lib
 			           ) + ";\n"
+			"ALLOW_PRECOMPILED_HEADERS = \"1\";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
@@ -709,6 +718,7 @@ void AutoSetup()
 							AppendFileName(sdk, "Lib") +
 							lib
 			           ) + ";\n"
+			"ALLOW_PRECOMPILED_HEADERS = \"1\";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}

@@ -8,7 +8,7 @@ uses
 	CodeEditor;
 
 file
-	LayDes.h,
+	LayDes.h options PCH,
 	laydes.key,
 	sdiff.cpp,
 	laylib.cpp,

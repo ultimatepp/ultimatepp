@@ -190,6 +190,17 @@ byte CharsetByNameX(const String& s)
 	return s == "UTF-8-BOM" ? CHARSET_UTF8_BOM : CharsetByName(s);
 }
 
+void Package::Option(bool& option, const char *name)
+{
+	File& f = file.Top();
+	for(int i = 0; i < f.option.GetCount(); i++) // Ugly BW compatibility hack
+		if(f.option[i].text == name) {
+			f.option.Remove(i);
+			option = true;
+			break;
+		}
+}
+
 bool Package::Load(const char *path)
 {
 	for(;;) {
@@ -264,38 +275,51 @@ bool Package::Load(const char *path)
 					else
 					if(p.Id("file")) {
 						do {
-							File f(ReadValue(p));
-							file.Add() = pick(f);
+							File fv(ReadValue(p));
+							File& f = file.Add();
+							f = pick(fv);
 							while(!p.IsChar(',') && !p.IsChar(';')) {
-								if(!LoadFOpt(p, "options", file.Top().option) &&
-								   !LoadFOpt(p, "depends", file.Top().depends)) {
+								if(!LoadFOpt(p, "options", f.option) &&
+								   !LoadFOpt(p, "depends", f.depends)) {
 									if(p.Id("optimize_speed"))
-										file.Top().optimize_speed = true;
+										f.optimize_speed = true;
 									else
 									if(p.Id("optimize_size"))
-										file.Top().optimize_speed = false;
+										f.optimize_speed = false;
+									else
+									if(p.Id("pch"))
+										f.pch = true;
+									else
+									if(p.Id("nopch"))
+										f.nopch = true;
+									else
+									if(p.Id("noblitz"))
+										f.noblitz = true;
 									else
 									if(p.Id("readonly"))
-										file.Top().readonly = true;
+										f.readonly = true;
 									else
 									if(p.Id("separator"))
-										file.Top().separator = true;
+										f.separator = true;
 									else
 									if(p.Id("charset"))
-										file.Top().charset = CharsetByNameX(p.ReadString());
+										f.charset = CharsetByNameX(p.ReadString());
 									else
 									if(p.Id("tabsize"))
-										file.Top().tabsize = minmax(p.ReadInt(), 1, 20);
+										f.tabsize = minmax(p.ReadInt(), 1, 20);
 									else
 									if(p.Id("font"))
-										file.Top().font = minmax(p.ReadInt(), 0, 3);
+										f.font = minmax(p.ReadInt(), 0, 3);
 									else
 									if(p.Id("highlight"))
-										file.Top().highlight = p.ReadId();
+										f.highlight = p.ReadId();
 									else
-										p.ThrowError("invalid keyword");
+										p.SkipTerm();
 								}
 							}
+							Option(f.pch, "PCH");
+							Option(f.nopch, "NOPCH");
+							Option(f.noblitz, "NOBLITZ");
 						}
 						while(p.Char(','));
 					}
@@ -319,7 +343,7 @@ bool Package::Load(const char *path)
 					if(p.Id("custom"))
 						custom.Add().Load(p);
 					else
-						p.ThrowError("invalid keyword");
+						p.SkipTerm();
 				}
 				p.Char(';');
 			}
@@ -424,6 +448,13 @@ bool Package::Save(const char *path) const {
 				out << " font " << f.font;
 			if(f.optimize_speed)
 				out << " optimize_speed";
+			if(f.pch)
+//				out << " pch"; // good solution, but not backward compatible
+				out << " options PCH";
+			if(f.nopch)
+				out << " options NOPCH";
+			if(f.noblitz)
+				out << " options NOBLITZ";
 			if(f.charset > 0 && f.charset < CharsetCount() || f.charset == CHARSET_UTF8)
 				out << " charset " << AsCString(CharsetName(f.charset));
 			else

@@ -9,7 +9,7 @@ uses
 uses(POSIX | LINUX | FREEBSD) PdfDraw;
 
 file
-	CtrlLib.h,
+	CtrlLib.h options PCH,
 	CtrlLib readonly separator,
 	LabelBase.h,
 	LabelBase.cpp,

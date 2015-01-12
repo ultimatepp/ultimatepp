@@ -193,6 +193,11 @@ bool IdeConsoleWait(int slot)
 	return the_ide && the_ide->IdeConsoleWait(slot);
 }
 
+void IdeConsoleOnFinish(Callback cb)
+{
+	if(the_ide) the_ide->IdeConsoleOnFinish(cb);
+}
+
 void IdeGotoCodeRef(String s)
 {
 	if(the_ide) the_ide->IdeGotoCodeRef(s);
