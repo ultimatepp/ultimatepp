@@ -35,7 +35,7 @@ file
 	Core.h options PCH,
 	config.h,
 	Defs.h,
-	Cpu.cpp optimize_speed options NOPCH,
+	Cpu.cpp optimize_speed,
 	Mt.h,
 	Core.upp,
 	Mt.cpp,

@@ -519,7 +519,11 @@ int CodeEditor::BlockReplace()
 	int count = 0;
 	foundpos = l;
 	Index<int> ln;
+	Progress pi("Searching...");
 	while(FindFrom(foundpos, false, true) && foundpos + foundsize <= h) {
+		pi.Set(foundpos - l, h - l);
+		if(pi.Canceled())
+			return count;
 		CachePos(foundpos);
 		if(~findreplace.mode == 0) {
 			Remove(foundpos, foundsize);
@@ -535,23 +539,27 @@ int CodeEditor::BlockReplace()
 		}
 	}
 	if(~findreplace.mode != 0) {
+		pi.SetText("Removing lines");
 		ClearSelection();
 		int ll = GetLine(l);
 		int lh = GetLine(h);
 		if(GetPos(lh) == h)
 			lh--;
 		bool mm = ~findreplace.mode == 1;
-		for(int i = lh; i >= ll; i--) {
-			if((ln.Find(i) >= 0) != mm) {
-				int pos = GetPos(i);
-				int l = GetLineLength(i);
-				CachePos(pos);
-				Remove(pos, min(l + 1, GetLength() - pos));
+		String replace;
+		pi.SetTotal(lh - ll + 1);
+		for(int i = ll; i <= lh; i++) {
+			pi.Set(i, lh - ll + 1);
+			if(pi.Canceled())
+				return 0;
+			if((ln.Find(i) >= 0) == mm) {
+				replace << GetUtf8Line(i) << "\n";
 				count++;
 			}
 		}
-		SetSelection(GetPos(ll), lh - count + 1 < GetLineCount() ? GetPos(lh - count + 1)
-		                                                         : GetLength());
+		int pos = GetPos(ll);
+		Remove(pos, GetPos(GetLine(h)) - pos);
+		SetSelection(pos, pos + Insert(pos, replace));
 	}
 	else
 		SetSelection(l, h);

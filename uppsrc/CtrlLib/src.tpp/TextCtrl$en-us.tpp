@@ -361,6 +361,10 @@ in between is the same as calling it once.&]
 [s2;%% Clears all undo and redo records.&]
 [s3;%% &]
 [s4; &]
+[s5;:TextCtrl`:`:ClearRedo`(`): [@(0.0.255) void]_[* ClearRedo]()&]
+[s2;%% Clears redo records.&]
+[s3; &]
+[s4; &]
 [s5;:TextCtrl`:`:PickUndoData`(`): [_^TextCtrl`:`:UndoData^ UndoData]_[* PickUndoData]()&]
 [s2;%% Picks undo and redo record. This is useful when single widget 
 is used to edit various text, this allows to change undo/redo 
