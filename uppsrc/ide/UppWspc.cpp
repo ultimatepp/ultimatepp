@@ -927,15 +927,20 @@ void WorkspaceWork::FileMenu(Bar& menu)
 	if(IsActiveFile()) {
 		menu.Separator();
 		String p = GetActiveFilePath();
-		if(GetFileExt(p) == ".tpp" && IsFolder(p)) {
+		String ext = GetFileExt(p);
+		if(ext == ".tpp" && IsFolder(p)) {
 			menu.Add("Includeable topic group", THISBACK(ToggleIncludeable))
 			    .Check(FileExists(AppendFileName(p, "all.i")));
 			if(IsSvnDir(p))
 				menu.Add("Svn Synchronize " + p, THISBACK1(SyncSvnDir, p));
 		}
-		else
+		else {
 			menu.Add("Optimize for speed", THISBACK(ToggleFileSpeed))
 			    .Check(ActiveFile().optimize_speed);
+			if(IsHeaderExt(ext))
+				menu.Add("Precompile header", THISBACK(TogglePCH))
+				    .Check(ActiveFile().pch);
+		}
 	}
 	FilePropertiesMenu(menu);
 }
@@ -944,6 +949,14 @@ void WorkspaceWork::ToggleFileSpeed()
 {
 	if(IsActiveFile()) {
 		ActiveFile().optimize_speed = !ActiveFile().optimize_speed;
+		SaveLoadPackageNS();
+	}
+}
+
+void WorkspaceWork::TogglePCH()
+{
+	if(IsActiveFile()) {
+		ActiveFile().pch = !ActiveFile().pch;
 		SaveLoadPackageNS();
 	}
 }

@@ -91,6 +91,11 @@ void PutVerbose(const char *s) { if(the_ide) the_ide->PutVerbose(s); }
 void PutLinking()              { if(the_ide) the_ide->PutLinking(); }
 void PutLinkingEnd(bool ok)    { if(the_ide) the_ide->PutLinkingEnd(ok); }
 
+bool IsHeaderExt(const String& ext)
+{
+	return findarg(ext, ".h", ".hpp", ".hh", ".hxx") >= 0;
+}
+
 const Workspace& GetIdeWorkspace()
 {
 	if(the_ide)

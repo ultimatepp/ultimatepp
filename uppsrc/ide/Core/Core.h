@@ -431,6 +431,8 @@ bool                  HdependBlitzApproved(const String& path);
 const Vector<String>& HdependGetDefines(const String& path);
 const Vector<String>& HdependGetAllFiles();
 
+bool IsHeaderExt(const String& ext);
+
 class BinObjInfo {
 public:
 	BinObjInfo();
