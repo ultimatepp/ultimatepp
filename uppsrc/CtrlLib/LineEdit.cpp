@@ -99,11 +99,21 @@ bool LineEdit::GetRectSelection(const Rect& rect, int line, int& l, int &h)
 int LineEdit::RemoveRectSelection()
 {
 	Rect rect = GetRectSelection();
+	WString txt;
 	for(int i = rect.top; i <= rect.bottom; i++) {
 		int l, h;
 		GetRectSelection(rect, i, l, h);
-		Remove(l, h - l);
+		WString s = GetWLine(i);
+		s.Remove(l - GetPos(i), h - l); 
+		txt.Cat(s);
+		txt.Cat('\n');
 	}
+	int l = GetPos(rect.top);
+	int h = GetPos(rect.bottom);
+	if(h < GetLength())
+		h++;
+	Remove(l, h - l);
+	Insert(l, txt);
 	return GetGPos(rect.bottom, rect.left);
 }
 
@@ -113,8 +123,9 @@ WString LineEdit::CopyRectSelection()
 	Rect rect = GetRectSelection();
 	for(int i = rect.top; i <= rect.bottom; i++) {
 		int l, h;
+		int pos = GetPos(i);
 		GetRectSelection(rect, i, l, h);
-		txt.Cat(GetW(l, h - l));
+		txt.Cat(GetWLine(i).Mid(l - pos, h - l));
 #ifdef PLATFORM_WIN32
 		txt.Cat('\r');
 #endif
