@@ -168,6 +168,7 @@ public:
 	bool      IsUndo() const                  { return undo.GetCount(); }
 	bool      IsRedo() const                  { return redo.GetCount(); }
 	void      ClearUndo()                     { undo.Clear(); redo.Clear(); }
+	void      ClearRedo()                     { redo.Clear(); }
 	bool      IsUndoOp() const                { return undo_op; }
 	UndoData  PickUndoData();
 	void      SetPickUndoData(UndoData rval_ data);
