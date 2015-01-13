@@ -109,7 +109,7 @@ int LineEdit::RemoveRectSelection()
 		txt.Cat('\n');
 	}
 	int l = GetPos(rect.top);
-	int h = GetPos(rect.bottom);
+	int h = GetPos(rect.bottom) + GetLineLength(rect.bottom);
 	if(h < GetLength())
 		h++;
 	Remove(l, h - l);
