@@ -348,6 +348,7 @@ struct WorkspaceWork {
 	void DelFile();
 	void RenameFile();
 	void ToggleFileSpeed();
+	void TogglePCH();
 	void ToggleIncludeable();
 
 	void AddNormalUses();

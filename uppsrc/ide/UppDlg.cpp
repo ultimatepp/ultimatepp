@@ -373,7 +373,7 @@ void PackageEditor::FileCursor()
 			String p = GetActiveFilePath();
 			String ext = ToLower(GetFileExt(p));
 			bool tpp = ext == ".tpp" && IsFolder(p);
-			bool hdr = findarg(ext, ".h", ".hpp", ".hh", ".hxx") >= 0 && !tpp;
+			bool hdr = IsHeaderExt(ext) && !tpp;
 			optimize_speed_file.Enable(!tpp);
 			optimize_speed_file <<= f.optimize_speed;
 			pch_file.Enable(hdr);
