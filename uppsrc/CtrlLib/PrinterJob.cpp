@@ -99,10 +99,8 @@ bool PrinterJob::Execute0(bool dodlg)
 			dlg.nFromPage = dlg.nMinPage;
 			dlg.nToPage = dlg.nMaxPage;
 		}
-//		for(int c = 0; c < ((dlg.Flags & PD_COLLATE) ? dlg.nCopies : 1); c++)
-			for(int i = dlg.nFromPage - 1; i <= dlg.nToPage - 1; i++)
-//				for(int c = 0; c < ((dlg.Flags & PD_COLLATE) ? 1 : dlg.nCopies); c++)
-					page.Add(i);
+		for(int i = dlg.nFromPage - 1; i <= dlg.nToPage - 1; i++)
+			page.Add(i);
 		return true;
 	}
 	return false;
