@@ -717,15 +717,15 @@ void CodeEditor::ReplaceWildcard()
 {
 	MenuBar menu;
 	String ptxt;
-	if(findreplace.regexp) {
+	if(findreplace.regexp)
 		ptxt = t_("Matched subpattern %d");
-	}
 	else {
 		menu.Add(t_("Matched spaces"), THISBACK1(InsertWildcard, "%"));
 		menu.Add(t_("Matched one or more any characters"), THISBACK1(InsertWildcard, "*"));
 		menu.Add(t_("Matched C++ identifier"), THISBACK1(InsertWildcard, "$"));
 		menu.Add(t_("Matched number"), THISBACK1(InsertWildcard, "#"));
 		menu.Add(t_("Matched any character"), THISBACK1(InsertWildcard, "?"));
+		ptxt = t_("Matched wildcard %d");
 	}
 	menu.Add(t_("0-based replace index"), THISBACK1(InsertWildcard, "0"));
 	menu.Add(t_("1-based replace index"), THISBACK1(InsertWildcard, "1"));

@@ -9,11 +9,14 @@ void SuggestCtrl::CancelMode()
 
 int SuggestCtrl::IsDelimiter(int c)
 {
-	if(delimiter_filter)
-		c = (*delimiter_filter)(c);
-	if(delimiter_char && delimiter_char != c)
-		c = 0;
-	return c;
+	if(delimiter_filter || delimiter_char) {
+		if(delimiter_filter)
+			c = (*delimiter_filter)(c);
+		if(delimiter_char && delimiter_char != c)
+			c = 0;
+		return c;
+	}
+	return 0;
 }
 
 WString SuggestCtrl::CF(const WString& src)
