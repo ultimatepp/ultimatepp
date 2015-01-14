@@ -310,7 +310,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				if(ext == ".lib")
 					linkfile.Add(fn);
 				else
-				if(IsHeaderExt(ext) >= 0 && pkg[i].pch && allow_pch && IsMsc89() && release && !HasAnyDebug() && !blitz) {
+				if(IsHeaderExt(ext) && pkg[i].pch && allow_pch && IsMsc89() && release && !HasAnyDebug() && !blitz) {
 					if(pch_header.GetCount())
 						PutConsole(GetFileName(fn) + ": multiple PCH is not allowed. Check your package configuration");
 					else
