@@ -1,0 +1,11 @@
+description "Example of basic DnD API\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI SSE2";
+
