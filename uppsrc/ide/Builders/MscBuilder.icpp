@@ -352,16 +352,15 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		if(blitz) // enable MK__s macros
 			pch_common.Cat(" -DBLITZ_INDEX__=FPCH");
 
-		if(HdependFileTime(pch_header) > GetFileTime(pch_obj)) { // check if PCH is up-to-date
-			int pch_slot = AllocSlot();
-			StringBuffer sb;
-			sb << Join(cc, cpp_options) << Pdb(package, pch_slot, false) << " -Yc" << pch_common
-			   << " -Tp " << GetHostPathQ(pch_header) << " -Fo" + GetHostPathQ(pch_obj);
-			PutConsole("PCH: " + GetFileName(pch_header));
-			if(pch_slot < 0 || !Run(~sb, pch_slot, GetHostPath(pch_obj), 1))
-				error = true;
-			Wait();
-		}
+		int pch_slot = AllocSlot();
+		StringBuffer sb;
+		sb << Join(cc, cpp_options) << Pdb(package, pch_slot, false) << " -Yc" << pch_common
+		   << " -Tp " << GetHostPathQ(pch_header) << " -Fo" + GetHostPathQ(pch_obj);
+		PutConsole("PCH: " + GetFileName(pch_header));
+		if(pch_slot < 0 || !Run(~sb, pch_slot, GetHostPath(pch_obj), 1))
+			error = true;
+		Wait();
+
 		pch_use = " -Yu" + pch_common;
 		obj.Add(pch_obj);
 	}
