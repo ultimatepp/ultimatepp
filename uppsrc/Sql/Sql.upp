@@ -9,7 +9,7 @@ uses
 	Core;
 
 file
-	Sql.h,
+	Sql.h options PCH,
 	Sqlexp.h,
 	SqlCase.cpp optimize_speed,
 	SqlVal.cpp optimize_speed,
