@@ -6,7 +6,7 @@ uses
 	Report;
 
 file
-	SqlCtrl.h,
+	SqlCtrl.h options PCH,
 	SqlCtrl.t charset "UTF-8",
 	SqlCtrl_init.icpp,
 	SqlCtrl.cpp,

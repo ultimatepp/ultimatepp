@@ -1,7 +1,7 @@
 description "XML-RPC support package (both server and client stuff)\3770,128,128";
 
 file
-	Rpc.h,
+	Rpc.h options PCH,
 	legacy.h,
 	Value.cpp,
 	Xml.cpp,
