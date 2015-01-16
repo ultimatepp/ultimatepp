@@ -125,7 +125,6 @@ bool IsDecentMachine()
 	MEMORYSTATUS m;
 	GlobalMemoryStatus(&m);
 	return m.dwTotalPhys > 500 * 1024 * 1024;
-
 }
 #else
 bool IsDecentMachine()
