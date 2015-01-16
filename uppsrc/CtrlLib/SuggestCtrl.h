@@ -11,6 +11,7 @@ private:
 	int             delimiter_char;
 	int           (*delimiter_filter)(int c);
 	int           (*compare_filter)(int c);
+	bool            just_start;
 
 	void            Cancel();
 	void            Select();
@@ -32,6 +33,7 @@ public:
 	SuggestCtrl& Delimiter(int chr)                   { delimiter_char = chr; return *this; }
 	SuggestCtrl& Delimiter(int (*filter)(int c))      { delimiter_filter = filter; return *this; }
 	SuggestCtrl& CompareFilter(int (*filter)(int c))  { compare_filter = filter; return *this; }
+	SuggestCtrl& JustStart(bool b = true)             { just_start = b; return *this; }
 		
 	SuggestCtrl();
 };

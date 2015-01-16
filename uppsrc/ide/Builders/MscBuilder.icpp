@@ -323,6 +323,8 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				}
 				if(pkg[i].noblitz)
 					noblitz.Add(fn);
+				if(ext == ".c")
+					nopch.Add(fn);
 			}
 		}
 	}
@@ -337,7 +339,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	for(i = 0; i < sfile.GetCount(); i++) {
 		String fn = sfile[i];
 		String ext = ToLower(GetFileExt(fn));
-		if(findarg(ext, ".rc", ".brc") < 0 && HdependFileTime(sfile[i]) > GetFileTime(CatAnyPath(outdir, GetFileTitle(fn) + ".obj")))
+		if(findarg(ext, ".rc", ".brc", ".c") < 0 && HdependFileTime(sfile[i]) > GetFileTime(CatAnyPath(outdir, GetFileTitle(fn) + ".obj")))
 			recompile++;
 	}
 

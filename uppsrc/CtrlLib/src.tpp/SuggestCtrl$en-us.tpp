@@ -66,4 +66,10 @@ change `',`' to `';`') before it is written to the text.&]
 ]_[* CompareFilter]([@(0.0.255) int]_(`*[*@3 filter])([@(0.0.255) int]_c))&]
 [s2;%% Sets filter to be applied to text and to the suggestions before 
 it is compared while searching for suggestions.&]
+[s3;%% &]
+[s4; &]
+[s5;:SuggestCtrl`:`:JustStart`(bool`): [_^SuggestCtrl^ SuggestCtrl][@(0.0.255) `&]_[* JustS
+tart]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% Only matches the starts of suggestions.&]
+[s3;%% &]
 [s0;%% ]]
