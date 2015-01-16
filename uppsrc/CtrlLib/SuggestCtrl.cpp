@@ -93,9 +93,11 @@ bool SuggestCtrl::Key(dword key, int count)
 			int h;
 			WString x = CF(ReadLast(h));
 			list.Clear();
-			for(int i = 0; i < data.GetCount(); i++)
-				if(CF(data[i]).Find(x) >= 0)
+			for(int i = 0; i < data.GetCount(); i++) {
+				WString h = CF(data[i]);
+				if(just_start ? h.StartsWith(x) : h.Find(x) >= 0)
 					list.Add(data[i]);
+			}
 			if(list.GetCount() == 0) {
 				Cancel();
 				return true;
@@ -154,6 +156,7 @@ SuggestCtrl::SuggestCtrl()
 	delimiter_filter = NULL;
 	droplines = 16;
 	compare_filter = NULL;
+	just_start = false;
 }
 
 END_UPP_NAMESPACE
