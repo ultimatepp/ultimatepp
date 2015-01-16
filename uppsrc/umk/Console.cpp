@@ -8,6 +8,7 @@ Console::Console() {
 	console_lock = -1;
 	wrap_text = true;
 	console = false;
+	serial = 0;
 }
 
 void Console::Append(const String& s) {
@@ -144,6 +145,7 @@ bool Console::Run(One<AProcess> process, const char *cmdline, Stream *out, bool 
 	pslot.key = key;
 	pslot.group = current_group;
 	pslot.last_msecs = msecs();
+	pslot.serial = ++serial;
 	groups.GetAdd(pslot.group).count += blitz_count;
 	if(processes.GetCount() == 1)
 		Wait(slot);
@@ -218,6 +220,13 @@ bool Console::Wait()
 	}
 }
 
+void Console::OnFinish(Callback cb)
+{
+	Finisher& f = finisher.Add();
+	f.serial = serial;
+	f.cb = cb;
+}
+
 void Console::Kill()
 {
 	for(int i = 0; i < processes.GetCount(); i++)
@@ -239,6 +248,20 @@ void Console::Kill(int islot)
 		FlushConsole();
 	}
 	CheckEndGroup();
+
+	int minserial = INT_MAX;
+	for(int i = 0; i < processes.GetCount(); i++)
+		minserial = min(processes[i].serial, minserial);
+	int i = 0;
+	while(i < finisher.GetCount()) {
+		const Finisher& f = finisher[i];
+		if(f.serial > minserial)
+			i++;
+		else {
+			f.cb();
+			finisher.Remove(i);
+		}
+	}
 }
 
 void Console::SetSlots(int s)

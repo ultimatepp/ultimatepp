@@ -22,6 +22,7 @@ protected:
 		bool              quiet;
 		int               exitcode;
 		int               last_msecs;
+		int               serial;
 	};
 
 	struct Group {
@@ -34,13 +35,20 @@ protected:
 		int               raw_msecs;
 	};
 
+	struct Finisher {
+		int               serial;
+		Callback          cb;
+	};
+
 	Array<Slot> processes;
+	Array<Finisher> finisher;
 	ArrayMap<String, Group> groups;
 	Vector<String> error_keys;
 	String current_group;
 	String spooled_output;
 	int console_lock;
 	bool wrap_text;
+	int  serial;
 
 	void CheckEndGroup();
 	void FlushConsole();
@@ -69,6 +77,8 @@ public:
 	Vector<String> PickErrors()               { Vector<String> e = error_keys; error_keys.Clear(); return e; }
 	void Wait(int slot);
 	bool Wait();
+
+	void OnFinish(Callback cb);
 
 	void WrapText(bool w)                     { wrap_text = w; }
 
@@ -105,6 +115,7 @@ struct Ide : public IdeContext, public MakeBuild {
 	virtual void             IdeConsoleEndGroup();
 	virtual bool             IdeConsoleWait();
 	virtual bool             IdeConsoleWait(int slot);
+	virtual void             IdeConsoleOnFinish(Callback cb);
 
 	virtual bool      IdeIsDebug() const ;
 	virtual void      IdeEndDebug();
