@@ -297,7 +297,6 @@ STDMETHODIMP UDataObject::QueryInterface(REFIID iid, void ** ppv)
 
 void SetMedium(STGMEDIUM *medium, const String& data)
 {
-	DUMPHEX(data);
 	int sz = data.GetCount();
 	HGLOBAL hData = GlobalAlloc(0, sz + 4);
 	if (hData) {
