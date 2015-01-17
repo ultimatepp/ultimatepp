@@ -154,11 +154,6 @@ static bool sContainsPchOptions(const String& x)
 	     || a.Find("-YX") >= 0 || a.Find("/YX") >= 0;
 }
 
-bool MscBuilder::HasAnyDebug() const
-{
-	return HasFlag("DEBUG") || HasFlag("DEBUG_MINIMAL") || HasFlag("DEBUG_FULL");
-}
-
 String MscBuilder::Pdb(String package, int slot, bool separate_pdb) const
 {
 	String pdb_name = GetAnyFileName(package);
@@ -239,40 +234,6 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	Vector<bool>   optimize, ioptimize;
 	Vector<String> sobjfile;
 	bool           error = false;
-
-	String pch;
-
-/*
-	if(allow_pch && pkg.GetCount() && IsMsc86()) {
-		String hdr_path = SourcePath(package, pkg[0]);
-		if(IsCHeaderFile(hdr_path) && HdependBlitzApproved(hdr_path)) {
-		// add check: .c in package should prohibit precompiled header
-		// add check: Only simple file name
-		// add check: Some file in package #includes it
-			int time = GetTickCount();
-			int slot = AllocSlot();
-			String pchfile = CatAnyPath(outdir, GetFileTitle(hdr_path) + ".pch");
-			String cppfile = ForceExt(hdr_path, ".$pch$.cpp");
-			SaveFile(cppfile, "#include \"" + pkg[0] + "\"\r\n");
-			if(slot < 0 ||
-			   !Run(Join(cc, cpp_options) + PdbPch(package, slot, false)
-			        + " -Tp " + GetHostPathQ(hdr_path) + " -Fp" + GetHostPathQ(cppfile)
-			        + " -Yc" + pkg[0],
-			        slot, GetHostPath(pchfile), 1))
-				error = true;
-			if(!Wait(slot))
-				error = true;
-			PutVerbose("precompiled header " + pchfile + " compiled in " + GetPrintTime(time));
-			if(error) {
-				IdeConsoleEndGroup();
-				return false;
-			}
-			DeleteFile(pchfile);
-			pch << " -Yu" << GetHostPathQ(GetFileTitle(hdr_path))
-			    << " -Fp" << GetHostPathQ(pchfile);
-		}
-	}
-*/
 
 	String pch_header;
 	
@@ -374,7 +335,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		if(HasAnyDebug())
 			c << Pdb(package, slot, false);
 		if(slot < 0 ||
-		   !Run(c + " -Tp " + GetHostPathQ(b.path) + " -Fo" + GetHostPathQ(b.object) + pch_use,
+		   !Run(c + " -Tp " + GetHostPathQ(b.path) + " -Fo" + GetHostPathQ(b.object),
 		        slot, GetHostPath(b.object), b.count))
 			error = true;
 	}

@@ -501,3 +501,8 @@ String CppBuilder::IncludesDefinesTargetTime(const String& package, const Packag
 	cc << DefinesTargetTime(" -D", package, pkg);
 	return cc;
 }
+
+bool CppBuilder::HasAnyDebug() const
+{
+	return HasFlag("DEBUG") || HasFlag("DEBUG_MINIMAL") || HasFlag("DEBUG_FULL");
+}
