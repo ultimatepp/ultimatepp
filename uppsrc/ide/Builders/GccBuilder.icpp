@@ -99,7 +99,12 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	Vector<String> soptions, isoptions;
 	Vector<bool>   optimize, ioptimize;
 	bool           error = false;
-	Index<String>  nopch, noblitz;
+
+	String pch_header;
+	
+	Index<String> nopch, noblitz;
+
+	bool blitz = HasFlag("BLITZ");
 
 	for(i = 0; i < pkg.GetCount(); i++) {
 		if(!IdeIsBuilding())
@@ -131,19 +136,67 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				else
 				if(ext == ".a" || ext == ".so")
 					linkfile.Add(fn);
+				else
+				if(IsHeaderExt(ext) && pkg[i].pch && allow_pch && release && !HasAnyDebug() && !blitz) {
+					if(pch_header.GetCount())
+						PutConsole(GetFileName(fn) + ": multiple PCH is not allowed. Check your package configuration");
+					else
+						pch_header = fn;
+				}
+				if(pkg[i].nopch) {
+					nopch.Add(fn);
+					if(allow_pch && release)
+						noblitz.Add(fn);
+				}
+				if(pkg[i].noblitz)
+					noblitz.Add(fn);
+				if(ext == ".c")
+					nopch.Add(fn);
 			}
 		}
 	}
 
-	if(HasFlag("BLITZ")) {
-		Blitz b = BlitzStep(sfile, soptions, obj, immfile, ".o", optimize, noblitz);
-		if(b.build) {
-			PutConsole("BLITZ:" + b.info);
-			int slot = AllocSlot();
-			if(slot < 0 || !Run(String().Cat() << Join(cc, cpp_options) << ' '
-			<< GetHostPathQ(b.path) << " -o " << GetHostPathQ(b.object), slot, GetHostPath(b.object), b.count))
-				error = true;
-		}
+	int recompile = 0;
+	Blitz b;
+	if(blitz) {
+		b = BlitzStep(sfile, soptions, obj, immfile, ".o", optimize, noblitz);
+		recompile = b.build;
+	}
+
+	for(i = 0; i < sfile.GetCount(); i++) {
+		String fn = sfile[i];
+		String ext = ToLower(GetFileExt(fn));
+		if(findarg(ext, ".rc", ".brc", ".c") < 0 && HdependFileTime(sfile[i]) > GetFileTime(CatAnyPath(outdir, GetFileTitle(fn) + ".o"))
+		   && !optimize[i])
+			recompile++;
+	}
+
+	String pch_use;
+	String pch_file;
+	
+	if(recompile > 1 && pch_header.GetCount()) {
+		pch_file = CatAnyPath(outdir, GetFileTitle(pch_header) + "$pch.h.gch");
+		
+		int pch_slot = AllocSlot();
+		StringBuffer sb;
+
+		sb << Join(cc, cpp_options) << ' ' << GetHostPathQ(pch_header) << " -o " << GetHostPathQ(pch_file);
+
+		PutConsole("PCH: " + GetFileName(pch_header));
+		if(pch_slot < 0 || !Run(~sb, pch_slot, GetHostPath(pch_file), 1))
+			error = true;
+		Wait();
+
+		pch_use = " -I" + GetHostPathQ(outdir) + " -include " + GetFileTitle(pch_header) + "$pch.h -Winvalid-pch ";
+	}
+
+	if(blitz && b.build) {
+		PutConsole("BLITZ:" + b.info);
+		int slot = AllocSlot();
+		if(slot < 0 || !Run(String().Cat() << Join(cc, cpp_options) << ' '
+		                    << GetHostPathQ(b.path)
+		                    << " -o " << GetHostPathQ(b.object), slot, GetHostPath(b.object), b.count))
+			error = true;
 	}
 
 	int first_ifile = sfile.GetCount();
@@ -176,7 +229,6 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			}
 			else if(brc) {
 				try {
-//					String hfn = GetHostPath(fn);
 					String brcdata = LoadFile(fn);
 					if(brcdata.IsVoid())
 						throw Exc(NFormat("error reading file '%s'", fn));
@@ -189,7 +241,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				}
 			}
 			else {
-				String exec = optimize[i] ? cc_speed : cc;
+				String exec = optimize[i] ? cc_speed : cc + pch_use; // GCC does not like different options for PCH
 				if(ext == ".c")
 					exec << Join(" -x c", c_options) << ' ';
 				else if(ext == ".s" || ext == ".S")
@@ -229,6 +281,9 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 
 	Vector<String> libs = Split(Gather(pkg.library, config.GetKeys()), ' ');
 	linkfile.Append(libs);
+
+	if(pch_file.GetCount())
+		OnFinish(callback1(DeletePCHFile, pch_file));
 
 	int libtime = GetTickCount();
 	if(!HasFlag("MAIN")) {

@@ -64,8 +64,11 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 			file = FollowCygwinSymlink(file);
 			if(IsFullPath(file) && FileExists(f.file) && IsTextFile(f.file)) {
 				f.file = file;
-				while(*s && !IsDigit(*s))
+				while(*s && !IsDigit(*s)) {
+					if(*s == '/' || IsAlpha(*s))
+						return false;
 					s++;
+				}
 				f.lineno = f.linepos = 0;
 				CParser p(s);
 				if(p.IsInt())
@@ -141,6 +144,10 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 						}
 					}
 				}
+				DDUMP(ln);
+				DDUMP(f.kind);
+				DDUMP(f.file);
+				DDUMP(f.lineno);
 				return f.lineno > 0;
 			}
 			else

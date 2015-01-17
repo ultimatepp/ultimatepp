@@ -60,6 +60,7 @@ struct CppBuilder : Builder {
 	String                 IncludesShort(const char *sep, const String& package, const Package& pkg);
 	String                 DefinesTargetTime(const char *sep, const String& package, const Package& pkg);
 	String                 IncludesDefinesTargetTime(const String& package, const Package& pkg);
+	bool                   HasAnyDebug() const;
 
 	String                 GetMakePath(String fn) const;
 	Point                  ExtractVersion() const;
@@ -130,7 +131,6 @@ struct MscBuilder : CppBuilder {
 	String MachineName() const;
 	String LinkerName() const;
 	String Pdb(String package, int slot, bool separate_pdb) const;
-	bool   HasAnyDebug() const;
 	void   BinObjConsole(String c) { PutConsole(c); }
 	bool   IsMsc89() const;
 	bool   IsMsc86() const;
@@ -183,5 +183,7 @@ private:
 	bool is_parsed;
 	bool script_error;
 };
+
+void DeletePCHFile(const String& pch_file);
 
 #endif

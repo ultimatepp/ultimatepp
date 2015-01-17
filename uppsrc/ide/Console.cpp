@@ -57,7 +57,7 @@ void Console::Append(const String& s) {
 	SetEditable();
 	MoveTextEnd();
 	WString t = Filter(s, sAppf).ToWString();
-	int mg = sb.GetReducedViewSize().cx / GetFont().Info().GetAveWidth();
+	int mg = sb.GetReducedViewSize().cx / GetFont().GetAveWidth();
 	if(wrap_text && mg > 4) {
 		int x = GetColumnLine(GetCursor()).x;
 		WStringBuffer tt;
@@ -65,8 +65,8 @@ void Console::Append(const String& s) {
 		while(*q) {
 			if(x > mg - 1) {
 				tt.Cat('\n');
-				tt.Cat('\t');
-				x = 0;
+				tt.Cat("    ");
+				x = 4;
 			}
 			x++;
 			if(*q == '\n')

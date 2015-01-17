@@ -75,6 +75,10 @@
 # if __GNUC__ >= 3
 #  define HAVE_GNUC_3
 # endif
+
+#define HAVE_SNPRINTF
+#define HAVE_VSNPRINTF
+
 #endif
 
 #ifdef __GNUC__
