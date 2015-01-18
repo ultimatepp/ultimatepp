@@ -307,7 +307,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	String pch_use;
 	String pch_file;
 	
-	if(recompile > 1 && pch_header.GetCount()) {
+	if(recompile > 2 && pch_header.GetCount()) {
 		String pch_obj = CatAnyPath(outdir, GetFileTitle(pch_header) + "$pch.obj");
 		pch_file = CatAnyPath(outdir, GetFileTitle(pch_header) + ".pch");
 		String pch_common = GetHostPathQ(pch_header) + " -Fp" + GetHostPathQ(pch_file) + " -FI" + GetHostPathQ(pch_header);
