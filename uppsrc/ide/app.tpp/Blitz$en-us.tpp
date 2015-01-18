@@ -1,4 +1,4 @@
-topic "What is BLITZ";
+topic "What is BLITZ and how are precompiled headers supported";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
@@ -22,11 +22,12 @@ topic "What is BLITZ";
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
-[s2; About BLITZ&]
-[s0; Blitz is advanced compilation technique based on [^http`:`/`/en`.wikipedia`.org`/wiki`/Single`_Compilation`_Unit^ S
+[s2; About BLITZ and precompiled headers&]
+[s0; [* Blitz] is advanced compilation technique based on [^http`:`/`/en`.wikipedia`.org`/wiki`/Single`_Compilation`_Unit^ S
 CU] approach, intended to speedup debug mode rebuilds of large 
 applications. In fact, BLITZ is what allows U`+`+ to keep libraries 
-in sources form. You can consider BLITZ as automated form SCU.&]
+in sources form. You can consider BLITZ as an automated form 
+SCU.&]
 [s0; &]
 [s0; Blitz processes packages (not the whole program) `- each package 
 can have a single [/ blitz`-block] (blitz block  is SCU).&]
@@ -94,4 +95,38 @@ compile without BLITZ):&]
 [s7; #define STATIC`_ID            MK`_`_s`_(`_`_LINE`_`_)&]
 [s0; [C@5;1 -|#endif]]}}&]
 [s0; &]
-[s0; ]]
+[s0; [*^http`:`/`/en`.wikipedia`.org`/wiki`/Precompiled`_header^ Precompiled 
+headers] is compiler technique trying to solve the very same 
+problem. In general, we have found BLITZ faster than any precompiled 
+header use, however BLITZ tends to have one disadvantage: by combining 
+all files into single object file, linker has less oportunity 
+to remove unused code. This leads to (sometimes significantly) 
+larger executable binaries. For this reason, we do not recommend 
+(and have off by default) BLITZ for release builds and if possible, 
+we use precompiled headers for release builds.&]
+[s0; &]
+[s0; Precompiled headers have a set of its own problems. Notably, 
+Microsoft C`+`+ precompiled headers are hard to use with multiple 
+processes building the code (Hydra) in debug mode. Also, precompiled 
+headers in general are very bulky files, easily surpasing 100MB, 
+which is a problem as we need to have single precompiled header 
+per package.&]
+[s0; &]
+[s0; For these reasons precompiled headers support works like this:&]
+[s0; &]
+[s0;i150;O2; Precompiled headers are activated only in release mode 
+without blitz.&]
+[s0;i150;O2; You have to set `"Precompile header`" flag on header 
+files candidates for precompilation. Only single candidate per 
+package is allowed. Note that not all headers can be with this 
+system. Header has to have include guards and it must be possible 
+for all files in the package to include it first before all other 
+headers.&]
+[s0;i150;O2; Build method has to have `"Allow precompiled headers`" 
+set.&]
+[s0;i150;O2; When package is build, it first checks whether using 
+precompiled header is possible (as per rules above). Then it 
+checks how many files are to be rebuild. If there are 3 or more 
+files to build, U`+`+ precompiles the header and uses it to build 
+the package. When the package is built, U`+`+ deletes the header 
+to conserve the space.]]
