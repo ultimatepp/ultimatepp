@@ -1,0 +1,4 @@
+#ifndef _PeekPokeSwap_icpp_init_stub
+#define _PeekPokeSwap_icpp_init_stub
+#include "Core/init"
+#endif
