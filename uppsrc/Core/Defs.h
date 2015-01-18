@@ -662,8 +662,8 @@ inline void   EndianSwap(int& v)      { v = SwapEndian32(v); }
 inline dword  SwapEndian32(dword v)   { return __builtin_bswap32(v); }
 inline int    SwapEndian32(int v)     { return __builtin_bswap32(v); }
 
-inline word   SwapEndian16(word v)    { return SwapEndian32(v) << 16; } // GCC bug workaround
-inline int16  SwapEndian16(int16 v)   { return SwapEndian32(v) << 16; }
+inline word   SwapEndian16(word v)    { return SwapEndian32(v) >> 16; } // GCC bug workaround
+inline int16  SwapEndian16(int16 v)   { return SwapEndian32(v) >> 16; }
 
 inline void   EndianSwap(word& v)     { v = SwapEndian16(v); }
 inline void   EndianSwap(int16& v)    { v = SwapEndian16(v); }
