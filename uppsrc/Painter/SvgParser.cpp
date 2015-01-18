@@ -437,8 +437,8 @@ bool SvgParser::Parse() {
 }
 
 SvgParser::SvgParser(const char *svg, Painter& sw)
-:	sw(sw), bp(sw),
-	XmlParser(svg)
+:	XmlParser(svg),
+    sw(sw), bp(sw)	
 {
 	Reset();
 }
