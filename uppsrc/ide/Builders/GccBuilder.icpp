@@ -7,7 +7,7 @@ void   GccBuilder::AddFlags(Index<String>& cfg)
 String GccBuilder::CompilerName() const
 {
 	if(!IsNull(compiler)) return compiler;
-	return HasFlag("GCC_ARM") ? "arm-wince-pe-c++" : "c++";
+	return "c++";
 }
 
 String GccBuilder::CmdLine(const String& package, const Package& pkg)
@@ -15,8 +15,6 @@ String GccBuilder::CmdLine(const String& package, const Package& pkg)
 	String cc = CompilerName();
 	cc << " -c ";
 	cc << IncludesDefinesTargetTime(package, pkg);
-	if(HasFlag("GCC32"))
-		cc << " -m32";
 	return cc;
 }
 
@@ -139,7 +137,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				else
 				if(IsHeaderExt(ext) && pkg[i].pch && allow_pch && release && !HasAnyDebug() && !blitz) {
 					if(pch_header.GetCount())
-						PutConsole(GetFileName(fn) + ": multiple PCH is not allowed. Check your package configuration");
+						PutConsole(GetFileName(fn) + ": multiple PCHs are not allowed. Check your package configuration");
 					else
 						pch_header = fn;
 				}
@@ -175,19 +173,21 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	String pch_file;
 	
 	if(recompile > 2 && pch_header.GetCount()) {
-		pch_file = CatAnyPath(outdir, GetFileTitle(pch_header) + "$pch.h.gch");
+		String pch_header2 = CatAnyPath(outdir, GetFileTitle(pch_header) + "$pch.h");
+		pch_file = pch_header2 + ".gch";
+		SaveFile(pch_header2, "#include <" + pch_header + ">"); // CLANG needs a copy of header
 		
 		int pch_slot = AllocSlot();
 		StringBuffer sb;
 
-		sb << Join(cc, cpp_options) << ' ' << GetHostPathQ(pch_header) << " -o " << GetHostPathQ(pch_file);
+		sb << Join(cc, cpp_options) << " -x c++-header " << GetHostPathQ(pch_header) << " -o " << GetHostPathQ(pch_file);
 
 		PutConsole("PCH: " + GetFileName(pch_header));
 		if(pch_slot < 0 || !Run(~sb, pch_slot, GetHostPath(pch_file), 1))
 			error = true;
 		Wait();
 
-		pch_use = " -I" + GetHostPathQ(outdir) + " -include " + GetFileTitle(pch_header) + "$pch.h -Winvalid-pch ";
+		pch_use = " -I" + GetHostPathQ(outdir) + " -include " + GetFileName(pch_header2) + " -Winvalid-pch ";
 	}
 
 	if(blitz && b.build) {
@@ -241,15 +241,18 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				}
 			}
 			else {
-				String exec = optimize[i] ? cc_speed : cc + pch_use; // GCC does not like different options for PCH
+				String exec = optimize[i] ? cc_speed : cc;
 				if(ext == ".c")
 					exec << Join(" -x c", c_options) << ' ';
 				else if(ext == ".s" || ext == ".S")
 					exec << " -x assembler-with-cpp ";
 				else if (ext == ".m" || ext == ".mm")
 					exec << fuse_cxa_atexit << " -x objective-c++ ";
-				else
+				else {
 					exec << fuse_cxa_atexit << Join(" -x c++", cpp_options) << ' ';
+					if(!optimize[i]) // GCC does not like different options for PCH
+						 exec << pch_use;
+				}
 				exec << GetHostPathQ(fn)  << " " << soptions[i] << " -o " << GetHostPathQ(objfile);
 				PutVerbose(exec);
 				int slot = AllocSlot();
@@ -589,6 +592,4 @@ INITBLOCK
 {
 	RegisterBuilder("GCC", CreateGccBuilder);
 	RegisterBuilder("CLANG", CreateGccBuilder);
-	RegisterBuilder("GCC32", CreateGccBuilder);
-	RegisterBuilder("GCC_ARM", CreateGccBuilder);
 }

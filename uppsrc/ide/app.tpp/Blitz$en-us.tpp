@@ -129,4 +129,9 @@ precompiled header is possible (as per rules above). Then it
 checks how many files are to be rebuild. If there are 3 or more 
 files to build, U`+`+ precompiles the header and uses it to build 
 the package. When the package is built, U`+`+ deletes the header 
-to conserve the space.]]
+to conserve the space.&]
+[s0; &]
+[s0; U`+`+ supports precompiled headers for MSC, GCC and CLANG. However, 
+practical benchmarks show that with CLANG using precompiled headers 
+actually leads to worse compilation times.&]
+[s0; ]]
