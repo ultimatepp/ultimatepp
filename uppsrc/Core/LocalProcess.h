@@ -53,6 +53,7 @@ private:
 	String       exit_string;
 #endif
 	int          exit_code;
+	String       wreso, wrese; // Output fetched during Write
 
 	typedef LocalProcess CLASSNAME;
 
