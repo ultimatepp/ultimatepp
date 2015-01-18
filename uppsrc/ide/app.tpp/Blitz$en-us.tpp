@@ -96,7 +96,7 @@ compile without BLITZ):&]
 [s0; [C@5;1 -|#endif]]}}&]
 [s0; &]
 [s0; [*^http`:`/`/en`.wikipedia`.org`/wiki`/Precompiled`_header^ Precompiled 
-headers] is compiler technique trying to solve the very same 
+headers] is a compiler technique trying to solve the very same 
 problem. In general, we have found BLITZ faster than any precompiled 
 header use, however BLITZ tends to have one disadvantage: by combining 
 all files into single object file, linker has less oportunity 
