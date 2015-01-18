@@ -594,7 +594,7 @@ bool IsDecentMachine();
 template <class T>
 inline void Swap(T& a, T& b) { T tmp = pick(a); a = pick(b); b = pick(tmp); }
 
-#if defined(CPU_UNALIGNED) && defined(CPU_LE)
+#if defined(CPU_UNALIGNED) && defined(CPU_LE) || __ARM_ARCH_7A__
 inline int    Peek16le(const void *ptr)  { return *(const word *)ptr; }
 inline int    Peek32le(const void *ptr)  { return *(const dword *)ptr; }
 inline int64  Peek64le(const void *ptr)  { return *(const int64 *)ptr; }
@@ -656,6 +656,22 @@ inline void   EndianSwap(dword& v)    { v = SwapEndian32(v); }
 inline void   EndianSwap(int& v)      { v = SwapEndian32(v); }
 
 #else
+
+#ifdef COMPILER_GCC
+
+inline dword  SwapEndian32(dword v)   { return __builtin_bswap32(v); }
+inline int    SwapEndian32(int v)     { return __builtin_bswap32(v); }
+
+inline word   SwapEndian16(word v)    { return SwapEndian32(v) << 16; } // GCC bug workaround
+inline int16  SwapEndian16(int16 v)   { return SwapEndian32(v) << 16; }
+
+inline void   EndianSwap(word& v)     { v = SwapEndian16(v); }
+inline void   EndianSwap(int16& v)    { v = SwapEndian16(v); }
+inline void   EndianSwap(dword& v)    { v = SwapEndian32(v); }
+inline void   EndianSwap(int& v)      { v = SwapEndian32(v); }
+
+#else
+
 inline void   EndianSwap(word& v)     { byte *x = (byte *)(&v); Swap(x[0], x[1]); }
 inline void   EndianSwap(int16& v)    { EndianSwap(*(word *)&v); }
 inline void   EndianSwap(dword& v)    { byte *x = (byte *)&v; Swap(x[0], x[3]); Swap(x[1], x[2]); }
@@ -664,6 +680,9 @@ inline word   SwapEndian16(word v)    { EndianSwap(v); return v; }
 inline int16  SwapEndian16(int16 v)   { EndianSwap(v); return v; }
 inline dword  SwapEndian32(dword v)   { EndianSwap(v); return v; }
 inline int    SwapEndian32(int v)     { EndianSwap(v); return v; }
+
+#endif
+
 #endif
 
 #if defined(CPU_AMD64) && (defined(COMPILER_GCC) || defined(COMPILER_MSC))
@@ -680,10 +699,21 @@ inline void   EndianSwap(int64& v)    { v = SwapEndian64(v); }
 inline void   EndianSwap(uint64& v)   { v = SwapEndian64(v); }
 
 #else
+
+#ifdef COMPILE_GCC
+
+inline uint64  SwapEndian64(uint64 v) { return __builtin_bswap64(v); }
+inline int64   SwapEndian64(int64 v)  { return __builtin_bswap64(v); }
+
+inline void    EndianSwap(int64& v)   { v = SwapEndian64(v); }
+inline void    EndianSwap(uint64& v)  { v = SwapEndian64(v); }
+
+#else
 inline void   EndianSwap(int64& v)    { byte *x = (byte *)&v; Swap(x[0], x[7]); Swap(x[1], x[6]); Swap(x[2], x[5]); Swap(x[3], x[4]); }
 inline void   EndianSwap(uint64& v)   { EndianSwap(*(int64 *)&v); }
 inline int64  SwapEndian64(int64 v)   { EndianSwap(v); return v; }
 inline uint64 SwapEndian64(uint64 v)  { EndianSwap(v); return v; }
+#endif
 #endif
 
 void EndianSwap(word *v, int count);

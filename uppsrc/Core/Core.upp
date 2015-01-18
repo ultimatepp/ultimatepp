@@ -32,7 +32,8 @@ link(SOLARIS) "-Wl,-R -Wl,/usr/local/lib";
 link(GCC POSIX STACKTRACE) -rdynamic;
 
 file
-	Core.h options PCH,
+	Core.h
+		options() PCH,
 	config.h,
 	Defs.h,
 	Cpu.cpp optimize_speed,
