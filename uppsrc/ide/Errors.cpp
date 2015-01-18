@@ -144,10 +144,6 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 						}
 					}
 				}
-				DDUMP(ln);
-				DDUMP(f.kind);
-				DDUMP(f.file);
-				DDUMP(f.lineno);
 				return f.lineno > 0;
 			}
 			else
