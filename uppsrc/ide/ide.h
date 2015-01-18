@@ -1099,7 +1099,6 @@ public:
 	void      BrowseMenu(Bar& menu);
 		void  RescanCode();
 		void  QueryId();
-		void  About();
 		void  OpenTopic(const String& topic, const String& createafter, bool before);
 		void  OpenTopic(const String& topic);
 		void  OpenATopic();
@@ -1121,6 +1120,8 @@ public:
 		void  GotoDirDiffRight(int line, DirDiffDlg *df);
 		void  DoDirDiff();
 
+	void      HelpMenu(Bar& menu);
+		void  About();
 
 	void      ConsoleMenu(Bar& menu);
 		void  ConsoleCopy();

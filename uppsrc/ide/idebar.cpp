@@ -20,11 +20,13 @@ void Ide::AKEditor()
 	CodeEditor::replace_key = AK_DOREPLACE().key[0];
 }
 
-void Ide::PackageMenu(Bar& menu) {
+void Ide::PackageMenu(Bar& menu)
+{
 	Project(menu);
 }
 
-void Ide::FileBookmark(Bar& menu) {
+void Ide::FileBookmark(Bar& menu)
+{
 	int i;
 	for(i = 0; i < 10; i++) {
 		const Bookmark& b = bookmark[i];
@@ -40,7 +42,8 @@ void Ide::FileBookmark(Bar& menu) {
 		    .Key(K_SHIFT_CTRL_0 + i);
 }
 
-void Ide::File(Bar& menu) {
+void Ide::File(Bar& menu)
+{
 	menu.Add(AK_SETMAIN, THISBACK(NewMainPackage))
 		.Help("Select global configuration (var), select / add main project package");
 
@@ -174,7 +177,8 @@ void Ide::SearchMenu(Bar& menu)
 		.Help("Locate file by filename (use *, ? when you're not sure)");
 }
 
-void Ide::Edit(Bar& menu) {
+void Ide::Edit(Bar& menu)
+{
 	if(designer) {
 		if(FileExists(designer->GetFileName())) {
 			menu.Add(AK_EDITASTEXT, THISBACK(EditAsText))
@@ -327,7 +331,8 @@ void Ide::EditMacro(int i)
 	}
 }
 
-void Ide::Setup(Bar& menu) {
+void Ide::Setup(Bar& menu)
+{
 	menu.Add("Be verbose", THISBACK(ToggleVerboseBuild))
 		.Check(console.verbosebuild)
 		.Help("Log detailed description of build and debug");
@@ -366,7 +371,8 @@ void Ide::ProjectSvn(Bar& menu)
 	menu.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncSvn));
 }
 
-void Ide::Project(Bar& menu) {
+void Ide::Project(Bar& menu)
+{
 	if(menu.IsToolBar() && !debugger && !IsEditorMode())
 	{
 		mainconfiglist.Enable(idestate == EDITING);
@@ -447,7 +453,8 @@ void Ide::BuildPackageMenu(Bar& menu)
 		.Help("Remove all intermediate files of the current package");
 }
 
-void Ide::BuildMenu(Bar& menu) {
+void Ide::BuildMenu(Bar& menu)
+{
 	bool b = !IdeIsDebugLock();
 	menu.Add(AK_OUTPUTMODE, THISBACK(SetupOutputMode))
 	    .Help("Setup how to build the target");
@@ -548,7 +555,8 @@ void Ide::DebugMenu(Bar& menu)
 	}
 }
 
-void Ide::BrowseMenu(Bar& menu) {
+void Ide::BrowseMenu(Bar& menu)
+{
 	if (menu.IsMenuBar()) {
 		if(!IsEditorMode()) {
 			menu.AddMenu(AK_NAVIGATOR, IdeImg::Navigator(), THISBACK(ToggleNavigator))
@@ -576,14 +584,20 @@ void Ide::BrowseMenu(Bar& menu) {
 		menu.AddMenu(!designer, AK_JSON, IdeCommonImg::json(), THISBACK(Json));
 		menu.AddMenu(AK_DIRDIFF, DiffImg::DirDiff(), THISBACK(DoDirDiff));
 	}
-	menu.Separator();
+}
+
+void Ide::HelpMenu(Bar& menu)
+{
 	menu.Add(AK_BROWSETOPICS, IdeImg::help(), THISBACK(ShowTopics));
 	menu.Add(AK_SEARCHTOPICS, THISBACK(SearchTopics));
 	menu.Add(AK_BROWSETOPICS_WIN, IdeImg::help_win(), THISBACK(ShowTopicsWin));
+	if(menu.IsMenuBar())
+		menu.Separator();
 	menu.Add("About..", THISBACK(About));
 }
 
-void Ide::MainMenu(Bar& menu) {
+void Ide::MainMenu(Bar& menu)
+{
 	menu.Add("File", THISBACK(File))
 		.Help("Package & file functions, exports, bookmarks");
 	menu.Add("Edit", THISBACK(Edit))
@@ -603,6 +617,8 @@ void Ide::MainMenu(Bar& menu) {
 		.Help("Informations, code browsing and assistance");
 	menu.Add("Setup", THISBACK(Setup))
 		.Help("Paths, editor settings, connection to remote host");
+	menu.Add("Help", THISBACK(HelpMenu))
+		.Help("Help, credits and license");
 }
 
 void Ide::MainTool(Bar& bar)
@@ -624,6 +640,8 @@ void Ide::MainTool(Bar& bar)
 	}
 	Setup(bar);
 	BrowseMenu(bar);
+	bar.Separator();
+	HelpMenu(bar);
 }
 
 void Ide::ConsoleMenu(Bar& menu)
