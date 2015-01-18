@@ -236,7 +236,9 @@ void MenuItem::MouseEnter(Point, dword)
 
 void MenuItem::MouseLeave()
 {
-	ClearHelpLine();
+    if(HasFocus() && GetParent())
+        GetParent()->SetFocus();
+    ClearHelpLine();
 }
 
 void MenuItem::GotFocus()
