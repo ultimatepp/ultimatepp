@@ -53,6 +53,11 @@ void LocalProcess::Free() {
 #endif
 }
 
+static void sNoBlock(int fd)
+{
+	fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | O_NONBLOCK);
+}
+
 bool LocalProcess::DoStart(const char *command, bool spliterr, const char *envptr)
 {
 	LLOG("LocalProcess::Start(\"" << command << "\")");
@@ -189,7 +194,10 @@ bool LocalProcess::DoStart(const char *command, bool spliterr, const char *envpt
 		LLOG("parent process - continue");
 		close(rpipe[0]); rpipe[0]=-1;
 		close(wpipe[1]); wpipe[1]=-1;
+		sNoBlock(rpipe[1]);
+		sNoBlock(wpipe[0]);
 		if (spliterr) {
+			sNoBlock(epipe[0]);
 			close(epipe[1]); epipe[1]=-1;
 		}
 		return true;
@@ -208,7 +216,6 @@ bool LocalProcess::DoStart(const char *command, bool spliterr, const char *envpt
 		close(epipe[1]);
 	}
 	rpipe[0] = rpipe[1] = wpipe[0] = wpipe[1] = epipe[0] = epipe[1] = -1;
-
 #if DO_LLOG
 	LLOG(args.GetCount() << "arguments:");
 	for(int a = 0; a < args.GetCount(); a++)
@@ -362,7 +369,7 @@ bool LocalProcess::Read(String& res) {
 #endif
 #ifdef PLATFORM_WIN32
 	LLOG("LocalProcess::Read");
-	res = Null;
+	res = wreso;
 	if(!hOutputRead) return false;
 	dword n;
 	if(!PeekNamedPipe(hOutputRead, NULL, 0, NULL, &n, NULL) || n == 0)
@@ -402,7 +409,7 @@ bool LocalProcess::Read2(String& reso, String& rese)
 			LLOG("Read() -> select");
 			char buffer[1024];
 			int done = read(pipe[0], buffer, sizeof(buffer));
-			LLOG("Read(), read -> " << done << ": " << String(buffer, done));
+			LLOG("Read(), read -> " << done);
 			if(done > 0)
 				res[wp].Cat(buffer, done);
 			else if (done == 0) {
@@ -415,8 +422,8 @@ bool LocalProcess::Read2(String& reso, String& rese)
 			LLOG("select -> " << sv);
 		}
 	}
-	reso = Null;
-	rese = Null;
+	reso = wreso;
+	rese = wrese;
 	if(convertcharset) {
 		reso << FromSystemCharset(res[0]);
 		rese << FromSystemCharset(res[1]);
@@ -434,13 +441,23 @@ void LocalProcess::Write(String s)
 		s = ToSystemCharset(s);
 #ifdef PLATFORM_WIN32
 	dword n;
-	if (hInputWrite)
-		WriteFile(hInputWrite, s, s.GetLength(), &n, NULL);
+	if (hInputWrite) {
+		bool ret = true;
+		for(int wn = 0; (ret > 0 || errno == EINTR) && wn < s.GetLength(); wn += n) {
+			ret = WriteFile(hInputWrite, s, s.GetLength(), &n, NULL);
+		}
+	}
 #endif
 #ifdef PLATFORM_POSIX
 	if (rpipe[1] >= 0) {
 		int ret=1;
-		for (int wn=0; (ret>0 || errno==EINTR) && wn<s.GetLength(); wn+=ret) {
+		for(int wn = 0; (ret > 0 || errno == EINTR) && wn < s.GetLength(); wn += ret) {
+			String ho = wreso;
+			String he = wrese;
+			wreso = wrese = Null;
+			Read2(wreso, wrese);
+			wreso = ho + wreso;
+			wrese = ho + wrese;
 			ret = write(rpipe[1], ~s + wn, s.GetLength() - wn);
 		}
 	}
