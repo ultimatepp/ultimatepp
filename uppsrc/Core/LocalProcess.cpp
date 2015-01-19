@@ -13,7 +13,7 @@ NAMESPACE_UPP
 
 void LocalProcess::Init() {
 #ifdef PLATFORM_WIN32
-	hProcess = hOutputRead = hInputWrite = NULL;
+	hProcess = hOutputRead = hErrorRead = hInputWrite = NULL;
 #endif
 #ifdef PLATFORM_POSIX
 	pid = 0;
@@ -32,6 +32,10 @@ void LocalProcess::Free() {
 	if(hOutputRead) {
 		CloseHandle(hOutputRead);
 		hOutputRead = NULL;
+	}
+	if(hErrorRead) {
+		CloseHandle(hErrorRead);
+		hErrorRead = NULL;
 	}
 	if(hInputWrite) {
 		CloseHandle(hInputWrite);
@@ -53,10 +57,12 @@ void LocalProcess::Free() {
 #endif
 }
 
+#ifdef PLATFORM_POSIX
 static void sNoBlock(int fd)
 {
 	fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | O_NONBLOCK);
 }
+#endif
 
 bool LocalProcess::DoStart(const char *command, bool spliterr, const char *envptr)
 {
@@ -68,9 +74,9 @@ bool LocalProcess::DoStart(const char *command, bool spliterr, const char *envpt
 		command++;
 
 #ifdef PLATFORM_WIN32
-	HANDLE hOutputReadTmp, hInputRead;
-	HANDLE hInputWriteTmp, hOutputWrite;
-	HANDLE hErrorWrite;
+	HANDLE hOutputReadTmp, hOutputWrite;
+	HANDLE hInputWriteTmp, hInputRead;
+	HANDLE hErrorReadTmp, hErrorWrite;
 	SECURITY_ATTRIBUTES sa;
 
 	sa.nLength = sizeof(SECURITY_ATTRIBUTES);
@@ -79,15 +85,21 @@ bool LocalProcess::DoStart(const char *command, bool spliterr, const char *envpt
 
 	HANDLE hp = GetCurrentProcess();
 
-	ASSERT(!spliterr); //spliterr NOT IMPLEMENTED (yet)
+	CreatePipe(&hInputRead, &hInputWriteTmp, &sa, 0);
+	DuplicateHandle(hp, hInputWriteTmp, hp, &hInputWrite, 0, FALSE, DUPLICATE_SAME_ACCESS);
+	CloseHandle(hInputWriteTmp);
 
 	CreatePipe(&hOutputReadTmp, &hOutputWrite, &sa, 0);
-	DuplicateHandle(hp, hOutputWrite, hp, &hErrorWrite, 0, TRUE, DUPLICATE_SAME_ACCESS);
-	CreatePipe(&hInputRead, &hInputWriteTmp, &sa, 0);
 	DuplicateHandle(hp, hOutputReadTmp, hp, &hOutputRead, 0, FALSE, DUPLICATE_SAME_ACCESS);
-	DuplicateHandle(hp, hInputWriteTmp, hp, &hInputWrite, 0, FALSE, DUPLICATE_SAME_ACCESS);
 	CloseHandle(hOutputReadTmp);
-	CloseHandle(hInputWriteTmp);
+
+	if(spliterr) {
+		CreatePipe(&hErrorReadTmp, &hErrorWrite, &sa, 0);
+		DuplicateHandle(hp, hErrorReadTmp, hp, &hErrorRead, 0, FALSE, DUPLICATE_SAME_ACCESS);
+		CloseHandle(hErrorReadTmp);
+	}
+	else
+		DuplicateHandle(hp, hOutputWrite, hp, &hErrorWrite, 0, TRUE, DUPLICATE_SAME_ACCESS);
 
 	PROCESS_INFORMATION pi;
 	STARTUPINFO si;
@@ -364,35 +376,41 @@ String LocalProcess::GetExitMessage() {
 }
 
 bool LocalProcess::Read(String& res) {
-#ifdef PLATFORM_POSIX
-	return Read2(res, res);
-#endif
-#ifdef PLATFORM_WIN32
-	LLOG("LocalProcess::Read");
-	res = wreso;
-	if(!hOutputRead) return false;
-	dword n;
-	if(!PeekNamedPipe(hOutputRead, NULL, 0, NULL, &n, NULL) || n == 0)
-		return IsRunning();
-	char buffer[1024];
-	if(!ReadFile(hOutputRead, buffer, sizeof(buffer), &n, NULL))
-		return false;
-	res = String(buffer, n);
-	if(convertcharset)
-		res = FromOEMCharset(res);
-	return true;
-#endif
+	String dummy;
+	return Read2(res, dummy);
 }
 
 bool LocalProcess::Read2(String& reso, String& rese)
 {
 	LLOG("LocalProcess::Read2");
-	String res[2] = {Null, Null};
+	reso = wreso;
+	rese = wrese;
+	wreso.Clear();
+	wrese.Clear();
+
 #ifdef PLATFORM_WIN32
-	NEVER(); //Not implemented
-	return false;
+	LLOG("LocalProcess::Read");
+	bool was_running = IsRunning();
+	char buffer[1024];
+	dword n;
+	if(hOutputRead && PeekNamedPipe(hOutputRead, NULL, 0, NULL, &n, NULL) && n)
+		while(ReadFile(hOutputRead, buffer, sizeof(buffer), &n, NULL) && n)
+			wreso.Cat(buffer, n);
+
+	if(hErrorRead && PeekNamedPipe(hErrorRead, NULL, 0, NULL, &n, NULL) && n)
+		while(ReadFile(hErrorRead, buffer, sizeof(buffer), &n, NULL) && n)
+			wrese.Cat(buffer, n);
+
+	if(convertcharset) {
+		reso = FromOEMCharset(reso);
+		rese = FromOEMCharset(rese);
+	}
+	
+	return reso.GetCount() || rese.GetCount() || was_running;
+
 #endif
 #ifdef PLATFORM_POSIX
+	String res[2];
 	bool was_running = IsRunning() || wpipe[0] >= 0 || epipe[0] >= 0;
 	for (int wp=0; wp<2;wp++) {
 		int *pipe = wp ? epipe : wpipe;
@@ -422,8 +440,6 @@ bool LocalProcess::Read2(String& reso, String& rese)
 			LLOG("select -> " << sv);
 		}
 	}
-	reso = wreso;
-	rese = wrese;
 	if(convertcharset) {
 		reso << FromSystemCharset(res[0]);
 		rese << FromSystemCharset(res[1]);
@@ -440,11 +456,17 @@ void LocalProcess::Write(String s)
 	if(convertcharset)
 		s = ToSystemCharset(s);
 #ifdef PLATFORM_WIN32
-	dword n;
 	if (hInputWrite) {
 		bool ret = true;
-		for(int wn = 0; (ret > 0 || errno == EINTR) && wn < s.GetLength(); wn += n) {
-			ret = WriteFile(hInputWrite, s, s.GetLength(), &n, NULL);
+		dword n;
+		for(int wn = 0; ret && wn < s.GetLength(); wn += n) {
+			ret = WriteFile(hInputWrite, ~s + wn, s.GetLength(), &n, NULL);
+			String ho = wreso;
+			String he = wrese;
+			wreso = wrese = Null;
+			Read2(wreso, wrese);
+			wreso = ho + wreso;
+			wrese = ho + wrese;
 		}
 	}
 #endif

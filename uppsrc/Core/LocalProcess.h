@@ -43,6 +43,7 @@ private:
 #ifdef PLATFORM_WIN32
 	HANDLE       hProcess;
 	HANDLE       hOutputRead;
+	HANDLE       hErrorRead;
 	HANDLE       hInputWrite;
 #endif
 #ifdef PLATFORM_POSIX
