@@ -64,7 +64,7 @@ static void sNoBlock(int fd)
 }
 #endif
 
-bool LocalProcess::DoStart(const char *command, bool spliterr, const char *envptr)
+bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool spliterr, const char *envptr)
 {
 	LLOG("LocalProcess::Start(\"" << command << "\")");
 
@@ -131,49 +131,69 @@ bool LocalProcess::DoStart(const char *command, bool spliterr, const char *envpt
 	return true;
 #endif
 #ifdef PLATFORM_POSIX
-	// parse command line for execve
-	cmd_buf.Alloc(strlen(command) + 1);
-	char *cmd_out = cmd_buf;
-	const char *p = command;
-	const char *b = p;
-	while(*p && (byte)*p > ' ')
-		if(*p++ == '\"')
-			while(*p && *p++ != '\"')
-				;
-	const char *app = cmd_out;
-	args.Add(cmd_out);
-	memcpy(cmd_out, b, p - b);
-	cmd_out += p - b;
-	*cmd_out++ = '\0';
-
-	while(*p)
-		if((byte)*p <= ' ')
-			p++;
-		else {
-			args.Add(cmd_out);
-			while(*p && (byte)*p > ' ') {
-				int c = *p;
-				if(c == '\\') {
-					if(*++p)
+	String app;
+	if(arg) {
+		app = command;
+		int n = strlen(command) + 1;
+		for(int i = 0; i < arg->GetCount(); i++)
+			n += (*arg)[i].GetCount() + 1;
+		cmd_buf.Alloc(n + 1);
+		char *p = cmd_buf;
+		args.Add(p);
+		int l = strlen(command) + 1;
+		memcpy(p, command, l);
+		p += strlen(command) + 1;
+		for(int i = 0; i < arg->GetCount(); i++) {
+			args.Add(p);
+			l = (*arg)[i].GetCount() + 1;
+			memcpy(p, ~(*arg)[i], l);
+			p += l;
+		}
+	}
+	else { // parse command line for execve
+		cmd_buf.Alloc(strlen(command) + 1);
+		char *cmd_out = cmd_buf;
+		const char *p = command;
+		const char *b = p;
+		while(*p && (byte)*p > ' ')
+			if(*p++ == '\"')
+				while(*p && *p++ != '\"')
+					;
+		args.Add(cmd_out);
+		memcpy(cmd_out, b, p - b);
+		cmd_out += p - b;
+		*cmd_out++ = '\0';
+		app = cmd_buf;
+	
+		while(*p)
+			if((byte)*p <= ' ')
+				p++;
+			else {
+				args.Add(cmd_out);
+				while(*p && (byte)*p > ' ') {
+					int c = *p;
+					if(c == '\\') {
+						if(*++p)
+							*cmd_out++ = *p++;
+					}
+					else if(c == '\"' || c == '\'') {
+						p++;
+						while(*p && *p != c)
+							if(*p == '\\') {
+								if(*++p)
+									*cmd_out++ = *p++;
+							}
+							else
+								*cmd_out++ = *p++;
+						if(*p == c)
+							p++;
+					}
+					else
 						*cmd_out++ = *p++;
 				}
-				else if(c == '\"' || c == '\'') {
-					p++;
-					while(*p && *p != c)
-						if(*p == '\\') {
-							if(*++p)
-								*cmd_out++ = *p++;
-						}
-						else
-							*cmd_out++ = *p++;
-					if(*p == c)
-						p++;
-				}
-				else
-					*cmd_out++ = *p++;
+				*cmd_out++ = '\0';
 			}
-			*cmd_out++ = '\0';
-		}
+	}
 
 	args.Add(NULL);
 
@@ -537,6 +557,27 @@ String Sys(const char *cmd, bool convertcharset)
 {
 	String r;
 	return Sys(cmd, r, convertcharset) ? String::GetVoid() : r;
+}
+
+int Sys(const char *cmd, const Vector<String>& arg, String& out, bool convertcharset)
+{
+	out.Clear();
+	LocalProcess p;
+	p.ConvertCharset(convertcharset);
+	if(!p.Start(cmd, arg))
+		return -1;
+	while(p.IsRunning()) {
+		out.Cat(p.Get());
+		Sleep(1); // p.Wait would be much better here!
+	}
+	out.Cat(p.Get());
+	return p.GetExitCode();
+}
+
+String Sys(const char *cmd, const Vector<String>& arg, bool convertcharset)
+{
+	String r;
+	return Sys(cmd, arg, r, convertcharset) ? String::GetVoid() : r;
 }
 
 END_UPP_NAMESPACE
