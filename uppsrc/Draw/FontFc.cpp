@@ -274,8 +274,24 @@ static inline double ft_dbl(int p)
     return double(p) / 64.0;
 }
 
-bool RenderOutline(const FT_Outline& outline, FontGlyphConsumer& path, double xx, double yy)
+struct ConvertOutlinePoint {
+	bool sheer;
+	double xx;
+	double yy;
+	
+	Pointf operator()(int x, int y) {
+		double fy = ft_dbl(y);
+		return Pointf(ft_dbl(x) + xx + (sheer ? 0.2 * fy : 0), yy - fy);
+	}
+};
+
+bool RenderOutline(const FT_Outline& outline, FontGlyphConsumer& path, double xx, double yy, bool sheer)
 {
+	ConvertOutlinePoint cp;
+	cp.xx = xx;
+	cp.yy = yy;
+	cp.sheer = sheer;
+	
 	FT_Vector   v_last;
 	FT_Vector   v_control;
 	FT_Vector   v_start;
@@ -312,7 +328,7 @@ bool RenderOutline(const FT_Outline& outline, FontGlyphConsumer& path, double xx
 			point--;
 			tags--;
 		}
-		path.Move(Pointf(ft_dbl(v_start.x) + xx, -ft_dbl(v_start.y) + yy));
+		path.Move(cp(v_start.x, v_start.y));
 		while(point < limit) {
 			point++;
 			tags++;
@@ -320,7 +336,7 @@ bool RenderOutline(const FT_Outline& outline, FontGlyphConsumer& path, double xx
 			tag = FT_CURVE_TAG(tags[0]);
 			switch(tag) {
 			case FT_CURVE_TAG_ON:
-				path.Line(Pointf(ft_dbl(point->x) + xx, -ft_dbl(point->y) + yy));
+				path.Line(cp(point->x, point->y));
 				continue;
 			case FT_CURVE_TAG_CONIC:
 				v_control.x = point->x;
@@ -335,20 +351,17 @@ bool RenderOutline(const FT_Outline& outline, FontGlyphConsumer& path, double xx
 					vec.x = point->x;
 					vec.y = point->y;
 					if(tag == FT_CURVE_TAG_ON) {
-						path.Quadratic(Pointf(ft_dbl(v_control.x) + xx, -ft_dbl(v_control.y) + yy),
-						               Pointf(ft_dbl(vec.x) + xx, -ft_dbl(vec.y) + yy));
+						path.Quadratic(cp(v_control.x, v_control.y), cp(vec.x, vec.y));
 						continue;
 					}
 					if(tag != FT_CURVE_TAG_CONIC) return false;
 					v_middle.x = (v_control.x + vec.x) / 2;
 					v_middle.y = (v_control.y + vec.y) / 2;
-					path.Quadratic(Pointf(ft_dbl(v_control.x) + xx, -ft_dbl(v_control.y) + yy),
-					               Pointf(ft_dbl(v_middle.x) + xx, -ft_dbl(v_middle.y) + yy));
+					path.Quadratic(cp(v_control.x, v_control.y), cp(v_middle.x, v_middle.y));
 					v_control = vec;
 					goto Do_Conic;
 				}
-				path.Quadratic(Pointf(ft_dbl(v_control.x) + xx, -ft_dbl(v_control.y) + yy),
-				               Pointf(ft_dbl(v_start.x) + xx, -ft_dbl(v_start.y) + yy));
+				path.Quadratic(cp(v_control.x, v_control.y), cp(v_start.x, v_start.y));
 				goto Close;
 
 			default:
@@ -365,14 +378,10 @@ bool RenderOutline(const FT_Outline& outline, FontGlyphConsumer& path, double xx
 					FT_Vector vec;
 					vec.x = point->x;
 					vec.y = point->y;
-					path.Cubic(Pointf(ft_dbl(vec1.x) + xx, -ft_dbl(vec1.y) + yy),
-					           Pointf(ft_dbl(vec2.x) + xx, -ft_dbl(vec2.y) + yy),
-					           Pointf(ft_dbl(vec.x) + xx, -ft_dbl(vec.y) + yy));
+					path.Cubic(cp(vec1.x, vec1.y), cp(vec2.x, vec2.y), cp(vec.x, vec.y));
 					continue;
 				}
-				path.Cubic(Pointf(ft_dbl(vec1.x) + xx, -ft_dbl(vec1.y) + yy),
-				           Pointf(ft_dbl(vec2.x) + xx, -ft_dbl(vec2.y) + yy),
-				           Pointf(ft_dbl(v_start.x) + xx, -ft_dbl(v_start.y) + yy));
+				path.Cubic(cp(vec1.x, vec1.y), cp(vec2.x, vec2.y), cp(v_start.x, v_start.y));
 				goto Close;
 			}
 		}
@@ -388,7 +397,8 @@ void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int ch, Font 
 	FT_Face face = FTFace(fnt, NULL);
 	int glyph_index = FT_Get_Char_Index(face, ch);
 	if(glyph_index && FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT) == 0)
-		RenderOutline(face->glyph->outline, sw, x, y + fnt.GetAscent());
+		RenderOutline(face->glyph->outline, sw, x, y + fnt.GetAscent(),
+		              fnt.IsItalic() && !(face->style_flags & FT_STYLE_FLAG_ITALIC));
 }
 
 END_UPP_NAMESPACE
