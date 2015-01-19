@@ -584,7 +584,7 @@ occurs at the border area of view.&]
 [s5;:Ctrl`:`:GetDropData`(const String`&`)const:%- [@(0.0.255) virtual] 
 [_^String^ String]_[* GetDropData]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 f
 mt])_[@(0.0.255) const]&]
-[s2; This method is invoked to obtain drop data from Ctrl is such 
+[s2; This method is invoked to obtain drop data from Ctrl if such 
 data was not supplied as ClipData in call to DoDragAndDrop. Default 
 implementation calls GetSelectionData.&]
 [s3; &]
