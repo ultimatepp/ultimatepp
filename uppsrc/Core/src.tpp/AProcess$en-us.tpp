@@ -113,6 +113,32 @@ activates mode when standard output and standard error output
 are read separately using Read2 method.&]
 [s3;%% &]
 [s4; &]
+[s5;:LocalProcess`:`:Start`(const char`*`,const Vector`<String`>`&`,const char`*`): [@(0.0.255) b
+ool]_[* Start]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^Vector^ V
+ector]<[_^String^ String]>`&_[*@3 arg], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr]_
+`=_NULL)&]
+[s2;%% Starts a new process defined by [%-*@3 cmd], [%-*@3 arg].[%-*@3  
+envptr ]can provide a new environment for the process, if NULL, 
+then the new process inherits caller`'s environment. This variant 
+passes individual arguments instead of whole commandline, this 
+has advantage that arguments are in POSIX passed directly to 
+execv, without parsing the commandline.&]
+[s3;%% &]
+[s4; &]
+[s5;:LocalProcess`:`:Start2`(const char`*`,const Vector`<String`>`&`,const char`*`): [@(0.0.255) b
+ool]_[* Start2]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^Vector^ V
+ector]<[_^String^ String]>`&_[*@3 arg], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr]_
+`=_NULL)&]
+[s2;%% Starts a new process defined by [%-*@3 cmd], [%-*@3 arg].[%-*@3  
+envptr ]can provide a new environment for the process, if NULL, 
+then the new process inherits caller`'s environment. This variant 
+activates mode when standard output and standard error output 
+are read separately using Read2 method. This variant passes individual 
+arguments instead of whole commandline, this has advantage that 
+arguments are in POSIX passed directly to execv, without parsing 
+the commandline.&]
+[s3;%% &]
+[s4; &]
 [s5;:LocalProcess`:`:ConvertCharset`(bool`): [_^LocalProcess^ LocalProcess][@(0.0.255) `&
 ]_[* ConvertCharset]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s5;:LocalProcess`:`:NoConvertCharset`(`): [_^LocalProcess^ LocalProcess][@(0.0.255) `&]_
@@ -131,8 +157,14 @@ onst]_[@(0.0.255) char]_`*[*@3 cmdline], [@(0.0.255) const]_[@(0.0.255) char]_`*
 ]_`=_NULL)&]
 [s2;%% Equivalent of default constructor and then invoking Start([%-*@3 cmdline][%- , 
 ][%-*@3 envptr]).&]
-[s3; &]
-[s0; &]
+[s3;%% &]
+[s4; &]
+[s5;:LocalProcess`:`:LocalProcess`(const char`*`,const Vector`<String`>`&`,const char`*`): [* L
+ocalProcess]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^Vector^ V
+ector]<[_^String^ String]>`&_[*@3 arg], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr]_
+`=_NULL)&]
+[s2;%% Equivalent of default constructor and then invoking Start([%-*@3 cmd][%- , 
+][%-*@3 arg][%- , ][%-*@3 envptr]).&]
 [s0; &]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Global functions related to LocalProcess]]}}&]
@@ -141,11 +173,10 @@ onst]_[@(0.0.255) char]_`*[*@3 cmdline], [@(0.0.255) const]_[@(0.0.255) char]_`*
 har]_`*[*@3 cmd], [_^String^ String][@(0.0.255) `&]_[*@3 out], [@(0.0.255) bool]_[*@3 convert
 charset]_`=_[@(0.0.255) true])&]
 [s2;%% Runs process defined by [%-*@3 cmd] command line, returns its 
-standard output in [%-*@3 output].and its exit code as return value. 
+standard output in [%-*@3 out].and its exit code as return value. 
 If there was error invoking [%-*@3 cmd], returns `-1. If [%-*@3 convertcharset] 
 is true, output is converted from system character encoding to 
 application encoding.&]
-[s3;%% &]
 [s4; &]
 [s5;:Sys`(const char`*`,bool`): [_^String^ String]_[* Sys]([@(0.0.255) const]_[@(0.0.255) cha
 r]_`*[*@3 cmd], [@(0.0.255) bool]_[*@3 convertcharset]_`=_[@(0.0.255) true])&]
@@ -155,4 +186,25 @@ its standard output, otherwise returns String`::GetVoid(). If
 [%-*@3 convertcharset] is true, output is converted from system 
 character encoding to application encoding.&]
 [s3; &]
+[s4; &]
+[s5;:Sys`(const char`*`,const Vector`<String`>`&`,String`&`,bool`): [@(0.0.255) int]_[* S
+ys]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^Vector^ Vector]<
+[_^String^ String]>`&_[*@3 arg], [_^String^ String][@(0.0.255) `&]_[*@3 out], 
+[@(0.0.255) bool]_[*@3 convertcharset]_`=_[@(0.0.255) true])&]
+[s2;%% Runs process defined by [%-*@3 cmd] [%-*@3 arg] command line, 
+returns its standard output in [%-*@3 output].and its exit code 
+as return value. If there was error invoking [%-*@3 cmd], returns 
+`-1. If [%-*@3 convertcharset] is true, output is converted from 
+system character encoding to application encoding.&]
+[s3;%% &]
+[s4; &]
+[s5;:Sys`(const char`*`,const Vector`<String`>`&`,bool`): [_^String^ String]_[* Sys]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^Vector^ Vector]<[_^String^ Strin
+g]>`&_[*@3 arg], [@(0.0.255) bool]_[*@3 convertcharset]_`=_[@(0.0.255) true])&]
+[s2;%% Runs process defined by [%-*@3 cmd] [%-*@3 arg] command line. 
+If [%-*@3 cmd] was executed successfully and returned zero exit 
+code, returns its standard output, otherwise returns String`::GetVoid(). 
+If [%-*@3 convertcharset] is true, output is converted from system 
+character encoding to application encoding.&]
+[s3;%% &]
 [s0; ]]

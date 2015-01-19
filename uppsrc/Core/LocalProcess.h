@@ -58,11 +58,14 @@ private:
 
 	typedef LocalProcess CLASSNAME;
 
-	bool DoStart(const char *cmdline, bool spliterr, const char *envptr = NULL);
+	bool DoStart(const char *cmdline, const Vector<String> *arg, bool spliterr, const char *envptr = NULL);
 
 public:
-	bool Start(const char *cmdline, const char *envptr = NULL)        { return DoStart(cmdline, false, envptr); }
-	bool Start2(const char *cmdline, const char *envptr = NULL)       { return DoStart(cmdline, true, envptr); }
+	bool Start(const char *cmdline, const char *envptr = NULL)        { return DoStart(cmdline, NULL, false, envptr); }
+	bool Start2(const char *cmdline, const char *envptr = NULL)       { return DoStart(cmdline, NULL, true, envptr); }
+
+	bool Start(const char *cmd, const Vector<String>& arg, const char *envptr = NULL)        { return DoStart(cmd, &arg, false, envptr); }
+	bool Start2(const char *cmd, const Vector<String>& arg, const char *envptr = NULL)       { return DoStart(cmd, &arg, true, envptr); }
 	
 #ifdef PLATFORM_POSIX
 	int  GetPid()  const                                              { return pid; }
@@ -75,10 +78,14 @@ public:
 	LocalProcess& ConvertCharset(bool b = true)                       { convertcharset = b; return *this; }
 	LocalProcess& NoConvertCharset()                                  { return ConvertCharset(false); }
 
-	LocalProcess()                                                    { Init(); }
-	LocalProcess(const char *cmdline, const char *envptr = NULL)      { Init(); Start(cmdline, envptr); }
-	virtual ~LocalProcess()                                           { Kill(); }
+	LocalProcess()                                                                          { Init(); }
+	LocalProcess(const char *cmdline, const char *envptr = NULL)                            { Init(); Start(cmdline, envptr); }
+	LocalProcess(const char *cmdline, const Vector<String>& arg, const char *envptr = NULL) { Init(); Start(cmdline, arg, envptr); }
+	virtual ~LocalProcess()                                                                 { Kill(); }
 };
 
-int    Sys(const char *cmd, String& out, bool convertcharset = true);
-String Sys(const char *cmd, bool convertcharset = true);
+int    Sys(const char *cmdline, String& out, bool convertcharset = true);
+String Sys(const char *cmdline, bool convertcharset = true);
+
+int    Sys(const char *cmd, const Vector<String>& arg, String& out, bool convertcharset = true);
+String Sys(const char *cmd, const Vector<String>& arg, bool convertcharset = true);
