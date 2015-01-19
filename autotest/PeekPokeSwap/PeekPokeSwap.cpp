@@ -6,7 +6,7 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
 
-	char h[] = { 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
+	byte h[] = { 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99 };
 	word v16 = Peek16le(h + 1);
 	RDUMP(Format64Hex(v16));
 
@@ -26,5 +26,6 @@ CONSOLE_APP_MAIN
 	v64 = SwapEndian64(v64);
 	RDUMP(Format64Hex(v64));
 	ASSERT(v64 == 0x2233445566778899);
+	
+	RLOG("================ OK");
 }
-
