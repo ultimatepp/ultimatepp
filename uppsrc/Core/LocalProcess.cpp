@@ -110,6 +110,43 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 	si.hStdInput  = hInputRead;
 	si.hStdOutput = hOutputWrite;
 	si.hStdError  = hErrorWrite;
+	String cmdh;
+	if(arg) {
+		cmdh = command;
+		for(int i = 0; i < arg->GetCount(); i++) {
+			cmdh << ' ';
+			String argument = (*arg)[i];
+			if(argument.GetCount() && argument.FindFirstOf(" \t\n\v\"") < 0)
+	    		cmdh << argument;
+			else {
+				cmdh << '\"';
+				const char *s = argument;
+				for(;;) {
+					int num_backslashes = 0;
+					while(*s == '\\') {
+						s++;
+						num_backslashes++;
+					}
+					if(*s == '\0') {
+						cmdh.Cat('\\', 2 * num_backslashes);
+						break;
+					}
+					else
+					if(*s == '\"') {
+						cmdh.Cat('\\', 2 * num_backslashes + 1);
+						cmdh << '\"';
+					}
+					else {
+						cmdh.Cat('\\', num_backslashes);
+						cmdh.Cat(*s);
+					}
+					s++;
+				}
+				cmdh << '\"';
+			}
+	    }
+		command = cmdh;
+	}
 	int n = (int)strlen(command) + 1;
 	Buffer<char> cmd(n);
 	memcpy(cmd, command, n);
