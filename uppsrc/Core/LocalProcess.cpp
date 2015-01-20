@@ -163,7 +163,6 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 	else {
 		Free();
 		return false;
-//		throw Exc(NFormat("Error running process: %s\nCommand: %s", GetErrorMessage(GetLastError()), command));
 	}
 	return true;
 #endif
