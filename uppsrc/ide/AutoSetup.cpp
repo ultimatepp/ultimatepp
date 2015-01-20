@@ -313,6 +313,7 @@ void AutoSetup()
 			"INCLUDE = " + AsCString(AppendFileName(mingwdir, "include") + include) + ";\n"
 			"LIB = " + AsCString(AppendFileName(mingwdir, "lib") + lib + mlib) + ";\n"
 			"ALLOW_PRECOMPILED_HEADERS = \"1\";\n"
+			"COMMON_OPTIONS = \"-msse2\";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
