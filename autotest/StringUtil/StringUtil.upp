@@ -5,5 +5,5 @@ file
 	StringUtil.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

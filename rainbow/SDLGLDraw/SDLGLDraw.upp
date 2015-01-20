@@ -10,5 +10,5 @@ file
 	SDLGLDraw.lay;
 
 mainconfig
-	"" = "GUI SSE2 SDL20GL";
+	"" = "GUI SDL20GL";
 

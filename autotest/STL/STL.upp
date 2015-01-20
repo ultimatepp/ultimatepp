@@ -5,5 +5,5 @@ file
 	STL.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

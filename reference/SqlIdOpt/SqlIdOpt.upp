@@ -8,5 +8,5 @@ file
 	SqlIdOpt.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

@@ -7,5 +7,5 @@ file
 	FileOutLocking.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

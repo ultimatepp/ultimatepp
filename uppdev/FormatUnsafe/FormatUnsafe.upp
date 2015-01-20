@@ -5,5 +5,5 @@ file
 	FormatUnsafe.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

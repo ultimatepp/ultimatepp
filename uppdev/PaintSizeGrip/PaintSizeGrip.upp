@@ -6,5 +6,5 @@ file
 	test.iml;
 
 mainconfig
-	"" = "GUI SSE2";
+	"" = "GUI";
 

@@ -6,5 +6,5 @@ file
 	Socket.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

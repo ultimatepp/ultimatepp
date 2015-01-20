@@ -9,5 +9,5 @@ file
 	ADT.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

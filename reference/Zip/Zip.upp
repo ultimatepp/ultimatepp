@@ -8,5 +8,5 @@ file
 	Zip.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

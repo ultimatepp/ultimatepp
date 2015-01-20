@@ -25,5 +25,5 @@ file
 	MapViewSearch.cpp;
 
 mainconfig
-	"" = "GUI SSE2";
+	"" = "GUI";
 

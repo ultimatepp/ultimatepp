@@ -36,5 +36,5 @@ file
 
 mainconfig
 	"" = "GUI",
-	"" = "GUI SSE2";
+	"" = "GUI";
 

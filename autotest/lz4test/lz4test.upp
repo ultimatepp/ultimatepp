@@ -6,5 +6,5 @@ file
 	lz4test.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

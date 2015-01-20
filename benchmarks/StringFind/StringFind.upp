@@ -7,5 +7,5 @@ file
 	main.cpp optimize_speed;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

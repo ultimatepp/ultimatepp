@@ -20,5 +20,5 @@ file
 	main.conf;
 
 mainconfig
-	"" = "SSE2 MT";
+	"" = "MT";
 

@@ -8,5 +8,5 @@ file
 	Decompress.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

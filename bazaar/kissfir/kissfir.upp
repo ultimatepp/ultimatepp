@@ -7,6 +7,6 @@ file
 	kissfir.cpp;
 
 mainconfig
-	"" = "MT SSE2",
-	"" = "MT SSE2 FAST_FILT_UTIL";
+	"" = "MT",
+	"" = "MT FAST_FILT_UTIL";
 

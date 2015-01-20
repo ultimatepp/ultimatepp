@@ -5,5 +5,5 @@ file
 	One.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

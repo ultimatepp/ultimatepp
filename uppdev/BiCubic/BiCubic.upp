@@ -17,5 +17,5 @@ file
 	help.txt;
 
 mainconfig
-	"" = "GUI SSE2";
+	"" = "GUI";
 

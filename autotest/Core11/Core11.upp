@@ -7,5 +7,5 @@ file
 	Core11.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

@@ -5,5 +5,5 @@ file
 	JSON.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

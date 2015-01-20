@@ -6,5 +6,5 @@ file
 	info.txt;
 
 mainconfig
-	"" = "GUI SSE2";
+	"" = "GUI";
 

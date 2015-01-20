@@ -10,5 +10,5 @@ file
 	Dim.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

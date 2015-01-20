@@ -7,5 +7,5 @@ file
 	AutoTest.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

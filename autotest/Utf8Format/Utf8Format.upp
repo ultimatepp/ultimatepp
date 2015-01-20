@@ -7,5 +7,5 @@ file
 	Utf8Format.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

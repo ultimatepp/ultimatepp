@@ -5,5 +5,5 @@ file
 	CallbackLambda.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

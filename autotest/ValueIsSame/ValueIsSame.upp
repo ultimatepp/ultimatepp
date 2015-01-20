@@ -5,5 +5,5 @@ file
 	ValueIsSame.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

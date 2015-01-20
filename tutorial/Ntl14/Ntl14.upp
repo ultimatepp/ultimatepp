@@ -7,5 +7,5 @@ file
 	Ntl14.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

@@ -11,5 +11,5 @@ file
 	KissFFTTest.lay;
 
 mainconfig
-	"" = "GUI MT SSE2";
+	"" = "GUI MT";
 

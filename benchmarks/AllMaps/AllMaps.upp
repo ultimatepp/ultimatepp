@@ -5,5 +5,5 @@ file
 	AllMaps.cpp optimize_speed;
 
 mainconfig
-	"" = "SSE2 MT";
+	"" = "MT";
 

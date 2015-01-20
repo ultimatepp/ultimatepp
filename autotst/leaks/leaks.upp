@@ -5,5 +5,5 @@ file
 	leaks.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

@@ -7,6 +7,6 @@ file
 	mt.cpp;
 
 mainconfig
-	"" = "MT SSE2",
+	"" = "MT",
 	"" = "";
 

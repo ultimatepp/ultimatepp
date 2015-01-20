@@ -5,5 +5,5 @@ file
 	FindFile.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

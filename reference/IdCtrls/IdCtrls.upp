@@ -8,5 +8,5 @@ file
 	IdCtrls.lay;
 
 mainconfig
-	"" = "GUI SSE2";
+	"" = "GUI";
 

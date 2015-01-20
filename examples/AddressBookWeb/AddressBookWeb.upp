@@ -17,5 +17,5 @@ file
 	AdrBook.iml;
 
 mainconfig
-	"" = "SSE2 MT";
+	"" = "MT";
 

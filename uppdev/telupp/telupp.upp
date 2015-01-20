@@ -13,5 +13,5 @@ file
 	test.qtf;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

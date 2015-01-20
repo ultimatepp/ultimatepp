@@ -6,5 +6,5 @@ file
 	PipeStream.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

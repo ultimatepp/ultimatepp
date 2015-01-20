@@ -6,6 +6,6 @@ file
 	main.cpp;
 
 mainconfig
-	"" = "GUI SSE2 MT",
-	"" = "GUI SSE2";
+	"" = "GUI MT",
+	"" = "GUI";
 

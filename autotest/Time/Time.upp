@@ -5,5 +5,5 @@ file
 	Time.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

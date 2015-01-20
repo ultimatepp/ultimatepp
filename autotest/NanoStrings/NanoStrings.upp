@@ -5,5 +5,5 @@ file
 	NanoStrings.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

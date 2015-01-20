@@ -8,5 +8,5 @@ file
 	ZMQ_HelloeWorld_Srv.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

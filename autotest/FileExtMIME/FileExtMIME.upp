@@ -5,5 +5,5 @@ file
 	FileExtMIME.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

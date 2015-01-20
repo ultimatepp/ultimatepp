@@ -5,5 +5,5 @@ file
 	UniqueFolder.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

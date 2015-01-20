@@ -14,5 +14,5 @@ file
 	FormEditorCommon.h;
 
 mainconfig
-	"" = "GUI SSE2";
+	"" = "GUI";
 

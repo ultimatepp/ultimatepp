@@ -13,5 +13,5 @@ file
 	image.iml;
 
 mainconfig
-	"" = "GUI SSE2";
+	"" = "GUI";
 

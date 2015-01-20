@@ -9,5 +9,5 @@ file
 	SMTP.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 
