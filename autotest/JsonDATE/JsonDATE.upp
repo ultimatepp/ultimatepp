@@ -5,5 +5,5 @@ file
 	JsonDATE.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

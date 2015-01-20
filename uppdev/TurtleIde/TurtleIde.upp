@@ -5,5 +5,5 @@ file
 	TurtleIde.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

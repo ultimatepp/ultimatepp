@@ -5,5 +5,5 @@ file
 	ScalarDate.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

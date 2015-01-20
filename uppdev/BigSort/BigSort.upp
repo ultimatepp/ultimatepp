@@ -8,5 +8,5 @@ file
 	BigSort.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

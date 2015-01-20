@@ -7,6 +7,6 @@ file
 	InVector.cpp;
 
 mainconfig
-	"" = "SSE2 IVTEST",
-	"" = "SSE2 IVTEST LONG";
+	"" = "IVTEST",
+	"" = "IVTEST LONG";
 

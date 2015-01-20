@@ -5,5 +5,5 @@ file
 	InVector.cpp;
 
 mainconfig
-	"" = "SSE2 MT";
+	"" = "MT";
 

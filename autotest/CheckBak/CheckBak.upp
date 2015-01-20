@@ -5,5 +5,5 @@ file
 	CheckBak.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

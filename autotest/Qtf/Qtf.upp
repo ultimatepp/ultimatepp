@@ -8,5 +8,5 @@ file
 	Qtf.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

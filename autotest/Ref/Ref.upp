@@ -7,5 +7,5 @@ file
 	Ref.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

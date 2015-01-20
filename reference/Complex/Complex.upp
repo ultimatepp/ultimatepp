@@ -7,5 +7,5 @@ file
 	Complex.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

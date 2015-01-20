@@ -7,5 +7,5 @@ file
 	StringStream.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

@@ -7,5 +7,5 @@ file
 	EscTest.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

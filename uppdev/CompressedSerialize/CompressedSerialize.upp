@@ -5,5 +5,5 @@ file
 	CompressedSerialize.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

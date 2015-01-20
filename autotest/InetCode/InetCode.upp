@@ -7,5 +7,5 @@ file
 	InetCode.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

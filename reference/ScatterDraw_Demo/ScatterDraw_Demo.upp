@@ -9,5 +9,5 @@ file
 	ScatterDraw_Demo.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

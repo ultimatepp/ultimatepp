@@ -8,5 +8,5 @@ file
 	Test.r;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

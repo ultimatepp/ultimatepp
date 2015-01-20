@@ -5,5 +5,5 @@ file
 	ConvertOverflow.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

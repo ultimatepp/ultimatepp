@@ -5,5 +5,5 @@ file
 	GateIssue.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

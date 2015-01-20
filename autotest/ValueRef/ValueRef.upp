@@ -5,5 +5,5 @@ file
 	ValueRef.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

@@ -9,5 +9,5 @@ file
 	h.java;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

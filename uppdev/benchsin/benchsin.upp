@@ -5,6 +5,5 @@ file
 	benchsin.cpp;
 
 mainconfig
-	"" = "SSE2",
 	"" = "";
 

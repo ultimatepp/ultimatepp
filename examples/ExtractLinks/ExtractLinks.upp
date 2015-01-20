@@ -8,5 +8,5 @@ file
 	ExtractLinks.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

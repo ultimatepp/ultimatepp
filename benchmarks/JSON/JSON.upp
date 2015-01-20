@@ -8,5 +8,5 @@ file
 	bench.txt;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

@@ -8,5 +8,5 @@ file
 	demo.html;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

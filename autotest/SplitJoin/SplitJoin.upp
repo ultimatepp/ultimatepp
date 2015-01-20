@@ -5,5 +5,5 @@ file
 	SplitJoin.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

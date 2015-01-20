@@ -9,5 +9,5 @@ file
 	Pop3.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

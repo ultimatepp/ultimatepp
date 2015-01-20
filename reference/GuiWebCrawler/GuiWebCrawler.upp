@@ -8,5 +8,5 @@ file
 	GuiWebCrawler.lay;
 
 mainconfig
-	"" = "GUI SSE2";
+	"" = "GUI";
 

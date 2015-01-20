@@ -6,5 +6,5 @@ file
 	0.xml;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

@@ -14,5 +14,5 @@ file
 	Main.cpp;
 
 mainconfig
-	"" = "MT SSE2";
+	"" = "MT";
 

@@ -11,5 +11,5 @@ file
 	2.xml;
 
 mainconfig
-	"" = "SSE2 TEST_XML";
+	"" = "TEST_XML";
 

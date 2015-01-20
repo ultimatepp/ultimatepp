@@ -7,5 +7,5 @@ file
 	JoinMerge.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

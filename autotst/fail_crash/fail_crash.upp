@@ -5,5 +5,5 @@ file
 	fail_crash.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

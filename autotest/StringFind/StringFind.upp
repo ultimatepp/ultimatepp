@@ -5,5 +5,5 @@ file
 	StringFind.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

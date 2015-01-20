@@ -6,6 +6,6 @@ file
 	main.cpp;
 
 mainconfig
-	"" = "GUI SSE2 WINFB",
-	"" = "GUI SSE2";
+	"" = "GUI WINFB",
+	"" = "GUI";
 

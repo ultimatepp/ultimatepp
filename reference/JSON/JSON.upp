@@ -8,5 +8,5 @@ file
 	main.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

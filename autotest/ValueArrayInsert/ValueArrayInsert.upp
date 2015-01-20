@@ -5,5 +5,5 @@ file
 	ValueArrayInsert.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

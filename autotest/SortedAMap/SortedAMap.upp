@@ -5,5 +5,5 @@ file
 	main.cpp;
 
 mainconfig
-	"" = "SSE2 IVTEST";
+	"" = "IVTEST";
 

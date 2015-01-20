@@ -6,5 +6,5 @@ file
 	UnZip.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

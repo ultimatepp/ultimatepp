@@ -5,5 +5,5 @@ file
 	ValueTypeError.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

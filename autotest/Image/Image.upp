@@ -10,5 +10,5 @@ file
 	Image.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

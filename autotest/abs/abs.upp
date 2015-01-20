@@ -7,5 +7,5 @@ file
 	abs.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

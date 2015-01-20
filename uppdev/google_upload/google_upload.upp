@@ -7,5 +7,5 @@ file
 	google_upload.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

@@ -5,5 +5,5 @@ file
 	LocalProcess.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

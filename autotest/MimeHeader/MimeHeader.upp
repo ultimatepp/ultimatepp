@@ -6,5 +6,5 @@ file
 	MimeHeader.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

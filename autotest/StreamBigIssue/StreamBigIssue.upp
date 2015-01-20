@@ -6,5 +6,5 @@ file
 	StreamBigIssue.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

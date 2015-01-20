@@ -5,5 +5,5 @@ file
 	CheckDownloads.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

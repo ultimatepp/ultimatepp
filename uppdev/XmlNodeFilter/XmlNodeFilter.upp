@@ -6,5 +6,5 @@ file
 	info.txt;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 
