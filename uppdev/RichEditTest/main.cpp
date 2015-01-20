@@ -1,19 +1,5 @@
 #include <RichEdit/RichEdit.h>
 
-#define Time    XTime
-#define Font    XFont
-#define Display XDisplay
-#define Picture XPicture
-
-#include <limits.h>
-#include <gtk/gtk.h>
-#include <gdk/gdkx.h>
-
-#undef Picture
-#undef Time
-#undef Font
-#undef Display
-
 using namespace Upp;
 
 String FileName()
@@ -58,8 +44,11 @@ GUI_APP_MAIN
 //	GUI_PopUpEffect_Write(GUIEFFECT_NONE);
 
 	DUMP(ScrollBarSize());
+	
+	
+	e.Pick(ParseRTF(LoadFile("C:/xxx/data.bin")));
 
-	e.Pick(ParseQTF(LoadFile(FileName())));
+//	e.Pick(ParseQTF(LoadFile(FileName())));
 //	e.SetQTF(LoadFile("U:\\xxx\\PainterBug.qtf"));
 //	e.ClipZoom(4, 1);
 //	Ctrl::ShowRepaint(50);
