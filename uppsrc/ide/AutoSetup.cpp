@@ -445,6 +445,7 @@ void AutoSetup()
 							lib
 			           ) + ";\n"
 			"ALLOW_PRECOMPILED_HEADERS = \"1\";\n"
+			"COMMON_OPTIONS = \"/arch:SSE2\";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
@@ -539,6 +540,7 @@ void AutoSetup()
 							lib
 			           ) + ";\n"
 			"ALLOW_PRECOMPILED_HEADERS = \"1\";\n"
+			"COMMON_OPTIONS = \"/arch:SSE2\";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
@@ -629,6 +631,7 @@ void AutoSetup()
 							lib
 			           ) + ";\n"
 			"ALLOW_PRECOMPILED_HEADERS = \"1\";\n"
+			"COMMON_OPTIONS = \"/arch:SSE2\";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
@@ -719,6 +722,7 @@ void AutoSetup()
 							lib
 			           ) + ";\n"
 			"ALLOW_PRECOMPILED_HEADERS = \"1\";\n"
+			"COMMON_OPTIONS = \"/arch:SSE2\";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
@@ -804,6 +808,7 @@ void AutoSetup()
 							AppendFileName(sdk, "Lib") +
 							lib
 			           ) + ";\n"
+			"COMMON_OPTIONS = \"/arch:SSE2\";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
