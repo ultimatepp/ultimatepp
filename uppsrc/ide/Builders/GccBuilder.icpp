@@ -74,11 +74,11 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		cc << " -arch i386";
 	}
 
-	if(HasFlag("SSE2")) {
-		cc << " -msse2";
-		if(!HasFlag("CLANG"))
-			cc << " -mfpmath=sse";
-	}
+//	if(HasFlag("SSE2")) {
+//		cc << " -msse2";
+//		if(!HasFlag("CLANG"))
+//			cc << " -mfpmath=sse";
+//	}
 
 	String cc_speed = cc;
 	bool   release = false;
