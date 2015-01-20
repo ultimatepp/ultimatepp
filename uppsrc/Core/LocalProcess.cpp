@@ -522,7 +522,7 @@ void LocalProcess::Write(String s)
 			wreso = wrese = Null;
 			Read2(wreso, wrese);
 			wreso = ho + wreso;
-			wrese = ho + wrese;
+			wrese = he + wrese;
 		}
 	}
 #endif
@@ -535,7 +535,7 @@ void LocalProcess::Write(String s)
 			wreso = wrese = Null;
 			Read2(wreso, wrese);
 			wreso = ho + wreso;
-			wrese = ho + wrese;
+			wrese = he + wrese;
 			ret = write(rpipe[1], ~s + wn, s.GetLength() - wn);
 		}
 	}
