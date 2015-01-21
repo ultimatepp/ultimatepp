@@ -342,6 +342,12 @@ void AppendClipboardImage(const Image& img)
 	AppendClipboard("image", StoreAsString(h));
 }
 
+void Append(VectorMap<String, ClipData>& data, const Image& img)
+{
+	Image h = img;
+	data.Add("image", StoreAsString(h));
+}
+
 bool AcceptFiles(PasteClip& clip)
 {
 	if(clip.Accept("files")) {

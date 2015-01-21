@@ -269,6 +269,17 @@ Ctrl *Ctrl::GetDragAndDropTarget()
 	return dndctrl;
 }
 
+void AppendClipboard(const char *format, const ClipData& data)
+{
+	AppendClipboard(format, data.data, data.render);
+}
+
+void AppendClipboard(const VectorMap<String, ClipData>& data)
+{
+	for(int i = 0; i < data.GetCount(); i++)
+		AppendClipboard(data.GetKey(i), data[i]);
+}
+
 void InitRichImage(String      (*fGetImageClip)(const Image& img, const String& fmt),
                    bool        (*fAcceptImage)(PasteClip& clip),
                    Image       (*fGetImage)(PasteClip& clip),
