@@ -299,6 +299,7 @@ public:
 	byte                     charset;
 	bool                     optimize_speed;
 	bool                     noblitz;
+	bool                     nowarnings;
 	String                   description;
 	Vector<String>           accepts;
 	Array<OptItem>           flag;

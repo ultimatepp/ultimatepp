@@ -161,7 +161,7 @@ void Package::Reset()
 {
 	charset = 0;
 	optimize_speed = false;
-	noblitz = false;
+	noblitz = nowarnings = false;
 	bold = italic = false;
 	ink = Null;
 }
@@ -347,6 +347,12 @@ bool Package::Load(const char *path)
 				}
 				p.Char(';');
 			}
+			for(int i = 0; i < option.GetCount(); i++)
+				if(option[i].when == "BUILDER_OPTION" && option[i].text == "NOWARNINGS") {
+					nowarnings = true;
+					option.Remove(i);
+					break;
+				}
 			return true;
 		}
 		catch(CParser::Error error) {
@@ -423,6 +429,8 @@ bool Package::Save(const char *path) const {
 		out << "optimize_speed;\n\n";
 	if(noblitz)
 		out << "noblitz;\n\n";
+	if(nowarnings)
+		out << "options(BUILDER_OPTION) NOWARNINGS;\n\n";
 	putp(out, "acceptflags", accepts);
 	putopt(out, "flags", flag);
 	putopt(out, "uses", uses);
@@ -449,12 +457,11 @@ bool Package::Save(const char *path) const {
 			if(f.optimize_speed)
 				out << " optimize_speed";
 			if(f.pch)
-//				out << " pch"; // good solution, but not backward compatible
-				out << " options PCH";
+				out << " options(BUILDER_OPTION) PCH";
 			if(f.nopch)
-				out << " options NOPCH";
+				out << " options(BUILDER_OPTION) NOPCH";
 			if(f.noblitz)
-				out << " options NOBLITZ";
+				out << " options(BUILDER_OPTION) NOBLITZ";
 			if(f.charset > 0 && f.charset < CharsetCount() || f.charset == CHARSET_UTF8)
 				out << " charset " << AsCString(CharsetName(f.charset));
 			else

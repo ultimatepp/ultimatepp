@@ -2,6 +2,8 @@ description "zlib compressor/decompressor and its U++ encapsulation\3770,128,128
 
 optimize_speed;
 
+options(BUILDER_OPTION) NOWARNINGS;
+
 flags(NOTMFC) "!GUI !CONSOLE";
 
 options(MSC8ARM) -DNO_ERRNO_H;

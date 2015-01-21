@@ -98,7 +98,7 @@ String MscBuilder::CmdLine(const String& package, const Package& pkg)
 		cc = HasFlag("INTEL") ? "icl" : "cl";
 // TRC 080605-documentation says Wp64 works in 32-bit compilation only
 //	cc << (IsMsc64() ? " -nologo -Wp64 -W3 -GR -c" : " -nologo -W3 -GR -c");
-	cc << " -nologo -W3 -GR -c";
+	cc << " -nologo -W" << (pkg.nowarnings ? "0" : "3") << " -GR -c";
 	cc << IncludesDefinesTargetTime(package, pkg);
 
 	return cc;
@@ -227,8 +227,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		if(opt == R_SPEED || pkg.optimize_speed)
 			cc = cc_speed;
 	}
-
-
+	
 	Vector<String> sfile, isfile;
 	Vector<String> soptions, isoptions;
 	Vector<bool>   optimize, ioptimize;

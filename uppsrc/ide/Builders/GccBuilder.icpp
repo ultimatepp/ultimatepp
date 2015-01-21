@@ -65,7 +65,9 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 //	else if(!HasFlag("WIN32")) // TRC 05/03/08: dynamic fPIC doesn't seem to work in MinGW
 //		cc << " -dynamic -fPIC "; // TRC 05/03/30: dynamic fPIC doesn't seem to work in GCC either :-)
 	cc << ' ' << Gather(pkg.option, config.GetKeys());
-	cc << " -fexceptions ";
+	cc << " -fexceptions";
+	if(pkg.nowarnings)
+		cc << " -w";
 
 	if (HasFlag("OSX11")) {
 	  if (HasFlag("POWERPC"))
