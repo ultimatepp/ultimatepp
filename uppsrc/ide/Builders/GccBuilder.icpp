@@ -115,9 +115,9 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			for(int j = 0; j < srcfile.GetCount(); j++) {
 				String fn = srcfile[j];
 				String ext = GetSrcType(fn);
-				if(ext == ".c" || ext == ".cpp" || ext == ".cc" || ext == ".cxx" || ext == ".m" || ext == ".mm"
-				|| ext == ".s" || ext == ".S"
-				|| ext == ".brc" || (ext == ".rc" && HasFlag("WIN32"))) {
+				if(findarg(ext, ".c", ".cpp", ".cc", ".cxx", ".brc", ".m", ".mm", ".s", ".ss") >= 0 ||
+				   (!release && blitz && ext == ".icpp") ||
+				   ext == ".rc" && HasFlag("WIN32")) {
 					sfile.Add(fn);
 					soptions.Add(gop);
 					optimize.Add(release && pkg[i].optimize_speed && opt == R_OPTIMAL);
