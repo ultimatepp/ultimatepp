@@ -101,8 +101,8 @@ system to String.&]
 [s3; &]
 [s4; &]
 [s5;:StringBuffer`:`:Reserve`(int`): [@(0.0.255) void]_[* Reserve]([@(0.0.255) int]_[*@3 r])&]
-[s2;%% Preallocates internal buffer (avoids resizing of internal 
-buffer up to [%-*@3 r] characters).&]
+[s2;%% Hint to preallocate internal buffer for concatenation of next 
+r characters.&]
 [s3;%% &]
 [s4; &]
 [s5;:StringBuffer`:`:GetAlloc`(`)const: [@(0.0.255) int]_[* GetAlloc]()_[@(0.0.255) const]&]

@@ -337,6 +337,8 @@ String::String(StringBuffer& b)
 		SLen() = 15;
 		LLen() = l;
 		chr[KIND] = min(b.GetAlloc(), 255);
+		if(GetAlloc() > 4 * GetLength() / 3)
+			Shrink();
 	}
 	b.Zero();
 
@@ -396,7 +398,8 @@ void StringBuffer::Expand()
 
 void StringBuffer::SetLength(int l)
 {
-	Realloc(l);
+	if(l > GetAlloc())
+		Realloc(l);
 	end = begin + l;
 }
 

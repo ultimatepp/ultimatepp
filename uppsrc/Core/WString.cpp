@@ -210,6 +210,8 @@ WString::WString(WStringBuffer& b)
 	ptr = b.begin;
 	ptr[length] = 0;
 	alloc = b.GetAlloc();
+	if(GetAlloc() > 4 * GetLength() / 3)
+		Shrink();
 	b.Zero();
 	Dsyn();
 }
