@@ -198,11 +198,12 @@ void SqlArray::AppendQuery(SqlBool where)
 			if(WhenFilter(fm))
 				Add(row);
 		}
-		if(GetCount())
+		if(GetCount()) {
 			if(goendpostquery)
 				GoEnd();
 			else
 				GoBegin();
+		}
 		DoColumnSort();
 		WhenPostQuery();
 	}
