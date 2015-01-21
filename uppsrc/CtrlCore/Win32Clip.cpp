@@ -436,6 +436,12 @@ void AppendClipboardImage(const Image& img)
 	AppendClipboard("dib", img, sDib);
 }
 
+void Append(VectorMap<String, ClipData>& data, const Image& img)
+{
+	data.Add(ClipFmt<Image>(), ClipData(img, sImage));
+	data.Add("dib", ClipData(img, sDib));
+}
+
 bool AcceptFiles(PasteClip& clip)
 {
 	if(clip.Accept("files")) {

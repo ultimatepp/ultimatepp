@@ -313,7 +313,6 @@ bool   Accept(PasteClip& clip)
 	return clip.Accept(ClipFmt<T>());
 }
 
-
 String GetInternalDropId__(const char *type, const char *id);
 void NewInternalDrop__(const void *ptr);
 const void *GetInternalDropPtr__();
@@ -1540,6 +1539,8 @@ void    ClearClipboard();
 void    AppendClipboard(const char *format, const byte *data, int length);
 void    AppendClipboard(const char *format, const String& data);
 void    AppendClipboard(const char *format, const Value& data, String (*render)(const Value& data));
+void    AppendClipboard(const char *format, const ClipData& data);
+void    AppendClipboard(const VectorMap<String, ClipData>& data);
 String  ReadClipboard(const char *format);
 bool    IsClipboardAvailable(const char *format);
 

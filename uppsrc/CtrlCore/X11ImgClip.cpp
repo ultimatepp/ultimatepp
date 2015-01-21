@@ -69,6 +69,12 @@ void AppendClipboardImage(const Image& img)
 	AppendClipboard("image/bmp", img, sBmp);
 }
 
+void Append(VectorMap<String, ClipData>& data, const Image& img)
+{
+	data.Add(ClipFmt<Image>(), ClipData(img, sImg));
+	data.Add("image/bmp", ClipData(img, sBmp));
+}
+
 END_UPP_NAMESPACE
 
 #endif
