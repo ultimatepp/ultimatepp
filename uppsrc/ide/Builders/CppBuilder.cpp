@@ -410,7 +410,7 @@ Blitz CppBuilder::BlitzStep(Vector<String>& sfile, Vector<String>& soptions,
 		String ext = ToLower(GetFileExt(fn));
 		String objfile = CatAnyPath(outdir, GetFileTitle(fn) + objext);
 		Time fntime = GetFileTime(fn);
-		if((ext == ".cpp" || ext == ".cc" || ext == ".cxx")
+		if((ext == ".cpp" || ext == ".cc" || ext == ".cxx" || ext == ".icpp")
 		   && HdependBlitzApproved(fn) && IsNull(soptions[i]) && !optimize[i]
 		   && fntime < BlitzBaseTime()
 		   && noblitz.Find(fn) < 0) {

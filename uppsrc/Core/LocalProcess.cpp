@@ -449,13 +449,13 @@ bool LocalProcess::Read2(String& reso, String& rese)
 	bool was_running = IsRunning();
 	char buffer[1024];
 	dword n;
-	if(hOutputRead && PeekNamedPipe(hOutputRead, NULL, 0, NULL, &n, NULL) && n)
-		while(ReadFile(hOutputRead, buffer, sizeof(buffer), &n, NULL) && n)
-			wreso.Cat(buffer, n);
+	if(hOutputRead && PeekNamedPipe(hOutputRead, NULL, 0, NULL, &n, NULL) && n &&
+	   ReadFile(hOutputRead, buffer, sizeof(buffer), &n, NULL) && n)
+		reso.Cat(buffer, n);
 
-	if(hErrorRead && PeekNamedPipe(hErrorRead, NULL, 0, NULL, &n, NULL) && n)
-		while(ReadFile(hErrorRead, buffer, sizeof(buffer), &n, NULL) && n)
-			wrese.Cat(buffer, n);
+	if(hErrorRead && PeekNamedPipe(hErrorRead, NULL, 0, NULL, &n, NULL) && n &&
+	   ReadFile(hErrorRead, buffer, sizeof(buffer), &n, NULL) && n)
+		rese.Cat(buffer, n);
 
 	if(convertcharset) {
 		reso = FromOEMCharset(reso);
@@ -463,7 +463,6 @@ bool LocalProcess::Read2(String& reso, String& rese)
 	}
 	
 	return reso.GetCount() || rese.GetCount() || was_running;
-
 #endif
 #ifdef PLATFORM_POSIX
 	String res[2];
