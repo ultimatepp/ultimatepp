@@ -8,8 +8,17 @@
 #define GDKEY(x) GDK_##x
 #endif
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+#endif
+
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
 NAMESPACE_UPP
 
