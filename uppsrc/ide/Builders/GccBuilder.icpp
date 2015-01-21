@@ -66,8 +66,6 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 //		cc << " -dynamic -fPIC "; // TRC 05/03/30: dynamic fPIC doesn't seem to work in GCC either :-)
 	cc << ' ' << Gather(pkg.option, config.GetKeys());
 	cc << " -fexceptions";
-	if(pkg.nowarnings)
-		cc << " -w";
 
 	if (HasFlag("OSX11")) {
 	  if (HasFlag("POWERPC"))
@@ -94,6 +92,9 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		if(opt == R_SPEED || pkg.optimize_speed)
 			cc = cc_speed;
 	}
+
+	if(pkg.nowarnings)
+		cc << " -w";
 
 	Vector<String> sfile, isfile;
 	Vector<String> soptions, isoptions;
