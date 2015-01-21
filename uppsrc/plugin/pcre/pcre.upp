@@ -1,5 +1,9 @@
 description "PCRE regular expressions library\3770,128,128";
 
+noblitz;
+
+options(BUILDER_OPTION) NOWARNINGS;
+
 file
 	Pcre.h,
 	RegExp.h,

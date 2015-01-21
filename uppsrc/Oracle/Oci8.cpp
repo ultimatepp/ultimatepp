@@ -511,7 +511,7 @@ bool OCI8Connection::BulkExecute(const char *stmt, const Vector< Vector<Value> >
 
 		if(sql_type == 0)
 			sql_type = SQLT_STR;
-		unsigned sum_len = nrows * max_row_len;
+		int sum_len = nrows * max_row_len;
 		Item& p = param.Add(new Item(oci8));
 		p.Alloc(nrows, session->envhp, sql_type, sum_len, 0);
 		p.dyna_vtype = VOID_V;
@@ -554,7 +554,7 @@ bool OCI8Connection::BulkExecute(const char *stmt, const Vector< Vector<Value> >
 				break;
 			}
 			case SQLT_DAT: {
-				ASSERT(sum_len >= nrows * 7u);
+				ASSERT(sum_len >= nrows * 7);
 				byte *datp = p.Data();
 				for(int r = 0; r < nrows; r++) {
 					Time d = (param_rows[r].GetCount() > a ? (Time)param_rows[r][a] : (Time)Null);
@@ -578,7 +578,7 @@ bool OCI8Connection::BulkExecute(const char *stmt, const Vector< Vector<Value> >
 					memcpy(datp, s, rawlen);
 					datp += max_row_len;
 				}
-				ASSERT((unsigned)(datp - (byte *)p.Data()) <= sum_len);
+				ASSERT((int)(datp - (byte *)p.Data()) <= sum_len);
 				break;
 			}
 			default: {
