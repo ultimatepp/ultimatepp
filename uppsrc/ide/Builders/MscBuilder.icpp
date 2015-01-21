@@ -253,7 +253,8 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			for(int j = 0; j < srcfile.GetCount(); j++) {
 				String fn = srcfile[j];
 				String ext = ToLower(GetFileExt(fn));
-				if(ext == ".c" || ext == ".cpp" || ext == ".cc" || ext == ".cxx" || ext == ".rc" || ext == ".brc") {
+				if(findarg(ext, ".c", ".cpp", ".cc", ".cxx", ".rc", ".brc") >= 0 ||
+				   (!release && blitz && ext == ".icpp")) {
 					sfile.Add(fn);
 					soptions.Add(gop);
 					optimize.Add(speed);
