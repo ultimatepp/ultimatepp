@@ -93,6 +93,7 @@ void PackageEditor::SaveOptions() {
 		actual.accepts = Split(accepts.GetText().ToString(), ' ');
 		actual.optimize_speed = optimize_speed;
 		actual.noblitz = noblitz;
+		actual.nowarnings = nowarnings;
 		if(IsActiveFile()) {
 			Package::File& f = ActiveFile();
 			f.optimize_speed = optimize_speed_file;
@@ -118,6 +119,7 @@ void PackageEditor::Empty()
 	FileEmpty();
 	charset.Disable();
 	noblitz.Disable();
+	nowarnings.Disable();
 	description.Disable();
 	ink.Disable();
 	italic.Disable();
@@ -179,6 +181,7 @@ void PackageEditor::PackageCursor()
 		charset <<= (int)actual.charset;
 		optimize_speed = actual.optimize_speed;
 		noblitz = actual.noblitz;
+		nowarnings = actual.nowarnings;
 		String s;
 		for(int i = 0; i < actual.accepts.GetCount(); i++) {
 			if(i) s << ' ';
@@ -191,6 +194,7 @@ void PackageEditor::PackageCursor()
 		italic.Enable();
 		charset.Enable();
 		noblitz.Enable();
+		nowarnings.Enable();
 		optimize_speed.Enable();
 		accepts.Enable();
 		option.Enable();
@@ -592,6 +596,7 @@ PackageEditor::PackageEditor()
 	accepts <<=
 	charset <<= THISBACK(SaveOptions);
 	noblitz <<=
+	nowarnings <<=
 	optimize_speed <<=
 	optimize_speed_file <<=
 	pch_file <<=
