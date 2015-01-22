@@ -290,7 +290,7 @@ bool DocReport::Print0(int i, const char *_name) {
 		::GlobalUnlock(dlg.hDevMode);
 	}
 	dlg.Flags = PD_ALLPAGES|PD_DISABLEPRINTTOFILE|PD_NOSELECTION|PD_RETURNDC|
-		        PD_HIDEPRINTTOFILE;
+		        PD_HIDEPRINTTOFILE|PD_USEDEVMODECOPIESANDCOLLATE;
 	dlg.nFromPage = i + 1;
 	dlg.nToPage = i + 1;
 	dlg.nMinPage = 1;
@@ -304,16 +304,14 @@ bool DocReport::Print0(int i, const char *_name) {
 		Size sz = w.GetPageSize();
 		int x = (sz.cx - pgsz.cx) / 2;
 		int y = (sz.cy - pgsz.cy) / 2;
-		for(int c = 0; c < ((dlg.Flags & PD_COLLATE) ? dlg.nCopies : 1); c++)
-			for(i = dlg.nFromPage - 1; i <= dlg.nToPage - 1; i++)
-				for(int c = 0; c < ((dlg.Flags & PD_COLLATE) ? 1 : dlg.nCopies); c++) {
-					LLOG("Printing Page " << i << " gdi: " << GdiGetFreeSpace());
-					Drawing iw = GetPage(i);
-					Size sz = iw.GetSize();
-					w.StartPage();
-					w.DrawDrawing(x, y, sz.cx, sz.cy, iw);
-					w.EndPage();
-				}
+		for(i = dlg.nFromPage - 1; i <= dlg.nToPage - 1; i++) {
+			LLOG("Printing Page " << i << " gdi: " << GdiGetFreeSpace());
+			Drawing iw = GetPage(i);
+			Size sz = iw.GetSize();
+			w.StartPage();
+			w.DrawDrawing(x, y, sz.cx, sz.cy, iw);
+			w.EndPage();
+		}
 	}
 	else
 		dlg.nToPage = (WORD)-1;
