@@ -138,6 +138,10 @@ void CairoGet(ImageBuffer& b, Size isz, cairo_surface_t *surface, cairo_surface_
 
 void ImageDraw::FetchStraight(ImageBuffer& b) const
 {
+	ImageDraw *m = const_cast<ImageDraw *>(this);
+	m->FlushText();
+	if(alpha_surface)
+		m->alpha.FlushText();
 	CairoGet(b, isz, surface, alpha_surface);
 }
 

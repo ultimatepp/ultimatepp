@@ -8,7 +8,7 @@ uses
 	RichEdit;
 
 file
-	IconDes.h options PCH,
+	IconDes.h options(BUILDER_OPTION) PCH,
 	IconDes.key,
 	IconDraw.cpp,
 	AlphaCtrl.cpp,
