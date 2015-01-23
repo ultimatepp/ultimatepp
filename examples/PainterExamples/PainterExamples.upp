@@ -39,6 +39,5 @@ file
 
 mainconfig
 	"" = "GUI",
-	"" = "GUI";,
-	"" = "GUI .NOGTK";
+	"" = "GUI";
 
