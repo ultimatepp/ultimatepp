@@ -20,6 +20,7 @@ CONSOLE_APP_MAIN
 		{ "www.google.com", "</script>" },
 		{ "http://wattsupwiththat.com/", "</html>" },
 		{ "http://www.rcalbum.com", "</html>" },
+		{ "www.cekas.cz", "<meta http-equiv" },
 	};
 	for(int nd = 0; nd < 1; nd++)
 		for(int i = 0; i < __countof(x); i++) {
