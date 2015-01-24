@@ -27,9 +27,9 @@ bool SqlPerformScript(SqlSession& session, Stream& script,
 	bool esc = false;
 	while(!script.IsEof()) {
 		int c = script.Term();
-		if(IsAlpha(c)) {
+		if(IsAlpha(c) || c == '_') {
 			String id;
-			while(IsAlpha(script.Term())) {
+			while(IsAlNum(script.Term()) || script.Term() == '_') {
 				c = script.Get();
 				stmt.Cat(c);
 				id.Cat(ToUpper(c));
