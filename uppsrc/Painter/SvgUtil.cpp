@@ -205,7 +205,7 @@ Array<double> GetTransformArgs(String str, const char *command) {
 	if ((pos = str.Find(command)) < 0) 
 		return args;
 	
-	pos += strlen(command);
+	pos += (int)strlen(command);
 	pos = 1 + str.Find('(', pos);
 	
 	while (true) {
