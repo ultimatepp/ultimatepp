@@ -1,6 +1,6 @@
 #include "Debuggers.h"
 
-#define PROMPT "<\xcd\xeb>"
+#define PROMPT "<wksuiherk" "bnuiohnsfoptmb>"
 
 bool Gdb::Result(String& result, const String& s)
 {
@@ -87,81 +87,28 @@ void Gdb::SetDisas(const String& text)
 	StringStream ss(text);
 	while(!ss.IsEof()) {
 		String ln = ss.GetLine();
-		CParser p(ln);
-		try {
-			if(p.Char2('0', 'x')) {
-				adr_t adr = p.IsNumber(16) ? (adr_t)p.ReadNumber64(16) : 0;
-				String code;
-				String args;
-				int level = 0;
-				while(!p.IsEof()) {
-					if(p.Char(':') && level == 0)
-						break;
-					else
-					if(p.Char('<'))
-						level++;
-					else
-					if(p.Char('>'))
-						level--;
-					else
-						p.GetChar();
-				}
-				p.Spaces();
-				if(p.IsId()) {
-					code = p.ReadId();
-					for(;;) {
-						if(p.Spaces())
-							args.Cat(' ');
-						if(p.IsEof())
-							break;
-						if(p.Char2('0', 'x')) {
-							adr_t adr = 0;
-							if(p.IsNumber(16))
-								adr = (adr_t)p.ReadNumber64(16);
-							String fname;
-							bool   usefname = false;
-							if(p.Char('<')) {
-								const char *b = p.GetPtr();
-								int level = 1;
-								usefname = true;
-								while(!p.IsEof()) {
-									if(p.Char('>') && --level == 0) {
-										fname = String(b, p.GetPtr() - 1);
-										break;
-									}
-									if(p.Char('<'))
-										level++;
-									if(p.Char('+'))
-										usefname = false;
-									else {
-										p.GetChar();
-										p.Spaces();
-									}
-								}
-							}
-							args << (usefname ? fname : Sprintf("0x%X", adr));
-							disas.AddT(adr);
-						}
-						else
-						if(p.Id("DWORD"))
-							args.Cat("dword ");
-						else
-						if(p.Id("WORD"))
-							args.Cat("word ");
-						else
-						if(p.Id("BYTE"))
-							args.Cat("byte ");
-						else
-						if(p.Id("PTR"))
-							args.Cat("ptr ");
-						else
-							args.Cat(p.GetChar());
-					}
-				}
-				disas.Add(adr, code, args);
-			}
+		const char *s = ln;
+		while(*s && !IsDigit(*s))
+			s++;
+		adr_t adr = 0;
+		String code, args;
+		if(s[0] == '0' && ToLower(s[1]) == 'x')
+			adr = (adr_t)ScanInt64(s + 2, NULL, 16);
+		int q = ln.Find(">:");
+		if(q >= 0) {
+			s = ~ln + q + 2;
+			while(IsSpace(*s))
+				s++;
+			while(*s && !IsSpace(*s))
+				code.Cat(*s++);
+			while(IsSpace(*s))
+				s++;
+			args = s;
+			q = args.Find("0x");			
+			if(q >= 0)
+				disas.AddT(ScanInt(~args + q + 2, NULL, 16));
+			disas.Add(adr, code, args);
 		}
-		catch(CParser::Error) {}
 	}
 }
 

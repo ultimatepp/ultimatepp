@@ -136,6 +136,8 @@ BufferPainter::BufferPainter(ImageBuffer& ib, int mode)
 	pathattr = attr;
 	
 	gradientn = Null;
+	
+	dopreclip = false;
 }
 
 END_UPP_NAMESPACE
