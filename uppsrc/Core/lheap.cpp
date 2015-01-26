@@ -265,6 +265,8 @@ bool   Heap::LTryRealloc(void *ptr, size_t newsize)
 	}
 	if(bh->heap != this) // if another thread's heap, do not bother to be smart
 		return newsize <= bh->size;
+	if(bh->size >= newsize)
+		return true;
 	LLOG("--- TryRealloc " << asString(bh->size));
 	Header *n = bh->Next();
 	if(n->free && newsize <= (size_t)n->size + (size_t)bh->size) {
