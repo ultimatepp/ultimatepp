@@ -100,7 +100,7 @@ String Dbg::Cmd(const char *command)
 	Lock();
 	if(command) {
 		LLOG("Cmd: " << command);
-		dbg->Write(String(command) + "\n"); _DBG_ // TRC 04/10/11: must not use \r\n, LINUX doesn't like it
+		dbg->Write(String(command) + "\n");
 		PutVerbose(command);
 	}
 	String result;

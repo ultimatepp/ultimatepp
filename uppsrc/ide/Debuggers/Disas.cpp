@@ -116,8 +116,6 @@ void DbgDisas::Clear()
 
 void  DbgDisas::Add(adr_t adr, const String& code, const String& args, const String& bytes)
 {
-	DDUMP(code);
-	DDUMP(args);
 	if(adr < low)
 		low = adr;
 	if(adr > high)
