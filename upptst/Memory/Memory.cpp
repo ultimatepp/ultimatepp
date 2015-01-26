@@ -11,6 +11,8 @@ void Test(int ini, int re)
 	RDUMP(GetMemoryBlockSize(h));
 	RDUMP(TryRealloc(h, re));
 	RDUMP(GetMemoryBlockSize(h));
+	
+	delete[] h;
 }
 
 CONSOLE_APP_MAIN
