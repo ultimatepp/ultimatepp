@@ -253,6 +253,39 @@ void Heap::LFree(void *ptr) {
 	}
 }
 
+bool   Heap::LTryRealloc(void *ptr, size_t newsize)
+{
+	DLink  *b = (DLink *)ptr;
+	Header *bh = b->GetHeader();
+	if(bh->size == 0) {
+		Mutex::Lock __(mutex);
+		ASSERT(((dword)(uintptr_t)bh & 4095) == BIGHDRSZ - sizeof(Header));
+		BigHdr *h = (BigHdr *)((byte *)ptr - BIGHDRSZ);
+		return newsize <= h->size;
+	}
+	if(bh->heap != this) // if another thread's heap, do not bother to be smart
+		return newsize <= bh->size;
+	LLOG("--- TryRealloc " << asString(bh->size));
+	Header *n = bh->Next();
+	if(n->free && newsize <= n->size + bh->size + sizeof(Header)) {
+		n->GetBlock()->Unlink();
+		bh->size += n->size + sizeof(Header);
+		n->Next()->prev = bh->size;
+		return true;
+	}
+	return false;
+}
+
+size_t Heap::LGetBlockSize(void *ptr) {
+	DLink  *b = (DLink *)ptr;
+	Header *bh = b->GetHeader();
+	if(bh->size == 0) {
+		BigHdr *h = (BigHdr *)((byte *)ptr - BIGHDRSZ);
+		return h->size;
+	}
+	return bh->size;
+}
+
 #endif
 
 END_UPP_NAMESPACE
