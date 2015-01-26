@@ -16,7 +16,7 @@ file
 	BufferPainter.h,
 	Xform2D.cpp,
 	Approximate.cpp,
-	Stroker.cpp,
+	Stroker.cpp optimize_speed,
 	Dasher.cpp,
 	Transformer.cpp,
 	Interpolator.cpp optimize_speed,

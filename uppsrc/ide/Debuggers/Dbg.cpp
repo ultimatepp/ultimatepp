@@ -1,6 +1,6 @@
 #include "Debuggers.h"
 
-#define LLOG(x) // LOG(x)
+#define LLOG(x)  LOG(x)
 
 #define IMAGECLASS DbgImg
 #define IMAGEFILE  <ide/Debuggers/Debuggers.iml>
@@ -100,27 +100,31 @@ String Dbg::Cmd(const char *command)
 	Lock();
 	if(command) {
 		LLOG("Cmd: " << command);
-		dbg->Write(String(command) + "\n"); // TRC 04/10/11: must not use \r\n, LINUX doesn't like it
+		dbg->Write(String(command) + "\n"); _DBG_ // TRC 04/10/11: must not use \r\n, LINUX doesn't like it
 		PutVerbose(command);
 	}
 	String result;
-	int sleep = 0;
+	int ms0 = msecs();
 	while(dbg) {
 		String s;
+		LLOG("About to read");
 		if(!dbg->Read(s)) {
-			LLOG(result);
+			LLOG("Read: " << result);
 			PutVerbose(result);
 			PutVerbose("Debugger terminated");
 			break;
 		}
 		if(!s.IsEmpty() && Result(result, s)) {
-			LLOG(result);
+			LLOG("Processed " << result);
 			PutVerbose(result);
 			break;
 		}
-		GuiSleep(sleep);
-		Ctrl::ProcessEvents();
-		sleep = min(20, sleep + max(1, 3 * sleep / 2));
+		LLOG("Unprocessed Result length: " << s);
+		GuiSleep(0);
+		if(ms0 != msecs()) {
+			ProcessEvents();
+			ms0 = msecs();
+		}
 		if(TTYQuit())
 			Stop();
 	}

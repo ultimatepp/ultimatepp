@@ -1,15 +1,18 @@
 #include "Painter.h"
 
-#define LLOG(x) // DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 NAMESPACE_UPP
 
-void Stroker::Init(double width, double miterlimit, double tolerance, int _linecap, int _linejoin)
+void Stroker::Init(double width, double miterlimit, double tolerance, int _linecap, int _linejoin, const Rect& preclip_)
 {
 	linecap = _linecap;
 	linejoin = _linejoin;
+	preclip = preclip_;
 	w2 = width / 2;
 	qmiter = miterlimit * w2;
+	if(!IsNull(preclip))
+		tw = 4 * max(qmiter, w2); // preclipping width
 	qmiter *= qmiter;
 	fid = acos(1 - tolerance / w2);
 	p0 = p1 = p2 = Null;
@@ -33,6 +36,14 @@ void Stroker::Round(const Pointf& p, const Pointf& v1, const Pointf& v2, double 
 		PutLine(Polar(p, r, a1));
 		a1 -= fid;
 	}
+}
+
+inline bool Stroker::PreClipped(Pointf p2, Pointf p3)
+{
+	return p2.x + tw < preclip.left && p3.x + tw < preclip.left ||
+	       p2.x - tw > preclip.right && p3.x - tw > preclip.right ||
+           p2.y + tw < preclip.top && p3.y + tw < preclip.top ||
+	       p2.y - tw > preclip.bottom && p3.y - tw > preclip.bottom;
 }
 
 void Stroker::Line(const Pointf& p3)
@@ -70,50 +81,54 @@ void Stroker::Line(const Pointf& p3)
 	Pointf a2 = p2 + o2;
 	Pointf b2 = p2 - o2;
 
-	double d = v1.y * v2.x - v2.y * v1.x;
-	if(d > 1e-30) {
-		Pointf ts = a1 + v1 * (v2.y * (a1.x - a2.x) - v2.x * (a1.y - a2.y)) / d;
-		PutMove(a1);
-		if(linejoin != LINEJOIN_MITER || SquaredDistance(ts, p2) > qmiter) {
+	if(IsNull(preclip) || !PreClipped(p2, p3)) {
+		double d = v1.y * v2.x - v2.y * v1.x;
+		if(d > 1e-30) {
+			Pointf ts = a1 + v1 * (v2.y * (a1.x - a2.x) - v2.x * (a1.y - a2.y)) / d;
+			PutMove(a1);
+			if(linejoin != LINEJOIN_MITER || SquaredDistance(ts, p2) > qmiter) {
+				PutLine(a1 + v1);
+				if(linejoin == LINEJOIN_ROUND)
+					Round(p2, o1, o2, w2);
+			}
+			else
+				PutLine(ts);
+			PutLine(a2);
+			PutMove(b2);
+			PutLine(p2);
+			PutLine(b1 + v1);
+			PutLine(b1);
+		}
+		else
+		if(d < -1e-30) {
+			Pointf ts = b2 + v2 * (v1.y * (a2.x - a1.x) - v1.x * (a2.y - a1.y)) / d;
+			PutMove(b2);
+			if(linejoin != LINEJOIN_MITER || SquaredDistance(ts, p2) > qmiter) {
+				if(linejoin == LINEJOIN_ROUND)
+					Round(p2, -o2, -o1, w2);
+				PutLine(b1 + v1);
+			}
+			else
+				PutLine(ts);
+			PutLine(b1);
+			PutMove(a1);
+			PutLine(a1 + v1);
+			PutLine(p2);
+			PutLine(a2);
+		}
+		else {
+			PutMove(a1);
 			PutLine(a1 + v1);
 			if(linejoin == LINEJOIN_ROUND)
 				Round(p2, o1, o2, w2);
+			PutLine(a2);
+			PutMove(b2);
+			PutLine(b1 + v1);
+			PutLine(b1);
 		}
-		else
-			PutLine(ts);
-		PutLine(a2);
-		PutMove(b2);
-		PutLine(p2);
-		PutLine(b1 + v1);
-		PutLine(b1);
 	}
 	else
-	if(d < -1e-30) {
-		Pointf ts = b2 + v2 * (v1.y * (a2.x - a1.x) - v1.x * (a2.y - a1.y)) / d;
-		PutMove(b2);
-		if(linejoin != LINEJOIN_MITER || SquaredDistance(ts, p2) > qmiter) {
-			if(linejoin == LINEJOIN_ROUND)
-				Round(p2, -o2, -o1, w2);
-			PutLine(b1 + v1);
-		}
-		else
-			PutLine(ts);
-		PutLine(b1);
-		PutMove(a1);
-		PutLine(a1 + v1);
-		PutLine(p2);
-		PutLine(a2);
-	}
-	else {
-		PutMove(a1);
-		PutLine(a1 + v1);
-		if(linejoin == LINEJOIN_ROUND)
-			Round(p2, o1, o2, w2);
-		PutLine(a2);
-		PutMove(b2);
-		PutLine(b1 + v1);
-		PutLine(b1);
-	}
+		LLOG("PRECLIPPED " << p2 << " - " << p3);
 	p1 = p2;
 	v1 = v2;
 	o1 = o2;
@@ -125,6 +140,11 @@ void Stroker::Line(const Pointf& p3)
 void Stroker::Cap(const Pointf& p, const Pointf& v, const Pointf& o,
                   const Pointf& a, const Pointf& b)
 {
+	if(!IsNull(preclip) &&
+	   (p.x + tw < preclip.left || p.x - tw > preclip.right || p.y + tw < preclip.top || p.y - tw > preclip.bottom)) {
+	    LLOG("Cap was preclipped out");
+	    return;
+	}
 	PutMove(a);
 	if(linecap == LINECAP_SQUARE) {
 		Pointf nv = Orthogonal(o);
@@ -140,13 +160,18 @@ void Stroker::Finish()
 {
 	if(IsNull(p1) || IsNull(p2) || IsNull(p0))
 		return;
+	LLOG("-- Finish " << p1 << " " << p2);
 	if(p2 == p0)
 		Line(p0 + v0);
 	else {
-		PutMove(a1);
-		PutLine(a1 + v1);
-		PutMove(b1 + v1);
-		PutLine(b1);
+		if(IsNull(preclip) || !PreClipped(p1, p2)) {
+			PutMove(a1);
+			PutLine(a1 + v1);
+			PutMove(b1 + v1);
+			PutLine(b1);
+		}
+		else
+			LLOG("FINISH PRECLIPPED " << p1 << " - " << p2);
 		Cap(p0, v0, o0, b0, a0);
 		Cap(p2, -v1, -o1, a1 + v1, b1 + v1);
 	}

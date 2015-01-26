@@ -31,20 +31,23 @@ private:
 	double w2;
 	double qmiter;
 	double fid;
+	double tw;
 
 	Pointf p0, v0, o0, a0, b0;
 	Pointf p1, v1, o1, a1, b1;
 	Pointf p2;
 	int    linecap;
 	int    linejoin;
+	Rectf  preclip;
 	
 	void   Finish();
 	void   Round(const Pointf& p, const Pointf& v1, const Pointf& v2, double r);
 	void   Cap(const Pointf& p0, const Pointf& v0, const Pointf& o0,
 	           const Pointf& a0, const Pointf& b0);
+	bool   PreClipped(Pointf p2, Pointf p3);
 
 public:	
-	void Init(double width, double miterlimit, double tolerance, int linecap, int linejoin);
+	void Init(double width, double miterlimit, double tolerance, int linecap, int linejoin, const Rect& preclip);
 };
 
 class Dasher : public LinearPathFilter {
@@ -150,7 +153,8 @@ public:
 
 	void LineRaw(int x1, int y1, int x2, int y2);
 	
-	void SetClip(const Rectf& rect);
+	void  SetClip(const Rectf& rect);
+	Rectf GetClip() const                     { return cliprect; }
 
 	int  MinY() const                         { return min_y; }
 	int  MaxY() const                         { return max_y; }
@@ -318,6 +322,7 @@ private:
 	int                        mode;
 	Buffer<int16>              subpixel;
 	int                        render_cx;
+	bool                       dopreclip;
 
 	Attr                       attr;
 	Attr                       pathattr;
@@ -370,6 +375,8 @@ private:
 public:
 	ImageBuffer&       GetBuffer()                             { return ib; }
 	const ImageBuffer& GetBuffer() const                       { return ib; }
+	
+	BufferPainter&     PreClip(bool b = true)                  { dopreclip = b; return *this; }
 
 	BufferPainter(ImageBuffer& ib, int mode = MODE_ANTIALIASED);
 };

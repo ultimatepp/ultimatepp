@@ -56,7 +56,24 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, SpanSource *ss, con
 	}
 	else
 	if(width > 0) {
-		stroker.Init(width, pathattr.miter_limit, tolerance, pathattr.cap, pathattr.join);
+		Rectf preclip = Null;
+		if(dopreclip) {
+			preclip = rasterizer.GetClip();
+			Xform2D imx = Inverse(pathattr.mtx);
+			Pointf tl, br, a;
+			tl = br = imx.Transform(preclip.TopLeft());
+			a = imx.Transform(preclip.TopRight());
+			tl = min(a, tl);
+			br = max(a, br);
+			a = imx.Transform(preclip.BottomLeft());
+			tl = min(a, tl);
+			br = max(a, br);
+			a = imx.Transform(preclip.BottomRight());
+			tl = min(a, tl);
+			br = max(a, br);
+			preclip = Rectf(tl, br);
+		}
+		stroker.Init(width, pathattr.miter_limit, tolerance, pathattr.cap, pathattr.join, preclip);
 		stroker.target = g;
 		if(pathattr.dash.GetCount()) {
 			dasher.Init(pathattr.dash, pathattr.dash_start);
