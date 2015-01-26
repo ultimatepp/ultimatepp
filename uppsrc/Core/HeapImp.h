@@ -151,7 +151,7 @@ struct Heap {
 
 	void   LinkFree(DLink *b, int size);
 	DLink *AddChunk(int reqsize);
-	void  *DivideBlock(DLink *b, int size, int ii);
+	void  *DivideBlock(DLink *b, int size);
 	void  *TryLAlloc(int ii, size_t size);
 	void  *LAlloc(size_t& size);
 	void   LFree(void *ptr);
