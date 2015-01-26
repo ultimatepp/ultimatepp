@@ -155,6 +155,8 @@ struct Heap {
 	void  *TryLAlloc(int ii, size_t size);
 	void  *LAlloc(size_t& size);
 	void   LFree(void *ptr);
+	size_t LGetBlockSize(void *ptr);
+	bool   LTryRealloc(void *ptr, size_t newsize);
 	void   Make(MemoryProfile& f);
 
 	static void Shrink();
@@ -163,13 +165,16 @@ struct Heap {
 	void Shutdown();
 	static void AuxFinalCheck();
 
-	void *Alloc(size_t sz);
-	void *AllocSz(size_t& sz);
-	void  Free(void *ptr);
-	void *Alloc32();
-	void  Free32(void *ptr);
-	void *Alloc48();
-	void  Free48(void *ptr);
+	void  *Alloc(size_t sz);
+	void  *AllocSz(size_t& sz);
+	void   Free(void *ptr);
+	size_t GetBlockSize(void *ptr);
+	void  *Alloc32();
+	void   Free32(void *ptr);
+	void  *Alloc48();
+	void   Free48(void *ptr);
+
+	bool   TryRealloc(void *ptr, size_t newsize);
 };
 
 extern thread__ Heap heap;

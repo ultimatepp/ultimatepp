@@ -501,6 +501,9 @@ int   MemoryUsedKb();
 
 void  MemoryLimitKb(int kb);
 
+size_t GetMemoryBlockSize(void *ptr);
+bool   TryRealloc(void *ptr, size_t newsize);
+
 #ifdef MEMORY_SHRINK
 void  MemoryShrink();
 #endif
@@ -566,6 +569,9 @@ inline int    MemoryUsedKb() { return 0; }
 
 inline void  MemoryIgnoreLeaksBegin() {}
 inline void  MemoryIgnoreLeaksEnd() {}
+
+inline size_t GetMemoryBlockSize(void *ptr) { return 0; }
+inline bool   TryRealloc(void *ptr, size_t newsize) { return false; }
 
 struct MemoryProfile {
 	int empty__;

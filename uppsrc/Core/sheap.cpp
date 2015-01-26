@@ -228,6 +228,30 @@ void Heap::Free(void *ptr)
 		LFree(ptr);
 }
 
+size_t Heap::GetBlockSize(void *ptr)
+{
+	if(!ptr) return 0;
+	LLOG("GetBlockSize " << ptr);
+	if((((dword)(uintptr_t)ptr) & 8) == 0) {
+		Page *page = (Page *)((uintptr_t)ptr & ~(uintptr_t)4095);
+		int k = page->klass;
+		return Ksz(k);
+	}
+	return LGetBlockSize(ptr);
+}
+
+bool Heap::TryRealloc(void *ptr, size_t newsize)
+{
+	if(!ptr) return 0;
+	LLOG("GetBlockSize " << ptr);
+	if((((dword)(uintptr_t)ptr) & 8) == 0) {
+		Page *page = (Page *)((uintptr_t)ptr & ~(uintptr_t)4095);
+		int k = page->klass;
+		return newsize <= Ksz(k);
+	}
+	return LTryRealloc(ptr, newsize);
+}
+
 void Heap::FreeDirect(void *ptr)
 {
 	LLOG("Free Direct " << ptr);
@@ -320,6 +344,12 @@ void  MemoryFree_(void *ptr)
 {
 	heap.Free(ptr);
 }
+
+size_t GetMemoryBlockSize_(void *ptr)
+{
+	return heap.GetBlockSize(ptr);
+}
+
 #else
 void *MemoryAlloc(size_t sz)
 {
@@ -334,6 +364,16 @@ void *MemoryAllocSz(size_t& sz)
 void  MemoryFree(void *ptr)
 {
 	heap.Free(ptr);
+}
+
+size_t GetMemoryBlockSize(void *ptr)
+{
+	return heap.GetBlockSize(ptr);
+}
+
+bool   TryRealloc(void *ptr, size_t size)
+{
+	return heap.TryRealloc(ptr, size);
 }
 
 void *MemoryAlloc32()
