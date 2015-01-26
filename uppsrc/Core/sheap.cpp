@@ -247,7 +247,7 @@ bool Heap::TryRealloc(void *ptr, size_t newsize)
 	if((((dword)(uintptr_t)ptr) & 8) == 0) {
 		Page *page = (Page *)((uintptr_t)ptr & ~(uintptr_t)4095);
 		int k = page->klass;
-		return newsize <= Ksz(k);
+		return newsize <= (size_t)Ksz(k);
 	}
 	return LTryRealloc(ptr, newsize);
 }

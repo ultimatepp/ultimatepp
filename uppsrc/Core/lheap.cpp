@@ -93,7 +93,7 @@ Heap::DLink *Heap::AddChunk(int reqsize)
 }
 
 inline
-void *Heap::DivideBlock(DLink *b, int size, int ii)
+void *Heap::DivideBlock(DLink *b, int size)
 {
 	b->Unlink();
 	Header *bh = b->GetHeader();
@@ -149,7 +149,7 @@ void *Heap::TryLAlloc(int ii, size_t size)
 	LLOG("TryLAlloc bin: " << asString(ii) << " size: " << asString(size));
 	while(ii < LBINS) {
 		if(freebin[ii] != freebin[ii]->next) {
-			void *ptr = DivideBlock(freebin[ii]->next, (int)size, ii);
+			void *ptr = DivideBlock(freebin[ii]->next, (int)size);
 			LLOG("TryLAlloc succeeded " << (void *)ptr);
 			ASSERT((size_t)ptr & 8);
 			return ptr;
@@ -201,7 +201,7 @@ void *Heap::LAlloc(size_t& size) {
 	DLink *n = AddChunk((int)size);
 	if(!n)
 		Panic("Out of memory!");
-	ptr = DivideBlock(n, (int)size, LBINS - 1);
+	ptr = DivideBlock(n, (int)size);
 	LLOG("LAlloc via AddChunk " << (void *)ptr);
 	ASSERT((size_t)ptr & 8);
 	return ptr;
@@ -267,8 +267,8 @@ bool   Heap::LTryRealloc(void *ptr, size_t newsize)
 		return newsize <= bh->size;
 	LLOG("--- TryRealloc " << asString(bh->size));
 	Header *n = bh->Next();
-	if(n->free && newsize <= n->size + bh->size + sizeof(Header)) {
-		n->GetBlock()->Unlink();
+	if(n->free && newsize <= (size_t)n->size + (size_t)bh->size) {
+		DivideBlock(n->GetBlock(), newsize - n->size);
 		bh->size += n->size + sizeof(Header);
 		n->Next()->prev = bh->size;
 		return true;
