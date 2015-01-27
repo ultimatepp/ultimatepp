@@ -39,6 +39,7 @@ private:
 	int    linecap;
 	int    linejoin;
 	Rectf  preclip;
+	int    lines;
 	
 	void   Finish();
 	void   Round(const Pointf& p, const Pointf& v1, const Pointf& v2, double r);
