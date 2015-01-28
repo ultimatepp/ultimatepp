@@ -155,7 +155,7 @@ void Stroker::Finish()
 	if(IsNull(p1) || IsNull(p2) || IsNull(p0))
 		return;
 	LLOG("-- Finish " << p1 << " " << p2 << ", lines " << lines);
-	if(lines == 1 && PreClipped(p1, p2)) {
+	if(lines == 1 && !IsNull(preclip) && PreClipped(p1, p2)) {
 		LLOG("FINISH PRECLIPPED " << p1 << " - " << p2);
 		lines = 0;
 		return;
