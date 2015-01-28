@@ -11,6 +11,8 @@ void BufferPainter::ClearPath()
 	current = move = Null;
 	ccontrol = qcontrol = Pointf(0, 0);
 	ischar = false;
+	path_min = Pointf(DBL_MAX, DBL_MAX);
+	path_max = -path_min;
 }
 
 Pointf BufferPainter::PathPoint(const Pointf& p, bool rel)
@@ -21,6 +23,10 @@ Pointf BufferPainter::PathPoint(const Pointf& p, bool rel)
 	if(IsNull(current)) {
 		ClearPath();
 		pathattr = attr;
+	}
+	if(dopreclip) {
+		path_min = min(r, path_min);
+		path_max = max(r, path_max);
 	}
 	return r;
 }
