@@ -3,6 +3,8 @@
 
 NAMESPACE_UPP
 
+#define LLOG(x) // DLOG(x)
+
 void BufferPainter::ClearOp(const RGBA& color)
 {
 	UPP::Fill(~ib, color, ib.GetLength());
@@ -43,6 +45,30 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, SpanSource *ss, con
 	bool regular = pathattr.mtx.IsRegular() && width < 0 && !ischar;
 	double tolerance;
 	LinearPathConsumer *g = &rasterizer;
+	Rectf preclip = Null;
+	if(dopreclip && width != ONPATH) {
+		preclip = rasterizer.GetClip();
+		Xform2D imx = Inverse(pathattr.mtx);
+		Pointf tl, br, a;
+		tl = br = imx.Transform(preclip.TopLeft());
+		a = imx.Transform(preclip.TopRight());
+		tl = min(a, tl);
+		br = max(a, br);
+		a = imx.Transform(preclip.BottomLeft());
+		tl = min(a, tl);
+		br = max(a, br);
+		a = imx.Transform(preclip.BottomRight());
+		tl = min(a, tl);
+		br = max(a, br);
+		preclip = Rectf(tl, br);
+		
+		if(!preclip.Intersects(
+				Rectf(path_min, path_max).Inflated(max(width, 0.0) * (1 + attr.miter_limit)))) {
+			LLOG("Preclipped " << preclip << ", min " << path_min << ", max " << path_max);
+			current = Null;
+			return newclip;
+		}
+	}
 	if(regular)
 		tolerance = 0.3;
 	else {
@@ -56,23 +82,6 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, SpanSource *ss, con
 	}
 	else
 	if(width > 0) {
-		Rectf preclip = Null;
-		if(dopreclip) {
-			preclip = rasterizer.GetClip();
-			Xform2D imx = Inverse(pathattr.mtx);
-			Pointf tl, br, a;
-			tl = br = imx.Transform(preclip.TopLeft());
-			a = imx.Transform(preclip.TopRight());
-			tl = min(a, tl);
-			br = max(a, br);
-			a = imx.Transform(preclip.BottomLeft());
-			tl = min(a, tl);
-			br = max(a, br);
-			a = imx.Transform(preclip.BottomRight());
-			tl = min(a, tl);
-			br = max(a, br);
-			preclip = Rectf(tl, br);
-		}
 		stroker.Init(width, pathattr.miter_limit, tolerance, pathattr.cap, pathattr.join, preclip);
 		stroker.target = g;
 		if(pathattr.dash.GetCount()) {

@@ -340,6 +340,7 @@ private:
 	Path         path;
 	Pointf       current, ccontrol, qcontrol, move;
 	bool         ischar;
+	Pointf       path_min, path_max;
 	
 	Rasterizer   rasterizer;
 	Buffer<RGBA> span;
