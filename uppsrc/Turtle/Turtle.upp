@@ -5,7 +5,7 @@ uses
 	CtrlLib;
 
 file
-	Turtle.h options PCH,
+	Turtle.h,
 	Keys.h,
 	After.h,
 	Local.h,
