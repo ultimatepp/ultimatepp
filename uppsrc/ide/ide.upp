@@ -25,7 +25,7 @@ link(WIN32 MSC) /MAP;
 
 file
 	IDE readonly separator,
-	ide.h options(BUILDER_OPTION) PCH,
+	ide.h options PCH,
 	version.h,
 	UppDlg.h,
 	BaseDlg.cpp,
