@@ -51,8 +51,8 @@ monospace glyphs `-  the width of character is constant).&]
 [s5;:LineEdit`:`:GetGPos`(int`,int`)const: [@(0.0.255) int]_[* GetGPos]([@(0.0.255) int]_[*@3 l
 n], [@(0.0.255) int]_[*@3 cl])_[@(0.0.255) const]&]
 [s2;%% Returns `"graphical`" position of [%-*@3 ln] line and [%-*@3 cl] 
-column. This takes into account any tabulator characters int 
-the line.&]
+column. This takes into account any tabulator characters in the 
+line.&]
 [s3; &]
 [s4; &]
 [s5;:LineEdit`:`:GetMousePos`(Point`)const: [@(0.0.255) int]_[* GetMousePos]([_^Point^ Poin
@@ -84,6 +84,17 @@ oint]_[*@3 pos])_[@(0.0.255) const]&]
 [s2;%% Returns the position for given column and line [%-*@3 pos]. 
 Does not account for tabulators.&]
 [s3; &]
+[s4; &]
+[s5;:LineEdit`:`:SetRectSelection`(int`,int`): [@(0.0.255) void]_[* SetRectSelection]([@(0.0.255) i
+nt]_[*@3 l], [@(0.0.255) int]_[*@3 h])&]
+[s2;%% Sets rectangular selection.&]
+[s3;%% &]
+[s4; &]
+[s5;:LineEdit`:`:SetRectSelection`(const Rect`&`): [@(0.0.255) void]_[* SetRectSelection](
+[@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 rect])&]
+[s2;%% Same as SetRectSelection(GetGPos(rect.top, rect.left), GetGPos(rect.bottom, 
+rect.right));&]
+[s3;%% &]
 [s4; &]
 [s5;:LineEdit`:`:GetRectSelection`(`)const: [_^Rect^ Rect]_[* GetRectSelection]()_[@(0.0.255) c
 onst]&]
