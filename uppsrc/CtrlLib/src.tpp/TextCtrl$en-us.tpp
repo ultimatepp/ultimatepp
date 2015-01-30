@@ -109,7 +109,14 @@ from not`-modified to modified (`"dirty`") or back.&]
 [s4; &]
 [s5;:TextCtrl`:`:CachePos`(int`): [@(0.0.255) void]_[* CachePos]([@(0.0.255) int]_[*@3 pos])&]
 [s2;%% This is specific optimization hint to the widget saying that 
-following operations will be performed near after [%-*@3 pos]. 
+following operations will be performed near [%-*@3 pos]. Unlikely 
+to be used in the client code.&]
+[s3;%% &]
+[s4; &]
+[s5;:TextCtrl`:`:CacheLinePos`(int`): [@(0.0.255) void]_[* CacheLinePos]([@(0.0.255) int]_[*@3 l
+inei])&]
+[s2;%% This is specific optimization hint to the widget saying that 
+following operations will be performed near line [%-*@3 linei]. 
 Unlikely to be used in the client code.&]
 [s3;%% &]
 [s4; &]

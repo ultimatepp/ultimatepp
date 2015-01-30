@@ -72,6 +72,17 @@ Size LineEdit::GetFontSize() const {
 	return Size(max(fi['M'], fi['W']), fi.GetHeight());
 }
 
+void LineEdit::SetRectSelection(int anchor, int cursor)
+{
+	dorectsel = true;
+	SetSelection(anchor, cursor);
+	dorectsel = false;
+}
+
+void LineEdit::SetRectSelection(const Rect& rect)
+{
+	SetRectSelection(GetGPos(rect.top, rect.left), GetGPos(rect.bottom, rect.right));
+}
 
 Rect LineEdit::GetRectSelection() const
 {
@@ -102,6 +113,7 @@ int LineEdit::RemoveRectSelection()
 	WString txt;
 	for(int i = rect.top; i <= rect.bottom; i++) {
 		int l, h;
+		CacheLinePos(i);
 		GetRectSelection(rect, i, l, h);
 		WString s = GetWLine(i);
 		s.Remove(l - GetPos(i), h - l); 
@@ -123,6 +135,7 @@ WString LineEdit::CopyRectSelection()
 	Rect rect = GetRectSelection();
 	for(int i = rect.top; i <= rect.bottom; i++) {
 		int l, h;
+		CacheLinePos(i);
 		int pos = GetPos(i);
 		GetRectSelection(rect, i, l, h);
 		txt.Cat(GetWLine(i).Mid(l - pos, h - l));
@@ -142,6 +155,7 @@ int LineEdit::PasteRectSelection(const WString& s)
 	int n = 0;
 	for(int i = 0; i < cl.GetCount() && rect.top + i <= rect.bottom; i++) { 
 		int l, h;
+		CacheLinePos(i);
 		GetRectSelection(rect, i + rect.top, l, h);
 		Remove(l, h - l);
 		int nn = Insert(l, cl[i]);
@@ -165,7 +179,8 @@ void LineEdit::PasteColumn(const WString& text)
 		RemoveSelection();
 		Point p = t.TopLeft();
 		pos = cursor;
-		for(int i = 0; i < t.bottom - t.top + 1; i++) { 
+		for(int i = 0; i < t.bottom - t.top + 1; i++) {
+			CacheLinePos(i + p.y);
 			int l = GetGPos(i + p.y, p.x);
 			pos = l + Insert(l, cl[i % cl.GetCount()]);
 		}
@@ -175,6 +190,7 @@ void LineEdit::PasteColumn(const WString& text)
 		Point p = GetColumnLine(cursor);
 		pos = cursor;
 		for(int i = 0; i < cl.GetCount(); i++) { 
+			CacheLinePos(i + p.y);
 			int li = p.y + i;
 			if(li < line.GetCount()) {
 				int l = GetGPos(i + p.y, p.x);
@@ -481,20 +497,39 @@ void   LineEdit::Layout() {
 
 int   LineEdit::GetGPos(int ln, int cl) const {
 	ln = minmax(ln, 0, line.GetCount() - 1);
-	WString txt = line[ln];
-	const wchar *b = txt;
-	const wchar *e = txt.End();
-	const wchar *s = b;
+	const String& stxt = line[ln].text;
+	const char *s = stxt;
+	const char *e = stxt.End();
+	const char *b = s;
 	int gl = 0;
+	int wpos = 0;
 	while(s < e) {
 		if(*s == '\t')
 			gl = (gl + tabsize) / tabsize * tabsize;
 		else
-			gl += 1 + IsCJKIdeograph(*s);
+		if((byte)*s < 128)
+			gl++;
+		else {
+			WString txt = FromUtf8(s, int(e - s));
+			const wchar *b = txt;
+			const wchar *e = txt.End();
+			const wchar *s = b;
+			while(s < e) {
+				if(*s == '\t')
+					gl = (gl + tabsize) / tabsize * tabsize;
+				else
+					gl += 1 + IsCJKIdeograph(*s);
+				if(cl < gl) break;
+				s++;
+			}
+			wpos = int(s - b);
+			break;
+		}
 		if(cl < gl) break;
 		s++;
 	}
-	return GetPos(ln, int(s - b));
+	
+	return GetPos(ln, int(s - b) + wpos);
 }
 
 Point LineEdit::GetColumnLine(int pos) const {

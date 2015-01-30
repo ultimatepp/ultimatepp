@@ -87,10 +87,19 @@ int TextCtrl::RemoveRectSelection() { return 0; }
 WString TextCtrl::CopyRectSelection() { return Null; }
 int TextCtrl::PasteRectSelection(const WString& s) { return 0; }
 
-void   TextCtrl::CachePos(int pos) {
+void   TextCtrl::CachePos(int pos)
+{
 	int p = pos;
 	cline = GetLinePos(p);
 	cpos = pos - p;
+}
+
+void   TextCtrl::CacheLinePos(int linei)
+{
+	if(linei >= 0 && linei < GetLineCount()) {
+		cpos = GetPos(linei);
+		cline = linei;
+	}
 }
 
 int   TextCtrl::Load(Stream& in, byte charset) {
@@ -381,12 +390,15 @@ int   TextCtrl::GetPos(int ln, int lpos) const {
 WString TextCtrl::GetW(int pos, int size) const
 {
 	int i = GetLinePos(pos);
-	WString r;
+	WStringBuffer r;
 	for(;;) {
 		if(i >= line.GetCount()) break;
 		WString ln = line[i++];
 		int sz = min(ln.GetLength() - pos, size);
-		r.Cat(ln.Mid(pos, sz));
+		if(pos == 0 && sz == ln.GetLength())
+			r.Cat(ln);
+		else
+			r.Cat(ln.Mid(pos, sz));
 		size -= sz;
 		if(size == 0) break;
 #ifdef PLATFORM_WIN32
@@ -402,6 +414,29 @@ WString TextCtrl::GetW(int pos, int size) const
 
 String TextCtrl::Get(int pos, int size, byte charset) const
 {
+	if(charset == CHARSET_UTF8) {
+		int i = GetLinePos(pos);
+		StringBuffer r;
+		for(;;) {
+			if(i >= line.GetCount()) break;
+			int sz = min(line[i].GetLength() - pos, size);
+			const String& ln = line[i++].text;
+			if(pos == 0 && sz == ln.GetLength())
+				r.Cat(ln);
+			else
+				r.Cat(ln.ToWString().Mid(pos, sz).ToString());
+			size -= sz;
+			if(size == 0) break;
+	#ifdef PLATFORM_WIN32
+			r.Cat('\r');
+	#endif
+			r.Cat('\n');
+			size--;
+			if(size == 0) break;
+			pos = 0;
+		}
+		return r;
+	}
 	return FromUnicode(GetW(pos, size), charset);
 }
 
@@ -420,19 +455,35 @@ int TextCtrl::Insert0(int pos, const WString& txt) {
 	int i = GetLinePos(pos);
 	DirtyFrom(i);
 	int size = 0;
-	WString ln;
+
+	WStringBuffer lnb;
 	Vector<Ln> iln;
-	for(const wchar *s = txt; s < txt.End(); s++)
-		if(*s >= ' ' || *s == '\t') {
-			ln.Cat(*s);
+	const wchar *s = txt;
+	while(s < txt.End())
+		if(*s >= ' ') {
+			const wchar *b = s;
+			while(*s >= ' ') // txt is zero teminated...
+				s++;
+			int sz = int(s - b);
+			lnb.Cat(b, sz);
+			size += sz;
+		}
+		else
+		if(*s == '\t') {
+			lnb.Cat(*s);
 			size++;
+			s++;
 		}
 		else
 		if(*s == '\n') {
-			iln.Add(ln);
+			iln.Add(WString(lnb));
 			size++;
-			ln.Clear();
+			lnb.Clear();
+			s++;
 		}
+		else
+			s++;
+	WString ln = lnb;
 
 	WString l = line[i];
 	if(iln.GetCount()) {

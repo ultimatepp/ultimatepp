@@ -105,6 +105,7 @@ public:
 	Callback        WhenSel;
 
 	void   CachePos(int pos);
+	void   CacheLinePos(int linei);
 
 	enum { CHARSET_UTF8_BOM = 250 };
 	enum { LE_DEFAULT, LE_CRLF, LE_LF };
@@ -311,6 +312,8 @@ public:
 	Point  GetIndexLine(int pos) const;
 	int    GetIndexLinePos(Point pos) const;
 
+	void   SetRectSelection(int l, int h);
+	void   SetRectSelection(const Rect& rect);
 	Rect   GetRectSelection() const;
 	bool   GetRectSelection(const Rect& rect, int line, int& l, int &h);
 
