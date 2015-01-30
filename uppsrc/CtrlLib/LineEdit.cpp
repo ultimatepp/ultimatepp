@@ -290,8 +290,6 @@ void   LineEdit::Paint0(Draw& w) {
 	int fascent = font.Info().GetAscent();
 	Color showcolor = Blend(SColorLight, SColorHighlight);
 	int cursorline = GetLine(cursor);
-//	int dx[] = { fsz.cx };
-//	int dx2[] = { 2 * fsz.cx };
 	Highlight ih;
 	ih.ink = color[IsShowEnabled() ? INK_NORMAL : INK_DISABLED];
 	ih.paper = color[IsReadOnly() && showreadonly || !IsShowEnabled() ? PAPER_READONLY : PAPER_NORMAL];
