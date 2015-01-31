@@ -4,8 +4,8 @@ NAMESPACE_UPP
 
 #ifdef _MULTITHREADED
 
-#define LLOG(x)   //  LOG(x)
-#define LDUMP(x)  //  DUMP(x)
+#define LLOG(x)     // DLOG(x)
+#define LDUMP(x)    // DDUMP(x)
 
 CoWork::Pool& CoWork::pool()
 {
@@ -15,7 +15,7 @@ CoWork::Pool& CoWork::pool()
 
 CoWork::Pool::Pool()
 {
-	LLOG("CoWork INIT");
+	LLOG("CoWork INIT pool: " << CPU_Cores() + 2);
 	for(int i = 0; i < CPU_Cores() + 2; i++)
 		threads.Add().Run(callback1(&ThreadRun, i));
 }
