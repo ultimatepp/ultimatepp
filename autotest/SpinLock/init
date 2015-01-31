@@ -1,0 +1,4 @@
+#ifndef _SpinLock_icpp_init_stub
+#define _SpinLock_icpp_init_stub
+#include "Core/init"
+#endif

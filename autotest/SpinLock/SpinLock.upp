@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	SpinLock.cpp;
+
+mainconfig
+	"" = "SSE2 MT";
+
