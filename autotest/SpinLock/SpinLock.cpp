@@ -7,9 +7,8 @@ dword    data;
 
 void AddData()
 {
-	data_lock.Enter();
+	SpinLock::Lock __(data_lock);
 	data = data + 1;
-	data_lock.Leave();
 }
 
 CONSOLE_APP_MAIN
