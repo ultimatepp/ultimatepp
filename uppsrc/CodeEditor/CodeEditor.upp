@@ -7,7 +7,7 @@ uses
 	plugin/pcre;
 
 file
-	CodeEditor.h options PCH,
+	CodeEditor.h options(BUILDER_OPTION) PCH,
 	Syntax readonly separator,
 	Syntax.h,
 	hl_color.i,

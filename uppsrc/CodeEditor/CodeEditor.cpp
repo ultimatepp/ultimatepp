@@ -26,6 +26,10 @@ One<EditorSyntax> CodeEditor::GetSyntax(int line)
 			break;
 		}
 	line = min(line, GetLineCount());
+	if(line - ln > 10000) { // optimization hack for huge files
+		syntax = EditorSyntax::Create(highlight);
+		ln = line - 10000;
+	}
 	while(ln < line) {
 		WString l = GetWLine(ln);
 		CTIMING("ScanSyntax3");
