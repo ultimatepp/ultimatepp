@@ -270,7 +270,7 @@ bool   Heap::LTryRealloc(void *ptr, size_t newsize)
 	LLOG("--- TryRealloc " << asString(bh->size));
 	Header *n = bh->Next();
 	if(n->free && newsize <= (size_t)n->size + (size_t)bh->size) {
-		DivideBlock(n->GetBlock(), newsize - n->size);
+		DivideBlock(n->GetBlock(), int(newsize - n->size));
 		bh->size += n->size + sizeof(Header);
 		n->Next()->prev = bh->size;
 		return true;
