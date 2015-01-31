@@ -33,4 +33,26 @@ on the same SpinLock, the order of acquiring it is not specified).&]
 [s4; &]
 [s5;:SpinLock`:`:Leave`(`): [@(0.0.255) void]_[* Leave]()&]
 [s2;%% Releases lock.&]
-[s3; ]]
+[s3; &]
+[s3; &]
+[s0;*@7;4%% &]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 SpinLock`::Lock]]}}&]
+[s3; &]
+[s3; &]
+[s1;:SpinLock`:`:Lock`:`:class: [@(0.0.255)3 class][3 _][*3 Lock][3 _:_][@(0.0.255)3 private][3 _][*@3;3 N
+oCopy]&]
+[s2;%% This nested class automates calls to Mutex`::Enter / Mutex`::Leave 
+for block of code using C`+`+ constructor / destructor rules. 
+Using [* operator StaticMutex`::Mutex], it can be used with StaticMutex 
+as well.&]
+[s3; &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Constructor / Destructor detail]]}}&]
+[s3; &]
+[s5;:SpinLock`:`:Lock`:`:Lock`(SpinLock`&`): [* Lock]([_^SpinLock^ SpinLock][@(0.0.255) `&]_
+[*@3 s])&]
+[s2;%% Performs [%-*@3 s].Enter().&]
+[s3;%% &]
+[s4; &]
+[s5;:SpinLock`:`:Lock`:`:`~Lock`(`): [@(0.0.255) `~][* Lock]()&]
+[s2; [%% Performs ][*@3 s].Leave() where [*@3 s] is the constructor parameter.&]
+[s0; ]]

@@ -230,6 +230,7 @@ NTL_MOVEABLE(float);
 NTL_MOVEABLE(double);
 NTL_MOVEABLE(void *);
 NTL_MOVEABLE(const void *);
+NTL_MOVEABLE(SpinLock);
 
 #if defined(_NATIVE_WCHAR_T_DEFINED) || defined(COMPILER_GCC)
 NTL_MOVEABLE(wchar_t);
