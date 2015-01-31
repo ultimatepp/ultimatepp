@@ -474,6 +474,19 @@ public:
 
 inline bool IsMainThread() { return Thread::IsMain(); }
 
+struct SpinLock : Moveable<SpinLock> {
+#ifdef PLATFORM_WIN32
+	LONG locked;
+	
+	bool TryEnter() { return InterlockedExchange(&locked, 1) == 0; }
+	void Leave()    { InterlockedExchange(&locked, 0); }
+#endif
+	
+	void Enter()    { while(!TryEnter()); }
+
+	SpinLock()      { locked = 0; }
+};
+
 #else
 
 inline bool IsMainThread() { return true; }
@@ -558,6 +571,15 @@ public:
 
 	LazyUpdate()                   { dirty = true; }
 };
+
+struct SpinLock : Moveable<SpinLock> {
+	bool TryEnter() { return true; }
+	void Leave()    {}
+	void Enter()    {}
+
+	SpinLock()      {}
+};
+
 
 #define INTERLOCKED
 #define INTERLOCKED_(x) { x.Enter(); }
