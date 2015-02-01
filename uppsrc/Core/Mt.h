@@ -589,18 +589,20 @@ public:
 	LazyUpdate()                   { dirty = true; }
 };
 
-struct SpinLock : Moveable<SpinLock> {
+struct SpinLock {
 	bool TryEnter() { return true; }
 	void Leave()    {}
 	void Enter()    {}
+	
+	class Lock;
 
 	SpinLock()      {}
 };
 
 class SpinLock::Lock : NoCopy {
 public:
-	Lock(SpinLock& s) : s(s) {}
-	~Lock()                  {}
+	Lock(SpinLock& s) {}
+	~Lock()           {}
 };
 
 #define INTERLOCKED
