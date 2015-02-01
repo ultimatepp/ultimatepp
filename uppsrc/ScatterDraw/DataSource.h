@@ -28,15 +28,20 @@ public:
 	virtual double MaxY() 		{return Max(&DataSource::y);}	
 	virtual double MaxX() 		{return Max(&DataSource::x);}	
 	
-	virtual double AvgY() 		{return Avg(&DataSource::y);}	
-	virtual double AvgX() 		{return Avg(&DataSource::x);}	
-	
+	virtual double AvgY() 		{return Avg(&DataSource::y);}		
+	virtual double StdDevY(double avg = Null) 	{return StdDev(&DataSource::y, avg);}	
+	virtual double VarianceY(double avg = Null) {return Variance(&DataSource::y, avg);}	
+
+	double Min(Getdatafun getdata);
+	double Max(Getdatafun getdata);
+	double Avg(Getdatafun getdata);
+	double StdDev(Getdatafun getdata, double avg = Null);
+	double Variance(Getdatafun getdata, double avg = Null);
+	double SinEstim_Amplitude(double avg = Null);
+	bool SinEstim_FreqPhase(double &frequency, double &phase, double avg = Null);
+		
 protected:
 	bool isParam, isExplicit;
-
-	virtual double Min(Getdatafun getdata);
-	virtual double Max(Getdatafun getdata);
-	virtual double Avg(Getdatafun getdata);
 
 private:
 	int key;

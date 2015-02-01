@@ -25,8 +25,12 @@ trend lines and non linear regression.]&]
 [s0;2 &]
 [s0; [2 Its normal use is subclassed to equation types like ][^topic`:`/`/ScatterDraw`/src`/LinearEquation`$en`-us^2 L
 inearEquation][2 , ][^topic`:`/`/ScatterDraw`/src`/PolynomialEquation`$en`-us^2 Polyn
-omialEquation ][2 or ][^topic`:`/`/ScatterDraw`/src`/FourierEquation`$en`-us^2 Fourie
-rEquation][2 .]&]
+omialEquation, ][^topic`:`/`/ScatterDraw`/src`/FourierEquation`$en`-us^2 FourierEqu
+ation, ][^topic`:`/`/ScatterDraw`/src`/Rational1Equation`$en`-us^2 Rational1Equatio
+n][^topic`:`/`/ScatterDraw`/src`/FourierEquation`$en`-us^2 , ][^topic`:`/`/ScatterDraw`/src`/ExponentialEquation`$en`-us^2 E
+xponentialEquation][^topic`:`/`/ScatterDraw`/src`/FourierEquation`$en`-us^2 , 
+][^topic`:`/`/ScatterDraw`/src`/UserEquation`$en`-us^2 UserEquation][^topic`:`/`/ScatterDraw`/src`/FourierEquation`$en`-us^2 .
+]&]
 [s0;2 &]
 [s1; &]
 [ {{10000F(128)G(128)@1 [s0; [*2 Public Member List]]}}&]
@@ -73,6 +77,12 @@ repeated data may avoid convergence.&]
 ataSource]_`&[*@3 series])&]
 [s4; Simplified version of [@(0.0.255) bool]_[* Fit]([_^DataSource^ DataSource]_`&[*@3 series
 ], [@(0.0.255) double]_`&[*@3 r2]) that do not return [*@3 r2].&]
+[s1; &]
+[s3;%- &]
+[s5;:ExplicitEquation`:`:GuessCoeff`(DataSource`&`):%- [@(0.0.255) virtual] 
+[@(0.0.255) void]_[* GuessCoeff]([_^DataSource^ DataSource]_`&[*@3 series])_`=_[@3 0]&]
+[s4; Guesses a set of initial values for the equation coefficients 
+that matches [%-*@3 series], based on previous knowledge of equation.&]
 [s1; &]
 [s3; &]
 [s5;:ExplicitEquation`:`:f`(double`): [@(0.0.255) virtual] [@(0.0.255) double]_[* f]([@(0.0.255) d

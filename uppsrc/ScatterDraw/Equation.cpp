@@ -34,7 +34,7 @@ ExplicitEquation::FitError ExplicitEquation::Fit(DataSource &series, double &r2)
 	
 	if (series.GetCount() < coeff.GetCount())
 		return SmallDataSource;
-		
+	
 	ptrdiff_t numUnknowns = coeff.GetCount();
 	
 	VectorXd x(numUnknowns);
@@ -73,7 +73,6 @@ ExplicitEquation::FitError ExplicitEquation::Fit(DataSource &series, double &r2)
 	return NoError;
 }
 
-int ExplicitEquation::numDigits = 3;
 int ExplicitEquation::maxFitFunctionEvaluations = 1000;
 
 
@@ -84,17 +83,17 @@ double PolynomialEquation::f(double x) {
 	return y;
 }
 
-String PolynomialEquation::GetEquation() {
+String PolynomialEquation::GetEquation(int numDigits) {
 	if (coeff.IsEmpty())
 		return String();
-	String y;
-	y = FormatDoubleFix(coeff[0], numDigits);
+	String ret = FormatCoeff(0, numDigits);
 	if (coeff.GetCount() == 1)
-		return y;
-	y += " " + String(coeff[1] >= 0 ? "+" : "-") + " " + FormatDoubleFix(fabs(coeff[1]), numDigits) + "*x";
+		return ret;
+	ret += Format(" + %s*x", FormatCoeff(1, numDigits));
 	for (int i = 2; i < coeff.GetCount(); ++i) 
-		y += " " + String(coeff[i] >= 0 ? "+" : "-") + " " + FormatDoubleFix(fabs(coeff[i]), numDigits) + "*x^" + FormatInt(i);
-	return y;
+		ret += Format(" + %s*x^%s", FormatCoeff(i, numDigits), FormatInt(i));
+	ret.Replace("+ -", "- ");
+	return ret;
 }
 	
 double FourierEquation::f(double x) {
@@ -107,20 +106,207 @@ double FourierEquation::f(double x) {
 	return y;
 }
 
-String FourierEquation::GetEquation() {
+String FourierEquation::GetEquation(int numDigits) {
 	if (coeff.GetCount() < 4)
 		return String();
-	String y = FormatDoubleFix(coeff[0], numDigits);
+	String ret = FormatCoeff(0, numDigits);
 	
 	for (int i = 2; i < coeff.GetCount(); i += 2) {
 		int n = 1 + (i - 2)/2;
-		String nwx = Format("%d*%s*x", n, FormatDoubleFix(fabs(coeff[1]), numDigits));
-		String signA = coeff[i] >= 0 ? "+" : "-";
-		String signB = coeff[i+1] >= 0 ? "+" : "-";
-		y += " " + signA + " " + FormatDoubleFix(fabs(coeff[i]), numDigits) + "*cos(" + nwx + ")";
-		y += " " + signB + " " + FormatDoubleFix(fabs(coeff[i+1]), numDigits) + "*sin(" + nwx + ")";
+		String nwx = Format("%d*%s*x", n, FormatCoeff(1, numDigits));
+		ret += Format(" + %s*cos(%s)", FormatCoeff(i, numDigits), nwx);
+		ret += Format(" + %s*sin(%s)", FormatCoeff(i + 1, numDigits), nwx);
 	}
-	return y;
+	ret.Replace("+ -", "- ");
+	return ret;
 }
+
+
+EvalExpr::EvalExpr() {
+	constants.Add("PI", M_PI);
+	constants.Add("M_PI", M_PI);
+	constants.Add("e", exp(1.0));
+	functions.Add("abs", fabs);
+	functions.Add("sqrt", sqrt);
+	functions.Add("sin", sin);
+	functions.Add("cos", cos);
+	functions.Add("tan", tan);
+	functions.Add("asin", asin);
+	functions.Add("acos", acos);
+	functions.Add("atan", atan);
+	functions.Add("sinh", sinh);
+	functions.Add("cosh", cosh);
+	functions.Add("tanh", tanh);
+}
+
+/*
+void *EvalExpr::Functions_Get(CParser& p) {
+	for (int i = 0; i < functions.GetCount(); ++i) {
+		if (p.Id(functions.GetKey(i)))
+			return (void *)functions[i];
+	}
+	return 0;	    
+}*/
+
+double EvalExpr::Term(CParser& p) {
+	if(p.IsId()) {
+		String strId = p.ReadId();
+		if(double (*function)(double) = functions.Get(strId, 0)) {
+			p.PassChar('(');
+			double x = Exp(p);
+			p.PassChar(')');
+			return function(x);
+		}	
+		double ret = constants.Get(strId, Null);
+		if (IsNull(ret))
+			ret = variables.GetAdd(strId, 0);
+		return ret;
+	}
+	if(p.Char('(')) {
+		double x = Exp(p);
+		p.PassChar(')');
+		return x;
+	}
+	return p.ReadDouble();
+}
+
+double EvalExpr::Mul(CParser& p) {
+	double x = Term(p);
+	for(;;)
+		if(p.Char('*'))
+			x = x * Term(p);
+		else if(p.Char('/')) {
+			double y = Term(p);
+			if(y == 0)
+				p.ThrowError(t_("Divide by zero"));
+			x = x / y;
+		} else if(p.Char('^'))
+			x = pow(x, Term(p));
+		else
+			return x;
+}
+
+double EvalExpr::Exp(CParser& p) {
+	double x = Mul(p);
+	for(;;) {
+		if(p.Char('+'))
+			x = x + Mul(p);
+		else if(p.Char('-'))
+			x = x - Mul(p);
+		else
+			return x;
+	}
+}
+
+double EvalExpr::Eval(String line) {
+	line = TrimBoth(line);
+	if (line.IsEmpty())
+		return Null;
 	
+	CParser p(line);
+	try {
+		if(p.IsId()) {
+			CParser::Pos pos = p.GetPos();
+			String var = p.ReadId();
+			if(p.Char('=')) {
+				double ret = Exp(p);
+				variables.GetAdd(var) = ret;
+				return ret;
+			} else {
+				p.SetPos(pos);
+				return Exp(p);
+			}
+		} else
+			return Exp(p);
+	}
+	catch(CParser::Error e) {
+		DLOG(Format(t_("Error evaluating '%s': %s"), line, e));
+		return Null;
+	}
+}
+
+String EvalExpr::TermStr(CParser& p, int numDigits) {
+	if(p.IsId()) {
+		String strId = p.ReadId();
+		if(functions.Find(strId) >= 0) {
+			p.PassChar('(');
+			String x = ExpStr(p, numDigits);
+			p.PassChar(')');
+			return strId + "(" + x + ")";
+		}
+		if (IsNull(numDigits)) {
+			if (constants.Find(strId) < 0)
+				variables.GetAdd(strId, 0);
+			return strId;
+		} else {
+			if (constants.Find(strId) >= 0)
+				return strId;
+			else {
+				double dat = variables.GetAdd(strId, 0);
+				return FormatDoubleFix(dat, numDigits);
+			}
+		}
+	}
+	if(p.Char('(')) {
+		String x = ExpStr(p, numDigits);
+		p.PassChar(')');
+		return "(" + x + ")";
+	}
+	return FormatDoubleFix(p.ReadDouble(), IsNull(numDigits) ? 3 : numDigits);
+}
+
+String EvalExpr::MulStr(CParser& p, int numDigits) {
+	String x = TermStr(p, numDigits);
+	for(;;)
+		if(p.Char('*'))
+			x = x + "*" + TermStr(p, numDigits);
+		else if(p.Char('/')) 
+			x = x + "/" + TermStr(p, numDigits);
+		else if(p.Char('^'))
+			x = x + "^" + TermStr(p, numDigits);
+		else
+			return x;
+}
+
+String EvalExpr::ExpStr(CParser& p, int numDigits) {
+	String x = MulStr(p, numDigits);
+	for(;;) {
+		if(p.Char('+'))
+			x = x + " + " + MulStr(p, numDigits);
+		else if(p.Char('-'))
+			x = x + " - " + MulStr(p, numDigits);
+		else {
+			x.Replace("+ -", "- ");
+			return x;
+		}
+	}
+}
+
+String EvalExpr::EvalStr(String line, int numDigits) {
+	line = TrimBoth(line);
+	if (line.IsEmpty())
+		return Null;
+	
+	CParser p(line);
+	try {
+		if(p.IsId()) {
+			CParser::Pos pos = p.GetPos();
+			String var = p.ReadId();
+			if(p.Char('=')) {
+				String ret = ExpStr(p, numDigits);
+				variables.GetAdd(var, 0);
+				return var + " = " + ret;
+			} else {
+				p.SetPos(pos);
+				return ExpStr(p, numDigits);
+			}
+		} else
+			return ExpStr(p, numDigits);
+	}
+	catch(CParser::Error e) {
+		DLOG(Format(t_("Error evaluating '%s': %s"), line, e));
+		return Null;
+	}
+}
+
 END_UPP_NAMESPACE
