@@ -290,7 +290,7 @@ void Ide::SetupBars()
 {
 	ClearFrames();
 	int r = HorzLayoutZoom(100);
-	int l = HorzLayoutZoom(320);
+	int l = HorzLayoutZoom(350);
 	menubar.Transparent();
 	if(toolbar_in_row) {
 		toolbar.SetFrame(NullFrame());
