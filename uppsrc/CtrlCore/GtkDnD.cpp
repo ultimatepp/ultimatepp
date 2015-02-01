@@ -39,6 +39,8 @@ void Ctrl::GtkDragGetData(GtkWidget *widget, GdkDragContext *context, GtkSelecti
                           guint info, guint time, gpointer user_data)
 {
 	LLOG("GtkDragGetData");
+	if(!dnd_source)
+		return;
 	if(info < (guint)dnd_source_data->GetCount())
 		GtkSelectionDataSet(data, dnd_source_data->GetKey(info), (*dnd_source_data)[info].Render());
 	else {
