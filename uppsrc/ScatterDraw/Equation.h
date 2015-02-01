@@ -155,7 +155,6 @@ public:
 	
 	VectorMap<String, double> constants;
 	VectorMap<String, double> variables;
-	VectorMap<String, double (*)(double)> functions;
 
 private:
 	void *Functions_Get(CParser& p);
@@ -165,12 +164,14 @@ private:
 	String TermStr(CParser& p, int numDigits);
 	String MulStr(CParser& p, int numDigits);
 	String ExpStr(CParser& p, int numDigits);
+	
+	VectorMap<String, double (*)(double)> functions;
 };
 
 class UserEquation : public ExplicitEquation {
 public:
 	UserEquation() {}
-	UserEquation(String _name, String _strEquation)	{Init(_name, _strEquation);}
+	UserEquation(String _name, String _strEquation, String varHoriz = "x")	{Init(_name, _strEquation, varHoriz);}
 	void Init(String _name, String _strEquation, String varHoriz = "x") {
 		name = _name;
 		strEquation = _strEquation;
