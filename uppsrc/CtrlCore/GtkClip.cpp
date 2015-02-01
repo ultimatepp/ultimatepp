@@ -399,7 +399,7 @@ void Ctrl::GuiPlatformSelection(PasteClip& d)
 
 String Ctrl::RenderPrimarySelection(const Value& fmt)
 {
-	return sel_ctrl->GetSelectionData(fmt);
+	return sel_ctrl ? sel_ctrl->GetSelectionData(fmt) : String();
 }
 
 void Ctrl::SetSelectionSource(const char *fmts)
