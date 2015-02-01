@@ -1639,7 +1639,7 @@ void debug_h() {
 	;			// It does nothing. Just to set a breakpoint in templated functions
 }
 
-INITBLOCK{
+INITBLOCK {
 	SeriesPlot::Register<LineSeriesPlot>("Line");
 	SeriesPlot::Register<StaggeredSeriesPlot>("Staggered");
 	SeriesPlot::Register<BarSeriesPlot>("Bar");
