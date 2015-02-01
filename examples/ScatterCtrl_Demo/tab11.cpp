@@ -11,14 +11,6 @@ void Tab11::Init()
 	
 	scatter.SetMouseHandling(true, true).ShowContextMenu();
 	
-	scatter.AddSeries(s1y, s1x).Legend("Series 1").MarkStyle<RhombMarkPlot>().MarkWidth(10).NoPlot();
-	scatter.AddSeries(linear).Legend(linear.GetFullName()).NoMark().Stroke(2);
-	scatter.AddSeries(poly2).Legend(poly2.GetFullName()).NoMark().Stroke(2);
-	scatter.AddSeries(poly4).Legend(poly4.GetFullName()).NoMark().Stroke(2);
-	scatter.AddSeries(fourier).Legend(fourier.GetFullName()).NoMark().Stroke(2);
-	scatter.AddSeries(exponential).Legend(exponential.GetFullName()).NoMark().Stroke(2);
-	scatter.AddSeries(rational1).Legend(rational1.GetFullName()).NoMark().Stroke(2);
-	
 	grid.AddColumn("Type", 10);
 	grid.AddColumn("Equation", 40);
 	grid.AddColumn("R2", 5);
@@ -27,9 +19,9 @@ void Tab11::Init()
 }
 
 void Tab11::OnSeries() {
-	double l_r2, p2_r2, p4_r2, f_r2, exp_r2, rat1_r2;
+	double l_r2, p2_r2, p4_r2, f_r2, exp_r2, rat1_r2, s_r2;
 	
-	//scatter.RemoveSeries(0);
+	scatter.RemoveAllSeries();
 	grid.Clear();
 	if (seriesList == "Series 1") {
 		scatter.SetRange(5, 1500).SetMajorUnits(1, 250).SetXYMin(-3, 0);
@@ -48,14 +40,18 @@ void Tab11::OnSeries() {
 		fourier.SetDegree(3);
 		fourier.Fit(vs1, f_r2);
 		exponential.Fit(vs1, exp_r2);
-		rational1.Fit(vs1, rat1_r2);		
+		rational1.Fit(vs1, rat1_r2);
+		sin.GuessCoeff(vs1);		
+		sin.Fit(vs1, s_r2);	
 		
-	//	scatter.InsertSeries(0, s1y, s1x).Legend("Series 1").MarkStyle<RhombMarkPlot>().MarkWidth(10).NoPlot();
+		scatter.AddSeries(s1x, s1y).Legend("Series 1").MarkStyle<RhombMarkPlot>().MarkWidth(10).NoPlot();
 	} else if (seriesList == "Series 2") {
-		s2.Clear();
-		s2 << 121 << 52 << 20 << 12 << 13 << 12 << 8 << 11;
+		s2x.Clear();
+		s2y.Clear();
+		s2y << -0.9 << -1.1	<< 2.8 << -3.4 << 2.7 << -0.9 << -1.1 << 2.8 << -3.4 << 2.7 << -0.9 << -1.1 << 2.8 << -3.4 << 2.7 << -0.7 << -1.2;
+		s2x << 0 << 0.6 << 1.2 << 1.8 << 2.5 << 3.1 << 3.7 << 4.3 << 5.0 << 5.6 << 6.2 << 6.9 << 7.5 << 8.1 << 8.7 << 9.4 << 10.0;
 		
-		VectorY<double> v2(s2, 0, 1);
+		VectorDouble v2(s2y, s2x);
 
 		linear.Fit(v2, l_r2);
 		poly2.SetDegree(2);
@@ -65,10 +61,27 @@ void Tab11::OnSeries() {
 		fourier.SetDegree(3);
 		fourier.Fit(v2, f_r2);
 		exponential.Fit(v2, exp_r2);
-		rational1.Fit(v2, rat1_r2);		
+		rational1.Fit(v2, rat1_r2);	
+		sin.GuessCoeff(v2);	
+		sin.Fit(v2, s_r2);	
 				
-		scatter.InsertSeries(0, s1y, s1x).Legend("Series 2").MarkStyle<RhombMarkPlot>().MarkWidth(10).NoPlot();
+		scatter.AddSeries(s2x, s2y).Legend("Series 2").MarkStyle<RhombMarkPlot>().MarkWidth(10).NoPlot();
 	}
+	if (l_r2 > 0.5)
+		scatter.AddSeries(linear).Legend(linear.GetFullName()).NoMark().Stroke(2);
+	if (p2_r2 > 0.5)
+		scatter.AddSeries(poly2).Legend(poly2.GetFullName()).NoMark().Stroke(2);
+	if (p4_r2 > 0.5)	
+		scatter.AddSeries(poly4).Legend(poly4.GetFullName()).NoMark().Stroke(2);
+	if (f_r2 > 0.5)	
+		scatter.AddSeries(fourier).Legend(fourier.GetFullName()).NoMark().Stroke(2);
+	if (exp_r2 > 0.5)
+		scatter.AddSeries(exponential).Legend(exponential.GetFullName()).NoMark().Stroke(2);
+	if (rat1_r2 > 0.5)
+		scatter.AddSeries(rational1).Legend(rational1.GetFullName()).NoMark().Stroke(2);
+	if (s_r2 > 0.5)	
+		scatter.AddSeries(sin).Legend(sin.GetFullName()).NoMark().Stroke(2);
+	scatter.FitToData(true);
 	scatter.Refresh();
 	
 	grid.Add(linear.GetFullName(), 	linear.GetEquation(),  FormatDoubleFix(l_r2, 5));
@@ -77,6 +90,8 @@ void Tab11::OnSeries() {
 	grid.Add(fourier.GetFullName(), fourier.GetEquation(), FormatDoubleFix(f_r2, 5));
 	grid.Add(exponential.GetFullName(), exponential.GetEquation(), FormatDoubleFix(exp_r2, 5));
 	grid.Add(rational1.GetFullName(), rational1.GetEquation(), FormatDoubleFix(rat1_r2, 5));
+	grid.Add(sin.GetFullName(), sin.GetEquation(), FormatDoubleFix(s_r2, 5));
+	grid.SetSortColumn(2, true);
 }
 
 ScatterDemo *Construct11()

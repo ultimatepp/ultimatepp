@@ -168,12 +168,13 @@ public:
 
 private:
 	Vector<double> s1x, s1y;
-	Vector<double> s2;
+	Vector<double> s2x, s2y;
 	LinearEquation linear;
 	PolynomialEquation poly2, poly4;
 	FourierEquation fourier;
 	ExponentialEquation exponential;
 	Rational1Equation rational1;
+	SinEquation sin;
 };
 
 class Tab12 : public WithTab12<ScatterDemo> {
@@ -185,6 +186,18 @@ public:
 
 private:
 	Vector<Pointf> s1, s2, s3;
+};
+
+class TabUserEquation : public WithTabUserEquation<ScatterDemo> {
+public:
+	typedef TabUserEquation CLASSNAME;
+	
+	virtual void Init();
+	void OnUpdate();
+	virtual ScatterCtrl &Scatter()	{return scatter;};
+
+private:
+	UserEquation userEquation;
 };
 
 class TabPie : public WithTabPie<StaticRect> {
