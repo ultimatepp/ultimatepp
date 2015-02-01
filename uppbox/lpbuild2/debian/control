@@ -19,6 +19,7 @@ Description: C++ library for cross-platform development
 Package: theide
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: sox
 Replaces: upp (<= 2332)
 Description: IDE (not only) for Ultimate++ framework
  TheIDE introduces modular concepts to C++ programming. It features 
@@ -31,6 +32,7 @@ Description: IDE (not only) for Ultimate++ framework
 Package: theide-nogtk
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: sox
 Provides: theide
 Replaces: theide, upp (<=2332)
 Conflicts: theide
