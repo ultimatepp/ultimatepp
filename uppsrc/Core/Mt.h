@@ -476,13 +476,13 @@ inline bool IsMainThread() { return Thread::IsMain(); }
 
 struct SpinLock {
 #ifdef PLATFORM_WIN32
-	LONG locked;
+	volatile LONG locked;
 	
 	bool TryEnter() { return InterlockedExchange(&locked, 1) == 0; }
 	void Leave()    { InterlockedExchange(&locked, 0); }
 #endif
-#ifdef PLATFORM_LINUX
-	int locked;
+#ifdef PLATFORM_POSIX
+	volatile int locked;
 	
 	bool TryEnter() { return __sync_lock_test_and_set(&locked, 1) == 0; }
 	void Leave()    { __sync_lock_release(&locked); }
