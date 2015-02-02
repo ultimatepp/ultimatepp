@@ -3,7 +3,8 @@
 #include "Sql/init"
 #include "CtrlLib/init"
 #include "Report/init"
-#define BLITZ_INDEX__ F74ba1cb7d560d8dd7adb49654c110f20
+#include "CodeEditor/init"
+#define BLITZ_INDEX__ F96a1ec818c4cc17747e79bf1c64548ae
 #include "SqlCtrl_init.icpp"
 #undef BLITZ_INDEX__
 #endif
