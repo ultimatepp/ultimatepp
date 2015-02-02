@@ -588,6 +588,11 @@ void Ide::BrowseMenu(Bar& menu)
 
 void Ide::HelpMenu(Bar& menu)
 {
+	menu.Add("Get help / report bugs..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/forums"));
+	menu.Add("Online documentation..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/www$uppweb$documentation$en-us.html"));
+	menu.Add("Common information..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/www$uppweb$community$en-us.html"));
+	if(menu.IsMenuBar())
+		menu.Separator();
 	menu.Add(AK_BROWSETOPICS, IdeImg::help(), THISBACK(ShowTopics));
 	menu.Add(AK_SEARCHTOPICS, THISBACK(SearchTopics));
 	menu.Add(AK_BROWSETOPICS_WIN, IdeImg::help_win(), THISBACK(ShowTopicsWin));
