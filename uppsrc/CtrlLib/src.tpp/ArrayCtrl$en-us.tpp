@@ -1802,6 +1802,11 @@ onst]_[_^ValueArray^ ValueArray][@(0.0.255) `&]_[*@3 va])&]
 [s2; Adds a new row at the end of source with value [%-*@3 va].&]
 [s3; &]
 [s4;%- &]
+[s5;:ArrayCtrl`:`:GetArray`(int`)const:%- [_^ValueArray^ ValueArray]_[* GetArray]([@(0.0.255) i
+nt]_[*@3 i])_[@(0.0.255) const]&]
+[s2; Returns a row as ValueArray.&]
+[s3; &]
+[s4;%- &]
 [s5;:ArrayCtrl`:`:Set`(int`,const VectorMap`<String`,Value`>`&`):%- [@(0.0.255) void]_[* S
 et]([@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[_^VectorMap^ VectorMap]<[_^String^ String
 ], [_^Value^ Value]>`&_[*@3 m])&]

@@ -230,6 +230,10 @@ void SqlConsole::Execute(int type) {
 	int ms0 = GetTickCount();
 	cursor.ClearError();
 	lastquery = s;
+	String ttl = s;
+	ttl.Replace("\t", " ");
+	ttl.Replace("\n", " ");
+	ttl.Replace("\r", "");
 	if(!cursor.Execute(s)) {
 	error:
 		record.Hide();
@@ -240,7 +244,7 @@ void SqlConsole::Execute(int type) {
 		list.Add(err);
 		trace.Add(s, err, "");
 		trace.GoEnd();
-		Title((s + " - " + err).ToWString());
+		Title((ttl + " - " + err).ToWString());
 		return;
 	}
 	if(type == QUIET)
@@ -251,12 +255,15 @@ void SqlConsole::Execute(int type) {
 	int ms1 = GetTickCount();
 	cw.SetCount(cursor.GetColumns());
 	visible.SetCount(cw.GetCount(), true);
+	int margins;
 	for(int i = 0; i < cursor.GetColumns(); i++) {
 		const SqlColumnInfo& ci = cursor.GetColumnInfo(i);
-		list.AddColumn(ci.name);
+		String n = ToLower(ci.name);
+		list.AddColumn(n);
 		list.HeaderTab(i).WhenAction = THISBACK1(Hide, i);
-		cw[i] = GetTextSize(ci.name, StdFont()).cx + 2 * list.HeaderTab(i).GetMargin();
-		record.Add(ci.name, Null);
+		margins = HorzLayoutZoom(2) + 2 * list.HeaderTab(i).GetMargin();
+		cw[i] = GetTextSize(n, StdFont()).cx + margins;
+		record.Add(n, Null);
 		lob.Add(ci.type == -1 || ci.type == -2); // !! BLOB / CLOB hack
 	}
 	Progress pi;
@@ -271,8 +278,7 @@ void SqlConsole::Execute(int type) {
 				cursor.GetColumn(i, temp);
 				row[i] = temp;
 			}
-			cw[i] = max(cw[i], GetTextSize(StdFormat(row[i]), StdFont()).cx +
-				        2 * list.HeaderTab(i).GetMargin());
+			cw[i] = max(cw[i], GetTextSize(StdFormat(row[i]), StdFont()).cx + margins);
 			cw[i] = min(cw[i], list.GetSize().cx / 3);
 		}
 		list.Add(row);
@@ -282,12 +288,11 @@ void SqlConsole::Execute(int type) {
 		list.Reset();
 		goto error;
 	}
-	DDUMP(cursor.GetColumns());
-	visible.SetCount(cw.GetCount(), true);
+	visible.SetCount(list.GetColumnCount(), true);
 	ColSize();
 	if(list.GetCount() > 0)
 		list.SetCursor(0);
-	Title(NFormat(t_("%s (%d rows)"), s, pi.GetPos()));
+	Title(NFormat(t_("%s (%d rows)"), ttl, list.GetCount()));
 	String rrows = Format(t_("%d rows"), max(list.GetCount(), cursor.GetRowsProcessed()));
 	String rms = Format(t_("%d ms"), ms1 - ms0);
 	if(type == RERUN && trace.IsCursor()) {
@@ -303,11 +308,9 @@ void SqlConsole::Execute(int type) {
 }
 
 void SqlConsole::ColSize() {
-	int maxw = 18 * StdFont().Info().GetAveWidth();
+	int maxw = list.GetSize().cx;
 	int wx = 0;
-	DUMP(visible);
-	DUMP(cw);
-	for(int i = 0; i < cursor.GetColumns(); i++)
+	for(int i = 0; i < list.GetColumnCount(); i++)
 		if(visible[i]) {
 			int w = min(maxw, cw[i]);
 			wx += w;
@@ -328,7 +331,7 @@ void SqlConsole::Record() {
 	if(list.GetIndexCount() == 1)
 		errortext <<= StdFormat(list.Get(0));
 	for(int i = 0; i < list.GetIndexCount(); i++)
-		record.Set(i, 1, list.Get(i));
+		record.Set(i, 1, list.IsCursor() ? list.Get(i) : Value());
 }
 
 bool SqlConsole::Key(dword key, int count) {
@@ -360,13 +363,23 @@ void SqlConsole::Serialize(Stream& s) {
 	record.SerializeHeader(s);
 	lires.Serialize(s);
 	trace.SerializeHeader(s);
+	if(s.IsLoading())
+		trace.Clear();
+	Vector<ValueArray> ar;
+	for(int i = 0; i < trace.GetCount(); i++)
+		ar.Add(trace.GetArray(i));
+	s % ar;
+	if(s.IsLoading())
+		for(int i = 0; i < ar.GetCount(); i++)
+			trace.SetArray(i, ar[i]);
 	if(version >= 1)
 		s % LastDir;
+	s.Magic();
 }
 
 void SqlConsole::Perform() {
 	const char cfg[] = "SqlConsole.cfg";
-//	LoadFromFile(*this, cfg);
+	LoadFromFile(*this, cfg);
 	Title(t_("SQL Commander"));
 	Icon(SqlConsoleImg::database_edit(), SqlConsoleImg::SqlConsoleIconLarge());
 	Sizeable();
@@ -374,12 +387,14 @@ void SqlConsole::Perform() {
 	ActiveFocus(command);
 	Run();
 	cursor.ClearError();
-//	StoreToFile(*this, cfg);
+	StoreToFile(*this, cfg);
 }
 
 void SqlConsole::TraceToCommand() {
-	if(trace.IsCursor())
+	if(trace.IsCursor()) {
 		command.SetData(trace.Get(0));
+		command.SetCursor(command.GetLength());
+	}
 }
 
 void SqlConsole::ListToCommand() {
@@ -565,7 +580,8 @@ SqlConsole::SqlConsole(SqlSession& session)
 	trace.WhenLeftClick = THISBACK(TraceToCommand);
 	trace.WhenLeftDouble = THISBACK(TraceToExecute);
 	trace.WhenBar = THISBACK(TraceMenu);
-	list.WhenEnterRow = THISBACK(Record);
+	trace.NoWantFocus();
+	list.WhenSel = THISBACK(Record);
 	list.WhenLeftDouble = THISBACK(ListToCommand);
 	list.WhenBar = THISBACK(ListMenu);
 	list.HeaderObject().Absolute();

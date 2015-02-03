@@ -471,6 +471,7 @@ public:
 
 	void       SetArray(int i, const ValueArray& va);
 	void       AddArray(const ValueArray& va);
+	ValueArray GetArray(int i) const;
 
 	void       AddSeparator();
 
