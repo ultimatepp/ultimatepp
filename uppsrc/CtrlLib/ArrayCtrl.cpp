@@ -1963,6 +1963,11 @@ ValueMap ArrayCtrl::GetMap(int i) const
 	return m;
 }
 
+ValueArray ArrayCtrl::GetArray(int i) const
+{
+	return ValueArray(clone(GetLine(i)));
+}
+
 void ArrayCtrl::SetArray(int i, const ValueArray& va)
 {
 	Set(i, va.Get());
