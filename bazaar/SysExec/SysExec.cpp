@@ -48,7 +48,7 @@ bool SysExec(String const &command, String const &args, const VectorMap<String, 
 	dup2(ErrFile, 2);
 
 	// builds the arguments and the environment
-	char **argv = BuildArgs(GetFileName(command), args);
+	char **argv = BuildArgs(command, args);
 	char **envv = BuildEnv(Environ);
 	
 	// executes the command
@@ -60,7 +60,7 @@ bool SysExec(String const &command, String const &args, const VectorMap<String, 
 		// Code only executed by child process
 
 		// exec svn, function shall not return if all ok
-		result = execvpe(command, argv, envv);
+		result = execve(command, argv, envv);
 
 		// terminates child process
 		_exit(result);
