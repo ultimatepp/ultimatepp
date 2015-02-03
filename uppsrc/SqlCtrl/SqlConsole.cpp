@@ -278,11 +278,12 @@ void SqlConsole::Execute(int type) {
 		list.Add(row);
 		if(pi.StepCanceled()) break;
 	}
-	if(cursor.GetColumns() && cursor.WasError()) {
+	if(cw.GetCount() && cursor.WasError()) {
 		list.Reset();
 		goto error;
 	}
-	visible.SetCount(cursor.GetColumns(), true);
+	DDUMP(cursor.GetColumns());
+	visible.SetCount(cw.GetCount(), true);
 	ColSize();
 	if(list.GetCount() > 0)
 		list.SetCursor(0);
@@ -304,6 +305,8 @@ void SqlConsole::Execute(int type) {
 void SqlConsole::ColSize() {
 	int maxw = 18 * StdFont().Info().GetAveWidth();
 	int wx = 0;
+	DUMP(visible);
+	DUMP(cw);
 	for(int i = 0; i < cursor.GetColumns(); i++)
 		if(visible[i]) {
 			int w = min(maxw, cw[i]);
@@ -363,15 +366,15 @@ void SqlConsole::Serialize(Stream& s) {
 
 void SqlConsole::Perform() {
 	const char cfg[] = "SqlConsole.cfg";
-	LoadFromFile(*this, cfg);
+//	LoadFromFile(*this, cfg);
 	Title(t_("SQL Commander"));
-	Icon(SqlConsoleImg::SqlConsoleIconSmall(), SqlConsoleImg::SqlConsoleIconLarge());
+	Icon(SqlConsoleImg::database_edit(), SqlConsoleImg::SqlConsoleIconLarge());
 	Sizeable();
 	Zoomable();
 	ActiveFocus(command);
 	Run();
 	cursor.ClearError();
-	StoreToFile(*this, cfg);
+//	StoreToFile(*this, cfg);
 }
 
 void SqlConsole::TraceToCommand() {
@@ -550,6 +553,9 @@ SqlConsole::SqlConsole(SqlSession& session)
 	errortext.Hide();
 	vsplit.Vert(lires, trace);
 	vsplit.Add(command_pane);
+	vsplit.SetPos(6500);
+	vsplit.SetPos(8500, 1);
+	lires.SetPos(7000);
 	record.AddColumn(t_("Column"), 5);
 	record.AddColumn(t_("Value"), 10);
 	record.WhenLeftDouble = THISBACK(ViewRecord);
@@ -565,16 +571,17 @@ SqlConsole::SqlConsole(SqlSession& session)
 	list.HeaderObject().Absolute();
 	Add(vsplit.SizePos());
 	command.SetFont(Courier(GetStdFontCy()));
-	command_pane.Add(command.VSizePos().HSizePos(0, HorzLayoutZoom(90)));
+	command_pane.Add(command.VSizePos().HSizePos(0, HorzLayoutZoom(100)));
 	ecy = max(24, ecy);
-	command_pane.Add(execute.TopPos(0, ecy).RightPos(4, HorzLayoutZoom(80)));
-	command_pane.Add(schema.TopPos(ecy + 4, ecy).RightPos(4, HorzLayoutZoom(80)));
+	command_pane.Add(execute.TopPos(0, ecy).RightPos(4, HorzLayoutZoom(90)));
+	command_pane.Add(schema.TopPos(ecy + 4, ecy).RightPos(4, HorzLayoutZoom(90)));
 	command.Highlight("sql");
 	schema.SetLabel(t_("&Schema"));
 	schema <<= THISBACK(ObjectTree);
+	schema.SetImage(SqlConsoleImg::bricks());
 	execute <<= THISBACK1(Execute, NORMAL);
-	execute.SetImage(SqlConsoleImg::Go());
-	execute.SetLabel(t_("Execute"));
+	execute.SetImage(SqlConsoleImg::lightning());
+	execute.SetLabel(t_("Execute (F5)"));
 	ActiveFocus(command);
 }
 
