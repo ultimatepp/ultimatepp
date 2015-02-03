@@ -193,10 +193,10 @@ Vector<String> PostgreSQLSession::EnumUsers()
 }
 
 Vector<String> PostgreSQLSession::EnumDatabases()
-{
+{// For now, we really enumerate namespaces rather than databases here
 	Vector<String> vec;
 	Sql sql(*this);
-	sql.Execute("select datname from pg_database");
+	sql.Execute("select nspname from pg_namespace where nspacl is not null");
 	while(sql.Fetch())
 		vec.Add(sql[0]);
 	return vec;

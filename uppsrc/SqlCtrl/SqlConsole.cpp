@@ -166,6 +166,7 @@ protected:
 	CodeEditor                 command;
 	Button                     execute;
 	Button                     schema;
+	Button                     csv;
 	ParentCtrl                 command_pane;
 //	CallbackSet                hide;
 	Vector<int>                cw;
@@ -191,6 +192,7 @@ protected:
 	void    RunScript(bool quiet);
 	void    TraceMenu(Bar& menu);
 	void    ObjectTree() { SQLObjectTree(cursor.GetSession()); }
+	void    Csv();
 
 	class Exec;
 	friend class Exec;
@@ -466,6 +468,11 @@ void SqlConsole::ListMenu(Bar& bar)
 	bar.Add(t_("Export..."), THISBACK(ListExport));
 }
 
+void SqlConsole::Csv()
+{
+	SelectSaveFile("Csv\t*.csv", list.AsCsv());
+}
+
 void SqlConsole::ListPrintRow()
 {
 	String qtf;
@@ -591,6 +598,7 @@ SqlConsole::SqlConsole(SqlSession& session)
 	ecy = max(24, ecy);
 	command_pane.Add(execute.TopPos(0, ecy).RightPos(4, HorzLayoutZoom(90)));
 	command_pane.Add(schema.TopPos(ecy + 4, ecy).RightPos(4, HorzLayoutZoom(90)));
+	command_pane.Add(csv.TopPos(2 * ecy + 4, ecy).RightPos(4, HorzLayoutZoom(90)));
 	command.Highlight("sql");
 	schema.SetLabel(t_("&Schema"));
 	schema <<= THISBACK(ObjectTree);
@@ -598,6 +606,9 @@ SqlConsole::SqlConsole(SqlSession& session)
 	execute <<= THISBACK1(Execute, NORMAL);
 	execute.SetImage(SqlConsoleImg::lightning());
 	execute.SetLabel(t_("Execute (F5)"));
+	csv <<= THISBACK(Csv);
+	csv.SetLabel(t_("Export.."));
+	csv.SetImage(SqlConsoleImg::database_save());
 	ActiveFocus(command);
 }
 
