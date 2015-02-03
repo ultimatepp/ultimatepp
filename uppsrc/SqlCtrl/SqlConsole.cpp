@@ -173,6 +173,7 @@ protected:
 	Vector<bool>               visible;
 	Vector<bool>               lob;
 	String                     LastDir;
+	Label                      info1, info2;
 
 	enum {
 		NORMAL,
@@ -187,7 +188,7 @@ protected:
 	void    Execute(int type = NORMAL);
 	void    TraceToCommand();
 	void    TraceToExecute();
-	void    ListToCommand();
+	void    ListToCommand(ArrayCtrl *list);
 	void    SaveTrace();
 	void    RunScript(bool quiet);
 	void    TraceMenu(Bar& menu);
@@ -217,6 +218,8 @@ public:
 
 	void    Perform();
 
+	void    AddInfo(Ctrl& tgt, Label& info, const char *txt);
+
 	SqlConsole(SqlSession& session);
 };
 
@@ -236,6 +239,8 @@ void SqlConsole::Execute(int type) {
 	ttl.Replace("\t", " ");
 	ttl.Replace("\n", " ");
 	ttl.Replace("\r", "");
+	info1.Remove();
+	info2.Remove();
 	if(!cursor.Execute(s)) {
 	error:
 		record.Hide();
@@ -399,11 +404,13 @@ void SqlConsole::TraceToCommand() {
 	}
 }
 
-void SqlConsole::ListToCommand() {
-	int c = list.GetEditColumn();
-	if(list.IsCursor() && c >= 0 && c < list.GetIndexCount())
-		command <<= AsString(list.Get(c));
-	command.SetFocus();
+void SqlConsole::ListToCommand(ArrayCtrl *l)
+{
+	int c = l->GetClickColumn();
+	if(GetCtrl() && l->IsCursor() && c >= 0 && c < l->GetColumnCount()) {
+		command.Paste(AsString(l->Get(c)).ToWString());
+		command.SetFocus();
+	}
 }
 
 void SqlConsole::TraceToExecute() {
@@ -564,6 +571,13 @@ void SqlConsole::ViewRecord()
 	SqlViewValue(record.Get(0), AsString(record.Get(1)));
 }
 
+void SqlConsole::AddInfo(Ctrl& tgt, Label& info, const char *txt)
+{
+	info = txt;
+	tgt.Add(info.SizePos());
+//	tgt.Add(info.BottomPos(0, GetStdFontCy()).RightPos(0, GetTextSize(txt, StdFont()).cx));
+}
+
 SqlConsole::SqlConsole(SqlSession& session)
 : cursor(session)
 {
@@ -581,6 +595,8 @@ SqlConsole::SqlConsole(SqlSession& session)
 	record.AddColumn(t_("Column"), 5);
 	record.AddColumn(t_("Value"), 10);
 	record.WhenLeftDouble = THISBACK(ViewRecord);
+	record.WhenLeftClick = THISBACK1(ListToCommand, &record);
+	AddInfo(record, info1, "\1[g= Use [@B Ctrl+Click] to copy data into SQL&[@B DoubleClick] for detailed view.");
 	trace.AddColumn(t_("Command"), 8);
 	trace.AddColumn(t_("Result"), 1);
 	trace.AddColumn(t_("Duration"), 1);
@@ -589,9 +605,10 @@ SqlConsole::SqlConsole(SqlSession& session)
 	trace.WhenBar = THISBACK(TraceMenu);
 	trace.NoWantFocus();
 	list.WhenSel = THISBACK(Record);
-	list.WhenLeftDouble = THISBACK(ListToCommand);
+	list.WhenLeftClick = THISBACK1(ListToCommand, &list);
 	list.WhenBar = THISBACK(ListMenu);
 	list.HeaderObject().Absolute();
+	AddInfo(list, info2, "\1[g= Use [@B Ctrl+Click] to copy data into SQL.");
 	Add(vsplit.SizePos());
 	command.SetFont(Courier(GetStdFontCy()));
 	command_pane.Add(command.VSizePos().HSizePos(0, HorzLayoutZoom(100)));
