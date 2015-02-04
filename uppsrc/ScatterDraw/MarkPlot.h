@@ -22,7 +22,7 @@ public:
 		typeMap().Remove(i);
 	}
 	static String         TypeName(int i)               {return typeMap()[i];}
-	static int            TypeIndex(const String& name) {return classMap().Find(name);}
+	static int            TypeIndex(const String& name) {return typeMap().Find(name);}
 	static int            GetCount()                    {return classMap().GetCount();}
 	static MarkPlot*   	  Create(int i)                 {return classMap()[i]();}
 	static Vector<String> GetTypes()                    {return clone(typeMap()).PickValues();}

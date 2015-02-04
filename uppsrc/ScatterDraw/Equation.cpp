@@ -29,6 +29,7 @@ void ExplicitEquation::SetNumCoeff(int num) {
 }
 
 ExplicitEquation::FitError ExplicitEquation::Fit(DataSource &series, double &r2) {
+	r2 = 0;
 	if (series.IsExplicit() || series.IsParam())
 		return InadequateDataSource;
 	
@@ -59,7 +60,7 @@ ExplicitEquation::FitError ExplicitEquation::Fit(DataSource &series, double &r2)
 		return ExplicitEquation::ImproperInputParameters;
 	if (ret == LevenbergMarquardtSpace::TooManyFunctionEvaluation)
 		return TooManyFunctionEvaluation;
-	
+
 	double mean = series.AvgY();
 	double sse = 0, sst = 0;
 	for (int64 i = 0; i < series.GetCount(); ++i) {
@@ -123,10 +124,14 @@ String FourierEquation::GetEquation(int numDigits) {
 
 
 EvalExpr::EvalExpr() {
+	noCase = false;
+	
 	constants.Add("PI", M_PI);
 	constants.Add("M_PI", M_PI);
 	constants.Add("e", exp(1.0));
 	functions.Add("abs", fabs);
+	functions.Add("ceil", ceil);
+	functions.Add("floor", floor);
 	functions.Add("sqrt", sqrt);
 	functions.Add("sin", sin);
 	functions.Add("cos", cos);
@@ -139,15 +144,6 @@ EvalExpr::EvalExpr() {
 	functions.Add("tanh", tanh);
 }
 
-/*
-void *EvalExpr::Functions_Get(CParser& p) {
-	for (int i = 0; i < functions.GetCount(); ++i) {
-		if (p.Id(functions.GetKey(i)))
-			return (void *)functions[i];
-	}
-	return 0;	    
-}*/
-
 double EvalExpr::Term(CParser& p) {
 	if(p.IsId()) {
 		String strId = p.ReadId();
@@ -157,31 +153,32 @@ double EvalExpr::Term(CParser& p) {
 			p.PassChar(')');
 			return function(x);
 		}	
+		if (noCase)
+			strId = ToUpper(strId);
 		double ret = constants.Get(strId, Null);
 		if (IsNull(ret))
 			ret = variables.GetAdd(strId, 0);
 		return ret;
-	}
-	if(p.Char('(')) {
+	} else if(p.Char('(')) {
 		double x = Exp(p);
 		p.PassChar(')');
 		return x;
-	}
-	return p.ReadDouble();
+	} else
+		return p.ReadDouble();
 }
 
 double EvalExpr::Mul(CParser& p) {
 	double x = Term(p);
 	for(;;)
 		if(p.Char('*'))
-			x = x * Term(p);
+			x = x * Mul(p);
 		else if(p.Char('/')) {
-			double y = Term(p);
+			double y = Mul(p);
 			if(y == 0)
 				p.ThrowError(t_("Divide by zero"));
 			x = x / y;
 		} else if(p.Char('^'))
-			x = pow(x, Term(p));
+			x = pow(x, Mul(p));
 		else
 			return x;
 }
@@ -220,7 +217,7 @@ double EvalExpr::Eval(String line) {
 			return Exp(p);
 	}
 	catch(CParser::Error e) {
-		DLOG(Format(t_("Error evaluating '%s': %s"), line, e));
+		LOG(Format(t_("Error evaluating '%s': %s"), line, e));
 		return Null;
 	}
 }
@@ -234,6 +231,8 @@ String EvalExpr::TermStr(CParser& p, int numDigits) {
 			p.PassChar(')');
 			return strId + "(" + x + ")";
 		}
+		if (noCase)
+			strId = ToUpper(strId);
 		if (IsNull(numDigits)) {
 			if (constants.Find(strId) < 0)
 				variables.GetAdd(strId, 0);
@@ -259,11 +258,11 @@ String EvalExpr::MulStr(CParser& p, int numDigits) {
 	String x = TermStr(p, numDigits);
 	for(;;)
 		if(p.Char('*'))
-			x = x + "*" + TermStr(p, numDigits);
+			x = x + "*" + MulStr(p, numDigits);
 		else if(p.Char('/')) 
-			x = x + "/" + TermStr(p, numDigits);
+			x = x + "/" + MulStr(p, numDigits);
 		else if(p.Char('^'))
-			x = x + "^" + TermStr(p, numDigits);
+			x = x + "^" + MulStr(p, numDigits);
 		else
 			return x;
 }
@@ -304,9 +303,24 @@ String EvalExpr::EvalStr(String line, int numDigits) {
 			return ExpStr(p, numDigits);
 	}
 	catch(CParser::Error e) {
-		DLOG(Format(t_("Error evaluating '%s': %s"), line, e));
+		LOG(Format(t_("Error evaluating '%s': %s"), line, e));
 		return Null;
 	}
+}
+
+INITBLOCK {
+	ExplicitEquation::Register<LinearEquation>("LinearEquation");
+	ExplicitEquation::Register<PolynomialEquation2>("PolynomialEquation2");
+	ExplicitEquation::Register<PolynomialEquation3>("PolynomialEquation3");
+	ExplicitEquation::Register<PolynomialEquation4>("PolynomialEquation4");
+	ExplicitEquation::Register<PolynomialEquation5>("PolynomialEquation5");
+	ExplicitEquation::Register<SinEquation>("SinEquation");
+	ExplicitEquation::Register<ExponentialEquation>("ExponentialEquation");
+	ExplicitEquation::Register<Rational1Equation>("Rational1Equation");
+	ExplicitEquation::Register<FourierEquation1>("FourierEquation1");
+	ExplicitEquation::Register<FourierEquation2>("FourierEquation2");
+	ExplicitEquation::Register<FourierEquation3>("FourierEquation3");
+	ExplicitEquation::Register<FourierEquation4>("FourierEquation4");
 }
 
 END_UPP_NAMESPACE

@@ -22,4 +22,4 @@ topic "2.2 VectorY";
 values beginning from [%-*@3 x0] and with [%-*@3 deltaX] between 
 X axis values.&]
 [s3;%% &]
-[s0;%% ]]
+[s3;%% ]]
