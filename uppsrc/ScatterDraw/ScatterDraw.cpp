@@ -633,11 +633,10 @@ ScatterDraw &ScatterDraw::_InsertSeries(int index, DataSource *data) {
 
 int64 ScatterDraw::GetCount(int index) {
 	ASSERT(IsValid(index));
-	if (series[index].PointsData()->IsParam())
+	if (series[index].PointsData()->IsParam() || series[index].PointsData()->IsExplicit())
 		return Null;
-	else if (IsNull(series[index].PointsData()->GetCount())) 
-		return Null;
-	return series[index].PointsData()->GetCount();
+	else 
+		return series[index].PointsData()->GetCount();
 }
 
 void ScatterDraw::GetValues(int index, int64 idata, double &x, double &y) {

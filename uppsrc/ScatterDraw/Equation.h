@@ -28,6 +28,7 @@ public:
 	virtual String GetName() = 0;
 	virtual String GetFullName()			{return GetName();}
 	virtual String GetEquation(int numDigits = 3) = 0;
+	virtual inline int64 GetCount()			{return Null;}
 	
 	void SetNumDigits(int n)				{numDigits = n;}
 	int GetNumDigits()						{return numDigits;}
@@ -37,6 +38,21 @@ public:
 	friend struct Equation_functor;
 	
 	const Array<double> &GetCoeff()			{return coeff;}
+
+	template<class T>	
+	static void Register(const String& name) {
+		classMap().FindAdd(name, __Create<T>);
+	}
+	static void Unregister(const String& name) {
+		int i = NameIndex(name);
+		ASSERT(i >= 0);
+		classMap().Remove(i);
+	}
+	static int            	 NameIndex(const String& name) {return classMap().Find(name);}
+	static int            	 GetEquationCount()            {return classMap().GetCount();}
+	static ExplicitEquation* Create(int i)                 {return classMap()[i]();}
+	
+	int GetNumCoeff(int num) {return coeff.GetCount();}
 	
 protected:
 	Array<double> coeff;
@@ -49,6 +65,11 @@ protected:
 	void SetCoeff(double c0, double c1) 			{coeff.Clear();	coeff << c0 << c1;}
 	void SetCoeff(double c0) 						{coeff.Clear();	coeff << c0;}
 	void SetCoeffVal(int id, double c) 				{coeff[id] = c;}
+	
+	typedef ExplicitEquation* (*CreateFunc)();
+	template<class T>	
+	static ExplicitEquation*                      __Create() {return new T;}
+	static VectorMap<String, CreateFunc>& classMap() {static VectorMap<String, CreateFunc> cMap; return cMap;}
 };
 
 class LinearEquation : public ExplicitEquation {
@@ -63,7 +84,7 @@ public:
 		return ret;
 	}
 	void SetDegree(int num)				{NEVER();}
-	virtual void GuessCoeff(DataSource &series)	{coeff[0] = AvgY();}
+	virtual void GuessCoeff(DataSource &series)	{coeff[0] = series.AvgY();}
 };
 
 class PolynomialEquation : public ExplicitEquation {
@@ -74,9 +95,29 @@ public:
 	virtual String GetName() 			       	{return t_("Polynomial");}
 	virtual String GetFullName() 		       	{return t_("Polynomial") + String(" n = ") + FormatInt(degree);}
 	virtual String GetEquation(int numDigits = 3);
-	virtual void GuessCoeff(DataSource &series) {}
+	virtual void GuessCoeff(DataSource &series) {coeff[0] = series.AvgY();}
 	void SetDegree(int num)				       	{degree = num;	SetNumCoeff(num + 1);}
 };	
+
+class PolynomialEquation2 : public PolynomialEquation {
+public:
+	PolynomialEquation2() {SetDegree(2);}
+};
+
+class PolynomialEquation3 : public PolynomialEquation {
+public:
+	PolynomialEquation3() {SetDegree(3);}
+};
+
+class PolynomialEquation4 : public PolynomialEquation {
+public:
+	PolynomialEquation4() {SetDegree(4);}
+};
+
+class PolynomialEquation5 : public PolynomialEquation {
+public:
+	PolynomialEquation5() {SetDegree(5);}
+};
 
 class SinEquation : public ExplicitEquation {
 public:
@@ -94,8 +135,7 @@ public:
 	void SetDegree(int num)				{NEVER();}
 	virtual void GuessCoeff(DataSource &series)	{
 		coeff[0] = series.AvgY();	
-		double A;
-		coeff[1] = A = series.SinEstim_Amplitude(coeff[0]);
+		coeff[1] = series.SinEstim_Amplitude(coeff[0]);
 		double frequency, phase;
 		if (series.SinEstim_FreqPhase(frequency, phase, coeff[0])) {
 			coeff[2] = frequency;
@@ -112,8 +152,28 @@ public:
 	virtual String GetName() 			        {return t_("Fourier");}
 	virtual String GetFullName() 		        {return t_("Fourier") + String(" n = ") + FormatInt(degree);}
 	virtual String GetEquation(int numDigits = 3);
-	virtual void GuessCoeff(DataSource &series) {}
+	virtual void GuessCoeff(DataSource &series) {coeff[0] = series.AvgY();}
 	void SetDegree(int num)				        {degree = num;	SetNumCoeff(2*num + 2);}
+};
+
+class FourierEquation1 : public FourierEquation {
+public:
+	FourierEquation1() {SetDegree(1);}
+};
+
+class FourierEquation2 : public FourierEquation {
+public:
+	FourierEquation2() {SetDegree(2);}
+};
+
+class FourierEquation3 : public FourierEquation {
+public:
+	FourierEquation3() {SetDegree(3);}
+};
+
+class FourierEquation4 : public FourierEquation {
+public:
+	FourierEquation4() {SetDegree(4);}
 };
 
 class ExponentialEquation : public ExplicitEquation {
@@ -152,6 +212,7 @@ public:
 	EvalExpr();
 	double Eval(String line);
 	String EvalStr(String line, int numDigits = 3);
+	void SetCaseSensitivity(bool val = true) {noCase = !val;}
 	
 	VectorMap<String, double> constants;
 	VectorMap<String, double> variables;
@@ -164,6 +225,7 @@ private:
 	String TermStr(CParser& p, int numDigits);
 	String MulStr(CParser& p, int numDigits);
 	String ExpStr(CParser& p, int numDigits);
+	bool noCase;
 	
 	VectorMap<String, double (*)(double)> functions;
 };
