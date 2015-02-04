@@ -178,7 +178,7 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 		args.Add(p);
 		int l = strlen(command) + 1;
 		memcpy(p, command, l);
-		p += strlen(command) + 1;
+		p += l;
 		for(int i = 0; i < arg->GetCount(); i++) {
 			args.Add(p);
 			l = (*arg)[i].GetCount() + 1;
@@ -190,17 +190,6 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 		cmd_buf.Alloc(strlen(command) + 1);
 		char *cmd_out = cmd_buf;
 		const char *p = command;
-		const char *b = p;
-		while(*p && (byte)*p > ' ')
-			if(*p++ == '\"')
-				while(*p && *p++ != '\"')
-					;
-		args.Add(cmd_out);
-		memcpy(cmd_out, b, p - b);
-		cmd_out += p - b;
-		*cmd_out++ = '\0';
-		app = cmd_buf;
-	
 		while(*p)
 			if((byte)*p <= ' ')
 				p++;
@@ -230,19 +219,26 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 				*cmd_out++ = '\0';
 			}
 	}
+	
+	if(args.GetCount() == 0)
+		return false;
 
 	args.Add(NULL);
 
-	String app_full = GetFileOnPath(app, getenv("PATH"), true);
+	String app_full = GetFileOnPath(args[0], getenv("PATH"), true);
 	if(IsNull(app_full))
 		return false;
+	
+	Buffer<char> arg0(app_full.GetCount() + 1);
+	memcpy(~arg0, ~app_full, app_full.GetCount() + 1);
+	args[0] = ~arg0;
 
 	if(pipe(rpipe) || pipe(wpipe))
 		return false;
 
 	if(spliterr && pipe(epipe))
 		return false;
-
+	
 	LLOG("\nLocalProcess::Start");
 	LLOG("rpipe[" << rpipe[0] << ", " << rpipe[1] << "]");
 	LLOG("wpipe[" << wpipe[0] << ", " << wpipe[1] << "]");
