@@ -38,7 +38,7 @@ inline String GetTypeName(const ::std::type_info& tinfo)   { return GetTypeName(
 
 void __LOGF__(const char *format, ...);
 
-#define STATIC_ASSERT( expr ) { struct __static_assert { unsigned static_assert:(expr); }; }
+#define STATIC_ASSERT( expr ) { struct __static_assert { unsigned __static_assert_tst:(expr); }; }
 
 #ifdef _DEBUG
 
