@@ -60,7 +60,7 @@ bool SysExec(String const &command, String const &args, const VectorMap<String, 
 		// Code only executed by child process
 
 		// exec svn, function shall not return if all ok
-		result = execve(command, argv, envv);
+		result = execvpe(command, argv, envv);
 
 		// terminates child process
 		_exit(result);
@@ -104,7 +104,7 @@ bool SysExec(String const &command, String const &args, const VectorMap<String, 
 	{
 		char *buf = (char *)malloc(OutSize + 1);
 		lseek(OutFile, 0L, SEEK_SET);
-		int dummy = read(OutFile, buf, OutSize);
+		/*int dummy = */ (void)read(OutFile, buf, OutSize);
 		buf[OutSize] = 0;
 		OutStr.Cat(buf);
 		free(buf);
@@ -116,7 +116,7 @@ bool SysExec(String const &command, String const &args, const VectorMap<String, 
 	{
 		char *buf = (char *)malloc(ErrSize + 1);
 		lseek(ErrFile, 0L, SEEK_SET);
-		int dummy = read(ErrFile, buf, ErrSize);
+		/* int dummy = */(void)read(ErrFile, buf, ErrSize);
 		buf[ErrSize] = 0;
 		ErrStr.Cat(buf);
 		free(buf);
