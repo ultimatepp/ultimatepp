@@ -68,7 +68,9 @@ void LngParseCFile(const String& fn, VectorMap<String, LngEntry>& lng)
 				p.SkipTerm();
 		}
 	}
-	catch(CParser::Error) {}
+	catch(CParser::Error e) {
+		PutConsole(e);
+	}
 }
 
 const Index<int>& LngIndex()
@@ -126,7 +128,7 @@ bool LngParseTFile(const String& fn, VectorMap<String, LngEntry>& lng)
 			}
 		}
 	}
-	catch(CParser::Error& e) {
+	catch(CParser::Error e) {
 		PutConsole(e);
 		return false;
 	}
