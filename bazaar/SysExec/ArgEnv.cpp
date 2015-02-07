@@ -29,11 +29,31 @@ char **BuildArgs(String const &command, String const &argline)
 				c = argline[++pos];
 				while (c && c != '"')
 				{
-					s << c;
-					c = argline[++pos];
+					if(c == '\\')
+					{
+						c = argline[++pos];
+						if(!c)
+						break;
+						s << c;
+						c = argline[++pos];
+					}
+					else
+					{
+						s << c;
+						c = argline[++pos];
+					}
 				}
 				if (c)
 					c = argline[++pos];
+			}
+			// read escaped characters
+			else if(c == '\\')
+			{
+				c = argline[++pos];
+				if(!c)
+					break;
+				s << c;
+				c = argline[++pos];
 			}
 			else
 			{
