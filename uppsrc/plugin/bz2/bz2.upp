@@ -2,6 +2,8 @@ description "BZ2 compressor/decompressor\3770,128,128";
 
 optimize_speed;
 
+options(BUILDER_OPTION) NOWARNINGS;
+
 uses
 	Core;
 
