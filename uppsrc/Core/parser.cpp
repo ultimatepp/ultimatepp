@@ -370,7 +370,7 @@ String CParser::ReadOneString(int delim, bool chkend) throw(Error) {
 			}
 		}
 		else {
-			if((byte)*term < ' ') {
+			if((byte)*term < ' ' && *term != '\t') {
 				if(chkend) {
 					ThrowError("Unterminated string");
 					return result;
