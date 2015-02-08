@@ -476,7 +476,7 @@ void EditorBar::HidePtr()
 	Refresh();
 }
 
-void EditorBar::SyncWidth()
+void EditorBar::SyncSize()
 {
 	int n = editor ? editor->GetLineCount() : 0;
 	int i = 0;
@@ -485,22 +485,21 @@ void EditorBar::SyncWidth()
 		n /= 10;
 	}
 	int w = (line_numbers && editor ? editor->GetFont()['0'] * i : 0) + 12 + 4 + annotations;
-	if(w != GetWidth()) {
+	if(w != GetWidth())
 		Width(w);
-		Refresh();
-	}
+	Refresh();
 }
 
 void EditorBar::LineNumbers(bool b)
 {
 	line_numbers = b;
-	SyncWidth();
+	SyncSize();
 }
 
 void EditorBar::Annotations(int width)
 {
 	annotations = width;
-	SyncWidth();
+	SyncSize();
 }
 
 EditorBar::EditorBar()
@@ -513,7 +512,7 @@ EditorBar::EditorBar()
 	annotations = 0;
 	ignored_next_edit = false;
 	next_age = 0;
-	SyncWidth();
+	SyncSize();
 }
 
 EditorBar::~EditorBar()

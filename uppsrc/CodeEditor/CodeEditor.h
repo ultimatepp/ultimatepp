@@ -98,7 +98,7 @@ public:
 
 	void Scroll()                          { Refresh(); }
 
-	void SyncWidth();
+	void SyncSize();
 
 	void Renumber(int linecount);
 	void ClearBreakpoints();
@@ -416,7 +416,7 @@ public:
 	void    CheckEdited(bool e = true)                { check_edited = e; }
 	bool    GetCheckEdited()                          { return check_edited; }
 
-	void    EditorBarLayout()                         { bar.SyncWidth(); }
+	void    EditorBarLayout()                         { bar.SyncSize(); }
 
 	LineInfo GetLineInfo() const                      { return bar.GetLineInfo(); }
 	void     SetLineInfo(const LineInfo& lf);
