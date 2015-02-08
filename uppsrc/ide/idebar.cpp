@@ -588,16 +588,14 @@ void Ide::BrowseMenu(Bar& menu)
 
 void Ide::HelpMenu(Bar& menu)
 {
-	menu.AddMenu("Get help / report bugs..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/forums"));
-	menu.AddMenu("Online documentation..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/www$uppweb$documentation$en-us.html"));
-	menu.AddMenu("Common information..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/www$uppweb$community$en-us.html"));
-	if(menu.IsMenuBar())
-		menu.Separator();
 	menu.Add(AK_BROWSETOPICS, IdeImg::help(), THISBACK(ShowTopics));
 	menu.Add(AK_SEARCHTOPICS, THISBACK(SearchTopics));
 	menu.Add(AK_BROWSETOPICS_WIN, IdeImg::help_win(), THISBACK(ShowTopicsWin));
-	if(menu.IsMenuBar())
-		menu.Separator();
+	menu.MenuSeparator();
+	menu.AddMenu("Get help / report bugs..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/forums"));
+	menu.AddMenu("Online documentation..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/www$uppweb$documentation$en-us.html"));
+	menu.AddMenu("Common information..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/www$uppweb$community$en-us.html"));
+	menu.MenuSeparator();
 	menu.Add("About..", THISBACK(About));
 }
 
