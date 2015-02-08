@@ -250,6 +250,12 @@ String Cpp::Preprocess(Stream& in, bool needresult)
 			result.Cat("\n");
 			if(strncmp(s + 1, "define", 6) == 0)
 				Define(s + 7);
+			else
+			if(strncmp(s + 1, "undef", 5) == 0) {
+				CParser p(s + 6);
+				if(p.IsId())
+					macro.UnlinkKey(p.ReadId());
+			}
 		}
 		else
 			if(needresult)

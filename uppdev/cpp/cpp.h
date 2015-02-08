@@ -5,13 +5,6 @@
 
 using namespace Upp;
 
-class CT {
-public:
-  struct ST : Moveable<ST> {
-    int x, y;
-  };
-};
-
 struct CppMacro : Moveable<CppMacro> {
 	String        body;
 	Index<String> param;

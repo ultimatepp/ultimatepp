@@ -13,6 +13,10 @@ TEST second line
 
 TEST // TEST
 
+#undef TEST
+
+This should not be expanded, it was undefined: TEST
+
 #define __Expand1(x) x(1)
 #define __Expand2(x)  __Expand1(x) x(2)
 #define __Expand3(x)  __Expand2(x) x(3)
