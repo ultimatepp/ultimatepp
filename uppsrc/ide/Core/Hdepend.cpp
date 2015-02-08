@@ -76,7 +76,6 @@ String Hdepend::FindIncludeFile(const char *s, const String& filedir)
 					String fn = NormalizePath(name, filedir);
 					if(FileExists(fn))
 						return fn;
-					FindFile ff(fn);
 				}
 				for(int i = 0; i < incdir.GetCount(); i++) {
 					String fn = CatAnyPath(incdir[i], name);
