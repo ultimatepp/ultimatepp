@@ -413,6 +413,7 @@ void Ide::SetupBuildMethods()
 	m.Load();
 	m.ShowDefault();
 	m.use_target = use_target;
+	m.method.FindSetCursor(method);
 	for(;;) {
 		int c = m.Run();
 		if(c == IDCANCEL)
