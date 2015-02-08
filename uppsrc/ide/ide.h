@@ -1336,4 +1336,6 @@ public:
 //	void CodeBrowser();
 };
 
+inline void ShowConsole() { if(TheIde()) ((Ide *)TheIde())->ShowConsole(); }
+
 #endif
