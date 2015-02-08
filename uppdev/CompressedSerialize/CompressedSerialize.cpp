@@ -1,4 +1,5 @@
 #include <Core/Core.h>
+#include <plugin/lz4/lz4.h>
 
 using namespace Upp;
 
@@ -16,21 +17,16 @@ CONSOLE_APP_MAIN
 		FileOut fout(path);
 		fout.Put("COMPRESSED");
 		int64 pos = fout.GetPos();
-		
 		fout.Put64le(pos);
-		Zlib zlib;
+		Lz4 zlib;
 		OutFilterStream out(fout, zlib);
 		zlib.Compress();
 		out % h;
-		fout.Seek(pos);
-		DDUMP(out.GetInCount());
-		DDUMP(out.GetCount());
-		fout.Put64le(out.GetInCount());
+		int ob = out.GetPos();
 		out.Close();
-		DDUMP(out.GetCount());
-		DDUMP(out.GetInCount());
+		fout.Seek(pos);
+		fout.Put64le(out.GetPos());
 	}
-	
 
 	{
 		String h2;
@@ -42,7 +38,7 @@ CONSOLE_APP_MAIN
 			return;
 		int sz = fin.Get64le();
 		DDUMP(sz);
-		Zlib zlib;
+		Lz4 zlib;
 		InFilterStream in(fin, zlib);
 		in.SetSize(sz);
 		zlib.Decompress();

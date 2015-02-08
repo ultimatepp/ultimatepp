@@ -8,5 +8,5 @@ file
 	PainterLine.lay;
 
 mainconfig
-	"" = "GUI";
+	"" = "GUI PRECLIP";
 
