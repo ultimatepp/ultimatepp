@@ -1,10 +1,17 @@
 #include "cpp.h"
 
+#include <string.h>
+
 #define LLOG(x)
 
 bool IsSpc(byte c)
 {
 	return c > 0 && c <= 32;
+}
+
+String CppMacro::ToString() const
+{
+	return String().Cat() << "(" << AsString(param) << ") " << body;
 }
 
 String CppMacro::Expand(const Vector<String>& p)
@@ -18,13 +25,25 @@ String CppMacro::Expand(const Vector<String>& p)
 			while(IsAlNum(*s) || *s == '_')
 				s++;
 			String id(b, s);
-			int q = param.Find(id);
-			if(q >= 0) {
-				if(q < p.GetCount())
-					r.Cat(p[q]);
+			static String VA_ARGS("__VA_ARGS__"); // Speed optimization
+			if(id == VA_ARGS) {
+				bool next = false;
+				for(int i = param.GetCount(); i < p.GetCount(); i++) {
+					if(next)
+						r.Cat(", ");
+					r.Cat(p[i]);
+					next = true;
+				}
 			}
-			else
-				r.Cat(id);
+			else {
+				int q = param.Find(id);
+				if(q >= 0) {
+					if(q < p.GetCount())
+						r.Cat(p[q]);
+				}
+				else
+					r.Cat(id);
+			}
 			continue;
 		}
 		if(s[0] == '#' && s[1] == '#') {
@@ -50,7 +69,8 @@ String CppMacro::Expand(const Vector<String>& p)
 				int q = param.Find(id);
 				if(q >= 0) {
 					if(q <= p.GetCount()) {
-						r.Cat(AsCString(p[q]));
+						if(q < p.GetCount())
+							r.Cat(AsCString(p[q]));
 						s = ss;
 						continue;
 					}
@@ -80,6 +100,8 @@ void Cpp::Define(const char *s)
 				m.param.Add(p.ReadId());
 				p.Char(',');
 			}
+			if(p.Char3('.', '.', '.'))
+				m.variadic = true;
 			p.Char(')');
 		}
 		m.body = p.GetPtr();
@@ -124,8 +146,18 @@ void Cpp::ParamAdd(Vector<String>& param, const char *s, const char *e)
 
 String Cpp::Expand(const char *s)
 {
-	String r;
+	StringBuffer r;
 	while(*s) {
+		if(incomment) {
+			if(s[0] == '*' && s[1] == '/') {
+				incomment = false;
+				s += 2;
+				r.Cat("*/");
+			}
+			else
+				r.Cat(*s++);
+		}
+		else
 		if(IsAlpha(*s) || *s == '_') {
 			const char *b = s;
 			s++;
@@ -136,6 +168,7 @@ String Cpp::Expand(const char *s)
 			if(q >= 0 && !macro[q].flag) {
 				LLOG("Expanding " << id);
 				Vector<String> param;
+				const char *s0 = s;
 				while(*s && (byte)*s <= ' ') s++;
 				if(*s == '(') {
 					s++;
@@ -170,6 +203,8 @@ String Cpp::Expand(const char *s)
 						else
 							s++;
 				}
+				else
+					s = s0; // otherwise we eat spaces after parameterless macro
 				macro[q].flag = true;
 				r.Cat(Expand(macro[q].Expand(param)));
 				macro[q].flag = false;
@@ -178,7 +213,65 @@ String Cpp::Expand(const char *s)
 				r.Cat(id);
 		}
 		else
+		if(s[0] == '/' && s[1] == '*') {
+			incomment = true;
+			s += 2;
+			r.Cat("/*");
+		}
+		else
+		if(s[0] == '/' && s[1] == '/') {
+			r.Cat(s);
+			break;
+		}
+		else
 			r.Cat(*s++);
 	}
 	return r;
+}
+
+String Cpp::Preprocess(Stream& in, bool needresult)
+{
+	incomment = false;
+	StringBuffer result;
+	result.Clear();
+	result.Reserve(16384);
+	while(!in.IsEof()) {
+		String l = in.GetLine();
+		int el = 0;
+		while(*l.Last() == '\\' && !in.IsEof()) {
+			el++;
+			l.Trim(l.GetLength() - 1);
+			l.Cat(in.GetLine());
+		}
+		const char *s = l;
+		while(*s == ' ')
+			s++;
+		if(*s == '#') {
+			result.Cat("\n");
+			if(strncmp(s + 1, "define", 6) == 0)
+				Define(s + 7);
+		}
+		else
+			if(needresult)
+				result.Cat(Expand(l) + "\n");
+			else {
+				const char *s = l;
+				while(*s) {
+					if(s[0] == '/' && s[1] == '*') {
+						incomment = true;
+						s += 2;
+					}
+					else
+					if(s[0] == '*' && s[1] == '/') {
+						incomment = false;
+						s += 2;
+					}					
+					s++;
+				}
+			}
+		if(needresult)
+			while(el--)
+				result.Cat("\n");
+	}
+	return result;
 }

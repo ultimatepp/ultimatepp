@@ -1,5 +1,22 @@
 #include <RichEdit/RichEdit.h>
 
+<<<<<<< .mine
+#define Time    XTime
+#define Font    XFont
+#define Display XDisplay
+#define Picture XPicture
+
+#include <limits.h>
+//#include <gtk/gtk.h>
+//#include <gdk/gdkx.h>
+
+#undef Picture
+#undef Time
+#undef Font
+#undef Display
+
+=======
+>>>>>>> .r8093
 using namespace Upp;
 
 String FileName()

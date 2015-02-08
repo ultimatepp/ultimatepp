@@ -34,6 +34,7 @@ TEST4
 
 CONSOLE_APP_MAIN
 {
+/*
 	{
 		CppMacro m;
 		m.body = "a + b * 123 - alfa";
@@ -44,7 +45,7 @@ CONSOLE_APP_MAIN
 		x.Add("two");
 		DUMP(m.Expand(x));
 	}
-/*
+
 	Cpp x;
 	x.Define("TEST(a, b) |a|b|");
 	DUMP(x.Expand("This is: TEST(('\\1'   , \"2\"    \"4\" '4' ',' \",\"), 3)!"));
@@ -54,14 +55,13 @@ CONSOLE_APP_MAIN
 	DUMP(x.Expand("This is: TEST(  \"1\" \"2\" \",\", ',')!"));
 */
 	Cpp x;
+	FileIn in0("C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include\\crtdefs.h");
+	x.Preprocess(in0);
+//	FileIn in("C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include\\string.h");
 	FileIn in(GetDataFile("test.h"));
-	while(!in.IsEof()) {
-		String l = in.GetLine();
-		if(l.StartsWith("#define"))
-			x.Define(~l + strlen("#define"));
-		else
-			LOG(/*l << " -> " << */x.Expand(l));
-	}
+	LOG(x.Preprocess(in));
+	LOG("---------------------------");
+	DUMPM(x.macro);
 }
 
 // TEST:a,b:|a|b|\n

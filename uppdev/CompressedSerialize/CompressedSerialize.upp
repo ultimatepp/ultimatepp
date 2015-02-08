@@ -1,5 +1,6 @@
 uses
-	Core;
+	Core,
+	plugin/lz4;
 
 file
 	CompressedSerialize.cpp;

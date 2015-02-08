@@ -1,3 +1,18 @@
+#include <string.h>
+
+#define eprintf(x, ...)  if(x) printf(__VA_ARGS__)
+
+eprintf(TEST, "%d is %d", a, b, c)
+
+#define TEST   test_expanded
+
+TEST /* TEST in comment */ TEST
+/* TEST in comment 2
+TEST second line
+*/ TEST
+
+TEST // TEST
+
 #define __Expand1(x) x(1)
 #define __Expand2(x)  __Expand1(x) x(2)
 #define __Expand3(x)  __Expand2(x) x(3)
@@ -102,7 +117,7 @@
 #define E__NFValue(I)  const Value& COMBINE(p, I)
 #define E__NFBody(I)   String Format(const char *fmt, __List##I(E__NFValue));
 
-EXPAND: __Expand2(E__NFBody)
+EXPAND: __Expand20(E__NFBody)
 
 ASSTRING(Just a test)
 
