@@ -21,6 +21,10 @@ struct CppMacro : Moveable<CppMacro> {
 struct Cpp {
 	bool                        incomment;
 	VectorMap<String, CppMacro> macro;
+	
+	String                      filedir;
+	String                      include_path;
+	int                         level;
 
 	void   Define(const char *s);
 
@@ -28,9 +32,10 @@ struct Cpp {
 	void ParamAdd(Vector<String>& param, const char *b, const char *e);
 
 	String Expand(const char *s);
+	void   Include(const char *s);
+	String GetIncludePath(const char *s);
 	
 	String   Preprocess(Stream& in, bool needresult = true);
 };
-
 
 #endif

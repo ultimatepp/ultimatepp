@@ -1,4 +1,7 @@
 #include <string.h>
+#include <winbase.h>
+#include <wingdi.h>
+#include <winuser.h>
 
 #define eprintf(x, ...)  if(x) printf(__VA_ARGS__)
 

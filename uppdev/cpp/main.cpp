@@ -55,8 +55,11 @@ CONSOLE_APP_MAIN
 	DUMP(x.Expand("This is: TEST(  \"1\" \"2\" \",\", ',')!"));
 */
 	Cpp x;
-	FileIn in0("C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include\\crtdefs.h");
-	x.Preprocess(in0);
+	x.filedir = GetFileFolder(GetDataFile("x"));
+	x.include_path = "C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include;C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Include;C:\\OpenSSL-Win32\\include;C:\\u\\pgsql\\include;C:\\u\\OpenSSL-Win32\\include";
+	x.level = 0;
+//	FileIn in0("C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include\\crtdefs.h");
+//	x.Preprocess(in0);
 //	FileIn in("C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include\\string.h");
 	FileIn in(GetDataFile("test.h"));
 	LOG(x.Preprocess(in));

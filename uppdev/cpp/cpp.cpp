@@ -256,6 +256,22 @@ String Cpp::Preprocess(Stream& in, bool needresult)
 				if(p.IsId())
 					macro.UnlinkKey(p.ReadId());
 			}
+			else
+			if(strncmp(s + 1, "include", 7) == 0 && level < 100) {
+				String path = GetIncludePath(s + 8);
+				DDUMP(path);
+				if(path.GetCount()) {
+					Cpp inc;
+					inc.level = level + 1;
+					inc.filedir = filedir;
+					inc.include_path = include_path;
+					FileIn in(path);
+					inc.Preprocess(in, false);
+					inc.macro.Sweep();
+					for(int i = 0; i < inc.macro.GetCount(); i++)
+						macro.GetAdd(inc.macro.GetKey(i)) = inc.macro[i];
+				}
+			}
 		}
 		else
 			if(needresult)
@@ -272,7 +288,11 @@ String Cpp::Preprocess(Stream& in, bool needresult)
 						incomment = false;
 						s += 2;
 					}					
-					s++;
+					else
+					if(s[0] == '/' && s[1] == '/' && !incomment)
+						break;
+					else
+						s++;
 				}
 			}
 		if(needresult)
@@ -280,4 +300,28 @@ String Cpp::Preprocess(Stream& in, bool needresult)
 				result.Cat("\n");
 	}
 	return result;
+}
+
+String Cpp::GetIncludePath(const char *s)
+{
+	while(IsSpace(*s))
+		s++;
+	int type = *s;
+	if(type == '<' || type == '\"' || type == '?') {
+		s++;
+		String name;
+		if(type == '<') type = '>';
+		while(*s != '\r' && *s != '\n') {
+			if(*s == type) {
+				if(type == '\"') {
+					String fn = NormalizePath(name, filedir);
+					if(FileExists(fn))
+						return fn;
+				}
+				return GetFileOnPath(name, include_path, false);
+			}
+			name.Cat(*s++);
+		}
+	}
+	return Null;
 }
