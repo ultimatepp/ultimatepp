@@ -263,10 +263,10 @@ IconDes::IconDes()
 	doselection = false;
 
 	tool = &IconDes::FreehandTool;
-
+	
 	AddFrame(leftpane);
-	AddFrame(bottompane);
 	AddFrame(toolbar);
+	AddFrame(bottompane);
 	AddFrame(sb);
 	AddFrame(ViewFrame());
 
@@ -296,7 +296,7 @@ IconDes::IconDes()
 	search.SetFilter(CharFilterToUpper);
 
 	bottompane.Bottom(iconshow, 64);
-
+	
 	SetBar();
 	ColorChanged();
 	BackPaint();
