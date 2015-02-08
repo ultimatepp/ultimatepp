@@ -70,6 +70,7 @@ void LngParseCFile(const String& fn, VectorMap<String, LngEntry>& lng)
 	}
 	catch(CParser::Error e) {
 		PutConsole(e);
+		ShowConsole();
 	}
 }
 
@@ -130,6 +131,7 @@ bool LngParseTFile(const String& fn, VectorMap<String, LngEntry>& lng)
 	}
 	catch(CParser::Error e) {
 		PutConsole(e);
+		ShowConsole();
 		return false;
 	}
 	return true;
