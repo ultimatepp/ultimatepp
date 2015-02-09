@@ -225,7 +225,7 @@ template <class T>
 void DumpMap(Stream& s, const T& t) {
 	s << LOG_BEGIN;
 	for(int i = 0; i < t.GetCount(); i++)
-		s << '[' << i << "] = ("<< t.GetKey(i) << ") " << t[i] << EOL;
+		s << '[' << i << "] = (" << t.GetKey(i) << ") " << t[i] << EOL;
 	s << LOG_END;
 }
 

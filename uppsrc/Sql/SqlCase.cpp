@@ -330,10 +330,12 @@ String SqlCompile(byte dialect, const String& s)
 	return b;
 }
 
+#ifndef NOAPPSQL
 String SqlCompile(const String& s)
 {
 	return SqlCompile(SQL.GetDialect(), s);
 }
+#endif
 
 Vector<SqlVal> SplitSqlSet(const SqlSet& set)
 {

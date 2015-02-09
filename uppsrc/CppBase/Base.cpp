@@ -57,6 +57,16 @@ bool CppBase::IsType(int i) const
 	return GetKey(i).GetCount();
 }
 
+void CppBase::Dump(Stream& s)
+{
+	for(int i = 0; i < GetCount(); i++) {
+		s << Nvl(GetKey(i), "<<GLOBALS>>") << "\n";
+		const Array<CppItem>& m = (*this)[i];
+		for(int j = 0; j < m.GetCount(); j++)
+			s << '\t' << m[j] << "\n";
+	}
+}
+
 void Remove(CppBase& base, const Vector<String>& pf)
 {
 	int ni = 0;

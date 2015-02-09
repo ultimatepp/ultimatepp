@@ -704,6 +704,7 @@ SqlR::SqlR(const SqlStatement& s)
 
 #endif
 
+#ifndef NOAPPSQL
 void operator*=(ValueMap& map, SqlSelect select)
 {
 	map.Clear();
@@ -712,5 +713,6 @@ void operator*=(ValueMap& map, SqlSelect select)
 	while(sql.Fetch())
 		map.Add(sql[0], sql[1]);
 }
+#endif
 
 END_UPP_NAMESPACE
