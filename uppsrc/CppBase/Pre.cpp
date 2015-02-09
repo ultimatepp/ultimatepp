@@ -85,9 +85,12 @@ SrcFile PreProcess(Stream& in)
 		if(IsAlNum(*rm)) {
 			const char *s = ln.Last();
 			while(s > rm && *s == ' ') s--;
-			if(*s != ':')
+			if(*s != ':') // check for label, labeled lines are not grounded
 				res.text << '\2';
 		}
+		else
+		if(*rm == '\x1a') // line started with macro
+			res.text << '\2';
 		while(*rm == ' ' || *rm == '\t') rm++;
 		if(*rm == '\0')
 			res.blankLinesRemoved++;

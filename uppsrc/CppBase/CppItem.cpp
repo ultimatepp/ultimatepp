@@ -2,10 +2,16 @@
 
 NAMESPACE_UPP
 
-void CppItem::Dump(Stream& s) const
+String CppItem::ToString() const
 {
-	s << Nvl(qitem, "?") << ' ';
-	s << decode(kind,
+	StringStream ss;
+	Dump(ss);
+	return ss;
+}
+
+String CppItemKindAsString(int kind)
+{
+	return decode(kind,
 				STRUCT, "STRUCT",
 				STRUCTTEMPLATE, "STRUCTTEMPLATE",
 				TYPEDEF, "TYPEDEF",
@@ -24,7 +30,13 @@ void CppItem::Dump(Stream& s) const
 				ENUM, "ENUM",
 				MACRO, "MACRO",
 				FRIENDCLASS, "FRIENDCLASS",
-				"?kind:" + AsString(kind)) << ' '
+				"?kind:" + AsString(kind));
+}
+
+void CppItem::Dump(Stream& s) const
+{
+	s << Nvl(qitem, "?") << ' ';
+	s << CppItemKindAsString(kind) << ' '
 	  << decode(access,
 				PUBLIC, "PUBLIC",
 				PROTECTED, "PROTECTED",

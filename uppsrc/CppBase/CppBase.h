@@ -260,9 +260,12 @@ struct CppItem {
 	void           Serialize(Stream& s);
 	
 	void           Dump(Stream& s) const;
+	String         ToString() const;
 
 	CppItem()      { at = decla = virt = false; qualify_type = qualify_param = true; serial = -1; isptr = false; }
 };
+
+String CppItemKindAsString(int kind);
 
 int FindItem(const Array<CppItem>& x, const String& qitem);
 int GetCount(const Array<CppItem>& x, int i);
@@ -274,6 +277,8 @@ struct CppBase : ArrayMap<String, Array<CppItem> > {
 	String         serial_md5;
 
 	bool           IsType(int i) const;
+	
+	void           Dump(Stream& s);
 	
 	CppBase() { serial = 0; }
 };

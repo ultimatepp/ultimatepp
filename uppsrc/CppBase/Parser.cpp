@@ -1564,6 +1564,7 @@ void Parser::Do(Stream& in, const Vector<String>& ignore, CppBase& _base, const 
 					++lex;
 					lex.SkipToGrounding();
 					lex.ClearBracesLevel();
+					LLOG("Grounding skipped to " << GetLine(lex.Pos()));
 				}
 			}
 		}
@@ -1578,6 +1579,7 @@ void Parse(Stream& s, const Vector<String>& ignore, CppBase& base, const String&
            Callback2<int, const String&> _err)
 {
 	LTIMING("Parse");
+	DUMP(ignore);
 	Parser p;
 	p.Do(s, ignore, base, fn, _err);
 }
