@@ -129,6 +129,12 @@ bool IsPainting(PageDraw& pw, Zoom z, const Rect& page, PageY top, PageY bottom)
 	return false;
 }
 
+PageY RichTxt::GetHeight(RichContext rc) const
+{
+	for(int i = 0; i < GetPartCount(); i++)
+		rc.py = GetNextPageY(i, rc);
+	return rc.py;
+}
 
 void RichTxt::Paint(PageDraw& pw, RichContext& rc, const PaintInfo& _pi) const
 {
@@ -349,13 +355,6 @@ void RichTxt::GatherValPos(Vector<RichValPos>& f, RichContext rc, int pos, int t
 		pos += GetPartLength(parti) + 1;
 		rc.py = GetNextPageY(parti++, rc);
 	}
-}
-
-PageY RichTxt::GetHeight(RichContext rc) const
-{
-	for(int i = 0; i < GetPartCount(); i++)
-		rc.py = GetNextPageY(i, rc);
-	return rc.py;
 }
 
 PageY RichTxt::GetTop(RichContext rc) const

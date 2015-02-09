@@ -5,7 +5,7 @@ uses
 	RichText;
 
 file
-	Report.h options PCH,
+	Report.h options(BUILDER_OPTION) PCH,
 	Report.cpp,
 	ReportDlg.cpp,
 	ReportI.icpp,
