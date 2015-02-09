@@ -2,23 +2,25 @@
 
 NAMESPACE_UPP
 
-RichContext RichText::Context(const Rect& page) const
+RichContext RichText::Context(const Rect& page, PageY py) const
 {
 	RichContext c(style);
 	c.page = GetPageMinusHeaderFooter(page);
-	c.py = PageY(0, c.page.top);
+	if(py.y < c.page.top)
+		c.py = PageY(0, c.page.top);
+	else
+		c.py = py;
 	return c;
 }
 
 PageY RichText::GetHeight(const Rect& page) const
 {
-	return RichTxt::GetHeight(Context(page));
+	return RichTxt::GetHeight(Context(page, PageY(0, 0)));
 }
 
 PageY RichText::GetHeight(PageY py, const Rect& page) const
 {
-	RichContext ctx = Context(page);
-	ctx.py = py;
+	RichContext ctx = Context(page, py);
 	return RichTxt::GetHeight(ctx);
 }
 
@@ -29,18 +31,15 @@ int   RichText::GetWidth() const
 
 void RichText::Paint(PageDraw& w, PageY py, const Rect& page, const PaintInfo& pi) const
 {
-	RichContext ctx = Context(page);
+	RichContext ctx = Context(page, py);
 	int from_page = py.page;
-	if(py.y < ctx.page.top)
-		py.y = ctx.page.top;
-	ctx.py = py;
 	RichTxt::Paint(w, ctx, pi);
 	PaintHeaderFooter(w, page, pi, from_page, ctx.py.page);
 }
 
 void  RichText::Paint(PageDraw& w, const Rect& page, const PaintInfo& pi) const
 {
-	RichContext ctx = Context(page);
+	RichContext ctx = Context(page, PageY(0, 0));
 	int from_page = ctx.py.page;
 	RichTxt::Paint(w, ctx, pi);
 	PaintHeaderFooter(w, page, pi, from_page, ctx.py.page);
@@ -48,22 +47,22 @@ void  RichText::Paint(PageDraw& w, const Rect& page, const PaintInfo& pi) const
 
 RichCaret RichText::GetCaret(int pos, const Rect& page) const
 {
-	return RichTxt::GetCaret(pos, Context(page));
+	return RichTxt::GetCaret(pos, Context(page, PageY(0, 0)));
 }
 
 int RichText::GetPos(int x, PageY y, const Rect& page) const
 {
-	return RichTxt::GetPos(x, y, Context(page));
+	return RichTxt::GetPos(x, y, Context(page, y));
 }
 
 int RichText::GetVertMove(int pos, int gx, const Rect& page, int dir) const
 {
-	return RichTxt::GetVertMove(pos, gx, Context(page), dir);
+	return RichTxt::GetVertMove(pos, gx, Context(page, PageY(0, 0)), dir);
 }
 
 RichHotPos  RichText::GetHotPos(int x, PageY y, int tolerance, const Rect& page) const
 {
-	RichHotPos p = RichTxt::GetHotPos(x, y, tolerance, Context(page));
+	RichHotPos p = RichTxt::GetHotPos(x, y, tolerance, Context(page, y));
 	if(p.column < -2)
 		p.table = 0;
 	return p;
@@ -72,7 +71,7 @@ RichHotPos  RichText::GetHotPos(int x, PageY y, int tolerance, const Rect& page)
 Vector<RichValPos> RichText::GetValPos(const Rect& page, int type) const
 {
 	Vector<RichValPos> f;
-	GatherValPos(f, Context(page), 0, type);
+	GatherValPos(f, Context(page, PageY(0, 0)), 0, type);
 	return f;
 }
 
@@ -116,7 +115,7 @@ bool RichText::GetInvalid(PageY& top, PageY& bottom, const Rect& page,
 		bottom = GetHeight(page);
 		return true;
 	}
-	RichContext rc = Context(page);
+	RichContext rc = Context(page, PageY(0, 0));
 	if(rtype == SPARA) {
 		rc.py = top = GetPartPageY(spi, rc);
 	   	bottom = GetNextPageY(spi, rc);

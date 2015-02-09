@@ -42,7 +42,7 @@ public:
 	void                  CatPick(RichText rval_ p);
 	using                 RichTxt::CatPick;
 
-	RichContext           Context(const Rect& page) const;
+	RichContext           Context(const Rect& page, PageY py) const;
 
 	RichPos               GetRichPos(int pos, int maxlevel = INT_MAX) const;
 	int                   operator[](int pos) const            { return GetRichPos(pos).chr; }
