@@ -35,6 +35,18 @@ char **BuildArgs(String const &command, String const &argline)
 				if (c)
 					c = argline[++pos];
 			}
+			// read single quoted string
+			else if(c == '\'')
+			{
+				c = argline[++pos];
+				while (c && c != '\'')
+				{
+					s << c;
+					c = argline[++pos];
+				}
+				if (c)
+					c = argline[++pos];
+			}
 			else
 			{
 				s << c;
