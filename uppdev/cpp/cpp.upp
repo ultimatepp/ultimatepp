@@ -1,5 +1,6 @@
 uses
-	Core;
+	Core,
+	CppBase;
 
 file
 	cpp.h,
